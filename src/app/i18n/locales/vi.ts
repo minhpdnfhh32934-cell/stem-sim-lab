@@ -400,6 +400,7 @@ const vi = {
     save: 'Lưu mô phỏng (.stemsim)',
     open: 'Mở tệp .stemsim',
     update: 'Kiểm tra cập nhật',
+    showcase: 'Chế độ trưng bày (tự chạy các cảnh)',
   },
   progress: {
     etaSeconds: 'còn khoảng {n} giây',
@@ -2481,6 +2482,9 @@ const vi = {
   },
   phaseChart: {
     label: '{title}: {y} theo {x}',
+  },
+  showcase: {
+    stopHint: 'Bấm bất kì đâu hoặc nhấn một phím để dừng.',
   },
 };
 

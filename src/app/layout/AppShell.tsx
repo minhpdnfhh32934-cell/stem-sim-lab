@@ -22,6 +22,7 @@ import '@/app/project/project.css';
 import { useModuleStore } from '@/modules/moduleStore';
 import { HomeScreen } from '@/app/learner/HomeScreen';
 import { Onboarding } from '@/app/learner/Onboarding';
+import { ShowcaseOverlay } from '@/app/showcase/ShowcaseOverlay';
 import { useIsHome, useIsLanding, useIsStudio, useIsTeacher } from '@/app/topics';
 import { useBreakReminder } from '@/learn/useBreakReminder';
 import { IconButton } from '@/ui/IconButton';
@@ -143,6 +144,7 @@ export function AppShell() {
       <UpdateDialog />
       <WhatsNewDialog />
       <Toaster />
+      <ShowcaseOverlay />
       {paletteUsed && (
         <Suspense fallback={null}>
           <CommandPalette />

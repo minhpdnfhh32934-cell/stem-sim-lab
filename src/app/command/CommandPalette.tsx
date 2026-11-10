@@ -8,6 +8,7 @@ import {
   House,
   Languages,
   Maximize2,
+  MonitorPlay,
   Presentation,
   Save,
   Search,
@@ -19,6 +20,7 @@ import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent } from 
 import { CATALOG } from '@/app/catalog';
 import { useT, type MessageKey } from '@/app/i18n';
 import { useLayoutStore } from '@/app/layout/layoutStore';
+import { startShowcase } from '@/app/showcase/showcase';
 import { openProject, saveProject } from '@/app/project/actions';
 import { SECTIONS } from '@/app/settings/sectionMeta';
 import { useSettingsStore } from '@/app/settings/settingsStore';
@@ -168,6 +170,14 @@ export function CommandPalette() {
         run: () => {
           useLayoutStore.getState().setPresentation(true);
         },
+      },
+      {
+        id: 'action.showcase',
+        group: 'actions',
+        label: t('command.showcase'),
+        keywords: 'trung bay showcase gian hang tu chay booth',
+        icon: MonitorPlay,
+        run: startShowcase,
       },
     );
     if (hasSimulation) {
