@@ -51,7 +51,7 @@ lỗi card cũ từ đêm 13/10); bộ canh đã sửa để chỉ tính tệp d
 v1 (84 lượt: 2 cách sinh) chạy trên đúng 42 câu; ý chính đúng tăng nhưng **số câu có lỗi đã biết
 tăng** (85,7 % → 76,2 % không lỗi). Đọc từng câu: câu lệnh "câu đầu: trả lời thẳng" làm mô hình mở
 đầu bằng "Đúng!" cả khi câu hỏi dựa trên ý sai (P6) hoặc học sinh trả lời sai (P10, C10). v2 sửa đúng
-chỗ đó (chỉ dẫn mở đầu theo loại lượt hỏi, `turnKind` trong `chatService.ts`), chạy lại 42 lượt.
+chỗ đó (chỉ dẫn mở đầu theo loại lượt hỏi, `turnKind` trong `turnKind.ts`), chạy lại 42 lượt.
 Vì v2 được sửa **sau khi** xem kết quả, nó được kiểm chứng thêm trên 15 câu held-out do một tác nhân
 khác viết mà không xem câu trả lời hay prompt nào.
 

@@ -30,6 +30,7 @@
  * ("2 tế bào con", "là 2 bước"), formula parts ("H2O", "x²", "2π", "1/2 mv²") and 0.
  */
 import { numbersIn } from '@/ai/numbers';
+import type { ChatMessageRecord } from './chatStore';
 import { numberWordValues } from './numberWords';
 
 const SUPERSCRIPTS: Record<string, string> = {
@@ -340,4 +341,33 @@ export function unverifiedNumbers(answer: string, allowed: readonly number[]): s
     if (!given && !out.includes(mention.text)) out.push(mention.text);
   }
   return out;
+}
+
+/**
+ * Numbers the AI was given: the question and the learner's turns (number words too), the app's
+ * results, the texts sent with this question (excerpt, screen) and earlier answers' numbers that
+ * were checked and not flagged there. An answer saved before the check existed (no
+ * `unverifiedNumbers` field) is checked now, against the learner's turns, the app's results, the
+ * texts sent now and the answers before it: its numbers are never taken as given unchecked.
+ */
+export function givenNumbers(
+  question: string,
+  records: readonly ChatMessageRecord[],
+  sources: readonly string[],
+): number[] {
+  const given = [
+    ...contextNumbers(
+      [question, ...records.flatMap((r) => (r.role === 'user' ? [r.content, r.prompt ?? ''] : []))],
+      { words: true },
+    ),
+    ...contextNumbers([...sources, ...records.flatMap((r) => r.facts ?? [])]),
+  ];
+  for (const r of records) {
+    if (r.role !== 'assistant') continue;
+    const flagged = contextNumbers(r.unverifiedNumbers ?? unverifiedNumbers(r.content, given));
+    given.push(
+      ...contextNumbers([r.content]).filter((v) => !flagged.some((f) => sameNumber(f, v))),
+    );
+  }
+  return given;
 }
