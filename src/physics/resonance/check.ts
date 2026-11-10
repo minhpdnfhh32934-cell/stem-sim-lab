@@ -17,18 +17,21 @@ const MAX_T = 1200;
 
 /**
  * Steady amplitude measured on the integrated motion, once the free part has died out: for a
- * sinusoid of angular frequency Ω, x² + (v/Ω)² is the amplitude squared at every instant. Null
- * when the damping is too weak to settle within MAX_T.
+ * sinusoid of angular frequency Ω, x² + (v/Ω)² is the amplitude squared at every instant. The
+ * motion is integrated one settling time at a time (the free part shrinks by e⁻²¹ in each) until
+ * that reading stops changing, since a large start or Ω ≪ ω₀ can leave a visible free part after
+ * the first. Null when it does not settle within MAX_T.
  */
 export function numericAmplitude(o: Forced): number | null {
-  const t1 = settleTime(o);
-  if (!(t1 <= MAX_T)) return null;
+  const span = settleTime(o);
   const scale = Math.max(1e-6, Math.abs(o.x0), o.F0 / o.k);
-  const r = dopri5(forcedLaw(o), [o.x0, o.v0], 0, t1, {
-    rtol: 1e-11,
-    atol: 1e-13 * scale,
-  });
-  const x = r.y[0] ?? 0;
-  const v = r.y[1] ?? 0;
-  return Math.hypot(x, v / o.W);
+  let y: ArrayLike<number> = [o.x0, o.v0];
+  let last = Number.NaN;
+  for (let t = 0; t + span <= MAX_T; t += span) {
+    y = dopri5(forcedLaw(o), y, t, t + span, { rtol: 1e-11, atol: 1e-13 * scale }).y;
+    const amp = Math.hypot(y[0] ?? 0, (y[1] ?? 0) / o.W);
+    if (Math.abs(amp - last) <= 1e-10 * amp) return amp;
+    last = amp;
+  }
+  return null;
 }

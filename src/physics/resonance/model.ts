@@ -63,5 +63,12 @@ export function stateAt(o: Forced, t: number): { x: number; v: number; a: number
   return { x, v, a: (Fd - o.k * x - o.b * v) / o.m, Fd };
 }
 
-/** Time for the free part to shrink by e⁻²¹ (≈ 10⁻⁹): the motion is then the steady one. */
-export const settleTime = (o: Forced): number => 21 / gammaOf(o);
+/**
+ * Time for the free part to shrink by e⁻²¹ (≈ 10⁻⁹): the motion is then the steady one. Its
+ * slowest mode decays at γ, or at γ − √(γ² − ω₀²) when overdamped (written without cancellation).
+ */
+export function settleTime(o: Forced): number {
+  const g = gammaOf(o);
+  const w0 = omega0(o);
+  return 21 / (g <= w0 ? g : (w0 * w0) / (g + Math.sqrt(g * g - w0 * w0)));
+}

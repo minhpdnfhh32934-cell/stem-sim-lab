@@ -3,10 +3,10 @@
  * between each answer's closed form and its numeric cross-check (issue #112).
  */
 import { toSI } from '@/core/units';
+import { compareCheck } from './tolerance';
 import type { Params, PhysicsScene } from './types';
 
-/** Largest gap allowed between an answer and its DOPRI5 check: 1e-8, relative above 1. */
-export const CHECK_TOL = 1e-8;
+export { CHECK_TOL } from './tolerance';
 
 /** Small seeded generator (the same sweep every run). */
 function seeded(seed: number): () => number {
@@ -41,7 +41,7 @@ export function sliderSweep(
   });
 }
 
-/** Answers whose check is farther than CHECK_TOL from the closed form (empty: all agree). */
+/** Answers whose check the solution panel would show as "chưa khớp" (empty: all agree). */
 export function checkMisses(
   scene: PhysicsScene,
   params: Params,
@@ -50,9 +50,7 @@ export function checkMisses(
   return scene
     .solve(params, 'vi')
     .answers.filter(
-      (a) =>
-        a.check !== undefined &&
-        !(Math.abs(a.check - a.value) <= CHECK_TOL * Math.max(1, Math.abs(a.value))),
+      (a) => a.check !== undefined && !compareCheck(a.value, a.check, a.checkTol).agrees,
     )
     .map((a) => ({ id: a.id, value: a.value, check: a.check ?? NaN }));
 }

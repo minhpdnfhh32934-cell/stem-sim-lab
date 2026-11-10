@@ -549,7 +549,7 @@ const vi = {
     agree: 'khớp, sai lệch {value}',
     disagree: 'chưa khớp, sai lệch {value}',
     engineNote:
-      'Mọi con số ở đây do chương trình tính bằng công thức; con số có ghi “khớp” đã được kiểm chứng bằng tích phân số. AI không tạo ra con số nào.',
+      'Mọi con số ở đây do chương trình tính bằng công thức. Số có ghi “khớp” đã được tính lại bằng một cách độc lập (tích phân số, đếm lại hoặc đo lại) và hai kết quả lệch nhau không quá 10⁻⁸ (tương đối), hoặc không quá mức Thẻ khoa học ghi cho phép đo đó; lệch hơn thì ghi “chưa khớp”. AI không tạo ra con số nào.',
     intervenedNote:
       'Lời giải áp dụng cho điều kiện ban đầu. Sau khi can thiệp, hãy dùng số liệu mô phỏng (tab Số liệu).',
     invalid: 'Chưa có lời giải vì thông số chưa hợp lệ.',

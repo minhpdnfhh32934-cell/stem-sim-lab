@@ -38,6 +38,16 @@ describe('forced damped oscillator (#54 item 9)', () => {
     expect(Math.abs((chk ?? 0) / steady(base).A - 1)).toBeLessThan(1e-6);
   });
 
+  it('the check waits for an overdamped slow mode and for a large free part (#119)', () => {
+    for (const o of [
+      // γ ≈ 30 > ω₀ ≈ 9,9: the free part decays at ≈ 1,6 1/s, not at γ.
+      { m: 0.15, k: 14.7, b: 9.05, F0: 0.84, W: 27.3, x0: -0.13, v0: 0 },
+      // Ω ≪ ω₀ ≈ 19 and x₀ ≈ 50·A: the free part weighs ω₀/Ω more in x² + (v/Ω)².
+      { m: 0.42, k: 155, b: 1.96, F0: 0.62, W: 1.6, x0: -0.19, v0: 0 },
+    ])
+      expect(Math.abs((numericAmplitude(o) ?? 0) / steady(o).A - 1)).toBeLessThan(1e-9);
+  });
+
   it('resonance: the peak of A(Ω) is at √(ω₀² − 2γ²), none under strong damping', () => {
     const r = resonance(base);
     expect(r?.W).toBeCloseTo(Math.sqrt(100 - 0.5), 12);
