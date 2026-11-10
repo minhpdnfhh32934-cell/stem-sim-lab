@@ -574,3 +574,45 @@ test('"Cách học": the guide opens by itself on the first visit only; the butt
   await expect(page.getByRole('dialog')).toHaveCount(0);
   await expectClean(page, w);
 });
+
+test('bench: a physics lesson sits beside the lab’s live stage (§9.7)', async ({ page }) => {
+  await page.goto('/');
+  await openStudio(page, 'Vật lý');
+  const live = page.getByRole('region', { name: 'Thí nghiệm của bài' });
+  await expect(live.getByRole('region', { name: 'Khung mô phỏng' })).toBeVisible({
+    timeout: 20_000,
+  });
+  await expect(live.locator('.stage__hud-title')).toHaveText(/Rơi tự do/, { timeout: 20_000 });
+  // The lesson panel is 416 wide; the stage runs with the bench edge's own player.
+  expect(Math.round((await page.locator('.bench-studio').boundingBox())?.width ?? 0)).toBe(416);
+  await live.getByRole('button', { name: 'Chạy (Space)' }).click();
+  await expect(live.getByRole('button', { name: 'Tạm dừng (Space)' })).toBeVisible();
+  // The lesson's own filled button stays the screen's only one; D0 is tonal here.
+  await expect(page.locator('.studio-live .bench-play')).not.toHaveCSS(
+    'background-color',
+    await page
+      .locator('.studio-flow__nav .btn--accent')
+      .evaluate((el) => getComputedStyle(el).backgroundColor),
+  );
+  // Chemistry and biology keep their bench or model in the lesson: no live stage.
+  await page.getByRole('tab', { name: 'Hóa học' }).click();
+  await expect(live).toBeHidden();
+});
+
+test('bench: Soạn bài lists the parts of the lesson beside the form (§9.7)', async ({ page }) => {
+  await page.goto('/');
+  await openStudio(page, 'Soạn bài');
+  await page.getByRole('button', { name: 'Tạo bài mới' }).first().click();
+  await page.locator('.author-pane').getByRole('button', { name: 'Vật lý', exact: true }).click();
+  const nav = page.getByRole('navigation', { name: 'Các phần của bài' });
+  await expect(nav.getByRole('link')).toHaveCount(3);
+  const navBox = await nav.boundingBox();
+  const form = await page.locator('#author-engine').boundingBox();
+  expect(Math.round(navBox?.width ?? 0)).toBe(160);
+  expect((form?.x ?? 0) - ((navBox?.x ?? 0) + (navBox?.width ?? 0))).toBeGreaterThan(0);
+  // Nothing of the form runs out of its card.
+  const overflow = await page
+    .locator('#author-engine')
+    .evaluate((el) => el.scrollWidth - el.clientWidth);
+  expect(overflow).toBeLessThanOrEqual(1);
+});

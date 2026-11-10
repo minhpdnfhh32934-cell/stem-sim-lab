@@ -236,6 +236,7 @@ const vi = {
     ai: 'Hỏi AI',
     play: 'Chạy',
     pause: 'Tạm dừng',
+    reset: 'Đặt lại',
     openScience: 'Mở Thẻ khoa học',
     darkTheme: 'Giao diện tối',
     followSystem: 'Theo máy',
@@ -1013,6 +1014,20 @@ const vi = {
     privacy: 'Em chọn khi nào chia sẻ ngữ cảnh màn hình hoặc dùng dịch vụ AI trực tuyến.',
   },
   studio: {
+    origin: {
+      engine: 'SimLab tính',
+      learner: 'Bạn ghi',
+      ai: 'AI hỗ trợ',
+      predict: 'Dự đoán',
+      measure: 'Số đo',
+      explain: 'Giải thích',
+      conclude: 'Kết luận',
+      aiNotes: 'Ghi chú do AI hỗ trợ',
+      aiCount: 'Có {n} ghi chú do AI hỗ trợ (trong báo cáo bên dưới)',
+      none: 'Chưa có',
+    },
+    liveStage: 'Thí nghiệm của bài',
+    authoringNav: 'Các phần của bài',
     title: 'Science Studio',
     subtitle:
       'Bài học có hướng dẫn: dự đoán, làm thí nghiệm, quan sát số đo, giải thích và kết luận. Mọi số liệu đều do mô phỏng tính.',

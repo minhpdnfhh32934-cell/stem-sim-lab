@@ -16,6 +16,7 @@ import { BenchLanding } from './Landing';
 import { BenchLibrary } from './Library';
 import { Notebook } from './Notebook';
 import { BenchContext } from './shellMode';
+import { useStudioSlot } from './studioSlot';
 import { keepBasicSpeedOnSteps } from './speeds';
 
 const TeacherScreen = lazy(() => import('@/teacher/screen/TeacherScreen'));
@@ -69,6 +70,13 @@ export default function BenchShell() {
           <StudioScreen />
         </Suspense>
       </main>
+      <section
+        className="bench-studio-live"
+        aria-label={t('studio.liveStage')}
+        ref={(el) => {
+          useStudioSlot.setState({ el });
+        }}
+      />
     </div>
   ) : (
     <BenchFrame />

@@ -152,7 +152,7 @@ test('enzyme 3D: forms from the model, a picked enzyme’s card, the time course
   const time = page.getByRole('slider', { name: 'Thời gian' });
   for (const t of ['0.5', '1.5', '3']) {
     await time.fill(t);
-    await expect(page.locator('.bio3d__player output')).toContainText(
+    await expect(page.locator('.bench-edge .edge-steps output')).toContainText(
       `t = ${t.replace('.', ',')} phút`,
     );
     const p = await hook<{ S: number; P: number }>(page, 'particles');
