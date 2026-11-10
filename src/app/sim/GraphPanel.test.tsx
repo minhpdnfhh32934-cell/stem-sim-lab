@@ -1,9 +1,13 @@
 import { render, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { electricField } from '@/physics/field/scenes';
 import { freeFall } from '@/physics/projectile/scenes';
 import { uniformMotion } from '@/physics/linear/scenes';
+import { hookeSpring, springPendulum } from '@/physics/spring/scenes';
 import type { Params, PhysicsScene } from '@/physics/types';
+import { BenchContext } from '@/app/bench/shellMode';
+import { useCompareStore } from './compare';
 import { GraphPanel } from './GraphPanel';
 import { useSimStore } from './simStore';
 
@@ -35,10 +39,14 @@ vi.mock('@/ui/charts/uplot', () => ({
     ),
 }));
 
-async function chartFor(scene: PhysicsScene, params: Params) {
+async function chartFor(scene: PhysicsScene, params: Params, bench = false) {
   created.length = 0;
   useSimStore.setState({ scene, params });
-  const view = render(<GraphPanel />);
+  const view = render(
+    <BenchContext.Provider value={bench}>
+      <GraphPanel />
+    </BenchContext.Provider>,
+  );
   await waitFor(() => {
     expect(created.length).toBeGreaterThan(0);
   });
@@ -74,5 +82,54 @@ describe('GraphPanel: a curve that can lie on another is dashed (UI-23)', () => 
     expect(dash[labels.indexOf('E')]).toBeNull();
     await chartFor(freeFall, { ...freeFall.defaults, g: 9.81 });
     expect((dashes.at(-1) ?? []).every((d) => d === null)).toBe(true);
+  });
+});
+
+describe('GraphPanel: phase portraits (#54 item 3)', () => {
+  it('offers the phase graphs; the phase circle only without damping; drawn on a canvas', async () => {
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(null);
+    useSimStore.setState({ scene: springPendulum, params: springPendulum.defaults });
+    const view = render(<GraphPanel />);
+    expect(view.getByRole('radio', { name: 'Vòng tròn pha' })).toBeInTheDocument();
+    await userEvent.click(view.getByRole('radio', { name: 'Không gian pha' }));
+    expect(
+      view.getByRole('img', { name: 'Không gian pha: v (m/s) theo x (m)' }),
+    ).toBeInTheDocument();
+    view.unmount();
+    useSimStore.setState({ scene: hookeSpring, params: hookeSpring.defaults });
+    const damped = render(<GraphPanel />);
+    expect(damped.getByRole('radio', { name: 'Không gian pha' })).toBeInTheDocument();
+    expect(damped.queryByRole('radio', { name: 'Vòng tròn pha' })).toBeNull();
+    damped.unmount();
+  });
+});
+
+describe('GraphPanel: a pinned run is drawn dashed beside the current one (bench only)', () => {
+  const pin = () => {
+    // A run is pinned on the open scene: opening another one clears the pin (compare.ts).
+    useSimStore.setState({ scene: freeFall, params: { ...freeFall.defaults, g: 9.81 } });
+    useCompareStore.getState().pin({
+      sceneId: freeFall.id,
+      tracks: [],
+      params: { ...freeFall.defaults, g: 9.81 },
+      run: { times: [0, 0.1], states: [Float64Array.of(0, 0, 0, 0), Float64Array.of(0, 0, 0, 0)] },
+    });
+  };
+  it('adds each shown curve again, dashed, named "đã ghim"; the classic chart does not', async () => {
+    pin();
+    const first = freeFall.graphs[0]?.series ?? [];
+    const labels = await chartFor(freeFall, { ...freeFall.defaults, g: 9.81 }, true);
+    expect(labels).toEqual([
+      't',
+      ...first.map((s) => s.label.vi),
+      ...first.map((s) => `${s.label.vi} · đã ghim`),
+    ]);
+    const dash = dashes.at(-1) ?? [];
+    expect(dash.slice(1 + first.length).every((d) => d !== null)).toBe(true);
+    expect(await chartFor(freeFall, { ...freeFall.defaults, g: 9.81 })).toEqual([
+      't',
+      ...first.map((s) => s.label.vi),
+    ]);
+    useCompareStore.getState().clear();
   });
 });

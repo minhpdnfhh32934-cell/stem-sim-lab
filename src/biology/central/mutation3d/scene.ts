@@ -179,8 +179,8 @@ export function buildMutationScene(model: MutationModel3D, o: MutationSceneOptio
   const accent = o.token(ROLES.highlight.token);
   const lookColor: Record<BracketLook, THREE.Color> = {
     changed: new THREE.Color(accent),
-    start: new THREE.Color(o.token('--conf-exact')),
-    stop: new THREE.Color(o.token('--conf-approx')),
+    start: new THREE.Color(o.token('--dna3d-start')),
+    stop: new THREE.Color(o.token('--dna3d-stop')),
     plain: new THREE.Color(o.token('--text-muted')),
   };
   const baseColor = new Map<string, THREE.Color>(
@@ -287,7 +287,7 @@ export function buildMutationScene(model: MutationModel3D, o: MutationSceneOptio
   const siteMat = solidOwn(accent, { roughness: 0.4 });
   const siteRod = kit.mesh(shapes.rod, siteMat);
   // ── End cap of a chain cut short by a premature stop: a flat disc ───────────────────────
-  const capMat = solidOwn(o.token('--conf-approx'), { roughness: 0.4, clearcoat: 0.4 });
+  const capMat = solidOwn(o.token('--dna3d-stop'), { roughness: 0.4, clearcoat: 0.4 });
   const endCap = kit.mesh(kit.cylinder(), capMat);
   endCap.visible = false;
   // ── Selection ring ─────────────────────────────────────────────────────────────────────

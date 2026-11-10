@@ -1,0 +1,3231 @@
+{
+  "groups": [
+    "qwen3.5-9b/base/server/0",
+    "qwen3.5-9b/trained/server/0"
+  ],
+  "summary": {
+    "qwen3.5-9b/base/server/0": {
+      "answers": 84,
+      "correctness": 1.8095238095238095,
+      "fullyCorrect": 0.8571428571428571,
+      "clarity": 4.4523809523809526,
+      "completeness": 4.119047619047619,
+      "inventedNumbers": 0.14285714285714285,
+      "endorsesError": 0,
+      "languageProblem": 0,
+      "asksMissing": 1
+    },
+    "qwen3.5-9b/trained/server/0": {
+      "answers": 84,
+      "correctness": 1.9285714285714286,
+      "fullyCorrect": 0.9523809523809523,
+      "clarity": 4.821428571428571,
+      "completeness": 4.130952380952381,
+      "inventedNumbers": 0.09523809523809523,
+      "endorsesError": 0.023809523809523808,
+      "languageProblem": 0,
+      "asksMissing": 1
+    }
+  },
+  "agreement": {
+    "pairs": 84,
+    "correctnessExact": 1,
+    "correctnessKappa": 1,
+    "clarityMeanAbsDiff": 0.13095238095238096,
+    "completenessMeanAbsDiff": 0.08333333333333333
+  },
+  "rows": [
+    {
+      "id": "P1",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "physics",
+      "kind": "concept"
+    },
+    {
+      "id": "P1",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "physics",
+      "kind": "concept"
+    },
+    {
+      "id": "P2",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 3,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": true,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "Asserts g is independent of mass without a = P/m; 10 m appears only in the follow-up exercise.",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "physics",
+      "kind": "misconception"
+    },
+    {
+      "id": "P2",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 3,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": true,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "Asserts g is independent of mass without a = P/m; 5 m appears only in the follow-up exercise.",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "physics",
+      "kind": "misconception"
+    },
+    {
+      "id": "P3",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 3,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "physics",
+      "kind": "problem"
+    },
+    {
+      "id": "P3",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "physics",
+      "kind": "problem"
+    },
+    {
+      "id": "P4",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 3,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "Result is right but the equation is never actually solved.",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "physics",
+      "kind": "problem"
+    },
+    {
+      "id": "P4",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "physics",
+      "kind": "problem"
+    },
+    {
+      "id": "P5",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 5,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "physics",
+      "kind": "missing-data"
+    },
+    {
+      "id": "P5",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "physics",
+      "kind": "missing-data"
+    },
+    {
+      "id": "P6",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "physics",
+      "kind": "misconception"
+    },
+    {
+      "id": "P6",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "physics",
+      "kind": "misconception"
+    },
+    {
+      "id": "P7",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 4,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "physics",
+      "kind": "concept"
+    },
+    {
+      "id": "P7",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 4,
+      "teaching": 5,
+      "flags": {
+        "invented_numbers": true,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok; 10 and 20 km/h appear only in the check question.",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "physics",
+      "kind": "concept"
+    },
+    {
+      "id": "P8",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 3,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "physics",
+      "kind": "problem"
+    },
+    {
+      "id": "P8",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 3,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "physics",
+      "kind": "problem"
+    },
+    {
+      "id": "P9",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": true,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok; l = 1 m appears only in the follow-up exercise.",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "physics",
+      "kind": "misconception"
+    },
+    {
+      "id": "P9",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "physics",
+      "kind": "misconception"
+    },
+    {
+      "id": "P10",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "physics",
+      "kind": "feedback"
+    },
+    {
+      "id": "P10",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 3,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "physics",
+      "kind": "feedback"
+    },
+    {
+      "id": "P11",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": true,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "ok; 5 s and 2 m/s2 are only sample inputs and no result is computed.",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "physics",
+      "kind": "missing-data"
+    },
+    {
+      "id": "P11",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 5,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "physics",
+      "kind": "missing-data"
+    },
+    {
+      "id": "P12",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "physics",
+      "kind": "missing-data"
+    },
+    {
+      "id": "P12",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "physics",
+      "kind": "missing-data"
+    },
+    {
+      "id": "P13",
+      "code": "A",
+      "correctness": 0,
+      "clarity": 4,
+      "completeness": 2,
+      "teaching": 2,
+      "flags": {
+        "invented_numbers": true,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "Final answer 100 m is wrong (correct 50 m) and no calculation is shown.",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "physics",
+      "kind": "steps"
+    },
+    {
+      "id": "P13",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "physics",
+      "kind": "steps"
+    },
+    {
+      "id": "P14",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "physics",
+      "kind": "trap"
+    },
+    {
+      "id": "P14",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": true,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok; 1 s appears only in the follow-up exercise.",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "physics",
+      "kind": "trap"
+    },
+    {
+      "id": "C1",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "chemistry",
+      "kind": "tool"
+    },
+    {
+      "id": "C1",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "chemistry",
+      "kind": "tool"
+    },
+    {
+      "id": "C2",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "chemistry",
+      "kind": "tool"
+    },
+    {
+      "id": "C2",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "chemistry",
+      "kind": "tool"
+    },
+    {
+      "id": "C3",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 4,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "chemistry",
+      "kind": "concept"
+    },
+    {
+      "id": "C3",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "chemistry",
+      "kind": "concept"
+    },
+    {
+      "id": "C4",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 5,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "chemistry",
+      "kind": "concept"
+    },
+    {
+      "id": "C4",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 5,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok; the acid and base ranges are worded so they overlap at 7.",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "chemistry",
+      "kind": "concept"
+    },
+    {
+      "id": "C5",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "chemistry",
+      "kind": "problem"
+    },
+    {
+      "id": "C5",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "chemistry",
+      "kind": "problem"
+    },
+    {
+      "id": "C6",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "chemistry",
+      "kind": "missing-data"
+    },
+    {
+      "id": "C6",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 5,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "chemistry",
+      "kind": "missing-data"
+    },
+    {
+      "id": "C7",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "chemistry",
+      "kind": "misconception"
+    },
+    {
+      "id": "C7",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "chemistry",
+      "kind": "misconception"
+    },
+    {
+      "id": "C8",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok; the hydrate-complex term and the energy-balance claim are loose.",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "chemistry",
+      "kind": "concept"
+    },
+    {
+      "id": "C8",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "chemistry",
+      "kind": "concept"
+    },
+    {
+      "id": "C9",
+      "code": "A",
+      "correctness": 1,
+      "clarity": 3,
+      "completeness": 4,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "Says it cannot be balanced but the reasons are muddled: compares H count with O count and implies H and O can convert under special conditions.",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "chemistry",
+      "kind": "tool"
+    },
+    {
+      "id": "C9",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "chemistry",
+      "kind": "tool"
+    },
+    {
+      "id": "C10",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "chemistry",
+      "kind": "feedback"
+    },
+    {
+      "id": "C10",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 5,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "chemistry",
+      "kind": "feedback"
+    },
+    {
+      "id": "C11",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 5,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "chemistry",
+      "kind": "missing-data"
+    },
+    {
+      "id": "C11",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 5,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "chemistry",
+      "kind": "missing-data"
+    },
+    {
+      "id": "C12",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 5,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "chemistry",
+      "kind": "missing-data"
+    },
+    {
+      "id": "C12",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 5,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "chemistry",
+      "kind": "missing-data"
+    },
+    {
+      "id": "C13",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 3,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "Right result but no written equation and no check question in a step-by-step request.",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "chemistry",
+      "kind": "steps"
+    },
+    {
+      "id": "C13",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "chemistry",
+      "kind": "steps"
+    },
+    {
+      "id": "C14",
+      "code": "A",
+      "correctness": 1,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": true,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "Conclusion 1 M is right but moles are wrong: 1 + 1 = 2 mol instead of 0,1 + 0,1 = 0,2 mol.",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "chemistry",
+      "kind": "trap"
+    },
+    {
+      "id": "C14",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "chemistry",
+      "kind": "trap"
+    },
+    {
+      "id": "B1",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 3,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "biology",
+      "kind": "concept"
+    },
+    {
+      "id": "B1",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 3,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "biology",
+      "kind": "concept"
+    },
+    {
+      "id": "B2",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "biology",
+      "kind": "concept"
+    },
+    {
+      "id": "B2",
+      "code": "B",
+      "correctness": 1,
+      "clarity": 4,
+      "completeness": 5,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "Four phases are right but it says mitosis starts with chromosomes gathering at the cell centre, which is metaphase.",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "biology",
+      "kind": "concept"
+    },
+    {
+      "id": "B3",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 4,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "biology",
+      "kind": "concept"
+    },
+    {
+      "id": "B3",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "biology",
+      "kind": "concept"
+    },
+    {
+      "id": "B4",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 3,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "biology",
+      "kind": "concept"
+    },
+    {
+      "id": "B4",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok; the mechanism wording about cell fibres is vague.",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "biology",
+      "kind": "concept"
+    },
+    {
+      "id": "B5",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "biology",
+      "kind": "problem"
+    },
+    {
+      "id": "B5",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "biology",
+      "kind": "problem"
+    },
+    {
+      "id": "B6",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 3,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "biology",
+      "kind": "concept"
+    },
+    {
+      "id": "B6",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 3,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "biology",
+      "kind": "concept"
+    },
+    {
+      "id": "B7",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 5,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "biology",
+      "kind": "missing-data"
+    },
+    {
+      "id": "B7",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 4,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "ok; number of divisions is named as missing though it does not affect the per-cell count.",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "biology",
+      "kind": "missing-data"
+    },
+    {
+      "id": "B8",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 3,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "biology",
+      "kind": "concept"
+    },
+    {
+      "id": "B8",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 3,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "biology",
+      "kind": "concept"
+    },
+    {
+      "id": "B9",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok; overstates that most mutations are harmful and only a few are neutral.",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "biology",
+      "kind": "misconception"
+    },
+    {
+      "id": "B9",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok; overstates that most mutations are harmful.",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "biology",
+      "kind": "misconception"
+    },
+    {
+      "id": "B10",
+      "code": "A",
+      "correctness": 0,
+      "clarity": 4,
+      "completeness": 1,
+      "teaching": 2,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": true,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "Confirms the learner's wrong 23; mitosis keeps 2n = 46.",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "biology",
+      "kind": "feedback"
+    },
+    {
+      "id": "B10",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok; a stray GHI CHU label leaks into the explanation.",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "biology",
+      "kind": "feedback"
+    },
+    {
+      "id": "B11",
+      "code": "A",
+      "correctness": 1,
+      "clarity": 4,
+      "completeness": 5,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "Asks for composition but wrongly says the covalent bond count could give the hydrogen bond count.",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "biology",
+      "kind": "missing-data"
+    },
+    {
+      "id": "B11",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 5,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "biology",
+      "kind": "missing-data"
+    },
+    {
+      "id": "B12",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 5,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "biology",
+      "kind": "missing-data"
+    },
+    {
+      "id": "B12",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 5,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "biology",
+      "kind": "missing-data"
+    },
+    {
+      "id": "B13",
+      "code": "A",
+      "correctness": 0,
+      "clarity": 3,
+      "completeness": 3,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": true,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "Final answer 3600 is wrong (correct 3120) and the bond counting is confused.",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "biology",
+      "kind": "steps"
+    },
+    {
+      "id": "B13",
+      "code": "B",
+      "correctness": 1,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": true,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "Method and A, G counts are right but the last sum is wrong: 3360 instead of 3120.",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "biology",
+      "kind": "steps"
+    },
+    {
+      "id": "B14",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "biology",
+      "kind": "trap"
+    },
+    {
+      "id": "B14",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j0",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "biology",
+      "kind": "trap"
+    },
+    {
+      "id": "P1",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "physics",
+      "kind": "concept"
+    },
+    {
+      "id": "P1",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "physics",
+      "kind": "concept"
+    },
+    {
+      "id": "P2",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 3,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": true,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "No science error but a = P/m = g is not shown; the follow-up exercise adds a new value (5 m).",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "physics",
+      "kind": "misconception"
+    },
+    {
+      "id": "P2",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 3,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": true,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "Asserts g is mass-independent without a = P/m; the follow-up exercise adds a new value (10 m).",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "physics",
+      "kind": "misconception"
+    },
+    {
+      "id": "P3",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "physics",
+      "kind": "problem"
+    },
+    {
+      "id": "P3",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 3,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "physics",
+      "kind": "problem"
+    },
+    {
+      "id": "P4",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 4,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "Result is right but the solve for t and the square root are not shown.",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "physics",
+      "kind": "problem"
+    },
+    {
+      "id": "P4",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "physics",
+      "kind": "problem"
+    },
+    {
+      "id": "P5",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 5,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "physics",
+      "kind": "missing-data"
+    },
+    {
+      "id": "P5",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "physics",
+      "kind": "missing-data"
+    },
+    {
+      "id": "P6",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "physics",
+      "kind": "misconception"
+    },
+    {
+      "id": "P6",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "physics",
+      "kind": "misconception"
+    },
+    {
+      "id": "P7",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 4,
+      "teaching": 5,
+      "flags": {
+        "invented_numbers": true,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "No science error; the check question adds new values (10 and 20 km/h).",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "physics",
+      "kind": "concept"
+    },
+    {
+      "id": "P7",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 4,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "physics",
+      "kind": "concept"
+    },
+    {
+      "id": "P8",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 3,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "physics",
+      "kind": "problem"
+    },
+    {
+      "id": "P8",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 3,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "physics",
+      "kind": "problem"
+    },
+    {
+      "id": "P9",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 3,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": true,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "No science error but no reason why m cancels; the follow-up exercise adds a new value (1 m).",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "physics",
+      "kind": "misconception"
+    },
+    {
+      "id": "P9",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "physics",
+      "kind": "misconception"
+    },
+    {
+      "id": "P10",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "physics",
+      "kind": "feedback"
+    },
+    {
+      "id": "P10",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 3,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "physics",
+      "kind": "feedback"
+    },
+    {
+      "id": "P11",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 5,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "physics",
+      "kind": "missing-data"
+    },
+    {
+      "id": "P11",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": true,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "No numeric result; illustrative values (5 s, 2 m/s2) are not in the question.",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "physics",
+      "kind": "missing-data"
+    },
+    {
+      "id": "P12",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "physics",
+      "kind": "missing-data"
+    },
+    {
+      "id": "P12",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "physics",
+      "kind": "missing-data"
+    },
+    {
+      "id": "P13",
+      "code": "A",
+      "correctness": 0,
+      "clarity": 4,
+      "completeness": 2,
+      "teaching": 2,
+      "flags": {
+        "invented_numbers": true,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "Final answer 100 m is wrong (correct is 50 m) and no calculation is shown.",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "physics",
+      "kind": "steps"
+    },
+    {
+      "id": "P13",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "physics",
+      "kind": "steps"
+    },
+    {
+      "id": "P14",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": true,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "No science error; the follow-up exercise adds a new value (1 s).",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "physics",
+      "kind": "trap"
+    },
+    {
+      "id": "P14",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "physics",
+      "kind": "trap"
+    },
+    {
+      "id": "C1",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "chemistry",
+      "kind": "tool"
+    },
+    {
+      "id": "C1",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "chemistry",
+      "kind": "tool"
+    },
+    {
+      "id": "C2",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "chemistry",
+      "kind": "tool"
+    },
+    {
+      "id": "C2",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "chemistry",
+      "kind": "tool"
+    },
+    {
+      "id": "C3",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "chemistry",
+      "kind": "concept"
+    },
+    {
+      "id": "C3",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 4,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "chemistry",
+      "kind": "concept"
+    },
+    {
+      "id": "C4",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "chemistry",
+      "kind": "concept"
+    },
+    {
+      "id": "C4",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "chemistry",
+      "kind": "concept"
+    },
+    {
+      "id": "C5",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "chemistry",
+      "kind": "problem"
+    },
+    {
+      "id": "C5",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 5,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "chemistry",
+      "kind": "problem"
+    },
+    {
+      "id": "C6",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 5,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "chemistry",
+      "kind": "missing-data"
+    },
+    {
+      "id": "C6",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 5,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "chemistry",
+      "kind": "missing-data"
+    },
+    {
+      "id": "C7",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "chemistry",
+      "kind": "misconception"
+    },
+    {
+      "id": "C7",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "chemistry",
+      "kind": "misconception"
+    },
+    {
+      "id": "C8",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "chemistry",
+      "kind": "concept"
+    },
+    {
+      "id": "C8",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "chemistry",
+      "kind": "concept"
+    },
+    {
+      "id": "C9",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "chemistry",
+      "kind": "tool"
+    },
+    {
+      "id": "C9",
+      "code": "B",
+      "correctness": 1,
+      "clarity": 3,
+      "completeness": 4,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "Right verdict but the reason compares 2 H with 2 O as if they differed, and suggests H and O can convert.",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "chemistry",
+      "kind": "tool"
+    },
+    {
+      "id": "C10",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "chemistry",
+      "kind": "feedback"
+    },
+    {
+      "id": "C10",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 5,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "chemistry",
+      "kind": "feedback"
+    },
+    {
+      "id": "C11",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 5,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "chemistry",
+      "kind": "missing-data"
+    },
+    {
+      "id": "C11",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "chemistry",
+      "kind": "missing-data"
+    },
+    {
+      "id": "C12",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "chemistry",
+      "kind": "missing-data"
+    },
+    {
+      "id": "C12",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 5,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "chemistry",
+      "kind": "missing-data"
+    },
+    {
+      "id": "C13",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 3,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "Result is right but the reaction equation is never written despite the step-by-step request.",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "chemistry",
+      "kind": "steps"
+    },
+    {
+      "id": "C13",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "chemistry",
+      "kind": "steps"
+    },
+    {
+      "id": "C14",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "chemistry",
+      "kind": "trap"
+    },
+    {
+      "id": "C14",
+      "code": "B",
+      "correctness": 1,
+      "clarity": 4,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": true,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "Right 1 M but the mole count is wrong: 1 mol + 1 mol instead of 0.1 + 0.1 = 0.2 mol.",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "chemistry",
+      "kind": "trap"
+    },
+    {
+      "id": "B1",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 3,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "biology",
+      "kind": "concept"
+    },
+    {
+      "id": "B1",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 3,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "biology",
+      "kind": "concept"
+    },
+    {
+      "id": "B2",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "biology",
+      "kind": "concept"
+    },
+    {
+      "id": "B2",
+      "code": "B",
+      "correctness": 1,
+      "clarity": 4,
+      "completeness": 5,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "Four phases are right but it says the process begins with chromosomes gathering at the cell centre.",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "biology",
+      "kind": "concept"
+    },
+    {
+      "id": "B3",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 4,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "Arrangement is right but ease of observation is given as a reason, which is a non sequitur.",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "biology",
+      "kind": "concept"
+    },
+    {
+      "id": "B3",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "biology",
+      "kind": "concept"
+    },
+    {
+      "id": "B4",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 3,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "No contrast with animal cells and no reason given (rigid cell wall).",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "biology",
+      "kind": "concept"
+    },
+    {
+      "id": "B4",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "biology",
+      "kind": "concept"
+    },
+    {
+      "id": "B5",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "biology",
+      "kind": "problem"
+    },
+    {
+      "id": "B5",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "biology",
+      "kind": "problem"
+    },
+    {
+      "id": "B6",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "biology",
+      "kind": "concept"
+    },
+    {
+      "id": "B6",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "biology",
+      "kind": "concept"
+    },
+    {
+      "id": "B7",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 5,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "biology",
+      "kind": "missing-data"
+    },
+    {
+      "id": "B7",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 5,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "biology",
+      "kind": "missing-data"
+    },
+    {
+      "id": "B8",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 3,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "biology",
+      "kind": "concept"
+    },
+    {
+      "id": "B8",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "biology",
+      "kind": "concept"
+    },
+    {
+      "id": "B9",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "biology",
+      "kind": "misconception"
+    },
+    {
+      "id": "B9",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "biology",
+      "kind": "misconception"
+    },
+    {
+      "id": "B10",
+      "code": "A",
+      "correctness": 0,
+      "clarity": 3,
+      "completeness": 1,
+      "teaching": 2,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": true,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "Confirms the wrong 23; mitosis keeps 2n = 46.",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "biology",
+      "kind": "feedback"
+    },
+    {
+      "id": "B10",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 4,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "biology",
+      "kind": "feedback"
+    },
+    {
+      "id": "B11",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 5,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "biology",
+      "kind": "missing-data"
+    },
+    {
+      "id": "B11",
+      "code": "B",
+      "correctness": 1,
+      "clarity": 4,
+      "completeness": 5,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "Wrongly says the number of covalent bonds between nucleotides would allow the calculation.",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "biology",
+      "kind": "missing-data"
+    },
+    {
+      "id": "B12",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 5,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "biology",
+      "kind": "missing-data"
+    },
+    {
+      "id": "B12",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 5,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": true,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "biology",
+      "kind": "missing-data"
+    },
+    {
+      "id": "B13",
+      "code": "A",
+      "correctness": 1,
+      "clarity": 5,
+      "completeness": 4,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": true,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "Method is right but 2x480 + 3x720 is 3120, not 3360.",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "biology",
+      "kind": "steps"
+    },
+    {
+      "id": "B13",
+      "code": "B",
+      "correctness": 0,
+      "clarity": 3,
+      "completeness": 3,
+      "teaching": 2,
+      "flags": {
+        "invented_numbers": true,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "Final answer 3600 is wrong (correct is 3120) and the bond counting is incoherent.",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "biology",
+      "kind": "steps"
+    },
+    {
+      "id": "B14",
+      "code": "A",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/trained/server/0",
+      "subject": "biology",
+      "kind": "trap"
+    },
+    {
+      "id": "B14",
+      "code": "B",
+      "correctness": 2,
+      "clarity": 5,
+      "completeness": 5,
+      "teaching": 4,
+      "flags": {
+        "invented_numbers": false,
+        "endorses_error": false,
+        "asks_for_missing_data": false,
+        "language_problem": false
+      },
+      "note": "ok",
+      "judge": "j1",
+      "group": "qwen3.5-9b/base/server/0",
+      "subject": "biology",
+      "kind": "trap"
+    }
+  ]
+}

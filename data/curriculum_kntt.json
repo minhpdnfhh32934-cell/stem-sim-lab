@@ -2372,6 +2372,32 @@
    "review_status": "pending"
   },
   {
+   "topic": "interference",
+   "subject": "physics",
+   "grade": 11,
+   "book": "VL11",
+   "chapter": "Chương II. Sóng",
+   "lessons": [
+    12
+   ],
+   "reason": "Tên Bài 12: giao thoa sóng (cảnh có hai nguồn cùng pha trên mặt nước; phần phách là mở rộng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "dcCircuit",
+   "subject": "physics",
+   "grade": 11,
+   "book": "VL11",
+   "chapter": "Chương IV. Dòng điện. Mạch điện",
+   "lessons": [
+    23,
+    24,
+    25
+   ],
+   "reason": "Tên Bài 23–25: điện trở, định luật Ohm, nguồn điện, năng lượng và công suất điện (cảnh có nguồn E, r và 1–3 điện trở).",
+   "review_status": "pending"
+  },
+  {
    "topic": "standingWave",
    "subject": "physics",
    "grade": 11,
@@ -2395,6 +2421,54 @@
     18
    ],
    "reason": "Tên Bài 16–18: lực tương tác giữa các điện tích, khái niệm điện trường, điện trường đều.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "cellToDna",
+   "subject": "biology",
+   "grade": 10,
+   "book": "SH10",
+   "chapter": "Chương 2. Cấu trúc tế bào",
+   "lessons": [
+    8
+   ],
+   "reason": "Tên Bài 8: tế bào nhân thực (cấp tế bào và nhân của bài phóng to). Không xếp Bài 7 (tế bào nhân sơ): bài chỉ có tế bào nhân thực, dù thang kích thước H 7.1 của Bài 7 là một nguồn số liệu.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "cellToDna",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 2. Di truyền nhiễm sắc thể",
+   "lessons": [
+    7
+   ],
+   "reason": "Tên Bài 7: cấu trúc và chức năng của nhiễm sắc thể (cấp NST kép, sợi nhiễm sắc, nucleosome, DNA).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "crystalStructure",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 6. Đại cương về kim loại",
+   "lessons": [
+    18
+   ],
+   "reason": "Tên Bài 18: cấu tạo và liên kết trong tinh thể kim loại (cảnh có thêm tinh thể NaCl; Bài 11 Hoá học 10 tên là liên kết ion, không nêu tinh thể nên không xếp).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "forcedOscillation",
+   "subject": "physics",
+   "grade": 11,
+   "book": "VL11",
+   "chapter": "Chương I. Dao động",
+   "lessons": [
+    6
+   ],
+   "reason": "Tên Bài 6: dao động tắt dần, dao động cưỡng bức, hiện tượng cộng hưởng (cảnh lò xo nằm ngang có cản và ngoại lực điều hoà).",
    "review_status": "pending"
   }
  ],
@@ -2472,9 +2546,27 @@
    "review_status": "pending"
   },
   {
+   "topic": "acidBaseTitration",
+   "subject": "chemistry",
+   "reason": "Tên Bài 2 là cân bằng trong dung dịch nước, không nêu chuẩn độ acid – base. Bài có thể liên quan: HH11 Bài 2.",
+   "review_status": "pending"
+  },
+  {
    "topic": "geneticDrift",
    "subject": "biology",
    "reason": "Tên Bài 18, 21 là di truyền học quần thể và học thuyết tiến hoá tổng hợp hiện đại, không nêu phiêu bạt di truyền. Bài có thể liên quan: SH12 Bài 18, 21.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "keplerOrbit",
+   "subject": "physics",
+   "reason": "Không bài nào trong ba cuốn Vật lí có tên về định luật Kepler; chuyên đề học tập không thuộc 9 cuốn nên giáo viên kiểm. Bài có thể liên quan: — (ngoài 9 cuốn; có thể thuộc chuyên đề Vật lí 11 “Trường hấp dẫn”).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "fourierSeries",
+   "subject": "physics",
+   "reason": "Không bài nào có tên về hoạ âm hay chuỗi Fourier; hoạ âm của dây chỉ là một phần của Bài 13 (sóng dừng). Bài có thể liên quan: VL11 Bài 13 (mở rộng).",
    "review_status": "pending"
   }
  ]

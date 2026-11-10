@@ -708,7 +708,7 @@
   background: var(--chart-3);
 }
 .rx-swatch--partial {
-  background: var(--accent);
+  background: var(--stage-accent);
   opacity: 0.6;
 }
 .rx-player {
@@ -924,6 +924,41 @@
   display: inline-flex;
   gap: 4px;
 }
+.eq-energy {
+  max-width: 30rem;
+  margin: var(--space-3) 0 var(--space-2);
+}
+.eq-energy__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+.eq-energy__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.eq-energy__axis,
+.eq-energy__span {
+  fill: none;
+  stroke: var(--text-muted);
+  stroke-width: 1;
+}
+.eq-energy__ref {
+  fill: none;
+  stroke: var(--border-strong);
+  stroke-dasharray: 4 3;
+}
+.eq-energy__curve {
+  fill: none;
+  stroke: var(--subject-chemistry);
+  stroke-width: 2.5;
+}
+.eq-energy__text {
+  fill: var(--text-muted);
+  font-size: 10px;
+}
 @media (prefers-reduced-motion: reduce) {
   .eq-bar__fill {
     transition: none;
@@ -976,4 +1011,94 @@
       auto repeat(7, minmax(var(--target), auto)) 8px
       repeat(2, minmax(var(--target), auto));
   }
+}
+
+/* ───── Acid–base titration ───── */
+.tit-stage {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+}
+.tit-figure {
+  flex: none;
+  width: min(14rem, 40%);
+  height: auto;
+}
+.tit-glass {
+  fill: none;
+  stroke: var(--border-strong);
+  stroke-width: 2;
+}
+.tit-beaker {
+  stroke-linejoin: round;
+}
+.tit-burette-liquid {
+  fill: var(--accent-soft);
+}
+.tit-stopcock {
+  fill: var(--text-muted);
+}
+.tit-water {
+  fill: var(--bg-panel-2);
+}
+.tit-solution {
+  opacity: 0.85;
+  transition: fill var(--dur-med) var(--ease-out);
+}
+.tit-label {
+  fill: var(--text-muted);
+  font-size: 11px;
+}
+.tit-readout {
+  flex: 1 1 18rem;
+  min-width: 0;
+  font-size: var(--text-content);
+}
+.tit-readout p {
+  margin: 0 0 var(--space-2);
+}
+.tit-ph {
+  font-size: var(--text-xl);
+}
+.tit-volume {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-top: var(--space-3);
+}
+.tit-volume input[type='range'] {
+  width: 100%;
+  min-height: var(--target);
+  accent-color: var(--accent);
+}
+.tit-nudge {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.tit-form .number-field {
+  flex: none;
+  width: 6.5rem;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tit-solution {
+    transition: none;
+  }
+}
+
+/* "Lọc theo nhóm chức" (Phân tử 3D, #54 item 11). */
+.mol-groups {
+  display: grid;
+  gap: var(--space-2);
+}
+.mol-groups label {
+  display: grid;
+  gap: var(--space-1);
+}
+.mol-groups select {
+  min-height: var(--target);
+}
+.mol-groups__list {
+  flex-wrap: wrap;
 }

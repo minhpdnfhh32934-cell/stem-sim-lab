@@ -210,6 +210,8 @@ function solve(p: Params, locale: Locale): Solution {
   const P = q.m1 * q.v1 + q.m2 * q.v2;
   const K0 = kinetic(q.m1, o.v1) + kinetic(q.m2, o.v2);
   const K1 = kinetic(q.m1, o.after.v1) + kinetic(q.m2, o.after.v2);
+  // An elastic collision loses nothing: its ~1e-15 J is rounding, which a learner must not read.
+  const dK = Math.abs(K1 - K0) < 1e-9 * K0 ? 0 : K1 - K0;
   steps.push({
     text: L(
       'Hệ kín theo phương ngang: động lượng bảo toàn.',
@@ -255,7 +257,7 @@ function solve(p: Params, locale: Locale): Solution {
   }
   steps.push({
     text: L('Động năng trước và sau va chạm:', 'Kinetic energy before and after:'),
-    tex: `W_{\\text{đ}} = ${Q(K0, 'J')} \\;\\to\\; W_{\\text{đ}}' = ${Q(K1, 'J')}\\quad (\\Delta W_{\\text{đ}} = ${Q(K1 - K0, 'J')})`,
+    tex: `W_{\\text{đ}} = ${Q(K0, 'J')} \\;\\to\\; W_{\\text{đ}}' = ${Q(K1, 'J')}\\quad (\\Delta W_{\\text{đ}} = ${Q(dK, 'J')})`,
   });
   if (q.e < 1 && q.e > 0)
     notes.push(

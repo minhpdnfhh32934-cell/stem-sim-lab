@@ -45,16 +45,19 @@ export const CATALOG: Record<Subject, ChapterEntry[]> = {
     ]),
     chapter('dynamics', ['newtonLaws', 'inclinedPlane', 'pulley', 'hookeSpring']),
     chapter('energyMomentum', ['energyConservation', 'collisions']),
-    chapter('oscillations', ['springPendulum', 'simplePendulum']),
+    chapter('oscillations', ['springPendulum', 'simplePendulum', 'forcedOscillation']),
     chapter('circularMotion', ['uniformCircularMotion']),
-    chapter('waves', ['standingWave']),
+    chapter('waves', ['interference', 'standingWave', 'fourierSeries']),
     chapter('electricField', ['electricField']),
+    chapter('dcCircuit', ['dcCircuit']),
+    chapter('gravitation', ['keplerOrbit']),
   ],
   chemistry: [
     chapter('atoms', ['periodicTable', 'electronConfiguration', 'bohrModel', 'orbitals']),
     chapter('molecules', ['molecule3d', 'vsepr', 'bondPolarity']),
-    chapter('reactions', ['reactionLibrary', 'equationBalancing']),
+    chapter('reactions', ['reactionLibrary', 'equationBalancing', 'acidBaseTitration']),
     chapter('particles', ['collisionTheory', 'maxwellBoltzmann', 'chemicalEquilibrium']),
+    chapter('crystals', ['crystalStructure']),
   ],
   biology: [
     chapter('cell', ['mitosis', 'meiosis']),
@@ -62,7 +65,7 @@ export const CATALOG: Record<Subject, ChapterEntry[]> = {
     chapter('genetics', ['mendel', 'hardyWeinberg', 'geneticDrift']),
     chapter('ecology', ['logisticGrowth', 'lotkaVolterra']),
     chapter('cellPhysiology', ['michaelisMenten', 'diffusionOsmosis']),
-    chapter('cellStructure', ['cellStructure']),
+    chapter('cellStructure', ['cellStructure', 'cellToDna']),
   ],
 };
 

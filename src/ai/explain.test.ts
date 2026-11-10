@@ -3,7 +3,7 @@ import { fromSI, unitLabel } from '@/core/units';
 import { MODE as FIELD_MODE } from '@/physics/field/model';
 import { loadScene, sceneIds } from '@/physics/registry';
 import type { Solution } from '@/physics/types';
-import { allowedNumbers, explainSolution, unknownNumbers } from './explain';
+import { allowedNumbers, explainSolution, unknownNumbers, withoutCopiedSteps } from './explain';
 import { formatNumber } from '@/app/i18n';
 import { texNum, texNumbers, texTokens } from '@/physics/common/tex';
 import { numberTokens, numbersIn } from './numbers';
@@ -86,6 +86,27 @@ describe('numbers written in an explanation', () => {
         ).not.toEqual([]);
       }
     }
+  });
+
+  it('a formula copied whole from a step passes; any other number around it still does not', async () => {
+    let copies = 0;
+    for (const id of sceneIds()) {
+      const sol = await defaultSolution(id);
+      const allowed = allowedNumbers(sol, '');
+      const check = (text: string) => unknownNumbers(withoutCopiedSteps(text, sol), allowed);
+      for (const { tex } of sol.steps) {
+        if (!tex) continue;
+        copies += 1;
+        expect(check(`Ta có $${tex}$ nên kết quả đúng.`), `${id}: ${tex}`).toEqual([]);
+        // An invented number beside the copy, or a formula that is not an exact copy.
+        expect(
+          check(`Ta có $${tex}$ và $t = 7654{.}321$.`).length,
+          `${id}: ${tex}`,
+        ).toBeGreaterThan(0);
+        expect(withoutCopiedSteps(`$${tex} + 1$`, sol)).toBe(`$${tex} + 1$`);
+      }
+    }
+    expect(copies).toBeGreaterThan(20);
   });
 
   it('accepts nothing main refuses, except numbers the steps really print (every scene)', async () => {

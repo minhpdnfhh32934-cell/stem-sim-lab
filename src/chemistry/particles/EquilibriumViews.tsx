@@ -13,7 +13,8 @@ import {
   Snowflake,
   TriangleAlert,
 } from 'lucide-react';
-import { useEffect, useMemo } from 'react';
+import { useContext, useEffect, useMemo } from 'react';
+import { BenchContext } from '@/app/bench/shellMode';
 import { formatNumber } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
@@ -22,6 +23,8 @@ import type { ScienceCardData } from '@/science-card/types';
 import { XYChart } from '@/ui/charts/XYChart';
 import { IconButton } from '@/ui/IconButton';
 import { CSRC, L, usePublishCard } from '../common';
+import { EnergyDiagram } from './EnergyDiagram';
+import { energyLevels } from './energyLevels';
 import { SYSTEMS, equationOf, shiftDirection, speciesOf } from './equilibrium';
 import {
   EA_MAX_KJ,
@@ -49,6 +52,10 @@ const CARD: ScienceCardData = {
     },
     {
       tex: '\\ln\\dfrac{K_2}{K_1} = -\\dfrac{\\Delta H}{R}\\left(\\dfrac{1}{T_2}-\\dfrac{1}{T_1}\\right),\\ \\Delta H = E_{a,t}-E_{a,n}',
+      label: L(
+        'Eₐ,t, Eₐ,n: năng lượng hoạt hóa của phản ứng thuận, nghịch',
+        'Eₐ,t, Eₐ,n: activation energies of the forward and reverse reactions',
+      ),
     },
   ],
   assumptions: [
@@ -64,6 +71,14 @@ const CARD: ScienceCardData = {
       'Nhiệt độ thay đổi tức thời; bỏ qua nhiệt của phản ứng làm đổi T.',
       'Temperature changes instantly; reaction heat does not change T.',
     ),
+    L(
+      'Giản đồ năng lượng: ba mức chất đầu (0), trạng thái chuyển tiếp (Eₐ thuận) và sản phẩm (ΔH) tính từ Eₐ người học nhập và vẽ đúng tỉ lệ với nhau; hình dạng đường cong giữa chúng là minh họa định tính, không phải tọa độ phản ứng thật.',
+      'Energy diagram: the three levels reactants (0), transition state (forward Eₐ) and products (ΔH) are computed from the Eₐ the learner typed and drawn to scale with each other; the curve shape between them is a qualitative illustration, not a real reaction coordinate.',
+    ),
+    L(
+      'ΔH ở đây là Eₐ(thuận) − Eₐ(nghịch), coi như không đổi theo nhiệt độ. Với K theo nồng độ của khí lí tưởng, hiệu này đúng ra là ΔU; khi số mol khí thay đổi (A + B ⇌ C, 2A ⇌ B), ΔH = ΔU + Δn·RT. Với chất tan, ΔH ≈ ΔU.',
+      'ΔH here is Eₐ(forward) − Eₐ(reverse), taken as independent of temperature. For a concentration-based K of ideal gases this difference is strictly ΔU; when the number of moles of gas changes (A + B ⇌ C, 2A ⇌ B), ΔH = ΔU + Δn·RT. For solutes, ΔH ≈ ΔU.',
+    ),
   ],
   confidence: 'exact',
   confidenceNote: L(
@@ -76,6 +91,8 @@ const CARD: ScienceCardData = {
     'Exact analytic solution in the reaction extent ξ (Riccati equation); cross-checked with Dormand–Prince 5(4), rtol 10⁻⁹',
   ),
   sources: [CSRC.sgk11, CSRC.atkins],
+  // Pending wording: CHEMUI-5, EDG-1, EDG-2 (docs/DATA_REVIEW.md).
+  reviewStatus: 'pending',
 };
 
 const DIRECTION: Record<'forward' | 'backward' | 'none', LocalizedText> = {
@@ -94,6 +111,8 @@ const DIRECTION: Record<'forward' | 'backward' | 'none', LocalizedText> = {
 const minus = (s: string) => s.replace(/^-/, '−');
 
 export function EquilibriumStage() {
+  // The bench runs and restarts from its edge (EquilibriumDriver).
+  const bench = useContext(BenchContext);
   usePublishCard(CARD);
   const Lz = useLocalized();
   const locale = useSettingsStore((s) => s.locale);
@@ -134,26 +153,31 @@ export function EquilibriumStage() {
     Number.isFinite(v) ? formatNumber(locale, v, { maximumSignificantDigits: d }) : '∞';
   const maxC = Math.max(1, ...species.map((sp) => st.c[sp] ?? 0));
   const DirIcon = dir === 'forward' ? ArrowRight : dir === 'backward' ? ArrowLeft : Equal;
+  const heat = energyLevels(st.kinetics.eaf, st.kinetics.ear);
 
   return (
     <div className="chem-view">
       <div className="chem-toolbar">
         <span className="rx-eq rx-eq--chip">{equationOf(s)}</span>
-        <IconButton
-          icon={st.running ? Pause : Play}
-          label={st.running ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Chạy', 'Run'))}
-          variant="solid"
-          onClick={() => {
-            useEqStore.setState((x) => ({ running: !x.running, stalled: false }));
-          }}
-        />
-        <IconButton
-          icon={RotateCcw}
-          label={Lz(L('Làm lại', 'Restart'))}
-          onClick={() => {
-            resetEq();
-          }}
-        />
+        {!bench && (
+          <>
+            <IconButton
+              icon={st.running ? Pause : Play}
+              label={st.running ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Chạy', 'Run'))}
+              variant="solid"
+              onClick={() => {
+                useEqStore.setState((x) => ({ running: !x.running, stalled: false }));
+              }}
+            />
+            <IconButton
+              icon={RotateCcw}
+              label={Lz(L('Làm lại', 'Restart'))}
+              onClick={() => {
+                resetEq();
+              }}
+            />
+          </>
+        )}
         <span className="chem-chip">
           t = {f(st.t, 4)} s · T = {f(st.T, 4)} K
         </span>
@@ -262,11 +286,12 @@ export function EquilibriumStage() {
           <Maximize2 size={14} aria-hidden="true" /> {Lz(L('Giãn (P÷2)', 'Expand (P÷2)'))}
         </button>
       </div>
+      <EnergyDiagram eaf={st.kinetics.eaf} ear={st.kinetics.ear} />
       <p className="small muted">
         {Lz(
           L(
-            `ΔH = Eₐ(thuận) − Eₐ(nghịch) = ${minus(f((st.kinetics.eaf - st.kinetics.ear) / 1000, 3))} kJ/mol: ${st.kinetics.eaf < st.kinetics.ear ? 'phản ứng thuận tỏa nhiệt → tăng nhiệt độ làm K giảm' : st.kinetics.eaf > st.kinetics.ear ? 'phản ứng thuận thu nhiệt → tăng nhiệt độ làm K tăng' : 'ΔH = 0 → K không đổi theo nhiệt độ'}.`,
-            `ΔH = Eₐ(forward) − Eₐ(reverse) = ${minus(f((st.kinetics.eaf - st.kinetics.ear) / 1000, 3))} kJ/mol: ${st.kinetics.eaf < st.kinetics.ear ? 'exothermic forward → heating lowers K' : st.kinetics.eaf > st.kinetics.ear ? 'endothermic forward → heating raises K' : 'ΔH = 0 → K does not depend on T'}.`,
+            `ΔH = Eₐ(thuận) − Eₐ(nghịch) = ${minus(f(heat.dH / 1000, 3))} kJ/mol: ${heat.kind === 'exothermic' ? 'phản ứng thuận tỏa nhiệt → tăng nhiệt độ làm K giảm' : heat.kind === 'endothermic' ? 'phản ứng thuận thu nhiệt → tăng nhiệt độ làm K tăng' : 'ΔH = 0 → K không đổi theo nhiệt độ'}.`,
+            `ΔH = Eₐ(forward) − Eₐ(reverse) = ${minus(f(heat.dH / 1000, 3))} kJ/mol: ${heat.kind === 'exothermic' ? 'exothermic forward → heating lowers K' : heat.kind === 'endothermic' ? 'endothermic forward → heating raises K' : 'ΔH = 0 → K does not depend on T'}.`,
           ),
         )}
       </p>

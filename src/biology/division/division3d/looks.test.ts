@@ -21,10 +21,27 @@ function block(selector: string): Map<string, string> {
   return out;
 }
 const ROOT = block(':root {');
+const LIGHT = block(":root[data-theme='light']");
+const DARK = block(":root[data-theme='dark']");
+/** The bench shell (0.8.1) overrides some tokens over the classic theme (docs/BENCH_DESIGN.md §4). */
+const BENCH = block(":root[data-shell='bench'] {");
 const THEMES = {
-  light: new Map([...ROOT, ...block(":root[data-theme='light']")]),
-  dark: new Map([...ROOT, ...block(":root[data-theme='dark']")]),
+  light: new Map([...ROOT, ...LIGHT]),
+  dark: new Map([...ROOT, ...DARK]),
+  'bench light': new Map([
+    ...ROOT,
+    ...LIGHT,
+    ...BENCH,
+    ...block(":root[data-shell='bench']:not([data-theme='dark'])"),
+  ]),
+  'bench dark': new Map([
+    ...ROOT,
+    ...DARK,
+    ...BENCH,
+    ...block(":root[data-shell='bench'][data-theme='dark']"),
+  ]),
 };
+type Theme = keyof typeof THEMES;
 
 type Rgb = [number, number, number];
 /** WCAG relative luminance of a linear RGB colour, and the contrast ratio of two. */
@@ -41,7 +58,7 @@ const linear = (css: string): Rgb => {
   return [c.r, c.g, c.b];
 };
 
-function scene(theme: 'light' | 'dark') {
+function scene(theme: Theme) {
   const tokens = THEMES[theme];
   const token = (name: string): string => {
     const v = tokens.get(name) ?? '';
@@ -77,7 +94,7 @@ function scene(theme: 'light' | 'dark') {
 const OUTLINE = 0.8;
 
 describe('division 3D shells: outlines read on both stages', () => {
-  for (const theme of ['light', 'dark'] as const) {
+  for (const theme of Object.keys(THEMES) as Theme[]) {
     it(`${theme}: the cell outline reaches 1.5 : 1 on the panel, the cell body shows`, () => {
       const s = scene(theme);
       expect(contrast(s.membraneAt(OUTLINE), s.panel)).toBeGreaterThanOrEqual(1.5);

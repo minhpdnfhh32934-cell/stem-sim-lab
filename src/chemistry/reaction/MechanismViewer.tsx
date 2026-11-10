@@ -130,8 +130,8 @@ export function MechanismViewer({ mechanism, t, showArrows, labels, ariaLabel }:
       bond: token('--text-faint', '#8a93a5'),
       breaking: token('--chart-4', '#d55e00'),
       forming: token('--chart-3', '#009e73'),
-      partial: token('--accent', '#2f62d8'),
-      arrow: token('--accent', '#2f62d8'),
+      partial: token('--stage-accent', '#2f62d8'),
+      arrow: token('--stage-accent', '#2f62d8'),
     };
 
     const posOf = (f: MechanismFrame | undefined, map: number): THREE.Vector3 => {

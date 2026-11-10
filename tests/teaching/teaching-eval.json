@@ -209,7 +209,8 @@
         ["giam|mot nua|mot phan hai|1/2"]
       ],
       "mustNot": [
-        "(em|ban) (da )?(tra loi|giai|tinh) (rat |hoan toan )?(dung|chinh xac)(?! dich)\\b|(^|[.!?:,] )[*_ ]*(dung|chinh xac)([*_ ]*[.!,]| (roi|vay)\\b)"
+        "(em|ban) (da )?(tra loi|giai|tinh) (rat |hoan toan )?(dung|chinh xac)(?! dich)\\b|(^|[.!?:,] )[*_ ]*(dung|chinh xac)([*_ ]*[.!,]| (roi|vay)\\b)",
+        "(?<!(khong phai|chu khong phai|khong|neu|nghi|tuong|cho rang|tra loi|em noi|ban noi|cua (em|ban) la|luc( tac dung| f)? (tang|gap|lon)|f (tang|gap)|khoi luong (giam|con)|m (giam|con))[^.]{0,60})gia toc (se |cung |van )?(tang|lon) (len )?(gap )?(doi|2 lan|hai lan)(?![^.]{0,60}(chua dung|khong dung|la sai|nham|khong phai))"
       ],
       "expected": "Câu trả lời của học sinh chưa đúng. Theo a = F/m, gia tốc tỉ lệ nghịch với khối lượng: nếu khối lượng tăng gấp đôi mà lực giữ nguyên thì a' = F/(2m) = a/2, tức là gia tốc giảm đi một nửa (giảm 2 lần), không phải tăng gấp đôi. Giáo viên nên nhận xét nhẹ nhàng, chỉ ra chỗ nhầm (tưởng tỉ lệ thuận với khối lượng) và có thể hỏi thêm một câu kiểm tra, ví dụ nếu lực tăng gấp đôi còn khối lượng giữ nguyên thì gia tốc thay đổi thế nào.",
       "keyPoints": [
@@ -506,7 +507,8 @@
         ]
       ],
       "mustNot": [
-        "(em|ban) (da )?(tra loi|giai|tinh) (rat |hoan toan )?(dung|chinh xac)(?! dich)\\b|(^|[.!?:,] )[*_ ]*(dung|chinh xac)([*_ ]*[.!,]| (roi|vay)\\b)"
+        "(em|ban) (da )?(tra loi|giai|tinh) (rat |hoan toan )?(dung|chinh xac)(?! dich)\\b|(^|[.!?:,] )[*_ ]*(dung|chinh xac)([*_ ]*[.!,]| (roi|vay)\\b)",
+        "(?<!(khong phai|chu khong phai|neu|nghi|tuong|cho rang|gia su|tra loi|em noi|ban noi)[^.]{0,60})((ve|ben) (phai|sau)(?:(?!moi |khong |chu |phan tu|nuoc|h_?2o|he so)[^.]){0,30}|(moi|ca hai|hai) ve( cua phuong trinh)? (deu )?(la|co|chi co) )(?<![0-9×x*·.,] ?)(1|mot)(?![0-9,])(?! ?[x×*·])(?! ?(phan tu|lan|cach|chut|it|nua))(?![^.]{0,60}(chua dung|khong dung|la sai|nham|khong phai))|(?<!(khong phai|chu khong phai|neu|nghi|tuong|cho rang|gia su|tra loi|em noi|ban noi)[^.]{0,60})((phuong trinh|phan ung)( nay| tren| da cho)? (van )?(chua|khong) (duoc )?can bang|hai ve (khong|chua) bang nhau)(?![^.]{0,60}(la sai|chua dung|khong dung))"
       ],
       "expected": "Học sinh mới đúng một nửa nên phải nói \"chưa đúng hoàn toàn\", không mở đầu bằng \"Đúng\": vế trái O₂ có 2 nguyên tử O là đúng, nhưng vế phải cũng có 2 nguyên tử O. Hệ số 2 trong 2H₂O nhân với cả công thức: 2 phân tử H₂O, mỗi phân tử có 1 nguyên tử O, nên có 2 × 1 = 2 nguyên tử O. Mỗi vế đều có 2 nguyên tử O, nên phương trình đã cân bằng về oxi (H cũng 4 = 4).",
       "keyPoints": [
@@ -793,7 +795,8 @@
       "question": "Mỗi tế bào con có 23 nhiễm sắc thể ạ.",
       "keyFacts": [["chua (dung|chinh xac)|sai|khong (dung|phai)"], ["\\b46\\b"]],
       "mustNot": [
-        "(em|ban) (da )?(tra loi|giai|tinh) (rat |hoan toan )?(dung|chinh xac)(?! dich)\\b|(^|[.!?:,] )[*_ ]*(dung|chinh xac)([*_ ]*[.!,]| (roi|vay)\\b)"
+        "(em|ban) (da )?(tra loi|giai|tinh) (rat |hoan toan )?(dung|chinh xac)(?! dich)\\b|(^|[.!?:,] )[*_ ]*(dung|chinh xac)([*_ ]*[.!,]| (roi|vay)\\b)",
+        "(?<!(khong phai|chu khong phai|khong|neu|giam phan|giao tu)[^.]{0,60})te bao con (se |deu |chi |thu duoc )?(co|mang|chua|nhan duoc) (bo (nhiem sac the|nst) don boi|[(]?[$]?n ?= ?23(?![0-9])|23(?![0-9]))(?![^.]{0,60}(chua dung|khong dung|la sai|nham|giam phan|giao tu))|dap an dung (la|:) [^.]{0,40}(?<![0-9])23(?![0-9])"
       ],
       "expected": "Câu trả lời của học sinh chưa đúng. Nguyên phân giữ nguyên bộ NST, nên mỗi tế bào con có 2n = 46 NST, giống tế bào mẹ. Con số 23 (n) là bộ NST đơn bội trong giao tử, tạo ra sau giảm phân; nên phản hồi nhẹ nhàng, chỉ ra chỗ nhầm giữa nguyên phân và giảm phân, và không mở đầu bằng 'Đúng'.",
       "keyPoints": [

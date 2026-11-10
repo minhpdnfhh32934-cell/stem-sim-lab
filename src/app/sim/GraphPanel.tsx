@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import type uPlotType from 'uplot';
+import { BenchContext } from '@/app/bench/shellMode';
 import { useT } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
@@ -11,19 +12,32 @@ import { EmptyState } from '@/ui/EmptyState';
 import { ChartSpline } from 'lucide-react';
 import { X_AXIS_SIZE, yTickSpace } from '@/ui/charts/axes';
 import { SERIES_VARS, loadUPlot } from '@/ui/charts/uplot';
-import { graphData, visibleSeries } from './data';
+import { PhaseChart } from './PhaseChart';
+import { type Ghost, useCompareStore } from './compare';
+import { alignRuns, graphData, visibleSeries } from './data';
 import { sim } from './runtime';
 import { useSimStore } from './simStore';
 import { subscriptElement } from '@/ui/subscripts';
 
-/** Time-series graphs of the running simulation (uPlot, crosshair + live legend). */
+/** Graphs of the running simulation: against time (uPlot, crosshair + live legend) or phase portraits. */
 export function GraphPanel() {
   const t = useT();
   const L = useLocalized();
   const scene = useSimStore((s) => s.scene);
   const [graphId, setGraphId] = useState<string | null>(null);
   const params = useSimStore((s) => s.params);
-  const picked = scene?.graphs.find((g) => g.id === graphId) ?? scene?.graphs[0] ?? null;
+  // The bench draws a pinned run's curves too, dashed (docs/BENCH_DESIGN.md §2, §9.4).
+  const bench = useContext(BenchContext);
+  const ghost = useCompareStore((s) =>
+    bench && s.ghost && s.ghost.sceneId === scene?.id ? s.ghost : null,
+  );
+  // A graph whose every curve the parameters hide (the phase circle once there is damping) leaves
+  // the picker.
+  const offered = (g: GraphDef) => visibleSeries(g, params).length > 0;
+  const picked =
+    scene?.graphs.find((g) => g.id === graphId && offered(g)) ??
+    scene?.graphs.find(offered) ??
+    null;
   // A new chart only when the shown series change (uPlot's series are fixed at creation).
   const shownKey = picked
     ? visibleSeries(picked, params)
@@ -52,7 +66,7 @@ export function GraphPanel() {
         role="radiogroup"
         aria-label={t('graphs.choose')}
       >
-        {scene.graphs.map((g) => (
+        {scene.graphs.filter(offered).map((g) => (
           <button
             key={g.id}
             type="button"
@@ -67,12 +81,20 @@ export function GraphPanel() {
           </button>
         ))}
       </div>
-      <Chart key={`${scene.id}-${graph.id}-${shownKey}`} graph={graph} />
+      {graph.x ? (
+        <PhaseChart key={`${scene.id}-${graph.id}-${shownKey}`} graph={graph} />
+      ) : (
+        <Chart
+          key={`${scene.id}-${graph.id}-${shownKey}-${ghost ? 'pin' : ''}`}
+          graph={graph}
+          ghost={ghost}
+        />
+      )}
     </div>
   );
 }
 
-function Chart({ graph }: { graph: GraphDef }) {
+function Chart({ graph, ghost }: { graph: GraphDef; ghost: Ghost | null }) {
   const t = useT();
   const L = useLocalized();
   const locale = useSettingsStore((s) => s.locale);
@@ -89,6 +111,13 @@ function Chart({ graph }: { graph: GraphDef }) {
   const params = useSimStore((s) => s.params);
   const hasData = sim.history.length > 1;
   const lastDraw = useRef(0);
+  // The pinned run's series that its own parameters showed, from its own samples.
+  const pinned = useMemo(() => {
+    if (!ghost) return null;
+    const g = { ...graph, series: visibleSeries(graph, ghost.params) };
+    const run = { ...ghost.run, length: ghost.run.times.length };
+    return { graph: g, data: graphData(g, ghost.params, 4000, run) };
+  }, [graph, ghost]);
 
   // Create the plot (again on theme/locale/graph change).
   useEffect(() => {
@@ -152,9 +181,23 @@ function Chart({ graph }: { graph: GraphDef }) {
             stroke: css(SERIES_VARS[i % SERIES_VARS.length] ?? '--chart-1'),
             width: 2,
             ...(s.dash ? { dash: s.dash } : {}),
+            ...(pinned ? { spanGaps: true } : {}),
             points: { show: false },
             value: (_u: uPlotType, v: number | null) => (v === null ? '—' : nf.format(v)),
           })),
+          // Same hue as its current curve, dashed (dotted under a curve that is dashed already).
+          ...(pinned?.graph.series.map((s) => {
+            const i = graph.series.findIndex((c) => c.id === s.id);
+            return {
+              label: `${L(s.label)} · ${t('stage.pinnedRun')}`,
+              stroke: css(SERIES_VARS[Math.max(0, i) % SERIES_VARS.length] ?? '--chart-1'),
+              width: 1.5,
+              dash: s.dash ? [2, 4] : [6, 5],
+              spanGaps: true,
+              points: { show: false },
+              value: (_u: uPlotType, v: number | null) => (v === null ? '—' : nf.format(v)),
+            };
+          }) ?? []),
         ],
         hooks: {
           draw: [
@@ -164,7 +207,7 @@ function Chart({ graph }: { graph: GraphDef }) {
               const x = u.valToPos(tt, 'x', true);
               const ctx = u.ctx;
               ctx.save();
-              ctx.strokeStyle = css('--accent');
+              ctx.strokeStyle = css('--stage-accent');
               ctx.lineWidth = 1.5 * devicePixelRatio;
               ctx.beginPath();
               ctx.moveTo(x, u.bbox.top);
@@ -175,7 +218,8 @@ function Chart({ graph }: { graph: GraphDef }) {
           ],
         },
       };
-      const data = graphData(graph, useSimStore.getState().params) as uPlotType.AlignedData;
+      const now = graphData(graph, useSimStore.getState().params);
+      const data = (pinned ? alignRuns(now, pinned.data) : now) as uPlotType.AlignedData;
       const plot = new UPlot(opts, data, host);
       plotRef.current = plot;
       plot.root.querySelectorAll('.u-legend .u-label').forEach(subscriptElement);
@@ -192,7 +236,7 @@ function Chart({ graph }: { graph: GraphDef }) {
       plotRef.current?.destroy();
       plotRef.current = null;
     };
-  }, [graph, theme, locale, t, L]);
+  }, [graph, pinned, theme, locale, t, L]);
 
   // Refresh data at the tier's graph rate.
   useEffect(() => {
@@ -200,8 +244,9 @@ function Chart({ graph }: { graph: GraphDef }) {
     if (now - lastDraw.current < 1000 / tier.graphHz && scrubTime === null) return;
     lastDraw.current = now;
     cursorT.current = scrubTime;
-    plotRef.current?.setData(graphData(graph, params) as uPlotType.AlignedData);
-  }, [dataVersion, scrubTime, params, graph, tier.graphHz]);
+    const cur = graphData(graph, params);
+    plotRef.current?.setData((pinned ? alignRuns(cur, pinned.data) : cur) as uPlotType.AlignedData);
+  }, [dataVersion, scrubTime, params, graph, pinned, tier.graphHz]);
 
   return (
     <div className="chart chart--legend-side">

@@ -257,12 +257,12 @@ describe('AI pipeline with a fake LLM', () => {
       topic_classification: [
         JSON.stringify({
           topic: 'unsupported',
-          reason: 'mạch điện',
-          unsupported_parts: ['dòng điện'],
+          reason: 'khúc xạ ánh sáng',
+          unsupported_parts: ['khúc xạ'],
         }),
       ],
     });
-    const r = await analyzeProblem(items.find((i) => i.id === 'ng-01')!.text, {
+    const r = await analyzeProblem(items.find((i) => i.id === 'ng-02')!.text, {
       ...baseCfg,
       transport: t,
     });

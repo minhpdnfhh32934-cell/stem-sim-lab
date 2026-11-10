@@ -75,6 +75,24 @@ data. A held Enter that pressed the button does not send it either: the box igno
 Enter keydowns (`e.repeat`). The teacher page's chat takes the question once
 (`useTeacherStore.draft`, cleared when taken or when the page closes).
 
+## Where the chat service lives (`src/teacher/chat/`)
+
+`chatService.ts` builds the prompt (`contextPrompt`), runs one answer through its gates (`askTeacher`)
+and re-exports every public name of the files below, so callers and test mocks keep one path.
+
+| File               | Holds                                                                             |
+| ------------------ | --------------------------------------------------------------------------------- |
+| `teacherErrors.ts` | `TeacherError`, `AnswerStopped`, the stop helpers, `requestId`, the `Answer` type |
+| `turnKind.ts`      | what the learner's message is (question, premise, reply to the check question)    |
+| `references.ts`    | excerpts as fenced, labelled blocks                                               |
+| `engines.ts`       | the engines that answer: online provider, Gemma, a runtime on this computer       |
+| `summary.ts`       | older turns folded into the stored summary                                        |
+| `inputGuards.ts`   | the input checks on the question, the circled board text and the shared screen    |
+
+The prompt texts are still in `chatService.ts`. `promptGolden.test.ts` pins every prompt and every
+request byte for byte (`__golden__/`): a change there is a prompt change, and an on-device prompt
+must be benchmarked before it ships.
+
 ## Cloud chat and Think
 
 Cloud chat uses the provider and key configured in Settings → Kết nối AI. **Think** sends one
@@ -860,7 +878,7 @@ app, the browser client only without it).
   know what it logs, a loopback relay can still forward), the browser CORS note, and the fallback
   line: a failing local AI is reported and nothing goes online.
 
-**Answers** (`chatService.localRuntimeChat`): streamed through the same filter as Gemma (every
+**Answers** (`engines.localRuntimeChat`): streamed through the same filter as Gemma (every
 piece passes `outputIsSafe`, unfinished reasoning is hidden, pieces are provisional), cleaned with
 `cleanAnswer`, labelled “Ollama · qwen3:8b” (`src/app/ai/localRuntime.ts`). No retry, no daily
 cap, never a fallback; “Dừng” closes the connection. Failures are study-partner sentences
@@ -870,7 +888,7 @@ online, not this runtime, not chosen, failed, app update) with the Settings page
 turns is written by the same runtime and capped to fit the window it is sent with (window − 400 −
 512 tokens), so Ollama never cuts it silently, and sent with `think: false` (only a model seen
 reasoning first gets it). A summary the runtime fails for a runtime reason (an allow-list in
-`chatService.localSummaryFatal`: not running, stalled, loading, model missing, locked, runs
+`summary.localSummaryFatal`: not running, stalled, loading, model missing, locked, runs
 online, not this runtime, not chosen, app update, gate closed) ends the question with that sentence
 instead of asking the runtime a second time; any other summary failure (did not fit, only
 reasoning, nothing within its 400 tokens, an unsafe text, another error) is skipped and the

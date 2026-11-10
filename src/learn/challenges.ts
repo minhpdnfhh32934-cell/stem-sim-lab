@@ -260,6 +260,22 @@ export const CHALLENGES: readonly Challenge[] = [
     ),
   },
   {
+    id: 'interference.max9',
+    topic: 'interference',
+    title: L('Đúng 9 vân cực đại', 'Exactly 9 maxima'),
+    task: L(
+      'Giữ tần số và tốc độ truyền sóng (bước sóng 3\u00a0cm), chỉnh khoảng cách hai nguồn để giữa S₁ và S₂ có đúng 9 cực đại (không kể hai nguồn). Bạn có thể kéo một nguồn trên hình; kéo điểm M không làm đổi số cực đại.',
+      'Keeping the frequency and the wave speed (wavelength 3\u00a0cm), set the source separation so that there are exactly 9 maxima between S₁ and S₂ (sources excluded). You can drag a source on the picture; dragging point M does not change the number of maxima.',
+    ),
+    // M (d₁, d₂) may be dragged too: the number of maxima does not depend on it.
+    controls: ['d', 'd1', 'd2'],
+    goal: { answer: 'maxima', kind: 'target', value: 9, tol: 0.5 },
+    hint: L(
+      'Hai cực đại liên tiếp trên S₁S₂ cách nhau nửa bước sóng. Thêm hai cực đại (một mỗi bên) thì S₁S₂ phải dài thêm khoảng bao nhiêu?',
+      'Neighbouring maxima on S₁S₂ are half a wavelength apart. To add two maxima (one on each side), about how much longer must S₁S₂ be?',
+    ),
+  },
+  {
     id: 'electricField.plates8000',
     topic: 'electricField',
     title: L('Điện trường đều 8.000 V/m', 'A uniform field of 8,000 V/m'),
@@ -274,6 +290,54 @@ export const CHALLENGES: readonly Challenge[] = [
     hint: L(
       'Hiệu điện thế tăng gấp đôi thì điện trường giữa hai bản thay đổi thế nào?',
       'If the voltage doubles, how does the field between the plates change?',
+    ),
+  },
+  {
+    id: 'forcedOscillation.resonance',
+    topic: 'forcedOscillation',
+    title: L('Tìm cộng hưởng', 'Find the resonance'),
+    task: L(
+      'Vật 0,5\u00a0kg gắn lò xo 50\u00a0N/m, lực cản 0,5\u00a0kg/s, ngoại lực biên độ 1\u00a0N (SimLab đặt sẵn khi bạn bắt đầu). Chỉnh tần số góc Ω của ngoại lực để biên độ dao động ổn định lớn nhất.',
+      'A 0.5\u00a0kg body on a 50\u00a0N/m spring, damping 0.5\u00a0kg/s, driving force amplitude 1\u00a0N (SimLab sets this when you start). Tune the driving angular frequency Ω so that the steady amplitude is largest.',
+    ),
+    controls: ['Omega'],
+    start: { Omega: 4, F0: 1, b: 0.5, m: 0.5, k: 50, x0: 0 },
+    goal: { answer: 'A', kind: 'max' },
+    hint: L(
+      'So Ω với tần số góc riêng của con lắc ω₀ = √(k/m).',
+      'Compare Ω with the natural angular frequency ω₀ = √(k/m).',
+    ),
+  },
+  {
+    id: 'dcCircuit.maxPower',
+    topic: 'dcCircuit',
+    title: L('Công suất mạch ngoài lớn nhất', 'Most power to the external circuit'),
+    task: L(
+      'Nguồn E\u00a0=\u00a012\u00a0V có điện trở trong r\u00a0=\u00a02\u00a0Ω, mạch ngoài chỉ có R₁ (SimLab đặt sẵn khi bạn bắt đầu). Chỉnh R₁ để công suất mạch ngoài lớn nhất.',
+      'A 12\u00a0V source with internal resistance r\u00a0=\u00a02\u00a0Ω feeds R₁ alone (SimLab sets this when you start). Adjust R₁ so that the external circuit gets the most power.',
+    ),
+    controls: ['R1'],
+    start: { layout: 0, emf: 12, rInt: 2, R1: 10 },
+    goal: { answer: 'P_out', kind: 'max' },
+    hint: L(
+      'R₁ quá nhỏ thì U nhỏ, R₁ quá lớn thì I nhỏ. Thử so R₁ với điện trở trong r.',
+      'Too small an R₁ gives a small U, too large a small I. Compare R₁ with the internal resistance r.',
+    ),
+  },
+  {
+    id: 'keplerOrbit.ratio3',
+    topic: 'keplerOrbit',
+    title: L('Nhanh gấp 3 lần ở cận nhật', 'Three times faster at perihelion'),
+    task: L(
+      'Chỉnh tâm sai e của quỹ đạo để tốc độ của hành tinh ở cận nhật gấp 3 lần tốc độ ở viễn nhật.',
+      'Adjust the eccentricity e so that the planet moves three times faster at perihelion than at aphelion.',
+    ),
+    controls: ['e'],
+    start: { e: 0.2, N: 6, T: 12 },
+    goal: { answer: 'speedRatio', kind: 'target', value: 3, tol: 0.05 },
+    hint: L(
+      'Ở hai đầu trục lớn, r·v như nhau: tỉ số tốc độ bằng tỉ số khoảng cách viễn nhật và cận nhật.',
+      'At both ends of the major axis r·v is the same: the speed ratio equals the aphelion-to-perihelion distance ratio.',
     ),
   },
 ];

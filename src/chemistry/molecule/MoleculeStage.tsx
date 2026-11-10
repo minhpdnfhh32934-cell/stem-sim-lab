@@ -18,42 +18,15 @@ import { METHOD_LABEL } from './labels';
 import { MoleculeViewer } from './MoleculeViewer';
 import { inspectSmiles } from './rdkit';
 import { lookupFor, type SmilesLookup } from './smilesLookup';
-import { pickAtom, pickBond, selectMolecule, useMoleculeStore, type MoleculeTopic } from './store';
+import {
+  pickAtom,
+  pickBond,
+  QUICK_MOLECULES,
+  selectMolecule,
+  useMoleculeStore,
+  type MoleculeTopic,
+} from './store';
 import '../chem.css';
-
-/** Molecules offered as quick picks for each topic. */
-const QUICK: Record<MoleculeTopic, string[]> = {
-  molecule3d: ['h2o', 'nh3', 'ch4', 'co2', 'c2h4', 'c2h2', 'c6h6', 'c2h5oh', 'ch3cooh', 'glucose'],
-  vsepr: [
-    'becl2',
-    'co2',
-    'bf3',
-    'so2',
-    'ch4',
-    'nh3',
-    'h2o',
-    'pcl5',
-    'sf4',
-    'clf3',
-    'xef2',
-    'sf6',
-    'xef4',
-  ],
-  bondPolarity: [
-    'h2',
-    'hcl',
-    'h2o',
-    'co2',
-    'nh3',
-    'ch4',
-    'ccl4',
-    'chcl3',
-    'bf3',
-    'so2',
-    'hcn',
-    'c2h5oh',
-  ],
-};
 
 const TITLES: Record<MoleculeTopic, LocalizedText> = {
   molecule3d: L('Phân tử 3D', '3D molecules'),
@@ -266,7 +239,7 @@ export function MoleculeStage({ topic }: { topic: MoleculeTopic }) {
           role="group"
           aria-label={Lz(L('Phân tử gợi ý', 'Suggested molecules'))}
         >
-          {QUICK[topic].map((id) => {
+          {QUICK_MOLECULES[topic].map((id) => {
             const m = moleculeById(id);
             if (!m) return null;
             return (

@@ -77,8 +77,15 @@ class SimRuntime {
         if (known.has(k)) sources[k] = v;
       }
       Object.assign(params, applyAutoDefaults(scene, params, sources));
-      const speed = scene.suggestedSpeed?.(params);
-      if (speed !== undefined) useWorkspaceStore.setState({ speed: closestSpeed(speed) });
+      // The lesson's own speed, or none: the previous lesson's own speed does not follow the
+      // learner into this one (a speed the learner chose does).
+      const lesson = scene.suggestedSpeed?.(params);
+      const suggestedSpeed = lesson === undefined ? null : closestSpeed(lesson);
+      const ws = useWorkspaceStore.getState();
+      useWorkspaceStore.setState({
+        suggestedSpeed,
+        speed: suggestedSpeed ?? (ws.speed === ws.suggestedSpeed ? 1 : ws.speed),
+      });
       useSimStore.setState({
         scene,
         params,
@@ -130,11 +137,23 @@ class SimRuntime {
     host.requestFrame(0, 1, true);
   }
 
+  /** How many opens and shutdowns so far: a caller can tell whether its own open is the last. */
+  get openCount(): number {
+    return this.openSeq;
+  }
+
   /** Closes the simulation and cancels an `open` still in progress. */
   shutdown(): void {
     this.openSeq++;
     useSimStore.setState({ loading: false, error: null });
     this.close();
+    // The lesson's own speed leaves with it (library, a module, Studio); a speed the learner
+    // chose stays. Not in close(): open() calls it before comparing with the old lesson's speed.
+    const ws = useWorkspaceStore.getState();
+    useWorkspaceStore.setState({
+      suggestedSpeed: null,
+      speed: ws.speed === ws.suggestedSpeed ? 1 : ws.speed,
+    });
   }
 
   close(): void {
@@ -219,7 +238,9 @@ class SimRuntime {
     const ws = useWorkspaceStore.getState();
     if (!ws.hasSimulation) return;
     if (ws.playing) {
-      useWorkspaceStore.setState({ playing: false });
+      // The shown time lags the engine by up to one UI update (100 ms): settle it now, so the
+      // pause is announced once, with the time it really stopped at.
+      useWorkspaceStore.setState({ playing: false, simTime: this.latest?.t ?? ws.simTime });
       return;
     }
     const sim = useSimStore.getState();
@@ -273,25 +294,37 @@ class SimRuntime {
 
   /** Changes a parameter. Live-editable params apply mid-run (as an intervention). */
   setParam(key: string, value: number, source: ParamSource = 'user'): void {
+    this.setParams({ [key]: value }, source);
+  }
+
+  /**
+   * Changes several parameters at once (a dragged source: `BodyDef.dragTo`). `fit: false` keeps
+   * the camera where it is, so the dragged body stays under the pointer.
+   */
+  setParams(values: Params, source: ParamSource = 'user', fit = true): void {
     const sim = useSimStore.getState();
     const scene = sim.scene;
     if (!scene) return;
-    const sources = { ...sim.sources, [key]: source };
-    const params = applyAutoDefaults(scene, { ...sim.params, [key]: value }, sources);
-    const def = scene.params.find((d) => d.key === key);
+    const keys = Object.keys(values);
+    if (keys.length === 0) return;
+    const sources = { ...sim.sources };
+    for (const k of keys) sources[k] = source;
+    const params = applyAutoDefaults(scene, { ...sim.params, ...values }, sources);
+    const live = keys.every((k) => scene.params.find((d) => d.key === k)?.live);
     const running = (this.latest?.t ?? 0) > 0 && !sim.finished;
     useSimStore.setState({
       params,
       sources,
       validation: scene.validate?.(params) ?? [],
     });
-    if (running && def?.live && (scene.validate?.(params) ?? []).length === 0) {
+    if (running && live && (scene.validate?.(params) ?? []).length === 0) {
       const ep = scene.engineParams?.(params) ?? params;
-      this.host?.input({ kind: 'setParam', name: key, value: ep[key] ?? value });
+      for (const k of keys)
+        this.host?.input({ kind: 'setParam', name: k, value: ep[k] ?? values[k] ?? 0 });
       this.updateCard();
     } else {
       this.reset();
-      useSimStore.setState({ fitRequest: useSimStore.getState().fitRequest + 1 });
+      if (fit) useSimStore.setState({ fitRequest: useSimStore.getState().fitRequest + 1 });
     }
   }
 

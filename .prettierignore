@@ -17,3 +17,5 @@ docs/CHANGELOG.md
 release-notes/google-docs.html
 # Generated from scripts/data/gen_curriculum_kntt.py (with data/curriculum_kntt.json)
 docs/CURRICULUM_KNTT.md
+# Generated from scripts/data/gen_teaching_heldout2.py
+tests/teaching/teaching-heldout-2.json

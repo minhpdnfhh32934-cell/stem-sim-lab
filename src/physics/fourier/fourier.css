@@ -1,0 +1,54 @@
+/* Harmonics and Fourier series (#54 item 10): the stage vocabulary (chem-view, chips) of the
+   module lessons. */
+@import '../../chemistry/chem.css';
+
+.fourier__legend {
+  position: absolute;
+  right: var(--space-3);
+  bottom: var(--space-2);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+}
+.fourier__swatch {
+  display: inline-block;
+  width: 18px;
+  height: 0;
+  border-top: 2px solid var(--chart-1);
+}
+.fourier__swatch--ideal {
+  border-top: 2px dashed var(--text-muted);
+}
+.fourier-panel {
+  display: grid;
+  gap: var(--space-3);
+}
+.fourier-panel label {
+  display: grid;
+  gap: var(--space-1);
+}
+.fourier-panel input[type='range'] {
+  width: 100%;
+  min-height: var(--target);
+}
+.fourier-panel .btn {
+  height: auto;
+  white-space: normal;
+  text-align: left;
+}
+.fourier-panel__check {
+  grid-auto-flow: column;
+  justify-content: start;
+  align-items: center;
+  min-height: var(--target);
+}
+.fourier-table {
+  border-collapse: collapse;
+}
+.fourier-table th,
+.fourier-table td {
+  padding: 4px var(--space-3);
+  text-align: right;
+  border-bottom: 1px solid var(--border);
+}

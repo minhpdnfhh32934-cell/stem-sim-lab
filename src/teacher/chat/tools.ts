@@ -15,6 +15,7 @@
 import { translate, type Locale } from '@/app/i18n';
 import { balance, EquationError, parseEquation, type ParsedEquation } from '@/chemistry/balance';
 import { FormulaError, parseFormula } from '@/chemistry/formula';
+import { lookupFacts } from './lookupFacts';
 import { TOOL_HEADER } from './promptLabels';
 
 const SUBSCRIPTS: Record<string, string> = {
@@ -110,8 +111,8 @@ function formatted(eq: ParsedEquation, coefficients: number[]): string {
 }
 
 export interface ToolFact {
-  kind: 'balanced' | 'unbalanceable';
-  /** The equation as the learner wrote it. */
+  kind: 'balanced' | 'unbalanceable' | 'computed';
+  /** The equation as the learner wrote it (a computed fact: the fact itself). */
   input: string;
   /** One sentence for the AI (with what it must not do). */
   text: string;
@@ -148,7 +149,7 @@ const TEXT = {
 } as const;
 
 /** Chemical equations in the question, solved by the app (empty when there is none). */
-export function toolFacts(question: string, locale: Locale): ToolFact[] {
+function balanceFacts(question: string, locale: Locale): ToolFact[] {
   // Precipitate/gas marks are not part of a formula: "CaCO3↓" is CaCO3.
   const q = question.normalize('NFC').replace(/\s*[↑↓]/g, '');
   const request = BALANCE_REQUEST.test(q);
@@ -197,6 +198,17 @@ export function toolFacts(question: string, locale: Locale): ToolFact[] {
     if (facts.length >= 3) break;
   }
   return facts;
+}
+
+/** Everything the app computes for this question (empty when no tool applies). */
+export function toolFacts(question: string, locale: Locale): ToolFact[] {
+  const computed = lookupFacts(question, locale).map((shown): ToolFact => ({
+    kind: 'computed',
+    input: shown,
+    text: shown,
+    shown,
+  }));
+  return [...balanceFacts(question, locale), ...computed].slice(0, 3);
 }
 
 /** The block appended to the instruction, or '' when the question needs no tool. */

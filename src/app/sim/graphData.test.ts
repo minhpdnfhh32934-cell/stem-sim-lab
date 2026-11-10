@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import type { GraphDef } from '@/physics/types';
-import { graphData } from './data';
+import { graphData, phaseData } from './data';
 import { sim } from './runtime';
 
 const graph: GraphDef = {
@@ -28,5 +28,37 @@ describe('graph points (UI-22)', () => {
     t.forEach((tt, i) => {
       expect(x[i]).toBe(0.05 * Math.cos(20 * tt));
     });
+  });
+});
+
+describe('phase portraits (#54 item 3)', () => {
+  afterEach(() => {
+    sim.history.clear();
+  });
+  const phase: GraphDef = {
+    ...graph,
+    x: { label: { vi: 'x', en: 'x' }, value: (s) => s[0] ?? 0 },
+    series: [{ id: 'y', label: { vi: 'y', en: 'y' }, value: (s) => s[1] ?? 0 }],
+  };
+
+  it('pairs x with each series, keeps the latest state and finds the scrubbed one', () => {
+    for (let i = 0; i <= 10; i++) sim.history.push(i / 10, Float64Array.of(i, 2 * i));
+    const d = phaseData(phase, {}, null, 4);
+    expect(d.series[0]).toEqual([
+      [0, 0],
+      [3, 6],
+      [6, 12],
+      [9, 18],
+      [10, 20],
+    ]);
+    expect(d.current).toEqual([[10, 20]]);
+    expect(phaseData(phase, {}, 0.35).current).toEqual([[3, 6]]);
+    expect(phaseData(phase, {}, 0).current).toEqual([[0, 0]]);
+  });
+
+  it('a time graph or an empty history has no phase points', () => {
+    expect(phaseData(phase, {}, null)).toEqual({ series: [[]], current: null });
+    sim.history.push(0, Float64Array.of(1, 2));
+    expect(phaseData(graph, {}, null).current).toBeNull();
   });
 });

@@ -1,0 +1,310 @@
+[
+ {
+  "id": "P1",
+  "question": "Lực ma sát nghỉ là gì? Cho một ví dụ.",
+  "reference": "Lực ma sát nghỉ là lực xuất hiện ở mặt tiếp xúc giữa hai vật khi có ngoại lực (hay xu hướng) làm vật trượt nhưng vật vẫn chưa chuyển động: nó giữ cho vật đứng yên so với mặt tiếp xúc. Lực có phương song song (tiếp tuyến) với mặt tiếp xúc, ngược chiều với xu hướng chuyển động, độ lớn bằng thành phần ngoại lực song song mặt tiếp xúc và chỉ tăng đến một giá trị cực đại; vượt quá giá trị đó thì vật bắt đầu trượt (khi đó là ma sát trượt). Ví dụ: đẩy nhẹ một thùng hàng nặng mà thùng chưa nhúc nhích; quyển sách nằm yên trên mặt bàn hơi nghiêng; ma sát nghỉ ở đế giày giúp ta bước đi không bị trượt.",
+  "keyPoints": [
+   "Xuất hiện khi vật có xu hướng chuyển động (chịu ngoại lực) nhưng chưa trượt; giữ vật đứng yên so với mặt tiếp xúc",
+   "Phương song song mặt tiếp xúc, chiều ngược với xu hướng chuyển động",
+   "Độ lớn bằng thành phần ngoại lực song song mặt tiếp xúc, có giá trị cực đại (ngoại lực vượt quá thì vật trượt)",
+   "Có ít nhất một ví dụ đúng: đẩy thùng chưa chuyển động, sách đứng yên trên mặt nghiêng, bàn chân không trượt khi đi bộ, xe đứng yên trên dốc",
+   "Không nhầm với ma sát trượt (xuất hiện khi vật đã trượt)"
+  ],
+  "answers": [
+   {
+    "code": "A",
+    "text": "Lực ma sát nghỉ là lực cản trở chuyển động xuất hiện khi một vật có xu hướng trượt nhưng vẫn đứng yên trên bề mặt tiếp xúc.\n\nVí dụ: Khi bạn đẩy nhẹ một chiếc vali trên sàn nhà mà vali không chuyển động, lực ma sát nghỉ chính là lực giữ cho vali đứng yên đó.\n\nLực này xuất hiện để cân bằng với lực đẩy bên ngoài, giúp vật không bị trượt ngay lập tức.\nĐộ lớn của lực ma sát nghỉ thay đổi tùy theo lực tác dụng, từ 0 đến một giá trị cực đại.\nKhác với lực ma sát trượt, lực ma sát nghỉ không có công thức tính đơn giản cố định như $f = \\mu N$.\n\nBạn có muốn thử tính độ lớn của lực ma sát nghỉ trong một tình huống cụ thể không?"
+   },
+   {
+    "code": "B",
+    "text": "Lực ma sát nghỉ là lực xuất hiện khi một vật có xu hướng chuyển động nhưng vẫn đứng yên so với mặt tiếp xúc, giúp cân bằng với các lực khác để giữ vật ở trạng thái tĩnh. Ví dụ, khi bạn đẩy nhẹ một chiếc hộp trên sàn mà nó chưa chuyển động, lực ma sát nghỉ sẽ tác dụng ngược lại với lực đẩy của bạn để giữ hộp đứng yên. Nếu bạn tăng dần lực đẩy mà hộp vẫn không chuyển động, thì lực ma sát nghỉ cũng sẽ tăng lên tương ứng cho đến khi đạt đến giá trị cực đại."
+   }
+  ]
+ },
+ {
+  "id": "P2",
+  "question": "Vì sao trong chân không, vật nặng và vật nhẹ rơi tự do nhanh như nhau?",
+  "reference": "Trong chân không, lực duy nhất tác dụng lên vật là trọng lực P = mg, nên theo định luật II Newton a = P/m = mg/m = g: gia tốc rơi tự do không phụ thuộc khối lượng, mọi vật ở cùng một nơi đều rơi với cùng gia tốc g. Vật nặng chịu trọng lực lớn hơn nhưng cũng có khối lượng (quán tính) lớn hơn đúng bằng tỉ lệ đó, nên hai hiệu ứng triệt tiêu. Vì vậy thả cùng độ cao, không vận tốc đầu thì hai vật chạm đất cùng lúc (t = √(2h/g)); trong không khí chúng rơi khác nhau là do lực cản không khí, không phải do khối lượng.",
+  "keyPoints": [
+   "Trong chân không chỉ có trọng lực tác dụng (không có lực cản)",
+   "a = P/m = g: gia tốc không phụ thuộc khối lượng, như nhau với mọi vật tại cùng một nơi",
+   "Trọng lực lớn hơn được bù bởi khối lượng (quán tính) lớn hơn",
+   "Cùng độ cao, cùng điều kiện thả thì cùng thời gian rơi",
+   "Sự khác biệt hằng ngày là do lực cản không khí",
+   "Không được khẳng định vật nặng rơi nhanh hơn (trừ khi nêu như một quan niệm sai)"
+  ],
+  "answers": [
+   {
+    "code": "A",
+    "text": "Trong chân không, vật nặng và vật nhẹ rơi tự do nhanh như nhau vì lực cản của không khí đã bị loại bỏ hoàn toàn. Khi không có lực cản, lực duy nhất tác dụng lên mọi vật là trọng lực, và gia tốc rơi tự do $g$ là một hằng số không phụ thuộc vào khối lượng của vật. Điều này có nghĩa là bất kể vật nặng hay nhẹ, chúng đều tăng tốc với cùng một tỷ lệ theo thời gian. Do đó, nếu thả đồng thời từ cùng một độ cao, cả hai vật sẽ chạm đất cùng một lúc.\n\nBạn có muốn thử tính toán xem hai vật sẽ chạm đất sau bao lâu nếu thả từ độ cao 5 mét không?"
+   },
+   {
+    "code": "B",
+    "text": "Trong chân không, vật nặng và vật nhẹ rơi tự do nhanh như nhau vì lực cản không khí đã bị loại bỏ hoàn toàn. Khi đó, lực duy nhất tác dụng lên cả hai vật là trọng lực, và gia tốc rơi tự do $g$ chỉ phụ thuộc vào bản chất của Trái Đất chứ không phụ thuộc vào khối lượng hay hình dạng của vật. Do đó, bất kể vật nặng hay nhẹ, chúng đều rơi với cùng một gia tốc và chạm đất cùng lúc nếu được thả từ cùng một độ cao. Em có muốn thử tính xem nếu thả hai vật từ độ cao $h = 10\\text{ m}$ thì chúng sẽ chạm đất sau bao lâu không?"
+   }
+  ]
+ },
+ {
+  "id": "P3",
+  "question": "Một vật khối lượng 2 kg chịu lực kéo 10 N trên mặt phẳng ngang không ma sát. Tính gia tốc của vật.",
+  "reference": "Hiểu lực kéo 10 N nằm ngang. Theo phương thẳng đứng, trọng lực và phản lực của mặt phẳng cân bằng nhau; theo phương ngang không có ma sát nên hợp lực bằng lực kéo. Theo định luật II Newton: a = F/m = 10 N / 2 kg = 5 m/s², cùng hướng với lực kéo.",
+  "keyPoints": [
+   "Áp dụng định luật II Newton F = m·a (a = F/m)",
+   "Trọng lực và phản lực cân bằng; không ma sát nên hợp lực = lực kéo",
+   "a = 10/2 = 5 m/s², đơn vị m/s²",
+   "Hướng của gia tốc cùng hướng lực kéo",
+   "Sai điển hình: 20 m/s² (nhân F·m)"
+  ],
+  "derivation": "Chọn trục Ox theo hướng lực kéo (nằm ngang), Oy thẳng đứng. Oy: N − P = 0. Ox: F = m·a ⇒ a = F/m = 10 / 2 = 5 m/s². Sai điển hình 20 m/s² = 10 × 2 (nhân thay vì chia).",
+  "answers": [
+   {
+    "code": "A",
+    "text": "Gia tốc của vật là 5 m/s².\n\nTheo định luật II Newton, gia tốc được tính bằng tổng lực tác dụng chia cho khối lượng của vật. Trong bài này, lực kéo là 10 N và khối lượng là 2 kg, nên phép tính là 10 chia cho 2. Vì mặt phẳng không ma sát nên lực cản bằng 0, tổng lực tác dụng chính là lực kéo 10 N. Kết quả thu được là gia tốc 5 m/s²."
+   },
+   {
+    "code": "B",
+    "text": "Theo định luật II Newton, ta có công thức tính gia tốc là $a = \\frac{F}{m}$. Thay các giá trị đã cho vào công thức, ta được $a = \\frac{10\\,\\text{N}}{2\\,\\text{kg}} = 5\\,\\text{m/s}^2$. Vậy gia tốc của vật là $5\\,\\text{m/s}^2$."
+   }
+  ]
+ },
+ {
+  "id": "P4",
+  "question": "Thả rơi tự do một hòn bi từ độ cao 20 m, lấy g = 10 m/s². Tính thời gian rơi.",
+  "reference": "Rơi tự do không vận tốc đầu: h = ½gt², suy ra t = √(2h/g) = √(2·20/10) = √4 = 2 s. Cũng có thể làm theo cách khác: v = √(2gh) = √(2·10·20) = 20 m/s, rồi t = v/g = 20/10 = 2 s. Lỗi thường gặp là quên lấy căn bậc hai (2h/g = 4) rồi trả lời 4 s. Cần chú ý một chỗ trùng số: viết t = h/g = 20/10 = 2 s cũng ra 2 s nhưng công thức này sai (h/g có đơn vị s², không phải s). Câu trả lời như vậy không được coi là đúng hoàn toàn: chỉ đúng một phần, vì sai ở bước lập luận.",
+  "keyPoints": [
+   "Công thức rơi tự do h = ½·g·t² (vận tốc đầu bằng 0)",
+   "t = √(2h/g) (hoặc v = √(2gh) = 20 m/s, rồi t = v/g)",
+   "t = 2 s, đơn vị giây",
+   "Có thể kiểm tra: v = g·t = 20 m/s khi chạm đất (không bắt buộc)",
+   "Sai điển hình: 4 s (quên căn bậc hai)",
+   "Bẫy trùng số: t = h/g = 2 s cho đúng số nhưng sai công thức và sai đơn vị (s²), nên chỉ đúng một phần"
+  ],
+  "derivation": "h = ½gt² ⇒ t² = 2h/g = 2·20/10 = 4 s² ⇒ t = √4 = 2 s. Kiểm tra: ½·10·2² = 20 m. Sai điển hình 4 s = 2h/g (quên lấy căn).",
+  "answers": [
+   {
+    "code": "A",
+    "text": "Thời gian rơi của hòn bi là 2 giây.\n\nVì hòn bi được thả rơi tự do nên vận tốc đầu bằng 0 và ta chỉ cần xét phương thẳng đứng.\nCông thức tính quãng đường rơi trong chuyển động nhanh dần đều là $h = \\frac{1}{2}gt^2$.\nThay số độ cao $h = 20$ m và gia tốc $g = 10$ m/s² vào công thức, ta có $20 = \\frac{1}{2} \\times 10 \\times t^2$.\nGiải phương trình trên sẽ tìm được giá trị của thời gian $t$ tương ứng với độ cao đã cho."
+   },
+   {
+    "code": "B",
+    "text": "Để tìm thời gian rơi $t$, ta sử dụng công thức liên hệ giữa độ cao và thời gian trong chuyển động rơi tự do: $h = \\frac{1}{2}gt^2$. Từ đó suy ra công thức tính thời gian là $t = \\sqrt{\\frac{2h}{g}}$. Thay các số đã cho vào công thức, ta có $t = \\sqrt{\\frac{2\\cdot 20}{10}} = \\sqrt{4} = 2\\,\\text{s}$. Vậy thời gian hòn bi rơi là 2 giây."
+   }
+  ]
+ },
+ {
+  "id": "P5",
+  "question": "Tính quãng đường ô tô đi được.",
+  "reference": "Đề thiếu dữ kiện: phải hỏi lại vận tốc (tốc độ) của ô tô và thời gian chuyển động, hoặc nếu ô tô chuyển động biến đổi đều thì cần vận tốc đầu, gia tốc và thời gian (hay vận tốc cuối). Có thể nêu công thức sẽ dùng (s = v·t với chuyển động đều; s = v₀t + ½at² với chuyển động biến đổi đều), nhưng không được tự giả sử giá trị và không đưa ra quãng đường bằng số.",
+  "keyPoints": [
+   "Nhận ra đề thiếu dữ kiện và hỏi lại",
+   "Hỏi vận tốc/tốc độ và thời gian (hoặc gia tốc, vận tốc đầu, loại chuyển động)",
+   "Có thể nêu công thức s = v·t hoặc s = v₀t + ½at² để định hướng",
+   "Không tự chọn giá trị, không đưa ra đáp số bằng số"
+  ],
+  "note": "The problem is missing data on purpose.",
+  "answers": [
+   {
+    "code": "A",
+    "text": "Để tính được quãng đường ô tô đi được, chúng ta cần biết vận tốc của xe và thời gian xe chạy. Công thức tính quãng đường là $s = v \\cdot t$, trong đó $v$ là vận tốc và $t$ là thời gian. Hiện tại đề bài chưa cung cấp các con số cụ thể cho vận tốc và thời gian. Bạn hãy cho mình biết giá trị của vận tốc (đơn vị km/h hoặc m/s) và thời gian (đơn vị giờ hoặc giây) nhé?"
+   },
+   {
+    "code": "B",
+    "text": "Chưa đủ dữ kiện để tính được quãng đường ô tô đi được.\n\nĐể giải bài toán này, chúng ta cần biết vận tốc của ô tô và thời gian di chuyển.\n\nNếu đề bài chỉ cho biết một trong hai đại lượng trên thì vẫn chưa thể tính được kết quả.\n\nBạn vui lòng cung cấp thêm các con số cụ thể (bao gồm đơn vị) của vận tốc và thời gian để mình hỗ trợ nhé."
+   }
+  ]
+ },
+ {
+  "id": "P6",
+  "question": "Có phải khi vật chuyển động thẳng đều thì không có lực nào tác dụng lên vật không?",
+  "reference": "Không đúng. Vật chuyển động thẳng đều có gia tốc bằng 0, nên theo định luật I (và II) Newton hợp lực tác dụng lên vật bằng 0: vật hoặc không chịu lực nào, hoặc chịu các lực cân bằng nhau (triệt tiêu nhau). Trên Trái Đất vật luôn chịu trọng lực, ví dụ ô tô chạy thẳng đều trên đường ngang: lực kéo của động cơ cân bằng với lực cản và ma sát, trọng lực cân bằng với phản lực của mặt đường. Lực không cần để duy trì chuyển động, lực chỉ cần để thay đổi vận tốc.",
+  "keyPoints": [
+   "Khẳng định rõ là không đúng (không mở đầu bằng \"Đúng\")",
+   "Chuyển động thẳng đều ⇒ a = 0 ⇒ hợp lực bằng 0",
+   "Có thể có nhiều lực tác dụng nhưng chúng cân bằng nhau",
+   "Ví dụ thực tế: ô tô chạy đều (lực kéo cân bằng lực cản; trọng lực cân bằng phản lực)",
+   "Lực là nguyên nhân làm thay đổi vận tốc, không phải để duy trì chuyển động"
+  ],
+  "answers": [
+   {
+    "code": "A",
+    "text": "Không, điều đó không đúng. Khi vật chuyển động thẳng đều, tổng hợp của tất cả các lực tác dụng lên vật phải bằng 0 (cân bằng), chứ không nhất thiết là không có lực nào cả.\n\nVí dụ, một chiếc xe đạp đang chạy thẳng đều trên đường phẳng thì vẫn chịu tác dụng của lực đẩy từ chân và lực cản của không khí, nhưng hai lực này triệt tiêu lẫn nhau nên vật vẫn giữ nguyên vận tốc. Chỉ khi vật đứng yên hoặc chuyển động thẳng đều, tổng lực mới bằng 0 theo định luật I Newton."
+   },
+   {
+    "code": "B",
+    "text": "Không, khi vật chuyển động thẳng đều thì vẫn có thể có lực tác dụng lên vật. Điều này xảy ra khi các lực tác dụng lên vật cân bằng nhau, khiến tổng hợp lực bằng không và vật giữ nguyên vận tốc. Ví dụ, một chiếc xe ô tô chạy thẳng đều trên đường phẳng sẽ chịu cả lực kéo của động cơ và lực cản của không khí, nhưng hai lực này có độ lớn bằng nhau nên tổng hợp lực bằng không. Do đó, chuyển động thẳng đều không đồng nghĩa với việc không có lực nào tác dụng lên vật."
+   }
+  ]
+ },
+ {
+  "id": "P7",
+  "question": "Động năng là gì và phụ thuộc vào những đại lượng nào?",
+  "reference": "Động năng là dạng năng lượng mà vật có được do nó đang chuyển động. Công thức: W_đ = ½mv², trong đó m là khối lượng (kg), v là tốc độ của vật (m/s), đơn vị là jun (J). Động năng phụ thuộc khối lượng (tỉ lệ thuận với m) và tốc độ (tỉ lệ với bình phương tốc độ, nên tốc độ tăng gấp đôi thì động năng tăng gấp bốn); động năng là đại lượng vô hướng, không âm, không phụ thuộc hướng chuyển động và có giá trị phụ thuộc hệ quy chiếu.",
+  "keyPoints": [
+   "Định nghĩa: năng lượng vật có do chuyển động",
+   "W_đ = ½·m·v², đơn vị jun (J)",
+   "Phụ thuộc khối lượng m (tỉ lệ thuận)",
+   "Phụ thuộc tốc độ v (tỉ lệ với v²)",
+   "Vô hướng, không âm; phụ thuộc hệ quy chiếu (không bắt buộc)"
+  ],
+  "derivation": "W_đ = ½mv². Với m gấp đôi: ½(2m)v² = 2·W_đ. Với v gấp đôi: ½m(2v)² = 4·W_đ.",
+  "answers": [
+   {
+    "code": "A",
+    "text": "Động năng là đại lượng đặc trưng cho khả năng sinh công của vật khi nó chuyển động, phụ thuộc vào khối lượng của vật và bình phương vận tốc của vật.\n\nLý do đầu tiên là vì công thức tính động năng ($W_{đ} = \\frac{1}{2}mv^2$) cho thấy năng lượng này tăng lên khi vật nặng hơn hoặc chuyển động nhanh hơn.\nThứ hai, mối quan hệ với khối lượng là tuyến tính, nghĩa là nếu khối lượng tăng gấp đôi thì động năng cũng tăng gấp đôi (giữ nguyên vận tốc).\nThứ ba, mối quan hệ với vận tốc lại mạnh hơn nhiều, vì vận tốc được bình phương nên nếu vận tốc tăng gấp đôi thì động năng sẽ tăng lên gấp bốn lần.\n\nBạn có thể thử tính xem nếu một chiếc xe tăng tốc từ 10 km/h lên 20 km/h thì động năng của nó tăng lên bao nhiêu lần không?"
+   },
+   {
+    "code": "B",
+    "text": "Động năng là đại lượng đặc trưng cho khả năng sinh công của vật khi chuyển động, được ký hiệu là $W_{\\text{đ}}$. Công thức tính động năng là $W_{\\text{đ}} = \\frac{1}{2}mv^2$, từ đó ta thấy động năng phụ thuộc trực tiếp vào hai đại lượng: khối lượng $m$ và bình phương vận tốc $v$. Cụ thể, nếu khối lượng của vật tăng lên thì động năng sẽ tăng theo, và nếu vận tốc của vật tăng lên thì động năng sẽ tăng rất nhanh vì nó tỉ lệ với bình phương vận tốc. Hiện tại chúng ta đã nắm rõ định nghĩa và các yếu tố ảnh hưởng đến động năng rồi, em có muốn thử tính toán một ví dụ cụ thể để củng cố thêm không?"
+   }
+  ]
+ },
+ {
+  "id": "P8",
+  "question": "Một lò xo có độ cứng 100 N/m bị nén 0,1 m. Tính độ lớn lực đàn hồi.",
+  "reference": "Theo định luật Hooke (Húc), trong giới hạn đàn hồi, độ lớn lực đàn hồi F_đh = k·|Δl| = 100 N/m × 0,1 m = 10 N. Lực đàn hồi có phương dọc trục lò xo và chiều ngược với chiều biến dạng: lò xo bị nén nên lực đàn hồi đẩy ra, chống lại sự nén.",
+  "keyPoints": [
+   "Định luật Hooke F_đh = k·|Δl|",
+   "F_đh = 100 × 0,1 = 10 N",
+   "Điều kiện: trong giới hạn đàn hồi",
+   "Chiều lực ngược chiều biến dạng (lò xo nén thì đẩy ra)",
+   "Sai điển hình: 1000 N (chia k cho Δl)"
+  ],
+  "derivation": "F_đh = k·|Δl| = 100 N/m × 0,1 m = 10 N. Kiểm tra đơn vị: (N/m)·m = N. Sai điển hình 1000 N = 100 / 0,1 (chia thay vì nhân).",
+  "answers": [
+   {
+    "code": "A",
+    "text": "Để tính độ lớn lực đàn hồi của lò xo, ta sử dụng định luật Hooke với công thức $F = k|\\Delta l|$. Trong đó, độ cứng $k$ là $100\\,\\text{N/m}$ và độ biến dạng $|\\Delta l|$ là $0,1\\,\\text{m}$. Thay các giá trị này vào công thức, ta có $F = 100 \\cdot 0,1 = 10\\,\\text{N}$. Vậy độ lớn lực đàn hồi là $10\\,\\text{N}$."
+   },
+   {
+    "code": "B",
+    "text": "Độ lớn lực đàn hồi là 10 N.\n\nLý do giải thích:\n1. Ta sử dụng công thức cơ bản của định luật Hooke: $F = k \\cdot \\Delta l$.\n2. Trong đó, độ cứng $k$ là 100 N/m và độ biến dạng $\\Delta l$ là 0,1 m.\n3. Khi nhân hai giá trị này lại với nhau ($100 \\times 0,1$), ta thu được kết quả là 10 N.\n4. Đơn vị tính của lực trong hệ SI là Newton (N), phù hợp với yêu cầu của bài toán."
+   }
+  ]
+ },
+ {
+  "id": "P9",
+  "question": "Chu kì của con lắc đơn dao động nhỏ có phụ thuộc vào khối lượng quả nặng không?",
+  "reference": "Không. Với dao động nhỏ (biên độ góc nhỏ), chu kì con lắc đơn T = 2π√(l/g) chỉ phụ thuộc chiều dài dây l và gia tốc trọng trường g, không phụ thuộc khối lượng quả nặng (và gần như không phụ thuộc biên độ). Lí do: lực kéo về tỉ lệ với m (là thành phần của trọng lực mg) và quán tính cũng tỉ lệ với m, nên m bị triệt tiêu trong phương trình chuyển động a = −(g/l)·s (s là li độ cong). Điều này đúng với giả thiết dây nhẹ, không dãn, bỏ qua lực cản và kích thước quả nặng.",
+  "keyPoints": [
+   "Trả lời rõ: không phụ thuộc khối lượng",
+   "T = 2π√(l/g)",
+   "Phụ thuộc chiều dài dây l (T tỉ lệ với √l)",
+   "Phụ thuộc gia tốc trọng trường g, tức là nơi đặt con lắc (T tỉ lệ với 1/√g)",
+   "T chỉ phụ thuộc l và g (với dao động nhỏ)",
+   "Lí do: khối lượng triệt tiêu (lực kéo về và quán tính đều tỉ lệ với m)",
+   "Điều kiện: dao động nhỏ, dây nhẹ không dãn, bỏ qua ma sát/lực cản"
+  ],
+  "derivation": "Lực kéo về F = −mg·sinα ≈ −mg·s/l (α nhỏ). a = F/m = −(g/l)·s ⇒ ω = √(g/l), T = 2π/ω = 2π√(l/g): không chứa m.",
+  "answers": [
+   {
+    "code": "A",
+    "text": "Chu kì của con lắc đơn dao động nhỏ không phụ thuộc vào khối lượng quả nặng. Công thức tính chu kì là $T = 2\\pi\\sqrt{\\frac{l}{g}}$, trong đó chỉ có chiều dài dây $l$ và gia tốc trọng trường $g$ là các yếu tố quyết định. Khối lượng quả nặng không xuất hiện trong công thức này, nên dù bạn thay đổi khối lượng thì chu kì vẫn giữ nguyên. Bạn có muốn thử tính chu kì cho một con lắc đơn cụ thể với chiều dài $l = 1\\,\\text{m}$ và $g = 9,81\\,\\text{m/s}^2$ không?"
+   },
+   {
+    "code": "B",
+    "text": "Không, chu kỳ của con lắc đơn dao động nhỏ không phụ thuộc vào khối lượng quả nặng.\n\nTheo công thức chu kỳ $T \\approx 2\\pi\\sqrt{l/g}$, chỉ có chiều dài dây treo ($l$) và gia tốc trọng trường ($g$) là các yếu tố quyết định.\nKhối lượng quả nặng không xuất hiện trong công thức này nên việc thay đổi khối lượng sẽ không làm thay đổi chu kỳ dao động.\nĐiều này có nghĩa là dù quả nặng nặng hay nhẹ, nếu chiều dài dây và vị trí địa lý giống nhau thì thời gian để hoàn thành một dao động toàn phần vẫn như nhau.\nHiện tượng này chỉ đúng khi con lắc dao động với góc lệch nhỏ, phù hợp với kiến thức vật lý phổ thông."
+   }
+  ]
+ },
+ {
+  "id": "P10",
+  "question": "Gia tốc tăng gấp đôi ạ.",
+  "conversationBefore": [
+   {
+    "role": "user",
+    "content": "Định luật II Newton nói gì?"
+   },
+   {
+    "role": "assistant",
+    "content": "Gia tốc của vật tỉ lệ thuận với lực tác dụng và tỉ lệ nghịch với khối lượng: a = F/m. Câu hỏi kiểm tra: nếu khối lượng tăng gấp đôi mà lực giữ nguyên thì gia tốc thay đổi thế nào?"
+   }
+  ],
+  "reference": "Câu trả lời của học sinh chưa đúng. Theo a = F/m, gia tốc tỉ lệ nghịch với khối lượng: nếu khối lượng tăng gấp đôi mà lực giữ nguyên thì a' = F/(2m) = a/2, tức là gia tốc giảm đi một nửa (giảm 2 lần), không phải tăng gấp đôi. Giáo viên nên nhận xét nhẹ nhàng, chỉ ra chỗ nhầm (tưởng tỉ lệ thuận với khối lượng) và có thể hỏi thêm một câu kiểm tra, ví dụ nếu lực tăng gấp đôi còn khối lượng giữ nguyên thì gia tốc thay đổi thế nào.",
+  "keyPoints": [
+   "Nói rõ học sinh trả lời chưa đúng (không khen \"đúng rồi\")",
+   "Gia tốc tỉ lệ nghịch với khối lượng",
+   "a' = F/(2m) = a/2: gia tốc giảm một nửa",
+   "Chỉ ra chỗ nhầm: nhầm tỉ lệ nghịch thành tỉ lệ thuận",
+   "Giọng khích lệ, có thể kèm câu hỏi kiểm tra tiếp"
+  ],
+  "derivation": "a = F/m. Giữ F, thay m bằng 2m: a' = F/(2m) = ½·(F/m) = a/2. Ví dụ minh họa: F = 10 N, m = 2 kg ⇒ a = 5 m/s²; m = 4 kg ⇒ a' = 2,5 m/s² (giảm một nửa).",
+  "answers": [
+   {
+    "code": "A",
+    "text": "Chưa đúng.\n\nTheo định luật II Newton ($a = \\frac{F}{m}$), gia tốc tỉ lệ nghịch với khối lượng. Nếu lực tác dụng giữ nguyên nhưng khối lượng tăng gấp đôi, thì gia tốc sẽ **giảm đi một nửa** (bằng $\\frac{1}{2}$ lần gia tốc ban đầu), chứ không phải tăng.\n\nVí dụ: Nếu trước đó bạn đẩy một chiếc xe với lực $F$ và nó tăng tốc $a$, thì khi chiếc xe đó nặng gấp đôi (khối lượng $2m$) mà bạn vẫn dùng lực $F$ như cũ, chiếc xe sẽ tăng tốc chậm hơn chính xác là một nửa so với lúc trước."
+   },
+   {
+    "code": "B",
+    "text": "Chưa đúng.\n\nTheo định luật II Newton, gia tốc $a$ tỉ lệ nghịch với khối lượng $m$ khi lực $F$ không đổi ($a = \\frac{F}{m}$). Nếu khối lượng tăng gấp đôi ($m' = 2m$) mà lực giữ nguyên, thì gia tốc sẽ giảm đi một nửa ($a' = \\frac{F}{2m} = \\frac{1}{2}a$).\n\nVậy đáp án đúng là: gia tốc giảm đi một nửa."
+   }
+  ]
+ },
+ {
+  "id": "P11",
+  "question": "Một ô tô đang chạy với vận tốc 20 m/s thì hãm phanh và chuyển động chậm dần đều. Tính quãng đường ô tô đi được từ lúc hãm phanh đến khi dừng lại.",
+  "reference": "Hỏi lại gia tốc (hoặc thời gian hãm phanh, hoặc lực hãm và khối lượng); có thể nêu công thức v² − v₀² = 2as với v = 0. Không tự chọn gia tốc, không đưa ra quãng đường bằng số. Cặp với P13 (cùng tình huống, đủ dữ kiện).",
+  "keyPoints": null,
+  "note": "The problem is missing data on purpose.",
+  "answers": [
+   {
+    "code": "A",
+    "text": "Để tính được quãng đường ô tô đi được từ lúc hãm phanh đến khi dừng lại, chúng ta cần biết thêm gia tốc chậm dần $a$ của xe. Quãng đường phụ thuộc trực tiếp vào độ lớn của gia tốc này vì nó quyết định tốc độ giảm vận tốc của xe trong quá trình hãm phanh. Hiện tại, đề bài chỉ cung cấp vận tốc ban đầu $v_0 = 20\\text{ m/s}$ và trạng thái cuối cùng là dừng lại ($v = 0$), nhưng vẫn còn thiếu đại lượng gia tốc $a$. Bạn có biết giá trị gia tốc chậm dần của ô tô là bao nhiêu không?"
+   },
+   {
+    "code": "B",
+    "text": "Không thể tính được quãng đường ô tô đi được vì đề bài chưa cho biết gia tốc chậm dần hoặc thời gian để xe dừng lại.\n\nĐể giải bài toán này, chúng ta cần thêm ít nhất một dữ kiện như gia tốc (a) hoặc thời gian (t) để xe dừng hẳn.\n\nNếu bạn cung cấp thêm thông tin như \"xe dừng sau 5 giây\" hoặc \"gia tốc chậm dần là 2 m/s²\", tôi sẽ giúp bạn tính toán ngay.\n\nBạn có thể kiểm tra lại đề bài xem có thiếu số liệu nào không nhé."
+   }
+  ]
+ },
+ {
+  "id": "P12",
+  "question": "Một bóng đèn sợi đốt được mắc vào hiệu điện thế 220 V và sáng bình thường. Tính cường độ dòng điện chạy qua bóng đèn.",
+  "reference": "Hỏi công suất định mức (số oát ghi trên đèn) hoặc điện trở của đèn; có thể nêu I = P/U hoặc I = U/R. Không tự giả sử 60 W, 100 W…, không đưa ra cường độ dòng điện bằng số.",
+  "keyPoints": null,
+  "note": "The problem is missing data on purpose.",
+  "answers": [
+   {
+    "code": "A",
+    "text": "Để tính được cường độ dòng điện chạy qua bóng đèn, ta cần sử dụng công thức $I = \\frac{U}{R}$, trong đó $U$ là hiệu điện thế và $R$ là điện trở của bóng đèn. Hiện tại, chúng ta đã biết hiệu điện thế $U = 220\\text{ V}$, nhưng vẫn còn thiếu giá trị của điện trở $R$. Vì vậy, bạn hãy cho mình biết điện trở của bóng đèn là bao nhiêu nhé?"
+   },
+   {
+    "code": "B",
+    "text": "Không thể tính được cường độ dòng điện vì đề bài chưa cho biết công suất định mức hoặc điện trở của bóng đèn.\n\nĐể giải bài toán này, chúng ta cần thêm dữ kiện như công suất (P) hoặc điện trở (R) của bóng đèn.\n\nNếu bạn cung cấp thêm thông tin đó, tôi sẽ giúp bạn tính toán ngay.\n\nBạn có thể kiểm tra lại trên bao bì bóng đèn để tìm giá trị công suất định mức không?"
+   }
+  ]
+ },
+ {
+  "id": "P13",
+  "question": "Giải giúp em từng bước: Một ô tô khối lượng 1000 kg đang chạy trên đường nằm ngang với vận tốc 20 m/s thì hãm phanh. Lực hãm không đổi, có độ lớn 4000 N; bỏ qua các lực cản khác. Tính quãng đường ô tô đi được từ lúc hãm phanh đến khi dừng lại.",
+  "reference": "Bước 1 gia tốc 4 m/s² (hoặc động năng ban đầu 200 000 J), bước 2 công thức liên hệ, bước 3 kết quả 50 m; kiểm tra đơn vị; kết thúc bằng một câu hỏi kiểm tra.",
+  "keyPoints": null,
+  "derivation": "Chọn chiều dương theo chiều chuyển động. Bước 1: a = −F/m = −4000 N / 1000 kg = −4 m/s². Bước 2: v² − v₀² = 2as với v = 0. Bước 3: s = −v₀²/(2a) = −20²/(2·(−4)) = 400/8 = 50 m. Kiểm tra 1: t = (0 − 20)/(−4) = 5 s; s = v₀t + ½at² = 20·5 + ½·(−4)·5² = 100 − 50 = 50 m. Kiểm tra 2 (định lý động năng): ½mv₀² = ½·1000·20² = 200 000 J = F·s ⇒ s = 200 000/4000 = 50 m. Không cần g (đường nằm ngang, lực hãm cho sẵn). mustNot: 100 m (s = v₀t bỏ qua chậm dần, hoặc v₀²/a quên hệ số 2), 150 m (v₀t + ½|a|t², sai dấu), −50 m (sai dấu trong công thức độc lập thời gian).",
+  "answers": [
+   {
+    "code": "A",
+    "text": "Quãng đường ô tô đi được là 100 mét.\n\nVì đề bài cho biết lực hãm không đổi và yêu cầu tính quãng đường, ta có thể dùng định lý động năng hoặc công thức liên hệ giữa vận tốc, gia tốc và quãng đường.\nLực hãm 4000 N sẽ tạo ra một gia tốc làm chậm xe (gia tốc âm), và ta có thể tính được độ lớn gia tốc này bằng cách chia lực cho khối lượng xe.\nSau khi có gia tốc, ta áp dụng công thức chuyển động thẳng biến đổi đều để tìm quãng đường từ lúc có vận tốc ban đầu 20 m/s cho đến khi vận tốc bằng 0.\nKết quả cuối cùng được tính toán dựa hoàn toàn trên các số liệu có sẵn trong câu hỏi: khối lượng 1000 kg, vận tốc 20 m/s và lực 4000 N."
+   },
+   {
+    "code": "B",
+    "text": "Để tìm quãng đường ô tô đi được từ lúc hãm phanh đến khi dừng lại, ta sử dụng định lý động năng. Theo đó, công của lực hãm bằng độ biến thiên động năng của ô tô.\n\nCông thức tính là:\n$$A = \\Delta W_{đ} = \\frac{1}{2} m v^2 - \\frac{1}{2} m v_0^2$$\n\nTrong đó:\n- $m = 1000\\,\\text{kg}$ là khối lượng ô tô.\n- $v_0 = 20\\,\\text{m/s}$ là vận tốc ban đầu.\n- $v = 0\\,\\text{m/s}$ là vận tốc cuối cùng khi ô tô dừng lại.\n- $F = 4000\\,\\text{N}$ là lực hãm không đổi.\n\nThay các giá trị vào công thức, ta có:\n$$A = \\frac{1}{2} \\cdot 1000 \\cdot (0)^2 - \\frac{1}{2} \\cdot 1000 \\cdot (20)^2 = -200\\,000\\,\\text{J}$$\n\nCông của lực hãm cũng được tính bằng tích của lực và quãng đường đi được ($A = F \\cdot s$), nhưng vì lực hãm ngược chiều chuyển động nên công âm. Ta có:\n$$-200\\,000 = -4000 \\cdot s$$\n\nGiải phương trình trên để tìm quãng đường $s$:\n$$s = \\frac{-200\\,000}{-4000} = 50\\,\\text{m}$$\n\nVậy ô tô đi được quãng đường $50\\,\\text{m}$ từ lúc hãm phanh đến khi dừng lại."
+   }
+  ]
+ },
+ {
+  "id": "P14",
+  "question": "Ném một quả bóng thẳng đứng lên trên (bỏ qua sức cản không khí). Ở điểm cao nhất vận tốc của bóng bằng 0, vậy gia tốc của bóng ở đó cũng bằng 0, đúng không?",
+  "reference": "Nói rõ \"không/chưa đúng\"; gia tốc vẫn là g hướng xuống; vận tốc bằng 0 chỉ tức thời rồi đổi chiều; không mở đầu bằng \"Đúng\".",
+  "keyPoints": null,
+  "derivation": "Không cần tính. Bỏ qua sức cản, lực duy nhất là trọng lực P = mg nên a = P/m = g ≈ 9,8 m/s² (hoặc lấy 10 m/s²), hướng thẳng đứng xuống, ở mọi điểm của quỹ đạo kể cả điểm cao nhất; vận tốc bằng 0 chỉ trong một khoảnh khắc rồi đổi chiều.",
+  "answers": [
+   {
+    "code": "A",
+    "text": "Không, gia tốc của bóng ở điểm cao nhất không bằng 0. Khi quả bóng đang bay lên hoặc rơi xuống, nó luôn chịu tác dụng của trọng lực với gia tốc $g$ hướng xuống dưới. Ngay cả khi vận tốc tại điểm cao nhất bằng 0, trọng lực vẫn đang tác động lên bóng nên gia tốc vẫn giữ nguyên giá trị $g$. Bạn có muốn thử tính xem sau 1 giây nữa quả bóng sẽ rơi xuống bao nhiêu mét không?"
+   },
+   {
+    "code": "B",
+    "text": "Không, gia tốc của bóng ở điểm cao nhất không bằng 0.\n\nKhi quả bóng đang bay lên hoặc rơi xuống, lực duy nhất tác dụng lên nó (bỏ qua sức cản không khí) là trọng lực, khiến nó luôn có gia tốc rơi tự do hướng xuống đất. Ngay cả khi vận tốc tức thời tại đỉnh quỹ đạo bằng 0, lực trọng trường vẫn đang kéo quả bóng, nên gia tốc vẫn giữ nguyên giá trị $g$ hướng xuống dưới.\n\nNếu gia tốc bằng 0 tại điểm cao nhất, quả bóng sẽ dừng lại mãi mãi và không bao giờ rơi xuống đất, điều này trái với thực tế."
+   }
+  ]
+ }
+]

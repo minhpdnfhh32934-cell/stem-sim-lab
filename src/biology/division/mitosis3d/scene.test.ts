@@ -387,4 +387,19 @@ describe('3D mitosis scene', () => {
     expect(looks().filter((l) => l === 'hi' || l === 'dim')).toEqual([]);
     ms.dispose();
   });
+
+  it('"Làm mờ phần còn lại" off: a picked part still glows, the others keep their own look', () => {
+    const tl = buildTimeline(2, 'animal');
+    const ms = buildMitosisScene(tl, PALETTE, { segments: 12 });
+    ms.update(tl.stateAt(tl.keyTime('metaphase')));
+    ms.setSelection({ component: 'spindle' });
+    const looks = () => [...visibleMaterials(ms.scene)].map((m) => m.userData.look as string);
+    expect(looks()).toContain('dim');
+    ms.setDimRest(false);
+    expect(looks()).not.toContain('dim');
+    expect(looks()).toContain('hi');
+    ms.setDimRest(true);
+    expect(looks()).toContain('dim');
+    ms.dispose();
+  });
 });

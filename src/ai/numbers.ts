@@ -43,18 +43,33 @@ function readings(token: string): number[] {
     const v = Number(s);
     if (Number.isFinite(v)) out.add(v);
   };
+  // A part of more than three digits after a separator is never a thousands group ("0,0025" is not
+  // 25); only tokens like that can have one (PLAIN), so every other token reads as before.
+  const long = (sep: string, dec: string) =>
+    (token.split(dec)[0] ?? '')
+      .split(sep)
+      .slice(1)
+      .some((g) => g.length > 3);
   // Decimal comma, dots as thousands separators (Vietnamese).
-  push(token.replace(/\./g, '').replace(',', '.'));
+  if (!long('.', ',')) push(token.replace(/\./g, '').replace(',', '.'));
   // Decimal point, commas as thousands separators (English).
-  push(token.replace(/,/g, ''));
+  if (!long(',', '.')) push(token.replace(/,/g, ''));
   // Only the first separator as decimal point.
-  push(token.replace(/[.,]/, '.').replace(/[.,]/g, ''));
+  if (
+    !token
+      .split(/[.,]/)
+      .slice(1)
+      .some((g) => g.length > 3)
+  )
+    push(token.replace(/[.,]/, '.').replace(/[.,]/g, ''));
   return [...out];
 }
 
 /** Scientific notation: a [.×x*] 10 ^? b */
 const SCI = /(\d+(?:[.,]\d+)?)\s*(?:[.×x*·])\s*10\s*\^?\s*\(?\s*(-?\d+)\s*\)?/g;
-const PLAIN = /\d+(?:[.,\s]\d{3})*(?:[.,]\d+)?|\d+/g;
+// A group of three digits is a thousands group only when no digit follows it: "0,2187" is one
+// number, not "0,218" and "7".
+const PLAIN = /\d+(?:[.,\s]\d{3}(?!\d))*(?:[.,]\d+)?|\d+/g;
 
 /**
  * Every number written in the text, one entry per written token, each with all its possible

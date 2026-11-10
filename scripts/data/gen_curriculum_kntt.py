@@ -488,8 +488,14 @@ PLACEMENTS = [
     ("logisticGrowth", "SH12", [24], "Tên Bài 24: sinh thái học quần thể."),
     ("cellStructure", "SH10", [7, 8], "Tên Bài 7–8: tế bào nhân sơ và tế bào nhân thực."),
     ("uniformCircularMotion", "VL10", [31, 32], "Tên Bài 31–32: động học của chuyển động tròn đều; lực hướng tâm và gia tốc hướng tâm."),
+    ("interference", "VL11", [12], "Tên Bài 12: giao thoa sóng (cảnh có hai nguồn cùng pha trên mặt nước; phần phách là mở rộng)."),
+    ("dcCircuit", "VL11", [23, 24, 25], "Tên Bài 23–25: điện trở, định luật Ohm, nguồn điện, năng lượng và công suất điện (cảnh có nguồn E, r và 1–3 điện trở)."),
     ("standingWave", "VL11", [13], "Tên Bài 13: sóng dừng (cảnh chỉ có dây hai đầu cố định)."),
     ("electricField", "VL11", [16, 17, 18], "Tên Bài 16–18: lực tương tác giữa các điện tích, khái niệm điện trường, điện trường đều."),
+    ("cellToDna", "SH10", [8], "Tên Bài 8: tế bào nhân thực (cấp tế bào và nhân của bài phóng to). Không xếp Bài 7 (tế bào nhân sơ): bài chỉ có tế bào nhân thực, dù thang kích thước H 7.1 của Bài 7 là một nguồn số liệu."),
+    ("cellToDna", "SH12", [7], "Tên Bài 7: cấu trúc và chức năng của nhiễm sắc thể (cấp NST kép, sợi nhiễm sắc, nucleosome, DNA)."),
+    ("crystalStructure", "HH12", [18], "Tên Bài 18: cấu tạo và liên kết trong tinh thể kim loại (cảnh có thêm tinh thể NaCl; Bài 11 Hoá học 10 tên là liên kết ion, không nêu tinh thể nên không xếp)."),
+    ("forcedOscillation", "VL11", [6], "Tên Bài 6: dao động tắt dần, dao động cưỡng bức, hiện tượng cộng hưởng (cảnh lò xo nằm ngang có cản và ngoại lực điều hoà)."),
 ]
 
 # Not placed (title not clear, or no lesson): (topic, subject, candidates, reason).
@@ -506,7 +512,10 @@ UNPLACED = [
     ("maxwellBoltzmann", "chemistry", "VL12 Bài 8, 12 (sách Vật lí; trong app chủ đề thuộc Hoá học)", "Không bài nào trong ba cuốn Hoá học có tên về phân bố Maxwell–Boltzmann; hai bài Vật lí 12 nói về mô hình động học phân tử chất khí."),
     ("michaelisMenten", "biology", "SH10 Bài 13–15", "Không bài nào có tên về động học enzyme."),
     ("lotkaVolterra", "biology", "SH12 Bài 26", "Tên Bài 26 là quần xã sinh vật, không nêu quan hệ con mồi – vật ăn thịt."),
+    ("acidBaseTitration", "chemistry", "HH11 Bài 2", "Tên Bài 2 là cân bằng trong dung dịch nước, không nêu chuẩn độ acid – base."),
     ("geneticDrift", "biology", "SH12 Bài 18, 21", "Tên Bài 18, 21 là di truyền học quần thể và học thuyết tiến hoá tổng hợp hiện đại, không nêu phiêu bạt di truyền."),
+    ("keplerOrbit", "physics", "— (ngoài 9 cuốn; có thể thuộc chuyên đề Vật lí 11 “Trường hấp dẫn”)", "Không bài nào trong ba cuốn Vật lí có tên về định luật Kepler; chuyên đề học tập không thuộc 9 cuốn nên giáo viên kiểm."),
+    ("fourierSeries", "physics", "VL11 Bài 13 (mở rộng)", "Không bài nào có tên về hoạ âm hay chuỗi Fourier; hoạ âm của dây chỉ là một phần của Bài 13 (sóng dừng)."),
 ]
 
 # Lessons of 0.8.0 Part A (plan #37 §4.2): listed in the document before their topics exist.
@@ -646,7 +655,7 @@ def markdown(data: dict) -> str:
         "",
         "## Bài SGK ↔ chủ đề SimLab",
         "",
-        "Gồm các bài đã có chủ đề SimLab (đề xuất) và các bài của kế hoạch 0.8.0 Phần A (#37). Các bài khác sẽ thêm ở 0.8.1 (#54).",
+        "Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab chưa có; #54 mục 7). Cột \"Chủ đề SimLab\" là đề xuất, chờ giáo viên duyệt; \"chưa có\" là bài SimLab chưa có chủ đề nào.",
         "",
         "| Sách | Chương | Bài | Tên bài | Trang | Loại | Chủ đề SimLab | Ghi chú | review_status |",
         "| --- | --- | --- | --- | --- | --- | --- | --- | --- |",
@@ -655,15 +664,15 @@ def markdown(data: dict) -> str:
         for c in b["chapters"]:
             for l in c["lessons"]:
                 key = (b["id"], l["number"])
-                if key not in by_lesson and key not in PART_A:
-                    continue
-                status = ", ".join(by_lesson.get(key, [])) or f"chưa có — kế hoạch {PART_A[key]}"
+                planned = PART_A.get(key)
+                status = ", ".join(by_lesson.get(key, [])) or (f"chưa có — kế hoạch {planned}" if planned else "chưa có")
                 pairs = reasons.get(key, [])
                 if len({r for _, r in pairs}) > 1:
                     note = " ".join(f"{name}: {r}" for name, r in pairs)
                 else:
-                    note = pairs[0][1] if pairs else "Bài của 0.8.0 Phần A (#37 mục 4.2)."
-                out.append(f"| {b['title']} | {c['label']} | {l['number']} | {l['title']} | {l['page']} | {KIND_VI[l['kind']]} | {status} | {note} | pending |")
+                    note = pairs[0][1] if pairs else ("Bài của 0.8.0 Phần A (#37 mục 4.2)." if planned else "")
+                number = "" if l["number"] is None else l["number"]
+                out.append(f"| {b['title']} | {c['label']} | {number} | {l['title']} | {l['page']} | {KIND_VI[l['kind']]} | {status} | {note} | pending |")
     out += [
         "",
         "## Chủ đề chưa xếp lớp",

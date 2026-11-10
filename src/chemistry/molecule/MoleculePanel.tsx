@@ -20,6 +20,7 @@ import {
   vsepr,
   type Molecule,
 } from '../data/molecules';
+import { GroupFilter } from './GroupFilter';
 import { BOND_TYPE, POLARITY, orderName } from './labels';
 import { useMoleculeStore, type MoleculeTopic } from './store';
 
@@ -38,6 +39,7 @@ export function MoleculePanel({ topic }: { topic: MoleculeTopic }) {
 
   return (
     <div className="chem-form">
+      {topic === 'molecule3d' && <GroupFilter />}
       <div>
         <p className="el-card__name">{Lz(m.name)}</p>
         <p className="mono">{prettyFormula(m.display_formula)}</p>

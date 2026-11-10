@@ -179,12 +179,12 @@ export function buildDiffusionScene(m: DiffusionModel3D, o: SceneOptions): Diffu
     ? kit.solid(standColor, { roughness: 0.6 })
     : kit.own(new THREE.MeshLambertMaterial({ color: standColor }));
   const soluteMat = particleMaterial(kit, 'solute');
-  const haloMat = kit.glass(tok('--accent'), {
+  const haloMat = kit.glass(tok('--stage-accent'), {
     opacity: 0.1,
-    rim: { color: tok('--accent'), alpha: 0.95, strength: 1, power: 1.6 },
+    rim: { color: tok('--stage-accent'), alpha: 0.95, strength: 1, power: 1.6 },
   });
   const outlineMat = kit.own(
-    new THREE.LineBasicMaterial({ color: tok('--accent'), transparent: true, opacity: 0.95 }),
+    new THREE.LineBasicMaterial({ color: tok('--stage-accent'), transparent: true, opacity: 0.95 }),
   );
 
   // ── Tank: glass walls with a thickness around both compartments ─────────────────────

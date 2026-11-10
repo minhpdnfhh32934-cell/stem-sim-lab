@@ -36,7 +36,7 @@ export function SpectrumBottom() {
               style={{
                 left: `${((nm - VIS_MIN) / (VIS_MAX - VIS_MIN)) * 100}%`,
                 background: wavelengthColor(nm) ?? 'currentColor',
-                outline: n === nUpper && nLower === 2 ? '2px solid var(--accent)' : undefined,
+                outline: n === nUpper && nLower === 2 ? '2px solid var(--stage-accent)' : undefined,
               }}
             />
             <span

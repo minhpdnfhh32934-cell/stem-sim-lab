@@ -134,7 +134,7 @@ export function buildOsmosisScene(m: OsmosisModel3D, o: SceneOptions): OsmosisSc
   const faintMat = kit.solid(muted, { roughness: 0.5 });
   const plateMat = kit.solid(tok('--border'), { roughness: 0.55, clearcoat: 0.2 });
   const standMat = kit.solid(tok('--border-strong'), { roughness: 0.6, clearcoat: 0.2 });
-  const accent = tok('--accent');
+  const accent = tok('--stage-accent');
   const haloMat = kit.glass(accent, {
     opacity: 0.1,
     rim: { color: accent, alpha: 0.95, strength: 1, power: 1.6 },

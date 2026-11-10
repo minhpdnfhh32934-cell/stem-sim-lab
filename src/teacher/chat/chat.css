@@ -292,15 +292,15 @@
   padding: 2px;
   border-radius: 99px;
   background: var(--border-strong);
-  transition: background 140ms ease;
+  transition: background var(--dur-fast) ease;
 }
 .chat-toggle__track span {
   display: block;
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background: white;
-  transition: transform 140ms ease;
+  background: var(--switch-knob);
+  transition: transform var(--dur-fast) ease;
 }
 .chat-toggle.is-on {
   color: var(--text);
@@ -630,9 +630,9 @@
   border-radius: 12px;
   background: var(--bg-panel);
   transition:
-    border-color 160ms ease,
-    background 160ms ease,
-    transform 160ms ease;
+    border-color var(--dur-fast) ease,
+    background var(--dur-fast) ease,
+    transform var(--dur-fast) ease;
 }
 .chat-settings__model > .chat-settings__progress,
 .chat-settings__model > .chat-settings__error,

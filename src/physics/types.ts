@@ -53,6 +53,15 @@ export interface GraphDef {
   /** Axis label, e.g. "x (m)". */
   yLabel: LocalizedText;
   series: SeriesDef[];
+  /**
+   * Horizontal axis: a quantity of the state instead of time (a phase portrait, v against x).
+   * With `period` the value wraps (an angle in (−π, π]) and the curve breaks where it jumps.
+   */
+  x?: { label: LocalizedText; value: (state: Float64Array, p: Params) => number; period?: number };
+  /** Fixed curves drawn dashed behind the data, in the axes' SI units (e.g. a separatrix). */
+  guides?: (p: Params) => { label: LocalizedText; points: [number, number][] }[];
+  /** Phase circle: equal scales, the vector from the origin to the point and its projection on x. */
+  phasor?: boolean;
 }
 
 export interface Answer {
@@ -87,6 +96,12 @@ export interface BodyDef {
   /** Pick radius in metres. */
   radius: (p: Params) => number;
   draggable: boolean;
+  /**
+   * Dragging sets these parameters (SI) instead of pulling the body in the engine: for a body
+   * whose position is an input, not a state (a source on water). Each move restarts the run with
+   * the new values, keeping the view; not an intervention.
+   */
+  dragTo?: (x: number, y: number, p: Params, sources: Record<string, ParamSource>) => Params;
   /**
    * Whether the body is part of the scene for these params (default: always). An inactive
    * body is neither drawn by the scene nor pickable or shown in the Inspector.

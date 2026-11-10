@@ -515,6 +515,107 @@ add(
     unsupported=True,
 )
 
+# --- Giao thoa sóng hai nguồn (VL11 Bài 12) ------------------------------------------------------
+# Hai nguồn cùng pha: cực đại khi d2 − d1 = kλ, cực tiểu khi d2 − d1 = (k + ½)λ; trên đoạn AB không kể
+# A, B: −AB < d2 − d1 < AB. Đếm bằng phân số đúng (Fraction), không dùng số thực. Phách: f_b = |f1 − f2|.
+# mode: 0 = cùng tần số, 1 = khác tần số (phách); waveFrom 1 = đề cho bước sóng λ.
+from fractions import Fraction as Fr
+
+
+def maxima_between(d, lam):
+    r = Fr(d) / Fr(lam)
+    return sum(1 for k in range(-int(r) - 1, int(r) + 2) if abs(Fr(k)) < r)
+
+
+def minima_between(d, lam):
+    r = Fr(d) / Fr(lam)
+    return sum(1 for k in range(-int(r) - 2, int(r) + 2) if abs(Fr(k) + Fr(1, 2)) < r)
+
+
+add(
+    "int-01",
+    "Trên mặt nước có hai nguồn kết hợp A, B cách nhau 10 cm, dao động cùng pha với tần số 20 Hz. Tốc độ truyền sóng trên mặt nước là 30 cm/s. Tính bước sóng, số điểm dao động với biên độ cực đại và số điểm đứng yên trên đoạn AB (không kể A, B).",
+    "interference",
+    [
+        q("d", 10, "cm", "cách nhau 10 cm"),
+        q("f", 20, "Hz", "tần số 20 Hz"),
+        q("v", 30, "cm/s", "30 cm/s"),
+    ],
+    {
+        "wavelength": 0.30 / 20,
+        "maxima": maxima_between("10", Fr(30, 20)),
+        "minima": minima_between("10", Fr(30, 20)),
+    },
+)
+add(
+    "int-02",
+    "Ở mặt nước, hai nguồn kết hợp S₁, S₂ cách nhau 12 cm dao động cùng pha. Sóng trên mặt nước có bước sóng 1,6 cm. Tìm số vân cực đại và số vân cực tiểu giao thoa cắt đoạn S₁S₂ (không kể S₁, S₂).",
+    "interference",
+    [
+        q("d", 12, "cm", "cách nhau 12 cm"),
+        q("lambda", 1.6, "cm", "bước sóng 1,6 cm"),
+    ],
+    {
+        "maxima": maxima_between("12", "1.6"),
+        "minima": minima_between("12", "1.6"),
+        "fringe_spacing": 0.016 / 2,
+    },
+    missing=["f"],
+)
+add(
+    "int-03",
+    "Ở mặt nước, hai nguồn kết hợp A, B cách nhau 10 cm dao động cùng pha với tần số 10 Hz và cùng biên độ 2 mm. Tốc độ truyền sóng là 30 cm/s. Điểm M ở mặt nước cách A 9 cm và cách B 12 cm. Tính biên độ dao động của phần tử nước tại M.",
+    "interference",
+    [
+        q("d", 10, "cm", "cách nhau 10 cm"),
+        q("f", 10, "Hz", "tần số 10 Hz"),
+        q("a", 2, "mm", "biên độ 2 mm"),
+        q("v", 30, "cm/s", "30 cm/s"),
+        q("d1", 9, "cm", "cách A 9 cm"),
+        q("d2", 12, "cm", "cách B 12 cm"),
+    ],
+    # λ = 3 cm, d2 − d1 = 3 cm = λ: M trên vân cực đại bậc 1, A_M = 2a.
+    {"path_difference": 0.03, "order": 1, "amplitude_M": 2 * 0.002 * abs(math.cos(math.pi * 3 / 3))},
+)
+add(
+    "int-04",
+    "Hai nguồn sóng trên mặt nước dao động cùng biên độ với tần số 20 Hz và 22 Hz. Tốc độ truyền sóng là 40 cm/s. Tính tần số phách và chu kì phách của dao động tổng hợp tại một điểm trên mặt nước.",
+    "interference",
+    [
+        q("f", 20, "Hz", "tần số 20 Hz"),
+        q("f2", 22, "Hz", "22 Hz"),
+        q("v", 40, "cm/s", "40 cm/s"),
+    ],
+    {"beat_frequency": abs(20 - 22), "beat_period": 1 / abs(20 - 22)},
+    missing=["d"],
+)
+
+# Đề cho khoảng cách hai cực đại liên tiếp (= λ/2): AI không tự nhân đôi thành λ (ghi vào clarifications),
+# nên app hỏi tốc độ truyền sóng; không có đáp số.
+add(
+    "int-06",
+    "Ở mặt nước, hai nguồn kết hợp A, B cách nhau 9 cm dao động cùng pha với tần số 25 Hz. Khoảng cách giữa hai cực đại giao thoa liên tiếp trên đoạn AB là 1,5 cm. Tính tốc độ truyền sóng trên mặt nước.",
+    "interference",
+    [
+        q("d", 9, "cm", "cách nhau 9 cm"),
+        q("f", 25, "Hz", "tần số 25 Hz"),
+    ],
+    missing=["v"],
+)
+
+# Hai nguồn ngược pha: ngoài phạm vi của cảnh (chỉ hai nguồn cùng pha) → unsupported_parts.
+add(
+    "int-05",
+    "Hai nguồn kết hợp A, B cách nhau 8 cm trên mặt nước dao động ngược pha với tần số 25 Hz. Tốc độ truyền sóng là 50 cm/s. Tính số điểm dao động với biên độ cực đại trên đoạn AB.",
+    "interference",
+    [
+        q("d", 8, "cm", "cách nhau 8 cm"),
+        q("f", 25, "Hz", "tần số 25 Hz"),
+        q("v", 50, "cm/s", "50 cm/s"),
+    ],
+    unsupported=True,
+)
+
 # --- Điện trường của điện tích điểm --------------------------------------------------
 # q1 ở gốc O, q2 trên trục Ox, M = (xP, yP) với yP = 0 mặc định. k mặc định = 1/(4πε₀) (SciPy);
 # "lấy k = 9.10⁹" thì dùng số của đề. E = k|q|/r², F = |q0|·E, F12 = k|q1·q2|/r², tụ phẳng E = U/d.
@@ -603,12 +704,90 @@ add(
     missing=["xP", "yP"],
 )
 
-# --- Ngoài phạm vi ------------------------------------------------------------------
+# --- Dao động cưỡng bức và cộng hưởng (VL11 Bài 6) -------------------------------------
+def _forced_amp(m, k, b, F0, W):
+    w0 = math.sqrt(k / m)
+    g = b / (2 * m)
+    return (F0 / m) / math.hypot(w0 * w0 - W * W, 2 * g * W)
+
+
 add(
-    "ng-01",
+    "res-01",
+    "Một con lắc lò xo nằm ngang gồm vật nặng 0,5 kg và lò xo có độ cứng 50 N/m, hệ số cản 0,5 kg/s, chịu tác dụng của ngoại lực F = 1cos(8t) (N). Tính biên độ dao động khi đã ổn định.",
+    "forcedOscillation",
+    [
+        q("m", 0.5, "kg", "vật nặng 0,5 kg"),
+        q("k", 50, "N/m", "độ cứng 50 N/m"),
+        q("b", 0.5, "kg/s", "hệ số cản 0,5 kg/s"),
+        q("F0", 1, "N", "F = 1cos(8t) (N)"),
+        q("Omega", 8, "rad/s", "F = 1cos(8t) (N)"),
+    ],
+    {"A": _forced_amp(0.5, 50, 0.5, 1, 8)},
+)
+add(
+    "res-02",
+    "Vật khối lượng 200 g gắn vào lò xo có độ cứng 20 N/m, hệ số cản 0,2 kg/s, dao động dưới tác dụng của ngoại lực biên độ 0,5 N, tần số góc 12 rad/s. Tính biên độ dao động ổn định và tần số góc của ngoại lực để xảy ra cộng hưởng.",
+    "forcedOscillation",
+    [
+        q("m", 0.2, "kg", "khối lượng 200 g"),
+        q("k", 20, "N/m", "độ cứng 20 N/m"),
+        q("b", 0.2, "kg/s", "hệ số cản 0,2 kg/s"),
+        q("F0", 0.5, "N", "biên độ 0,5 N"),
+        q("Omega", 12, "rad/s", "tần số góc 12 rad/s"),
+    ],
+    {
+        "A": _forced_amp(0.2, 20, 0.2, 0.5, 12),
+        "omegaR": math.sqrt(20 / 0.2 - 2 * (0.2 / (2 * 0.2)) ** 2),
+    },
+)
+# --- Định luật II Kepler (mở rộng, ngoài SGK) ------------------------------------------
+add(
+    "kp-01",
+    "Một hành tinh chuyển động quanh Mặt Trời trên quỹ đạo elip có tâm sai 0,2. Tính tỉ số giữa tốc độ của hành tinh ở điểm cận nhật và ở điểm viễn nhật.",
+    "keplerOrbit",
+    [q("e", 0.2, "1", "tâm sai 0,2")],
+    {"speedRatio": (1 + 0.2) / (1 - 0.2)},
+)
+# --- Ngoài phạm vi ------------------------------------------------------------------
+# --- Mạch điện một chiều (VL11 Bài 23–25) ------------------------------------
+# layout: 0 = 1 điện trở, 1 = 2 nối tiếp, 3 = 2 song song. Đề không cho r: rInt mặc định 0 (không ghi).
+# "dc-01" là đề "ng-01" cũ (trước đây ngoài phạm vi).
+add(
+    "dc-01",
     "Một mạch điện gồm điện trở 10 Ω mắc vào hai cực của một nguồn điện có hiệu điện thế 12 V. Tính cường độ dòng điện chạy qua điện trở.",
-    "unsupported",
-    [],
+    "dcCircuit",
+    [
+        q("layout", 0, "1", "gồm điện trở 10 Ω"),
+        q("R1", 10, "ohm", "điện trở 10 Ω"),
+        q("emf", 12, "V", "hiệu điện thế 12 V"),
+    ],
+    {"I": 12 / 10},
+)
+add(
+    "dc-02",
+    "Một nguồn điện có suất điện động 12 V và điện trở trong 1 Ω được mắc với mạch ngoài gồm hai điện trở R₁ = 3 Ω và R₂ = 8 Ω mắc nối tiếp. Tính cường độ dòng điện trong mạch, hiệu điện thế giữa hai cực của nguồn và hiệu suất của nguồn.",
+    "dcCircuit",
+    [
+        q("layout", 1, "1", "mắc nối tiếp"),
+        q("emf", 12, "V", "suất điện động 12 V"),
+        q("rInt", 1, "ohm", "điện trở trong 1 Ω"),
+        q("R1", 3, "ohm", "R₁ = 3 Ω"),
+        q("R2", 8, "ohm", "R₂ = 8 Ω"),
+    ],
+    {"I": 12 / (3 + 8 + 1), "U": 12 / (3 + 8 + 1) * (3 + 8), "H": (3 + 8) / (3 + 8 + 1)},
+)
+add(
+    "dc-03",
+    "Hai điện trở R₁ = 6 Ω và R₂ = 3 Ω mắc song song rồi nối vào nguồn điện có suất điện động 6 V, điện trở trong không đáng kể. Tính cường độ dòng điện qua mạch chính và qua mỗi điện trở.",
+    "dcCircuit",
+    [
+        q("layout", 3, "1", "mắc song song"),
+        q("R1", 6, "ohm", "R₁ = 6 Ω"),
+        q("R2", 3, "ohm", "R₂ = 3 Ω"),
+        q("emf", 6, "V", "suất điện động 6 V"),
+        q("rInt", 0, "ohm", "điện trở trong không đáng kể"),
+    ],
+    {"I": 6 / (6 * 3 / (6 + 3)), "I1": 6 / 6, "I2": 6 / 3},
 )
 add(
     "ng-02",

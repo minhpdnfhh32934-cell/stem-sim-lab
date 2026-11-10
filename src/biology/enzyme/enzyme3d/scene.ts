@@ -295,9 +295,9 @@ export function buildEnzymeScene(o: EnzymeSceneOptions): EnzymeScene {
   const mutedRing = new THREE.Color(tok('--text-muted'));
   const substrateRing = new THREE.Color(tok(ROLES.substrate.token));
   const inhibitorRing = new THREE.Color(tok(ROLES.inhibitor.token));
-  const haloMat = kit.glass(tok('--accent'), {
+  const haloMat = kit.glass(tok('--stage-accent'), {
     opacity: 0.08,
-    rim: { color: tok('--accent'), alpha: 0.95, strength: 1, power: 1.6 },
+    rim: { color: tok('--stage-accent'), alpha: 0.95, strength: 1, power: 1.6 },
   });
   // The picked enzyme: a glowing outline behind it (HDR on High: brighter than white, so the
   // bloom picks it up — and only it).

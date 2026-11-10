@@ -1,0 +1,361 @@
+{
+ "seed": "simlab-2026-10-14",
+ "groups": [
+  "qwen3.5-9b/base/server/0",
+  "qwen3.5-9b/trained/server/0"
+ ],
+ "files": [
+  "eval-qwen3.5-9b-desk-base.json",
+  "eval-qwen3.5-9b-desk-export1-e1.json"
+ ],
+ "inputs": {
+  "judge-input-j0-physics.json": "9243c9da28bbaaa5c9fda48dc73e529398fd4152c5c13e9712ba1721a69192ff",
+  "judge-input-j0-chemistry.json": "1454d145db72bf531e9211015d3a41ab915b2d341821ad2454bbabf43c0bb1c1",
+  "judge-input-j0-biology.json": "a3999cd6730120b50d6ab0be95f1293e5f18874f61414c9d4dee9764e729753f",
+  "judge-input-j1-physics.json": "d1acd0fc6b1dd8acdc4c424191e6aa36f59a20f9153a6670143adcbd2d879bc6",
+  "judge-input-j1-chemistry.json": "f058983377bb5274d8e776da724c8c1d3eb50cb76ee46de7ce4fc152cd2a7235",
+  "judge-input-j1-biology.json": "de20843937c3609650e6fe852e0790f7cfb61f08700d2bf81c91ac43fc8e588f"
+ },
+ "key": {
+  "j0": {
+   "P1": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "P2": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "P3": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "P4": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "P5": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "P6": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "P7": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "P8": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "P9": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "P10": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "P11": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "P12": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "P13": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "P14": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "C1": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "C2": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "C3": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "C4": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "C5": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "C6": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "C7": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "C8": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "C9": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "C10": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "C11": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "C12": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "C13": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "C14": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "B1": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "B2": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "B3": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "B4": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "B5": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "B6": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "B7": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "B8": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "B9": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "B10": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "B11": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "B12": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "B13": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "B14": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   }
+  },
+  "j1": {
+   "P1": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "P2": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "P3": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "P4": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "P5": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "P6": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "P7": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "P8": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "P9": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "P10": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "P11": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "P12": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "P13": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "P14": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "C1": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "C2": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "C3": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "C4": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "C5": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "C6": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "C7": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "C8": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "C9": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "C10": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "C11": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "C12": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "C13": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "C14": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "B1": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "B2": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "B3": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "B4": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "B5": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "B6": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "B7": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "B8": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "B9": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "B10": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "B11": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "B12": {
+    "A": "qwen3.5-9b/base/server/0",
+    "B": "qwen3.5-9b/trained/server/0"
+   },
+   "B13": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   },
+   "B14": {
+    "A": "qwen3.5-9b/trained/server/0",
+    "B": "qwen3.5-9b/base/server/0"
+   }
+  }
+ }
+}

@@ -1,0 +1,2210 @@
+/* "Bàn thí nghiệm" shell (0.8.1, docs/BENCH_DESIGN.md §8). Only loaded behind the dev switch.
+   Controls follow the uiverse kit B the user chose (sources and MIT notices: docs/THIRD_PARTY.md). */
+
+.bench-shell {
+  --bench-header: 48px;
+  --bench-rail: 64px;
+  --bench-edge: 64px;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  min-width: 0;
+  background: var(--bg-app);
+}
+
+/* ── Surfaces ───────────────────────────────────────────────────────────
+   One hook gives every control its look. Controls are drawn for paper with the paper tokens;
+   [data-surface='frame'] (header, notebook rail, bench edge, tray spine) maps those tokens to the
+   frame's, so the same rules draw the frame variant and the focus ring turns --focus-frame.
+   [data-surface='paper'] inside the frame (the file menu, the confidence chip) maps them back. */
+:root[data-shell='bench'] {
+  --paper-text: var(--text);
+  --paper-text-muted: var(--text-muted);
+  --paper-text-faint: var(--text-faint);
+  --paper-bg: var(--bg-panel);
+  --paper-bg-2: var(--bg-panel-2);
+  --paper-sunken: var(--bg-sunken);
+  --paper-hover: var(--bg-hover);
+  --paper-active: var(--bg-active);
+  --paper-border: var(--border);
+  --paper-line: var(--border-input);
+  --paper-accent: var(--accent);
+  --paper-accent-hover: var(--accent-hover);
+  --paper-accent-soft: var(--accent-soft);
+  --paper-on-accent: var(--text-on-accent);
+  --paper-focus: var(--focus-ring);
+}
+[data-surface='frame'] {
+  --text: var(--on-frame);
+  --text-muted: var(--on-frame-muted);
+  --text-faint: var(--on-frame-muted);
+  --bg-panel: var(--frame);
+  --bg-panel-2: var(--frame-raised);
+  --bg-sunken: var(--frame-raised);
+  --bg-hover: var(--frame-raised);
+  --bg-active: var(--frame-pressed);
+  --border: var(--frame-line);
+  --border-input: var(--frame-line);
+  --border-strong: var(--frame-line);
+  --accent: var(--play);
+  --accent-hover: var(--play-hover);
+  --accent-soft: var(--frame-raised);
+  --text-on-accent: var(--on-play);
+  --focus-ring: var(--focus-frame);
+  background: var(--frame);
+  color: var(--on-frame);
+}
+[data-surface='paper'] {
+  --text: var(--paper-text);
+  --text-muted: var(--paper-text-muted);
+  --text-faint: var(--paper-text-faint);
+  --bg-panel: var(--paper-bg);
+  --bg-panel-2: var(--paper-bg-2);
+  --bg-sunken: var(--paper-sunken);
+  --bg-hover: var(--paper-hover);
+  --bg-active: var(--paper-active);
+  --border: var(--paper-border);
+  --border-input: var(--paper-line);
+  --border-strong: var(--paper-line);
+  --accent: var(--paper-accent);
+  --accent-hover: var(--paper-accent-hover);
+  --accent-soft: var(--paper-accent-soft);
+  --text-on-accent: var(--paper-on-accent);
+  --focus-ring: var(--paper-focus);
+  color: var(--text);
+}
+
+/* ── Controls (kit B) ───────────────────────────────────────────────────
+   Buttons (e-coders/nervous-chipmunk-49) and icon buttons (Galahhad/kind-cheetah-52; the name
+   shows in TooltipLayer). Disabled: dimmed text and a dashed border, not told by colour alone. */
+.btn,
+.icon-btn {
+  transition:
+    background-color var(--dur-fast),
+    color var(--dur-fast);
+}
+.btn {
+  height: auto;
+  min-height: var(--target);
+}
+.btn:active:not(:disabled),
+.icon-btn:active:not(:disabled) {
+  background: var(--bg-active);
+  transform: none;
+}
+.btn--accent:active:not(:disabled) {
+  background: var(--accent-hover);
+}
+.btn:disabled,
+.icon-btn:disabled {
+  opacity: 1;
+  color: var(--text-faint);
+  border: 1px dashed var(--border-input);
+  cursor: not-allowed;
+}
+.icon-btn {
+  border-radius: var(--radius-md);
+  color: var(--text);
+}
+.icon-btn svg {
+  transition: transform var(--dur-fast);
+}
+kbd {
+  padding: 0 var(--space-1);
+  border: 1px solid currentColor;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: inherit;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: 16px;
+  box-shadow: none;
+}
+
+/* Two to four options (Pradeepsaranbishnoi/slimy-warthog-37): joined 40 px segments, the chosen one
+   tinted with a 2 px border and bold. */
+.segmented {
+  padding: 0;
+  background: none;
+}
+.segmented.has-indicator::before {
+  display: none;
+}
+.segmented__item {
+  min-height: var(--target);
+  padding: 0 var(--space-3);
+  border: 1px solid var(--border-input);
+  border-radius: 0;
+  background: var(--bg-panel);
+  color: var(--text-muted);
+  line-height: 1.3;
+  transition: background-color var(--dur-fast);
+}
+.segmented .segmented__item {
+  min-height: var(--target);
+}
+.segmented__item + .segmented__item {
+  margin-left: -1px;
+}
+.segmented__item:first-child {
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+}
+.segmented__item:last-child {
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+.segmented__item:hover:not(:disabled) {
+  background: var(--bg-hover);
+  color: var(--text);
+}
+.segmented .segmented__item[aria-checked='true'] {
+  position: relative;
+  z-index: 1;
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+  color: var(--text);
+  font-weight: 600;
+}
+.segmented__item:focus-visible {
+  position: relative;
+  z-index: 2;
+}
+
+/* Graphs to choose (Admin12121/cold-bobcat-20): items in a sunken track; names wrap, never cut. */
+.segmented.graph-panel__picker {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
+  align-self: stretch;
+  padding: 3px;
+  border-radius: 10px;
+  background: var(--bg-sunken);
+}
+.graph-panel__picker .segmented__item,
+.graph-panel__picker .segmented__item:first-child,
+.graph-panel__picker .segmented__item:last-child {
+  margin: 0;
+  padding: var(--space-1) var(--space-2);
+  border-color: transparent;
+  border-radius: var(--radius-md);
+  background: transparent;
+  text-align: center;
+}
+.graph-panel__picker.segmented .segmented__item[aria-checked='true'] {
+  border-color: var(--border-input);
+  background: var(--bg-panel);
+  box-shadow: none;
+}
+/* A chart's CSV button: a full target (it shows on hover, or always on touch). */
+.chart__csv {
+  width: var(--target);
+  height: var(--target);
+  border-radius: var(--radius-md);
+}
+/* The live legend is one row under the plot (the notebook is narrow). */
+.chart--legend-side {
+  flex-direction: column;
+}
+.chart--legend-side .chart__plot {
+  min-height: 0;
+  overflow: hidden;
+}
+.chart--legend-side .chart__legend {
+  flex: none;
+  max-width: none;
+  align-self: stretch;
+}
+.chart__legend .u-legend.u-inline tr {
+  display: inline-block;
+  margin-right: var(--space-3);
+}
+
+/* Native checkboxes and radios, 20 px, in the accent colour (cbolson/calm-wasp-75). */
+.tray input[type='checkbox'],
+.notebook__drawer input[type='checkbox'],
+.tray input[type='radio'],
+.notebook__drawer input[type='radio'] {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  accent-color: var(--accent);
+}
+.param__toggle {
+  min-height: var(--target);
+}
+
+/* Search field (alexruix/slippery-frog-10). */
+.sidebar__search {
+  height: var(--target);
+  border-color: var(--border-input);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel);
+  color: var(--text-muted);
+}
+.sidebar__search:focus-within {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+.sidebar__search input::placeholder {
+  color: var(--text-faint);
+}
+
+/* Collapsible card (Admin12121/fluffy-vampirebat-68): sections of the tray, sentence case. */
+.section {
+  margin: 0 var(--space-3) var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--bg-panel);
+}
+.panel__scroll > .section:first-child,
+.panel__scroll > :not(.section) + .section {
+  margin-top: var(--space-3);
+}
+.section__header {
+  padding-right: var(--space-1);
+}
+.section__toggle {
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-md);
+}
+.section__toggle:hover {
+  background: var(--bg-hover);
+}
+.section__title {
+  font-size: var(--text-md);
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text);
+}
+.section__chevron {
+  color: var(--text-muted);
+  transition: transform var(--dur-fast);
+}
+
+/* Chips 12/16 (kamehame-ha/swift-penguin-73, Madflows/great-chipmunk-4). */
+.badge,
+.param__source {
+  font-size: var(--text-xs);
+  line-height: 16px;
+}
+.param__source {
+  padding: 1px var(--space-2);
+  font-weight: 500;
+}
+.param__source--default {
+  border: 1px dashed var(--pending);
+}
+
+/* Parameter row (satisshTechie/sharp-hound-14, §9.4): label and source left, the number box
+   112×40 right; − slider + below. The whole box is the number's label (one click target). */
+.param:has(> .param__controls) {
+  --param-step: var(--target);
+  display: grid;
+  grid-template-columns:
+    var(--param-step) minmax(0, 1fr) calc(112px - var(--param-step))
+    var(--param-step);
+  grid-template-areas:
+    'head head num num'
+    'minus range range plus';
+  align-items: center;
+  row-gap: var(--space-2);
+}
+.param:has(> .param__controls) > .param__head {
+  grid-area: head;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+.param:has(> .param__controls) > .param__controls {
+  display: contents;
+}
+.param__step {
+  width: var(--param-step);
+  height: var(--param-step);
+}
+.param__step--minus {
+  grid-area: minus;
+}
+.param__step--plus {
+  grid-area: plus;
+}
+.param__controls input[type='range'] {
+  grid-area: range;
+  height: var(--target);
+  margin: 0;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+.param__controls input[type='range']::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border-input);
+}
+.param__controls input[type='range']::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: -8px;
+  border: 2px solid var(--bg-panel);
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+  transition: box-shadow var(--dur-fast);
+}
+.param__controls input[type='range']:hover::-webkit-slider-thumb {
+  box-shadow:
+    0 0 0 1px var(--accent),
+    0 0 0 7px var(--accent-soft);
+}
+.param__num {
+  grid-area: num;
+  display: flex;
+  align-items: center;
+  height: var(--target);
+  border: 1px solid var(--border-input);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel);
+  cursor: text;
+}
+.param__num:focus-within {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+.param__num:has([aria-invalid='true']) {
+  border-color: var(--danger);
+}
+.param__num .number-field {
+  flex: 1;
+  min-width: 0;
+}
+.param__num .param__number {
+  height: 100%;
+  padding: 0 var(--space-1) 0 var(--space-2);
+  border: 0;
+  background: transparent;
+  font-size: var(--text-md);
+}
+.param__num .param__number:focus-visible {
+  outline: none;
+}
+.param__num .param__unit {
+  min-width: 0;
+  padding-right: var(--space-2);
+  white-space: nowrap;
+}
+
+/* ── Header ─────────────────────────────────────────────────────────── */
+.bench-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: var(--bench-header);
+  padding: 0 var(--space-2);
+  flex: none;
+  min-width: 0;
+}
+[data-surface='frame'] .icon-btn,
+.tray .panel__header .icon-btn,
+.notebook .panel__header .icon-btn {
+  width: var(--target);
+  height: var(--target);
+}
+.bench-header__mark {
+  display: grid;
+  place-items: center;
+  width: var(--target);
+  height: var(--target);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  cursor: pointer;
+}
+.bench-crumbs {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+  overflow: hidden;
+}
+.bench-crumbs__sep {
+  color: var(--text-muted);
+}
+.bench-crumb {
+  flex: none;
+  min-height: var(--target);
+  padding: 0 var(--space-2);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.bench-crumb:hover {
+  background: var(--bg-hover);
+  color: var(--text);
+}
+/* The topic's name: a block, so a long name ends in "…" (the 40 px line keeps its accents). */
+.bench-crumb--current {
+  display: block;
+  flex: 0 1 auto;
+  min-width: 0;
+  margin: 0;
+  color: var(--text);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  line-height: var(--target);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: default;
+}
+.bench-crumb--current:hover {
+  background: transparent;
+}
+.bench-header__spacer {
+  flex: 1;
+}
+.bench-header__problem {
+  flex: none;
+  width: 112px;
+  justify-content: center;
+}
+.bench-header__search {
+  flex: none;
+  width: 172px;
+}
+.bench-header__search kbd {
+  margin-left: auto;
+}
+.bench-header .segmented {
+  flex: none;
+}
+/* AI status on the frame: the word and the icon say the state, in the frame's own ink. */
+.bench-header .ai-status {
+  min-height: var(--target);
+  border-color: var(--border-input);
+  color: var(--text);
+  font-size: var(--text-xs);
+}
+.file-menu__list {
+  box-shadow: var(--shadow-l2);
+}
+.file-menu__item {
+  min-height: var(--target);
+}
+.file-menu__item:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: -2px;
+}
+
+/* Theme switch (JkHuger/old-falcon-20): a sun on a sliding knob that turns into a moon. The
+   original's full-screen blend wipe is left out (it would invert every chart). */
+.theme-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.theme-switch__toggle {
+  position: relative;
+  display: inline-flex;
+  padding: 5px;
+  font-size: var(--text-md);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.theme-switch__toggle input {
+  appearance: none;
+  display: block;
+  width: 4.5em;
+  height: 2.25em;
+  margin: 0;
+  padding: 0.1875em;
+  border-radius: var(--radius-full);
+  background: var(--sw-day-track);
+  box-shadow: 0 0 0 1px var(--border-input);
+  font-size: inherit;
+  cursor: pointer;
+  transition: background-color var(--dur-drawer) var(--ease);
+}
+.theme-switch__toggle input::before {
+  content: '';
+  display: block;
+  width: 1.875em;
+  height: 1.875em;
+  border-radius: 50%;
+  background: var(--sw-day-knob);
+  transition:
+    translate var(--dur-drawer) var(--ease),
+    background-color var(--dur-drawer) var(--ease);
+}
+.theme-switch__toggle input:checked {
+  background: var(--sw-night-track);
+}
+.theme-switch__toggle input:checked::before {
+  translate: 2.25em 0;
+  background: var(--sw-night-knob);
+}
+.theme-switch__toggle input:focus-visible {
+  outline-offset: 3px;
+}
+/* The sun (a disc and eight rays) sits on the knob; checked, the disc becomes a crescent. */
+.theme-switch__icon {
+  position: absolute;
+  top: calc(5px + 0.375em);
+  left: calc(5px + 0.375em);
+  width: 1.5em;
+  height: 1.5em;
+  pointer-events: none;
+  transition: translate var(--dur-drawer) var(--ease);
+}
+.theme-switch__toggle input:checked ~ .theme-switch__icon {
+  translate: 2.25em 0;
+}
+.theme-switch__icon i {
+  position: absolute;
+  top: calc(50% - 0.5em);
+  left: calc(50% - 0.5em);
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  box-shadow: 0.4em -0.4em 0 0.5em var(--sw-icon) inset;
+  transform: scale(0.5);
+  transition:
+    box-shadow var(--dur-drawer) var(--ease),
+    opacity var(--dur-drawer) var(--ease),
+    transform var(--dur-drawer) var(--ease);
+}
+.theme-switch__icon i ~ i {
+  top: 50%;
+  left: calc(50% - 0.05em);
+  width: 0.1em;
+  height: 0.2em;
+  border-radius: 0.05em;
+  box-shadow: none;
+  background: var(--sw-icon);
+  transform-origin: 50% 0;
+  transform: rotate(0deg) translateY(0.5em);
+}
+.theme-switch__icon i:nth-child(3) {
+  transform: rotate(45deg) translateY(0.45em);
+}
+.theme-switch__icon i:nth-child(4) {
+  transform: rotate(90deg) translateY(0.45em);
+}
+.theme-switch__icon i:nth-child(5) {
+  transform: rotate(135deg) translateY(0.45em);
+}
+.theme-switch__icon i:nth-child(6) {
+  transform: rotate(180deg) translateY(0.45em);
+}
+.theme-switch__icon i:nth-child(7) {
+  transform: rotate(225deg) translateY(0.45em);
+}
+.theme-switch__icon i:nth-child(8) {
+  transform: rotate(270deg) translateY(0.5em);
+}
+.theme-switch__icon i:nth-child(9) {
+  transform: rotate(315deg) translateY(0.5em);
+}
+.theme-switch__toggle input:checked ~ .theme-switch__icon i:nth-child(1) {
+  box-shadow: 0.2em -0.2em 0 0.2em var(--sw-icon) inset;
+  transform: translate(var(--moon-dx), var(--moon-dy)) scale(1);
+}
+.theme-switch__toggle input:checked ~ .theme-switch__icon i ~ i {
+  opacity: 0;
+}
+.theme-switch__toggle input:checked ~ .theme-switch__icon i:nth-child(2) {
+  transform: rotate(45deg) translateY(0.8em);
+}
+.theme-switch__toggle input:checked ~ .theme-switch__icon i:nth-child(3) {
+  transform: rotate(90deg) translateY(0.8em);
+}
+.theme-switch__toggle input:checked ~ .theme-switch__icon i:nth-child(4) {
+  transform: rotate(135deg) translateY(0.8em);
+}
+.theme-switch__toggle input:checked ~ .theme-switch__icon i:nth-child(5) {
+  transform: rotate(180deg) translateY(0.8em);
+}
+.theme-switch__toggle input:checked ~ .theme-switch__icon i:nth-child(6) {
+  transform: rotate(225deg) translateY(0.8em);
+}
+.theme-switch__toggle input:checked ~ .theme-switch__icon i:nth-child(7) {
+  transform: rotate(270deg) translateY(0.8em);
+}
+.theme-switch__toggle input:checked ~ .theme-switch__icon i:nth-child(8) {
+  transform: rotate(315deg) translateY(0.8em);
+}
+.theme-switch__toggle input:checked ~ .theme-switch__icon i:nth-child(9) {
+  transform: rotate(360deg) translateY(0.8em);
+}
+/* The crescent's lit part is off-centre in its box: this puts its pixel centroid on the knob's
+   centre (measured at 14 px: within 0,1 px). */
+.theme-switch__icon {
+  --moon-dx: 0.1em;
+  --moon-dy: -0.09em;
+}
+.theme-switch__system[aria-pressed='true'] {
+  box-shadow: inset 0 -2px 0 var(--accent);
+  font-weight: 600;
+}
+
+/* ── Rooms that are not the bench (launch, library, studio, teacher) ── */
+.bench-room {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+.bench-room--full {
+  flex-direction: column;
+}
+.bench-library {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-right: 1px solid var(--border);
+  background: var(--bg-panel);
+}
+.bench-library .subject-switch {
+  margin: var(--space-2);
+}
+.bench-library .sidebar {
+  flex: 1;
+}
+.bench-room__main {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* ── The bench: rail · (pushed drawer) · stage · tray, edge below ────── */
+.bench {
+  position: relative;
+  display: grid;
+  flex: 1;
+  min-height: 0;
+  grid-template-columns: var(--bench-rail) var(--bench-push, 0px) minmax(0, 1fr) var(--tray-w);
+  grid-template-rows: minmax(0, 1fr) var(--bench-edge);
+  grid-template-areas:
+    'rail push stage tray'
+    'edge edge edge edge';
+}
+.bench[data-push] {
+  --bench-push: var(--notebook-w);
+}
+.bench[data-presentation] {
+  grid-template-columns: 0 0 minmax(0, 1fr) 0;
+}
+.bench__stage {
+  grid-area: stage;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* Notebook: the rail stays; the drawer opens beside or over the stage. */
+.notebook {
+  grid-area: rail;
+  min-height: 0;
+}
+.notebook__rail {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.notebook__tab {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 2px;
+  min-height: 72px;
+  padding: var(--space-1);
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: var(--text-xs);
+  line-height: 1.3;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color var(--dur-fast);
+}
+.notebook__tab[data-pinned]:first-of-type,
+.notebook__tab:not([data-pinned]) + .notebook__tab[data-pinned] {
+  margin-top: auto;
+}
+.notebook__tab:hover {
+  background: var(--bg-hover);
+  color: var(--text);
+}
+.notebook__tab[aria-selected='true'] {
+  background: var(--bg-hover);
+  color: var(--text);
+  box-shadow: inset 3px 0 0 var(--play);
+  font-weight: 600;
+}
+.notebook__tab:focus-visible {
+  outline-offset: -4px;
+}
+.notebook__drawer {
+  position: absolute;
+  top: 0;
+  bottom: var(--bench-edge);
+  left: var(--bench-rail);
+  z-index: 5;
+  display: flex;
+  width: var(--notebook-w);
+  background: var(--bg-panel);
+  border-right: 1px solid var(--border);
+}
+.notebook__drawer[data-mode='overlay'] {
+  box-shadow: var(--shadow-l2);
+}
+.notebook__panel {
+  flex: 1;
+  min-width: 0;
+}
+/* "Hỏi AI" fills the drawer. The chat's own floating-card size would run over the stage. */
+.notebook__panel > .chat-panel {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+/* The drawer's rail tab already names the chat: its width goes to the buttons, so "Đóng" fits. */
+.notebook__panel > .chat-panel .chat-panel__identity strong {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.notebook__panel > .chat-panel .chat-panel__header {
+  padding: 0 6px 0 10px;
+}
+.notebook__panel > .chat-panel .chat-panel__header-actions {
+  flex: none;
+}
+.notebook__panel > .chat-panel .chat-engine select {
+  max-width: 110px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Tray */
+.tray {
+  grid-area: tray;
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  background: var(--bg-panel);
+  border-left: 1px solid var(--border);
+}
+.tray[data-folded] {
+  border-left: 0;
+}
+.tray__panel {
+  flex: 1;
+  min-width: 0;
+}
+.tray__spine {
+  display: grid;
+  place-items: center;
+  align-content: start;
+  gap: var(--space-1);
+  width: 100%;
+  min-height: 72px;
+  padding: var(--space-3) var(--space-1);
+  border: 0;
+  font: inherit;
+  font-size: var(--text-xs);
+  line-height: 1.3;
+  cursor: pointer;
+  transition: background-color var(--dur-fast);
+}
+.tray__spine:hover {
+  background: var(--bg-hover);
+}
+.tray__spine:active {
+  background: var(--bg-active);
+}
+.tray__spine:focus-visible {
+  outline-offset: -4px;
+}
+
+/* ── Bench edge (driver grid, §8): fixed columns, the same on every screen ── */
+.bench-edge {
+  grid-area: edge;
+  display: grid;
+  grid-template-columns:
+    [d0] 144px 8px [d1] 48px 4px [d2] 48px 4px [d3] 48px 20px [readout] 112px 12px
+    [scrub] minmax(0, 1fr) 12px [speed] 168px 8px [chip] 226px;
+  align-items: center;
+  padding: 0 var(--space-2) 0 var(--space-4);
+  min-width: 0;
+}
+.bench-edge .icon-btn {
+  width: 48px;
+  height: 48px;
+}
+.bench-edge__main {
+  grid-column: d0;
+}
+.bench-edge__d1 {
+  grid-column: d1;
+}
+.bench-edge__d2 {
+  grid-column: d2;
+}
+.bench-edge__d3 {
+  grid-column: d3;
+}
+.bench-edge__readout {
+  grid-column: readout;
+  font-family: var(--font-mono);
+  font-size: var(--text-lg);
+  line-height: 22px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Main action (SelfMadeSystem/tough-fireant-47): a key cap with a 2 px edge; 144 px whatever its
+   word ("Chạy", "Tạm dừng", "Chạy để kiểm tra" on two lines), so D1 never moves. The kit's "Space"
+   key chip left no room for those words: the shortcut is in the tooltip and the accessible name. */
+.bench-play {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  width: 144px;
+  height: 48px;
+  padding: 0 var(--space-2);
+  border: 0;
+  border-bottom: calc(2px - var(--press-lift)) solid var(--play-edge);
+  border-radius: var(--radius-md);
+  background: var(--play);
+  color: var(--on-play);
+  font: inherit;
+  font-weight: 600;
+  line-height: 18px;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast),
+    translate var(--dur-fast);
+}
+.bench-play > svg {
+  flex: none;
+}
+.bench-play__label {
+  min-width: 0;
+  text-align: start;
+}
+.bench-play:hover:not(:disabled) {
+  background: var(--play-hover);
+  translate: 0 calc(-1 * var(--press-lift));
+}
+.bench-play:active:not(:disabled) {
+  translate: 0 var(--press-lift);
+}
+.bench-play:disabled {
+  border: 1px dashed var(--border-input);
+  background: transparent;
+  color: var(--text-faint);
+  cursor: not-allowed;
+}
+
+/* Time scrubber (Galahhad/happy-dodo-17): 40 px to grab, a 6 px track, the played part filled. */
+.bench-edge__scrubber {
+  grid-column: scrub;
+  width: 100%;
+  min-width: 0;
+  height: var(--target);
+  margin: 0;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+.bench-edge__scrubber::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(
+    to right,
+    var(--play) var(--pct, 0%),
+    var(--border-input) var(--pct, 0%)
+  );
+}
+.bench-edge__scrubber::-webkit-slider-thumb {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  margin-top: -5px;
+  border-radius: 50%;
+  background: var(--text);
+  box-shadow:
+    0 0 0 2px var(--frame),
+    0 0 0 4px var(--play);
+}
+.bench-edge__scrubber:disabled {
+  cursor: not-allowed;
+}
+.bench-edge__scrubber:disabled::-webkit-slider-thumb {
+  box-shadow: 0 0 0 2px var(--frame);
+}
+
+/* Speed: Basic 0,5× · 1× · 2× (Yaya12085/rude-mouse-79), each 40 px tall in the 168×40 slot; the
+   track is drawn by its background and inner line. Advanced: a select (mi-series/good-walrus-42). */
+.bench-speed {
+  grid-column: speed;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  width: 168px;
+  height: var(--target);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--bg-sunken);
+  box-shadow: inset 0 0 0 1px var(--border-input);
+}
+.bench-speed label {
+  position: relative;
+  display: grid;
+}
+.bench-speed input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+.bench-speed span {
+  display: grid;
+  place-items: center;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: background-color var(--dur-fast);
+}
+.bench-speed span:hover {
+  color: var(--text);
+}
+.bench-speed input:checked + span {
+  border-color: var(--border-input);
+  background: var(--bg-panel);
+  color: var(--text);
+  font-weight: 600;
+}
+.bench-speed input:focus-visible + span {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+.bench-edge__speed {
+  grid-column: speed;
+}
+.bench-edge__speed select {
+  width: 168px;
+  height: var(--target);
+  padding: 0 var(--space-2);
+  border: 1px solid var(--border-input);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel);
+  color: var(--text);
+  font-family: var(--font-mono);
+}
+
+/* Confidence chip, 226×48 in two lines; it is paper, its focus ring is drawn on the frame. */
+.bench-chip {
+  grid-column: chip;
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  gap: 2px;
+  width: 226px;
+  height: 48px;
+  padding: 0 var(--space-2);
+  border: 1px solid var(--frame-line);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  --focus-ring: var(--focus-frame);
+}
+.bench-chip--empty {
+  border: 0;
+  background: transparent;
+  cursor: default;
+}
+.bench-chip__note {
+  color: var(--conf-approx);
+  font-size: var(--text-xs);
+  line-height: 16px;
+}
+
+/* One filled button per screen (D0 on the bench edge): the notebook's own actions are tonal. */
+.notebook .btn--accent,
+.notebook .btn--accent:hover:not(:disabled) {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.notebook .btn--accent:hover:not(:disabled) {
+  background: var(--bg-hover);
+}
+
+/* The 18+ question has two equal answers: no filled button there. */
+:root[data-shell='bench'] .age-gate .btn--accent {
+  background: transparent;
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* ── Overlays ───────────────────────────────────────────────────────── */
+/* Tooltip (kyle1dev/quiet-cougar-91), drawn by TooltipLayer in the top layer. */
+.tooltip {
+  max-width: 32ch;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--frame);
+  color: var(--on-frame);
+  font-size: var(--text-xs);
+  line-height: 16px;
+  box-shadow: var(--shadow-l2);
+}
+
+/* Skeleton (Yaya12085/curvy-otter-58): a gentle pulse, opacity only. */
+.skeleton__block {
+  background: var(--bg-sunken);
+  animation: bench-pulse 1.6s ease-in-out infinite;
+}
+@keyframes bench-pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skeleton__block {
+    animation: none;
+  }
+}
+:root[data-motion='reduce'] .skeleton__block {
+  animation: none;
+}
+
+/* Toast (andrew-demchenk0/nervous-bear-89): a 4 px rule in the meaning colour, icon and word. */
+.toast {
+  align-items: center;
+  padding: var(--space-1) var(--space-1) var(--space-1) var(--space-3);
+  border-left: 4px solid var(--tone, var(--border-input));
+  color: var(--text);
+  box-shadow: var(--shadow-l2);
+}
+.toast > svg {
+  margin-top: 0;
+  color: var(--tone);
+}
+.toast--success {
+  --tone: var(--conf-exact);
+}
+.toast--warn {
+  --tone: var(--conf-approx);
+}
+.toast--error {
+  --tone: var(--danger);
+}
+.toast--info {
+  --tone: var(--accent);
+}
+.toast__close {
+  display: grid;
+  place-items: center;
+  width: var(--target);
+  height: var(--target);
+  padding: 0;
+  border-radius: var(--radius-md);
+}
+
+/* Touch screens and pens: every icon button on the frame and on the bench grows to 48 px (§6). */
+@media (any-pointer: coarse) {
+  [data-surface='frame'] .icon-btn,
+  .bench .icon-btn,
+  .bench .panel__header .icon-btn,
+  .bench .chart__csv {
+    width: 48px;
+    height: 48px;
+  }
+  .param:has(> .param__controls) {
+    --param-step: 48px;
+  }
+}
+
+/* B2: the Science Card's summary pinned at the top of the tray (docs/BENCH_DESIGN.md §9.4). */
+.science-card.science-card--summary {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--border);
+  background: var(--paper-bg);
+}
+.science-card__summary-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+.science-card__summary-title {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.science-card__summary-validity {
+  margin: 0;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--paper-text-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.science-card__summary-open {
+  justify-self: start;
+  min-height: var(--target);
+}
+.science-card__intervened {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  border-left: 3px solid var(--warning);
+  border-radius: var(--radius-sm);
+  background: var(--warning-soft);
+  font-size: 13px;
+  line-height: 18px;
+}
+.science-card__intervened .btn {
+  justify-self: start;
+  min-height: var(--target);
+}
+
+/* B2: "Dụng cụ đo", one 40 px switch row per tool. */
+.tool-switches {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--space-1);
+}
+.tool-switch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  width: 100%;
+  min-height: var(--target);
+  padding: 0 var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--paper-bg);
+  color: var(--paper-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.tool-switch:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+.tool-switch__track {
+  flex: 0 0 auto;
+  width: 31px;
+  height: 18px;
+  padding: 2px;
+  border-radius: 99px;
+  background: var(--border-strong);
+}
+.tool-switch__track span {
+  display: block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--switch-knob);
+}
+.tool-switch[aria-checked='true'] {
+  font-weight: 600;
+}
+.tool-switch[aria-checked='true'] .tool-switch__track {
+  background: var(--accent);
+}
+.tool-switch[aria-checked='true'] .tool-switch__track span {
+  transform: translateX(13px);
+}
+
+/* B3: "Kệ bài", the bench's library (docs/BENCH_DESIGN.md §9.3). */
+.shelf-room {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+.shelf-filters {
+  flex: 0 0 288px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border-right: 1px solid var(--border);
+  background: var(--paper-bg);
+  overflow-y: auto;
+}
+.shelf-filters__title {
+  margin: var(--space-2) 0 0;
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 600;
+  color: var(--paper-text-muted);
+}
+.shelf-subjects {
+  display: grid;
+  gap: var(--space-1);
+}
+.shelf-subject {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 48px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--paper-bg);
+  color: var(--paper-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.shelf-subject[aria-checked='true'] {
+  border-color: var(--accent);
+  background: var(--paper-active);
+  font-weight: 600;
+}
+.shelf-subject__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--subject-physics);
+}
+.shelf-subject[data-subject='chemistry'] .shelf-subject__dot {
+  background: var(--subject-chemistry);
+}
+.shelf-subject[data-subject='biology'] .shelf-subject__dot {
+  background: var(--subject-biology);
+}
+.shelf-subject__name {
+  flex: 1;
+}
+.shelf-subject__count {
+  font-size: 12px;
+  color: var(--paper-text-muted);
+}
+.shelf-search {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--target);
+  margin-top: var(--space-2);
+  padding: 0 var(--space-2);
+  border: 1px solid var(--border-input);
+  border-radius: var(--radius-sm);
+  background: var(--paper-bg);
+}
+.shelf-search input {
+  flex: 1;
+  min-width: 0;
+  min-height: 38px;
+  border: 0;
+  background: transparent;
+  color: var(--paper-text);
+  font: inherit;
+}
+.shelf-main {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  padding: var(--space-6, 24px);
+  background: var(--paper-sunken);
+}
+.shelf-main__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+}
+.shelf-main__head h1 {
+  flex: 1;
+  margin: 0;
+  font-size: 32px;
+  line-height: 42px;
+}
+.shelf-main__note {
+  flex: 0 0 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--paper-text-muted);
+}
+.shelf-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-4);
+  margin: var(--space-4) 0;
+}
+.shelf-start {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md, 10px);
+  background: var(--paper-bg);
+}
+.shelf-start h2 {
+  margin: 0;
+  font-size: 16px;
+  line-height: 22px;
+}
+.shelf-start .btn {
+  justify-self: start;
+  min-height: var(--target);
+}
+.shelf {
+  margin-top: var(--space-6, 24px);
+}
+.shelf__title {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-2);
+  font-size: 18px;
+  line-height: 26px;
+}
+.shelf__count {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--paper-text-muted);
+}
+.shelf__grid > li {
+  display: flex;
+}
+.shelf__grid > li > .shelf-card {
+  flex: 1;
+}
+.shelf__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(232px, 1fr));
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.shelf-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  min-height: 112px;
+  /* A line kept at the bottom for the mark, opened or not: getting it never moves a line (UI-42). */
+  padding: var(--space-3) var(--space-3) calc(var(--space-3) + 20px);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--subject-physics);
+  border-radius: var(--radius-md, 10px);
+  background: var(--paper-bg);
+  color: var(--paper-text);
+}
+.shelf-card__open {
+  min-height: var(--target);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+/* The whole card is the button's target. */
+.shelf-card__open::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+.shelf-card__open:focus-visible {
+  outline: none;
+}
+.shelf-card:has(.shelf-card__open:focus-visible) {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+.shelf-card--soon .shelf-card__open {
+  cursor: default;
+}
+[data-subject-shelf='chemistry'] .shelf-card {
+  border-top-color: var(--subject-chemistry);
+}
+[data-subject-shelf='biology'] .shelf-card {
+  border-top-color: var(--subject-biology);
+}
+.shelf-card:not(.shelf-card--soon):hover {
+  background: var(--paper-hover);
+}
+.shelf-card--soon {
+  opacity: 0.7;
+}
+.shelf-card__title {
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: 600;
+}
+.shelf-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-2);
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--paper-text-muted);
+}
+.shelf-card__lessons {
+  padding: 1px var(--space-1);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-sm);
+}
+.shelf-card__mark {
+  position: absolute;
+  right: var(--space-3);
+  bottom: var(--space-3);
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  color: var(--paper-text);
+}
+.shelf-empty {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-2);
+  margin-top: var(--space-6, 24px);
+}
+.shelf-start__topic {
+  margin: 0;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+/* "Cửa vào" (§9.1): two doors, the lab filled, AI Teacher outlined. */
+.bench-launch {
+  display: grid;
+  grid-template-columns: minmax(0, 560px) minmax(0, 590px);
+  column-gap: 64px;
+  align-items: start;
+  margin: 0 0 0 96px;
+  padding: 64px 0 var(--space-6, 24px);
+  color: var(--paper-text);
+}
+.bench-launch__main {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+/* The "bench still" (§9.1): 590×440 at y120 in an 8 px frame border, caption under it. */
+.bench-launch__still {
+  margin: 56px 0 0;
+}
+.bench-launch__canvas {
+  display: block;
+  width: 100%;
+  aspect-ratio: 590 / 440;
+  border: 8px solid var(--frame);
+  border-radius: var(--radius-md, 10px);
+  background: var(--bg-stage);
+}
+.bench-launch__still figcaption {
+  margin-top: var(--space-2);
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--paper-text-muted);
+}
+.bench-launch__eyebrow {
+  margin: 0 0 var(--space-2);
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 600;
+  color: var(--paper-text-muted);
+}
+.bench-launch__title {
+  margin: 0;
+  font-size: 32px;
+  line-height: 42px;
+  font-weight: 600;
+}
+.bench-launch__subtitle {
+  max-width: 52ch;
+  margin: var(--space-3) 0 0;
+  font-size: 16px;
+  line-height: 26px;
+  color: var(--paper-text-muted);
+}
+.bench-launch__doors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 40px;
+}
+.bench-door {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  width: 268px;
+  min-height: 168px;
+  padding: 16px;
+  border: 1px solid var(--border-input);
+  border-radius: var(--radius-md, 10px);
+  background: var(--paper-bg);
+  color: var(--paper-text);
+  font: inherit;
+  text-align: left;
+}
+button.bench-door {
+  cursor: pointer;
+}
+button.bench-door:hover {
+  background: var(--bg-hover);
+}
+.bench-door strong {
+  font-size: 22px;
+  line-height: 30px;
+  font-weight: 600;
+}
+.bench-door span {
+  font-size: 14px;
+  line-height: 20px;
+}
+.bench-door--lab,
+button.bench-door--lab:hover {
+  border-color: transparent;
+  background: var(--accent);
+  color: var(--text-on-accent);
+}
+button.bench-door--lab:hover {
+  background: var(--accent-hover);
+}
+.bench-door--locked {
+  border-style: dashed;
+  color: var(--paper-text-muted);
+}
+.bench-launch__resume {
+  margin-top: var(--space-4);
+  border-color: transparent;
+  background: none;
+}
+.bench-launch__privacy {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 48px 0 0;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--paper-text-muted);
+}
+@media (max-width: 1200px) {
+  .bench-launch {
+    grid-template-columns: minmax(0, 560px);
+  }
+  .bench-launch__still {
+    display: none;
+  }
+}
+@media (max-width: 900px) {
+  .bench-launch {
+    margin-left: var(--space-4);
+  }
+}
+
+/* First run (§9.2): one sheet per step, "Bước i/3" over a three-part strip. */
+.first-run.dialog {
+  width: min(760px, calc(100vw - 32px));
+}
+.step-strip {
+  display: grid;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+.step-strip .onboarding__step {
+  margin: 0;
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 600;
+}
+.step-strip__bar {
+  display: grid;
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column;
+  gap: var(--space-2);
+}
+.step-strip__bar > span {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border);
+}
+.step-strip__bar > span[data-done] {
+  background: var(--accent);
+}
+.first-run__grades,
+.first-run__subjects,
+.first-run__connect {
+  display: grid;
+  gap: 12px;
+}
+.first-run__grades {
+  grid-template-columns: repeat(4, 1fr);
+}
+.first-run__grades .onboarding__option {
+  min-height: 88px;
+}
+.first-run__subjects,
+.first-run__connect {
+  grid-template-columns: repeat(3, 1fr);
+}
+.first-run__subjects .onboarding__option {
+  min-height: 72px;
+}
+.first-run__connect .onboarding__option {
+  min-height: 120px;
+}
+.first-run__subhead {
+  margin: var(--space-4) 0 var(--space-2);
+  font-size: 16px;
+  line-height: 22px;
+}
+.first-run__note {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  line-height: 16px;
+}
+.first-run__footer {
+  justify-content: space-between;
+}
+
+.shelf-start__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.bench-header__teacher {
+  white-space: nowrap;
+}
+.shelf-history {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: auto;
+}
+.shelf-history > .btn {
+  justify-self: start;
+}
+
+/* A module's stepper (element, molecule) spans D0–D3; nothing in it is filled (§9.10). */
+.bench-edge__stepper {
+  grid-column: d0 / readout;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+.bench-edge__stepper > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+}
+.bench-edge__find {
+  grid-column: scrub;
+  min-width: 0;
+}
+.bench-edge__find select {
+  width: 100%;
+  min-height: var(--target);
+}
+.bench-edge__toggle {
+  grid-column: speed;
+  justify-self: start;
+}
+
+/* A biology view's own player, drawn into the edge (EdgePortal, B5): one row from D0 to the
+   chip, without the stage's glass box. */
+.bench-edge__module {
+  grid-column: d0 / chip;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  overflow: hidden;
+}
+.bench-edge__module:empty {
+  display: none;
+}
+/* Two classes: a lesson's own CSS (bio.css) loads later with its chunk. */
+.bench-edge .bench-edge__module > * {
+  position: static;
+  inset: auto;
+  margin: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+.bench-edge .bench-edge__module .bio3d__player {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+}
+
+/* Science Studio on the bench (§9.7, first cut): one paper sheet, readable width. */
+.bench-studio {
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  background: var(--paper-bg);
+}
+.bench-studio > .studio {
+  width: min(960px, 100%);
+  margin: 0 auto;
+  padding: var(--space-4);
+}
+/* The lesson room: the rail on the left, its drawer over the lesson (no bench edge here). */
+.bench-studio-room {
+  --bench-edge: 0px;
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--bench-rail) minmax(0, 1fr);
+  grid-template-areas: 'rail main';
+  flex: 1;
+  min-height: 0;
+}
+.bench-studio-room > .bench-studio {
+  grid-area: main;
+}
+
+/* Settings sheet (§9.9): 1200×688, a 256 px grouped nav, group titles 12/16 600 muted. */
+:root[data-shell='bench'] .dialog.settings-dialog {
+  width: min(1200px, calc(100vw - 32px));
+  height: min(688px, calc(100vh - 80px));
+}
+:root[data-shell='bench'] .settings-layout {
+  grid-template-columns: 256px minmax(0, 1fr);
+}
+:root[data-shell='bench'] .settings-nav__group-title {
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+/* Palette (§9.10): 88 px from the top, rows 44. */
+:root[data-shell='bench'] .command-palette {
+  margin-top: 88px;
+}
+:root[data-shell='bench'] .command-palette__item {
+  min-height: 44px;
+}
+.teacher__is-ai {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 0 var(--space-2);
+  border: 1px solid var(--border-input);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 16px;
+  white-space: nowrap;
+}
+
+/* Compare legend (§9.4 TR): the pinned run's dash, and "đã cũ" once the inputs changed. */
+:root[data-shell='bench'] .stage__compare {
+  top: var(--space-3);
+  right: var(--space-3);
+  bottom: auto;
+  left: auto;
+  max-width: min(40%, 360px);
+}
+.stage__compare-stale {
+  display: inline-block;
+  margin-left: var(--space-2);
+  padding: 0 var(--space-2);
+  border: 1px dashed var(--pending);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+/* Lời giải in the 312 px notebook (§9.4): each answer on two lines, its name and then its value
+   with the check, so a long name never wraps beside its number (UI-07). */
+.notebook .solution__answers tr {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: var(--space-2);
+  padding: 4px 0;
+}
+.notebook .solution__answers th {
+  grid-column: 1 / -1;
+  padding: 0;
+}
+.notebook .solution__answers td {
+  padding: 0;
+}
+.notebook .solution__check span {
+  margin-left: 0;
+}
+
+/* A shelf card's preview 88 (§9.3): full width under the subject rule, the stage's paper. */
+.shelf-card__preview {
+  display: grid;
+  place-items: center;
+  align-self: stretch;
+  height: 88px;
+  margin: calc(-1 * var(--space-3)) calc(-1 * var(--space-3)) 0;
+  overflow: hidden;
+  background: var(--bg-stage);
+  color: var(--paper-text-muted);
+}
+.shelf-card__still {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* "Tiếp tục" (§9.3): the topic's thumbnail 160×96 left, its name and "Mở lại" beside it. */
+.shelf-start--resume:has(.shelf-start__thumb) {
+  grid-template-columns: 160px minmax(0, 1fr);
+  column-gap: var(--space-3);
+}
+.shelf-start--resume:has(.shelf-start__thumb) > :not(.shelf-start__thumb) {
+  grid-column: 2;
+}
+.shelf-start__thumb {
+  grid-row: 1 / span 3;
+  width: 160px;
+  height: 96px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-stage);
+}
+/* "Có đề bài?" one-line field: a button drawn as a field, opening the Đề bài sheet. */
+.shelf-start__field {
+  display: block;
+  width: 100%;
+  min-height: var(--target);
+  padding: 0 var(--space-3);
+  border: 1px solid var(--border-input);
+  border-radius: var(--radius-sm);
+  background: var(--paper-bg);
+  color: var(--paper-text-muted);
+  font: inherit;
+  text-align: left;
+  cursor: text;
+}
+.shelf-start__field:hover {
+  border-color: var(--border-strong);
+}
+.first-run__ghosts {
+  display: flex;
+  gap: var(--space-2);
+}
+
+/* The mechanism's speeds share the speed slot with "Dừng ở mỗi bước" (§9.5): 3 × 40 at its end. */
+/* One row: these share or follow the speed slot, never wrap below the edge. */
+.bench-edge > .bench-edge__toggle,
+.bench-edge > .bench-chip,
+.bench-speed--narrow {
+  grid-row: 1;
+}
+.bench-speed--narrow {
+  justify-self: end;
+  width: 116px;
+}
+.bench-speed:disabled span {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Provenance stamp (§11): dashed border, fixed text, no close; BL = the stage's bottom left. */
+.bench-stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 4px var(--space-2);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--bg-panel);
+  color: var(--text);
+  font-size: 12px;
+  line-height: 16px;
+}
+.bench-stamp--bl {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  z-index: 2;
+  max-width: calc(100% - 24px);
+}
+/* The reaction's equation band (§9.5 TC): centred, solid, the equation at 22 px. Only the
+   mechanism's overlay: other views (Bohr, the biology 3D lessons) use .chem-overlay too. */
+.bench__stage .chem-view--flush > .chem-overlay:has(> .rx-eq--chip) {
+  left: 50%;
+  right: auto;
+  justify-content: center;
+  width: min(720px, calc(100% - 24px));
+  min-height: 56px;
+  translate: -50% 0;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel);
+}
+.bench__stage .chem-view--flush > .chem-overlay > .rx-eq--chip {
+  font-size: 22px;
+  line-height: 30px;
+}
+.bench__stage .chem-view--flush > .rx-status {
+  top: 80px;
+  left: 50%;
+  translate: -50% 0;
+  justify-content: center;
+}
+/* Tray rows (§9.5): the name and "Có cơ chế" on one line, the equation under them. */
+.tray .rx-list button {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: var(--space-2);
+  min-height: 48px;
+  text-align: left;
+}
+.tray .rx-list__tag {
+  grid-column: 2;
+  grid-row: 1;
+}
+.rx-list__eq {
+  grid-column: 1 / -1;
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 16px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rx-other {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: var(--space-2);
+}
+.rx-other label {
+  display: grid;
+  gap: var(--space-1);
+}
+.rx-other input {
+  min-height: var(--target);
+  font-family: var(--font-mono);
+}
+/* The balancer is one stage card 760 wide (§9.10). */
+.bench__stage .chem-view:has(> .rx-input) {
+  width: min(760px, 100%);
+  margin-inline: auto;
+}
+
+/* A biology lesson's player on the edge's slots (EdgeSteps, §9.6): the module slot becomes a
+   subgrid of the edge, so D0–D3, the readout, the scrubber and the speed land in their columns. */
+.bench-edge__module:has(> .edge-steps) {
+  display: grid;
+  grid-template-columns: subgrid;
+  overflow: visible;
+}
+.edge-steps {
+  display: contents;
+}
+.edge-steps__readout {
+  overflow: hidden;
+  font-size: 13px;
+  line-height: 16px;
+  white-space: normal;
+}
+.edge-steps__scrub {
+  position: relative;
+  grid-column: scrub;
+  min-width: 0;
+}
+.edge-steps__ticks {
+  position: absolute;
+  inset: auto 0 -2px;
+  height: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  pointer-events: none;
+}
+.edge-steps__ticks li {
+  position: absolute;
+  top: 0;
+  width: 1px;
+  height: 6px;
+  background: var(--frame-line);
+}
+.edge-steps__ticks span {
+  position: absolute;
+  top: 5px;
+  left: 3px;
+  color: var(--text-muted);
+  font-size: 10px;
+  line-height: 10px;
+  white-space: nowrap;
+}
+.edge-steps__speed {
+  grid-column: speed;
+  min-width: 0;
+}
+
+/* A guided lesson beside its live stage (§9.7): the lesson panel 416 (640 on Báo cáo), the lab's
+   stage and bench edge on the right. Lessons without one keep the room's single sheet. */
+.bench-studio-live:empty {
+  display: none;
+}
+.bench-studio-room:has(.bench-studio-live:not(:empty)) {
+  grid-template-columns: var(--bench-rail) var(--lesson-w, 416px) minmax(0, 1fr);
+  grid-template-areas: 'rail main live';
+}
+.bench-studio-room:has(.bench-studio-live:not(:empty)):has(.studio-flow[data-step='report']) {
+  --lesson-w: 640px;
+}
+.bench-studio-room:has(.bench-studio-live:not(:empty)) > .bench-studio > .studio {
+  width: 100%;
+  padding: var(--space-3);
+}
+.bench-studio-live {
+  grid-area: live;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  border-left: 1px solid var(--frame-line);
+}
+.studio-live {
+  --bench-edge: 64px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) var(--bench-edge);
+  /* The edge places itself by its area name (grid-area: edge). */
+  grid-template-areas:
+    'stage'
+    'edge';
+  flex: 1;
+  min-height: 0;
+}
+.studio-live__stage {
+  grid-area: stage;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+/* The lesson footer owns the filled slot: D0 is tonal here (§9.7). */
+.studio-live .bench-play {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+/* "Báo cáo" (§9.7): the four sections, each item with its origin chip. */
+.report-origins {
+  display: grid;
+  gap: var(--space-3);
+}
+.report-origins h4 {
+  margin: 0 0 var(--space-1);
+  font-size: 14px;
+  line-height: 20px;
+}
+.report-origins p,
+.report-origins ul {
+  margin: 0;
+}
+.report-origins__ink {
+  color: var(--ink-learner);
+}
+.origin-chip {
+  display: inline-flex;
+  margin-left: var(--space-1);
+  padding: 0 var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 16px;
+  white-space: nowrap;
+}
+.origin-chip[data-origin='engine'] {
+  border-color: var(--conf-exact);
+}
+.origin-chip[data-origin='ai'] {
+  border-color: var(--ink-ai);
+}
+
+/* Soạn bài (§9.7): the parts of the lesson in a 160 column, the form beside it. The design's 448
+   leaves no room for a scene's quantity rows (number box, unit, range), so the form takes the rest. */
+.bench-studio .author-editor:has(> .author-nav) {
+  display: grid;
+  grid-template-columns: 160px minmax(0, 1fr);
+  column-gap: var(--space-4);
+  align-items: start;
+}
+.bench-studio .author-editor:has(> .author-nav) > * {
+  grid-column: 2;
+}
+.bench-studio .author-editor > .author-nav {
+  position: sticky;
+  top: 0;
+  grid-column: 1;
+  grid-row: 1 / span 20;
+  display: grid;
+  gap: var(--space-1);
+}
+.author-nav a {
+  display: flex;
+  align-items: center;
+  min-height: var(--target);
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--paper-text);
+  font-size: 14px;
+  line-height: 18px;
+  text-decoration: none;
+}
+.author-nav a:hover {
+  background: var(--paper-hover);
+}

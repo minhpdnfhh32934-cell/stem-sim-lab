@@ -191,6 +191,33 @@ Người dùng / giáo viên cần xác nhận:
 - Việc dùng tên bài/chương và đưa nhãn "Theo SGK Kết nối tri thức" vào app có cần NXB Giáo dục cho
   phép hay không (Máy A không kết luận).
 
+## 2h. Huấn luyện model riêng cho AI Teacher (ghi 2026-11-09)
+
+Quyết định của người dùng ngày 2026-11-09 (#128). Mục này chỉ liệt kê việc cần xác nhận, **không
+phải kết luận pháp lí**.
+
+Cách làm: script lấy số liệu, công thức, tên đại lượng và phạm vi áp dụng của công thức từ bộ máy
+của app; Qwen3.5 9B chạy trên máy viết lời; giáo viên duyệt một mẫu; huấn luyện trên Google Colab
+hoặc máy của người dùng. Model nền từ tối 2026-11-09 là Qwen3.5 9B (thay cho Gemma 4 E2B); cách đưa
+model vào app chưa quyết định. Không dùng sách giáo khoa và dữ liệu học sinh. Gemini và Claude không viết dữ
+liệu huấn luyện. Phần câu lệnh của mỗi dòng dữ liệu (lời dặn, ghi chú thư viện) là chữ có sẵn trong
+app, đúng như khi app gửi cho model.
+
+Người dùng cần tự đọc và xác nhận trước khi phát hành model:
+
+1. Điều khoản của Anthropic ([thương mại](https://www.anthropic.com/legal/commercial-terms),
+   [người dùng](https://www.anthropic.com/legal/consumer-terms)). Phần lớn câu chữ và mã của SimLab
+   được viết cùng Claude. Lời trong dữ liệu do Qwen viết, nhưng tên đại lượng và công thức vẫn lấy từ
+   app, và script sinh dữ liệu cũng được viết cùng Claude.
+2. Giấy phép của model nền: trang
+   [Gemma 4 E2B](https://huggingface.co/google/gemma-4-e2b-it) và
+   [Qwen3.5 9B](https://huggingface.co/Qwen/Qwen3.5-9B) ghi Apache-2.0 khi tra ngày 2026-11-09. Cần
+   đối chiếu lại lúc phát hành và ghi vào `docs/THIRD_PARTY.md`. Gemma 3 12B (đã đo so sánh, chưa
+   huấn luyện) dùng điều khoản riêng của Gemma, không phải Apache-2.0.
+3. Đăng model đã huấn luyện lên HuggingFace: tài khoản của người dùng, điều khoản của HuggingFace,
+   và trách nhiệm với model do mình phát hành cho người học.
+4. Điều khoản của Google Colab khi dùng GPU miễn phí để huấn luyện.
+
 ## 5. Ứng dụng xử lý dữ liệu thế nào (tóm tắt kỹ thuật)
 
 - Không tài khoản, không quảng cáo, không thống kê sử dụng. Mạng chỉ dùng khi: gọi AI (người dùng

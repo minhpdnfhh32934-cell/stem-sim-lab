@@ -802,6 +802,9 @@
     "metan"
    ],
    "category": "organic",
+   "groups": [
+    "alkane"
+   ],
    "smiles": "C",
    "formula": "CH4",
    "display_formula": "CH4",
@@ -2116,6 +2119,9 @@
     "cacbon tetraclorua"
    ],
    "category": "organic",
+   "groups": [
+    "halide"
+   ],
    "smiles": "ClC(Cl)(Cl)Cl",
    "formula": "CCl4",
    "display_formula": "CCl4",
@@ -2214,6 +2220,9 @@
     "trichloromethane"
    ],
    "category": "organic",
+   "groups": [
+    "halide"
+   ],
    "smiles": "ClC(Cl)Cl",
    "formula": "CHCl3",
    "display_formula": "CHCl3",
@@ -2309,6 +2318,9 @@
    },
    "aliases": [],
    "category": "organic",
+   "groups": [
+    "halide"
+   ],
    "smiles": "ClCCl",
    "formula": "CH2Cl2",
    "display_formula": "CH2Cl2",
@@ -2406,6 +2418,9 @@
     "metyl clorua"
    ],
    "category": "organic",
+   "groups": [
+    "halide"
+   ],
    "smiles": "CCl",
    "formula": "CH3Cl",
    "display_formula": "CH3Cl",
@@ -2503,6 +2518,9 @@
     "metyl bromua"
    ],
    "category": "organic",
+   "groups": [
+    "halide"
+   ],
    "smiles": "CBr",
    "formula": "CH3Br",
    "display_formula": "CH3Br",
@@ -2600,6 +2618,9 @@
     "etan"
    ],
    "category": "organic",
+   "groups": [
+    "alkane"
+   ],
    "smiles": "CC",
    "formula": "C2H6",
    "display_formula": "C2H6",
@@ -2750,6 +2771,9 @@
     "eten"
    ],
    "category": "organic",
+   "groups": [
+    "alkene"
+   ],
    "smiles": "C=C",
    "formula": "C2H4",
    "display_formula": "C2H4",
@@ -2872,6 +2896,9 @@
     "etin"
    ],
    "category": "organic",
+   "groups": [
+    "alkyne"
+   ],
    "smiles": "C#C",
    "formula": "C2H2",
    "display_formula": "C2H2",
@@ -2960,6 +2987,9 @@
     "propan"
    ],
    "category": "organic",
+   "groups": [
+    "alkane"
+   ],
    "smiles": "CCC",
    "formula": "C3H8",
    "display_formula": "C3H8",
@@ -3153,6 +3183,9 @@
     "propilen"
    ],
    "category": "organic",
+   "groups": [
+    "alkene"
+   ],
    "smiles": "C=CC",
    "formula": "C3H6",
    "display_formula": "CH2=CH–CH3",
@@ -3314,6 +3347,9 @@
     "butan"
    ],
    "category": "organic",
+   "groups": [
+    "alkane"
+   ],
    "smiles": "CCCC",
    "formula": "C4H10",
    "display_formula": "CH3CH2CH2CH3",
@@ -3555,6 +3591,9 @@
     "isobutilen"
    ],
    "category": "organic",
+   "groups": [
+    "alkene"
+   ],
    "smiles": "C=C(C)C",
    "formula": "C4H8",
    "display_formula": "(CH3)2C=CH2",
@@ -3764,6 +3803,9 @@
     "benzen"
    ],
    "category": "organic",
+   "groups": [
+    "arene"
+   ],
    "smiles": "c1ccccc1",
    "formula": "C6H6",
    "display_formula": "C6H6",
@@ -3775,7 +3817,7 @@
      "xyz": [
       0.8035,
       -1.1401,
-      -0.0082
+      -0.0083
      ],
      "charge": 0
     },
@@ -3986,6 +4028,9 @@
     "toluen"
    ],
    "category": "organic",
+   "groups": [
+    "arene"
+   ],
    "smiles": "Cc1ccccc1",
    "formula": "C7H8",
    "display_formula": "C6H5CH3",
@@ -4250,6 +4295,9 @@
     "metanol"
    ],
    "category": "organic",
+   "groups": [
+    "alcohol"
+   ],
    "smiles": "CO",
    "formula": "CH4O",
    "display_formula": "CH3OH",
@@ -4365,6 +4413,9 @@
     "etanol"
    ],
    "category": "organic",
+   "groups": [
+    "alcohol"
+   ],
    "smiles": "CCO",
    "formula": "C2H6O",
    "display_formula": "C2H5OH",
@@ -4526,6 +4577,9 @@
     "tert-butanol"
    ],
    "category": "organic",
+   "groups": [
+    "alcohol"
+   ],
    "smiles": "CC(C)(C)O",
    "formula": "C4H10O",
    "display_formula": "(CH3)3COH",
@@ -4783,6 +4837,9 @@
     "tert-butyl bromua"
    ],
    "category": "organic",
+   "groups": [
+    "halide"
+   ],
    "smiles": "CC(C)(C)Br",
    "formula": "C4H9Br",
    "display_formula": "(CH3)3CBr",
@@ -5024,6 +5081,9 @@
     "isopropyl bromua"
    ],
    "category": "organic",
+   "groups": [
+    "halide"
+   ],
    "smiles": "CC(C)Br",
    "formula": "C3H7Br",
    "display_formula": "CH3CHBrCH3",
@@ -5218,6 +5278,9 @@
     "anđehit fomic"
    ],
    "category": "organic",
+   "groups": [
+    "aldehyde"
+   ],
    "smiles": "C=O",
    "formula": "CH2O",
    "display_formula": "HCHO",
@@ -5300,6 +5363,9 @@
     "axetanđehit"
    ],
    "category": "organic",
+   "groups": [
+    "aldehyde"
+   ],
    "smiles": "CC=O",
    "formula": "C2H4O",
    "display_formula": "CH3CHO",
@@ -5429,6 +5495,9 @@
     "axeton"
    ],
    "category": "organic",
+   "groups": [
+    "ketone"
+   ],
    "smiles": "CC(C)=O",
    "formula": "C3H6O",
    "display_formula": "CH3COCH3",
@@ -5606,6 +5675,9 @@
     "axit fomic"
    ],
    "category": "organic",
+   "groups": [
+    "acid"
+   ],
    "smiles": "O=CO",
    "formula": "CH2O2",
    "display_formula": "HCOOH",
@@ -5703,6 +5775,9 @@
     "axit axetic"
    ],
    "category": "organic",
+   "groups": [
+    "acid"
+   ],
    "smiles": "CC(=O)O",
    "formula": "C2H4O2",
    "display_formula": "CH3COOH",
@@ -5848,6 +5923,9 @@
     "etyl axetat"
    ],
    "category": "organic",
+   "groups": [
+    "ester"
+   ],
    "smiles": "CCOC(C)=O",
    "formula": "C4H8O2",
    "display_formula": "CH3COOC2H5",
@@ -6089,6 +6167,10 @@
     "axit aminoaxetic"
    ],
    "category": "organic",
+   "groups": [
+    "acid",
+    "amine"
+   ],
    "smiles": "NCC(=O)O",
    "formula": "C2H5NO2",
    "display_formula": "H2NCH2COOH",
@@ -6266,6 +6348,9 @@
     "ure"
    ],
    "category": "organic",
+   "groups": [
+    "amide"
+   ],
    "smiles": "NC(N)=O",
    "formula": "CH4N2O",
    "display_formula": "(NH2)2CO",
@@ -6411,6 +6496,10 @@
     "glucozơ"
    ],
    "category": "organic",
+   "groups": [
+    "alcohol",
+    "ether"
+   ],
    "smiles": "OC[C@H]1O[C@@H](O)[C@H](O)[C@@H](O)[C@@H]1O",
    "formula": "C6H12O6",
    "display_formula": "C6H12O6",
@@ -7283,6 +7372,4714 @@
     {
      "a": 1,
      "b": 4,
+     "order": 1,
+     "aromatic": false
+    }
+   ],
+   "geometry_method": "mmff94",
+   "reference": null,
+   "experimental": null,
+   "review_status": "pending"
+  },
+  {
+   "id": "propyne",
+   "name": {
+    "vi": "Propyne",
+    "en": "Propyne"
+   },
+   "aliases": [
+    "propin"
+   ],
+   "category": "organic",
+   "groups": [
+    "alkyne"
+   ],
+   "smiles": "C#CC",
+   "formula": "C3H4",
+   "display_formula": "CH≡C–CH3",
+   "molar_mass": 40.065,
+   "atoms": [
+    {
+     "el": "C",
+     "sym": 6,
+     "xyz": [
+      -0.9036,
+      -0.2893,
+      0.1151
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 5,
+     "xyz": [
+      0.4799,
+      0.1537,
+      -0.0611
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 4,
+     "xyz": [
+      1.6151,
+      0.5172,
+      -0.2057
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 1,
+     "xyz": [
+      -1.6024,
+      0.4426,
+      -0.301
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 1,
+     "xyz": [
+      -1.0731,
+      -1.2455,
+      -0.3891
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 1,
+     "xyz": [
+      -1.1386,
+      -0.4184,
+      1.1759
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      2.6226,
+      0.8398,
+      -0.3341
+     ],
+     "charge": 0
+    }
+   ],
+   "bonds": [
+    {
+     "a": 0,
+     "b": 1,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 2,
+     "order": 3,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 3,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 4,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 5,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 6,
+     "order": 1,
+     "aromatic": false
+    }
+   ],
+   "geometry_method": "mmff94",
+   "reference": null,
+   "experimental": null,
+   "review_status": "pending"
+  },
+  {
+   "id": "but1ene",
+   "name": {
+    "vi": "But-1-ene",
+    "en": "But-1-ene"
+   },
+   "aliases": [
+    "butene",
+    "buten"
+   ],
+   "category": "organic",
+   "groups": [
+    "alkene"
+   ],
+   "smiles": "C=CCC",
+   "formula": "C4H8",
+   "display_formula": "CH2=CH–CH2–CH3",
+   "molar_mass": 56.108,
+   "atoms": [
+    {
+     "el": "C",
+     "sym": 8,
+     "xyz": [
+      1.6482,
+      0.5593,
+      0.2479
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 9,
+     "xyz": [
+      0.9823,
+      -0.5895,
+      0.0727
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 11,
+     "xyz": [
+      -0.4987,
+      -0.7676,
+      -0.1237
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 10,
+     "xyz": [
+      -1.3439,
+      0.4992,
+      -0.1245
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      2.7263,
+      0.5559,
+      0.3801
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      1.1538,
+      1.5245,
+      0.2657
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 2,
+     "xyz": [
+      1.559,
+      -1.514,
+      0.0684
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 6,
+     "xyz": [
+      -0.8679,
+      -1.4326,
+      0.6662
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 6,
+     "xyz": [
+      -0.6541,
+      -1.2911,
+      -1.0746
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 3,
+     "xyz": [
+      -1.2614,
+      1.0336,
+      0.8277
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 3,
+     "xyz": [
+      -2.3985,
+      0.2458,
+      -0.2746
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 3,
+     "xyz": [
+      -1.0453,
+      1.1766,
+      -0.9313
+     ],
+     "charge": 0
+    }
+   ],
+   "bonds": [
+    {
+     "a": 0,
+     "b": 1,
+     "order": 2,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 2,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 3,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 4,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 5,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 6,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 7,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 8,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 3,
+     "b": 9,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 3,
+     "b": 10,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 3,
+     "b": 11,
+     "order": 1,
+     "aromatic": false
+    }
+   ],
+   "geometry_method": "mmff94",
+   "reference": null,
+   "experimental": null,
+   "review_status": "pending"
+  },
+  {
+   "id": "butadiene",
+   "name": {
+    "vi": "Buta-1,3-diene",
+    "en": "Buta-1,3-diene"
+   },
+   "aliases": [
+    "butađien",
+    "butadien"
+   ],
+   "category": "organic",
+   "groups": [
+    "alkene"
+   ],
+   "smiles": "C=CC=C",
+   "formula": "C4H6",
+   "display_formula": "CH2=CH–CH=CH2",
+   "molar_mass": 54.092,
+   "atoms": [
+    {
+     "el": "C",
+     "sym": 6,
+     "xyz": [
+      1.8155,
+      -0.2411,
+      -0.0747
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 8,
+     "xyz": [
+      0.6223,
+      0.2816,
+      0.2306
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 8,
+     "xyz": [
+      -0.6223,
+      -0.2816,
+      -0.2306
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 6,
+     "xyz": [
+      -1.8155,
+      0.2411,
+      0.0747
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      2.7276,
+      0.2167,
+      0.295
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      1.9177,
+      -1.1273,
+      -0.6927
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 4,
+     "xyz": [
+      0.5787,
+      1.1719,
+      0.8546
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 4,
+     "xyz": [
+      -0.5787,
+      -1.1719,
+      -0.8546
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      -2.7276,
+      -0.2167,
+      -0.295
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      -1.9177,
+      1.1273,
+      0.6927
+     ],
+     "charge": 0
+    }
+   ],
+   "bonds": [
+    {
+     "a": 0,
+     "b": 1,
+     "order": 2,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 2,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 3,
+     "order": 2,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 4,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 5,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 6,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 7,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 3,
+     "b": 8,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 3,
+     "b": 9,
+     "order": 1,
+     "aromatic": false
+    }
+   ],
+   "geometry_method": "mmff94",
+   "reference": null,
+   "experimental": null,
+   "review_status": "pending"
+  },
+  {
+   "id": "cyclohexane",
+   "name": {
+    "vi": "Cyclohexane",
+    "en": "Cyclohexane"
+   },
+   "aliases": [
+    "xiclohexan"
+   ],
+   "category": "organic",
+   "groups": [
+    "alkane"
+   ],
+   "smiles": "C1CCCCC1",
+   "formula": "C6H12",
+   "display_formula": "C6H12",
+   "molar_mass": 84.162,
+   "atoms": [
+    {
+     "el": "C",
+     "sym": 12,
+     "xyz": [
+      0.3305,
+      -1.3764,
+      -0.294
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 12,
+     "xyz": [
+      1.4567,
+      -0.3456,
+      -0.192
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 12,
+     "xyz": [
+      0.9657,
+      1.0689,
+      0.1232
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 12,
+     "xyz": [
+      -0.4383,
+      1.3146,
+      -0.4125
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 12,
+     "xyz": [
+      -1.4567,
+      0.3456,
+      0.192
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 12,
+     "xyz": [
+      -0.8579,
+      -1.007,
+      0.5833
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      -0.0025,
+      -1.4481,
+      -1.3372
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      0.7124,
+      -2.3665,
+      -0.0206
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      2.1698,
+      -0.6502,
+      0.5837
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      2.0161,
+      -0.343,
+      -1.1354
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      1.6656,
+      1.8023,
+      -0.2928
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      0.9661,
+      1.2195,
+      1.2103
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      -0.7477,
+      2.3463,
+      -0.2107
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      -0.431,
+      1.1992,
+      -1.5038
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      -2.27,
+      0.1972,
+      -0.5288
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      -1.9159,
+      0.796,
+      1.0804
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      -0.5327,
+      -0.9706,
+      1.6308
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      -1.6304,
+      -1.782,
+      0.5241
+     ],
+     "charge": 0
+    }
+   ],
+   "bonds": [
+    {
+     "a": 0,
+     "b": 1,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 2,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 3,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 3,
+     "b": 4,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 4,
+     "b": 5,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 5,
+     "b": 0,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 6,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 7,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 8,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 9,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 10,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 11,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 3,
+     "b": 12,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 3,
+     "b": 13,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 4,
+     "b": 14,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 4,
+     "b": 15,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 5,
+     "b": 16,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 5,
+     "b": 17,
+     "order": 1,
+     "aromatic": false
+    }
+   ],
+   "geometry_method": "mmff94",
+   "reference": null,
+   "experimental": null,
+   "review_status": "pending"
+  },
+  {
+   "id": "styrene",
+   "name": {
+    "vi": "Styrene",
+    "en": "Styrene"
+   },
+   "aliases": [
+    "stiren"
+   ],
+   "category": "organic",
+   "groups": [
+    "alkene",
+    "arene"
+   ],
+   "smiles": "C=Cc1ccccc1",
+   "formula": "C8H8",
+   "display_formula": "C6H5CH=CH2",
+   "molar_mass": 104.152,
+   "atoms": [
+    {
+     "el": "C",
+     "sym": 8,
+     "xyz": [
+      2.8599,
+      0.2449,
+      0.2046
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 12,
+     "xyz": [
+      1.8149,
+      -0.5914,
+      0.2636
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 15,
+     "xyz": [
+      0.3951,
+      -0.2421,
+      0.0777
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 13,
+     "xyz": [
+      -0.5607,
+      -1.2653,
+      0.178
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 10,
+     "xyz": [
+      -1.923,
+      -0.9986,
+      0.0119
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 9,
+     "xyz": [
+      -2.3509,
+      0.2979,
+      -0.2576
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 10,
+     "xyz": [
+      -1.4173,
+      1.3254,
+      -0.3607
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 13,
+     "xyz": [
+      -0.0543,
+      1.0572,
+      -0.1942
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      2.7656,
+      1.3057,
+      0.0064
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      3.8665,
+      -0.1323,
+      0.3596
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 5,
+     "xyz": [
+      2.0192,
+      -1.6408,
+      0.4694
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 6,
+     "xyz": [
+      -0.2545,
+      -2.2879,
+      0.3879
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 3,
+     "xyz": [
+      -2.6471,
+      -1.8049,
+      0.0934
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 2,
+     "xyz": [
+      -3.4093,
+      0.5075,
+      -0.3871
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 3,
+     "xyz": [
+      -1.7467,
+      2.3396,
+      -0.571
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 6,
+     "xyz": [
+      0.6427,
+      1.885,
+      -0.282
+     ],
+     "charge": 0
+    }
+   ],
+   "bonds": [
+    {
+     "a": 0,
+     "b": 1,
+     "order": 2,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 2,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 3,
+     "order": 2,
+     "aromatic": true
+    },
+    {
+     "a": 3,
+     "b": 4,
+     "order": 1,
+     "aromatic": true
+    },
+    {
+     "a": 4,
+     "b": 5,
+     "order": 2,
+     "aromatic": true
+    },
+    {
+     "a": 5,
+     "b": 6,
+     "order": 1,
+     "aromatic": true
+    },
+    {
+     "a": 6,
+     "b": 7,
+     "order": 2,
+     "aromatic": true
+    },
+    {
+     "a": 7,
+     "b": 2,
+     "order": 1,
+     "aromatic": true
+    },
+    {
+     "a": 0,
+     "b": 8,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 9,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 10,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 3,
+     "b": 11,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 4,
+     "b": 12,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 5,
+     "b": 13,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 6,
+     "b": 14,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 7,
+     "b": 15,
+     "order": 1,
+     "aromatic": false
+    }
+   ],
+   "geometry_method": "mmff94",
+   "reference": null,
+   "experimental": null,
+   "review_status": "pending"
+  },
+  {
+   "id": "naphthalene",
+   "name": {
+    "vi": "Naphthalene",
+    "en": "Naphthalene"
+   },
+   "aliases": [
+    "naphtalen",
+    "băng phiến"
+   ],
+   "category": "organic",
+   "groups": [
+    "arene"
+   ],
+   "smiles": "c1ccc2ccccc2c1",
+   "formula": "C10H8",
+   "display_formula": "C10H8",
+   "molar_mass": 128.174,
+   "atoms": [
+    {
+     "el": "C",
+     "sym": 8,
+     "xyz": [
+      2.4045,
+      -0.7836,
+      -0.1161
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 8,
+     "xyz": [
+      2.4556,
+      0.6073,
+      -0.1032
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 12,
+     "xyz": [
+      1.2742,
+      1.3483,
+      -0.0422
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 16,
+     "xyz": [
+      0.0259,
+      0.7066,
+      0.0066
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 12,
+     "xyz": [
+      -1.172,
+      1.437,
+      0.0681
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 8,
+     "xyz": [
+      -2.4045,
+      0.7836,
+      0.1161
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 8,
+     "xyz": [
+      -2.4556,
+      -0.6073,
+      0.1032
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 12,
+     "xyz": [
+      -1.2742,
+      -1.3483,
+      0.0422
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 16,
+     "xyz": [
+      -0.0259,
+      -0.7066,
+      -0.0066
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 12,
+     "xyz": [
+      1.172,
+      -1.437,
+      -0.0681
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      3.3237,
+      -1.3616,
+      -0.1635
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      3.4146,
+      1.1171,
+      -0.1405
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 4,
+     "xyz": [
+      1.3343,
+      2.4342,
+      -0.033
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 4,
+     "xyz": [
+      -1.1523,
+      2.5244,
+      0.0791
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      -3.3237,
+      1.3616,
+      0.1636
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      -3.4146,
+      -1.1171,
+      0.1405
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 4,
+     "xyz": [
+      -1.3343,
+      -2.4342,
+      0.033
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 4,
+     "xyz": [
+      1.1523,
+      -2.5244,
+      -0.0792
+     ],
+     "charge": 0
+    }
+   ],
+   "bonds": [
+    {
+     "a": 0,
+     "b": 1,
+     "order": 2,
+     "aromatic": true
+    },
+    {
+     "a": 1,
+     "b": 2,
+     "order": 1,
+     "aromatic": true
+    },
+    {
+     "a": 2,
+     "b": 3,
+     "order": 2,
+     "aromatic": true
+    },
+    {
+     "a": 3,
+     "b": 4,
+     "order": 1,
+     "aromatic": true
+    },
+    {
+     "a": 4,
+     "b": 5,
+     "order": 2,
+     "aromatic": true
+    },
+    {
+     "a": 5,
+     "b": 6,
+     "order": 1,
+     "aromatic": true
+    },
+    {
+     "a": 6,
+     "b": 7,
+     "order": 2,
+     "aromatic": true
+    },
+    {
+     "a": 7,
+     "b": 8,
+     "order": 1,
+     "aromatic": true
+    },
+    {
+     "a": 8,
+     "b": 9,
+     "order": 2,
+     "aromatic": true
+    },
+    {
+     "a": 9,
+     "b": 0,
+     "order": 1,
+     "aromatic": true
+    },
+    {
+     "a": 8,
+     "b": 3,
+     "order": 1,
+     "aromatic": true
+    },
+    {
+     "a": 0,
+     "b": 10,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 11,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 12,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 4,
+     "b": 13,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 5,
+     "b": 14,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 6,
+     "b": 15,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 7,
+     "b": 16,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 9,
+     "b": 17,
+     "order": 1,
+     "aromatic": false
+    }
+   ],
+   "geometry_method": "mmff94",
+   "reference": null,
+   "experimental": null,
+   "review_status": "pending"
+  },
+  {
+   "id": "vinylcl",
+   "name": {
+    "vi": "Vinyl chloride",
+    "en": "Vinyl chloride"
+   },
+   "aliases": [
+    "vinyl clorua"
+   ],
+   "category": "organic",
+   "groups": [
+    "alkene",
+    "halide"
+   ],
+   "smiles": "C=CCl",
+   "formula": "C2H3Cl",
+   "display_formula": "CH2=CHCl",
+   "molar_mass": 62.499,
+   "atoms": [
+    {
+     "el": "C",
+     "sym": 4,
+     "xyz": [
+      -0.7213,
+      -0.1709,
+      -0.0058
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 5,
+     "xyz": [
+      0.5289,
+      0.2908,
+      0.0093
+     ],
+     "charge": 0
+    },
+    {
+     "el": "Cl",
+     "sym": 3,
+     "xyz": [
+      1.8967,
+      -0.7378,
+      -0.021
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      -1.5632,
+      0.5123,
+      0.0144
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      -0.9337,
+      -1.2346,
+      -0.0384
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 2,
+     "xyz": [
+      0.7926,
+      1.3402,
+      0.0415
+     ],
+     "charge": 0
+    }
+   ],
+   "bonds": [
+    {
+     "a": 0,
+     "b": 1,
+     "order": 2,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 2,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 3,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 4,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 5,
+     "order": 1,
+     "aromatic": false
+    }
+   ],
+   "geometry_method": "mmff94",
+   "reference": null,
+   "experimental": null,
+   "review_status": "pending"
+  },
+  {
+   "id": "chlorobenzene",
+   "name": {
+    "vi": "Chlorobenzene",
+    "en": "Chlorobenzene"
+   },
+   "aliases": [
+    "clobenzen"
+   ],
+   "category": "organic",
+   "groups": [
+    "arene",
+    "halide"
+   ],
+   "smiles": "Clc1ccccc1",
+   "formula": "C6H5Cl",
+   "display_formula": "C6H5Cl",
+   "molar_mass": 112.559,
+   "atoms": [
+    {
+     "el": "Cl",
+     "sym": 5,
+     "xyz": [
+      2.9823,
+      -0.6843,
+      -0.007
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 11,
+     "xyz": [
+      1.305,
+      -0.2994,
+      -0.0031
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 9,
+     "xyz": [
+      0.9008,
+      1.0348,
+      -0.0223
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 7,
+     "xyz": [
+      -0.4598,
+      1.346,
+      -0.0191
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 6,
+     "xyz": [
+      -1.4092,
+      0.3234,
+      0.0033
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 7,
+     "xyz": [
+      -1.0006,
+      -1.0109,
+      0.0225
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 9,
+     "xyz": [
+      0.3596,
+      -1.324,
+      0.0194
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 3,
+     "xyz": [
+      1.6374,
+      1.8332,
+      -0.0398
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 1,
+     "xyz": [
+      -0.7797,
+      2.3849,
+      -0.0341
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      -2.4691,
+      0.5666,
+      0.0058
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 1,
+     "xyz": [
+      -1.7413,
+      -1.8064,
+      0.04
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 3,
+     "xyz": [
+      0.6745,
+      -2.3638,
+      0.0344
+     ],
+     "charge": 0
+    }
+   ],
+   "bonds": [
+    {
+     "a": 0,
+     "b": 1,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 2,
+     "order": 2,
+     "aromatic": true
+    },
+    {
+     "a": 2,
+     "b": 3,
+     "order": 1,
+     "aromatic": true
+    },
+    {
+     "a": 3,
+     "b": 4,
+     "order": 2,
+     "aromatic": true
+    },
+    {
+     "a": 4,
+     "b": 5,
+     "order": 1,
+     "aromatic": true
+    },
+    {
+     "a": 5,
+     "b": 6,
+     "order": 2,
+     "aromatic": true
+    },
+    {
+     "a": 6,
+     "b": 1,
+     "order": 1,
+     "aromatic": true
+    },
+    {
+     "a": 2,
+     "b": 7,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 3,
+     "b": 8,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 4,
+     "b": 9,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 5,
+     "b": 10,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 6,
+     "b": 11,
+     "order": 1,
+     "aromatic": false
+    }
+   ],
+   "geometry_method": "mmff94",
+   "reference": null,
+   "experimental": null,
+   "review_status": "pending"
+  },
+  {
+   "id": "propan1ol",
+   "name": {
+    "vi": "Propan-1-ol",
+    "en": "Propan-1-ol"
+   },
+   "aliases": [
+    "propanol",
+    "ancol propylic"
+   ],
+   "category": "organic",
+   "groups": [
+    "alcohol"
+   ],
+   "smiles": "CCCO",
+   "formula": "C3H8O",
+   "display_formula": "CH3CH2CH2OH",
+   "molar_mass": 60.096,
+   "atoms": [
+    {
+     "el": "C",
+     "sym": 9,
+     "xyz": [
+      -1.3061,
+      -0.0154,
+      0.5024
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 11,
+     "xyz": [
+      -0.1415,
+      0.6492,
+      -0.2174
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 10,
+     "xyz": [
+      0.9134,
+      -0.356,
+      -0.6626
+     ],
+     "charge": 0
+    },
+    {
+     "el": "O",
+     "sym": 8,
+     "xyz": [
+      1.4916,
+      -1.0131,
+      0.4565
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 1,
+     "xyz": [
+      -2.0537,
+      0.7337,
+      0.7819
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 1,
+     "xyz": [
+      -0.9747,
+      -0.5175,
+      1.4168
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 1,
+     "xyz": [
+      -1.792,
+      -0.7563,
+      -0.1404
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 6,
+     "xyz": [
+      -0.5185,
+      1.1908,
+      -1.0918
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 6,
+     "xyz": [
+      0.3111,
+      1.3832,
+      0.4593
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 4,
+     "xyz": [
+      0.4766,
+      -1.1166,
+      -1.3173
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 4,
+     "xyz": [
+      1.7128,
+      0.1476,
+      -1.2154
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      1.8809,
+      -0.3296,
+      1.0282
+     ],
+     "charge": 0
+    }
+   ],
+   "bonds": [
+    {
+     "a": 0,
+     "b": 1,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 2,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 3,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 4,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 5,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 6,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 7,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 8,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 9,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 10,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 3,
+     "b": 11,
+     "order": 1,
+     "aromatic": false
+    }
+   ],
+   "geometry_method": "mmff94",
+   "reference": null,
+   "experimental": null,
+   "review_status": "pending"
+  },
+  {
+   "id": "propan2ol",
+   "name": {
+    "vi": "Propan-2-ol",
+    "en": "Propan-2-ol"
+   },
+   "aliases": [
+    "isopropanol",
+    "ancol isopropylic"
+   ],
+   "category": "organic",
+   "groups": [
+    "alcohol"
+   ],
+   "smiles": "CC(C)O",
+   "formula": "C3H8O",
+   "display_formula": "CH3CH(OH)CH3",
+   "molar_mass": 60.096,
+   "atoms": [
+    {
+     "el": "C",
+     "sym": 9,
+     "xyz": [
+      1.2358,
+      -0.1362,
+      0.4275
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 11,
+     "xyz": [
+      0.0867,
+      0.2774,
+      -0.4792
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 9,
+     "xyz": [
+      -1.1442,
+      -0.5904,
+      -0.2661
+     ],
+     "charge": 0
+    },
+    {
+     "el": "O",
+     "sym": 8,
+     "xyz": [
+      -0.2481,
+      1.6375,
+      -0.221
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 1,
+     "xyz": [
+      2.1003,
+      0.5175,
+      0.2692
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 1,
+     "xyz": [
+      0.959,
+      -0.0408,
+      1.4833
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 1,
+     "xyz": [
+      1.5398,
+      -1.1699,
+      0.2373
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 7,
+     "xyz": [
+      0.4042,
+      0.2107,
+      -1.525
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 1,
+     "xyz": [
+      -1.9619,
+      -0.2577,
+      -0.9145
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 1,
+     "xyz": [
+      -0.9317,
+      -1.6416,
+      -0.4829
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 1,
+     "xyz": [
+      -1.5085,
+      -0.5117,
+      0.7642
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      -0.5314,
+      1.705,
+      0.7069
+     ],
+     "charge": 0
+    }
+   ],
+   "bonds": [
+    {
+     "a": 0,
+     "b": 1,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 2,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 3,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 4,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 5,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 6,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 7,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 8,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 9,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 10,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 3,
+     "b": 11,
+     "order": 1,
+     "aromatic": false
+    }
+   ],
+   "geometry_method": "mmff94",
+   "reference": null,
+   "experimental": null,
+   "review_status": "pending"
+  },
+  {
+   "id": "glycol",
+   "name": {
+    "vi": "Ethylene glycol",
+    "en": "Ethylene glycol"
+   },
+   "aliases": [
+    "etylen glicol",
+    "ethane-1,2-diol"
+   ],
+   "category": "organic",
+   "groups": [
+    "alcohol"
+   ],
+   "smiles": "OCCO",
+   "formula": "C2H6O2",
+   "display_formula": "HOCH2CH2OH",
+   "molar_mass": 62.068,
+   "atoms": [
+    {
+     "el": "O",
+     "sym": 6,
+     "xyz": [
+      -1.7881,
+      0.3156,
+      -0.3307
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 8,
+     "xyz": [
+      -0.5282,
+      -0.3248,
+      -0.4757
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 8,
+     "xyz": [
+      0.584,
+      0.4871,
+      0.1805
+     ],
+     "charge": 0
+    },
+    {
+     "el": "O",
+     "sym": 6,
+     "xyz": [
+      1.8351,
+      -0.179,
+      0.0821
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      -1.9925,
+      0.3612,
+      0.6189
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 2,
+     "xyz": [
+      -0.3229,
+      -0.4534,
+      -1.5435
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 2,
+     "xyz": [
+      -0.5879,
+      -1.3282,
+      -0.0405
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 2,
+     "xyz": [
+      0.3619,
+      0.6707,
+      1.2372
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 2,
+     "xyz": [
+      0.6713,
+      1.4667,
+      -0.3007
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      1.7674,
+      -1.0159,
+      0.5726
+     ],
+     "charge": 0
+    }
+   ],
+   "bonds": [
+    {
+     "a": 0,
+     "b": 1,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 2,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 3,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 4,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 5,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 6,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 7,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 8,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 3,
+     "b": 9,
+     "order": 1,
+     "aromatic": false
+    }
+   ],
+   "geometry_method": "mmff94",
+   "reference": null,
+   "experimental": null,
+   "review_status": "pending"
+  },
+  {
+   "id": "glycerol",
+   "name": {
+    "vi": "Glycerol",
+    "en": "Glycerol"
+   },
+   "aliases": [
+    "glixerol"
+   ],
+   "category": "organic",
+   "groups": [
+    "alcohol"
+   ],
+   "smiles": "OCC(O)CO",
+   "formula": "C3H8O3",
+   "display_formula": "C3H5(OH)3",
+   "molar_mass": 92.094,
+   "atoms": [
+    {
+     "el": "O",
+     "sym": 8,
+     "xyz": [
+      -1.7383,
+      -0.7712,
+      1.139
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 11,
+     "xyz": [
+      -1.3238,
+      0.2516,
+      0.2447
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 13,
+     "xyz": [
+      0.0331,
+      -0.059,
+      -0.3903
+     ],
+     "charge": 0
+    },
+    {
+     "el": "O",
+     "sym": 10,
+     "xyz": [
+      0.373,
+      0.9384,
+      -1.3649
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 11,
+     "xyz": [
+      1.153,
+      -0.1005,
+      0.6536
+     ],
+     "charge": 0
+    },
+    {
+     "el": "O",
+     "sym": 8,
+     "xyz": [
+      2.3949,
+      -0.3648,
+      -0.0038
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      -1.8839,
+      -1.5833,
+      0.623
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 3,
+     "xyz": [
+      -1.2836,
+      1.1982,
+      0.7947
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 3,
+     "xyz": [
+      -2.0915,
+      0.3732,
+      -0.5275
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 7,
+     "xyz": [
+      0.0025,
+      -1.0237,
+      -0.9101
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 2,
+     "xyz": [
+      -0.2957,
+      0.8964,
+      -2.0712
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 3,
+     "xyz": [
+      1.2541,
+      0.8625,
+      1.1649
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 3,
+     "xyz": [
+      0.9853,
+      -0.8836,
+      1.3983
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      2.4209,
+      0.2659,
+      -0.7505
+     ],
+     "charge": 0
+    }
+   ],
+   "bonds": [
+    {
+     "a": 0,
+     "b": 1,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 2,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 3,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 4,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 4,
+     "b": 5,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 6,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 7,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 8,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 9,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 3,
+     "b": 10,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 4,
+     "b": 11,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 4,
+     "b": 12,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 5,
+     "b": 13,
+     "order": 1,
+     "aromatic": false
+    }
+   ],
+   "geometry_method": "mmff94",
+   "reference": null,
+   "experimental": null,
+   "review_status": "pending"
+  },
+  {
+   "id": "phenol",
+   "name": {
+    "vi": "Phenol",
+    "en": "Phenol"
+   },
+   "aliases": [],
+   "category": "organic",
+   "groups": [
+    "arene",
+    "phenol"
+   ],
+   "smiles": "Oc1ccccc1",
+   "formula": "C6H6O",
+   "display_formula": "C6H5OH",
+   "molar_mass": 94.113,
+   "atoms": [
+    {
+     "el": "O",
+     "sym": 6,
+     "xyz": [
+      2.4916,
+      -0.0965,
+      0.0109
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 12,
+     "xyz": [
+      1.1295,
+      -0.03,
+      0.0106
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 10,
+     "xyz": [
+      0.352,
+      -1.0925,
+      -0.4416
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 8,
+     "xyz": [
+      -1.0393,
+      -0.9797,
+      -0.4235
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 7,
+     "xyz": [
+      -1.6409,
+      0.1897,
+      0.0446
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 8,
+     "xyz": [
+      -0.8522,
+      1.2488,
+      0.4957
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 10,
+     "xyz": [
+      0.538,
+      1.1381,
+      0.4784
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      2.7573,
+      -0.9622,
+      -0.3393
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 4,
+     "xyz": [
+      0.8061,
+      -2.0073,
+      -0.8082
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 2,
+     "xyz": [
+      -1.6562,
+      -1.803,
+      -0.7742
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 1,
+     "xyz": [
+      -2.7244,
+      0.2761,
+      0.0581
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 2,
+     "xyz": [
+      -1.319,
+      2.1597,
+      0.8604
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 4,
+     "xyz": [
+      1.1575,
+      1.9588,
+      0.8281
+     ],
+     "charge": 0
+    }
+   ],
+   "bonds": [
+    {
+     "a": 0,
+     "b": 1,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 2,
+     "order": 2,
+     "aromatic": true
+    },
+    {
+     "a": 2,
+     "b": 3,
+     "order": 1,
+     "aromatic": true
+    },
+    {
+     "a": 3,
+     "b": 4,
+     "order": 2,
+     "aromatic": true
+    },
+    {
+     "a": 4,
+     "b": 5,
+     "order": 1,
+     "aromatic": true
+    },
+    {
+     "a": 5,
+     "b": 6,
+     "order": 2,
+     "aromatic": true
+    },
+    {
+     "a": 6,
+     "b": 1,
+     "order": 1,
+     "aromatic": true
+    },
+    {
+     "a": 0,
+     "b": 7,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 8,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 3,
+     "b": 9,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 4,
+     "b": 10,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 5,
+     "b": 11,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 6,
+     "b": 12,
+     "order": 1,
+     "aromatic": false
+    }
+   ],
+   "geometry_method": "mmff94",
+   "reference": null,
+   "experimental": null,
+   "review_status": "pending"
+  },
+  {
+   "id": "dme",
+   "name": {
+    "vi": "Dimethyl ether",
+    "en": "Dimethyl ether"
+   },
+   "aliases": [
+    "đimetyl ete"
+   ],
+   "category": "organic",
+   "groups": [
+    "ether"
+   ],
+   "smiles": "COC",
+   "formula": "C2H6O",
+   "display_formula": "CH3OCH3",
+   "molar_mass": 46.069,
+   "atoms": [
+    {
+     "el": "C",
+     "sym": 7,
+     "xyz": [
+      -1.1682,
+      -0.0027,
+      -0.1333
+     ],
+     "charge": 0
+    },
+    {
+     "el": "O",
+     "sym": 6,
+     "xyz": [
+      -0.0267,
+      0.8393,
+      -0.0451
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 7,
+     "xyz": [
+      1.1656,
+      0.0857,
+      0.1289
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      -2.0518,
+      0.6273,
+      -0.2658
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      -1.0843,
+      -0.6728,
+      -0.9944
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      -1.2877,
+      -0.5837,
+      0.7863
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      1.1213,
+      -0.4924,
+      1.057
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      2.007,
+      0.781,
+      0.1902
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      1.3248,
+      -0.5816,
+      -0.7237
+     ],
+     "charge": 0
+    }
+   ],
+   "bonds": [
+    {
+     "a": 0,
+     "b": 1,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 2,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 3,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 4,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 5,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 6,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 7,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 8,
+     "order": 1,
+     "aromatic": false
+    }
+   ],
+   "geometry_method": "mmff94",
+   "reference": null,
+   "experimental": null,
+   "review_status": "pending"
+  },
+  {
+   "id": "propanal",
+   "name": {
+    "vi": "Propanal",
+    "en": "Propanal"
+   },
+   "aliases": [
+    "anđehit propionic"
+   ],
+   "category": "organic",
+   "groups": [
+    "aldehyde"
+   ],
+   "smiles": "CCC=O",
+   "formula": "C3H6O",
+   "display_formula": "CH3CH2CHO",
+   "molar_mass": 58.08,
+   "atoms": [
+    {
+     "el": "C",
+     "sym": 8,
+     "xyz": [
+      -1.1082,
+      -0.3609,
+      -0.0348
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 9,
+     "xyz": [
+      0.0753,
+      0.5476,
+      0.2359
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 7,
+     "xyz": [
+      1.3883,
+      -0.0638,
+      -0.1868
+     ],
+     "charge": 0
+    },
+    {
+     "el": "O",
+     "sym": 6,
+     "xyz": [
+      1.5109,
+      -1.1727,
+      -0.696
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 1,
+     "xyz": [
+      -1.1912,
+      -0.5911,
+      -1.1022
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 1,
+     "xyz": [
+      -1.008,
+      -1.3086,
+      0.5047
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 1,
+     "xyz": [
+      -2.0384,
+      0.1184,
+      0.2853
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 4,
+     "xyz": [
+      0.1401,
+      0.7717,
+      1.3055
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 4,
+     "xyz": [
+      -0.0437,
+      1.4913,
+      -0.3059
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      2.2749,
+      0.5681,
+      -0.0057
+     ],
+     "charge": 0
+    }
+   ],
+   "bonds": [
+    {
+     "a": 0,
+     "b": 1,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 2,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 3,
+     "order": 2,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 4,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 5,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 6,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 7,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 8,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 9,
+     "order": 1,
+     "aromatic": false
+    }
+   ],
+   "geometry_method": "mmff94",
+   "reference": null,
+   "experimental": null,
+   "review_status": "pending"
+  },
+  {
+   "id": "butanone",
+   "name": {
+    "vi": "Butanone",
+    "en": "Butanone"
+   },
+   "aliases": [
+    "butan-2-one",
+    "metyl etyl xeton"
+   ],
+   "category": "organic",
+   "groups": [
+    "ketone"
+   ],
+   "smiles": "CCC(C)=O",
+   "formula": "C4H8O",
+   "display_formula": "CH3COCH2CH3",
+   "molar_mass": 72.107,
+   "atoms": [
+    {
+     "el": "C",
+     "sym": 11,
+     "xyz": [
+      -1.9034,
+      0.0156,
+      0.0886
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 12,
+     "xyz": [
+      -0.4863,
+      -0.5274,
+      0.1199
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 9,
+     "xyz": [
+      0.5569,
+      0.5469,
+      -0.1268
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 10,
+     "xyz": [
+      1.9933,
+      0.0925,
+      -0.1127
+     ],
+     "charge": 0
+    },
+    {
+     "el": "O",
+     "sym": 8,
+     "xyz": [
+      0.2665,
+      1.7251,
+      -0.3285
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 3,
+     "xyz": [
+      -2.6237,
+      -0.788,
+      0.2702
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 3,
+     "xyz": [
+      -2.0472,
+      0.7839,
+      0.8554
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 3,
+     "xyz": [
+      -2.1308,
+      0.4657,
+      -0.8835
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 6,
+     "xyz": [
+      -0.3722,
+      -1.2975,
+      -0.6502
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 6,
+     "xyz": [
+      -0.2882,
+      -0.9775,
+      1.0983
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      2.2338,
+      -0.3309,
+      0.8656
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      2.1493,
+      -0.6533,
+      -0.8959
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      2.652,
+      0.945,
+      -0.3003
+     ],
+     "charge": 0
+    }
+   ],
+   "bonds": [
+    {
+     "a": 0,
+     "b": 1,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 2,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 3,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 4,
+     "order": 2,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 5,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 6,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 7,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 8,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 9,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 3,
+     "b": 10,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 3,
+     "b": 11,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 3,
+     "b": 12,
+     "order": 1,
+     "aromatic": false
+    }
+   ],
+   "geometry_method": "mmff94",
+   "reference": null,
+   "experimental": null,
+   "review_status": "pending"
+  },
+  {
+   "id": "propanoic",
+   "name": {
+    "vi": "Propanoic acid",
+    "en": "Propanoic acid"
+   },
+   "aliases": [
+    "axit propionic"
+   ],
+   "category": "organic",
+   "groups": [
+    "acid"
+   ],
+   "smiles": "CCC(=O)O",
+   "formula": "C3H6O2",
+   "display_formula": "CH3CH2COOH",
+   "molar_mass": 74.079,
+   "atoms": [
+    {
+     "el": "C",
+     "sym": 9,
+     "xyz": [
+      -1.3375,
+      0.3073,
+      0.5153
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 10,
+     "xyz": [
+      -0.2054,
+      -0.5849,
+      0.0381
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 8,
+     "xyz": [
+      1.0058,
+      0.2131,
+      -0.3587
+     ],
+     "charge": 0
+    },
+    {
+     "el": "O",
+     "sym": 6,
+     "xyz": [
+      1.1416,
+      1.4237,
+      -0.3303
+     ],
+     "charge": 0
+    },
+    {
+     "el": "O",
+     "sym": 7,
+     "xyz": [
+      2.0108,
+      -0.579,
+      -0.7824
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 1,
+     "xyz": [
+      -1.646,
+      1.0052,
+      -0.2702
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 1,
+     "xyz": [
+      -1.0327,
+      0.8977,
+      1.3859
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 1,
+     "xyz": [
+      -2.2057,
+      -0.2961,
+      0.7977
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 4,
+     "xyz": [
+      0.0796,
+      -1.2726,
+      0.8411
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 4,
+     "xyz": [
+      -0.5389,
+      -1.1642,
+      -0.8291
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      2.7284,
+      0.0498,
+      -1.0073
+     ],
+     "charge": 0
+    }
+   ],
+   "bonds": [
+    {
+     "a": 0,
+     "b": 1,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 2,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 3,
+     "order": 2,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 4,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 5,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 6,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 7,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 8,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 9,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 4,
+     "b": 10,
+     "order": 1,
+     "aromatic": false
+    }
+   ],
+   "geometry_method": "mmff94",
+   "reference": null,
+   "experimental": null,
+   "review_status": "pending"
+  },
+  {
+   "id": "benzoic",
+   "name": {
+    "vi": "Benzoic acid",
+    "en": "Benzoic acid"
+   },
+   "aliases": [
+    "axit benzoic"
+   ],
+   "category": "organic",
+   "groups": [
+    "arene",
+    "acid"
+   ],
+   "smiles": "O=C(O)c1ccccc1",
+   "formula": "C7H6O2",
+   "display_formula": "C6H5COOH",
+   "molar_mass": 122.123,
+   "atoms": [
+    {
+     "el": "O",
+     "sym": 7,
+     "xyz": [
+      2.8065,
+      0.6492,
+      0.0037
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 8,
+     "xyz": [
+      2.0478,
+      -0.4587,
+      0.0827
+     ],
+     "charge": 0
+    },
+    {
+     "el": "O",
+     "sym": 6,
+     "xyz": [
+      2.552,
+      -1.5615,
+      0.1879
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 14,
+     "xyz": [
+      0.5948,
+      -0.1685,
+      0.027
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 12,
+     "xyz": [
+      0.1011,
+      1.1365,
+      -0.0954
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 10,
+     "xyz": [
+      -1.2767,
+      1.3609,
+      -0.1438
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 9,
+     "xyz": [
+      -2.163,
+      0.2862,
+      -0.0703
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 10,
+     "xyz": [
+      -1.6764,
+      -1.0152,
+      0.0516
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 12,
+     "xyz": [
+      -0.3,
+      -1.2437,
+      0.1004
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      3.7235,
+      0.3069,
+      0.0524
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 4,
+     "xyz": [
+      0.7797,
+      1.9839,
+      -0.1537
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 2,
+     "xyz": [
+      -1.6583,
+      2.3746,
+      -0.2388
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 1,
+     "xyz": [
+      -3.2353,
+      0.4633,
+      -0.1082
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 2,
+     "xyz": [
+      -2.3681,
+      -1.852,
+      0.1088
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 4,
+     "xyz": [
+      0.0725,
+      -2.2619,
+      0.1956
+     ],
+     "charge": 0
+    }
+   ],
+   "bonds": [
+    {
+     "a": 0,
+     "b": 1,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 2,
+     "order": 2,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 3,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 3,
+     "b": 4,
+     "order": 2,
+     "aromatic": true
+    },
+    {
+     "a": 4,
+     "b": 5,
+     "order": 1,
+     "aromatic": true
+    },
+    {
+     "a": 5,
+     "b": 6,
+     "order": 2,
+     "aromatic": true
+    },
+    {
+     "a": 6,
+     "b": 7,
+     "order": 1,
+     "aromatic": true
+    },
+    {
+     "a": 7,
+     "b": 8,
+     "order": 2,
+     "aromatic": true
+    },
+    {
+     "a": 8,
+     "b": 3,
+     "order": 1,
+     "aromatic": true
+    },
+    {
+     "a": 0,
+     "b": 9,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 4,
+     "b": 10,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 5,
+     "b": 11,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 6,
+     "b": 12,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 7,
+     "b": 13,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 8,
+     "b": 14,
+     "order": 1,
+     "aromatic": false
+    }
+   ],
+   "geometry_method": "mmff94",
+   "reference": null,
+   "experimental": null,
+   "review_status": "pending"
+  },
+  {
+   "id": "meac",
+   "name": {
+    "vi": "Methyl ethanoate (methyl acetate)",
+    "en": "Methyl acetate"
+   },
+   "aliases": [
+    "metyl axetat"
+   ],
+   "category": "organic",
+   "groups": [
+    "ester"
+   ],
+   "smiles": "COC(C)=O",
+   "formula": "C3H6O2",
+   "display_formula": "CH3COOCH3",
+   "molar_mass": 74.079,
+   "atoms": [
+    {
+     "el": "C",
+     "sym": 9,
+     "xyz": [
+      -1.8198,
+      0.2982,
+      -0.0865
+     ],
+     "charge": 0
+    },
+    {
+     "el": "O",
+     "sym": 7,
+     "xyz": [
+      -0.4483,
+      0.6138,
+      0.1563
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 8,
+     "xyz": [
+      0.4072,
+      -0.4148,
+      -0.095
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 10,
+     "xyz": [
+      1.8158,
+      0.0098,
+      0.1873
+     ],
+     "charge": 0
+    },
+    {
+     "el": "O",
+     "sym": 6,
+     "xyz": [
+      0.0862,
+      -1.5257,
+      -0.4926
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      -1.9737,
+      0.0412,
+      -1.1392
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      -2.4173,
+      1.1845,
+      0.1442
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      -2.1464,
+      -0.5187,
+      0.5646
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 3,
+     "xyz": [
+      2.4935,
+      -0.8238,
+      -0.018
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 3,
+     "xyz": [
+      1.9153,
+      0.2883,
+      1.2394
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 3,
+     "xyz": [
+      2.0876,
+      0.847,
+      -0.4605
+     ],
+     "charge": 0
+    }
+   ],
+   "bonds": [
+    {
+     "a": 0,
+     "b": 1,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 2,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 3,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 4,
+     "order": 2,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 5,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 6,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 7,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 3,
+     "b": 8,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 3,
+     "b": 9,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 3,
+     "b": 10,
+     "order": 1,
+     "aromatic": false
+    }
+   ],
+   "geometry_method": "mmff94",
+   "reference": null,
+   "experimental": null,
+   "review_status": "pending"
+  },
+  {
+   "id": "methylamine",
+   "name": {
+    "vi": "Methylamine",
+    "en": "Methylamine"
+   },
+   "aliases": [
+    "metylamin"
+   ],
+   "category": "organic",
+   "groups": [
+    "amine"
+   ],
+   "smiles": "CN",
+   "formula": "CH5N",
+   "display_formula": "CH3NH2",
+   "molar_mass": 31.058,
+   "atoms": [
+    {
+     "el": "C",
+     "sym": 6,
+     "xyz": [
+      -0.5744,
+      0.0038,
+      0.0158
+     ],
+     "charge": 0
+    },
+    {
+     "el": "N",
+     "sym": 5,
+     "xyz": [
+      0.8405,
+      0.1651,
+      0.2994
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 2,
+     "xyz": [
+      -1.0522,
+      -0.587,
+      0.8022
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 2,
+     "xyz": [
+      -0.7194,
+      -0.5042,
+      -0.9419
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 2,
+     "xyz": [
+      -1.0647,
+      0.9803,
+      -0.0273
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      1.2908,
+      -0.7491,
+      0.3069
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      1.2794,
+      0.6911,
+      -0.4552
+     ],
+     "charge": 0
+    }
+   ],
+   "bonds": [
+    {
+     "a": 0,
+     "b": 1,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 2,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 3,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 4,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 5,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 6,
+     "order": 1,
+     "aromatic": false
+    }
+   ],
+   "geometry_method": "mmff94",
+   "reference": null,
+   "experimental": null,
+   "review_status": "pending"
+  },
+  {
+   "id": "aniline",
+   "name": {
+    "vi": "Aniline",
+    "en": "Aniline"
+   },
+   "aliases": [
+    "anilin"
+   ],
+   "category": "organic",
+   "groups": [
+    "arene",
+    "amine"
+   ],
+   "smiles": "Nc1ccccc1",
+   "formula": "C6H7N",
+   "display_formula": "C6H5NH2",
+   "molar_mass": 93.129,
+   "atoms": [
+    {
+     "el": "N",
+     "sym": 13,
+     "xyz": [
+      2.3127,
+      0.1473,
+      -0.1412
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 12,
+     "xyz": [
+      0.9157,
+      0.0545,
+      -0.1151
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 10,
+     "xyz": [
+      0.2955,
+      -1.1812,
+      0.0868
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 8,
+     "xyz": [
+      -1.0917,
+      -1.2688,
+      0.2311
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 7,
+     "xyz": [
+      -1.8679,
+      -0.1124,
+      0.2169
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 8,
+     "xyz": [
+      -1.2539,
+      1.13,
+      0.0773
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 10,
+     "xyz": [
+      0.1337,
+      1.2115,
+      -0.0666
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 5,
+     "xyz": [
+      2.6563,
+      0.9883,
+      -0.5937
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 5,
+     "xyz": [
+      2.7698,
+      -0.6907,
+      -0.4861
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 3,
+     "xyz": [
+      0.8892,
+      -2.09,
+      0.133
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 1,
+     "xyz": [
+      -1.562,
+      -2.2385,
+      0.369
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      -2.9461,
+      -0.1777,
+      0.3351
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 1,
+     "xyz": [
+      -1.851,
+      2.0376,
+      0.0949
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 3,
+     "xyz": [
+      0.5998,
+      2.1901,
+      -0.1413
+     ],
+     "charge": 0
+    }
+   ],
+   "bonds": [
+    {
+     "a": 0,
+     "b": 1,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 2,
+     "order": 2,
+     "aromatic": true
+    },
+    {
+     "a": 2,
+     "b": 3,
+     "order": 1,
+     "aromatic": true
+    },
+    {
+     "a": 3,
+     "b": 4,
+     "order": 2,
+     "aromatic": true
+    },
+    {
+     "a": 4,
+     "b": 5,
+     "order": 1,
+     "aromatic": true
+    },
+    {
+     "a": 5,
+     "b": 6,
+     "order": 2,
+     "aromatic": true
+    },
+    {
+     "a": 6,
+     "b": 1,
+     "order": 1,
+     "aromatic": true
+    },
+    {
+     "a": 0,
+     "b": 7,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 8,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 9,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 3,
+     "b": 10,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 4,
+     "b": 11,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 5,
+     "b": 12,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 6,
+     "b": 13,
+     "order": 1,
+     "aromatic": false
+    }
+   ],
+   "geometry_method": "mmff94",
+   "reference": null,
+   "experimental": null,
+   "review_status": "pending"
+  },
+  {
+   "id": "alanine",
+   "name": {
+    "vi": "Alanine",
+    "en": "Alanine"
+   },
+   "aliases": [
+    "axit α-aminopropionic"
+   ],
+   "category": "organic",
+   "groups": [
+    "acid",
+    "amine"
+   ],
+   "smiles": "C[C@H](N)C(=O)O",
+   "formula": "C3H7NO2",
+   "display_formula": "CH3CH(NH2)COOH",
+   "molar_mass": 89.094,
+   "atoms": [
+    {
+     "el": "C",
+     "sym": 11,
+     "xyz": [
+      -1.0001,
+      0.9553,
+      -0.4596
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 12,
+     "xyz": [
+      -0.3585,
+      -0.3891,
+      -0.1452
+     ],
+     "charge": 0
+    },
+    {
+     "el": "C",
+     "sym": 9,
+     "xyz": [
+      1.1629,
+      -0.2551,
+      -0.024
+     ],
+     "charge": 0
+    },
+    {
+     "el": "O",
+     "sym": 7,
+     "xyz": [
+      1.8394,
+      -0.5368,
+      0.9543
+     ],
+     "charge": 0
+    },
+    {
+     "el": "O",
+     "sym": 8,
+     "xyz": [
+      1.751,
+      0.1896,
+      -1.1518
+     ],
+     "charge": 0
+    },
+    {
+     "el": "N",
+     "sym": 10,
+     "xyz": [
+      -0.9276,
+      -0.9166,
+      1.1158
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 3,
+     "xyz": [
+      -0.647,
+      1.3419,
+      -1.4217
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 3,
+     "xyz": [
+      -2.0907,
+      0.8687,
+      -0.518
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 3,
+     "xyz": [
+      -0.7559,
+      1.7046,
+      0.3022
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 6,
+     "xyz": [
+      -0.5712,
+      -1.1108,
+      -0.941
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 0,
+     "xyz": [
+      2.7065,
+      0.2052,
+      -0.9326
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 1,
+     "xyz": [
+      -0.6778,
+      -0.2768,
+      1.8731
+     ],
+     "charge": 0
+    },
+    {
+     "el": "H",
+     "sym": 1,
+     "xyz": [
+      -0.4311,
+      -1.78,
+      1.3486
+     ],
+     "charge": 0
+    }
+   ],
+   "bonds": [
+    {
+     "a": 0,
+     "b": 1,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 2,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 3,
+     "order": 2,
+     "aromatic": false
+    },
+    {
+     "a": 2,
+     "b": 4,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 5,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 6,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 7,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 0,
+     "b": 8,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 1,
+     "b": 9,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 4,
+     "b": 10,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 5,
+     "b": 11,
+     "order": 1,
+     "aromatic": false
+    },
+    {
+     "a": 5,
+     "b": 12,
      "order": 1,
      "aromatic": false
     }

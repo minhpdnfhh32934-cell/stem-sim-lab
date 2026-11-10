@@ -13,6 +13,7 @@ const MODULES: Record<string, () => Promise<ModuleView>> = {
   bondPolarity: () => import('@/chemistry/molecule/modules').then((m) => m.bondPolarity),
   reactionLibrary: () => import('@/chemistry/reaction/modules').then((m) => m.reactionLibrary),
   equationBalancing: () => import('@/chemistry/reaction/modules').then((m) => m.equationBalancing),
+  acidBaseTitration: () => import('@/chemistry/titration/modules').then((m) => m.acidBaseTitration),
   maxwellBoltzmann: () => import('@/chemistry/particles/modules').then((m) => m.maxwellBoltzmann),
   collisionTheory: () => import('@/chemistry/particles/modules').then((m) => m.collisionTheory),
   chemicalEquilibrium: () =>
@@ -30,6 +31,10 @@ const MODULES: Record<string, () => Promise<ModuleView>> = {
   michaelisMenten: () => import('@/biology/modules').then((m) => m.michaelisMenten),
   diffusionOsmosis: () => import('@/biology/modules').then((m) => m.diffusionOsmosis),
   cellStructure: () => import('@/biology/modules').then((m) => m.cellStructure),
+  cellToDna: () => import('@/biology/modules').then((m) => m.cellToDna),
+  crystalStructure: () => import('@/chemistry/crystal/modules').then((m) => m.crystalStructure),
+  // Physics lesson with its own view (no time stepping): harmonics and Fourier series.
+  fourierSeries: () => import('@/physics/fourier/modules').then((m) => m.fourierSeries),
 };
 
 export function hasModule(id: string): boolean {

@@ -1,4 +1,5 @@
-import { useRef } from 'react';
+import { useContext, useRef } from 'react';
+import { BenchContext } from '@/app/bench/shellMode';
 import { useLocalized } from '@/app/i18n/localized';
 import type { ScienceCardData } from '@/science-card/types';
 import { useCanvas } from '@/ui/canvas/useCanvas';
@@ -59,6 +60,7 @@ export function BohrStage() {
   usePublishCard(CARD);
   const Lz = useLocalized();
   const z = usePeriodicStore((s) => s.selected);
+  const bench = useContext(BenchContext);
   const { nLower, nUpper } = useBohrStore();
   const e = elementByZ(z);
   const shells = e ? electronsPerShell(e) : [];
@@ -83,7 +85,7 @@ export function BohrStage() {
       // Orbits
       for (let i = 0; i < count; i++) {
         const active = hydrogen && (i + 1 === nLower || i + 1 === nUpper);
-        ctx.strokeStyle = active ? css('--accent') : faint;
+        ctx.strokeStyle = active ? css('--stage-accent') : faint;
         ctx.lineWidth = active ? 2 : 1;
         ctx.setLineDash(active ? [] : [4, 4]);
         ctx.beginPath();
@@ -126,7 +128,7 @@ export function BohrStage() {
         const y1 = cy + radius(nUpper - 1) * Math.sin(ang);
         const x2 = cx + radius(nLower - 1) * Math.cos(ang);
         const y2 = cy + radius(nLower - 1) * Math.sin(ang);
-        ctx.strokeStyle = css('--accent');
+        ctx.strokeStyle = css('--stage-accent');
         ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.moveTo(x1, y1);
@@ -138,7 +140,7 @@ export function BohrStage() {
         ctx.lineTo(x2 - 9 * Math.cos(h - 0.4), y2 - 9 * Math.sin(h - 0.4));
         ctx.lineTo(x2 - 9 * Math.cos(h + 0.4), y2 - 9 * Math.sin(h + 0.4));
         ctx.closePath();
-        ctx.fillStyle = css('--accent');
+        ctx.fillStyle = css('--stage-accent');
         ctx.fill();
         // Emitted photon: a wavy line leaving the atom.
         const mx = (x1 + x2) / 2;
@@ -185,7 +187,8 @@ export function BohrStage() {
         aria-label={Lz(L('Mô hình Bohr', 'Bohr model'))}
       />
       <div className="chem-overlay" ref={overlayRef}>
-        <ElementPicker />
+        {/* The bench edge's element stepper has the picker (§9.10). */}
+        {!bench && <ElementPicker />}
         <span className="chem-chip chem-chip--qual">
           {Lz(
             L('Mô hình Bohr — giản lược, mang tính lịch sử', 'Bohr model — simplified, historical'),

@@ -5,7 +5,7 @@
  */
 import '@fontsource/patrick-hand/400.css';
 import '@fontsource/pangolin/400.css';
-import { loadKatex } from '@/science-card/katex';
+import { loadKatex, tightDecimalCommas } from '@/science-card/katex';
 import type { Measure } from './layout';
 
 export const HAND_FONT = '"Patrick Hand", "Segoe Print", cursive';
@@ -63,7 +63,7 @@ export const browserMeasure: Measure = {
       const probe = document.createElement('span');
       probe.style.cssText = `position:absolute;visibility:hidden;left:-9999px;top:0;font-size:${String(px)}px;white-space:nowrap`;
       try {
-        probe.innerHTML = katex.default.renderToString(tex, {
+        probe.innerHTML = katex.default.renderToString(tightDecimalCommas(tex), {
           throwOnError: false,
           displayMode: false,
           trust: false,
@@ -83,7 +83,7 @@ export const browserMeasure: Measure = {
 /** KaTeX HTML for a board formula (empty until KaTeX is loaded). */
 export function renderMath(tex: string): string {
   if (!katex) return '';
-  return katex.default.renderToString(tex, {
+  return katex.default.renderToString(tightDecimalCommas(tex), {
     throwOnError: false,
     displayMode: false,
     trust: false,

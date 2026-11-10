@@ -59,7 +59,26 @@ registerEngine('phys.standingWave', async () => {
   return () => new StandingWaveEngine();
 });
 
+registerEngine('phys.interference', async () => {
+  const { InterferenceEngine } = await import('@/physics/interference/engine');
+  return () => new InterferenceEngine();
+});
+
 registerEngine('phys.field', async () => {
   const { FieldEngine } = await import('@/physics/field/engine');
   return () => new FieldEngine();
+});
+
+registerEngine('phys.resonance', async () => {
+  const { ResonanceEngine } = await import('@/physics/resonance/engine');
+  return () => new ResonanceEngine();
+});
+registerEngine('phys.circuit', async () => {
+  const { CircuitEngine } = await import('@/physics/circuit/engine');
+  return () => new CircuitEngine();
+});
+
+registerEngine('phys.kepler', async () => {
+  const { KeplerEngine } = await import('@/physics/kepler/engine');
+  return () => new KeplerEngine();
 });
