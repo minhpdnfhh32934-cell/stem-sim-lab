@@ -250,6 +250,21 @@ trong `tests/teaching-rubric.test.ts`). Bảng trên giữ nguyên số lúc đo
   nên tính là lỗi mới đúng. McNemar so với Qwen gốc (`compare.mjs`): p = 0,344 → 0,549.
 - Gemma 3 1B improved-v2 (14/10): không lỗi đã biết 81,0 % → 78,6 %.
 
+Hai câu followup còn lại của bộ chính, P10 (gia tốc) và C10 (nguyên tử oxi), có cùng lỗ hổng: mẫu cũ chỉ
+bắt câu mở đầu bằng "Đúng". Cũng ngày 10/11 đã thêm mẫu thứ hai cho mỗi câu, cùng cách như B10, có test.
+Chấm lại mọi kết quả đã lưu (so bộ câu trước và sau khi thêm mẫu): chỉ 5 câu trả lời đổi.
+
+- P10, Gemma 3 1B improved-v2 (14/10): từ đúng thành sai. Câu này mở đầu "Chưa đúng" nhưng sau đó
+  ghi "**Đáp án:** Gia tốc tăng gấp đôi". Câu đúng 33,3 % → 31,0 %, không lỗi đã biết 78,6 % → 76,2 %.
+- C10, Gemma 3 1B baseline-greedy-part2 (14/10): 2 câu (hai biến thể) thành có lỗi đã biết.
+- C10, Qwen 3.5 9B e2 (09/11): không lỗi đã biết 95,2 % → 92,9 %; câu đúng không đổi.
+- C10, export2-e2 (10/11): không lỗi đã biết 97,6 % → 95,2 % (bảng trên ghi 97,6 %, số lúc đo);
+  câu đúng không đổi.
+
+Ở C10, số câu đúng không đổi trong mọi tệp (các câu này đã sai ở ý chính). Thước từ khóa bây giờ bắt
+được kiểu nhắc lại đáp án sai của người học như đáp án ở cả 3 câu followup của bộ chính, nhưng vẫn chỉ
+bắt các kiểu câu đã biết.
+
 Con số "không lỗi đã biết" chỉ đếm các lỗi mà thước biết tìm: nó không có nghĩa là model không bao
 giờ đồng tình với lỗi sai của người học. Bộ kiểm chứng (`teaching-heldout.json`) không đổi: sửa nó sau
 khi đã xem kết quả là tinh chỉnh theo chính bộ đó.
