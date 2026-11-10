@@ -733,3 +733,12 @@ Khi viết code mà gặp giá trị, phản ứng hay cơ chế không chắc c
   đường; điện tích âm nhận thêm các đường đi tới từ điện tích dương) nhưng mật độ đường trên hình
   **không** tỉ lệ với |E| (ghi trên Thẻ Khoa học). Nhờ giáo viên xem cách trình bày này và giá trị
   mặc định có hợp với lớp 11 không. `review_status: "pending"`.
+- **CELL3D-6 … CELL3D-8 — bản 3D của "Tế bào nhân sơ và nhân thực" (10/11/2026, phần 3D của Sinh (a)
+  trong #37 bị bỏ trước demo, làm ở kế hoạch 24/24 mục B3):** (6) Vị trí cố định, chỉ minh hoạ, không theo tỉ
+  lệ (chú thích của bài vẫn là `CELL_ILLUSTRATION`): bào quan nằm **trong** màng sinh chất; thành tế bào,
+  màng ngoài, roi, lông nằm **ngoài**; lưới nội chất là các vòng ôm nhân, mép trong chạm màng nhân; ribosome
+  bám trên lưới nội chất hạt và có cả ribosome tự do trong tế bào chất (test kiểm từng quy tắc). (7) Số lượng
+  bào quan (6 ti thể, 7 lục lạp, 70 ribosome ở vi khuẩn…) và hình dạng (lưới nội chất vẽ thành vòng, bộ máy
+  Golgi thành 4 túi dẹt, vùng nhân thành các vòng xoắn) là hình minh hoạ, giống nhau ở mọi mức máy. (8) Bộ
+  phận vẽ đúng danh sách `partsFor` của bản 2D (cùng tên, cùng chức năng, cùng nguồn). Nhờ giáo viên xem: các
+  quy tắc vị trí ở (6) và hình dạng ở (7) có gây hiểu nhầm không. `review_status: "pending"`.
