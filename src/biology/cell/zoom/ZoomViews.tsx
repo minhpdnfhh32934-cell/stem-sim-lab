@@ -5,6 +5,8 @@
  */
 import { Tags, ZoomIn, ZoomOut } from 'lucide-react';
 import { Suspense, lazy, useEffect, useMemo, type ReactNode } from 'react';
+import { EdgeSteps } from '@/app/bench/EdgeSteps';
+import { useOnEdge } from '@/app/bench/edgeSlot';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useCanvas } from '@/ui/canvas/useCanvas';
@@ -86,6 +88,40 @@ export function ZoomButtons({ glide }: { glide: boolean }) {
   const level = useCellZoom((s) => s.level);
   const moving = useCellZoom((s) => s.moving);
   const next = LEVEL_NAME[levelInfo(level + 1).id];
+  const onEdge = useOnEdge();
+  if (onEdge) {
+    // The bench edge (§9.10 "Cell → DNA zoom"): D0 Phóng to, D1 Thu nhỏ, "Bậc 3/6 · <level>";
+    // "Định tính" shows while the picture glides between two levels.
+    const at = Lz(
+      L(
+        `Bậc ${String(level + 1)}/${String(LEVELS.length)} · ${LEVEL_NAME[levelInfo(level).id].vi}`,
+        `Level ${String(level + 1)}/${String(LEVELS.length)} · ${LEVEL_NAME[levelInfo(level).id].en}`,
+      ),
+    );
+    return (
+      <EdgePortal>
+        <EdgeSteps
+          main={{
+            icon: ZoomIn,
+            label: Lz(L('Phóng to', 'Zoom in')),
+            disabled: moving || level === LEVELS.length - 1,
+            onClick: () => {
+              zoomIn(glide);
+            },
+          }}
+          prev={{
+            icon: ZoomOut,
+            label: Lz(L('Thu nhỏ', 'Zoom out')),
+            disabled: moving || level === 0,
+            onClick: zoomOut,
+          }}
+          readout={at}
+        >
+          {moving && <span className="chem-chip chem-chip--qual">{Lz(TRANSITION)}</span>}
+        </EdgeSteps>
+      </EdgePortal>
+    );
+  }
   return (
     <EdgePortal>
       <div className="zoom__buttons">

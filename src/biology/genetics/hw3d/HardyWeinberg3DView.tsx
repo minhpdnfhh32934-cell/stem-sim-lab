@@ -48,6 +48,8 @@ import { HW_VIEW } from './layout';
 import { buildHwHabitat } from './scene';
 import { useHw3D, type HwCameraMode } from './store';
 import { EdgePortal } from '@/app/bench/EdgePortal';
+import { EdgeSteps } from '@/app/bench/EdgeSteps';
+import { useOnEdge } from '@/app/bench/edgeSlot';
 import { BenchContext } from '@/app/bench/shellMode';
 
 /** Real seconds per generation while playing. */
@@ -135,46 +137,79 @@ function GenerationPlayer({
   const n = model.generations[g]?.n ?? 0;
   // The bench draws the player in its edge; the camera switch stays on the stage (§9.6).
   const bench = useContext(BenchContext);
+  const onEdge = useOnEdge();
   const camera3d = <Framing camera={camera} />;
   return (
     <>
       <EdgePortal>
-        <div className="bio3d__player hw3d__player">
-          <IconButton
-            icon={Play}
-            altIcon={Pause}
-            showAlt={playback.playing}
-            size="lg"
-            variant="solid"
-            label={
-              playback.playing
-                ? Lz(L('Tạm dừng', 'Pause'))
-                : Lz(L('Phát các thế hệ', 'Play the generations'))
-            }
-            onClick={playback.toggle}
-          />
-          <IconButton
-            icon={RotateCcw}
-            size="lg"
-            label={Lz(L('Phát lại từ thế hệ 0', 'Replay from generation 0'))}
-            onClick={playback.replay}
-          />
-          <input
-            type="range"
-            aria-label={Lz(L('Thế hệ', 'Generation'))}
-            min={0}
-            max={HW_GENERATIONS}
-            step={1}
-            value={g}
-            onChange={(e) => {
-              playback.setT(Number(e.target.value));
+        {onEdge ? (
+          // The bench edge (§9.10 habitats): Chạy, "Bước 1 thế hệ" (forward: D2), Đặt lại, the readout and
+          // the slider "Thế hệ" (its name kept).
+          <EdgeSteps
+            play={{ playing: playback.playing, onClick: playback.toggle }}
+            next={{
+              label: Lz(L('Bước 1 thế hệ', 'One generation on')),
+              disabled: g >= HW_GENERATIONS,
+              onClick: () => {
+                playback.setT(Math.min(HW_GENERATIONS, g + 1));
+              },
+            }}
+            reset={{
+              label: Lz(L('Đặt lại', 'Reset')),
+              disabled: g <= 0 && !playback.playing,
+              onClick: () => {
+                playback.setT(0);
+              },
+            }}
+            readout={`${Lz(L('Thế hệ', 'Generation'))} ${String(g)}/${String(HW_GENERATIONS)} · N = ${fmt(n, 6)}`}
+            scrub={{
+              label: Lz(L('Thế hệ', 'Generation')),
+              min: 0,
+              max: HW_GENERATIONS,
+              step: 1,
+              value: g,
+              valueText: `${Lz(L('Thế hệ', 'Generation'))} ${String(g)}/${String(HW_GENERATIONS)} · N = ${fmt(n, 6)}`,
+              onChange: playback.setT,
             }}
           />
-          <output aria-live="off">
-            {Lz(L('Thế hệ', 'Generation'))} {g}/{HW_GENERATIONS} · N = {fmt(n, 6)}
-          </output>
-          {!bench && camera3d}
-        </div>
+        ) : (
+          <div className="bio3d__player hw3d__player">
+            <IconButton
+              icon={Play}
+              altIcon={Pause}
+              showAlt={playback.playing}
+              size="lg"
+              variant="solid"
+              label={
+                playback.playing
+                  ? Lz(L('Tạm dừng', 'Pause'))
+                  : Lz(L('Phát các thế hệ', 'Play the generations'))
+              }
+              onClick={playback.toggle}
+            />
+            <IconButton
+              icon={RotateCcw}
+              size="lg"
+              label={Lz(L('Phát lại từ thế hệ 0', 'Replay from generation 0'))}
+              onClick={playback.replay}
+            />
+            <input
+              type="range"
+              aria-label={Lz(L('Thế hệ', 'Generation'))}
+              min={0}
+              max={HW_GENERATIONS}
+              step={1}
+              value={g}
+              onChange={(e) => {
+                playback.setT(Number(e.target.value));
+              }}
+            />
+            <output aria-live="off">
+              {Lz(L('Thế hệ', 'Generation'))} {g}/{HW_GENERATIONS} · N = {fmt(n, 6)}
+            </output>
+            {camera3d}
+          </div>
+        )}
       </EdgePortal>
       {bench && camera3d}
     </>

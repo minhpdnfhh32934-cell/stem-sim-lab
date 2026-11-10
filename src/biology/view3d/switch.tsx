@@ -8,6 +8,7 @@ import { L } from '../common';
 import { Segmented } from '../ui';
 import { set3d, use3dWanted, type Bio3DLesson } from './prefs';
 import { useShow3d } from './support';
+import { No3dNotice } from './No3dNotice';
 
 export function Bio3DSwitch({ lesson }: { lesson: Bio3DLesson }) {
   const wanted = use3dWanted(lesson);
@@ -32,7 +33,7 @@ export function Bio3DToolbar({ lesson }: { lesson: Bio3DLesson }) {
   return (
     <>
       <Bio3DSwitch lesson={lesson} />
-      {notice && <span className="chem-chip chem-chip--qual">{notice}</span>}
+      {notice && <No3dNotice text={notice} />}
     </>
   );
 }
@@ -50,7 +51,7 @@ export function Bio3DFigure({ lesson, figure }: { lesson: Bio3DLesson; figure: R
     <>
       {!show3d && (
         <div className="chem-toolbar bio3d-figure__bar">
-          {notice && <span className="chem-chip chem-chip--qual">{notice}</span>}
+          {notice && <No3dNotice text={notice} />}
           <Bio3DSwitch lesson={lesson} />
         </div>
       )}

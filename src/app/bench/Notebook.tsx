@@ -136,6 +136,7 @@ export function Notebook({ push, pinnedOnly = false }: { push: boolean; pinnedOn
     <section className="notebook" aria-label={t('bottom.regionLabel')}>
       <div
         className="notebook__rail"
+        data-tour="notebook"
         data-surface="frame"
         role="tablist"
         aria-orientation="vertical"

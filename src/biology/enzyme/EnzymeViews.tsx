@@ -12,6 +12,7 @@ import { KIND_NAME, noInhibitor, paramsOf, useEnzymeData } from './data';
 import { Enzyme3DSwitch } from './enzyme3d/Enzyme3DSwitch';
 import { useEnzyme3D } from './enzyme3d/store';
 import '../bio.css';
+import { No3dNotice } from '../view3d/No3dNotice';
 
 // three.js and the 3D reaction volume load only when the 3D view is shown.
 const Enzyme3DView = lazy(() =>
@@ -47,7 +48,7 @@ function MichaelisMenten2D({ notice }: { notice: string | undefined }) {
       <div className="chem-overlay">
         <EnzymeChips />
         <Enzyme3DSwitch />
-        {notice && <span className="chem-chip chem-chip--qual">{notice}</span>}
+        {notice && <No3dNotice text={notice} />}
       </div>
       <div className="bio-stage-chart">
         {st.view === 'rate' ? (
