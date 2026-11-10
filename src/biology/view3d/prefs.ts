@@ -12,7 +12,8 @@ import { createJSONStorage, persist } from 'zustand/middleware';
  * Protein" and "Đột biến điểm" in the dogma store (`view3d`); "Di truyền Mendel", "Động học
  * enzyme" and "Khuếch tán & thẩm thấu" in their own stores (`view3d`).
  */
-export type Bio3DLesson = 'hardyWeinberg' | 'drift' | 'logistic' | 'lotkaVolterra' | 'cellToDna';
+export type Bio3DLesson =
+  'hardyWeinberg' | 'drift' | 'logistic' | 'lotkaVolterra' | 'cellToDna' | 'cellStructure';
 
 export const BIO3D_LESSONS: readonly Bio3DLesson[] = [
   'hardyWeinberg',
@@ -20,6 +21,7 @@ export const BIO3D_LESSONS: readonly Bio3DLesson[] = [
   'logistic',
   'lotkaVolterra',
   'cellToDna',
+  'cellStructure',
 ];
 
 interface Bio3DPrefs {

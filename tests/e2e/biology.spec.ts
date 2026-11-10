@@ -185,9 +185,12 @@ test('cell structure: a part opens its card; targets >= 40 px, no horizontal scr
   const card = page.locator('.cell-part-card');
   await expect(card.locator('strong')).toHaveText('Lục lạp');
   await expect(card).toContainText('quang hợp');
-  // The plant has the longest list; the cell switch and "Hiện tên" are targets too.
+  // The plant has the longest list; the cell switch and "Hiện tên" (in the 3D view's corner
+  // since the cell has a 3D view, over the 2D picture otherwise) are targets too.
   const sizes = await page
-    .locator('.cell-parts .segmented__item, .cell-parts .m3d-parts__item, .cell2d .icon-btn')
+    .locator(
+      '.cell-parts .segmented__item, .cell-parts .m3d-parts__item, button[aria-label="Hiện tên các bộ phận"]',
+    )
     .evaluateAll((els) =>
       els.map((e) => Math.min(e.getBoundingClientRect().width, e.getBoundingClientRect().height)),
     );
