@@ -471,7 +471,7 @@ const vi = {
     check: 'Kiểm chứng số',
     agree: 'khớp, sai lệch {value}',
     engineNote:
-      'Mọi con số ở đây do chương trình tính bằng công thức và được kiểm chứng bằng tích phân số. AI không tạo ra con số nào.',
+      'Mọi con số ở đây do chương trình tính bằng công thức; con số có ghi “khớp” đã được kiểm chứng bằng tích phân số. AI không tạo ra con số nào.',
     intervenedNote:
       'Lời giải áp dụng cho điều kiện ban đầu. Sau khi can thiệp, hãy dùng số liệu mô phỏng (tab Số liệu).',
     invalid: 'Chưa có lời giải vì thông số chưa hợp lệ.',

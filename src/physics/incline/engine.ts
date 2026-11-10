@@ -2,7 +2,7 @@ import type { EngineInput, SimulationEngine } from '@/core/sim/engine';
 import { limitHit } from '../common/coulomb1d';
 import { dragAccel } from '../common/drag';
 import type { Params } from '../types';
-import { accelFor, forces, type InclineInput } from './model';
+import { accelFor, forces, stopsOnEdge, type InclineInput } from './model';
 
 /** State: [s, v, a, friction, N, off (1 = left the surface)]. */
 export const IS = { s: 0, v: 1, a: 2, friction: 3, N: 4, off: 5 } as const;
@@ -27,6 +27,19 @@ export function inclineInput(p: Params): InclineInput {
  * the update is exact; the instant v reaches 0 is located inside the step and the
  * static-friction condition is re-evaluated there (exact stick–slip).
  */
+/**
+ * How long the motion runs in a sub-interval of length h, and whether it stops in it: v reaches
+ * 0 at ts = −v/a ≤ h (also exactly at its end), or — with ts a hair above h by rounding —
+ * v + a·h comes out 0 or of the other sign.
+ */
+export function subInterval(v: number, a: number, h: number): { tau: number; stops: boolean } {
+  if (v === 0 || a === 0 || Math.sign(a) === Math.sign(v)) return { tau: h, stops: false };
+  const ts = -v / a;
+  if (ts <= h) return { tau: ts, stops: true };
+  const vEnd = v + a * h;
+  return { tau: h, stops: vEnd === 0 || Math.sign(vEnd) !== Math.sign(v) };
+}
+
 export class InclineEngine implements SimulationEngine<Params> {
   readonly id = 'phys.incline';
   readonly stateSize = 6;
@@ -41,6 +54,13 @@ export class InclineEngine implements SimulationEngine<Params> {
   private tEnd = 30;
   private drag: number | null = null;
   private restTime = 0;
+  /**
+   * Whether the current motion stops on an edge (stopsOnEdge), decided once when it starts —
+   * as the exact solution decides it per segment — and kept: re-deciding with the current speed
+   * would narrow the band as v → 0. `dir` is that motion's direction: a step that starts with
+   * another sign of v belongs to a new motion. null: decide at the next step.
+   */
+  private tie: { dir: number; onEdge: boolean } | null = null;
 
   reset(params: Params): void {
     this.p = inclineInput(params);
@@ -51,6 +71,7 @@ export class InclineEngine implements SimulationEngine<Params> {
     this.off = false;
     this.drag = null;
     this.restTime = 0;
+    this.tie = null;
     const r = accelFor(this.p, this.v);
     this.a = r.a;
     this.friction = r.friction;
@@ -65,6 +86,7 @@ export class InclineEngine implements SimulationEngine<Params> {
       this.v += acc * h;
       this.s = Math.min(this.p.length, Math.max(0, this.s + this.v * h));
       this.a = acc;
+      this.tie = null;
       return;
     }
     // Up to two sub-intervals: motion until v = 0, then the regime after stopping.
@@ -75,18 +97,22 @@ export class InclineEngine implements SimulationEngine<Params> {
       if (r.regime === 'static') {
         this.v = 0;
         this.restTime += h;
+        this.tie = null;
         break;
       }
       this.restTime = 0;
-      let tau = h;
       const startV = this.v;
-      if (startV !== 0 && Math.sign(r.a) !== Math.sign(startV) && r.a !== 0) {
-        const ts = -startV / r.a;
-        if (ts < tau) tau = ts;
-      }
+      const { tau, stops } = subInterval(startV, r.a, h);
       // Leaving the surface (s = 0 or s = L) inside this sub-interval — or right now, when
-      // the block sits on an edge and moves outward: stop exactly there.
-      const tb = limitHit(this.s, this.v, r.a, 0, this.p.length, tau);
+      // the block sits on an edge and moves outward: stop exactly there. A stop on an edge is a
+      // stop, as in the exact solution (stopsOnEdge).
+      if (this.tie && this.tie.dir !== Math.sign(startV)) this.tie = null;
+      this.tie ??= {
+        dir: Math.sign(startV),
+        onEdge: stopsOnEdge(this.s, startV, r.a, this.p.length),
+      };
+      const tie = this.tie.onEdge;
+      const tb = tie ? Infinity : limitHit(this.s, this.v, r.a, 0, this.p.length, tau);
       if (tb <= tau) {
         this.s = this.s + this.v * tb + 0.5 * r.a * tb * tb;
         this.s = Math.min(this.p.length, Math.max(0, this.s));
@@ -95,7 +121,23 @@ export class InclineEngine implements SimulationEngine<Params> {
         return;
       }
       this.s += this.v * tau + 0.5 * r.a * tau * tau;
-      this.v = tau < h ? 0 : this.v + r.a * tau;
+      // An edge reached exactly at the sub-interval's end (within rounding, moving outward):
+      // limitHit drops roots this close to the next start (τ < 1e-12), so leave here, not one
+      // step later with a step's extra speed.
+      const vEnd = stops ? 0 : this.v + r.a * tau;
+      const near = 1e-12 * (this.p.length + 1);
+      if (!tie && ((this.s <= near && vEnd < 0) || (this.s >= this.p.length - near && vEnd > 0))) {
+        this.s = Math.min(this.p.length, Math.max(0, this.s));
+        this.v = vEnd;
+        this.off = true;
+        return;
+      }
+      if (stops) {
+        // Stopped: a stop on an edge sits on it, and the next motion decides afresh.
+        if (tie) this.s = Math.min(this.p.length, Math.max(0, this.s));
+        this.tie = null;
+      }
+      this.v = stops ? 0 : this.v + r.a * tau;
       h -= tau;
     }
   }
@@ -120,6 +162,8 @@ export class InclineEngine implements SimulationEngine<Params> {
     this.friction = st[IS.friction] ?? 0;
     this.off = (st[IS.off] ?? 0) > 0.5;
     this.t = t;
+    // Restored mid-motion: decided again from here (its start is not in the saved state).
+    this.tie = null;
   }
 
   input(msg: EngineInput): boolean {
