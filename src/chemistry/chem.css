@@ -924,6 +924,41 @@
   display: inline-flex;
   gap: 4px;
 }
+.eq-energy {
+  max-width: 30rem;
+  margin: var(--space-3) 0 var(--space-2);
+}
+.eq-energy__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+.eq-energy__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.eq-energy__axis,
+.eq-energy__span {
+  fill: none;
+  stroke: var(--text-muted);
+  stroke-width: 1;
+}
+.eq-energy__ref {
+  fill: none;
+  stroke: var(--border-strong);
+  stroke-dasharray: 4 3;
+}
+.eq-energy__curve {
+  fill: none;
+  stroke: var(--subject-chemistry);
+  stroke-width: 2.5;
+}
+.eq-energy__text {
+  fill: var(--text-muted);
+  font-size: 10px;
+}
 @media (prefers-reduced-motion: reduce) {
   .eq-bar__fill {
     transition: none;
