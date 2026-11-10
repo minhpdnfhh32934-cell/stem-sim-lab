@@ -7,6 +7,8 @@ import {
   TriangleAlert,
 } from 'lucide-react';
 import { useEffect, useMemo, type ReactNode } from 'react';
+import { EdgeSteps } from '@/app/bench/EdgeSteps';
+import { useOnEdge } from '@/app/bench/edgeSlot';
 import { useLocalized } from '@/app/i18n/localized';
 import { cx } from '@/ui/cx';
 import { IconButton } from '@/ui/IconButton';
@@ -26,6 +28,7 @@ import {
 import { EFFECT, dogmaCard, mutationOf, parseInput, useDogmaStore } from './state';
 import '../bio.css';
 import { EdgePortal } from '@/app/bench/EdgePortal';
+import { No3dNotice } from '../view3d/No3dNotice';
 
 function CodonTrack({
   mrna,
@@ -128,6 +131,7 @@ export function DogmaStage({
   const coding = parsed.ok ? parsed.coding : '';
   const mrna = codingToMrna(coding);
   const t = useMemo(() => translate(mrna), [mrna]);
+  const onEdge = useOnEdge();
   const steps = t.codons.length;
 
   useEffect(() => {
@@ -161,7 +165,7 @@ export function DogmaStage({
         {(toolbar ?? notice) && (
           <div className="chem-toolbar">
             {toolbar}
-            {notice && <span className="chem-chip chem-chip--qual">{notice}</span>}
+            {notice && <No3dNotice text={notice} />}
           </div>
         )}
         <div className="seq-row">
@@ -206,42 +210,104 @@ export function DogmaStage({
   }
 
   const active = Math.min(st.step, Math.max(0, steps - 1));
+  const goCodon = (i: number) => {
+    useDogmaStore.setState({ step: Math.max(0, Math.min(steps - 1, i)), playing: false });
+  };
+  const codonAt = Lz(
+    L(
+      `Bộ ba ${String(active + 1)}/${String(steps)}`,
+      `Codon ${String(active + 1)}/${String(steps)}`,
+    ),
+  );
   return (
     <div className="bio-scroll">
       <div className="chem-toolbar">
         <EdgePortal>
-          <IconButton
-            icon={ChevronLeft}
-            label={Lz(L('Bộ ba trước', 'Previous codon'))}
-            disabled={active <= 0}
-            onClick={() => {
-              useDogmaStore.setState({ step: Math.max(0, active - 1), playing: false });
-            }}
-          />
-          <IconButton
-            icon={st.playing ? Pause : Play}
-            label={
-              st.playing
-                ? Lz(L('Tạm dừng', 'Pause'))
-                : Lz(L('Dịch mã từng bước', 'Translate step by step'))
-            }
-            variant="solid"
-            disabled={steps === 0}
-            onClick={() => {
-              useDogmaStore.setState((s) => ({
-                playing: !s.playing,
-                step: s.step >= steps - 1 ? 0 : s.step,
-              }));
-            }}
-          />
-          <IconButton
-            icon={ChevronRight}
-            label={Lz(L('Bộ ba sau', 'Next codon'))}
-            disabled={active >= steps - 1}
-            onClick={() => {
-              useDogmaStore.setState({ step: Math.min(steps - 1, active + 1), playing: false });
-            }}
-          />
+          {onEdge ? (
+            // The bench edge (§9.6): Chạy, codon by codon, Đặt lại, "Bộ ba 3/8" and a slider.
+            <EdgeSteps
+              play={{
+                playing: st.playing,
+                disabled: steps === 0,
+                onClick: () => {
+                  useDogmaStore.setState((s) => ({
+                    playing: !s.playing,
+                    step: s.step >= steps - 1 ? 0 : s.step,
+                  }));
+                },
+              }}
+              prev={{
+                label: Lz(L('Bộ ba trước', 'Previous codon')),
+                disabled: active <= 0,
+                onClick: () => {
+                  goCodon(active - 1);
+                },
+              }}
+              next={{
+                label: Lz(L('Bộ ba sau', 'Next codon')),
+                disabled: active >= steps - 1,
+                onClick: () => {
+                  goCodon(active + 1);
+                },
+              }}
+              reset={{
+                label: Lz(L('Đặt lại', 'Reset')),
+                disabled: active === 0 && !st.playing,
+                onClick: () => {
+                  goCodon(0);
+                },
+              }}
+              {...(steps > 0
+                ? {
+                    readout: codonAt,
+                    scrub: {
+                      label: Lz(L('Bộ ba', 'Codon')),
+                      min: 0,
+                      max: Math.max(0, steps - 1),
+                      step: 1,
+                      value: active,
+                      valueText: codonAt,
+                      onChange: goCodon,
+                    },
+                  }
+                : {})}
+            />
+          ) : (
+            <>
+              <IconButton
+                icon={ChevronLeft}
+                label={Lz(L('Bộ ba trước', 'Previous codon'))}
+                disabled={active <= 0}
+                onClick={() => {
+                  useDogmaStore.setState({ step: Math.max(0, active - 1), playing: false });
+                }}
+              />
+              <IconButton
+                icon={st.playing ? Pause : Play}
+                label={
+                  st.playing
+                    ? Lz(L('Tạm dừng', 'Pause'))
+                    : Lz(L('Dịch mã từng bước', 'Translate step by step'))
+                }
+                variant="solid"
+                disabled={steps === 0}
+                onClick={() => {
+                  useDogmaStore.setState((s) => ({
+                    playing: !s.playing,
+                    step: s.step >= steps - 1 ? 0 : s.step,
+                  }));
+                }}
+              />
+              <IconButton
+                icon={ChevronRight}
+                label={Lz(L('Bộ ba sau', 'Next codon'))}
+                disabled={active >= steps - 1}
+                onClick={() => {
+                  useDogmaStore.setState({ step: Math.min(steps - 1, active + 1), playing: false });
+                }}
+              />
+            </>
+          )}
         </EdgePortal>
         <span className="chem-chip">
           {steps
@@ -254,7 +320,7 @@ export function DogmaStage({
             : Lz(L('Không có bộ ba mở đầu AUG', 'No AUG start codon'))}
         </span>
         {toolbar}
-        {notice && <span className="chem-chip chem-chip--qual">{notice}</span>}
+        {notice && <No3dNotice text={notice} />}
       </div>
       <div className="seq-row">
         <span className="seq-row__label">

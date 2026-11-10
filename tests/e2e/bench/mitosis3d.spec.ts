@@ -128,9 +128,10 @@ test('mitosis 3D: plays through every stage, switches cell type, no leaks on rep
   for (let play = 1; ; play++) {
     seen.clear();
     await page.getByRole('radio', { name: '2×' }).click();
-    // The first time from the paused start; after a reopen the replay restarts at G1 and plays.
-    if (play === 1) await page.getByRole('button', { name: 'Phát', exact: true }).click();
-    else await page.getByRole('button', { name: 'Phát lại từ đầu' }).click();
+    // The first time from the paused start; after a reopen "Đặt lại" goes back to G1 (the bench
+    // edge's D3, §9.6) and "Chạy" plays.
+    if (play > 1) await page.getByRole('button', { name: 'Đặt lại', exact: true }).click();
+    await page.getByRole('button', { name: 'Chạy', exact: true }).click();
     const last = await pollUntil(
       async () => {
         const s = await stage(page);
@@ -142,7 +143,7 @@ test('mitosis 3D: plays through every stage, switches cell type, no leaks on rep
     );
     // Playing stops at the end of cytokinesis; no frame is timed after that, so no later swap.
     if (last === 'cytokinesis')
-      await expect(page.getByRole('button', { name: 'Phát', exact: true })).toBeVisible({
+      await expect(page.getByRole('button', { name: 'Chạy', exact: true })).toBeVisible({
         timeout: 15_000,
       });
     const swapped = await switchedTo2d(page);
@@ -180,10 +181,10 @@ test('mitosis 3D: plays through every stage, switches cell type, no leaks on rep
   // Replay 10 times (stepping through every stage): GPU resources must not grow. Every
   // measurement is taken at the same moment (end of cytokinesis, after one full pass), so the
   // same geometries and shader programs have been drawn each time.
-  const next = page.getByRole('button', { name: 'Bước tiếp theo' });
+  const next = page.getByRole('button', { name: 'Sang kì tiếp' });
   const pass = async () => {
-    await page.getByRole('button', { name: 'Phát lại từ đầu' }).click();
-    await page.getByRole('button', { name: 'Tạm dừng' }).click();
+    // The bench edge's "Đặt lại" (D3) goes back to G1, paused (the classic replay + pause).
+    await page.getByRole('button', { name: 'Đặt lại', exact: true }).click();
     // On a loaded machine the replay can leave G1 before the pause lands (seen 2026-10-20: the
     // sixth step then waited on a disabled button): the steps always start from G1.
     await strip(page).getByRole('button', { name: 'Trung gian G1' }).click();
@@ -669,9 +670,9 @@ const twoFrames = (page: Page) =>
  * stage reached.
  */
 async function timedPlay(page: Page) {
-  // The stage strip pauses at the start of prophase; "Phát" plays from there.
+  // The stage strip pauses at the start of prophase; "Chạy" plays from there.
   await strip(page).getByRole('button', { name: 'Kì đầu' }).click();
-  await page.getByRole('button', { name: 'Phát', exact: true }).click();
+  await page.getByRole('button', { name: 'Chạy', exact: true }).click();
   await page.evaluate(() => {
     const s = { frames: [] as number[], calls: 0, triangles: 0, running: true };
     window.__m3dPerf = s;
@@ -841,7 +842,7 @@ test('mitosis 3D performance: 2n = 8 at High quality within the draw and frame b
   // sees no frame), so shader programs and the 2n = 8 shapes are built before any frame is timed.
   await strip(page).getByRole('button', { name: 'Trung gian G1' }).click();
   for (let k = 0; k < STAGES.length - 1; k++) {
-    await page.getByRole('button', { name: 'Bước tiếp theo' }).click();
+    await page.getByRole('button', { name: 'Sang kì tiếp' }).click();
     await twoFrames(page);
   }
   expect(await stage(page)).toBe('cytokinesis');

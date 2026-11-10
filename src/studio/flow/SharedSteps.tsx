@@ -7,7 +7,8 @@ import {
   RotateCcw,
   Sparkles,
 } from 'lucide-react';
-import { useEffect, useId, useMemo, useState } from 'react';
+import { useContext, useEffect, useId, useMemo, useState } from 'react';
+import { BenchContext } from '@/app/bench/shellMode';
 import { useT } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { saveFile, slugify } from '@/app/project/fileio';
@@ -20,6 +21,7 @@ import { computedLabel, learnerText, MAX_NOTE, predictionLabel, withLearnerText 
 import { useStudioStore } from '../studioStore';
 import { TeacherNote } from '../TeacherNote';
 import { copyText } from './clipboard';
+import { ReportOrigins } from './ReportOrigins';
 import type { StepProps, SubjectPlugin } from './types';
 
 type WithPlugin = StepProps & { plugin: SubjectPlugin };
@@ -161,6 +163,7 @@ export function ReportStep({ plugin, ...props }: WithPlugin) {
   const locale = useSettingsStore((s) => s.locale);
   const restart = useStudioStore((s) => s.restart);
   const { scenario, session } = props;
+  const bench = useContext(BenchContext);
   const [sources, setSources] = useState<Source[]>([]);
   const load = plugin.modelSources;
 
@@ -222,6 +225,7 @@ export function ReportStep({ plugin, ...props }: WithPlugin) {
           {t('studio.report.done')}
         </p>
       )}
+      {bench && <ReportOrigins scenario={scenario} session={session} />}
       <pre className="studio-report" tabIndex={0} aria-label={t('studio.report.preview')}>
         {report}
       </pre>

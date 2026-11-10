@@ -27,5 +27,6 @@ export const equationBalancing: ModuleView = {
   title: L('Cân bằng phương trình', 'Equation balancing'),
   Stage: BalanceStage,
   Panel: BalancePanel,
+  trayStartsFolded: true,
   state: bindStore(useReactionStore, ['equation']),
 };

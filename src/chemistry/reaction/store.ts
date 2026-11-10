@@ -8,6 +8,8 @@ export interface ReactionState {
   playing: boolean;
   /** Pause briefly on every key frame while playing. */
   stepPause: boolean;
+  /** Playback speed of the mechanism (the bench edge's 0,5× · 1× · 2×). */
+  speed: number;
   arrows: boolean;
   labels: boolean;
   query: string;
@@ -21,6 +23,7 @@ export const useReactionStore = create<ReactionState>()(() => ({
   t: 0,
   playing: false,
   stepPause: true,
+  speed: 1,
   arrows: true,
   labels: true,
   query: '',
