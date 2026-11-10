@@ -1737,7 +1737,6 @@ button.bench-door--lab:hover {
   border: 0;
   background: none;
   box-shadow: none;
-  backdrop-filter: none;
 }
 .bench-edge .bench-edge__module .bio3d__player {
   flex: 1;
