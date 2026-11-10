@@ -102,6 +102,8 @@ export interface MeiosisScene {
   scene: THREE.Scene;
   update(state: Meiosis3DState): void;
   setSelection(sel: MeiosisSelection | null): void;
+  /** Dim the parts that are not picked ("Làm mờ phần còn lại"; on by default). */
+  setDimRest(on: boolean): void;
   /** The cell part under a ray (inner parts win over the membranes they sit in). */
   pick(raycaster: THREE.Raycaster): MeiosisSelection | null;
   /** Where the last `pick` ray met the part it picked (null when it picked nothing). */
@@ -461,6 +463,7 @@ export function buildMeiosisScene(
     reach: CONTACT_SHADE.reach,
   };
   let selection: MeiosisSelection | null = null;
+  let dimRest = true;
 
   const setOpacity = setLookOpacity;
 
@@ -526,7 +529,7 @@ export function buildMeiosisScene(
   };
 
   const choose = <M extends THREE.Material>(l: Look<M>, data: PartData, st: Meiosis3DState): M =>
-    !selection ? l.base : isSelected(data, st) ? l.hi : l.dim;
+    !selection ? l.base : isSelected(data, st) ? l.hi : dimRest ? l.dim : l.base;
 
   const applyLooks = (st: Meiosis3DState) => {
     const d = (m: THREE.Object3D) => m.userData as PartData;
@@ -983,6 +986,10 @@ export function buildMeiosisScene(
     update,
     setSelection(sel) {
       selection = sel;
+      if (last) applyLooks(last);
+    },
+    setDimRest(on) {
+      dimRest = on;
       if (last) applyLooks(last);
     },
     pick,

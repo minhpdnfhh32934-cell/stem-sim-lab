@@ -1,0 +1,132 @@
+{
+ "dataset": "cell_dna_zoom",
+ "version": 1,
+ "accessed": "2026-11-02",
+ "generated_by": "scripts/data/gen_cell_dna_zoom.py",
+ "sources": {
+  "sgk-sh10-kntt": {
+   "id": "sgk-sh10-kntt",
+   "citation": "Sinh học 10, bộ sách Kết nối tri thức với cuộc sống (Chương trình GDPT 2018), NXB Giáo dục Việt Nam",
+   "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-sinh-hoc-10.4700819489"
+  },
+  "sgk-sh12-kntt": {
+   "id": "sgk-sh12-kntt",
+   "citation": "Sinh học 12, bộ sách Kết nối tri thức với cuộc sống (Chương trình GDPT 2018), NXB Giáo dục Việt Nam",
+   "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-sinh-hoc-12.4701665546"
+  },
+  "ou-2017": {
+   "id": "ou-2017",
+   "citation": "H. D. Ou et al. — ChromEMT: Visualizing 3D chromatin structure and compaction in interphase and mitotic cells, Science 357 (2017) eaag0025",
+   "url": "https://doi.org/10.1126/science.aag0025"
+  }
+ },
+ "sizes": {
+  "eukCellMinUm": {
+   "value": 10,
+   "unit": "µm",
+   "source": "sgk-sh10-kntt",
+   "pages": [
+    44
+   ],
+   "where": "H 7.1",
+   "review_status": "pending"
+  },
+  "eukCellMaxUm": {
+   "value": 100,
+   "unit": "µm",
+   "source": "sgk-sh10-kntt",
+   "pages": [
+    44
+   ],
+   "where": "H 7.1",
+   "review_status": "pending"
+  },
+  "nucleusUm": {
+   "value": 5,
+   "unit": "µm",
+   "source": "sgk-sh10-kntt",
+   "pages": [
+    49
+   ],
+   "where": "Bài 8, mục II.1",
+   "review_status": "pending"
+  },
+  "chromatidNm": {
+   "value": 700,
+   "unit": "nm",
+   "source": "sgk-sh12-kntt",
+   "pages": [
+    37
+   ],
+   "where": "Bài 7, mục I (kì đầu, kì giữa); H 7.1",
+   "review_status": "pending"
+  },
+  "fibreNm": {
+   "value": 10,
+   "unit": "nm",
+   "source": "sgk-sh12-kntt",
+   "pages": [
+    36,
+    37
+   ],
+   "where": "Bài 7, mục I (kì trung gian, kì đầu); H 7.1",
+   "review_status": "pending"
+  },
+  "histones": {
+   "value": 8,
+   "unit": "count",
+   "source": "sgk-sh12-kntt",
+   "pages": [
+    36
+   ],
+   "where": "Bài 7, mục I (kì trung gian)",
+   "review_status": "pending"
+  },
+  "histoneKinds": {
+   "value": 4,
+   "unit": "count",
+   "source": "sgk-sh12-kntt",
+   "pages": [
+    36
+   ],
+   "where": "Bài 7, mục I (kì trung gian)",
+   "review_status": "pending"
+  },
+  "nucleosomeBp": {
+   "value": 146,
+   "unit": "count",
+   "source": "sgk-sh12-kntt",
+   "pages": [
+    36
+   ],
+   "where": "Bài 7, mục I (kì trung gian)",
+   "review_status": "pending"
+  },
+  "dnaWidthNm": {
+   "value": 2,
+   "unit": "nm",
+   "source": "sgk-sh12-kntt",
+   "pages": [
+    37
+   ],
+   "where": "H 7.1",
+   "review_status": "pending"
+  },
+  "nucleosomeBpOu": {
+   "value": 147,
+   "unit": "count",
+   "source": "ou-2017",
+   "pages": [],
+   "where": "Introduction (online article, no printed page)",
+   "review_status": "pending"
+  },
+  "coreParticleNmOu": {
+   "value": 11,
+   "unit": "nm",
+   "source": "ou-2017",
+   "pages": [],
+   "where": "Introduction (online article, no printed page)",
+   "review_status": "pending"
+  }
+ }
+}

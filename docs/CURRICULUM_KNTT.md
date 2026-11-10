@@ -39,8 +39,8 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Hoá học 12 | 30 | 22 | 0 |
 | Sinh học 10 | 26 | 17 | 5 |
 | Sinh học 11 | 29 | 20 | 0 |
-| Sinh học 12 | 35 | 28 | 6 |
-| **Cộng** | **253** | **189** | **42** |
+| Sinh học 12 | 35 | 28 | 7 |
+| **Cộng** | **253** | **189** | **43** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -91,12 +91,13 @@ Gồm các bài đã có chủ đề SimLab (đề xuất) và các bài của k
 | Hoá học 10 | Chương 6. Tốc độ phản ứng | 19 | Tốc độ phản ứng | 92 | Lí thuyết | Thuyết va chạm | Tên Bài 19: tốc độ phản ứng. | pending |
 | Hoá học 11 | Chương 1. Cân bằng hoá học | 1 | Khái niệm về cân bằng hoá học | 6 | Lí thuyết | Cân bằng hóa học & Le Chatelier | Tên Bài 1: khái niệm về cân bằng hoá học. | pending |
 | Sinh học 10 | Chương 2. Cấu trúc tế bào | 7 | Tế bào nhân sơ | 44 | Lí thuyết | Tế bào nhân sơ và nhân thực | Tên Bài 7–8: tế bào nhân sơ và tế bào nhân thực. | pending |
-| Sinh học 10 | Chương 2. Cấu trúc tế bào | 8 | Tế bào nhân thực | 48 | Lí thuyết | Tế bào nhân sơ và nhân thực | Tên Bài 7–8: tế bào nhân sơ và tế bào nhân thực. | pending |
+| Sinh học 10 | Chương 2. Cấu trúc tế bào | 8 | Tế bào nhân thực | 48 | Lí thuyết | Tế bào nhân sơ và nhân thực, Từ tế bào đến DNA | Tế bào nhân sơ và nhân thực: Tên Bài 7–8: tế bào nhân sơ và tế bào nhân thực. Từ tế bào đến DNA: Tên Bài 8: tế bào nhân thực (cấp tế bào và nhân của bài phóng to). Không xếp Bài 7 (tế bào nhân sơ): bài chỉ có tế bào nhân thực, dù thang kích thước H 7.1 của Bài 7 là một nguồn số liệu. | pending |
 | Sinh học 10 | Chương 3. Trao đổi chất qua màng và truyền tin tế bào | 10 | Trao đổi chất qua màng tế bào | 64 | Lí thuyết | Khuếch tán & thẩm thấu | Tên Bài 10: trao đổi chất qua màng tế bào. Chỉ phần vận chuyển thụ động (khuếch tán, thẩm thấu), trên mô hình hai ngăn và ống chữ U, không phải màng tế bào thật. | pending |
 | Sinh học 10 | Chương 5. Chu kì tế bào và phân bào | 16 | Chu kì tế bào và nguyên phân | 97 | Lí thuyết | Nguyên phân | Tên Bài 16: chu kì tế bào và nguyên phân. | pending |
 | Sinh học 10 | Chương 5. Chu kì tế bào và phân bào | 17 | Giảm phân | 104 | Lí thuyết | Giảm phân | Tên Bài 17: giảm phân. | pending |
 | Sinh học 12 | Chương 1. Di truyền phân tử | 2 | Gene, hệ gene và quá trình truyền đạt thông tin di truyền | 9 | Lí thuyết | ADN → mARN → Protein | Tên Bài 2: quá trình truyền đạt thông tin di truyền (Bài 1 về DNA và tái bản: giáo viên quyết định). | pending |
 | Sinh học 12 | Chương 1. Di truyền phân tử | 4 | Đột biến gene | 23 | Lí thuyết | Đột biến điểm | Tên Bài 4: đột biến gene. | pending |
+| Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 7 | Cấu trúc và chức năng của nhiễm sắc thể | 36 | Lí thuyết | Từ tế bào đến DNA | Tên Bài 7: cấu trúc và chức năng của nhiễm sắc thể (cấp NST kép, sợi nhiễm sắc, nucleosome, DNA). | pending |
 | Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 8 | Học thuyết di truyền Mendel | 40 | Lí thuyết | Di truyền Mendel | Tên Bài 8–9: học thuyết di truyền Mendel và mở rộng học thuyết Mendel (cảnh chỉ mở rộng tới trội không hoàn toàn). | pending |
 | Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 9 | Mở rộng học thuyết Mendel | 46 | Lí thuyết | Di truyền Mendel | Tên Bài 8–9: học thuyết di truyền Mendel và mở rộng học thuyết Mendel (cảnh chỉ mở rộng tới trội không hoàn toàn). | pending |
 | Sinh học 12 | Chương 4. Di truyền quần thể | 18 | Di truyền học quần thể | 91 | Lí thuyết | Định luật Hardy–Weinberg | Tên Bài 18: di truyền học quần thể. | pending |

@@ -36,8 +36,11 @@ test('every chemistry topic opens without errors and publishes a Science Card', 
         .getByRole('button', { name: 'Hóa học', exact: true })
         .click();
     await page.getByRole('main').getByRole('button', { name, exact: true }).click();
-    // Each topic is a lazy module the dev server compiles on first use.
-    await expect(page.locator('.science-card')).toBeVisible({ timeout: 20_000 });
+    // Each topic is a lazy module the dev server compiles on first use. The bench edge's chip is
+    // the card's first depth (§11); the tray's summary too, unless the view folds its tray.
+    await expect(page.locator('button.bench-chip')).toBeVisible({ timeout: 20_000 });
+    if ((await page.locator('.tray[data-folded]').count()) === 0)
+      await expect(page.locator('.science-card')).toBeVisible();
     await page.waitForTimeout(300);
   }
   expect(errors).toEqual([]);
@@ -46,7 +49,8 @@ test('every chemistry topic opens without errors and publishes a Science Card', 
 test('electron configuration shows the Cr exception from the data table', async ({ page }) => {
   await openChemistry(page);
   await page.getByRole('button', { name: 'Cấu hình electron', exact: true }).click();
-  await page.getByLabel('Nguyên tố').selectOption('24');
+  // The element picker is on the bench edge, beside the stepper (§9.10).
+  await page.getByRole('combobox', { name: /^Nguyên tố/ }).selectOption('24');
   await expect(page.getByText('[Ar] 3d⁵ 4s¹').first()).toBeVisible();
   await expect(page.getByText(/Ngoại lệ/)).toBeVisible();
 });
@@ -74,9 +78,10 @@ test('reaction mechanism: stepping shows bond changes and the illustrative label
   await page.getByRole('tab', { name: 'Các bước và liên kết thay đổi' }).click();
   await expect(page.getByText('Đứt: C1–Br2')).toBeVisible();
   await page.getByRole('slider', { name: 'Tiến trình phản ứng' }).fill('0.5');
+  // The bench writes it as a stamp at the stage's bottom left (§9.5).
   await expect(
     page
-      .locator('.rx-status')
+      .locator('.bench-stamp')
       .getByText('Chuyển tiếp minh họa — không phải quỹ đạo nguyên tử thực'),
   ).toBeVisible();
 });

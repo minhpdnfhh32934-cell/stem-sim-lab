@@ -1,5 +1,6 @@
 import { ArrowLeft, Info, MessageCircle, Presentation } from 'lucide-react';
-import { lazy, Suspense, useEffect, useId } from 'react';
+import { lazy, Suspense, useContext, useEffect, useId } from 'react';
+import { BenchContext } from '@/app/bench/shellMode';
 import { useT } from '@/app/i18n';
 import { engineKind, useAnalysisEngine } from '@/app/ai/engineChoice';
 import { useLocalAiStore } from '@/ai/local/localAiStore';
@@ -31,6 +32,8 @@ export default function TeacherScreen() {
   // The face shows what the teacher is doing: speaking, waiting for the AI, or listening.
   const answering = useChatStore((s) => s.answering);
   const layoutId = useId();
+  // The bench names it an AI beside the title (docs/BENCH_DESIGN.md §9.8).
+  const bench = useContext(BenchContext);
   // The board teaches the latest answer that is not about part of the board (latestLesson.ts).
   const lesson = latestLesson(messages);
   // What the page is and what may leave the computer: one tooltip instead of two lines of text.
@@ -66,6 +69,7 @@ export default function TeacherScreen() {
         <h1 id="teacher-title" className="teacher__title">
           {t('teacher.title')}
         </h1>
+        {bench && <span className="teacher__is-ai">{t('bench.isAi')}</span>}
         <span
           className="teacher__about"
           role="note"

@@ -1,7 +1,10 @@
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
 import { useProfileStore } from '@/app/learner/profileStore';
+import { useNavigationStore } from '@/app/navigationStore';
+import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useWorkspaceStore } from '@/app/workspaceStore';
+import { useStudioStore } from '@/studio/studioStore';
 import { BenchLibrary } from './Library';
 import { useProblemSheet } from './problemSheet';
 
@@ -47,5 +50,42 @@ describe('"Kệ bài" (docs/BENCH_DESIGN.md §9.3)', () => {
     render(<BenchLibrary />);
     fireEvent.click(screen.getByRole('button', { name: 'Phân tích đề' }));
     expect(useProblemSheet.getState().open).toBe(true);
+  });
+
+  it('"Có đề bài?": the one-line field is a button that opens the sheet (focus alone does not)', () => {
+    render(<BenchLibrary />);
+    const field = screen.getByRole('button', { name: 'Gõ hoặc dán đề bài…' });
+    act(() => {
+      field.focus();
+    });
+    expect(useProblemSheet.getState().open).toBe(false);
+    fireEvent.click(field);
+    expect(useProblemSheet.getState().open).toBe(true);
+  });
+
+  it('every card has a preview: a physics engine frame, else its subject line art', () => {
+    render(<BenchLibrary />);
+    const cards = document.querySelectorAll('.shelf-card');
+    expect(cards.length).toBeGreaterThan(5);
+    for (const c of cards) expect(c.querySelector('.shelf-card__preview canvas')).not.toBeNull();
+    act(() => {
+      useWorkspaceStore.getState().setSubject('chemistry');
+    });
+    for (const c of document.querySelectorAll('.shelf-card'))
+      expect(c.querySelector('.shelf-card__preview svg')).not.toBeNull();
+  });
+
+  it('Advanced: "Soạn bài" at the bottom of the filters opens Science Studio’s authoring', () => {
+    act(() => {
+      useSettingsStore.setState({ uiMode: 'advanced' });
+    });
+    render(<BenchLibrary />);
+    fireEvent.click(screen.getByRole('button', { name: 'Soạn bài' }));
+    expect(useStudioStore.getState().tab).toBe('authoring');
+    expect(useNavigationStore.getState().screen).toBe('studio');
+    act(() => {
+      useSettingsStore.setState({ uiMode: 'basic' });
+      useNavigationStore.setState({ screen: 'lab' });
+    });
   });
 });

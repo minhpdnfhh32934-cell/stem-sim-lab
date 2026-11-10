@@ -10,7 +10,7 @@
  * every number is the model's.
  */
 import { Crosshair, Pause, Play, RotateCcw, Tags, X } from 'lucide-react';
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, useContext } from 'react';
 import { useLocalized } from '@/app/i18n/localized';
 import { useTierConfig } from '@/perf/perfStore';
 import { IconButton } from '@/ui/IconButton';
@@ -50,6 +50,10 @@ import {
 import { LOGI_VIEW } from './layout';
 import { buildLogisticHabitat } from './scene';
 import { useLogistic3D, type LogiCameraMode } from './store';
+import { EdgePortal } from '@/app/bench/EdgePortal';
+import { EdgeSteps } from '@/app/bench/EdgeSteps';
+import { useOnEdge } from '@/app/bench/edgeSlot';
+import { BenchContext } from '@/app/bench/shellMode';
 
 /** Real seconds the whole time span plays in. */
 const SECONDS = 10;
@@ -144,50 +148,93 @@ function TimePlayer({
 }) {
   const Lz = useLocalized();
   const canStar = tStarInRun(model);
+  // The bench draws the player in its edge; the camera switch stays on the stage (§9.6).
+  const bench = useContext(BenchContext);
+  const onEdge = useOnEdge();
+  const camera3d = <Framing camera={camera} picked={picked} />;
   return (
-    <div className="bio3d__player logi3d__player">
-      <IconButton
-        icon={Play}
-        altIcon={Pause}
-        showAlt={playback.playing}
-        size="lg"
-        variant="solid"
-        label={playback.playing ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Phát', 'Play'))}
-        onClick={playback.toggle}
-      />
-      <IconButton
-        icon={RotateCcw}
-        size="lg"
-        label={Lz(L('Phát lại từ đầu', 'Replay from the start'))}
-        onClick={playback.replay}
-      />
-      <button
-        type="button"
-        className="btn logi3d__star-btn"
-        disabled={!canStar}
-        title={Lz(
-          canStar
-            ? L(
-                'Tới điểm uốn: N = K/2, tăng nhanh nhất',
-                'Go to the inflection: N = K/2, fastest growth',
-              )
-            : L('Không có điểm uốn trong khoảng thời gian này', 'No inflection in this time span'),
+    <>
+      <EdgePortal>
+        {onEdge ? (
+          // The bench edge (§9.10 habitats): Chạy, Đặt lại, the readout and the lesson's own
+          // time track over its curve (its name kept).
+          <EdgeSteps
+            play={{ playing: playback.playing, onClick: playback.toggle }}
+            prev={{
+              icon: Crosshair,
+              label: Lz(L('Tới t*', 'Go to t*')),
+              disabled: !canStar,
+              onClick: () => {
+                playback.setT(model.tStar);
+              },
+            }}
+            reset={{
+              label: Lz(L('Đặt lại', 'Reset')),
+              onClick: () => {
+                playback.setT(0);
+              },
+            }}
+            readout={readout(moment, fmt)}
+            track={
+              <CurveTrack
+                model={model}
+                moment={moment}
+                playback={playback}
+                label={Lz(L('Thời gian t', 'Time t'))}
+              />
+            }
+          />
+        ) : (
+          <div className="bio3d__player logi3d__player">
+            <IconButton
+              icon={Play}
+              altIcon={Pause}
+              showAlt={playback.playing}
+              size="lg"
+              variant="solid"
+              label={playback.playing ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Phát', 'Play'))}
+              onClick={playback.toggle}
+            />
+            <IconButton
+              icon={RotateCcw}
+              size="lg"
+              label={Lz(L('Phát lại từ đầu', 'Replay from the start'))}
+              onClick={playback.replay}
+            />
+            <button
+              type="button"
+              className="btn logi3d__star-btn"
+              disabled={!canStar}
+              title={Lz(
+                canStar
+                  ? L(
+                      'Tới điểm uốn: N = K/2, tăng nhanh nhất',
+                      'Go to the inflection: N = K/2, fastest growth',
+                    )
+                  : L(
+                      'Không có điểm uốn trong khoảng thời gian này',
+                      'No inflection in this time span',
+                    ),
+              )}
+              onClick={() => {
+                playback.setT(model.tStar);
+              }}
+            >
+              <Crosshair size={15} aria-hidden="true" /> {Lz(L('Tới t*', 'Go to t*'))}
+            </button>
+            <CurveTrack
+              model={model}
+              moment={moment}
+              playback={playback}
+              label={Lz(L('Thời gian t', 'Time t'))}
+            />
+            <output aria-live="off">{readout(moment, fmt)}</output>
+            {camera3d}
+          </div>
         )}
-        onClick={() => {
-          playback.setT(model.tStar);
-        }}
-      >
-        <Crosshair size={15} aria-hidden="true" /> {Lz(L('Tới t*', 'Go to t*'))}
-      </button>
-      <CurveTrack
-        model={model}
-        moment={moment}
-        playback={playback}
-        label={Lz(L('Thời gian t', 'Time t'))}
-      />
-      <output aria-live="off">{readout(moment, fmt)}</output>
-      <Framing camera={camera} picked={picked} />
-    </div>
+      </EdgePortal>
+      {bench && camera3d}
+    </>
   );
 }
 
