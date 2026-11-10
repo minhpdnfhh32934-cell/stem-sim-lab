@@ -137,6 +137,11 @@ class SimRuntime {
     host.requestFrame(0, 1, true);
   }
 
+  /** How many opens and shutdowns so far: a caller can tell whether its own open is the last. */
+  get openCount(): number {
+    return this.openSeq;
+  }
+
   /** Closes the simulation and cancels an `open` still in progress. */
   shutdown(): void {
     this.openSeq++;

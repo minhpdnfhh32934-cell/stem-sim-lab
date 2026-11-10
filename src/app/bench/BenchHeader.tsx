@@ -1,18 +1,21 @@
 import { FileText, Redo2, Search, Settings, Undo2, X } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useAnalyzeStore } from '@/app/ai/analyze';
 import { AiStatusPill } from '@/app/ai/AiStatusPill';
 import { useCommandPalette } from '@/app/command/commands';
 import { useT } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { ProblemInput } from '@/app/layout/ProblemInput';
+import { useProblemSheet } from './problemSheet';
 import { ModeSwitch } from '@/app/learner/ModeSwitch';
 import { FileMenu } from '@/app/project/FileMenu';
 import { redo, undo, useUndoStore } from '@/app/project/undo';
 import { SettingsDialog } from '@/app/settings/SettingsDialog';
 import { sim } from '@/app/sim/runtime';
 import { useSimStore } from '@/app/sim/simStore';
-import { goHome, openLab, useIsLanding, useIsStudio, useIsTeacher } from '@/app/topics';
+import { goHome, openLab, useIsHome, useIsLanding, useIsStudio, useIsTeacher } from '@/app/topics';
+import { useSafetyStore } from '@/safety/safetyStore';
+import { openTeacher } from '@/teacher/teacherStore';
 import { useWorkspaceStore, type Subject } from '@/app/workspaceStore';
 import { closeModule, useModuleStore } from '@/modules/moduleStore';
 import { IconButton } from '@/ui/IconButton';
@@ -39,6 +42,9 @@ export function BenchHeader() {
   const landing = useIsLanding();
   const studio = useIsStudio() && !teacher;
   const lab = !teacher && !landing;
+  // The shelf has nothing to undo; it offers AI Teacher there instead, 18+ only (§9.3).
+  const shelf = useIsHome() && lab;
+  const adult = useSafetyStore((s) => s.status?.aiAllowed === true);
   const subject = useWorkspaceStore((s) => s.subject);
   const settingsOpen = useWorkspaceStore((s) => s.settingsOpen);
   const setSettingsOpen = useWorkspaceStore((s) => s.setSettingsOpen);
@@ -48,7 +54,10 @@ export function BenchHeader() {
   const sceneTitle = useSimStore((s) => s.scene?.title);
   const moduleTitle = useModuleStore((s) => s.active?.view.title);
   const topic = sceneTitle ?? moduleTitle;
-  const [problemOpen, setProblemOpen] = useState(false);
+  const problemOpen = useProblemSheet((s) => s.open);
+  const setProblemOpen = (open: boolean) => {
+    useProblemSheet.setState({ open });
+  };
   const problemButton = useRef<HTMLButtonElement>(null);
 
   // The dialogs sit beside the header, not in it: the frame's colours must not reach them.
@@ -116,12 +125,15 @@ export function BenchHeader() {
           </button>
         )}
         <div className="bench-header__spacer" />
-        <AiStatusPill
-          onClick={(section) => {
-            if (section) openSettingsAt(section);
-            else setSettingsOpen(true);
-          }}
-        />
+        {/* The launch page has nothing to undo and no AI on it yet (§9.1). */}
+        {!landing && (
+          <AiStatusPill
+            onClick={(section) => {
+              if (section) openSettingsAt(section);
+              else setSettingsOpen(true);
+            }}
+          />
+        )}
         <button
           type="button"
           className="btn bench-header__search"
@@ -137,7 +149,17 @@ export function BenchHeader() {
         </button>
         {lab && <ModeSwitch compact />}
         <ThemeSwitch />
-        {!teacher && (
+        {shelf && adult && (
+          <button
+            type="button"
+            className="btn bench-header__teacher"
+            aria-label={t('home.teacherOpen')}
+            onClick={openTeacher}
+          >
+            {t('landing.teacherTitle')}
+          </button>
+        )}
+        {lab && !shelf && (
           <>
             <IconButton
               icon={Undo2}

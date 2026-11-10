@@ -189,3 +189,10 @@
 .solution__hidden p {
   margin: 0;
 }
+
+/* Bench: the locked prediction waits for "Chạy để kiểm tra" on the bench edge. */
+.learn-card__locked {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}

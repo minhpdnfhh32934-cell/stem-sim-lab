@@ -547,6 +547,15 @@ Progress log: `docs/PROGRESS.md`.
   `scripts/data/gen_*.py` (mendeleev, RDKit, SciPy). Never hand-edit the JSON; change the generator.
 - Code: `src/chemistry/{data,atom,periodic,molecule,reaction,particles}`, `formula.ts` (parser),
   `balance.ts` (exact null-space balancer). three.js viewers render on demand; RDKit.js is lazy.
+- Acid–base titration (`src/chemistry/titration/`, 0.8.1, #106; strong acid in the flask, strong
+  base from the burette, 25 °C): `titration.ts` (pH = positive root of the charge balance with Kw,
+  written without cancellation; `curve` crowds points around V_eq; `indicatorAt`: colours[i] →
+  colours[i + 1] over ranges[i], phenolphthalein has two), data
+  `data/titration.json` from `scripts/data/gen_titration.py` (Kw from the IAPWS R11-24 formula,
+  checked against its test table, moved from mol/kg to mol/L; indicator ranges and colour names
+  cited; the screen colour is a CSS named colour chosen by name, an illustration), `store.ts` (`setTitration` validates;
+  V_b is clamped to 2·V_eq only when set, views read `addedVolume`), `card.ts`, `TitrationViews.tsx` (Basic: concentrations and volumes
+  only). Weak acids/buffers: not yet. Unplaced in the KNTT bar (DATA_REVIEW TIT-5).
 - Shared UI: `src/ui/charts/XYChart.tsx` (uPlot), `src/ui/canvas/useCanvas.ts`.
 - Biology: `src/biology/{division,central,genetics,ecology,enzyme,transport,cell}` — pure model
   files (`*.ts`, tested) + `*Views.tsx`; `modules.ts` lists the 12 ModuleViews. Small shared controls in
@@ -707,6 +716,19 @@ Progress log: `docs/PROGRESS.md`.
   (`useCell`; only `kind` is saved, `restoreCell` ignores other values), `CellViews.tsx` (stage:
   "Hiện tên", on in Basic; inspector: cell switch + parts list → name + function card). The 3D
   version is planned for 0.8.1 (#54). Texts: DATA_REVIEW `CELL3D-*`.
+- "Từ tế bào đến DNA" (`src/biology/cell/zoom/`, 0.8.1, #107; topic `cellToDna`, chapter
+  `cellStructure`; SH10 Bài 8, SH12 Bài 7): six zoom levels (cell → nucleus → metaphase
+  chromosome → 10 nm fibre on the scaffold → nucleosomes → B-DNA). `levels.ts` (pure: printed sizes
+  from `data/cell_dna_zoom.json` ← `scripts/data/gen_cell_dna_zoom.py`, B-DNA from `bdna.ts`,
+  `DRAWN` illustration choices, per-level field / scale bar 1-2-5 × 10ᵏ ≤ ¼ field / 3D unit =
+  field/10, `zoomSpot`), `card.ts` (Science Cards, captions, part names; no 30 nm fibre — the SGK
+  has none and it is debated), `scene.ts` (one scene per level on the biology kit: shells,
+  `ChromosomeTube`, the dogma helix; world-space ruler exactly `barNm`; `zoom-<i>` framing = the
+  glide into the next level), `draw2d.ts` (2D, same numbers), `store.ts` (`level` saved), `hooks.ts`,
+  `ZoomViews.tsx`, `Zoom3DView.tsx`. "Phóng to" glides `GLIDE_MS` (= `CAMERA_MOVE_MS`) with the
+  "không theo tỉ lệ" chip, then the next level; reduced motion steps at once. 3D/2D choice:
+  `stemsim.bio3d` lesson `cellToDna`. Budgets in `scene.test.ts`. E2E `tests/e2e/cellzoom-bio3d.spec.ts`
+  (3D project). Texts: DATA_REVIEW `DNAZ-*`.
 - Projects (Phase 6): `src/app/project/` — `snapshot.ts` (.stemsim schema; inputs only), `undo.ts`,
   `history.ts` (Rust SQLite `src-tauri/src/history.rs`), `actions.ts` (save/open/PNG/CSV via Rust
   dialogs in `files.rs`), `FileMenu`, `SourcesDialog` (lazy), `Tour` (first run, `stemsim.tourDone`).

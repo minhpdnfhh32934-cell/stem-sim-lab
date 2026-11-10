@@ -65,6 +65,8 @@ export interface LayoutState {
   notebookTabBySubject: Partial<Record<Subject, NotebookTab>>;
   /** Bench: the notebook drawer is open. Never persisted (it opens closed). */
   notebookOpen: boolean;
+  /** Physics topics already opened on the bench (their first visit landed on Thử thách). */
+  challengeSeen: string[];
   /** Presentation mode (for judges): hides side panels and enlarges text. Never persisted. */
   presentation: boolean;
 
@@ -74,6 +76,8 @@ export interface LayoutState {
   setTrayFolded: (folded: boolean) => void;
   setNotebookTab: (subject: Subject, tab: NotebookTab) => void;
   setNotebookOpen: (open: boolean) => void;
+  /** First visit of a topic: its notebook will open on Thử thách (§9.4). False if seen. */
+  landOnChallenge: (topic: string, subject: Subject) => boolean;
   setPresentation: (on: boolean) => void;
   resetLayout: () => void;
 }
@@ -89,6 +93,7 @@ type PersistedLayout = Pick<
   | 'trayWidth'
   | 'notebookWidth'
   | 'notebookTabBySubject'
+  | 'challengeSeen'
 >;
 
 export function clampSize(panel: PanelSizeKey, px: number): number {
@@ -107,6 +112,7 @@ const DEFAULT_LAYOUT = {
   trayWidth: LAYOUT_LIMITS.tray.default,
   notebookWidth: LAYOUT_LIMITS.notebook.default,
   notebookTabBySubject: {},
+  challengeSeen: [],
 } as const satisfies PersistedLayout;
 
 const SIZE_FIELD = {
@@ -152,6 +158,19 @@ export const useLayoutStore = create<LayoutState>()(
       setNotebookOpen: (notebookOpen) => {
         set({ notebookOpen });
       },
+      landOnChallenge: (topic, subject) => {
+        let first = false;
+        set((s) => {
+          if (s.challengeSeen.includes(topic)) return {};
+          first = true;
+          return {
+            // The newest topics are kept: a long-used install never grows this list without end.
+            challengeSeen: [...s.challengeSeen, topic].slice(-200),
+            notebookTabBySubject: { ...s.notebookTabBySubject, [subject]: 'challenge' },
+          };
+        });
+        return first;
+      },
       setPresentation: (presentation) => {
         set({ presentation });
       },
@@ -175,6 +194,7 @@ export const useLayoutStore = create<LayoutState>()(
         trayWidth: s.trayWidth,
         notebookWidth: s.notebookWidth,
         notebookTabBySubject: s.notebookTabBySubject,
+        challengeSeen: s.challengeSeen,
       }),
       // Only known fields are restored, sizes re-clamped (limits may change). Until 0.4.3 the
       // panels could be hidden (`leftOpen`/`rightOpen`/`bottomOpen` were saved): those flags are
@@ -193,6 +213,9 @@ export const useLayoutStore = create<LayoutState>()(
           trayWidth: clampSize('tray', num(p.trayWidth, current.trayWidth)),
           notebookWidth: clampSize('notebook', num(p.notebookWidth, current.notebookWidth)),
           notebookTabBySubject: notebookTabs(p.notebookTabBySubject),
+          challengeSeen: Array.isArray(p.challengeSeen)
+            ? p.challengeSeen.filter((x): x is string => typeof x === 'string').slice(-200)
+            : [],
         };
       },
     },

@@ -3,6 +3,9 @@ import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { useProfileStore } from '@/app/learner/profileStore';
 import { useNavigationStore } from '@/app/navigationStore';
+import { BenchContext } from '@/app/bench/shellMode';
+import { useSimStore } from '@/app/sim/simStore';
+import { freeFall } from '@/physics/projectile/scenes';
 import { loadSafety } from '@/safety/safetyStore';
 import { FileMenu } from './FileMenu';
 import { Tour } from './Tour';
@@ -13,6 +16,35 @@ const esc = () => {
     window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
   });
 };
+
+describe('the bench tour (docs/BENCH_DESIGN.md §9.2 "Then")', () => {
+  beforeEach(async () => {
+    useProfileStore.setState({ onboarded: true, connectSeen: true });
+    await loadSafety();
+    startTour();
+  });
+
+  it('waits on the shelf; on the first topic: play, tray, notebook, "Bỏ qua hướng dẫn"', () => {
+    useNavigationStore.setState({ screen: 'lab' });
+    useSimStore.setState({ scene: null, loading: false, error: null });
+    const view = render(
+      <BenchContext.Provider value={true}>
+        <Tour />
+      </BenchContext.Provider>,
+    );
+    expect(screen.queryByRole('dialog')).toBeNull();
+    act(() => {
+      useSimStore.setState({ scene: freeFall });
+    });
+    expect(screen.getByRole('dialog')).toHaveTextContent('1/3');
+    expect(screen.getByRole('heading', { name: 'Chạy thí nghiệm' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Bỏ qua hướng dẫn' })).toBeInTheDocument();
+    view.unmount();
+    act(() => {
+      useSimStore.setState({ scene: null });
+    });
+  });
+});
 
 describe('first-run tour', () => {
   beforeEach(async () => {
