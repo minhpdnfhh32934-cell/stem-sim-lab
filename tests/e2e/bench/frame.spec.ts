@@ -28,22 +28,27 @@ async function openProjectile(page: Page) {
  * accent colour (one main action per screen, PROMPT_PHAN_2 A4).
  */
 async function expectFilled(scope: Locator, n: number) {
-  const count = await scope.evaluate((root) => {
-    const probe = document.createElement('i');
-    document.body.append(probe);
-    const colour = (token: string) => {
-      probe.style.background = `var(${token})`;
-      return getComputedStyle(probe).backgroundColor;
-    };
-    const filled = [colour('--play'), colour('--accent')];
-    probe.remove();
-    // Both tokens must resolve (the bench sets --play); a transparent "fill" would match any button.
-    if (filled.some((c) => c === 'rgba(0, 0, 0, 0)')) return -1;
-    return [...root.querySelectorAll<HTMLElement>('button, [role="button"], a.btn')].filter(
-      (el) => el.checkVisibility() && filled.includes(getComputedStyle(el).backgroundColor),
-    ).length;
-  });
-  expect(count).toBe(n);
+  // The pointer can rest on a button after the last click (opening a topic leaves it where the
+  // main action appears): hovered, a filled button shows its hover colour instead. A button that
+  // has just become enabled fades into its fill (background transition), so the count is polled.
+  await scope.page().mouse.move(1, 1);
+  const filledCount = () =>
+    scope.evaluate((root) => {
+      const probe = document.createElement('i');
+      document.body.append(probe);
+      const colour = (token: string) => {
+        probe.style.background = `var(${token})`;
+        return getComputedStyle(probe).backgroundColor;
+      };
+      const filled = [colour('--play'), colour('--accent')];
+      probe.remove();
+      // Both tokens must resolve (the bench sets --play); a transparent "fill" would match any button.
+      if (filled.some((c) => c === 'rgba(0, 0, 0, 0)')) return -1;
+      return [...root.querySelectorAll<HTMLElement>('button, [role="button"], a.btn')].filter(
+        (el) => el.checkVisibility() && filled.includes(getComputedStyle(el).backgroundColor),
+      ).length;
+    });
+  await expect.poll(filledCount).toBe(n);
 }
 
 test('a physics topic opens on the bench: stage 998×656, landmarks, no horizontal scroll', async ({
