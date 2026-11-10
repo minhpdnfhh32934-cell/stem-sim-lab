@@ -20,6 +20,7 @@ const TOPICS: readonly (readonly [string, string])[] = [
   ['Va chạm đàn hồi và va chạm mềm', 'Va chạm đàn hồi và va chạm mềm'],
   ['Con lắc lò xo', 'Con lắc lò xo'],
   ['Con lắc đơn', 'Con lắc đơn'],
+  ['Dao động cưỡng bức và cộng hưởng', 'Dao động cưỡng bức và cộng hưởng'],
   ['Chuyển động tròn đều', 'Chuyển động tròn đều'],
   ['Giao thoa sóng hai nguồn', 'Giao thoa sóng hai nguồn'],
   ['Sóng dừng trên dây', 'Sóng dừng trên dây'],

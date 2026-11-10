@@ -245,6 +245,19 @@ export const POES: readonly Poe[] = [
     start: { mode: 1 },
   },
   {
+    id: 'forcedOscillation.Omega',
+    topic: 'forcedOscillation',
+    param: 'Omega',
+    factor: 2,
+    answer: 'A',
+    question: L(
+      'Vật 0,5\u00a0kg, lò xo 50\u00a0N/m (ω₀\u00a0=\u00a010\u00a0rad/s), ngoại lực có Ω\u00a0=\u00a05\u00a0rad/s (SimLab đặt sẵn khi bạn bấm “Chạy để kiểm tra”): giữ nguyên mọi thứ khác, nếu Ω tăng gấp đôi thì biên độ dao động ổn định tăng, giảm hay không đổi?',
+      'A 0.5\u00a0kg body, a 50\u00a0N/m spring (ω₀\u00a0=\u00a010\u00a0rad/s), driven at Ω\u00a0=\u00a05\u00a0rad/s (SimLab sets it when you press “Run to check”): keeping everything else, if Ω doubles, does the steady amplitude go up, down or stay the same?',
+    ),
+    choices: DIRS,
+    start: { Omega: 5, F0: 1, b: 0.5, m: 0.5, k: 50, x0: 0 },
+  },
+  {
     id: 'dcCircuit.R2',
     topic: 'dcCircuit',
     param: 'R2',

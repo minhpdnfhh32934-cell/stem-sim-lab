@@ -2422,6 +2422,18 @@
    ],
    "reason": "Tên Bài 16–18: lực tương tác giữa các điện tích, khái niệm điện trường, điện trường đều.",
    "review_status": "pending"
+  },
+  {
+   "topic": "forcedOscillation",
+   "subject": "physics",
+   "grade": 11,
+   "book": "VL11",
+   "chapter": "Chương I. Dao động",
+   "lessons": [
+    6
+   ],
+   "reason": "Tên Bài 6: dao động tắt dần, dao động cưỡng bức, hiện tượng cộng hưởng (cảnh lò xo nằm ngang có cản và ngoại lực điều hoà).",
+   "review_status": "pending"
   }
  ],
  "unplaced": [

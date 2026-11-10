@@ -133,6 +133,7 @@ const en: Messages = {
     interference: 'Two-source interference',
     standingWave: 'Standing waves on a string',
     electricField: 'Electric field of point charges',
+    forcedOscillation: 'Forced oscillation and resonance',
     dcCircuit: 'Direct-current circuit',
   },
   stage: {

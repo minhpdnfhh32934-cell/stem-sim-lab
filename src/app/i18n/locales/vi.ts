@@ -136,6 +136,7 @@ const vi = {
     interference: 'Giao thoa sóng hai nguồn',
     standingWave: 'Sóng dừng trên dây',
     electricField: 'Điện trường của điện tích điểm',
+    forcedOscillation: 'Dao động cưỡng bức và cộng hưởng',
     dcCircuit: 'Mạch điện một chiều',
   },
   stage: {
