@@ -2,6 +2,7 @@ import {
   BadgeInfo,
   ChartSpline,
   ListOrdered,
+  Lock,
   MessageCircle,
   Table2,
   Target,
@@ -25,6 +26,7 @@ import { ScienceCard } from '@/science-card/ScienceCard';
 import { ChatPanel } from '@/teacher/chat/ChatPanel';
 import { openTeacher, useTeacherStore } from '@/teacher/teacherStore';
 import { useChatStore } from '@/teacher/chat/chatStore';
+import { useSafetyStore } from '@/safety/safetyStore';
 import { EmptyState } from '@/ui/EmptyState';
 import { IconButton } from '@/ui/IconButton';
 
@@ -49,8 +51,9 @@ const LABEL: Record<Exclude<NotebookTab, 'module'>, MessageKey> = {
 /**
  * The notebook on the left: an always-visible rail of tabs (same names as the classic bottom
  * panel's) and a drawer with the chosen tab, pushed beside the stage or over it (`push`).
+ * `pinnedOnly`: only "Thẻ khoa học" and "Hỏi AI" (a guided lesson, §9.7).
  */
-export function Notebook({ push }: { push: boolean }) {
+export function Notebook({ push, pinnedOnly = false }: { push: boolean; pinnedOnly?: boolean }) {
   const t = useT();
   const L = useLocalized();
   const subject = useWorkspaceStore((s) => s.subject);
@@ -66,11 +69,13 @@ export function Notebook({ push }: { push: boolean }) {
       setSize: s.setSize,
     })),
   );
-  const main: NotebookTab[] = mod
-    ? mod.view.Bottom
-      ? ['module']
-      : []
-    : ['challenge', 'graphs', 'solution', ...(advanced ? (['data'] as const) : [])];
+  const main: NotebookTab[] = pinnedOnly
+    ? []
+    : mod
+      ? mod.view.Bottom
+        ? ['module']
+        : []
+      : ['challenge', 'graphs', 'solution', ...(advanced ? (['data'] as const) : [])];
   const tabs: NotebookTab[] = [...main, 'science', 'ai'];
   const stored = tabBySubject[subject];
   const tab = stored && tabs.includes(stored) ? stored : (main[0] ?? 'science');
@@ -115,17 +120,30 @@ export function Notebook({ push }: { push: boolean }) {
     }
   }, [asked]);
 
+  // Screen context is opt-in every time the chat opens (as in the bubble), however it was left:
+  // its X, the rail tab, Esc, another tab or another room.
+  const chatShown = open && tab === 'ai';
+  // Under 18 the tab is a lock and one explanation, no chat and no key field (§9.10).
+  const minor = useSafetyStore((s) => s.status?.minor === true);
+  useEffect(() => {
+    if (!chatShown) return;
+    return () => {
+      useChatStore.getState().setIncludeScreen(false);
+    };
+  }, [chatShown]);
+
   return (
     <section className="notebook" aria-label={t('bottom.regionLabel')}>
       <div
         className="notebook__rail"
+        data-tour="notebook"
         data-surface="frame"
         role="tablist"
         aria-orientation="vertical"
         aria-label={t('bottom.regionLabel')}
       >
         {tabs.map((id, i) => {
-          const Icon = ICON[id];
+          const Icon = id === 'ai' && minor ? Lock : ICON[id];
           return (
             <button
               key={id}
@@ -171,16 +189,23 @@ export function Notebook({ push }: { push: boolean }) {
             role="tabpanel"
             aria-labelledby={`notebook-tab-${tab}`}
           >
-            {tab === 'ai' ? (
+            {tab === 'ai' && minor ? (
+              <>
+                <header className="panel__header">
+                  <h2 className="panel__title">{label(tab)}</h2>
+                  <IconButton icon={X} label={t('bench.closeNotebook')} onClick={close} />
+                </header>
+                <div className="panel__scroll">
+                  <EmptyState icon={Lock} title={t('bench.teacherLocked')} compact>
+                    <p>{t('safety.gate.minorNote')}</p>
+                  </EmptyState>
+                </div>
+              </>
+            ) : tab === 'ai' ? (
               <ChatPanel
                 compact
-                onClose={() => {
-                  // Screen context is opt-in every time the chat opens (as in the bubble).
-                  useChatStore.getState().setIncludeScreen(false);
-                  close();
-                }}
+                onClose={close}
                 onExpand={() => {
-                  useChatStore.getState().setIncludeScreen(false);
                   close();
                   openTeacher();
                 }}

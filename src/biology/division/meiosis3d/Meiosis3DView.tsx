@@ -9,7 +9,14 @@ import {
   Tags,
   X,
 } from 'lucide-react';
-import { useEffect, useLayoutEffect, useMemo, useRef, type CSSProperties } from 'react';
+import {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  type CSSProperties,
+  type ReactNode,
+} from 'react';
 import * as THREE from 'three';
 import { useLocalized } from '@/app/i18n/localized';
 import { formatNumber, useT } from '@/app/i18n';
@@ -67,6 +74,10 @@ import {
   type Vec3,
 } from './timeline';
 import '../../bio.css';
+import { EdgePortal } from '@/app/bench/EdgePortal';
+import { useDimRest } from '../../view3d/dimRest';
+import { EdgeSteps } from '@/app/bench/EdgeSteps';
+import { useOnEdge } from '@/app/bench/edgeSlot';
 
 export type { RendererFactory, RendererLike };
 
@@ -123,6 +134,69 @@ function useTimeline(): MeiosisTimeline {
 function goToStage(tl: MeiosisTimeline, index: number) {
   const stage = MEIOSIS_STAGES_3D[Math.max(0, Math.min(MEIOSIS_STAGES_3D.length - 1, index))];
   if (stage) useMeiosis3D.setState({ t: tl.keyTime(stage), playing: false });
+}
+
+/**
+ * The bench edge (docs/BENCH_DESIGN.md §9.6): D0 Chạy, D1 Về kì trước, D2 Sang kì tiếp, D3 Đặt
+ * lại, the readout "Kì giữa I (4/12)" and the illustrative time with the stages on it. Its own
+ * component: it follows t every frame, the view does not.
+ */
+function MeiosisEdge({
+  tl,
+  play,
+  children,
+}: {
+  tl: MeiosisTimeline;
+  play: () => void;
+  children: ReactNode;
+}) {
+  const Lz = useLocalized();
+  const t = useMeiosis3D((s) => s.t);
+  const playing = useMeiosis3D((s) => s.playing);
+  const index = tl.stageAt(t).index;
+  const id = MEIOSIS_STAGES_3D[index] ?? MEIOSIS_STAGES_3D[0];
+  const where = `${id ? Lz(MEIOSIS_STAGE_NAME[id]) : ''} (${String(index + 1)}/${String(MEIOSIS_STAGES_3D.length)})`;
+  return (
+    <EdgeSteps
+      play={{ playing, onClick: play }}
+      prev={{
+        label: Lz(L('Về kì trước', 'Previous stage')),
+        disabled: index === 0,
+        onClick: () => {
+          goToStage(tl, index - 1);
+        },
+      }}
+      next={{
+        label: Lz(L('Sang kì tiếp', 'Next stage')),
+        disabled: index >= MEIOSIS_STAGES_3D.length - 1,
+        onClick: () => {
+          goToStage(tl, index + 1);
+        },
+      }}
+      reset={{
+        label: Lz(L('Đặt lại', 'Reset')),
+        disabled: t <= 0 && !playing,
+        onClick: () => {
+          useMeiosis3D.setState({ t: 0, playing: false });
+        },
+      }}
+      readout={where}
+      scrub={{
+        label: Lz(L('Thời gian minh họa', 'Illustrative time')),
+        min: 0,
+        max: tl.total,
+        step: tl.total / 400,
+        value: Math.min(t, tl.total),
+        valueText: where,
+        ticks: tl.stages.map((w) => ({ at: w.start, label: Lz(MEIOSIS_STAGE_SHORT[w.id]) })),
+        onChange: (v) => {
+          useMeiosis3D.setState({ t: v, playing: false });
+        },
+      }}
+    >
+      {children}
+    </EdgeSteps>
+  );
 }
 
 /**
@@ -297,6 +371,7 @@ export function Meiosis3DView({
   const camera = useMeiosis3D((s) => s.camera);
   const labelsChoice = useMeiosis3D((s) => s.labels);
   const basic = uiMode === 'basic';
+  const onEdge = useOnEdge();
   // "Hiện tên": on by default in Basic mode.
   const labelsOn = labelsChoice ?? basic;
   const stage = MEIOSIS_STAGES_3D[stageIndex] ?? 'g1';
@@ -513,6 +588,11 @@ export function Meiosis3DView({
     const ui = useMeiosis3D.getState();
     ms.update(meiosisStateFor(tl, Math.min(ui.t, tl.total)));
     ms.setSelection(ui.selected);
+    ms.setDimRest(useDimRest.getState().on);
+    const undim = useDimRest.subscribe((d) => {
+      ms.setDimRest(d.on);
+      hostRt.current?.request();
+    });
     const framed = framedRef.current;
     if (framed.host !== h || framed.tl !== tl) {
       frameCamera(h, ui.camera);
@@ -542,6 +622,7 @@ export function Meiosis3DView({
     });
     return () => {
       unsub();
+      undim();
       if (sceneRef.current?.scene === ms) {
         sceneRef.current = null;
         h.setScene(null);
@@ -579,6 +660,16 @@ export function Meiosis3DView({
   const play = () => {
     useMeiosis3D.setState((s) => ({ playing: !s.playing, t: s.t >= tl.total ? 0 : s.t }));
   };
+  const speedControl = !basic && (
+    <Segmented
+      label={L('Tốc độ', 'Speed')}
+      value={String(speed)}
+      options={SPEEDS.map((v) => ({ id: String(v), label: L(fmtSpeed(v), fmtSpeed(v)) }))}
+      onChange={(v) => {
+        useDivisionStore.setState({ speed: Number(v) });
+      }}
+    />
+  );
 
   return (
     <div className="bio-view m3d mei3d" data-lesson="meiosis">
@@ -591,51 +682,52 @@ export function Meiosis3DView({
       />
       <div ref={hudRef} className="m3d__hud">
         <div className="chem-overlay m3d__top" data-inset="top">
-          <IconButton
-            icon={ChevronLeft}
-            size="lg"
-            label={Lz(L('Bước trước', 'Previous step'))}
-            disabled={stageIndex === 0}
-            onClick={() => {
-              goToStage(tl, stageIndex - 1);
-            }}
-          />
-          <IconButton
-            icon={Play}
-            altIcon={Pause}
-            showAlt={playing}
-            size="lg"
-            variant="solid"
-            label={playing ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Phát', 'Play'))}
-            onClick={play}
-          />
-          <IconButton
-            icon={ChevronRight}
-            size="lg"
-            label={Lz(L('Bước tiếp theo', 'Next step'))}
-            disabled={stageIndex >= MEIOSIS_STAGES_3D.length - 1}
-            onClick={() => {
-              goToStage(tl, stageIndex + 1);
-            }}
-          />
-          <IconButton
-            icon={RotateCcw}
-            size="lg"
-            label={Lz(L('Phát lại từ đầu', 'Replay from the start'))}
-            onClick={() => {
-              useMeiosis3D.setState({ t: 0, playing: !prefersReducedMotion() });
-            }}
-          />
-          {!basic && (
-            <Segmented
-              label={L('Tốc độ', 'Speed')}
-              value={String(speed)}
-              options={SPEEDS.map((v) => ({ id: String(v), label: L(fmtSpeed(v), fmtSpeed(v)) }))}
-              onChange={(v) => {
-                useDivisionStore.setState({ speed: Number(v) });
-              }}
-            />
-          )}
+          <EdgePortal>
+            {onEdge ? (
+              <MeiosisEdge tl={tl} play={play}>
+                {speedControl}
+              </MeiosisEdge>
+            ) : (
+              <>
+                <IconButton
+                  icon={ChevronLeft}
+                  size="lg"
+                  label={Lz(L('Bước trước', 'Previous step'))}
+                  disabled={stageIndex === 0}
+                  onClick={() => {
+                    goToStage(tl, stageIndex - 1);
+                  }}
+                />
+                <IconButton
+                  icon={Play}
+                  altIcon={Pause}
+                  showAlt={playing}
+                  size="lg"
+                  variant="solid"
+                  label={playing ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Phát', 'Play'))}
+                  onClick={play}
+                />
+                <IconButton
+                  icon={ChevronRight}
+                  size="lg"
+                  label={Lz(L('Bước tiếp theo', 'Next step'))}
+                  disabled={stageIndex >= MEIOSIS_STAGES_3D.length - 1}
+                  onClick={() => {
+                    goToStage(tl, stageIndex + 1);
+                  }}
+                />
+                <IconButton
+                  icon={RotateCcw}
+                  size="lg"
+                  label={Lz(L('Phát lại từ đầu', 'Replay from the start'))}
+                  onClick={() => {
+                    useMeiosis3D.setState({ t: 0, playing: !prefersReducedMotion() });
+                  }}
+                />
+                {speedControl}
+              </>
+            )}
+          </EdgePortal>
           <span className="chem-chip">
             <strong>{Lz(MEIOSIS_STAGE_NAME[stage])}</strong>
           </span>

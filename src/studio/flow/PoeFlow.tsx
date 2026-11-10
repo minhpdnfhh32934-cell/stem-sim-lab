@@ -1,5 +1,6 @@
 import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
-import { useCallback, useId, useMemo } from 'react';
+import { useCallback, useContext, useId, useMemo } from 'react';
+import { BenchContext } from '@/app/bench/shellMode';
 import { useT } from '@/app/i18n';
 import { cx } from '@/ui/cx';
 import { scenarioSteps, type FlowStep, type StudioScenario } from '../scenario';
@@ -48,6 +49,7 @@ export function PoeFlow({ scenario, plugin }: { scenario: StudioScenario; plugin
   };
 
   const props: StepProps = { scenario, session, update };
+  const bench = useContext(BenchContext);
   const body =
     step === 'predict' ? (
       <plugin.Predict {...props} />
@@ -64,7 +66,8 @@ export function PoeFlow({ scenario, plugin }: { scenario: StudioScenario; plugin
     );
 
   return (
-    <div className="studio-flow">
+    <div className="studio-flow" data-step={step}>
+      {bench && plugin.Live && <plugin.Live {...props} />}
       <ol className="studio-steps" aria-label={t('studio.flow.label')}>
         {steps.map((s, i) => {
           const current = s === step;

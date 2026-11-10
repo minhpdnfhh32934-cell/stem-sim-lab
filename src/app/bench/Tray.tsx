@@ -6,6 +6,7 @@ import { InspectorBody } from '@/app/layout/Inspector';
 import { LAYOUT_LIMITS, useLayoutStore } from '@/app/layout/layoutStore';
 import { Splitter } from '@/app/layout/Splitter';
 import { IconButton } from '@/ui/IconButton';
+import { ScienceSummary } from './ScienceSummary';
 
 /**
  * The tray on the right ("Điều chỉnh"): what the learner changes. It folds to a 64 px spine and
@@ -83,6 +84,7 @@ export function Tray() {
                 }}
               />
             </header>
+            <ScienceSummary />
             <div className="panel__scroll">
               <InspectorBody />
             </div>

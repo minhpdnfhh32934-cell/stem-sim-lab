@@ -55,22 +55,49 @@ const fake = vi.hoisted(() => {
       generate: (options: Record<string, unknown>) => {
         generated.push(options);
         const prompt = (options.input_ids as { dims: number[] }).dims[1] ?? 0;
-        return Promise.resolve({ dims: [1, prompt + 3], slice: () => ({}) });
+        // Like the real model: the output starts with the prompt.
+        return Promise.resolve({
+          dims: [1, prompt + 3],
+          slice: (...args: unknown[]) => {
+            slices.push(args);
+            return { answerOnly: true };
+          },
+        });
       },
     };
   }
+  /** The arguments of every `output.slice(...)` before decoding. */
+  const slices: unknown[][] = [];
   /** Prompt lengths in tokens: a text prompt, and a photo prompt (image tokens included). */
   const promptTokens = { text: 6, vision: 9 };
+  /** Decodes like the real tokenizer: an output that was not cut still holds the prompt. */
+  const batch_decode = (output: { answerOnly?: boolean }) => [
+    output.answerOnly ? 'Trả lời.' : 'Hệ thống: lời nhắc. Trả lời.',
+  ];
   // Callable like the real tokenizer and processor.
   const tokenizer = Object.assign(() => ({ input_ids: { dims: [1, promptTokens.text] } }), {
     apply_chat_template: () => 'prompt',
-    batch_decode: () => ['Trả lời.'],
+    batch_decode,
   });
+  /** Turns of the last vision prompt (system turn left out); `perTurn` tokens each. */
+  const vision = { turns: 0, perTurn: 0 };
   const processor = Object.assign(
-    () => Promise.resolve({ input_ids: { dims: [1, promptTokens.vision] } }),
-    { apply_chat_template: () => 'prompt', batch_decode: () => ['Trả lời.'], tokenizer: {} },
+    () =>
+      Promise.resolve({
+        input_ids: { dims: [1, promptTokens.vision + vision.turns * vision.perTurn] },
+      }),
+    {
+      apply_chat_template: (turns: unknown[]) => {
+        vision.turns = turns.length - 1;
+        return 'prompt';
+      },
+      batch_decode,
+      tokenizer: {},
+    },
   );
   return {
+    slices,
+    vision,
     behaviour,
     devices,
     env,
@@ -339,6 +366,35 @@ describe('Gemma worker: decoding options', () => {
     const rules = rulesOf(lastOptions());
     expect(rules).toHaveLength(1);
     expect(promptOnlyRow(rules[0], fake.promptTokens.vision, [])).toEqual(Array(8).fill(1));
+  });
+
+  it('the reply holds only the answer, never the prompt, on the text and the photo path', async () => {
+    await load('gemma3-1b');
+    await chat();
+    expect(posted.at(-1)).toMatchObject({ kind: 'reply', text: 'Trả lời.' });
+    expect(fake.slices.at(-1)).toEqual([null, [fake.promptTokens.text, null]]);
+
+    await send({ kind: 'unload' });
+    await settle();
+    await loadVision();
+    await chat();
+    expect(posted.at(-1)).toMatchObject({ kind: 'reply', text: 'Trả lời.' });
+    expect(fake.slices.at(-1)).toEqual([null, [fake.promptTokens.vision, null]]);
+  });
+
+  it('photo path: a prompt over the budget loses its oldest turns, and still starts with the learner', async () => {
+    await loadVision();
+    fake.vision.perTurn = 100;
+    const messages = ['a', 'b', 'c', 'd', 'e'].map((content, i) => ({
+      role: i % 2 === 0 ? 'user' : 'assistant',
+      content,
+    }));
+    await chat({ messages });
+    expect(fake.vision.turns).toBe(5);
+    // 5 turns are 509 tokens; 4 would start with the assistant, so 3 turns (309) are sent.
+    await chat({ messages, inputBudget: 350 });
+    expect(fake.vision.turns).toBe(3);
+    fake.vision.perTurn = 0;
   });
 
   it("'legacy' reproduces the PR #20 (f527f18) / 0.5.2 settings exactly, text and photo (evaluation only)", async () => {

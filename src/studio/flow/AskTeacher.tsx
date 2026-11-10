@@ -6,8 +6,8 @@ import { askInBubble } from '@/teacher/teacherStore';
 import type { FlowStep, StudioScenario } from '../scenario';
 
 /**
- * "Hỏi thầy": opens the chat bubble with a question about the current step, written from the
- * lesson's own title. The learner may change it and sends it; the lesson's data goes along only
+ * "Hỏi thầy": opens the chat bubble (the bench: the "Hỏi AI" tab beside the lesson) with a
+ * question about the current step, written from the lesson's own title. The learner may change it and sends it; the lesson's data goes along only
  * when the learner turns on the bubble's screen-context switch.
  */
 export function AskTeacher({ scenario, step }: { scenario: StudioScenario; step: FlowStep }) {
