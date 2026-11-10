@@ -32,7 +32,8 @@ test('B5: mitosis 3D steps from the edge; the stage keeps the stage name', async
   await next.click();
   await expect(name).not.toHaveText(before ?? '');
   await expect(edge(page).getByRole('button', { name: 'Bước trước' })).toBeEnabled();
-  expect(await serious(page)).toEqual([]);
+  // Polled: a button that has just become enabled fades into its colours.
+  await expect.poll(() => serious(page)).toEqual([]);
 });
 
 test('B5: a habitat lesson plays from the edge (time slider there)', async ({ page }) => {
@@ -41,7 +42,8 @@ test('B5: a habitat lesson plays from the edge (time slider there)', async ({ pa
     timeout: 30_000,
   });
   await expect(stage(page).locator('.bio3d__player')).toHaveCount(0);
-  expect(await serious(page)).toEqual([]);
+  // Polled: a button that has just become enabled fades into its colours.
+  await expect.poll(() => serious(page)).toEqual([]);
 });
 
 test('B5: cell → DNA zooms from the edge', async ({ page }) => {
@@ -53,5 +55,6 @@ test('B5: cell → DNA zooms from the edge', async ({ page }) => {
   await expect(edge(page).getByRole('button', { name: 'Thu nhỏ' })).toBeEnabled({
     timeout: 10_000,
   });
-  expect(await serious(page)).toEqual([]);
+  // Polled: a button that has just become enabled fades into its colours.
+  await expect.poll(() => serious(page)).toEqual([]);
 });
