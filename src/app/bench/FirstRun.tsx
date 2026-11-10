@@ -9,6 +9,7 @@ import { StepStrip } from '@/app/learner/StepStrip';
 import { GRADE_CHOICES } from '@/app/levels';
 import { SUBJECT_ICON } from '@/app/subjectIcons';
 import { SUBJECTS, useWorkspaceStore, type SettingsSection } from '@/app/workspaceStore';
+import { openGate } from '@/safety/safetyStore';
 import { cx } from '@/ui/cx';
 
 /**
@@ -159,9 +160,21 @@ export function BenchConnectStep() {
         </div>
       </div>
       <footer className="dialog__footer first-run__footer">
-        <button type="button" className="btn btn--ghost" onClick={finish}>
-          {t('onboarding.skip')}
-        </button>
+        <span className="first-run__ghosts">
+          {/* Back to step 2: the 18+ question again, to change the answer (§9.2 footer). */}
+          <button
+            type="button"
+            className="btn btn--ghost"
+            onClick={() => {
+              openGate({ firstRun: true });
+            }}
+          >
+            {t('onboarding.back')}
+          </button>
+          <button type="button" className="btn btn--ghost" onClick={finish}>
+            {t('onboarding.skip')}
+          </button>
+        </span>
         <button type="button" className="btn btn--accent" onClick={go}>
           {t('onboarding.next')}
         </button>

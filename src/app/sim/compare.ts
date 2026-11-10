@@ -15,6 +15,11 @@ export interface Ghost {
   sceneId: string;
   tracks: Pt[][];
   params: Params;
+  /**
+   * The pinned run's recorded samples (the bench's graphs draw them dashed): the same state
+   * objects the history kept (it never changes one after recording), never recomputed.
+   */
+  run: { times: number[]; states: Float64Array[] };
 }
 
 /** Trail points of a recorded run, one track per body (at most 601 points each). */
@@ -81,7 +86,7 @@ useSimStore.subscribe((s, prev) => {
  * Pins the run just recorded for comparison (its trail as dashed ghosts), or clears the pinned
  * one: the classic stage tool bar and the bench's D2. Nothing is pinned without a trail.
  */
-export function togglePin(history: Pick<History, 'states' | 'length'>): void {
+export function togglePin(history: Pick<History, 'times' | 'states' | 'length'>): void {
   const { scene, params } = useSimStore.getState();
   if (useCompareStore.getState().ghost || !scene) {
     useCompareStore.getState().clear();
@@ -90,6 +95,10 @@ export function togglePin(history: Pick<History, 'states' | 'length'>): void {
   const kept = { ...params };
   const tracks = recordedTracks(history, scene, kept);
   if (tracks.some((tr) => tr.length > 1)) {
-    useCompareStore.getState().pin({ sceneId: scene.id, tracks, params: kept });
+    const run = {
+      times: history.times.slice(0, history.length),
+      states: history.states.slice(0, history.length),
+    };
+    useCompareStore.getState().pin({ sceneId: scene.id, tracks, params: kept, run });
   }
 }

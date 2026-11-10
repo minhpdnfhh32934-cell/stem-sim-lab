@@ -80,7 +80,11 @@ export function EdgePlay({
 
 /** The one filled control of the screen (D0): never in a menu, never moves. */
 export function MainActionSlot({ children }: { children: ReactNode }) {
-  return <div className="bench-edge__main">{children}</div>;
+  return (
+    <div className="bench-edge__main" data-tour="play">
+      {children}
+    </div>
+  );
 }
 
 function TimeDriver() {
