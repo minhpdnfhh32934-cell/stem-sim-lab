@@ -1603,3 +1603,70 @@ button.bench-door--lab:hover {
     margin-left: var(--space-4);
   }
 }
+
+/* First run (§9.2): one sheet per step, "Bước i/3" over a three-part strip. */
+.first-run.dialog {
+  width: min(760px, calc(100vw - 32px));
+}
+.step-strip {
+  display: grid;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+.step-strip .onboarding__step {
+  margin: 0;
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 600;
+}
+.step-strip__bar {
+  display: grid;
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column;
+  gap: var(--space-2);
+}
+.step-strip__bar > span {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border);
+}
+.step-strip__bar > span[data-done] {
+  background: var(--accent);
+}
+.first-run__grades,
+.first-run__subjects,
+.first-run__connect {
+  display: grid;
+  gap: 12px;
+}
+.first-run__grades {
+  grid-template-columns: repeat(4, 1fr);
+}
+.first-run__grades .onboarding__option {
+  min-height: 88px;
+}
+.first-run__subjects,
+.first-run__connect {
+  grid-template-columns: repeat(3, 1fr);
+}
+.first-run__subjects .onboarding__option {
+  min-height: 72px;
+}
+.first-run__connect .onboarding__option {
+  min-height: 120px;
+}
+.first-run__subhead {
+  margin: var(--space-4) 0 var(--space-2);
+  font-size: 16px;
+  line-height: 22px;
+}
+.first-run__note {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  line-height: 16px;
+}
+.first-run__footer {
+  justify-content: space-between;
+}

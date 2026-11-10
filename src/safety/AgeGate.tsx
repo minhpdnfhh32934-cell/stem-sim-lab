@@ -1,6 +1,8 @@
 import { ShieldCheck } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { benchShellOn } from '@/app/bench/shellMode';
 import { useT } from '@/app/i18n';
+import { StepStrip } from '@/app/learner/StepStrip';
 import { checkAiStatus } from '@/app/ai/useAiStatus';
 import { getSafety, toSafetyError, type SafetyStatus } from './safety';
 import {
@@ -30,6 +32,8 @@ export function AgeGate({ hold = false }: { hold?: boolean }) {
   // `hold`: the first-run onboarding (level, subjects) comes before the gate.
   const visible = useGateVisible() && !hold;
   const status = useSafetyStore((s) => s.status);
+  // The bench's first run counts the gate as step 2 of 3 (§9.2); not when Settings reopens it.
+  const firstRunStep = useSafetyStore((s) => !s.gateRequested) && benchShellOn();
 
   useEffect(() => {
     void loadSafety().catch(() => undefined);
@@ -62,6 +66,7 @@ export function AgeGate({ hold = false }: { hold?: boolean }) {
       }}
     >
       <header className="dialog__header">
+        {firstRunStep && <StepStrip i={2} n={3} />}
         <h2 id="age-gate-title">
           <ShieldCheck size={18} strokeWidth={1.75} aria-hidden="true" />
           {t('safety.gate.title')}

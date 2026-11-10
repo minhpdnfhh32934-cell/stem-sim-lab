@@ -253,6 +253,11 @@ const vi = {
     teacherDoorBody: 'AI Teacher là một AI nên có thể sai.',
     teacherLocked: 'AI Teacher cần bạn đủ 18 tuổi',
     resume: 'Tiếp tục: {topic} ({subject})',
+    firstRun: {
+      connectDesc: 'Gemini, có hướng dẫn từng bước.',
+      gemma: 'Dùng Gemma trên máy này',
+      gemmaDesc: 'Tải {size}, không gửi gì lên mạng.',
+    },
   },
   layout: {
     resizeLeft: 'Kéo để đổi độ rộng Thư viện',

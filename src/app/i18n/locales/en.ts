@@ -251,6 +251,11 @@ const en: Messages = {
     teacherDoorBody: 'AI Teacher is an AI, so it can be wrong.',
     teacherLocked: 'AI Teacher needs you to be 18 or older',
     resume: 'Continue: {topic} ({subject})',
+    firstRun: {
+      connectDesc: 'Gemini, with a step-by-step guide.',
+      gemma: 'Use Gemma on this computer',
+      gemmaDesc: 'Downloads {size}, sends nothing online.',
+    },
   },
   layout: {
     resizeLeft: 'Drag to resize the Library',
