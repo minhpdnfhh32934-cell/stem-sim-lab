@@ -11,6 +11,8 @@ test.use({ viewport: { width: 1366, height: 768 } });
 
 /** Plot area (uPlot's `.u-over`) a learner can still read: at least four y values. */
 const MIN_PLOT_HEIGHT = 80;
+/** Physics lessons with a view of their own: no engine run, no graph tab (see fourier.spec.ts). */
+const OWN_VIEW = ['Hoạ âm và chuỗi Fourier'];
 
 interface Rect {
   top: number;
@@ -41,8 +43,9 @@ async function chartProblems(page: Page, expectEmpty: boolean): Promise<string[]
     }
     return {
       panel: rect(panel),
-      over: rect(chart?.querySelector('.u-over')),
-      legend: rect(panel?.querySelector('.u-legend')),
+      // A phase portrait (a graph with an x quantity) draws on its own canvas, legend as a list.
+      over: rect(chart?.querySelector('.u-over, .chart__canvas')),
+      legend: rect(panel?.querySelector('.u-legend, .phase-legend')),
       text,
       hScroll: document.documentElement.scrollWidth > document.documentElement.clientWidth,
       // The graph tab must fit the drawer: anything that scrolls is hidden at first sight.
@@ -86,7 +89,9 @@ async function checkEveryGraph(page: Page, topic: string, expectEmpty: boolean):
     }
     const name = `${topic} · ${await radio.innerText()} · ${expectEmpty ? 'before' : 'after'} Run`;
     await expect.poll(() => chartProblems(page, expectEmpty), { message: name }).toEqual([]);
-    if (!expectEmpty) {
+    // The live legend (time under the cursor) is uPlot's; a phase portrait has none.
+    const phase = (await page.locator('.notebook .chart__canvas').count()) > 0;
+    if (!expectEmpty && !phase) {
       // Hovering fills the live legend; the plot must keep its width under the mouse.
       const over = page.locator('.notebook .u-over');
       const before = await over.boundingBox();
@@ -140,6 +145,7 @@ test('every physics graph is readable at 1366 × 768, before and after running',
     if (i > 0) topics = await physicsShelf(page);
     const button = topics.nth(i);
     const topic = (await button.innerText()).trim();
+    if (OWN_VIEW.includes(topic)) continue;
     await button.click();
     // The dev server compiles each scene on first use (up to ~20 s on a busy machine); the
     // stage names the scene, which may differ from the shelf's title.
