@@ -8,6 +8,7 @@ import {
   type Source,
 } from '@/core/data/dataset';
 import { normalizeForSearch } from '@/app/catalog';
+import { GROUPS } from '../molecule/groups';
 import { elementBySymbol } from './elements';
 
 const AtomSchema = z.object({
@@ -27,6 +28,8 @@ const MoleculeSchema = z.object({
   name: LocalizedTextSchema,
   aliases: z.array(z.string()),
   category: z.enum(['inorganic', 'organic', 'ion']),
+  /** Functional groups found by the data script's SMARTS patterns (organic molecules only). */
+  groups: z.array(z.enum(GROUPS)).optional(),
   smiles: z.string(),
   formula: z.string(),
   /** Formula as written in textbooks, e.g. "C2H5OH" (same atoms as `formula`). */

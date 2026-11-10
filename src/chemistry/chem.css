@@ -1086,3 +1086,19 @@
     transition: none;
   }
 }
+
+/* "Lọc theo nhóm chức" (Phân tử 3D, #54 item 11). */
+.mol-groups {
+  display: grid;
+  gap: var(--space-2);
+}
+.mol-groups label {
+  display: grid;
+  gap: var(--space-1);
+}
+.mol-groups select {
+  min-height: var(--target);
+}
+.mol-groups__list {
+  flex-wrap: wrap;
+}

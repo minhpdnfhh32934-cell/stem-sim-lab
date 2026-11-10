@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 
+import type { FunctionalGroup } from './groups';
+
 export type MoleculeTopic = 'molecule3d' | 'vsepr' | 'bondPolarity';
 
 export interface MoleculeState {
@@ -11,6 +13,8 @@ export interface MoleculeState {
   labels: boolean;
   dipole: boolean;
   query: string;
+  /** Functional group chosen in "Lọc theo nhóm chức" (Phân tử 3D), or none. */
+  group: FunctionalGroup | null;
 }
 
 export const useMoleculeStore = create<MoleculeState>()(() => ({
@@ -21,6 +25,7 @@ export const useMoleculeStore = create<MoleculeState>()(() => ({
   labels: true,
   dipole: false,
   query: '',
+  group: null,
 }));
 
 /** Topic-specific defaults when a molecule topic opens. */

@@ -107,6 +107,75 @@ DISPLAY_FORMULA = {
     "no3": "NO3-", "co3": "CO3-2", "so4": "SO4-2",
 }
 
+# 0.8.1 (#54 item 11): more organic molecules for the functional-group filter of "Phân tử 3D"
+# (names as in SGK Hoá học 11–12 2018: IUPAC names; pending teacher review, DATA_REVIEW ORG-1).
+MOLECULES += [
+    ("propyne", "Propyne", "Propyne", "CC#C", "organic", ["propin"]),
+    ("but1ene", "But-1-ene", "But-1-ene", "C=CCC", "organic", ["butene", "buten"]),
+    ("butadiene", "Buta-1,3-diene", "Buta-1,3-diene", "C=CC=C", "organic", ["butađien", "butadien"]),
+    ("cyclohexane", "Cyclohexane", "Cyclohexane", "C1CCCCC1", "organic", ["xiclohexan"]),
+    ("styrene", "Styrene", "Styrene", "C=Cc1ccccc1", "organic", ["stiren"]),
+    ("naphthalene", "Naphthalene", "Naphthalene", "c1ccc2ccccc2c1", "organic", ["naphtalen", "băng phiến"]),
+    ("vinylcl", "Vinyl chloride", "Vinyl chloride", "C=CCl", "organic", ["vinyl clorua"]),
+    ("chlorobenzene", "Chlorobenzene", "Chlorobenzene", "Clc1ccccc1", "organic", ["clobenzen"]),
+    ("propan1ol", "Propan-1-ol", "Propan-1-ol", "CCCO", "organic", ["propanol", "ancol propylic"]),
+    ("propan2ol", "Propan-2-ol", "Propan-2-ol", "CC(C)O", "organic", ["isopropanol", "ancol isopropylic"]),
+    ("glycol", "Ethylene glycol", "Ethylene glycol", "OCCO", "organic", ["etylen glicol", "ethane-1,2-diol"]),
+    ("glycerol", "Glycerol", "Glycerol", "OCC(O)CO", "organic", ["glixerol"]),
+    ("phenol", "Phenol", "Phenol", "Oc1ccccc1", "organic", []),
+    ("dme", "Dimethyl ether", "Dimethyl ether", "COC", "organic", ["đimetyl ete"]),
+    ("propanal", "Propanal", "Propanal", "CCC=O", "organic", ["anđehit propionic"]),
+    ("butanone", "Butanone", "Butanone", "CCC(C)=O", "organic", ["butan-2-one", "metyl etyl xeton"]),
+    ("propanoic", "Propanoic acid", "Propanoic acid", "CCC(=O)O", "organic", ["axit propionic"]),
+    ("benzoic", "Benzoic acid", "Benzoic acid", "OC(=O)c1ccccc1", "organic", ["axit benzoic"]),
+    ("meac", "Methyl ethanoate (methyl acetate)", "Methyl acetate", "COC(C)=O", "organic", ["metyl axetat"]),
+    ("methylamine", "Methylamine", "Methylamine", "CN", "organic", ["metylamin"]),
+    ("aniline", "Aniline", "Aniline", "Nc1ccccc1", "organic", ["anilin"]),
+    ("alanine", "Alanine", "Alanine", "C[C@@H](C(=O)O)N", "organic", ["axit α-aminopropionic"]),
+]
+DISPLAY_FORMULA.update({
+    "propyne": "CH≡C–CH3", "but1ene": "CH2=CH–CH2–CH3", "butadiene": "CH2=CH–CH=CH2",
+    "cyclohexane": "C6H12", "styrene": "C6H5CH=CH2", "naphthalene": "C10H8",
+    "vinylcl": "CH2=CHCl", "chlorobenzene": "C6H5Cl", "propan1ol": "CH3CH2CH2OH",
+    "propan2ol": "CH3CH(OH)CH3", "glycol": "HOCH2CH2OH", "glycerol": "C3H5(OH)3",
+    "phenol": "C6H5OH", "dme": "CH3OCH3", "propanal": "CH3CH2CHO", "butanone": "CH3COCH2CH3",
+    "propanoic": "CH3CH2COOH", "benzoic": "C6H5COOH", "meac": "CH3COOCH3",
+    "methylamine": "CH3NH2", "aniline": "C6H5NH2", "alanine": "CH3CH(NH2)COOH",
+})
+
+# Functional groups of an organic molecule, found by SMARTS patterns (RDKit), never written by
+# hand. Order: how the filter lists them.
+GROUP_SMARTS = [
+    ("alkane", None),  # only C and H, single bonds, no ring of aromatic atoms (see below)
+    ("alkene", "[C]=[C]"),
+    ("alkyne", "[C]#[C]"),
+    ("arene", "c"),
+    ("halide", "[#6][F,Cl,Br,I]"),
+    ("alcohol", "[CX4][OX2H]"),
+    ("phenol", "c[OX2H]"),
+    ("ether", "[OD2]([#6;!$(C=O)])[#6;!$(C=O)]"),
+    ("aldehyde", "[CX3;H1,H2;!$(C[OX2])]=O"),
+    ("ketone", "[#6][CX3](=O)[#6]"),
+    ("acid", "[CX3](=O)[OX2H1]"),
+    ("ester", "[CX3;!$(C[OX2H1])](=O)[OX2][#6]"),
+    ("amine", "[NX3;!$(NC=O)]"),
+    ("amide", "[NX3][CX3]=O"),
+]
+
+
+def functional_groups(smiles: str) -> list:
+    mol = Chem.MolFromSmiles(smiles)
+    out = []
+    for gid, smarts in GROUP_SMARTS:
+        if smarts is None:
+            only_ch = all(a.GetSymbol() in ("C", "H") for a in mol.GetAtoms())
+            single = all(b.GetBondType() == Chem.BondType.SINGLE for b in mol.GetBonds())
+            if only_ch and single:
+                out.append(gid)
+        elif mol.HasSubstructMatch(Chem.MolFromSmarts(smarts)):
+            out.append(gid)
+    return out
+
 # VSEPR ideal directions (unit vectors) for bonds + lone pairs, by steric number.
 IDEAL = {
     2: [(0, 0, 1), (0, 0, -1)],
@@ -293,6 +362,7 @@ def main() -> None:
                 "name": {"vi": vi, "en": en},
                 "aliases": aliases,
                 "category": cat,
+                **({"groups": functional_groups(smiles)} if cat == "organic" else {}),
                 **data,
                 "reference": REFERENCE.get(mid),
                 "experimental": EXPERIMENTAL.get(mid),
