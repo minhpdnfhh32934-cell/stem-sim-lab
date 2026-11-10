@@ -293,3 +293,31 @@ bắt các kiểu câu đã biết.
 Con số "không lỗi đã biết" chỉ đếm các lỗi mà thước biết tìm: nó không có nghĩa là model không bao
 giờ đồng tình với lỗi sai của người học. Bộ kiểm chứng (`teaching-heldout.json`) không đổi: sửa nó sau
 khi đã xem kết quả là tinh chỉnh theo chính bộ đó.
+
+## Đo Gemma 4 E2B (09/11/2026)
+
+Cùng 42 câu và 15 câu held-out, cùng thước chấm tự động, prompt v2, cách sinh của app, greedy. Đo
+bằng bản 122183e trên RTX 5060 Laptop, không lượt nào lỗi. Dữ liệu thô:
+`tests/teaching/results/2026-11-09-gemma4-e2b-*.json`. Cột 1B lấy từ các tệp đo ngày 14/10, bản
+build khác, nên chỉ so tương đối.
+
+| Chỉ số                  | E2B, 42 câu | 1B, 42 câu | E2B, held-out | 1B, held-out |
+| ----------------------- | ----------- | ---------- | ------------- | ------------ |
+| Câu đúng đủ ý chính     | 25          | 14         | 8 / 15        | 2 / 15       |
+| Tỉ lệ ý chính nêu được  | 72 %        | 48 %       | 79 %          | 44 %         |
+| Câu mắc lỗi đã biết     | 0           | 8          | 1             | 2            |
+| Câu có số tự đặt ra     | 1           | 7          | 0             | 0            |
+| Câu bị méo chữ          | 0           | 2          | 0             | 0            |
+| Câu lẫn chữ nước ngoài  | 0           | 3          | 0             | 1            |
+| Giây trung bình mỗi câu | 12,1        | 12,0       | 10,3          | 6,1          |
+
+Theo loại câu trên bộ 42 câu (E2B so với 1B): khái niệm 8/11 và 4/11, ngộ nhận 5/5 và 0/5, thiếu dữ
+kiện 7/9 và 6/9, hỏi tiếp 3/3 và 1/3, câu bẫy 1/3 và 0/3, bài toán 1/5 và 2/5, nêu từng bước 0/3 và
+0/3, cần công cụ 0/3 và 1/3.
+
+E2B hơn 1B rõ ở khái niệm và ngộ nhận, gần như không còn lỗi đã biết. Nó vẫn yếu ở bài toán, nêu
+từng bước và câu cần công cụ: 1/11 câu đúng đủ ý chính.
+
+Giới hạn: chưa chấm mù bằng AI, chưa có giáo viên chấm; đáp án chuẩn vẫn chờ giáo viên; một lượt
+greedy cho mỗi câu, trong khi app thật dùng temperature 0,2; đợt này không chạy bộ canh VRAM và nhiệt
+độ của đợt 14/10 (cao nhất ghi nhận lúc xem: 5,0 GB, 61 °C).

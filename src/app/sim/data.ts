@@ -1,5 +1,6 @@
 import { getUnit, isKnownUnit, sameDimension } from '@/core/units';
 import type { GraphDef, Params, PhysicsScene } from '@/physics/types';
+import type { History } from './history';
 import { sim } from './runtime';
 
 /**
@@ -7,8 +8,12 @@ import { sim } from './runtime';
  * most `maxPoints` of them (every k-th). 4000 keeps ≥ 15 points per period of a 0,3 s
  * oscillation over a minute at ×1 (UI-22); 1500 left 6, so peaks looked angular.
  */
-export function graphData(graph: GraphDef, p: Params, maxPoints = 4000): number[][] {
-  const h = sim.history;
+export function graphData(
+  graph: GraphDef,
+  p: Params,
+  maxPoints = 4000,
+  h: Pick<History, 'times' | 'states' | 'length'> = sim.history,
+): number[][] {
   const n = h.length;
   const stride = Math.max(1, Math.ceil(n / maxPoints));
   const cols: number[][] = [[], ...graph.series.map(() => [])];
@@ -68,6 +73,35 @@ export function phaseData(
       ? graph.series.map((ser): [number, number] => [axis.value(s, p), ser.value(s, p)])
       : null,
   };
+}
+
+/**
+ * One uPlot table for two runs that kept their own times (the current run `a` and the pinned run
+ * `b`): x is the union of both, sorted; each run's series are null at the other run's times, so
+ * nothing is interpolated (the chart joins a run's own points with `spanGaps`).
+ */
+export function alignRuns(a: number[][], b: number[][]): (number | null)[][] {
+  const ax = a[0] ?? [];
+  const bx = b[0] ?? [];
+  const as = a.slice(1);
+  const bs = b.slice(1);
+  const x: number[] = [];
+  const outA: (number | null)[][] = as.map(() => []);
+  const outB: (number | null)[][] = bs.map(() => []);
+  let i = 0;
+  let j = 0;
+  while (i < ax.length || j < bx.length) {
+    const ta = ax[i];
+    const tb = bx[j];
+    const takeA = ta !== undefined && (tb === undefined || ta <= tb);
+    const takeB = tb !== undefined && (ta === undefined || tb <= ta);
+    x.push((takeA ? ta : tb) ?? 0);
+    as.forEach((col, k) => outA[k]?.push(takeA ? (col[i] ?? null) : null));
+    bs.forEach((col, k) => outB[k]?.push(takeB ? (col[j] ?? null) : null));
+    if (takeA) i++;
+    if (takeB) j++;
+  }
+  return [x, ...outA, ...outB];
 }
 
 export interface Column {

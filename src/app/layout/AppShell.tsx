@@ -1,22 +1,14 @@
 import { Minimize2 } from 'lucide-react';
-import { lazy, Suspense, useEffect, type CSSProperties } from 'react';
+import { lazy, Suspense, type CSSProperties } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { ProblemDialog } from '@/app/ai/ProblemDialog';
-import { useAiStatusPolling } from '@/app/ai/useAiStatus';
 import { useT } from '@/app/i18n';
-import { initHistory } from '@/app/project/history';
 import { Tour } from '@/app/project/Tour';
 import { useProjectUi } from '@/app/project/uiStore';
-import { initUndo } from '@/app/project/undo';
-import { useGlobalShortcuts } from '@/app/shortcuts/useGlobalShortcuts';
 import { UpdateDialog } from '@/app/update/UpdateDialog';
 import { WhatsNewDialog } from '@/app/whatsnew/WhatsNewDialog';
-import { useWhatsNewStartup } from '@/app/whatsnew/whatsNewStore';
-import { scheduleAutoCheck } from '@/app/update/updater';
-import { installSlidingIndicators } from '@/ui/slidingIndicator';
 import { Skeleton } from '@/ui/Skeleton';
 import { useCommandPalette } from '@/app/command/commands';
-import { useMemoryWatchdog } from '@/perf/useMemoryWatchdog';
 import { Toaster } from '@/ui/Toaster';
 import '@/app/project/project.css';
 import { useModuleStore } from '@/modules/moduleStore';
@@ -24,22 +16,21 @@ import { HomeScreen } from '@/app/learner/HomeScreen';
 import { Onboarding } from '@/app/learner/Onboarding';
 import { ShowcaseOverlay } from '@/app/showcase/ShowcaseOverlay';
 import { useIsHome, useIsLanding, useIsStudio, useIsTeacher } from '@/app/topics';
-import { useBreakReminder } from '@/learn/useBreakReminder';
 import { IconButton } from '@/ui/IconButton';
 import { BottomPanel } from './BottomPanel';
 import { Inspector } from './Inspector';
 import { LAYOUT_LIMITS, useLayoutStore } from './layoutStore';
 import { LeftSidebar } from './LeftSidebar';
 import { Splitter } from './Splitter';
+import { useShellServices } from './useShellServices';
+import { benchShellOn } from '@/app/bench/shellMode';
 import { Stage } from './Stage';
 import { StatusBar } from './StatusBar';
 import { Timeline } from './Timeline';
 import { TopBar } from './TopBar';
-import { usePresentationFullscreen } from './usePresentationFullscreen';
 import { LandingScreen } from '@/app/learner/LandingScreen';
 import { ChatBubble } from '@/teacher/chat/ChatBubble';
 import { GpuRestartReminder } from '@/teacher/chat/GpuSettings';
-import { loadGpuStatus } from '@/ai/gpu';
 
 /**
  * Main window layout (MASTER_PROMPT §7.1):
@@ -59,31 +50,54 @@ const CommandPalette = lazy(() =>
   import('@/app/command/CommandPalette').then((m) => ({ default: m.CommandPalette })),
 );
 
+// Dev switch (0.8.1 B1, #115): a production build replaces import.meta.env.DEV with false, so the
+// bench shell is never even loaded there. Unit tests (MODE 'test') leave it out too: with it, the
+// test runner also prepared the bench's large chunk and slowed other lazy screens (2026-11-02).
+const BenchShell =
+  import.meta.env.DEV && import.meta.env.MODE !== 'test'
+    ? lazy(() => import('@/app/bench/BenchShell'))
+    : null;
+
 export function AppShell() {
-  useGlobalShortcuts();
-  useAiStatusPolling();
-  useMemoryWatchdog();
-  usePresentationFullscreen();
-  useBreakReminder();
-  // "Có gì mới" after an update; it waits for the launch page or the lab home.
-  useWhatsNewStartup();
-  useEffect(() => {
-    const offUndo = initUndo();
-    const offHistory = initHistory();
-    const offUpdate = scheduleAutoCheck();
-    const offIndicators = installSlidingIndicators();
-    // Desktop: which cards exist decides how short Gemma's prompt must be (audit GPU-01), so it
-    // is known before the first question, not only after Settings → GPU was opened.
-    void loadGpuStatus().catch(() => null);
-    return () => {
-      offUndo();
-      offHistory();
-      offUpdate();
-      offIndicators();
-    };
-  }, []);
+  return BenchShell && benchShellOn() ? (
+    <Suspense fallback={null}>
+      <BenchShell />
+    </Suspense>
+  ) : (
+    <ClassicShell />
+  );
+}
+
+/** Dialogs and overlays shared by both shells (problem review, first run, updates, palette…). */
+export function ShellOverlays({ presentation }: { presentation: boolean }) {
   const sourcesOpen = useProjectUi((s) => s.sourcesOpen);
   const paletteUsed = useCommandPalette((s) => s.used);
+  return (
+    <>
+      <ProblemDialog />
+      {sourcesOpen && (
+        <Suspense fallback={null}>
+          <SourcesDialog />
+        </Suspense>
+      )}
+      <Onboarding />
+      <Tour />
+      <UpdateDialog />
+      <WhatsNewDialog />
+      <Toaster />
+      <ShowcaseOverlay />
+      {paletteUsed && (
+        <Suspense fallback={null}>
+          <CommandPalette />
+        </Suspense>
+      )}
+      {!presentation && <GpuRestartReminder />}
+    </>
+  );
+}
+
+function ClassicShell() {
+  useShellServices();
   const t = useT();
   const layout = useLayoutStore(
     useShallow((s) => ({
@@ -133,24 +147,7 @@ export function AppShell() {
       style={style}
     >
       {!presentation && <TopBar />}
-      <ProblemDialog />
-      {sourcesOpen && (
-        <Suspense fallback={null}>
-          <SourcesDialog />
-        </Suspense>
-      )}
-      <Onboarding />
-      <Tour />
-      <UpdateDialog />
-      <WhatsNewDialog />
-      <Toaster />
-      <ShowcaseOverlay />
-      {paletteUsed && (
-        <Suspense fallback={null}>
-          <CommandPalette />
-        </Suspense>
-      )}
-      {!presentation && <GpuRestartReminder />}
+      <ShellOverlays presentation={presentation} />
 
       <div className="shell__body">
         {showLeft && (

@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { useResolvedTheme } from '@/app/theme/useApplyTheme';
 import { useTierConfig } from '@/perf/perfStore';
+import { prefersReducedMotion } from '@/ui/three/availability';
 import { elementBySymbol } from '../data/elements';
 import {
   bondPolarity,
@@ -15,6 +16,7 @@ import {
   type Vec3,
 } from '../data/molecules';
 import { visibleLabels } from './labelOverlap';
+import { useMoleculeStore } from './store';
 
 /** Qualitative partial charge sign per atom from the electronegativity differences. */
 function partialSigns(m: Molecule): ('+' | '−' | '')[] {
@@ -143,7 +145,7 @@ export function MoleculeViewer(props: Props) {
     });
 
     // Selection halos
-    const halo = mat(token('--accent') || '#2f62d8', {
+    const halo = mat(token('--stage-accent') || '#2f62d8', {
       transparent: true,
       opacity: 0.35,
       depthWrite: false,
@@ -195,7 +197,7 @@ export function MoleculeViewer(props: Props) {
       if (off.lengthSq() < 1e-6) off = new THREE.Vector3(0, 1, 0).cross(dir);
       off.normalize();
       const selected = selectedBond === k;
-      const color = selected ? token('--accent') || '#2f62d8' : bondColor;
+      const color = selected ? token('--stage-accent') || '#2f62d8' : bondColor;
       const material = mat(color);
       // Half bonds in the atom colours read better; keep grey when selected.
       const half = (shift: THREE.Vector3, m1: THREE.Material, m2: THREE.Material) => {
@@ -358,6 +360,26 @@ export function MoleculeViewer(props: Props) {
     controls.addEventListener('change', request);
     request();
 
+    // "Tự xoay" (bench): OrbitControls' own auto-rotation, one frame loop only while it is on;
+    // never with reduced motion. The camera only turns: nothing about the molecule changes.
+    let spin = 0;
+    const turn = () => {
+      controls.update();
+      spin = requestAnimationFrame(turn);
+    };
+    const setSpin = (on: boolean) => {
+      controls.autoRotate = on && !prefersReducedMotion();
+      if (controls.autoRotate && !spin) spin = requestAnimationFrame(turn);
+      if (!controls.autoRotate && spin) {
+        cancelAnimationFrame(spin);
+        spin = 0;
+      }
+    };
+    setSpin(useMoleculeStore.getState().spin);
+    const unspin = useMoleculeStore.subscribe((s, prev) => {
+      if (s.spin !== prev.spin) setSpin(s.spin);
+    });
+
     // Picking (a click without a drag)
     const ray = new THREE.Raycaster();
     let down: { x: number; y: number } | null = null;
@@ -399,6 +421,8 @@ export function MoleculeViewer(props: Props) {
         target: controls.target.clone(),
       };
       ro.disconnect();
+      unspin();
+      if (spin) cancelAnimationFrame(spin);
       if (frame) cancelAnimationFrame(frame);
       controls.dispose();
       renderer.domElement.removeEventListener('pointerdown', onDown);

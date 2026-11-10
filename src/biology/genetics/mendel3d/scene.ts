@@ -270,8 +270,8 @@ export function buildMendelScene(model: MendelModel3D, o: MendelSceneOptions): M
   // The liquid columns: each class's token as albedo (per instance), glossy like a liquid.
   const liquidMat = kit.solid(NEUTRAL, { roughness: 0.18, clearcoat: 0.8 });
   const markMat = annotation(kit);
-  const ringMat = kit.solid(tok('--accent'), {
-    emissive: tok('--accent'),
+  const ringMat = kit.solid(tok('--stage-accent'), {
+    emissive: tok('--stage-accent'),
     emissiveIntensity: 0.35,
   });
   const looks = model.classes.map((_, i) => classLook(i));

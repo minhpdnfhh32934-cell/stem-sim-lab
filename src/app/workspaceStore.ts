@@ -45,6 +45,8 @@ export interface WorkspaceState {
   hasSimulation: boolean;
   playing: boolean;
   speed: PlaybackSpeed;
+  /** The open lesson's own speed (its scene's `suggestedSpeed`), or null; set by every open. */
+  suggestedSpeed: PlaybackSpeed | null;
   /** Simulation time in seconds (SI). */
   simTime: number;
   aiStatus: AiStatus;
@@ -73,6 +75,7 @@ export const useWorkspaceStore = create<WorkspaceState>()((set) => ({
   hasSimulation: false,
   playing: false,
   speed: 1,
+  suggestedSpeed: null,
   simTime: 0,
   aiStatus: 'offline',
   scienceCard: null,

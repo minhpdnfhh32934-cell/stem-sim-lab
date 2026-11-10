@@ -26,7 +26,7 @@ const TOKENS: Record<string, string> = {
   '--chart-5': '#ff00ff',
   '--chart-6': '#00ffff',
   '--chart-7': '#ffff00',
-  '--accent': '#123456',
+  '--stage-accent': '#123456',
 };
 const token = (name: string) => TOKENS[name] ?? '#808080';
 

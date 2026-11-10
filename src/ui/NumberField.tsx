@@ -12,6 +12,7 @@ export function NumberField({
   value,
   onChange,
   id,
+  describedBy,
   step,
   min = -Infinity,
   max = Infinity,
@@ -21,6 +22,8 @@ export function NumberField({
   value: number;
   onChange: (v: number) => void;
   id?: string;
+  /** Id of what else describes the number (its unit). */
+  describedBy?: string | undefined;
   /** Arrow up / down add or remove it (as a number input did). */
   step?: number | undefined;
   /** Range the arrows stay in (the parent clamps typed values itself). */
@@ -47,7 +50,9 @@ export function NumberField({
         inputMode="decimal"
         aria-label={label}
         aria-invalid={differs || undefined}
-        aria-describedby={differs ? hintId : undefined}
+        aria-describedby={
+          [describedBy, differs ? hintId : undefined].filter(Boolean).join(' ') || undefined
+        }
         value={focused ? text : fieldText(locale, value)}
         onFocus={() => {
           setText(fieldText(locale, value));

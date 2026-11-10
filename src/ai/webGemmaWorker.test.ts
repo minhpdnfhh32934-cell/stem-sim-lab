@@ -79,12 +79,25 @@ const fake = vi.hoisted(() => {
     apply_chat_template: () => 'prompt',
     batch_decode,
   });
+  /** Turns of the last vision prompt (system turn left out); `perTurn` tokens each. */
+  const vision = { turns: 0, perTurn: 0 };
   const processor = Object.assign(
-    () => Promise.resolve({ input_ids: { dims: [1, promptTokens.vision] } }),
-    { apply_chat_template: () => 'prompt', batch_decode, tokenizer: {} },
+    () =>
+      Promise.resolve({
+        input_ids: { dims: [1, promptTokens.vision + vision.turns * vision.perTurn] },
+      }),
+    {
+      apply_chat_template: (turns: unknown[]) => {
+        vision.turns = turns.length - 1;
+        return 'prompt';
+      },
+      batch_decode,
+      tokenizer: {},
+    },
   );
   return {
     slices,
+    vision,
     behaviour,
     devices,
     env,
@@ -367,6 +380,21 @@ describe('Gemma worker: decoding options', () => {
     await chat();
     expect(posted.at(-1)).toMatchObject({ kind: 'reply', text: 'Trả lời.' });
     expect(fake.slices.at(-1)).toEqual([null, [fake.promptTokens.vision, null]]);
+  });
+
+  it('photo path: a prompt over the budget loses its oldest turns, and still starts with the learner', async () => {
+    await loadVision();
+    fake.vision.perTurn = 100;
+    const messages = ['a', 'b', 'c', 'd', 'e'].map((content, i) => ({
+      role: i % 2 === 0 ? 'user' : 'assistant',
+      content,
+    }));
+    await chat({ messages });
+    expect(fake.vision.turns).toBe(5);
+    // 5 turns are 509 tokens; 4 would start with the assistant, so 3 turns (309) are sent.
+    await chat({ messages, inputBudget: 350 });
+    expect(fake.vision.turns).toBe(3);
+    fake.vision.perTurn = 0;
   });
 
   it("'legacy' reproduces the PR #20 (f527f18) / 0.5.2 settings exactly, text and photo (evaluation only)", async () => {

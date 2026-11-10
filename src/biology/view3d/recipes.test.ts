@@ -57,15 +57,30 @@ function block(selector: string): Map<string, string> {
   return out;
 }
 const ROOT = block(':root {');
+const LIGHT = block(":root[data-theme='light']");
+const DARK = block(":root[data-theme='dark']");
+/** The bench shell (0.8.1) overrides some tokens over the classic theme (docs/BENCH_DESIGN.md §4). */
 const THEME = {
-  light: new Map([...ROOT, ...block(":root[data-theme='light']")]),
-  dark: new Map([...ROOT, ...block(":root[data-theme='dark']")]),
+  light: new Map([...ROOT, ...LIGHT]),
+  dark: new Map([...ROOT, ...DARK]),
+  'bench light': new Map([
+    ...ROOT,
+    ...LIGHT,
+    ...block(":root[data-shell='bench']:not([data-theme='dark'])"),
+  ]),
+  'bench dark': new Map([
+    ...ROOT,
+    ...DARK,
+    ...block(":root[data-shell='bench'][data-theme='dark']"),
+  ]),
 };
-const tokenOf = (theme: 'light' | 'dark') => (name: string) => THEME[theme].get(name) ?? '';
+type Theme = keyof typeof THEME;
+const THEMES = Object.keys(THEME) as Theme[];
+const tokenOf = (theme: Theme) => (name: string) => THEME[theme].get(name) ?? '';
 
 function kitFor(
   tier: QualityTier,
-  o: { transmission?: boolean; hdr?: boolean; theme?: 'light' | 'dark' } = {},
+  o: { transmission?: boolean; hdr?: boolean; theme?: Theme } = {},
 ): SceneKit {
   return new SceneKit({
     tier,
@@ -140,7 +155,7 @@ describe('material recipes: tier → material class', () => {
 });
 
 describe('material recipes: data colours are the tokens, unchanged', () => {
-  for (const theme of ['light', 'dark'] as const) {
+  for (const theme of THEMES) {
     it(`${theme}: albedo = token for every data role`, () => {
       const t = tokenOf(theme);
       const kit = kitFor('high', { theme });
@@ -165,7 +180,7 @@ describe('material recipes: data colours are the tokens, unchanged', () => {
   }
 
   it('structures are less saturated than the data they hold', () => {
-    for (const theme of ['light', 'dark'] as const) {
+    for (const theme of THEMES) {
       const t = tokenOf(theme);
       const mem = oklch(muted(t, STRUCTURES.membrane.token));
       const bio = oklch(t('--subject-biology'));
@@ -194,7 +209,7 @@ describe('material recipes: data colours are the tokens, unchanged', () => {
       return col.map((v) => v * (1 - g) + newPeak * g) as [number, number, number];
     };
     const failures: string[] = [];
-    for (const theme of ['light', 'dark'] as const) {
+    for (const theme of THEMES) {
       for (const name of [
         '--chart-1',
         '--chart-2',
@@ -402,7 +417,7 @@ describe('glassware, liquids and membrane sheets', () => {
       0.015,
     );
     expect(deltaEOK(shellInkColor(light('--bio3d-glass')), stage)).toBeGreaterThanOrEqual(0.25);
-    for (const theme of ['light', 'dark'] as const) {
+    for (const theme of THEMES) {
       const t = tokenOf(theme);
       const line = waterLineColor(t('--bio3d-liquid'), t('--text'), Number(t('--m3d-water-line')));
       expect(deltaEOK(line, t('--bg-stage')), theme).toBeGreaterThanOrEqual(0.25);
@@ -490,7 +505,7 @@ describe('glassware, liquids and membrane sheets', () => {
     g.dispose();
   });
 
-  for (const theme of ['light', 'dark'] as const)
+  for (const theme of THEMES)
     it(`${theme}: a key membrane can be emphasised (half way back to the subject colour), inked on light`, () => {
       const kit = kitFor('medium', { theme });
       const m = fibrousMembrane(kit, { opacity: 0.9, repeat: [3, 0.45], emphasis: 0.5, ink: true });
@@ -499,11 +514,11 @@ describe('glassware, liquids and membrane sheets', () => {
       const amount =
         (m.userData.rim as { uRimInkAmount: { value: number } } | undefined)?.uRimInkAmount.value ??
         0;
-      expect(amount > 0).toBe(theme === 'light');
+      expect(amount > 0).toBe(!theme.endsWith('dark'));
       kit.dispose();
     });
 
-  for (const theme of ['light', 'dark'] as const)
+  for (const theme of THEMES)
     it(`${theme}: a fibrous membrane is the muted membrane colour, see-through, bumped in fibres`, () => {
       for (const tier of ['medium', 'high'] as const) {
         const kit = kitFor(tier, { theme });

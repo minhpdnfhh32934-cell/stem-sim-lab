@@ -5,6 +5,8 @@
  */
 import { Tags, ZoomIn, ZoomOut } from 'lucide-react';
 import { Suspense, lazy, useEffect, useMemo, type ReactNode } from 'react';
+import { EdgeSteps } from '@/app/bench/EdgeSteps';
+import { useOnEdge } from '@/app/bench/edgeSlot';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useCanvas } from '@/ui/canvas/useCanvas';
@@ -28,6 +30,7 @@ import {
 import { GLIDE_MS, useLength, useNames, useShowNames, zoomIn, zoomOut } from './hooks';
 import { setZoomLevel, useCellZoom } from './store';
 import '../../bio.css';
+import { EdgePortal } from '@/app/bench/EdgePortal';
 
 const Zoom3DView = lazy(() => import('./Zoom3DView').then((m) => ({ default: m.Zoom3DView })));
 
@@ -85,28 +88,64 @@ export function ZoomButtons({ glide }: { glide: boolean }) {
   const level = useCellZoom((s) => s.level);
   const moving = useCellZoom((s) => s.moving);
   const next = LEVEL_NAME[levelInfo(level + 1).id];
+  const onEdge = useOnEdge();
+  if (onEdge) {
+    // The bench edge (§9.10 "Cell → DNA zoom"): D0 Phóng to, D1 Thu nhỏ, "Bậc 3/6 · <level>";
+    // "Định tính" shows while the picture glides between two levels.
+    const at = Lz(
+      L(
+        `Bậc ${String(level + 1)}/${String(LEVELS.length)} · ${LEVEL_NAME[levelInfo(level).id].vi}`,
+        `Level ${String(level + 1)}/${String(LEVELS.length)} · ${LEVEL_NAME[levelInfo(level).id].en}`,
+      ),
+    );
+    return (
+      <EdgePortal>
+        <EdgeSteps
+          main={{
+            icon: ZoomIn,
+            label: Lz(L('Phóng to', 'Zoom in')),
+            disabled: moving || level === LEVELS.length - 1,
+            onClick: () => {
+              zoomIn(glide);
+            },
+          }}
+          prev={{
+            icon: ZoomOut,
+            label: Lz(L('Thu nhỏ', 'Zoom out')),
+            disabled: moving || level === 0,
+            onClick: zoomOut,
+          }}
+          readout={at}
+        >
+          {moving && <span className="chem-chip chem-chip--qual">{Lz(TRANSITION)}</span>}
+        </EdgeSteps>
+      </EdgePortal>
+    );
+  }
   return (
-    <div className="zoom__buttons">
-      {/* Floats above the buttons: showing it never resizes a bar the 3D camera keeps clear of
+    <EdgePortal>
+      <div className="zoom__buttons">
+        {/* Floats above the buttons: showing it never resizes a bar the 3D camera keeps clear of
           (a resize mid-glide would turn the glide into a jump). */}
-      {moving && <span className="chem-chip chem-chip--qual zoom__moving">{Lz(TRANSITION)}</span>}
-      <button type="button" className="btn" disabled={moving || level === 0} onClick={zoomOut}>
-        <ZoomOut size={18} aria-hidden="true" />
-        {Lz(L('Thu nhỏ', 'Zoom out'))}
-      </button>
-      <button
-        type="button"
-        className="btn btn--accent"
-        disabled={moving || level === LEVELS.length - 1}
-        title={level < LEVELS.length - 1 ? Lz(next) : undefined}
-        onClick={() => {
-          zoomIn(glide);
-        }}
-      >
-        <ZoomIn size={18} aria-hidden="true" />
-        {Lz(L('Phóng to', 'Zoom in'))}
-      </button>
-    </div>
+        {moving && <span className="chem-chip chem-chip--qual zoom__moving">{Lz(TRANSITION)}</span>}
+        <button type="button" className="btn" disabled={moving || level === 0} onClick={zoomOut}>
+          <ZoomOut size={18} aria-hidden="true" />
+          {Lz(L('Thu nhỏ', 'Zoom out'))}
+        </button>
+        <button
+          type="button"
+          className="btn btn--accent"
+          disabled={moving || level === LEVELS.length - 1}
+          title={level < LEVELS.length - 1 ? Lz(next) : undefined}
+          onClick={() => {
+            zoomIn(glide);
+          }}
+        >
+          <ZoomIn size={18} aria-hidden="true" />
+          {Lz(L('Phóng to', 'Zoom in'))}
+        </button>
+      </div>
+    </EdgePortal>
   );
 }
 

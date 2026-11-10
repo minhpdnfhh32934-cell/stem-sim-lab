@@ -708,7 +708,7 @@
   background: var(--chart-3);
 }
 .rx-swatch--partial {
-  background: var(--accent);
+  background: var(--stage-accent);
   opacity: 0.6;
 }
 .rx-player {

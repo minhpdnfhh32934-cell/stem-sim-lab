@@ -713,7 +713,11 @@ export async function askTeacher(
   // Only learning content is kept (answerClean.ts): hidden reasoning, echoed prompt labels,
   // reference blocks and the reviewer's notes about the draft never reach the chat, the voice,
   // the board, the history sent back to the AI or the number check below.
-  const drafted = cleanAnswer(draft.content);
+  // Only the small on-device prompt: a cloud board lesson may rightly open like BOARD_SYSTEM's example.
+  const drafted = cleanAnswer(draft.content, {
+    note: prompt.note,
+    ...(compact ? { instructions: baseSystem } : {}),
+  });
   let raw = draft.content;
   let cleaned = drafted;
   let truncated = draft.truncated;

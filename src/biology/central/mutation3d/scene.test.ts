@@ -15,7 +15,7 @@ const TOKENS: Record<string, string> = {
   '--chart-3': '#00aa00',
   '--chart-4': '#ff0000',
   '--chart-5': '#ff00ff',
-  '--accent': '#123456',
+  '--stage-accent': '#123456',
 };
 const token = (name: string) => TOKENS[name] ?? '#808080';
 const BASE_TOKEN: Record<string, string> = {

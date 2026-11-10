@@ -49,6 +49,10 @@
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --dur-fast: 120ms;
   --dur-med: 220ms;
+  /* Blur behind an open dialog (`.dialog::backdrop`). */
+  --scrim-blur: blur(2px);
+  /* The knob of a small on/off switch (AI Teacher's chat toggles). */
+  --switch-knob: #ffffff;
 
   /*
    * Chart palette: Okabe & Ito (2008) color-universal-design palette,
@@ -87,6 +91,9 @@
   --accent: #2f62d8;
   --accent-hover: #2653bd;
   --accent-soft: #e3ebfd;
+  /* Selection, cursors and halos drawn on the stage, charts and 3D views (read at run time);
+     kept apart from the frame accent above so the frame can change on its own. */
+  --stage-accent: #2f62d8;
   --focus-ring: rgba(47, 98, 216, 0.45);
 
   --danger: #c93a3a;
@@ -184,6 +191,9 @@
   --dna3d-ribosome: #8b97b8;
   --dna3d-trna: #2a9fae;
   --dna3d-peptide: #9a5f2e;
+  /* Start / stop codon marks of the 3D point-mutation lesson (the bench gives them its own). */
+  --dna3d-start: var(--conf-exact);
+  --dna3d-stop: var(--conf-approx);
 
   --shadow-sm: 0 1px 2px rgba(20, 30, 50, 0.06), 0 1px 1px rgba(20, 30, 50, 0.04);
   --shadow-md: 0 6px 20px rgba(20, 30, 50, 0.1), 0 2px 6px rgba(20, 30, 50, 0.06);
@@ -218,6 +228,7 @@
   --accent: #7aa2ff;
   --accent-hover: #93b4ff;
   --accent-soft: #1d2a47;
+  --stage-accent: #7aa2ff;
   --focus-ring: rgba(122, 162, 255, 0.5);
 
   --danger: #ff7b7b;
@@ -287,6 +298,8 @@
   --dna3d-ribosome: #a9b4d4;
   --dna3d-trna: #4cc3cf;
   --dna3d-peptide: #d39a62;
+  --dna3d-start: var(--conf-exact);
+  --dna3d-stop: var(--conf-approx);
 
   /* Dark-mode chart steps: same hue order, re-stepped into the OKLCH L 0.48–0.67 band
      (validated with the dataviz palette validator against --bg-panel #151b24). */
@@ -311,4 +324,221 @@
     --dur-fast: 0ms;
     --dur-med: 0ms;
   }
+}
+
+/*
+ * "Bàn thí nghiệm" (bench) shell, 0.8.1 (#113; design `docs/BENCH_DESIGN.md` §4). Applies
+ * only while <html> carries data-shell="bench" (the dev switch, B1); the classic shell never sets
+ * it, so nothing below changes it. Names that mean the same thing are overridden, so every module
+ * picks the bench look up unchanged; new names only where nothing matches today. The bench fonts
+ * (Be Vietnam Pro, JetBrains Mono) are loaded by `benchFonts.ts`. Contrast table: tokens.test.ts.
+ */
+:root[data-shell='bench'] {
+  --font-sans:
+    'Be Vietnam Pro', 'Segoe UI Variable Text', 'Segoe UI', system-ui, -apple-system, 'Noto Sans',
+    'Helvetica Neue', Arial, sans-serif;
+  --font-mono:
+    'JetBrains Mono', 'Cascadia Mono', 'Cascadia Code', Consolas, ui-monospace, 'SF Mono', monospace;
+  /* No blur anywhere (integrated GPUs): glass becomes the solid panel. */
+  --glass-bg: var(--bg-panel);
+  --glass-border: var(--border);
+  --glass-highlight: transparent;
+  --glass-blur: none;
+  --scrim-blur: none;
+  /* Type floor 12/16 (§5) and radii 8 for controls, 12 for cards and sheets (§6). */
+  --text-xs: 0.8572rem;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  /* Motion (§7), all 0 with reduced motion (below). --press-lift: how far the main action moves
+     when hovered or pressed. */
+  --dur-drawer: 160ms;
+  --dur-sheet: 240ms;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --press-lift: 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-shell='bench'] {
+    --dur-drawer: 0ms;
+    --dur-sheet: 0ms;
+    --press-lift: 0px;
+  }
+}
+
+/* The in-app reduced-motion switch ("Hiển thị và trợ năng", §13) sets data-motion="reduce". */
+:root[data-shell='bench'][data-motion='reduce'] {
+  --dur-fast: 0ms;
+  --dur-med: 0ms;
+  --dur-drawer: 0ms;
+  --dur-sheet: 0ms;
+  --press-lift: 0px;
+}
+
+:root[data-shell='bench']:not([data-theme='dark']) {
+  /* Frame: the chrome around the bench, dark in both themes. */
+  --frame: #1c2226;
+  --frame-raised: #2a3237;
+  --frame-line: #7c888f;
+  --on-frame: #eef2f3;
+  --on-frame-muted: #aab5ba;
+  --frame-pressed: #333d43;
+  --play: #3dbfb2;
+  --play-hover: #54c7bb;
+  --play-edge: #26766e;
+  --on-play: #0a1f1d;
+  --focus-frame: #f5c84c;
+  /* Theme switch (JkHuger/old-falcon-20): its day and night faces, the same in both themes. */
+  --sw-day-track: #fbe9a8;
+  --sw-day-knob: #a06c00;
+  --sw-night-track: #12304a;
+  --sw-night-knob: #2f7fc4;
+  --sw-icon: #ffffff;
+  --switch-knob: #ffffff;
+  /* Elevation (§6): L1 stage overlays, L2 overlay drawers, menus and popovers. */
+  --shadow-l1: 0 1px 2px rgba(0, 0, 0, 0.12);
+  --shadow-l2: 0 8px 24px rgba(11, 14, 16, 0.22);
+
+  /* Paper: library, tray, notebook, sheets (bg, surface-1, surface-2, surface-3). */
+  --bg-app: #f6f4ef;
+  --bg-panel: #ffffff;
+  --bg-panel-2: #eeebe4;
+  --bg-sunken: #eeebe4;
+  --bg-hover: #eeebe4;
+  --bg-active: #e4e0d7;
+  --border: #dad5cb;
+  --border-input: #7a746a;
+  --border-strong: var(--border-input);
+
+  --text: #1d2124;
+  --text-muted: #555b61;
+  --text-faint: #5c6268;
+  --text-on-accent: #ffffff;
+
+  --accent: #0a6b66;
+  --accent-hover: #085752;
+  --accent-soft: #dcefec;
+  --focus-ring: #0a6b66;
+
+  --danger: #b3261e;
+  --on-danger: #ffffff;
+  --warning: #6e4a00;
+  --warning-soft: #fff1cc;
+
+  /* Status and provenance: ink on its soft chip. */
+  --conf-exact: #11592b;
+  --conf-exact-soft: #dcf1e2;
+  --conf-approx: #694700;
+  --conf-approx-soft: #fbedc4;
+  --conf-qual: #1b4c9c;
+  --conf-qual-soft: #dce8fa;
+  --pending: #4a4f6a;
+  --pending-soft: #ecedf3;
+  --ink-ai: #5e3596;
+  --ink-ai-soft: #efe7f9;
+  --ink-learner: #2a4c9c;
+  --ink-learner-soft: #e6ecf8;
+
+  /* Subjects: chrome only (library dots and rules, breadcrumb dot). */
+  --subject-physics: #4044c2;
+  --subject-chemistry: #ae3a16;
+  --subject-biology: #2b7530;
+
+  /* Stage, kept apart from the chrome (--stage-accent and --stage-grid-major unchanged). */
+  --bg-stage: #fcfcfa;
+  --stage-grid: #e6e6e0;
+  --stage-tool: #3a4247;
+
+  /* Okabe–Ito data colours, same hues, lightness spread out (docs/BENCH_DESIGN.md §4): each
+     ≥ 3 : 1 on the stage and the paper, and the closest pair stays apart for normal, deutan and
+     protan vision (tokens.test.ts). Dark keeps its steps. */
+  --chart-1: #054c78;
+  --chart-2: #614102;
+  --chart-3: #0c7a59;
+  --chart-4: #af4c03;
+  --chart-5: #bb6997;
+  --chart-6: #3495c9;
+  --chart-7: #968d0f;
+  /* 3D terrain outside the data colours' lightness band, still muted: deep greens for clover,
+     island grass and canopies, light soil and bark (the grazed-patch count stays readable). */
+  --bio3d-island-grass: #062f19;
+  --bio3d-island-grass-2: #162b25;
+  --bio3d-soil: #b1a9a1;
+  --bio3d-foliage: #102d23;
+  --bio3d-foliage-2: #032f1b;
+  --bio3d-bark: #b9a99d;
+  /* Start / stop codon marks: apart from the base colours, the stage accent and muted text. */
+  --dna3d-start: #34a409;
+  --dna3d-stop: #53033f;
+}
+
+:root[data-shell='bench'][data-theme='dark'] {
+  --frame: #0b0e10;
+  --frame-raised: #1b2125;
+  --frame-line: #6e7a81;
+  --on-frame: #e9eef0;
+  --on-frame-muted: #a2adb3;
+  --frame-pressed: #262d32;
+  --play: #45c7ba;
+  --play-hover: #5bcec2;
+  --play-edge: #2b7b73;
+  --on-play: #06201e;
+  --focus-frame: #f5c84c;
+  --sw-day-track: #fbe9a8;
+  --sw-day-knob: #a06c00;
+  --sw-night-track: #12304a;
+  --sw-night-knob: #2f7fc4;
+  --sw-icon: #ffffff;
+  --switch-knob: #1e2327;
+  --shadow-l1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-l2: 0 8px 24px rgba(0, 0, 0, 0.45);
+
+  --bg-app: #15191c;
+  --bg-panel: #1e2327;
+  --bg-panel-2: #252b30;
+  --bg-sunken: #252b30;
+  --bg-hover: #252b30;
+  --bg-active: #2d3439;
+  --border: #2f363b;
+  --border-input: #7a858b;
+  --border-strong: var(--border-input);
+
+  --text: #e6eaec;
+  --text-muted: #a5aeb4;
+  --text-faint: #949da3;
+  --text-on-accent: #06201e;
+
+  --accent: #45c7ba;
+  --accent-hover: #6ad6cb;
+  --accent-soft: #123532;
+  --focus-ring: #f5c84c;
+
+  --danger: #ff8a80;
+  --on-danger: #2a0a07;
+  --warning: #f2cf6b;
+  --warning-soft: #3a2c07;
+
+  --conf-exact: #8fe0a8;
+  --conf-exact-soft: #12301d;
+  --conf-approx: #f2cf6b;
+  --conf-approx-soft: #3a2c07;
+  --conf-qual: #a3c4ff;
+  --conf-qual-soft: #142a4d;
+  --pending: #b3b7d3;
+  --pending-soft: #22243a;
+  --ink-ai: #cfb6f6;
+  --ink-ai-soft: #2a1f3d;
+  --ink-learner: #93b1ff;
+  --ink-learner-soft: #1c2846;
+
+  --subject-physics: #a3a6ff;
+  --subject-chemistry: #ff9e7d;
+  --subject-biology: #84d488;
+
+  --bg-stage: #20262b;
+  --stage-grid: #2c3338;
+  --stage-tool: #c9d1d5;
+  /* The 3D water line stays ΔE_OK ≥ 0.25 from the lighter dark stage. */
+  --m3d-water-line: 0.15;
+  --dna3d-start: #74e4b0;
+  --dna3d-stop: #fccd68;
 }

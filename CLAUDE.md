@@ -131,7 +131,8 @@ release history and old work-logs keep the old name). The user accepted:
   Measurements and design: `docs/AI_TUTOR.md` → "Choosing the graphics card".
 - **0.4.3 (user decisions 2026-10-12):** the lab panels can no longer be hidden (no top-bar
   buttons, no Ctrl+B/I/J, no in-panel X; only resizing; presentation mode still hides them) — do not
-  add show/hide back. AI Teacher context is a token budget with an AI-written summary of older turns
+  add show/hide back (the bench shell folds its tray instead: "Giao diện Bàn thí nghiệm" below).
+  AI Teacher context is a token budget with an AI-written summary of older turns
   (`src/teacher/chat/memory.ts`, Settings "Trí nhớ hội thoại"); never go back to "last N messages".
   "Giảng trên bảng" is the whiteboard below (one implementation; the earlier compact lesson board
   was merged into it). Details: `docs/AI_TUTOR.md`.
@@ -152,6 +153,74 @@ release-notes` generates `docs/VERSION_HISTORY.md`, `docs/CHANGELOG.md` and
   true only when its notes are reviewed for a real release; never describe an unreleased version
   as released or invent a date. In-app box and Settings → "Lịch sử phiên bản": `src/app/whatsnew/`
   (`stemsim.whatsnew`). Procedure: `release-notes/README.md`.
+
+## Giao diện Bàn thí nghiệm (0.8.1)
+
+User decisions 2026-11-02 (plan #54, issues #113 onward; design `docs/BENCH_DESIGN.md`, phases
+B0–B8 in its §14, merged from 08/11):
+
+- **Direction:** a new interface built from scratch, "Bàn thí nghiệm" (the bench), not a restyle of
+  the old one. Of the dropped restyle only `--stage-accent` (#109) stays: run-time readers on
+  stages, charts and 3D read `--stage-accent`, never the frame's `--accent`.
+- **Dev switch until B8:** the bench shell shows only in a dev build with the storage key
+  `stemsim.dev.shell` = `bench` (B1; no `VITE_*` flag, one build); production keeps the classic
+  shell until the flip in B8. Bench tokens and fonts apply only under
+  `:root[data-shell='bench']` (`tokens.css`), so the classic shell does not change a pixel.
+- **Panels (bench only; replaces the 0.4.3 rule there):** the tray folds to a labelled 64 px spine
+  and the notebook closes to its always-visible rail. Nothing reaches zero width, no shortcut hides
+  anything, no X on the tray; "Đặt lại bố cục" in the palette and Settings; presentation mode
+  unchanged. The classic shell keeps the 0.4.3 rule.
+- **Launch page:** two cards as today (Virtual Lab, AI Teacher; Studio stays inside the lab) plus a
+  returning-user text link "Tiếp tục: …" (a link, not a card).
+- **Fonts:** Be Vietnam Pro (400/500/600, interface) and JetBrains Mono (400/500, readouts),
+  `@fontsource` 5.3.0, OFL-1.1, loaded only by the bench (`src/app/theme/benchFonts.ts`, ≤ 400 KB
+  woff2, 223 KB today; `docs/THIRD_PARTY.md`). Sub/superscript digits (except ¹²³), arrows,
+  ≈ ≤ ≥ √ and, for Be Vietnam Pro, Greek letters fall back to the next font
+  (`benchFonts.test.ts`).
+- **"Think"** becomes **"Suy nghĩ kĩ (Think)"**.
+- **Tokens (B0):** `docs/BENCH_DESIGN.md` §4. `tokens.test.ts` runs every theme check on bench
+  light/dark too, plus the §4 contrast table (text ≥ 4.5, components ≥ 3), the closest pair of data
+  colours for normal, deutan and protan vision (Machado 2009), the codon marks vs the base colours,
+  the clover vs grazed meadow patches, and "no `backdrop-filter`" under the bench;
+  `recipes.test.ts` and `division3d/looks.test.ts` run on bench light/dark too. Light
+  `--chart-1…7` keep their hues with the lightness spread out (≥ 3 : 1); the light 3D terrain is
+  deep green with light soil, the dark `--m3d-water-line` 0.15, and the mutation lesson's start/stop
+  marks read `--dna3d-start` / `--dna3d-stop`. Never lower a floor.
+- **Shell (B1, #115):** `src/app/bench/` — `shellMode.ts` (dev switch), `BenchShell` (sets
+  `data-shell`, loads the bench fonts; launch / library / studio / teacher rooms reuse their
+  screens until B3–B7), `BenchHeader` (breadcrumb, "Đề bài" sheet with `ProblemInput`),
+  `Notebook` (left rail, tabs keep the classic names, drawer pushes or overlays by
+  `notebookPushes`), `Tray` (`InspectorBody`, 64 px spine), `DriverGrid` (bench edge, D0 =
+  `MainActionSlot`). `stemsim.layout` stays version 1: the bench fields `trayFolded`,
+  `trayWidth`, `notebookWidth`, `notebookTabBySubject` are extra version-1 fields that `merge`
+  fills in; never bump the version (an older copy of the app would drop every saved size). The
+  stage HUD is not a live region: `StageAnnouncer` speaks state changes only (`togglePlay` writes
+  the engine's time with the pause). E2E: bench specs in `tests/e2e/bench/` (projects
+  `chromium-bench`, `chromium-3d-bench`, `chromium-3d-bench-perf` for `@perf`, after the classic
+  suite; storage state with the switch); a copy of a classic spec keeps every title and switches
+  nothing off that the classic spec does not (`scripts/e2e/title-parity.mjs`, run in CI);
+  `nav.ts` `openTopic` / `openProblem` work in both shells.
+- **Controls (uiverse kit B, user choice 2026-11-02; `docs/BENCH_DESIGN.md` §12):** `bench.css`
+  only, tokens only. Controls are drawn for paper; `[data-surface="frame"]` (header, rail, edge,
+  tray spine) maps the paper tokens to the frame's (focus ring `--focus-frame`) and
+  `[data-surface="paper"]` maps them back; never add per-ancestor frame rules. Disabled = dimmed
+  text + dashed border.
+  `BenchContext` (`shellMode.ts`) marks the bench tree for the few shared parts that differ
+  (`ParamsPanel` − / +, Settings' theme switch); classic pixels never change. D0 is 144 px, edge
+  columns fixed (§8). Basic speed steps = 0,5×·1×·2× ∪ the open lesson's own speed
+  (`workspaceStore.suggestedSpeed`, set by every `sim.open`, null when none; it never follows into
+  the next lesson); `keepBasicSpeedOnSteps` (`speeds.ts`, subscribed by the bench shell) lands any
+  other speed on the nearest step at every mode switch or open, whatever is on screen. Light /
+  dark switch `ThemeSwitch.tsx` (header + Settings → Giao diện with "Theo máy"; test against
+  `theme-boot.js`). `TooltipLayer` (WCAG 1.4.13): a hover bubble takes the first Esc for itself (a
+  focus bubble lets it reach the dialog); a hover bubble stays while the pointer is on it, judged
+  by position — the bubble keeps `pointer-events: none`, never block a click (classic E2E
+  `tests/e2e/tooltip.spec.ts`). E2E `tests/e2e/bench/controls.spec.ts`: 40/48 px targets, focus
+  rings ≥ 3 : 1 on frame and paper, keyboard, no motion under reduced motion, axe
+  (`@axe-core/playwright`, serious/critical). MIT notices: `docs/THIRD_PARTY.md`.
+- **New features (§13), all agreed on 2026-11-02, built after the bench frame is done:** "Sổ ghi"
+  run log, "Ví dụ" presets, parameter sweep, Ctrl+/ shortcut sheet, the "Hiển thị và trợ năng"
+  page, "Làm mờ phần còn lại", "Theo dõi một hạt" and the "Tiếp tục" resume link.
 
 ## ⚠️ Supreme rule: scientific integrity (MASTER_PROMPT §2) — never violate
 

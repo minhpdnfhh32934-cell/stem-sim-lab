@@ -20,11 +20,16 @@ const EDGE = 6;
  * and shown on keyboard focus as well as hover. It is a manual popover, so it joins the top
  * layer above an open modal dialog (Settings, Update, the command palette…), whose icon-only
  * buttons have no other visible name; without popover support it stays a plain fixed layer.
+ * WCAG 1.4.13: Esc hides it (a hover bubble takes that Esc for itself), and a bubble shown by
+ * hover stays while the pointer is on it or crossing the gap to it. The bubble never takes the pointer (`pointer-events: none`), so
+ * that is judged from the pointer's position, and a click always reaches what lies under it.
  */
 export function TooltipLayer() {
   const [tip, setTip] = useState<TipState | null>(null);
   const timer = useRef<number | undefined>(undefined);
   const bubble = useRef<HTMLDivElement>(null);
+  /** The control whose bubble is on screen, and whether hover (not focus) showed it. */
+  const shown = useRef<{ anchor: HTMLElement; hover: boolean } | null>(null);
 
   // Nudge the bubble back inside the window when it would overflow an edge.
   useLayoutEffect(() => {
@@ -71,21 +76,65 @@ export function TooltipLayer() {
           left: { x: r.left - GAP, y: r.top + r.height / 2 },
           right: { x: r.right + GAP, y: r.top + r.height / 2 },
         };
+        shown.current = { anchor: el, hover: !immediate };
         setTip({ text, side, ...pos[side] });
       };
       if (immediate) open();
       else timer.current = window.setTimeout(open, SHOW_DELAY_MS);
     };
 
+    // Takes the bubble away; a bubble waiting to open for another control still opens.
+    const hideBubble = () => {
+      shown.current = null;
+      setTip(null);
+    };
     const hide = () => {
       window.clearTimeout(timer.current);
-      setTip(null);
+      hideBubble();
+    };
+    // On the bubble or in the gap around it (the way from the control to the bubble).
+    const near = (e: PointerEvent) => {
+      const r = bubble.current?.getBoundingClientRect();
+      return (
+        !!r &&
+        e.clientX >= r.left - GAP &&
+        e.clientX <= r.right + GAP &&
+        e.clientY >= r.top - GAP &&
+        e.clientY <= r.bottom + GAP
+      );
     };
 
     const onOver = (e: PointerEvent) => {
+      if (shown.current?.hover && near(e)) {
+        window.clearTimeout(timer.current);
+        return;
+      }
+      const el = findTarget(e.target);
+      if (!el) hide();
+      else if (el !== shown.current?.anchor) {
+        hideBubble();
+        show(el, false);
+      }
+    };
+    const onMove = (e: PointerEvent) => {
+      const s = shown.current;
+      const onAnchor = e.target instanceof Node && s?.anchor.contains(e.target);
+      if (!s?.hover || onAnchor || near(e)) return;
+      hideBubble();
+      // The pointer left the bubble over another control (one the bubble covered, so it got no
+      // pointerover of its own): its tooltip opens as if just entered.
       const el = findTarget(e.target);
       if (el) show(el, false);
-      else hide();
+    };
+    // A hover bubble takes the first Esc for itself (the drawer or dialog closes on the next one).
+    // A focus bubble only goes: the Esc still closes the dialog whose first control has a tip.
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return;
+      const hover = shown.current?.hover;
+      hide();
+      if (!hover) return;
+      e.preventDefault();
+      e.stopPropagation();
     };
     const onFocus = (e: FocusEvent) => {
       const el = findTarget(e.target);
@@ -93,16 +142,20 @@ export function TooltipLayer() {
     };
 
     document.addEventListener('pointerover', onOver);
+    document.addEventListener('pointermove', onMove);
     document.addEventListener('focusin', onFocus);
     document.addEventListener('focusout', hide);
     document.addEventListener('pointerdown', hide);
+    document.addEventListener('keydown', onKey, true);
     window.addEventListener('blur', hide);
     return () => {
       window.clearTimeout(timer.current);
       document.removeEventListener('pointerover', onOver);
+      document.removeEventListener('pointermove', onMove);
       document.removeEventListener('focusin', onFocus);
       document.removeEventListener('focusout', hide);
       document.removeEventListener('pointerdown', hide);
+      document.removeEventListener('keydown', onKey, true);
       window.removeEventListener('blur', hide);
     };
   }, []);

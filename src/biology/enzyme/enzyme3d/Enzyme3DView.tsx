@@ -77,6 +77,9 @@ import type { Vec3 } from './layout';
 import { buildEnzymeScene, type EnzymeScene } from './scene';
 import { enzyme3dFor, useEnzyme3D, type EnzymeCameraMode } from './store';
 import '../../bio.css';
+import { EdgePortal } from '@/app/bench/EdgePortal';
+import { EdgeSteps } from '@/app/bench/EdgeSteps';
+import { useOnEdge } from '@/app/bench/edgeSlot';
 
 export type { RendererFactory };
 
@@ -516,6 +519,13 @@ function Enzyme3DScene({
 
   const time = model.view === 'time';
   const top = time ? model.tEnd : model.sTop;
+  const onEdge = useOnEdge();
+  const xLabel = time
+    ? Lz(L('Thời gian', 'Time'))
+    : Lz(L('Nồng độ cơ chất [S]', 'Substrate concentration [S]'));
+  const setX = (v: number) => {
+    useEnzyme3D.setState(time ? { t: v, playing: false } : { s: v, playing: false });
+  };
   const play = () => {
     useEnzyme3D.setState((s) => {
       if (s.playing) return { playing: false };
@@ -582,34 +592,64 @@ function Enzyme3DScene({
           <PartInfo model={model} frame={frame} forms={forms} selected={selected} fmt={fmt} />
         )}
         <div className="m3d__bottom" data-inset="bottom">
-          <div className="bio3d__player">
-            <IconButton
-              icon={Play}
-              altIcon={Pause}
-              showAlt={playing}
-              size="lg"
-              variant="solid"
-              label={playing ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Phát', 'Play'))}
-              onClick={play}
-            />
-            <input
-              type="range"
-              aria-label={
-                time
-                  ? Lz(L('Thời gian', 'Time'))
-                  : Lz(L('Nồng độ cơ chất [S]', 'Substrate concentration [S]'))
-              }
-              min={0}
-              max={top}
-              step={top / 400}
-              value={frame.x}
-              onChange={(e) => {
-                const v = Number(e.target.value);
-                useEnzyme3D.setState(time ? { t: v, playing: false } : { s: v, playing: false });
-              }}
-            />
-            <output>{Lz(readout(frame, fmt))}</output>
-          </div>
+          <EdgePortal>
+            {onEdge ? (
+              // The bench edge (§9.6): Chạy, Đặt lại (t = 0, or [S] back at the apparent Km),
+              // the readout and the slider of the view shown.
+              <EdgeSteps
+                play={{ playing, onClick: play }}
+                reset={{
+                  label: Lz(L('Đặt lại', 'Reset')),
+                  onClick: () => {
+                    useEnzyme3D.setState(
+                      time ? { t: 0, playing: false } : { s: null, playing: false },
+                    );
+                  },
+                }}
+                readout={Lz(readout(frame, fmt))}
+                scrub={{
+                  label: xLabel,
+                  min: 0,
+                  max: top,
+                  step: top / 400,
+                  value: frame.x,
+                  valueText: Lz(readout(frame, fmt)),
+                  onChange: setX,
+                }}
+              />
+            ) : (
+              <div className="bio3d__player">
+                <IconButton
+                  icon={Play}
+                  altIcon={Pause}
+                  showAlt={playing}
+                  size="lg"
+                  variant="solid"
+                  label={playing ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Phát', 'Play'))}
+                  onClick={play}
+                />
+                <input
+                  type="range"
+                  aria-label={
+                    time
+                      ? Lz(L('Thời gian', 'Time'))
+                      : Lz(L('Nồng độ cơ chất [S]', 'Substrate concentration [S]'))
+                  }
+                  min={0}
+                  max={top}
+                  step={top / 400}
+                  value={frame.x}
+                  onChange={(e) => {
+                    const v = Number(e.target.value);
+                    useEnzyme3D.setState(
+                      time ? { t: v, playing: false } : { s: v, playing: false },
+                    );
+                  }}
+                />
+                <output>{Lz(readout(frame, fmt))}</output>
+              </div>
+            )}
+          </EdgePortal>
           <div className="enz3d__row">
             <span className="chem-chip">
               {Lz(
