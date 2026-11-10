@@ -26,7 +26,7 @@ tauri-plugin-dialog = "2"
 rusqlite = { version = "0.41.1", features = ["bundled"] }
 base64 = "0.23.1"
 ed25519-dalek = "3.0.0"
-sha2 = "0.10.9"
+sha2 = "0.11.1"
 zip = { version = "9.0.5", default-features = false, features = ["deflate"] }
 tauri-plugin-opener = "2"
 dirs = "7"
