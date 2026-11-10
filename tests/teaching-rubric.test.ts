@@ -996,6 +996,57 @@ describe("known errors: restated premises and the item's own checks", () => {
   });
 });
 
+describe('B10: an answer that agrees with "23 nhiễm sắc thể" is a known error', () => {
+  // The blind judging of 2026-11-10 caught export1-e1 giving the learner's wrong 23 as the answer
+  // without opening with "Đúng"; the first pattern only caught that opening.
+  const saved = JSON.parse(
+    readFileSync(
+      resolve(import.meta.dirname, 'teaching/results/2026-11-10-qwen3.5-9b-export1-e1-main.json'),
+      'utf8',
+    ),
+  ) as { results: { id: string; answer: string }[] };
+  const exported = saved.results.find((r) => r.id === 'B10')?.answer ?? '';
+
+  it.each([
+    ['the saved export1-e1 answer', exported],
+    ['"Đúng rồi" with 23', 'Đúng rồi! Mỗi tế bào con có 23 nhiễm sắc thể.'],
+    [
+      'n = 23 as the result',
+      'Mỗi tế bào con sẽ có bộ nhiễm sắc thể đơn bội (n = 23). Vì vậy kết quả là 46 ở tế bào mẹ.',
+    ],
+    ['"Đáp án đúng" 23', 'Đáp án đúng: mỗi tế bào con có 23 NST.'],
+  ])('caught: %s', (_name, answer) => {
+    expect(answer).not.toBe('');
+    expect(scoreAnswer(item('B10'), answer).noKnownErrors).toBe(false);
+  });
+
+  it.each([
+    ['the expected answer', item('B10').expected],
+    [
+      'correcting 23 as the gametes’ number',
+      'Chưa đúng em ạ. Mỗi tế bào con có 46 nhiễm sắc thể (2n), giống tế bào mẹ. Con số 23 là số NST trong giao tử sau giảm phân.',
+    ],
+    [
+      'naming the learner’s 23 as wrong',
+      'Em nói mỗi tế bào con có 23 nhiễm sắc thể là chưa đúng. Nguyên phân giữ nguyên 2n = 46.',
+    ],
+    [
+      '"Không phải" 23',
+      'Không phải mỗi tế bào con có 23 NST. Sau nguyên phân mỗi tế bào con có 46 NST.',
+    ],
+    [
+      '23 in meiosis, 46 in mitosis',
+      'Chưa đúng. Trong giảm phân, mỗi tế bào con có 23 NST; còn nguyên phân thì mỗi tế bào con có 46 NST.',
+    ],
+    [
+      '"Nếu" 23 then meiosis',
+      'Chưa đúng. Nếu mỗi tế bào con có 23 NST thì đó là giảm phân. Nguyên phân cho 46 NST.',
+    ],
+  ])('not caught: %s', (_name, answer) => {
+    expect(scoreAnswer(item('B10'), answer).noKnownErrors).toBe(true);
+  });
+});
+
 describe('key facts read LaTeX like plain text', () => {
   const answerKey = (keyFacts: string[][]) => ({
     id: 'X',

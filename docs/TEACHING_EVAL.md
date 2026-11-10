@@ -236,3 +236,20 @@ giám khảo). Thước là `judge-rubric.md` cộng thêm tiêu chí "Cách d�
 Về Cách dạy, export1-e1 hơn ở 18 câu, kém ở 9 câu, bằng ở 15 câu (kiểm định dấu p = 0,12). Hai giám khảo
 đồng ý 100 % về độ đúng (kappa 1,00) và 88 % về Cách dạy. Đây là AI chấm, không thay giáo viên; hai giám
 khảo cùng một loại model nên mức đồng ý cao không có nghĩa là chấm đúng. Chưa kết luận dùng model nào.
+
+**Bổ sung ngày 10/11: thước từ khóa đã bỏ sót một lỗi ở câu B10.** Khi chấm mù, export1-e1 trả lời B10
+"Đáp án đúng là mỗi tế bào con có 23 nhiễm sắc thể … đơn bội (n = 23)", tức là đồng tình với lỗi của
+người học. Thước từ khóa vẫn ghi câu này là "không lỗi đã biết", vì mẫu `mustNot` của B10 chỉ bắt câu
+mở đầu bằng "Đúng". Ngày 10/11 đã thêm mẫu thứ hai cho B10 (`tests/teaching/teaching-eval.json`, test
+trong `tests/teaching-rubric.test.ts`). Bảng trên giữ nguyên số lúc đo. Chấm lại mọi kết quả đã lưu bằng
+`rescore.mjs --changes` (không sửa tệp kết quả nào): chỉ câu B10 đổi, ở 3 tệp:
+
+- export1-e1 (10/11): câu đúng đủ ý không đổi (38/42, 90,5 %); không lỗi đã biết 100 % → 97,6 %.
+- lora-e1 cũ (10/11): B10 từ đúng thành sai, 37 → 36 câu (88,1 % → 85,7 %); không lỗi đã biết
+  97,6 % → 95,2 %. Câu này mở đầu "Chưa đúng" nhưng sau đó nói mỗi tế bào con có bộ "đơn bội n = 23",
+  nên tính là lỗi mới đúng. McNemar so với Qwen gốc (`compare.mjs`): p = 0,344 → 0,549.
+- Gemma 3 1B improved-v2 (14/10): không lỗi đã biết 81,0 % → 78,6 %.
+
+Con số "không lỗi đã biết" chỉ đếm các lỗi mà thước biết tìm: nó không có nghĩa là model không bao
+giờ đồng tình với lỗi sai của người học. Bộ kiểm chứng (`teaching-heldout.json`) không đổi: sửa nó sau
+khi đã xem kết quả là tinh chỉnh theo chính bộ đó.
