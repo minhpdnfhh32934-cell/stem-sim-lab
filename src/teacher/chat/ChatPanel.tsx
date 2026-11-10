@@ -7,14 +7,11 @@ import {
   Globe,
   LassoSelect,
   LoaderCircle,
-  Maximize2,
   Send,
   Settings2,
   ShieldCheck,
   Square,
-  Trash2,
   Volume2,
-  VolumeX,
   X,
 } from 'lucide-react';
 import { useEffect, useRef, useState, type KeyboardEvent, type SyntheticEvent } from 'react';
@@ -23,7 +20,8 @@ import { PROVIDER_NAME } from '@/app/ai/aiStatusView';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useWorkspaceStore, type SettingsSection } from '@/app/workspaceStore';
 import { getTransport } from '@/ai/transport';
-import { useChatStore, type ChatEngine, type ChatMessageRecord } from './chatStore';
+import { useChatStore, type ChatMessageRecord } from './chatStore';
+import { ChatHeader } from './ChatHeader';
 import { ChatMessageView } from './ChatMessageView';
 import { subtitleText } from '@/teacher/board/lesson';
 import { useBoardStore } from '@/teacher/board/boardStore';
@@ -35,17 +33,8 @@ import {
   type BoardSelection,
 } from '@/teacher/board/selection';
 import { BOARD_ASK_EVENT } from '@/teacher/board/boardAsk';
-import {
-  canSpeakOnDevice,
-  speak,
-  speechSupported,
-  stopSpeaking,
-  vietnameseVoices,
-  voicesWhenLoaded,
-} from '@/teacher/voice/speak';
-import { toast } from '@/ui/toast';
+import { canSpeakOnDevice, speak, stopSpeaking } from '@/teacher/voice/speak';
 import { useVoiceStore } from '@/teacher/voice/voiceStore';
-import { TeacherFace } from '@/teacher/face/TeacherFace';
 import {
   AnswerStopped,
   TeacherError,
@@ -128,11 +117,8 @@ export function ChatPanel({
       ? fallbackChoice
       : null;
   const localSelection = useLocalAiStore((s) => s.selected);
-  const voiceEnabled = useVoiceStore((s) => s.enabled);
   // The Gemini voice reads every answer (chat and board) through Google: the text goes online.
   const voiceOnline = useVoiceStore((s) => s.enabled && s.engine === 'gemini');
-  const setVoiceEnabled = useVoiceStore((s) => s.setEnabled);
-  const voiceSpeaking = useVoiceStore((s) => s.speaking);
   const [draft, setDraft] = useState('');
   // What the learner circled on the board, when a question can carry it (the board layout of the
   // teacher page; readable text, or a picture for an AI on this computer that reads pictures).
@@ -636,6 +622,14 @@ export function ChatPanel({
       window.removeEventListener(BOARD_ASK_EVENT, onAsk);
     };
   }, [teacherPage]);
+  /** "Xóa cuộc trò chuyện". An answer being written belongs to this conversation: it stops with it. */
+  const clearConversation = () => {
+    useChatStore.getState().stopAnswer?.();
+    stopSpeaking();
+    chat.clearMessages();
+    useChatStore.setState({ stopped: false });
+    setError(null);
+  };
   const hasAnswer = chat.messages.some((m) => m.role === 'assistant');
   // The simulation the last question names (audit EDU-03): found in the catalog, not by the AI.
   const activeTopic = useActiveTopic();
@@ -723,107 +717,15 @@ export function ChatPanel({
       className={cx('chat-panel', compact && 'chat-panel--compact')}
       aria-label={t('chat.label')}
     >
-      <header className="chat-panel__header">
-        <div className="chat-panel__identity">
-          {/* The big teacher face on the teacher page already identifies the
-              teacher, so the small header face only shows in bubble mode. */}
-          {!teacherPage && (
-            <span className="chat-panel__avatar">
-              <TeacherFace
-                mood={busy ? 'thinking' : voiceSpeaking ? 'speaking' : 'idle'}
-                trackCursor
-              />
-            </span>
-          )}
-          <strong>{t('chat.title')}</strong>
-        </div>
-        <div className="chat-panel__header-actions">
-          <label className="chat-engine" data-tip={t('chat.engineLabel')} data-tip-side="bottom">
-            <span className="sr-only">{t('chat.engineLabel')}</span>
-            <select
-              aria-label={t('chat.engineLabel')}
-              value={engine}
-              onChange={(e) => {
-                chat.setEngine(e.target.value as ChatEngine);
-              }}
-            >
-              <option value="cloud">{t('chat.cloud')}</option>
-              <option value="gemma">{t('chat.gemma')}</option>
-              <option value="local">{t('chat.local')}</option>
-            </select>
-          </label>
-          {speechSupported() && (
-            <button
-              type="button"
-              className="chat-panel__icon-button"
-              onClick={() => {
-                if (voiceEnabled) stopSpeaking();
-                setVoiceEnabled(!voiceEnabled);
-                // Without a Vietnamese voice the Windows voice reads with the wrong accent
-                // (seen on a test machine with only English voices, 2026-10-14). The list may
-                // still be loading (WebView2: empty until "voiceschanged"), so wait for it.
-                if (
-                  !voiceEnabled &&
-                  useVoiceStore.getState().engine === 'system' &&
-                  speechSupported()
-                ) {
-                  void voicesWhenLoaded().then((voices) => {
-                    const { enabled, engine: voiceEngine } = useVoiceStore.getState();
-                    if (
-                      enabled &&
-                      voiceEngine === 'system' &&
-                      vietnameseVoices(voices).length === 0
-                    ) {
-                      toast(t('voice.noVietnameseOnEnable'), 'warn');
-                    }
-                  });
-                }
-              }}
-              aria-pressed={voiceEnabled}
-              aria-label={t('chat.voice')}
-              title={t('chat.voiceHint')}
-            >
-              {voiceEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
-            </button>
-          )}
-          <button
-            type="button"
-            className="chat-panel__icon-button"
-            onClick={() => {
-              // An answer being written belongs to this conversation: it stops with it.
-              useChatStore.getState().stopAnswer?.();
-              stopSpeaking();
-              chat.clearMessages();
-              useChatStore.setState({ stopped: false });
-              setError(null);
-            }}
-            aria-label={t('chat.clear')}
-            title={t('chat.clear')}
-          >
-            <Trash2 size={16} />
-          </button>
-          {compact && onExpand && (
-            <button
-              type="button"
-              className="chat-panel__icon-button"
-              onClick={onExpand}
-              aria-label={t('chat.expand')}
-            >
-              <Maximize2 size={16} />
-            </button>
-          )}
-          {onClose && (
-            <button
-              type="button"
-              className="chat-panel__icon-button"
-              onClick={onClose}
-              aria-label={t('chat.close')}
-            >
-              <X size={18} />
-            </button>
-          )}
-        </div>
-      </header>
+      <ChatHeader
+        teacherPage={teacherPage}
+        busy={busy}
+        engine={engine}
+        compact={compact}
+        onClear={clearConversation}
+        onExpand={onExpand}
+        onClose={onClose}
+      />
 
       {showScreenContext && (
         <div className="chat-panel__toolbar">
