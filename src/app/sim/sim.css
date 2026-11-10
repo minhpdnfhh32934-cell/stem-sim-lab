@@ -265,9 +265,22 @@
   padding: var(--space-1) var(--space-3);
   gap: var(--space-1);
 }
+/* One row whatever the UI font (Linux fonts, a larger font scale): a second row would take the
+   chart's height, so the row scrolls sideways instead. The bench lays the names out in a grid. */
 .graph-panel__picker {
   align-self: flex-start;
-  flex-wrap: wrap;
+}
+.graph-panel__picker > .segmented__item {
+  flex: none;
+}
+.bottom-panel .graph-panel__picker {
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+/* The row clips what lies outside it: the focus ring goes inside the item. */
+.bottom-panel .graph-panel__picker > .segmented__item:focus-visible {
+  outline-offset: -2px;
 }
 .chart {
   position: relative;
