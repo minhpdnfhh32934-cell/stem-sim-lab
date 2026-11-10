@@ -757,4 +757,3 @@ Khi viết code mà gặp giá trị, phản ứng hay cơ chế không chắc c
   P_ng là công suất nguồn, R_N là điện trở mạch ngoài. (4) Lời văn của Thẻ Khoa học, thử thách "công suất
   mạch ngoài lớn nhất" (R₁ = r), câu "Dự đoán trước" (R₂ tăng gấp đôi trong R₁ nt (R₂ ∥ R₃) thì I giảm), ba đề
   chuẩn dc-01 … dc-03 (dc-01 là đề ng-01 cũ trước đây ngoài phạm vi). `review_status: "pending"`.
-
