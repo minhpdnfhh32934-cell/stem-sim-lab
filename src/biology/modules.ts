@@ -10,6 +10,8 @@ import { useDrift, useHw, useMendel } from './genetics/store';
 import { useTransport } from './transport/store';
 import { CellPanel, CellStage } from './cell/CellViews';
 import { restoreCell, useCell } from './cell/store';
+import { CellZoomPanel, CellZoomStage } from './cell/zoom/ZoomViews';
+import { restoreZoom, useCellZoom } from './cell/zoom/store';
 import {
   CentralDogmaPanel,
   CentralDogmaStage,
@@ -207,4 +209,11 @@ export const cellStructure: ModuleView = {
   Panel: CellPanel,
   // Files are untrusted: restoreCell ignores a `kind` that is not one of the three cells.
   state: bindStore(useCell, ['kind'], restoreCell),
+};
+export const cellToDna: ModuleView = {
+  title: L('Từ tế bào đến DNA', 'From cell to DNA'),
+  Stage: CellZoomStage,
+  Panel: CellZoomPanel,
+  // Files are untrusted: restoreZoom ignores a `level` that is not one of the six.
+  state: bindStore(useCellZoom, ['level'], restoreZoom),
 };

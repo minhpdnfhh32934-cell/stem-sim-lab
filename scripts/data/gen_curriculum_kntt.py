@@ -490,6 +490,8 @@ PLACEMENTS = [
     ("uniformCircularMotion", "VL10", [31, 32], "Tên Bài 31–32: động học của chuyển động tròn đều; lực hướng tâm và gia tốc hướng tâm."),
     ("standingWave", "VL11", [13], "Tên Bài 13: sóng dừng (cảnh chỉ có dây hai đầu cố định)."),
     ("electricField", "VL11", [16, 17, 18], "Tên Bài 16–18: lực tương tác giữa các điện tích, khái niệm điện trường, điện trường đều."),
+    ("cellToDna", "SH10", [8], "Tên Bài 8: tế bào nhân thực (cấp tế bào và nhân của bài phóng to). Không xếp Bài 7 (tế bào nhân sơ): bài chỉ có tế bào nhân thực, dù thang kích thước H 7.1 của Bài 7 là một nguồn số liệu."),
+    ("cellToDna", "SH12", [7], "Tên Bài 7: cấu trúc và chức năng của nhiễm sắc thể (cấp NST kép, sợi nhiễm sắc, nucleosome, DNA)."),
 ]
 
 # Not placed (title not clear, or no lesson): (topic, subject, candidates, reason).

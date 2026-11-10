@@ -1,5 +1,5 @@
 import { Tags } from 'lucide-react';
-import { useMemo } from 'react';
+import { lazy, Suspense, useMemo } from 'react';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useCanvas } from '@/ui/canvas/useCanvas';
@@ -7,6 +7,8 @@ import { cx } from '@/ui/cx';
 import { IconButton } from '@/ui/IconButton';
 import { L, usePublishCard } from '../common';
 import { Segmented } from '../ui';
+import { Bio3DToolbar } from '../view3d/switch';
+import { useShow3d } from '../view3d/support';
 import { CELL_ILLUSTRATION, cellCard } from './card';
 import { drawCell } from './draw';
 import { CELL_KINDS, CELL_KIND_NAME, PARTS, partsFor, type CellKind } from './parts';
@@ -19,6 +21,10 @@ const SHORT_NAME: Record<CellKind, ReturnType<typeof L>> = {
   plant: L('Thực vật', 'Plant'),
 };
 
+const Cell3DView = lazy(() =>
+  import('./cell3d/Cell3DView').then((m) => ({ default: m.Cell3DView })),
+);
+
 /** "Hiện tên": the learner's choice, else on in Basic mode. */
 function useShowNames(): boolean {
   const choice = useCell((s) => s.labels);
@@ -26,14 +32,45 @@ function useShowNames(): boolean {
   return choice ?? basic;
 }
 
-/** "Tế bào nhân sơ và nhân thực": the 2D picture (Cell2D) with "Hiện tên". */
+function NamesButton({ on }: { on: boolean }) {
+  const Lz = useLocalized();
+  return (
+    <IconButton
+      icon={Tags}
+      size="lg"
+      active={on}
+      label={Lz(L('Hiện tên các bộ phận', 'Show part names'))}
+      onClick={() => {
+        useCell.setState({ labels: !on });
+      }}
+    />
+  );
+}
+
+/**
+ * "Tế bào nhân sơ và nhân thực": the 3D cell (loaded when shown), or the 2D picture (Cell2D) on a
+ * weak device, without WebGL 2, after a lost context or by the learner's choice.
+ */
 export function CellStage() {
+  const { show3d } = useShow3d('cellStructure');
+  const showNames = useShowNames();
+  const kind = useCell((s) => s.kind);
+  const card = useMemo(() => cellCard(kind), [kind]);
+  usePublishCard(card);
+  if (show3d)
+    return (
+      <Suspense fallback={<div className="bio-view" />}>
+        <Cell3DView tools={<NamesButton on={showNames} />} showNames={showNames} />
+      </Suspense>
+    );
+  return <Cell2D />;
+}
+
+function Cell2D() {
   const Lz = useLocalized();
   const kind = useCell((s) => s.kind);
   const selected = useCell((s) => s.selected);
   const showNames = useShowNames();
-  const card = useMemo(() => cellCard(kind), [kind]);
-  usePublishCard(card);
   const names = useMemo(
     () => Object.fromEntries(partsFor(kind).map((id) => [id, Lz(PARTS[id].name)])),
     [kind, Lz],
@@ -49,16 +86,9 @@ export function CellStage() {
     <div className="bio-view cell2d">
       <canvas ref={ref} className="chem-canvas" role="img" aria-label={Lz(CELL_KIND_NAME[kind])} />
       <div className="chem-overlay">
-        <IconButton
-          icon={Tags}
-          size="lg"
-          active={showNames}
-          label={Lz(L('Hiện tên các bộ phận', 'Show part names'))}
-          onClick={() => {
-            useCell.setState({ labels: !showNames });
-          }}
-        />
+        <NamesButton on={showNames} />
         <span className="chem-chip chem-chip--qual">{Lz(L('Định tính', 'Qualitative'))}</span>
+        <Bio3DToolbar lesson="cellStructure" />
       </div>
       <p className="bio-caption">{Lz(CELL_ILLUSTRATION)}</p>
     </div>

@@ -661,6 +661,19 @@ Progress log: `docs/PROGRESS.md`.
   (`useCell`; only `kind` is saved, `restoreCell` ignores other values), `CellViews.tsx` (stage:
   "Hiện tên", on in Basic; inspector: cell switch + parts list → name + function card). The 3D
   version is planned for 0.8.1 (#54). Texts: DATA_REVIEW `CELL3D-*`.
+- "Từ tế bào đến DNA" (`src/biology/cell/zoom/`, 0.8.1, #107; topic `cellToDna`, chapter
+  `cellStructure`; SH10 Bài 8, SH12 Bài 7): six zoom levels (cell → nucleus → metaphase
+  chromosome → 10 nm fibre on the scaffold → nucleosomes → B-DNA). `levels.ts` (pure: printed sizes
+  from `data/cell_dna_zoom.json` ← `scripts/data/gen_cell_dna_zoom.py`, B-DNA from `bdna.ts`,
+  `DRAWN` illustration choices, per-level field / scale bar 1-2-5 × 10ᵏ ≤ ¼ field / 3D unit =
+  field/10, `zoomSpot`), `card.ts` (Science Cards, captions, part names; no 30 nm fibre — the SGK
+  has none and it is debated), `scene.ts` (one scene per level on the biology kit: shells,
+  `ChromosomeTube`, the dogma helix; world-space ruler exactly `barNm`; `zoom-<i>` framing = the
+  glide into the next level), `draw2d.ts` (2D, same numbers), `store.ts` (`level` saved), `hooks.ts`,
+  `ZoomViews.tsx`, `Zoom3DView.tsx`. "Phóng to" glides `GLIDE_MS` (= `CAMERA_MOVE_MS`) with the
+  "không theo tỉ lệ" chip, then the next level; reduced motion steps at once. 3D/2D choice:
+  `stemsim.bio3d` lesson `cellToDna`. Budgets in `scene.test.ts`. E2E `tests/e2e/cellzoom-bio3d.spec.ts`
+  (3D project). Texts: DATA_REVIEW `DNAZ-*`.
 - Projects (Phase 6): `src/app/project/` — `snapshot.ts` (.stemsim schema; inputs only), `undo.ts`,
   `history.ts` (Rust SQLite `src-tauri/src/history.rs`), `actions.ts` (save/open/PNG/CSV via Rust
   dialogs in `files.rs`), `FileMenu`, `SourcesDialog` (lazy), `Tour` (first run, `stemsim.tourDone`).
