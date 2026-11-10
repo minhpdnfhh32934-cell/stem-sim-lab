@@ -96,7 +96,7 @@ export function ChatPanel({
   const circled = useBoardStore((s) => s.selection);
   // On the board the lesson reads itself sentence by sentence, in step with the pen (Whiteboard).
   // `board` asks the AI for a board lesson; who reads an answer is decided when it arrives
-  // (`boardOwnsVoice`), because the learner may switch layouts while the AI is answering.
+  // (`boardOwnsVoice` in useChatVoice), because the learner may switch layouts while it answers.
   const board = useTeacherStore((s) => teacherPage && s.layout === 'board');
   const { quietBeforeAsking, readAloud, unread } = useChatVoice(teacherPage);
   const [busy, setLocalBusy] = useState(false);
