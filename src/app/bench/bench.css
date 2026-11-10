@@ -2091,3 +2091,120 @@ button.bench-door--lab:hover {
   grid-column: speed;
   min-width: 0;
 }
+
+/* A guided lesson beside its live stage (§9.7): the lesson panel 416 (640 on Báo cáo), the lab's
+   stage and bench edge on the right. Lessons without one keep the room's single sheet. */
+.bench-studio-live:empty {
+  display: none;
+}
+.bench-studio-room:has(.bench-studio-live:not(:empty)) {
+  grid-template-columns: var(--bench-rail) var(--lesson-w, 416px) minmax(0, 1fr);
+  grid-template-areas: 'rail main live';
+}
+.bench-studio-room:has(.bench-studio-live:not(:empty)):has(.studio-flow[data-step='report']) {
+  --lesson-w: 640px;
+}
+.bench-studio-room:has(.bench-studio-live:not(:empty)) > .bench-studio > .studio {
+  width: 100%;
+  padding: var(--space-3);
+}
+.bench-studio-live {
+  grid-area: live;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  border-left: 1px solid var(--frame-line);
+}
+.studio-live {
+  --bench-edge: 64px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) var(--bench-edge);
+  /* The edge places itself by its area name (grid-area: edge). */
+  grid-template-areas:
+    'stage'
+    'edge';
+  flex: 1;
+  min-height: 0;
+}
+.studio-live__stage {
+  grid-area: stage;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+/* The lesson footer owns the filled slot: D0 is tonal here (§9.7). */
+.studio-live .bench-play {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+/* "Báo cáo" (§9.7): the four sections, each item with its origin chip. */
+.report-origins {
+  display: grid;
+  gap: var(--space-3);
+}
+.report-origins h4 {
+  margin: 0 0 var(--space-1);
+  font-size: 14px;
+  line-height: 20px;
+}
+.report-origins p,
+.report-origins ul {
+  margin: 0;
+}
+.report-origins__ink {
+  color: var(--ink-learner);
+}
+.origin-chip {
+  display: inline-flex;
+  margin-left: var(--space-1);
+  padding: 0 var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 16px;
+  white-space: nowrap;
+}
+.origin-chip[data-origin='engine'] {
+  border-color: var(--conf-exact);
+}
+.origin-chip[data-origin='ai'] {
+  border-color: var(--ink-ai);
+}
+
+/* Soạn bài (§9.7): the parts of the lesson in a 160 column, the form beside it. The design's 448
+   leaves no room for a scene's quantity rows (number box, unit, range), so the form takes the rest. */
+.bench-studio .author-editor:has(> .author-nav) {
+  display: grid;
+  grid-template-columns: 160px minmax(0, 1fr);
+  column-gap: var(--space-4);
+  align-items: start;
+}
+.bench-studio .author-editor:has(> .author-nav) > * {
+  grid-column: 2;
+}
+.bench-studio .author-editor > .author-nav {
+  position: sticky;
+  top: 0;
+  grid-column: 1;
+  grid-row: 1 / span 20;
+  display: grid;
+  gap: var(--space-1);
+}
+.author-nav a {
+  display: flex;
+  align-items: center;
+  min-height: var(--target);
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--paper-text);
+  font-size: 14px;
+  line-height: 18px;
+  text-decoration: none;
+}
+.author-nav a:hover {
+  background: var(--paper-hover);
+}

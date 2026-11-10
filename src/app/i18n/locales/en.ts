@@ -1018,6 +1018,20 @@ const en: Messages = {
     privacy: 'You choose when to share screen context or use an online AI service.',
   },
   studio: {
+    origin: {
+      engine: 'Computed by SimLab',
+      learner: 'Written by you',
+      ai: 'AI-assisted',
+      predict: 'Prediction',
+      measure: 'Measurements',
+      explain: 'Explanation',
+      conclude: 'Conclusion',
+      aiNotes: 'AI-assisted notes',
+      aiCount: '{n} AI-assisted note(s) (in the report below)',
+      none: 'Not yet',
+    },
+    liveStage: "The lesson's experiment",
+    authoringNav: 'Parts of the lesson',
     title: 'Science Studio',
     subtitle:
       'Guided lessons: predict, experiment, observe measurements, explain and conclude. Every number is computed by the simulation.',
