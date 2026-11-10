@@ -75,3 +75,24 @@ describe('collision engine', () => {
     }
   });
 });
+
+describe('the worked solution shows no rounding noise', () => {
+  it('an elastic collision loses exactly 0 J, not 2,665·10⁻¹⁵ J', () => {
+    const p = { ...collisions.defaults, mode: 0, m1: 2.5, v1: 2, m2: 1.6, v2: -0.6, e: 1 };
+    const tex = collisions
+      .solve(p, 'vi')
+      .steps.map((s) => s.tex)
+      .join(' ');
+    expect(tex).toContain('\\Delta W_{\\text{đ}} = 0');
+    expect(tex).not.toMatch(/10\^\{-1\d\}/);
+  });
+
+  it('a real energy loss is still shown', () => {
+    const p = { ...collisions.defaults, mode: 0, m1: 2.5, v1: 2, m2: 1.6, v2: -0.6, e: 0.5 };
+    const tex = collisions
+      .solve(p, 'vi')
+      .steps.map((s) => s.tex)
+      .join(' ');
+    expect(tex).not.toContain('\\Delta W_{\\text{đ}} = 0');
+  });
+});

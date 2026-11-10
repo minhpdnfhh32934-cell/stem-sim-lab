@@ -96,6 +96,27 @@ const EQUALS_BEFORE = /(?:[=≈~]|\\approx|\\simeq)\s*[*_]*\s*[-−]?\s*$/;
 const plainMath = (s) =>
   s.replace(/\\(?:text|mathrm|rm)\s*\{\s*([^{}]*?)\s*\}/g, ' $1').replace(/\s+/g, ' ');
 
+const FRACTION = /\\d?frac\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g;
+/**
+ * Folded LaTeX as the plain text the answer keys are written for: `5\,\text{m/s}^2` → "5 m/s^2",
+ * `\frac{f}{m}` → "f/m", `h_2` → "h2", `\rightarrow` → "→". Only for key facts and steps:
+ * inventedNumbers keeps plainMath, where a number inside a fraction must still count as a value.
+ */
+const mathAsText = (s) =>
+  plainMath(s)
+    .replace(/\$/g, ' ')
+    .replace(FRACTION, '$1/$2')
+    .replace(/\\sqrt\s*\{([^{}]*)\}/g, 'sqrt($1)')
+    .replace(FRACTION, '$1/$2')
+    .replace(/\\(?:long)?rightarrow|\\to\b/g, '→')
+    .replace(/\\(?:cdot|times)\b/g, '·')
+    .replace(/\\delta\b/g, 'delta')
+    .replace(/\\(?:left|right)\b/g, '')
+    .replace(/\\[,;:! ]/g, ' ')
+    .replace(/\{([,.])\}/g, '$1')
+    .replace(/_\{?(\d+)\}?/g, '$1')
+    .replace(/\s+/g, ' ');
+
 /**
  * Numbers the answer brings in that are not in the question (nor in item.allowNumbers), where they
  * act as values: after "=", "≈", "~", "\approx" or "\simeq", within 40 characters after "khoảng /
@@ -163,7 +184,7 @@ export function namesMissing(item, answer) {
  */
 export function stepsInOrder(item, answer) {
   if (!item.steps) return null;
-  const f = fold(answer);
+  const f = mathAsText(fold(answer));
   let pos = 0;
   let done = 0;
   for (const stage of item.steps) {
@@ -485,7 +506,7 @@ const CHECK_QUESTION_TYPES = new Set(['concept', 'misconception']);
  * checks are null when they do not apply.
  */
 export function scoreAnswer(item, answer) {
-  const f = fold(answer);
+  const f = mathAsText(fold(answer));
   const facts = (item.keyFacts ?? []).map((group) => group.some((p) => new RegExp(p).test(f)));
   const wrong = knownErrors(item, answer);
   const ends = endsWithQuestion(answer);

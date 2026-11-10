@@ -280,6 +280,8 @@ function solve(p: Params, locale: Locale): Solution {
   const low = lowestPoint(tr);
   const E = m * g * y0 + 0.5 * m * v0 * v0;
   const vLow = speedAt(g, y0, v0, low.y) ?? 0;
+  // A valley at ground level comes out of the curve as a few micrometres at most: not for a learner.
+  const hMin = Number(low.y.toFixed(3));
   const steps: SolutionStep[] = [
     {
       text: L(
@@ -290,7 +292,7 @@ function solve(p: Params, locale: Locale): Solution {
     },
     {
       text: L('Tại điểm thấp nhất của máng:', 'At the lowest point of the track:'),
-      tex: `v = \\sqrt{v_0^2 + 2g(h_0 - h_{min})} = \\sqrt{${n(v0)}^2 + 2\\cdot ${n(g)}\\cdot(${n(y0)} - ${n(low.y)})} = ${Q(vLow, 'm/s')}`,
+      tex: `v = \\sqrt{v_0^2 + 2g(h_0 - h_{min})} = \\sqrt{${n(v0)}^2 + 2\\cdot ${n(g)}\\cdot(${n(y0)} - ${n(hMin)})} = ${Q(vLow, 'm/s')}`,
     },
     {
       text: L('Độ cao lớn nhất vật có thể đạt tới (v = 0):', 'Highest point reachable (v = 0):'),

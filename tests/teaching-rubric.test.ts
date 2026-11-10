@@ -47,6 +47,12 @@ function item(id: string): EvalItem {
   return found;
 }
 
+function expectedOf(id: string): string {
+  const text = item(id).expected;
+  if (!text) throw new Error(`${id} has no expected answer`);
+  return text;
+}
+
 /** Items added on 2026-10-14 (missing data, step-by-step and trap questions). */
 const NEW_IDS = [
   'P11',
@@ -993,6 +999,177 @@ describe("known errors: restated premises and the item's own checks", () => {
     const agrees = '**Trả lời:**\n\nĐúng, nồng độ thu được không đổi.';
     expect(scoreAnswer(item('C14'), agrees).noKnownErrors).toBe(false);
     expect(trapHandled(item('C14'), agrees)).toBe(false);
+  });
+});
+
+describe('B10: an answer that agrees with "23 nhiễm sắc thể" is a known error', () => {
+  // The blind judging of 2026-11-10 caught export1-e1 giving the learner's wrong 23 as the answer
+  // without opening with "Đúng"; the first pattern only caught that opening.
+  const saved = JSON.parse(
+    readFileSync(
+      resolve(import.meta.dirname, 'teaching/results/2026-11-10-qwen3.5-9b-export1-e1-main.json'),
+      'utf8',
+    ),
+  ) as { results: { id: string; answer: string }[] };
+  const exported = saved.results.find((r) => r.id === 'B10')?.answer ?? '';
+
+  it.each([
+    ['the saved export1-e1 answer', exported],
+    ['"Đúng rồi" with 23', 'Đúng rồi! Mỗi tế bào con có 23 nhiễm sắc thể.'],
+    [
+      'n = 23 as the result',
+      'Mỗi tế bào con sẽ có bộ nhiễm sắc thể đơn bội (n = 23). Vì vậy kết quả là 46 ở tế bào mẹ.',
+    ],
+    ['"Đáp án đúng" 23', 'Đáp án đúng: mỗi tế bào con có 23 NST.'],
+  ])('caught: %s', (_name, answer) => {
+    expect(answer).not.toBe('');
+    expect(scoreAnswer(item('B10'), answer).noKnownErrors).toBe(false);
+  });
+
+  it.each([
+    ['the expected answer', expectedOf('B10')],
+    [
+      'correcting 23 as the gametes’ number',
+      'Chưa đúng em ạ. Mỗi tế bào con có 46 nhiễm sắc thể (2n), giống tế bào mẹ. Con số 23 là số NST trong giao tử sau giảm phân.',
+    ],
+    [
+      'naming the learner’s 23 as wrong',
+      'Em nói mỗi tế bào con có 23 nhiễm sắc thể là chưa đúng. Nguyên phân giữ nguyên 2n = 46.',
+    ],
+    [
+      '"Không phải" 23',
+      'Không phải mỗi tế bào con có 23 NST. Sau nguyên phân mỗi tế bào con có 46 NST.',
+    ],
+    [
+      '23 in meiosis, 46 in mitosis',
+      'Chưa đúng. Trong giảm phân, mỗi tế bào con có 23 NST; còn nguyên phân thì mỗi tế bào con có 46 NST.',
+    ],
+    [
+      '"Nếu" 23 then meiosis',
+      'Chưa đúng. Nếu mỗi tế bào con có 23 NST thì đó là giảm phân. Nguyên phân cho 46 NST.',
+    ],
+  ])('not caught: %s', (_name, answer) => {
+    expect(scoreAnswer(item('B10'), answer).noKnownErrors).toBe(true);
+  });
+});
+
+describe('P10 and C10: an answer that restates the learner’s wrong answer is a known error', () => {
+  // The same hole as B10: the first pattern of each caught only an opening "Đúng".
+  const export2e2 = JSON.parse(
+    readFileSync(
+      resolve(import.meta.dirname, 'teaching/results/2026-11-10-qwen3.5-9b-export2-e2-main.json'),
+      'utf8',
+    ),
+  ) as { results: { id: string; answer: string }[] };
+  const savedC10 = export2e2.results.find((r) => r.id === 'C10')?.answer ?? '';
+
+  it.each([
+    ['P10', 'Chưa đúng. Gia tốc tăng gấp đôi vì a tỉ lệ với m.'],
+    ['P10', 'Đáp án đúng là gia tốc tăng gấp đôi.'],
+    ['P10', 'Theo a = F/m, vậy gia tốc sẽ tăng lên gấp đôi.'],
+    ['P10', 'Chưa đúng.\n\n**Đáp án:** Gia tốc tăng gấp đôi.'],
+    [
+      'C10',
+      'Vế trái có 2 nguyên tử oxi, vế phải chỉ có 1 nguyên tử oxi nên phương trình chưa cân bằng.',
+    ],
+    ['C10', 'Chưa đúng hoàn toàn. Số nguyên tử oxi ở vế phải là 1.'],
+    ['C10', 'Số lượng nguyên tử oxi ở mỗi vế của phương trình là 1.'],
+    ['C10', 'Vế trái 2, vế phải 1, nên hai vế không bằng nhau.'],
+    ['C10', 'Vế phải chỉ có một nguyên tử oxi.'],
+    ['C10', savedC10],
+  ])('%s caught: %s', (id, answer) => {
+    expect(answer).not.toBe('');
+    expect(scoreAnswer(item(id), answer).noKnownErrors).toBe(false);
+  });
+
+  it.each([
+    ['P10', expectedOf('P10')],
+    [
+      'P10',
+      'Câu trả lời của em là "Gia tốc tăng gấp đôi" nhưng theo a = F/m thì gia tốc giảm một nửa.',
+    ],
+    ['P10', 'Chưa đúng. Gia tốc giảm đi một nửa, chứ không phải tăng gấp đôi.'],
+    ['P10', 'Chưa đúng. Gia tốc không tăng gấp đôi mà giảm còn một nửa.'],
+    ['P10', 'Em nói gia tốc tăng gấp đôi, nhưng thật ra gia tốc giảm một nửa.'],
+    ['P10', 'Gia tốc tăng gấp đôi là chưa đúng: khối lượng tăng gấp đôi thì a giảm một nửa.'],
+    [
+      'P10',
+      'Chưa đúng, a giảm một nửa. Câu hỏi thêm: nếu lực tăng gấp đôi còn khối lượng giữ nguyên thì gia tốc tăng gấp đôi hay giảm?',
+    ],
+    [
+      'P10',
+      'Chưa đúng, a giảm một nửa. Ngược lại, nếu khối lượng giảm một nửa thì gia tốc tăng gấp đôi.',
+    ],
+    [
+      'P10',
+      'Chưa đúng, a giảm một nửa. Còn khi lực tăng gấp đôi, khối lượng giữ nguyên, gia tốc tăng gấp đôi.',
+    ],
+    ['C10', expectedOf('C10')],
+    [
+      'C10',
+      'Chưa đúng hoàn toàn. Vế trái 2 là đúng, nhưng vế phải không phải 1 mà là 2 nguyên tử oxi, vì 2H₂O có 2 × 1 = 2.',
+    ],
+    ['C10', 'Em trả lời vế phải 1 là chưa đúng: 2H₂O có 2 nguyên tử oxi.'],
+    ['C10', 'Chưa đúng. Vế phải: mỗi phân tử H₂O có 1 nguyên tử oxi, có 2 phân tử nên tổng là 2.'],
+    [
+      'C10',
+      'Chưa đúng. Nếu vế phải chỉ có 1 nguyên tử oxi thì phương trình chưa cân bằng, nhưng ở đây 2H₂O có 2.',
+    ],
+    ['C10', 'Chưa đúng. Ở vế phải, H₂O có 1 nguyên tử oxi, nhân với hệ số 2 được 2.'],
+    ['C10', 'Chưa đúng. Ở vế phải, $H_2O$ có 1 nguyên tử oxi, nhân hệ số 2 thành 2.'],
+    ['C10', 'Chưa đúng. Vế phải có 2 × 1 = 2 nguyên tử oxi, bằng vế trái.'],
+    ['C10', 'Chưa đúng. Vế phải: 1 × 2 = 2 nguyên tử oxi. Phương trình đã cân bằng.'],
+  ])('%s not caught: %s', (id, answer) => {
+    expect(scoreAnswer(item(id), answer).noKnownErrors).toBe(true);
+  });
+});
+
+describe('key facts read LaTeX like plain text', () => {
+  const answerKey = (keyFacts: string[][]) => ({
+    id: 'X',
+    subject: 'physics',
+    type: 'problem',
+    question: 'q',
+    keyFacts,
+  });
+  const hits = (keyFacts: string[][], answer: string) =>
+    scoreAnswer(answerKey(keyFacts) as never, answer).facts;
+
+  it('units with text marks and thin spaces, and fractions', () => {
+    expect(
+      hits(
+        [[String.raw`\b5 ?m/s`], ['a ?= ?f ?/ ?m']],
+        String.raw`$a = \frac{F}{m} = 5\,\text{m/s}^2$`,
+      ),
+    ).toEqual([true, true]);
+  });
+
+  it('square roots, also around a fraction', () => {
+    expect(
+      hits(
+        [[String.raw`\b2 ?(s\b|giay)`], ['sqrt']],
+        String.raw`$t = \sqrt{\frac{2h}{g}} = 2\,\text{s}$`,
+      ),
+    ).toEqual([true, true]);
+  });
+
+  it('subscripts and arrows in a chemical equation', () => {
+    expect(
+      hits(
+        [[String.raw`2 ?h2 ?\+ ?o2 ?(→|->) ?2 ?h2o`]],
+        String.raw`$2H_2 + O_2 \rightarrow 2H_{2}O$`,
+      ),
+    ).toEqual([true]);
+  });
+
+  it('decimal commas in braces', () => {
+    expect(hits([[String.raw`\b0,1 ?m\b`]], String.raw`$\Delta l = 0{,}1\,\text{m}$`)).toEqual([
+      true,
+    ]);
+  });
+
+  it('a wrong value stays wrong', () => {
+    expect(hits([[String.raw`\b5 ?m/s`]], String.raw`$a = 6\,\text{m/s}^2$`)).toEqual([false]);
   });
 });
 

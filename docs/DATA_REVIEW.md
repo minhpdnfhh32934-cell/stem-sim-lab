@@ -719,3 +719,12 @@ Khi viết code mà gặp giá trị, phản ứng hay cơ chế không chắc c
   (có quá chặt hay quá lỏng với câu trả lời đúng diễn đạt khác) và `mustNot`; (d) hai số tham khảo
   ngoài app: pH của CH₃COOH 0,1 M ≈ 2,9 (Ka ≈ 1,8·10⁻⁵ ở 25 °C, OpenStax Chemistry 2e) và nhiệt độ
   sôi của H₂S khoảng −60 °C. `review_status: "pending"`.
+
+- **TRAIN-1 (09/11/2026, #128):** dữ liệu huấn luyện model riêng của AI Teacher, sinh bởi
+  `scripts/data/teacher_training/`. Số liệu do bộ máy của app tính, lời do Qwen3.5 9B viết. Script chỉ
+  kiểm được số, ký hiệu, ngôn ngữ và độ an toàn, **không** kiểm được cách giải thích có đúng hay
+  không; các lô thử đã có câu sai kiến thức lọt qua. Nhờ giáo viên đọc một mẫu và xác nhận trước khi
+  model rời mức dùng thử. Không dùng `tests/teaching/*`, sách giáo khoa và dữ liệu học sinh. Có bài
+  tính và bài thiếu dữ kiện cho Vật lí, Hóa học, Sinh học; **chưa có** câu hỏi khái niệm hay hiểu
+  lầm, vì lời giải thích sẽ không có nguồn nào kiểm được. Mẫu cho giáo viên: `teacher-sample.md` do
+  `export.mjs` tạo. `review_status: "pending"`.

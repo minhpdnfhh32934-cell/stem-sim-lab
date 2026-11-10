@@ -174,3 +174,122 @@ Giới hạn:
   sau lượt của model, không tính phần lặp. Điểm ghi sẵn trong tệp kết quả tính trên cả câu thô.
 - Bộ câu và kết quả: `tests/teaching/results/2026-11-10-tools-set.json`,
   `2026-11-10-gemma4-e2b-tools-before.json`, `2026-11-10-gemma4-e2b-tools-after.json`.
+
+## Đợt 09/11/2026: Qwen 3.5 9B và bản huấn luyện riêng
+
+Cùng 42 + 15 câu, cùng prompt của app, temperature 0, một lượt. Qwen và Gemma 3 12B chạy trên
+`llama-server` (bản Q4_K_M, `scripts/teaching/eval-local.mjs`); Gemma 4 E2B chạy trong app bằng WebGPU
+(đo sáng cùng ngày). Bản huấn luyện: LoRA trên Qwen 3.5 9B, 628 hội thoại, ba vòng trên Colab (T4).
+Sai số trên 98 hội thoại kiểm tra: gốc 0,7328; vòng 1 0,4390; vòng 2 0,4151; vòng 3 0,4344 (không lưu).
+Kết quả đã lưu: `tests/teaching/results/2026-11-09-*.json`.
+
+| 42 câu của bộ chính | Câu đúng đủ ý | Tỉ lệ ý chính | Không lỗi đã biết |
+| ------------------- | ------------- | ------------- | ----------------- |
+| Gemma 4 E2B         | 66,7 %        | 76,9 %        | 100 %             |
+| Gemma 3 12B gốc     | 66,7 %        | 83,7 %        | 97,6 %            |
+| Qwen 3.5 9B gốc     | 81,0 %        | 92,0 %        | 95,2 %            |
+| Qwen, vòng 1        | 90,5 %        | 97,4 %        | 97,6 %            |
+| Qwen, vòng 2        | 78,6 %        | 91,8 %        | 95,2 %            |
+
+| 15 câu kiểm chứng | Câu đúng đủ ý | Tỉ lệ ý chính | Không lỗi đã biết |
+| ----------------- | ------------- | ------------- | ----------------- |
+| Gemma 4 E2B       | 60,0 %        | 82,2 %        | 93,3 %            |
+| Gemma 3 12B gốc   | 60,0 %        | 84,4 %        | 100 %             |
+| Qwen 3.5 9B gốc   | 86,7 %        | 96,7 %        | 93,3 %            |
+| Qwen, vòng 1      | 100 %         | 100 %         | 100 %             |
+
+Trên bộ chính, vòng 1 hỏi lại khi đề thiếu dữ kiện 66,7 % (gốc 11,1 %), nêu các bước đúng thứ tự
+100 % (gốc 44,4 %), nhưng nêu đúng dữ kiện còn thiếu 88,9 % (gốc 100 %). Vòng 1 được chọn bằng bộ
+chính; chỉ riêng nó chạy một lần trên bộ kiểm chứng.
+
+Giới hạn của đợt này:
+
+- Vòng 1 hơn Qwen gốc 2 câu và không kém câu nào trên bộ kiểm chứng (McNemar p = 0,5), 6 câu hơn và
+  2 câu kém trên bộ chính. Mẫu nhỏ: chưa đủ để nói thắng rõ.
+- Chấm theo từ khóa, chưa có giáo viên hay giám khảo AI chấm mù.
+- Trong đợt này bộ chấm được sửa để đọc LaTeX (commit 08ebd0b), sau khi đã xem kết quả, vì câu đúng
+  viết bằng công thức bị tính là thiếu ý. Đáp án không đổi, mọi nhóm được chấm lại như nhau.
+- Dữ liệu huấn luyện do chính Qwen 3.5 9B viết và chưa được giáo viên duyệt.
+- E2B và Qwen chạy trên hai đường khác nhau, nên thời gian trả lời chỉ để tham khảo.
+
+## Đợt 10/11/2026: huấn luyện lại trên RTX 4080 và chấm mù
+
+Cùng bộ câu và cách đo với đợt 09/11, trên máy bàn (RTX 4080, `llama-server` CUDA backend 2.71.0 của
+LM Studio, bản Q4_K_M, temperature 0). export-1 là 628 hội thoại cũ. export-2 thêm 400 hội thoại do
+Qwen 3.5 9B viết bằng đúng quy trình cũ (960 huấn luyện, 160 kiểm tra), vẫn `review_status: "pending"`.
+Kết quả đã lưu: `tests/teaching/results/2026-11-10-*.json` và `tests/teaching/results/judge-2026-11-10/`.
+
+| 42 câu của bộ chính         | Câu đúng đủ ý | Tỉ lệ ý chính | Không lỗi đã biết |
+| --------------------------- | ------------- | ------------- | ----------------- |
+| Qwen 3.5 9B gốc             | 78,6 %        | 91,8 %        | 97,6 %            |
+| lora-e1 cũ (Colab, 09/11)   | 88,1 %        | 96,8 %        | 97,6 %            |
+| export1-e1 (huấn luyện lại) | 90,5 %        | 96,2 %        | 100 %             |
+| export1-e2                  | 83,3 %        | 93,3 %        | 97,6 %            |
+| export2-e1 (thêm dữ liệu)   | 85,7 %        | 93,5 %        | 97,6 %            |
+| export2-e2                  | 78,6 %        | 89,3 %        | 97,6 %            |
+
+Không bản nào hơn Qwen gốc có ý nghĩa thống kê (McNemar p: 0,344; 0,180; 0,774; 0,508; 1,000). Máy bàn
+lệch laptop 1 câu ở cả hai mốc đối chứng (gốc 33 so với 34 câu, lora-e1 37 so với 38 câu), và chỉ 10/42
+câu trả lời của bản gốc giống hệt laptop; nguyên nhân chưa xác định.
+
+Theo quy tắc chọn định trước (nhiều câu đúng nhất), export1-e1 được chọn và chạy đúng một lần trên bộ
+kiểm chứng: **13/15** (86,7 %), tỉ lệ ý chính 94,4 %, không lỗi đã biết 100 %. Số đã lưu từ đợt 09/11 trên
+laptop: Qwen gốc 13/15, lora-e1 cũ 15/15. Quy tắc được ghi sau khi đã có 6 lần đo bộ chính, do một phiên
+chưa thấy các số đó viết.
+
+Hai điều rút ra:
+
+- Huấn luyện lại cùng dữ liệu và cùng cách cho 13/15 thay vì 15/15, nên kết quả 15/15 của đợt trước
+  không ổn định.
+- Thêm dữ liệu do chính Qwen viết không làm tăng điểm: export2-e1 36 câu so với export1-e1 38 câu,
+  export2-e2 33 câu so với export1-e2 35 câu.
+
+Giám khảo AI chấm mù Qwen gốc và export1-e1 (42 câu, 2 giám khảo, nhãn ẩn, thứ tự xáo riêng cho từng
+giám khảo). Thước là `judge-rubric.md` cộng thêm tiêu chí "Cách dạy", lưu ở thư mục kết quả (SHA-256
+`6c9441fd3befc152840026fe4037ae831cd1b9cce0705335033e900c0421b77a`); thước gốc không đổi.
+
+| Tiêu chí              | Qwen gốc | export1-e1 |
+| --------------------- | -------- | ---------- |
+| Độ đúng (0–2)         | 1,81     | 1,93       |
+| Đúng hoàn toàn        | 86 %     | 95 %       |
+| Độ rõ (1–5)           | 4,45     | 4,82       |
+| Độ đủ ý (1–5)         | 4,12     | 4,13       |
+| Cách dạy (1–5)        | 3,60     | 3,86       |
+| Có số tự đưa ra       | 14 %     | 10 %       |
+| Đồng tình với lỗi sai | 0 %      | 2 %        |
+
+Về Cách dạy, export1-e1 hơn ở 18 câu, kém ở 9 câu, bằng ở 15 câu (kiểm định dấu p = 0,12). Hai giám khảo
+đồng ý 100 % về độ đúng (kappa 1,00) và 88 % về Cách dạy. Đây là AI chấm, không thay giáo viên; hai giám
+khảo cùng một loại model nên mức đồng ý cao không có nghĩa là chấm đúng. Chưa kết luận dùng model nào.
+
+**Bổ sung ngày 10/11: thước từ khóa đã bỏ sót một lỗi ở câu B10.** Khi chấm mù, export1-e1 trả lời B10
+"Đáp án đúng là mỗi tế bào con có 23 nhiễm sắc thể … đơn bội (n = 23)", tức là đồng tình với lỗi của
+người học. Thước từ khóa vẫn ghi câu này là "không lỗi đã biết", vì mẫu `mustNot` của B10 chỉ bắt câu
+mở đầu bằng "Đúng". Ngày 10/11 đã thêm mẫu thứ hai cho B10 (`tests/teaching/teaching-eval.json`, test
+trong `tests/teaching-rubric.test.ts`). Bảng trên giữ nguyên số lúc đo. Chấm lại mọi kết quả đã lưu bằng
+`rescore.mjs --changes` (không sửa tệp kết quả nào): chỉ câu B10 đổi, ở 3 tệp:
+
+- export1-e1 (10/11): câu đúng đủ ý không đổi (38/42, 90,5 %); không lỗi đã biết 100 % → 97,6 %.
+- lora-e1 cũ (10/11): B10 từ đúng thành sai, 37 → 36 câu (88,1 % → 85,7 %); không lỗi đã biết
+  97,6 % → 95,2 %. Câu này mở đầu "Chưa đúng" nhưng sau đó nói mỗi tế bào con có bộ "đơn bội n = 23",
+  nên tính là lỗi mới đúng. McNemar so với Qwen gốc (`compare.mjs`): p = 0,344 → 0,549.
+- Gemma 3 1B improved-v2 (14/10): không lỗi đã biết 81,0 % → 78,6 %.
+
+Hai câu followup còn lại của bộ chính, P10 (gia tốc) và C10 (nguyên tử oxi), có cùng lỗ hổng: mẫu cũ chỉ
+bắt câu mở đầu bằng "Đúng". Cũng ngày 10/11 đã thêm mẫu thứ hai cho mỗi câu, cùng cách như B10, có test.
+Chấm lại mọi kết quả đã lưu (so bộ câu trước và sau khi thêm mẫu): chỉ 5 câu trả lời đổi.
+
+- P10, Gemma 3 1B improved-v2 (14/10): từ đúng thành sai. Câu này mở đầu "Chưa đúng" nhưng sau đó
+  ghi "**Đáp án:** Gia tốc tăng gấp đôi". Câu đúng 33,3 % → 31,0 %, không lỗi đã biết 78,6 % → 76,2 %.
+- C10, Gemma 3 1B baseline-greedy-part2 (14/10): 2 câu (hai biến thể) thành có lỗi đã biết.
+- C10, Qwen 3.5 9B e2 (09/11): không lỗi đã biết 95,2 % → 92,9 %; câu đúng không đổi.
+- C10, export2-e2 (10/11): không lỗi đã biết 97,6 % → 95,2 % (bảng trên ghi 97,6 %, số lúc đo);
+  câu đúng không đổi.
+
+Ở C10, số câu đúng không đổi trong mọi tệp (các câu này đã sai ở ý chính). Thước từ khóa bây giờ bắt
+được kiểu nhắc lại đáp án sai của người học như đáp án ở cả 3 câu followup của bộ chính, nhưng vẫn chỉ
+bắt các kiểu câu đã biết.
+
+Con số "không lỗi đã biết" chỉ đếm các lỗi mà thước biết tìm: nó không có nghĩa là model không bao
+giờ đồng tình với lỗi sai của người học. Bộ kiểm chứng (`teaching-heldout.json`) không đổi: sửa nó sau
+khi đã xem kết quả là tinh chỉnh theo chính bộ đó.
