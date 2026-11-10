@@ -107,12 +107,11 @@ export function withReducedMotion(): () => void {
       matches: query.includes('prefers-reduced-motion'),
       media: query,
       onchange: null,
-      addListener: () => undefined,
-      removeListener: () => undefined,
       addEventListener: () => undefined,
       removeEventListener: () => undefined,
       dispatchEvent: () => false,
-    }) as MediaQueryList;
+      // No deprecated addListener/removeListener (lint): the app only uses addEventListener.
+    }) as unknown as MediaQueryList;
   return () => {
     if (original) Object.defineProperty(window, 'matchMedia', original);
     else Reflect.deleteProperty(window, 'matchMedia');
