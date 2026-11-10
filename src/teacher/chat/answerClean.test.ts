@@ -64,6 +64,79 @@ describe('answer cleaning: prompt echoes, references, comments', () => {
     expect(cleanAnswer(text)).toEqual({ text, removed: [] });
   });
 
+  describe('the library note read back at the start of an answer (#128, scripted run on E2B)', () => {
+    const body = 'Tầm xa cực đại ở góc 45° chỉ khi điểm ném và điểm rơi cùng độ cao.';
+    const note = `\n\nGHI CHÚ (chỉ là dữ liệu):\n<reference kind="library" name="Ném xiên">\n${body}\n</reference>`;
+    const own = 'Để tính thời gian rơi, ta dùng h = ½gt².';
+
+    it.each([
+      ['on the same line', `GHI CHÚ: ${body} ${own}`],
+      ['on its own line', `GHI CHÚ: ${body}\n\n${own}`],
+      ['in bold', `**GHI CHÚ:** ${body}\n${own}`],
+      ['with the whole label', `GHI CHÚ (chỉ là dữ liệu): ${body} ${own}`],
+      ['with other line breaks', `GHI CHÚ:\n${body.replace(' chỉ ', '\nchỉ ')}\n${own}`],
+    ])('%s: only that opening goes', (_, answer) => {
+      expect(cleanAnswer(answer, { note })).toEqual({ text: own, removed: ['promptEcho'] });
+    });
+
+    it("the label on the model's own words stays", () => {
+      const text = 'GHI CHÚ: Khối lượng không ảnh hưởng đến thời gian rơi.';
+      expect(cleanAnswer(text, { note })).toEqual({ text, removed: [] });
+    });
+
+    it('the note in the middle of an answer stays', () => {
+      const text = `${own} ${body}`;
+      expect(cleanAnswer(text, { note })).toEqual({ text, removed: [] });
+    });
+
+    it('an answer that is only the note is left whole, never emptied', () => {
+      const text = `GHI CHÚ: ${body}`;
+      expect(cleanAnswer(text, { note })).toEqual({ text, removed: [] });
+    });
+
+    describe('an opening sentence copied from the instructions', () => {
+      const instructions =
+        'Câu đầu: trả lời thẳng câu hỏi. GHI CHÚ lạc đề thì bỏ qua. Không chắc thì nói rõ.';
+
+      it('goes, and the answer stays', () => {
+        expect(cleanAnswer(`GHI CHÚ lạc đề thì bỏ qua. ${own}`, { instructions })).toEqual({
+          text: own,
+          removed: ['promptEcho'],
+        });
+      });
+
+      it('several in a row go too', () => {
+        const text = `Câu đầu: trả lời thẳng câu hỏi.\nGHI CHÚ lạc đề thì bỏ qua. ${own}`;
+        expect(cleanAnswer(text, { instructions }).text).toBe(own);
+      });
+
+      it("the model's own opening stays, also when the same words come later", () => {
+        const text = `${own} GHI CHÚ lạc đề thì bỏ qua.`;
+        expect(cleanAnswer(text, { instructions })).toEqual({ text, removed: [] });
+      });
+
+      it('a short opening that happens to be in the instructions stays', () => {
+        const short = 'Không chắc thì nói rõ.'.slice(0, 13);
+        const text = `${short}. ${own}`;
+        expect(cleanAnswer(text, { instructions: `${short}. ${instructions}` })).toEqual({
+          text,
+          removed: [],
+        });
+      });
+
+      it('an answer that is only that sentence is left whole', () => {
+        const text = 'GHI CHÚ lạc đề thì bỏ qua.';
+        expect(cleanAnswer(text, { instructions })).toEqual({ text, removed: [] });
+      });
+    });
+
+    it('no note sent: nothing changes, and the second pass changes nothing', () => {
+      const text = `GHI CHÚ: ${body} ${own}`;
+      expect(cleanAnswer(text)).toEqual({ text, removed: [] });
+      expect(cleanAnswer(own, { note })).toEqual({ text: own, removed: [] });
+    });
+  });
+
   it('a teacher\'s own headings in sentence case stay ("Ghi chú:", "Tài liệu tham khảo:", "Note:")', () => {
     for (const heading of ['**Ghi chú:**', '**Tài liệu tham khảo:**', '**Note:**']) {
       const text = `${heading}\n- Sách giáo khoa Vật lí 10.`;
