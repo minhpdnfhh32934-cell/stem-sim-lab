@@ -84,6 +84,7 @@ import { Mendel3DSwitch } from './Mendel3DSwitch';
 import { buildMendelScene, type MendelScene } from './scene';
 import { currentMendel, useMendel3D, type MendelCameraMode } from './store';
 import '../../bio.css';
+import { EdgePortal } from '@/app/bench/EdgePortal';
 
 export type { RendererFactory };
 
@@ -653,42 +654,44 @@ function Mendel3DScene({
       />
       <div ref={hudRef} className="m3d__hud">
         <div className="chem-overlay m3d__top" data-inset="top">
-          <IconButton
-            icon={ChevronLeft}
-            size="lg"
-            label={Lz(L('Bước trước', 'Previous step'))}
-            disabled={stepIndex === 0}
-            onClick={() => {
-              goTo(stepIndex - 1);
-            }}
-          />
-          <IconButton
-            icon={Play}
-            altIcon={Pause}
-            showAlt={playing}
-            size="lg"
-            variant="solid"
-            label={playing ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Phát', 'Play'))}
-            onClick={play}
-          />
-          <IconButton
-            icon={ChevronRight}
-            size="lg"
-            label={Lz(L('Bước tiếp theo', 'Next step'))}
-            disabled={stepIndex >= MENDEL_STEPS.length - 1 && t >= MENDEL_TOTAL}
-            onClick={() => {
-              goTo(t >= stepEnd(stepIndex) ? stepIndex + 1 : stepIndex);
-            }}
-          />
-          <IconButton
-            icon={RotateCcw}
-            size="lg"
-            label={Lz(L('Phát lại từ đầu', 'Replay from the start'))}
-            onClick={() => {
-              useMendel3D.setState({ t: 0, playing: !prefersReducedMotion() });
-            }}
-          />
-          <ClassLegend model={model} />
+          <EdgePortal>
+            <IconButton
+              icon={ChevronLeft}
+              size="lg"
+              label={Lz(L('Bước trước', 'Previous step'))}
+              disabled={stepIndex === 0}
+              onClick={() => {
+                goTo(stepIndex - 1);
+              }}
+            />
+            <IconButton
+              icon={Play}
+              altIcon={Pause}
+              showAlt={playing}
+              size="lg"
+              variant="solid"
+              label={playing ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Phát', 'Play'))}
+              onClick={play}
+            />
+            <IconButton
+              icon={ChevronRight}
+              size="lg"
+              label={Lz(L('Bước tiếp theo', 'Next step'))}
+              disabled={stepIndex >= MENDEL_STEPS.length - 1 && t >= MENDEL_TOTAL}
+              onClick={() => {
+                goTo(t >= stepEnd(stepIndex) ? stepIndex + 1 : stepIndex);
+              }}
+            />
+            <IconButton
+              icon={RotateCcw}
+              size="lg"
+              label={Lz(L('Phát lại từ đầu', 'Replay from the start'))}
+              onClick={() => {
+                useMendel3D.setState({ t: 0, playing: !prefersReducedMotion() });
+              }}
+            />
+            <ClassLegend model={model} />
+          </EdgePortal>
         </div>
         <div className="m3d__side" data-inset="corner">
           <div className="m3d__side-row">

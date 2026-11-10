@@ -8,7 +8,7 @@
  * is the model's.
  */
 import { Dices, Pause, Play, RotateCcw, Tags, X } from 'lucide-react';
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, useContext } from 'react';
 import { useLocalized } from '@/app/i18n/localized';
 import { useTierConfig } from '@/perf/perfStore';
 import { IconButton } from '@/ui/IconButton';
@@ -46,6 +46,8 @@ import {
 import { DRIFT_VIEW, frontIsland } from './layout';
 import { buildDriftArchipelago, islandFrame } from './scene';
 import { useDrift3D, type DriftCameraMode } from './store';
+import { EdgePortal } from '@/app/bench/EdgePortal';
+import { BenchContext } from '@/app/bench/shellMode';
 
 /** The animals hop on their own for this long after a change, then the picture rests. */
 const LIVELY_MS = 5000;
@@ -107,54 +109,64 @@ function GenerationPlayer({
 }) {
   const Lz = useLocalized();
   const s = summaryAt(model, g);
+  // The bench draws the player in its edge; the camera switch stays on the stage (§9.6).
+  const bench = useContext(BenchContext);
+  const camera3d = (
+    <Segmented<DriftCameraMode>
+      label={L('Góc nhìn', 'View')}
+      value={camera}
+      options={[
+        { id: 'overview', label: L('Toàn cảnh', 'All islands') },
+        { id: 'closeup', label: L('Cận cảnh một đảo', 'One island close up') },
+      ]}
+      onChange={(v) => {
+        // The whole archipelago has no room beside a card: "Toàn cảnh" closes it.
+        useDrift3D.setState(v === 'overview' ? { camera: v, selected: null } : { camera: v });
+      }}
+    />
+  );
   return (
-    <div className="bio3d__player drift3d__player">
-      <IconButton
-        icon={Play}
-        altIcon={Pause}
-        showAlt={playback.playing}
-        size="lg"
-        variant="solid"
-        label={
-          playback.playing
-            ? Lz(L('Tạm dừng', 'Pause'))
-            : Lz(L('Phát các thế hệ', 'Play the generations'))
-        }
-        onClick={playback.toggle}
-      />
-      <IconButton
-        icon={RotateCcw}
-        size="lg"
-        label={Lz(L('Phát lại từ thế hệ 0', 'Replay from generation 0'))}
-        onClick={playback.replay}
-      />
-      <input
-        type="range"
-        aria-label={Lz(L('Thế hệ', 'Generation'))}
-        min={0}
-        max={model.generations}
-        step={1}
-        value={g}
-        onChange={(e) => {
-          playback.setT(Number(e.target.value));
-        }}
-      />
-      <output aria-live="off">
-        {Lz(L('Thế hệ', 'Generation'))} {g}/{model.generations} · H̄ = {fmt(s.meanH, 3)}
-      </output>
-      <Segmented<DriftCameraMode>
-        label={L('Góc nhìn', 'View')}
-        value={camera}
-        options={[
-          { id: 'overview', label: L('Toàn cảnh', 'All islands') },
-          { id: 'closeup', label: L('Cận cảnh một đảo', 'One island close up') },
-        ]}
-        onChange={(v) => {
-          // The whole archipelago has no room beside a card: "Toàn cảnh" closes it.
-          useDrift3D.setState(v === 'overview' ? { camera: v, selected: null } : { camera: v });
-        }}
-      />
-    </div>
+    <>
+      <EdgePortal>
+        <div className="bio3d__player drift3d__player">
+          <IconButton
+            icon={Play}
+            altIcon={Pause}
+            showAlt={playback.playing}
+            size="lg"
+            variant="solid"
+            label={
+              playback.playing
+                ? Lz(L('Tạm dừng', 'Pause'))
+                : Lz(L('Phát các thế hệ', 'Play the generations'))
+            }
+            onClick={playback.toggle}
+          />
+          <IconButton
+            icon={RotateCcw}
+            size="lg"
+            label={Lz(L('Phát lại từ thế hệ 0', 'Replay from generation 0'))}
+            onClick={playback.replay}
+          />
+          <input
+            type="range"
+            aria-label={Lz(L('Thế hệ', 'Generation'))}
+            min={0}
+            max={model.generations}
+            step={1}
+            value={g}
+            onChange={(e) => {
+              playback.setT(Number(e.target.value));
+            }}
+          />
+          <output aria-live="off">
+            {Lz(L('Thế hệ', 'Generation'))} {g}/{model.generations} · H̄ = {fmt(s.meanH, 3)}
+          </output>
+          {!bench && camera3d}
+        </div>
+      </EdgePortal>
+      {bench && camera3d}
+    </>
   );
 }
 

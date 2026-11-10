@@ -4,6 +4,7 @@ import { useLocalized } from '@/app/i18n/localized';
 import { IconButton } from '@/ui/IconButton';
 import { L } from '../common';
 import type { Playback } from './playback';
+import { EdgePortal } from '@/app/bench/EdgePortal';
 
 /** Play / pause, replay, a time slider and the moment shown (formatted by the lesson). */
 export function Player({
@@ -21,34 +22,36 @@ export function Player({
 }) {
   const Lz = useLocalized();
   return (
-    <div className="bio3d__player">
-      <IconButton
-        icon={Play}
-        altIcon={Pause}
-        showAlt={playback.playing}
-        size="lg"
-        variant="solid"
-        label={playback.playing ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Phát', 'Play'))}
-        onClick={playback.toggle}
-      />
-      <IconButton
-        icon={RotateCcw}
-        size="lg"
-        label={Lz(L('Phát lại từ đầu', 'Replay from the start'))}
-        onClick={playback.replay}
-      />
-      <input
-        type="range"
-        aria-label={label}
-        min={0}
-        max={duration}
-        step={duration / 400}
-        value={playback.t}
-        onChange={(e) => {
-          playback.setT(Number(e.target.value));
-        }}
-      />
-      <output aria-live="off">{readout}</output>
-    </div>
+    <EdgePortal>
+      <div className="bio3d__player">
+        <IconButton
+          icon={Play}
+          altIcon={Pause}
+          showAlt={playback.playing}
+          size="lg"
+          variant="solid"
+          label={playback.playing ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Phát', 'Play'))}
+          onClick={playback.toggle}
+        />
+        <IconButton
+          icon={RotateCcw}
+          size="lg"
+          label={Lz(L('Phát lại từ đầu', 'Replay from the start'))}
+          onClick={playback.replay}
+        />
+        <input
+          type="range"
+          aria-label={label}
+          min={0}
+          max={duration}
+          step={duration / 400}
+          value={playback.t}
+          onChange={(e) => {
+            playback.setT(Number(e.target.value));
+          }}
+        />
+        <output aria-live="off">{readout}</output>
+      </div>
+    </EdgePortal>
   );
 }

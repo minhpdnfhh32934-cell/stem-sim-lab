@@ -1715,3 +1715,32 @@ button.bench-door--lab:hover {
   grid-column: speed;
   justify-self: start;
 }
+
+/* A biology view's own player, drawn into the edge (EdgePortal, B5): one row from D0 to the
+   chip, without the stage's glass box. */
+.bench-edge__module {
+  grid-column: d0 / chip;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  overflow: hidden;
+}
+.bench-edge__module:empty {
+  display: none;
+}
+/* Two classes: a lesson's own CSS (bio.css) loads later with its chunk. */
+.bench-edge .bench-edge__module > * {
+  position: static;
+  inset: auto;
+  margin: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+.bench-edge .bench-edge__module .bio3d__player {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+}

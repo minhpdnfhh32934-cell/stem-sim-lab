@@ -80,6 +80,7 @@ import { buildOsmosisScene, type OsmosisScene } from './osmosisScene';
 import { diffusion3dFor, useTransport3D } from './store';
 import { Transport3DSwitch } from './Transport3DSwitch';
 import '../../bio.css';
+import { EdgePortal } from '@/app/bench/EdgePortal';
 
 export type { RendererFactory };
 
@@ -591,29 +592,31 @@ function Transport3DScene({
         </div>
         {selected && <PartInfo view={view} selected={selected} fmt={fmt} />}
         <div className="m3d__bottom" data-inset="bottom">
-          <div className="bio3d__player">
-            <IconButton
-              icon={Play}
-              altIcon={Pause}
-              showAlt={playing}
-              size="lg"
-              variant="solid"
-              label={playing ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Phát', 'Play'))}
-              onClick={play}
-            />
-            <input
-              type="range"
-              aria-label={Lz(L('Thời gian', 'Time'))}
-              min={0}
-              max={top}
-              step={step}
-              value={view.frame.t}
-              onChange={(e) => {
-                useTransport3D.setState({ t: Number(e.target.value), playing: false });
-              }}
-            />
-            <output>{Lz(readout)}</output>
-          </div>
+          <EdgePortal>
+            <div className="bio3d__player">
+              <IconButton
+                icon={Play}
+                altIcon={Pause}
+                showAlt={playing}
+                size="lg"
+                variant="solid"
+                label={playing ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Phát', 'Play'))}
+                onClick={play}
+              />
+              <input
+                type="range"
+                aria-label={Lz(L('Thời gian', 'Time'))}
+                min={0}
+                max={top}
+                step={step}
+                value={view.frame.t}
+                onChange={(e) => {
+                  useTransport3D.setState({ t: Number(e.target.value), playing: false });
+                }}
+              />
+              <output>{Lz(readout)}</output>
+            </div>
+          </EdgePortal>
           <div className="tr3d__row">
             {isDiffusion ? (
               <>

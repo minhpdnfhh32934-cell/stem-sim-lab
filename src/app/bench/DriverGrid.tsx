@@ -12,6 +12,7 @@ import { PLAYBACK_SPEEDS, useWorkspaceStore, type PlaybackSpeed } from '@/app/wo
 import { useModuleStore } from '@/modules/moduleStore';
 import { ConfidenceBadge } from '@/ui/Badges';
 import { IconButton } from '@/ui/IconButton';
+import { useEdgeSlot } from './edgeSlot';
 import { basicSteps } from './speeds';
 
 /**
@@ -25,8 +26,15 @@ export function DriverGrid() {
   const Driver = mod?.view.Driver;
   if (!moduleShown) return <TimeDriver />;
   if (Driver) return <Driver />;
+  // A view with its own player (biology) draws it into this slot (EdgePortal).
   return (
     <div className="bench-edge" data-surface="frame">
+      <div
+        className="bench-edge__module"
+        ref={(el) => {
+          useEdgeSlot.setState({ el });
+        }}
+      />
       <ConfidenceChip />
     </div>
   );

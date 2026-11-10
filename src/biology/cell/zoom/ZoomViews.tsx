@@ -28,6 +28,7 @@ import {
 import { GLIDE_MS, useLength, useNames, useShowNames, zoomIn, zoomOut } from './hooks';
 import { setZoomLevel, useCellZoom } from './store';
 import '../../bio.css';
+import { EdgePortal } from '@/app/bench/EdgePortal';
 
 const Zoom3DView = lazy(() => import('./Zoom3DView').then((m) => ({ default: m.Zoom3DView })));
 
@@ -86,27 +87,29 @@ export function ZoomButtons({ glide }: { glide: boolean }) {
   const moving = useCellZoom((s) => s.moving);
   const next = LEVEL_NAME[levelInfo(level + 1).id];
   return (
-    <div className="zoom__buttons">
-      {/* Floats above the buttons: showing it never resizes a bar the 3D camera keeps clear of
+    <EdgePortal>
+      <div className="zoom__buttons">
+        {/* Floats above the buttons: showing it never resizes a bar the 3D camera keeps clear of
           (a resize mid-glide would turn the glide into a jump). */}
-      {moving && <span className="chem-chip chem-chip--qual zoom__moving">{Lz(TRANSITION)}</span>}
-      <button type="button" className="btn" disabled={moving || level === 0} onClick={zoomOut}>
-        <ZoomOut size={18} aria-hidden="true" />
-        {Lz(L('Thu nhỏ', 'Zoom out'))}
-      </button>
-      <button
-        type="button"
-        className="btn btn--accent"
-        disabled={moving || level === LEVELS.length - 1}
-        title={level < LEVELS.length - 1 ? Lz(next) : undefined}
-        onClick={() => {
-          zoomIn(glide);
-        }}
-      >
-        <ZoomIn size={18} aria-hidden="true" />
-        {Lz(L('Phóng to', 'Zoom in'))}
-      </button>
-    </div>
+        {moving && <span className="chem-chip chem-chip--qual zoom__moving">{Lz(TRANSITION)}</span>}
+        <button type="button" className="btn" disabled={moving || level === 0} onClick={zoomOut}>
+          <ZoomOut size={18} aria-hidden="true" />
+          {Lz(L('Thu nhỏ', 'Zoom out'))}
+        </button>
+        <button
+          type="button"
+          className="btn btn--accent"
+          disabled={moving || level === LEVELS.length - 1}
+          title={level < LEVELS.length - 1 ? Lz(next) : undefined}
+          onClick={() => {
+            zoomIn(glide);
+          }}
+        >
+          <ZoomIn size={18} aria-hidden="true" />
+          {Lz(L('Phóng to', 'Zoom in'))}
+        </button>
+      </div>
+    </EdgePortal>
   );
 }
 

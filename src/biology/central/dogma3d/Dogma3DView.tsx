@@ -60,6 +60,7 @@ import type { Vec3 } from './layout';
 import { buildDogmaScene, type DogmaScene } from './scene';
 import { DOGMA_SPEEDS, dogma3dFor, useDogma3D } from './store';
 import '../../bio.css';
+import { EdgePortal } from '@/app/bench/EdgePortal';
 
 export type { RendererFactory };
 
@@ -632,54 +633,56 @@ function Dogma3DScene({
       <div ref={hostRef} className="m3d__gl" role="img" tabIndex={0} aria-label={label} />
       <div ref={hudRef} className="m3d__hud">
         <div className="chem-overlay m3d__top" data-inset="top">
-          <IconButton
-            icon={ChevronLeft}
-            size="lg"
-            label={Lz(L('Bước trước', 'Previous step'))}
-            disabled={atStart}
-            onClick={() => {
-              step(-1);
-            }}
-          />
-          <IconButton
-            icon={Play}
-            altIcon={Pause}
-            showAlt={playing}
-            size="lg"
-            variant="solid"
-            label={playing ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Phát', 'Play'))}
-            onClick={play}
-          />
-          <IconButton
-            icon={ChevronRight}
-            size="lg"
-            label={Lz(L('Bước tiếp theo', 'Next step'))}
-            disabled={atEnd}
-            onClick={() => {
-              step(1);
-            }}
-          />
-          <IconButton
-            icon={RotateCcw}
-            size="lg"
-            label={Lz(L('Phát lại từ đầu', 'Replay from the start'))}
-            onClick={() => {
-              useDogma3D.setState({ t: 0, playing: !prefersReducedMotion() });
-            }}
-          />
-          {!basic && (
-            <Segmented
-              label={L('Tốc độ', 'Speed')}
-              value={String(speed)}
-              options={DOGMA_SPEEDS.map((v) => ({
-                id: String(v),
-                label: L(fmtSpeed(v), fmtSpeed(v)),
-              }))}
-              onChange={(v) => {
-                useDogma3D.setState({ speed: Number(v) });
+          <EdgePortal>
+            <IconButton
+              icon={ChevronLeft}
+              size="lg"
+              label={Lz(L('Bước trước', 'Previous step'))}
+              disabled={atStart}
+              onClick={() => {
+                step(-1);
               }}
             />
-          )}
+            <IconButton
+              icon={Play}
+              altIcon={Pause}
+              showAlt={playing}
+              size="lg"
+              variant="solid"
+              label={playing ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Phát', 'Play'))}
+              onClick={play}
+            />
+            <IconButton
+              icon={ChevronRight}
+              size="lg"
+              label={Lz(L('Bước tiếp theo', 'Next step'))}
+              disabled={atEnd}
+              onClick={() => {
+                step(1);
+              }}
+            />
+            <IconButton
+              icon={RotateCcw}
+              size="lg"
+              label={Lz(L('Phát lại từ đầu', 'Replay from the start'))}
+              onClick={() => {
+                useDogma3D.setState({ t: 0, playing: !prefersReducedMotion() });
+              }}
+            />
+            {!basic && (
+              <Segmented
+                label={L('Tốc độ', 'Speed')}
+                value={String(speed)}
+                options={DOGMA_SPEEDS.map((v) => ({
+                  id: String(v),
+                  label: L(fmtSpeed(v), fmtSpeed(v)),
+                }))}
+                onChange={(v) => {
+                  useDogma3D.setState({ speed: Number(v) });
+                }}
+              />
+            )}
+          </EdgePortal>
           <span className="chem-chip">
             <strong>{Lz(PHASE_NAME[phase])}</strong>
           </span>

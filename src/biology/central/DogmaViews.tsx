@@ -25,6 +25,7 @@ import {
 } from './dogma';
 import { EFFECT, dogmaCard, mutationOf, parseInput, useDogmaStore } from './state';
 import '../bio.css';
+import { EdgePortal } from '@/app/bench/EdgePortal';
 
 function CodonTrack({
   mrna,
@@ -208,38 +209,40 @@ export function DogmaStage({
   return (
     <div className="bio-scroll">
       <div className="chem-toolbar">
-        <IconButton
-          icon={ChevronLeft}
-          label={Lz(L('Bộ ba trước', 'Previous codon'))}
-          disabled={active <= 0}
-          onClick={() => {
-            useDogmaStore.setState({ step: Math.max(0, active - 1), playing: false });
-          }}
-        />
-        <IconButton
-          icon={st.playing ? Pause : Play}
-          label={
-            st.playing
-              ? Lz(L('Tạm dừng', 'Pause'))
-              : Lz(L('Dịch mã từng bước', 'Translate step by step'))
-          }
-          variant="solid"
-          disabled={steps === 0}
-          onClick={() => {
-            useDogmaStore.setState((s) => ({
-              playing: !s.playing,
-              step: s.step >= steps - 1 ? 0 : s.step,
-            }));
-          }}
-        />
-        <IconButton
-          icon={ChevronRight}
-          label={Lz(L('Bộ ba sau', 'Next codon'))}
-          disabled={active >= steps - 1}
-          onClick={() => {
-            useDogmaStore.setState({ step: Math.min(steps - 1, active + 1), playing: false });
-          }}
-        />
+        <EdgePortal>
+          <IconButton
+            icon={ChevronLeft}
+            label={Lz(L('Bộ ba trước', 'Previous codon'))}
+            disabled={active <= 0}
+            onClick={() => {
+              useDogmaStore.setState({ step: Math.max(0, active - 1), playing: false });
+            }}
+          />
+          <IconButton
+            icon={st.playing ? Pause : Play}
+            label={
+              st.playing
+                ? Lz(L('Tạm dừng', 'Pause'))
+                : Lz(L('Dịch mã từng bước', 'Translate step by step'))
+            }
+            variant="solid"
+            disabled={steps === 0}
+            onClick={() => {
+              useDogmaStore.setState((s) => ({
+                playing: !s.playing,
+                step: s.step >= steps - 1 ? 0 : s.step,
+              }));
+            }}
+          />
+          <IconButton
+            icon={ChevronRight}
+            label={Lz(L('Bộ ba sau', 'Next codon'))}
+            disabled={active >= steps - 1}
+            onClick={() => {
+              useDogmaStore.setState({ step: Math.min(steps - 1, active + 1), playing: false });
+            }}
+          />
+        </EdgePortal>
         <span className="chem-chip">
           {steps
             ? Lz(

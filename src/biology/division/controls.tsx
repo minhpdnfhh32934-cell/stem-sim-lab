@@ -9,6 +9,7 @@ import { L } from '../common';
 import { countsOf, type Division, type StageState } from './division';
 import { setDivisionState } from './stageIndex';
 import { STAGE_NAME, useDivisionStore } from './state';
+import { EdgePortal } from '@/app/bench/EdgePortal';
 
 export function DivisionControls({
   kind,
@@ -26,37 +27,39 @@ export function DivisionControls({
   const c = countsOf(s);
   return (
     <>
-      <IconButton
-        icon={ChevronLeft}
-        label={Lz(L('Bước trước', 'Previous step'))}
-        disabled={index === 0}
-        onClick={() => {
-          setDivisionState(kind, { index: Math.max(0, index - 1), playing: false });
-        }}
-      />
-      <IconButton
-        icon={playing ? Pause : Play}
-        label={playing ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Phát', 'Play'))}
-        variant="solid"
-        onClick={() => {
-          const x = useDivisionStore.getState();
-          setDivisionState(kind, {
-            playing: !x.playing,
-            index: x.index >= stages.length - 1 ? 0 : x.index,
-          });
-        }}
-      />
-      <IconButton
-        icon={ChevronRight}
-        label={Lz(L('Bước tiếp theo', 'Next step'))}
-        disabled={index >= stages.length - 1}
-        onClick={() => {
-          setDivisionState(kind, {
-            index: Math.min(stages.length - 1, index + 1),
-            playing: false,
-          });
-        }}
-      />
+      <EdgePortal>
+        <IconButton
+          icon={ChevronLeft}
+          label={Lz(L('Bước trước', 'Previous step'))}
+          disabled={index === 0}
+          onClick={() => {
+            setDivisionState(kind, { index: Math.max(0, index - 1), playing: false });
+          }}
+        />
+        <IconButton
+          icon={playing ? Pause : Play}
+          label={playing ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Phát', 'Play'))}
+          variant="solid"
+          onClick={() => {
+            const x = useDivisionStore.getState();
+            setDivisionState(kind, {
+              playing: !x.playing,
+              index: x.index >= stages.length - 1 ? 0 : x.index,
+            });
+          }}
+        />
+        <IconButton
+          icon={ChevronRight}
+          label={Lz(L('Bước tiếp theo', 'Next step'))}
+          disabled={index >= stages.length - 1}
+          onClick={() => {
+            setDivisionState(kind, {
+              index: Math.min(stages.length - 1, index + 1),
+              playing: false,
+            });
+          }}
+        />
+      </EdgePortal>
       <span className="chem-chip">
         <strong>{Lz(STAGE_NAME[s.stage])}</strong>
       </span>
