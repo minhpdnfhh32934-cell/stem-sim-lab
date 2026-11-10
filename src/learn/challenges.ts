@@ -308,6 +308,22 @@ export const CHALLENGES: readonly Challenge[] = [
       'Compare Ω with the natural angular frequency ω₀ = √(k/m).',
     ),
   },
+  {
+    id: 'dcCircuit.maxPower',
+    topic: 'dcCircuit',
+    title: L('Công suất mạch ngoài lớn nhất', 'Most power to the external circuit'),
+    task: L(
+      'Nguồn E\u00a0=\u00a012\u00a0V có điện trở trong r\u00a0=\u00a02\u00a0Ω, mạch ngoài chỉ có R₁ (SimLab đặt sẵn khi bạn bắt đầu). Chỉnh R₁ để công suất mạch ngoài lớn nhất.',
+      'A 12\u00a0V source with internal resistance r\u00a0=\u00a02\u00a0Ω feeds R₁ alone (SimLab sets this when you start). Adjust R₁ so that the external circuit gets the most power.',
+    ),
+    controls: ['R1'],
+    start: { layout: 0, emf: 12, rInt: 2, R1: 10 },
+    goal: { answer: 'P_out', kind: 'max' },
+    hint: L(
+      'R₁ quá nhỏ thì U nhỏ, R₁ quá lớn thì I nhỏ. Thử so R₁ với điện trở trong r.',
+      'Too small an R₁ gives a small U, too large a small I. Compare R₁ with the internal resistance r.',
+    ),
+  },
 ];
 
 export function challengesFor(topic: string): Challenge[] {

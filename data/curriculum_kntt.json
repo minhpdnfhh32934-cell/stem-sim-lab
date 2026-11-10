@@ -2384,6 +2384,20 @@
    "review_status": "pending"
   },
   {
+   "topic": "dcCircuit",
+   "subject": "physics",
+   "grade": 11,
+   "book": "VL11",
+   "chapter": "Chương IV. Dòng điện. Mạch điện",
+   "lessons": [
+    23,
+    24,
+    25
+   ],
+   "reason": "Tên Bài 23–25: điện trở, định luật Ohm, nguồn điện, năng lượng và công suất điện (cảnh có nguồn E, r và 1–3 điện trở).",
+   "review_status": "pending"
+  },
+  {
    "topic": "standingWave",
    "subject": "physics",
    "grade": 11,

@@ -32,7 +32,7 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Sách | Số bài | Lí thuyết | Lí thuyết có chủ đề SimLab |
 | --- | --- | --- | --- |
 | Vật lí 10 | 34 | 26 | 16 |
-| Vật lí 11 | 26 | 20 | 10 |
+| Vật lí 11 | 26 | 20 | 13 |
 | Vật lí 12 | 25 | 21 | 0 |
 | Hoá học 10 | 23 | 16 | 5 |
 | Hoá học 11 | 25 | 19 | 1 |
@@ -40,7 +40,7 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Sinh học 10 | 26 | 17 | 5 |
 | Sinh học 11 | 29 | 20 | 0 |
 | Sinh học 12 | 35 | 28 | 6 |
-| **Cộng** | **253** | **189** | **43** |
+| **Cộng** | **253** | **189** | **46** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -82,9 +82,9 @@ Gồm các bài đã có chủ đề SimLab (đề xuất) và các bài của k
 | Vật lí 11 | Chương III. Điện trường | 16 | Lực tương tác giữa các điện tích | 61 | Lí thuyết | Điện trường của điện tích điểm | Tên Bài 16–18: lực tương tác giữa các điện tích, khái niệm điện trường, điện trường đều. | pending |
 | Vật lí 11 | Chương III. Điện trường | 17 | Khái niệm điện trường | 65 | Lí thuyết | Điện trường của điện tích điểm | Tên Bài 16–18: lực tương tác giữa các điện tích, khái niệm điện trường, điện trường đều. | pending |
 | Vật lí 11 | Chương III. Điện trường | 18 | Điện trường đều | 71 | Lí thuyết | Điện trường của điện tích điểm | Tên Bài 16–18: lực tương tác giữa các điện tích, khái niệm điện trường, điện trường đều. | pending |
-| Vật lí 11 | Chương IV. Dòng điện. Mạch điện | 23 | Điện trở. Định luật Ohm | 95 | Lí thuyết | chưa có — kế hoạch (e) Mạch điện một chiều, chuyển sang 0.8.1 | Bài của 0.8.0 Phần A (#37 mục 4.2). | pending |
-| Vật lí 11 | Chương IV. Dòng điện. Mạch điện | 24 | Nguồn điện | 102 | Lí thuyết | chưa có — kế hoạch (e) Mạch điện một chiều, chuyển sang 0.8.1 | Bài của 0.8.0 Phần A (#37 mục 4.2). | pending |
-| Vật lí 11 | Chương IV. Dòng điện. Mạch điện | 25 | Năng lượng và công suất điện | 106 | Lí thuyết | chưa có — kế hoạch (e) Mạch điện một chiều, chuyển sang 0.8.1 | Bài của 0.8.0 Phần A (#37 mục 4.2). | pending |
+| Vật lí 11 | Chương IV. Dòng điện. Mạch điện | 23 | Điện trở. Định luật Ohm | 95 | Lí thuyết | Mạch điện một chiều | Tên Bài 23–25: điện trở, định luật Ohm, nguồn điện, năng lượng và công suất điện (cảnh có nguồn E, r và 1–3 điện trở). | pending |
+| Vật lí 11 | Chương IV. Dòng điện. Mạch điện | 24 | Nguồn điện | 102 | Lí thuyết | Mạch điện một chiều | Tên Bài 23–25: điện trở, định luật Ohm, nguồn điện, năng lượng và công suất điện (cảnh có nguồn E, r và 1–3 điện trở). | pending |
+| Vật lí 11 | Chương IV. Dòng điện. Mạch điện | 25 | Năng lượng và công suất điện | 106 | Lí thuyết | Mạch điện một chiều | Tên Bài 23–25: điện trở, định luật Ohm, nguồn điện, năng lượng và công suất điện (cảnh có nguồn E, r và 1–3 điện trở). | pending |
 | Hoá học 10 | Chương 1. Cấu tạo nguyên tử | 3 | Cấu trúc lớp vỏ electron nguyên tử | 21 | Lí thuyết | Cấu hình electron, Hình dạng orbital | Tên Bài 3: cấu trúc lớp vỏ electron nguyên tử. | pending |
 | Hoá học 10 | Chương 2. Bảng tuần hoàn các nguyên tố hoá học và định luật tuần hoàn | 5 | Cấu tạo của bảng tuần hoàn các nguyên tố hoá học | 30 | Lí thuyết | Bảng tuần hoàn | Tên Bài 5, 6, 8: cấu tạo bảng tuần hoàn, xu hướng biến đổi tính chất, định luật tuần hoàn. | pending |
 | Hoá học 10 | Chương 2. Bảng tuần hoàn các nguyên tố hoá học và định luật tuần hoàn | 6 | Xu hướng biến đổi một số tính chất của nguyên tử các nguyên tố trong một chu kì và trong một nhóm | 34 | Lí thuyết | Bảng tuần hoàn | Tên Bài 5, 6, 8: cấu tạo bảng tuần hoàn, xu hướng biến đổi tính chất, định luật tuần hoàn. | pending |
