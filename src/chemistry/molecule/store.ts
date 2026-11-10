@@ -11,6 +11,8 @@ export interface MoleculeState {
   labels: boolean;
   dipole: boolean;
   query: string;
+  /** The bench's "Tự xoay": the camera turns slowly around the molecule (never saved). */
+  spin: boolean;
 }
 
 export const useMoleculeStore = create<MoleculeState>()(() => ({
@@ -21,6 +23,7 @@ export const useMoleculeStore = create<MoleculeState>()(() => ({
   labels: true,
   dipole: false,
   query: '',
+  spin: false,
 }));
 
 /** Topic-specific defaults when a molecule topic opens. */
@@ -64,3 +67,37 @@ export function consumePendingMolecule(): string | null {
   pending = null;
   return p;
 }
+
+/** Molecules offered as quick picks for each topic. */
+export const QUICK_MOLECULES: Record<MoleculeTopic, string[]> = {
+  molecule3d: ['h2o', 'nh3', 'ch4', 'co2', 'c2h4', 'c2h2', 'c6h6', 'c2h5oh', 'ch3cooh', 'glucose'],
+  vsepr: [
+    'becl2',
+    'co2',
+    'bf3',
+    'so2',
+    'ch4',
+    'nh3',
+    'h2o',
+    'pcl5',
+    'sf4',
+    'clf3',
+    'xef2',
+    'sf6',
+    'xef4',
+  ],
+  bondPolarity: [
+    'h2',
+    'hcl',
+    'h2o',
+    'co2',
+    'nh3',
+    'ch4',
+    'ccl4',
+    'chcl3',
+    'bf3',
+    'so2',
+    'hcn',
+    'c2h5oh',
+  ],
+};

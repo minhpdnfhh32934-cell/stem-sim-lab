@@ -6,6 +6,7 @@ import { resetEq, useEqStore } from './eqStore';
 import { GasBottom } from './GasBottom';
 import { resetGas, useGasStore } from './gasStore';
 import { GasPanel } from './GasPanel';
+import { EquilibriumDriver, GasDriver } from './ParticleDrivers';
 import { CollisionStage, MaxwellStage } from './views';
 
 const gasState = bindStore(useGasStore, ['gas', 'T', 'n', 'start', 'eaKJ', 'reversible'], (p) => {
@@ -19,6 +20,7 @@ export const maxwellBoltzmann: ModuleView = {
   Panel: GasPanel,
   Bottom: GasBottom,
   bottomTitle: L('Phân bố tốc độ', 'Speed distribution'),
+  Driver: GasDriver,
   state: gasState,
 };
 export const collisionTheory: ModuleView = {
@@ -27,6 +29,7 @@ export const collisionTheory: ModuleView = {
   Panel: GasPanel,
   Bottom: GasBottom,
   bottomTitle: L('Số hạt theo thời gian', 'Particles over time'),
+  Driver: GasDriver,
   state: gasState,
 };
 export const chemicalEquilibrium: ModuleView = {
@@ -35,6 +38,7 @@ export const chemicalEquilibrium: ModuleView = {
   Panel: EquilibriumPanel,
   Bottom: EquilibriumBottom,
   bottomTitle: L('Nồng độ theo thời gian', 'Concentrations over time'),
+  Driver: EquilibriumDriver,
   state: bindStore(useEqStore, ['systemId', 'kinetics', 'T', 'initial'], (p) => {
     resetEq(p);
   }),

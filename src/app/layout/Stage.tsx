@@ -256,6 +256,7 @@ function CompareLegend() {
   const locale = useSettingsStore((s) => s.locale);
   const ghost = useCompareStore((s) => s.ghost);
   const { scene, params } = useSimStore(useShallow((s) => ({ scene: s.scene, params: s.params })));
+  const bench = useContext(BenchContext);
   if (!ghost || !scene) return null;
   const changed = changedParams(
     scene.params.filter((d) => d.kind === 'number'),
@@ -268,7 +269,19 @@ function CompareLegend() {
         <line x1="1" y1="4" x2="25" y2="4" />
       </svg>
       <span>
-        {t('stage.compareLegend')}
+        {/* The bench marks a pinned run whose inputs changed since (docs/BENCH_DESIGN.md §2). */}
+        {bench ? (
+          <span>
+            {t('stage.compareLegend')}
+            {changed.length > 0 && (
+              <span className="stage__compare-stale" title={t('stage.compareStaleHint')}>
+                {t('stage.compareStale')}
+              </span>
+            )}
+          </span>
+        ) : (
+          t('stage.compareLegend')
+        )}
         {changed.length > 0 && (
           <small>
             {t('stage.compareBefore', {

@@ -22,6 +22,7 @@ import { SUBJECTS, useWorkspaceStore } from '@/app/workspaceStore';
 import { HistoryList } from '@/app/project/HistoryList';
 import { useProfileStore } from '@/app/learner/profileStore';
 import { chaptersFor, GRADE_CHOICES, type LibraryChapter } from '@/app/levels';
+import { chapterTitle, searchChapters } from './libraryChapters';
 import '@/app/learner/learner.css';
 import { EmptyState } from '@/ui/EmptyState';
 import { Tabs } from '@/ui/Tabs';
@@ -67,25 +68,6 @@ function StudioEntry({ t }: { t: TFunction }) {
       <ChevronRight size={15} strokeWidth={1.75} aria-hidden="true" />
     </button>
   );
-}
-
-const chapterTitle = (c: LibraryChapter, t: TFunction) =>
-  'key' in c.title ? t(c.title.key) : c.title.text;
-
-/** Chapters whose title or topics match the query (accent- and case-insensitive). */
-function searchChapters(all: LibraryChapter[], query: string, t: TFunction): LibraryChapter[] {
-  const q = normalizeForSearch(query);
-  if (!q) return all;
-  return all
-    .map((c) => ({
-      ...c,
-      topics: c.topics.filter(
-        (topic) =>
-          normalizeForSearch(t(topic.titleKey)).includes(q) ||
-          normalizeForSearch(chapterTitle(c, t)).includes(q),
-      ),
-    }))
-    .filter((c) => c.topics.length > 0);
 }
 
 function Library({ t }: { t: TFunction }) {

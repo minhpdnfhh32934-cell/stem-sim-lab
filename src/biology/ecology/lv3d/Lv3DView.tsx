@@ -10,7 +10,7 @@
  * illustration (caption); every number is the model's.
  */
 import { Pause, Play, RotateCcw, Tags, X } from 'lucide-react';
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, useContext } from 'react';
 import { useLocalized } from '@/app/i18n/localized';
 import { useTierConfig } from '@/perf/perfStore';
 import { IconButton } from '@/ui/IconButton';
@@ -50,6 +50,10 @@ import {
 import { LV_VIEW } from './layout';
 import { buildLvHabitat } from './scene';
 import { useLv3D, type LvCameraMode } from './store';
+import { EdgePortal } from '@/app/bench/EdgePortal';
+import { EdgeSteps } from '@/app/bench/EdgeSteps';
+import { useOnEdge } from '@/app/bench/edgeSlot';
+import { BenchContext } from '@/app/bench/shellMode';
 
 /** The animals move on their own for this long after a change, then the picture rests. */
 const LIVELY_MS = 6000;
@@ -144,32 +148,64 @@ function TimePlayer({
   picked: boolean;
 }) {
   const Lz = useLocalized();
+  // The bench draws the player in its edge; the camera switch stays on the stage (§9.6).
+  const bench = useContext(BenchContext);
+  const onEdge = useOnEdge();
+  const camera3d = <Framing camera={camera} picked={picked} />;
   return (
-    <div className="bio3d__player lv3d__player">
-      <IconButton
-        icon={Play}
-        altIcon={Pause}
-        showAlt={playback.playing}
-        size="lg"
-        variant="solid"
-        label={playback.playing ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Phát', 'Play'))}
-        onClick={playback.toggle}
-      />
-      <IconButton
-        icon={RotateCcw}
-        size="lg"
-        label={Lz(L('Phát lại từ đầu', 'Replay from the start'))}
-        onClick={playback.replay}
-      />
-      <CurveTrack
-        model={model}
-        moment={moment}
-        playback={playback}
-        label={Lz(L('Thời gian t', 'Time t'))}
-      />
-      <output aria-live="off">{readout(moment, fmt)}</output>
-      <Framing camera={camera} picked={picked} />
-    </div>
+    <>
+      <EdgePortal>
+        {onEdge ? (
+          // The bench edge (§9.10 habitats): Chạy, Đặt lại, the readout and the lesson's own
+          // time track over its curve (its name kept).
+          <EdgeSteps
+            play={{ playing: playback.playing, onClick: playback.toggle }}
+            reset={{
+              label: Lz(L('Đặt lại', 'Reset')),
+              onClick: () => {
+                playback.setT(0);
+              },
+            }}
+            readout={readout(moment, fmt)}
+            track={
+              <CurveTrack
+                model={model}
+                moment={moment}
+                playback={playback}
+                label={Lz(L('Thời gian t', 'Time t'))}
+              />
+            }
+          />
+        ) : (
+          <div className="bio3d__player lv3d__player">
+            <IconButton
+              icon={Play}
+              altIcon={Pause}
+              showAlt={playback.playing}
+              size="lg"
+              variant="solid"
+              label={playback.playing ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Phát', 'Play'))}
+              onClick={playback.toggle}
+            />
+            <IconButton
+              icon={RotateCcw}
+              size="lg"
+              label={Lz(L('Phát lại từ đầu', 'Replay from the start'))}
+              onClick={playback.replay}
+            />
+            <CurveTrack
+              model={model}
+              moment={moment}
+              playback={playback}
+              label={Lz(L('Thời gian t', 'Time t'))}
+            />
+            <output aria-live="off">{readout(moment, fmt)}</output>
+            {camera3d}
+          </div>
+        )}
+      </EdgePortal>
+      {bench && camera3d}
+    </>
   );
 }
 

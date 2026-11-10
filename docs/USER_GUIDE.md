@@ -562,10 +562,16 @@ Khi dùng AI:
   **Thực vật**; bấm tên một bộ phận ở khung bên phải để đọc chức năng của nó (diễn đạt theo SGK Sinh
   học 10). Nút **Hiện tên** ghi tên mọi bộ phận lên hình (chế độ Cơ bản bật sẵn). Hình 2D chỉ là
   minh họa, không theo tỉ lệ; số bào quan vẽ ra chỉ để minh họa.
+- **Từ tế bào đến DNA** (chương “Cấu trúc tế bào”): bấm **Phóng to** để đi qua 6 cấp — tế bào nhân
+  thực → nhân → NST kép ở kì giữa → sợi nhiễm sắc 10 nm và khung NST → nucleosome → chuỗi xoắn kép
+  B-DNA; **Thu nhỏ** để lùi một cấp, hoặc bấm tên một cấp ở khung bên phải để tới thẳng. Vòng sáng
+  trên hình là chỗ cấp sau phóng to. Mỗi cấp có **thước tỉ lệ** dài đúng số ghi trên thước và Thẻ
+  Khoa học riêng; khung bên phải ghi các kích thước kèm sách và số trang. Lúc camera lướt từ cấp này
+  sang cấp kia, hình ghi “không theo tỉ lệ” (khi bật giảm chuyển động thì chuyển cấp ngay).
 
 ### Hình 3D trong Sinh học (bản 0.7, làm đẹp ở 0.7.1)
 
-11 trong 12 bài Sinh học mở bằng hình 3D (bài mới “Tế bào nhân sơ và nhân thực” hiện chỉ có
+12 trong 13 bài Sinh học mở bằng hình 3D (bài “Tế bào nhân sơ và nhân thực” hiện chỉ có
 hình 2D). Cách dùng chung:
 
 - Nút **3D / 2D** để đổi hình; app nhớ lựa chọn của từng bài. Kéo chuột để xoay, lăn chuột để
