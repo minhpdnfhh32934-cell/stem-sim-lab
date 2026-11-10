@@ -25,5 +25,10 @@ export interface ModuleView {
   Panel?: ComponentType;
   Bottom?: ComponentType;
   bottomTitle?: LocalizedText;
+  /**
+   * The bench edge's controls for this view (bench shell only, docs/BENCH_DESIGN.md §8): the
+   * view then leaves them off its stage there. The classic shell never shows it.
+   */
+  Driver?: ComponentType;
   state?: ModuleStateBinding;
 }

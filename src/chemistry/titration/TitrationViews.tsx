@@ -1,5 +1,6 @@
 import { Minus, Plus } from 'lucide-react';
-import { useMemo } from 'react';
+import { useContext, useMemo } from 'react';
+import { BenchContext } from '@/app/bench/shellMode';
 import { formatNumber } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
@@ -116,6 +117,8 @@ function Flask({ colour, level, burette }: { colour: string; level: number; bure
 
 export function TitrationStage() {
   const Lz = useLocalized();
+  // The bench adds and removes NaOH from its edge (TitrationDriver).
+  const bench = useContext(BenchContext);
   const { locale, fixed, sig } = useFormat();
   usePublishCard(useMemo(() => titrationCard(locale), [locale]));
   const st = useTitrationStore();
@@ -170,46 +173,50 @@ export function TitrationStage() {
             <strong>{Lz(ind.name)}</strong>: {Lz(phaseText(ind, value, (v) => fixed(v, 1)))}
           </p>
           <p className="small muted">{Lz(where)}</p>
-          <label className="tit-volume">
-            <span>
-              {Lz(L('Thể tích NaOH đã thêm', 'NaOH added'))} V<sub>b</sub>:{' '}
-              <strong className="mono">{vol(vb)} mL</strong>
-            </span>
-            <input
-              type="range"
-              min={0}
-              max={vMax}
-              step={step}
-              value={vb}
-              onChange={(e) => {
-                setTitration({ vb: Number(e.target.value) });
-              }}
-            />
-          </label>
-          <div className="tit-nudge">
-            <button
-              type="button"
-              className="btn"
-              disabled={vb <= 0}
-              aria-label={Lz(L(`Bớt ${sig(nudge)} mL NaOH`, `Remove ${sig(nudge)} mL of NaOH`))}
-              onClick={() => {
-                setTitration({ vb: vb - nudge });
-              }}
-            >
-              <Minus size={14} aria-hidden="true" /> {sig(nudge)} mL
-            </button>
-            <button
-              type="button"
-              className="btn"
-              disabled={vb >= vMax}
-              aria-label={Lz(L(`Thêm ${sig(nudge)} mL NaOH`, `Add ${sig(nudge)} mL of NaOH`))}
-              onClick={() => {
-                setTitration({ vb: vb + nudge });
-              }}
-            >
-              <Plus size={14} aria-hidden="true" /> {sig(nudge)} mL
-            </button>
-          </div>
+          {!bench && (
+            <>
+              <label className="tit-volume">
+                <span>
+                  {Lz(L('Thể tích NaOH đã thêm', 'NaOH added'))} V<sub>b</sub>:{' '}
+                  <strong className="mono">{vol(vb)} mL</strong>
+                </span>
+                <input
+                  type="range"
+                  min={0}
+                  max={vMax}
+                  step={step}
+                  value={vb}
+                  onChange={(e) => {
+                    setTitration({ vb: Number(e.target.value) });
+                  }}
+                />
+              </label>
+              <div className="tit-nudge">
+                <button
+                  type="button"
+                  className="btn"
+                  disabled={vb <= 0}
+                  aria-label={Lz(L(`Bớt ${sig(nudge)} mL NaOH`, `Remove ${sig(nudge)} mL of NaOH`))}
+                  onClick={() => {
+                    setTitration({ vb: vb - nudge });
+                  }}
+                >
+                  <Minus size={14} aria-hidden="true" /> {sig(nudge)} mL
+                </button>
+                <button
+                  type="button"
+                  className="btn"
+                  disabled={vb >= vMax}
+                  aria-label={Lz(L(`Thêm ${sig(nudge)} mL NaOH`, `Add ${sig(nudge)} mL of NaOH`))}
+                  onClick={() => {
+                    setTitration({ vb: vb + nudge });
+                  }}
+                >
+                  <Plus size={14} aria-hidden="true" /> {sig(nudge)} mL
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

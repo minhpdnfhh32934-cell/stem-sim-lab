@@ -21,12 +21,52 @@ import { basicSteps } from './speeds';
  */
 export function DriverGrid() {
   const moduleShown = useModuleStore((s) => s.active !== null || s.loading);
-  return moduleShown ? (
+  const mod = useModuleStore((s) => s.active);
+  const Driver = mod?.view.Driver;
+  if (!moduleShown) return <TimeDriver />;
+  if (Driver) return <Driver />;
+  return (
     <div className="bench-edge" data-surface="frame">
       <ConfidenceChip />
     </div>
-  ) : (
-    <TimeDriver />
+  );
+}
+
+/** A module's bench edge: its own controls in the D slots, then the confidence chip. */
+export function ModuleEdge({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div className="bench-edge" data-surface="frame" role="group" aria-label={label}>
+      {children}
+      <ConfidenceChip />
+    </div>
+  );
+}
+
+/**
+ * D0 "Chạy" / "Tạm dừng" of a module (the screen's one filled control); the visible word is its
+ * name (WCAG 2.5.3).
+ */
+export function EdgePlay({
+  playing,
+  disabled = false,
+  onClick,
+}: {
+  playing: boolean;
+  disabled?: boolean;
+  onClick: () => void;
+}) {
+  const t = useT();
+  return (
+    <MainActionSlot>
+      <button type="button" className="bench-play" disabled={disabled} onClick={onClick}>
+        {playing ? (
+          <Pause size={18} strokeWidth={2} aria-hidden="true" />
+        ) : (
+          <Play size={18} strokeWidth={2} aria-hidden="true" />
+        )}
+        <span className="bench-play__label">{playing ? t('bench.pause') : t('bench.play')}</span>
+      </button>
+    </MainActionSlot>
   );
 }
 
