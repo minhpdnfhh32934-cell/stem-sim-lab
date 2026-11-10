@@ -29,12 +29,13 @@ const TOPICS: readonly (readonly [string, string])[] = [
 async function openPhysicsLibrary(page: Page) {
   await openLab(page);
   await page.getByRole('radio', { name: 'Vật lý' }).click();
-  return page.getByRole('complementary', { name: 'Thư viện chủ đề' });
+  // "Kệ bài" (B3): the topic cards are in the main area.
+  return page.getByRole('main');
 }
 
 test('the physics library lists exactly the topics below', async ({ page }) => {
   const library = await openPhysicsLibrary(page);
-  await expect(library.locator('.tree__topic-title')).toHaveText(TOPICS.map(([name]) => name));
+  await expect(library.locator('.shelf-card__title')).toHaveText(TOPICS.map(([name]) => name));
 });
 
 for (const [name, title] of TOPICS) {

@@ -8,7 +8,6 @@ import { useLayoutStore } from '@/app/layout/layoutStore';
 import { LeftSidebar } from '@/app/layout/LeftSidebar';
 import { SubjectSwitch } from '@/app/layout/SubjectSwitch';
 import { useShellServices } from '@/app/layout/useShellServices';
-import { HomeScreen } from '@/app/learner/HomeScreen';
 import { LandingScreen } from '@/app/learner/LandingScreen';
 import { useIsHome, useIsLanding, useIsStudio, useIsTeacher } from '@/app/topics';
 import { ScreenScan } from '@/teacher/chat/ScreenScan';
@@ -16,6 +15,7 @@ import { IconButton } from '@/ui/IconButton';
 import { Skeleton } from '@/ui/Skeleton';
 import { BenchFrame } from './BenchFrame';
 import { BenchHeader } from './BenchHeader';
+import { BenchLibrary } from './Library';
 import { BenchContext } from './shellMode';
 import { keepBasicSpeedOnSteps } from './speeds';
 
@@ -58,20 +58,18 @@ export default function BenchShell() {
     <main className="bench-room bench-room--full">
       <LandingScreen />
     </main>
-  ) : library || studio ? (
+  ) : library ? (
+    <BenchLibrary />
+  ) : studio ? (
     <div className="bench-room" style={{ '--left-w': `${leftWidth}px` } as CSSProperties}>
       <div className="bench-library">
         <SubjectSwitch />
         <LeftSidebar />
       </div>
       <main className="bench-room__main">
-        {studio ? (
-          <Suspense fallback={<Skeleton label={t('stage.loading')} variant="lines" />}>
-            <StudioScreen />
-          </Suspense>
-        ) : (
-          <HomeScreen />
-        )}
+        <Suspense fallback={<Skeleton label={t('stage.loading')} variant="lines" />}>
+          <StudioScreen />
+        </Suspense>
       </main>
     </div>
   ) : (

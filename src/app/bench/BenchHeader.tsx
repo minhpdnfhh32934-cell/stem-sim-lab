@@ -1,11 +1,12 @@
 import { FileText, Redo2, Search, Settings, Undo2, X } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useAnalyzeStore } from '@/app/ai/analyze';
 import { AiStatusPill } from '@/app/ai/AiStatusPill';
 import { useCommandPalette } from '@/app/command/commands';
 import { useT } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { ProblemInput } from '@/app/layout/ProblemInput';
+import { useProblemSheet } from './problemSheet';
 import { ModeSwitch } from '@/app/learner/ModeSwitch';
 import { FileMenu } from '@/app/project/FileMenu';
 import { redo, undo, useUndoStore } from '@/app/project/undo';
@@ -48,7 +49,10 @@ export function BenchHeader() {
   const sceneTitle = useSimStore((s) => s.scene?.title);
   const moduleTitle = useModuleStore((s) => s.active?.view.title);
   const topic = sceneTitle ?? moduleTitle;
-  const [problemOpen, setProblemOpen] = useState(false);
+  const problemOpen = useProblemSheet((s) => s.open);
+  const setProblemOpen = (open: boolean) => {
+    useProblemSheet.setState({ open });
+  };
   const problemButton = useRef<HTMLButtonElement>(null);
 
   // The dialogs sit beside the header, not in it: the frame's colours must not reach them.

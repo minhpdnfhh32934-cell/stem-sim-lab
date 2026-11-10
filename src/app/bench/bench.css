@@ -1253,3 +1253,254 @@ kbd {
 .tool-switch[aria-checked='true'] .tool-switch__track span {
   transform: translateX(13px);
 }
+
+/* B3: "Kệ bài", the bench's library (docs/BENCH_DESIGN.md §9.3). */
+.shelf-room {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+.shelf-filters {
+  flex: 0 0 288px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border-right: 1px solid var(--border);
+  background: var(--paper-bg);
+  overflow-y: auto;
+}
+.shelf-filters__title {
+  margin: var(--space-2) 0 0;
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 600;
+  color: var(--paper-text-muted);
+}
+.shelf-subjects {
+  display: grid;
+  gap: var(--space-1);
+}
+.shelf-subject {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 48px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--paper-bg);
+  color: var(--paper-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.shelf-subject[aria-checked='true'] {
+  border-color: var(--accent);
+  background: var(--paper-active);
+  font-weight: 600;
+}
+.shelf-subject__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--subject-physics);
+}
+.shelf-subject[data-subject='chemistry'] .shelf-subject__dot {
+  background: var(--subject-chemistry);
+}
+.shelf-subject[data-subject='biology'] .shelf-subject__dot {
+  background: var(--subject-biology);
+}
+.shelf-subject__name {
+  flex: 1;
+}
+.shelf-subject__count {
+  font-size: 12px;
+  color: var(--paper-text-muted);
+}
+.shelf-search {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--target);
+  margin-top: var(--space-2);
+  padding: 0 var(--space-2);
+  border: 1px solid var(--border-input);
+  border-radius: var(--radius-sm);
+  background: var(--paper-bg);
+}
+.shelf-search input {
+  flex: 1;
+  min-width: 0;
+  min-height: 38px;
+  border: 0;
+  background: transparent;
+  color: var(--paper-text);
+  font: inherit;
+}
+.shelf-main {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  padding: var(--space-6, 24px);
+  background: var(--paper-sunken);
+}
+.shelf-main__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+}
+.shelf-main__head h1 {
+  flex: 1;
+  margin: 0;
+  font-size: 32px;
+  line-height: 42px;
+}
+.shelf-main__note {
+  flex: 0 0 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--paper-text-muted);
+}
+.shelf-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-4);
+  margin: var(--space-4) 0;
+}
+.shelf-start {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md, 10px);
+  background: var(--paper-bg);
+}
+.shelf-start h2 {
+  margin: 0;
+  font-size: 16px;
+  line-height: 22px;
+}
+.shelf-start .btn {
+  justify-self: start;
+  min-height: var(--target);
+}
+.shelf {
+  margin-top: var(--space-6, 24px);
+}
+.shelf__title {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-2);
+  font-size: 18px;
+  line-height: 26px;
+}
+.shelf__count {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--paper-text-muted);
+}
+.shelf__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(232px, 1fr));
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.shelf-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  min-height: 112px;
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--subject-physics);
+  border-radius: var(--radius-md, 10px);
+  background: var(--paper-bg);
+  color: var(--paper-text);
+}
+.shelf-card__open {
+  min-height: var(--target);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+/* The whole card is the button's target. */
+.shelf-card__open::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+.shelf-card__open:focus-visible {
+  outline: none;
+}
+.shelf-card:has(.shelf-card__open:focus-visible) {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+.shelf-card--soon .shelf-card__open {
+  cursor: default;
+}
+[data-subject-shelf='chemistry'] .shelf-card {
+  border-top-color: var(--subject-chemistry);
+}
+[data-subject-shelf='biology'] .shelf-card {
+  border-top-color: var(--subject-biology);
+}
+.shelf-card:not(.shelf-card--soon):hover {
+  background: var(--paper-hover);
+}
+.shelf-card--soon {
+  opacity: 0.7;
+}
+.shelf-card__title {
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: 600;
+}
+.shelf-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-2);
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--paper-text-muted);
+}
+.shelf-card__lessons {
+  padding: 1px var(--space-1);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-sm);
+}
+.shelf-card__mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  color: var(--paper-text);
+}
+.shelf-empty {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-2);
+  margin-top: var(--space-6, 24px);
+}
+.shelf-start__topic {
+  margin: 0;
+  font-size: 14px;
+  line-height: 20px;
+}
