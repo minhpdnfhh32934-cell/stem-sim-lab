@@ -506,6 +506,7 @@ UNPLACED = [
     ("maxwellBoltzmann", "chemistry", "VL12 Bài 8, 12 (sách Vật lí; trong app chủ đề thuộc Hoá học)", "Không bài nào trong ba cuốn Hoá học có tên về phân bố Maxwell–Boltzmann; hai bài Vật lí 12 nói về mô hình động học phân tử chất khí."),
     ("michaelisMenten", "biology", "SH10 Bài 13–15", "Không bài nào có tên về động học enzyme."),
     ("lotkaVolterra", "biology", "SH12 Bài 26", "Tên Bài 26 là quần xã sinh vật, không nêu quan hệ con mồi – vật ăn thịt."),
+    ("acidBaseTitration", "chemistry", "HH11 Bài 2", "Tên Bài 2 là cân bằng trong dung dịch nước, không nêu chuẩn độ acid – base."),
     ("geneticDrift", "biology", "SH12 Bài 18, 21", "Tên Bài 18, 21 là di truyền học quần thể và học thuyết tiến hoá tổng hợp hiện đại, không nêu phiêu bạt di truyền."),
 ]
 

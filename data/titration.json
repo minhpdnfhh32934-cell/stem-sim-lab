@@ -1,0 +1,203 @@
+{
+ "dataset": "titration",
+ "version": 1,
+ "review_status": "pending",
+ "accessed": "2026-11-02",
+ "source": {
+  "id": "iapws-r11-24",
+  "citation": "IAPWS R11-24, Revised Release on the Ionization Constant of H2O (2024), Eqs. (2)–(4), Table 1; based on Bandura & Lvov, J. Phys. Chem. Ref. Data 35, 15 (2006) and Arcis et al., J. Phys. Chem. Ref. Data 53, 023103 (2024)",
+  "url": "https://iapws.org/documents/release/Ionization.download"
+ },
+ "generated_by": "scripts/data/gen_titration.py",
+ "water": {
+  "T_K": 298.15,
+  "p_MPa": 0.1,
+  "density_g_cm3": 0.99704702,
+  "pKw_molal": 13.9944,
+  "pKw": 13.9969,
+  "uncertainty_pK": 0.05,
+  "source": {
+   "id": "iapws-r11-24",
+   "citation": "IAPWS R11-24, Revised Release on the Ionization Constant of H2O (2024), Eqs. (2)–(4), Table 1; based on Bandura & Lvov, J. Phys. Chem. Ref. Data 35, 15 (2006) and Arcis et al., J. Phys. Chem. Ref. Data 53, 023103 (2024)",
+   "url": "https://iapws.org/documents/release/Ionization.download"
+  },
+  "density_source": {
+   "id": "iapws-95",
+   "citation": "W. Wagner, A. Pruss, The IAPWS Formulation 1995 for the Thermodynamic Properties of Ordinary Water Substance, J. Phys. Chem. Ref. Data 31, 387 (2002): density of liquid water at 25 °C, 0.1 MPa"
+  },
+  "review_status": "pending"
+ },
+ "items": [
+  {
+   "id": "methylOrange",
+   "name": {
+    "vi": "Methyl da cam",
+    "en": "Methyl orange"
+   },
+   "colours": [
+    {
+     "name": {
+      "vi": "đỏ",
+      "en": "red"
+     },
+     "css": "red"
+    },
+    {
+     "name": {
+      "vi": "vàng",
+      "en": "yellow"
+     },
+     "css": "yellow"
+    }
+   ],
+   "ranges": [
+    [
+     3.1,
+     4.4
+    ]
+   ],
+   "source": {
+    "id": "wikipedia-ph-indicator",
+    "citation": "Wikipedia, \"pH indicator\", table \"Common laboratory indicators\" (revision 1354116288 of 14 May 2026, read 2026-11-02); the article cites D. C. Harris, Exploring Chemical Analysis, 3rd ed., W. H. Freeman (2005)",
+    "url": "https://en.wikipedia.org/w/index.php?title=PH_indicator&oldid=1354116288"
+   },
+   "display_source": {
+    "id": "w3c-css-color-4",
+    "citation": "W3C, CSS Color Module Level 4, §6.1 Named Colors (screen colour of a colour name; illustration only)",
+    "url": "https://www.w3.org/TR/css-color-4/#named-colors"
+   },
+   "review_status": "pending"
+  },
+  {
+   "id": "methylRed",
+   "name": {
+    "vi": "Methyl đỏ",
+    "en": "Methyl red"
+   },
+   "colours": [
+    {
+     "name": {
+      "vi": "đỏ",
+      "en": "red"
+     },
+     "css": "red"
+    },
+    {
+     "name": {
+      "vi": "vàng",
+      "en": "yellow"
+     },
+     "css": "yellow"
+    }
+   ],
+   "ranges": [
+    [
+     4.4,
+     6.2
+    ]
+   ],
+   "source": {
+    "id": "wikipedia-ph-indicator",
+    "citation": "Wikipedia, \"pH indicator\", table \"Common laboratory indicators\" (revision 1354116288 of 14 May 2026, read 2026-11-02); the article cites D. C. Harris, Exploring Chemical Analysis, 3rd ed., W. H. Freeman (2005)",
+    "url": "https://en.wikipedia.org/w/index.php?title=PH_indicator&oldid=1354116288"
+   },
+   "display_source": {
+    "id": "w3c-css-color-4",
+    "citation": "W3C, CSS Color Module Level 4, §6.1 Named Colors (screen colour of a colour name; illustration only)",
+    "url": "https://www.w3.org/TR/css-color-4/#named-colors"
+   },
+   "review_status": "pending"
+  },
+  {
+   "id": "bromothymolBlue",
+   "name": {
+    "vi": "Bromothymol xanh",
+    "en": "Bromothymol blue"
+   },
+   "colours": [
+    {
+     "name": {
+      "vi": "vàng",
+      "en": "yellow"
+     },
+     "css": "yellow"
+    },
+    {
+     "name": {
+      "vi": "xanh lam",
+      "en": "blue"
+     },
+     "css": "blue"
+    }
+   ],
+   "ranges": [
+    [
+     6.0,
+     7.6
+    ]
+   ],
+   "source": {
+    "id": "wikipedia-ph-indicator",
+    "citation": "Wikipedia, \"pH indicator\", table \"Common laboratory indicators\" (revision 1354116288 of 14 May 2026, read 2026-11-02); the article cites D. C. Harris, Exploring Chemical Analysis, 3rd ed., W. H. Freeman (2005)",
+    "url": "https://en.wikipedia.org/w/index.php?title=PH_indicator&oldid=1354116288"
+   },
+   "display_source": {
+    "id": "w3c-css-color-4",
+    "citation": "W3C, CSS Color Module Level 4, §6.1 Named Colors (screen colour of a colour name; illustration only)",
+    "url": "https://www.w3.org/TR/css-color-4/#named-colors"
+   },
+   "review_status": "pending"
+  },
+  {
+   "id": "phenolphthalein",
+   "name": {
+    "vi": "Phenolphthalein",
+    "en": "Phenolphthalein"
+   },
+   "colours": [
+    {
+     "name": {
+      "vi": "không màu",
+      "en": "colourless"
+     },
+     "css": "transparent"
+    },
+    {
+     "name": {
+      "vi": "hồng tím",
+      "en": "purple-pink"
+     },
+     "css": "orchid"
+    },
+    {
+     "name": {
+      "vi": "không màu",
+      "en": "colourless"
+     },
+     "css": "transparent"
+    }
+   ],
+   "ranges": [
+    [
+     8.3,
+     10.0
+    ],
+    [
+     12.0,
+     13.0
+    ]
+   ],
+   "source": {
+    "id": "wikipedia-ph-indicator",
+    "citation": "Wikipedia, \"pH indicator\", table \"Common laboratory indicators\" (revision 1354116288 of 14 May 2026, read 2026-11-02); the article cites D. C. Harris, Exploring Chemical Analysis, 3rd ed., W. H. Freeman (2005)",
+    "url": "https://en.wikipedia.org/w/index.php?title=PH_indicator&oldid=1354116288"
+   },
+   "display_source": {
+    "id": "w3c-css-color-4",
+    "citation": "W3C, CSS Color Module Level 4, §6.1 Named Colors (screen colour of a colour name; illustration only)",
+    "url": "https://www.w3.org/TR/css-color-4/#named-colors"
+   },
+   "review_status": "pending"
+  }
+ ]
+}

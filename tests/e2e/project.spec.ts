@@ -184,7 +184,7 @@ test('manual mode offers chemistry and biology topics too', async ({ page }) => 
   const dialog = page.getByRole('dialog', { name: 'Tự dựng cảnh' });
   const select = dialog.getByRole('combobox', { name: 'Chủ đề' });
   await expect(select.locator('optgroup')).toHaveCount(3);
-  await expect(select.locator('optgroup[label="Hóa học"] option')).toHaveCount(12);
+  await expect(select.locator('optgroup[label="Hóa học"] option')).toHaveCount(13);
   await expect(select.locator('optgroup[label="Sinh học"] option')).toHaveCount(12);
   await select.selectOption('logisticGrowth');
   await expect(dialog.locator('.problem-review__module input[type="range"]').first()).toBeVisible();

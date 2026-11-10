@@ -53,7 +53,7 @@ export const CATALOG: Record<Subject, ChapterEntry[]> = {
   chemistry: [
     chapter('atoms', ['periodicTable', 'electronConfiguration', 'bohrModel', 'orbitals']),
     chapter('molecules', ['molecule3d', 'vsepr', 'bondPolarity']),
-    chapter('reactions', ['reactionLibrary', 'equationBalancing']),
+    chapter('reactions', ['reactionLibrary', 'equationBalancing', 'acidBaseTitration']),
     chapter('particles', ['collisionTheory', 'maxwellBoltzmann', 'chemicalEquilibrium']),
   ],
   biology: [

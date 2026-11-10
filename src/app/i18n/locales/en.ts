@@ -116,6 +116,7 @@ const en: Messages = {
     collisionTheory: 'Collision theory',
     maxwellBoltzmann: 'Maxwell–Boltzmann distribution',
     chemicalEquilibrium: "Chemical equilibrium & Le Chatelier's principle",
+    acidBaseTitration: 'Acid–base titration',
     mitosis: 'Mitosis',
     meiosis: 'Meiosis',
     centralDogma: 'DNA → mRNA → Protein',
