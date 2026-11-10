@@ -1,29 +1,24 @@
 import {
   Bot,
-  Check,
   CircleAlert,
   RotateCcw,
   FlaskConical,
-  LassoSelect,
   LoaderCircle,
-  Send,
   Settings2,
   Square,
-  X,
 } from 'lucide-react';
-import { useEffect, useRef, useState, type KeyboardEvent, type SyntheticEvent } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useWorkspaceStore, type SettingsSection } from '@/app/workspaceStore';
 import { useChatStore, type ChatMessageRecord } from './chatStore';
+import { ChatComposer, type QuickAction } from './ChatComposer';
 import { ChatHeader } from './ChatHeader';
 import { ChatMessageView } from './ChatMessageView';
 import { ChatNotices } from './ChatNotices';
-import { subtitleText } from '@/teacher/board/lesson';
 import { useBoardStore } from '@/teacher/board/boardStore';
 import {
   askable,
   asksInWords,
-  cut,
   selectionExcerpt,
   type BoardSelection,
 } from '@/teacher/board/selection';
@@ -487,26 +482,20 @@ export function ChatPanel({
   // A question may still be answered by another panel (the bubble before "Mở rộng").
   const answering = useChatStore((s) => s.answering);
   const pending = busy || answering;
-  const stopAnswer = useChatStore((s) => s.stopAnswer);
   const stopped = useChatStore((s) => s.stopped);
 
   /** The typed question, with the circled part when the chip is there. */
   const submitDraft = () => {
     void submit(draft, undefined, boardAsk ? { selection: boardAsk } : {});
   };
-  const onSubmit = (e: SyntheticEvent) => {
-    e.preventDefault();
-    submitDraft();
-  };
-  const onKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
-      e.preventDefault();
-      // Only a fresh press sends. A held Enter repeats: one that opened this page from a button
-      // (e.g. "Hỏi thầy về bộ phận này", which writes a question into this box and focuses it)
-      // must not send that question on its own; a held key never sends twice either.
-      if (e.repeat) return;
-      submitDraft();
-    }
+  // A quick button: shown as the short label, sent as a full instruction (a bare "Chậm hơn" was
+  // misread by small models).
+  const quickAction = (key: QuickAction) => {
+    void submit(
+      t(`teacher.chips.${key}` as MessageKey),
+      t(`teacher.chipPrompts.${key}` as MessageKey),
+      { quickAction: true, ...(boardAsk ? { selection: boardAsk } : {}) },
+    );
   };
 
   // A question about a picture of the circled area is never reviewed online (askTeacher), and a
@@ -676,114 +665,19 @@ export function ChatPanel({
         <div ref={messagesEnd} />
       </div>
 
-      {/* "Giải thích lại", "Chậm hơn"… only make sense once there is an answer to rework. */}
-      {teacherPage && hasAnswer && (
-        <div className="teacher__quick-actions" role="group" aria-label={t('teacher.chipsLabel')}>
-          {(['hint', 'again', 'slower', 'example', 'simpler', 'lost'] as const).map((key) => (
-            <button
-              key={key}
-              type="button"
-              onClick={() => {
-                // Shown as the short label, sent as a full instruction (a bare "Chậm hơn"
-                // was misread by small models).
-                void submit(
-                  t(`teacher.chips.${key}` as MessageKey),
-                  t(`teacher.chipPrompts.${key}` as MessageKey),
-                  { quickAction: true, ...(boardAsk ? { selection: boardAsk } : {}) },
-                );
-              }}
-              disabled={busy}
-            >
-              {t(`teacher.chips.${key}` as MessageKey)}
-            </button>
-          ))}
-        </div>
-      )}
-      {boardAsk && (
-        // The question goes with what was circled; the learner can take it off.
-        <div className="chat-panel__board-chip">
-          <LassoSelect size={14} aria-hidden="true" />
-          <span className="chat-panel__board-chip-text">
-            {boardInWords
-              ? t('chat.boardChipPictureWords')
-              : boardAsk.status === 'picture'
-                ? t('chat.boardChipPicture')
-                : t('chat.boardChip', {
-                    excerpt: cut(subtitleText(selectionExcerpt(boardAsk, 160)), 60),
-                  })}
-          </span>
-          <button
-            type="button"
-            className="chat-panel__icon-button"
-            onClick={() => {
-              useBoardStore.getState().set({ selection: null });
-            }}
-            aria-label={t('chat.boardChipRemove')}
-            title={t('chat.boardChipRemove')}
-          >
-            <X size={15} />
-          </button>
-        </div>
-      )}
-      <form className="chat-panel__composer" onSubmit={onSubmit}>
-        <textarea
-          ref={input}
-          value={draft}
-          onChange={(e) => {
-            setDraft(e.target.value);
-          }}
-          onKeyDown={onKeyDown}
-          rows={2}
-          maxLength={4000}
-          placeholder={t('chat.placeholder')}
-          aria-label={t('chat.inputLabel')}
-        />
-        <div className="chat-panel__composer-actions">
-          <button
-            type="button"
-            className={cx('chat-panel__think', chat.thinkEnabled && 'is-on')}
-            aria-pressed={chat.thinkEnabled}
-            onClick={() => {
-              chat.setThinkEnabled(!chat.thinkEnabled);
-            }}
-            title={t('chat.thinkTitle')}
-          >
-            <Check size={14} /> {t('chat.think')}{' '}
-            {/* A draft written on this computer is reviewed by one API only. */}
-            {chat.thinkEnabled && (
-              <span>{engine === 'cloud' ? t('chat.twoApis') : t('chat.oneApiReview')}</span>
-            )}
-          </button>
-          <span className="chat-panel__composer-spacer" />
-          {pending && stopAnswer ? (
-            // While an answer is being written, the main action is to stop it.
-            <button
-              type="button"
-              className="btn chat-panel__stop"
-              onClick={() => {
-                stopSpeaking();
-                stopAnswer();
-              }}
-              aria-label={t('chat.stopLabel')}
-              title={t('chat.stopLabel')}
-            >
-              <Square size={14} aria-hidden="true" />
-              {t('chat.stop')}
-            </button>
-          ) : (
-            <button
-              type="submit"
-              className="btn btn--accent chat-panel__send"
-              disabled={!draft.trim() || busy}
-              aria-label={t('chat.send')}
-              data-tip={t('chat.enterHint')}
-              data-tip-side="top"
-            >
-              <Send size={16} />
-            </button>
-          )}
-        </div>
-      </form>
+      <ChatComposer
+        showQuickActions={teacherPage && hasAnswer}
+        onQuickAction={quickAction}
+        boardAsk={boardAsk}
+        boardInWords={boardInWords}
+        draft={draft}
+        onDraftChange={setDraft}
+        inputRef={input}
+        onSend={submitDraft}
+        busy={busy}
+        pending={pending}
+        engine={engine}
+      />
       <footer className="chat-panel__footer">{t('chat.footer')}</footer>
     </section>
   );
