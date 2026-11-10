@@ -1,7 +1,8 @@
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Rotate3d } from 'lucide-react';
 import { ModuleEdge } from '@/app/bench/DriverGrid';
 import { useLocalized } from '@/app/i18n/localized';
 import { IconButton } from '@/ui/IconButton';
+import { prefersReducedMotion } from '@/ui/three/availability';
 import { L } from '../common';
 import { moleculeById, prettyFormula } from '../data/molecules';
 import { QUICK_MOLECULES, selectMolecule, useMoleculeStore, type MoleculeTopic } from './store';
@@ -22,6 +23,8 @@ function MoleculeStepper({ topic }: { topic: MoleculeTopic }) {
     useMoleculeStore.setState({ query: '' });
   };
   const m = moleculeById(id);
+  const spin = useMoleculeStore((s) => s.spin);
+  const reduced = prefersReducedMotion();
   return (
     <ModuleEdge label={Lz(L('Chọn phân tử', 'Choose a molecule'))}>
       <div className="bench-edge__stepper">
@@ -46,6 +49,21 @@ function MoleculeStepper({ topic }: { topic: MoleculeTopic }) {
           }}
         />
       </div>
+      <IconButton
+        className="bench-edge__toggle"
+        icon={Rotate3d}
+        label={Lz(
+          reduced
+            ? L('Tự xoay (tắt khi máy giảm chuyển động)', 'Auto-rotate (off with reduced motion)')
+            : L('Tự xoay', 'Auto-rotate'),
+        )}
+        tooltipSide="top"
+        active={spin && !reduced}
+        disabled={reduced}
+        onClick={() => {
+          useMoleculeStore.setState((s) => ({ spin: !s.spin }));
+        }}
+      />
     </ModuleEdge>
   );
 }

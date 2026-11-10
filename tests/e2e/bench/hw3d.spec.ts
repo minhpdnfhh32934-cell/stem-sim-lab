@@ -127,7 +127,7 @@ test('Hardy–Weinberg 3D: the habitat follows the model through the generations
 
   const chip = (g: string) => view.locator(`[data-genotype="${g}"] strong`);
   // The bench draws the lesson's player in its edge.
-  const player = page.locator('.bench-edge .bio3d__player');
+  const player = page.locator('.bench-edge .edge-steps');
 
   // Generation 0: the learner's counts, drawn one figure per 10 individuals (1 000 > 150).
   await expect(chip('AA')).toHaveText(vi(START.AA));
@@ -228,13 +228,8 @@ test('Hardy–Weinberg 3D: the habitat follows the model through the generations
   await expect(v3.locator('[data-chip="pq"]')).toHaveText('p = — · q = —');
   await expect(v3.locator('[data-chip="empty"]')).toHaveText('Chưa có cá thể nào');
   await expect(page.getByRole('button', { name: 'Cho ngẫu phối 1 thế hệ' })).toBeDisabled();
-  await page
-    .locator('.bench-edge .bio3d__player')
-    .getByRole('slider', { name: 'Thế hệ' })
-    .fill('3');
-  await expect(page.locator('.bench-edge .bio3d__player output')).toContainText(
-    'Thế hệ 3/10 · N = 0',
-  );
+  await page.locator('.bench-edge .edge-steps').getByRole('slider', { name: 'Thế hệ' }).fill('3');
+  await expect(page.locator('.bench-edge .edge-steps output')).toContainText('Thế hệ 3/10 · N = 0');
   await expect.poll(async () => (await state(page))?.generation).toBe(3);
   expect((await state(page))?.drawn).toEqual({ AA: 0, Aa: 0, aa: 0 });
   expect((await state(page))?.beads).toEqual({ A: 0, a: 0 });
