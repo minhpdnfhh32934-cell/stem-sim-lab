@@ -9,7 +9,8 @@ import {
   Tag,
   TriangleAlert,
 } from 'lucide-react';
-import { useEffect, useMemo, useRef } from 'react';
+import { useContext, useEffect, useMemo, useRef } from 'react';
+import { BenchContext } from '@/app/bench/shellMode';
 import { useShallow } from 'zustand/react/shallow';
 import { useLocalized } from '@/app/i18n/localized';
 import { IconButton } from '@/ui/IconButton';
@@ -47,6 +48,8 @@ function libraryMolecules(r: Reaction) {
 
 export function ReactionStage() {
   const Lz = useLocalized();
+  // The bench plays the mechanism from its edge (ReactionDriver).
+  const bench = useContext(BenchContext);
   const st = useReactionStore(
     useShallow((s) => ({
       id: s.id,
@@ -76,7 +79,7 @@ export function ReactionStage() {
       if (hold.current > 0) {
         hold.current -= dt;
       } else {
-        let next = s.t + dt * 0.45;
+        let next = s.t + dt * 0.45 * s.speed;
         if (Math.floor(next) > Math.floor(s.t) && s.stepPause) {
           next = Math.floor(next);
           hold.current = 1.2;
@@ -186,7 +189,7 @@ export function ReactionStage() {
               ` ‡${frame.total_charge ? (frame.total_charge > 0 ? '+' : '−') : ''}`}
           </span>
         )}
-        {!atKey && (
+        {!atKey && !bench && (
           <span className="chem-chip chem-chip--approx">
             <TriangleAlert size={13} strokeWidth={1.75} aria-hidden="true" /> {Lz(ILLUSTRATIVE)}
           </span>
@@ -198,56 +201,67 @@ export function ReactionStage() {
           {Lz(L('liên kết một phần', 'partial bond'))}
         </span>
       </div>
-      <div
-        className="rx-player"
-        role="group"
-        aria-label={Lz(L('Điều khiển cơ chế', 'Mechanism controls'))}
-      >
-        <IconButton
-          icon={SkipBack}
-          label={Lz(L('Bước trước', 'Previous step'))}
-          disabled={st.t <= 0}
-          onClick={() => {
-            useReactionStore.setState({ t: Math.max(0, Math.ceil(st.t) - 1), playing: false });
-          }}
-        />
-        <IconButton
-          icon={st.playing ? Pause : Play}
-          label={st.playing ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Phát', 'Play'))}
-          variant="solid"
-          onClick={() => {
-            useReactionStore.setState((s) => ({ playing: !s.playing, t: s.t >= last ? 0 : s.t }));
-          }}
-        />
-        <IconButton
-          icon={SkipForward}
-          label={Lz(L('Bước sau', 'Next step'))}
-          disabled={st.t >= last}
-          onClick={() => {
-            useReactionStore.setState({ t: Math.min(last, Math.floor(st.t) + 1), playing: false });
-          }}
-        />
-        <input
-          type="range"
-          min={0}
-          max={last}
-          step={0.01}
-          value={st.t}
-          aria-label={Lz(L('Tiến trình phản ứng', 'Reaction progress'))}
-          onChange={(e) => {
-            useReactionStore.setState({ t: Number(e.target.value), playing: false });
-          }}
-        />
-        <IconButton
-          icon={ArrowRightLeft}
-          label={Lz(L('Dừng ở mỗi bước khi phát', 'Pause on each step while playing'))}
-          active={st.stepPause}
-          onClick={() => {
-            useReactionStore.setState((s) => ({ stepPause: !s.stepPause }));
-          }}
-        />
-        <span className="rx-player__kind">{frame ? Lz(FRAME_KIND[frame.kind]) : ''}</span>
-      </div>
+      {bench && !atKey && (
+        <p className="bench-stamp bench-stamp--bl">
+          <TriangleAlert size={14} strokeWidth={1.75} aria-hidden="true" />
+          {Lz(ILLUSTRATIVE)}
+        </p>
+      )}
+      {!bench && (
+        <div
+          className="rx-player"
+          role="group"
+          aria-label={Lz(L('Điều khiển cơ chế', 'Mechanism controls'))}
+        >
+          <IconButton
+            icon={SkipBack}
+            label={Lz(L('Bước trước', 'Previous step'))}
+            disabled={st.t <= 0}
+            onClick={() => {
+              useReactionStore.setState({ t: Math.max(0, Math.ceil(st.t) - 1), playing: false });
+            }}
+          />
+          <IconButton
+            icon={st.playing ? Pause : Play}
+            label={st.playing ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Phát', 'Play'))}
+            variant="solid"
+            onClick={() => {
+              useReactionStore.setState((s) => ({ playing: !s.playing, t: s.t >= last ? 0 : s.t }));
+            }}
+          />
+          <IconButton
+            icon={SkipForward}
+            label={Lz(L('Bước sau', 'Next step'))}
+            disabled={st.t >= last}
+            onClick={() => {
+              useReactionStore.setState({
+                t: Math.min(last, Math.floor(st.t) + 1),
+                playing: false,
+              });
+            }}
+          />
+          <input
+            type="range"
+            min={0}
+            max={last}
+            step={0.01}
+            value={st.t}
+            aria-label={Lz(L('Tiến trình phản ứng', 'Reaction progress'))}
+            onChange={(e) => {
+              useReactionStore.setState({ t: Number(e.target.value), playing: false });
+            }}
+          />
+          <IconButton
+            icon={ArrowRightLeft}
+            label={Lz(L('Dừng ở mỗi bước khi phát', 'Pause on each step while playing'))}
+            active={st.stepPause}
+            onClick={() => {
+              useReactionStore.setState((s) => ({ stepPause: !s.stepPause }));
+            }}
+          />
+          <span className="rx-player__kind">{frame ? Lz(FRAME_KIND[frame.kind]) : ''}</span>
+        </div>
+      )}
     </div>
   );
 }

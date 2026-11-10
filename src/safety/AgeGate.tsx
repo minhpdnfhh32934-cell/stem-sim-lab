@@ -33,7 +33,7 @@ export function AgeGate({ hold = false }: { hold?: boolean }) {
   const visible = useGateVisible() && !hold;
   const status = useSafetyStore((s) => s.status);
   // The bench's first run counts the gate as step 2 of 3 (§9.2); not when Settings reopens it.
-  const firstRunStep = useSafetyStore((s) => !s.gateRequested) && benchShellOn();
+  const firstRunStep = useSafetyStore((s) => !s.gateRequested || s.gateFirstRun) && benchShellOn();
 
   useEffect(() => {
     void loadSafety().catch(() => undefined);

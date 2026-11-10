@@ -2,6 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { useAiStore } from '@/ai/aiStore';
+import { Notebook } from '@/app/bench/Notebook';
 import { BenchContext } from '@/app/bench/shellMode';
 import { setTransportForTests, type LlmTransport } from '@/ai/transport';
 import type { ChatRequest } from '@/ai/types';
@@ -130,20 +131,29 @@ describe('"Hỏi thầy" in Science Studio', () => {
     expect(screenContext('vi')).not.toContain('[Science Studio');
   });
 
-  it('in the bench it opens the AI Teacher page with the question written in, nothing sent', async () => {
+  it('in the bench it opens "Hỏi AI" beside the lesson with the question written in, nothing sent', async () => {
     const user = userEvent.setup();
     render(
       <BenchContext.Provider value={true}>
+        <Notebook push={false} pinnedOnly />
         <Lesson scenario={sc} />
       </BenchContext.Provider>,
     );
-    expect(screen.queryByText(/Lấy thông tin từ màn hình/)).toBeNull();
+    // Only the two pinned tabs beside a lesson (docs/BENCH_DESIGN.md §9.7).
+    expect(screen.getAllByRole('tab').map((t) => t.textContent)).toEqual([
+      'Thẻ khoa học',
+      'Hỏi AI',
+    ]);
     await user.click(screen.getByRole('button', { name: 'Hỏi thầy' }));
-    const teacher = useTeacherStore.getState();
-    expect(teacher.open).toBe(true);
-    expect(teacher.draft).toContain('bước Quan sát');
-    // Left unread, a bubble question would pop up in the next topic's drawer.
-    expect(teacher.bubbleDraft).toBeNull();
+    const box = await screen.findByRole('textbox', { name: 'Nhập câu hỏi' });
+    await waitFor(() => {
+      expect((box as HTMLTextAreaElement).value).toContain('bước Quan sát');
+    });
+    // The bench's chat has the screen-context switch, off until the learner turns it on.
+    expect(screen.getByRole('checkbox', { name: 'Lấy thông tin từ màn hình' })).not.toBeChecked();
+    // Read by the chat, so it never pops up again in the next topic's drawer.
+    expect(useTeacherStore.getState().bubbleDraft).toBeNull();
+    expect(useTeacherStore.getState().open).toBe(false);
     expect(calls).toHaveLength(0);
   });
 

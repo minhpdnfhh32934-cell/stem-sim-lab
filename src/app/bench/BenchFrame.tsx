@@ -4,6 +4,7 @@ import { BENCH_RAIL, notebookPushes, useLayoutStore } from '@/app/layout/layoutS
 import { Stage } from '@/app/layout/Stage';
 import { useSimStore } from '@/app/sim/simStore';
 import { useWorkspaceStore } from '@/app/workspaceStore';
+import { useModuleStore } from '@/modules/moduleStore';
 import { DriverGrid } from './DriverGrid';
 import { Notebook } from './Notebook';
 import { Tray } from './Tray';
@@ -38,6 +39,17 @@ export function BenchFrame() {
     if (sceneId)
       useLayoutStore.getState().landOnChallenge(sceneId, useWorkspaceStore.getState().subject);
   }, [sceneId]);
+  // A view without a tray to work in opens with it folded; the learner's own choice comes back
+  // with the next topic (it is never saved).
+  const fold = useModuleStore((s) => s.active?.view.trayStartsFolded === true);
+  useEffect(() => {
+    if (!fold) return;
+    const before = useLayoutStore.getState().trayFolded;
+    useLayoutStore.getState().setTrayFolded(true);
+    return () => {
+      useLayoutStore.getState().setTrayFolded(before);
+    };
+  }, [fold]);
   const push = layout.notebookOpen && notebookPushes(viewport, layout);
   const style = {
     '--tray-w': `${layout.trayFolded ? BENCH_RAIL : layout.trayWidth}px`,
