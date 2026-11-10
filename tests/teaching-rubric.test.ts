@@ -47,6 +47,12 @@ function item(id: string): EvalItem {
   return found;
 }
 
+function expectedOf(id: string): string {
+  const text = item(id).expected;
+  if (!text) throw new Error(`${id} has no expected answer`);
+  return text;
+}
+
 /** Items added on 2026-10-14 (missing data, step-by-step and trap questions). */
 const NEW_IDS = [
   'P11',
@@ -1021,7 +1027,7 @@ describe('B10: an answer that agrees with "23 nhiễm sắc thể" is a known er
   });
 
   it.each([
-    ['the expected answer', item('B10').expected],
+    ['the expected answer', expectedOf('B10')],
     [
       'correcting 23 as the gametes’ number',
       'Chưa đúng em ạ. Mỗi tế bào con có 46 nhiễm sắc thể (2n), giống tế bào mẹ. Con số 23 là số NST trong giao tử sau giảm phân.',
@@ -1077,7 +1083,7 @@ describe('P10 and C10: an answer that restates the learner’s wrong answer is a
   });
 
   it.each([
-    ['P10', item('P10').expected],
+    ['P10', expectedOf('P10')],
     [
       'P10',
       'Câu trả lời của em là "Gia tốc tăng gấp đôi" nhưng theo a = F/m thì gia tốc giảm một nửa.',
@@ -1098,7 +1104,7 @@ describe('P10 and C10: an answer that restates the learner’s wrong answer is a
       'P10',
       'Chưa đúng, a giảm một nửa. Còn khi lực tăng gấp đôi, khối lượng giữ nguyên, gia tốc tăng gấp đôi.',
     ],
-    ['C10', item('C10').expected],
+    ['C10', expectedOf('C10')],
     [
       'C10',
       'Chưa đúng hoàn toàn. Vế trái 2 là đúng, nhưng vế phải không phải 1 mà là 2 nguyên tử oxi, vì 2H₂O có 2 × 1 = 2.',
