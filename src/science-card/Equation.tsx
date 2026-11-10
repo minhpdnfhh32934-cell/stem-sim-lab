@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { fitScale } from './fitScale';
-import { loadKatex } from './katex';
+import { loadKatex, tightDecimalCommas } from './katex';
 
 interface EquationProps {
   tex: string;
@@ -21,7 +21,7 @@ export function Equation({ tex, display = true }: EquationProps) {
       if (!alive) return;
       try {
         setHtml(
-          k.default.renderToString(tex, {
+          k.default.renderToString(tightDecimalCommas(tex), {
             displayMode: display,
             throwOnError: true,
             output: 'html',
