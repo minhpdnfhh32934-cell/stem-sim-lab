@@ -1,0 +1,35 @@
+/* Metal crystals and NaCl (#54 item 8). */
+.crystal {
+  position: relative;
+}
+.crystal-viewer {
+  position: absolute;
+  inset: 0;
+}
+.crystal-viewer canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.crystal-viewer:focus-visible {
+  outline: 2px solid var(--focus-ring, var(--accent));
+  outline-offset: -2px;
+}
+.crystal__fallback {
+  margin: var(--space-6, 24px);
+}
+.crystal__legend + .crystal__legend {
+  margin-left: var(--space-2);
+}
+.crystal-facts {
+  display: grid;
+  gap: var(--space-1);
+  margin: var(--space-3) 0;
+}
+.crystal-facts dt {
+  margin-top: var(--space-2);
+  font-weight: 600;
+}
+.crystal-facts dd {
+  margin: 0;
+}

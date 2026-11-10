@@ -55,6 +55,7 @@ export const CATALOG: Record<Subject, ChapterEntry[]> = {
     chapter('molecules', ['molecule3d', 'vsepr', 'bondPolarity']),
     chapter('reactions', ['reactionLibrary', 'equationBalancing']),
     chapter('particles', ['collisionTheory', 'maxwellBoltzmann', 'chemicalEquilibrium']),
+    chapter('crystals', ['crystalStructure']),
   ],
   biology: [
     chapter('cell', ['mitosis', 'meiosis']),

@@ -36,11 +36,11 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Vật lí 12 | 25 | 21 | 0 |
 | Hoá học 10 | 23 | 16 | 5 |
 | Hoá học 11 | 25 | 19 | 1 |
-| Hoá học 12 | 30 | 22 | 0 |
+| Hoá học 12 | 30 | 22 | 1 |
 | Sinh học 10 | 26 | 17 | 5 |
 | Sinh học 11 | 29 | 20 | 0 |
 | Sinh học 12 | 35 | 28 | 6 |
-| **Cộng** | **253** | **189** | **42** |
+| **Cộng** | **253** | **189** | **43** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -90,6 +90,7 @@ Gồm các bài đã có chủ đề SimLab (đề xuất) và các bài của k
 | Hoá học 10 | Chương 2. Bảng tuần hoàn các nguyên tố hoá học và định luật tuần hoàn | 8 | Định luật tuần hoàn. Ý nghĩa của bảng tuần hoàn các nguyên tố hoá học | 43 | Lí thuyết | Bảng tuần hoàn | Tên Bài 5, 6, 8: cấu tạo bảng tuần hoàn, xu hướng biến đổi tính chất, định luật tuần hoàn. | pending |
 | Hoá học 10 | Chương 6. Tốc độ phản ứng | 19 | Tốc độ phản ứng | 92 | Lí thuyết | Thuyết va chạm | Tên Bài 19: tốc độ phản ứng. | pending |
 | Hoá học 11 | Chương 1. Cân bằng hoá học | 1 | Khái niệm về cân bằng hoá học | 6 | Lí thuyết | Cân bằng hóa học & Le Chatelier | Tên Bài 1: khái niệm về cân bằng hoá học. | pending |
+| Hoá học 12 | Chương 6. Đại cương về kim loại | 18 | Cấu tạo và liên kết trong tinh thể kim loại | 87 | Lí thuyết | Tinh thể kim loại và NaCl | Tên Bài 18: cấu tạo và liên kết trong tinh thể kim loại (cảnh có thêm tinh thể NaCl; Bài 11 Hoá học 10 tên là liên kết ion, không nêu tinh thể nên không xếp). | pending |
 | Sinh học 10 | Chương 2. Cấu trúc tế bào | 7 | Tế bào nhân sơ | 44 | Lí thuyết | Tế bào nhân sơ và nhân thực | Tên Bài 7–8: tế bào nhân sơ và tế bào nhân thực. | pending |
 | Sinh học 10 | Chương 2. Cấu trúc tế bào | 8 | Tế bào nhân thực | 48 | Lí thuyết | Tế bào nhân sơ và nhân thực | Tên Bài 7–8: tế bào nhân sơ và tế bào nhân thực. | pending |
 | Sinh học 10 | Chương 3. Trao đổi chất qua màng và truyền tin tế bào | 10 | Trao đổi chất qua màng tế bào | 64 | Lí thuyết | Khuếch tán & thẩm thấu | Tên Bài 10: trao đổi chất qua màng tế bào. Chỉ phần vận chuyển thụ động (khuếch tán, thẩm thấu), trên mô hình hai ngăn và ống chữ U, không phải màng tế bào thật. | pending |

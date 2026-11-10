@@ -14,6 +14,7 @@ const TOPICS = [
   'Thuyết va chạm',
   'Phân bố Maxwell–Boltzmann',
   'Cân bằng hóa học & Le Chatelier',
+  'Tinh thể kim loại và NaCl',
 ];
 
 async function openChemistry(page: Page) {

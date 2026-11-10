@@ -89,6 +89,7 @@ const en: Messages = {
     circularMotion: 'Uniform circular motion',
     waves: 'Waves',
     electricField: 'Electric field',
+    crystals: 'Crystals',
   },
   topics: {
     uniformMotion: 'Uniform linear motion',
@@ -131,6 +132,7 @@ const en: Messages = {
     uniformCircularMotion: 'Uniform circular motion',
     standingWave: 'Standing waves on a string',
     electricField: 'Electric field of point charges',
+    crystalStructure: 'Metal crystals and NaCl',
   },
   stage: {
     regionLabel: 'Simulation stage',
