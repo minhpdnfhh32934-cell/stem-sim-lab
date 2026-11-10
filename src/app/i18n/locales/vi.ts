@@ -92,6 +92,7 @@ const vi = {
     circularMotion: 'Chuyển động tròn đều',
     waves: 'Sóng',
     electricField: 'Điện trường',
+    dcCircuit: 'Dòng điện, mạch điện',
   },
   topics: {
     uniformMotion: 'Chuyển động thẳng đều',
@@ -135,6 +136,7 @@ const vi = {
     interference: 'Giao thoa sóng hai nguồn',
     standingWave: 'Sóng dừng trên dây',
     electricField: 'Điện trường của điện tích điểm',
+    dcCircuit: 'Mạch điện một chiều',
   },
   stage: {
     regionLabel: 'Khung mô phỏng',

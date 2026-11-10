@@ -72,4 +72,9 @@ export const SRC = {
     citation:
       'D. Halliday, R. Resnick, J. Walker — Fundamentals of Physics, Wiley — ch. 21 (định luật Coulomb), ch. 22 (điện trường), ch. 24 (điện thế), ch. 25 (tụ điện)',
   },
+  hallidayCircuits: {
+    id: 'halliday-circuits',
+    citation:
+      'D. Halliday, R. Resnick, J. Walker — Fundamentals of Physics, Wiley — ch. 26 (dòng điện, điện trở), ch. 27 (mạch điện, suất điện động, điện trở trong)',
+  },
 } satisfies Record<string, Source>;

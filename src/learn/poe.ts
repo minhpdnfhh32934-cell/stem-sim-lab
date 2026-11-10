@@ -244,6 +244,20 @@ export const POES: readonly Poe[] = [
     // mode 1 = "Tụ điện phẳng": U stays fixed while d changes.
     start: { mode: 1 },
   },
+  {
+    id: 'dcCircuit.R2',
+    topic: 'dcCircuit',
+    param: 'R2',
+    factor: 2,
+    answer: 'I',
+    question: L(
+      'Mạch R₁ nt (R₂ ∥ R₃) (SimLab đặt sẵn khi bạn bấm “Chạy để kiểm tra”): giữ nguyên nguồn và R₁, R₃, nếu R₂ tăng gấp đôi thì cường độ dòng điện qua nguồn tăng, giảm hay không đổi?',
+      'Circuit R₁ + (R₂ ∥ R₃) (SimLab sets it when you press “Run to check”): keeping the source, R₁ and R₃, if R₂ doubles, does the current through the source go up, down or stay the same?',
+    ),
+    choices: DIRS,
+    // layout 5 = R₁ nt (R₂ ∥ R₃).
+    start: { layout: 5 },
+  },
 ];
 
 export function poeFor(topic: string): Poe | undefined {
