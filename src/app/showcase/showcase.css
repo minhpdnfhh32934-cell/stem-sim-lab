@@ -1,0 +1,30 @@
+/* "Chế độ trưng bày" caption (#54 item 13): bottom centre, over the presentation stage. */
+.showcase {
+  position: fixed;
+  left: 50%;
+  bottom: var(--space-6, 24px);
+  z-index: 50;
+  width: min(760px, calc(100vw - 32px));
+  translate: -50% 0;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md, 10px);
+  background: var(--bg-panel);
+  color: var(--text);
+  box-shadow: var(--shadow-l2, 0 4px 16px rgb(0 0 0 / 0.2));
+  pointer-events: none;
+}
+.showcase__caption {
+  margin: 0;
+  font-size: var(--text-content, 16px);
+  line-height: 1.45;
+}
+.showcase__count {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+.showcase__hint {
+  margin: var(--space-1) 0 0;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}

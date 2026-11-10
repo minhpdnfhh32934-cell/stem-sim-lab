@@ -386,6 +386,7 @@ const en: Messages = {
     save: 'Save simulation (.stemsim)',
     open: 'Open a .stemsim file',
     update: 'Check for updates',
+    showcase: 'Showcase mode (plays the scenes by itself)',
   },
   progress: {
     etaSeconds: 'about {n} s left',
@@ -2452,6 +2453,9 @@ const en: Messages = {
   languages: {
     vi: 'Tiếng Việt',
     en: 'English',
+  },
+  showcase: {
+    stopHint: 'Click anywhere or press a key to stop.',
   },
 };
 
