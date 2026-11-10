@@ -29,6 +29,7 @@ import { useChatStore } from '@/teacher/chat/chatStore';
 import { useSafetyStore } from '@/safety/safetyStore';
 import { EmptyState } from '@/ui/EmptyState';
 import { IconButton } from '@/ui/IconButton';
+import { useScrollCue } from '@/ui/useScrollCue';
 
 const ICON: Record<NotebookTab, LucideIcon> = {
   challenge: Target,
@@ -56,6 +57,7 @@ const LABEL: Record<Exclude<NotebookTab, 'module'>, MessageKey> = {
 export function Notebook({ push, pinnedOnly = false }: { push: boolean; pinnedOnly?: boolean }) {
   const t = useT();
   const L = useLocalized();
+  const cue = useScrollCue();
   const subject = useWorkspaceStore((s) => s.subject);
   const mod = useModuleStore((s) => s.active);
   const advanced = useSettingsStore((s) => s.uiMode === 'advanced');
@@ -195,7 +197,7 @@ export function Notebook({ push, pinnedOnly = false }: { push: boolean; pinnedOn
                   <h2 className="panel__title">{label(tab)}</h2>
                   <IconButton icon={X} label={t('bench.closeNotebook')} onClick={close} />
                 </header>
-                <div className="panel__scroll">
+                <div ref={cue} className="panel__scroll scroll-cue">
                   <EmptyState icon={Lock} title={t('bench.teacherLocked')} compact>
                     <p>{t('safety.gate.minorNote')}</p>
                   </EmptyState>
@@ -216,7 +218,7 @@ export function Notebook({ push, pinnedOnly = false }: { push: boolean; pinnedOn
                   <h2 className="panel__title">{label(tab)}</h2>
                   <IconButton icon={X} label={t('bench.closeNotebook')} onClick={close} />
                 </header>
-                <div className="panel__scroll">
+                <div ref={cue} className="panel__scroll scroll-cue">
                   <TabContent tab={tab} />
                 </div>
               </>

@@ -28,6 +28,13 @@ Trước khi sửa, ba chỗ không đạt 1e-8:
 
 Sau khi sửa: mọi bài đạt quy tắc chặt; test `tolerance.test.ts` giữ lượt quét này.
 
+## Lộ ra khi chạy E2E
+
+- Câu `engineNote` dài hơn làm bảng Lời giải của bài "Chuyển động thẳng biến đổi đều" vượt chiều cao sổ
+  ghi bên Bàn thí nghiệm. Test UI-09 (`tests/e2e/bench/layout.spec.ts`) khi đó đòi dấu "còn nữa bên
+  dưới", nhưng `Notebook.tsx` chưa bao giờ gắn `useScrollCue` (chỉ `BottomPanel` cũ có). Sửa: gắn
+  `useScrollCue` + `.scroll-cue` cho khung cuộn của sổ ghi, như khung dưới cũ.
+
 ## Test
 
 - `tolerance.test.ts` (quy tắc + quét mọi bài), `SolutionPanel.test.tsx` (giữ các ca #110/#112; thêm
