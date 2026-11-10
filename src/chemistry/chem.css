@@ -977,3 +977,77 @@
       repeat(2, minmax(var(--target), auto));
   }
 }
+
+/* ───── Acid–base titration ───── */
+.tit-stage {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+}
+.tit-figure {
+  flex: none;
+  width: min(14rem, 40%);
+  height: auto;
+}
+.tit-glass {
+  fill: none;
+  stroke: var(--border-strong);
+  stroke-width: 2;
+}
+.tit-beaker {
+  stroke-linejoin: round;
+}
+.tit-burette-liquid {
+  fill: var(--accent-soft);
+}
+.tit-stopcock {
+  fill: var(--text-muted);
+}
+.tit-water {
+  fill: var(--bg-panel-2);
+}
+.tit-solution {
+  opacity: 0.85;
+  transition: fill var(--dur-med) var(--ease-out);
+}
+.tit-label {
+  fill: var(--text-muted);
+  font-size: 11px;
+}
+.tit-readout {
+  flex: 1 1 18rem;
+  min-width: 0;
+  font-size: var(--text-content);
+}
+.tit-readout p {
+  margin: 0 0 var(--space-2);
+}
+.tit-ph {
+  font-size: var(--text-xl);
+}
+.tit-volume {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-top: var(--space-3);
+}
+.tit-volume input[type='range'] {
+  width: 100%;
+  min-height: var(--target);
+  accent-color: var(--accent);
+}
+.tit-nudge {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.tit-form .number-field {
+  flex: none;
+  width: 6.5rem;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tit-solution {
+    transition: none;
+  }
+}

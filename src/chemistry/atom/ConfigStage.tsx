@@ -1,5 +1,6 @@
 import { Info, TriangleAlert } from 'lucide-react';
-import { useMemo } from 'react';
+import { useContext, useMemo } from 'react';
+import { BenchContext } from '@/app/bench/shellMode';
 import { useLocalized } from '@/app/i18n/localized';
 import type { ScienceCardData } from '@/science-card/types';
 import { cx } from '@/ui/cx';
@@ -61,6 +62,7 @@ export function ConfigStage() {
   usePublishCard(CARD);
   const Lz = useLocalized();
   const z = usePeriodicStore((s) => s.selected);
+  const bench = useContext(BenchContext);
   const e = elementByZ(z);
   const exception = e ? isAufbauException(e) : false;
   const predicted = useMemo(() => configString(shellOrder(aufbauPrediction(z))), [z]);
@@ -70,9 +72,12 @@ export function ConfigStage() {
 
   return (
     <div className="chem-view">
-      <div className="chem-toolbar">
-        <ElementPicker />
-      </div>
+      {/* The bench edge's element stepper has the picker (§9.10). */}
+      {!bench && (
+        <div className="chem-toolbar">
+          <ElementPicker />
+        </div>
+      )}
 
       <p className="econf__label">{Lz(L('Theo thứ tự mức năng lượng', 'In energy order'))}</p>
       <p className="econf__big">{configString(energyOrder(e.configuration))}</p>

@@ -16,6 +16,7 @@ import { DIFFUSION_CARD, OSMOSIS_CARD } from './transportCards';
 import { Transport3DSwitch } from './transport3d/Transport3DSwitch';
 import { useTransport3D } from './transport3d/store';
 import '../bio.css';
+import { No3dNotice } from '../view3d/No3dNotice';
 
 // three.js and the 3D apparatus load only when the 3D view is shown.
 const Transport3DView = lazy(() =>
@@ -249,7 +250,7 @@ function DiffusionOsmosis2D({ notice }: { notice: string | undefined }) {
       <div className="chem-overlay">
         <TransportChips />
         <Transport3DSwitch />
-        {notice && <span className="chem-chip chem-chip--qual">{notice}</span>}
+        {notice && <No3dNotice text={notice} />}
       </div>
     </div>
   );

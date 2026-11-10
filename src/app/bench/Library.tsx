@@ -1,18 +1,40 @@
-import { Award, Check, Clock, FileText, Search, SearchX } from 'lucide-react';
+import {
+  Award,
+  BookOpen,
+  Check,
+  Clock,
+  FilePen,
+  FileText,
+  History,
+  PencilRuler,
+  Search,
+  SearchX,
+} from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
+import { useAiStore } from '@/ai/aiStore';
+import { openManual } from '@/app/ai/analyze';
+import { useAnalysisEngine } from '@/app/ai/engineChoice';
 import { useT } from '@/app/i18n';
 import { chapterTitle, searchChapters } from '@/app/layout/libraryChapters';
+import { Badges } from '@/app/learner/HomeScreen';
+import { HistoryList } from '@/app/project/HistoryList';
+import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useProfileStore } from '@/app/learner/profileStore';
 import { chaptersFor, GRADE_CHOICES, type LibraryTopic } from '@/app/levels';
 import { lessonRange } from '@/app/curriculum';
 import { openStudio, openTopic } from '@/app/topics';
-import { SUBJECTS, useWorkspaceStore } from '@/app/workspaceStore';
+import { SUBJECTS, useWorkspaceStore, type Subject } from '@/app/workspaceStore';
 import { chapterProgress, topicStatus } from '@/learn/progress';
 import { useProgressStore } from '@/learn/progressStore';
+import { useSafetyStore } from '@/safety/safetyStore';
 import { useLessonsForTopic } from '@/studio/lessons';
+import { useStudioStore } from '@/studio/studioStore';
 import { cx } from '@/ui/cx';
+import { hasScene } from '@/physics/registry';
+import { SUBJECT_ICON } from '@/app/subjectIcons';
 import { openProblemSheet } from './problemSheet';
+import { SceneStill } from './SceneStill';
 
 /**
  * "Kệ bài" (docs/BENCH_DESIGN.md §9.3): a filter column (subject, kind of lesson, search) and
@@ -28,6 +50,8 @@ export function BenchLibrary() {
   const setGrade = useProfileStore((s) => s.setGrade);
   const lastTopic = useProfileStore((s) => s.lastTopic);
   const [query, setQuery] = useState('');
+  const advanced = useSettingsStore((s) => s.uiMode === 'advanced');
+  const [historyOpen, setHistoryOpen] = useState(false);
   const progress = useProgressStore(
     useShallow((s) => ({
       visited: s.visited,
@@ -103,6 +127,34 @@ export function BenchLibrary() {
             }}
           />
         </label>
+        {/* "Lịch sử" at the bottom of the filters, Advanced only (§9.3). */}
+        {advanced && (
+          <div className="shelf-history">
+            <button
+              type="button"
+              className="btn btn--ghost"
+              aria-expanded={historyOpen}
+              onClick={() => {
+                setHistoryOpen(!historyOpen);
+              }}
+            >
+              <History size={16} strokeWidth={1.75} aria-hidden="true" />
+              {t('sidebar.history')}
+            </button>
+            {historyOpen && <HistoryList />}
+            <button
+              type="button"
+              className="btn btn--ghost"
+              onClick={() => {
+                useStudioStore.getState().setTab('authoring');
+                openStudio();
+              }}
+            >
+              <FilePen size={16} strokeWidth={1.75} aria-hidden="true" />
+              {t('studio.tabs.authoring')}
+            </button>
+          </div>
+        )}
       </aside>
 
       <main className="shelf-main" aria-labelledby="shelf-title" data-subject-shelf={subject}>
@@ -132,7 +184,11 @@ export function BenchLibrary() {
 
         <div className="shelf-cards">
           {lastTopic && (
-            <section className="shelf-start">
+            <section className="shelf-start shelf-start--resume">
+              {/* Thumbnail 160×96 (§9.3): the topic's own engine frame (physics only). */}
+              {hasScene(lastTopic) && (
+                <SceneStill topic={lastTopic} className="shelf-start__thumb" grid={false} />
+              )}
               <h2>{t('home.continue')}</h2>
               <p className="shelf-start__topic">
                 {t(`topics.${lastTopic}` as Parameters<typeof t>[0])}
@@ -148,16 +204,25 @@ export function BenchLibrary() {
               </button>
             </section>
           )}
-          <section className="shelf-start">
-            <h2>{t('bench.haveProblem')}</h2>
-            <button type="button" className="btn btn--accent" onClick={openProblemSheet}>
-              <FileText size={16} strokeWidth={1.75} aria-hidden="true" />
-              {t('home.analyze')}
-            </button>
-          </section>
+          <ProblemCard />
         </div>
 
-        {chapters.length === 0 ? (
+        {shelf.length === 0 && grade !== 'all' ? (
+          // Never a dead end: a grade without topics in this subject leads back to every topic.
+          <div className="shelf-empty" role="status">
+            <BookOpen size={20} strokeWidth={1.75} aria-hidden="true" />
+            <p>{t('levels.empty', { subject: t(`subjects.${subject}`), grade })}</p>
+            <button
+              type="button"
+              className="btn"
+              onClick={() => {
+                setGrade('all');
+              }}
+            >
+              {t('levels.showAll')}
+            </button>
+          </div>
+        ) : chapters.length === 0 ? (
           <div className="shelf-empty" role="status">
             <SearchX size={20} strokeWidth={1.75} aria-hidden="true" />
             <p>{t('sidebar.noResults')}</p>
@@ -185,7 +250,11 @@ export function BenchLibrary() {
                 <ul className="shelf__grid">
                   {c.topics.map((topic) => (
                     <li key={topic.id}>
-                      <ShelfCard topic={topic} status={topicStatus(topic.id, progress)} />
+                      <ShelfCard
+                        topic={topic}
+                        subject={subject}
+                        status={topicStatus(topic.id, progress)}
+                      />
                     </li>
                   ))}
                 </ul>
@@ -193,6 +262,9 @@ export function BenchLibrary() {
             );
           })
         )}
+        <section className="shelf shelf-badges">
+          <Badges />
+        </section>
       </main>
     </div>
   );
@@ -200,19 +272,30 @@ export function BenchLibrary() {
 
 function ShelfCard({
   topic,
+  subject,
   status,
 }: {
   topic: LibraryTopic;
+  subject: Subject;
   status: ReturnType<typeof topicStatus>;
 }) {
   const t = useT();
   const guided = useLessonsForTopic(topic.id).length;
   const soon = topic.status !== 'available';
   const descId = `shelf-card-${topic.id}-desc`;
+  const Icon = SUBJECT_ICON[subject];
   // One button per card, named by its title only (its text): the lessons, the pending note and
   // the progress describe it. Its ::after covers the card, so the whole card is the target.
   return (
     <div className={cx('shelf-card', soon && 'shelf-card--soon')}>
+      {/* Preview 88 (§9.3): a physics topic's own engine frame, else its subject's line art. */}
+      <div className="shelf-card__preview" aria-hidden="true">
+        {hasScene(topic.id) ? (
+          <SceneStill topic={topic.id} className="shelf-card__still" grid={false} />
+        ) : (
+          <Icon size={32} strokeWidth={1.25} />
+        )}
+      </div>
       <button
         type="button"
         className="shelf-card__open"
@@ -249,5 +332,58 @@ function ShelfCard({
         )}
       </span>
     </div>
+  );
+}
+
+/**
+ * "Có đề bài?" (§9.3): "Phân tích đề" opens the Đề bài sheet (the screen's main action), or says
+ * "Kết nối AI để phân tích đề" without a key (the same rule as the classic home); "Tự dựng cảnh"
+ * beside it, filled instead for a learner who said they are under 18.
+ */
+function ProblemCard() {
+  const t = useT();
+  const ai = useAiStore(useShallow((s) => ({ provider: s.provider, status: s.status })));
+  // Read on this computer (Gemma or a chosen local runtime): no API key needed.
+  const onDevice = useAnalysisEngine() !== 'cloud';
+  const needsKey = ai.provider !== 'off' && ai.status === 'noKey' && !onDevice;
+  const minor = useSafetyStore((s) => s.status?.minor === true);
+  const openSettingsAt = useWorkspaceStore((s) => s.openSettingsAt);
+  return (
+    <section className="shelf-start">
+      <h2>{t('bench.haveProblem')}</h2>
+      {/* The one-line field (§9.3) opens the Đề bài sheet. A button, not an input that opens it
+          on focus: focus alone never changes the context (WCAG 3.2.1). */}
+      {!minor && (
+        <button type="button" className="shelf-start__field" onClick={openProblemSheet}>
+          {t('bench.problemField')}
+        </button>
+      )}
+      <div className="shelf-start__actions">
+        {!minor && (
+          <button
+            type="button"
+            className="btn btn--accent"
+            onClick={() => {
+              if (needsKey) openSettingsAt('ai');
+              else openProblemSheet();
+            }}
+          >
+            <FileText size={16} strokeWidth={1.75} aria-hidden="true" />
+            {needsKey ? t('home.connectFirst') : t('home.analyze')}
+          </button>
+        )}
+        <button
+          type="button"
+          className={minor ? 'btn btn--accent' : 'btn btn--ghost'}
+          aria-label={t('topbar.manual')}
+          onClick={() => {
+            void openManual();
+          }}
+        >
+          <PencilRuler size={16} strokeWidth={1.75} aria-hidden="true" />
+          {t('home.manual')}
+        </button>
+      </div>
+    </section>
   );
 }

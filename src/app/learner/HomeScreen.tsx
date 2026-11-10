@@ -136,7 +136,7 @@ export function HomeScreen() {
 }
 
 /** Badges earned (A4.1: healthy motivation — specific, no streaks or rankings). */
-function Badges() {
+export function Badges() {
   const t = useT();
   const progress = useProgressStore(
     useShallow((s) => ({

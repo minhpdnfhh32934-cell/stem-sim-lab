@@ -111,6 +111,8 @@ export interface MitosisScene {
   scene: THREE.Scene;
   update(state: Mitosis3DState): void;
   setSelection(sel: Selection | null): void;
+  /** Dim the parts that are not picked ("Làm mờ phần còn lại"; on by default). */
+  setDimRest(on: boolean): void;
   /** The cell part under a ray (inner parts win over the membranes they sit in). */
   pick(raycaster: THREE.Raycaster): PickResult | null;
   /** Where the last `pick` ray met the part it picked (null when it picked nothing). */
@@ -493,6 +495,7 @@ export function buildMitosisScene(
     reach: CONTACT_SHADE.reach,
   };
   let selection: Selection | null = null;
+  let dimRest = true;
 
   const setOpacity = setLookOpacity;
 
@@ -553,7 +556,7 @@ export function buildMitosisScene(
 
   /** The look's material for a part: highlighted, dimmed (another part is picked) or normal. */
   const choose = <M extends THREE.Material>(l: Look<M>, data: PartData, st: Mitosis3DState): M =>
-    !selection ? l.base : isSelected(data, st) ? l.hi : l.dim;
+    !selection ? l.base : isSelected(data, st) ? l.hi : dimRest ? l.dim : l.base;
 
   const applyLooks = (st: Mitosis3DState) => {
     for (const o of chromatids) {
@@ -981,6 +984,10 @@ export function buildMitosisScene(
     update,
     setSelection(sel) {
       selection = sel;
+      if (last) applyLooks(last);
+    },
+    setDimRest(on) {
+      dimRest = on;
       if (last) applyLooks(last);
     },
     pick,

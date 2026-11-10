@@ -5,7 +5,7 @@ import { uniformAcceleration } from '@/physics/linear/scenes';
 import { simplePendulum } from '@/physics/pendulum/scenes';
 import { loadScene, sceneIds } from '@/physics/registry';
 import { energyConservation } from '@/physics/track/scenes';
-import { columnsFor, visibleSeries } from './data';
+import { alignRuns, columnsFor, graphData, visibleSeries } from './data';
 
 const vi = (t: { vi: string }) => t.vi;
 const headers = (scene: Parameters<typeof columnsFor>[0]) =>
@@ -63,5 +63,41 @@ describe('Số liệu headers (UI-21)', () => {
         }
       }
     }
+  });
+});
+
+describe('a pinned run beside the current one (BENCH_DESIGN §2: dashed, own times)', () => {
+  it('joins both runs on the union of their times, null where a run has no sample', () => {
+    const a = [
+      [0, 1, 2],
+      [10, 11, 12],
+    ];
+    const b = [
+      [0, 0.5, 2, 3],
+      [20, 21, 22, 23],
+    ];
+    expect(alignRuns(a, b)).toEqual([
+      [0, 0.5, 1, 2, 3],
+      [10, null, 11, 12, null],
+      [20, 21, null, 22, 23],
+    ]);
+  });
+
+  it('reads the pinned run from its own samples and its own parameters', () => {
+    const g = uniformAcceleration.graphs[0];
+    if (!g) throw new Error('no graph');
+    const states = [Float64Array.of(0, 0, 0, 0), Float64Array.of(1, 2, 3, 4)];
+    const cols = graphData(g, uniformAcceleration.defaults, 4000, {
+      times: [0, 0.5],
+      states,
+      length: 2,
+    });
+    expect(cols[0]).toEqual([0, 0.5]);
+    expect(cols).toHaveLength(g.series.length + 1);
+    g.series.forEach((ser, k) => {
+      expect(cols[k + 1]?.[1]).toBe(
+        ser.value(states[1] ?? Float64Array.of(), uniformAcceleration.defaults),
+      );
+    });
   });
 });

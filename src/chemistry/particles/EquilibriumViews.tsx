@@ -13,7 +13,8 @@ import {
   Snowflake,
   TriangleAlert,
 } from 'lucide-react';
-import { useEffect, useMemo } from 'react';
+import { useContext, useEffect, useMemo } from 'react';
+import { BenchContext } from '@/app/bench/shellMode';
 import { formatNumber } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
@@ -94,6 +95,8 @@ const DIRECTION: Record<'forward' | 'backward' | 'none', LocalizedText> = {
 const minus = (s: string) => s.replace(/^-/, '−');
 
 export function EquilibriumStage() {
+  // The bench runs and restarts from its edge (EquilibriumDriver).
+  const bench = useContext(BenchContext);
   usePublishCard(CARD);
   const Lz = useLocalized();
   const locale = useSettingsStore((s) => s.locale);
@@ -139,21 +142,25 @@ export function EquilibriumStage() {
     <div className="chem-view">
       <div className="chem-toolbar">
         <span className="rx-eq rx-eq--chip">{equationOf(s)}</span>
-        <IconButton
-          icon={st.running ? Pause : Play}
-          label={st.running ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Chạy', 'Run'))}
-          variant="solid"
-          onClick={() => {
-            useEqStore.setState((x) => ({ running: !x.running, stalled: false }));
-          }}
-        />
-        <IconButton
-          icon={RotateCcw}
-          label={Lz(L('Làm lại', 'Restart'))}
-          onClick={() => {
-            resetEq();
-          }}
-        />
+        {!bench && (
+          <>
+            <IconButton
+              icon={st.running ? Pause : Play}
+              label={st.running ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Chạy', 'Run'))}
+              variant="solid"
+              onClick={() => {
+                useEqStore.setState((x) => ({ running: !x.running, stalled: false }));
+              }}
+            />
+            <IconButton
+              icon={RotateCcw}
+              label={Lz(L('Làm lại', 'Restart'))}
+              onClick={() => {
+                resetEq();
+              }}
+            />
+          </>
+        )}
         <span className="chem-chip">
           t = {f(st.t, 4)} s · T = {f(st.T, 4)} K
         </span>
