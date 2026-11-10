@@ -89,6 +89,7 @@ const en: Messages = {
     circularMotion: 'Uniform circular motion',
     waves: 'Waves',
     electricField: 'Electric field',
+    dcCircuit: 'Current and circuits',
   },
   topics: {
     uniformMotion: 'Uniform linear motion',
@@ -132,6 +133,8 @@ const en: Messages = {
     interference: 'Two-source interference',
     standingWave: 'Standing waves on a string',
     electricField: 'Electric field of point charges',
+    forcedOscillation: 'Forced oscillation and resonance',
+    dcCircuit: 'Direct-current circuit',
   },
   stage: {
     regionLabel: 'Simulation stage',
@@ -470,7 +473,7 @@ const en: Messages = {
     agree: 'agrees, deviation {value}',
     disagree: 'does not agree, deviation {value}',
     engineNote:
-      'Every number here is computed by the program from formulas and cross-checked by numerical integration. AI produces no numbers.',
+      'Every number here is computed by the program from formulas; numbers marked “agrees” are cross-checked by numerical integration. AI produces no numbers.',
     intervenedNote:
       'The solution applies to the initial conditions. After an intervention use the simulation data (Data tab).',
     invalid: 'No solution: the parameters are not valid yet.',
@@ -2454,6 +2457,9 @@ const en: Messages = {
   languages: {
     vi: 'Tiếng Việt',
     en: 'English',
+  },
+  phaseChart: {
+    label: '{title}: {y} against {x}',
   },
 };
 

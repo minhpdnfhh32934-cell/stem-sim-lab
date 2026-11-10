@@ -53,6 +53,15 @@ export interface GraphDef {
   /** Axis label, e.g. "x (m)". */
   yLabel: LocalizedText;
   series: SeriesDef[];
+  /**
+   * Horizontal axis: a quantity of the state instead of time (a phase portrait, v against x).
+   * With `period` the value wraps (an angle in (−π, π]) and the curve breaks where it jumps.
+   */
+  x?: { label: LocalizedText; value: (state: Float64Array, p: Params) => number; period?: number };
+  /** Fixed curves drawn dashed behind the data, in the axes' SI units (e.g. a separatrix). */
+  guides?: (p: Params) => { label: LocalizedText; points: [number, number][] }[];
+  /** Phase circle: equal scales, the vector from the origin to the point and its projection on x. */
+  phasor?: boolean;
 }
 
 export interface Answer {

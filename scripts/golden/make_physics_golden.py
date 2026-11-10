@@ -704,12 +704,82 @@ add(
     missing=["xP", "yP"],
 )
 
-# --- Ngoài phạm vi ------------------------------------------------------------------
+# --- Dao động cưỡng bức và cộng hưởng (VL11 Bài 6) -------------------------------------
+def _forced_amp(m, k, b, F0, W):
+    w0 = math.sqrt(k / m)
+    g = b / (2 * m)
+    return (F0 / m) / math.hypot(w0 * w0 - W * W, 2 * g * W)
+
+
 add(
-    "ng-01",
+    "res-01",
+    "Một con lắc lò xo nằm ngang gồm vật nặng 0,5 kg và lò xo có độ cứng 50 N/m, hệ số cản 0,5 kg/s, chịu tác dụng của ngoại lực F = 1cos(8t) (N). Tính biên độ dao động khi đã ổn định.",
+    "forcedOscillation",
+    [
+        q("m", 0.5, "kg", "vật nặng 0,5 kg"),
+        q("k", 50, "N/m", "độ cứng 50 N/m"),
+        q("b", 0.5, "kg/s", "hệ số cản 0,5 kg/s"),
+        q("F0", 1, "N", "F = 1cos(8t) (N)"),
+        q("Omega", 8, "rad/s", "F = 1cos(8t) (N)"),
+    ],
+    {"A": _forced_amp(0.5, 50, 0.5, 1, 8)},
+)
+add(
+    "res-02",
+    "Vật khối lượng 200 g gắn vào lò xo có độ cứng 20 N/m, hệ số cản 0,2 kg/s, dao động dưới tác dụng của ngoại lực biên độ 0,5 N, tần số góc 12 rad/s. Tính biên độ dao động ổn định và tần số góc của ngoại lực để xảy ra cộng hưởng.",
+    "forcedOscillation",
+    [
+        q("m", 0.2, "kg", "khối lượng 200 g"),
+        q("k", 20, "N/m", "độ cứng 20 N/m"),
+        q("b", 0.2, "kg/s", "hệ số cản 0,2 kg/s"),
+        q("F0", 0.5, "N", "biên độ 0,5 N"),
+        q("Omega", 12, "rad/s", "tần số góc 12 rad/s"),
+    ],
+    {
+        "A": _forced_amp(0.2, 20, 0.2, 0.5, 12),
+        "omegaR": math.sqrt(20 / 0.2 - 2 * (0.2 / (2 * 0.2)) ** 2),
+    },
+)
+# --- Ngoài phạm vi ------------------------------------------------------------------
+# --- Mạch điện một chiều (VL11 Bài 23–25) ------------------------------------
+# layout: 0 = 1 điện trở, 1 = 2 nối tiếp, 3 = 2 song song. Đề không cho r: rInt mặc định 0 (không ghi).
+# "dc-01" là đề "ng-01" cũ (trước đây ngoài phạm vi).
+add(
+    "dc-01",
     "Một mạch điện gồm điện trở 10 Ω mắc vào hai cực của một nguồn điện có hiệu điện thế 12 V. Tính cường độ dòng điện chạy qua điện trở.",
-    "unsupported",
-    [],
+    "dcCircuit",
+    [
+        q("layout", 0, "1", "gồm điện trở 10 Ω"),
+        q("R1", 10, "ohm", "điện trở 10 Ω"),
+        q("emf", 12, "V", "hiệu điện thế 12 V"),
+    ],
+    {"I": 12 / 10},
+)
+add(
+    "dc-02",
+    "Một nguồn điện có suất điện động 12 V và điện trở trong 1 Ω được mắc với mạch ngoài gồm hai điện trở R₁ = 3 Ω và R₂ = 8 Ω mắc nối tiếp. Tính cường độ dòng điện trong mạch, hiệu điện thế giữa hai cực của nguồn và hiệu suất của nguồn.",
+    "dcCircuit",
+    [
+        q("layout", 1, "1", "mắc nối tiếp"),
+        q("emf", 12, "V", "suất điện động 12 V"),
+        q("rInt", 1, "ohm", "điện trở trong 1 Ω"),
+        q("R1", 3, "ohm", "R₁ = 3 Ω"),
+        q("R2", 8, "ohm", "R₂ = 8 Ω"),
+    ],
+    {"I": 12 / (3 + 8 + 1), "U": 12 / (3 + 8 + 1) * (3 + 8), "H": (3 + 8) / (3 + 8 + 1)},
+)
+add(
+    "dc-03",
+    "Hai điện trở R₁ = 6 Ω và R₂ = 3 Ω mắc song song rồi nối vào nguồn điện có suất điện động 6 V, điện trở trong không đáng kể. Tính cường độ dòng điện qua mạch chính và qua mỗi điện trở.",
+    "dcCircuit",
+    [
+        q("layout", 3, "1", "mắc song song"),
+        q("R1", 6, "ohm", "R₁ = 6 Ω"),
+        q("R2", 3, "ohm", "R₂ = 3 Ω"),
+        q("emf", 6, "V", "suất điện động 6 V"),
+        q("rInt", 0, "ohm", "điện trở trong không đáng kể"),
+    ],
+    {"I": 6 / (6 * 3 / (6 + 3)), "I1": 6 / 6, "I2": 6 / 3},
 )
 add(
     "ng-02",

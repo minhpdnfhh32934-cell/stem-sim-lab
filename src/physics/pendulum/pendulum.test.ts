@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { pendulumPeriodExact } from '@/core/math/special';
 import { PE, PendulumEngine, pendulumInput } from './engine';
-import { maxAngle, numericPeriodPendulum, simplePendulum } from './scenes';
+import { maxAngle, numericPeriodPendulum, separatrix, simplePendulum, wrapAngle } from './scenes';
 
 describe('simple pendulum', () => {
   it('RK4 engine: period from zero crossings matches the elliptic formula', () => {
@@ -91,5 +91,34 @@ describe('simple pendulum — the string must stay taut', () => {
   it('with damping, any start above the 90° level is rejected (it slows through the slack zone)', () => {
     expect(errs({ ...base, c: 0.1, theta0: 0, omega0: 8 }).length).toBeGreaterThan(0);
     expect(errs({ ...base, c: 0.1, theta0: deg(80) })).toEqual([]);
+  });
+});
+
+describe('phase space: the separatrix E = 2mgL (#54 item 3)', () => {
+  const q = pendulumInput({ L: 1, g: 9.81, m: 0.5, c: 0 });
+
+  it('every point of the separatrix has exactly E = 2mgL', () => {
+    for (const sign of [1, -1] as const) {
+      for (const [a, w] of separatrix(q, sign)) {
+        const E = 0.5 * q.m * (q.L * w) ** 2 + q.m * q.g * q.L * (1 - Math.cos(a));
+        expect(E).toBeCloseTo(2 * q.m * q.g * q.L, 10);
+      }
+    }
+  });
+
+  it('just inside it the pendulum swings, just outside it goes round', () => {
+    const top = 2 * Math.sqrt(q.g / q.L);
+    expect(maxAngle({ ...q, theta0: 0, omega0: 0.99 * top })).not.toBeNull();
+    expect(maxAngle({ ...q, theta0: 0, omega0: 1.01 * top })).toBeNull();
+  });
+
+  it('the phase graph wraps the angle into (−π, π]', () => {
+    expect(wrapAngle(Math.PI)).toBe(Math.PI);
+    expect(wrapAngle(-Math.PI)).toBe(Math.PI);
+    expect(wrapAngle((3 * Math.PI) / 2)).toBeCloseTo(-Math.PI / 2, 12);
+    expect(wrapAngle(0.3 + 4 * Math.PI)).toBeCloseTo(0.3, 12);
+    const g = simplePendulum.graphs.find((d) => d.id === 'phase');
+    expect(g?.x?.period).toBeCloseTo(2 * Math.PI, 12);
+    expect(g?.guides?.(simplePendulum.defaults)).toHaveLength(2);
   });
 });

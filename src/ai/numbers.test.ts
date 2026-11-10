@@ -76,6 +76,16 @@ describe('numbers the problem states (MASTER_PROMPT §2.1)', () => {
     expect(mentions(list, 3e-8)).toBe(true);
     expect(mentions(list, 8.3e-8)).toBe(false);
   });
+
+  it('reads a decimal with more than three digits after the separator as one number', () => {
+    // A thousands group was matched first: "0,2187" read as 0,218 and a stray 7.
+    expect(numberTokens('φ = 0,2187 rad')).toEqual([expect.arrayContaining([0.2187])]);
+    expect(numberTokens('A = 0.05423 m')).toEqual([expect.arrayContaining([0.05423])]);
+    expect(unknownNumbers('Độ lệch pha φ = 0,2187 rad.', [0.2187])).toEqual([]);
+    // Thousands groups still read as before.
+    expect(numberTokens('E = 35.950 V/m')).toEqual([expect.arrayContaining([35950, 35.95])]);
+    expect(numberTokens('1 200 000 J')).toEqual([[1200000]]);
+  });
 });
 
 describe('never laxer than main (#89)', () => {

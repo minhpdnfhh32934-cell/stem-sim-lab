@@ -92,6 +92,7 @@ const vi = {
     circularMotion: 'Chuyển động tròn đều',
     waves: 'Sóng',
     electricField: 'Điện trường',
+    dcCircuit: 'Dòng điện, mạch điện',
   },
   topics: {
     uniformMotion: 'Chuyển động thẳng đều',
@@ -135,6 +136,8 @@ const vi = {
     interference: 'Giao thoa sóng hai nguồn',
     standingWave: 'Sóng dừng trên dây',
     electricField: 'Điện trường của điện tích điểm',
+    forcedOscillation: 'Dao động cưỡng bức và cộng hưởng',
+    dcCircuit: 'Mạch điện một chiều',
   },
   stage: {
     regionLabel: 'Khung mô phỏng',
@@ -473,7 +476,7 @@ const vi = {
     agree: 'khớp, sai lệch {value}',
     disagree: 'chưa khớp, sai lệch {value}',
     engineNote:
-      'Mọi con số ở đây do chương trình tính bằng công thức và được kiểm chứng bằng tích phân số. AI không tạo ra con số nào.',
+      'Mọi con số ở đây do chương trình tính bằng công thức; con số có ghi “khớp” đã được kiểm chứng bằng tích phân số. AI không tạo ra con số nào.',
     intervenedNote:
       'Lời giải áp dụng cho điều kiện ban đầu. Sau khi can thiệp, hãy dùng số liệu mô phỏng (tab Số liệu).',
     invalid: 'Chưa có lời giải vì thông số chưa hợp lệ.',
@@ -2448,6 +2451,9 @@ const vi = {
   languages: {
     vi: 'Tiếng Việt',
     en: 'English',
+  },
+  phaseChart: {
+    label: '{title}: {y} theo {x}',
   },
 };
 

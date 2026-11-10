@@ -292,6 +292,38 @@ export const CHALLENGES: readonly Challenge[] = [
       'If the voltage doubles, how does the field between the plates change?',
     ),
   },
+  {
+    id: 'forcedOscillation.resonance',
+    topic: 'forcedOscillation',
+    title: L('Tìm cộng hưởng', 'Find the resonance'),
+    task: L(
+      'Vật 0,5\u00a0kg gắn lò xo 50\u00a0N/m, lực cản 0,5\u00a0kg/s, ngoại lực biên độ 1\u00a0N (SimLab đặt sẵn khi bạn bắt đầu). Chỉnh tần số góc Ω của ngoại lực để biên độ dao động ổn định lớn nhất.',
+      'A 0.5\u00a0kg body on a 50\u00a0N/m spring, damping 0.5\u00a0kg/s, driving force amplitude 1\u00a0N (SimLab sets this when you start). Tune the driving angular frequency Ω so that the steady amplitude is largest.',
+    ),
+    controls: ['Omega'],
+    start: { Omega: 4, F0: 1, b: 0.5, m: 0.5, k: 50, x0: 0 },
+    goal: { answer: 'A', kind: 'max' },
+    hint: L(
+      'So Ω với tần số góc riêng của con lắc ω₀ = √(k/m).',
+      'Compare Ω with the natural angular frequency ω₀ = √(k/m).',
+    ),
+  },
+  {
+    id: 'dcCircuit.maxPower',
+    topic: 'dcCircuit',
+    title: L('Công suất mạch ngoài lớn nhất', 'Most power to the external circuit'),
+    task: L(
+      'Nguồn E\u00a0=\u00a012\u00a0V có điện trở trong r\u00a0=\u00a02\u00a0Ω, mạch ngoài chỉ có R₁ (SimLab đặt sẵn khi bạn bắt đầu). Chỉnh R₁ để công suất mạch ngoài lớn nhất.',
+      'A 12\u00a0V source with internal resistance r\u00a0=\u00a02\u00a0Ω feeds R₁ alone (SimLab sets this when you start). Adjust R₁ so that the external circuit gets the most power.',
+    ),
+    controls: ['R1'],
+    start: { layout: 0, emf: 12, rInt: 2, R1: 10 },
+    goal: { answer: 'P_out', kind: 'max' },
+    hint: L(
+      'R₁ quá nhỏ thì U nhỏ, R₁ quá lớn thì I nhỏ. Thử so R₁ với điện trở trong r.',
+      'Too small an R₁ gives a small U, too large a small I. Compare R₁ with the internal resistance r.',
+    ),
+  },
 ];
 
 export function challengesFor(topic: string): Challenge[] {

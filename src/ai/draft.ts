@@ -115,6 +115,18 @@ const IMPLIED: {
   { keys: /^e$/, value: 0, phrases: ['va chạm mềm', 'dính vào nhau', 'dính nhau', 'dính liền'] },
   { keys: /^angle$/, value: 0, phrases: ['ném ngang', 'phương ngang', 'nằm ngang'] },
   { keys: /^beta$/, value: 0, phrases: ['phương ngang', 'nằm ngang', 'song song', 'dọc theo'] },
+  {
+    keys: /^rInt$/,
+    value: 0,
+    phrases: [
+      'điện trở trong không đáng kể',
+      'bỏ qua điện trở trong',
+      'nguồn lí tưởng',
+      'nguồn lý tưởng',
+      'nguồn điện lí tưởng',
+      'nguồn điện lý tưởng',
+    ],
+  },
 ];
 
 /** Words that turn the phrase after them around ("không khí"/"không gian" are nouns, not "not"). */

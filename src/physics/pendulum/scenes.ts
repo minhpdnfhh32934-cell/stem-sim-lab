@@ -208,7 +208,41 @@ const graphs: GraphDef[] = [
     yLabel: L('T (N)', 'T (N)'),
     series: [{ id: 'T', label: L('T', 'T'), value: (s) => s[PE.T] ?? 0 }],
   },
+  {
+    id: 'phase',
+    title: L('Không gian pha', 'Phase space'),
+    yLabel: L('ω (rad/s)', 'ω (rad/s)'),
+    x: {
+      label: L('α (rad)', 'α (rad)'),
+      value: (s) => wrapAngle(s[PE.th] ?? 0),
+      period: 2 * Math.PI,
+    },
+    series: [{ id: 'om', label: L('ω', 'ω'), value: (s) => s[PE.om] ?? 0 }],
+    guides: (p) =>
+      ([1, -1] as const).map((sign) => ({
+        label: L('Đường phân cách (E = 2mgL)', 'Separatrix (E = 2mgL)'),
+        points: separatrix(pendulumInput(p), sign),
+      })),
+  },
 ];
+
+/** An angle wrapped into (−π, π]: a pendulum that goes over the top comes back on the left. */
+export function wrapAngle(a: number): number {
+  const w = a - 2 * Math.PI * Math.floor((a + Math.PI) / (2 * Math.PI));
+  return w === -Math.PI ? Math.PI : w;
+}
+
+/**
+ * The separatrix: the motion with exactly E = 2mgL (just enough to reach the top),
+ * ω = ±2·√(g/L)·cos(α/2). Inside it the pendulum swings, outside it goes round.
+ */
+export function separatrix(q: PendulumInput, sign: 1 | -1, steps = 120): [number, number][] {
+  const w0 = Math.sqrt(q.g / q.L);
+  return Array.from({ length: steps + 1 }, (_, i): [number, number] => {
+    const a = -Math.PI + (2 * Math.PI * i) / steps;
+    return [a, sign * 2 * w0 * Math.cos(a / 2)];
+  });
+}
 
 /** Period measured by high-accuracy integration: twice the time between zero crossings. */
 export function numericPeriodPendulum(q: PendulumInput): number | null {

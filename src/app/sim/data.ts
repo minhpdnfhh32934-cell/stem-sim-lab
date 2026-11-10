@@ -22,6 +22,54 @@ export function graphData(graph: GraphDef, p: Params, maxPoints = 4000): number[
   return cols;
 }
 
+/** A phase portrait: per series the recorded (x, y) points, and the point now. */
+export interface PhaseData {
+  series: [number, number][][];
+  /** Each series' point at the scrubbed time (or the latest state); null without data. */
+  current: [number, number][] | null;
+}
+
+/**
+ * Points of a graph whose horizontal axis is a state quantity (`graph.x`): recorded states only,
+ * every k-th of at most `maxPoints` and always the latest, in recording order.
+ */
+export function phaseData(
+  graph: GraphDef,
+  p: Params,
+  at: number | null,
+  maxPoints = 4000,
+): PhaseData {
+  const axis = graph.x;
+  const h = sim.history;
+  const n = h.length;
+  const series = graph.series.map(() => [] as [number, number][]);
+  if (!axis || n === 0) return { series, current: null };
+  const stride = Math.max(1, Math.ceil(n / maxPoints));
+  const add = (i: number) => {
+    const s = h.states[i];
+    if (s) graph.series.forEach((ser, k) => series[k]?.push([axis.value(s, p), ser.value(s, p)]));
+  };
+  for (let i = 0; i < n; i += stride) add(i);
+  if ((n - 1) % stride !== 0) add(n - 1);
+  // The last recorded state at or before the scrubbed time (times only grow).
+  let i = n - 1;
+  if (at !== null) {
+    let lo = 0;
+    while (lo < i) {
+      const mid = (lo + i + 1) >> 1;
+      if ((h.times[mid] ?? 0) <= at) lo = mid;
+      else i = mid - 1;
+    }
+  }
+  const s = h.states[i];
+  return {
+    series,
+    current: s
+      ? graph.series.map((ser): [number, number] => [axis.value(s, p), ser.value(s, p)])
+      : null,
+  };
+}
+
 export interface Column {
   id: string;
   header: string;
