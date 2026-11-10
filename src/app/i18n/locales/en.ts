@@ -470,7 +470,7 @@ const en: Messages = {
     agree: 'agrees, deviation {value}',
     disagree: 'does not agree, deviation {value}',
     engineNote:
-      'Every number here is computed by the program from formulas and cross-checked by numerical integration. AI produces no numbers.',
+      'Every number here is computed by the program from formulas; numbers marked “agrees” are cross-checked by numerical integration. AI produces no numbers.',
     intervenedNote:
       'The solution applies to the initial conditions. After an intervention use the simulation data (Data tab).',
     invalid: 'No solution: the parameters are not valid yet.',

@@ -111,6 +111,14 @@ describe('Dormand–Prince 5(4)', () => {
     expect(r.events.length).toBe(13); // zeros of cos(2t) on (0, 20]: t = π/4 + kπ/2
     expect(r.y[0]).toBeCloseTo(Math.cos(40), 8);
   });
+
+  it('runs with a tiny absolute tolerance (squared error ratios do not overflow, #112)', () => {
+    // v starts at 0, so its scale is atol alone: ratios ~1e200, squares overflowed to Infinity,
+    // the first step became 0 and the run stalled at t = 0.
+    const r = dopri5(sho, [1, 0], 0, 1, { rtol: 1e-10, atol: 1e-200, maxSteps: 20_000 });
+    expect(r.t).toBe(1);
+    expect(r.y[0]).toBeCloseTo(Math.cos(omega), 8);
+  });
 });
 
 describe('velocity Verlet', () => {
