@@ -76,3 +76,20 @@ useSimStore.subscribe((s, prev) => {
     useCompareStore.getState().clear();
   }
 });
+
+/**
+ * Pins the run just recorded for comparison (its trail as dashed ghosts), or clears the pinned
+ * one: the classic stage tool bar and the bench's D2. Nothing is pinned without a trail.
+ */
+export function togglePin(history: Pick<History, 'states' | 'length'>): void {
+  const { scene, params } = useSimStore.getState();
+  if (useCompareStore.getState().ghost || !scene) {
+    useCompareStore.getState().clear();
+    return;
+  }
+  const kept = { ...params };
+  const tracks = recordedTracks(history, scene, kept);
+  if (tracks.some((tr) => tr.length > 1)) {
+    useCompareStore.getState().pin({ sceneId: scene.id, tracks, params: kept });
+  }
+}

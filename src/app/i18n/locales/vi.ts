@@ -236,6 +236,9 @@ const vi = {
     followSystem: 'Theo máy',
     decrease: 'Giảm {name}',
     increase: 'Tăng {name}',
+    toolsSection: 'Dụng cụ đo',
+    viewCard: 'Xem thẻ',
+    resetExact: 'Đặt lại để về kết quả chính xác',
   },
   layout: {
     resizeLeft: 'Kéo để đổi độ rộng Thư viện',
@@ -2401,6 +2404,8 @@ const vi = {
     leftPredict: 'Dự đoán trước',
     leftChallenges: '{count} thử thách',
     chapterLearned: '{done}/{total} chủ đề đã học',
+    lockPrediction: 'Chốt dự đoán',
+    lockedHint: 'Đã chốt. Bấm “Chạy để kiểm tra” ở mép bàn.',
   },
   teacher: {
     regionLabel: 'Dạy học bằng AI',

@@ -234,6 +234,9 @@ const en: Messages = {
     followSystem: 'Follow device',
     decrease: 'Decrease {name}',
     increase: 'Increase {name}',
+    toolsSection: 'Measuring tools',
+    viewCard: 'See the card',
+    resetExact: 'Reset for the exact result',
   },
   layout: {
     resizeLeft: 'Drag to resize the Library',
@@ -2412,6 +2415,8 @@ const en: Messages = {
     leftPredict: 'Predict first',
     leftChallenges: '{count} challenge(s)',
     chapterLearned: '{done}/{total} topics studied',
+    lockPrediction: 'Lock my prediction',
+    lockedHint: 'Locked. Press “Run to check” at the bottom of the bench.',
   },
   teacher: {
     regionLabel: 'Learn with an AI teacher',

@@ -13,12 +13,13 @@ import {
   X,
   type LucideIcon,
 } from 'lucide-react';
-import { memo } from 'react';
+import { memo, useContext } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { formatNumber, useT } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
-import { changedParams, recordedTracks, useCompareStore } from '@/app/sim/compare';
+import { changedParams, togglePin, useCompareStore } from '@/app/sim/compare';
+import { BenchContext } from '@/app/bench/shellMode';
 import { sim as runtime } from '@/app/sim/runtime';
 import { StageCanvas } from '@/app/sim/StageCanvas';
 import { Stopwatch } from '@/app/sim/Stopwatch';
@@ -89,18 +90,9 @@ export const Stage = memo(function Stage() {
   const ghost = useCompareStore((s) =>
     s.ghost && s.ghost.sceneId === sim.scene?.id ? s.ghost : null,
   );
-  const togglePin = () => {
-    const scene = useSimStore.getState().scene;
-    if (ghost || !scene) {
-      useCompareStore.getState().clear();
-      return;
-    }
-    const params = { ...useSimStore.getState().params };
-    const tracks = recordedTracks(runtime.history, scene, params);
-    if (tracks.some((tr) => tr.length > 1)) {
-      useCompareStore.getState().pin({ sceneId: scene.id, tracks, params });
-    }
-  };
+  // The bench keeps only "Chọn | Kéo" and "Vừa khung" here: the measuring tools are switches in
+  // its tray and the pin is its D2 (docs/BENCH_DESIGN.md §9.4).
+  const bench = useContext(BenchContext);
   const SubjectIcon = SUBJECT_ICON[subject];
   const disabled = !hasSimulation;
 
@@ -126,7 +118,9 @@ export const Stage = memo(function Stage() {
       {sim.scene && <StageCanvas scene={sim.scene} />}
 
       <div className="stage__toolbar" role="toolbar" aria-label={t('stage.toolbarLabel')}>
-        {MODES.filter((m) => shown(m.basic, activeTool === m.id)).map((m) => {
+        {MODES.filter((m) =>
+          bench ? m.id === 'select' || m.id === 'drag' : shown(m.basic, activeTool === m.id),
+        ).map((m) => {
           const label = t(`stage.tools.${m.id}`);
           const off = disabled && m.id !== 'select';
           return (
@@ -144,7 +138,7 @@ export const Stage = memo(function Stage() {
           );
         })}
         <span className="stage__toolbar-sep" aria-hidden="true" />
-        {TOGGLES.filter((tg) => shown(tg.basic, sim[tg.id])).map((tg) => {
+        {TOGGLES.filter((tg) => !bench && shown(tg.basic, sim[tg.id])).map((tg) => {
           const label = t(`stage.tools.${tg.id}`);
           return (
             <IconButton
@@ -174,14 +168,16 @@ export const Stage = memo(function Stage() {
             useSimStore.setState((s) => ({ fitRequest: s.fitRequest + 1 }));
           }}
         />
-        {sim.scene?.trail && (
+        {sim.scene?.trail && !bench && (
           <IconButton
             icon={ghost ? PinOff : Pin}
             label={t(ghost ? 'stage.tools.unpinCompare' : 'stage.tools.pinCompare')}
             tooltipSide="right"
             active={ghost !== null}
             disabled={disabled}
-            onClick={togglePin}
+            onClick={() => {
+              togglePin(runtime.history);
+            }}
           />
         )}
       </div>

@@ -1,11 +1,13 @@
-import { Pause, Play, RotateCcw, StepForward } from 'lucide-react';
+import { Pause, Pin, PinOff, Play, RotateCcw, StepForward } from 'lucide-react';
 import type { CSSProperties, ReactNode } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { formatNumber, useT } from '@/app/i18n';
 import { useLayoutStore } from '@/app/layout/layoutStore';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { sim } from '@/app/sim/runtime';
+import { togglePin, useCompareStore } from '@/app/sim/compare';
 import { useSimStore } from '@/app/sim/simStore';
+import { runLockedPrediction, usePoeRun } from '@/learn/poeRun';
 import { PLAYBACK_SPEEDS, useWorkspaceStore, type PlaybackSpeed } from '@/app/workspaceStore';
 import { useModuleStore } from '@/modules/moduleStore';
 import { ConfidenceBadge } from '@/ui/Badges';
@@ -54,6 +56,10 @@ function TimeDriver() {
       invalid: s.validation.length > 0,
     })),
   );
+  const scene = useSimStore((s) => s.scene);
+  const pinned = useCompareStore((s) => s.ghost !== null && s.ghost.sceneId === scene?.id);
+  // A locked prediction ("Chốt dự đoán") makes the main action its run: "Chạy để kiểm tra".
+  const check = usePoeRun((s) => s.run !== null) && !playing;
   const shown = scrubTime ?? simTime;
   const timeText = formatNumber(locale, shown, {
     minimumFractionDigits: 3,
@@ -76,13 +82,16 @@ function TimeDriver() {
         <button
           type="button"
           className="bench-play"
-          aria-label={playing ? t('timeline.pause') : t('timeline.play')}
+          aria-label={
+            check ? t('learn.observe') : playing ? t('timeline.pause') : t('timeline.play')
+          }
           aria-keyshortcuts="Space"
-          data-tip={playing ? t('timeline.pause') : t('timeline.play')}
+          data-tip={check ? t('learn.observe') : playing ? t('timeline.pause') : t('timeline.play')}
           data-tip-side="top"
+          data-check={check || undefined}
           disabled={!canRun}
           onClick={() => {
-            sim.togglePlay();
+            if (!runLockedPrediction()) sim.togglePlay();
           }}
         >
           {playing ? (
@@ -91,7 +100,7 @@ function TimeDriver() {
             <Play size={18} strokeWidth={2} aria-hidden="true" />
           )}
           <span className="bench-play__label" aria-hidden="true">
-            {playing ? t('bench.pause') : t('bench.play')}
+            {check ? t('learn.observe') : playing ? t('bench.pause') : t('bench.play')}
           </span>
         </button>
       </MainActionSlot>
@@ -105,8 +114,22 @@ function TimeDriver() {
           sim.step();
         }}
       />
-      {/* D2: "Ghim lần chạy này để so sánh" moves here from the stage tool bar in B2. */}
-      <span className="bench-edge__d2" aria-hidden="true" />
+      {/* D2: "Ghim lần chạy này để so sánh" (a scene with a trail), else an empty slot. */}
+      {scene?.trail ? (
+        <IconButton
+          className="bench-edge__d2"
+          icon={pinned ? PinOff : Pin}
+          label={t(pinned ? 'stage.tools.unpinCompare' : 'stage.tools.pinCompare')}
+          tooltipSide="top"
+          active={pinned}
+          disabled={!hasSimulation}
+          onClick={() => {
+            togglePin(sim.history);
+          }}
+        />
+      ) : (
+        <span className="bench-edge__d2" aria-hidden="true" />
+      )}
       <IconButton
         className="bench-edge__d3"
         icon={RotateCcw}
