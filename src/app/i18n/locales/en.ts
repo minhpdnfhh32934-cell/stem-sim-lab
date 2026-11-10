@@ -2453,6 +2453,27 @@ const en: Messages = {
     vi: 'Tiếng Việt',
     en: 'English',
   },
+  toolFacts: {
+    molarMass: 'Molar mass of {formula}: {mass} g/mol (from standard atomic weights).',
+    configuration: 'Electron configuration of {symbol} (Z = {z}): {config}.',
+    configurationShort:
+      'Electron configuration of {symbol} (Z = {z}): {config}, short form {short}.',
+    conversion: '{value} {from} = {result} {to}.',
+    codon: 'Codon {codon} codes for {three} ({name}).',
+    codonStart: 'Codon {codon} codes for {three} ({name}) and is the start codon.',
+    codonStop: 'Codon {codon} is a stop codon and codes for no amino acid.',
+    complement: 'Complementary strand of {strand}: {result}.',
+    mrna: 'mRNA for {strand}: {result}.',
+    protein: 'Amino acid chain translated from {rna}: {chain}, stopping at codon {stop}.',
+    proteinNoStop: 'Amino acid chain translated from {rna}: {chain} (no stop codon reached).',
+    crossBoth:
+      '{p1} × {p2}: genotype ratio {genotypes}; phenotype ratio (with complete dominance) {phenotypes}.',
+    crossGenotypes: '{p1} × {p2}: genotype ratio {genotypes}.',
+    crossPhenotypes: '{p1} × {p2}: phenotype ratio (with complete dominance) {phenotypes}.',
+    hardyWeinberg:
+      'Population in Hardy–Weinberg equilibrium with p = {p}, q = {q}: {AA} = {fAA}; {Aa} = {fAa}; {aa} = {faa}.',
+    constant: '{name}: {symbol} = {value} {unit}.',
+  },
 };
 
 export default en;

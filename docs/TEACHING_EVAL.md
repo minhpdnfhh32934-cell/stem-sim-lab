@@ -149,3 +149,28 @@ Mô hình 1B vẫn yếu nhất ở bài tính số, các bước giải và câ
   câu trả lời (commit b18ceb7). Trong bộ đánh giá, 6 câu có lịch sử hội thoại vẫn được nhận là câu
   trả lời và các câu khác không có tin nhắn trước của thầy, nên số đo ở trên không đổi. Bản đo đã ghi
   mã băm `chatService.ts` của lúc đo, không phải của bản hiện tại.
+
+## Thêm công cụ tính cho AI Teacher (10/11/2026, #136)
+
+Ngoài bộ cân bằng phương trình, câu hỏi về khối lượng mol, cấu hình electron, đổi đơn vị, codon, mạch
+ADN/mARN, phép lai Mendel, Hardy–Weinberg và hằng số vật lí giờ nhận kết quả do app tính
+(`src/teacher/chat/lookupFacts.ts`). Vì khối này nằm trong prompt, đã đo 12 câu thuộc các dạng trên
+bằng Gemma 4 E2B (card NVIDIA, greedy), cùng câu hỏi, trước và sau thay đổi:
+
+| Bản              | Đúng mọi ý chính |
+| ---------------- | ---------------- |
+| Trước (`main`)   | 7/12             |
+| Sau (có công cụ) | 12/12            |
+
+Trước khi có công cụ, model nói sai chẳng hạn GCU mã hóa Glutamine (đúng là Alanine) và mạch bổ sung
+TAGGCU (đúng là TACGGC). Bộ 42 câu và bộ held-out 15 câu không có câu nào kích hoạt công cụ mới, nên
+prompt của chúng không đổi và số đo cũ vẫn giữ nguyên.
+
+Giới hạn:
+
+- 12 câu, một lượt greedy. Đáp án lấy từ chính các bộ máy này, nên số liệu chỉ cho thấy model chép
+  đúng kết quả được đưa, không kiểm chứng bản thân bộ máy.
+- Bản đo dựa trên `main`, nơi câu trả lời thô còn lặp lại prompt; điểm trong bảng tính riêng phần
+  sau lượt của model, không tính phần lặp. Điểm ghi sẵn trong tệp kết quả tính trên cả câu thô.
+- Bộ câu và kết quả: `tests/teaching/results/2026-11-10-tools-set.json`,
+  `2026-11-10-gemma4-e2b-tools-before.json`, `2026-11-10-gemma4-e2b-tools-after.json`.

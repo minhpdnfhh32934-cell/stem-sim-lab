@@ -2447,6 +2447,26 @@ const vi = {
     vi: 'Tiếng Việt',
     en: 'English',
   },
+  toolFacts: {
+    molarMass: 'Khối lượng mol của {formula}: {mass} g/mol (theo nguyên tử khối chuẩn).',
+    configuration: 'Cấu hình electron của {symbol} (Z = {z}): {config}.',
+    configurationShort: 'Cấu hình electron của {symbol} (Z = {z}): {config}, viết gọn {short}.',
+    conversion: '{value} {from} = {result} {to}.',
+    codon: 'Codon {codon} mã hóa {three} ({name}).',
+    codonStart: 'Codon {codon} mã hóa {three} ({name}) và là codon mở đầu.',
+    codonStop: 'Codon {codon} là codon kết thúc, không mã hóa axit amin.',
+    complement: 'Mạch bổ sung của {strand}: {result}.',
+    mrna: 'mARN tương ứng với {strand}: {result}.',
+    protein: 'Chuỗi axit amin dịch từ {rna}: {chain}, dừng ở codon {stop}.',
+    proteinNoStop: 'Chuỗi axit amin dịch từ {rna}: {chain} (chưa gặp codon kết thúc).',
+    crossBoth:
+      '{p1} × {p2}: tỉ lệ kiểu gen {genotypes}; tỉ lệ kiểu hình (nếu trội hoàn toàn) {phenotypes}.',
+    crossGenotypes: '{p1} × {p2}: tỉ lệ kiểu gen {genotypes}.',
+    crossPhenotypes: '{p1} × {p2}: tỉ lệ kiểu hình (nếu trội hoàn toàn) {phenotypes}.',
+    hardyWeinberg:
+      'Quần thể cân bằng Hardy–Weinberg với p = {p}, q = {q}: {AA} = {fAA}; {Aa} = {fAa}; {aa} = {faa}.',
+    constant: '{name}: {symbol} = {value} {unit}.',
+  },
 };
 
 export default vi;

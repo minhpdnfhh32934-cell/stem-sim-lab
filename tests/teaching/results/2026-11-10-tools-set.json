@@ -1,0 +1,197 @@
+{
+ "about": "A5 (#136): câu hỏi mà công cụ mới của app trả lời được. Đáp án do bộ máy của app tính; bộ tạm để đo, không nằm trong repo.",
+ "review_status": "pending",
+ "items": [
+  {
+   "id": "T1",
+   "subject": "chemistry",
+   "type": "tool",
+   "question": "Tính khối lượng mol của H2SO4.",
+   "keyFacts": [
+    [
+     "98([,.]\\d+)?"
+    ]
+   ],
+   "mustNot": [],
+   "expected": "",
+   "keyPoints": [],
+   "reference": "SimLab engine"
+  },
+  {
+   "id": "T2",
+   "subject": "chemistry",
+   "type": "tool",
+   "question": "Phân tử khối của CO2 là bao nhiêu?",
+   "keyFacts": [
+    [
+     "44([,.]\\d+)?"
+    ]
+   ],
+   "mustNot": [],
+   "expected": "",
+   "keyPoints": [],
+   "reference": "SimLab engine"
+  },
+  {
+   "id": "T3",
+   "subject": "chemistry",
+   "type": "tool",
+   "question": "Viết cấu hình electron của Cr.",
+   "keyFacts": [
+    [
+     "3d.{0,3}[5⁵].{0,8}4s.{0,3}[1¹]",
+     "4s.{0,3}[1¹].{0,8}3d.{0,3}[5⁵]"
+    ]
+   ],
+   "mustNot": [],
+   "expected": "",
+   "keyPoints": [],
+   "reference": "SimLab engine"
+  },
+  {
+   "id": "T4",
+   "subject": "chemistry",
+   "type": "tool",
+   "question": "Cấu hình electron của nguyên tử sắt là gì?",
+   "keyFacts": [
+    [
+     "3d.{0,3}[6⁶].{0,8}4s.{0,3}[2²]",
+     "4s.{0,3}[2²].{0,8}3d.{0,3}[6⁶]"
+    ]
+   ],
+   "mustNot": [],
+   "expected": "",
+   "keyPoints": [],
+   "reference": "SimLab engine"
+  },
+  {
+   "id": "T5",
+   "subject": "physics",
+   "type": "tool",
+   "question": "Đổi 72 km/h ra m/s.",
+   "keyFacts": [
+    [
+     "\\b20\\b"
+    ]
+   ],
+   "mustNot": [],
+   "expected": "",
+   "keyPoints": [],
+   "reference": "SimLab engine"
+  },
+  {
+   "id": "T6",
+   "subject": "physics",
+   "type": "tool",
+   "question": "Đổi 25 °C ra K.",
+   "keyFacts": [
+    [
+     "298([,.]15)?"
+    ]
+   ],
+   "mustNot": [],
+   "expected": "",
+   "keyPoints": [],
+   "reference": "SimLab engine"
+  },
+  {
+   "id": "T7",
+   "subject": "biology",
+   "type": "tool",
+   "question": "Codon GCU mã hóa axit amin gì?",
+   "keyFacts": [
+    [
+     "alanin|\\bala\\b"
+    ]
+   ],
+   "mustNot": [],
+   "expected": "",
+   "keyPoints": [],
+   "reference": "SimLab engine"
+  },
+  {
+   "id": "T8",
+   "subject": "biology",
+   "type": "tool",
+   "question": "Hãy viết mạch bổ sung của đoạn 5'-ATGCCG-3'.",
+   "keyFacts": [
+    [
+     "t[- ]?a[- ]?c[- ]?g[- ]?g[- ]?c"
+    ]
+   ],
+   "mustNot": [],
+   "expected": "",
+   "keyPoints": [],
+   "reference": "SimLab engine"
+  },
+  {
+   "id": "T9",
+   "subject": "biology",
+   "type": "tool",
+   "question": "Mạch gốc có trình tự 3'-TACGGC-5'. Viết mARN.",
+   "keyFacts": [
+    [
+     "a[- ]?u[- ]?g[- ]?c[- ]?c[- ]?g"
+    ]
+   ],
+   "mustNot": [],
+   "expected": "",
+   "keyPoints": [],
+   "reference": "SimLab engine"
+  },
+  {
+   "id": "T10",
+   "subject": "biology",
+   "type": "tool",
+   "question": "Phép lai Aa × Aa cho tỉ lệ kiểu gen và kiểu hình thế nào?",
+   "keyFacts": [
+    [
+     "1\\s*(aa)?\\s*:\\s*2\\s*(aa)?\\s*:\\s*1"
+    ],
+    [
+     "3\\s*(a_)?\\s*:\\s*1"
+    ]
+   ],
+   "mustNot": [],
+   "expected": "",
+   "keyPoints": [],
+   "reference": "SimLab engine"
+  },
+  {
+   "id": "T11",
+   "subject": "biology",
+   "type": "tool",
+   "question": "Quần thể cân bằng di truyền có p = 0,6. Tính tần số các kiểu gen.",
+   "keyFacts": [
+    [
+     "0[,.]36"
+    ],
+    [
+     "0[,.]48"
+    ],
+    [
+     "0[,.]16"
+    ]
+   ],
+   "mustNot": [],
+   "expected": "",
+   "keyPoints": [],
+   "reference": "SimLab engine"
+  },
+  {
+   "id": "T12",
+   "subject": "physics",
+   "type": "tool",
+   "question": "Hằng số Planck bằng bao nhiêu?",
+   "keyFacts": [
+    [
+     "6[,.]626"
+    ]
+   ],
+   "mustNot": [],
+   "expected": "",
+   "keyPoints": [],
+   "reference": "SimLab engine"
+  }
+ ]
+}
