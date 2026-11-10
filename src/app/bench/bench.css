@@ -1975,8 +1975,9 @@ button.bench-door--lab:hover {
   z-index: 2;
   max-width: calc(100% - 24px);
 }
-/* The reaction's equation band (§9.5 TC): centred, solid, the equation at 22 px. */
-.bench__stage .chem-overlay {
+/* The reaction's equation band (§9.5 TC): centred, solid, the equation at 22 px. Only the
+   mechanism's overlay: other views (Bohr, the biology 3D lessons) use .chem-overlay too. */
+.bench__stage .chem-view--flush > .chem-overlay:has(> .rx-eq--chip) {
   left: 50%;
   right: auto;
   justify-content: center;
@@ -1988,11 +1989,11 @@ button.bench-door--lab:hover {
   border-radius: var(--radius-md);
   background: var(--bg-panel);
 }
-.bench__stage .chem-overlay .rx-eq--chip {
+.bench__stage .chem-view--flush > .chem-overlay > .rx-eq--chip {
   font-size: 22px;
   line-height: 30px;
 }
-.bench__stage .rx-status {
+.bench__stage .chem-view--flush > .rx-status {
   top: 80px;
   left: 50%;
   translate: -50% 0;
