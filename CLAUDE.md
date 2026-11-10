@@ -172,6 +172,38 @@ B0–B8 in its §14, merged from 08/11):
   `--chart-1…7` keep their hues with the lightness spread out (≥ 3 : 1); the light 3D terrain is
   deep green with light soil, the dark `--m3d-water-line` 0.15, and the mutation lesson's start/stop
   marks read `--dna3d-start` / `--dna3d-stop`. Never lower a floor.
+- **Shell (B1, #115):** `src/app/bench/` — `shellMode.ts` (dev switch), `BenchShell` (sets
+  `data-shell`, loads the bench fonts; launch / library / studio / teacher rooms reuse their
+  screens until B3–B7), `BenchHeader` (breadcrumb, "Đề bài" sheet with `ProblemInput`),
+  `Notebook` (left rail, tabs keep the classic names, drawer pushes or overlays by
+  `notebookPushes`), `Tray` (`InspectorBody`, 64 px spine), `DriverGrid` (bench edge, D0 =
+  `MainActionSlot`). `stemsim.layout` stays version 1: the bench fields `trayFolded`,
+  `trayWidth`, `notebookWidth`, `notebookTabBySubject` are extra version-1 fields that `merge`
+  fills in; never bump the version (an older copy of the app would drop every saved size). The
+  stage HUD is not a live region: `StageAnnouncer` speaks state changes only (`togglePlay` writes
+  the engine's time with the pause). E2E: bench specs in `tests/e2e/bench/` (projects
+  `chromium-bench`, `chromium-3d-bench`, `chromium-3d-bench-perf` for `@perf`, after the classic
+  suite; storage state with the switch); a copy of a classic spec keeps every title and switches
+  nothing off that the classic spec does not (`scripts/e2e/title-parity.mjs`, run in CI);
+  `nav.ts` `openTopic` / `openProblem` work in both shells.
+- **Controls (uiverse kit B, user choice 2026-11-02; `docs/BENCH_DESIGN.md` §12):** `bench.css`
+  only, tokens only. Controls are drawn for paper; `[data-surface="frame"]` (header, rail, edge,
+  tray spine) maps the paper tokens to the frame's (focus ring `--focus-frame`) and
+  `[data-surface="paper"]` maps them back; never add per-ancestor frame rules. Disabled = dimmed
+  text + dashed border.
+  `BenchContext` (`shellMode.ts`) marks the bench tree for the few shared parts that differ
+  (`ParamsPanel` − / +, Settings' theme switch); classic pixels never change. D0 is 144 px, edge
+  columns fixed (§8). Basic speed steps = 0,5×·1×·2× ∪ the open lesson's own speed
+  (`workspaceStore.suggestedSpeed`, set by every `sim.open`, null when none; it never follows into
+  the next lesson); `keepBasicSpeedOnSteps` (`speeds.ts`, subscribed by the bench shell) lands any
+  other speed on the nearest step at every mode switch or open, whatever is on screen. Light /
+  dark switch `ThemeSwitch.tsx` (header + Settings → Giao diện with "Theo máy"; test against
+  `theme-boot.js`). `TooltipLayer` (WCAG 1.4.13): a hover bubble takes the first Esc for itself (a
+  focus bubble lets it reach the dialog); a hover bubble stays while the pointer is on it, judged
+  by position — the bubble keeps `pointer-events: none`, never block a click (classic E2E
+  `tests/e2e/tooltip.spec.ts`). E2E `tests/e2e/bench/controls.spec.ts`: 40/48 px targets, focus
+  rings ≥ 3 : 1 on frame and paper, keyboard, no motion under reduced motion, axe
+  (`@axe-core/playwright`, serious/critical). MIT notices: `docs/THIRD_PARTY.md`.
 - **New features (§13), all agreed on 2026-11-02, built after the bench frame is done:** "Sổ ghi"
   run log, "Ví dụ" presets, parameter sweep, Ctrl+/ shortcut sheet, the "Hiển thị và trợ năng"
   page, "Làm mờ phần còn lại", "Theo dõi một hạt" and the "Tiếp tục" resume link.
@@ -515,6 +547,15 @@ Progress log: `docs/PROGRESS.md`.
   `scripts/data/gen_*.py` (mendeleev, RDKit, SciPy). Never hand-edit the JSON; change the generator.
 - Code: `src/chemistry/{data,atom,periodic,molecule,reaction,particles}`, `formula.ts` (parser),
   `balance.ts` (exact null-space balancer). three.js viewers render on demand; RDKit.js is lazy.
+- Acid–base titration (`src/chemistry/titration/`, 0.8.1, #106; strong acid in the flask, strong
+  base from the burette, 25 °C): `titration.ts` (pH = positive root of the charge balance with Kw,
+  written without cancellation; `curve` crowds points around V_eq; `indicatorAt`: colours[i] →
+  colours[i + 1] over ranges[i], phenolphthalein has two), data
+  `data/titration.json` from `scripts/data/gen_titration.py` (Kw from the IAPWS R11-24 formula,
+  checked against its test table, moved from mol/kg to mol/L; indicator ranges and colour names
+  cited; the screen colour is a CSS named colour chosen by name, an illustration), `store.ts` (`setTitration` validates;
+  V_b is clamped to 2·V_eq only when set, views read `addedVolume`), `card.ts`, `TitrationViews.tsx` (Basic: concentrations and volumes
+  only). Weak acids/buffers: not yet. Unplaced in the KNTT bar (DATA_REVIEW TIT-5).
 - Shared UI: `src/ui/charts/XYChart.tsx` (uPlot), `src/ui/canvas/useCanvas.ts`.
 - Biology: `src/biology/{division,central,genetics,ecology,enzyme,transport,cell}` — pure model
   files (`*.ts`, tested) + `*Views.tsx`; `modules.ts` lists the 12 ModuleViews. Small shared controls in
@@ -675,6 +716,19 @@ Progress log: `docs/PROGRESS.md`.
   (`useCell`; only `kind` is saved, `restoreCell` ignores other values), `CellViews.tsx` (stage:
   "Hiện tên", on in Basic; inspector: cell switch + parts list → name + function card). The 3D
   version is planned for 0.8.1 (#54). Texts: DATA_REVIEW `CELL3D-*`.
+- "Từ tế bào đến DNA" (`src/biology/cell/zoom/`, 0.8.1, #107; topic `cellToDna`, chapter
+  `cellStructure`; SH10 Bài 8, SH12 Bài 7): six zoom levels (cell → nucleus → metaphase
+  chromosome → 10 nm fibre on the scaffold → nucleosomes → B-DNA). `levels.ts` (pure: printed sizes
+  from `data/cell_dna_zoom.json` ← `scripts/data/gen_cell_dna_zoom.py`, B-DNA from `bdna.ts`,
+  `DRAWN` illustration choices, per-level field / scale bar 1-2-5 × 10ᵏ ≤ ¼ field / 3D unit =
+  field/10, `zoomSpot`), `card.ts` (Science Cards, captions, part names; no 30 nm fibre — the SGK
+  has none and it is debated), `scene.ts` (one scene per level on the biology kit: shells,
+  `ChromosomeTube`, the dogma helix; world-space ruler exactly `barNm`; `zoom-<i>` framing = the
+  glide into the next level), `draw2d.ts` (2D, same numbers), `store.ts` (`level` saved), `hooks.ts`,
+  `ZoomViews.tsx`, `Zoom3DView.tsx`. "Phóng to" glides `GLIDE_MS` (= `CAMERA_MOVE_MS`) with the
+  "không theo tỉ lệ" chip, then the next level; reduced motion steps at once. 3D/2D choice:
+  `stemsim.bio3d` lesson `cellToDna`. Budgets in `scene.test.ts`. E2E `tests/e2e/cellzoom-bio3d.spec.ts`
+  (3D project). Texts: DATA_REVIEW `DNAZ-*`.
 - Projects (Phase 6): `src/app/project/` — `snapshot.ts` (.stemsim schema; inputs only), `undo.ts`,
   `history.ts` (Rust SQLite `src-tauri/src/history.rs`), `actions.ts` (save/open/PNG/CSV via Rust
   dialogs in `files.rs`), `FileMenu`, `SourcesDialog` (lazy), `Tour` (first run, `stemsim.tourDone`).

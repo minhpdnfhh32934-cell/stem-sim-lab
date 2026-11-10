@@ -1,6 +1,7 @@
 import { useAiStore } from '@/ai/aiStore';
 import { useProjectUi } from '@/app/project/uiStore';
 import { useGateVisible, useSafetyStore } from '@/safety/safetyStore';
+import { useWorkspaceStore } from '@/app/workspaceStore';
 import { useProfileStore } from './profileStore';
 
 /**
@@ -24,4 +25,12 @@ export function useOnboardingPhase(): OnboardingPhase {
   if (gate) return 'gate';
   if (!connectSeen && noKey) return 'connect';
   return tour ? 'tour' : 'done';
+}
+
+/** Ends the profile steps; the first chosen subject becomes the open subject in the library. */
+export function finishProfileSteps(): void {
+  const profile = useProfileStore.getState();
+  const first = profile.interests[0];
+  if (first) useWorkspaceStore.getState().setSubject(first);
+  profile.finishProfile();
 }

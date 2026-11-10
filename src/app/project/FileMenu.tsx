@@ -101,7 +101,12 @@ export function FileMenu() {
       />
       {unseen && <span className="file-menu__dot" aria-hidden="true" />}
       {open && (
-        <div className="file-menu__list" role="menu" aria-label={t('project.file')}>
+        <div
+          className="file-menu__list"
+          role="menu"
+          aria-label={t('project.file')}
+          data-surface="paper"
+        >
           {items.map(({ icon: Icon, label, run }) => (
             <button
               key={label}

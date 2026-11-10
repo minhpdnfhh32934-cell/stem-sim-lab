@@ -52,6 +52,10 @@ export interface CleanOptions {
    * answer's words about a draft are feedback the learner asked for: the wrapper stays.
    */
   question?: string;
+  /** The library-note block sent with this question: an answer opening by reading it back loses that part. */
+  note?: string;
+  /** The instructions sent with this question, without the note: an opening sentence copied from them goes. */
+  instructions?: string;
 }
 
 /** Cleans an answer (see the file comment). */
@@ -62,7 +66,11 @@ export function cleanAnswer(text: string, options: CleanOptions = {}): CleanedAn
     options.reviewed === true && !asksAboutOwnDraft(question)
       ? { correction: asksForCorrection(question) }
       : null;
-  let out = text;
+  let out = removeInstructionEcho(
+    removeNoteEcho(text, options.note ?? '', found),
+    options.instructions ?? '',
+    found,
+  );
   // Each pass only removes, so it ends; a second pass catches what the first one uncovered.
   for (let pass = 0; pass < 5; pass++) {
     const next = cleanOnce(out, review, found);
@@ -201,6 +209,59 @@ function isEcho(line: string, next: string | undefined): boolean {
   if (form.generic && HEADING_LINE.test(line)) return false;
   if (form.sources && next !== undefined && BULLET_LINE.test(next)) return false;
   return true;
+}
+
+/** Where `body` ends in `text`, whitespace aside; -1 when `text` does not start with it. */
+function endOfPrefix(text: string, body: string): number {
+  let i = 0;
+  for (const ch of body.replace(/\s+/gu, '')) {
+    while (/\s/u.test(text[i] ?? '')) i += 1;
+    if (text[i] !== ch) return -1;
+    i += 1;
+  }
+  return i;
+}
+
+/**
+ * A small model sometimes opens with the note it was given: "GHI CHÚ: <the note>." That is the
+ * prompt read back, and the note may even be off-topic. Only that exact opening goes: a label
+ * followed by the model's own words stays, and an answer that is nothing else is left whole.
+ */
+function removeNoteEcho(text: string, block: string, found: Set<CleanKind>): string {
+  const body = /<reference[^>]*>\s*([\s\S]*?)\s*<\/reference>/u.exec(block)?.[1];
+  const label = nameOf(block.trim().split('\n')[0] ?? '');
+  if (!body || !label) return text;
+  const opening = text.match(/^[\s*_]*/u)?.[0].length ?? 0;
+  if (!text.startsWith(label, opening)) return text;
+  const after = text.slice(opening + label.length).match(/^(?:\s*\([^)]*\))?[\s*_]*[:：][\s*_]*/u);
+  if (!after) return text;
+  const start = opening + label.length + after[0].length;
+  const end = endOfPrefix(text.slice(start), body);
+  if (end < 0) return text;
+  const rest = text.slice(start + end).replace(/^[\s*_]+/u, '');
+  if (!rest) return text;
+  found.add('promptEcho');
+  return rest;
+}
+
+/** Shorter openings ("Đúng vậy.") could match an instruction by chance. */
+const MIN_INSTRUCTION_ECHO = 15;
+
+/** An opening sentence copied word for word from the instructions is the prompt read back. */
+function removeInstructionEcho(text: string, instructions: string, found: Set<CleanKind>): string {
+  const squeeze = (s: string) => s.replace(/\s+/gu, ' ').trim();
+  const prompt = squeeze(instructions);
+  if (!prompt) return text;
+  let out = text;
+  for (;;) {
+    const sentence = /^\s*[^\n.!?]+[.!?](?=\s|$)/u.exec(out)?.[0];
+    if (!sentence || squeeze(sentence).length < MIN_INSTRUCTION_ECHO) return out;
+    if (!prompt.includes(squeeze(sentence))) return out;
+    const rest = out.slice(sentence.length).replace(/^\s+/u, '');
+    if (!rest) return out;
+    found.add('promptEcho');
+    out = rest;
+  }
 }
 
 function removeEchoLines(text: string, found: Set<CleanKind>): string {

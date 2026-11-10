@@ -27,7 +27,13 @@ export function SafetySettings() {
           {line}
         </p>
         <div className="ai-settings__actions">
-          <button type="button" className="btn" onClick={openGate}>
+          <button
+            type="button"
+            className="btn"
+            onClick={() => {
+              openGate();
+            }}
+          >
             {t('safety.settings.answerAgain')}
           </button>
           <button type="button" className="btn" onClick={openPrivacy}>

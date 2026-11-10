@@ -411,6 +411,45 @@ async function chatText(
   };
 }
 
+/** `promptWithin` for the vision model; the images stay on the last learner turn. */
+async function visionPromptWithin(
+  eng: VisionEngine,
+  system: string,
+  messages: TextMessage[],
+  images: RawImage[],
+  budget: number | undefined,
+): Promise<Record<string, Tensor>> {
+  let kept = messages;
+  for (;;) {
+    const turns = [
+      { role: 'system', content: system },
+      ...kept.map((m, i) => {
+        if (i === kept.length - 1 && m.role === 'user' && images.length > 0) {
+          const content: ({ type: 'text'; text: string } | { type: 'image' })[] = [];
+          for (let k = 0; k < images.length; k++) content.push({ type: 'image' });
+          content.push({ type: 'text', text: m.content });
+          return { role: m.role, content };
+        }
+        return { role: m.role, content: m.content };
+      }),
+    ];
+    const prompt = eng.processor.apply_chat_template(turns, {
+      add_generation_prompt: true,
+      tokenize: false,
+    });
+    const inputs = (images.length === 0
+      ? await eng.processor(prompt)
+      : await eng.processor(prompt, images.length === 1 ? images[0] : images)) as unknown as Record<
+      string,
+      Tensor
+    >;
+    const size = inputs.input_ids ? lastDim(inputs.input_ids) : 0;
+    if (!budget || kept.length <= 1 || size <= budget) return inputs;
+    kept = kept.slice(1);
+    while (kept.length > 1 && kept[0]?.role !== 'user') kept = kept.slice(1);
+  }
+}
+
 async function chatVision(
   eng: VisionEngine,
   system: string,
@@ -418,35 +457,15 @@ async function chatVision(
   images: ArrayBuffer[],
   temperature: number,
   maxTokens: number,
+  inputBudget: number | undefined,
   decoding: Decoding,
   onText: (text: string) => void,
   stop: InterruptableStoppingCriteria,
 ): Promise<Reply> {
-  const turns = [
-    { role: 'system', content: system },
-    ...messages.map((m, i) => {
-      if (i === messages.length - 1 && m.role === 'user' && images.length > 0) {
-        const content: ({ type: 'text'; text: string } | { type: 'image' })[] = [];
-        for (let k = 0; k < images.length; k++) content.push({ type: 'image' });
-        content.push({ type: 'text', text: m.content });
-        return { role: m.role, content };
-      }
-      return { role: m.role, content: m.content };
-    }),
-  ];
-  const prompt = eng.processor.apply_chat_template(turns, {
-    add_generation_prompt: true,
-    tokenize: false,
-  });
   const loaded = await Promise.all(
     images.map((ab) => RawImage.fromBlob(new Blob([ab], { type: 'image/jpeg' }))),
   );
-  const inputs = (loaded.length === 0
-    ? await eng.processor(prompt)
-    : await eng.processor(prompt, loaded.length === 1 ? loaded[0] : loaded)) as unknown as Record<
-    string,
-    Tensor
-  >;
+  const inputs = await visionPromptWithin(eng, system, messages, loaded, inputBudget);
   // Image tokens included: the processor expands each image in input_ids.
   const promptTokens = inputs.input_ids ? lastDim(inputs.input_ids) : 0;
   const output = (await eng.model.generate({
@@ -462,7 +481,11 @@ async function chatVision(
     top_k: 40,
     ...repetitionOptions(decoding, promptTokens),
   })) as Tensor;
-  const decoded = eng.processor.batch_decode(output, { skip_special_tokens: true });
+  // `generate` returns the prompt too: decoding all of it showed the whole prompt in the chat.
+  const decoded = eng.processor.batch_decode(
+    output.slice(null, [promptTokens, null] as unknown as number[]),
+    { skip_special_tokens: true },
+  );
   return {
     text: (decoded[0] ?? '').trim(),
     truncated: lastDim(output) - promptTokens >= maxTokens,
@@ -581,6 +604,7 @@ self.onmessage = async (event: MessageEvent<InMessage>) => {
             msg.images,
             msg.temperature,
             msg.maxTokens,
+            msg.inputBudget,
             decoding,
             onText,
             stop,

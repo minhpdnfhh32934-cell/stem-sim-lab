@@ -9,7 +9,14 @@ import {
   Tags,
   X,
 } from 'lucide-react';
-import { useEffect, useLayoutEffect, useMemo, useRef, type CSSProperties } from 'react';
+import {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  type CSSProperties,
+  type ReactNode,
+} from 'react';
 import * as THREE from 'three';
 import { useLocalized } from '@/app/i18n/localized';
 import { formatNumber, useT } from '@/app/i18n';
@@ -48,6 +55,10 @@ import { stateFor, timelineFor, useMitosis3D } from './store';
 import { STAGES_3D, type CellType, type Stage3D, type Timeline, type Vec3 } from './timeline';
 import { Mitosis3DSwitch } from './Mitosis3DSwitch';
 import '../../bio.css';
+import { EdgePortal } from '@/app/bench/EdgePortal';
+import { useDimRest } from '../../view3d/dimRest';
+import { EdgeSteps } from '@/app/bench/EdgeSteps';
+import { useOnEdge } from '@/app/bench/edgeSlot';
 
 export type { RendererFactory, RendererLike };
 
@@ -122,6 +133,69 @@ const SHORT: Record<Stage3D, ReturnType<typeof L>> = {
 function goToStage(tl: Timeline, index: number) {
   const stage = STAGES_3D[Math.max(0, Math.min(STAGES_3D.length - 1, index))];
   if (stage) useMitosis3D.setState({ t: tl.keyTime(stage), playing: false });
+}
+
+/**
+ * The bench edge (docs/BENCH_DESIGN.md §9.6): D0 Chạy, D1 Về kì trước, D2 Sang kì tiếp (not "Kì
+ * sau": that is anaphase's name), D3 Đặt lại, the
+ * readout "Kì giữa (4/8)" and the illustrative time with the stages named on it. Its own
+ * component: it follows t every frame, the view does not.
+ */
+function MitosisEdge({
+  tl,
+  play,
+  children,
+}: {
+  tl: Timeline;
+  play: () => void;
+  children: ReactNode;
+}) {
+  const Lz = useLocalized();
+  const t = useMitosis3D((s) => s.t);
+  const playing = useMitosis3D((s) => s.playing);
+  const index = tl.stageAt(t).index;
+  const where = `${Lz(STAGE3D_NAME[STAGES_3D[index] ?? 'g1'])} (${String(index + 1)}/${String(STAGES_3D.length)})`;
+  return (
+    <EdgeSteps
+      play={{ playing, onClick: play }}
+      prev={{
+        label: Lz(L('Về kì trước', 'Previous stage')),
+        disabled: index === 0,
+        onClick: () => {
+          goToStage(tl, index - 1);
+        },
+      }}
+      next={{
+        label: Lz(L('Sang kì tiếp', 'Next stage')),
+        disabled: index >= STAGES_3D.length - 1,
+        onClick: () => {
+          goToStage(tl, index + 1);
+        },
+      }}
+      reset={{
+        label: Lz(L('Đặt lại', 'Reset')),
+        disabled: t <= 0 && !playing,
+        onClick: () => {
+          useMitosis3D.setState({ t: 0, playing: false });
+        },
+      }}
+      readout={where}
+      scrub={{
+        label: Lz(L('Thời gian minh họa', 'Illustrative time')),
+        min: 0,
+        max: tl.total,
+        step: tl.total / 400,
+        value: Math.min(t, tl.total),
+        valueText: where,
+        ticks: tl.stages.map((w) => ({ at: w.start, label: Lz(SHORT[w.id]) })),
+        onChange: (v) => {
+          useMitosis3D.setState({ t: v, playing: false });
+        },
+      }}
+    >
+      {children}
+    </EdgeSteps>
+  );
 }
 
 /**
@@ -349,6 +423,7 @@ export function Mitosis3DView({
   const camera = useMitosis3D((s) => s.camera);
   const cellLocked = useMitosis3D((s) => s.cellLocked);
   const uiMode = useSettingsStore((s) => s.uiMode);
+  const onEdge = useOnEdge();
   const labelsChoice = useMitosis3D((s) => s.labels);
   // "Hiện tên": on by default in Basic mode, off while a lesson holds the model (it may ask the
   // learner to find a part by its function).
@@ -585,6 +660,11 @@ export function Mitosis3DView({
     const ui = useMitosis3D.getState();
     ms.update(stateFor(tl, ui.t));
     ms.setSelection(ui.selected);
+    ms.setDimRest(useDimRest.getState().on);
+    const undim = useDimRest.subscribe((d) => {
+      ms.setDimRest(d.on);
+      hostRt.current?.request();
+    });
     // A theme change keeps the learner's camera; a new cell, 2n or renderer is framed again.
     const framed = framedRef.current;
     if (framed.host !== h || framed.tl !== tl) {
@@ -605,6 +685,7 @@ export function Mitosis3DView({
     });
     return () => {
       unsub();
+      undim();
       if (sceneRef.current?.scene === ms) {
         sceneRef.current = null;
         h.setScene(null);
@@ -645,6 +726,16 @@ export function Mitosis3DView({
   const play = () => {
     useMitosis3D.setState((s) => ({ playing: !s.playing, t: s.t >= tl.total ? 0 : s.t }));
   };
+  const speedControl = (
+    <Segmented
+      label={L('Tốc độ', 'Speed')}
+      value={String(speed)}
+      options={SPEEDS.map((v) => ({ id: String(v), label: L(fmtSpeed(v), fmtSpeed(v)) }))}
+      onChange={(v) => {
+        useDivisionStore.setState({ speed: Number(v) });
+      }}
+    />
+  );
 
   return (
     <div className="bio-view m3d">
@@ -659,50 +750,53 @@ export function Mitosis3DView({
       {/* Controls over the picture, laid out on a grid so no two boxes ever overlap. */}
       <div ref={hudRef} className="m3d__hud">
         <div className="chem-overlay m3d__top" data-inset="top">
-          <IconButton
-            icon={ChevronLeft}
-            size="lg"
-            label={Lz(L('Bước trước', 'Previous step'))}
-            disabled={stageIndex === 0}
-            onClick={() => {
-              goToStage(tl, stageIndex - 1);
-            }}
-          />
-          <IconButton
-            icon={Play}
-            altIcon={Pause}
-            showAlt={playing}
-            size="lg"
-            variant="solid"
-            label={playing ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Phát', 'Play'))}
-            onClick={play}
-          />
-          <IconButton
-            icon={ChevronRight}
-            size="lg"
-            label={Lz(L('Bước tiếp theo', 'Next step'))}
-            disabled={stageIndex >= STAGES_3D.length - 1}
-            onClick={() => {
-              goToStage(tl, stageIndex + 1);
-            }}
-          />
-          <IconButton
-            icon={RotateCcw}
-            size="lg"
-            label={Lz(L('Phát lại từ đầu', 'Replay from the start'))}
-            onClick={() => {
-              // With reduced motion the replay waits for "Phát" instead of starting by itself.
-              useMitosis3D.setState({ t: 0, playing: !prefersReducedMotion() });
-            }}
-          />
-          <Segmented
-            label={L('Tốc độ', 'Speed')}
-            value={String(speed)}
-            options={SPEEDS.map((v) => ({ id: String(v), label: L(fmtSpeed(v), fmtSpeed(v)) }))}
-            onChange={(v) => {
-              useDivisionStore.setState({ speed: Number(v) });
-            }}
-          />
+          <EdgePortal>
+            {onEdge ? (
+              <MitosisEdge tl={tl} play={play}>
+                {speedControl}
+              </MitosisEdge>
+            ) : (
+              <>
+                <IconButton
+                  icon={ChevronLeft}
+                  size="lg"
+                  label={Lz(L('Bước trước', 'Previous step'))}
+                  disabled={stageIndex === 0}
+                  onClick={() => {
+                    goToStage(tl, stageIndex - 1);
+                  }}
+                />
+                <IconButton
+                  icon={Play}
+                  altIcon={Pause}
+                  showAlt={playing}
+                  size="lg"
+                  variant="solid"
+                  label={playing ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Phát', 'Play'))}
+                  onClick={play}
+                />
+                <IconButton
+                  icon={ChevronRight}
+                  size="lg"
+                  label={Lz(L('Bước tiếp theo', 'Next step'))}
+                  disabled={stageIndex >= STAGES_3D.length - 1}
+                  onClick={() => {
+                    goToStage(tl, stageIndex + 1);
+                  }}
+                />
+                <IconButton
+                  icon={RotateCcw}
+                  size="lg"
+                  label={Lz(L('Phát lại từ đầu', 'Replay from the start'))}
+                  onClick={() => {
+                    // With reduced motion the replay waits for "Phát" instead of starting by itself.
+                    useMitosis3D.setState({ t: 0, playing: !prefersReducedMotion() });
+                  }}
+                />
+                {speedControl}
+              </>
+            )}
+          </EdgePortal>
           <span className="chem-chip">
             <strong>{Lz(STAGE3D_NAME[stage])}</strong>
           </span>

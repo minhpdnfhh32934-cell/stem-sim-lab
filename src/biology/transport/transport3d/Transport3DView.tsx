@@ -80,6 +80,9 @@ import { buildOsmosisScene, type OsmosisScene } from './osmosisScene';
 import { diffusion3dFor, useTransport3D } from './store';
 import { Transport3DSwitch } from './Transport3DSwitch';
 import '../../bio.css';
+import { EdgePortal } from '@/app/bench/EdgePortal';
+import { EdgeSteps } from '@/app/bench/EdgeSteps';
+import { useOnEdge } from '@/app/bench/edgeSlot';
 
 export type { RendererFactory };
 
@@ -552,6 +555,7 @@ function Transport3DScene({
 
   const isDiffusion = view.mode === 'diffusion';
   const readout = isDiffusion ? diffusionReadout(view.frame, fmt) : osmosisReadout(view.frame, fmt);
+  const onEdge = useOnEdge();
   const picture = isDiffusion
     ? diffusionPicture(view.model, view.frame, fmt)
     : osmosisPicture(view.frame, fmt);
@@ -591,29 +595,56 @@ function Transport3DScene({
         </div>
         {selected && <PartInfo view={view} selected={selected} fmt={fmt} />}
         <div className="m3d__bottom" data-inset="bottom">
-          <div className="bio3d__player">
-            <IconButton
-              icon={Play}
-              altIcon={Pause}
-              showAlt={playing}
-              size="lg"
-              variant="solid"
-              label={playing ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Phát', 'Play'))}
-              onClick={play}
-            />
-            <input
-              type="range"
-              aria-label={Lz(L('Thời gian', 'Time'))}
-              min={0}
-              max={top}
-              step={step}
-              value={view.frame.t}
-              onChange={(e) => {
-                useTransport3D.setState({ t: Number(e.target.value), playing: false });
-              }}
-            />
-            <output>{Lz(readout)}</output>
-          </div>
+          <EdgePortal>
+            {onEdge ? (
+              // The bench edge (§9.6): Chạy, Đặt lại, the readout and the time slider.
+              <EdgeSteps
+                play={{ playing, onClick: play }}
+                reset={{
+                  label: Lz(L('Đặt lại', 'Reset')),
+                  onClick: () => {
+                    useTransport3D.setState({ t: 0, playing: false });
+                  },
+                }}
+                readout={Lz(readout)}
+                scrub={{
+                  label: Lz(L('Thời gian', 'Time')),
+                  min: 0,
+                  max: top,
+                  step,
+                  value: view.frame.t,
+                  valueText: Lz(readout),
+                  onChange: (v) => {
+                    useTransport3D.setState({ t: v, playing: false });
+                  },
+                }}
+              />
+            ) : (
+              <div className="bio3d__player">
+                <IconButton
+                  icon={Play}
+                  altIcon={Pause}
+                  showAlt={playing}
+                  size="lg"
+                  variant="solid"
+                  label={playing ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Phát', 'Play'))}
+                  onClick={play}
+                />
+                <input
+                  type="range"
+                  aria-label={Lz(L('Thời gian', 'Time'))}
+                  min={0}
+                  max={top}
+                  step={step}
+                  value={view.frame.t}
+                  onChange={(e) => {
+                    useTransport3D.setState({ t: Number(e.target.value), playing: false });
+                  }}
+                />
+                <output>{Lz(readout)}</output>
+              </div>
+            )}
+          </EdgePortal>
           <div className="tr3d__row">
             {isDiffusion ? (
               <>
