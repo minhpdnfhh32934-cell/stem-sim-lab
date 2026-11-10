@@ -31,6 +31,7 @@ import { useDrift3D } from './drift3d/store';
 import { HW_CARD, HW_CARD_3D } from './hwCard';
 import { useDriftRuns } from './driftData';
 import '../bio.css';
+import { No3dNotice } from '../view3d/No3dNotice';
 
 // three.js and the 3D pictures load only when a 3D view is shown.
 const Drift3DView = lazy(() =>
@@ -92,7 +93,7 @@ function MendelPage({ notice }: { notice: string | undefined }) {
   const toolbar = (
     <div className="chem-toolbar">
       <Mendel3DSwitch />
-      {notice && <span className="chem-chip chem-chip--qual">{notice}</span>}
+      {notice && <No3dNotice text={notice} />}
     </div>
   );
   if (!read.ok) {

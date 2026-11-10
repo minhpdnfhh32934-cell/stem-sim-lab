@@ -109,7 +109,7 @@ test('predator–prey 3D: the habitat follows the computed trajectory', async ({
 
   // Scrub to t = 12 (sample 320; the slider stops the playback): the sample's x and y everywhere.
   // The bench draws the lesson's player in its edge.
-  const player = page.locator('.bench-edge .bio3d__player');
+  const player = page.locator('.bench-edge .edge-steps');
   const slider = player.getByRole('slider', { name: 'Thời gian t' });
   for (const [t, k] of [
     [12, 320],

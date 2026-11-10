@@ -11,6 +11,8 @@ export interface MoleculeState {
   labels: boolean;
   dipole: boolean;
   query: string;
+  /** The bench's "Tự xoay": the camera turns slowly around the molecule (never saved). */
+  spin: boolean;
 }
 
 export const useMoleculeStore = create<MoleculeState>()(() => ({
@@ -21,6 +23,7 @@ export const useMoleculeStore = create<MoleculeState>()(() => ({
   labels: true,
   dipole: false,
   query: '',
+  spin: false,
 }));
 
 /** Topic-specific defaults when a molecule topic opens. */

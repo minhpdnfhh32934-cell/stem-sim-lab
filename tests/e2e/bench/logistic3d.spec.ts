@@ -122,7 +122,7 @@ test('logistic growth 3D: the habitat follows N(t) of the exact solution', async
 
   // Scrub to t = 12 (the slider stops the playback): the model's N(12) everywhere.
   // The bench draws the lesson's player in its edge.
-  const player = page.locator('.bench-edge .bio3d__player');
+  const player = page.locator('.bench-edge .edge-steps');
   const slider = player.getByRole('slider', { name: 'Thời gian t' });
   await slider.fill('12');
   await expect(player.locator('output')).toHaveText(`t = 12 · N = ${vi(N(12), 4)}`);

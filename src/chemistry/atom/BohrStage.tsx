@@ -1,4 +1,5 @@
-import { useRef } from 'react';
+import { useContext, useRef } from 'react';
+import { BenchContext } from '@/app/bench/shellMode';
 import { useLocalized } from '@/app/i18n/localized';
 import type { ScienceCardData } from '@/science-card/types';
 import { useCanvas } from '@/ui/canvas/useCanvas';
@@ -59,6 +60,7 @@ export function BohrStage() {
   usePublishCard(CARD);
   const Lz = useLocalized();
   const z = usePeriodicStore((s) => s.selected);
+  const bench = useContext(BenchContext);
   const { nLower, nUpper } = useBohrStore();
   const e = elementByZ(z);
   const shells = e ? electronsPerShell(e) : [];
@@ -185,7 +187,8 @@ export function BohrStage() {
         aria-label={Lz(L('Mô hình Bohr', 'Bohr model'))}
       />
       <div className="chem-overlay" ref={overlayRef}>
-        <ElementPicker />
+        {/* The bench edge's element stepper has the picker (§9.10). */}
+        {!bench && <ElementPicker />}
         <span className="chem-chip chem-chip--qual">
           {Lz(
             L('Mô hình Bohr — giản lược, mang tính lịch sử', 'Bohr model — simplified, historical'),

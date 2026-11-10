@@ -1,6 +1,7 @@
 declare const process: { env: Record<string, string | undefined> };
+import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
-import { openLab } from '../nav';
+import { openLab, openTopic } from '../nav';
 
 /**
  * The bench: a topic card on the shelf (back to the shelf through the subject crumb when a topic
@@ -136,9 +137,10 @@ test('logistic 3D: the habitat follows the model; rebuilding for new inputs free
   // The chips are the 2D view's (same text).
   await expect(page.getByText('Sức chứa K = 1.000')).toBeVisible();
   // Pause, go to the end: N(t = 30) of the exact solution.
-  const player = page.locator('.bio3d__player');
+  // The bench edge's player (EdgeSteps, §9.6): D0 "Chạy" / "Tạm dừng".
+  const player = page.locator('.bench-edge .edge-steps');
   await player
-    .getByRole('button', { name: /Tạm dừng|Phát/ })
+    .getByRole('button', { name: /Tạm dừng|Chạy/ })
     .first()
     .click();
   await player.getByRole('slider').fill('30');
@@ -163,4 +165,224 @@ test('logistic 3D: the habitat follows the model; rebuilding for new inputs free
   const after = await page.evaluate(() => window.__simlabBio3d?.info() ?? null);
   expect(after?.geometries).toBe(before?.geometries);
   expect(after?.textures).toBe(before?.textures);
+});
+
+// ---- Cell → DNA (copy of tests/e2e/cellzoom-bio3d.spec.ts, same titles) ----
+// Kept here: the bench's 3D project matches only bench/<name>.spec.ts with the classic 3D
+// names (playwright.config.ts BENCH_3D), so a file named cellzoom-bio3d.spec.ts ran in the
+// light project with software WebGL beside every other bench spec.
+interface ZoomState {
+  level: string;
+  barNm: number;
+  unitNm: number;
+  named: string[];
+  spot: boolean;
+}
+interface Hook {
+  frames(): number;
+  moving(): boolean;
+  state(): ZoomState | null;
+}
+/** The bench draws the zoom buttons (and the glide's chip) in its edge. */
+const EDGE = '.bench-edge';
+const hook = (page: Page) =>
+  page.evaluate(() => {
+    const h = (window as unknown as { __simlabBio3d?: Hook }).__simlabBio3d;
+    return h ? { frames: h.frames(), state: h.state() } : null;
+  });
+
+async function openZoom(page: Page, errors: string[], fontScale = 1): Promise<void> {
+  page.on('pageerror', (e) => errors.push(String(e)));
+  page.on('console', (m) => {
+    if (m.type() === 'error') errors.push(m.text());
+  });
+  await page.addInitScript((scale) => {
+    localStorage.setItem(
+      'stemsim.perf',
+      JSON.stringify({ state: { preference: 'medium', benchmark: null }, version: 1 }),
+    );
+    if (scale !== 1)
+      localStorage.setItem(
+        'stemsim.settings',
+        JSON.stringify({ state: { fontScale: scale }, version: 2 }),
+      );
+  }, fontScale);
+  await openLab(page);
+  await page.getByRole('radio', { name: 'Sinh học' }).click();
+  await page.getByRole('button', { name: 'Từ tế bào đến DNA', exact: true }).click();
+}
+
+test('cell → DNA 3D: six levels, scale bars and the not-to-scale glide', async ({ page }) => {
+  test.setTimeout(150_000);
+  const errors: string[] = [];
+  await openZoom(page, errors);
+  const edge = page.locator(EDGE);
+  const view = page.locator('.bio3d[data-lesson="cellToDna"]');
+  await expect(view.locator('canvas')).toBeVisible({ timeout: 30_000 });
+  await expect.poll(async () => (await hook(page))?.frames ?? 0).toBeGreaterThan(0);
+  await expect(view.getByText('Cấp 1/6 · Tế bào nhân thực')).toBeVisible();
+  // Level 1: the 5 µm bar (a page label of the scene) and the nucleus at its printed size.
+  await expect.poll(async () => (await hook(page))?.state?.level).toBe('cell');
+  expect((await hook(page))?.state?.barNm).toBe(5000);
+  await expect(view.locator('.bio3d__labels').getByText('5 µm', { exact: true })).toBeVisible();
+  await expect(view.getByText('Đường kính nhân ≈ 5 µm')).toBeVisible();
+  // The Science Card of the level.
+  await expect(page.getByText('Tế bào nhân thực — cấp 1/6')).toBeVisible();
+
+  // "Phóng to": the chip says "not to scale" while the camera glides, then level 2.
+  const zoomIn = edge.getByRole('button', { name: 'Phóng to' });
+  await zoomIn.click();
+  await expect(edge.getByText('Chuyển cảnh giữa hai cấp — không theo tỉ lệ')).toBeVisible();
+  await expect(view.getByText('Cấp 2/6 · Nhân tế bào')).toBeVisible();
+  await expect.poll(async () => (await hook(page))?.state?.level).toBe('nucleus');
+  await expect(edge.getByText('Chuyển cảnh giữa hai cấp — không theo tỉ lệ')).toHaveCount(0);
+  expect((await hook(page))?.state?.barNm).toBe(1000);
+
+  // Every level from the inspector: its own bar, and the last one has no next spot.
+  const bars: Record<string, [number, string]> = {
+    chromosome: [500, '500 nm'],
+    fibre: [100, '100 nm'],
+    nucleosome: [10, '10 nm'],
+    dna: [1, '1 nm'],
+  };
+  const panel = page.getByRole('group', { name: 'Sáu cấp phóng to' });
+  const names = ['3. NST kép ở kì giữa', '4. Sợi nhiễm sắc 10 nm và khung NST', '5. Nucleosome'];
+  for (const [i, id] of ['chromosome', 'fibre', 'nucleosome', 'dna'].entries()) {
+    const label = i < 3 ? names[i] : '6. Chuỗi xoắn kép B-DNA';
+    await panel.getByRole('button', { name: new RegExp(`^${label ?? ''}`) }).click();
+    await expect.poll(async () => (await hook(page))?.state?.level).toBe(id);
+    const [nm, text] = bars[id] ?? [0, ''];
+    expect((await hook(page))?.state?.barNm).toBe(nm);
+    await expect(view.locator('.bio3d__labels').getByText(text, { exact: true })).toBeVisible();
+  }
+  expect((await hook(page))?.state?.spot).toBe(false);
+  await expect(zoomIn).toBeDisabled();
+  // The fibre level's card says why there is no 30 nm level (debated); in Basic mode it sits
+  // under the card's "Xem thêm".
+  await panel.getByRole('button', { name: /^4\. / }).click();
+  // The bench: the whole Science Card is the notebook's "Thẻ khoa học" tab.
+  await page.getByRole('tab', { name: 'Thẻ khoa học' }).click();
+  await expect(page.getByText(/còn được tranh luận nên hình không vẽ/)).toHaveCount(1);
+
+  // 1366×768: no horizontal scroll; the zoom buttons are full targets.
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(1366);
+  const box = await edge.getByRole('button', { name: 'Thu nhỏ' }).boundingBox();
+  expect(box?.height ?? 0).toBeGreaterThanOrEqual(40);
+  expect(errors).toEqual([]);
+});
+
+test('cell → DNA: reduced motion steps at once; the 2D picture has the same levels', async ({
+  page,
+}) => {
+  test.setTimeout(120_000);
+  const errors: string[] = [];
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await openZoom(page, errors);
+  const edge = page.locator(EDGE);
+  const view = page.locator('.bio3d[data-lesson="cellToDna"]');
+  await expect(view.locator('canvas')).toBeVisible({ timeout: 30_000 });
+  await edge.getByRole('button', { name: 'Phóng to' }).click();
+  // No glide, so no not-to-scale moment: the next level at once.
+  await expect.poll(async () => (await hook(page))?.state?.level).toBe('nucleus');
+  await expect(edge.getByText('Chuyển cảnh giữa hai cấp — không theo tỉ lệ')).toHaveCount(0);
+
+  // The learner's 2D choice: the canvas picture, the same level and buttons.
+  await view.getByRole('radio', { name: '2D' }).click();
+  const flat = page.locator('.zoom2d');
+  await expect(flat.locator('canvas')).toBeVisible();
+  await expect(flat.getByText('Cấp 2/6 · Nhân tế bào')).toBeVisible();
+  await edge.getByRole('button', { name: 'Phóng to' }).click();
+  await expect(flat.getByText('Cấp 3/6 · NST kép ở kì giữa')).toBeVisible();
+  await expect(flat.getByText(/Thước tỉ lệ dài đúng 500 nm/)).toBeVisible();
+  await edge.getByRole('button', { name: 'Thu nhỏ' }).click();
+  await expect(flat.getByText('Cấp 2/6 · Nhân tế bào')).toBeVisible();
+  // Back to 3D for the next tests on this machine (the choice is remembered per device).
+  await flat.getByRole('radio', { name: '3D' }).click();
+  await expect(view.locator('canvas')).toBeVisible({ timeout: 30_000 });
+  expect(errors).toEqual([]);
+});
+
+for (const fontScale of [1, 1.4])
+  test(`cell → DNA 3D: the glide is never cut short by a resize (font ${String(fontScale * 100)} %)`, async ({
+    page,
+  }) => {
+    // Review of PR #111: a "not to scale" chip that wrapped the top bar resized a HUD inset
+    // mid-glide, and the camera jumped to the spot instead of gliding.
+    test.setTimeout(120_000);
+    const errors: string[] = [];
+    await openZoom(page, errors, fontScale);
+    const edge = page.locator(EDGE);
+    const view = page.locator('.bio3d[data-lesson="cellToDna"]');
+    await expect(view.locator('canvas')).toBeVisible({ timeout: 30_000 });
+    const panel = page.getByRole('group', { name: 'Sáu cấp phóng to' });
+    for (const n of [3, 4]) {
+      await panel.getByRole('button', { name: new RegExp(`^${String(n)}\\. `) }).click();
+      await expect(view.getByText(new RegExp(`^Cấp ${String(n)}/6`))).toBeVisible();
+      await expect
+        .poll(async () => (await hook(page))?.state?.level)
+        .toBe(n === 3 ? 'chromosome' : 'fibre');
+      const top = view.locator('.bio3d__top');
+      const before = (await top.boundingBox())?.height ?? 0;
+      await edge.getByRole('button', { name: 'Phóng to' }).click();
+      // The camera is gliding (a resize would have ended the glide at once).
+      expect(
+        await page.evaluate(
+          () => (window as unknown as { __simlabBio3d?: Hook }).__simlabBio3d?.moving() ?? false,
+        ),
+      ).toBe(true);
+      await expect(edge.getByText('Chuyển cảnh giữa hai cấp — không theo tỉ lệ')).toBeVisible();
+      expect((await top.boundingBox())?.height ?? 0).toBeCloseTo(before, 0);
+      await expect(view.getByText(new RegExp(`^Cấp ${String(n + 1)}/6`))).toBeVisible();
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
+      1366,
+    );
+    expect(errors).toEqual([]);
+  });
+
+// ---- Biology on the bench edge (B5) ----
+const edgeOf = (page: Page) => page.locator('.bench-edge');
+const stageOf = (page: Page) => page.getByRole('region', { name: 'Khung mô phỏng' });
+const seriousOnEdge = async (page: Page) =>
+  (await new AxeBuilder({ page }).include('.bench-edge').analyze()).violations
+    .filter((v) => v.impact === 'serious' || v.impact === 'critical')
+    .map((v) => `${v.id} (${v.nodes.map((n) => n.target.join(' ')).join(' | ')})`);
+
+test('B5: mitosis 3D steps from the edge; the stage keeps the stage name', async ({ page }) => {
+  await openTopic(page, 'Sinh học', 'Nguyên phân');
+  // D1 / D2 (§9.6): "Về kì trước" / "Sang kì tiếp" ("Kì sau" is anaphase's name).
+  const next = edgeOf(page).getByRole('button', { name: 'Sang kì tiếp' });
+  await expect(next).toBeVisible({ timeout: 30_000 });
+  await expect(edgeOf(page).getByRole('button', { name: 'Về kì trước' })).toBeDisabled();
+  await expect(stageOf(page).getByRole('button', { name: 'Sang kì tiếp' })).toHaveCount(0);
+  const name = page.locator('.m3d__top .chem-chip strong').first();
+  const before = await name.textContent();
+  await next.click();
+  await expect(name).not.toHaveText(before ?? '');
+  await expect(edgeOf(page).getByRole('button', { name: 'Về kì trước' })).toBeEnabled();
+  // Polled: a button that has just become enabled fades into its colours.
+  await expect.poll(() => seriousOnEdge(page)).toEqual([]);
+});
+
+test('B5: a habitat lesson plays from the edge (time slider there)', async ({ page }) => {
+  await openTopic(page, 'Sinh học', 'Tăng trưởng logistic');
+  await expect(edgeOf(page).locator('.edge-steps input[type="range"]')).toBeVisible({
+    timeout: 30_000,
+  });
+  await expect(stageOf(page).locator('.bio3d__player')).toHaveCount(0);
+  // Polled: a button that has just become enabled fades into its colours.
+  await expect.poll(() => seriousOnEdge(page)).toEqual([]);
+});
+
+test('B5: cell → DNA zooms from the edge', async ({ page }) => {
+  await openTopic(page, 'Sinh học', 'Từ tế bào đến DNA');
+  const zoomIn = edgeOf(page).getByRole('button', { name: 'Phóng to' });
+  await expect(zoomIn).toBeVisible({ timeout: 30_000 });
+  await expect(edgeOf(page).getByRole('button', { name: 'Thu nhỏ' })).toBeDisabled();
+  await zoomIn.click();
+  await expect(edgeOf(page).getByRole('button', { name: 'Thu nhỏ' })).toBeEnabled({
+    timeout: 10_000,
+  });
+  // Polled: a button that has just become enabled fades into its colours.
+  await expect.poll(() => seriousOnEdge(page)).toEqual([]);
 });

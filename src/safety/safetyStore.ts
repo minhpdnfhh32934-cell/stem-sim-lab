@@ -6,12 +6,15 @@ export interface SafetyUiState {
   status: SafetyStatus | null;
   /** The gate was opened from Settings (to answer again). */
   gateRequested: boolean;
+  /** …or from the bench's first run ("Quay lại" on step 3): it stays "Bước 2/3". */
+  gateFirstRun: boolean;
   privacyOpen: boolean;
 }
 
 export const useSafetyStore = create<SafetyUiState>()(() => ({
   status: null,
   gateRequested: false,
+  gateFirstRun: false,
   privacyOpen: false,
 }));
 
@@ -41,12 +44,12 @@ export function useGateVisible(): boolean {
   return useSafetyStore(gateVisible);
 }
 
-export function openGate(): void {
-  useSafetyStore.setState({ gateRequested: true });
+export function openGate({ firstRun = false } = {}): void {
+  useSafetyStore.setState({ gateRequested: true, gateFirstRun: firstRun });
 }
 
 export function closeGate(): void {
-  useSafetyStore.setState({ gateRequested: false });
+  useSafetyStore.setState({ gateRequested: false, gateFirstRun: false });
 }
 
 /** Records an incident (kind and time only). Never fails the caller. */
