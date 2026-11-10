@@ -184,6 +184,7 @@ const UNITS: readonly UnitDef[] = [
     factor: 1,
     aliases: ['N·m²/C²', 'N.m^2/C^2', 'N.m²/C²', 'Nm^2/C^2', 'Nm²/C²'],
   },
+  { symbol: 'kohm', dim: DIM.resistance, factor: 1e3, aliases: ['kΩ'] },
 ];
 
 const REGISTRY = new Map<string, UnitDef>();
@@ -264,6 +265,7 @@ export function unitLabel(symbol: string, locale?: 'vi' | 'en'): string {
     uN: 'µN',
     angstrom: 'Å',
     ohm: 'Ω',
+    kohm: 'kΩ',
     '1': '',
     'kg*m/s': 'kg·m/s',
   };

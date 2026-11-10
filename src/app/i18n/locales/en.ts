@@ -89,6 +89,7 @@ const en: Messages = {
     circularMotion: 'Uniform circular motion',
     waves: 'Waves',
     electricField: 'Electric field',
+    dcCircuit: 'Current and circuits',
   },
   topics: {
     uniformMotion: 'Uniform linear motion',
@@ -132,6 +133,7 @@ const en: Messages = {
     interference: 'Two-source interference',
     standingWave: 'Standing waves on a string',
     electricField: 'Electric field of point charges',
+    dcCircuit: 'Direct-current circuit',
   },
   stage: {
     regionLabel: 'Simulation stage',

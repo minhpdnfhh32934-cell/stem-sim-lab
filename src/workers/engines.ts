@@ -68,3 +68,8 @@ registerEngine('phys.field', async () => {
   const { FieldEngine } = await import('@/physics/field/engine');
   return () => new FieldEngine();
 });
+
+registerEngine('phys.circuit', async () => {
+  const { CircuitEngine } = await import('@/physics/circuit/engine');
+  return () => new CircuitEngine();
+});

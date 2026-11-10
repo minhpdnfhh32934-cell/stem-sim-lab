@@ -22,6 +22,7 @@ const SCENES: Record<string, () => Promise<PhysicsScene>> = {
   interference: () => import('./interference/scenes').then((m) => m.interference),
   standingWave: () => import('./wave/scenes').then((m) => m.standingWave),
   electricField: () => import('./field/scenes').then((m) => m.electricField),
+  dcCircuit: () => import('./circuit/scenes').then((m) => m.dcCircuit),
 };
 
 export function hasScene(topicId: string): boolean {

@@ -745,3 +745,15 @@ Khi viết code mà gặp giá trị, phản ứng hay cơ chế không chắc c
   vòng tròn chỉ đúng khi đó. Nguồn đối chiếu: OpenStax University Physics Volume 1, chương
   "Oscillations" (mục so sánh dao động điều hoà với chuyển động tròn). Nhờ giáo viên xem tên đồ
   thị, kí hiệu trục "−v/ω" và cách SGK Vật lí 11 KNTT gọi vòng tròn này. `review_status: "pending"`.
+- **DCC-1 … DCC-4 — Mạch điện một chiều (10/11/2026, việc (e) của #37 bị bỏ trước demo, làm ở kế hoạch
+  24/24 mục B3):** (1) Mô hình: nguồn E, r; mạch ngoài 1–3 điện trở thuần theo 7 cách mắc (1 điện trở; 2,
+  3 nối tiếp; 2, 3 song song; R₁ nt (R₂ ∥ R₃); (R₁ nt R₂) ∥ R₃); dây, ampe kế, vôn kế lí tưởng; I = E/(R_N + r),
+  U = E − I·r, P = U·I, P_nguồn = E·I, H = U/E. Kiểm chéo: phương pháp điện thế nút (giải hệ tuyến tính,
+  không dùng công thức nối tiếp/song song), cân bằng công suất ΣPₖ + I²r = E·I, và trong test: DOPRI5 với tụ
+  nhỏ ở mỗi nút nạp tới điện thế nút. Nguồn: SGK Vật lí 11 KNTT Bài 23–25; Halliday ch. 26–27. (2) Đề không
+  cho r thì r = 0 (nguồn lí tưởng, Thẻ Khoa học ghi rõ); luật "điện trở trong không đáng kể" / "nguồn lí
+  tưởng" → r = 0 (mục 2 của các luật suy ra từ lời). Đề chỉ ghi "hiệu điện thế 12 V" của nguồn được đọc là
+  E = 12 V với r = 0 (giáo viên xem cách hiểu này). (3) Kí hiệu suất điện động viết là E (SGK có thể viết 𝓔),
+  P_ng là công suất nguồn, R_N là điện trở mạch ngoài. (4) Lời văn của Thẻ Khoa học, thử thách "công suất
+  mạch ngoài lớn nhất" (R₁ = r), câu "Dự đoán trước" (R₂ tăng gấp đôi trong R₁ nt (R₂ ∥ R₃) thì I giảm), ba đề
+  chuẩn dc-01 … dc-03 (dc-01 là đề ng-01 cũ trước đây ngoài phạm vi). `review_status: "pending"`.
