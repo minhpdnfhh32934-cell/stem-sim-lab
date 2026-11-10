@@ -15,6 +15,7 @@ const TOPICS = [
   'Phân bố Maxwell–Boltzmann',
   'Cân bằng hóa học & Le Chatelier',
   'Chuẩn độ acid – base',
+  'Tinh thể kim loại và NaCl',
 ];
 
 async function openChemistry(page: Page) {

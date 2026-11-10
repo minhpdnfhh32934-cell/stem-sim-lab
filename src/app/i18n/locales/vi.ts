@@ -92,6 +92,7 @@ const vi = {
     circularMotion: 'Chuyển động tròn đều',
     waves: 'Sóng',
     electricField: 'Điện trường',
+    crystals: 'Tinh thể',
   },
   topics: {
     uniformMotion: 'Chuyển động thẳng đều',
@@ -136,6 +137,7 @@ const vi = {
     uniformCircularMotion: 'Chuyển động tròn đều',
     standingWave: 'Sóng dừng trên dây',
     electricField: 'Điện trường của điện tích điểm',
+    crystalStructure: 'Tinh thể kim loại và NaCl',
   },
   stage: {
     regionLabel: 'Khung mô phỏng',

@@ -2420,6 +2420,18 @@
    ],
    "reason": "Tên Bài 7: cấu trúc và chức năng của nhiễm sắc thể (cấp NST kép, sợi nhiễm sắc, nucleosome, DNA).",
    "review_status": "pending"
+  },
+  {
+   "topic": "crystalStructure",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 6. Đại cương về kim loại",
+   "lessons": [
+    18
+   ],
+   "reason": "Tên Bài 18: cấu tạo và liên kết trong tinh thể kim loại (cảnh có thêm tinh thể NaCl; Bài 11 Hoá học 10 tên là liên kết ion, không nêu tinh thể nên không xếp).",
+   "review_status": "pending"
   }
  ],
  "unplaced": [

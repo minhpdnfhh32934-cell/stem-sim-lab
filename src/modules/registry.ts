@@ -32,6 +32,7 @@ const MODULES: Record<string, () => Promise<ModuleView>> = {
   diffusionOsmosis: () => import('@/biology/modules').then((m) => m.diffusionOsmosis),
   cellStructure: () => import('@/biology/modules').then((m) => m.cellStructure),
   cellToDna: () => import('@/biology/modules').then((m) => m.cellToDna),
+  crystalStructure: () => import('@/chemistry/crystal/modules').then((m) => m.crystalStructure),
 };
 
 export function hasModule(id: string): boolean {
