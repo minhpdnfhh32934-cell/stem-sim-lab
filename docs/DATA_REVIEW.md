@@ -707,3 +707,15 @@ Khi viết code mà gặp giá trị, phản ứng hay cơ chế không chắc c
   đường; điện tích âm nhận thêm các đường đi tới từ điện tích dương) nhưng mật độ đường trên hình
   **không** tỉ lệ với |E| (ghi trên Thẻ Khoa học). Nhờ giáo viên xem cách trình bày này và giá trị
   mặc định có hợp với lớp 11 không. `review_status: "pending"`.
+- **HOLD2-01 … HOLD2-30 — bộ kiểm chứng độc lập thứ hai cho AI Teacher (10/11/2026, kế hoạch 24/24
+  mục A7):** `tests/teaching/teaching-heldout-2.json`, sinh bằng `scripts/data/gen_teaching_heldout2.py`
+  (không sửa tay). Mỗi môn 10 câu: 2 hiểu sai thường gặp, 2 câu bẫy, 2 câu hỏi tiếp theo, 2 khái
+  niệm, 2 bài toán đủ dữ kiện. Câu hỏi và đáp án mẫu do Claude tự viết, không lấy nội dung SGK; ý
+  khoa học theo các sách OpenStax ghi ở trường `reference` của từng câu; mọi con số lấy từ bảng dữ
+  liệu và bộ máy tính của app (`tests/teaching-heldout-2.test.ts` đối chiếu). Khi soạn không đọc câu
+  trả lời đã lưu của model nào cho các câu này; trước đó cùng ngày người soạn đã xem câu trả lời của
+  Gemma 4 E2B cho 12 câu khác cùng dạng với HOLD2-19, 25, 26, 29, 30 (đã ghi trong `about`). Chưa
+  đo. Nhờ giáo viên xem: (a) lời văn và độ khó của câu hỏi; (b) đáp án mẫu; (c) các mẫu `keyFacts`
+  (có quá chặt hay quá lỏng với câu trả lời đúng diễn đạt khác) và `mustNot`; (d) hai số tham khảo
+  ngoài app: pH của CH₃COOH 0,1 M ≈ 2,9 (Ka ≈ 1,8·10⁻⁵ ở 25 °C, OpenStax Chemistry 2e) và nhiệt độ
+  sôi của H₂S khoảng −60 °C. `review_status: "pending"`.
