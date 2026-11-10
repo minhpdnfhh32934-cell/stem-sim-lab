@@ -42,8 +42,9 @@ describe('SolutionPanel cross-checks', () => {
     expect(screen.queryAllByText(/chưa khớp/)).toHaveLength(0);
   });
 
-  // Checks that disagree on these reachable inputs were shown as "khớp" before #110; the panel now
-  // says "chưa khớp". The checks themselves are fixed in issue #112, not here.
+  // Checks that disagreed on these reachable inputs were shown as "khớp" before #110, then as
+  // "chưa khớp". Issue #112 (PR #118) fixed the checks: they now agree, or the card says why there
+  // is none, so none of these inputs reads "chưa khớp" any more.
   it.each([
     [
       'newtonLaws: the body passes the end before stopping',
@@ -53,8 +54,8 @@ describe('SolutionPanel cross-checks', () => {
     ['inclinedPlane: the body just passes the top', inclinedPlane, { v0: 0.9, s0: 4.95 }],
     ['springPendulum: near critical damping', springPendulum, { b: 9.9 }],
     ['hookeSpring: near critical damping', hookeSpring, { vertical: 0, x0: -0.26, b: 6.3 }],
-  ] as const)('%s reads "chưa khớp"', (_name, scene, p) => {
+  ] as const)('%s: fixed by #112, no "chưa khớp"', (_name, scene, p) => {
     show(scene, p);
-    expect(screen.getAllByText(/chưa khớp/).length).toBeGreaterThan(0);
+    expect(screen.queryAllByText(/chưa khớp/)).toHaveLength(0);
   });
 });
