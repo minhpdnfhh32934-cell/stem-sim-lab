@@ -12,18 +12,25 @@ import { ChartSpline } from 'lucide-react';
 import { X_AXIS_SIZE, yTickSpace } from '@/ui/charts/axes';
 import { SERIES_VARS, loadUPlot } from '@/ui/charts/uplot';
 import { graphData, visibleSeries } from './data';
+import { PhaseChart } from './PhaseChart';
 import { sim } from './runtime';
 import { useSimStore } from './simStore';
 import { subscriptElement } from '@/ui/subscripts';
 
-/** Time-series graphs of the running simulation (uPlot, crosshair + live legend). */
+/** Graphs of the running simulation: against time (uPlot, crosshair + live legend) or phase portraits. */
 export function GraphPanel() {
   const t = useT();
   const L = useLocalized();
   const scene = useSimStore((s) => s.scene);
   const [graphId, setGraphId] = useState<string | null>(null);
   const params = useSimStore((s) => s.params);
-  const picked = scene?.graphs.find((g) => g.id === graphId) ?? scene?.graphs[0] ?? null;
+  // A graph whose every curve the parameters hide (the phase circle once there is damping) leaves
+  // the picker.
+  const offered = (g: GraphDef) => visibleSeries(g, params).length > 0;
+  const picked =
+    scene?.graphs.find((g) => g.id === graphId && offered(g)) ??
+    scene?.graphs.find(offered) ??
+    null;
   // A new chart only when the shown series change (uPlot's series are fixed at creation).
   const shownKey = picked
     ? visibleSeries(picked, params)
@@ -52,7 +59,7 @@ export function GraphPanel() {
         role="radiogroup"
         aria-label={t('graphs.choose')}
       >
-        {scene.graphs.map((g) => (
+        {scene.graphs.filter(offered).map((g) => (
           <button
             key={g.id}
             type="button"
@@ -67,7 +74,11 @@ export function GraphPanel() {
           </button>
         ))}
       </div>
-      <Chart key={`${scene.id}-${graph.id}-${shownKey}`} graph={graph} />
+      {graph.x ? (
+        <PhaseChart key={`${scene.id}-${graph.id}-${shownKey}`} graph={graph} />
+      ) : (
+        <Chart key={`${scene.id}-${graph.id}-${shownKey}`} graph={graph} />
+      )}
     </div>
   );
 }

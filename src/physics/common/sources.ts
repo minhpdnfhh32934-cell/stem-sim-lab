@@ -57,6 +57,11 @@ export const SRC = {
     citation:
       'D. Halliday, R. Resnick, J. Walker — Fundamentals of Physics, Wiley — ch. 16 (sóng trên dây, sóng dừng)',
   },
+  hallidayInterference: {
+    id: 'halliday-interference',
+    citation:
+      'D. Halliday, R. Resnick, J. Walker — Fundamentals of Physics, Wiley — ch. 17 (giao thoa theo hiệu đường đi, phách)',
+  },
   sgk11kntt: {
     id: 'sgk-vl11-kntt',
     citation:
@@ -66,5 +71,10 @@ export const SRC = {
     id: 'halliday-electric',
     citation:
       'D. Halliday, R. Resnick, J. Walker — Fundamentals of Physics, Wiley — ch. 21 (định luật Coulomb), ch. 22 (điện trường), ch. 24 (điện thế), ch. 25 (tụ điện)',
+  },
+  hallidayCircuits: {
+    id: 'halliday-circuits',
+    citation:
+      'D. Halliday, R. Resnick, J. Walker — Fundamentals of Physics, Wiley — ch. 26 (dòng điện, điện trở), ch. 27 (mạch điện, suất điện động, điện trở trong)',
   },
 } satisfies Record<string, Source>;

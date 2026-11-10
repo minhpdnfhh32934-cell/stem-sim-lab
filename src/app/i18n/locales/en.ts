@@ -90,6 +90,7 @@ const en: Messages = {
     waves: 'Waves',
     electricField: 'Electric field',
     crystals: 'Crystals',
+    dcCircuit: 'Current and circuits',
   },
   topics: {
     uniformMotion: 'Uniform linear motion',
@@ -132,9 +133,12 @@ const en: Messages = {
     cellStructure: 'Prokaryotic and eukaryotic cells',
     cellToDna: 'From cell to DNA',
     uniformCircularMotion: 'Uniform circular motion',
+    interference: 'Two-source interference',
     standingWave: 'Standing waves on a string',
     electricField: 'Electric field of point charges',
     crystalStructure: 'Metal crystals and NaCl',
+    forcedOscillation: 'Forced oscillation and resonance',
+    dcCircuit: 'Direct-current circuit',
   },
   stage: {
     regionLabel: 'Simulation stage',
@@ -471,6 +475,7 @@ const en: Messages = {
     steps: 'Step-by-step solution',
     check: 'Numerical check',
     agree: 'agrees, deviation {value}',
+    disagree: 'does not agree, deviation {value}',
     engineNote:
       'Every number here is computed by the program from formulas; numbers marked “agrees” are cross-checked by numerical integration. AI produces no numbers.',
     intervenedNote:
@@ -2477,6 +2482,9 @@ const en: Messages = {
     hardyWeinberg:
       'Population in Hardy–Weinberg equilibrium with p = {p}, q = {q}: {AA} = {fAA}; {Aa} = {fAa}; {aa} = {faa}.',
     constant: '{name}: {symbol} = {value} {unit}.',
+  },
+  phaseChart: {
+    label: '{title}: {y} against {x}',
   },
 };
 

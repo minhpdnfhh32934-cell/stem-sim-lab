@@ -32,7 +32,7 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Sách | Số bài | Lí thuyết | Lí thuyết có chủ đề SimLab |
 | --- | --- | --- | --- |
 | Vật lí 10 | 34 | 26 | 16 |
-| Vật lí 11 | 26 | 20 | 9 |
+| Vật lí 11 | 26 | 20 | 13 |
 | Vật lí 12 | 25 | 21 | 0 |
 | Hoá học 10 | 23 | 16 | 5 |
 | Hoá học 11 | 25 | 19 | 1 |
@@ -40,7 +40,7 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Sinh học 10 | 26 | 17 | 5 |
 | Sinh học 11 | 29 | 20 | 0 |
 | Sinh học 12 | 35 | 28 | 7 |
-| **Cộng** | **253** | **189** | **44** |
+| **Cộng** | **253** | **189** | **48** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -95,13 +95,13 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Vật lí 11 | Chương I. Dao động | 3 | Vận tốc, gia tốc trong dao động điều hoà | 14 | Lí thuyết | Con lắc lò xo, Con lắc đơn | Con lắc lò xo: Tên Bài 1–3, 5: dao động điều hoà, vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng). Con lắc đơn: Tên Bài 1–3, 5: dao động điều hoà (con lắc đơn dao động điều hoà khi góc nhỏ), vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng). | pending |
 | Vật lí 11 | Chương I. Dao động | 4 | Bài tập về dao động điều hoà | 17 | Bài tập | chưa có |  | pending |
 | Vật lí 11 | Chương I. Dao động | 5 | Động năng. Thế năng. Sự chuyển hoá năng lượng trong dao động điều hoà | 20 | Lí thuyết | Con lắc lò xo, Con lắc đơn | Con lắc lò xo: Tên Bài 1–3, 5: dao động điều hoà, vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng). Con lắc đơn: Tên Bài 1–3, 5: dao động điều hoà (con lắc đơn dao động điều hoà khi góc nhỏ), vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng). | pending |
-| Vật lí 11 | Chương I. Dao động | 6 | Dao động tắt dần. Dao động cưỡng bức. Hiện tượng cộng hưởng | 24 | Lí thuyết | Con lắc lò xo, Con lắc đơn | Con lắc lò xo: Tên Bài 1–3, 5: dao động điều hoà, vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng). Con lắc đơn: Tên Bài 1–3, 5: dao động điều hoà (con lắc đơn dao động điều hoà khi góc nhỏ), vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng). | pending |
+| Vật lí 11 | Chương I. Dao động | 6 | Dao động tắt dần. Dao động cưỡng bức. Hiện tượng cộng hưởng | 24 | Lí thuyết | Con lắc lò xo, Con lắc đơn, Dao động cưỡng bức và cộng hưởng | Con lắc lò xo: Tên Bài 1–3, 5: dao động điều hoà, vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng). Con lắc đơn: Tên Bài 1–3, 5: dao động điều hoà (con lắc đơn dao động điều hoà khi góc nhỏ), vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng). Dao động cưỡng bức và cộng hưởng: Tên Bài 6: dao động tắt dần, dao động cưỡng bức, hiện tượng cộng hưởng (cảnh lò xo nằm ngang có cản và ngoại lực điều hoà). | pending |
 | Vật lí 11 | Chương I. Dao động | 7 | Bài tập về sự chuyển hoá năng lượng trong dao động điều hoà | 28 | Bài tập | chưa có |  | pending |
 | Vật lí 11 | Chương II. Sóng | 8 | Mô tả sóng | 32 | Lí thuyết | chưa có |  | pending |
 | Vật lí 11 | Chương II. Sóng | 9 | Sóng ngang. Sóng dọc. Sự truyền năng lượng của sóng cơ | 37 | Lí thuyết | chưa có |  | pending |
 | Vật lí 11 | Chương II. Sóng | 10 | Thực hành: Đo tần số của sóng âm | 41 | Thực hành | chưa có |  | pending |
 | Vật lí 11 | Chương II. Sóng | 11 | Sóng điện từ | 44 | Lí thuyết | chưa có |  | pending |
-| Vật lí 11 | Chương II. Sóng | 12 | Giao thoa sóng | 48 | Lí thuyết | chưa có |  | pending |
+| Vật lí 11 | Chương II. Sóng | 12 | Giao thoa sóng | 48 | Lí thuyết | Giao thoa sóng hai nguồn | Tên Bài 12: giao thoa sóng (cảnh có hai nguồn cùng pha trên mặt nước; phần phách là mở rộng). | pending |
 | Vật lí 11 | Chương II. Sóng | 13 | Sóng dừng | 52 | Lí thuyết | Sóng dừng trên dây | Tên Bài 13: sóng dừng (cảnh chỉ có dây hai đầu cố định). | pending |
 | Vật lí 11 | Chương II. Sóng | 14 | Bài tập về sóng | 55 | Bài tập | chưa có |  | pending |
 | Vật lí 11 | Chương II. Sóng | 15 | Thực hành: Đo tốc độ truyền âm | 58 | Thực hành | chưa có |  | pending |
@@ -112,9 +112,9 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Vật lí 11 | Chương III. Điện trường | 20 | Điện thế | 79 | Lí thuyết | chưa có |  | pending |
 | Vật lí 11 | Chương III. Điện trường | 21 | Tụ điện | 83 | Lí thuyết | chưa có |  | pending |
 | Vật lí 11 | Chương IV. Dòng điện. Mạch điện | 22 | Cường độ dòng điện | 91 | Lí thuyết | chưa có |  | pending |
-| Vật lí 11 | Chương IV. Dòng điện. Mạch điện | 23 | Điện trở. Định luật Ohm | 95 | Lí thuyết | chưa có — kế hoạch (e) Mạch điện một chiều, chuyển sang 0.8.1 | Bài của 0.8.0 Phần A (#37 mục 4.2). | pending |
-| Vật lí 11 | Chương IV. Dòng điện. Mạch điện | 24 | Nguồn điện | 102 | Lí thuyết | chưa có — kế hoạch (e) Mạch điện một chiều, chuyển sang 0.8.1 | Bài của 0.8.0 Phần A (#37 mục 4.2). | pending |
-| Vật lí 11 | Chương IV. Dòng điện. Mạch điện | 25 | Năng lượng và công suất điện | 106 | Lí thuyết | chưa có — kế hoạch (e) Mạch điện một chiều, chuyển sang 0.8.1 | Bài của 0.8.0 Phần A (#37 mục 4.2). | pending |
+| Vật lí 11 | Chương IV. Dòng điện. Mạch điện | 23 | Điện trở. Định luật Ohm | 95 | Lí thuyết | Mạch điện một chiều | Tên Bài 23–25: điện trở, định luật Ohm, nguồn điện, năng lượng và công suất điện (cảnh có nguồn E, r và 1–3 điện trở). | pending |
+| Vật lí 11 | Chương IV. Dòng điện. Mạch điện | 24 | Nguồn điện | 102 | Lí thuyết | Mạch điện một chiều | Tên Bài 23–25: điện trở, định luật Ohm, nguồn điện, năng lượng và công suất điện (cảnh có nguồn E, r và 1–3 điện trở). | pending |
+| Vật lí 11 | Chương IV. Dòng điện. Mạch điện | 25 | Năng lượng và công suất điện | 106 | Lí thuyết | Mạch điện một chiều | Tên Bài 23–25: điện trở, định luật Ohm, nguồn điện, năng lượng và công suất điện (cảnh có nguồn E, r và 1–3 điện trở). | pending |
 | Vật lí 11 | Chương IV. Dòng điện. Mạch điện | 26 | Thực hành: Đo suất điện động và điện trở trong của pin điện hoá | 111 | Thực hành | chưa có |  | pending |
 | Vật lí 12 | Chương I. Vật lí nhiệt | 1 | Cấu trúc của chất. Sự chuyển thể | 6 | Lí thuyết | chưa có |  | pending |
 | Vật lí 12 | Chương I. Vật lí nhiệt | 2 | Nội năng. Định luật I của nhiệt động lực học | 10 | Lí thuyết | chưa có |  | pending |

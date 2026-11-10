@@ -273,25 +273,37 @@ class SimRuntime {
 
   /** Changes a parameter. Live-editable params apply mid-run (as an intervention). */
   setParam(key: string, value: number, source: ParamSource = 'user'): void {
+    this.setParams({ [key]: value }, source);
+  }
+
+  /**
+   * Changes several parameters at once (a dragged source: `BodyDef.dragTo`). `fit: false` keeps
+   * the camera where it is, so the dragged body stays under the pointer.
+   */
+  setParams(values: Params, source: ParamSource = 'user', fit = true): void {
     const sim = useSimStore.getState();
     const scene = sim.scene;
     if (!scene) return;
-    const sources = { ...sim.sources, [key]: source };
-    const params = applyAutoDefaults(scene, { ...sim.params, [key]: value }, sources);
-    const def = scene.params.find((d) => d.key === key);
+    const keys = Object.keys(values);
+    if (keys.length === 0) return;
+    const sources = { ...sim.sources };
+    for (const k of keys) sources[k] = source;
+    const params = applyAutoDefaults(scene, { ...sim.params, ...values }, sources);
+    const live = keys.every((k) => scene.params.find((d) => d.key === k)?.live);
     const running = (this.latest?.t ?? 0) > 0 && !sim.finished;
     useSimStore.setState({
       params,
       sources,
       validation: scene.validate?.(params) ?? [],
     });
-    if (running && def?.live && (scene.validate?.(params) ?? []).length === 0) {
+    if (running && live && (scene.validate?.(params) ?? []).length === 0) {
       const ep = scene.engineParams?.(params) ?? params;
-      this.host?.input({ kind: 'setParam', name: key, value: ep[key] ?? value });
+      for (const k of keys)
+        this.host?.input({ kind: 'setParam', name: k, value: ep[k] ?? values[k] ?? 0 });
       this.updateCard();
     } else {
       this.reset();
-      useSimStore.setState({ fitRequest: useSimStore.getState().fitRequest + 1 });
+      if (fit) useSimStore.setState({ fitRequest: useSimStore.getState().fitRequest + 1 });
     }
   }
 

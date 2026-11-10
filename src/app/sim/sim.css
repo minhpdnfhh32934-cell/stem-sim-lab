@@ -397,6 +397,9 @@
   font-size: var(--text-xs);
   color: var(--conf-exact);
 }
+.solution__check span.is-off {
+  color: var(--conf-approx);
+}
 .solution__steps {
   margin: 0;
   padding-left: 1.3rem;
@@ -539,4 +542,38 @@
     width: var(--target);
     height: var(--target);
   }
+}
+
+/* Phase portraits (PhaseChart.tsx): a canvas that fills the plot box, and a small legend. */
+.chart__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.phase-legend {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+.phase-legend li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+}
+.phase-legend strong {
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+.phase-legend__swatch {
+  flex: 0 0 auto;
+  width: 14px;
+  height: 3px;
+  border-radius: 2px;
+}
+.phase-legend__swatch--dashed {
+  background: repeating-linear-gradient(90deg, var(--text-muted) 0 5px, transparent 5px 8px);
 }

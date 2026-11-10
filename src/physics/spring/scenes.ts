@@ -151,6 +151,16 @@ function draw({ ctx, cam, state, p, opts }: DrawContext): void {
   );
 }
 
+/** The phase circle x = A·cos φ, −v/ω = A·sin φ of the undamped oscillator (A from x₀, v₀). */
+export function phaseCircle(p: Params, steps = 120): [number, number][] {
+  const q = springInput(p);
+  const { A } = amplitudePhase(q, q.x0, q.v0);
+  return Array.from({ length: steps + 1 }, (_, i): [number, number] => {
+    const f = (2 * Math.PI * i) / steps;
+    return [A * Math.cos(f), A * Math.sin(f)];
+  });
+}
+
 function graphs(): GraphDef[] {
   return [
     {
@@ -198,6 +208,32 @@ function graphs(): GraphDef[] {
       series: [
         { id: 'F', label: L('F_đh (N)', 'F_s (N)'), value: (s) => s[SP.F] ?? 0 },
         { id: 'ext', label: L('Δl (m)', 'Δl (m)'), value: (s) => s[SP.ext] ?? 0 },
+      ],
+    },
+    {
+      id: 'phase',
+      title: L('Không gian pha', 'Phase space'),
+      yLabel: L('v (m/s)', 'v (m/s)'),
+      x: { label: L('x (m)', 'x (m)'), value: (s) => s[SP.x] ?? 0 },
+      series: [{ id: 'v', label: L('v', 'v'), value: (s) => s[SP.v] ?? 0 }],
+    },
+    {
+      id: 'phasor',
+      title: L('Vòng tròn pha', 'Phase circle'),
+      yLabel: L('−v/ω (m)', '−v/ω (m)'),
+      x: { label: L('x (m)', 'x (m)'), value: (s) => s[SP.x] ?? 0 },
+      phasor: true,
+      // Only for an undamped oscillator: the rotating vector of length A is that model.
+      series: [
+        {
+          id: 'phasorY',
+          label: L('Đầu vectơ quay', 'Tip of the rotating vector'),
+          value: (s, p) => -(s[SP.v] ?? 0) / omega0(springInput(p)),
+          when: (p) => springInput(p).b === 0,
+        },
+      ],
+      guides: (p) => [
+        { label: L('Đường tròn bán kính A', 'Circle of radius A'), points: phaseCircle(p) },
       ],
     },
   ];

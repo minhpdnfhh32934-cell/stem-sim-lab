@@ -2372,6 +2372,32 @@
    "review_status": "pending"
   },
   {
+   "topic": "interference",
+   "subject": "physics",
+   "grade": 11,
+   "book": "VL11",
+   "chapter": "Chương II. Sóng",
+   "lessons": [
+    12
+   ],
+   "reason": "Tên Bài 12: giao thoa sóng (cảnh có hai nguồn cùng pha trên mặt nước; phần phách là mở rộng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "dcCircuit",
+   "subject": "physics",
+   "grade": 11,
+   "book": "VL11",
+   "chapter": "Chương IV. Dòng điện. Mạch điện",
+   "lessons": [
+    23,
+    24,
+    25
+   ],
+   "reason": "Tên Bài 23–25: điện trở, định luật Ohm, nguồn điện, năng lượng và công suất điện (cảnh có nguồn E, r và 1–3 điện trở).",
+   "review_status": "pending"
+  },
+  {
    "topic": "standingWave",
    "subject": "physics",
    "grade": 11,
@@ -2431,6 +2457,18 @@
     18
    ],
    "reason": "Tên Bài 18: cấu tạo và liên kết trong tinh thể kim loại (cảnh có thêm tinh thể NaCl; Bài 11 Hoá học 10 tên là liên kết ion, không nêu tinh thể nên không xếp).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "forcedOscillation",
+   "subject": "physics",
+   "grade": 11,
+   "book": "VL11",
+   "chapter": "Chương I. Dao động",
+   "lessons": [
+    6
+   ],
+   "reason": "Tên Bài 6: dao động tắt dần, dao động cưỡng bức, hiện tượng cộng hưởng (cảnh lò xo nằm ngang có cản và ngoại lực điều hoà).",
    "review_status": "pending"
   }
  ],

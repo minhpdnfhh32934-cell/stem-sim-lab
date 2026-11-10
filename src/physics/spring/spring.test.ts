@@ -2,9 +2,15 @@ import { describe, expect, it } from 'vitest';
 import { dopri5 } from '@/core/ode/dopri5';
 import { EngineRunner } from '@/core/sim/runner';
 import { SP, SpringEngine, springInput, staticExtension } from './engine';
-import { amplitudePhase, period, propagate, regime, type Oscillator } from './model';
-import { checkMisses, sliderSweep } from '../testing';
-import { hookeSpring, numericPeriod, periodUncheckable, springPendulum } from './scenes';
+import { amplitudePhase, omega0, period, propagate, regime, type Oscillator } from './model';
+import { CHECK_TOL, checkMisses, sliderSweep } from '../testing';
+import {
+  hookeSpring,
+  numericPeriod,
+  periodUncheckable,
+  phaseCircle,
+  springPendulum,
+} from './scenes';
 
 function reference(o: Oscillator, x0: number, v0: number, t: number): number {
   const r = dopri5(
@@ -183,5 +189,49 @@ describe('damped spring: period only where there is an oscillation', () => {
     const gamma = q.b / (2 * q.m);
     const T = hookeSpring.solve(hookeSpring.defaults, 'en').answers.find((a) => a.id === 'period');
     expect(T?.value).toBeCloseTo((2 * Math.PI) / Math.sqrt(w0 * w0 - gamma * gamma), 12);
+  });
+});
+
+describe('phase space and phase circle (#54 item 3)', () => {
+  const p = { m: 0.25, k: 100, x0: 0.05, v0: 0.3, b: 0, tEnd: 5 };
+
+  it('an undamped oscillator traces the ellipse x²/A² + v²/(ωA)² = 1', () => {
+    const e = new SpringEngine();
+    e.reset(p);
+    const run = new EngineRunner(e, 1000);
+    const q = springInput(p);
+    const w = omega0(q);
+    const { A } = amplitudePhase(q, q.x0, q.v0);
+    const st = new Float64Array(5);
+    let worst = 0;
+    for (let i = 0; i < 200; i++) {
+      run.frame(1 / 60, 1);
+      e.readState(st);
+      const x = st[SP.x] ?? 0;
+      const v = st[SP.v] ?? 0;
+      worst = Math.max(worst, Math.abs((x * x) / (A * A) + (v * v) / (w * A) ** 2 - 1));
+    }
+    expect(worst).toBeLessThan(CHECK_TOL);
+  });
+
+  it('the phase circle: the tip (x, −v/ω) stays on the radius-A circle; hidden with damping', () => {
+    const g = springPendulum.graphs.find((d) => d.id === 'phasor');
+    const tip = g?.series[0];
+    if (!g?.x || !tip) throw new Error('no phase circle');
+    const q = springInput(p);
+    const { A } = amplitudePhase(q, q.x0, q.v0);
+    for (const [x, y] of phaseCircle(p)) expect(Math.hypot(x, y)).toBeCloseTo(A, 12);
+    const e = new SpringEngine();
+    e.reset(p);
+    const run = new EngineRunner(e, 1000);
+    const st = new Float64Array(5);
+    for (let i = 0; i < 50; i++) {
+      run.frame(1 / 60, 1);
+      e.readState(st);
+      expect(Math.hypot(g.x.value(st, p), tip.value(st, p))).toBeCloseTo(A, 9);
+    }
+    expect(tip.when?.(p)).toBe(true);
+    expect(tip.when?.({ ...p, b: 0.05 })).toBe(false);
+    expect(hookeSpring.graphs.some((d) => d.id === 'phase')).toBe(true);
   });
 });

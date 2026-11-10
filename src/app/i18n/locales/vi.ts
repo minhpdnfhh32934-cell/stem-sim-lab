@@ -93,6 +93,7 @@ const vi = {
     waves: 'Sóng',
     electricField: 'Điện trường',
     crystals: 'Tinh thể',
+    dcCircuit: 'Dòng điện, mạch điện',
   },
   topics: {
     uniformMotion: 'Chuyển động thẳng đều',
@@ -135,9 +136,12 @@ const vi = {
     cellStructure: 'Tế bào nhân sơ và nhân thực',
     cellToDna: 'Từ tế bào đến DNA',
     uniformCircularMotion: 'Chuyển động tròn đều',
+    interference: 'Giao thoa sóng hai nguồn',
     standingWave: 'Sóng dừng trên dây',
     electricField: 'Điện trường của điện tích điểm',
     crystalStructure: 'Tinh thể kim loại và NaCl',
+    forcedOscillation: 'Dao động cưỡng bức và cộng hưởng',
+    dcCircuit: 'Mạch điện một chiều',
   },
   stage: {
     regionLabel: 'Khung mô phỏng',
@@ -474,6 +478,7 @@ const vi = {
     steps: 'Lời giải từng bước',
     check: 'Kiểm chứng số',
     agree: 'khớp, sai lệch {value}',
+    disagree: 'chưa khớp, sai lệch {value}',
     engineNote:
       'Mọi con số ở đây do chương trình tính bằng công thức; con số có ghi “khớp” đã được kiểm chứng bằng tích phân số. AI không tạo ra con số nào.',
     intervenedNote:
@@ -2470,6 +2475,9 @@ const vi = {
     hardyWeinberg:
       'Quần thể cân bằng Hardy–Weinberg với p = {p}, q = {q}: {AA} = {fAA}; {Aa} = {fAa}; {aa} = {faa}.',
     constant: '{name}: {symbol} = {value} {unit}.',
+  },
+  phaseChart: {
+    label: '{title}: {y} theo {x}',
   },
 };
 

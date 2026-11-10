@@ -488,11 +488,14 @@ PLACEMENTS = [
     ("logisticGrowth", "SH12", [24], "Tên Bài 24: sinh thái học quần thể."),
     ("cellStructure", "SH10", [7, 8], "Tên Bài 7–8: tế bào nhân sơ và tế bào nhân thực."),
     ("uniformCircularMotion", "VL10", [31, 32], "Tên Bài 31–32: động học của chuyển động tròn đều; lực hướng tâm và gia tốc hướng tâm."),
+    ("interference", "VL11", [12], "Tên Bài 12: giao thoa sóng (cảnh có hai nguồn cùng pha trên mặt nước; phần phách là mở rộng)."),
+    ("dcCircuit", "VL11", [23, 24, 25], "Tên Bài 23–25: điện trở, định luật Ohm, nguồn điện, năng lượng và công suất điện (cảnh có nguồn E, r và 1–3 điện trở)."),
     ("standingWave", "VL11", [13], "Tên Bài 13: sóng dừng (cảnh chỉ có dây hai đầu cố định)."),
     ("electricField", "VL11", [16, 17, 18], "Tên Bài 16–18: lực tương tác giữa các điện tích, khái niệm điện trường, điện trường đều."),
     ("cellToDna", "SH10", [8], "Tên Bài 8: tế bào nhân thực (cấp tế bào và nhân của bài phóng to). Không xếp Bài 7 (tế bào nhân sơ): bài chỉ có tế bào nhân thực, dù thang kích thước H 7.1 của Bài 7 là một nguồn số liệu."),
     ("cellToDna", "SH12", [7], "Tên Bài 7: cấu trúc và chức năng của nhiễm sắc thể (cấp NST kép, sợi nhiễm sắc, nucleosome, DNA)."),
     ("crystalStructure", "HH12", [18], "Tên Bài 18: cấu tạo và liên kết trong tinh thể kim loại (cảnh có thêm tinh thể NaCl; Bài 11 Hoá học 10 tên là liên kết ion, không nêu tinh thể nên không xếp)."),
+    ("forcedOscillation", "VL11", [6], "Tên Bài 6: dao động tắt dần, dao động cưỡng bức, hiện tượng cộng hưởng (cảnh lò xo nằm ngang có cản và ngoại lực điều hoà)."),
 ]
 
 # Not placed (title not clear, or no lesson): (topic, subject, candidates, reason).

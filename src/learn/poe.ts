@@ -219,6 +219,18 @@ export const POES: readonly Poe[] = [
     start: { mode: 0, vFrom: 1 },
   },
   {
+    id: 'interference.d',
+    topic: 'interference',
+    param: 'd',
+    factor: 2,
+    answer: 'fringe_spacing',
+    question: L(
+      'Giữ nguyên tần số và tốc độ truyền sóng, nếu khoảng cách hai nguồn S₁S₂ gấp đôi thì khoảng cách giữa hai cực đại liên tiếp trên S₁S₂ thay đổi thế nào?',
+      'Keeping the frequency and the wave speed, if the source separation S₁S₂ doubles, how does the spacing of neighbouring maxima on S₁S₂ change?',
+    ),
+    choices: ratios(0.5, 1, 2),
+  },
+  {
     id: 'electricField.d',
     topic: 'electricField',
     param: 'd',
@@ -231,6 +243,33 @@ export const POES: readonly Poe[] = [
     choices: ratios(0.5, 1, 2),
     // mode 1 = "Tụ điện phẳng": U stays fixed while d changes.
     start: { mode: 1 },
+  },
+  {
+    id: 'forcedOscillation.Omega',
+    topic: 'forcedOscillation',
+    param: 'Omega',
+    factor: 2,
+    answer: 'A',
+    question: L(
+      'Vật 0,5\u00a0kg, lò xo 50\u00a0N/m (ω₀\u00a0=\u00a010\u00a0rad/s), ngoại lực có Ω\u00a0=\u00a05\u00a0rad/s (SimLab đặt sẵn khi bạn bấm “Chạy để kiểm tra”): giữ nguyên mọi thứ khác, nếu Ω tăng gấp đôi thì biên độ dao động ổn định tăng, giảm hay không đổi?',
+      'A 0.5\u00a0kg body, a 50\u00a0N/m spring (ω₀\u00a0=\u00a010\u00a0rad/s), driven at Ω\u00a0=\u00a05\u00a0rad/s (SimLab sets it when you press “Run to check”): keeping everything else, if Ω doubles, does the steady amplitude go up, down or stay the same?',
+    ),
+    choices: DIRS,
+    start: { Omega: 5, F0: 1, b: 0.5, m: 0.5, k: 50, x0: 0 },
+  },
+  {
+    id: 'dcCircuit.R2',
+    topic: 'dcCircuit',
+    param: 'R2',
+    factor: 2,
+    answer: 'I',
+    question: L(
+      'Mạch R₁ nt (R₂ ∥ R₃) (SimLab đặt sẵn khi bạn bấm “Chạy để kiểm tra”): giữ nguyên nguồn và R₁, R₃, nếu R₂ tăng gấp đôi thì cường độ dòng điện qua nguồn tăng, giảm hay không đổi?',
+      'Circuit R₁ + (R₂ ∥ R₃) (SimLab sets it when you press “Run to check”): keeping the source, R₁ and R₃, if R₂ doubles, does the current through the source go up, down or stay the same?',
+    ),
+    choices: DIRS,
+    // layout 5 = R₁ nt (R₂ ∥ R₃).
+    start: { layout: 5 },
   },
 ];
 

@@ -1403,6 +1403,201 @@
       "expectUnsupportedParts": true
     },
     {
+      "id": "int-01",
+      "text": "Trên mặt nước có hai nguồn kết hợp A, B cách nhau 10 cm, dao động cùng pha với tần số 20 Hz. Tốc độ truyền sóng trên mặt nước là 30 cm/s. Tính bước sóng, số điểm dao động với biên độ cực đại và số điểm đứng yên trên đoạn AB (không kể A, B).",
+      "topic": "interference",
+      "quantities": [
+        {
+          "key": "d",
+          "value": 10,
+          "unit": "cm",
+          "quote": "cách nhau 10 cm"
+        },
+        {
+          "key": "f",
+          "value": 20,
+          "unit": "Hz",
+          "quote": "tần số 20 Hz"
+        },
+        {
+          "key": "v",
+          "value": 30,
+          "unit": "cm/s",
+          "quote": "30 cm/s"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "wavelength": 0.015,
+        "maxima": 13,
+        "minima": 14
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "int-02",
+      "text": "Ở mặt nước, hai nguồn kết hợp S₁, S₂ cách nhau 12 cm dao động cùng pha. Sóng trên mặt nước có bước sóng 1,6 cm. Tìm số vân cực đại và số vân cực tiểu giao thoa cắt đoạn S₁S₂ (không kể S₁, S₂).",
+      "topic": "interference",
+      "quantities": [
+        {
+          "key": "d",
+          "value": 12,
+          "unit": "cm",
+          "quote": "cách nhau 12 cm"
+        },
+        {
+          "key": "lambda",
+          "value": 1.6,
+          "unit": "cm",
+          "quote": "bước sóng 1,6 cm"
+        }
+      ],
+      "missing": [
+        "f"
+      ],
+      "answers": {
+        "maxima": 15,
+        "minima": 14,
+        "fringe_spacing": 0.008
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "int-03",
+      "text": "Ở mặt nước, hai nguồn kết hợp A, B cách nhau 10 cm dao động cùng pha với tần số 10 Hz và cùng biên độ 2 mm. Tốc độ truyền sóng là 30 cm/s. Điểm M ở mặt nước cách A 9 cm và cách B 12 cm. Tính biên độ dao động của phần tử nước tại M.",
+      "topic": "interference",
+      "quantities": [
+        {
+          "key": "d",
+          "value": 10,
+          "unit": "cm",
+          "quote": "cách nhau 10 cm"
+        },
+        {
+          "key": "f",
+          "value": 10,
+          "unit": "Hz",
+          "quote": "tần số 10 Hz"
+        },
+        {
+          "key": "a",
+          "value": 2,
+          "unit": "mm",
+          "quote": "biên độ 2 mm"
+        },
+        {
+          "key": "v",
+          "value": 30,
+          "unit": "cm/s",
+          "quote": "30 cm/s"
+        },
+        {
+          "key": "d1",
+          "value": 9,
+          "unit": "cm",
+          "quote": "cách A 9 cm"
+        },
+        {
+          "key": "d2",
+          "value": 12,
+          "unit": "cm",
+          "quote": "cách B 12 cm"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "path_difference": 0.03,
+        "order": 1,
+        "amplitude_M": 0.004
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "int-04",
+      "text": "Hai nguồn sóng trên mặt nước dao động cùng biên độ với tần số 20 Hz và 22 Hz. Tốc độ truyền sóng là 40 cm/s. Tính tần số phách và chu kì phách của dao động tổng hợp tại một điểm trên mặt nước.",
+      "topic": "interference",
+      "quantities": [
+        {
+          "key": "f",
+          "value": 20,
+          "unit": "Hz",
+          "quote": "tần số 20 Hz"
+        },
+        {
+          "key": "f2",
+          "value": 22,
+          "unit": "Hz",
+          "quote": "22 Hz"
+        },
+        {
+          "key": "v",
+          "value": 40,
+          "unit": "cm/s",
+          "quote": "40 cm/s"
+        }
+      ],
+      "missing": [
+        "d"
+      ],
+      "answers": {
+        "beat_frequency": 2,
+        "beat_period": 0.5
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "int-06",
+      "text": "Ở mặt nước, hai nguồn kết hợp A, B cách nhau 9 cm dao động cùng pha với tần số 25 Hz. Khoảng cách giữa hai cực đại giao thoa liên tiếp trên đoạn AB là 1,5 cm. Tính tốc độ truyền sóng trên mặt nước.",
+      "topic": "interference",
+      "quantities": [
+        {
+          "key": "d",
+          "value": 9,
+          "unit": "cm",
+          "quote": "cách nhau 9 cm"
+        },
+        {
+          "key": "f",
+          "value": 25,
+          "unit": "Hz",
+          "quote": "tần số 25 Hz"
+        }
+      ],
+      "missing": [
+        "v"
+      ],
+      "answers": {},
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "int-05",
+      "text": "Hai nguồn kết hợp A, B cách nhau 8 cm trên mặt nước dao động ngược pha với tần số 25 Hz. Tốc độ truyền sóng là 50 cm/s. Tính số điểm dao động với biên độ cực đại trên đoạn AB.",
+      "topic": "interference",
+      "quantities": [
+        {
+          "key": "d",
+          "value": 8,
+          "unit": "cm",
+          "quote": "cách nhau 8 cm"
+        },
+        {
+          "key": "f",
+          "value": 25,
+          "unit": "Hz",
+          "quote": "tần số 25 Hz"
+        },
+        {
+          "key": "v",
+          "value": 50,
+          "unit": "cm/s",
+          "quote": "50 cm/s"
+        }
+      ],
+      "missing": [],
+      "answers": {},
+      "expectUnsupportedParts": true
+    },
+    {
       "id": "efd-01",
       "text": "Một điện tích điểm q = 4.10⁻⁸ C đặt trong không khí. Lấy k = 9.10⁹ N.m²/C². Tính cường độ điện trường tại điểm M cách điện tích 3 cm.",
       "topic": "electricField",
@@ -1609,12 +1804,206 @@
       "expectUnsupportedParts": false
     },
     {
-      "id": "ng-01",
-      "text": "Một mạch điện gồm điện trở 10 Ω mắc vào hai cực của một nguồn điện có hiệu điện thế 12 V. Tính cường độ dòng điện chạy qua điện trở.",
-      "topic": "unsupported",
-      "quantities": [],
+      "id": "res-01",
+      "text": "Một con lắc lò xo nằm ngang gồm vật nặng 0,5 kg và lò xo có độ cứng 50 N/m, hệ số cản 0,5 kg/s, chịu tác dụng của ngoại lực F = 1cos(8t) (N). Tính biên độ dao động khi đã ổn định.",
+      "topic": "forcedOscillation",
+      "quantities": [
+        {
+          "key": "m",
+          "value": 0.5,
+          "unit": "kg",
+          "quote": "vật nặng 0,5 kg"
+        },
+        {
+          "key": "k",
+          "value": 50,
+          "unit": "N/m",
+          "quote": "độ cứng 50 N/m"
+        },
+        {
+          "key": "b",
+          "value": 0.5,
+          "unit": "kg/s",
+          "quote": "hệ số cản 0,5 kg/s"
+        },
+        {
+          "key": "F0",
+          "value": 1,
+          "unit": "N",
+          "quote": "F = 1cos(8t) (N)"
+        },
+        {
+          "key": "Omega",
+          "value": 8,
+          "unit": "rad/s",
+          "quote": "F = 1cos(8t) (N)"
+        }
+      ],
       "missing": [],
-      "answers": {},
+      "answers": {
+        "A": 0.05423261445466404
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "res-02",
+      "text": "Vật khối lượng 200 g gắn vào lò xo có độ cứng 20 N/m, hệ số cản 0,2 kg/s, dao động dưới tác dụng của ngoại lực biên độ 0,5 N, tần số góc 12 rad/s. Tính biên độ dao động ổn định và tần số góc của ngoại lực để xảy ra cộng hưởng.",
+      "topic": "forcedOscillation",
+      "quantities": [
+        {
+          "key": "m",
+          "value": 0.2,
+          "unit": "kg",
+          "quote": "khối lượng 200 g"
+        },
+        {
+          "key": "k",
+          "value": 20,
+          "unit": "N/m",
+          "quote": "độ cứng 20 N/m"
+        },
+        {
+          "key": "b",
+          "value": 0.2,
+          "unit": "kg/s",
+          "quote": "hệ số cản 0,2 kg/s"
+        },
+        {
+          "key": "F0",
+          "value": 0.5,
+          "unit": "N",
+          "quote": "biên độ 0,5 N"
+        },
+        {
+          "key": "Omega",
+          "value": 12,
+          "unit": "rad/s",
+          "quote": "tần số góc 12 rad/s"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "A": 0.05481612620668933,
+        "omegaR": 9.974968671630002
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "dc-01",
+      "text": "Một mạch điện gồm điện trở 10 Ω mắc vào hai cực của một nguồn điện có hiệu điện thế 12 V. Tính cường độ dòng điện chạy qua điện trở.",
+      "topic": "dcCircuit",
+      "quantities": [
+        {
+          "key": "layout",
+          "value": 0,
+          "unit": "1",
+          "quote": "gồm điện trở 10 Ω"
+        },
+        {
+          "key": "R1",
+          "value": 10,
+          "unit": "ohm",
+          "quote": "điện trở 10 Ω"
+        },
+        {
+          "key": "emf",
+          "value": 12,
+          "unit": "V",
+          "quote": "hiệu điện thế 12 V"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "I": 1.2
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "dc-02",
+      "text": "Một nguồn điện có suất điện động 12 V và điện trở trong 1 Ω được mắc với mạch ngoài gồm hai điện trở R₁ = 3 Ω và R₂ = 8 Ω mắc nối tiếp. Tính cường độ dòng điện trong mạch, hiệu điện thế giữa hai cực của nguồn và hiệu suất của nguồn.",
+      "topic": "dcCircuit",
+      "quantities": [
+        {
+          "key": "layout",
+          "value": 1,
+          "unit": "1",
+          "quote": "mắc nối tiếp"
+        },
+        {
+          "key": "emf",
+          "value": 12,
+          "unit": "V",
+          "quote": "suất điện động 12 V"
+        },
+        {
+          "key": "rInt",
+          "value": 1,
+          "unit": "ohm",
+          "quote": "điện trở trong 1 Ω"
+        },
+        {
+          "key": "R1",
+          "value": 3,
+          "unit": "ohm",
+          "quote": "R₁ = 3 Ω"
+        },
+        {
+          "key": "R2",
+          "value": 8,
+          "unit": "ohm",
+          "quote": "R₂ = 8 Ω"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "I": 1.0,
+        "U": 11.0,
+        "H": 0.9166666666666666
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "dc-03",
+      "text": "Hai điện trở R₁ = 6 Ω và R₂ = 3 Ω mắc song song rồi nối vào nguồn điện có suất điện động 6 V, điện trở trong không đáng kể. Tính cường độ dòng điện qua mạch chính và qua mỗi điện trở.",
+      "topic": "dcCircuit",
+      "quantities": [
+        {
+          "key": "layout",
+          "value": 3,
+          "unit": "1",
+          "quote": "mắc song song"
+        },
+        {
+          "key": "R1",
+          "value": 6,
+          "unit": "ohm",
+          "quote": "R₁ = 6 Ω"
+        },
+        {
+          "key": "R2",
+          "value": 3,
+          "unit": "ohm",
+          "quote": "R₂ = 3 Ω"
+        },
+        {
+          "key": "emf",
+          "value": 6,
+          "unit": "V",
+          "quote": "suất điện động 6 V"
+        },
+        {
+          "key": "rInt",
+          "value": 0,
+          "unit": "ohm",
+          "quote": "điện trở trong không đáng kể"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "I": 3.0,
+        "I1": 1.0,
+        "I2": 2.0
+      },
       "expectUnsupportedParts": false
     },
     {
