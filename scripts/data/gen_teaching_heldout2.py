@@ -563,7 +563,7 @@ def main() -> None:
         assert (i["type"] == "trap") == ("trap" in i), i["id"]
         assert (i["type"] == "followup") == ("history" in i), i["id"]
     data = {"about": ABOUT, "review_status": "pending", "items": ITEMS}
-    OUT.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    OUT.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
     print(f"wrote {OUT.relative_to(ROOT)}: {len(ITEMS)} items")
 
 
