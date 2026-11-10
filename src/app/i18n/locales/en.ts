@@ -253,6 +253,18 @@ const en: Messages = {
     pendingTeacher: 'awaiting teacher review',
     reopen: 'Open again',
     launchEyebrow: 'Physics · Chemistry · Biology simulations',
+    stillCaption: 'Drawn by the projectile simulation with its default values',
+    problemField: 'Type or paste a problem…',
+    tourPlayTitle: 'Run the experiment',
+    tourPlayBody:
+      'Run on the bench edge runs the simulation; Space also runs or pauses it. The bar beside it scrubs back.',
+    tourTrayTitle: 'The settings tray',
+    tourTrayBody:
+      'Change the parameters here. The box at the top sums up the model and how far its result can be trusted.',
+    tourNotebookTitle: 'Notebook',
+    tourNotebookBody:
+      'Challenges, Graphs, Solution, Science Card and Ask AI open from the left column.',
+    tourSkip: 'Skip the guide',
     teacherDoorBody: 'AI Teacher is an AI, so it can be wrong.',
     teacherLocked: 'AI Teacher needs you to be 18 or older',
     resume: 'Continue: {topic} ({subject})',

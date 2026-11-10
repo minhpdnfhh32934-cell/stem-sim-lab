@@ -218,7 +218,8 @@ test('the tool palette keeps clear of the captions scenes write at x = 60 px (UI
     proto.fillText = function (text: string, x: number, y: number) {
       // Canvas units are scaled by devicePixelRatio; the stage canvas sets that transform.
       const m = this.getTransform();
-      w.__texts.push({ text, x: m.a * x + m.e, y: m.d * y + m.f });
+      if (this.canvas.closest('.stage'))
+        w.__texts.push({ text, x: m.a * x + m.e, y: m.d * y + m.f });
       Reflect.apply(fill, this, [text, x, y]);
     };
   });
@@ -430,7 +431,8 @@ test('the y-axis numbers start right of the tool palette (UI-02, drawGrid labelL
     const proto = CanvasRenderingContext2D.prototype;
     const fill = Reflect.get<CanvasRenderingContext2D, 'fillText'>(proto, 'fillText');
     proto.fillText = function (text: string, x: number, y: number) {
-      if (this.textAlign === 'left') w.__fills.push({ text, x });
+      // The stage's canvas only (the launch page's still draws a grid of its own).
+      if (this.textAlign === 'left' && this.canvas.closest('.stage')) w.__fills.push({ text, x });
       Reflect.apply(fill, this, [text, x, y]);
     };
   });

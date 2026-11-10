@@ -1408,6 +1408,12 @@ kbd {
   font-weight: 400;
   color: var(--paper-text-muted);
 }
+.shelf__grid > li {
+  display: flex;
+}
+.shelf__grid > li > .shelf-card {
+  flex: 1;
+}
 .shelf__grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(232px, 1fr));
@@ -1511,13 +1517,37 @@ kbd {
 
 /* "Cửa vào" (§9.1): two doors, the lab filled, AI Teacher outlined. */
 .bench-launch {
+  display: grid;
+  grid-template-columns: minmax(0, 560px) minmax(0, 590px);
+  column-gap: 64px;
+  align-items: start;
+  margin: 0 0 0 96px;
+  padding: 64px 0 var(--space-6, 24px);
+  color: var(--paper-text);
+}
+.bench-launch__main {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  width: min(560px, 100%);
-  margin: 0 auto 0 96px;
-  padding: 64px 0 var(--space-6, 24px);
-  color: var(--paper-text);
+  min-width: 0;
+}
+/* The "bench still" (§9.1): 590×440 at y120 in an 8 px frame border, caption under it. */
+.bench-launch__still {
+  margin: 56px 0 0;
+}
+.bench-launch__canvas {
+  display: block;
+  width: 100%;
+  aspect-ratio: 590 / 440;
+  border: 8px solid var(--frame);
+  border-radius: var(--radius-md, 10px);
+  background: var(--bg-stage);
+}
+.bench-launch__still figcaption {
+  margin-top: var(--space-2);
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--paper-text-muted);
 }
 .bench-launch__eyebrow {
   margin: 0 0 var(--space-2);
@@ -1601,6 +1631,14 @@ button.bench-door--lab:hover {
   font-size: 13px;
   line-height: 18px;
   color: var(--paper-text-muted);
+}
+@media (max-width: 1200px) {
+  .bench-launch {
+    grid-template-columns: minmax(0, 560px);
+  }
+  .bench-launch__still {
+    display: none;
+  }
 }
 @media (max-width: 900px) {
   .bench-launch {
@@ -1844,4 +1882,58 @@ button.bench-door--lab:hover {
 }
 .notebook .solution__check span {
   margin-left: 0;
+}
+
+/* A shelf card's preview 88 (§9.3): full width under the subject rule, the stage's paper. */
+.shelf-card__preview {
+  display: grid;
+  place-items: center;
+  align-self: stretch;
+  height: 88px;
+  margin: calc(-1 * var(--space-3)) calc(-1 * var(--space-3)) 0;
+  overflow: hidden;
+  background: var(--bg-stage);
+  color: var(--paper-text-muted);
+}
+.shelf-card__still {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* "Tiếp tục" (§9.3): the topic's thumbnail 160×96 left, its name and "Mở lại" beside it. */
+.shelf-start--resume:has(.shelf-start__thumb) {
+  grid-template-columns: 160px minmax(0, 1fr);
+  column-gap: var(--space-3);
+}
+.shelf-start--resume:has(.shelf-start__thumb) > :not(.shelf-start__thumb) {
+  grid-column: 2;
+}
+.shelf-start__thumb {
+  grid-row: 1 / span 3;
+  width: 160px;
+  height: 96px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-stage);
+}
+/* "Có đề bài?" one-line field: a button drawn as a field, opening the Đề bài sheet. */
+.shelf-start__field {
+  display: block;
+  width: 100%;
+  min-height: var(--target);
+  padding: 0 var(--space-3);
+  border: 1px solid var(--border-input);
+  border-radius: var(--radius-sm);
+  background: var(--paper-bg);
+  color: var(--paper-text-muted);
+  font: inherit;
+  text-align: left;
+  cursor: text;
+}
+.shelf-start__field:hover {
+  border-color: var(--border-strong);
+}
+.first-run__ghosts {
+  display: flex;
+  gap: var(--space-2);
 }
