@@ -733,3 +733,15 @@ Khi viết code mà gặp giá trị, phản ứng hay cơ chế không chắc c
   đường; điện tích âm nhận thêm các đường đi tới từ điện tích dương) nhưng mật độ đường trên hình
   **không** tỉ lệ với |E| (ghi trên Thẻ Khoa học). Nhờ giáo viên xem cách trình bày này và giá trị
   mặc định có hợp với lớp 11 không. `review_status: "pending"`.
+- **PHS-1 … PHS-3 — không gian pha và vòng tròn pha (10/11/2026, #54 mục 3):** (1) Đồ thị "Không gian
+  pha" của lò xo, con lắc lò xo (v theo x) và con lắc đơn (ω theo α, α đưa về khoảng (−π; π], đường
+  đứt nét khi con lắc quay qua đỉnh) vẽ đúng các trạng thái engine đã ghi, không nội suy. Dao động
+  điều hoà cho elip x²/A² + v²/(ωA)² = 1 (test so với engine, sai số < 1e-8). (2) Đường phân cách
+  của con lắc đơn là chuyển động có cơ năng đúng bằng E = 2mgL (thế năng tính từ vị trí thấp nhất):
+  ω = ±2·√(g/L)·cos(α/2), suy ra từ bảo toàn cơ năng; trong đường này con lắc lắc qua lại, ngoài
+  đường này con lắc quay tròn (test ở 0,99 và 1,01 lần tốc độ góc tới hạn). (3) "Vòng tròn pha": vectơ
+  quay dài A = √(x₀² + (v₀/ω)²), góc φ = ωt + φ₀ ngược chiều kim đồng hồ, toạ độ đầu vectơ là
+  (x; −v/ω), hình chiếu lên trục x là li độ; chỉ hiện khi không có lực cản (b = 0), vì mô hình
+  vòng tròn chỉ đúng khi đó. Nguồn đối chiếu: OpenStax University Physics Volume 1, chương
+  "Oscillations" (mục so sánh dao động điều hoà với chuyển động tròn). Nhờ giáo viên xem tên đồ
+  thị, kí hiệu trục "−v/ω" và cách SGK Vật lí 11 KNTT gọi vòng tròn này. `review_status: "pending"`.

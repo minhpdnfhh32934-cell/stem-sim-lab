@@ -2449,6 +2449,9 @@ const vi = {
     vi: 'Tiếng Việt',
     en: 'English',
   },
+  phaseChart: {
+    label: '{title}: {y} theo {x}',
+  },
 };
 
 export default vi;

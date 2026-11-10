@@ -2455,6 +2455,9 @@ const en: Messages = {
     vi: 'Tiếng Việt',
     en: 'English',
   },
+  phaseChart: {
+    label: '{title}: {y} against {x}',
+  },
 };
 
 export default en;
