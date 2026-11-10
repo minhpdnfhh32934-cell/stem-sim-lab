@@ -1,7 +1,9 @@
-import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
+import { BenchContext } from '@/app/bench/shellMode';
 import { useT, type MessageKey } from '@/app/i18n';
 import { useOnboardingPhase } from '@/app/learner/onboardingPhase';
 import { useNavigationStore } from '@/app/navigationStore';
+import { useIsHome } from '@/app/topics';
 import { endTour, useProjectUi } from './uiStore';
 
 export interface TourStep {
@@ -21,6 +23,20 @@ const STEPS: TourStep[] = [
   { target: '[data-tour="file"]', title: 'tour.fileTitle', body: 'tour.fileBody' },
 ];
 
+/**
+ * The bench's tour (docs/BENCH_DESIGN.md §9.2 "Then"): three spots on the first topic opened,
+ * the main action, the tray and the notebook.
+ */
+const BENCH_STEPS: TourStep[] = [
+  { target: '[data-tour="play"]', title: 'bench.tourPlayTitle', body: 'bench.tourPlayBody' },
+  { target: '[data-tour="inspector"]', title: 'bench.tourTrayTitle', body: 'bench.tourTrayBody' },
+  {
+    target: '[data-tour="notebook"]',
+    title: 'bench.tourNotebookTitle',
+    body: 'bench.tourNotebookBody',
+  },
+];
+
 const CARD_W = 340;
 const GAP = 12;
 
@@ -30,13 +46,17 @@ export function Tour() {
   // Onboarding (level, subjects), the safety question and "Kết nối AI" come first; the tour
   // explains the lab, so it waits until the learner opens "Virtual Lab".
   const inLab = useNavigationStore((s) => s.screen === 'lab');
-  const waiting = useOnboardingPhase() !== 'tour' || !inLab;
+  // The bench shows it on the first topic opened (its shelf has none of the spots).
+  const bench = useContext(BenchContext);
+  const shelf = useIsHome();
+  const waiting = useOnboardingPhase() !== 'tour' || !inLab || (bench && shelf);
   // While the tour waits (onboarding, launch page, teacher page) nothing is rendered, so Esc
   // belongs to whatever is on screen: it must not silently end a tour the learner has not seen.
   if (step === null || waiting) return null;
   return (
     <TourOverlay
-      steps={STEPS}
+      steps={bench ? BENCH_STEPS : STEPS}
+      {...(bench ? { skipLabel: 'bench.tourSkip' as const } : {})}
       step={step}
       onStep={(next) => {
         useProjectUi.setState({ tourStep: next });
@@ -56,11 +76,13 @@ export function TourOverlay({
   step,
   onStep,
   onEnd,
+  skipLabel = 'tour.skip',
 }: {
   steps: readonly TourStep[];
   step: number;
   onStep: (step: number) => void;
   onEnd: () => void;
+  skipLabel?: MessageKey;
 }) {
   const t = useT();
   const titleId = useId();
@@ -172,7 +194,7 @@ export function TourOverlay({
         <p id={bodyId}>{t(current.body)}</p>
         <div className="tour__actions">
           <button type="button" className="btn btn--ghost" onClick={onEnd}>
-            {t('tour.skip')}
+            {t(skipLabel)}
           </button>
           <span className="tour__spacer" />
           {step > 0 && (

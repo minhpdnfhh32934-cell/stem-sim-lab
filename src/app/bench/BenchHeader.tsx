@@ -13,7 +13,9 @@ import { redo, undo, useUndoStore } from '@/app/project/undo';
 import { SettingsDialog } from '@/app/settings/SettingsDialog';
 import { sim } from '@/app/sim/runtime';
 import { useSimStore } from '@/app/sim/simStore';
-import { goHome, openLab, useIsLanding, useIsStudio, useIsTeacher } from '@/app/topics';
+import { goHome, openLab, useIsHome, useIsLanding, useIsStudio, useIsTeacher } from '@/app/topics';
+import { useSafetyStore } from '@/safety/safetyStore';
+import { openTeacher } from '@/teacher/teacherStore';
 import { useWorkspaceStore, type Subject } from '@/app/workspaceStore';
 import { closeModule, useModuleStore } from '@/modules/moduleStore';
 import { IconButton } from '@/ui/IconButton';
@@ -40,6 +42,9 @@ export function BenchHeader() {
   const landing = useIsLanding();
   const studio = useIsStudio() && !teacher;
   const lab = !teacher && !landing;
+  // The shelf has nothing to undo; it offers AI Teacher there instead, 18+ only (§9.3).
+  const shelf = useIsHome() && lab;
+  const adult = useSafetyStore((s) => s.status?.aiAllowed === true);
   const subject = useWorkspaceStore((s) => s.subject);
   const settingsOpen = useWorkspaceStore((s) => s.settingsOpen);
   const setSettingsOpen = useWorkspaceStore((s) => s.setSettingsOpen);
@@ -120,12 +125,15 @@ export function BenchHeader() {
           </button>
         )}
         <div className="bench-header__spacer" />
-        <AiStatusPill
-          onClick={(section) => {
-            if (section) openSettingsAt(section);
-            else setSettingsOpen(true);
-          }}
-        />
+        {/* The launch page has nothing to undo and no AI on it yet (§9.1). */}
+        {!landing && (
+          <AiStatusPill
+            onClick={(section) => {
+              if (section) openSettingsAt(section);
+              else setSettingsOpen(true);
+            }}
+          />
+        )}
         <button
           type="button"
           className="btn bench-header__search"
@@ -141,7 +149,17 @@ export function BenchHeader() {
         </button>
         {lab && <ModeSwitch compact />}
         <ThemeSwitch />
-        {!teacher && (
+        {shelf && adult && (
+          <button
+            type="button"
+            className="btn bench-header__teacher"
+            aria-label={t('home.teacherOpen')}
+            onClick={openTeacher}
+          >
+            {t('landing.teacherTitle')}
+          </button>
+        )}
+        {lab && !shelf && (
           <>
             <IconButton
               icon={Undo2}

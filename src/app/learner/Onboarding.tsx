@@ -1,11 +1,14 @@
 import { Check, KeyRound } from 'lucide-react';
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useContext, useState } from 'react';
+import { BenchConnectStep, BenchProfileStep } from '@/app/bench/FirstRun';
+import { BenchContext } from '@/app/bench/shellMode';
 import { useT } from '@/app/i18n';
 import { GRADE_CHOICES } from '@/app/levels';
 import { SUBJECT_ICON } from '@/app/subjectIcons';
 import { SUBJECTS, useWorkspaceStore } from '@/app/workspaceStore';
 import { cx } from '@/ui/cx';
-import { useOnboardingPhase } from './onboardingPhase';
+import { ModalCard } from './ModalCard';
+import { finishProfileSteps, useOnboardingPhase } from './onboardingPhase';
 import { useProfileStore } from './profileStore';
 import './learner.css';
 
@@ -17,43 +20,11 @@ const TOTAL = 5;
 /** First-run onboarding: profile steps, then (after the age gate) "Kết nối AI" in main. */
 export function Onboarding() {
   const phase = useOnboardingPhase();
-  if (phase === 'profile') return <ProfileSteps />;
-  if (phase === 'connect') return <ConnectStep />;
+  // The bench's first run has three steps (docs/BENCH_DESIGN.md §9.2).
+  const bench = useContext(BenchContext);
+  if (phase === 'profile') return bench ? <BenchProfileStep /> : <ProfileSteps />;
+  if (phase === 'connect') return bench ? <BenchConnectStep /> : <ConnectStep />;
   return null;
-}
-
-function ModalCard({
-  labelledBy,
-  onCancel,
-  children,
-}: {
-  labelledBy: string;
-  onCancel: () => void;
-  children: ReactNode;
-}) {
-  const ref = useRef<HTMLDialogElement>(null);
-  useEffect(() => {
-    const d = ref.current;
-    if (d && !d.open) d.showModal();
-    // showModal() focuses the first option, whose focus ring then looks like a second choice.
-    d?.querySelector<HTMLElement>('[role="radio"][aria-checked="true"]')?.focus();
-    return () => {
-      if (d?.open) d.close();
-    };
-  }, []);
-  return (
-    <dialog
-      ref={ref}
-      className="dialog onboarding"
-      aria-labelledby={labelledBy}
-      onCancel={(e) => {
-        e.preventDefault();
-        onCancel();
-      }}
-    >
-      {children}
-    </dialog>
-  );
 }
 
 function ProfileSteps() {
@@ -62,12 +33,7 @@ function ProfileSteps() {
   const profile = useProfileStore();
   const step = STEPS[index] ?? 'subjects';
   const last = index === STEPS.length - 1;
-  const finish = () => {
-    // The first chosen subject becomes the open subject in the library.
-    const first = useProfileStore.getState().interests[0];
-    if (first) useWorkspaceStore.getState().setSubject(first);
-    profile.finishProfile();
-  };
+  const finish = finishProfileSteps;
 
   return (
     <ModalCard labelledBy="onboarding-title" onCancel={finish}>
