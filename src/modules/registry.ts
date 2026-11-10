@@ -30,6 +30,8 @@ const MODULES: Record<string, () => Promise<ModuleView>> = {
   michaelisMenten: () => import('@/biology/modules').then((m) => m.michaelisMenten),
   diffusionOsmosis: () => import('@/biology/modules').then((m) => m.diffusionOsmosis),
   cellStructure: () => import('@/biology/modules').then((m) => m.cellStructure),
+  // Physics lesson with its own view (no time stepping): harmonics and Fourier series.
+  fourierSeries: () => import('@/physics/fourier/modules').then((m) => m.fourierSeries),
 };
 
 export function hasModule(id: string): boolean {

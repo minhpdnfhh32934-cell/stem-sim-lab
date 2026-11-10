@@ -121,3 +121,4 @@ Tên bài SGK chưa nói rõ chủ đề, hoặc không có bài nào: để "Ch
 | Sinh học | Động học enzyme (Michaelis–Menten) | Không bài nào có tên về động học enzyme. Bài có thể liên quan: SH10 Bài 13–15. | pending |
 | Sinh học | Con mồi – vật ăn thịt (Lotka–Volterra) | Tên Bài 26 là quần xã sinh vật, không nêu quan hệ con mồi – vật ăn thịt. Bài có thể liên quan: SH12 Bài 26. | pending |
 | Sinh học | Phiêu bạt di truyền | Tên Bài 18, 21 là di truyền học quần thể và học thuyết tiến hoá tổng hợp hiện đại, không nêu phiêu bạt di truyền. Bài có thể liên quan: SH12 Bài 18, 21. | pending |
+| Vật lí | Hoạ âm và chuỗi Fourier | Không bài nào có tên về hoạ âm hay chuỗi Fourier; hoạ âm của dây chỉ là một phần của Bài 13 (sóng dừng). Bài có thể liên quan: VL11 Bài 13 (mở rộng). | pending |

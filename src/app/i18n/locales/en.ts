@@ -131,6 +131,7 @@ const en: Messages = {
     uniformCircularMotion: 'Uniform circular motion',
     standingWave: 'Standing waves on a string',
     electricField: 'Electric field of point charges',
+    fourierSeries: 'Harmonics and Fourier series',
   },
   stage: {
     regionLabel: 'Simulation stage',

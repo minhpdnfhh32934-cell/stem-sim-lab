@@ -134,6 +134,7 @@ const vi = {
     uniformCircularMotion: 'Chuyển động tròn đều',
     standingWave: 'Sóng dừng trên dây',
     electricField: 'Điện trường của điện tích điểm',
+    fourierSeries: 'Hoạ âm và chuỗi Fourier',
   },
   stage: {
     regionLabel: 'Khung mô phỏng',

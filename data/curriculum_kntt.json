@@ -2476,6 +2476,12 @@
    "subject": "biology",
    "reason": "Tên Bài 18, 21 là di truyền học quần thể và học thuyết tiến hoá tổng hợp hiện đại, không nêu phiêu bạt di truyền. Bài có thể liên quan: SH12 Bài 18, 21.",
    "review_status": "pending"
+  },
+  {
+   "topic": "fourierSeries",
+   "subject": "physics",
+   "reason": "Không bài nào có tên về hoạ âm hay chuỗi Fourier; hoạ âm của dây chỉ là một phần của Bài 13 (sóng dừng). Bài có thể liên quan: VL11 Bài 13 (mở rộng).",
+   "review_status": "pending"
   }
  ]
 }
