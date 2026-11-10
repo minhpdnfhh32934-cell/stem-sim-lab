@@ -8,13 +8,13 @@ import { useLayoutStore } from '@/app/layout/layoutStore';
 import { LeftSidebar } from '@/app/layout/LeftSidebar';
 import { SubjectSwitch } from '@/app/layout/SubjectSwitch';
 import { useShellServices } from '@/app/layout/useShellServices';
-import { LandingScreen } from '@/app/learner/LandingScreen';
 import { useIsHome, useIsLanding, useIsStudio, useIsTeacher } from '@/app/topics';
 import { ScreenScan } from '@/teacher/chat/ScreenScan';
 import { IconButton } from '@/ui/IconButton';
 import { Skeleton } from '@/ui/Skeleton';
 import { BenchFrame } from './BenchFrame';
 import { BenchHeader } from './BenchHeader';
+import { BenchLanding } from './Landing';
 import { BenchLibrary } from './Library';
 import { BenchContext } from './shellMode';
 import { keepBasicSpeedOnSteps } from './speeds';
@@ -56,7 +56,7 @@ export default function BenchShell() {
     </div>
   ) : landing ? (
     <main className="bench-room bench-room--full">
-      <LandingScreen />
+      <BenchLanding />
     </main>
   ) : library ? (
     <BenchLibrary />

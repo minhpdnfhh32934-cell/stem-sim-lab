@@ -205,3 +205,23 @@ test('every control on the frame is at least 40 px; "Đề bài" opens the probl
   await expect(field).toHaveCount(0);
   await expect(page.getByRole('button', { name: 'Đề bài', exact: true })).toBeFocused();
 });
+
+test('the launch page: two 268×168 doors, the lab the only filled one, "Tiếp tục" after a visit', async ({
+  page,
+}) => {
+  await page.goto('/');
+  const lab = page.getByRole('button', { name: /Virtual Lab/ });
+  await expect(lab).toBeVisible({ timeout: 20_000 });
+  expect(await box(lab)).toEqual({ w: 268, h: 168 });
+  expect(await box(page.locator('.launch-card--teacher'))).toEqual({ w: 268, h: 168 });
+  await expectFilled(page.locator('body'), 1);
+  // Nothing to undo and no AI on the launch page (§9.1).
+  await expect(page.getByRole('button', { name: /Hoàn tác|Làm lại/ })).toHaveCount(0);
+  await expect(page.locator('.ai-status')).toHaveCount(0);
+  expect(await overflow(page)).toBe(0);
+
+  await openProjectile(page);
+  await page.getByRole('button', { name: 'Về trang chủ' }).click();
+  await page.getByRole('button', { name: 'Tiếp tục: Ném xiên (Vật lý)' }).click();
+  await expect(page.locator('.stage__hud-title')).toHaveText('Ném xiên');
+});

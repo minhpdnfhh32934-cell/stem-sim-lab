@@ -120,12 +120,15 @@ export function BenchHeader() {
           </button>
         )}
         <div className="bench-header__spacer" />
-        <AiStatusPill
-          onClick={(section) => {
-            if (section) openSettingsAt(section);
-            else setSettingsOpen(true);
-          }}
-        />
+        {/* The launch page has nothing to undo and no AI on it yet (§9.1). */}
+        {!landing && (
+          <AiStatusPill
+            onClick={(section) => {
+              if (section) openSettingsAt(section);
+              else setSettingsOpen(true);
+            }}
+          />
+        )}
         <button
           type="button"
           className="btn bench-header__search"
@@ -141,7 +144,7 @@ export function BenchHeader() {
         </button>
         {lab && <ModeSwitch compact />}
         <ThemeSwitch />
-        {!teacher && (
+        {lab && (
           <>
             <IconButton
               icon={Undo2}

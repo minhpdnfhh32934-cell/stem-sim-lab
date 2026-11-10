@@ -247,6 +247,10 @@ const en: Messages = {
     guidedCount: '{count} guided lessons',
     pendingTeacher: 'awaiting teacher review',
     reopen: 'Open again',
+    launchEyebrow: 'Physics · Chemistry · Biology simulations',
+    teacherDoorBody: 'AI Teacher is an AI, so it can be wrong.',
+    teacherLocked: 'AI Teacher needs you to be 18 or older',
+    resume: 'Continue: {topic} ({subject})',
   },
   layout: {
     resizeLeft: 'Drag to resize the Library',

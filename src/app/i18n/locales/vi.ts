@@ -249,6 +249,10 @@ const vi = {
     guidedCount: 'Có {count} bài có hướng dẫn',
     pendingTeacher: 'chờ giáo viên duyệt',
     reopen: 'Mở lại',
+    launchEyebrow: 'Mô phỏng Vật lí · Hóa học · Sinh học',
+    teacherDoorBody: 'AI Teacher là một AI nên có thể sai.',
+    teacherLocked: 'AI Teacher cần bạn đủ 18 tuổi',
+    resume: 'Tiếp tục: {topic} ({subject})',
   },
   layout: {
     resizeLeft: 'Kéo để đổi độ rộng Thư viện',
