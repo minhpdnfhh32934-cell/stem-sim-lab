@@ -119,6 +119,7 @@ const vi = {
     collisionTheory: 'Thuyết va chạm',
     maxwellBoltzmann: 'Phân bố Maxwell–Boltzmann',
     chemicalEquilibrium: 'Cân bằng hóa học & Le Chatelier',
+    acidBaseTitration: 'Chuẩn độ acid – base',
     mitosis: 'Nguyên phân',
     meiosis: 'Giảm phân',
     centralDogma: 'ADN → mARN → Protein',

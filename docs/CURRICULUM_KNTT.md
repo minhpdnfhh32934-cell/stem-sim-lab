@@ -120,4 +120,5 @@ Tên bài SGK chưa nói rõ chủ đề, hoặc không có bài nào: để "Ch
 | Hoá học | Phân bố Maxwell–Boltzmann | Không bài nào trong ba cuốn Hoá học có tên về phân bố Maxwell–Boltzmann; hai bài Vật lí 12 nói về mô hình động học phân tử chất khí. Bài có thể liên quan: VL12 Bài 8, 12 (sách Vật lí; trong app chủ đề thuộc Hoá học). | pending |
 | Sinh học | Động học enzyme (Michaelis–Menten) | Không bài nào có tên về động học enzyme. Bài có thể liên quan: SH10 Bài 13–15. | pending |
 | Sinh học | Con mồi – vật ăn thịt (Lotka–Volterra) | Tên Bài 26 là quần xã sinh vật, không nêu quan hệ con mồi – vật ăn thịt. Bài có thể liên quan: SH12 Bài 26. | pending |
+| Hoá học | Chuẩn độ acid – base | Tên Bài 2 là cân bằng trong dung dịch nước, không nêu chuẩn độ acid – base. Bài có thể liên quan: HH11 Bài 2. | pending |
 | Sinh học | Phiêu bạt di truyền | Tên Bài 18, 21 là di truyền học quần thể và học thuyết tiến hoá tổng hợp hiện đại, không nêu phiêu bạt di truyền. Bài có thể liên quan: SH12 Bài 18, 21. | pending |

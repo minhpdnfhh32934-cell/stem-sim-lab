@@ -547,6 +547,15 @@ Progress log: `docs/PROGRESS.md`.
   `scripts/data/gen_*.py` (mendeleev, RDKit, SciPy). Never hand-edit the JSON; change the generator.
 - Code: `src/chemistry/{data,atom,periodic,molecule,reaction,particles}`, `formula.ts` (parser),
   `balance.ts` (exact null-space balancer). three.js viewers render on demand; RDKit.js is lazy.
+- Acid–base titration (`src/chemistry/titration/`, 0.8.1, #106; strong acid in the flask, strong
+  base from the burette, 25 °C): `titration.ts` (pH = positive root of the charge balance with Kw,
+  written without cancellation; `curve` crowds points around V_eq; `indicatorAt`: colours[i] →
+  colours[i + 1] over ranges[i], phenolphthalein has two), data
+  `data/titration.json` from `scripts/data/gen_titration.py` (Kw from the IAPWS R11-24 formula,
+  checked against its test table, moved from mol/kg to mol/L; indicator ranges and colour names
+  cited; the screen colour is a CSS named colour chosen by name, an illustration), `store.ts` (`setTitration` validates;
+  V_b is clamped to 2·V_eq only when set, views read `addedVolume`), `card.ts`, `TitrationViews.tsx` (Basic: concentrations and volumes
+  only). Weak acids/buffers: not yet. Unplaced in the KNTT bar (DATA_REVIEW TIT-5).
 - Shared UI: `src/ui/charts/XYChart.tsx` (uPlot), `src/ui/canvas/useCanvas.ts`.
 - Biology: `src/biology/{division,central,genetics,ecology,enzyme,transport,cell}` — pure model
   files (`*.ts`, tested) + `*Views.tsx`; `modules.ts` lists the 12 ModuleViews. Small shared controls in

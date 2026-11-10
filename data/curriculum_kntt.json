@@ -2472,6 +2472,12 @@
    "review_status": "pending"
   },
   {
+   "topic": "acidBaseTitration",
+   "subject": "chemistry",
+   "reason": "Tên Bài 2 là cân bằng trong dung dịch nước, không nêu chuẩn độ acid – base. Bài có thể liên quan: HH11 Bài 2.",
+   "review_status": "pending"
+  },
+  {
    "topic": "geneticDrift",
    "subject": "biology",
    "reason": "Tên Bài 18, 21 là di truyền học quần thể và học thuyết tiến hoá tổng hợp hiện đại, không nêu phiêu bạt di truyền. Bài có thể liên quan: SH12 Bài 18, 21.",
