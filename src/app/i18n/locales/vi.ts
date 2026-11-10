@@ -236,6 +236,7 @@ const vi = {
     ai: 'Hỏi AI',
     play: 'Chạy',
     pause: 'Tạm dừng',
+    reset: 'Đặt lại',
     openScience: 'Mở Thẻ khoa học',
     darkTheme: 'Giao diện tối',
     followSystem: 'Theo máy',

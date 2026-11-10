@@ -7,7 +7,14 @@
  * missing or lost; everything is freed on unmount.
  */
 import { ChevronLeft, ChevronRight, Focus, Pause, Play, RotateCcw, Tags, X } from 'lucide-react';
-import { useEffect, useLayoutEffect, useMemo, useRef, type CSSProperties } from 'react';
+import {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  type CSSProperties,
+  type ReactNode,
+} from 'react';
 import * as THREE from 'three';
 import { formatNumber } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
@@ -61,6 +68,8 @@ import { buildDogmaScene, type DogmaScene } from './scene';
 import { DOGMA_SPEEDS, dogma3dFor, useDogma3D } from './store';
 import '../../bio.css';
 import { EdgePortal } from '@/app/bench/EdgePortal';
+import { EdgeSteps } from '@/app/bench/EdgeSteps';
+import { useOnEdge } from '@/app/bench/edgeSlot';
 
 export type { RendererFactory };
 
@@ -117,6 +126,84 @@ export function Dogma3DView({
 
 function goTo(t: number) {
   useDogma3D.setState({ t, playing: false });
+}
+
+/**
+ * The bench edge (docs/BENCH_DESIGN.md §9.6): D0 Chạy, D1 / D2 the lesson's own steps, D3 Đặt
+ * lại, "Bước i/n" over its step moments and the clock with "Phiên mã" and "Dịch mã" marked. Its
+ * own component: it follows t every frame, the view does not.
+ */
+function DogmaEdge({
+  clock,
+  model,
+  moments,
+  play,
+  step,
+  children,
+}: {
+  clock: DogmaClock;
+  model: DogmaModel3D;
+  moments: readonly number[];
+  play: () => void;
+  step: (dir: -1 | 1) => void;
+  children: ReactNode;
+}) {
+  const Lz = useLocalized();
+  const locale = useSettingsStore((s) => s.locale);
+  const t = useDogma3D((s) => s.t);
+  const playing = useDogma3D((s) => s.playing);
+  const { total, tlStart } = clock;
+  const fmt = (v: number) => formatNumber(locale, v);
+  const done = moments.filter((m) => m <= t + 1e-9).length;
+  const where = Lz(
+    L(
+      `Bước ${String(done)}/${String(moments.length)}`,
+      `Step ${String(done)}/${String(moments.length)}`,
+    ),
+  );
+  return (
+    <EdgeSteps
+      play={{ playing, onClick: play }}
+      prev={{
+        label: Lz(L('Bước trước', 'Previous step')),
+        disabled: t <= 0,
+        onClick: () => {
+          step(-1);
+        },
+      }}
+      next={{
+        label: Lz(L('Bước tiếp theo', 'Next step')),
+        disabled: t >= total,
+        onClick: () => {
+          step(1);
+        },
+      }}
+      reset={{
+        label: Lz(L('Đặt lại', 'Reset')),
+        disabled: t <= 0 && !playing,
+        onClick: () => {
+          goTo(0);
+        },
+      }}
+      readout={where}
+      // The stage's own slider, moved here: same name, the model's position as its value.
+      scrub={{
+        label: Lz(L('Thời điểm (kéo để tua)', 'Moment (drag to scrub)')),
+        min: 0,
+        max: total,
+        step: total / 1000,
+        value: Math.min(t, total),
+        valueText: Lz(countsChip(model, momentAt(clock, t), fmt)),
+        ticks: [
+          { at: 0, label: Lz(L('Phiên mã', 'Transcription')) },
+          { at: tlStart, label: Lz(L('Dịch mã', 'Translation')) },
+        ],
+        onChange: goTo,
+      }}
+    >
+      {children}
+    </EdgeSteps>
+  );
 }
 
 /** Transcription and translation, each filled as far as the clock has gone. */
@@ -627,6 +714,20 @@ function Dogma3DScene({
     return sel.kind === 'part' ? sc.partVisible(sel.part) : sc.focusPoint(sel) !== null;
   };
   const atStart = useDogma3D((s) => s.t <= 0);
+  const onEdge = useOnEdge();
+  const speedControl = !basic && (
+    <Segmented
+      label={L('Tốc độ', 'Speed')}
+      value={String(speed)}
+      options={DOGMA_SPEEDS.map((v) => ({
+        id: String(v),
+        label: L(fmtSpeed(v), fmtSpeed(v)),
+      }))}
+      onChange={(v) => {
+        useDogma3D.setState({ speed: Number(v) });
+      }}
+    />
+  );
 
   return (
     <div className="bio-view m3d dogma3d" data-lesson="centralDogma">
@@ -634,53 +735,49 @@ function Dogma3DScene({
       <div ref={hudRef} className="m3d__hud">
         <div className="chem-overlay m3d__top" data-inset="top">
           <EdgePortal>
-            <IconButton
-              icon={ChevronLeft}
-              size="lg"
-              label={Lz(L('Bước trước', 'Previous step'))}
-              disabled={atStart}
-              onClick={() => {
-                step(-1);
-              }}
-            />
-            <IconButton
-              icon={Play}
-              altIcon={Pause}
-              showAlt={playing}
-              size="lg"
-              variant="solid"
-              label={playing ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Phát', 'Play'))}
-              onClick={play}
-            />
-            <IconButton
-              icon={ChevronRight}
-              size="lg"
-              label={Lz(L('Bước tiếp theo', 'Next step'))}
-              disabled={atEnd}
-              onClick={() => {
-                step(1);
-              }}
-            />
-            <IconButton
-              icon={RotateCcw}
-              size="lg"
-              label={Lz(L('Phát lại từ đầu', 'Replay from the start'))}
-              onClick={() => {
-                useDogma3D.setState({ t: 0, playing: !prefersReducedMotion() });
-              }}
-            />
-            {!basic && (
-              <Segmented
-                label={L('Tốc độ', 'Speed')}
-                value={String(speed)}
-                options={DOGMA_SPEEDS.map((v) => ({
-                  id: String(v),
-                  label: L(fmtSpeed(v), fmtSpeed(v)),
-                }))}
-                onChange={(v) => {
-                  useDogma3D.setState({ speed: Number(v) });
-                }}
-              />
+            {onEdge ? (
+              <DogmaEdge clock={clock} model={model} moments={moments} play={play} step={step}>
+                {speedControl}
+              </DogmaEdge>
+            ) : (
+              <>
+                <IconButton
+                  icon={ChevronLeft}
+                  size="lg"
+                  label={Lz(L('Bước trước', 'Previous step'))}
+                  disabled={atStart}
+                  onClick={() => {
+                    step(-1);
+                  }}
+                />
+                <IconButton
+                  icon={Play}
+                  altIcon={Pause}
+                  showAlt={playing}
+                  size="lg"
+                  variant="solid"
+                  label={playing ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Phát', 'Play'))}
+                  onClick={play}
+                />
+                <IconButton
+                  icon={ChevronRight}
+                  size="lg"
+                  label={Lz(L('Bước tiếp theo', 'Next step'))}
+                  disabled={atEnd}
+                  onClick={() => {
+                    step(1);
+                  }}
+                />
+                <IconButton
+                  icon={RotateCcw}
+                  size="lg"
+                  label={Lz(L('Phát lại từ đầu', 'Replay from the start'))}
+                  onClick={() => {
+                    useDogma3D.setState({ t: 0, playing: !prefersReducedMotion() });
+                  }}
+                />
+                {speedControl}
+              </>
             )}
           </EdgePortal>
           <span className="chem-chip">
@@ -737,7 +834,7 @@ function Dogma3DScene({
         <div className="m3d__bottom" data-inset="bottom">
           <div className="dogma3d__timeline">
             <PhaseStrip clock={clock} />
-            <Scrubber clock={clock} model={model} />
+            {!onEdge && <Scrubber clock={clock} model={model} />}
           </div>
           <p className="m3d__caption">
             {caption}{' '}

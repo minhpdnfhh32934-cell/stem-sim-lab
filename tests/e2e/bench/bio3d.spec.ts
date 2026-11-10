@@ -137,9 +137,10 @@ test('logistic 3D: the habitat follows the model; rebuilding for new inputs free
   // The chips are the 2D view's (same text).
   await expect(page.getByText('Sức chứa K = 1.000')).toBeVisible();
   // Pause, go to the end: N(t = 30) of the exact solution.
-  const player = page.locator('.bio3d__player');
+  // The bench edge's player (EdgeSteps, §9.6): D0 "Chạy" / "Tạm dừng".
+  const player = page.locator('.bench-edge .edge-steps');
   await player
-    .getByRole('button', { name: /Tạm dừng|Phát/ })
+    .getByRole('button', { name: /Tạm dừng|Chạy/ })
     .first()
     .click();
   await player.getByRole('slider').fill('30');
@@ -349,22 +350,23 @@ const seriousOnEdge = async (page: Page) =>
 
 test('B5: mitosis 3D steps from the edge; the stage keeps the stage name', async ({ page }) => {
   await openTopic(page, 'Sinh học', 'Nguyên phân');
-  const next = edgeOf(page).getByRole('button', { name: 'Bước tiếp theo' });
+  // D1 / D2 (§9.6): "Về kì trước" / "Sang kì tiếp" ("Kì sau" is anaphase's name).
+  const next = edgeOf(page).getByRole('button', { name: 'Sang kì tiếp' });
   await expect(next).toBeVisible({ timeout: 30_000 });
-  await expect(edgeOf(page).getByRole('button', { name: 'Bước trước' })).toBeDisabled();
-  await expect(stageOf(page).getByRole('button', { name: 'Bước tiếp theo' })).toHaveCount(0);
+  await expect(edgeOf(page).getByRole('button', { name: 'Về kì trước' })).toBeDisabled();
+  await expect(stageOf(page).getByRole('button', { name: 'Sang kì tiếp' })).toHaveCount(0);
   const name = page.locator('.m3d__top .chem-chip strong').first();
   const before = await name.textContent();
   await next.click();
   await expect(name).not.toHaveText(before ?? '');
-  await expect(edgeOf(page).getByRole('button', { name: 'Bước trước' })).toBeEnabled();
+  await expect(edgeOf(page).getByRole('button', { name: 'Về kì trước' })).toBeEnabled();
   // Polled: a button that has just become enabled fades into its colours.
   await expect.poll(() => seriousOnEdge(page)).toEqual([]);
 });
 
 test('B5: a habitat lesson plays from the edge (time slider there)', async ({ page }) => {
   await openTopic(page, 'Sinh học', 'Tăng trưởng logistic');
-  await expect(edgeOf(page).locator('.bio3d__player input[type="range"]')).toBeVisible({
+  await expect(edgeOf(page).locator('.edge-steps input[type="range"]')).toBeVisible({
     timeout: 30_000,
   });
   await expect(stageOf(page).locator('.bio3d__player')).toHaveCount(0);

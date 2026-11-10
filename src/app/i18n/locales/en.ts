@@ -234,6 +234,7 @@ const en: Messages = {
     ai: 'Ask AI',
     play: 'Run',
     pause: 'Pause',
+    reset: 'Reset',
     openScience: 'Open the Science card',
     darkTheme: 'Dark theme',
     followSystem: 'Follow device',
