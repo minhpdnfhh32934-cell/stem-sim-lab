@@ -1,7 +1,7 @@
 /// <reference types="node" />
 import { readFile } from 'node:fs/promises';
 import { expect, test, type Page } from '@playwright/test';
-import { enterLab, openLab } from '../nav';
+import { enterLab, openLab, openProblem } from '../nav';
 
 /**
  * These tests open biology topics, whose 3D views draw with WebGL: in software (SwiftShader),
@@ -20,6 +20,17 @@ async function openLogistic(page: Page) {
   await page.getByRole('button', { name: 'Tăng trưởng logistic', exact: true }).click();
   // First use of a lazy module: the dev server compiles it (slow while specs run in parallel).
   await expect(page.locator('.science-card')).toBeVisible({ timeout: 20_000 });
+}
+
+/** The bench shows the open topic's subject in the header's breadcrumb (no subject switch). */
+const crumb = (page: Page, name: string) =>
+  page.locator('.bench-crumbs').getByRole('button', { name, exact: true });
+
+/** From an open topic back to the shelf ("Virtual Lab" crumb), then another subject's topic. */
+async function openFromShelf(page: Page, subject: string, topic: string) {
+  await crumb(page, 'Virtual Lab').click();
+  await page.getByRole('radio', { name: subject }).click();
+  await page.getByRole('main').getByRole('button', { name: topic, exact: true }).click();
 }
 
 function slider(page: Page, name: RegExp) {
@@ -70,7 +81,7 @@ test('save and reopen a .stemsim file', async ({ page }) => {
   // Opening the file loads the biology module again on this fresh page, and its 3D view draws in
   // software: like every first open of a lazy module, allow up to 20 s (slow CI runners).
   await expect(page.getByText('Sức chứa K = 1.500')).toBeVisible({ timeout: 20_000 });
-  await expect(page.getByRole('radio', { name: 'Sinh học' })).toBeChecked();
+  await expect(crumb(page, 'Sinh học')).toBeVisible();
 });
 
 test('a broken project file is rejected with a message', async ({ page }) => {
@@ -91,9 +102,11 @@ test('history lists opened simulations and reopens them', async ({ page }) => {
   await openLogistic(page);
   await slider(page, /Sức chứa K/).fill('1500');
   await page.waitForTimeout(1800); // the history entry follows edits after a short delay
-  await page.getByRole('radio', { name: 'Hóa học' }).click();
-  await page.getByRole('button', { name: 'Bảng tuần hoàn', exact: true }).click();
-  await page.getByRole('tab', { name: 'Lịch sử' }).click();
+  await openFromShelf(page, 'Hóa học', 'Bảng tuần hoàn');
+  // The bench keeps "Lịch sử" at the bottom of the shelf's filters, in Advanced (§9.3).
+  await crumb(page, 'Virtual Lab').click();
+  await page.getByRole('radio', { name: 'Nâng cao' }).click();
+  await page.getByRole('button', { name: 'Lịch sử' }).click();
   const entry = page.locator('.history__item', { hasText: 'Tăng trưởng logistic' }).first();
   await expect(entry).toBeVisible();
   await entry.locator('.history__open').click();
@@ -195,9 +208,13 @@ test('manual mode offers chemistry and biology topics too', async ({ page }) => 
   await dialog.getByRole('button', { name: 'Mô phỏng' }).click();
   await expect(dialog).toBeHidden();
   await expect(page.getByText('Sức chứa K = 1.500')).toBeVisible();
-  await expect(page.getByRole('radio', { name: 'Sinh học' })).toBeChecked();
-  // Back to a physics topic from the same picker.
-  await page.getByRole('button', { name: 'Tự dựng cảnh (không dùng AI)' }).click();
+  await expect(crumb(page, 'Sinh học')).toBeVisible();
+  // Back to a physics topic from the same picker (the bench: in the "Đề bài" sheet).
+  await openProblem(page);
+  await page
+    .locator('dialog.bench-problem')
+    .getByRole('button', { name: 'Tự dựng cảnh (không dùng AI)' })
+    .click();
   await select.selectOption('freeFall');
   await expect(dialog.locator('.qty-cards')).toBeVisible();
 });

@@ -4,6 +4,7 @@ import {
   Check,
   Clock,
   FileText,
+  History,
   PencilRuler,
   Search,
   SearchX,
@@ -16,6 +17,8 @@ import { useAnalysisEngine } from '@/app/ai/engineChoice';
 import { useT } from '@/app/i18n';
 import { chapterTitle, searchChapters } from '@/app/layout/libraryChapters';
 import { Badges } from '@/app/learner/HomeScreen';
+import { HistoryList } from '@/app/project/HistoryList';
+import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useProfileStore } from '@/app/learner/profileStore';
 import { chaptersFor, GRADE_CHOICES, type LibraryTopic } from '@/app/levels';
 import { lessonRange } from '@/app/curriculum';
@@ -42,6 +45,8 @@ export function BenchLibrary() {
   const setGrade = useProfileStore((s) => s.setGrade);
   const lastTopic = useProfileStore((s) => s.lastTopic);
   const [query, setQuery] = useState('');
+  const advanced = useSettingsStore((s) => s.uiMode === 'advanced');
+  const [historyOpen, setHistoryOpen] = useState(false);
   const progress = useProgressStore(
     useShallow((s) => ({
       visited: s.visited,
@@ -117,6 +122,23 @@ export function BenchLibrary() {
             }}
           />
         </label>
+        {/* "Lịch sử" at the bottom of the filters, Advanced only (§9.3). */}
+        {advanced && (
+          <div className="shelf-history">
+            <button
+              type="button"
+              className="btn btn--ghost"
+              aria-expanded={historyOpen}
+              onClick={() => {
+                setHistoryOpen(!historyOpen);
+              }}
+            >
+              <History size={16} strokeWidth={1.75} aria-hidden="true" />
+              {t('sidebar.history')}
+            </button>
+            {historyOpen && <HistoryList />}
+          </div>
+        )}
       </aside>
 
       <main className="shelf-main" aria-labelledby="shelf-title" data-subject-shelf={subject}>
