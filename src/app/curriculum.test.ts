@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { CATALOG } from '@/app/catalog';
 import { SUBJECTS } from '@/app/workspaceStore';
@@ -191,5 +193,22 @@ describe('lessonRange', () => {
     expect(lessonRange([18, 14, 15, 16])).toBe('14–16, 18');
     expect(lessonRange([10])).toBe('10');
     expect(lessonRange([3, 3, 1])).toBe('1, 3');
+  });
+});
+
+describe('docs/CURRICULUM_KNTT.md lists every lesson of the 9 books (#54 item 7)', () => {
+  it('one row per lesson of the table of contents, SimLab topic or not', () => {
+    const doc = readFileSync(resolve(import.meta.dirname, '../../docs/CURRICULUM_KNTT.md'), 'utf8');
+    let lessons = 0;
+    for (const book of CURRICULUM.books) {
+      for (const chapter of book.chapters) {
+        for (const lesson of chapter.lessons) {
+          lessons++;
+          const row = `| ${book.title} | ${chapter.label} | ${String(lesson.number ?? '')} | ${lesson.title} |`;
+          expect(doc, row).toContain(row);
+        }
+      }
+    }
+    expect(lessons).toBeGreaterThanOrEqual(253);
   });
 });

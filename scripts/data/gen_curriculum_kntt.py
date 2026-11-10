@@ -646,7 +646,7 @@ def markdown(data: dict) -> str:
         "",
         "## Bài SGK ↔ chủ đề SimLab",
         "",
-        "Gồm các bài đã có chủ đề SimLab (đề xuất) và các bài của kế hoạch 0.8.0 Phần A (#37). Các bài khác sẽ thêm ở 0.8.1 (#54).",
+        "Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab chưa có; #54 mục 7). Cột \"Chủ đề SimLab\" là đề xuất, chờ giáo viên duyệt; \"chưa có\" là bài SimLab chưa có chủ đề nào.",
         "",
         "| Sách | Chương | Bài | Tên bài | Trang | Loại | Chủ đề SimLab | Ghi chú | review_status |",
         "| --- | --- | --- | --- | --- | --- | --- | --- | --- |",
@@ -655,15 +655,15 @@ def markdown(data: dict) -> str:
         for c in b["chapters"]:
             for l in c["lessons"]:
                 key = (b["id"], l["number"])
-                if key not in by_lesson and key not in PART_A:
-                    continue
-                status = ", ".join(by_lesson.get(key, [])) or f"chưa có — kế hoạch {PART_A[key]}"
+                planned = PART_A.get(key)
+                status = ", ".join(by_lesson.get(key, [])) or (f"chưa có — kế hoạch {planned}" if planned else "chưa có")
                 pairs = reasons.get(key, [])
                 if len({r for _, r in pairs}) > 1:
                     note = " ".join(f"{name}: {r}" for name, r in pairs)
                 else:
-                    note = pairs[0][1] if pairs else "Bài của 0.8.0 Phần A (#37 mục 4.2)."
-                out.append(f"| {b['title']} | {c['label']} | {l['number']} | {l['title']} | {l['page']} | {KIND_VI[l['kind']]} | {status} | {note} | pending |")
+                    note = pairs[0][1] if pairs else ("Bài của 0.8.0 Phần A (#37 mục 4.2)." if planned else "")
+                number = "" if l["number"] is None else l["number"]
+                out.append(f"| {b['title']} | {c['label']} | {number} | {l['title']} | {l['page']} | {KIND_VI[l['kind']]} | {status} | {note} | pending |")
     out += [
         "",
         "## Chủ đề chưa xếp lớp",
