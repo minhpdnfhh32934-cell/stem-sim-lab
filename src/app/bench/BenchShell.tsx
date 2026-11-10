@@ -1,12 +1,10 @@
 import '@/app/theme/benchFonts';
 import './bench.css';
 import { Minimize2 } from 'lucide-react';
-import { lazy, Suspense, useEffect, type CSSProperties } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { useT } from '@/app/i18n';
 import { ShellOverlays } from '@/app/layout/AppShell';
 import { useLayoutStore } from '@/app/layout/layoutStore';
-import { LeftSidebar } from '@/app/layout/LeftSidebar';
-import { SubjectSwitch } from '@/app/layout/SubjectSwitch';
 import { useShellServices } from '@/app/layout/useShellServices';
 import { useIsHome, useIsLanding, useIsStudio, useIsTeacher } from '@/app/topics';
 import { ScreenScan } from '@/teacher/chat/ScreenScan';
@@ -16,6 +14,7 @@ import { BenchFrame } from './BenchFrame';
 import { BenchHeader } from './BenchHeader';
 import { BenchLanding } from './Landing';
 import { BenchLibrary } from './Library';
+import { Notebook } from './Notebook';
 import { BenchContext } from './shellMode';
 import { keepBasicSpeedOnSteps } from './speeds';
 
@@ -32,7 +31,6 @@ export default function BenchShell() {
   useShellServices();
   const t = useT();
   const presentation = useLayoutStore((s) => s.presentation);
-  const leftWidth = useLayoutStore((s) => s.leftWidth);
   const teacher = useIsTeacher();
   const studio = useIsStudio() && !teacher;
   const landing = useIsLanding();
@@ -61,12 +59,12 @@ export default function BenchShell() {
   ) : library ? (
     <BenchLibrary />
   ) : studio ? (
-    <div className="bench-room" style={{ '--left-w': `${leftWidth}px` } as CSSProperties}>
-      <div className="bench-library">
-        <SubjectSwitch />
-        <LeftSidebar />
-      </div>
-      <main className="bench-room__main">
+    // A guided lesson is one paper sheet beside the rail's "Thẻ khoa học" and "Hỏi AI", which
+    // open over it (docs/BENCH_DESIGN.md §9.7, first cut); the shelf ("Virtual Lab" in the
+    // breadcrumb) replaces the classic library column.
+    <div className="bench-studio-room">
+      <Notebook push={false} pinnedOnly />
+      <main className="bench-studio">
         <Suspense fallback={<Skeleton label={t('stage.loading')} variant="lines" />}>
           <StudioScreen />
         </Suspense>

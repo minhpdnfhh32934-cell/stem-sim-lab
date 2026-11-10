@@ -49,8 +49,9 @@ const LABEL: Record<Exclude<NotebookTab, 'module'>, MessageKey> = {
 /**
  * The notebook on the left: an always-visible rail of tabs (same names as the classic bottom
  * panel's) and a drawer with the chosen tab, pushed beside the stage or over it (`push`).
+ * `pinnedOnly`: only "Thẻ khoa học" and "Hỏi AI" (a guided lesson, §9.7).
  */
-export function Notebook({ push }: { push: boolean }) {
+export function Notebook({ push, pinnedOnly = false }: { push: boolean; pinnedOnly?: boolean }) {
   const t = useT();
   const L = useLocalized();
   const subject = useWorkspaceStore((s) => s.subject);
@@ -66,11 +67,13 @@ export function Notebook({ push }: { push: boolean }) {
       setSize: s.setSize,
     })),
   );
-  const main: NotebookTab[] = mod
-    ? mod.view.Bottom
-      ? ['module']
-      : []
-    : ['challenge', 'graphs', 'solution', ...(advanced ? (['data'] as const) : [])];
+  const main: NotebookTab[] = pinnedOnly
+    ? []
+    : mod
+      ? mod.view.Bottom
+        ? ['module']
+        : []
+      : ['challenge', 'graphs', 'solution', ...(advanced ? (['data'] as const) : [])];
   const tabs: NotebookTab[] = [...main, 'science', 'ai'];
   const stored = tabBySubject[subject];
   const tab = stored && tabs.includes(stored) ? stored : (main[0] ?? 'science');

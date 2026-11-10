@@ -1743,3 +1743,28 @@ button.bench-door--lab:hover {
   min-width: 0;
   padding: 0;
 }
+
+/* Science Studio on the bench (§9.7, first cut): one paper sheet, readable width. */
+.bench-studio {
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  background: var(--paper-bg);
+}
+.bench-studio > .studio {
+  width: min(960px, 100%);
+  margin: 0 auto;
+  padding: var(--space-4);
+}
+/* The lesson room: the rail on the left, its drawer over the lesson (no bench edge here). */
+.bench-studio-room {
+  --bench-edge: 0px;
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--bench-rail) minmax(0, 1fr);
+  grid-template-areas: 'rail main';
+  flex: 1;
+  min-height: 0;
+}
+.bench-studio-room > .bench-studio {
+  grid-area: main;
+}
