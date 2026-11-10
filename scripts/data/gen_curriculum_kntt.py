@@ -490,6 +490,8 @@ PLACEMENTS = [
     ("uniformCircularMotion", "VL10", [31, 32], "Tên Bài 31–32: động học của chuyển động tròn đều; lực hướng tâm và gia tốc hướng tâm."),
     ("standingWave", "VL11", [13], "Tên Bài 13: sóng dừng (cảnh chỉ có dây hai đầu cố định)."),
     ("electricField", "VL11", [16, 17, 18], "Tên Bài 16–18: lực tương tác giữa các điện tích, khái niệm điện trường, điện trường đều."),
+    ("cellToDna", "SH10", [8], "Tên Bài 8: tế bào nhân thực (cấp tế bào và nhân của bài phóng to). Không xếp Bài 7 (tế bào nhân sơ): bài chỉ có tế bào nhân thực, dù thang kích thước H 7.1 của Bài 7 là một nguồn số liệu."),
+    ("cellToDna", "SH12", [7], "Tên Bài 7: cấu trúc và chức năng của nhiễm sắc thể (cấp NST kép, sợi nhiễm sắc, nucleosome, DNA)."),
 ]
 
 # Not placed (title not clear, or no lesson): (topic, subject, candidates, reason).
@@ -506,6 +508,7 @@ UNPLACED = [
     ("maxwellBoltzmann", "chemistry", "VL12 Bài 8, 12 (sách Vật lí; trong app chủ đề thuộc Hoá học)", "Không bài nào trong ba cuốn Hoá học có tên về phân bố Maxwell–Boltzmann; hai bài Vật lí 12 nói về mô hình động học phân tử chất khí."),
     ("michaelisMenten", "biology", "SH10 Bài 13–15", "Không bài nào có tên về động học enzyme."),
     ("lotkaVolterra", "biology", "SH12 Bài 26", "Tên Bài 26 là quần xã sinh vật, không nêu quan hệ con mồi – vật ăn thịt."),
+    ("acidBaseTitration", "chemistry", "HH11 Bài 2", "Tên Bài 2 là cân bằng trong dung dịch nước, không nêu chuẩn độ acid – base."),
     ("geneticDrift", "biology", "SH12 Bài 18, 21", "Tên Bài 18, 21 là di truyền học quần thể và học thuyết tiến hoá tổng hợp hiện đại, không nêu phiêu bạt di truyền."),
 ]
 

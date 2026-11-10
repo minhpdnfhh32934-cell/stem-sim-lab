@@ -2,6 +2,7 @@ import { bindStore } from '@/modules/binding';
 import type { ModuleView } from '@/modules/types';
 import { L } from '../common';
 import { BondTable } from './BondTable';
+import { Molecule3dDriver, PolarityDriver, VseprDriver } from './MoleculeDriver';
 import { useMoleculeStore } from './store';
 import {
   Molecule3dPanel,
@@ -18,6 +19,7 @@ const state = bindStore(useMoleculeStore, ['id', 'lonePairs', 'labels', 'dipole'
 export const molecule3d: ModuleView = {
   title: L('Phân tử 3D', '3D molecules'),
   Stage: Molecule3dStage,
+  Driver: Molecule3dDriver,
   Panel: Molecule3dPanel,
   Bottom: BondTable,
   bottomTitle,
@@ -26,6 +28,7 @@ export const molecule3d: ModuleView = {
 export const vsepr: ModuleView = {
   title: L('Hình học phân tử (VSEPR)', 'Molecular geometry (VSEPR)'),
   Stage: VseprStage,
+  Driver: VseprDriver,
   Panel: VseprPanel,
   Bottom: BondTable,
   bottomTitle,
@@ -34,6 +37,7 @@ export const vsepr: ModuleView = {
 export const bondPolarity: ModuleView = {
   title: L('Độ phân cực liên kết', 'Bond polarity'),
   Stage: PolarityStage,
+  Driver: PolarityDriver,
   Panel: PolarityPanel,
   Bottom: BondTable,
   bottomTitle,

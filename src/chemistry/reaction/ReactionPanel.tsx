@@ -1,8 +1,18 @@
 import { Search } from 'lucide-react';
+import { useContext, useState } from 'react';
+import { BenchContext } from '@/app/bench/shellMode';
 import { useLocalized } from '@/app/i18n/localized';
+import { openTopic } from '@/app/topics';
 import { ReviewBadge } from '@/ui/Badges';
 import { L } from '../common';
-import { REACTIONS, findReactions, reactionById, type ReactionCategory } from '../data/reactions';
+import {
+  REACTIONS,
+  findReactions,
+  reactionById,
+  type Reaction,
+  type ReactionCategory,
+} from '../data/reactions';
+import { formatFormula } from '../formula';
 import { EquationText } from './Equation';
 import { CATEGORY } from './labels';
 import { selectReaction, useReactionStore } from './store';
@@ -20,10 +30,19 @@ const FILTERS: (ReactionCategory | 'all' | 'mechanism')[] = [
   'equilibrium',
 ];
 
+/** "2H₂ + O₂ → 2H₂O" as one line of text (a list row cannot hold the equation's paragraph). */
+function equationString(r: Pick<Reaction, 'reactants' | 'products' | 'reversible'>): string {
+  const side = (terms: Reaction['reactants']) =>
+    terms.map((t) => `${t.coef > 1 ? String(t.coef) : ''}${formatFormula(t.formula)}`).join(' + ');
+  return `${side(r.reactants)}${r.reversible ? ' ⇌ ' : ' → '}${side(r.products)}`;
+}
+
 /** Reaction list (search + category) and the selected reaction's facts and sources. */
 export function ReactionPanel() {
   const Lz = useLocalized();
   const { id, query, category } = useReactionStore();
+  const bench = useContext(BenchContext);
+  const [other, setOther] = useState('');
   const r = reactionById(id);
   const list = findReactions(query).filter((x) =>
     category === 'all'
@@ -76,7 +95,12 @@ export function ReactionPanel() {
               }}
             >
               <span>{Lz(x.name)}</span>
-              {x.mechanism && <span className="rx-list__tag">{Lz(L('cơ chế', 'mechanism'))}</span>}
+              {bench && <span className="rx-list__eq">{equationString(x)}</span>}
+              {x.mechanism && (
+                <span className="rx-list__tag">
+                  {bench ? Lz(L('Có cơ chế', 'Has a mechanism')) : Lz(L('cơ chế', 'mechanism'))}
+                </span>
+              )}
             </button>
           </li>
         ))}
@@ -95,6 +119,32 @@ export function ReactionPanel() {
           </p>
           <p className="small muted">{r.sources.map((s) => s.citation).join(' · ')}</p>
         </div>
+      )}
+      {bench && (
+        <form
+          className="rx-other"
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (!other.trim()) return;
+            useReactionStore.setState({ equation: other.trim() });
+            void openTopic('equationBalancing');
+          }}
+        >
+          <label>
+            <span>{Lz(L('Viết phản ứng khác', 'Write another reaction'))}</span>
+            <input
+              value={other}
+              placeholder="Fe + Cl2 -> FeCl3"
+              spellCheck={false}
+              onChange={(e) => {
+                setOther(e.target.value);
+              }}
+            />
+          </label>
+          <button type="submit" className="btn" disabled={!other.trim()}>
+            {Lz(L('Kiểm tra', 'Check'))}
+          </button>
+        </form>
       )}
     </div>
   );

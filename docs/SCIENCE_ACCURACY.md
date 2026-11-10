@@ -218,15 +218,19 @@ phương pháp cho từng phân tử trong app và trong Thẻ Khoa học).
 
 ### Dữ liệu
 
-| Dữ liệu                             | Nguồn                                                  | Tạo bằng                           | Trạng thái |
-| ----------------------------------- | ------------------------------------------------------ | ---------------------------------- | ---------- |
-| Bảng mã di truyền chuẩn (64 bộ ba)  | NCBI Genetic Code, bảng số 1 (qua Biopython 1.88)      | `scripts/data/gen_genetic_code.py` | chờ duyệt  |
-| Bảng số lượng NST ở các kì phân bào | Không nhập tay: **đếm** từ mô hình NST (`division.ts`) | code + test so với bảng SGK        | chờ duyệt  |
-| Bộ phận tế bào (3 tế bào, 21 mục)   | SGK Sinh học 10 KNTT, Bài 7–8 (diễn đạt lại)           | `src/biology/cell/parts.ts` + test | chờ duyệt  |
+| Dữ liệu                              | Nguồn                                                                               | Tạo bằng                            | Trạng thái |
+| ------------------------------------ | ----------------------------------------------------------------------------------- | ----------------------------------- | ---------- |
+| Bảng mã di truyền chuẩn (64 bộ ba)   | NCBI Genetic Code, bảng số 1 (qua Biopython 1.88)                                   | `scripts/data/gen_genetic_code.py`  | chờ duyệt  |
+| Bảng số lượng NST ở các kì phân bào  | Không nhập tay: **đếm** từ mô hình NST (`division.ts`)                              | code + test so với bảng SGK         | chờ duyệt  |
+| Bộ phận tế bào (3 tế bào, 21 mục)    | SGK Sinh học 10 KNTT, Bài 7–8 (diễn đạt lại)                                        | `src/biology/cell/parts.ts` + test  | chờ duyệt  |
+| Kích thước 6 cấp “Từ tế bào đến DNA” | SGK Sinh học 10 KNTT tr. 44, 49; SGK Sinh học 12 KNTT tr. 36–38; Ou và cộng sự 2017 | `scripts/data/gen_cell_dna_zoom.py` | chờ duyệt  |
 
 Mọi chủ đề sinh học khác dùng **công thức** (không có bảng số liệu nhập tay), nên độ tin cậy do
 test tự động bảo đảm. Riêng bài “Tế bào nhân sơ và nhân thực” là **định tính**: bảng bộ phận chỉ
-có chữ (không có số), chờ giáo viên duyệt (`DATA_REVIEW.md`, mục `CELL3D-*`).
+có chữ (không có số), chờ giáo viên duyệt (`DATA_REVIEW.md`, mục `CELL3D-*`). Bài “Từ tế bào đến
+DNA” chỉ dùng **số in trong sách** (kích thước, số histone, số cặp nucleotide) và hằng số B-DNA của
+`bdna.ts`; không tính gì thêm ngoài phép đổi µm → nm và bán kính trục DNA quấn = (10 nm − 2 nm)/2
+(`DATA_REVIEW.md`, mục `DNAZ-*`).
 
 ### Kiểm chứng tự động
 
@@ -246,6 +250,7 @@ có chữ (không có số), chờ giáo viên duyệt (`DATA_REVIEW.md`, mục 
 | Khuếch tán (Fick hai ngăn)          | Bảo toàn lượng chất; cân bằng tại nồng độ trung bình theo thể tích; chuyển động Brown: ⟨r²⟩ = 4Dt (2D)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | đạt     |
 | Thẩm thấu (ống chữ U)               | Tại cân bằng ρgΔh = iCRT (van ’t Hoff, có tính pha loãng); nước luôn đi vào nhánh dung dịch                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | đạt     |
 | Tế bào nhân sơ và nhân thực         | Nhân sơ không có nhân và không có bào quan có màng bao bọc; tế bào động vật không có thành tế bào, lục lạp; tế bào thực vật có thành tế bào, lục lạp, không bào trung tâm; mọi bộ phận có tên vi/en, nguồn + số trang, `pending`; không có chữ số; không kích hoạt nhầm cảnh báo khủng hoảng; hình 2D vẽ đúng các bộ phận của bảng                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | đạt     |
+| Từ tế bào đến DNA                   | Số trong dữ liệu đúng số in trong SGK (tr. 36, 37, 44, 49) và đường kính DNA = hằng số `bdna.ts`; 6 cấp nhỏ dần; thước tỉ lệ là 1, 2 hoặc 5 × 10ᵏ, dài đúng `barNm` trong cả 3D và 2D; cảnh 3D giải phóng hết bộ nhớ (`expectAllFreed`), ngân sách vẽ đo thật; E2E: phóng to có chip “không theo tỉ lệ”, giảm chuyển động thì chuyển cấp ngay, bản 2D cùng số                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | đạt     |
 
 ### Nguyên tắc hiển thị
 
@@ -268,6 +273,14 @@ có chữ (không có số), chờ giáo viên duyệt (`DATA_REVIEW.md`, mục 
 - Tế bào nhân sơ và nhân thực (bản 2D, 0.8.0): hình **định tính**, ghi “Minh họa — không theo tỉ
   lệ; số lượng bào quan chỉ để minh họa”; vị trí, hình dạng, màu chỉ để phân biệt các bộ phận. Tên
   và chức năng diễn đạt lại theo SGK Sinh học 10 KNTT (Bài 7–8), chờ giáo viên duyệt.
+- Từ tế bào đến DNA (0.8.1, #107): mỗi cấp có **một kích thước vẽ đúng số in trong sách** (nhân
+  5 µm, crômatit 700 nm, sợi nhiễm sắc 10 nm, B-DNA 2 nm) và một thước tỉ lệ dài đúng; tế bào vẽ
+  đường kính 20 µm, một giá trị chọn trong khoảng 10–100 µm của SGK (chú thích ghi rõ). Mọi phần
+  khác (bào quan, lỗ màng nhân, hạch nhân, chiều dài cánh NST, số vòng của sợi, số vòng DNA quấn
+  quanh histone, trình tự base) là minh họa. Lúc chuyển giữa hai cấp, hình ghi “không theo tỉ lệ”.
+  Theo SGK Sinh học 12 (H 7.1), sợi 10 nm gắn thẳng vào khung NST; hình **không vẽ sợi 30 nm**, và
+  Thẻ Khoa học ghi lí do (SGK không có cấp này; Ou và cộng sự 2017 không thấy sợi 30 nm trong nhân tế
+  bào người). Cấp nhân và cấp NST kép là hai thời điểm khác nhau của chu kì tế bào (thẻ ghi rõ).
 
 ## 8. Lưu tệp, lịch sử và quá tải (Giai đoạn 6)
 

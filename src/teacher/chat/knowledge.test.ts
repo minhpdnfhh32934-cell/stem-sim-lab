@@ -145,6 +145,12 @@ describe('excerpt for the small on-device prompt', () => {
   });
 });
 
+describe('a question about the conversation itself (#128, scripted run on E2B)', () => {
+  it('"đầu tiên" names no topic: it no longer finds "tiên phong" in the succession note', () => {
+    expect(unambiguousNote('Câu đầu tiên em hỏi là gì?', 'vi')).toEqual([]);
+  });
+});
+
 describe('notes the small prompt can trust (review 2)', () => {
   const motion = builtinKnowledge('vi').find((n) => n.id === 'builtin:physics-motion');
 

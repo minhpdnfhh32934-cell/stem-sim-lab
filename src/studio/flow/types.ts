@@ -19,6 +19,12 @@ export interface SubjectPlugin {
   Predict: ComponentType<StepProps>;
   Interact: ComponentType<StepProps>;
   Observe: ComponentType<StepProps>;
+  /**
+   * The bench's live stage beside the lesson (docs/BENCH_DESIGN.md §9.7): the lab's own scene
+   * at the lesson's inputs. Only physics has one; the others keep their bench or model in the
+   * lesson.
+   */
+  Live?: ComponentType<StepProps>;
   /** Short engine facts repeated next to the conclusion (optional). */
   Facts?: ComponentType<StepProps>;
   /** Sources of the model behind the numbers, listed in the report. */

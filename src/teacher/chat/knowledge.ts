@@ -695,7 +695,7 @@ const FRAME_WORDS =
   đại lượng|điều kiện|đặc điểm|ý nghĩa|vai trò|định nghĩa|khái niệm|nguyên nhân|ứng dụng|
   phương pháp|trường hợp|người ta|tác dụng|thay đổi|
   dự đoán|thí nghiệm|quan sát|kết luận|báo cáo|gợi ý|suy nghĩ|đáp án|kết quả|mô phỏng|
-  so sánh|quan trọng`
+  so sánh|quan trọng|đầu tiên`
     .split('|')
     .map((w) => w.trim())
     .filter(Boolean);

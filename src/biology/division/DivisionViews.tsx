@@ -26,6 +26,7 @@ import {
 } from './division';
 import { scatterLayout } from './layout2d';
 import '../bio.css';
+import { No3dNotice } from '../view3d/No3dNotice';
 
 const CHROMO_LEN = [0.36, 0.28, 0.22, 0.18];
 
@@ -230,7 +231,7 @@ export function DivisionStage({
       <div className="chem-overlay">
         <DivisionControls kind={kind} stages={stages} index={i} />
         {toolbar}
-        {notice && <span className="chem-chip chem-chip--qual">{notice}</span>}
+        {notice && <No3dNotice text={notice} />}
       </div>
       <p className="bio-caption">{Lz(STAGE_NOTE[s.stage])}</p>
     </div>

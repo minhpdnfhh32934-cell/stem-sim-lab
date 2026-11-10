@@ -1,7 +1,10 @@
-import { useSyncExternalStore, type CSSProperties } from 'react';
+import { useEffect, useSyncExternalStore, type CSSProperties } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { BENCH_RAIL, notebookPushes, useLayoutStore } from '@/app/layout/layoutStore';
 import { Stage } from '@/app/layout/Stage';
+import { useSimStore } from '@/app/sim/simStore';
+import { useWorkspaceStore } from '@/app/workspaceStore';
+import { useModuleStore } from '@/modules/moduleStore';
 import { DriverGrid } from './DriverGrid';
 import { Notebook } from './Notebook';
 import { Tray } from './Tray';
@@ -29,6 +32,24 @@ export function BenchFrame() {
     })),
   );
   const viewport = useSyncExternalStore(onResize, () => window.innerWidth);
+  // A physics topic's first visit: its notebook lands on Thử thách when opened (§9.4); the drawer
+  // itself stays as the learner left it (default: closed).
+  const sceneId = useSimStore((s) => s.scene?.id ?? null);
+  useEffect(() => {
+    if (sceneId)
+      useLayoutStore.getState().landOnChallenge(sceneId, useWorkspaceStore.getState().subject);
+  }, [sceneId]);
+  // A view without a tray to work in opens with it folded; the learner's own choice comes back
+  // with the next topic (it is never saved).
+  const fold = useModuleStore((s) => s.active?.view.trayStartsFolded === true);
+  useEffect(() => {
+    if (!fold) return;
+    const before = useLayoutStore.getState().trayFolded;
+    useLayoutStore.getState().setTrayFolded(true);
+    return () => {
+      useLayoutStore.getState().setTrayFolded(before);
+    };
+  }, [fold]);
   const push = layout.notebookOpen && notebookPushes(viewport, layout);
   const style = {
     '--tray-w': `${layout.trayFolded ? BENCH_RAIL : layout.trayWidth}px`,
