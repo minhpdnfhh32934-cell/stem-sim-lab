@@ -16,6 +16,18 @@
 # No fix is available for these locked versions: glib >= 0.20 exists only with the GTK4
 # bindings, and Tauri, wry and tao still use GTK3 / webkit2gtk 4.1. Remove both entries when
 # Tauri moves to GTK4 (`cargo audit` then no longer lists them).
+#
+# Reviewed 2026-11-03: the zvariant family (advisories of 2026-10-16) comes only from the Linux
+# D-Bus backend of the opener plugin, which is not compiled for Windows (`cargo tree -i zbus
+# --target x86_64-pc-windows-msvc` prints nothing). The app code does not use D-Bus.
+#
+#   tauri-plugin-opener 2.7.0 -> zbus 5.19.0 (and zbus_macros 5.19.0)
+#     -> zvariant 5.15.0 -> zvariant_derive 5.15.0; zbus_names 4.3.4 -> zvariant
+#
+# The crates were merged into zbus 6.0.0 (its `wire` module), but no tauri-plugin-opener uses
+# zbus 6 yet (2.7.2 is the latest stable; 3.0.0-alpha.3 still requires zbus ^5.9). Remove the
+# three entries when the opener plugin moves to zbus >= 6 (`cargo audit` then no longer lists
+# them).
 [advisories]
 ignore = [
   # glib 0.18.5: unsound `VariantStrIter` iterator impls. Linux-only (see above).
@@ -23,4 +35,10 @@ ignore = [
   # proc-macro-error 1.0.4: unmaintained. Compile-time proc-macro of glib-macros and
   # gtk3-macros only, Linux-only; nothing of it ends up in a binary.
   "RUSTSEC-2024-0370",
+  # zvariant 5.15.0: unmaintained (merged into zbus 6). Linux-only (see above).
+  "RUSTSEC-2026-0370",
+  # zbus_names 4.3.4: unmaintained (merged into zbus 6). Linux-only (see above).
+  "RUSTSEC-2026-0371",
+  # zvariant_derive 5.15.0: unmaintained (merged into zbus 6). Proc-macro of zvariant, Linux-only.
+  "RUSTSEC-2026-0372",
 ]

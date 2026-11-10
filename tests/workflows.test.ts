@@ -495,7 +495,7 @@ describe('release.yml: mandatory-update floor', () => {
 });
 
 describe('dependency checks', () => {
-  it('fail cargo audit on any unsound or yanked crate except the two reviewed GTK3 notices', () => {
+  it('fail cargo audit on any unsound or yanked crate except the reviewed Linux-only notices', () => {
     const audit = job(read('security.yml'), 'cargo-audit');
     const commands = runScripts(audit).filter((s) => s.startsWith('cargo audit'));
     expect(commands).toEqual(['cargo audit --deny unsound --deny yanked']);
@@ -505,6 +505,10 @@ describe('dependency checks', () => {
     expect(ignore.match(/RUSTSEC-\d{4}-\d{4}/g)).toEqual([
       'RUSTSEC-2024-0429',
       'RUSTSEC-2024-0370',
+      // Linux-only zbus stack of tauri-plugin-opener (reviewed 2026-11-03).
+      'RUSTSEC-2026-0370',
+      'RUSTSEC-2026-0371',
+      'RUSTSEC-2026-0372',
     ]);
   });
 
