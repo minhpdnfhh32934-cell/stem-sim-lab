@@ -258,6 +258,7 @@ const en: Messages = {
       gemma: 'Use Gemma on this computer',
       gemmaDesc: 'Downloads {size}, sends nothing online.',
     },
+    isAi: 'An AI',
   },
   layout: {
     resizeLeft: 'Drag to resize the Library',

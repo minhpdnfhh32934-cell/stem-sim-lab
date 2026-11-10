@@ -260,6 +260,7 @@ const vi = {
       gemma: 'Dùng Gemma trên máy này',
       gemmaDesc: 'Tải {size}, không gửi gì lên mạng.',
     },
+    isAi: 'Là một AI',
   },
   layout: {
     resizeLeft: 'Kéo để đổi độ rộng Thư viện',

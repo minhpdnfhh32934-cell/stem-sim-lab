@@ -1768,3 +1768,38 @@ button.bench-door--lab:hover {
 .bench-studio-room > .bench-studio {
   grid-area: main;
 }
+
+/* Settings sheet (§9.9): 1200×688, a 256 px grouped nav, group titles 12/16 600 muted. */
+:root[data-shell='bench'] .dialog.settings-dialog {
+  width: min(1200px, calc(100vw - 32px));
+  height: min(688px, calc(100vh - 80px));
+}
+:root[data-shell='bench'] .settings-layout {
+  grid-template-columns: 256px minmax(0, 1fr);
+}
+:root[data-shell='bench'] .settings-nav__group-title {
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+/* Palette (§9.10): 88 px from the top, rows 44. */
+:root[data-shell='bench'] .command-palette {
+  margin-top: 88px;
+}
+:root[data-shell='bench'] .command-palette__item {
+  min-height: 44px;
+}
+.teacher__is-ai {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 0 var(--space-2);
+  border: 1px solid var(--border-input);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 16px;
+  white-space: nowrap;
+}
