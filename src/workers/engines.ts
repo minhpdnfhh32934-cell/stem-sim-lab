@@ -68,3 +68,8 @@ registerEngine('phys.field', async () => {
   const { FieldEngine } = await import('@/physics/field/engine');
   return () => new FieldEngine();
 });
+
+registerEngine('phys.resonance', async () => {
+  const { ResonanceEngine } = await import('@/physics/resonance/engine');
+  return () => new ResonanceEngine();
+});

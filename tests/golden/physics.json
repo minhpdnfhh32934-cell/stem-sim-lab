@@ -1804,6 +1804,91 @@
       "expectUnsupportedParts": false
     },
     {
+      "id": "res-01",
+      "text": "Một con lắc lò xo nằm ngang gồm vật nặng 0,5 kg và lò xo có độ cứng 50 N/m, hệ số cản 0,5 kg/s, chịu tác dụng của ngoại lực F = 1cos(8t) (N). Tính biên độ dao động khi đã ổn định.",
+      "topic": "forcedOscillation",
+      "quantities": [
+        {
+          "key": "m",
+          "value": 0.5,
+          "unit": "kg",
+          "quote": "vật nặng 0,5 kg"
+        },
+        {
+          "key": "k",
+          "value": 50,
+          "unit": "N/m",
+          "quote": "độ cứng 50 N/m"
+        },
+        {
+          "key": "b",
+          "value": 0.5,
+          "unit": "kg/s",
+          "quote": "hệ số cản 0,5 kg/s"
+        },
+        {
+          "key": "F0",
+          "value": 1,
+          "unit": "N",
+          "quote": "F = 1cos(8t) (N)"
+        },
+        {
+          "key": "Omega",
+          "value": 8,
+          "unit": "rad/s",
+          "quote": "F = 1cos(8t) (N)"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "A": 0.05423261445466404
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "res-02",
+      "text": "Vật khối lượng 200 g gắn vào lò xo có độ cứng 20 N/m, hệ số cản 0,2 kg/s, dao động dưới tác dụng của ngoại lực biên độ 0,5 N, tần số góc 12 rad/s. Tính biên độ dao động ổn định và tần số góc của ngoại lực để xảy ra cộng hưởng.",
+      "topic": "forcedOscillation",
+      "quantities": [
+        {
+          "key": "m",
+          "value": 0.2,
+          "unit": "kg",
+          "quote": "khối lượng 200 g"
+        },
+        {
+          "key": "k",
+          "value": 20,
+          "unit": "N/m",
+          "quote": "độ cứng 20 N/m"
+        },
+        {
+          "key": "b",
+          "value": 0.2,
+          "unit": "kg/s",
+          "quote": "hệ số cản 0,2 kg/s"
+        },
+        {
+          "key": "F0",
+          "value": 0.5,
+          "unit": "N",
+          "quote": "biên độ 0,5 N"
+        },
+        {
+          "key": "Omega",
+          "value": 12,
+          "unit": "rad/s",
+          "quote": "tần số góc 12 rad/s"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "A": 0.05481612620668933,
+        "omegaR": 9.974968671630002
+      },
+      "expectUnsupportedParts": false
+    },
+    {
       "id": "ng-01",
       "text": "Một mạch điện gồm điện trở 10 Ω mắc vào hai cực của một nguồn điện có hiệu điện thế 12 V. Tính cường độ dòng điện chạy qua điện trở.",
       "topic": "unsupported",

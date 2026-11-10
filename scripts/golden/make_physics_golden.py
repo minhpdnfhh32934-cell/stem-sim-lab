@@ -704,6 +704,42 @@ add(
     missing=["xP", "yP"],
 )
 
+# --- Dao động cưỡng bức và cộng hưởng (VL11 Bài 6) -------------------------------------
+def _forced_amp(m, k, b, F0, W):
+    w0 = math.sqrt(k / m)
+    g = b / (2 * m)
+    return (F0 / m) / math.hypot(w0 * w0 - W * W, 2 * g * W)
+
+
+add(
+    "res-01",
+    "Một con lắc lò xo nằm ngang gồm vật nặng 0,5 kg và lò xo có độ cứng 50 N/m, hệ số cản 0,5 kg/s, chịu tác dụng của ngoại lực F = 1cos(8t) (N). Tính biên độ dao động khi đã ổn định.",
+    "forcedOscillation",
+    [
+        q("m", 0.5, "kg", "vật nặng 0,5 kg"),
+        q("k", 50, "N/m", "độ cứng 50 N/m"),
+        q("b", 0.5, "kg/s", "hệ số cản 0,5 kg/s"),
+        q("F0", 1, "N", "F = 1cos(8t) (N)"),
+        q("Omega", 8, "rad/s", "F = 1cos(8t) (N)"),
+    ],
+    {"A": _forced_amp(0.5, 50, 0.5, 1, 8)},
+)
+add(
+    "res-02",
+    "Vật khối lượng 200 g gắn vào lò xo có độ cứng 20 N/m, hệ số cản 0,2 kg/s, dao động dưới tác dụng của ngoại lực biên độ 0,5 N, tần số góc 12 rad/s. Tính biên độ dao động ổn định và tần số góc của ngoại lực để xảy ra cộng hưởng.",
+    "forcedOscillation",
+    [
+        q("m", 0.2, "kg", "khối lượng 200 g"),
+        q("k", 20, "N/m", "độ cứng 20 N/m"),
+        q("b", 0.2, "kg/s", "hệ số cản 0,2 kg/s"),
+        q("F0", 0.5, "N", "biên độ 0,5 N"),
+        q("Omega", 12, "rad/s", "tần số góc 12 rad/s"),
+    ],
+    {
+        "A": _forced_amp(0.2, 20, 0.2, 0.5, 12),
+        "omegaR": math.sqrt(20 / 0.2 - 2 * (0.2 / (2 * 0.2)) ** 2),
+    },
+)
 # --- Ngoài phạm vi ------------------------------------------------------------------
 add(
     "ng-01",
