@@ -23,6 +23,7 @@ const TOPICS: readonly (readonly [string, string])[] = [
   ['Chuyển động tròn đều', 'Chuyển động tròn đều'],
   ['Sóng dừng trên dây', 'Sóng dừng trên dây'],
   ['Điện trường của điện tích điểm', 'Điện trường của điện tích điểm'],
+  ['Định luật II Kepler', 'Định luật II Kepler'],
 ];
 
 async function openPhysicsLibrary(page: Page) {

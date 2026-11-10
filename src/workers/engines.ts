@@ -63,3 +63,8 @@ registerEngine('phys.field', async () => {
   const { FieldEngine } = await import('@/physics/field/engine');
   return () => new FieldEngine();
 });
+
+registerEngine('phys.kepler', async () => {
+  const { KeplerEngine } = await import('@/physics/kepler/engine');
+  return () => new KeplerEngine();
+});

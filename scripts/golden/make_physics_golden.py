@@ -603,6 +603,14 @@ add(
     missing=["xP", "yP"],
 )
 
+# --- Định luật II Kepler (mở rộng, ngoài SGK) ------------------------------------------
+add(
+    "kp-01",
+    "Một hành tinh chuyển động quanh Mặt Trời trên quỹ đạo elip có tâm sai 0,2. Tính tỉ số giữa tốc độ của hành tinh ở điểm cận nhật và ở điểm viễn nhật.",
+    "keplerOrbit",
+    [q("e", 0.2, "1", "tâm sai 0,2")],
+    {"speedRatio": (1 + 0.2) / (1 - 0.2)},
+)
 # --- Ngoài phạm vi ------------------------------------------------------------------
 add(
     "ng-01",

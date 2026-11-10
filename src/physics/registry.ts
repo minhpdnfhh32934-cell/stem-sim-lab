@@ -21,6 +21,7 @@ const SCENES: Record<string, () => Promise<PhysicsScene>> = {
   uniformCircularMotion: () => import('./circular/scenes').then((m) => m.uniformCircularMotion),
   standingWave: () => import('./wave/scenes').then((m) => m.standingWave),
   electricField: () => import('./field/scenes').then((m) => m.electricField),
+  keplerOrbit: () => import('./kepler/scenes').then((m) => m.keplerOrbit),
 };
 
 export function hasScene(topicId: string): boolean {

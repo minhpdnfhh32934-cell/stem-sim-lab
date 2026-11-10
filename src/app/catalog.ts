@@ -49,6 +49,7 @@ export const CATALOG: Record<Subject, ChapterEntry[]> = {
     chapter('circularMotion', ['uniformCircularMotion']),
     chapter('waves', ['standingWave']),
     chapter('electricField', ['electricField']),
+    chapter('gravitation', ['keplerOrbit']),
   ],
   chemistry: [
     chapter('atoms', ['periodicTable', 'electronConfiguration', 'bohrModel', 'orbitals']),

@@ -89,6 +89,7 @@ const en: Messages = {
     circularMotion: 'Uniform circular motion',
     waves: 'Waves',
     electricField: 'Electric field',
+    gravitation: 'Gravitation (extension)',
   },
   topics: {
     uniformMotion: 'Uniform linear motion',
@@ -131,6 +132,7 @@ const en: Messages = {
     uniformCircularMotion: 'Uniform circular motion',
     standingWave: 'Standing waves on a string',
     electricField: 'Electric field of point charges',
+    keplerOrbit: 'Kepler’s second law',
   },
   stage: {
     regionLabel: 'Simulation stage',

@@ -92,6 +92,7 @@ const vi = {
     circularMotion: 'Chuyển động tròn đều',
     waves: 'Sóng',
     electricField: 'Điện trường',
+    gravitation: 'Hấp dẫn (mở rộng)',
   },
   topics: {
     uniformMotion: 'Chuyển động thẳng đều',
@@ -134,6 +135,7 @@ const vi = {
     uniformCircularMotion: 'Chuyển động tròn đều',
     standingWave: 'Sóng dừng trên dây',
     electricField: 'Điện trường của điện tích điểm',
+    keplerOrbit: 'Định luật II Kepler',
   },
   stage: {
     regionLabel: 'Khung mô phỏng',

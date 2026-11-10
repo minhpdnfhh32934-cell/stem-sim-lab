@@ -2476,6 +2476,12 @@
    "subject": "biology",
    "reason": "Tên Bài 18, 21 là di truyền học quần thể và học thuyết tiến hoá tổng hợp hiện đại, không nêu phiêu bạt di truyền. Bài có thể liên quan: SH12 Bài 18, 21.",
    "review_status": "pending"
+  },
+  {
+   "topic": "keplerOrbit",
+   "subject": "physics",
+   "reason": "Không bài nào trong ba cuốn Vật lí có tên về định luật Kepler; chuyên đề học tập không thuộc 9 cuốn nên giáo viên kiểm. Bài có thể liên quan: — (ngoài 9 cuốn; có thể thuộc chuyên đề Vật lí 11 “Trường hấp dẫn”).",
+   "review_status": "pending"
   }
  ]
 }
