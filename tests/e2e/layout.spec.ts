@@ -9,7 +9,11 @@ test.use({ viewport: { width: 1366, height: 768 } });
 
 /** Plot area (uPlot's `.u-over`) a learner can still read: at least four y values. */
 const MIN_PLOT_HEIGHT = 80;
-/** Physics lessons with a view of their own: no engine run, no graph tab (see fourier.spec.ts). */
+/**
+ * Physics lessons with a view of their own: the bottom panel shows the module's table, with no
+ * graph tab and no Run (waiting for the tab ran into the 5 min timeout). fourier.spec.ts checks
+ * the lesson's figure at 1366 × 768 instead.
+ */
 const OWN_VIEW = ['Hoạ âm và chuỗi Fourier'];
 
 interface Rect {
