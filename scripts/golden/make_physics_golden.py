@@ -740,6 +740,14 @@ add(
         "omegaR": math.sqrt(20 / 0.2 - 2 * (0.2 / (2 * 0.2)) ** 2),
     },
 )
+# --- Định luật II Kepler (mở rộng, ngoài SGK) ------------------------------------------
+add(
+    "kp-01",
+    "Một hành tinh chuyển động quanh Mặt Trời trên quỹ đạo elip có tâm sai 0,2. Tính tỉ số giữa tốc độ của hành tinh ở điểm cận nhật và ở điểm viễn nhật.",
+    "keplerOrbit",
+    [q("e", 0.2, "1", "tâm sai 0,2")],
+    {"speedRatio": (1 + 0.2) / (1 - 0.2)},
+)
 # --- Ngoài phạm vi ------------------------------------------------------------------
 # --- Mạch điện một chiều (VL11 Bài 23–25) ------------------------------------
 # layout: 0 = 1 điện trở, 1 = 2 nối tiếp, 3 = 2 song song. Đề không cho r: rInt mặc định 0 (không ghi).

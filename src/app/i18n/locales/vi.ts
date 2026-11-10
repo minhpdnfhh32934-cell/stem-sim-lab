@@ -94,6 +94,7 @@ const vi = {
     electricField: 'Điện trường',
     crystals: 'Tinh thể',
     dcCircuit: 'Dòng điện, mạch điện',
+    gravitation: 'Hấp dẫn (mở rộng)',
   },
   topics: {
     uniformMotion: 'Chuyển động thẳng đều',
@@ -142,6 +143,7 @@ const vi = {
     crystalStructure: 'Tinh thể kim loại và NaCl',
     forcedOscillation: 'Dao động cưỡng bức và cộng hưởng',
     dcCircuit: 'Mạch điện một chiều',
+    keplerOrbit: 'Định luật II Kepler',
   },
   stage: {
     regionLabel: 'Khung mô phỏng',

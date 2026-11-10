@@ -324,6 +324,22 @@ export const CHALLENGES: readonly Challenge[] = [
       'Too small an R₁ gives a small U, too large a small I. Compare R₁ with the internal resistance r.',
     ),
   },
+  {
+    id: 'keplerOrbit.ratio3',
+    topic: 'keplerOrbit',
+    title: L('Nhanh gấp 3 lần ở cận nhật', 'Three times faster at perihelion'),
+    task: L(
+      'Chỉnh tâm sai e của quỹ đạo để tốc độ của hành tinh ở cận nhật gấp 3 lần tốc độ ở viễn nhật.',
+      'Adjust the eccentricity e so that the planet moves three times faster at perihelion than at aphelion.',
+    ),
+    controls: ['e'],
+    start: { e: 0.2, N: 6, T: 12 },
+    goal: { answer: 'speedRatio', kind: 'target', value: 3, tol: 0.05 },
+    hint: L(
+      'Ở hai đầu trục lớn, r·v như nhau: tỉ số tốc độ bằng tỉ số khoảng cách viễn nhật và cận nhật.',
+      'At both ends of the major axis r·v is the same: the speed ratio equals the aphelion-to-perihelion distance ratio.',
+    ),
+  },
 ];
 
 export function challengesFor(topic: string): Challenge[] {

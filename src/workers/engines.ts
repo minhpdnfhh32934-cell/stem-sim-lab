@@ -77,3 +77,8 @@ registerEngine('phys.circuit', async () => {
   const { CircuitEngine } = await import('@/physics/circuit/engine');
   return () => new CircuitEngine();
 });
+
+registerEngine('phys.kepler', async () => {
+  const { KeplerEngine } = await import('@/physics/kepler/engine');
+  return () => new KeplerEngine();
+});

@@ -91,6 +91,7 @@ const en: Messages = {
     electricField: 'Electric field',
     crystals: 'Crystals',
     dcCircuit: 'Current and circuits',
+    gravitation: 'Gravitation (extension)',
   },
   topics: {
     uniformMotion: 'Uniform linear motion',
@@ -139,6 +140,7 @@ const en: Messages = {
     crystalStructure: 'Metal crystals and NaCl',
     forcedOscillation: 'Forced oscillation and resonance',
     dcCircuit: 'Direct-current circuit',
+    keplerOrbit: 'Kepler’s second law',
   },
   stage: {
     regionLabel: 'Simulation stage',

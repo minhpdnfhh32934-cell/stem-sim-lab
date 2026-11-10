@@ -1889,6 +1889,24 @@
       "expectUnsupportedParts": false
     },
     {
+      "id": "kp-01",
+      "text": "Một hành tinh chuyển động quanh Mặt Trời trên quỹ đạo elip có tâm sai 0,2. Tính tỉ số giữa tốc độ của hành tinh ở điểm cận nhật và ở điểm viễn nhật.",
+      "topic": "keplerOrbit",
+      "quantities": [
+        {
+          "key": "e",
+          "value": 0.2,
+          "unit": "1",
+          "quote": "tâm sai 0,2"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "speedRatio": 1.4999999999999998
+      },
+      "expectUnsupportedParts": false
+    },
+    {
       "id": "dc-01",
       "text": "Một mạch điện gồm điện trở 10 Ω mắc vào hai cực của một nguồn điện có hiệu điện thế 12 V. Tính cường độ dòng điện chạy qua điện trở.",
       "topic": "dcCircuit",

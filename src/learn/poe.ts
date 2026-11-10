@@ -271,6 +271,19 @@ export const POES: readonly Poe[] = [
     // layout 5 = R₁ nt (R₂ ∥ R₃).
     start: { layout: 5 },
   },
+  {
+    id: 'keplerOrbit.e',
+    topic: 'keplerOrbit',
+    param: 'e',
+    factor: 2,
+    answer: 'speedRatio',
+    question: L(
+      'Quỹ đạo có tâm sai 0,2 (SimLab đặt sẵn khi bạn bấm “Chạy để kiểm tra”): nếu tâm sai tăng gấp đôi thì tỉ số tốc độ ở cận nhật và ở viễn nhật tăng, giảm hay không đổi?',
+      'An orbit of eccentricity 0.2 (SimLab sets it when you press “Run to check”): if the eccentricity doubles, does the ratio of the perihelion and aphelion speeds go up, down or stay the same?',
+    ),
+    choices: DIRS,
+    start: { e: 0.2, N: 6, T: 12 },
+  },
 ];
 
 export function poeFor(topic: string): Poe | undefined {
