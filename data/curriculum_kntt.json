@@ -2562,6 +2562,12 @@
    "subject": "physics",
    "reason": "Không bài nào trong ba cuốn Vật lí có tên về định luật Kepler; chuyên đề học tập không thuộc 9 cuốn nên giáo viên kiểm. Bài có thể liên quan: — (ngoài 9 cuốn; có thể thuộc chuyên đề Vật lí 11 “Trường hấp dẫn”).",
    "review_status": "pending"
+  },
+  {
+   "topic": "fourierSeries",
+   "subject": "physics",
+   "reason": "Không bài nào có tên về hoạ âm hay chuỗi Fourier; hoạ âm của dây chỉ là một phần của Bài 13 (sóng dừng). Bài có thể liên quan: VL11 Bài 13 (mở rộng).",
+   "review_status": "pending"
   }
  ]
 }

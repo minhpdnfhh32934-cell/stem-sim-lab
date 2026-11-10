@@ -24,6 +24,7 @@ const TOPICS: readonly (readonly [string, string])[] = [
   ['Chuyển động tròn đều', 'Chuyển động tròn đều'],
   ['Giao thoa sóng hai nguồn', 'Giao thoa sóng hai nguồn'],
   ['Sóng dừng trên dây', 'Sóng dừng trên dây'],
+  ['Hoạ âm và chuỗi Fourier', 'Hoạ âm và chuỗi Fourier'],
   ['Điện trường của điện tích điểm', 'Điện trường của điện tích điểm'],
   ['Mạch điện một chiều', 'Mạch điện một chiều'],
   ['Định luật II Kepler', 'Định luật II Kepler'],

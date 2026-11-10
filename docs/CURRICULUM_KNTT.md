@@ -332,3 +332,4 @@ Tên bài SGK chưa nói rõ chủ đề, hoặc không có bài nào: để "Ch
 | Hoá học | Chuẩn độ acid – base | Tên Bài 2 là cân bằng trong dung dịch nước, không nêu chuẩn độ acid – base. Bài có thể liên quan: HH11 Bài 2. | pending |
 | Sinh học | Phiêu bạt di truyền | Tên Bài 18, 21 là di truyền học quần thể và học thuyết tiến hoá tổng hợp hiện đại, không nêu phiêu bạt di truyền. Bài có thể liên quan: SH12 Bài 18, 21. | pending |
 | Vật lí | Định luật II Kepler | Không bài nào trong ba cuốn Vật lí có tên về định luật Kepler; chuyên đề học tập không thuộc 9 cuốn nên giáo viên kiểm. Bài có thể liên quan: — (ngoài 9 cuốn; có thể thuộc chuyên đề Vật lí 11 “Trường hấp dẫn”). | pending |
+| Vật lí | Hoạ âm và chuỗi Fourier | Không bài nào có tên về hoạ âm hay chuỗi Fourier; hoạ âm của dây chỉ là một phần của Bài 13 (sóng dừng). Bài có thể liên quan: VL11 Bài 13 (mở rộng). | pending |

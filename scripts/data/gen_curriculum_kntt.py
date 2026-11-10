@@ -515,6 +515,7 @@ UNPLACED = [
     ("acidBaseTitration", "chemistry", "HH11 Bài 2", "Tên Bài 2 là cân bằng trong dung dịch nước, không nêu chuẩn độ acid – base."),
     ("geneticDrift", "biology", "SH12 Bài 18, 21", "Tên Bài 18, 21 là di truyền học quần thể và học thuyết tiến hoá tổng hợp hiện đại, không nêu phiêu bạt di truyền."),
     ("keplerOrbit", "physics", "— (ngoài 9 cuốn; có thể thuộc chuyên đề Vật lí 11 “Trường hấp dẫn”)", "Không bài nào trong ba cuốn Vật lí có tên về định luật Kepler; chuyên đề học tập không thuộc 9 cuốn nên giáo viên kiểm."),
+    ("fourierSeries", "physics", "VL11 Bài 13 (mở rộng)", "Không bài nào có tên về hoạ âm hay chuỗi Fourier; hoạ âm của dây chỉ là một phần của Bài 13 (sóng dừng)."),
 ]
 
 # Lessons of 0.8.0 Part A (plan #37 §4.2): listed in the document before their topics exist.

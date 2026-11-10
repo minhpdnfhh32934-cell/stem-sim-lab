@@ -144,6 +144,7 @@ const vi = {
     forcedOscillation: 'Dao động cưỡng bức và cộng hưởng',
     dcCircuit: 'Mạch điện một chiều',
     keplerOrbit: 'Định luật II Kepler',
+    fourierSeries: 'Hoạ âm và chuỗi Fourier',
   },
   stage: {
     regionLabel: 'Khung mô phỏng',

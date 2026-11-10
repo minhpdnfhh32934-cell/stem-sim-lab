@@ -141,6 +141,7 @@ const en: Messages = {
     forcedOscillation: 'Forced oscillation and resonance',
     dcCircuit: 'Direct-current circuit',
     keplerOrbit: 'Kepler’s second law',
+    fourierSeries: 'Harmonics and Fourier series',
   },
   stage: {
     regionLabel: 'Simulation stage',
