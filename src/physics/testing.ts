@@ -41,6 +41,27 @@ export function sliderSweep(
   });
 }
 
+/**
+ * Slider end points: every slider at its minimum, every one at its maximum, and each one alone at
+ * either end with the others at their defaults (choices and toggles at their defaults).
+ */
+export function sliderEnds(scene: PhysicsScene): Params[] {
+  const sliders = scene.params.filter(
+    (d) => d.kind !== 'choice' && d.kind !== 'toggle' && d.min !== undefined && d.max !== undefined,
+  );
+  const end = (d: (typeof sliders)[number], hi: boolean) =>
+    toSI((hi ? d.max : d.min) ?? 0, d.unit ?? '1');
+  const all = (hi: boolean): Params => Object.fromEntries(sliders.map((d) => [d.key, end(d, hi)]));
+  return [
+    { ...scene.defaults, ...all(false) },
+    { ...scene.defaults, ...all(true) },
+    ...sliders.flatMap((d) => [
+      { ...scene.defaults, [d.key]: end(d, false) },
+      { ...scene.defaults, [d.key]: end(d, true) },
+    ]),
+  ];
+}
+
 /** Answers whose check the solution panel would show as "chưa khớp" (empty: all agree). */
 export function checkMisses(
   scene: PhysicsScene,

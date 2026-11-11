@@ -51,14 +51,18 @@ export function resonance(o: Forced): { W: number; A: number } | null {
   return { W: Math.sqrt(r2), A: o.F0 / o.m / (2 * g * Math.sqrt(w0 * w0 - g * g)) };
 }
 
+/** The free (transient) part x_h, v_h at time t: what the start adds to the steady motion. */
+export function freePart(o: Forced, t: number): [number, number] {
+  const { A, phi } = steady(o);
+  return propagate(o, o.x0 - A * Math.cos(phi), o.v0 - A * o.W * Math.sin(phi), t);
+}
+
 /** Position, velocity, acceleration and driving force at time t. */
 export function stateAt(o: Forced, t: number): { x: number; v: number; a: number; Fd: number } {
   const { A, phi } = steady(o);
-  const xp = (s: number) => A * Math.cos(o.W * s - phi);
-  const vp = (s: number) => -A * o.W * Math.sin(o.W * s - phi);
-  const [xh, vh] = propagate(o, o.x0 - xp(0), o.v0 - vp(0), t);
-  const x = xh + xp(t);
-  const v = vh + vp(t);
+  const [xh, vh] = freePart(o, t);
+  const x = xh + A * Math.cos(o.W * t - phi);
+  const v = vh - A * o.W * Math.sin(o.W * t - phi);
   const Fd = o.F0 * Math.cos(o.W * t);
   return { x, v, a: (Fd - o.k * x - o.b * v) / o.m, Fd };
 }

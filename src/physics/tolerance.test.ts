@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { loadScene, sceneIds } from './registry';
-import { sliderSweep } from './testing';
+import { sliderEnds, sliderSweep } from './testing';
 import { CHECK_FLOOR, CHECK_TOL, compareCheck } from './tolerance';
 
 describe('compareCheck: one rule for "khớp" (#119)', () => {
@@ -29,17 +29,36 @@ describe('compareCheck: one rule for "khớp" (#119)', () => {
   });
 });
 
-describe('every physics scene: its checks agree over a slider sweep', () => {
-  it('no answer on any slider setting reads "chưa khớp"', async () => {
+/**
+ * Answers whose check is left out on some inputs by design (`check` absent, never a weaker one).
+ * Every other answer that is checked somewhere is checked on every swept input.
+ */
+const CONDITIONAL_CHECK: Record<string, string> = {
+  'simplePendulum.period': 'only without damping and when the pendulum swings back',
+  'energyConservation.v_low': 'not from the lowest point, nor when the body never gets there',
+  'interference.beat_frequency': 'only close frequencies and a short enough beat (solution note)',
+  'interference.beat_period': 'only close frequencies and a short enough beat (solution note)',
+  'electricField.E': 'point charges where E > 0; between plates E = U/d is the definition',
+};
+
+describe('every physics scene: its checks agree over a slider sweep and the slider ends', () => {
+  it('no answer reads "chưa khớp", and no check goes missing', async () => {
     const misses: string[] = [];
+    const seen = new Map<string, { checked: number; missing: string[] }>();
     let checked = 0;
     for (const id of sceneIds()) {
       const scene = await loadScene(id);
-      for (const p of sliderSweep(scene, 300, 119)) {
+      for (const p of [...sliderSweep(scene, 300, 119), ...sliderEnds(scene)]) {
         if ((scene.validate?.(p) ?? []).length > 0) continue;
         for (const a of scene.solve(p, 'vi').answers) {
-          if (a.check === undefined) continue;
+          const s = seen.get(`${id}.${a.id}`) ?? { checked: 0, missing: [] };
+          seen.set(`${id}.${a.id}`, s);
+          if (a.check === undefined) {
+            s.missing.push(JSON.stringify(p));
+            continue;
+          }
           checked++;
+          s.checked++;
           if (!compareCheck(a.value, a.check, a.checkTol).agrees)
             misses.push(
               `${id}.${a.id} ${String(a.value)} vs ${String(a.check)} ${JSON.stringify(p)}`,
@@ -49,5 +68,9 @@ describe('every physics scene: its checks agree over a slider sweep', () => {
     }
     expect(misses).toEqual([]);
     expect(checked).toBeGreaterThan(10_000);
+    const lost = [...seen]
+      .filter(([key, s]) => s.checked > 0 && s.missing.length > 0 && !(key in CONDITIONAL_CHECK))
+      .map(([key, s]) => `${key} (${String(s.missing.length)}×) ${s.missing[0] ?? ''}`);
+    expect(lost).toEqual([]);
   }, 60_000);
 });
