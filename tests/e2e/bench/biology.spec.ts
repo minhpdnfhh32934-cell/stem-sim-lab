@@ -213,7 +213,10 @@ test('cell structure: a part opens its card; targets >= 40 px, no horizontal scr
   await expect(card.locator('strong')).toHaveText('Lục lạp');
   await expect(card).toContainText('quang hợp');
   // The plant has the longest list; the cell switch and "Hiện tên" (in the 3D view's corner
-  // since the cell has a 3D view, over the 2D picture otherwise) are targets too.
+  // since the cell has a 3D view, over the 2D picture otherwise) are targets too. The view loads
+  // lazily: counted before it was on screen, the list came out one short (seen after the
+  // every-topic test in the same worker, on main too).
+  await expect(page.getByRole('button', { name: 'Hiện tên các bộ phận' })).toBeVisible();
   const sizes = await page
     .locator(
       '.cell-parts .segmented__item, .cell-parts .m3d-parts__item, button[aria-label="Hiện tên các bộ phận"]',
