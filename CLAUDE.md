@@ -486,8 +486,8 @@ Progress log: `docs/PROGRESS.md`.
   `basicSplit` (`src/app/sim/basicParams.ts`, first 5 params + any from the problem/user), no data
   tab/CSV, no Object section, toolbar without protractor/stopwatch/trail. New panels must respect it.
 - Library views: `src/app/levels.ts` (`chaptersFor(grade, subject)`: switch "Lớp 10 · 11 · 12 · Tất
-  cả", a grade = textbook chapters + "Bài n", empty → "Xem tất cả"; onboarding asks the grade, home
-  suggests by it). The grade never reaches the AI: `Level` stays `foundation` for `LEVEL_HINT`
+  cả", a grade = textbook chapters + "Bài n", empty → "Xem tất cả"; onboarding asks the grade and
+  the shelf opens on it). The grade never reaches the AI: `Level` stays `foundation` for `LEVEL_HINT`
   (`chatService.ts`) and Science Studio's level field. **Curriculum mapping
   (user decision 2026-10-22, plan #37 §3.3, replaces "never fill it without a teacher"):** topics are
   placed in grades/lessons only from the official KNTT tables of contents, by the script
