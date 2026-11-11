@@ -7,6 +7,7 @@ import { timelineFor, useMitosis3D } from '@/biology/division/mitosis3d/store';
 import type { Stage3D } from '@/biology/division/mitosis3d/timeline';
 import { useDivisionStore } from '@/biology/division/state';
 import { useProgressStore } from '@/learn/progressStore';
+import { usePerfStore } from '@/perf/perfStore';
 import StudioScreen from '../StudioScreen';
 import { useStudioStore } from '../studioStore';
 
@@ -48,6 +49,27 @@ const answer = (n: number) =>
   screen.getByRole('button', { name: new RegExp(`^Trả lời chức năng ${String(n)} `) });
 
 describe('Biology Studio on the 3D mitosis model', () => {
+  it('the model says slow motion and a lower display quality, as the lab stage does (B8)', async () => {
+    const user = userEvent.setup();
+    render(<StudioScreen />);
+    await user.click(screen.getByRole('radio', { name: 'Kì đầu' }));
+    await user.click(next());
+    const model = within(
+      screen.getByRole('img', { name: 'Mô hình nguyên phân (thử)' }).parentElement as HTMLElement,
+    );
+    expect(model.queryByRole('status')).toBeNull();
+    act(() => {
+      usePerfStore.setState({ timeScale: 0.5, degraded: true });
+    });
+    const notes = model.getByRole('status');
+    expect(notes).toHaveTextContent('Chuyển động chậm ×0,5 để giữ độ chính xác');
+    expect(notes).toHaveTextContent('Đã hạ chất lượng hiển thị để giữ độ mượt (số liệu không đổi)');
+    act(() => {
+      usePerfStore.setState({ timeScale: 1, degraded: false });
+    });
+    expect(model.queryByRole('status')).toBeNull();
+  });
+
   it('Predict → model (stages + find the parts) → Observe → Explain → Conclude → Report', async () => {
     const user = userEvent.setup();
     render(<StudioScreen />);

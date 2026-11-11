@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { PerfNotes } from '@/app/layout/PerfNotes';
 import { Mitosis3DParts } from '@/biology/division/mitosis3d/panels';
 import { MitosisStage } from '@/biology/division/views';
 import type { StepProps } from '../flow/types';
@@ -22,6 +23,8 @@ export function ModelStep(props: StepProps) {
     <div className="studio-stack bio-studio">
       <div className="bio-studio__model">
         <MitosisStage />
+        {/* Outside the lab's Stage: the overload ladder is said here too (B8). */}
+        <PerfNotes className="stage__notes stage__notes--float" />
       </div>
       <Mitosis3DParts />
       <div className="bio-studio__panels">
