@@ -98,8 +98,18 @@ describe('bench first run (docs/BENCH_DESIGN.md §9.2)', () => {
       useSafetyStore.setState({ gateRequested: false, gateFirstRun: false });
       useProfileStore.setState({ onboarded: true, connectSeen: true });
     });
+    const { unmount: closeAgain } = render(<AgeGate />);
+    await screen.findByRole('button', { name: 'Tôi chưa đủ 18 tuổi' });
+    expect(screen.queryByText(/Bước/)).toBeNull();
+    closeAgain();
+    // A learner whose first run skipped step 3 (an AI was already set up) but did the lab tour.
+    act(() => {
+      useProfileStore.setState({ connectSeen: false });
+    });
+    localStorage.setItem('stemsim.tourDone', '1');
     render(<AgeGate />);
     await screen.findByRole('button', { name: 'Tôi chưa đủ 18 tuổi' });
     expect(screen.queryByText(/Bước/)).toBeNull();
+    localStorage.removeItem('stemsim.tourDone');
   });
 });

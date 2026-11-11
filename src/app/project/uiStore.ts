@@ -2,7 +2,8 @@ import { create } from 'zustand';
 
 const TOUR_KEY = 'stemsim.tourDone';
 
-function readTourDone(): boolean {
+/** The lab tour was done or skipped once (`stemsim.tourDone`): this is not the first run. */
+export function readTourDone(): boolean {
   try {
     return localStorage.getItem(TOUR_KEY) === '1';
   } catch {
