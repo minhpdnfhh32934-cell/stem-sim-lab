@@ -46,7 +46,7 @@ describe('App shell (Phase 0)', () => {
     expect(screen.queryByRole('region', { name: 'Khung mô phỏng' })).not.toBeInTheDocument();
     expect(screen.queryByRole('group', { name: 'Điều khiển thời gian' })).not.toBeInTheDocument();
     expect(
-      screen.queryByRole('complementary', { name: 'Bảng thuộc tính' }),
+      screen.queryByRole('complementary', { name: /bảng thuộc tính/i }),
     ).not.toBeInTheDocument();
     // The "SimLab" brand goes back to the landing page.
     await user.click(screen.getByRole('button', { name: 'Về trang chủ' }));
@@ -87,7 +87,7 @@ describe('App shell (Phase 0)', () => {
     // A lesson takes the centre: no inspector, lab timeline or launch page around it. The bench
     // gives the lesson its own live stage with the edge player (§9.7): any run control is that one.
     expect(
-      screen.queryByRole('complementary', { name: 'Bảng thuộc tính' }),
+      screen.queryByRole('complementary', { name: /bảng thuộc tính/i }),
     ).not.toBeInTheDocument();
     for (const edge of screen.queryAllByRole('group', { name: 'Điều khiển thời gian' }))
       expect(edge.closest('.bench-studio-live')).not.toBeNull();
