@@ -1829,7 +1829,7 @@ const en: Messages = {
     flowThinkLocal:
       'Think is on: the question, the draft of the AI on this computer, related library excerpts, the summary of older turns (if any) and the screen context (if you turned it on) → {name} for review. Nothing goes to a fallback provider.',
     flowScreen:
-      'Screen context is sent only when you turn on “Use screen information” in the chat bubble; it is SimLab data, not a screenshot.',
+      'Screen context is sent only when you turn on “Use current screen information” in the notebook’s Ask AI tab; it is SimLab data, not a screenshot.',
     download: 'Download model',
     downloaded: 'Downloaded',
     deleteModel: 'Delete Gemma',

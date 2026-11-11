@@ -1814,7 +1814,7 @@ const vi = {
     flowThinkLocal:
       'Think đang bật: câu hỏi, bản nháp của AI trên máy, trích đoạn tài liệu liên quan, tóm tắt phần trò chuyện cũ (nếu có) và ngữ cảnh màn hình (nếu em bật) → {name} để rà soát. Không gửi tới nhà cung cấp dự phòng.',
     flowScreen:
-      'Ngữ cảnh màn hình chỉ được gửi khi em bật “Lấy thông tin từ màn hình” trong bong bóng chat; đó là dữ liệu của SimLab, không phải ảnh chụp màn hình.',
+      'Ngữ cảnh màn hình chỉ được gửi khi em bật “Lấy thông tin từ màn hình” ở thẻ Hỏi AI của sổ ghi; đó là dữ liệu của SimLab, không phải ảnh chụp màn hình.',
     download: 'Tải mô hình',
     downloaded: 'Đã tải',
     deleteModel: 'Xóa Gemma',
