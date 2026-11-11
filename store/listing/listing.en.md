@@ -42,9 +42,16 @@ on a whiteboard.
 
 physics, chemistry, biology, simulation, learning
 
-## What's new — 0.5.1
+## What's new — 0.8.1
 
-First release on the Microsoft Store. The Store keeps the app up to date.
+Version 0.8.1:
+
+- A new "Lab bench" interface: pick a lesson on the shelf, set values in the tray, press Run on the bench edge.
+- New Physics lessons: Uniform circular motion, Standing waves, Two-source interference, Electric field, DC circuits, Forced oscillation, Harmonics and Fourier series, Kepler's second law.
+- Chemistry: Acid–base titration, metal and NaCl crystals in 3D, the reaction energy diagram, molecules filtered by functional group.
+- Biology: Prokaryotic and eukaryotic cells (3D and 2D), From cell to DNA.
+- The library can show Grade 10, 11 or 12 following the Kết nối tri thức textbooks; the lab is now called Virtual Lab.
+- Many bug fixes, and libraries with known vulnerabilities updated.
 
 ## System requirements (suggested)
 

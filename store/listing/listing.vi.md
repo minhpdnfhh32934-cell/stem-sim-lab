@@ -42,9 +42,16 @@ trên bảng trắng.
 
 vật lý, hóa học, sinh học, mô phỏng, học tập
 
-## Có gì mới (What's new) — bản 0.5.1
+## Có gì mới (What's new) — bản 0.8.1
 
-Bản đầu tiên trên Microsoft Store. Store tự cập nhật ứng dụng.
+Bản 0.8.1:
+
+- Giao diện mới "Bàn thí nghiệm": chọn bài trên kệ, chỉnh thông số ở khay, bấm Chạy ở mép bàn.
+- Bài Vật lí mới: Chuyển động tròn đều, Sóng dừng, Giao thoa sóng, Điện trường, Mạch điện một chiều, Dao động cưỡng bức, Hoạ âm và chuỗi Fourier, Định luật II Kepler.
+- Hoá học: Chuẩn độ acid – base, Tinh thể kim loại và NaCl 3D, giản đồ năng lượng phản ứng, lọc phân tử theo nhóm chức.
+- Sinh học: Tế bào nhân sơ và nhân thực (3D và 2D), Từ tế bào đến DNA.
+- Thư viện chọn được Lớp 10, 11, 12 theo sách Kết nối tri thức; Phòng thí nghiệm nay tên là Virtual Lab.
+- Sửa nhiều lỗi và cập nhật các thư viện có lỗ hổng đã biết.
 
 ## Yêu cầu hệ thống (gợi ý)
 
