@@ -686,6 +686,7 @@ const en: Messages = {
     exportPng: 'Export PNG image',
     sources: 'Sources & assumptions',
     tour: 'Quick tour',
+    presentation: 'Presentation mode (F5)',
     dismiss: 'Dismiss',
     nothingToSave: 'No topic is open.',
     saved: 'Saved: {name}',

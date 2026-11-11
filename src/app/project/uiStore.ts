@@ -12,12 +12,15 @@ function readTourDone(): boolean {
 
 export interface ProjectUiState {
   sourcesOpen: boolean;
+  /** The shelf's "Lịch sử" list is open (Tệp → Lịch sử opens it in Basic too). */
+  historyOpen: boolean;
   /** Index of the tour step shown, or null when the tour is closed. */
   tourStep: number | null;
 }
 
 export const useProjectUi = create<ProjectUiState>()(() => ({
   sourcesOpen: false,
+  historyOpen: false,
   tourStep: readTourDone() ? null : 0,
 }));
 

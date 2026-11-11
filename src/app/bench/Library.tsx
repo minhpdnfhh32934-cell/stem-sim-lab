@@ -20,6 +20,7 @@ import { useT } from '@/app/i18n';
 import { chapterTitle, searchChapters } from '@/app/layout/libraryChapters';
 import { Badges } from '@/app/learner/HomeScreen';
 import { HistoryList } from '@/app/project/HistoryList';
+import { useProjectUi } from '@/app/project/uiStore';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useProfileStore } from '@/app/learner/profileStore';
 import { chaptersFor, GRADE_CHOICES, type LibraryTopic } from '@/app/levels';
@@ -52,7 +53,10 @@ export function BenchLibrary() {
   const lastTopic = useProfileStore((s) => s.lastTopic);
   const [query, setQuery] = useState('');
   const advanced = useSettingsStore((s) => s.uiMode === 'advanced');
-  const [historyOpen, setHistoryOpen] = useState(false);
+  const historyOpen = useProjectUi((s) => s.historyOpen);
+  const setHistoryOpen = (open: boolean) => {
+    useProjectUi.setState({ historyOpen: open });
+  };
   const progress = useProgressStore(
     useShallow((s) => ({
       visited: s.visited,
@@ -146,8 +150,8 @@ export function BenchLibrary() {
             }}
           />
         </label>
-        {/* "Lịch sử" at the bottom of the filters, Advanced only (§9.3). */}
-        {advanced && (
+        {/* "Lịch sử" at the bottom of the filters: Advanced (§9.3), or opened from Tệp → Lịch sử. */}
+        {(advanced || historyOpen) && (
           <div className="shelf-history">
             <button
               type="button"
@@ -161,17 +165,19 @@ export function BenchLibrary() {
               {t('sidebar.history')}
             </button>
             {historyOpen && <HistoryList />}
-            <button
-              type="button"
-              className="btn btn--ghost"
-              onClick={() => {
-                useStudioStore.getState().setTab('authoring');
-                openStudio();
-              }}
-            >
-              <FilePen size={16} strokeWidth={1.75} aria-hidden="true" />
-              {t('studio.tabs.authoring')}
-            </button>
+            {advanced && (
+              <button
+                type="button"
+                className="btn btn--ghost"
+                onClick={() => {
+                  useStudioStore.getState().setTab('authoring');
+                  openStudio();
+                }}
+              >
+                <FilePen size={16} strokeWidth={1.75} aria-hidden="true" />
+                {t('studio.tabs.authoring')}
+              </button>
+            )}
           </div>
         )}
       </aside>

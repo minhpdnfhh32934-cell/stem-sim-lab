@@ -11,24 +11,16 @@ import { ModeSwitch } from '@/app/learner/ModeSwitch';
 import { FileMenu } from '@/app/project/FileMenu';
 import { redo, undo, useUndoStore } from '@/app/project/undo';
 import { SettingsDialog } from '@/app/settings/SettingsDialog';
-import { sim } from '@/app/sim/runtime';
 import { useSimStore } from '@/app/sim/simStore';
-import { goHome, openLab, useIsHome, useIsLanding, useIsStudio, useIsTeacher } from '@/app/topics';
+import { goHome, useIsHome, useIsLanding, useIsStudio, useIsTeacher } from '@/app/topics';
 import { useSafetyStore } from '@/safety/safetyStore';
 import { openTeacher } from '@/teacher/teacherStore';
-import { useWorkspaceStore, type Subject } from '@/app/workspaceStore';
-import { closeModule, useModuleStore } from '@/modules/moduleStore';
+import { useWorkspaceStore } from '@/app/workspaceStore';
+import { useModuleStore } from '@/modules/moduleStore';
 import { IconButton } from '@/ui/IconButton';
 import { Logo } from '@/ui/Logo';
 import { ThemeSwitch } from './ThemeSwitch';
-
-/** Back to the lab's library (Kệ bài), optionally showing one subject. */
-function toLibrary(subject?: Subject) {
-  sim.shutdown();
-  closeModule();
-  if (subject) useWorkspaceStore.getState().setSubject(subject);
-  openLab();
-}
+import { toLibrary } from './toLibrary';
 
 /**
  * The bench's 48 px frame header (docs/BENCH_DESIGN.md §9.4): the SimLab mark (launch page), the

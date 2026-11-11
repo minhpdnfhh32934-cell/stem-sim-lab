@@ -2187,3 +2187,8 @@ button.bench-door--lab:hover {
 .author-nav a:hover {
   background: var(--paper-hover);
 }
+
+/* Presentation: the HUD's right end (title, chips, PerfNotes) stays clear of the 48 px exit button. */
+.bench-shell[data-presentation] .stage__hud {
+  right: calc(var(--space-3) + 56px);
+}

@@ -4,14 +4,18 @@ import {
   CircleHelp,
   CloudDownload,
   FolderOpen,
+  History,
   ImageDown,
+  Maximize2,
   Menu,
   Save,
   Sparkles,
   type LucideIcon,
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { toLibrary } from '@/app/bench/toLibrary';
 import { useT } from '@/app/i18n';
+import { useLayoutStore } from '@/app/layout/layoutStore';
 import { openLab } from '@/app/topics';
 import { checkForUpdate, updatesSupported } from '@/app/update/updater';
 import { openWhatsNew, useWhatsNewStore } from '@/app/whatsnew/whatsNewStore';
@@ -60,6 +64,22 @@ export function FileMenu() {
     { icon: FolderOpen, label: t('project.open'), run: () => void openProject() },
     { icon: Save, label: t('project.save'), run: () => void saveProject() },
     { icon: ImageDown, label: t('project.exportPng'), run: () => void exportPng() },
+    {
+      icon: History,
+      label: t('sidebar.history'),
+      // The shelf's list (docs/BENCH_DESIGN.md §9.8): Basic has no other way to it.
+      run: () => {
+        toLibrary();
+        useProjectUi.setState({ historyOpen: true });
+      },
+    },
+    {
+      icon: Maximize2,
+      label: t('project.presentation'),
+      run: () => {
+        useLayoutStore.getState().setPresentation(true);
+      },
+    },
     {
       icon: BookMarked,
       label: t('project.sources'),

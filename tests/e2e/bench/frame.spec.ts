@@ -280,3 +280,27 @@ test('the tour waits on the shelf, then shows Chạy, the tray and the notebook 
   await tour.getByRole('button', { name: 'Bắt đầu' }).click();
   await expect(tour).toHaveCount(0);
 });
+
+test('presentation from Tệp: the HUD stays clear of the exit button; Esc leaves it', async ({
+  page,
+}) => {
+  await openProjectile(page);
+  await page.getByRole('button', { name: 'Tệp' }).click();
+  await page.getByRole('menuitem', { name: 'Chế độ trình chiếu (F5)' }).click();
+  const exit = page.getByRole('button', { name: 'Thoát trình chiếu (Esc)' });
+  await expect(exit).toBeVisible();
+  await expect(page.locator('.bench-header')).toHaveCount(0);
+  // The HUD's right end (title, "Đã có can thiệp", PerfNotes) never sits under the button.
+  const hud = await page.locator('.stage__hud').boundingBox();
+  const button = await exit.boundingBox();
+  if (!hud || !button) throw new Error('not visible');
+  const apart =
+    hud.x + hud.width <= button.x ||
+    button.x + button.width <= hud.x ||
+    hud.y + hud.height <= button.y ||
+    button.y + button.height <= hud.y;
+  expect(apart, `HUD ${JSON.stringify(hud)} vs exit ${JSON.stringify(button)}`).toBe(true);
+  await page.keyboard.press('Escape');
+  await expect(exit).toHaveCount(0);
+  await expect(page.locator('.bench-header')).toHaveCount(1);
+});

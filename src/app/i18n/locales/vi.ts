@@ -686,6 +686,7 @@ const vi = {
     exportPng: 'Xuất ảnh PNG',
     sources: 'Nguồn & Giả định',
     tour: 'Hướng dẫn nhanh',
+    presentation: 'Chế độ trình chiếu (F5)',
     dismiss: 'Đóng thông báo',
     nothingToSave: 'Chưa mở chủ đề nào để lưu.',
     saved: 'Đã lưu: {name}',
