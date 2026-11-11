@@ -50,8 +50,9 @@ riêng tư "Hỏi thầy" trên sổ thay bong bóng), `FirstRun.test.tsx` (cổ
 
 - Nhánh `BenchContext` cổ điển còn trong vài thành phần dùng chung (luôn `true` trong app).
 - `stemsim.layout` giữ các trường cũ (`leftWidth`…) để không đổi version của store.
-- Thanh trạng thái cũ còn hiện FPS/RAM/phiên bản (Nâng cao) và nhắc cập nhật sau "Để sau": bench
-  không có; phiên bản xem ở Cài đặt → Lịch sử phiên bản, cập nhật qua menu ☰.
+- FPS / mức chất lượng / RAM (Nâng cao) của thanh trạng thái cũ: bench chưa có chỗ, đề xuất issue riêng.
+  Phiên bản đang chạy: Tệp → "Kiểm tra cập nhật" và Cài đặt → Lịch sử phiên bản.
+- `BenchContext`: nhánh cổ điển còn ở 26 tệp, đề xuất PR riêng.
 - Mục 0.8.1 trong `release-notes/versions.json`: test buộc mục đầu trùng `package.json` (0.8.0);
   thêm mục mới cần đổi số phiên bản, việc của #194. Câu ghi chú B8 soạn sẵn trong PR.
 
@@ -75,7 +76,36 @@ riêng tư "Hỏi thầy" trên sổ thay bong bóng), `FirstRun.test.tsx` (cổ
     dưới đúng chỗ: PASS (`docs/images/b8-native-katex.png`).
   - (c) dấu tiếng Việt: Be Vietnam Pro 400/500/600 vẽ đủ "Ặ Ẫ Ỡ Ữ Ỵ ẫ ặ ệ ộ ợ": PASS
     (`docs/images/b8-native-diacritics.png`).
-  - (d) thanh công cụ bảng trắng: BLOCKED — cần trả lời 18+ và đồng ý điều khoản, chỉ người dùng được
-    làm (bị chặn khi máy tự làm).
+  - (d) thanh công cụ bảng trắng: không kiểm native (cần trả lời 18+, việc chỉ người dùng được làm).
+    **Chấp nhận bằng E2E `board.spec`, quyết định của người dùng ngày 11/11/2026.** Bằng chứng: CI run
+    43030147008 trên `1630e21`, job E2E: `board.spec.ts` 19/19 PASS, gồm hai test bề rộng thanh công
+    cụ ở 1366×768 (`:1032`, `:1118`); cả lần chạy 201 PASS.
 - CI: `cargo audit` FAIL vì RUSTSEC-2026-0486 (`rustix` 1.1.5, công bố hôm nay; `Cargo.lock` không đổi
-  trong B8, main cũng sẽ đỏ) — ngoài phạm vi B8.
+  trong B8, main cũng sẽ đỏ) — PR #199 nâng `rustix` lên 1.1.6.
+
+## Vòng 2 (review của laptop, 11 việc bắt buộc + 3 việc nên sửa)
+
+Tiêu chí: mỗi việc của review có code hoặc tài liệu sửa đúng chỗ và một phép kiểm không dựa vào code
+được sửa (dữ liệu bài học, `tokens.css`, luồng của người học trong E2E).
+
+- 1 `PerfNotes` ở Studio Sinh học (mô hình vẽ ngoài `Stage`): `BiologyFlow.test` PASS.
+- 2 Tệp → "Chế độ trình chiếu (F5)"; HUD chừa nút thoát khi trình chiếu: `FileMenu.test`, E2E
+  `frame.spec` PASS.
+- 3 Tệp → "Lịch sử" (cả ở Cơ bản): `FileMenu.test` PASS.
+- 4 thẻ chủ đề "Đã mở · 1/3 bước", "Còn: Dự đoán trước, n thử thách": `Library.test`, E2E
+  `learner.spec` PASS.
+- 5 "Có bản cập nhật {phiên bản}" ở đầu bàn sau "Để sau" (cả khi cần bộ cài mới): `update.test`, E2E
+  `layout.spec` (vừa đầu bàn ở 1366, tên bài dài) PASS. FPS / mức chất lượng / RAM: đề xuất issue riêng.
+- 6 khung hình đầu là bench (`theme-boot.js` đặt `data-shell`, nền `index.html` lấy từ `tokens.css`):
+  `tests/index-html.test.ts` PASS; native: xem Kết quả vòng 2.
+- 7 câu riêng tư ở thẻ "Hỏi AI" của sổ ghi (vi, en).
+- 8 `Badges` ra tệp riêng; xoá `HomeScreen` ("Gợi ý cho lớp N" bỏ, kệ bài theo lớp thay), `Inspector`
+  cổ điển và chú giải (bench không có chú giải ở chỗ khác), CSS/token/khoá i18n chết. `BenchContext`
+  còn canh nhánh cổ điển ở 26 tệp: đề xuất PR riêng (`shortcut:` trong `shellMode.ts`).
+- 9 `learner.spec` kiểm "Bài 4–5, 7 · chờ giáo viên duyệt" trên thẻ: PASS.
+- 10 tiêu điểm về ô tìm / nút "Tất cả": `Library.test` PASS.
+- 11 tài liệu và chú thích theo bench; BENCH_DESIGN/PROGRESS ghi "đang review".
+- Nên sửa: `PerfNotes` chỉ đọc khi thông báo đến/đi (`PerfNotes.test`); "Bước 2/3" chỉ lần chạy đầu
+  (`FirstRun.test`); `drift3d` vào `HEAVY_3D`: chạy riêng ở `chromium-3d` lần đầu FAIL (ngay sau khi
+  dừng một lượt chạy khác, máy chủ dev nguội; không giữ được lỗi), rồi 3 lần liền PASS — ghi là chập
+  chờn chưa rõ nguyên nhân, theo dõi ở lượt chạy đủ.
