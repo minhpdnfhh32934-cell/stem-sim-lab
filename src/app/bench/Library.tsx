@@ -18,7 +18,7 @@ import { useAnalysisEngine } from '@/app/ai/engineChoice';
 import { normalizeForSearch } from '@/app/catalog';
 import { useT, type TFunction } from '@/app/i18n';
 import { chapterTitle, searchChapters } from '@/app/layout/libraryChapters';
-import { Badges } from '@/app/learner/HomeScreen';
+import { Badges } from '@/app/learner/Badges';
 import { HistoryList } from '@/app/project/HistoryList';
 import { useProjectUi } from '@/app/project/uiStore';
 import { useSettingsStore } from '@/app/settings/settingsStore';

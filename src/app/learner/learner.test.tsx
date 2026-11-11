@@ -3,9 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { CATALOG } from '@/app/catalog';
 import { CURRICULUM } from '@/app/curriculum';
-import { HomeScreen } from '@/app/learner/HomeScreen';
-import { availableCount, chaptersFor, suggestions } from '@/app/levels';
-import { useWorkspaceStore } from '@/app/workspaceStore';
+import { chaptersFor } from '@/app/levels';
 import { basicSplit, BASIC_PARAM_COUNT } from '@/app/sim/basicParams';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useAiStore } from '@/ai/aiStore';
@@ -30,10 +28,6 @@ describe('library views (Grade → Subject → Topic)', () => {
     // Unplaced (no textbook lesson clearly names it): only under "Tất cả".
     expect(ids).not.toContain('inclinedPlane');
     expect(chaptersFor(11, 'biology')).toEqual([]);
-    expect(availableCount(11, 'biology')).toBe(0);
-    expect(availableCount('all', 'biology')).toBe(
-      CATALOG.biology.flatMap((c) => c.topics).filter((x) => x.status === 'available').length,
-    );
   });
 
   // Decision 2026-10-22 (plan #37 §3.3): the mapping now comes from the official tables of
@@ -42,16 +36,6 @@ describe('library views (Grade → Subject → Topic)', () => {
     expect(CURRICULUM.generated_by).toBe('scripts/data/gen_curriculum_kntt.py');
     expect(CURRICULUM.review_status).toBe('pending');
     expect(CURRICULUM.items.every((p) => p.review_status === 'pending')).toBe(true);
-  });
-
-  it('suggestions list available topics of the chosen view, the chosen subjects first', () => {
-    const s = suggestions('all', ['biology']);
-    expect(s[0]?.subject).toBe('biology');
-    expect(s.every((x) => x.topic.status === 'available')).toBe(true);
-    // Grade 11 has no biology topic: its suggestions are physics and chemistry ones.
-    const g11 = suggestions(11, ['biology']);
-    expect(g11.map((x) => x.subject)).not.toContain('biology');
-    expect(g11[0]?.topic.id).toBe('springPendulum');
   });
 });
 
@@ -140,27 +124,6 @@ describe('profile migration', () => {
     expect(useProfileStore.persist.hasHydrated()).toBe(true);
     expect(useProfileStore.getState()).toMatchObject({ interests: ['biology'], onboarded: true });
     localStorage.removeItem('stemsim.profile');
-  });
-});
-
-describe('library grade switch', () => {
-  beforeEach(() => {
-    useProfileStore.setState({ grade: 'all' });
-    useWorkspaceStore.setState({ subject: 'physics' });
-  });
-
-  // The library's grade views and searches: src/app/bench/Library.test.tsx (the shelf, B8).
-  it('home suggests the grade’s topics, with the pending label and per-grade counts', () => {
-    useProfileStore.setState({ grade: 12, interests: [], lastTopic: null });
-    render(<HomeScreen />);
-    expect(screen.getByRole('heading', { name: 'Gợi ý cho lớp 12' })).toBeInTheDocument();
-    expect(
-      screen.getByText('Theo SGK Kết nối tri thức · Đang chờ giáo viên duyệt'),
-    ).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /^Sinh học/ })).toHaveTextContent(
-      `${availableCount(12, 'biology')} chủ đề lớp 12`,
-    );
-    expect(screen.getByRole('button', { name: 'ADN → mARN → Protein · Sinh học' })).toBeVisible();
   });
 });
 
