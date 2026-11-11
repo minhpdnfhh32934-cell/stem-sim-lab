@@ -2,15 +2,16 @@ import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { App } from '@/app/App';
+import { DriverGrid } from '@/app/bench/DriverGrid';
 import { useCommandPalette } from '@/app/command/commands';
 import { Inspector } from '@/app/layout/Inspector';
 import { useLayoutStore } from '@/app/layout/layoutStore';
-import { Timeline } from '@/app/layout/Timeline';
 import { openLab, openStudio } from '@/app/topics';
 import { useNavigationStore } from '@/app/navigationStore';
 import { DEFAULT_SETTINGS, useSettingsStore } from '@/app/settings/settingsStore';
 import { useWorkspaceStore } from '@/app/workspaceStore';
 
+// The bench ("Bàn thí nghiệm") is the only shell since B8 (#193): these run on it.
 describe('App shell (Phase 0)', () => {
   beforeEach(() => {
     act(() => {
@@ -39,7 +40,8 @@ describe('App shell (Phase 0)', () => {
     expect(screen.getByRole('radiogroup', { name: 'Môn học' })).toBeInTheDocument();
     expect(screen.getByRole('complementary', { name: 'Thư viện chủ đề' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Hôm nay học gì?' })).toBeInTheDocument();
-    expect(screen.getByRole('textbox', { name: 'Nhập đề bài hoặc câu hỏi…' })).toBeInTheDocument();
+    // The problem box opens from the shelf (and the header's "Đề bài").
+    expect(screen.getByRole('button', { name: 'Gõ hoặc dán đề bài…' })).toBeInTheDocument();
     expect(screen.getAllByText('AI Teacher').length).toBeGreaterThan(0);
     // Nothing open yet: no stage, timeline, inspector or graphs.
     expect(screen.queryByRole('region', { name: 'Khung mô phỏng' })).not.toBeInTheDocument();
@@ -55,14 +57,14 @@ describe('App shell (Phase 0)', () => {
   it('the landing page has clear Lab and Teacher entries', async () => {
     const user = userEvent.setup();
     render(<App />);
-    await user.click(screen.getByRole('button', { name: /cùng kiểm tra kiến thức/ }));
+    await user.click(screen.getByRole('button', { name: /^AI Teacher/ }));
     // The Teacher screen is a lazy module: its first import is slow when the whole suite runs.
     expect(
       await screen.findByRole('heading', { name: 'Dạy học bằng AI' }, { timeout: 5000 }),
     ).toBeInTheDocument();
   });
 
-  it('Science Studio shows inside the lab (screen "studio"), beside the topic library', async () => {
+  it('Science Studio shows inside the lab (screen "studio"), the lab one step up', async () => {
     const user = userEvent.setup();
     // openStudio() is what every older caller uses (it also closes AI Teacher).
     act(() => {
@@ -74,16 +76,22 @@ describe('App shell (Phase 0)', () => {
     expect(
       await screen.findByRole('heading', { level: 1, name: 'Science Studio' }, { timeout: 5000 }),
     ).toBeInTheDocument();
-    const library = screen.getByRole('complementary', { name: 'Thư viện chủ đề' });
-    expect(within(library).getByRole('button', { name: /^Science Studio/ })).toHaveAttribute(
+    // The bench's studio room: the breadcrumb leads back to the lab ("Virtual Lab", not the
+    // current page); the lesson has the room to itself, no library column beside it (§9.7).
+    const crumbs = screen.getByRole('navigation', { name: 'Vị trí' });
+    expect(within(crumbs).getByRole('button', { name: 'Virtual Lab' })).not.toHaveAttribute(
       'aria-current',
-      'page',
     );
-    // A lesson takes the centre: no inspector, timeline or launch page around it.
+    expect(
+      screen.queryByRole('complementary', { name: 'Thư viện chủ đề' }),
+    ).not.toBeInTheDocument();
+    // A lesson takes the centre: no inspector, lab timeline or launch page around it. The bench
+    // gives the lesson its own live stage with the edge player (§9.7): any run control is that one.
     expect(
       screen.queryByRole('complementary', { name: 'Bảng thuộc tính' }),
     ).not.toBeInTheDocument();
-    expect(screen.queryByRole('group', { name: 'Điều khiển thời gian' })).not.toBeInTheDocument();
+    for (const edge of screen.queryAllByRole('group', { name: 'Điều khiển thời gian' }))
+      expect(edge.closest('.bench-studio-live')).not.toBeNull();
     expect(
       screen.queryByRole('heading', { name: 'Chào mừng đến với SimLab' }),
     ).not.toBeInTheDocument();
@@ -103,11 +111,12 @@ describe('App shell (Phase 0)', () => {
   it('switching subject changes the library', async () => {
     const user = userEvent.setup();
     renderInLab();
-    const library = screen.getByRole('complementary', { name: 'Thư viện chủ đề' });
-    expect(within(library).getByText('Ném xiên')).toBeInTheDocument();
+    // The shelf ("Kệ bài"): topic cards in the main area, beside the library's filter column.
+    const shelf = screen.getByRole('main');
+    expect(within(shelf).getByText('Ném xiên')).toBeInTheDocument();
     await user.click(screen.getByRole('radio', { name: 'Hóa học' }));
-    expect(within(library).queryByText('Ném xiên')).not.toBeInTheDocument();
-    expect(within(library).getByText('Bảng tuần hoàn')).toBeInTheDocument();
+    expect(within(shelf).queryByText('Ném xiên')).not.toBeInTheDocument();
+    expect(within(shelf).getByText('Bảng tuần hoàn')).toBeInTheDocument();
   });
 
   it('library search ignores diacritics', async () => {
@@ -143,7 +152,7 @@ describe('App shell (Phase 0)', () => {
     const user = userEvent.setup();
     render(<App />);
     expect(document.documentElement.dataset.theme).toBe('light');
-    await user.click(screen.getByRole('button', { name: 'Đổi giao diện sáng / tối' }));
+    await user.click(screen.getByRole('switch', { name: 'Giao diện tối' }));
     expect(document.documentElement.dataset.theme).toBe('dark');
   });
 
@@ -159,12 +168,12 @@ describe('App shell (Phase 0)', () => {
     const user = userEvent.setup();
     renderInLab();
     await user.keyboard('{F5}');
-    expect(
-      screen.queryByRole('complementary', { name: 'Thư viện chủ đề' }),
-    ).not.toBeInTheDocument();
+    // The bench hides its header (and, around a topic, the tray and notebook) with one way out.
+    expect(document.querySelector('.bench-header')).toBeNull();
+    expect(screen.getByRole('button', { name: 'Thoát trình chiếu (Esc)' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Hôm nay học gì?' })).toBeInTheDocument();
     await user.keyboard('{Escape}');
-    expect(screen.getByRole('complementary', { name: 'Thư viện chủ đề' })).toBeInTheDocument();
+    expect(document.querySelector('.bench-header')).not.toBeNull();
   });
 
   it('language can be switched to English in Settings', async () => {
@@ -193,16 +202,17 @@ describe('App shell (Phase 0)', () => {
   });
 
   it('play controls stay disabled until a simulation exists', () => {
-    render(<Timeline />);
+    // The bench edge (D0 "Chạy", B2) replaced the classic timeline.
+    render(<DriverGrid />);
     expect(screen.getByRole('button', { name: 'Chạy (Space)' })).toBeDisabled();
   });
 
   it('a subject card selects the subject and shows its topics in the library', async () => {
     const user = userEvent.setup();
     renderInLab();
-    await user.click(screen.getByRole('button', { name: /^Sinh học/ }));
+    // The bench's subject choice is the "Môn học" radios (it has no subject cards, §9.3).
+    await user.click(screen.getByRole('radio', { name: 'Sinh học' }));
     expect(screen.getByRole('radio', { name: 'Sinh học' })).toHaveAttribute('aria-checked', 'true');
-    const library = screen.getByRole('complementary', { name: 'Thư viện chủ đề' });
-    expect(within(library).getByText('Nguyên phân')).toBeInTheDocument();
+    expect(within(screen.getByRole('main')).getByText('Nguyên phân')).toBeInTheDocument();
   });
 });

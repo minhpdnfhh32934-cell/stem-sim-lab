@@ -1,4 +1,4 @@
-import { act, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { ModuleView } from '@/modules/types';
 
@@ -28,19 +28,27 @@ afterEach(() => {
   });
 });
 
+// The bench (B8, #193): a topic's bottom panel is a notebook tab named after the topic.
 describe('bottom panel of a topic', () => {
   it('is not shown for a topic without a table or chart (no empty box)', () => {
     render(<App />);
     open({ title: L('Mendel'), Stage });
     expect(screen.getByText('stage')).toBeInTheDocument();
-    expect(screen.queryByRole('region', { name: 'Bảng đồ thị và lời giải' })).toBeNull();
+    const rail = screen.getByRole('tablist', { name: 'Bảng đồ thị và lời giải' });
+    expect(within(rail).queryByRole('tab', { name: 'Mendel' })).toBeNull();
+    expect(
+      within(rail)
+        .getAllByRole('tab')
+        .map((tab) => tab.textContent),
+    ).toEqual(['Thẻ khoa học', 'Hỏi AI']);
     expect(screen.queryByText('Chủ đề này không có bảng phụ.')).toBeNull();
   });
 
   it('is shown when the topic has one', () => {
     render(<App />);
     open({ title: L('Logistic'), Stage, Bottom: () => <p>chart</p> });
-    expect(screen.getByRole('region', { name: 'Bảng đồ thị và lời giải' })).toBeInTheDocument();
+    const rail = screen.getByRole('tablist', { name: 'Bảng đồ thị và lời giải' });
+    fireEvent.click(within(rail).getByRole('tab', { name: 'Logistic' }));
     expect(screen.getByText('chart')).toBeInTheDocument();
   });
 });

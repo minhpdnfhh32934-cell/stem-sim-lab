@@ -10,11 +10,12 @@ import {
   Search,
   SearchX,
 } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useAiStore } from '@/ai/aiStore';
 import { openManual } from '@/app/ai/analyze';
 import { useAnalysisEngine } from '@/app/ai/engineChoice';
+import { normalizeForSearch } from '@/app/catalog';
 import { useT } from '@/app/i18n';
 import { chapterTitle, searchChapters } from '@/app/layout/libraryChapters';
 import { Badges } from '@/app/learner/HomeScreen';
@@ -61,6 +62,24 @@ export function BenchLibrary() {
   );
   const shelf = useMemo(() => chaptersFor(grade, subject), [grade, subject]);
   const chapters = useMemo(() => searchChapters(shelf, query, t), [shelf, query, t]);
+  // Nothing found here: does another subject have it (§9.3 "Có 3 kết quả trong Hóa học")?
+  const elsewhere = useMemo(
+    () =>
+      chapters.length > 0 || !normalizeForSearch(query)
+        ? []
+        : SUBJECTS.filter((s) => s !== subject)
+            .map((s) => ({
+              subject: s,
+              count: searchChapters(chaptersFor(grade, s), query, t).reduce(
+                (n, c) => n + c.topics.length,
+                0,
+              ),
+            }))
+            .filter((m) => m.count > 0),
+    [chapters.length, query, subject, grade, t],
+  );
+  // The recovery buttons vanish once used: the keyboard focus goes to the grade they set.
+  const allRef = useRef<HTMLButtonElement>(null);
   const counts = useMemo(
     () =>
       Object.fromEntries(
@@ -164,6 +183,7 @@ export function BenchLibrary() {
             {GRADE_CHOICES.map((g) => (
               <button
                 key={g}
+                ref={g === 'all' ? allRef : undefined}
                 type="button"
                 role="radio"
                 aria-checked={grade === g}
@@ -226,6 +246,30 @@ export function BenchLibrary() {
           <div className="shelf-empty" role="status">
             <SearchX size={20} strokeWidth={1.75} aria-hidden="true" />
             <p>{t('sidebar.noResults')}</p>
+            {elsewhere.map((m) => (
+              <button
+                key={m.subject}
+                type="button"
+                className="btn"
+                onClick={() => {
+                  setSubject(m.subject);
+                }}
+              >
+                {t('sidebar.foundIn', { count: m.count, subject: t(`subjects.${m.subject}`) })}
+              </button>
+            ))}
+            {grade !== 'all' && (
+              <button
+                type="button"
+                className="btn"
+                onClick={() => {
+                  setGrade('all');
+                  allRef.current?.focus();
+                }}
+              >
+                {t('levels.showAll')}
+              </button>
+            )}
             <button
               type="button"
               className="btn"
@@ -238,7 +282,9 @@ export function BenchLibrary() {
           </div>
         ) : (
           chapters.map((c) => {
-            const done = chapterProgress(c.topics, progress);
+            // Progress counts the whole chapter, also while a search shows part of it.
+            const whole = shelf.find((x) => x.id === c.id) ?? c;
+            const done = chapterProgress(whole.topics, progress);
             return (
               <section key={c.id} className="shelf" aria-labelledby={`shelf-${c.id}`}>
                 <h2 id={`shelf-${c.id}`} className="shelf__title">

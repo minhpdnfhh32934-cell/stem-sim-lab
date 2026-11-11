@@ -32,6 +32,7 @@ import { fmtQty } from '@/physics/common/tex';
 import { EmptyState } from '@/ui/EmptyState';
 import { Skeleton } from '@/ui/Skeleton';
 import { IconButton } from '@/ui/IconButton';
+import { PerfNotes } from './PerfNotes';
 import { StageAnnouncer } from './StageAnnouncer';
 
 /** `basic`: shown in Basic mode too (drag, measure, vectors, camera — PROMPT_PHAN_2 A4.2). */
@@ -101,6 +102,7 @@ export const Stage = memo(function Stage() {
     return (
       <section className="stage stage--module" aria-label={t('stage.regionLabel')}>
         {View && <View />}
+        <PerfNotes className="stage__notes stage__notes--float" />
         {mod.loading && <Skeleton label={t('stage.loading')} className="stage__skeleton" />}
         {mod.error && (
           <div className="stage__message" role="alert">
@@ -200,6 +202,7 @@ export const Stage = memo(function Stage() {
           {sim.intervened && (
             <span className="stage__chip stage__chip--warn">{t('science.intervened')}</span>
           )}
+          <PerfNotes className="stage__notes" />
         </div>
       )}
 

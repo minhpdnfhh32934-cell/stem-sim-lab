@@ -4,10 +4,6 @@
  * and by `i18n.test.ts`).
  */
 const vi = {
-  app: {
-    name: 'SimLab',
-    tagline: 'Mô phỏng Vật lý · Hóa học · Sinh học',
-  },
   subjects: {
     label: 'Môn học',
     physics: 'Vật lý',
@@ -26,8 +22,6 @@ const vi = {
     undo: 'Hoàn tác (Ctrl+Z)',
     redo: 'Làm lại (Ctrl+Y)',
     settings: 'Cài đặt',
-    toggleTheme: 'Đổi giao diện sáng / tối',
-    presentation: 'Chế độ trình chiếu (F5)',
   },
   ai: {
     notAllowed: 'AI: chưa mở',
@@ -62,17 +56,13 @@ const vi = {
   },
   sidebar: {
     regionLabel: 'Thư viện chủ đề',
-    library: 'Thư viện',
     history: 'Lịch sử',
     search: 'Tìm chủ đề…',
     noResults: 'Không tìm thấy chủ đề phù hợp.',
     foundIn: 'Có {count} chủ đề ở {subject}',
     clearSearch: 'Xóa tìm kiếm',
     comingSoon: 'Sắp có',
-    comingSoonHint: 'Chủ đề này sẽ được xây dựng ở các giai đoạn sau.',
     historyEmpty: 'Chưa có mô phỏng nào. Các mô phỏng bạn chạy sẽ xuất hiện ở đây.',
-    studio: 'Science Studio',
-    studioHint: 'Bài học có hướng dẫn',
   },
   chapters: {
     kinematics: 'Động học',
@@ -208,7 +198,6 @@ const vi = {
     verified: 'Đã được duyệt',
   },
   bottom: {
-    moduleEmpty: 'Chủ đề này không có bảng phụ.',
     regionLabel: 'Bảng đồ thị và lời giải',
     graphs: 'Đồ thị',
     solution: 'Lời giải',
@@ -227,7 +216,6 @@ const vi = {
     reset: 'Đặt lại (R)',
     speed: 'Tốc độ phát',
     scrubber: 'Tua mô phỏng',
-    time: 'Thời gian mô phỏng',
   },
   bench: {
     breadcrumb: 'Vị trí',
@@ -286,18 +274,7 @@ const vi = {
     isAi: 'Là một AI',
   },
   layout: {
-    resizeLeft: 'Kéo để đổi độ rộng Thư viện',
-    resizeRight: 'Kéo để đổi độ rộng bảng Thuộc tính',
-    resizeBottom: 'Kéo để đổi chiều cao bảng Đồ thị',
     exitPresentation: 'Thoát trình chiếu (Esc)',
-  },
-  status: {
-    ready: 'Sẵn sàng',
-    quality: 'Chất lượng hiển thị',
-    qualityNotMeasured: 'chưa đo',
-    fps: 'FPS',
-    version: 'Phiên bản',
-    browserMode: 'chế độ trình duyệt',
   },
   settings: {
     nav: {
@@ -442,7 +419,6 @@ const vi = {
   },
   command: {
     title: 'Tìm nhanh',
-    openButton: 'Tìm nhanh (Ctrl+K)',
     placeholder: 'Gõ tên chủ đề, trang cài đặt hoặc việc muốn làm…',
     empty: 'Không có kết quả. Thử gõ ngắn hơn hoặc không dấu.',
     keys: '↑ ↓ để chọn · Enter để mở · Esc để đóng',
@@ -736,7 +712,6 @@ const vi = {
     degraded: 'Đã hạ chất lượng hiển thị để giữ độ mượt (số liệu không đổi)',
     memoryHigh:
       'Bộ nhớ đang cao ({mb} MB). Đã giải phóng bộ nhớ đệm. Nên đóng bớt chủ đề 3D hoặc giảm số hạt.',
-    memory: 'RAM {mb} MB',
   },
   tour: {
     label: 'Hướng dẫn nhanh',
@@ -807,7 +782,6 @@ const vi = {
     retry: 'Thử lại',
     requiredNote:
       'Bản cập nhật này là bắt buộc: cần cập nhật để tiếp tục dùng ứng dụng. Lịch sử, tệp và cài đặt của bạn được giữ nguyên.',
-    available: 'Có bản cập nhật {version}',
     browserOnly: 'Cập nhật trong app chỉ có ở bản cài trên máy.',
   },
   whatsnew: {
@@ -1014,14 +988,12 @@ const vi = {
       'Em đã chọn AI trên máy khác nhưng chưa chọn chương trình và mô hình, nên ảnh chưa được gửi đi đâu. Chọn trong Cài đặt → AI trên máy khác.',
   },
   landing: {
-    eyebrow: 'Học khoa học bằng khám phá',
     title: 'Chào mừng đến với SimLab',
     subtitle:
       'Chọn cách em muốn học hôm nay. Mô phỏng, dữ liệu và trợ lý học tập nằm trong cùng một không gian.',
     labTitle: 'Virtual Lab',
     labBody: 'Khám phá mô phỏng Vật lý, Hóa học và Sinh học; điều chỉnh thông số và xem kết quả.',
     teacherTitle: 'AI Teacher',
-    teacherBody: 'Hỏi bài, xin gợi ý và cùng kiểm tra kiến thức với trợ lý AI.',
     privacy: 'Em chọn khi nào chia sẻ ngữ cảnh màn hình hoặc dùng dịch vụ AI trực tuyến.',
   },
   studio: {
@@ -2441,7 +2413,6 @@ const vi = {
     successTarget: 'Chính xác! {quantity} = {value}, đúng mục tiêu {goal} (chỉ lệch {diff}).',
     successBest: 'Tuyệt! {quantity} = {value} — giá trị lớn nhất có thể là {best}.',
     showHint: 'Xem gợi ý',
-    topicDone: 'Đã hoàn thành chủ đề',
     badgesTitle: 'Huy hiệu của bạn',
     noBadges: 'Mở một chủ đề, thử dự đoán hoặc làm thử thách để nhận huy hiệu đầu tiên.',
     badges: {
@@ -2460,11 +2431,6 @@ const vi = {
     },
     breakReminder:
       'Bạn đã học khoảng 45 phút liên tục. Nghỉ mắt vài phút nhé: đứng dậy, nhìn ra xa — mô phỏng vẫn chờ bạn ở đây.',
-    topicLearned: 'Đã học',
-    topicLearnedLeft: 'Đã học — xong {done}/{total} bước, còn: {left}',
-    leftPredict: 'Dự đoán trước',
-    leftChallenges: '{count} thử thách',
-    chapterLearned: '{done}/{total} chủ đề đã học',
     lockPrediction: 'Chốt dự đoán',
     lockedHint: 'Đã chốt. Bấm “Chạy để kiểm tra” ở mép bàn.',
   },

@@ -3,7 +3,6 @@ import './bench.css';
 import { Minimize2 } from 'lucide-react';
 import { lazy, Suspense, useEffect } from 'react';
 import { useT } from '@/app/i18n';
-import { ShellOverlays } from '@/app/layout/AppShell';
 import { useLayoutStore } from '@/app/layout/layoutStore';
 import { useShellServices } from '@/app/layout/useShellServices';
 import { useIsHome, useIsLanding, useIsStudio, useIsTeacher } from '@/app/topics';
@@ -16,6 +15,7 @@ import { BenchLanding } from './Landing';
 import { BenchLibrary } from './Library';
 import { Notebook } from './Notebook';
 import { BenchContext } from './shellMode';
+import { ShellOverlays } from './ShellOverlays';
 import { useStudioSlot } from './studioSlot';
 import { keepBasicSpeedOnSteps } from './speeds';
 
@@ -23,10 +23,9 @@ const TeacherScreen = lazy(() => import('@/teacher/screen/TeacherScreen'));
 const StudioScreen = lazy(() => import('@/studio/StudioScreen'));
 
 /**
- * The "Bàn thí nghiệm" shell (0.8.1, docs/BENCH_DESIGN.md), shown only behind the dev switch
- * (`benchShellOn`). It marks <html data-shell="bench"> so the bench tokens and fonts apply. Rooms:
- * launch, library (the classic library column for now, B3), the bench for an open topic, Science
- * Studio and AI Teacher (their own screens until B6/B7).
+ * The "Bàn thí nghiệm" shell (0.8.1, docs/BENCH_DESIGN.md): the app's only shell since B8 (#193).
+ * It marks <html data-shell="bench"> so the bench tokens and fonts apply. Rooms: launch, library
+ * ("Kệ bài"), the bench for an open topic, Science Studio and AI Teacher.
  */
 export default function BenchShell() {
   useShellServices();

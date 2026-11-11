@@ -155,7 +155,7 @@ export function showVersionHistory(): void {
   useWorkspaceStore.getState().openSettingsAt('versions');
 }
 
-/** AppShell: decide once at start-up, then wait for a calm moment to open the box. */
+/** The shell: decide once at start-up, then wait for a calm moment to open the box. */
 export function useWhatsNewStartup(intervalMs = 1000): void {
   useEffect(() => {
     void initWhatsNew();

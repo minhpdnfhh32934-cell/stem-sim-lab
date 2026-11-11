@@ -8,7 +8,7 @@ import { useWorkspaceStore } from '@/app/workspaceStore';
 import { AgeGate } from '@/safety/AgeGate';
 import { BrowserSafety, setSafetyBackendForTests } from '@/safety/safety';
 import { loadSafety, useSafetyStore } from '@/safety/safetyStore';
-import { BenchContext, DEV_SHELL_KEY } from './shellMode';
+import { BenchContext } from './shellMode';
 
 const bench = (node: React.ReactNode) => (
   <BenchContext.Provider value={true}>{node}</BenchContext.Provider>
@@ -19,7 +19,6 @@ beforeEach(() => {
   useAiStore.setState({ status: 'noKey' });
 });
 afterEach(() => {
-  localStorage.removeItem(DEV_SHELL_KEY);
   act(() => {
     useWorkspaceStore.setState({ settingsOpen: false, subject: 'physics' });
     useSafetyStore.setState({ gateRequested: false, gateFirstRun: false });
@@ -66,7 +65,6 @@ describe('bench first run (docs/BENCH_DESIGN.md §9.2)', () => {
 
   it('step 3/3: "Quay lại" asks the 18+ question again, still as step 2/3', async () => {
     const user = userEvent.setup();
-    localStorage.setItem(DEV_SHELL_KEY, 'bench');
     useProfileStore.setState({ onboarded: true });
     await act(async () => {
       await loadSafety();
@@ -83,12 +81,14 @@ describe('bench first run (docs/BENCH_DESIGN.md §9.2)', () => {
 
   it('the gate is step 2/3 on the bench’s first run only', async () => {
     setSafetyBackendForTests(new BrowserSafety());
-    localStorage.setItem(DEV_SHELL_KEY, 'bench');
     const { unmount } = render(<AgeGate />);
     await screen.findByRole('button', { name: 'Tôi chưa đủ 18 tuổi' });
     expect(screen.getByText('Bước 2/3')).toBeInTheDocument();
     unmount();
-    localStorage.removeItem(DEV_SHELL_KEY);
+    // Reopened from Settings (not the first run): no step number.
+    act(() => {
+      useSafetyStore.setState({ gateRequested: true, gateFirstRun: false });
+    });
     render(<AgeGate />);
     await screen.findByRole('button', { name: 'Tôi chưa đủ 18 tuổi' });
     expect(screen.queryByText(/Bước/)).toBeNull();

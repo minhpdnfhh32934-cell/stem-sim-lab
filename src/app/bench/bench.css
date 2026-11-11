@@ -232,22 +232,6 @@ kbd {
   min-height: var(--target);
 }
 
-/* Search field (alexruix/slippery-frog-10). */
-.sidebar__search {
-  height: var(--target);
-  border-color: var(--border-input);
-  border-radius: var(--radius-md);
-  background: var(--bg-panel);
-  color: var(--text-muted);
-}
-.sidebar__search:focus-within {
-  outline: 2px solid var(--focus-ring);
-  outline-offset: 2px;
-}
-.sidebar__search input::placeholder {
-  color: var(--text-faint);
-}
-
 /* Collapsible card (Admin12121/fluffy-vampirebat-68): sections of the tray, sentence case. */
 .section {
   margin: 0 var(--space-3) var(--space-2);
@@ -667,12 +651,7 @@ kbd {
   border-right: 1px solid var(--border);
   background: var(--bg-panel);
 }
-.bench-library .subject-switch {
-  margin: var(--space-2);
-}
-.bench-library .sidebar {
-  flex: 1;
-}
+
 .bench-room__main {
   display: flex;
   flex-direction: column;

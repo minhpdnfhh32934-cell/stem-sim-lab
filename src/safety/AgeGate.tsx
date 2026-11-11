@@ -1,6 +1,5 @@
 import { ShieldCheck } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import { benchShellOn } from '@/app/bench/shellMode';
 import { useT } from '@/app/i18n';
 import { StepStrip } from '@/app/learner/StepStrip';
 import { checkAiStatus } from '@/app/ai/useAiStatus';
@@ -33,7 +32,7 @@ export function AgeGate({ hold = false }: { hold?: boolean }) {
   const visible = useGateVisible() && !hold;
   const status = useSafetyStore((s) => s.status);
   // The bench's first run counts the gate as step 2 of 3 (§9.2); not when Settings reopens it.
-  const firstRunStep = useSafetyStore((s) => !s.gateRequested || s.gateFirstRun) && benchShellOn();
+  const firstRunStep = useSafetyStore((s) => !s.gateRequested || s.gateFirstRun);
 
   useEffect(() => {
     void loadSafety().catch(() => undefined);

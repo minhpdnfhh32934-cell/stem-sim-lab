@@ -2,10 +2,6 @@ import type { Messages } from '../types';
 
 /** English UI strings. Must have exactly the same keys as `vi.ts` (checked by the type). */
 const en: Messages = {
-  app: {
-    name: 'SimLab',
-    tagline: 'Physics · Chemistry · Biology simulations',
-  },
   subjects: {
     label: 'Subject',
     physics: 'Physics',
@@ -24,8 +20,6 @@ const en: Messages = {
     undo: 'Undo (Ctrl+Z)',
     redo: 'Redo (Ctrl+Y)',
     settings: 'Settings',
-    toggleTheme: 'Toggle light / dark theme',
-    presentation: 'Presentation mode (F5)',
   },
   ai: {
     notAllowed: 'AI: not enabled',
@@ -59,17 +53,13 @@ const en: Messages = {
   },
   sidebar: {
     regionLabel: 'Topic library',
-    library: 'Library',
     history: 'History',
     search: 'Search topics…',
     noResults: 'No matching topics.',
     foundIn: '{count} in {subject}',
     clearSearch: 'Clear search',
     comingSoon: 'Coming soon',
-    comingSoonHint: 'This topic will be built in a later phase.',
     historyEmpty: 'No simulations yet. Simulations you run will appear here.',
-    studio: 'Science Studio',
-    studioHint: 'Guided lessons',
   },
   chapters: {
     kinematics: 'Kinematics',
@@ -205,7 +195,6 @@ const en: Messages = {
     verified: 'Reviewed',
   },
   bottom: {
-    moduleEmpty: 'This topic has no extra panel.',
     regionLabel: 'Graphs and solution panel',
     graphs: 'Graphs',
     solution: 'Solution',
@@ -225,7 +214,6 @@ const en: Messages = {
     reset: 'Reset (R)',
     speed: 'Playback speed',
     scrubber: 'Scrub simulation',
-    time: 'Simulation time',
   },
   bench: {
     breadcrumb: 'You are here',
@@ -286,18 +274,7 @@ const en: Messages = {
     isAi: 'An AI',
   },
   layout: {
-    resizeLeft: 'Drag to resize the Library',
-    resizeRight: 'Drag to resize the Properties panel',
-    resizeBottom: 'Drag to resize the Graphs panel',
     exitPresentation: 'Exit presentation (Esc)',
-  },
-  status: {
-    ready: 'Ready',
-    quality: 'Render quality',
-    qualityNotMeasured: 'not measured',
-    fps: 'FPS',
-    version: 'Version',
-    browserMode: 'browser mode',
   },
   settings: {
     nav: {
@@ -441,7 +418,6 @@ const en: Messages = {
   },
   command: {
     title: 'Quick search',
-    openButton: 'Quick search (Ctrl+K)',
     placeholder: 'Type a topic, a Settings page or something to do…',
     empty: 'No results. Try fewer letters.',
     keys: '↑ ↓ to choose · Enter to open · Esc to close',
@@ -736,7 +712,6 @@ const en: Messages = {
     degraded: 'Display quality lowered to keep things smooth (numbers unchanged)',
     memoryHigh:
       'Memory use is high ({mb} MB). Caches were released. Close some 3D topics or use fewer particles.',
-    memory: 'RAM {mb} MB',
   },
   tour: {
     label: 'Quick tour',
@@ -808,7 +783,6 @@ const en: Messages = {
     retry: 'Try again',
     requiredNote:
       'This update is required: update to keep using the app. Your history, files and settings are kept.',
-    available: 'Update {version} available',
     browserOnly: 'In-app updates are only available in the installed app.',
   },
   whatsnew: {
@@ -1016,7 +990,6 @@ const en: Messages = {
       'You chose the AI on this computer but no program and model yet, so the photo was not sent anywhere. Choose them in Settings → AI on this computer.',
   },
   landing: {
-    eyebrow: 'Explore science by doing',
     title: 'Welcome to SimLab',
     subtitle:
       'Choose how you want to learn today. Simulations, data and learning support share one workspace.',
@@ -1024,8 +997,6 @@ const en: Messages = {
     labBody:
       'Explore Physics, Chemistry and Biology simulations, adjust parameters and inspect results.',
     teacherTitle: 'AI Teacher',
-    teacherBody:
-      'Ask questions, get hints and check your understanding with an AI study assistant.',
     privacy: 'You choose when to share screen context or use an online AI service.',
   },
   studio: {
@@ -2454,7 +2425,6 @@ const en: Messages = {
     successTarget: 'Exactly! {quantity} = {value}, on target {goal} (only {diff} off).',
     successBest: 'Great! {quantity} = {value} — the largest possible is {best}.',
     showHint: 'Show a hint',
-    topicDone: 'Topic completed',
     badgesTitle: 'Your badges',
     noBadges: 'Open a topic, try a prediction or a challenge to earn your first badge.',
     badges: {
@@ -2473,11 +2443,6 @@ const en: Messages = {
     },
     breakReminder:
       'You have been studying for about 45 minutes. Rest your eyes for a few minutes: stand up, look into the distance — the simulation will wait for you.',
-    topicLearned: 'Studied',
-    topicLearnedLeft: 'Studied — {done}/{total} steps done, still to do: {left}',
-    leftPredict: 'Predict first',
-    leftChallenges: '{count} challenge(s)',
-    chapterLearned: '{done}/{total} topics studied',
     lockPrediction: 'Lock my prediction',
     lockedHint: 'Locked. Press “Run to check” at the bottom of the bench.',
   },
