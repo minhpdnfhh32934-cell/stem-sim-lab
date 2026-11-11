@@ -153,7 +153,7 @@ test('focus rings reach 3 : 1 on the frame and on paper, in light and dark', asy
     await page.getByRole('button', { name: 'Mở khay Điều chỉnh' }).click();
     await page.getByRole('tab', { name: 'Đồ thị' }).click();
     await page.getByRole('button', { name: 'Cài đặt', exact: true }).click();
-    await page.getByRole('switch', { name: 'Giao diện tối' }).last().waitFor();
+    await page.getByRole('button', { name: 'Giao diện tối' }).last().waitFor();
     await expectRings(page, page.locator('.settings-dialog .theme-switch :is(input, button)'), 2);
     await page.keyboard.press('Escape');
     // The file menu opens from the frame but is paper again.
@@ -162,6 +162,60 @@ test('focus rings reach 3 : 1 on the frame and on paper, in light and dark', asy
     await page.getByRole('button', { name: 'Tệp', exact: true }).click();
   }
 });
+
+for (const fontScale of [1, 1.4] as const)
+  test(`the light / dark button: 40 px, in the header at 1366 × 768, its icon ≥ 3 : 1 in both themes (${String(fontScale * 100)} %, #202)`, async ({
+    page,
+  }) => {
+    await page.addInitScript((scale) => {
+      localStorage.setItem(
+        'stemsim.settings',
+        JSON.stringify({ state: { locale: 'vi', fontScale: scale, theme: 'light' }, version: 2 }),
+      );
+    }, fontScale);
+    await openProjectile(page);
+    const button = page.locator('.bench-header').getByRole('button', { name: 'Giao diện tối' });
+    for (const pressed of [false, true]) {
+      await expect(button).toHaveAttribute('aria-pressed', String(pressed));
+      const r = await button.evaluate((el) => {
+        const lum = (c: string) => {
+          const [r, g, b] = (c.match(/\d+(\.\d+)?/g) ?? [])
+            .slice(0, 3)
+            .map(Number)
+            .map((v) => {
+              const s = v / 255;
+              return s <= 0.04045 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+            });
+          return 0.2126 * (r ?? 0) + 0.7152 * (g ?? 0) + 0.0722 * (b ?? 0);
+        };
+        // The icon on screen, against the first painted background under the button.
+        const shown =
+          el.getAttribute('aria-pressed') === 'true' ? '.icon-swap__alt' : '.icon-swap__main';
+        const ink = getComputedStyle(el.querySelector(shown) ?? el).color;
+        let under: Element | null = el;
+        let bg = 'rgba(0, 0, 0, 0)';
+        while (under && /rgba\(.*, 0\)$|transparent/.test(bg)) {
+          bg = getComputedStyle(under).backgroundColor;
+          under = under.parentElement;
+        }
+        const [a, b] = [lum(ink), lum(bg)].sort((x, y) => y - x) as [number, number];
+        const box = el.getBoundingClientRect();
+        const d = document.documentElement;
+        return {
+          contrast: (a + 0.05) / (b + 0.05),
+          size: Math.min(box.width, box.height),
+          right: box.right,
+          overflow: d.scrollWidth - d.clientWidth,
+        };
+      });
+      expect(r.contrast).toBeGreaterThanOrEqual(3);
+      expect(r.size).toBeGreaterThanOrEqual(40);
+      expect(r.right).toBeLessThanOrEqual(1366);
+      expect(r.overflow).toBe(0);
+      await button.click();
+    }
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+  });
 
 test('keyboard: speed steps, the light / dark switch, − / +, Esc hides a tooltip', async ({
   page,
@@ -176,7 +230,7 @@ test('keyboard: speed steps, the light / dark switch, − / +, Esc hides a toolt
   await expect(speed.getByRole('radio', { name: '0,5×' })).toBeChecked();
 
   const html = page.locator('html');
-  const dark = page.locator('.bench-header').getByRole('switch', { name: 'Giao diện tối' });
+  const dark = page.locator('.bench-header').getByRole('button', { name: 'Giao diện tối' });
   const before = await html.getAttribute('data-theme');
   await dark.focus();
   await page.keyboard.press('Space');

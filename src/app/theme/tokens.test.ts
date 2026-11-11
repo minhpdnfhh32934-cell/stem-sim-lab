@@ -228,9 +228,6 @@ const BENCH_PAIRS: readonly (readonly [string, readonly string[], number])[] = [
   // The main action's 2 px bottom edge reads as depth, not as its boundary (--play is that).
   ['--play-edge', ['--play'], 2],
   // Theme switch: the sun / moon on its knob, the knob on its track (the knob's side is the state).
-  ['--sw-icon', ['--sw-day-knob', '--sw-night-knob'], 3],
-  ['--sw-day-knob', ['--sw-day-track'], 3],
-  ['--sw-night-knob', ['--sw-night-track'], 3],
   // A chat toggle's knob on its track, off and on.
   ['--switch-knob', ['--border-strong', '--accent'], 3],
   ['--focus-ring', [...PAPER, '--bg-stage'], 3],

@@ -367,12 +367,6 @@
   --play-edge: #26766e;
   --on-play: #0a1f1d;
   --focus-frame: #f5c84c;
-  /* Theme switch (JkHuger/old-falcon-20): its day and night faces, the same in both themes. */
-  --sw-day-track: #fbe9a8;
-  --sw-day-knob: #a06c00;
-  --sw-night-track: #12304a;
-  --sw-night-knob: #2f7fc4;
-  --sw-icon: #ffffff;
   --switch-knob: #ffffff;
   /* Elevation (§6): L1 stage overlays, L2 overlay drawers, menus and popovers. */
   --shadow-l1: 0 1px 2px rgba(0, 0, 0, 0.12);
@@ -463,11 +457,6 @@
   --play-edge: #2b7b73;
   --on-play: #06201e;
   --focus-frame: #f5c84c;
-  --sw-day-track: #fbe9a8;
-  --sw-day-knob: #a06c00;
-  --sw-night-track: #12304a;
-  --sw-night-knob: #2f7fc4;
-  --sw-icon: #ffffff;
   --switch-knob: #1e2327;
   --shadow-l1: 0 1px 2px rgba(0, 0, 0, 0.4);
   --shadow-l2: 0 8px 24px rgba(0, 0, 0, 0.45);

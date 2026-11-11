@@ -143,7 +143,7 @@ describe('App shell (Phase 0)', () => {
     const user = userEvent.setup();
     render(<App />);
     expect(document.documentElement.dataset.theme).toBe('light');
-    await user.click(screen.getByRole('switch', { name: 'Giao diện tối' }));
+    await user.click(screen.getByRole('button', { name: 'Giao diện tối', pressed: false }));
     expect(document.documentElement.dataset.theme).toBe('dark');
   });
 

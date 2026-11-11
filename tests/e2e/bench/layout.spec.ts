@@ -413,6 +413,105 @@ async function backToChemistry(page: Page) {
   await page.locator('.bench-crumbs').getByRole('button', { name: 'Hóa học' }).click();
 }
 
+test('bench text follows Cỡ chữ: at 140 % the shelf and edge text is 1,4× larger, nothing spills (#202)', async ({
+  page,
+}) => {
+  test.setTimeout(120_000);
+  const SHELF = ['.shelf-card__title', '.shelf-card__meta', '.shelf__title', '.shelf-main__note'];
+  const EDGE = ['.bench-play', '.bench-edge__readout'];
+  const fontSizes = (selectors: string[]) =>
+    page.evaluate(
+      (sels) =>
+        sels.map((sel) => {
+          const el = document.querySelector(sel);
+          return el ? parseFloat(getComputedStyle(el).fontSize) : NaN;
+        }),
+      selectors,
+    );
+  const spills = () =>
+    page.evaluate(() => {
+      const d = document.documentElement;
+      const edge = document.querySelector('.bench-edge')?.getBoundingClientRect();
+      return {
+        sideways: d.scrollWidth - d.clientWidth,
+        edgeOut: edge ? Math.max(0, edge.right - innerWidth, edge.bottom - innerHeight) : -1,
+      };
+    });
+  const measure = async (fontScale: number) => {
+    await page.addInitScript((scale) => {
+      localStorage.setItem(
+        'stemsim.settings',
+        JSON.stringify({ state: { locale: 'vi', fontScale: scale }, version: 2 }),
+      );
+    }, fontScale);
+    await openLab(page);
+    await page.getByRole('radio', { name: 'Vật lý' }).click();
+    await expect(page.locator('.shelf-card__title').first()).toBeVisible();
+    const shelf = await fontSizes(SHELF);
+    const shelfSpills = await spills();
+    await page.getByRole('main').getByRole('button', { name: 'Ném xiên', exact: true }).click();
+    await expect(page.locator('.stage__hud-title')).toBeVisible({ timeout: 20_000 });
+    const edge = await fontSizes(EDGE);
+    return { sizes: [...shelf, ...edge], shelfSpills, benchSpills: await spills() };
+  };
+  const base = await measure(1);
+  const big = await measure(1.4);
+  expect(base.sizes.every((v) => v > 0)).toBe(true);
+  big.sizes.forEach((v, i) => {
+    expect(v, [...SHELF, ...EDGE][i]).toBeCloseTo((base.sizes[i] ?? 0) * 1.4, 0);
+  });
+  expect(big.shelfSpills).toEqual({ sideways: 0, edgeOut: -1 });
+  expect(big.benchSpills).toEqual({ sideways: 0, edgeOut: 0 });
+});
+
+test('a card picture switched to dark outlines its labels in the dark stage colour (#202)', async ({
+  page,
+}) => {
+  // Every label outline drawn on a card picture: the canvas, and the colour it was drawn with.
+  await page.addInitScript(() => {
+    const w = window as unknown as { __cardStrokes: string[] };
+    w.__cardStrokes = [];
+    const proto = CanvasRenderingContext2D.prototype;
+    // eslint-disable-next-line @typescript-eslint/unbound-method -- re-applied to the same context below
+    const stroke = proto.strokeText;
+    proto.strokeText = function (...args) {
+      const style = this.strokeStyle;
+      if (this.canvas.classList.contains('shelf-card__still'))
+        w.__cardStrokes.push(typeof style === 'string' ? style : 'not a colour');
+      stroke.apply(this, args);
+    };
+  });
+  await openPhysics(page, 'Chuyển động thẳng đều');
+  // Back on the shelf after the lab stage drew a frame in the light theme.
+  await page.locator('.bench-crumbs').getByRole('button', { name: 'Vật lý' }).click();
+  await expect(page.locator('.shelf-card__still').first()).toBeVisible();
+  await page.evaluate(async (url) => {
+    (window as unknown as { __cardStrokes: string[] }).__cardStrokes = [];
+    const { useSettingsStore } = (await import(
+      /* @vite-ignore */ url
+    )) as typeof import('../../../src/app/settings/settingsStore');
+    useSettingsStore.getState().setTheme('dark');
+  }, '/src/app/settings/settingsStore.ts');
+  await expect
+    .poll(() =>
+      page.evaluate(() => (window as unknown as { __cardStrokes: string[] }).__cardStrokes.length),
+    )
+    .toBeGreaterThan(0);
+  const { strokes, stage } = await page.evaluate(() => {
+    // The dark --bg-stage in the canvas's own colour form (#rrggbb).
+    const probe = document.createElement('canvas').getContext('2d');
+    if (!probe) throw new Error('no 2D canvas');
+    probe.strokeStyle = getComputedStyle(document.documentElement)
+      .getPropertyValue('--bg-stage')
+      .trim();
+    return {
+      strokes: [...new Set((window as unknown as { __cardStrokes: string[] }).__cardStrokes)],
+      stage: probe.strokeStyle,
+    };
+  });
+  expect(strokes).toEqual([stage]);
+});
+
 test('library: a selected title keeps its line; a checkbox sits by its label (UI-42, UI-43)', async ({
   page,
 }) => {

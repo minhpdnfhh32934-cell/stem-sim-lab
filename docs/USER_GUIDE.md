@@ -349,7 +349,9 @@ trạng thái, bảng dưới, bong bóng chat) đã bỏ. Dữ liệu đã lưu
 3D/2D) vẫn được giữ.
 
 - **Thanh trên:** về trang chủ, đường dẫn (Virtual Lab › môn › bài), nút **Đề bài**, trạng thái AI,
-  **Tìm…** (Ctrl+K), Cơ bản/Nâng cao, sáng/tối, AI Teacher, hoàn tác/làm lại, Tệp, Cài đặt.
+  **Tìm…** (Ctrl+K), Cơ bản/Nâng cao, nút sáng/tối (mặt trăng khi đang sáng, mặt trời khi đang
+  tối), AI Teacher, hoàn tác/làm lại, Tệp, Cài đặt. Khi chữ to (Cài đặt → Cỡ chữ) hoặc cửa sổ hẹp,
+  ô Tìm và trạng thái AI chỉ còn biểu tượng để tên bài có chỗ.
 - **Kệ bài** (khi chưa mở bài): cột lọc bên trái (môn học, loại bài **Tự do** / **Có hướng dẫn**,
   ô tìm chủ đề, Lịch sử ở chế độ Nâng cao). Ở giữa là "Hôm nay học gì?" với nút chọn lớp, ô
   **Tiếp tục** và **Có đề bài?**, rồi các kệ thẻ chủ đề theo chương. Tìm không thấy thì app gợi ý

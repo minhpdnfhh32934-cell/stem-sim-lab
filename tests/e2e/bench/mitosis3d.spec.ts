@@ -117,6 +117,25 @@ test('overload notices: a strip under the stage, clear of the 3D view’s HUD (B
   await expectNoticesBelow(page, '.stage__notes--strip', 'section.stage', '.m3d__hud');
 });
 
+test('presentation: the exit button is a 40 px target and covers nothing of the 3D stage (#202)', async ({
+  page,
+}) => {
+  await openMitosis(page);
+  await page.getByRole('button', { name: 'Tệp' }).click();
+  await page.getByRole('menuitem', { name: 'Chế độ trình chiếu (F5)' }).click();
+  const exit = page.getByRole('button', { name: 'Thoát trình chiếu (Esc)' });
+  await expect(exit).toBeVisible();
+  await expect(page.locator('.m3d__side')).toBeVisible();
+  const [button, stage] = await Promise.all([
+    exit.boundingBox(),
+    page.getByRole('region', { name: 'Khung mô phỏng' }).boundingBox(),
+  ]);
+  if (!button || !stage) throw new Error('not on screen');
+  expect(Math.min(button.width, button.height)).toBeGreaterThanOrEqual(40);
+  // Wholly right of the stage: its HUD, side controls (.m3d__side) and overlays stay uncovered.
+  expect(button.x).toBeGreaterThanOrEqual(stage.x + stage.width - 0.5);
+});
+
 test('mitosis 3D: plays through every stage, switches cell type, no leaks on replay', async ({
   page,
 }) => {
