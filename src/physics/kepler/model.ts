@@ -71,14 +71,21 @@ export function arc(o: Orbit, t0: number, t1: number, steps = 64): { x: number; 
   });
 }
 
-/** Area of the sector Sun–arc (shoelace on the polygon): a numerical check of Kepler's 2nd law. */
+/**
+ * Area of the sector Sun–arc: a numerical check of Kepler's 2nd law. Shoelace on the inscribed
+ * polygon, whose chord error falls as 1/steps²; Richardson's (4·A(steps) − A(steps/2))/3 removes
+ * that term (steps even).
+ */
 export function sectorArea(o: Orbit, t0: number, t1: number, steps = 2000): number {
-  const pts = [{ x: 0, y: 0 }, ...arc(o, t0, t1, steps)];
-  let s = 0;
-  for (let i = 0; i < pts.length; i++) {
-    const p = pts[i] ?? { x: 0, y: 0 };
-    const q = pts[(i + 1) % pts.length] ?? { x: 0, y: 0 };
-    s += p.x * q.y - q.x * p.y;
-  }
-  return Math.abs(s) / 2;
+  const polygon = (n: number) => {
+    const pts = [{ x: 0, y: 0 }, ...arc(o, t0, t1, n)];
+    let s = 0;
+    for (let i = 0; i < pts.length; i++) {
+      const p = pts[i] ?? { x: 0, y: 0 };
+      const q = pts[(i + 1) % pts.length] ?? { x: 0, y: 0 };
+      s += p.x * q.y - q.x * p.y;
+    }
+    return Math.abs(s) / 2;
+  };
+  return (4 * polygon(steps) - polygon(steps / 2)) / 3;
 }

@@ -242,4 +242,15 @@ describe('textbookFormula (UI-39: heading and formula row agree)', () => {
     // "Cl" or "Ca" first is not carbon.
     expect(textbookFormula({ formula: 'CaO', display_formula: 'CaO' })).toBe('CaO');
   });
+
+  it('HCN reads "HCN" on the formula row, as in its heading, not Hill’s "CHN" (#192)', () => {
+    const hcn = moleculeById('hcn');
+    expect(hcn && textbookFormula(hcn)).toBe('HCN');
+    expect(hcn?.display_formula).toBe('HCN');
+    // Every other molecule: the row and the heading agree, or the heading is a condensed
+    // structure of a carbon compound and the row its Hill formula.
+    for (const m of MOLECULES)
+      if (textbookFormula(m) !== m.display_formula)
+        expect([m.id, textbookFormula(m)]).toEqual([m.id, m.formula]);
+  });
 });

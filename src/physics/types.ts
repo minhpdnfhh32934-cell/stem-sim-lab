@@ -73,6 +73,11 @@ export interface Answer {
   unit: string;
   /** Independent numerical cross-check of `value` (same unit), when available. */
   check?: number;
+  /**
+   * Relative tolerance of `check` when it cannot reach CHECK_TOL (`tolerance.ts`), e.g. a
+   * measurement on sampled data; the Science Card says why, and a test proves it is met.
+   */
+  checkTol?: number;
 }
 
 export interface SolutionStep {

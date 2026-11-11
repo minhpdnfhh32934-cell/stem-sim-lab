@@ -34,6 +34,9 @@ const MoleculeSchema = z.object({
   formula: z.string(),
   /** Formula as written in textbooks, e.g. "C2H5OH" (same atoms as `formula`). */
   display_formula: z.string(),
+  /** Molecular formula of a carbon compound written out of Hill order ("HCN"), with its source. */
+  molecular_formula: z.string().optional(),
+  molecular_formula_source: z.string().optional(),
   molar_mass: z.number().positive(),
   atoms: z.array(AtomSchema).min(1),
   bonds: z.array(BondSchema),
@@ -334,10 +337,13 @@ export function lonePairDirections(m: Molecule, i: number): Vec3[] {
 
 /**
  * Molecular formula as Vietnamese textbooks write it: Hill order for carbon compounds ("C2H6O"
- * for ethanol), the textbook order otherwise ("NH3", "HCl", not Hill's "H3N", "ClH").
+ * for ethanol) unless the data gives a cited exception ("HCN", not Hill's "CHN"), the textbook
+ * order otherwise ("NH3", "HCl", not Hill's "H3N", "ClH").
  */
-export function textbookFormula(m: Pick<Molecule, 'formula' | 'display_formula'>): string {
-  return /^C(?![a-z])/.test(m.formula) ? m.formula : m.display_formula;
+export function textbookFormula(
+  m: Pick<Molecule, 'formula' | 'display_formula' | 'molecular_formula'>,
+): string {
+  return m.molecular_formula ?? (/^C(?![a-z])/.test(m.formula) ? m.formula : m.display_formula);
 }
 
 /** "C2H4O2" → "C₂H₄O₂", "CO3-2" → "CO₃²⁻" (RDKit formula format). */

@@ -161,7 +161,9 @@ export function formatFormula(input: string): string {
 
 /**
  * An equation as typed ("MnO4^- + Fe^2+ -> Mn^2+") with typographic formulas ("MnO₄⁻ + Fe²⁺ →
- * Mn²⁺"); a term the formula reader does not know is shown as typed.
+ * Mn²⁺"); a term the formula reader does not know is shown as typed. The arrow keeps its kind:
+ * "⇌", "<=>" or "<->" → ⇌ (reversible), "->", "→", "⟶", "=>" or "=" → → (the arrows
+ * `balance.ts` reads).
  */
 export function formatEquationText(input: string): string {
   const side = (s: string) =>
@@ -176,10 +178,11 @@ export function formatEquationText(input: string): string {
         }
       })
       .join(' + ');
+  // The captured arrows sit at the odd indices between the sides.
   return input
-    .split(/\s*(?:->|=|→|⇌)\s*/)
-    .map(side)
-    .join(' → ');
+    .split(/\s*(<=>|<->|⇌|=>|->|⟶|→|=)\s*/)
+    .map((part, i) => (i % 2 === 0 ? side(part) : /^(?:<=>|<->|⇌)$/.test(part) ? ' ⇌ ' : ' → '))
+    .join('');
 }
 
 /** Molar mass (g/mol) from standard atomic weights. */

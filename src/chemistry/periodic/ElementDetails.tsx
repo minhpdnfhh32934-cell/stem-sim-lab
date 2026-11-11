@@ -13,10 +13,13 @@ import { L } from '../common';
 import { CATEGORY_LABEL } from './layout';
 import { usePeriodicStore } from './store';
 
+/** mendeleev's version as the data script recorded it, so the line below cannot drift (#192). */
+const MENDELEEV_VERSION = /^mendeleev (\S+) /.exec(ELEMENTS_SOURCE.citation)?.[1] ?? '';
+
 /** The data source in the learner's language; the original citation is the tooltip. */
 const SOURCE = L(
-  'Nguồn: thư viện mendeleev 1.3.0 — khối lượng nguyên tử IUPAC/CIAAW, độ âm điện Pauling, bán kính cộng hóa trị (Cordero và cộng sự, 2008), cấu hình electron và năng lượng ion hóa NIST ASD, màu CPK/Jmol.',
-  'Source: mendeleev 1.3.0 library — IUPAC/CIAAW atomic weights, Pauling electronegativity, covalent radii (Cordero et al., 2008), NIST ASD electron configurations and ionisation energies, CPK/Jmol colours.',
+  `Nguồn: thư viện mendeleev ${MENDELEEV_VERSION} — khối lượng nguyên tử IUPAC/CIAAW, độ âm điện Pauling, bán kính cộng hóa trị (Cordero và cộng sự, 2008), cấu hình electron và năng lượng ion hóa NIST ASD, màu CPK/Jmol.`,
+  `Source: mendeleev ${MENDELEEV_VERSION} library — IUPAC/CIAAW atomic weights, Pauling electronegativity, covalent radii (Cordero et al., 2008), NIST ASD electron configurations and ionisation energies, CPK/Jmol colours.`,
 );
 
 /** Data sheet of the selected element (every value from data/elements.json). */
