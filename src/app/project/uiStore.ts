@@ -14,6 +14,8 @@ export interface ProjectUiState {
   sourcesOpen: boolean;
   /** The shelf's "Lịch sử" list is open (Tệp → Lịch sử opens it in Basic too). */
   historyOpen: boolean;
+  /** Once: the shelf moves the focus to "Lịch sử" when it shows it (Tệp → Lịch sử). */
+  historyFocus: boolean;
   /** Index of the tour step shown, or null when the tour is closed. */
   tourStep: number | null;
 }
@@ -21,6 +23,7 @@ export interface ProjectUiState {
 export const useProjectUi = create<ProjectUiState>()(() => ({
   sourcesOpen: false,
   historyOpen: false,
+  historyFocus: false,
   tourStep: readTourDone() ? null : 0,
 }));
 

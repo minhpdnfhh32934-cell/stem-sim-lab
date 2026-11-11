@@ -10,7 +10,7 @@ import {
   Search,
   SearchX,
 } from 'lucide-react';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useAiStore } from '@/ai/aiStore';
 import { openManual } from '@/app/ai/analyze';
@@ -85,6 +85,14 @@ export function BenchLibrary() {
   // The recovery buttons vanish once used: the keyboard focus goes to the grade or field they set.
   const allRef = useRef<HTMLButtonElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
+  const historyRef = useRef<HTMLButtonElement>(null);
+  // Tệp → Lịch sử: the focus goes to the list it opened (once; the menu's item is gone).
+  const historyFocus = useProjectUi((s) => s.historyFocus);
+  useEffect(() => {
+    if (!historyFocus) return;
+    historyRef.current?.focus();
+    useProjectUi.setState({ historyFocus: false });
+  }, [historyFocus]);
   const counts = useMemo(
     () =>
       Object.fromEntries(
@@ -158,9 +166,12 @@ export function BenchLibrary() {
             <button
               type="button"
               className="btn btn--ghost"
+              ref={historyRef}
               aria-expanded={historyOpen}
               onClick={() => {
                 setHistoryOpen(!historyOpen);
+                // In Basic the section goes with the list it closes: the focus goes to the search.
+                if (!advanced && historyOpen) searchRef.current?.focus();
               }}
             >
               <History size={16} strokeWidth={1.75} aria-hidden="true" />

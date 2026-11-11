@@ -70,7 +70,7 @@ export function FileMenu() {
       // The shelf's list (docs/BENCH_DESIGN.md §9.8): Basic has no other way to it.
       run: () => {
         toLibrary();
-        useProjectUi.setState({ historyOpen: true });
+        useProjectUi.setState({ historyOpen: true, historyFocus: true });
       },
     },
     {
