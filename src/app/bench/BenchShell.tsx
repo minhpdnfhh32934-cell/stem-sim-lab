@@ -1,5 +1,4 @@
 import '@/app/theme/benchFonts';
-import './bench.css';
 import { Minimize2 } from 'lucide-react';
 import { lazy, Suspense, useEffect } from 'react';
 import { useT } from '@/app/i18n';
