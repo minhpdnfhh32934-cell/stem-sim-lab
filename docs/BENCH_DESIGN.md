@@ -836,7 +836,10 @@ New shell, same organs: rewriting domain logic would add risk without adding any
 
 Total: about 14–15 builder-weeks, including the duplicated specs.
 
-**B8 (#193, in review: "done" only once the native WebView2 check and the full E2E run pass).**
+**B8 done (#193, PR #198, merged 12/11/2026 as `f2e535e`).** Native WebView2: window height,
+KaTeX subscripts under the real CSP, diacritics and the first frame passed; the whiteboard toolbar
+was accepted through E2E `board.spec` (user decision 11/11/2026). CI run 43051736789 on the last
+head `d086b3e`: 8/8 green (two jobs re-run after a DNS error installing apt packages on the runner).
 The bench is the only shell. Parity first: every classic E2E title
 had its bench copy (143/143) before the 37 classic specs went; the classic shell's unit tests now
 check the same things on the bench. Deleted after an import walk from `src/main.tsx`: the classic
