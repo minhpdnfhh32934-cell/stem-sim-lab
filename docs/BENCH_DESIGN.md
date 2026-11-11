@@ -783,7 +783,7 @@ New shell, same organs: rewriting domain logic would add risk without adding any
 
 ## 14. Build plan for 0.8.1
 
-**Dev switch.** One build only, no `VITE_*` flag.
+**Dev switch (B1–B7; B8 removed it).** One build only, no `VITE_*` flag.
 
 - `AppShell` renders `BenchShell` when `import.meta.env.DEV && localStorage['stemsim.dev.shell'] === 'bench'` (wrapped in try/catch).
 - A unit test proves a production build ignores the key.
@@ -836,7 +836,8 @@ New shell, same organs: rewriting domain logic would add risk without adding any
 
 Total: about 14–15 builder-weeks, including the duplicated specs.
 
-**B8 done (11/11/2026, #193).** The bench is the only shell. Parity first: every classic E2E title
+**B8 (#193, in review: "done" only once the native WebView2 check and the full E2E run pass).**
+The bench is the only shell. Parity first: every classic E2E title
 had its bench copy (143/143) before the 37 classic specs went; the classic shell's unit tests now
 check the same things on the bench. Deleted after an import walk from `src/main.tsx`: the classic
 shell and its parts, their CSS, `--glass-*`, the launch blobs and 30 i18n keys. Kept from them where

@@ -124,7 +124,7 @@ export function TourOverlay({
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onEnd();
       if (e.key !== 'Tab') return;
-      // Tab wraps around the card's buttons. Focus elsewhere (the chat bubble, the Ctrl+K
+      // Tab wraps around the card's buttons. Focus elsewhere (the notebook, the Ctrl+K
       // palette, a dialog opened on top) is left alone.
       const buttons = [...(cardRef.current?.querySelectorAll<HTMLButtonElement>('button') ?? [])];
       const first = buttons[0];

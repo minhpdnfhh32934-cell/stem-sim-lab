@@ -3,8 +3,8 @@ import { expect, test, type Locator, type Page } from '@playwright/test';
 import { isBench, openProblem, openTopic } from '../nav';
 
 /**
- * The bench frame (0.8.1 B1, #115; docs/BENCH_DESIGN.md §3 and §8), with the dev switch on
- * (project `chromium-bench`): geometry at 1366×768, landmarks, the folding tray, the notebook,
+ * The bench frame (0.8.1 B1, #115; docs/BENCH_DESIGN.md §3 and §8), the only shell since B8:
+ * geometry at 1366×768, landmarks, the folding tray, the notebook,
  * one filled button per state, the stage's live line and 40 px targets.
  */
 

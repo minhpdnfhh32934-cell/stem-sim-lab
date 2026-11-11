@@ -70,7 +70,7 @@ chép qua USB và cài trước.
    Hướng dẫn nhanh mở lại được bằng menu ☰ → Hướng dẫn nhanh. App cũng đo nhanh sức mạnh máy
    (khoảng 1 giây) để chọn chất lượng hiển thị.
 
-   **Tìm nhanh (Ctrl+K)** hoặc nút kính lúp trên thanh trên cùng: gõ vài chữ (không cần dấu, ví
+   **Tìm nhanh (Ctrl+K)** hoặc nút **Tìm…** ở đầu bàn: gõ vài chữ (không cần dấu, ví
    dụ "nem xien") để mở một chủ đề, một trang Cài đặt, AI Teacher, hoặc làm nhanh một việc (đổi
    sáng/tối, Cơ bản/Nâng cao, ngôn ngữ, trình chiếu, lưu/mở tệp). Mũi tên ↑ ↓ để chọn, Enter để mở,
    Esc để đóng.
@@ -664,8 +664,8 @@ Từng bài:
 - **Xuất PNG:** chụp khung mô phỏng (hình 2D, 3D hoặc đồ thị). Chủ đề hiển thị bằng bảng thì dùng Xuất
   CSV. Ở chế độ **Nâng cao**, rê chuột lên một đồ thị để thấy nút **Xuất CSV** ở góc phải (trên màn
   hình cảm ứng nút luôn hiện).
-- **Lịch sử** (tab ở cột trái): mọi mô phỏng đã mở, kèm thông số cuối cùng. Bấm để mở lại; bấm
-  thùng rác để xóa.
+- **Lịch sử** (Tệp → **Lịch sử**; ở chế độ Nâng cao còn có nút **Lịch sử** ở cột lọc của Kệ bài):
+  mọi mô phỏng đã mở, kèm thông số cuối cùng. Bấm để mở lại; bấm thùng rác để xóa.
 - **Nguồn & Giả định:** một trang tổng hợp nguyên tắc khoa học, nguồn của mọi bộ dữ liệu (kèm số mục
   chờ giáo viên duyệt), tài liệu tham khảo và giả định của chủ đề đang mở — dùng khi trình bày với
   giám khảo.

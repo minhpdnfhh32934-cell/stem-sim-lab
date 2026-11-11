@@ -7,8 +7,8 @@
  * the drawings' own SVG with their colours written in (the page's CSS does not reach an image).
  * KaTeX and the written words are never rasterised. The SVG becomes a PNG through a `blob:` URL
  * and an OffscreenCanvas (the CSP allows `img-src blob:`). Checked in Chromium
- * (tests/e2e/board-picture.spec.ts); not yet in the desktop app's WebView2 (a canvas tainted by an SVG image would make it fail: then the learner is told and
- * nothing is sent).
+ * (tests/e2e/bench/board-picture.spec.ts); not yet in the desktop app's WebView2 (a canvas tainted
+ * by an SVG image would make it fail: then the learner is told and nothing is sent).
  */
 import { BOARD_W, type Box } from './layout';
 import type { BoardSelection, Point } from './selection';

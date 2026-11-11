@@ -168,9 +168,9 @@ test('logistic 3D: the habitat follows the model; rebuilding for new inputs free
 });
 
 // ---- Cell → DNA ----
-// Kept here: the bench's 3D project matches only bench/<name>.spec.ts with the classic 3D
-// names (playwright.config.ts BENCH_3D), so a file named cellzoom-bio3d.spec.ts ran in the
-// light project with software WebGL beside every other bench spec.
+// Kept in bio3d.spec.ts, which the `chromium-3d` project runs (HEAVY_3D in playwright.config.ts):
+// a spec whose name HEAVY_3D does not match would run in the light project, with software WebGL
+// beside every other spec.
 interface ZoomState {
   level: string;
   barNm: number;
