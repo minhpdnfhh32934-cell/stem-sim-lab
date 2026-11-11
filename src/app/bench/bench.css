@@ -2249,9 +2249,14 @@ button.bench-door--lab:hover {
 }
 
 /*
- * Presentation: the HUD's right end (title, chips, PerfNotes) stays clear of the exit button
- * (`icon-btn--lg`, 38 px at 100 %; its size is #202) and a gap.
+ * Presentation: the exit button is a target-sized button in a gutter of its own, right of the
+ * stage, so nothing drawn on any stage (the HUD, a 3D view's side controls, overlays) is ever
+ * under it (#202).
  */
-.bench-shell[data-presentation] .stage__hud {
-  right: calc(var(--space-3) + 56px);
+.bench-shell .shell__exit-presentation {
+  width: var(--target);
+  height: var(--target);
+}
+.bench[data-presentation] .bench__stage {
+  padding-right: calc(var(--target) + 2 * var(--space-3));
 }

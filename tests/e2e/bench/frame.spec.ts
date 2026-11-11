@@ -294,6 +294,8 @@ test('presentation from Tệp: the HUD stays clear of the exit button; Esc leave
   const hud = await page.locator('.stage__hud').boundingBox();
   const button = await exit.boundingBox();
   if (!hud || !button) throw new Error('not visible');
+  // A 40 px target (#202; it was 38 px).
+  expect(Math.min(button.width, button.height)).toBeGreaterThanOrEqual(40);
   const apart =
     hud.x + hud.width <= button.x ||
     button.x + button.width <= hud.x ||
