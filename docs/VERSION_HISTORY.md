@@ -1,22 +1,22 @@
 # SimLab — Version History & Release Notes
 
-Lịch sử phiên bản và ghi chú phát hành của SimLab (tên cũ: STEM Sim Lab). Tạo tự động từ `release-notes/versions.json` bằng `npm run release-notes`. Đừng sửa tay. Bằng chứng được kiểm lần cuối ngày 28/10/2026.
+Lịch sử phiên bản và ghi chú phát hành của SimLab (tên cũ: STEM Sim Lab). Tạo tự động từ `release-notes/versions.json` bằng `npm run release-notes`. Đừng sửa tay. Bằng chứng được kiểm lần cuối ngày 12/11/2026.
 
 ## I. Tổng quan lịch sử SimLab
 
 SimLab (tên cũ: STEM Sim Lab) là ứng dụng desktop mô phỏng Vật lý, Hóa học và Sinh học cho người học, chạy ngay trên máy (Tauri 2 + React). Mọi con số do chương trình tính bằng mô hình ghi trong Thẻ Khoa học; AI chỉ đọc đề và giải thích bằng lời.
 
-Dự án bắt đầu ngày 28/09/2026: Phase 0–7 (khung app, lõi tính toán, Vật lý, AI đọc đề, Hóa học, Sinh học, dự án và bộ cài Windows) xong trong hai ngày đầu. Tiếp theo là giai đoạn 3b (học bằng khám phá, an toàn khi dùng AI, hai bộ cài), bản fork 'Thầy AI' (09–12/10/2026) mà nay là AI Teacher, rồi đổi tên thành SimLab ở 0.5.0 và đợt rà soát toàn diện G0–G5 cho 0.6.0. Bản 0.7.0 và 0.7.1 đưa cả 11 bài Sinh học lên hình 3D.
+Dự án bắt đầu ngày 28/09/2026: Phase 0–7 (khung app, lõi tính toán, Vật lý, AI đọc đề, Hóa học, Sinh học, dự án và bộ cài Windows) xong trong hai ngày đầu. Tiếp theo là giai đoạn 3b (học bằng khám phá, an toàn khi dùng AI, hai bộ cài), bản fork 'Thầy AI' (09–12/10/2026) mà nay là AI Teacher, rồi đổi tên thành SimLab ở 0.5.0 và đợt rà soát toàn diện G0–G5 cho 0.6.0. Bản 0.7.0 và 0.7.1 đưa cả 11 bài Sinh học lên hình 3D. Bản 0.8.0 (không phát hành riêng) và 0.8.1 (chưa phát hành) bám sách Kết nối tri thức, thêm nhiều bài mới và thay toàn bộ giao diện bằng Bàn thí nghiệm.
 
 Tài liệu này được tạo tự động từ release-notes/versions.json (npm run release-notes). Mọi mốc thời gian lấy từ git, GitHub (PR, Actions, Releases) và tài liệu trong repo; ô ghi 'Chưa xác minh được' nghĩa là chưa có bằng chứng, không có nghĩa là việc đó không xảy ra. Giờ được đổi sang giờ Việt Nam (UTC+7); giá trị gốc nằm trong versions.json.
 
-- Số phiên bản ghi nhận: 14 (0.1.0 → 0.8.0).
+- Số phiên bản ghi nhận: 15 (0.1.0 → 0.8.1).
 - Đã phát hành trên GitHub: 0.2.0 (05/10/2026), 0.3.0 (06/10/2026), 0.4.1 (12/10/2026), 0.5.0 (13/10/2026), 0.5.2 (13/10/2026), 0.6.0 (19/10/2026), 0.7.0 (20/10/2026), 0.7.1 (22/10/2026).
-- Đã gộp, chưa phát hành: 0.5.1.
-- Đang xét duyệt: 0.8.0.
+- Đã gộp, chưa phát hành: 0.5.1, 0.8.0.
+- Đang xét duyệt: 0.8.1.
 - Bản phát triển, không phát hành: 0.1.0.
 - Chưa xác minh: 0.4.0, 0.4.2, 0.4.3.
-- Phiên bản mới nhất trong dữ liệu: 0.8.0 (Đang xét duyệt).
+- Phiên bản mới nhất trong dữ liệu: 0.8.1 (Đang xét duyệt).
 
 ## II. Dòng thời gian phát triển từ bản gốc
 
@@ -37,7 +37,8 @@ Cũ nhất ở trên. Cột "Ngày phát hành" chỉ ghi ngày khi có GitHub R
 | 0.6.0 | Đã phát hành | 19/10/2026 (đã xác minh) | [#20](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/20), [#21](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/21), [#22](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/22), [#29](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/29), [#30](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/30) | [v0.6.0](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.6.0) |
 | 0.7.0 | Đã phát hành | 20/10/2026 (đã xác minh) | [#32](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/32) | [v0.7.0](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.7.0) |
 | 0.7.1 | Đã phát hành | 22/10/2026 (đã xác minh) | [#35](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/35), [#38](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/38) | [v0.7.1](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.7.1) |
-| 0.8.0 | Đang xét duyệt | Chưa phát hành | [#26](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/26), [#27](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/27), [#28](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/28), [#40](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/40), [#41](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/41), [#42](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/42), [#43](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/43), [#44](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/44), [#45](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/45), [#46](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/46), [#47](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/47), [#48](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/48), [#49](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/49), [#50](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/50), [#51](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/51), [#53](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/53), [#55](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/55), [#56](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/56), [#79](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/79), [#81](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/81), [#82](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/82), [#83](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/83), [#84](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/84), [#85](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/85), [#86](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/86), [#87](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/87), [#88](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/88), [#89](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/89), [#90](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/90), [#91](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/91), [#93](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/93), [#94](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/94), [#95](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/95), [#96](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/96), [#97](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/97), [#98](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/98), [#99](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/99), [#100](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/100), [#101](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/101), [#102](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/102), [#103](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/103) | — |
+| 0.8.0 | Đã gộp, chưa phát hành | Chưa phát hành | [#26](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/26), [#27](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/27), [#28](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/28), [#40](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/40), [#41](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/41), [#42](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/42), [#43](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/43), [#44](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/44), [#45](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/45), [#46](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/46), [#47](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/47), [#48](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/48), [#49](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/49), [#50](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/50), [#51](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/51), [#53](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/53), [#55](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/55), [#56](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/56), [#79](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/79), [#81](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/81), [#82](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/82), [#83](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/83), [#84](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/84), [#85](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/85), [#86](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/86), [#87](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/87), [#88](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/88), [#89](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/89), [#90](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/90), [#91](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/91), [#93](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/93), [#94](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/94), [#95](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/95), [#96](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/96), [#97](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/97), [#98](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/98), [#99](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/99), [#100](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/100), [#101](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/101), [#102](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/102), [#103](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/103) | — |
+| 0.8.1 | Đang xét duyệt | Chưa phát hành | [#104](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/104), [#108](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/108), [#110](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/110), [#111](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/111), [#114](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/114), [#117](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/117), [#118](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/118), [#120](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/120), [#122](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/122), [#123](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/123), [#124](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/124), [#125](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/125), [#126](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/126), [#129](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/129), [#130](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/130), [#131](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/131), [#132](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/132), [#133](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/133), [#135](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/135), [#137](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/137), [#139](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/139), [#141](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/141), [#143](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/143), [#145](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/145), [#147](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/147), [#149](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/149), [#151](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/151), [#153](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/153), [#155](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/155), [#157](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/157), [#159](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/159), [#161](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/161), [#163](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/163), [#165](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/165), [#167](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/167), [#169](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/169), [#171](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/171), [#173](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/173), [#175](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/175), [#177](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/177), [#179](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/179), [#181](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/181), [#183](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/183), [#185](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/185), [#187](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/187), [#189](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/189), [#191](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/191), [#196](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/196), [#197](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/197), [#198](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/198), [#199](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/199), [#203](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/203), [#204](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/204) | — |
 
 ### Các mốc phát triển
 
@@ -73,16 +74,125 @@ Cũ nhất ở trên. Cột "Ngày phát hành" chỉ ghi ngày khi có GitHub R
 | 20/10/2026 22:22 | Phát hành 0.7.0 (v0.7.0): bảy bài Sinh học có hình 3D riêng, sửa nhiều lỗi | GitHub Release v0.7.0, published\_at 2026-10-20T15:22:50Z, lượt Release 39444423723 |
 | 21/10/2026 10:35 | Science Studio vào trong Phòng thí nghiệm (PR #35) | PR #35 mergedAt 2026-10-21T03:35:48Z (gh pr view 35), merge commit b6d7298 |
 | 22/10/2026 18:40 | Phát hành 0.7.1 (v0.7.1): cả 11 bài Sinh học có hình 3D, bốn bài quần thể có khung cảnh riêng | GitHub Release v0.7.1, published\_at 2026-10-22T11:40:31Z, lượt Release 39769849056 |
+| 12/11/2026 00:25 | Bàn thí nghiệm thành giao diện duy nhất (PR #198, B8) | PR #198 mergedAt 2026-11-11T17:25:52Z (gh pr view 198), merge commit f2e535e |
 
 ## III. Chi tiết từng phiên bản
 
-### 0.8.0 (Đang xét duyệt)
+### 0.8.1 (Đang xét duyệt)
 
-Bản 0.8.0 bám theo sách Kết nối tri thức: thêm bài Chuyển động tròn đều, Sóng dừng trên dây và Điện trường của điện tích điểm (Vật lí), bài Tế bào nhân sơ và nhân thực (Sinh học), thanh chọn Lớp 10 · 11 · 12 trong thư viện, và đổi tên Phòng thí nghiệm thành Virtual Lab.
+Bản 0.8.1 có giao diện mới "Bàn thí nghiệm" và gộp mọi thay đổi của bản 0.8.0 (bản đó không phát hành riêng). Có nhiều bài mới bám sách Kết nối tri thức, như Chuyển động tròn đều, Giao thoa sóng, Mạch điện một chiều, Chuẩn độ acid – base và Từ tế bào đến DNA, cùng thanh chọn Lớp 10 · 11 · 12; Phòng thí nghiệm nay tên là Virtual Lab.
 
 - Trạng thái: Đang xét duyệt.
 - Kênh phân phối: GitHub Releases: bộ cài Windows và cập nhật trong app.
-- Ghi chú trạng thái: PR phiên bản (#92) mở 27/10/2026, bỏ nháp ngày 28/10/2026 khi mọi PR của 0.8.0 đã gộp vào main (người dùng cho tự làm, sớm hơn hạn 31/10/2026 của kế hoạch #37); chưa phát hành. Phần web và phần lõi cùng lên 0.8.0 theo lời giao việc 0.8.0 của chủ dự án, nên ứng dụng 0.7.1 sẽ được báo cài bộ cài mới thay vì cập nhật trong app; máy dùng cho buổi demo 07/11/2026 phải cài bộ cài 0.8.0.
+- Ghi chú trạng thái: PR phiên bản của issue #194 mở ngày 12/11/2026; chưa phát hành. Gộp mọi thay đổi của 0.8.0 (bản đó không phát hành riêng). Phần web và phần lõi cùng lên 0.8.1 vì lõi Rust đã đổi kể từ 0.7.1 (thư viện Cargo, PR #125 và #199), nên ứng dụng 0.7.1 cài từ GitHub sẽ được báo cài bộ cài mới thay vì cập nhật trong app. Bản Store: gói 0.8.1.0, người dùng nộp tay trong Partner Center. notesReady đặt true ngày 12/11/2026 theo lời đồng ý của người dùng, sau khi rà ghi chú.
+- Ghi chú công khai: đã duyệt để công bố (hiện trong hộp "Có gì mới").
+
+| Mốc | Thời điểm (giờ VN) | Giá trị gốc |
+| --- | --- | --- |
+| Bắt đầu phát triển | 26/10/2026 06:08 | `2026-10-25T23:08:42Z` |
+| Commit đầu tiên | 02/11/2026 01:58 | `2026-11-01T18:58:55Z` |
+| Commit cuối cùng | 12/11/2026 01:36 | `2026-11-12T01:36:14+07:00` |
+| Gộp vào nhánh (merge) | Chưa xác minh được | — |
+| Dựng bộ cài (GitHub Actions) | Chưa xác minh được | — |
+| Phát hành (GitHub Release) | Chưa xác minh được | — |
+| Tạo tag | Chưa xác minh được | — |
+
+**Tính năng mới**
+
+- Giao diện mới "Bàn thí nghiệm" thay cho giao diện cũ: kệ bài để chọn chủ đề; khi mở một bài, sổ ở bên trái (Đồ thị, Lời giải, Thẻ Khoa học…), khay thông số ở bên phải và mép bàn ở dưới khung mô phỏng với nút Chạy, thanh tua và tốc độ.
+- Vật lí: bài Chuyển động tròn đều (Vật lí 10, Bài 31–32). Em chọn đề cho biết tốc độ, tốc độ góc, chu kì hay tần số; app tính các đại lượng còn lại, gia tốc hướng tâm và lực hướng tâm.
+- Vật lí: bài Sóng dừng trên dây (Vật lí 11, Bài 13). Xem bụng, nút và số bó sóng; khi chưa có sóng dừng, nút "Dùng fₙ" đặt đúng tần số cộng hưởng gần nhất.
+- Vật lí: bài Điện trường của điện tích điểm (Vật lí 11, Bài 16–18). Đặt một đến ba điện tích hoặc hai bản tụ phẳng, xem đường sức, điểm có điện trường bằng 0 và lực lên điện tích thử.
+- Vật lí: bài Giao thoa sóng hai nguồn (Vật lí 11, Bài 12). Kéo một nguồn hoặc điểm M; app đếm số cực đại, cực tiểu trên đoạn S₁S₂ và tính biên độ tại M. Khi hai tần số khác nhau, em thấy hiện tượng phách (phần mở rộng ngoài sách).
+- Vật lí: bài Dao động cưỡng bức và cộng hưởng. Đồ thị biên độ theo tần số góc của ngoại lực cho thấy cộng hưởng; có thử thách "Tìm cộng hưởng".
+- Vật lí: bài Mạch điện một chiều (Vật lí 11, Bài 23–25). Nguồn có điện trở trong, 7 cách mắc điện trở, ampe kế và vôn kế; lời giải từng bước, mọi đáp số đều được kiểm chéo.
+- Vật lí: bài Định luật II Kepler (mở rộng, ngoài sách Kết nối tri thức). Quỹ đạo elip và các dải quét có diện tích bằng nhau trong những khoảng thời gian bằng nhau.
+- Vật lí: bài Hoạ âm và chuỗi Fourier. Cộng dần các hoạ âm để dựng sóng vuông hoặc răng cưa; nút "Nghe" phát đúng âm đang vẽ.
+- Vật lí: đồ thị không gian pha cho Lò xo, Con lắc lò xo và Con lắc đơn; con lắc lò xo không có lực cản còn có vòng tròn pha.
+- Hoá học: bài Chuẩn độ acid – base. HCl trong cốc, NaOH từ buret; kéo thể tích NaOH để thấy pH và màu chất chỉ thị đổi, cùng đường cong chuẩn độ.
+- Hoá học: bài Tinh thể kim loại và NaCl, hình 3D. App đếm số hạt trong một ô mạng, số phối trí và độ đặc khít của lập phương tâm khối, tâm mặt, lục phương đặc khít và NaCl.
+- Hoá học: bài Cân bằng hoá học có giản đồ năng lượng phản ứng, vẽ từ năng lượng hoạt hoá em nhập; bài Phân tử 3D có thêm 22 phân tử hữu cơ và ô "Lọc theo nhóm chức".
+- Sinh học: bài Tế bào nhân sơ và tế bào nhân thực (Sinh học 10, Bài 7–8), có hình 3D và 2D. Bấm một bộ phận để xem tên và chức năng.
+- Sinh học: bài Từ tế bào đến DNA. Phóng to qua 6 cấp, từ tế bào tới chuỗi xoắn kép DNA; mỗi cấp có thước tỉ lệ.
+- Kệ bài và bước làm quen có thanh Lớp 10 · 11 · 12 · Tất cả, xếp chủ đề theo mục lục sách Kết nối tri thức. Cách xếp này đang chờ giáo viên duyệt.
+- Science Studio có hướng dẫn "Cách học" ngay trong app.
+- AI Teacher dùng kết quả do SimLab tính cho thêm 8 dạng câu hỏi: khối lượng mol, cấu hình electron, đổi đơn vị, codon, mạch bổ sung và chuỗi axit amin, phép lai Mendel, Hardy–Weinberg và hằng số vật lí.
+- Chế độ trưng bày: Ctrl+K → "Chế độ trưng bày (tự chạy các cảnh)" tự chạy 8 cảnh có sẵn ở chế độ trình chiếu; bấm hoặc nhấn một phím bất kì để dừng.
+- Ở chế độ Nâng cao, Tệp → "Thông tin máy" cho xem mức chất lượng hiển thị (kèm lúc đo), FPS và RAM.
+
+**Cải tiến**
+
+- Đồ thị các bài Vật lí đọc được trên màn hình 1366×768.
+- Thẻ bài trên kệ ghi "Đã mở" cho mọi chủ đề em đã mở, kèm số bước đã làm.
+- Bảng "Tôi hiểu đề như sau" báo khi đề cho một đại lượng mà cách bố trí đang chọn không dùng tới.
+- Khi AI đọc đề: số viết dạng 4.10⁻⁸ được đọc đúng, số bịa rất nhỏ bị chặn chắc hơn, và bảng báo khi dấu của điện tích có thể không khớp với đề.
+- AI đọc đề hiểu số thập phân dài như 0,2187 là một số.
+- Rà soát toàn bộ giao diện: chữ tiếng Việt thống nhất, lựa chọn "API" nay gọi là "AI trực tuyến", nút đủ lớn để bấm, nhãn trên hình 3D Sinh học không che nhau.
+- Hình Vật lí: nhãn có chỉ số dưới thật, tên mũi tên đặt sau đầu mũi tên, hai đường có thể trùng nhau được vẽ nét đứt; số trên trục không còn bị thanh công cụ che.
+- Ô nhập số hiểu cả "9,81" lẫn "9.81"; khi số vượt giới hạn, dưới ô ghi rõ mô phỏng đang chạy với giá trị nào.
+- Đồ thị đủ điểm khi chạy chậm hoặc bấm "Bước" từng bước; bảng Số liệu và tệp CSV vẫn là giá trị do mô hình tính, không nội suy.
+- Bảng Lời giải chỉ ghi "khớp" khi phép kiểm chéo độc lập lệch không quá một phần trăm triệu; đáp số gần 0 ghi độ lệch kèm đơn vị.
+- Mọi chữ của Bàn thí nghiệm to theo Cài đặt → Cỡ chữ; khi chữ to, ô Tìm và trạng thái AI chỉ còn biểu tượng để tên bài có chỗ.
+
+**Sửa lỗi**
+
+- Bảng của AI Teacher: không còn viết dòng nguồn "Theo ghi chú từ…", chữ phụ đề không còn kí hiệu thô, và không cắt câu giữa chừng.
+- Thẻ Khoa học của bài Chuyển động thẳng đều ghi nhầm "gia tốc không đổi"; nay ghi đúng là vận tốc không đổi.
+- Khi AI đọc một đề va chạm có câu "bỏ qua ma sát", nó không còn tự đặt độ lệch tâm bằng 0; độ lệch tâm chỉ lấy từ đề hoặc do em nhập.
+- Kiểm chéo của bốn bài Mặt phẳng nghiêng, Định luật Newton, Lò xo và Con lắc lò xo không còn báo lệch nhầm; công thức của các bài vốn đúng.
+- Khi AI giải thích lời giải mà chép nguyên công thức của một bước, lời giải thích không còn bị ẩn nhầm.
+- Công thức giữ dấu phẩy thập phân liền số: 9,81 không còn hiện thành "9, 81", trong chat, Thẻ Khoa học và trên bảng.
+- Gemma 4 E2B chạy trên máy không còn hiện cả lời nhắc trước câu trả lời.
+- Hoá học: dòng "Công thức phân tử" của HCN không còn ghi CHN; phương trình gõ với mũi tên ⇌ giữ đúng mũi tên hai chiều; câu nguồn của dữ liệu nguyên tố ghi đúng phiên bản.
+- Ảnh nhỏ trên thẻ bài đúng màu sau khi đổi giao diện sáng/tối.
+- Nút Thoát trình chiếu không còn che các nút điều khiển của bài.
+
+**Bảo mật**
+
+- Cập nhật các thư viện có lỗ hổng đã biết và các phụ thuộc khác.
+
+**Thay đổi**
+
+- Giao diện cũ (thanh trên, thanh trạng thái, bảng dưới, bong bóng chat) đã bỏ; cài đặt, tiến độ và lựa chọn 3D/2D đã lưu vẫn được giữ.
+- "Phòng thí nghiệm" nay tên là "Virtual Lab" ở cả tiếng Việt và tiếng Anh.
+- Nút sáng/tối ở thanh trên nay là một nút mặt trăng / mặt trời; "Theo máy" nằm ở Cài đặt → Giao diện.
+- Máy cài SimLab 0.7.1 từ trang GitHub cần tải bộ cài mới để lên 0.8.1; bản này không cập nhật được trong app. Bản trên Microsoft Store được Store tự cập nhật.
+
+**Vấn đề đã biết**
+
+- Bài Phiêu bạt di truyền ở dạng 3D: ba đường chỉ tên bên trái vẫn cắt qua hình một hòn đảo khi có nhiều đảo.
+- Vị trí các bài trong từng lớp (Lớp 10 · 11 · 12) lấy từ mục lục sách Kết nối tri thức và đang chờ giáo viên duyệt.
+- Câu chữ và dữ liệu có nguồn của các bài mới đang chờ giáo viên duyệt; số liệu trên màn hình vẫn do mô hình của bài tính.
+- Bài Định luật II Kepler dùng đơn vị tương đối (bán trục lớn bằng 1), chưa có số liệu hành tinh thật; bài Tinh thể chưa ghi độ dài cạnh ô mạng.
+- Bài Chuẩn độ chỉ có acid mạnh với base mạnh; acid yếu và dung dịch đệm chưa có.
+
+**Điểm nổi bật trong app**
+
+- Giao diện mới Bàn thí nghiệm: chọn bài trên kệ, chỉnh thông số ở khay, bấm Chạy ở mép bàn.
+- Bài Vật lí mới: Chuyển động tròn đều, Sóng dừng, Giao thoa sóng, Điện trường, Mạch điện một chiều, Dao động cưỡng bức, Hoạ âm và chuỗi Fourier, Định luật II Kepler.
+- Hoá học: Chuẩn độ acid – base, Tinh thể kim loại và NaCl 3D, giản đồ năng lượng phản ứng, lọc phân tử theo nhóm chức.
+- Sinh học: Tế bào nhân sơ và nhân thực (3D và 2D), Từ tế bào đến DNA.
+- Thư viện chọn được Lớp 10, 11, 12 theo sách Kết nối tri thức; Phòng thí nghiệm nay tên là Virtual Lab.
+
+**Bằng chứng**
+
+- devStart: issue #54 (kế hoạch 0.8.1) tạo lúc 2026-10-25T23:08:42Z (gh issue view 54)
+- Khoảng commit: sau cd6cdd6 (PR #92, phiên bản 0.8.0, gộp 2026-10-28T13:47:27Z) đến main b91cc61; 211 commit không phải commit gộp (git rev-list --no-merges --count cd6cdd6..b91cc61)
+- firstCommit: 7cc29de 2026-11-01T18:58:55Z 'build(deps): Bump Swatinem/rust-cache' (dependabot); commit đầu của app: 038deaa 2026-11-02T08:34:29+07:00 (dữ liệu chuẩn độ); lastCommit trước PR phiên bản: 226bf09 2026-11-12T01:36:14+07:00 (work-log #201)
+- Lõi Rust: PR #125 async-executor 1.14.1, gộp a939222 2026-11-10T13:32:48Z; PR #199 rustix 1.1.6 (RUSTSEC-2026-0486), gộp b5820d5 2026-11-11T15:09:07Z; dependabot #122, #123, #124 qua PR #191
+- PR #191 (cách B: 24 PR đơn vị, mỗi khối một merge commit), gộp aadc36a 2026-11-10T22:18:46Z: #104, #108 chuẩn độ (#106), #110 giao thoa (#105; kèm #143 không gian pha, #171 dao động cưỡng bức, #147 mạch điện một chiều), #111 Từ tế bào đến DNA (#107; kèm #149 tế bào 3D), #114 Bàn thí nghiệm B0–B7 (kèm #120, #151–#165, #181–#189), #117 giản đồ năng lượng (#116), #118 kiểm chéo DOPRI5 (#112), #122, #123, #124, #126 Gemma E2B, #130, #131, #132, #135 dấu phẩy KaTeX, #137 thêm 8 công cụ tính, #141, #145, #167 tinh thể, #169 bộ đọc số, #173 Fourier, #175 phân tử hữu cơ, #177 Kepler, #179 chế độ trưng bày
+- PR #196 một quy tắc "khớp" (#119), gộp d09d611 2026-11-11T07:37:27Z; PR #197 chữ Hoá học (HCN, ⇌, câu nguồn mendeleev; #192), gộp d079b3f 2026-11-11T08:25:56Z
+- PR #198 Bàn thí nghiệm thành giao diện duy nhất (B8, #193), gộp f2e535e 2026-11-11T17:25:52Z; PR #203 chữ theo Cỡ chữ, ảnh thẻ, nút Thoát trình chiếu, nút sáng/tối (#202), gộp bbd8ac2 2026-11-11T18:40:40Z; PR #204 Tệp → "Thông tin máy" (#201), gộp b91cc61 2026-11-11T19:10:27Z
+- Vấn đề đã biết của 0.8.0 đã sửa: lời giải thích chép công thức của một bước không còn bị ẩn, commit c38ab29 2026-11-09T08:28:52+07:00; vẫn còn: đường chỉ tên ở Phiêu bạt di truyền 3D (work-log 2089e0d, #70 UI-49) và xếp lớp chờ giáo viên duyệt (DATA\_REVIEW KNTT-\*)
+- Giới hạn ghi ở vấn đề đã biết: Kepler đơn vị tương đối (PR #177), tinh thể chưa có hằng số mạng (DATA\_REVIEW CRY-3), chuẩn độ chỉ acid mạnh – base mạnh (CLAUDE.md, mục Acid–base titration)
+
+### 0.8.0 (Đã gộp, chưa phát hành)
+
+Bản 0.8.0 bám theo sách Kết nối tri thức: thêm bài Chuyển động tròn đều, Sóng dừng trên dây và Điện trường của điện tích điểm (Vật lí), bài Tế bào nhân sơ và nhân thực (Sinh học), thanh chọn Lớp 10 · 11 · 12 trong thư viện, và đổi tên Phòng thí nghiệm thành Virtual Lab.
+
+- Trạng thái: Đã gộp, chưa phát hành.
+- Kênh phân phối: GitHub Releases: bộ cài Windows và cập nhật trong app.
+- Ghi chú trạng thái: PR phiên bản (#92) gộp vào main ngày 28/10/2026; không phát hành riêng. Toàn bộ nội dung gộp vào 0.8.1 (issue #194, kế hoạch người dùng đã duyệt). Bộ cài 0.8.0 chỉ dùng cho máy demo 07/11/2026. notesReady giữ false để hộp "Có gì mới" không hiện hai lần cùng một nội dung.
 - Ghi chú công khai: bản nháp, chưa duyệt để công bố (không hiện trong hộp "Có gì mới").
 
 | Mốc | Thời điểm (giờ VN) | Giá trị gốc |
@@ -90,7 +200,7 @@ Bản 0.8.0 bám theo sách Kết nối tri thức: thêm bài Chuyển động 
 | Bắt đầu phát triển | 22/10/2026 10:56 | `2026-10-22T03:56:04Z` |
 | Commit đầu tiên | 22/10/2026 23:06 | `2026-10-22T23:06:49+07:00` |
 | Commit cuối cùng | 28/10/2026 15:18 | `2026-10-28T15:18:56+07:00` |
-| Gộp vào nhánh (merge) | Chưa xác minh được | — |
+| Gộp vào nhánh (merge) | 28/10/2026 20:47 | `2026-10-28T13:47:27Z` |
 | Dựng bộ cài (GitHub Actions) | Chưa xác minh được | — |
 | Phát hành (GitHub Release) | Chưa xác minh được | — |
 | Tạo tag | Chưa xác minh được | — |
@@ -164,6 +274,7 @@ Bản 0.8.0 bám theo sách Kết nối tri thức: thêm bài Chuyển động 
 - Bảng của AI Teacher (dòng nguồn, chữ phụ đề, cắt câu giữa chừng, thấy trong bản ghi hình 26/10/2026): PR #55, gộp d6f9fec 2026-10-26T00:17:07Z
 - Phụ thuộc có lỗ hổng: PR #48 tokio 1.53.3 (RUSTSEC-2026-0386), gộp 4321eb9 2026-10-23T15:51:45Z; PR #51 undici 8.12.3 và zod 4.6.7 (npm audit), gộp f7eb477 2026-10-24T05:12:59Z; dependabot PR #45, #49, #27, #53, #28, #26 gộp 24/10/2026
 - Chỉ đổi CI và E2E, không đổi app: PR #40, #41, #42, #43, #44, #46, #47, #50, #84 (ci.yml), #85 (release.yml)
+- merged: PR #92 gộp cd6cdd6 2026-10-28T13:47:27Z (gh pr view 92); không có tag hay GitHub Release 0.8.0; nội dung gộp vào 0.8.1 (issue #194)
 
 ### 0.7.1 (Đã phát hành)
 
@@ -1099,7 +1210,10 @@ Gom từ các ghi chú có area teacher, voice, gemma và api, cũ nhất ở tr
 - **0.6.0** (Đã phát hành, vấn đề đã biết): “Khoanh để hỏi”, AI trên máy khác, câu trả lời hiện dần và nút “Hỏi thầy” của Science Studio mới chỉ được thử với dịch vụ giả lập: chưa thử với khóa API thật hay Ollama, LM Studio, llama.cpp thật; ảnh vùng khoanh chưa được thử trên ứng dụng desktop.
 - **0.6.0** (Đã phát hành, vấn đề đã biết): SimLab không chọn được card đồ họa cho chương trình AI trên máy khác; chọn trong chính chương trình đó.
 - **0.7.0** (Đã phát hành, sửa lỗi): AI Teacher, bảng dạy và giọng đọc: xóa trò chuyện thì dừng câu trả lời; tra thư viện và Wikipedia dùng đúng lời em hỏi; bảng giữ đúng phép chia, lũy thừa và số thập phân; giọng đọc đọc đúng 2gh, khoảng giá trị, 0,125, đơn vị m³/s² và 5′→3′; công thức tải lỗi không làm bảng treo.
-- **0.8.0** (Đang xét duyệt, sửa lỗi): Bảng của AI Teacher: không còn viết dòng nguồn "Theo ghi chú từ…", chữ phụ đề không còn kí hiệu thô, và không cắt câu giữa chừng.
+- **0.8.0** (Đã gộp, chưa phát hành, sửa lỗi): Bảng của AI Teacher: không còn viết dòng nguồn "Theo ghi chú từ…", chữ phụ đề không còn kí hiệu thô, và không cắt câu giữa chừng.
+- **0.8.1** (Đang xét duyệt, tính năng mới): AI Teacher dùng kết quả do SimLab tính cho thêm 8 dạng câu hỏi: khối lượng mol, cấu hình electron, đổi đơn vị, codon, mạch bổ sung và chuỗi axit amin, phép lai Mendel, Hardy–Weinberg và hằng số vật lí.
+- **0.8.1** (Đang xét duyệt, sửa lỗi): Bảng của AI Teacher: không còn viết dòng nguồn "Theo ghi chú từ…", chữ phụ đề không còn kí hiệu thô, và không cắt câu giữa chừng.
+- **0.8.1** (Đang xét duyệt, sửa lỗi): Công thức giữ dấu phẩy thập phân liền số: 9,81 không còn hiện thành "9, 81", trong chat, Thẻ Khoa học và trên bảng.
 
 ### Giọng nói
 
@@ -1139,6 +1253,7 @@ Gom từ các ghi chú có area teacher, voice, gemma và api, cũ nhất ở tr
 - **0.6.0** (Đã phát hành, vấn đề đã biết): Gemma 1B vẫn hay sai kiến thức và có lúc khen câu trả lời sai của học sinh; hãy kiểm tra lại bằng mô phỏng hoặc sách.
 - **0.6.0** (Đã phát hành, vấn đề đã biết): Các lớp bảo vệ mới cho Gemma trên card đồ họa tích hợp chưa được thử lại trên một card tích hợp thật.
 - **0.7.0** (Đã phát hành, sửa lỗi): Card đồ họa có mã nhận dạng dài (ví dụ máy Windows chạy chip ARM) nay chọn được trong Cài đặt.
+- **0.8.1** (Đang xét duyệt, sửa lỗi): Gemma 4 E2B chạy trên máy không còn hiện cả lời nhắc trước câu trả lời.
 
 ### AI qua API (Gemini, Claude, Groq)
 
@@ -1160,9 +1275,14 @@ Gom từ các ghi chú có area teacher, voice, gemma và api, cũ nhất ở tr
 - **0.6.0** (Đã phát hành, cải tiến): Lỗi AI được nói bằng lời dễ hiểu (hết lượt, sai khóa, mất mạng, chương trình trên máy chưa mở…), dòng “gửi tới” nêu đúng nơi câu hỏi sẽ được gửi, và nhà cung cấp dự phòng chỉ trả lời khi nhà cung cấp chính hết lượt hoặc hết tiền.
 - **0.6.0** (Đã phát hành, bảo mật): Giới hạn lượt AI mỗi ngày chắc chắn hơn (mặc định 100 lượt).
 - **0.6.0** (Đã phát hành, vấn đề đã biết): Chưa đánh giá cách giảng với Gemini, Claude hoặc Groq thật (chưa có khóa để thử).
-- **0.8.0** (Đang xét duyệt, cải tiến): Bảng "Tôi hiểu đề như sau" báo khi đề cho một đại lượng mà cách bố trí đang chọn không dùng tới.
-- **0.8.0** (Đang xét duyệt, cải tiến): Khi AI đọc đề: số viết dạng 4.10⁻⁸ được đọc đúng, số bịa rất nhỏ bị chặn chắc hơn, và bảng báo khi dấu của điện tích có thể không khớp với đề.
-- **0.8.0** (Đang xét duyệt, sửa lỗi): Khi AI đọc một đề va chạm có câu "bỏ qua ma sát", nó không còn tự đặt độ lệch tâm bằng 0; độ lệch tâm chỉ lấy từ đề hoặc do em nhập.
+- **0.8.0** (Đã gộp, chưa phát hành, cải tiến): Bảng "Tôi hiểu đề như sau" báo khi đề cho một đại lượng mà cách bố trí đang chọn không dùng tới.
+- **0.8.0** (Đã gộp, chưa phát hành, cải tiến): Khi AI đọc đề: số viết dạng 4.10⁻⁸ được đọc đúng, số bịa rất nhỏ bị chặn chắc hơn, và bảng báo khi dấu của điện tích có thể không khớp với đề.
+- **0.8.0** (Đã gộp, chưa phát hành, sửa lỗi): Khi AI đọc một đề va chạm có câu "bỏ qua ma sát", nó không còn tự đặt độ lệch tâm bằng 0; độ lệch tâm chỉ lấy từ đề hoặc do em nhập.
+- **0.8.1** (Đang xét duyệt, cải tiến): Bảng "Tôi hiểu đề như sau" báo khi đề cho một đại lượng mà cách bố trí đang chọn không dùng tới.
+- **0.8.1** (Đang xét duyệt, cải tiến): Khi AI đọc đề: số viết dạng 4.10⁻⁸ được đọc đúng, số bịa rất nhỏ bị chặn chắc hơn, và bảng báo khi dấu của điện tích có thể không khớp với đề.
+- **0.8.1** (Đang xét duyệt, cải tiến): AI đọc đề hiểu số thập phân dài như 0,2187 là một số.
+- **0.8.1** (Đang xét duyệt, sửa lỗi): Khi AI đọc một đề va chạm có câu "bỏ qua ma sát", nó không còn tự đặt độ lệch tâm bằng 0; độ lệch tâm chỉ lấy từ đề hoặc do em nhập.
+- **0.8.1** (Đang xét duyệt, sửa lỗi): Khi AI giải thích lời giải mà chép nguyên công thức của một bước, lời giải thích không còn bị ẩn nhầm.
 
 ## V. Cải tiến mô phỏng 3D Sinh học
 
@@ -1195,6 +1315,8 @@ Mô phỏng 3D Sinh học xuất hiện lần đầu ở phiên bản 0.6.0 (Đ�
 - **0.7.1** (Đã phát hành, sửa lỗi): Đột biến điểm 3D: dấu “chuỗi kết thúc sớm” chỉ hiện khi bộ ba kết thúc thật sự đến sớm, không hiện khi chỉ mất trọn một bộ ba.
 - **0.7.1** (Đã phát hành, sửa lỗi): Dịch mã 3D: màu bazơ của mARN và tARN không còn nhạt đi.
 - **0.7.1** (Đã phát hành, sửa lỗi): Ở chất lượng Cao trên máy có card đồ họa rời, nền, màng tế bào và bóng dưới tế bào có đúng màu như ở các mức khác.
+- **0.8.1** (Đang xét duyệt, tính năng mới): Sinh học: bài Tế bào nhân sơ và tế bào nhân thực (Sinh học 10, Bài 7–8), có hình 3D và 2D. Bấm một bộ phận để xem tên và chức năng.
+- **0.8.1** (Đang xét duyệt, tính năng mới): Sinh học: bài Từ tế bào đến DNA. Phóng to qua 6 cấp, từ tế bào tới chuỗi xoắn kép DNA; mỗi cấp có thước tỉ lệ.
 
 **Kiểm thử liên quan**
 
@@ -1228,7 +1350,8 @@ Mô phỏng 3D Sinh học xuất hiện lần đầu ở phiên bản 0.6.0 (Đ�
 - **0.7.0** (Đã phát hành): Hộp cập nhật bắt buộc và câu hỏi về tuổi hiện lại nếu bị đóng bằng phím Esc.
 - **0.7.0** (Đã phát hành): Câu hỏi bị chặn ở lại ô nhập để em sửa, không còn bị lưu hay gửi đi sau đó.
 - **0.7.1** (Đã phát hành): Phần lõi của ứng dụng dùng bản mới của thư viện kiểm tra chứng chỉ khi kết nối Internet.
-- **0.8.0** (Đang xét duyệt): Cập nhật các thư viện có lỗ hổng đã biết và các phụ thuộc khác.
+- **0.8.0** (Đã gộp, chưa phát hành): Cập nhật các thư viện có lỗ hổng đã biết và các phụ thuộc khác.
+- **0.8.1** (Đang xét duyệt): Cập nhật các thư viện có lỗ hổng đã biết và các phụ thuộc khác.
 
 ### Hiệu năng
 
@@ -1324,7 +1447,7 @@ Mô phỏng 3D Sinh học xuất hiện lần đầu ở phiên bản 0.6.0 (Đ�
 - Chưa kiểm bản dựng thật bằng exe + CDP: ngày 22/10/2026 SimLab đã cài (D:/SimLab/stem-sim-lab.exe) đang mở trên máy, nên bước này bỏ qua để không đụng tới tiến trình đó
 - 22/10/2026 trên máy Windows, feat/0.7.1 ở 2b069b6: format, lint, typecheck sạch; 4203 unit test qua (307 tệp), 1 bỏ qua có điều kiện (postfx.gpu.test.ts); E2E chromium-3d 34/34 và @perf 7/7 lần chạy riêng (p95 66,6–66,7 ms) trên cổng 1421; dự án chromium vẫn có 3 bài chỉ hỏng vì tự ghi gốc http://localhost:1420 như các dòng trên
 
-**0.8.0** (Đang xét duyệt)
+**0.8.0** (Đã gộp, chưa phát hành)
 
 - CI 8/8 (Frontend lint · typecheck · test · build, Rust ubuntu và windows, E2E, npm audit, cargo audit, gitleaks, dependency review) xanh trước khi gộp trên mọi PR, trừ #43, #44, #46 (PR sửa E2E chập chờn, gộp 23/10/2026 khi E2E còn đỏ, trước khi main bắt buộc 8 bước) (gh pr checks)
 - PR #87: E2E đầy đủ trên máy 125/125 đạt (26/10/2026, trước lượt duyệt); sau khi sửa theo duyệt: E2E ai-flow + physics 35/35 đạt (bình luận trên PR #87)
@@ -1334,17 +1457,26 @@ Mô phỏng 3D Sinh học xuất hiện lần đầu ở phiên bản 0.6.0 (Đ�
 - PR #93–#102 (rà soát giao diện i2): CI 8/8 xanh trước khi gộp; unit và E2E liên quan do phiên làm PR chạy, ghi trong work-log docs/work-log/2026-10-27-i2-\*.md và 2026-10-28-i2-graph-samples.md
 - PR #103: unit src/ai + src/physics + tests/golden 606 đạt, E2E ai-flow 21 đạt (mô tả PR #103); CI 8/8 trước khi gộp
 
+**0.8.1** (Đang xét duyệt)
+
+- CI 8/8 xanh trên lượt cuối trước khi gộp của PR #198, #203, #204 (gh pr checks; laptop xác nhận khi bật tự gộp)
+- PR #204: npm run check 5036 đạt (1 bỏ qua có sẵn); E2E đủ nhóm trên máy bàn 214/214 đạt (docs/work-log/2026-11-12-201-machine-info.md)
+- PR #203: npm run check 5033 đạt; E2E đủ nhóm trên máy bàn 212/212 đạt (docs/work-log/2026-11-12-202-bench-text-theme-exit.md)
+
 ## VII. Những vấn đề chưa hoàn thành
 
-### Vấn đề đã biết của bản mới nhất (0.8.0, Đang xét duyệt)
+### Vấn đề đã biết của bản mới nhất (0.8.1, Đang xét duyệt)
 
 - Bài Phiêu bạt di truyền ở dạng 3D: ba đường chỉ tên bên trái vẫn cắt qua hình một hòn đảo khi có nhiều đảo.
 - Vị trí các bài trong từng lớp (Lớp 10 · 11 · 12) lấy từ mục lục sách Kết nối tri thức và đang chờ giáo viên duyệt.
-- Khi AI giải thích lời giải mà chép nguyên công thức của một bước, lời giải thích có thể bị ẩn nhầm kèm lời báo có số chưa kiểm chứng. Số liệu do SimLab tính vẫn hiện đầy đủ; bản sau sẽ sửa.
+- Câu chữ và dữ liệu có nguồn của các bài mới đang chờ giáo viên duyệt; số liệu trên màn hình vẫn do mô hình của bài tính.
+- Bài Định luật II Kepler dùng đơn vị tương đối (bán trục lớn bằng 1), chưa có số liệu hành tinh thật; bài Tinh thể chưa ghi độ dài cạnh ô mạng.
+- Bài Chuẩn độ chỉ có acid mạnh với base mạnh; acid yếu và dung dịch đệm chưa có.
 
 ### Phiên bản chưa phát hành hoặc chưa xác minh
 
-- **0.8.0** (Đang xét duyệt): PR phiên bản (#92) mở 27/10/2026, bỏ nháp ngày 28/10/2026 khi mọi PR của 0.8.0 đã gộp vào main (người dùng cho tự làm, sớm hơn hạn 31/10/2026 của kế hoạch #37); chưa phát hành. Phần web và phần lõi cùng lên 0.8.0 theo lời giao việc 0.8.0 của chủ dự án, nên ứng dụng 0.7.1 sẽ được báo cài bộ cài mới thay vì cập nhật trong app; máy dùng cho buổi demo 07/11/2026 phải cài bộ cài 0.8.0.
+- **0.8.1** (Đang xét duyệt): PR phiên bản của issue #194 mở ngày 12/11/2026; chưa phát hành. Gộp mọi thay đổi của 0.8.0 (bản đó không phát hành riêng). Phần web và phần lõi cùng lên 0.8.1 vì lõi Rust đã đổi kể từ 0.7.1 (thư viện Cargo, PR #125 và #199), nên ứng dụng 0.7.1 cài từ GitHub sẽ được báo cài bộ cài mới thay vì cập nhật trong app. Bản Store: gói 0.8.1.0, người dùng nộp tay trong Partner Center. notesReady đặt true ngày 12/11/2026 theo lời đồng ý của người dùng, sau khi rà ghi chú.
+- **0.8.0** (Đã gộp, chưa phát hành): PR phiên bản (#92) gộp vào main ngày 28/10/2026; không phát hành riêng. Toàn bộ nội dung gộp vào 0.8.1 (issue #194, kế hoạch người dùng đã duyệt). Bộ cài 0.8.0 chỉ dùng cho máy demo 07/11/2026. notesReady giữ false để hộp "Có gì mới" không hiện hai lần cùng một nội dung.
 - **0.5.1** (Đã gộp, chưa phát hành): Không có tag v0.5.1 và không có GitHub Release riêng; bộ cài lõi 0.5.1 được phát hành lần đầu kèm Release v0.5.2. Gói Microsoft Store 0.5.1.0 đã gửi duyệt ngày 13/10/2026 và được chọn giữ lại; chưa có tài liệu nào cho thấy app đã lên Store.
 - **0.4.3** (Chưa xác minh): Nhãn nội bộ, chưa bao giờ là số phiên bản trong package.json (commit cbb176a nâng thẳng 0.4.1 → 0.5.0). Không có tag, Release hay ZIP. Nội dung, trừ bảng giảng LessonBoard đã bị thay, đến với người dùng trong 0.5.0.
 - **0.4.2** (Chưa xác minh): Nhãn nội bộ, chưa bao giờ là số phiên bản trong package.json. Không có tag, Release hay ZIP. Nội dung đến với người dùng trong 0.5.0.
@@ -1367,6 +1499,7 @@ Kho mã: [https://github.com/minhpdnfhh32934-cell/stem-sim-lab](https://github.c
 
 | Phiên bản | Tag | Commit của tag | GitHub Release | PR | Commit (đầu → cuối) | Nhánh |
 | --- | --- | --- | --- | --- | --- | --- |
+| 0.8.1 | — | — | — | [#104](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/104), [#108](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/108), [#110](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/110), [#111](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/111), [#114](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/114), [#117](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/117), [#118](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/118), [#120](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/120), [#122](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/122), [#123](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/123), [#124](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/124), [#125](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/125), [#126](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/126), [#129](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/129), [#130](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/130), [#131](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/131), [#132](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/132), [#133](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/133), [#135](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/135), [#137](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/137), [#139](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/139), [#141](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/141), [#143](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/143), [#145](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/145), [#147](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/147), [#149](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/149), [#151](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/151), [#153](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/153), [#155](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/155), [#157](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/157), [#159](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/159), [#161](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/161), [#163](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/163), [#165](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/165), [#167](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/167), [#169](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/169), [#171](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/171), [#173](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/173), [#175](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/175), [#177](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/177), [#179](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/179), [#181](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/181), [#183](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/183), [#185](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/185), [#187](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/187), [#189](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/189), [#191](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/191), [#196](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/196), [#197](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/197), [#198](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/198), [#199](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/199), [#203](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/203), [#204](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/204) | `7cc29de` → `226bf09` | `main`, `feat/194-release-0.8.1` |
 | 0.8.0 | — | — | — | [#26](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/26), [#27](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/27), [#28](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/28), [#40](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/40), [#41](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/41), [#42](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/42), [#43](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/43), [#44](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/44), [#45](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/45), [#46](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/46), [#47](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/47), [#48](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/48), [#49](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/49), [#50](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/50), [#51](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/51), [#53](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/53), [#55](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/55), [#56](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/56), [#79](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/79), [#81](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/81), [#82](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/82), [#83](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/83), [#84](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/84), [#85](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/85), [#86](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/86), [#87](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/87), [#88](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/88), [#89](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/89), [#90](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/90), [#91](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/91), [#93](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/93), [#94](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/94), [#95](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/95), [#96](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/96), [#97](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/97), [#98](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/98), [#99](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/99), [#100](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/100), [#101](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/101), [#102](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/102), [#103](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/103) | `39bfd01` → `a871bfd` | `main`, `chore/0.8.0-version` |
 | 0.7.1 | `v0.7.1` | `49c4d6a513ae452a5290d5f49359a4b243db911a` | [Release v0.7.1](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.7.1) | [#35](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/35), [#38](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/38) | `61258ea` → `9fb3061` → `a5661cb` → `3b2d0b8` → `9be792c` → `fbde966` → `c3cab4c` → `5a3ddaf` → `9de55fc` → `0adba18` → `4d6769b` → `b97b2b5` → `3e3115c` → `24ac90b` → `12f6fc1` → `304ef28` → `ee773a0` → `8b6cc69` → `3bdb73a` → `0b4970f` → `1f51d5d` → `2f135f1` → `5b9efef` → `fdfeecb` → `6232792` → `b5852b5` → `ccfc01e` → `6a8b391` → `a3d8a97` → `bd95467` → `7f35c78` → `dafff80` → `2b069b6` → `49c4d6a` | `claude/wizardly-galileo-k3vxcs`, `feat/0.7.1` |
 | 0.7.0 | `v0.7.0` | `433c3a91b481e4ba9dabf593d2a6cb8b113ee8bf` | [Release v0.7.0](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.7.0) | [#32](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/32) | `d86c099` → `ff4f63f` → `15ae66c` → `2ea45a6` → `745dea0` → `b361e3c` → `1c00c7c` → `f302cff` → `3773296` → `825a08f` → `b59cc1a` → `433c3a9` | `feat/0.7` |
