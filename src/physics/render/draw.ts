@@ -19,8 +19,17 @@ export interface Pt {
   y: number;
 }
 
-/** Stage colour drawn around label glyphs (set by drawGrid, which starts every frame). */
+/** Stage colour drawn around label glyphs: set at the start of every frame (setLabelHalo). */
 let halo = '';
+
+/**
+ * Starts a frame's labels with the halo of the background they sit on. drawGrid calls it; a
+ * frame drawn without the grid (a shelf card's picture) must call it too, or its labels keep the
+ * colour of the last stage frame, from another theme after a light / dark switch (#202).
+ */
+export function setLabelHalo(colour: string): void {
+  halo = colour;
+}
 
 /** "a_ht, F_ht" → runs [a][ht sub][, F][ht sub]: canvas text has no subscripts. */
 export function labelRuns(value: string): { text: string; sub: boolean }[] {
@@ -88,7 +97,7 @@ export function drawGrid(
    */
   labelLeft = 4,
 ): void {
-  halo = colors.stage;
+  setLabelHalo(colors.stage);
   const v = cam.visible();
   const major = niceStep(cam.scale, 90);
   const minor = major / 5;

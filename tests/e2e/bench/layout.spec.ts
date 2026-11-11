@@ -413,6 +413,54 @@ async function backToChemistry(page: Page) {
   await page.locator('.bench-crumbs').getByRole('button', { name: 'Hóa học' }).click();
 }
 
+test('a card picture switched to dark outlines its labels in the dark stage colour (#202)', async ({
+  page,
+}) => {
+  // Every label outline drawn on a card picture: the canvas, and the colour it was drawn with.
+  await page.addInitScript(() => {
+    const w = window as unknown as { __cardStrokes: string[] };
+    w.__cardStrokes = [];
+    const proto = CanvasRenderingContext2D.prototype;
+    // eslint-disable-next-line @typescript-eslint/unbound-method -- re-applied to the same context below
+    const stroke = proto.strokeText;
+    proto.strokeText = function (...args) {
+      const style = this.strokeStyle;
+      if (this.canvas.classList.contains('shelf-card__still'))
+        w.__cardStrokes.push(typeof style === 'string' ? style : 'not a colour');
+      stroke.apply(this, args);
+    };
+  });
+  await openPhysics(page, 'Chuyển động thẳng đều');
+  // Back on the shelf after the lab stage drew a frame in the light theme.
+  await page.locator('.bench-crumbs').getByRole('button', { name: 'Vật lý' }).click();
+  await expect(page.locator('.shelf-card__still').first()).toBeVisible();
+  await page.evaluate(async (url) => {
+    (window as unknown as { __cardStrokes: string[] }).__cardStrokes = [];
+    const { useSettingsStore } = (await import(
+      /* @vite-ignore */ url
+    )) as typeof import('../../../src/app/settings/settingsStore');
+    useSettingsStore.getState().setTheme('dark');
+  }, '/src/app/settings/settingsStore.ts');
+  await expect
+    .poll(() =>
+      page.evaluate(() => (window as unknown as { __cardStrokes: string[] }).__cardStrokes.length),
+    )
+    .toBeGreaterThan(0);
+  const { strokes, stage } = await page.evaluate(() => {
+    // The dark --bg-stage in the canvas's own colour form (#rrggbb).
+    const probe = document.createElement('canvas').getContext('2d');
+    if (!probe) throw new Error('no 2D canvas');
+    probe.strokeStyle = getComputedStyle(document.documentElement)
+      .getPropertyValue('--bg-stage')
+      .trim();
+    return {
+      strokes: [...new Set((window as unknown as { __cardStrokes: string[] }).__cardStrokes)],
+      stage: probe.strokeStyle,
+    };
+  });
+  expect(strokes).toEqual([stage]);
+});
+
 test('library: a selected title keeps its line; a checkbox sits by its label (UI-42, UI-43)', async ({
   page,
 }) => {

@@ -3,7 +3,7 @@ import { useSettingsStore } from '@/app/settings/settingsStore';
 import { readThemeColors } from '@/app/sim/themeColors';
 import { useResolvedTheme } from '@/app/theme/useApplyTheme';
 import { Camera } from '@/physics/render/camera';
-import { drawGrid, polyline } from '@/physics/render/draw';
+import { drawGrid, polyline, setLabelHalo } from '@/physics/render/draw';
 import { stillRun } from './stillRun';
 
 /** When the page is idle (after the first paint), never blocking it. */
@@ -83,6 +83,8 @@ export function SceneStill({
           cam.fit(scene.view(p), Math.min(48, r.height * 0.1));
           const colors = readThemeColors();
           ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          // The card's preview is --bg-stage too: its labels get this theme's halo, grid or not.
+          setLabelHalo(colors.stage);
           if (grid) drawGrid(ctx, cam, colors, locale, scene.yStretch?.(p));
           if (scene.trail) {
             const tracks: { x: number; y: number }[][] = [];
