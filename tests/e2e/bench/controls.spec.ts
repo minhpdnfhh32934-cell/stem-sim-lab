@@ -314,6 +314,9 @@ test('#120: a long topic name ends in "…"; the graph legend is one row under t
   expect(await cut()).toEqual(['block', 'hidden', 'ellipsis', 'nowrap', true]);
 
   await page.getByRole('tab', { name: 'Đồ thị' }).click();
+  // uPlot fills the legend a moment after the tab opens and the plot shrinks for it: measure the
+  // drawn legend, not the instant before its rows exist.
+  await expect(page.locator('#notebook-panel .chart__legend tr').first()).toBeVisible();
   const plot = await page.locator('#notebook-panel .chart__plot').boundingBox();
   const legend = await page.locator('#notebook-panel .chart__legend').boundingBox();
   const panel = await page.locator('#notebook-panel .panel__scroll').boundingBox();
