@@ -59,6 +59,19 @@ describe('formula parser', () => {
       expect(a.charge, m.id).toBe(m.atoms.reduce((s, x) => s + x.charge, 0));
     }
   });
+
+  it('a cited molecular formula (#192) has the Hill formula’s atoms and a source', () => {
+    const cited = MOLECULES.filter((m) => m.molecular_formula !== undefined);
+    expect(cited.map((m) => m.id)).toEqual(['hcn']);
+    for (const m of cited) {
+      const a = parseFormula(m.molecular_formula ?? '');
+      const b = parseFormula(m.formula);
+      expect(Object.fromEntries(a.counts), m.id).toEqual(Object.fromEntries(b.counts));
+      expect(a.charge, m.id).toBe(b.charge);
+      expect(m.molecular_formula_source, m.id).toMatch(/PubChem CID \d+/);
+      expect(m.review_status, m.id).toBe('pending');
+    }
+  });
 });
 
 describe('hydrate separator', () => {
@@ -79,5 +92,15 @@ describe('formatEquationText (UI-36: sample chips without raw ^ and ->)', () => 
     expect(formatEquationText('Cu + HNO3 -> Cu(NO3)2 + NO + H2O')).toBe(
       'Cu + HNO₃ → Cu(NO₃)₂ + NO + H₂O',
     );
+  });
+
+  it('keeps a reversible arrow reversible (#192)', () => {
+    expect(formatEquationText('N2 + 3H2 <=> 2NH3')).toBe('N₂ + 3H₂ ⇌ 2NH₃');
+    expect(formatEquationText('N2O4 ⇌ 2NO2')).toBe('N₂O₄ ⇌ 2NO₂');
+    expect(formatEquationText('H2 + I2 <-> 2HI')).toBe('H₂ + I₂ ⇌ 2HI');
+    expect(formatEquationText('CaCO3 = CaO + CO2')).toBe('CaCO₃ → CaO + CO₂');
+    expect(formatEquationText('CH4 + 2O2 -> CO2 + 2H2O')).toBe('CH₄ + 2O₂ → CO₂ + 2H₂O');
+    expect(formatEquationText('Zn + 2HCl => ZnCl2 + H2')).toBe('Zn + 2HCl → ZnCl₂ + H₂');
+    expect(formatEquationText('2Na + Cl2 ⟶ 2NaCl')).toBe('2Na + Cl₂ → 2NaCl');
   });
 });

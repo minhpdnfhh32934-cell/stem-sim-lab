@@ -1259,6 +1259,8 @@
    "smiles": "C#N",
    "formula": "CHN",
    "display_formula": "HCN",
+   "molecular_formula": "HCN",
+   "molecular_formula_source": "PubChem CID 768 (Hydrogen Cyanide), mục Molecular Formula: “HCN” theo ILO-WHO International Chemical Safety Card ICSC 0492",
    "molar_mass": 27.026,
    "atoms": [
     {

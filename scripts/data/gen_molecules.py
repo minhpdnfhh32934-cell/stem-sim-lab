@@ -143,6 +143,18 @@ DISPLAY_FORMULA.update({
     "methylamine": "CH3NH2", "aniline": "C6H5NH2", "alanine": "CH3CH(NH2)COOH",
 })
 
+# #192: carbon compounds whose molecular formula is written out of Hill order (the "Công thức
+# phân tử" row shows Hill for every other carbon compound). Same atoms as the Hill formula (test);
+# each with its source; pending teacher review (DATA_REVIEW CHEMUI-7). Of the library's carbon
+# compounds only HCN: the other display formulas are condensed structures (C2H5OH, HCHO, …).
+MOLECULAR_FORMULA = {
+    "hcn": (
+        "HCN",
+        "PubChem CID 768 (Hydrogen Cyanide), mục Molecular Formula: “HCN” theo ILO-WHO "
+        "International Chemical Safety Card ICSC 0492",
+    ),
+}
+
 # Functional groups of an organic molecule, found by SMARTS patterns (RDKit), never written by
 # hand. Order: how the filter lists them.
 GROUP_SMARTS = [
@@ -345,6 +357,11 @@ def build(mid: str, smiles: str):
         "smiles": canonical,
         "formula": formula,
         "display_formula": DISPLAY_FORMULA.get(mid, formula),
+        **(
+            {"molecular_formula": MOLECULAR_FORMULA[mid][0],
+             "molecular_formula_source": MOLECULAR_FORMULA[mid][1]}
+            if mid in MOLECULAR_FORMULA else {}
+        ),
         "molar_mass": round(Descriptors.MolWt(mol), 3),
         "atoms": atoms,
         "bonds": bonds,
