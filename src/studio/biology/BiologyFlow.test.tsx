@@ -54,21 +54,28 @@ describe('Biology Studio on the 3D mitosis model', () => {
     render(<StudioScreen />);
     await user.click(screen.getByRole('radio', { name: 'Kì đầu' }));
     await user.click(next());
-    const model = within(
-      screen.getByRole('img', { name: 'Mô hình nguyên phân (thử)' }).parentElement as HTMLElement,
-    );
-    expect(model.queryByRole('status')).toBeNull();
+    const box = screen.getByRole('img', { name: 'Mô hình nguyên phân (thử)' })
+      .parentElement as HTMLElement;
+    // The notices sit right under the model, never inside its box (they covered its HUD there).
+    const notes = () =>
+      box.nextElementSibling?.matches('.stage__notes') ? box.nextElementSibling : null;
+    expect(notes()).toBeNull();
     act(() => {
       usePerfStore.setState({ timeScale: 0.5, degraded: true });
     });
-    expect(model.getByRole('status')).toHaveTextContent(
+    const shown = notes();
+    if (!(shown instanceof HTMLElement)) throw new Error('no notices under the model');
+    expect(within(shown).getByRole('status')).toHaveTextContent(
       'Chuyển động chậm hơn thời gian thực để giữ độ chính xác. Đã hạ chất lượng hiển thị để giữ độ mượt (số liệu không đổi)',
     );
-    expect(model.getByText('Chuyển động chậm ×0,5 để giữ độ chính xác')).toBeInTheDocument();
+    expect(
+      within(shown).getByText('Chuyển động chậm ×0,5 để giữ độ chính xác'),
+    ).toBeInTheDocument();
+    expect(box.querySelector('.stage__notes')).toBeNull();
     act(() => {
       usePerfStore.setState({ timeScale: 1, degraded: false });
     });
-    expect(model.queryByRole('status')).toBeNull();
+    expect(notes()).toBeNull();
   });
 
   it('Predict → model (stages + find the parts) → Observe → Explain → Conclude → Report', async () => {

@@ -1,6 +1,7 @@
 declare const process: { env: Record<string, string | undefined> };
 import { expect, test, type Page } from '@playwright/test';
 import { enterLab, enterStudio } from '../nav';
+import { expectNoticesBelow, showOverloadNotices } from '../overload';
 
 /**
  * Biology Studio, lesson "Nguyên phân 3D" on the lab's own mitosis model: predict → experiment
@@ -80,6 +81,35 @@ async function openStudioBiology(page: Page): Promise<void> {
 const next = (page: Page) => page.getByRole('button', { name: /^Tiếp:/ });
 const overflowX = (page: Page) =>
   page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+
+test('Biology Studio: the overload notices sit under the model, clear of its HUD (B8)', async ({
+  page,
+}) => {
+  await setUp(page);
+  // High quality: a lower one (medium) keeps the 3D view and its HUD, as on a real machine.
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      'stemsim.perf',
+      JSON.stringify({ state: { preference: 'high', benchmark: null }, version: 1 }),
+    );
+  });
+  await page.goto('/');
+  await expectSoftwareWebGL(page);
+  await openStudioBiology(page);
+  await page.getByRole('radio', { name: 'Kì giữa' }).click();
+  await next(page).click();
+  const model = page.locator('.bio-studio__model');
+  await expect(model.locator('.m3d canvas')).toBeVisible({ timeout: 20_000 });
+  await showOverloadNotices(page);
+  const notes = page.locator('.bio-studio > .stage__notes--strip');
+  await expect(notes).toContainText('Đã hạ chất lượng hiển thị');
+  await expectNoticesBelow(
+    page,
+    '.bio-studio > .stage__notes--strip',
+    '.bio-studio__model',
+    '.bio-studio__model .m3d__hud',
+  );
+});
 
 test('Biology Studio: mitosis lesson end to end, session kept, lab settings given back', async ({
   page,

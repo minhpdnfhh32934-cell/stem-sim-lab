@@ -100,17 +100,21 @@ export const Stage = memo(function Stage() {
   if (mod.active || mod.loading || mod.error) {
     const View = mod.active?.view.Stage;
     return (
-      <section className="stage stage--module" aria-label={t('stage.regionLabel')}>
-        {View && <View />}
-        <PerfNotes className="stage__notes stage__notes--float" />
-        {mod.loading && <Skeleton label={t('stage.loading')} className="stage__skeleton" />}
-        {mod.error && (
-          <div className="stage__message" role="alert">
-            <AlertTriangle size={16} strokeWidth={1.75} aria-hidden="true" />
-            <p>{`${t('stage.engineError')}: ${mod.error}`}</p>
-          </div>
-        )}
-      </section>
+      <>
+        <section className="stage stage--module" aria-label={t('stage.regionLabel')}>
+          {View && <View />}
+          {mod.loading && <Skeleton label={t('stage.loading')} className="stage__skeleton" />}
+          {mod.error && (
+            <div className="stage__message" role="alert">
+              <AlertTriangle size={16} strokeWidth={1.75} aria-hidden="true" />
+              <p>{`${t('stage.engineError')}: ${mod.error}`}</p>
+            </div>
+          )}
+        </section>
+        {/* A strip under the stage, in the flow (both parents are flex columns): over the stage
+            it covered the views' own HUDs, run buttons and overlays (review of #198). */}
+        <PerfNotes className="stage__notes stage__notes--strip" />
+      </>
     );
   }
 

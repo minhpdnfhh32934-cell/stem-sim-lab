@@ -23,9 +23,9 @@ export function ModelStep(props: StepProps) {
     <div className="studio-stack bio-studio">
       <div className="bio-studio__model">
         <MitosisStage />
-        {/* Outside the lab's Stage: the overload ladder is said here too (B8). */}
-        <PerfNotes className="stage__notes stage__notes--float" />
       </div>
+      {/* Outside the lab's Stage, so said here too (B8); under the model, never over its HUD. */}
+      <PerfNotes className="stage__notes stage__notes--strip" />
       <Mitosis3DParts />
       <div className="bio-studio__panels">
         <StageRecorder {...props} b={b} />

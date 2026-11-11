@@ -1,6 +1,7 @@
 declare const process: { env: Record<string, string | undefined> };
 import { expect, test, type Page } from '@playwright/test';
 import { openLab } from '../nav';
+import { expectNoticesBelow, showOverloadNotices } from '../overload';
 
 /**
  * The bench: a topic card on the shelf (back to the shelf through the subject crumb when a topic
@@ -102,6 +103,19 @@ const strip = (page: Page) => page.getByRole('group', { name: 'Các kì' });
 
 const stage = (page: Page) => page.evaluate(() => window.__simlabMitosis3d?.stage() ?? null);
 const info = (page: Page) => page.evaluate(() => window.__simlabMitosis3d?.info() ?? null);
+
+test('overload notices: a strip under the stage, clear of the 3D view’s HUD (B8)', async ({
+  page,
+}) => {
+  // High quality: a lower one (medium) keeps the 3D view and its HUD, as on a real machine.
+  await openMitosis(page, 'high');
+  await showOverloadNotices(page);
+  const notes = page.locator('.stage__notes--strip');
+  await expect(notes).toContainText('Đã hạ chất lượng hiển thị');
+  await expect(notes).toContainText('Chuyển động chậm ×0,5');
+  // Below the whole stage, so nothing drawn in it (HUD, run buttons, overlays) can be covered.
+  await expectNoticesBelow(page, '.stage__notes--strip', 'section.stage', '.m3d__hud');
+});
 
 test('mitosis 3D: plays through every stage, switches cell type, no leaks on replay', async ({
   page,

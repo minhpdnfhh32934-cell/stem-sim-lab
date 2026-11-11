@@ -54,13 +54,14 @@
   align-items: center;
   gap: 4px;
 }
-.stage__notes--float {
-  position: absolute;
-  top: var(--space-2);
-  left: 50%;
-  z-index: 3;
-  transform: translateX(-50%);
-  pointer-events: none;
+/* Under a module's stage (and Studio's model), in the flow: nothing inside the stage is covered. */
+.stage__notes--strip {
+  display: flex;
+  flex: none;
+  justify-content: center;
+  padding: var(--space-1) var(--space-2);
+  border-top: 1px solid var(--border);
+  background: var(--bg-stage);
 }
 .stage__chip--warn {
   background: var(--conf-approx-soft);
