@@ -93,7 +93,8 @@ export function BohrStage() {
         ctx.stroke();
         ctx.setLineDash([]);
         ctx.fillStyle = muted;
-        ctx.font = '11px var(--font-sans), sans-serif';
+        // A canvas font cannot read a CSS variable (#205 A1: also up to the 12 px floor).
+        ctx.font = '12px sans-serif';
         ctx.fillText(`n = ${i + 1}`, cx + radius(i) * 0.707 + 4, cy - radius(i) * 0.707 - 4);
       }
 

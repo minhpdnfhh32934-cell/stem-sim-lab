@@ -60,6 +60,7 @@
 }
 .chem-tube__label {
   fill: var(--text);
+  /* Text inside a drawing (SVG units, #205 A1): it scales with the picture. */
   font-size: 14px;
 }
 .chem-result {

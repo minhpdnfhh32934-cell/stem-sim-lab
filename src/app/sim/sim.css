@@ -139,7 +139,7 @@
 }
 .stopwatch__hint {
   margin: 0;
-  font-size: 0.7rem;
+  font-size: var(--text-caption);
   color: var(--text-faint);
   text-align: center;
   text-wrap: balance;
@@ -174,7 +174,7 @@
   flex: none;
   padding: 0 7px;
   border-radius: var(--radius-full);
-  font-size: 0.7rem;
+  font-size: var(--text-caption);
   font-weight: 600;
   background: var(--bg-sunken);
   color: var(--text-muted);
@@ -227,7 +227,7 @@
 }
 .param__hint {
   margin: 2px 0 0;
-  font-size: 0.7rem;
+  font-size: var(--text-caption);
   color: var(--text-faint);
 }
 

@@ -390,13 +390,13 @@
   display: block;
   margin-top: 8px;
   color: var(--text-muted);
-  font-size: calc(11rem / 14);
+  font-size: var(--text-caption);
 }
 .chat-message__references {
   display: block;
   margin-top: 5px;
   color: var(--accent);
-  font-size: calc(11rem / 14);
+  font-size: var(--text-caption);
 }
 .chat-message--user .chat-message__meta {
   color: rgb(255 255 255 / 78%);
@@ -759,7 +759,7 @@
     height: min(650px, calc(100vh - 116px));
   }
   .chat-toggle {
-    font-size: calc(11rem / 14);
+    font-size: var(--text-caption);
   }
   .chat-engine select {
     max-width: 120px;
@@ -1020,7 +1020,7 @@ p.gpu-notice {
   align-items: center;
   margin-top: 6px;
   color: inherit;
-  font-size: calc(11rem / 14);
+  font-size: var(--text-caption);
   opacity: 0.85;
   overflow-wrap: anywhere;
 }

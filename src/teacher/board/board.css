@@ -191,6 +191,7 @@
 }
 .board__mark-label {
   fill: var(--board-mark);
+  /* Board units (#205 A1): layout.ts places the sheet in these pixels and its zoom scales them. */
   font-size: 24px;
   text-anchor: middle;
   /* A halo in the board colour keeps the label readable over strokes. */
@@ -227,6 +228,7 @@
 }
 .board__draw text {
   fill: var(--board-ink);
+  /* Board units (#205 A1): layout.ts places the sheet in these pixels and its zoom scales them. */
   font-size: 24px;
   opacity: 0;
   transition: opacity 400ms ease 700ms;
@@ -235,6 +237,7 @@
   opacity: 1;
 }
 .board__draw .board__tick {
+  /* Board units (#205 A1): layout.ts places the sheet in these pixels and its zoom scales them. */
   font-size: 18px;
 }
 .board__draw .board__curve-label {
@@ -247,6 +250,7 @@
 }
 .board__table {
   border-collapse: collapse;
+  /* Board units (#205 A1): layout.ts places the sheet in these pixels and its zoom scales them. */
   font-size: 24px;
   opacity: 0;
   transition: opacity 700ms ease;

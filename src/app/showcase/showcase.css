@@ -16,7 +16,7 @@
 }
 .showcase__caption {
   margin: 0;
-  font-size: var(--text-content, 16px);
+  font-size: var(--text-content);
   line-height: 1.45;
 }
 .showcase__count {

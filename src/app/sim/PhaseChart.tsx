@@ -59,7 +59,7 @@ export function PhaseChart({ graph }: { graph: GraphDef }) {
     const X = (v: number) => PAD.left + ((v - b.xMin) / (b.xMax - b.xMin)) * pw;
     const Y = (v: number) => PAD.top + ((b.yMax - v) / (b.yMax - b.yMin)) * ph;
     const font = css('--font-sans') || 'sans-serif';
-    ctx.font = `11px ${font}`;
+    ctx.font = `12px ${font}`;
     ctx.lineWidth = 1;
     // Grid and tick labels.
     ctx.strokeStyle = css('--stage-grid-major');

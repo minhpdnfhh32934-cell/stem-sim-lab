@@ -322,7 +322,7 @@
   border-radius: var(--radius-full);
   background: var(--accent-soft);
   color: var(--accent);
-  font-size: 0.68rem;
+  font-size: var(--text-caption);
   font-weight: 600;
   white-space: nowrap;
 }
@@ -485,10 +485,12 @@
 }
 .guide-art__text {
   fill: var(--text);
+  /* Text inside a drawing (SVG units, #205 A1): it scales with the picture. */
   font-size: 11px;
   font-family: inherit;
 }
 .guide-art__text--small {
+  /* Text inside a drawing (SVG units, #205 A1): it scales with the picture. */
   font-size: 9px;
   fill: var(--text-muted);
 }
