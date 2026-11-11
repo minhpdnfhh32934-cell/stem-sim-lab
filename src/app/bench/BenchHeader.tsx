@@ -12,6 +12,7 @@ import { FileMenu } from '@/app/project/FileMenu';
 import { redo, undo, useUndoStore } from '@/app/project/undo';
 import { SettingsDialog } from '@/app/settings/SettingsDialog';
 import { useSimStore } from '@/app/sim/simStore';
+import { UpdateReminder } from '@/app/update/UpdateReminder';
 import { goHome, useIsHome, useIsLanding, useIsStudio, useIsTeacher } from '@/app/topics';
 import { useSafetyStore } from '@/safety/safetyStore';
 import { openTeacher } from '@/teacher/teacherStore';
@@ -25,7 +26,8 @@ import { toLibrary } from './toLibrary';
 /**
  * The bench's 48 px frame header (docs/BENCH_DESIGN.md §9.4): the SimLab mark (launch page), the
  * breadcrumb (every crumb a 40 px button, the open topic is the page's h1), "Đề bài", AI status,
- * search, Basic/Advanced, the light / dark switch, undo/redo, Tệp and Settings (presentation: F5).
+ * search, Basic/Advanced, the light / dark switch, undo/redo, Tệp and Settings (presentation: F5);
+ * "Có bản cập nhật" after "Để sau" (the classic status bar's reminder).
  */
 export function BenchHeader() {
   const t = useT();
@@ -117,6 +119,7 @@ export function BenchHeader() {
           </button>
         )}
         <div className="bench-header__spacer" />
+        <UpdateReminder />
         {/* The launch page has nothing to undo and no AI on it yet (§9.1). */}
         {!landing && (
           <AiStatusPill

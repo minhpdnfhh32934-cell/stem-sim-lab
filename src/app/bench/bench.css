@@ -1697,7 +1697,9 @@ button.bench-door--lab:hover {
   flex-wrap: wrap;
   gap: var(--space-2);
 }
-.bench-header__teacher {
+.bench-header__teacher,
+.bench-header__update {
+  flex: none;
   white-space: nowrap;
 }
 .shelf-history {

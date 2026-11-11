@@ -759,6 +759,7 @@ const vi = {
   },
   update: {
     title: 'Cập nhật phần mềm',
+    available: 'Có bản cập nhật {version}',
     menu: 'Kiểm tra cập nhật',
     close: 'Đóng',
     current: 'Đang dùng: phiên bản {version} (lõi {native})',

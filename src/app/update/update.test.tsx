@@ -22,6 +22,7 @@ vi.mock('@tauri-apps/api/core', () => ({ isTauri: () => true, invoke }));
 
 const { checkForUpdate, useUpdateStore } = await import('./updater');
 const { UpdateDialog } = await import('./UpdateDialog');
+const { UpdateReminder } = await import('./UpdateReminder');
 
 function result(over: Record<string, unknown>) {
   return {
@@ -63,6 +64,22 @@ describe('update window at start-up (in-app updates)', () => {
     expect(screen.getByRole('button', { name: 'Cập nhật ngay' })).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Để sau' }));
     expect(useUpdateStore.getState().dialogOpen).toBe(false);
+  });
+
+  it('after "Để sau", "Có bản cập nhật 0.3.1" stays in the header and opens the window again', async () => {
+    const user = userEvent.setup();
+    render(<UpdateReminder />);
+    expect(screen.queryByRole('button', { name: /Có bản cập nhật/ })).toBeNull();
+    await startUpCheck({});
+    await user.click(screen.getByRole('button', { name: 'Để sau' }));
+    await user.click(screen.getByRole('button', { name: 'Có bản cập nhật 0.3.1' }));
+    expect(useUpdateStore.getState().dialogOpen).toBe(true);
+  });
+
+  it('a version that needs the installer is reminded too', async () => {
+    render(<UpdateReminder />);
+    await startUpCheck({ available: false, needsInstaller: true });
+    expect(screen.getByRole('button', { name: 'Có bản cập nhật 0.3.1' })).toBeInTheDocument();
   });
 
   it('nothing new: no window at start-up', async () => {

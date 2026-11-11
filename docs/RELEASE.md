@@ -62,8 +62,8 @@ chạy: lượt sau chờ lượt trước xong, không lượt nào bị hủy 
    `publish`). Chỉ bấm **Approve** khi trang lượt chạy ghi nhánh `main` và đúng commit vừa gộp.
 4. Khoảng 15–35 phút sau có bản Release `v<phiên bản>` gồm: bộ cài `.exe`, `.msi`,
    `SHA256SUMS.txt`, `web-bundle.zip` và `web-update.json`.
-5. Mọi máy đã cài app sẽ tự thấy "Có bản cập nhật" ở thanh trạng thái (app kiểm tra khi mở, nếu có
-   mạng).
+5. Mọi máy đã cài app sẽ tự thấy hộp "Cập nhật phần mềm", rồi nút "Có bản cập nhật" ở đầu bàn
+   (app kiểm tra khi mở, nếu có mạng).
 
 Điều kiện một lần:
 
@@ -94,7 +94,8 @@ menu ☰), trang Cài đặt → "Lịch sử phiên bản", `docs/VERSION_HISTO
 
 - Mở app (có mạng) → khoảng 8 giây sau app tự kiểm tra. Có bản mới thì **tự hiện hộp thoại** với
   **Cập nhật ngay** / **Để sau** (cần bộ cài mới thì nút **Mở trang tải bộ cài** / **Để sau**).
-  Chọn "Để sau" thì lần mở app sau hỏi lại; thanh trạng thái vẫn nhắc "Có bản cập nhật".
+  Chọn "Để sau" thì lần mở app sau hỏi lại; đầu bàn vẫn có nút nhắc "Có bản cập nhật {phiên bản}"
+  (cả khi bản mới cần bộ cài mới), bấm vào là mở lại hộp thoại.
 - **Bắt buộc cập nhật:** khi chạy Release, tích ô **"Bắt buộc cập nhật"**. Bản đó ghi
   `minRequired = <phiên bản này>` vào `web-update.json`. Máy đang chạy bản cũ hơn sẽ thấy hộp thoại
   **không có ✕, không có "Để sau", Esc không đóng** — phải cập nhật mới dùng tiếp (nếu tải lỗi có

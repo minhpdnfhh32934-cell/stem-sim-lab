@@ -49,14 +49,14 @@ WebView2 trên Windows cần đo bằng Task Manager trên máy tối thiểu (i
 
 Nguyên tắc: hy sinh độ mượt trước, **không bao giờ âm thầm giảm độ chính xác**.
 
-| Bậc | Khi nào                                                                      | Làm gì                                                                                                                                      | Người dùng thấy                                                    |
-| --- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| 1   | 45 khung hình liên tiếp chậm hơn ngân sách 20 % (`FrameMonitor`)             | Hạ mức chất lượng vẽ một bậc (độ nét, khử răng cưa, bóng, số hạt vẽ, tần số cập nhật đồ thị). Số liệu không đổi. Đặt lại khi mở chủ đề khác | Thanh trạng thái: "Đã hạ chất lượng hiển thị… (số liệu không đổi)" |
-| 2   | Máy không kịp tính đủ bước vật lý trong thời gian thực (ngân sách mỗi khung) | Chạy chậm hơn thời gian thực, giữ nguyên bước tích phân                                                                                     | "Chuyển động chậm ×0,5 để giữ độ chính xác"                        |
-| 3   | Phân tử                                                                      | Mức chi tiết khối cầu theo mức chất lượng; phân tử trong app ≤ 30 nguyên tử nên chưa cần dạng cartoon                                       | —                                                                  |
-| 4   | Nhiều hạt                                                                    | Va chạm hạt dùng lưới không gian (spatial hashing)                                                                                          | —                                                                  |
-| 5   | Mô phỏng hạt                                                                 | Hạt chỉ minh họa; kết quả định lượng lấy từ phương trình (Fick, ODE cân bằng, Maxwell–Boltzmann)                                            | Thẻ Khoa học ghi rõ                                                |
-| 6   | Giới hạn cứng                                                                | Thanh trượt giới hạn số hạt (khí ≤ 800, khuếch tán ≤ 400) theo mức chất lượng                                                               | —                                                                  |
+| Bậc | Khi nào                                                                      | Làm gì                                                                                                                                      | Người dùng thấy                                                 |
+| --- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| 1   | 45 khung hình liên tiếp chậm hơn ngân sách 20 % (`FrameMonitor`)             | Hạ mức chất lượng vẽ một bậc (độ nét, khử răng cưa, bóng, số hạt vẽ, tần số cập nhật đồ thị). Số liệu không đổi. Đặt lại khi mở chủ đề khác | Trên sân khấu: "Đã hạ chất lượng hiển thị… (số liệu không đổi)" |
+| 2   | Máy không kịp tính đủ bước vật lý trong thời gian thực (ngân sách mỗi khung) | Chạy chậm hơn thời gian thực, giữ nguyên bước tích phân                                                                                     | "Chuyển động chậm ×0,5 để giữ độ chính xác"                     |
+| 3   | Phân tử                                                                      | Mức chi tiết khối cầu theo mức chất lượng; phân tử trong app ≤ 30 nguyên tử nên chưa cần dạng cartoon                                       | —                                                               |
+| 4   | Nhiều hạt                                                                    | Va chạm hạt dùng lưới không gian (spatial hashing)                                                                                          | —                                                               |
+| 5   | Mô phỏng hạt                                                                 | Hạt chỉ minh họa; kết quả định lượng lấy từ phương trình (Fick, ODE cân bằng, Maxwell–Boltzmann)                                            | Thẻ Khoa học ghi rõ                                             |
+| 6   | Giới hạn cứng                                                                | Thanh trượt giới hạn số hạt (khí ≤ 800, khuếch tán ≤ 400) theo mức chất lượng                                                               | —                                                               |
 
 Ổn định số học: runner phát hiện NaN/Infinity → dừng, khôi phục trạng thái hợp lệ gần nhất và báo
 lỗi; hệ bảo toàn theo dõi sai lệch năng lượng (Giai đoạn 1–2); Lotka–Volterra hiển thị sai lệch của
@@ -175,4 +175,5 @@ không đổi; máy GPU tích hợp không bị nâng mức.
 **Watchdog bộ nhớ** (`src/perf/memory.ts`): 10 giây đọc heap JS một lần (WebView2/Chromium). Khi vượt
 80 % ngân sách 300 MB (hoặc 80 % giới hạn heap), app giải phóng bộ nhớ đệm đã đăng ký (ví dụ: bản
 ghi đồ thị vật lý giữ lại một nửa số mẫu — chỉ giảm độ phân giải đồ thị, không ảnh hưởng mô phỏng)
-và hiện cảnh báo một lần. Thanh trạng thái hiện RAM hiện tại.
+và hiện cảnh báo một lần. (Số RAM, FPS và mức chất lượng của thanh trạng thái cũ chưa có chỗ trên
+bàn thí nghiệm từ 0.8.1; xem mô tả PR #198.)

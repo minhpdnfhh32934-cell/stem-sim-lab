@@ -760,6 +760,7 @@ const en: Messages = {
   },
   update: {
     title: 'Software update',
+    available: 'Update {version} available',
     menu: 'Check for updates',
     close: 'Close',
     current: 'Running version {version} (core {native})',

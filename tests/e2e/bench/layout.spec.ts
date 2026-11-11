@@ -194,6 +194,37 @@ async function openPhysics(page: Page, topic: string) {
   await expect(page.locator('.stage__hud-title')).toBeVisible({ timeout: 20_000 });
 }
 
+test('"Có bản cập nhật" after "Để sau" fits the header at 1366 × 768 with a topic open (B8)', async ({
+  page,
+}) => {
+  // A long topic name: the breadcrumb shrinks to "…", never the controls.
+  await openPhysics(page, 'Chuyển động thẳng biến đổi đều');
+  // The dev server serves the app's own store module: fill it as a start-up check would.
+  await page.evaluate(async (url) => {
+    const { useUpdateStore } = (await import(
+      /* @vite-ignore */ url
+    )) as typeof import('../../../src/app/update/updater');
+    useUpdateStore.setState({
+      phase: 'available',
+      manifest: { webVersion: '9.9.9', minNative: '0.0.0', size: 1, notes: '', date: '' },
+    });
+  }, '/src/app/update/updater.ts');
+  await page.getByRole('button', { name: 'Có bản cập nhật 9.9.9' }).click();
+  await expect(page.getByRole('dialog', { name: 'Cập nhật phần mềm' })).toBeVisible();
+  await page.getByRole('button', { name: 'Để sau' }).click();
+  await expect(page.getByRole('button', { name: 'Có bản cập nhật 9.9.9' })).toBeVisible();
+  // The header keeps every control on its line: nothing overflows it or the page.
+  const overflow = await page.evaluate(() => {
+    const h = document.querySelector('.bench-header');
+    const d = document.documentElement;
+    return [h ? h.scrollWidth - h.clientWidth : 1, d.scrollWidth - d.clientWidth];
+  });
+  expect(overflow).toEqual([0, 0]);
+  await expect(page.getByRole('button', { name: 'Cài đặt', exact: true })).toBeInViewport({
+    ratio: 1,
+  });
+});
+
 test('the AI Teacher button covers no Inspector line and no Studio button (UI-01)', async ({
   page,
 }) => {
