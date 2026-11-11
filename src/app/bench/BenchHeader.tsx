@@ -1,5 +1,5 @@
 import { FileText, Redo2, Search, Settings, Undo2, X } from 'lucide-react';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, type PointerEvent } from 'react';
 import { useAnalyzeStore } from '@/app/ai/analyze';
 import { AiStatusPill } from '@/app/ai/AiStatusPill';
 import { useCommandPalette } from '@/app/command/commands';
@@ -22,6 +22,16 @@ import { IconButton } from '@/ui/IconButton';
 import { Logo } from '@/ui/Logo';
 import { ThemeSwitch } from './ThemeSwitch';
 import { toLibrary } from './toLibrary';
+
+/**
+ * A topic name cut to "…" (a long name, a large font) shows whole in the tooltip on hover. Set
+ * on pointerover, before the tooltip layer's document listener reads it; never when it fits.
+ */
+function tipIfCut(e: PointerEvent<HTMLElement>) {
+  const el = e.currentTarget;
+  if (el.scrollWidth > el.clientWidth) el.dataset.tip = el.textContent;
+  else delete el.dataset.tip;
+}
 
 /**
  * The bench's 48 px frame header (docs/BENCH_DESIGN.md §9.4): the SimLab mark (launch page), the
@@ -98,7 +108,9 @@ export function BenchHeader() {
               <span className="bench-crumbs__sep" aria-hidden="true">
                 ›
               </span>
-              <h1 className="bench-crumb bench-crumb--current">{L(topic)}</h1>
+              <h1 className="bench-crumb bench-crumb--current" onPointerOver={tipIfCut}>
+                {L(topic)}
+              </h1>
             </>
           )}
           {/* The teacher page has its own h1. */}
@@ -133,6 +145,8 @@ export function BenchHeader() {
           type="button"
           className="btn bench-header__search"
           aria-keyshortcuts="Control+K"
+          // Its words are only hidden from view when the header is short of room (bench.css).
+          data-tip={`${t('bench.search')} (Ctrl+K)`}
           onClick={() => {
             useCommandPalette.getState().setOpen(true);
           }}

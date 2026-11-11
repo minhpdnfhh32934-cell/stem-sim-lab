@@ -1,10 +1,12 @@
 import { CloudDownload } from 'lucide-react';
 import { useT } from '@/app/i18n';
+import { IconButton } from '@/ui/IconButton';
 import { useUpdateStore } from './updater';
 
 /**
  * "Có bản cập nhật {version}" in the bench header after "Để sau" (the classic status bar's
- * button): also when the new version needs the installer, so nobody misses it.
+ * button): also when the new version needs the installer, so nobody misses it. An icon with a
+ * dot, its name in the tooltip: a text button took the topic name's room (review of #198).
  */
 export function UpdateReminder() {
   const t = useT();
@@ -13,15 +15,13 @@ export function UpdateReminder() {
   );
   if (!update) return null;
   return (
-    <button
-      type="button"
-      className="btn bench-header__update"
+    <IconButton
+      icon={CloudDownload}
+      label={t('update.available', { version: update.webVersion })}
+      className="bench-header__update"
       onClick={() => {
         useUpdateStore.setState({ dialogOpen: true });
       }}
-    >
-      <CloudDownload size={16} strokeWidth={1.75} aria-hidden="true" />
-      <span>{t('update.available', { version: update.webVersion })}</span>
-    </button>
+    />
   );
 }

@@ -463,6 +463,34 @@ kbd {
 .bench-header__search kbd {
   margin-left: auto;
 }
+/*
+ * Short of room (a large Cỡ chữ, a narrow window): the search and the AI status keep only their
+ * icons (names and tooltips stay), so the topic name keeps its room (review of #198). `em` is the
+ * header's own font size, so the threshold follows Cỡ chữ: at 1366 px it folds from 110 %.
+ */
+.bench-header {
+  container: bench-header / inline-size;
+}
+@container bench-header (max-width: 90em) {
+  .bench-header__search {
+    width: var(--target);
+    justify-content: center;
+    padding-inline: 0;
+  }
+  /* Out of view only: they stay the button's name. */
+  .bench-header__search > span,
+  .bench-header__search > kbd {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .bench-header .ai-status__label {
+    display: none;
+  }
+}
 .bench-header .segmented {
   flex: none;
 }
@@ -1697,10 +1725,24 @@ button.bench-door--lab:hover {
   flex-wrap: wrap;
   gap: var(--space-2);
 }
-.bench-header__teacher,
-.bench-header__update {
-  flex: none;
+.bench-header__teacher {
   white-space: nowrap;
+}
+/* "Có bản cập nhật": an icon with an accent dot, so it never takes the topic name's room. */
+.bench-header__update {
+  position: relative;
+  flex: none;
+}
+.bench-header__update::after {
+  content: '';
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: var(--accent);
+  pointer-events: none;
 }
 .shelf-history {
   display: grid;

@@ -194,36 +194,79 @@ async function openPhysics(page: Page, topic: string) {
   await expect(page.locator('.stage__hud-title')).toBeVisible({ timeout: 20_000 });
 }
 
-test('"Có bản cập nhật" after "Để sau" fits the header at 1366 × 768 with a topic open (B8)', async ({
-  page,
-}) => {
-  // A long topic name: the breadcrumb shrinks to "…", never the controls.
-  await openPhysics(page, 'Chuyển động thẳng biến đổi đều');
-  // The dev server serves the app's own store module: fill it as a start-up check would.
-  await page.evaluate(async (url) => {
-    const { useUpdateStore } = (await import(
-      /* @vite-ignore */ url
-    )) as typeof import('../../../src/app/update/updater');
-    useUpdateStore.setState({
-      phase: 'available',
-      manifest: { webVersion: '9.9.9', minNative: '0.0.0', size: 1, notes: '', date: '' },
+for (const fontScale of [1, 1.4] as const) {
+  test(`"Có bản cập nhật" after "Để sau" keeps the header whole at 1366 × 768, font ${String(fontScale * 100)} % (B8)`, async ({
+    page,
+  }) => {
+    await page.addInitScript((scale) => {
+      localStorage.setItem(
+        'stemsim.settings',
+        JSON.stringify({ state: { locale: 'vi', fontScale: scale }, version: 2 }),
+      );
+    }, fontScale);
+    // A long topic name: the breadcrumb shrinks to "…", never the controls.
+    const name = 'Chuyển động thẳng biến đổi đều';
+    await openPhysics(page, name);
+    const title = page.getByRole('heading', { level: 1, name });
+    const before = (await title.boundingBox())?.width ?? 0;
+    // The dev server serves the app's own store module: fill it as a start-up check would.
+    await page.evaluate(async (url) => {
+      const { useUpdateStore } = (await import(
+        /* @vite-ignore */ url
+      )) as typeof import('../../../src/app/update/updater');
+      useUpdateStore.setState({
+        phase: 'available',
+        manifest: { webVersion: '9.9.9', minNative: '0.0.0', size: 1, notes: '', date: '' },
+      });
+    }, '/src/app/update/updater.ts');
+    const reminder = page.getByRole('button', { name: 'Có bản cập nhật 9.9.9' });
+    await reminder.click();
+    await expect(page.getByRole('dialog', { name: 'Cập nhật phần mềm' })).toBeVisible();
+    await page.getByRole('button', { name: 'Để sau' }).click();
+    await expect(reminder).toBeVisible();
+    // Every header control stays on screen and nothing overflows the header or the page.
+    const right = await page
+      .locator('.bench-header button')
+      .evaluateAll((els) => Math.max(...els.map((el) => el.getBoundingClientRect().right)));
+    const overflow = await page.evaluate(() => {
+      const h = document.querySelector('.bench-header');
+      const d = document.documentElement;
+      return [h ? h.scrollWidth - h.clientWidth : 1, d.scrollWidth - d.clientWidth];
     });
-  }, '/src/app/update/updater.ts');
-  await page.getByRole('button', { name: 'Có bản cập nhật 9.9.9' }).click();
-  await expect(page.getByRole('dialog', { name: 'Cập nhật phần mềm' })).toBeVisible();
-  await page.getByRole('button', { name: 'Để sau' }).click();
-  await expect(page.getByRole('button', { name: 'Có bản cập nhật 9.9.9' })).toBeVisible();
-  // The header keeps every control on its line: nothing overflows it or the page.
-  const overflow = await page.evaluate(() => {
-    const h = document.querySelector('.bench-header');
-    const d = document.documentElement;
-    return [h ? h.scrollWidth - h.clientWidth : 1, d.scrollWidth - d.clientWidth];
+    // Readable: the name keeps at least its first two words ("Chuyển động"), measured in its own
+    // font apart from the layout; the crumbs before it stay whole.
+    const { width, twoWords, cutCrumbs } = await title.evaluate((el) => {
+      const probe = document.createElement('span');
+      probe.style.cssText = `position:absolute;visibility:hidden;white-space:nowrap;font:${getComputedStyle(el).font}`;
+      probe.textContent = el.textContent.split(' ').slice(0, 2).join(' ');
+      document.body.append(probe);
+      const words = probe.getBoundingClientRect().width;
+      probe.remove();
+      const box = el.parentElement?.getBoundingClientRect();
+      const cut = [...document.querySelectorAll('.bench-crumbs > button')].filter((b) => {
+        const r = b.getBoundingClientRect();
+        return b.scrollWidth > b.clientWidth || (box !== undefined && r.right > box.right + 0.5);
+      }).length;
+      return { width: el.getBoundingClientRect().width, twoWords: words, cutCrumbs: cut };
+    });
+    expect(right).toBeLessThanOrEqual(1366);
+    expect(overflow).toEqual([0, 0]);
+    expect(width).toBeGreaterThanOrEqual(twoWords);
+    expect(cutCrumbs).toBe(0);
+    // The reminder takes its own width and one gap from the name, nothing more.
+    const cost = await reminder.evaluate(
+      (el) =>
+        el.getBoundingClientRect().width +
+        parseFloat(getComputedStyle(el.parentElement ?? el).columnGap || '0'),
+    );
+    expect(before - width).toBeLessThanOrEqual(cost + 1);
+    // A name cut to "…" is shown whole in the tooltip.
+    if (await title.evaluate((el) => el.scrollWidth > el.clientWidth)) {
+      await title.hover();
+      await expect(page.getByRole('tooltip')).toHaveText(name);
+    }
   });
-  expect(overflow).toEqual([0, 0]);
-  await expect(page.getByRole('button', { name: 'Cài đặt', exact: true })).toBeInViewport({
-    ratio: 1,
-  });
-});
+}
 
 test('the AI Teacher button covers no Inspector line and no Studio button (UI-01)', async ({
   page,
