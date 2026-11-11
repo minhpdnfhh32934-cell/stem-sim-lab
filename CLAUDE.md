@@ -771,7 +771,9 @@ Progress log: `docs/PROGRESS.md`.
   **Every new module must set `ModuleView.state = bindStore(store, inputKeys)`** so files, history
   and undo work. E2E runs with `tests/e2e/storage-state.json` (tour already done).
 - Overload: render loops call `reportOverload()` from a `FrameMonitor`; memory watchdog in
-  `src/perf/memory.ts` (`registerCacheRelease`).
+  `src/perf/memory.ts` (`registerCacheRelease`). Advanced shows the render quality (with its
+  measurement), FPS and RAM in Tệp → "Thông tin máy" (`src/app/bench/MachineInfo.tsx`, #201): no live
+  region, a dash for a missing number.
 - KaTeX: never put Vietnamese words inside `\text{}` — use the equation `label` instead. A textbook
   symbol's Vietnamese subscript goes inside `\text{}` (`W_{\text{đ}}`, `\alpha_{\text{bđ}}`), never straight in
   math mode (fallback font next to italic letters, KaTeX warning). KaTeX's fonts have "đ" but not "ỏ", "ỉ",
