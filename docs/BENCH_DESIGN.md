@@ -230,6 +230,8 @@ Budget: ≤ 400 KB of woff2, measured in B0.
 | mono 28/34         | meter (pH)                                      |
 | KaTeX 18 / 22      | Science Card / equation band                    |
 
+Tokens (#205 A1, `tokens.css`): `--text-caption` 12, `--text-note` 13, `--text-md` 14, `--text-lg` 16, `--text-title` 18, `--text-heading` 22, `--text-display` 32; lesson text stays `--text-content`. Stylesheets never write their own `calc(N rem / 14)`. Pixel sizes are kept only for text inside a drawing (board units, SVG pictures), each with its reason in `src/app/theme/typeScale.test.ts`. The periodic table's tiles stay below the floor until B7. Canvas labels follow the same 12 px floor (axis numbers: `fontPx(12)`).
+
 **Rules**
 
 - Weights ≥ 400. Sentence case, never uppercase.
