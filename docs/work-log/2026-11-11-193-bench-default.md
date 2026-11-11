@@ -63,5 +63,19 @@ riêng tư "Hỏi thầy" trên sổ thay bong bóng), `FirstRun.test.tsx` (cổ
   156/156) chạy lại sau khi máy khởi động lại cũng FAIL 101/156 cùng kiểu lỗi (thử A/B trong worktree
   tạm). Đo thời gian trả lời `/` khi đang chạy: 8,5 / 18,5 / 28,5 s… (kết nối TCP thử lại), Vite chỉ
   nghe `[::1]:1420`; WARP đang tắt.
-- E2E 4 worker trên máy bàn và CI (PR): xem mô tả PR.
-- Kiểm WebView2 native: xem mô tả PR.
+- E2E 4 worker trên máy bàn: chromium 148/156, chromium-3d 40/44, perf 1/1. Lỗi còn lại: `page.goto`
+  hết giờ (môi trường), một test bảng trắng chập chờn (chạy riêng 6/6 PASS). Hai lỗi thật đã sửa:
+  thứ tự CSS (`bench.css` phải nạp cuối, 5 test controls/frame) và `project.spec` "first run" (trước B8
+  chạy luồng lần đầu của khung cũ vì context trống không có công tắc; nay theo luồng bench).
+- Kiểm WebView2 native (bản `tauri build --debug --no-bundle`, identifier tạm `vn.stemsimlab.b8check`
+  qua `--config`, hồ sơ tạm đã xoá; Edge WebView2 157, màn 125 %):
+  - (a) cửa sổ 1366×690 CSS px (máy 1366×768 phóng to): khung mô phỏng 998×578, mép bàn đủ, không cuộn:
+    PASS (`docs/images/b8-native-1366x690.png`).
+  - (b) KaTeX dưới CSP thật (script nội tuyến bị chặn): 45 phần tử `top:` nội tuyến, 0 bị chặn; chỉ số
+    dưới đúng chỗ: PASS (`docs/images/b8-native-katex.png`).
+  - (c) dấu tiếng Việt: Be Vietnam Pro 400/500/600 vẽ đủ "Ặ Ẫ Ỡ Ữ Ỵ ẫ ặ ệ ộ ợ": PASS
+    (`docs/images/b8-native-diacritics.png`).
+  - (d) thanh công cụ bảng trắng: BLOCKED — cần trả lời 18+ và đồng ý điều khoản, chỉ người dùng được
+    làm (bị chặn khi máy tự làm).
+- CI: `cargo audit` FAIL vì RUSTSEC-2026-0486 (`rustix` 1.1.5, công bố hôm nay; `Cargo.lock` không đổi
+  trong B8, main cũng sẽ đỏ) — ngoài phạm vi B8.
