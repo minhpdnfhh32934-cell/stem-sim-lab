@@ -317,10 +317,11 @@
 
 /*
  * "Bàn thí nghiệm" (bench) shell, 0.8.1 (#113; design `docs/BENCH_DESIGN.md` §4). Applies
- * only while <html> carries data-shell="bench" (the dev switch, B1); the classic shell never sets
- * it, so nothing below changes it. Names that mean the same thing are overridden, so every module
- * picks the bench look up unchanged; new names only where nothing matches today. The bench fonts
- * (Be Vietnam Pro, JetBrains Mono) are loaded by `benchFonts.ts`. Contrast table: tokens.test.ts.
+ * while <html> carries data-shell="bench": `public/theme-boot.js` sets it before the first frame
+ * (the bench is the only shell since B8) and `BenchShell` keeps it. Names that mean the same
+ * thing are overridden, so every module picks the bench look up unchanged; new names only where
+ * nothing matches today. The bench fonts (Be Vietnam Pro, JetBrains Mono) are loaded by
+ * `benchFonts.ts`. Contrast table: tokens.test.ts.
  */
 :root[data-shell='bench'] {
   --font-sans:
