@@ -341,6 +341,16 @@ for (const fontScale of [1, 1.4])
   });
 
 // ---- Biology on the bench edge (B5) ----
+/** As `openBiology`: a slow test machine may measure as "low" quality (2D pictures, no 3D edge). */
+async function openBioTopic(page: Page, topic: string) {
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      'stemsim.perf',
+      JSON.stringify({ state: { preference: 'medium', benchmark: null }, version: 1 }),
+    );
+  });
+  await openTopic(page, 'Sinh học', topic);
+}
 const edgeOf = (page: Page) => page.locator('.bench-edge');
 const stageOf = (page: Page) => page.getByRole('region', { name: 'Khung mô phỏng' });
 const seriousOnEdge = async (page: Page) =>
@@ -349,7 +359,7 @@ const seriousOnEdge = async (page: Page) =>
     .map((v) => `${v.id} (${v.nodes.map((n) => n.target.join(' ')).join(' | ')})`);
 
 test('B5: mitosis 3D steps from the edge; the stage keeps the stage name', async ({ page }) => {
-  await openTopic(page, 'Sinh học', 'Nguyên phân');
+  await openBioTopic(page, 'Nguyên phân');
   // D1 / D2 (§9.6): "Về kì trước" / "Sang kì tiếp" ("Kì sau" is anaphase's name).
   const next = edgeOf(page).getByRole('button', { name: 'Sang kì tiếp' });
   await expect(next).toBeVisible({ timeout: 30_000 });
@@ -365,7 +375,7 @@ test('B5: mitosis 3D steps from the edge; the stage keeps the stage name', async
 });
 
 test('B5: a habitat lesson plays from the edge (time slider there)', async ({ page }) => {
-  await openTopic(page, 'Sinh học', 'Tăng trưởng logistic');
+  await openBioTopic(page, 'Tăng trưởng logistic');
   await expect(edgeOf(page).locator('.edge-steps input[type="range"]')).toBeVisible({
     timeout: 30_000,
   });
@@ -375,7 +385,7 @@ test('B5: a habitat lesson plays from the edge (time slider there)', async ({ pa
 });
 
 test('B5: cell → DNA zooms from the edge', async ({ page }) => {
-  await openTopic(page, 'Sinh học', 'Từ tế bào đến DNA');
+  await openBioTopic(page, 'Từ tế bào đến DNA');
   const zoomIn = edgeOf(page).getByRole('button', { name: 'Phóng to' });
   await expect(zoomIn).toBeVisible({ timeout: 30_000 });
   await expect(edgeOf(page).getByRole('button', { name: 'Thu nhỏ' })).toBeDisabled();
