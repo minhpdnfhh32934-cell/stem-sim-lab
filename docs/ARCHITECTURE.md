@@ -178,7 +178,7 @@ lab: the shelf's "Có hướng dẫn" kind of lesson (`src/app/bench/Library.tsx
 `go.studio`) → `openStudio()` → screen `'studio'` (`src/app/navigationStore.ts`; the value is kept, so
 every older caller lands in the new place) → `StudioScreen`, mounted by `BenchShell` in its studio
 room (the notebook's pinned tabs beside the sheet, the live stage; "Về Virtual Lab" goes back). The studio's
-subject tab sets the library's subject. From an open topic: the inspector card `TopicLessons.tsx`
+subject tab sets the library's subject. From an open topic: the tray's lesson card `TopicLessons.tsx`
 lists the topic's lessons, and in the "Thử thách" tab a lab POE that a lesson runs (`binding.poe`)
 becomes a link to that lesson instead of a second prediction (`ChallengePanel.tsx`). Both use
 `lessons.ts` (`lessonsForTopic`, `lessonForPoe`, `openLesson`): built-in + teacher lessons matched by
@@ -381,7 +381,7 @@ it without code of its own:
     (Tags) sits in the corner (`Bio3DFigureBody.tools`), "Toàn cảnh / Cận cảnh cá thể" in the
     generation row. The gene pool's name heads the label in front of the plinth.
 - Genetic drift archipelago (`src/biology/genetics/drift3d/`, the full stage, `Bio3DView` with
-  `top` / `tools` / `bottom` / `info`; the heterozygosity chart stays in the Bottom panel and marks
+  `top` / `tools` / `bottom` / `info`; the heterozygosity chart stays in the module's `Bottom` (a notebook tab) and marks
   the generation shown through `useDrift3D` (`active`, `t`)). `driftRuns` (`population.ts`, one
   `rng(seed)` stream, Wright–Fisher run after run) is shared by the 2D chart, its chips and the 3D
   view. `binding.ts`: one island per run; A copies at g = p·2N (whole from generation 1; generation
@@ -407,7 +407,7 @@ it without code of its own:
   card (`useScrollMore` fades the card's last line while more is below); "Toàn cảnh" closes it.
   Medium: 15 draw calls (+ up to 5 for flags), ~155k triangles, 0 frames at rest.
 - Logistic growth habitat (`src/biology/ecology/logistic3d/`, the full stage, `Bio3DView` with
-  `top` / `tools` / `bottom` / `info`; the dN/dt chart stays in the Bottom panel and marks N(t) of
+  `top` / `tools` / `bottom` / `info`; the dN/dt chart stays in the module's `Bottom` (a notebook tab) and marks N(t) of
   the moment shown through `useLogistic3D` (`active`, `t`)). `binding.ts`: the exact solution
   `logistic` of `ecology.ts` at time t; one figure per `per` individuals, `drawScale(max(peak, K),
 200)` for the whole run (`figureCap`: the tier's instance share, at most `LEGIBLE_FIGURES`), drawn
@@ -438,7 +438,7 @@ it without code of its own:
   t = 0); `logisticCard.ts` holds the Science Card and its 3D notes (`LOGISTIC_CARD_3D`). Medium: 21
   draw calls, ~104k triangles (High 22, ~122k), 0 frames at rest.
 - Predator–prey habitat (`src/biology/ecology/lv3d/`, same shell as logistic; the x(t), y(t)
-  chart in the Bottom panel marks the sample shown through `useLv3D` (`active`, `t`)).
+  chart in the module's `Bottom` (a notebook tab) marks the sample shown through `useLv3D` (`active`, `t`)).
   `binding.ts`: the moment is the computed sample nearest t (`sampleAt`, never interpolated) of
   the 801-point DOPRI5 trajectory from `useLvData`; one figure per `per` individuals for both
   species, `drawScale(peak x + peak y, figureCap)`; drawn = round(x / per), round(y / per); the
@@ -519,8 +519,8 @@ it without code of its own:
 ## 5. Verified in Phase 0
 
 - `npm run tauri dev` and a debug `tauri build` both open the native window with the full layout
-  (checked on Linux/WebKitGTK under Xvfb). The status bar shows the version from the Rust
-  `app_info` command, which proves the IPC works.
+  (checked on Linux/WebKitGTK under Xvfb). The classic status bar (until B8) showed the version
+  from the Rust `app_info` command, which proved the IPC works.
 - Browser checks: tooltips on disabled buttons, Esc closes Settings, Space presses a focused
   control, splitter drag and persistence across reload, dark theme applied before React loads,
   and no horizontal overflow at the 1024×600 minimum window size.
