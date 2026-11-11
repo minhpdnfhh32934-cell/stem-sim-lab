@@ -242,11 +242,3 @@
 .update__spacer {
   flex: 1;
 }
-.statusbar__update {
-  border: 0;
-  background: transparent;
-  color: var(--accent);
-  font: inherit;
-  font-weight: 600;
-  cursor: pointer;
-}

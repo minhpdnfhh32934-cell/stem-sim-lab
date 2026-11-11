@@ -44,9 +44,10 @@ export function notebookPushes(
 type PanelSizeKey = keyof typeof LAYOUT_LIMITS;
 
 /**
- * The lab panels (library, properties, graphs) are always shown; they can only be resized.
- * Presentation mode, the home page and the AI teacher page hide them (`AppShell`). The bench shell
- * (0.8.1) folds its tray to a 64 px spine instead (user decision 2026-11-02); nothing reaches zero.
+ * Panel sizes and tabs. The bench (the only shell since 0.8.1 B8) folds its tray to a 64 px spine
+ * and closes the notebook to its rail (user decision 2026-11-02); nothing reaches zero, and
+ * presentation mode hides them. `leftWidth`, `rightWidth`, `bottomHeight`, `leftTab` and
+ * `bottomTab` were the classic shell's: still read and saved, so the store stays version 1.
  */
 export interface LayoutState {
   leftWidth: number;

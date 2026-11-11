@@ -1,8 +1,8 @@
 # AI Teacher and local Gemma
 
-This fork adds a launch page (“Virtual Lab” / “AI Teacher”), an AI tutor page and a floating
-chat bubble in the lab. The chat is text-based. It never takes screenshots or inspects other
-applications.
+This fork adds a launch page (“Virtual Lab” / “AI Teacher”), an AI tutor page and, in the lab,
+the notebook's “Hỏi AI” tab (the floating chat bubble until the bench, B8). The chat is
+text-based. It never takes screenshots or inspects other applications.
 
 > **Fork exceptions (user decision 2026-10-12).** `CLAUDE.md` / PROMPT_PHAN_2 forbid local AI and
 > remote hosts in the production CSP. For this fork the user accepted two exceptions: Gemma runs
@@ -13,9 +13,9 @@ applications.
 
 - The app opens on the launch page with two entries: **Virtual Lab** (the existing topic
   browser and simulations) and **AI Teacher** (the full tutor page).
-- The **SimLab** brand in the top bar always returns to the launch page. Esc leaves the tutor
+- The **SimLab** mark in the bench header always returns to the launch page. Esc leaves the tutor
   page.
-- The chat bubble is shown in the lab only (the launch page already has its own entry).
+- The “Hỏi AI” notebook tab is in the lab only (the launch page already has its own entry).
 - The first-run tour explains the lab, so it starts the first time the learner opens the lab.
 
 ## Which engine answers
@@ -39,8 +39,9 @@ reported as such when the learner asks.
 
 ## Screen context
 
-“Lấy thông tin từ màn hình” appears only in the floating chat bubble, is off by default, and is
-reset to off every time the bubble opens (and when the full tutor page opens). When enabled, the
+“Lấy thông tin từ màn hình” appears only in the notebook's “Hỏi AI” tab, is off by default, and
+is reset to off whenever that chat stops being shown (its X, the rail, Esc, another tab or another
+room; `Notebook.tsx`) and when the full tutor page opens. When enabled, the
 prompt may include the active subject and topic, physics parameters, simulation time, the current
 problem text, module inputs and the Science Card. The context is read from app state; no
 screenshot, clipboard or data from another window is collected. The blue scan band is visual
@@ -56,9 +57,10 @@ engine or copied from the data library, the learner's notes (prediction, explana
 conclusion; each quoted at most 250 characters) and the last AI text kept in the session. The
 expected conclusion is never included. Building it never changes the session; AI text is never
 stored as engine evidence. The toggle still decides: off → nothing of the lesson is sent. The
-Studio's “Hỏi thầy” button (`AskTeacher.tsx`) opens the bubble (`askInBubble`) with a question
-about the current step in the box; the learner edits and sends it. Closing the bubble turns the
-toggle off, so it is off whenever a screen opens the bubble.
+Studio's “Hỏi thầy” button (`AskTeacher.tsx`) opens the “Hỏi AI” tab beside the lesson
+(`askInBubble`, the name kept from the bubble) with a question about the current step in the box;
+the learner edits and sends it. Leaving the chat turns the toggle off, so it is off whenever a
+screen opens it.
 
 **“Hỏi thầy về bộ phận này” (3D mitosis, item 2 outside the board).** The part card of the 3D
 mitosis view (`Mitosis3DView.tsx` `PartInfo`, shown after a tap or a pick in “Bộ phận tế bào”)
@@ -646,7 +648,7 @@ question about a picture of the circled area names no reviewer either: it is not
 | questions to a runtime on this computer (loopback addresses only; leaves only if that program forwards it; Ollama cloud models refused) | question + draft (also a Gemma or local-runtime draft) + relevant excerpts + summary + screen context (if on) → reviewer (only with Think on; never the fallback) |
 | API keys (keychain or session memory)                                                                                                   | (with a runtime on this computer: only Think, Wikipedia or the Gemini voice)                                                                                      |
 |                                                                                                                                         | question → Wikipedia (only if the lookup is on; never for “Khoanh để hỏi”)                                                                                        |
-|                                                                                                                                         | screen context (only when the bubble toggle is on)                                                                                                                |
+|                                                                                                                                         | screen context (only when the “Hỏi AI” toggle is on)                                                                                                              |
 |                                                                                                                                         | a photographed problem → the API (browser only, downscaled)                                                                                                       |
 |                                                                                                                                         | model files are downloaded from HuggingFace (nothing is uploaded)                                                                                                 |
 | the learner's own strokes on the board                                                                                                  | circled board text (“Khoanh để hỏi”: the lesson's own words, LaTeX and drawing labels, ≤ 2000 chars) → the answering provider and the Think reviewer              |
@@ -699,7 +701,7 @@ Wikipedia out then. It is never read as an answer to the teacher's check questio
 (`TurnOrigin.boardAsk`). When the circled text does not fit the block's cap, the title and the
 neighbours are left out first, then lines are cut ("…") and the parts left out are counted in a
 marked line — never dropped silently. The PNG path (blob: URL → OffscreenCanvas) runs in Chromium
-in `tests/e2e/board-picture.spec.ts` (the learner's strokes, and a drawing without labels, circled →
+in `tests/e2e/bench/board-picture.spec.ts` (the learner's strokes, and a drawing without labels, circled →
 a PNG to a fake Ollama with vision; nothing online); it is **not verified in the native WebView2
 build** (a user step); if it fails there, the learner is told and nothing is sent.
 
@@ -812,8 +814,8 @@ The engine stays MMS-TTS (`Xenova/mms-tts-vie`, VITS). Text editing is separate 
 
 ## Teacher face
 
-The teacher appears as an original vector face in the chat header (bubble mode), the bubble button
-and the tutor page. The eyes follow the mouse while the chat is open (off with
+The teacher appears as an original vector face in the chat header (the “Hỏi AI” tab) and the
+tutor page. The eyes follow the mouse while the chat is open (off with
 `prefers-reduced-motion`).
 
 ## Problem analysis and photos
@@ -930,7 +932,7 @@ Tests: `engineChoice.test.ts`, `chatStore.test.ts`, `memory.test.ts`, `chatLocal
 `TeacherSettingsDataFlow.test.tsx`, `analyze.test.ts`, `ExplainBox.test.tsx`,
 `photoVision.test.ts`, `CameraDialog.test.tsx`, `localAiStore.test.ts`, `localRuntime.test.ts`,
 `AiStatusPill.test.tsx`, E2E
-`tests/e2e/local-ai.spec.ts` (a fake Ollama on
+`tests/e2e/bench/local-ai.spec.ts` (a fake Ollama on
 127.0.0.1:11434; every cloud host and Wikipedia counted and refused). Not tested against a real
 runtime.
 

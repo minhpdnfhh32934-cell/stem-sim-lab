@@ -10,22 +10,24 @@ import {
   Search,
   SearchX,
 } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useAiStore } from '@/ai/aiStore';
 import { openManual } from '@/app/ai/analyze';
 import { useAnalysisEngine } from '@/app/ai/engineChoice';
-import { useT } from '@/app/i18n';
+import { normalizeForSearch } from '@/app/catalog';
+import { useT, type TFunction } from '@/app/i18n';
 import { chapterTitle, searchChapters } from '@/app/layout/libraryChapters';
-import { Badges } from '@/app/learner/HomeScreen';
+import { Badges } from '@/app/learner/Badges';
 import { HistoryList } from '@/app/project/HistoryList';
+import { useProjectUi } from '@/app/project/uiStore';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useProfileStore } from '@/app/learner/profileStore';
 import { chaptersFor, GRADE_CHOICES, type LibraryTopic } from '@/app/levels';
 import { lessonRange } from '@/app/curriculum';
 import { openStudio, openTopic } from '@/app/topics';
 import { SUBJECTS, useWorkspaceStore, type Subject } from '@/app/workspaceStore';
-import { chapterProgress, topicStatus } from '@/learn/progress';
+import { chapterProgress, topicStatus, type TopicStatus } from '@/learn/progress';
 import { useProgressStore } from '@/learn/progressStore';
 import { useSafetyStore } from '@/safety/safetyStore';
 import { useLessonsForTopic } from '@/studio/lessons';
@@ -51,7 +53,10 @@ export function BenchLibrary() {
   const lastTopic = useProfileStore((s) => s.lastTopic);
   const [query, setQuery] = useState('');
   const advanced = useSettingsStore((s) => s.uiMode === 'advanced');
-  const [historyOpen, setHistoryOpen] = useState(false);
+  const historyOpen = useProjectUi((s) => s.historyOpen);
+  const setHistoryOpen = (open: boolean) => {
+    useProjectUi.setState({ historyOpen: open });
+  };
   const progress = useProgressStore(
     useShallow((s) => ({
       visited: s.visited,
@@ -61,6 +66,33 @@ export function BenchLibrary() {
   );
   const shelf = useMemo(() => chaptersFor(grade, subject), [grade, subject]);
   const chapters = useMemo(() => searchChapters(shelf, query, t), [shelf, query, t]);
+  // Nothing found here: does another subject have it (§9.3 "Có 3 kết quả trong Hóa học")?
+  const elsewhere = useMemo(
+    () =>
+      chapters.length > 0 || !normalizeForSearch(query)
+        ? []
+        : SUBJECTS.filter((s) => s !== subject)
+            .map((s) => ({
+              subject: s,
+              count: searchChapters(chaptersFor(grade, s), query, t).reduce(
+                (n, c) => n + c.topics.length,
+                0,
+              ),
+            }))
+            .filter((m) => m.count > 0),
+    [chapters.length, query, subject, grade, t],
+  );
+  // The recovery buttons vanish once used: the keyboard focus goes to the grade or field they set.
+  const allRef = useRef<HTMLButtonElement>(null);
+  const searchRef = useRef<HTMLInputElement>(null);
+  const historyRef = useRef<HTMLButtonElement>(null);
+  // Tệp → Lịch sử: the focus goes to the list it opened (once; the menu's item is gone).
+  const historyFocus = useProjectUi((s) => s.historyFocus);
+  useEffect(() => {
+    if (!historyFocus) return;
+    historyRef.current?.focus();
+    useProjectUi.setState({ historyFocus: false });
+  }, [historyFocus]);
   const counts = useMemo(
     () =>
       Object.fromEntries(
@@ -118,6 +150,7 @@ export function BenchLibrary() {
         <label className="shelf-search">
           <Search size={16} strokeWidth={1.75} aria-hidden="true" />
           <input
+            ref={searchRef}
             type="search"
             value={query}
             placeholder={t('sidebar.search')}
@@ -127,32 +160,37 @@ export function BenchLibrary() {
             }}
           />
         </label>
-        {/* "Lịch sử" at the bottom of the filters, Advanced only (§9.3). */}
-        {advanced && (
+        {/* "Lịch sử" at the bottom of the filters: Advanced (§9.3), or opened from Tệp → Lịch sử. */}
+        {(advanced || historyOpen) && (
           <div className="shelf-history">
             <button
               type="button"
               className="btn btn--ghost"
+              ref={historyRef}
               aria-expanded={historyOpen}
               onClick={() => {
                 setHistoryOpen(!historyOpen);
+                // In Basic the section goes with the list it closes: the focus goes to the search.
+                if (!advanced && historyOpen) searchRef.current?.focus();
               }}
             >
               <History size={16} strokeWidth={1.75} aria-hidden="true" />
               {t('sidebar.history')}
             </button>
             {historyOpen && <HistoryList />}
-            <button
-              type="button"
-              className="btn btn--ghost"
-              onClick={() => {
-                useStudioStore.getState().setTab('authoring');
-                openStudio();
-              }}
-            >
-              <FilePen size={16} strokeWidth={1.75} aria-hidden="true" />
-              {t('studio.tabs.authoring')}
-            </button>
+            {advanced && (
+              <button
+                type="button"
+                className="btn btn--ghost"
+                onClick={() => {
+                  useStudioStore.getState().setTab('authoring');
+                  openStudio();
+                }}
+              >
+                <FilePen size={16} strokeWidth={1.75} aria-hidden="true" />
+                {t('studio.tabs.authoring')}
+              </button>
+            )}
           </div>
         )}
       </aside>
@@ -164,6 +202,7 @@ export function BenchLibrary() {
             {GRADE_CHOICES.map((g) => (
               <button
                 key={g}
+                ref={g === 'all' ? allRef : undefined}
                 type="button"
                 role="radio"
                 aria-checked={grade === g}
@@ -217,6 +256,7 @@ export function BenchLibrary() {
               className="btn"
               onClick={() => {
                 setGrade('all');
+                allRef.current?.focus();
               }}
             >
               {t('levels.showAll')}
@@ -226,11 +266,36 @@ export function BenchLibrary() {
           <div className="shelf-empty" role="status">
             <SearchX size={20} strokeWidth={1.75} aria-hidden="true" />
             <p>{t('sidebar.noResults')}</p>
+            {elsewhere.map((m) => (
+              <button
+                key={m.subject}
+                type="button"
+                className="btn"
+                onClick={() => {
+                  setSubject(m.subject);
+                }}
+              >
+                {t('sidebar.foundIn', { count: m.count, subject: t(`subjects.${m.subject}`) })}
+              </button>
+            ))}
+            {grade !== 'all' && (
+              <button
+                type="button"
+                className="btn"
+                onClick={() => {
+                  setGrade('all');
+                  allRef.current?.focus();
+                }}
+              >
+                {t('levels.showAll')}
+              </button>
+            )}
             <button
               type="button"
               className="btn"
               onClick={() => {
                 setQuery('');
+                searchRef.current?.focus();
               }}
             >
               {t('sidebar.clearSearch')}
@@ -238,7 +303,9 @@ export function BenchLibrary() {
           </div>
         ) : (
           chapters.map((c) => {
-            const done = chapterProgress(c.topics, progress);
+            // Progress counts the whole chapter, also while a search shows part of it.
+            const whole = shelf.find((x) => x.id === c.id) ?? c;
+            const done = chapterProgress(whole.topics, progress);
             return (
               <section key={c.id} className="shelf" aria-labelledby={`shelf-${c.id}`}>
                 <h2 id={`shelf-${c.id}`} className="shelf__title">
@@ -277,9 +344,10 @@ function ShelfCard({
 }: {
   topic: LibraryTopic;
   subject: Subject;
-  status: ReturnType<typeof topicStatus>;
+  status: TopicStatus;
 }) {
   const t = useT();
+  const left = status.state === 'opened' ? stepsLeft(status, t) : null;
   const guided = useLessonsForTopic(topic.id).length;
   const soon = topic.status !== 'available';
   const descId = `shelf-card-${topic.id}-desc`;
@@ -287,7 +355,10 @@ function ShelfCard({
   // One button per card, named by its title only (its text): the lessons, the pending note and
   // the progress describe it. Its ::after covers the card, so the whole card is the target.
   return (
-    <div className={cx('shelf-card', soon && 'shelf-card--soon')}>
+    <div
+      className={cx('shelf-card', soon && 'shelf-card--soon')}
+      data-steps={status.total > 1 || undefined}
+    >
       {/* Preview 88 (§9.3): a physics topic's own engine frame, else its subject's line art. */}
       <div className="shelf-card__preview" aria-hidden="true">
         {hasScene(topic.id) ? (
@@ -324,15 +395,29 @@ function ShelfCard({
             ) : (
               <Check size={14} strokeWidth={2.25} aria-hidden="true" />
             )}
-            {t(status.state === 'complete' ? 'bench.topicComplete' : 'bench.topicOpened')}
+            {status.state === 'complete'
+              ? t('bench.topicComplete')
+              : status.total > 1
+                ? t('bench.topicOpenedSteps', { done: status.done, total: status.total })
+                : t('bench.topicOpened')}
           </span>
         )}
+        {left && <span className="shelf-card__left">{t('bench.topicLeft', { left })}</span>}
         {guided > 0 && (
           <span className="shelf-card__guided">{t('bench.guidedCount', { count: guided })}</span>
         )}
       </span>
     </div>
   );
+}
+
+/** What an opened topic still has ("Dự đoán trước, 2 thử thách"), as the classic library said (3b.5). */
+function stepsLeft(s: TopicStatus, t: TFunction): string | null {
+  const left = [
+    ...(s.predictLeft ? [t('learn.leftPredict')] : []),
+    ...(s.challengesLeft > 0 ? [t('learn.leftChallenges', { count: s.challengesLeft })] : []),
+  ];
+  return left.length > 0 ? left.join(', ') : null;
 }
 
 /**

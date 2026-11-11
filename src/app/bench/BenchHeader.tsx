@@ -1,5 +1,5 @@
 import { FileText, Redo2, Search, Settings, Undo2, X } from 'lucide-react';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, type PointerEvent } from 'react';
 import { useAnalyzeStore } from '@/app/ai/analyze';
 import { AiStatusPill } from '@/app/ai/AiStatusPill';
 import { useCommandPalette } from '@/app/command/commands';
@@ -11,29 +11,33 @@ import { ModeSwitch } from '@/app/learner/ModeSwitch';
 import { FileMenu } from '@/app/project/FileMenu';
 import { redo, undo, useUndoStore } from '@/app/project/undo';
 import { SettingsDialog } from '@/app/settings/SettingsDialog';
-import { sim } from '@/app/sim/runtime';
 import { useSimStore } from '@/app/sim/simStore';
-import { goHome, openLab, useIsHome, useIsLanding, useIsStudio, useIsTeacher } from '@/app/topics';
+import { UpdateReminder } from '@/app/update/UpdateReminder';
+import { goHome, useIsHome, useIsLanding, useIsStudio, useIsTeacher } from '@/app/topics';
 import { useSafetyStore } from '@/safety/safetyStore';
 import { openTeacher } from '@/teacher/teacherStore';
-import { useWorkspaceStore, type Subject } from '@/app/workspaceStore';
-import { closeModule, useModuleStore } from '@/modules/moduleStore';
+import { useWorkspaceStore } from '@/app/workspaceStore';
+import { useModuleStore } from '@/modules/moduleStore';
 import { IconButton } from '@/ui/IconButton';
 import { Logo } from '@/ui/Logo';
 import { ThemeSwitch } from './ThemeSwitch';
+import { toLibrary } from './toLibrary';
 
-/** Back to the lab's library (Kệ bài), optionally showing one subject. */
-function toLibrary(subject?: Subject) {
-  sim.shutdown();
-  closeModule();
-  if (subject) useWorkspaceStore.getState().setSubject(subject);
-  openLab();
+/**
+ * A topic name cut to "…" (a long name, a large font) shows whole in the tooltip on hover. Set
+ * on pointerover, before the tooltip layer's document listener reads it; never when it fits.
+ */
+function tipIfCut(e: PointerEvent<HTMLElement>) {
+  const el = e.currentTarget;
+  if (el.scrollWidth > el.clientWidth) el.dataset.tip = el.textContent;
+  else delete el.dataset.tip;
 }
 
 /**
  * The bench's 48 px frame header (docs/BENCH_DESIGN.md §9.4): the SimLab mark (launch page), the
  * breadcrumb (every crumb a 40 px button, the open topic is the page's h1), "Đề bài", AI status,
- * search, Basic/Advanced, the light / dark switch, undo/redo, Tệp and Settings (presentation: F5).
+ * search, Basic/Advanced, the light / dark switch, undo/redo, Tệp and Settings (presentation: F5);
+ * "Có bản cập nhật" after "Để sau" (the classic status bar's reminder).
  */
 export function BenchHeader() {
   const t = useT();
@@ -104,7 +108,9 @@ export function BenchHeader() {
               <span className="bench-crumbs__sep" aria-hidden="true">
                 ›
               </span>
-              <h1 className="bench-crumb bench-crumb--current">{L(topic)}</h1>
+              <h1 className="bench-crumb bench-crumb--current" onPointerOver={tipIfCut}>
+                {L(topic)}
+              </h1>
             </>
           )}
           {/* The teacher page has its own h1. */}
@@ -125,6 +131,7 @@ export function BenchHeader() {
           </button>
         )}
         <div className="bench-header__spacer" />
+        <UpdateReminder />
         {/* The launch page has nothing to undo and no AI on it yet (§9.1). */}
         {!landing && (
           <AiStatusPill
@@ -138,6 +145,8 @@ export function BenchHeader() {
           type="button"
           className="btn bench-header__search"
           aria-keyshortcuts="Control+K"
+          // Its words are only hidden from view when the header is short of room (bench.css).
+          data-tip={`${t('bench.search')} (Ctrl+K)`}
           onClick={() => {
             useCommandPalette.getState().setOpen(true);
           }}

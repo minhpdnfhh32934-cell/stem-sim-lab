@@ -30,21 +30,21 @@ Principles:
 
 ## 2. Frontend (Phase 0: done)
 
-| Area          | Where                             | Notes                                                                                                |
-| ------------- | --------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| Entry         | `src/main.tsx`, `src/app/App.tsx` | Loads CSS tokens, mounts `AppShell` + global `TooltipLayer`.                                         |
-| Layout        | `src/app/layout/`                 | `AppShell` = TopBar · LeftSidebar · Stage + Timeline + BottomPanel · Inspector · StatusBar.          |
-| Resizing      | `Splitter.tsx`                    | Pointer + keyboard (arrows / Home / End / Enter = reset), ARIA `separator`.                          |
-| Layout state  | `layoutStore.ts`                  | Sizes clamped to `LAYOUT_LIMITS`, persisted (`stemsim.layout`). Presentation flag not persisted.     |
-| Settings      | `src/app/settings/`               | Theme (system/light/dark), language, font scale; persisted (`stemsim.settings`).                     |
-| Workspace     | `src/app/workspaceStore.ts`       | Subject, problem text, active tool, playback. From Phase 1 it mirrors the engine worker.             |
-| Theme         | `src/app/theme/`                  | CSS variables; `data-theme` on `<html>`; `--font-scale` drives rem sizes.                            |
-| i18n          | `src/app/i18n/`                   | Tiny typed i18n (no dependency). `MessageKey` is a union of dotted keys, so typos fail to compile.   |
-| Shortcuts     | `src/app/shortcuts/`              | Pure table + matcher (unit tested) + one `keydown` listener. IME-safe (Telex/VNI).                   |
-| Design system | `src/ui/`                         | IconButton, Tabs, Section, Badges, EmptyState, TooltipLayer, Logo.                                   |
-| Catalog       | `src/app/catalog.ts`              | MVP topic list (names only, no scientific data).                                                     |
-| Learner UI    | `src/app/learner/`, `levels.ts`   | Home screen, onboarding phases, Basic/Advanced (`uiMode`), Level → Subject → Topic (3b.4).           |
-| Learning      | `src/learn/`                      | Challenges + predict–observe–explain checked with `solve()`, progress/badges, break reminder (3b.5). |
+| Area          | Where                               | Notes                                                                                                                               |
+| ------------- | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Entry         | `src/main.tsx`, `src/app/App.tsx`   | Loads CSS tokens, mounts `BenchShell` (the only shell since 0.8.1 B8) + global `TooltipLayer`.                                      |
+| Layout        | `src/app/bench/`, `src/app/layout/` | `BenchShell` = BenchHeader · Notebook · Stage (frame) + bench edge (`DriverGrid`) · Tray (`InspectorBody`); `docs/BENCH_DESIGN.md`. |
+| Resizing      | `Splitter.tsx`                      | Pointer + keyboard (arrows / Home / End / Enter = reset), ARIA `separator`.                                                         |
+| Layout state  | `layoutStore.ts`                    | Sizes clamped to `LAYOUT_LIMITS`, persisted (`stemsim.layout`). Presentation flag not persisted.                                    |
+| Settings      | `src/app/settings/`                 | Theme (system/light/dark), language, font scale; persisted (`stemsim.settings`).                                                    |
+| Workspace     | `src/app/workspaceStore.ts`         | Subject, problem text, active tool, playback. From Phase 1 it mirrors the engine worker.                                            |
+| Theme         | `src/app/theme/`                    | CSS variables; `data-theme` on `<html>`; `--font-scale` drives rem sizes.                                                           |
+| i18n          | `src/app/i18n/`                     | Tiny typed i18n (no dependency). `MessageKey` is a union of dotted keys, so typos fail to compile.                                  |
+| Shortcuts     | `src/app/shortcuts/`                | Pure table + matcher (unit tested) + one `keydown` listener. IME-safe (Telex/VNI).                                                  |
+| Design system | `src/ui/`                           | IconButton, Tabs, Section, Badges, EmptyState, TooltipLayer, Logo.                                                                  |
+| Catalog       | `src/app/catalog.ts`                | MVP topic list (names only, no scientific data).                                                                                    |
+| Learner UI    | `src/app/learner/`, `levels.ts`     | Home screen, onboarding phases, Basic/Advanced (`uiMode`), Level → Subject → Topic (3b.4).                                          |
+| Learning      | `src/learn/`                        | Challenges + predict–observe–explain checked with `solve()`, progress/badges, break reminder (3b.5).                                |
 
 ### Why these choices (Phase 0)
 
@@ -174,11 +174,11 @@ engines and data; the studio never computes a measurement of its own.
 
 **Inside the lab (user decisions 2026-10-20):** the name stays "Science Studio"; the launch page has
 only Virtual Lab + AI Teacher — do not add a Science Studio card back there. Entries, all in the
-lab: the "Science Studio" button at the top of the topic library (`LeftSidebar.tsx`, also Ctrl+K
+lab: the shelf's "Có hướng dẫn" kind of lesson (`src/app/bench/Library.tsx`, also Ctrl+K
 `go.studio`) → `openStudio()` → screen `'studio'` (`src/app/navigationStore.ts`; the value is kept, so
-every older caller lands in the new place) → `StudioScreen`, mounted by `AppShell` beside the
-library (no inspector, timeline or bottom panel; "Về Virtual Lab" goes back). The studio's
-subject tab sets the library's subject. From an open topic: the inspector card `TopicLessons.tsx`
+every older caller lands in the new place) → `StudioScreen`, mounted by `BenchShell` in its studio
+room (the notebook's pinned tabs beside the sheet, the live stage; "Về Virtual Lab" goes back). The studio's
+subject tab sets the library's subject. From an open topic: the tray's lesson card `TopicLessons.tsx`
 lists the topic's lessons, and in the "Thử thách" tab a lab POE that a lesson runs (`binding.poe`)
 becomes a link to that lesson instead of a second prediction (`ChallengePanel.tsx`). Both use
 `lessons.ts` (`lessonsForTopic`, `lessonForPoe`, `openLesson`): built-in + teacher lessons matched by
@@ -193,13 +193,13 @@ becomes a link to that lesson instead of a second prediction (`ChallengePanel.ts
 | Physics          | `physics/plugin.ts`, `PhysicsSteps.tsx`, `comparison.ts`, `engineRun.ts`, `openInLab.ts`, `usePhysics.ts`                                                                  | Conditions A/B run headless in the scene's own engine; `solve()` is the cross-check and the POE verdict; opens the same run in the lab.                              |
 | Chemistry        | `chemistry/plugin.ts`, `bench.ts` (pure state machine), `library.ts`, `evidence.ts`, `card.ts`, `BenchStep.tsx`, `TubeSvg.tsx`, `EvidenceFacts.tsx`                        | One tube, two solutions, mix. What a mix shows comes only from `data/reactions.json`; no record → "chưa có trong cơ sở dữ liệu đã kiểm chứng".                       |
 | Biology          | `biology/plugin.ts`, `model.ts`, `match.ts`, `evidence.ts`, `card.ts`, `bioSession.ts`, `useModel.ts`, `ModelStep.tsx`, `StageRecorder.tsx`, `FindParts.tsx`               | Reuses the mitosis 3D view (2D fallback); stage counts come from the model; the part-finding key is the model's own component data.                                  |
-| Lab entry        | `lessons.ts`, `TopicLessons.tsx` (+ `LeftSidebar.tsx`, `Inspector.tsx`, `ChallengePanel.tsx` outside `src/studio`)                                                         | Which lessons belong to a topic / hold a lab POE; opens one lesson with its saved session.                                                                           |
+| Lab entry        | `lessons.ts`, `TopicLessons.tsx` (+ `bench/Library.tsx`, `Inspector.tsx`, `ChallengePanel.tsx` outside `src/studio`)                                                       | Which lessons belong to a topic / hold a lab POE; opens one lesson with its saved session.                                                                           |
 | Built-in lessons | `scenarios/*.ts`, `scenarios/index.ts`                                                                                                                                     | Three scenarios, each validated at load; an invalid one is left out.                                                                                                 |
 | Authoring        | `authoring/service.ts`, `check.ts`, `choices.ts`, `draft.ts`, `bindingDraft.ts`, `collection.ts`, `fileFormat.ts`, `limits.ts`, `issueText.ts`, `authoringStore.ts`, views | "Soạn bài": every choice comes from an engine or data table; schema + size + engine checks before saving; local only (`teacher.` ids); JSON import/export.           |
 
 Teaching text is `review_status: "pending"` (`docs/DATA_REVIEW.md` items 20–23) and is shown with
 its label. Tests: unit tests next to each file (`src/studio/**/*.test.ts(x)`), E2E
-`tests/e2e/studio.spec.ts` and `tests/e2e/studio-biology.spec.ts`. Step records: `docs/work-log/`.
+`tests/e2e/bench/studio.spec.ts` and `tests/e2e/bench/studio-biology.spec.ts`. Step records: `docs/work-log/`.
 
 ## 3g. 3D views (`src/ui/three/`, `src/biology/**`, 0.6.0–0.7.1)
 
@@ -381,7 +381,7 @@ it without code of its own:
     (Tags) sits in the corner (`Bio3DFigureBody.tools`), "Toàn cảnh / Cận cảnh cá thể" in the
     generation row. The gene pool's name heads the label in front of the plinth.
 - Genetic drift archipelago (`src/biology/genetics/drift3d/`, the full stage, `Bio3DView` with
-  `top` / `tools` / `bottom` / `info`; the heterozygosity chart stays in the Bottom panel and marks
+  `top` / `tools` / `bottom` / `info`; the heterozygosity chart stays in the module's `Bottom` (a notebook tab) and marks
   the generation shown through `useDrift3D` (`active`, `t`)). `driftRuns` (`population.ts`, one
   `rng(seed)` stream, Wright–Fisher run after run) is shared by the 2D chart, its chips and the 3D
   view. `binding.ts`: one island per run; A copies at g = p·2N (whole from generation 1; generation
@@ -407,7 +407,7 @@ it without code of its own:
   card (`useScrollMore` fades the card's last line while more is below); "Toàn cảnh" closes it.
   Medium: 15 draw calls (+ up to 5 for flags), ~155k triangles, 0 frames at rest.
 - Logistic growth habitat (`src/biology/ecology/logistic3d/`, the full stage, `Bio3DView` with
-  `top` / `tools` / `bottom` / `info`; the dN/dt chart stays in the Bottom panel and marks N(t) of
+  `top` / `tools` / `bottom` / `info`; the dN/dt chart stays in the module's `Bottom` (a notebook tab) and marks N(t) of
   the moment shown through `useLogistic3D` (`active`, `t`)). `binding.ts`: the exact solution
   `logistic` of `ecology.ts` at time t; one figure per `per` individuals, `drawScale(max(peak, K),
 200)` for the whole run (`figureCap`: the tier's instance share, at most `LEGIBLE_FIGURES`), drawn
@@ -438,7 +438,7 @@ it without code of its own:
   t = 0); `logisticCard.ts` holds the Science Card and its 3D notes (`LOGISTIC_CARD_3D`). Medium: 21
   draw calls, ~104k triangles (High 22, ~122k), 0 frames at rest.
 - Predator–prey habitat (`src/biology/ecology/lv3d/`, same shell as logistic; the x(t), y(t)
-  chart in the Bottom panel marks the sample shown through `useLv3D` (`active`, `t`)).
+  chart in the module's `Bottom` (a notebook tab) marks the sample shown through `useLv3D` (`active`, `t`)).
   `binding.ts`: the moment is the computed sample nearest t (`sampleAt`, never interpolated) of
   the 801-point DOPRI5 trajectory from `useLvData`; one figure per `per` individuals for both
   species, `drawScale(peak x + peak y, figureCap)`; drawn = round(x / per), round(y / per); the
@@ -519,8 +519,8 @@ it without code of its own:
 ## 5. Verified in Phase 0
 
 - `npm run tauri dev` and a debug `tauri build` both open the native window with the full layout
-  (checked on Linux/WebKitGTK under Xvfb). The status bar shows the version from the Rust
-  `app_info` command, which proves the IPC works.
+  (checked on Linux/WebKitGTK under Xvfb). The classic status bar (until B8) showed the version
+  from the Rust `app_info` command, which proved the IPC works.
 - Browser checks: tooltips on disabled buttons, Esc closes Settings, Space presses a focused
   control, splitter drag and persistence across reload, dark theme applied before React loads,
   and no horizontal overflow at the 1024×600 minimum window size.

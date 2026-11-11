@@ -2,7 +2,8 @@ import { create } from 'zustand';
 
 const TOUR_KEY = 'stemsim.tourDone';
 
-function readTourDone(): boolean {
+/** The lab tour was done or skipped once (`stemsim.tourDone`): this is not the first run. */
+export function readTourDone(): boolean {
   try {
     return localStorage.getItem(TOUR_KEY) === '1';
   } catch {
@@ -12,12 +13,18 @@ function readTourDone(): boolean {
 
 export interface ProjectUiState {
   sourcesOpen: boolean;
+  /** The shelf's "Lịch sử" list is open (Tệp → Lịch sử opens it in Basic too). */
+  historyOpen: boolean;
+  /** Once: the shelf moves the focus to "Lịch sử" when it shows it (Tệp → Lịch sử). */
+  historyFocus: boolean;
   /** Index of the tour step shown, or null when the tour is closed. */
   tourStep: number | null;
 }
 
 export const useProjectUi = create<ProjectUiState>()(() => ({
   sourcesOpen: false,
+  historyOpen: false,
+  historyFocus: false,
   tourStep: readTourDone() ? null : 0,
 }));
 

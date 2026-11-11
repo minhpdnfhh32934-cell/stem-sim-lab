@@ -15,7 +15,7 @@ async function askAi(page: Page) {
   await tab.click();
 }
 
-/** "AI Teacher": launch page entry, the full teacher page and the floating chat bubble. */
+/** "AI Teacher": launch page entry, the full teacher page and the lab notebook's "Hỏi AI" tab. */
 
 const overflow = (page: Page) =>
   page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);

@@ -1,12 +1,9 @@
-import { act, fireEvent, render, screen, within } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { CATALOG } from '@/app/catalog';
 import { CURRICULUM } from '@/app/curriculum';
-import { LeftSidebar } from '@/app/layout/LeftSidebar';
-import { HomeScreen } from '@/app/learner/HomeScreen';
-import { availableCount, chaptersFor, suggestions } from '@/app/levels';
-import { useWorkspaceStore } from '@/app/workspaceStore';
+import { chaptersFor } from '@/app/levels';
 import { basicSplit, BASIC_PARAM_COUNT } from '@/app/sim/basicParams';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useAiStore } from '@/ai/aiStore';
@@ -31,10 +28,6 @@ describe('library views (Grade → Subject → Topic)', () => {
     // Unplaced (no textbook lesson clearly names it): only under "Tất cả".
     expect(ids).not.toContain('inclinedPlane');
     expect(chaptersFor(11, 'biology')).toEqual([]);
-    expect(availableCount(11, 'biology')).toBe(0);
-    expect(availableCount('all', 'biology')).toBe(
-      CATALOG.biology.flatMap((c) => c.topics).filter((x) => x.status === 'available').length,
-    );
   });
 
   // Decision 2026-10-22 (plan #37 §3.3): the mapping now comes from the official tables of
@@ -43,16 +36,6 @@ describe('library views (Grade → Subject → Topic)', () => {
     expect(CURRICULUM.generated_by).toBe('scripts/data/gen_curriculum_kntt.py');
     expect(CURRICULUM.review_status).toBe('pending');
     expect(CURRICULUM.items.every((p) => p.review_status === 'pending')).toBe(true);
-  });
-
-  it('suggestions list available topics of the chosen view, the chosen subjects first', () => {
-    const s = suggestions('all', ['biology']);
-    expect(s[0]?.subject).toBe('biology');
-    expect(s.every((x) => x.topic.status === 'available')).toBe(true);
-    // Grade 11 has no biology topic: its suggestions are physics and chemistry ones.
-    const g11 = suggestions(11, ['biology']);
-    expect(g11.map((x) => x.subject)).not.toContain('biology');
-    expect(g11[0]?.topic.id).toBe('springPendulum');
   });
 });
 
@@ -141,80 +124,6 @@ describe('profile migration', () => {
     expect(useProfileStore.persist.hasHydrated()).toBe(true);
     expect(useProfileStore.getState()).toMatchObject({ interests: ['biology'], onboarded: true });
     localStorage.removeItem('stemsim.profile');
-  });
-});
-
-describe('library grade switch', () => {
-  beforeEach(() => {
-    useProfileStore.setState({ grade: 'all' });
-    useWorkspaceStore.setState({ subject: 'physics' });
-  });
-
-  it('a grade shows its topics under the textbook chapter, with lessons and the pending label', async () => {
-    const user = userEvent.setup();
-    render(<LeftSidebar />);
-    const grades = screen.getByRole('radiogroup', { name: 'Lớp' });
-    expect(
-      within(grades)
-        .getAllByRole('radio')
-        .map((r) => r.textContent),
-    ).toEqual(['Lớp 10', 'Lớp 11', 'Lớp 12', 'Tất cả']);
-    expect(screen.queryByText(/Đang chờ giáo viên duyệt/)).toBeNull();
-    expect(screen.getByRole('list', { name: 'Vật lý' })).not.toHaveAttribute('aria-describedby');
-    await user.click(within(grades).getByRole('radio', { name: 'Lớp 10' }));
-    expect(useProfileStore.getState().grade).toBe(10);
-    expect(screen.getByRole('list', { name: 'Vật lý' })).toHaveAccessibleDescription(
-      'Theo SGK Kết nối tri thức · Đang chờ giáo viên duyệt',
-    );
-    const chapter = screen.getByRole('button', { name: /Chương II\. Động học/ }).closest('li');
-    expect(
-      within(chapter as HTMLElement).getByRole('button', {
-        name: 'Chuyển động thẳng đều Bài 4–5, 7',
-      }),
-    ).toBeInTheDocument();
-    // "Có n chủ đề ở …" stays, counting that grade only: the periodic table is grade 10 chemistry.
-    fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'tuần hoàn' } });
-    await user.click(screen.getByRole('button', { name: 'Có 1 chủ đề ở Hóa học' }));
-    expect(useWorkspaceStore.getState().subject).toBe('chemistry');
-    expect(screen.getByRole('button', { name: /^Bảng tuần hoàn Bài 5–6, 8/ })).toBeInTheDocument();
-    act(() => {
-      useWorkspaceStore.getState().setSubject('physics');
-    });
-    // Unplaced topics are only under "Tất cả"; the search looks in the view shown.
-    expect(screen.queryByRole('button', { name: /Mặt phẳng nghiêng/ })).toBeNull();
-    fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'nghiêng' } });
-    expect(screen.getByText('Không tìm thấy chủ đề phù hợp.')).toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: 'Xem tất cả' }));
-    expect(useProfileStore.getState().grade).toBe('all');
-    // The button that was clicked is gone: the focus stays in the library.
-    expect(within(grades).getByRole('radio', { name: 'Tất cả' })).toHaveFocus();
-    expect(screen.getByRole('button', { name: 'Mặt phẳng nghiêng' })).toBeInTheDocument();
-  });
-
-  it('a grade without topics in the subject is no dead end: "Xem tất cả"', async () => {
-    const user = userEvent.setup();
-    useProfileStore.setState({ grade: 11 });
-    useWorkspaceStore.setState({ subject: 'biology' });
-    render(<LeftSidebar />);
-    expect(
-      screen.getByText('Chưa có chủ đề Sinh học nào được xếp vào lớp 11.'),
-    ).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Xóa tìm kiếm' })).toBeNull();
-    await user.click(screen.getByRole('button', { name: 'Xem tất cả' }));
-    expect(screen.getByRole('button', { name: 'Nguyên phân' })).toBeInTheDocument();
-  });
-
-  it('home suggests the grade’s topics, with the pending label and per-grade counts', () => {
-    useProfileStore.setState({ grade: 12, interests: [], lastTopic: null });
-    render(<HomeScreen />);
-    expect(screen.getByRole('heading', { name: 'Gợi ý cho lớp 12' })).toBeInTheDocument();
-    expect(
-      screen.getByText('Theo SGK Kết nối tri thức · Đang chờ giáo viên duyệt'),
-    ).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /^Sinh học/ })).toHaveTextContent(
-      `${availableCount(12, 'biology')} chủ đề lớp 12`,
-    );
-    expect(screen.getByRole('button', { name: 'ADN → mARN → Protein · Sinh học' })).toBeVisible();
   });
 });
 

@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { PerfNotes } from '@/app/layout/PerfNotes';
 import { Mitosis3DParts } from '@/biology/division/mitosis3d/panels';
 import { MitosisStage } from '@/biology/division/views';
 import type { StepProps } from '../flow/types';
@@ -23,6 +24,8 @@ export function ModelStep(props: StepProps) {
       <div className="bio-studio__model">
         <MitosisStage />
       </div>
+      {/* Outside the lab's Stage, so said here too (B8); under the model, never over its HUD. */}
+      <PerfNotes className="stage__notes stage__notes--strip" />
       <Mitosis3DParts />
       <div className="bio-studio__panels">
         <StageRecorder {...props} b={b} />

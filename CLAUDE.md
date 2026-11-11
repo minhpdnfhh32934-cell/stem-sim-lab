@@ -129,9 +129,10 @@ release history and old work-logs keep the old name). The user accepted:
   `--use-webgpu-power-preference=force-high-performance` (no adapter at all). UI:
   `src/teacher/chat/GpuSettings.tsx`; it shows what WebGPU really reports, never the wish.
   Measurements and design: `docs/AI_TUTOR.md` → "Choosing the graphics card".
-- **0.4.3 (user decisions 2026-10-12):** the lab panels can no longer be hidden (no top-bar
+- **0.4.3 (user decisions 2026-10-12):** the lab panels could no longer be hidden (no top-bar
   buttons, no Ctrl+B/I/J, no in-panel X; only resizing; presentation mode still hides them) — do not
-  add show/hide back (the bench shell folds its tray instead: "Giao diện Bàn thí nghiệm" below).
+  add show/hide back. Since the bench (0.8.1 B8, the only shell) the tray folds to its spine and the
+  notebook closes to its rail instead (user decision 2026-11-02, "Giao diện Bàn thí nghiệm" below).
   AI Teacher context is a token budget with an AI-written summary of older turns
   (`src/teacher/chat/memory.ts`, Settings "Trí nhớ hội thoại"); never go back to "last N messages".
   "Giảng trên bảng" is the whiteboard below (one implementation; the earlier compact lesson board
@@ -162,14 +163,16 @@ B0–B8 in its §14, merged from 08/11):
 - **Direction:** a new interface built from scratch, "Bàn thí nghiệm" (the bench), not a restyle of
   the old one. Of the dropped restyle only `--stage-accent` (#109) stays: run-time readers on
   stages, charts and 3D read `--stage-accent`, never the frame's `--accent`.
-- **Dev switch until B8:** the bench shell shows only in a dev build with the storage key
-  `stemsim.dev.shell` = `bench` (B1; no `VITE_*` flag, one build); production keeps the classic
-  shell until the flip in B8. Bench tokens and fonts apply only under
-  `:root[data-shell='bench']` (`tokens.css`), so the classic shell does not change a pixel.
-- **Panels (bench only; replaces the 0.4.3 rule there):** the tray folds to a labelled 64 px spine
-  and the notebook closes to its always-visible rail. Nothing reaches zero width, no shortcut hides
-  anything, no X on the tray; "Đặt lại bố cục" in the palette and Settings; presentation mode
-  unchanged. The classic shell keeps the 0.4.3 rule.
+- **The only shell since B8 (#193):** `App` renders `BenchShell` in every build (no dev switch,
+  no `VITE_*` flag; a saved `stemsim.dev.shell` is ignored; `src/app/App.test.tsx`). The classic
+  shell (top bar, status bar, timeline, bottom panel, left sidebar, chat bubble, its launch page
+  and the `--glass-*` tokens) was deleted after every classic E2E title had its bench copy. Bench
+  tokens and fonts apply under `:root[data-shell='bench']` (`tokens.css`), set by `BenchShell`.
+  The status bar's slow-motion and lower-quality notices live on the stage (`PerfNotes`, HUD or
+  over a module's stage): never let the overload ladder act silently.
+- **Panels (replace the 0.4.3 rule):** the tray folds to a labelled 64 px spine and the notebook
+  closes to its always-visible rail. Nothing reaches zero width, no shortcut hides anything, no X
+  on the tray; "Đặt lại bố cục" in the palette and Settings; presentation mode unchanged.
 - **Launch page:** two cards as today (Virtual Lab, AI Teacher; Studio stays inside the lab) plus a
   returning-user text link "Tiếp tục: …" (a link, not a card).
 - **Fonts:** Be Vietnam Pro (400/500/600, interface) and JetBrains Mono (400/500, readouts),
@@ -186,7 +189,7 @@ B0–B8 in its §14, merged from 08/11):
   `--chart-1…7` keep their hues with the lightness spread out (≥ 3 : 1); the light 3D terrain is
   deep green with light soil, the dark `--m3d-water-line` 0.15, and the mutation lesson's start/stop
   marks read `--dna3d-start` / `--dna3d-stop`. Never lower a floor.
-- **Shell (B1, #115):** `src/app/bench/` — `shellMode.ts` (dev switch), `BenchShell` (sets
+- **Shell (B1, #115):** `src/app/bench/` — `shellMode.ts` (`BenchContext`), `BenchShell` (sets
   `data-shell`, loads the bench fonts; launch / library / studio / teacher rooms reuse their
   screens until B3–B7), `BenchHeader` (breadcrumb, "Đề bài" sheet with `ProblemInput`),
   `Notebook` (left rail, tabs keep the classic names, drawer pushes or overlays by
@@ -195,18 +198,17 @@ B0–B8 in its §14, merged from 08/11):
   `trayWidth`, `notebookWidth`, `notebookTabBySubject` are extra version-1 fields that `merge`
   fills in; never bump the version (an older copy of the app would drop every saved size). The
   stage HUD is not a live region: `StageAnnouncer` speaks state changes only (`togglePlay` writes
-  the engine's time with the pause). E2E: bench specs in `tests/e2e/bench/` (projects
-  `chromium-bench`, `chromium-3d-bench`, `chromium-3d-bench-perf` for `@perf`, after the classic
-  suite; storage state with the switch); a copy of a classic spec keeps every title and switches
-  nothing off that the classic spec does not (`scripts/e2e/title-parity.mjs`, run in CI);
-  `nav.ts` `openTopic` / `openProblem` work in both shells.
+  the engine's time with the pause). E2E: the specs are in `tests/e2e/bench/` (the Playwright
+  `testDir`; projects `chromium`, `chromium-3d` for `HEAVY_3D` names, prefixed ones included, and
+  `chromium-3d-perf` for `@perf`), one storage state `tests/e2e/storage-state.json`;
+  `nav.ts` `openTopic` / `openProblem` enter the bench the way a learner does.
 - **Controls (uiverse kit B, user choice 2026-11-02; `docs/BENCH_DESIGN.md` §12):** `bench.css`
   only, tokens only. Controls are drawn for paper; `[data-surface="frame"]` (header, rail, edge,
   tray spine) maps the paper tokens to the frame's (focus ring `--focus-frame`) and
   `[data-surface="paper"]` maps them back; never add per-ancestor frame rules. Disabled = dimmed
   text + dashed border.
   `BenchContext` (`shellMode.ts`) marks the bench tree for the few shared parts that differ
-  (`ParamsPanel` − / +, Settings' theme switch); classic pixels never change. D0 is 144 px, edge
+  (`ParamsPanel` − / +, Settings' theme switch). D0 is 144 px, edge
   columns fixed (§8). Basic speed steps = 0,5×·1×·2× ∪ the open lesson's own speed
   (`workspaceStore.suggestedSpeed`, set by every `sim.open`, null when none; it never follows into
   the next lesson); `keepBasicSpeedOnSteps` (`speeds.ts`, subscribed by the bench shell) lands any
@@ -214,8 +216,8 @@ B0–B8 in its §14, merged from 08/11):
   dark switch `ThemeSwitch.tsx` (header + Settings → Giao diện with "Theo máy"; test against
   `theme-boot.js`). `TooltipLayer` (WCAG 1.4.13): a hover bubble takes the first Esc for itself (a
   focus bubble lets it reach the dialog); a hover bubble stays while the pointer is on it, judged
-  by position — the bubble keeps `pointer-events: none`, never block a click (classic E2E
-  `tests/e2e/tooltip.spec.ts`). E2E `tests/e2e/bench/controls.spec.ts`: 40/48 px targets, focus
+  by position — the bubble keeps `pointer-events: none`, never block a click (E2E
+  `tests/e2e/bench/tooltip.spec.ts`). E2E `tests/e2e/bench/controls.spec.ts`: 40/48 px targets, focus
   rings ≥ 3 : 1 on frame and paper, keyboard, no motion under reduced motion, axe
   (`@axe-core/playwright`, serious/critical). MIT notices: `docs/THIRD_PARTY.md`.
 - **New features (§13), all agreed on 2026-11-02, built after the bench frame is done:** "Sổ ghi"
@@ -388,7 +390,7 @@ Progress log: `docs/PROGRESS.md`.
 - **Unit groups (0.8.0):** `UnitDef.group` `'angular'` (rad/s) / `'cycle'` (Hz, rev/s = vòng/s,
   rev/min = vòng/phút): `convert()` throws across groups, `allowedUnits()` keeps a field's own group
   (an ω field never takes Hz). New units of the same dimension that must not mix get a group.
-- Every scene's engine must be registered (`src/physics/registry.test.ts`). `tests/e2e/physics.spec.ts`
+- Every scene's engine must be registered (`src/physics/registry.test.ts`). `tests/e2e/bench/physics.spec.ts`
   opens every physics topic (no page error, no horizontal scroll at 1366×768, right title): a new
   topic appends its [library name, stage title] to `TOPICS`.
 - Uniform circular motion (`src/physics/circular/`, 0.8.0): `model.ts` (mode = given v / ω / T / f),
@@ -474,9 +476,9 @@ Progress log: `docs/PROGRESS.md`.
 
 ## Learner UI (3b.4, PROMPT_PHAN_2 A4)
 
-- `src/app/learner/`: `HomeScreen` ("Hôm nay học gì?", shown by `AppShell` while `useIsHome()`;
-  no stage/timeline/bottom/inspector then, and the top-bar problem box is hidden — the home box is
-  the main action), `Onboarding` + `onboardingPhase.ts` (not `onboarding.ts`: Windows is case-insensitive, `Onboarding` would resolve to it) (`useOnboardingPhase`: profile → gate → connect
+- `src/app/learner/`: `Badges` (shown on the bench's shelf, "Kệ bài", which replaced the classic
+  "Hôm nay học gì?" home screen in B8: grade views instead of its suggestions; the "Có đề bài?"
+  card is the shelf's main action), `Onboarding` + `onboardingPhase.ts` (not `onboarding.ts`: Windows is case-insensitive, `Onboarding` would resolve to it) (`useOnboardingPhase`: profile → gate → connect
   (only when status is `noKey`) → tour; `AgeGate hold`, the Tour waits for its phase),
   `profileStore` (`stemsim.profile` v2: level, grade, interests, lastTopic; v1 → grade `all`; users with `stemsim.tourDone`
   skip onboarding), `ModeSwitch`.
@@ -484,8 +486,8 @@ Progress log: `docs/PROGRESS.md`.
   `basicSplit` (`src/app/sim/basicParams.ts`, first 5 params + any from the problem/user), no data
   tab/CSV, no Object section, toolbar without protractor/stopwatch/trail. New panels must respect it.
 - Library views: `src/app/levels.ts` (`chaptersFor(grade, subject)`: switch "Lớp 10 · 11 · 12 · Tất
-  cả", a grade = textbook chapters + "Bài n", empty → "Xem tất cả"; onboarding asks the grade, home
-  suggests by it). The grade never reaches the AI: `Level` stays `foundation` for `LEVEL_HINT`
+  cả", a grade = textbook chapters + "Bài n", empty → "Xem tất cả"; onboarding asks the grade and
+  the shelf opens on it). The grade never reaches the AI: `Level` stays `foundation` for `LEVEL_HINT`
   (`chatService.ts`) and Science Studio's level field. **Curriculum mapping
   (user decision 2026-10-22, plan #37 §3.3, replaces "never fill it without a teacher"):** topics are
   placed in grades/lessons only from the official KNTT tables of contents, by the script
@@ -496,7 +498,7 @@ Progress log: `docs/PROGRESS.md`.
   (`gradeView`, `lessonRange`); a test fails when a catalog topic is neither placed nor unplaced.
 - Tokens: `--subject-*` colors, `--text-content` (≥ 15px learning text), `--target` (≥ 40px; `.btn`
   height; icon buttons grow under `any-pointer: coarse`). E2E checks 1366×768 without horizontal
-  scroll (`tests/e2e/learner.spec.ts`). Confirmation table = `qty-cards` (`quantityIcon.ts`).
+  scroll (`tests/e2e/bench/learner.spec.ts`). Confirmation table = `qty-cards` (`quantityIcon.ts`).
 - Learner-facing errors speak like a study partner ("Mình chưa…"); no "JSON/engine/token/LLM".
 - Audit 2026-10-13 (`docs/AUDIT_2026-10-13.md`): **never run Gemma on an integrated GPU for tests or
   benchmarks** (it crashed the lead's laptop, bugcheck 0x119); `gpuSafety.ts` stops Gemma after one
@@ -504,11 +506,11 @@ Progress log: `docs/PROGRESS.md`.
   "Kết quả do SimLab tính" card). AI-written links are never clickable; `navigation.rs` keeps the
   window on the app. Workflows pin actions by SHA (`tests/workflows.test.ts`); releases only publish
   commits on `main`, signing in the `release` environment.
-- UI polish kit (0.5.2): `.segmented`/`.subject-switch`/`.tabs__list` get a sliding indicator
+- UI polish kit (0.5.2): `.segmented`/`.tabs__list` get a sliding indicator
   automatically (`src/ui/slidingIndicator.ts`); `IconButton altIcon/showAlt` morphs two icons;
   `Skeleton` for loading, `ProgressBar` + `eta.ts` for downloads (estimate only from progress
   callbacks, never during render), `Celebrate` for a reached goal (no scores/streaks); floating
-  overlays use `--glass-*` tokens. Ctrl+K palette: `src/app/command/` (lazy; topics come from
+  overlays are solid panels (`--bg-panel`, `--border`; no blur since B8). Ctrl+K palette: `src/app/command/` (lazy; topics come from
   `CATALOG`, Settings pages from `src/app/settings/sectionMeta.ts`).
 
 ## Learning (3b.5, `src/learn/`)
@@ -521,8 +523,9 @@ Progress log: `docs/PROGRESS.md`.
 - `poe.ts`: one "Dự đoán trước" per physics topic; the right choice is computed from `solve()`
   before/after (`observe`). The learner writes the explanation (never stored or sent).
 - `progressStore` (`stemsim.progress`, local only), `progress.ts` (topic/chapter progress, badges —
-  no streaks or ranks; `topicStatus`: the library marks every opened topic "Đã học", a physics topic
-  with steps left adds "1/3", all done → "Hoàn thành"; badges keep the "complete" rule),
+  no streaks or ranks; `topicStatus`: a shelf card marks every opened topic "Đã mở", a physics topic
+  with steps left says "Đã mở · 1/3 bước" and "Còn: Dự đoán trước, n thử thách", all done → "Đã
+  xong"; badges keep the "complete" rule),
   `breakReminder.ts` + `useBreakReminder` (~45 min of continuous use).
 - SolutionPanel: a typed-in problem shows hints first (Gợi ý n → Lời giải đầy đủ, "Xem lời giải ngay").
 - New physics scene → add a challenge and a POE item, or the tests fail.
@@ -534,9 +537,9 @@ Progress log: `docs/PROGRESS.md`.
 - **User decisions 2026-10-20:** (1) the guided-lesson mode keeps the name **Science Studio**;
   (2) the launch page has only **Virtual Lab** (called Phòng thí nghiệm until 0.8.0) + **AI Teacher**:
   **không thêm lại thẻ Science Studio ở trang mở đầu**. Science Studio lives inside the lab: the
-  "Science Studio" button at the top of the topic library (and Ctrl+K) → `openStudio()` → screen `'studio'` (kept for older callers) →
-  `StudioScreen` beside the library (tabs Hóa học · Sinh học · Vật lí · Soạn bài; "Về Virtual
-  Lab"). An open topic lists its lessons in the inspector (`TopicLessons.tsx`); a lab POE that a
+  shelf's "Có hướng dẫn" filter (Advanced also "Soạn bài"; and Ctrl+K) → `openStudio()` → screen
+  `'studio'` (kept for older callers) → `StudioScreen` as the bench's studio room (tabs Hóa học · Sinh
+  học · Vật lí · Soạn bài; "Về Virtual Lab"). An open topic lists its lessons in the tray (`TopicLessons.tsx`); a lab POE that a
   lesson runs (`binding.poe`) is a link to the lesson in "Thử thách", never a second prediction.
   Lookups only through `src/studio/lessons.ts`.
 - **The studio never computes a measurement.** A scenario (`scenario.ts`, Zod) binds only engine
@@ -553,7 +556,7 @@ Progress log: `docs/PROGRESS.md`.
   ("Soạn bài", `authoring/`): every choice comes from an engine or data table, local only
   (`teacher.` ids), JSON import/export, always labelled unreviewed.
 - Teaching text is `review_status: "pending"` (DATA_REVIEW 20–23). Tests next to each file,
-  E2E `tests/e2e/studio.spec.ts` and `studio-biology.spec.ts` (3D project).
+  E2E `tests/e2e/bench/studio.spec.ts` and `studio-biology.spec.ts` (3D project).
 
 ## Safety (3b.3, PROMPT_PHAN_2 A3)
 
@@ -571,7 +574,7 @@ Progress log: `docs/PROGRESS.md`.
 ## Modules (chemistry, biology — Phase 4+)
 
 - A non-physics topic is a `ModuleView` (`src/modules/types.ts`): `Stage`, optional `Panel`
-  (Inspector) and `Bottom`. Register a lazy loader in `src/modules/registry.ts`; the catalog marks
+  (the bench's tray) and `Bottom` (a notebook tab). Register a lazy loader in `src/modules/registry.ts`; the catalog marks
   the topic available automatically. Modules publish their Science Card with `usePublishCard`.
 - Chemistry: data in `data/elements.json`, `data/molecules.json`, `data/reactions.json`, generated by
   `scripts/data/gen_*.py` (mendeleev, RDKit, SciPy). Never hand-edit the JSON; change the generator.
@@ -618,7 +621,7 @@ Progress log: `docs/PROGRESS.md`.
   `drillSelection`: a second click on a bivalent / homologue lists one chromatid's pieces),
   `facts.ts`, `store.ts` (`useMeiosis3D`, own 3D ↔ 2D index map), `Meiosis3DView`,
   `Meiosis3DSwitch`, `panels.tsx`. Saved: `meiosisView3d` (division store, meiosis binding).
-  Basic hides speed and camera mode. E2E `tests/e2e/meiosis3d.spec.ts` (3D project).
+  Basic hides speed and camera mode. E2E `tests/e2e/bench/meiosis3d.spec.ts` (3D project).
 - DNA → mRNA → protein 3D (`src/biology/central/dogma3d/`): `bdna.ts` (one cited B-DNA constant:
   10 bp/turn, 3,4 nm/turn, 2 nm; scene unit 1 nm), `binding.ts` (pure: model from `parseInput` →
   `complement`/`codingToMrna`/`translate`, clock: transcription positions 0…n, release, then one
@@ -630,7 +633,7 @@ Progress log: `docs/PROGRESS.md`.
   (caption, chips, part card from the model), `camera.ts` ("Theo dõi"/"Toàn cảnh"), `store.ts`
   (`useDogma3D`), `Dogma3DView`, `Dogma3DSwitch`, `panels.tsx`. Letters, amino acid names and
   positions: `src/ui/three/tagLayer.ts`. `anticodon()` is shared with the 2D page (`dogma.ts`).
-  Saved: `view3d` (dogma store, shared binding with pointMutation). E2E `tests/e2e/dogma3d.spec.ts`.
+  Saved: `view3d` (dogma store, shared binding with pointMutation). E2E `tests/e2e/bench/dogma3d.spec.ts`.
   The helix primitive (palette, base shapes, `Writer`, `makeStrand`) is `dogma3d/helix.ts`.
 - Point mutation 3D (`src/biology/central/mutation3d/`): `binding.ts` (pure: `mutationOf` →
   `mutate`/`analyzeMutation`/`mutatedTranslation`; "slots" keep the mutated helix aligned with the
@@ -641,7 +644,7 @@ Progress log: `docs/PROGRESS.md`.
   `drawn()` for tests), `facts.ts`, `camera.ts` ("Toàn cảnh"/"Vị trí đột biến"), `store.ts`
   (`useMutation3D`, `applyPick`: a normal base pair sets the saved `pos`), `Mutation3DView`,
   `Mutation3DSwitch`. 3D/2D is the dogma store's `view3d`. The outlines pulse a few times after a
-  change, never with reduced motion. E2E `tests/e2e/mutation3d.spec.ts`.
+  change, never with reduced motion. E2E `tests/e2e/bench/mutation3d.spec.ts`.
 - Mendel 3D (`src/biology/genetics/mendel3d/`): `binding.ts` (pure: `mendelModel3d` from
   `parseGenotype`/`gametes`/`cross`/`phenotype`/`ratio`; `fraction`; the four illustrative steps
   meiosis → gametes → fertilisation → offspring, `stepEnd(k)` = a step complete; `fieldOf` = a
@@ -655,7 +658,7 @@ Progress log: `docs/PROGRESS.md`.
   `genetics/mendelRun.ts` (`mendelDraw`, shared with the 2D table: same seed, same counts); texts
   shared by both views in `mendelCard.ts`, the invalid-genotype notice in `MendelNotice.tsx`.
   Saved: `view3d` (Mendel store). Shape geometries of the palette's cues:
-  `view3d/primitives/classShape.ts`. E2E `tests/e2e/mendel3d.spec.ts`.
+  `view3d/primitives/classShape.ts`. E2E `tests/e2e/bench/mendel3d.spec.ts`.
 - Enzyme kinetics 3D (`src/biology/enzyme/enzyme3d/`): model `enzymeSpecies` (rapid-equilibrium
   fractions of E/ES/EI/ESI) and `timeCourseEnd` (the 2D plot's t range) in `enzyme/enzyme.ts`;
   `binding.ts` (pure: `ENZYMES_DRAWN` 24, ES drawn = round(24·rate/Vmax), the rest by largest
@@ -668,7 +671,7 @@ Progress log: `docs/PROGRESS.md`.
   tests), `facts.ts` (readout, counts, scale chip, cards), `components.ts` (texts, `enzymeCard3d`),
   `camera.ts` ("Toàn cảnh"/"Cận cảnh enzyme"), `store.ts` (`useEnzyme3D`: `t`, cursor `s`),
   `Enzyme3DView`, `Enzyme3DSwitch`. Science Card texts of the 2D page: `enzyme/enzymeCard.ts`.
-  Saved: `view3d` (enzyme store). E2E `tests/e2e/enzyme3d.spec.ts`.
+  Saved: `view3d` (enzyme store). E2E `tests/e2e/bench/enzyme3d.spec.ts`.
 - Diffusion & osmosis 3D (`src/biology/transport/transport3d/`): `diffusion.ts` (pure: N₁(t) =
   apportion(particles · c₁(t)V₁ / (c₁⁰V₁ + c₂⁰V₂)) from `twoCompartment`, crossing schedule — the
   m-th crossing when N₁ has moved by m, net only; no pore → counts stay), `diffusionLayout.ts`
@@ -680,7 +683,7 @@ Progress log: `docs/PROGRESS.md`.
   `components.ts` (texts, `diffusionCard3d`/`osmosisCard3d`), `camera.ts`, `store.ts`
   (`useTransport3D`), `Transport3DView`, `Transport3DSwitch`. Shared with the 2D page:
   `fickTimeEnd` (transport.ts), `osmosisData` (osmosisData.ts), cards in `transportCards.ts`.
-  Saved: `view3d` (transport store). E2E `tests/e2e/transport3d.spec.ts`.
+  Saved: `view3d` (transport store). E2E `tests/e2e/bench/transport3d.spec.ts`.
 - Generic 3D kit (`src/ui/three/`, no biology inside): `renderer.ts` (sRGB, Neutral tone mapping,
   shadow maps only on request), `quality3d.ts` (one table per tier: segments, shadows, instances,
   label cap), `useThreeHost.ts` (renderer + camera + damped OrbitControls, render on demand,
@@ -734,7 +737,7 @@ Progress log: `docs/PROGRESS.md`.
   `palette.ts` (one token + shape cue per role, per lesson no two roles alike), `sampling.ts`
   (`drawScale` nice steps, `apportion` largest remainders: classes add up exactly),
   `texts.ts` (`ILLUSTRATION`, `MOTION`, `card3dAssumptions`), `primitives/`.
-  Tests: `src/biology/view3d/testing.ts` (`expectAllFreed`), E2E `tests/e2e/bio3d.spec.ts` (3D
+  Tests: `src/biology/view3d/testing.ts` (`expectAllFreed`), E2E `tests/e2e/bench/bio3d.spec.ts` (3D
   project, SwiftShader). Specs that open biology topics set SwiftShader too and run in the
   `chromium-3d` project (`HEAVY_3D` in `playwright.config.ts`, after the light specs).
 - Cell structure 2D (`src/biology/cell/`, 0.8.0, SGK Sinh học 10 KNTT Bài 7–8; topic and chapter
@@ -744,7 +747,7 @@ Progress log: `docs/PROGRESS.md`.
   caption `CELL_ILLUSTRATION`, not the 3D kit's sentence), `draw.ts` (canvas, token colours,
   draws exactly `partsFor(kind)` — test; name labels in a column on each side), `store.ts`
   (`useCell`; only `kind` is saved, `restoreCell` ignores other values), `CellViews.tsx` (stage:
-  "Hiện tên", on in Basic; inspector: cell switch + parts list → name + function card). The 3D
+  "Hiện tên", on in Basic; tray: cell switch + parts list → name + function card). The 3D
   version is planned for 0.8.1 (#54). Texts: DATA_REVIEW `CELL3D-*`.
 - "Từ tế bào đến DNA" (`src/biology/cell/zoom/`, 0.8.1, #107; topic `cellToDna`, chapter
   `cellStructure`; SH10 Bài 8, SH12 Bài 7): six zoom levels (cell → nucleus → metaphase
@@ -757,7 +760,7 @@ Progress log: `docs/PROGRESS.md`.
   glide into the next level), `draw2d.ts` (2D, same numbers), `store.ts` (`level` saved), `hooks.ts`,
   `ZoomViews.tsx`, `Zoom3DView.tsx`. "Phóng to" glides `GLIDE_MS` (= `CAMERA_MOVE_MS`) with the
   "không theo tỉ lệ" chip, then the next level; reduced motion steps at once. 3D/2D choice:
-  `stemsim.bio3d` lesson `cellToDna`. Budgets in `scene.test.ts`. E2E `tests/e2e/cellzoom-bio3d.spec.ts`
+  `stemsim.bio3d` lesson `cellToDna`. Budgets in `scene.test.ts`. E2E `tests/e2e/bench/bio3d.spec.ts`
   (3D project). Texts: DATA_REVIEW `DNAZ-*`.
 - Projects (Phase 6): `src/app/project/` — `snapshot.ts` (.stemsim schema; inputs only), `undo.ts`,
   `history.ts` (Rust SQLite `src-tauri/src/history.rs`), `actions.ts` (save/open/PNG/CSV via Rust

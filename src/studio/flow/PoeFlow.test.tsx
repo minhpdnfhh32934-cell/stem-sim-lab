@@ -1,8 +1,8 @@
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { LandingScreen } from '@/app/learner/LandingScreen';
-import { LeftSidebar } from '@/app/layout/LeftSidebar';
+import { BenchLanding } from '@/app/bench/Landing';
+import { BenchLibrary } from '@/app/bench/Library';
 import { useNavigationStore } from '@/app/navigationStore';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useProgressStore } from '@/learn/progressStore';
@@ -27,7 +27,7 @@ beforeEach(() => {
 describe('Science Studio entry', () => {
   it('the launch page has no Science Studio card; the lab sidebar opens the studio', async () => {
     const user = userEvent.setup();
-    const landing = render(<LandingScreen />);
+    const landing = render(<BenchLanding />);
     // User decision 2026-10-20: two entries only, Science Studio lives inside the lab.
     expect(
       screen.getAllByRole('button').map((b) => b.querySelector('strong')?.textContent),
@@ -35,13 +35,11 @@ describe('Science Studio entry', () => {
     expect(screen.queryByRole('button', { name: /Science Studio/ })).toBeNull();
     landing.unmount();
     useNavigationStore.setState({ screen: 'lab' });
-    render(<LeftSidebar />);
-    await user.click(screen.getByRole('button', { name: /Science Studio/ }));
+    // The shelf's filter column ("Thư viện chủ đề"): guided lessons are its "Có hướng dẫn" kind.
+    render(<BenchLibrary />);
+    const library = screen.getByRole('complementary', { name: 'Thư viện chủ đề' });
+    await user.click(within(library).getByRole('radio', { name: 'Có hướng dẫn' }));
     expect(useNavigationStore.getState().screen).toBe('studio');
-    expect(screen.getByRole('button', { name: /Science Studio/ })).toHaveAttribute(
-      'aria-current',
-      'page',
-    );
   });
 
   it('authoring lists the local scenarios (none yet, no fake content); biology has its lesson', async () => {

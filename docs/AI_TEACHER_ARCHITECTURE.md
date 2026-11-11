@@ -152,7 +152,8 @@ visual ideas:
   show their short label but send a full instruction (`teacher.chipPrompts`, 0.4.3). A small
   four-step marker counts assistant replies; it is not a measure of lesson mastery.
 - The answer provider, API notice and text composer remain available on the page. The optional
-  screen-context switch is shown only in the floating chat bubble and is disabled on this route.
+  screen-context switch is shown only in the lab notebook's “Hỏi AI” tab and is disabled on this
+  route.
 
 Voice input/output, a structured TeachScript whiteboard, lesson planning and transcript controls from
 the full B4 roadmap have not been implemented in this text-tutor copy.

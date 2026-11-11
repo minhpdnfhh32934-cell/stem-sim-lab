@@ -105,7 +105,7 @@ test('targets: 40 px on the bench, the speed steps fill their 168×40 slot', asy
 
 test('targets: icon buttons grow to 48 px on a touch screen', async ({ browser }) => {
   const ctx = await browser.newContext({
-    storageState: 'tests/e2e/bench/storage-state.json',
+    storageState: 'tests/e2e/storage-state.json',
     baseURL: 'http://localhost:1420',
     locale: 'vi-VN',
     viewport: { width: 1366, height: 768 },
@@ -314,6 +314,9 @@ test('#120: a long topic name ends in "…"; the graph legend is one row under t
   expect(await cut()).toEqual(['block', 'hidden', 'ellipsis', 'nowrap', true]);
 
   await page.getByRole('tab', { name: 'Đồ thị' }).click();
+  // uPlot fills the legend a moment after the tab opens and the plot shrinks for it: measure the
+  // drawn legend, not the instant before its rows exist.
+  await expect(page.locator('#notebook-panel .chart__legend tr').first()).toBeVisible();
   const plot = await page.locator('#notebook-panel .chart__plot').boundingBox();
   const legend = await page.locator('#notebook-panel .chart__legend').boundingBox();
   const panel = await page.locator('#notebook-panel .panel__scroll').boundingBox();

@@ -8,7 +8,7 @@ import { useStudioStore } from '../studioStore';
 /**
  * While a lesson is shown, AI Teacher's screen context describes it (built from the stored
  * session when a question is sent, never earlier). Whether it is sent is the chat's
- * "Lấy thông tin từ màn hình" switch, which is off each time the bubble opens.
+ * "Lấy thông tin từ màn hình" switch, which is off each time the notebook's "Hỏi AI" chat opens.
  */
 export function useStudioContext(scenario: StudioScenario): void {
   useEffect(

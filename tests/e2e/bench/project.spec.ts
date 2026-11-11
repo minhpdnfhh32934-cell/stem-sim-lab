@@ -139,39 +139,48 @@ test('first run: grade → subjects → age question → tour (once, can be skip
   const context = await browser.newContext({ storageState: { cookies: [], origins: [] } });
   const page = await context.newPage();
   await page.goto('/');
-  // Onboarding (A4.2) comes first; the safety question and the tour wait behind it.
+  // The bench's first run (docs/BENCH_DESIGN.md §9.2): grade and subjects on one page (1/3), then
+  // the safety question (2/3); the tour waits until a topic is open.
   const onboarding = page.getByRole('dialog', { name: 'Bạn đang học hoặc ôn lớp nào?' });
   await expect(onboarding).toBeVisible();
-  await expect(onboarding).toContainText('Bước 1/5');
+  await expect(onboarding).toContainText('Bước 1/3');
   // Focus is on the chosen card ("Tất cả"), not on "Lớp 10" where a ring would look like a 2nd choice.
   await expect(onboarding.getByRole('radio', { name: /Tất cả/ })).toBeFocused();
   await expect(onboarding).toContainText('đang chờ giáo viên duyệt');
   await expect(page.getByRole('dialog', { name: 'Trước khi bắt đầu' })).toHaveCount(0);
   await onboarding.getByRole('radio', { name: /Lớp 12/ }).click();
+  await onboarding.getByRole('button', { name: /^Sinh học/ }).click();
   await onboarding.getByRole('button', { name: 'Tiếp' }).click();
-  const subjects = page.getByRole('dialog', { name: 'Bạn quan tâm môn nào?' });
-  await subjects.getByRole('button', { name: /^Sinh học/ }).click();
-  await subjects.getByRole('button', { name: 'Xong' }).click();
   const gate = page.getByRole('dialog', { name: 'Trước khi bắt đầu' });
   await expect(gate).toBeVisible();
+  await expect(gate).toContainText('Bước 2/3');
   await expect(page.locator('.tour')).toHaveCount(0);
   await gate.getByRole('button', { name: 'Tôi chưa đủ 18 tuổi' }).click();
   // Under 18 in the main edition: no AI, so no "Kết nối AI" step.
   await expect(page.getByRole('dialog', { name: /Kết nối AI/ })).toHaveCount(0);
-  // The tour explains the lab, so it starts when the learner opens it.
   await expect(page.locator('.tour')).toHaveCount(0);
   await enterLab(page);
   await expect(page.getByRole('radio', { name: 'Sinh học' })).toBeChecked();
   // The library opens on the grade chosen in the first step.
   await expect(page.getByRole('radio', { name: 'Lớp 12' })).toBeChecked();
-  const tour = page.getByRole('dialog', { name: 'Chào mừng đến SimLab' });
-  await expect(tour).toBeVisible();
-  await tour.getByRole('button', { name: 'Tiếp', exact: true }).click();
-  await expect(page.getByRole('dialog', { name: 'Chọn môn' })).toBeVisible();
-  await page.locator('.tour').getByRole('button', { name: 'Bỏ qua' }).click();
+  // The tour explains the bench, so it waits on the shelf and starts on a topic.
   await expect(page.locator('.tour')).toHaveCount(0);
+  const openFreeFall = async () => {
+    await page.getByRole('radio', { name: 'Vật lý' }).click();
+    await page.getByRole('radio', { name: 'Tất cả' }).click();
+    await page.getByRole('main').getByRole('button', { name: 'Rơi tự do', exact: true }).click();
+    await expect(page.locator('.stage__hud-title')).toHaveText('Rơi tự do và ném thẳng đứng', {
+      timeout: 20_000,
+    });
+  };
+  await openFreeFall();
+  const tour = page.locator('.tour');
+  await expect(tour.getByRole('heading', { name: 'Chạy thí nghiệm' })).toBeVisible();
+  await tour.getByRole('button', { name: 'Bỏ qua hướng dẫn' }).click();
+  await expect(tour).toHaveCount(0);
   await page.reload();
   await enterLab(page);
+  await openFreeFall();
   await expect(page.locator('.tour')).toHaveCount(0);
   await context.close();
 });

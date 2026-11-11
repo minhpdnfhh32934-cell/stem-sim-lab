@@ -66,11 +66,11 @@ test('subject cards and the grade switch (Grade → Subject → Topic)', async (
   // Grade 10: physics topics under the textbook chapters, with lessons and the pending label.
   await library.getByRole('radio', { name: 'Vật lý' }).click();
   await grades.getByRole('radio', { name: 'Lớp 10' }).click();
-  await expect(shelf).toContainText('chờ giáo viên duyệt');
   const kinematics = shelf.locator('.shelf', { hasText: 'Chương II. Động học' });
+  // On the card itself: its lessons and the pending label (the shelf's source note always says it).
   await expect(
     kinematics.getByRole('button', { name: 'Chuyển động thẳng đều', exact: true }),
-  ).toHaveAccessibleDescription(/Bài 4–5, 7/);
+  ).toHaveAccessibleDescription(/Bài 4–5, 7 · chờ giáo viên duyệt/);
   await expectNoHorizontalScroll(page);
 
   // Biology has no grade 11 topic yet: no dead end, "Xem tất cả" goes back to every topic.
@@ -177,7 +177,7 @@ test.describe('Basic / Advanced', () => {
 
 test('touch screens get 40px targets for icon buttons', async ({ browser }) => {
   const context = await browser.newContext({
-    storageState: 'tests/e2e/bench/storage-state.json',
+    storageState: 'tests/e2e/storage-state.json',
     viewport: { width: 1366, height: 768 },
     hasTouch: true,
     isMobile: false,
@@ -205,6 +205,11 @@ test('learn by exploring: predict → observe, a challenge solved, progress and 
   await enterLab(page);
   await expect(card()).toHaveAccessibleDescription(/Đã mở/);
   await expect(page.locator('.shelf-card__mark[data-state="opened"] svg')).toHaveCount(1);
+  // What is left is said on the card (3b.5): one prediction and one challenge of three steps.
+  await expect(page.locator('.shelf-card__mark[data-state="opened"]')).toHaveText(
+    'Đã mở · 1/3 bước',
+  );
+  await expect(card()).toHaveAccessibleDescription(/Còn: Dự đoán trước, 1 thử thách/);
   await expect(
     page
       .locator('.shelf', { has: page.getByRole('button', { name: 'Ném ngang', exact: true }) })

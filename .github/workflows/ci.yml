@@ -36,8 +36,6 @@ jobs:
       - run: npm run lint
       - run: npm run typecheck
       - run: npm test
-      # A bench spec that copies a classic one keeps its test titles (docs/BENCH_DESIGN.md §14).
-      - run: node scripts/e2e/title-parity.mjs
       - run: npm run build
 
   e2e:

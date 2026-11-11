@@ -2,10 +2,6 @@ import type { Messages } from '../types';
 
 /** English UI strings. Must have exactly the same keys as `vi.ts` (checked by the type). */
 const en: Messages = {
-  app: {
-    name: 'SimLab',
-    tagline: 'Physics · Chemistry · Biology simulations',
-  },
   subjects: {
     label: 'Subject',
     physics: 'Physics',
@@ -24,8 +20,6 @@ const en: Messages = {
     undo: 'Undo (Ctrl+Z)',
     redo: 'Redo (Ctrl+Y)',
     settings: 'Settings',
-    toggleTheme: 'Toggle light / dark theme',
-    presentation: 'Presentation mode (F5)',
   },
   ai: {
     notAllowed: 'AI: not enabled',
@@ -59,17 +53,13 @@ const en: Messages = {
   },
   sidebar: {
     regionLabel: 'Topic library',
-    library: 'Library',
     history: 'History',
     search: 'Search topics…',
     noResults: 'No matching topics.',
     foundIn: '{count} in {subject}',
     clearSearch: 'Clear search',
     comingSoon: 'Coming soon',
-    comingSoonHint: 'This topic will be built in a later phase.',
     historyEmpty: 'No simulations yet. Simulations you run will appear here.',
-    studio: 'Science Studio',
-    studioHint: 'Guided lessons',
   },
   chapters: {
     kinematics: 'Kinematics',
@@ -182,8 +172,6 @@ const en: Messages = {
     },
   },
   inspector: {
-    regionLabel: 'Inspector',
-    title: 'Properties',
     objectSection: 'Object',
     noSelection: 'Nothing selected.',
     paramsSection: 'Parameters',
@@ -194,18 +182,14 @@ const en: Messages = {
   },
   confidence: {
     exact: 'Exact quantitative',
-    exactDesc: 'Matches the analytic solution within the stated tolerance.',
     approx: 'Approximate quantitative',
-    approxDesc: 'Numerical integration, with an estimated error.',
     qualitative: 'Qualitative / illustrative',
-    qualitativeDesc: 'Illustrates a concept only; do not read numbers from it.',
   },
   review: {
     pending: 'Awaiting teacher review',
     verified: 'Reviewed',
   },
   bottom: {
-    moduleEmpty: 'This topic has no extra panel.',
     regionLabel: 'Graphs and solution panel',
     graphs: 'Graphs',
     solution: 'Solution',
@@ -225,7 +209,6 @@ const en: Messages = {
     reset: 'Reset (R)',
     speed: 'Playback speed',
     scrubber: 'Scrub simulation',
-    time: 'Simulation time',
   },
   bench: {
     breadcrumb: 'You are here',
@@ -258,6 +241,8 @@ const en: Messages = {
     haveProblem: 'Have a problem to solve?',
     chapterOpened: '{done}/{total} opened',
     topicOpened: 'Opened',
+    topicOpenedSteps: 'Opened · {done}/{total} steps',
+    topicLeft: 'Still to do: {left}',
     topicComplete: 'Done',
     guidedCount: '{count} guided lessons',
     pendingTeacher: 'awaiting teacher review',
@@ -286,18 +271,7 @@ const en: Messages = {
     isAi: 'An AI',
   },
   layout: {
-    resizeLeft: 'Drag to resize the Library',
-    resizeRight: 'Drag to resize the Properties panel',
-    resizeBottom: 'Drag to resize the Graphs panel',
     exitPresentation: 'Exit presentation (Esc)',
-  },
-  status: {
-    ready: 'Ready',
-    quality: 'Render quality',
-    qualityNotMeasured: 'not measured',
-    fps: 'FPS',
-    version: 'Version',
-    browserMode: 'browser mode',
   },
   settings: {
     nav: {
@@ -441,7 +415,6 @@ const en: Messages = {
   },
   command: {
     title: 'Quick search',
-    openButton: 'Quick search (Ctrl+K)',
     placeholder: 'Type a topic, a Settings page or something to do…',
     empty: 'No results. Try fewer letters.',
     keys: '↑ ↓ to choose · Enter to open · Esc to close',
@@ -508,6 +481,7 @@ const en: Messages = {
     yes: 'yes',
     no: 'no',
     slowMotion: 'Slow motion ×{factor} to keep accuracy',
+    slowMotionSpoken: 'Slower than real time to keep accuracy',
   },
   physicsSettings: {
     title: 'Physics',
@@ -710,6 +684,7 @@ const en: Messages = {
     exportPng: 'Export PNG image',
     sources: 'Sources & assumptions',
     tour: 'Quick tour',
+    presentation: 'Presentation mode (F5)',
     dismiss: 'Dismiss',
     nothingToSave: 'No topic is open.',
     saved: 'Saved: {name}',
@@ -736,7 +711,6 @@ const en: Messages = {
     degraded: 'Display quality lowered to keep things smooth (numbers unchanged)',
     memoryHigh:
       'Memory use is high ({mb} MB). Caches were released. Close some 3D topics or use fewer particles.',
-    memory: 'RAM {mb} MB',
   },
   tour: {
     label: 'Quick tour',
@@ -782,6 +756,7 @@ const en: Messages = {
   },
   update: {
     title: 'Software update',
+    available: 'Update {version} available',
     menu: 'Check for updates',
     close: 'Close',
     current: 'Running version {version} (core {native})',
@@ -808,7 +783,6 @@ const en: Messages = {
     retry: 'Try again',
     requiredNote:
       'This update is required: update to keep using the app. Your history, files and settings are kept.',
-    available: 'Update {version} available',
     browserOnly: 'In-app updates are only available in the installed app.',
   },
   whatsnew: {
@@ -960,29 +934,18 @@ const en: Messages = {
     regionLabel: 'Home',
     goHome: 'Back to home',
     title: 'What shall we learn today?',
-    subtitle: 'Pick a subject, open a topic, or paste a problem to turn it into a simulation.',
     continue: 'Continue where you left off',
-    problemLabel: 'Type a problem or a question…',
-    problemPlaceholder:
-      'Example: A ball is thrown at 20 m/s at 45°. Find the range.\n(Multi-line problems are fine. Ctrl+Enter to analyze.)',
     analyze: 'Analyze',
     manual: 'Build a scene',
     connectFirst: 'Connect AI to analyze problems',
-    subjectsTitle: 'Subjects',
     subjectDesc: {
       physics: 'Motion, forces, energy, oscillations',
       chemistry: 'Atoms, molecules, reactions, particles',
       biology: 'Cell division, genetics, ecology, enzymes',
     },
     topicCount: '{count} topics',
-    suggestedTitle: 'Suggested for you',
-    noSuggestions: 'This grade has no topics yet. Choose "All" in the Library to see every topic.',
-    teacherTitle: 'AI Teacher',
-    teacherBody:
-      'Ask questions, get step-by-step hints and check your understanding. Simulation numbers still come from the app.',
     comingSoon: 'Coming soon',
     teacherOpen: 'Open AI Teacher',
-    noAiNote: 'No AI or no internet? You can still learn: open a topic or build a scene.',
     cameraButton: 'Photograph the problem',
   },
   camera: {
@@ -1016,7 +979,6 @@ const en: Messages = {
       'You chose the AI on this computer but no program and model yet, so the photo was not sent anywhere. Choose them in Settings → AI on this computer.',
   },
   landing: {
-    eyebrow: 'Explore science by doing',
     title: 'Welcome to SimLab',
     subtitle:
       'Choose how you want to learn today. Simulations, data and learning support share one workspace.',
@@ -1024,8 +986,6 @@ const en: Messages = {
     labBody:
       'Explore Physics, Chemistry and Biology simulations, adjust parameters and inspect results.',
     teacherTitle: 'AI Teacher',
-    teacherBody:
-      'Ask questions, get hints and check your understanding with an AI study assistant.',
     privacy: 'You choose when to share screen context or use an online AI service.',
   },
   studio: {
@@ -1854,7 +1814,7 @@ const en: Messages = {
     flowThinkLocal:
       'Think is on: the question, the draft of the AI on this computer, related library excerpts, the summary of older turns (if any) and the screen context (if you turned it on) → {name} for review. Nothing goes to a fallback provider.',
     flowScreen:
-      'Screen context is sent only when you turn on “Use screen information” in the chat bubble; it is SimLab data, not a screenshot.',
+      'Screen context is sent only when you turn on “Use current screen information” in the notebook’s Ask AI tab; it is SimLab data, not a screenshot.',
     download: 'Download model',
     downloaded: 'Downloaded',
     deleteModel: 'Delete Gemma',
@@ -2378,16 +2338,12 @@ const en: Messages = {
     all: 'All',
     gradeDesc: 'Topics arranged by the grade {grade} textbook chapters.',
     allDesc: 'Every topic, including those not placed in a grade.',
-    source: 'Following the Kết nối tri thức textbooks · Waiting for a teacher’s review',
     lessons: 'Lessons {range}',
     empty: 'No {subject} topic has been placed in grade {grade} yet.',
     showAll: 'Show all',
     lessonOne: 'Lesson {range}',
     sourceNote:
       'SimLab proposes this arrangement from the Kết nối tri thức tables of contents; it is waiting for a teacher’s review.',
-    suggested: 'Suggested for grade {grade}',
-    topicCount: '{count} grade {grade} topics',
-    topicCountOne: '1 grade {grade} topic',
   },
   onboarding: {
     label: 'Getting started with SimLab',
@@ -2419,6 +2375,8 @@ const en: Messages = {
     fewerParams: 'Fewer parameters',
   },
   learn: {
+    leftPredict: 'Predict first',
+    leftChallenges: '{count} challenge(s)',
     empty: 'Open a Physics topic for a prediction question and challenges.',
     none: 'This topic has no challenge yet.',
     predictTitle: 'Predict first',
@@ -2454,7 +2412,6 @@ const en: Messages = {
     successTarget: 'Exactly! {quantity} = {value}, on target {goal} (only {diff} off).',
     successBest: 'Great! {quantity} = {value} — the largest possible is {best}.',
     showHint: 'Show a hint',
-    topicDone: 'Topic completed',
     badgesTitle: 'Your badges',
     noBadges: 'Open a topic, try a prediction or a challenge to earn your first badge.',
     badges: {
@@ -2473,11 +2430,6 @@ const en: Messages = {
     },
     breakReminder:
       'You have been studying for about 45 minutes. Rest your eyes for a few minutes: stand up, look into the distance — the simulation will wait for you.',
-    topicLearned: 'Studied',
-    topicLearnedLeft: 'Studied — {done}/{total} steps done, still to do: {left}',
-    leftPredict: 'Predict first',
-    leftChallenges: '{count} challenge(s)',
-    chapterLearned: '{done}/{total} topics studied',
     lockPrediction: 'Lock my prediction',
     lockedHint: 'Locked. Press “Run to check” at the bottom of the bench.',
   },

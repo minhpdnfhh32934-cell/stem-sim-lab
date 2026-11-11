@@ -6,14 +6,14 @@ import { askInBubble } from '@/teacher/teacherStore';
 import type { FlowStep, StudioScenario } from '../scenario';
 
 /**
- * "Hỏi thầy": opens the chat bubble (the bench: the "Hỏi AI" tab beside the lesson) with a
- * question about the current step, written from the lesson's own title. The learner may change it and sends it; the lesson's data goes along only
- * when the learner turns on the bubble's screen-context switch.
+ * "Hỏi thầy": opens the notebook's "Hỏi AI" tab beside the lesson with a question about the
+ * current step, written from the lesson's own title. The learner may change it and sends it; the
+ * lesson's data goes along only when the learner turns on the tab's screen-context switch.
  */
 export function AskTeacher({ scenario, step }: { scenario: StudioScenario; step: FlowStep }) {
   const t = useT();
   const L = useLocalized();
-  // The bubble is hidden in presentation mode, so there is nothing to open.
+  // The notebook is hidden in presentation mode, so there is nothing to open.
   const presentation = useLayoutStore((s) => s.presentation);
   if (presentation) return null;
   return (

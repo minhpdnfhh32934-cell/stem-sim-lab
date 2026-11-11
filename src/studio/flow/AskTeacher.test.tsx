@@ -1,13 +1,13 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import type { ReactNode } from 'react';
 import { useAiStore } from '@/ai/aiStore';
 import { Notebook } from '@/app/bench/Notebook';
 import { BenchContext } from '@/app/bench/shellMode';
 import { setTransportForTests, type LlmTransport } from '@/ai/transport';
 import type { ChatRequest } from '@/ai/types';
 import { fmtQty } from '@/physics/common/tex';
-import { ChatBubble } from '@/teacher/chat/ChatBubble';
 import { useChatStore } from '@/teacher/chat/chatStore';
 import { screenContext } from '@/teacher/chat/context';
 import { useTeacherStore } from '@/teacher/teacherStore';
@@ -59,6 +59,14 @@ function Lesson({ scenario }: { scenario: StudioScenario }) {
 
 const sent = (req: ChatRequest | undefined) => JSON.stringify(req ?? null);
 
+/** A lesson as the bench shows it: the notebook's pinned tabs ("Hỏi AI") beside the sheet. */
+const beside = (lesson: ReactNode) => (
+  <BenchContext.Provider value={true}>
+    <Notebook push={false} pinnedOnly />
+    {lesson}
+  </BenchContext.Provider>
+);
+
 describe('"Hỏi thầy" in Science Studio', () => {
   beforeEach(() => {
     calls = [];
@@ -82,14 +90,10 @@ describe('"Hỏi thầy" in Science Studio', () => {
     setTransportForTests(null);
   });
 
+  // The bench's "Hỏi AI" in the notebook beside the lesson replaced the classic chat bubble (B8).
   it('opens the bubble with an editable question; lesson data goes only with screen context on', async () => {
     const user = userEvent.setup();
-    const view = render(
-      <>
-        <Lesson scenario={sc} />
-        <ChatBubble />
-      </>,
-    );
+    const view = render(beside(<Lesson scenario={sc} />));
     await user.click(screen.getByRole('button', { name: 'Hỏi thầy' }));
 
     const box = await screen.findByRole('textbox', { name: 'Nhập câu hỏi' });
@@ -159,12 +163,7 @@ describe('"Hỏi thầy" in Science Studio', () => {
 
   it('closing the bubble turns screen context off again', async () => {
     const user = userEvent.setup();
-    render(
-      <>
-        <Lesson scenario={sc} />
-        <ChatBubble />
-      </>,
-    );
+    render(beside(<Lesson scenario={sc} />));
     await user.click(screen.getByRole('button', { name: 'Hỏi thầy' }));
     await user.click(await screen.findByRole('checkbox', { name: 'Lấy thông tin từ màn hình' }));
     expect(useChatStore.getState().includeScreen).toBe(true);

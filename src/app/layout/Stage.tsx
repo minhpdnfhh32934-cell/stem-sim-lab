@@ -32,6 +32,7 @@ import { fmtQty } from '@/physics/common/tex';
 import { EmptyState } from '@/ui/EmptyState';
 import { Skeleton } from '@/ui/Skeleton';
 import { IconButton } from '@/ui/IconButton';
+import { PerfNotes } from './PerfNotes';
 import { StageAnnouncer } from './StageAnnouncer';
 
 /** `basic`: shown in Basic mode too (drag, measure, vectors, camera — PROMPT_PHAN_2 A4.2). */
@@ -99,16 +100,21 @@ export const Stage = memo(function Stage() {
   if (mod.active || mod.loading || mod.error) {
     const View = mod.active?.view.Stage;
     return (
-      <section className="stage stage--module" aria-label={t('stage.regionLabel')}>
-        {View && <View />}
-        {mod.loading && <Skeleton label={t('stage.loading')} className="stage__skeleton" />}
-        {mod.error && (
-          <div className="stage__message" role="alert">
-            <AlertTriangle size={16} strokeWidth={1.75} aria-hidden="true" />
-            <p>{`${t('stage.engineError')}: ${mod.error}`}</p>
-          </div>
-        )}
-      </section>
+      <>
+        <section className="stage stage--module" aria-label={t('stage.regionLabel')}>
+          {View && <View />}
+          {mod.loading && <Skeleton label={t('stage.loading')} className="stage__skeleton" />}
+          {mod.error && (
+            <div className="stage__message" role="alert">
+              <AlertTriangle size={16} strokeWidth={1.75} aria-hidden="true" />
+              <p>{`${t('stage.engineError')}: ${mod.error}`}</p>
+            </div>
+          )}
+        </section>
+        {/* A strip under the stage, in the flow (both parents are flex columns): over the stage
+            it covered the views' own HUDs, run buttons and overlays (review of #198). */}
+        <PerfNotes className="stage__notes stage__notes--strip" />
+      </>
     );
   }
 
@@ -200,6 +206,7 @@ export const Stage = memo(function Stage() {
           {sim.intervened && (
             <span className="stage__chip stage__chip--warn">{t('science.intervened')}</span>
           )}
+          <PerfNotes className="stage__notes" />
         </div>
       )}
 

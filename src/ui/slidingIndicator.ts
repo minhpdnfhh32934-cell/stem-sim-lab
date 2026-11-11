@@ -1,14 +1,14 @@
 /**
  * Sliding selection indicator for every segmented control in the app (gallery pattern 039).
  *
- * One installer watches the whole document: for each `.segmented`, `.subject-switch` (pill) and
+ * One installer watches the whole document: for each `.segmented` (pill) and
  * `.tabs__list` (underline) it measures the checked item and writes its position into CSS
  * variables on the container (`--ind-x`, `--ind-y`, `--ind-w`, `--ind-h`) plus the class
  * `has-indicator`. The CSS draws the pill/underline from those variables and lets it glide;
  * without them (no script, jsdom) the controls keep their plain checked style.
  */
 
-const CONTAINERS = '.segmented, .subject-switch, .tabs__list';
+const CONTAINERS = '.segmented, .tabs__list';
 const ACTIVE = '[aria-checked="true"], [aria-selected="true"]';
 
 /** Position of the active item inside its container, in CSS pixels (pure; tested). */

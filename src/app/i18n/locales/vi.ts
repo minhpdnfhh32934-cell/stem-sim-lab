@@ -4,10 +4,6 @@
  * and by `i18n.test.ts`).
  */
 const vi = {
-  app: {
-    name: 'SimLab',
-    tagline: 'Mô phỏng Vật lý · Hóa học · Sinh học',
-  },
   subjects: {
     label: 'Môn học',
     physics: 'Vật lý',
@@ -26,8 +22,6 @@ const vi = {
     undo: 'Hoàn tác (Ctrl+Z)',
     redo: 'Làm lại (Ctrl+Y)',
     settings: 'Cài đặt',
-    toggleTheme: 'Đổi giao diện sáng / tối',
-    presentation: 'Chế độ trình chiếu (F5)',
   },
   ai: {
     notAllowed: 'AI: chưa mở',
@@ -62,17 +56,13 @@ const vi = {
   },
   sidebar: {
     regionLabel: 'Thư viện chủ đề',
-    library: 'Thư viện',
     history: 'Lịch sử',
     search: 'Tìm chủ đề…',
     noResults: 'Không tìm thấy chủ đề phù hợp.',
     foundIn: 'Có {count} chủ đề ở {subject}',
     clearSearch: 'Xóa tìm kiếm',
     comingSoon: 'Sắp có',
-    comingSoonHint: 'Chủ đề này sẽ được xây dựng ở các giai đoạn sau.',
     historyEmpty: 'Chưa có mô phỏng nào. Các mô phỏng bạn chạy sẽ xuất hiện ở đây.',
-    studio: 'Science Studio',
-    studioHint: 'Bài học có hướng dẫn',
   },
   chapters: {
     kinematics: 'Động học',
@@ -185,8 +175,6 @@ const vi = {
     },
   },
   inspector: {
-    regionLabel: 'Bảng thuộc tính',
-    title: 'Thuộc tính',
     objectSection: 'Đối tượng',
     noSelection: 'Chưa chọn đối tượng nào.',
     paramsSection: 'Thông số',
@@ -197,18 +185,14 @@ const vi = {
   },
   confidence: {
     exact: 'Định lượng chính xác',
-    exactDesc: 'Khớp lời giải giải tích trong sai số cho phép.',
     approx: 'Định lượng gần đúng',
-    approxDesc: 'Tích phân số, có ghi sai số ước lượng.',
     qualitative: 'Định tính / minh họa',
-    qualitativeDesc: 'Chỉ minh họa khái niệm, không dùng để đọc số liệu.',
   },
   review: {
     pending: 'Đang chờ giáo viên duyệt',
     verified: 'Đã được duyệt',
   },
   bottom: {
-    moduleEmpty: 'Chủ đề này không có bảng phụ.',
     regionLabel: 'Bảng đồ thị và lời giải',
     graphs: 'Đồ thị',
     solution: 'Lời giải',
@@ -227,7 +211,6 @@ const vi = {
     reset: 'Đặt lại (R)',
     speed: 'Tốc độ phát',
     scrubber: 'Tua mô phỏng',
-    time: 'Thời gian mô phỏng',
   },
   bench: {
     breadcrumb: 'Vị trí',
@@ -260,6 +243,8 @@ const vi = {
     haveProblem: 'Có đề bài?',
     chapterOpened: '{done}/{total} đã mở',
     topicOpened: 'Đã mở',
+    topicOpenedSteps: 'Đã mở · {done}/{total} bước',
+    topicLeft: 'Còn: {left}',
     topicComplete: 'Đã xong',
     guidedCount: 'Có {count} bài có hướng dẫn',
     pendingTeacher: 'chờ giáo viên duyệt',
@@ -286,18 +271,7 @@ const vi = {
     isAi: 'Là một AI',
   },
   layout: {
-    resizeLeft: 'Kéo để đổi độ rộng Thư viện',
-    resizeRight: 'Kéo để đổi độ rộng bảng Thuộc tính',
-    resizeBottom: 'Kéo để đổi chiều cao bảng Đồ thị',
     exitPresentation: 'Thoát trình chiếu (Esc)',
-  },
-  status: {
-    ready: 'Sẵn sàng',
-    quality: 'Chất lượng hiển thị',
-    qualityNotMeasured: 'chưa đo',
-    fps: 'FPS',
-    version: 'Phiên bản',
-    browserMode: 'chế độ trình duyệt',
   },
   settings: {
     nav: {
@@ -442,7 +416,6 @@ const vi = {
   },
   command: {
     title: 'Tìm nhanh',
-    openButton: 'Tìm nhanh (Ctrl+K)',
     placeholder: 'Gõ tên chủ đề, trang cài đặt hoặc việc muốn làm…',
     empty: 'Không có kết quả. Thử gõ ngắn hơn hoặc không dấu.',
     keys: '↑ ↓ để chọn · Enter để mở · Esc để đóng',
@@ -509,6 +482,7 @@ const vi = {
     yes: 'có',
     no: 'không',
     slowMotion: 'Chuyển động chậm ×{factor} để giữ độ chính xác',
+    slowMotionSpoken: 'Chuyển động chậm hơn thời gian thực để giữ độ chính xác',
   },
   physicsSettings: {
     title: 'Vật lý',
@@ -710,6 +684,7 @@ const vi = {
     exportPng: 'Xuất ảnh PNG',
     sources: 'Nguồn & Giả định',
     tour: 'Hướng dẫn nhanh',
+    presentation: 'Chế độ trình chiếu (F5)',
     dismiss: 'Đóng thông báo',
     nothingToSave: 'Chưa mở chủ đề nào để lưu.',
     saved: 'Đã lưu: {name}',
@@ -736,7 +711,6 @@ const vi = {
     degraded: 'Đã hạ chất lượng hiển thị để giữ độ mượt (số liệu không đổi)',
     memoryHigh:
       'Bộ nhớ đang cao ({mb} MB). Đã giải phóng bộ nhớ đệm. Nên đóng bớt chủ đề 3D hoặc giảm số hạt.',
-    memory: 'RAM {mb} MB',
   },
   tour: {
     label: 'Hướng dẫn nhanh',
@@ -781,6 +755,7 @@ const vi = {
   },
   update: {
     title: 'Cập nhật phần mềm',
+    available: 'Có bản cập nhật {version}',
     menu: 'Kiểm tra cập nhật',
     close: 'Đóng',
     current: 'Đang dùng: phiên bản {version} (lõi {native})',
@@ -807,7 +782,6 @@ const vi = {
     retry: 'Thử lại',
     requiredNote:
       'Bản cập nhật này là bắt buộc: cần cập nhật để tiếp tục dùng ứng dụng. Lịch sử, tệp và cài đặt của bạn được giữ nguyên.',
-    available: 'Có bản cập nhật {version}',
     browserOnly: 'Cập nhật trong app chỉ có ở bản cài trên máy.',
   },
   whatsnew: {
@@ -958,29 +932,18 @@ const vi = {
     regionLabel: 'Trang chủ',
     goHome: 'Về trang chủ',
     title: 'Hôm nay học gì?',
-    subtitle: 'Chọn môn, mở một chủ đề, hoặc dán đề bài để xem nó thành mô phỏng.',
     continue: 'Tiếp tục bài đang học',
-    problemLabel: 'Nhập đề bài hoặc câu hỏi…',
-    problemPlaceholder:
-      'Ví dụ: Một vật được ném xiên với vận tốc 20 m/s, góc 45°. Tính tầm xa.\n(Dán được cả đề nhiều dòng. Ctrl+Enter để phân tích.)',
     analyze: 'Phân tích đề',
     manual: 'Tự dựng cảnh',
     connectFirst: 'Kết nối AI để phân tích đề',
-    subjectsTitle: 'Môn học',
     subjectDesc: {
       physics: 'Chuyển động, lực, năng lượng, dao động',
       chemistry: 'Nguyên tử, phân tử, phản ứng, mức hạt',
       biology: 'Phân bào, di truyền, sinh thái, enzyme',
     },
     topicCount: '{count} chủ đề',
-    suggestedTitle: 'Gợi ý cho bạn',
-    noSuggestions: 'Lớp này chưa có chủ đề. Chọn "Tất cả" ở Thư viện để xem mọi chủ đề.',
-    teacherTitle: 'AI Teacher',
-    teacherBody:
-      'AI Teacher hỗ trợ hỏi bài, gợi ý từng bước và kiểm tra kiến thức. Số liệu mô phỏng do ứng dụng tính.',
     comingSoon: 'Sắp có',
     teacherOpen: 'Mở AI Teacher',
-    noAiNote: 'Không có AI hay mất mạng vẫn học được: mở chủ đề trong Thư viện hoặc Tự dựng cảnh.',
     cameraButton: 'Chụp đề bài',
   },
   camera: {
@@ -1014,14 +977,12 @@ const vi = {
       'Em đã chọn AI trên máy khác nhưng chưa chọn chương trình và mô hình, nên ảnh chưa được gửi đi đâu. Chọn trong Cài đặt → AI trên máy khác.',
   },
   landing: {
-    eyebrow: 'Học khoa học bằng khám phá',
     title: 'Chào mừng đến với SimLab',
     subtitle:
       'Chọn cách em muốn học hôm nay. Mô phỏng, dữ liệu và trợ lý học tập nằm trong cùng một không gian.',
     labTitle: 'Virtual Lab',
     labBody: 'Khám phá mô phỏng Vật lý, Hóa học và Sinh học; điều chỉnh thông số và xem kết quả.',
     teacherTitle: 'AI Teacher',
-    teacherBody: 'Hỏi bài, xin gợi ý và cùng kiểm tra kiến thức với trợ lý AI.',
     privacy: 'Em chọn khi nào chia sẻ ngữ cảnh màn hình hoặc dùng dịch vụ AI trực tuyến.',
   },
   studio: {
@@ -1838,7 +1799,7 @@ const vi = {
     flowThinkLocal:
       'Think đang bật: câu hỏi, bản nháp của AI trên máy, trích đoạn tài liệu liên quan, tóm tắt phần trò chuyện cũ (nếu có) và ngữ cảnh màn hình (nếu em bật) → {name} để rà soát. Không gửi tới nhà cung cấp dự phòng.',
     flowScreen:
-      'Ngữ cảnh màn hình chỉ được gửi khi em bật “Lấy thông tin từ màn hình” trong bong bóng chat; đó là dữ liệu của SimLab, không phải ảnh chụp màn hình.',
+      'Ngữ cảnh màn hình chỉ được gửi khi em bật “Lấy thông tin từ màn hình” ở thẻ Hỏi AI của sổ ghi; đó là dữ liệu của SimLab, không phải ảnh chụp màn hình.',
     download: 'Tải mô hình',
     downloaded: 'Đã tải',
     deleteModel: 'Xóa Gemma',
@@ -2363,16 +2324,12 @@ const vi = {
     all: 'Tất cả',
     gradeDesc: 'Chủ đề xếp theo chương sách giáo khoa lớp {grade}.',
     allDesc: 'Mọi chủ đề, kể cả chủ đề chưa xếp lớp.',
-    source: 'Theo SGK Kết nối tri thức · Đang chờ giáo viên duyệt',
     lessons: 'Bài {range}',
     empty: 'Chưa có chủ đề {subject} nào được xếp vào lớp {grade}.',
     showAll: 'Xem tất cả',
     lessonOne: 'Bài {range}',
     sourceNote:
       'Cách xếp chủ đề theo lớp do SimLab đề xuất từ mục lục SGK Kết nối tri thức, đang chờ giáo viên duyệt.',
-    suggested: 'Gợi ý cho lớp {grade}',
-    topicCount: '{count} chủ đề lớp {grade}',
-    topicCountOne: '1 chủ đề lớp {grade}',
   },
   onboarding: {
     label: 'Làm quen với SimLab',
@@ -2405,6 +2362,8 @@ const vi = {
     fewerParams: 'Ẩn bớt thông số',
   },
   learn: {
+    leftPredict: 'Dự đoán trước',
+    leftChallenges: '{count} thử thách',
     empty: 'Mở một chủ đề Vật lý để có câu hỏi dự đoán và thử thách.',
     none: 'Chủ đề này chưa có thử thách.',
     predictTitle: 'Dự đoán trước',
@@ -2441,7 +2400,6 @@ const vi = {
     successTarget: 'Chính xác! {quantity} = {value}, đúng mục tiêu {goal} (chỉ lệch {diff}).',
     successBest: 'Tuyệt! {quantity} = {value} — giá trị lớn nhất có thể là {best}.',
     showHint: 'Xem gợi ý',
-    topicDone: 'Đã hoàn thành chủ đề',
     badgesTitle: 'Huy hiệu của bạn',
     noBadges: 'Mở một chủ đề, thử dự đoán hoặc làm thử thách để nhận huy hiệu đầu tiên.',
     badges: {
@@ -2460,11 +2418,6 @@ const vi = {
     },
     breakReminder:
       'Bạn đã học khoảng 45 phút liên tục. Nghỉ mắt vài phút nhé: đứng dậy, nhìn ra xa — mô phỏng vẫn chờ bạn ở đây.',
-    topicLearned: 'Đã học',
-    topicLearnedLeft: 'Đã học — xong {done}/{total} bước, còn: {left}',
-    leftPredict: 'Dự đoán trước',
-    leftChallenges: '{count} thử thách',
-    chapterLearned: '{done}/{total} chủ đề đã học',
     lockPrediction: 'Chốt dự đoán',
     lockedHint: 'Đã chốt. Bấm “Chạy để kiểm tra” ở mép bàn.',
   },

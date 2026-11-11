@@ -27,22 +27,7 @@
 }
 
 .chat-panel__avatar .teacher-face,
-.chat-message__avatar .teacher-face,
-.chat-bubble__face {
+.chat-message__avatar .teacher-face {
   width: 26px;
   height: 26px;
-}
-
-/* The collapsed bubble sits on the accent background: draw the face in white. */
-.chat-bubble .teacher-face__head {
-  fill: transparent;
-  stroke: white;
-}
-.chat-bubble .teacher-face__brow,
-.chat-bubble .teacher-face__mouth {
-  stroke: white;
-}
-.chat-bubble .teacher-face__eye,
-.chat-bubble .teacher-face__mouth-open {
-  fill: white;
 }

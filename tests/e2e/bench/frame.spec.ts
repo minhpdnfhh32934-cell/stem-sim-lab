@@ -3,8 +3,8 @@ import { expect, test, type Locator, type Page } from '@playwright/test';
 import { isBench, openProblem, openTopic } from '../nav';
 
 /**
- * The bench frame (0.8.1 B1, #115; docs/BENCH_DESIGN.md §3 and §8), with the dev switch on
- * (project `chromium-bench`): geometry at 1366×768, landmarks, the folding tray, the notebook,
+ * The bench frame (0.8.1 B1, #115; docs/BENCH_DESIGN.md §3 and §8), the only shell since B8:
+ * geometry at 1366×768, landmarks, the folding tray, the notebook,
  * one filled button per state, the stage's live line and 40 px targets.
  */
 
@@ -130,7 +130,7 @@ test('one filled button on the bench, none at the 18+ question', async ({ page, 
   }
 
   // A first run that has not answered the 18+ question yet.
-  const state = JSON.parse(readFileSync('tests/e2e/bench/storage-state.json', 'utf8')) as {
+  const state = JSON.parse(readFileSync('tests/e2e/storage-state.json', 'utf8')) as {
     origins: { localStorage: { name: string }[] }[];
   };
   for (const o of state.origins)
@@ -145,7 +145,7 @@ test('one filled button on the bench, none at the 18+ question', async ({ page, 
   await fresh.goto('/');
   const gate = fresh.locator('dialog.age-gate');
   await expect(gate).toBeVisible({ timeout: 20_000 });
-  // App draws the gate at once; the bench shell (a lazy chunk) marks <html> a moment later.
+  // App draws the gate at once; the bench shell marks <html> in an effect, a moment later.
   await expect.poll(() => isBench(fresh)).toBe(true);
   await expectFilled(gate, 0);
   await ctx.close();
@@ -279,4 +279,28 @@ test('the tour waits on the shelf, then shows Chạy, the tray and the notebook 
   await expect(tour.getByRole('button', { name: 'Bỏ qua hướng dẫn' })).toBeVisible();
   await tour.getByRole('button', { name: 'Bắt đầu' }).click();
   await expect(tour).toHaveCount(0);
+});
+
+test('presentation from Tệp: the HUD stays clear of the exit button; Esc leaves it', async ({
+  page,
+}) => {
+  await openProjectile(page);
+  await page.getByRole('button', { name: 'Tệp' }).click();
+  await page.getByRole('menuitem', { name: 'Chế độ trình chiếu (F5)' }).click();
+  const exit = page.getByRole('button', { name: 'Thoát trình chiếu (Esc)' });
+  await expect(exit).toBeVisible();
+  await expect(page.locator('.bench-header')).toHaveCount(0);
+  // The HUD's right end (title, "Đã có can thiệp", PerfNotes) never sits under the button.
+  const hud = await page.locator('.stage__hud').boundingBox();
+  const button = await exit.boundingBox();
+  if (!hud || !button) throw new Error('not visible');
+  const apart =
+    hud.x + hud.width <= button.x ||
+    button.x + button.width <= hud.x ||
+    hud.y + hud.height <= button.y ||
+    button.y + button.height <= hud.y;
+  expect(apart, `HUD ${JSON.stringify(hud)} vs exit ${JSON.stringify(button)}`).toBe(true);
+  await page.keyboard.press('Escape');
+  await expect(exit).toHaveCount(0);
+  await expect(page.locator('.bench-header')).toHaveCount(1);
 });

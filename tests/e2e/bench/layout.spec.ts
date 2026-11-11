@@ -2,7 +2,6 @@ import { expect, test, type Locator, type Page } from '@playwright/test';
 import { openLab, openStudioFromLab } from '../nav';
 
 /**
- * Bench twin of tests/e2e/layout.spec.ts (0.8.1 B2, same titles: scripts/e2e/title-parity.mjs).
  * The bench has no bottom panel: graphs, Lời giải and Thử thách are notebook tabs (a 312 px
  * drawer the full stage height), the parameters are in the tray, the library is "Kệ bài"
  * (docs/BENCH_DESIGN.md §8, §9.3, §9.4, §14 "layout.spec geometry").
@@ -195,6 +194,80 @@ async function openPhysics(page: Page, topic: string) {
   await expect(page.locator('.stage__hud-title')).toBeVisible({ timeout: 20_000 });
 }
 
+for (const fontScale of [1, 1.4] as const) {
+  test(`"Có bản cập nhật" after "Để sau" keeps the header whole at 1366 × 768, font ${String(fontScale * 100)} % (B8)`, async ({
+    page,
+  }) => {
+    await page.addInitScript((scale) => {
+      localStorage.setItem(
+        'stemsim.settings',
+        JSON.stringify({ state: { locale: 'vi', fontScale: scale }, version: 2 }),
+      );
+    }, fontScale);
+    // A long topic name: the breadcrumb shrinks to "…", never the controls.
+    const name = 'Chuyển động thẳng biến đổi đều';
+    await openPhysics(page, name);
+    const title = page.getByRole('heading', { level: 1, name });
+    const before = (await title.boundingBox())?.width ?? 0;
+    // The dev server serves the app's own store module: fill it as a start-up check would.
+    await page.evaluate(async (url) => {
+      const { useUpdateStore } = (await import(
+        /* @vite-ignore */ url
+      )) as typeof import('../../../src/app/update/updater');
+      useUpdateStore.setState({
+        phase: 'available',
+        manifest: { webVersion: '9.9.9', minNative: '0.0.0', size: 1, notes: '', date: '' },
+      });
+    }, '/src/app/update/updater.ts');
+    const reminder = page.getByRole('button', { name: 'Có bản cập nhật 9.9.9' });
+    await reminder.click();
+    await expect(page.getByRole('dialog', { name: 'Cập nhật phần mềm' })).toBeVisible();
+    await page.getByRole('button', { name: 'Để sau' }).click();
+    await expect(reminder).toBeVisible();
+    // Every header control stays on screen and nothing overflows the header or the page.
+    const right = await page
+      .locator('.bench-header button')
+      .evaluateAll((els) => Math.max(...els.map((el) => el.getBoundingClientRect().right)));
+    const overflow = await page.evaluate(() => {
+      const h = document.querySelector('.bench-header');
+      const d = document.documentElement;
+      return [h ? h.scrollWidth - h.clientWidth : 1, d.scrollWidth - d.clientWidth];
+    });
+    // Readable: the name keeps at least its first two words ("Chuyển động"), measured in its own
+    // font apart from the layout; the crumbs before it stay whole.
+    const { width, twoWords, cutCrumbs } = await title.evaluate((el) => {
+      const probe = document.createElement('span');
+      probe.style.cssText = `position:absolute;visibility:hidden;white-space:nowrap;font:${getComputedStyle(el).font}`;
+      probe.textContent = el.textContent.split(' ').slice(0, 2).join(' ');
+      document.body.append(probe);
+      const words = probe.getBoundingClientRect().width;
+      probe.remove();
+      const box = el.parentElement?.getBoundingClientRect();
+      const cut = [...document.querySelectorAll('.bench-crumbs > button')].filter((b) => {
+        const r = b.getBoundingClientRect();
+        return b.scrollWidth > b.clientWidth || (box !== undefined && r.right > box.right + 0.5);
+      }).length;
+      return { width: el.getBoundingClientRect().width, twoWords: words, cutCrumbs: cut };
+    });
+    expect(right).toBeLessThanOrEqual(1366);
+    expect(overflow).toEqual([0, 0]);
+    expect(width).toBeGreaterThanOrEqual(twoWords);
+    expect(cutCrumbs).toBe(0);
+    // The reminder takes its own width and one gap from the name, nothing more.
+    const cost = await reminder.evaluate(
+      (el) =>
+        el.getBoundingClientRect().width +
+        parseFloat(getComputedStyle(el.parentElement ?? el).columnGap || '0'),
+    );
+    expect(before - width).toBeLessThanOrEqual(cost + 1);
+    // A name cut to "…" is shown whole in the tooltip.
+    if (await title.evaluate((el) => el.scrollWidth > el.clientWidth)) {
+      await title.hover();
+      await expect(page.getByRole('tooltip')).toHaveText(name);
+    }
+  });
+}
+
 test('the AI Teacher button covers no Inspector line and no Studio button (UI-01)', async ({
   page,
 }) => {
@@ -359,6 +432,31 @@ test('library: a selected title keeps its line; a checkbox sits by its label (UI
   const text = await box(label.locator('span').first());
   expect(text.x - input.right).toBeLessThan(16);
   expect((await box(label)).height).toBeGreaterThanOrEqual(40);
+});
+
+test('library: a physics card keeps its height when it gets "Đã mở · 1/3 bước" and "Còn: …" (UI-42)', async ({
+  page,
+}) => {
+  await openLab(page);
+  await page.getByRole('radio', { name: 'Vật lý' }).click();
+  const name = 'Ném ngang';
+  const open = page.getByRole('main').getByRole('button', { name, exact: true });
+  const card = page
+    .getByRole('main')
+    .locator('.shelf-card')
+    .filter({ has: page.getByRole('button', { name, exact: true }) });
+  const before = await box(card);
+  const titleBefore = await box(open.locator('.shelf-card__title'));
+  await open.click();
+  await expect(page.locator('.stage__hud-title')).toHaveText(name, { timeout: 20_000 });
+  await page.locator('.bench-crumbs').getByRole('button', { name: 'Vật lý' }).click();
+  await expect(card.locator('.shelf-card__left')).toHaveText('Còn: Dự đoán trước, 1 thử thách');
+  // One line, inside the card, and nothing moved.
+  const left = await box(card.locator('.shelf-card__left'));
+  expect(left.height).toBeLessThanOrEqual(20);
+  expect(left.bottom).toBeLessThanOrEqual((await box(card.locator('.shelf-card__mark'))).y + 0.5);
+  expect((await box(card)).height).toBeLessThanOrEqual(before.height + 1);
+  expect((await box(open.locator('.shelf-card__title'))).y).toBeCloseTo(titleBefore.y, 0);
 });
 
 for (const fontScale of [1.25, 1.4])

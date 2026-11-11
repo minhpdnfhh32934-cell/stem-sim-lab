@@ -4,6 +4,11 @@
 with `page.route('https://generativelanguage.googleapis.com/v1beta/**')` and a test key injected
 with `addInitScript`, so no real key or network is needed.
 
+The specs are in `tests/e2e/bench/` (the bench, "Bàn thí nghiệm", is the only shell since 0.8.1 B8;
+the classic specs were deleted once each of their test titles had a bench copy). Playwright projects:
+`chromium`, `chromium-3d` (software WebGL, `HEAVY_3D` names) and `chromium-3d-perf` (`@perf`); one
+storage state, `storage-state.json`.
+
 First run on a new machine: `npx playwright install chromium`. To use an already installed
 Chromium instead, set `PW_CHROMIUM=/path/to/chrome`.
 
@@ -22,8 +27,8 @@ the first visit.
 `{"lastSeen": "999.0.0"}` (every version already seen), so the box never covers the other
 specs once a version's notes are marked ready. The spec itself sets an older `lastSeen`.
 
-Science Studio (`studio.spec.ts`): the launch page has two cards only; lab → Studio tabs (sidebar
-entry, a topic's inspector card, Rơi tự do's "Dự đoán trước"), a session kept after going back; chemistry bench against
+Science Studio (`studio.spec.ts`): the launch page has two cards only; lab → Studio tabs (the shelf's
+"Có hướng dẫn" filter, a topic's lesson card in the tray, Rơi tự do's "Dự đoán trước"), a session kept after going back; chemistry bench against
 `data/reactions.json` (no-record pair, another record, the question's pair), POE, report sources,
 reload; biology stages in the 2D picture (low quality); physics at a non-default height against
 √(2h/g) and the lab's own solution; authoring a chemistry lesson → preview → reload; "Hỏi thầy"

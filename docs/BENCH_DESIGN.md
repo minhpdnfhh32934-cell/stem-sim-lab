@@ -783,7 +783,7 @@ New shell, same organs: rewriting domain logic would add risk without adding any
 
 ## 14. Build plan for 0.8.1
 
-**Dev switch.** One build only, no `VITE_*` flag.
+**Dev switch (B1–B7; B8 removed it).** One build only, no `VITE_*` flag.
 
 - `AppShell` renders `BenchShell` when `import.meta.env.DEV && localStorage['stemsim.dev.shell'] === 'bench'` (wrapped in try/catch).
 - A unit test proves a production build ignores the key.
@@ -835,6 +835,15 @@ New shell, same organs: rewriting domain logic would add risk without adding any
 | B8    | Flip: bench becomes default, classic shell + classic specs + `--glass-*` + launch blobs deleted after parity passes; native WebView2 check (window height, KaTeX subscripts, diacritics, board toolbar width); CLAUDE.md "Bench" section; release-notes entry (`notesReady` false until reviewed) | 1     |
 
 Total: about 14–15 builder-weeks, including the duplicated specs.
+
+**B8 (#193, in review: "done" only once the native WebView2 check and the full E2E run pass).**
+The bench is the only shell. Parity first: every classic E2E title
+had its bench copy (143/143) before the 37 classic specs went; the classic shell's unit tests now
+check the same things on the bench. Deleted after an import walk from `src/main.tsx`: the classic
+shell and its parts, their CSS, `--glass-*`, the launch blobs and 30 i18n keys. Kept from them where
+the bench had nothing: the slow-motion and lower-quality notices (`PerfNotes`, on the stage) and the
+§9.3 empty-search ways out on the shelf. The Playwright projects `chromium`, `chromium-3d`,
+`chromium-3d-perf` run `tests/e2e/bench/`; `title-parity.mjs` went with the classic specs.
 
 **Owner decisions (all decided on 02/11):**
 

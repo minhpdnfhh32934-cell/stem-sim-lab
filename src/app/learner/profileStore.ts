@@ -17,9 +17,9 @@ const isGrade = (v: unknown): v is GradeChoice => v === 'all' || GRADES.some((g)
 
 export interface ProfileState {
   level: Level;
-  /** Grade the learner studies or revises; only arranges the library and suggestions. */
+  /** Grade the learner studies or revises; only arranges the shelf (never sent to the AI). */
   grade: GradeChoice;
-  /** Subjects chosen during onboarding (used to order the suggestions on the home screen). */
+  /** Subjects chosen during onboarding: the first one opens on the shelf (finishProfileSteps). */
   interests: Subject[];
   /** Grade + subject steps of the first-run onboarding are done. */
   onboarded: boolean;

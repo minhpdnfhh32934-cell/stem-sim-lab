@@ -2,6 +2,8 @@
 // avoiding a light "flash" when the user prefers dark mode.
 (function () {
   var root = document.documentElement;
+  // The bench is the only shell (B8): its tokens apply from the first frame, not after React.
+  root.dataset.shell = 'bench';
   var theme = 'system';
   var fontScale = 1;
   try {

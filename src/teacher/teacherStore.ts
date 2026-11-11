@@ -16,8 +16,9 @@ interface TeacherState {
    */
   draft: string | null;
   /**
-   * The same for the chat bubble (askInBubble): it opens the bubble, where the learner decides
-   * whether screen context goes with the question. Also never sent by itself.
+   * The same for the lab notebook's "Hỏi AI" tab (askInBubble, named after the chat bubble it
+   * replaced in B8): the learner decides there whether screen context goes with the question. Also
+   * never sent by itself.
    */
   bubbleDraft: string | null;
   setLayout: (layout: TeacherLayout) => void;
@@ -49,8 +50,8 @@ export function openTeacherWithQuestion(question: string): void {
 }
 
 /**
- * Opens the chat bubble with `question` written into its box (e.g. "Hỏi thầy" in Science Studio).
- * Screen context stays as the learner set it: off whenever the bubble was closed.
+ * Opens the notebook's "Hỏi AI" tab with `question` written into its box (e.g. "Hỏi thầy" in
+ * Science Studio). Screen context stays off: it is turned off whenever that chat was left.
  */
 export function askInBubble(question: string): void {
   useTeacherStore.setState({ bubbleDraft: question });
