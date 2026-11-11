@@ -127,3 +127,31 @@ Tiêu chí: mỗi việc của review có code hoặc tài liệu sửa đúng c
   gắn gì): `data-shell="bench"`, nền `rgb(246, 244, 239)` (sáng) và `rgb(21, 25, 28)` (tối), khớp
   `--bg-app` của bench sau khi tải xong: PASS.
 - BENCH_DESIGN/PROGRESS vẫn ghi "đang review" cho tới khi CI của head này chạy đủ và đạt.
+
+## Vòng 3 (duyệt vòng 2 của laptop trên `3b89add`: 5 việc bắt buộc + 4 việc nên sửa)
+
+Đã gộp `main` (`b5820d5`, rustix 1.1.6 của #199): chỉ đổi `src-tauri/Cargo.lock`
+(`cargo metadata --locked` PASS).
+
+- 1 `app.test`: "không có khay" so tên thật (`/bảng thuộc tính/i`): PASS.
+- 2 nút nhắc cập nhật thành nút biểu tượng có chấm; đầu bàn thiếu chỗ (container query theo `em`
+  của đầu bàn) thì ô Tìm và trạng thái AI chỉ còn biểu tượng; tên bài bị cắt có tooltip. E2E
+  `layout.spec` 100 % và 140 % khi nút nhắc hiện: mọi nút trong 1366, không tràn, tên bài ≥ hai
+  chữ đầu đo bằng phông của nó (140 %: 195 ≥ 147 px; trước 22 px), breadcrumb nguyên, tooltip:
+  PASS; axe (`controls.spec`) PASS.
+- 3 ghi chú quá tải thành dải trong luồng dưới khung mô-đun và dưới mô hình Studio. E2E
+  `mitosis3d.spec`, `studio-biology.spec`: dải nằm dưới, không chung điểm ảnh với `.m3d__hud`: PASS.
+- 4 tiêu điểm khi mở Lịch sử từ Tệp và khi đóng ở Cơ bản: `FileMenu.test` PASS.
+- 5 tài liệu (`USER_GUIDE`, `CLAUDE.md:489-490` — người dùng cho phép, `profileStore`, #200/#201,
+  chú thích 38 px, xoá `.statusbar__update`).
+- Nên sửa: "Bước 2/3" khi điều khoản mới và đã xem hướng dẫn (`FirstRun.test`); dòng đọc PerfNotes
+  luôn gắn (`PerfNotes.test`); thẻ Vật lí giữ sẵn dòng "Còn: …" (E2E UI-42 thẻ Vật lí); chú thích
+  ARCHITECTURE/Studio.
+
+### Kết quả vòng 3 (máy bàn)
+
+- `npm run check`: PASS (5032 qua, 1 bỏ qua có sẵn); `format:check`: PASS.
+- E2E đủ nhóm, 4 worker: `chromium` 159/159 PASS; `chromium-3d` 43/47 — 4 FAIL đều dừng ở bước
+  đầu (chờ nút "Virtual Lab" của trang mở đầu 150–240 s); trace: từng mô-đun mất 110–160 s, hai
+  yêu cầu 408, 58 yêu cầu không xong — dev server của máy bàn nghẽn (môi trường). Chạy lại riêng
+  (1 worker): 4/4 PASS; `chromium-3d-perf` 1/1 PASS.
