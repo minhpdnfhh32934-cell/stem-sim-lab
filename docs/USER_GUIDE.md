@@ -277,11 +277,11 @@ Với mỗi chủ đề Vật lý, mở thẻ **Thử thách** ở sổ bên tr�
   máy đặt "giảm chuyển động").
 - **Gợi ý từng bước**: khi bạn nhập đề bài, thẻ **Lời giải** ẩn đáp số để bạn tự giải trước: bấm
   **Gợi ý 1**, **Gợi ý 2**… đến **Lời giải đầy đủ**, hoặc **Xem lời giải ngay** để đối chiếu.
-- **Tiến độ và huy hiệu**: mở một chủ đề (môn nào cũng vậy) là có dấu ✓ **Đã học** trong Thư viện.
-  Chủ đề Vật lí còn việc thì có thêm số nhỏ như "1/3" (di chuột vào để xem còn Dự đoán trước hay
-  thử thách nào); làm xong hết (đã mở, đã dự đoán, đã làm mọi thử thách) thì dấu ✓ đổi thành biểu
-  tượng **Hoàn thành**. Mỗi chương có số "đã học/tổng". Huy hiệu hiện ở trang chủ. Không có chuỗi
-  ngày hay bảng xếp hạng. Tiến độ chỉ lưu trên máy này.
+- **Tiến độ và huy hiệu**: mở một chủ đề (môn nào cũng vậy) là thẻ của nó trên Kệ bài có dấu ✓
+  **Đã mở**. Chủ đề Vật lí còn việc thì dấu ghi thêm số bước, như "Đã mở · 1/3 bước", và thẻ có dòng
+  "Còn: Dự đoán trước, 1 thử thách"; làm xong hết (đã mở, đã dự đoán, đã làm mọi thử thách) thì dấu
+  đổi thành biểu tượng **Đã xong**. Mỗi chương có số "đã mở/tổng". Huy hiệu hiện trên Kệ bài. Không
+  có chuỗi ngày hay bảng xếp hạng. Tiến độ chỉ lưu trên máy này.
 - **Nhắc nghỉ mắt**: sau khoảng 45 phút dùng liên tục, app hiện một lời nhắc nhỏ (không chặn màn
   hình). Nghỉ từ 5 phút trở lên thì đếm lại từ đầu.
 

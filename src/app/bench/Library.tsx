@@ -16,7 +16,7 @@ import { useAiStore } from '@/ai/aiStore';
 import { openManual } from '@/app/ai/analyze';
 import { useAnalysisEngine } from '@/app/ai/engineChoice';
 import { normalizeForSearch } from '@/app/catalog';
-import { useT } from '@/app/i18n';
+import { useT, type TFunction } from '@/app/i18n';
 import { chapterTitle, searchChapters } from '@/app/layout/libraryChapters';
 import { Badges } from '@/app/learner/HomeScreen';
 import { HistoryList } from '@/app/project/HistoryList';
@@ -27,7 +27,7 @@ import { chaptersFor, GRADE_CHOICES, type LibraryTopic } from '@/app/levels';
 import { lessonRange } from '@/app/curriculum';
 import { openStudio, openTopic } from '@/app/topics';
 import { SUBJECTS, useWorkspaceStore, type Subject } from '@/app/workspaceStore';
-import { chapterProgress, topicStatus } from '@/learn/progress';
+import { chapterProgress, topicStatus, type TopicStatus } from '@/learn/progress';
 import { useProgressStore } from '@/learn/progressStore';
 import { useSafetyStore } from '@/safety/safetyStore';
 import { useLessonsForTopic } from '@/studio/lessons';
@@ -329,9 +329,10 @@ function ShelfCard({
 }: {
   topic: LibraryTopic;
   subject: Subject;
-  status: ReturnType<typeof topicStatus>;
+  status: TopicStatus;
 }) {
   const t = useT();
+  const left = status.state === 'opened' ? stepsLeft(status, t) : null;
   const guided = useLessonsForTopic(topic.id).length;
   const soon = topic.status !== 'available';
   const descId = `shelf-card-${topic.id}-desc`;
@@ -376,15 +377,29 @@ function ShelfCard({
             ) : (
               <Check size={14} strokeWidth={2.25} aria-hidden="true" />
             )}
-            {t(status.state === 'complete' ? 'bench.topicComplete' : 'bench.topicOpened')}
+            {status.state === 'complete'
+              ? t('bench.topicComplete')
+              : status.total > 1
+                ? t('bench.topicOpenedSteps', { done: status.done, total: status.total })
+                : t('bench.topicOpened')}
           </span>
         )}
+        {left && <span className="shelf-card__left">{t('bench.topicLeft', { left })}</span>}
         {guided > 0 && (
           <span className="shelf-card__guided">{t('bench.guidedCount', { count: guided })}</span>
         )}
       </span>
     </div>
   );
+}
+
+/** What an opened topic still has ("Dự đoán trước, 2 thử thách"), as the classic library said (3b.5). */
+function stepsLeft(s: TopicStatus, t: TFunction): string | null {
+  const left = [
+    ...(s.predictLeft ? [t('learn.leftPredict')] : []),
+    ...(s.challengesLeft > 0 ? [t('learn.leftChallenges', { count: s.challengesLeft })] : []),
+  ];
+  return left.length > 0 ? left.join(', ') : null;
 }
 
 /**

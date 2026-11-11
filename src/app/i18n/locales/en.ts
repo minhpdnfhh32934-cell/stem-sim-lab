@@ -246,6 +246,8 @@ const en: Messages = {
     haveProblem: 'Have a problem to solve?',
     chapterOpened: '{done}/{total} opened',
     topicOpened: 'Opened',
+    topicOpenedSteps: 'Opened · {done}/{total} steps',
+    topicLeft: 'Still to do: {left}',
     topicComplete: 'Done',
     guidedCount: '{count} guided lessons',
     pendingTeacher: 'awaiting teacher review',
@@ -2391,6 +2393,8 @@ const en: Messages = {
     fewerParams: 'Fewer parameters',
   },
   learn: {
+    leftPredict: 'Predict first',
+    leftChallenges: '{count} challenge(s)',
     empty: 'Open a Physics topic for a prediction question and challenges.',
     none: 'This topic has no challenge yet.',
     predictTitle: 'Predict first',

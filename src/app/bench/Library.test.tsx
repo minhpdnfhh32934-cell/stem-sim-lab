@@ -145,6 +145,24 @@ describe('"Kệ bài": marks, grade views and searches without a dead end (B8)',
     expect(shelfCount(/^Động học/)).toHaveTextContent('1/5 đã mở');
   });
 
+  it('a physics topic with steps left says "1/3" and what is left (3b.5); others just "Đã mở"', () => {
+    act(() => {
+      useProgressStore.setState({ visited: { freeFall: true, periodicTable: true } });
+    });
+    render(<BenchLibrary />);
+    expect(card('Rơi tự do')).toHaveAccessibleDescription(
+      /Đã mở · 1\/3 bước.*Còn: Dự đoán trước, 1 thử thách/,
+    );
+    act(() => {
+      useProgressStore.setState({ predictions: { 'freeFall.h0': true } });
+    });
+    expect(card('Rơi tự do')).toHaveAccessibleDescription(/Đã mở · 2\/3 bước.*Còn: 1 thử thách/);
+    expect(card('Rơi tự do')).not.toHaveAccessibleDescription(/Dự đoán trước/);
+    fireEvent.click(screen.getByRole('radio', { name: 'Hóa học' }));
+    expect(card('Bảng tuần hoàn')).toHaveAccessibleDescription(/Đã mở/);
+    expect(card('Bảng tuần hoàn')).not.toHaveAccessibleDescription(/bước|Còn:/);
+  });
+
   it('every step done → the "Đã xong" mark instead of "Đã mở"', () => {
     act(() => {
       useProgressStore.setState({

@@ -205,6 +205,11 @@ test('learn by exploring: predict → observe, a challenge solved, progress and 
   await enterLab(page);
   await expect(card()).toHaveAccessibleDescription(/Đã mở/);
   await expect(page.locator('.shelf-card__mark[data-state="opened"] svg')).toHaveCount(1);
+  // What is left is said on the card (3b.5): one prediction and one challenge of three steps.
+  await expect(page.locator('.shelf-card__mark[data-state="opened"]')).toHaveText(
+    'Đã mở · 1/3 bước',
+  );
+  await expect(card()).toHaveAccessibleDescription(/Còn: Dự đoán trước, 1 thử thách/);
   await expect(
     page
       .locator('.shelf', { has: page.getByRole('button', { name: 'Ném ngang', exact: true }) })

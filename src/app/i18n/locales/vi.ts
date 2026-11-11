@@ -248,6 +248,8 @@ const vi = {
     haveProblem: 'Có đề bài?',
     chapterOpened: '{done}/{total} đã mở',
     topicOpened: 'Đã mở',
+    topicOpenedSteps: 'Đã mở · {done}/{total} bước',
+    topicLeft: 'Còn: {left}',
     topicComplete: 'Đã xong',
     guidedCount: 'Có {count} bài có hướng dẫn',
     pendingTeacher: 'chờ giáo viên duyệt',
@@ -2378,6 +2380,8 @@ const vi = {
     fewerParams: 'Ẩn bớt thông số',
   },
   learn: {
+    leftPredict: 'Dự đoán trước',
+    leftChallenges: '{count} thử thách',
     empty: 'Mở một chủ đề Vật lý để có câu hỏi dự đoán và thử thách.',
     none: 'Chủ đề này chưa có thử thách.',
     predictTitle: 'Dự đoán trước',
