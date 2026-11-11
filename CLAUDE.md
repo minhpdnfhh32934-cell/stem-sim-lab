@@ -281,7 +281,10 @@ CI (`.github/workflows/ci.yml`) runs all of the above on every push. A failed E2
 ## Project map
 
 ```
-src/app/          shell, layout, theme, i18n, settings, shortcuts, stores
+src/app/          shell (the bench, `src/app/bench/`), layout, theme, i18n, settings, shortcuts, stores
+src/learn/        challenges, predict–observe–explain, progress, break reminder (3b.5)
+src/modules/      ModuleView registry for non-physics topics (and the module-built physics ones)
+src/safety/       age gate, moderation, incident log (the gate itself is in Rust)
 src/ui/           shared design-system components
 src/ai/           LLM client + SceneSpec pipeline (Phase 3)
 src/core/         units, constants, integrators, fixed timestep (Phase 1)
@@ -803,9 +806,14 @@ Progress log: `docs/PROGRESS.md`.
       shared 3D kit (release-notes entry updated by PR #34)
 - [x] 0.7.1 released 2026-10-22 (v0.7.1): Science Studio inside the lab (PR #35), 3D render
       pipeline, the seven 3D lessons polished, the four population lessons as 3D habitats
-- [~] 0.8.0 (plan #37, version PR open, not released): KNTT grade bar, uniform circular motion,
-  standing waves, electric field (PR #89), cell structure 2D, Studio guide, "Virtual Lab"; the native
-  part is 0.8.0 too, so 0.7.1 installs need the new installer
+- [~] 0.8.0 (plan #37): KNTT grade bar, uniform circular motion, standing waves, electric field
+  (PR #89), cell structure 2D, Studio guide, "Virtual Lab". Version PR #92 merged 2026-10-28; never
+  released on its own (only a demo installer): its content ships in 0.8.1
+- [~] 0.8.1 (plan #54; version PR of #194 open, not released): the bench as the only shell (B0–B8),
+  interference, forced oscillation, DC circuits, Kepler's second law (extension), Fourier series,
+  phase space, titration, crystals, the energy diagram, organic molecules by functional group, cell
+  3D, "Từ tế bào đến DNA", showcase mode, "Thông tin máy". Web and native parts are both 0.8.1
+  (0.7.1 installs need the new installer); Store package 0.8.1.0, submitted by hand
 - [ ] Phase 8+: extensions (MASTER_PROMPT §6.2, advanced 3D/biology) — only on request
 
 ## Release
