@@ -175,5 +175,6 @@ không đổi; máy GPU tích hợp không bị nâng mức.
 **Watchdog bộ nhớ** (`src/perf/memory.ts`): 10 giây đọc heap JS một lần (WebView2/Chromium). Khi vượt
 80 % ngân sách 300 MB (hoặc 80 % giới hạn heap), app giải phóng bộ nhớ đệm đã đăng ký (ví dụ: bản
 ghi đồ thị vật lý giữ lại một nửa số mẫu — chỉ giảm độ phân giải đồ thị, không ảnh hưởng mô phỏng)
-và hiện cảnh báo một lần. (Số RAM, FPS và mức chất lượng của thanh trạng thái cũ chưa có chỗ trên
-bàn thí nghiệm; việc đưa chúng lại cho chế độ Nâng cao là issue #201.)
+và hiện cảnh báo một lần. Ở chế độ Nâng cao, menu Tệp → **Thông tin máy** cho xem mức chất lượng
+(kèm lần đo), FPS và RAM hiện tại (#201; thanh trạng thái cũ có ba số này, mép bàn thì không còn
+chỗ, §8).
