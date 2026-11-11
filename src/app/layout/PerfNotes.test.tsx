@@ -26,8 +26,18 @@ describe('the overload ladder is never silent on the bench (B8)', () => {
       usePerfStore.setState({ timeScale: 0.5, degraded: true });
     });
     rerender(<Stage />);
-    const notes = screen.getByRole('status');
-    expect(notes).toHaveTextContent('Chuyển động chậm ×0,5 để giữ độ chính xác');
-    expect(notes).toHaveTextContent('Đã hạ chất lượng hiển thị để giữ độ mượt (số liệu không đổi)');
+    const live = screen.getByRole('status');
+    expect(live).toHaveTextContent(
+      'Chuyển động chậm hơn thời gian thực để giữ độ chính xác. Đã hạ chất lượng hiển thị để giữ độ mượt (số liệu không đổi)',
+    );
+    // The chips show the factor; the live line has none, so a new factor is not read out again.
+    expect(screen.getByText('Chuyển động chậm ×0,5 để giữ độ chính xác')).toBeInTheDocument();
+    const said = live.textContent;
+    act(() => {
+      usePerfStore.setState({ timeScale: 0.43 });
+    });
+    rerender(<Stage />);
+    expect(screen.getByText('Chuyển động chậm ×0,43 để giữ độ chính xác')).toBeInTheDocument();
+    expect(screen.getByRole('status').textContent).toBe(said);
   });
 });

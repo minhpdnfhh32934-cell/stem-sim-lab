@@ -1,6 +1,7 @@
 import { ShieldCheck } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useT } from '@/app/i18n';
+import { useProfileStore } from '@/app/learner/profileStore';
 import { StepStrip } from '@/app/learner/StepStrip';
 import { checkAiStatus } from '@/app/ai/useAiStatus';
 import { getSafety, toSafetyError, type SafetyStatus } from './safety';
@@ -31,8 +32,11 @@ export function AgeGate({ hold = false }: { hold?: boolean }) {
   // `hold`: the first-run onboarding (level, subjects) comes before the gate.
   const visible = useGateVisible() && !hold;
   const status = useSafetyStore((s) => s.status);
-  // The bench's first run counts the gate as step 2 of 3 (§9.2); not when Settings reopens it.
-  const firstRunStep = useSafetyStore((s) => !s.gateRequested || s.gateFirstRun);
+  // The bench's first run counts the gate as step 2 of 3 (§9.2): not when Settings reopens it,
+  // nor when new terms ask a learner who already went through step 3.
+  const gateStep = useSafetyStore((s) => !s.gateRequested || s.gateFirstRun);
+  const firstRunDone = useProfileStore((s) => s.connectSeen);
+  const firstRunStep = gateStep && !firstRunDone;
 
   useEffect(() => {
     void loadSafety().catch(() => undefined);

@@ -481,6 +481,7 @@ const en: Messages = {
     yes: 'yes',
     no: 'no',
     slowMotion: 'Slow motion ×{factor} to keep accuracy',
+    slowMotionSpoken: 'Slower than real time to keep accuracy',
   },
   physicsSettings: {
     title: 'Physics',

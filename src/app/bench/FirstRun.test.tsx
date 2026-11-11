@@ -89,6 +89,15 @@ describe('bench first run (docs/BENCH_DESIGN.md §9.2)', () => {
     act(() => {
       useSafetyStore.setState({ gateRequested: true, gateFirstRun: false });
     });
+    const { unmount: close } = render(<AgeGate />);
+    await screen.findByRole('button', { name: 'Tôi chưa đủ 18 tuổi' });
+    expect(screen.queryByText(/Bước/)).toBeNull();
+    close();
+    // New terms ask a learner who finished the first run again (as at start-up): no step number.
+    act(() => {
+      useSafetyStore.setState({ gateRequested: false, gateFirstRun: false });
+      useProfileStore.setState({ onboarded: true, connectSeen: true });
+    });
     render(<AgeGate />);
     await screen.findByRole('button', { name: 'Tôi chưa đủ 18 tuổi' });
     expect(screen.queryByText(/Bước/)).toBeNull();

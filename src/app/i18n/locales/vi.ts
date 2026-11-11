@@ -482,6 +482,7 @@ const vi = {
     yes: 'có',
     no: 'không',
     slowMotion: 'Chuyển động chậm ×{factor} để giữ độ chính xác',
+    slowMotionSpoken: 'Chuyển động chậm hơn thời gian thực để giữ độ chính xác',
   },
   physicsSettings: {
     title: 'Vật lý',

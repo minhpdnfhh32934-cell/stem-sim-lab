@@ -61,9 +61,10 @@ describe('Biology Studio on the 3D mitosis model', () => {
     act(() => {
       usePerfStore.setState({ timeScale: 0.5, degraded: true });
     });
-    const notes = model.getByRole('status');
-    expect(notes).toHaveTextContent('Chuyển động chậm ×0,5 để giữ độ chính xác');
-    expect(notes).toHaveTextContent('Đã hạ chất lượng hiển thị để giữ độ mượt (số liệu không đổi)');
+    expect(model.getByRole('status')).toHaveTextContent(
+      'Chuyển động chậm hơn thời gian thực để giữ độ chính xác. Đã hạ chất lượng hiển thị để giữ độ mượt (số liệu không đổi)',
+    );
+    expect(model.getByText('Chuyển động chậm ×0,5 để giữ độ chính xác')).toBeInTheDocument();
     act(() => {
       usePerfStore.setState({ timeScale: 1, degraded: false });
     });
