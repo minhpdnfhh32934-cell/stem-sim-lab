@@ -413,6 +413,52 @@ async function backToChemistry(page: Page) {
   await page.locator('.bench-crumbs').getByRole('button', { name: 'Hóa học' }).click();
 }
 
+for (const fontScale of [1, 1.4] as const)
+  test(`Tệp → "Thông tin máy" (Advanced) at ${String(fontScale * 100)} %: the edge's columns stay put, Esc gives Tệp back (#201)`, async ({
+    page,
+  }) => {
+    await page.addInitScript((scale) => {
+      localStorage.setItem(
+        'stemsim.settings',
+        JSON.stringify({
+          state: { locale: 'vi', fontScale: scale, uiMode: 'advanced' },
+          version: 2,
+        }),
+      );
+    }, fontScale);
+    await openPhysics(page, 'Ném xiên');
+    // Every bench-edge slot's box, before and while the box is open.
+    const slots = () =>
+      page.locator('.bench-edge > *').evaluateAll((els) =>
+        els.map((el) => {
+          const r = el.getBoundingClientRect();
+          return [Math.round(r.x), Math.round(r.width)];
+        }),
+      );
+    const before = await slots();
+    const file = page.getByRole('button', { name: 'Tệp', exact: true });
+    await file.click();
+    await page.getByRole('menuitem', { name: 'Thông tin máy' }).click();
+    const dialog = page.getByRole('dialog', { name: 'Thông tin máy' });
+    await expect(dialog).toBeVisible();
+    await expect(dialog).toContainText('Chất lượng hiển thị');
+    await expect(dialog).toContainText('FPS');
+    await expect(dialog).toContainText('Bộ nhớ');
+    const box = await dialog.boundingBox();
+    if (!box) throw new Error('no dialog box');
+    expect(box.x).toBeGreaterThanOrEqual(0);
+    expect(box.x + box.width).toBeLessThanOrEqual(1366);
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      ),
+    ).toBe(0);
+    expect(await slots()).toEqual(before);
+    await page.keyboard.press('Escape');
+    await expect(dialog).toHaveCount(0);
+    await expect(file).toBeFocused();
+  });
+
 test('bench text follows Cỡ chữ: at 140 % the shelf and edge text is 1,4× larger, nothing spills (#202)', async ({
   page,
 }) => {

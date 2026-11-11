@@ -659,7 +659,8 @@ Từng bài:
 
 - **Menu Tệp** (nút ☰ ở đầu bàn): Mở tệp `.stemsim`, Lưu mô phỏng, Xuất ảnh PNG, Lịch sử,
   Chế độ trình chiếu (F5), Nguồn & Giả định, Kiểm tra cập nhật, Quyền riêng tư & dùng AI an toàn,
-  Hướng dẫn nhanh (và "Có gì mới" khi có bản mới chưa xem).
+  Hướng dẫn nhanh (và "Có gì mới" khi có bản mới chưa xem). Ở chế độ **Nâng cao** có thêm **Thông
+  tin máy**: mức chất lượng hiển thị (kèm lúc đo), FPS và RAM; Esc để đóng.
 - **Lưu (Ctrl+S) / Mở (Ctrl+O):** tệp `.stemsim` lưu chủ đề và các thông số bạn đã chỉnh (không lưu
   kết quả — app tính lại khi mở, nên kết quả luôn đúng với phiên bản app).
 - **Hoàn tác / Làm lại (Ctrl+Z / Ctrl+Y):** áp dụng cho thông số của chủ đề đang mở. Kéo thanh trượt

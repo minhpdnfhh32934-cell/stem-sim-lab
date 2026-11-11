@@ -2125,3 +2125,23 @@ button.bench-door--lab:hover {
 .bench[data-presentation] .bench__stage {
   padding-right: calc(var(--target) + 2 * var(--space-3));
 }
+
+/* Tệp → "Thông tin máy" (#201): a name and its value per row; a narrow dialog. */
+.machine-info {
+  width: min(24rem, calc(100vw - 2rem));
+}
+.machine-info__list {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: var(--space-2) var(--space-4);
+  margin: 0;
+}
+.machine-info__list dt {
+  color: var(--text-muted);
+}
+.machine-info__list dd {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--space-2);
+  margin: 0;
+}

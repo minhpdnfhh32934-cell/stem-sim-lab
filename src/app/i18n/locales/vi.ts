@@ -684,6 +684,9 @@ const vi = {
     exportPng: 'Xuất ảnh PNG',
     sources: 'Nguồn & Giả định',
     tour: 'Hướng dẫn nhanh',
+    machineInfo: 'Thông tin máy',
+    machineInfoMeasured: 'đo lúc {when}',
+    machineInfoClose: 'Đóng',
     presentation: 'Chế độ trình chiếu (F5)',
     dismiss: 'Đóng thông báo',
     nothingToSave: 'Chưa mở chủ đề nào để lưu.',
@@ -707,8 +710,15 @@ const vi = {
     confirmClear: 'Bấm lần nữa để xóa hết',
     fromProblem: 'Từ đề bài',
   },
+  status: {
+    quality: 'Chất lượng hiển thị',
+    qualityNotMeasured: 'chưa đo',
+    fps: 'FPS',
+    memory: 'Bộ nhớ',
+  },
   perf: {
     degraded: 'Đã hạ chất lượng hiển thị để giữ độ mượt (số liệu không đổi)',
+    memory: 'RAM {mb} MB',
     memoryHigh:
       'Bộ nhớ đang cao ({mb} MB). Đã giải phóng bộ nhớ đệm. Nên đóng bớt chủ đề 3D hoặc giảm số hạt.',
   },

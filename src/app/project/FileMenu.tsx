@@ -8,14 +8,17 @@ import {
   ImageDown,
   Maximize2,
   Menu,
+  MonitorCog,
   Save,
   Sparkles,
   type LucideIcon,
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { MachineInfoDialog } from '@/app/bench/MachineInfo';
 import { toLibrary } from '@/app/bench/toLibrary';
 import { useT } from '@/app/i18n';
 import { useLayoutStore } from '@/app/layout/layoutStore';
+import { useSettingsStore } from '@/app/settings/settingsStore';
 import { openLab } from '@/app/topics';
 import { checkForUpdate, updatesSupported } from '@/app/update/updater';
 import { openWhatsNew, useWhatsNewStore } from '@/app/whatsnew/whatsNewStore';
@@ -39,6 +42,9 @@ interface Item {
 export function FileMenu() {
   const t = useT();
   const [open, setOpen] = useState(false);
+  // "Thông tin máy" (Advanced, #201): render quality, FPS and RAM, the classic status bar's three.
+  const [infoOpen, setInfoOpen] = useState(false);
+  const advanced = useSettingsStore((s) => s.uiMode === 'advanced');
   const unseen = useWhatsNewStore((s) => s.pending.length > 0);
   const root = useRef<HTMLDivElement>(null);
 
@@ -87,6 +93,17 @@ export function FileMenu() {
         useProjectUi.setState({ sourcesOpen: true });
       },
     },
+    ...(advanced
+      ? [
+          {
+            icon: MonitorCog,
+            label: t('project.machineInfo'),
+            run: () => {
+              setInfoOpen(true);
+            },
+          },
+        ]
+      : []),
     {
       icon: CloudDownload,
       label: t('update.menu'),
@@ -153,6 +170,15 @@ export function FileMenu() {
             </button>
           ))}
         </div>
+      )}
+      {infoOpen && (
+        <MachineInfoDialog
+          onClose={() => {
+            setInfoOpen(false);
+            // The menu item that opened it is gone: back to Tệp, not <body>.
+            root.current?.querySelector<HTMLButtonElement>('button')?.focus();
+          }}
+        />
       )}
     </div>
   );
