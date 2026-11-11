@@ -684,6 +684,9 @@ const en: Messages = {
     exportPng: 'Export PNG image',
     sources: 'Sources & assumptions',
     tour: 'Quick tour',
+    machineInfo: 'Machine info',
+    machineInfoMeasured: 'measured {when}',
+    machineInfoClose: 'Close',
     presentation: 'Presentation mode (F5)',
     dismiss: 'Dismiss',
     nothingToSave: 'No topic is open.',
@@ -707,8 +710,15 @@ const en: Messages = {
     confirmClear: 'Click again to clear everything',
     fromProblem: 'From a problem',
   },
+  status: {
+    quality: 'Render quality',
+    qualityNotMeasured: 'not measured',
+    fps: 'FPS',
+    memory: 'Memory',
+  },
   perf: {
     degraded: 'Display quality lowered to keep things smooth (numbers unchanged)',
+    memory: 'RAM {mb} MB',
     memoryHigh:
       'Memory use is high ({mb} MB). Caches were released. Close some 3D topics or use fewer particles.',
   },
