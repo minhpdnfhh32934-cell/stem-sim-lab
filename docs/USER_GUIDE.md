@@ -384,9 +384,10 @@ giảm độ chính xác.
 
 ## Vật lý
 
-17 chủ đề: chuyển động thẳng đều, thẳng biến đổi đều, rơi tự do, ném ngang, ném xiên, định luật
+21 chủ đề: chuyển động thẳng đều, thẳng biến đổi đều, rơi tự do, ném ngang, ném xiên, định luật
 Newton, mặt phẳng nghiêng, ròng rọc – dây nối, lò xo (Hooke), bảo toàn cơ năng, va chạm, con lắc lò
-xo, con lắc đơn, chuyển động tròn đều, giao thoa sóng hai nguồn, sóng dừng trên dây, điện trường.
+xo, con lắc đơn, dao động cưỡng bức và cộng hưởng, chuyển động tròn đều, giao thoa sóng hai nguồn,
+sóng dừng trên dây, hoạ âm và chuỗi Fourier, điện trường, mạch điện một chiều, định luật II Kepler.
 
 - **Thông số** (khay Điều chỉnh, bên phải): kéo thanh trượt hoặc gõ số. Nhãn **đề bài / mặc định / đã chỉnh** cho biết
   giá trị đến từ đâu. Ví dụ g = 9,81 m/s² là mặc định khi đề không cho (đổi trong Cài đặt → Vật lý).
@@ -437,6 +438,34 @@ xo, con lắc đơn, chuyển động tròn đều, giao thoa sóng hai nguồn,
   phẳng: nhập U và d, app tính E = U/d. Hằng số k mặc định là 1/(4πε₀) ≈ 8,988·10⁹ N·m²/C²; đề ghi
   "lấy k = 9.10⁹" thì app dùng số của đề. Nếu AI đọc sai dấu điện tích (hoặc đề chỉ cho "độ lớn"),
   bảng "Tôi hiểu đề như sau" nhắc bạn kiểm tra dấu. Không kéo được gì trên hình.
+- **Không gian pha** (thẻ Đồ thị ở sổ): ở Lò xo và Con lắc lò xo, đồ thị v theo x là một elip khi
+  không có lực cản và một đường xoắn ốc vào gốc khi có cản. Con lắc lò xo không có lực cản (b = 0)
+  có thêm **Vòng tròn pha**: vectơ quay dài A, hình chiếu đầu vectơ lên trục x là li độ; có lực cản
+  thì đồ thị này tự ẩn. Ở Con lắc đơn, đồ thị ω theo α có một **đường phân cách** nét đứt
+  (E = 2mgL): bên trong con lắc lắc qua lại, bên ngoài con lắc quay tròn. Đồ thị chỉ vẽ các trạng
+  thái app đã tính, không nội suy.
+- **Dao động cưỡng bức và cộng hưởng** (chương **Dao động**): lò xo nằm ngang chịu ngoại lực
+  F₀cos(Ωt). Chỉnh tần số góc Ω và biên độ F₀ của ngoại lực, hệ số cản cùng các thông số của lò xo;
+  app tính biên độ dao động ổn định, độ lệch pha và tần số góc riêng. Đồ thị **Biên độ theo tần số
+  góc của ngoại lực** vẽ đường A(Ω) nét đứt; chấm "Biên độ lúc này" tiến dần lên đường cong khi
+  dao động riêng tắt. Thử thách **Tìm cộng hưởng**: chỉnh Ω để biên độ lớn nhất.
+- **Mạch điện một chiều** (chương **Dòng điện, mạch điện**, Vật lí 11 Bài 23–25): nguồn có suất
+  điện động E và điện trở trong r; đề không cho r thì r = 0 (nguồn lí tưởng, Thẻ Khoa học ghi rõ).
+  Mạch ngoài có 7 cách mắc: 1 điện trở; 2 hoặc 3 điện trở nối tiếp; 2 hoặc 3 điện trở song song;
+  R₁ nt (R₂ ∥ R₃); (R₁ nt R₂) ∥ R₃. Sơ đồ có ampe kế (số chỉ I) và vôn kế (số chỉ U); bấm vào một
+  điện trở để xem I, U, P của nó. Lời giải đi từng bước: R_N → I = E/(R_N + r) → U = E − I·r → từng
+  điện trở → P, P_nguồn, H. Mọi đáp số đều được kiểm chéo bằng phương pháp điện thế nút.
+- **Hoạ âm và chuỗi Fourier** (chương **Sóng**): chọn sóng vuông hoặc răng cưa, số hoạ âm N (1–50)
+  và tần số cơ bản f₁ (55–880 Hz). Hình vẽ sóng lí tưởng (nét đứt) và tổng N hoạ âm đầu; **Hiện
+  từng hoạ âm** vẽ thêm từng thành phần. Sổ có bảng hoạ âm (bậc, nf₁, bₙ, so với bậc 1). Nút
+  **Nghe** phát đúng âm đang vẽ, nhỏ, chỉ khi bạn bấm, và tự tắt khi rời bài. Bài này không có nút
+  Chạy, vì không có diễn biến theo thời gian.
+- **Định luật II Kepler** (chương **Hấp dẫn (mở rộng)**, ngoài 9 cuốn SGK Kết nối tri thức): quỹ
+  đạo elip, Mặt Trời ở một tiêu điểm, tính bằng **đơn vị tương đối** (bán trục lớn a = 1; chu kì T
+  chỉ quyết định tốc độ chạy hình). Chu kì được chia thành nhiều phần bằng nhau; mỗi phần quét một
+  dải có diện tích bằng nhau, dải đang quét được tô đậm. Lời giải ghi khoảng cách cận nhật, viễn
+  nhật và tỉ số tốc độ; đồ thị vẽ r, v và dA/dt (một đường nằm ngang). Thử thách: làm hành tinh nhanh
+  gấp 3 lần ở cận nhật bằng cách chỉnh tâm sai e.
 
 ## Đọc đề bằng AI
 
@@ -553,10 +582,25 @@ Khi dùng AI:
   Các ngoại lệ như Cr, Cu được ghi chú rõ.
 - **Phân tử 3D, VSEPR, độ phân cực:** tìm theo tên (Việt/Anh), công thức hoặc SMILES. Kéo chuột
   để xoay, lăn để phóng to. Nhấp nguyên tử/liên kết để xem chi tiết; Shift+nhấp 2 hoặc 3 nguyên tử
-  để đo khoảng cách hoặc góc.
+  để đo khoảng cách hoặc góc. Ô **Lọc theo nhóm chức** ở khay liệt kê các phân tử hữu cơ có một nhóm
+  chức (alcohol, aldehyde, carboxylic acid, ester, amine…); bấm một phân tử để mở hình 3D. Nhóm chức
+  được tìm sẵn từ cấu trúc phân tử và đang chờ giáo viên duyệt.
 - **Thư viện phản ứng:** chọn phản ứng ở khay Điều chỉnh (bên phải). Phản ứng có cơ chế có thanh phát: tua từng bước,
   xoay 3D; liên kết đứt màu cam, liên kết tạo màu xanh lá.
 - **Cân bằng phương trình:** gõ ví dụ `Fe + O2 -> Fe2O3`. Điện tích: `Fe^3+`, `SO4^2-`.
+- **Chuẩn độ acid – base** (chương Phản ứng hóa học): HCl trong cốc, NaOH từ buret, 25 °C. Kéo thanh
+  **thể tích NaOH đã thêm** (hoặc bấm hai nút ±) để thấy pH, màu chất chỉ thị (màu minh họa) và câu
+  "trước / tại / sau điểm tương đương". Đồ thị pH theo thể tích có chấm điểm tương đương và hai đường
+  nét đứt là khoảng đổi màu của chất chỉ thị. Chế độ Nâng cao chọn được chất chỉ thị (methyl da cam,
+  methyl đỏ, bromothymol xanh, phenolphthalein); Cơ bản chỉ hiện nồng độ và thể tích. Hiện chỉ có
+  acid mạnh với base mạnh.
+- **Tinh thể kim loại và NaCl** (chương Tinh thể): chọn lập phương tâm khối, lập phương tâm mặt, lục
+  phương đặc khít hoặc NaCl, rồi xoay hình 3D. App đếm phần mỗi hạt góp vào một ô và tổng số hạt
+  (ví dụ 8 × 1/8 + 1 = 2), số phối trí và độ đặc khít (NaCl không tính độ đặc khít, vì cần bán kính
+  hai ion). Hình không theo tỉ lệ và chưa ghi cạnh ô mạng.
+- **Giản đồ năng lượng** (trong bài Cân bằng hóa học): chất đầu → đỉnh → sản phẩm, vẽ từ Eₐ thuận
+  và Eₐ nghịch bạn nhập. Ba mức do app tính (chất đầu = 0, đỉnh = Eₐ thuận, sản phẩm = ΔH = Eₐ thuận
+  − Eₐ nghịch) và đúng tỉ lệ với nhau; hình dạng đường cong chỉ là minh họa định tính.
 - **Mức hạt:** Maxwell–Boltzmann (khí 2D), thuyết va chạm, cân bằng hóa học (nhấn các nút thêm
   chất, đổi nhiệt độ, nén để thấy nguyên lí Le Chatelier).
 
@@ -588,8 +632,10 @@ Khi dùng AI:
   ρgΔh = iCRT.
 - **Tế bào nhân sơ và nhân thực** (chương “Cấu trúc tế bào”): chọn **Vi khuẩn**, **Động vật** hoặc
   **Thực vật**; bấm tên một bộ phận ở khung bên phải để đọc chức năng của nó (diễn đạt theo SGK Sinh
-  học 10). Nút **Hiện tên** ghi tên mọi bộ phận lên hình (chế độ Cơ bản bật sẵn). Hình 2D chỉ là
-  minh họa, không theo tỉ lệ; số bào quan vẽ ra chỉ để minh họa.
+  học 10). Bài mở bằng hình 3D (nút **3D / 2D** để đổi): màng và thành tế bào trong suốt để thấy bào
+  quan bên trong; bấm một bộ phận trên hình thì bộ phận đó sáng lên và khung bên phải hiện tên, chức
+  năng. Nút **Hiện tên** ghi tên mọi bộ phận lên hình (chế độ Cơ bản bật sẵn). Hình chỉ là minh họa,
+  không theo tỉ lệ; số bào quan vẽ ra chỉ để minh họa.
 - **Từ tế bào đến DNA** (chương “Cấu trúc tế bào”): bấm **Phóng to** để đi qua 6 cấp — tế bào nhân
   thực → nhân → NST kép ở kì giữa → sợi nhiễm sắc 10 nm và khung NST → nucleosome → chuỗi xoắn kép
   B-DNA; **Thu nhỏ** để lùi một cấp, hoặc bấm tên một cấp ở khung bên phải để tới thẳng. Vòng sáng
@@ -599,8 +645,7 @@ Khi dùng AI:
 
 ### Hình 3D trong Sinh học (bản 0.7, làm đẹp ở 0.7.1)
 
-12 trong 13 bài Sinh học mở bằng hình 3D (bài “Tế bào nhân sơ và nhân thực” hiện chỉ có
-hình 2D). Cách dùng chung:
+Cả 13 bài Sinh học mở bằng hình 3D. Cách dùng chung:
 
 - Nút **3D / 2D** để đổi hình; app nhớ lựa chọn của từng bài. Kéo chuột để xoay, lăn chuột để
   phóng to, phím mũi tên cũng xoay được; **Góc nhìn** đổi giữa **Toàn cảnh** và cận cảnh.
@@ -675,6 +720,11 @@ Từng bài:
   giám khảo.
 - **Chế độ trình chiếu (F5):** toàn màn hình, chữ to hơn, ẩn thanh trên, sổ và khay. Esc (hoặc nút
   **Thoát trình chiếu**) để thoát.
+- **Chế độ trưng bày:** Ctrl+K → **Chế độ trưng bày (tự chạy các cảnh)** bật chế độ trình chiếu và tự
+  chạy 8 cảnh có sẵn (ném xiên, con lắc lò xo, sóng dừng, chuyển động tròn đều, điện trường, phân tử
+  3D, nguyên phân, tăng trưởng logistic), mỗi cảnh 35–50 giây với một câu chú thích. Bấm bất kì đâu
+  hoặc nhấn một phím để dừng; thoát trình chiếu cũng dừng. Chế độ này không gọi AI và chạy được khi
+  không có mạng.
 
 ## Cập nhật phần mềm
 
