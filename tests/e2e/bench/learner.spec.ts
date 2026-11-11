@@ -255,6 +255,24 @@ test('learn by exploring: predict → observe, a challenge solved, progress and 
 });
 
 test('a reminder to rest the eyes after ~45 minutes of continuous use', async ({ page }) => {
+  // A measured machine: the start-up benchmark loops until 600 ms have passed, and under the
+  // fake clock performance.now() never moves, so the page would hang in it (seen as a flaky
+  // 60 s timeout inside clock.fastForward, #202).
+  await page.addInitScript(() => {
+    const measured = {
+      cpuScore: 8,
+      drawScore: 100,
+      webgl2: true,
+      cores: 8,
+      tier: 'medium',
+      measuredAt: '2026-11-12T00:00:00.000Z',
+      durationMs: 1200,
+    };
+    localStorage.setItem(
+      'stemsim.perf',
+      JSON.stringify({ state: { preference: 'auto', benchmark: measured }, version: 1 }),
+    );
+  });
   await page.clock.install();
   await openLab(page);
   for (let m = 0; m < 45; m++) {
