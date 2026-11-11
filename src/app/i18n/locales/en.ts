@@ -172,8 +172,6 @@ const en: Messages = {
     },
   },
   inspector: {
-    regionLabel: 'Inspector',
-    title: 'Properties',
     objectSection: 'Object',
     noSelection: 'Nothing selected.',
     paramsSection: 'Parameters',
@@ -184,11 +182,8 @@ const en: Messages = {
   },
   confidence: {
     exact: 'Exact quantitative',
-    exactDesc: 'Matches the analytic solution within the stated tolerance.',
     approx: 'Approximate quantitative',
-    approxDesc: 'Numerical integration, with an estimated error.',
     qualitative: 'Qualitative / illustrative',
-    qualitativeDesc: 'Illustrates a concept only; do not read numbers from it.',
   },
   review: {
     pending: 'Awaiting teacher review',

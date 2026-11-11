@@ -4,7 +4,6 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { App } from '@/app/App';
 import { DriverGrid } from '@/app/bench/DriverGrid';
 import { useCommandPalette } from '@/app/command/commands';
-import { Inspector } from '@/app/layout/Inspector';
 import { useLayoutStore } from '@/app/layout/layoutStore';
 import { openLab, openStudio } from '@/app/topics';
 import { useNavigationStore } from '@/app/navigationStore';
@@ -98,14 +97,6 @@ describe('App shell (Phase 0)', () => {
     await user.click(screen.getByRole('button', { name: 'Về Virtual Lab' }));
     expect(useNavigationStore.getState().screen).toBe('lab');
     expect(screen.getByRole('heading', { name: 'Hôm nay học gì?' })).toBeInTheDocument();
-  });
-
-  it('shows the three Science Card confidence levels', () => {
-    render(<Inspector />);
-    const inspector = screen.getByRole('complementary', { name: 'Bảng thuộc tính' });
-    expect(within(inspector).getByText('Định lượng chính xác')).toBeInTheDocument();
-    expect(within(inspector).getByText('Định lượng gần đúng')).toBeInTheDocument();
-    expect(within(inspector).getByText('Định tính / minh họa')).toBeInTheDocument();
   });
 
   it('switching subject changes the library', async () => {

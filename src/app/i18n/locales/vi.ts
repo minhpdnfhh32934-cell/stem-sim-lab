@@ -175,8 +175,6 @@ const vi = {
     },
   },
   inspector: {
-    regionLabel: 'Bảng thuộc tính',
-    title: 'Thuộc tính',
     objectSection: 'Đối tượng',
     noSelection: 'Chưa chọn đối tượng nào.',
     paramsSection: 'Thông số',
@@ -187,11 +185,8 @@ const vi = {
   },
   confidence: {
     exact: 'Định lượng chính xác',
-    exactDesc: 'Khớp lời giải giải tích trong sai số cho phép.',
     approx: 'Định lượng gần đúng',
-    approxDesc: 'Tích phân số, có ghi sai số ước lượng.',
     qualitative: 'Định tính / minh họa',
-    qualitativeDesc: 'Chỉ minh họa khái niệm, không dùng để đọc số liệu.',
   },
   review: {
     pending: 'Đang chờ giáo viên duyệt',

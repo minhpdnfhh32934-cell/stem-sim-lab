@@ -302,33 +302,6 @@ body[data-resizing] .splitter {
   }
 }
 
-.inspector {
-  width: var(--right-w);
-  flex: none;
-}
-
-.science-intro {
-  margin: 0 0 var(--space-3);
-  font-size: var(--text-sm);
-  color: var(--text-muted);
-}
-.confidence-legend {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.confidence-legend li {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
-  font-size: var(--text-sm);
-  color: var(--text-muted);
-}
-
 @media (max-height: 700px) {
   .stage__empty .empty {
     padding: var(--space-4);
