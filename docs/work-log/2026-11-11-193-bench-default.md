@@ -108,4 +108,22 @@ Tiêu chí: mỗi việc của review có code hoặc tài liệu sửa đúng c
 - Nên sửa: `PerfNotes` chỉ đọc khi thông báo đến/đi (`PerfNotes.test`); "Bước 2/3" chỉ lần chạy đầu
   (`FirstRun.test`); `drift3d` vào `HEAVY_3D`: chạy riêng ở `chromium-3d` lần đầu FAIL (ngay sau khi
   dừng một lượt chạy khác, máy chủ dev nguội; không giữ được lỗi), rồi 3 lần liền PASS — ghi là chập
-  chờn chưa rõ nguyên nhân, theo dõi ở lượt chạy đủ.
+  chờn chưa rõ nguyên nhân, theo dõi ở lượt chạy đủ (lượt chạy đủ thứ hai: PASS ở `chromium-3d`).
+
+### Kết quả vòng 2 (head `529f114` trở đi, máy bàn)
+
+- `npm run check`: PASS (5032 qua, 1 bỏ qua có sẵn); `format:check`: PASS.
+- E2E đủ nhóm, 4 worker (cách né môi trường của máy bàn; CI chạy cấu hình gốc):
+  - lượt 1: `chromium` 156/157 — FAIL "a reminder to rest the eyes…" (`learner.spec:257`, hết 60 s khi
+    4 worker cùng chạy); hai nhóm 3D không chạy (phụ thuộc). Chạy riêng 3 lần: PASS 3/3 (~5 s). Trace
+    bị xoá khi chạy lại nên không biết bước nào chậm: ghi là chập chờn khi máy nặng.
+  - lượt 2: `chromium` 157/157 PASS; `chromium-3d` 42/45 — FAIL `hw3d.spec:99` và `bio3d.spec:130`
+    (`page.goto` hết 120 s: môi trường, như vòng 1) và `biology.spec:49` (bài Động học enzyme mở,
+    khung mô phỏng chưa vẽ sau 20 s nên chưa có Thẻ khoa học: mô-đun nạp lười chưa về, cùng lúc với
+    hai lỗi `page.goto`); `chromium-3d-perf` không chạy (phụ thuộc). Chạy lại riêng (1 worker): 3/3
+    PASS; perf 1/1 PASS.
+- Native WebView2 (bản `tauri build --debug --no-bundle`, identifier tạm qua `--config`, hồ sơ tạm đã
+  xoá), việc 6: một script chạy trước mọi script của trang ghi lại ở khung hình đầu (trước khi React
+  gắn gì): `data-shell="bench"`, nền `rgb(246, 244, 239)` (sáng) và `rgb(21, 25, 28)` (tối), khớp
+  `--bg-app` của bench sau khi tải xong: PASS.
+- BENCH_DESIGN/PROGRESS vẫn ghi "đang review" cho tới khi CI của head này chạy đủ và đạt.
