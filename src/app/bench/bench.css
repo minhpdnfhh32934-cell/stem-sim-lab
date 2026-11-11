@@ -1501,6 +1501,22 @@ kbd {
   border: 1px dashed var(--border-strong);
   border-radius: var(--radius-sm);
 }
+/*
+ * A topic with steps keeps a second bottom line for "Còn: …" from the start, so getting it never
+ * moves a line either (UI-42); one line, cut to "…" (the card's description keeps all of it).
+ */
+.shelf-card[data-steps] {
+  padding-bottom: calc(var(--space-3) + 40px);
+}
+.shelf-card__left {
+  position: absolute;
+  right: var(--space-3);
+  bottom: calc(var(--space-3) + 20px);
+  left: var(--space-3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .shelf-card__mark {
   position: absolute;
   right: var(--space-3);

@@ -434,6 +434,31 @@ test('library: a selected title keeps its line; a checkbox sits by its label (UI
   expect((await box(label)).height).toBeGreaterThanOrEqual(40);
 });
 
+test('library: a physics card keeps its height when it gets "Đã mở · 1/3 bước" and "Còn: …" (UI-42)', async ({
+  page,
+}) => {
+  await openLab(page);
+  await page.getByRole('radio', { name: 'Vật lý' }).click();
+  const name = 'Ném ngang';
+  const open = page.getByRole('main').getByRole('button', { name, exact: true });
+  const card = page
+    .getByRole('main')
+    .locator('.shelf-card')
+    .filter({ has: page.getByRole('button', { name, exact: true }) });
+  const before = await box(card);
+  const titleBefore = await box(open.locator('.shelf-card__title'));
+  await open.click();
+  await expect(page.locator('.stage__hud-title')).toHaveText(name, { timeout: 20_000 });
+  await page.locator('.bench-crumbs').getByRole('button', { name: 'Vật lý' }).click();
+  await expect(card.locator('.shelf-card__left')).toHaveText('Còn: Dự đoán trước, 1 thử thách');
+  // One line, inside the card, and nothing moved.
+  const left = await box(card.locator('.shelf-card__left'));
+  expect(left.height).toBeLessThanOrEqual(20);
+  expect(left.bottom).toBeLessThanOrEqual((await box(card.locator('.shelf-card__mark'))).y + 0.5);
+  expect((await box(card)).height).toBeLessThanOrEqual(before.height + 1);
+  expect((await box(open.locator('.shelf-card__title'))).y).toBeCloseTo(titleBefore.y, 0);
+});
+
 for (const fontScale of [1.25, 1.4])
   test(`library at ${fontScale}× font: a title keeps its line when it gets its mark (UI-42)`, async ({
     page,

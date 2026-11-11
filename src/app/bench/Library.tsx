@@ -355,7 +355,10 @@ function ShelfCard({
   // One button per card, named by its title only (its text): the lessons, the pending note and
   // the progress describe it. Its ::after covers the card, so the whole card is the target.
   return (
-    <div className={cx('shelf-card', soon && 'shelf-card--soon')}>
+    <div
+      className={cx('shelf-card', soon && 'shelf-card--soon')}
+      data-steps={status.total > 1 || undefined}
+    >
       {/* Preview 88 (§9.3): a physics topic's own engine frame, else its subject's line art. */}
       <div className="shelf-card__preview" aria-hidden="true">
         {hasScene(topic.id) ? (
