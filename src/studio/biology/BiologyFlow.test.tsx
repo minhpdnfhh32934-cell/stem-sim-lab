@@ -65,7 +65,8 @@ describe('Biology Studio on the 3D mitosis model', () => {
     });
     const shown = notes();
     if (!(shown instanceof HTMLElement)) throw new Error('no notices under the model');
-    expect(within(shown).getByRole('status')).toHaveTextContent(
+    const live = box.parentElement?.querySelector(':scope > [role="status"]');
+    expect(live).toHaveTextContent(
       'Chuyển động chậm hơn thời gian thực để giữ độ chính xác. Đã hạ chất lượng hiển thị để giữ độ mượt (số liệu không đổi)',
     );
     expect(

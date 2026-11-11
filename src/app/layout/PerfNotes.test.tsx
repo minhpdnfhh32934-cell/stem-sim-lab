@@ -21,7 +21,9 @@ describe('the overload ladder is never silent on the bench (B8)', () => {
       });
     });
     const { rerender } = render(<Stage />);
-    expect(screen.queryByRole('status')).toBeNull();
+    // The live line is there before any notice, so the first one is read out.
+    expect(screen.getByRole('status')).toBeEmptyDOMElement();
+    expect(document.querySelector('.stage__notes')).toBeNull();
     act(() => {
       usePerfStore.setState({ timeScale: 0.5, degraded: true });
     });
