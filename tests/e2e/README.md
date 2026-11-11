@@ -4,6 +4,11 @@
 with `page.route('https://generativelanguage.googleapis.com/v1beta/**')` and a test key injected
 with `addInitScript`, so no real key or network is needed.
 
+The specs are in `tests/e2e/bench/` (the bench, "Bàn thí nghiệm", is the only shell since 0.8.1 B8;
+the classic specs were deleted once each of their test titles had a bench copy). Playwright projects:
+`chromium`, `chromium-3d` (software WebGL, `HEAVY_3D` names) and `chromium-3d-perf` (`@perf`); one
+storage state, `storage-state.json`.
+
 First run on a new machine: `npx playwright install chromium`. To use an already installed
 Chromium instead, set `PW_CHROMIUM=/path/to/chrome`.
 

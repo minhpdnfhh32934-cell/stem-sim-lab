@@ -312,7 +312,7 @@ Câu trả lời AI ──► answerClean.ts (bỏ suy nghĩ ẩn, nhãn lời n
     hỏi" và "Viết nhanh" luôn hiện tên** (trên màn hình cảm ứng không có chú thích khi rê chuột);
     bảng hẹp đến mức hai nút này cũng không vừa thì thanh xuống hai hàng. Tốc độ viết là một danh
     sách ngắn (0,75×–2×, cao bằng một nút ≥ 40 px) thay cho dãy bốn nút. Kiểm tra:
-    `toolbarFit.test.ts`, `BoardToolbar.test.tsx`, `tests/e2e/board.spec.ts` (đo bề rộng tên hiện ra
+    `toolbarFit.test.ts`, `BoardToolbar.test.tsx`, `tests/e2e/bench/board.spec.ts` (đo bề rộng tên hiện ra
     và chiều cao thanh công cụ ở 1366×768, với một phông rộng giả lập để lỗi hiện ra trên mọi máy).
   - **Câu trả lời là câu "ngoài lề"** (`mode: 'aside'`): hiện trong khung chat, có nhãn AI và nút báo
     cáo, được đọc to trong khung chat; **không bao giờ được giảng lên bảng** — bảng giữ nguyên bài

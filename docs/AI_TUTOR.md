@@ -699,7 +699,7 @@ Wikipedia out then. It is never read as an answer to the teacher's check questio
 (`TurnOrigin.boardAsk`). When the circled text does not fit the block's cap, the title and the
 neighbours are left out first, then lines are cut ("…") and the parts left out are counted in a
 marked line — never dropped silently. The PNG path (blob: URL → OffscreenCanvas) runs in Chromium
-in `tests/e2e/board-picture.spec.ts` (the learner's strokes, and a drawing without labels, circled →
+in `tests/e2e/bench/board-picture.spec.ts` (the learner's strokes, and a drawing without labels, circled →
 a PNG to a fake Ollama with vision; nothing online); it is **not verified in the native WebView2
 build** (a user step); if it fails there, the learner is told and nothing is sent.
 
@@ -930,7 +930,7 @@ Tests: `engineChoice.test.ts`, `chatStore.test.ts`, `memory.test.ts`, `chatLocal
 `TeacherSettingsDataFlow.test.tsx`, `analyze.test.ts`, `ExplainBox.test.tsx`,
 `photoVision.test.ts`, `CameraDialog.test.tsx`, `localAiStore.test.ts`, `localRuntime.test.ts`,
 `AiStatusPill.test.tsx`, E2E
-`tests/e2e/local-ai.spec.ts` (a fake Ollama on
+`tests/e2e/bench/local-ai.spec.ts` (a fake Ollama on
 127.0.0.1:11434; every cloud host and Wikipedia counted and refused). Not tested against a real
 runtime.
 
