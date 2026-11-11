@@ -12,7 +12,7 @@ Quyết định của người dùng (13/10/2026):
 - Chính sách quyền riêng tư đặt trên GitHub Pages:
   `https://minhpdnfhh32934-cell.github.io/stem-sim-lab/privacy.html` (tệp `site/privacy.html`).
 
-## Trạng thái (26/10/2026)
+## Trạng thái (12/11/2026)
 
 - Tài khoản nhà phát triển cá nhân: **FPTTECH**. App: **SimLab**, Store ID `9P1FDCQBSDHT`,
   trang Store: <https://apps.microsoft.com/detail/9P1FDCQBSDHT>.
@@ -23,12 +23,33 @@ Quyết định của người dùng (13/10/2026):
 - Bản nộp 3 (cùng gói 0.7.1.0, chỉ thay ảnh chụp trên trang Store bằng 8 ảnh mới trong
   `store/listing/screenshots/`, cho cả tiếng Việt và tiếng Anh): **gửi duyệt ngày 26/10/2026**, chọn
   **giữ lại**: duyệt xong, người dùng bấm **Publish now** thì ảnh mới mới hiện trên Store.
-- Ảnh chụp 0.7.1 (8 ảnh PNG 1366×768, thứ tự = tên tệp): ảnh 1, 3–8 chụp từ giao diện web 0.7.1 bằng
-  Playwright, đã bỏ chữ " (chế độ trình duyệt)" ở thanh trạng thái cho giống app cài đặt; ảnh 2 là
-  một khung hình quay từ app cài đặt, câu trả lời Gemini thật, con trỏ chuột được vá bằng chính nút
-  đó chụp từ app. Ảnh 2 còn dòng "(Theo ghi chú từ: …)" mà PR #55 đã bỏ: chụp lại khi bản có sửa
-  lỗi này lên Store.
+- Bản nộp 4 (gói `SimLab_0.8.1.0_x64.msix`, gồm cả 0.8.0 vì 0.8.0 không phát hành riêng): **chưa
+  nộp**. Ngày 12/11/2026 máy bàn dựng thử gói bằng `node scripts/store/make-msix.mjs` từ bản dựng
+  `npm run tauri build` của nhánh #194: tạo gói thành công (13,6 MB, danh tính `FPTTECH.SimLab`,
+  `Version="0.8.1.0"`). Gói để nộp thật lấy từ artifact **simlab-store** của lượt Release (bước 7).
+- Ảnh chụp 0.8.1 (8 ảnh PNG 1366×768, giao diện Bàn thí nghiệm, thứ tự = tên tệp): 1 sinh thái 3D
+  (Con mồi – vật ăn thịt), 2 AI Teacher, 3 giao thoa sóng hai nguồn, 4 ADN → mARN → Protein 3D,
+  5 chuẩn độ acid – base, 6 nguyên phân 3D, 7 Science Studio, 8 trang mở đầu. Chụp bằng
+  `node scripts/store/screenshots.mjs` (dev server, card đồ họa thật, mọi máy chủ AI bị chặn nên
+  không gọi AI). Ảnh 2 hiện là trang AI Teacher **lúc chưa kết nối AI** (người dùng chọn ngày
+  12/11/2026): trước khi nộp, người dùng thay bằng ảnh có câu trả lời thật, theo mục "Chụp lại ảnh AI
+  Teacher" dưới đây. Ảnh của 0.7.1 vẫn còn trong lịch sử git.
+- Chữ "Có gì mới" cho bản nộp 4: mục "Có gì mới (What's new) — bản 0.8.1" trong
+  `store/listing/listing.vi.md` và `listing.en.md`.
 - Tự nộp từ GitHub Actions: **không dùng** (quyết định 13/10/2026, xem bước 7).
+
+### Chụp lại ảnh AI Teacher (ảnh 2) trước bản nộp 4
+
+Script không gọi AI thật, nên ảnh có câu trả lời của AI Teacher phải chụp từ app đã cài, bằng key
+của bạn:
+
+1. Cài SimLab 0.8.1, mở app, xác nhận 18+ và nhập key ở Cài đặt → Kết nối AI.
+2. Để giao diện sáng, cửa sổ ít nhất 1366×768 (Store nhận ảnh từ 1366×768 trở lên).
+3. Trang mở đầu → **AI Teacher** → **Giảng trên bảng**. Hỏi một câu ngắn, ví dụ "Giải thích giúp em ý
+   chính của chủ đề ném xiên", và chờ thầy giảng xong.
+4. Chụp cửa sổ (Win + Shift + S, chế độ cửa sổ), lưu PNG đè lên
+   `store/listing/screenshots/2-ai-teacher.png`, hoặc tải thẳng ảnh đó lên Partner Center thay cho
+   ảnh 2. Không dùng câu trả lời bịa hay sửa chữ trên ảnh.
 
 ## Cách hoạt động
 
