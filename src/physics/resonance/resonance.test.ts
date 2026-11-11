@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { dopri5 } from '@/core/ode/dopri5';
+import { compareCheck } from '../tolerance';
 import { numericAmplitude, forcedLaw } from './check';
 import { ResonanceEngine, RE } from './engine';
 import { amplitudeAt, forced, resonance, stateAt, steady } from './model';
@@ -37,6 +38,32 @@ describe('forced damped oscillator (#54 item 9)', () => {
     expect(chk).not.toBeNull();
     expect(Math.abs((chk ?? 0) / steady(base).A - 1)).toBeLessThan(1e-6);
   });
+
+  it('the check waits for an overdamped slow mode and for a large free part (#119)', () => {
+    for (const o of [
+      // γ ≈ 30 > ω₀ ≈ 9,9: the free part decays at ≈ 1,6 1/s, not at γ.
+      { m: 0.15, k: 14.7, b: 9.05, F0: 0.84, W: 27.3, x0: -0.13, v0: 0 },
+      // Ω ≪ ω₀ ≈ 19 and x₀ ≈ 50·A: the free part weighs ω₀/Ω more in x² + (v/Ω)².
+      { m: 0.42, k: 155, b: 1.96, F0: 0.62, W: 1.6, x0: -0.19, v0: 0 },
+    ])
+      expect(Math.abs((numericAmplitude(o) ?? 0) / steady(o).A - 1)).toBeLessThan(1e-9);
+  });
+
+  it('the weakest damping on the sliders still gets a check, and it agrees (#196 review)', () => {
+    // b = 0,1 kg/s with m = 1 kg: γ = 0,05 1/s, the slowest settling the sliders allow.
+    for (const b of [0.1, 0.15])
+      for (const m of [1, 0.95])
+        for (const k of [5, 50, 200])
+          for (const W of [0.5, 8, 30])
+            for (const x0 of [-0.2, 0, 0.2]) {
+              const o = { m, k, b, F0: 1, W, x0, v0: 0 };
+              const chk = numericAmplitude(o);
+              expect(chk, JSON.stringify(o)).not.toBeNull();
+              expect(compareCheck(steady(o).A, chk ?? Number.NaN).agrees, JSON.stringify(o)).toBe(
+                true,
+              );
+            }
+  }, 60_000);
 
   it('resonance: the peak of A(Ω) is at √(ω₀² − 2γ²), none under strong damping', () => {
     const r = resonance(base);

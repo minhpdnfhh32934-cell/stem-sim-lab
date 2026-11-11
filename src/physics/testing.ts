@@ -3,10 +3,10 @@
  * between each answer's closed form and its numeric cross-check (issue #112).
  */
 import { toSI } from '@/core/units';
+import { compareCheck } from './tolerance';
 import type { Params, PhysicsScene } from './types';
 
-/** Largest gap allowed between an answer and its DOPRI5 check: 1e-8, relative above 1. */
-export const CHECK_TOL = 1e-8;
+export { CHECK_TOL } from './tolerance';
 
 /** Small seeded generator (the same sweep every run). */
 function seeded(seed: number): () => number {
@@ -41,7 +41,28 @@ export function sliderSweep(
   });
 }
 
-/** Answers whose check is farther than CHECK_TOL from the closed form (empty: all agree). */
+/**
+ * Slider end points: every slider at its minimum, every one at its maximum, and each one alone at
+ * either end with the others at their defaults (choices and toggles at their defaults).
+ */
+export function sliderEnds(scene: PhysicsScene): Params[] {
+  const sliders = scene.params.filter(
+    (d) => d.kind !== 'choice' && d.kind !== 'toggle' && d.min !== undefined && d.max !== undefined,
+  );
+  const end = (d: (typeof sliders)[number], hi: boolean) =>
+    toSI((hi ? d.max : d.min) ?? 0, d.unit ?? '1');
+  const all = (hi: boolean): Params => Object.fromEntries(sliders.map((d) => [d.key, end(d, hi)]));
+  return [
+    { ...scene.defaults, ...all(false) },
+    { ...scene.defaults, ...all(true) },
+    ...sliders.flatMap((d) => [
+      { ...scene.defaults, [d.key]: end(d, false) },
+      { ...scene.defaults, [d.key]: end(d, true) },
+    ]),
+  ];
+}
+
+/** Answers whose check the solution panel would show as "chưa khớp" (empty: all agree). */
 export function checkMisses(
   scene: PhysicsScene,
   params: Params,
@@ -50,9 +71,7 @@ export function checkMisses(
   return scene
     .solve(params, 'vi')
     .answers.filter(
-      (a) =>
-        a.check !== undefined &&
-        !(Math.abs(a.check - a.value) <= CHECK_TOL * Math.max(1, Math.abs(a.value))),
+      (a) => a.check !== undefined && !compareCheck(a.value, a.check, a.checkTol).agrees,
     )
     .map((a) => ({ id: a.id, value: a.value, check: a.check ?? NaN }));
 }

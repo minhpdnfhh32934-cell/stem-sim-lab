@@ -39,7 +39,7 @@ describe('Kepler orbit (#54 item 12)', () => {
     for (let k = 0; k < o.N; k++)
       expect(
         Math.abs(sectorArea(o, (k * o.T) / o.N, ((k + 1) * o.T) / o.N) / slice - 1),
-      ).toBeLessThan(1e-5);
+      ).toBeLessThan(1e-9);
     for (const t of [0, 1.3, 5.9, 11]) {
       const s = stateAt(o, t);
       expect((s.x * s.vy - s.y * s.vx) / 2).toBeCloseTo(arealVelocity(o), 12);

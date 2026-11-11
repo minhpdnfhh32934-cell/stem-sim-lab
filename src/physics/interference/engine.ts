@@ -228,6 +228,9 @@ const MAX_SAMPLES = 200_000;
 export const beatsMeasurable = (f1: number, f2: number) =>
   (2 * Math.abs(f1 - f2)) / (f1 + f2) <= 0.5;
 
+/** Tolerance of that measurement (relative; read off sampled peaks, so it cannot reach 1e-8). */
+export const BEAT_CHECK_TOL = 3e-3;
+
 /** Engine steps per sample: Δt ≤ T/200, so a sample every T/40 of the faster source or finer. */
 const STRIDE = 5;
 

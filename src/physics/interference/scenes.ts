@@ -22,6 +22,7 @@ import {
   IF,
   MAX_RATIO,
   MODE,
+  BEAT_CHECK_TOL,
   interferenceInput,
   beatsMeasurable,
   measuredBeatPeriod,
@@ -255,14 +256,14 @@ function solve(p: Params, locale: Locale): Solution {
         label: L('Tần số phách', 'Beat frequency'),
         value: fb,
         unit: 'Hz',
-        ...(ok ? { check: 1 / Tm } : {}),
+        ...(ok ? { check: 1 / Tm, checkTol: BEAT_CHECK_TOL } : {}),
       },
       {
         id: 'beat_period',
         label: L('Chu kì phách', 'Beat period'),
         value: 1 / fb,
         unit: 's',
-        ...(ok ? { check: Tm } : {}),
+        ...(ok ? { check: Tm, checkTol: BEAT_CHECK_TOL } : {}),
       },
       { id: 'wavelength', label: L('Bước sóng λ₁', 'Wavelength λ₁'), value: q.lambda1, unit: 'cm' },
       {
@@ -478,8 +479,8 @@ function card(p: Params): ScienceCardData {
           'The largest surface slope 4πa/λ is above 0.1: the amplitude is no longer small compared with the wavelength, so the linear model is only approximate. The model is exact only for an amplitude a much smaller than the wavelength.',
         )
       : L(
-          'Li độ tính bằng công thức chính xác ở từng thời điểm (không cộng dồn sai số). Đối chiếu: số cực đại, cực tiểu đếm lại bằng cách quét biên độ dọc S₁S₂; chu kì phách đo lại trên li độ tại M (khi hai tần số đủ gần nhau và chu kì phách không quá dài; nếu không, Lời giải ghi chú vì sao); thời gian truyền của mỗi sóng được kiểm lại bằng phương trình sóng một chiều dọc một tia, giải bằng phương pháp Dormand–Prince (test; phép này không kiểm giả thiết biên độ không giảm theo khoảng cách).',
-          'The displacement is the exact formula at each instant (no accumulated error). Cross-checks: maxima and minima counted again by scanning the amplitude along S₁S₂; the beat period measured again on the displacement at M (when the frequencies are close enough and the beat period is not too long; otherwise the solution says why); each wave’s travel time checked again with the one-dimensional wave equation along a ray, solved with Dormand–Prince (tested; this does not check the assumption that the amplitude does not decrease with distance).',
+          'Li độ tính bằng công thức chính xác ở từng thời điểm (không cộng dồn sai số). Đối chiếu: số cực đại, cực tiểu đếm lại bằng cách quét biên độ dọc S₁S₂; chu kì phách đo lại trên li độ tại M (khi hai tần số đủ gần nhau và chu kì phách không quá dài; nếu không, Lời giải ghi chú vì sao; phép đo đọc trên các điểm lấy mẫu nên Lời giải ghi “khớp” khi lệch không quá 0,3 %, thay cho 10⁻⁸ của các phép kiểm khác); thời gian truyền của mỗi sóng được kiểm lại bằng phương trình sóng một chiều dọc một tia, giải bằng phương pháp Dormand–Prince (test; phép này không kiểm giả thiết biên độ không giảm theo khoảng cách).',
+          'The displacement is the exact formula at each instant (no accumulated error). Cross-checks: maxima and minima counted again by scanning the amplitude along S₁S₂; the beat period measured again on the displacement at M (when the frequencies are close enough and the beat period is not too long; otherwise the solution says why; it is read off sampled points, so the solution marks it “agrees” within 0.3 %, instead of the 10⁻⁸ of the other checks); each wave’s travel time checked again with the one-dimensional wave equation along a ray, solved with Dormand–Prince (tested; this does not check the assumption that the amplitude does not decrease with distance).',
         ),
     method: L(
       `Công thức giải tích tại t = i·Δt, Δt = ${fmtQty('vi', stepOf(q), 's', 3)} (≤ T/200).`,
