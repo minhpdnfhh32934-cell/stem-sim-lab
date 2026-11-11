@@ -773,7 +773,7 @@ New shell, same organs: rewriting domain logic would add risk without adding any
   - inspector → tray, bottom panel → notebook;
   - stage tool buttons become tray switches;
   - Studio tabs become Library filters;
-  - presentation moves to Tệp / F5; the light / dark switch (uiverse JkHuger/old-falcon-20, user choice 2026-11-02) sits in the header and in Settings → Giao diện, where "Theo máy" toggles following the device;
+  - presentation moves to Tệp / F5; the light / dark control sits in the header and in Settings → Giao diện, where "Theo máy" toggles following the device; it was the uiverse switch JkHuger/old-falcon-20 (user choice 2026-11-02) until the user asked for another kind (11/11/2026, #202): now a 40 × 40 icon button, moon ⇄ sun, pressed = dark;
   - the face-ring column is removed;
   - "Think" becomes "Suy nghĩ kĩ (Think)";
   - Segoe UI → bundled Be Vietnam Pro + JetBrains Mono (new dependencies: one Vietnamese-safe face on every Windows build, and tabular readouts);

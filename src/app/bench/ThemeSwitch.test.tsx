@@ -37,11 +37,12 @@ describe('bench theme switch', () => {
       useSettingsStore.getState().setTheme('system');
     });
     render(<ThemeSwitch system />);
-    const dark = screen.getByRole('switch', { name: 'Giao diện tối' });
+    // An icon button (user decision 11/11/2026, #202): pressed = dark, moon ⇄ sun.
+    const dark = screen.getByRole('button', { name: 'Giao diện tối' });
     const follow = screen.getByRole('button', { name: 'Theo máy' });
     const state = () => ({
       saved: useSettingsStore.getState().theme,
-      dark: (dark as HTMLInputElement).checked,
+      dark: dark.getAttribute('aria-pressed') === 'true',
       follow: follow.getAttribute('aria-pressed'),
       boot: bootTheme(),
     });
@@ -64,7 +65,9 @@ describe('bench theme switch', () => {
     systemIs(false);
     render(<ThemeSwitch system />);
     const follow = screen.getByRole('button', { name: 'Theo máy' });
-    expect(screen.getByRole('switch', { name: 'Giao diện tối' })).not.toBeChecked();
+    expect(
+      screen.getByRole('button', { name: 'Giao diện tối', pressed: false }),
+    ).toBeInTheDocument();
     expect(bootTheme()).toBe('light');
     fireEvent.click(follow);
     expect(useSettingsStore.getState().theme).toBe('light');
@@ -74,5 +77,19 @@ describe('bench theme switch', () => {
   it('the header copy has no "Theo máy" (that lives in Settings → Giao diện)', () => {
     render(<ThemeSwitch />);
     expect(screen.queryByRole('button', { name: 'Theo máy' })).toBeNull();
+  });
+
+  it('a moon while light, a sun while dark; the name is its tooltip', () => {
+    systemIs(false);
+    render(<ThemeSwitch />);
+    const button = screen.getByRole('button', { name: 'Giao diện tối' });
+    expect(button).toHaveAttribute('data-tip', 'Giao diện tối');
+    const shown = () => button.querySelector('.icon-swap')?.getAttribute('data-alt');
+    expect(button.querySelector('.lucide-moon')).not.toBeNull();
+    expect(button.querySelector('.lucide-sun')).not.toBeNull();
+    expect(shown()).toBe('false');
+    fireEvent.click(button);
+    expect(button).toHaveAttribute('aria-pressed', 'true');
+    expect(shown()).toBe('true');
   });
 });

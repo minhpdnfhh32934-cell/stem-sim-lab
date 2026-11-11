@@ -34,7 +34,6 @@ uiverse.io chưa mở được để đối chiếu; kho mã ghi giấy phép MI
 - Tooltip: kyle1dev — uiverse.io/kyle1dev/quiet-cougar-91
 - Khung chờ tải: Yaya12085 — uiverse.io/Yaya12085/curvy-otter-58
 - Thông báo nổi: andrew-demchenk0 — uiverse.io/andrew-demchenk0/nervous-bear-89
-- Nút sáng/tối: JkHuger — uiverse.io/JkHuger/old-falcon-20 (bỏ hiệu ứng đảo màu toàn màn hình)
 
 ```text
 MIT License

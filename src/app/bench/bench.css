@@ -512,152 +512,17 @@ kbd {
   outline-offset: -2px;
 }
 
-/* Theme switch (JkHuger/old-falcon-20): a sun on a sliding knob that turns into a moon. The
-   original's full-screen blend wipe is left out (it would invert every chart). */
+/* Light / dark: a moon ⇄ sun icon button (#202), a full target in Settings too. */
 .theme-switch {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
 }
-.theme-switch__toggle {
-  position: relative;
-  display: inline-flex;
-  padding: 5px;
-  font-size: var(--text-md);
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
+.theme-switch .icon-btn {
+  width: var(--target);
+  height: var(--target);
 }
-.theme-switch__toggle input {
-  appearance: none;
-  display: block;
-  width: 4.5em;
-  height: 2.25em;
-  margin: 0;
-  padding: 0.1875em;
-  border-radius: var(--radius-full);
-  background: var(--sw-day-track);
-  box-shadow: 0 0 0 1px var(--border-input);
-  font-size: inherit;
-  cursor: pointer;
-  transition: background-color var(--dur-drawer) var(--ease);
-}
-.theme-switch__toggle input::before {
-  content: '';
-  display: block;
-  width: 1.875em;
-  height: 1.875em;
-  border-radius: 50%;
-  background: var(--sw-day-knob);
-  transition:
-    translate var(--dur-drawer) var(--ease),
-    background-color var(--dur-drawer) var(--ease);
-}
-.theme-switch__toggle input:checked {
-  background: var(--sw-night-track);
-}
-.theme-switch__toggle input:checked::before {
-  translate: 2.25em 0;
-  background: var(--sw-night-knob);
-}
-.theme-switch__toggle input:focus-visible {
-  outline-offset: 3px;
-}
-/* The sun (a disc and eight rays) sits on the knob; checked, the disc becomes a crescent. */
-.theme-switch__icon {
-  position: absolute;
-  top: calc(5px + 0.375em);
-  left: calc(5px + 0.375em);
-  width: 1.5em;
-  height: 1.5em;
-  pointer-events: none;
-  transition: translate var(--dur-drawer) var(--ease);
-}
-.theme-switch__toggle input:checked ~ .theme-switch__icon {
-  translate: 2.25em 0;
-}
-.theme-switch__icon i {
-  position: absolute;
-  top: calc(50% - 0.5em);
-  left: calc(50% - 0.5em);
-  width: 1em;
-  height: 1em;
-  border-radius: 50%;
-  box-shadow: 0.4em -0.4em 0 0.5em var(--sw-icon) inset;
-  transform: scale(0.5);
-  transition:
-    box-shadow var(--dur-drawer) var(--ease),
-    opacity var(--dur-drawer) var(--ease),
-    transform var(--dur-drawer) var(--ease);
-}
-.theme-switch__icon i ~ i {
-  top: 50%;
-  left: calc(50% - 0.05em);
-  width: 0.1em;
-  height: 0.2em;
-  border-radius: 0.05em;
-  box-shadow: none;
-  background: var(--sw-icon);
-  transform-origin: 50% 0;
-  transform: rotate(0deg) translateY(0.5em);
-}
-.theme-switch__icon i:nth-child(3) {
-  transform: rotate(45deg) translateY(0.45em);
-}
-.theme-switch__icon i:nth-child(4) {
-  transform: rotate(90deg) translateY(0.45em);
-}
-.theme-switch__icon i:nth-child(5) {
-  transform: rotate(135deg) translateY(0.45em);
-}
-.theme-switch__icon i:nth-child(6) {
-  transform: rotate(180deg) translateY(0.45em);
-}
-.theme-switch__icon i:nth-child(7) {
-  transform: rotate(225deg) translateY(0.45em);
-}
-.theme-switch__icon i:nth-child(8) {
-  transform: rotate(270deg) translateY(0.5em);
-}
-.theme-switch__icon i:nth-child(9) {
-  transform: rotate(315deg) translateY(0.5em);
-}
-.theme-switch__toggle input:checked ~ .theme-switch__icon i:nth-child(1) {
-  box-shadow: 0.2em -0.2em 0 0.2em var(--sw-icon) inset;
-  transform: translate(var(--moon-dx), var(--moon-dy)) scale(1);
-}
-.theme-switch__toggle input:checked ~ .theme-switch__icon i ~ i {
-  opacity: 0;
-}
-.theme-switch__toggle input:checked ~ .theme-switch__icon i:nth-child(2) {
-  transform: rotate(45deg) translateY(0.8em);
-}
-.theme-switch__toggle input:checked ~ .theme-switch__icon i:nth-child(3) {
-  transform: rotate(90deg) translateY(0.8em);
-}
-.theme-switch__toggle input:checked ~ .theme-switch__icon i:nth-child(4) {
-  transform: rotate(135deg) translateY(0.8em);
-}
-.theme-switch__toggle input:checked ~ .theme-switch__icon i:nth-child(5) {
-  transform: rotate(180deg) translateY(0.8em);
-}
-.theme-switch__toggle input:checked ~ .theme-switch__icon i:nth-child(6) {
-  transform: rotate(225deg) translateY(0.8em);
-}
-.theme-switch__toggle input:checked ~ .theme-switch__icon i:nth-child(7) {
-  transform: rotate(270deg) translateY(0.8em);
-}
-.theme-switch__toggle input:checked ~ .theme-switch__icon i:nth-child(8) {
-  transform: rotate(315deg) translateY(0.8em);
-}
-.theme-switch__toggle input:checked ~ .theme-switch__icon i:nth-child(9) {
-  transform: rotate(360deg) translateY(0.8em);
-}
-/* The crescent's lit part is off-centre in its box: this puts its pixel centroid on the knob's
-   centre (measured at 14 px: within 0,1 px). */
-.theme-switch__icon {
-  --moon-dx: 0.1em;
-  --moon-dy: -0.09em;
-}
+
 .theme-switch__system[aria-pressed='true'] {
   box-shadow: inset 0 -2px 0 var(--accent);
   font-weight: 600;

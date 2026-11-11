@@ -1,12 +1,15 @@
+import { Moon, Sun } from 'lucide-react';
 import { useT } from '@/app/i18n';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useResolvedTheme } from '@/app/theme/useApplyTheme';
+import { IconButton } from '@/ui/IconButton';
 
 /**
- * Light / dark switch of the bench (uiverse JkHuger/old-falcon-20, MIT): on = dark. Choosing a
- * side leaves "Theo máy"; `system` adds the "Theo máy" toggle (Settings → Giao diện), which, pressed
- * again, keeps the theme on screen as the learner's own choice. Saved in `stemsim.settings`, the
- * key `theme-boot.js` reads before the app loads.
+ * Light / dark button of the bench (user decision 11/11/2026, #202: an icon button instead of the
+ * uiverse switch chosen on 02/11): a moon while light, a sun while dark, pressed = dark. Choosing
+ * a side leaves "Theo máy"; `system` adds the "Theo máy" toggle (Settings → Giao diện), which,
+ * pressed again, keeps the theme on screen as the learner's own choice. Saved in
+ * `stemsim.settings`, the key `theme-boot.js` reads before the app loads.
  */
 export function ThemeSwitch({ system = false }: { system?: boolean }) {
   const t = useT();
@@ -14,24 +17,20 @@ export function ThemeSwitch({ system = false }: { system?: boolean }) {
   const setTheme = useSettingsStore((s) => s.setTheme);
   const shown = useResolvedTheme();
   const following = preference === 'system';
+  const dark = shown === 'dark';
   return (
     <div className="theme-switch">
-      <label className="theme-switch__toggle">
-        <input
-          type="checkbox"
-          role="switch"
-          aria-label={t('bench.darkTheme')}
-          checked={shown === 'dark'}
-          onChange={(e) => {
-            setTheme(e.target.checked ? 'dark' : 'light');
-          }}
-        />
-        <span className="theme-switch__icon" aria-hidden="true">
-          {Array.from({ length: 9 }, (_, i) => (
-            <i key={i} />
-          ))}
-        </span>
-      </label>
+      <IconButton
+        icon={Moon}
+        altIcon={Sun}
+        showAlt={dark}
+        label={t('bench.darkTheme')}
+        // Pressed, not `active`: the state is the theme on screen, not a highlighted tool.
+        aria-pressed={dark}
+        onClick={() => {
+          setTheme(dark ? 'light' : 'dark');
+        }}
+      />
       {system && (
         <button
           type="button"
