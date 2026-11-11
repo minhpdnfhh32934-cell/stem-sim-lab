@@ -1,9 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { openLab } from '../nav';
 
-// Bench twin of tests/e2e/kepler.spec.ts (0.8.1 B8: same titles, the same checks on the bench
-// shell; scripts/e2e/title-parity.mjs).
-
 /** Kepler's second law (#54 item 12, an extension): equal areas, the solution, relative units. */
 test('Kepler II: the orbit runs, equal-area slices, the speed ratio in the solution', async ({
   page,

@@ -4,9 +4,6 @@ import { driftRuns } from '../../../src/biology/genetics/population';
 import { apportion } from '../../../src/biology/view3d/sampling';
 import { openLab } from '../nav';
 
-// Bench twin of tests/e2e/drift3d.spec.ts (0.8.1 B8: same titles, the same checks on the bench
-// shell; scripts/e2e/title-parity.mjs).
-
 /**
  * The 3D archipelago of "Phiêu bạt di truyền": one island per run of the lesson's own model (the
  * same seed as the 2D chart). Scrubbing the generation slider moves every island to that
@@ -230,7 +227,6 @@ test('genetic drift 3D: the archipelago follows the model’s runs through the g
   await expect(
     page.locator('canvas[aria-label="Phiêu bạt di truyền (Wright–Fisher)"]'),
   ).toBeVisible();
-  // The bench stage (the classic copy's `.shell__center`).
   await page
     .getByRole('region', { name: 'Khung mô phỏng' })
     .getByRole('radio', { name: '3D', exact: true })

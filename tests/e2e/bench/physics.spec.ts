@@ -2,7 +2,6 @@ import { expect, test, type Page } from '@playwright/test';
 import { openLab } from '../nav';
 
 /**
- * Bench twin of tests/e2e/physics.spec.ts (0.8.1 B2, same titles: scripts/e2e/title-parity.mjs).
  * Every physics topic opens without a page error, fits 1366×768 without horizontal scrolling
  * and shows its own title. A new topic appends its [library name, stage title] here; the first
  * test fails until it does.

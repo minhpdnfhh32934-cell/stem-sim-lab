@@ -1,9 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { openLab } from '../nav';
 
-// Bench twin of tests/e2e/showcase.spec.ts (0.8.1 B8: same titles, the same checks on the bench
-// shell; scripts/e2e/title-parity.mjs).
-
 /** Showcase mode (#54 item 13): from Ctrl+K, the first scene with its caption, a click stops it. */
 test('showcase: starts from Ctrl+K in presentation mode, a click stops it', async ({ page }) => {
   const errors: string[] = [];

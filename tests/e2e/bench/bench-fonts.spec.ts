@@ -1,8 +1,5 @@
 import { expect, test } from '@playwright/test';
 
-// Bench twin of tests/e2e/bench-fonts.spec.ts (0.8.1 B8: same titles, the same checks on the bench
-// shell; scripts/e2e/title-parity.mjs).
-
 /**
  * The bench fonts (#113) really draw every Vietnamese letter (and the in-range signs µ·°×−¹²³),
  * in every bundled weight. A glyph comes from the bench font when its width is the same with a
@@ -17,8 +14,7 @@ const FALLBACK = '→';
 
 test('bench fonts draw every Vietnamese letter in every weight', async ({ page }) => {
   await page.goto('/');
-  // The bench shell loads them too; importing the font module again (as the classic copy
-  // must) changes nothing and keeps the two tests the same.
+  // The shell loads them itself; importing the font module again changes nothing.
   await page.addScriptTag({ type: 'module', url: '/src/app/theme/benchFonts.ts' });
   const result = await page.evaluate(
     async ({ text, fallback }) => {

@@ -177,7 +177,7 @@ test.describe('Basic / Advanced', () => {
 
 test('touch screens get 40px targets for icon buttons', async ({ browser }) => {
   const context = await browser.newContext({
-    storageState: 'tests/e2e/bench/storage-state.json',
+    storageState: 'tests/e2e/storage-state.json',
     viewport: { width: 1366, height: 768 },
     hasTouch: true,
     isMobile: false,

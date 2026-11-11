@@ -105,7 +105,7 @@ test('targets: 40 px on the bench, the speed steps fill their 168×40 slot', asy
 
 test('targets: icon buttons grow to 48 px on a touch screen', async ({ browser }) => {
   const ctx = await browser.newContext({
-    storageState: 'tests/e2e/bench/storage-state.json',
+    storageState: 'tests/e2e/storage-state.json',
     baseURL: 'http://localhost:1420',
     locale: 'vi-VN',
     viewport: { width: 1366, height: 768 },

@@ -1,9 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { openLab } from '../nav';
 
-// Bench twin of tests/e2e/tooltip.spec.ts (0.8.1 B8: same titles, the same checks on the bench
-// shell; scripts/e2e/title-parity.mjs).
-
 /**
  * The shared tooltip (`TooltipLayer`, WCAG 1.4.13) in the bench shell: it never blocks a
  * click, the next control's tooltip still opens, and one Esc closes a dialog even while the

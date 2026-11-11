@@ -1,9 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 import { openLab } from '../nav';
 
-// Bench twin of tests/e2e/fourier.spec.ts (0.8.1 B8: same titles, the same checks on the bench
-// shell; scripts/e2e/title-parity.mjs).
-
 test.use({ viewport: { width: 1366, height: 768 } });
 
 /**

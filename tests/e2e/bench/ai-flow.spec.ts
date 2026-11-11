@@ -380,8 +380,6 @@ test.describe('first run (age question not answered yet)', () => {
           // launch page as soon as the age question closes, depending on timing.
           localStorage: [
             { name: 'stemsim.tourDone', value: '1' },
-            // The bench dev switch, as in tests/e2e/bench/storage-state.json.
-            { name: 'stemsim.dev.shell', value: 'bench' },
             { name: 'stemsim.whatsnew', value: '{"lastSeen": "999.0.0"}' },
           ],
         },

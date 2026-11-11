@@ -30,21 +30,16 @@ const chromium = {
  */
 const HEAVY_3D =
   /(mitosis3d|meiosis3d|dogma3d|mutation3d|mendel3d|hw3d|logistic3d|lv3d|enzyme3d|transport3d|studio-biology|bio3d|biology|project)\.spec\.ts$/;
-/**
- * Bench shell specs (0.8.1, docs/BENCH_DESIGN.md §14) live in tests/e2e/bench/ and run with the dev
- * switch on (their own storage state). A copy of a classic spec keeps its test titles
- * (scripts/e2e/title-parity.mjs); the classic projects never run them.
- */
-const BENCH = /[\\/]bench[\\/][^\\/]+\.spec\.ts$/;
-const BENCH_3D = new RegExp(String.raw`[\\/]bench[\\/]` + HEAVY_3D.source);
-const BENCH_STATE = 'tests/e2e/bench/storage-state.json';
 /** The 3D performance budget test (tag @perf): its own project, after the other 3D tests. */
 const PERF = /@perf/;
 /** Software WebGL (SwiftShader): the perf numbers are never measured on a GPU. */
 const SWIFTSHADER = ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'];
 
 export default defineConfig({
-  testDir: 'tests/e2e',
+  // The bench ("Bàn thí nghiệm") is the only shell since 0.8.1 B8 (#193): its specs are the suite.
+  // HEAVY_3D has no anchor before the name, so a prefixed 3D spec (e.g. cell-bio3d.spec.ts) also
+  // runs in the 3D projects, never beside the light ones (PR #165).
+  testDir: 'tests/e2e/bench',
   timeout: 60_000,
   fullyParallel: false,
   retries: 0,
@@ -54,18 +49,17 @@ export default defineConfig({
     locale: 'vi-VN',
     viewport: { width: 1366, height: 768 },
     trace: 'retain-on-failure',
-    // The first-run tour is tested separately (tests/e2e/project.spec.ts).
+    // The first-run tour is tested separately (tests/e2e/bench/project.spec.ts).
     storageState: 'tests/e2e/storage-state.json',
     ...(executablePath ? { launchOptions: { executablePath } } : {}),
   },
   projects: [
-    { name: 'chromium', use: chromium, testIgnore: [HEAVY_3D, BENCH] },
+    { name: 'chromium', use: chromium, testIgnore: HEAVY_3D },
     // Skipped when a spec of the first project fails (Playwright dependencies); fix those first.
     {
       name: 'chromium-3d',
       use: chromium,
       testMatch: HEAVY_3D,
-      testIgnore: BENCH,
       grepInvert: PERF,
       dependencies: ['chromium'],
       // Each worker draws WebGL in software on the CPU. With 8 at once (16-thread machine,
@@ -87,39 +81,8 @@ export default defineConfig({
         launchOptions: { ...(executablePath ? { executablePath } : {}), args: SWIFTSHADER },
       },
       testMatch: HEAVY_3D,
-      testIgnore: BENCH,
       grep: PERF,
       dependencies: ['chromium-3d'],
-    },
-    // After the whole classic suite: run beside it, the bench's first lazy chunks slowed the
-    // dev server enough for classic topics to miss their 20 s load wait (2026-11-02).
-    {
-      name: 'chromium-bench',
-      use: { ...chromium, storageState: BENCH_STATE },
-      testMatch: BENCH,
-      // Exactly the complement of chromium-3d-bench, so every bench spec has one project.
-      testIgnore: BENCH_3D,
-      dependencies: ['chromium-3d-perf'],
-    },
-    {
-      name: 'chromium-3d-bench',
-      use: { ...chromium, storageState: BENCH_STATE },
-      testMatch: BENCH_3D,
-      grepInvert: PERF,
-      dependencies: ['chromium-bench'],
-      workers: process.env.CI ? 1 : 4,
-      expect: { timeout: 15_000 },
-    },
-    {
-      name: 'chromium-3d-bench-perf',
-      use: {
-        ...chromium,
-        storageState: BENCH_STATE,
-        launchOptions: { ...(executablePath ? { executablePath } : {}), args: SWIFTSHADER },
-      },
-      testMatch: BENCH_3D,
-      grep: PERF,
-      dependencies: ['chromium-3d-bench'],
     },
   ],
   webServer: {

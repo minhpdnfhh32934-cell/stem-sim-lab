@@ -1,9 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { openLab } from '../nav';
 
-// Bench twin of tests/e2e/crystal.spec.ts (0.8.1 B8: same titles, the same checks on the bench
-// shell; scripts/e2e/title-parity.mjs).
-
 /** Metal crystals and NaCl (#54 item 8): counts from geometry, a 3D cell, never "to scale". */
 test('metal crystals and NaCl: counts from the cell, coordination 6 : 6, not to scale', async ({
   page,

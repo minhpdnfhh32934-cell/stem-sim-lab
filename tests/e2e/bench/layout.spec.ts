@@ -2,7 +2,6 @@ import { expect, test, type Locator, type Page } from '@playwright/test';
 import { openLab, openStudioFromLab } from '../nav';
 
 /**
- * Bench twin of tests/e2e/layout.spec.ts (0.8.1 B2, same titles: scripts/e2e/title-parity.mjs).
  * The bench has no bottom panel: graphs, Lời giải and Thử thách are notebook tabs (a 312 px
  * drawer the full stage height), the parameters are in the tray, the library is "Kệ bài"
  * (docs/BENCH_DESIGN.md §8, §9.3, §9.4, §14 "layout.spec geometry").

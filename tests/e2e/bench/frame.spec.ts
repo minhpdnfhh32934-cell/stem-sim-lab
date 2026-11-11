@@ -130,7 +130,7 @@ test('one filled button on the bench, none at the 18+ question', async ({ page, 
   }
 
   // A first run that has not answered the 18+ question yet.
-  const state = JSON.parse(readFileSync('tests/e2e/bench/storage-state.json', 'utf8')) as {
+  const state = JSON.parse(readFileSync('tests/e2e/storage-state.json', 'utf8')) as {
     origins: { localStorage: { name: string }[] }[];
   };
   for (const o of state.origins)
@@ -145,7 +145,7 @@ test('one filled button on the bench, none at the 18+ question', async ({ page, 
   await fresh.goto('/');
   const gate = fresh.locator('dialog.age-gate');
   await expect(gate).toBeVisible({ timeout: 20_000 });
-  // App draws the gate at once; the bench shell (a lazy chunk) marks <html> a moment later.
+  // App draws the gate at once; the bench shell marks <html> in an effect, a moment later.
   await expect.poll(() => isBench(fresh)).toBe(true);
   await expectFilled(gate, 0);
   await ctx.close();

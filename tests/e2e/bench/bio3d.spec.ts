@@ -167,7 +167,7 @@ test('logistic 3D: the habitat follows the model; rebuilding for new inputs free
   expect(after?.textures).toBe(before?.textures);
 });
 
-// ---- Cell → DNA (copy of tests/e2e/cellzoom-bio3d.spec.ts, same titles) ----
+// ---- Cell → DNA ----
 // Kept here: the bench's 3D project matches only bench/<name>.spec.ts with the classic 3D
 // names (playwright.config.ts BENCH_3D), so a file named cellzoom-bio3d.spec.ts ran in the
 // light project with software WebGL beside every other bench spec.
@@ -397,8 +397,7 @@ test('B5: cell → DNA zooms from the edge', async ({ page }) => {
   await expect.poll(() => seriousOnEdge(page)).toEqual([]);
 });
 
-// ---- Cell structure 3D (copy of tests/e2e/cell-bio3d.spec.ts, same titles; here so that it runs
-// in the 3D bench project: BENCH_3D matches this file's name, not a prefixed one) ----
+// ---- Cell structure 3D ----
 interface CellState {
   kind: string;
   parts: string[];

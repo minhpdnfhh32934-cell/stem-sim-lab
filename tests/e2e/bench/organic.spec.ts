@@ -1,9 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { openLab } from '../nav';
 
-// Bench twin of tests/e2e/organic.spec.ts (0.8.1 B8: same titles, the same checks on the bench
-// shell; scripts/e2e/title-parity.mjs).
-
 /** Organic molecules in 3D (#54 item 11): filter by functional group, open one in 3D. */
 test('Phân tử 3D: "Lọc theo nhóm chức" lists the arenes and opens phenol in 3D', async ({
   page,

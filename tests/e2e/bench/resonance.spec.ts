@@ -1,9 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { openLab } from '../nav';
 
-// Bench twin of tests/e2e/resonance.spec.ts (0.8.1 B8: same titles, the same checks on the bench
-// shell; scripts/e2e/title-parity.mjs).
-
 /** Forced oscillation and resonance (#54 item 9): the A(Ω) curve and the amplitude settling on it. */
 test('resonance: the A(Ω) graph shows the steady-amplitude curve, no horizontal scroll', async ({
   page,
