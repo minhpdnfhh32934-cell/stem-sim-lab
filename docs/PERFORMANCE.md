@@ -176,4 +176,4 @@ không đổi; máy GPU tích hợp không bị nâng mức.
 80 % ngân sách 300 MB (hoặc 80 % giới hạn heap), app giải phóng bộ nhớ đệm đã đăng ký (ví dụ: bản
 ghi đồ thị vật lý giữ lại một nửa số mẫu — chỉ giảm độ phân giải đồ thị, không ảnh hưởng mô phỏng)
 và hiện cảnh báo một lần. (Số RAM, FPS và mức chất lượng của thanh trạng thái cũ chưa có chỗ trên
-bàn thí nghiệm từ 0.8.1; xem mô tả PR #198.)
+bàn thí nghiệm; việc đưa chúng lại cho chế độ Nâng cao là issue #201.)

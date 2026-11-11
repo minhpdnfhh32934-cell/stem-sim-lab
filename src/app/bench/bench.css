@@ -2232,7 +2232,10 @@ button.bench-door--lab:hover {
   background: var(--paper-hover);
 }
 
-/* Presentation: the HUD's right end (title, chips, PerfNotes) stays clear of the 48 px exit button. */
+/*
+ * Presentation: the HUD's right end (title, chips, PerfNotes) stays clear of the exit button
+ * (`icon-btn--lg`, 38 px at 100 %; its size is #202) and a gap.
+ */
 .bench-shell[data-presentation] .stage__hud {
   right: calc(var(--space-3) + 56px);
 }

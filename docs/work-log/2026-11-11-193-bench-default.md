@@ -50,9 +50,9 @@ riêng tư "Hỏi thầy" trên sổ thay bong bóng), `FirstRun.test.tsx` (cổ
 
 - Nhánh `BenchContext` cổ điển còn trong vài thành phần dùng chung (luôn `true` trong app).
 - `stemsim.layout` giữ các trường cũ (`leftWidth`…) để không đổi version của store.
-- FPS / mức chất lượng / RAM (Nâng cao) của thanh trạng thái cũ: bench chưa có chỗ, đề xuất issue riêng.
+- FPS / mức chất lượng / RAM (Nâng cao) của thanh trạng thái cũ: bench chưa có chỗ; issue #201.
   Phiên bản đang chạy: Tệp → "Kiểm tra cập nhật" và Cài đặt → Lịch sử phiên bản.
-- `BenchContext`: nhánh cổ điển còn ở 26 tệp, đề xuất PR riêng.
+- `BenchContext`: nhánh cổ điển còn ở 27 tệp (28 chỗ đọc); issue #200, sau khi phát hành 0.8.1.
 - Mục 0.8.1 trong `release-notes/versions.json`: test buộc mục đầu trùng `package.json` (0.8.0);
   thêm mục mới cần đổi số phiên bản, việc của #194. Câu ghi chú B8 soạn sẵn trong PR.
 
@@ -95,13 +95,13 @@ Tiêu chí: mỗi việc của review có code hoặc tài liệu sửa đúng c
 - 4 thẻ chủ đề "Đã mở · 1/3 bước", "Còn: Dự đoán trước, n thử thách": `Library.test`, E2E
   `learner.spec` PASS.
 - 5 "Có bản cập nhật {phiên bản}" ở đầu bàn sau "Để sau" (cả khi cần bộ cài mới): `update.test`, E2E
-  `layout.spec` (vừa đầu bàn ở 1366, tên bài dài) PASS. FPS / mức chất lượng / RAM: đề xuất issue riêng.
+  `layout.spec` (vừa đầu bàn ở 1366, tên bài dài) PASS. FPS / mức chất lượng / RAM: issue #201.
 - 6 khung hình đầu là bench (`theme-boot.js` đặt `data-shell`, nền `index.html` lấy từ `tokens.css`):
   `tests/index-html.test.ts` PASS; native: xem Kết quả vòng 2.
 - 7 câu riêng tư ở thẻ "Hỏi AI" của sổ ghi (vi, en).
 - 8 `Badges` ra tệp riêng; xoá `HomeScreen` ("Gợi ý cho lớp N" bỏ, kệ bài theo lớp thay), `Inspector`
   cổ điển và chú giải (bench không có chú giải ở chỗ khác), CSS/token/khoá i18n chết. `BenchContext`
-  còn canh nhánh cổ điển ở 26 tệp: đề xuất PR riêng (`shortcut:` trong `shellMode.ts`).
+  còn canh nhánh cổ điển ở 27 tệp, 28 chỗ đọc: issue #200 (`shortcut:` trong `shellMode.ts`).
 - 9 `learner.spec` kiểm "Bài 4–5, 7 · chờ giáo viên duyệt" trên thẻ: PASS.
 - 10 tiêu điểm về ô tìm / nút "Tất cả": `Library.test` PASS.
 - 11 tài liệu và chú thích theo bench; BENCH_DESIGN/PROGRESS ghi "đang review".

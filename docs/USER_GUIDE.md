@@ -238,13 +238,13 @@ lớp nào?"; bạn đổi lại bất cứ lúc nào bằng thanh **Lớp 10 ·
 viện.
 
 - **Một lớp:** chủ đề nằm dưới tên chương của sách giáo khoa _Kết nối tri thức với cuộc sống_ lớp đó,
-  theo thứ tự trong sách, kèm số bài (ví dụ "Bài 4–5, 7"). Dòng **"Theo SGK Kết nối tri thức · Đang
-  chờ giáo viên duyệt"** nhắc rằng cách xếp này do SimLab đề xuất từ mục lục chính thức
+  theo thứ tự trong sách; thẻ chủ đề ghi số bài kèm nhãn, ví dụ "Bài 4–5, 7 · chờ giáo viên duyệt".
+  Dòng dưới thanh Lớp nhắc rằng cách xếp này do SimLab đề xuất từ mục lục chính thức
   (`docs/CURRICULUM_KNTT.md`) và chưa được giáo viên duyệt (`docs/DATA_REVIEW.md`, mục 12).
 - **Tất cả:** mọi chủ đề như trước, kể cả các chủ đề chưa xếp được vào lớp nào.
 - Môn nào chưa có chủ đề ở lớp đang chọn (ví dụ Sinh học lớp 11) hiện câu "Chưa có chủ đề …" và nút
   **Xem tất cả**. Ô tìm kiếm chỉ tìm trong lớp đang xem; nút "Có … chủ đề ở môn khác" vẫn như cũ.
-- Trang chủ gợi ý chủ đề của lớp đang chọn. Lớp chỉ dùng để xếp danh sách, không gửi cho AI.
+- Lớp chỉ dùng để xếp danh sách trên Kệ bài, không gửi cho AI.
 
 ### Chế độ Cơ bản và Nâng cao
 
@@ -655,8 +655,9 @@ Từng bài:
 
 ## Lưu, mở, xuất và lịch sử
 
-- **Menu Tệp** (nút ☰ ở thanh trên): Mở tệp `.stemsim`, Lưu mô phỏng, Xuất ảnh PNG, Nguồn & Giả
-  định, Hướng dẫn nhanh.
+- **Menu Tệp** (nút ☰ ở đầu bàn): Mở tệp `.stemsim`, Lưu mô phỏng, Xuất ảnh PNG, Lịch sử,
+  Chế độ trình chiếu (F5), Nguồn & Giả định, Kiểm tra cập nhật, Quyền riêng tư & dùng AI an toàn,
+  Hướng dẫn nhanh (và "Có gì mới" khi có bản mới chưa xem).
 - **Lưu (Ctrl+S) / Mở (Ctrl+O):** tệp `.stemsim` lưu chủ đề và các thông số bạn đã chỉnh (không lưu
   kết quả — app tính lại khi mở, nên kết quả luôn đúng với phiên bản app).
 - **Hoàn tác / Làm lại (Ctrl+Z / Ctrl+Y):** áp dụng cho thông số của chủ đề đang mở. Kéo thanh trượt
@@ -664,7 +665,7 @@ Từng bài:
 - **Xuất PNG:** chụp khung mô phỏng (hình 2D, 3D hoặc đồ thị). Chủ đề hiển thị bằng bảng thì dùng Xuất
   CSV. Ở chế độ **Nâng cao**, rê chuột lên một đồ thị để thấy nút **Xuất CSV** ở góc phải (trên màn
   hình cảm ứng nút luôn hiện).
-- **Lịch sử** (Tệp → **Lịch sử**; ở chế độ Nâng cao còn có nút **Lịch sử** ở cột lọc của Kệ bài):
+- **Lịch sử** (menu ☰ → **Lịch sử**; ở chế độ Nâng cao còn có nút **Lịch sử** ở cột lọc của Kệ bài):
   mọi mô phỏng đã mở, kèm thông số cuối cùng. Bấm để mở lại; bấm thùng rác để xóa.
 - **Nguồn & Giả định:** một trang tổng hợp nguyên tắc khoa học, nguồn của mọi bộ dữ liệu (kèm số mục
   chờ giáo viên duyệt), tài liệu tham khảo và giả định của chủ đề đang mở — dùng khi trình bày với
@@ -675,8 +676,9 @@ Từng bài:
 ## Cập nhật phần mềm
 
 - Khi mở app (có mạng), app tự kiểm tra bản mới. Nếu có, **hộp thoại cập nhật tự hiện** với hai nút
-  **Cập nhật ngay** / **Để sau**. Chọn "Để sau" thì lần mở app sau sẽ hỏi lại; muốn cập nhật ngay
-  lúc khác thì vào menu ☰ → **Kiểm tra cập nhật**.
+  **Cập nhật ngay** / **Để sau**. Chọn "Để sau" thì đầu bàn có nút nhắc (biểu tượng đám mây có chấm,
+  tên "Có bản cập nhật {phiên bản}"; cả khi bản mới cần bộ cài mới), bấm vào là mở lại hộp thoại; lần
+  mở app sau sẽ hỏi lại. Muốn kiểm tra lúc khác thì vào menu ☰ → **Kiểm tra cập nhật**.
 - Một số bản là **bắt buộc** (ví dụ sửa lỗi quan trọng): hộp thoại không có nút "Để sau", cần cập
   nhật mới dùng tiếp. Không có mạng thì app vẫn dùng bình thường.
 - Bấm **Cập nhật ngay** → app tải gói cập nhật (vài MB), kiểm tra chữ ký số và mã SHA-256, rồi
