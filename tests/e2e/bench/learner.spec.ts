@@ -66,11 +66,11 @@ test('subject cards and the grade switch (Grade → Subject → Topic)', async (
   // Grade 10: physics topics under the textbook chapters, with lessons and the pending label.
   await library.getByRole('radio', { name: 'Vật lý' }).click();
   await grades.getByRole('radio', { name: 'Lớp 10' }).click();
-  await expect(shelf).toContainText('chờ giáo viên duyệt');
   const kinematics = shelf.locator('.shelf', { hasText: 'Chương II. Động học' });
+  // On the card itself: its lessons and the pending label (the shelf's source note always says it).
   await expect(
     kinematics.getByRole('button', { name: 'Chuyển động thẳng đều', exact: true }),
-  ).toHaveAccessibleDescription(/Bài 4–5, 7/);
+  ).toHaveAccessibleDescription(/Bài 4–5, 7 · chờ giáo viên duyệt/);
   await expectNoHorizontalScroll(page);
 
   // Biology has no grade 11 topic yet: no dead end, "Xem tất cả" goes back to every topic.

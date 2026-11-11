@@ -82,8 +82,9 @@ export function BenchLibrary() {
             .filter((m) => m.count > 0),
     [chapters.length, query, subject, grade, t],
   );
-  // The recovery buttons vanish once used: the keyboard focus goes to the grade they set.
+  // The recovery buttons vanish once used: the keyboard focus goes to the grade or field they set.
   const allRef = useRef<HTMLButtonElement>(null);
+  const searchRef = useRef<HTMLInputElement>(null);
   const counts = useMemo(
     () =>
       Object.fromEntries(
@@ -141,6 +142,7 @@ export function BenchLibrary() {
         <label className="shelf-search">
           <Search size={16} strokeWidth={1.75} aria-hidden="true" />
           <input
+            ref={searchRef}
             type="search"
             value={query}
             placeholder={t('sidebar.search')}
@@ -243,6 +245,7 @@ export function BenchLibrary() {
               className="btn"
               onClick={() => {
                 setGrade('all');
+                allRef.current?.focus();
               }}
             >
               {t('levels.showAll')}
@@ -281,6 +284,7 @@ export function BenchLibrary() {
               className="btn"
               onClick={() => {
                 setQuery('');
+                searchRef.current?.focus();
               }}
             >
               {t('sidebar.clearSearch')}

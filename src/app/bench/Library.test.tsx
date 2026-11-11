@@ -46,6 +46,9 @@ describe('"Kệ bài" (docs/BENCH_DESIGN.md §9.3)', () => {
     expect(screen.getByRole('status')).toHaveTextContent('Không tìm thấy');
     fireEvent.click(screen.getByRole('button', { name: 'Xóa tìm kiếm' }));
     expect(titles().length).toBeGreaterThan(5);
+    // The button that was clicked is gone: the focus goes back to the search field, emptied.
+    expect(search).toHaveFocus();
+    expect(search).toHaveValue('');
   });
 
   it('"Có đề bài?": "Phân tích đề" opens the problem sheet (the screen’s main action)', () => {
@@ -221,5 +224,6 @@ describe('"Kệ bài": marks, grade views and searches without a dead end (B8)',
     expect(screen.queryByRole('button', { name: 'Xóa tìm kiếm' })).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: 'Xem tất cả' }));
     expect(card('Nguyên phân')).toBeInTheDocument();
+    expect(screen.getByRole('radio', { name: 'Tất cả' })).toHaveFocus();
   });
 });
