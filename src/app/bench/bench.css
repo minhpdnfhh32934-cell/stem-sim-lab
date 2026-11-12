@@ -477,9 +477,19 @@ kbd {
   clip-path: inset(50%);
   white-space: nowrap;
 }
-/* Light / dark in Tệp only when the header is short of room (below). */
-.bench-header .file-menu__theme {
+/* Light / dark, undo / redo in Tệp and "…" for the middle crumbs only when the header is short
+   of room (below). */
+.bench-header .file-menu__theme,
+.bench-header .file-menu__history,
+.bench-crumbs__fold {
   display: none;
+}
+.bench-header__history {
+  display: contents;
+}
+.file-menu__item[aria-disabled='true'] {
+  color: var(--text-muted);
+  cursor: default;
 }
 /*
  * Short of room (a large Cỡ chữ, a narrow window): the AI status keeps only its icon (name and
@@ -495,8 +505,18 @@ kbd {
   .bench-header > .theme-switch {
     display: none;
   }
-  .bench-header .file-menu__theme {
+  .bench-header .file-menu__theme,
+  .bench-header .file-menu__history {
     display: flex;
+  }
+  /* Undo / redo move into Tệp, "Virtual Lab › Sinh học" folds into "…" (#205 B2b). */
+  .bench-header__history,
+  .bench-crumbs__path {
+    display: none;
+  }
+  .bench-crumbs__fold {
+    display: block;
+    min-width: var(--target);
   }
   .bench-header .ai-status__label {
     display: none;
