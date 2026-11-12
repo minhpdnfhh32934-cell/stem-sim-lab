@@ -7,6 +7,7 @@ import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import type { ScienceCardData } from '@/science-card/types';
 import { useCanvas } from '@/ui/canvas/useCanvas';
+import { prefersReducedMotion } from '@/ui/three/availability';
 import { IconButton } from '@/ui/IconButton';
 import { CSRC, L, usePublishCard } from '../common';
 import { TYPE_A, TYPE_B, TYPE_C, TYPE_D } from './gas';
@@ -112,7 +113,8 @@ export function GasStage({ mode }: { mode: GasMode }) {
   usePublishCard(card);
 
   useEffect(() => {
-    useGasStore.setState({ mode, running: true });
+    // Opens running, or paused with reduced motion (#205 C3).
+    useGasStore.setState({ mode, running: !prefersReducedMotion() });
     resetGas();
   }, [mode]);
 
