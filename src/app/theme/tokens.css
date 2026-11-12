@@ -45,6 +45,23 @@
   --dur-med: 220ms;
   /* Blur behind an open dialog (`.dialog::backdrop`). */
   --scrim-blur: blur(2px);
+  /* Colours that were written in stylesheets, moved here with their values unchanged (#205 A2).
+     Scrims behind dialogs (dialog, camera) and behind the first-run tour. */
+  --scrim: rgba(8, 12, 20, 0.45);
+  --scrim-strong: rgba(8, 12, 20, 0.5);
+  /* Fixed backgrounds: behind a camera video; behind RDKit's black-on-white 2D drawings. */
+  --bg-media: #000000;
+  --bg-drawing: #ffffff;
+  /* Shadows: the floating chat panel, the chat docked in AI Teacher, the board's pen. */
+  --shadow-float: 0 20px 64px rgb(10 22 34 / 24%);
+  --shadow-docked: 0 12px 38px rgb(10 22 34 / 8%);
+  --shadow-pen: 0 2px 2px rgba(0, 0, 0, 0.25);
+  /* Data colours: text on a dark data tile; the visible spectrum (violet to red, stops in %). */
+  --text-on-data: #ffffff;
+  --text-on-data-muted: rgba(255, 255, 255, 0.8);
+  --data-spectrum:
+    rgb(97, 0, 97) 0%, rgb(0, 0, 255) 16%, rgb(0, 255, 255) 30%, rgb(0, 255, 0) 36%,
+    rgb(255, 255, 0) 57%, rgb(255, 128, 0) 69%, rgb(255, 0, 0) 84%, rgb(97, 0, 0) 100%;
   /* The knob of a small on/off switch (AI Teacher's chat toggles). */
   --switch-knob: #ffffff;
 
@@ -64,6 +81,9 @@
 :root,
 :root[data-theme='light'] {
   color-scheme: light;
+  /* Two-ended data scale (periodic table trends), #205 A2: values unchanged. */
+  --data-seq-lo: #e8f0fb;
+  --data-seq-hi: #0b4f8a;
   --bg-app: #eef1f6;
   --bg-panel: #ffffff;
   --bg-panel-2: #f6f8fb;
@@ -195,6 +215,8 @@
 
 :root[data-theme='dark'] {
   color-scheme: dark;
+  --data-seq-lo: #1d2a3b;
+  --data-seq-hi: #7db8ee;
   --bg-app: #0d1117;
   --bg-panel: #151b24;
   --bg-panel-2: #19202b;
