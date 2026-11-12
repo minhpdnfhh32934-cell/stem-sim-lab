@@ -25,10 +25,7 @@ const PX_OK: Record<string, string> = {
     'SVG units, ≥ 12px on screen down to 0.8 scale (svg-text.spec.ts)',
 };
 /** `file selector` → why it is below the floor for now. */
-const BELOW_FLOOR_OK: Record<string, string> = {
-  'src/chemistry/chem.css .pt__group': '#205 B7 lays the periodic table out again',
-  'src/chemistry/chem.css .pt-cell__z': '#205 B7 lays the periodic table out again',
-};
+const BELOW_FLOOR_OK: Record<string, string> = {};
 
 /** Every `font-size` with the selector of its rule. */
 function fontSizes() {
