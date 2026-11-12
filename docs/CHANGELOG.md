@@ -6,7 +6,7 @@ Mọi thay đổi đáng chú ý của SimLab (tên cũ: STEM Sim Lab), bản m�
 
 _PR phiên bản của issue #194 mở ngày 12/11/2026; chưa phát hành. Gộp mọi thay đổi của 0.8.0 (bản đó không phát hành riêng). Phần web và phần lõi cùng lên 0.8.1 vì lõi Rust đã đổi kể từ 0.7.1 (thư viện Cargo, PR #125 và #199), nên ứng dụng 0.7.1 cài từ GitHub sẽ được báo cài bộ cài mới thay vì cập nhật trong app. Bản Store: gói 0.8.1.0, người dùng nộp tay trong Partner Center. notesReady đặt true ngày 12/11/2026 theo lời đồng ý của người dùng, sau khi rà ghi chú._
 
-Bản 0.8.1 có giao diện mới "Bàn thí nghiệm" và gộp mọi thay đổi của bản 0.8.0 (bản đó không phát hành riêng). Có nhiều bài mới bám sách Kết nối tri thức, như Chuyển động tròn đều, Giao thoa sóng, Mạch điện một chiều, Chuẩn độ acid – base và Từ tế bào đến DNA, cùng thanh chọn Lớp 10 · 11 · 12; Phòng thí nghiệm nay tên là Virtual Lab.
+Bản 0.8.1 có giao diện mới "Bàn thí nghiệm" và gộp mọi thay đổi của bản 0.8.0 (bản đó không phát hành riêng). Có nhiều bài mới bám sách Kết nối tri thức, như Chuyển động tròn đều, Giao thoa sóng, Mạch điện một chiều, Chuẩn độ acid – base và Từ tế bào đến DNA, cùng thanh chọn Lớp 10 · 11 · 12; Phòng thí nghiệm nay tên là Virtual Lab. Giao diện cũng dễ đọc và dễ bấm hơn, và các bài có chuyển động lặp lại nay chạy liên tục tới khi em bấm Tạm dừng.
 
 ### Added
 
@@ -45,6 +45,13 @@ Bản 0.8.1 có giao diện mới "Bàn thí nghiệm" và gộp mọi thay đ�
 - Đồ thị đủ điểm khi chạy chậm hoặc bấm "Bước" từng bước; bảng Số liệu và tệp CSV vẫn là giá trị do mô hình tính, không nội suy.
 - Bảng Lời giải chỉ ghi "khớp" khi phép kiểm chéo độc lập lệch không quá một phần trăm triệu; đáp số gần 0 ghi độ lệch kèm đơn vị.
 - Mọi chữ của Bàn thí nghiệm to theo Cài đặt → Cỡ chữ; khi chữ to, ô Tìm và trạng thái AI chỉ còn biểu tượng để tên bài có chỗ.
+- Dễ đọc và dễ bấm hơn ở mọi màn hình: chữ nhỏ nhất 12 px, mọi nút rộng ít nhất 40 px, có viền rõ khi dùng bàn phím; tên bài và nhãn dài không còn bị cắt, chữ đầy đủ hiện khi rê chuột hoặc dùng bàn phím.
+- Các bài có chuyển động lặp lại chạy liên tục tới khi em bấm Tạm dừng: chuyển động tròn đều, Kepler, dao động cưỡng bức, giao thoa, sóng dừng, lò xo và con lắc; trong Sinh học: con mồi – vật ăn thịt, tăng trưởng logistic, khuếch tán và thẩm thấu. Bảng Số liệu và tệp CSV ghi rõ đoạn thời gian đang giữ.
+- Khi một bài chạy lâu làm năng lượng lệch khỏi giá trị ban đầu quá một phần tỉ, Thẻ Khoa học báo ngay và có nút chạy lại.
+- Khi máy bật “giảm chuyển động”, các bài mở ở trạng thái dừng.
+- Hoá học: bảng tuần hoàn ô to, chữ rõ, bấm vào chú giải để làm nổi một nhóm; bài Maxwell–Boltzmann hiện biểu đồ phân bố tốc độ ngay cạnh hộp khí. Thanh trượt Hoá và Sinh có ô nhập số và nút −/+ như bài Vật lí.
+- AI Teacher gọn hơn: một tiêu đề, thêm chỗ cho cuộc trò chuyện; khi chưa kết nối AI có thẻ hướng dẫn “Kết nối AI”; nút Think nay ghi “Suy nghĩ kĩ (Think)”.
+- Khi chữ to, đầu trang gọn lại: Hoàn tác và Làm lại vào menu Tệp, đường dẫn giữa thu thành “…” (đọc đủ khi rê chuột hoặc dùng bàn phím).
 
 ### Fixed
 
@@ -58,6 +65,10 @@ Bản 0.8.1 có giao diện mới "Bàn thí nghiệm" và gộp mọi thay đ�
 - Hoá học: dòng "Công thức phân tử" của HCN không còn ghi CHN; phương trình gõ với mũi tên ⇌ giữ đúng mũi tên hai chiều; câu nguồn của dữ liệu nguyên tố ghi đúng phiên bản.
 - Ảnh nhỏ trên thẻ bài đúng màu sau khi đổi giao diện sáng/tối.
 - Nút Thoát trình chiếu không còn che các nút điều khiển của bài.
+- Nguyên phân và giảm phân: tên kì không còn gãy dòng, nhãn trên thanh thời gian không còn đè nhau, nhãn cột trái ngắn lại.
+- Science Studio: bước Báo cáo không còn tràn ngang màn hình.
+- Bấm Ctrl+K hoặc mở “Nguồn & Giả định” khi một bài 3D đang chạy liên tục nay luôn mở được; nếu tải không được, app báo và lần sau thử lại.
+- Sau khi bấm Tạm dừng, thời gian đứng đúng chỗ đã bấm.
 
 ### Security
 
