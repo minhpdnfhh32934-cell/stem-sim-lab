@@ -213,6 +213,7 @@ const vi = {
     scrubber: 'Tua mô phỏng',
   },
   bench: {
+    loadFailed: 'Mình chưa mở được phần này. Em thử mở lại nhé.',
     breadcrumb: 'Vị trí',
     problem: 'Đề bài',
     closeProblem: 'Đóng đề bài',
