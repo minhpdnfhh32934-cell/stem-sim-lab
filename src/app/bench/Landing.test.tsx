@@ -23,9 +23,11 @@ describe('"Cửa vào" (docs/BENCH_DESIGN.md §9.1)', () => {
       screen.getByRole('heading', { level: 1, name: 'Chào mừng đến với SimLab' }),
     ).toHaveAttribute('id', 'launch-title');
     expect(screen.getByRole('button', { name: /Virtual Lab/ })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /AI Teacher là một AI nên có thể sai/ })).toHaveClass(
+    // #205 B1: the door says what AI Teacher does; "can be wrong" is a note under the doors.
+    expect(screen.getByRole('button', { name: /Hỏi bài và xem giảng từng bước/ })).toHaveClass(
       'launch-card--teacher',
     );
+    expect(screen.getByText('AI Teacher là một AI nên có thể sai.')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /Tiếp tục/ })).toBeNull();
   });
 
@@ -43,6 +45,8 @@ describe('"Cửa vào" (docs/BENCH_DESIGN.md §9.1)', () => {
     });
     render(<BenchLanding />);
     expect(screen.getByText('AI Teacher cần bạn đủ 18 tuổi')).toBeInTheDocument();
+    // No AI Teacher, no note about it.
+    expect(screen.queryByText('AI Teacher là một AI nên có thể sai.')).toBeNull();
     expect(screen.queryByRole('button', { name: /AI Teacher/ })).toBeNull();
     expect(screen.getAllByRole('button')).toHaveLength(1);
   });
