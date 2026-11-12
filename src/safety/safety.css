@@ -44,19 +44,15 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 1px 6px;
+  /* A 40 px target with a mouse too (#205 B9; it was 19 px). */
+  min-height: var(--target);
+  padding: 0 10px;
   border: 0;
   border-radius: var(--radius-md);
   background: none;
   color: var(--text-muted);
   font: inherit;
   cursor: pointer;
-}
-@media (any-pointer: coarse) {
-  .ai-label__report {
-    min-height: var(--target);
-    padding: 0 10px;
-  }
 }
 .ai-label__report:hover {
   background: var(--bg-hover);
