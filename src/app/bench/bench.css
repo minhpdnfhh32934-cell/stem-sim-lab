@@ -492,6 +492,10 @@ kbd {
   .bench-header .ai-status__label {
     display: none;
   }
+  /* One line, a little tighter: the lesson name keeps its first two words (#205 A5, B8 test). */
+  .bench-header .segmented__item {
+    padding-inline: var(--space-2);
+  }
   /* Its icon alone is still a full target (#205 A3: it went down to 34px wide at 140 %). */
   .bench-header .ai-status {
     flex: none;
