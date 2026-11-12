@@ -2,6 +2,7 @@ import { formatNumber } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useTierConfig } from '@/perf/perfStore';
+import { SliderField } from '@/ui/SliderField';
 import { L } from '../common';
 import { formatFormula } from '../formula';
 import { eaReduced, GASES, resetGas, useGasStore, type GasId } from './gasStore';
@@ -37,36 +38,28 @@ export function GasPanel() {
           </select>
         </label>
       )}
-      <label>
-        <span>
-          {Lz(L('Nhiệt độ T', 'Temperature T'))} ({f(st.T, 4)} K)
-        </span>
-        <input
-          type="range"
-          min={100}
-          max={1500}
-          step={10}
-          value={st.T}
-          onChange={(e) => {
-            set({ T: Number(e.target.value) });
-          }}
-        />
-      </label>
-      <label>
-        <span>
-          {Lz(L('Số hạt', 'Particles'))} ({st.n})
-        </span>
-        <input
-          type="range"
-          min={50}
-          max={maxN}
-          step={10}
-          value={Math.min(st.n, maxN)}
-          onChange={(e) => {
-            set({ n: Number(e.target.value) });
-          }}
-        />
-      </label>
+      {/* A number box and − / + beside each slider, as in the physics lessons (#205 B7). */}
+      <SliderField
+        label={Lz(L('Nhiệt độ T', 'Temperature T'))}
+        value={st.T}
+        min={100}
+        max={1500}
+        step={10}
+        unit="K"
+        onChange={(T) => {
+          set({ T });
+        }}
+      />
+      <SliderField
+        label={Lz(L('Số hạt', 'Particles'))}
+        value={Math.min(st.n, maxN)}
+        min={50}
+        max={maxN}
+        step={10}
+        onChange={(n) => {
+          set({ n: Math.round(n) });
+        }}
+      />
       {st.mode === 'maxwell' && (
         <div
           className="segmented"
@@ -96,21 +89,17 @@ export function GasPanel() {
       )}
       {st.mode === 'collision' && (
         <>
-          <label>
-            <span>
-              {Lz(L('Năng lượng hoạt hóa Eₐ', 'Activation energy Eₐ'))} ({f(st.eaKJ)} kJ/mol)
-            </span>
-            <input
-              type="range"
-              min={0}
-              max={30}
-              step={0.5}
-              value={st.eaKJ}
-              onChange={(e) => {
-                set({ eaKJ: Number(e.target.value) });
-              }}
-            />
-          </label>
+          <SliderField
+            label={Lz(L('Năng lượng hoạt hóa Eₐ', 'Activation energy Eₐ'))}
+            value={st.eaKJ}
+            min={0}
+            max={30}
+            step={0.5}
+            unit="kJ/mol"
+            onChange={(eaKJ) => {
+              set({ eaKJ });
+            }}
+          />
           <p className="small muted">
             Eₐ/RT = {f(eaReduced(st.eaKJ, st.T))} ·{' '}
             {Lz(L('tỉ lệ va chạm hiệu quả lý thuyết', 'theoretical energetic fraction'))} e
