@@ -74,12 +74,15 @@ export function ChatPanel({
   teacherPage = false,
   onClose,
   onExpand,
+  onComposingChange,
 }: {
   compact?: boolean;
   showScreenContext?: boolean;
   teacherPage?: boolean;
   onClose?: () => void;
   onExpand?: () => void;
+  /** A question is being typed (the box has the focus and some text), or no longer is. */
+  onComposingChange?: (typing: boolean) => void;
 }) {
   const t = useT();
   const locale = useSettingsStore((s) => s.locale);
@@ -91,6 +94,11 @@ export function ChatPanel({
   const chosenEngine = useAnalysisEngine();
   const engine = engineKind(chosenEngine);
   const [draft, setDraft] = useState('');
+  const [inBox, setInBox] = useState(false);
+  const composing = inBox && draft.trim() !== '';
+  useEffect(() => {
+    onComposingChange?.(composing);
+  }, [composing, onComposingChange]);
   // What the learner circled on the board, when a question can carry it (the board layout of the
   // teacher page; readable text, or a picture for an AI on this computer that reads pictures).
   const pictureReader = usePictureReader(chosenEngine);
@@ -643,6 +651,7 @@ export function ChatPanel({
         boardInWords={boardInWords}
         draft={draft}
         onDraftChange={setDraft}
+        onFocusChange={setInBox}
         inputRef={input}
         onSend={submitDraft}
         busy={busy}

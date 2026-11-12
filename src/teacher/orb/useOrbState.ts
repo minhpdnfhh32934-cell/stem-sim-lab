@@ -1,10 +1,9 @@
 /**
  * The orb's state from what the page already knows (#234): the voice store (speaking), the chat
- * store (an answer on its way, just finished) and the question box inside `scope` (being typed).
- * Nothing new is stored; the question box is read from its own events (its text lives in the
- * chat panel).
+ * store (an answer on its way, just finished) and `typing`, which the chat panel reports
+ * (`onComposingChange`: its question box has the focus and some text). Nothing new is stored.
  */
-import { useEffect, useState, type RefObject } from 'react';
+import { useEffect, useState } from 'react';
 import { useChatStore } from '@/teacher/chat/chatStore';
 import { useVoiceStore } from '@/teacher/voice/voiceStore';
 import { orbStateOf, type OrbState } from './states';
@@ -14,14 +13,10 @@ export const BOOT_MS = 1200;
 /** A finished answer shows as "done" this long, then the orb waits. */
 export const DONE_MS = 3000;
 
-const isQuestionBox = (t: EventTarget | null): t is HTMLTextAreaElement =>
-  t instanceof HTMLTextAreaElement && t.closest('.chat-panel__composer') !== null;
-
-export function useOrbState(scope: RefObject<HTMLElement | null>): OrbState {
+export function useOrbState(typing: boolean): OrbState {
   const speaking = useVoiceStore((s) => s.speaking);
   const answering = useChatStore((s) => s.answering);
   const [booting, setBooting] = useState(true);
-  const [typing, setTyping] = useState(false);
   const [justAnswered, setJustAnswered] = useState(false);
 
   useEffect(() => {
@@ -36,11 +31,7 @@ export function useOrbState(scope: RefObject<HTMLElement | null>): OrbState {
   useEffect(() => {
     let done = 0;
     const unsubscribe = useChatStore.subscribe((s, prev) => {
-      if (s.answering && !prev.answering) {
-        // The question was sent: the box is empty again (set from code, no input event).
-        setTyping(false);
-        setJustAnswered(false);
-      }
+      if (s.answering && !prev.answering) setJustAnswered(false);
       if (prev.answering && !s.answering) {
         setJustAnswered(true);
         window.clearTimeout(done);
@@ -54,28 +45,6 @@ export function useOrbState(scope: RefObject<HTMLElement | null>): OrbState {
       window.clearTimeout(done);
     };
   }, []);
-
-  useEffect(() => {
-    const el = scope.current;
-    if (!el) return;
-    let pending = 0;
-    const check = (e: Event) => {
-      if (!isQuestionBox(e.target)) return;
-      const box = e.target;
-      // After the event: a state update inside it would re-render the controlled box before
-      // React read the new text (microtasks run between listeners) and wipe what was typed.
-      window.clearTimeout(pending);
-      pending = window.setTimeout(() => {
-        setTyping(document.activeElement === box && box.value.trim() !== '');
-      }, 0);
-    };
-    const events = ['input', 'focusin', 'focusout'] as const;
-    for (const type of events) el.addEventListener(type, check);
-    return () => {
-      window.clearTimeout(pending);
-      for (const type of events) el.removeEventListener(type, check);
-    };
-  }, [scope]);
 
   return orbStateOf({ booting, speaking, answering, typing, justAnswered });
 }

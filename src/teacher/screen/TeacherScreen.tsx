@@ -1,5 +1,5 @@
 import { ArrowLeft, Info, MessageCircle, Presentation } from 'lucide-react';
-import { useContext, useEffect, useId, useRef, type ComponentProps } from 'react';
+import { useContext, useEffect, useId, useState, type ComponentProps } from 'react';
 import { useLoaded, type Loaded } from '@/app/bench/useLoaded';
 import { BenchContext } from '@/app/bench/shellMode';
 import { useT } from '@/app/i18n';
@@ -7,6 +7,7 @@ import { engineKind, useAnalysisEngine } from '@/app/ai/engineChoice';
 import { useLocalAiStore } from '@/ai/local/localAiStore';
 import { useChatStore } from '@/teacher/chat/chatStore';
 import { useVoiceStore } from '@/teacher/voice/voiceStore';
+import { voiceLevel } from '@/teacher/voice/voiceLevel';
 import { ChatPanel } from '@/teacher/chat/ChatPanel';
 import { TeacherFace } from '@/teacher/face/TeacherFace';
 import { OrbView } from '@/teacher/orb/OrbView';
@@ -39,8 +40,8 @@ export default function TeacherScreen() {
   // The face shows what the teacher is doing: speaking, waiting for the AI, or listening.
   const answering = useChatStore((s) => s.answering);
   const layoutId = useId();
-  const page = useRef<HTMLElement>(null);
-  const orbState = useOrbState(page);
+  const [typing, setTyping] = useState(false);
+  const orbState = useOrbState(typing);
   const boardLoaded = useLoaded(
     board,
     layout === 'board',
@@ -77,12 +78,7 @@ export default function TeacherScreen() {
 
   return (
     // One title, the header's "AI Teacher" (#205 B5); the region keeps its own name.
-    <section
-      ref={page}
-      className="teacher"
-      aria-label={t('teacher.regionLabel')}
-      data-layout={layout}
-    >
+    <section className="teacher" aria-label={t('teacher.regionLabel')} data-layout={layout}>
       <header className="teacher__header">
         <button type="button" className="btn teacher__back" onClick={closeTeacher}>
           <ArrowLeft size={16} strokeWidth={1.75} aria-hidden="true" />
@@ -130,6 +126,7 @@ export default function TeacherScreen() {
         <aside className="teacher__presence">
           {/* The orb (#234); the SVG rings and the face when it cannot be drawn. */}
           <OrbView
+            level={voiceLevel}
             state={orbState}
             fallback={
               <div className="teacher-ring" aria-hidden="true">
@@ -184,7 +181,7 @@ export default function TeacherScreen() {
         )}
 
         <main className="teacher__chat-wrap" aria-label={t('chat.label')}>
-          <ChatPanel showScreenContext={false} teacherPage />
+          <ChatPanel showScreenContext={false} teacherPage onComposingChange={setTyping} />
         </main>
       </div>
     </section>
