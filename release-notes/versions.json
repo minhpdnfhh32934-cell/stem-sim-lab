@@ -384,8 +384,8 @@
           },
           {
             "area": "ui",
-            "vi": "Dễ đọc và dễ bấm hơn ở mọi màn hình: chữ nhỏ nhất 12 px, mọi nút rộng ít nhất 40 px, có viền rõ khi dùng bàn phím; tên bài và nhãn dài không còn bị cắt, chữ đầy đủ hiện khi rê chuột hoặc dùng bàn phím.",
-            "en": "Easier to read and to press on every screen: no text below 12 px, every button at least 40 px, a clear outline when using the keyboard; long lesson names and labels are no longer cut off, and the full text shows on hover or with the keyboard."
+            "vi": "Dễ đọc và dễ bấm hơn ở mọi màn hình: chữ nhỏ nhất 12 px, mọi vùng bấm ít nhất 40 px, có viền rõ khi dùng bàn phím; tên bài và nhãn dài không còn bị cắt, chữ đầy đủ hiện khi rê chuột hoặc dùng bàn phím.",
+            "en": "Easier to read and to press on every screen: no text below 12 px, every click target at least 40 px, a clear outline when using the keyboard; long lesson names and labels are no longer cut off, and the full text shows on hover or with the keyboard."
           },
           {
             "area": "ui",
