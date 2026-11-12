@@ -22,6 +22,7 @@ import {
   brownianStep,
   osmosisEquilibrium,
   osmosisRate,
+  osmosisSegment,
   osmosisTrajectory,
   twoCompartment,
   type OsmosisParams,
@@ -163,6 +164,43 @@ describe('diffusion and osmosis', () => {
         expect(hL).toBeLessThanOrEqual(2 * h0);
       }
       expect(traj.hL.at(-1)).toBeCloseTo(2 * h0, 9);
+    },
+  );
+
+  it.each([
+    // The lesson's defaults (no dry arm) and an arm that runs dry part-way.
+    { c0: 1, i: 1, T: 298.15, h0: 0.2 },
+    { c0: 5, i: 1, T: 298.15, h0: 0.2 },
+  ])(
+    'osmosis continued span by span from each last sample is the run in one go (c0=$c0) (#205 C5)',
+    ({ c0, i, T, h0 }) => {
+      const p: OsmosisParams = { c0, i, T, h0, rho: 1000, g: 9.80665, lp: 5e-6 };
+      const k = p.lp * (2 * p.rho * p.g + (i * c0 * 8.314462618 * T) / h0);
+      // Spans of 1/k: the first ones still move, the later ones stand at the end state.
+      const span = 1 / k;
+      const n = 240;
+      const whole = osmosisTrajectory(p, 10 * span, 10 * n);
+      let seg = osmosisTrajectory(p, span, n);
+      const t = [...seg.t];
+      const h = [...seg.hL];
+      for (let j = 1; j < 10; j++) {
+        const last = seg.t.length - 1;
+        seg = osmosisSegment(p, { t: seg.t[last]!, hL: seg.hL[last]! }, span, n);
+        t.push(...seg.t.slice(1));
+        h.push(...seg.hL.slice(1));
+      }
+      expect(t).toHaveLength(whole.t.length);
+      let gap = 0;
+      t.forEach((ti, m) => {
+        expect(Math.abs(ti - whole.t[m]!) / span).toBeLessThan(1e-9);
+        gap = Math.max(gap, Math.abs(h[m]! - whole.hL[m]!));
+      });
+      // Measured: 0 (the same steps).
+      expect(gap).toBeLessThan(1e-12);
+      const eq = osmosisEquilibrium(p);
+      // Towards the end state: the gap is a thousandth of the starting one (1/k is linearised).
+      expect(Math.abs(h.at(-1)! - eq.hL)).toBeLessThan(1e-3 * Math.abs(eq.hL - h0));
+      for (const v of h) expect(v).toBeLessThanOrEqual(2 * h0);
     },
   );
 
