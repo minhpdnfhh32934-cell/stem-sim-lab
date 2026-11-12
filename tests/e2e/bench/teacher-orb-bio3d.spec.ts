@@ -78,7 +78,7 @@ for (const fontScale of [1, 1.4] as const) {
     expect(await sideScroll(page)).toBe(0);
 
     // The board loads while the orb draws every frame (by hand, not lazy(): #228).
-    await page.getByRole('radio', { name: 'Giảng trên bảng' }).click();
+    await page.getByRole('radio', { name: 'Bảng giảng' }).click();
     await expect(page.getByRole('region', { name: 'Bảng trắng của AI Teacher' })).toBeVisible({
       timeout: 20_000,
     });
