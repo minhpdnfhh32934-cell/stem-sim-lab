@@ -1,10 +1,10 @@
-import { ArrowLeft, Info, MessageCircle, Presentation } from 'lucide-react';
-import { useContext, useEffect, useId, useState, type ComponentProps } from 'react';
+import { ArrowLeft, Info } from 'lucide-react';
+import { useContext, useEffect, useId, useRef, useState, type ComponentProps } from 'react';
 import { useLoaded, type Loaded } from '@/app/bench/useLoaded';
 import { BenchContext } from '@/app/bench/shellMode';
 import { useT } from '@/app/i18n';
-import { engineKind, useAnalysisEngine } from '@/app/ai/engineChoice';
-import { useLocalAiStore } from '@/ai/local/localAiStore';
+import { useAiStatusView } from '@/app/ai/aiStatusView';
+import { effectiveTier, usePerfStore } from '@/perf/perfStore';
 import { useChatStore } from '@/teacher/chat/chatStore';
 import { useVoiceStore } from '@/teacher/voice/voiceStore';
 import { voiceLevel } from '@/teacher/voice/voiceLevel';
@@ -14,6 +14,7 @@ import { OrbView } from '@/teacher/orb/OrbView';
 import { useOrbState } from '@/teacher/orb/useOrbState';
 import { closeTeacher, useTeacherStore, type TeacherLayout } from '@/teacher/teacherStore';
 import { Skeleton } from '@/ui/Skeleton';
+import { useGlide } from './glide';
 import { latestLesson } from './latestLesson';
 import './teacher.css';
 
@@ -32,9 +33,13 @@ export default function TeacherScreen() {
   const t = useT();
   const layout = useTeacherStore((s) => s.layout);
   const setLayout = useTeacherStore((s) => s.setLayout);
-  const engine = engineKind(useAnalysisEngine());
-  const gemmaModel = useChatStore((s) => s.gemmaModel);
-  const localLabel = useLocalAiStore((s) => s.selected?.label ?? null);
+  // Who answers, in the header pill's words (#233: the old pill said "AI trực tuyến" beside
+  // "Chưa kết nối AI"). Only when an AI can answer: the header and the empty conversation already
+  // say what is missing, and the room never repeats "Chưa kết nối" (#205 B5).
+  const link = useAiStatusView();
+  const answers = link.kind === 'cloud' || link.kind === 'local';
+  // Glass cards are translucent; on the Low tier, or once frames run slow, they are opaque.
+  const solidGlass = usePerfStore((s) => effectiveTier(s) === 'low');
   const messages = useChatStore((s) => s.messages);
   const speaking = useVoiceStore((s) => s.speaking);
   // The face shows what the teacher is doing: speaking, waiting for the AI, or listening.
@@ -42,6 +47,8 @@ export default function TeacherScreen() {
   const layoutId = useId();
   const [typing, setTyping] = useState(false);
   const orbState = useOrbState(typing);
+  const orbSlot = useRef<HTMLDivElement>(null);
+  useGlide(orbSlot, layout);
   const boardLoaded = useLoaded(
     board,
     layout === 'board',
@@ -78,7 +85,12 @@ export default function TeacherScreen() {
 
   return (
     // One title, the header's "AI Teacher" (#205 B5); the region keeps its own name.
-    <section className="teacher" aria-label={t('teacher.regionLabel')} data-layout={layout}>
+    <section
+      className="teacher"
+      aria-label={t('teacher.regionLabel')}
+      data-layout={layout}
+      data-glass={solidGlass ? 'solid' : 'glass'}
+    >
       <header className="teacher__header">
         <button type="button" className="btn teacher__back" onClick={closeTeacher}>
           <ArrowLeft size={16} strokeWidth={1.75} aria-hidden="true" />
@@ -95,79 +107,78 @@ export default function TeacherScreen() {
         >
           <Info size={16} strokeWidth={1.75} aria-hidden="true" />
         </span>
-        <div className="teacher__layout">
-          <span id={layoutId} className="sr-only">
-            {t('teacher.layoutLabel')}
-          </span>
-          <div className="segmented" role="radiogroup" aria-labelledby={layoutId}>
-            {LAYOUTS.map((item) => {
-              const Icon = item === 'talk' ? MessageCircle : Presentation;
-              return (
-                <button
-                  key={item}
-                  type="button"
-                  role="radio"
-                  aria-checked={layout === item}
-                  className="segmented__item"
-                  onClick={() => {
-                    setLayout(item);
-                  }}
-                >
-                  <Icon size={15} aria-hidden="true" />
-                  {t(item === 'talk' ? 'teacher.layoutTalk' : 'teacher.layoutBoard')}
-                </button>
-              );
-            })}
-          </div>
+        {/* Numbered tabs (#234): the layout switch keeps its radio roles and names. */}
+        <span id={layoutId} className="sr-only">
+          {t('teacher.layoutLabel')}
+        </span>
+        <div className="tabs__list teacher__tabs" role="radiogroup" aria-labelledby={layoutId}>
+          {LAYOUTS.map((item, i) => (
+            <button
+              key={item}
+              type="button"
+              role="radio"
+              aria-checked={layout === item}
+              className="tabs__tab teacher__tab"
+              onClick={() => {
+                setLayout(item);
+              }}
+            >
+              <span className="teacher__tab-num" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              {t(item === 'talk' ? 'teacher.layoutTalk' : 'teacher.layoutBoard')}
+            </button>
+          ))}
         </div>
+        {answers && (
+          <span className="teacher__link" data-status={link.kind}>
+            <span className="teacher__link-dot" aria-hidden="true" />
+            {link.label}
+          </span>
+        )}
       </header>
 
       <div className="teacher__stage">
         <aside className="teacher__presence">
           {/* The orb (#234); the SVG rings and the face when it cannot be drawn. */}
-          <OrbView
-            level={voiceLevel}
-            state={orbState}
-            fallback={
-              <div className="teacher-ring" aria-hidden="true">
-                <svg viewBox="0 0 200 200" className="teacher-ring__waves">
-                  <circle
-                    cx="100"
-                    cy="100"
-                    r="78"
-                    className="teacher-ring__wave teacher-ring__wave--1"
+          <div ref={orbSlot} className="teacher__orb-slot">
+            <OrbView
+              level={voiceLevel}
+              state={orbState}
+              fallback={
+                <div className="teacher-ring" aria-hidden="true">
+                  <svg viewBox="0 0 200 200" className="teacher-ring__waves">
+                    <circle
+                      cx="100"
+                      cy="100"
+                      r="78"
+                      className="teacher-ring__wave teacher-ring__wave--1"
+                    />
+                    <circle
+                      cx="100"
+                      cy="100"
+                      r="70"
+                      className="teacher-ring__wave teacher-ring__wave--2"
+                    />
+                    <circle
+                      cx="100"
+                      cy="100"
+                      r="62"
+                      className="teacher-ring__wave teacher-ring__wave--3"
+                    />
+                  </svg>
+                  <TeacherFace
+                    mood={speaking ? 'speaking' : answering ? 'thinking' : 'idle'}
+                    trackCursor
                   />
-                  <circle
-                    cx="100"
-                    cy="100"
-                    r="70"
-                    className="teacher-ring__wave teacher-ring__wave--2"
-                  />
-                  <circle
-                    cx="100"
-                    cy="100"
-                    r="62"
-                    className="teacher-ring__wave teacher-ring__wave--3"
-                  />
-                </svg>
-                <TeacherFace
-                  mood={speaking ? 'speaking' : answering ? 'thinking' : 'idle'}
-                  trackCursor
-                />
-              </div>
-            }
-          />
-          <p className="teacher__caption">
-            {t(layout === 'board' ? 'teacher.boardCaption' : 'teacher.talkCaption')}
+                </div>
+              }
+            />
+          </div>
+          {/* The orb is aria-hidden: its state is said here (polite: after what is being read). */}
+          <p className="teacher__state" aria-live="polite">
+            {t(`teacher.state.${orbState}`)}
           </p>
-          <span className="teacher__engine-pill">
-            <span className="teacher__engine-dot" />
-            {engine === 'gemma'
-              ? t('chat.model', { model: gemmaModel })
-              : engine === 'local'
-                ? (localLabel ?? t('chat.local'))
-                : t('chat.cloud')}
-          </span>
         </aside>
 
         {layout === 'board' && (
