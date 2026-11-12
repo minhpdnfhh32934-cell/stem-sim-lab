@@ -123,7 +123,7 @@ export function drawGrid(
 
   // Axis labels (metres) along the bottom and left edges.
   ctx.fillStyle = colors.faint;
-  ctx.font = `${fontPx(11)} ui-monospace, Consolas, monospace`;
+  ctx.font = `${fontPx(12)} ui-monospace, Consolas, monospace`;
   const fmtFor = (step: number) => {
     // Enough decimals to write every multiple of `step` (a step of 2.5·10ⁿ needs one more).
     let digits = Math.max(0, -Math.floor(Math.log10(step) + 1e-9));

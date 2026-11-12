@@ -1037,7 +1037,7 @@ kbd {
   min-width: 0;
 }
 .science-card__summary-title {
-  font-size: calc(14rem / 14);
+  font-size: var(--text-md);
   line-height: calc(20rem / 14);
   font-weight: 600;
   overflow: hidden;
@@ -1046,7 +1046,7 @@ kbd {
 }
 .science-card__summary-validity {
   margin: 0;
-  font-size: calc(13rem / 14);
+  font-size: var(--text-note);
   line-height: calc(18rem / 14);
   color: var(--paper-text-muted);
   display: -webkit-box;
@@ -1065,7 +1065,7 @@ kbd {
   border-left: 3px solid var(--warning);
   border-radius: var(--radius-sm);
   background: var(--warning-soft);
-  font-size: calc(13rem / 14);
+  font-size: var(--text-note);
   line-height: calc(18rem / 14);
 }
 .science-card__intervened .btn {
@@ -1144,7 +1144,7 @@ kbd {
 }
 .shelf-filters__title {
   margin: var(--space-2) 0 0;
-  font-size: calc(13rem / 14);
+  font-size: var(--text-note);
   line-height: calc(18rem / 14);
   font-weight: 600;
   color: var(--paper-text-muted);
@@ -1188,7 +1188,7 @@ kbd {
   flex: 1;
 }
 .shelf-subject__count {
-  font-size: calc(12rem / 14);
+  font-size: var(--text-caption);
   color: var(--paper-text-muted);
 }
 .shelf-search {
@@ -1228,7 +1228,7 @@ kbd {
 .shelf-main__head h1 {
   flex: 1;
   margin: 0;
-  font-size: calc(32rem / 14);
+  font-size: var(--text-display);
   line-height: calc(42rem / 14);
 }
 .shelf-main__note {
@@ -1237,7 +1237,7 @@ kbd {
   align-items: center;
   gap: var(--space-1);
   margin: 0;
-  font-size: calc(12rem / 14);
+  font-size: var(--text-caption);
   line-height: calc(16rem / 14);
   color: var(--paper-text-muted);
 }
@@ -1257,7 +1257,7 @@ kbd {
 }
 .shelf-start h2 {
   margin: 0;
-  font-size: calc(16rem / 14);
+  font-size: var(--text-lg);
   line-height: calc(22rem / 14);
 }
 .shelf-start .btn {
@@ -1272,11 +1272,11 @@ kbd {
   align-items: baseline;
   gap: var(--space-2);
   margin: 0 0 var(--space-2);
-  font-size: calc(18rem / 14);
+  font-size: var(--text-title);
   line-height: calc(26rem / 14);
 }
 .shelf__count {
-  font-size: calc(13rem / 14);
+  font-size: var(--text-note);
   font-weight: 400;
   color: var(--paper-text-muted);
 }
@@ -1349,7 +1349,7 @@ kbd {
   opacity: 0.7;
 }
 .shelf-card__title {
-  font-size: calc(16rem / 14);
+  font-size: var(--text-lg);
   line-height: calc(22rem / 14);
   font-weight: 600;
 }
@@ -1357,7 +1357,7 @@ kbd {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-1) var(--space-2);
-  font-size: calc(12rem / 14);
+  font-size: var(--text-caption);
   line-height: calc(16rem / 14);
   color: var(--paper-text-muted);
 }
@@ -1399,7 +1399,7 @@ kbd {
 }
 .shelf-start__topic {
   margin: 0;
-  font-size: calc(14rem / 14);
+  font-size: var(--text-md);
   line-height: calc(20rem / 14);
 }
 
@@ -1433,27 +1433,27 @@ kbd {
 }
 .bench-launch__still figcaption {
   margin-top: var(--space-2);
-  font-size: calc(12rem / 14);
+  font-size: var(--text-caption);
   line-height: calc(16rem / 14);
   color: var(--paper-text-muted);
 }
 .bench-launch__eyebrow {
   margin: 0 0 var(--space-2);
-  font-size: calc(13rem / 14);
+  font-size: var(--text-note);
   line-height: calc(18rem / 14);
   font-weight: 600;
   color: var(--paper-text-muted);
 }
 .bench-launch__title {
   margin: 0;
-  font-size: calc(32rem / 14);
+  font-size: var(--text-display);
   line-height: calc(42rem / 14);
   font-weight: 600;
 }
 .bench-launch__subtitle {
   max-width: 52ch;
   margin: var(--space-3) 0 0;
-  font-size: calc(16rem / 14);
+  font-size: var(--text-lg);
   line-height: calc(26rem / 14);
   color: var(--paper-text-muted);
 }
@@ -1485,12 +1485,12 @@ button.bench-door:hover {
   background: var(--bg-hover);
 }
 .bench-door strong {
-  font-size: calc(22rem / 14);
+  font-size: var(--text-heading);
   line-height: calc(30rem / 14);
   font-weight: 600;
 }
 .bench-door span {
-  font-size: calc(14rem / 14);
+  font-size: var(--text-md);
   line-height: calc(20rem / 14);
 }
 .bench-door--lab,
@@ -1516,7 +1516,7 @@ button.bench-door--lab:hover {
   align-items: center;
   gap: var(--space-2);
   margin: 48px 0 0;
-  font-size: calc(13rem / 14);
+  font-size: var(--text-note);
   line-height: calc(18rem / 14);
   color: var(--paper-text-muted);
 }
@@ -1545,7 +1545,7 @@ button.bench-door--lab:hover {
 }
 .step-strip .onboarding__step {
   margin: 0;
-  font-size: calc(13rem / 14);
+  font-size: var(--text-note);
   line-height: calc(18rem / 14);
   font-weight: 600;
 }
@@ -1587,14 +1587,14 @@ button.bench-door--lab:hover {
 }
 .first-run__subhead {
   margin: var(--space-4) 0 var(--space-2);
-  font-size: calc(16rem / 14);
+  font-size: var(--text-lg);
   line-height: calc(22rem / 14);
 }
 .first-run__note {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: calc(12rem / 14);
+  font-size: var(--text-caption);
   line-height: calc(16rem / 14);
 }
 .first-run__footer {
@@ -1725,7 +1725,7 @@ button.bench-door--lab:hover {
 }
 :root[data-shell='bench'] .settings-nav__group-title {
   color: var(--text-muted);
-  font-size: calc(12rem / 14);
+  font-size: var(--text-caption);
   line-height: calc(16rem / 14);
   letter-spacing: 0;
   text-transform: none;
@@ -1745,7 +1745,7 @@ button.bench-door--lab:hover {
   border: 1px solid var(--border-input);
   border-radius: var(--radius-sm);
   color: var(--text-muted);
-  font-size: calc(12rem / 14);
+  font-size: var(--text-caption);
   line-height: calc(16rem / 14);
   white-space: nowrap;
 }
@@ -1764,7 +1764,7 @@ button.bench-door--lab:hover {
   padding: 0 var(--space-2);
   border: 1px dashed var(--pending);
   border-radius: var(--radius-sm);
-  font-size: calc(12rem / 14);
+  font-size: var(--text-caption);
   line-height: calc(16rem / 14);
 }
 
@@ -1869,7 +1869,7 @@ button.bench-door--lab:hover {
   border-radius: var(--radius-sm);
   background: var(--bg-panel);
   color: var(--text);
-  font-size: calc(12rem / 14);
+  font-size: var(--text-caption);
   line-height: calc(16rem / 14);
 }
 .bench-stamp--bl {
@@ -1894,7 +1894,7 @@ button.bench-door--lab:hover {
   background: var(--bg-panel);
 }
 .bench__stage .chem-view--flush > .chem-overlay > .rx-eq--chip {
-  font-size: calc(22rem / 14);
+  font-size: var(--text-heading);
   line-height: calc(30rem / 14);
 }
 .bench__stage .chem-view--flush > .rx-status {
@@ -1920,7 +1920,7 @@ button.bench-door--lab:hover {
   grid-column: 1 / -1;
   overflow: hidden;
   color: var(--text-muted);
-  font-size: calc(12rem / 14);
+  font-size: var(--text-caption);
   line-height: calc(16rem / 14);
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1957,7 +1957,7 @@ button.bench-door--lab:hover {
 }
 .edge-steps__readout {
   overflow: hidden;
-  font-size: calc(13rem / 14);
+  font-size: var(--text-note);
   line-height: calc(16rem / 14);
   white-space: normal;
 }
@@ -1987,8 +1987,8 @@ button.bench-door--lab:hover {
   top: 5px;
   left: 3px;
   color: var(--text-muted);
-  font-size: calc(10rem / 14);
-  line-height: calc(10rem / 14);
+  font-size: var(--text-caption);
+  line-height: var(--text-caption);
   white-space: nowrap;
 }
 .edge-steps__speed {
@@ -2051,7 +2051,7 @@ button.bench-door--lab:hover {
 }
 .report-origins h4 {
   margin: 0 0 var(--space-1);
-  font-size: calc(14rem / 14);
+  font-size: var(--text-md);
   line-height: calc(20rem / 14);
 }
 .report-origins p,
@@ -2068,7 +2068,7 @@ button.bench-door--lab:hover {
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   color: var(--text-muted);
-  font-size: calc(12rem / 14);
+  font-size: var(--text-caption);
   line-height: calc(16rem / 14);
   white-space: nowrap;
 }
@@ -2105,7 +2105,7 @@ button.bench-door--lab:hover {
   padding: 0 var(--space-2);
   border-radius: var(--radius-sm);
   color: var(--paper-text);
-  font-size: calc(14rem / 14);
+  font-size: var(--text-md);
   line-height: calc(18rem / 14);
   text-decoration: none;
 }

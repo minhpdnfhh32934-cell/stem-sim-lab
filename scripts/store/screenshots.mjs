@@ -9,7 +9,7 @@
  * learner without a key sees it. Store shots should show a real answer: take that one from the
  * installed app with a real key (docs/STORE.md).
  */
-import { spawn } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -57,8 +57,8 @@ async function startServer() {
 
 function stopServer(child) {
   if (!child) return;
-  // npm runs Vite in a child shell: end the whole tree.
-  if (process.platform === 'win32') spawn('taskkill', ['/pid', String(child.pid), '/t', '/f']);
+  // npm runs Vite in a child shell: end the whole tree, and wait for it (process.exit follows).
+  if (process.platform === 'win32') spawnSync('taskkill', ['/pid', String(child.pid), '/t', '/f']);
   else child.kill('SIGTERM');
 }
 

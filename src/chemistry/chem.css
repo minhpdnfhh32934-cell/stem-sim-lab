@@ -88,6 +88,7 @@
 .pt__group {
   align-self: end;
   color: var(--text-faint);
+  /* Below the 12px floor until #205 B7 lays the periodic table out again. */
   font-size: 0.65rem;
   text-align: center;
   text-wrap: balance;
@@ -132,6 +133,7 @@
 }
 .pt-cell__z {
   color: var(--text-muted);
+  /* Below the 12px floor until #205 B7 lays the periodic table out again. */
   font-size: 0.6rem;
 }
 .pt-cell__symbol {
@@ -550,7 +552,7 @@
   border-radius: 3px;
   background: color-mix(in srgb, var(--bg-panel) 70%, transparent);
   color: var(--text);
-  font-size: calc(11rem / 14);
+  font-size: var(--text-caption);
   font-weight: 600;
   white-space: nowrap;
 }
@@ -769,7 +771,7 @@
   border-radius: var(--radius-full);
   background: var(--conf-qual-soft);
   color: var(--conf-qual);
-  font-size: 0.68rem;
+  font-size: var(--text-caption);
   font-weight: 600;
 }
 .rx-facts p {
@@ -957,6 +959,7 @@
 }
 .eq-energy__text {
   fill: var(--text-muted);
+  /* Text inside a drawing (SVG units, #205 A1): it scales with the picture. */
   font-size: 10px;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1048,7 +1051,9 @@
 }
 .tit-label {
   fill: var(--text-muted);
-  font-size: 11px;
+  /* SVG units (#205 A1): the picture is drawn at about 0.98 of its size at 100 %, so 13 gives
+     12.7px on screen; svg-text.spec.ts measures it. */
+  font-size: 13px;
 }
 .tit-readout {
   flex: 1 1 18rem;
