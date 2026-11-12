@@ -100,8 +100,9 @@ export function rayAt(camera: THREE.Camera, x: number, y: number): THREE.Raycast
 
 /** Makes `prefers-reduced-motion: reduce` match until the returned function is called. */
 export function withReducedMotion(): () => void {
-  // jsdom has no matchMedia: the original may be missing.
-  const original = Object.getOwnPropertyDescriptor(window, 'matchMedia');
+  // jsdom has no matchMedia, and vitest's global is an accessor: putting the descriptor back
+  // would keep the stub, so the old value (undefined) goes back through it.
+  const before: unknown = Reflect.get(window, 'matchMedia');
   window.matchMedia = (query: string) =>
     ({
       matches: query.includes('prefers-reduced-motion'),
@@ -113,7 +114,6 @@ export function withReducedMotion(): () => void {
       // No deprecated addListener/removeListener (lint): the app only uses addEventListener.
     }) as unknown as MediaQueryList;
   return () => {
-    if (original) Object.defineProperty(window, 'matchMedia', original);
-    else Reflect.deleteProperty(window, 'matchMedia');
+    Reflect.set(window, 'matchMedia', before);
   };
 }
