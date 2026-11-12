@@ -71,6 +71,7 @@ import {
 } from './facts';
 import {
   SOLUTE_DRAWN,
+  advanceOsmosis,
   osmosisFrameAt,
   osmosisModel3d,
   type OsmosisModel3D,
@@ -254,14 +255,35 @@ function Transport3DScene({
   const t = useTransport3D((s) => s.t);
   // "Hiện tên": on by default (the names and counts on the picture are the model's).
   const labelsOn = labelsChoice ?? true;
-  const top = mode === 'diffusion' ? diffusion.tEnd : osmosis.tEnd;
-  const x = Math.min(Math.max(0, t), top);
+  // Endless (#205 C5): spans of the process's tEnd one after the other; `page` is the one shown.
+  const span = mode === 'diffusion' ? diffusion.tEnd : osmosis.tEnd;
+  const page = useTransport3D((s) => s.page);
+  const from = page * span;
+  const x = Math.min(Math.max(from, t), from + span);
+  // Osmosis: the span's samples, by DOPRI5 from the last sample of the span before.
+  const osmosisKey = JSON.stringify([osmosis.p, osmosis.tEnd]);
+  const osmosisRun = useMemo(
+    () =>
+      advanceOsmosis(useTransport3D.getState().osmosis, {
+        key: osmosisKey,
+        page: mode === 'osmosis' ? page : 0,
+        d: osmosis,
+      }),
+    [osmosisKey, mode, page, osmosis],
+  );
+  useEffect(() => {
+    useTransport3D.setState({ osmosis: osmosisRun });
+  }, [osmosisRun]);
   const view: TransportView3D = useMemo(
     () =>
       mode === 'diffusion'
         ? { mode, model: diffusion, frame: diffusionFrameAt(diffusion, x) }
-        : { mode, model: osmosis, frame: osmosisFrameAt(osmosis, x) },
-    [mode, diffusion, osmosis, x],
+        : {
+            mode,
+            model: { ...osmosis, traj: osmosisRun.traj },
+            frame: osmosisFrameAt({ ...osmosis, traj: osmosisRun.traj }, x),
+          },
+    [mode, diffusion, osmosis, osmosisRun, x],
   );
   const quality = quality3d(tierName, tier);
   const hostRef = useRef<HTMLDivElement>(null);
@@ -286,8 +308,9 @@ function Transport3DScene({
   useEffect(
     () =>
       useTransport.subscribe((s, prev) => {
-        if (s.mode !== prev.mode) useTransport3D.setState({ t: 0, playing: false, selected: null });
-        else if (s.run !== prev.run) useTransport3D.setState({ t: 0, playing: true });
+        if (s.mode !== prev.mode)
+          useTransport3D.setState({ t: 0, page: 0, playing: false, selected: null });
+        else if (s.run !== prev.run) useTransport3D.setState({ t: 0, page: 0, playing: true });
       }),
     [],
   );
@@ -502,22 +525,22 @@ function Transport3DScene({
     hostRt.current?.request();
   }, [view, hostRt]);
 
-  // Play: t runs to the end of the range; molecules wobble (illustration, never with reduced
-  // motion). Frames only while playing.
+  // Play: t runs on, span after span (#205 C5); molecules wobble (illustration, never with
+  // reduced motion). Frames only while playing.
   useFrameLoop(playing, (dt) => {
     const v = viewRef.current;
-    const end = v.model.tEnd;
+    const len = v.model.tEnd;
     if (!prefersReducedMotion()) {
       phaseRef.current += dt;
       const sc = sceneRef.current;
       if (sc?.mode === 'osmosis') sc.setPhase(phaseRef.current);
     }
-    const now = Math.min(useTransport3D.getState().t, end);
-    const next = Math.min(end, now + (dt * end) / PLAY_SECONDS);
-    const done = next >= end;
-    useTransport3D.setState({ t: next, playing: !done });
+    const s = useTransport3D.getState();
+    const next = s.t + (dt * len) / PLAY_SECONDS;
+    // Past the end of the span shown: the next one (its first sample is this one's last).
+    useTransport3D.setState({ t: next, page: next >= (s.page + 1) * len ? s.page + 1 : s.page });
     hostRt.current?.request();
-    return !done;
+    return true;
   });
 
   useLayoutEffect(() => {
@@ -545,12 +568,9 @@ function Transport3DScene({
     hostRt.current?.request();
   }, [labelsOn, Lz, locale, hostRt]);
 
+  // Endless: "Chạy" goes on from where the run is (at a span's end, into the next one).
   const play = () => {
-    useTransport3D.setState((s) => {
-      if (s.playing) return { playing: false };
-      // From the start again once the end is reached.
-      return { playing: true, t: s.t >= top ? 0 : Math.min(s.t, top) };
-    });
+    useTransport3D.setState((s) => ({ playing: !s.playing }));
   };
 
   const isDiffusion = view.mode === 'diffusion';
@@ -560,7 +580,7 @@ function Transport3DScene({
     ? diffusionPicture(view.model, view.frame, fmt)
     : osmosisPicture(view.frame, fmt);
   // Osmosis samples the trajectory: the slider steps from one sample to the next.
-  const step = isDiffusion ? top / 400 : top / Math.max(1, view.model.traj.t.length - 1);
+  const step = isDiffusion ? span / 400 : span / Math.max(1, view.model.traj.t.length - 1);
 
   return (
     <div className="bio-view m3d tr3d" data-lesson="transport" data-mode={mode}>
@@ -603,14 +623,14 @@ function Transport3DScene({
                 reset={{
                   label: Lz(L('Đặt lại', 'Reset')),
                   onClick: () => {
-                    useTransport3D.setState({ t: 0, playing: false });
+                    useTransport3D.setState({ t: 0, page: 0, playing: false });
                   },
                 }}
                 readout={Lz(readout)}
                 scrub={{
                   label: Lz(L('Thời gian', 'Time')),
-                  min: 0,
-                  max: top,
+                  min: from,
+                  max: from + span,
                   step,
                   value: view.frame.t,
                   valueText: Lz(readout),
@@ -633,8 +653,8 @@ function Transport3DScene({
                 <input
                   type="range"
                   aria-label={Lz(L('Thời gian', 'Time'))}
-                  min={0}
-                  max={top}
+                  min={from}
+                  max={from + span}
                   step={step}
                   value={view.frame.t}
                   onChange={(e) => {

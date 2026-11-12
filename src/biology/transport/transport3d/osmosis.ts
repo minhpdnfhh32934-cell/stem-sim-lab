@@ -10,7 +10,7 @@
 import { C } from '@/core/constants';
 import { rng } from '../../genetics/stats';
 import { niceStep } from '../../fmt';
-import type { OsmosisParams } from '../transport';
+import { osmosisSegment, type OsmosisParams } from '../transport';
 
 export type Vec3 = [number, number, number];
 
@@ -20,6 +20,7 @@ export interface OsmosisData {
   eq: { hL: number; hR: number; dh: number; pi: number; dry: boolean };
   pi0: number;
   tEnd: number;
+  /** Samples of the span shown: from t = 0, or where an endless run's span starts (#205 C5). */
   traj: { t: number[]; hL: number[] };
 }
 
@@ -79,8 +80,37 @@ export function osmosisModel3d(d: OsmosisData): OsmosisModel3D {
 /** The trajectory sample shown at time t: the one at or before t (the 2D picture's rule). */
 export function sampleIndex(m: OsmosisData, t: number): number {
   const n = m.traj.t.length;
-  const u = Math.max(0, t) / Math.max(1e-12, m.tEnd);
+  const u = Math.max(0, t - (m.traj.t[0] ?? 0)) / Math.max(1e-12, m.tEnd);
   return Math.max(0, Math.min(n - 1, Math.floor(u * (n - 1) + 1e-9)));
+}
+
+/** An endless run (#205 C5): the span `page` shown and its samples. */
+export interface OsmosisSpan {
+  key: string;
+  page: number;
+  traj: { t: number[]; hL: number[] };
+}
+
+/**
+ * The run at span `page`: each span is computed by DOPRI5 from the last sample of the one before
+ * (`osmosisSegment`, the same steps as one run in one go), never interpolated; only the span
+ * shown is kept. Another `key` (other inputs) or an earlier page starts again from span 0.
+ */
+export function advanceOsmosis(
+  cur: OsmosisSpan | null,
+  want: { key: string; page: number; d: OsmosisData },
+): OsmosisSpan {
+  const { d } = want;
+  let run =
+    cur && cur.key === want.key && cur.page <= want.page
+      ? cur
+      : { key: want.key, page: 0, traj: d.traj };
+  const n = d.traj.t.length - 1;
+  while (run.page < want.page && n > 0) {
+    const last = { t: run.traj.t[n] ?? 0, hL: run.traj.hL[n] ?? d.p.h0 };
+    run = { key: want.key, page: run.page + 1, traj: osmosisSegment(d.p, last, d.tEnd, n) };
+  }
+  return run;
 }
 
 export function osmosisFrameAt(m: OsmosisData, t: number): OsmosisFrame {
