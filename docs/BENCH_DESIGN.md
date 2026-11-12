@@ -202,6 +202,8 @@ Closest pair of data colours, ΔE_OK (Machado et al. 2009, severity 1.0, on line
 - Light: ink #000 on #FFF (21:1), accent #00524E (9.06), `--border-input` = ink.
 - Dark: #FFF on #000 (21:1), accent #7FF2E6 (15.75).
 
+**Colours outside the palette (#205 A2).** Scrims, fixed backgrounds, shadows and data colours that stylesheets used to write themselves are tokens too, with their values unchanged: `--scrim`, `--scrim-strong`, `--bg-media`, `--bg-drawing`, `--shadow-float`, `--shadow-docked`, `--shadow-pen`, `--text-on-data(-muted)`, `--data-spectrum` and the two-ended `--data-seq-lo` / `--data-seq-hi`. `colorTokens.test.ts` keeps literal colours out of every other stylesheet. Text on the accent always uses `--text-on-accent` (the learner's chat bubble wrote white, unreadable on the light accent of the dark themes).
+
 ## 5. Type
 
 Bundled with `@fontsource` 5.3.0, OFL-1.1. The `vietnamese` subset was checked on api.fontsource.org on 2026-11-02. Import only the `latin`, `latin-ext` and `vietnamese` subset CSS. CSP `font-src 'self'` is unchanged.
