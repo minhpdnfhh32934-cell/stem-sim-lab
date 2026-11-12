@@ -397,6 +397,7 @@ Under 18: door 2 becomes a non-interactive card the same size, with a Lock icon 
 
 - Mark 40 at x8; breadcrumb "Phòng thí nghiệm" at x56.
 - Right side: `.ai-status` 108 at x666, "Tìm… Ctrl+K" 172 at x778, mode segmented "Cơ bản | Nâng cao" 176 at x954, "AI Teacher" outlined 112 at x1134 (18+ only), Tệp 64 at x1250, Cài đặt 40 at x1318.
+- #205 B2 (12/11/2026): the search is a 40 px icon named "Tìm kiếm" (Ctrl+K in its tooltip; "Tìm…" read as cut text). When the header is short of room (its container query, from 110 % at 1366 px) the AI status keeps only its icon and the light / dark switch moves into Tệp as "Giao diện tối" (a checkbox item), so the lesson name keeps its room. "Đề bài" is at least 112 px and never squeezes its icon.
 
 **Filter column x0–288** (complementary "Thư viện chủ đề"; padding 16, content 256), in order:
 
