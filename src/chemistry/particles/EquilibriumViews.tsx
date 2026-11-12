@@ -22,6 +22,7 @@ import type { LocalizedText } from '@/core/data/dataset';
 import type { ScienceCardData } from '@/science-card/types';
 import { XYChart } from '@/ui/charts/XYChart';
 import { IconButton } from '@/ui/IconButton';
+import { prefersReducedMotion } from '@/ui/three/availability';
 import { CSRC, L, usePublishCard } from '../common';
 import { EnergyDiagram } from './EnergyDiagram';
 import { energyLevels } from './energyLevels';
@@ -119,6 +120,11 @@ export function EquilibriumStage() {
   const st = useEqStore();
   const s = systemOf(st.systemId);
   const species = speciesOf(s);
+
+  // Reopened with reduced motion, the lesson waits for "Chạy" (#205 C3).
+  useEffect(() => {
+    if (prefersReducedMotion()) useEqStore.setState({ running: false });
+  }, []);
 
   useEffect(() => {
     if (!st.running) return;
