@@ -14,10 +14,12 @@ export interface SimStoreState {
   sources: Record<string, ParamSource>;
   validation: LocalizedText[];
   intervened: boolean;
+  /** Measured relative energy drift (one significant digit) above `DRIFT_WARN`, else 0 (#205 C2). */
+  energyDrift: number;
   finished: boolean;
-  /** Longest recorded simulated time (s). */
   /** Oldest recorded time: 0, or the start of a long endless run's latest stretch (#205 C1). */
   start: number;
+  /** Longest recorded simulated time (s). */
   duration: number;
   /** Time shown while scrubbing a recorded run; null when live. */
   scrubTime: number | null;
@@ -43,6 +45,7 @@ export const useSimStore = create<SimStoreState>()(() => ({
   sources: {},
   validation: [],
   intervened: false,
+  energyDrift: 0,
   finished: false,
   start: 0,
   duration: 0,

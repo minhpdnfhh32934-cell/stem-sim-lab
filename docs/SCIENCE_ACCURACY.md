@@ -57,7 +57,11 @@ với một phương pháp độc lập khác.
 - **NaN / vô cực:** nếu trạng thái có giá trị không hữu hạn, app dừng, khôi phục trạng thái hợp lệ
   gần nhất và báo lỗi.
 - **Đại lượng bảo toàn:** engine báo năng lượng hoặc động lượng, và app theo dõi độ trôi tương đối
-  so với lúc bắt đầu.
+  so với lúc bắt đầu. Khi độ trôi năng lượng vượt 10⁻⁹ (#205 C2), Thẻ Khoa học nói rõ: "Năng lượng
+  đã lệch … so với lúc đầu", kèm con số đo được; nhãn "Định lượng chính xác" chuyển thành
+  "Định lượng gần đúng" và sai số ước lượng ít nhất bằng độ trôi đó. Đặt lại thì đo lại từ đầu.
+  Ngưỡng 10⁻⁹ là mức các thẻ kiểm chứng (con lắc: chu kì khớp Dormand–Prince dưới 10⁻⁹); các lần chạy
+  RK4 đo được 2·10⁻¹² tới 5·10⁻¹² sau 10⁴ s, nên chỉ các lần chạy rất dài mới chạm ngưỡng.
 - **Can thiệp của người dùng:** khi người dùng kéo hoặc ném vật, app đánh dấu "Đã có can thiệp",
   nhãn "Định lượng chính xác" tự chuyển thành "Định lượng gần đúng", và app bỏ mốc năng lượng
   ban đầu.

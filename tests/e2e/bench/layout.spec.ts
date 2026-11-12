@@ -427,6 +427,8 @@ for (const fontScale of [1, 1.4] as const)
       );
     }, fontScale);
     await openPhysics(page, 'Ném xiên');
+    // The edge is whole once the engine has loaded and the card is out (the chip comes last).
+    await expect(page.locator('.bench-chip:not(.bench-chip--empty)')).toBeVisible();
     // Every bench-edge slot's box, before and while the box is open.
     const slots = () =>
       page.locator('.bench-edge > *').evaluateAll((els) =>
