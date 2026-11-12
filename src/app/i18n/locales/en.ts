@@ -2514,6 +2514,33 @@ const en: Messages = {
     askMeiosisPartHiddenQuestion:
       'At the “{stage}” stage (meiosis model, animal cell) I can’t clearly see the “{part}”. Is it there at that point, and when does it appear or disappear?',
   },
+  // AI Teacher's Advanced tabs (#234 step 5): plain words, real numbers only.
+  teacherViews: {
+    memoryTab: 'Memory',
+    usageTab: 'Usage',
+    memory: {
+      title: 'What AI Teacher remembers',
+      empty: 'Nothing to remember yet: the conversation is empty.',
+      level: 'Memory: {level}.',
+      summaryTitle: 'Summary of the earlier conversation',
+      noSummary:
+        'The conversation is still short: it is read back word for word, no summary needed yet.',
+      settings: 'Change in Settings',
+    },
+    usage: {
+      title: 'Online AI calls today',
+      reading: 'Reading the count…',
+      unavailable: 'Calls are only counted in the SimLab desktop app.',
+      today: 'Used {count}/{cap} calls today.',
+      todayNoCap: 'Used {count} calls today. You set no daily limit.',
+      left: '{left} left until the end of the day.',
+      used: 'No calls left today: the online AI rests until tomorrow.',
+      local: 'The AI on this computer is answering now: it uses no calls.',
+      what: 'Each request SimLab sends to an online AI is one call: a question, the review of "Think", a summary of the earlier conversation, the Gemini voice.',
+      provider: 'The free plans of Gemini and Groq have their own limits; SimLab cannot read them.',
+      settings: 'Change the daily limit',
+    },
+  },
   languages: {
     vi: 'Tiếng Việt',
     en: 'English',

@@ -1,0 +1,49 @@
+/* AI Teacher's Advanced views (#234 step 5, "Ghi nhớ" and "Lượt dùng"): plain text on the
+   station's stage, in the --teacher-* text tokens (≥ 4.5 : 1 on the stage, tokens.test.ts). */
+.teacher-view {
+  display: flex;
+  width: min(100%, 720px);
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4) 0;
+  color: var(--teacher-text);
+  font-size: var(--text-content);
+  line-height: 1.55;
+}
+.teacher-view p {
+  margin: 0;
+}
+.teacher-view__title {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  margin: 0;
+  font-size: var(--text-lg);
+}
+.teacher-view__lead {
+  font-weight: 600;
+}
+/* The AI-written summary: an opaque card, so its text keeps its contrast on any stage. */
+.teacher-view__card {
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid color-mix(in srgb, var(--teacher-line) 55%, transparent);
+  border-radius: var(--radius-lg);
+  background: var(--teacher-glass-solid);
+}
+.teacher-view__subtitle {
+  margin: 0 0 var(--space-2);
+  color: var(--teacher-text-muted);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+.teacher-view__summary {
+  white-space: pre-wrap;
+}
+.teacher-view__note {
+  color: var(--teacher-text-muted);
+  font-size: var(--text-sm);
+}
+.teacher-view__action {
+  align-self: flex-start;
+  min-height: var(--target);
+}

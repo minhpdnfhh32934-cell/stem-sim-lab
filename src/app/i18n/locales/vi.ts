@@ -2505,6 +2505,33 @@ const vi = {
     askMeiosisPartHiddenQuestion:
       'Thầy ơi, ở giai đoạn “{stage}” (mô phỏng giảm phân, tế bào động vật) em không thấy rõ bộ phận “{part}”. Lúc đó nó có không, và nó xuất hiện hay biến mất khi nào ạ?',
   },
+  // AI Teacher's Advanced tabs (#234 step 5): plain words, real numbers only.
+  teacherViews: {
+    memoryTab: 'Ghi nhớ',
+    usageTab: 'Lượt dùng',
+    memory: {
+      title: 'AI Teacher đang nhớ gì',
+      empty: 'Chưa có gì để nhớ: cuộc trò chuyện còn trống.',
+      level: 'Mức nhớ: {level}.',
+      summaryTitle: 'Tóm tắt phần trò chuyện cũ',
+      noSummary: 'Cuộc trò chuyện còn ngắn: thầy đọc lại nguyên văn, chưa cần tóm tắt.',
+      settings: 'Đổi trong Cài đặt',
+    },
+    usage: {
+      title: 'Lượt dùng AI trực tuyến hôm nay',
+      reading: 'Đang đọc số lượt…',
+      unavailable: 'Số lượt chỉ đếm được trong ứng dụng SimLab trên máy tính.',
+      today: 'Hôm nay đã dùng {count}/{cap} lượt.',
+      todayNoCap: 'Hôm nay đã dùng {count} lượt. Em không đặt giới hạn mỗi ngày.',
+      left: 'Còn {left} lượt đến hết ngày.',
+      used: 'Đã hết lượt hôm nay: AI trực tuyến nghỉ đến ngày mai.',
+      local: 'Lúc này AI trên máy này đang trả lời: không tính lượt.',
+      what: 'Mỗi lần SimLab gửi một yêu cầu tới AI trực tuyến là một lượt: câu hỏi, lượt rà soát của "Suy nghĩ kĩ", tóm tắt phần trò chuyện cũ, giọng đọc Gemini.',
+      provider:
+        'Gói miễn phí của Gemini hay Groq còn có giới hạn riêng; SimLab không đọc được giới hạn đó.',
+      settings: 'Đổi giới hạn mỗi ngày',
+    },
+  },
   languages: {
     vi: 'Tiếng Việt',
     en: 'English',
