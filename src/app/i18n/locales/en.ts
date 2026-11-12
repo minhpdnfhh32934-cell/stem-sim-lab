@@ -1579,8 +1579,6 @@ const en: Messages = {
     localRuntimeHere: 'SimLab sends questions to {name} on this computer ({address}).',
     voiceOnline:
       'The Gemini voice is on: the text of each answer is sent to Google to be read aloud.',
-    noApi:
-      'No online AI is connected. Connect one in Settings → Connect AI, or choose a downloaded Gemma model.',
     gemmaMissingNotice:
       'Gemma is not ready: this model is not downloaded. Download it in Settings → AI Teacher, or choose “Online AI”.',
     settings: 'Settings',
@@ -1604,6 +1602,10 @@ const en: Messages = {
     boardRef: 'About what you circled: «{excerpt}»',
     boardRefPicture: 'About the drawing you circled on the board',
     welcomeTitle: 'Ask questions your way',
+    connectTitle: 'Connect an AI to start asking',
+    connectBody:
+      'Add an online AI key in Settings, or pick a downloaded Gemma in the AI box above.',
+    connect: 'Connect AI',
     welcomeBody:
       'Turn on “Use current screen information” if your question is about the open simulation.',
     welcomeBodyTeacher:
@@ -2449,7 +2451,6 @@ const en: Messages = {
   },
   teacher: {
     regionLabel: 'Learn with an AI teacher',
-    title: 'Learn with an AI teacher',
     sketchBadge: 'Study assistant',
     sketchNote:
       'Ask questions, request hints and learn at your pace. Choose online AI or Gemma running on this computer.',
@@ -2457,7 +2458,6 @@ const en: Messages = {
     layoutLabel: 'Preview layout',
     layoutTalk: 'Conversation',
     layoutBoard: 'Board lesson',
-    aiLabel: 'AI teacher',
     talkCaption: 'Hi! What shall we learn today?',
     boardCaption: 'Let’s put the key ideas on the board and reason through them step by step.',
     startTitle: 'What do you want to learn today?',

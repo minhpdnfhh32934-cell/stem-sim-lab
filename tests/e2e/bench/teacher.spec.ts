@@ -27,12 +27,15 @@ test('the AI teacher page: honest label, no screen toggle, fits 1366×768, Esc g
   await page.locator('.launch-card--teacher').click();
   const screen = page.getByRole('region', { name: 'Dạy học bằng AI' });
   await expect(screen).toBeVisible();
-  await expect(screen.getByText('AI Teacher', { exact: true }).first()).toBeVisible();
+  // One title, the header's h1, beside "Là một AI" (#205 B5).
+  await expect(page.getByRole('heading', { level: 1, name: 'AI Teacher' })).toBeVisible();
+  await expect(page.getByText('Là một AI', { exact: true })).toBeVisible();
   // The screen-context switch belongs to the bubble only.
   await expect(page.getByRole('checkbox', { name: 'Lấy thông tin từ màn hình' })).toHaveCount(0);
-  // No API key and no local model: a clear notice, never a pretend answer.
-  await expect(page.getByText(/Chưa kết nối AI trực tuyến/)).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Cài đặt' }).first()).toBeVisible();
+  // No API key and no local model: the empty conversation says how to connect, never a pretend
+  // answer (#205 B5: no bar repeating the header's "Chưa kết nối AI").
+  await expect(screen.getByRole('heading', { name: 'Kết nối AI để bắt đầu hỏi' })).toBeVisible();
+  await expect(screen.getByRole('button', { name: 'Kết nối AI' })).toBeVisible();
   expect(await overflow(page)).toBeLessThanOrEqual(0);
   for (const name of ['Gửi câu hỏi', 'Về trang chủ']) {
     const box = await screen.getByRole('button', { name }).boundingBox();

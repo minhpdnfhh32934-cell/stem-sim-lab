@@ -1562,8 +1562,6 @@ const vi = {
       'SimLab chỉ gửi câu hỏi tới {name} trên máy này ({address}), không tự gửi lên mạng.',
     localRuntimeHere: 'SimLab gửi câu hỏi tới {name} trên máy này ({address}).',
     voiceOnline: 'Giọng Gemini đang bật: chữ của câu trả lời được gửi tới Google để đọc to.',
-    noApi:
-      'Chưa kết nối AI trực tuyến. Kết nối trong Cài đặt → Kết nối AI, hoặc chọn Gemma đã tải về.',
     gemmaMissingNotice:
       'Gemma chưa sẵn sàng: chưa tải mô hình này. Tải trong Cài đặt → AI Teacher, hoặc chọn “AI trực tuyến”.',
     settings: 'Cài đặt',
@@ -1587,6 +1585,10 @@ const vi = {
     boardRef: 'Về chỗ em khoanh: «{excerpt}»',
     boardRefPicture: 'Về hình em khoanh trên bảng',
     welcomeTitle: 'Hỏi bài theo cách của em',
+    connectTitle: 'Kết nối AI để bắt đầu hỏi',
+    connectBody:
+      'Nhập khóa của một AI trực tuyến trong Cài đặt, hoặc chọn Gemma đã tải về ở ô AI phía trên.',
+    connect: 'Kết nối AI',
     welcomeBody: 'Bật “Lấy thông tin từ màn hình” nếu câu hỏi liên quan đến mô phỏng đang mở.',
     welcomeBodyTeacher:
       'Đặt câu hỏi hoặc chọn một gợi ý bên dưới. AI Teacher sẽ giải thích từng bước dựa trên thư viện kiến thức.',
@@ -1613,7 +1615,7 @@ const vi = {
     inputLabel: 'Nhập câu hỏi',
     placeholder: 'Nhập câu hỏi của em…',
     send: 'Gửi câu hỏi',
-    think: 'Think',
+    think: 'Suy nghĩ kĩ (Think)',
     thinkTitle: 'Dùng một AI thứ hai để rà soát câu trả lời',
     twoApis: '· 2 AI',
     oneApiReview: '· 1 AI rà soát',
@@ -2436,7 +2438,6 @@ const vi = {
   },
   teacher: {
     regionLabel: 'Dạy học bằng AI',
-    title: 'Dạy học bằng AI',
     sketchBadge: 'Trợ lý học tập',
     sketchNote:
       'Đặt câu hỏi, xin gợi ý và học theo nhịp độ của em. Có thể chọn AI trực tuyến hoặc Gemma chạy trên máy.',
@@ -2444,7 +2445,6 @@ const vi = {
     layoutLabel: 'Xem thử bố cục',
     layoutTalk: 'Trò chuyện',
     layoutBoard: 'Giảng trên bảng',
-    aiLabel: 'AI Teacher',
     talkCaption: 'Chào em! Hôm nay mình học gì nhỉ?',
     boardCaption: 'Mình cùng ghi lại ý chính và suy luận từng bước lên bảng nhé.',
     startTitle: 'Hôm nay muốn học gì?',

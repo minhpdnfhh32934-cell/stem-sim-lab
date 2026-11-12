@@ -40,8 +40,9 @@ describe('"Dạy học bằng AI" screen', () => {
   it('is clearly labelled as an AI assistant with a working chat panel', () => {
     openTeacher();
     render(<TeacherScreen />);
-    // Honest that it is an AI, never a person.
-    expect(screen.getAllByText('AI Teacher').length).toBeGreaterThan(0);
+    // Honest that it is an AI, never a person (its one visible title, "AI Teacher", is the bench
+    // header's h1 beside "Là một AI", #205 B5: rooms.spec.ts).
+    expect(screen.getByRole('region', { name: 'Dạy học bằng AI' })).toBeInTheDocument();
     expect(screen.getByRole('region', { name: 'Trò chuyện với AI Teacher' })).toBeInTheDocument();
     expect(screen.getByRole('textbox', { name: 'Nhập câu hỏi' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Gửi câu hỏi' })).toBeInTheDocument();
@@ -96,17 +97,17 @@ describe('"Dạy học bằng AI" screen', () => {
     if (!fallback) expect(within(board).queryByText(/dự phòng/)).not.toBeInTheDocument();
   });
 
-  it('without a cloud key: a notice that opens Settings (never a fake reply)', async () => {
+  it('without a cloud key: "Kết nối AI" opens Settings, no suggestions to send (never a fake reply)', async () => {
     const user = userEvent.setup();
     useAiStore.setState({ status: 'noKey' });
     openTeacher();
     render(<TeacherScreen />);
+    // #205 B5: the empty conversation says how to start; no bar repeating the header's chip.
     expect(
-      await screen.findByText(
-        'Chưa kết nối AI trực tuyến. Kết nối trong Cài đặt → Kết nối AI, hoặc chọn Gemma đã tải về.',
-      ),
+      await screen.findByRole('heading', { name: 'Kết nối AI để bắt đầu hỏi' }),
     ).toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: 'Cài đặt' }));
+    expect(screen.queryByText(/Chưa kết nối AI trực tuyến/)).not.toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Kết nối AI' }));
     expect(useWorkspaceStore.getState().settingsOpen).toBe(true);
   });
 

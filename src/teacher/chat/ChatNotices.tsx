@@ -23,6 +23,7 @@ export function ChatNotices({
   withScreen,
   withBoard,
   pictureAsk,
+  onNoApi,
 }: {
   chosenEngine: AnalysisEngine;
   /** The screen's content goes with the question. */
@@ -31,6 +32,11 @@ export function ChatNotices({
   withBoard: boolean;
   /** The circled part goes as a picture, to the AI on this computer only. */
   pictureAsk: boolean;
+  /**
+   * No online AI connected (#205 B5): no bar repeating the header's "Chưa kết nối AI"; the
+   * conversation, when empty, offers "Kết nối AI" instead.
+   */
+  onNoApi?: (noApi: boolean) => void;
 }) {
   const t = useT();
   const locale = useSettingsStore((s) => s.locale);
@@ -192,6 +198,9 @@ export function ChatNotices({
     gemmaReadyState = gemmaLookup?.model === chat.gemmaModel ? gemmaLookup.ready : null;
   }
   const noApi = engine === 'cloud' && (provider === 'off' || keyAvailable === false);
+  useEffect(() => {
+    onNoApi?.(noApi);
+  }, [noApi, onNoApi]);
   const noWebGpu = engine === 'gemma' && webGPUStatus() !== 'webgpu';
   const gemmaUnavailable = engine === 'gemma' && gemmaReadyState === false;
   const verifierMissing =
@@ -199,15 +208,14 @@ export function ChatNotices({
   const localMissing = chosenEngine === 'local-missing';
   const notice: { text: string; section: SettingsSection } | null = localMissing
     ? { text: t('chat.localMissingNotice'), section: 'runtimes' }
-    : noApi
-      ? { text: t('chat.noApi'), section: 'ai' }
-      : noWebGpu
-        ? { text: t('chat.noWebgpuNotice'), section: 'local' }
-        : gemmaUnavailable
-          ? { text: t('chat.gemmaMissingNotice'), section: 'local' }
-          : verifierMissing
-            ? { text: t('chat.thinkNoVerifier'), section: 'teacher' }
-            : null;
+    : // No online AI (noApi) is said by the empty conversation and the header chip (#205 B5).
+      noWebGpu
+      ? { text: t('chat.noWebgpuNotice'), section: 'local' }
+      : gemmaUnavailable
+        ? { text: t('chat.gemmaMissingNotice'), section: 'local' }
+        : verifierMissing
+          ? { text: t('chat.thinkNoVerifier'), section: 'teacher' }
+          : null;
   // Where the next question goes, from the current settings (nothing is guessed).
   const providerName = (p: string) => t(`settings.aiProviders.${p}` as MessageKey);
   // The fallback is named only when it can really be asked (it has a key).
@@ -263,7 +271,8 @@ export function ChatNotices({
           {localSelection.kind === 'openAiCompatible' && ` ${t('localRuntime.relayNote')}`}
         </p>
       )}
-      {!notice && targets.length > 0 && (
+      {/* Not connected: nothing is sent, so no "sent to" line (#205 B5). */}
+      {!notice && !noApi && targets.length > 0 && (
         <p className="chat-panel__local-note chat-panel__local-note--online">
           <Globe size={14} />{' '}
           {t(

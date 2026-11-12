@@ -84,6 +84,7 @@ export function ChatPanel({
   const t = useT();
   const locale = useSettingsStore((s) => s.locale);
   const openSettingsAt = useWorkspaceStore((s) => s.openSettingsAt);
+  const [noApi, setNoApi] = useState(false);
   const chat = useChatStore();
   // The engine that will really answer (a pre-selected Gemma without a model → the API; a chosen
   // local runtime stays local, also before one is picked).
@@ -495,10 +496,29 @@ export function ChatPanel({
         withScreen={withScreen}
         withBoard={withBoard}
         pictureAsk={pictureAsk}
+        onNoApi={setNoApi}
       />
 
       <div className="chat-panel__messages" aria-live="polite" aria-relevant="additions text">
-        {chat.messages.length === 0 ? (
+        {chat.messages.length === 0 && noApi ? (
+          // Not connected (#205 B5): how to start, not suggestions that cannot be answered yet.
+          <div className="chat-panel__welcome">
+            <div className="chat-panel__welcome-icon">
+              <Bot size={27} />
+            </div>
+            <h2>{t('chat.connectTitle')}</h2>
+            <p>{t('chat.connectBody')}</p>
+            <button
+              type="button"
+              className="btn btn--accent"
+              onClick={() => {
+                openSettingsAt('ai');
+              }}
+            >
+              <Settings2 size={16} aria-hidden="true" /> {t('chat.connect')}
+            </button>
+          </div>
+        ) : chat.messages.length === 0 ? (
           <div className="chat-panel__welcome">
             <div className="chat-panel__welcome-icon">
               <Bot size={27} />

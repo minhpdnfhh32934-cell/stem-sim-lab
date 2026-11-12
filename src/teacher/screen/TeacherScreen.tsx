@@ -60,15 +60,13 @@ export default function TeacherScreen() {
   }, []);
 
   return (
-    <section className="teacher" aria-labelledby="teacher-title" data-layout={layout}>
+    // One title, the header's "AI Teacher" (#205 B5); the region keeps its own name.
+    <section className="teacher" aria-label={t('teacher.regionLabel')} data-layout={layout}>
       <header className="teacher__header">
         <button type="button" className="btn teacher__back" onClick={closeTeacher}>
           <ArrowLeft size={16} strokeWidth={1.75} aria-hidden="true" />
           {t('teacher.back')}
         </button>
-        <h1 id="teacher-title" className="teacher__title">
-          {t('teacher.title')}
-        </h1>
         {bench && <span className="teacher__is-ai">{t('bench.isAi')}</span>}
         <span
           className="teacher__about"
@@ -135,7 +133,6 @@ export default function TeacherScreen() {
               trackCursor
             />
           </div>
-          <span className="teacher__ai-label">{t('teacher.aiLabel')}</span>
           <p className="teacher__caption">
             {t(layout === 'board' ? 'teacher.boardCaption' : 'teacher.talkCaption')}
           </p>
