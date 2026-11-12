@@ -110,7 +110,7 @@ export const mitosis: ModuleView = {
   Stage: MitosisStage,
   Panel: MitosisPanel,
   Bottom: MitosisBottom,
-  bottomTitle: L('Số lượng NST, crômatit, tâm động, ADN', 'Chromosome, chromatid, DNA counts'),
+  bottomTitle: L('Bảng số lượng', 'Counts table'),
   state: mitosisState,
 };
 export const meiosis: ModuleView = {
@@ -118,7 +118,7 @@ export const meiosis: ModuleView = {
   Stage: MeiosisStage,
   Panel: MeiosisPanel,
   Bottom: MeiosisBottom,
-  bottomTitle: L('Số lượng NST, crômatit, tâm động, ADN', 'Chromosome, chromatid, DNA counts'),
+  bottomTitle: L('Bảng số lượng', 'Counts table'),
   state: division,
 };
 export const centralDogma: ModuleView = {

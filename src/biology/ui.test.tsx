@@ -93,17 +93,19 @@ describe('Segmented (radio group)', () => {
   });
 });
 
-describe('slider labels of the population lessons (UI-50)', () => {
-  it('every slider reads "label: value"; the Greek symbol follows the name', () => {
+describe('slider labels of the population lessons (UI-50, #205 B8)', () => {
+  it('every slider has its number box named after it; the Greek symbol follows the name', () => {
     const drift = render(<DriftPanel />);
-    const driftNames = screen.getAllByRole('slider').map((s) => s.closest('label')?.textContent);
-    expect(driftNames).toContain('Kích thước quần thể N: 50');
-    expect(driftNames).toContain('Tần số ban đầu p₀: 0,5');
+    expect(screen.getByRole('textbox', { name: 'Kích thước quần thể N' })).toHaveValue('50');
+    expect(screen.getByRole('textbox', { name: 'Tần số ban đầu p₀' })).toHaveValue('0,5');
     drift.unmount();
     render(<LotkaVolterraPanel />);
-    const lv = screen.getAllByRole('slider').map((s) => s.closest('label')?.textContent ?? '');
-    expect(lv.every((t) => /: \S/.test(t))).toBe(true);
-    expect(lv.some((t) => t.startsWith('Tốc độ chết của vật ăn thịt (γ): '))).toBe(true);
+    const lv = screen.getAllByRole('slider').map((s) => s.getAttribute('aria-label') ?? '');
+    for (const name of lv) {
+      expect(screen.getByRole('textbox', { name })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: `Tăng ${name}` })).toBeInTheDocument();
+    }
+    expect(lv).toContain('Tốc độ chết của vật ăn thịt (γ)');
   });
 });
 

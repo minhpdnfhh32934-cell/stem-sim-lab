@@ -1,5 +1,5 @@
 import { RotateCcw, SkipBack, SkipForward, type LucideIcon } from 'lucide-react';
-import type { CSSProperties, ReactNode } from 'react';
+import { useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { useT } from '@/app/i18n';
 import { IconButton } from '@/ui/IconButton';
 import { EdgePlay, MainActionSlot } from './DriverGrid';
@@ -25,6 +25,39 @@ export interface EdgeScrub {
   onChange: (value: number) => void;
   /** Marks along the track (stages); a name shows under a mark only where it has room. */
   ticks?: readonly { at: number; label: string }[];
+}
+
+/**
+ * Which tick names fit on the track, measured after layout and again whenever the track or a name
+ * changes size (window, panels, the font size setting).
+ */
+function useTickNames(ticks: EdgeScrub['ticks']) {
+  const ref = useRef<HTMLOListElement>(null);
+  const [shown, setShown] = useState<readonly boolean[]>([]);
+  const names = ticks?.map((k) => `${String(k.at)}:${k.label}`).join('|') ?? '';
+  useLayoutEffect(() => {
+    const ol = ref.current;
+    if (!ol) return;
+    const spans = [...ol.querySelectorAll('span')];
+    const fit = () => {
+      setShown(
+        namedTicks(
+          spans.map((s) => (s.parentElement?.offsetLeft ?? 0) + s.offsetLeft),
+          spans.map((s) => s.offsetWidth),
+          ol.clientWidth,
+        ),
+      );
+    };
+    fit();
+    if (typeof ResizeObserver === 'undefined') return;
+    const ro = new ResizeObserver(fit);
+    ro.observe(ol);
+    for (const s of spans) ro.observe(s);
+    return () => {
+      ro.disconnect();
+    };
+  }, [names]);
+  return { ref, shown };
 }
 
 /**
@@ -60,7 +93,7 @@ export function EdgeSteps({
   const t = useT();
   const span = scrub ? scrub.max - scrub.min : 0;
   const pct = (v: number) => (span > 0 ? (100 * (v - (scrub?.min ?? 0))) / span : 0);
-  const shown = scrub?.ticks ? namedTicks(scrub.ticks.map((k) => pct(k.at))) : [];
+  const { ref: ticksRef, shown } = useTickNames(scrub?.ticks);
   return (
     <div className="edge-steps">
       {play && (
@@ -133,10 +166,11 @@ export function EdgeSteps({
             }}
           />
           {scrub.ticks && (
-            <ol className="edge-steps__ticks" aria-hidden="true">
+            <ol ref={ticksRef} className="edge-steps__ticks" aria-hidden="true">
               {scrub.ticks.map((k, i) => (
                 <li key={k.at} style={{ left: `${String(pct(k.at))}%` }}>
-                  {shown[i] && <span>{k.label}</span>}
+                  {/* Every name is laid out (to be measured); only those with room are seen. */}
+                  <span className={shown[i] ? undefined : 'is-unnamed'}>{k.label}</span>
                 </li>
               ))}
             </ol>

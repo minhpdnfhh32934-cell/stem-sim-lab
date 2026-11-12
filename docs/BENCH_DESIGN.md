@@ -560,7 +560,7 @@ Fold order at large font or in English: Tìm → icon 40; AI status → icon + d
 
 - D0 "Chạy", D1 "Kì trước", D2 "Kì sau", D3 "Đặt lại".
 - Readout "Kì giữa (3/6)".
-- Scrubber with named ticks.
+- Scrubber with named ticks: a name shows only where its measured width fits (never overlapping, inside the track, just under it); the current stage's full name is in the readout (#205 B8).
 - Speed (Advanced only; Basic hides speed and camera mode as today).
 - Chip.
 

@@ -2060,7 +2060,9 @@ button.bench-door--lab:hover {
 }
 .edge-steps__ticks {
   position: absolute;
-  inset: auto 0 -2px;
+  /* Just under the track (the slider's middle), so the names stay on the edge at any font size
+     (#205 B8: under the slider's foot they ran off the window at 140 %). */
+  inset: calc(var(--target) / 2 + 5px) 0 auto;
   height: 14px;
   margin: 0;
   padding: 0;
@@ -2082,6 +2084,10 @@ button.bench-door--lab:hover {
   font-size: var(--text-caption);
   line-height: var(--text-caption);
   white-space: nowrap;
+}
+/* A name without room stays laid out (EdgeSteps measures it) but is not seen (#205 B8). */
+.edge-steps__ticks span.is-unnamed {
+  visibility: hidden;
 }
 .edge-steps__speed {
   grid-column: speed;

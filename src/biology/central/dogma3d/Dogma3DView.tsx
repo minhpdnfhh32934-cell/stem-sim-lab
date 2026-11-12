@@ -218,12 +218,7 @@ function PhaseStrip({ clock }: { clock: DogmaClock }) {
   ];
   const current = t >= clock.tlStart && clock.steps > 0 ? 'translation' : 'transcription';
   return (
-    <div
-      className="m3d__stages"
-      role="group"
-      aria-label={Lz(L('Các giai đoạn', 'Stages'))}
-      style={{ '--stage-count': phases.length } as CSSProperties}
-    >
+    <div className="m3d__stages" role="group" aria-label={Lz(L('Các giai đoạn', 'Stages'))}>
       {phases.map((p) => {
         const fill = Math.min(1, Math.max(0, (t - p.start) / Math.max(1e-9, p.end - p.start)));
         return (

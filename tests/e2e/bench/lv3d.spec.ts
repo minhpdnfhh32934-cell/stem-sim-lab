@@ -176,9 +176,7 @@ test('predator–prey 3D: the habitat follows the computed trajectory', async ({
   await tags.click();
 
   // New inputs rebuild the habitat from the new trajectory (γ = 1: x* = γ/δ changes).
-  const gamma = page
-    .locator('label', { hasText: /Tốc độ chết của vật ăn thịt/ })
-    .locator('input[type="range"]');
+  const gamma = page.getByRole('slider', { name: /Tốc độ chết của vật ăn thịt/ });
   await gamma.fill('1');
   const t2 = lotkaVolterra({ ...P, gamma: 1 }, 10, 5, 30, 800);
   await slider.fill('12');
