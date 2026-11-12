@@ -8,9 +8,10 @@ export interface Loaded {
 
 /**
  * Loads `slot`'s code once `when` holds; true once it is there. By hand rather than with
- * `lazy()`: React retries a suspended `lazy()` at a low priority that never expires, and a lesson
- * that runs without end (an update every frame, slow on a weak machine) starved it for good:
- * Ctrl+K and "Nguồn & Giả định" opened nothing (#205, seen on CI). A failed load (offline, files
+ * `lazy()`: React retries a suspended `lazy()` at a low priority that never expires, and a 3D
+ * lesson that runs without end (an update every frame, no idle time between frames) starved it
+ * for good: Ctrl+K and "Nguồn & Giả định" opened nothing (#205; every time with a desktop GPU,
+ * not with software WebGL, whose slower frames leave room). A failed load (offline, files
  * replaced by an update) says `failText` and calls `reset`, which withdraws the request, so the
  * next open tries again.
  */
