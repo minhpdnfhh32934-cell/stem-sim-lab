@@ -1,28 +1,37 @@
+/* AI Teacher's station (#234 step 4): a stage of its own (dark in the dark theme, pale in the
+   light one), numbered tabs, the connection chip, the orb beside the conversation (talk) or small
+   in the corner (board), and AI Teacher's answers on glass cards. Colours come from the --teacher-*
+   tokens, whose text pairs are checked on the stage, the glow and the glass (tokens.test.ts). */
 .teacher {
   display: flex;
   flex: 1;
   min-width: 0;
   min-height: 0;
   flex-direction: column;
-  gap: var(--space-3);
-  padding: var(--space-3) var(--space-5) var(--space-4);
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-5) var(--space-3);
   overflow: hidden;
   background:
-    radial-gradient(
-      ellipse at 18% 24%,
-      color-mix(in srgb, var(--accent-soft) 62%, transparent),
-      transparent 34%
-    ),
-    var(--bg-stage);
+    radial-gradient(circle at 9% 26%, var(--teacher-glow), transparent 52%), var(--teacher-bg);
+  color: var(--teacher-text);
 }
 
-/* One slim row: back · title · (i) · layout switch. */
+/* What sits on the stage reads the stage's text colours (the board keeps its own). */
+.teacher__header,
+.teacher__presence,
+.teacher__chat-wrap {
+  --text: var(--teacher-text);
+  --text-muted: var(--teacher-text-muted);
+}
+
+/* One row: back · "Là một AI" · (i) · 01 02 tabs · connection chip. */
 .teacher__header {
   display: flex;
   flex: none;
   flex-wrap: wrap;
-  gap: var(--space-2) var(--space-3);
+  gap: var(--space-1) var(--space-3);
   align-items: center;
+  border-bottom: 1px solid color-mix(in srgb, var(--teacher-line) 45%, transparent);
 }
 
 .teacher__about {
@@ -31,34 +40,87 @@
   height: var(--target);
   place-items: center;
   border-radius: var(--radius-full);
-  color: var(--text-muted);
+  color: var(--teacher-text-muted);
   cursor: help;
 }
 .teacher__about:hover {
-  background: var(--bg-hover);
-  color: var(--text);
+  background: color-mix(in srgb, var(--teacher-line) 22%, transparent);
+  color: var(--teacher-text);
 }
 
-.teacher__layout {
-  margin-left: auto;
+/* The layout switch as numbered tabs; slidingIndicator.ts slides the underline. */
+.teacher__tabs {
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  gap: var(--space-1);
 }
-
-.teacher__layout .segmented__item {
-  display: inline-flex;
-  gap: 7px;
-  align-items: center;
+.teacher__tab {
   min-height: var(--target);
+  gap: var(--space-2);
+  padding: 0 var(--space-3);
+  color: var(--teacher-text-muted);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.teacher__tab:hover,
+.teacher__tab[aria-checked='true'] {
+  color: var(--teacher-text);
+}
+/* Without the script the open tab keeps its own underline. */
+.teacher__tab[aria-checked='true'] {
+  box-shadow: inset 0 -2px var(--teacher-accent);
+}
+.teacher__tabs.has-indicator > .teacher__tab {
+  box-shadow: none;
+}
+.teacher__tabs.has-indicator::before {
+  background: var(--teacher-accent);
+}
+.teacher__tab-num {
+  color: var(--teacher-accent);
+  font-family: var(--font-mono);
+  font-weight: 500;
 }
 
+/* The AI that answers, in the header pill's words (aiStatusView.ts); shown only while one can. */
+.teacher__link {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  max-width: 100%;
+  min-height: 28px;
+  margin-left: auto;
+  padding: 0 var(--space-3);
+  border: 1px solid color-mix(in srgb, var(--teacher-line) 60%, transparent);
+  border-radius: var(--radius-full);
+  color: var(--teacher-text);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.teacher__link-dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--teacher-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--teacher-accent) 25%, transparent);
+}
+
+/* Talk: the orb at the left, the conversation in the rest (≥ 70 % of the room, #205 B5). Not
+   above it: at 1366 × 768 an orb on top left the answers about 180 px of height. */
 .teacher__stage {
   display: grid;
   flex: 1;
-  /* A narrower face column, more room for the conversation (#205 B5: 0.3fr). */
-  grid-template-columns: minmax(176px, 0.2fr) minmax(0, 1fr);
+  grid-template-columns: max-content minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
   gap: var(--space-4);
   min-height: 0;
   overflow: hidden;
-  transition: grid-template-columns 480ms var(--ease-out);
 }
 
 .teacher__presence {
@@ -66,22 +128,26 @@
   min-width: 0;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: var(--space-3);
-  padding: 20px 12px;
+  align-self: start;
+  gap: var(--space-1);
+  padding-top: var(--space-4);
   text-align: center;
-  text-wrap: balance;
 }
 
-/* The rings (fallback) and AI Teacher's orb (#234) take the same place and size. */
+/* The orb's box; glide.ts moves it between the layouts (one resize, then a transform). */
+.teacher__orb-slot {
+  flex: none;
+  width: clamp(96px, 13vw, 176px);
+}
+
+/* The rings (fallback) and AI Teacher's orb take the whole slot. */
 .teacher-ring,
 .teacher-orb {
   position: relative;
   display: grid;
-  width: min(176px, 24vh, 100%);
+  width: 100%;
   aspect-ratio: 1;
   place-items: center;
-  transition: width 480ms var(--ease-out);
 }
 
 .teacher-orb__canvas {
@@ -128,32 +194,15 @@
   }
 }
 
-.teacher__caption {
-  max-width: 36ch;
+/* The orb's state in words (the orb itself is aria-hidden). */
+.teacher__state {
   margin: 0;
-  color: var(--text-muted);
-  font-size: var(--text-content);
-  line-height: 1.5;
-}
-
-.teacher__engine-pill {
-  display: inline-flex;
-  gap: 7px;
-  align-items: center;
-  padding: 5px 10px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-full);
-  background: var(--bg-panel);
-  color: var(--text-muted);
+  color: var(--teacher-accent);
+  font-family: var(--font-mono);
   font-size: var(--text-xs);
-}
-
-.teacher__engine-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-soft);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .teacher__chat-wrap {
@@ -163,12 +212,26 @@
   justify-content: center;
 }
 
+/* The conversation lies on the stage: no panel of its own. */
 .teacher__chat-wrap .chat-panel {
   width: 100%;
   height: 100%;
   min-height: 0;
-  border-color: color-mix(in srgb, var(--accent) 12%, var(--border));
-  box-shadow: var(--shadow-docked);
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+/* AI Teacher's answers on glass cards: translucent, opaque on the Low tier or once frames run
+   slow (data-glass, TeacherScreen). Never a backdrop-filter under the bench (tokens.test.ts). */
+.teacher .chat-message--assistant .chat-message__body {
+  border: 1px solid color-mix(in srgb, var(--teacher-line) 55%, transparent);
+  background: var(--teacher-glass);
+  color: var(--teacher-text);
+  box-shadow: 0 0 24px color-mix(in srgb, var(--teacher-glow) 60%, transparent);
+}
+.teacher[data-glass='solid'] .chat-message--assistant .chat-message__body {
+  background: var(--teacher-glass-solid);
 }
 
 .teacher__quick-actions {
@@ -206,11 +269,9 @@
   cursor: wait;
 }
 
-/* Board: small teacher · the whiteboard (Whiteboard.tsx) · a narrow chat column. */
+/* Board: the orb small in the corner · the whiteboard (Whiteboard.tsx) · the chat at the right. */
 .teacher[data-layout='board'] .teacher__stage {
-  /* Board layout (B4.1): a small teacher on the side, the board in the middle, the chat at
-     the right. */
-  grid-template-columns: minmax(110px, 150px) minmax(0, 1.6fr) minmax(300px, 0.9fr);
+  grid-template-columns: 96px minmax(0, 1.6fr) minmax(300px, 0.9fr);
 }
 
 .teacher__board {
@@ -224,19 +285,11 @@
 }
 
 .teacher[data-layout='board'] .teacher__presence {
-  align-self: start;
-  justify-content: flex-start;
-  gap: 10px;
-  padding-top: 14px;
+  padding-top: var(--space-1);
 }
 
-.teacher[data-layout='board'] .teacher-ring,
-.teacher[data-layout='board'] .teacher-orb {
-  width: min(130px, 18vh, 100%);
-}
-
-.teacher[data-layout='board'] .teacher__caption {
-  font-size: var(--text-sm);
+.teacher[data-layout='board'] .teacher__orb-slot {
+  width: 88px;
 }
 
 .teacher[data-layout='board'] .teacher__quick-actions button {
@@ -251,26 +304,18 @@
   .teacher[data-layout='board'] .teacher__presence {
     grid-column: 1 / -1;
     flex-direction: row;
-    padding: 0 8px;
+    gap: var(--space-3);
+    align-self: center;
+    padding: 0;
   }
-  .teacher[data-layout='board'] .teacher-ring,
-  .teacher[data-layout='board'] .teacher-orb {
+  .teacher[data-layout='board'] .teacher__orb-slot {
     width: 56px;
-    flex: none;
-  }
-  .teacher[data-layout='board'] .teacher__engine-pill {
-    display: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .teacher-ring__wave {
     animation: none;
-  }
-  .teacher__stage,
-  .teacher-ring,
-  .teacher-orb {
-    transition: none;
   }
 }
 
@@ -294,22 +339,13 @@
   .teacher__presence,
   .teacher[data-layout='board'] .teacher__presence {
     flex-direction: row;
-    justify-content: flex-start;
-    padding: 4px 8px;
-    text-align: left;
+    gap: var(--space-3);
+    justify-self: start;
+    padding-top: 0;
   }
-  .teacher-ring,
-  .teacher-orb,
-  .teacher[data-layout='board'] .teacher-ring,
-  .teacher[data-layout='board'] .teacher-orb {
+  .teacher__orb-slot,
+  .teacher[data-layout='board'] .teacher__orb-slot {
     width: 88px;
-    flex: none;
-  }
-  .teacher__caption {
-    flex: 1;
-  }
-  .teacher__engine-pill {
-    display: none;
   }
 }
 
@@ -320,22 +356,22 @@
   .teacher__header > .btn {
     flex: none;
   }
-  .teacher__layout {
-    width: 100%;
-    margin-left: 0;
-  }
-  .teacher__layout .segmented {
+  .teacher__tabs {
     width: 100%;
   }
-  .teacher__layout .segmented__item {
+  .teacher__tab {
     flex: 1;
+    justify-content: center;
+  }
+  .teacher__link {
+    margin-left: 0;
   }
   .teacher__stage,
   .teacher[data-layout='board'] .teacher__stage {
     grid-template-rows: auto minmax(390px, 1fr);
   }
-  .teacher-ring,
-  .teacher[data-layout='board'] .teacher-ring {
+  .teacher__orb-slot,
+  .teacher[data-layout='board'] .teacher__orb-slot {
     width: 64px;
   }
 }
