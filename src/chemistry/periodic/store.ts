@@ -56,6 +56,11 @@ export interface PeriodicState {
   selected: number;
   colorBy: ColorBy;
   query: string;
+  /**
+   * The legend entry pressed ("cat:noble-gas", "block:d"): its cells are outlined, the others
+   * dimmed, so a group is found without telling colours apart (#205 B7). Not saved.
+   */
+  highlight: string | null;
 }
 
 /** Shared by the periodic table, electron configuration, Bohr and orbital modules. */
@@ -63,6 +68,7 @@ export const usePeriodicStore = create<PeriodicState>()(() => ({
   selected: 6,
   colorBy: 'category',
   query: '',
+  highlight: null,
 }));
 
 export function selectElement(z: number): void {

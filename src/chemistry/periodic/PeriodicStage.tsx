@@ -1,5 +1,5 @@
 import { Search } from 'lucide-react';
-import { useMemo } from 'react';
+import { useMemo, type ReactNode } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { formatNumber } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
@@ -22,9 +22,19 @@ import '../chem.css';
 export function PeriodicStage() {
   const Lz = useLocalized();
   const locale = useSettingsStore((s) => s.locale);
-  const { selected, colorBy, query } = usePeriodicStore(
-    useShallow((s) => ({ selected: s.selected, colorBy: s.colorBy, query: s.query })),
+  const { selected, colorBy, query, highlight } = usePeriodicStore(
+    useShallow((s) => ({
+      selected: s.selected,
+      colorBy: s.colorBy,
+      query: s.query,
+      highlight: s.highlight,
+    })),
   );
+  /** The cell belongs to the pressed legend entry (null: none pressed). */
+  const inHighlight = (e: ElementData): boolean | null =>
+    highlight === null
+      ? null
+      : highlight === `cat:${e.category}` || highlight === `block:${e.block}`;
   const range = useMemo(() => (isNumeric(colorBy) ? propertyRange(colorBy) : null), [colorBy]);
   const numeric = isNumeric(colorBy) ? PROPERTIES[colorBy] : null;
 
@@ -61,7 +71,8 @@ export function PeriodicStage() {
               aria-checked={colorBy === c.id}
               className="segmented__item"
               onClick={() => {
-                usePeriodicStore.setState({ colorBy: c.id });
+                // Another legend: no entry pressed.
+                usePeriodicStore.setState({ colorBy: c.id, highlight: null });
               }}
             >
               {Lz(c.label)}
@@ -75,6 +86,7 @@ export function PeriodicStage() {
           const { row, col } = gridPosition(e);
           const v = numeric?.value(e) ?? null;
           const ramp = rampOf(e);
+          const lit = inHighlight(e);
           return (
             <button
               key={e.z}
@@ -95,6 +107,8 @@ export function PeriodicStage() {
                 ramp !== null && ramp > 0.62 && 'is-dark',
                 selected === e.z && 'is-selected',
                 query && matchesQuery(e, query) && 'is-match',
+                lit === true && 'is-lit',
+                lit === false && 'is-dim',
               )}
               data-cat={e.category}
               data-block={e.block}
@@ -134,6 +148,25 @@ export function PeriodicStage() {
   );
 }
 
+/** A legend entry: pressed, its cells are outlined and the rest dimmed (#205 B7). */
+function LegendEntry({ id, children }: { id: string; children: ReactNode }) {
+  const on = usePeriodicStore((s) => s.highlight === id);
+  return (
+    <li>
+      <button
+        type="button"
+        className="pt__legend-item"
+        aria-pressed={on}
+        onClick={() => {
+          usePeriodicStore.setState({ highlight: on ? null : id });
+        }}
+      >
+        {children}
+      </button>
+    </li>
+  );
+}
+
 function Legend({ colorBy, range }: { colorBy: ColorBy; range: [number, number] | null }) {
   const Lz = useLocalized();
   const locale = useSettingsStore((s) => s.locale);
@@ -141,10 +174,10 @@ function Legend({ colorBy, range }: { colorBy: ColorBy; range: [number, number] 
     return (
       <ul className="pt__legend">
         {CATEGORIES.map((c) => (
-          <li key={c}>
+          <LegendEntry key={c} id={`cat:${c}`}>
             <span className="pt-swatch pt-cell--cat" data-cat={c} aria-hidden="true" />
             {Lz(CATEGORY_LABEL[c])}
-          </li>
+          </LegendEntry>
         ))}
       </ul>
     );
@@ -153,10 +186,10 @@ function Legend({ colorBy, range }: { colorBy: ColorBy; range: [number, number] 
     return (
       <ul className="pt__legend">
         {(['s', 'p', 'd', 'f'] as const).map((b) => (
-          <li key={b}>
+          <LegendEntry key={b} id={`block:${b}`}>
             <span className="pt-swatch pt-cell--block" data-block={b} aria-hidden="true" />
             {Lz(L(`Khối ${b}`, `${b}-block`))}
-          </li>
+          </LegendEntry>
         ))}
       </ul>
     );

@@ -18,9 +18,11 @@ function elementName(z: number, locale: string): string {
 
 /**
  * The periodic table's bench edge (docs/BENCH_DESIGN.md §9.10): an element stepper
- * "‹ 26 · Fe · Sắt ›" in D0–D3 and the element finder. Nothing here is filled.
+ * "‹ 26 · Fe · Sắt ›" in D0–D3 and the element finder. Nothing here is filled. The periodic
+ * table itself has no finder there (#205 B7): its table and search box pick the element, the list
+ * only repeated the stepper; the configuration and Bohr lessons keep it (their only list).
  */
-export function PeriodicDriver() {
+export function PeriodicDriver({ picker = true }: { picker?: boolean } = {}) {
   const Lz = useLocalized();
   const locale = useSettingsStore((s) => s.locale);
   const z = usePeriodicStore((s) => s.selected);
@@ -51,9 +53,16 @@ export function PeriodicDriver() {
           }}
         />
       </div>
-      <div className="bench-edge__find">
-        <ElementPicker />
-      </div>
+      {picker && (
+        <div className="bench-edge__find">
+          <ElementPicker />
+        </div>
+      )}
     </ModuleEdge>
   );
+}
+
+/** The periodic table's edge: the stepper only (#205 B7). */
+export function PeriodicTableDriver() {
+  return <PeriodicDriver picker={false} />;
 }
