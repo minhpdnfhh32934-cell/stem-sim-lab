@@ -405,6 +405,9 @@ sóng dừng trên dây, hoạ âm và chuỗi Fourier, điện trường, mạc
   trên đường ray dừng khi chạy ra khỏi ray). Đồ thị, bảng Số liệu và thanh tua giữ đoạn gần nhất
   (khoảng 100 giây khi phát ở tốc độ 1×); bảng và tệp CSV ghi rõ đoạn đó "từ t = … s đến t = … s".
   Các bài có điểm dừng tự nhiên (ném, rơi, va chạm, mặt phẳng nghiêng, ròng rọc) vẫn dừng như cũ.
+  Nếu chạy rất lâu mà sai số tính toán cộng dồn làm năng lượng lệch quá 10⁻⁹, Thẻ Khoa học ghi rõ
+  "Năng lượng đã lệch … so với lúc đầu" và chuyển sang "Định lượng gần đúng"; bấm **Đặt lại để về
+  kết quả chính xác** để chạy lại từ đầu.
 - **Giảm chuyển động:** khi máy đặt "giảm chuyển động" (trên Windows: tắt hiệu ứng hoạt ảnh trong
   phần Trợ năng), mọi bài mở ở trạng thái dừng, kể cả các bài hạt của Hóa học (Maxwell–Boltzmann, thuyết va chạm, cân bằng hóa
   học) vốn tự chạy khi mở; chỉ chạy khi bạn bấm **Chạy** ở chỗ cũ. Đổi thông số lúc đang dừng thì

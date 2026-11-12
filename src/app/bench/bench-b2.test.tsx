@@ -6,7 +6,7 @@ import { useSimStore } from '@/app/sim/simStore';
 import { useWorkspaceStore } from '@/app/workspaceStore';
 import { usePoeRun } from '@/learn/poeRun';
 import { freeFall } from '@/physics/projectile/scenes';
-import type { ScienceCardData } from '@/science-card/types';
+import { withDrift, type ScienceCardData } from '@/science-card/types';
 import { DriverGrid } from './DriverGrid';
 import { ScienceSummary } from './ScienceSummary';
 import { ToolSwitches } from './ToolSwitches';
@@ -53,6 +53,21 @@ describe('bench B2 (docs/BENCH_DESIGN.md §9.4)', () => {
     });
     render(<ScienceSummary />);
     expect(screen.getByRole('status')).toHaveTextContent('Đã có can thiệp');
+    expect(
+      screen.getByRole('button', { name: 'Đặt lại để về kết quả chính xác' }),
+    ).toBeInTheDocument();
+  });
+
+  it('an energy drift above 10⁻⁹ is said on the summary, with its number and the reset (#205 C2)', () => {
+    act(() => {
+      useWorkspaceStore.setState({ scienceCard: withDrift(card(false), 4e-9) });
+      useSimStore.setState({ scene: freeFall });
+    });
+    render(<ScienceSummary />);
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'Năng lượng đã lệch 4·10⁻⁹ so với lúc đầu',
+    );
+    expect(screen.getByText('Định lượng gần đúng')).toBeInTheDocument();
     expect(
       screen.getByRole('button', { name: 'Đặt lại để về kết quả chính xác' }),
     ).toBeInTheDocument();

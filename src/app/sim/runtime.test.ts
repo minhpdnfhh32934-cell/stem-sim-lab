@@ -1,4 +1,5 @@
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { EngineRunner } from '@/core/sim/runner';
 import { useWorkspaceStore } from '@/app/workspaceStore';
 import { sim } from './runtime';
 import { useSimStore } from './simStore';
@@ -116,5 +117,41 @@ describe('pausing', () => {
     expect(t).toBeGreaterThan(0.4);
     expect(useWorkspaceStore.getState().playing).toBe(false);
     expect(useWorkspaceStore.getState().simTime).toBe(t);
+  });
+});
+
+describe('energy drift reaches the Science Card (#205 C2)', () => {
+  it('a drift above 10⁻⁹ makes the card approximate and says so; a reset clears it', async () => {
+    // The runner's own measurement, raised as a very long RK4 run would (a real one measured
+    // 2–5·10⁻¹² over 10⁴ s, too small to reach here).
+    let fake = 0;
+    const frame = Object.getOwnPropertyDescriptor(EngineRunner.prototype, 'frame')
+      ?.value as EngineRunner['frame'];
+    vi.spyOn(EngineRunner.prototype, 'frame').mockImplementation(function (
+      this: EngineRunner,
+      ...args: Parameters<EngineRunner['frame']>
+    ) {
+      const f = frame.apply(this, args);
+      if ('stats' in f) f.stats.maxRelDrift = Math.max(f.stats.maxRelDrift, fake);
+      return f;
+    });
+    await sim.open('simplePendulum');
+    play(0.5);
+    expect(useWorkspaceStore.getState().scienceCard?.confidence).toBe('exact');
+    expect(useSimStore.getState().energyDrift).toBe(0);
+    fake = 3.4e-9;
+    play(0.5);
+    expect(useSimStore.getState().energyDrift).toBe(3e-9);
+    const card = useWorkspaceStore.getState().scienceCard;
+    expect(card?.energyDrift).toBe(3e-9);
+    expect(card?.confidence).toBe('approx');
+    // Below the threshold again (a new run): the card is exact again.
+    fake = 0;
+    sim.reset();
+    play(0.5);
+    expect(useSimStore.getState().energyDrift).toBe(0);
+    expect(useWorkspaceStore.getState().scienceCard?.energyDrift).toBeUndefined();
+    expect(useWorkspaceStore.getState().scienceCard?.confidence).toBe('exact');
+    vi.restoreAllMocks();
   });
 });

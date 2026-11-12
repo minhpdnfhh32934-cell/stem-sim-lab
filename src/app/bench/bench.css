@@ -1092,6 +1092,11 @@ kbd {
 .science-card__intervened .btn {
   justify-self: start;
   min-height: var(--target);
+  /* "Đặt lại để về kết quả chính xác" wraps at 140 % instead of widening the tray (#205 C2). */
+  height: auto;
+  padding-block: var(--space-1);
+  white-space: normal;
+  text-align: start;
 }
 
 /* B2: "Dụng cụ đo", one 40 px switch row per tool. */
