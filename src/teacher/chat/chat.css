@@ -466,6 +466,11 @@
   border-radius: 14px;
   background: var(--bg-panel-2);
 }
+/* The box shows the textarea's ring; its buttons keep their own (#205 A4). */
+.chat-panel__composer:has(textarea:focus-visible) {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
 .chat-panel__composer textarea {
   display: block;
   width: 100%;
