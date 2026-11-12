@@ -230,7 +230,6 @@
 }
 
 .teacher[data-layout='board'] .teacher__quick-actions button {
-  min-height: 36px;
   font-size: var(--text-xs);
 }
 
