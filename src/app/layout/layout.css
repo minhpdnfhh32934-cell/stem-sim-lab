@@ -214,6 +214,11 @@ body[data-resizing] .splitter {
   overflow-y: auto;
   scrollbar-width: none;
 }
+.stage__toolbar .icon-btn {
+  /* Full targets (R5, #205 A3): the tools were 30 x 30. */
+  width: var(--target);
+  height: var(--target);
+}
 .stage__tool {
   display: flex;
   flex-direction: column;

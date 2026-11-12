@@ -396,6 +396,8 @@ kbd {
   height: var(--target);
 }
 .bench-header__mark {
+  /* Never squeezed by a long lesson name (#205 A3: it went down to 38px wide). */
+  flex: none;
   display: grid;
   place-items: center;
   width: var(--target);
@@ -489,6 +491,12 @@ kbd {
   }
   .bench-header .ai-status__label {
     display: none;
+  }
+  /* Its icon alone is still a full target (#205 A3: it went down to 34px wide at 140 %). */
+  .bench-header .ai-status {
+    flex: none;
+    min-width: var(--target);
+    justify-content: center;
   }
 }
 .bench-header .segmented {

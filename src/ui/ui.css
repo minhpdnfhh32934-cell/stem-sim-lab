@@ -233,7 +233,8 @@
    styles (`appearance: base-select`); other browsers keep their own list. Options stay plain
    text so the native keyboard, screen-reader and form behaviour is unchanged. */
 select {
-  min-height: 2.43rem;
+  /* Every target >= 40px (R5, #205 A3). */
+  min-height: var(--target);
   max-width: 100%;
   padding: 0 var(--space-3);
   border: 1px solid var(--border-strong);
@@ -253,6 +254,12 @@ select:hover:not(:disabled) {
 select:disabled {
   opacity: 0.55;
   cursor: not-allowed;
+}
+/* Search boxes and sliders are full-size targets everywhere (#205 A3); text and number fields
+   sit in a labelled box of that size (ParamsPanel) or grow on touch screens. */
+input[type='search'],
+input[type='range'] {
+  min-height: var(--target);
 }
 /* Touch screens and pens: form fields are full-size targets (>= 40px) wherever they are. */
 @media (any-pointer: coarse) {
@@ -595,6 +602,10 @@ select:disabled {
   padding: var(--space-3) var(--space-3) var(--space-3) var(--space-4);
   border-bottom: 1px solid var(--border);
 }
+.dialog__header .icon-btn {
+  width: var(--target);
+  height: var(--target);
+}
 .dialog__header h2 {
   margin: 0;
   font-size: var(--text-lg);
@@ -641,6 +652,7 @@ select:disabled {
   background: var(--bg-sunken);
 }
 .segmented__item {
+  min-width: var(--target);
   padding: 4px 10px;
   border: 0;
   border-radius: calc(var(--radius-md) - 2px);
