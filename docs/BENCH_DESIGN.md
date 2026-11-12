@@ -444,7 +444,7 @@ Under 18: door 2 becomes a non-interactive card the same size, with a Lock icon 
 | Tệp 64                                 | x1250         |
 | Cài đặt 40                             | x1318         |
 
-Fold order at large font or in English: Tìm → icon 40; AI status → icon + dot (text in tooltip and aria); undo/redo → into Tệp; middle crumbs → "…".
+Fold order at large font or in English: Tìm → icon 40; AI status → icon + dot (text in tooltip and aria); undo/redo → into Tệp; middle crumbs → "…". Undo / redo and the middle crumbs fold with the B2 container query (#205 B2b): Tệp lists "Hoàn tác" / "Làm lại" first (aria-disabled when empty), "…" names the whole path (name and tooltip) and leads to the subject's shelf.
 
 **Notebook rail x0–64, y48–704** (frame). Tabs 64×72, icon 20 + label 12/14 on up to 2 lines:
 

@@ -75,7 +75,7 @@ export function BenchHeader() {
           {lab && (
             <button
               type="button"
-              className="bench-crumb"
+              className={topic ? 'bench-crumb bench-crumbs__path' : 'bench-crumb'}
               aria-current={!topic && !studio ? 'page' : undefined}
               onClick={() => {
                 toLibrary();
@@ -86,17 +86,30 @@ export function BenchHeader() {
           )}
           {lab && topic && (
             <>
-              <span className="bench-crumbs__sep" aria-hidden="true">
+              <span className="bench-crumbs__sep bench-crumbs__path" aria-hidden="true">
                 ›
               </span>
               <button
                 type="button"
-                className="bench-crumb"
+                className="bench-crumb bench-crumbs__path"
                 onClick={() => {
                   toLibrary(subject);
                 }}
               >
                 {t(`subjects.${subject}`)}
+              </button>
+              {/* Short of room, "Virtual Lab › Sinh học" folds into "…" (#205 B2b, bench.css): its
+                  name and tooltip keep the whole path; it goes where the subject crumb goes. */}
+              <button
+                type="button"
+                className="bench-crumb bench-crumbs__fold"
+                aria-label={`${t('landing.labTitle')} › ${t(`subjects.${subject}`)}`}
+                data-tip={`${t('landing.labTitle')} › ${t(`subjects.${subject}`)}`}
+                onClick={() => {
+                  toLibrary(subject);
+                }}
+              >
+                …
               </button>
               <span className="bench-crumbs__sep" aria-hidden="true">
                 ›
@@ -164,8 +177,9 @@ export function BenchHeader() {
             {t('landing.teacherTitle')}
           </button>
         )}
+        {/* Short of room they move into Tệp (#205 B2b, bench.css); Ctrl+Z / Ctrl+Y still work. */}
         {lab && !shelf && (
-          <>
+          <span className="bench-header__history">
             <IconButton
               icon={Undo2}
               label={t('topbar.undo')}
@@ -182,9 +196,9 @@ export function BenchHeader() {
                 redo();
               }}
             />
-          </>
+          </span>
         )}
-        <FileMenu />
+        <FileMenu history={lab && !shelf} />
         <IconButton
           icon={Settings}
           label={t('topbar.settings')}

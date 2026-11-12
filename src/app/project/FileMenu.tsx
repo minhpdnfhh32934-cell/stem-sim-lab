@@ -10,8 +10,10 @@ import {
   Menu,
   MonitorCog,
   Moon,
+  Redo2,
   Save,
   Sparkles,
+  Undo2,
   type LucideIcon,
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
@@ -27,6 +29,7 @@ import { openWhatsNew, useWhatsNewStore } from '@/app/whatsnew/whatsNewStore';
 import { IconButton } from '@/ui/IconButton';
 import { toast } from '@/ui/toast';
 import { exportPng, openProject, saveProject } from './actions';
+import { redo, undo, useUndoStore } from './undo';
 import { openPrivacy } from '@/safety/safetyStore';
 import { startTour, useProjectUi } from './uiStore';
 
@@ -35,6 +38,9 @@ interface Item {
   label: string;
   hint?: string;
   run: () => void;
+  /** Shown only while the header is short of room (bench.css), like the theme item. */
+  className?: string;
+  disabled?: boolean;
 }
 
 /**
@@ -43,8 +49,10 @@ interface Item {
  * When the bench header is short of room the light / dark switch moves in here (#205 B2): the
  * item is always rendered and shown by the header's container query (bench.css).
  */
-export function FileMenu() {
+export function FileMenu({ history = false }: { history?: boolean } = {}) {
   const t = useT();
+  const canUndo = useUndoStore((s) => s.canUndo);
+  const canRedo = useUndoStore((s) => s.canRedo);
   const [open, setOpen] = useState(false);
   // "Thông tin máy" (Advanced, #201): render quality, FPS and RAM, the classic status bar's three.
   const [infoOpen, setInfoOpen] = useState(false);
@@ -64,7 +72,8 @@ export function FileMenu() {
     };
     document.addEventListener('pointerdown', onDown);
     document.addEventListener('keydown', onKey);
-    root.current?.querySelector<HTMLButtonElement>('[role^="menuitem"]')?.focus();
+    // The first item on screen (undo / redo and light / dark are hidden while the header has room).
+    menuItems(root.current)[0]?.focus();
     return () => {
       document.removeEventListener('pointerdown', onDown);
       document.removeEventListener('keydown', onKey);
@@ -72,6 +81,25 @@ export function FileMenu() {
   }, [open]);
 
   const items: Item[] = [
+    // Undo / redo of an open topic, here when the header folds them away (#205 B2b).
+    ...(history
+      ? [
+          {
+            icon: Undo2,
+            label: t('topbar.undo'),
+            run: undo,
+            className: 'file-menu__history',
+            disabled: !canUndo,
+          },
+          {
+            icon: Redo2,
+            label: t('topbar.redo'),
+            run: redo,
+            className: 'file-menu__history',
+            disabled: !canRedo,
+          },
+        ]
+      : []),
     ...(unseen ? [{ icon: Sparkles, label: t('whatsnew.menu'), run: openWhatsNew }] : []),
     { icon: FolderOpen, label: t('project.open'), run: () => void openProject() },
     { icon: Save, label: t('project.save'), run: () => void saveProject() },
@@ -150,13 +178,16 @@ export function FileMenu() {
           aria-label={t('project.file')}
           data-surface="paper"
         >
-          {items.map(({ icon: Icon, label, run }) => (
+          {items.map(({ icon: Icon, label, run, className, disabled }) => (
             <button
               key={label}
               type="button"
               role="menuitem"
-              className="file-menu__item"
+              className={className ? `file-menu__item ${className}` : 'file-menu__item'}
+              // Not `disabled`: the arrow keys still reach it (WAI-ARIA menu).
+              aria-disabled={disabled || undefined}
               onClick={() => {
+                if (disabled) return;
                 setOpen(false);
                 run();
               }}
