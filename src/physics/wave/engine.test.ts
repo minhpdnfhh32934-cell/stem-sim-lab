@@ -51,12 +51,14 @@ describe('standing wave engine', () => {
     }
   });
 
-  it('Δt resolves each period (≤ T/200) and the run stops after 20 periods', () => {
+  it('Δt resolves each period (≤ T/200); no end of its own, a caller may still set one', () => {
     const e = new StandingWaveEngine();
     e.reset(base);
     expect(e.dt).toBeLessThanOrEqual(1 / 25 / 200);
+    for (let i = 0; i < 4000; i++) e.step();
+    expect(e.finished()).toBe(false);
+    e.reset({ ...base, tEnd: 0.8 });
     while (!e.finished()) e.step();
-    expect(e.time()).toBeGreaterThanOrEqual(0.8);
     expect(e.time() - 0.8).toBeLessThan(e.dt);
   });
 

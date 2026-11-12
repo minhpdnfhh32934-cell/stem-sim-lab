@@ -77,9 +77,6 @@ export function waveOf(q: StandingInput): Wave | null {
 
 const hasFrequency = (q: StandingInput) => Number.isFinite(q.f) && q.f > 0;
 
-/** Run length shown by default: 20 periods. */
-export const runEnd = (q: StandingInput) => (hasFrequency(q) ? 20 / q.f : 1);
-
 /** Fixed step Δt ≤ T/200, so slow playback still gets a new state on every frame. */
 export const stepOf = (q: StandingInput) =>
   hasFrequency(q) ? Math.min(1 / 240, 1 / (200 * q.f)) : 1 / 240;
@@ -96,7 +93,8 @@ export class StandingWaveEngine implements SimulationEngine<Params> {
   private steps = 0;
   private q: StandingInput = standingInput({});
   private w: Wave | null = null;
-  private tEnd = 1;
+  /** No end of its own (#205 C1): it runs until paused. Only a caller (a test) sets one. */
+  private tEnd: number | undefined;
 
   reset(p: Params): void {
     this.q = standingInput(p);
@@ -104,7 +102,7 @@ export class StandingWaveEngine implements SimulationEngine<Params> {
     this.dt = stepOf(this.q);
     this.t0 = 0;
     this.steps = 0;
-    this.tEnd = p.tEnd ?? runEnd(this.q);
+    this.tEnd = p.tEnd;
   }
 
   step(): void {
@@ -131,7 +129,7 @@ export class StandingWaveEngine implements SimulationEngine<Params> {
   }
 
   finished(): boolean {
-    return this.time() >= this.tEnd;
+    return this.tEnd !== undefined && this.time() >= this.tEnd;
   }
 }
 
