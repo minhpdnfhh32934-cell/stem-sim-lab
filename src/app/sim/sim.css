@@ -13,6 +13,12 @@
   touch-action: none;
   outline: none;
 }
+/* The stage takes the keyboard (tabIndex 0): its ring sits inside, the canvas fills the stage
+   (#205 A4). A mouse click does not show it. */
+.stage__canvas:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: -2px;
+}
 
 .stage__hud {
   position: absolute;

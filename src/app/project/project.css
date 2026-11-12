@@ -44,7 +44,6 @@
 .file-menu__item:hover,
 .file-menu__item:focus-visible {
   background: var(--bg-hover);
-  outline: none;
 }
 .file-menu__item svg {
   color: var(--text-muted);

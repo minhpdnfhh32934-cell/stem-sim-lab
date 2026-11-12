@@ -65,6 +65,11 @@
   background: var(--bg-panel);
   color: var(--text-muted);
 }
+/* The box shows the input's ring (#205 A4). */
+.pt__search:focus-within {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
 .pt__search input {
   width: 13rem;
   border: 0;

@@ -18,6 +18,11 @@
   border-bottom: 1px solid var(--border);
   color: var(--text-muted);
 }
+/* The input itself has no ring (it fills the row): the row shows it (#205 A4). */
+.command-palette__search:focus-within {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: -2px;
+}
 .command-palette__search input {
   flex: 1;
   min-width: 0;
