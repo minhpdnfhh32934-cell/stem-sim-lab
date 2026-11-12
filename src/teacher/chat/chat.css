@@ -213,7 +213,7 @@
   display: inline-flex;
   gap: 8px;
   align-items: center;
-  min-height: 36px;
+  min-height: var(--target);
   color: var(--text-muted);
   font-size: var(--text-sm);
   cursor: pointer;
@@ -540,7 +540,7 @@
   margin-top: 8px;
 }
 .chat-settings__actions .btn {
-  min-height: 36px;
+  min-height: var(--target);
 }
 .chat-settings__error,
 .chat-settings__success {
@@ -664,7 +664,7 @@
   justify-content: flex-end;
 }
 .chat-settings__model-actions .btn {
-  min-height: 38px;
+  min-height: var(--target);
 }
 .chat-settings__progress {
   display: grid;
@@ -745,8 +745,8 @@
 }
 .chat-settings__documents button {
   display: grid;
-  width: 30px;
-  height: 30px;
+  width: var(--target);
+  height: var(--target);
   flex: none;
   place-items: center;
   border: 0;
