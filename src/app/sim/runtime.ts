@@ -54,6 +54,12 @@ class SimRuntime {
   renderState: Float64Array | null = null;
   private lastUi = 0;
   private stepping = false;
+  /**
+   * The frame shown when the learner paused. A frame requested just before the pause still comes
+   * back advanced (one request is in flight to the worker): it is not shown and the engine goes
+   * back to this frame, so the time stays where "Tạm dừng" was pressed (#205: it moved one step).
+   */
+  private pausedAt: Frame | null = null;
 
   get scene(): PhysicsScene | null {
     return useSimStore.getState().scene;
@@ -170,6 +176,7 @@ class SimRuntime {
     this.host?.dispose();
     this.host = null;
     this.latest = null;
+    this.pausedAt = null;
     this.renderState = null;
     this.history.clear();
     useWorkspaceStore.setState({
@@ -182,6 +189,11 @@ class SimRuntime {
   }
 
   private onFrame(f: Frame): void {
+    const paused = this.pausedAt;
+    if (paused && f.stats.steps > 0 && !useWorkspaceStore.getState().playing) {
+      this.host?.seek(paused.curr, paused.t);
+      return;
+    }
     this.latest = f;
     const out = this.renderState ?? new Float64Array(f.curr.length);
     lerpState(f.prev, f.curr, f.alpha, out);
@@ -255,8 +267,10 @@ class SimRuntime {
       // The shown time lags the engine by up to one UI update (100 ms): settle it now, so the
       // pause is announced once, with the time it really stopped at.
       useWorkspaceStore.setState({ playing: false, simTime: this.latest?.t ?? ws.simTime });
+      this.pausedAt = this.latest;
       return;
     }
+    this.pausedAt = null;
     const sim = useSimStore.getState();
     if (sim.validation.length > 0) return;
     if (sim.scrubTime !== null) this.resumeFromScrub();
@@ -269,6 +283,7 @@ class SimRuntime {
     if (t === null || !this.host) return;
     const state = this.history.stateAt(t);
     if (state) {
+      this.pausedAt = null;
       this.host.seek(state, t);
       this.history.truncateAfter(t);
     }
@@ -280,11 +295,13 @@ class SimRuntime {
     if (!ws.hasSimulation || useSimStore.getState().validation.length > 0) return;
     if (useSimStore.getState().scrubTime !== null) this.resumeFromScrub();
     useWorkspaceStore.setState({ playing: false });
+    this.pausedAt = null;
     this.stepping = true;
   }
 
   reset(): void {
     if (!this.host) return;
+    this.pausedAt = null;
     this.host.reset(this.engineParams());
     this.history.clear();
     useSimStore.setState({
