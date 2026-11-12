@@ -208,22 +208,23 @@ describe('Transport3DView — diffusion', () => {
     expect(screen.getByText(BLOCKED_NOTE.vi)).toHaveAttribute('role', 'status');
   });
 
-  it('play from the end starts again; "Chạy lại" plays from t = 0; Basic hides the scale', () => {
+  it('play from the end goes on (#205 C5); "Chạy lại" plays from t = 0; Basic hides the scale', () => {
     const { factory } = fakeRenderer();
     const { unmount } = render(<Transport3DView createRenderer={factory} />);
     const m = diffusionModel3d(DIFF);
     act(() => {
       useTransport3D.setState({ t: m.tEnd });
     });
+    // Endless: from the end of the span the run goes on into the next one (it used to restart).
     fireEvent.click(screen.getByRole('button', { name: 'Phát' }));
-    expect(useTransport3D.getState()).toMatchObject({ playing: true, t: 0 });
+    expect(useTransport3D.getState()).toMatchObject({ playing: true, t: m.tEnd });
     fireEvent.click(screen.getByRole('button', { name: 'Tạm dừng' }));
     act(() => {
       useTransport3D.setState({ t: 3 });
     });
     fireEvent.click(screen.getByRole('button', { name: 'Chạy lại' }));
     expect(useTransport.getState().run).toBe(1);
-    expect(useTransport3D.getState()).toMatchObject({ playing: true, t: 0 });
+    expect(useTransport3D.getState()).toMatchObject({ playing: true, t: 0, page: 0 });
     unmount();
     useSettingsStore.setState({ uiMode: 'basic' });
     render(<Transport3DView createRenderer={fakeRenderer().factory} />);
