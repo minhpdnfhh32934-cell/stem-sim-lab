@@ -205,7 +205,7 @@ body[data-resizing] .splitter {
   flex-direction: column;
   align-items: center;
   gap: 2px;
-  padding: 4px;
+  padding: 2px;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   background: var(--bg-panel);
@@ -213,6 +213,12 @@ body[data-resizing] .splitter {
   max-height: calc(100% - 2 * var(--space-3));
   overflow-y: auto;
   scrollbar-width: none;
+}
+.stage__toolbar .icon-btn {
+  /* Full targets (R5, #205 A3; they were 30 x 30), in px: with the 2px padding the palette ends
+     at x = 58, clear of the captions scenes write at x = 60 at every Cỡ chữ (layout.spec UI-02). */
+  width: 40px;
+  height: 40px;
 }
 .stage__tool {
   display: flex;

@@ -260,7 +260,7 @@
 }
 .chat-engine select {
   max-width: 150px;
-  min-height: 34px;
+  min-height: var(--target);
   font-size: var(--text-sm);
 }
 .chat-panel__notice {
@@ -277,7 +277,7 @@
 }
 .chat-panel__notice .btn {
   flex: none;
-  min-height: 34px;
+  min-height: var(--target);
 }
 .chat-panel__local-note {
   display: flex;
