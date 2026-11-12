@@ -45,7 +45,9 @@ for (const fontScale of [1, 1.4] as const) {
     const tray = page.getByRole('complementary', { name: 'Điều chỉnh (bảng thuộc tính)' });
     const notice = tray.getByRole('status').filter({ hasText: 'Năng lượng đã lệch' });
     await expect(notice).toContainText('Năng lượng đã lệch 3·10⁻⁹ so với lúc đầu');
-    await expect(tray.getByText('Định lượng gần đúng')).toBeVisible();
+    // The confidence is the edge's chip (the tray does not repeat it, #205 B4).
+    const chip = page.locator('.bench-chip');
+    await expect(chip).toContainText('Định lượng gần đúng');
     const reset = notice.getByRole('button', { name: 'Đặt lại để về kết quả chính xác' });
     await expect(reset).toBeVisible();
     // Whole inside the tray: nothing cut at its right edge.
@@ -71,6 +73,6 @@ for (const fontScale of [1, 1.4] as const) {
     // The reset runs again from the start: the measured drift is 0, the card exact again.
     await reset.click();
     await expect(notice).toHaveCount(0);
-    await expect(tray.getByText('Định lượng chính xác')).toBeVisible();
+    await expect(chip).toContainText('Định lượng chính xác');
   });
 }
