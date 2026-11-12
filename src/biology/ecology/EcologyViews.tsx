@@ -118,7 +118,7 @@ export function LogisticPanel() {
         }}
       />
       <Range
-        label={L('Thời gian mô phỏng t', 'Time span t')}
+        label={L('Khung thời gian t', 'Time window t')}
         value={st.tEnd}
         min={5}
         max={100}
@@ -154,7 +154,8 @@ export function LogisticBottom() {
   const label = Lz(L('dN/dt = rN(1 − N/K)', 'dN/dt = rN(1 − N/K)'));
   const series = useMemo(() => [{ label, y: data.y }], [label, data.y]);
   const marker =
-    shown === null ? st.K / 2 : logistic(st.N0, st.r, st.K, Math.max(0, Math.min(st.tEnd, shown)));
+    // The 3D habitat's time: an endless run goes on past tEnd (#205 C5).
+    shown === null ? st.K / 2 : logistic(st.N0, st.r, st.K, Math.max(0, shown));
   return (
     <div className="gas-bottom gas-bottom--single">
       <XYChart

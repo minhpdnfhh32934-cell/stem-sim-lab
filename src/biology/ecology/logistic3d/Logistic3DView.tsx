@@ -80,8 +80,9 @@ function CurveTrack({
     [model],
   );
   const kY = 100 - (model.K / model.top) * 100;
-  const star = tStarInRun(model) ? (model.tStar / model.tEnd) * 100 : null;
-  const u = model.tEnd > 0 ? moment.t / model.tEnd : 0;
+  // The span shown starts at t0 (0, or where an endless run's span starts).
+  const star = tStarInRun(model) ? ((model.tStar - model.t0) / model.tEnd) * 100 : null;
+  const u = model.tEnd > 0 ? (moment.t - model.t0) / model.tEnd : 0;
   const v = moment.fill;
   return (
     <div className="logi3d__track">
@@ -99,12 +100,12 @@ function CurveTrack({
       <input
         type="range"
         aria-label={label}
-        min={0}
-        max={model.tEnd}
+        min={model.t0}
+        max={model.t0 + model.tEnd}
         step={model.tEnd / 400}
         value={moment.t}
         onChange={(e) => {
-          playback.setT(Number(e.target.value));
+          playback.setT(Number(e.target.value) - model.t0);
         }}
       />
     </div>
@@ -147,7 +148,8 @@ function TimePlayer({
   picked: boolean;
 }) {
   const Lz = useLocalized();
-  const canStar = tStarInRun(model);
+  // The endless run reaches t* whenever it exists for t ≥ 0: "Tới t*" goes to its span.
+  const canStar = Number.isFinite(model.tStar) && model.tStar >= 0;
   // The bench draws the player in its edge; the camera switch stays on the stage (§9.6).
   const bench = useContext(BenchContext);
   const onEdge = useOnEdge();
@@ -165,13 +167,13 @@ function TimePlayer({
               label: Lz(L('Tới t*', 'Go to t*')),
               disabled: !canStar,
               onClick: () => {
-                playback.setT(model.tStar);
+                playback.seek(model.tStar);
               },
             }}
             reset={{
               label: Lz(L('Đặt lại', 'Reset')),
               onClick: () => {
-                playback.setT(0);
+                playback.reset();
               },
             }}
             readout={readout(moment, fmt)}
@@ -217,7 +219,7 @@ function TimePlayer({
                     ),
               )}
               onClick={() => {
-                playback.setT(model.tStar);
+                playback.seek(model.tStar);
               }}
             >
               <Crosshair size={15} aria-hidden="true" /> {Lz(L('Tới t*', 'Go to t*'))}
@@ -292,13 +294,19 @@ export function Logistic3DView() {
   const st = useLogistic();
   const tier = useTierConfig();
   const cap = figureCap(tier.maxParticles);
-  const model = useMemo(
-    () => logisticModel3d({ N0: st.N0, r: st.r, K: st.K, tEnd: st.tEnd }, cap),
-    [st.N0, st.r, st.K, st.tEnd, cap],
-  );
   const modelKey = JSON.stringify([st.N0, st.r, st.K, st.tEnd, cap]);
-  const playback = usePlayback(st.tEnd, { start: 0, autoplay: true, seconds: SECONDS });
-  const moment = momentAt(model, playback.t);
+  // Endless (#205 C5): span after span of the exact N(t), towards K and then at K.
+  const playback = usePlayback(st.tEnd, {
+    start: 0,
+    autoplay: true,
+    seconds: SECONDS,
+    endless: true,
+    runKey: modelKey,
+  });
+  const t0 = playback.page * st.tEnd;
+  // Closed form, cheap: no memo (the React compiler memoizes the component).
+  const model = logisticModel3d({ N0: st.N0, r: st.r, K: st.K, tEnd: st.tEnd }, cap, t0);
+  const moment = momentAt(model, t0 + playback.t);
   const selected = useLogistic3D((s) => s.selected);
   const camera = useLogistic3D((s) => s.camera);
   // "Hiện tên": on unless the learner turned it off.
@@ -306,8 +314,8 @@ export function Logistic3DView() {
 
   // The chart under the stage marks the moment shown while this view is on screen.
   useLayoutEffect(() => {
-    useLogistic3D.setState({ t: playback.t, active: true });
-  }, [playback.t]);
+    useLogistic3D.setState({ t: moment.t, active: true });
+  }, [moment.t]);
   useEffect(
     () => () => {
       useLogistic3D.setState({ active: false, selected: null });
@@ -351,14 +359,15 @@ export function Logistic3DView() {
   const scale = Lz(scaleText(model.per, fmt));
   const scene: SceneSpec = {
     build: (kit) => buildLogisticHabitat(kit, { model, texts }),
-    buildKey: JSON.stringify([modelKey, title, marks, fmt(1.5)]),
+    // A new span (its scales and curve) is built again.
+    buildKey: JSON.stringify([modelKey, playback.page, title, marks, fmt(1.5)]),
     label: Lz(
       L(
         `Quần thể tăng trưởng logistic: ${readout(moment, fmt)}, ${String(moment.shown)} hình (${scale}); sức chứa K = ${fmt(model.K, 4)}.`,
         `Logistic population growth: ${readout(moment, fmt)}, ${String(moment.shown)} figures (${scale}); carrying capacity K = ${fmt(model.K, 4)}.`,
       ),
     ),
-    time: playback.t,
+    time: moment.t,
     running: (playback.playing && !prefersReducedMotion()) || lively,
     viewDir: LOGI_VIEW,
     aspect: 2.2,

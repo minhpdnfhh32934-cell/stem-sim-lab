@@ -166,7 +166,7 @@ function TimePlayer({
             reset={{
               label: Lz(L('Đặt lại', 'Reset')),
               onClick: () => {
-                playback.setT(0);
+                playback.reset();
               },
             }}
             readout={readout(moment, fmt)}

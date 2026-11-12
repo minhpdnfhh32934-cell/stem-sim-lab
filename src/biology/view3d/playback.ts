@@ -19,6 +19,10 @@ export interface Playback {
   setT: (t: number) => void;
   toggle: () => void;
   replay: () => void;
+  /** Back to t = 0 of the run (page 0), paused ("Đặt lại"). */
+  reset: () => void;
+  /** Shows the run's time T, paused: endless, in its span ⌊T / span⌋ (#205 C5). */
+  seek: (T: number) => void;
 }
 
 /**
@@ -105,6 +109,20 @@ export function usePlayback(
       setTState(0);
       setPage(0);
       setPlaying(!prefersReducedMotion());
+    },
+    reset: () => {
+      tRef.current = 0;
+      setTState(0);
+      setPage(0);
+      setPlaying(false);
+    },
+    seek: (T) => {
+      const span = spanRef.current;
+      const k = endless && Number.isFinite(T) ? Math.max(0, Math.floor(T / span)) : 0;
+      tRef.current = Math.min(span, Math.max(0, T - k * span));
+      setTState(tRef.current);
+      setPage(k);
+      setPlaying(false);
     },
   };
 }
