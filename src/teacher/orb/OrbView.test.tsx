@@ -1,4 +1,5 @@
 import { act, render, screen } from '@testing-library/react';
+import type { Scene } from 'three';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { usePerfStore } from '@/perf/perfStore';
 import { fakeRenderer, withReducedMotion } from '@/ui/three/testing';
@@ -68,6 +69,26 @@ describe('OrbView (#234 step 2)', () => {
       await Promise.resolve();
     });
     expect(screen.getByTestId('rings')).toBeInTheDocument();
+  });
+
+  it('speaking: the voice level swells the orb, eased, and it settles back when the voice stops', async () => {
+    const { factory, made } = fakeRenderer();
+    let loud = 1;
+    render(
+      <OrbView state="speaking" level={() => loud} fallback={RINGS} createRenderer={factory} />,
+    );
+    const r = made[0];
+    if (!r) throw new Error('no renderer');
+    const scale = () => {
+      const scene = vi.mocked(r.render).mock.calls.at(-1)?.[0] as Scene | undefined;
+      return Math.max(...(scene?.children ?? []).map((c) => c.scale.x));
+    };
+    await new Promise((ok) => setTimeout(ok, 300));
+    // speaking: scale 1.02, swell 0.12 at full level (orbScene.ts).
+    expect(scale()).toBeCloseTo(1.02 * 1.12, 2);
+    loud = 0;
+    await new Promise((ok) => setTimeout(ok, 300));
+    expect(scale()).toBeCloseTo(1.02, 2);
   });
 
   it('reduced motion: drawn once, still; a new state draws it once more', async () => {

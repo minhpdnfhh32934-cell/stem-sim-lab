@@ -4,6 +4,8 @@
  * after another, with the pauses the text asks for. Nothing is recorded or stored.
  */
 
+import { levelInput, soundEnded, soundStarted } from './voiceLevel';
+
 export interface Pcm {
   samples: Float32Array;
   sampleRate: number;
@@ -97,8 +99,10 @@ export async function playPcm(pcm: Pcm, signal: AbortSignal, rate = 1): Promise<
   const source = ctx.createBufferSource();
   source.buffer = buffer;
   source.playbackRate.value = rate;
-  source.connect(ctx.destination);
+  // Through the level meter to the speakers: the orb follows the voice (#234 step 3).
+  source.connect(levelInput(ctx));
   current = source;
+  soundStarted();
   await new Promise<void>((resolve) => {
     const stop = () => {
       try {
@@ -115,6 +119,7 @@ export async function playPcm(pcm: Pcm, signal: AbortSignal, rate = 1): Promise<
     signal.addEventListener('abort', stop, { once: true });
     source.start();
   });
+  soundEnded();
   if (current === source) current = null;
 }
 
