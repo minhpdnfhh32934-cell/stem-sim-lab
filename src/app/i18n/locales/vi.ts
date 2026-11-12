@@ -260,7 +260,8 @@ const vi = {
     tourNotebookTitle: 'Sổ ghi',
     tourNotebookBody: 'Thử thách, Đồ thị, Lời giải, Thẻ khoa học và Hỏi AI mở từ cột bên trái.',
     tourSkip: 'Bỏ qua hướng dẫn',
-    teacherDoorBody: 'AI Teacher là một AI nên có thể sai.',
+    teacherDoorBody: 'Hỏi bài và xem giảng từng bước trên bảng, có thể nghe đọc thành tiếng.',
+    teacherDoorNote: 'AI Teacher là một AI nên có thể sai.',
     teacherLocked: 'AI Teacher cần bạn đủ 18 tuổi',
     resume: 'Tiếp tục: {topic} ({subject})',
     firstRun: {

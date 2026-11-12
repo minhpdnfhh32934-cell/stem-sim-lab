@@ -1,4 +1,4 @@
-import { GraduationCap, Lock, PencilRuler, RotateCcw, ShieldCheck } from 'lucide-react';
+import { GraduationCap, Info, Lock, PencilRuler, RotateCcw, ShieldCheck } from 'lucide-react';
 import { useT } from '@/app/i18n';
 import { useProfileStore } from '@/app/learner/profileStore';
 import { openLab, openTopic, subjectOf } from '@/app/topics';
@@ -9,7 +9,8 @@ import { SceneStill } from './SceneStill';
 /**
  * "Cửa vào" (docs/BENCH_DESIGN.md §9.1): two doors, Virtual Lab (the only filled element) and
  * AI Teacher (outlined; a locked card for a learner who said they are under 18), a "Tiếp tục"
- * text button for a returning learner and the privacy line. Science Studio stays inside the lab
+ * text button for a returning learner, and the notes: AI Teacher can be wrong (moved off its card,
+ * which now says what it does, #205 B1) and the privacy line. Science Studio stays inside the lab
  * (user decision 2026-10-20).
  */
 export function BenchLanding() {
@@ -69,10 +70,18 @@ export function BenchLanding() {
             })}
           </button>
         )}
-        <p className="bench-launch__privacy">
-          <ShieldCheck size={16} strokeWidth={1.75} aria-hidden="true" />
-          <span>{t('landing.privacy')}</span>
-        </p>
+        <div className="bench-launch__notes">
+          {!minor && (
+            <p className="bench-launch__note">
+              <Info size={16} strokeWidth={1.75} aria-hidden="true" />
+              <span>{t('bench.teacherDoorNote')}</span>
+            </p>
+          )}
+          <p className="bench-launch__note">
+            <ShieldCheck size={16} strokeWidth={1.75} aria-hidden="true" />
+            <span>{t('landing.privacy')}</span>
+          </p>
+        </div>
       </div>
       {/* "Bench still" (§9.1): one frame the projectile engine computes, drawn once when idle. */}
       <figure className="bench-launch__still">
