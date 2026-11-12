@@ -619,6 +619,8 @@ Fold order at large font or in English: Tìm → icon 40; AI status → icon + d
 
 ### 9.9 Settings sheet
 
+#205 B6 (12/11/2026): part A on every page: each field, button and disclosure line is a 40 px target (the key fields were 27 px, the key buttons 36, "Tải mô hình" 38, the key's show button 30, "Hướng dẫn lấy khóa API" 17); summaries stay list items so their triangle stays. `settings-b6.spec.ts` checks every page at 100 % and 140 %.
+
 - Sheet 1200×688 at x83, y40 (surface-1, L3, solid scrim). Header 56: "Cài đặt" + "Đóng (Esc)" 40.
 - **Nav x83–339, y96–728:** vertical tablist with arrow keys, rows 40, groups in 12/16 600 muted:
   - "Chung": Giao diện · Mô phỏng · Phím tắt · Lịch sử phiên bản, plus the optional new page "Hiển thị và trợ năng".
