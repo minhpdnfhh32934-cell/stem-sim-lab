@@ -3,7 +3,9 @@
  * a state the engine computed (never interpolated). Samples are at least `baseSpacing` of
  * screen time apart: that much simulated time × the playback speed, so slow motion (×0,1) keeps
  * ten times more samples per second of simulation (UI-22: a 25 Hz wave got ~5 per period).
- * When the buffer is full, every other sample is dropped (long runs keep their overall shape).
+ * When the buffer is full, every other sample is dropped (long runs keep their overall shape),
+ * except in a run with no end of its own (#205 C1): it keeps its latest stretch at full
+ * resolution and lets the oldest samples go.
  */
 export class History {
   readonly times: number[] = [];
@@ -12,6 +14,9 @@ export class History {
   private timeScale = 1;
   /** 2ⁿ after n decimations. */
   private level = 1;
+  /** A run with no end: drop the oldest samples instead of thinning the whole run. */
+  private windowed = false;
+  private dropped = false;
 
   constructor(
     private readonly baseSpacing = 1 / 120,
@@ -36,10 +41,25 @@ export class History {
     return this.times.at(-1) ?? 0;
   }
 
+  /** Time of the oldest sample kept (0 until a windowed run lets samples go). */
+  get start(): number {
+    return this.times[0] ?? 0;
+  }
+
+  /** True once the oldest samples of a windowed run went: the data is its latest stretch. */
+  get trimmed(): boolean {
+    return this.dropped;
+  }
+
+  setWindowed(on: boolean): void {
+    this.windowed = on;
+  }
+
   clear(): void {
     this.times.length = 0;
     this.states.length = 0;
     this.level = 1;
+    this.dropped = false;
   }
 
   /** Adds a sample if enough simulated time has passed since the previous one. */
@@ -52,7 +72,16 @@ export class History {
     }
     this.times.push(t);
     this.states.push(Float64Array.from(state));
-    if (this.times.length > this.maxSamples) this.decimate();
+    if (this.times.length <= this.maxSamples) return;
+    if (!this.windowed) {
+      this.decimate();
+      return;
+    }
+    // A quarter at a time: amortised O(1) per sample, never more than maxSamples kept.
+    const drop = Math.ceil(this.maxSamples / 4);
+    this.times.splice(0, drop);
+    this.states.splice(0, drop);
+    this.dropped = true;
   }
 
   /** Keeps every other sample (also used by the memory watchdog to free memory). */

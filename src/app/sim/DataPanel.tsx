@@ -1,7 +1,7 @@
 import { Download, Table2 } from 'lucide-react';
 import { useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
-import { useT } from '@/app/i18n';
+import { formatNumber, useT } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { EmptyState } from '@/ui/EmptyState';
@@ -32,10 +32,15 @@ export function DataPanel() {
       if (!s || tt === undefined) continue;
       rows.push([tt, ...cols.map((c) => c.value(s, params))]);
     }
-    return { cols, rows, total };
+    // An endless run keeps its latest stretch (#205 C1): the table and the CSV say which.
+    const fmtT = (v: number) => formatNumber(locale, v, { maximumFractionDigits: 3 });
+    const note = h.trimmed
+      ? t('data.windowNote', { from: fmtT(h.start), to: fmtT(h.duration) })
+      : null;
+    return { cols, rows, total, note };
     // dataVersion drives refresh of the mutable history.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scene, params, L, dataVersion]);
+  }, [scene, params, L, dataVersion, locale, t]);
 
   if (!scene || !table || table.total === 0) {
     return (
@@ -49,7 +54,7 @@ export function DataPanel() {
     const cols = columnsFor(scene, L, params);
     const h = sim.history;
     const rows = h.states.map((s, i) => [h.times[i] ?? 0, ...cols.map((c) => c.value(s, params))]);
-    const csv = toCsv(['t (s)', ...cols.map((c) => c.header)], rows);
+    const csv = toCsv(['t (s)', ...cols.map((c) => c.header)], rows, table.note ?? undefined);
     void exportCsv(scene.id, csv);
   };
 
@@ -65,6 +70,7 @@ export function DataPanel() {
       <div className="data-panel__bar">
         <span className="muted small">
           {t('data.rows', { shown: table.rows.length, total: table.total })}
+          {table.note && <> · {table.note}</>}
         </span>
         <button type="button" className="btn" onClick={onExport}>
           <Download size={14} strokeWidth={1.75} aria-hidden="true" />

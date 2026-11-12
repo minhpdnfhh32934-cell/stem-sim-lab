@@ -478,6 +478,7 @@ const vTension = (p: Params) => notMode(MODE.speed)(p) && (p.vFrom ?? 0) > 0.5;
 export const standingWave: PhysicsScene = {
   id: 'standingWave',
   engineId: 'phys.standingWave',
+  endless: true,
   title: L('Sóng dừng trên dây', 'Standing waves on a string'),
   // Filtered by `when`: each mode asks only for what it uses (draft.ts).
   required: ['L', 'n', 'f', 'v', 'tension', 'muL'],

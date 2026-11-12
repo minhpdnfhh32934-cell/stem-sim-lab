@@ -290,6 +290,7 @@ const givenParam = (
 export const uniformCircularMotion: PhysicsScene = {
   id: 'uniformCircularMotion',
   engineId: 'phys.circular',
+  endless: true,
   title: L('Chuyển động tròn đều', 'Uniform circular motion'),
   // Only the given quantity of the chosen mode is asked for (`when`).
   required: ['r', ...GIVEN],

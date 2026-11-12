@@ -13,6 +13,23 @@ describe('physics registry', () => {
     }
   });
 
+  it('a scene marked endless runs on: no end without a caller tEnd (#205 C1)', async () => {
+    const { createEngine } = await import('@/core/sim/engine');
+    const endless: string[] = [];
+    for (const id of sceneIds()) {
+      const scene = await loadScene(id);
+      if (!scene.endless) continue;
+      endless.push(id);
+      const e = await createEngine(scene.engineId);
+      e.reset(scene.engineParams?.(scene.defaults) ?? scene.defaults);
+      // Past every former end (the longest was 600 s), at the engine's own step.
+      const n = Math.ceil(700 / e.dt);
+      for (let i = 0; i < n; i++) e.step();
+      expect(e.finished?.() ?? false, id).toBe(false);
+    }
+    expect(endless.length).toBeGreaterThanOrEqual(7);
+  });
+
   it('time graphs share one naming ("Vận tốc theo thời gian", UI-14)', async () => {
     for (const id of sceneIds()) {
       for (const g of (await loadScene(id)).graphs) {

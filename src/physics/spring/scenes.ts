@@ -586,6 +586,7 @@ const orientation: ParamDef = {
 
 const common = {
   engineId: 'phys.spring',
+  endless: true,
   usesGravity: true,
   graphs: graphs(),
   bodies: [body],
