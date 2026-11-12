@@ -19,7 +19,14 @@
  */
 import { SERIES_VARS } from '@/ui/charts/uplot';
 import { drawScale } from '../../view3d/sampling';
-import { lvEquilibrium, lvInvariantLog, type LvParams } from '../ecology';
+import {
+  lvDrift,
+  lvEquilibrium,
+  lvInvariantLog,
+  lvSegment,
+  type LvParams,
+  type LvRun,
+} from '../ecology';
 
 export { figureCap } from '../logistic3d/binding';
 
@@ -45,6 +52,7 @@ export interface LvTrajectory {
 export interface LvModel3D {
   p: LvParams;
   traj: LvTrajectory;
+  /** The span shown: from traj.t[0] (0, or where an endless run's span starts) for tEnd. */
   tEnd: number;
   /** Largest x and y among the computed samples. */
   peak: { prey: number; predators: number };
@@ -92,19 +100,85 @@ export interface LvMoment {
 const dxdt = (p: LvParams, x: number, y: number) => p.alpha * x - p.beta * x * y;
 const dydt = (p: LvParams, x: number, y: number) => p.delta * x * y - p.gamma * y;
 
-export function lvModel3d(
-  input: { p: LvParams; traj: LvTrajectory; tEnd: number; drift: number },
-  cap: number,
-): LvModel3D {
-  const { p, traj, tEnd } = input;
-  const peak = { prey: Math.max(0, ...traj.x), predators: Math.max(0, ...traj.y) };
-  const eq = lvEquilibrium(p);
-  const per = drawScale(peak.prey + peak.predators, cap);
-  let rateRef = 0;
+/**
+ * What a run has met so far (#205 C5): V at t = 0, the largest x and y and the largest rate among
+ * its computed samples. An endless run's scales come from it, so they never shrink at a new span.
+ */
+export interface LvSeen {
+  V0: number;
+  peak: { prey: number; predators: number };
+  rateRef: number;
+}
+
+/** `before` (the run's earlier spans) and the samples of `traj`. */
+export function lvSeen(p: LvParams, traj: LvTrajectory, before?: LvSeen): LvSeen {
+  const peak = {
+    prey: Math.max(before?.peak.prey ?? 0, ...traj.x),
+    predators: Math.max(before?.peak.predators ?? 0, ...traj.y),
+  };
+  let rateRef = before?.rateRef ?? 0;
   traj.x.forEach((x, i) => {
     const y = traj.y[i] ?? 0;
     rateRef = Math.max(rateRef, Math.abs(dxdt(p, x, y)), Math.abs(dydt(p, x, y)));
   });
+  return { V0: before?.V0 ?? lvInvariantLog(p, traj.u[0] ?? 0, traj.v[0] ?? 0), peak, rateRef };
+}
+
+/** An endless run (#205 C5): the span `page` shown, V's drift since t = 0, what it has met. */
+export interface LvEndless {
+  key: string;
+  page: number;
+  traj: LvRun;
+  drift: number;
+  seen: LvSeen;
+}
+
+/**
+ * The run at span `page`: each span is computed by DOPRI5 from the last sample of the one before
+ * (`lvSegment`, the same steps as one run in one go), never interpolated; only the span shown is
+ * kept. Another `key` (other inputs) or an earlier page starts again from `first` (span 0).
+ */
+export function advanceLvRun(
+  cur: LvEndless | null,
+  want: { key: string; page: number; p: LvParams; first: LvRun; firstDrift: number },
+): LvEndless {
+  const { p, first } = want;
+  let run =
+    cur && cur.key === want.key && cur.page <= want.page
+      ? cur
+      : { key: want.key, page: 0, traj: first, drift: want.firstDrift, seen: lvSeen(p, first) };
+  const n = first.t.length - 1;
+  const span = (first.t[n] ?? 0) - (first.t[0] ?? 0);
+  while (run.page < want.page && n > 0) {
+    const { t, u, v } = run.traj;
+    const next = lvSegment(p, { t: t[n] ?? 0, u: u[n] ?? 0, v: v[n] ?? 0 }, span, n);
+    run = {
+      key: want.key,
+      page: run.page + 1,
+      traj: next,
+      drift: Math.max(run.drift, lvDrift(p, next, run.seen.V0)),
+      seen: lvSeen(p, next, run.seen),
+    };
+  }
+  return run;
+}
+
+export function lvModel3d(
+  input: {
+    p: LvParams;
+    traj: LvTrajectory;
+    tEnd: number;
+    drift: number;
+    /** An endless run's `seen` (its earlier spans and this one); default: this traj alone. */
+    seen?: LvSeen;
+  },
+  cap: number,
+): LvModel3D {
+  const { p, traj, tEnd } = input;
+  const seen = input.seen ?? lvSeen(p, traj);
+  const { peak, rateRef } = seen;
+  const eq = lvEquilibrium(p);
+  const per = drawScale(peak.prey + peak.predators, cap);
   return {
     p,
     traj,
@@ -117,7 +191,7 @@ export function lvModel3d(
     rateRef,
     xMax: 1.1 * Math.max(peak.prey, eq.x),
     yMax: 1.1 * Math.max(peak.predators, eq.y),
-    V0: lvInvariantLog(p, traj.u[0] ?? 0, traj.v[0] ?? 0),
+    V0: seen.V0,
     drift: input.drift,
   };
 }
@@ -176,7 +250,7 @@ export function momentAt(model: LvModel3D, time: number): LvMoment {
 
 /**
  * The x(t) and y(t) curves under the time slider, on the columns' scale: computed samples only
- * (every `step`-th, the last always), u = t / tEnd, v = value / top.
+ * (every `step`-th, the last always), u = (t − t₀) / tEnd from the span's start, v = value / top.
  */
 export function curvePoints(
   model: LvModel3D,
@@ -187,11 +261,12 @@ export function curvePoints(
   const prey: [number, number][] = [];
   const predators: [number, number][] = [];
   const span = model.tEnd > 0 ? model.tEnd : 1;
+  const t0 = model.traj.t[0] ?? 0;
   const top = model.top > 0 ? model.top : 1;
   for (let i = 0; i < n; i += step) push(i);
   if ((n - 1) % step !== 0 && n > 0) push(n - 1);
   function push(i: number) {
-    const u = (model.traj.t[i] ?? 0) / span;
+    const u = ((model.traj.t[i] ?? 0) - t0) / span;
     prey.push([u, (model.traj.x[i] ?? 0) / top]);
     predators.push([u, (model.traj.y[i] ?? 0) / top]);
   }

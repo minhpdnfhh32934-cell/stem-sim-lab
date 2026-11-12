@@ -3,6 +3,7 @@ import { useLocalized } from '@/app/i18n/localized';
 import { L } from '../common';
 import { useFmt } from '../fmt';
 import { useLogisticData, useLvData } from './data';
+import { useLv3D } from './lv3d/store';
 import { LV_DRIFT_WARN } from './ecology';
 import { useLogistic } from './store';
 
@@ -38,7 +39,10 @@ export function LogisticChips() {
 export function LvChips() {
   const Lz = useLocalized();
   const fmt = useFmt();
-  const { drift, eq } = useLvData();
+  const data = useLvData();
+  const { eq } = data;
+  // The 3D habitat's endless run: V's drift since t = 0 over every span played (#205 C5).
+  const drift = useLv3D((s) => (s.active ? s.run?.drift : undefined)) ?? data.drift;
   return (
     <>
       <span className="chem-chip">

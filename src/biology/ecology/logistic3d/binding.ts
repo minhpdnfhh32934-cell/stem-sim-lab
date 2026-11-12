@@ -2,8 +2,8 @@
  * Numbers of the logistic-growth 3D habitat (pure, tested), all from the lesson's model
  * (`ecology.ts`: the exact solution N(t) = K / (1 + (K/N₀ − 1)e^(−rt)), dN/dt = rN(1 − N/K)):
  *
- * - the moment shown at time t of the lesson's span [0, tEnd]: N(t), N/K, dN/dt, the growth rate
- *   per individual r(1 − N/K);
+ * - the moment shown at time t of the span shown [t₀, t₀ + tEnd] (t₀ = 0, or where an endless
+ *   run's span starts, #205 C5): N(t), N/K, dN/dt, the growth rate per individual r(1 − N/K);
  * - how many figures the picture draws for it: one figure per `per` individuals, a "nice" step
  *   (`drawScale` of the larger of the run's peak and K, so the fence's K figures fit as well)
  *   shared by the whole run, so the figures always mean the same number; drawn = round(N(t) / per)
@@ -42,8 +42,10 @@ export interface LogisticModel3D {
   N0: number;
   r: number;
   K: number;
+  /** The span shown: from t0 (0, or where an endless run's span starts) for tEnd. */
+  t0: number;
   tEnd: number;
-  /** Largest N of the run on [0, tEnd] (N(t) is monotone: an end point). */
+  /** Largest N of the run on [0, t0 + tEnd] (N(t) is monotone: an end point). */
   peak: number;
   /** Individuals one figure stands for (the same at every moment; fits max(peak, K)). */
   per: number;
@@ -94,9 +96,11 @@ export const growthRate = (r: number, K: number, N: number): number => r * N * (
 export function logisticModel3d(
   st: Pick<LogisticState, 'N0' | 'r' | 'K' | 'tEnd'>,
   cap: number,
+  /** Where the span shown starts (an endless run's later spans, #205 C5). */
+  t0 = 0,
 ): LogisticModel3D {
   const { N0, r, K, tEnd } = st;
-  const end = logistic(N0, r, K, tEnd);
+  const end = logistic(N0, r, K, t0 + tEnd);
   const peak = Math.max(N0, end);
   // One scale for the run and the fence: K figures fit too, even when the run stays far below K.
   const per = drawScale(Math.max(peak, K), cap);
@@ -107,6 +111,7 @@ export function logisticModel3d(
     N0,
     r,
     K,
+    t0,
     tEnd,
     peak,
     per,
@@ -121,7 +126,10 @@ export function logisticModel3d(
 }
 
 export function momentAt(model: LogisticModel3D, time: number): LogisticMoment {
-  const t = Math.max(0, Math.min(model.tEnd, Number.isFinite(time) ? time : 0));
+  const t = Math.max(
+    model.t0,
+    Math.min(model.t0 + model.tEnd, Number.isFinite(time) ? time : model.t0),
+  );
   const N = logistic(model.N0, model.r, model.K, t);
   const dNdt = growthRate(model.r, model.K, N);
   return {
@@ -137,21 +145,23 @@ export function momentAt(model: LogisticModel3D, time: number): LogisticMoment {
 }
 
 /**
- * The N(t) curve under the time slider: `samples` + 1 points (u = t / tEnd, v = N(t) / top, both
- * in [0, 1]) on the gauge column's scale, so the slider's curve and the column agree.
+ * The N(t) curve under the time slider: `samples` + 1 points (u = (t − t0) / tEnd, v = N(t) / top,
+ * both in [0, 1]) on the gauge column's scale, so the slider's curve and the column agree.
  */
 export function curvePoints(model: LogisticModel3D, samples = 120): [number, number][] {
   const n = Math.max(1, Math.floor(samples));
   return Array.from({ length: n + 1 }, (_, i) => {
     const u = i / n;
-    const N = logistic(model.N0, model.r, model.K, u * model.tEnd);
+    const N = logistic(model.N0, model.r, model.K, model.t0 + u * model.tEnd);
     return [u, model.top > 0 ? N / model.top : 0];
   });
 }
 
-/** Whether the inflection t* lies on the lesson's time span (the "Tới t*" button). */
+/** Whether the inflection t* lies on the span shown (its mark on the curve). */
 export function tStarInRun(model: LogisticModel3D): boolean {
-  return Number.isFinite(model.tStar) && model.tStar >= 0 && model.tStar <= model.tEnd;
+  return (
+    Number.isFinite(model.tStar) && model.tStar >= model.t0 && model.tStar <= model.t0 + model.tEnd
+  );
 }
 
 /** Food patches drawn grazed: round(patches · min(1, N/K)) (illustration of N/K). */

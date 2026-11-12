@@ -101,6 +101,11 @@ function inflection(model: LogisticModel3D, fmt: Fmt): LocalizedText {
       `Nhanh nhất khi N = K/2, lúc t* = ${fmt(model.tStar, 3)}: dN/dt = rK/4 = ${fmt(model.maxRate, 3)}.`,
       `Fastest at N = K/2, at t* = ${fmt(model.tStar, 3)}: dN/dt = rK/4 = ${fmt(model.maxRate, 3)}.`,
     );
+  if (Number.isFinite(model.tStar) && model.tStar < model.t0)
+    return L(
+      `Nhanh nhất khi N = K/2 (dN/dt = rK/4 = ${fmt(model.maxRate, 3)}), lúc t* = ${fmt(model.tStar, 3)} — trước khoảng thời gian đang xem.`,
+      `Fastest at N = K/2 (dN/dt = rK/4 = ${fmt(model.maxRate, 3)}), at t* = ${fmt(model.tStar, 3)} — before the time span shown.`,
+    );
   return Number.isFinite(model.tStar)
     ? L(
         `Nhanh nhất khi N = K/2 (dN/dt = rK/4 = ${fmt(model.maxRate, 3)}), lúc t* = ${fmt(model.tStar, 3)} — sau khoảng thời gian đang xem.`,
