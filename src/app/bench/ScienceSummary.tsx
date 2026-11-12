@@ -7,6 +7,7 @@ import { sim } from '@/app/sim/runtime';
 import { useSimStore } from '@/app/sim/simStore';
 import { useWorkspaceStore } from '@/app/workspaceStore';
 import { ConfidenceBadge } from '@/ui/Badges';
+import { useCutTip } from '@/ui/useCutTip';
 
 /**
  * The Science Card's summary pinned at the top of the tray (docs/BENCH_DESIGN.md §9.4): the
@@ -20,6 +21,7 @@ export function ScienceSummary() {
   const card = useWorkspaceStore((s) => s.scienceCard);
   const hasScene = useSimStore((s) => s.scene !== null);
   const locale = useSettingsStore((s) => s.locale);
+  const titleRef = useCutTip<HTMLElement>(card ? L(card.title) : '');
   if (!card) return null;
   return (
     <section
@@ -29,7 +31,9 @@ export function ScienceSummary() {
     >
       <div className="science-card__summary-head">
         <ConfidenceBadge level={card.confidence} />
-        <strong className="science-card__summary-title">{L(card.title)}</strong>
+        <strong ref={titleRef} className="science-card__summary-title">
+          {L(card.title)}
+        </strong>
       </div>
       {card.validity && <p className="science-card__summary-validity">{L(card.validity)}</p>}
       <button
