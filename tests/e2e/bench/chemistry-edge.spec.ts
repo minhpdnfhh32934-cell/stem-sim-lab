@@ -32,7 +32,9 @@ test('B4: the periodic table steps through elements; nothing on its edge is fill
   await openTopic(page, 'Hóa học', 'Bảng tuần hoàn');
   const stepper = page.getByRole('group', { name: 'Chọn nguyên tố' });
   await expect(stepper).toBeVisible({ timeout: 20_000 });
-  await stepper.getByRole('combobox').selectOption('26');
+  // #205 B7: no element list on the edge (it repeated the stepper); the table picks one.
+  await expect(stepper.getByRole('combobox')).toHaveCount(0);
+  await page.getByRole('gridcell', { name: /^26 Fe / }).click();
   await expect(stepper).toContainText('26 · Fe · Sắt');
   await stepper.getByRole('button', { name: 'Nguyên tố sau' }).click();
   await expect(stepper).toContainText('27 · Co');

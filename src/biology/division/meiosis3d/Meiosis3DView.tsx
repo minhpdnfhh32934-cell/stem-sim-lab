@@ -208,12 +208,7 @@ function StageStrip({ tl }: { tl: MeiosisTimeline }) {
   const t = useMeiosis3D((s) => s.t);
   const current = tl.stageAt(t).index;
   return (
-    <div
-      className="m3d__stages"
-      role="group"
-      aria-label={Lz(L('Các kì', 'Stages'))}
-      style={{ '--stage-count': tl.stages.length } as CSSProperties}
-    >
+    <div className="m3d__stages" role="group" aria-label={Lz(L('Các kì', 'Stages'))}>
       {tl.stages.map((w, k) => {
         const fill = Math.min(1, Math.max(0, (t - w.start) / (w.end - w.start)));
         const full = Lz(MEIOSIS_STAGE_NAME[w.id]);

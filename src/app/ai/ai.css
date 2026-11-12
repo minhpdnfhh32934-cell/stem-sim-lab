@@ -393,6 +393,7 @@
 .ai-key input {
   flex: 1;
   min-width: 0;
+  min-height: var(--target);
   padding: 4px 8px;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);

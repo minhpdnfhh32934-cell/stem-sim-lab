@@ -4,9 +4,9 @@ import type { LocalizedText } from '@/core/data/dataset';
 import { useT } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
-import { useFmt } from './fmt';
+import { SliderField } from '@/ui/SliderField';
 
-/** Labelled slider that shows its current value with the user's locale. */
+/** Labelled slider with its number box and − / + (#205 B8: the shared `SliderField`). */
 export function Range(props: {
   label: LocalizedText;
   value: number;
@@ -14,32 +14,19 @@ export function Range(props: {
   max: number;
   step: number;
   unit?: string;
-  digits?: number;
   onChange: (v: number) => void;
 }) {
   const Lz = useLocalized();
-  const fmt = useFmt();
   return (
-    <label>
-      <span>
-        {/* The colon keeps the value apart from a symbol or word that wraps (UI-50). */}
-        {Lz(props.label)}:{' '}
-        <strong className="mono">
-          {fmt(props.value, props.digits ?? 3)}
-          {props.unit ? ` ${props.unit}` : ''}
-        </strong>
-      </span>
-      <input
-        type="range"
-        min={props.min}
-        max={props.max}
-        step={props.step}
-        value={props.value}
-        onChange={(e) => {
-          props.onChange(Number(e.target.value));
-        }}
-      />
-    </label>
+    <SliderField
+      label={Lz(props.label)}
+      value={props.value}
+      min={props.min}
+      max={props.max}
+      step={props.step}
+      unit={props.unit}
+      onChange={props.onChange}
+    />
   );
 }
 

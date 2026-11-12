@@ -368,16 +368,22 @@
 .m3d__bottom > * {
   pointer-events: auto;
 }
-/* One column per stage: seven in mitosis, twelve in meiosis (`--stage-count` on the strip). */
+/* A panel button's long name wraps instead of being cut off at a large font size (#205 B8). */
+.chem-form .btn {
+  white-space: normal;
+}
+/* One button per stage (seven in mitosis, twelve in meiosis), each name on one line (#205 B8):
+   the buttons share the row and wrap to a second one when the names do not fit (large font). */
 .m3d__stages {
-  display: grid;
-  grid-template-columns: repeat(var(--stage-count, 7), minmax(0, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 4px;
 }
 .m3d__stage {
   position: relative;
+  flex: 1 0 auto;
   min-height: var(--target);
-  padding: 2px 4px;
+  padding: 2px 8px;
   overflow: hidden;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
@@ -385,7 +391,7 @@
   color: var(--text-muted);
   font-size: var(--text-xs);
   line-height: 1.2;
-  text-wrap: balance;
+  white-space: nowrap;
   isolation: isolate;
 }
 .m3d__stage::before {
@@ -568,7 +574,10 @@
 }
 .dogma3d__timeline .m3d__stages {
   flex: none;
-  grid-template-columns: repeat(var(--stage-count, 2), minmax(6.5rem, auto));
+  flex-wrap: nowrap;
+}
+.dogma3d__timeline .m3d__stage {
+  min-width: 6.5rem;
 }
 .dogma3d__scrub {
   flex: 1;

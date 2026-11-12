@@ -34,7 +34,7 @@ async function openFromShelf(page: Page, subject: string, topic: string) {
 }
 
 function slider(page: Page, name: RegExp) {
-  return page.locator('label', { hasText: name }).locator('input[type="range"]');
+  return page.getByRole('slider', { name });
 }
 
 test('undo / redo restores module inputs', async ({ page }) => {
@@ -211,8 +211,8 @@ test('manual mode offers chemistry and biology topics too', async ({ page }) => 
   await select.selectOption('logisticGrowth');
   await expect(dialog.locator('.problem-review__module input[type="range"]').first()).toBeVisible();
   await dialog
-    .locator('.problem-review__module label', { hasText: 'Sức chứa K' })
-    .locator('input')
+    .locator('.problem-review__module')
+    .getByRole('slider', { name: 'Sức chứa K' })
     .fill('1500');
   await dialog.getByRole('button', { name: 'Mô phỏng' }).click();
   await expect(dialog).toBeHidden();

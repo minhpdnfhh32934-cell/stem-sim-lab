@@ -328,6 +328,8 @@ Easing: `cubic-bezier(.2,.8,.2,1)` (`--ease`). `--press-lift` (1 px) is how far 
 | Speed / step segmented | x956–1124          | 168×40                                                                     |
 | Confidence chip        | x1132–1358         | 226×48                                                                     |
 
+#205 B4 (12/11/2026): the readout's width follows Cỡ chữ (112 px × `--font-scale`; at 140 % "t = 0,000 s" ran onto the scrubber), and a lesson's player (EdgeSteps, "t = … · x = … · y = …") has 240 px × `--font-scale`, at most two lines. D0's padding and gap are px, so "Tạm dừng" stays on one line at 140 %. The confidence is this chip only: the tray's Science Card summary no longer repeats it.
+
 The confidence chip has two lines:
 
 - line 1: icon 16 + word 14/20 600;
@@ -558,7 +560,7 @@ Fold order at large font or in English: Tìm → icon 40; AI status → icon + d
 
 - D0 "Chạy", D1 "Kì trước", D2 "Kì sau", D3 "Đặt lại".
 - Readout "Kì giữa (3/6)".
-- Scrubber with named ticks.
+- Scrubber with named ticks: a name shows only where its measured width fits (never overlapping, inside the track, just under it); the current stage's full name is in the readout (#205 B8).
 - Speed (Advanced only; Basic hides speed and camera mode as today).
 - Chip.
 
@@ -583,6 +585,7 @@ Fold order at large font or in English: Tìm → icon 40; AI status → icon + d
 **Báo cáo:**
 
 - The panel widens to x64–704 (640); the stage stays live at x704–1302 (598).
+- The live stage is narrower than the lab's edge (886 px of columns): below 940 px the confidence chip shows its icon only (its words in its name and tooltip); below 760 px ("Báo cáo") the speed steps give way to the scrubber (#205 B9).
 - Sections Dự đoán / Số đo / Giải thích / Kết luận. Every item has an origin chip: "SimLab tính" / "Bạn ghi" / "AI hỗ trợ".
 - Footer: "Lưu báo cáo" filled, "Sao chép", "Làm lại", and the link "Thử tự do trong Phòng thí nghiệm".
 
@@ -594,6 +597,7 @@ Fold order at large font or in English: Tìm → icon 40; AI status → icon + d
 
 - "Về trang chủ" ghost 144 at x8.
 - h1 "AI Teacher" 16/22 600 at x168, with the chip "Là một AI".
+- #205 B5 (12/11/2026): that h1 is the room's one title (the bench header's crumb, id `teacher-title`); the page's "Dạy học bằng AI" heading, the chat panel's "AI Teacher" and the face's tag are gone (the region keeps the name "Dạy học bằng AI"). Without an online AI, no bar repeats the header's "Chưa kết nối AI": the empty conversation says how to start, with "Kết nối AI" (Settings → Kết nối AI). "Think" reads "Suy nghĩ kĩ (Think)". The face column is 0.2fr (was 0.3fr), its ring ≤ 176 px.
 - Segmented "Trò chuyện | Giảng trên bảng" 240 at x456.
 - Engine select 280 at x704, grouped: "Trên mạng: Gemini · Claude · Groq" / "Trên máy này: Gemma 270M · 1B · E2B" / "Máy khác (cùng máy tính): Ollama · LM Studio · llama.cpp…".
 - "Giọng đọc" 40 at x1190, micro 40 at x1234 (opt-in), Cài đặt 40 at x1318.
@@ -622,6 +626,8 @@ Fold order at large font or in English: Tìm → icon 40; AI status → icon + d
 
 ### 9.9 Settings sheet
 
+#205 B6 (12/11/2026): part A on every page: each field, button and disclosure line is a 40 px target (the key fields were 27 px, the key buttons 36, "Tải mô hình" 38, the key's show button 30, "Hướng dẫn lấy khóa API" 17); summaries stay list items so their triangle stays. `settings-b6.spec.ts` checks every page at 100 % and 140 %.
+
 - Sheet 1200×688 at x83, y40 (surface-1, L3, solid scrim). Header 56: "Cài đặt" + "Đóng (Esc)" 40.
 - **Nav x83–339, y96–728:** vertical tablist with arrow keys, rows 40, groups in 12/16 600 muted:
   - "Chung": Giao diện · Mô phỏng · Phím tắt · Lịch sử phiên bản, plus the optional new page "Hiển thị và trợ năng".
@@ -632,6 +638,8 @@ Fold order at large font or in English: Tìm → icon 40; AI status → icon + d
 - **Main action:** at most one filled button per page ("Kiểm tra key", "Tải Gemma", "Tìm AI trên máy này"). Everything else saves on change.
 
 ### 9.10 Other screens (same frame, short)
+
+#205 B7 (12/11/2026), the periodic table: atomic and group numbers at the 12 px floor, symbols 16 px; the table fills the frame; each legend entry is a toggle that outlines its cells and dims the others (not by colour alone, not saved); its edge keeps the stepper only (electron configuration and Bohr keep the element list, their only one).
 
 - **Periodic table:**
   - `role=grid` with arrow keys. 18 × 50 px tiles + 2 px gaps = 934, at stage x96, y96–446; f-block y466–566.

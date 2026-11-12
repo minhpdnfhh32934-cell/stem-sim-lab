@@ -12,6 +12,7 @@ import { PLAYBACK_SPEEDS, useWorkspaceStore, type PlaybackSpeed } from '@/app/wo
 import { useModuleStore } from '@/modules/moduleStore';
 import { ConfidenceBadge } from '@/ui/Badges';
 import { IconButton } from '@/ui/IconButton';
+import { useCutTip } from '@/ui/useCutTip';
 import { useEdgeSlot } from './edgeSlot';
 import { basicSteps } from './speeds';
 
@@ -260,11 +261,20 @@ function ConfidenceChip() {
   const t = useT();
   const card = useWorkspaceStore((s) => s.scienceCard);
   const intervened = useSimStore((s) => s.intervened);
+  // On a narrow edge (a guided lesson's live stage) only the icon shows: the words in a tooltip.
+  const words = card
+    ? [t(`confidence.${card.confidence}`), ...(intervened ? [t('science.intervened')] : [])].join(
+        ' · ',
+      )
+    : '';
+  const ref = useCutTip<HTMLButtonElement>(words);
   if (!card) return <span className="bench-chip bench-chip--empty" aria-hidden="true" />;
   return (
     <button
+      ref={ref}
       type="button"
       className="bench-chip"
+      data-tip-side="top"
       data-surface="paper"
       aria-describedby="bench-chip-hint"
       onClick={() => {

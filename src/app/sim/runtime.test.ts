@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { EngineRunner } from '@/core/sim/runner';
 import { useWorkspaceStore } from '@/app/workspaceStore';
+import type { SimulationHost } from '@/workers/host';
 import { sim } from './runtime';
 import { useSimStore } from './simStore';
 
@@ -117,6 +118,40 @@ describe('pausing', () => {
     expect(t).toBeGreaterThan(0.4);
     expect(useWorkspaceStore.getState().playing).toBe(false);
     expect(useWorkspaceStore.getState().simTime).toBe(t);
+  });
+
+  it('a frame the worker ran past the pause is not shown: the time stays where it was paused', async () => {
+    // Interference runs without end (#205 C1); the worker answers a request sent just before the
+    // pause after it: here that request is made by hand, right after the pause.
+    await sim.open('interference');
+    play(0.5);
+    sim.togglePlay();
+    const t = sim.latest?.t ?? 0;
+    expect(t).toBeGreaterThan(0.4);
+    const host = Reflect.get(sim, 'host') as SimulationHost;
+    host.requestFrame(1 / 60, 1, false);
+    expect(sim.latest?.t).toBe(t);
+    expect(useWorkspaceStore.getState().simTime).toBe(t);
+    // The paused frames that follow come from the engine sent back to the paused time.
+    for (let i = 0; i < 10; i++) sim.tick(1 / 60);
+    expect(sim.latest?.t).toBe(t);
+    expect(useWorkspaceStore.getState().simTime).toBe(t);
+    // Playing again goes on from there, not from the frame that was not shown.
+    sim.togglePlay();
+    sim.tick(1 / 60);
+    const next = sim.latest?.t ?? 0;
+    expect(next).toBeGreaterThan(t);
+    expect(next).toBeLessThanOrEqual(t + 1 / 60 + 1e-9);
+  });
+
+  it('a Step after a pause still advances (it is not taken for a late frame)', async () => {
+    await sim.open('interference');
+    play(0.2);
+    sim.togglePlay();
+    const t = sim.latest?.t ?? 0;
+    sim.step();
+    sim.tick(1 / 60);
+    expect(sim.latest?.t ?? 0).toBeGreaterThan(t);
   });
 });
 

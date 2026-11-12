@@ -67,7 +67,8 @@ describe('bench B2 (docs/BENCH_DESIGN.md §9.4)', () => {
     expect(screen.getByRole('status')).toHaveTextContent(
       'Năng lượng đã lệch 4·10⁻⁹ so với lúc đầu',
     );
-    expect(screen.getByText('Định lượng gần đúng')).toBeInTheDocument();
+    // The confidence ("gần đúng") is the edge's chip, not repeated in the tray (#205 B4).
+    expect(screen.queryByText('Định lượng gần đúng')).toBeNull();
     expect(
       screen.getByRole('button', { name: 'Đặt lại để về kết quả chính xác' }),
     ).toBeInTheDocument();

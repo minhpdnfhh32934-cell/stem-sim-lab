@@ -633,7 +633,6 @@ export function DriftPanel() {
       min={min}
       max={max}
       step={step}
-      digits={4}
       onChange={(v) => {
         useDrift.setState({ [k]: v });
       }}
