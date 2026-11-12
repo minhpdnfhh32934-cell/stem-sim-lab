@@ -472,6 +472,18 @@
   /* Start / stop codon marks: apart from the base colours, the stage accent and muted text. */
   --dna3d-start: #34a409;
   --dna3d-stop: #53033f;
+  /* AI Teacher's station (#234): a pale stage with a soft glow, SimLab's teal for the orb and the
+     labels, amber for "look here", glass cards (a translucent panel, an opaque one when the
+     machine is slow). Text ≥ 4.5 : 1 on the stage, the glow and the glass (tokens.test.ts). */
+  --teacher-bg: #eef3f3;
+  --teacher-glow: #d3ebe7;
+  --teacher-accent: #085752;
+  --teacher-warn: #6e4a00;
+  --teacher-line: #578783;
+  --teacher-text: #1d2124;
+  --teacher-text-muted: #4b5559;
+  --teacher-glass-solid: #fbfdfd;
+  --teacher-glass: color-mix(in srgb, var(--teacher-glass-solid) 78%, transparent);
 }
 
 :root[data-shell='bench'][data-theme='dark'] {
@@ -539,4 +551,14 @@
   --m3d-water-line: 0.15;
   --dna3d-start: #74e4b0;
   --dna3d-stop: #fccd68;
+  /* AI Teacher's station (#234): a blue-black stage, a teal glow, the accent brightened for it. */
+  --teacher-bg: #070d12;
+  --teacher-glow: #10343a;
+  --teacher-accent: #5fe0d2;
+  --teacher-warn: #f5c84c;
+  --teacher-line: #468f92;
+  --teacher-text: #e8f1f2;
+  --teacher-text-muted: #9fb3b8;
+  --teacher-glass-solid: #0d1a20;
+  --teacher-glass: color-mix(in srgb, var(--teacher-glass-solid) 78%, transparent);
 }

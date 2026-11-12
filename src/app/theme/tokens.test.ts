@@ -406,3 +406,62 @@ describe('bench tokens (#113)', () => {
     expect(blurs).toEqual([]);
   });
 });
+
+describe("AI Teacher's station tokens (#234)", () => {
+  const ALPHA =
+    Number(
+      /--teacher-glass: color-mix\(in srgb, var\(--teacher-glass-solid\) (\d+)%, transparent\)/.exec(
+        CSS,
+      )?.[1],
+    ) / 100;
+  /** The glass panel over a background: sRGB alpha compositing, as the browser draws it. */
+  const over = (fg: string, bg: string) =>
+    `#${[1, 3, 5]
+      .map((i) =>
+        Math.round(
+          ALPHA * parseInt(fg.slice(i, i + 2), 16) + (1 - ALPHA) * parseInt(bg.slice(i, i + 2), 16),
+        )
+          .toString(16)
+          .padStart(2, '0'),
+      )
+      .join('')}`;
+
+  for (const name of ['bench light', 'bench dark'] as const) {
+    const get = (key: string) => {
+      const v = THEMES[name].get(key);
+      if (!v) throw new Error(`${name}: no ${key}`);
+      return v;
+    };
+
+    it(`${name}: text, labels, the accent and amber reach 4.5 : 1 on the stage, its glow and the glass`, () => {
+      const stage = [get('--teacher-bg'), get('--teacher-glow')];
+      const grounds = [
+        ...stage,
+        get('--teacher-glass-solid'),
+        ...stage.map((g) => over(get('--teacher-glass-solid'), g)),
+      ];
+      const low: string[] = [];
+      for (const ink of [
+        '--teacher-text',
+        '--teacher-text-muted',
+        '--teacher-accent',
+        '--teacher-warn',
+      ])
+        for (const g of grounds) {
+          const c = contrast(get(ink), g);
+          if (c < 4.5) low.push(`${ink} on ${g}: ${c.toFixed(2)}`);
+        }
+      expect(low).toEqual([]);
+    });
+
+    it(`${name}: the orb's lines and the cards' edges reach 3 : 1 on the stage and its glow`, () => {
+      for (const g of [get('--teacher-bg'), get('--teacher-glow')])
+        expect(contrast(get('--teacher-line'), g)).toBeGreaterThanOrEqual(3);
+    });
+  }
+
+  it('the glass is translucent, never below 70 % (the text stays readable over the glow)', () => {
+    expect(ALPHA).toBeGreaterThanOrEqual(0.7);
+    expect(ALPHA).toBeLessThan(1);
+  });
+});
