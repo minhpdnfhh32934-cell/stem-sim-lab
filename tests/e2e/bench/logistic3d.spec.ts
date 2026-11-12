@@ -211,7 +211,7 @@ test('logistic growth 3D: the habitat follows N(t) of the exact solution', async
   await tags.click();
 
   // N₀ = 1 500 > K: the population falls towards K; the figures above K stand outside the fence.
-  const n0 = page.locator('label', { hasText: /Số cá thể ban đầu/ }).locator('input[type="range"]');
+  const n0 = page.getByRole('slider', { name: /Số cá thể ban đầu/ });
   await n0.fill('1500');
   const perHigh = drawScale(Math.max(1500, LESSON.K), MEDIUM_CAP);
   await expect(view.locator('[data-chip="scale"]')).toHaveText(

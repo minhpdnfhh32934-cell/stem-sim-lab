@@ -2028,6 +2028,10 @@ button.bench-door--lab:hover {
   line-height: var(--text-caption);
   white-space: nowrap;
 }
+/* A name without room stays laid out (EdgeSteps measures it) but is not seen (#205 B8). */
+.edge-steps__ticks span.is-unnamed {
+  visibility: hidden;
+}
 .edge-steps__speed {
   grid-column: speed;
   min-width: 0;

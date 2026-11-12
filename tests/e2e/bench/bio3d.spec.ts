@@ -151,7 +151,7 @@ test('logistic 3D: the habitat follows the model; rebuilding for new inputs free
   await player.getByRole('slider').fill('9');
   await expect(player.locator('output')).toContainText(`t = 9 · N = ${vi.format(N(9))}`);
   const before = await page.evaluate(() => window.__simlabBio3d?.info() ?? null);
-  const slider = page.locator('label', { hasText: /Sức chứa K/ }).locator('input[type="range"]');
+  const slider = page.getByRole('slider', { name: /Sức chứa K/ });
   for (const k of ['1500', '800', '1000']) {
     await slider.fill(k);
     await page.waitForTimeout(300);

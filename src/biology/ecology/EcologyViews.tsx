@@ -91,7 +91,6 @@ export function LogisticPanel() {
         min={1}
         max={1500}
         step={1}
-        digits={4}
         onChange={(N0) => {
           set({ N0 });
         }}
@@ -112,7 +111,6 @@ export function LogisticPanel() {
         min={50}
         max={2000}
         step={50}
-        digits={4}
         onChange={(K) => {
           set({ K });
         }}

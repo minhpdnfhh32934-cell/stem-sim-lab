@@ -208,12 +208,7 @@ function StepStrip() {
   const t = useMendel3D((s) => s.t);
   const current = stepIndexAt(t);
   return (
-    <div
-      className="m3d__stages"
-      role="group"
-      aria-label={Lz(L('Các bước', 'Steps'))}
-      style={{ '--stage-count': MENDEL_STEPS.length } as CSSProperties}
-    >
+    <div className="m3d__stages" role="group" aria-label={Lz(L('Các bước', 'Steps'))}>
       {MENDEL_STEPS.map((id, k) => (
         <button
           key={id}
