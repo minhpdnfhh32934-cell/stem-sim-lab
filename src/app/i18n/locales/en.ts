@@ -211,6 +211,7 @@ const en: Messages = {
     scrubber: 'Scrub simulation',
   },
   bench: {
+    loadFailed: 'I could not open this yet. Please try again.',
     breadcrumb: 'You are here',
     problem: 'Problem',
     closeProblem: 'Close the problem',
