@@ -214,7 +214,7 @@ const en: Messages = {
     breadcrumb: 'You are here',
     problem: 'Problem',
     closeProblem: 'Close the problem',
-    search: 'Search…',
+    search: 'Search',
     trayTitle: 'Adjust',
     trayRegion: 'Adjust (inspector)',
     foldTray: 'Fold the tray',
