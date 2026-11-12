@@ -630,6 +630,8 @@ Fold order at large font or in English: Tìm → icon 40; AI status → icon + d
 
 ### 9.10 Other screens (same frame, short)
 
+#205 B7 (12/11/2026), the periodic table: atomic and group numbers at the 12 px floor, symbols 16 px; the table fills the frame; each legend entry is a toggle that outlines its cells and dims the others (not by colour alone, not saved); its edge keeps the stepper only (electron configuration and Bohr keep the element list, their only one).
+
 - **Periodic table:**
   - `role=grid` with arrow keys. 18 × 50 px tiles + 2 px gaps = 934, at stage x96, y96–446; f-block y466–566.
   - Tile text flips between ink and white per ramp step (≥ 4.5:1).
