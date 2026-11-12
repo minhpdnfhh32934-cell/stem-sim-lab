@@ -4,8 +4,9 @@ import { openLab } from '../nav';
 
 /**
  * #205 B8, biology at 1366 × 768, 100 % and 140 %: the stage names of mitosis / meiosis stay on
- * one line, the timeline's names never overlap (only those with room show), the notebook rail's
- * label fits, a panel button is never cut off, and every slider has its number box and − / +.
+ * one line (meiosis' two rows split between the divisions), the timeline's names never overlap
+ * (only those with room show), the notebook rail's label fits, a panel button is never cut off,
+ * "2n = 4" stays on one line, and every slider has its number box and − / +.
  * WebGL in software (SwiftShader), as in meiosis3d.spec.ts.
  */
 test.use({
@@ -116,6 +117,18 @@ for (const fontScale of [1, 1.4] as const) {
     const reshuffle = page.getByRole('button', { name: 'Sắp xếp ngẫu nhiên lại ở kì giữa I' });
     await expect(reshuffle).toBeVisible({ timeout: 30_000 });
     for (const b of await layoutOf(reshuffle)) expect(b.cut).toBe(false);
+    // Short of room, the twelve stages take two rows split between the divisions: the second
+    // starts at "Kì đầu II", never "Chia tế bào chất II" alone.
+    const tops = await page
+      .locator('.m3d__stage')
+      .evaluateAll((els) => els.map((e) => Math.round(e.getBoundingClientRect().top)));
+    expect(new Set(tops).size).toBe(2);
+    expect(tops.findIndex((top) => top !== tops[0])).toBe(7);
+    // "2n = 4" on one line beside its long label.
+    const pairs = page.getByRole('combobox', { name: /Bộ NST lưỡng bội/ });
+    const box = await pairs.boundingBox();
+    expect(box?.height ?? 0).toBeLessThanOrEqual(40 * fontScale + 2);
+    expect(await pairs.evaluate((el) => el.scrollWidth <= el.clientWidth + 1)).toBe(true);
   });
 
   test(`logistic growth at ${pct}: every slider of the tray has its number box and − / +`, async ({

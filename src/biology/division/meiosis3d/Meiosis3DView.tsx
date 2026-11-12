@@ -10,6 +10,7 @@ import {
   X,
 } from 'lucide-react';
 import {
+  Fragment,
   useEffect,
   useLayoutEffect,
   useMemo,
@@ -214,19 +215,22 @@ function StageStrip({ tl }: { tl: MeiosisTimeline }) {
         const full = Lz(MEIOSIS_STAGE_NAME[w.id]);
         const short = Lz(MEIOSIS_STAGE_SHORT[w.id]);
         return (
-          <button
-            key={w.id}
-            type="button"
-            className={cx('m3d__stage', k === current && 'is-current')}
-            aria-current={k === current ? 'step' : undefined}
-            title={full === short ? undefined : full}
-            style={{ '--fill': fill } as CSSProperties}
-            onClick={() => {
-              goToStage(tl, k);
-            }}
-          >
-            {short}
-          </button>
+          <Fragment key={w.id}>
+            <button
+              type="button"
+              className={cx('m3d__stage', k === current && 'is-current')}
+              aria-current={k === current ? 'step' : undefined}
+              title={full === short ? undefined : full}
+              style={{ '--fill': fill } as CSSProperties}
+              onClick={() => {
+                goToStage(tl, k);
+              }}
+            >
+              {short}
+            </button>
+            {/* Two rows (short of room) break between the divisions, not before the last stage. */}
+            {w.id === 'cytokinesis1' && <span className="m3d__stages-break" aria-hidden="true" />}
+          </Fragment>
         );
       })}
     </div>

@@ -432,6 +432,11 @@
 .chem-form select {
   min-width: 0;
 }
+/* A short choice ("2n = 4") keeps its width beside a long label, which wraps instead (#205 B8:
+   the select broke in two at 140 %). */
+.chem-form .chem-form__fit {
+  flex: none;
+}
 .chem-form input[type='number'],
 .chem-form input[type='text'] {
   min-width: 0;

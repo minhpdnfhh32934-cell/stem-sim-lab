@@ -379,6 +379,22 @@
   flex-wrap: wrap;
   gap: 4px;
 }
+/* Meiosis' twelve stages need about 75 times the font size in one row (1050 px at 100 %): with
+   less, the second row starts at meiosis II instead of holding "Chia tế bào chất II" alone
+   (#205 B8). */
+.m3d__stages {
+  container: m3d-stages / inline-size;
+}
+.m3d__stages-break {
+  display: none;
+  flex-basis: 100%;
+  height: 0;
+}
+@container m3d-stages (max-width: 75em) {
+  .m3d__stages-break {
+    display: block;
+  }
+}
 .m3d__stage {
   position: relative;
   flex: 1 0 auto;
