@@ -26,6 +26,7 @@ import { LvChips } from '../chips';
 import { useLvData } from '../data';
 import { useLv } from '../store';
 import {
+  advanceLvRun,
   curvePoints,
   figureCap,
   lvModel3d,
@@ -79,7 +80,9 @@ function CurveTrack({
     const c = curvePoints(model);
     return { prey: path(c.prey), predators: path(c.predators) };
   }, [model]);
-  const u = model.tEnd > 0 ? moment.t / model.tEnd : 0;
+  // The span shown starts at t₀ (0, or where an endless run's span starts).
+  const t0 = model.traj.t[0] ?? 0;
+  const u = model.tEnd > 0 ? (moment.t - t0) / model.tEnd : 0;
   const steps = Math.max(1, model.traj.t.length - 1);
   const dot = (v: number, kind: 'prey' | 'predators') => (
     <i
@@ -100,12 +103,12 @@ function CurveTrack({
       <input
         type="range"
         aria-label={label}
-        min={0}
-        max={model.tEnd}
+        min={t0}
+        max={t0 + model.tEnd}
         step={model.tEnd / steps}
         value={moment.t}
         onChange={(e) => {
-          playback.setT(Number(e.target.value));
+          playback.setT(Number(e.target.value) - t0);
         }}
       />
     </div>
@@ -264,10 +267,6 @@ export function Lv3DView() {
   const { p, traj, drift } = useLvData();
   const tier = useTierConfig();
   const cap = figureCap(tier.maxParticles);
-  const model = useMemo(
-    () => lvModel3d({ p, traj, tEnd: st.tEnd, drift }, cap),
-    [p, traj, st.tEnd, drift, cap],
-  );
   const modelKey = JSON.stringify([
     st.alpha,
     st.beta,
@@ -278,12 +277,34 @@ export function Lv3DView() {
     st.tEnd,
     cap,
   ]);
+  // Endless (#205 C5): at the end of the span the next one is computed by DOPRI5 from its last
+  // sample and plays on; other inputs start a new run.
   const playback = usePlayback(st.tEnd, {
     start: 0,
     autoplay: true,
     seconds: playSeconds(st.tEnd),
+    endless: true,
+    runKey: modelKey,
   });
-  const moment = momentAt(model, playback.t);
+  const run = useMemo(
+    () =>
+      advanceLvRun(useLv3D.getState().run, {
+        key: modelKey,
+        page: playback.page,
+        p,
+        first: traj,
+        firstDrift: drift,
+      }),
+    [modelKey, playback.page, p, traj, drift],
+  );
+  useEffect(() => {
+    useLv3D.setState({ run });
+  }, [run]);
+  const model = useMemo(
+    () => lvModel3d({ p, traj: run.traj, tEnd: st.tEnd, drift: run.drift, seen: run.seen }, cap),
+    [p, run, st.tEnd, cap],
+  );
+  const moment = momentAt(model, (run.traj.t[0] ?? 0) + playback.t);
   const selected = useLv3D((s) => s.selected);
   const camera = useLv3D((s) => s.camera);
   // "Hiện tên": on unless the learner turned it off.
@@ -333,14 +354,15 @@ export function Lv3DView() {
   const scale = Lz(scaleText(model.per, fmt));
   const scene: SceneSpec = {
     build: (kit) => buildLvHabitat(kit, { model, texts }),
-    buildKey: JSON.stringify([modelKey, texts]),
+    // A new span is a new stretch of computed samples (and maybe wider scales): built again.
+    buildKey: JSON.stringify([modelKey, run.page, model.per, texts]),
     label: Lz(
       L(
         `Con mồi và vật ăn thịt: ${readout(moment, fmt)}; ${String(moment.shown.prey)} hình con mồi, ${String(moment.shown.predators)} hình vật ăn thịt (${scale}); cân bằng (x*, y*) = (${fmt(model.eq.x, 4)}; ${fmt(model.eq.y, 4)}).`,
         `Prey and predators: ${readout(moment, fmt)}; ${String(moment.shown.prey)} prey figures, ${String(moment.shown.predators)} predator figures (${scale}); equilibrium (x*, y*) = (${fmt(model.eq.x, 4)}; ${fmt(model.eq.y, 4)}).`,
       ),
     ),
-    time: playback.t,
+    time: (run.traj.t[0] ?? 0) + playback.t,
     running: (playback.playing && !prefersReducedMotion()) || lively,
     viewDir: LV_VIEW,
     aspect: 2.2,

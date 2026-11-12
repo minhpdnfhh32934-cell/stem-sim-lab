@@ -356,7 +356,7 @@ export function LotkaVolterraPanel() {
         }}
       />
       <Range
-        label={L('Thời gian mô phỏng t', 'Time span t')}
+        label={L('Khung thời gian t', 'Time window t')}
         value={st.tEnd}
         min={5}
         max={100}
@@ -394,9 +394,11 @@ export function LotkaVolterraPanel() {
 
 export function LotkaVolterraBottom() {
   const Lz = useLocalized();
-  const { traj } = useLvData();
-  // The moment the 3D habitat shows (the computed sample nearest its time) is marked while the
-  // 3D view is on screen.
+  const data = useLvData();
+  // While the 3D habitat is on screen: the span it plays (an endless run's latest, #205 C5) and
+  // the moment it shows (the computed sample nearest its time) are marked.
+  const span = useLv3D((s) => (s.active ? s.run : null));
+  const traj = span?.traj ?? data.traj;
   const shown = useLv3D((s) => (s.active ? s.t : null));
   return (
     <div className="gas-bottom gas-bottom--single">

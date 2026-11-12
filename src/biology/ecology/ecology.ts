@@ -95,9 +95,15 @@ export function lvInvariantLog(p: LvParams, u: number, v: number): number {
   return p.delta * Math.exp(u) - p.gamma * u + p.beta * Math.exp(v) - p.alpha * v;
 }
 
-/** Largest relative change of V along a trajectory (0 for an exact solution). */
-export function lvDrift(p: LvParams, traj: { u: number[]; v: number[] }): number {
-  const v0 = lvInvariantLog(p, traj.u[0] ?? 0, traj.v[0] ?? 0);
+/**
+ * Largest relative change of V along a trajectory (0 for an exact solution), from `v0` (default:
+ * V at its first sample; an endless run's later spans pass V at t = 0).
+ */
+export function lvDrift(
+  p: LvParams,
+  traj: { u: readonly number[]; v: readonly number[] },
+  v0 = lvInvariantLog(p, traj.u[0] ?? 0, traj.v[0] ?? 0),
+): number {
   let drift = 0;
   traj.u.forEach((u, i) => {
     const v = lvInvariantLog(p, u, traj.v[i] ?? 0);
