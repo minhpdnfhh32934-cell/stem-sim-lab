@@ -467,6 +467,8 @@ const vi = {
     method: 'Phương pháp tính',
     sources: 'Nguồn',
     intervened: 'Đã có can thiệp — kết quả là mô phỏng số.',
+    energyDrift:
+      'Năng lượng đã lệch {value} so với lúc đầu (sai số tính toán cộng dồn khi chạy lâu, quá ngưỡng 10⁻⁹): kết quả lúc này là gần đúng.',
     more: 'Phương trình, giả định và nguồn',
     estimatedError: 'Sai số ước lượng: {value}',
   },

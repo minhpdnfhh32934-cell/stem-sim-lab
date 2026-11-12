@@ -466,6 +466,8 @@ const en: Messages = {
     method: 'Numerical method',
     sources: 'Sources',
     intervened: 'User intervention — results are a numerical simulation.',
+    energyDrift:
+      'Energy has drifted by {value} from the start (numerical error built up over a long run, above 10⁻⁹): results are now approximate.',
     more: 'Equations, assumptions and sources',
     estimatedError: 'Estimated error: {value}',
   },

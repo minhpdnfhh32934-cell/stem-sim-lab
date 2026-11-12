@@ -1,6 +1,8 @@
 import { useT } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { useLayoutStore } from '@/app/layout/layoutStore';
+import { useSettingsStore } from '@/app/settings/settingsStore';
+import { formatDeviation } from '@/app/sim/numbers';
 import { sim } from '@/app/sim/runtime';
 import { useSimStore } from '@/app/sim/simStore';
 import { useWorkspaceStore } from '@/app/workspaceStore';
@@ -10,13 +12,15 @@ import { useCutTip } from '@/ui/useCutTip';
 /**
  * The Science Card's summary pinned at the top of the tray (docs/BENCH_DESIGN.md §9.4): the
  * confidence, the model's name and its validity, "Xem thẻ" for the whole card (the notebook's
- * "Thẻ khoa học"). After an intervention it says so and offers the reset back to the exact run.
+ * "Thẻ khoa học"). After an intervention, or an energy drift above 10⁻⁹ in a long run (#205 C2), it
+ * says so and offers the reset back to the exact run.
  */
 export function ScienceSummary() {
   const t = useT();
   const L = useLocalized();
   const card = useWorkspaceStore((s) => s.scienceCard);
   const hasScene = useSimStore((s) => s.scene !== null);
+  const locale = useSettingsStore((s) => s.locale);
   const titleRef = useCutTip<HTMLElement>(card ? L(card.title) : '');
   if (!card) return null;
   return (
@@ -46,6 +50,24 @@ export function ScienceSummary() {
       {card.userIntervened && (
         <div className="science-card__intervened" role="status">
           <span>{t('science.intervened')}</span>
+          {hasScene && (
+            <button
+              type="button"
+              className="btn btn--small"
+              onClick={() => {
+                sim.reset();
+              }}
+            >
+              {t('bench.resetExact')}
+            </button>
+          )}
+        </div>
+      )}
+      {card.energyDrift !== undefined && (
+        <div className="science-card__intervened" role="status">
+          <span>
+            {t('science.energyDrift', { value: formatDeviation(locale, card.energyDrift) })}
+          </span>
           {hasScene && (
             <button
               type="button"

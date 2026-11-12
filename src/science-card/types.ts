@@ -39,6 +39,11 @@ export interface ScienceCardData {
   estimatedError?: number;
   /** Set when the user intervened (dragged/threw an object) — §2.5. */
   userIntervened: boolean;
+  /**
+   * Relative drift of the conserved energy the run measured, set only above `DRIFT_WARN`
+   * (#205 C2): a long run's round-off is said on the card, never silent (§2.6).
+   */
+  energyDrift?: number;
   /** Numerical method, e.g. "Velocity Verlet, Δt = 1/240 s". */
   method?: LocalizedText;
   sources: Source[];
@@ -50,6 +55,26 @@ export interface ScienceCardData {
  * Applies the intervention rule (§2.5): once the user drags or throws an object the
  * analytic solution no longer applies, so an `exact` card becomes `approx`.
  */
+/**
+ * Relative energy drift above which a run says so on its card (#205 C2). The cards' checks hold
+ * to 10⁻⁹ (pendulum: Dormand–Prince period check); RK4 runs measured 2–5·10⁻¹² over 10⁴ s.
+ */
+export const DRIFT_WARN = 1e-9;
+
+/**
+ * A measured energy drift above `DRIFT_WARN` is shown on the card: `exact` becomes `approx` and
+ * the estimated error is at least the drift. Below it the card is unchanged.
+ */
+export function withDrift(card: ScienceCardData, drift: number): ScienceCardData {
+  if (!(drift > DRIFT_WARN)) return card;
+  return {
+    ...card,
+    energyDrift: drift,
+    confidence: card.confidence === 'exact' ? 'approx' : card.confidence,
+    estimatedError: Math.max(card.estimatedError ?? 0, drift),
+  };
+}
+
 export function withIntervention(card: ScienceCardData, intervened: boolean): ScienceCardData {
   if (!intervened) return card;
   return {
