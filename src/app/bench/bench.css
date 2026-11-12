@@ -1383,8 +1383,10 @@ kbd {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-1) var(--space-2);
-  font-size: var(--text-caption);
-  line-height: calc(16rem / 14);
+  /* Big and bold enough to read (#205 B3: it was 12 px regular). */
+  font-size: var(--text-note);
+  font-weight: 500;
+  line-height: calc(18rem / 14);
   color: var(--paper-text-muted);
 }
 .shelf-card__lessons {
@@ -1839,8 +1841,13 @@ button.bench-door--lab:hover {
 .shelf-start--resume:has(.shelf-start__thumb) > :not(.shelf-start__thumb) {
   grid-column: 2;
 }
+/* "Tiếp tục bài đang học" on its own row above the thumbnail: it no longer breaks (#205 B3). */
+.shelf-start--resume:has(.shelf-start__thumb) > h2:not(.shelf-start__thumb) {
+  grid-column: 1 / -1;
+  grid-row: 1;
+}
 .shelf-start__thumb {
-  grid-row: 1 / span 3;
+  grid-row: 2 / span 2;
   width: 160px;
   height: 96px;
   border-radius: var(--radius-sm);

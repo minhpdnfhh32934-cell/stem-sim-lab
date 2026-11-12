@@ -52,8 +52,13 @@ export async function openTopic(
     .click();
 }
 
-/** The problem box, behind the header's "Đề bài" button. */
+/**
+ * The problem box: behind the header's "Đề bài" button in a lesson, behind the "Có đề bài?" card's
+ * field on the shelf (#205 B3: one place to type a problem there).
+ */
 export async function openProblem(page: Page): Promise<Locator> {
-  await page.getByRole('button', { name: 'Đề bài', exact: true }).click();
+  const header = page.getByRole('button', { name: 'Đề bài', exact: true });
+  if (await header.isVisible()) await header.click();
+  else await page.getByRole('button', { name: 'Gõ hoặc dán đề bài…' }).click();
   return page.locator('#problem-text');
 }

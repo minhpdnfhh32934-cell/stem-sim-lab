@@ -110,7 +110,8 @@ export function BenchHeader() {
           {teacher && <span className="bench-crumb bench-crumb--current">{t('chat.title')}</span>}
         </nav>
 
-        {lab && !studio && (
+        {/* One place to type a problem (#205 B3): the shelf has its "Có đề bài?" card. */}
+        {lab && !studio && !shelf && (
           <button
             ref={problemButton}
             type="button"
@@ -199,10 +200,11 @@ export function BenchHeader() {
       />
       {problemOpen && (
         <ProblemSheet
-          onClose={() => {
+          onClose={(opener) => {
             setProblemOpen(false);
-            // The sheet leaves the page: give the keyboard focus back to its button.
-            problemButton.current?.focus();
+            // The sheet leaves the page: the focus goes back to its button, or on the shelf (no
+            // button, #205 B3) to what opened it ("Có đề bài?").
+            (problemButton.current ?? opener)?.focus();
           }}
         />
       )}
@@ -211,9 +213,13 @@ export function BenchHeader() {
 }
 
 /** "Đề bài": the problem box in a sheet; it closes when the analysis starts. */
-function ProblemSheet({ onClose }: { onClose: () => void }) {
+function ProblemSheet({ onClose }: { onClose: (opener: HTMLElement | null) => void }) {
   const t = useT();
   const ref = useRef<HTMLDialogElement>(null);
+  // What had the focus when the sheet opened (kept from the first render).
+  const opener = useRef(
+    document.activeElement instanceof HTMLElement ? document.activeElement : null,
+  );
   const running = useAnalyzeStore((s) => s.phase === 'running');
   useEffect(() => {
     ref.current?.showModal();
@@ -227,7 +233,9 @@ function ProblemSheet({ onClose }: { onClose: () => void }) {
       ref={ref}
       className="dialog bench-problem"
       aria-labelledby="bench-problem-title"
-      onClose={onClose}
+      onClose={() => {
+        onClose(opener.current?.isConnected ? opener.current : null);
+      }}
     >
       <header className="dialog__header">
         <h2 id="bench-problem-title">{t('bench.problem')}</h2>
