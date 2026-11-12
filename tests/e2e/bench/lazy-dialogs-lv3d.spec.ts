@@ -1,12 +1,28 @@
+declare const process: { env: Record<string, string | undefined> };
 import { expect, test } from '@playwright/test';
 import { openLab } from '../nav';
 
 /**
  * Dialogs whose code loads on first use open while a lesson runs without end (#205 C5: the
  * predator–prey habitat updates every frame). With React's `lazy()` their retry was starved and
- * Ctrl+K or "Nguồn & Giả định" opened nothing (seen on CI, and every time on a slow machine).
+ * Ctrl+K or "Nguồn & Giả định" opened nothing (every time on the desktop machine). The habitat
+ * must play, so WebGL runs in software (SwiftShader) at medium quality, in the chromium-3d project
+ * ("lv3d" in the name): at Low quality the lesson shows its still 2D chart.
  */
+test.use({
+  launchOptions: {
+    args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'],
+    ...(process.env.PW_CHROMIUM ? { executablePath: process.env.PW_CHROMIUM } : {}),
+  },
+});
+
 test('Ctrl+K and "Nguồn & Giả định" open while a lesson runs without end', async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      'stemsim.perf',
+      JSON.stringify({ state: { preference: 'medium', benchmark: null }, version: 1 }),
+    );
+  });
   await openLab(page);
   await page.getByRole('radio', { name: 'Sinh học' }).click();
   await page
