@@ -9,6 +9,7 @@ import {
   Maximize2,
   Menu,
   MonitorCog,
+  Moon,
   Save,
   Sparkles,
   type LucideIcon,
@@ -19,6 +20,7 @@ import { toLibrary } from '@/app/bench/toLibrary';
 import { useT } from '@/app/i18n';
 import { useLayoutStore } from '@/app/layout/layoutStore';
 import { useSettingsStore } from '@/app/settings/settingsStore';
+import { useResolvedTheme } from '@/app/theme/useApplyTheme';
 import { openLab } from '@/app/topics';
 import { checkForUpdate, updatesSupported } from '@/app/update/updater';
 import { openWhatsNew, useWhatsNewStore } from '@/app/whatsnew/whatsNewStore';
@@ -38,6 +40,8 @@ interface Item {
 /**
  * "Tệp" menu: open / save `.stemsim`, export PNG, sources page, quick tour — and "Có gì mới"
  * (with a dot on the button) while the notes of an update are unseen, e.g. after "Để sau".
+ * When the bench header is short of room the light / dark switch moves in here (#205 B2): the
+ * item is always rendered and shown by the header's container query (bench.css).
  */
 export function FileMenu() {
   const t = useT();
@@ -46,6 +50,8 @@ export function FileMenu() {
   const [infoOpen, setInfoOpen] = useState(false);
   const advanced = useSettingsStore((s) => s.uiMode === 'advanced');
   const unseen = useWhatsNewStore((s) => s.pending.length > 0);
+  const setTheme = useSettingsStore((s) => s.setTheme);
+  const dark = useResolvedTheme() === 'dark';
   const root = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -58,7 +64,7 @@ export function FileMenu() {
     };
     document.addEventListener('pointerdown', onDown);
     document.addEventListener('keydown', onKey);
-    root.current?.querySelector<HTMLButtonElement>('[role="menuitem"]')?.focus();
+    root.current?.querySelector<HTMLButtonElement>('[role^="menuitem"]')?.focus();
     return () => {
       document.removeEventListener('pointerdown', onDown);
       document.removeEventListener('keydown', onKey);
@@ -157,9 +163,7 @@ export function FileMenu() {
               onKeyDown={(e) => {
                 if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
                 e.preventDefault();
-                const all = [
-                  ...(root.current?.querySelectorAll<HTMLButtonElement>('[role="menuitem"]') ?? []),
-                ];
+                const all = menuItems(root.current);
                 const i = all.indexOf(e.currentTarget);
                 const next = all[(i + (e.key === 'ArrowDown' ? 1 : all.length - 1)) % all.length];
                 next?.focus();
@@ -169,6 +173,26 @@ export function FileMenu() {
               <span>{label}</span>
             </button>
           ))}
+          <button
+            type="button"
+            role="menuitemcheckbox"
+            aria-checked={dark}
+            className="file-menu__item file-menu__theme"
+            onClick={() => {
+              setOpen(false);
+              setTheme(dark ? 'light' : 'dark');
+            }}
+            onKeyDown={(e) => {
+              if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+              e.preventDefault();
+              const all = menuItems(root.current);
+              const i = all.indexOf(e.currentTarget);
+              all[(i + (e.key === 'ArrowDown' ? 1 : all.length - 1)) % all.length]?.focus();
+            }}
+          >
+            <Moon size={16} strokeWidth={1.75} aria-hidden="true" />
+            <span>{t('bench.darkTheme')}</span>
+          </button>
         </div>
       )}
       {infoOpen && (
@@ -181,5 +205,12 @@ export function FileMenu() {
         />
       )}
     </div>
+  );
+}
+
+/** The menu's items on screen (the theme item is hidden while the header has room). */
+function menuItems(root: HTMLElement | null): HTMLButtonElement[] {
+  return [...(root?.querySelectorAll<HTMLButtonElement>('[role^="menuitem"]') ?? [])].filter(
+    (b) => getComputedStyle(b).display !== 'none',
   );
 }

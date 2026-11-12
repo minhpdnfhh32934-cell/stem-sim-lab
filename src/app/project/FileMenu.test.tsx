@@ -108,3 +108,25 @@ describe('"Thông tin máy" in Tệp: quality, FPS and RAM for Advanced (#201)',
     expect(within(dialog).getAllByText('—')).toHaveLength(2);
   });
 });
+
+describe('light / dark in Tệp (#205 B2: there when the header is short of room)', () => {
+  it('"Giao diện tối" is a checkbox item that switches the theme, and the arrows reach it', () => {
+    act(() => {
+      useSettingsStore.getState().setTheme('light');
+    });
+    openMenu();
+    const item = screen.getByRole('menuitemcheckbox', { name: 'Giao diện tối' });
+    expect(item).toHaveAttribute('aria-checked', 'false');
+    // Up from the first item wraps to the last one: the theme item.
+    const first = screen.getAllByRole('menuitem')[0];
+    if (!first) throw new Error('no items');
+    first.focus();
+    fireEvent.keyDown(first, { key: 'ArrowUp' });
+    expect(item).toHaveFocus();
+    fireEvent.click(item);
+    expect(useSettingsStore.getState().theme).toBe('dark');
+    act(() => {
+      useSettingsStore.getState().setTheme('system');
+    });
+  });
+});

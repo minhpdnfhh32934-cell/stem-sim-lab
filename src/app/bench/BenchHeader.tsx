@@ -134,22 +134,21 @@ export function BenchHeader() {
             }}
           />
         )}
+        {/* An icon (#205 B2: "Tìm…" read as cut text): its words stay the name, Ctrl+K the tip. */}
         <button
           type="button"
           className="btn bench-header__search"
           aria-keyshortcuts="Control+K"
-          // Its words are only hidden from view when the header is short of room (bench.css).
           data-tip={`${t('bench.search')} (Ctrl+K)`}
           onClick={() => {
             useCommandPalette.getState().setOpen(true);
           }}
         >
           <Search size={16} strokeWidth={1.75} aria-hidden="true" />
-          {/* The visible words are the name (WCAG 2.5.3). */}
           <span>{t('bench.search')}</span>
-          <kbd>Ctrl+K</kbd>
         </button>
         {lab && <ModeSwitch compact />}
+        {/* Short of room it moves into Tệp (#205 B2, bench.css). */}
         <ThemeSwitch />
         {shelf && adult && (
           <button
