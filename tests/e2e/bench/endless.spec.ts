@@ -37,18 +37,12 @@ for (const [topic, oldEnd] of [
     await expect(page.getByText('Kết thúc', { exact: true })).toHaveCount(0);
     await pause.click();
     await expect(page.getByRole('button', { name: 'Chạy (Space)' }).first()).toBeVisible();
-    // A frame the worker sent before it got the pause may still land (CI: 3,312 → 3,3165 s):
-    // wait until the time holds between two reads, then it must hold for half a second.
-    let stopped = await simTime(page);
-    await expect
-      .poll(async () => {
-        const now = await simTime(page);
-        const held = now === stopped;
-        stopped = now;
-        return held;
-      })
-      .toBe(true);
-    await page.waitForTimeout(500);
-    expect(await simTime(page)).toBe(stopped);
+    // The time stays where "Tạm dừng" was pressed: a frame the worker ran past it is not shown
+    // (#205: it moved one step, 3,1955 → 3,1995 s on CI). Read five times over 2 s.
+    const stopped = await simTime(page);
+    for (let i = 0; i < 5; i += 1) {
+      await page.waitForTimeout(400);
+      expect(await simTime(page)).toBe(stopped);
+    }
   });
 }
