@@ -65,3 +65,14 @@ Languages", Meta AI, 2023.
 **Đã cân nhắc nhưng không dùng:** giọng Piper tiếng Việt (`vi_VN-vais1000`, `vi_VN-25hours_single`,
 `vi_VN-vivos`): tinh chỉnh từ giọng `lessac` có dữ liệu gốc chỉ cho phép dùng nghiên cứu, và cần
 espeak-ng (GPL-3) để phiên âm. Chi tiết: `docs/LEGAL_COMPLIANCE.md` mục 2e.
+
+## SimLab 3D (trò chơi, `public/game/`, `docs/GAME.md`)
+
+Bản dựng sẵn của game phòng thí nghiệm 3D (thêm ngày 12/11/2026):
+
+- **Thư viện đóng gói trong bản dựng:** three.js (MIT), Rapier `@dimforge/rapier3d-compat` (Apache-2.0), zod (MIT).
+- **Âm thanh:** Kenney "Impact Sounds" và "RPG Audio", CC0 1.0. Danh sách từng tệp ở `public/game/audio/CREDITS.md`.
+- **Mô hình thành phố dưới sàn sảnh:** Quaternius "Downtown City MegaKit" (bản Standard miễn phí), CC0 1.0 (`public/game/hub-city/README.md`).
+- **Không đóng gói:**
+  - texture Ultra (ambientCG, CC0), vì quá nặng;
+  - mô hình MediaPipe Face Landmarker / Hair Segmenter (Apache-2.0), vì không chạy mô hình trong app khi chưa hỏi người dùng.
