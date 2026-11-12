@@ -25,13 +25,6 @@
   align-items: center;
 }
 
-.teacher__title {
-  min-width: 0;
-  margin: 0;
-  font-size: var(--text-lg);
-  font-weight: 680;
-}
-
 .teacher__about {
   display: inline-grid;
   width: var(--target);
@@ -60,7 +53,8 @@
 .teacher__stage {
   display: grid;
   flex: 1;
-  grid-template-columns: minmax(200px, 0.3fr) minmax(0, 1fr);
+  /* A narrower face column, more room for the conversation (#205 B5: 0.3fr). */
+  grid-template-columns: minmax(176px, 0.2fr) minmax(0, 1fr);
   gap: var(--space-4);
   min-height: 0;
   overflow: hidden;
@@ -82,7 +76,7 @@
 .teacher-ring {
   position: relative;
   display: grid;
-  width: min(220px, 28vh, 100%);
+  width: min(176px, 24vh, 100%);
   aspect-ratio: 1;
   place-items: center;
   transition: width 480ms var(--ease-out);
@@ -123,16 +117,6 @@
   50% {
     transform: scale(1.055);
   }
-}
-
-.teacher__ai-label {
-  padding: 5px 12px;
-  border: 1px solid color-mix(in srgb, var(--accent) 20%, var(--border));
-  border-radius: var(--radius-full);
-  background: var(--accent-soft);
-  color: var(--accent);
-  font-size: var(--text-sm);
-  font-weight: 650;
 }
 
 .teacher__caption {
@@ -340,8 +324,5 @@
   .teacher-ring,
   .teacher[data-layout='board'] .teacher-ring {
     width: 64px;
-  }
-  .teacher__ai-label {
-    flex: none;
   }
 }

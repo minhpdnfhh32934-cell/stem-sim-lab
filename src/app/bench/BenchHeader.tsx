@@ -119,8 +119,12 @@ export function BenchHeader() {
               </h1>
             </>
           )}
-          {/* The teacher page has its own h1. */}
-          {teacher && <span className="bench-crumb bench-crumb--current">{t('chat.title')}</span>}
+          {/* The AI Teacher room's one title (#205 B5: three levels became one). */}
+          {teacher && (
+            <h1 id="teacher-title" className="bench-crumb bench-crumb--current">
+              {t('chat.title')}
+            </h1>
+          )}
         </nav>
 
         {/* One place to type a problem (#205 B3): the shelf has its "Có đề bài?" card. */}

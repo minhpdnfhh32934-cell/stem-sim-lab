@@ -59,7 +59,8 @@ describe('App shell (Phase 0)', () => {
     await user.click(screen.getByRole('button', { name: /^AI Teacher/ }));
     // The Teacher screen is a lazy module: its first import is slow when the whole suite runs.
     expect(
-      await screen.findByRole('heading', { name: 'Dạy học bằng AI' }, { timeout: 5000 }),
+      // Its one title is the header's h1 (#205 B5); the region keeps its name.
+      await screen.findByRole('region', { name: 'Dạy học bằng AI' }, { timeout: 5000 }),
     ).toBeInTheDocument();
   });
 
