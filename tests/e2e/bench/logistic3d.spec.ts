@@ -230,3 +230,53 @@ test('logistic growth 3D: the habitat follows N(t) of the exact solution', async
 
   expect(errors).toEqual([]);
 });
+
+test('logistic growth 3D: the run goes on past its span, then stands at K (#205 C5)', async ({
+  page,
+}) => {
+  test.setTimeout(150_000);
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(String(e)));
+  page.on('console', (m) => {
+    if (m.type() === 'error') errors.push(m.text());
+  });
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      'stemsim.perf',
+      JSON.stringify({ state: { preference: 'medium', benchmark: null }, version: 1 }),
+    );
+  });
+  await openLab(page);
+  await page.getByRole('radio', { name: 'Sinh học' }).click();
+  await page.getByRole('button', { name: 'Tăng trưởng logistic', exact: true }).click();
+  const view = page.locator('.bio3d[data-lesson="logistic"]');
+  await expect(view.locator('canvas')).toBeVisible({ timeout: 30_000 });
+  await expect.poll(() => frames(page), { timeout: 15_000 }).toBeGreaterThan(0);
+
+  // The end of the first span (paused there); "Chạy" goes on to the next span.
+  const player = page.locator('.bench-edge .edge-steps');
+  const slider = player.getByRole('slider', { name: 'Thời gian t' });
+  await slider.fill(String(LESSON.tEnd));
+  await player.getByRole('button', { name: 'Chạy', exact: true }).click();
+  await expect
+    .poll(async () => (await state(page))?.t ?? 0, { timeout: 30_000 })
+    .toBeGreaterThan(LESSON.tEnd + 1);
+  await player.getByRole('button', { name: 'Tạm dừng', exact: true }).click();
+  await expect(slider).toHaveAttribute('min', String(LESSON.tEnd));
+  await expect(slider).toHaveAttribute('max', String(2 * LESSON.tEnd));
+  const s = await state(page);
+  if (!s) throw new Error('no state');
+  // The exact N(t) at the time shown: by then the herd stands at K.
+  expect(s.N).toBeCloseTo(N(s.t), 6);
+  expect(s.drawn).toBe(Math.round(N(s.t) / s.per));
+  expect(s.drawn).toBe(s.kSlots);
+
+  // "Tới t*" goes back to the span holding the inflection; "Đặt lại" to t = 0.
+  const tStar = logisticInflection(LESSON.N0, LESSON.r, LESSON.K);
+  await player.getByRole('button', { name: /Tới t\*/ }).click();
+  await expect(player.locator('output')).toHaveText(`t = ${vi(tStar, 3)} · N = ${vi(500, 4)}`);
+  await expect(slider).toHaveAttribute('min', '0');
+  await player.getByRole('button', { name: 'Đặt lại', exact: true }).click();
+  await expect.poll(async () => (await state(page))?.t).toBe(0);
+  expect(errors).toEqual([]);
+});

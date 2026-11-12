@@ -204,12 +204,14 @@ export function selectionCard(
         arrowScale(model, fmt),
       ],
     };
+  // The span shown starts at t₀: 0, or where an endless run's span starts (#205 C5).
+  const t0 = model.traj.t[0] ?? 0;
   return {
     title: L(`Mặt phẳng pha — lúc t = ${fmt(m.t, 3)}`, `Phase plane — at t = ${fmt(m.t, 3)}`),
     lines: [
       L(
-        `Hạt sáng: (x, y) = (${fmt(m.x, 4)}; ${fmt(m.y, 4)}). Đường cong đi qua các điểm (x, y) mô hình đã tính từ t = 0 tới t = ${fmt(model.tEnd, 3)}.`,
-        `Bead: (x, y) = (${fmt(m.x, 4)}; ${fmt(m.y, 4)}). The curve goes through the points (x, y) the model computed from t = 0 to t = ${fmt(model.tEnd, 3)}.`,
+        `Hạt sáng: (x, y) = (${fmt(m.x, 4)}; ${fmt(m.y, 4)}). Đường cong đi qua các điểm (x, y) mô hình đã tính từ t = ${fmt(t0, 3)} tới t = ${fmt(t0 + model.tEnd, 3)}.`,
+        `Bead: (x, y) = (${fmt(m.x, 4)}; ${fmt(m.y, 4)}). The curve goes through the points (x, y) the model computed from t = ${fmt(t0, 3)} to t = ${fmt(t0 + model.tEnd, 3)}.`,
       ),
       L(
         `Điểm cân bằng (x*, y*) = (γ/δ; α/β) = (${fmt(model.eq.x, 4)}; ${fmt(model.eq.y, 4)}). Nét đứt dọc x = x*: số vật ăn thịt tạm không đổi; nét đứt ngang y = y*: số con mồi tạm không đổi.`,
