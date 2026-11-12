@@ -163,7 +163,8 @@ test('focus rings reach 3 : 1 on the frame and on paper, in light and dark', asy
   }
 });
 
-for (const fontScale of [1, 1.4] as const)
+// At 140 % it is in Tệp instead (#205 B2: the header short of room), tested below.
+for (const fontScale of [1] as const)
   test(`the light / dark button: 40 px, in the header at 1366 × 768, its icon ≥ 3 : 1 in both themes (${String(fontScale * 100)} %, #202)`, async ({
     page,
   }) => {
@@ -216,6 +217,36 @@ for (const fontScale of [1, 1.4] as const)
     }
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
   });
+
+test('140 %: light / dark is a 40 px item of Tệp, not a header button (#205 B2)', async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      'stemsim.settings',
+      JSON.stringify({ state: { locale: 'vi', fontScale: 1.4, theme: 'light' }, version: 2 }),
+    );
+  });
+  await openProjectile(page);
+  await expect(
+    page.locator('.bench-header').getByRole('button', { name: 'Giao diện tối' }),
+  ).toBeHidden();
+  for (const pressed of [false, true]) {
+    await page.getByRole('button', { name: 'Tệp', exact: true }).click();
+    const item = page.getByRole('menuitemcheckbox', { name: 'Giao diện tối' });
+    await expect(item).toHaveAttribute('aria-checked', String(pressed));
+    const box = await item.boundingBox();
+    expect(box?.height ?? 0).toBeGreaterThanOrEqual(40);
+    expect((box?.x ?? 0) + (box?.width ?? 0)).toBeLessThanOrEqual(1366);
+    await item.click();
+    await expect(page.locator('html')).toHaveAttribute('data-theme', pressed ? 'light' : 'dark');
+  }
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    ),
+  ).toBe(0);
+});
 
 test('keyboard: speed steps, the light / dark switch, − / +, Esc hides a tooltip', async ({
   page,
