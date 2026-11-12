@@ -25,9 +25,16 @@ describe('physics registry', () => {
       // Past every former end (the longest was 600 s), at the engine's own step.
       const n = Math.ceil(700 / e.dt);
       for (let i = 0; i < n; i++) e.step();
+      if (id === 'energyConservation' && e.finished?.()) {
+        // Its one natural end: the bead ran off an end of the track (state `off`), never a time.
+        const out = new Float64Array(e.stateSize);
+        e.readState(out);
+        expect(out[4], id).toBe(1);
+        continue;
+      }
       expect(e.finished?.() ?? false, id).toBe(false);
     }
-    expect(endless.length).toBeGreaterThanOrEqual(7);
+    expect(endless.length).toBeGreaterThanOrEqual(9);
   });
 
   it('time graphs share one naming ("Vận tốc theo thời gian", UI-14)', async () => {
