@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { prefersReducedMotion } from '@/ui/three/availability';
 import {
   SYSTEMS,
   equilibriumConstant,
@@ -64,7 +65,8 @@ export const useEqStore = create<EqState>()(() => {
     initial: init,
     c: { ...init },
     t: 0,
-    running: true,
+    // With reduced motion the lesson opens paused (#205 C3).
+    running: !prefersReducedMotion(),
     history: emptyHistory(s, init),
     events: [],
     version: 0,
@@ -88,7 +90,8 @@ export function resetEq(
     history: emptyHistory(s, initial),
     events: [],
     version: st.version + 1,
-    running: true,
+    // A restart runs again; with reduced motion it keeps the learner's choice (#205 C3).
+    running: prefersReducedMotion() ? st.running : true,
     stalled: false,
   });
 }
