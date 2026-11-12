@@ -1,5 +1,6 @@
 import { ArrowLeft, Info, MessageCircle, Presentation } from 'lucide-react';
-import { lazy, Suspense, useContext, useEffect, useId } from 'react';
+import { useContext, useEffect, useId, useRef, type ComponentProps } from 'react';
+import { useLoaded, type Loaded } from '@/app/bench/useLoaded';
 import { BenchContext } from '@/app/bench/shellMode';
 import { useT } from '@/app/i18n';
 import { engineKind, useAnalysisEngine } from '@/app/ai/engineChoice';
@@ -8,15 +9,21 @@ import { useChatStore } from '@/teacher/chat/chatStore';
 import { useVoiceStore } from '@/teacher/voice/voiceStore';
 import { ChatPanel } from '@/teacher/chat/ChatPanel';
 import { TeacherFace } from '@/teacher/face/TeacherFace';
+import { OrbView } from '@/teacher/orb/OrbView';
+import { useOrbState } from '@/teacher/orb/useOrbState';
 import { closeTeacher, useTeacherStore, type TeacherLayout } from '@/teacher/teacherStore';
 import { Skeleton } from '@/ui/Skeleton';
 import { latestLesson } from './latestLesson';
 import './teacher.css';
 
-// The board (fonts, KaTeX, layout) loads only when the learner opens the board layout.
-const Whiteboard = lazy(() =>
-  import('@/teacher/board/Whiteboard').then((m) => ({ default: m.Whiteboard })),
-);
+// The board (fonts, KaTeX, layout) loads only when the learner opens the board layout. By hand
+// (useLoaded), not lazy(): the orb draws every frame and could starve a suspended retry (#228).
+type BoardProps = ComponentProps<typeof import('@/teacher/board/Whiteboard').Whiteboard>;
+const board: Loaded<BoardProps> = { Component: null };
+const loadBoard = () => import('@/teacher/board/Whiteboard').then((m) => m.Whiteboard);
+const backToTalk = () => {
+  useTeacherStore.getState().setLayout('talk');
+};
 
 const LAYOUTS: TeacherLayout[] = ['talk', 'board'];
 
@@ -32,6 +39,15 @@ export default function TeacherScreen() {
   // The face shows what the teacher is doing: speaking, waiting for the AI, or listening.
   const answering = useChatStore((s) => s.answering);
   const layoutId = useId();
+  const page = useRef<HTMLElement>(null);
+  const orbState = useOrbState(page);
+  const boardLoaded = useLoaded(
+    board,
+    layout === 'board',
+    loadBoard,
+    t('bench.loadFailed'),
+    backToTalk,
+  );
   // The bench names it an AI beside the title (docs/BENCH_DESIGN.md §9.8).
   const bench = useContext(BenchContext);
   // The board teaches the latest answer that is not about part of the board (latestLesson.ts).
@@ -61,7 +77,12 @@ export default function TeacherScreen() {
 
   return (
     // One title, the header's "AI Teacher" (#205 B5); the region keeps its own name.
-    <section className="teacher" aria-label={t('teacher.regionLabel')} data-layout={layout}>
+    <section
+      ref={page}
+      className="teacher"
+      aria-label={t('teacher.regionLabel')}
+      data-layout={layout}
+    >
       <header className="teacher__header">
         <button type="button" className="btn teacher__back" onClick={closeTeacher}>
           <ArrowLeft size={16} strokeWidth={1.75} aria-hidden="true" />
@@ -107,32 +128,38 @@ export default function TeacherScreen() {
 
       <div className="teacher__stage">
         <aside className="teacher__presence">
-          <div className="teacher-ring" aria-hidden="true">
-            <svg viewBox="0 0 200 200" className="teacher-ring__waves">
-              <circle
-                cx="100"
-                cy="100"
-                r="78"
-                className="teacher-ring__wave teacher-ring__wave--1"
-              />
-              <circle
-                cx="100"
-                cy="100"
-                r="70"
-                className="teacher-ring__wave teacher-ring__wave--2"
-              />
-              <circle
-                cx="100"
-                cy="100"
-                r="62"
-                className="teacher-ring__wave teacher-ring__wave--3"
-              />
-            </svg>
-            <TeacherFace
-              mood={speaking ? 'speaking' : answering ? 'thinking' : 'idle'}
-              trackCursor
-            />
-          </div>
+          {/* The orb (#234); the SVG rings and the face when it cannot be drawn. */}
+          <OrbView
+            state={orbState}
+            fallback={
+              <div className="teacher-ring" aria-hidden="true">
+                <svg viewBox="0 0 200 200" className="teacher-ring__waves">
+                  <circle
+                    cx="100"
+                    cy="100"
+                    r="78"
+                    className="teacher-ring__wave teacher-ring__wave--1"
+                  />
+                  <circle
+                    cx="100"
+                    cy="100"
+                    r="70"
+                    className="teacher-ring__wave teacher-ring__wave--2"
+                  />
+                  <circle
+                    cx="100"
+                    cy="100"
+                    r="62"
+                    className="teacher-ring__wave teacher-ring__wave--3"
+                  />
+                </svg>
+                <TeacherFace
+                  mood={speaking ? 'speaking' : answering ? 'thinking' : 'idle'}
+                  trackCursor
+                />
+              </div>
+            }
+          />
           <p className="teacher__caption">
             {t(layout === 'board' ? 'teacher.boardCaption' : 'teacher.talkCaption')}
           </p>
@@ -148,9 +175,11 @@ export default function TeacherScreen() {
 
         {layout === 'board' && (
           <div className="teacher__board">
-            <Suspense fallback={<Skeleton label={t('board.preparing')} variant="board" />}>
-              <Whiteboard lesson={lesson} />
-            </Suspense>
+            {boardLoaded && board.Component ? (
+              <board.Component lesson={lesson} />
+            ) : (
+              <Skeleton label={t('board.preparing')} variant="board" />
+            )}
           </div>
         )}
 

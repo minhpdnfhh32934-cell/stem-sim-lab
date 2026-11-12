@@ -73,13 +73,22 @@
   text-wrap: balance;
 }
 
-.teacher-ring {
+/* The rings (fallback) and AI Teacher's orb (#234) take the same place and size. */
+.teacher-ring,
+.teacher-orb {
   position: relative;
   display: grid;
   width: min(176px, 24vh, 100%);
   aspect-ratio: 1;
   place-items: center;
   transition: width 480ms var(--ease-out);
+}
+
+.teacher-orb__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .teacher-ring__waves {
@@ -221,7 +230,8 @@
   padding-top: 14px;
 }
 
-.teacher[data-layout='board'] .teacher-ring {
+.teacher[data-layout='board'] .teacher-ring,
+.teacher[data-layout='board'] .teacher-orb {
   width: min(130px, 18vh, 100%);
 }
 
@@ -243,7 +253,8 @@
     flex-direction: row;
     padding: 0 8px;
   }
-  .teacher[data-layout='board'] .teacher-ring {
+  .teacher[data-layout='board'] .teacher-ring,
+  .teacher[data-layout='board'] .teacher-orb {
     width: 56px;
     flex: none;
   }
@@ -257,7 +268,8 @@
     animation: none;
   }
   .teacher__stage,
-  .teacher-ring {
+  .teacher-ring,
+  .teacher-orb {
     transition: none;
   }
 }
@@ -287,7 +299,9 @@
     text-align: left;
   }
   .teacher-ring,
-  .teacher[data-layout='board'] .teacher-ring {
+  .teacher-orb,
+  .teacher[data-layout='board'] .teacher-ring,
+  .teacher[data-layout='board'] .teacher-orb {
     width: 88px;
     flex: none;
   }
