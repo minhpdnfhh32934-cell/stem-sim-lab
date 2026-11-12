@@ -44,6 +44,12 @@ for (const fontScale of [1, 1.4] as const) {
           'stemsim.settings',
           JSON.stringify({ state: { locale: 'vi', fontScale: scale }, version: 2 }),
         );
+        // The 2D picture: this spec checks labels, and software WebGL on a CI runner made every
+        // Tab press slow enough to time out (the 3D habitat runs in the chromium-3d project).
+        localStorage.setItem(
+          'stemsim.bio3d',
+          JSON.stringify({ state: { off: ['lotkaVolterra'] }, version: 1 }),
+        );
       }, fontScale);
       await openLab(page);
       await page.getByRole('radio', { name: subject }).click();
