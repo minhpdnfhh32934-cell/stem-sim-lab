@@ -56,16 +56,20 @@ const layoutOf = (loc: Locator) =>
     }),
   );
 
-/** The timeline's shown names: inside the track and apart from each other. */
+/** The timeline's shown names: apart, inside the track and on the edge (not below the window). */
 async function tickNames(page: Page) {
   return page.locator('.edge-steps__ticks').evaluate((ol) => {
     const track = ol.getBoundingClientRect();
     const boxes = [...ol.querySelectorAll('span:not(.is-unnamed)')].map((s) => {
       const b = s.getBoundingClientRect();
-      return { text: s.textContent, left: b.left, right: b.right };
+      return { text: s.textContent, left: b.left, right: b.right, bottom: b.bottom };
     });
+    const edge = ol.closest('.bench-edge')?.getBoundingClientRect();
+    const low = Math.min(edge?.bottom ?? 0, window.innerHeight);
     const overlaps = boxes.slice(1).filter((b, i) => b.left < (boxes[i]?.right ?? -Infinity));
-    const outside = boxes.filter((b) => b.left < track.left - 1 || b.right > track.right + 1);
+    const outside = boxes.filter(
+      (b) => b.left < track.left - 1 || b.right > track.right + 1 || b.bottom > low + 1,
+    );
     return { names: boxes.map((b) => b.text), overlaps: overlaps.length, outside: outside.length };
   });
 }
