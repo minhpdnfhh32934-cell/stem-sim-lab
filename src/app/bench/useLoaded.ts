@@ -1,9 +1,9 @@
 import { useEffect, useState, type ComponentType } from 'react';
 import { toast } from '@/ui/toast';
 
-/** A dialog's code, loaded the first time it is needed (start-up stays light). */
-export interface Loaded {
-  Component: ComponentType | null;
+/** A part's code (a dialog, the board), loaded the first time it is needed (start-up stays light). */
+export interface Loaded<P extends object = object> {
+  Component: ComponentType<P> | null;
 }
 
 /**
@@ -15,10 +15,10 @@ export interface Loaded {
  * replaced by an update) says `failText` and calls `reset`, which withdraws the request, so the
  * next open tries again.
  */
-export function useLoaded(
-  slot: Loaded,
+export function useLoaded<P extends object>(
+  slot: Loaded<P>,
   when: boolean,
-  load: () => Promise<ComponentType>,
+  load: () => Promise<ComponentType<P>>,
   failText: string,
   reset: () => void,
 ): boolean {
