@@ -95,6 +95,20 @@ describe('playing a phrase', () => {
     expect(level.voiceLevel()).toBe(0);
   });
 
+  it('a sound that cannot start is not left on the meter', async () => {
+    FakeContext.loudness = 0.1;
+    FakeSource.onStart = () => {
+      throw new Error('closed');
+    };
+    await expect(
+      audio.playPcm(
+        { samples: new Float32Array(160), sampleRate: 16000 },
+        new AbortController().signal,
+      ),
+    ).rejects.toThrow('closed');
+    expect(level.voiceLevel()).toBe(0);
+  });
+
   it('plays samples once the audio context runs', async () => {
     const pcm = { samples: new Float32Array(160), sampleRate: 16000 };
     await audio.playPcm(pcm, new AbortController().signal);

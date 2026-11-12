@@ -103,23 +103,27 @@ export async function playPcm(pcm: Pcm, signal: AbortSignal, rate = 1): Promise<
   source.connect(levelInput(ctx));
   current = source;
   soundStarted();
-  await new Promise<void>((resolve) => {
-    const stop = () => {
-      try {
-        source.stop();
-      } catch {
-        /* already stopped */
-      }
-      resolve();
-    };
-    source.onended = () => {
-      signal.removeEventListener('abort', stop);
-      resolve();
-    };
-    signal.addEventListener('abort', stop, { once: true });
-    source.start();
-  });
-  soundEnded();
+  try {
+    await new Promise<void>((resolve) => {
+      const stop = () => {
+        try {
+          source.stop();
+        } catch {
+          /* already stopped */
+        }
+        resolve();
+      };
+      source.onended = () => {
+        signal.removeEventListener('abort', stop);
+        resolve();
+      };
+      signal.addEventListener('abort', stop, { once: true });
+      source.start();
+    });
+  } finally {
+    // Also when the sound could not start: the meter is never left counting it.
+    soundEnded();
+  }
   if (current === source) current = null;
 }
 
