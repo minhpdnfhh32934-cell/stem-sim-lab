@@ -58,13 +58,21 @@ export function useOrbState(scope: RefObject<HTMLElement | null>): OrbState {
   useEffect(() => {
     const el = scope.current;
     if (!el) return;
+    let pending = 0;
     const check = (e: Event) => {
       if (!isQuestionBox(e.target)) return;
-      setTyping(e.type !== 'focusout' && e.target.value.trim() !== '');
+      const box = e.target;
+      // After the event: a state update inside it would re-render the controlled box before
+      // React read the new text (microtasks run between listeners) and wipe what was typed.
+      window.clearTimeout(pending);
+      pending = window.setTimeout(() => {
+        setTyping(document.activeElement === box && box.value.trim() !== '');
+      }, 0);
     };
     const events = ['input', 'focusin', 'focusout'] as const;
     for (const type of events) el.addEventListener(type, check);
     return () => {
+      window.clearTimeout(pending);
       for (const type of events) el.removeEventListener(type, check);
     };
   }, [scope]);

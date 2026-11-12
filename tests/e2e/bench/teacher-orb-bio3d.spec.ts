@@ -68,6 +68,13 @@ for (const fontScale of [1, 1.4] as const) {
     await expect
       .poll(async () => (await orb(page))?.frames ?? 0)
       .toBeGreaterThan((first?.frames ?? 0) + 5);
+    // The question box keeps what is typed while the orb listens to it (a state update inside
+    // the input event once wiped it: a real browser runs microtasks between listeners).
+    const question = page.getByRole('textbox', { name: 'Nhập câu hỏi' });
+    await question.fill('Vì sao trời xanh?');
+    await page.waitForTimeout(300);
+    await expect(question).toHaveValue('Vì sao trời xanh?');
+    await question.fill('');
     expect(await sideScroll(page)).toBe(0);
 
     // The board loads while the orb draws every frame (by hand, not lazy(): #228).

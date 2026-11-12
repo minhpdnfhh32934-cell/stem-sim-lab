@@ -69,8 +69,10 @@ describe('useOrbState (#234)', () => {
     const box = view.getByLabelText('q') as HTMLTextAreaElement;
     const type = (el: HTMLTextAreaElement, text: string) => {
       act(() => {
+        el.focus();
         el.value = text;
         el.dispatchEvent(new Event('input', { bubbles: true }));
+        vi.runOnlyPendingTimers();
       });
     };
     type(view.getByLabelText('other') as HTMLTextAreaElement, 'x');
@@ -78,7 +80,8 @@ describe('useOrbState (#234)', () => {
     type(box, 'Vì sao');
     expect(state).toBe('listening');
     act(() => {
-      box.dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
+      box.blur();
+      vi.runOnlyPendingTimers();
     });
     expect(state).toBe('idle');
     type(box, '   ');
