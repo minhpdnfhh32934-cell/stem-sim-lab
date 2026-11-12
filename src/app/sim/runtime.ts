@@ -8,7 +8,12 @@ import { closeModule } from '@/modules/moduleStore';
 import { applyAutoDefaults } from '@/physics/autoDefaults';
 import { loadScene } from '@/physics/registry';
 import type { ParamSource, Params, PhysicsScene } from '@/physics/types';
-import { withIntervention, type ScienceCardData } from '@/science-card/types';
+import {
+  DRIFT_WARN,
+  withDrift,
+  withIntervention,
+  type ScienceCardData,
+} from '@/science-card/types';
 import { createSimulationHost, type SimulationHost } from '@/workers/host';
 import { History } from './history';
 import { useSimStore } from './simStore';
@@ -92,6 +97,7 @@ class SimRuntime {
         sources,
         loading: false,
         intervened: false,
+        energyDrift: 0,
         finished: false,
         start: 0,
         duration: 0,
@@ -188,17 +194,22 @@ class SimRuntime {
     const store = useSimStore.getState();
     const now = performance.now();
     const intervenedChanged = f.stats.intervened !== store.intervened;
+    // One significant digit: the card changes when the shown number does, not every frame.
+    const drift = f.stats.maxRelDrift > DRIFT_WARN ? Number(f.stats.maxRelDrift.toPrecision(1)) : 0;
+    const driftChanged = drift !== store.energyDrift;
     if (f.stats.finished && useWorkspaceStore.getState().playing) {
       useWorkspaceStore.setState({ playing: false });
     }
     if (
       now - this.lastUi > 1000 / UI_HZ ||
       intervenedChanged ||
+      driftChanged ||
       f.stats.finished !== store.finished
     ) {
       this.lastUi = now;
       useSimStore.setState({
         intervened: f.stats.intervened,
+        energyDrift: drift,
         finished: f.stats.finished,
         start: this.history.start,
         duration: this.history.duration,
@@ -214,7 +225,7 @@ class SimRuntime {
         // Slow motion only describes a running simulation.
         perf.setTimeScale(1);
       }
-      if (intervenedChanged) this.updateCard();
+      if (intervenedChanged || driftChanged) this.updateCard();
     }
   }
 
@@ -278,6 +289,7 @@ class SimRuntime {
     this.history.clear();
     useSimStore.setState({
       intervened: false,
+      energyDrift: 0,
       finished: false,
       start: 0,
       duration: 0,
@@ -350,9 +362,9 @@ class SimRuntime {
 
   /** Science Card for the current scene, params and intervention state. */
   currentCard(): ScienceCardData | null {
-    const { scene, params, sources, intervened } = useSimStore.getState();
+    const { scene, params, sources, intervened, energyDrift } = useSimStore.getState();
     if (!scene || (scene.validate?.(params) ?? []).length > 0) return null;
-    const card = withIntervention(scene.scienceCard(params), intervened);
+    const card = withDrift(withIntervention(scene.scienceCard(params), intervened), energyDrift);
     const defaults = scene.params.filter((d) => sources[d.key] === 'default' && d.key === 'g');
     if (defaults.length > 0 && params.g !== undefined) {
       card.assumptions = [

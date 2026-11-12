@@ -10,6 +10,7 @@ import {
 import { useT } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { formatNumber } from '@/app/i18n';
+import { formatDeviation } from '@/app/sim/numbers';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { ConfidenceBadge, ReviewBadge } from '@/ui/Badges';
 import { Equation } from './Equation';
@@ -144,6 +145,12 @@ export function ScienceCard({
         <p className="science-card__alert" role="note">
           <Hand size={14} strokeWidth={1.75} aria-hidden="true" />
           {t('science.intervened')}
+        </p>
+      )}
+      {card.energyDrift !== undefined && (
+        <p className="science-card__alert" role="note">
+          <AlertTriangle size={14} strokeWidth={1.75} aria-hidden="true" />
+          {t('science.energyDrift', { value: formatDeviation(locale, card.energyDrift) })}
         </p>
       )}
 
