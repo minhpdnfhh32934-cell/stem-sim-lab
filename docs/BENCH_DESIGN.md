@@ -581,6 +581,7 @@ Fold order at large font or in English: Tìm → icon 40; AI status → icon + d
 **Báo cáo:**
 
 - The panel widens to x64–704 (640); the stage stays live at x704–1302 (598).
+- The live stage is narrower than the lab's edge (886 px of columns): below 940 px the confidence chip shows its icon only (its words in its name and tooltip); below 760 px ("Báo cáo") the speed steps give way to the scrubber (#205 B9).
 - Sections Dự đoán / Số đo / Giải thích / Kết luận. Every item has an origin chip: "SimLab tính" / "Bạn ghi" / "AI hỗ trợ".
 - Footer: "Lưu báo cáo" filled, "Sao chép", "Làm lại", and the link "Thử tự do trong Phòng thí nghiệm".
 
