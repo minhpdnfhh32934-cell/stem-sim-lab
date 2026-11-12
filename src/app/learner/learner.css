@@ -241,7 +241,7 @@
   display: grid;
   place-items: center;
   padding: 16px;
-  background: rgba(8, 12, 20, 0.45);
+  background: var(--scrim);
 }
 .camera-dialog {
   display: flex;
@@ -272,7 +272,7 @@
   overflow: hidden;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  background: #000;
+  background: var(--bg-media);
 }
 .camera-dialog__preview video,
 .camera-dialog__preview img {
