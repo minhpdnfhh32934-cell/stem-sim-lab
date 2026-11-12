@@ -55,8 +55,6 @@ export function GameDialog() {
         <h2 id="game-dialog-title" className="game-dialog__title">
           {t('game.title')}
         </h2>
-        <span className="game-dialog__badge">{t('game.preview')}</span>
-        <p className="game-dialog__note">{t('game.note')}</p>
       </div>
       {open && (
         <iframe

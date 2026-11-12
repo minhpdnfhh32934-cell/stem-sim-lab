@@ -1,8 +1,10 @@
 # SimLab 3D (trò chơi phòng thí nghiệm 3D) trong SimLab
 
-**Trạng thái:** bản thử nghiệm, đưa vào 0.8.1 theo yêu cầu của người dùng ngày 12/11/2026 ("tích
-hợp game vào được trong đêm nay và hoàn thành đóng gói bản mới trong 6h sáng"). Nội dung khoa học
-trong game **đang chờ giáo viên duyệt** (DATA_REVIEW `GAME-1`).
+**Trạng thái:** bản chính thức của trò chơi trong 0.8.1. Đưa vào 0.8.1 theo yêu cầu của người dùng
+ngày 12/11/2026 ("tích hợp game vào được trong đêm nay và hoàn thành đóng gói bản mới trong 6h
+sáng"); ngày 13/11/2026 người dùng bỏ nhãn "Bản thử nghiệm" và dòng ghi chú trên thanh của game
+("vì đây là bản chính thức của trò chơi"). Nội dung khoa học trong game vẫn **đang chờ giáo viên
+duyệt** (DATA_REVIEW `GAME-1`): bỏ nhãn trên giao diện không có nghĩa là nội dung đã được duyệt.
 
 ## Game là gì
 
@@ -48,7 +50,7 @@ Ngoài ra không sửa gì khác trong game.
 ## Cách mở trong SimLab
 
 - Virtual Lab → thanh bên trái, mục "Trò chơi" → nút **SimLab 3D**.
-- Game mở trong một `<dialog>` toàn màn hình (`src/app/game/GameDialog.tsx`). Đầu hộp có nút "Về SimLab", nhãn "Bản thử nghiệm" và câu "đang chờ giáo viên duyệt". Game chạy trong một `<iframe>` cùng nguồn.
+- Game mở trong một `<dialog>` toàn màn hình (`src/app/game/GameDialog.tsx`). Đầu hộp chỉ có nút "Về SimLab" và tiêu đề "SimLab 3D". Game chạy trong một `<iframe>` cùng nguồn.
 - Đóng hộp thì gỡ iframe, nên ngữ cảnh WebGL của game được giải phóng.
 - Lần mở đầu, game theo ngôn ngữ của app: ghi `simlab.settings.language`, khoá riêng của game. Nếu người học đã đổi ngôn ngữ trong game thì lựa chọn đó được giữ.
 - Game lưu bài chơi trong `localStorage` với tiền tố `simlab.*`, không đụng khoá `stemsim.*` của SimLab.
