@@ -10,15 +10,11 @@ import { eaReduced, gasRuntime, sigmaReal, useGasStore } from './gasStore';
 const BINS = 30;
 const VMAX = 4; // reduced units (4σ)
 
-/** Maxwell–Boltzmann: speed histogram vs 2D theory. Collision theory: counts vs time. */
-export function GasBottom() {
-  const Lz = useLocalized();
-  const locale = useSettingsStore((s) => s.locale);
-  const { mode, version, gas, T, eaKJ } = useGasStore();
-  const f = (v: number, d = 3) => formatNumber(locale, v, { maximumSignificantDigits: d });
+/** The measured speed histogram (density per m/s) and the 2D theory at the same speeds. */
+function useSpeedHistogram() {
+  const { version, gas, T } = useGasStore();
   const sigma = sigmaReal(gas, T);
-
-  const histogram = useMemo(() => {
+  return useMemo(() => {
     const speeds = gasRuntime.history.speeds;
     const counts = new Array<number>(BINS).fill(0);
     for (const v of speeds) {
@@ -36,6 +32,40 @@ export function GasBottom() {
     // version drives the refresh; the history is mutated in place.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [version, sigma]);
+}
+
+/**
+ * The speed distribution chart: the simulation's histogram against the 2D theory. Under the
+ * stage (notebook) and beside the gas box on the Maxwell–Boltzmann stage (#205 B7).
+ */
+export function SpeedChart() {
+  const Lz = useLocalized();
+  const version = useGasStore((s) => s.version);
+  const histogram = useSpeedHistogram();
+  return (
+    <XYChart
+      x={histogram.x}
+      series={[
+        { label: Lz(L('Mô phỏng', 'Simulation')), y: histogram.y, bars: true },
+        { label: Lz(L('Lý thuyết 2D', '2D theory')), y: histogram.theory, color: 3 },
+      ]}
+      xLabel={Lz(L('Tốc độ v', 'Speed v'))}
+      yLabel="f(v) (s/m)"
+      xUnit="m/s"
+      version={version}
+    />
+  );
+}
+
+/** Maxwell–Boltzmann: speed histogram vs 2D theory. Collision theory: counts vs time. */
+export function GasBottom() {
+  const Lz = useLocalized();
+  const locale = useSettingsStore((s) => s.locale);
+  const { mode, version, gas, T, eaKJ } = useGasStore();
+  const f = (v: number, d = 3) => formatNumber(locale, v, { maximumSignificantDigits: d });
+  const sigma = sigmaReal(gas, T);
+
+  const histogram = useSpeedHistogram();
 
   const timeSeries = useMemo(() => {
     const h = gasRuntime.history;
@@ -46,17 +76,7 @@ export function GasBottom() {
   if (mode === 'maxwell') {
     return (
       <div className="gas-bottom">
-        <XYChart
-          x={histogram.x}
-          series={[
-            { label: Lz(L('Mô phỏng', 'Simulation')), y: histogram.y, bars: true },
-            { label: Lz(L('Lý thuyết 2D', '2D theory')), y: histogram.theory, color: 3 },
-          ]}
-          xLabel={Lz(L('Tốc độ v', 'Speed v'))}
-          yLabel="f(v) (s/m)"
-          xUnit="m/s"
-          version={version}
-        />
+        <SpeedChart />
         <table className="chem-table gas-bottom__stats">
           <tbody>
             <tr>
