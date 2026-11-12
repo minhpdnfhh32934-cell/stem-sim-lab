@@ -455,39 +455,48 @@ kbd {
 }
 .bench-header__problem {
   flex: none;
-  width: 112px;
+  /* At least 112 px; wider at 140 % so its icon is not squeezed to a dot (#205 B2). */
+  min-width: 112px;
   justify-content: center;
+}
+.bench-header__problem > svg {
+  flex: none;
 }
 .bench-header__search {
   flex: none;
-  width: 172px;
+  /* An icon (#205 B2: "Tìm…" read as cut text); its words stay the name, Ctrl+K is the tip. */
+  width: var(--target);
+  justify-content: center;
+  padding-inline: 0;
 }
-.bench-header__search kbd {
-  margin-left: auto;
+.bench-header__search > span {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+/* Light / dark in Tệp only when the header is short of room (below). */
+.bench-header .file-menu__theme {
+  display: none;
 }
 /*
- * Short of room (a large Cỡ chữ, a narrow window): the search and the AI status keep only their
- * icons (names and tooltips stay), so the topic name keeps its room (review of #198). `em` is the
- * header's own font size, so the threshold follows Cỡ chữ: at 1366 px it folds from 110 %.
+ * Short of room (a large Cỡ chữ, a narrow window): the AI status keeps only its icon (name and
+ * tooltip stay) and the light / dark switch moves into Tệp, so the topic name keeps its room
+ * (review of #198, #205 B2). `em` is the header's own font size, so the threshold follows Cỡ chữ:
+ * at 1366 px it folds from 110 %.
  */
 .bench-header {
   container: bench-header / inline-size;
 }
 @container bench-header (max-width: 90em) {
-  .bench-header__search {
-    width: var(--target);
-    justify-content: center;
-    padding-inline: 0;
+  /* The light / dark switch moves into Tệp (#205 B2): more room for the lesson name. */
+  .bench-header > .theme-switch {
+    display: none;
   }
-  /* Out of view only: they stay the button's name. */
-  .bench-header__search > span,
-  .bench-header__search > kbd {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
+  .bench-header .file-menu__theme {
+    display: flex;
   }
   .bench-header .ai-status__label {
     display: none;
