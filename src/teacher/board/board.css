@@ -319,7 +319,8 @@
   margin: 0;
   padding: 24px 15%;
   place-items: center;
-  color: color-mix(in srgb, var(--board-ink) 62%, transparent);
+  /* 70 %: ≥ 4.5 : 1 on the light board too (62 % gave 4.23, axe in teacher-station.spec.ts). */
+  color: color-mix(in srgb, var(--board-ink) 70%, transparent);
   font-size: var(--text-content);
   line-height: 1.5;
   text-align: center;

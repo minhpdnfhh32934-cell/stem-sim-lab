@@ -45,7 +45,7 @@ test('the AI teacher page: honest label, no screen toggle, fits 1366×768, Esc g
   await expect(page.getByRole('radiogroup', { name: 'Môn học' })).toHaveCount(0);
   await expect(page.getByRole('button', { name: 'Em chưa hiểu chỗ này' })).toHaveCount(0);
 
-  await page.getByRole('radio', { name: 'Giảng trên bảng' }).click();
+  await page.getByRole('radio', { name: 'Bảng giảng' }).click();
   await expect(screen).toHaveAttribute('data-layout', 'board');
   expect(await overflow(page)).toBeLessThanOrEqual(0);
 
@@ -223,7 +223,7 @@ test('whiteboard: the answer is taught on the board (written, circled, boxed), t
 
   await page.goto('/');
   await page.locator('.launch-card--teacher').click();
-  await page.getByRole('radio', { name: 'Giảng trên bảng' }).click();
+  await page.getByRole('radio', { name: 'Bảng giảng' }).click();
   const board = page.getByRole('region', { name: 'Bảng trắng của AI Teacher' });
   await expect(board).toBeVisible({ timeout: 20_000 });
   const panel = page.getByRole('region', { name: 'Trò chuyện với AI Teacher' });
@@ -253,7 +253,7 @@ test('whiteboard: the answer is taught on the board (written, circled, boxed), t
 async function openTeacher(page: Page, layout: 'talk' | 'board' = 'talk') {
   await page.goto('/');
   await page.locator('.launch-card--teacher').click();
-  if (layout === 'board') await page.getByRole('radio', { name: 'Giảng trên bảng' }).click();
+  if (layout === 'board') await page.getByRole('radio', { name: 'Bảng giảng' }).click();
   return page.getByRole('region', { name: 'Trò chuyện với AI Teacher' });
 }
 
