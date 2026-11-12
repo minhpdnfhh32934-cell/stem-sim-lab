@@ -22,9 +22,10 @@ const loadSources = () => import('@/app/project/SourcesDialog').then((m) => m.de
 
 /**
  * Loads `slot`'s code once `when` holds; true once it is there. By hand rather than with
- * `lazy()`: React retries a suspended `lazy()` at a low priority that never expires, and a lesson
- * that runs without end (an update every frame, slow on a weak machine) starved it for good:
- * Ctrl+K and "Nguồn & Giả định" opened nothing (#205, seen on CI).
+ * `lazy()`: React retries a suspended `lazy()` at a low priority that never expires, and a 3D
+ * lesson that runs without end (an update every frame, no idle time between frames) starved it
+ * for good: Ctrl+K and "Nguồn & Giả định" opened nothing (#205; every time with a desktop GPU,
+ * not with software WebGL, whose slower frames leave room).
  */
 function useLoaded(slot: Loaded, when: boolean, load: () => Promise<ComponentType>): boolean {
   const [loaded, setLoaded] = useState(slot.Component !== null);
