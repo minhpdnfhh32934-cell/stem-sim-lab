@@ -108,6 +108,14 @@ thức đóng: test chạy thật tới 10⁴ s và kiểm năng lượng (đo �
 Đồ thị, bảng và CSV giữ đoạn gần nhất của lần chạy (12000 mẫu, khoảng 100 s ở 1×), không thưa dần;
 bảng và CSV ghi rõ đoạn đó.
 
+**Sinh học chạy liên tục (#205 C5, 12/11/2026):** cảnh 3D khuếch tán và thẩm thấu chạy hết khung này
+sang khung khác. Khuếch tán: số hạt mỗi ngăn và các lần qua màng theo nghiệm Fick tại mọi t (đường đi
+Brown của hạt là minh họa, đi tới rồi đi lùi theo các mốc đã có sau tEnd, không đổi số liệu). Thẩm
+thấu: mỗi khung được tính bằng DOPRI5 (rtol 10⁻¹⁰, cùng bước lấy mẫu) từ mẫu cuối của khung trước
+(`osmosisSegment`), không nội suy; ống nước đã cạn giữ cạn. Kiểm chứng (`src/biology/models.test.ts`,
+`transport3d/endless.test.ts`): 10 khung nối nhau trùng một lần tính liền mạch, từng mẫu (đo được
+sai khác 0), cả khi ống cạn giữa chừng.
+
 **Sự kiện trong DOPRI5 (sửa lỗi ngày 2026-09-29):** khi vật xuất phát đúng tại mặt đất (y = 0) hoặc
 khi hai sự kiện (đỉnh quỹ đạo và chạm đất) rơi vào cùng một bước tích phân dài, bộ bắt sự kiện cũ
 có thể bỏ sót lần chạm đất. Nay mọi sự kiện trong một bước được xử lý theo thứ tự thời gian, và

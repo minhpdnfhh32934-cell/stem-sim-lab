@@ -688,7 +688,11 @@ Từng bài:
   chất ức chế gắn đúng chỗ theo kiểu ức chế đã chọn; thang "1 hạt = … mM". Góc nhìn **Cận cảnh
   enzyme** để nhìn một enzyme.
 - **Khuếch tán & thẩm thấu 3D:** số hạt mỗi ngăn theo định luật Fick ở mọi thời điểm, hạt đi qua
-  lỗ màng. Thẩm thấu: ống chữ U có thước cm, mực nước lấy từ đồ thị của bài.
+  lỗ màng. Thẩm thấu: ống chữ U có thước cm, mực nước lấy từ đồ thị của bài. Cả hai chạy liên tục
+  tới khi bạn bấm **Tạm dừng** (#205): hết khung thời gian thì khung sau nối tiếp, thanh thời gian
+  theo khung đang xem. Khuếch tán: số hạt mỗi ngăn vẫn theo công thức Fick (về tỉ lệ cân bằng);
+  chuyển động của hạt là minh họa. Thẩm thấu: khung sau tính bằng DOPRI5 từ mẫu cuối của khung trước,
+  không nội suy; mực nước tiến về trạng thái cuối. **Đặt lại** về t = 0.
 - **Bốn bài quần thể (0.7.1)** mỗi bài có một khung cảnh ngoài trời riêng. Con vật, cây cỏ, đảo,
   hàng rào và cách chúng di chuyển chỉ là minh họa; số con vẽ ra lấy từ mô hình của bài. Khi quần
   thể lớn hơn số hình vẽ được, góc hình ghi tỉ lệ, ví dụ "1 hình = 5 cá thể (làm tròn)". Bấm vào một

@@ -93,14 +93,28 @@ export function osmosisTrajectory(
   tEnd: number,
   samples: number,
 ): { t: number[]; hL: number[] } {
+  return osmosisSegment(p, { t: 0, hL: p.h0 }, tEnd, samples);
+}
+
+/**
+ * The trajectory from a computed sample `from` (t, h_L) over `span`, `samples` steps: the same
+ * DOPRI5 step by step as `osmosisTrajectory`, so a run continued span by span from each last
+ * sample is the run computed in one go (#205 C5). A dry water arm (h_L = 2h₀) stays dry.
+ */
+export function osmosisSegment(
+  p: OsmosisParams,
+  from: { t: number; hL: number },
+  span: number,
+  samples: number,
+): { t: number[]; hL: number[] } {
   const full = 2 * p.h0;
-  const t: number[] = [0];
-  const h: number[] = [p.h0];
-  let y = Float64Array.from([p.h0]);
-  let dry = false;
+  const t: number[] = [from.t];
+  const h: number[] = [from.hL];
+  let y = Float64Array.from([from.hL]);
+  let dry = from.hL >= full;
   for (let k = 1; k <= samples; k++) {
-    const t0 = ((k - 1) * tEnd) / samples;
-    const t1 = (k * tEnd) / samples;
+    const t0 = from.t + ((k - 1) * span) / samples;
+    const t1 = from.t + (k * span) / samples;
     if (!dry) {
       const r = dopri5(
         (_t, s, d) => {
