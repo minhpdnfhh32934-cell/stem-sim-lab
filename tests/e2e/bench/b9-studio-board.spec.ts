@@ -104,7 +104,7 @@ for (const fontScale of [1, 1.4] as const) {
     });
     await page.goto('/');
     await page.locator('.launch-card--teacher').click();
-    await page.getByRole('radio', { name: 'Giảng trên bảng' }).click();
+    await page.getByRole('radio', { name: 'Bảng giảng' }).click();
     const board = page.getByRole('region', { name: 'Bảng trắng của AI Teacher' });
     await expect(board).toContainText('Hỏi AI Teacher một câu', { timeout: 20_000 });
     await page.getByRole('textbox', { name: 'Nhập câu hỏi' }).fill('Giải bài rơi tự do');

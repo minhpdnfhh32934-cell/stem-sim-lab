@@ -190,7 +190,8 @@ SimLab không chọn được card đồ họa cho chương trình đó (chỉnh
 
 ### Giảng trên bảng
 
-Ở trang AI Teacher, chọn **Giảng trên bảng** (góc trên bên phải). Mỗi câu trả lời được giảng trên bảng
+Ở trang AI Teacher, chọn tab **02 Bảng giảng** (hàng tab dưới đầu trang; quả cầu thu nhỏ về góc trái).
+Mỗi câu trả lời được giảng trên bảng
 trắng: thầy vừa nói vừa viết (chữ viết tay tiếng Việt, đầu bút đi theo), công thức hiện dần, gạch chân
 từ khóa, khoanh công thức quan trọng, đóng khung kết quả, mũi tên nối các ý, vẽ đồ thị, sơ đồ lực, bảng
 số. Bảng chia ba cột như lớp học: trái là tóm tắt đề và ghi chú, giữa là các bước giải, phải là hình
