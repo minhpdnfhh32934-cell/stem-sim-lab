@@ -357,10 +357,11 @@ Left column x96–656:
 - Subtitle 16/26 at y236–288, max 52ch.
 - Doors at y344–512, each 268×168, at x96 and x380.
   - Door 1 "Virtual Lab": filled, the only filled element. Name kept for `nav.ts`.
-  - Door 2 "AI Teacher": outlined, same size, class `.launch-card--teacher` kept. Body "AI Teacher là một AI nên có thể sai."
+  - Door 2 "AI Teacher": outlined, same size, class `.launch-card--teacher` kept. Body (#205 B1) "Hỏi bài và xem giảng từng bước trên bảng, có thể nghe đọc thành tiếng."; "AI Teacher là một AI nên có thể sai." moved to the notes below.
   - Inside each door: icon 28, title 22/30 600, body 14/20.
 - Resume text button, 40 tall, at y536 (returning users only; decided 02/11): "Tiếp tục: Ném xiên (Vật lí)".
-- Privacy line at y696: ShieldCheck + 13 px.
+- Notes under the doors (#205 B1, 13 px): Info + "AI Teacher là một AI nên có thể sai." (not when AI Teacher is locked), then ShieldCheck + the privacy line (was alone at y696).
+- #205 B1 (12/11/2026), less space: 40 px at the top, 24 px above the doors, 12 px above "Tiếp tục", 16 px above the notes, all fixed px so the gaps do not grow with the font; a first visit fits 1366 × 768 at 140 %. The still stays at y120.
 
 Right column x720–1310: "bench still" 590×440 at y120.
 
