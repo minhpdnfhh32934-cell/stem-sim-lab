@@ -850,6 +850,30 @@
 .gas-bottom--single {
   grid-template-columns: 1fr;
 }
+/* Maxwell–Boltzmann: the gas box and its speed distribution side by side (#205 B7). */
+.gas-split {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+.gas-split__box {
+  position: relative;
+  min-width: 0;
+}
+.gas-split__chart {
+  display: grid;
+  min-width: 0;
+  padding: var(--space-6, 24px) var(--space-4) var(--space-4) 0;
+}
+.gas-split__chart .chart {
+  height: 100%;
+  min-height: 12rem;
+}
+/* The slider rows of a chemistry panel keep their own layout (#205 B7: SliderField). */
+.chem-form .slider-field label {
+  justify-content: normal;
+}
 .eq-bars {
   display: flex;
   align-items: flex-end;
