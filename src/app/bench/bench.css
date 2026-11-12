@@ -1445,7 +1445,8 @@ kbd {
   column-gap: 64px;
   align-items: start;
   margin: 0 0 0 96px;
-  padding: 64px 0 var(--space-6, 24px);
+  /* #205 B1: less space (40 at the top, the still kept at y120), so 140 % fits 1366 × 768. */
+  padding: 40px 0 16px;
   color: var(--paper-text);
 }
 .bench-launch__main {
@@ -1456,7 +1457,7 @@ kbd {
 }
 /* The "bench still" (§9.1): 590×440 at y120 in an 8 px frame border, caption under it. */
 .bench-launch__still {
-  margin: 56px 0 0;
+  margin: 80px 0 0;
 }
 .bench-launch__canvas {
   display: block;
@@ -1496,7 +1497,8 @@ kbd {
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
-  margin-top: 40px;
+  /* Fixed px like the rest of §9.1's spacing: at 140 % the gaps do not grow with the text. */
+  margin-top: 24px;
 }
 .bench-door {
   display: flex;
@@ -1542,18 +1544,27 @@ button.bench-door--lab:hover {
   color: var(--paper-text-muted);
 }
 .bench-launch__resume {
-  margin-top: var(--space-4);
+  margin-top: 12px;
   border-color: transparent;
   background: none;
 }
-.bench-launch__privacy {
+/* The notes under the doors: AI Teacher can be wrong, and the privacy line. */
+.bench-launch__notes {
+  display: grid;
+  gap: 6px;
+  margin-top: 16px;
+}
+.bench-launch__note {
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  margin: 48px 0 0;
+  margin: 0;
   font-size: var(--text-note);
   line-height: calc(18rem / 14);
   color: var(--paper-text-muted);
+}
+.bench-launch__note > svg {
+  flex: none;
 }
 @media (max-width: 1200px) {
   .bench-launch {

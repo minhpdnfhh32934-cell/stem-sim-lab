@@ -260,7 +260,9 @@ const en: Messages = {
     tourNotebookBody:
       'Challenges, Graphs, Solution, Science Card and Ask AI open from the left column.',
     tourSkip: 'Skip the guide',
-    teacherDoorBody: 'AI Teacher is an AI, so it can be wrong.',
+    teacherDoorBody:
+      'Ask questions and follow step-by-step explanations on a board, read aloud if you like.',
+    teacherDoorNote: 'AI Teacher is an AI, so it can be wrong.',
     teacherLocked: 'AI Teacher needs you to be 18 or older',
     resume: 'Continue: {topic} ({subject})',
     firstRun: {
