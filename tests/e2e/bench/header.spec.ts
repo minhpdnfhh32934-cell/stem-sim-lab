@@ -62,9 +62,15 @@ test('140 %: light / dark is in Tệp; the lesson name keeps its first words', a
   await expect(item).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  // "Đề bài" keeps its icon whole (it was squeezed to a dot at 140 %).
+  const icon = await header(page)
+    .getByRole('button', { name: 'Đề bài' })
+    .locator('svg')
+    .boundingBox();
+  expect(icon?.width ?? 0).toBeGreaterThanOrEqual(15);
   // The name: 204 px of 452 before #205 B2.
   const room = await nameRoom(page);
-  expect(room.shown).toBeGreaterThanOrEqual(260);
+  expect(room.shown).toBeGreaterThanOrEqual(250);
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth - document.documentElement.clientWidth,

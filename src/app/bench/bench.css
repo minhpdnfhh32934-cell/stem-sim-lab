@@ -455,8 +455,12 @@ kbd {
 }
 .bench-header__problem {
   flex: none;
-  width: 112px;
+  /* At least 112 px; wider at 140 % so its icon is not squeezed to a dot (#205 B2). */
+  min-width: 112px;
   justify-content: center;
+}
+.bench-header__problem > svg {
+  flex: none;
 }
 .bench-header__search {
   flex: none;
