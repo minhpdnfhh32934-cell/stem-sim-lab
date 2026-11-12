@@ -20,13 +20,16 @@ export class TrackEngine implements SimulationEngine<Params> {
   readonly id = 'phys.track';
   readonly stateSize = 5;
   dt = 1 / 240;
-  private t = 0;
+  /** Time = start + steps × dt (#205 C1). */
+  private t0 = 0;
+  private steps = 0;
   private y = new Float64Array(2);
   private tr: Track = parabola(3, 4);
   private g = 9.81;
   private drag: number | null = null;
   private off = false;
-  private tEnd = 60;
+  /** No end of its own (#205 C1) while the bead stays on the track. Only a caller sets one. */
+  private tEnd: number | undefined;
   private readonly rk = new Rk4((_t, s, d) => {
     const x = s[0] ?? 0;
     const xd = s[1] ?? 0;
@@ -42,17 +45,19 @@ export class TrackEngine implements SimulationEngine<Params> {
     const d = this.tr.df(x0);
     this.y[0] = x0;
     this.y[1] = (p.v0 ?? 0) / Math.sqrt(1 + d * d);
-    this.t = 0;
+    this.t0 = 0;
+    this.steps = 0;
     this.off = false;
     this.drag = null;
-    this.tEnd = p.tEnd ?? 60;
+    this.tEnd = p.tEnd;
   }
 
   step(): void {
-    this.t += this.dt;
+    const t = this.time();
+    this.steps++;
     if (this.off) return;
     const h = this.dt / 8;
-    for (let i = 0; i < 8; i++) this.rk.step(this.t + i * h, this.y, h);
+    for (let i = 0; i < 8; i++) this.rk.step(t + i * h, this.y, h);
     const x = this.y[0] ?? 0;
     if (x < this.tr.xMin || x > this.tr.xMax) {
       this.y[0] = Math.min(this.tr.xMax, Math.max(this.tr.xMin, x));
@@ -61,7 +66,7 @@ export class TrackEngine implements SimulationEngine<Params> {
   }
 
   time(): number {
-    return this.t;
+    return this.t0 + this.steps * this.dt;
   }
 
   readState(out: Float64Array): void {
@@ -79,7 +84,8 @@ export class TrackEngine implements SimulationEngine<Params> {
     this.y[0] = s[TS.x] ?? 0;
     this.y[1] = s[TS.xd] ?? 0;
     this.off = (s[TS.off] ?? 0) > 0.5;
-    this.t = t;
+    this.t0 = t;
+    this.steps = 0;
   }
 
   diagnostics() {
@@ -109,6 +115,8 @@ export class TrackEngine implements SimulationEngine<Params> {
   }
 
   finished(): boolean {
-    return this.drag === null && (this.off || this.t >= this.tEnd);
+    return (
+      this.drag === null && (this.off || (this.tEnd !== undefined && this.time() >= this.tEnd))
+    );
   }
 }

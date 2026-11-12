@@ -2,10 +2,13 @@ import { describe, expect, it } from 'vitest';
 import { CircularEngine, CE } from './circular/engine';
 import { MODE as CIRCLE } from './circular/model';
 import { InterferenceEngine, IF, interferenceInput, MODE as WAVES } from './interference/engine';
+import { energyDrift } from './endlessRk4';
 import { KeplerEngine, KE } from './kepler/engine';
 import { gm, orbit, semiMinor, A as SEMI_MAJOR } from './kepler/model';
+import { PendulumEngine, PE } from './pendulum/engine';
 import { ResonanceEngine, RE } from './resonance/engine';
 import { SpringEngine, SP } from './spring/engine';
+import { TrackEngine } from './track/engine';
 import { StandingWaveEngine, SW, standingInput } from './wave/engine';
 
 /**
@@ -124,5 +127,25 @@ describe('periodic lessons run on: closed form at t = 10⁵ s (#205 C1)', { time
     expect(Math.abs(out[SW.y]! - 2 * q.A * Math.sin(k * q.xP) * Math.sin(w * t))).toBeLessThan(
       1e-12,
     );
+  });
+});
+
+/**
+ * The two RK4 lessons have no closed form: run for real to 10⁴ s, their energy must hold (measured
+ * 2026-11-12: 2·10⁻¹² to 5·10⁻¹²). The 10⁵ s run is `npm run test:slow` (user's choice A).
+ */
+describe('RK4 lessons run on: energy holds over 10⁴ s (#205 C1)', { timeout: 60_000 }, () => {
+  it('large-angle pendulum (θ₀ = 2.5 rad) and its small-angle model, exact from the start', () => {
+    expect(energyDrift(new PendulumEngine(), { theta0: 2.5, c: 0 }, 1e4)).toBeLessThan(1e-9);
+    const e = new PendulumEngine();
+    e.reset({ L: 1, g: 9.81, theta0: 0.2, omega0: 0, c: 0 });
+    const t = runTo(e, 1e4);
+    const out = new Float64Array(e.stateSize);
+    e.readState(out);
+    expect(Math.abs(out[PE.thS]! - 0.2 * Math.cos(Math.sqrt(9.81) * t))).toBeLessThan(1e-9);
+  });
+
+  it('bead on the track: energy holds, still on the track', () => {
+    expect(energyDrift(new TrackEngine(), {}, 1e4)).toBeLessThan(1e-9);
   });
 });

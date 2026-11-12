@@ -550,7 +550,7 @@ const vi = {
     exportCsv: 'Xuất CSV',
     rows: '{shown} / {total} dòng',
     noData: 'Chưa có dữ liệu. Nhấn Chạy để ghi.',
-    windowNote: 'Bài chạy liên tục: bảng và CSV giữ đoạn gần nhất, t = {from} … {to} s.',
+    windowNote: 'Bài chạy liên tục: bảng và CSV giữ đoạn gần nhất, từ t = {from} s đến t = {to} s.',
   },
   object: {
     none: 'Nhấp vào một vật trên khung mô phỏng để xem thuộc tính.',

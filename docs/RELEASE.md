@@ -56,6 +56,10 @@ chạy: lượt sau chờ lượt trước xong, không lượt nào bị hủy 
 
 1. **Gộp (merge) pull request** vào `main` trên GitHub. Không đẩy thẳng lên `main` (nhánh này được
    bảo vệ). Các kiểm tra CI và Security của pull request phải xanh.
+   - **Trước mỗi bản**, trên máy, chạy `npm run test:slow` (khoảng 20 giây). Lệnh này chạy con lắc
+     góc lớn và hạt trên đường ray tới t = 10⁵ s, kiểm năng lượng không trôi (#205 C1, người dùng
+     chọn ngày 12/11/2026). CI và `npm run check` không chạy lệnh này; chúng chỉ chạy tới 10⁴ s.
+     Lệnh phải ghi "2 passed". Nếu hỏng thì không phát hành.
 2. GitHub → **Actions → Release (Windows installer) → Run workflow**, chọn nhánh `main`. Để
    `publish` = true, ghi chú thay đổi bằng tiếng Việt (hiện trong hộp thoại cập nhật của app).
 3. Khi environment `release` có người duyệt, GitHub hỏi duyệt hai lần (job ký `web` và job
