@@ -178,3 +178,26 @@
     padding: var(--space-3);
   }
 }
+
+/*
+ * #205 B6, part A3 in Settings: every field, button and disclosure line is a 40 px target (the
+ * key fields were 27 px, "Lưu khóa" 36, "Tải mô hình" 38, the key's show button 30, "Hướng dẫn
+ * lấy khóa API" 17).
+ */
+.settings-dialog
+  :is(
+    input:not([type='checkbox'], [type='radio'], [type='range'], [type='file'], [type='hidden']),
+    textarea,
+    .btn
+  ) {
+  min-height: var(--target);
+}
+.settings-dialog .icon-btn {
+  min-width: var(--target);
+  min-height: var(--target);
+}
+/* Still a list item, so its open / closed triangle stays. */
+.settings-dialog summary {
+  min-height: var(--target);
+  padding-block: var(--space-2);
+}
