@@ -5,6 +5,7 @@ import {
   Clock,
   FilePen,
   FileText,
+  Gamepad2,
   History,
   PencilRuler,
   Search,
@@ -25,6 +26,7 @@ import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useProfileStore } from '@/app/learner/profileStore';
 import { chaptersFor, GRADE_CHOICES, type LibraryTopic } from '@/app/levels';
 import { lessonRange } from '@/app/curriculum';
+import { openGame } from '@/app/game/gameStore';
 import { openStudio, openTopic } from '@/app/topics';
 import { SUBJECTS, useWorkspaceStore, type Subject } from '@/app/workspaceStore';
 import { chapterProgress, topicStatus, type TopicStatus } from '@/learn/progress';
@@ -53,6 +55,7 @@ export function BenchLibrary() {
   const lastTopic = useProfileStore((s) => s.lastTopic);
   const [query, setQuery] = useState('');
   const advanced = useSettingsStore((s) => s.uiMode === 'advanced');
+  const locale = useSettingsStore((s) => s.locale);
   const historyOpen = useProjectUi((s) => s.historyOpen);
   const setHistoryOpen = (open: boolean) => {
     useProjectUi.setState({ historyOpen: open });
@@ -147,6 +150,19 @@ export function BenchLibrary() {
             {t('bench.lessonGuided')}
           </button>
         </div>
+        {/* The 3D lab game (docs/GAME.md): a window of its own over the app. */}
+        <h2 className="shelf-filters__title">{t('game.shelfTitle')}</h2>
+        <button
+          type="button"
+          className="btn shelf-game"
+          title={t('game.openHint')}
+          onClick={() => {
+            openGame(locale);
+          }}
+        >
+          <Gamepad2 size={16} strokeWidth={1.75} aria-hidden="true" />
+          {t('game.open')}
+        </button>
         <label className="shelf-search">
           <Search size={16} strokeWidth={1.75} aria-hidden="true" />
           <input

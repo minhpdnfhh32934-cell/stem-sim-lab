@@ -19,3 +19,5 @@ release-notes/google-docs.html
 docs/CURRICULUM_KNTT.md
 # Generated from scripts/data/gen_teaching_heldout2.py
 tests/teaching/teaching-heldout-2.json
+# The built SimLab 3D game (docs/GAME.md): minified output of its own build, not formatted here.
+public/game
