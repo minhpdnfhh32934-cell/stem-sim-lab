@@ -93,6 +93,7 @@ class SimRuntime {
         loading: false,
         intervened: false,
         finished: false,
+        start: 0,
         duration: 0,
         scrubTime: null,
         selected: null,
@@ -132,6 +133,7 @@ class SimRuntime {
     );
     const info = await host.load(scene.engineId, this.engineParams());
     this.history.clear();
+    this.history.setWindowed(scene.endless === true);
     this.renderState = new Float64Array(info.stateSize);
     // Prime the first frame so the scene is drawn before playing.
     host.requestFrame(0, 1, true);
@@ -198,6 +200,7 @@ class SimRuntime {
       useSimStore.setState({
         intervened: f.stats.intervened,
         finished: f.stats.finished,
+        start: this.history.start,
         duration: this.history.duration,
         dataVersion: store.dataVersion + 1,
         tick: store.tick + 1,
@@ -276,6 +279,7 @@ class SimRuntime {
     useSimStore.setState({
       intervened: false,
       finished: false,
+      start: 0,
       duration: 0,
       scrubTime: null,
       dataVersion: useSimStore.getState().dataVersion + 1,
@@ -287,9 +291,10 @@ class SimRuntime {
   }
 
   scrub(t: number): void {
-    const d = this.history.duration;
-    useWorkspaceStore.setState({ playing: false, simTime: Math.max(0, Math.min(d, t)) });
-    useSimStore.setState({ scrubTime: Math.max(0, Math.min(d, t)) });
+    const { start, duration } = this.history;
+    const at = Math.max(start, Math.min(duration, t));
+    useWorkspaceStore.setState({ playing: false, simTime: at });
+    useSimStore.setState({ scrubTime: at });
   }
 
   /** Changes a parameter. Live-editable params apply mid-run (as an intervention). */

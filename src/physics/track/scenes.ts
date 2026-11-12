@@ -408,6 +408,7 @@ export const energyConservation: PhysicsScene = {
   id: 'energyConservation',
   required: ['H'],
   engineId: 'phys.track',
+  endless: true,
   title: L('Bảo toàn cơ năng', 'Conservation of mechanical energy'),
   usesGravity: true,
   params: [

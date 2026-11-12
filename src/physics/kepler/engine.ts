@@ -15,11 +15,12 @@ export class KeplerEngine implements SimulationEngine<Params> {
   dt = 1 / 240;
   private n = 0;
   private o: Orbit = orbit({});
-  private tEnd = 60;
+  /** No end of its own (#205 C1): it runs until paused. Only a caller (a test) sets one. */
+  private tEnd: number | undefined;
 
   reset(p: Params): void {
     this.o = orbit(p);
-    this.tEnd = p.tEnd ?? Math.max(60, 3 * this.o.T);
+    this.tEnd = p.tEnd;
     this.n = 0;
   }
 
@@ -51,6 +52,6 @@ export class KeplerEngine implements SimulationEngine<Params> {
   }
 
   finished(): boolean {
-    return this.time() >= this.tEnd;
+    return this.tEnd !== undefined && this.time() >= this.tEnd;
   }
 }

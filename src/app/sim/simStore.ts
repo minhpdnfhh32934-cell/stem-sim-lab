@@ -16,6 +16,8 @@ export interface SimStoreState {
   intervened: boolean;
   finished: boolean;
   /** Longest recorded simulated time (s). */
+  /** Oldest recorded time: 0, or the start of a long endless run's latest stretch (#205 C1). */
+  start: number;
   duration: number;
   /** Time shown while scrubbing a recorded run; null when live. */
   scrubTime: number | null;
@@ -42,6 +44,7 @@ export const useSimStore = create<SimStoreState>()(() => ({
   validation: [],
   intervened: false,
   finished: false,
+  start: 0,
   duration: 0,
   scrubTime: null,
   selected: null,

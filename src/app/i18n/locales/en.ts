@@ -549,6 +549,8 @@ const en: Messages = {
     exportCsv: 'Export CSV',
     rows: '{shown} / {total} rows',
     noData: 'No data yet. Press Play to record.',
+    windowNote:
+      'A continuous run: the table and CSV keep the latest stretch, from t = {from} s to t = {to} s.',
   },
   object: {
     none: 'Click an object on the stage to see its properties.',

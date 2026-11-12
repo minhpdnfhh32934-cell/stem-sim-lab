@@ -9,7 +9,6 @@ import {
   measuredBeatPeriod,
   pointM,
   rayLattice,
-  runEnd,
 } from './engine';
 import { amplitudeAt } from './model';
 
@@ -63,14 +62,15 @@ describe('interference engine', () => {
     }
   });
 
-  it('Δt ≤ T/200 of the faster source; the run lasts 20 periods or 3 beat periods', () => {
+  it('Δt ≤ T/200 of the faster source; no end of its own, a caller may still set one', () => {
     const e = new InterferenceEngine();
     e.reset(base);
     expect(e.dt).toBeLessThanOrEqual(1 / 2000);
+    for (let i = 0; i < 10000; i++) e.step();
+    expect(e.finished()).toBe(false);
+    e.reset({ ...base, tEnd: 2 });
     while (!e.finished()) e.step();
     expect(e.time() - 2).toBeLessThan(e.dt);
-    expect(runEnd(interferenceInput({ ...base, mode: MODE.beats, f2: 11 }))).toBeCloseTo(3, 12);
-    expect(runEnd(interferenceInput({ ...base, mode: MODE.beats, f2: 30 }))).toBeCloseTo(2 / 3, 12);
   });
 
   it('point M: at d₁ from S₁ and d₂ from S₂ (y ≥ 0), or none', () => {

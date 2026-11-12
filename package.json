@@ -19,6 +19,7 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:slow": "vitest run --mode slow src/physics/endless.slow.test.ts",
     "check": "npm run format:check && npm run lint && npm run typecheck && npm run test",
     "test:e2e": "playwright test",
     "golden:llm": "vitest run --config vitest.llm.config.ts",

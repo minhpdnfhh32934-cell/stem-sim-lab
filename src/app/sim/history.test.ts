@@ -57,6 +57,25 @@ describe('History', () => {
     for (let i = 0; i < 500; i++) h.push(i * 0.01, s(i));
     expect(h.length).toBeLessThanOrEqual(51);
     expect(h.duration).toBeGreaterThan(4);
+    expect(h.start).toBe(0);
+    expect(h.trimmed).toBe(false);
+  });
+
+  it('an endless run keeps its latest stretch at full resolution (#205 C1)', () => {
+    const h = new History(0.01, 50);
+    h.setWindowed(true);
+    for (let i = 0; i < 500; i++) h.push(i * 0.01, s(i));
+    // Bounded, never thinned: neighbours stay 0.01 apart, and the end is the latest sample.
+    expect(h.length).toBeLessThanOrEqual(50);
+    expect(h.duration).toBeCloseTo(4.99, 12);
+    for (let i = 1; i < h.length; i++)
+      expect((h.times[i] ?? 0) - (h.times[i - 1] ?? 0)).toBeCloseTo(0.01, 12);
+    expect(h.start).toBeGreaterThan(4);
+    expect(h.trimmed).toBe(true);
+    // A sample is a computed state, kept with its own time.
+    expect(h.stateAt(h.start)?.[0]).toBe(Math.round(h.start / 0.01));
+    h.clear();
+    expect([h.start, h.trimmed]).toEqual([0, false]);
   });
 });
 
@@ -72,5 +91,15 @@ describe('CSV export', () => {
     expect(csv.startsWith('﻿')).toBe(true);
     expect(csv).toContain('"x, m"');
     expect(csv).toContain('0.1,\r\n');
+  });
+
+  it('a note (the stretch an endless run kept) is a first line of its own', () => {
+    const csv = toCsv(['t (s)', 'x (m)'], [[4.5, 1]], 'đoạn gần nhất, t = 4,5 … 5 s');
+    // After the BOM.
+    expect(csv.slice(1).split('\r\n').slice(0, 3)).toEqual([
+      '"đoạn gần nhất, t = 4,5 … 5 s"',
+      't (s),x (m)',
+      '4.5,1',
+    ]);
   });
 });
