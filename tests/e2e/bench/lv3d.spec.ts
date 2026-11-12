@@ -240,3 +240,39 @@ test('predator–prey 3D: the run goes on past its span, computed from its last 
   await expect(view.getByText(/Sai lệch của đại lượng bảo toàn V/)).not.toHaveClass(/approx/);
   expect(errors).toEqual([]);
 });
+
+for (const fontScale of [1, 1.4] as const)
+  test(`predator–prey 3D at ${String(fontScale * 100)} %: the edge's "t · x · y" at most two lines, clear of the track (#205 B4)`, async ({
+    page,
+  }) => {
+    test.setTimeout(150_000);
+    await page.setViewportSize({ width: 1366, height: 768 });
+    await page.addInitScript((scale) => {
+      localStorage.setItem(
+        'stemsim.settings',
+        JSON.stringify({ state: { locale: 'vi', fontScale: scale }, version: 2 }),
+      );
+      localStorage.setItem(
+        'stemsim.perf',
+        JSON.stringify({ state: { preference: 'medium', benchmark: null }, version: 1 }),
+      );
+    }, fontScale);
+    await openLab(page);
+    await page.getByRole('radio', { name: 'Sinh học' }).click();
+    await page
+      .getByRole('button', { name: 'Con mồi – vật ăn thịt (Lotka–Volterra)', exact: true })
+      .click();
+    const readout = page.locator('.bench-edge .edge-steps__readout');
+    await expect(readout).toHaveText(/^t = .* · x = .* · y = /, { timeout: 30_000 });
+    const r = await readout.evaluate((el) => {
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      return {
+        lines: new Set([...range.getClientRects()].map((x) => Math.round(x.top))).size,
+        right: el.getBoundingClientRect().right,
+      };
+    });
+    expect(r.lines).toBeLessThanOrEqual(2);
+    const track = await page.locator('.bench-edge .edge-steps__scrub').boundingBox();
+    expect(r.right).toBeLessThanOrEqual(track?.x ?? 0);
+  });

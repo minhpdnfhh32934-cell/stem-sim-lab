@@ -328,6 +328,8 @@ Easing: `cubic-bezier(.2,.8,.2,1)` (`--ease`). `--press-lift` (1 px) is how far 
 | Speed / step segmented | x956–1124          | 168×40                                                                     |
 | Confidence chip        | x1132–1358         | 226×48                                                                     |
 
+#205 B4 (12/11/2026): the readout's width follows Cỡ chữ (112 px × `--font-scale`; at 140 % "t = 0,000 s" ran onto the scrubber), and a lesson's player (EdgeSteps, "t = … · x = … · y = …") has 240 px × `--font-scale`, at most two lines. D0's padding and gap are px, so "Tạm dừng" stays on one line at 140 %. The confidence is this chip only: the tray's Science Card summary no longer repeats it.
+
 The confidence chip has two lines:
 
 - line 1: icon 16 + word 14/20 600;
