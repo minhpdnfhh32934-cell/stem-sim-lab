@@ -40,6 +40,16 @@ for (const fontScale of [1, 1.4] as const) {
     await expect(resume).toBeVisible();
     expect(await lines(resume)).toBe(1);
 
+    // Nothing in the two start cards pushes past their edge (the field and "Kết nối AI…" did at
+    // 140 %).
+    for (const card of await page.locator('.shelf-start').all()) {
+      const edge = await card.evaluate((el) => el.getBoundingClientRect().right);
+      for (const child of await card.locator('button, h2, p').all()) {
+        const right = await child.evaluate((el) => el.getBoundingClientRect().right);
+        expect(right).toBeLessThanOrEqual(edge + 0.5);
+      }
+    }
+
     // No "Đề bài" in the header here: the "Có đề bài?" card is the one place.
     const header = page.locator('.bench-header');
     await expect(header.getByRole('button', { name: 'Đề bài', exact: true })).toHaveCount(0);

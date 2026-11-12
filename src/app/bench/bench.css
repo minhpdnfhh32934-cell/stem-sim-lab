@@ -1275,6 +1275,8 @@ kbd {
 }
 .shelf-start {
   display: grid;
+  /* One column that may shrink: nothing inside pushes past the card (#205 B3). */
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-2);
   padding: var(--space-3) var(--space-4);
   border: 1px solid var(--border);
@@ -1633,6 +1635,15 @@ button.bench-door--lab:hover {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
+}
+/* A long label ("Kết nối AI để phân tích đề" at 140 %) wraps inside its button instead of
+   pushing past the card (#205 B3). */
+.shelf-start__actions .btn {
+  max-width: 100%;
+  height: auto;
+  padding-block: var(--space-1);
+  white-space: normal;
+  text-align: start;
 }
 .bench-header__teacher {
   white-space: nowrap;
