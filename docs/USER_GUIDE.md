@@ -408,6 +408,10 @@ sóng dừng trên dây, hoạ âm và chuỗi Fourier, điện trường, mạc
   Nếu chạy rất lâu mà sai số tính toán cộng dồn làm năng lượng lệch quá 10⁻⁹, Thẻ Khoa học ghi rõ
   "Năng lượng đã lệch … so với lúc đầu" và chuyển sang "Định lượng gần đúng"; bấm **Đặt lại để về
   kết quả chính xác** để chạy lại từ đầu.
+- **Giảm chuyển động:** khi máy đặt "giảm chuyển động" (trên Windows: tắt hiệu ứng hoạt ảnh trong
+  phần Trợ năng), mọi bài mở ở trạng thái dừng, kể cả các bài hạt của Hóa học (Maxwell–Boltzmann, thuyết va chạm, cân bằng hóa
+  học) vốn tự chạy khi mở; chỉ chạy khi bạn bấm **Chạy** ở chỗ cũ. Đổi thông số lúc đang dừng thì
+  bài vẫn dừng.
 - **Sổ bên trái:** **Đồ thị** (x–t, v–t, a–t, năng lượng; rê chuột lên đồ thị
   để đọc giá trị tại thời điểm đó), **Lời giải** (công thức và các bước, đáp số đề hỏi được đánh dấu),
   **Số liệu** (bảng giá trị, nút Xuất CSV).
