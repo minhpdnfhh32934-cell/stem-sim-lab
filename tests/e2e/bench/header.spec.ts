@@ -45,9 +45,10 @@ test('100 %: the search is an icon named "Tìm kiếm"; the lesson name is whole
   await header(page).getByRole('button', { name: 'Tệp' }).click();
   await expect(page.getByRole('menuitemcheckbox', { name: 'Giao diện tối' })).toBeHidden();
   await page.keyboard.press('Escape');
-  // Ctrl+K still opens the search.
+  // Ctrl+K still opens the search. Its code loads on first use: up to 20 s, as for the lazy
+  // modules (CI went past 5 s with the 2D chart, nothing running).
   await page.keyboard.press('Control+k');
-  await expect(page.getByRole('dialog', { name: 'Tìm nhanh' })).toBeVisible();
+  await expect(page.getByRole('dialog', { name: 'Tìm nhanh' })).toBeVisible({ timeout: 20_000 });
 });
 
 test('140 %: light / dark is in Tệp; the lesson name keeps its first words', async ({ page }) => {
