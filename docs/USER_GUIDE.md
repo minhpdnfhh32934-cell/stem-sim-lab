@@ -721,6 +721,22 @@ Từng bài:
     lệch V theo khung đang xem (V so với lúc t = 0). Logistic dùng công thức N(t) ở mọi t: đàn tiến
     về K rồi đứng ở K. **Đặt lại** về t = 0; **Tới t\*** nhảy về khung có điểm uốn.
 
+## Trò chơi SimLab 3D (bản thử nghiệm)
+
+Trong Virtual Lab, thanh bên trái có mục **Trò chơi** với nút **SimLab 3D**. Nút này mở một phòng
+thí nghiệm 3D, em nhìn qua mắt người chơi:
+
+- Em vào phòng chuẩn bị, đọc nội quy, mặc đồ bảo hộ và rửa tay, rồi mới vào phòng Vật lý.
+- Trong phòng Vật lý, em làm các thí nghiệm rơi tự do, ném xiên, con lắc và lò xo. Sau mỗi lần chạy, em xem số đo đặt cạnh kết quả lý thuyết.
+- Đi lại bằng W A S D, nhìn quanh bằng chuột. Bảng "Điều khiển" trong menu của trò chơi ghi đủ các phím.
+- Bấm **Về SimLab** ở đầu màn hình để quay lại. Lượt chơi được lưu trên máy này.
+
+Đây là bản thử nghiệm:
+
+- Nội dung khoa học trong trò chơi đang chờ giáo viên duyệt.
+- Trong app chỉ chơi một người.
+- Không có mức đồ hoạ Ultra, trò chuyện bằng giọng hay khuôn mặt từ ảnh.
+
 ## Lưu, mở, xuất và lịch sử
 
 - **Menu Tệp** (nút ☰ ở đầu bàn): Mở tệp `.stemsim`, Lưu mô phỏng, Xuất ảnh PNG, Lịch sử,

@@ -30,6 +30,7 @@ Bản 0.8.1 có giao diện mới "Bàn thí nghiệm" và gộp mọi thay đ�
 - AI Teacher dùng kết quả do SimLab tính cho thêm 8 dạng câu hỏi: khối lượng mol, cấu hình electron, đổi đơn vị, codon, mạch bổ sung và chuỗi axit amin, phép lai Mendel, Hardy–Weinberg và hằng số vật lí.
 - Chế độ trưng bày: Ctrl+K → "Chế độ trưng bày (tự chạy các cảnh)" tự chạy 8 cảnh có sẵn ở chế độ trình chiếu; bấm hoặc nhấn một phím bất kì để dừng.
 - Ở chế độ Nâng cao, Tệp → "Thông tin máy" cho xem mức chất lượng hiển thị (kèm lúc đo), FPS và RAM.
+- Trò chơi SimLab 3D (bản thử nghiệm): một phòng thí nghiệm 3D nhìn qua mắt người chơi, mở từ Virtual Lab → SimLab 3D. Em chuẩn bị đồ bảo hộ rồi làm các thí nghiệm rơi tự do, ném xiên, con lắc và lò xo. Chỉ chơi một người.
 
 ### Improved
 
@@ -87,6 +88,7 @@ Bản 0.8.1 có giao diện mới "Bàn thí nghiệm" và gộp mọi thay đ�
 - Câu chữ và dữ liệu có nguồn của các bài mới đang chờ giáo viên duyệt; số liệu trên màn hình vẫn do mô hình của bài tính.
 - Bài Định luật II Kepler dùng đơn vị tương đối (bán trục lớn bằng 1), chưa có số liệu hành tinh thật; bài Tinh thể chưa ghi độ dài cạnh ô mạng.
 - Bài Chuẩn độ chỉ có acid mạnh với base mạnh; acid yếu và dung dịch đệm chưa có.
+- SimLab 3D là bản thử nghiệm: nội dung khoa học trong trò chơi đang chờ giáo viên duyệt; trong app không có mức đồ hoạ Ultra, chơi nhiều người, trò chuyện bằng giọng và khuôn mặt từ ảnh.
 
 ## 0.8.0 - Đã gộp, chưa phát hành
 

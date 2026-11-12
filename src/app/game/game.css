@@ -1,0 +1,51 @@
+/* "SimLab 3D" (docs/GAME.md): the game fills the window under a bar with the way back. */
+.dialog.game-dialog {
+  width: 100vw;
+  max-width: none;
+  height: 100vh;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  display: none;
+  flex-direction: column;
+  background: var(--bg-app);
+}
+.dialog.game-dialog[open] {
+  display: flex;
+}
+.game-dialog__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: calc(var(--target) + 2 * var(--space-2));
+  padding: var(--space-2) var(--space-4);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-panel);
+}
+.game-dialog__title {
+  margin: 0;
+  font-size: var(--text-lg);
+  white-space: nowrap;
+}
+.game-dialog__badge {
+  flex: none;
+  padding: 2px var(--space-2);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  font-size: var(--text-caption);
+  color: var(--text-muted);
+}
+.game-dialog__note {
+  margin: 0;
+  min-width: 0;
+  font-size: var(--text-note);
+  color: var(--text-muted);
+}
+.game-dialog__frame {
+  flex: 1;
+  width: 100%;
+  border: 0;
+  background: var(--bg-stage);
+}

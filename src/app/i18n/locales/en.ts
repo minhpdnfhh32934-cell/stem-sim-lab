@@ -2545,6 +2545,16 @@ const en: Messages = {
   showcase: {
     stopHint: 'Click anywhere or press a key to stop.',
   },
+  game: {
+    shelfTitle: 'Game',
+    open: 'SimLab 3D',
+    openHint: 'A first-person 3D laboratory (preview)',
+    title: 'SimLab 3D',
+    preview: 'Preview',
+    note: 'A 3D laboratory game. Its science content is waiting for a teacher’s review.',
+    back: 'Back to SimLab',
+    frameTitle: 'SimLab 3D game',
+  },
 };
 
 export default en;
