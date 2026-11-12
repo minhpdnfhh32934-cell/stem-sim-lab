@@ -6,12 +6,11 @@ import { formatDeviation } from '@/app/sim/numbers';
 import { sim } from '@/app/sim/runtime';
 import { useSimStore } from '@/app/sim/simStore';
 import { useWorkspaceStore } from '@/app/workspaceStore';
-import { ConfidenceBadge } from '@/ui/Badges';
 import { useCutTip } from '@/ui/useCutTip';
 
 /**
  * The Science Card's summary pinned at the top of the tray (docs/BENCH_DESIGN.md §9.4): the
- * confidence, the model's name and its validity, "Xem thẻ" for the whole card (the notebook's
+ * model's name and its validity (the confidence is the edge's chip, #205 B4), "Xem thẻ" for the whole card (the notebook's
  * "Thẻ khoa học"). After an intervention, or an energy drift above 10⁻⁹ in a long run (#205 C2), it
  * says so and offers the reset back to the exact run.
  */
@@ -29,8 +28,8 @@ export function ScienceSummary() {
       aria-label={t('inspector.scienceCard')}
       data-intervened={card.userIntervened || undefined}
     >
+      {/* The confidence is the edge's chip, beside the tray: not repeated here (#205 B4). */}
       <div className="science-card__summary-head">
-        <ConfidenceBadge level={card.confidence} />
         <strong ref={titleRef} className="science-card__summary-title">
           {L(card.title)}
         </strong>

@@ -732,8 +732,11 @@ kbd {
 .bench-edge {
   grid-area: edge;
   display: grid;
+  /* The readout follows Cỡ chữ (#205 B4: "t = 0,000 s" ran onto the scrubber at 140 %); a
+     lesson's player (EdgeSteps) has a longer one ("t = … · x = … · y = …"). */
+  --edge-readout: calc(112px * var(--font-scale, 1));
   grid-template-columns:
-    [d0] 144px 8px [d1] 48px 4px [d2] 48px 4px [d3] 48px 20px [readout] 112px 12px
+    [d0] 144px 8px [d1] 48px 4px [d2] 48px 4px [d3] 48px 20px [readout] var(--edge-readout) 12px
     [scrub] minmax(0, 1fr) 12px [speed] 168px 8px [chip] 226px;
   align-items: center;
   padding: 0 var(--space-2) 0 var(--space-4);
@@ -771,10 +774,11 @@ kbd {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--space-2);
+  /* px, not rem: at 140 % "Tạm dừng" still fits the 144 px on one line (#205 B4). */
+  gap: 8px;
   width: 144px;
   height: 48px;
-  padding: 0 var(--space-2);
+  padding: 0 8px;
   border: 0;
   border-bottom: calc(2px - var(--press-lift)) solid var(--play-edge);
   border-radius: var(--radius-md);
@@ -1972,7 +1976,11 @@ button.bench-door--lab:hover {
 }
 
 /* A biology lesson's player on the edge's slots (EdgeSteps, §9.6): the module slot becomes a
-   subgrid of the edge, so D0–D3, the readout, the scrubber and the speed land in their columns. */
+   subgrid of the edge, so D0–D3, the readout, the scrubber and the speed land in their columns.
+   Its readout is longer: a wider column, at most two lines (#205 B4: three or four before). */
+.bench-edge:has(.edge-steps) {
+  --edge-readout: calc(240px * var(--font-scale, 1));
+}
 .bench-edge__module:has(> .edge-steps) {
   display: grid;
   grid-template-columns: subgrid;
