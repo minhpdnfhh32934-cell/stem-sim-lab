@@ -212,15 +212,17 @@
         "prs": [
           104, 108, 110, 111, 114, 117, 118, 120, 122, 123, 124, 125, 126, 129, 130, 131, 132, 133,
           135, 137, 139, 141, 143, 145, 147, 149, 151, 153, 155, 157, 159, 161, 163, 165, 167, 169,
-          171, 173, 175, 177, 179, 181, 183, 185, 187, 189, 191, 196, 197, 198, 199, 203, 204
+          171, 173, 175, 177, 179, 181, 183, 185, 187, 189, 191, 196, 197, 198, 199, 203, 204, 206,
+          207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224,
+          225, 226, 227, 228, 229, 230, 231, 232
         ],
         "commits": ["7cc29de", "226bf09"],
         "branches": ["main", "feat/194-release-0.8.1"]
       },
       "publicNotes": {
         "summary": {
-          "vi": "Bản 0.8.1 có giao diện mới \"Bàn thí nghiệm\" và gộp mọi thay đổi của bản 0.8.0 (bản đó không phát hành riêng). Có nhiều bài mới bám sách Kết nối tri thức, như Chuyển động tròn đều, Giao thoa sóng, Mạch điện một chiều, Chuẩn độ acid – base và Từ tế bào đến DNA, cùng thanh chọn Lớp 10 · 11 · 12; Phòng thí nghiệm nay tên là Virtual Lab.",
-          "en": "Version 0.8.1 has a new \"Lab bench\" interface and includes every change of version 0.8.0 (which was not released on its own). Many new lessons follow the Kết nối tri thức textbooks, such as Uniform circular motion, Two-source interference, DC circuits, Acid–base titration and From cell to DNA, with a Grade 10 · 11 · 12 bar; the lab is now called Virtual Lab."
+          "vi": "Bản 0.8.1 có giao diện mới \"Bàn thí nghiệm\" và gộp mọi thay đổi của bản 0.8.0 (bản đó không phát hành riêng). Có nhiều bài mới bám sách Kết nối tri thức, như Chuyển động tròn đều, Giao thoa sóng, Mạch điện một chiều, Chuẩn độ acid – base và Từ tế bào đến DNA, cùng thanh chọn Lớp 10 · 11 · 12; Phòng thí nghiệm nay tên là Virtual Lab. Giao diện cũng dễ đọc và dễ bấm hơn, và các bài có chuyển động lặp lại nay chạy liên tục tới khi em bấm Tạm dừng.",
+          "en": "Version 0.8.1 has a new \"Lab bench\" interface and includes every change of version 0.8.0 (which was not released on its own). Many new lessons follow the Kết nối tri thức textbooks, such as Uniform circular motion, Two-source interference, DC circuits, Acid–base titration and From cell to DNA, with a Grade 10 · 11 · 12 bar; the lab is now called Virtual Lab. The interface is also easier to read and to press, and lessons with repeating motion now run until you press Pause."
         },
         "added": [
           {
@@ -379,6 +381,41 @@
             "vi": "Mọi chữ của Bàn thí nghiệm to theo Cài đặt → Cỡ chữ; khi chữ to, ô Tìm và trạng thái AI chỉ còn biểu tượng để tên bài có chỗ.",
             "en": "All the bench’s text follows Settings → Font size; with large text, the Search box and the AI status show only their icons so the lesson name has room.",
             "area": "ui"
+          },
+          {
+            "area": "ui",
+            "vi": "Dễ đọc và dễ bấm hơn ở mọi màn hình: chữ nhỏ nhất 12 px, mọi nút rộng ít nhất 40 px, có viền rõ khi dùng bàn phím; tên bài và nhãn dài không còn bị cắt, chữ đầy đủ hiện khi rê chuột hoặc dùng bàn phím.",
+            "en": "Easier to read and to press on every screen: no text below 12 px, every button at least 40 px, a clear outline when using the keyboard; long lesson names and labels are no longer cut off, and the full text shows on hover or with the keyboard."
+          },
+          {
+            "area": "ui",
+            "vi": "Các bài có chuyển động lặp lại chạy liên tục tới khi em bấm Tạm dừng: chuyển động tròn đều, Kepler, dao động cưỡng bức, giao thoa, sóng dừng, lò xo và con lắc; trong Sinh học: con mồi – vật ăn thịt, tăng trưởng logistic, khuếch tán và thẩm thấu. Bảng Số liệu và tệp CSV ghi rõ đoạn thời gian đang giữ.",
+            "en": "Lessons with repeating motion run until you press Pause: uniform circular motion, Kepler, forced oscillation, interference, standing waves, springs and pendulums; in Biology: predator–prey, logistic growth, diffusion and osmosis. The data table and CSV file say which time span they keep."
+          },
+          {
+            "area": "ui",
+            "vi": "Khi một bài chạy lâu làm năng lượng lệch khỏi giá trị ban đầu quá một phần tỉ, Thẻ Khoa học báo ngay và có nút chạy lại.",
+            "en": "When a long run makes the energy drift from its starting value by more than one part in a billion, the Science Card says so and offers to restart."
+          },
+          {
+            "area": "ui",
+            "vi": "Khi máy bật “giảm chuyển động”, các bài mở ở trạng thái dừng.",
+            "en": "When the computer asks for reduced motion, lessons open paused."
+          },
+          {
+            "area": "ui",
+            "vi": "Hoá học: bảng tuần hoàn ô to, chữ rõ, bấm vào chú giải để làm nổi một nhóm; bài Maxwell–Boltzmann hiện biểu đồ phân bố tốc độ ngay cạnh hộp khí. Thanh trượt Hoá và Sinh có ô nhập số và nút −/+ như bài Vật lí.",
+            "en": "Chemistry: a periodic table with larger cells and clearer text, where a legend entry highlights its group; Maxwell–Boltzmann shows the speed distribution next to the gas box. Chemistry and Biology sliders have a number box and − / + buttons, as in Physics."
+          },
+          {
+            "area": "teacher",
+            "vi": "AI Teacher gọn hơn: một tiêu đề, thêm chỗ cho cuộc trò chuyện; khi chưa kết nối AI có thẻ hướng dẫn “Kết nối AI”; nút Think nay ghi “Suy nghĩ kĩ (Think)”.",
+            "en": "A tidier AI Teacher: one title and more room for the conversation; without an AI connection a “Connect AI” card shows the way; in Vietnamese the Think button now reads “Suy nghĩ kĩ (Think)”."
+          },
+          {
+            "area": "ui",
+            "vi": "Khi chữ to, đầu trang gọn lại: Hoàn tác và Làm lại vào menu Tệp, đường dẫn giữa thu thành “…” (đọc đủ khi rê chuột hoặc dùng bàn phím).",
+            "en": "With large text the header makes room: Undo and Redo move into the File menu, and the middle of the path folds into “…” (read in full on hover or with the keyboard)."
           }
         ],
         "fixed": [
@@ -431,6 +468,26 @@
             "vi": "Nút Thoát trình chiếu không còn che các nút điều khiển của bài.",
             "en": "The Exit presentation button no longer covers the lesson’s controls.",
             "area": "ui"
+          },
+          {
+            "area": "ui",
+            "vi": "Nguyên phân và giảm phân: tên kì không còn gãy dòng, nhãn trên thanh thời gian không còn đè nhau, nhãn cột trái ngắn lại.",
+            "en": "Mitosis and meiosis: stage names no longer break across lines, the timeline labels no longer overlap, and the left rail label is shorter."
+          },
+          {
+            "area": "ui",
+            "vi": "Science Studio: bước Báo cáo không còn tràn ngang màn hình.",
+            "en": "Science Studio: the Report step no longer runs past the side of the screen."
+          },
+          {
+            "area": "ui",
+            "vi": "Bấm Ctrl+K hoặc mở “Nguồn & Giả định” khi một bài 3D đang chạy liên tục nay luôn mở được; nếu tải không được, app báo và lần sau thử lại.",
+            "en": "Ctrl+K and “Sources & assumptions” now always open while a 3D lesson keeps running; if they cannot load, the app says so and tries again next time."
+          },
+          {
+            "area": "ui",
+            "vi": "Sau khi bấm Tạm dừng, thời gian đứng đúng chỗ đã bấm.",
+            "en": "After Pause, the time stays exactly where you pressed it."
           }
         ],
         "security": [
@@ -510,8 +567,8 @@
         },
         {
           "area": "ui",
-          "vi": "Thư viện chọn được Lớp 10, 11, 12 theo sách Kết nối tri thức; Phòng thí nghiệm nay tên là Virtual Lab.",
-          "en": "The library can show Grade 10, 11 or 12 following the Kết nối tri thức textbooks; the lab is now called Virtual Lab."
+          "vi": "Dễ đọc hơn (chữ, nút, bàn phím), và các bài có chuyển động lặp lại chạy liên tục tới khi em bấm Tạm dừng.",
+          "en": "Easier to read (text, buttons, keyboard), and lessons with repeating motion run until you press Pause."
         }
       ]
     },
