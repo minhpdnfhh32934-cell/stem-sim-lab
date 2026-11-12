@@ -246,6 +246,7 @@ export function DivisionPanel({ kind }: { kind: Division }) {
       <label>
         <span>{Lz(L('Bộ NST lưỡng bội 2n', 'Diploid number 2n'))}</span>
         <select
+          className="chem-form__fit"
           value={pairs}
           onChange={(e) => {
             setDivisionState(kind, { pairs: Number(e.target.value), index: 0 });
