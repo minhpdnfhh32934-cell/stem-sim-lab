@@ -216,7 +216,7 @@ const vi = {
     breadcrumb: 'Vị trí',
     problem: 'Đề bài',
     closeProblem: 'Đóng đề bài',
-    search: 'Tìm…',
+    search: 'Tìm kiếm',
     trayTitle: 'Điều chỉnh',
     trayRegion: 'Điều chỉnh (bảng thuộc tính)',
     foldTray: 'Thu gọn khay',
