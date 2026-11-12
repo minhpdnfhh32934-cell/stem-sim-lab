@@ -175,7 +175,7 @@
   height: 100%;
   min-height: 0;
   border-color: color-mix(in srgb, var(--accent) 12%, var(--border));
-  box-shadow: 0 12px 38px rgb(10 22 34 / 8%);
+  box-shadow: var(--shadow-docked);
 }
 
 .teacher__quick-actions {

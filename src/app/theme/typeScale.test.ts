@@ -1,14 +1,13 @@
-import { readdirSync, readFileSync } from 'node:fs';
-import { join, relative, resolve } from 'node:path';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { cssDeclarations } from './cssTesting';
 
 /**
  * Type scale (#205 A1): every stylesheet sizes text with the `--text-*` tokens of tokens.css, in
  * rem so Cỡ chữ scales it, and nothing goes below the 12px floor (--text-caption at 100 %).
  * Pixel sizes are allowed only where the text belongs to a drawing that scales by itself.
  */
-const SRC = resolve(__dirname, '../..');
-const ROOT = resolve(SRC, '..');
 const FLOOR_REM = 12 / 14;
 
 /** `file selector` → why its text is sized in pixels. */
@@ -31,35 +30,9 @@ const BELOW_FLOOR_OK: Record<string, string> = {
   'src/chemistry/chem.css .pt-cell__z': '#205 B7 lays the periodic table out again',
 };
 
-function cssFiles(dir: string): string[] {
-  return readdirSync(dir, { withFileTypes: true }).flatMap((e) =>
-    e.isDirectory()
-      ? cssFiles(join(dir, e.name))
-      : e.name.endsWith('.css')
-        ? [join(dir, e.name)]
-        : [],
-  );
-}
-
-interface Decl {
-  key: string;
-  value: string;
-}
-
-/** Every `font-size` with the selector of its rule (comments removed; good enough for our CSS). */
-function fontSizes(): Decl[] {
-  return cssFiles(SRC).flatMap((file) => {
-    const rel = relative(ROOT, file).split('\\').join('/');
-    const css = readFileSync(file, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
-    const out: Decl[] = [];
-    for (const m of css.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
-      const selector = m[1]!.trim().split('\n').pop()!.trim();
-      for (const d of m[2]!.matchAll(/font-size:\s*([^;]+);/g)) {
-        out.push({ key: `${rel} ${selector}`, value: d[1]!.trim() });
-      }
-    }
-    return out;
-  });
+/** Every `font-size` with the selector of its rule. */
+function fontSizes() {
+  return cssDeclarations().filter((d) => d.prop === 'font-size');
 }
 
 describe('type scale (#205 A1)', () => {

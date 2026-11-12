@@ -3,14 +3,10 @@
 :root {
   --cat-s: 62%;
   --cat-l: 86%;
-  --seq-lo: #e8f0fb;
-  --seq-hi: #0b4f8a;
 }
 :root[data-theme='dark'] {
   --cat-s: 32%;
   --cat-l: 27%;
-  --seq-lo: #1d2a3b;
-  --seq-hi: #7db8ee;
 }
 
 .chem-view {
@@ -187,13 +183,13 @@
   --h: 290;
 }
 .pt-cell--seq {
-  background: color-mix(in oklab, var(--seq-hi) calc(var(--t) * 100%), var(--seq-lo));
+  background: color-mix(in oklab, var(--data-seq-hi) calc(var(--t) * 100%), var(--data-seq-lo));
 }
 .pt-cell--seq.is-dark {
-  color: #fff;
+  color: var(--text-on-data);
 }
 .pt-cell--seq.is-dark .pt-cell__z {
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--text-on-data-muted);
 }
 .pt-cell--missing {
   background: repeating-linear-gradient(135deg, var(--bg-sunken) 0 4px, var(--bg-panel) 4px 8px);
@@ -229,7 +225,7 @@
   width: 9rem;
   height: 10px;
   border-radius: 5px;
-  background: linear-gradient(90deg in oklab, var(--seq-lo), var(--seq-hi));
+  background: linear-gradient(90deg in oklab, var(--data-seq-lo), var(--data-seq-hi));
 }
 
 /* ───── Element details (Inspector) ───── */
@@ -439,17 +435,7 @@
   height: 44px;
   margin: var(--space-2) 0 var(--space-4);
   border-radius: var(--radius-sm);
-  background: linear-gradient(
-    90deg,
-    rgb(97, 0, 97) 0%,
-    rgb(0, 0, 255) 16%,
-    rgb(0, 255, 255) 30%,
-    rgb(0, 255, 0) 36%,
-    rgb(255, 255, 0) 57%,
-    rgb(255, 128, 0) 69%,
-    rgb(255, 0, 0) 84%,
-    rgb(97, 0, 0) 100%
-  );
+  background: linear-gradient(90deg, var(--data-spectrum));
   opacity: 0.35;
 }
 .spectrum-wrap {
@@ -648,7 +634,7 @@
   max-width: 100%;
   margin: var(--space-2) auto;
   border-radius: var(--radius-md);
-  background: #fff;
+  background: var(--bg-drawing);
 }
 
 /* ───── Reactions ───── */

@@ -105,7 +105,7 @@ export function BohrStage() {
       ctx.beginPath();
       ctx.arc(cx, cy, r0 * 0.7, 0, 2 * Math.PI);
       ctx.fill();
-      ctx.fillStyle = '#fff';
+      ctx.fillStyle = css('--text-on-data') || '#fff';
       ctx.font = `600 ${Math.round(r0 * 0.55)}px sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';

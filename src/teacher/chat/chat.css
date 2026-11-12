@@ -61,7 +61,7 @@
   border-radius: 18px;
   background: var(--bg-panel);
   color: var(--text);
-  box-shadow: 0 20px 64px rgb(10 22 34 / 24%);
+  box-shadow: var(--shadow-float);
 }
 .chat-panel:not(.chat-panel--compact) {
   width: min(930px, 100%);
@@ -362,7 +362,8 @@
 .chat-message--user .chat-message__body {
   border-radius: 16px 16px 4px 16px;
   background: var(--accent);
-  color: white;
+  /* Was white: unreadable on the light accent of the dark themes (#205 A2). */
+  color: var(--text-on-accent);
 }
 .chat-message--assistant {
   align-self: flex-start;
@@ -399,7 +400,7 @@
   font-size: var(--text-caption);
 }
 .chat-message--user .chat-message__meta {
-  color: rgb(255 255 255 / 78%);
+  color: color-mix(in srgb, var(--text-on-accent) 78%, transparent);
 }
 /* The on-device answer while it is written: a soft blinking caret at the end. */
 .chat-message__caret {
