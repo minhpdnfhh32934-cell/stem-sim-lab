@@ -2160,9 +2160,11 @@ button.bench-door--lab:hover {
   }
 }
 @container studio-live (max-width: 760px) {
+  /* The readout grows with Cỡ chữ (#220): a tighter gap before it keeps the scrubber usable at
+     140 % (78 px with the 20 px gap). */
   .bench-edge {
     grid-template-columns:
-      [d0] 144px 8px [d1] 48px 4px [d2] 48px 4px [d3] 48px 20px [readout] var(--edge-readout, 112px)
+      [d0] 144px 8px [d1] 48px 4px [d2] 48px 4px [d3] 48px 12px [readout] var(--edge-readout, 112px)
       12px [scrub] minmax(0, 1fr) 8px [chip] 48px;
   }
   .bench-speed,
