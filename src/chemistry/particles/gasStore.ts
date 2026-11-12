@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { C } from '@/core/constants';
+import { prefersReducedMotion } from '@/ui/three/availability';
 import { molarMass } from '../formula';
 import { Gas2D, TYPE_A, TYPE_B, TYPE_C, TYPE_D } from './gas';
 
@@ -31,7 +32,8 @@ export const useGasStore = create<GasState>()(() => ({
   start: 'equal',
   eaKJ: 5,
   reversible: false,
-  running: true,
+  // With reduced motion the lesson opens paused (#205 C3).
+  running: !prefersReducedMotion(),
   version: 0,
 }));
 
