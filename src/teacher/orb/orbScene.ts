@@ -13,6 +13,11 @@ export interface OrbColors {
   accent: string;
   /** The lines (`--teacher-line`). */
   line: string;
+  /**
+   * Light added to the dark stage (glowing points); false on the light stage, where added light
+   * would vanish into the pale background: the accent is drawn as ink instead.
+   */
+  glow: boolean;
 }
 
 export interface OrbScene {
@@ -85,12 +90,19 @@ export function buildOrbScene(
   camera.lookAt(0, 0, 0);
 
   const accent = new THREE.Color();
+  let glowing = true;
   let time = 0;
   let turn = 0;
 
   const setColors = (c: OrbColors) => {
     accent.set(c.accent);
     lineMaterial.color.set(c.line);
+    glowing = c.glow;
+    const blending = c.glow ? THREE.AdditiveBlending : THREE.NormalBlending;
+    for (const m of [pointMaterial, lineMaterial]) {
+      m.blending = blending;
+      m.needsUpdate = true;
+    }
   };
   setColors(colors);
 
@@ -111,7 +123,8 @@ export function buildOrbScene(
       for (let i = 0; i < n; i++) {
         const off = Math.abs((positions[3 * i + 1] ?? 0) - bandY);
         const lit = off < BAND_WIDTH ? 1 + p.band * BAND_GAIN * (1 - off / BAND_WIDTH) : 1;
-        const k = glow * lit;
+        // Ink on the light stage: never paler than half the accent (it must stay visible).
+        const k = glowing ? glow * lit : Math.min(1, 0.5 + 0.5 * glow * lit);
         tint[3 * i] = accent.r * k;
         tint[3 * i + 1] = accent.g * k;
         tint[3 * i + 2] = accent.b * k;

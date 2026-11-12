@@ -5,7 +5,7 @@ import { buildOrbScene } from './orbScene';
 import { ORB_BUDGET } from './points';
 import { ORB_STATES, still } from './states';
 
-const COLORS = { accent: '#5fe0d2', line: '#468f92' };
+const COLORS = { accent: '#5fe0d2', line: '#468f92', glow: true };
 
 function parts(orb: ReturnType<typeof buildOrbScene>) {
   const group = orb.scene.children[0] as THREE.Group;
