@@ -183,7 +183,7 @@
       "dates": {
         "devStart": "2026-10-25T23:08:42Z",
         "firstCommit": "2026-11-01T18:58:55Z",
-        "lastCommit": "2026-11-12T01:36:14+07:00",
+        "lastCommit": "2026-11-12T22:24:28+07:00",
         "merged": null,
         "built": null,
         "released": null,
@@ -198,7 +198,8 @@
         "PR #196 một quy tắc \"khớp\" (#119), gộp d09d611 2026-11-11T07:37:27Z; PR #197 chữ Hoá học (HCN, ⇌, câu nguồn mendeleev; #192), gộp d079b3f 2026-11-11T08:25:56Z",
         "PR #198 Bàn thí nghiệm thành giao diện duy nhất (B8, #193), gộp f2e535e 2026-11-11T17:25:52Z; PR #203 chữ theo Cỡ chữ, ảnh thẻ, nút Thoát trình chiếu, nút sáng/tối (#202), gộp bbd8ac2 2026-11-11T18:40:40Z; PR #204 Tệp → \"Thông tin máy\" (#201), gộp b91cc61 2026-11-11T19:10:27Z",
         "Vấn đề đã biết của 0.8.0 đã sửa: lời giải thích chép công thức của một bước không còn bị ẩn, commit c38ab29 2026-11-09T08:28:52+07:00; vẫn còn: đường chỉ tên ở Phiêu bạt di truyền 3D (work-log 2089e0d, #70 UI-49) và xếp lớp chờ giáo viên duyệt (DATA_REVIEW KNTT-*)",
-        "Giới hạn ghi ở vấn đề đã biết: Kepler đơn vị tương đối (PR #177), tinh thể chưa có hằng số mạng (DATA_REVIEW CRY-3), chuẩn độ chỉ acid mạnh – base mạnh (CLAUDE.md, mục Acid–base titration)"
+        "Giới hạn ghi ở vấn đề đã biết: Kepler đơn vị tương đối (PR #177), tinh thể chưa có hằng số mạng (DATA_REVIEW CRY-3), chuẩn độ chỉ acid mạnh – base mạnh (CLAUDE.md, mục Acid–base titration)",
+        "lastCommit (cập nhật sau #233): d9ede91 2026-11-12T22:24:28+07:00 'docs(194): 0.8.1 work-log — check results', commit cuối không phải commit gộp trên main e289f69 (git log -1 --no-merges main); trước đó ghi 2026-11-12T01:36:14+07:00. 304 commit không phải commit gộp từ cd6cdd6 (git rev-list --no-merges --count cd6cdd6..d9ede91). Nếu PR game (#236) vào main trước khi phát hành thì lastCommit đổi theo commit cuối của nó."
       ],
       "tests": [
         "CI 8/8 xanh trên lượt cuối trước khi gộp của PR #198, #203, #204 (gh pr checks; laptop xác nhận khi bật tự gộp)",
@@ -384,8 +385,8 @@
           },
           {
             "area": "ui",
-            "vi": "Dễ đọc và dễ bấm hơn ở mọi màn hình: chữ nhỏ nhất 12 px, mọi nút rộng ít nhất 40 px, có viền rõ khi dùng bàn phím; tên bài và nhãn dài không còn bị cắt, chữ đầy đủ hiện khi rê chuột hoặc dùng bàn phím.",
-            "en": "Easier to read and to press on every screen: no text below 12 px, every button at least 40 px, a clear outline when using the keyboard; long lesson names and labels are no longer cut off, and the full text shows on hover or with the keyboard."
+            "vi": "Dễ đọc và dễ bấm hơn ở mọi màn hình: chữ nhỏ nhất 12 px, mọi vùng bấm ít nhất 40 px, có viền rõ khi dùng bàn phím; tên bài và nhãn dài không còn bị cắt, chữ đầy đủ hiện khi rê chuột hoặc dùng bàn phím.",
+            "en": "Easier to read and to press on every screen: no text below 12 px, every click target at least 40 px, a clear outline when using the keyboard; long lesson names and labels are no longer cut off, and the full text shows on hover or with the keyboard."
           },
           {
             "area": "ui",

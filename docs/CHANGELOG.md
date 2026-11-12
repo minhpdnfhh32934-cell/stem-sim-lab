@@ -44,7 +44,7 @@ Bản 0.8.1 có giao diện mới "Bàn thí nghiệm" và gộp mọi thay đ�
 - Đồ thị đủ điểm khi chạy chậm hoặc bấm "Bước" từng bước; bảng Số liệu và tệp CSV vẫn là giá trị do mô hình tính, không nội suy.
 - Bảng Lời giải chỉ ghi "khớp" khi phép kiểm chéo độc lập lệch không quá một phần trăm triệu; đáp số gần 0 ghi độ lệch kèm đơn vị.
 - Mọi chữ của Bàn thí nghiệm to theo Cài đặt → Cỡ chữ; khi chữ to, ô Tìm và trạng thái AI chỉ còn biểu tượng để tên bài có chỗ.
-- Dễ đọc và dễ bấm hơn ở mọi màn hình: chữ nhỏ nhất 12 px, mọi nút rộng ít nhất 40 px, có viền rõ khi dùng bàn phím; tên bài và nhãn dài không còn bị cắt, chữ đầy đủ hiện khi rê chuột hoặc dùng bàn phím.
+- Dễ đọc và dễ bấm hơn ở mọi màn hình: chữ nhỏ nhất 12 px, mọi vùng bấm ít nhất 40 px, có viền rõ khi dùng bàn phím; tên bài và nhãn dài không còn bị cắt, chữ đầy đủ hiện khi rê chuột hoặc dùng bàn phím.
 - Các bài có chuyển động lặp lại chạy liên tục tới khi em bấm Tạm dừng: chuyển động tròn đều, Kepler, dao động cưỡng bức, giao thoa, sóng dừng, lò xo và con lắc; trong Sinh học: con mồi – vật ăn thịt, tăng trưởng logistic, khuếch tán và thẩm thấu. Bảng Số liệu và tệp CSV ghi rõ đoạn thời gian đang giữ.
 - Khi một bài chạy lâu làm năng lượng lệch khỏi giá trị ban đầu quá một phần tỉ, Thẻ Khoa học báo ngay và có nút chạy lại.
 - Khi máy bật “giảm chuyển động”, các bài mở ở trạng thái dừng.
