@@ -339,6 +339,13 @@ DNA” chỉ dùng **số in trong sách** (kích thước, số histone, số c
   bằng không phụ thuộc Lp.
 - Π = iCRT chỉ đúng cho dung dịch loãng; i = 2 (NaCl), 3 (CaCl₂) là giả thiết phân li hoàn toàn.
 - Lotka–Volterra là mô hình định tính kinh điển (thẻ khoa học ghi "gần đúng" vì giải số).
+- **Chạy liên tục (#205 C5, 12/11/2026):** cảnh 3D Lotka–Volterra chạy hết khung này sang khung
+  khác; mỗi khung được tính bằng DOPRI5 (cùng rtol 10⁻¹⁰, cùng bước lấy mẫu) từ điểm cuối của khung
+  trước (`lvSegment`), không nội suy. Kiểm chứng (`src/biology/models.test.ts`): 10 khung nối nhau
+  trùng với một lần tính liền mạch, từng mẫu (đo được sai khác 0), cả khi con mồi xuống dưới 10⁻¹⁰⁰;
+  V lệch 2·10⁻¹⁰ tới 8·10⁻¹⁰ sau 300 đơn vị thời gian và 8·10⁻⁹ sau 3000 (ngưỡng cảnh báo của bài
+  10⁻⁶). Chip sai lệch V tính so với V lúc t = 0 qua mọi khung đã chạy. Cảnh 3D logistic dùng công
+  thức N(t) tại mọi t (không bước số).
 - Tế bào nhân sơ và nhân thực (bản 2D 0.8.0, bản 3D 0.8.1 #148): hình **định tính**, ghi “Minh họa
   — không theo tỉ lệ; số lượng bào quan chỉ để minh họa”; vị trí, hình dạng, màu chỉ để phân biệt
   các bộ phận. Bản 3D vẽ đúng các bộ phận của hình trong SGK cho từng loại tế bào (test), giống nhau
