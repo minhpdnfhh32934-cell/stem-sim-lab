@@ -2444,7 +2444,7 @@ const vi = {
     sketchNote:
       'Đặt câu hỏi, xin gợi ý và học theo nhịp độ của em. Có thể chọn AI trực tuyến hoặc Gemma chạy trên máy.',
     back: 'Về trang chủ',
-    layoutLabel: 'Xem thử bố cục',
+    layoutLabel: 'Các trang của AI Teacher',
     layoutTalk: 'Trò chuyện',
     layoutBoard: 'Bảng giảng',
     // The orb's state (#234), said for screen readers; shown in capitals under the orb.

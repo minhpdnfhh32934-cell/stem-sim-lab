@@ -10,6 +10,10 @@
   font-size: var(--text-content);
   line-height: 1.55;
 }
+.teacher__stage > .teacher-view {
+  min-height: 0;
+  overflow-y: auto;
+}
 .teacher-view p {
   margin: 0;
 }

@@ -211,6 +211,9 @@
   min-height: 0;
   justify-content: center;
 }
+.teacher__chat-wrap[hidden] {
+  display: none;
+}
 
 /* The conversation lies on the stage: no panel of its own. */
 .teacher__chat-wrap .chat-panel {

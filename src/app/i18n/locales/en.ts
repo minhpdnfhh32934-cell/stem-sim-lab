@@ -2458,7 +2458,7 @@ const en: Messages = {
     sketchNote:
       'Ask questions, request hints and learn at your pace. Choose online AI or Gemma running on this computer.',
     back: 'Back to home',
-    layoutLabel: 'Preview layout',
+    layoutLabel: 'AI Teacher pages',
     layoutTalk: 'Conversation',
     layoutBoard: 'Whiteboard',
     // The orb's state (#234), said for screen readers; shown in capitals under the orb.
