@@ -192,3 +192,53 @@ test('predator–prey 3D: the habitat follows the computed trajectory', async ({
 
   expect(errors).toEqual([]);
 });
+
+test('predator–prey 3D: the run goes on past its span, computed from its last sample (#205 C5)', async ({
+  page,
+}) => {
+  test.setTimeout(150_000);
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(String(e)));
+  page.on('console', (m) => {
+    if (m.type() === 'error') errors.push(m.text());
+  });
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      'stemsim.perf',
+      JSON.stringify({ state: { preference: 'medium', benchmark: null }, version: 1 }),
+    );
+  });
+  await openLab(page);
+  await page.getByRole('radio', { name: 'Sinh học' }).click();
+  await page
+    .getByRole('button', { name: 'Con mồi – vật ăn thịt (Lotka–Volterra)', exact: true })
+    .click();
+  const view = page.locator('.bio3d[data-lesson="lotkaVolterra"]');
+  await expect(view.locator('canvas')).toBeVisible({ timeout: 30_000 });
+  await expect.poll(() => frames(page), { timeout: 15_000 }).toBeGreaterThan(0);
+
+  // The end of the first span (paused there); "Chạy" goes on to the next span, it does not stop
+  // or start again from t = 0.
+  const player = page.locator('.bench-edge .edge-steps');
+  const slider = player.getByRole('slider', { name: 'Thời gian t' });
+  await slider.fill('30');
+  await player.getByRole('button', { name: 'Chạy', exact: true }).click();
+  await expect
+    .poll(async () => (await state(page))?.t ?? 0, { timeout: 30_000 })
+    .toBeGreaterThan(31);
+  await player.getByRole('button', { name: 'Tạm dừng', exact: true }).click();
+  await expect(slider).toHaveAttribute('min', '30');
+  await expect(slider).toHaveAttribute('max', '60');
+
+  // The moment shown is the run computed in one go over both spans: never an interpolation.
+  const s = await state(page);
+  if (!s) throw new Error('no state');
+  const whole = lotkaVolterra(P, 10, 5, 60, 1600);
+  const k = 800 + Math.round(((s.t - 30) / 30) * 800);
+  expect(s.t).toBeCloseTo(whole.t[k] ?? 0, 9);
+  expect(s.x).toBeCloseTo(whole.x[k] ?? 0, 9);
+  expect(s.y).toBeCloseTo(whole.y[k] ?? 0, 9);
+  // V is still conserved over both spans: the chip is not flagged.
+  await expect(view.getByText(/Sai lệch của đại lượng bảo toàn V/)).not.toHaveClass(/approx/);
+  expect(errors).toEqual([]);
+});

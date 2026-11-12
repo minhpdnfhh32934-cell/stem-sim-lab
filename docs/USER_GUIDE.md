@@ -711,6 +711,11 @@ Từng bài:
   - **Con mồi – vật ăn thịt 3D:** con mồi và vật ăn thịt trên đồng cỏ, số con theo điểm đã tính gần
     nhất của quỹ đạo (không nội suy); hai ống thủy tinh cho x và y có vạch x\*, y\*, mũi tên dx/dt,
     dy/dt và biển ghi số; bảng bên phải vẽ quỹ đạo pha như hình 2D, có hạt sáng ở thời điểm đang xem.
+  - **Chạy liên tục (#205):** hai cảnh 3D trên chạy tới khi bạn bấm **Tạm dừng**. Thanh trượt
+    **Khung thời gian t** là độ dài một khung; hết khung thì khung sau nối tiếp. Lotka–Volterra tính
+    khung sau bằng DOPRI5 từ điểm cuối của khung trước, không nội suy; đồ thị bên dưới và chip sai
+    lệch V theo khung đang xem (V so với lúc t = 0). Logistic dùng công thức N(t) ở mọi t: đàn tiến
+    về K rồi đứng ở K. **Đặt lại** về t = 0; **Tới t\*** nhảy về khung có điểm uốn.
 
 ## Lưu, mở, xuất và lịch sử
 
