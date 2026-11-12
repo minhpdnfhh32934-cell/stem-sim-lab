@@ -8,6 +8,7 @@ import {
   lvDrift,
   lvEquilibrium,
   lvInvariant,
+  lvSegment,
 } from './ecology/ecology';
 import {
   apparent,
@@ -65,6 +66,59 @@ describe('ecology', () => {
     }
     expect(peaks.length).toBeGreaterThanOrEqual(2);
     expect(peaks[1]! - peaks[0]!).toBeCloseTo(eq.period, 1);
+  });
+});
+
+describe('Lotka–Volterra continued segment by segment (#205 C5)', () => {
+  it.each([
+    // The lesson's defaults, and a run whose prey collapses below 10⁻¹⁰⁰.
+    [{ alpha: 1, beta: 0.1, delta: 0.075, gamma: 1.5 }, 10, 5, 30],
+    [{ alpha: 3, beta: 0.01, delta: 0.3, gamma: 0.1 }, 100, 1, 30],
+  ] as const)(
+    'ten segments, each from the last sample, are the run in one go (%j)',
+    (p, x0, y0, span) => {
+      const k = 10;
+      const n = 800;
+      const whole = lotkaVolterra(p, x0, y0, k * span, k * n);
+      let seg = lotkaVolterra(p, x0, y0, span, n);
+      const t = [...seg.t];
+      const u = [...seg.u];
+      const v = [...seg.v];
+      for (let j = 1; j < k; j++) {
+        const last = seg.t.length - 1;
+        seg = lvSegment(p, { t: seg.t[last]!, u: seg.u[last]!, v: seg.v[last]! }, span, n);
+        t.push(...seg.t.slice(1));
+        u.push(...seg.u.slice(1));
+        v.push(...seg.v.slice(1));
+      }
+      expect(t).toHaveLength(whole.t.length);
+      let gap = 0;
+      t.forEach((ti, i) => {
+        expect(Math.abs(ti - whole.t[i]!)).toBeLessThan(1e-9);
+        gap = Math.max(gap, Math.abs(u[i]! - whole.u[i]!), Math.abs(v[i]! - whole.v[i]!));
+      });
+      // ln x and ln y: a relative gap in x and y (measured: 0, the same steps exactly).
+      expect(gap).toBeLessThan(1e-9);
+      // V along the joined run (measured 2·10⁻¹⁰ and 8·10⁻¹⁰ over these 300 time units).
+      expect(lvDrift(p, { u, v })).toBeLessThan(1e-8);
+    },
+  );
+
+  it('a long endless run (100 segments, 3000 time units) keeps V well below the lesson’s flag', () => {
+    const p = { alpha: 1, beta: 0.1, delta: 0.075, gamma: 1.5 };
+    let seg = lotkaVolterra(p, 10, 5, 30, 800);
+    const u = [...seg.u];
+    const v = [...seg.v];
+    for (let j = 1; j < 100; j++) {
+      const last = seg.t.length - 1;
+      seg = lvSegment(p, { t: seg.t[last]!, u: seg.u[last]!, v: seg.v[last]! }, 30, 800);
+      u.push(...seg.u.slice(1));
+      v.push(...seg.v.slice(1));
+    }
+    expect(seg.t.at(-1)).toBeCloseTo(3000, 9);
+    // Measured 8·10⁻⁹: it grows about linearly, so the flag (10⁻⁶) is days of playing away.
+    expect(lvDrift(p, { u, v })).toBeLessThan(1e-7);
+    expect(lvDrift(p, { u, v })).toBeLessThan(LV_DRIFT_WARN);
   });
 });
 

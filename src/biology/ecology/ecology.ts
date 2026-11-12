@@ -40,20 +40,43 @@ export function lotkaVolterra(
   y0: number,
   tEnd: number,
   samples: number,
-): { t: number[]; x: number[]; y: number[]; u: number[]; v: number[] } {
+): LvRun {
+  return lvSegment(p, { t: 0, u: Math.log(x0), v: Math.log(y0) }, tEnd, samples);
+}
+
+export interface LvRun {
+  t: number[];
+  x: number[];
+  y: number[];
+  u: number[];
+  v: number[];
+}
+
+/**
+ * The run from a computed sample `from` (t, u = ln x, v = ln y) over `span`, `samples` steps: the
+ * same DOPRI5 step by step as `lotkaVolterra`, so a run continued segment by segment from each
+ * last sample is the run computed in one go (#205 C5: an endless lesson adds segments, it never
+ * interpolates). Sample i is at from.t + i·span/samples.
+ */
+export function lvSegment(
+  p: LvParams,
+  from: { t: number; u: number; v: number },
+  span: number,
+  samples: number,
+): LvRun {
   const f = (_t: number, s: Float64Array, d: Float64Array) => {
     const u = s[0] ?? 0;
     const v = s[1] ?? 0;
     d[0] = p.alpha - p.beta * Math.exp(v);
     d[1] = p.delta * Math.exp(u) - p.gamma;
   };
-  const t: number[] = [0];
-  const us: number[] = [Math.log(x0)];
-  const vs: number[] = [Math.log(y0)];
-  let state = Float64Array.from([Math.log(x0), Math.log(y0)]);
+  const t: number[] = [from.t];
+  const us: number[] = [from.u];
+  const vs: number[] = [from.v];
+  let state = Float64Array.from([from.u, from.v]);
   for (let i = 1; i <= samples; i++) {
-    const t0 = ((i - 1) * tEnd) / samples;
-    const t1 = (i * tEnd) / samples;
+    const t0 = from.t + ((i - 1) * span) / samples;
+    const t1 = from.t + (i * span) / samples;
     state = Float64Array.from(dopri5(f, state, t0, t1, { rtol: 1e-10, atol: 1e-12 }).y);
     t.push(t1);
     us.push(state[0] ?? 0);
