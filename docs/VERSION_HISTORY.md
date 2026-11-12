@@ -91,7 +91,7 @@ Bản 0.8.1 có giao diện mới "Bàn thí nghiệm" và gộp mọi thay đ�
 | --- | --- | --- |
 | Bắt đầu phát triển | 26/10/2026 06:08 | `2026-10-25T23:08:42Z` |
 | Commit đầu tiên | 02/11/2026 01:58 | `2026-11-01T18:58:55Z` |
-| Commit cuối cùng | 12/11/2026 01:36 | `2026-11-12T01:36:14+07:00` |
+| Commit cuối cùng | 12/11/2026 22:24 | `2026-11-12T22:24:28+07:00` |
 | Gộp vào nhánh (merge) | Chưa xác minh được | — |
 | Dựng bộ cài (GitHub Actions) | Chưa xác minh được | — |
 | Phát hành (GitHub Release) | Chưa xác minh được | — |
@@ -196,6 +196,7 @@ Bản 0.8.1 có giao diện mới "Bàn thí nghiệm" và gộp mọi thay đ�
 - PR #198 Bàn thí nghiệm thành giao diện duy nhất (B8, #193), gộp f2e535e 2026-11-11T17:25:52Z; PR #203 chữ theo Cỡ chữ, ảnh thẻ, nút Thoát trình chiếu, nút sáng/tối (#202), gộp bbd8ac2 2026-11-11T18:40:40Z; PR #204 Tệp → "Thông tin máy" (#201), gộp b91cc61 2026-11-11T19:10:27Z
 - Vấn đề đã biết của 0.8.0 đã sửa: lời giải thích chép công thức của một bước không còn bị ẩn, commit c38ab29 2026-11-09T08:28:52+07:00; vẫn còn: đường chỉ tên ở Phiêu bạt di truyền 3D (work-log 2089e0d, #70 UI-49) và xếp lớp chờ giáo viên duyệt (DATA\_REVIEW KNTT-\*)
 - Giới hạn ghi ở vấn đề đã biết: Kepler đơn vị tương đối (PR #177), tinh thể chưa có hằng số mạng (DATA\_REVIEW CRY-3), chuẩn độ chỉ acid mạnh – base mạnh (CLAUDE.md, mục Acid–base titration)
+- lastCommit (cập nhật sau #233): d9ede91 2026-11-12T22:24:28+07:00 'docs(194): 0.8.1 work-log — check results', commit cuối không phải commit gộp trên main e289f69 (git log -1 --no-merges main); trước đó ghi 2026-11-12T01:36:14+07:00. 304 commit không phải commit gộp từ cd6cdd6 (git rev-list --no-merges --count cd6cdd6..d9ede91). Nếu PR game (#236) vào main trước khi phát hành thì lastCommit đổi theo commit cuối của nó.
 
 ### 0.8.0 (Đã gộp, chưa phát hành)
 
