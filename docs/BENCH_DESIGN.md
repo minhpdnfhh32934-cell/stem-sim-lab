@@ -413,6 +413,7 @@ Under 18: door 2 becomes a non-interactive card the same size, with a Lock icon 
 - y156–268: two cards, each about 500×112.
   - "Tiếp tục": static engine thumbnail 160×96 + "Mở lại" outlined.
   - "Có đề bài?": a one-line field that opens the Đề bài sheet on focus; "Phân tích đề" filled (the screen's main action; "Kết nối AI để phân tích đề" without a key; "Tự dựng cảnh" filled under 18); "Tự dựng cảnh" ghost.
+  - #205 B3 (12/11/2026): the "Tiếp tục" card's title spans the card above the thumbnail (one line at 100 % and 140 %); "Có đề bài?" is the shelf's only problem box (the header's "Đề bài" is in a lesson only; closing the sheet gives the focus back to what opened it); the start cards' column may shrink and a long action wraps in its button; the topic cards' second line is 13 px, weight 500.
 - y292 onward: chapter shelves.
   - Heading 18/26 600 + muted "3/5 đã mở".
   - Card grid `repeat(auto-fill, minmax(232px, 1fr))`, gap 16: 4 columns of about 242×152.

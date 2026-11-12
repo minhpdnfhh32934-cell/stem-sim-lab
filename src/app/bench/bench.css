@@ -1304,6 +1304,8 @@ kbd {
 }
 .shelf-start {
   display: grid;
+  /* One column that may shrink: nothing inside pushes past the card (#205 B3). */
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-2);
   padding: var(--space-3) var(--space-4);
   border: 1px solid var(--border);
@@ -1412,8 +1414,10 @@ kbd {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-1) var(--space-2);
-  font-size: var(--text-caption);
-  line-height: calc(16rem / 14);
+  /* Big and bold enough to read (#205 B3: it was 12 px regular). */
+  font-size: var(--text-note);
+  font-weight: 500;
+  line-height: calc(18rem / 14);
   color: var(--paper-text-muted);
 }
 .shelf-card__lessons {
@@ -1672,6 +1676,15 @@ button.bench-door--lab:hover {
   flex-wrap: wrap;
   gap: var(--space-2);
 }
+/* A long label ("Kết nối AI để phân tích đề" at 140 %) wraps inside its button instead of
+   pushing past the card (#205 B3). */
+.shelf-start__actions .btn {
+  max-width: 100%;
+  height: auto;
+  padding-block: var(--space-1);
+  white-space: normal;
+  text-align: start;
+}
 .bench-header__teacher {
   white-space: nowrap;
 }
@@ -1879,8 +1892,13 @@ button.bench-door--lab:hover {
 .shelf-start--resume:has(.shelf-start__thumb) > :not(.shelf-start__thumb) {
   grid-column: 2;
 }
+/* "Tiếp tục bài đang học" on its own row above the thumbnail: it no longer breaks (#205 B3). */
+.shelf-start--resume:has(.shelf-start__thumb) > h2:not(.shelf-start__thumb) {
+  grid-column: 1 / -1;
+  grid-row: 1;
+}
 .shelf-start__thumb {
-  grid-row: 1 / span 3;
+  grid-row: 2 / span 2;
   width: 160px;
   height: 96px;
   border-radius: var(--radius-sm);

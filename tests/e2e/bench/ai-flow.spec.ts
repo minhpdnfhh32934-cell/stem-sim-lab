@@ -400,6 +400,10 @@ test.describe('first run (age question not answered yet)', () => {
     await expect(gate).toBeHidden();
     await enterLab(page);
     await expect(page.locator('.bench-header .ai-status')).toContainText('AI: chưa mở');
+    // Under 18 the shelf's "Có đề bài?" card offers only "Tự dựng cảnh", and the shelf has no
+    // header "Đề bài" (#205 B3): a lesson's header still opens the box.
+    await page.getByRole('radio', { name: 'Vật lý' }).click();
+    await page.getByRole('main').getByRole('button', { name: 'Ném xiên', exact: true }).click();
     await (await openProblem(page)).fill(item.text);
     await analyze(page);
     await expect(page.getByRole('dialog', { name: 'Mình chưa đọc được đề này' })).toContainText(
