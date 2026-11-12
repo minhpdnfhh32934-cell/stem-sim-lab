@@ -155,9 +155,16 @@ export function placeIn(lay: DiffusionLayout, s: 1 | 2, u: Vec3, out: Vec3): Vec
   return out;
 }
 
-/** Knot position of time t on the walks (0 … WALK_KNOTS). */
-export const knotOf = (m: DiffusionModel3D, t: number): number =>
-  (Math.max(0, Math.min(m.tEnd, t)) / m.tEnd) * WALK_KNOTS;
+/**
+ * Knot position of time t on the walks (0 … WALK_KNOTS). Past tEnd (an endless run, #205 C5)
+ * the walk goes back and forth along its knots: a Brownian path read backwards is one too, and
+ * nothing jumps (the walk is illustration; counts and crossings come from the model).
+ */
+export const knotOf = (m: DiffusionModel3D, t: number): number => {
+  const f = Math.max(0, t) / m.tEnd;
+  const phase = f % 2;
+  return (phase <= 1 ? phase : 2 - phase) * WALK_KNOTS;
+};
 
 /**
  * Faint water dots (High tier, illustration, never counted): how many of `count` stay in

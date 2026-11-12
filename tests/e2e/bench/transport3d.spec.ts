@@ -199,3 +199,77 @@ test('diffusion & osmosis 3D: Fick counts, a picked particle, the U-tube’s hei
   await expect(page.locator('.tr3d canvas')).toBeVisible({ timeout: 15_000 });
   expect(errors).toEqual([]);
 });
+
+/** Time and span of the 3D view's endless run (its store). */
+const run3d = (page: Page) =>
+  page.evaluate(async () => {
+    const mod = '/src/biology/transport/transport3d/store.ts';
+    const { useTransport3D } = (await import(/* @vite-ignore */ mod)) as {
+      useTransport3D: { getState(): { t: number; page: number } };
+    };
+    const s = useTransport3D.getState();
+    return { t: s.t, page: s.page };
+  });
+
+test('diffusion & osmosis 3D: the run goes on past its span (#205 C5)', async ({ page }) => {
+  test.setTimeout(150_000);
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(String(e)));
+  page.on('console', (m) => {
+    if (m.type() === 'error') errors.push(m.text());
+  });
+  await openTransport(page);
+  const edge = page.locator('.bench-edge');
+  const time = page.getByRole('slider', { name: 'Thời gian' });
+
+  // Diffusion: from the end of the first span "Chạy" goes on; the counts follow Fick past it.
+  await time.focus();
+  await page.keyboard.press('End');
+  const end = (await run3d(page)).t;
+  expect(end).toBeGreaterThan(0);
+  await edge.getByRole('button', { name: 'Chạy', exact: true }).click();
+  await expect
+    .poll(async () => (await run3d(page)).t, { timeout: 30_000 })
+    .toBeGreaterThan(1.05 * end);
+  await edge.getByRole('button', { name: 'Tạm dừng', exact: true }).click();
+  const at = await run3d(page);
+  expect(at.page).toBe(1);
+  expect(Number(await time.getAttribute('min'))).toBeCloseTo(end, 9);
+  const n1 = n1At(at.t);
+  await expect(page.locator('.tr3d__counts')).toHaveText(
+    `Ngăn 1: ${String(n1)} hạt · Ngăn 2: ${String(160 - n1)} hạt`,
+  );
+  expect(await hook(page, 'counts')).toEqual({ n1, n2: 160 - n1, left: n1, right: 160 - n1 });
+
+  // Osmosis: the same; past its first span the columns stand at the model's end state.
+  await page.getByRole('radio', { name: 'Thẩm thấu' }).click();
+  await expect(page.locator('.tr3d[data-mode="osmosis"] canvas')).toBeVisible();
+  expect((await run3d(page)).page).toBe(0);
+  await time.focus();
+  await page.keyboard.press('End');
+  const oEnd = (await run3d(page)).t;
+  const first = (await hook<{ hL: number }>(page, 'heights'))!;
+  await edge.getByRole('button', { name: 'Chạy', exact: true }).click();
+  await expect
+    .poll(async () => (await run3d(page)).t, { timeout: 30_000 })
+    .toBeGreaterThan(1.05 * oEnd);
+  await edge.getByRole('button', { name: 'Tạm dừng', exact: true }).click();
+  expect((await run3d(page)).page).toBe(1);
+  const h = (await hook<{ hL: number; hR: number; drawnL: number; drawnR: number }>(
+    page,
+    'heights',
+  ))!;
+  expect(h.drawnL).toBeCloseTo(h.hL, 6);
+  expect(h.drawnR).toBeCloseTo(h.hR, 6);
+  // Closer still to the defaults' equilibrium (C₀ = 1 mM, i = 1, 25 °C, h₀ = 20 cm) than at the
+  // end of the first span (the sample-for-sample check is osmosis's endless.test.ts).
+  const RT = 8.314462618 * 298.15;
+  const rg = 1000 * 9.80665;
+  const hEq = (2 * rg * 0.2 + Math.sqrt((2 * rg * 0.2) ** 2 + 8 * rg * 0.2 * RT)) / (4 * rg);
+  expect(Math.abs(h.hL - hEq)).toBeLessThan(Math.abs(first.hL - hEq));
+  expect(Math.abs(h.hL - hEq)).toBeLessThan(1e-3);
+  // "Đặt lại": back to t = 0 of the run.
+  await edge.getByRole('button', { name: 'Đặt lại', exact: true }).click();
+  await expect.poll(() => run3d(page)).toEqual({ t: 0, page: 0 });
+  expect(errors).toEqual([]);
+});
