@@ -400,6 +400,11 @@ sóng dừng trên dây, hoạ âm và chuỗi Fourier, điện trường, mạc
   tính thêm gì. Bấm lại nút ghim hoặc dấu × để bỏ; mở chủ đề khác thì tự bỏ.
 - **Mép bàn:** chạy/dừng, bước từng khung, đặt lại, kéo để tua lại, chọn tốc độ (Cơ bản: 0,5× · 1× · 2×
   và tốc độ riêng của bài; Nâng cao: ×0,1 đến ×4, và tua nhanh cho bài toán tính bằng giờ).
+- **Bài chạy liên tục:** chuyển động tròn đều, Kepler, dao động cưỡng bức, giao thoa, sóng dừng, lò
+  xo, con lắc lò xo, con lắc đơn và vật trên đường ray chạy mãi tới khi bạn bấm **Tạm dừng** (vật
+  trên đường ray dừng khi chạy ra khỏi ray). Đồ thị, bảng Số liệu và thanh tua giữ đoạn gần nhất
+  (khoảng 100 giây khi phát ở tốc độ 1×); bảng và tệp CSV ghi rõ đoạn đó "từ t = … s đến t = … s".
+  Các bài có điểm dừng tự nhiên (ném, rơi, va chạm, mặt phẳng nghiêng, ròng rọc) vẫn dừng như cũ.
 - **Sổ bên trái:** **Đồ thị** (x–t, v–t, a–t, năng lượng; rê chuột lên đồ thị
   để đọc giá trị tại thời điểm đó), **Lời giải** (công thức và các bước, đáp số đề hỏi được đánh dấu),
   **Số liệu** (bảng giá trị, nút Xuất CSV).

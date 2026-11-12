@@ -39,12 +39,17 @@ export class PendulumEngine implements SimulationEngine<Params> {
   readonly id = 'phys.pendulum';
   readonly stateSize = 6;
   dt = 1 / 240;
-  private t = 0;
+  /** Time = start + steps × dt (#205 C1). */
+  private t0 = 0;
+  private steps = 0;
   private y = new Float64Array(2);
   private small = { th: 0, om: 0 };
+  /** Where the small-angle model starts: its state is the closed form from here, never stepped. */
+  private smallStart = { th: 0, om: 0 };
   private q: PendulumInput = pendulumInput({});
   private drag: number | null = null;
-  private tEnd = 60;
+  /** No end of its own (#205 C1): it runs until paused. Only a caller (a test) sets one. */
+  private tEnd: number | undefined;
   private readonly rk: Rk4;
 
   constructor() {
@@ -64,30 +69,33 @@ export class PendulumEngine implements SimulationEngine<Params> {
 
   reset(p: Params): void {
     this.q = pendulumInput(p);
-    this.tEnd = p.tEnd ?? 120;
-    this.t = 0;
+    this.tEnd = p.tEnd;
+    this.t0 = 0;
+    this.steps = 0;
     this.y[0] = this.q.theta0;
     this.y[1] = this.q.omega0;
     this.small = { th: this.q.theta0, om: this.q.omega0 };
+    this.smallStart = { ...this.small };
     this.drag = null;
   }
 
   step(): void {
     const h = this.dt / SUBSTEPS;
-    for (let i = 0; i < SUBSTEPS; i++) this.rk.step(this.t + i * h, this.y, h);
-    // Exact solution of the linearised model θ″ + c θ′ + (g/L) θ = 0.
+    const t = this.time();
+    for (let i = 0; i < SUBSTEPS; i++) this.rk.step(t + i * h, this.y, h);
+    this.steps++;
+    // Exact solution of the linearised model θ″ + c θ′ + (g/L) θ = 0, from its start.
     const [th, om] = propagate(
       { m: 1, k: this.q.g / this.q.L, b: this.q.c },
-      this.small.th,
-      this.small.om,
-      this.dt,
+      this.smallStart.th,
+      this.smallStart.om,
+      this.steps * this.dt,
     );
     this.small = { th, om };
-    this.t += this.dt;
   }
 
   time(): number {
-    return this.t;
+    return this.t0 + this.steps * this.dt;
   }
 
   readState(out: Float64Array): void {
@@ -106,7 +114,9 @@ export class PendulumEngine implements SimulationEngine<Params> {
     this.y[0] = s[PE.th] ?? 0;
     this.y[1] = s[PE.om] ?? 0;
     this.small = { th: s[PE.thS] ?? 0, om: s[PE.omS] ?? 0 };
-    this.t = t;
+    this.smallStart = { ...this.small };
+    this.t0 = t;
+    this.steps = 0;
   }
 
   diagnostics() {
@@ -140,6 +150,6 @@ export class PendulumEngine implements SimulationEngine<Params> {
   }
 
   finished(): boolean {
-    return this.drag === null && this.t >= this.tEnd;
+    return this.drag === null && this.tEnd !== undefined && this.time() >= this.tEnd;
   }
 }

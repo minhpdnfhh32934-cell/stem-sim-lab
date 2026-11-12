@@ -83,13 +83,6 @@ export function sourcesOf(q: InterferenceInput): [Source, Source] {
 const fMax = (q: InterferenceInput) => Math.max(q.f1, q.f2);
 const hasFrequency = (q: InterferenceInput) => Number.isFinite(fMax(q)) && fMax(q) > 0;
 
-/** Run shown by default: 20 periods, or 3 beat periods when that is longer. */
-export function runEnd(q: InterferenceInput): number {
-  if (!hasFrequency(q)) return 1;
-  const fb = beatFrequency(q.f1, q.f2);
-  return q.mode === MODE.beats && fb > 0 ? Math.max(20 / fMax(q), 3 / fb) : 20 / fMax(q);
-}
-
 /** Fixed step Δt ≤ T/200 of the faster source, so slow playback gets a new state every frame. */
 export const stepOf = (q: InterferenceInput) =>
   hasFrequency(q) ? Math.min(1 / 240, 1 / (200 * fMax(q))) : 1 / 240;
@@ -106,7 +99,8 @@ export class InterferenceEngine implements SimulationEngine<Params> {
   private steps = 0;
   private q: InterferenceInput = interferenceInput({});
   private s: [Source, Source] = sourcesOf(this.q);
-  private tEnd = 1;
+  /** No end of its own (#205 C1): it runs until paused. Only a caller (a test) sets one. */
+  private tEnd: number | undefined;
 
   reset(p: Params): void {
     this.q = interferenceInput(p);
@@ -114,7 +108,7 @@ export class InterferenceEngine implements SimulationEngine<Params> {
     this.dt = stepOf(this.q);
     this.t0 = 0;
     this.steps = 0;
-    this.tEnd = p.tEnd ?? runEnd(this.q);
+    this.tEnd = p.tEnd;
   }
 
   step(): void {
@@ -142,7 +136,7 @@ export class InterferenceEngine implements SimulationEngine<Params> {
   }
 
   finished(): boolean {
-    return this.time() >= this.tEnd;
+    return this.tEnd !== undefined && this.time() >= this.tEnd;
   }
 }
 

@@ -82,7 +82,8 @@ describe('uniform circular motion — engine', () => {
       expect(Math.abs(Math.hypot(out[CE.x]!, out[CE.y]!) - 1.5)).toBeLessThan(1e-12);
       expect(Math.abs(Math.hypot(out[CE.vx]!, out[CE.vy]!) - 4)).toBeLessThan(1e-12);
     }
-    expect(e.finished()).toBe(true);
+    // No end of its own (#205 C1): still running after the old 60 s mark.
+    expect(e.finished()).toBe(false);
     expect(e.input()).toBe(false);
   });
 });

@@ -92,6 +92,18 @@ thời gian thực với lời giải chính xác.
 đó. Ngay khi có can thiệp, Thẻ Khoa học chuyển sang mức **Định lượng gần đúng**, và lời giải giải
 tích được ghi rõ là chỉ áp dụng cho điều kiện ban đầu.
 
+**Bài chạy liên tục (#205 C1, 12/11/2026):** các bài tuần hoàn (chuyển động tròn đều, Kepler, dao
+động cưỡng bức, giao thoa, sóng dừng, lò xo, con lắc đơn, vật trên đường ray) không còn mốc dừng; vật
+trên đường ray vẫn dừng khi rời ray. Thời gian luôn là t = t₀ + n·Δt (không cộng dồn). Các bài có
+công thức đóng tính trạng thái thẳng từ công thức tại t đó, từ trạng thái đầu (hoặc lần kéo, lần tua
+gần nhất); lò xo và mô hình góc nhỏ của con lắc không còn bước theo bản đồ chuyển trạng thái, nên sai
+số không tích luỹ. Kiểm chứng: `src/physics/endless.test.ts` chạy thật mỗi engine tới t = 10⁵ s và so
+với công thức đóng viết riêng trong test. Hai bài RK4 (con lắc góc lớn, đường ray) không có công
+thức đóng: test chạy thật tới 10⁴ s và kiểm năng lượng (đo được độ trôi tương đối 2·10⁻¹² tới
+5·10⁻¹², ngưỡng 10⁻⁹); `npm run test:slow` chạy tới 10⁵ s (ngưỡng 10⁻⁸) trước mỗi bản phát hành.
+Đồ thị, bảng và CSV giữ đoạn gần nhất của lần chạy (12000 mẫu, khoảng 100 s ở 1×), không thưa dần;
+bảng và CSV ghi rõ đoạn đó.
+
 **Sự kiện trong DOPRI5 (sửa lỗi ngày 2026-09-29):** khi vật xuất phát đúng tại mặt đất (y = 0) hoặc
 khi hai sự kiện (đỉnh quỹ đạo và chạm đất) rơi vào cùng một bước tích phân dài, bộ bắt sự kiện cũ
 có thể bỏ sót lần chạm đất. Nay mọi sự kiện trong một bước được xử lý theo thứ tự thời gian, và

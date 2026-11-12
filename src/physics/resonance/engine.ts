@@ -1,5 +1,4 @@
 import type { SimulationEngine } from '@/core/sim/engine';
-import { gammaOf } from '../spring/model';
 import type { Params } from '../types';
 import { forced, stateAt, type Forced } from './model';
 
@@ -17,13 +16,12 @@ export class ResonanceEngine implements SimulationEngine<Params> {
   dt = 1 / 240;
   private n = 0;
   private o: Forced = forced({});
-  private tEnd = 60;
+  /** No end of its own (#205 C1): it runs until paused. Only a caller (a test) sets one. */
+  private tEnd: number | undefined;
 
   reset(p: Params): void {
     this.o = forced(p);
-    // Long enough for the free part to die out (5/γ: below 1 % of its start) and some periods more.
-    const g = gammaOf(this.o);
-    this.tEnd = p.tEnd ?? Math.max(60, Math.min(600, 5 / g + (20 * Math.PI) / this.o.W));
+    this.tEnd = p.tEnd;
     this.n = 0;
   }
 
@@ -54,6 +52,6 @@ export class ResonanceEngine implements SimulationEngine<Params> {
   }
 
   finished(): boolean {
-    return this.time() >= this.tEnd;
+    return this.tEnd !== undefined && this.time() >= this.tEnd;
   }
 }

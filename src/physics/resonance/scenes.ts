@@ -279,6 +279,7 @@ const number = (def: Omit<ParamDef, 'kind'>): ParamDef => ({ ...def, kind: 'numb
 export const forcedOscillation: PhysicsScene = {
   id: 'forcedOscillation',
   engineId: 'phys.resonance',
+  endless: true,
   title: L('Dao động cưỡng bức và cộng hưởng', 'Forced oscillation and resonance'),
   required: ['m', 'k', 'b', 'F0', 'Omega'],
   usesGravity: false,

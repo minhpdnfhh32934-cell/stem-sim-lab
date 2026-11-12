@@ -589,6 +589,7 @@ const lambdaTyped = (p: Params) => (p.waveFrom ?? 0) > 0.5;
 export const interference: PhysicsScene = {
   id: 'interference',
   engineId: 'phys.interference',
+  endless: true,
   title: L('Giao thoa sóng hai nguồn', 'Two-source interference'),
   // Filtered by `when`: f₂ only for beats, v or λ as chosen.
   required: ['d', 'f', 'f2', 'v', 'lambda'],

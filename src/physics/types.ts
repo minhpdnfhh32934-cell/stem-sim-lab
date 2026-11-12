@@ -168,6 +168,11 @@ export interface WorldBounds {
 export interface PhysicsScene {
   id: string;
   engineId: string;
+  /**
+   * The engine has no end of its own: the run goes on until paused (#205 C1). The recorded
+   * history keeps its latest stretch (graphs, data table, CSV, scrubbing slide with it).
+   */
+  endless?: boolean;
   title: LocalizedText;
   params: ParamDef[];
   /**

@@ -39,20 +39,26 @@ export class SpringEngine implements SimulationEngine<Params> {
   readonly id = 'phys.spring';
   readonly stateSize = 5;
   dt = 1 / 240;
-  private t = 0;
+  /** Time = start + steps × dt (#205 C1): the free motion is the closed form from the start. */
+  private t0 = 0;
+  private steps = 0;
+  private x0 = 0;
+  private v0 = 0;
   private x = 0;
   private v = 0;
   private q: SpringInput = springInput({});
   private drag: number | null = null;
-  private tEnd = 60;
+  /** No end of its own (#205 C1): it runs until paused. Only a caller (a test) sets one. */
+  private tEnd: number | undefined;
 
   reset(p: Params): void {
     this.q = springInput(p);
-    this.x = this.q.x0;
-    this.v = this.q.v0;
-    this.t = 0;
+    this.x = this.x0 = this.q.x0;
+    this.v = this.v0 = this.q.v0;
+    this.t0 = 0;
+    this.steps = 0;
     this.drag = null;
-    this.tEnd = p.tEnd ?? 60;
+    this.tEnd = p.tEnd;
   }
 
   private accel(x: number, v: number) {
@@ -66,14 +72,20 @@ export class SpringEngine implements SimulationEngine<Params> {
       const a = this.accel(this.x, this.v) + dragAccel(this.drag, this.x, this.v);
       this.v += a * h;
       this.x += this.v * h;
+      // The hand moved the mass: the free motion starts again from here.
+      this.t0 = this.time() + h;
+      this.steps = 0;
+      this.x0 = this.x;
+      this.v0 = this.v;
     } else {
-      [this.x, this.v] = propagate(this.q, this.x, this.v, h);
+      this.steps++;
+      // Exact in t from the start, never stepped on: no error builds up however long it runs.
+      [this.x, this.v] = propagate(this.q, this.x0, this.v0, this.steps * h);
     }
-    this.t += h;
   }
 
   time(): number {
-    return this.t;
+    return this.t0 + this.steps * this.dt;
   }
 
   readState(out: Float64Array): void {
@@ -87,9 +99,10 @@ export class SpringEngine implements SimulationEngine<Params> {
   }
 
   writeState(s: Float64Array, t: number): void {
-    this.x = s[SP.x] ?? 0;
-    this.v = s[SP.v] ?? 0;
-    this.t = t;
+    this.x = this.x0 = s[SP.x] ?? 0;
+    this.v = this.v0 = s[SP.v] ?? 0;
+    this.t0 = t;
+    this.steps = 0;
   }
 
   diagnostics() {
@@ -120,6 +133,6 @@ export class SpringEngine implements SimulationEngine<Params> {
   }
 
   finished(): boolean {
-    return this.drag === null && this.t >= this.tEnd;
+    return this.drag === null && this.tEnd !== undefined && this.time() >= this.tEnd;
   }
 }

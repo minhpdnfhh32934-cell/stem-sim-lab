@@ -216,6 +216,7 @@ function card(): ScienceCardData {
 export const keplerOrbit: PhysicsScene = {
   id: 'keplerOrbit',
   engineId: 'phys.kepler',
+  endless: true,
   title: L('Định luật II Kepler', 'Kepler’s second law'),
   required: ['e'],
   usesGravity: false,

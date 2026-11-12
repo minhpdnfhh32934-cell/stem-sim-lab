@@ -101,8 +101,9 @@ function TimeDriver() {
       hasSimulation: s.hasSimulation,
     })),
   );
-  const { duration, scrubTime, invalid } = useSimStore(
+  const { start, duration, scrubTime, invalid } = useSimStore(
     useShallow((s) => ({
+      start: s.start,
       duration: s.duration,
       scrubTime: s.scrubTime,
       invalid: s.validation.length > 0,
@@ -120,8 +121,11 @@ function TimeDriver() {
   const canRun = hasSimulation && !invalid;
   // The lesson's own speed is a step of its own (speeds.ts keeps Basic's speed on the steps).
   const steps = basicSteps(suggested);
-  const end = Math.max(duration, 1e-6);
-  const played = { '--pct': `${(100 * Math.min(shown, end)) / end}%` } as CSSProperties;
+  // An endless run scrubs over its latest stretch only (#205 C1).
+  const end = Math.max(duration, start + 1e-6);
+  const played = {
+    '--pct': `${(100 * (Math.min(shown, end) - start)) / (end - start)}%`,
+  } as CSSProperties;
 
   return (
     <div
@@ -203,10 +207,10 @@ function TimeDriver() {
         aria-label={t('timeline.scrubber')}
         aria-valuetext={`${timeText} s`}
         style={played}
-        min={0}
+        min={start}
         max={end}
         step="any"
-        value={Math.min(shown, end)}
+        value={Math.min(Math.max(shown, start), end)}
         disabled={!hasSimulation || duration <= 0}
         onChange={(e) => {
           sim.scrub(Number(e.target.value));
