@@ -2,6 +2,7 @@ import { useContext, useRef } from 'react';
 import { BenchContext } from '@/app/bench/shellMode';
 import { useLocalized } from '@/app/i18n/localized';
 import type { ScienceCardData } from '@/science-card/types';
+import { fontPx } from '@/physics/render/draw';
 import { useCanvas } from '@/ui/canvas/useCanvas';
 import { ELEMENTS_SOURCE, electronsPerShell, elementByZ } from '../data/elements';
 import { CSRC, L, usePublishCard } from '../common';
@@ -81,6 +82,8 @@ export function BohrStage() {
       const faint = css('--border-strong');
       const electron = css('--chart-1');
       const nucleus = css('--chart-4');
+      // Canvas fonts cannot read a CSS variable: resolve it here. 12px floor, scaled by Cỡ chữ.
+      const font = css('--font-sans') || 'sans-serif';
 
       // Orbits
       for (let i = 0; i < count; i++) {
@@ -93,8 +96,7 @@ export function BohrStage() {
         ctx.stroke();
         ctx.setLineDash([]);
         ctx.fillStyle = muted;
-        // A canvas font cannot read a CSS variable (#205 A1: also up to the 12 px floor).
-        ctx.font = '12px sans-serif';
+        ctx.font = `${fontPx(12)} ${font}`;
         ctx.fillText(`n = ${i + 1}`, cx + radius(i) * 0.707 + 4, cy - radius(i) * 0.707 - 4);
       }
 
@@ -171,7 +173,7 @@ export function BohrStage() {
             drawElectron(cx + radius(i) * Math.cos(a), cy + radius(i) * Math.sin(a));
           }
           ctx.fillStyle = text;
-          ctx.font = '600 12px sans-serif';
+          ctx.font = `600 ${fontPx(12)} ${font}`;
           ctx.fillText(String(count2), cx - 4, cy - radius(i) - 8);
         });
       }

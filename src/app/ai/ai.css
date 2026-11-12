@@ -485,13 +485,12 @@
 }
 .guide-art__text {
   fill: var(--text);
-  /* Text inside a drawing (SVG units, #205 A1): it scales with the picture. */
-  font-size: 11px;
+  /* SVG units (#205 A1): 15 keeps the text at 12px or more on screen while the drawing shrinks
+     down to 0.8 of its size (a narrow Settings page); svg-text.spec.ts measures it. */
+  font-size: 15px;
   font-family: inherit;
 }
-.guide-art__text--small {
-  /* Text inside a drawing (SVG units, #205 A1): it scales with the picture. */
-  font-size: 9px;
+.guide-art__text--muted {
   fill: var(--text-muted);
 }
 .guide-art__text--on-accent {

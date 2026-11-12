@@ -18,11 +18,12 @@ const PX_OK: Record<string, string> = {
   'src/teacher/board/board.css .board__draw text': 'board units, scaled by the board zoom',
   'src/teacher/board/board.css .board__draw .board__tick': 'board units, scaled by the board zoom',
   'src/teacher/board/board.css .board__table': 'board units, scaled by the board zoom',
-  'src/studio/chemistry/chemistry.css .chem-tube__label': 'SVG text, scales with the test tube',
-  'src/chemistry/chem.css .eq-energy__text': 'SVG text, scales with the energy diagram',
-  'src/chemistry/chem.css .tit-label': 'SVG text, scales with the titration picture',
-  'src/app/ai/ai.css .guide-art__text': 'SVG text, scales with the guide drawing',
-  'src/app/ai/ai.css .guide-art__text--small': 'SVG text, scales with the guide drawing',
+  'src/studio/chemistry/chemistry.css .chem-tube__label':
+    'SVG units, 14px on screen (svg-text.spec.ts)',
+  'src/chemistry/chem.css .eq-energy__text': 'SVG units, 13.1px on screen (svg-text.spec.ts)',
+  'src/chemistry/chem.css .tit-label': 'SVG units, 12.7px on screen (svg-text.spec.ts)',
+  'src/app/ai/ai.css .guide-art__text':
+    'SVG units, ≥ 12px on screen down to 0.8 scale (svg-text.spec.ts)',
 };
 /** `file selector` → why it is below the floor for now. */
 const BELOW_FLOOR_OK: Record<string, string> = {

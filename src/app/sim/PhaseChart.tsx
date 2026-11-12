@@ -4,6 +4,7 @@ import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useResolvedTheme } from '@/app/theme/useApplyTheme';
 import { useTierConfig } from '@/perf/perfStore';
+import { fontPx } from '@/physics/render/draw';
 import type { GraphDef } from '@/physics/types';
 import { SERIES_VARS } from '@/ui/charts/uplot';
 import { phaseData } from './data';
@@ -59,7 +60,7 @@ export function PhaseChart({ graph }: { graph: GraphDef }) {
     const X = (v: number) => PAD.left + ((v - b.xMin) / (b.xMax - b.xMin)) * pw;
     const Y = (v: number) => PAD.top + ((b.yMax - v) / (b.yMax - b.yMin)) * ph;
     const font = css('--font-sans') || 'sans-serif';
-    ctx.font = `12px ${font}`;
+    ctx.font = `${fontPx(12)} ${font}`;
     ctx.lineWidth = 1;
     // Grid and tick labels.
     ctx.strokeStyle = css('--stage-grid-major');

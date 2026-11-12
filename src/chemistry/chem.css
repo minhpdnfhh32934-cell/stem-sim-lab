@@ -1051,8 +1051,9 @@
 }
 .tit-label {
   fill: var(--text-muted);
-  /* Text inside a drawing (SVG units, #205 A1): it scales with the picture. */
-  font-size: 11px;
+  /* SVG units (#205 A1): the picture is drawn at about 0.98 of its size at 100 %, so 13 gives
+     12.7px on screen; svg-text.spec.ts measures it. */
+  font-size: 13px;
 }
 .tit-readout {
   flex: 1 1 18rem;
