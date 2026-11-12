@@ -11,6 +11,7 @@ import { useAiStore } from '@/ai/aiStore';
 import { isQuotaError } from '@/ai/fallback';
 import { AiError } from '@/ai/types';
 import { decodeAudio, isSilent, pause, playPcm, stopAudio, type Pcm } from './audio';
+import { markWord } from './voiceLevel';
 import { localVoiceStatus } from './localVoice';
 import { speakNatural, type RenderCache } from './naturalVoice';
 import { prepareSpeech, type PlannedChunk, type SpeechRole } from './speechPlan';
@@ -375,6 +376,11 @@ async function speakSystem(
         done();
       }
       utterance.onend = done;
+      // The system voice's sound never passes through the page: each word pulses the orb
+      // (an illustration, #234 step 3).
+      utterance.onboundary = (event: SpeechSynthesisEvent) => {
+        if (event.name !== 'sentence') markWord();
+      };
       // A stop or a new phrase interrupts or cancels: not an error. Anything else (not allowed,
       // synthesis failed…) is reported and the phrase was not heard.
       utterance.onerror = (event: SpeechSynthesisErrorEvent) => {

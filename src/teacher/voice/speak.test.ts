@@ -4,6 +4,7 @@ import { decodeAudio } from './audio';
 import { geminiGroups, pickVoice, speak, stopSpeaking, toSpokenText } from './speak';
 import { textForModel } from './localVoice';
 import { VOICE_PRESETS, VOICE_SAMPLE, VOICE_STYLES, useVoiceStore } from './voiceStore';
+import { resetVoiceLevel, voiceLevel } from './voiceLevel';
 
 const voice = (name: string, lang: string, localService = true) =>
   ({ name, lang, voiceURI: name, localService, default: false }) as SpeechSynthesisVoice;
@@ -91,6 +92,25 @@ describe('teacher voice', () => {
     expect(spoken.every((s) => s.lang === 'vi-VN' && s.voice === 'Microsoft An')).toBe(true);
     expect(spoken[0]?.rate).toBeCloseTo(VOICE_PRESETS.vui.rate * 1.2);
     expect(useVoiceStore.getState().speaking).toBe(false);
+  });
+
+  it('the Windows voice pulses the orb on each word, not on a sentence boundary', async () => {
+    fakeSpeech([voice('Microsoft An', 'vi-VN')]);
+    resetVoiceLevel();
+    type Boundary = { onboundary?: (e: { name: string }) => void };
+    const synth = speechSynthesis as unknown as { speak: (u: Boundary) => void };
+    const speakNow = synth.speak;
+    const levels: number[] = [];
+    synth.speak = (u) => {
+      u.onboundary?.({ name: 'sentence' });
+      levels.push(voiceLevel());
+      u.onboundary?.({ name: 'word' });
+      levels.push(voiceLevel());
+      speakNow(u);
+    };
+    await speak('Xin chào.');
+    expect(levels[0]).toBe(0);
+    expect(levels[1]).toBeGreaterThan(0.9);
   });
 
   it('Gemini without a key: says why in Settings and the Windows voice reads instead', async () => {

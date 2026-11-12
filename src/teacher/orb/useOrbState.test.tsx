@@ -1,5 +1,4 @@
-import { act, render, renderHook } from '@testing-library/react';
-import { useRef } from 'react';
+import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useChatStore } from '@/teacher/chat/chatStore';
 import { useVoiceStore } from '@/teacher/voice/voiceStore';
@@ -14,11 +13,9 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-const noScope = { current: null };
-
 describe('useOrbState (#234)', () => {
   it('boots on the first open, then waits', () => {
-    const { result } = renderHook(() => useOrbState(noScope));
+    const { result } = renderHook(() => useOrbState(false));
     expect(result.current).toBe('boot');
     act(() => {
       vi.advanceTimersByTime(BOOT_MS);
@@ -27,7 +24,7 @@ describe('useOrbState (#234)', () => {
   });
 
   it('an answer on its way thinks, a voice speaks, a finished answer is done for a while', () => {
-    const { result } = renderHook(() => useOrbState(noScope));
+    const { result } = renderHook(() => useOrbState(false));
     act(() => {
       vi.advanceTimersByTime(BOOT_MS);
       useChatStore.setState({ answering: true });
@@ -48,50 +45,25 @@ describe('useOrbState (#234)', () => {
     expect(result.current).toBe('idle');
   });
 
-  it('a question being typed in the question box listens; an empty or left box does not', () => {
-    let state = '';
-    function Page() {
-      const scope = useRef<HTMLDivElement>(null);
-      state = useOrbState(scope);
-      return (
-        <div ref={scope}>
-          <form className="chat-panel__composer">
-            <textarea aria-label="q" />
-          </form>
-          <textarea aria-label="other" />
-        </div>
-      );
-    }
-    const view = render(<Page />);
+  it('a question being typed listens; sending it thinks, then done, never back to listening', () => {
+    const { result, rerender } = renderHook(({ typing }) => useOrbState(typing), {
+      initialProps: { typing: false },
+    });
     act(() => {
       vi.advanceTimersByTime(BOOT_MS);
     });
-    const box = view.getByLabelText('q') as HTMLTextAreaElement;
-    const type = (el: HTMLTextAreaElement, text: string) => {
-      act(() => {
-        el.focus();
-        el.value = text;
-        el.dispatchEvent(new Event('input', { bubbles: true }));
-        vi.runOnlyPendingTimers();
-      });
-    };
-    type(view.getByLabelText('other') as HTMLTextAreaElement, 'x');
-    expect(state).toBe('idle');
-    type(box, 'Vì sao');
-    expect(state).toBe('listening');
-    act(() => {
-      box.blur();
-      vi.runOnlyPendingTimers();
-    });
-    expect(state).toBe('idle');
-    type(box, '   ');
-    expect(state).toBe('idle');
-    // Sending the question empties the box from code: thinking, never back to listening.
-    type(box, 'Vì sao trời xanh?');
+    expect(result.current).toBe('idle');
+    rerender({ typing: true });
+    expect(result.current).toBe('listening');
+    // Sent: the answer is on its way (the panel reports the emptied box at the same time).
     act(() => {
       useChatStore.setState({ answering: true });
+    });
+    rerender({ typing: false });
+    expect(result.current).toBe('thinking');
+    act(() => {
       useChatStore.setState({ answering: false });
     });
-    expect(state).toBe('done');
+    expect(result.current).toBe('done');
   });
 });

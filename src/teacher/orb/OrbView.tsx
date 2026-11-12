@@ -24,6 +24,9 @@ import {
 
 /** A settled, waiting orb is drawn at most this often (ms): it barely moves. */
 const IDLE_FRAME_MS = 50;
+/** The voice level is eased over about this long (s): a word's pulse swells, never jumps. */
+const VOICE_EASE_S = 0.06;
+const silent = () => 0;
 
 /** The orb's colours from the theme tokens (the bench sets `--teacher-*`; else the accent). */
 function themeColors(theme: 'light' | 'dark'): OrbColors {
@@ -49,11 +52,14 @@ export interface OrbDebug {
 export function OrbView({
   state,
   fallback,
+  level = silent,
   createRenderer = webglRenderer,
 }: {
   state: OrbState;
   /** The SVG rings, shown when the orb cannot be drawn. */
   fallback: ReactNode;
+  /** The voice level now, 0–1 (read once per frame; `voiceLevel` on the page). */
+  level?: () => number;
   createRenderer?: RendererFactory;
 }) {
   const tier = usePerfStore(effectiveTier);
@@ -69,8 +75,10 @@ export function OrbView({
   const drawn = useRef<Drawn | null>(null);
   // The colours a new orb starts with (a theme change recolours it without rebuilding it).
   const themeRef = useRef(theme);
+  const levelRef = useRef(level);
   useLayoutEffect(() => {
     themeRef.current = theme;
+    levelRef.current = level;
   });
   const frames = useRef(0);
   // The change in progress: from the parameters shown when it began to the new state's.
@@ -80,13 +88,14 @@ export function OrbView({
     since: 0,
     last: 0,
     pending: 0,
+    voice: 0,
   });
 
   /** Draws one frame `dt` seconds on (the reduced-motion picture: once, still). */
-  const drawRef = useRef((dt: number, params: OrbParams) => {
+  const drawRef = useRef((dt: number, params: OrbParams, voice = 0) => {
     const d = drawn.current;
     if (!d) return;
-    d.orb.update(dt, params, 0);
+    d.orb.update(dt, params, voice);
     d.renderer.render(d.orb.scene, d.orb.camera);
     frames.current += 1;
   });
@@ -166,7 +175,8 @@ export function OrbView({
     m.pending += dt;
     const settled = state === 'idle' && now - m.since > TRANSITION_MS;
     if (settled && now - m.last < IDLE_FRAME_MS) return;
-    drawRef.current(m.pending, paramsAt(m.from, m.to, now - m.since));
+    m.voice += (levelRef.current() - m.voice) * (1 - Math.exp(-m.pending / VOICE_EASE_S));
+    drawRef.current(m.pending, paramsAt(m.from, m.to, now - m.since), m.voice);
     m.pending = 0;
     m.last = now;
   });

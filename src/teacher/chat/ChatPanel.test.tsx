@@ -42,6 +42,33 @@ describe('AI Teacher chat panel', () => {
     setTransportForTests(null);
   });
 
+  it('reports a question being typed: the box focused with some text; left, emptied or sent, not', async () => {
+    const user = userEvent.setup();
+    const typing: boolean[] = [];
+    render(
+      <ChatPanel teacherPage showScreenContext={false} onComposingChange={(v) => typing.push(v)} />,
+    );
+    const box = screen.getByLabelText('Nhập câu hỏi');
+    await user.click(box);
+    await user.keyboard('   ');
+    expect(typing.at(-1)).toBe(false);
+    await user.keyboard('Vì sao');
+    expect(typing.at(-1)).toBe(true);
+    // The typed text is never wiped by the report (#239: the orb's old listener did).
+    expect(box).toHaveValue('   Vì sao');
+    await user.tab();
+    expect(typing.at(-1)).toBe(false);
+    await user.click(box);
+    expect(typing.at(-1)).toBe(true);
+    await user.clear(box);
+    expect(typing.at(-1)).toBe(false);
+    await user.type(box, 'Vì sao trời xanh?{Enter}');
+    await waitFor(() => {
+      expect(calls).toHaveLength(1);
+    });
+    expect(typing.at(-1)).toBe(false);
+  });
+
   it('quick buttons ("Chậm hơn"…) wait until there is an answer to rework', () => {
     render(<ChatPanel teacherPage showScreenContext={false} />);
     expect(screen.queryByRole('button', { name: 'Chậm hơn' })).not.toBeInTheDocument();

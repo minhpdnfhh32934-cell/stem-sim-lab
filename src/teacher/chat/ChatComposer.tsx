@@ -22,6 +22,7 @@ export function ChatComposer({
   boardInWords,
   draft,
   onDraftChange,
+  onFocusChange,
   inputRef,
   onSend,
   busy,
@@ -34,6 +35,8 @@ export function ChatComposer({
   boardInWords: boolean;
   draft: string;
   onDraftChange: (text: string) => void;
+  /** The box gains or loses the keyboard focus. */
+  onFocusChange?: (focused: boolean) => void;
   inputRef: RefObject<HTMLTextAreaElement | null>;
   /** Sends the typed question (with the circled part when the chip is there). */
   onSend: () => void;
@@ -113,6 +116,8 @@ export function ChatComposer({
             onDraftChange(e.target.value);
           }}
           onKeyDown={onKeyDown}
+          onFocus={() => onFocusChange?.(true)}
+          onBlur={() => onFocusChange?.(false)}
           rows={2}
           maxLength={4000}
           placeholder={t('chat.placeholder')}
