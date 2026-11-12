@@ -106,7 +106,7 @@ nhỏ dưới thanh chọn cho biết câu hỏi tiếp theo sẽ được gửi
   Thẻ Khoa học của SimLab cùng câu hỏi. Mặc định tắt; nút tự tắt lại mỗi lần đóng thẻ Hỏi AI.
   Công tắc này chỉ có ở thẻ Hỏi AI trong sổ, không có ở trang AI Teacher toàn màn hình.
   Ứng dụng dùng trạng thái có cấu trúc, không chụp màn hình hay đọc cửa sổ khác.
-- Bật **Think** để API trả lời thứ nhất tạo bản nháp và một nhà cung cấp API khác kiểm tra, chỉnh lại
+- Bật **Suy nghĩ kĩ (Think)** để API trả lời thứ nhất tạo bản nháp và một nhà cung cấp API khác kiểm tra, chỉnh lại
   câu trả lời. Think dùng thêm lượt API; cấu hình nhà cung cấp thứ hai trong Cài đặt → AI Teacher. Thiếu
   khóa thứ hai thì app báo ngay khi bật Think, không gửi gì. Khi bật Think, bản nháp không chuyển
   sang nhà cung cấp dự phòng, để người rà soát không tự chấm bài của chính mình. Trên trình duyệt,
