@@ -220,6 +220,13 @@ B0–B8 in its §14, merged from 08/11):
   `tests/e2e/bench/tooltip.spec.ts`). E2E `tests/e2e/bench/controls.spec.ts`: 40/48 px targets, focus
   rings ≥ 3 : 1 on frame and paper, keyboard, no motion under reduced motion, axe
   (`@axe-core/playwright`, serious/critical). MIT notices: `docs/THIRD_PARTY.md`.
+  A one-line label that can be cut (lesson name, tray title…) uses `useCutTip`
+  (`src/ui/useCutTip.ts`, #205 A5): while cut it carries the whole text as a tooltip and joins the
+  Tab order. With reduced motion, lessons that would start playing open paused (#205 C3).
+- **Dialogs loaded on first use (`ShellOverlays`):** the Ctrl+K palette and "Nguồn & Giả định" load
+  through `useLoaded` (`src/app/bench/useLoaded.ts`), never `React.lazy`: a suspended `lazy()`
+  retries at a low priority that never expires, and a 3D lesson running without end starved it
+  (#228). A failed load toasts "Mình chưa mở được phần này…" and the next open tries again (#229).
 - **New features (§13), all agreed on 2026-11-02, built after the bench frame is done:** "Sổ ghi"
   run log, "Ví dụ" presets, parameter sweep, Ctrl+/ shortcut sheet, the "Hiển thị và trợ năng"
   page, "Làm mờ phần còn lại", "Theo dõi một hạt" and the "Tiếp tục" resume link.
@@ -378,7 +385,8 @@ Progress log: `docs/PROGRESS.md`.
   NaN recovery, drift, intervention), hosts in `src/workers/host.ts`; register engines in
   `src/workers/engines.ts` with lazy imports.
 - Perf: `src/perf` (benchmark → tier, `usePerfStore`, `FrameMonitor`).
-- Science Card: `src/science-card` (`ScienceCard`, `withIntervention`, lazy KaTeX).
+- Science Card: `src/science-card` (`ScienceCard`, `withIntervention`, lazy KaTeX). `withDrift`
+  (#205 C2): an energy drift above 10⁻⁹ makes the card approximate, says so, and offers a reset.
 - Scientific text is `LocalizedText {vi, en}` (use `useLocalized()`), UI text goes through `t()`.
 
 ## Physics scenes (Phase 2)
@@ -390,6 +398,13 @@ Progress log: `docs/PROGRESS.md`.
   otherwise RK4 with substeps and energy monitoring. Every scene needs a test comparing the
   engine with the closed form and a DOPRI5 cross-check.
 - UI runtime: `src/app/sim/runtime.ts` (`sim` singleton), `StageCanvas`, panels in `src/app/sim`.
+- **Lessons that run until paused (#205 C1, C5):** periodic scenes are `endless` (an engine stops
+  only at a test's `tEnd`; time = steps × dt); `History` keeps a sliding window (12000 samples, the
+  oldest quarter dropped) and the data table / CSV name the span they keep. The biology habitats
+  (predator–prey, logistic, diffusion / osmosis) run on in joined segments, each one computed from
+  the end of the last (C5). `npm run test:slow` (10⁵ s, RK4 energy) runs before every release
+  (`docs/RELEASE.md`). After Pause the runtime keeps `pausedAt`: a frame the worker ran past it is
+  not shown and the engine is sent back (`seek`, #230).
 - **Unit groups (0.8.0):** `UnitDef.group` `'angular'` (rad/s) / `'cycle'` (Hz, rev/s = vòng/s,
   rev/min = vòng/phút): `convert()` throws across groups, `allowedUnits()` keeps a field's own group
   (an ω field never takes Hz). New units of the same dimension that must not mix get a group.
@@ -595,7 +610,9 @@ Progress log: `docs/PROGRESS.md`.
 - Shared UI: `src/ui/charts/XYChart.tsx` (uPlot), `src/ui/canvas/useCanvas.ts`.
 - Biology: `src/biology/{division,central,genetics,ecology,enzyme,transport,cell}` — pure model
   files (`*.ts`, tested) + `*Views.tsx`; `modules.ts` lists the 12 ModuleViews. Small shared controls in
-  `src/biology/ui.tsx` (`Range`, `Segmented`) and `fmt.ts` (`useFmt`, `niceStep`). Genetic code in
+  `src/biology/ui.tsx` (`Range`, `Segmented`) and `fmt.ts` (`useFmt`, `niceStep`). `Range` renders the
+  shared `SliderField` (`src/ui/SliderField.tsx`, #205 B7–B8: slider, number box and − / +, the
+  physics `.param` row), also used by the chemistry gas panels. Genetic code in
   `data/genetic_code.json` (`scripts/data/gen_genetic_code.py`).
 - Mitosis 3D (`src/biology/division/mitosis3d/`): `timeline.ts` (pure, counts from
   `runDivision('mitosis')`, S phase folded into the G1→G2 boundary), `scene.ts` (three.js, nothing
@@ -811,11 +828,14 @@ Progress log: `docs/PROGRESS.md`.
 - [~] 0.8.0 (plan #37): KNTT grade bar, uniform circular motion, standing waves, electric field
   (PR #89), cell structure 2D, Studio guide, "Virtual Lab". Version PR #92 merged 2026-10-28; never
   released on its own (only a demo installer): its content ships in 0.8.1
-- [~] 0.8.1 (plan #54; version PR of #194 open, not released): the bench as the only shell (B0–B8),
+- [~] 0.8.1 (plan #54; not released yet): the bench as the only shell (B0–B8),
   interference, forced oscillation, DC circuits, Kepler's second law (extension), Fourier series,
   phase space, titration, crystals, the energy diagram, organic molecules by functional group, cell
-  3D, "Từ tế bào đến DNA", showcase mode, "Thông tin máy". Web and native parts are both 0.8.1
-  (0.7.1 installs need the new installer); Store package 0.8.1.0, submitted by hand
+  3D, "Từ tế bào đến DNA", showcase mode, "Thông tin máy", and #205 (a readable interface: text
+  ≥ 12 px, targets ≥ 40 px, focus rings, uncut labels; periodic lessons run until paused; energy
+  drift on the Science Card; reduced motion opens lessons paused; its last eight PRs merged through
+  the train PR #231). Web and native parts are both 0.8.1 (0.7.1 installs need the new installer);
+  Store package 0.8.1.0, to be submitted by hand in Partner Center
 - [ ] Phase 8+: extensions (MASTER_PROMPT §6.2, advanced 3D/biology) — only on request
 
 ## Release
