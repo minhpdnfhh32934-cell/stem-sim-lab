@@ -424,6 +424,8 @@ Under 18: door 2 becomes a non-interactive card the same size, with a Lock icon 
 
 ### 9.4 Physics bench (default: notebook closed, tray open)
 
+**Targets (#205 A3).** Every visible control is at least 40 × 40 at 100 % and 140 % (`tests/e2e/bench/targets.spec.ts`; a field inside a `<label>` box counts by its box). The stage palette's tools are 40 px fixed (not `--target`) with 2 px padding, so the palette ends at x = 58, clear of the captions scenes write at x = 60 at every Cỡ chữ. The mark, the speed steps and the icon-only `.ai-status` never shrink below 40. The periodic table's tiles wait for B7.
+
 **Header y0–48**
 
 | Element                                | Position      |
