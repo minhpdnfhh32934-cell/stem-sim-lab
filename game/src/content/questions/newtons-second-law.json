@@ -1,0 +1,1058 @@
+{
+  "id": "newtons-second-law",
+  "skills": [
+    {
+      "id": "first-law",
+      "name": "No net force: constant velocity",
+      "advice": "Re-read Newton’s first law. Run the glider with nothing hanging: both gates give the same speed — no force is needed to keep it moving.",
+      "vi": {
+        "name": "Không có hợp lực: chuyển động thẳng đều",
+        "advice": "Đọc lại định luật I Newton. Cho xe chạy khi không treo vật: hai cổng cho cùng một tốc độ — không cần lực để duy trì chuyển động."
+      }
+    },
+    {
+      "id": "second-law",
+      "name": "Newton’s second law: a = m·g/(M + m)",
+      "advice": "The hanging weight m·g pulls both bodies, so divide by the whole mass M + m. Trap: dividing by M alone. Try m = 5, 10, 20 g at the station and compare a.",
+      "vi": {
+        "name": "Định luật II Newton: a = m·g/(M + m)",
+        "advice": "Trọng lượng vật treo m·g kéo cả hai vật, nên phải chia cho tổng khối lượng M + m. Lỗi hay gặp: chỉ chia cho M. Thử m = 5, 10, 20 g trên trạm và so sánh a."
+      }
+    },
+    {
+      "id": "tension",
+      "name": "The string’s pull: T = M·a",
+      "advice": "Write Newton’s second law for the glider alone: the string is the only horizontal force on it, so T = M·a, a little less than m·g — the hanging mass is accelerating, not hanging still.",
+      "vi": {
+        "name": "Lực căng dây: T = M·a",
+        "advice": "Viết định luật II Newton cho riêng xe: lực căng dây là lực nằm ngang duy nhất tác dụng lên xe, nên T = M·a, nhỏ hơn m·g một chút — vật treo đang chuyển động có gia tốc chứ không đứng yên."
+      }
+    },
+    {
+      "id": "gates",
+      "name": "Speeds and acceleration from light gates",
+      "advice": "Practise v = L/Δt with the card length L, then a = (v_B² − v_A²)/(2·AB) with AB the distance between the gates, not a gate’s position.",
+      "vi": {
+        "name": "Tốc độ và gia tốc từ cổng quang",
+        "advice": "Luyện v = L/Δt với L là chiều dài tấm chắn, rồi a = (v_B² − v_A²)/(2·AB) với AB là khoảng cách giữa hai cổng, không phải vị trí của một cổng."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "coasting",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["first-law"],
+      "stem": "On the level air track, with nothing hanging from the string, the glider is given a push and let go. Afterwards it…",
+      "explain": "No net force acts (no friction on the air cushion), so by Newton’s first law it keeps a constant velocity.",
+      "vi": {
+        "stem": "Trên đệm không khí nằm ngang, khi không treo vật nào, xe được đẩy rồi thả ra. Sau đó xe…",
+        "explain": "Không có hợp lực tác dụng (đệm khí không có ma sát), nên theo định luật I Newton xe giữ nguyên vận tốc."
+      },
+      "options": [
+        {
+          "text": "moves in a straight line at constant speed",
+          "vi": {
+            "text": "chuyển động thẳng đều"
+          },
+          "correct": true
+        },
+        {
+          "text": "slows down and stops",
+          "vi": {
+            "text": "chậm dần rồi dừng lại"
+          }
+        },
+        {
+          "text": "keeps speeding up",
+          "vi": {
+            "text": "nhanh dần mãi"
+          }
+        },
+        {
+          "text": "stops at once",
+          "vi": {
+            "text": "dừng lại ngay"
+          }
+        }
+      ]
+    },
+    {
+      "id": "second-law",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["second-law"],
+      "stem": "Newton’s second law says that the acceleration of a body…",
+      "explain": "a = F/m: proportional to the net force, inversely proportional to the mass, in the direction of the net force.",
+      "vi": {
+        "stem": "Định luật II Newton phát biểu rằng gia tốc của một vật…",
+        "explain": "a = F/m: tỉ lệ thuận với hợp lực, tỉ lệ nghịch với khối lượng, cùng hướng với hợp lực."
+      },
+      "options": [
+        {
+          "text": "is proportional to the net force and inversely proportional to its mass",
+          "vi": {
+            "text": "tỉ lệ thuận với hợp lực tác dụng và tỉ lệ nghịch với khối lượng của vật"
+          },
+          "correct": true
+        },
+        {
+          "text": "is proportional to its mass and inversely proportional to the net force",
+          "vi": {
+            "text": "tỉ lệ thuận với khối lượng và tỉ lệ nghịch với hợp lực"
+          }
+        },
+        {
+          "text": "is proportional to its speed",
+          "vi": {
+            "text": "tỉ lệ thuận với tốc độ của vật"
+          }
+        },
+        {
+          "text": "is zero whenever the body moves",
+          "vi": {
+            "text": "bằng 0 mỗi khi vật chuyển động"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-track",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["first-law", "gates", "tension"],
+      "stem": "A glider on a level air track is timed by two light gates; its card is L long. Decide whether each statement is true or false.",
+      "explain": "The air cushion removes friction; a gate gives v = L/Δt; coasting, both speeds are equal; the string pulls the glider with M·a, less than m·g.",
+      "vi": {
+        "stem": "Một xe trượt trên đệm không khí nằm ngang được đo bằng hai cổng quang; tấm chắn của xe dài L. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Đệm khí loại bỏ ma sát; mỗi cổng cho v = L/Δt; khi xe tự chạy, hai tốc độ bằng nhau; dây kéo xe với lực M·a, nhỏ hơn m·g."
+      },
+      "statements": [
+        {
+          "text": "The air cushion removes the friction between glider and track.",
+          "vi": {
+            "text": "Đệm khí loại bỏ ma sát giữa xe và máng."
+          },
+          "true": true
+        },
+        {
+          "text": "The speed at a gate is the card length over the time the beam is blocked.",
+          "vi": {
+            "text": "Tốc độ tại một cổng bằng chiều dài tấm chắn chia cho thời gian chùm tia bị chắn."
+          },
+          "true": true
+        },
+        {
+          "text": "With nothing hanging, the two gates give the same speed.",
+          "vi": {
+            "text": "Khi không treo vật, hai cổng cho cùng một tốc độ."
+          },
+          "true": true
+        },
+        {
+          "text": "With a mass m hanging, the string pulls the glider with exactly m·g.",
+          "vi": {
+            "text": "Khi treo vật khối lượng m, dây kéo xe với lực đúng bằng m·g."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "double-hanging",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["second-law"],
+      "stem": "The hanging mass m is doubled; the glider mass M stays the same. The acceleration…",
+      "explain": "a = m·g/(M + m): the pull doubles, but the mass moved grows too, so a grows to a little less than twice.",
+      "vi": {
+        "stem": "Tăng khối lượng vật treo m lên gấp đôi, khối lượng xe M giữ nguyên. Gia tốc…",
+        "explain": "a = m·g/(M + m): lực kéo tăng gấp đôi nhưng khối lượng được kéo cũng tăng, nên a tăng nhưng chưa tới hai lần."
+      },
+      "options": [
+        {
+          "text": "increases, but to less than twice",
+          "vi": {
+            "text": "tăng lên, nhưng chưa tới gấp đôi"
+          },
+          "correct": true
+        },
+        {
+          "text": "exactly doubles",
+          "vi": {
+            "text": "tăng đúng gấp đôi"
+          }
+        },
+        {
+          "text": "halves",
+          "vi": {
+            "text": "giảm một nửa"
+          }
+        },
+        {
+          "text": "does not change",
+          "vi": {
+            "text": "không đổi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "heavier-glider",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["second-law"],
+      "stem": "Slotted masses are added to the glider; the hanging mass stays the same. The acceleration…",
+      "explain": "The pull m·g is unchanged but it moves more mass, so a = m·g/(M + m) decreases.",
+      "vi": {
+        "stem": "Gắn thêm các quả gia trọng lên xe, vật treo giữ nguyên. Gia tốc của xe…",
+        "explain": "Lực kéo m·g không đổi nhưng phải kéo khối lượng lớn hơn, nên a = m·g/(M + m) giảm."
+      },
+      "options": [
+        {
+          "text": "decreases",
+          "vi": {
+            "text": "giảm"
+          },
+          "correct": true
+        },
+        {
+          "text": "increases",
+          "vi": {
+            "text": "tăng"
+          }
+        },
+        {
+          "text": "does not change",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "becomes zero",
+          "vi": {
+            "text": "bằng 0"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-coast",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["first-law", "gates"],
+      "set": {
+        "hangingMass": 0,
+        "gliderMass": 0.2
+      },
+      "stem": "Nothing hangs from the string; the launcher pushes the {gliderMass} kg glider off at u = {launchSpeed} m/s along the level, frictionless track. Decide whether each statement is true or false.",
+      "explain": "With no net force a = 0: the glider keeps u, so both gates read the same Δt and v = L/Δt = {launchSpeed} m/s. Its weight is balanced by the air cushion; no force is needed to keep it moving.",
+      "vi": {
+        "stem": "Không treo vật nào; bộ phóng đẩy xe {gliderMass} kg đi với u = {launchSpeed} m/s trên máng nằm ngang không ma sát. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Không có hợp lực nên a = 0: xe giữ nguyên u, hai cổng đo cùng Δt và v = L/Δt = {launchSpeed} m/s. Trọng lực cân bằng với lực nâng của đệm khí; không cần lực nào để duy trì chuyển động."
+      },
+      "statements": [
+        {
+          "text": "Its acceleration is zero.",
+          "vi": {
+            "text": "Gia tốc của xe bằng 0."
+          },
+          "true": true,
+          "check": {
+            "expr": "0",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "Gates A and B read the same time Δt.",
+          "vi": {
+            "text": "Cổng A và cổng B đo được cùng thời gian Δt."
+          },
+          "true": true,
+          "check": {
+            "expr": "@blockedA",
+            "equals": "blockedB"
+          }
+        },
+        {
+          "text": "The speed at gate A is {launchSpeed} m/s.",
+          "vi": {
+            "text": "Tốc độ tại cổng A bằng {launchSpeed} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "launchSpeed",
+            "equals": "speedA"
+          }
+        },
+        {
+          "text": "A forward force must act on it all the way to keep it moving.",
+          "vi": {
+            "text": "Phải có một lực đẩy về phía trước tác dụng liên tục thì xe mới tiếp tục chuyển động."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "acceleration",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["second-law"],
+      "set": {
+        "hangingMass": 0.02,
+        "gliderMass": 0.3
+      },
+      "stem": "A {gliderMass} kg glider on a level air track is pulled by a {hangingMass} kg mass hanging over a light pulley (g = {gravity} m/s²). What is the acceleration?",
+      "explain": "m·g moves both bodies: a = m·g/(M + m) = {hangingMass}·{gravity}/({gliderMass} + {hangingMass}) ≈ {@acceleration} m/s².",
+      "vi": {
+        "stem": "Xe trượt {gliderMass} kg trên đệm không khí nằm ngang được kéo bởi vật {hangingMass} kg treo qua ròng rọc nhẹ (g = {gravity} m/s²). Gia tốc của xe bằng bao nhiêu?",
+        "explain": "m·g kéo cả hai vật: a = m·g/(M + m) = {hangingMass}·{gravity}/({gliderMass} + {hangingMass}) ≈ {@acceleration} m/s²."
+      },
+      "options": [
+        {
+          "text": "{@acceleration} m/s²",
+          "vi": {
+            "text": "{@acceleration} m/s²"
+          },
+          "correct": true,
+          "check": {
+            "expr": "hangingMass*gravity/(gliderMass+hangingMass)",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "{=hangingMass*gravity/gliderMass} m/s²",
+          "vi": {
+            "text": "{=hangingMass*gravity/gliderMass} m/s²"
+          },
+          "check": {
+            "expr": "hangingMass*gravity/gliderMass",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "{=hangingMass/(gliderMass+hangingMass)} m/s²",
+          "vi": {
+            "text": "{=hangingMass/(gliderMass+hangingMass)} m/s²"
+          },
+          "check": {
+            "expr": "hangingMass/(gliderMass+hangingMass)",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "{gravity} m/s²",
+          "vi": {
+            "text": "{gravity} m/s²"
+          },
+          "check": {
+            "expr": "gravity",
+            "equals": "acceleration"
+          }
+        }
+      ]
+    },
+    {
+      "id": "tension",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["tension"],
+      "set": {
+        "hangingMass": 0.015,
+        "gliderMass": 0.4
+      },
+      "stem": "A {gliderMass} kg glider is pulled along a level air track by a {hangingMass} kg hanging mass; the acceleration is {@acceleration} m/s² (g = {gravity} m/s²). How hard does the string pull the glider?",
+      "explain": "The string is the only horizontal force on the glider: T = M·a = {gliderMass}·{@acceleration} ≈ {@tension} N, a little less than m·g = {@force} N.",
+      "vi": {
+        "stem": "Xe trượt {gliderMass} kg được kéo trên đệm không khí nằm ngang bởi vật treo {hangingMass} kg; gia tốc là {@acceleration} m/s² (g = {gravity} m/s²). Lực căng dây kéo xe bằng bao nhiêu?",
+        "explain": "Lực căng dây là lực nằm ngang duy nhất tác dụng lên xe: T = M·a = {gliderMass}·{@acceleration} ≈ {@tension} N, nhỏ hơn m·g = {@force} N một chút."
+      },
+      "options": [
+        {
+          "text": "{@tension} N",
+          "vi": {
+            "text": "{@tension} N"
+          },
+          "correct": true,
+          "check": {
+            "expr": "gliderMass*@acceleration",
+            "equals": "tension"
+          }
+        },
+        {
+          "text": "{=hangingMass*gravity} N",
+          "vi": {
+            "text": "{=hangingMass*gravity} N"
+          },
+          "check": {
+            "expr": "hangingMass*gravity",
+            "equals": "tension"
+          }
+        },
+        {
+          "text": "{=hangingMass*@acceleration} N",
+          "vi": {
+            "text": "{=hangingMass*@acceleration} N"
+          },
+          "check": {
+            "expr": "hangingMass*@acceleration",
+            "equals": "tension"
+          }
+        },
+        {
+          "text": "{=gliderMass*gravity} N",
+          "vi": {
+            "text": "{=gliderMass*gravity} N"
+          },
+          "check": {
+            "expr": "gliderMass*gravity",
+            "equals": "tension"
+          }
+        }
+      ]
+    },
+    {
+      "id": "gate-speed",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["gates"],
+      "set": {
+        "hangingMass": 0.01,
+        "gliderMass": 0.2
+      },
+      "stem": "The glider’s card is {cardLength} m long and blocks gate A for Δt_A = {@blockedA|4} s. What is the glider’s speed at gate A?",
+      "explain": "v_A = L/Δt_A = {cardLength}/{@blockedA|4} ≈ {@speedA} m/s.",
+      "vi": {
+        "stem": "Tấm chắn của xe dài {cardLength} m, chắn cổng A trong Δt_A = {@blockedA|4} s. Tốc độ của xe tại cổng A bằng bao nhiêu?",
+        "explain": "v_A = L/Δt_A = {cardLength}/{@blockedA|4} ≈ {@speedA} m/s."
+      },
+      "options": [
+        {
+          "text": "{@speedA} m/s",
+          "vi": {
+            "text": "{@speedA} m/s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "cardLength/@blockedA",
+            "equals": "speedA"
+          }
+        },
+        {
+          "text": "{=@blockedA/cardLength} m/s",
+          "vi": {
+            "text": "{=@blockedA/cardLength} m/s"
+          },
+          "check": {
+            "expr": "@blockedA/cardLength",
+            "equals": "speedA"
+          }
+        },
+        {
+          "text": "{=gateA/@blockedA} m/s",
+          "vi": {
+            "text": "{=gateA/@blockedA} m/s"
+          },
+          "check": {
+            "expr": "gateA/@blockedA",
+            "equals": "speedA"
+          }
+        },
+        {
+          "text": "{=cardLength*@blockedA} m/s",
+          "vi": {
+            "text": "{=cardLength*@blockedA} m/s"
+          },
+          "check": {
+            "expr": "cardLength*@blockedA",
+            "equals": "speedA"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-forces",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["second-law", "tension"],
+      "set": {
+        "hangingMass": 0.01,
+        "gliderMass": 0.3
+      },
+      "stem": "A {gliderMass} kg glider on a level air track is pulled by a {hangingMass} kg hanging mass (g = {gravity} m/s²). Decide whether each statement is true or false.",
+      "explain": "F = m·g ≈ {@force} N; a = F/(M + m) ≈ {@acceleration} m/s²; T = M·a ≈ {@tension} N, less than m·g.",
+      "vi": {
+        "stem": "Xe trượt {gliderMass} kg trên đệm không khí nằm ngang được kéo bởi vật treo {hangingMass} kg (g = {gravity} m/s²). Mỗi nhận định sau đúng hay sai?",
+        "explain": "F = m·g ≈ {@force} N; a = F/(M + m) ≈ {@acceleration} m/s²; T = M·a ≈ {@tension} N, nhỏ hơn m·g."
+      },
+      "statements": [
+        {
+          "text": "The hanging weight is about {@force} N.",
+          "vi": {
+            "text": "Trọng lượng của vật treo khoảng {@force} N."
+          },
+          "true": true,
+          "check": {
+            "expr": "hangingMass*gravity",
+            "equals": "force"
+          }
+        },
+        {
+          "text": "The acceleration is about {@acceleration} m/s².",
+          "vi": {
+            "text": "Gia tốc khoảng {@acceleration} m/s²."
+          },
+          "true": true,
+          "check": {
+            "expr": "hangingMass*gravity/(gliderMass+hangingMass)",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "The string pulls the glider with about {=hangingMass*gravity} N.",
+          "vi": {
+            "text": "Dây kéo xe với lực khoảng {=hangingMass*gravity} N."
+          },
+          "true": false,
+          "check": {
+            "expr": "hangingMass*gravity",
+            "equals": "tension"
+          }
+        },
+        {
+          "text": "The acceleration equals the hanging weight divided by M + m.",
+          "vi": {
+            "text": "Gia tốc bằng trọng lượng vật treo chia cho M + m."
+          },
+          "true": true,
+          "check": {
+            "expr": "@force/(gliderMass+hangingMass)",
+            "equals": "acceleration"
+          }
+        }
+      ]
+    },
+    {
+      "id": "a-from-gates",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["gates"],
+      "set": {
+        "hangingMass": 0.015,
+        "gliderMass": 0.4,
+        "gateB": 0.7
+      },
+      "stem": "The {cardLength} m card blocks gate A (at {gateA} m) for {@blockedA|4} s and gate B (at {gateB} m) for {@blockedB|4} s. What acceleration do the gates give?",
+      "explain": "v_A = L/Δt_A ≈ {@speedA|4} m/s, v_B = L/Δt_B ≈ {@speedB|4} m/s; a = (v_B² − v_A²)/(2·AB) with AB = {=gateB-gateA} m: ≈ {@measuredAcceleration} m/s². Using x_B for AB, or v_B − v_A for the squares, gives the wrong values.",
+      "vi": {
+        "stem": "Tấm chắn dài {cardLength} m chắn cổng A (ở vị trí {gateA} m) trong {@blockedA|4} s và cổng B (ở {gateB} m) trong {@blockedB|4} s. Gia tốc tính từ hai cổng bằng bao nhiêu?",
+        "explain": "v_A = L/Δt_A ≈ {@speedA|4} m/s, v_B = L/Δt_B ≈ {@speedB|4} m/s; a = (v_B² − v_A²)/(2·AB) với AB = {=gateB-gateA} m: ≈ {@measuredAcceleration} m/s². Dùng x_B thay cho AB, hoặc dùng v_B − v_A thay cho hiệu bình phương, sẽ ra các giá trị sai."
+      },
+      "options": [
+        {
+          "text": "{@measuredAcceleration} m/s²",
+          "vi": {
+            "text": "{@measuredAcceleration} m/s²"
+          },
+          "correct": true,
+          "check": {
+            "expr": "((cardLength/@blockedB)^2-(cardLength/@blockedA)^2)/(2*(gateB-gateA))",
+            "equals": "measuredAcceleration"
+          }
+        },
+        {
+          "text": "{=((cardLength/@blockedB)^2-(cardLength/@blockedA)^2)/(2*gateB)} m/s²",
+          "vi": {
+            "text": "{=((cardLength/@blockedB)^2-(cardLength/@blockedA)^2)/(2*gateB)} m/s²"
+          },
+          "check": {
+            "expr": "((cardLength/@blockedB)^2-(cardLength/@blockedA)^2)/(2*gateB)",
+            "equals": "measuredAcceleration"
+          }
+        },
+        {
+          "text": "{=((cardLength/@blockedB)^2-(cardLength/@blockedA)^2)/(gateB-gateA)} m/s²",
+          "vi": {
+            "text": "{=((cardLength/@blockedB)^2-(cardLength/@blockedA)^2)/(gateB-gateA)} m/s²"
+          },
+          "check": {
+            "expr": "((cardLength/@blockedB)^2-(cardLength/@blockedA)^2)/(gateB-gateA)",
+            "equals": "measuredAcceleration"
+          }
+        },
+        {
+          "text": "{=(cardLength/@blockedB-cardLength/@blockedA)/(2*(gateB-gateA))} m/s²",
+          "vi": {
+            "text": "{=(cardLength/@blockedB-cardLength/@blockedA)/(2*(gateB-gateA))} m/s²"
+          },
+          "check": {
+            "expr": "(cardLength/@blockedB-cardLength/@blockedA)/(2*(gateB-gateA))",
+            "equals": "measuredAcceleration"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-analysis",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["second-law", "gates"],
+      "set": {
+        "hangingMass": 0.02,
+        "gliderMass": 0.2
+      },
+      "stem": "A {gliderMass} kg glider is pulled by a {hangingMass} kg hanging mass; the gates give a ≈ {@measuredAcceleration|4} m/s², and Newton’s second law gives m·g/(M + m) ≈ {@acceleration|4} m/s². Decide whether each statement is true or false.",
+      "explain": "L/Δt is the speed at the middle of the card’s passage, so the gates’ value comes out a little over m·g/(M + m). a = F/(M + m): plotted against F/(M + m) it is a line of slope 1; with M + m fixed (masses moved from glider to hanger), a ∝ m. A real track (drag, pulley friction and inertia) gives less, not more.",
+      "vi": {
+        "stem": "Xe trượt {gliderMass} kg được kéo bởi vật treo {hangingMass} kg; hai cổng cho a ≈ {@measuredAcceleration|4} m/s², còn định luật II Newton cho m·g/(M + m) ≈ {@acceleration|4} m/s². Mỗi nhận định sau đúng hay sai?",
+        "explain": "L/Δt là tốc độ ở giữa lúc tấm chắn đi qua, nên giá trị từ hai cổng lớn hơn m·g/(M + m) một chút. a = F/(M + m): đồ thị a theo F/(M + m) là đường thẳng hệ số góc 1; giữ M + m không đổi (chuyển gia trọng từ xe sang móc treo) thì a tỉ lệ với m. Máng thật (lực cản, ma sát và quán tính ròng rọc) cho a nhỏ hơn chứ không lớn hơn."
+      },
+      "statements": [
+        {
+          "text": "The gates’ acceleration is a little larger than m·g/(M + m).",
+          "vi": {
+            "text": "Gia tốc tính từ hai cổng lớn hơn m·g/(M + m) một chút."
+          },
+          "true": true
+        },
+        {
+          "text": "Plotting a against F/(M + m) over several runs gives a straight line of slope 1.",
+          "vi": {
+            "text": "Vẽ a theo F/(M + m) qua nhiều lần đo được đường thẳng có hệ số góc bằng 1."
+          },
+          "true": true
+        },
+        {
+          "text": "Keeping M + m fixed by moving masses from the glider to the hanger, a is proportional to m.",
+          "vi": {
+            "text": "Giữ M + m không đổi bằng cách chuyển gia trọng từ xe sang móc treo thì a tỉ lệ thuận với m."
+          },
+          "true": true
+        },
+        {
+          "text": "On a real track with drag and a real pulley, the measured a would be larger than the theory.",
+          "vi": {
+            "text": "Trên máng thật có lực cản và ròng rọc thật, gia tốc đo được sẽ lớn hơn lí thuyết."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "newton-unit",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["second-law"],
+      "stem": "From F = m·a, one newton is the same as…",
+      "explain": "1 N is the force that gives 1 kg an acceleration of 1 m/s²: 1 N = 1 kg·m/s².",
+      "vi": {
+        "stem": "Từ F = m·a, một niutơn bằng…",
+        "explain": "1 N là lực truyền cho vật khối lượng 1 kg gia tốc 1 m/s²: 1 N = 1 kg·m/s²."
+      },
+      "options": [
+        {
+          "text": "1 kg·m/s²",
+          "vi": {
+            "text": "1 kg·m/s²"
+          },
+          "correct": true
+        },
+        {
+          "text": "1 kg·m/s",
+          "vi": {
+            "text": "1 kg·m/s"
+          }
+        },
+        {
+          "text": "1 kg/(m·s²)",
+          "vi": {
+            "text": "1 kg/(m·s²)"
+          }
+        },
+        {
+          "text": "1 J/s",
+          "vi": {
+            "text": "1 J/s"
+          }
+        }
+      ]
+    },
+    {
+      "id": "double-both",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["second-law"],
+      "stem": "The net force on a body is doubled and so is its mass. Its acceleration…",
+      "explain": "a = F/m: doubling both leaves the ratio, and so the acceleration, unchanged.",
+      "vi": {
+        "stem": "Hợp lực tác dụng lên một vật tăng gấp đôi, đồng thời khối lượng của vật cũng tăng gấp đôi. Gia tốc của vật…",
+        "explain": "a = F/m: tăng cả hai lên gấp đôi thì tỉ số, tức gia tốc, không đổi."
+      },
+      "options": [
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          },
+          "correct": true
+        },
+        {
+          "text": "doubles",
+          "vi": {
+            "text": "tăng gấp đôi"
+          }
+        },
+        {
+          "text": "becomes four times larger",
+          "vi": {
+            "text": "tăng gấp bốn lần"
+          }
+        },
+        {
+          "text": "halves",
+          "vi": {
+            "text": "giảm một nửa"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-system",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["first-law", "second-law", "tension"],
+      "stem": "A glider on a level air track is pulled by a string over a light pulley to a hanging mass. Decide whether each statement is true or false.",
+      "explain": "On the level track the glider’s weight is balanced by the air cushion, so only the string pulls it along. The hanging mass’s weight m·g accelerates both bodies together, M + m. The hanging mass accelerates downwards, so the string pulls it up with less than its weight: T < m·g. With nothing hanging, a pushed glider keeps a constant speed.",
+      "vi": {
+        "stem": "Một xe trên đệm khí nằm ngang được kéo bởi sợi dây vắt qua ròng rọc nhẹ, đầu kia treo một vật. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Trên đệm khí nằm ngang, trọng lực của xe được đệm khí cân bằng, nên chỉ có dây kéo xe đi. Trọng lượng m·g của vật treo làm cả hai vật, M + m, cùng chuyển động có gia tốc. Vật treo đi xuống nhanh dần nên dây kéo nó lên với lực nhỏ hơn trọng lượng của nó: T < m·g. Khi không treo gì, xe được đẩy sẽ chuyển động thẳng đều."
+      },
+      "statements": [
+        {
+          "text": "The air cushion balances the glider’s weight.",
+          "vi": {
+            "text": "Đệm khí cân bằng với trọng lực của xe."
+          },
+          "true": true
+        },
+        {
+          "text": "The hanging weight m·g accelerates both the glider and the hanging mass.",
+          "vi": {
+            "text": "Trọng lượng m·g của vật treo làm cả xe và vật treo cùng chuyển động có gia tốc."
+          },
+          "true": true
+        },
+        {
+          "text": "The string pulls with a force equal to m·g.",
+          "vi": {
+            "text": "Dây kéo với lực bằng m·g."
+          },
+          "true": false
+        },
+        {
+          "text": "With nothing hanging, a glider given a push keeps a constant speed.",
+          "vi": {
+            "text": "Khi không treo vật, xe được đẩy một cái sẽ chuyển động với tốc độ không đổi."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "acceleration-15g",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["second-law"],
+      "set": {
+        "hangingMass": 0.015,
+        "gliderMass": 0.2
+      },
+      "stem": "A {gliderMass} kg glider on a level air track is pulled by a {hangingMass} kg mass hanging over a light pulley (g = {gravity} m/s²). What is the acceleration?",
+      "explain": "The weight m·g = {@force} N accelerates M + m = {=gliderMass+hangingMass} kg: a = m·g/(M + m) ≈ {@acceleration} m/s². Dividing by M only, or forgetting g, gives the other values.",
+      "vi": {
+        "stem": "Một xe {gliderMass} kg trên đệm khí nằm ngang được kéo bởi vật {hangingMass} kg treo qua ròng rọc nhẹ (g = {gravity} m/s²). Gia tốc của hệ bằng bao nhiêu?",
+        "explain": "Trọng lượng m·g = {@force} N làm khối lượng M + m = {=gliderMass+hangingMass} kg chuyển động: a = m·g/(M + m) ≈ {@acceleration} m/s². Chỉ chia cho M, hoặc quên g, sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{@acceleration} m/s²",
+          "vi": {
+            "text": "{@acceleration} m/s²"
+          },
+          "correct": true,
+          "check": {
+            "expr": "hangingMass*gravity/(gliderMass+hangingMass)",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "{=hangingMass*gravity/gliderMass} m/s²",
+          "vi": {
+            "text": "{=hangingMass*gravity/gliderMass} m/s²"
+          },
+          "check": {
+            "expr": "hangingMass*gravity/gliderMass",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "{=hangingMass/(gliderMass+hangingMass)} m/s²",
+          "vi": {
+            "text": "{=hangingMass/(gliderMass+hangingMass)} m/s²"
+          },
+          "check": {
+            "expr": "hangingMass/(gliderMass+hangingMass)",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "{=hangingMass*gravity/(gliderMass-hangingMass)} m/s²",
+          "vi": {
+            "text": "{=hangingMass*gravity/(gliderMass-hangingMass)} m/s²"
+          },
+          "check": {
+            "expr": "hangingMass*gravity/(gliderMass-hangingMass)",
+            "equals": "acceleration"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-20g",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["second-law", "tension"],
+      "set": {
+        "hangingMass": 0.02,
+        "gliderMass": 0.4
+      },
+      "stem": "A {gliderMass} kg glider on a level air track is pulled by a {hangingMass} kg hanging mass (g = {gravity} m/s²). Decide whether each statement is true or false.",
+      "explain": "The pulling force is m·g = {@force} N; a = m·g/(M + m) ≈ {@acceleration} m/s². The string gives the glider its acceleration: T = M·a ≈ {@tension} N, a little less than m·g.",
+      "vi": {
+        "stem": "Một xe {gliderMass} kg trên đệm khí nằm ngang được kéo bởi vật treo {hangingMass} kg (g = {gravity} m/s²). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Lực kéo hệ là m·g = {@force} N; a = m·g/(M + m) ≈ {@acceleration} m/s². Dây truyền gia tốc cho xe: T = M·a ≈ {@tension} N, nhỏ hơn m·g một chút."
+      },
+      "statements": [
+        {
+          "text": "The weight of the hanging mass is {@force} N.",
+          "vi": {
+            "text": "Trọng lượng của vật treo bằng {@force} N."
+          },
+          "true": true,
+          "check": {
+            "expr": "hangingMass*gravity",
+            "equals": "force"
+          }
+        },
+        {
+          "text": "The acceleration is about {@acceleration} m/s².",
+          "vi": {
+            "text": "Gia tốc khoảng {@acceleration} m/s²."
+          },
+          "true": true,
+          "check": {
+            "expr": "hangingMass*gravity/(gliderMass+hangingMass)",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "The string pulls the glider with about {@tension} N.",
+          "vi": {
+            "text": "Dây kéo xe với lực khoảng {@tension} N."
+          },
+          "true": true,
+          "check": {
+            "expr": "gliderMass*@acceleration",
+            "equals": "tension"
+          }
+        },
+        {
+          "text": "The string pulls the glider with the full {@force} N.",
+          "vi": {
+            "text": "Dây kéo xe với lực bằng đúng {@force} N."
+          },
+          "true": false,
+          "check": {
+            "expr": "@force",
+            "equals": "tension"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-hanging",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["second-law"],
+      "set": {
+        "hangingMass": 0.015,
+        "gliderMass": 0.3
+      },
+      "stem": "A {gliderMass} kg glider on a level air track, pulled by a mass hanging over a light pulley, accelerates at {@acceleration|4} m/s² (g = {gravity} m/s²). What is the hanging mass?",
+      "explain": "a(M + m) = m·g gives m = M·a/(g − a) = {gliderMass}·{@acceleration|4}/({gravity} − {@acceleration|4}) ≈ {=gliderMass*@acceleration/(gravity-@acceleration)*1000|3} g. M·a/g forgets that the hanging mass is accelerated too; M(g − a)/a turns the ratio over.",
+      "vi": {
+        "stem": "Một xe {gliderMass} kg trên đệm khí nằm ngang, được kéo bởi một vật treo qua ròng rọc nhẹ, chuyển động với gia tốc {@acceleration|4} m/s² (g = {gravity} m/s²). Khối lượng vật treo bằng bao nhiêu?",
+        "explain": "a(M + m) = m·g cho m = M·a/(g − a) = {gliderMass}·{@acceleration|4}/({gravity} − {@acceleration|4}) ≈ {=gliderMass*@acceleration/(gravity-@acceleration)*1000|3} g. M·a/g là quên rằng vật treo cũng chuyển động có gia tốc; M(g − a)/a là đảo ngược tỉ số."
+      },
+      "options": [
+        {
+          "text": "{=gliderMass*@acceleration/(gravity-@acceleration)*1000|3} g",
+          "vi": {
+            "text": "{=gliderMass*@acceleration/(gravity-@acceleration)*1000|3} g"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(gliderMass*@acceleration/(gravity-@acceleration))*gravity/(gliderMass+gliderMass*@acceleration/(gravity-@acceleration))",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "{=gliderMass*@acceleration/gravity*1000|3} g",
+          "vi": {
+            "text": "{=gliderMass*@acceleration/gravity*1000|3} g"
+          },
+          "check": {
+            "expr": "(gliderMass*@acceleration/gravity)*gravity/(gliderMass+gliderMass*@acceleration/gravity)",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "{=gliderMass*@acceleration/(gravity+@acceleration)*1000|3} g",
+          "vi": {
+            "text": "{=gliderMass*@acceleration/(gravity+@acceleration)*1000|3} g"
+          },
+          "check": {
+            "expr": "(gliderMass*@acceleration/(gravity+@acceleration))*gravity/(gliderMass+gliderMass*@acceleration/(gravity+@acceleration))",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "{=gliderMass*(gravity-@acceleration)/@acceleration|3} kg",
+          "vi": {
+            "text": "{=gliderMass*(gravity-@acceleration)/@acceleration|3} kg"
+          },
+          "check": {
+            "expr": "(gliderMass*(gravity-@acceleration)/@acceleration)*gravity/(gliderMass+gliderMass*(gravity-@acceleration)/@acceleration)",
+            "equals": "acceleration"
+          }
+        }
+      ]
+    },
+    {
+      "id": "glider-from-tension",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["tension", "second-law"],
+      "set": {
+        "hangingMass": 0.01,
+        "gliderMass": 0.3
+      },
+      "stem": "A force sensor in the string reads T = {@tension|4} N while the glider accelerates at {@acceleration|4} m/s²; the hanging mass weighs {@force} N. What is the glider’s mass?",
+      "explain": "Only the string pulls the glider along the level track: T = M·a, so M = T/a = {@tension|4}/{@acceleration|4} ≈ {=@tension/@acceleration} kg. m·g/a is the mass of glider and hanging mass together; (m·g − T)/a is the hanging mass.",
+      "vi": {
+        "stem": "Một cảm biến lực gắn trên dây chỉ T = {@tension|4} N khi xe chuyển động với gia tốc {@acceleration|4} m/s²; vật treo có trọng lượng {@force} N. Khối lượng của xe bằng bao nhiêu?",
+        "explain": "Trên đệm khí nằm ngang chỉ có dây kéo xe: T = M·a, nên M = T/a = {@tension|4}/{@acceleration|4} ≈ {=@tension/@acceleration} kg. m·g/a là khối lượng của cả xe và vật treo; (m·g − T)/a là khối lượng vật treo."
+      },
+      "options": [
+        {
+          "text": "{=@tension/@acceleration} kg",
+          "vi": {
+            "text": "{=@tension/@acceleration} kg"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(@tension/@acceleration)*@acceleration",
+            "equals": "tension"
+          }
+        },
+        {
+          "text": "{=@force/@acceleration} kg",
+          "vi": {
+            "text": "{=@force/@acceleration} kg"
+          },
+          "check": {
+            "expr": "(@force/@acceleration)*@acceleration",
+            "equals": "tension"
+          }
+        },
+        {
+          "text": "{=(@force-@tension)/@acceleration} kg",
+          "vi": {
+            "text": "{=(@force-@tension)/@acceleration} kg"
+          },
+          "check": {
+            "expr": "((@force-@tension)/@acceleration)*@acceleration",
+            "equals": "tension"
+          }
+        },
+        {
+          "text": "{=@tension*@acceleration} kg",
+          "vi": {
+            "text": "{=@tension*@acceleration} kg"
+          },
+          "check": {
+            "expr": "(@tension*@acceleration)*@acceleration",
+            "equals": "tension"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-gates-20g",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["second-law", "gates"],
+      "set": {
+        "hangingMass": 0.02,
+        "gliderMass": 0.2,
+        "gateB": 0.7
+      },
+      "stem": "A {gliderMass} kg glider is pulled by a {hangingMass} kg hanging mass (g = {gravity} m/s²); its {cardLength} m card blocks gate A for {@blockedA|4} s and gate B for {@blockedB|4} s. Decide whether each statement is true or false.",
+      "explain": "a = m·g/(M + m) ≈ {@acceleration} m/s², the same as F/(M + m). The gates give v_A = L/Δt_A ≈ {@speedA} m/s; from the two gates the acceleration comes out about {@measuredAcceleration} m/s², close to the model’s. Doubling M does not halve a, because the hanging mass is part of what is accelerated.",
+      "vi": {
+        "stem": "Một xe {gliderMass} kg được kéo bởi vật treo {hangingMass} kg (g = {gravity} m/s²); tấm chắn sáng dài {cardLength} m của xe che cổng A trong {@blockedA|4} s và cổng B trong {@blockedB|4} s. Mỗi nhận định sau đúng hay sai?",
+        "explain": "a = m·g/(M + m) ≈ {@acceleration} m/s², bằng F/(M + m). Các cổng cho v_A = L/Δt_A ≈ {@speedA} m/s; từ hai cổng tính ra gia tốc khoảng {@measuredAcceleration} m/s², gần với giá trị của mô hình. Tăng M gấp đôi không làm a giảm đúng một nửa, vì vật treo cũng là một phần của hệ chuyển động."
+      },
+      "statements": [
+        {
+          "text": "F/(M + m) gives a ≈ {@acceleration} m/s².",
+          "vi": {
+            "text": "F/(M + m) cho a ≈ {@acceleration} m/s²."
+          },
+          "true": true,
+          "check": {
+            "expr": "@force/(gliderMass+hangingMass)",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "Gate A gives v_A ≈ {@speedA} m/s.",
+          "vi": {
+            "text": "Cổng A cho v_A ≈ {@speedA} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "cardLength/@blockedA",
+            "equals": "speedA"
+          }
+        },
+        {
+          "text": "The acceleration found from the gates, about {@measuredAcceleration} m/s², is close to m·g/(M + m).",
+          "vi": {
+            "text": "Gia tốc tính từ các cổng, khoảng {@measuredAcceleration} m/s², gần với m·g/(M + m)."
+          },
+          "true": true
+        },
+        {
+          "text": "Doubling the glider’s mass would exactly halve the acceleration.",
+          "vi": {
+            "text": "Tăng khối lượng xe gấp đôi thì gia tốc giảm đúng một nửa."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1064 @@
+{
+  "id": "photosynthesis",
+  "skills": [
+    {
+      "id": "limiting-factors",
+      "name": "Limiting factors",
+      "advice": "Learn the idea: the rate is held back by the factor in shortest supply, and raising another factor hardly helps. At the station change one factor at a time (lamp, hydrogencarbonate, temperature) and see which one moves the rate.",
+      "vi": {
+        "name": "Các nhân tố giới hạn",
+        "advice": "Nắm ý chính: cường độ quang hợp bị giới hạn bởi nhân tố thiếu nhất, tăng nhân tố khác hầu như không có tác dụng. Trên trạm, mỗi lần chỉ thay đổi một nhân tố (đèn, hydrogencarbonate, nhiệt độ) và xem nhân tố nào làm thay đổi tốc độ."
+      }
+    },
+    {
+      "id": "inverse-square",
+      "name": "Light and lamp distance: I ∝ 1/d²",
+      "advice": "Practise I = I₀·(d₀/d)²: twice as far gives a quarter of the light, not a half. Move the lamp from 0.1 to 0.2 m at the station and compare the intensities.",
+      "vi": {
+        "name": "Ánh sáng và khoảng cách đèn: I tỉ lệ với 1/d²",
+        "advice": "Luyện I = I₀·(d₀/d)²: xa gấp đôi thì ánh sáng còn một phần tư, không phải một nửa. Dời đèn từ 0,1 m ra 0,2 m trên trạm rồi so sánh cường độ ánh sáng."
+      }
+    },
+    {
+      "id": "rate-measurement",
+      "name": "Measuring the rate of photosynthesis",
+      "advice": "Re-read the set-up: the oxygen bubbles (or the volume in the capillary) per minute give the rate; hydrogencarbonate supplies CO₂; the heat filter and water bath keep the temperature fixed. Name the controlled variables of each run.",
+      "vi": {
+        "name": "Đo cường độ quang hợp",
+        "advice": "Đọc lại cách bố trí thí nghiệm: số bọt khí oxygen (hoặc thể tích trong ống mao quản) mỗi phút cho biết cường độ quang hợp; hydrogencarbonate cung cấp CO₂; tấm lọc nhiệt và bể ổn nhiệt giữ nhiệt độ không đổi. Nêu các biến được kiểm soát của mỗi lần đo."
+      }
+    },
+    {
+      "id": "light-response",
+      "name": "The model’s light-response curve",
+      "advice": "Work the model step by step: αI, then the plateau P_c from CO₂ and temperature, then P = αI·P_c/(αI + P_c). Use the straight line 1/P against d²: its intercept is 1/P_c. All the constants are illustrative.",
+      "vi": {
+        "name": "Đường cong đáp ứng ánh sáng của mô hình",
+        "advice": "Tính theo mô hình từng bước: αI, rồi mức bão hòa P_c từ CO₂ và nhiệt độ, rồi P = αI·P_c/(αI + P_c). Dùng đường thẳng 1/P theo d²: tung độ gốc bằng 1/P_c. Mọi hằng số đều là giá trị minh họa."
+      }
+    },
+    {
+      "id": "process",
+      "name": "Where photosynthesis happens and what it uses and makes",
+      "advice": "Learn the overall equation, 6 CO₂ + 6 H₂O → C₆H₁₂O₆ + 6 O₂ (light, chlorophyll), and where each stage happens: the light reactions on the thylakoids split water and release its O₂; the Calvin cycle in the stroma fixes CO₂ into sugar. Say for each bubble you count where its oxygen came from.",
+      "vi": {
+        "name": "Nơi diễn ra quang hợp, nguyên liệu và sản phẩm",
+        "advice": "Ghi nhớ phương trình tổng quát 6 CO₂ + 6 H₂O → C₆H₁₂O₆ + 6 O₂ (ánh sáng, diệp lục) và nơi diễn ra từng pha: pha sáng trên màng thylakoid phân li nước và giải phóng O₂ của nước; chu trình Calvin trong chất nền lục lạp cố định CO₂ thành đường. Với mỗi bọt khí đếm được, hãy nói oxi của nó có nguồn gốc từ đâu."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "which-gas",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["rate-measurement"],
+      "stem": "The bubbles given off by the pondweed in the light are mainly…",
+      "explain": "Photosynthesis releases oxygen; the model takes the bubbles as pure O₂ (in a real sprig they also hold some other gases).",
+      "vi": {
+        "stem": "Các bọt khí do cành rong thải ra khi được chiếu sáng chủ yếu là…",
+        "explain": "Quang hợp giải phóng oxygen; mô hình coi bọt khí là O₂ tinh khiết (ở cành rong thật, bọt khí còn có một ít khí khác)."
+      },
+      "options": [
+        {
+          "text": "oxygen",
+          "vi": {
+            "text": "oxygen"
+          },
+          "correct": true
+        },
+        {
+          "text": "carbon dioxide",
+          "vi": {
+            "text": "carbon dioxide"
+          }
+        },
+        {
+          "text": "nitrogen",
+          "vi": {
+            "text": "nitrogen"
+          }
+        },
+        {
+          "text": "water vapour",
+          "vi": {
+            "text": "hơi nước"
+          }
+        }
+      ]
+    },
+    {
+      "id": "why-carbonate",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["rate-measurement"],
+      "stem": "Sodium hydrogencarbonate is dissolved in the water around the pondweed to…",
+      "explain": "Hydrogencarbonate is the source of the CO₂ the plant fixes; its concentration sets how much CO₂ there is.",
+      "vi": {
+        "stem": "Hòa tan sodium hydrogencarbonate vào nước quanh cành rong nhằm…",
+        "explain": "Hydrogencarbonate là nguồn CO₂ cho cây cố định; nồng độ của nó quyết định lượng CO₂ có sẵn."
+      },
+      "options": [
+        {
+          "text": "supply carbon dioxide for photosynthesis",
+          "vi": {
+            "text": "cung cấp carbon dioxide cho quang hợp"
+          },
+          "correct": true
+        },
+        {
+          "text": "supply oxygen for the plant",
+          "vi": {
+            "text": "cung cấp oxygen cho cây"
+          }
+        },
+        {
+          "text": "keep the water at a fixed temperature",
+          "vi": {
+            "text": "giữ nước ở nhiệt độ không đổi"
+          }
+        },
+        {
+          "text": "make the bubbles easier to count",
+          "vi": {
+            "text": "làm các bọt khí dễ đếm hơn"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-setup",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["rate-measurement", "limiting-factors"],
+      "stem": "About measuring photosynthesis with pondweed under a lamp: decide whether each statement is true or false.",
+      "explain": "The heat filter stops the lamp warming the water, so the lamp changes only the light. In dim light, light limits. Warming helps only up to about 30 °C here; above it, the rate falls. The bubbles are counted over a fixed time, one minute, to give a rate.",
+      "vi": {
+        "stem": "Về thí nghiệm đo quang hợp của cành rong dưới đèn, mỗi nhận định sau đúng hay sai?",
+        "explain": "Tấm lọc nhiệt ngăn đèn làm nóng nước, nên đèn chỉ làm thay đổi ánh sáng. Khi ánh sáng yếu, ánh sáng là nhân tố giới hạn. Tăng nhiệt độ chỉ có lợi đến khoảng 30 °C trong mô hình; cao hơn, tốc độ giảm. Bọt khí được đếm trong một khoảng thời gian cố định, một phút, để tính tốc độ."
+      },
+      "statements": [
+        {
+          "text": "The heat filter keeps the lamp from warming the water, so moving the lamp changes only the light.",
+          "vi": {
+            "text": "Tấm lọc nhiệt ngăn đèn làm nóng nước, nên dời đèn chỉ làm thay đổi ánh sáng."
+          },
+          "true": true
+        },
+        {
+          "text": "In dim light, light is the limiting factor.",
+          "vi": {
+            "text": "Khi ánh sáng yếu, ánh sáng là nhân tố giới hạn."
+          },
+          "true": true
+        },
+        {
+          "text": "Raising the temperature always raises the rate of photosynthesis.",
+          "vi": {
+            "text": "Tăng nhiệt độ luôn làm tăng cường độ quang hợp."
+          },
+          "true": false
+        },
+        {
+          "text": "The bubbles are counted over a fixed time to find a rate.",
+          "vi": {
+            "text": "Bọt khí được đếm trong một khoảng thời gian cố định để tính tốc độ."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "twice-as-far",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["inverse-square"],
+      "stem": "The lamp is moved from 0.1 m to 0.2 m from the plant. The light intensity at the plant…",
+      "explain": "I ∝ 1/d²: twice the distance gives (1/2)² = a quarter of the light.",
+      "vi": {
+        "stem": "Đèn được dời từ 0,1 m ra 0,2 m so với cây. Cường độ ánh sáng tại cây…",
+        "explain": "I tỉ lệ với 1/d²: khoảng cách gấp đôi thì ánh sáng còn (1/2)² = một phần tư."
+      },
+      "options": [
+        {
+          "text": "falls to a quarter",
+          "vi": {
+            "text": "giảm còn một phần tư"
+          },
+          "correct": true
+        },
+        {
+          "text": "falls to a half",
+          "vi": {
+            "text": "giảm còn một nửa"
+          }
+        },
+        {
+          "text": "doubles",
+          "vi": {
+            "text": "tăng gấp đôi"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "raise-co2-limited",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["limiting-factors"],
+      "stem": "The lamp is very close, at 30 °C, but the water holds only 0.002 mol/L hydrogencarbonate, so CO₂ limits. Which change raises the rate most?",
+      "explain": "Only raising the limiting factor raises the plateau: more hydrogencarbonate. More light hardly helps, and 30 °C is already the model’s best temperature.",
+      "vi": {
+        "stem": "Đèn đặt rất gần, nhiệt độ 30 °C, nhưng nước chỉ có 0,002 mol/L hydrogencarbonate nên CO₂ là nhân tố giới hạn. Thay đổi nào làm tăng cường độ quang hợp nhiều nhất?",
+        "explain": "Chỉ tăng nhân tố giới hạn mới nâng được mức bão hòa: thêm hydrogencarbonate. Thêm ánh sáng hầu như không có tác dụng, và 30 °C đã là nhiệt độ tốt nhất trong mô hình."
+      },
+      "options": [
+        {
+          "text": "Adding more hydrogencarbonate",
+          "vi": {
+            "text": "Thêm hydrogencarbonate"
+          },
+          "correct": true
+        },
+        {
+          "text": "Moving the lamp even closer",
+          "vi": {
+            "text": "Dời đèn lại gần hơn nữa"
+          }
+        },
+        {
+          "text": "Using a brighter lamp",
+          "vi": {
+            "text": "Dùng đèn sáng hơn"
+          }
+        },
+        {
+          "text": "Warming the water to 40 °C",
+          "vi": {
+            "text": "Làm ấm nước lên 40 °C"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-factors",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["light-response", "limiting-factors"],
+      "stem": "About the model of limiting factors: decide whether each statement is true or false.",
+      "explain": "Above 30 °C the enzymes start to denature, so cooling raises the rate. Close to the lamp the rate levels off at a plateau set by CO₂ and temperature. In dim light αI is small whatever the CO₂, so more hydrogencarbonate hardly helps. The constants are illustrative, not Elodea’s measured values.",
+      "vi": {
+        "stem": "Về mô hình các nhân tố giới hạn, mỗi nhận định sau đúng hay sai?",
+        "explain": "Trên 30 °C enzyme bắt đầu bị biến tính, nên làm mát sẽ tăng tốc độ. Khi đèn ở gần, tốc độ đạt mức bão hòa do CO₂ và nhiệt độ quyết định. Khi ánh sáng yếu, αI nhỏ dù CO₂ thế nào, nên thêm hydrogencarbonate hầu như không có tác dụng. Các hằng số là minh họa, không phải giá trị đo được của rong đuôi chó."
+      },
+      "statements": [
+        {
+          "text": "Above 30 °C, cooling the water (not warming it) raises the rate in the model.",
+          "vi": {
+            "text": "Trên 30 °C, làm mát nước (chứ không phải làm ấm) sẽ tăng tốc độ trong mô hình."
+          },
+          "true": true
+        },
+        {
+          "text": "Close to the lamp the rate levels off at a plateau set by CO₂ and temperature.",
+          "vi": {
+            "text": "Khi đèn ở gần, tốc độ đạt mức bão hòa do CO₂ và nhiệt độ quyết định."
+          },
+          "true": true
+        },
+        {
+          "text": "In dim light, adding more hydrogencarbonate raises the rate greatly.",
+          "vi": {
+            "text": "Khi ánh sáng yếu, thêm hydrogencarbonate làm tốc độ tăng mạnh."
+          },
+          "true": false
+        },
+        {
+          "text": "The model’s constants are values measured for Elodea.",
+          "vi": {
+            "text": "Các hằng số của mô hình là giá trị đo được ở rong đuôi chó."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "intensity-02",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["inverse-square"],
+      "set": {
+        "distance": 0.2
+      },
+      "stem": "The lamp gives 10 000 lux at 0.10 m (an illustrative value). What is the light intensity at the plant when the lamp is {distance} m away?",
+      "explain": "I = 10 000·(0.1/{distance})² = {@intensity} lux: the square of the distance ratio.",
+      "vi": {
+        "stem": "Đèn cho 10 000 lux ở khoảng cách 0,10 m (giá trị minh họa). Cường độ ánh sáng tại cây là bao nhiêu khi đèn cách cây {distance} m?",
+        "explain": "I = 10 000·(0,1/{distance})² = {@intensity} lux: bình phương của tỉ số khoảng cách."
+      },
+      "options": [
+        {
+          "text": "{@intensity} lux",
+          "vi": {
+            "text": "{@intensity} lux"
+          },
+          "correct": true,
+          "check": {
+            "expr": "10000*(0.1/distance)^2",
+            "equals": "intensity"
+          }
+        },
+        {
+          "text": "{=10000*0.1/distance} lux",
+          "vi": {
+            "text": "{=10000*0.1/distance} lux"
+          },
+          "check": {
+            "expr": "10000*0.1/distance",
+            "equals": "intensity"
+          }
+        },
+        {
+          "text": "{=10000*(distance/0.1)^2} lux",
+          "vi": {
+            "text": "{=10000*(distance/0.1)^2} lux"
+          },
+          "check": {
+            "expr": "10000*(distance/0.1)^2",
+            "equals": "intensity"
+          }
+        },
+        {
+          "text": "{=10000*(0.1/distance)^3} lux",
+          "vi": {
+            "text": "{=10000*(0.1/distance)^3} lux"
+          },
+          "check": {
+            "expr": "10000*(0.1/distance)^3",
+            "equals": "intensity"
+          }
+        }
+      ]
+    },
+    {
+      "id": "rate-light-limited",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["light-response"],
+      "set": {
+        "distance": 0.2,
+        "carbonate": 0.05,
+        "temperature": 25
+      },
+      "stem": "At {distance} m the plant gets I = {@intensity} lux, so αI = {=2e-6*@intensity} mL/s (α = 2·10⁻⁶ mL/s per lux); with {carbonate} mol/L hydrogencarbonate at {temperature} °C the plateau is P_c = {@saturatedRate|3} mL/s. Using P = αI·P_c/(αI + P_c), what is the rate of O₂ release?",
+      "explain": "P = {=2e-6*@intensity}·{@saturatedRate|3}/({=2e-6*@intensity} + {@saturatedRate|3}) ≈ {@rate} mL/s: smaller than either factor alone, as two limits act together.",
+      "vi": {
+        "stem": "Ở khoảng cách {distance} m, cây nhận I = {@intensity} lux, nên αI = {=2e-6*@intensity} mL/s (α = 2·10⁻⁶ mL/s mỗi lux); với hydrogencarbonate {carbonate} mol/L ở {temperature} °C, mức bão hòa là P_c = {@saturatedRate|3} mL/s. Dùng P = αI·P_c/(αI + P_c), tốc độ giải phóng O₂ là bao nhiêu?",
+        "explain": "P = {=2e-6*@intensity}·{@saturatedRate|3}/({=2e-6*@intensity} + {@saturatedRate|3}) ≈ {@rate} mL/s: nhỏ hơn từng giá trị riêng, vì hai giới hạn cùng tác động."
+      },
+      "options": [
+        {
+          "text": "{@rate} mL/s",
+          "vi": {
+            "text": "{@rate} mL/s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2e-6*@intensity*@saturatedRate/(2e-6*@intensity+@saturatedRate)",
+            "equals": "rate"
+          }
+        },
+        {
+          "text": "{=2e-6*@intensity} mL/s",
+          "vi": {
+            "text": "{=2e-6*@intensity} mL/s"
+          },
+          "check": {
+            "expr": "2e-6*@intensity",
+            "equals": "rate"
+          }
+        },
+        {
+          "text": "{=@saturatedRate} mL/s",
+          "vi": {
+            "text": "{=@saturatedRate} mL/s"
+          },
+          "check": {
+            "expr": "@saturatedRate",
+            "equals": "rate"
+          }
+        },
+        {
+          "text": "{=2e-6*@intensity+@saturatedRate} mL/s",
+          "vi": {
+            "text": "{=2e-6*@intensity+@saturatedRate} mL/s"
+          },
+          "check": {
+            "expr": "2e-6*@intensity+@saturatedRate",
+            "equals": "rate"
+          }
+        }
+      ]
+    },
+    {
+      "id": "volume-one-minute",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["rate-measurement"],
+      "set": {
+        "distance": 0.1,
+        "carbonate": 0.05,
+        "temperature": 25
+      },
+      "stem": "With the lamp {distance} m away, {carbonate} mol/L hydrogencarbonate and {temperature} °C, the sprig releases O₂ at a steady {@rate|3} mL/s. What volume collects in the capillary in {duration} s?",
+      "explain": "A steady rate: V = P·t = {@rate|3}·{duration} ≈ {@volume} mL.",
+      "vi": {
+        "stem": "Với đèn cách {distance} m, hydrogencarbonate {carbonate} mol/L và {temperature} °C, cành rong giải phóng O₂ với tốc độ ổn định {@rate|3} mL/s. Thể tích khí thu được trong ống mao quản sau {duration} s là bao nhiêu?",
+        "explain": "Tốc độ ổn định: V = P·t = {@rate|3}·{duration} ≈ {@volume} mL."
+      },
+      "options": [
+        {
+          "text": "{@volume} mL",
+          "vi": {
+            "text": "{@volume} mL"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@rate*duration",
+            "equals": "volume"
+          }
+        },
+        {
+          "text": "{=@rate/duration} mL",
+          "vi": {
+            "text": "{=@rate/duration} mL"
+          },
+          "check": {
+            "expr": "@rate/duration",
+            "equals": "volume"
+          }
+        },
+        {
+          "text": "{=@rate*duration/60} mL",
+          "vi": {
+            "text": "{=@rate*duration/60} mL"
+          },
+          "check": {
+            "expr": "@rate*duration/60",
+            "equals": "volume"
+          }
+        },
+        {
+          "text": "{=@rate*duration*60} mL",
+          "vi": {
+            "text": "{=@rate*duration*60} mL"
+          },
+          "check": {
+            "expr": "@rate*duration*60",
+            "equals": "volume"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-close-lamp",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["inverse-square", "light-response", "limiting-factors"],
+      "set": {
+        "distance": 0.05,
+        "carbonate": 0.002,
+        "temperature": 30
+      },
+      "stem": "The lamp is {distance} m away (10 000 lux at 0.10 m), the water holds {carbonate} mol/L hydrogencarbonate at {temperature} °C, and α = 2·10⁻⁶ mL/s per lux (illustrative). Decide whether each statement is true or false.",
+      "explain": "I = 10 000·(0.1/{distance})² = {@intensity} lux; αI = {=2e-6*@intensity|3} mL/s, far above P_c = {@saturatedRate|3} mL/s, so CO₂ limits and P ≈ {@rate|3} mL/s, just under P_c. Moving the lamp closer cannot lift P above P_c.",
+      "vi": {
+        "stem": "Đèn cách cây {distance} m (10 000 lux ở 0,10 m), nước có hydrogencarbonate {carbonate} mol/L ở {temperature} °C, và α = 2·10⁻⁶ mL/s mỗi lux (giá trị minh họa). Mỗi nhận định sau đúng hay sai?",
+        "explain": "I = 10 000·(0,1/{distance})² = {@intensity} lux; αI = {=2e-6*@intensity|3} mL/s, lớn hơn nhiều so với P_c = {@saturatedRate|3} mL/s, nên CO₂ là nhân tố giới hạn và P ≈ {@rate|3} mL/s, chỉ thấp hơn P_c một chút. Dời đèn lại gần hơn không thể làm P vượt quá P_c."
+      },
+      "statements": [
+        {
+          "text": "The light at the plant is {@intensity} lux.",
+          "vi": {
+            "text": "Cường độ ánh sáng tại cây là {@intensity} lux."
+          },
+          "true": true,
+          "check": {
+            "expr": "10000*(0.1/distance)^2",
+            "equals": "intensity"
+          }
+        },
+        {
+          "text": "αI = {=2e-6*@intensity|3} mL/s is far above the plateau of {@saturatedRate|3} mL/s, so CO₂ is the limiting factor.",
+          "vi": {
+            "text": "αI = {=2e-6*@intensity|3} mL/s lớn hơn nhiều so với mức bão hòa {@saturatedRate|3} mL/s, nên CO₂ là nhân tố giới hạn."
+          },
+          "true": true,
+          "check": {
+            "expr": "2",
+            "equals": "limiting"
+          }
+        },
+        {
+          "text": "The rate of O₂ release is about {@rate|3} mL/s.",
+          "vi": {
+            "text": "Tốc độ giải phóng O₂ khoảng {@rate|3} mL/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "2e-6*@intensity*@saturatedRate/(2e-6*@intensity+@saturatedRate)",
+            "equals": "rate"
+          }
+        },
+        {
+          "text": "Moving the lamp even closer would raise the rate several times.",
+          "vi": {
+            "text": "Dời đèn lại gần hơn nữa sẽ làm tốc độ tăng lên vài lần."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "plateau-from-line",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["light-response"],
+      "set": {
+        "carbonate": 0.01,
+        "temperature": 20
+      },
+      "stem": "At {carbonate} mol/L hydrogencarbonate and {temperature} °C the lamp is moved and 1/rate is plotted against d². The model’s line is 1/P = d²/(αI₀d₀²) + 1/P_c; it has slope {@inverseRateSlope|3} s/(mL·m²) and intercept {@inverseRateIntercept|3} s/mL. What is the plateau rate P_c?",
+      "explain": "At d² = 0 (unlimited light) 1/P = 1/P_c, so P_c = 1/{@inverseRateIntercept|3} ≈ {@saturatedRate|3} mL/s. The slope belongs to the light alone: 1/slope = αI₀d₀².",
+      "vi": {
+        "stem": "Ở nồng độ hydrogencarbonate {carbonate} mol/L và {temperature} °C, dời đèn và vẽ đồ thị 1/tốc độ theo d². Đường thẳng của mô hình là 1/P = d²/(αI₀d₀²) + 1/P_c; hệ số góc {@inverseRateSlope|3} s/(mL·m²) và tung độ gốc {@inverseRateIntercept|3} s/mL. Mức bão hòa P_c bằng bao nhiêu?",
+        "explain": "Tại d² = 0 (ánh sáng không giới hạn), 1/P = 1/P_c, nên P_c = 1/{@inverseRateIntercept|3} ≈ {@saturatedRate|3} mL/s. Hệ số góc chỉ phụ thuộc ánh sáng: 1/hệ số góc = αI₀d₀²."
+      },
+      "options": [
+        {
+          "text": "{=1/@inverseRateIntercept} mL/s",
+          "vi": {
+            "text": "{=1/@inverseRateIntercept} mL/s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "1/@inverseRateIntercept",
+            "equals": "saturatedRate"
+          }
+        },
+        {
+          "text": "{=@inverseRateIntercept} mL/s",
+          "vi": {
+            "text": "{=@inverseRateIntercept} mL/s"
+          },
+          "check": {
+            "expr": "@inverseRateIntercept",
+            "equals": "saturatedRate"
+          }
+        },
+        {
+          "text": "{=1/@inverseRateSlope} mL/s",
+          "vi": {
+            "text": "{=1/@inverseRateSlope} mL/s"
+          },
+          "check": {
+            "expr": "1/@inverseRateSlope",
+            "equals": "saturatedRate"
+          }
+        },
+        {
+          "text": "{=@inverseRateSlope/@inverseRateIntercept} mL/s",
+          "vi": {
+            "text": "{=@inverseRateSlope/@inverseRateIntercept} mL/s"
+          },
+          "check": {
+            "expr": "@inverseRateSlope/@inverseRateIntercept",
+            "equals": "saturatedRate"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-too-hot",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["limiting-factors", "light-response", "rate-measurement"],
+      "set": {
+        "distance": 0.1,
+        "carbonate": 0.05,
+        "temperature": 40
+      },
+      "stem": "The lamp is {distance} m away, the water holds {carbonate} mol/L hydrogencarbonate, and the bath is at {temperature} °C. In the model the temperature factor rises to 1 at 30 °C and falls to 0 at 45 °C. The capillary reads to {resolution} mL. Decide whether each statement is true or false.",
+      "explain": "At {temperature} °C the temperature factor is (45 − {temperature})/15 = {=(45-temperature)/15|3}, below the CO₂ factor {=carbonate/(carbonate+0.005)|3}: temperature limits, because it is too hot — cooling to 30 °C helps. The light, αI = {=2e-6*@intensity|3} mL/s, is not the limit. In {duration} s V = {@volume|3} mL, read as {=round(@volume/resolution)*resolution} mL.",
+      "vi": {
+        "stem": "Đèn cách cây {distance} m, nước có hydrogencarbonate {carbonate} mol/L, và bể ổn nhiệt ở {temperature} °C. Trong mô hình, hệ số nhiệt độ tăng đến 1 ở 30 °C và giảm về 0 ở 45 °C. Ống mao quản có độ chia {resolution} mL. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Ở {temperature} °C hệ số nhiệt độ là (45 − {temperature})/15 = {=(45-temperature)/15|3}, nhỏ hơn hệ số CO₂ {=carbonate/(carbonate+0.005)|3}: nhiệt độ là nhân tố giới hạn vì quá nóng — làm mát xuống 30 °C sẽ có lợi. Ánh sáng, αI = {=2e-6*@intensity|3} mL/s, không phải nhân tố giới hạn. Trong {duration} s, V = {@volume|3} mL, đọc được {=round(@volume/resolution)*resolution} mL."
+      },
+      "statements": [
+        {
+          "text": "Temperature is the limiting factor.",
+          "vi": {
+            "text": "Nhiệt độ là nhân tố giới hạn."
+          },
+          "true": true,
+          "check": {
+            "expr": "3",
+            "equals": "limiting"
+          }
+        },
+        {
+          "text": "Cooling the bath to 30 °C would raise the rate.",
+          "vi": {
+            "text": "Làm mát bể xuống 30 °C sẽ làm tăng tốc độ."
+          },
+          "true": true
+        },
+        {
+          "text": "Moving the lamp closer would raise the rate several times.",
+          "vi": {
+            "text": "Dời đèn lại gần sẽ làm tốc độ tăng lên vài lần."
+          },
+          "true": false
+        },
+        {
+          "text": "In {duration} s about {@volume|3} mL collects, which the capillary reads as {=round(@volume/resolution)*resolution} mL.",
+          "vi": {
+            "text": "Trong {duration} s thu được khoảng {@volume|3} mL, ống mao quản đọc được {=round(@volume/resolution)*resolution} mL."
+          },
+          "true": true,
+          "check": {
+            "expr": "@rate*duration",
+            "equals": "volume"
+          }
+        }
+      ]
+    },
+    {
+      "id": "where",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["process"],
+      "stem": "In the pondweed’s leaf cells, photosynthesis takes place in the…",
+      "explain": "Chloroplasts hold the chlorophyll that absorbs light; the light reactions happen on their thylakoid membranes and CO₂ is fixed in their stroma.",
+      "vi": {
+        "stem": "Trong tế bào lá rong, quang hợp diễn ra ở…",
+        "explain": "Lục lạp chứa diệp lục hấp thụ ánh sáng; pha sáng diễn ra trên màng thylakoid và CO₂ được cố định trong chất nền (stroma) của lục lạp."
+      },
+      "options": [
+        {
+          "text": "chloroplasts",
+          "vi": {
+            "text": "lục lạp"
+          },
+          "correct": true
+        },
+        {
+          "text": "mitochondria",
+          "vi": {
+            "text": "ti thể"
+          }
+        },
+        {
+          "text": "ribosomes",
+          "vi": {
+            "text": "ribosome"
+          }
+        },
+        {
+          "text": "vacuole",
+          "vi": {
+            "text": "không bào"
+          }
+        }
+      ]
+    },
+    {
+      "id": "oxygen-source",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["process", "rate-measurement"],
+      "stem": "The oxygen in the bubbles comes from…",
+      "explain": "In the light reactions water is split (photolysis): its electrons go to the electron transport chain and its oxygen is released as O₂. The CO₂ is built into sugar in the Calvin cycle; its oxygen does not leave as O₂.",
+      "vi": {
+        "stem": "Oxi trong các bọt khí có nguồn gốc từ…",
+        "explain": "Trong pha sáng, nước bị phân li (quang phân li nước): electron của nó đi vào chuỗi truyền electron, còn oxi được giải phóng dưới dạng O₂. CO₂ được gắn vào đường trong chu trình Calvin; oxi của CO₂ không thoát ra dưới dạng O₂."
+      },
+      "options": [
+        {
+          "text": "water, split in the light reactions",
+          "vi": {
+            "text": "nước, bị phân li trong pha sáng"
+          },
+          "correct": true
+        },
+        {
+          "text": "carbon dioxide, split in the Calvin cycle",
+          "vi": {
+            "text": "carbon dioxide, bị phân giải trong chu trình Calvin"
+          }
+        },
+        {
+          "text": "the sodium hydrogencarbonate, which gives off O₂ when heated",
+          "vi": {
+            "text": "sodium hydrogencarbonate, chất giải phóng O₂ khi bị đun nóng"
+          }
+        },
+        {
+          "text": "glucose, broken down by respiration",
+          "vi": {
+            "text": "glucose, bị phân giải trong hô hấp"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-model-limits",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["rate-measurement", "light-response"],
+      "stem": "About this simulation’s model of the pondweed: decide whether each statement is true or false.",
+      "explain": "The constants are illustrative, chosen to give tens of bubbles a minute, not measured for Elodea. Respiration is not modelled: the rate is gross O₂, so there is no compensation point. Real bubbles also hold other gases, and some O₂ dissolves; the model counts O₂ only. The water bath and heat filter let the lamp change only the light.",
+      "vi": {
+        "stem": "Về mô hình cây rong trong mô phỏng này, mỗi nhận định sau đúng hay sai?",
+        "explain": "Các hằng số là giá trị minh họa, được chọn để cho vài chục bọt khí mỗi phút, không phải số đo thật của rong Elodea. Hô hấp không được mô hình hóa: tốc độ là lượng O₂ toàn phần, nên không có điểm bù ánh sáng. Bọt khí thật còn chứa các khí khác, và một phần O₂ hòa tan vào nước; mô hình chỉ tính O₂. Bể ổn nhiệt và tấm lọc nhiệt giúp đèn chỉ làm thay đổi ánh sáng."
+      },
+      "statements": [
+        {
+          "text": "The model’s constants are illustrative, not values measured for Elodea.",
+          "vi": {
+            "text": "Các hằng số của mô hình là giá trị minh họa, không phải giá trị đo được ở rong Elodea."
+          },
+          "true": true
+        },
+        {
+          "text": "The model subtracts respiration, so in very dim light no O₂ is released.",
+          "vi": {
+            "text": "Mô hình có trừ đi hô hấp, nên khi ánh sáng rất yếu thì không có O₂ được giải phóng."
+          },
+          "true": false
+        },
+        {
+          "text": "Real bubbles can hold gases other than O₂, which the model leaves out.",
+          "vi": {
+            "text": "Bọt khí thật có thể chứa các khí khác ngoài O₂, điều mà mô hình bỏ qua."
+          },
+          "true": true
+        },
+        {
+          "text": "The water bath and heat filter stop the lamp from changing the temperature.",
+          "vi": {
+            "text": "Bể ổn nhiệt và tấm lọc nhiệt giúp đèn không làm thay đổi nhiệt độ."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "bubbles-in-minute",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["rate-measurement"],
+      "set": {
+        "distance": 0.2,
+        "carbonate": 0.05,
+        "temperature": 25
+      },
+      "stem": "The sprig releases O₂ at a steady {@rate|3} mL/s. Each bubble holds about 0.01 mL (illustrative). How many whole bubbles are counted in {duration} s?",
+      "explain": "V = {@rate|3} × {duration} ≈ {@volume|3} mL; {@volume|3}/0.01 ≈ {=@volume/0.01|3}, so {@bubbles} whole bubbles.",
+      "vi": {
+        "stem": "Cành rong giải phóng O₂ với tốc độ ổn định {@rate|3} mL/s. Mỗi bọt khí chứa khoảng 0,01 mL (giá trị minh họa). Trong {duration} s đếm được bao nhiêu bọt khí trọn vẹn?",
+        "explain": "V = {@rate|3} × {duration} ≈ {@volume|3} mL; {@volume|3}/0,01 ≈ {=@volume/0.01|3}, nên đếm được {@bubbles} bọt khí trọn vẹn."
+      },
+      "options": [
+        {
+          "text": "{=round(@volume/0.01-0.5)}",
+          "vi": {
+            "text": "{=round(@volume/0.01-0.5)}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "round(@volume/0.01-0.5)",
+            "equals": "bubbles"
+          }
+        },
+        {
+          "text": "{=round(@volume/0.1-0.5)}",
+          "vi": {
+            "text": "{=round(@volume/0.1-0.5)}"
+          },
+          "check": {
+            "expr": "round(@volume/0.1-0.5)",
+            "equals": "bubbles"
+          }
+        },
+        {
+          "text": "{=round(2e-6*@intensity*duration/0.01-0.5)}",
+          "vi": {
+            "text": "{=round(2e-6*@intensity*duration/0.01-0.5)}"
+          },
+          "check": {
+            "expr": "round(2e-6*@intensity*duration/0.01-0.5)",
+            "equals": "bubbles"
+          }
+        },
+        {
+          "text": "{=round(@rate*3600/0.01-0.5)}",
+          "vi": {
+            "text": "{=round(@rate*3600/0.01-0.5)}"
+          },
+          "check": {
+            "expr": "round(@rate*3600/0.01-0.5)",
+            "equals": "bubbles"
+          }
+        }
+      ]
+    },
+    {
+      "id": "plateau-20",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["limiting-factors", "light-response"],
+      "set": {
+        "carbonate": 0.05,
+        "temperature": 20
+      },
+      "stem": "In this simulation the plateau rate is P_c = P_max·C/(C + K_C)·f(T), with the illustrative P_max = 0.01 mL/s and K_C = 0.005 mol/L; below 30 °C, f(T) halves for every 10 °C cooler (Q₁₀ = 2). What is P_c with {carbonate} mol/L hydrogencarbonate at {temperature} °C?",
+      "explain": "C/(C + K_C) = {carbonate}/{=carbonate+0.005} ≈ {=carbonate/(carbonate+0.005)|3}; f({temperature} °C) = 2^(({temperature} − 30)/10) = {=2^((temperature-30)/10)}; P_c = 0.01 × {=carbonate/(carbonate+0.005)|3} × {=2^((temperature-30)/10)} ≈ {@saturatedRate|3} mL/s.",
+      "vi": {
+        "stem": "Trong mô phỏng này, tốc độ bão hòa là P_c = P_max·C/(C + K_C)·f(T), với các giá trị minh họa P_max = 0,01 mL/s và K_C = 0,005 mol/L; dưới 30 °C, f(T) giảm một nửa khi nhiệt độ giảm mỗi 10 °C (Q₁₀ = 2). P_c bằng bao nhiêu khi nồng độ hydrogencarbonate là {carbonate} mol/L và nhiệt độ {temperature} °C?",
+        "explain": "C/(C + K_C) = {carbonate}/{=carbonate+0.005} ≈ {=carbonate/(carbonate+0.005)|3}; f({temperature} °C) = 2^(({temperature} − 30)/10) = {=2^((temperature-30)/10)}; P_c = 0,01 × {=carbonate/(carbonate+0.005)|3} × {=2^((temperature-30)/10)} ≈ {@saturatedRate|3} mL/s."
+      },
+      "options": [
+        {
+          "text": "{@saturatedRate|3} mL/s",
+          "vi": {
+            "text": "{@saturatedRate|3} mL/s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "0.01*carbonate/(carbonate+0.005)*2^((temperature-30)/10)",
+            "equals": "saturatedRate"
+          }
+        },
+        {
+          "text": "{=0.01*carbonate/(carbonate+0.005)|3} mL/s",
+          "vi": {
+            "text": "{=0.01*carbonate/(carbonate+0.005)|3} mL/s"
+          },
+          "check": {
+            "expr": "0.01*carbonate/(carbonate+0.005)",
+            "equals": "saturatedRate"
+          }
+        },
+        {
+          "text": "{=0.01*carbonate/(carbonate+0.005)*2^((30-temperature)/10)|3} mL/s",
+          "vi": {
+            "text": "{=0.01*carbonate/(carbonate+0.005)*2^((30-temperature)/10)|3} mL/s"
+          },
+          "check": {
+            "expr": "0.01*carbonate/(carbonate+0.005)*2^((30-temperature)/10)",
+            "equals": "saturatedRate"
+          }
+        },
+        {
+          "text": "{=0.01*carbonate/(carbonate+0.005)*temperature/30|3} mL/s",
+          "vi": {
+            "text": "{=0.01*carbonate/(carbonate+0.005)*temperature/30|3} mL/s"
+          },
+          "check": {
+            "expr": "0.01*carbonate/(carbonate+0.005)*temperature/30",
+            "equals": "saturatedRate"
+          }
+        }
+      ]
+    },
+    {
+      "id": "half-plateau-distance",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["inverse-square", "light-response"],
+      "set": {
+        "carbonate": 0.05,
+        "temperature": 30
+      },
+      "stem": "With {carbonate} mol/L hydrogencarbonate at {temperature} °C the plateau is P_c = {@saturatedRate|3} mL/s. The rate is half the plateau where αI = P_c (α = 2·10⁻⁶ mL/s per lux; the lamp gives 10 000 lux at 0.10 m, illustrative). How far from the lamp is that?",
+      "explain": "I = P_c/α = {@saturatedRate|3}/(2·10⁻⁶) ≈ {=@saturatedRate/2e-6|3} lux. By the inverse square law I = 10 000·(0.10/d)², so d = 0.10·√(10 000/I) ≈ {=0.1*sqrt(10000/(@saturatedRate/2e-6))|3} m. Forgetting the square root gives a distance too far.",
+      "vi": {
+        "stem": "Với dung dịch hydrogencarbonate {carbonate} mol/L ở {temperature} °C, tốc độ bão hòa là P_c = {@saturatedRate|3} mL/s. Tốc độ bằng một nửa mức bão hòa khi αI = P_c (α = 2·10⁻⁶ mL/s trên mỗi lux; đèn cho 10 000 lux ở 0,10 m, giá trị minh họa). Khi đó đèn cách cây bao xa?",
+        "explain": "I = P_c/α = {@saturatedRate|3}/(2·10⁻⁶) ≈ {=@saturatedRate/2e-6|3} lux. Theo định luật nghịch đảo bình phương, I = 10 000·(0,10/d)², nên d = 0,10·√(10 000/I) ≈ {=0.1*sqrt(10000/(@saturatedRate/2e-6))|3} m. Quên lấy căn bậc hai sẽ cho khoảng cách quá xa."
+      },
+      "options": [
+        {
+          "text": "{=0.1*sqrt(10000/(@saturatedRate/2e-6))|3} m",
+          "vi": {
+            "text": "{=0.1*sqrt(10000/(@saturatedRate/2e-6))|3} m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2e-6*10000*0.01/(0.1*sqrt(10000/(@saturatedRate/2e-6)))^2",
+            "equals": "saturatedRate"
+          }
+        },
+        {
+          "text": "{=0.1*10000/(@saturatedRate/2e-6)|3} m",
+          "vi": {
+            "text": "{=0.1*10000/(@saturatedRate/2e-6)|3} m"
+          },
+          "check": {
+            "expr": "2e-6*10000*0.01/(0.1*10000/(@saturatedRate/2e-6))^2",
+            "equals": "saturatedRate"
+          }
+        },
+        {
+          "text": "{=0.1*sqrt((@saturatedRate/2e-6)/10000)|3} m",
+          "vi": {
+            "text": "{=0.1*sqrt((@saturatedRate/2e-6)/10000)|3} m"
+          },
+          "check": {
+            "expr": "2e-6*10000*0.01/(0.1*sqrt((@saturatedRate/2e-6)/10000))^2",
+            "equals": "saturatedRate"
+          }
+        },
+        {
+          "text": "{=0.1*sqrt(20000/(@saturatedRate/2e-6))|3} m",
+          "vi": {
+            "text": "{=0.1*sqrt(20000/(@saturatedRate/2e-6))|3} m"
+          },
+          "check": {
+            "expr": "2e-6*10000*0.01/(0.1*sqrt(20000/(@saturatedRate/2e-6)))^2",
+            "equals": "saturatedRate"
+          }
+        }
+      ]
+    },
+    {
+      "id": "cold-bath",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["limiting-factors", "light-response"],
+      "set": {
+        "distance": 0.1,
+        "carbonate": 0.05,
+        "temperature": 10
+      },
+      "stem": "The lamp is {distance} m away (αI = {=2e-6*@intensity} mL/s), the water holds {carbonate} mol/L hydrogencarbonate (C/(C + K_C) ≈ {=carbonate/(carbonate+0.005)|2}) and the bath is at {temperature} °C (f(T) = {=2^((temperature-30)/10)}). The plateau is only {@saturatedRate|3} mL/s. Which single change raises the rate most?",
+      "explain": "αI = {=2e-6*@intensity} mL/s is far above P_c = {@saturatedRate|3} mL/s, so light is not limiting. Of the plateau’s two factors, f(T) = {=2^((temperature-30)/10)} is much smaller than {=carbonate/(carbonate+0.005)|2}: temperature limits. Warming the bath towards 30 °C raises the plateau most; more light or CO₂ adds little.",
+      "vi": {
+        "stem": "Đèn cách cây {distance} m (αI = {=2e-6*@intensity} mL/s), nước chứa hydrogencarbonate {carbonate} mol/L (C/(C + K_C) ≈ {=carbonate/(carbonate+0.005)|2}) và bể ở {temperature} °C (f(T) = {=2^((temperature-30)/10)}). Tốc độ bão hòa chỉ là {@saturatedRate|3} mL/s. Thay đổi một yếu tố nào làm tăng tốc độ nhiều nhất?",
+        "explain": "αI = {=2e-6*@intensity} mL/s lớn hơn nhiều so với P_c = {@saturatedRate|3} mL/s, nên ánh sáng không phải là nhân tố giới hạn. Trong hai thừa số của mức bão hòa, f(T) = {=2^((temperature-30)/10)} nhỏ hơn nhiều so với {=carbonate/(carbonate+0.005)|2}: nhiệt độ là nhân tố giới hạn. Làm ấm bể lên gần 30 °C làm tăng mức bão hòa nhiều nhất; tăng ánh sáng hay CO₂ chỉ thêm được rất ít."
+      },
+      "options": [
+        {
+          "text": "Warming the bath towards 30 °C",
+          "vi": {
+            "text": "Làm ấm bể lên gần 30 °C"
+          },
+          "correct": true,
+          "check": {
+            "expr": "3",
+            "equals": "limiting"
+          }
+        },
+        {
+          "text": "Moving the lamp closer",
+          "vi": {
+            "text": "Đưa đèn lại gần hơn"
+          },
+          "check": {
+            "expr": "1",
+            "equals": "limiting"
+          }
+        },
+        {
+          "text": "Adding more hydrogencarbonate",
+          "vi": {
+            "text": "Thêm hydrogencarbonate"
+          },
+          "check": {
+            "expr": "2",
+            "equals": "limiting"
+          }
+        },
+        {
+          "text": "Cooling the bath, since the enzymes are denaturing",
+          "vi": {
+            "text": "Làm lạnh bể, vì các enzyme đang bị biến tính"
+          },
+          "check": {
+            "expr": "0",
+            "equals": "limiting"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-far-lamp",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["inverse-square", "light-response", "limiting-factors"],
+      "set": {
+        "distance": 0.4,
+        "carbonate": 0.01,
+        "temperature": 30
+      },
+      "stem": "The lamp is {distance} m away (10 000 lux at 0.10 m), with {carbonate} mol/L hydrogencarbonate at {temperature} °C; α = 2·10⁻⁶ mL/s per lux and P_c = {@saturatedRate|3} mL/s (illustrative). Decide whether each statement is true or false.",
+      "explain": "I = 10 000·(0.10/{distance})² = {@intensity} lux; αI = {=2e-6*@intensity} mL/s < P_c, so light limits. 1/P = 1/(αI) + 1/P_c ≈ {@inverseRate|3} s/mL. At half the distance I is 4 times as large, but the rate rises only to {=8e-6*@intensity*@saturatedRate/(8e-6*@intensity+@saturatedRate)|3} mL/s, about {=(8e-6*@intensity*@saturatedRate/(8e-6*@intensity+@saturatedRate))/@rate|3} times, not 4, as the curve bends towards the plateau.",
+      "vi": {
+        "stem": "Đèn cách cây {distance} m (10 000 lux ở 0,10 m), nước chứa hydrogencarbonate {carbonate} mol/L ở {temperature} °C; α = 2·10⁻⁶ mL/s trên mỗi lux và P_c = {@saturatedRate|3} mL/s (giá trị minh họa). Mỗi nhận định sau đúng hay sai?",
+        "explain": "I = 10 000·(0,10/{distance})² = {@intensity} lux; αI = {=2e-6*@intensity} mL/s < P_c, nên ánh sáng là nhân tố giới hạn. 1/P = 1/(αI) + 1/P_c ≈ {@inverseRate|3} s/mL. Khi khoảng cách giảm một nửa, I tăng 4 lần, nhưng tốc độ chỉ tăng lên {=8e-6*@intensity*@saturatedRate/(8e-6*@intensity+@saturatedRate)|3} mL/s, khoảng {=(8e-6*@intensity*@saturatedRate/(8e-6*@intensity+@saturatedRate))/@rate|3} lần, không phải 4 lần, vì đường cong uốn dần về mức bão hòa."
+      },
+      "statements": [
+        {
+          "text": "The light intensity at the plant is {@intensity} lux.",
+          "vi": {
+            "text": "Cường độ ánh sáng tại cây là {@intensity} lux."
+          },
+          "true": true,
+          "check": {
+            "expr": "10000*0.1^2/distance^2",
+            "equals": "intensity"
+          }
+        },
+        {
+          "text": "1/P = 1/(αI) + 1/P_c ≈ {@inverseRate|3} s/mL.",
+          "vi": {
+            "text": "1/P = 1/(αI) + 1/P_c ≈ {@inverseRate|3} s/mL."
+          },
+          "true": true,
+          "check": {
+            "expr": "1/(2e-6*@intensity)+1/@saturatedRate",
+            "equals": "inverseRate"
+          }
+        },
+        {
+          "text": "Light is the limiting factor.",
+          "vi": {
+            "text": "Ánh sáng là nhân tố giới hạn."
+          },
+          "true": true,
+          "check": {
+            "expr": "1",
+            "equals": "limiting"
+          }
+        },
+        {
+          "text": "Moving the lamp to half the distance would make the rate 4 times as large.",
+          "vi": {
+            "text": "Đưa đèn lại gần còn một nửa khoảng cách thì tốc độ sẽ tăng gấp 4 lần."
+          },
+          "true": false,
+          "check": {
+            "expr": "(8e-6*@intensity*@saturatedRate/(8e-6*@intensity+@saturatedRate))/4",
+            "equals": "rate"
+          }
+        }
+      ]
+    }
+  ]
+}

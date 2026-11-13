@@ -1,0 +1,456 @@
+{
+  "id": "balancing",
+  "name": "Balancing equations: conservation of atoms and mass",
+  "category": "chemistry",
+  "description": "In a reaction no atom is made or destroyed: the atoms of the reactants are rearranged into the products. Balancing an equation means choosing how many of each molecule take part so that every element has the same number of atoms on both sides. A balance with the atoms on its pans shows it: it is level only when the equation is balanced — the same atoms, the same mass.",
+  "vi": {
+    "name": "Cân bằng phương trình: bảo toàn nguyên tử và khối lượng",
+    "description": "Trong phản ứng hóa học không có nguyên tử nào được tạo ra hay mất đi: các nguyên tử của chất tham gia được sắp xếp lại thành sản phẩm. Cân bằng phương trình là chọn số phân tử mỗi chất sao cho mỗi nguyên tố có cùng số nguyên tử ở hai vế. Chiếc cân có các nguyên tử trên hai đĩa cho thấy điều đó: cân chỉ thăng bằng khi phương trình đã cân bằng — cùng các nguyên tử, cùng khối lượng.",
+    "note": "Mô hình dạy học trên một thư viện phản ứng cố định (sản phẩm đã biết, không suy ra từ công thức). Hệ số là các số nguyên nhỏ nhất bảo toàn mọi nguyên tố (không gian nghiệm của ma trận nguyên tố, tính chính xác bằng số nguyên). Lượt chạy cân bằng như học sinh làm bằng cách nhẩm: bắt đầu với mọi hệ số bằng 1, cứ mỗi 0,5 s tăng một hệ số thêm 1, lần lượt từng chất, và đếm số nguyên tử còn lệch sau mỗi bước cho tới khi không còn. Khối lượng tính từ hệ số và khối lượng mol (nguyên tử khối chuẩn IUPAC) cho số mol ứng với khối lượng chất đầu tiên đã chọn; khi đã cân bằng, tổng khối lượng hai vế bằng nhau (định luật bảo toàn khối lượng). Độ nghiêng của cân chỉ là hình minh họa: chênh lệch 1% khối lượng → 1°, tối đa 12°."
+  },
+  "requiredEquipment": ["atom-balance"],
+  "model": "chemistry.balancing",
+  "parameters": [
+    {
+      "id": "reaction",
+      "label": "Reaction",
+      "vi": {
+        "label": "Phản ứng"
+      },
+      "unit": "",
+      "default": 0,
+      "min": 0,
+      "max": 7,
+      "presets": [
+        {
+          "label": "CH₄ + O₂ → CO₂ + H₂O (methane burns)",
+          "vi": {
+            "label": "CH₄ + O₂ → CO₂ + H₂O (metan cháy)"
+          },
+          "value": 0
+        },
+        {
+          "label": "H₂ + O₂ → H₂O (hydrogen burns)",
+          "vi": {
+            "label": "H₂ + O₂ → H₂O (hiđro cháy)"
+          },
+          "value": 1
+        },
+        {
+          "label": "N₂ + H₂ → NH₃ (ammonia synthesis)",
+          "vi": {
+            "label": "N₂ + H₂ → NH₃ (tổng hợp amoniac)"
+          },
+          "value": 2
+        },
+        {
+          "label": "C₃H₈ + O₂ → CO₂ + H₂O (propane burns)",
+          "vi": {
+            "label": "C₃H₈ + O₂ → CO₂ + H₂O (propan cháy)"
+          },
+          "value": 3
+        },
+        {
+          "label": "Al + Cl₂ → AlCl₃ (aluminium in chlorine)",
+          "vi": {
+            "label": "Al + Cl₂ → AlCl₃ (nhôm tác dụng với clo)"
+          },
+          "value": 4
+        },
+        {
+          "label": "Fe₂O₃ + CO → Fe + CO₂ (blast furnace)",
+          "vi": {
+            "label": "Fe₂O₃ + CO → Fe + CO₂ (lò cao luyện gang)"
+          },
+          "value": 5
+        },
+        {
+          "label": "KClO₃ → KCl + O₂ (heating potassium chlorate)",
+          "vi": {
+            "label": "KClO₃ → KCl + O₂ (nhiệt phân kali clorat)"
+          },
+          "value": 6
+        },
+        {
+          "label": "C₂H₅OH + O₂ → CO₂ + H₂O (ethanol burns)",
+          "vi": {
+            "label": "C₂H₅OH + O₂ → CO₂ + H₂O (etanol cháy)"
+          },
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": "mass",
+      "label": "Mass of the first reactant",
+      "vi": {
+        "label": "Khối lượng chất tham gia đầu tiên"
+      },
+      "unit": "g",
+      "default": 16,
+      "min": 1,
+      "max": 100,
+      "step": 1
+    }
+  ],
+  "initialConditions": {
+    "stepTime": 0.5
+  },
+  "inputs": {
+    "stepTime": {
+      "symbol": "Δt",
+      "unit": "s",
+      "desk": false
+    }
+  },
+  "simulation": {
+    "timeStep": 0.02,
+    "maxDuration": 12,
+    "sampleInterval": 0.05
+  },
+  "measurements": [
+    {
+      "id": "time",
+      "label": "Time",
+      "vi": {
+        "label": "Thời gian"
+      },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "time"
+    },
+    {
+      "id": "imbalance",
+      "label": "Atoms out of balance",
+      "vi": {
+        "label": "Số nguyên tử còn lệch"
+      },
+      "unit": "",
+      "variable": "imbalance"
+    },
+    {
+      "id": "leftMass",
+      "label": "Mass of the reactants",
+      "vi": {
+        "label": "Khối lượng chất tham gia"
+      },
+      "symbol": "m₁",
+      "unit": "g",
+      "variable": "leftMass"
+    },
+    {
+      "id": "rightMass",
+      "label": "Mass of the products",
+      "vi": {
+        "label": "Khối lượng sản phẩm"
+      },
+      "symbol": "m₂",
+      "unit": "g",
+      "variable": "rightMass"
+    }
+  ],
+  "results": [
+    {
+      "id": "coefficientA",
+      "label": "Coefficient a (first reactant)",
+      "vi": {
+        "label": "Hệ số a (chất tham gia thứ nhất)"
+      },
+      "unit": "",
+      "variable": "coefficientA",
+      "reduce": "final",
+      "format": "integer",
+      "theory": "coefficientA"
+    },
+    {
+      "id": "coefficientB",
+      "label": "Coefficient b (second species)",
+      "vi": {
+        "label": "Hệ số b (chất thứ hai)"
+      },
+      "unit": "",
+      "variable": "coefficientB",
+      "reduce": "final",
+      "format": "integer",
+      "theory": "coefficientB"
+    },
+    {
+      "id": "coefficientC",
+      "label": "Coefficient c (third species)",
+      "vi": {
+        "label": "Hệ số c (chất thứ ba)"
+      },
+      "unit": "",
+      "variable": "coefficientC",
+      "reduce": "final",
+      "format": "integer",
+      "theory": "coefficientC"
+    },
+    {
+      "id": "coefficientD",
+      "label": "Coefficient d (fourth species)",
+      "vi": {
+        "label": "Hệ số d (chất thứ tư)"
+      },
+      "unit": "",
+      "variable": "coefficientD",
+      "reduce": "final",
+      "format": "integer",
+      "theory": "coefficientD"
+    },
+    {
+      "id": "reactantMass",
+      "label": "Mass of the reactants",
+      "vi": {
+        "label": "Khối lượng chất tham gia"
+      },
+      "symbol": "m₁",
+      "unit": "g",
+      "variable": "leftMass",
+      "reduce": "final",
+      "theory": "reactantMass"
+    },
+    {
+      "id": "productMass",
+      "label": "Mass of the products",
+      "vi": {
+        "label": "Khối lượng sản phẩm"
+      },
+      "symbol": "m₂",
+      "unit": "g",
+      "variable": "rightMass",
+      "reduce": "final",
+      "theory": "productMass"
+    },
+    {
+      "id": "steps",
+      "label": "Steps to balance",
+      "vi": {
+        "label": "Số bước để cân bằng"
+      },
+      "unit": "",
+      "variable": "steps",
+      "reduce": "final",
+      "format": "integer",
+      "theory": "steps"
+    }
+  ],
+  "graphs": [
+    {
+      "id": "imbalance-time",
+      "title": "Atoms out of balance as the coefficients change",
+      "vi": {
+        "title": "Số nguyên tử còn lệch khi hệ số thay đổi"
+      },
+      "x": "time",
+      "y": ["imbalance"]
+    },
+    {
+      "id": "mass-time",
+      "title": "Mass on each side",
+      "vi": {
+        "title": "Khối lượng mỗi vế"
+      },
+      "x": "time",
+      "y": ["leftMass", "rightMass"]
+    }
+  ],
+  "monitor": "imbalance-time",
+  "compare": [
+    {
+      "graph": "mass-time",
+      "series": "rightMass"
+    }
+  ],
+  "note": "A teaching model over a fixed library of reactions (known products, never inferred from formulas). The coefficients are the smallest whole numbers that conserve every element (the null space of the element matrix, solved exactly in integers). The run balances the equation as a student does by inspection: from all coefficients 1, one coefficient is raised by one every 0.5 s, species by species, and the atoms still out of balance are counted after each step until none are. Masses follow from the coefficients and molar masses (IUPAC standard atomic weights) for the moles in the chosen mass of the first reactant; once balanced, the two sides weigh the same (conservation of mass). The balance’s tilt is a picture: 1% of mass difference → 1°, at most 12°.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the balancing instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn cân bằng phương trình trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "balancing-instructions"
+      }
+    },
+    {
+      "id": "reaction",
+      "instruction": "Choose a reaction with the dial; count the atoms on each pan.",
+      "vi": {
+        "instruction": "Chọn một phản ứng bằng núm xoay; đếm các nguyên tử trên mỗi đĩa cân."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "reaction"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: watch the coefficients change until the balance is level.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: quan sát các hệ số thay đổi cho tới khi cân thăng bằng."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Read the coefficients and the two masses.",
+      "vi": {
+        "instruction": "Đọc các hệ số và khối lượng hai vế."
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET and try propane: balance C first, then H, then O.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI và thử với propan: cân bằng C trước, rồi H, rồi O."
+      },
+      "done": {
+        "kind": "reset"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "methane-burns",
+      "question": "{mass} g of methane burns completely in oxygen: CH₄ + O₂ → CO₂ + H₂O. Balance the equation, and find the total mass of the reactants and of the products.",
+      "vi": {
+        "question": "{mass} g khí metan cháy hoàn toàn trong oxi: CH₄ + O₂ → CO₂ + H₂O. Cân bằng phương trình, và tìm tổng khối lượng các chất tham gia và các sản phẩm."
+      },
+      "set": { "reaction": 0, "mass": 16 },
+      "find": [{ "theory": "reactantMass" }, { "theory": "productMass" }],
+      "steps": [
+        {
+          "say": "Balance C first, then H, then O: four H make two H₂O, and the four O on the right need two O₂.",
+          "vi": {
+            "say": "Cân bằng C trước, rồi H, rồi O: bốn nguyên tử H tạo hai H₂O, và bốn nguyên tử O bên phải cần hai O₂."
+          },
+          "write": "CH₄ + 2O₂ → CO₂ + 2H₂O"
+        },
+        {
+          "say": "Moles of methane: mass over molar mass, 16.043 g/mol. Each mole needs 2 mol O₂ of 31.998 g/mol.",
+          "vi": {
+            "say": "Số mol metan bằng khối lượng chia khối lượng mol, 16,043 g/mol. Mỗi mol cần 2 mol O₂ có khối lượng mol 31,998 g/mol."
+          },
+          "write": "m₁ = {mass} + 2·({mass}/16.043)·31.998 ≈ {@reactantMass} g",
+          "check": { "expr": "mass+2*(mass/16.043)*31.998", "equals": "reactantMass" }
+        },
+        {
+          "say": "The products: 1 mol CO₂ (44.009 g/mol) and 2 mol H₂O (18.015 g/mol) for each mole of methane. The same mass: mass is conserved.",
+          "vi": {
+            "say": "Sản phẩm: 1 mol CO₂ (44,009 g/mol) và 2 mol H₂O (18,015 g/mol) cho mỗi mol metan. Khối lượng bằng nhau: khối lượng được bảo toàn."
+          },
+          "write": "m₂ = ({mass}/16.043)·(44.009 + 2·18.015) ≈ {@productMass} g",
+          "check": { "expr": "(mass/16.043)*(44.009+2*18.015)", "equals": "productMass" }
+        }
+      ]
+    },
+    {
+      "id": "aluminium-chloride",
+      "question": "{mass} g of aluminium burns in chlorine: Al + Cl₂ → AlCl₃. Balance the equation and find the mass of aluminium chloride formed.",
+      "vi": {
+        "question": "{mass} g nhôm cháy trong khí clo: Al + Cl₂ → AlCl₃. Cân bằng phương trình và tìm khối lượng nhôm clorua tạo thành."
+      },
+      "set": { "reaction": 4, "mass": 27 },
+      "find": [{ "theory": "productMass" }],
+      "steps": [
+        {
+          "say": "Chlorine comes in pairs and AlCl₃ needs three: the smallest common multiple is six Cl, so 3Cl₂ and 2AlCl₃, then 2Al.",
+          "vi": {
+            "say": "Clo đi theo cặp còn AlCl₃ cần ba nguyên tử: bội chung nhỏ nhất là sáu nguyên tử Cl, nên 3Cl₂ và 2AlCl₃, rồi 2Al."
+          },
+          "write": "2Al + 3Cl₂ → 2AlCl₃"
+        },
+        {
+          "say": "Two Al give two AlCl₃: as many moles of product as of aluminium. M(AlCl₃) = 26.982 + 3·35.45 g/mol.",
+          "vi": {
+            "say": "Hai Al tạo hai AlCl₃: số mol sản phẩm bằng số mol nhôm. M(AlCl₃) = 26,982 + 3·35,45 g/mol."
+          },
+          "write": "m = ({mass}/26.982)·(26.982 + 3·35.45) ≈ {@productMass} g",
+          "check": { "expr": "(mass/26.982)*(26.982+3*35.45)", "equals": "productMass" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "Atoms are only rearranged in a reaction, never made or lost: a balanced equation has the same atoms of every element on both sides, so the reactants and products have the same mass.",
+    "vi": {
+      "summary": "Trong phản ứng các nguyên tử chỉ được sắp xếp lại, không sinh ra hay mất đi: phương trình đã cân bằng có cùng số nguyên tử mỗi nguyên tố ở hai vế, nên chất tham gia và sản phẩm có cùng khối lượng."
+    },
+    "parts": [
+      {
+        "id": "reactants",
+        "name": "Reactants pan",
+        "role": "The atoms of the reactants, each element in its own row and colour.",
+        "vi": {
+          "name": "Đĩa chất tham gia",
+          "role": "Các nguyên tử của chất tham gia, mỗi nguyên tố một hàng, một màu."
+        },
+        "anchor": {
+          "part": "reactants-pan"
+        }
+      },
+      {
+        "id": "products",
+        "name": "Products pan",
+        "role": "The atoms of the products: when balanced, the same rows as on the left.",
+        "vi": {
+          "name": "Đĩa sản phẩm",
+          "role": "Các nguyên tử của sản phẩm: khi đã cân bằng, có đúng các hàng như bên trái."
+        },
+        "anchor": {
+          "part": "products-pan"
+        }
+      },
+      {
+        "id": "pointer",
+        "name": "Beam and pointer",
+        "role": "Tips to the heavier side; level when both sides have the same mass.",
+        "vi": {
+          "name": "Đòn cân và kim",
+          "role": "Nghiêng về phía nặng hơn; thăng bằng khi hai vế có cùng khối lượng."
+        },
+        "anchor": {
+          "part": "pointer"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "Left pan: the reactants’ atoms. Right pan: the products’. Each colour is one element — count the balls of one colour on each side.",
+        "vi": {
+          "text": "Đĩa trái: các nguyên tử của chất tham gia. Đĩa phải: của sản phẩm. Mỗi màu là một nguyên tố — đếm số viên cùng màu ở mỗi bên."
+        },
+        "parts": ["reactants", "products"]
+      },
+      {
+        "text": "With every coefficient 1 the counts differ, so the balance tips. A coefficient multiplies a whole molecule — we never change a formula’s small numbers.",
+        "vi": {
+          "text": "Khi mọi hệ số bằng 1, số nguyên tử hai bên khác nhau nên cân bị nghiêng. Hệ số nhân cả phân tử — không bao giờ đổi chỉ số nhỏ trong công thức."
+        },
+        "parts": ["pointer", "reactants"]
+      },
+      {
+        "text": "Balance one element at a time, the one in fewest species first (C, then H, then O for a fuel burning). Each step raises one coefficient.",
+        "vi": {
+          "text": "Cân bằng từng nguyên tố một, nguyên tố có mặt trong ít chất nhất trước (với nhiên liệu cháy: C, rồi H, rồi O). Mỗi bước tăng một hệ số."
+        },
+        "parts": ["reactants", "products"]
+      },
+      {
+        "text": "Balanced: the same atoms on both pans, so the same mass — the beam is level. That is the law of conservation of mass.",
+        "vi": {
+          "text": "Đã cân bằng: hai đĩa có cùng các nguyên tử nên cùng khối lượng — đòn cân nằm ngang. Đó là định luật bảo toàn khối lượng."
+        },
+        "parts": ["pointer", "products"]
+      }
+    ]
+  }
+}

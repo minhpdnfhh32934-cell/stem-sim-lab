@@ -1,0 +1,425 @@
+{
+  "id": "molecule-shapes",
+  "name": "Shapes of molecules (VSEPR) and polarity",
+  "category": "chemistry",
+  "description": "Why is water bent and carbon dioxide straight? The electron pairs around a central atom push each other as far apart as they can: their number sets the molecule’s shape. Lone pairs push harder and squeeze the bonds together. See nine molecules in 3D, read their bond angles and dipole moments, and tell which are polar.",
+  "vi": {
+    "name": "Hình học phân tử (VSEPR) và độ phân cực",
+    "description": "Vì sao phân tử nước có dạng gấp khúc còn cacbon đioxit thẳng? Các cặp electron quanh nguyên tử trung tâm đẩy nhau ra xa nhất có thể: số cặp quyết định hình dạng phân tử. Cặp electron tự do đẩy mạnh hơn và ép các liên kết lại gần nhau. Quan sát chín phân tử ở dạng 3D, đọc góc liên kết và momen lưỡng cực của chúng, và cho biết phân tử nào phân cực.",
+    "note": "Mô hình dạy học thuyết VSEPR (lực đẩy giữa các cặp electron lớp vỏ hóa trị). Các vùng electron quanh nguyên tử trung tâm (cặp liên kết — liên kết bội tính là một vùng — và cặp electron tự do) đẩy nhau ra xa: số vùng cho cách sắp xếp và góc lí tưởng (2 → 180°; 3 → 120°; 4 → 109,5°; 5 → 90° và 120°; 6 → 90°); cặp electron tự do đẩy mạnh hơn nên ép góc liên kết nhỏ lại. Góc liên kết đo được ở pha khí theo dữ liệu thực nghiệm của NIST CCCBDB (H₂O 104,48°; NH₃ 106,67°; SO₂ 119,33°; CH₄ 109,47°); momen lưỡng cực theo CRC Handbook (H₂O 1,8546 D; NH₃ 1,4718 D; SO₂ 1,6331 D; các phân tử đối xứng bằng 0). Lượt chạy cho thấy các vùng electron chuyển từ góc lí tưởng tới góc đo được trong 3 s — chỉ là hình minh họa lực đẩy, không phải chuyển động thật. Mô hình que-cầu: 1 Å được vẽ thành 7 cm; mũi tên lưỡng cực chỉ về đầu âm (quy ước của hóa học)."
+  },
+  "requiredEquipment": ["molecule-model"],
+  "model": "chemistry.molecule-shapes",
+  "parameters": [
+    {
+      "id": "molecule",
+      "label": "Molecule",
+      "vi": {
+        "label": "Phân tử"
+      },
+      "unit": "",
+      "default": 6,
+      "min": 0,
+      "max": 8,
+      "presets": [
+        {
+          "label": "BeCl₂ (beryllium chloride)",
+          "vi": {
+            "label": "BeCl₂ (beri clorua)"
+          },
+          "value": 0
+        },
+        {
+          "label": "CO₂ (carbon dioxide)",
+          "vi": {
+            "label": "CO₂ (cacbon đioxit)"
+          },
+          "value": 1
+        },
+        {
+          "label": "BF₃ (boron trifluoride)",
+          "vi": {
+            "label": "BF₃ (bo triflorua)"
+          },
+          "value": 2
+        },
+        {
+          "label": "SO₂ (sulfur dioxide)",
+          "vi": {
+            "label": "SO₂ (lưu huỳnh đioxit)"
+          },
+          "value": 3
+        },
+        {
+          "label": "CH₄ (methane)",
+          "vi": {
+            "label": "CH₄ (metan)"
+          },
+          "value": 4
+        },
+        {
+          "label": "NH₃ (ammonia)",
+          "vi": {
+            "label": "NH₃ (amoniac)"
+          },
+          "value": 5
+        },
+        {
+          "label": "H₂O (water)",
+          "vi": {
+            "label": "H₂O (nước)"
+          },
+          "value": 6
+        },
+        {
+          "label": "PCl₅ (phosphorus pentachloride)",
+          "vi": {
+            "label": "PCl₅ (photpho pentaclorua)"
+          },
+          "value": 7
+        },
+        {
+          "label": "SF₆ (sulfur hexafluoride)",
+          "vi": {
+            "label": "SF₆ (lưu huỳnh hexaflorua)"
+          },
+          "value": 8
+        }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "settleTime": 3
+  },
+  "inputs": {
+    "settleTime": {
+      "symbol": "t",
+      "unit": "s",
+      "desk": false
+    }
+  },
+  "simulation": {
+    "timeStep": 0.02,
+    "maxDuration": 5,
+    "sampleInterval": 0.05
+  },
+  "measurements": [
+    {
+      "id": "time",
+      "label": "Time",
+      "vi": {
+        "label": "Thời gian"
+      },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "time"
+    },
+    {
+      "id": "angle",
+      "label": "Bond angle",
+      "vi": {
+        "label": "Góc liên kết"
+      },
+      "symbol": "θ",
+      "unit": "°",
+      "variable": "angle"
+    }
+  ],
+  "results": [
+    {
+      "id": "angle",
+      "label": "Bond angle (measured)",
+      "vi": {
+        "label": "Góc liên kết (đo được)"
+      },
+      "symbol": "θ",
+      "unit": "°",
+      "variable": "angle",
+      "reduce": "final",
+      "theory": "angle"
+    },
+    {
+      "id": "ideal",
+      "label": "Angle with no lone pairs (VSEPR ideal)",
+      "vi": {
+        "label": "Góc khi không có cặp tự do (lí tưởng theo VSEPR)"
+      },
+      "symbol": "θ₀",
+      "unit": "°",
+      "variable": "angle",
+      "reduce": "max",
+      "theory": "idealAngle"
+    },
+    {
+      "id": "domains",
+      "label": "Electron domains on the central atom",
+      "vi": {
+        "label": "Số vùng electron quanh nguyên tử trung tâm"
+      },
+      "unit": "",
+      "variable": "domains",
+      "reduce": "final",
+      "format": "integer",
+      "theory": "domains"
+    },
+    {
+      "id": "lonePairs",
+      "label": "Lone pairs on the central atom",
+      "vi": {
+        "label": "Số cặp electron tự do của nguyên tử trung tâm"
+      },
+      "unit": "",
+      "variable": "lonePairs",
+      "reduce": "final",
+      "format": "integer",
+      "theory": "lonePairs"
+    },
+    {
+      "id": "dipole",
+      "label": "Dipole moment",
+      "vi": {
+        "label": "Momen lưỡng cực"
+      },
+      "symbol": "μ",
+      "unit": "D",
+      "variable": "dipole",
+      "reduce": "final",
+      "theory": "dipole",
+      "classes": [
+        {
+          "max": 0,
+          "label": "Non-polar",
+          "vi": {
+            "label": "Không phân cực"
+          }
+        },
+        {
+          "label": "Polar",
+          "vi": {
+            "label": "Phân cực"
+          }
+        }
+      ]
+    }
+  ],
+  "graphs": [
+    {
+      "id": "angle-time",
+      "title": "Bond angle as the domains settle",
+      "vi": {
+        "title": "Góc liên kết khi các vùng electron ổn định"
+      },
+      "x": "time",
+      "y": ["angle"]
+    }
+  ],
+  "monitor": "angle-time",
+  "compare": [
+    {
+      "graph": "angle-time",
+      "series": "angle"
+    }
+  ],
+  "note": "A teaching model of VSEPR theory (valence-shell electron-pair repulsion). The electron domains around the central atom (bonding pairs — a multiple bond counting once — and lone pairs) push apart: their number gives the arrangement and the ideal angle (2 → 180°, 3 → 120°, 4 → 109.5°, 5 → 90° and 120°, 6 → 90°); lone pairs push harder, squeezing the bond angles. Bond angles measured in the gas phase from NIST CCCBDB experimental data (H₂O 104.48°, NH₃ 106.67°, SO₂ 119.33°, CH₄ 109.47°); dipole moments from the CRC Handbook (H₂O 1.8546 D, NH₃ 1.4718 D, SO₂ 1.6331 D; the symmetric molecules 0). The run shows the domains moving from the ideal angle to the measured one in 3 s — a picture of the repulsion, not a real motion. Ball-and-stick model: 1 Å drawn as 7 cm; the dipole arrow points to the negative end (the chemists’ convention).",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the molecule shapes instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn về hình học phân tử trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "molecule-shapes-instructions"
+      }
+    },
+    {
+      "id": "molecule",
+      "instruction": "Choose a molecule with the dial; look at it turning.",
+      "vi": {
+        "instruction": "Chọn một phân tử bằng núm xoay; quan sát nó xoay."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "molecule"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: watch the electron pairs settle into the measured shape.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: quan sát các cặp electron ổn định ở hình dạng đo được."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Read the domains, lone pairs, bond angle and dipole moment.",
+      "vi": {
+        "instruction": "Đọc số vùng electron, số cặp tự do, góc liên kết và momen lưỡng cực."
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET and compare CH₄, NH₃ and H₂O: why do the angles shrink?",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI và so sánh CH₄, NH₃ và H₂O: vì sao góc nhỏ dần?"
+      },
+      "done": {
+        "kind": "reset"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "boron-trifluoride",
+      "question": "Boron trifluoride, BF₃: boron has three valence electrons, each bonded to a fluorine. Find the number of electron domains on boron and the angle between its bonds.",
+      "vi": {
+        "question": "Bo triflorua, BF₃: bo có ba electron hóa trị, mỗi electron liên kết với một nguyên tử flo. Tìm số vùng electron quanh nguyên tử bo và góc giữa các liên kết."
+      },
+      "set": { "molecule": 2 },
+      "find": [{ "theory": "idealAngle" }],
+      "steps": [
+        {
+          "say": "Three bonding pairs and no lone pair: three electron domains, written AX₃.",
+          "vi": {
+            "say": "Ba cặp electron liên kết và không có cặp tự do: ba vùng electron, kí hiệu AX₃."
+          },
+          "write": "BF₃: AX₃"
+        },
+        {
+          "say": "Three domains push as far apart as they can: flat, at the corners of a triangle, a full turn shared by three.",
+          "vi": {
+            "say": "Ba vùng electron đẩy nhau ra xa nhất có thể: nằm trong một mặt phẳng, ở ba đỉnh tam giác, chia đều một vòng tròn cho ba."
+          },
+          "write": "θ₀ = 360°/3 = {@idealAngle}°",
+          "check": { "expr": "360/3", "equals": "idealAngle" }
+        }
+      ]
+    },
+    {
+      "id": "water",
+      "question": "Water, H₂O: oxygen has six valence electrons; two bond with hydrogen atoms. Find the VSEPR ideal angle for its arrangement, and compare it with the measured angle.",
+      "vi": {
+        "question": "Nước, H₂O: oxi có sáu electron hóa trị; hai electron liên kết với hai nguyên tử hiđro. Tìm góc lí tưởng theo VSEPR cho cách sắp xếp này, và so sánh với góc đo được."
+      },
+      "set": { "molecule": 6 },
+      "find": [{ "theory": "idealAngle" }],
+      "steps": [
+        {
+          "say": "The other four valence electrons make two lone pairs: two bonds and two lone pairs, four domains, AX₂E₂.",
+          "vi": {
+            "say": "Bốn electron hóa trị còn lại tạo hai cặp tự do: hai liên kết và hai cặp tự do, bốn vùng electron, AX₂E₂."
+          },
+          "write": "H₂O: AX₂E₂"
+        },
+        {
+          "say": "Four domains point to the corners of a tetrahedron; the angle between any two has cos θ = −1/3.",
+          "vi": {
+            "say": "Bốn vùng electron hướng về bốn đỉnh của một tứ diện; góc giữa hai vùng bất kì có cos θ = −1/3."
+          },
+          "write": "θ₀ = arccos(−1/3) ≈ {@idealAngle|4}°",
+          "check": { "expr": "deg(acos(-1/3))", "equals": "idealAngle" }
+        },
+        {
+          "say": "Lone pairs push harder than bonds and squeeze the H–O–H angle: it is measured at {@angle}°.",
+          "vi": {
+            "say": "Cặp electron tự do đẩy mạnh hơn cặp liên kết nên ép góc H–O–H nhỏ lại: góc đo được là {@angle}°."
+          },
+          "write": "θ < θ₀"
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "The electron pairs around a central atom repel and spread as far apart as possible; how many there are, and how many are lone pairs, decides the molecule’s shape and whether it is polar.",
+    "vi": {
+      "summary": "Các cặp electron quanh nguyên tử trung tâm đẩy nhau và phân bố xa nhau nhất có thể; số cặp và số cặp tự do quyết định hình dạng phân tử và việc nó có phân cực hay không."
+    },
+    "parts": [
+      {
+        "id": "centre",
+        "name": "Central atom",
+        "role": "Holds the bonds and lone pairs whose repulsion sets the shape.",
+        "vi": {
+          "name": "Nguyên tử trung tâm",
+          "role": "Mang các liên kết và cặp electron tự do mà lực đẩy giữa chúng quyết định hình dạng."
+        },
+        "anchor": {
+          "part": "central-atom"
+        }
+      },
+      {
+        "id": "bonded",
+        "name": "Bonded atom",
+        "role": "Each bond is one electron domain (a double bond counts once).",
+        "vi": {
+          "name": "Nguyên tử liên kết",
+          "role": "Mỗi liên kết là một vùng electron (liên kết đôi tính là một vùng)."
+        },
+        "anchor": {
+          "part": "atom-0"
+        }
+      },
+      {
+        "id": "lone-pair",
+        "name": "Lone pair",
+        "role": "A pair of electrons not shared: it pushes harder than a bond and squeezes the angles.",
+        "vi": {
+          "name": "Cặp electron tự do",
+          "role": "Cặp electron không dùng chung: đẩy mạnh hơn liên kết và ép các góc nhỏ lại."
+        },
+        "anchor": {
+          "part": "lone-pair-0"
+        }
+      },
+      {
+        "id": "dipole",
+        "name": "Dipole arrow",
+        "role": "Shown when bond polarities do not cancel: the molecule has a negative and a positive end.",
+        "vi": {
+          "name": "Mũi tên lưỡng cực",
+          "role": "Hiện khi độ phân cực của các liên kết không triệt tiêu: phân tử có một đầu âm và một đầu dương."
+        },
+        "anchor": {
+          "part": "dipole"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "Count the electron domains on the central atom: bonds (a double bond counts once) plus lone pairs. They repel each other and spread as far apart as they can.",
+        "vi": {
+          "text": "Đếm số vùng electron quanh nguyên tử trung tâm: số liên kết (liên kết đôi tính là một) cộng số cặp electron tự do. Chúng đẩy nhau và phân bố xa nhau nhất có thể."
+        },
+        "parts": ["centre", "bonded"]
+      },
+      {
+        "text": "Two domains: a straight line (CO₂, 180°). Three: a flat triangle (BF₃, 120°). Four: a tetrahedron (CH₄, 109.5°). Five: a trigonal bipyramid; six: an octahedron (SF₆, 90°).",
+        "vi": {
+          "text": "Hai vùng: đường thẳng (CO₂, 180°). Ba vùng: tam giác phẳng (BF₃, 120°). Bốn vùng: tứ diện (CH₄, 109,5°). Năm vùng: lưỡng chóp tam giác; sáu vùng: bát diện (SF₆, 90°)."
+        },
+        "parts": ["bonded"]
+      },
+      {
+        "text": "Lone pairs are held closer to the atom and push harder: NH₃ (one lone pair) closes to 106.7°, H₂O (two) to 104.5°. We name the shape by the atoms only: pyramidal, bent.",
+        "vi": {
+          "text": "Cặp electron tự do ở gần nguyên tử hơn và đẩy mạnh hơn: NH₃ (một cặp tự do) có góc 106,7°, H₂O (hai cặp) có góc 104,5°. Hình dạng chỉ gọi theo các nguyên tử: chóp tam giác, gấp khúc."
+        },
+        "parts": ["lone-pair", "centre"]
+      },
+      {
+        "text": "Polarity: each bond to a more electronegative atom is a small dipole. In a symmetric shape (CO₂, CH₄, BF₃) they cancel — non-polar. In H₂O and NH₃ they add up — the molecule is polar.",
+        "vi": {
+          "text": "Độ phân cực: mỗi liên kết với nguyên tử có độ âm điện lớn hơn là một lưỡng cực nhỏ. Trong hình dạng đối xứng (CO₂, CH₄, BF₃) chúng triệt tiêu nhau — không phân cực. Trong H₂O và NH₃ chúng cộng lại — phân tử phân cực."
+        },
+        "parts": ["dipole", "bonded"]
+      }
+    ]
+  }
+}

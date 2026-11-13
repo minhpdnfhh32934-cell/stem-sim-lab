@@ -1,0 +1,618 @@
+{
+  "id": "ph-measurement",
+  "name": "Measuring pH: strong and weak acids, bases and a buffer",
+  "category": "chemistry",
+  "description": "Dip a glass electrode into a sample and read its pH on the meter. Choose the acid–base pair — hydrochloric acid, ethanoic acid, ammonium or hydroxide — its form (the acid, the base, or a 1 : 1 mixture of both) and its concentration. A drop of universal indicator shows the same pH as a colour. Diluting a sample tenfold moves a strong acid's pH by one unit, a weak acid's by half a unit, and a buffer's hardly at all.",
+  "vi": {
+    "name": "Đo pH: axit mạnh, axit yếu, bazơ và dung dịch đệm",
+    "description": "Nhúng điện cực thủy tinh vào mẫu và đọc pH trên máy đo. Chọn cặp axit–bazơ — axit clohiđric, axit axetic, amoni hoặc hiđroxit — dạng của nó (dạng axit, dạng bazơ, hoặc hỗn hợp 1 : 1 của cả hai) và nồng độ. Một giọt chất chỉ thị vạn năng cho thấy cùng pH đó bằng màu sắc. Pha loãng mẫu mười lần làm pH của axit mạnh thay đổi một đơn vị, của axit yếu nửa đơn vị, còn của dung dịch đệm gần như không đổi.",
+    "note": "Mẫu là một cặp axit–bazơ liên hợp (HA/A⁻ hoặc BH⁺/B) có tổng nồng độ C, pha với tỉ lệ n ở dạng bazơ: n = 0 là dạng axit (HCl, CH₃COOH, NH₄Cl), n = 1 là dạng bazơ (NaCl, CH₃COONa, NH₃, NaOH), n = ½ là hỗn hợp 1 : 1. pH cân bằng được tính chính xác từ cân bằng điện tích [H⁺] + n·C = C·Ka/(Ka + [H⁺]) + Kw/[H⁺], không dùng công thức gần đúng: cân bằng tức thời và lí tưởng (hoạt độ bằng nồng độ). Axit mạnh là cặp có pKa rất thấp (HCl khoảng −6); bazơ mạnh NaOH được biểu diễn bằng pKa = 20 (nghĩa là phản ứng hoàn toàn, không phải hằng số đo được). Điện cực thủy tinh có thế E = S·(7 − pH) với độ dốc Nernst S = ln10·R·T/F (59,16 mV ở 25 °C); máy đo được coi là đã hiệu chuẩn hoàn hảo (việc hiệu chuẩn không được mô phỏng). Số đọc tiến dần đến pH của mẫu theo hàm mũ với hằng số thời gian τ = 3 s — một giá trị dạy học, như nhau với mọi mẫu, trong khi điện cực thật chậm hơn trong mẫu loãng. Kết quả mô phỏng không có sai số ngẫu nhiên; số đọc của máy chỉ được làm tròn theo độ phân giải d."
+  },
+  "requiredEquipment": ["ph-meter-station"],
+  "model": "acid-base.ph-measurement",
+  "parameters": [
+    {
+      "id": "pKa",
+      "label": "Acid–base pair",
+      "vi": {
+        "label": "Cặp axit–bazơ"
+      },
+      "symbol": "pKa",
+      "unit": "",
+      "default": 4.76,
+      "min": -6,
+      "max": 20,
+      "presets": [
+        {
+          "label": "HCl / Cl⁻ (strong acid, pKa ≈ −6)",
+          "vi": {
+            "label": "HCl / Cl⁻ (axit mạnh, pKa ≈ −6)"
+          },
+          "value": -6
+        },
+        {
+          "label": "CH₃COOH / CH₃COO⁻ (weak acid, pKa 4.76)",
+          "vi": {
+            "label": "CH₃COOH / CH₃COO⁻ (axit yếu, pKa 4,76)"
+          },
+          "value": 4.76
+        },
+        {
+          "label": "NH₄⁺ / NH₃ (weak base, pKa 9.25)",
+          "vi": {
+            "label": "NH₄⁺ / NH₃ (bazơ yếu, pKa 9,25)"
+          },
+          "value": 9.25
+        },
+        {
+          "label": "H₂O / OH⁻ (NaOH, strong base)",
+          "vi": {
+            "label": "H₂O / OH⁻ (NaOH, bazơ mạnh)"
+          },
+          "value": 20
+        }
+      ]
+    },
+    {
+      "id": "baseFraction",
+      "label": "Form of the sample",
+      "vi": {
+        "label": "Dạng của mẫu"
+      },
+      "symbol": "n",
+      "unit": "",
+      "default": 0,
+      "min": 0,
+      "max": 1,
+      "presets": [
+        {
+          "label": "Acid form (n = 0)",
+          "vi": {
+            "label": "Dạng axit (n = 0)"
+          },
+          "value": 0
+        },
+        {
+          "label": "1 : 1 mixture, a buffer (n = ½)",
+          "vi": {
+            "label": "Hỗn hợp 1 : 1, dung dịch đệm (n = ½)"
+          },
+          "value": 0.5
+        },
+        {
+          "label": "Base form (n = 1)",
+          "vi": {
+            "label": "Dạng bazơ (n = 1)"
+          },
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "concentration",
+      "label": "Concentration",
+      "vi": {
+        "label": "Nồng độ"
+      },
+      "symbol": "C",
+      "unit": "mol/L",
+      "default": 0.1,
+      "min": 0.0001,
+      "max": 0.1,
+      "presets": [
+        {
+          "label": "0.1 mol/L",
+          "vi": {
+            "label": "0,1 mol/L"
+          },
+          "value": 0.1
+        },
+        {
+          "label": "0.01 mol/L",
+          "vi": {
+            "label": "0,01 mol/L"
+          },
+          "value": 0.01
+        },
+        {
+          "label": "0.001 mol/L",
+          "vi": {
+            "label": "0,001 mol/L"
+          },
+          "value": 0.001
+        },
+        {
+          "label": "0.0001 mol/L",
+          "vi": {
+            "label": "0,0001 mol/L"
+          },
+          "value": 0.0001
+        }
+      ]
+    },
+    {
+      "id": "meterResolution",
+      "label": "Meter resolution",
+      "vi": {
+        "label": "Độ phân giải của máy đo"
+      },
+      "symbol": "d",
+      "unit": "pH",
+      "default": 0.01,
+      "min": 0.001,
+      "max": 0.1,
+      "presets": [
+        {
+          "label": "0.1",
+          "vi": {
+            "label": "0,1"
+          },
+          "value": 0.1
+        },
+        {
+          "label": "0.01",
+          "vi": {
+            "label": "0,01"
+          },
+          "value": 0.01
+        },
+        {
+          "label": "0.001",
+          "vi": {
+            "label": "0,001"
+          },
+          "value": 0.001
+        }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "kw": 1e-14,
+    "temperature": 25,
+    "timeConstant": 3,
+    "readTime": 30,
+    "startPH": 7
+  },
+  "inputs": {
+    "kw": {
+      "symbol": "K_w",
+      "unit": "(mol/L)²",
+      "desk": false
+    },
+    "temperature": {
+      "symbol": "θ",
+      "unit": "°C"
+    },
+    "timeConstant": {
+      "symbol": "τ",
+      "unit": "s",
+      "desk": false
+    },
+    "readTime": {
+      "symbol": "t_read",
+      "unit": "s"
+    },
+    "startPH": {
+      "symbol": "pH₀",
+      "unit": "",
+      "desk": false
+    }
+  },
+  "simulation": {
+    "timeStep": 0.05,
+    "maxDuration": 40,
+    "sampleInterval": 0.25
+  },
+  "measurements": [
+    {
+      "id": "reading",
+      "label": "Meter reading",
+      "vi": {
+        "label": "Số đọc của máy đo"
+      },
+      "symbol": "pH",
+      "unit": "pH",
+      "variable": "reading"
+    },
+    {
+      "id": "potential",
+      "label": "Electrode potential",
+      "vi": {
+        "label": "Thế điện cực"
+      },
+      "symbol": "E",
+      "unit": "mV",
+      "variable": "potential"
+    },
+    {
+      "id": "immersion",
+      "label": "Time in the sample",
+      "vi": {
+        "label": "Thời gian nhúng trong mẫu"
+      },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "immersionTime"
+    }
+  ],
+  "results": [
+    {
+      "id": "reading",
+      "label": "pH read on the meter",
+      "vi": {
+        "label": "pH đọc trên máy đo"
+      },
+      "symbol": "pH",
+      "unit": "pH",
+      "variable": "reading",
+      "reduce": "final",
+      "theory": "finalReading"
+    },
+    {
+      "id": "hydrogen",
+      "label": "[H⁺] = 10^(−pH)",
+      "vi": {
+        "label": "[H⁺] = 10^(−pH)"
+      },
+      "symbol": "[H⁺]",
+      "unit": "mol/L",
+      "variable": "hydrogenIon",
+      "reduce": "final",
+      "theory": "hydrogenIon"
+    },
+    {
+      "id": "ionization",
+      "label": "Solute that has reacted with water",
+      "vi": {
+        "label": "Phần chất tan đã phản ứng với nước"
+      },
+      "symbol": "α",
+      "unit": "%",
+      "variable": "ionization",
+      "reduce": "final",
+      "theory": "ionization"
+    },
+    {
+      "id": "potential",
+      "label": "Electrode potential",
+      "vi": {
+        "label": "Thế điện cực"
+      },
+      "symbol": "E",
+      "unit": "mV",
+      "variable": "potential",
+      "reduce": "final",
+      "theory": "potential"
+    },
+    {
+      "id": "logConcentration",
+      "label": "lg C",
+      "vi": {
+        "label": "lg C"
+      },
+      "symbol": "lg C",
+      "unit": "",
+      "variable": "logConcentration",
+      "reduce": "final"
+    }
+  ],
+  "instruments": [
+    {
+      "result": "reading",
+      "quantity": "pH of the sample",
+      "name": "pH meter",
+      "resolution": "meterResolution",
+      "excludes": "the meter's calibration, the electrode's drift and junction potential, temperature compensation, and a sample changed by air or by the electrode",
+      "vi": {
+        "quantity": "pH của mẫu",
+        "name": "Máy đo pH",
+        "excludes": "việc hiệu chuẩn máy, độ trôi và thế tiếp xúc của điện cực, việc bù nhiệt độ, và mẫu bị thay đổi do không khí hoặc do điện cực"
+      }
+    }
+  ],
+  "graphs": [
+    {
+      "id": "reading-time",
+      "title": "Meter reading against time in the sample",
+      "vi": {
+        "title": "Số đọc của máy đo theo thời gian nhúng"
+      },
+      "x": "immersion",
+      "y": ["reading"],
+      "yLabel": "pH"
+    }
+  ],
+  "monitor": "reading-time",
+  "compare": [
+    {
+      "graph": "reading-time",
+      "series": "reading"
+    }
+  ],
+  "analyses": [
+    {
+      "id": "dilution",
+      "title": "pH against lg C, one pair and form",
+      "note": "Each run is one point: the pH read against lg C. Diluting tenfold lowers lg C by one: a strong acid's pH rises by 1 (slope −1), a weak acid's by ½ (slope −½), a weak base's falls by ½, a buffer's stays (slope 0) — the textbook limits, which the exact pH approaches while the solution is not too dilute.",
+      "vi": {
+        "title": "pH theo lg C, cùng một cặp và một dạng",
+        "note": "Mỗi lần chạy là một điểm: pH đọc được theo lg C. Pha loãng mười lần làm lg C giảm 1: pH của axit mạnh tăng 1 (hệ số góc −1), của axit yếu tăng ½ (hệ số góc −½), của bazơ yếu giảm ½, của dung dịch đệm gần như không đổi (hệ số góc 0) — các giới hạn trong sách giáo khoa, mà pH chính xác tiến gần tới khi dung dịch chưa quá loãng."
+      },
+      "x": "logConcentration",
+      "y": "reading",
+      "group": ["pKa", "baseFraction"],
+      "columns": [
+        "pKa",
+        "baseFraction",
+        "concentration",
+        "logConcentration",
+        "reading",
+        "ionization"
+      ],
+      "slope": {
+        "label": "Slope of pH against lg C",
+        "vi": {
+          "label": "Hệ số góc của pH theo lg C"
+        },
+        "symbol": "k",
+        "unit": "",
+        "theory": "limitSlope",
+        "intercept": "limitIntercept"
+      }
+    }
+  ],
+  "note": "The sample is one conjugate acid–base pair (HA/A⁻ or BH⁺/B) of total concentration C, made up with a fraction n as its base form: n = 0 is the acid form (HCl, CH₃COOH, NH₄Cl), n = 1 the base form (NaCl, CH₃COONa, NH₃, NaOH), n = ½ a 1 : 1 mixture. Its equilibrium pH is solved exactly from the charge balance [H⁺] + n·C = C·Ka/(Ka + [H⁺]) + Kw/[H⁺], with no approximation: the equilibrium is instant and ideal (activities are concentrations). A strong acid is a pair with a very low pKa (HCl's is about −6); the strong base NaOH stands as a pKa of 20 (reaction complete, not a measured constant). The glass electrode's potential is E = S·(7 − pH) with the Nernst slope S = ln10·R·T/F (59.16 mV at 25 °C); the meter is taken as perfectly calibrated (calibration is not modelled). The reading approaches the sample's pH exponentially with a time constant τ = 3 s — a teaching value, the same for every sample, where a real electrode is slower in dilute samples. The simulated results carry no random error; the meter's reading is only rounded to its resolution d.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the pH measurement instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn đo pH trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "ph-measurement-instructions"
+      }
+    },
+    {
+      "id": "pair",
+      "instruction": "Choose the acid–base pair with its dial on the control desk.",
+      "vi": {
+        "instruction": "Chọn cặp axit–bazơ bằng núm xoay trên bàn điều khiển."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "pKa"
+      }
+    },
+    {
+      "id": "concentration",
+      "instruction": "Set the sample's form and its concentration C.",
+      "vi": {
+        "instruction": "Đặt dạng của mẫu và nồng độ C."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "concentration"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the electrode goes into the sample; watch the reading settle and the indicator's colour.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: điện cực được nhúng vào mẫu; quan sát số đọc ổn định dần và màu của chất chỉ thị."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Read pH, [H⁺] and the electrode potential on the results monitor.",
+      "vi": {
+        "instruction": "Đọc pH, [H⁺] và thế điện cực trên màn hình kết quả."
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, dilute the sample tenfold (C ÷ 10) and run again: how much does pH change?",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, pha loãng mẫu mười lần (C ÷ 10) rồi chạy lại: pH thay đổi bao nhiêu?"
+      },
+      "done": {
+        "kind": "reset"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "strong-acid",
+      "question": "Hydrochloric acid at {concentration} mol/L. Find [H⁺] and the pH.",
+      "vi": { "question": "Dung dịch axit clohiđric {concentration} mol/L. Tìm [H⁺] và pH." },
+      "set": { "pKa": -6, "baseFraction": 0, "concentration": 0.001 },
+      "find": [{ "theory": "hydrogenIon" }, { "theory": "pH", "symbol": "pH", "unit": "" }],
+      "steps": [
+        {
+          "say": "HCl is a strong acid: it ionises completely, so [H⁺] is the acid’s concentration (the water’s own H⁺ is far smaller).",
+          "vi": {
+            "say": "HCl là axit mạnh, phân li hoàn toàn, nên [H⁺] bằng nồng độ axit (lượng H⁺ do nước phân li nhỏ hơn rất nhiều)."
+          },
+          "write": "[H⁺] = C = {@hydrogenIon} mol/L",
+          "check": { "expr": "concentration", "equals": "hydrogenIon" }
+        },
+        {
+          "say": "pH is minus the base-ten logarithm of [H⁺].",
+          "vi": { "say": "pH bằng trừ lôgarit cơ số mười của [H⁺]." },
+          "write": "pH = −lg[H⁺] = −lg {@hydrogenIon} = {@pH}",
+          "check": { "expr": "-log(concentration)", "equals": "pH" }
+        }
+      ]
+    },
+    {
+      "id": "weak-acid",
+      "question": "Acetic acid at {concentration} mol/L, pKa = {pKa}. Find [H⁺] and the pH.",
+      "vi": {
+        "question": "Dung dịch axit axetic {concentration} mol/L, pKa = {pKa}. Tìm [H⁺] và pH."
+      },
+      "set": { "pKa": 4.76, "baseFraction": 0, "concentration": 0.1 },
+      "find": [
+        { "theory": "hydrogenIon", "figures": 4 },
+        { "theory": "pH", "symbol": "pH", "unit": "" }
+      ],
+      "steps": [
+        {
+          "say": "A weak acid ionises only partly: CH₃COOH ⇌ H⁺ + CH₃COO⁻, Ka = 10^(−pKa). With x = [H⁺], Ka = x²/(C − x).",
+          "vi": {
+            "say": "Axit yếu chỉ phân li một phần: CH₃COOH ⇌ H⁺ + CH₃COO⁻, Ka = 10^(−pKa). Đặt x = [H⁺], ta có Ka = x²/(C − x)."
+          },
+          "write": "x² + Ka·x − Ka·C = 0"
+        },
+        {
+          "say": "Take the positive root of the quadratic.",
+          "vi": { "say": "Lấy nghiệm dương của phương trình bậc hai." },
+          "write": "x = (−Ka + √(Ka² + 4Ka·C))/2 ≈ {@hydrogenIon|4} mol/L",
+          "check": {
+            "expr": "(-10^(-pKa)+sqrt(10^(-2*pKa)+4*10^(-pKa)*concentration))/2",
+            "equals": "hydrogenIon"
+          }
+        },
+        {
+          "say": "Then the pH: much higher than a strong acid’s at the same concentration.",
+          "vi": { "say": "Rồi tính pH: cao hơn nhiều so với axit mạnh cùng nồng độ." },
+          "write": "pH = −lg {@hydrogenIon|4} ≈ {@pH}",
+          "check": {
+            "expr": "-log((-10^(-pKa)+sqrt(10^(-2*pKa)+4*10^(-pKa)*concentration))/2)",
+            "equals": "pH"
+          }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "The pH of a solution says how much H⁺ it holds: pH = −lg[H⁺]. A glass electrode turns it into a voltage the meter reads; an indicator shows it as a colour.",
+    "vi": {
+      "summary": "pH của dung dịch cho biết nồng độ ion H⁺: pH = −lg[H⁺]. Điện cực thủy tinh chuyển nó thành một hiệu điện thế mà máy đo đọc được; chất chỉ thị cho thấy nó bằng màu sắc."
+    },
+    "parts": [
+      {
+        "id": "meter",
+        "name": "pH meter",
+        "role": "Turns the electrode's voltage into a pH reading on its LCD.",
+        "vi": {
+          "name": "Máy đo pH",
+          "role": "Chuyển hiệu điện thế của điện cực thành số pH trên màn hình."
+        },
+        "anchor": {
+          "part": "lcd"
+        }
+      },
+      {
+        "id": "electrode",
+        "name": "Glass electrode",
+        "role": "Its thin glass bulb takes a voltage that depends on [H⁺] in the sample: 59 mV per pH unit at 25 °C.",
+        "vi": {
+          "name": "Điện cực thủy tinh",
+          "role": "Bầu thủy tinh mỏng tạo ra hiệu điện thế phụ thuộc [H⁺] trong mẫu: 59 mV cho mỗi đơn vị pH ở 25 °C."
+        },
+        "anchor": {
+          "part": "electrode"
+        }
+      },
+      {
+        "id": "sample",
+        "name": "Sample (50 mL)",
+        "role": "The solution measured: the chosen pair, form and concentration.",
+        "vi": {
+          "name": "Mẫu (50 mL)",
+          "role": "Dung dịch được đo: cặp, dạng và nồng độ đã chọn."
+        },
+        "anchor": {
+          "at": [0.02, -0.19, 0.02]
+        }
+      },
+      {
+        "id": "indicator",
+        "name": "Universal indicator drop",
+        "role": "Changes colour with pH: red when acidic, green near 7, violet when basic — a guide to about one unit.",
+        "vi": {
+          "name": "Giọt chất chỉ thị vạn năng",
+          "role": "Đổi màu theo pH: đỏ khi axit, xanh lục gần 7, tím khi bazơ — ước lượng chính xác khoảng một đơn vị."
+        },
+        "anchor": {
+          "part": "drop"
+        }
+      },
+      {
+        "id": "chart",
+        "name": "Colour chart",
+        "role": "Matches the drop's colour to a pH value.",
+        "vi": {
+          "name": "Bảng màu",
+          "role": "So màu của giọt với một giá trị pH."
+        },
+        "anchor": {
+          "at": [0.17, -0.22, 0.145]
+        }
+      },
+      {
+        "id": "bottles",
+        "name": "Reagent bottles",
+        "role": "The four acid–base pairs, sorted by strength: pKa ≤ 0, 0–7, 7–14, ≥ 14.",
+        "vi": {
+          "name": "Các chai thuốc thử",
+          "role": "Bốn cặp axit–bazơ, xếp theo độ mạnh: pKa ≤ 0, 0–7, 7–14, ≥ 14."
+        },
+        "anchor": {
+          "part": "bottles"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "Water and everything dissolved in it hold H⁺ ions. pH = −lg[H⁺]: each pH unit is a tenfold change in [H⁺]. Below 7 acidic, 7 neutral, above 7 basic (at 25 °C).",
+        "vi": {
+          "text": "Nước và mọi chất tan trong nó đều chứa ion H⁺. pH = −lg[H⁺]: mỗi đơn vị pH ứng với [H⁺] thay đổi mười lần. Dưới 7 là axit, bằng 7 là trung tính, trên 7 là bazơ (ở 25 °C)."
+        },
+        "parts": ["sample"]
+      },
+      {
+        "text": "Press RUN: the rinsed electrode dips into the sample. The thin glass bulb takes a voltage E = 59.16 mV × (7 − pH) at 25 °C; the meter turns E back into pH. The reading settles over a few seconds.",
+        "vi": {
+          "text": "Nhấn CHẠY: điện cực đã tráng nhúng vào mẫu. Bầu thủy tinh mỏng tạo ra hiệu điện thế E = 59,16 mV × (7 − pH) ở 25 °C; máy đo đổi E trở lại thành pH. Số đọc ổn định sau vài giây."
+        },
+        "parts": ["electrode", "meter", "sample"]
+      },
+      {
+        "text": "A drop of universal indicator on the white tile takes a colour for the same pH; matched against the chart it gives pH to about one unit — the meter to its resolution d.",
+        "vi": {
+          "text": "Một giọt chất chỉ thị vạn năng trên khay sứ trắng đổi màu theo cùng pH đó; so với bảng màu sẽ biết pH chính xác khoảng một đơn vị — còn máy đo chính xác tới độ phân giải d."
+        },
+        "parts": ["indicator", "chart"]
+      },
+      {
+        "text": "A strong acid like HCl gives all its H⁺ to water: [H⁺] = C, so pH = −lg C. A weak acid like ethanoic acid gives only a small part, so its pH is higher at the same C.",
+        "vi": {
+          "text": "Axit mạnh như HCl cho hết H⁺ vào nước: [H⁺] = C, nên pH = −lg C. Axit yếu như axit axetic chỉ cho một phần nhỏ, nên pH của nó cao hơn ở cùng nồng độ C."
+        },
+        "parts": ["bottles", "sample"]
+      },
+      {
+        "text": "Dilute tenfold and compare: a strong acid's pH rises by 1, a weak acid's by about ½, and a 1 : 1 mixture of a weak acid and its base — a buffer — hardly changes.",
+        "vi": {
+          "text": "Pha loãng mười lần rồi so sánh: pH của axit mạnh tăng 1, của axit yếu tăng khoảng ½, còn hỗn hợp 1 : 1 của axit yếu và bazơ liên hợp của nó — dung dịch đệm — gần như không đổi."
+        },
+        "parts": ["sample", "meter"]
+      },
+      {
+        "text": "The same holds for bases: NaOH is strong (pH = 14 + lg C), ammonia is weak. The results show [H⁺] from the reading and α, the share of the solute that reacted with water.",
+        "vi": {
+          "text": "Bazơ cũng vậy: NaOH là bazơ mạnh (pH = 14 + lg C), amoniac là bazơ yếu. Kết quả cho thấy [H⁺] tính từ số đọc và α, phần chất tan đã phản ứng với nước."
+        },
+        "parts": ["bottles", "meter"]
+      }
+    ]
+  }
+}

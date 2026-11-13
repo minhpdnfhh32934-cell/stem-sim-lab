@@ -1,0 +1,606 @@
+{
+  "id": "latent-heat",
+  "name": "The specific latent heat of fusion of ice",
+  "category": "physics",
+  "description": "Two funnels hold crushed ice at 0 °C over two beakers. An immersion heater in one of them is switched on for a measured time while a joulemeter counts its energy E; the other funnel, without a heater, is the control. Ice melts in both, since both take heat from the room. The extra meltwater in the heated funnel's beaker, m₁ − m₂, was melted by the heater alone: λ = E/(m₁ − m₂). Without the control, E/m₁ comes out too low.",
+  "vi": {
+    "name": "Đo nhiệt nóng chảy riêng của nước đá",
+    "description": "Hai phễu chứa nước đá vụn ở 0 °C đặt trên hai cốc. Một dây đốt nhúng trong một phễu được bật trong một khoảng thời gian đo được, trong khi joulemeter đếm năng lượng E của nó; phễu kia, không có dây đốt, là phễu đối chứng. Nước đá tan ở cả hai phễu vì cả hai đều nhận nhiệt từ phòng. Lượng nước tan dôi ra ở cốc dưới phễu có dây đốt, m₁ − m₂, là do riêng dây đốt làm tan: λ = E/(m₁ − m₂). Nếu không có phễu đối chứng, E/m₁ cho kết quả quá nhỏ.",
+    "note": "Nước đá ở 0 °C nhận nhiệt mà không tăng nhiệt độ: mỗi kilôgam cần một nhiệt lượng λ để tan hết. Trong thời gian t, phễu có dây đốt công suất P nhận P·t từ dây đốt và P_phòng·t từ phòng, nên lượng nước tan là m₁ = (P + P_phòng)·t/λ; phễu đối chứng chỉ nhận từ phòng, m₂ = P_phòng·t/λ. Hiệu m₁ − m₂ = P·t/λ = E/λ. Ở đây P_phòng = 1,5 W cho mỗi phễu (giá trị minh họa). Nhiệt nóng chảy riêng của nước đá ở 0 °C là λ = 3,336 × 10⁵ J/kg (CRC Handbook of Chemistry and Physics, 333,6 J/g). Đây là mô hình dạy học đơn giản hóa: hai phễu giống hệt nhau và nhận nhiệt từ phòng như nhau, toàn bộ nhiệt của dây đốt đi vào nước đá xung quanh nó, mọi nước tan đều chảy xuống cốc ngay. Cân đọc khối lượng nước trong mỗi cốc và joulemeter đọc năng lượng theo độ phân giải d của chúng (bội số gần nhất của d, độ bất định d/√12 chỉ do độ phân giải); không có sai số ngẫu nhiên nào được thêm vào. Thời gian được tua nhanh: 24 giây trong phòng thí nghiệm trong mỗi giây chạy. Trong phòng thí nghiệm thật, nước tan còn bám lại trên nước đá, nước đá có thể lạnh hơn 0 °C lúc đầu, và một phần nhiệt của dây đốt thoát ra không khí."
+  },
+  "requiredEquipment": ["ice-funnels"],
+  "model": "thermal.latent-heat",
+  "parameters": [
+    {
+      "id": "power",
+      "label": "Heater power",
+      "vi": {
+        "label": "Công suất dây đốt"
+      },
+      "symbol": "P",
+      "unit": "W",
+      "default": 36,
+      "min": 24,
+      "max": 48,
+      "presets": [
+        {
+          "label": "24 W",
+          "vi": {
+            "label": "24 W"
+          },
+          "value": 24
+        },
+        {
+          "label": "36 W",
+          "vi": {
+            "label": "36 W"
+          },
+          "value": 36
+        },
+        {
+          "label": "48 W",
+          "vi": {
+            "label": "48 W"
+          },
+          "value": 48
+        }
+      ]
+    },
+    {
+      "id": "heatingTime",
+      "label": "Heating time",
+      "vi": {
+        "label": "Thời gian đun"
+      },
+      "symbol": "t",
+      "unit": "s",
+      "default": 240,
+      "min": 120,
+      "max": 360,
+      "presets": [
+        {
+          "label": "2 min",
+          "vi": {
+            "label": "2 phút"
+          },
+          "value": 120
+        },
+        {
+          "label": "4 min",
+          "vi": {
+            "label": "4 phút"
+          },
+          "value": 240
+        },
+        {
+          "label": "6 min",
+          "vi": {
+            "label": "6 phút"
+          },
+          "value": 360
+        }
+      ]
+    },
+    {
+      "id": "balanceResolution",
+      "label": "Balance resolution",
+      "vi": {
+        "label": "Độ phân giải của cân"
+      },
+      "symbol": "d_m",
+      "unit": "kg",
+      "default": 0.0001,
+      "min": 0.0001,
+      "max": 0.001,
+      "presets": [
+        {
+          "label": "0.1 g",
+          "vi": {
+            "label": "0,1 g"
+          },
+          "value": 0.0001
+        },
+        {
+          "label": "1 g",
+          "vi": {
+            "label": "1 g"
+          },
+          "value": 0.001
+        }
+      ]
+    },
+    {
+      "id": "joulemeterResolution",
+      "label": "Joulemeter resolution",
+      "vi": {
+        "label": "Độ phân giải của joulemeter"
+      },
+      "symbol": "d_E",
+      "unit": "J",
+      "default": 1,
+      "min": 1,
+      "max": 100,
+      "presets": [
+        {
+          "label": "1 J",
+          "vi": {
+            "label": "1 J"
+          },
+          "value": 1
+        },
+        {
+          "label": "100 J",
+          "vi": {
+            "label": "100 J"
+          },
+          "value": 100
+        }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "roomHeatGain": 1.5,
+    "iceMass": 0.3,
+    "timeLapse": 24
+  },
+  "inputs": {
+    "roomHeatGain": {
+      "symbol": "P_room",
+      "unit": "W",
+      "desk": false
+    },
+    "iceMass": {
+      "symbol": "m_ice",
+      "unit": "kg"
+    },
+    "timeLapse": {
+      "symbol": "k_t",
+      "unit": "",
+      "desk": false
+    }
+  },
+  "simulation": {
+    "timeStep": 0.02,
+    "maxDuration": 20,
+    "sampleInterval": 0.1
+  },
+  "measurements": [
+    {
+      "id": "meltHeated",
+      "label": "Meltwater under the heated funnel",
+      "vi": {
+        "label": "Nước tan dưới phễu có dây đốt"
+      },
+      "symbol": "m₁",
+      "unit": "kg",
+      "variable": "meltHeated"
+    },
+    {
+      "id": "meltControl",
+      "label": "Meltwater under the control funnel",
+      "vi": {
+        "label": "Nước tan dưới phễu đối chứng"
+      },
+      "symbol": "m₂",
+      "unit": "kg",
+      "variable": "meltControl"
+    },
+    {
+      "id": "energy",
+      "label": "Energy on the joulemeter",
+      "vi": {
+        "label": "Năng lượng trên joulemeter"
+      },
+      "symbol": "E",
+      "unit": "J",
+      "variable": "energy"
+    },
+    {
+      "id": "labTime",
+      "label": "Time",
+      "vi": {
+        "label": "Thời gian"
+      },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "labTime"
+    }
+  ],
+  "results": [
+    {
+      "id": "meltHeated",
+      "label": "Meltwater m₁ under the heated funnel",
+      "vi": {
+        "label": "Nước tan m₁ dưới phễu có dây đốt"
+      },
+      "symbol": "m₁",
+      "unit": "kg",
+      "variable": "meltHeated",
+      "reduce": "final",
+      "theory": "meltHeated"
+    },
+    {
+      "id": "meltControl",
+      "label": "Meltwater m₂ under the control funnel",
+      "vi": {
+        "label": "Nước tan m₂ dưới phễu đối chứng"
+      },
+      "symbol": "m₂",
+      "unit": "kg",
+      "variable": "meltControl",
+      "reduce": "final",
+      "theory": "meltControl"
+    },
+    {
+      "id": "meltByHeater",
+      "label": "Meltwater m₁ − m₂ melted by the heater",
+      "vi": {
+        "label": "Nước tan m₁ − m₂ do dây đốt làm tan"
+      },
+      "symbol": "m₁ − m₂",
+      "unit": "kg",
+      "variable": "meltByHeater",
+      "reduce": "final",
+      "theory": "meltByHeater"
+    },
+    {
+      "id": "energy",
+      "label": "Energy E given to the heater",
+      "vi": {
+        "label": "Năng lượng E cung cấp cho dây đốt"
+      },
+      "symbol": "E",
+      "unit": "J",
+      "variable": "energy",
+      "reduce": "final",
+      "theory": "energy"
+    },
+    {
+      "id": "latentHeatSeen",
+      "label": "λ = E/(m₁ − m₂)",
+      "vi": {
+        "label": "λ = E/(m₁ − m₂)"
+      },
+      "symbol": "λ",
+      "unit": "J/kg",
+      "variable": "latentHeatSeen",
+      "reduce": "final",
+      "theory": "latentHeat"
+    },
+    {
+      "id": "latentHeatUncorrected",
+      "label": "E/m₁, without the control",
+      "vi": {
+        "label": "E/m₁, khi không có phễu đối chứng"
+      },
+      "symbol": "λ'",
+      "unit": "J/kg",
+      "variable": "latentHeatUncorrected",
+      "reduce": "final",
+      "theory": "uncorrected"
+    }
+  ],
+  "instruments": [
+    {
+      "result": "meltHeated",
+      "quantity": "Meltwater m₁",
+      "name": "Balance",
+      "resolution": "balanceResolution",
+      "excludes": "water left clinging to the ice and the funnel, and drops still falling when the beaker is taken away",
+      "vi": {
+        "quantity": "Nước tan m₁",
+        "name": "Cân",
+        "excludes": "nước còn bám trên nước đá và phễu, và những giọt còn đang rơi khi lấy cốc ra"
+      }
+    },
+    {
+      "result": "meltControl",
+      "quantity": "Meltwater m₂",
+      "name": "Balance",
+      "resolution": "balanceResolution",
+      "excludes": "water left clinging to the ice and the funnel, and drops still falling when the beaker is taken away",
+      "vi": {
+        "quantity": "Nước tan m₂",
+        "name": "Cân",
+        "excludes": "nước còn bám trên nước đá và phễu, và những giọt còn đang rơi khi lấy cốc ra"
+      }
+    },
+    {
+      "result": "energy",
+      "quantity": "Energy E",
+      "name": "Joulemeter",
+      "resolution": "joulemeterResolution",
+      "excludes": "the joulemeter's calibration, and the heater's heat that escapes to the air instead of the ice",
+      "vi": {
+        "quantity": "Năng lượng E",
+        "name": "Joulemeter",
+        "excludes": "sai số hiệu chuẩn của joulemeter, và phần nhiệt của dây đốt thoát ra không khí thay vì vào nước đá"
+      }
+    }
+  ],
+  "graphs": [
+    {
+      "id": "melt-time",
+      "title": "Meltwater in both beakers against time",
+      "vi": {
+        "title": "Lượng nước tan trong hai cốc theo thời gian"
+      },
+      "x": "labTime",
+      "y": ["meltHeated", "meltControl"],
+      "yLabel": "m"
+    }
+  ],
+  "monitor": "melt-time",
+  "compare": [
+    {
+      "graph": "melt-time",
+      "series": "meltHeated"
+    }
+  ],
+  "analyses": [
+    {
+      "id": "melt-energy",
+      "title": "Extra meltwater against the heater's energy (m₁ − m₂ = E/λ)",
+      "note": "Each run is one point: the heater's energy E against the meltwater it alone melted, m₁ − m₂. Runs at the same power are fitted together, at different heating times. E = λ·(m₁ − m₂): a straight line through the origin whose slope is λ, the specific latent heat of fusion; every power gives the same slope.",
+      "vi": {
+        "title": "Năng lượng của dây đốt theo lượng nước tan dôi ra (E = λ·(m₁ − m₂))",
+        "note": "Mỗi lần chạy là một điểm: năng lượng E của dây đốt theo lượng nước chỉ do dây đốt làm tan, m₁ − m₂. Các lần chạy cùng công suất được khớp chung, với các thời gian đun khác nhau. E = λ·(m₁ − m₂): một đường thẳng đi qua gốc tọa độ có hệ số góc là λ, nhiệt nóng chảy riêng; mọi công suất đều cho cùng một hệ số góc."
+      },
+      "x": "meltByHeater",
+      "y": "energy",
+      "group": ["power"],
+      "columns": ["power", "heatingTime", "meltHeated", "meltControl", "meltByHeater", "energy"],
+      "slope": {
+        "label": "Slope of E against m₁ − m₂ (λ)",
+        "vi": {
+          "label": "Hệ số góc của E theo m₁ − m₂ (λ)"
+        },
+        "symbol": "λ",
+        "unit": "J/kg",
+        "theory": "latentHeat"
+      }
+    }
+  ],
+  "note": "Ice at 0 °C takes heat without warming: each kilogram needs λ to melt. In a time t the heated funnel takes P·t from its heater of power P and P_room·t from the room, so m₁ = (P + P_room)·t/λ melts; the control takes heat from the room only, m₂ = P_room·t/λ. The difference m₁ − m₂ = P·t/λ = E/λ. Here P_room = 1.5 W for each funnel (illustrative). The specific latent heat of fusion of ice at 0 °C is λ = 3.336 × 10⁵ J/kg (CRC Handbook of Chemistry and Physics, 333.6 J/g). A simplified teaching model: the two funnels are alike and take the same heat from the room, all the heater's heat goes into the ice around it, all meltwater drains at once. The balance reads the water in each beaker and the joulemeter the energy to their resolutions d (the nearest multiple of d, with the uncertainty d/√12 from the resolution alone); no random error is added. Time is compressed: 24 lab seconds each run second. In a real lab meltwater clings to the ice, the ice may start below 0 °C, and some of the heater's heat escapes to the air.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the latent heat instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn thí nghiệm nhiệt nóng chảy riêng trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "latent-heat-instructions"
+      }
+    },
+    {
+      "id": "power",
+      "instruction": "Choose the heater's power with its dial on the control desk.",
+      "vi": {
+        "instruction": "Chọn công suất của dây đốt bằng núm xoay trên bàn điều khiển."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "power"
+      }
+    },
+    {
+      "id": "time",
+      "instruction": "Choose the heating time.",
+      "vi": {
+        "instruction": "Chọn thời gian đun."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "heatingTime"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the heater melts the ice in one funnel; watch both beakers fill.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: dây đốt làm tan nước đá trong một phễu; quan sát nước trong cả hai cốc."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Read m₁, m₂, E and λ on the results monitor, and compare λ with E/m₁.",
+      "vi": {
+        "instruction": "Đọc m₁, m₂, E và λ trên màn hình kết quả, rồi so sánh λ với E/m₁."
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, change the power or the time and run again.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, đổi công suất hoặc thời gian đun rồi chạy lại."
+      },
+      "done": {
+        "kind": "reset"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "melt-by-heater",
+      "question": "A {power} W heater in a funnel of ice at 0 °C runs for {heatingTime} s. How much energy does it give, and how much ice does that melt? (λ = 3.336 × 10⁵ J/kg)",
+      "vi": {
+        "question": "Một dây đun {power} W đặt trong phễu nước đá ở 0 °C hoạt động trong {heatingTime} s. Nó cung cấp bao nhiêu năng lượng, và lượng đó làm tan bao nhiêu nước đá? (λ = 3,336 × 10⁵ J/kg)"
+      },
+      "set": { "power": 48, "heatingTime": 360 },
+      "find": [{ "theory": "energy", "figures": 5 }, { "theory": "meltByHeater" }],
+      "steps": [
+        {
+          "say": "The joulemeter reads the energy: power times time.",
+          "vi": { "say": "Joulemeter chỉ năng lượng: công suất nhân thời gian." },
+          "write": "E = P·t = {power}·{heatingTime} = {@energy|5} J",
+          "check": { "expr": "power*heatingTime", "equals": "energy" }
+        },
+        {
+          "say": "Ice at 0 °C takes heat without warming: each kilogram needs λ to melt, the handbook value for ice.",
+          "vi": {
+            "say": "Nước đá ở 0 °C nhận nhiệt mà không nóng lên: mỗi kilôgam cần λ để nóng chảy, giá trị tra theo sổ tay."
+          },
+          "write": "m = E/λ = {@energy|5}/333600 ≈ {@meltByHeater} kg",
+          "check": { "expr": "@energy/333600", "equals": "meltByHeater" }
+        }
+      ]
+    },
+    {
+      "id": "why-a-control",
+      "question": "A {power} W heater runs for {heatingTime} s; the room also gives each funnel {roomHeatGain} W (an illustrative value). How much ice melts in the heated funnel, and what λ would you get from it without the control funnel?",
+      "vi": {
+        "question": "Dây đun {power} W hoạt động trong {heatingTime} s; phòng cũng truyền cho mỗi phễu {roomHeatGain} W (giá trị minh họa). Phễu có dây đun tan bao nhiêu nước đá, và nếu không dùng phễu đối chứng thì λ tính ra bằng bao nhiêu?"
+      },
+      "set": { "power": 24, "heatingTime": 120 },
+      "find": [{ "theory": "meltHeated" }, { "theory": "uncorrected" }],
+      "steps": [
+        {
+          "say": "The heated funnel takes heat from both the heater and the room.",
+          "vi": { "say": "Phễu có dây đun nhận nhiệt từ cả dây đun và không khí trong phòng." },
+          "write": "m₁ = ({power} + {roomHeatGain})·{heatingTime}/333600 ≈ {@meltHeated} kg",
+          "check": { "expr": "(power+roomHeatGain)*heatingTime/333600", "equals": "meltHeated" }
+        },
+        {
+          "say": "Dividing the joulemeter’s energy by all that melt gives a λ that is too small: the room’s share must be taken off, which is what the control funnel measures.",
+          "vi": {
+            "say": "Lấy năng lượng của joulemeter chia cho toàn bộ lượng tan thì được λ quá nhỏ: phải trừ phần do phòng làm tan, chính là phần phễu đối chứng đo được."
+          },
+          "write": "λ′ = P·t/m₁ = {=power*heatingTime}/{@meltHeated} ≈ {@uncorrected} J/kg",
+          "check": { "expr": "power*heatingTime/@meltHeated", "equals": "uncorrected" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "Ice at 0 °C takes in heat without warming up — the heat goes into melting it; comparing a heated funnel of ice with an unheated one finds the energy each kilogram needs to melt, λ.",
+    "vi": {
+      "summary": "Nước đá ở 0 °C nhận nhiệt mà không nóng lên — nhiệt lượng dùng để làm nó nóng chảy; so sánh một phễu đá được đun với một phễu không đun sẽ tìm ra năng lượng cần để mỗi kilôgam nóng chảy, λ."
+    },
+    "parts": [
+      {
+        "id": "heated",
+        "name": "Heated funnel",
+        "role": "Crushed ice at 0 °C with an immersion heater in it.",
+        "vi": {
+          "name": "Phễu được đun",
+          "role": "Nước đá vụn ở 0 °C có dây đun nhúng trong đó."
+        },
+        "anchor": {
+          "part": "funnel-heated"
+        }
+      },
+      {
+        "id": "heater",
+        "name": "Immersion heater",
+        "role": "Gives the ice energy at the power P for the time t.",
+        "vi": {
+          "name": "Dây đun nhúng",
+          "role": "Cung cấp năng lượng cho nước đá với công suất P trong thời gian t."
+        },
+        "anchor": {
+          "at": [-0.13, 0.13, 0]
+        }
+      },
+      {
+        "id": "control",
+        "name": "Control funnel",
+        "role": "The same ice without a heater: it melts only from the room’s heat.",
+        "vi": {
+          "name": "Phễu đối chứng",
+          "role": "Cùng loại nước đá nhưng không có dây đun: nó chỉ nóng chảy do nhiệt của phòng."
+        },
+        "anchor": {
+          "part": "funnel-control"
+        }
+      },
+      {
+        "id": "beaker-heated",
+        "name": "Beaker under the heated funnel",
+        "role": "Collects its meltwater, of mass m₁.",
+        "vi": {
+          "name": "Cốc dưới phễu được đun",
+          "role": "Hứng nước đá tan chảy xuống, khối lượng m₁."
+        },
+        "anchor": {
+          "part": "beaker-heated"
+        }
+      },
+      {
+        "id": "beaker-control",
+        "name": "Beaker under the control",
+        "role": "Collects the control’s meltwater, of mass m₂.",
+        "vi": {
+          "name": "Cốc dưới phễu đối chứng",
+          "role": "Hứng nước tan chảy từ phễu đối chứng, khối lượng m₂."
+        },
+        "anchor": {
+          "part": "beaker-control"
+        }
+      },
+      {
+        "id": "joulemeter",
+        "name": "Joulemeter",
+        "role": "Counts the energy E = P·t given to the heater.",
+        "vi": {
+          "name": "Jun kế",
+          "role": "Đếm năng lượng E = P·t cung cấp cho dây đun."
+        },
+        "anchor": {
+          "at": [-0.02, -0.135, 0.141]
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "Ice at 0 °C does not warm up when it takes heat: the heat melts it instead. Each kilogram needs the same energy λ to melt — the specific latent heat of fusion.",
+        "vi": {
+          "text": "Nước đá ở 0 °C không nóng lên khi nhận nhiệt: nhiệt lượng làm nó nóng chảy. Mỗi kilôgam cần cùng một năng lượng λ để nóng chảy — đó là nhiệt nóng chảy riêng."
+        },
+        "parts": ["heated", "control"]
+      },
+      {
+        "text": "The heater is switched on for the time t while the joulemeter counts its energy E. Meltwater drips into the beaker below.",
+        "vi": {
+          "text": "Dây đun được bật trong thời gian t trong khi jun kế đếm năng lượng E của nó. Nước tan chảy nhỏ giọt xuống cốc bên dưới."
+        },
+        "parts": ["heater", "joulemeter", "beaker-heated"]
+      },
+      {
+        "text": "Ice melts in the control funnel too, because both funnels take heat from the room. That is why the control is there.",
+        "vi": {
+          "text": "Nước đá trong phễu đối chứng cũng tan, vì cả hai phễu đều nhận nhiệt từ phòng. Đó là lý do cần có phễu đối chứng."
+        },
+        "parts": ["control", "beaker-control"]
+      },
+      {
+        "text": "The heated funnel melts m₁ = (P + P_room)·t/λ, the control m₂ = P_room·t/λ. The difference m₁ − m₂ was melted by the heater alone, so λ = E/(m₁ − m₂).",
+        "vi": {
+          "text": "Phễu được đun làm tan m₁ = (P + P_room)·t/λ, phễu đối chứng m₂ = P_room·t/λ. Hiệu m₁ − m₂ là phần do riêng dây đun làm tan, nên λ = E/(m₁ − m₂)."
+        },
+        "parts": ["beaker-heated", "beaker-control", "joulemeter"]
+      },
+      {
+        "text": "Without the control, E/m₁ comes out too low: it counts the ice the room melted as the heater’s. The results show both, beside the handbook λ.",
+        "vi": {
+          "text": "Nếu không có phễu đối chứng, E/m₁ sẽ quá thấp: nó tính cả phần đá do phòng làm tan vào phần của dây đun. Phần kết quả cho cả hai giá trị, bên cạnh λ trong sổ tay."
+        },
+        "parts": ["beaker-heated"]
+      },
+      {
+        "text": "A simplified model: the two funnels take the same heat from the room, all the heater’s heat goes into the ice, and the meltwater drains at once. Time runs 24 times faster than in the lab.",
+        "vi": {
+          "text": "Mô hình đơn giản hóa: hai phễu nhận cùng một nhiệt lượng từ phòng, toàn bộ nhiệt của dây đun đi vào nước đá, và nước tan chảy xuống ngay. Thời gian chạy nhanh gấp 24 lần so với trong phòng thí nghiệm."
+        },
+        "parts": ["heated", "control"]
+      }
+    ]
+  }
+}

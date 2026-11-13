@@ -1,0 +1,432 @@
+{
+  "id": "cell-division",
+  "name": "Cell division: mitosis and meiosis",
+  "category": "biology",
+  "description": "How does one cell become two identical cells — and how are eggs and sperm made with half the chromosomes? Follow the chromosomes of one cell, the mother’s copy of each pair in red and the father’s in blue: copied in interphase, lined up at the equator, pulled to the poles. Count the chromosomes and the DNA in each cell at every stage.",
+  "vi": {
+    "name": "Phân bào: nguyên phân và giảm phân",
+    "description": "Làm thế nào một tế bào trở thành hai tế bào giống hệt nhau — và trứng, tinh trùng được tạo ra với một nửa số nhiễm sắc thể như thế nào? Theo dõi các nhiễm sắc thể của một tế bào, chiếc từ mẹ của mỗi cặp màu đỏ, chiếc từ bố màu xanh: nhân đôi ở kì trung gian, xếp hàng ở mặt phẳng xích đạo, bị kéo về hai cực. Đếm số nhiễm sắc thể và lượng ADN trong mỗi tế bào ở từng kì.",
+    "note": "Mô hình dạy học theo các kì trong sách giáo khoa. Số lượng trong mỗi tế bào là chính xác: nhiễm sắc thể đếm theo tâm động (một NST kép là một NST gồm hai crômatit chị em), ADN tính theo C (hàm lượng ADN đơn bội). Độ dài các kì không theo tỉ lệ thật: mỗi kì 1,5 s. Ở giảm phân I, mỗi cặp tương đồng tự quay về một phía (phân li độc lập) theo một kiểu cố định ở đây; không vẽ trao đổi chéo. Kích thước là của hình vẽ, không phải của tế bào. Bộ NST: ruồi giấm 2n = 8, hành tây 2n = 16, người 2n = 46; 2n = 4 là tế bào minh họa."
+  },
+  "requiredEquipment": ["dividing-cell"],
+  "model": "biology.cell-division",
+  "parameters": [
+    {
+      "id": "division",
+      "label": "Division",
+      "vi": {
+        "label": "Kiểu phân bào"
+      },
+      "unit": "",
+      "default": 0,
+      "min": 0,
+      "max": 1,
+      "presets": [
+        {
+          "label": "Mitosis",
+          "vi": {
+            "label": "Nguyên phân"
+          },
+          "value": 0
+        },
+        {
+          "label": "Meiosis",
+          "vi": {
+            "label": "Giảm phân"
+          },
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "diploid",
+      "label": "Chromosomes in a body cell (2n)",
+      "vi": {
+        "label": "Số NST trong tế bào sinh dưỡng (2n)"
+      },
+      "unit": "",
+      "default": 4,
+      "min": 4,
+      "max": 46,
+      "step": 2,
+      "presets": [
+        {
+          "label": "2n = 4 (illustrative cell)",
+          "vi": {
+            "label": "2n = 4 (tế bào minh họa)"
+          },
+          "value": 4
+        },
+        {
+          "label": "2n = 8 (fruit fly)",
+          "vi": {
+            "label": "2n = 8 (ruồi giấm)"
+          },
+          "value": 8
+        },
+        {
+          "label": "2n = 16 (onion)",
+          "vi": {
+            "label": "2n = 16 (hành tây)"
+          },
+          "value": 16
+        },
+        {
+          "label": "2n = 46 (human)",
+          "vi": {
+            "label": "2n = 46 (người)"
+          },
+          "value": 46
+        }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "stageTime": 1.5
+  },
+  "inputs": {
+    "stageTime": {
+      "symbol": "Δt",
+      "unit": "s",
+      "desk": false
+    }
+  },
+  "simulation": {
+    "timeStep": 0.02,
+    "maxDuration": 20,
+    "sampleInterval": 0.05
+  },
+  "measurements": [
+    {
+      "id": "time",
+      "label": "Time",
+      "vi": {
+        "label": "Thời gian"
+      },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "time"
+    },
+    {
+      "id": "chromosomes",
+      "label": "Chromosomes in a cell",
+      "vi": {
+        "label": "Số NST trong một tế bào"
+      },
+      "unit": "",
+      "variable": "chromosomes"
+    },
+    {
+      "id": "chromatids",
+      "label": "Chromatids in a cell",
+      "vi": {
+        "label": "Số crômatit trong một tế bào"
+      },
+      "unit": "",
+      "variable": "chromatids"
+    },
+    {
+      "id": "dna",
+      "label": "DNA in a cell",
+      "vi": {
+        "label": "Lượng ADN trong một tế bào"
+      },
+      "unit": "C",
+      "variable": "dna"
+    },
+    {
+      "id": "cells",
+      "label": "Cells",
+      "vi": {
+        "label": "Số tế bào"
+      },
+      "unit": "",
+      "variable": "cells"
+    }
+  ],
+  "results": [
+    {
+      "id": "cells",
+      "label": "Daughter cells",
+      "vi": {
+        "label": "Số tế bào con"
+      },
+      "unit": "",
+      "variable": "cells",
+      "reduce": "final",
+      "format": "integer",
+      "theory": "cells"
+    },
+    {
+      "id": "chromosomes",
+      "label": "Chromosomes in each daughter cell",
+      "vi": {
+        "label": "Số NST trong mỗi tế bào con"
+      },
+      "unit": "",
+      "variable": "chromosomes",
+      "reduce": "final",
+      "format": "integer",
+      "theory": "chromosomes"
+    },
+    {
+      "id": "dna",
+      "label": "DNA in each daughter cell",
+      "vi": {
+        "label": "Lượng ADN trong mỗi tế bào con"
+      },
+      "unit": "C",
+      "variable": "dna",
+      "reduce": "final",
+      "format": "integer",
+      "theory": "dna"
+    },
+    {
+      "id": "peak",
+      "label": "Most chromosomes in one cell (anaphase)",
+      "vi": {
+        "label": "Số NST nhiều nhất trong một tế bào (kì sau)"
+      },
+      "unit": "",
+      "variable": "chromosomes",
+      "reduce": "max",
+      "format": "integer",
+      "theory": "peakChromosomes"
+    },
+    {
+      "id": "identical",
+      "label": "Daughter cells",
+      "vi": {
+        "label": "Các tế bào con"
+      },
+      "unit": "",
+      "variable": "identical",
+      "reduce": "final",
+      "theory": "identical",
+      "classes": [
+        {
+          "max": 0,
+          "label": "New combinations (not identical)",
+          "vi": {
+            "label": "Tổ hợp mới (không giống nhau)"
+          }
+        },
+        {
+          "label": "Identical to the parent cell",
+          "vi": {
+            "label": "Giống hệt tế bào mẹ"
+          }
+        }
+      ]
+    }
+  ],
+  "graphs": [
+    {
+      "id": "counts-time",
+      "title": "Chromosomes and DNA in one cell, stage by stage",
+      "vi": {
+        "title": "Số NST và lượng ADN trong một tế bào qua từng kì"
+      },
+      "x": "time",
+      "y": ["chromosomes", "chromatids"]
+    }
+  ],
+  "monitor": "counts-time",
+  "compare": [
+    {
+      "graph": "counts-time",
+      "series": "chromosomes"
+    }
+  ],
+  "note": "A teaching model of the textbook stages. The counts per cell are exact: chromosomes counted by centromeres (a doubled chromosome is one chromosome of two sister chromatids), DNA in C (the haploid DNA content). Stage lengths are not to scale: 1.5 s each. In meiosis I each homologous pair turns its own way (independent assortment), in a fixed pattern here; crossing over is not drawn. Sizes are a picture’s, not a cell’s. Chromosome numbers: fruit fly 2n = 8, onion 2n = 16, human 2n = 46; 2n = 4 is an illustrative cell.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the cell division instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn về phân bào trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "cell-division-instructions"
+      }
+    },
+    {
+      "id": "division",
+      "instruction": "Choose mitosis or meiosis with the dial.",
+      "vi": {
+        "instruction": "Chọn nguyên phân hoặc giảm phân bằng núm xoay."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "division"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: follow the red and blue chromosomes stage by stage.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: theo dõi các NST đỏ và xanh qua từng kì."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Read the daughter cells, their chromosomes and DNA.",
+      "vi": {
+        "instruction": "Đọc số tế bào con, số NST và lượng ADN của chúng."
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET and run the other division: what is different?",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI và chạy kiểu phân bào còn lại: khác nhau ở đâu?"
+      },
+      "done": {
+        "kind": "reset"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "human-mitosis",
+      "question": "A human body cell (2n = {diploid}) divides by mitosis. How many chromosomes does each daughter cell have, and how many are in the cell at anaphase?",
+      "vi": {
+        "question": "Một tế bào sinh dưỡng của người (2n = {diploid}) nguyên phân. Mỗi tế bào con có bao nhiêu NST, và ở kì sau tế bào có bao nhiêu NST?"
+      },
+      "set": { "division": 0, "diploid": 46 },
+      "find": [
+        { "theory": "chromosomes", "symbol": "2n", "unit": "" },
+        { "theory": "peakChromosomes", "symbol": "4n", "unit": "" }
+      ],
+      "steps": [
+        {
+          "say": "Before division each chromosome is copied into two sister chromatids. At anaphase they separate, so for a moment the cell holds twice as many single chromosomes.",
+          "vi": {
+            "say": "Trước khi phân chia, mỗi NST nhân đôi thành hai crômatit chị em. Ở kì sau chúng tách nhau ra, nên trong chốc lát tế bào có số NST đơn gấp đôi."
+          },
+          "write": "4n = 2·{diploid} = {@peakChromosomes}",
+          "check": { "expr": "2*diploid", "equals": "peakChromosomes" }
+        },
+        {
+          "say": "Each daughter cell gets one of each: the same 2n as the mother cell, and the two cells are identical.",
+          "vi": {
+            "say": "Mỗi tế bào con nhận một NST từ mỗi cặp crômatit: bộ 2n giống hệt tế bào mẹ, và hai tế bào con giống nhau."
+          },
+          "write": "2n = {@chromosomes}",
+          "check": { "expr": "diploid", "equals": "chromosomes" }
+        }
+      ]
+    },
+    {
+      "id": "fruit-fly-meiosis",
+      "question": "A fruit-fly cell (2n = {diploid}) goes through meiosis. How many chromosomes does each of the four cells end with, and what is the most a cell holds at any stage?",
+      "vi": {
+        "question": "Một tế bào ruồi giấm (2n = {diploid}) giảm phân. Mỗi tế bào trong bốn tế bào con có bao nhiêu NST, và số NST nhiều nhất một tế bào có ở một kì bất kì là bao nhiêu?"
+      },
+      "set": { "division": 1, "diploid": 8 },
+      "find": [
+        { "theory": "chromosomes", "symbol": "n", "unit": "" },
+        { "theory": "peakChromosomes", "symbol": "2n", "unit": "" }
+      ],
+      "steps": [
+        {
+          "say": "Meiosis I separates the homologous pairs, so each cell keeps one of each pair; meiosis II then separates the sister chromatids: four cells, each with n.",
+          "vi": {
+            "say": "Giảm phân I tách các cặp NST tương đồng, mỗi tế bào giữ một NST của mỗi cặp; giảm phân II tách các crômatit chị em: bốn tế bào, mỗi tế bào có n NST."
+          },
+          "write": "n = {diploid}/2 = {@chromosomes}",
+          "check": { "expr": "diploid/2", "equals": "chromosomes" }
+        },
+        {
+          "say": "A cell never holds more than 2n: the doubled chromosomes of meiosis I, or the single ones at anaphase II.",
+          "vi": {
+            "say": "Một tế bào không bao giờ có quá 2n NST: các NST kép ở giảm phân I, hoặc các NST đơn ở kì sau II."
+          },
+          "write": "2n = {@peakChromosomes}",
+          "check": { "expr": "diploid", "equals": "peakChromosomes" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "Before dividing, a cell copies every chromosome. Mitosis then shares the copies equally: two cells identical to the parent. Meiosis divides twice: four cells with one chromosome of each pair, each a new mix.",
+    "vi": {
+      "summary": "Trước khi phân chia, tế bào nhân đôi mọi NST. Nguyên phân chia đều các bản sao: hai tế bào giống hệt tế bào mẹ. Giảm phân chia hai lần: bốn tế bào, mỗi tế bào có một chiếc của mỗi cặp NST, mỗi tế bào một tổ hợp mới."
+    },
+    "parts": [
+      {
+        "id": "chromosomes",
+        "name": "Chromosomes",
+        "role": "Red: the copy from the mother; blue: from the father. Same size, same pair.",
+        "vi": {
+          "name": "Nhiễm sắc thể",
+          "role": "Đỏ: chiếc nhận từ mẹ; xanh: từ bố. Cùng kích thước là cùng một cặp."
+        },
+        "anchor": {
+          "part": "chromosomes"
+        }
+      },
+      {
+        "id": "cell",
+        "name": "Cell",
+        "role": "Its membrane pinches in two at the end of each division.",
+        "vi": {
+          "name": "Tế bào",
+          "role": "Màng tế bào thắt lại làm đôi ở cuối mỗi lần phân chia."
+        },
+        "anchor": {
+          "part": "cell-0"
+        }
+      },
+      {
+        "id": "pole",
+        "name": "Spindle pole",
+        "role": "The spindle fibres from the poles pull the chromosomes apart.",
+        "vi": {
+          "name": "Cực thoi phân bào",
+          "role": "Các sợi thoi từ hai cực kéo các NST tách ra."
+        },
+        "anchor": {
+          "part": "pole-1"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "Interphase: the cell grows and copies its DNA (S phase). Each chromosome becomes two sister chromatids joined at the centromere: 2C → 4C.",
+        "vi": {
+          "text": "Kì trung gian: tế bào lớn lên và nhân đôi ADN (pha S). Mỗi NST thành hai crômatit chị em dính nhau ở tâm động: 2C → 4C."
+        },
+        "parts": ["chromosomes", "cell"]
+      },
+      {
+        "text": "Mitosis: the doubled chromosomes line up in one row at the equator (metaphase), then the sisters are pulled to opposite poles (anaphase): for a moment the cell holds 4n single chromosomes.",
+        "vi": {
+          "text": "Nguyên phân: các NST kép xếp thành một hàng ở mặt phẳng xích đạo (kì giữa), rồi các crômatit chị em bị kéo về hai cực (kì sau): lúc đó tế bào có 4n NST đơn."
+        },
+        "parts": ["chromosomes", "pole"]
+      },
+      {
+        "text": "Each new cell gets one copy of every chromosome: two cells with 2n, identical to the parent — for growth and repair.",
+        "vi": {
+          "text": "Mỗi tế bào mới nhận một bản của mọi NST: hai tế bào 2n giống hệt tế bào mẹ — để sinh trưởng và thay thế tế bào."
+        },
+        "parts": ["cell"]
+      },
+      {
+        "text": "Meiosis I: the pairs line up side by side and the two copies of each pair go to opposite poles, each pair its own way: two cells with n doubled chromosomes. Meiosis II then splits the sisters: four cells with n — eggs or sperm.",
+        "vi": {
+          "text": "Giảm phân I: các cặp NST tương đồng xếp thành hai hàng và hai chiếc của mỗi cặp đi về hai cực, mỗi cặp theo một hướng riêng: hai tế bào có n NST kép. Giảm phân II tách các crômatit chị em: bốn tế bào có n NST — trứng hoặc tinh trùng."
+        },
+        "parts": ["chromosomes", "pole"]
+      }
+    ]
+  }
+}

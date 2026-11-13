@@ -1,0 +1,897 @@
+{
+  "id": "heating-curve",
+  "name": "Heating curve of water",
+  "category": "chemistry",
+  "description": "A beaker of crushed ice stands on a hot-plate stirrer, with a magnetic stir bar and a thermometer in it. Heated from below 0 °C, the ice warms, then stays at 0 °C while it melts, the water warms to 100 °C, then stays at 100 °C while it boils. The flat parts of the curve are where latent heat is taken in: the melting plateau lasts m·L_f/P, with L_f the specific latent heat of fusion. Over several runs, the melting time against the mass gives L_f.",
+  "vi": {
+    "name": "Đường cong đun nóng của nước",
+    "description": "Một cốc thủy tinh đựng nước đá đập nhỏ đặt trên bếp điện khuấy từ, trong cốc có con khuấy từ và cắm nhiệt kế. Khi được đun từ dưới 0 °C, nước đá nóng dần lên, rồi giữ ở 0 °C trong lúc nóng chảy; nước nóng dần lên đến 100 °C, rồi giữ ở 100 °C trong lúc sôi. Các đoạn nằm ngang của đồ thị là lúc nước đá thu nhiệt để nóng chảy và nước thu nhiệt để hóa hơi: đoạn nóng chảy kéo dài m·L_f/P, với L_f là nhiệt nóng chảy riêng. Qua nhiều lần chạy, đồ thị thời gian nóng chảy theo khối lượng cho ta L_f.",
+    "note": "Đây là mô hình dạy học đơn giản hóa, không phải phép đo chính xác của phòng thí nghiệm. Bếp truyền vào cốc một công suất không đổi P — công suất của bếp trừ đi phần nhiệt thất thoát ra không khí và vào cốc, mà mô hình không tính — nên nhiệt lượng nhận được là Q = P·t. Nước đá ở T₀ nóng lên với tốc độ P/(m·c_ice) đến 0 °C; nóng chảy ở 0 °C trong m·L_f/P; nước nóng lên với tốc độ P/(m·c_w) đến 100 °C; rồi sôi ở 100 °C cho đến khi 5 % lượng nước đã hóa hơi, mất f·m·L_v/P. Các hằng số: c_ice = 2100 J/(kg·K) (nước đá gần 0 °C), nhiệt nóng chảy riêng L_f = 334 kJ/kg, c_w = 4180 J/(kg·K) (giá trị trong sách giáo khoa, của nước ở khoảng 20–50 °C), nhiệt hóa hơi riêng L_v = 2257 kJ/kg (ở 100 °C), điểm sôi 100 °C ở áp suất 1 atm — các giá trị trong sách giáo khoa, làm tròn từ bảng số liệu tham khảo (CRC Handbook). Giả định: nước đá và nước luôn được khuấy đều nên có chung một nhiệt độ; cốc, nhiệt kế và không khí không nhận nhiệt; nước không bay hơi dưới 100 °C và không bị quá nhiệt; nhiệt dung riêng không đổi trong từng giai đoạn. Đồ thị thật có các góc tròn và các đoạn nằm ngang hơi nghiêng chính vì những hiệu ứng này. Thời gian của mỗi giai đoạn được bấm giờ trên đồng hồ của lần chạy, bắt đầu và dừng đúng tại các góc của đồ thị."
+  },
+  "requiredEquipment": ["hot-plate"],
+  "model": "thermal.heating-curve",
+  "presentation": "bench-embedded",
+  "workspace": {
+    "pieces": [
+      {
+        "id": "plate",
+        "kind": "hot-plate",
+        "slot": "anchor",
+        "label": "Hot-plate stirrer",
+        "vi": {
+          "label": "Bếp điện khuấy từ"
+        },
+        "owns": ["power"],
+        "shows": []
+      },
+      {
+        "id": "beaker",
+        "kind": "beaker",
+        "slot": "anchor",
+        "label": "250 mL beaker of crushed ice",
+        "vi": {
+          "label": "Cốc 250 mL đựng nước đá đập nhỏ"
+        },
+        "owns": ["mass", "startTemperature"],
+        "shows": [
+          {
+            "variable": "iceFraction"
+          },
+          {
+            "variable": "waterMass"
+          },
+          {
+            "variable": "vapourMass"
+          },
+          {
+            "result": "state"
+          },
+          {
+            "input": "fusionHeat"
+          },
+          {
+            "input": "waterHeatCapacity"
+          }
+        ]
+      },
+      {
+        "id": "thermometer",
+        "kind": "thermometer",
+        "slot": "anchor",
+        "label": "Thermometer, −30 to 110 °C",
+        "vi": {
+          "label": "Nhiệt kế −30 đến 110 °C"
+        },
+        "owns": [],
+        "shows": [
+          {
+            "variable": "temperature"
+          }
+        ]
+      },
+      {
+        "id": "stopwatch",
+        "kind": "stopwatch",
+        "slot": "anchor",
+        "label": "Stopwatch",
+        "vi": {
+          "label": "Đồng hồ bấm giây"
+        },
+        "owns": ["resolution"],
+        "shows": [
+          {
+            "variable": "meltingTime"
+          },
+          {
+            "instrument": "meltingTime"
+          },
+          {
+            "instrument": "boilStartTime"
+          }
+        ]
+      }
+    ],
+    "materials": [],
+    "setup": []
+  },
+  "parameters": [
+    {
+      "id": "mass",
+      "label": "Mass of ice",
+      "vi": {
+        "label": "Khối lượng nước đá"
+      },
+      "symbol": "m",
+      "unit": "kg",
+      "default": 0.1,
+      "min": 0.05,
+      "max": 0.1,
+      "presets": [
+        {
+          "label": "0.05 kg",
+          "vi": {
+            "label": "0,05 kg"
+          },
+          "value": 0.05
+        },
+        {
+          "label": "0.07 kg",
+          "vi": {
+            "label": "0,07 kg"
+          },
+          "value": 0.07
+        },
+        {
+          "label": "0.1 kg",
+          "vi": {
+            "label": "0,1 kg"
+          },
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "id": "startTemperature",
+      "label": "Starting temperature of the ice",
+      "vi": {
+        "label": "Nhiệt độ ban đầu của nước đá"
+      },
+      "symbol": "T₀",
+      "unit": "°C",
+      "default": -10,
+      "min": -30,
+      "max": 0,
+      "presets": [
+        {
+          "label": "−20 °C",
+          "vi": {
+            "label": "−20 °C"
+          },
+          "value": -20
+        },
+        {
+          "label": "−10 °C",
+          "vi": {
+            "label": "−10 °C"
+          },
+          "value": -10
+        },
+        {
+          "label": "−5 °C",
+          "vi": {
+            "label": "−5 °C"
+          },
+          "value": -5
+        },
+        {
+          "label": "0 °C",
+          "vi": {
+            "label": "0 °C"
+          },
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": "power",
+      "label": "Heating power into the beaker",
+      "vi": {
+        "label": "Công suất truyền vào cốc"
+      },
+      "symbol": "P",
+      "unit": "W",
+      "default": 500,
+      "min": 200,
+      "max": 800,
+      "presets": [
+        {
+          "label": "200 W",
+          "vi": {
+            "label": "200 W"
+          },
+          "value": 200
+        },
+        {
+          "label": "500 W",
+          "vi": {
+            "label": "500 W"
+          },
+          "value": 500
+        },
+        {
+          "label": "800 W",
+          "vi": {
+            "label": "800 W"
+          },
+          "value": 800
+        }
+      ]
+    },
+    {
+      "id": "resolution",
+      "label": "Stopwatch resolution",
+      "vi": {
+        "label": "Độ phân giải đồng hồ bấm giây"
+      },
+      "symbol": "d",
+      "unit": "s",
+      "default": 0.1,
+      "min": 0.01,
+      "max": 1,
+      "presets": [
+        {
+          "label": "0.01 s",
+          "vi": {
+            "label": "0,01 s"
+          },
+          "value": 0.01
+        },
+        {
+          "label": "0.1 s",
+          "vi": {
+            "label": "0,1 s"
+          },
+          "value": 0.1
+        },
+        {
+          "label": "1 s",
+          "vi": {
+            "label": "1 s"
+          },
+          "value": 1
+        }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "iceHeatCapacity": 2100,
+    "fusionHeat": 334000,
+    "waterHeatCapacity": 4180,
+    "vaporisationHeat": 2257000,
+    "meltingPoint": 0,
+    "boilingPoint": 100,
+    "boilOffFraction": 0.05
+  },
+  "inputs": {
+    "fusionHeat": {
+      "symbol": "L_f",
+      "unit": "J/kg"
+    },
+    "waterHeatCapacity": {
+      "symbol": "c_w",
+      "unit": "J/(kg·K)"
+    },
+    "iceHeatCapacity": {
+      "symbol": "c_ice",
+      "unit": "J/(kg·K)",
+      "desk": false
+    },
+    "vaporisationHeat": {
+      "symbol": "L_v",
+      "unit": "J/kg",
+      "desk": false
+    },
+    "meltingPoint": {
+      "symbol": "T_melt",
+      "unit": "°C",
+      "desk": false
+    },
+    "boilingPoint": {
+      "symbol": "T_boil",
+      "unit": "°C",
+      "desk": false
+    },
+    "boilOffFraction": {
+      "symbol": "f",
+      "unit": "",
+      "desk": false
+    }
+  },
+  "simulation": {
+    "timeStep": 0.01,
+    "maxDuration": 600,
+    "sampleInterval": 0.5
+  },
+  "measurements": [
+    {
+      "id": "temperature",
+      "label": "Temperature",
+      "vi": {
+        "label": "Nhiệt độ"
+      },
+      "symbol": "T",
+      "unit": "°C",
+      "variable": "temperature"
+    },
+    {
+      "id": "iceFraction",
+      "label": "Fraction still ice",
+      "vi": {
+        "label": "Phần còn là nước đá"
+      },
+      "symbol": "x_ice",
+      "unit": "",
+      "variable": "iceFraction"
+    },
+    {
+      "id": "waterMass",
+      "label": "Mass of liquid water",
+      "vi": {
+        "label": "Khối lượng nước lỏng"
+      },
+      "symbol": "m_w",
+      "unit": "kg",
+      "variable": "waterMass"
+    },
+    {
+      "id": "vapourMass",
+      "label": "Mass boiled away",
+      "vi": {
+        "label": "Khối lượng đã hóa hơi"
+      },
+      "symbol": "m_v",
+      "unit": "kg",
+      "variable": "vapourMass"
+    },
+    {
+      "id": "heat",
+      "label": "Heat supplied",
+      "vi": {
+        "label": "Nhiệt lượng đã cung cấp"
+      },
+      "symbol": "Q",
+      "unit": "J",
+      "variable": "heat"
+    }
+  ],
+  "results": [
+    {
+      "id": "iceWarmingTime",
+      "label": "Time for the ice to reach 0 °C",
+      "vi": {
+        "label": "Thời gian nước đá nóng lên đến 0 °C"
+      },
+      "symbol": "t₁",
+      "unit": "s",
+      "variable": "iceWarmingTime",
+      "reduce": "final",
+      "theory": "iceWarmingTime"
+    },
+    {
+      "id": "meltingTime",
+      "label": "Melting plateau at 0 °C",
+      "vi": {
+        "label": "Thời gian nóng chảy ở 0 °C"
+      },
+      "symbol": "t_f",
+      "unit": "s",
+      "variable": "meltingTime",
+      "reduce": "final",
+      "theory": "meltingTime"
+    },
+    {
+      "id": "waterWarmingTime",
+      "label": "Time for the water to warm from 0 to 100 °C",
+      "vi": {
+        "label": "Thời gian nước nóng lên từ 0 đến 100 °C"
+      },
+      "symbol": "t₂",
+      "unit": "s",
+      "variable": "waterWarmingTime",
+      "reduce": "final",
+      "theory": "waterWarmingTime"
+    },
+    {
+      "id": "boilStartTime",
+      "label": "Time to reach 100 °C",
+      "vi": {
+        "label": "Thời gian đến khi đạt 100 °C"
+      },
+      "symbol": "t_b",
+      "unit": "s",
+      "variable": "boilStartTime",
+      "reduce": "final",
+      "theory": "boilStartTime"
+    },
+    {
+      "id": "boilingTime",
+      "label": "Boiling plateau at 100 °C (5 % boiled away)",
+      "vi": {
+        "label": "Thời gian sôi ở 100 °C (5 % đã hóa hơi)"
+      },
+      "symbol": "t_v",
+      "unit": "s",
+      "variable": "boilingTime",
+      "reduce": "final",
+      "theory": "boilingTime"
+    },
+    {
+      "id": "temperature",
+      "label": "Temperature at the end",
+      "vi": {
+        "label": "Nhiệt độ lúc kết thúc"
+      },
+      "symbol": "T",
+      "unit": "°C",
+      "variable": "temperature",
+      "reduce": "final",
+      "theory": "boilingPoint"
+    },
+    {
+      "id": "heat",
+      "label": "Heat supplied Q = P·t",
+      "vi": {
+        "label": "Nhiệt lượng đã cung cấp Q = P·t"
+      },
+      "symbol": "Q",
+      "unit": "J",
+      "variable": "heat",
+      "reduce": "final",
+      "theory": "totalHeat"
+    },
+    {
+      "id": "vapourMass",
+      "label": "Mass boiled away",
+      "vi": {
+        "label": "Khối lượng đã hóa hơi"
+      },
+      "symbol": "m_v",
+      "unit": "kg",
+      "variable": "vapourMass",
+      "reduce": "final",
+      "theory": "vapourMass"
+    },
+    {
+      "id": "waterMass",
+      "label": "Water left in the beaker",
+      "vi": {
+        "label": "Lượng nước còn lại trong cốc"
+      },
+      "symbol": "m_w",
+      "unit": "kg",
+      "variable": "waterMass",
+      "reduce": "final",
+      "theory": "waterMass"
+    },
+    {
+      "id": "state",
+      "label": "State at the end",
+      "vi": {
+        "label": "Trạng thái lúc kết thúc"
+      },
+      "unit": "",
+      "variable": "state",
+      "reduce": "final",
+      "classes": [
+        {
+          "max": 0.5,
+          "label": "Solid ice",
+          "vi": {
+            "label": "Nước đá (thể rắn)"
+          }
+        },
+        {
+          "max": 1.5,
+          "label": "Melting",
+          "vi": {
+            "label": "Đang nóng chảy"
+          }
+        },
+        {
+          "max": 2.5,
+          "label": "Liquid water",
+          "vi": {
+            "label": "Nước (thể lỏng)"
+          }
+        },
+        {
+          "label": "Boiling",
+          "vi": {
+            "label": "Đang sôi"
+          }
+        }
+      ]
+    }
+  ],
+  "graphs": [
+    {
+      "id": "heating-curve",
+      "title": "Temperature against time (the heating curve)",
+      "vi": {
+        "title": "Nhiệt độ theo thời gian (đường cong đun nóng)"
+      },
+      "x": "time",
+      "y": ["temperature"],
+      "mark": "boilStartTime"
+    },
+    {
+      "id": "temperature-heat",
+      "title": "Temperature against heat supplied",
+      "vi": {
+        "title": "Nhiệt độ theo nhiệt lượng cung cấp"
+      },
+      "x": "heat",
+      "y": ["temperature"]
+    },
+    {
+      "id": "ice-time",
+      "title": "Fraction still ice against time",
+      "vi": {
+        "title": "Phần còn là nước đá theo thời gian"
+      },
+      "x": "time",
+      "y": ["iceFraction"]
+    },
+    {
+      "id": "masses-time",
+      "title": "Liquid water and water boiled away against time",
+      "vi": {
+        "title": "Nước lỏng và nước đã hóa hơi theo thời gian"
+      },
+      "x": "time",
+      "y": ["waterMass", "vapourMass"],
+      "yLabel": "m"
+    }
+  ],
+  "monitor": "heating-curve",
+  "compare": [
+    {
+      "graph": "heating-curve"
+    },
+    {
+      "graph": "temperature-heat"
+    }
+  ],
+  "instruments": [
+    {
+      "result": "meltingTime",
+      "quantity": "Melting time t_f",
+      "name": "Stopwatch (started at 0 °C, stopped when the last ice is gone)",
+      "resolution": "resolution",
+      "excludes": "judging by eye when the thermometer settles at 0 °C and when the last ice disappears, and the reaction time in starting and stopping the watch",
+      "vi": {
+        "quantity": "Thời gian nóng chảy t_f",
+        "name": "Đồng hồ bấm giây (bấm khi nhiệt kế chỉ 0 °C, dừng khi cục đá cuối cùng tan hết)",
+        "excludes": "việc quan sát bằng mắt lúc nhiệt kế dừng ở 0 °C và lúc cục đá cuối cùng tan hết, cùng thời gian phản xạ khi bấm và dừng đồng hồ"
+      }
+    },
+    {
+      "result": "boilStartTime",
+      "quantity": "Time to reach 100 °C t_b",
+      "name": "Stopwatch (started with the hot plate)",
+      "resolution": "resolution",
+      "excludes": "reading the thermometer by eye (parallax) and its calibration, and the reaction time in stopping the watch",
+      "vi": {
+        "quantity": "Thời gian đến 100 °C t_b",
+        "name": "Đồng hồ bấm giây (bấm cùng lúc bật bếp)",
+        "excludes": "việc đọc nhiệt kế bằng mắt (thị sai) và sai số hiệu chuẩn của nhiệt kế, cùng thời gian phản xạ khi dừng đồng hồ"
+      }
+    }
+  ],
+  "note": "A simplified teaching model, not a lab-grade measurement. The hot plate puts a constant net power P into the beaker — the plate's power less what is lost to the air and the glass, which the model does not compute — so the heat received is Q = P·t. The ice at T₀ warms at P/(m·c_ice) to 0 °C; melts at 0 °C in m·L_f/P; the water warms at P/(m·c_w) to 100 °C; then boils at 100 °C until 5 % of it has turned to steam, in f·m·L_v/P. Constants: c_ice = 2100 J/(kg·K) (ice near 0 °C), L_f = 334 kJ/kg, c_w = 4180 J/(kg·K) (the textbook value, water at about 20–50 °C), L_v = 2257 kJ/kg (at 100 °C), boiling at 100 °C at 1 atm — textbook values, rounded from reference tables (CRC Handbook). Assumed: ice and water are stirred, so they share one temperature; the beaker, the thermometer and the air take no heat; nothing evaporates below 100 °C and the water does not superheat; the heat capacities are constant over each stage. A real curve has rounded corners and slightly tilted plateaus because of exactly these effects. Each stage is timed on the run's own clock, started and stopped on the curve's corners.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the heating curve instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn về đường cong đun nóng trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "heating-curve-instructions"
+      }
+    },
+    {
+      "id": "work",
+      "instruction": "Go to the hot plate and press E to work at the bench.",
+      "vi": {
+        "instruction": "Đến bếp điện và nhấn E để làm việc tại bàn thí nghiệm."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "hot-plate"
+      }
+    },
+    {
+      "id": "mass",
+      "instruction": "Choose the mass of ice m on the beaker.",
+      "vi": {
+        "instruction": "Chọn khối lượng nước đá m trên cốc."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "mass"
+      }
+    },
+    {
+      "id": "start-temperature",
+      "instruction": "Choose the starting temperature of the ice T₀ on the beaker.",
+      "vi": {
+        "instruction": "Chọn nhiệt độ ban đầu của nước đá T₀ trên cốc."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "startTemperature"
+      }
+    },
+    {
+      "id": "power",
+      "instruction": "Choose the heating power P on the hot plate.",
+      "vi": {
+        "instruction": "Chọn công suất đun P trên bếp điện."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "power"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN to switch the hot plate on: watch the thermometer stop at 0 °C while the ice melts, and at 100 °C while the water boils.",
+      "vi": {
+        "instruction": "Nhấn CHẠY để bật bếp điện: quan sát nhiệt kế dừng ở 0 °C trong lúc nước đá tan và ở 100 °C trong lúc nước sôi."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Open the results in the notebook and read the melting time and the heating curve.",
+      "vi": {
+        "instruction": "Mở kết quả trong sổ ghi chép và đọc thời gian nóng chảy cùng đường cong đun nóng."
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, change the mass of ice at the same power, and run again.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, đổi khối lượng nước đá ở cùng công suất rồi chạy lại."
+      },
+      "done": {
+        "kind": "reset"
+      }
+    }
+  ],
+  "analyses": [
+    {
+      "id": "melting",
+      "title": "Melting time against mass of ice",
+      "note": "At one power P, t_f = m·L_f/P: a line through the origin whose slope a = L_f/P, so L_f = a·P. Only runs at the same power are fitted together; the starting temperature may differ, since it changes the time before melting, not the melting itself.",
+      "vi": {
+        "title": "Thời gian nóng chảy theo khối lượng nước đá",
+        "note": "Với cùng một công suất P, t_f = m·L_f/P: một đường thẳng qua gốc tọa độ có độ dốc a = L_f/P, nên L_f = a·P. Chỉ các lần chạy cùng công suất mới được khớp chung; nhiệt độ ban đầu có thể khác nhau, vì nó chỉ làm thay đổi thời gian trước khi nóng chảy, không làm thay đổi quá trình nóng chảy."
+      },
+      "x": "mass",
+      "y": "meltingTime",
+      "group": ["power"],
+      "columns": ["mass", "power", "startTemperature", "meltingTime"],
+      "slope": {
+        "label": "Melting time per kilogram",
+        "vi": {
+          "label": "Thời gian nóng chảy cho mỗi kilôgam"
+        },
+        "symbol": "a",
+        "unit": "s/kg",
+        "theory": "meltingSlope"
+      }
+    },
+    {
+      "id": "warming",
+      "title": "Time to warm the water from 0 to 100 °C against mass",
+      "note": "At one power P, t₂ = m·c_w·(100 °C − 0 °C)/P: a line through the origin whose slope a = c_w·100 K/P, so c_w = a·P/(100 K).",
+      "vi": {
+        "title": "Thời gian nước nóng lên từ 0 đến 100 °C theo khối lượng",
+        "note": "Với cùng một công suất P, t₂ = m·c_w·(100 °C − 0 °C)/P: một đường thẳng qua gốc tọa độ có độ dốc a = c_w·100 K/P, nên c_w = a·P/(100 K)."
+      },
+      "x": "mass",
+      "y": "waterWarmingTime",
+      "group": ["power"],
+      "columns": ["mass", "power", "waterWarmingTime"],
+      "slope": {
+        "label": "Warming time per kilogram",
+        "vi": {
+          "label": "Thời gian đun nóng cho mỗi kilôgam"
+        },
+        "symbol": "a",
+        "unit": "s/kg",
+        "theory": "warmingSlope"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "warm-then-melt",
+      "question": "{mass} kg of ice at {startTemperature} °C takes a steady {power} W. How long does it take to warm to 0 °C, and then to melt? (c_ice = {iceHeatCapacity} J/(kg·K), L_f = {fusionHeat} J/kg)",
+      "vi": {
+        "question": "{mass} kg nước đá ở {startTemperature} °C nhận công suất nhiệt không đổi {power} W. Mất bao lâu để nó nóng lên tới 0 °C, rồi tan hết? (c_đá = {iceHeatCapacity} J/(kg·K), L_f = {fusionHeat} J/kg)"
+      },
+      "set": { "mass": 0.1, "startTemperature": -20, "power": 500 },
+      "find": [{ "theory": "iceWarmingTime" }, { "theory": "meltingTime" }],
+      "steps": [
+        {
+          "say": "Warming the ice takes Q = m·c·ΔT; the heat comes in at P joules each second.",
+          "vi": { "say": "Làm nóng nước đá cần Q = m·c·ΔT; nhiệt được cung cấp P jun mỗi giây." },
+          "write": "t₁ = m·c_ice·ΔT/P = {mass}·{iceHeatCapacity}·{=0-startTemperature}/{power} = {@iceWarmingTime} s",
+          "check": {
+            "expr": "mass*iceHeatCapacity*(meltingPoint-startTemperature)/power",
+            "equals": "iceWarmingTime"
+          }
+        },
+        {
+          "say": "At 0 °C the temperature stops rising while the ice melts: the heat goes into melting, m·L_f.",
+          "vi": {
+            "say": "Ở 0 °C nhiệt độ ngừng tăng trong khi nước đá tan: nhiệt dùng để nóng chảy, m·L_f."
+          },
+          "write": "t_f = m·L_f/P = {mass}·{fusionHeat}/{power} = {@meltingTime} s",
+          "check": { "expr": "mass*fusionHeat/power", "equals": "meltingTime" }
+        }
+      ]
+    },
+    {
+      "id": "water-and-total",
+      "question": "{mass} kg of ice at {startTemperature} °C is heated at {power} W until 5 % of it has boiled away. How long does the water take to warm from 0 to 100 °C, and how much heat is needed in all? (L_v = {vaporisationHeat} J/kg)",
+      "vi": {
+        "question": "{mass} kg nước đá ở {startTemperature} °C được đun với công suất {power} W cho tới khi 5 % lượng nước hóa hơi. Nước mất bao lâu để nóng từ 0 lên 100 °C, và tổng nhiệt lượng cần là bao nhiêu? (L_v = {vaporisationHeat} J/kg)"
+      },
+      "set": { "mass": 0.05, "startTemperature": -20, "power": 200 },
+      "find": [{ "theory": "waterWarmingTime" }, { "theory": "totalHeat" }],
+      "steps": [
+        {
+          "say": "The water warms by 100 K with c_w = {waterHeatCapacity} J/(kg·K).",
+          "vi": { "say": "Nước nóng lên 100 K với c_n = {waterHeatCapacity} J/(kg·K)." },
+          "write": "t₂ = m·c_w·100/P = {mass}·{waterHeatCapacity}·100/{power} = {@waterWarmingTime} s",
+          "check": {
+            "expr": "mass*waterHeatCapacity*(boilingPoint-meltingPoint)/power",
+            "equals": "waterWarmingTime"
+          }
+        },
+        {
+          "say": "Add the four stages: warm the ice, m·c_ice·ΔT; melt it, m·L_f; warm the water, m·c_w·100; boil off 5 %, 0.05·m·L_v.",
+          "vi": {
+            "say": "Cộng bốn giai đoạn: làm nóng nước đá, m·c_đá·ΔT; nóng chảy, m·L_f; làm nóng nước, m·c_n·100; hóa hơi 5 %, 0,05·m·L_v."
+          },
+          "write": "Q = Q₁ + Q_f + Q₂ + Q_v ≈ {@totalHeat} J",
+          "check": {
+            "expr": "mass*(iceHeatCapacity*(meltingPoint-startTemperature)+fusionHeat+waterHeatCapacity*(boilingPoint-meltingPoint)+boilOffFraction*vaporisationHeat)",
+            "equals": "totalHeat"
+          }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "Heated steadily, ice warms, then stays at 0 °C while it melts, the water warms, then stays at 100 °C while it boils: on the flat parts the heat goes into changing state, not temperature.",
+    "vi": {
+      "summary": "Khi được đun đều, nước đá nóng lên, rồi giữ ở 0 °C trong khi nóng chảy, nước nóng lên, rồi giữ ở 100 °C trong khi sôi: ở các đoạn nằm ngang, nhiệt lượng dùng để chuyển thể chứ không làm tăng nhiệt độ."
+    },
+    "parts": [
+      {
+        "id": "plate",
+        "name": "Hot-plate stirrer",
+        "role": "Puts a constant net power P into the beaker, so the heat received is Q = P·t.",
+        "vi": {
+          "name": "Bếp điện có khuấy từ",
+          "role": "Cung cấp cho cốc một công suất có ích không đổi P, nên nhiệt lượng nhận được là Q = P·t."
+        },
+        "anchor": {
+          "part": "plate"
+        }
+      },
+      {
+        "id": "knob",
+        "name": "Power knob",
+        "role": "Sets the heating power P.",
+        "vi": {
+          "name": "Núm công suất",
+          "role": "Đặt công suất đun P."
+        },
+        "anchor": {
+          "part": "knob"
+        }
+      },
+      {
+        "id": "beaker",
+        "name": "Beaker",
+        "role": "Holds the mass m of crushed ice, then its water.",
+        "vi": {
+          "name": "Cốc thủy tinh",
+          "role": "Chứa khối lượng m nước đá vụn, rồi nước khi đá tan."
+        },
+        "anchor": {
+          "part": "glass"
+        }
+      },
+      {
+        "id": "ice",
+        "name": "Crushed ice",
+        "role": "Starts at T₀, below 0 °C.",
+        "vi": {
+          "name": "Nước đá vụn",
+          "role": "Bắt đầu ở nhiệt độ T₀, dưới 0 °C."
+        },
+        "anchor": {
+          "part": "ice"
+        }
+      },
+      {
+        "id": "stir-bar",
+        "name": "Magnetic stir bar",
+        "role": "Keeps the ice and water at one temperature.",
+        "vi": {
+          "name": "Con khuấy từ",
+          "role": "Giữ cho nước đá và nước có cùng một nhiệt độ."
+        },
+        "anchor": {
+          "part": "stir-bar"
+        }
+      },
+      {
+        "id": "thermometer",
+        "name": "Thermometer",
+        "role": "Its bulb in the beaker: follows the temperature T.",
+        "vi": {
+          "name": "Nhiệt kế",
+          "role": "Bầu của nó nhúng trong cốc: theo dõi nhiệt độ T."
+        },
+        "anchor": {
+          "part": "column"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "The hot plate gives the beaker heat at a steady rate P. First the ice warms from T₀ towards 0 °C, at P/(m·c_ice) per second.",
+        "vi": {
+          "text": "Bếp cung cấp nhiệt cho cốc với tốc độ không đổi P. Đầu tiên nước đá nóng lên từ T₀ tới 0 °C, mỗi giây tăng P/(m·c_ice)."
+        },
+        "parts": ["plate", "knob", "ice", "thermometer"]
+      },
+      {
+        "text": "At 0 °C the temperature stops rising although the heating goes on: the heat now melts the ice. Melting takes m·L_f/P, L_f the specific latent heat of fusion.",
+        "vi": {
+          "text": "Ở 0 °C, nhiệt độ ngừng tăng dù vẫn đang đun: nhiệt lượng lúc này làm nước đá nóng chảy. Quá trình nóng chảy mất m·L_f/P, với L_f là nhiệt nóng chảy riêng."
+        },
+        "parts": ["ice", "thermometer"]
+      },
+      {
+        "text": "Once all the ice has melted, the water warms from 0 to 100 °C, more slowly than the ice did, as water’s specific heat capacity is larger.",
+        "vi": {
+          "text": "Khi nước đá đã tan hết, nước nóng lên từ 0 tới 100 °C, chậm hơn so với nước đá trước đó, vì nhiệt dung riêng của nước lớn hơn."
+        },
+        "parts": ["beaker", "thermometer"]
+      },
+      {
+        "text": "At 100 °C it boils and the temperature stays put again: the heat turns water into steam. The run stops when 5 % has boiled away.",
+        "vi": {
+          "text": "Ở 100 °C nước sôi và nhiệt độ lại đứng yên: nhiệt lượng biến nước thành hơi. Lần chạy dừng khi 5 % lượng nước đã bay hơi."
+        },
+        "parts": ["beaker", "thermometer"]
+      },
+      {
+        "text": "The stir bar keeps everything at one temperature, so the thermometer reads it all. More ice makes every stage longer; more power makes every stage shorter.",
+        "vi": {
+          "text": "Con khuấy từ giữ mọi thứ ở cùng một nhiệt độ, nên nhiệt kế đo đúng cho toàn bộ. Nhiều nước đá hơn thì mọi giai đoạn dài hơn; công suất lớn hơn thì mọi giai đoạn ngắn hơn."
+        },
+        "parts": ["stir-bar", "knob", "ice"]
+      },
+      {
+        "text": "The results give the time of each stage, read on a stopwatch to its resolution d. Over several runs at one power, the melting time against the mass is a line of slope L_f/P.",
+        "vi": {
+          "text": "Phần kết quả cho thời gian của từng giai đoạn, đọc bằng đồng hồ bấm giây theo độ phân giải d. Qua nhiều lần chạy cùng công suất, thời gian nóng chảy theo khối lượng là đường thẳng có hệ số góc L_f/P."
+        },
+        "parts": ["thermometer"]
+      },
+      {
+        "text": "A simplified model: the beaker, thermometer and air take no heat, and nothing evaporates below 100 °C. A real curve has rounded corners and slightly tilted plateaus.",
+        "vi": {
+          "text": "Mô hình đơn giản hóa: cốc, nhiệt kế và không khí không thu nhiệt, và không có gì bay hơi dưới 100 °C. Đường thực tế có các góc bo tròn và các đoạn nằm ngang hơi nghiêng."
+        },
+        "parts": ["beaker"]
+      }
+    ]
+  }
+}

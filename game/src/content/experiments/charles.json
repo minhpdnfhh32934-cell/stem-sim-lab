@@ -1,0 +1,548 @@
+{
+  "id": "charles",
+  "name": "Charles's law: volume and temperature of a gas",
+  "category": "physics",
+  "description": "A column of dry air is trapped in a thin glass tube of even bore by a short bead of liquid; the tube stands in a beaker of water on a hot plate, a ruler beside it. The air stays at the room's pressure; as the water warms it, the column grows. Its length — and so its volume — against the temperature in °C is a straight line, which extended backwards reaches zero at −273.15 °C: the absolute zero of temperature.",
+  "vi": {
+    "name": "Định luật Charles: thể tích và nhiệt độ của chất khí",
+    "description": "Một cột không khí khô bị giam trong một ống thủy tinh nhỏ, tiết diện đều, bởi một giọt chất lỏng ngắn; ống được đặt trong cốc nước trên bếp điện, bên cạnh có thước đo. Không khí luôn ở áp suất của phòng; khi nước làm nóng nó, cột khí dài ra. Chiều dài cột khí — tức là thể tích của nó — theo nhiệt độ tính bằng °C là một đường thẳng, kéo dài về phía sau sẽ chạm 0 tại −273,15 °C: độ không tuyệt đối.",
+    "note": "Khi áp suất không đổi, thể tích của một lượng khí xác định tỉ lệ thuận với nhiệt độ tuyệt đối (định luật Charles): V/T = hằng số, với T = t + 273,15 K. Ống có tiết diện đều nên chiều dài cột khí cũng vậy: L = L0·(t + 273,15)/(t0 + 273,15), trong đó L0 là chiều dài ở nhiệt độ phòng t0 = 20 °C. Đồ thị L theo t là đường thẳng có hệ số góc L0/(t0 + 273,15) và cắt trục L tại L0·273,15/(t0 + 273,15) khi t = 0 °C; kéo dài, nó chạm L = 0 tại t = −273,15 °C (thang Celsius được định nghĩa với 0 °C = 273,15 K). Nước được đun đều 0,05 K/s tới nhiệt độ đặt (hoặc làm lạnh bằng nước đá tới 0 °C), và không khí theo kịp nhiệt độ của nước ngay. Đây là mô hình dạy học đơn giản hóa: không khí là khí lí tưởng và khô (không có hơi nước), giọt chất lỏng trượt tự do, thủy tinh không giãn nở. Nhiệt kế và thước đọc theo độ phân giải d của chúng (bội số gần nhất của d, độ bất định d/√12 chỉ do độ phân giải); không có sai số ngẫu nhiên nào được thêm vào. Thời gian được tua nhanh: 100 giây trong phòng thí nghiệm trong mỗi giây chạy. Trong phòng thí nghiệm thật, hơi nước trong cột khí làm nó dài thêm ở nhiệt độ cao, nhiệt độ của khí theo chậm nhiệt độ của nước, và giọt chất lỏng có thể bị kẹt."
+  },
+  "requiredEquipment": ["gas-column"],
+  "model": "gases.charles",
+  "parameters": [
+    {
+      "id": "bathTemperature",
+      "label": "Water bath temperature",
+      "vi": {
+        "label": "Nhiệt độ của nước"
+      },
+      "symbol": "t",
+      "unit": "°C",
+      "default": 60,
+      "min": 0,
+      "max": 90,
+      "presets": [
+        {
+          "label": "0 °C (ice)",
+          "vi": {
+            "label": "0 °C (nước đá)"
+          },
+          "value": 0
+        },
+        {
+          "label": "40 °C",
+          "vi": {
+            "label": "40 °C"
+          },
+          "value": 40
+        },
+        {
+          "label": "60 °C",
+          "vi": {
+            "label": "60 °C"
+          },
+          "value": 60
+        },
+        {
+          "label": "80 °C",
+          "vi": {
+            "label": "80 °C"
+          },
+          "value": 80
+        }
+      ]
+    },
+    {
+      "id": "startLength",
+      "label": "Air column at 20 °C",
+      "vi": {
+        "label": "Cột khí ở 20 °C"
+      },
+      "symbol": "L0",
+      "unit": "m",
+      "default": 0.1,
+      "min": 0.08,
+      "max": 0.12,
+      "presets": [
+        {
+          "label": "8 cm",
+          "vi": {
+            "label": "8 cm"
+          },
+          "value": 0.08
+        },
+        {
+          "label": "10 cm",
+          "vi": {
+            "label": "10 cm"
+          },
+          "value": 0.1
+        },
+        {
+          "label": "12 cm",
+          "vi": {
+            "label": "12 cm"
+          },
+          "value": 0.12
+        }
+      ]
+    },
+    {
+      "id": "thermometerResolution",
+      "label": "Thermometer resolution",
+      "vi": {
+        "label": "Độ phân giải của nhiệt kế"
+      },
+      "symbol": "d_T",
+      "unit": "°C",
+      "default": 1,
+      "min": 0.1,
+      "max": 1,
+      "presets": [
+        {
+          "label": "0.1 °C",
+          "vi": {
+            "label": "0,1 °C"
+          },
+          "value": 0.1
+        },
+        {
+          "label": "1 °C",
+          "vi": {
+            "label": "1 °C"
+          },
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "rulerResolution",
+      "label": "Ruler resolution",
+      "vi": {
+        "label": "Độ chia của thước"
+      },
+      "symbol": "d_L",
+      "unit": "m",
+      "default": 0.001,
+      "min": 0.0005,
+      "max": 0.001,
+      "presets": [
+        {
+          "label": "1 mm",
+          "vi": {
+            "label": "1 mm"
+          },
+          "value": 0.001
+        },
+        {
+          "label": "0.5 mm",
+          "vi": {
+            "label": "0,5 mm"
+          },
+          "value": 0.0005
+        }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "startTemperature": 20,
+    "heatingRate": 0.05,
+    "timeLapse": 100
+  },
+  "inputs": {
+    "startTemperature": {
+      "symbol": "t0",
+      "unit": "°C"
+    },
+    "heatingRate": {
+      "symbol": "r",
+      "unit": "K/s",
+      "desk": false
+    },
+    "timeLapse": {
+      "symbol": "k_t",
+      "unit": "",
+      "desk": false
+    }
+  },
+  "simulation": {
+    "timeStep": 0.02,
+    "maxDuration": 12,
+    "sampleInterval": 0.1
+  },
+  "measurements": [
+    {
+      "id": "temperature",
+      "label": "Water temperature",
+      "vi": {
+        "label": "Nhiệt độ của nước"
+      },
+      "symbol": "t",
+      "unit": "°C",
+      "variable": "temperature"
+    },
+    {
+      "id": "length",
+      "label": "Length of the air column",
+      "vi": {
+        "label": "Chiều dài cột khí"
+      },
+      "symbol": "L",
+      "unit": "m",
+      "variable": "length"
+    },
+    {
+      "id": "labTime",
+      "label": "Time",
+      "vi": {
+        "label": "Thời gian"
+      },
+      "symbol": "t_lab",
+      "unit": "s",
+      "variable": "labTime"
+    }
+  ],
+  "results": [
+    {
+      "id": "temperature",
+      "label": "Temperature t of the water",
+      "vi": {
+        "label": "Nhiệt độ t của nước"
+      },
+      "symbol": "t",
+      "unit": "°C",
+      "variable": "temperature",
+      "reduce": "final",
+      "theory": "temperature"
+    },
+    {
+      "id": "length",
+      "label": "Length L of the air column",
+      "vi": {
+        "label": "Chiều dài L của cột khí"
+      },
+      "symbol": "L",
+      "unit": "m",
+      "variable": "length",
+      "reduce": "final",
+      "theory": "length"
+    }
+  ],
+  "instruments": [
+    {
+      "result": "temperature",
+      "quantity": "Temperature t",
+      "name": "Thermometer",
+      "resolution": "thermometerResolution",
+      "excludes": "the air lagging behind the water, and water not yet stirred to one temperature",
+      "vi": {
+        "quantity": "Nhiệt độ t",
+        "name": "Nhiệt kế",
+        "excludes": "nhiệt độ của khí theo chậm nhiệt độ của nước, và nước chưa được khuấy đều"
+      }
+    },
+    {
+      "result": "length",
+      "quantity": "Length L",
+      "name": "Ruler",
+      "resolution": "rulerResolution",
+      "excludes": "reading the bead's edge at an angle through the water and the glass",
+      "vi": {
+        "quantity": "Chiều dài L",
+        "name": "Thước",
+        "excludes": "việc đọc mép giọt chất lỏng lệch góc qua nước và thủy tinh"
+      }
+    }
+  ],
+  "graphs": [
+    {
+      "id": "length-temperature",
+      "title": "Length of the air column against temperature",
+      "vi": {
+        "title": "Chiều dài cột khí theo nhiệt độ"
+      },
+      "x": "temperature",
+      "y": ["length"],
+      "yLabel": "L"
+    }
+  ],
+  "monitor": "length-temperature",
+  "compare": [
+    {
+      "graph": "length-temperature"
+    }
+  ],
+  "analyses": [
+    {
+      "id": "length-temperature",
+      "title": "Air column against temperature (L = L0·(t + 273.15)/(t0 + 273.15))",
+      "note": "Each run is one point: the column's length L against the water's temperature t. Runs with the same column at 20 °C are fitted together, at different temperatures. L is a straight line in t with slope L0/(t0 + 273.15) and the intercept L0·273.15/(t0 + 273.15) at 0 °C. Where it would reach L = 0, t = −intercept/slope = −273.15 °C: the absolute zero, the same for every column.",
+      "vi": {
+        "title": "Chiều dài cột khí theo nhiệt độ (L = L0·(t + 273,15)/(t0 + 273,15))",
+        "note": "Mỗi lần chạy là một điểm: chiều dài L của cột khí theo nhiệt độ t của nước. Các lần chạy cùng cột khí ở 20 °C được khớp chung, với các nhiệt độ khác nhau. L là đường thẳng theo t, có hệ số góc L0/(t0 + 273,15) và cắt trục L tại L0·273,15/(t0 + 273,15) khi t = 0 °C. Nơi nó chạm L = 0, t = −(tung độ gốc)/(hệ số góc) = −273,15 °C: độ không tuyệt đối, như nhau với mọi cột khí."
+      },
+      "x": "temperature",
+      "y": "length",
+      "group": ["startLength"],
+      "columns": ["startLength", "bathTemperature", "temperature", "length"],
+      "slope": {
+        "label": "Slope of L against t",
+        "vi": {
+          "label": "Hệ số góc của L theo t"
+        },
+        "symbol": "L0/(t0 + 273.15)",
+        "unit": "m/K",
+        "theory": "lengthPerKelvin",
+        "intercept": "lengthAtZeroCelsius"
+      }
+    }
+  ],
+  "note": "At constant pressure the volume of a fixed mass of gas is proportional to its absolute temperature (Charles's law): V/T is constant, T = t + 273.15 K. The tube has an even bore, so the column's length is too: L = L0·(t + 273.15)/(t0 + 273.15), L0 its length at the room's t0 = 20 °C. L against t is a line of slope L0/(t0 + 273.15) meeting the L axis at L0·273.15/(t0 + 273.15) at 0 °C; extended, it reaches L = 0 at t = −273.15 °C (the Celsius scale is defined with 0 °C = 273.15 K). The water is heated steadily at 0.05 K/s to the set temperature (or cooled with ice to 0 °C), and the air follows the water at once. A simplified teaching model: the air is ideal and dry (no water vapour), the bead slides freely, the glass does not expand. The thermometer and the ruler read to their resolutions d (the nearest multiple of d, with the uncertainty d/√12 from the resolution alone); no random error is added. Time is compressed: 100 lab seconds each run second. In a real lab water vapour in the column lengthens it at high temperatures, the air lags behind the water, and the bead can stick.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the Charles's law instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn thí nghiệm định luật Charles trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "charles-instructions"
+      }
+    },
+    {
+      "id": "temperature",
+      "instruction": "Choose the water's temperature with its dial on the control desk.",
+      "vi": {
+        "instruction": "Chọn nhiệt độ của nước bằng núm xoay trên bàn điều khiển."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "bathTemperature"
+      }
+    },
+    {
+      "id": "column",
+      "instruction": "Choose the length of the air column at 20 °C.",
+      "vi": {
+        "instruction": "Chọn chiều dài cột khí ở 20 °C."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "startLength"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the water warms (or cools) to it; watch the bead move up the tube.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: nước được đun nóng (hoặc làm lạnh) tới nhiệt độ đó; quan sát giọt chất lỏng di chuyển trong ống."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Read t and L on the results monitor.",
+      "vi": {
+        "instruction": "Đọc t và L trên màn hình kết quả."
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, choose another temperature and run again; then extend the line to L = 0.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, chọn nhiệt độ khác rồi chạy lại; sau đó kéo dài đường thẳng tới L = 0."
+      },
+      "done": {
+        "kind": "reset"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "warm-bath",
+      "question": "An air column {startLength} m long at {startTemperature} °C is heated at constant pressure to {bathTemperature} °C. Find its new length.",
+      "vi": {
+        "question": "Một cột không khí dài {startLength} m ở {startTemperature} °C được đun nóng đẳng áp tới {bathTemperature} °C. Tìm chiều dài mới của cột khí."
+      },
+      "set": { "bathTemperature": 80, "startLength": 0.1 },
+      "find": [{ "theory": "length", "figures": 4 }],
+      "steps": [
+        {
+          "say": "At constant pressure V/T stays the same, with T in kelvin. The tube’s bore is even, so the column’s length goes the same way: L/T is constant.",
+          "vi": {
+            "say": "Trong quá trình đẳng áp, V/T không đổi, với T tính bằng kelvin. Ống có tiết diện đều nên chiều dài cột khí cũng vậy: L/T không đổi."
+          },
+          "write": "L/T = L₀/T₀,  T = t + 273.15"
+        },
+        {
+          "say": "Turn both temperatures into kelvin and scale the length.",
+          "vi": { "say": "Đổi hai nhiệt độ ra kelvin rồi tính chiều dài theo tỉ lệ." },
+          "write": "L = {startLength}·{=bathTemperature+273.15|5}/{=startTemperature+273.15|5} ≈ {@length|4} m",
+          "check": {
+            "expr": "startLength*(bathTemperature+273.15)/(startTemperature+273.15)",
+            "equals": "length"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ice-bath",
+      "question": "A {startLength} m air column at {startTemperature} °C is cooled in melting ice to {bathTemperature} °C at constant pressure. How much does its length change for each kelvin, and what is its new length?",
+      "vi": {
+        "question": "Một cột khí dài {startLength} m ở {startTemperature} °C được làm lạnh đẳng áp trong nước đá đang tan tới {bathTemperature} °C. Chiều dài cột khí thay đổi bao nhiêu với mỗi kelvin, và chiều dài mới là bao nhiêu?"
+      },
+      "set": { "bathTemperature": 0, "startLength": 0.12 },
+      "find": [
+        { "theory": "lengthPerKelvin", "symbol": "ΔL/Δt", "unit": "m/K" },
+        { "theory": "length", "figures": 4 }
+      ],
+      "steps": [
+        {
+          "say": "L is proportional to T, so each kelvin changes it by L₀ divided by T₀ in kelvin.",
+          "vi": {
+            "say": "L tỉ lệ với T, nên mỗi kelvin làm nó thay đổi một lượng bằng L₀ chia T₀ (tính bằng kelvin)."
+          },
+          "write": "ΔL/Δt = L₀/T₀ = {startLength}/{=startTemperature+273.15|5} ≈ {@lengthPerKelvin} m/K",
+          "check": { "expr": "startLength/(startTemperature+273.15)", "equals": "lengthPerKelvin" }
+        },
+        {
+          "say": "At 0 °C the absolute temperature is 273.15 K.",
+          "vi": { "say": "Ở 0 °C, nhiệt độ tuyệt đối là 273,15 K." },
+          "write": "L = L₀·T/T₀ = {startLength}·273.15/{=startTemperature+273.15|5} ≈ {@length|4} m",
+          "check": { "expr": "startLength*273.15/(startTemperature+273.15)", "equals": "length" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "Air warmed at constant pressure expands in proportion to its absolute temperature; the line of its volume against temperature reaches zero at −273.15 °C, absolute zero (Charles’s law).",
+    "vi": {
+      "summary": "Không khí được nung nóng ở áp suất không đổi nở ra tỉ lệ với nhiệt độ tuyệt đối của nó; đường biểu diễn thể tích theo nhiệt độ cắt giá trị không tại −273.15 °C, độ không tuyệt đối (định luật Sác-lơ cho quá trình đẳng áp)."
+    },
+    "parts": [
+      {
+        "id": "capillary",
+        "name": "Glass tube",
+        "role": "A thin tube of even bore, sealed at its foot, trapping a column of dry air.",
+        "vi": {
+          "name": "Ống thủy tinh",
+          "role": "Ống mảnh có tiết diện đều, bịt kín ở đáy, giam một cột không khí khô."
+        },
+        "anchor": {
+          "part": "capillary"
+        }
+      },
+      {
+        "id": "bead",
+        "name": "Liquid bead",
+        "role": "A short bead of liquid that traps the air and slides freely, so the air stays at the room’s pressure.",
+        "vi": {
+          "name": "Giọt chất lỏng",
+          "role": "Một giọt chất lỏng ngắn giam khí và trượt tự do, nên khí luôn ở áp suất phòng."
+        },
+        "anchor": {
+          "part": "index"
+        }
+      },
+      {
+        "id": "ruler",
+        "name": "Ruler",
+        "role": "Behind the tube, 0 at its sealed foot: reads the column’s length L.",
+        "vi": {
+          "name": "Thước",
+          "role": "Đặt sau ống, vạch 0 ở đáy kín: đọc chiều dài L của cột khí."
+        },
+        "anchor": {
+          "at": [-0.031, 0.055, -0.004]
+        }
+      },
+      {
+        "id": "bath",
+        "name": "Water bath",
+        "role": "A beaker of water around the tube; the air takes its temperature.",
+        "vi": {
+          "name": "Bình nước",
+          "role": "Cốc nước bao quanh ống; khí có cùng nhiệt độ với nước."
+        },
+        "anchor": {
+          "part": "bath"
+        }
+      },
+      {
+        "id": "plate",
+        "name": "Hot plate",
+        "role": "Warms the water steadily to the set temperature (or ice cools it to 0 °C).",
+        "vi": {
+          "name": "Bếp điện",
+          "role": "Đun nước tăng đều tới nhiệt độ đã đặt (hoặc dùng nước đá làm lạnh tới 0 °C)."
+        },
+        "anchor": {
+          "at": [0, -0.105, 0.1]
+        }
+      },
+      {
+        "id": "thermometer",
+        "name": "Thermometer",
+        "role": "Reads the water’s temperature t in °C.",
+        "vi": {
+          "name": "Nhiệt kế",
+          "role": "Đọc nhiệt độ t của nước theo °C."
+        },
+        "anchor": {
+          "part": "stem"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "The bead traps a column of air in the tube. It slides freely, so the air’s pressure stays the room’s.",
+        "vi": {
+          "text": "Giọt chất lỏng giam một cột không khí trong ống. Nó trượt tự do, nên áp suất của khí luôn bằng áp suất phòng."
+        },
+        "parts": ["bead", "capillary"]
+      },
+      {
+        "text": "As the hot plate warms the water, the air warms too and expands: the bead moves up the tube.",
+        "vi": {
+          "text": "Khi bếp làm nước nóng lên, không khí cũng nóng lên và nở ra: giọt chất lỏng di chuyển lên trên ống."
+        },
+        "parts": ["plate", "bath", "bead"]
+      },
+      {
+        "text": "The tube has an even bore, so the column’s length L stands for its volume. Read L on the ruler and t on the thermometer.",
+        "vi": {
+          "text": "Ống có tiết diện đều, nên chiều dài L của cột khí đại diện cho thể tích của nó. Đọc L trên thước và t trên nhiệt kế."
+        },
+        "parts": ["ruler", "thermometer", "capillary"]
+      },
+      {
+        "text": "Charles’s law: at constant pressure V/T is constant, with T = t + 273.15 K the absolute temperature. So L = L0·(t + 273.15)/(t0 + 273.15), L0 the length at t0 = 20 °C.",
+        "vi": {
+          "text": "Định luật Sác-lơ cho quá trình đẳng áp: ở áp suất không đổi, V/T không đổi, với T = t + 273.15 K là nhiệt độ tuyệt đối. Vì vậy L = L0·(t + 273.15)/(t0 + 273.15), L0 là chiều dài ở t0 = 20 °C."
+        },
+        "parts": ["capillary", "thermometer"]
+      },
+      {
+        "text": "Run at several temperatures and plot L against t: a straight line. Extended backwards it reaches L = 0 at t = −273.15 °C — absolute zero.",
+        "vi": {
+          "text": "Chạy ở nhiều nhiệt độ và vẽ L theo t: được một đường thẳng. Kéo dài về phía trái, nó cắt L = 0 tại t = −273.15 °C — độ không tuyệt đối."
+        },
+        "parts": ["ruler", "thermometer"]
+      },
+      {
+        "text": "A simplified model: the air is ideal and dry, the bead never sticks and the glass does not expand. Time runs 100 times faster than in the lab.",
+        "vi": {
+          "text": "Mô hình đơn giản hóa: không khí là khí lí tưởng và khô, giọt chất lỏng không bị kẹt và thủy tinh không giãn nở. Thời gian chạy nhanh gấp 100 lần so với trong phòng thí nghiệm."
+        },
+        "parts": ["capillary", "bead"]
+      }
+    ]
+  }
+}

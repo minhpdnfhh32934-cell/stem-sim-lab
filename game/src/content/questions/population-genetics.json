@@ -1,0 +1,1040 @@
+{
+  "id": "population-genetics",
+  "skills": [
+    {
+      "id": "hardy-weinberg",
+      "name": "Hardy–Weinberg: p² + 2pq + q² = 1",
+      "advice": "Practise both ways: genotype shares from p (p², 2pq, q²) and p from a genotype share (q = √(aa share)). Learn the conditions (large population, random mating, no selection, mutation or migration) and which one the station breaks.",
+      "vi": {
+        "name": "Định luật Hardy – Weinberg: p² + 2pq + q² = 1",
+        "advice": "Luyện theo cả hai chiều: từ p tính tỉ lệ kiểu gene (p², 2pq, q²) và từ tỉ lệ kiểu gene tính p (q = √(tỉ lệ aa)). Học thuộc các điều kiện nghiệm đúng (quần thể lớn, giao phối ngẫu nhiên, không có chọn lọc, đột biến, di – nhập gene) và xem trạm vi phạm điều kiện nào."
+      }
+    },
+    {
+      "id": "allele-frequency",
+      "name": "Allele frequencies from genotype counts",
+      "advice": "Count alleles, not individuals: p = (2·AA + Aa)/(2N). The trap is dividing by N instead of 2N, or forgetting that each AA carries two A alleles.",
+      "vi": {
+        "name": "Tính tần số allele từ số lượng kiểu gene",
+        "advice": "Đếm số allele chứ không đếm số cá thể: p = (2·AA + Aa)/(2N). Bẫy thường gặp là chia cho N thay vì 2N, hoặc quên rằng mỗi cá thể AA mang hai allele A."
+      }
+    },
+    {
+      "id": "drift",
+      "name": "Genetic drift",
+      "advice": "Run the station with N = 2000 and with N = 10, several population numbers each, and compare how far p wanders. Drift is random: it has no direction, and it is strongest in small populations.",
+      "vi": {
+        "name": "Phiêu bạt di truyền",
+        "advice": "Chạy trạm với N = 2000 và với N = 10, mỗi trường hợp vài lần với số quần thể khác nhau, rồi so sánh mức dao động của p. Phiêu bạt di truyền là ngẫu nhiên: không có hướng xác định và mạnh nhất ở quần thể nhỏ."
+      }
+    },
+    {
+      "id": "heterozygosity",
+      "name": "Loss of heterozygotes: H = 2p₀q₀(1 − 1/2N)^t",
+      "advice": "Work H = 2p₀q₀(1 − 1/2N)^t for N = 10 and N = 2000 over 50 generations. Mind the 2N (two alleles per individual) and the power t; the result is an average over many populations.",
+      "vi": {
+        "name": "Sự giảm tỉ lệ dị hợp: H = 2p₀q₀(1 − 1/2N)^t",
+        "advice": "Tính H = 2p₀q₀(1 − 1/2N)^t với N = 10 và N = 2000 sau 50 thế hệ. Chú ý 2N (mỗi cá thể mang hai allele) và số mũ t; kết quả là giá trị trung bình của rất nhiều quần thể."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "hw-aa",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["hardy-weinberg"],
+      "stem": "A population is in Hardy–Weinberg equilibrium, with allele frequencies p (A) and q (a). The frequency of Aa is…",
+      "explain": "Random union of gametes: Aa arises as A from one parent and a from the other, or the reverse: 2pq.",
+      "vi": {
+        "stem": "Một quần thể ở trạng thái cân bằng Hardy – Weinberg, tần số allele A là p và allele a là q. Tần số kiểu gene Aa là…",
+        "explain": "Các giao tử kết hợp ngẫu nhiên: Aa được tạo ra khi nhận A từ bố và a từ mẹ, hoặc ngược lại: 2pq."
+      },
+      "options": [
+        {
+          "text": "2pq",
+          "vi": {
+            "text": "2pq"
+          },
+          "correct": true
+        },
+        {
+          "text": "pq",
+          "vi": {
+            "text": "pq"
+          }
+        },
+        {
+          "text": "p²",
+          "vi": {
+            "text": "p²"
+          }
+        },
+        {
+          "text": "p + q",
+          "vi": {
+            "text": "p + q"
+          }
+        }
+      ]
+    },
+    {
+      "id": "what-drift",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["drift"],
+      "stem": "Genetic drift is…",
+      "explain": "Drift is a change of allele frequencies by chance alone, from one generation’s random sample of the gene pool to the next; it is strongest in small populations.",
+      "vi": {
+        "stem": "Phiêu bạt di truyền (biến động di truyền) là…",
+        "explain": "Phiêu bạt di truyền là sự thay đổi tần số allele do ngẫu nhiên, khi mỗi thế hệ chỉ nhận một mẫu ngẫu nhiên của vốn gene thế hệ trước; nó mạnh nhất ở quần thể nhỏ."
+      },
+      "options": [
+        {
+          "text": "a random change in allele frequencies from one generation to the next, strongest in small populations",
+          "vi": {
+            "text": "sự thay đổi ngẫu nhiên tần số allele qua các thế hệ, mạnh nhất ở quần thể nhỏ"
+          },
+          "correct": true
+        },
+        {
+          "text": "a change in allele frequencies by natural selection",
+          "vi": {
+            "text": "sự thay đổi tần số allele do chọn lọc tự nhiên"
+          }
+        },
+        {
+          "text": "the movement of alleles into a population by migration",
+          "vi": {
+            "text": "sự đưa allele vào quần thể do di – nhập gene"
+          }
+        },
+        {
+          "text": "the appearance of new alleles by mutation",
+          "vi": {
+            "text": "sự xuất hiện allele mới do đột biến"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-basic",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["hardy-weinberg", "drift"],
+      "stem": "About a gene with two alleles A and a in a population: decide whether each statement is true or false.",
+      "explain": "p + q = 1. Hardy–Weinberg needs a large, randomly mating population with no selection, mutation or migration. Drift is random: it favours neither allele, and in a small population it can lose one for good.",
+      "vi": {
+        "stem": "Về một gene có hai allele A và a trong một quần thể, mỗi nhận định sau đúng hay sai?",
+        "explain": "p + q = 1. Định luật Hardy – Weinberg cần quần thể lớn, giao phối ngẫu nhiên, không có chọn lọc, đột biến và di – nhập gene. Phiêu bạt di truyền là ngẫu nhiên: không ưu tiên allele nào, và ở quần thể nhỏ có thể làm mất hẳn một allele."
+      },
+      "statements": [
+        {
+          "text": "The allele frequencies add up to one: p + q = 1.",
+          "vi": {
+            "text": "Tổng tần số các allele bằng 1: p + q = 1."
+          },
+          "true": true
+        },
+        {
+          "text": "Hardy–Weinberg equilibrium needs a large population with random mating and no selection, mutation or migration.",
+          "vi": {
+            "text": "Cân bằng Hardy – Weinberg cần quần thể có kích thước lớn, giao phối ngẫu nhiên, không có chọn lọc, đột biến và di – nhập gene."
+          },
+          "true": true
+        },
+        {
+          "text": "Genetic drift always raises the frequency of the dominant allele.",
+          "vi": {
+            "text": "Phiêu bạt di truyền luôn làm tăng tần số allele trội."
+          },
+          "true": false
+        },
+        {
+          "text": "In a small population an allele can be lost by chance alone.",
+          "vi": {
+            "text": "Ở quần thể nhỏ, một allele có thể bị mất chỉ do ngẫu nhiên."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "why-small",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["drift"],
+      "stem": "Why does p change more by drift in a population of N = 10 than of N = 2000?",
+      "explain": "Each generation takes only 2N alleles from the gene pool: a small sample strays further from it by chance, as 20 coin tosses stray further from half heads than 4000 do.",
+      "vi": {
+        "stem": "Vì sao do phiêu bạt di truyền, p thay đổi nhiều hơn ở quần thể N = 10 so với quần thể N = 2000?",
+        "explain": "Mỗi thế hệ chỉ lấy 2N allele từ vốn gene: mẫu nhỏ dễ lệch xa hơn do ngẫu nhiên, giống như tung đồng xu 20 lần dễ lệch khỏi một nửa mặt ngửa hơn tung 4000 lần."
+      },
+      "options": [
+        {
+          "text": "Each generation is a small random sample of the gene pool, so chance changes are relatively larger",
+          "vi": {
+            "text": "Mỗi thế hệ là một mẫu ngẫu nhiên nhỏ của vốn gene, nên các thay đổi ngẫu nhiên tương đối lớn hơn"
+          },
+          "correct": true
+        },
+        {
+          "text": "Natural selection is stronger in small populations",
+          "vi": {
+            "text": "Chọn lọc tự nhiên mạnh hơn ở quần thể nhỏ"
+          }
+        },
+        {
+          "text": "Mutations are more frequent in small populations",
+          "vi": {
+            "text": "Đột biến xảy ra thường xuyên hơn ở quần thể nhỏ"
+          }
+        },
+        {
+          "text": "Small populations always mate with relatives, which removes heterozygotes",
+          "vi": {
+            "text": "Quần thể nhỏ luôn giao phối cận huyết nên loại bỏ dị hợp tử"
+          }
+        }
+      ]
+    },
+    {
+      "id": "after-loss",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["drift", "heterozygosity"],
+      "stem": "In the model, allele a has been lost by drift (p = 1). In the later generations…",
+      "explain": "With no mutation or migration, a cannot come back: every individual is AA, p stays 1 and there are no heterozygotes. Allele A is fixed.",
+      "vi": {
+        "stem": "Trong mô hình, allele a đã bị mất do phiêu bạt di truyền (p = 1). Ở các thế hệ sau…",
+        "explain": "Không có đột biến hay di – nhập gene thì allele a không thể xuất hiện trở lại: mọi cá thể là AA, p giữ ở 1 và không còn dị hợp tử. Allele A đã được cố định."
+      },
+      "options": [
+        {
+          "text": "p stays 1 and there are no heterozygotes",
+          "vi": {
+            "text": "p giữ ở 1 và không còn cá thể dị hợp"
+          },
+          "correct": true
+        },
+        {
+          "text": "allele a reappears by chance",
+          "vi": {
+            "text": "allele a xuất hiện trở lại do ngẫu nhiên"
+          }
+        },
+        {
+          "text": "p drifts back to its starting value",
+          "vi": {
+            "text": "p dao động trở lại giá trị ban đầu"
+          }
+        },
+        {
+          "text": "the share of Aa returns to 2p₀q₀",
+          "vi": {
+            "text": "tỉ lệ Aa trở về 2p₀q₀"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-large",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["hardy-weinberg", "drift"],
+      "set": {
+        "population": 2000,
+        "startFrequency": 0.6,
+        "generations": 50
+      },
+      "stem": "A population of N = {population} starts with p₀ = {startFrequency} for allele A and breeds by random mating for {generations} generations. Decide whether each statement is true or false.",
+      "explain": "At the start AA = p² = {=startFrequency^2}, Aa = 2pq = {=2*startFrequency*(1-startFrequency)}, aa = q² = {=(1-startFrequency)^2}. Drift has no direction, so the expected p stays {@p}; but one run wanders a little, so it does not end exactly at {startFrequency}.",
+      "vi": {
+        "stem": "Một quần thể N = {population} có tần số allele A ban đầu p₀ = {startFrequency}, giao phối ngẫu nhiên qua {generations} thế hệ. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Lúc đầu AA = p² = {=startFrequency^2}, Aa = 2pq = {=2*startFrequency*(1-startFrequency)}, aa = q² = {=(1-startFrequency)^2}. Phiêu bạt di truyền không có hướng nên giá trị kì vọng của p vẫn là {@p}; nhưng mỗi lần chạy p dao động một chút, nên không kết thúc đúng bằng {startFrequency}."
+      },
+      "statements": [
+        {
+          "text": "Random mating from p₀ gives expected shares of {=startFrequency^2} AA, {=2*startFrequency*(1-startFrequency)} Aa and {=(1-startFrequency)^2} aa.",
+          "vi": {
+            "text": "Giao phối ngẫu nhiên từ p₀ cho tỉ lệ kì vọng của các kiểu gene AA, Aa và aa lần lượt là {=startFrequency^2}, {=2*startFrequency*(1-startFrequency)} và {=(1-startFrequency)^2}."
+          },
+          "true": true
+        },
+        {
+          "text": "The expected frequency of A after {generations} generations is {@p}.",
+          "vi": {
+            "text": "Tần số kì vọng của allele A sau {generations} thế hệ là {@p}."
+          },
+          "true": true,
+          "check": {
+            "expr": "startFrequency",
+            "equals": "p"
+          }
+        },
+        {
+          "text": "A single run always ends with p exactly {startFrequency}.",
+          "vi": {
+            "text": "Mỗi lần chạy luôn kết thúc với p đúng bằng {startFrequency}."
+          },
+          "true": false
+        },
+        {
+          "text": "Averaged over many such populations, p stays where it started.",
+          "vi": {
+            "text": "Tính trung bình trên rất nhiều quần thể như vậy, p vẫn giữ giá trị ban đầu."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "aa-share",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["hardy-weinberg"],
+      "set": {
+        "startFrequency": 0.3
+      },
+      "stem": "The frequency of allele A is p = {startFrequency}. At Hardy–Weinberg equilibrium, what share of the population is aa?",
+      "explain": "q = 1 − {startFrequency} = {=1-startFrequency}; aa = q² = {=(1-startFrequency)^2}.",
+      "vi": {
+        "stem": "Tần số allele A là p = {startFrequency}. Ở trạng thái cân bằng Hardy – Weinberg, tỉ lệ kiểu gene aa trong quần thể là bao nhiêu?",
+        "explain": "q = 1 − {startFrequency} = {=1-startFrequency}; aa = q² = {=(1-startFrequency)^2}."
+      },
+      "options": [
+        {
+          "text": "{=(1-startFrequency)^2}",
+          "vi": {
+            "text": "{=(1-startFrequency)^2}"
+          },
+          "correct": true
+        },
+        {
+          "text": "{=1-startFrequency}",
+          "vi": {
+            "text": "{=1-startFrequency}"
+          }
+        },
+        {
+          "text": "{=2*startFrequency*(1-startFrequency)}",
+          "vi": {
+            "text": "{=2*startFrequency*(1-startFrequency)}"
+          }
+        },
+        {
+          "text": "{=startFrequency^2}",
+          "vi": {
+            "text": "{=startFrequency^2}"
+          }
+        }
+      ]
+    },
+    {
+      "id": "p-from-counts",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["allele-frequency"],
+      "set": {
+        "population": 200,
+        "startFrequency": 0.7
+      },
+      "stem": "A sample of {population} beetles holds {=population*startFrequency^2} AA, {=population*2*startFrequency*(1-startFrequency)} Aa and {=population*(1-startFrequency)^2} aa. What is the frequency p of allele A?",
+      "explain": "Count the A alleles: 2·{=population*startFrequency^2} + {=population*2*startFrequency*(1-startFrequency)} = {=2*population*startFrequency^2+population*2*startFrequency*(1-startFrequency)} of 2·{population} = {=2*population} alleles: p = {@p}.",
+      "vi": {
+        "stem": "Một mẫu {population} con bọ cánh cứng có {=population*startFrequency^2} con AA, {=population*2*startFrequency*(1-startFrequency)} con Aa và {=population*(1-startFrequency)^2} con aa. Tần số p của allele A là bao nhiêu?",
+        "explain": "Đếm số allele A: 2·{=population*startFrequency^2} + {=population*2*startFrequency*(1-startFrequency)} = {=2*population*startFrequency^2+population*2*startFrequency*(1-startFrequency)} trên tổng 2·{population} = {=2*population} allele: p = {@p}."
+      },
+      "options": [
+        {
+          "text": "{=(2*population*startFrequency^2+population*2*startFrequency*(1-startFrequency))/(2*population)}",
+          "vi": {
+            "text": "{=(2*population*startFrequency^2+population*2*startFrequency*(1-startFrequency))/(2*population)}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(2*population*startFrequency^2+population*2*startFrequency*(1-startFrequency))/(2*population)",
+            "equals": "p"
+          }
+        },
+        {
+          "text": "{=population*startFrequency^2/population}",
+          "vi": {
+            "text": "{=population*startFrequency^2/population}"
+          },
+          "check": {
+            "expr": "population*startFrequency^2/population",
+            "equals": "p"
+          }
+        },
+        {
+          "text": "{=(population*startFrequency^2+population*2*startFrequency*(1-startFrequency))/population}",
+          "vi": {
+            "text": "{=(population*startFrequency^2+population*2*startFrequency*(1-startFrequency))/population}"
+          },
+          "check": {
+            "expr": "(population*startFrequency^2+population*2*startFrequency*(1-startFrequency))/population",
+            "equals": "p"
+          }
+        },
+        {
+          "text": "{=(population*startFrequency^2+population*2*startFrequency*(1-startFrequency))/(2*population)}",
+          "vi": {
+            "text": "{=(population*startFrequency^2+population*2*startFrequency*(1-startFrequency))/(2*population)}"
+          },
+          "check": {
+            "expr": "(population*startFrequency^2+population*2*startFrequency*(1-startFrequency))/(2*population)",
+            "equals": "p"
+          }
+        }
+      ]
+    },
+    {
+      "id": "h-after-50",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["heterozygosity"],
+      "set": {
+        "population": 50,
+        "startFrequency": 0.5,
+        "generations": 50
+      },
+      "stem": "A population of N = {population} starts with p₀ = {startFrequency}. With H = 2p₀q₀(1 − 1/2N)^t, what share of heterozygotes Aa is expected after {generations} generations?",
+      "explain": "H = {=2*startFrequency*(1-startFrequency)}·(1 − 1/{=2*population})^{generations} ≈ {@heterozygosity}. Use 2N (two alleles per individual), and the power, not a product.",
+      "vi": {
+        "stem": "Một quần thể N = {population} có p₀ = {startFrequency}. Theo H = 2p₀q₀(1 − 1/2N)^t, tỉ lệ dị hợp tử Aa kì vọng sau {generations} thế hệ là bao nhiêu?",
+        "explain": "H = {=2*startFrequency*(1-startFrequency)}·(1 − 1/{=2*population})^{generations} ≈ {@heterozygosity}. Dùng 2N (mỗi cá thể có hai allele), và dùng lũy thừa chứ không phải phép nhân."
+      },
+      "options": [
+        {
+          "text": "{@heterozygosity}",
+          "vi": {
+            "text": "{@heterozygosity}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2*startFrequency*(1-startFrequency)*(1-1/(2*population))^generations",
+            "equals": "heterozygosity"
+          }
+        },
+        {
+          "text": "{=2*startFrequency*(1-startFrequency)}",
+          "vi": {
+            "text": "{=2*startFrequency*(1-startFrequency)}"
+          },
+          "check": {
+            "expr": "2*startFrequency*(1-startFrequency)",
+            "equals": "heterozygosity"
+          }
+        },
+        {
+          "text": "{=2*startFrequency*(1-startFrequency)*(1-1/population)^generations}",
+          "vi": {
+            "text": "{=2*startFrequency*(1-startFrequency)*(1-1/population)^generations}"
+          },
+          "check": {
+            "expr": "2*startFrequency*(1-startFrequency)*(1-1/population)^generations",
+            "equals": "heterozygosity"
+          }
+        },
+        {
+          "text": "{=2*startFrequency*(1-startFrequency)*(1-generations/(2*population))}",
+          "vi": {
+            "text": "{=2*startFrequency*(1-startFrequency)*(1-generations/(2*population))}"
+          },
+          "check": {
+            "expr": "2*startFrequency*(1-startFrequency)*(1-generations/(2*population))",
+            "equals": "heterozygosity"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-tiny",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["heterozygosity", "hardy-weinberg"],
+      "set": {
+        "population": 10,
+        "startFrequency": 0.3,
+        "generations": 20
+      },
+      "stem": "A tiny population, N = {population}, starts with p₀ = {startFrequency} and breeds by random mating for {generations} generations. Decide whether each statement is true or false.",
+      "explain": "At the start 2p₀q₀ = {=2*startFrequency*(1-startFrequency)}. Each generation keeps 1 − 1/(2N) = {=1-1/(2*population)} of it on average: after {generations}, H ≈ {@heterozygosity}. The expected p stays {@p}, not q = {=1-startFrequency}.",
+      "vi": {
+        "stem": "Một quần thể rất nhỏ, N = {population}, có p₀ = {startFrequency}, giao phối ngẫu nhiên qua {generations} thế hệ. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Lúc đầu 2p₀q₀ = {=2*startFrequency*(1-startFrequency)}. Mỗi thế hệ trung bình giữ lại 1 − 1/(2N) = {=1-1/(2*population)} lượng đó: sau {generations} thế hệ, H ≈ {@heterozygosity}. Giá trị kì vọng của p vẫn là {@p}, không phải q = {=1-startFrequency}."
+      },
+      "statements": [
+        {
+          "text": "At the start, Hardy–Weinberg gives a share of Aa of {=2*startFrequency*(1-startFrequency)}.",
+          "vi": {
+            "text": "Lúc đầu, theo Hardy – Weinberg, tỉ lệ Aa là {=2*startFrequency*(1-startFrequency)}."
+          },
+          "true": true
+        },
+        {
+          "text": "After {generations} generations the expected share of Aa is about {@heterozygosity}.",
+          "vi": {
+            "text": "Sau {generations} thế hệ, tỉ lệ Aa kì vọng khoảng {@heterozygosity}."
+          },
+          "true": true,
+          "check": {
+            "expr": "2*startFrequency*(1-startFrequency)*(1-1/(2*population))^generations",
+            "equals": "heterozygosity"
+          }
+        },
+        {
+          "text": "On average each generation keeps {=1-1/(2*population)} of the heterozygosity of the one before.",
+          "vi": {
+            "text": "Trung bình mỗi thế hệ giữ lại {=1-1/(2*population)} mức dị hợp của thế hệ trước."
+          },
+          "true": true
+        },
+        {
+          "text": "The expected frequency of A after {generations} generations is {=1-startFrequency}.",
+          "vi": {
+            "text": "Tần số kì vọng của allele A sau {generations} thế hệ là {=1-startFrequency}."
+          },
+          "true": false,
+          "check": {
+            "expr": "1-startFrequency",
+            "equals": "p"
+          }
+        }
+      ]
+    },
+    {
+      "id": "share-left",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["heterozygosity", "drift"],
+      "set": {
+        "population": 100,
+        "startFrequency": 0.2,
+        "generations": 100
+      },
+      "stem": "A population of N = {population} starts with p₀ = {startFrequency}. What fraction of its starting heterozygosity 2p₀q₀ is expected to remain after {generations} generations?",
+      "explain": "H/H₀ = (1 − 1/2N)^t = (1 − 1/{=2*population})^{generations} ≈ {=(1-1/(2*population))^generations}: H ≈ {@heterozygosity} of the starting {=2*startFrequency*(1-startFrequency)}. p₀ does not change the fraction.",
+      "vi": {
+        "stem": "Một quần thể N = {population} có p₀ = {startFrequency}. Sau {generations} thế hệ, phần mức dị hợp ban đầu 2p₀q₀ được kì vọng còn lại là bao nhiêu?",
+        "explain": "H/H₀ = (1 − 1/2N)^t = (1 − 1/{=2*population})^{generations} ≈ {=(1-1/(2*population))^generations}: H ≈ {@heterozygosity} so với ban đầu {=2*startFrequency*(1-startFrequency)}. p₀ không ảnh hưởng đến tỉ lệ này."
+      },
+      "options": [
+        {
+          "text": "{=(1-1/(2*population))^generations}",
+          "vi": {
+            "text": "{=(1-1/(2*population))^generations}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2*startFrequency*(1-startFrequency)*(1-1/(2*population))^generations",
+            "equals": "heterozygosity"
+          }
+        },
+        {
+          "text": "{=(1-1/population)^generations}",
+          "vi": {
+            "text": "{=(1-1/population)^generations}"
+          },
+          "check": {
+            "expr": "2*startFrequency*(1-startFrequency)*(1-1/population)^generations",
+            "equals": "heterozygosity"
+          }
+        },
+        {
+          "text": "{=1-generations/(2*population)}",
+          "vi": {
+            "text": "{=1-generations/(2*population)}"
+          },
+          "check": {
+            "expr": "2*startFrequency*(1-startFrequency)*(1-generations/(2*population))",
+            "equals": "heterozygosity"
+          }
+        },
+        {
+          "text": "{=1-1/(2*population)}",
+          "vi": {
+            "text": "{=1-1/(2*population)}"
+          },
+          "check": {
+            "expr": "2*startFrequency*(1-startFrequency)*(1-1/(2*population))",
+            "equals": "heterozygosity"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-compare",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["drift", "heterozygosity", "hardy-weinberg"],
+      "set": {
+        "population": 2000,
+        "startFrequency": 0.5,
+        "generations": 50
+      },
+      "stem": "Two populations start with p₀ = {startFrequency} and breed by random mating for {generations} generations: one of N = {population}, one of N = 10. Decide whether each statement is true or false.",
+      "explain": "N = {population}: H ≈ {@heterozygosity}, almost 2p₀q₀ = {=2*startFrequency*(1-startFrequency)}. N = 10: {=2*startFrequency*(1-startFrequency)}·(1 − 1/20)^{generations} ≈ {=2*startFrequency*(1-startFrequency)*(1-1/20)^generations}. The expected p is {@p} in both, but a small population often ends with p = 0 or 1. Drift is weaker, not stronger, in the larger population.",
+      "vi": {
+        "stem": "Hai quần thể có p₀ = {startFrequency}, giao phối ngẫu nhiên qua {generations} thế hệ: một quần thể N = {population}, một quần thể N = 10. Mỗi nhận định sau đúng hay sai?",
+        "explain": "N = {population}: H ≈ {@heterozygosity}, gần bằng 2p₀q₀ = {=2*startFrequency*(1-startFrequency)}. N = 10: {=2*startFrequency*(1-startFrequency)}·(1 − 1/20)^{generations} ≈ {=2*startFrequency*(1-startFrequency)*(1-1/20)^generations}. Giá trị kì vọng của p ở cả hai là {@p}, nhưng quần thể nhỏ thường kết thúc với p = 0 hoặc 1. Phiêu bạt di truyền yếu hơn chứ không mạnh hơn ở quần thể lớn."
+      },
+      "statements": [
+        {
+          "text": "In the population of {population}, the expected share of Aa after {generations} generations is about {@heterozygosity}, close to its start.",
+          "vi": {
+            "text": "Ở quần thể {population} cá thể, tỉ lệ Aa kì vọng sau {generations} thế hệ khoảng {@heterozygosity}, gần với ban đầu."
+          },
+          "true": true,
+          "check": {
+            "expr": "2*startFrequency*(1-startFrequency)*(1-1/(2*population))^generations",
+            "equals": "heterozygosity"
+          }
+        },
+        {
+          "text": "In the population of 10, the expected share of Aa would be about {=2*startFrequency*(1-startFrequency)*(1-1/20)^generations}.",
+          "vi": {
+            "text": "Ở quần thể 10 cá thể, tỉ lệ Aa kì vọng khoảng {=2*startFrequency*(1-startFrequency)*(1-1/20)^generations}."
+          },
+          "true": true
+        },
+        {
+          "text": "A run of the small population may end with p = 0 or p = 1, although the expected p is {@p}.",
+          "vi": {
+            "text": "Một lần chạy quần thể nhỏ có thể kết thúc với p = 0 hoặc p = 1, dù giá trị kì vọng của p là {@p}."
+          },
+          "true": true,
+          "check": {
+            "expr": "startFrequency",
+            "equals": "p"
+          }
+        },
+        {
+          "text": "Drift is stronger in the larger population, because more individuals breed.",
+          "vi": {
+            "text": "Phiêu bạt di truyền mạnh hơn ở quần thể lớn hơn vì có nhiều cá thể sinh sản hơn."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "gene-pool",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["allele-frequency"],
+      "stem": "The gene pool of a population is…",
+      "explain": "The gene pool is all the alleles of all the genes carried by the individuals of a population at one time; allele frequencies describe it.",
+      "vi": {
+        "stem": "Vốn gene của một quần thể là…",
+        "explain": "Vốn gene là tập hợp tất cả các allele của tất cả các gene có trong các cá thể của quần thể ở một thời điểm xác định; tần số allele mô tả vốn gene đó."
+      },
+      "options": [
+        {
+          "text": "all the alleles of all the genes carried by its individuals at one time",
+          "vi": {
+            "text": "tập hợp tất cả các allele của tất cả các gene có trong các cá thể của quần thể ở một thời điểm"
+          },
+          "correct": true
+        },
+        {
+          "text": "the genotype of its commonest individual",
+          "vi": {
+            "text": "kiểu gene của cá thể phổ biến nhất trong quần thể"
+          }
+        },
+        {
+          "text": "the alleles that are dominant in it",
+          "vi": {
+            "text": "các allele trội trong quần thể"
+          }
+        },
+        {
+          "text": "the number of individuals in it",
+          "vi": {
+            "text": "số lượng cá thể trong quần thể"
+          }
+        }
+      ]
+    },
+    {
+      "id": "hw-condition",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["hardy-weinberg"],
+      "stem": "Which of these is a condition for a population to stay in Hardy–Weinberg equilibrium?",
+      "explain": "Hardy–Weinberg needs random mating, a very large population, no mutation, no selection and no migration. Selection, a small population (drift) and migration all change allele frequencies.",
+      "vi": {
+        "stem": "Điều kiện nào sau đây là điều kiện để quần thể duy trì trạng thái cân bằng Hardy – Weinberg?",
+        "explain": "Cân bằng Hardy – Weinberg đòi hỏi giao phối ngẫu nhiên, quần thể có kích thước rất lớn, không có đột biến, không có chọn lọc và không có di – nhập gene. Chọn lọc, quần thể nhỏ (phiêu bạt di truyền) và di – nhập gene đều làm thay đổi tần số allele."
+      },
+      "options": [
+        {
+          "text": "Mating is random",
+          "vi": {
+            "text": "Giao phối ngẫu nhiên"
+          },
+          "correct": true
+        },
+        {
+          "text": "Natural selection favours one allele",
+          "vi": {
+            "text": "Chọn lọc tự nhiên ưu tiên một allele"
+          }
+        },
+        {
+          "text": "The population is small",
+          "vi": {
+            "text": "Quần thể có kích thước nhỏ"
+          }
+        },
+        {
+          "text": "Individuals often move in from other populations",
+          "vi": {
+            "text": "Các cá thể thường xuyên nhập cư từ quần thể khác"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-drift",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["drift"],
+      "stem": "About genetic drift: decide whether each statement is true or false.",
+      "explain": "Drift is change by chance in which alleles are passed on: it has no direction and does not adapt the population. In a small population it can fix even a harmful allele. A bottleneck and the founder effect are drift after a population is cut to a few individuals.",
+      "vi": {
+        "stem": "Về phiêu bạt di truyền, mỗi nhận định sau đúng hay sai?",
+        "explain": "Phiêu bạt di truyền là sự thay đổi ngẫu nhiên về những allele được truyền lại: nó không có hướng và không làm quần thể thích nghi. Trong quần thể nhỏ, nó có thể cố định cả một allele có hại. Hiệu ứng thắt cổ chai và hiệu ứng kẻ sáng lập là phiêu bạt di truyền sau khi quần thể chỉ còn rất ít cá thể."
+      },
+      "statements": [
+        {
+          "text": "Drift changes allele frequencies at random, with no direction.",
+          "vi": {
+            "text": "Phiêu bạt di truyền làm thay đổi tần số allele một cách ngẫu nhiên, không theo hướng xác định."
+          },
+          "true": true
+        },
+        {
+          "text": "In a small population drift can fix a harmful allele.",
+          "vi": {
+            "text": "Trong quần thể nhỏ, phiêu bạt di truyền có thể cố định một allele có hại."
+          },
+          "true": true
+        },
+        {
+          "text": "The founder effect is a form of genetic drift.",
+          "vi": {
+            "text": "Hiệu ứng kẻ sáng lập là một dạng phiêu bạt di truyền."
+          },
+          "true": true
+        },
+        {
+          "text": "Drift makes a population better adapted to its environment.",
+          "vi": {
+            "text": "Phiêu bạt di truyền làm quần thể thích nghi tốt hơn với môi trường."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "carriers",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["hardy-weinberg"],
+      "set": {
+        "population": 2000,
+        "startFrequency": 0.8,
+        "generations": 10
+      },
+      "stem": "In a large population at Hardy–Weinberg equilibrium, {=100*(1-startFrequency)^2}% of individuals show a recessive trait (aa). What share are heterozygous carriers (Aa)?",
+      "explain": "q² = {=(1-startFrequency)^2}, so q = √{=(1-startFrequency)^2} = {=1-startFrequency} and p = {startFrequency}. Carriers: 2pq = 2·{startFrequency}·{=1-startFrequency} = {=2*startFrequency*(1-startFrequency)}, i.e. {=200*startFrequency*(1-startFrequency)}%.",
+      "vi": {
+        "stem": "Trong một quần thể lớn ở trạng thái cân bằng Hardy – Weinberg, {=100*(1-startFrequency)^2}% số cá thể biểu hiện tính trạng lặn (aa). Tỉ lệ cá thể dị hợp mang allele lặn (Aa) là bao nhiêu?",
+        "explain": "q² = {=(1-startFrequency)^2}, nên q = √{=(1-startFrequency)^2} = {=1-startFrequency} và p = {startFrequency}. Tỉ lệ dị hợp: 2pq = 2·{startFrequency}·{=1-startFrequency} = {=2*startFrequency*(1-startFrequency)}, tức {=200*startFrequency*(1-startFrequency)}%."
+      },
+      "options": [
+        {
+          "text": "{=200*startFrequency*(1-startFrequency)}%",
+          "vi": {
+            "text": "{=200*startFrequency*(1-startFrequency)}%"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2*(1-sqrt((1-startFrequency)^2))*sqrt((1-startFrequency)^2)*(1-1/(2*population))^generations",
+            "equals": "heterozygosity"
+          }
+        },
+        {
+          "text": "{=200*(1-startFrequency)^2}%",
+          "vi": {
+            "text": "{=200*(1-startFrequency)^2}%"
+          },
+          "check": {
+            "expr": "2*(1-startFrequency)^2*(1-1/(2*population))^generations",
+            "equals": "heterozygosity"
+          }
+        },
+        {
+          "text": "{=100*(1-startFrequency)}%",
+          "vi": {
+            "text": "{=100*(1-startFrequency)}%"
+          },
+          "check": {
+            "expr": "(1-startFrequency)*(1-1/(2*population))^generations",
+            "equals": "heterozygosity"
+          }
+        },
+        {
+          "text": "{=100*(1-(1-startFrequency)^2)}%",
+          "vi": {
+            "text": "{=100*(1-(1-startFrequency)^2)}%"
+          },
+          "check": {
+            "expr": "(1-(1-startFrequency)^2)*(1-1/(2*population))^generations",
+            "equals": "heterozygosity"
+          }
+        }
+      ]
+    },
+    {
+      "id": "count-alleles",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["allele-frequency"],
+      "set": {
+        "population": 200,
+        "startFrequency": 0.7
+      },
+      "stem": "A population of {population} diploid individuals has allele A at frequency p = {startFrequency}. How many copies of allele A does it carry?",
+      "explain": "Each diploid individual carries 2 alleles of the gene: 2·{population} = {=2*population} in all, of which {startFrequency}·{=2*population} = {=2*population*startFrequency} are A.",
+      "vi": {
+        "stem": "Một quần thể gồm {population} cá thể lưỡng bội có tần số allele A là p = {startFrequency}. Quần thể mang bao nhiêu bản sao allele A?",
+        "explain": "Mỗi cá thể lưỡng bội mang 2 allele của gene: tổng cộng 2·{population} = {=2*population} allele, trong đó {startFrequency}·{=2*population} = {=2*population*startFrequency} là allele A."
+      },
+      "options": [
+        {
+          "text": "{=2*population*startFrequency}",
+          "vi": {
+            "text": "{=2*population*startFrequency}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(2*population*startFrequency)/(2*population)",
+            "equals": "p"
+          }
+        },
+        {
+          "text": "{=population*startFrequency}",
+          "vi": {
+            "text": "{=population*startFrequency}"
+          },
+          "check": {
+            "expr": "(population*startFrequency)/(2*population)",
+            "equals": "p"
+          }
+        },
+        {
+          "text": "{=2*population*(1-startFrequency)}",
+          "vi": {
+            "text": "{=2*population*(1-startFrequency)}"
+          },
+          "check": {
+            "expr": "(2*population*(1-startFrequency))/(2*population)",
+            "equals": "p"
+          }
+        },
+        {
+          "text": "{=population*startFrequency^2}",
+          "vi": {
+            "text": "{=population*startFrequency^2}"
+          },
+          "check": {
+            "expr": "(population*startFrequency^2)/(2*population)",
+            "equals": "p"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-n",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["heterozygosity", "drift"],
+      "set": {
+        "population": 50,
+        "startFrequency": 0.5,
+        "generations": 50
+      },
+      "stem": "A population starts with p₀ = {startFrequency}, so 2p₀q₀ = {=2*startFrequency*(1-startFrequency)}. After {generations} generations of drift the expected share of heterozygotes is {@heterozygosity|4}. Using H = 2p₀q₀(1 − 1/2N)^t, what is the population size N?",
+      "explain": "(1 − 1/2N)^{generations} = {@heterozygosity|4}/{=2*startFrequency*(1-startFrequency)} ≈ {=@heterozygosity/(2*startFrequency*(1-startFrequency))|4}, so 1 − 1/2N = {=(@heterozygosity/(2*startFrequency*(1-startFrequency)))^(1/generations)|4} and N = 1/(2·(1 − {=(@heterozygosity/(2*startFrequency*(1-startFrequency)))^(1/generations)|4})) ≈ {=1/(2*(1-(@heterozygosity/(2*startFrequency*(1-startFrequency)))^(1/generations)))|3}. The 2 is there because N diploid individuals carry 2N alleles.",
+      "vi": {
+        "stem": "Một quần thể bắt đầu với p₀ = {startFrequency}, nên 2p₀q₀ = {=2*startFrequency*(1-startFrequency)}. Sau {generations} thế hệ phiêu bạt di truyền, tỉ lệ dị hợp tử kì vọng là {@heterozygosity|4}. Dùng H = 2p₀q₀(1 − 1/2N)^t, kích thước quần thể N là bao nhiêu?",
+        "explain": "(1 − 1/2N)^{generations} = {@heterozygosity|4}/{=2*startFrequency*(1-startFrequency)} ≈ {=@heterozygosity/(2*startFrequency*(1-startFrequency))|4}, nên 1 − 1/2N = {=(@heterozygosity/(2*startFrequency*(1-startFrequency)))^(1/generations)|4} và N = 1/(2·(1 − {=(@heterozygosity/(2*startFrequency*(1-startFrequency)))^(1/generations)|4})) ≈ {=1/(2*(1-(@heterozygosity/(2*startFrequency*(1-startFrequency)))^(1/generations)))|3}. Có hệ số 2 vì N cá thể lưỡng bội mang 2N allele."
+      },
+      "options": [
+        {
+          "text": "{=1/(2*(1-(@heterozygosity/(2*startFrequency*(1-startFrequency)))^(1/generations)))|3}",
+          "vi": {
+            "text": "{=1/(2*(1-(@heterozygosity/(2*startFrequency*(1-startFrequency)))^(1/generations)))|3}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2*startFrequency*(1-startFrequency)*(1-1/(2*(1/(2*(1-(@heterozygosity/(2*startFrequency*(1-startFrequency)))^(1/generations))))))^generations",
+            "equals": "heterozygosity"
+          }
+        },
+        {
+          "text": "{=1/(1-(@heterozygosity/(2*startFrequency*(1-startFrequency)))^(1/generations))|3}",
+          "vi": {
+            "text": "{=1/(1-(@heterozygosity/(2*startFrequency*(1-startFrequency)))^(1/generations))|3}"
+          },
+          "check": {
+            "expr": "2*startFrequency*(1-startFrequency)*(1-1/(2*(1/(1-(@heterozygosity/(2*startFrequency*(1-startFrequency)))^(1/generations)))))^generations",
+            "equals": "heterozygosity"
+          }
+        },
+        {
+          "text": "{=generations/(2*(1-@heterozygosity/(2*startFrequency*(1-startFrequency))))|3}",
+          "vi": {
+            "text": "{=generations/(2*(1-@heterozygosity/(2*startFrequency*(1-startFrequency))))|3}"
+          },
+          "check": {
+            "expr": "2*startFrequency*(1-startFrequency)*(1-1/(2*(generations/(2*(1-@heterozygosity/(2*startFrequency*(1-startFrequency)))))))^generations",
+            "equals": "heterozygosity"
+          }
+        },
+        {
+          "text": "{=1/(4*(1-(@heterozygosity/(2*startFrequency*(1-startFrequency)))^(1/generations)))|3}",
+          "vi": {
+            "text": "{=1/(4*(1-(@heterozygosity/(2*startFrequency*(1-startFrequency)))^(1/generations)))|3}"
+          },
+          "check": {
+            "expr": "2*startFrequency*(1-startFrequency)*(1-1/(2*(1/(4*(1-(@heterozygosity/(2*startFrequency*(1-startFrequency)))^(1/generations))))))^generations",
+            "equals": "heterozygosity"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sample-not-hw",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["hardy-weinberg", "allele-frequency"],
+      "set": {
+        "population": 200,
+        "startFrequency": 0.6
+      },
+      "stem": "A sample of {population} plants holds {=population*(startFrequency-0.1)} AA, {=population*0.2} Aa and {=population*(0.9-startFrequency)} aa. What is the frequency p of A, and is the sample at Hardy–Weinberg equilibrium?",
+      "explain": "p = (2·{=population*(startFrequency-0.1)} + {=population*0.2})/(2·{population}) = {startFrequency}. At equilibrium 2pq = {=2*startFrequency*(1-startFrequency)} of the plants, about {=2*startFrequency*(1-startFrequency)*population}, would be Aa — far more than {=population*0.2}. The genotype shares are not p², 2pq, q², even though p + q = 1 (too few heterozygotes, as with self-fertilisation).",
+      "vi": {
+        "stem": "Một mẫu gồm {population} cây có {=population*(startFrequency-0.1)} cây AA, {=population*0.2} cây Aa và {=population*(0.9-startFrequency)} cây aa. Tần số allele A là bao nhiêu, và mẫu có ở trạng thái cân bằng Hardy – Weinberg không?",
+        "explain": "p = (2·{=population*(startFrequency-0.1)} + {=population*0.2})/(2·{population}) = {startFrequency}. Nếu cân bằng thì 2pq = {=2*startFrequency*(1-startFrequency)} số cây, khoảng {=2*startFrequency*(1-startFrequency)*population} cây, phải là Aa — nhiều hơn hẳn {=population*0.2}. Tỉ lệ kiểu gene không phải p², 2pq, q², dù p + q = 1 (thiếu dị hợp tử, như khi tự thụ phấn)."
+      },
+      "options": [
+        {
+          "text": "p = {=(2*(startFrequency-0.1)+0.2)/2}; not at equilibrium: too few Aa",
+          "vi": {
+            "text": "p = {=(2*(startFrequency-0.1)+0.2)/2}; không cân bằng: quá ít cá thể Aa"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(2*population*(startFrequency-0.1)+population*0.2)/(2*population)",
+            "equals": "p"
+          }
+        },
+        {
+          "text": "p = {startFrequency}; at equilibrium, since p + q = 1",
+          "vi": {
+            "text": "p = {startFrequency}; cân bằng, vì p + q = 1"
+          },
+          "check": {
+            "expr": "0.2*(1-1/(2*population))^generations",
+            "equals": "heterozygosity"
+          }
+        },
+        {
+          "text": "p = {=startFrequency-0.1+0.2}; not at equilibrium",
+          "vi": {
+            "text": "p = {=startFrequency-0.1+0.2}; không cân bằng"
+          },
+          "check": {
+            "expr": "startFrequency-0.1+0.2",
+            "equals": "p"
+          }
+        },
+        {
+          "text": "p = {=sqrt(startFrequency-0.1)|3}; at equilibrium",
+          "vi": {
+            "text": "p = {=sqrt(startFrequency-0.1)|3}; cân bằng"
+          },
+          "check": {
+            "expr": "sqrt(startFrequency-0.1)",
+            "equals": "p"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-ten",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["heterozygosity", "drift", "allele-frequency"],
+      "set": {
+        "population": 10,
+        "startFrequency": 0.5,
+        "generations": 30
+      },
+      "stem": "A population of N = {population} starts with p₀ = {startFrequency} and breeds by random mating for {generations} generations; H = 2p₀q₀(1 − 1/2N)^t. Decide whether each statement is true or false.",
+      "explain": "Each generation keeps 1 − 1/2N = {=1-1/(2*population)} of H: after {generations} generations {=100*(1-1/(2*population))^generations|2}% is left, H ≈ {@heterozygosity|3}. Using 1/N instead of 1/2N would give {=2*startFrequency*(1-startFrequency)*(1-1/population)^generations|3}. The expected p stays {@p}, since drift has no direction, but a single run can wander far from it or lose an allele. With N = 100 the loss per generation is ten times smaller.",
+      "vi": {
+        "stem": "Một quần thể có N = {population} bắt đầu với p₀ = {startFrequency} và giao phối ngẫu nhiên qua {generations} thế hệ; H = 2p₀q₀(1 − 1/2N)^t. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Mỗi thế hệ giữ lại 1 − 1/2N = {=1-1/(2*population)} của H: sau {generations} thế hệ còn {=100*(1-1/(2*population))^generations|2}%, H ≈ {@heterozygosity|3}. Dùng 1/N thay cho 1/2N sẽ cho {=2*startFrequency*(1-startFrequency)*(1-1/population)^generations|3}. p kì vọng vẫn là {@p}, vì phiêu bạt di truyền không có hướng, nhưng trong một lần chạy p có thể lệch xa hoặc một allele bị mất. Với N = 100, mức mất mỗi thế hệ nhỏ hơn mười lần."
+      },
+      "statements": [
+        {
+          "text": "After {generations} generations about {=100*(1-1/(2*population))^generations|2}% of the starting heterozygosity is left.",
+          "vi": {
+            "text": "Sau {generations} thế hệ, còn lại khoảng {=100*(1-1/(2*population))^generations|2}% độ dị hợp ban đầu."
+          },
+          "true": true,
+          "check": {
+            "expr": "2*startFrequency*(1-startFrequency)*(1-1/(2*population))^generations",
+            "equals": "heterozygosity"
+          }
+        },
+        {
+          "text": "The expected share of heterozygotes is then {=2*startFrequency*(1-startFrequency)*(1-1/population)^generations|3}.",
+          "vi": {
+            "text": "Khi đó tỉ lệ dị hợp tử kì vọng là {=2*startFrequency*(1-startFrequency)*(1-1/population)^generations|3}."
+          },
+          "true": false,
+          "check": {
+            "expr": "2*startFrequency*(1-startFrequency)*(1-1/population)^generations",
+            "equals": "heterozygosity"
+          }
+        },
+        {
+          "text": "The expected frequency of A stays {startFrequency}, though one run may end far from it.",
+          "vi": {
+            "text": "Tần số kì vọng của A vẫn là {startFrequency}, dù một lần chạy có thể kết thúc ở giá trị khác xa."
+          },
+          "true": true,
+          "check": {
+            "expr": "startFrequency",
+            "equals": "p"
+          }
+        },
+        {
+          "text": "In a population of N = 100 the heterozygosity would fall just as fast.",
+          "vi": {
+            "text": "Ở quần thể có N = 100, độ dị hợp sẽ giảm nhanh như vậy."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

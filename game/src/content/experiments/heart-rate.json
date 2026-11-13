@@ -1,0 +1,374 @@
+{
+  "id": "heart-rate",
+  "name": "Heart rate during exercise and recovery",
+  "category": "biology",
+  "description": "Exercise for three minutes, then rest for two. Your heart beats faster to pump more blood to the muscles, then slows down again. Watch the heart beat and the ECG, and read the peak heart rate, the maximum for your age and the cardiac output.",
+  "vi": {
+    "name": "Nhịp tim khi vận động và khi nghỉ",
+    "description": "Vận động trong ba phút, rồi nghỉ hai phút. Tim đập nhanh hơn để bơm nhiều máu tới cơ, rồi chậm lại. Quan sát tim đập và điện tâm đồ, đọc nhịp tim cao nhất, nhịp tối đa theo tuổi và cung lượng tim.",
+    "note": "Nhịp tim tối đa theo tuổi: 208 − 0,7 × tuổi (Tanaka và cộng sự, 2001). Nhịp tim mục tiêu khi vận động (Karvonen): nhịp nghỉ + cường độ × (nhịp tối đa − nhịp nghỉ). Nhịp tim tăng dần tới mục tiêu với hằng số thời gian 30 s và giảm về nhịp nghỉ với 45 s; thể tích tâm thu cố định 70 mL — các giá trị này là minh họa (thực tế thể tích tâm thu cũng tăng khi vận động). Cung lượng tim = nhịp tim × thể tích tâm thu. 5 phút (300 s) chạy trong 10 s; tim trên bàn đập theo nhịp đang hiển thị. Điện tâm đồ là đường minh họa P–QRS–T, không phải bản ghi thật."
+  },
+  "requiredEquipment": ["heart-model"],
+  "model": "biology.heart-rate",
+  "parameters": [
+    {
+      "id": "age",
+      "label": "Age",
+      "vi": {
+        "label": "Tuổi"
+      },
+      "unit": "years",
+      "default": 16,
+      "min": 10,
+      "max": 70,
+      "step": 1
+    },
+    {
+      "id": "restingRate",
+      "label": "Resting heart rate",
+      "vi": {
+        "label": "Nhịp tim lúc nghỉ"
+      },
+      "unit": "beats/min",
+      "default": 70,
+      "min": 50,
+      "max": 90,
+      "step": 1
+    },
+    {
+      "id": "intensity",
+      "label": "Exercise intensity (of heart-rate reserve)",
+      "vi": {
+        "label": "Cường độ vận động (so với dự trữ nhịp tim)"
+      },
+      "unit": "%",
+      "default": 70,
+      "min": 30,
+      "max": 90,
+      "step": 5
+    }
+  ],
+  "initialConditions": {
+    "exercise": 180,
+    "recovery": 120,
+    "riseTime": 30,
+    "fallTime": 45,
+    "strokeVolume": 70,
+    "speed": 30
+  },
+  "inputs": {
+    "exercise": {
+      "symbol": "t₁",
+      "unit": "s",
+      "desk": false
+    },
+    "recovery": {
+      "symbol": "t₂",
+      "unit": "s",
+      "desk": false
+    },
+    "riseTime": {
+      "symbol": "τ₁",
+      "unit": "s",
+      "desk": false
+    },
+    "fallTime": {
+      "symbol": "τ₂",
+      "unit": "s",
+      "desk": false
+    },
+    "strokeVolume": {
+      "symbol": "SV",
+      "unit": "mL",
+      "desk": false
+    },
+    "speed": {
+      "symbol": "v",
+      "unit": "",
+      "desk": false
+    }
+  },
+  "simulation": {
+    "timeStep": 0.02,
+    "maxDuration": 12,
+    "sampleInterval": 0.05
+  },
+  "measurements": [
+    {
+      "id": "time",
+      "label": "Time",
+      "vi": {
+        "label": "Thời gian"
+      },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "time"
+    },
+    {
+      "id": "elapsed",
+      "label": "Session time",
+      "vi": {
+        "label": "Thời gian buổi tập"
+      },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "elapsed"
+    },
+    {
+      "id": "rate",
+      "label": "Heart rate",
+      "vi": {
+        "label": "Nhịp tim"
+      },
+      "unit": "beats/min",
+      "variable": "rate"
+    },
+    {
+      "id": "output",
+      "label": "Cardiac output",
+      "vi": {
+        "label": "Cung lượng tim"
+      },
+      "unit": "L/min",
+      "variable": "output"
+    }
+  ],
+  "results": [
+    {
+      "id": "peak",
+      "label": "Highest heart rate",
+      "vi": {
+        "label": "Nhịp tim cao nhất"
+      },
+      "unit": "beats/min",
+      "variable": "rate",
+      "reduce": "max",
+      "theory": "peakRate"
+    },
+    {
+      "id": "final",
+      "label": "Heart rate after 2 minutes of rest",
+      "vi": {
+        "label": "Nhịp tim sau 2 phút nghỉ"
+      },
+      "unit": "beats/min",
+      "variable": "rate",
+      "reduce": "final",
+      "theory": "finalRate"
+    },
+    {
+      "id": "output",
+      "label": "Highest cardiac output",
+      "vi": {
+        "label": "Cung lượng tim lớn nhất"
+      },
+      "unit": "L/min",
+      "variable": "output",
+      "reduce": "max",
+      "theory": "peakOutput"
+    }
+  ],
+  "graphs": [
+    {
+      "id": "rate-time",
+      "title": "Heart rate: exercise, then rest",
+      "vi": {
+        "title": "Nhịp tim: vận động rồi nghỉ"
+      },
+      "x": "elapsed",
+      "y": ["rate"]
+    },
+    {
+      "id": "output-time",
+      "title": "Cardiac output",
+      "vi": {
+        "title": "Cung lượng tim"
+      },
+      "x": "elapsed",
+      "y": ["output"]
+    }
+  ],
+  "monitor": "rate-time",
+  "compare": [
+    {
+      "graph": "rate-time",
+      "series": "rate"
+    }
+  ],
+  "note": "The age-predicted maximum heart rate: 208 − 0.7 × age (Tanaka et al., 2001). The exercise target (Karvonen): resting rate + intensity × (maximum − resting rate). The rate rises towards the target with a time constant of 30 s and falls back to rest with 45 s; the stroke volume is fixed at 70 mL — these values are illustrative (in fact the stroke volume rises with exercise too). Cardiac output = heart rate × stroke volume. 5 minutes (300 s) run in 10 s; the heart on the table beats at the rate shown. The ECG is an illustrative P–QRS–T trace, not a recording.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the heart rate instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn về nhịp tim trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "heart-rate-instructions"
+      }
+    },
+    {
+      "id": "age",
+      "instruction": "Set your age with the dial.",
+      "vi": {
+        "instruction": "Đặt tuổi của em bằng núm xoay."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "age"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: 3 minutes of exercise, then 2 of rest.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: 3 phút vận động rồi 2 phút nghỉ."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Read the highest rate and how far it fell after resting.",
+      "vi": {
+        "instruction": "Đọc nhịp cao nhất và nhịp đã giảm bao nhiêu sau khi nghỉ."
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET and try a harder exercise.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI và thử vận động mạnh hơn."
+      },
+      "done": {
+        "kind": "reset"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "maximum-and-peak",
+      "question": "A {age}-year-old with a resting rate of {restingRate} beats/min exercises for 3 minutes at {intensity}% of the heart-rate reserve. Find the age-predicted maximum and the highest rate reached.",
+      "vi": {
+        "question": "Một người {age} tuổi có nhịp tim lúc nghỉ {restingRate} nhịp/phút vận động 3 phút với cường độ {intensity}% dự trữ nhịp tim. Tìm nhịp tim tối đa theo tuổi và nhịp tim cao nhất đạt được."
+      },
+      "set": { "age": 16, "restingRate": 70, "intensity": 70 },
+      "find": [
+        { "theory": "maxRate", "symbol": "HR_max", "unit": "beats/min", "figures": 4 },
+        { "theory": "peakRate", "symbol": "HR", "unit": "beats/min", "figures": 4 }
+      ],
+      "steps": [
+        {
+          "say": "The age-predicted maximum (Tanaka): 208 minus 0.7 times the age.",
+          "vi": { "say": "Nhịp tim tối đa theo tuổi (Tanaka): 208 trừ 0,7 nhân số tuổi." },
+          "write": "HR_max = 208 − 0.7·{age} = {@maxRate|4}",
+          "check": { "expr": "208-0.7*age", "equals": "maxRate" }
+        },
+        {
+          "say": "The exercise target (Karvonen) is the resting rate plus the intensity’s share of the reserve: {=restingRate+intensity/100*(@maxRate-restingRate)|4}. The rate climbs towards it with a 30 s time constant (illustrative), so after 3 minutes it is all but there.",
+          "vi": {
+            "say": "Nhịp tim mục tiêu (Karvonen) bằng nhịp lúc nghỉ cộng phần cường độ của dự trữ nhịp tim: {=restingRate+intensity/100*(@maxRate-restingRate)|4}. Nhịp tim tăng dần về đó với hằng số thời gian 30 s (minh họa), nên sau 3 phút gần như đạt tới."
+          },
+          "write": "HR = {restingRate} + {=intensity/100}·({@maxRate|4} − {restingRate}) ≈ {@peakRate|4}",
+          "check": {
+            "expr": "restingRate+intensity/100*(@maxRate-restingRate)*(1-exp(-exercise/riseTime))",
+            "equals": "peakRate"
+          }
+        }
+      ]
+    },
+    {
+      "id": "cardiac-output",
+      "question": "A {age}-year-old (resting rate {restingRate} beats/min) exercises at {intensity}% of the heart-rate reserve. Each beat pumps {strokeVolume} mL (illustrative). Find the highest rate and the highest cardiac output.",
+      "vi": {
+        "question": "Một người {age} tuổi (nhịp tim lúc nghỉ {restingRate} nhịp/phút) vận động với cường độ {intensity}% dự trữ nhịp tim. Mỗi nhịp tim bơm {strokeVolume} mL máu (minh họa). Tìm nhịp tim cao nhất và cung lượng tim lớn nhất."
+      },
+      "set": { "age": 50, "restingRate": 60, "intensity": 80 },
+      "find": [
+        { "theory": "peakRate", "symbol": "HR", "unit": "beats/min", "figures": 4 },
+        { "theory": "peakOutput", "symbol": "Q", "unit": "L/min" }
+      ],
+      "steps": [
+        {
+          "say": "First the maximum: 208 − 0.7 × age = {@maxRate}. Then the target, which the rate all but reaches after 3 minutes.",
+          "vi": {
+            "say": "Trước hết nhịp tối đa: 208 − 0,7 × tuổi = {@maxRate}. Rồi nhịp mục tiêu, mà nhịp tim gần như đạt tới sau 3 phút."
+          },
+          "write": "HR = {restingRate} + {=intensity/100}·({@maxRate|4} − {restingRate}) ≈ {@peakRate|4}",
+          "check": {
+            "expr": "restingRate+intensity/100*(@maxRate-restingRate)*(1-exp(-exercise/riseTime))",
+            "equals": "peakRate"
+          }
+        },
+        {
+          "say": "Cardiac output is the heart rate times the stroke volume; mL per minute divided by 1000 gives litres per minute.",
+          "vi": {
+            "say": "Cung lượng tim bằng nhịp tim nhân thể tích tâm thu; mL mỗi phút chia 1000 được lít mỗi phút."
+          },
+          "write": "Q = HR·SV = {@peakRate|4}·{strokeVolume}/1000 ≈ {@peakOutput} L/min",
+          "check": { "expr": "@peakRate*strokeVolume/1000", "equals": "peakOutput" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "Working muscles need more oxygen and glucose, so the heart beats faster and pumps more blood each minute. After exercise it slows back towards its resting rate — a fitter heart recovers faster.",
+    "vi": {
+      "summary": "Cơ đang làm việc cần nhiều ôxi và glucôzơ hơn, nên tim đập nhanh hơn và bơm nhiều máu hơn mỗi phút. Sau vận động tim chậm dần về nhịp nghỉ — tim khỏe hơn hồi phục nhanh hơn."
+    },
+    "parts": [
+      {
+        "id": "heart",
+        "name": "Heart",
+        "role": "Each beat pumps one stroke volume of blood into the arteries.",
+        "vi": {
+          "name": "Tim",
+          "role": "Mỗi nhịp bơm một thể tích tâm thu máu vào động mạch."
+        },
+        "anchor": {
+          "part": "heart"
+        }
+      },
+      {
+        "id": "ecg",
+        "name": "ECG",
+        "role": "The heart’s electrical signal: one spike (QRS) per beat.",
+        "vi": {
+          "name": "Điện tâm đồ",
+          "role": "Tín hiệu điện của tim: mỗi nhịp một đỉnh nhọn (QRS)."
+        },
+        "anchor": {
+          "part": "ecg-screen"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "At rest the heart beats about 70 times a minute; each beat pumps about 70 mL: about 5 L of blood a minute (cardiac output).",
+        "vi": {
+          "text": "Khi nghỉ tim đập khoảng 70 lần mỗi phút; mỗi nhịp bơm khoảng 70 mL: khoảng 5 L máu mỗi phút (cung lượng tim)."
+        },
+        "parts": ["heart"]
+      },
+      {
+        "text": "Exercise: the muscles use more oxygen and make more CO₂; nerves and adrenaline speed the heart up towards a target — never above about 208 − 0.7 × age.",
+        "vi": {
+          "text": "Vận động: cơ dùng nhiều ôxi và thải nhiều CO₂ hơn; thần kinh và ađrênalin làm tim đập nhanh dần tới mức mục tiêu — không vượt quá khoảng 208 − 0,7 × tuổi."
+        },
+        "parts": ["heart", "ecg"]
+      },
+      {
+        "text": "Rest: the rate falls back towards resting. Count the spikes on the ECG to read the rate.",
+        "vi": {
+          "text": "Nghỉ: nhịp tim giảm dần về nhịp nghỉ. Đếm các đỉnh trên điện tâm đồ để đọc nhịp tim."
+        },
+        "parts": ["ecg"]
+      }
+    ]
+  }
+}

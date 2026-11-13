@@ -1,0 +1,1085 @@
+{
+  "id": "atwood-machine",
+  "skills": [
+    {
+      "id": "system",
+      "name": "Two bodies joined by a string",
+      "advice": "Picture the pair as one system: the string makes them move together with one acceleration, and only the extra weight Δm·g drives it. Watch a run in the Explain view: one side falls as far as the other rises.",
+      "vi": {
+        "name": "Hai vật nối với nhau bằng dây",
+        "advice": "Coi hai vật như một hệ: sợi dây làm chúng chuyển động cùng nhau với cùng một gia tốc, và chỉ có trọng lượng phần dư Δm·g làm hệ chuyển động. Xem một lần chạy trong màn Giải thích: một bên đi xuống bao nhiêu thì bên kia đi lên bấy nhiêu."
+      }
+    },
+    {
+      "id": "acceleration",
+      "name": "Acceleration: a = Δm·g/(2M + Δm)",
+      "advice": "Write Newton’s second law for each mass and add the two equations: the tension cancels. Trap: dividing by 2M or by M alone — the extra weight moves all the mass, 2M + Δm.",
+      "vi": {
+        "name": "Gia tốc: a = Δm·g/(2M + Δm)",
+        "advice": "Viết định luật II Newton cho từng vật rồi cộng hai phương trình: lực căng bị triệt tiêu. Lỗi hay gặp: chia cho 2M hoặc chỉ cho M — trọng lượng phần dư phải kéo toàn bộ khối lượng 2M + Δm."
+      }
+    },
+    {
+      "id": "tension",
+      "name": "The string’s pull: T = M(g + a)",
+      "advice": "From the rising mass: T − M·g = M·a, so T = M(g + a) — more than its weight, because it speeds up upwards; the same T acts on the falling side.",
+      "vi": {
+        "name": "Lực căng dây: T = M(g + a)",
+        "advice": "Từ vật đi lên: T − M·g = M·a nên T = M(g + a) — lớn hơn trọng lượng của nó vì nó đang nhanh dần đi lên; cùng lực căng T đó tác dụng lên vật đi xuống."
+      }
+    },
+    {
+      "id": "measure-g",
+      "name": "Timing the fall to find g",
+      "advice": "From rest, h = ½·a·t², so a = 2h/t²; then g = a·(2M + Δm)/Δm. Do both steps in order, and remember a real pulley makes g come out low.",
+      "vi": {
+        "name": "Đo thời gian rơi để tìm g",
+        "advice": "Xuất phát từ nghỉ, h = ½·a·t² nên a = 2h/t²; sau đó g = a·(2M + Δm)/Δm. Làm đủ hai bước theo thứ tự, và nhớ rằng ròng rọc thật làm g tính được nhỏ hơn thực tế."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "what-drives",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["system"],
+      "stem": "Two equal masses M hang over a pulley, and a small extra mass Δm is added on the right. What drives the motion?",
+      "explain": "The weights M·g on the two sides balance; only the extra weight Δm·g is unbalanced.",
+      "vi": {
+        "stem": "Hai vật có cùng khối lượng M treo qua ròng rọc, bên phải gắn thêm gia trọng nhỏ Δm. Điều gì làm hệ chuyển động?",
+        "explain": "Trọng lượng M·g ở hai bên cân bằng nhau; chỉ có trọng lượng phần dư Δm·g là không cân bằng."
+      },
+      "options": [
+        {
+          "text": "the weight of the extra mass, Δm·g",
+          "vi": {
+            "text": "trọng lượng của gia trọng, Δm·g"
+          },
+          "correct": true
+        },
+        {
+          "text": "the weight of both masses, 2M·g",
+          "vi": {
+            "text": "trọng lượng của cả hai vật, 2M·g"
+          }
+        },
+        {
+          "text": "the turning of the pulley",
+          "vi": {
+            "text": "sự quay của ròng rọc"
+          }
+        },
+        {
+          "text": "the pull of the electromagnet",
+          "vi": {
+            "text": "lực hút của nam châm điện"
+          }
+        }
+      ]
+    },
+    {
+      "id": "same-acceleration",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["system"],
+      "stem": "Why do the two masses of an Atwood machine move with accelerations of the same size?",
+      "explain": "A string that does not stretch joins them: whatever distance one side falls, the other rises.",
+      "vi": {
+        "stem": "Vì sao hai vật của máy Atwood chuyển động với gia tốc có cùng độ lớn?",
+        "explain": "Chúng được nối bằng sợi dây không giãn: một bên đi xuống bao nhiêu thì bên kia đi lên bấy nhiêu."
+      },
+      "options": [
+        {
+          "text": "They are joined by a string that does not stretch.",
+          "vi": {
+            "text": "Chúng được nối với nhau bằng một sợi dây không giãn."
+          },
+          "correct": true
+        },
+        {
+          "text": "They have the same mass.",
+          "vi": {
+            "text": "Chúng có cùng khối lượng."
+          }
+        },
+        {
+          "text": "Gravity pulls them equally hard.",
+          "vi": {
+            "text": "Trọng lực kéo chúng mạnh như nhau."
+          }
+        },
+        {
+          "text": "The pulley has no mass.",
+          "vi": {
+            "text": "Ròng rọc không có khối lượng."
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-machine",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["system", "tension"],
+      "stem": "In the ideal Atwood machine (light string, light frictionless pulley), the right side carries an extra mass Δm and is let go from rest. Decide whether each statement is true or false.",
+      "explain": "The string makes the moves equal; a = Δm·g/(2M + Δm) is far below g; a light string over an ideal pulley pulls equally on both sides. With Δm = 0 the masses balance and stay at rest.",
+      "vi": {
+        "stem": "Trong máy Atwood lí tưởng (dây nhẹ, ròng rọc nhẹ không ma sát), bên phải có thêm gia trọng Δm và hệ được thả từ trạng thái nghỉ. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Sợi dây làm hai vật dịch chuyển như nhau; a = Δm·g/(2M + Δm) nhỏ hơn g rất nhiều; dây nhẹ vắt qua ròng rọc lí tưởng kéo hai bên như nhau. Khi Δm = 0 hai vật cân bằng và đứng yên."
+      },
+      "statements": [
+        {
+          "text": "The left mass rises as far as the right mass falls.",
+          "vi": {
+            "text": "Vật bên trái đi lên một đoạn bằng đoạn vật bên phải đi xuống."
+          },
+          "true": true
+        },
+        {
+          "text": "The acceleration is much smaller than g.",
+          "vi": {
+            "text": "Gia tốc nhỏ hơn g rất nhiều."
+          },
+          "true": true
+        },
+        {
+          "text": "The string pulls the two sides equally hard.",
+          "vi": {
+            "text": "Lực căng dây ở hai bên bằng nhau."
+          },
+          "true": true
+        },
+        {
+          "text": "Without the extra mass, the two masses would fall with acceleration g.",
+          "vi": {
+            "text": "Nếu không có gia trọng, hai vật sẽ rơi với gia tốc g."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "double-extra",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["acceleration"],
+      "stem": "With M = 0.2 kg on each side, the extra mass is changed from 20 g to 40 g. The acceleration…",
+      "explain": "a = Δm·g/(2M + Δm): the driving weight doubles, and the mass moved grows a little, so a grows to a little less than twice.",
+      "vi": {
+        "stem": "Với M = 0,2 kg mỗi bên, gia trọng được đổi từ 20 g thành 40 g. Gia tốc…",
+        "explain": "a = Δm·g/(2M + Δm): lực kéo tăng gấp đôi, khối lượng được kéo tăng thêm một chút, nên a tăng gần gấp đôi nhưng chưa tới hai lần."
+      },
+      "options": [
+        {
+          "text": "increases to a little less than twice",
+          "vi": {
+            "text": "tăng lên gần gấp đôi nhưng chưa tới hai lần"
+          },
+          "correct": true
+        },
+        {
+          "text": "exactly doubles",
+          "vi": {
+            "text": "tăng đúng gấp đôi"
+          }
+        },
+        {
+          "text": "halves",
+          "vi": {
+            "text": "giảm một nửa"
+          }
+        },
+        {
+          "text": "does not change",
+          "vi": {
+            "text": "không đổi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "heavier-sides",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["acceleration"],
+      "stem": "The masses M on both sides are made larger; the extra mass Δm stays the same. The acceleration…",
+      "explain": "The driving weight Δm·g is unchanged but it moves more mass, 2M + Δm, so a decreases.",
+      "vi": {
+        "stem": "Tăng khối lượng M ở cả hai bên, giữ nguyên gia trọng Δm. Gia tốc…",
+        "explain": "Lực kéo Δm·g không đổi nhưng phải kéo khối lượng lớn hơn, 2M + Δm, nên a giảm."
+      },
+      "options": [
+        {
+          "text": "decreases",
+          "vi": {
+            "text": "giảm"
+          },
+          "correct": true
+        },
+        {
+          "text": "increases",
+          "vi": {
+            "text": "tăng"
+          }
+        },
+        {
+          "text": "does not change",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "becomes equal to g",
+          "vi": {
+            "text": "bằng g"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-forces",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["acceleration", "tension"],
+      "set": {
+        "mass": 0.2,
+        "extraMass": 0.02
+      },
+      "stem": "M = {mass} kg hangs on each side and Δm = {extraMass} kg is added on the right (g = {gravity} m/s²). Decide whether each statement is true or false.",
+      "explain": "a = Δm·g/(2M + Δm) ≈ {@acceleration} m/s². T = M(g + a) ≈ {@tensionLeft} N on the left, and (M + Δm)(g − a) gives the same on the right; M·g = {=mass*gravity} N is too small, since the left mass speeds up upwards.",
+      "vi": {
+        "stem": "Mỗi bên treo vật M = {mass} kg, bên phải thêm gia trọng Δm = {extraMass} kg (g = {gravity} m/s²). Mỗi nhận định sau đúng hay sai?",
+        "explain": "a = Δm·g/(2M + Δm) ≈ {@acceleration} m/s². Bên trái T = M(g + a) ≈ {@tensionLeft} N, bên phải (M + Δm)(g − a) cho cùng giá trị; M·g = {=mass*gravity} N là quá nhỏ, vì vật bên trái đang nhanh dần đi lên."
+      },
+      "statements": [
+        {
+          "text": "The acceleration is about {@acceleration} m/s².",
+          "vi": {
+            "text": "Gia tốc khoảng {@acceleration} m/s²."
+          },
+          "true": true,
+          "check": {
+            "expr": "extraMass*gravity/(2*mass+extraMass)",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "The string pulls the left mass with about {@tensionLeft} N.",
+          "vi": {
+            "text": "Dây kéo vật bên trái với lực khoảng {@tensionLeft} N."
+          },
+          "true": true,
+          "check": {
+            "expr": "mass*(gravity+@acceleration)",
+            "equals": "tensionLeft"
+          }
+        },
+        {
+          "text": "(M + Δm)(g − a) gives the same pull on the right side.",
+          "vi": {
+            "text": "(M + Δm)(g − a) cho cùng lực căng ở bên phải."
+          },
+          "true": true,
+          "check": {
+            "expr": "(mass+extraMass)*(gravity-@acceleration)",
+            "equals": "tensionLeft"
+          }
+        },
+        {
+          "text": "The string pulls the left mass with its weight, {=mass*gravity} N.",
+          "vi": {
+            "text": "Dây kéo vật bên trái với lực bằng trọng lượng của nó, {=mass*gravity} N."
+          },
+          "true": false,
+          "check": {
+            "expr": "mass*gravity",
+            "equals": "tensionLeft"
+          }
+        }
+      ]
+    },
+    {
+      "id": "acceleration",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["acceleration"],
+      "set": {
+        "mass": 0.15,
+        "extraMass": 0.01
+      },
+      "stem": "Two masses of {mass} kg hang over a light, frictionless pulley, and {extraMass} kg is added on the right (g = {gravity} m/s²). What is the acceleration?",
+      "explain": "a = Δm·g/(2M + Δm) = {extraMass}·{gravity}/(2·{mass} + {extraMass}) ≈ {@acceleration} m/s².",
+      "vi": {
+        "stem": "Hai vật {mass} kg treo qua ròng rọc nhẹ không ma sát, bên phải thêm {extraMass} kg (g = {gravity} m/s²). Gia tốc của hệ bằng bao nhiêu?",
+        "explain": "a = Δm·g/(2M + Δm) = {extraMass}·{gravity}/(2·{mass} + {extraMass}) ≈ {@acceleration} m/s²."
+      },
+      "options": [
+        {
+          "text": "{@acceleration} m/s²",
+          "vi": {
+            "text": "{@acceleration} m/s²"
+          },
+          "correct": true,
+          "check": {
+            "expr": "extraMass*gravity/(2*mass+extraMass)",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "{=extraMass*gravity/(2*mass)} m/s²",
+          "vi": {
+            "text": "{=extraMass*gravity/(2*mass)} m/s²"
+          },
+          "check": {
+            "expr": "extraMass*gravity/(2*mass)",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "{=extraMass*gravity/mass} m/s²",
+          "vi": {
+            "text": "{=extraMass*gravity/mass} m/s²"
+          },
+          "check": {
+            "expr": "extraMass*gravity/mass",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "{=extraMass*gravity/(mass+extraMass)} m/s²",
+          "vi": {
+            "text": "{=extraMass*gravity/(mass+extraMass)} m/s²"
+          },
+          "check": {
+            "expr": "extraMass*gravity/(mass+extraMass)",
+            "equals": "acceleration"
+          }
+        }
+      ]
+    },
+    {
+      "id": "tension",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["tension"],
+      "set": {
+        "mass": 0.1,
+        "extraMass": 0.04
+      },
+      "stem": "M = {mass} kg hangs on each side, Δm = {extraMass} kg on the right; the masses accelerate at {@acceleration} m/s² (g = {gravity} m/s²). What is the tension in the string?",
+      "explain": "For the rising mass, T − M·g = M·a: T = M(g + a) = {mass}·({gravity} + {@acceleration}) ≈ {@tensionLeft} N.",
+      "vi": {
+        "stem": "Mỗi bên treo M = {mass} kg, bên phải thêm Δm = {extraMass} kg; hệ chuyển động với gia tốc {@acceleration} m/s² (g = {gravity} m/s²). Lực căng dây bằng bao nhiêu?",
+        "explain": "Với vật đi lên, T − M·g = M·a: T = M(g + a) = {mass}·({gravity} + {@acceleration}) ≈ {@tensionLeft} N."
+      },
+      "options": [
+        {
+          "text": "{@tensionLeft} N",
+          "vi": {
+            "text": "{@tensionLeft} N"
+          },
+          "correct": true,
+          "check": {
+            "expr": "mass*(gravity+@acceleration)",
+            "equals": "tensionLeft"
+          }
+        },
+        {
+          "text": "{=mass*gravity} N",
+          "vi": {
+            "text": "{=mass*gravity} N"
+          },
+          "check": {
+            "expr": "mass*gravity",
+            "equals": "tensionLeft"
+          }
+        },
+        {
+          "text": "{=mass*(gravity-@acceleration)} N",
+          "vi": {
+            "text": "{=mass*(gravity-@acceleration)} N"
+          },
+          "check": {
+            "expr": "mass*(gravity-@acceleration)",
+            "equals": "tensionLeft"
+          }
+        },
+        {
+          "text": "{=(mass+extraMass)*gravity} N",
+          "vi": {
+            "text": "{=(mass+extraMass)*gravity} N"
+          },
+          "check": {
+            "expr": "(mass+extraMass)*gravity",
+            "equals": "tensionLeft"
+          }
+        }
+      ]
+    },
+    {
+      "id": "fall-time",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["measure-g"],
+      "set": {
+        "mass": 0.2,
+        "extraMass": 0.02,
+        "dropHeight": 0.6
+      },
+      "stem": "The masses move from rest with a = {@acceleration} m/s². How long does the right mass take to fall {dropHeight} m to the pad?",
+      "explain": "h = ½·a·t², so t = √(2h/a) = √(2·{dropHeight}/{@acceleration}) ≈ {@fallTime} s — much longer than a free fall, √(2h/g) ≈ {=sqrt(2*dropHeight/gravity)} s.",
+      "vi": {
+        "stem": "Hệ chuyển động từ nghỉ với a = {@acceleration} m/s². Vật bên phải mất bao lâu để rơi {dropHeight} m xuống tấm đệm?",
+        "explain": "h = ½·a·t² nên t = √(2h/a) = √(2·{dropHeight}/{@acceleration}) ≈ {@fallTime} s — lâu hơn nhiều so với rơi tự do, √(2h/g) ≈ {=sqrt(2*dropHeight/gravity)} s."
+      },
+      "options": [
+        {
+          "text": "{@fallTime} s",
+          "vi": {
+            "text": "{@fallTime} s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "sqrt(2*dropHeight/@acceleration)",
+            "equals": "fallTime"
+          }
+        },
+        {
+          "text": "{=sqrt(2*dropHeight/gravity)} s",
+          "vi": {
+            "text": "{=sqrt(2*dropHeight/gravity)} s"
+          },
+          "check": {
+            "expr": "sqrt(2*dropHeight/gravity)",
+            "equals": "fallTime"
+          }
+        },
+        {
+          "text": "{=sqrt(dropHeight/@acceleration)} s",
+          "vi": {
+            "text": "{=sqrt(dropHeight/@acceleration)} s"
+          },
+          "check": {
+            "expr": "sqrt(dropHeight/@acceleration)",
+            "equals": "fallTime"
+          }
+        },
+        {
+          "text": "{=2*dropHeight/@acceleration} s",
+          "vi": {
+            "text": "{=2*dropHeight/@acceleration} s"
+          },
+          "check": {
+            "expr": "2*dropHeight/@acceleration",
+            "equals": "fallTime"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-fall",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["acceleration", "measure-g"],
+      "set": {
+        "mass": 0.15,
+        "extraMass": 0.02,
+        "dropHeight": 0.8
+      },
+      "stem": "M = {mass} kg on each side, Δm = {extraMass} kg on the right; the right mass falls {dropHeight} m from rest (g = {gravity} m/s²). Decide whether each statement is true or false.",
+      "explain": "a = Δm·g/(2M + Δm) ≈ {@acceleration} m/s²; t = √(2h/a) ≈ {@fallTime} s; v = √(2a·h) ≈ {@landingSpeed} m/s — not √(2g·h), which is a free fall.",
+      "vi": {
+        "stem": "Mỗi bên M = {mass} kg, bên phải thêm Δm = {extraMass} kg; vật bên phải rơi {dropHeight} m từ trạng thái nghỉ (g = {gravity} m/s²). Mỗi nhận định sau đúng hay sai?",
+        "explain": "a = Δm·g/(2M + Δm) ≈ {@acceleration} m/s²; t = √(2h/a) ≈ {@fallTime} s; v = √(2a·h) ≈ {@landingSpeed} m/s — không phải √(2g·h) của rơi tự do."
+      },
+      "statements": [
+        {
+          "text": "The acceleration is about {@acceleration} m/s².",
+          "vi": {
+            "text": "Gia tốc khoảng {@acceleration} m/s²."
+          },
+          "true": true,
+          "check": {
+            "expr": "extraMass*gravity/(2*mass+extraMass)",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "It reaches the pad after about {@fallTime} s.",
+          "vi": {
+            "text": "Nó chạm tấm đệm sau khoảng {@fallTime} s."
+          },
+          "true": true,
+          "check": {
+            "expr": "sqrt(2*dropHeight/@acceleration)",
+            "equals": "fallTime"
+          }
+        },
+        {
+          "text": "It reaches the pad at about {@landingSpeed} m/s.",
+          "vi": {
+            "text": "Nó chạm tấm đệm với tốc độ khoảng {@landingSpeed} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "sqrt(2*@acceleration*dropHeight)",
+            "equals": "landingSpeed"
+          }
+        },
+        {
+          "text": "It reaches the pad at about {=sqrt(2*gravity*dropHeight)} m/s.",
+          "vi": {
+            "text": "Nó chạm tấm đệm với tốc độ khoảng {=sqrt(2*gravity*dropHeight)} m/s."
+          },
+          "true": false,
+          "check": {
+            "expr": "sqrt(2*gravity*dropHeight)",
+            "equals": "landingSpeed"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-g",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["measure-g", "acceleration"],
+      "set": {
+        "mass": 0.1,
+        "extraMass": 0.04,
+        "dropHeight": 0.8
+      },
+      "stem": "With M = {mass} kg on each side and Δm = {extraMass} kg, the timer reads the {dropHeight} m fall from rest as t = {@fallTime|4} s. What value of g does this give?",
+      "explain": "a = 2h/t² = 2·{dropHeight}/{@fallTime|4}² ≈ {@measuredAcceleration} m/s²; g = a·(2M + Δm)/Δm ≈ {@gravityEstimate} m/s². Stopping at a, or dropping the 2 or the Δm in 2M + Δm, gives the wrong values.",
+      "vi": {
+        "stem": "Với M = {mass} kg mỗi bên và Δm = {extraMass} kg, đồng hồ đo được thời gian rơi {dropHeight} m từ nghỉ là t = {@fallTime|4} s. Giá trị g tính được bằng bao nhiêu?",
+        "explain": "a = 2h/t² = 2·{dropHeight}/{@fallTime|4}² ≈ {@measuredAcceleration} m/s²; g = a·(2M + Δm)/Δm ≈ {@gravityEstimate} m/s². Dừng lại ở a, hoặc bỏ mất số 2 hay Δm trong 2M + Δm, sẽ ra các giá trị sai."
+      },
+      "options": [
+        {
+          "text": "{@gravityEstimate} m/s²",
+          "vi": {
+            "text": "{@gravityEstimate} m/s²"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2*dropHeight/@fallTime^2*(2*mass+extraMass)/extraMass",
+            "equals": "gravityEstimate"
+          }
+        },
+        {
+          "text": "{=2*dropHeight/@fallTime^2} m/s²",
+          "vi": {
+            "text": "{=2*dropHeight/@fallTime^2} m/s²"
+          },
+          "check": {
+            "expr": "2*dropHeight/@fallTime^2",
+            "equals": "gravityEstimate"
+          }
+        },
+        {
+          "text": "{=dropHeight/@fallTime^2*(2*mass+extraMass)/extraMass} m/s²",
+          "vi": {
+            "text": "{=dropHeight/@fallTime^2*(2*mass+extraMass)/extraMass} m/s²"
+          },
+          "check": {
+            "expr": "dropHeight/@fallTime^2*(2*mass+extraMass)/extraMass",
+            "equals": "gravityEstimate"
+          }
+        },
+        {
+          "text": "{=2*dropHeight/@fallTime^2*2*mass/extraMass} m/s²",
+          "vi": {
+            "text": "{=2*dropHeight/@fallTime^2*2*mass/extraMass} m/s²"
+          },
+          "check": {
+            "expr": "2*dropHeight/@fallTime^2*2*mass/extraMass",
+            "equals": "gravityEstimate"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-measure",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["measure-g", "system"],
+      "set": {
+        "mass": 0.2,
+        "extraMass": 0.02,
+        "dropHeight": 0.6,
+        "timerResolution": 0.001
+      },
+      "stem": "M = {mass} kg on each side, Δm = {extraMass} kg; the fall of {dropHeight} m is timed with a timer of resolution {timerResolution} s. Decide whether each statement is true or false.",
+      "explain": "The model’s fall time is {@fallTime|4} s, shown as {=round(@fallTime/timerResolution)*timerResolution} s. A real pulley’s inertia and friction make a smaller, so g comes out low. A larger Δm gives a larger a and an earlier landing.",
+      "vi": {
+        "stem": "Mỗi bên M = {mass} kg, Δm = {extraMass} kg; thời gian rơi {dropHeight} m được đo bằng đồng hồ có độ phân giải {timerResolution} s. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Thời gian rơi theo mô hình là {@fallTime|4} s, đồng hồ hiển thị {=round(@fallTime/timerResolution)*timerResolution} s. Quán tính và ma sát của ròng rọc thật làm a nhỏ hơn, nên g tính được nhỏ hơn. Δm lớn hơn thì a lớn hơn và vật chạm đệm sớm hơn."
+      },
+      "statements": [
+        {
+          "text": "The model’s fall time is about {@fallTime|4} s.",
+          "vi": {
+            "text": "Thời gian rơi theo mô hình khoảng {@fallTime|4} s."
+          },
+          "true": true,
+          "check": {
+            "expr": "sqrt(2*dropHeight/@acceleration)",
+            "equals": "fallTime"
+          }
+        },
+        {
+          "text": "The timer shows {=round(@fallTime/timerResolution)*timerResolution} s.",
+          "vi": {
+            "text": "Đồng hồ hiển thị {=round(@fallTime/timerResolution)*timerResolution} s."
+          },
+          "true": true
+        },
+        {
+          "text": "With a real pulley, which has inertia and friction, the g worked out comes out lower than the true g.",
+          "vi": {
+            "text": "Với ròng rọc thật có quán tính và ma sát, giá trị g tính được nhỏ hơn g thực."
+          },
+          "true": true
+        },
+        {
+          "text": "A larger extra mass would make the right mass reach the pad later.",
+          "vi": {
+            "text": "Gia trọng lớn hơn sẽ làm vật bên phải chạm tấm đệm muộn hơn."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "gate-speed",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["measure-g"],
+      "stem": "A card of length ℓ fixed to the falling mass blocks a light gate’s beam for a time Δt. The speed it gives at the gate is…",
+      "explain": "The gate divides the card’s length by the time it blocks the beam: v = ℓ/Δt, the average speed while the card passes.",
+      "vi": {
+        "stem": "Một tấm chắn sáng dài ℓ gắn trên vật đang rơi che chùm sáng của cổng quang điện trong thời gian Δt. Tốc độ đo được tại cổng là…",
+        "explain": "Cổng quang điện lấy chiều dài tấm chắn chia cho thời gian nó che chùm sáng: v = ℓ/Δt, tốc độ trung bình khi tấm chắn đi qua."
+      },
+      "options": [
+        {
+          "text": "v = ℓ/Δt",
+          "vi": {
+            "text": "v = ℓ/Δt"
+          },
+          "correct": true
+        },
+        {
+          "text": "v = ℓ·Δt",
+          "vi": {
+            "text": "v = ℓ·Δt"
+          }
+        },
+        {
+          "text": "v = Δt/ℓ",
+          "vi": {
+            "text": "v = Δt/ℓ"
+          }
+        },
+        {
+          "text": "v = 2ℓ/Δt²",
+          "vi": {
+            "text": "v = 2ℓ/Δt²"
+          }
+        }
+      ]
+    },
+    {
+      "id": "equal-push",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["system"],
+      "stem": "Equal masses hang on both sides (no extra mass) over a light, frictionless pulley, and they are given a small push. Afterwards they…",
+      "explain": "With equal masses the net force on the system is zero, so its acceleration is zero: once pushed it keeps moving at a constant speed (Newton’s first law).",
+      "vi": {
+        "stem": "Hai vật có khối lượng bằng nhau treo hai bên ròng rọc nhẹ, không ma sát (không có gia trọng), được đẩy nhẹ một cái. Sau đó chúng…",
+        "explain": "Khi hai khối lượng bằng nhau, hợp lực tác dụng lên hệ bằng 0 nên gia tốc bằng 0: đã được đẩy thì hệ tiếp tục chuyển động thẳng đều (định luật I Newton)."
+      },
+      "options": [
+        {
+          "text": "keep moving at a constant speed",
+          "vi": {
+            "text": "tiếp tục chuyển động với tốc độ không đổi"
+          },
+          "correct": true
+        },
+        {
+          "text": "speed up steadily",
+          "vi": {
+            "text": "chuyển động nhanh dần đều"
+          }
+        },
+        {
+          "text": "slow down and stop",
+          "vi": {
+            "text": "chậm dần rồi dừng lại"
+          }
+        },
+        {
+          "text": "swing back to where they started",
+          "vi": {
+            "text": "quay ngược về vị trí ban đầu"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-5g",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["acceleration", "tension", "system"],
+      "set": {
+        "mass": 0.1,
+        "extraMass": 0.005
+      },
+      "stem": "M = {mass} kg hangs on each side and Δm = {extraMass} kg is added on the right (g = {gravity} m/s²). Decide whether each statement is true or false.",
+      "explain": "The net force Δm·g accelerates the whole mass 2M + Δm: a = Δm·g/(2M + Δm) ≈ {@acceleration|3} m/s², not Δm·g/M. The left mass speeds up upwards, so the string pulls it with more than its weight: T = M(g + a) ≈ {@tensionLeft|4} N.",
+      "vi": {
+        "stem": "Mỗi bên treo M = {mass} kg và thêm gia trọng Δm = {extraMass} kg vào bên phải (g = {gravity} m/s²). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Hợp lực Δm·g làm cả khối lượng 2M + Δm chuyển động: a = Δm·g/(2M + Δm) ≈ {@acceleration|3} m/s², không phải Δm·g/M. Vật bên trái đi lên nhanh dần nên dây kéo nó với lực lớn hơn trọng lượng của nó: T = M(g + a) ≈ {@tensionLeft|4} N."
+      },
+      "statements": [
+        {
+          "text": "The acceleration is about {@acceleration|3} m/s².",
+          "vi": {
+            "text": "Gia tốc khoảng {@acceleration|3} m/s²."
+          },
+          "true": true,
+          "check": {
+            "expr": "extraMass*gravity/(2*mass+extraMass)",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "The string pulls the left mass with about {@tensionLeft|4} N, more than its weight.",
+          "vi": {
+            "text": "Dây kéo vật bên trái với lực khoảng {@tensionLeft|4} N, lớn hơn trọng lượng của nó."
+          },
+          "true": true,
+          "check": {
+            "expr": "mass*(gravity+@acceleration)",
+            "equals": "tensionLeft"
+          }
+        },
+        {
+          "text": "The acceleration is Δm·g/M = {=extraMass*gravity/mass|3} m/s².",
+          "vi": {
+            "text": "Gia tốc bằng Δm·g/M = {=extraMass*gravity/mass|3} m/s²."
+          },
+          "true": false,
+          "check": {
+            "expr": "extraMass*gravity/mass",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "The net force Δm·g accelerates only the mass M + Δm on the right.",
+          "vi": {
+            "text": "Hợp lực Δm·g chỉ làm chuyển động khối lượng M + Δm ở bên phải."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "landing-speed",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["acceleration", "measure-g"],
+      "set": {
+        "mass": 0.15,
+        "extraMass": 0.04,
+        "dropHeight": 0.4
+      },
+      "stem": "M = {mass} kg on each side, Δm = {extraMass} kg on the right; the masses start from rest with a = {@acceleration} m/s². How fast is the right mass moving after falling {dropHeight} m?",
+      "explain": "From rest with constant a: v² = 2ah, so v = √(2·{@acceleration}·{dropHeight}) ≈ {@landingSpeed} m/s. √(2gh) treats the mass as falling freely; forgetting the square root gives v².",
+      "vi": {
+        "stem": "Mỗi bên treo M = {mass} kg, bên phải thêm Δm = {extraMass} kg; hệ bắt đầu chuyển động từ nghỉ với a = {@acceleration} m/s². Vật bên phải có tốc độ bao nhiêu sau khi rơi được {dropHeight} m?",
+        "explain": "Từ nghỉ với gia tốc không đổi: v² = 2ah, nên v = √(2·{@acceleration}·{dropHeight}) ≈ {@landingSpeed} m/s. Dùng √(2gh) là coi vật rơi tự do; quên khai căn sẽ ra v²."
+      },
+      "options": [
+        {
+          "text": "{@landingSpeed} m/s",
+          "vi": {
+            "text": "{@landingSpeed} m/s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "sqrt(2*@acceleration*dropHeight)",
+            "equals": "landingSpeed"
+          }
+        },
+        {
+          "text": "{=sqrt(2*gravity*dropHeight)} m/s",
+          "vi": {
+            "text": "{=sqrt(2*gravity*dropHeight)} m/s"
+          },
+          "check": {
+            "expr": "sqrt(2*gravity*dropHeight)",
+            "equals": "landingSpeed"
+          }
+        },
+        {
+          "text": "{=2*@acceleration*dropHeight} m/s",
+          "vi": {
+            "text": "{=2*@acceleration*dropHeight} m/s"
+          },
+          "check": {
+            "expr": "2*@acceleration*dropHeight",
+            "equals": "landingSpeed"
+          }
+        },
+        {
+          "text": "{=sqrt(@acceleration*dropHeight)} m/s",
+          "vi": {
+            "text": "{=sqrt(@acceleration*dropHeight)} m/s"
+          },
+          "check": {
+            "expr": "sqrt(@acceleration*dropHeight)",
+            "equals": "landingSpeed"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-80cm",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["acceleration", "measure-g"],
+      "set": {
+        "mass": 0.2,
+        "extraMass": 0.01,
+        "dropHeight": 0.8
+      },
+      "stem": "M = {mass} kg on each side, Δm = {extraMass} kg on the right; the right mass falls {dropHeight} m from rest (g = {gravity} m/s²). Decide whether each statement is true or false.",
+      "explain": "a = Δm·g/(2M + Δm) ≈ {@acceleration} m/s²; t = √(2h/a) ≈ {@fallTime} s; v = a·t ≈ {@landingSpeed} m/s. Doubling both M changes a, so the time changes too.",
+      "vi": {
+        "stem": "Mỗi bên treo M = {mass} kg, bên phải thêm Δm = {extraMass} kg; vật bên phải rơi {dropHeight} m từ nghỉ (g = {gravity} m/s²). Mỗi nhận định sau đúng hay sai?",
+        "explain": "a = Δm·g/(2M + Δm) ≈ {@acceleration} m/s²; t = √(2h/a) ≈ {@fallTime} s; v = a·t ≈ {@landingSpeed} m/s. Tăng gấp đôi cả hai khối lượng M thì a thay đổi nên thời gian cũng thay đổi."
+      },
+      "statements": [
+        {
+          "text": "The fall takes about {@fallTime} s.",
+          "vi": {
+            "text": "Vật rơi hết khoảng {@fallTime} s."
+          },
+          "true": true,
+          "check": {
+            "expr": "sqrt(2*dropHeight/@acceleration)",
+            "equals": "fallTime"
+          }
+        },
+        {
+          "text": "It lands at about {=@acceleration*@fallTime} m/s.",
+          "vi": {
+            "text": "Vật chạm đệm với tốc độ khoảng {=@acceleration*@fallTime} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "@acceleration*@fallTime",
+            "equals": "landingSpeed"
+          }
+        },
+        {
+          "text": "The fall takes about {=sqrt(2*dropHeight/gravity)} s, as in free fall.",
+          "vi": {
+            "text": "Vật rơi hết khoảng {=sqrt(2*dropHeight/gravity)} s, như khi rơi tự do."
+          },
+          "true": false,
+          "check": {
+            "expr": "sqrt(2*dropHeight/gravity)",
+            "equals": "fallTime"
+          }
+        },
+        {
+          "text": "With both masses M doubled, the fall would take the same time.",
+          "vi": {
+            "text": "Nếu tăng gấp đôi cả hai khối lượng M thì thời gian rơi vẫn như cũ."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "find-extra",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["acceleration", "measure-g"],
+      "set": {
+        "mass": 0.15,
+        "extraMass": 0.02,
+        "dropHeight": 0.6
+      },
+      "stem": "With M = {mass} kg on each side, the right mass falls {dropHeight} m from rest in {@fallTime|4} s (g = {gravity} m/s²). How large is the extra mass Δm?",
+      "explain": "First a = 2h/t² ≈ {=2*dropHeight/@fallTime^2} m/s². Then a(2M + Δm) = Δm·g gives Δm = 2M·a/(g − a) ≈ {=2*mass*@acceleration/(gravity-@acceleration)*1000|3} g. Leaving a out of the bracket, or the 2 in a = 2h/t², gives the other values.",
+      "vi": {
+        "stem": "Mỗi bên treo M = {mass} kg, vật bên phải rơi {dropHeight} m từ nghỉ trong {@fallTime|4} s (g = {gravity} m/s²). Gia trọng Δm bằng bao nhiêu?",
+        "explain": "Trước hết a = 2h/t² ≈ {=2*dropHeight/@fallTime^2} m/s². Từ a(2M + Δm) = Δm·g suy ra Δm = 2M·a/(g − a) ≈ {=2*mass*@acceleration/(gravity-@acceleration)*1000|3} g. Bỏ a trong ngoặc, hoặc quên số 2 trong a = 2h/t², sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{=2*mass*@acceleration/(gravity-@acceleration)*1000|3} g",
+          "vi": {
+            "text": "{=2*mass*@acceleration/(gravity-@acceleration)*1000|3} g"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(2*mass*@acceleration/(gravity-@acceleration))*gravity/(2*mass+2*mass*@acceleration/(gravity-@acceleration))",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "{=2*mass*@acceleration/gravity*1000|3} g",
+          "vi": {
+            "text": "{=2*mass*@acceleration/gravity*1000|3} g"
+          },
+          "check": {
+            "expr": "(2*mass*@acceleration/gravity)*gravity/(2*mass+2*mass*@acceleration/gravity)",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "{=mass*@acceleration/(gravity-@acceleration)*1000|3} g",
+          "vi": {
+            "text": "{=mass*@acceleration/(gravity-@acceleration)*1000|3} g"
+          },
+          "check": {
+            "expr": "(mass*@acceleration/(gravity-@acceleration))*gravity/(2*mass+mass*@acceleration/(gravity-@acceleration))",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "{=2*mass*(dropHeight/@fallTime^2)/(gravity-dropHeight/@fallTime^2)*1000|3} g",
+          "vi": {
+            "text": "{=2*mass*(dropHeight/@fallTime^2)/(gravity-dropHeight/@fallTime^2)*1000|3} g"
+          },
+          "check": {
+            "expr": "(2*mass*(dropHeight/@fallTime^2)/(gravity-dropHeight/@fallTime^2))*gravity/(2*mass+2*mass*(dropHeight/@fallTime^2)/(gravity-dropHeight/@fallTime^2))",
+            "equals": "acceleration"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ratio-slope",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["measure-g", "acceleration"],
+      "set": {
+        "mass": 0.2,
+        "extraMass": 0.02
+      },
+      "stem": "For several extra masses, a student plots the measured acceleration a (vertical) against the mass ratio Δm/(2M + Δm) (horizontal). In this ideal machine the points lie on a straight line through the origin. What is its slope?",
+      "explain": "a = g·Δm/(2M + Δm): a is proportional to the ratio, and the slope is g = {@ratioSlope} m/s². This is how the station finds g from several runs, rather than from one.",
+      "vi": {
+        "stem": "Với nhiều gia trọng khác nhau, một học sinh vẽ đồ thị gia tốc đo được a (trục tung) theo tỉ số khối lượng Δm/(2M + Δm) (trục hoành). Trong máy lí tưởng này các điểm nằm trên một đường thẳng đi qua gốc tọa độ. Hệ số góc của nó bằng bao nhiêu?",
+        "explain": "a = g·Δm/(2M + Δm): a tỉ lệ thuận với tỉ số khối lượng, và hệ số góc bằng g = {@ratioSlope} m/s². Trạm dùng cách này để tìm g từ nhiều lần đo thay vì từ một lần."
+      },
+      "options": [
+        {
+          "text": "{@ratioSlope} m/s²",
+          "vi": {
+            "text": "{@ratioSlope} m/s²"
+          },
+          "correct": true,
+          "check": {
+            "expr": "gravity",
+            "equals": "ratioSlope"
+          }
+        },
+        {
+          "text": "{=@ratioSlope/2} m/s²",
+          "vi": {
+            "text": "{=@ratioSlope/2} m/s²"
+          },
+          "check": {
+            "expr": "@ratioSlope/2",
+            "equals": "ratioSlope"
+          }
+        },
+        {
+          "text": "{=2*@ratioSlope} m/s²",
+          "vi": {
+            "text": "{=2*@ratioSlope} m/s²"
+          },
+          "check": {
+            "expr": "2*@ratioSlope",
+            "equals": "ratioSlope"
+          }
+        },
+        {
+          "text": "{=1/@ratioSlope} s²/m",
+          "vi": {
+            "text": "{=1/@ratioSlope} s²/m"
+          },
+          "check": {
+            "expr": "1/@ratioSlope",
+            "equals": "ratioSlope"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-double-extra",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["acceleration", "tension", "system"],
+      "set": {
+        "mass": 0.1,
+        "extraMass": 0.02,
+        "dropHeight": 0.6
+      },
+      "stem": "M = {mass} kg on each side, Δm = {extraMass} kg on the right (g = {gravity} m/s²). Decide whether each statement is true or false.",
+      "explain": "a = Δm·g/(2M + Δm) ≈ {@acceleration} m/s². Doubling Δm also enlarges the mass being moved, so a grows to {=2*extraMass*gravity/(2*mass+2*extraMass)} m/s², less than twice. In a light string over a light frictionless pulley the pull is the same on both sides: (M + Δm)(g − a) = M(g + a) ≈ {@tensionLeft|4} N. Both masses always move at the same speed.",
+      "vi": {
+        "stem": "Mỗi bên treo M = {mass} kg, bên phải thêm Δm = {extraMass} kg (g = {gravity} m/s²). Mỗi nhận định sau đúng hay sai?",
+        "explain": "a = Δm·g/(2M + Δm) ≈ {@acceleration} m/s². Tăng Δm gấp đôi thì khối lượng của hệ cũng tăng, nên a chỉ tăng lên {=2*extraMass*gravity/(2*mass+2*extraMass)} m/s², chưa đến hai lần. Với dây nhẹ vắt qua ròng rọc nhẹ không ma sát, lực căng hai bên bằng nhau: (M + Δm)(g − a) = M(g + a) ≈ {@tensionLeft|4} N. Hai vật luôn có cùng tốc độ."
+      },
+      "statements": [
+        {
+          "text": "The acceleration is about {@acceleration} m/s².",
+          "vi": {
+            "text": "Gia tốc khoảng {@acceleration} m/s²."
+          },
+          "true": true,
+          "check": {
+            "expr": "extraMass*gravity/(2*mass+extraMass)",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "The string pulls the heavier side with (M + Δm)(g − a), the same {@tensionLeft|4} N as the lighter side.",
+          "vi": {
+            "text": "Dây kéo bên nặng hơn với lực (M + Δm)(g − a), bằng đúng {@tensionLeft|4} N như bên nhẹ hơn."
+          },
+          "true": true,
+          "check": {
+            "expr": "(mass+extraMass)*(gravity-@acceleration)",
+            "equals": "tensionLeft"
+          }
+        },
+        {
+          "text": "Doubling Δm exactly doubles the acceleration.",
+          "vi": {
+            "text": "Tăng Δm gấp đôi thì gia tốc tăng đúng gấp đôi."
+          },
+          "true": false
+        },
+        {
+          "text": "When the right mass has fallen {dropHeight} m, the left mass is moving more slowly than it.",
+          "vi": {
+            "text": "Khi vật bên phải đã rơi được {dropHeight} m, vật bên trái chuyển động chậm hơn nó."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

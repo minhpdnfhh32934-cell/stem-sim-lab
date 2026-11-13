@@ -1,0 +1,1007 @@
+{
+  "id": "separation",
+  "skills": [
+    {
+      "id": "method",
+      "name": "Dissolve, filter, evaporate",
+      "advice": "Say what each step separates and why it works: salt dissolves and sand does not, so filtering keeps the sand (residue) and lets the salt solution (filtrate) through; evaporating the water leaves the salt.",
+      "vi": {
+        "name": "Hòa tan, lọc, cô cạn",
+        "advice": "Nói rõ mỗi bước tách được gì và vì sao: muối tan còn cát không tan, nên khi lọc cát ở lại trên giấy lọc (bã) và dung dịch muối (nước lọc) đi qua; làm bay hơi nước sẽ thu được muối."
+      }
+    },
+    {
+      "id": "water",
+      "name": "Enough water: the solubility limit",
+      "advice": "Before choosing the volume, work out the most salt it can dissolve: about 0.359 g of NaCl per gram of water at 20 °C. Try 40 g of salt in 50 mL at the station and see salt stay with the sand.",
+      "vi": {
+        "name": "Đủ nước: giới hạn độ tan",
+        "advice": "Trước khi chọn lượng nước, tính lượng muối tối đa có thể tan: khoảng 0,359 g NaCl cho mỗi gam nước ở 20 °C. Thử 40 g muối trong 50 mL nước trên trạm để thấy muối còn lẫn trong cát."
+      }
+    },
+    {
+      "id": "rinsing",
+      "name": "Rinsing the residue",
+      "advice": "The wet sand holds some salt solution; each rinse dilutes what is held and carries salt into the filtrate. Compare 0, 1, 2 and 3 rinses at the station: several small rinses beat one large one.",
+      "vi": {
+        "name": "Tráng rửa bã lọc",
+        "advice": "Cát ướt giữ lại một phần dung dịch muối; mỗi lần tráng làm loãng phần dung dịch đó và đưa muối xuống nước lọc. So sánh 0, 1, 2 và 3 lần tráng trên trạm: tráng nhiều lần với ít nước tốt hơn một lần với nhiều nước."
+      }
+    },
+    {
+      "id": "results",
+      "name": "Mass balance, percentages and errors",
+      "advice": "Keep two percentages apart: salt in the mixture (crystals over the whole mixture) and recovery (crystals over the salt put in). For each slip — wet crystals, spitting, a torn filter paper — decide whether the result comes out high or low.",
+      "vi": {
+        "name": "Cân bằng khối lượng, phần trăm và sai số",
+        "advice": "Phân biệt hai đại lượng: phần trăm muối trong hỗn hợp (khối lượng tinh thể chia cho khối lượng cả hỗn hợp) và hiệu suất thu hồi (khối lượng tinh thể chia cho lượng muối ban đầu). Với mỗi sai sót — tinh thể còn ướt, muối bắn ra ngoài, giấy lọc bị rách — xác định kết quả cao hay thấp hơn thực tế."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "order",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["method"],
+      "stem": "In which order are the steps done to get salt back from a mixture of salt and sand?",
+      "explain": "Dissolve the salt in water, filter off the sand, then evaporate the water from the filtrate to leave salt crystals.",
+      "vi": {
+        "stem": "Để tách lấy muối ăn từ hỗn hợp muối và cát, cần thực hiện các bước theo thứ tự nào?",
+        "explain": "Hòa tan muối vào nước, lọc bỏ cát, rồi cô cạn nước lọc để thu tinh thể muối."
+      },
+      "options": [
+        {
+          "text": "Dissolve, filter, evaporate",
+          "vi": {
+            "text": "Hòa tan, lọc, cô cạn"
+          },
+          "correct": true
+        },
+        {
+          "text": "Filter, dissolve, evaporate",
+          "vi": {
+            "text": "Lọc, hòa tan, cô cạn"
+          }
+        },
+        {
+          "text": "Evaporate, dissolve, filter",
+          "vi": {
+            "text": "Cô cạn, hòa tan, lọc"
+          }
+        },
+        {
+          "text": "Dissolve, evaporate, filter",
+          "vi": {
+            "text": "Hòa tan, cô cạn, lọc"
+          }
+        }
+      ]
+    },
+    {
+      "id": "filtrate",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["method"],
+      "stem": "When the salt-and-sand mixture in water is filtered, what passes through the filter paper?",
+      "explain": "The dissolved salt passes through with the water as the filtrate; the insoluble sand stays on the paper as the residue.",
+      "vi": {
+        "stem": "Khi lọc hỗn hợp muối, cát và nước, chất nào đi qua giấy lọc?",
+        "explain": "Muối đã tan đi qua giấy lọc cùng với nước thành nước lọc; cát không tan ở lại trên giấy lọc thành bã."
+      },
+      "options": [
+        {
+          "text": "The salt solution",
+          "vi": {
+            "text": "Dung dịch muối"
+          },
+          "correct": true
+        },
+        {
+          "text": "The sand",
+          "vi": {
+            "text": "Cát"
+          }
+        },
+        {
+          "text": "Dry salt crystals",
+          "vi": {
+            "text": "Tinh thể muối khô"
+          }
+        },
+        {
+          "text": "Nothing passes through",
+          "vi": {
+            "text": "Không có gì đi qua"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-method",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["method"],
+      "stem": "Decide whether each statement about separating salt from sand is true or false.",
+      "explain": "Sand does not dissolve in water, so it is left on the paper as the residue, and evaporating the filtrate leaves salt. Filtration separates undissolved solids from a liquid; it cannot take dissolved salt out of the water.",
+      "vi": {
+        "stem": "Mỗi nhận định sau về việc tách muối ra khỏi cát đúng hay sai?",
+        "explain": "Cát không tan trong nước nên ở lại trên giấy lọc thành bã, và cô cạn nước lọc sẽ thu được muối. Phép lọc tách chất rắn không tan ra khỏi chất lỏng; không tách được muối đã tan ra khỏi nước."
+      },
+      "statements": [
+        {
+          "text": "Sand does not dissolve in water.",
+          "vi": {
+            "text": "Cát không tan trong nước."
+          },
+          "true": true
+        },
+        {
+          "text": "The residue left on the filter paper is mainly sand.",
+          "vi": {
+            "text": "Bã còn lại trên giấy lọc chủ yếu là cát."
+          },
+          "true": true
+        },
+        {
+          "text": "Evaporating the filtrate leaves salt crystals.",
+          "vi": {
+            "text": "Cô cạn nước lọc thu được tinh thể muối."
+          },
+          "true": true
+        },
+        {
+          "text": "Filtration separates the dissolved salt from the water.",
+          "vi": {
+            "text": "Phép lọc tách được muối đã tan ra khỏi nước."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "why-rinse",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["rinsing"],
+      "stem": "Why is the sand on the filter paper rinsed with a little clean water?",
+      "explain": "The wet sand holds some salt solution; rinsing washes that salt through into the filtrate, so less salt is lost with the sand.",
+      "vi": {
+        "stem": "Vì sao phần cát trên giấy lọc được tráng bằng một ít nước sạch?",
+        "explain": "Cát ướt giữ lại một phần dung dịch muối; tráng rửa đưa lượng muối đó xuống nước lọc, nên ít muối bị mất theo cát hơn."
+      },
+      "options": [
+        {
+          "text": "To wash the salt solution held in the wet sand into the filtrate",
+          "vi": {
+            "text": "Để đưa phần dung dịch muối còn giữ trong cát ướt xuống nước lọc"
+          },
+          "correct": true
+        },
+        {
+          "text": "To dissolve the sand",
+          "vi": {
+            "text": "Để hòa tan cát"
+          }
+        },
+        {
+          "text": "To make the salt crystals larger",
+          "vi": {
+            "text": "Để tinh thể muối to hơn"
+          }
+        },
+        {
+          "text": "To cool the filtrate",
+          "vi": {
+            "text": "Để làm nguội nước lọc"
+          }
+        }
+      ]
+    },
+    {
+      "id": "stop-heating",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["method"],
+      "stem": "Near the end of evaporating the filtrate, the heat is turned down and the last water left to dry off gently. Why?",
+      "explain": "Near dryness the salt crust spits: hot crystals jump out of the dish and are lost (and can burn). Gentle drying keeps the salt in the dish.",
+      "vi": {
+        "stem": "Gần cuối quá trình cô cạn nước lọc, người ta giảm lửa và để phần nước cuối cùng bay hơi từ từ. Vì sao?",
+        "explain": "Khi gần cạn, lớp muối bị bắn tóe: tinh thể nóng văng ra khỏi bát và bị mất (có thể gây bỏng). Làm khô từ từ giữ muối lại trong bát."
+      },
+      "options": [
+        {
+          "text": "To stop the salt spitting out of the dish",
+          "vi": {
+            "text": "Để muối không bị bắn ra khỏi bát"
+          },
+          "correct": true
+        },
+        {
+          "text": "To make the salt dissolve again",
+          "vi": {
+            "text": "Để muối tan trở lại"
+          }
+        },
+        {
+          "text": "Because salt boils at 100 °C",
+          "vi": {
+            "text": "Vì muối sôi ở 100 °C"
+          }
+        },
+        {
+          "text": "To let the sand settle",
+          "vi": {
+            "text": "Để cát lắng xuống"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-rinses",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["rinsing", "water"],
+      "stem": "Decide whether each statement about recovering the salt is true or false.",
+      "explain": "Each rinse leaves only a fraction of the held salt behind, so more rinses recover more, and several small rinses beat one large one. Without rinsing, the salt in the solution held by the sand is lost. Too little water leaves salt undissolved with the sand.",
+      "vi": {
+        "stem": "Mỗi nhận định sau về việc thu hồi muối đúng hay sai?",
+        "explain": "Mỗi lần tráng chỉ để lại một phần lượng muối còn giữ trong cát, nên tráng nhiều lần thu được nhiều muối hơn, và tráng nhiều lần với ít nước tốt hơn một lần với nhiều nước. Không tráng thì muối trong dung dịch mà cát giữ lại bị mất. Dùng quá ít nước thì một phần muối không tan, ở lại với cát."
+      },
+      "statements": [
+        {
+          "text": "More rinses of the sand recover more salt.",
+          "vi": {
+            "text": "Tráng cát càng nhiều lần thì thu hồi được càng nhiều muối."
+          },
+          "true": true
+        },
+        {
+          "text": "Several small rinses recover more salt than one large rinse with the same total water.",
+          "vi": {
+            "text": "Tráng nhiều lần với lượng nước nhỏ thu hồi nhiều muối hơn tráng một lần với cùng tổng lượng nước."
+          },
+          "true": true
+        },
+        {
+          "text": "Without any rinse, all the salt still reaches the dish.",
+          "vi": {
+            "text": "Không tráng lần nào thì toàn bộ muối vẫn xuống được bát cô cạn."
+          },
+          "true": false
+        },
+        {
+          "text": "Using too little water to dissolve the mixture leaves salt with the sand.",
+          "vi": {
+            "text": "Dùng quá ít nước để hòa tan hỗn hợp thì một phần muối còn lại với cát."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "undissolved",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["water"],
+      "set": {
+        "saltMass": 40,
+        "waterVolume": 50
+      },
+      "stem": "{saltMass} g of salt mixed with sand is stirred into {waterVolume} mL of water at 20 °C (0.9982 g/mL). NaCl dissolves up to 35.9 g per 100 g of water. How much salt stays undissolved?",
+      "explain": "The water weighs {=waterVolume*0.9982|4} g and dissolves at most 0.359·{=waterVolume*0.9982|4} ≈ {=0.359*waterVolume*0.9982} g; the rest, {saltMass} − {=0.359*waterVolume*0.9982} ≈ {@undissolvedSalt} g, stays with the sand.",
+      "vi": {
+        "stem": "Khuấy hỗn hợp chứa {saltMass} g muối và cát vào {waterVolume} mL nước ở 20 °C (0,9982 g/mL). NaCl tan tối đa 35,9 g trong 100 g nước. Bao nhiêu gam muối không tan?",
+        "explain": "Khối lượng nước là {=waterVolume*0.9982|4} g, hòa tan tối đa 0,359·{=waterVolume*0.9982|4} ≈ {=0.359*waterVolume*0.9982} g; phần còn lại, {saltMass} − {=0.359*waterVolume*0.9982} ≈ {@undissolvedSalt} g, ở lại với cát."
+      },
+      "options": [
+        {
+          "text": "{@undissolvedSalt} g",
+          "vi": {
+            "text": "{@undissolvedSalt} g"
+          },
+          "correct": true,
+          "check": {
+            "expr": "saltMass-0.359*waterVolume*0.9982",
+            "equals": "undissolvedSalt"
+          }
+        },
+        {
+          "text": "{=saltMass-35.9} g",
+          "vi": {
+            "text": "{=saltMass-35.9} g"
+          },
+          "check": {
+            "expr": "saltMass-35.9",
+            "equals": "undissolvedSalt"
+          }
+        },
+        {
+          "text": "0 g",
+          "vi": {
+            "text": "0 g"
+          },
+          "check": {
+            "expr": "0",
+            "equals": "undissolvedSalt"
+          }
+        },
+        {
+          "text": "{=0.359*waterVolume*0.9982} g",
+          "vi": {
+            "text": "{=0.359*waterVolume*0.9982} g"
+          },
+          "check": {
+            "expr": "0.359*waterVolume*0.9982",
+            "equals": "undissolvedSalt"
+          }
+        }
+      ]
+    },
+    {
+      "id": "salt-percent",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["results"],
+      "set": {
+        "saltMass": 20,
+        "waterVolume": 100,
+        "rinses": 2
+      },
+      "stem": "A mixture of salt and {sandMass} g of sand weighing {=saltMass+sandMass} g in all is separated, and {@saltRecovered|4} g of dry salt crystals are recovered. What percentage of salt in the mixture does this result give?",
+      "explain": "w = m(crystals)/m(mixture) = {@saltRecovered|4}/{=saltMass+sandMass} ≈ {@saltPercent|3}%. Dividing by the sand, or by the salt put in (the recovery), answers other questions.",
+      "vi": {
+        "stem": "Tách một hỗn hợp muối và {sandMass} g cát có tổng khối lượng {=saltMass+sandMass} g, thu được {@saltRecovered|4} g tinh thể muối khô. Theo kết quả này, phần trăm khối lượng muối trong hỗn hợp là bao nhiêu?",
+        "explain": "w = m(tinh thể)/m(hỗn hợp) = {@saltRecovered|4}/{=saltMass+sandMass} ≈ {@saltPercent|3}%. Chia cho khối lượng cát, hay cho lượng muối ban đầu (hiệu suất thu hồi), là trả lời câu hỏi khác."
+      },
+      "options": [
+        {
+          "text": "{=100*@saltRecovered/(saltMass+sandMass)|3}%",
+          "vi": {
+            "text": "{=100*@saltRecovered/(saltMass+sandMass)|3}%"
+          },
+          "correct": true,
+          "check": {
+            "expr": "100*@saltRecovered/(saltMass+sandMass)",
+            "equals": "saltPercent"
+          }
+        },
+        {
+          "text": "{=100*@saltRecovered/sandMass|3}%",
+          "vi": {
+            "text": "{=100*@saltRecovered/sandMass|3}%"
+          },
+          "check": {
+            "expr": "100*@saltRecovered/sandMass",
+            "equals": "saltPercent"
+          }
+        },
+        {
+          "text": "{=100*@saltRecovered/saltMass|3}%",
+          "vi": {
+            "text": "{=100*@saltRecovered/saltMass|3}%"
+          },
+          "check": {
+            "expr": "100*@saltRecovered/saltMass",
+            "equals": "saltPercent"
+          }
+        },
+        {
+          "text": "{=100*@residueMass/(saltMass+sandMass)|3}%",
+          "vi": {
+            "text": "{=100*@residueMass/(saltMass+sandMass)|3}%"
+          },
+          "check": {
+            "expr": "100*@residueMass/(saltMass+sandMass)",
+            "equals": "saltPercent"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-one-rinse",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["rinsing", "results"],
+      "set": {
+        "saltMass": 10,
+        "waterVolume": 50,
+        "rinses": 1
+      },
+      "stem": "{saltMass} g of salt and {sandMass} g of sand are stirred into {waterVolume} mL of water (0.9982 g/mL). The wet sand holds {retainedWater} g of the solution’s water (an illustrative value) and is rinsed once with {rinseVolume} mL. Decide whether each statement is true or false.",
+      "explain": "The held water carries {retainedWater}/{=waterVolume*0.9982|4} of the salt; the rinse leaves the fraction {retainedWater}/({retainedWater} + {=0.9982*rinseVolume|4}) of that behind: m_lost ≈ {@saltLost|3} g. Recovered: {saltMass} − {@saltLost|3} ≈ {@saltRecovered|3} g, R ≈ {@recovery|3}%. The dried residue is the sand plus the lost salt, {@residueMass|4} g.",
+      "vi": {
+        "stem": "Khuấy {saltMass} g muối và {sandMass} g cát vào {waterVolume} mL nước (0,9982 g/mL). Cát ướt giữ lại {retainedWater} g nước của dung dịch (giá trị minh họa) và được tráng một lần bằng {rinseVolume} mL nước. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Phần nước bị giữ lại mang theo {retainedWater}/{=waterVolume*0.9982|4} lượng muối; lần tráng để lại một phần {retainedWater}/({retainedWater} + {=0.9982*rinseVolume|4}) của lượng đó: m_mất ≈ {@saltLost|3} g. Thu hồi: {saltMass} − {@saltLost|3} ≈ {@saltRecovered|3} g, R ≈ {@recovery|3}%. Bã khô gồm cát và phần muối bị mất, {@residueMass|4} g."
+      },
+      "statements": [
+        {
+          "text": "About {@saltLost|3} g of salt stays in the sand.",
+          "vi": {
+            "text": "Có khoảng {@saltLost|3} g muối còn lại trong cát."
+          },
+          "true": true,
+          "check": {
+            "expr": "saltMass*(retainedWater/(waterVolume*0.9982))*(retainedWater/(retainedWater+0.9982*rinseVolume))^rinses",
+            "equals": "saltLost"
+          }
+        },
+        {
+          "text": "About {@saltRecovered|3} g of salt is recovered.",
+          "vi": {
+            "text": "Thu hồi được khoảng {@saltRecovered|3} g muối."
+          },
+          "true": true,
+          "check": {
+            "expr": "saltMass-@saltLost",
+            "equals": "saltRecovered"
+          }
+        },
+        {
+          "text": "The recovery is about {@recovery|3}%.",
+          "vi": {
+            "text": "Hiệu suất thu hồi khoảng {@recovery|3}%."
+          },
+          "true": true,
+          "check": {
+            "expr": "100*@saltRecovered/saltMass",
+            "equals": "recovery"
+          }
+        },
+        {
+          "text": "The dried residue weighs exactly {sandMass} g, the mass of the sand.",
+          "vi": {
+            "text": "Bã khô nặng đúng {sandMass} g, bằng khối lượng cát."
+          },
+          "true": false,
+          "check": {
+            "expr": "sandMass",
+            "equals": "residueMass"
+          }
+        }
+      ]
+    },
+    {
+      "id": "no-rinse",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["rinsing"],
+      "set": {
+        "saltMass": 10,
+        "waterVolume": 50,
+        "rinses": 0
+      },
+      "stem": "{saltMass} g of salt is dissolved in {waterVolume} mL of water (0.9982 g/mL) with sand. The wet sand keeps {retainedWater} g of that water (an illustrative value) and is not rinsed. How much salt is lost with the sand?",
+      "explain": "The held water carries salt in the solution’s own ratio: {saltMass}·{retainedWater}/{=waterVolume*0.9982|4} ≈ {@saltLost|4} g.",
+      "vi": {
+        "stem": "Hòa tan {saltMass} g muối cùng với cát trong {waterVolume} mL nước (0,9982 g/mL). Cát ướt giữ lại {retainedWater} g lượng nước đó (giá trị minh họa) và không được tráng. Bao nhiêu gam muối bị mất theo cát?",
+        "explain": "Phần nước bị giữ lại chứa muối theo đúng tỉ lệ của dung dịch: {saltMass}·{retainedWater}/{=waterVolume*0.9982|4} ≈ {@saltLost|4} g."
+      },
+      "options": [
+        {
+          "text": "{@saltLost|4} g",
+          "vi": {
+            "text": "{@saltLost|4} g"
+          },
+          "correct": true,
+          "check": {
+            "expr": "saltMass*retainedWater/(waterVolume*0.9982)",
+            "equals": "saltLost"
+          }
+        },
+        {
+          "text": "{=saltMass*retainedWater/(waterVolume*0.9982+retainedWater)|4} g",
+          "vi": {
+            "text": "{=saltMass*retainedWater/(waterVolume*0.9982+retainedWater)|4} g"
+          },
+          "check": {
+            "expr": "saltMass*retainedWater/(waterVolume*0.9982+retainedWater)",
+            "equals": "saltLost"
+          }
+        },
+        {
+          "text": "{=0.359*retainedWater|4} g",
+          "vi": {
+            "text": "{=0.359*retainedWater|4} g"
+          },
+          "check": {
+            "expr": "0.359*retainedWater",
+            "equals": "saltLost"
+          }
+        },
+        {
+          "text": "0 g",
+          "vi": {
+            "text": "0 g"
+          },
+          "check": {
+            "expr": "0",
+            "equals": "saltLost"
+          }
+        }
+      ]
+    },
+    {
+      "id": "best-rinsing",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["rinsing"],
+      "stem": "The wet sand holds 5 g of solution water. With 30 mL of rinse water in all, which leaves the least salt in the sand?",
+      "explain": "Each rinse leaves the fraction 5/(5 + water used). Three rinses of 10 mL: ({=5/(5+9.982)|3})³ ≈ {=(5/(5+9.982))^3|2}; two of 15 mL: ({=5/(5+14.973)|3})² ≈ {=(5/(5+14.973))^2|2}; one of 30 mL: {=5/(5+29.946)|2}. Several small rinses win.",
+      "vi": {
+        "stem": "Cát ướt giữ lại 5 g nước của dung dịch. Với tổng cộng 30 mL nước tráng, cách nào để lại ít muối trong cát nhất?",
+        "explain": "Mỗi lần tráng để lại phần 5/(5 + lượng nước tráng). Ba lần, mỗi lần 10 mL: ({=5/(5+9.982)|3})³ ≈ {=(5/(5+9.982))^3|2}; hai lần 15 mL: ({=5/(5+14.973)|3})² ≈ {=(5/(5+14.973))^2|2}; một lần 30 mL: {=5/(5+29.946)|2}. Tráng nhiều lần với ít nước hiệu quả hơn."
+      },
+      "options": [
+        {
+          "text": "Three rinses of 10 mL",
+          "vi": {
+            "text": "Tráng ba lần, mỗi lần 10 mL"
+          },
+          "correct": true
+        },
+        {
+          "text": "One rinse of 30 mL",
+          "vi": {
+            "text": "Tráng một lần với 30 mL"
+          }
+        },
+        {
+          "text": "Two rinses of 15 mL",
+          "vi": {
+            "text": "Tráng hai lần, mỗi lần 15 mL"
+          }
+        },
+        {
+          "text": "They all leave the same amount",
+          "vi": {
+            "text": "Các cách đều để lại lượng muối như nhau"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-errors",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["results", "method"],
+      "stem": "A student separates a salt-and-sand mixture and works out the percentage of salt from the dry crystals. Decide whether each statement is true or false.",
+      "explain": "Wet crystals weigh more: the percentage comes out too high. Spilt filtrate or salt spitting from the dish means fewer crystals: too low. Sand through a torn paper ends up in the dish and is weighed as salt: too high.",
+      "vi": {
+        "stem": "Một học sinh tách hỗn hợp muối và cát rồi tính phần trăm muối từ khối lượng tinh thể khô. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Tinh thể còn ướt nặng hơn: phần trăm tính được cao hơn thực tế. Làm đổ nước lọc hay muối bị bắn ra khỏi bát làm khối lượng tinh thể giảm: kết quả thấp hơn. Cát lọt qua giấy lọc rách rơi vào bát và bị cân như muối: kết quả cao hơn."
+      },
+      "statements": [
+        {
+          "text": "Weighing the crystals before they are fully dry makes the salt percentage too high.",
+          "vi": {
+            "text": "Cân tinh thể khi chưa khô hẳn làm phần trăm muối tính được cao hơn thực tế."
+          },
+          "true": true
+        },
+        {
+          "text": "Spilling some filtrate makes the salt percentage too low.",
+          "vi": {
+            "text": "Làm đổ một ít nước lọc làm phần trăm muối tính được thấp hơn thực tế."
+          },
+          "true": true
+        },
+        {
+          "text": "Salt spitting out of the dish makes the salt percentage too high.",
+          "vi": {
+            "text": "Muối bắn ra khỏi bát làm phần trăm muối tính được cao hơn thực tế."
+          },
+          "true": false
+        },
+        {
+          "text": "Sand passing through a torn filter paper makes the salt percentage too high.",
+          "vi": {
+            "text": "Cát lọt qua giấy lọc bị rách làm phần trăm muối tính được cao hơn thực tế."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "evaporating-dish",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["method"],
+      "stem": "In which piece of apparatus is the filtrate heated to evaporate the water and leave the salt?",
+      "explain": "An evaporating dish (a shallow porcelain basin) stands the heat and gives a large surface for the water to leave. A volumetric flask, a burette and a funnel are not used for heating to dryness.",
+      "vi": {
+        "stem": "Nước lọc được đun trong dụng cụ nào để làm bay hơi nước và thu lấy muối?",
+        "explain": "Bát sứ (chén sứ nông) chịu được nhiệt và có bề mặt rộng để nước bay hơi. Bình định mức, burette và phễu không dùng để đun cạn."
+      },
+      "options": [
+        {
+          "text": "An evaporating dish",
+          "vi": {
+            "text": "Bát sứ"
+          },
+          "correct": true
+        },
+        {
+          "text": "A volumetric flask",
+          "vi": {
+            "text": "Bình định mức"
+          }
+        },
+        {
+          "text": "A burette",
+          "vi": {
+            "text": "Burette"
+          }
+        },
+        {
+          "text": "A filter funnel",
+          "vi": {
+            "text": "Phễu lọc"
+          }
+        }
+      ]
+    },
+    {
+      "id": "property-used",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["method"],
+      "stem": "Which difference between salt and sand makes this separation possible?",
+      "explain": "Salt dissolves in water and sand does not: stirred with water, the salt passes through the filter in solution and the sand stays behind. Evaporation then takes the water away from the salt.",
+      "vi": {
+        "stem": "Sự khác nhau nào giữa muối ăn và cát giúp tách được hai chất này?",
+        "explain": "Muối tan trong nước còn cát không tan: khi khuấy với nước, muối đi qua giấy lọc dưới dạng dung dịch, còn cát ở lại trên giấy lọc. Sau đó cô cạn để tách nước khỏi muối."
+      },
+      "options": [
+        {
+          "text": "Salt dissolves in water; sand does not",
+          "vi": {
+            "text": "Muối tan trong nước; cát không tan"
+          },
+          "correct": true
+        },
+        {
+          "text": "Salt is denser than sand",
+          "vi": {
+            "text": "Muối nặng hơn cát"
+          }
+        },
+        {
+          "text": "Salt boils at a lower temperature than sand",
+          "vi": {
+            "text": "Muối sôi ở nhiệt độ thấp hơn cát"
+          }
+        },
+        {
+          "text": "Sand is attracted by a magnet",
+          "vi": {
+            "text": "Cát bị nam châm hút"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-water-amount",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["water", "method", "results"],
+      "stem": "NaCl dissolves up to 35.9 g per 100 g of water at 20 °C. Decide whether each statement about dissolving the salt is true or false.",
+      "explain": "50 g of water dissolves at most 0.359·50 ≈ 18 g, so 40 g of salt cannot all dissolve. Undissolved salt stays on the filter with the sand and is not recovered, so the recovery comes out low. More water dissolves more salt, but all of it has to be boiled off afterwards, which takes longer.",
+      "vi": {
+        "stem": "Ở 20 °C, NaCl tan tối đa 35,9 g trong 100 g nước. Mỗi nhận định sau về việc hòa tan muối đúng hay sai?",
+        "explain": "50 g nước hòa tan được tối đa 0,359·50 ≈ 18 g, nên 40 g muối không thể tan hết. Muối không tan nằm lại trên giấy lọc cùng với cát và không thu hồi được, nên hiệu suất thu hồi thấp. Nhiều nước hơn hòa tan được nhiều muối hơn, nhưng sau đó phải đun cạn toàn bộ lượng nước đó, mất nhiều thời gian hơn."
+      },
+      "statements": [
+        {
+          "text": "40 g of salt dissolves completely in 50 g of water at 20 °C.",
+          "vi": {
+            "text": "40 g muối tan hết trong 50 g nước ở 20 °C."
+          },
+          "true": false
+        },
+        {
+          "text": "Salt left undissolved stays on the filter paper with the sand.",
+          "vi": {
+            "text": "Muối không tan nằm lại trên giấy lọc cùng với cát."
+          },
+          "true": true
+        },
+        {
+          "text": "Undissolved salt makes the recovered mass of salt come out low.",
+          "vi": {
+            "text": "Muối không tan làm khối lượng muối thu hồi được thấp hơn thực tế."
+          },
+          "true": true
+        },
+        {
+          "text": "Using more water to dissolve the salt makes the evaporation take longer.",
+          "vi": {
+            "text": "Dùng nhiều nước hơn để hòa tan muối làm thời gian cô cạn dài hơn."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "lost-two-rinses",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["rinsing"],
+      "set": {
+        "saltMass": 20,
+        "waterVolume": 100,
+        "rinses": 2
+      },
+      "stem": "{saltMass} g of salt is dissolved in {waterVolume} mL of water (0.9982 g/mL) with sand. The wet sand keeps {retainedWater} g of that water (an illustrative value) and is rinsed {rinses} times with {rinseVolume} mL each. How much salt is lost with the sand?",
+      "explain": "Before rinsing the sand holds {retainedWater}/{=waterVolume*0.9982|4} of the solution: {saltMass}·{=retainedWater/(waterVolume*0.9982)|3} ≈ {=saltMass*retainedWater/(waterVolume*0.9982)|3} g of salt. Each rinse keeps only q = {retainedWater}/({retainedWater} + {=rinseVolume*0.9982|4}) ≈ {=retainedWater/(retainedWater+0.9982*rinseVolume)|3} of it, so after {rinses} rinses: ≈ {@saltLost} g.",
+      "vi": {
+        "stem": "{saltMass} g muối được hòa tan trong {waterVolume} mL nước (0,9982 g/mL) có lẫn cát. Cát ướt giữ lại {retainedWater} g nước đó (giá trị minh họa) và được tráng {rinses} lần, mỗi lần {rinseVolume} mL. Lượng muối bị mất theo cát là bao nhiêu?",
+        "explain": "Trước khi tráng, cát giữ {retainedWater}/{=waterVolume*0.9982|4} lượng dung dịch: {saltMass}·{=retainedWater/(waterVolume*0.9982)|3} ≈ {=saltMass*retainedWater/(waterVolume*0.9982)|3} g muối. Mỗi lần tráng chỉ còn giữ lại q = {retainedWater}/({retainedWater} + {=rinseVolume*0.9982|4}) ≈ {=retainedWater/(retainedWater+0.9982*rinseVolume)|3} lượng đó, nên sau {rinses} lần tráng: ≈ {@saltLost} g."
+      },
+      "options": [
+        {
+          "text": "{=saltMass*(retainedWater/(waterVolume*0.9982))*(retainedWater/(retainedWater+0.9982*rinseVolume))^rinses} g",
+          "vi": {
+            "text": "{=saltMass*(retainedWater/(waterVolume*0.9982))*(retainedWater/(retainedWater+0.9982*rinseVolume))^rinses} g"
+          },
+          "correct": true,
+          "check": {
+            "expr": "saltMass*(retainedWater/(waterVolume*0.9982))*(retainedWater/(retainedWater+0.9982*rinseVolume))^rinses",
+            "equals": "saltLost"
+          }
+        },
+        {
+          "text": "{=saltMass*(retainedWater/(waterVolume*0.9982))} g",
+          "vi": {
+            "text": "{=saltMass*(retainedWater/(waterVolume*0.9982))} g"
+          },
+          "check": {
+            "expr": "saltMass*(retainedWater/(waterVolume*0.9982))",
+            "equals": "saltLost"
+          }
+        },
+        {
+          "text": "{=saltMass*(retainedWater/(waterVolume*0.9982))*(retainedWater/(retainedWater+0.9982*rinseVolume))} g",
+          "vi": {
+            "text": "{=saltMass*(retainedWater/(waterVolume*0.9982))*(retainedWater/(retainedWater+0.9982*rinseVolume))} g"
+          },
+          "check": {
+            "expr": "saltMass*(retainedWater/(waterVolume*0.9982))*(retainedWater/(retainedWater+0.9982*rinseVolume))",
+            "equals": "saltLost"
+          }
+        },
+        {
+          "text": "{=saltMass*(retainedWater/(waterVolume*0.9982))*rinses*(retainedWater/(retainedWater+0.9982*rinseVolume))} g",
+          "vi": {
+            "text": "{=saltMass*(retainedWater/(waterVolume*0.9982))*rinses*(retainedWater/(retainedWater+0.9982*rinseVolume))} g"
+          },
+          "check": {
+            "expr": "saltMass*(retainedWater/(waterVolume*0.9982))*rinses*(retainedWater/(retainedWater+0.9982*rinseVolume))",
+            "equals": "saltLost"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-small-batch",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["results", "rinsing", "water"],
+      "set": {
+        "saltMass": 5,
+        "waterVolume": 25,
+        "rinses": 1
+      },
+      "stem": "{saltMass} g of salt and {sandMass} g of sand are stirred into {waterVolume} mL of water (0.9982 g/mL; NaCl dissolves up to 35.9 g per 100 g of water). The wet sand holds {retainedWater} g of the solution's water (an illustrative value) and is rinsed once with {rinseVolume} mL. Decide whether each statement is true or false.",
+      "explain": "{=waterVolume*0.9982|4} g of water dissolves up to {=0.359*waterVolume*0.9982|3} g, so all {saltMass} g dissolves. The sand keeps {=saltMass*retainedWater/(waterVolume*0.9982)|3} g of salt, a third of which ({@saltLost|3} g) stays after the rinse: {@saltRecovered|4} g is recovered, {@recovery|3}% of the salt. The mixture weighed {=saltMass+sandMass} g, so these crystals give {@saltPercent|3}% salt; dividing by the salt alone gives the recovery, not the percentage in the mixture.",
+      "vi": {
+        "stem": "Khuấy {saltMass} g muối và {sandMass} g cát vào {waterVolume} mL nước (0,9982 g/mL; NaCl tan tối đa 35,9 g trong 100 g nước). Cát ướt giữ lại {retainedWater} g nước của dung dịch (giá trị minh họa) và được tráng một lần với {rinseVolume} mL. Mỗi nhận định sau đúng hay sai?",
+        "explain": "{=waterVolume*0.9982|4} g nước hòa tan được tối đa {=0.359*waterVolume*0.9982|3} g, nên toàn bộ {saltMass} g muối đều tan. Cát giữ lại {=saltMass*retainedWater/(waterVolume*0.9982)|3} g muối, sau khi tráng còn một phần ba ({@saltLost|3} g): thu hồi được {@saltRecovered|4} g, tức {@recovery|3}% lượng muối. Hỗn hợp nặng {=saltMass+sandMass} g, nên lượng tinh thể này cho {@saltPercent|3}% muối; chia cho khối lượng muối là tính hiệu suất thu hồi, không phải phần trăm muối trong hỗn hợp."
+      },
+      "statements": [
+        {
+          "text": "All the salt dissolves.",
+          "vi": {
+            "text": "Toàn bộ lượng muối đều tan."
+          },
+          "true": true,
+          "check": {
+            "expr": "max(0,saltMass-0.359*waterVolume*0.9982)",
+            "equals": "undissolvedSalt"
+          }
+        },
+        {
+          "text": "About {=saltMass-saltMass*(retainedWater/(waterVolume*0.9982))*(retainedWater/(retainedWater+0.9982*rinseVolume))|4} g of salt is recovered.",
+          "vi": {
+            "text": "Thu hồi được khoảng {=saltMass-saltMass*(retainedWater/(waterVolume*0.9982))*(retainedWater/(retainedWater+0.9982*rinseVolume))|4} g muối."
+          },
+          "true": true,
+          "check": {
+            "expr": "saltMass-saltMass*(retainedWater/(waterVolume*0.9982))*(retainedWater/(retainedWater+0.9982*rinseVolume))",
+            "equals": "saltRecovered"
+          }
+        },
+        {
+          "text": "The recovery is about {=100*@saltRecovered/saltMass|3}% of the salt.",
+          "vi": {
+            "text": "Hiệu suất thu hồi khoảng {=100*@saltRecovered/saltMass|3}% lượng muối."
+          },
+          "true": true,
+          "check": {
+            "expr": "100*@saltRecovered/saltMass",
+            "equals": "recovery"
+          }
+        },
+        {
+          "text": "These crystals show that the mixture was about {=100*@saltRecovered/saltMass|3}% salt.",
+          "vi": {
+            "text": "Lượng tinh thể này cho thấy hỗn hợp chứa khoảng {=100*@saltRecovered/saltMass|3}% muối."
+          },
+          "true": false,
+          "check": {
+            "expr": "100*@saltRecovered/saltMass",
+            "equals": "saltPercent"
+          }
+        }
+      ]
+    },
+    {
+      "id": "least-water",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["water"],
+      "set": {
+        "saltMass": 20,
+        "waterVolume": 100
+      },
+      "stem": "{saltMass} g of salt mixed with sand is to be dissolved at 20 °C (0.9982 g/mL; NaCl dissolves up to 35.9 g per 100 g of water). What is the least of the station's volumes of water that dissolves all of it?",
+      "explain": "Water needed: {saltMass}/0.359 ≈ {=saltMass/0.359|3} g ≈ {=saltMass/0.359/0.9982|3} mL. 50 mL dissolves only {=0.359*50*0.9982|3} g, leaving {=saltMass-0.359*50*0.9982|3} g; 25 mL dissolves {=0.359*25*0.9982|3} g. 100 mL dissolves up to {=0.359*100*0.9982|3} g: enough.",
+      "vi": {
+        "stem": "Cần hòa tan {saltMass} g muối có lẫn cát ở 20 °C (0,9982 g/mL; NaCl tan tối đa 35,9 g trong 100 g nước). Trong các thể tích nước có ở trạm, thể tích nhỏ nhất hòa tan được toàn bộ lượng muối là bao nhiêu?",
+        "explain": "Lượng nước cần: {saltMass}/0,359 ≈ {=saltMass/0.359|3} g ≈ {=saltMass/0.359/0.9982|3} mL. 50 mL chỉ hòa tan được {=0.359*50*0.9982|3} g, còn dư {=saltMass-0.359*50*0.9982|3} g; 25 mL hòa tan được {=0.359*25*0.9982|3} g. 100 mL hòa tan được tối đa {=0.359*100*0.9982|3} g: đủ."
+      },
+      "options": [
+        {
+          "text": "100 mL",
+          "vi": {
+            "text": "100 mL"
+          },
+          "correct": true,
+          "check": {
+            "expr": "max(0,saltMass-0.359*100*0.9982)",
+            "equals": "undissolvedSalt"
+          }
+        },
+        {
+          "text": "50 mL",
+          "vi": {
+            "text": "50 mL"
+          },
+          "check": {
+            "expr": "max(0,saltMass-0.359*50*0.9982)",
+            "equals": "undissolvedSalt"
+          }
+        },
+        {
+          "text": "25 mL",
+          "vi": {
+            "text": "25 mL"
+          },
+          "check": {
+            "expr": "max(0,saltMass-0.359*25*0.9982)",
+            "equals": "undissolvedSalt"
+          }
+        },
+        {
+          "text": "None of them: 20 g needs more than 100 mL",
+          "vi": {
+            "text": "Không thể tích nào: 20 g cần nhiều hơn 100 mL"
+          }
+        }
+      ]
+    },
+    {
+      "id": "least-loss",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["rinsing", "water"],
+      "set": {
+        "saltMass": 5,
+        "waterVolume": 25,
+        "rinses": 2
+      },
+      "stem": "{saltMass} g of salt is dissolved with sand; the wet sand keeps {retainedWater} g of water (an illustrative value), and each rinse uses {rinseVolume} mL (0.9982 g/mL). Which choice leaves the least salt in the sand?",
+      "explain": "Lost = m·(5/m_w)·qⁿ with q = 5/(5 + {=0.9982*rinseVolume|4}) ≈ {=retainedWater/(retainedWater+0.9982*rinseVolume)|3}. 50 mL, no rinse: {=saltMass*5/(50*0.9982)|3} g; 100 mL, no rinse: {=saltMass*5/(100*0.9982)|3} g; 50 mL, one rinse: {=saltMass*5/(50*0.9982)*(5/(5+0.9982*10))|3} g; 25 mL, two rinses: {@saltLost|3} g. Each rinse divides the loss by about 3; doubling the water only halves it.",
+      "vi": {
+        "stem": "Hòa tan {saltMass} g muối có lẫn cát; cát ướt giữ lại {retainedWater} g nước (giá trị minh họa), mỗi lần tráng dùng {rinseVolume} mL (0,9982 g/mL). Cách nào để lại ít muối trong cát nhất?",
+        "explain": "Lượng mất = m·(5/m_n)·qⁿ với q = 5/(5 + {=0.9982*rinseVolume|4}) ≈ {=retainedWater/(retainedWater+0.9982*rinseVolume)|3}. 50 mL, không tráng: {=saltMass*5/(50*0.9982)|3} g; 100 mL, không tráng: {=saltMass*5/(100*0.9982)|3} g; 50 mL, tráng một lần: {=saltMass*5/(50*0.9982)*(5/(5+0.9982*10))|3} g; 25 mL, tráng hai lần: {@saltLost|3} g. Mỗi lần tráng làm lượng mất giảm khoảng 3 lần; tăng gấp đôi lượng nước chỉ giảm được một nửa."
+      },
+      "options": [
+        {
+          "text": "25 mL of water, then two rinses",
+          "vi": {
+            "text": "25 mL nước, sau đó tráng hai lần"
+          },
+          "correct": true,
+          "check": {
+            "expr": "saltMass*(retainedWater/(waterVolume*0.9982))*(retainedWater/(retainedWater+0.9982*rinseVolume))^rinses",
+            "equals": "saltLost"
+          }
+        },
+        {
+          "text": "100 mL of water, no rinse",
+          "vi": {
+            "text": "100 mL nước, không tráng"
+          }
+        },
+        {
+          "text": "50 mL of water, one rinse",
+          "vi": {
+            "text": "50 mL nước, tráng một lần"
+          }
+        },
+        {
+          "text": "50 mL of water, no rinse",
+          "vi": {
+            "text": "50 mL nước, không tráng"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-too-little-water",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["water", "results"],
+      "set": {
+        "saltMass": 40,
+        "waterVolume": 50,
+        "rinses": 1
+      },
+      "stem": "A mixture of {saltMass} g of salt and {sandMass} g of sand is stirred into {waterVolume} mL of water at 20 °C (0.9982 g/mL; NaCl dissolves up to 35.9 g per 100 g of water), filtered, rinsed once and evaporated. Decide whether each statement is true or false.",
+      "explain": "{=waterVolume*0.9982|4} g of water dissolves at most {=0.359*waterVolume*0.9982|3} g: {@undissolvedSalt|3} g does not dissolve. The rinse dissolves a little of it, but {@saltLost|3} g of salt still stays with the sand, so the residue weighs {@residueMass|3} g, more than the {sandMass} g of sand. Only {@saltRecovered|3} g is recovered, giving {@saltPercent|3}% salt instead of the true {=100*saltMass/(saltMass+sandMass)}%. 100 mL would dissolve up to {=0.359*100*0.9982|3} g — still not all 40 g.",
+      "vi": {
+        "stem": "Khuấy hỗn hợp gồm {saltMass} g muối và {sandMass} g cát vào {waterVolume} mL nước ở 20 °C (0,9982 g/mL; NaCl tan tối đa 35,9 g trong 100 g nước), lọc, tráng một lần rồi cô cạn. Mỗi nhận định sau đúng hay sai?",
+        "explain": "{=waterVolume*0.9982|4} g nước hòa tan được tối đa {=0.359*waterVolume*0.9982|3} g: {@undissolvedSalt|3} g muối không tan. Lần tráng hòa tan thêm được một ít, nhưng vẫn còn {@saltLost|3} g muối nằm lại cùng cát, nên bã rắn nặng {@residueMass|3} g, hơn {sandMass} g cát ban đầu. Chỉ thu hồi được {@saltRecovered|3} g, cho {@saltPercent|3}% muối thay vì giá trị đúng {=100*saltMass/(saltMass+sandMass)}%. 100 mL hòa tan được tối đa {=0.359*100*0.9982|3} g — vẫn chưa đủ cho 40 g."
+      },
+      "statements": [
+        {
+          "text": "About {=saltMass-0.359*waterVolume*0.9982|3} g of salt does not dissolve in the {waterVolume} mL.",
+          "vi": {
+            "text": "Khoảng {=saltMass-0.359*waterVolume*0.9982|3} g muối không tan trong {waterVolume} mL nước."
+          },
+          "true": true,
+          "check": {
+            "expr": "saltMass-0.359*waterVolume*0.9982",
+            "equals": "undissolvedSalt"
+          }
+        },
+        {
+          "text": "The residue on the filter weighs more than the sand alone.",
+          "vi": {
+            "text": "Bã rắn trên giấy lọc nặng hơn lượng cát ban đầu."
+          },
+          "true": true
+        },
+        {
+          "text": "The crystals give a salt percentage of about {=100*@saltRecovered/(saltMass+sandMass)|3}%, far below the true value.",
+          "vi": {
+            "text": "Lượng tinh thể cho phần trăm muối khoảng {=100*@saltRecovered/(saltMass+sandMass)|3}%, thấp hơn nhiều so với giá trị đúng."
+          },
+          "true": true,
+          "check": {
+            "expr": "100*@saltRecovered/(saltMass+sandMass)",
+            "equals": "saltPercent"
+          }
+        },
+        {
+          "text": "Using 100 mL of water instead would have dissolved all 40 g of salt.",
+          "vi": {
+            "text": "Nếu dùng 100 mL nước thì toàn bộ 40 g muối đã tan hết."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

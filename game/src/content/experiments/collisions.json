@@ -1,0 +1,663 @@
+{
+  "id": "collisions",
+  "name": "Collisions and momentum on an air track",
+  "category": "physics",
+  "description": "Two gliders ride on a cushion of air along a level track, so there is almost no friction. Glider A, pushed off by the launcher, passes light gate 1 and hits glider B, which is at rest; B then passes light gate 2. Each gate times how long the card on a glider blocks its beam, which gives the speed v = L/Δt. With spring bumpers the gliders bounce apart (an elastic or nearly elastic collision); with Velcro they stick and move on together (a perfectly inelastic collision). In every collision the total momentum after equals the momentum before; only an elastic one keeps the kinetic energy.",
+  "vi": {
+    "name": "Va chạm và động lượng trên đệm khí",
+    "description": "Hai xe trượt chuyển động trên đệm không khí dọc theo một máng nằm ngang, nên gần như không có ma sát. Xe A được bộ phóng đẩy đi, chạy qua cổng quang điện 1 rồi va chạm với xe B đang đứng yên; sau đó xe B chạy qua cổng quang điện 2. Mỗi cổng đo khoảng thời gian tấm chắn sáng trên xe che chùm sáng của nó, từ đó tính được tốc độ v = L/Δt. Với đệm lò xo, hai xe bật ra xa nhau (va chạm đàn hồi hoặc gần đàn hồi); với băng nhám dính, hai xe dính vào nhau và cùng chuyển động (va chạm mềm). Trong mọi va chạm, tổng động lượng sau va chạm bằng tổng động lượng trước va chạm; chỉ va chạm đàn hồi mới giữ nguyên động năng.",
+    "note": "Đây là một mô hình dạy học đã được đơn giản hóa. Xe B (0,3 kg: một xe 0,2 kg gắn thêm một quả nặng 0,1 kg) đứng yên trên máng nằm ngang, không ma sát và không có lực cản của không khí, nên giữa các lần va chạm mỗi xe chuyển động thẳng đều. Khi bắt đầu, xe A đã chuyển động với tốc độ u_A (bộ phóng đã đẩy nó). Va chạm xảy ra tức thời và tuân theo định luật phục hồi của Newton: tốc độ tách ra bằng e lần tốc độ tiến lại gần, v_B′ − v_A′ = e·u_A, trong khi tổng động lượng được bảo toàn, m_A·v_A′ + m_B·v_B′ = m_A·u_A. Do đó v_A′ = u_A·(m_A − e·m_B)/(m_A + m_B) và v_B′ = u_A·m_A·(1 + e)/(m_A + m_B). e = 1 là va chạm đàn hồi (động năng được giữ nguyên: hai xe cùng khối lượng đổi vận tốc cho nhau, xe A dừng hẳn), e = 0 là va chạm mềm (hai xe dính vào nhau và cùng chuyển động với vận tốc m_A·u_A/(m_A + m_B)); ở giữa hai trường hợp đó, phần động năng còn lại là 1 − (1 − e²)·m_B/(m_A + m_B), phần còn lại biến thành nhiệt, âm thanh và làm biến dạng đệm. Các giá trị e là tính chất minh họa của đệm va chạm, không phải giá trị đo được: đệm lò xo hay đệm nam châm thật cho e gần 1 nhưng nhỏ hơn 1, và không có đệm thật nào đạt đúng 1. Mỗi xe mang một tấm chắn sáng dài L = 0,1 m; cổng quang điện đo khoảng thời gian tấm chắn che chùm sáng, Δt = L/v; cổng 1 đo xe A trước va chạm, cổng 2 đo xe B sau va chạm. Vận tốc, động lượng và động năng hiển thị là giá trị mô phỏng; số đọc của các cổng là thời gian chắn sáng làm tròn theo độ phân giải d của đồng hồ. Vận tốc của xe A sau va chạm là giá trị mô phỏng: trên máng thật, nó được đo bằng cổng 1 nếu xe A bật ngược lại, bằng cổng 2 nếu xe A đi theo xe B, và không đo được khi xe A dừng; \"Dừng lại\" nghĩa là |v_A′| ≤ 0,5 mm/s. Lần chạy kết thúc khi xe B chạm tấm chặn ở đầu xa của máng dài 1,5 m; cú bật lại ở đó không được mô phỏng. Trên máng đệm khí thật, không khí vẫn cản một chút, máng không bao giờ nằm ngang tuyệt đối và đệm va chạm tác dụng trong vài mili giây, nên động lượng đo được sau va chạm hơi khác động lượng trước va chạm."
+  },
+  "requiredEquipment": ["air-track"],
+  "model": "mechanics.collision",
+  "parameters": [
+    {
+      "id": "massA",
+      "label": "Mass of glider A (moving)",
+      "vi": { "label": "Khối lượng xe A (xe chuyển động)" },
+      "symbol": "m_A",
+      "unit": "kg",
+      "default": 0.3,
+      "min": 0.2,
+      "max": 0.5,
+      "presets": [
+        { "label": "0.2 kg (glider alone)", "vi": { "label": "0,2 kg (chỉ có xe)" }, "value": 0.2 },
+        { "label": "0.3 kg (+ 0.1 kg)", "vi": { "label": "0,3 kg (+ 0,1 kg)" }, "value": 0.3 },
+        { "label": "0.4 kg (+ 0.2 kg)", "vi": { "label": "0,4 kg (+ 0,2 kg)" }, "value": 0.4 },
+        { "label": "0.5 kg (+ 0.3 kg)", "vi": { "label": "0,5 kg (+ 0,3 kg)" }, "value": 0.5 }
+      ]
+    },
+    {
+      "id": "speed",
+      "label": "Speed of glider A before the collision",
+      "vi": { "label": "Tốc độ của xe A trước va chạm" },
+      "symbol": "u_A",
+      "unit": "m/s",
+      "default": 0.3,
+      "min": 0.2,
+      "max": 0.5,
+      "presets": [
+        { "label": "0.2 m/s", "vi": { "label": "0,2 m/s" }, "value": 0.2 },
+        { "label": "0.3 m/s", "vi": { "label": "0,3 m/s" }, "value": 0.3 },
+        { "label": "0.4 m/s", "vi": { "label": "0,4 m/s" }, "value": 0.4 },
+        { "label": "0.5 m/s", "vi": { "label": "0,5 m/s" }, "value": 0.5 }
+      ]
+    },
+    {
+      "id": "restitution",
+      "label": "Bumpers (coefficient of restitution)",
+      "vi": { "label": "Đệm va chạm (hệ số phục hồi)" },
+      "symbol": "e",
+      "unit": "",
+      "default": 1,
+      "min": 0,
+      "max": 1,
+      "presets": [
+        {
+          "label": "Elastic bumpers, e = 1 (ideal)",
+          "vi": { "label": "Đệm đàn hồi, e = 1 (lý tưởng)" },
+          "value": 1
+        },
+        {
+          "label": "Spring bumpers, e = 0.9",
+          "vi": { "label": "Đệm lò xo, e = 0,9" },
+          "value": 0.9
+        },
+        { "label": "Soft pads, e = 0.5", "vi": { "label": "Đệm mềm, e = 0,5" }, "value": 0.5 },
+        {
+          "label": "Velcro: the gliders stick, e = 0",
+          "vi": { "label": "Băng nhám dính: hai xe dính nhau, e = 0" },
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": "timerResolution",
+      "label": "Timer resolution",
+      "vi": { "label": "Độ phân giải của đồng hồ đo thời gian" },
+      "symbol": "d",
+      "unit": "s",
+      "default": 0.001,
+      "min": 0.0001,
+      "max": 0.01,
+      "presets": [
+        { "label": "0.0001 s (0.1 ms)", "vi": { "label": "0,0001 s (0,1 ms)" }, "value": 0.0001 },
+        { "label": "0.001 s (1 ms)", "vi": { "label": "0,001 s (1 ms)" }, "value": 0.001 },
+        { "label": "0.01 s (10 ms)", "vi": { "label": "0,01 s (10 ms)" }, "value": 0.01 }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "massB": 0.3,
+    "flagLength": 0.1,
+    "gliderLength": 0.2,
+    "startA": 0.15,
+    "startB": 0.8,
+    "gate1": 0.35,
+    "gate2": 1,
+    "trackLength": 1.5
+  },
+  "inputs": {
+    "massB": { "symbol": "m_B", "unit": "kg" },
+    "flagLength": { "symbol": "L", "unit": "m" },
+    "gliderLength": { "symbol": "ℓ", "unit": "m", "desk": false },
+    "startA": { "symbol": "x_A0", "unit": "m", "desk": false },
+    "startB": { "symbol": "x_B0", "unit": "m", "desk": false },
+    "gate1": { "symbol": "x_1", "unit": "m", "desk": false },
+    "gate2": { "symbol": "x_2", "unit": "m", "desk": false },
+    "trackLength": { "symbol": "x_end", "unit": "m", "desk": false }
+  },
+  "simulation": { "timeStep": 0.001, "maxDuration": 15, "sampleInterval": 0.01 },
+  "measurements": [
+    {
+      "id": "velocityA",
+      "label": "Velocity of glider A",
+      "vi": { "label": "Vận tốc của xe A" },
+      "symbol": "v_A",
+      "unit": "m/s",
+      "variable": "velocityA"
+    },
+    {
+      "id": "velocityB",
+      "label": "Velocity of glider B",
+      "vi": { "label": "Vận tốc của xe B" },
+      "symbol": "v_B",
+      "unit": "m/s",
+      "variable": "velocityB"
+    },
+    {
+      "id": "momentum",
+      "label": "Total momentum",
+      "vi": { "label": "Tổng động lượng" },
+      "symbol": "p",
+      "unit": "kg·m/s",
+      "variable": "momentum"
+    },
+    {
+      "id": "momentumA",
+      "label": "Momentum of glider A",
+      "vi": { "label": "Động lượng của xe A" },
+      "symbol": "p_A",
+      "unit": "kg·m/s",
+      "variable": "momentumA"
+    },
+    {
+      "id": "momentumB",
+      "label": "Momentum of glider B",
+      "vi": { "label": "Động lượng của xe B" },
+      "symbol": "p_B",
+      "unit": "kg·m/s",
+      "variable": "momentumB"
+    },
+    {
+      "id": "kinetic",
+      "label": "Total kinetic energy",
+      "vi": { "label": "Tổng động năng" },
+      "symbol": "E_k",
+      "unit": "J",
+      "variable": "kinetic"
+    },
+    {
+      "id": "kineticA",
+      "label": "Kinetic energy of glider A",
+      "vi": { "label": "Động năng của xe A" },
+      "symbol": "E_kA",
+      "unit": "J",
+      "variable": "kineticA"
+    },
+    {
+      "id": "kineticB",
+      "label": "Kinetic energy of glider B",
+      "vi": { "label": "Động năng của xe B" },
+      "symbol": "E_kB",
+      "unit": "J",
+      "variable": "kineticB"
+    },
+    {
+      "id": "positionA",
+      "label": "Position of glider A",
+      "vi": { "label": "Vị trí của xe A" },
+      "symbol": "x_A",
+      "unit": "m",
+      "variable": "positionA"
+    },
+    {
+      "id": "positionB",
+      "label": "Position of glider B",
+      "vi": { "label": "Vị trí của xe B" },
+      "symbol": "x_B",
+      "unit": "m",
+      "variable": "positionB"
+    }
+  ],
+  "results": [
+    {
+      "id": "momentumBefore",
+      "label": "Total momentum before the collision",
+      "vi": { "label": "Tổng động lượng trước va chạm" },
+      "symbol": "p",
+      "unit": "kg·m/s",
+      "variable": "momentumBefore",
+      "reduce": "final",
+      "theory": "momentumBefore"
+    },
+    {
+      "id": "momentumAfter",
+      "label": "Total momentum after the collision",
+      "vi": { "label": "Tổng động lượng sau va chạm" },
+      "symbol": "p′",
+      "unit": "kg·m/s",
+      "variable": "momentum",
+      "reduce": "final",
+      "theory": "momentumAfter"
+    },
+    {
+      "id": "kineticPercent",
+      "label": "Kinetic energy kept",
+      "vi": { "label": "Phần động năng còn lại" },
+      "symbol": "E_k′/E_k",
+      "unit": "%",
+      "variable": "kineticPercent",
+      "reduce": "final",
+      "theory": "kineticPercent",
+      "classes": [
+        {
+          "max": 99.95,
+          "label": "Inelastic: some lost",
+          "vi": { "label": "Không đàn hồi: mất một phần" }
+        },
+        { "label": "Elastic: all kept", "vi": { "label": "Đàn hồi: giữ nguyên" } }
+      ]
+    },
+    {
+      "id": "velocityA",
+      "label": "Velocity of glider A after the collision",
+      "vi": { "label": "Vận tốc của xe A sau va chạm" },
+      "symbol": "v_A′",
+      "unit": "m/s",
+      "variable": "velocityA",
+      "reduce": "final",
+      "theory": "velocityA",
+      "classes": [
+        { "max": -0.0005, "label": "Bounces back", "vi": { "label": "Bật ngược lại" } },
+        { "max": 0.0005, "label": "Stops", "vi": { "label": "Dừng lại" } },
+        { "label": "Moves on", "vi": { "label": "Tiếp tục đi tới" } }
+      ]
+    },
+    {
+      "id": "velocityB",
+      "label": "Velocity of glider B after the collision",
+      "vi": { "label": "Vận tốc của xe B sau va chạm" },
+      "symbol": "v_B′",
+      "unit": "m/s",
+      "variable": "velocityB",
+      "reduce": "final",
+      "theory": "velocityB"
+    },
+    {
+      "id": "gateTimeA",
+      "label": "Time at gate 1 (glider A, before)",
+      "vi": { "label": "Thời gian chắn sáng ở cổng 1 (xe A, trước va chạm)" },
+      "symbol": "Δt₁",
+      "unit": "s",
+      "variable": "gateTimeA",
+      "reduce": "final",
+      "theory": "gateTimeA"
+    },
+    {
+      "id": "gateTimeB",
+      "label": "Time at gate 2 (glider B, after)",
+      "vi": { "label": "Thời gian chắn sáng ở cổng 2 (xe B, sau va chạm)" },
+      "symbol": "Δt₂",
+      "unit": "s",
+      "variable": "gateTimeB",
+      "reduce": "final",
+      "theory": "gateTimeB"
+    },
+    {
+      "id": "kineticBefore",
+      "label": "Total kinetic energy before the collision",
+      "vi": { "label": "Tổng động năng trước va chạm" },
+      "symbol": "E_k",
+      "unit": "J",
+      "variable": "kineticBefore",
+      "reduce": "final",
+      "theory": "kineticBefore"
+    },
+    {
+      "id": "kineticAfter",
+      "label": "Total kinetic energy after the collision",
+      "vi": { "label": "Tổng động năng sau va chạm" },
+      "symbol": "E_k′",
+      "unit": "J",
+      "variable": "kinetic",
+      "reduce": "final",
+      "theory": "kineticAfter"
+    }
+  ],
+  "graphs": [
+    {
+      "id": "momentum-time",
+      "title": "Momentum against time",
+      "vi": { "title": "Động lượng theo thời gian" },
+      "x": "time",
+      "y": ["momentumA", "momentumB", "momentum"],
+      "yLabel": "p",
+      "mark": "collisionTime"
+    },
+    {
+      "id": "velocity-time",
+      "title": "Velocity against time",
+      "vi": { "title": "Vận tốc theo thời gian" },
+      "x": "time",
+      "y": ["velocityA", "velocityB"],
+      "yLabel": "v",
+      "mark": "collisionTime"
+    },
+    {
+      "id": "energy-time",
+      "title": "Kinetic energy against time",
+      "vi": { "title": "Động năng theo thời gian" },
+      "x": "time",
+      "y": ["kineticA", "kineticB", "kinetic"],
+      "yLabel": "E_k",
+      "mark": "collisionTime"
+    },
+    {
+      "id": "position-time",
+      "title": "Position on the track against time",
+      "vi": { "title": "Vị trí trên máng theo thời gian" },
+      "x": "time",
+      "y": ["positionA", "positionB"],
+      "yLabel": "x"
+    }
+  ],
+  "monitor": "momentum-time",
+  "compare": [
+    { "graph": "momentum-time", "series": "momentum" },
+    { "graph": "energy-time", "series": "kinetic" }
+  ],
+  "instruments": [
+    {
+      "result": "gateTimeA",
+      "quantity": "Gate time Δt₁ (glider A at gate 1)",
+      "name": "Light gate 1 and digital timer",
+      "resolution": "timerResolution",
+      "excludes": "the width of the light beam and where on the card it is cut, how well the card's length L is known, and the timer's calibration",
+      "vi": {
+        "quantity": "Thời gian chắn sáng Δt₁ (xe A ở cổng 1)",
+        "name": "Cổng quang điện 1 và đồng hồ đo thời gian hiện số",
+        "excludes": "độ rộng của chùm sáng và vị trí trên tấm chắn nơi chùm sáng bị che, độ chính xác của chiều dài L của tấm chắn, và sai số hiệu chuẩn của đồng hồ"
+      }
+    },
+    {
+      "result": "gateTimeB",
+      "quantity": "Gate time Δt₂ (glider B at gate 2)",
+      "name": "Light gate 2 and digital timer",
+      "resolution": "timerResolution",
+      "excludes": "the width of the light beam and where on the card it is cut, how well the card's length L is known, and the timer's calibration",
+      "vi": {
+        "quantity": "Thời gian chắn sáng Δt₂ (xe B ở cổng 2)",
+        "name": "Cổng quang điện 2 và đồng hồ đo thời gian hiện số",
+        "excludes": "độ rộng của chùm sáng và vị trí trên tấm chắn nơi chùm sáng bị che, độ chính xác của chiều dài L của tấm chắn, và sai số hiệu chuẩn của đồng hồ"
+      }
+    }
+  ],
+  "analyses": [
+    {
+      "id": "momentum",
+      "title": "Total momentum after against before",
+      "note": "Each run is one point: the total momentum after the collision, p′ = m_A·v_A′ + m_B·v_B′, against the momentum before, p = m_A·u_A. Runs with the same bumpers (the same e) are fitted together: change the mass m_A and the speed u_A between them. Momentum is conserved in every collision, elastic or not, so the points lie on the line p′ = p — slope 1 through the origin, the dashed theory line. Here the track has no friction and the impact is instantaneous, so the points fall on it to rounding; on a real air track a little air drag, a track not quite level and the timing make the slope come out slightly different from 1.",
+      "vi": {
+        "title": "Tổng động lượng sau va chạm theo trước va chạm",
+        "note": "Mỗi lần chạy là một điểm: tổng động lượng sau va chạm, p′ = m_A·v_A′ + m_B·v_B′, theo động lượng trước va chạm, p = m_A·u_A. Các lần chạy cùng loại đệm (cùng e) được khớp chung: giữa các lần chạy, hãy thay đổi khối lượng m_A và tốc độ u_A. Động lượng được bảo toàn trong mọi va chạm, dù đàn hồi hay không, nên các điểm nằm trên đường thẳng p′ = p — hệ số góc bằng 1 và đi qua gốc tọa độ, chính là đường lý thuyết nét đứt. Ở đây máng không có ma sát và va chạm xảy ra tức thời, nên các điểm nằm đúng trên đường đó (sai khác chỉ do làm tròn); trên máng đệm khí thật, lực cản nhỏ của không khí, máng không hoàn toàn nằm ngang và sai số đo thời gian làm hệ số góc hơi khác 1."
+      },
+      "x": "momentumBefore",
+      "y": "momentumAfter",
+      "group": ["restitution"],
+      "columns": [
+        "massA",
+        "speed",
+        "restitution",
+        "momentumBefore",
+        "momentumAfter",
+        "velocityA",
+        "velocityB"
+      ],
+      "slope": {
+        "label": "Slope of p′ against p",
+        "vi": { "label": "Hệ số góc của p′ theo p" },
+        "symbol": "p′/p",
+        "unit": "",
+        "theory": "momentumSlope"
+      }
+    },
+    {
+      "id": "energy",
+      "title": "Kinetic energy after against before",
+      "note": "Each run is one point: the total kinetic energy after the collision against the kinetic energy before, ½·m_A·u_A². Runs with the same mass m_A and the same bumpers e are fitted together: change only the speed u_A between them. The line goes through the origin, its slope the fraction of kinetic energy kept, 1 − (1 − e²)·m_B/(m_A + m_B): 1 with elastic bumpers, m_A/(m_A + m_B) when the gliders stick. Unlike momentum, kinetic energy is conserved only in an elastic collision; the rest goes into the bumpers as heat, sound and deformation.",
+      "vi": {
+        "title": "Động năng sau va chạm theo trước va chạm",
+        "note": "Mỗi lần chạy là một điểm: tổng động năng sau va chạm theo động năng trước va chạm, ½·m_A·u_A². Các lần chạy cùng khối lượng m_A và cùng loại đệm e được khớp chung: giữa các lần chạy, chỉ thay đổi tốc độ u_A. Đường thẳng đi qua gốc tọa độ, hệ số góc của nó là phần động năng còn lại, 1 − (1 − e²)·m_B/(m_A + m_B): bằng 1 với đệm đàn hồi, bằng m_A/(m_A + m_B) khi hai xe dính vào nhau. Khác với động lượng, động năng chỉ được bảo toàn trong va chạm đàn hồi; phần mất đi chuyển thành nhiệt, âm thanh và làm biến dạng đệm."
+      },
+      "x": "kineticBefore",
+      "y": "kineticAfter",
+      "group": ["massA", "restitution"],
+      "columns": [
+        "massA",
+        "speed",
+        "restitution",
+        "kineticBefore",
+        "kineticAfter",
+        "kineticPercent"
+      ],
+      "slope": {
+        "label": "Fraction of kinetic energy kept",
+        "vi": { "label": "Phần động năng còn lại" },
+        "symbol": "E_k′/E_k",
+        "unit": "",
+        "theory": "kineticSlope"
+      }
+    }
+  ],
+  "note": "A simplified teaching model. Glider B (0.3 kg: a 0.2 kg glider with one 0.1 kg mass) rests on a level track with no friction and no air drag, so between impacts each glider moves at constant velocity. Glider A starts already moving at u_A (the launcher has pushed it). The impact is instantaneous and follows Newton's law of restitution: the speed of separation is e times the speed of approach, v_B′ − v_A′ = e·u_A, while the total momentum is conserved, m_A·v_A′ + m_B·v_B′ = m_A·u_A. So v_A′ = u_A·(m_A − e·m_B)/(m_A + m_B) and v_B′ = u_A·m_A·(1 + e)/(m_A + m_B). e = 1 is elastic (the kinetic energy is kept: equal gliders swap velocities and A stops dead), e = 0 perfectly inelastic (the gliders stick and move on at m_A·u_A/(m_A + m_B)); in between, the fraction of the kinetic energy kept is 1 − (1 − e²)·m_B/(m_A + m_B), the rest going into heat, sound and the bumpers. The e values are illustrative properties of the bumpers, not measured ones: real spring or magnetic bumpers come close to 1 but stay below it, and no real bumper reaches exactly 1. Each glider carries a card L = 0.1 m long; a light gate times how long the card blocks its beam, Δt = L/v; gate 1 times glider A before the impact, gate 2 glider B after it. The velocities, momenta and energies shown are simulated values; the gate readings are the gate times rounded to the timer's resolution d. Glider A's velocity after the impact is the simulated value: on a real track gate 1 times it if A bounces back and gate 2 if it follows B, and it cannot be timed when A stops; \"Stops\" means |v_A′| ≤ 0.5 mm/s. The run ends when glider B reaches the buffer at the far end of the 1.5 m track; its bounce there is not modelled. On a real air track the air still drags a little, the track is never perfectly level and the bumpers act over a few milliseconds, so the momentum measured after the collision comes out a little different from the momentum before.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the collision instructions on the board.",
+      "vi": { "instruction": "Đọc hướng dẫn thí nghiệm va chạm trên bảng." },
+      "done": { "kind": "inspected", "item": "collisions-instructions" }
+    },
+    {
+      "id": "bumpers",
+      "instruction": "Choose the bumpers with the e dial: elastic or spring bumpers, soft pads, or Velcro so the gliders stick.",
+      "vi": {
+        "instruction": "Chọn loại đệm va chạm bằng núm e: đệm đàn hồi hoặc đệm lò xo, đệm mềm, hoặc băng nhám dính để hai xe dính vào nhau."
+      },
+      "done": { "kind": "adjusted", "parameter": "restitution" }
+    },
+    {
+      "id": "mass",
+      "instruction": "Set the mass of glider A, m_A, and its speed u_A.",
+      "vi": { "instruction": "Đặt khối lượng m_A của xe A và tốc độ u_A của nó." },
+      "done": { "kind": "adjusted", "parameter": "massA" }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: glider A passes light gate 1, hits glider B, and B passes light gate 2.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: xe A đi qua cổng quang điện 1, va chạm với xe B, rồi xe B đi qua cổng quang điện 2."
+      },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read the gate times and the momentum before and after on the results monitor: are they equal? Is the kinetic energy kept?",
+      "vi": {
+        "instruction": "Đọc thời gian chắn sáng, tổng động lượng trước và sau va chạm trên màn hình kết quả: chúng có bằng nhau không? Động năng có được giữ nguyên không?"
+      },
+      "done": { "kind": "viewed" }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, change u_A or m_A, and run again to add points to the analyses.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, thay đổi u_A hoặc m_A rồi chạy lại để thêm điểm vào phần phân tích."
+      },
+      "done": { "kind": "reset" }
+    }
+  ],
+  "examples": [
+    {
+      "id": "gliders-stick",
+      "question": "Glider A ({massA} kg) moving at {speed} m/s hits glider B ({massB} kg) at rest; Velcro makes them stick together. Find their common velocity and the share of the kinetic energy kept.",
+      "vi": {
+        "question": "Xe A ({massA} kg) chuyển động với tốc độ {speed} m/s va vào xe B ({massB} kg) đang đứng yên; băng dính gai làm hai xe dính vào nhau. Tìm vận tốc chung và phần trăm động năng còn lại."
+      },
+      "set": { "massA": 0.3, "speed": 0.4, "restitution": 0 },
+      "find": [{ "theory": "velocityB" }, { "theory": "kineticPercent" }],
+      "steps": [
+        {
+          "say": "Momentum is conserved, and after the impact both gliders move together.",
+          "vi": { "say": "Động lượng được bảo toàn, và sau va chạm hai xe chuyển động cùng nhau." },
+          "write": "v = {massA}·{speed}/({massA} + {massB}) = {@velocityB} m/s",
+          "check": { "expr": "massA*speed/(massA+massB)", "equals": "velocityB" }
+        },
+        {
+          "say": "Compare the kinetic energy after, ½(m_A + m_B)v², with the energy before, ½m_A·u_A². The rest became heat and sound.",
+          "vi": {
+            "say": "So sánh động năng sau, ½(m_A + m_B)v², với động năng trước, ½m_A·u_A². Phần còn lại chuyển thành nhiệt và âm."
+          },
+          "write": "E_k′/E_k = (m_A + m_B)v²/(m_A·u_A²) = {@kineticPercent}%",
+          "check": {
+            "expr": "100*(massA+massB)*@velocityB^2/(massA*speed^2)",
+            "equals": "kineticPercent"
+          }
+        }
+      ]
+    },
+    {
+      "id": "elastic-heavier",
+      "question": "Glider A, {massA} kg at {speed} m/s, collides elastically (e = {restitution}) with glider B ({massB} kg) at rest. Find both velocities after the collision.",
+      "vi": {
+        "question": "Xe A, {massA} kg, chuyển động với {speed} m/s, va chạm đàn hồi (e = {restitution}) với xe B ({massB} kg) đang đứng yên. Tìm vận tốc của hai xe sau va chạm."
+      },
+      "set": { "massA": 0.5, "speed": 0.4, "restitution": 1 },
+      "find": [{ "theory": "velocityA" }, { "theory": "velocityB" }],
+      "steps": [
+        {
+          "say": "Two laws: momentum is conserved, m_A·u_A = m_A·v_A′ + m_B·v_B′; and the gliders separate e times as fast as they approached.",
+          "vi": {
+            "say": "Hai định luật: động lượng bảo toàn, m_A·u_A = m_A·v_A′ + m_B·v_B′; và tốc độ tách ra bằng e lần tốc độ lại gần."
+          },
+          "write": "v_B′ − v_A′ = e·u_A"
+        },
+        {
+          "say": "Solving the two together gives B’s velocity.",
+          "vi": { "say": "Giải hệ hai phương trình được vận tốc của xe B." },
+          "write": "v_B′ = u_A·m_A(1 + e)/(m_A + m_B) = {@velocityB} m/s",
+          "check": { "expr": "speed*massA*(1+restitution)/(massA+massB)", "equals": "velocityB" }
+        },
+        {
+          "say": "Then A’s velocity: positive, so the heavier glider A follows B forwards.",
+          "vi": {
+            "say": "Từ đó suy ra vận tốc xe A: dương, nên xe A nặng hơn tiếp tục đi theo xe B."
+          },
+          "write": "v_A′ = v_B′ − e·u_A = {@velocityB} − {restitution}·{speed} = {@velocityA} m/s",
+          "check": { "expr": "@velocityB-restitution*speed", "equals": "velocityA" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "Glider A hits glider B on an almost frictionless air track; in every collision the total momentum stays the same, but only an elastic one keeps the kinetic energy.",
+    "vi": {
+      "summary": "Xe trượt A va chạm xe trượt B trên đệm không khí gần như không ma sát; trong mọi va chạm tổng động lượng được bảo toàn, nhưng chỉ va chạm đàn hồi mới bảo toàn động năng."
+    },
+    "parts": [
+      {
+        "id": "track",
+        "name": "Air track",
+        "role": "Air blown through rows of holes lifts the gliders, so they move with almost no friction.",
+        "vi": {
+          "name": "Đệm không khí",
+          "role": "Không khí thổi qua các hàng lỗ nâng xe trượt lên, nên xe chuyển động gần như không ma sát."
+        },
+        "anchor": {
+          "at": [0.5, -0.06, 0.03]
+        }
+      },
+      {
+        "id": "glider-a",
+        "name": "Glider A, mass m_A",
+        "role": "Already moving at u_A towards B; its bumper (or Velcro) faces B.",
+        "vi": {
+          "name": "Xe trượt A, khối lượng m_A",
+          "role": "Đang chuyển động với vận tốc u_A về phía B; tấm đệm (hoặc băng dính gai) của nó hướng về B."
+        },
+        "anchor": {
+          "part": "bumper-a"
+        }
+      },
+      {
+        "id": "glider-b",
+        "name": "Glider B (0.3 kg)",
+        "role": "At rest until A hits it.",
+        "vi": {
+          "name": "Xe trượt B (0.3 kg)",
+          "role": "Đứng yên cho tới khi bị A va chạm."
+        },
+        "anchor": {
+          "part": "bumper-b"
+        }
+      },
+      {
+        "id": "gate-1",
+        "name": "Light gate 1",
+        "role": "Times how long A’s 0.1 m card blocks its beam, before the collision.",
+        "vi": {
+          "name": "Cổng quang 1",
+          "role": "Đo thời gian tấm chắn dài 0.1 m của A che chùm sáng, trước va chạm."
+        },
+        "anchor": {
+          "at": [-0.4, 0.045, 0]
+        }
+      },
+      {
+        "id": "gate-2",
+        "name": "Light gate 2",
+        "role": "Times B’s card after the collision.",
+        "vi": {
+          "name": "Cổng quang 2",
+          "role": "Đo thời gian tấm chắn của B đi qua, sau va chạm."
+        },
+        "anchor": {
+          "at": [0.25, 0.045, 0]
+        }
+      },
+      {
+        "id": "timer",
+        "name": "Timer",
+        "role": "Shows the two gate times Δt₁ and Δt₂, to its resolution d.",
+        "vi": {
+          "name": "Đồng hồ đo thời gian",
+          "role": "Hiển thị hai khoảng thời gian Δt₁ và Δt₂, theo độ phân giải d."
+        },
+        "anchor": {
+          "part": "timer"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "Glider A slides towards B, which is at rest. On the air track nothing slows them: between impacts each glider keeps a constant velocity.",
+        "vi": {
+          "text": "Xe trượt A trượt về phía B đang đứng yên. Trên đệm không khí không có gì làm chúng chậm lại: giữa các lần va chạm mỗi xe giữ vận tốc không đổi."
+        },
+        "parts": ["track", "glider-a", "glider-b"]
+      },
+      {
+        "text": "Each gate times how long a glider’s card blocks its beam. With the card length L = 0.1 m, the speed is v = L/Δt: gate 1 gives A’s speed before, gate 2 B’s speed after.",
+        "vi": {
+          "text": "Mỗi cổng quang đo thời gian tấm chắn trên xe che chùm sáng. Với chiều dài tấm chắn L = 0.1 m, tốc độ là v = L/Δt: cổng 1 cho tốc độ của A trước va chạm, cổng 2 cho tốc độ của B sau va chạm."
+        },
+        "parts": ["gate-1", "gate-2", "timer"]
+      },
+      {
+        "text": "Momentum is mass times velocity, p = m·v. In the collision the gliders push on each other equally and oppositely, so the total momentum after equals the total before: m_A·v_A′ + m_B·v_B′ = m_A·u_A.",
+        "vi": {
+          "text": "Động lượng là tích khối lượng và vận tốc, p = m·v. Khi va chạm, hai xe tác dụng lên nhau những lực bằng nhau và ngược chiều, nên tổng động lượng sau bằng tổng động lượng trước: m_A·v_A′ + m_B·v_B′ = m_A·u_A."
+        },
+        "parts": ["glider-a", "glider-b"]
+      },
+      {
+        "text": "The bumpers set how they bounce: they separate at e times the speed they met at. With e = 1 (elastic) equal gliders swap velocities and A stops dead; with Velcro, e = 0, they stick and move on together.",
+        "vi": {
+          "text": "Tấm đệm quyết định cách chúng nảy ra: tốc độ tách ra bằng e lần tốc độ lúc lại gần. Với e = 1 (đàn hồi), hai xe bằng nhau trao đổi vận tốc và A dừng hẳn; với băng dính gai, e = 0, chúng dính vào nhau và cùng chuyển động."
+        },
+        "parts": ["glider-a", "glider-b"]
+      },
+      {
+        "text": "Kinetic energy is kept only when e = 1. Below that, the fraction kept is 1 − (1 − e²)·m_B/(m_A + m_B); the rest goes into heat, sound and the bumpers.",
+        "vi": {
+          "text": "Động năng chỉ được bảo toàn khi e = 1. Khi e nhỏ hơn, phần động năng còn lại là 1 − (1 − e²)·m_B/(m_A + m_B); phần còn lại chuyển thành nhiệt, âm thanh và biến dạng tấm đệm."
+        },
+        "parts": ["glider-a", "glider-b"]
+      },
+      {
+        "text": "The results compare the momentum before and after, the energy kept and the gate times with theory. Change m_A, u_A or the bumpers and run again.",
+        "vi": {
+          "text": "Phần kết quả so sánh động lượng trước và sau, phần động năng còn lại và các khoảng thời gian qua cổng với lý thuyết. Đổi m_A, u_A hoặc tấm đệm rồi chạy lại."
+        },
+        "parts": ["timer"]
+      },
+      {
+        "text": "The model is ideal: no friction or air drag, a level track and an instant impact. On a real track these make the momentum after come out a little different.",
+        "vi": {
+          "text": "Mô hình là lý tưởng: không ma sát, không lực cản không khí, đệm nằm ngang tuyệt đối và va chạm tức thời. Trên đệm thật, các yếu tố này làm động lượng sau va chạm hơi khác."
+        },
+        "parts": ["track"]
+      }
+    ]
+  }
+}

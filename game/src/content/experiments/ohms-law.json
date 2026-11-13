@@ -1,0 +1,708 @@
+{
+  "id": "ohms-law",
+  "name": "Ohm's law: series and parallel resistors",
+  "category": "physics",
+  "description": "A DC supply drives one resistor, two in series or two in parallel through a switch and an ammeter, with a voltmeter across the resistors. Close the switch and read the voltage U and the current I: their ratio U/I is the equivalent resistance, R1 + R2 in series and R1·R2/(R1 + R2) in parallel, and the circuit turns electrical energy into heat at the power P = U·I. Over several runs at different supply voltages, U against I is a straight line whose slope is that resistance.",
+  "vi": {
+    "name": "Định luật Ôm: đoạn mạch nối tiếp và song song",
+    "description": "Một nguồn điện một chiều cấp điện cho một điện trở, hai điện trở mắc nối tiếp hoặc hai điện trở mắc song song qua một khóa K và một ampe kế, với vôn kế mắc song song với đoạn mạch điện trở. Đóng khóa K rồi đọc hiệu điện thế U và cường độ dòng điện I: tỉ số U/I chính là điện trở tương đương, R1 + R2 khi mắc nối tiếp và R1·R2/(R1 + R2) khi mắc song song, và đoạn mạch biến điện năng thành nhiệt năng với công suất P = U·I. Qua nhiều lần chạy với các hiệu điện thế nguồn khác nhau, đồ thị U theo I là một đường thẳng có hệ số góc bằng điện trở đó.",
+    "note": "Định luật Ôm cho từng điện trở: U = I·R. Mắc nối tiếp, mọi điện trở có cùng cường độ dòng điện và các hiệu điện thế cộng lại, U = U1 + U2, nên R_eq = R1 + R2 (SGK kí hiệu R_tđ). Mắc song song, mọi điện trở có cùng hiệu điện thế và các dòng điện cộng lại, I = I1 + I2, nên 1/R_eq = 1/R1 + 1/R2. Khi đó I = U/R_eq, công suất P = U·I = U²/R_eq và điện năng tiêu thụ trong thời gian đóng khóa K là E = P·t (SGK kí hiệu A). Đây là mô hình dạy học đơn giản hóa: nguồn lý tưởng (không có điện trở trong), ampe kế lý tưởng (điện trở bằng 0), vôn kế lý tưởng (điện trở vô cùng lớn), dây nối không có điện trở, và các điện trở tuân theo định luật Ôm (điện trở không đổi, không bị nhiệt làm thay đổi giá trị). Vì vậy vôn kế đọc đúng hiệu điện thế nguồn, và kết quả đo trùng với lý thuyết đến sai số làm tròn của máy tính; không có sai số ngẫu nhiên nào được thêm vào. Khóa K mở trong 0,5 s đầu rồi đóng tới 3 s. Quá trình quá độ không được mô phỏng: điện cảm và điện dung ký sinh của bảng mạch làm dòng điện ổn định chỉ trong khoảng 20 nano giây, ngắn hơn rất nhiều so với bước tính 1 ms, nên dòng điện đạt ngay giá trị ổn định U/R_eq khi đóng khóa. Đồ thị nối các điểm lấy mẫu cách nhau 10 ms, nên bước nhảy đó được vẽ thành một đoạn dốc ngắn giữa điểm cuối khi khóa mở và điểm đầu khi khóa đóng: đó không phải là quá trình tăng dòng đo được. Các núm cho chọn U = 1,5; 3; 6 hoặc 12 V và mỗi điện trở 100, 220, 470 hoặc 1000 Ω, nên mỗi điện trở tỏa nhiều nhất 12²/100 = 1,44 W, dưới công suất định mức giả định 2 W. Trong phòng thí nghiệm thật, điện trở có dung sai (thường ±5 %), nóng lên khi có dòng điện chạy qua, và đồng hồ đo có điện trở riêng, nên U/I đo được lệch đôi chút so với giá trị ghi trên điện trở."
+  },
+  "requiredEquipment": ["circuit-board"],
+  "model": "electric.dc-circuit",
+  "parameters": [
+    {
+      "id": "voltage",
+      "label": "Supply voltage",
+      "vi": {
+        "label": "Hiệu điện thế nguồn"
+      },
+      "symbol": "U",
+      "unit": "V",
+      "default": 6,
+      "min": 1.5,
+      "max": 12,
+      "presets": [
+        {
+          "label": "1.5 V",
+          "vi": {
+            "label": "1,5 V"
+          },
+          "value": 1.5
+        },
+        {
+          "label": "3 V",
+          "vi": {
+            "label": "3 V"
+          },
+          "value": 3
+        },
+        {
+          "label": "6 V",
+          "vi": {
+            "label": "6 V"
+          },
+          "value": 6
+        },
+        {
+          "label": "12 V",
+          "vi": {
+            "label": "12 V"
+          },
+          "value": 12
+        }
+      ]
+    },
+    {
+      "id": "resistance1",
+      "label": "Resistor R1",
+      "vi": {
+        "label": "Điện trở R1"
+      },
+      "symbol": "R1",
+      "unit": "Ω",
+      "default": 100,
+      "min": 100,
+      "max": 1000,
+      "presets": [
+        {
+          "label": "100 Ω",
+          "vi": {
+            "label": "100 Ω"
+          },
+          "value": 100
+        },
+        {
+          "label": "220 Ω",
+          "vi": {
+            "label": "220 Ω"
+          },
+          "value": 220
+        },
+        {
+          "label": "470 Ω",
+          "vi": {
+            "label": "470 Ω"
+          },
+          "value": 470
+        },
+        {
+          "label": "1000 Ω",
+          "vi": {
+            "label": "1000 Ω"
+          },
+          "value": 1000
+        }
+      ]
+    },
+    {
+      "id": "resistance2",
+      "label": "Resistor R2",
+      "vi": {
+        "label": "Điện trở R2"
+      },
+      "symbol": "R2",
+      "unit": "Ω",
+      "default": 220,
+      "min": 100,
+      "max": 1000,
+      "presets": [
+        {
+          "label": "100 Ω",
+          "vi": {
+            "label": "100 Ω"
+          },
+          "value": 100
+        },
+        {
+          "label": "220 Ω",
+          "vi": {
+            "label": "220 Ω"
+          },
+          "value": 220
+        },
+        {
+          "label": "470 Ω",
+          "vi": {
+            "label": "470 Ω"
+          },
+          "value": 470
+        },
+        {
+          "label": "1000 Ω",
+          "vi": {
+            "label": "1000 Ω"
+          },
+          "value": 1000
+        }
+      ]
+    },
+    {
+      "id": "configuration",
+      "label": "Circuit",
+      "vi": {
+        "label": "Cách mắc"
+      },
+      "unit": "",
+      "default": 1,
+      "min": 0,
+      "max": 2,
+      "presets": [
+        {
+          "label": "R1 only",
+          "vi": {
+            "label": "Chỉ R1"
+          },
+          "value": 0
+        },
+        {
+          "label": "R1 + R2 in series",
+          "vi": {
+            "label": "R1 nối tiếp R2"
+          },
+          "value": 1
+        },
+        {
+          "label": "R1 ∥ R2 in parallel",
+          "vi": {
+            "label": "R1 song song R2"
+          },
+          "value": 2
+        }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "switchTime": 0.5,
+    "duration": 3
+  },
+  "inputs": {
+    "switchTime": {
+      "symbol": "t_K",
+      "unit": "s"
+    },
+    "duration": {
+      "symbol": "t_end",
+      "unit": "s"
+    }
+  },
+  "simulation": {
+    "timeStep": 0.001,
+    "maxDuration": 5,
+    "sampleInterval": 0.01
+  },
+  "measurements": [
+    {
+      "id": "networkVoltage",
+      "label": "Voltage across the resistors",
+      "vi": {
+        "label": "Hiệu điện thế giữa hai đầu đoạn mạch"
+      },
+      "symbol": "U",
+      "unit": "V",
+      "variable": "voltage"
+    },
+    {
+      "id": "current",
+      "label": "Current",
+      "vi": {
+        "label": "Cường độ dòng điện"
+      },
+      "symbol": "I",
+      "unit": "A",
+      "variable": "current"
+    },
+    {
+      "id": "power",
+      "label": "Power",
+      "vi": {
+        "label": "Công suất"
+      },
+      "symbol": "P",
+      "unit": "W",
+      "variable": "power"
+    },
+    {
+      "id": "energy",
+      "label": "Energy delivered",
+      "vi": {
+        "label": "Điện năng tiêu thụ"
+      },
+      "symbol": "E",
+      "unit": "J",
+      "variable": "energy"
+    },
+    {
+      "id": "current1",
+      "label": "Current through R1",
+      "vi": {
+        "label": "Cường độ dòng điện qua R1"
+      },
+      "symbol": "I1",
+      "unit": "A",
+      "variable": "current1"
+    },
+    {
+      "id": "current2",
+      "label": "Current through R2",
+      "vi": {
+        "label": "Cường độ dòng điện qua R2"
+      },
+      "symbol": "I2",
+      "unit": "A",
+      "variable": "current2"
+    }
+  ],
+  "results": [
+    {
+      "id": "networkVoltage",
+      "label": "Voltage across the circuit U",
+      "vi": {
+        "label": "Hiệu điện thế giữa hai đầu đoạn mạch U"
+      },
+      "symbol": "U",
+      "unit": "V",
+      "variable": "voltage",
+      "reduce": "final",
+      "theory": "voltage"
+    },
+    {
+      "id": "current",
+      "label": "Current in the main circuit I",
+      "vi": {
+        "label": "Cường độ dòng điện trong mạch chính I"
+      },
+      "symbol": "I",
+      "unit": "A",
+      "variable": "current",
+      "reduce": "final",
+      "theory": "current"
+    },
+    {
+      "id": "resistance",
+      "label": "Equivalent resistance U/I",
+      "vi": {
+        "label": "Điện trở tương đương U/I"
+      },
+      "symbol": "U/I",
+      "unit": "Ω",
+      "variable": "resistance",
+      "reduce": "final",
+      "theory": "equivalentResistance"
+    },
+    {
+      "id": "power",
+      "label": "Power P = U·I",
+      "vi": {
+        "label": "Công suất P = U·I"
+      },
+      "symbol": "P",
+      "unit": "W",
+      "variable": "power",
+      "reduce": "final",
+      "theory": "power"
+    },
+    {
+      "id": "energy",
+      "label": "Energy while the switch was closed",
+      "vi": {
+        "label": "Điện năng tiêu thụ khi khóa K đóng"
+      },
+      "symbol": "E",
+      "unit": "J",
+      "variable": "energy",
+      "reduce": "final",
+      "theory": "energy"
+    },
+    {
+      "id": "voltage1",
+      "label": "Voltage across R1",
+      "vi": {
+        "label": "Hiệu điện thế giữa hai đầu R1"
+      },
+      "symbol": "U1",
+      "unit": "V",
+      "variable": "voltage1",
+      "reduce": "final",
+      "theory": "voltage1"
+    },
+    {
+      "id": "voltage2",
+      "label": "Voltage across R2",
+      "vi": {
+        "label": "Hiệu điện thế giữa hai đầu R2"
+      },
+      "symbol": "U2",
+      "unit": "V",
+      "variable": "voltage2",
+      "reduce": "final",
+      "theory": "voltage2"
+    },
+    {
+      "id": "current1",
+      "label": "Current through R1",
+      "vi": {
+        "label": "Cường độ dòng điện qua R1"
+      },
+      "symbol": "I1",
+      "unit": "A",
+      "variable": "current1",
+      "reduce": "final",
+      "theory": "current1"
+    },
+    {
+      "id": "current2",
+      "label": "Current through R2",
+      "vi": {
+        "label": "Cường độ dòng điện qua R2"
+      },
+      "symbol": "I2",
+      "unit": "A",
+      "variable": "current2",
+      "reduce": "final",
+      "theory": "current2"
+    }
+  ],
+  "graphs": [
+    {
+      "id": "current-time",
+      "title": "Current against time",
+      "vi": {
+        "title": "Cường độ dòng điện theo thời gian"
+      },
+      "x": "time",
+      "y": ["current"]
+    },
+    {
+      "id": "voltage-current",
+      "title": "Voltage against current",
+      "vi": {
+        "title": "Hiệu điện thế theo cường độ dòng điện"
+      },
+      "x": "current",
+      "y": ["networkVoltage"],
+      "mark": "current"
+    },
+    {
+      "id": "branch-currents",
+      "title": "Currents through R1 and R2 against time",
+      "vi": {
+        "title": "Cường độ dòng điện qua R1 và R2 theo thời gian"
+      },
+      "x": "time",
+      "y": ["current", "current1", "current2"],
+      "yLabel": "I"
+    },
+    {
+      "id": "energy-time",
+      "title": "Energy delivered against time",
+      "vi": {
+        "title": "Điện năng tiêu thụ theo thời gian"
+      },
+      "x": "time",
+      "y": ["energy"]
+    }
+  ],
+  "monitor": "current-time",
+  "compare": [
+    {
+      "graph": "voltage-current"
+    },
+    {
+      "graph": "energy-time"
+    }
+  ],
+  "analyses": [
+    {
+      "id": "ohm",
+      "title": "Voltage against current (Ohm's law)",
+      "note": "Each run is one point: the voltmeter's U against the ammeter's I with the switch closed. Runs with the same circuit — the same R1, R2 and way of connecting them — are fitted together, at different supply voltages; the slope of U against I is the circuit's equivalent resistance, and the line passes through the origin because the resistors are ohmic. R2 is part of the group even with R1 alone, where it carries no current: change only the supply voltage between runs.",
+      "vi": {
+        "title": "Hiệu điện thế theo cường độ dòng điện (định luật Ôm)",
+        "note": "Mỗi lần chạy là một điểm: số chỉ U của vôn kế theo số chỉ I của ampe kế khi khóa K đóng. Các lần chạy cùng một đoạn mạch — cùng R1, R2 và cùng cách mắc — được khớp chung, với các hiệu điện thế nguồn khác nhau; hệ số góc của U theo I là điện trở tương đương của đoạn mạch, và đường thẳng đi qua gốc tọa độ vì điện trở của các điện trở không đổi. R2 vẫn thuộc nhóm ngay cả khi chỉ dùng R1, lúc đó R2 không có dòng điện: giữa các lần chạy chỉ thay đổi hiệu điện thế nguồn."
+      },
+      "x": "current",
+      "y": "networkVoltage",
+      "group": ["resistance1", "resistance2", "configuration"],
+      "columns": [
+        "configuration",
+        "resistance1",
+        "resistance2",
+        "voltage",
+        "networkVoltage",
+        "current",
+        "resistance",
+        "power"
+      ],
+      "slope": {
+        "label": "Equivalent resistance",
+        "vi": {
+          "label": "Điện trở tương đương"
+        },
+        "symbol": "R_eq",
+        "unit": "Ω",
+        "theory": "equivalentResistance"
+      }
+    }
+  ],
+  "note": "Ohm's law for each resistor: U = I·R. In series every resistor carries the same current and the voltages add, U = U1 + U2, so R_eq = R1 + R2. In parallel every resistor has the same voltage and the currents add, I = I1 + I2, so 1/R_eq = 1/R1 + 1/R2. Then I = U/R_eq, the power P = U·I = U²/R_eq and the energy over the time the switch is closed E = P·t. A simplified teaching model: an ideal supply (no internal resistance), an ideal ammeter (zero resistance), an ideal voltmeter (infinite resistance), leads without resistance and ohmic resistors — constant resistance, never changed by heating. So the voltmeter reads the supply voltage, and the results agree with the theory to the computer's rounding; no random error is added. The switch is open for the first 0.5 s and closed until 3 s. No transient is modelled: the board's stray inductance and capacitance settle the current within some 20 ns, far below the 1 ms step, so it takes its steady value U/R_eq the moment the switch closes. The graphs join samples 10 ms apart, so that jump is drawn as a short slope between the last open and the first closed sample: it is not a measured rise. The dials offer U = 1.5, 3, 6 or 12 V and each resistor 100, 220, 470 or 1000 Ω, so no resistor dissipates more than 12²/100 = 1.44 W, below the assumed 2 W rating. In a real lab the resistors have a tolerance (often ±5 %), warm up as current flows, and the meters have resistance of their own, so the measured U/I differs a little from the value printed on the resistor.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the Ohm's law instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn định luật Ôm trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "ohms-law-instructions"
+      }
+    },
+    {
+      "id": "circuit",
+      "instruction": "Choose the circuit — R1 alone, in series or in parallel — and set R1 and R2 with the dials on the control desk.",
+      "vi": {
+        "instruction": "Chọn cách mắc — chỉ R1, nối tiếp hoặc song song — rồi đặt R1 và R2 bằng các núm xoay trên bàn điều khiển."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "configuration"
+      }
+    },
+    {
+      "id": "voltage",
+      "instruction": "Set the supply voltage U.",
+      "vi": {
+        "instruction": "Đặt hiệu điện thế nguồn U."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "voltage"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the switch closes after 0.5 s; watch the ammeter and the voltmeter.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: sau 0,5 s khóa K đóng; quan sát ampe kế và vôn kế."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Read U, I and U/I on the results monitor, and compare U/I with R1 + R2 or R1·R2/(R1 + R2).",
+      "vi": {
+        "instruction": "Đọc U, I và U/I trên màn hình kết quả, rồi so sánh U/I với R1 + R2 hoặc R1·R2/(R1 + R2)."
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, change only the supply voltage, and run again to add a point to the U–I line.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, chỉ thay đổi hiệu điện thế nguồn, rồi chạy lại để thêm một điểm vào đồ thị U–I."
+      },
+      "done": {
+        "kind": "reset"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "series",
+      "question": "R1 = {resistance1} Ω and R2 = {resistance2} Ω are in series across {voltage} V. Find the current and the voltage across R1.",
+      "vi": {
+        "question": "Hai điện trở R1 = {resistance1} Ω và R2 = {resistance2} Ω mắc nối tiếp vào hiệu điện thế {voltage} V. Tìm cường độ dòng điện và hiệu điện thế giữa hai đầu R1."
+      },
+      "set": { "voltage": 12, "resistance1": 470, "resistance2": 1000, "configuration": 1 },
+      "find": [{ "theory": "current" }, { "theory": "voltage1" }],
+      "steps": [
+        {
+          "say": "In series the resistances add.",
+          "vi": { "say": "Mắc nối tiếp thì điện trở tương đương bằng tổng các điện trở." },
+          "write": "R = R1 + R2 = {resistance1} + {resistance2} = {@equivalentResistance} Ω",
+          "check": { "expr": "resistance1+resistance2", "equals": "equivalentResistance" }
+        },
+        {
+          "say": "Ohm’s law for the whole circuit gives the current, the same in both resistors.",
+          "vi": {
+            "say": "Định luật Ôm cho cả đoạn mạch cho cường độ dòng điện, như nhau trong hai điện trở."
+          },
+          "write": "I = U/R = {voltage}/{@equivalentResistance} ≈ {@current} A",
+          "check": { "expr": "voltage/@equivalentResistance", "equals": "current" }
+        },
+        {
+          "say": "Ohm’s law for R1 alone.",
+          "vi": { "say": "Định luật Ôm cho riêng R1." },
+          "write": "U1 = I·R1 = {@current}·{resistance1} ≈ {@voltage1} V",
+          "check": { "expr": "@current*resistance1", "equals": "voltage1" }
+        }
+      ]
+    },
+    {
+      "id": "parallel",
+      "question": "R1 = {resistance1} Ω and R2 = {resistance2} Ω are in parallel across {voltage} V. Find the equivalent resistance and the main current.",
+      "vi": {
+        "question": "Hai điện trở R1 = {resistance1} Ω và R2 = {resistance2} Ω mắc song song vào hiệu điện thế {voltage} V. Tìm điện trở tương đương và cường độ dòng điện mạch chính."
+      },
+      "set": { "voltage": 6, "resistance1": 100, "resistance2": 220, "configuration": 2 },
+      "find": [{ "theory": "equivalentResistance", "symbol": "R" }, { "theory": "current" }],
+      "steps": [
+        {
+          "say": "In parallel the reciprocals add: the result is smaller than either resistor.",
+          "vi": {
+            "say": "Mắc song song thì nghịch đảo các điện trở cộng lại: điện trở tương đương nhỏ hơn mỗi điện trở thành phần."
+          },
+          "write": "R = R1·R2/(R1 + R2) = {resistance1}·{resistance2}/({resistance1} + {resistance2}) ≈ {@equivalentResistance} Ω",
+          "check": {
+            "expr": "resistance1*resistance2/(resistance1+resistance2)",
+            "equals": "equivalentResistance"
+          }
+        },
+        {
+          "say": "The main current is U over R — the sum of the branch currents U/R1 and U/R2.",
+          "vi": {
+            "say": "Dòng điện mạch chính bằng U chia R — cũng bằng tổng các dòng nhánh U/R1 và U/R2."
+          },
+          "write": "I = U/R = {voltage}/{@equivalentResistance} ≈ {@current} A",
+          "check": { "expr": "voltage/@equivalentResistance", "equals": "current" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "The current through a resistor is proportional to the voltage across it (Ohm’s law); two resistors in series add up, two in parallel make a smaller resistance.",
+    "vi": {
+      "summary": "Cường độ dòng điện qua điện trở tỉ lệ với hiệu điện thế giữa hai đầu nó (định luật Ôm); hai điện trở mắc nối tiếp thì cộng lại, hai điện trở mắc song song cho điện trở nhỏ hơn."
+    },
+    "parts": [
+      {
+        "id": "supply",
+        "name": "DC supply",
+        "role": "Sets the voltage U that drives the current; its readout shows the setting.",
+        "vi": {
+          "name": "Nguồn điện một chiều",
+          "role": "Tạo hiệu điện thế U đẩy dòng điện chạy; màn hình của nó hiện giá trị đã đặt."
+        },
+        "anchor": {
+          "part": "supply-readout"
+        }
+      },
+      {
+        "id": "switch",
+        "name": "Switch K",
+        "role": "Closes the circuit 0.5 s after RUN.",
+        "vi": {
+          "name": "Khóa K",
+          "role": "Đóng mạch 0.5 s sau khi nhấn CHẠY."
+        },
+        "anchor": {
+          "part": "switch"
+        }
+      },
+      {
+        "id": "ammeter",
+        "name": "Ammeter",
+        "role": "In the main circuit: reads the current I.",
+        "vi": {
+          "name": "Ampe kế",
+          "role": "Mắc trong mạch chính: đọc cường độ dòng điện I."
+        },
+        "anchor": {
+          "part": "ammeter-readout"
+        }
+      },
+      {
+        "id": "voltmeter",
+        "name": "Voltmeter",
+        "role": "Across the resistors: reads the voltage U.",
+        "vi": {
+          "name": "Vôn kế",
+          "role": "Mắc song song với các điện trở: đọc hiệu điện thế U."
+        },
+        "anchor": {
+          "part": "needle"
+        }
+      },
+      {
+        "id": "r1",
+        "name": "Resistor R1",
+        "role": "Turns electrical energy into heat; its value is set on the dial.",
+        "vi": {
+          "name": "Điện trở R1",
+          "role": "Biến điện năng thành nhiệt; giá trị đặt bằng núm xoay."
+        },
+        "anchor": {
+          "at": [0.03, -0.047, 0.03]
+        }
+      },
+      {
+        "id": "r2",
+        "name": "Resistor R2",
+        "role": "Linked in series or in parallel with R1 by the leads, or left out.",
+        "vi": {
+          "name": "Điện trở R2",
+          "role": "Được nối tiếp hoặc song song với R1 bằng dây nối, hoặc không dùng."
+        },
+        "anchor": {
+          "at": [0.03, -0.047, 0.12]
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "Close the switch: the supply pushes a current through the resistors. The ammeter reads the current I, the voltmeter the voltage U across them.",
+        "vi": {
+          "text": "Đóng khóa: nguồn đẩy dòng điện chạy qua các điện trở. Ampe kế đọc cường độ I, vôn kế đọc hiệu điện thế U giữa hai đầu chúng."
+        },
+        "parts": ["switch", "supply", "ammeter", "voltmeter"]
+      },
+      {
+        "text": "Ohm’s law: U = I·R. For a fixed resistance the current is proportional to the voltage, so U/I gives the resistance.",
+        "vi": {
+          "text": "Định luật Ôm: U = I·R. Với điện trở không đổi, cường độ dòng điện tỉ lệ với hiệu điện thế, nên U/I cho giá trị điện trở."
+        },
+        "parts": ["r1", "ammeter", "voltmeter"]
+      },
+      {
+        "text": "In series the same current flows through both and the voltages add, U = U1 + U2: the equivalent resistance is R1 + R2.",
+        "vi": {
+          "text": "Mắc nối tiếp: cùng một dòng điện chạy qua cả hai và các hiệu điện thế cộng lại, U = U1 + U2: điện trở tương đương là R1 + R2."
+        },
+        "parts": ["r1", "r2"]
+      },
+      {
+        "text": "In parallel both have the same voltage and the currents add, I = I1 + I2: 1/R_eq = 1/R1 + 1/R2, smaller than either resistor.",
+        "vi": {
+          "text": "Mắc song song: hai điện trở có cùng hiệu điện thế và các dòng điện cộng lại, I = I1 + I2: 1/R_eq = 1/R1 + 1/R2, nhỏ hơn mỗi điện trở thành phần."
+        },
+        "parts": ["r1", "r2"]
+      },
+      {
+        "text": "The resistors turn the electrical energy into heat at the power P = U·I = U²/R_eq; while the switch is closed they take E = P·t.",
+        "vi": {
+          "text": "Các điện trở biến điện năng thành nhiệt với công suất P = U·I = U²/R_eq; khi khóa đóng, chúng tiêu thụ E = P·t."
+        },
+        "parts": ["r1", "r2", "supply"]
+      },
+      {
+        "text": "The results compare U, I and U/I with theory. Change only U and run again: U against I is a straight line whose slope is R_eq.",
+        "vi": {
+          "text": "Phần kết quả so sánh U, I và U/I với lý thuyết. Chỉ đổi U rồi chạy lại: đồ thị U theo I là đường thẳng có hệ số góc bằng R_eq."
+        },
+        "parts": ["supply", "ammeter", "voltmeter"]
+      },
+      {
+        "text": "The model is ideal: no resistance in the supply, ammeter or leads, a perfect voltmeter, and resistances that heating never changes. Real resistors have a tolerance, so the measured U/I differs a little.",
+        "vi": {
+          "text": "Mô hình là lý tưởng: nguồn, ampe kế và dây nối không có điện trở, vôn kế hoàn hảo, và điện trở không thay đổi khi nóng lên. Điện trở thật có sai số chế tạo, nên U/I đo được hơi khác."
+        },
+        "parts": ["r1", "r2"]
+      }
+    ]
+  }
+}

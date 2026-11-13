@@ -1,0 +1,1053 @@
+{
+  "id": "boyle",
+  "skills": [
+    {
+      "id": "law",
+      "name": "Boyle’s law: p·V = constant",
+      "advice": "Re-read the conditions: a fixed mass of gas at one temperature. Then p·V stays the same, p = p0·V0/V. Push slowly at the station so the air stays at the room’s temperature.",
+      "vi": {
+        "name": "Định luật Boyle: p·V = hằng số",
+        "advice": "Đọc lại điều kiện: khối lượng khí xác định, nhiệt độ không đổi. Khi đó p·V không đổi, p = p0·V0/V. Trên trạm, đẩy pit-tông chậm để không khí giữ ở nhiệt độ phòng."
+      }
+    },
+    {
+      "id": "inverse",
+      "name": "Pressure and volume are inversely proportional",
+      "advice": "Halve the volume and the pressure doubles; reduce it to a third and the pressure triples. Trap: a linear guess, such as “30 mL less, 30 % more pressure”.",
+      "vi": {
+        "name": "Áp suất tỉ lệ nghịch với thể tích",
+        "advice": "Thể tích giảm một nửa thì áp suất tăng gấp đôi; giảm còn một phần ba thì áp suất tăng gấp ba. Lỗi hay gặp: suy luận tuyến tính kiểu “bớt 30 mL thì áp suất tăng 30 %”."
+      }
+    },
+    {
+      "id": "graph",
+      "name": "The p–1/V graph and p·V",
+      "advice": "Plot p against 1/V for several runs: a straight line through the origin whose slope is p·V. Work p·V in SI: Pa × m³ = J; 1 mL = 10⁻⁶ m³.",
+      "vi": {
+        "name": "Đồ thị p theo 1/V và tích p·V",
+        "advice": "Vẽ p theo 1/V qua nhiều lần đo: một đường thẳng qua gốc tọa độ có hệ số góc là p·V. Tính p·V theo SI: Pa × m³ = J; 1 mL = 10⁻⁶ m³."
+      }
+    },
+    {
+      "id": "measurement",
+      "name": "Reading the gauge and real effects",
+      "advice": "Each scale shows the nearest multiple of its resolution d, with u = d/√12 from the resolution alone. Remember what the model leaves out: the tube’s own volume, warming if pushed fast, leaks.",
+      "vi": {
+        "name": "Đọc áp kế và các ảnh hưởng thực tế",
+        "advice": "Mỗi dụng cụ hiển thị bội số gần nhất của độ phân giải d, với u = d/√12 chỉ do độ phân giải. Nhớ những gì mô hình bỏ qua: thể tích riêng của ống dẫn, khí nóng lên khi đẩy nhanh, rò khí."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "conditions",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["law"],
+      "stem": "Boyle’s law applies to a gas whose…",
+      "explain": "Boyle’s law: a fixed mass of gas at constant temperature.",
+      "vi": {
+        "stem": "Định luật Boyle áp dụng cho một lượng khí có…",
+        "explain": "Định luật Boyle: khối lượng khí xác định và nhiệt độ không đổi."
+      },
+      "options": [
+        {
+          "text": "mass and temperature stay the same",
+          "vi": {
+            "text": "khối lượng và nhiệt độ không đổi"
+          },
+          "correct": true
+        },
+        {
+          "text": "pressure and mass stay the same",
+          "vi": {
+            "text": "áp suất và khối lượng không đổi"
+          }
+        },
+        {
+          "text": "volume and temperature stay the same",
+          "vi": {
+            "text": "thể tích và nhiệt độ không đổi"
+          }
+        },
+        {
+          "text": "temperature may change freely",
+          "vi": {
+            "text": "nhiệt độ thay đổi tùy ý"
+          }
+        }
+      ]
+    },
+    {
+      "id": "relation",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["law"],
+      "stem": "For a fixed mass of gas at constant temperature…",
+      "explain": "Boyle’s law: p·V = constant.",
+      "vi": {
+        "stem": "Với một khối lượng khí xác định ở nhiệt độ không đổi…",
+        "explain": "Định luật Boyle: p·V = hằng số."
+      },
+      "options": [
+        {
+          "text": "p·V = constant",
+          "vi": {
+            "text": "p·V = constant"
+          },
+          "correct": true
+        },
+        {
+          "text": "p/V = constant",
+          "vi": {
+            "text": "p/V = constant"
+          }
+        },
+        {
+          "text": "V/T = constant",
+          "vi": {
+            "text": "V/T = constant"
+          }
+        },
+        {
+          "text": "p/T = constant",
+          "vi": {
+            "text": "p/T = constant"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-squeeze",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["law", "graph"],
+      "stem": "The piston of a sealed syringe of air is pushed in slowly. Decide whether each statement is true or false.",
+      "explain": "Squeezed, the molecules hit the walls more often and the pressure rises; slowly, the air stays at the room’s temperature. p against V is a curve (a hyperbola); p against 1/V is the straight line.",
+      "vi": {
+        "stem": "Pit-tông của một xilanh kín chứa không khí được đẩy vào từ từ. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Khi bị nén, các phân tử va chạm vào thành bình nhiều hơn nên áp suất tăng; đẩy chậm thì không khí giữ ở nhiệt độ phòng. Đồ thị p theo V là đường cong (hypebol); p theo 1/V mới là đường thẳng."
+      },
+      "statements": [
+        {
+          "text": "The pressure of the air rises.",
+          "vi": {
+            "text": "Áp suất của không khí tăng."
+          },
+          "true": true
+        },
+        {
+          "text": "Its molecules hit the walls more often.",
+          "vi": {
+            "text": "Các phân tử khí va chạm vào thành xilanh nhiều hơn."
+          },
+          "true": true
+        },
+        {
+          "text": "Pushing slowly lets the air stay at the room’s temperature.",
+          "vi": {
+            "text": "Đẩy chậm giúp không khí giữ ở nhiệt độ phòng."
+          },
+          "true": true
+        },
+        {
+          "text": "p against V is a straight line through the origin.",
+          "vi": {
+            "text": "Đồ thị p theo V là đường thẳng đi qua gốc tọa độ."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "halve",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["inverse"],
+      "stem": "At constant temperature the volume of the trapped air is halved. Its pressure…",
+      "explain": "p·V constant: half V, twice p.",
+      "vi": {
+        "stem": "Ở nhiệt độ không đổi, thể tích không khí bị nhốt giảm một nửa. Áp suất của nó…",
+        "explain": "p·V không đổi: V giảm một nửa thì p tăng gấp đôi."
+      },
+      "options": [
+        {
+          "text": "doubles",
+          "vi": {
+            "text": "tăng gấp đôi"
+          },
+          "correct": true
+        },
+        {
+          "text": "halves",
+          "vi": {
+            "text": "giảm một nửa"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "becomes four times larger",
+          "vi": {
+            "text": "tăng gấp bốn lần"
+          }
+        }
+      ]
+    },
+    {
+      "id": "straight-graph",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["graph"],
+      "stem": "For several runs of Boyle’s law, which graph is a straight line through the origin?",
+      "explain": "p = (p·V)·(1/V): p is proportional to 1/V.",
+      "vi": {
+        "stem": "Với nhiều lần đo theo định luật Boyle, đồ thị nào là đường thẳng đi qua gốc tọa độ?",
+        "explain": "p = (p·V)·(1/V): p tỉ lệ thuận với 1/V."
+      },
+      "options": [
+        {
+          "text": "p against 1/V",
+          "vi": {
+            "text": "p theo 1/V"
+          },
+          "correct": true
+        },
+        {
+          "text": "p against V",
+          "vi": {
+            "text": "p theo V"
+          }
+        },
+        {
+          "text": "p·V against V",
+          "vi": {
+            "text": "p·V theo V"
+          }
+        },
+        {
+          "text": "V against p",
+          "vi": {
+            "text": "V theo p"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-half",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["law", "inverse"],
+      "set": {
+        "startVolume": 0.00006,
+        "endVolume": 0.00003
+      },
+      "stem": "A syringe holds {=startVolume*1e6} mL of air at p0 = {atmosphericPressure|6} Pa; the piston is pushed slowly to {=endVolume*1e6} mL. Decide whether each statement is true or false.",
+      "explain": "p = p0·V0/V = 2·p0 = {@pressure|6} Pa; p·V stays p0·V0 ≈ {@pressureVolume} J. At 40 mL it would be p0·60/40 = 1.5·p0.",
+      "vi": {
+        "stem": "Một xilanh chứa {=startVolume*1e6} mL không khí ở p0 = {atmosphericPressure|6} Pa; pit-tông được đẩy chậm đến {=endVolume*1e6} mL. Mỗi nhận định sau đúng hay sai?",
+        "explain": "p = p0·V0/V = 2·p0 = {@pressure|6} Pa; p·V giữ nguyên p0·V0 ≈ {@pressureVolume} J. Ở 40 mL áp suất sẽ là p0·60/40 = 1,5·p0."
+      },
+      "statements": [
+        {
+          "text": "The pressure is now {@pressure|6} Pa.",
+          "vi": {
+            "text": "Áp suất lúc này là {@pressure|6} Pa."
+          },
+          "true": true,
+          "check": {
+            "expr": "atmosphericPressure*startVolume/endVolume",
+            "equals": "pressure"
+          }
+        },
+        {
+          "text": "p·V is about {@pressureVolume} J.",
+          "vi": {
+            "text": "p·V khoảng {@pressureVolume} J."
+          },
+          "true": true,
+          "check": {
+            "expr": "atmosphericPressure*startVolume",
+            "equals": "pressureVolume"
+          }
+        },
+        {
+          "text": "p·V at {=endVolume*1e6} mL is half its value at the start.",
+          "vi": {
+            "text": "p·V ở {=endVolume*1e6} mL bằng một nửa giá trị ban đầu."
+          },
+          "true": false
+        },
+        {
+          "text": "Pushed only to 40 mL, the pressure would be 1.5 times p0.",
+          "vi": {
+            "text": "Nếu chỉ đẩy đến 40 mL, áp suất sẽ bằng 1,5 lần p0."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "pressure",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["law", "inverse"],
+      "set": {
+        "startVolume": 0.00006,
+        "endVolume": 0.000025
+      },
+      "stem": "Air at {atmosphericPressure|6} Pa fills a syringe to {=startVolume*1e6} mL. The piston is pushed slowly to {=endVolume*1e6} mL. What is the pressure now?",
+      "explain": "p = p0·V0/V = {atmosphericPressure|6}·{=startVolume*1e6}/{=endVolume*1e6} ≈ {@pressure|5} Pa. p − p0 is only the rise.",
+      "vi": {
+        "stem": "Không khí ở {atmosphericPressure|6} Pa chiếm {=startVolume*1e6} mL trong xilanh. Pit-tông được đẩy chậm đến {=endVolume*1e6} mL. Áp suất lúc này bằng bao nhiêu?",
+        "explain": "p = p0·V0/V = {atmosphericPressure|6}·{=startVolume*1e6}/{=endVolume*1e6} ≈ {@pressure|5} Pa. p − p0 chỉ là phần tăng thêm."
+      },
+      "options": [
+        {
+          "text": "{@pressure|5} Pa",
+          "vi": {
+            "text": "{@pressure|5} Pa"
+          },
+          "correct": true,
+          "check": {
+            "expr": "atmosphericPressure*startVolume/endVolume",
+            "equals": "pressure"
+          }
+        },
+        {
+          "text": "{=atmosphericPressure*endVolume/startVolume|5} Pa",
+          "vi": {
+            "text": "{=atmosphericPressure*endVolume/startVolume|5} Pa"
+          },
+          "check": {
+            "expr": "atmosphericPressure*endVolume/startVolume",
+            "equals": "pressure"
+          }
+        },
+        {
+          "text": "{=atmosphericPressure*(startVolume/endVolume)^2|5} Pa",
+          "vi": {
+            "text": "{=atmosphericPressure*(startVolume/endVolume)^2|5} Pa"
+          },
+          "check": {
+            "expr": "atmosphericPressure*(startVolume/endVolume)^2",
+            "equals": "pressure"
+          }
+        },
+        {
+          "text": "{=atmosphericPressure*(startVolume-endVolume)/endVolume|5} Pa",
+          "vi": {
+            "text": "{=atmosphericPressure*(startVolume-endVolume)/endVolume|5} Pa"
+          },
+          "check": {
+            "expr": "atmosphericPressure*(startVolume-endVolume)/endVolume",
+            "equals": "pressure"
+          }
+        }
+      ]
+    },
+    {
+      "id": "pv",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["graph"],
+      "set": {
+        "startVolume": 0.00004,
+        "endVolume": 0.00002
+      },
+      "stem": "A syringe holds {=startVolume*1e6} mL of air at {atmosphericPressure|6} Pa. What is p·V for this air, in SI units?",
+      "explain": "V0 = {startVolume} m³, so p·V = {atmosphericPressure|6}·{startVolume} ≈ {@pressureVolume} J — and it keeps that value as the air is squeezed slowly.",
+      "vi": {
+        "stem": "Một xilanh chứa {=startVolume*1e6} mL không khí ở {atmosphericPressure|6} Pa. Tích p·V của lượng khí này theo đơn vị SI bằng bao nhiêu?",
+        "explain": "V0 = {startVolume} m³, nên p·V = {atmosphericPressure|6}·{startVolume} ≈ {@pressureVolume} J — và giữ nguyên giá trị đó khi khí bị nén chậm."
+      },
+      "options": [
+        {
+          "text": "{@pressureVolume} J",
+          "vi": {
+            "text": "{@pressureVolume} J"
+          },
+          "correct": true,
+          "check": {
+            "expr": "atmosphericPressure*startVolume",
+            "equals": "pressureVolume"
+          }
+        },
+        {
+          "text": "{=atmosphericPressure*startVolume*1e6} J",
+          "vi": {
+            "text": "{=atmosphericPressure*startVolume*1e6} J"
+          },
+          "check": {
+            "expr": "atmosphericPressure*startVolume*1e6",
+            "equals": "pressureVolume"
+          }
+        },
+        {
+          "text": "{=atmosphericPressure/startVolume} J",
+          "vi": {
+            "text": "{=atmosphericPressure/startVolume} J"
+          },
+          "check": {
+            "expr": "atmosphericPressure/startVolume",
+            "equals": "pressureVolume"
+          }
+        },
+        {
+          "text": "{=atmosphericPressure*endVolume} J",
+          "vi": {
+            "text": "{=atmosphericPressure*endVolume} J"
+          },
+          "check": {
+            "expr": "atmosphericPressure*endVolume",
+            "equals": "pressureVolume"
+          }
+        }
+      ]
+    },
+    {
+      "id": "which-volume",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["inverse"],
+      "set": {
+        "startVolume": 0.00006,
+        "endVolume": 0.00004
+      },
+      "stem": "{=startVolume*1e6} mL of air at {atmosphericPressure|6} Pa is squeezed slowly until the gauge reads {@pressure|6} Pa. To what volume has the piston been pushed?",
+      "explain": "V = p0·V0/p = {atmosphericPressure|6}·{=startVolume*1e6}/{@pressure|6} = {=endVolume*1e6} mL. A 1.5-fold pressure means two thirds of the volume, not 30 mL less by a linear guess.",
+      "vi": {
+        "stem": "{=startVolume*1e6} mL không khí ở {atmosphericPressure|6} Pa được nén chậm cho đến khi áp kế chỉ {@pressure|6} Pa. Pit-tông đã được đẩy đến thể tích bao nhiêu?",
+        "explain": "V = p0·V0/p = {atmosphericPressure|6}·{=startVolume*1e6}/{@pressure|6} = {=endVolume*1e6} mL. Áp suất tăng 1,5 lần thì thể tích còn hai phần ba, không phải giảm tuyến tính."
+      },
+      "options": [
+        {
+          "text": "{=atmosphericPressure*startVolume/@pressure*1e6} mL",
+          "vi": {
+            "text": "{=atmosphericPressure*startVolume/@pressure*1e6} mL"
+          },
+          "correct": true,
+          "check": {
+            "expr": "atmosphericPressure*startVolume/@pressure",
+            "equals": "volume"
+          }
+        },
+        {
+          "text": "{=@pressure*startVolume/atmosphericPressure*1e6} mL",
+          "vi": {
+            "text": "{=@pressure*startVolume/atmosphericPressure*1e6} mL"
+          },
+          "check": {
+            "expr": "@pressure*startVolume/atmosphericPressure",
+            "equals": "volume"
+          }
+        },
+        {
+          "text": "{=startVolume*(2-@pressure/atmosphericPressure)*1e6} mL",
+          "vi": {
+            "text": "{=startVolume*(2-@pressure/atmosphericPressure)*1e6} mL"
+          },
+          "check": {
+            "expr": "startVolume*(2-@pressure/atmosphericPressure)",
+            "equals": "volume"
+          }
+        },
+        {
+          "text": "{=startVolume*atmosphericPressure/(@pressure-atmosphericPressure)*1e6} mL",
+          "vi": {
+            "text": "{=startVolume*atmosphericPressure/(@pressure-atmosphericPressure)*1e6} mL"
+          },
+          "check": {
+            "expr": "startVolume*atmosphericPressure/(@pressure-atmosphericPressure)",
+            "equals": "volume"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-25",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["law", "graph"],
+      "set": {
+        "startVolume": 0.00004,
+        "endVolume": 0.000025
+      },
+      "stem": "{=startVolume*1e6} mL of air at {atmosphericPressure|6} Pa is squeezed slowly to {=endVolume*1e6} mL. Decide whether each statement is true or false.",
+      "explain": "p = p0·V0/V ≈ {@pressure|5} Pa; 1/V = 1/{endVolume} = {@inverseVolume} m⁻³; p·V = p0·V0 ≈ {@pressureVolume} J. p0·V/V0 inverts the ratio.",
+      "vi": {
+        "stem": "{=startVolume*1e6} mL không khí ở {atmosphericPressure|6} Pa được nén chậm đến {=endVolume*1e6} mL. Mỗi nhận định sau đúng hay sai?",
+        "explain": "p = p0·V0/V ≈ {@pressure|5} Pa; 1/V = 1/{endVolume} = {@inverseVolume} m⁻³; p·V = p0·V0 ≈ {@pressureVolume} J. p0·V/V0 là đảo ngược tỉ số."
+      },
+      "statements": [
+        {
+          "text": "The pressure is about {@pressure|5} Pa.",
+          "vi": {
+            "text": "Áp suất khoảng {@pressure|5} Pa."
+          },
+          "true": true,
+          "check": {
+            "expr": "atmosphericPressure*startVolume/endVolume",
+            "equals": "pressure"
+          }
+        },
+        {
+          "text": "1/V is {@inverseVolume} m⁻³.",
+          "vi": {
+            "text": "1/V bằng {@inverseVolume} m⁻³."
+          },
+          "true": true,
+          "check": {
+            "expr": "1/endVolume",
+            "equals": "inverseVolume"
+          }
+        },
+        {
+          "text": "p·V is about {@pressureVolume} J, as at the start.",
+          "vi": {
+            "text": "p·V khoảng {@pressureVolume} J, như lúc đầu."
+          },
+          "true": true,
+          "check": {
+            "expr": "@pressure*endVolume",
+            "equals": "pressureVolume"
+          }
+        },
+        {
+          "text": "The pressure is about {=atmosphericPressure*endVolume/startVolume|5} Pa.",
+          "vi": {
+            "text": "Áp suất khoảng {=atmosphericPressure*endVolume/startVolume|5} Pa."
+          },
+          "true": false,
+          "check": {
+            "expr": "atmosphericPressure*endVolume/startVolume",
+            "equals": "pressure"
+          }
+        }
+      ]
+    },
+    {
+      "id": "slope",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["graph", "law"],
+      "set": {
+        "startVolume": 0.00006,
+        "endVolume": 0.00003
+      },
+      "stem": "Several runs start from {=startVolume*1e6} mL at {atmosphericPressure|6} Pa and stop at different volumes. p is plotted against 1/V (in m⁻³). What is the slope of the line?",
+      "explain": "p = (p·V)·(1/V), and p·V = p0·V0 = {atmosphericPressure|6}·{startVolume} ≈ {@pressureVolume} Pa·m³ (J) for every run: that is the slope. With V in mL instead of m³ the number would be 10⁶ times too large.",
+      "vi": {
+        "stem": "Nhiều lần đo cùng bắt đầu từ {=startVolume*1e6} mL ở {atmosphericPressure|6} Pa và dừng ở các thể tích khác nhau. Vẽ p theo 1/V (tính bằng m⁻³). Hệ số góc của đường thẳng bằng bao nhiêu?",
+        "explain": "p = (p·V)·(1/V), mà p·V = p0·V0 = {atmosphericPressure|6}·{startVolume} ≈ {@pressureVolume} Pa·m³ (J) ở mọi lần đo: đó là hệ số góc. Nếu để V theo mL thay vì m³ thì con số sẽ lớn gấp 10⁶ lần."
+      },
+      "options": [
+        {
+          "text": "{@pressureVolume} Pa·m³",
+          "vi": {
+            "text": "{@pressureVolume} Pa·m³"
+          },
+          "correct": true,
+          "check": {
+            "expr": "atmosphericPressure*startVolume",
+            "equals": "pressureVolume"
+          }
+        },
+        {
+          "text": "{=atmosphericPressure*startVolume*1e6} Pa·m³",
+          "vi": {
+            "text": "{=atmosphericPressure*startVolume*1e6} Pa·m³"
+          },
+          "check": {
+            "expr": "atmosphericPressure*startVolume*1e6",
+            "equals": "pressureVolume"
+          }
+        },
+        {
+          "text": "{=1/(atmosphericPressure*startVolume)} Pa·m³",
+          "vi": {
+            "text": "{=1/(atmosphericPressure*startVolume)} Pa·m³"
+          },
+          "check": {
+            "expr": "1/(atmosphericPressure*startVolume)",
+            "equals": "pressureVolume"
+          }
+        },
+        {
+          "text": "{=atmosphericPressure/startVolume} Pa·m³",
+          "vi": {
+            "text": "{=atmosphericPressure/startVolume} Pa·m³"
+          },
+          "check": {
+            "expr": "atmosphericPressure/startVolume",
+            "equals": "pressureVolume"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-gauge",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["measurement", "law"],
+      "set": {
+        "startVolume": 0.00006,
+        "endVolume": 0.00003,
+        "gaugeResolution": 5000
+      },
+      "stem": "{=startVolume*1e6} mL of air at {atmosphericPressure|6} Pa is squeezed to {=endVolume*1e6} mL; the gauge reads to {gaugeResolution} Pa. Decide whether each statement is true or false.",
+      "explain": "p = {@pressure|6} Pa shows as {=round(@pressure/gaugeResolution)*gaugeResolution|6} Pa; u = d/√12 ≈ {=gaugeResolution/sqrt(12)|3} Pa from the resolution alone. The air also fills the tube: p·(V + V_tube) stays constant, so p·V from the syringe's scale alone, the constant less p·V_tube, shrinks as p rises. Pushing fast warms the air, so the temperature is not kept.",
+      "vi": {
+        "stem": "{=startVolume*1e6} mL không khí ở {atmosphericPressure|6} Pa được nén đến {=endVolume*1e6} mL; áp kế có độ phân giải {gaugeResolution} Pa. Mỗi nhận định sau đúng hay sai?",
+        "explain": "p = {@pressure|6} Pa được hiển thị {=round(@pressure/gaugeResolution)*gaugeResolution|6} Pa; u = d/√12 ≈ {=gaugeResolution/sqrt(12)|3} Pa chỉ do độ phân giải. Khí còn chiếm cả ống dẫn: p·(V + V_ống) không đổi, nên p·V tính riêng từ vạch chia của xilanh, bằng hằng số đó trừ p·V_ống, giảm dần khi p tăng. Đẩy nhanh làm khí nóng lên, nên nhiệt độ không còn giữ nguyên."
+      },
+      "statements": [
+        {
+          "text": "The gauge shows {=round(@pressure/gaugeResolution)*gaugeResolution|6} Pa.",
+          "vi": {
+            "text": "Áp kế hiển thị {=round(@pressure/gaugeResolution)*gaugeResolution|6} Pa."
+          },
+          "true": true
+        },
+        {
+          "text": "From the resolution alone the reading’s standard uncertainty is about {=gaugeResolution/sqrt(12)|3} Pa.",
+          "vi": {
+            "text": "Chỉ do độ phân giải, độ không đảm bảo chuẩn của số đọc khoảng {=gaugeResolution/sqrt(12)|3} Pa."
+          },
+          "true": true
+        },
+        {
+          "text": "In a real lab the tube’s own volume makes p·V worked from the syringe’s scale shrink as the air is squeezed.",
+          "vi": {
+            "text": "Trong thí nghiệm thật, thể tích riêng của ống dẫn làm p·V tính từ vạch chia của xilanh giảm dần khi nén."
+          },
+          "true": true
+        },
+        {
+          "text": "Pushing the piston in quickly keeps the air’s temperature the same.",
+          "vi": {
+            "text": "Đẩy pit-tông thật nhanh giúp giữ nguyên nhiệt độ của khí."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "isothermal",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["law"],
+      "stem": "A change of state of a fixed mass of gas in which its temperature stays the same is called…",
+      "explain": "At constant temperature the process is isothermal; Boyle’s law, p·V = constant, describes it. Constant pressure is isobaric, constant volume isochoric.",
+      "vi": {
+        "stem": "Quá trình biến đổi trạng thái của một lượng khí xác định trong đó nhiệt độ được giữ không đổi gọi là…",
+        "explain": "Nhiệt độ không đổi là quá trình đẳng nhiệt, được mô tả bởi định luật Boyle: p·V = hằng số. Áp suất không đổi là đẳng áp, thể tích không đổi là đẳng tích."
+      },
+      "options": [
+        {
+          "text": "an isothermal process",
+          "vi": {
+            "text": "quá trình đẳng nhiệt"
+          },
+          "correct": true
+        },
+        {
+          "text": "an isobaric process",
+          "vi": {
+            "text": "quá trình đẳng áp"
+          }
+        },
+        {
+          "text": "an isochoric process",
+          "vi": {
+            "text": "quá trình đẳng tích"
+          }
+        },
+        {
+          "text": "a process in which p·V doubles",
+          "vi": {
+            "text": "quá trình trong đó p·V tăng gấp đôi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "push-slowly",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["law", "measurement"],
+      "stem": "Why must the piston be pushed in slowly when Boyle’s law is checked?",
+      "explain": "Squeezing a gas does work on it and warms it. Pushing slowly gives the air time to give that heat to the syringe and the room, so its temperature stays at room temperature: the process stays isothermal.",
+      "vi": {
+        "stem": "Vì sao khi kiểm chứng định luật Boyle phải đẩy pit-tông thật chậm?",
+        "explain": "Khi nén khí, ta thực hiện công lên khí và làm nó nóng lên. Đẩy chậm để khí kịp truyền nhiệt ra xi lanh và môi trường, giữ nhiệt độ bằng nhiệt độ phòng: quá trình vẫn là đẳng nhiệt."
+      },
+      "options": [
+        {
+          "text": "So the air stays at room temperature",
+          "vi": {
+            "text": "Để khí giữ được nhiệt độ bằng nhiệt độ phòng"
+          },
+          "correct": true
+        },
+        {
+          "text": "So the pressure of the air stays constant",
+          "vi": {
+            "text": "Để áp suất của khí không đổi"
+          }
+        },
+        {
+          "text": "So the mass of the air grows slowly",
+          "vi": {
+            "text": "Để khối lượng khí tăng dần từ từ"
+          }
+        },
+        {
+          "text": "So p·V can rise steadily",
+          "vi": {
+            "text": "Để p·V tăng đều"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-graphs",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["graph", "inverse"],
+      "stem": "A fixed mass of air is squeezed slowly at constant temperature, and its pressure p is recorded at several volumes V. Decide whether each statement about the graphs is true or false.",
+      "explain": "p = constant/V: on p–V axes the points lie on a hyperbola (an isotherm), and on p–1/V axes on a straight line through the origin. p falls as V grows, but not along a straight line. At a higher temperature the same air has a larger p·V, so its isotherm lies further from the axes.",
+      "vi": {
+        "stem": "Một lượng khí xác định được nén chậm ở nhiệt độ không đổi, áp suất p được ghi lại ở nhiều thể tích V. Mỗi nhận định sau về các đồ thị đúng hay sai?",
+        "explain": "p = hằng số/V: trên hệ trục p–V các điểm nằm trên một đường hypebol (đường đẳng nhiệt), trên hệ trục p–1/V chúng nằm trên một đường thẳng đi qua gốc tọa độ. p giảm khi V tăng nhưng không theo đường thẳng. Ở nhiệt độ cao hơn, cùng lượng khí có p·V lớn hơn nên đường đẳng nhiệt nằm xa các trục hơn."
+      },
+      "statements": [
+        {
+          "text": "On p–V axes the points lie on a hyperbola.",
+          "vi": {
+            "text": "Trên hệ trục p–V, các điểm nằm trên một đường hypebol."
+          },
+          "true": true
+        },
+        {
+          "text": "On p–1/V axes the points lie on a straight line through the origin.",
+          "vi": {
+            "text": "Trên hệ trục p–1/V, các điểm nằm trên một đường thẳng đi qua gốc tọa độ."
+          },
+          "true": true
+        },
+        {
+          "text": "On p–V axes the points lie on a straight line sloping down.",
+          "vi": {
+            "text": "Trên hệ trục p–V, các điểm nằm trên một đường thẳng dốc xuống."
+          },
+          "true": false
+        },
+        {
+          "text": "At a higher temperature the same air would have the same p·V.",
+          "vi": {
+            "text": "Ở nhiệt độ cao hơn, cùng lượng khí đó vẫn có p·V như cũ."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "pressure-rise",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["law"],
+      "set": {
+        "startVolume": 0.00006,
+        "endVolume": 0.00004
+      },
+      "stem": "{=startVolume*1e6} mL of air at {atmosphericPressure|6} Pa is squeezed slowly to {=endVolume*1e6} mL at constant temperature. By how much does its pressure rise?",
+      "explain": "p = p0·V0/V = {atmosphericPressure|6}·{=startVolume*1e6}/{=endVolume*1e6} ≈ {@pressure|4} Pa, so the rise is p − p0 ≈ {=@pressure-atmosphericPressure|4} Pa. The final pressure itself is not the rise; p0·(V0 − V)/V0 uses the wrong volume.",
+      "vi": {
+        "stem": "{=startVolume*1e6} mL không khí ở {atmosphericPressure|6} Pa được nén chậm đến {=endVolume*1e6} mL ở nhiệt độ không đổi. Áp suất của nó tăng thêm bao nhiêu?",
+        "explain": "p = p0·V0/V = {atmosphericPressure|6}·{=startVolume*1e6}/{=endVolume*1e6} ≈ {@pressure|4} Pa, nên độ tăng áp suất là p − p0 ≈ {=@pressure-atmosphericPressure|4} Pa. Áp suất cuối không phải độ tăng; p0·(V0 − V)/V0 dùng sai thể tích."
+      },
+      "options": [
+        {
+          "text": "{=@pressure-atmosphericPressure|4} Pa",
+          "vi": {
+            "text": "{=@pressure-atmosphericPressure|4} Pa"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(@pressure-atmosphericPressure)+atmosphericPressure",
+            "equals": "pressure"
+          }
+        },
+        {
+          "text": "{@pressure|4} Pa",
+          "vi": {
+            "text": "{@pressure|4} Pa"
+          },
+          "check": {
+            "expr": "@pressure+atmosphericPressure",
+            "equals": "pressure"
+          }
+        },
+        {
+          "text": "{=atmosphericPressure*(startVolume-endVolume)/startVolume|4} Pa",
+          "vi": {
+            "text": "{=atmosphericPressure*(startVolume-endVolume)/startVolume|4} Pa"
+          },
+          "check": {
+            "expr": "atmosphericPressure*(startVolume-endVolume)/startVolume+atmosphericPressure",
+            "equals": "pressure"
+          }
+        },
+        {
+          "text": "{=atmosphericPressure*endVolume/startVolume|4} Pa",
+          "vi": {
+            "text": "{=atmosphericPressure*endVolume/startVolume|4} Pa"
+          },
+          "check": {
+            "expr": "atmosphericPressure*endVolume/startVolume+atmosphericPressure",
+            "equals": "pressure"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-50",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["law", "graph"],
+      "set": {
+        "startVolume": 0.00006,
+        "endVolume": 0.00005
+      },
+      "stem": "{=startVolume*1e6} mL of air at {atmosphericPressure|6} Pa is squeezed slowly to {=endVolume*1e6} mL. Decide whether each statement is true or false.",
+      "explain": "p = p0·V0/V ≈ {@pressure|4} Pa, a rise of p0·(V0 − V)/V = {=@pressure-atmosphericPressure|4} Pa (divided by the new volume, not the old). 1/V = 1/({endVolume} m³) = {@inverseVolume|4} m⁻³. p·V is unchanged, {@pressureVolume|4} J.",
+      "vi": {
+        "stem": "{=startVolume*1e6} mL không khí ở {atmosphericPressure|6} Pa được nén chậm đến {=endVolume*1e6} mL. Mỗi nhận định sau đúng hay sai?",
+        "explain": "p = p0·V0/V ≈ {@pressure|4} Pa, tăng thêm p0·(V0 − V)/V = {=@pressure-atmosphericPressure|4} Pa (chia cho thể tích mới, không phải thể tích cũ). 1/V = 1/({endVolume} m³) = {@inverseVolume|4} m⁻³. p·V không đổi, bằng {@pressureVolume|4} J."
+      },
+      "statements": [
+        {
+          "text": "The pressure becomes about {@pressure|4} Pa.",
+          "vi": {
+            "text": "Áp suất trở thành khoảng {@pressure|4} Pa."
+          },
+          "true": true,
+          "check": {
+            "expr": "atmosphericPressure*startVolume/endVolume",
+            "equals": "pressure"
+          }
+        },
+        {
+          "text": "At the end, 1/V is about {@inverseVolume|4} m⁻³.",
+          "vi": {
+            "text": "Lúc cuối, 1/V khoảng {@inverseVolume|4} m⁻³."
+          },
+          "true": true,
+          "check": {
+            "expr": "1/endVolume",
+            "equals": "inverseVolume"
+          }
+        },
+        {
+          "text": "The pressure becomes p0·V/V0 ≈ {=atmosphericPressure*endVolume/startVolume|4} Pa.",
+          "vi": {
+            "text": "Áp suất trở thành p0·V/V0 ≈ {=atmosphericPressure*endVolume/startVolume|4} Pa."
+          },
+          "true": false,
+          "check": {
+            "expr": "atmosphericPressure*endVolume/startVolume",
+            "equals": "pressure"
+          }
+        },
+        {
+          "text": "The pressure rises by {=atmosphericPressure*(startVolume-endVolume)/startVolume|4} Pa.",
+          "vi": {
+            "text": "Áp suất tăng thêm {=atmosphericPressure*(startVolume-endVolume)/startVolume|4} Pa."
+          },
+          "true": false,
+          "check": {
+            "expr": "atmosphericPressure+atmosphericPressure*(startVolume-endVolume)/startVolume",
+            "equals": "pressure"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-start",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["law", "inverse"],
+      "set": {
+        "startVolume": 0.00004,
+        "endVolume": 0.00003
+      },
+      "stem": "Air at {atmosphericPressure|6} Pa is trapped in a syringe and squeezed slowly to {=endVolume*1e6} mL, where the gauge reads {@pressure|5} Pa. How much air was trapped at first?",
+      "explain": "p0·V0 = p·V, so V0 = p·V/p0 = {@pressure|5}·{=endVolume*1e6}/{atmosphericPressure|6} = {=startVolume*1e6} mL. Turning the ratio over gives a volume smaller than the end volume, which squeezing cannot reach; using the rise p − p0 for p gives the other values.",
+      "vi": {
+        "stem": "Không khí ở {atmosphericPressure|6} Pa bị nhốt trong xi lanh rồi được nén chậm đến {=endVolume*1e6} mL, khi đó áp kế chỉ {@pressure|5} Pa. Lúc đầu xi lanh chứa bao nhiêu không khí?",
+        "explain": "p0·V0 = p·V, nên V0 = p·V/p0 = {@pressure|5}·{=endVolume*1e6}/{atmosphericPressure|6} = {=startVolume*1e6} mL. Đảo ngược tỉ số sẽ ra thể tích nhỏ hơn thể tích cuối, điều không thể có khi nén; dùng độ tăng p − p0 thay cho p sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{=startVolume*1e6} mL",
+          "vi": {
+            "text": "{=startVolume*1e6} mL"
+          },
+          "correct": true,
+          "check": {
+            "expr": "atmosphericPressure*(@pressure*endVolume/atmosphericPressure)/endVolume",
+            "equals": "pressure"
+          }
+        },
+        {
+          "text": "{=atmosphericPressure*endVolume/@pressure*1e6|3} mL",
+          "vi": {
+            "text": "{=atmosphericPressure*endVolume/@pressure*1e6|3} mL"
+          },
+          "check": {
+            "expr": "atmosphericPressure*(atmosphericPressure*endVolume/@pressure)/endVolume",
+            "equals": "pressure"
+          }
+        },
+        {
+          "text": "{=(@pressure-atmosphericPressure)*endVolume/atmosphericPressure*1e6|3} mL",
+          "vi": {
+            "text": "{=(@pressure-atmosphericPressure)*endVolume/atmosphericPressure*1e6|3} mL"
+          },
+          "check": {
+            "expr": "atmosphericPressure*((@pressure-atmosphericPressure)*endVolume/atmosphericPressure)/endVolume",
+            "equals": "pressure"
+          }
+        },
+        {
+          "text": "{=atmosphericPressure*endVolume/(@pressure-atmosphericPressure)*1e6|3} mL",
+          "vi": {
+            "text": "{=atmosphericPressure*endVolume/(@pressure-atmosphericPressure)*1e6|3} mL"
+          },
+          "check": {
+            "expr": "atmosphericPressure*(atmosphericPressure*endVolume/(@pressure-atmosphericPressure))/endVolume",
+            "equals": "pressure"
+          }
+        }
+      ]
+    },
+    {
+      "id": "slope-compare",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["graph", "law"],
+      "set": {
+        "startVolume": 0.00004,
+        "endVolume": 0.00002
+      },
+      "stem": "Two series of runs start at {atmosphericPressure|6} Pa, one with 60 mL of air and one with {=startVolume*1e6} mL. Each gives a straight line through the origin on a p–1/V graph. What is the slope of the {=startVolume*1e6} mL line?",
+      "explain": "p = (p0·V0)·(1/V): the slope is p·V = p0·V0 = {atmosphericPressure|6} Pa × {startVolume} m³ ≈ {@pressureVolume|4} J. The 60 mL line is steeper ({=atmosphericPressure*0.00006|4} J): more air at the same pressure. Leaving V0 in mL, or dividing by it, gives the other values.",
+      "vi": {
+        "stem": "Hai loạt thí nghiệm cùng bắt đầu ở {atmosphericPressure|6} Pa, một loạt với 60 mL không khí, loạt kia với {=startVolume*1e6} mL. Mỗi loạt cho một đường thẳng đi qua gốc tọa độ trên đồ thị p–1/V. Hệ số góc của đường ứng với {=startVolume*1e6} mL bằng bao nhiêu?",
+        "explain": "p = (p0·V0)·(1/V): hệ số góc là p·V = p0·V0 = {atmosphericPressure|6} Pa × {startVolume} m³ ≈ {@pressureVolume|4} J. Đường 60 mL dốc hơn ({=atmosphericPressure*0.00006|4} J) vì có nhiều khí hơn ở cùng áp suất. Để V0 theo mL hoặc chia cho V0 sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{@pressureVolume|4} J",
+          "vi": {
+            "text": "{@pressureVolume|4} J"
+          },
+          "correct": true,
+          "check": {
+            "expr": "atmosphericPressure*startVolume",
+            "equals": "pressureVolume"
+          }
+        },
+        {
+          "text": "{=atmosphericPressure*0.00006|4} J",
+          "vi": {
+            "text": "{=atmosphericPressure*0.00006|4} J"
+          },
+          "check": {
+            "expr": "atmosphericPressure*0.00006",
+            "equals": "pressureVolume"
+          }
+        },
+        {
+          "text": "{=atmosphericPressure*startVolume*1e6|4} J",
+          "vi": {
+            "text": "{=atmosphericPressure*startVolume*1e6|4} J"
+          },
+          "check": {
+            "expr": "atmosphericPressure*startVolume*1e6",
+            "equals": "pressureVolume"
+          }
+        },
+        {
+          "text": "{=atmosphericPressure/startVolume|4} Pa/m³",
+          "vi": {
+            "text": "{=atmosphericPressure/startVolume|4} Pa/m³"
+          },
+          "check": {
+            "expr": "atmosphericPressure/startVolume",
+            "equals": "pressureVolume"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-ratio",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["law", "inverse", "measurement"],
+      "set": {
+        "startVolume": 0.00006,
+        "endVolume": 0.000025
+      },
+      "stem": "{=startVolume*1e6} mL of air at {atmosphericPressure|6} Pa is squeezed to {=endVolume*1e6} mL. Decide whether each statement is true or false.",
+      "explain": "The volume falls {=startVolume/endVolume} times, so 1/V and p rise {=startVolume/endVolume} times: p ≈ {@pressure|4} Pa. p·V stays {@pressureVolume|4} J; it does not grow. Pushed in quickly, real air warms as it is squeezed, so the gauge first reads more than Boyle’s law gives and falls back as the air cools (the simulation keeps the temperature constant).",
+      "vi": {
+        "stem": "{=startVolume*1e6} mL không khí ở {atmosphericPressure|6} Pa được nén đến {=endVolume*1e6} mL. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Thể tích giảm {=startVolume/endVolume} lần nên 1/V và p tăng {=startVolume/endVolume} lần: p ≈ {@pressure|4} Pa. p·V vẫn bằng {@pressureVolume|4} J, không tăng. Nếu đẩy nhanh, không khí thật nóng lên khi bị nén nên áp kế lúc đầu chỉ cao hơn giá trị theo định luật Boyle, rồi giảm dần khi khí nguội (mô phỏng giữ nhiệt độ không đổi)."
+      },
+      "statements": [
+        {
+          "text": "Squeezed slowly, the air reaches about {@pressure|4} Pa.",
+          "vi": {
+            "text": "Khi nén chậm, áp suất khí đạt khoảng {@pressure|4} Pa."
+          },
+          "true": true,
+          "check": {
+            "expr": "atmosphericPressure*startVolume/endVolume",
+            "equals": "pressure"
+          }
+        },
+        {
+          "text": "1/V rises from {=1/startVolume|4} m⁻³ to {@inverseVolume|4} m⁻³, so p rises in the same ratio.",
+          "vi": {
+            "text": "1/V tăng từ {=1/startVolume|4} m⁻³ lên {@inverseVolume|4} m⁻³, nên p tăng theo cùng tỉ lệ."
+          },
+          "true": true,
+          "check": {
+            "expr": "1/endVolume",
+            "equals": "inverseVolume"
+          }
+        },
+        {
+          "text": "p·V at {=endVolume*1e6} mL is {=startVolume/endVolume} times p·V at {=startVolume*1e6} mL.",
+          "vi": {
+            "text": "p·V ở {=endVolume*1e6} mL gấp {=startVolume/endVolume} lần p·V ở {=startVolume*1e6} mL."
+          },
+          "true": false
+        },
+        {
+          "text": "Pushed in quickly, real air would at first read below Boyle’s value, because squeezing cools it.",
+          "vi": {
+            "text": "Nếu đẩy nhanh, không khí thật lúc đầu sẽ có áp suất thấp hơn giá trị theo định luật Boyle vì bị nén thì khí lạnh đi."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

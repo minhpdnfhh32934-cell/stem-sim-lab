@@ -1,0 +1,416 @@
+{
+  "id": "seed-respiration",
+  "name": "Respiration of germinating seeds: a respirometer",
+  "category": "biology",
+  "description": "Germinating seeds lie on gauze in a stoppered tube over a CO₂ absorber, in a water bath; from the bung a graduated pipette holds a coloured drop. As the seeds take up oxygen and their carbon dioxide is absorbed, the gas in the tube shrinks and the drop moves towards them. Choose the seeds, the bath's temperature and the absorber, then time the drop for 10 minutes: the volume it moves gives the rate of respiration per gram of seed. Boiled seeds are the control; a run over water instead of the absorber shows the CO₂ given out, and from the two runs the respiratory quotient.",
+  "vi": {
+    "name": "Hô hấp của hạt đang nảy mầm: hô hấp kế",
+    "description": "Hạt đang nảy mầm được đặt trên lưới trong một ống nghiệm đậy kín, phía dưới là chất hấp thụ CO₂, ống ngâm trong bể ổn nhiệt; từ nút ống, một pipet chia vạch chứa một giọt nước màu. Khi hạt lấy khí oxygen và khí carbon dioxide do hạt thải ra bị hấp thụ, thể tích khí trong ống giảm và giọt màu dịch chuyển về phía hạt. Chọn loại hạt, nhiệt độ của bể và chất hấp thụ, rồi theo dõi giọt màu trong 10 phút: thể tích giọt màu dịch chuyển cho biết tốc độ hô hấp trên mỗi gam hạt. Hạt đã luộc là đối chứng; một lần chạy với nước thay cho chất hấp thụ cho thấy lượng CO₂ thải ra, và từ hai lần chạy suy ra thương số hô hấp.",
+    "note": "Hạt lấy O₂ với tốc độ r = m·r₂₀·Q₁₀^((T − 20)/10) và thải CO₂ với tốc độ RQ·r. r₂₀ = 0,25 mL O₂ mỗi gam mỗi giờ ở 20 °C là giá trị minh họa (THIẾU DỮ LIỆU: không phải số đo của một loài cụ thể), cỡ vài phần mười mL mỗi gam mỗi giờ như hô hấp kế ở trường cho thấy, và được lấy như nhau cho cả hai loại hạt sống để chỉ thương số hô hấp phân biệt chúng; Q₁₀ = 2 (tốc độ tăng gấp đôi khi nhiệt độ tăng 10 °C) là giá trị thường dùng trong sách giáo khoa, cũng chỉ mang tính minh họa. Thương số hô hấp RQ = CO₂ thải ra / O₂ lấy vào được suy ra từ phương trình hô hấp: với tinh bột (đường) C₆H₁₂O₆ + 6 O₂ → 6 CO₂ + 6 H₂O, RQ = 1; với chất béo khoảng 0,7 (tripalmitin: 2 C₅₁H₉₈O₆ + 145 O₂ → 102 CO₂ + 98 H₂O, 102/145 = 0,703). Có dung dịch KOH, CO₂ bị hấp thụ ngay khi thải ra, nên giọt màu đo lượng O₂ lấy vào; với nước, giọt màu đo O₂ − CO₂ = r·(1 − RQ). Từ hai lần chạy chỉ khác chất hấp thụ: RQ = 1 − V_nước/V_KOH. Hạt đã luộc không còn sống và không hô hấp. Giả thiết: hạt đã ổn định trong bể trước khi đo (quy trình thật chờ 5–10 phút), nên tốc độ không đổi; chất hấp thụ lấy hết CO₂ ngay; bể giữ nhiệt độ không đổi và một ống đối chứng chứa bi thủy tinh (thermobarometer) bù cho thay đổi áp suất phòng, nên chỉ hô hấp làm giọt màu dịch chuyển. Thể tích khí tính ở nhiệt độ của bể và áp suất phòng. Mô hình chỉ dùng từ 5 đến 35 °C; nóng hơn, enzyme của hạt bắt đầu biến tính. Thời gian được nén: 10 phút đo hiển thị trong 10 giây. Pipet đọc thể tích mô phỏng theo vạch chia d_V của nó (bội số gần nhất của d_V, độ bất định d_V/√12 chỉ do vạch chia); không có sai số ngẫu nhiên nào được thêm vào, và tốc độ được tính từ thể tích mô phỏng, không phải từ số đọc. Trong phòng thí nghiệm thật, nút có thể hở, giọt màu có thể bị dính trong pipet, vi sinh vật trên hạt đã luộc vẫn hô hấp một ít, và hạt có dầu đang nảy mầm còn chuyển chất béo thành đường — quá trình này lấy O₂ mà không thải CO₂ — nên RQ đo được của chúng thường thấp hơn 0,7."
+  },
+  "requiredEquipment": ["respirometer"],
+  "model": "biology.seed-respiration",
+  "parameters": [
+    {
+      "id": "seeds",
+      "label": "Seeds in the tube",
+      "vi": { "label": "Hạt trong ống" },
+      "unit": "",
+      "default": 0,
+      "min": 0,
+      "max": 2,
+      "presets": [
+        {
+          "label": "Germinating peas",
+          "vi": { "label": "Hạt đậu Hà Lan đang nảy mầm" },
+          "value": 0
+        },
+        {
+          "label": "Germinating sunflower seeds",
+          "vi": { "label": "Hạt hướng dương đang nảy mầm" },
+          "value": 1
+        },
+        {
+          "label": "Boiled peas (control)",
+          "vi": { "label": "Hạt đậu Hà Lan đã luộc (đối chứng)" },
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": "temperature",
+      "label": "Temperature of the water bath",
+      "vi": { "label": "Nhiệt độ của bể ổn nhiệt" },
+      "symbol": "T",
+      "unit": "°C",
+      "default": 20,
+      "min": 15,
+      "max": 30,
+      "presets": [
+        { "label": "15 °C", "vi": { "label": "15 °C" }, "value": 15 },
+        { "label": "20 °C", "vi": { "label": "20 °C" }, "value": 20 },
+        { "label": "25 °C", "vi": { "label": "25 °C" }, "value": 25 },
+        { "label": "30 °C", "vi": { "label": "30 °C" }, "value": 30 }
+      ]
+    },
+    {
+      "id": "absorber",
+      "label": "Under the seeds",
+      "vi": { "label": "Dưới lớp hạt" },
+      "unit": "",
+      "default": 1,
+      "min": 0,
+      "max": 1,
+      "presets": [
+        {
+          "label": "Water (no CO₂ absorber)",
+          "vi": { "label": "Nước (không hấp thụ CO₂)" },
+          "value": 0
+        },
+        {
+          "label": "Potassium hydroxide solution (absorbs CO₂)",
+          "vi": { "label": "Dung dịch KOH (hấp thụ CO₂)" },
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "pipetteResolution",
+      "label": "Pipette's graduation",
+      "vi": { "label": "Vạch chia của pipet" },
+      "symbol": "d_V",
+      "unit": "mL",
+      "default": 0.01,
+      "min": 0.01,
+      "max": 0.05,
+      "presets": [
+        { "label": "0.01 mL", "vi": { "label": "0,01 mL" }, "value": 0.01 },
+        { "label": "0.02 mL", "vi": { "label": "0,02 mL" }, "value": 0.02 },
+        { "label": "0.05 mL", "vi": { "label": "0,05 mL" }, "value": 0.05 }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "seedMass": 10,
+    "pipetteVolume": 1,
+    "duration": 600,
+    "timeLapse": 60
+  },
+  "inputs": {
+    "seedMass": { "symbol": "m", "unit": "g" },
+    "pipetteVolume": { "symbol": "V_max", "unit": "mL", "desk": false },
+    "duration": { "symbol": "t", "unit": "s", "desk": false },
+    "timeLapse": { "symbol": "k", "unit": "", "desk": false }
+  },
+  "simulation": { "timeStep": 0.02, "maxDuration": 15, "sampleInterval": 0.1 },
+  "measurements": [
+    {
+      "id": "gasTakenUp",
+      "label": "Gas taken up (the drop's movement)",
+      "vi": { "label": "Thể tích khí bị lấy đi (giọt màu dịch chuyển)" },
+      "symbol": "V",
+      "unit": "mL",
+      "variable": "gasTakenUp"
+    },
+    {
+      "id": "timing",
+      "label": "Measuring time",
+      "vi": { "label": "Thời gian đo" },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "labTime"
+    }
+  ],
+  "results": [
+    {
+      "id": "gasTakenUp",
+      "label": "Gas taken up in 10 min V",
+      "vi": { "label": "Thể tích khí bị lấy đi trong 10 phút V" },
+      "symbol": "V",
+      "unit": "mL",
+      "variable": "gasTakenUp",
+      "reduce": "final",
+      "theory": "gasTakenUp"
+    },
+    {
+      "id": "uptakeRate",
+      "label": "Rate of gas uptake per gram of seed",
+      "vi": { "label": "Tốc độ lấy khí trên mỗi gam hạt" },
+      "symbol": "V/(m·t)",
+      "unit": "mL/(g·h)",
+      "variable": "uptakeRate",
+      "reduce": "final",
+      "theory": "uptakeRate"
+    }
+  ],
+  "instruments": [
+    {
+      "result": "gasTakenUp",
+      "quantity": "Volume V the drop moved",
+      "name": "Graduated pipette (1 mL)",
+      "resolution": "pipetteResolution",
+      "excludes": "judging where the drop's edge is, the drop sticking in the pipette, the time as kept by hand, and a leaking bung, a drifting bath or seeds not yet settled, which change the volume itself",
+      "vi": {
+        "quantity": "Thể tích V giọt màu dịch chuyển",
+        "name": "Pipet chia vạch (1 mL)",
+        "excludes": "việc xác định vị trí mép giọt màu, giọt màu bị dính trong pipet, thời gian bấm bằng tay, và nút bị hở, nhiệt độ bể thay đổi hay hạt chưa ổn định, những yếu tố làm thay đổi chính thể tích đo"
+      }
+    }
+  ],
+  "graphs": [
+    {
+      "id": "gas-time",
+      "title": "Gas taken up against measuring time",
+      "vi": { "title": "Thể tích khí bị lấy đi theo thời gian đo" },
+      "x": "timing",
+      "y": ["gasTakenUp"],
+      "yLabel": "V"
+    }
+  ],
+  "monitor": "gas-time",
+  "compare": [{ "graph": "gas-time" }],
+  "scatters": [
+    {
+      "id": "rate-temperature",
+      "title": "Rate of gas uptake against the bath's temperature",
+      "vi": { "title": "Tốc độ lấy khí theo nhiệt độ của bể" },
+      "x": "temperature",
+      "y": "uptakeRate"
+    }
+  ],
+  "note": "The seeds take up O₂ at r = m·r₂₀·Q₁₀^((T − 20)/10) and give out CO₂ at RQ·r. r₂₀ = 0.25 mL of O₂ per gram per hour at 20 °C is illustrative (SPEC GAP: not measured for one species), of the size school respirometers show (tenths of a mL per gram per hour), and the same for both living seeds, so that only their respiratory quotients tell them apart; Q₁₀ = 2 (the rate doubles for every 10 °C) is a common textbook value, also illustrative. The respiratory quotient RQ = CO₂ given out / O₂ taken up follows from the equations of respiration: for starch (sugar), C₆H₁₂O₆ + 6 O₂ → 6 CO₂ + 6 H₂O, RQ = 1; for fat about 0.7 (tripalmitin: 2 C₅₁H₉₈O₆ + 145 O₂ → 102 CO₂ + 98 H₂O, 102/145 = 0.703). Over potassium hydroxide the CO₂ is absorbed as it is given out, so the drop measures the O₂ taken up; over water it measures O₂ − CO₂ = r·(1 − RQ). Two runs that differ only in the absorber give RQ = 1 − V_water/V_KOH. Boiled seeds are dead and do not respire. Assumed: the seeds have settled in the bath before the timing (a real protocol waits 5–10 min), so the rate is steady; the absorber takes up all the CO₂ at once; the bath holds its temperature and a control tube of glass beads (a thermobarometer) cancels changes in the room's pressure, so only respiration moves the drop. Gas volumes are at the bath's temperature and the room's pressure. The model is used only from 5 to 35 °C; warmer, the seeds' enzymes begin to denature. Time is compressed: 10 minutes of timing are shown in 10 seconds. The pipette reads the simulated volume to its graduation d_V (the nearest multiple of d_V, with the uncertainty d_V/√12 from the graduation alone); no random error is added, and the rate is worked out from the simulated volume, not from the reading. In a real lab a bung can leak, the drop can stick in the pipette, microbes on boiled seeds still respire a little, and germinating oily seeds also turn fat into sugar — which takes up O₂ without giving out CO₂ — so their measured RQ is often below 0.7.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the respiration instructions on the board.",
+      "vi": { "instruction": "Đọc hướng dẫn thí nghiệm hô hấp trên bảng." },
+      "done": { "kind": "inspected", "item": "respiration-instructions" }
+    },
+    {
+      "id": "seeds",
+      "instruction": "Choose the seeds with their dial on the control desk: germinating peas, germinating sunflower seeds, or boiled peas as the control.",
+      "vi": {
+        "instruction": "Chọn loại hạt bằng núm xoay trên bàn điều khiển: hạt đậu Hà Lan đang nảy mầm, hạt hướng dương đang nảy mầm, hoặc hạt đậu đã luộc làm đối chứng."
+      },
+      "done": { "kind": "adjusted", "parameter": "seeds" }
+    },
+    {
+      "id": "temperature",
+      "instruction": "Set the water bath's temperature, and what lies under the seeds: potassium hydroxide, or water to see the CO₂.",
+      "vi": {
+        "instruction": "Đặt nhiệt độ của bể ổn nhiệt, và chất dưới lớp hạt: dung dịch KOH, hoặc nước để thấy lượng CO₂."
+      },
+      "done": { "kind": "adjusted", "parameter": "temperature" }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN and watch the drop move along the pipette for the 10 minutes of timing.",
+      "vi": {
+        "instruction": "Nhấn CHẠY và quan sát giọt màu dịch chuyển dọc theo pipet trong 10 phút đo."
+      },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read the gas taken up V and the rate per gram on the results monitor: which seeds respire faster, and what does the boiled control show?",
+      "vi": {
+        "instruction": "Đọc thể tích khí bị lấy đi V và tốc độ trên mỗi gam hạt trên màn hình kết quả: hạt nào hô hấp nhanh hơn, và mẫu đối chứng đã luộc cho thấy gì?"
+      },
+      "done": { "kind": "viewed" }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, change only the absorber and run again: the respiratory quotient is RQ = 1 − V_water/V_KOH.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, chỉ thay đổi chất hấp thụ rồi chạy lại: thương số hô hấp RQ = 1 − V_nước/V_KOH."
+      },
+      "done": { "kind": "reset" }
+    }
+  ],
+  "examples": [
+    {
+      "id": "peas-warm-bath",
+      "question": "{seedMass} g of germinating peas respire at 0.25 mL O₂ per gram per hour at 20 °C (illustrative), doubling every 10 °C. Over potassium hydroxide at {temperature} °C, find their O₂ uptake rate and the gas taken up in {=duration/60} min.",
+      "vi": {
+        "question": "{seedMass} g hạt đậu nảy mầm hô hấp với tốc độ 0,25 mL O₂ mỗi gam mỗi giờ ở 20 °C (minh họa), tăng gấp đôi khi nhiệt độ tăng 10 °C. Với kali hiđroxit trong ống, ở {temperature} °C, tìm tốc độ lấy O₂ và thể tích khí bị lấy đi trong {=duration/60} phút."
+      },
+      "set": { "seeds": 0, "absorber": 1, "temperature": 30 },
+      "find": [
+        { "theory": "oxygenRate", "symbol": "r", "unit": "mL/h" },
+        { "theory": "gasTakenUp" }
+      ],
+      "steps": [
+        {
+          "say": "The rate scales with the seeds’ mass and doubles for each 10 °C (Q₁₀ = 2).",
+          "vi": {
+            "say": "Tốc độ tỉ lệ với khối lượng hạt và tăng gấp đôi khi nhiệt độ tăng 10 °C (Q₁₀ = 2)."
+          },
+          "write": "r = {seedMass}·0.25·2^(({temperature} − 20)/10) = {@oxygenRate} mL/h",
+          "check": { "expr": "seedMass*0.25*2^((temperature-20)/10)", "equals": "oxygenRate" }
+        },
+        {
+          "say": "The hydroxide absorbs the CO₂ given out, so the drop measures the O₂ taken up.",
+          "vi": {
+            "say": "Kali hiđroxit hấp thụ CO₂ thải ra, nên giọt màu đo đúng lượng O₂ bị lấy đi."
+          },
+          "write": "V = r·t = {@oxygenRate}·{duration}/3600 ≈ {@gasTakenUp} mL",
+          "check": { "expr": "@oxygenRate*duration/3600", "equals": "gasTakenUp" }
+        }
+      ]
+    },
+    {
+      "id": "sunflower-over-water",
+      "question": "{seedMass} g of germinating sunflower seeds (fat, RQ ≈ 0.7) respire at {temperature} °C at 0.25 mL O₂ per gram per hour (illustrative). With water, not hydroxide, under them, find the CO₂ they give out per hour and how far the drop moves in {=duration/60} min.",
+      "vi": {
+        "question": "{seedMass} g hạt hướng dương nảy mầm (chất béo, RQ ≈ 0,7) hô hấp ở {temperature} °C với tốc độ 0,25 mL O₂ mỗi gam mỗi giờ (minh họa). Với nước thay cho kali hiđroxit trong ống, tìm lượng CO₂ thải ra mỗi giờ và giọt màu dịch chuyển bao nhiêu trong {=duration/60} phút."
+      },
+      "set": { "seeds": 1, "absorber": 0, "temperature": 20 },
+      "find": [
+        { "theory": "carbonDioxideRate", "symbol": "RQ·r", "unit": "mL/h" },
+        { "theory": "gasTakenUp" }
+      ],
+      "steps": [
+        {
+          "say": "The O₂ taken up is {@oxygenRate} mL/h; fat gives out less CO₂ than the O₂ it uses: RQ = CO₂/O₂ ≈ 0.7.",
+          "vi": {
+            "say": "Lượng O₂ lấy vào là {@oxygenRate} mL/h; chất béo thải ra ít CO₂ hơn lượng O₂ nó dùng: RQ = CO₂/O₂ ≈ 0,7."
+          },
+          "write": "CO₂ = RQ·r = 0.7·{@oxygenRate} = {@carbonDioxideRate} mL/h",
+          "check": { "expr": "0.7*@oxygenRate", "equals": "carbonDioxideRate" }
+        },
+        {
+          "say": "Over water the CO₂ stays in the air, so the drop moves only by O₂ taken minus CO₂ given.",
+          "vi": {
+            "say": "Khi chỉ có nước, CO₂ vẫn ở lại trong không khí, nên giọt màu chỉ dịch chuyển theo hiệu O₂ lấy vào trừ CO₂ thải ra."
+          },
+          "write": "V = r·(1 − RQ)·t = {@oxygenRate}·0.3·{duration}/3600 ≈ {@gasTakenUp} mL",
+          "check": { "expr": "@oxygenRate*(1-0.7)*duration/3600", "equals": "gasTakenUp" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "Germinating seeds take in oxygen as they respire; with their carbon dioxide absorbed, the gas around them shrinks and a coloured drop moves, measuring how fast they respire.",
+    "vi": {
+      "summary": "Hạt đang nảy mầm hấp thụ oxi khi hô hấp; khi khí cacbonic do chúng thải ra bị hấp thụ, lượng khí xung quanh giảm đi và một giọt màu di chuyển, cho biết tốc độ hô hấp."
+    },
+    "parts": [
+      {
+        "id": "seeds",
+        "name": "Seeds on gauze",
+        "role": "Germinating peas, germinating sunflower seeds, or boiled peas as the control.",
+        "vi": {
+          "name": "Hạt trên lưới",
+          "role": "Hạt đậu đang nảy mầm, hạt hướng dương đang nảy mầm, hoặc hạt đậu đã luộc làm đối chứng."
+        },
+        "anchor": {
+          "part": "seeds"
+        }
+      },
+      {
+        "id": "absorber",
+        "name": "Absorber",
+        "role": "Under the gauze: potassium hydroxide solution absorbs CO₂; water does not.",
+        "vi": {
+          "name": "Chất hấp thụ",
+          "role": "Dưới lưới: dung dịch kali hiđroxit hấp thụ CO₂; nước thì không."
+        },
+        "anchor": {
+          "part": "absorber"
+        }
+      },
+      {
+        "id": "control",
+        "name": "Control tube",
+        "role": "Glass beads over the same absorber: it cancels changes in the room’s pressure.",
+        "vi": {
+          "name": "Ống đối chứng",
+          "role": "Hạt thủy tinh trên cùng chất hấp thụ: loại bỏ ảnh hưởng của thay đổi áp suất phòng."
+        },
+        "anchor": {
+          "at": [-0.24, -0.235, 0.06]
+        }
+      },
+      {
+        "id": "bath",
+        "name": "Water bath",
+        "role": "Holds both tubes at the temperature T.",
+        "vi": {
+          "name": "Bể nước",
+          "role": "Giữ cả hai ống ở nhiệt độ T."
+        },
+        "anchor": {
+          "at": [-0.33, -0.3, 0.1]
+        }
+      },
+      {
+        "id": "drop",
+        "name": "Coloured drop",
+        "role": "In the graduated pipette from the seeds’ tube: it moves as the gas shrinks.",
+        "vi": {
+          "name": "Giọt màu",
+          "role": "Nằm trong pipet chia vạch nối với ống chứa hạt: di chuyển khi lượng khí giảm."
+        },
+        "anchor": {
+          "part": "drop"
+        }
+      },
+      {
+        "id": "scale",
+        "name": "Pipette scale",
+        "role": "Reads the volume V the drop moves, in mL, to the graduation d_V.",
+        "vi": {
+          "name": "Thước của pipet",
+          "role": "Đọc thể tích V mà giọt màu đã di chuyển, đơn vị mL, theo vạch chia d_V."
+        },
+        "anchor": {
+          "at": [0.24, -0.04, 0.06]
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "Living seeds respire: they take in oxygen and give out carbon dioxide. For sugar, C₆H₁₂O₆ + 6 O₂ → 6 CO₂ + 6 H₂O.",
+        "vi": {
+          "text": "Hạt sống hô hấp: chúng hấp thụ oxi và thải ra khí cacbonic. Với đường, C₆H₁₂O₆ + 6 O₂ → 6 CO₂ + 6 H₂O."
+        },
+        "parts": ["seeds"]
+      },
+      {
+        "text": "Over potassium hydroxide the CO₂ is absorbed as fast as it is given out, so the gas in the tube shrinks by the oxygen taken up, and the drop moves towards the seeds.",
+        "vi": {
+          "text": "Trên dung dịch kali hiđroxit, CO₂ bị hấp thụ ngay khi được thải ra, nên lượng khí trong ống giảm đúng bằng lượng oxi đã hấp thụ, và giọt màu di chuyển về phía hạt."
+        },
+        "parts": ["absorber", "drop", "seeds"]
+      },
+      {
+        "text": "The volume the drop moves in 10 minutes, per gram of seed, is the rate of respiration. Warmer seeds respire faster: about twice as fast every 10 °C.",
+        "vi": {
+          "text": "Thể tích giọt màu di chuyển trong 10 phút, tính cho mỗi gam hạt, là tốc độ hô hấp. Hạt ấm hơn hô hấp nhanh hơn: khoảng gấp đôi mỗi khi tăng 10 °C."
+        },
+        "parts": ["drop", "scale", "bath"]
+      },
+      {
+        "text": "Boiled seeds are the control: dead seeds do not respire. The tube of glass beads cancels any change in the room’s pressure, so only respiration moves the drop.",
+        "vi": {
+          "text": "Hạt đã luộc dùng làm đối chứng: hạt chết không hô hấp. Ống chứa hạt thủy tinh loại bỏ ảnh hưởng của thay đổi áp suất phòng, nên chỉ có hô hấp làm giọt màu di chuyển."
+        },
+        "parts": ["seeds", "control"]
+      },
+      {
+        "text": "Over water the CO₂ stays in the gas, so the drop measures O₂ taken up minus CO₂ given out. Two runs that differ only in the absorber give the respiratory quotient RQ = CO₂/O₂ = 1 − V_water/V_KOH: 1 for sugar, about 0.7 for fat.",
+        "vi": {
+          "text": "Trên nước, CO₂ vẫn ở trong khí, nên giọt màu đo lượng O₂ hấp thụ trừ đi lượng CO₂ thải ra. Hai lần chạy chỉ khác nhau ở chất hấp thụ cho thương số hô hấp RQ = CO₂/O₂ = 1 − V_nước/V_KOH: bằng 1 với đường, khoảng 0.7 với chất béo."
+        },
+        "parts": ["absorber", "drop"]
+      },
+      {
+        "text": "The results give V and the rate per gram. The rates are illustrative values; the seeds are taken as already settled in the bath, and time runs 60 times faster.",
+        "vi": {
+          "text": "Phần kết quả cho V và tốc độ trên mỗi gam hạt. Các tốc độ là giá trị minh họa; hạt được coi là đã ổn định trong bể, và thời gian chạy nhanh gấp 60 lần."
+        },
+        "parts": ["scale"]
+      }
+    ]
+  }
+}

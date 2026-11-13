@@ -1,0 +1,1010 @@
+{
+  "id": "halogens",
+  "skills": [
+    {
+      "id": "reactivity",
+      "name": "Oxidising strength: Cl₂ > Br₂ > I₂",
+      "advice": "Fill in the 3 × 3 table of halogen water against halide at the station and mark which tubes react. A halogen displaces only the halogens below it in the group; one never displaces itself or a stronger one.",
+      "vi": {
+        "name": "Tính oxi hóa: Cl₂ > Br₂ > I₂",
+        "advice": "Điền bảng 3 × 3 (nước halogen với dung dịch muối halide) trên trạm và đánh dấu ống nào có phản ứng. Một halogen chỉ đẩy được các halogen đứng sau nó trong nhóm; không đẩy được chính nó hay halogen mạnh hơn."
+      }
+    },
+    {
+      "id": "redox",
+      "name": "Displacement as a redox reaction",
+      "advice": "Write each displacement as X₂ + 2Y⁻ → 2X⁻ + Y₂ and mark the electron transfer: X₂ gains electrons (oxidising agent, reduced), Y⁻ loses them (reducing agent, oxidised). Check that atoms and charges balance.",
+      "vi": {
+        "name": "Phản ứng thế halogen là phản ứng oxi hóa – khử",
+        "advice": "Viết mỗi phản ứng thế dưới dạng X₂ + 2Y⁻ → 2X⁻ + Y₂ và chỉ rõ sự chuyển electron: X₂ nhận electron (chất oxi hóa, bị khử), Y⁻ nhường electron (chất khử, bị oxi hóa). Kiểm tra cân bằng cả nguyên tử và điện tích."
+      }
+    },
+    {
+      "id": "colours",
+      "name": "Colours of the halogens",
+      "advice": "Learn the colours as a table: in water chlorine pale yellow-green, bromine orange, iodine brown; in the cyclohexane layer bromine orange-red, iodine violet. Shake each product with cyclohexane at the station and name it by the top layer.",
+      "vi": {
+        "name": "Màu của các halogen",
+        "advice": "Học màu theo bảng: trong nước, chlorine vàng lục nhạt, bromine màu cam, iodine màu nâu; trong lớp cyclohexane, bromine đỏ cam, iodine màu tím. Lắc mỗi sản phẩm với cyclohexane trên trạm và gọi tên halogen theo màu lớp trên."
+      }
+    },
+    {
+      "id": "amounts",
+      "name": "Amounts: the reagent that runs out",
+      "advice": "Turn each volume into mmol (mL × mol/L), divide the halide by its coefficient 2, and the smaller share runs out. The other reagent is left over — compare with the station’s n(Y₂) formed and n(X₂) left.",
+      "vi": {
+        "name": "Tính lượng chất: chất phản ứng hết",
+        "advice": "Đổi mỗi thể tích ra mmol (mL × mol/L), chia số mmol ion halide cho hệ số 2 của nó; chất có tỉ lệ nhỏ hơn sẽ hết. Chất còn lại dư — so sánh với lượng Y₂ tạo thành và X₂ còn dư trên trạm."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "order",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["reactivity"],
+      "stem": "Which order of oxidising strength of the halogens is right?",
+      "explain": "Chlorine displaces bromine and iodine, and bromine displaces iodine: Cl₂ > Br₂ > I₂ (E°: 1.358 > 1.087 > 0.536 V).",
+      "vi": {
+        "stem": "Thứ tự tính oxi hóa nào của các halogen sau đây là đúng?",
+        "explain": "Chlorine đẩy được bromine và iodine, còn bromine đẩy được iodine: Cl₂ > Br₂ > I₂ (E°: 1,358 > 1,087 > 0,536 V)."
+      },
+      "options": [
+        {
+          "text": "Cl₂ > Br₂ > I₂",
+          "vi": {
+            "text": "Cl₂ > Br₂ > I₂"
+          },
+          "correct": true
+        },
+        {
+          "text": "I₂ > Br₂ > Cl₂",
+          "vi": {
+            "text": "I₂ > Br₂ > Cl₂"
+          }
+        },
+        {
+          "text": "Br₂ > Cl₂ > I₂",
+          "vi": {
+            "text": "Br₂ > Cl₂ > I₂"
+          }
+        },
+        {
+          "text": "Cl₂ > I₂ > Br₂",
+          "vi": {
+            "text": "Cl₂ > I₂ > Br₂"
+          }
+        }
+      ]
+    },
+    {
+      "id": "iodine-layer",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["colours"],
+      "stem": "After a displacement that forms iodine, the tube is shaken with cyclohexane. What colour is the top layer?",
+      "explain": "Iodine dissolves better in cyclohexane than in water and shows violet there; bromine would show orange-red.",
+      "vi": {
+        "stem": "Sau một phản ứng thế tạo ra iodine, ống nghiệm được lắc với cyclohexane. Lớp chất lỏng phía trên có màu gì?",
+        "explain": "Iodine tan trong cyclohexane tốt hơn trong nước và có màu tím trong đó; bromine sẽ có màu đỏ cam."
+      },
+      "options": [
+        {
+          "text": "Violet",
+          "vi": {
+            "text": "Tím"
+          },
+          "correct": true
+        },
+        {
+          "text": "Orange-red",
+          "vi": {
+            "text": "Đỏ cam"
+          }
+        },
+        {
+          "text": "Pale yellow-green",
+          "vi": {
+            "text": "Vàng lục nhạt"
+          }
+        },
+        {
+          "text": "Colourless",
+          "vi": {
+            "text": "Không màu"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-tubes",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["reactivity", "colours"],
+      "stem": "Halogen water is added to colourless solutions of KCl, KBr and KI. Decide whether each statement is true or false.",
+      "explain": "Chlorine water turns KBr orange (bromine formed); bromine displaces iodine from KI; iodine cannot displace chlorine. The halide ions themselves are colourless.",
+      "vi": {
+        "stem": "Cho nước halogen vào các dung dịch không màu KCl, KBr và KI. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Nước chlorine làm dung dịch KBr chuyển màu cam (tạo bromine); bromine đẩy iodine ra khỏi KI; iodine không đẩy được chlorine. Bản thân các ion halide không màu."
+      },
+      "statements": [
+        {
+          "text": "Chlorine water added to KBr turns the solution orange.",
+          "vi": {
+            "text": "Cho nước chlorine vào dung dịch KBr, dung dịch chuyển sang màu cam."
+          },
+          "true": true
+        },
+        {
+          "text": "Iodine solution added to KCl forms chlorine.",
+          "vi": {
+            "text": "Cho dung dịch iodine vào dung dịch KCl thì tạo thành chlorine."
+          },
+          "true": false
+        },
+        {
+          "text": "Bromine water added to KI forms iodine.",
+          "vi": {
+            "text": "Cho nước bromine vào dung dịch KI thì tạo thành iodine."
+          },
+          "true": true
+        },
+        {
+          "text": "The ions Cl⁻, Br⁻ and I⁻ in solution are colourless.",
+          "vi": {
+            "text": "Các ion Cl⁻, Br⁻ và I⁻ trong dung dịch đều không màu."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "which-reacts",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["reactivity"],
+      "stem": "Which mixture gives a displacement reaction?",
+      "explain": "Only a more reactive halogen displaces a less reactive one: bromine is above iodine, so Br₂ + 2KI → 2KBr + I₂. Iodine is below bromine and chlorine, and bromine below chlorine.",
+      "vi": {
+        "stem": "Hỗn hợp nào sau đây xảy ra phản ứng thế halogen?",
+        "explain": "Chỉ halogen hoạt động mạnh hơn mới đẩy được halogen yếu hơn: bromine đứng trên iodine, nên Br₂ + 2KI → 2KBr + I₂. Iodine yếu hơn bromine và chlorine, còn bromine yếu hơn chlorine."
+      },
+      "options": [
+        {
+          "text": "Bromine water and KI solution",
+          "vi": {
+            "text": "Nước bromine và dung dịch KI"
+          },
+          "correct": true
+        },
+        {
+          "text": "Iodine solution and KBr solution",
+          "vi": {
+            "text": "Dung dịch iodine và dung dịch KBr"
+          }
+        },
+        {
+          "text": "Bromine water and KCl solution",
+          "vi": {
+            "text": "Nước bromine và dung dịch KCl"
+          }
+        },
+        {
+          "text": "Iodine solution and KCl solution",
+          "vi": {
+            "text": "Dung dịch iodine và dung dịch KCl"
+          }
+        }
+      ]
+    },
+    {
+      "id": "chlorine-role",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["redox"],
+      "stem": "In Cl₂ + 2Br⁻ → 2Cl⁻ + Br₂, chlorine…",
+      "explain": "Each Cl atom goes from 0 to −1: chlorine gains electrons, so it is the oxidising agent and is itself reduced; Br⁻ is oxidised.",
+      "vi": {
+        "stem": "Trong phản ứng Cl₂ + 2Br⁻ → 2Cl⁻ + Br₂, chlorine",
+        "explain": "Mỗi nguyên tử Cl chuyển từ số oxi hóa 0 xuống −1: chlorine nhận electron, nên là chất oxi hóa và bị khử; Br⁻ bị oxi hóa."
+      },
+      "options": [
+        {
+          "text": "is the oxidising agent and is reduced",
+          "vi": {
+            "text": "là chất oxi hóa và bị khử"
+          },
+          "correct": true
+        },
+        {
+          "text": "is the reducing agent and is oxidised",
+          "vi": {
+            "text": "là chất khử và bị oxi hóa"
+          }
+        },
+        {
+          "text": "is the oxidising agent and is oxidised",
+          "vi": {
+            "text": "là chất oxi hóa và bị oxi hóa"
+          }
+        },
+        {
+          "text": "is neither oxidised nor reduced",
+          "vi": {
+            "text": "không bị oxi hóa cũng không bị khử"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-redox",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["redox", "reactivity"],
+      "stem": "Chlorine water is added to potassium iodide solution. Decide whether each statement is true or false.",
+      "explain": "Cl₂ + 2I⁻ → 2Cl⁻ + I₂: each I⁻ loses one electron and each Cl₂ gains two. Cl₂ + I⁻ → Cl⁻ + I₂ balances neither atoms nor charge. Iodide gives up electrons more easily than chloride: it is the stronger reducing agent.",
+      "vi": {
+        "stem": "Cho nước chlorine vào dung dịch potassium iodide. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Cl₂ + 2I⁻ → 2Cl⁻ + I₂: mỗi ion I⁻ nhường một electron và mỗi phân tử Cl₂ nhận hai electron. Cl₂ + I⁻ → Cl⁻ + I₂ không cân bằng cả nguyên tử lẫn điện tích. Ion iodide nhường electron dễ hơn ion chloride: là chất khử mạnh hơn."
+      },
+      "statements": [
+        {
+          "text": "The iodide ions are oxidised.",
+          "vi": {
+            "text": "Các ion iodide bị oxi hóa."
+          },
+          "true": true
+        },
+        {
+          "text": "Each Cl₂ molecule gains two electrons.",
+          "vi": {
+            "text": "Mỗi phân tử Cl₂ nhận hai electron."
+          },
+          "true": true
+        },
+        {
+          "text": "Cl₂ + I⁻ → Cl⁻ + I₂ is the balanced ionic equation.",
+          "vi": {
+            "text": "Cl₂ + I⁻ → Cl⁻ + I₂ là phương trình ion đã cân bằng."
+          },
+          "true": false
+        },
+        {
+          "text": "The reaction shows that I⁻ is a stronger reducing agent than Cl⁻.",
+          "vi": {
+            "text": "Phản ứng cho thấy I⁻ có tính khử mạnh hơn Cl⁻."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "iodine-formed",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["amounts", "redox"],
+      "set": {
+        "halogen": 0,
+        "halide": 2,
+        "reagentVolume": 2,
+        "halideConcentration": 0.1
+      },
+      "stem": "{reagentVolume} mL of chlorine water ({halogenConcentration} mol/L Cl₂) is added to {sampleVolume} mL of KI solution ({halideConcentration} mol/L). What amount of iodine forms?",
+      "explain": "Cl₂ + 2I⁻ → 2Cl⁻ + I₂. n(Cl₂) = {halogenConcentration}·{reagentVolume} = {=halogenConcentration*reagentVolume} mmol needs {=2*halogenConcentration*reagentVolume} mmol I⁻, and {=halideConcentration*sampleVolume} mmol is there: chlorine runs out, giving {@formed} mmol I₂.",
+      "vi": {
+        "stem": "Cho {reagentVolume} mL nước chlorine (Cl₂ {halogenConcentration} mol/L) vào {sampleVolume} mL dung dịch KI {halideConcentration} mol/L. Lượng iodine tạo thành là bao nhiêu?",
+        "explain": "Cl₂ + 2I⁻ → 2Cl⁻ + I₂. n(Cl₂) = {halogenConcentration}·{reagentVolume} = {=halogenConcentration*reagentVolume} mmol cần {=2*halogenConcentration*reagentVolume} mmol I⁻, trong khi có {=halideConcentration*sampleVolume} mmol: chlorine hết, tạo ra {@formed} mmol I₂."
+      },
+      "options": [
+        {
+          "text": "{@formed} mmol",
+          "vi": {
+            "text": "{@formed} mmol"
+          },
+          "correct": true,
+          "check": {
+            "expr": "halogenConcentration*reagentVolume",
+            "equals": "formed"
+          }
+        },
+        {
+          "text": "{=2*halogenConcentration*reagentVolume} mmol",
+          "vi": {
+            "text": "{=2*halogenConcentration*reagentVolume} mmol"
+          },
+          "check": {
+            "expr": "2*halogenConcentration*reagentVolume",
+            "equals": "formed"
+          }
+        },
+        {
+          "text": "{=halideConcentration*sampleVolume/2} mmol",
+          "vi": {
+            "text": "{=halideConcentration*sampleVolume/2} mmol"
+          },
+          "check": {
+            "expr": "halideConcentration*sampleVolume/2",
+            "equals": "formed"
+          }
+        },
+        {
+          "text": "{=halogenConcentration*reagentVolume} mol",
+          "vi": {
+            "text": "{=halogenConcentration*reagentVolume} mol"
+          },
+          "check": {
+            "expr": "1000*halogenConcentration*reagentVolume",
+            "equals": "formed"
+          }
+        }
+      ]
+    },
+    {
+      "id": "bromine-left",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["amounts"],
+      "set": {
+        "halogen": 1,
+        "halide": 2,
+        "reagentVolume": 10,
+        "halideConcentration": 0.05
+      },
+      "stem": "{reagentVolume} mL of bromine water ({halogenConcentration} mol/L Br₂) is added to {sampleVolume} mL of KI solution ({halideConcentration} mol/L). What amount of bromine is left unreacted?",
+      "explain": "Br₂ + 2I⁻ → 2Br⁻ + I₂. n(Br₂) = {=halogenConcentration*reagentVolume} mmol; n(I⁻) = {=halideConcentration*sampleVolume} mmol uses only half as much Br₂, {=halideConcentration*sampleVolume/2} mmol. Left: {=halogenConcentration*reagentVolume} − {=halideConcentration*sampleVolume/2} = {@halogenLeft} mmol.",
+      "vi": {
+        "stem": "Cho {reagentVolume} mL nước bromine (Br₂ {halogenConcentration} mol/L) vào {sampleVolume} mL dung dịch KI {halideConcentration} mol/L. Lượng bromine còn dư là bao nhiêu?",
+        "explain": "Br₂ + 2I⁻ → 2Br⁻ + I₂. n(Br₂) = {=halogenConcentration*reagentVolume} mmol; n(I⁻) = {=halideConcentration*sampleVolume} mmol chỉ phản ứng với một nửa lượng đó Br₂, tức {=halideConcentration*sampleVolume/2} mmol. Còn dư: {=halogenConcentration*reagentVolume} − {=halideConcentration*sampleVolume/2} = {@halogenLeft} mmol."
+      },
+      "options": [
+        {
+          "text": "{@halogenLeft} mmol",
+          "vi": {
+            "text": "{@halogenLeft} mmol"
+          },
+          "correct": true,
+          "check": {
+            "expr": "halogenConcentration*reagentVolume-halideConcentration*sampleVolume/2",
+            "equals": "halogenLeft"
+          }
+        },
+        {
+          "text": "{=halogenConcentration*reagentVolume-halideConcentration*sampleVolume} mmol",
+          "vi": {
+            "text": "{=halogenConcentration*reagentVolume-halideConcentration*sampleVolume} mmol"
+          },
+          "check": {
+            "expr": "halogenConcentration*reagentVolume-halideConcentration*sampleVolume",
+            "equals": "halogenLeft"
+          }
+        },
+        {
+          "text": "0 mmol",
+          "vi": {
+            "text": "0 mmol"
+          },
+          "check": {
+            "expr": "0",
+            "equals": "halogenLeft"
+          }
+        },
+        {
+          "text": "{=halogenConcentration*reagentVolume} mmol",
+          "vi": {
+            "text": "{=halogenConcentration*reagentVolume} mmol"
+          },
+          "check": {
+            "expr": "halogenConcentration*reagentVolume",
+            "equals": "halogenLeft"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-no-reaction",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["reactivity", "amounts", "colours"],
+      "set": {
+        "halogen": 2,
+        "halide": 1,
+        "reagentVolume": 5,
+        "halideConcentration": 0.1
+      },
+      "stem": "{reagentVolume} mL of iodine solution ({halogenConcentration} mol/L I₂) is added to {sampleVolume} mL of KBr solution ({halideConcentration} mol/L). Decide whether each statement is true or false.",
+      "explain": "Iodine is less reactive than bromine, so nothing happens: no bromine forms and all {=halogenConcentration*reagentVolume} mmol of I₂ stays free, keeping the brown colour of iodine.",
+      "vi": {
+        "stem": "Cho {reagentVolume} mL dung dịch iodine (I₂ {halogenConcentration} mol/L) vào {sampleVolume} mL dung dịch KBr {halideConcentration} mol/L. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Iodine hoạt động kém hơn bromine nên không có phản ứng: không tạo ra bromine và toàn bộ {=halogenConcentration*reagentVolume} mmol I₂ vẫn ở dạng tự do, dung dịch giữ màu nâu của iodine."
+      },
+      "statements": [
+        {
+          "text": "No reaction takes place, as iodine is less reactive than bromine.",
+          "vi": {
+            "text": "Không có phản ứng xảy ra, vì iodine hoạt động kém hơn bromine."
+          },
+          "true": true,
+          "check": {
+            "expr": "-1",
+            "equals": "product"
+          }
+        },
+        {
+          "text": "No bromine is formed.",
+          "vi": {
+            "text": "Không có bromine tạo thành."
+          },
+          "true": true,
+          "check": {
+            "expr": "0",
+            "equals": "formed"
+          }
+        },
+        {
+          "text": "All {=halogenConcentration*reagentVolume} mmol of iodine added stays free in the tube.",
+          "vi": {
+            "text": "Toàn bộ {=halogenConcentration*reagentVolume} mmol iodine cho vào vẫn ở dạng tự do trong ống."
+          },
+          "true": true,
+          "check": {
+            "expr": "halogenConcentration*reagentVolume",
+            "equals": "halogenLeft"
+          }
+        },
+        {
+          "text": "The solution turns orange because bromine forms.",
+          "vi": {
+            "text": "Dung dịch chuyển sang màu cam vì tạo thành bromine."
+          },
+          "true": false,
+          "check": {
+            "expr": "1",
+            "equals": "product"
+          }
+        }
+      ]
+    },
+    {
+      "id": "identify-salt",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["colours", "reactivity"],
+      "stem": "A colourless solution is KCl, KBr or KI. Chlorine water is added and the tube shaken with cyclohexane: the top layer turns violet. The solution was…",
+      "explain": "Violet in cyclohexane is iodine, so chlorine displaced iodine from iodide: KI. KBr would give orange-red, and KCl no reaction.",
+      "vi": {
+        "stem": "Một dung dịch không màu là KCl, KBr hoặc KI. Cho nước chlorine vào rồi lắc với cyclohexane: lớp trên có màu tím. Dung dịch ban đầu là",
+        "explain": "Màu tím trong cyclohexane là của iodine, vậy chlorine đã đẩy iodine ra khỏi muối iodide: KI. KBr sẽ cho màu đỏ cam, còn KCl không phản ứng."
+      },
+      "options": [
+        {
+          "text": "KI",
+          "vi": {
+            "text": "KI"
+          },
+          "correct": true
+        },
+        {
+          "text": "KBr",
+          "vi": {
+            "text": "KBr"
+          }
+        },
+        {
+          "text": "KCl",
+          "vi": {
+            "text": "KCl"
+          }
+        },
+        {
+          "text": "It cannot be told from this test",
+          "vi": {
+            "text": "Không xác định được bằng thí nghiệm này"
+          }
+        }
+      ]
+    },
+    {
+      "id": "just-enough",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["amounts", "redox"],
+      "set": {
+        "halogen": 0,
+        "halide": 2,
+        "reagentVolume": 5,
+        "halideConcentration": 0.1
+      },
+      "stem": "Chlorine water ({halogenConcentration} mol/L Cl₂) is added to {sampleVolume} mL of KI solution ({halideConcentration} mol/L). What volume of chlorine water just turns all the iodide into iodine, leaving no chlorine over?",
+      "explain": "n(I⁻) = {halideConcentration}·{sampleVolume} = {=halideConcentration*sampleVolume} mmol needs half as much Cl₂, {=halideConcentration*sampleVolume/2} mmol: V = {=halideConcentration*sampleVolume/2}/{halogenConcentration} = {=halideConcentration*sampleVolume/2/halogenConcentration} mL. Then {@formed} mmol of I₂ forms and {@halogenLeft} mmol of Cl₂ is left.",
+      "vi": {
+        "stem": "Cho nước chlorine (Cl₂ {halogenConcentration} mol/L) vào {sampleVolume} mL dung dịch KI {halideConcentration} mol/L. Cần bao nhiêu mL nước chlorine để chuyển vừa hết ion iodide thành iodine, không dư chlorine?",
+        "explain": "n(I⁻) = {halideConcentration}·{sampleVolume} = {=halideConcentration*sampleVolume} mmol cần lượng Cl₂ bằng một nửa, {=halideConcentration*sampleVolume/2} mmol: V = {=halideConcentration*sampleVolume/2}/{halogenConcentration} = {=halideConcentration*sampleVolume/2/halogenConcentration} mL. Khi đó tạo ra {@formed} mmol I₂ và còn dư {@halogenLeft} mmol Cl₂."
+      },
+      "options": [
+        {
+          "text": "5 mL",
+          "vi": {
+            "text": "5 mL"
+          },
+          "correct": true,
+          "check": {
+            "expr": "max(0, halogenConcentration*5-halideConcentration*sampleVolume/2)",
+            "equals": "halogenLeft"
+          }
+        },
+        {
+          "text": "10 mL",
+          "vi": {
+            "text": "10 mL"
+          },
+          "check": {
+            "expr": "max(0, halogenConcentration*10-halideConcentration*sampleVolume/2)",
+            "equals": "halogenLeft"
+          }
+        },
+        {
+          "text": "2.5 mL",
+          "vi": {
+            "text": "2.5 mL"
+          },
+          "check": {
+            "expr": "min(halogenConcentration*2.5, halideConcentration*sampleVolume/2)",
+            "equals": "formed"
+          }
+        },
+        {
+          "text": "1 mL",
+          "vi": {
+            "text": "1 mL"
+          },
+          "check": {
+            "expr": "min(halogenConcentration*1, halideConcentration*sampleVolume/2)",
+            "equals": "formed"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-conclusions",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["reactivity", "redox", "colours"],
+      "stem": "A student tests each halogen water with each of KCl, KBr and KI solutions and records which tubes change colour. Decide whether each statement about the conclusions is true or false.",
+      "explain": "Chlorine displaces two halogens, bromine one, iodine none: Cl₂ > Br₂ > I₂, so the halide ions as reducing agents run the other way, I⁻ > Br⁻ > Cl⁻. Chlorine water that has stood in light has partly reacted with water: weaker, it gives a paler colour, not a deeper one. Brown iodine and orange bromine in water can look alike, which is why the cyclohexane layer is used.",
+      "vi": {
+        "stem": "Một học sinh thử từng loại nước halogen với từng dung dịch KCl, KBr và KI, rồi ghi lại ống nào đổi màu. Mỗi nhận định sau về kết luận rút ra đúng hay sai?",
+        "explain": "Chlorine đẩy được hai halogen, bromine đẩy được một, iodine không đẩy được halogen nào: Cl₂ > Br₂ > I₂, nên tính khử của các ion halide theo chiều ngược lại, I⁻ > Br⁻ > Cl⁻. Nước chlorine để lâu ngoài ánh sáng đã phản ứng một phần với nước: yếu hơn, cho màu nhạt hơn chứ không đậm hơn. Iodine màu nâu và bromine màu cam trong nước có thể trông giống nhau, vì vậy cần dùng lớp cyclohexane."
+      },
+      "statements": [
+        {
+          "text": "Chlorine reacts in two tubes, bromine in one and iodine in none, so the oxidising strength is Cl₂ > Br₂ > I₂.",
+          "vi": {
+            "text": "Chlorine phản ứng ở hai ống, bromine ở một ống, iodine không phản ứng ở ống nào, nên tính oxi hóa là Cl₂ > Br₂ > I₂."
+          },
+          "true": true
+        },
+        {
+          "text": "The results show that the reducing strength of the halide ions is I⁻ > Br⁻ > Cl⁻.",
+          "vi": {
+            "text": "Kết quả cho thấy tính khử của các ion halide là I⁻ > Br⁻ > Cl⁻."
+          },
+          "true": true
+        },
+        {
+          "text": "Chlorine water that has stood in sunlight would give a deeper orange with KBr.",
+          "vi": {
+            "text": "Nước chlorine để lâu ngoài ánh nắng sẽ cho màu cam đậm hơn với KBr."
+          },
+          "true": false
+        },
+        {
+          "text": "Without cyclohexane, iodine and bromine formed in water can be hard to tell apart.",
+          "vi": {
+            "text": "Nếu không dùng cyclohexane, iodine và bromine tạo thành trong nước có thể khó phân biệt."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "bromine-water-colour",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["colours"],
+      "stem": "What colour is dilute bromine water?",
+      "explain": "Dilute bromine water is yellow to orange. Chlorine water is a very pale yellow-green, iodine in water brown, and iodine in cyclohexane violet.",
+      "vi": {
+        "stem": "Nước bromine loãng có màu gì?",
+        "explain": "Nước bromine loãng có màu vàng đến da cam. Nước chlorine có màu vàng lục rất nhạt, dung dịch iodine trong nước màu nâu, còn iodine trong cyclohexane màu tím."
+      },
+      "options": [
+        {
+          "text": "Yellow to orange",
+          "vi": {
+            "text": "Vàng đến da cam"
+          },
+          "correct": true
+        },
+        {
+          "text": "Violet",
+          "vi": {
+            "text": "Tím"
+          }
+        },
+        {
+          "text": "Colourless",
+          "vi": {
+            "text": "Không màu"
+          }
+        },
+        {
+          "text": "Deep blue",
+          "vi": {
+            "text": "Xanh lam đậm"
+          }
+        }
+      ]
+    },
+    {
+      "id": "strongest-reductant",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["redox", "reactivity"],
+      "stem": "Which of these ions is the strongest reducing agent?",
+      "explain": "The weaker the halogen as an oxidising agent, the more easily its halide ion gives up electrons: I⁻ (from the weakest, I₂) is the strongest reducing agent of the three halides, Cl⁻ the weakest. K⁺ cannot be oxidised in these conditions.",
+      "vi": {
+        "stem": "Ion nào sau đây có tính khử mạnh nhất?",
+        "explain": "Halogen có tính oxi hóa càng yếu thì ion halide tương ứng càng dễ nhường electron: I⁻ (ứng với I₂, chất oxi hóa yếu nhất) có tính khử mạnh nhất trong ba ion halide, Cl⁻ yếu nhất. K⁺ không bị oxi hóa trong điều kiện này."
+      },
+      "options": [
+        {
+          "text": "I⁻",
+          "vi": {
+            "text": "I⁻"
+          },
+          "correct": true
+        },
+        {
+          "text": "Br⁻",
+          "vi": {
+            "text": "Br⁻"
+          }
+        },
+        {
+          "text": "Cl⁻",
+          "vi": {
+            "text": "Cl⁻"
+          }
+        },
+        {
+          "text": "K⁺",
+          "vi": {
+            "text": "K⁺"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-bromine-iodide",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["redox", "reactivity"],
+      "stem": "Bromine water is added to potassium iodide solution. Decide whether each statement is true or false.",
+      "explain": "Br₂ is the stronger oxidising agent, so Br₂ + 2I⁻ → 2Br⁻ + I₂: bromine gains electrons (is reduced) and iodide ions lose them (are oxidised). The reverse, I₂ with KBr, does not happen.",
+      "vi": {
+        "stem": "Cho nước bromine vào dung dịch potassium iodide. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Br₂ có tính oxi hóa mạnh hơn, nên Br₂ + 2I⁻ → 2Br⁻ + I₂: bromine nhận electron (bị khử), còn ion iodide nhường electron (bị oxi hóa). Phản ứng ngược lại, I₂ với KBr, không xảy ra."
+      },
+      "statements": [
+        {
+          "text": "The reaction is Br₂ + 2I⁻ → 2Br⁻ + I₂.",
+          "vi": {
+            "text": "Phản ứng xảy ra là Br₂ + 2I⁻ → 2Br⁻ + I₂."
+          },
+          "true": true
+        },
+        {
+          "text": "Bromine is reduced.",
+          "vi": {
+            "text": "Bromine bị khử."
+          },
+          "true": true
+        },
+        {
+          "text": "The iodide ions gain electrons.",
+          "vi": {
+            "text": "Các ion iodide nhận electron."
+          },
+          "true": false
+        },
+        {
+          "text": "Iodine solution added to potassium bromide would set bromine free.",
+          "vi": {
+            "text": "Cho dung dịch iodine vào dung dịch potassium bromide sẽ giải phóng bromine."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "bromine-formed",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["amounts", "redox"],
+      "set": {
+        "halogen": 0,
+        "halide": 1,
+        "reagentVolume": 10,
+        "halideConcentration": 0.05
+      },
+      "stem": "{reagentVolume} mL of chlorine water ({halogenConcentration} mol/L Cl₂) is added to {sampleVolume} mL of KBr solution ({halideConcentration} mol/L). What amount of bromine forms?",
+      "explain": "Cl₂ + 2Br⁻ → 2Cl⁻ + Br₂. n(Cl₂) = {halogenConcentration}·{reagentVolume} = {=halogenConcentration*reagentVolume} mmol; n(Br⁻) = {halideConcentration}·{sampleVolume} = {=halideConcentration*sampleVolume} mmol, enough for only {=halideConcentration*sampleVolume/2} mmol Br₂. Bromide runs out: n(Br₂) = {@formed} mmol, and {@halogenLeft} mmol Cl₂ is left over.",
+      "vi": {
+        "stem": "Cho {reagentVolume} mL nước chlorine (Cl₂ {halogenConcentration} mol/L) vào {sampleVolume} mL dung dịch KBr ({halideConcentration} mol/L). Lượng bromine tạo thành là bao nhiêu?",
+        "explain": "Cl₂ + 2Br⁻ → 2Cl⁻ + Br₂. n(Cl₂) = {halogenConcentration}·{reagentVolume} = {=halogenConcentration*reagentVolume} mmol; n(Br⁻) = {halideConcentration}·{sampleVolume} = {=halideConcentration*sampleVolume} mmol, chỉ đủ tạo {=halideConcentration*sampleVolume/2} mmol Br₂. Bromide hết trước: n(Br₂) = {@formed} mmol, và còn dư {@halogenLeft} mmol Cl₂."
+      },
+      "options": [
+        {
+          "text": "{=halideConcentration*sampleVolume/2} mmol",
+          "vi": {
+            "text": "{=halideConcentration*sampleVolume/2} mmol"
+          },
+          "correct": true,
+          "check": {
+            "expr": "halideConcentration*sampleVolume/2",
+            "equals": "formed"
+          }
+        },
+        {
+          "text": "{=halogenConcentration*reagentVolume} mmol",
+          "vi": {
+            "text": "{=halogenConcentration*reagentVolume} mmol"
+          },
+          "check": {
+            "expr": "halogenConcentration*reagentVolume",
+            "equals": "formed"
+          }
+        },
+        {
+          "text": "{=halideConcentration*sampleVolume} mmol",
+          "vi": {
+            "text": "{=halideConcentration*sampleVolume} mmol"
+          },
+          "check": {
+            "expr": "halideConcentration*sampleVolume",
+            "equals": "formed"
+          }
+        },
+        {
+          "text": "{=halideConcentration*sampleVolume/2000} mmol",
+          "vi": {
+            "text": "{=halideConcentration*sampleVolume/2000} mmol"
+          },
+          "check": {
+            "expr": "halideConcentration*sampleVolume/2000",
+            "equals": "formed"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-chlorine-bromide",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["amounts", "colours", "redox"],
+      "set": {
+        "halogen": 0,
+        "halide": 1,
+        "reagentVolume": 2,
+        "halideConcentration": 0.1
+      },
+      "stem": "{reagentVolume} mL of chlorine water ({halogenConcentration} mol/L Cl₂) is added to {sampleVolume} mL of KBr solution ({halideConcentration} mol/L), and the tube is shaken with cyclohexane. Decide whether each statement is true or false.",
+      "explain": "n(Cl₂) = {=halogenConcentration*reagentVolume} mmol; n(Br⁻) = {=halideConcentration*sampleVolume} mmol could give {=halideConcentration*sampleVolume/2} mmol Br₂. Chlorine runs out: {@formed} mmol Br₂ forms from {=2*@formed} mmol Br⁻, so not all the bromide reacts. Bromine colours the cyclohexane layer orange.",
+      "vi": {
+        "stem": "Cho {reagentVolume} mL nước chlorine (Cl₂ {halogenConcentration} mol/L) vào {sampleVolume} mL dung dịch KBr ({halideConcentration} mol/L), rồi lắc ống nghiệm với cyclohexane. Mỗi nhận định sau đúng hay sai?",
+        "explain": "n(Cl₂) = {=halogenConcentration*reagentVolume} mmol; n(Br⁻) = {=halideConcentration*sampleVolume} mmol có thể tạo {=halideConcentration*sampleVolume/2} mmol Br₂. Chlorine hết trước: tạo {@formed} mmol Br₂ từ {=2*@formed} mmol Br⁻, nên không phải toàn bộ bromide đã phản ứng. Bromine làm lớp cyclohexane có màu da cam."
+      },
+      "statements": [
+        {
+          "text": "Chlorine is the reagent that runs out.",
+          "vi": {
+            "text": "Chlorine là chất phản ứng hết trước."
+          },
+          "true": true
+        },
+        {
+          "text": "{=halogenConcentration*reagentVolume} mmol of bromine forms.",
+          "vi": {
+            "text": "Có {=halogenConcentration*reagentVolume} mmol bromine tạo thành."
+          },
+          "true": true,
+          "check": {
+            "expr": "halogenConcentration*reagentVolume",
+            "equals": "formed"
+          }
+        },
+        {
+          "text": "All {=halideConcentration*sampleVolume} mmol of bromide ions react.",
+          "vi": {
+            "text": "Toàn bộ {=halideConcentration*sampleVolume} mmol ion bromide đều phản ứng."
+          },
+          "true": false,
+          "check": {
+            "expr": "halideConcentration*sampleVolume/2",
+            "equals": "formed"
+          }
+        },
+        {
+          "text": "The cyclohexane layer turns orange.",
+          "vi": {
+            "text": "Lớp cyclohexane chuyển sang màu da cam."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "largest-potential",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["reactivity", "redox"],
+      "set": {
+        "halogen": 0,
+        "halide": 2
+      },
+      "stem": "E° at 25 °C: Cl₂/Cl⁻ +1.35827 V, Br₂/Br⁻ +1.0873 V, I₂/I⁻ +0.5355 V. Which displacement X₂ + 2Y⁻ → 2X⁻ + Y₂ has the largest E° = E°(X₂/X⁻) − E°(Y₂/Y⁻)?",
+      "explain": "The largest gap is between the strongest oxidising agent and the weakest: Cl₂ + 2I⁻ → 2Cl⁻ + I₂, E° = 1.35827 − 0.5355 = {@potential|4} V. Cl₂ with Br⁻ gives {=1.35827-1.0873|4} V, Br₂ with I⁻ {=1.0873-0.5355|4} V; I₂ with Br⁻ is negative ({=0.5355-1.0873|4} V) and does not happen.",
+      "vi": {
+        "stem": "E° ở 25 °C: Cl₂/Cl⁻ +1,35827 V, Br₂/Br⁻ +1,0873 V, I₂/I⁻ +0,5355 V. Phản ứng thế X₂ + 2Y⁻ → 2X⁻ + Y₂ nào có E° = E°(X₂/X⁻) − E°(Y₂/Y⁻) lớn nhất?",
+        "explain": "Hiệu lớn nhất là giữa chất oxi hóa mạnh nhất và yếu nhất: Cl₂ + 2I⁻ → 2Cl⁻ + I₂, E° = 1,35827 − 0,5355 = {@potential|4} V. Cl₂ với Br⁻ cho {=1.35827-1.0873|4} V, Br₂ với I⁻ cho {=1.0873-0.5355|4} V; I₂ với Br⁻ có E° âm ({=0.5355-1.0873|4} V) nên không xảy ra."
+      },
+      "options": [
+        {
+          "text": "Cl₂ + 2I⁻ → 2Cl⁻ + I₂",
+          "vi": {
+            "text": "Cl₂ + 2I⁻ → 2Cl⁻ + I₂"
+          },
+          "correct": true,
+          "check": {
+            "expr": "1.35827-0.5355",
+            "equals": "potential"
+          }
+        },
+        {
+          "text": "Cl₂ + 2Br⁻ → 2Cl⁻ + Br₂",
+          "vi": {
+            "text": "Cl₂ + 2Br⁻ → 2Cl⁻ + Br₂"
+          },
+          "check": {
+            "expr": "1.35827-1.0873",
+            "equals": "potential"
+          }
+        },
+        {
+          "text": "Br₂ + 2I⁻ → 2Br⁻ + I₂",
+          "vi": {
+            "text": "Br₂ + 2I⁻ → 2Br⁻ + I₂"
+          },
+          "check": {
+            "expr": "1.0873-0.5355",
+            "equals": "potential"
+          }
+        },
+        {
+          "text": "I₂ + 2Br⁻ → 2I⁻ + Br₂",
+          "vi": {
+            "text": "I₂ + 2Br⁻ → 2I⁻ + Br₂"
+          },
+          "check": {
+            "expr": "0.5355-1.0873",
+            "equals": "potential"
+          }
+        }
+      ]
+    },
+    {
+      "id": "volume-from-excess",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["amounts"],
+      "set": {
+        "halogen": 1,
+        "halide": 2,
+        "reagentVolume": 10,
+        "halideConcentration": 0.05
+      },
+      "stem": "Some bromine water ({halogenConcentration} mol/L Br₂) is added to {sampleVolume} mL of KI solution ({halideConcentration} mol/L). When the reaction is over, {@halogenLeft} mmol of Br₂ is left unreacted. What volume of bromine water was added?",
+      "explain": "Br₂ + 2I⁻ → 2Br⁻ + I₂. Bromine is left, so all the iodide reacted: it used n(I⁻)/2 = {halideConcentration}·{sampleVolume}/2 = {@formed} mmol Br₂. Added: {@formed} + {@halogenLeft} = {=@formed+@halogenLeft} mmol, so V = {=@formed+@halogenLeft}/{halogenConcentration} = {=(@formed+@halogenLeft)/halogenConcentration} mL. Counting only the leftover, or the bromine as n(I⁻), are the traps.",
+      "vi": {
+        "stem": "Cho một lượng nước bromine (Br₂ {halogenConcentration} mol/L) vào {sampleVolume} mL dung dịch KI ({halideConcentration} mol/L). Khi phản ứng kết thúc, còn dư {@halogenLeft} mmol Br₂ chưa phản ứng. Thể tích nước bromine đã cho vào là bao nhiêu?",
+        "explain": "Br₂ + 2I⁻ → 2Br⁻ + I₂. Bromine còn dư nên iodide đã phản ứng hết: lượng Br₂ đã phản ứng là n(I⁻)/2 = {halideConcentration}·{sampleVolume}/2 = {@formed} mmol. Lượng đã cho vào: {@formed} + {@halogenLeft} = {=@formed+@halogenLeft} mmol, nên V = {=@formed+@halogenLeft}/{halogenConcentration} = {=(@formed+@halogenLeft)/halogenConcentration} mL. Chỉ tính lượng dư, hoặc lấy lượng bromine phản ứng bằng n(I⁻), là các bẫy thường gặp."
+      },
+      "options": [
+        {
+          "text": "{=(@formed+@halogenLeft)/halogenConcentration} mL",
+          "vi": {
+            "text": "{=(@formed+@halogenLeft)/halogenConcentration} mL"
+          },
+          "correct": true,
+          "check": {
+            "expr": "halogenConcentration*((@formed+@halogenLeft)/halogenConcentration)-@formed",
+            "equals": "halogenLeft"
+          }
+        },
+        {
+          "text": "{=@halogenLeft/halogenConcentration} mL",
+          "vi": {
+            "text": "{=@halogenLeft/halogenConcentration} mL"
+          },
+          "check": {
+            "expr": "halogenConcentration*(@halogenLeft/halogenConcentration)-@formed",
+            "equals": "halogenLeft"
+          }
+        },
+        {
+          "text": "{=(2*@formed+@halogenLeft)/halogenConcentration} mL",
+          "vi": {
+            "text": "{=(2*@formed+@halogenLeft)/halogenConcentration} mL"
+          },
+          "check": {
+            "expr": "halogenConcentration*((2*@formed+@halogenLeft)/halogenConcentration)-@formed",
+            "equals": "halogenLeft"
+          }
+        },
+        {
+          "text": "{=@formed/halogenConcentration} mL",
+          "vi": {
+            "text": "{=@formed/halogenConcentration} mL"
+          },
+          "check": {
+            "expr": "halogenConcentration*(@formed/halogenConcentration)-@formed",
+            "equals": "halogenLeft"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-unknown-salt",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["reactivity", "colours", "redox"],
+      "stem": "A colourless solution X is either KBr or KI. Bromine water is added, and on shaking with cyclohexane the top layer turns violet. Decide whether each statement is true or false.",
+      "explain": "Violet in cyclohexane is iodine: Br₂ + 2I⁻ → 2Br⁻ + I₂, so X is KI. With KBr, bromine has no weaker halogen to displace: no reaction. Chlorine water, a stronger oxidising agent, also frees iodine from KI — violet, not orange. Iodine solution reacts with neither KBr nor KI, so it cannot tell them apart.",
+      "vi": {
+        "stem": "Dung dịch không màu X là KBr hoặc KI. Cho nước bromine vào, lắc với cyclohexane thì lớp trên có màu tím. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Màu tím trong cyclohexane là của iodine: Br₂ + 2I⁻ → 2Br⁻ + I₂, nên X là KI. Với KBr, bromine không có halogen yếu hơn để đẩy ra: không có phản ứng. Nước chlorine, chất oxi hóa mạnh hơn, cũng giải phóng iodine từ KI — màu tím, không phải da cam. Dung dịch iodine không phản ứng với cả KBr lẫn KI, nên không phân biệt được hai chất."
+      },
+      "statements": [
+        {
+          "text": "X is potassium iodide.",
+          "vi": {
+            "text": "X là potassium iodide."
+          },
+          "true": true
+        },
+        {
+          "text": "Had X been KBr, no displacement reaction would have taken place.",
+          "vi": {
+            "text": "Nếu X là KBr thì đã không xảy ra phản ứng thế."
+          },
+          "true": true
+        },
+        {
+          "text": "Chlorine water added to X would turn the cyclohexane layer orange.",
+          "vi": {
+            "text": "Cho nước chlorine vào X sẽ làm lớp cyclohexane có màu da cam."
+          },
+          "true": false
+        },
+        {
+          "text": "Iodine solution could have been used instead to tell KBr from KI.",
+          "vi": {
+            "text": "Có thể dùng dung dịch iodine thay thế để phân biệt KBr với KI."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

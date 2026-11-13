@@ -1,0 +1,1032 @@
+{
+  "id": "neutralisation",
+  "skills": [
+    {
+      "id": "reaction",
+      "name": "Neutralisation is exothermic",
+      "advice": "Learn the net ionic equation H⁺ + OH⁻ → H₂O and the sign: heat is given out, so ΔH < 0 and the mixture warms. For a strong acid with a strong base ΔH is about −57 kJ per mole of water.",
+      "vi": {
+        "name": "Phản ứng trung hòa tỏa nhiệt",
+        "advice": "Ghi nhớ phương trình ion rút gọn H⁺ + OH⁻ → H₂O và dấu của ΔH: phản ứng tỏa nhiệt, nên ΔH < 0 và hỗn hợp nóng lên. Với axit mạnh và bazơ mạnh, ΔH khoảng −57 kJ cho mỗi mol nước tạo thành."
+      }
+    },
+    {
+      "id": "limiting",
+      "name": "The water formed: the reagent that runs out",
+      "advice": "Work out both amounts in mmol (c·V) and take the smaller: the excess reagent gives no extra heat, it only adds mass to warm. Try unequal volumes at the station.",
+      "vi": {
+        "name": "Lượng nước tạo thành: chất phản ứng hết",
+        "advice": "Tính số mmol của cả hai chất (c·V) và lấy giá trị nhỏ hơn: chất dư không tỏa thêm nhiệt, chỉ thêm khối lượng cần làm nóng. Thử các thể tích khác nhau trên trạm."
+      }
+    },
+    {
+      "id": "calorimetry",
+      "name": "q = m·c·ΔT with the whole mixture",
+      "advice": "Use the total volume of the mixture as its mass (1.00 g/mL) and c = 4.18 J/(g·K); keep q in J and n in mol before dividing for kJ/mol. The common slip is using only one solution’s volume.",
+      "vi": {
+        "name": "q = m·c·ΔT với toàn bộ hỗn hợp",
+        "advice": "Lấy tổng thể tích hỗn hợp làm khối lượng (1,00 g/mL) và c = 4,18 J/(g·K); để q tính bằng J và n tính bằng mol trước khi chia ra kJ/mol. Lỗi hay gặp là chỉ dùng thể tích của một dung dịch."
+      }
+    },
+    {
+      "id": "errors",
+      "name": "Heat losses and reading the thermometer",
+      "advice": "For each source of error (heat lost to the cup and air, reading too early, a coarse thermometer) decide whether ΔT comes out low or high, and so whether ΔH comes out too small in size or too large.",
+      "vi": {
+        "name": "Thất thoát nhiệt và đọc nhiệt kế",
+        "advice": "Với mỗi nguồn sai số (nhiệt thất thoát ra cốc và không khí, đọc nhiệt kế quá sớm, nhiệt kế có độ chia lớn), xác định ΔT đo được thấp hay cao hơn, từ đó ΔH có độ lớn nhỏ hơn hay lớn hơn thực tế."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "exothermic",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["reaction"],
+      "stem": "The neutralisation of hydrochloric acid by sodium hydroxide solution is…",
+      "explain": "The mixture warms up: heat is given out, so the reaction is exothermic and ΔH is negative.",
+      "vi": {
+        "stem": "Phản ứng trung hòa dung dịch HCl bằng dung dịch NaOH là phản ứng",
+        "explain": "Hỗn hợp nóng lên: nhiệt được tỏa ra, nên phản ứng tỏa nhiệt và ΔH mang dấu âm."
+      },
+      "options": [
+        {
+          "text": "exothermic, with ΔH < 0",
+          "vi": {
+            "text": "tỏa nhiệt, ΔH < 0"
+          },
+          "correct": true
+        },
+        {
+          "text": "endothermic, with ΔH > 0",
+          "vi": {
+            "text": "thu nhiệt, ΔH > 0"
+          }
+        },
+        {
+          "text": "exothermic, with ΔH > 0",
+          "vi": {
+            "text": "tỏa nhiệt, ΔH > 0"
+          }
+        },
+        {
+          "text": "neither exothermic nor endothermic",
+          "vi": {
+            "text": "không tỏa nhiệt cũng không thu nhiệt"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ionic-equation",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["reaction"],
+      "stem": "Which is the net ionic equation of the neutralisation of HCl by NaOH?",
+      "explain": "Na⁺ and Cl⁻ are spectator ions; what reacts is H⁺ + OH⁻ → H₂O.",
+      "vi": {
+        "stem": "Phương trình ion rút gọn của phản ứng trung hòa HCl bằng NaOH là",
+        "explain": "Na⁺ và Cl⁻ là các ion không tham gia phản ứng; thực chất phản ứng là H⁺ + OH⁻ → H₂O."
+      },
+      "options": [
+        {
+          "text": "H⁺ + OH⁻ → H₂O",
+          "vi": {
+            "text": "H⁺ + OH⁻ → H₂O"
+          },
+          "correct": true
+        },
+        {
+          "text": "Na⁺ + Cl⁻ → NaCl",
+          "vi": {
+            "text": "Na⁺ + Cl⁻ → NaCl"
+          }
+        },
+        {
+          "text": "H₂O → H⁺ + OH⁻",
+          "vi": {
+            "text": "H₂O → H⁺ + OH⁻"
+          }
+        },
+        {
+          "text": "2H⁺ + O²⁻ → H₂O",
+          "vi": {
+            "text": "2H⁺ + O²⁻ → H₂O"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-method",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["reaction", "errors"],
+      "stem": "HCl and NaOH solutions are mixed in a foam cup with a lid and a thermometer. Decide whether each statement is true or false.",
+      "explain": "Foam and a lid reduce heat loss; the highest temperature reached gives ΔT. The mixture warms, it does not cool. For a strong acid and a strong base the enthalpy of neutralisation is about −57 kJ per mole of water (textbook value).",
+      "vi": {
+        "stem": "Trộn dung dịch HCl và dung dịch NaOH trong cốc xốp có nắp và nhiệt kế. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Cốc xốp và nắp làm giảm thất thoát nhiệt; nhiệt độ cao nhất đạt được cho biết ΔT. Hỗn hợp nóng lên chứ không lạnh đi. Với axit mạnh và bazơ mạnh, nhiệt trung hòa khoảng −57 kJ cho mỗi mol nước (giá trị trong sách giáo khoa)."
+      },
+      "statements": [
+        {
+          "text": "The foam cup and its lid reduce the heat lost to the surroundings.",
+          "vi": {
+            "text": "Cốc xốp và nắp giúp giảm nhiệt thất thoát ra môi trường."
+          },
+          "true": true
+        },
+        {
+          "text": "The highest temperature reached is used to find ΔT.",
+          "vi": {
+            "text": "Nhiệt độ cao nhất đạt được được dùng để tính ΔT."
+          },
+          "true": true
+        },
+        {
+          "text": "The temperature of the mixture falls during the neutralisation.",
+          "vi": {
+            "text": "Nhiệt độ của hỗn hợp giảm trong quá trình trung hòa."
+          },
+          "true": false
+        },
+        {
+          "text": "For a strong acid and a strong base, about 57 kJ is given out per mole of water formed.",
+          "vi": {
+            "text": "Với axit mạnh và bazơ mạnh, khoảng 57 kJ nhiệt được tỏa ra cho mỗi mol nước tạo thành."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "double-volumes",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["calorimetry", "limiting"],
+      "stem": "Instead of 25 mL + 25 mL, 50 mL of HCl and 50 mL of NaOH of the same concentrations are mixed. The temperature rise…",
+      "explain": "Twice the water formed gives twice the heat, but it warms twice the mass: ΔT = q/(m·c) stays the same.",
+      "vi": {
+        "stem": "Thay vì 25 mL + 25 mL, trộn 50 mL HCl với 50 mL NaOH có cùng nồng độ như trước. Độ tăng nhiệt độ",
+        "explain": "Lượng nước tạo thành gấp đôi nên nhiệt tỏa ra gấp đôi, nhưng khối lượng cần làm nóng cũng gấp đôi: ΔT = q/(m·c) không đổi."
+      },
+      "options": [
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          },
+          "correct": true
+        },
+        {
+          "text": "doubles",
+          "vi": {
+            "text": "tăng gấp đôi"
+          }
+        },
+        {
+          "text": "halves",
+          "vi": {
+            "text": "giảm một nửa"
+          }
+        },
+        {
+          "text": "becomes four times larger",
+          "vi": {
+            "text": "tăng gấp bốn lần"
+          }
+        }
+      ]
+    },
+    {
+      "id": "double-concentration",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["calorimetry"],
+      "stem": "The same volumes are used, but both solutions are twice as concentrated. The temperature rise…",
+      "explain": "Twice the water formed in the same mass of mixture: twice the heat, twice ΔT.",
+      "vi": {
+        "stem": "Giữ nguyên thể tích, nhưng cả hai dung dịch đều có nồng độ gấp đôi. Độ tăng nhiệt độ",
+        "explain": "Lượng nước tạo thành gấp đôi trong cùng khối lượng hỗn hợp: nhiệt tỏa ra gấp đôi, ΔT gấp đôi."
+      },
+      "options": [
+        {
+          "text": "doubles",
+          "vi": {
+            "text": "tăng gấp đôi"
+          },
+          "correct": true
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "halves",
+          "vi": {
+            "text": "giảm một nửa"
+          }
+        },
+        {
+          "text": "becomes four times larger",
+          "vi": {
+            "text": "tăng gấp bốn lần"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-excess",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["limiting", "calorimetry", "errors"],
+      "stem": "50 mL of 1.0 mol/L HCl is mixed with 25 mL of 1.0 mol/L NaOH. Decide whether each statement is true or false.",
+      "explain": "NaOH (25 mmol) runs out before HCl (50 mmol), so it sets the water formed; more NaOH past 50 mL would give no more heat. The calculation treats the mixture as water, 1.00 g/mL and 4.18 J/(g·K). A real cup loses some heat, so a real ΔT is a little lower.",
+      "vi": {
+        "stem": "Trộn 50 mL HCl 1,0 mol/L với 25 mL NaOH 1,0 mol/L. Mỗi nhận định sau đúng hay sai?",
+        "explain": "NaOH (25 mmol) hết trước HCl (50 mmol), nên quyết định lượng nước tạo thành; thêm NaOH quá 50 mL cũng không tỏa thêm nhiệt. Khi tính, coi hỗn hợp như nước, 1,00 g/mL và 4,18 J/(g·K). Cốc thật có thất thoát một ít nhiệt, nên ΔT thực tế thấp hơn một chút."
+      },
+      "statements": [
+        {
+          "text": "The amount of water formed is set by the NaOH.",
+          "vi": {
+            "text": "Lượng nước tạo thành được quyết định bởi NaOH."
+          },
+          "true": true
+        },
+        {
+          "text": "Adding NaOH beyond 50 mL would keep increasing the heat given out.",
+          "vi": {
+            "text": "Thêm NaOH vượt quá 50 mL sẽ tiếp tục làm tăng nhiệt lượng tỏa ra."
+          },
+          "true": false
+        },
+        {
+          "text": "In the calculation the mixture is treated as water: 1.00 g/mL and 4.18 J/(g·K).",
+          "vi": {
+            "text": "Khi tính toán, hỗn hợp được coi như nước: 1,00 g/mL và 4,18 J/(g·K)."
+          },
+          "true": true
+        },
+        {
+          "text": "Because a real cup loses some heat, a measured ΔT comes out a little lower than calculated.",
+          "vi": {
+            "text": "Vì cốc thật thất thoát một ít nhiệt, ΔT đo được thấp hơn một chút so với tính toán."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "water-formed",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["limiting"],
+      "set": {
+        "acidVolume": 50,
+        "baseVolume": 25,
+        "concentration": 2
+      },
+      "stem": "{acidVolume} mL of HCl and {baseVolume} mL of NaOH, both {concentration} mol/L, are mixed. How much water forms?",
+      "explain": "n(HCl) = {=concentration*acidVolume} mmol and n(NaOH) = {=concentration*baseVolume} mmol: NaOH runs out, so n(H₂O) = {@water} mmol.",
+      "vi": {
+        "stem": "Trộn {acidVolume} mL HCl với {baseVolume} mL NaOH, cả hai đều {concentration} mol/L. Lượng nước tạo thành là bao nhiêu?",
+        "explain": "n(HCl) = {=concentration*acidVolume} mmol và n(NaOH) = {=concentration*baseVolume} mmol: NaOH hết, nên n(H₂O) = {@water} mmol."
+      },
+      "options": [
+        {
+          "text": "{@water} mmol",
+          "vi": {
+            "text": "{@water} mmol"
+          },
+          "correct": true,
+          "check": {
+            "expr": "concentration*min(acidVolume,baseVolume)",
+            "equals": "water"
+          }
+        },
+        {
+          "text": "{=concentration*acidVolume} mmol",
+          "vi": {
+            "text": "{=concentration*acidVolume} mmol"
+          },
+          "check": {
+            "expr": "concentration*acidVolume",
+            "equals": "water"
+          }
+        },
+        {
+          "text": "{=concentration*(acidVolume+baseVolume)} mmol",
+          "vi": {
+            "text": "{=concentration*(acidVolume+baseVolume)} mmol"
+          },
+          "check": {
+            "expr": "concentration*(acidVolume+baseVolume)",
+            "equals": "water"
+          }
+        },
+        {
+          "text": "{=concentration*baseVolume/1000} mmol",
+          "vi": {
+            "text": "{=concentration*baseVolume/1000} mmol"
+          },
+          "check": {
+            "expr": "concentration*baseVolume/1000",
+            "equals": "water"
+          }
+        }
+      ]
+    },
+    {
+      "id": "temperature-rise",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["calorimetry"],
+      "set": {
+        "acidVolume": 50,
+        "baseVolume": 50,
+        "concentration": 1
+      },
+      "stem": "{acidVolume} mL of HCl and {baseVolume} mL of NaOH, both {concentration} mol/L, are mixed in a foam cup (ΔH = −57.1 kJ/mol; the mixture taken as water, 1.00 g/mL, 4.18 J/(g·K); no heat lost). What is the temperature rise?",
+      "explain": "n = {@water} mmol = {=@water/1000} mol gives q = {=@water/1000}·57100 ≈ {=@water*57.1|4} J, which warms {=acidVolume+baseVolume} g: ΔT = q/(m·c) = {=@water*57.1|4}/({=acidVolume+baseVolume}·4.18) ≈ {@temperatureRise} K.",
+      "vi": {
+        "stem": "Trộn {acidVolume} mL HCl với {baseVolume} mL NaOH, cả hai đều {concentration} mol/L, trong cốc xốp (ΔH = −57,1 kJ/mol; coi hỗn hợp như nước, 1,00 g/mL, 4,18 J/(g·K); không thất thoát nhiệt). Độ tăng nhiệt độ là bao nhiêu?",
+        "explain": "n = {@water} mmol = {=@water/1000} mol tỏa ra q = {=@water/1000}·57100 ≈ {=@water*57.1|4} J, làm nóng {=acidVolume+baseVolume} g hỗn hợp: ΔT = q/(m·c) = {=@water*57.1|4}/({=acidVolume+baseVolume}·4,18) ≈ {@temperatureRise} K."
+      },
+      "options": [
+        {
+          "text": "{@temperatureRise} K",
+          "vi": {
+            "text": "{@temperatureRise} K"
+          },
+          "correct": true,
+          "check": {
+            "expr": "concentration*min(acidVolume,baseVolume)*57.1/((acidVolume+baseVolume)*4.18)*(1-exp(-readTime/timeConstant))",
+            "equals": "temperatureRise"
+          }
+        },
+        {
+          "text": "{=@water*57.1/(acidVolume*4.18)} K",
+          "vi": {
+            "text": "{=@water*57.1/(acidVolume*4.18)} K"
+          },
+          "check": {
+            "expr": "concentration*min(acidVolume,baseVolume)*57.1/(acidVolume*4.18)*(1-exp(-readTime/timeConstant))",
+            "equals": "temperatureRise"
+          }
+        },
+        {
+          "text": "{=@water*0.0571/((acidVolume+baseVolume)*4.18)} K",
+          "vi": {
+            "text": "{=@water*0.0571/((acidVolume+baseVolume)*4.18)} K"
+          },
+          "check": {
+            "expr": "concentration*min(acidVolume,baseVolume)*0.0571/((acidVolume+baseVolume)*4.18)*(1-exp(-readTime/timeConstant))",
+            "equals": "temperatureRise"
+          }
+        },
+        {
+          "text": "{=@water*57.1/((acidVolume+baseVolume)/1000*4.18)} K",
+          "vi": {
+            "text": "{=@water*57.1/((acidVolume+baseVolume)/1000*4.18)} K"
+          },
+          "check": {
+            "expr": "concentration*min(acidVolume,baseVolume)*57.1/((acidVolume+baseVolume)/1000*4.18)*(1-exp(-readTime/timeConstant))",
+            "equals": "temperatureRise"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-heat",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["limiting", "calorimetry"],
+      "set": {
+        "acidVolume": 50,
+        "baseVolume": 25,
+        "concentration": 2
+      },
+      "stem": "{acidVolume} mL of HCl and {baseVolume} mL of NaOH, both {concentration} mol/L and at {startTemperature} °C, are mixed (ΔH = −57.1 kJ/mol; the mixture taken as water, 1.00 g/mL, 4.18 J/(g·K); no heat lost). Decide whether each statement is true or false.",
+      "explain": "NaOH runs out: n = {@water} mmol, q = {@water}·57.1 ≈ {@heat|4} J. It warms all {=acidVolume+baseVolume} g: ΔT ≈ {@temperatureRise} K, so T ≈ {@finalTemperature} °C. Using only the {acidVolume} g of acid as the mass would give too high a value.",
+      "vi": {
+        "stem": "Trộn {acidVolume} mL HCl với {baseVolume} mL NaOH, cả hai đều {concentration} mol/L và ở {startTemperature} °C (ΔH = −57,1 kJ/mol; coi hỗn hợp như nước, 1,00 g/mL, 4,18 J/(g·K); không thất thoát nhiệt). Mỗi nhận định sau đúng hay sai?",
+        "explain": "NaOH hết: n = {@water} mmol, q = {@water}·57,1 ≈ {@heat|4} J. Nhiệt làm nóng toàn bộ {=acidVolume+baseVolume} g: ΔT ≈ {@temperatureRise} K, nên T ≈ {@finalTemperature} °C. Nếu chỉ lấy {acidVolume} g axit làm khối lượng thì kết quả cao quá."
+      },
+      "statements": [
+        {
+          "text": "{@water} mmol of water forms.",
+          "vi": {
+            "text": "Có {@water} mmol nước tạo thành."
+          },
+          "true": true,
+          "check": {
+            "expr": "concentration*min(acidVolume,baseVolume)",
+            "equals": "water"
+          }
+        },
+        {
+          "text": "The heat given out is about {@heat|4} J.",
+          "vi": {
+            "text": "Nhiệt lượng tỏa ra khoảng {@heat|4} J."
+          },
+          "true": true,
+          "check": {
+            "expr": "concentration*min(acidVolume,baseVolume)*57.1*(1-exp(-readTime/timeConstant))",
+            "equals": "heat"
+          }
+        },
+        {
+          "text": "The temperature rises by about {@temperatureRise} K.",
+          "vi": {
+            "text": "Nhiệt độ tăng khoảng {@temperatureRise} K."
+          },
+          "true": true,
+          "check": {
+            "expr": "concentration*min(acidVolume,baseVolume)*57.1/((acidVolume+baseVolume)*4.18)*(1-exp(-readTime/timeConstant))",
+            "equals": "temperatureRise"
+          }
+        },
+        {
+          "text": "The thermometer reaches about {=startTemperature+@water*57.1/(acidVolume*4.18)} °C.",
+          "vi": {
+            "text": "Nhiệt kế chỉ khoảng {=startTemperature+@water*57.1/(acidVolume*4.18)} °C."
+          },
+          "true": false,
+          "check": {
+            "expr": "startTemperature+concentration*min(acidVolume,baseVolume)*57.1/(acidVolume*4.18)*(1-exp(-readTime/timeConstant))",
+            "equals": "finalTemperature"
+          }
+        }
+      ]
+    },
+    {
+      "id": "final-temperature",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["limiting", "calorimetry"],
+      "set": {
+        "acidVolume": 25,
+        "baseVolume": 75,
+        "concentration": 1
+      },
+      "stem": "{acidVolume} mL of HCl and {baseVolume} mL of NaOH, both {concentration} mol/L and at {startTemperature} °C, are mixed (ΔH = −57.1 kJ/mol; the mixture taken as water, 1.00 g/mL, 4.18 J/(g·K); no heat lost). What is the highest temperature reached?",
+      "explain": "HCl runs out: n = {@water} mmol, q ≈ {=@water*57.1|4} J warming {=acidVolume+baseVolume} g: ΔT ≈ {@temperatureRise} K, so T ≈ {startTemperature} + {@temperatureRise} ≈ {@finalTemperature} °C.",
+      "vi": {
+        "stem": "Trộn {acidVolume} mL HCl với {baseVolume} mL NaOH, cả hai đều {concentration} mol/L và ở {startTemperature} °C (ΔH = −57,1 kJ/mol; coi hỗn hợp như nước, 1,00 g/mL, 4,18 J/(g·K); không thất thoát nhiệt). Nhiệt độ cao nhất đạt được là bao nhiêu?",
+        "explain": "HCl hết: n = {@water} mmol, q ≈ {=@water*57.1|4} J làm nóng {=acidVolume+baseVolume} g: ΔT ≈ {@temperatureRise} K, nên T ≈ {startTemperature} + {@temperatureRise} ≈ {@finalTemperature} °C."
+      },
+      "options": [
+        {
+          "text": "{@finalTemperature} °C",
+          "vi": {
+            "text": "{@finalTemperature} °C"
+          },
+          "correct": true,
+          "check": {
+            "expr": "startTemperature+concentration*min(acidVolume,baseVolume)*57.1/((acidVolume+baseVolume)*4.18)*(1-exp(-readTime/timeConstant))",
+            "equals": "finalTemperature"
+          }
+        },
+        {
+          "text": "{=startTemperature+concentration*baseVolume*57.1/((acidVolume+baseVolume)*4.18)} °C",
+          "vi": {
+            "text": "{=startTemperature+concentration*baseVolume*57.1/((acidVolume+baseVolume)*4.18)} °C"
+          },
+          "check": {
+            "expr": "startTemperature+concentration*baseVolume*57.1/((acidVolume+baseVolume)*4.18)*(1-exp(-readTime/timeConstant))",
+            "equals": "finalTemperature"
+          }
+        },
+        {
+          "text": "{=startTemperature+@water*57.1/(acidVolume*4.18)} °C",
+          "vi": {
+            "text": "{=startTemperature+@water*57.1/(acidVolume*4.18)} °C"
+          },
+          "check": {
+            "expr": "startTemperature+concentration*min(acidVolume,baseVolume)*57.1/(acidVolume*4.18)*(1-exp(-readTime/timeConstant))",
+            "equals": "finalTemperature"
+          }
+        },
+        {
+          "text": "{@temperatureRise} °C",
+          "vi": {
+            "text": "{@temperatureRise} °C"
+          },
+          "check": {
+            "expr": "concentration*min(acidVolume,baseVolume)*57.1/((acidVolume+baseVolume)*4.18)*(1-exp(-readTime/timeConstant))",
+            "equals": "finalTemperature"
+          }
+        }
+      ]
+    },
+    {
+      "id": "enthalpy",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["calorimetry", "reaction"],
+      "set": {
+        "acidVolume": 50,
+        "baseVolume": 50,
+        "concentration": 1
+      },
+      "stem": "A student mixes {acidVolume} mL of HCl with {baseVolume} mL of NaOH, both {concentration} mol/L, and measures a temperature rise of {@temperatureRise|3} K. Taking the mixture as water (1.00 g/mL, 4.18 J/(g·K)), what enthalpy of neutralisation does this give?",
+      "explain": "q = m·c·ΔT = {=acidVolume+baseVolume}·4.18·{@temperatureRise|3} ≈ {=(acidVolume+baseVolume)*4.18*@temperatureRise|4} J for n = {=@water/1000} mol of water; heat is given out, so ΔH = −q/n ≈ {=-(acidVolume+baseVolume)*4.18*@temperatureRise/@water} kJ/mol.",
+      "vi": {
+        "stem": "Một học sinh trộn {acidVolume} mL HCl với {baseVolume} mL NaOH, cả hai đều {concentration} mol/L, và đo được nhiệt độ tăng {@temperatureRise|3} K. Coi hỗn hợp như nước (1,00 g/mL, 4,18 J/(g·K)), nhiệt trung hòa tính được là bao nhiêu?",
+        "explain": "q = m·c·ΔT = {=acidVolume+baseVolume}·4,18·{@temperatureRise|3} ≈ {=(acidVolume+baseVolume)*4.18*@temperatureRise|4} J cho n = {=@water/1000} mol nước; phản ứng tỏa nhiệt nên ΔH = −q/n ≈ {=-(acidVolume+baseVolume)*4.18*@temperatureRise/@water} kJ/mol."
+      },
+      "options": [
+        {
+          "text": "{=-(acidVolume+baseVolume)*4.18*@temperatureRise/@water} kJ/mol",
+          "vi": {
+            "text": "{=-(acidVolume+baseVolume)*4.18*@temperatureRise/@water} kJ/mol"
+          },
+          "correct": true,
+          "check": {
+            "expr": "-(acidVolume+baseVolume)*4.18*@temperatureRise/(1-exp(-readTime/timeConstant))/@water",
+            "equals": "enthalpy"
+          }
+        },
+        {
+          "text": "{=(acidVolume+baseVolume)*4.18*@temperatureRise/@water} kJ/mol",
+          "vi": {
+            "text": "{=(acidVolume+baseVolume)*4.18*@temperatureRise/@water} kJ/mol"
+          },
+          "check": {
+            "expr": "(acidVolume+baseVolume)*4.18*@temperatureRise/(1-exp(-readTime/timeConstant))/@water",
+            "equals": "enthalpy"
+          }
+        },
+        {
+          "text": "{=-acidVolume*4.18*@temperatureRise/@water} kJ/mol",
+          "vi": {
+            "text": "{=-acidVolume*4.18*@temperatureRise/@water} kJ/mol"
+          },
+          "check": {
+            "expr": "-acidVolume*4.18*@temperatureRise/(1-exp(-readTime/timeConstant))/@water",
+            "equals": "enthalpy"
+          }
+        },
+        {
+          "text": "{=-(acidVolume+baseVolume)*4.18*@temperatureRise/(@water/1000)} kJ/mol",
+          "vi": {
+            "text": "{=-(acidVolume+baseVolume)*4.18*@temperatureRise/(@water/1000)} kJ/mol"
+          },
+          "check": {
+            "expr": "-(acidVolume+baseVolume)*4.18*@temperatureRise/(1-exp(-readTime/timeConstant))/(@water/1000)",
+            "equals": "enthalpy"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-reading",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["errors", "calorimetry"],
+      "set": {
+        "acidVolume": 50,
+        "baseVolume": 50,
+        "concentration": 1,
+        "thermometerResolution": 0.5
+      },
+      "stem": "{acidVolume} mL of HCl and {baseVolume} mL of NaOH, both {concentration} mol/L and at {startTemperature} °C, are mixed (ΔH = −57.1 kJ/mol; mixture as water, 4.18 J/(g·K)). The thermometer reads to {thermometerResolution} °C. Decide whether each statement is true or false.",
+      "explain": "The mixture reaches {@finalTemperature} °C; to the nearest {thermometerResolution} °C the thermometer shows {=round(@finalTemperature/thermometerResolution)*thermometerResolution} °C, a rise of {=round(@finalTemperature/thermometerResolution)*thermometerResolution-startTemperature} K, giving ΔH ≈ −{=(acidVolume+baseVolume)*4.18*(round(@finalTemperature/thermometerResolution)*thermometerResolution-startTemperature)/@water|3} kJ/mol. Heat lost or reading too early both make ΔT too small, so ΔH comes out smaller in size than 57.1 kJ/mol.",
+      "vi": {
+        "stem": "Trộn {acidVolume} mL HCl với {baseVolume} mL NaOH, cả hai đều {concentration} mol/L và ở {startTemperature} °C (ΔH = −57,1 kJ/mol; coi hỗn hợp như nước, 4,18 J/(g·K)). Nhiệt kế có độ chia {thermometerResolution} °C. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Hỗn hợp đạt {@finalTemperature} °C; làm tròn theo độ chia {thermometerResolution} °C, nhiệt kế chỉ {=round(@finalTemperature/thermometerResolution)*thermometerResolution} °C, tức tăng {=round(@finalTemperature/thermometerResolution)*thermometerResolution-startTemperature} K, cho ΔH ≈ −{=(acidVolume+baseVolume)*4.18*(round(@finalTemperature/thermometerResolution)*thermometerResolution-startTemperature)/@water|3} kJ/mol. Thất thoát nhiệt hay đọc nhiệt kế quá sớm đều làm ΔT nhỏ hơn, nên ΔH có độ lớn nhỏ hơn 57,1 kJ/mol."
+      },
+      "statements": [
+        {
+          "text": "The thermometer shows {=round(@finalTemperature/thermometerResolution)*thermometerResolution} °C at the highest point.",
+          "vi": {
+            "text": "Nhiệt kế chỉ {=round(@finalTemperature/thermometerResolution)*thermometerResolution} °C ở thời điểm cao nhất."
+          },
+          "true": true
+        },
+        {
+          "text": "From that reading, ΔH works out at about −{=(acidVolume+baseVolume)*4.18*(round(@finalTemperature/thermometerResolution)*thermometerResolution-startTemperature)/@water|3} kJ/mol.",
+          "vi": {
+            "text": "Từ số đọc đó, ΔH tính được khoảng −{=(acidVolume+baseVolume)*4.18*(round(@finalTemperature/thermometerResolution)*thermometerResolution-startTemperature)/@water|3} kJ/mol."
+          },
+          "true": true
+        },
+        {
+          "text": "Heat lost from the cup makes the measured ΔH smaller in size than the true value.",
+          "vi": {
+            "text": "Nhiệt thất thoát ra khỏi cốc làm ΔH đo được có độ lớn nhỏ hơn giá trị thực."
+          },
+          "true": true
+        },
+        {
+          "text": "Reading the thermometer before the mixture has finished warming makes ΔH too large in size.",
+          "vi": {
+            "text": "Đọc nhiệt kế khi hỗn hợp chưa nóng lên hết làm ΔH có độ lớn quá lớn."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "salt-formed",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["reaction"],
+      "stem": "Which salt forms when hydrochloric acid neutralises sodium hydroxide solution?",
+      "explain": "HCl + NaOH → NaCl + H₂O: the acid's anion and the base's cation make sodium chloride; H⁺ and OH⁻ make water.",
+      "vi": {
+        "stem": "Muối nào tạo thành khi dung dịch hydrochloric acid trung hòa dung dịch sodium hydroxide?",
+        "explain": "HCl + NaOH → NaCl + H₂O: anion của acid và cation của base tạo thành sodium chloride; H⁺ và OH⁻ tạo thành nước."
+      },
+      "options": [
+        {
+          "text": "NaCl",
+          "vi": {
+            "text": "NaCl"
+          },
+          "correct": true
+        },
+        {
+          "text": "NaClO",
+          "vi": {
+            "text": "NaClO"
+          }
+        },
+        {
+          "text": "Na₂O",
+          "vi": {
+            "text": "Na₂O"
+          }
+        },
+        {
+          "text": "NaH",
+          "vi": {
+            "text": "NaH"
+          }
+        }
+      ]
+    },
+    {
+      "id": "extra-base",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["limiting", "calorimetry"],
+      "stem": "Mixing 50 mL of 1.0 mol/L HCl with 50 mL of 1.0 mol/L NaOH gives a certain temperature rise. If 100 mL of the NaOH is used instead, with the same 50 mL of HCl, the temperature rise is…",
+      "explain": "HCl still runs out: the same 50 mmol of water and the same heat. But that heat now warms 150 g instead of 100 g, so ΔT falls to two-thirds.",
+      "vi": {
+        "stem": "Trộn 50 mL HCl 1,0 mol/L với 50 mL NaOH 1,0 mol/L cho một độ tăng nhiệt độ nhất định. Nếu dùng 100 mL dung dịch NaOH đó với cùng 50 mL HCl thì độ tăng nhiệt độ",
+        "explain": "HCl vẫn hết trước: vẫn tạo 50 mmol nước và tỏa cùng nhiệt lượng. Nhưng nhiệt lượng đó giờ làm nóng 150 g thay vì 100 g, nên ΔT chỉ còn hai phần ba."
+      },
+      "options": [
+        {
+          "text": "smaller",
+          "vi": {
+            "text": "nhỏ hơn"
+          },
+          "correct": true
+        },
+        {
+          "text": "the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "larger",
+          "vi": {
+            "text": "lớn hơn"
+          }
+        },
+        {
+          "text": "twice as large",
+          "vi": {
+            "text": "lớn gấp đôi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-cup",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["reaction", "limiting", "errors"],
+      "stem": "HCl and NaOH solutions are mixed in a calorimeter to measure the enthalpy of neutralisation. Decide whether each statement is true or false.",
+      "explain": "Neutralisation gives out heat, so ΔH < 0. The heat follows the water formed, set by the reagent that runs out; an excess of the other adds nothing. A glass beaker conducts heat away faster than a foam cup, so ΔT comes out smaller, not larger. Stirring spreads the heat so the thermometer reads the whole mixture.",
+      "vi": {
+        "stem": "Trộn dung dịch HCl và NaOH trong một nhiệt lượng kế để đo enthalpy của phản ứng trung hòa. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Phản ứng trung hòa tỏa nhiệt, nên ΔH < 0. Nhiệt lượng tỏa ra theo lượng nước tạo thành, do chất phản ứng hết quyết định; phần dư của chất kia không thêm nhiệt. Cốc thủy tinh dẫn nhiệt ra ngoài nhanh hơn cốc xốp, nên ΔT nhỏ hơn chứ không lớn hơn. Khuấy giúp nhiệt phân bố đều để nhiệt kế đo được nhiệt độ của cả hỗn hợp."
+      },
+      "statements": [
+        {
+          "text": "The enthalpy change of neutralisation is negative.",
+          "vi": {
+            "text": "Biến thiên enthalpy của phản ứng trung hòa có giá trị âm."
+          },
+          "true": true
+        },
+        {
+          "text": "The heat given out depends on the amount of water formed, not on the excess reagent.",
+          "vi": {
+            "text": "Nhiệt lượng tỏa ra phụ thuộc lượng nước tạo thành, không phụ thuộc chất còn dư."
+          },
+          "true": true
+        },
+        {
+          "text": "Using a glass beaker instead of a foam cup makes the measured temperature rise larger.",
+          "vi": {
+            "text": "Dùng cốc thủy tinh thay cho cốc xốp làm độ tăng nhiệt độ đo được lớn hơn."
+          },
+          "true": false
+        },
+        {
+          "text": "Stirring helps the whole mixture reach the same temperature.",
+          "vi": {
+            "text": "Khuấy giúp toàn bộ hỗn hợp đạt cùng một nhiệt độ."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "heat-released",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["limiting", "reaction"],
+      "set": {
+        "acidVolume": 25,
+        "baseVolume": 25,
+        "concentration": 2
+      },
+      "stem": "{acidVolume} mL of HCl and {baseVolume} mL of NaOH, both {concentration} mol/L, are mixed (ΔH = −57.1 kJ/mol, no heat lost). How much heat is given out?",
+      "explain": "n(H₂O) = {concentration}·{acidVolume} = {@water} mmol = {=@water/1000} mol, so q = {=@water/1000}·57 100 ≈ {@heat|4} J. Adding both volumes counts the water twice; 57.1 kJ/mol times mmol gives J, not kJ.",
+      "vi": {
+        "stem": "Trộn {acidVolume} mL HCl với {baseVolume} mL NaOH, đều {concentration} mol/L (ΔH = −57,1 kJ/mol, không mất nhiệt). Nhiệt lượng tỏa ra là bao nhiêu?",
+        "explain": "n(H₂O) = {concentration}·{acidVolume} = {@water} mmol = {=@water/1000} mol, nên q = {=@water/1000}·57 100 ≈ {@heat|4} J. Cộng cả hai thể tích là tính lượng nước gấp đôi; 57,1 kJ/mol nhân với số mmol cho kết quả bằng J, không phải kJ."
+      },
+      "options": [
+        {
+          "text": "{@heat|4} J",
+          "vi": {
+            "text": "{@heat|4} J"
+          },
+          "correct": true,
+          "check": {
+            "expr": "concentration*min(acidVolume,baseVolume)*57.1*(1-exp(-readTime/timeConstant))",
+            "equals": "heat"
+          }
+        },
+        {
+          "text": "{=concentration*(acidVolume+baseVolume)*57.1|4} J",
+          "vi": {
+            "text": "{=concentration*(acidVolume+baseVolume)*57.1|4} J"
+          },
+          "check": {
+            "expr": "concentration*(acidVolume+baseVolume)*57.1*(1-exp(-readTime/timeConstant))",
+            "equals": "heat"
+          }
+        },
+        {
+          "text": "{=concentration*min(acidVolume,baseVolume)*57100|4} J",
+          "vi": {
+            "text": "{=concentration*min(acidVolume,baseVolume)*57100|4} J"
+          },
+          "check": {
+            "expr": "concentration*min(acidVolume,baseVolume)*57100*(1-exp(-readTime/timeConstant))",
+            "equals": "heat"
+          }
+        },
+        {
+          "text": "{=concentration*min(acidVolume,baseVolume)*57.1/2|4} J",
+          "vi": {
+            "text": "{=concentration*min(acidVolume,baseVolume)*57.1/2|4} J"
+          },
+          "check": {
+            "expr": "concentration*min(acidVolume,baseVolume)*57.1/2*(1-exp(-readTime/timeConstant))",
+            "equals": "heat"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-acid-short",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["limiting", "calorimetry"],
+      "set": {
+        "acidVolume": 25,
+        "baseVolume": 50,
+        "concentration": 1
+      },
+      "stem": "{acidVolume} mL of HCl and {baseVolume} mL of NaOH, both {concentration} mol/L and at {startTemperature} °C, are mixed (ΔH = −57.1 kJ/mol; the mixture taken as water, 1.00 g/mL, 4.18 J/(g·K); no heat lost). Decide whether each statement is true or false.",
+      "explain": "n(HCl) = {=concentration*acidVolume} mmol < n(NaOH) = {=concentration*baseVolume} mmol: HCl runs out and {@water} mmol of water forms. q ≈ {=@water*57.1|4} J warms all {=acidVolume+baseVolume} g: ΔT ≈ {@temperatureRise} K, T ≈ {@finalTemperature} °C. Using only the {baseVolume} g of NaOH solution as the mass gives too large a ΔT.",
+      "vi": {
+        "stem": "Trộn {acidVolume} mL HCl với {baseVolume} mL NaOH, đều {concentration} mol/L và ở {startTemperature} °C (ΔH = −57,1 kJ/mol; coi hỗn hợp như nước, 1,00 g/mL, 4,18 J/(g·K); không mất nhiệt). Mỗi nhận định sau đúng hay sai?",
+        "explain": "n(HCl) = {=concentration*acidVolume} mmol < n(NaOH) = {=concentration*baseVolume} mmol: HCl hết trước và tạo {@water} mmol nước. q ≈ {=@water*57.1|4} J làm nóng toàn bộ {=acidVolume+baseVolume} g: ΔT ≈ {@temperatureRise} K, T ≈ {@finalTemperature} °C. Chỉ lấy {baseVolume} g dung dịch NaOH làm khối lượng sẽ cho ΔT quá lớn."
+      },
+      "statements": [
+        {
+          "text": "HCl is the reagent that runs out.",
+          "vi": {
+            "text": "HCl là chất phản ứng hết trước."
+          },
+          "true": true
+        },
+        {
+          "text": "{=concentration*min(acidVolume,baseVolume)} mmol of water forms.",
+          "vi": {
+            "text": "Có {=concentration*min(acidVolume,baseVolume)} mmol nước tạo thành."
+          },
+          "true": true,
+          "check": {
+            "expr": "concentration*min(acidVolume,baseVolume)",
+            "equals": "water"
+          }
+        },
+        {
+          "text": "The temperature rises by about {=@water*57.1/(baseVolume*4.18)} K.",
+          "vi": {
+            "text": "Nhiệt độ tăng khoảng {=@water*57.1/(baseVolume*4.18)} K."
+          },
+          "true": false,
+          "check": {
+            "expr": "@water*57.1/(baseVolume*4.18)*(1-exp(-readTime/timeConstant))",
+            "equals": "temperatureRise"
+          }
+        },
+        {
+          "text": "The thermometer reaches about {@finalTemperature} °C.",
+          "vi": {
+            "text": "Nhiệt kế chỉ cao nhất khoảng {@finalTemperature} °C."
+          },
+          "true": true,
+          "check": {
+            "expr": "startTemperature+concentration*min(acidVolume,baseVolume)*57.1/((acidVolume+baseVolume)*4.18)*(1-exp(-readTime/timeConstant))",
+            "equals": "finalTemperature"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-concentration",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["calorimetry", "limiting"],
+      "set": {
+        "acidVolume": 50,
+        "baseVolume": 50,
+        "concentration": 2
+      },
+      "stem": "{acidVolume} mL of HCl and {baseVolume} mL of NaOH of the same, unknown concentration are mixed, and the temperature rises by {@temperatureRise|3} K (ΔH = −57.1 kJ/mol; the mixture taken as water, 1.00 g/mL, 4.18 J/(g·K); no heat lost). What is the concentration?",
+      "explain": "q = m·c·ΔT = {=acidVolume+baseVolume}·4.18·{@temperatureRise|3} ≈ {=(acidVolume+baseVolume)*4.18*@temperatureRise|4} J, so n(H₂O) = q/57.1 ≈ {=(acidVolume+baseVolume)*4.18*@temperatureRise/57.1|3} mmol from {acidVolume} mL: c ≈ {concentration} mol/L. Taking only {acidVolume} g as the mass gives half that.",
+      "vi": {
+        "stem": "Trộn {acidVolume} mL HCl với {baseVolume} mL NaOH có cùng một nồng độ chưa biết, nhiệt độ tăng {@temperatureRise|3} K (ΔH = −57,1 kJ/mol; coi hỗn hợp như nước, 1,00 g/mL, 4,18 J/(g·K); không mất nhiệt). Nồng độ của hai dung dịch là bao nhiêu?",
+        "explain": "q = m·c·ΔT = {=acidVolume+baseVolume}·4,18·{@temperatureRise|3} ≈ {=(acidVolume+baseVolume)*4.18*@temperatureRise|4} J, nên n(H₂O) = q/57,1 ≈ {=(acidVolume+baseVolume)*4.18*@temperatureRise/57.1|3} mmol từ {acidVolume} mL: c ≈ {concentration} mol/L. Chỉ lấy {acidVolume} g làm khối lượng sẽ được một nửa giá trị đó."
+      },
+      "options": [
+        {
+          "text": "{concentration} mol/L",
+          "vi": {
+            "text": "{concentration} mol/L"
+          },
+          "correct": true,
+          "check": {
+            "expr": "concentration*min(acidVolume,baseVolume)*57.1/((acidVolume+baseVolume)*4.18)*(1-exp(-readTime/timeConstant))",
+            "equals": "temperatureRise"
+          }
+        },
+        {
+          "text": "{=concentration/2} mol/L",
+          "vi": {
+            "text": "{=concentration/2} mol/L"
+          },
+          "check": {
+            "expr": "(concentration/2)*min(acidVolume,baseVolume)*57.1/((acidVolume+baseVolume)*4.18)*(1-exp(-readTime/timeConstant))",
+            "equals": "temperatureRise"
+          }
+        },
+        {
+          "text": "{=concentration/4} mol/L",
+          "vi": {
+            "text": "{=concentration/4} mol/L"
+          },
+          "check": {
+            "expr": "(concentration/4)*min(acidVolume,baseVolume)*57.1/((acidVolume+baseVolume)*4.18)*(1-exp(-readTime/timeConstant))",
+            "equals": "temperatureRise"
+          }
+        },
+        {
+          "text": "{=2*concentration} mol/L",
+          "vi": {
+            "text": "{=2*concentration} mol/L"
+          },
+          "check": {
+            "expr": "(2*concentration)*min(acidVolume,baseVolume)*57.1/((acidVolume+baseVolume)*4.18)*(1-exp(-readTime/timeConstant))",
+            "equals": "temperatureRise"
+          }
+        }
+      ]
+    },
+    {
+      "id": "largest-rise",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["calorimetry", "limiting"],
+      "set": {
+        "acidVolume": 25,
+        "baseVolume": 25,
+        "concentration": 2
+      },
+      "stem": "Which mixture of HCl and NaOH gives the largest temperature rise? (Both solutions in each mixture have the stated concentration.)",
+      "explain": "ΔT = n·57.1/(m·4.18) with n set by the reagent that runs out and m the whole mixture: ΔT ∝ c·V(limiting)/V(total). 25 + 25 mL at 2.0 mol/L: 2.0·25/50 = {=2*25/50} → {@temperatureRise} K. 50 + 50 mL at 1.0 mol/L: {=1*50/100}; 50 + 100 mL at 2.0 mol/L: {=2*50/150|2}; 50 + 25 mL at 2.0 mol/L: {=2*25/75|2}. More solution gives more heat, but also more to warm.",
+      "vi": {
+        "stem": "Hỗn hợp HCl và NaOH nào sau đây cho độ tăng nhiệt độ lớn nhất? (Trong mỗi hỗn hợp, cả hai dung dịch đều có nồng độ đã cho.)",
+        "explain": "ΔT = n·57,1/(m·4,18) với n do chất hết trước quyết định và m là khối lượng cả hỗn hợp: ΔT ∝ c·V(chất hết)/V(tổng). 25 + 25 mL, 2,0 mol/L: 2,0·25/50 = {=2*25/50} → {@temperatureRise} K. 50 + 50 mL, 1,0 mol/L: {=1*50/100}; 50 + 100 mL, 2,0 mol/L: {=2*50/150|2}; 50 + 25 mL, 2,0 mol/L: {=2*25/75|2}. Dùng nhiều dung dịch hơn thì tỏa nhiều nhiệt hơn, nhưng cũng phải làm nóng nhiều chất hơn."
+      },
+      "options": [
+        {
+          "text": "25 mL + 25 mL, 2.0 mol/L",
+          "vi": {
+            "text": "25 mL + 25 mL, 2,0 mol/L"
+          },
+          "correct": true
+        },
+        {
+          "text": "50 mL + 50 mL, 1.0 mol/L",
+          "vi": {
+            "text": "50 mL + 50 mL, 1,0 mol/L"
+          }
+        },
+        {
+          "text": "50 mL HCl + 100 mL NaOH, 2.0 mol/L",
+          "vi": {
+            "text": "50 mL HCl + 100 mL NaOH, 2,0 mol/L"
+          }
+        },
+        {
+          "text": "50 mL HCl + 25 mL NaOH, 2.0 mol/L",
+          "vi": {
+            "text": "50 mL HCl + 25 mL NaOH, 2,0 mol/L"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-changes",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["calorimetry", "limiting"],
+      "set": {
+        "acidVolume": 50,
+        "baseVolume": 50,
+        "concentration": 0.5
+      },
+      "stem": "{acidVolume} mL of HCl and {baseVolume} mL of NaOH, both {concentration} mol/L, are mixed (ΔH = −57.1 kJ/mol; the mixture taken as water, 1.00 g/mL, 4.18 J/(g·K); no heat lost). Decide whether each statement is true or false.",
+      "explain": "n = {@water} mmol, ΔT = {@water}·57.1/({=acidVolume+baseVolume}·4.18) ≈ {@temperatureRise} K. Doubling both volumes doubles the heat and the mass: ΔT unchanged. Doubling both concentrations doubles the heat only: ΔT ≈ {=2*@temperatureRise} K. With the NaOH alone made twice as concentrated, HCl still limits n: the same heat, the same mass, the same ΔT.",
+      "vi": {
+        "stem": "Trộn {acidVolume} mL HCl với {baseVolume} mL NaOH, đều {concentration} mol/L (ΔH = −57,1 kJ/mol; coi hỗn hợp như nước, 1,00 g/mL, 4,18 J/(g·K); không mất nhiệt). Mỗi nhận định sau đúng hay sai?",
+        "explain": "n = {@water} mmol, ΔT = {@water}·57,1/({=acidVolume+baseVolume}·4,18) ≈ {@temperatureRise} K. Tăng gấp đôi cả hai thể tích thì nhiệt lượng và khối lượng đều gấp đôi: ΔT không đổi. Tăng gấp đôi cả hai nồng độ thì chỉ nhiệt lượng gấp đôi: ΔT ≈ {=2*@temperatureRise} K. Nếu chỉ NaOH đặc gấp đôi, HCl vẫn quyết định n: cùng nhiệt lượng, cùng khối lượng, cùng ΔT."
+      },
+      "statements": [
+        {
+          "text": "The temperature rises by about {@temperatureRise} K.",
+          "vi": {
+            "text": "Nhiệt độ tăng khoảng {@temperatureRise} K."
+          },
+          "true": true,
+          "check": {
+            "expr": "concentration*min(acidVolume,baseVolume)*57.1/((acidVolume+baseVolume)*4.18)*(1-exp(-readTime/timeConstant))",
+            "equals": "temperatureRise"
+          }
+        },
+        {
+          "text": "Using 100 mL of each solution instead would double the temperature rise.",
+          "vi": {
+            "text": "Nếu dùng mỗi dung dịch 100 mL thì độ tăng nhiệt độ sẽ gấp đôi."
+          },
+          "true": false
+        },
+        {
+          "text": "Using both solutions at {=2*concentration} mol/L would give a rise of about {=2*@temperatureRise} K.",
+          "vi": {
+            "text": "Nếu dùng cả hai dung dịch nồng độ {=2*concentration} mol/L thì nhiệt độ tăng khoảng {=2*@temperatureRise} K."
+          },
+          "true": true,
+          "check": {
+            "expr": "(2*concentration)*min(acidVolume,baseVolume)*57.1/((acidVolume+baseVolume)*4.18)*(1-exp(-readTime/timeConstant))/2",
+            "equals": "temperatureRise"
+          }
+        },
+        {
+          "text": "Using the NaOH alone at {=2*concentration} mol/L would double the temperature rise.",
+          "vi": {
+            "text": "Nếu chỉ dùng NaOH nồng độ {=2*concentration} mol/L thì độ tăng nhiệt độ sẽ gấp đôi."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

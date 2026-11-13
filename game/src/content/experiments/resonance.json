@@ -1,0 +1,397 @@
+{
+  "id": "resonance",
+  "name": "Forced oscillation and resonance",
+  "category": "physics",
+  "description": "A brass mass hangs on a spring whose top a small motor moves up and down 1 cm, at the frequency set at the desk; a card vane under the mass damps its motion. The mass is driven at the motor's frequency: far from the spring's own frequency (2 Hz) it hardly moves, near it the swing grows many times the motor's own — resonance. Run at several frequencies and plot the amplitude against the frequency: the lighter the damping, the higher and sharper the peak.",
+  "vi": {
+    "name": "Dao động cưỡng bức và hiện tượng cộng hưởng",
+    "description": "Một quả nặng bằng đồng thau treo vào lò xo, đầu trên của lò xo được một động cơ nhỏ kéo lên xuống 1 cm với tần số đặt tại bàn; một tấm bìa cản bên dưới quả nặng làm dao động tắt dần. Quả nặng dao động cưỡng bức với tần số của động cơ: khi tần số này khác xa tần số riêng của con lắc lò xo (2 Hz), quả nặng gần như đứng yên; khi gần tần số riêng, biên độ tăng lên gấp nhiều lần biên độ của động cơ — hiện tượng cộng hưởng. Chạy với nhiều tần số và vẽ biên độ theo tần số: lực cản càng nhỏ, đỉnh cộng hưởng càng cao và càng nhọn.",
+    "note": "Đầu trên của lò xo dao động a·cos(2π·f·t) với a = 1 cm. Với x là độ dời của quả nặng khỏi vị trí cân bằng, x'' + 2ζω0·x' + ω0²·x = ω0²·a·cos ωt, trong đó ω0 = √(k/m) ứng với tần số riêng f0 = 2 Hz (m = 0,25 kg, k ≈ 39,5 N/m) và ζ là hệ số tắt dần do tấm cản (giá trị minh họa). Thả từ trạng thái nghỉ, chuyển động là tổng của dao động cưỡng bức A·cos(ωt − φ) với A = ω0²·a/√((ω0² − ω²)² + (2ζω0ω)²) và dao động riêng tắt dần theo e^(−ζω0·t); mô hình tính chuyển động này theo công thức chính xác. Biên độ đo được là độ dời lớn nhất trong chu kỳ dao động cưỡng bức cuối cùng trước khi kết thúc lần chạy (20 s), khi dao động riêng đã tắt. Ở tần số riêng A = a/(2ζ): với ζ = 0,05, biên độ là 10 cm, gấp 10 lần biên độ của động cơ. Đây là mô hình dạy học đơn giản hóa: lò xo nhẹ và tuân theo định luật Húc, lực cản tỉ lệ với vận tốc, động cơ không bị quả nặng làm chậm lại; trọng lực chỉ làm dời vị trí cân bằng. Thước đọc biên độ mô phỏng theo độ phân giải d của nó (bội số gần nhất của d, độ bất định d/√12 chỉ do độ phân giải); không có sai số ngẫu nhiên nào được thêm vào. Trong phòng thí nghiệm thật, lực cản của không khí lên tấm bìa không hoàn toàn tỉ lệ với vận tốc, lò xo có khối lượng, và động cơ có thể dao động theo khi biên độ lớn, nên đỉnh cộng hưởng đo được lệch đôi chút."
+  },
+  "requiredEquipment": ["resonance-rig"],
+  "model": "oscillations.resonance",
+  "parameters": [
+    {
+      "id": "driveFrequency",
+      "label": "Motor frequency",
+      "vi": { "label": "Tần số của động cơ" },
+      "symbol": "f",
+      "unit": "Hz",
+      "default": 1.5,
+      "min": 1,
+      "max": 3,
+      "presets": [
+        { "label": "1.0 Hz", "vi": { "label": "1,0 Hz" }, "value": 1 },
+        { "label": "1.5 Hz", "vi": { "label": "1,5 Hz" }, "value": 1.5 },
+        { "label": "1.8 Hz", "vi": { "label": "1,8 Hz" }, "value": 1.8 },
+        { "label": "1.9 Hz", "vi": { "label": "1,9 Hz" }, "value": 1.9 },
+        { "label": "2.0 Hz", "vi": { "label": "2,0 Hz" }, "value": 2 },
+        { "label": "2.1 Hz", "vi": { "label": "2,1 Hz" }, "value": 2.1 },
+        { "label": "2.2 Hz", "vi": { "label": "2,2 Hz" }, "value": 2.2 },
+        { "label": "2.5 Hz", "vi": { "label": "2,5 Hz" }, "value": 2.5 },
+        { "label": "3.0 Hz", "vi": { "label": "3,0 Hz" }, "value": 3 }
+      ]
+    },
+    {
+      "id": "dampingRatio",
+      "label": "Damping vane",
+      "vi": { "label": "Tấm cản" },
+      "symbol": "ζ",
+      "unit": "",
+      "default": 0.1,
+      "min": 0.05,
+      "max": 0.2,
+      "presets": [
+        { "label": "Small (ζ = 0.05)", "vi": { "label": "Nhỏ (ζ = 0,05)" }, "value": 0.05 },
+        { "label": "Medium (ζ = 0.1)", "vi": { "label": "Vừa (ζ = 0,1)" }, "value": 0.1 },
+        { "label": "Large (ζ = 0.2)", "vi": { "label": "Lớn (ζ = 0,2)" }, "value": 0.2 }
+      ]
+    },
+    {
+      "id": "rulerResolution",
+      "label": "Scale resolution",
+      "vi": { "label": "Độ phân giải của thước" },
+      "symbol": "d",
+      "unit": "m",
+      "default": 0.001,
+      "min": 0.0005,
+      "max": 0.002,
+      "presets": [
+        { "label": "0.5 mm", "vi": { "label": "0,5 mm" }, "value": 0.0005 },
+        { "label": "1 mm", "vi": { "label": "1 mm" }, "value": 0.001 },
+        { "label": "2 mm", "vi": { "label": "2 mm" }, "value": 0.002 }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "mass": 0.25,
+    "stiffness": 39.4784176,
+    "driveAmplitude": 0.01,
+    "duration": 20
+  },
+  "inputs": {
+    "mass": { "symbol": "m", "unit": "kg" },
+    "stiffness": { "symbol": "k", "unit": "N/m" },
+    "driveAmplitude": { "symbol": "a", "unit": "m" },
+    "duration": { "symbol": "t_end", "unit": "s", "desk": false }
+  },
+  "simulation": { "timeStep": 0.005, "maxDuration": 25, "sampleInterval": 0.02 },
+  "measurements": [
+    {
+      "id": "displacement",
+      "label": "Displacement of the mass",
+      "vi": { "label": "Độ dời của quả nặng" },
+      "symbol": "x",
+      "unit": "m",
+      "variable": "displacement"
+    },
+    {
+      "id": "driver",
+      "label": "Motion of the spring's top",
+      "vi": { "label": "Chuyển động của đầu trên lò xo" },
+      "symbol": "x_đ",
+      "unit": "m",
+      "variable": "driver"
+    },
+    {
+      "id": "labTime",
+      "label": "Time",
+      "vi": { "label": "Thời gian" },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "clock"
+    }
+  ],
+  "results": [
+    {
+      "id": "amplitude",
+      "label": "Amplitude over the last period A",
+      "vi": { "label": "Biên độ trong chu kỳ cuối A" },
+      "symbol": "A",
+      "unit": "m",
+      "variable": "amplitude",
+      "reduce": "final",
+      "theory": "steadyAmplitude"
+    },
+    {
+      "id": "steadyAmplitude",
+      "label": "Steady amplitude of the theory",
+      "vi": { "label": "Biên độ dao động cưỡng bức theo lý thuyết" },
+      "symbol": "A_lt",
+      "unit": "m",
+      "variable": "steadyAmplitude",
+      "reduce": "final",
+      "theory": "steadyAmplitude"
+    },
+    {
+      "id": "amplitudeRatio",
+      "label": "Amplitude against the motor's A/a",
+      "vi": { "label": "Tỉ số biên độ so với động cơ A/a" },
+      "symbol": "A/a",
+      "unit": "",
+      "variable": "amplitudeRatio",
+      "reduce": "final",
+      "theory": "amplitudeRatio"
+    }
+  ],
+  "instruments": [
+    {
+      "result": "amplitude",
+      "quantity": "Amplitude A of the mass",
+      "name": "Scale beside the mass",
+      "resolution": "rulerResolution",
+      "excludes": "judging the turning points of a moving mass by eye, parallax against the scale, and the vane's drag not being quite proportional to speed, which changes the amplitude itself",
+      "vi": {
+        "quantity": "Biên độ A của quả nặng",
+        "name": "Thước bên cạnh quả nặng",
+        "excludes": "việc ước lượng bằng mắt vị trí biên của quả nặng đang chuyển động, sai số thị sai khi nhìn vào thước, và lực cản của tấm bìa không hoàn toàn tỉ lệ với vận tốc, yếu tố làm thay đổi chính biên độ"
+      }
+    }
+  ],
+  "graphs": [
+    {
+      "id": "motion-time",
+      "title": "The mass and the spring's top against time",
+      "vi": { "title": "Quả nặng và đầu trên lò xo theo thời gian" },
+      "x": "labTime",
+      "y": ["displacement", "driver"],
+      "yLabel": "x"
+    }
+  ],
+  "monitor": "motion-time",
+  "compare": [{ "graph": "motion-time", "series": "displacement" }],
+  "scatters": [
+    {
+      "id": "resonance-curve",
+      "title": "Amplitude against the motor's frequency (the resonance curve)",
+      "vi": { "title": "Biên độ theo tần số của động cơ (đường cộng hưởng)" },
+      "x": "driveFrequency",
+      "y": "amplitude"
+    }
+  ],
+  "note": "The spring's top moves a·cos(2π·f·t), a = 1 cm. With x the mass's displacement from its rest position, x'' + 2ζω0·x' + ω0²·x = ω0²·a·cos ωt, where ω0 = √(k/m) gives the natural frequency f0 = 2 Hz (m = 0.25 kg, k ≈ 39.5 N/m) and ζ is the vane's damping ratio (an illustrative value). Released at rest, the motion is the forced oscillation A·cos(ωt − φ), A = ω0²·a/√((ω0² − ω²)² + (2ζω0ω)²), plus the free oscillation dying away as e^(−ζω0·t); the model computes it in closed form. The amplitude measured is the mass's largest displacement over the last whole drive period before the run ends (20 s), when the free oscillation has died away. At the natural frequency A = a/(2ζ): with ζ = 0.05 it is 10 cm, ten times the motor's. A simplified teaching model: a light spring obeying Hooke's law, drag proportional to speed, a motor the mass does not slow; gravity only shifts the rest position. The scale reads the simulated amplitude to its resolution d (the nearest multiple of d, with the uncertainty d/√12 from the resolution alone); no random error is added. In a real lab the air's drag on the card is not quite proportional to speed, the spring has mass, and the motor itself can shake at large amplitudes, so the measured peak differs a little.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the resonance instructions on the board.",
+      "vi": { "instruction": "Đọc hướng dẫn thí nghiệm cộng hưởng trên bảng." },
+      "done": { "kind": "inspected", "item": "resonance-instructions" }
+    },
+    {
+      "id": "frequency",
+      "instruction": "Set the motor's frequency with its dial on the control desk.",
+      "vi": { "instruction": "Đặt tần số của động cơ bằng núm xoay trên bàn điều khiển." },
+      "done": { "kind": "adjusted", "parameter": "driveFrequency" }
+    },
+    {
+      "id": "damping",
+      "instruction": "Choose the damping vane.",
+      "vi": { "instruction": "Chọn tấm cản." },
+      "done": { "kind": "adjusted", "parameter": "dampingRatio" }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the motor starts; watch the mass's swing grow and settle.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: động cơ chạy; quan sát biên độ của quả nặng tăng dần rồi ổn định."
+      },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read the amplitude A and A/a on the results monitor.",
+      "vi": { "instruction": "Đọc biên độ A và tỉ số A/a trên màn hình kết quả." },
+      "done": { "kind": "viewed" }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, change only the frequency and run again to add a point to the resonance curve.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, chỉ thay đổi tần số rồi chạy lại để thêm một điểm vào đường cộng hưởng."
+      },
+      "done": { "kind": "reset" }
+    }
+  ],
+  "examples": [
+    {
+      "id": "at-resonance",
+      "question": "A {mass} kg mass hangs on a spring of stiffness {stiffness|4} N/m whose top is shaken {driveAmplitude} m up and down at {driveFrequency} Hz; the damping ratio is ζ = {dampingRatio}. Find the natural frequency and the steady amplitude.",
+      "vi": {
+        "question": "Vật {mass} kg treo vào lò xo độ cứng {stiffness|4} N/m, đầu trên lò xo được rung lên xuống với biên độ {driveAmplitude} m, tần số {driveFrequency} Hz; tỉ số tắt dần ζ = {dampingRatio}. Tìm tần số riêng và biên độ dao động ổn định."
+      },
+      "set": { "driveFrequency": 2, "dampingRatio": 0.05 },
+      "find": [
+        { "theory": "naturalFrequency", "symbol": "f₀", "unit": "Hz" },
+        { "theory": "steadyAmplitude" }
+      ],
+      "steps": [
+        {
+          "say": "The natural frequency of a mass on a spring.",
+          "vi": { "say": "Tần số riêng của con lắc lò xo." },
+          "write": "f₀ = (1/2π)·√(k/m) = (1/2π)·√({stiffness|4}/{mass}) ≈ {@naturalFrequency} Hz",
+          "check": { "expr": "sqrt(stiffness/mass)/(2*pi)", "equals": "naturalFrequency" }
+        },
+        {
+          "say": "It is driven at its natural frequency: resonance. There the amplitude is the drive’s divided by 2ζ — the smaller the damping, the larger the swing.",
+          "vi": {
+            "say": "Tần số cưỡng bức bằng tần số riêng: xảy ra cộng hưởng. Khi đó biên độ bằng biên độ kích thích chia 2ζ — lực cản càng nhỏ, dao động càng mạnh."
+          },
+          "write": "A = a/(2ζ) = {driveAmplitude}/(2·{dampingRatio}) ≈ {@steadyAmplitude} m",
+          "check": { "expr": "driveAmplitude/(2*dampingRatio)", "equals": "steadyAmplitude" }
+        }
+      ]
+    },
+    {
+      "id": "below-resonance",
+      "question": "The same system (f₀ ≈ {@naturalFrequency} Hz) is now driven at {driveFrequency} Hz with damping ζ = {dampingRatio}, the top moving {driveAmplitude} m. Find A/a and the steady amplitude.",
+      "vi": {
+        "question": "Cùng hệ đó (f₀ ≈ {@naturalFrequency} Hz) giờ được kích thích ở {driveFrequency} Hz với ζ = {dampingRatio}, đầu trên dao động biên độ {driveAmplitude} m. Tìm tỉ số A/a và biên độ dao động ổn định."
+      },
+      "set": { "driveFrequency": 1, "dampingRatio": 0.2 },
+      "find": [{ "theory": "amplitudeRatio" }, { "theory": "steadyAmplitude" }],
+      "steps": [
+        {
+          "say": "For a forced oscillation the ratio depends on r = f/f₀, here {=driveFrequency/@naturalFrequency|2}, and on ζ.",
+          "vi": {
+            "say": "Với dao động cưỡng bức, tỉ số này phụ thuộc vào r = f/f₀, ở đây bằng {=driveFrequency/@naturalFrequency|2}, và vào ζ."
+          },
+          "write": "A/a = 1/√((1 − r²)² + (2ζr)²) ≈ {@amplitudeRatio}",
+          "check": {
+            "expr": "1/sqrt((1-(driveFrequency/@naturalFrequency)^2)^2+(2*dampingRatio*driveFrequency/@naturalFrequency)^2)",
+            "equals": "amplitudeRatio"
+          }
+        },
+        {
+          "say": "Far from resonance the mass moves only a little more than the top of the spring.",
+          "vi": { "say": "Xa vùng cộng hưởng, vật chỉ dao động mạnh hơn đầu lò xo một chút." },
+          "write": "A = {@amplitudeRatio}·{driveAmplitude} ≈ {@steadyAmplitude} m",
+          "check": { "expr": "@amplitudeRatio*driveAmplitude", "equals": "steadyAmplitude" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "A mass on a spring, shaken up and down by a motor, hardly moves at most frequencies — but near its own natural frequency its swing grows many times larger: resonance.",
+    "vi": {
+      "summary": "Một vật treo trên lò xo, được động cơ rung lên xuống, hầu như không dao động ở phần lớn các tần số — nhưng gần tần số riêng của nó, biên độ tăng lên gấp nhiều lần: đó là hiện tượng cộng hưởng."
+    },
+    "parts": [
+      {
+        "id": "motor",
+        "name": "Motor",
+        "role": "Moves the top of the spring up and down by a = 1 cm at the frequency f set at the desk.",
+        "vi": {
+          "name": "Động cơ",
+          "role": "Làm đầu trên lò xo dao động lên xuống với biên độ a = 1 cm, ở tần số f đặt tại bàn điều khiển."
+        },
+        "anchor": {
+          "at": [0, 0.39, 0]
+        }
+      },
+      {
+        "id": "rod",
+        "name": "Drive rod",
+        "role": "Carries the motor’s motion to the spring’s top.",
+        "vi": {
+          "name": "Thanh truyền",
+          "role": "Truyền chuyển động của động cơ tới đầu trên lò xo."
+        },
+        "anchor": {
+          "part": "rod"
+        }
+      },
+      {
+        "id": "spring",
+        "name": "Spring",
+        "role": "With the mass, it has its own natural frequency f0 = 2 Hz.",
+        "vi": {
+          "name": "Lò xo",
+          "role": "Cùng với vật nặng, nó có tần số riêng f0 = 2 Hz."
+        },
+        "anchor": {
+          "part": "spring"
+        }
+      },
+      {
+        "id": "mass",
+        "name": "Brass mass (0.25 kg)",
+        "role": "Driven up and down by the spring; its amplitude A is measured.",
+        "vi": {
+          "name": "Quả nặng bằng đồng thau (0.25 kg)",
+          "role": "Được lò xo kéo dao động lên xuống; biên độ A của nó được đo."
+        },
+        "anchor": {
+          "part": "mass"
+        }
+      },
+      {
+        "id": "vane",
+        "name": "Damping vane",
+        "role": "A card under the mass: the air drags on it and damps the motion (ratio ζ).",
+        "vi": {
+          "name": "Cánh cản",
+          "role": "Tấm bìa dưới vật nặng: không khí cản nó và làm tắt dần dao động (hệ số ζ)."
+        },
+        "anchor": {
+          "part": "vane"
+        }
+      },
+      {
+        "id": "scale",
+        "name": "Scale",
+        "role": "Beside the mass: reads its displacement.",
+        "vi": {
+          "name": "Thước",
+          "role": "Đặt cạnh vật nặng: đọc độ dời của nó."
+        },
+        "anchor": {
+          "at": [0.09, -0.01, 0.01]
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "Pulled down and let go, a mass on a spring swings at its own natural frequency, here f0 = √(k/m)/(2π) = 2 Hz.",
+        "vi": {
+          "text": "Khi kéo xuống rồi thả ra, vật trên lò xo dao động với tần số riêng của nó, ở đây f0 = √(k/m)/(2π) = 2 Hz."
+        },
+        "parts": ["spring", "mass"]
+      },
+      {
+        "text": "Here the motor shakes the spring’s top 1 cm up and down at the frequency f. After a while the mass swings at the motor’s frequency, not its own: a forced oscillation.",
+        "vi": {
+          "text": "Ở đây động cơ rung đầu trên lò xo lên xuống 1 cm với tần số f. Sau một thời gian, vật dao động với tần số của động cơ chứ không phải tần số riêng: đó là dao động cưỡng bức."
+        },
+        "parts": ["motor", "rod", "mass"]
+      },
+      {
+        "text": "Far from f0 the mass hardly moves. Near f0 each push comes at the right moment and adds to the swing, which grows many times the motor’s own 1 cm: resonance.",
+        "vi": {
+          "text": "Ở xa f0, vật hầu như không dao động. Gần f0, mỗi lần đẩy đến đúng lúc và cộng thêm vào dao động, nên biên độ tăng gấp nhiều lần 1 cm của động cơ: đó là cộng hưởng."
+        },
+        "parts": ["mass", "motor"]
+      },
+      {
+        "text": "The vane damps the motion. The steady amplitude is A = ω0²·a/√((ω0² − ω²)² + (2ζω0ω)²); at f0 it is a/(2ζ). Lighter damping gives a higher, sharper peak.",
+        "vi": {
+          "text": "Cánh cản làm tắt dần dao động. Biên độ ổn định là A = ω0²·a/√((ω0² − ω²)² + (2ζω0ω)²); tại f0, A = a/(2ζ). Lực cản càng nhỏ thì đỉnh cộng hưởng càng cao và càng nhọn."
+        },
+        "parts": ["vane", "mass"]
+      },
+      {
+        "text": "The results give the amplitude over the last drive period, read on the scale, and A/a against theory. Change only f and run again to draw the resonance curve.",
+        "vi": {
+          "text": "Phần kết quả cho biên độ trong chu kỳ cưỡng bức cuối cùng, đọc trên thước, và A/a so với lý thuyết. Chỉ đổi f rồi chạy lại để vẽ đường cong cộng hưởng."
+        },
+        "parts": ["scale", "mass"]
+      },
+      {
+        "text": "A simplified model: a light spring obeying Hooke’s law, drag proportional to speed, and a motor the mass does not slow. Real air drag on a card is not quite like that.",
+        "vi": {
+          "text": "Mô hình đơn giản hóa: lò xo nhẹ tuân theo định luật Húc, lực cản tỉ lệ với tốc độ, và động cơ không bị vật làm chậm lại. Lực cản thật của không khí lên tấm bìa không hoàn toàn như vậy."
+        },
+        "parts": ["vane", "spring"]
+      }
+    ]
+  }
+}

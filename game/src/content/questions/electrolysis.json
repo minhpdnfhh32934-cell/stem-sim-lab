@@ -1,0 +1,1025 @@
+{
+  "id": "electrolysis",
+  "skills": [
+    {
+      "id": "electrodes",
+      "name": "What happens at each electrode",
+      "advice": "Learn the pair: at the cathode (−) Cu²⁺ + 2e⁻ → Cu (reduction), at the copper anode (+) Cu → Cu²⁺ + 2e⁻ (oxidation). Watch both plates at the station and explain why the blue colour does not fade.",
+      "vi": {
+        "name": "Quá trình ở mỗi điện cực",
+        "advice": "Ghi nhớ cặp quá trình: ở cathode (−) Cu²⁺ + 2e⁻ → Cu (sự khử), ở anode bằng đồng (+) Cu → Cu²⁺ + 2e⁻ (sự oxi hóa). Quan sát hai điện cực trên trạm và giải thích vì sao màu xanh của dung dịch không nhạt đi."
+      }
+    },
+    {
+      "id": "charge",
+      "name": "Charge and electrons: Q = I·t, n(e⁻) = Q/F",
+      "advice": "Convert the time to seconds before multiplying (20 min = 1200 s). Then divide by F = 96 485 C/mol for the moles of electrons — and multiply by 1000 if the answer is in mmol.",
+      "vi": {
+        "name": "Điện lượng và số mol electron: Q = I·t, n(e⁻) = Q/F",
+        "advice": "Đổi thời gian ra giây trước khi nhân (20 phút = 1200 s). Sau đó chia cho F = 96 485 C/mol để được số mol electron — nhân thêm 1000 nếu đáp án tính bằng mmol."
+      }
+    },
+    {
+      "id": "faraday",
+      "name": "Faraday’s law: m = I·t·M/(n·F)",
+      "advice": "Write the half-equation first to get n (2 for Cu²⁺). Check proportions at the station: double I or t and the mass doubles. The common slip is forgetting the 2.",
+      "vi": {
+        "name": "Định luật Faraday: m = I·t·M/(n·F)",
+        "advice": "Viết bán phản ứng trước để biết n (bằng 2 với Cu²⁺). Kiểm tra tỉ lệ trên trạm: tăng I hoặc t gấp đôi thì khối lượng tăng gấp đôi. Lỗi hay gặp là quên số 2."
+      }
+    },
+    {
+      "id": "measurement",
+      "name": "Weighing the plates: resolution and errors",
+      "advice": "Compare the expected mass with the balance’s resolution before the run: a gain of a few hundredths of a gram on a 0.01 g balance has a large relative error. Dry the cathode before weighing, and think through what a wet plate or flaking copper does to Δm.",
+      "vi": {
+        "name": "Cân điện cực: độ chia và sai số",
+        "advice": "So khối lượng dự kiến với độ chia của cân trước khi chạy: khối lượng tăng vài phần trăm gam trên cân có độ chia 0,01 g có sai số tương đối lớn. Làm khô cathode trước khi cân, và suy nghĩ xem điện cực còn ướt hay đồng bị bong ra ảnh hưởng đến Δm thế nào."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "cathode-reaction",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["electrodes"],
+      "stem": "In the electrolysis of copper(II) sulfate solution with copper electrodes, which process takes place at the cathode?",
+      "explain": "The cathode is negative: Cu²⁺ ions take two electrons each and copper is deposited, Cu²⁺ + 2e⁻ → Cu (a reduction).",
+      "vi": {
+        "stem": "Khi điện phân dung dịch copper(II) sulfate với các điện cực bằng đồng, quá trình nào xảy ra ở cathode?",
+        "explain": "Cathode là cực âm: mỗi ion Cu²⁺ nhận hai electron và đồng bám lên điện cực, Cu²⁺ + 2e⁻ → Cu (sự khử)."
+      },
+      "options": [
+        {
+          "text": "Cu²⁺ + 2e⁻ → Cu",
+          "vi": {
+            "text": "Cu²⁺ + 2e⁻ → Cu"
+          },
+          "correct": true
+        },
+        {
+          "text": "Cu → Cu²⁺ + 2e⁻",
+          "vi": {
+            "text": "Cu → Cu²⁺ + 2e⁻"
+          }
+        },
+        {
+          "text": "2H₂O → O₂ + 4H⁺ + 4e⁻",
+          "vi": {
+            "text": "2H₂O → O₂ + 4H⁺ + 4e⁻"
+          }
+        },
+        {
+          "text": "Cu²⁺ → Cu + 2e⁻",
+          "vi": {
+            "text": "Cu²⁺ → Cu + 2e⁻"
+          }
+        }
+      ]
+    },
+    {
+      "id": "charge-unit",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["charge"],
+      "stem": "The charge Q = I·t passed through the cell is measured in…",
+      "explain": "Amperes times seconds give coulombs: 1 C = 1 A·s.",
+      "vi": {
+        "stem": "Điện lượng Q = I·t đi qua bình điện phân có đơn vị là",
+        "explain": "Ampe nhân giây cho coulomb: 1 C = 1 A·s."
+      },
+      "options": [
+        {
+          "text": "coulombs (C)",
+          "vi": {
+            "text": "coulomb (C)"
+          },
+          "correct": true
+        },
+        {
+          "text": "amperes (A)",
+          "vi": {
+            "text": "ampe (A)"
+          }
+        },
+        {
+          "text": "volts (V)",
+          "vi": {
+            "text": "vôn (V)"
+          }
+        },
+        {
+          "text": "joules (J)",
+          "vi": {
+            "text": "jun (J)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-cell",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["electrodes", "charge"],
+      "stem": "Copper(II) sulfate solution is electrolysed between two copper plates. Decide whether each statement is true or false.",
+      "explain": "The cathode is joined to the negative terminal; the copper anode dissolves as much copper as the cathode gains, so the blue colour stays. F ≈ 96 485 C is the charge of one mole of electrons.",
+      "vi": {
+        "stem": "Điện phân dung dịch copper(II) sulfate giữa hai tấm đồng. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Cathode nối với cực âm của nguồn; anode bằng đồng tan ra đúng bằng lượng đồng bám lên cathode, nên màu xanh không đổi. F ≈ 96 485 C là điện lượng của một mol electron."
+      },
+      "statements": [
+        {
+          "text": "The cathode is connected to the negative terminal of the power supply.",
+          "vi": {
+            "text": "Cathode được nối với cực âm của nguồn điện."
+          },
+          "true": true
+        },
+        {
+          "text": "The copper anode slowly dissolves.",
+          "vi": {
+            "text": "Anode bằng đồng tan dần."
+          },
+          "true": true
+        },
+        {
+          "text": "The blue colour of the solution fades as the electrolysis goes on.",
+          "vi": {
+            "text": "Màu xanh của dung dịch nhạt dần trong quá trình điện phân."
+          },
+          "true": false
+        },
+        {
+          "text": "The Faraday constant, about 96 485 C/mol, is the charge of one mole of electrons.",
+          "vi": {
+            "text": "Hằng số Faraday, khoảng 96 485 C/mol, là điện lượng của một mol electron."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "double-current",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["faraday"],
+      "stem": "The current is doubled and the time kept the same. The mass of copper deposited on the cathode…",
+      "explain": "m = I·t·M/(2F) is proportional to the charge I·t: twice the current, twice the charge, twice the copper.",
+      "vi": {
+        "stem": "Tăng cường độ dòng điện gấp đôi, giữ nguyên thời gian điện phân. Khối lượng đồng bám lên cathode",
+        "explain": "m = I·t·M/(2F) tỉ lệ thuận với điện lượng I·t: cường độ gấp đôi thì điện lượng gấp đôi, khối lượng đồng gấp đôi."
+      },
+      "options": [
+        {
+          "text": "doubles",
+          "vi": {
+            "text": "tăng gấp đôi"
+          },
+          "correct": true
+        },
+        {
+          "text": "becomes four times larger",
+          "vi": {
+            "text": "tăng gấp bốn"
+          }
+        },
+        {
+          "text": "halves",
+          "vi": {
+            "text": "giảm một nửa"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "colour-constant",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["electrodes"],
+      "stem": "Why does the blue colour of the copper(II) sulfate solution stay the same during this electrolysis?",
+      "explain": "Each Cu²⁺ that plates out at the cathode is replaced by one dissolving from the copper anode, so [Cu²⁺] stays constant.",
+      "vi": {
+        "stem": "Vì sao màu xanh của dung dịch copper(II) sulfate không thay đổi trong quá trình điện phân này?",
+        "explain": "Mỗi ion Cu²⁺ bị khử ở cathode được bù lại bằng một ion Cu²⁺ tan ra từ anode bằng đồng, nên nồng độ Cu²⁺ không đổi."
+      },
+      "options": [
+        {
+          "text": "The anode dissolves as much copper as is deposited on the cathode",
+          "vi": {
+            "text": "Anode tan ra lượng đồng đúng bằng lượng đồng bám lên cathode"
+          },
+          "correct": true
+        },
+        {
+          "text": "No reaction takes place in the solution",
+          "vi": {
+            "text": "Không có phản ứng nào xảy ra trong dung dịch"
+          }
+        },
+        {
+          "text": "The sulfate ions are blue, not the copper ions",
+          "vi": {
+            "text": "Ion sulfate có màu xanh, không phải ion đồng"
+          }
+        },
+        {
+          "text": "Water is decomposed instead of copper ions",
+          "vi": {
+            "text": "Nước bị điện phân thay cho ion đồng"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-faraday",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["faraday", "electrodes"],
+      "stem": "Decide whether each statement about this electrolysis (Cu²⁺ + 2e⁻ → Cu at the cathode, 100 % current efficiency) is true or false.",
+      "explain": "m ∝ Q = I·t, so 1 A for 10 min passes the same 600 C as 0.5 A for 20 min. The anode loses what the cathode gains. Two moles of electrons deposit one mole of copper.",
+      "vi": {
+        "stem": "Mỗi nhận định sau về quá trình điện phân này (Cu²⁺ + 2e⁻ → Cu ở cathode, hiệu suất dòng điện 100 %) đúng hay sai?",
+        "explain": "m tỉ lệ với Q = I·t, nên 1 A trong 10 phút cho cùng điện lượng 600 C như 0,5 A trong 20 phút. Anode mất đúng khối lượng mà cathode nhận được. Hai mol electron tạo ra một mol đồng."
+      },
+      "statements": [
+        {
+          "text": "The mass deposited is proportional to the charge passed.",
+          "vi": {
+            "text": "Khối lượng đồng bám vào tỉ lệ thuận với điện lượng đi qua."
+          },
+          "true": true
+        },
+        {
+          "text": "1 A for 10 min deposits the same mass as 0.5 A for 20 min.",
+          "vi": {
+            "text": "Dòng 1 A trong 10 phút cho cùng khối lượng đồng như dòng 0,5 A trong 20 phút."
+          },
+          "true": true
+        },
+        {
+          "text": "The anode loses as much mass as the cathode gains.",
+          "vi": {
+            "text": "Khối lượng anode giảm đúng bằng khối lượng cathode tăng."
+          },
+          "true": true
+        },
+        {
+          "text": "Two moles of electrons deposit two moles of copper.",
+          "vi": {
+            "text": "Hai mol electron tạo ra hai mol đồng."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "charge-value",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["charge"],
+      "set": {
+        "current": 0.5,
+        "duration": 1200
+      },
+      "stem": "A current of {current} A flows through the cell for 20 min. What charge passes?",
+      "explain": "In seconds: t = 20·60 = {duration} s, so Q = I·t = {current}·{duration} = {@charge} C.",
+      "vi": {
+        "stem": "Cho dòng điện {current} A chạy qua bình điện phân trong 20 phút. Điện lượng đi qua bình là bao nhiêu?",
+        "explain": "Đổi ra giây: t = 20·60 = {duration} s, nên Q = I·t = {current}·{duration} = {@charge} C."
+      },
+      "options": [
+        {
+          "text": "{@charge} C",
+          "vi": {
+            "text": "{@charge} C"
+          },
+          "correct": true,
+          "check": {
+            "expr": "current*duration",
+            "equals": "charge"
+          }
+        },
+        {
+          "text": "{=current*duration/60} C",
+          "vi": {
+            "text": "{=current*duration/60} C"
+          },
+          "check": {
+            "expr": "current*duration/60",
+            "equals": "charge"
+          }
+        },
+        {
+          "text": "{=duration/current} C",
+          "vi": {
+            "text": "{=duration/current} C"
+          },
+          "check": {
+            "expr": "duration/current",
+            "equals": "charge"
+          }
+        },
+        {
+          "text": "{=current*duration/3600} C",
+          "vi": {
+            "text": "{=current*duration/3600} C"
+          },
+          "check": {
+            "expr": "current*duration/3600",
+            "equals": "charge"
+          }
+        }
+      ]
+    },
+    {
+      "id": "copper-mass",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["faraday", "charge"],
+      "set": {
+        "current": 1,
+        "duration": 1800
+      },
+      "stem": "A current of {current} A flows for {duration} s through copper(II) sulfate between copper electrodes. What mass of copper is deposited on the cathode? (M(Cu) = 63.546 g/mol; F = 96 485 C/mol)",
+      "explain": "Q = {current}·{duration} = {@charge} C; Cu²⁺ + 2e⁻ → Cu, so m = Q·M/(2F) = {@charge}·63.546/(2·96485) ≈ {@mass} g.",
+      "vi": {
+        "stem": "Cho dòng điện {current} A chạy trong {duration} s qua dung dịch copper(II) sulfate với các điện cực bằng đồng. Khối lượng đồng bám lên cathode là bao nhiêu? (M(Cu) = 63,546 g/mol; F = 96 485 C/mol)",
+        "explain": "Q = {current}·{duration} = {@charge} C; Cu²⁺ + 2e⁻ → Cu, nên m = Q·M/(2F) = {@charge}·63,546/(2·96485) ≈ {@mass} g."
+      },
+      "options": [
+        {
+          "text": "{@mass} g",
+          "vi": {
+            "text": "{@mass} g"
+          },
+          "correct": true,
+          "check": {
+            "expr": "current*duration*63.546/(2*96485.33212331)",
+            "equals": "mass"
+          }
+        },
+        {
+          "text": "{=current*duration*63.546/96485.33212331} g",
+          "vi": {
+            "text": "{=current*duration*63.546/96485.33212331} g"
+          },
+          "check": {
+            "expr": "current*duration*63.546/96485.33212331",
+            "equals": "mass"
+          }
+        },
+        {
+          "text": "{=current*duration/(2*96485.33212331)} g",
+          "vi": {
+            "text": "{=current*duration/(2*96485.33212331)} g"
+          },
+          "check": {
+            "expr": "current*duration/(2*96485.33212331)",
+            "equals": "mass"
+          }
+        },
+        {
+          "text": "{=current*(duration/60)*63.546/(2*96485.33212331)} g",
+          "vi": {
+            "text": "{=current*(duration/60)*63.546/(2*96485.33212331)} g"
+          },
+          "check": {
+            "expr": "current*(duration/60)*63.546/(2*96485.33212331)",
+            "equals": "mass"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-small-current",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["charge", "faraday"],
+      "set": {
+        "current": 0.2,
+        "duration": 600
+      },
+      "stem": "A current of {current} A flows for {duration} s through the copper cell (M(Cu) = 63.546 g/mol; F = 96 485 C/mol). Decide whether each statement is true or false.",
+      "explain": "Q = {current}·{duration} = {@charge} C; n(e⁻) = Q/F ≈ {@electrons} mmol; each Cu²⁺ takes two electrons, so n(Cu) = n(e⁻)/2 ≈ {@copperAmount} mmol and m ≈ {@copperAmount}·63.546/1000 ≈ {@mass} g.",
+      "vi": {
+        "stem": "Cho dòng điện {current} A chạy trong {duration} s qua bình điện phân đồng (M(Cu) = 63,546 g/mol; F = 96 485 C/mol). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Q = {current}·{duration} = {@charge} C; n(e⁻) = Q/F ≈ {@electrons} mmol; mỗi ion Cu²⁺ nhận hai electron, nên n(Cu) = n(e⁻)/2 ≈ {@copperAmount} mmol và m ≈ {@copperAmount}·63,546/1000 ≈ {@mass} g."
+      },
+      "statements": [
+        {
+          "text": "The charge passed is {@charge} C.",
+          "vi": {
+            "text": "Điện lượng đi qua bình là {@charge} C."
+          },
+          "true": true,
+          "check": {
+            "expr": "current*duration",
+            "equals": "charge"
+          }
+        },
+        {
+          "text": "About {@electrons} mmol of electrons pass through the circuit.",
+          "vi": {
+            "text": "Có khoảng {@electrons} mmol electron đi qua mạch."
+          },
+          "true": true,
+          "check": {
+            "expr": "current*duration/96485.33212331*1000",
+            "equals": "electrons"
+          }
+        },
+        {
+          "text": "About {@electrons} mmol of copper is deposited.",
+          "vi": {
+            "text": "Có khoảng {@electrons} mmol đồng bám lên cathode."
+          },
+          "true": false,
+          "check": {
+            "expr": "@electrons",
+            "equals": "copperAmount"
+          }
+        },
+        {
+          "text": "The cathode gains about {@mass} g.",
+          "vi": {
+            "text": "Khối lượng cathode tăng khoảng {@mass} g."
+          },
+          "true": true,
+          "check": {
+            "expr": "@electrons/2*63.546/1000",
+            "equals": "mass"
+          }
+        }
+      ]
+    },
+    {
+      "id": "time-needed",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["faraday", "charge"],
+      "set": {
+        "current": 0.5,
+        "duration": 1800
+      },
+      "stem": "How long must a current of {current} A flow through the copper cell to deposit {@mass|3} g of copper on the cathode? (M(Cu) = 63.546 g/mol; F = 96 485 C/mol)",
+      "explain": "t = 2F·m/(I·M) = 2·96485·{@mass|3}/({current}·63.546) ≈ {=2*96485.33212331*@mass/(current*63.546)|3} s, i.e. 30 min.",
+      "vi": {
+        "stem": "Cần cho dòng điện {current} A chạy qua bình điện phân đồng trong bao lâu để có {@mass|3} g đồng bám lên cathode? (M(Cu) = 63,546 g/mol; F = 96 485 C/mol)",
+        "explain": "t = 2F·m/(I·M) = 2·96485·{@mass|3}/({current}·63,546) ≈ {=2*96485.33212331*@mass/(current*63.546)|3} s, tức 30 phút."
+      },
+      "options": [
+        {
+          "text": "1800 s",
+          "vi": {
+            "text": "1800 s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "current*1800*63.546/(2*96485.33212331)",
+            "equals": "mass"
+          }
+        },
+        {
+          "text": "900 s",
+          "vi": {
+            "text": "900 s"
+          },
+          "check": {
+            "expr": "current*900*63.546/(2*96485.33212331)",
+            "equals": "mass"
+          }
+        },
+        {
+          "text": "3600 s",
+          "vi": {
+            "text": "3600 s"
+          },
+          "check": {
+            "expr": "current*3600*63.546/(2*96485.33212331)",
+            "equals": "mass"
+          }
+        },
+        {
+          "text": "30 s",
+          "vi": {
+            "text": "30 s"
+          },
+          "check": {
+            "expr": "current*30*63.546/(2*96485.33212331)",
+            "equals": "mass"
+          }
+        }
+      ]
+    },
+    {
+      "id": "faraday-constant",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["faraday", "measurement"],
+      "set": {
+        "current": 1,
+        "duration": 1800
+      },
+      "stem": "A student passes {current} A for {duration} s and finds the cathode {@mass|4} g heavier. Taking M(Cu) = 63.546 g/mol, what value of the Faraday constant does this give?",
+      "explain": "m = I·t·M/(2F), so F = I·t·M/(2m) = {current}·{duration}·63.546/(2·{@mass|4}) ≈ {=current*duration*63.546/(2*@mass)|4} C/mol. Forgetting the 2 (one electron per Cu) doubles it.",
+      "vi": {
+        "stem": "Một học sinh cho dòng {current} A chạy trong {duration} s và thấy cathode nặng thêm {@mass|4} g. Lấy M(Cu) = 63,546 g/mol, giá trị hằng số Faraday tính được từ kết quả này là bao nhiêu?",
+        "explain": "m = I·t·M/(2F), nên F = I·t·M/(2m) = {current}·{duration}·63,546/(2·{@mass|4}) ≈ {=current*duration*63.546/(2*@mass)|4} C/mol. Quên số 2 (coi mỗi Cu nhận một electron) sẽ làm kết quả gấp đôi."
+      },
+      "options": [
+        {
+          "text": "{=current*duration*63.546/(2*@mass)|4} C/mol",
+          "vi": {
+            "text": "{=current*duration*63.546/(2*@mass)|4} C/mol"
+          },
+          "correct": true,
+          "check": {
+            "expr": "current*duration*63.546/(2*(current*duration*63.546/(2*@mass)))",
+            "equals": "mass"
+          }
+        },
+        {
+          "text": "{=current*duration*63.546/@mass|4} C/mol",
+          "vi": {
+            "text": "{=current*duration*63.546/@mass|4} C/mol"
+          },
+          "check": {
+            "expr": "current*duration*63.546/(2*(current*duration*63.546/@mass))",
+            "equals": "mass"
+          }
+        },
+        {
+          "text": "{=current*duration/(2*@mass)|4} C/mol",
+          "vi": {
+            "text": "{=current*duration/(2*@mass)|4} C/mol"
+          },
+          "check": {
+            "expr": "current*duration*63.546/(2*(current*duration/(2*@mass)))",
+            "equals": "mass"
+          }
+        },
+        {
+          "text": "{=current*(duration/60)*63.546/(2*@mass)|4} C/mol",
+          "vi": {
+            "text": "{=current*(duration/60)*63.546/(2*@mass)|4} C/mol"
+          },
+          "check": {
+            "expr": "current*duration*63.546/(2*(current*(duration/60)*63.546/(2*@mass)))",
+            "equals": "mass"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-weighing",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["measurement", "faraday"],
+      "set": {
+        "current": 0.2,
+        "duration": 300,
+        "balanceResolution": 0.01
+      },
+      "stem": "A current of {current} A flows for {duration} s through the copper cell; the cathode is weighed on a balance reading to 0.01 g (M(Cu) = 63.546 g/mol; F = 96 485 C/mol). Decide whether each statement is true or false.",
+      "explain": "m = I·t·M/(2F) ≈ {@mass|3} g; the balance shows the nearest 0.01 g, {=round(@mass*100)/100} g, with an uncertainty from its resolution alone of 0.01/√12 ≈ 0.003 g — about {=0.01/sqrt(12)/@mass*100|2}% of the mass, so a larger I·t gives a more precise result. A wet cathode carries water: the gain comes out too large.",
+      "vi": {
+        "stem": "Cho dòng {current} A chạy trong {duration} s qua bình điện phân đồng; cathode được cân bằng cân có độ chia 0,01 g (M(Cu) = 63,546 g/mol; F = 96 485 C/mol). Mỗi nhận định sau đúng hay sai?",
+        "explain": "m = I·t·M/(2F) ≈ {@mass|3} g; cân hiển thị giá trị gần nhất theo 0,01 g, {=round(@mass*100)/100} g, với độ không đảm bảo do độ chia của cân là 0,01/√12 ≈ 0,003 g — khoảng {=0.01/sqrt(12)/@mass*100|2}% khối lượng, nên I·t lớn hơn cho kết quả chính xác hơn. Cathode còn ướt mang theo nước: khối lượng tăng đo được lớn hơn thực tế."
+      },
+      "statements": [
+        {
+          "text": "The cathode gains about {@mass|3} g.",
+          "vi": {
+            "text": "Khối lượng cathode tăng khoảng {@mass|3} g."
+          },
+          "true": true,
+          "check": {
+            "expr": "current*duration*63.546/(2*96485.33212331)",
+            "equals": "mass"
+          }
+        },
+        {
+          "text": "The balance shows a gain of {=round(@mass*100)/100} g.",
+          "vi": {
+            "text": "Cân cho thấy khối lượng tăng {=round(@mass*100)/100} g."
+          },
+          "true": true
+        },
+        {
+          "text": "Running for ten times as long would give a much smaller relative uncertainty from the balance’s resolution.",
+          "vi": {
+            "text": "Điện phân trong thời gian gấp mười lần sẽ cho độ không đảm bảo tương đối do độ chia của cân nhỏ hơn nhiều."
+          },
+          "true": true
+        },
+        {
+          "text": "Weighing the cathode while it is still wet makes the measured gain too small.",
+          "vi": {
+            "text": "Cân cathode khi còn ướt làm khối lượng tăng đo được nhỏ hơn thực tế."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "anode-reaction",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["electrodes"],
+      "stem": "In the electrolysis of copper(II) sulfate solution with copper electrodes, which process takes place at the anode?",
+      "explain": "The copper anode is oxidised and dissolves: Cu → Cu²⁺ + 2e⁻. Water would be oxidised to oxygen only at an inert anode (graphite, platinum); Cu²⁺ is reduced at the cathode.",
+      "vi": {
+        "stem": "Khi điện phân dung dịch copper(II) sulfate với các điện cực bằng đồng, quá trình nào xảy ra ở anode?",
+        "explain": "Anode bằng đồng bị oxi hóa và tan dần: Cu → Cu²⁺ + 2e⁻. Nước chỉ bị oxi hóa thành oxygen khi anode trơ (than chì, platinum); Cu²⁺ bị khử ở cathode."
+      },
+      "options": [
+        {
+          "text": "Cu → Cu²⁺ + 2e⁻",
+          "vi": {
+            "text": "Cu → Cu²⁺ + 2e⁻"
+          },
+          "correct": true
+        },
+        {
+          "text": "2H₂O → O₂ + 4H⁺ + 4e⁻",
+          "vi": {
+            "text": "2H₂O → O₂ + 4H⁺ + 4e⁻"
+          }
+        },
+        {
+          "text": "Cu²⁺ + 2e⁻ → Cu",
+          "vi": {
+            "text": "Cu²⁺ + 2e⁻ → Cu"
+          }
+        },
+        {
+          "text": "2H₂O + 2e⁻ → H₂ + 2OH⁻",
+          "vi": {
+            "text": "2H₂O + 2e⁻ → H₂ + 2OH⁻"
+          }
+        }
+      ]
+    },
+    {
+      "id": "plate-masses",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["electrodes", "faraday"],
+      "stem": "During the electrolysis of copper(II) sulfate between copper plates, how do the masses of the two plates change?",
+      "explain": "Every Cu²⁺ reduced at the cathode is replaced by one Cu oxidised at the anode, with the same electrons: the cathode gains exactly the mass of copper the anode loses (ideally, with pure plates and 100 % current efficiency).",
+      "vi": {
+        "stem": "Khi điện phân dung dịch copper(II) sulfate giữa hai tấm đồng, khối lượng của hai tấm thay đổi như thế nào?",
+        "explain": "Mỗi ion Cu²⁺ bị khử ở cathode được bù bằng một nguyên tử Cu bị oxi hóa ở anode, với cùng số electron: cathode tăng đúng bằng khối lượng đồng mà anode mất (trường hợp lí tưởng, tấm đồng tinh khiết và hiệu suất dòng điện 100 %)."
+      },
+      "options": [
+        {
+          "text": "The cathode gains as much mass as the anode loses",
+          "vi": {
+            "text": "Cathode tăng đúng bằng khối lượng anode giảm"
+          },
+          "correct": true
+        },
+        {
+          "text": "Both plates gain mass",
+          "vi": {
+            "text": "Cả hai tấm đều tăng khối lượng"
+          }
+        },
+        {
+          "text": "The cathode gains mass and the anode stays the same",
+          "vi": {
+            "text": "Cathode tăng khối lượng, anode không đổi"
+          }
+        },
+        {
+          "text": "The cathode loses mass and the anode gains it",
+          "vi": {
+            "text": "Cathode giảm khối lượng, anode tăng khối lượng"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-law",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["charge", "faraday"],
+      "stem": "Decide whether each statement about this electrolysis (Cu²⁺ + 2e⁻ → Cu at the cathode, 100 % current efficiency) is true or false.",
+      "explain": "Q = I·t, so doubling t at the same I doubles Q and the copper. The mass depends on the charge only, not on the size of the plates. Each Cu²⁺ takes 2 electrons; for Ag⁺ + e⁻ → Ag one electron is enough, so the same charge deposits twice as many moles of silver.",
+      "vi": {
+        "stem": "Mỗi nhận định sau về quá trình điện phân này (ở cathode: Cu²⁺ + 2e⁻ → Cu, hiệu suất dòng điện 100 %) đúng hay sai?",
+        "explain": "Q = I·t, nên tăng gấp đôi t với cùng I thì Q và lượng đồng tăng gấp đôi. Khối lượng chỉ phụ thuộc điện lượng, không phụ thuộc kích thước tấm điện cực. Mỗi ion Cu²⁺ cần 2 electron; với Ag⁺ + e⁻ → Ag chỉ cần một electron, nên cùng điện lượng sẽ tạo ra số mol bạc gấp đôi."
+      },
+      "statements": [
+        {
+          "text": "Doubling the time at the same current doubles the mass of copper deposited.",
+          "vi": {
+            "text": "Tăng gấp đôi thời gian với cùng cường độ dòng điện thì khối lượng đồng bám vào tăng gấp đôi."
+          },
+          "true": true
+        },
+        {
+          "text": "Larger plates deposit more copper for the same current and time.",
+          "vi": {
+            "text": "Với cùng cường độ dòng điện và thời gian, tấm điện cực lớn hơn sẽ có nhiều đồng bám vào hơn."
+          },
+          "true": false
+        },
+        {
+          "text": "Each Cu²⁺ ion needs 2 electrons to become a copper atom.",
+          "vi": {
+            "text": "Mỗi ion Cu²⁺ cần 2 electron để trở thành một nguyên tử đồng."
+          },
+          "true": true
+        },
+        {
+          "text": "The same charge would deposit twice as many moles of silver (Ag⁺ + e⁻ → Ag) as of copper.",
+          "vi": {
+            "text": "Cùng một điện lượng sẽ tạo ra số mol bạc (Ag⁺ + e⁻ → Ag) gấp đôi số mol đồng."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "electrons-mmol",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["charge"],
+      "set": {
+        "current": 1,
+        "duration": 600
+      },
+      "stem": "A current of {current} A flows through the copper cell for {=duration/60} min. How many millimoles of electrons pass? (F = 96 485 C/mol)",
+      "explain": "The time must be in seconds: t = {duration} s, Q = I·t = {@charge} C. n(e⁻) = Q/F = {@charge}/96 485 ≈ {=@charge/96485.33212331} mol = {@electrons} mmol. Half of that is the copper deposited, not the electrons.",
+      "vi": {
+        "stem": "Dòng điện {current} A chạy qua bình điện phân đồng trong {=duration/60} phút. Có bao nhiêu milimol electron đã đi qua? (F = 96 485 C/mol)",
+        "explain": "Thời gian phải đổi ra giây: t = {duration} s, Q = I·t = {@charge} C. n(e⁻) = Q/F = {@charge}/96 485 ≈ {=@charge/96485.33212331} mol = {@electrons} mmol. Một nửa giá trị đó là số mol đồng bám vào, không phải số mol electron."
+      },
+      "options": [
+        {
+          "text": "{@electrons} mmol",
+          "vi": {
+            "text": "{@electrons} mmol"
+          },
+          "correct": true,
+          "check": {
+            "expr": "current*duration/96485.33212331*1000",
+            "equals": "electrons"
+          }
+        },
+        {
+          "text": "{=current*duration/96485.33212331*1000/2} mmol",
+          "vi": {
+            "text": "{=current*duration/96485.33212331*1000/2} mmol"
+          },
+          "check": {
+            "expr": "current*duration/96485.33212331*1000/2",
+            "equals": "electrons"
+          }
+        },
+        {
+          "text": "{=current*(duration/60)/96485.33212331*1000} mmol",
+          "vi": {
+            "text": "{=current*(duration/60)/96485.33212331*1000} mmol"
+          },
+          "check": {
+            "expr": "current*(duration/60)/96485.33212331*1000",
+            "equals": "electrons"
+          }
+        },
+        {
+          "text": "{=current*duration*96485.33212331/1e6} mmol",
+          "vi": {
+            "text": "{=current*duration*96485.33212331/1e6} mmol"
+          },
+          "check": {
+            "expr": "current*duration*96485.33212331/1e6",
+            "equals": "electrons"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-twenty-minutes",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["charge", "faraday", "electrodes"],
+      "set": {
+        "current": 1,
+        "duration": 1200
+      },
+      "stem": "A current of {current} A flows for {duration} s through copper(II) sulfate between copper plates (M(Cu) = 63.546 g/mol; F = 96 485 C/mol). Decide whether each statement is true or false.",
+      "explain": "Q = I·t = {@charge} C; n(e⁻) = Q/F ≈ {@electrons} mmol, and n(Cu) is half of it, {@copperAmount} mmol. The cathode gains m = Q·M/(2F) ≈ {@mass} g, and the anode loses the same mass, not twice it.",
+      "vi": {
+        "stem": "Dòng điện {current} A chạy trong {duration} s qua dung dịch copper(II) sulfate giữa hai tấm đồng (M(Cu) = 63,546 g/mol; F = 96 485 C/mol). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Q = I·t = {@charge} C; n(e⁻) = Q/F ≈ {@electrons} mmol, còn n(Cu) bằng một nửa, {@copperAmount} mmol. Cathode tăng m = Q·M/(2F) ≈ {@mass} g, và anode giảm đúng khối lượng đó, không phải gấp đôi."
+      },
+      "statements": [
+        {
+          "text": "The charge passed is {=current*duration} C.",
+          "vi": {
+            "text": "Điện lượng đã đi qua là {=current*duration} C."
+          },
+          "true": true,
+          "check": {
+            "expr": "current*duration",
+            "equals": "charge"
+          }
+        },
+        {
+          "text": "{=current*duration/96485.33212331*1000} mmol of copper is deposited.",
+          "vi": {
+            "text": "Lượng đồng bám vào cathode là {=current*duration/96485.33212331*1000} mmol."
+          },
+          "true": false,
+          "check": {
+            "expr": "current*duration/96485.33212331*1000",
+            "equals": "copperAmount"
+          }
+        },
+        {
+          "text": "The cathode gains about {=current*duration*63.546/(2*96485.33212331)} g.",
+          "vi": {
+            "text": "Khối lượng cathode tăng khoảng {=current*duration*63.546/(2*96485.33212331)} g."
+          },
+          "true": true,
+          "check": {
+            "expr": "current*duration*63.546/(2*96485.33212331)",
+            "equals": "mass"
+          }
+        },
+        {
+          "text": "The anode loses about {=2*current*duration*63.546/(2*96485.33212331)} g.",
+          "vi": {
+            "text": "Khối lượng anode giảm khoảng {=2*current*duration*63.546/(2*96485.33212331)} g."
+          },
+          "true": false,
+          "check": {
+            "expr": "2*current*duration*63.546/(2*96485.33212331)",
+            "equals": "mass"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-current",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["faraday", "charge"],
+      "set": {
+        "current": 0.2,
+        "duration": 1800
+      },
+      "stem": "In {=duration/60} min the cathode of the copper cell gains {@mass} g. What steady current flowed? (M(Cu) = 63.546 g/mol; F = 96 485 C/mol)",
+      "explain": "Turn it round: n(Cu) = {@mass}/63.546 ≈ {=@mass/63.546} mol, n(e⁻) = 2·n(Cu), Q = n(e⁻)·F ≈ {=2*@mass/63.546*96485.33212331} C, and I = Q/t = {=2*@mass/63.546*96485.33212331}/{duration} ≈ {current} A. Forgetting the 2 gives half the current; leaving t in minutes gives a current 60 times too large.",
+      "vi": {
+        "stem": "Trong {=duration/60} phút, cathode của bình điện phân đồng tăng {@mass} g. Cường độ dòng điện không đổi đã dùng là bao nhiêu? (M(Cu) = 63,546 g/mol; F = 96 485 C/mol)",
+        "explain": "Tính ngược lại: n(Cu) = {@mass}/63,546 ≈ {=@mass/63.546} mol, n(e⁻) = 2·n(Cu), Q = n(e⁻)·F ≈ {=2*@mass/63.546*96485.33212331} C, và I = Q/t = {=2*@mass/63.546*96485.33212331}/{duration} ≈ {current} A. Quên hệ số 2 thì cường độ tính được chỉ còn một nửa; để t theo phút thì cường độ dòng điện lớn gấp 60 lần."
+      },
+      "options": [
+        {
+          "text": "{current} A",
+          "vi": {
+            "text": "{current} A"
+          },
+          "correct": true,
+          "check": {
+            "expr": "current*duration*63.546/(2*96485.33212331)",
+            "equals": "mass"
+          }
+        },
+        {
+          "text": "{=current/2} A",
+          "vi": {
+            "text": "{=current/2} A"
+          },
+          "check": {
+            "expr": "(current/2)*duration*63.546/(2*96485.33212331)",
+            "equals": "mass"
+          }
+        },
+        {
+          "text": "{=2*current} A",
+          "vi": {
+            "text": "{=2*current} A"
+          },
+          "check": {
+            "expr": "(2*current)*duration*63.546/(2*96485.33212331)",
+            "equals": "mass"
+          }
+        },
+        {
+          "text": "{=60*current} A",
+          "vi": {
+            "text": "{=60*current} A"
+          },
+          "check": {
+            "expr": "(60*current)*duration*63.546/(2*96485.33212331)",
+            "equals": "mass"
+          }
+        }
+      ]
+    },
+    {
+      "id": "most-copper",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["faraday", "charge"],
+      "set": {
+        "current": 0.2,
+        "duration": 1800
+      },
+      "stem": "Four runs are made with the copper cell. Which one deposits the most copper on the cathode?",
+      "explain": "The mass is proportional to the charge Q = I·t, not to the current alone: 1.0 A × 300 s = 300 C; 0.5 A × 600 s = 300 C; 0.2 A × 1200 s = 240 C; 0.2 A × 1800 s = {@charge} C, the most — {@mass} g of copper.",
+      "vi": {
+        "stem": "Bốn lần điện phân được thực hiện với bình điện phân đồng. Lần nào có nhiều đồng bám vào cathode nhất?",
+        "explain": "Khối lượng tỉ lệ với điện lượng Q = I·t, không chỉ với cường độ dòng điện: 1,0 A × 300 s = 300 C; 0,5 A × 600 s = 300 C; 0,2 A × 1200 s = 240 C; 0,2 A × 1800 s = {@charge} C, lớn nhất — {@mass} g đồng."
+      },
+      "options": [
+        {
+          "text": "0.2 A for 30 min",
+          "vi": {
+            "text": "0,2 A trong 30 phút"
+          },
+          "correct": true
+        },
+        {
+          "text": "1.0 A for 5 min",
+          "vi": {
+            "text": "1,0 A trong 5 phút"
+          }
+        },
+        {
+          "text": "0.5 A for 10 min",
+          "vi": {
+            "text": "0,5 A trong 10 phút"
+          }
+        },
+        {
+          "text": "0.2 A for 20 min",
+          "vi": {
+            "text": "0,2 A trong 20 phút"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-slips",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["measurement", "faraday"],
+      "set": {
+        "current": 0.5,
+        "duration": 600
+      },
+      "stem": "A student passes {current} A for {duration} s through the copper cell, weighs the cathode before and after, and works out the Faraday constant from F = I·t·M/(2·Δm) (M(Cu) = 63.546 g/mol). Decide whether each statement is true or false.",
+      "explain": "A wet cathode weighs too much, so Δm is too large. Copper that falls off makes Δm too small, so F = I·t·M/(2Δm) comes out too large. If the current drifts down but the starting value is used, I·t overstates the charge. With the right n = 2, the expected gain is {@mass} g; {=current*duration*63.546/96485.33212331} g forgets the 2.",
+      "vi": {
+        "stem": "Một học sinh cho dòng điện {current} A chạy qua bình điện phân đồng trong {duration} s, cân cathode trước và sau, rồi tính hằng số Faraday theo F = I·t·M/(2·Δm) (M(Cu) = 63,546 g/mol). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Cathode còn ướt thì cân nặng hơn, nên Δm quá lớn. Đồng bị bong ra làm Δm quá nhỏ, nên F = I·t·M/(2Δm) tính ra quá lớn. Nếu dòng điện giảm dần mà vẫn dùng giá trị ban đầu thì I·t lớn hơn điện lượng thực. Với đúng n = 2, khối lượng tăng dự kiến là {@mass} g; {=current*duration*63.546/96485.33212331} g là do quên hệ số 2."
+      },
+      "statements": [
+        {
+          "text": "If the cathode is weighed while still wet, the measured gain is too large.",
+          "vi": {
+            "text": "Nếu cân cathode khi còn ướt, khối lượng tăng đo được sẽ quá lớn."
+          },
+          "true": true
+        },
+        {
+          "text": "If some copper falls off the cathode, the value of F worked out is too large.",
+          "vi": {
+            "text": "Nếu một ít đồng bong khỏi cathode, giá trị F tính được sẽ quá lớn."
+          },
+          "true": true
+        },
+        {
+          "text": "If the current drifts down during the run but its starting value is used, the charge worked out is too small.",
+          "vi": {
+            "text": "Nếu cường độ dòng điện giảm dần trong khi điện phân mà vẫn dùng giá trị ban đầu, điện lượng tính được sẽ quá nhỏ."
+          },
+          "true": false
+        },
+        {
+          "text": "The cathode is expected to gain {=current*duration*63.546/96485.33212331} g.",
+          "vi": {
+            "text": "Khối lượng cathode dự kiến tăng {=current*duration*63.546/96485.33212331} g."
+          },
+          "true": false,
+          "check": {
+            "expr": "current*duration*63.546/96485.33212331",
+            "equals": "mass"
+          }
+        }
+      ]
+    }
+  ]
+}

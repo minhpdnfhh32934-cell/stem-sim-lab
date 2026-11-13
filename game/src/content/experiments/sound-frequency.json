@@ -1,0 +1,345 @@
+{
+  "id": "sound-frequency",
+  "name": "Measuring the frequency of a sound with an oscilloscope",
+  "category": "physics",
+  "description": "Strike a tuning fork in front of a microphone: the oscilloscope joined to it shows the sound as a wave across its screen. Its time base spreads time across the screen's 10 divisions. Count how many divisions one whole wave spans and multiply by the time base: that is the period T, and the frequency is f = 1/T. Compare it with the number stamped on the fork.",
+  "vi": {
+    "name": "Đo tần số của sóng âm bằng dao động kí",
+    "description": "Gõ một âm thoa trước micrô: dao động kí nối với micrô hiển thị âm thanh thành một đường sóng trên màn hình. Cơ sở thời gian của dao động kí trải thời gian theo 10 ô của màn hình. Đếm số ô mà một bước sóng trọn vẹn chiếm trên màn hình rồi nhân với cơ sở thời gian: đó là chu kì T, và tần số là f = 1/T. So sánh với tần số ghi trên âm thoa.",
+    "note": "Micrô biến dao động của áp suất không khí thành một hiệu điện thế dao động cùng tần số; dao động kí vẽ hiệu điện thế đó theo thời gian, mỗi ô theo phương ngang ứng với một khoảng thời gian bằng cơ sở thời gian (ví dụ 0,5 ms/ô). Một chu kì T chiếm T/(cơ sở thời gian) ô: với âm thoa 440 Hz ở 0,5 ms/ô, một chu kì chiếm khoảng 4,55 ô, T ≈ 2,27 ms. Tín hiệu là một âm thuần v0·e^(−t/τ)·sin(2πft) tắt dần khi âm thoa ngừng rung (τ = 3 s, giá trị minh họa); cao độ không đổi khi âm nhỏ dần. Đây là mô hình dạy học đơn giản hóa: micrô và dao động kí lý tưởng, không có độ trễ hay méo tín hiệu, không có tiếng ồn xung quanh. Chu kì đọc trên màn hình được làm tròn theo độ phân giải d của việc đọc (bội số gần nhất của d, độ bất định d/√12 chỉ do độ phân giải); không có sai số ngẫu nhiên nào được thêm vào, và f được tính từ chu kì mô phỏng, không phải từ số đọc. Trong phòng thí nghiệm thật, âm thoa có thêm các họa âm lúc mới gõ, tiếng ồn làm đường sóng rung, và việc xác định đầu cuối một chu kì trên lưới có sai số, nên tần số đo được lệch đôi chút."
+  },
+  "requiredEquipment": ["oscilloscope-bench"],
+  "model": "waves.sound-frequency",
+  "parameters": [
+    {
+      "id": "frequency",
+      "label": "Tuning fork",
+      "vi": { "label": "Âm thoa" },
+      "symbol": "f",
+      "unit": "Hz",
+      "default": 440,
+      "min": 256,
+      "max": 512,
+      "presets": [
+        { "label": "256 Hz", "vi": { "label": "256 Hz" }, "value": 256 },
+        { "label": "320 Hz", "vi": { "label": "320 Hz" }, "value": 320 },
+        { "label": "384 Hz", "vi": { "label": "384 Hz" }, "value": 384 },
+        { "label": "440 Hz", "vi": { "label": "440 Hz" }, "value": 440 },
+        { "label": "512 Hz", "vi": { "label": "512 Hz" }, "value": 512 }
+      ]
+    },
+    {
+      "id": "timeBase",
+      "label": "Time base",
+      "vi": { "label": "Cơ sở thời gian" },
+      "symbol": "TB",
+      "unit": "s",
+      "default": 0.0005,
+      "min": 0.0005,
+      "max": 0.002,
+      "presets": [
+        { "label": "0.5 ms/div", "vi": { "label": "0,5 ms/ô" }, "value": 0.0005 },
+        { "label": "1 ms/div", "vi": { "label": "1 ms/ô" }, "value": 0.001 },
+        { "label": "2 ms/div", "vi": { "label": "2 ms/ô" }, "value": 0.002 }
+      ]
+    },
+    {
+      "id": "periodResolution",
+      "label": "Reading resolution",
+      "vi": { "label": "Độ phân giải khi đọc" },
+      "symbol": "d_T",
+      "unit": "s",
+      "default": 0.00005,
+      "min": 0.00002,
+      "max": 0.0001,
+      "presets": [
+        { "label": "0.02 ms", "vi": { "label": "0,02 ms" }, "value": 0.00002 },
+        { "label": "0.05 ms", "vi": { "label": "0,05 ms" }, "value": 0.00005 },
+        { "label": "0.1 ms", "vi": { "label": "0,1 ms" }, "value": 0.0001 }
+      ]
+    }
+  ],
+  "initialConditions": { "signalAmplitude": 2, "ringTime": 3, "duration": 2 },
+  "inputs": {
+    "signalAmplitude": { "symbol": "v0", "unit": "V", "desk": false },
+    "ringTime": { "symbol": "τ", "unit": "s", "desk": false },
+    "duration": { "symbol": "t_end", "unit": "s", "desk": false }
+  },
+  "simulation": { "timeStep": 0.01, "maxDuration": 3, "sampleInterval": 0.02 },
+  "measurements": [
+    {
+      "id": "envelope",
+      "label": "Loudness of the signal",
+      "vi": { "label": "Biên độ của tín hiệu" },
+      "symbol": "v_max",
+      "unit": "V",
+      "variable": "envelope"
+    },
+    {
+      "id": "labTime",
+      "label": "Time",
+      "vi": { "label": "Thời gian" },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "clock"
+    }
+  ],
+  "results": [
+    {
+      "id": "period",
+      "label": "Period read on the screen T",
+      "vi": { "label": "Chu kì đọc trên màn hình T" },
+      "symbol": "T",
+      "unit": "s",
+      "variable": "period",
+      "reduce": "final",
+      "theory": "period"
+    },
+    {
+      "id": "divisions",
+      "label": "Divisions one period spans",
+      "vi": { "label": "Số ô của một chu kì" },
+      "symbol": "n",
+      "unit": "",
+      "variable": "divisions",
+      "reduce": "final",
+      "theory": "divisions"
+    },
+    {
+      "id": "frequency",
+      "label": "Frequency f = 1/T",
+      "vi": { "label": "Tần số f = 1/T" },
+      "symbol": "f",
+      "unit": "Hz",
+      "variable": "frequency",
+      "reduce": "final",
+      "theory": "frequency"
+    }
+  ],
+  "instruments": [
+    {
+      "result": "period",
+      "quantity": "Period T on the screen",
+      "name": "Oscilloscope grid",
+      "resolution": "periodResolution",
+      "excludes": "the time base's own calibration, judging where a period starts and ends on a trace that is not quite clean, and the fork's overtones just after it is struck",
+      "vi": {
+        "quantity": "Chu kì T trên màn hình",
+        "name": "Lưới chia ô của dao động kí",
+        "excludes": "sai số hiệu chuẩn của cơ sở thời gian, việc xác định điểm đầu và điểm cuối một chu kì trên đường sóng không hoàn toàn sạch, và các họa âm của âm thoa ngay sau khi gõ"
+      }
+    }
+  ],
+  "graphs": [
+    {
+      "id": "envelope-time",
+      "title": "The signal's loudness against time as the fork rings down",
+      "vi": { "title": "Biên độ của tín hiệu theo thời gian khi âm thoa tắt dần" },
+      "x": "labTime",
+      "y": ["envelope"],
+      "yLabel": "v_max"
+    }
+  ],
+  "monitor": "envelope-time",
+  "compare": [{ "graph": "envelope-time" }],
+  "scatters": [
+    {
+      "id": "period-frequency",
+      "title": "Period against the fork's frequency",
+      "vi": { "title": "Chu kì theo tần số của âm thoa" },
+      "x": "frequency",
+      "y": "period"
+    }
+  ],
+  "note": "The microphone turns the air's pressure oscillation into a voltage oscillating at the same frequency; the oscilloscope draws that voltage against time, each horizontal division standing for one time base (e.g. 0.5 ms/div). A period T spans T/(time base) divisions: a 440 Hz fork at 0.5 ms/div spans about 4.55 divisions, T ≈ 2.27 ms. The signal is a pure tone v0·e^(−t/τ)·sin(2πft) dying away as the fork stops ringing (τ = 3 s, an illustrative value); its pitch does not change as it fades. A simplified teaching model: an ideal microphone and oscilloscope, no delay or distortion, no noise around. The period read on the screen is rounded to the reading's resolution d (the nearest multiple of d, with the uncertainty d/√12 from the resolution alone); no random error is added, and f is worked out from the simulated period, not from the reading. In a real lab a fork has overtones just after it is struck, noise makes the trace shake, and judging a period's ends on the grid has its own error, so the measured frequency differs a little.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the sound frequency instructions on the board.",
+      "vi": { "instruction": "Đọc hướng dẫn thí nghiệm đo tần số âm trên bảng." },
+      "done": { "kind": "inspected", "item": "sound-frequency-instructions" }
+    },
+    {
+      "id": "fork",
+      "instruction": "Choose the tuning fork with its dial on the control desk.",
+      "vi": { "instruction": "Chọn âm thoa bằng núm xoay trên bàn điều khiển." },
+      "done": { "kind": "adjusted", "parameter": "frequency" }
+    },
+    {
+      "id": "timebase",
+      "instruction": "Set the oscilloscope's time base so that one or more whole waves fit on the screen.",
+      "vi": {
+        "instruction": "Đặt cơ sở thời gian của dao động kí sao cho một hoặc vài bước sóng trọn vẹn nằm trên màn hình."
+      },
+      "done": { "kind": "adjusted", "parameter": "timeBase" }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the fork is struck; watch the wave on the screen.",
+      "vi": { "instruction": "Nhấn CHẠY: âm thoa được gõ; quan sát đường sóng trên màn hình." },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read T, the divisions and f = 1/T on the results monitor, and compare f with the fork's number.",
+      "vi": {
+        "instruction": "Đọc T, số ô và f = 1/T trên màn hình kết quả, rồi so sánh f với số ghi trên âm thoa."
+      },
+      "done": { "kind": "viewed" }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, choose another fork and run again.",
+      "vi": { "instruction": "Nhấn ĐẶT LẠI, chọn âm thoa khác rồi chạy lại." },
+      "done": { "kind": "reset" }
+    }
+  ],
+  "examples": [
+    {
+      "id": "period-on-screen",
+      "question": "A {frequency} Hz tuning fork sounds into a microphone; the oscilloscope’s time base is {=timeBase*1000} ms per division. Find the period, and how many divisions one period spans.",
+      "vi": {
+        "question": "Một âm thoa {frequency} Hz phát âm vào micrô; thang thời gian của dao động kí là {=timeBase*1000} ms mỗi ô. Tìm chu kì, và một chu kì chiếm bao nhiêu ô."
+      },
+      "set": { "frequency": 256, "timeBase": 0.001 },
+      "find": [{ "theory": "period", "figures": 4 }, { "theory": "divisions" }],
+      "steps": [
+        {
+          "say": "The period is one over the frequency.",
+          "vi": { "say": "Chu kì bằng nghịch đảo của tần số." },
+          "write": "T = 1/f = 1/{frequency} ≈ {@period|4} s",
+          "check": { "expr": "1/frequency", "equals": "period" }
+        },
+        {
+          "say": "Each division stands for one time base.",
+          "vi": { "say": "Mỗi ô ứng với một thang thời gian." },
+          "write": "n = T/TB = {@period|4}/{timeBase} ≈ {@divisions}",
+          "check": { "expr": "@period/timeBase", "equals": "divisions" }
+        }
+      ]
+    },
+    {
+      "id": "frequency-from-screen",
+      "question": "At {=timeBase*1000} ms per division, one period of a tuning fork’s trace spans {@divisions|4} divisions. Find the period and the fork’s frequency.",
+      "vi": {
+        "question": "Với thang thời gian {=timeBase*1000} ms mỗi ô, một chu kì của đồ thị âm thoa chiếm {@divisions|4} ô. Tìm chu kì và tần số của âm thoa."
+      },
+      "set": { "timeBase": 0.001 },
+      "find": [{ "theory": "period", "figures": 4 }, { "theory": "frequency" }],
+      "steps": [
+        {
+          "say": "Number of divisions times the time base gives the period.",
+          "vi": { "say": "Số ô nhân thang thời gian cho chu kì." },
+          "write": "T = n·TB = {@divisions|4}·{timeBase} ≈ {@period|4} s",
+          "check": { "expr": "@divisions*timeBase", "equals": "period" }
+        },
+        {
+          "say": "The frequency is one over the period.",
+          "vi": { "say": "Tần số bằng nghịch đảo của chu kì." },
+          "write": "f = 1/T = 1/{@period|4} ≈ {@frequency} Hz",
+          "check": { "expr": "1/@period", "equals": "frequency" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "An oscilloscope draws a sound as a wave against time; reading how long one whole wave takes — the period — gives the sound’s frequency, f = 1/T.",
+    "vi": {
+      "summary": "Dao động kí vẽ âm thanh thành một sóng theo thời gian; đọc thời gian của một sóng trọn vẹn — chu kỳ — sẽ cho tần số của âm, f = 1/T."
+    },
+    "parts": [
+      {
+        "id": "fork",
+        "name": "Tuning fork",
+        "role": "On its wooden resonance box: struck, it sounds one tone of frequency f.",
+        "vi": {
+          "name": "Âm thoa",
+          "role": "Đặt trên hộp cộng hưởng bằng gỗ: khi gõ, nó phát ra một âm có tần số f."
+        },
+        "anchor": {
+          "at": [-0.24, 0.04, 0]
+        }
+      },
+      {
+        "id": "microphone",
+        "name": "Microphone",
+        "role": "Turns the air’s pressure oscillation into a voltage oscillating at the same frequency.",
+        "vi": {
+          "name": "Micrô",
+          "role": "Biến dao động áp suất của không khí thành một điện áp dao động cùng tần số."
+        },
+        "anchor": {
+          "at": [-0.11, 0.04, 0.05]
+        }
+      },
+      {
+        "id": "screen",
+        "name": "Oscilloscope screen",
+        "role": "Draws the voltage against time over 10 divisions; each division stands for one time base.",
+        "vi": {
+          "name": "Màn dao động kí",
+          "role": "Vẽ điện áp theo thời gian trên 10 ô; mỗi ô ứng với một khoảng thời gian bằng thang thời gian."
+        },
+        "anchor": {
+          "at": [0.07, 0.01, 0.141]
+        }
+      },
+      {
+        "id": "trace",
+        "name": "Trace",
+        "role": "The sound’s wave, dying away as the fork stops ringing.",
+        "vi": {
+          "name": "Đường sóng",
+          "role": "Sóng của âm thanh, nhỏ dần khi âm thoa tắt tiếng."
+        },
+        "anchor": {
+          "part": "trace"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "Strike the fork: its prongs vibrate and push the air back and forth, sending out a sound wave of frequency f.",
+        "vi": {
+          "text": "Gõ âm thoa: hai nhánh của nó dao động và đẩy không khí tới lui, phát ra sóng âm có tần số f."
+        },
+        "parts": ["fork"]
+      },
+      {
+        "text": "The microphone turns the air’s pressure changes into a voltage that oscillates at the same frequency.",
+        "vi": {
+          "text": "Micrô biến những thay đổi áp suất của không khí thành một điện áp dao động với cùng tần số."
+        },
+        "parts": ["microphone"]
+      },
+      {
+        "text": "The oscilloscope draws that voltage against time: time runs across the screen, one time base for each of its 10 divisions (for example 0.5 ms per division).",
+        "vi": {
+          "text": "Dao động kí vẽ điện áp đó theo thời gian: thời gian chạy ngang màn hình, mỗi ô trong 10 ô ứng với một thang thời gian (ví dụ 0.5 ms mỗi ô)."
+        },
+        "parts": ["screen", "trace"]
+      },
+      {
+        "text": "Count how many divisions one whole wave spans, and multiply by the time base: that is the period T. The frequency is f = 1/T.",
+        "vi": {
+          "text": "Đếm số ô mà một sóng trọn vẹn chiếm, rồi nhân với thang thời gian: đó là chu kỳ T. Tần số là f = 1/T."
+        },
+        "parts": ["trace", "screen"]
+      },
+      {
+        "text": "A higher-pitched fork gives shorter waves on the screen. As the fork stops ringing the wave gets smaller, but its period does not change: the pitch stays the same.",
+        "vi": {
+          "text": "Âm thoa có tần số cao hơn cho các sóng ngắn hơn trên màn. Khi âm thoa tắt dần, sóng nhỏ đi nhưng chu kỳ không đổi: độ cao của âm vẫn giữ nguyên."
+        },
+        "parts": ["fork", "trace"]
+      },
+      {
+        "text": "The results give T, the divisions and f beside the fork’s number; T is read to the resolution d. The model uses an ideal microphone and oscilloscope with no noise.",
+        "vi": {
+          "text": "Phần kết quả cho T, số ô và f bên cạnh số ghi trên âm thoa; T được đọc theo độ phân giải d. Mô hình dùng micrô và dao động kí lý tưởng, không có nhiễu."
+        },
+        "parts": ["screen"]
+      }
+    ]
+  }
+}

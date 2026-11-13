@@ -1,0 +1,1054 @@
+{
+  "id": "pendulum",
+  "skills": [
+    {
+      "id": "oscillation",
+      "name": "What a pendulum’s period is",
+      "advice": "Re-read the meaning of period (one full swing, there and back), frequency (swings per second) and amplitude (largest angle). Count one period aloud while a run plays in the Explain view.",
+      "vi": {
+        "name": "Chu kì của con lắc là gì",
+        "advice": "Đọc lại ý nghĩa của chu kì (một dao động toàn phần, đi và về), tần số (số dao động trong một giây) và biên độ (góc lệch lớn nhất). Vừa xem một lần chạy trong màn Giải thích vừa đếm to một chu kì."
+      }
+    },
+    {
+      "id": "period",
+      "name": "Small-angle period: T₀ = 2π√(L/g)",
+      "advice": "Practise T₀ = 2π√(L/g) with the length in metres and the g of the place given. Common trap: writing √(g/L), or giving half the period (one end to the other).",
+      "vi": {
+        "name": "Chu kì dao động nhỏ: T₀ = 2π√(L/g)",
+        "advice": "Luyện công thức T₀ = 2π√(L/g) với chiều dài tính bằng mét và g của nơi đang xét. Lỗi hay gặp: viết √(g/L), hoặc chỉ lấy nửa chu kì (từ biên này sang biên kia)."
+      }
+    },
+    {
+      "id": "dependence",
+      "name": "What the period depends on",
+      "advice": "At the station change one thing at a time: L, then g, then the bob’s mass. Four times L gives twice T; the mass changes nothing; larger g gives a shorter T.",
+      "vi": {
+        "name": "Chu kì phụ thuộc vào những gì",
+        "advice": "Trên trạm, mỗi lần chỉ thay đổi một đại lượng: L, rồi g, rồi khối lượng quả nặng. L tăng 4 lần thì T tăng 2 lần; khối lượng không làm T thay đổi; g lớn hơn thì T ngắn hơn."
+      }
+    },
+    {
+      "id": "energy",
+      "name": "Energy and speed in the swing",
+      "advice": "Take the lowest point as zero: the bob is raised L(1 − cos θ₀), so E = mgL(1 − cos θ₀) and v_max = √(2gL(1 − cos θ₀)). Set your calculator to degrees before taking cos θ₀.",
+      "vi": {
+        "name": "Năng lượng và tốc độ khi dao động",
+        "advice": "Chọn mốc thế năng ở vị trí thấp nhất: quả nặng được nâng lên L(1 − cos θ₀), nên E = mgL(1 − cos θ₀) và v_max = √(2gL(1 − cos θ₀)). Chuyển máy tính sang chế độ độ (deg) trước khi tính cos θ₀."
+      }
+    },
+    {
+      "id": "large-angle",
+      "name": "Large swings and measuring T",
+      "advice": "Compare runs at 10° and at 60°: the measured period grows beyond T₀ (about 7 % at 60°). Remember a timer shows the nearest multiple of its resolution d, with u = d/√12 from the resolution alone.",
+      "vi": {
+        "name": "Dao động biên độ lớn và phép đo T",
+        "advice": "So sánh các lần chạy ở 10° và 60°: chu kì đo được lớn hơn T₀ (khoảng 7 % ở 60°). Nhớ rằng đồng hồ hiển thị bội số gần nhất của độ phân giải d, với u = d/√12 chỉ do độ phân giải."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "what-period",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["oscillation"],
+      "stem": "The period of a pendulum is…",
+      "explain": "The period is the time of one full oscillation: from one end, across, and back to the same end.",
+      "vi": {
+        "stem": "Chu kì dao động của con lắc là…",
+        "explain": "Chu kì là thời gian thực hiện một dao động toàn phần: từ một biên, qua vị trí cân bằng, rồi trở lại đúng biên đó."
+      },
+      "options": [
+        {
+          "text": "the time of one full oscillation, there and back",
+          "vi": {
+            "text": "thời gian thực hiện một dao động toàn phần (đi và về)"
+          },
+          "correct": true
+        },
+        {
+          "text": "the time to swing from one end to the other",
+          "vi": {
+            "text": "thời gian đi từ biên này sang biên kia"
+          }
+        },
+        {
+          "text": "the number of oscillations made in one second",
+          "vi": {
+            "text": "số dao động thực hiện được trong một giây"
+          }
+        },
+        {
+          "text": "the largest angle of the rod from the vertical",
+          "vi": {
+            "text": "góc lệch lớn nhất của thanh so với phương thẳng đứng"
+          }
+        }
+      ]
+    },
+    {
+      "id": "formula",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["period"],
+      "stem": "For small swings, the period of a simple pendulum of length L where the gravitational acceleration is g is…",
+      "explain": "T₀ = 2π√(L/g): a longer rod swings more slowly, a stronger gravity more quickly.",
+      "vi": {
+        "stem": "Với dao động nhỏ, chu kì của con lắc đơn có chiều dài L tại nơi có gia tốc trọng trường g là…",
+        "explain": "T₀ = 2π√(L/g): thanh dài hơn thì dao động chậm hơn, trọng trường mạnh hơn thì dao động nhanh hơn."
+      },
+      "options": [
+        {
+          "text": "T₀ = 2π√(L/g)",
+          "vi": {
+            "text": "T₀ = 2π√(L/g)"
+          },
+          "correct": true
+        },
+        {
+          "text": "T₀ = 2π√(g/L)",
+          "vi": {
+            "text": "T₀ = 2π√(g/L)"
+          }
+        },
+        {
+          "text": "T₀ = 2πL/g",
+          "vi": {
+            "text": "T₀ = 2πL/g"
+          }
+        },
+        {
+          "text": "T₀ = (1/2π)√(L/g)",
+          "vi": {
+            "text": "T₀ = (1/2π)√(L/g)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-swing",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["oscillation", "energy"],
+      "stem": "A pendulum is pulled aside and released from rest; there is no friction. Decide whether each statement is true or false.",
+      "explain": "At the ends the bob stops for an instant (all potential energy); at the lowest point it is fastest (all kinetic). The mass does not change the period. L is measured from the pivot to the centre of the bob.",
+      "vi": {
+        "stem": "Một con lắc được kéo lệch rồi thả nhẹ không vận tốc đầu; bỏ qua mọi ma sát. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Ở hai biên quả nặng dừng lại trong khoảnh khắc (toàn bộ là thế năng); ở vị trí thấp nhất nó có tốc độ lớn nhất (toàn bộ là động năng). Khối lượng không ảnh hưởng đến chu kì. L được đo từ trục quay đến tâm quả nặng."
+      },
+      "statements": [
+        {
+          "text": "At each end of the swing the bob is momentarily at rest.",
+          "vi": {
+            "text": "Ở mỗi vị trí biên, quả nặng dừng lại trong khoảnh khắc."
+          },
+          "true": true
+        },
+        {
+          "text": "The bob is fastest at the lowest point.",
+          "vi": {
+            "text": "Quả nặng có tốc độ lớn nhất tại vị trí thấp nhất."
+          },
+          "true": true
+        },
+        {
+          "text": "A heavier bob on the same rod gives a shorter period.",
+          "vi": {
+            "text": "Thay quả nặng nặng hơn trên cùng thanh treo thì chu kì ngắn hơn."
+          },
+          "true": false
+        },
+        {
+          "text": "The length L is measured from the pivot to the lowest edge of the bob.",
+          "vi": {
+            "text": "Chiều dài L được đo từ trục quay đến mép dưới của quả nặng."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "four-times-length",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["dependence"],
+      "stem": "The length of a pendulum is made four times longer; the swings stay small. Its period…",
+      "explain": "T₀ ∝ √L: four times L gives √4 = 2 times the period.",
+      "vi": {
+        "stem": "Tăng chiều dài con lắc lên gấp bốn lần, dao động vẫn nhỏ. Chu kì của nó…",
+        "explain": "T₀ tỉ lệ với √L: L tăng 4 lần thì chu kì tăng √4 = 2 lần."
+      },
+      "options": [
+        {
+          "text": "doubles",
+          "vi": {
+            "text": "tăng gấp đôi"
+          },
+          "correct": true
+        },
+        {
+          "text": "becomes four times longer",
+          "vi": {
+            "text": "tăng gấp bốn lần"
+          }
+        },
+        {
+          "text": "halves",
+          "vi": {
+            "text": "giảm một nửa"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "shorter-period",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["dependence"],
+      "stem": "Which change makes a pendulum’s small-angle period shorter?",
+      "explain": "T₀ = 2π√(L/g): a larger g (Jupiter, 24.79 m/s²) shortens it; a longer rod or a smaller g lengthens it; the mass does not appear.",
+      "vi": {
+        "stem": "Thay đổi nào sau đây làm chu kì dao động nhỏ của con lắc ngắn đi?",
+        "explain": "T₀ = 2π√(L/g): g lớn hơn (Sao Mộc, 24,79 m/s²) làm chu kì ngắn đi; thanh dài hơn hoặc g nhỏ hơn làm chu kì dài ra; khối lượng không có mặt trong công thức."
+      },
+      "options": [
+        {
+          "text": "Taking it to Jupiter, where g is larger",
+          "vi": {
+            "text": "Đưa con lắc lên Sao Mộc, nơi g lớn hơn"
+          },
+          "correct": true
+        },
+        {
+          "text": "Using a heavier bob",
+          "vi": {
+            "text": "Dùng quả nặng có khối lượng lớn hơn"
+          }
+        },
+        {
+          "text": "Making the rod longer",
+          "vi": {
+            "text": "Dùng thanh treo dài hơn"
+          }
+        },
+        {
+          "text": "Taking it to the Moon",
+          "vi": {
+            "text": "Đưa con lắc lên Mặt Trăng"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-earth",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["period", "large-angle"],
+      "set": {
+        "length": 1,
+        "angle": 60,
+        "gravity": 9.81
+      },
+      "stem": "A pendulum {length} m long swings on Earth (g = {gravity} m/s²), released from rest at {angle}°. Decide whether each statement is true or false.",
+      "explain": "T₀ = 2π√(L/g) ≈ {@smallAnglePeriod} s, but at {angle}° the exact period is {@period} s, about {=(@period/@smallAnglePeriod-1)*100|2} % longer. The frequency is 1/T. The mass cancels from the motion.",
+      "vi": {
+        "stem": "Một con lắc dài {length} m dao động trên Trái Đất (g = {gravity} m/s²), được thả nhẹ từ góc lệch {angle}°. Mỗi nhận định sau đúng hay sai?",
+        "explain": "T₀ = 2π√(L/g) ≈ {@smallAnglePeriod} s, nhưng ở {angle}° chu kì chính xác là {@period} s, dài hơn khoảng {=(@period/@smallAnglePeriod-1)*100|2} %. Tần số bằng 1/T. Khối lượng không ảnh hưởng đến chuyển động."
+      },
+      "statements": [
+        {
+          "text": "The small-angle formula gives T₀ ≈ {@smallAnglePeriod} s.",
+          "vi": {
+            "text": "Công thức dao động nhỏ cho T₀ ≈ {@smallAnglePeriod} s."
+          },
+          "true": true,
+          "check": {
+            "expr": "2*pi*sqrt(length/gravity)",
+            "equals": "smallAnglePeriod"
+          }
+        },
+        {
+          "text": "At this release angle the true period is longer than T₀.",
+          "vi": {
+            "text": "Với góc thả này, chu kì thực lớn hơn T₀."
+          },
+          "true": true
+        },
+        {
+          "text": "A bob of twice the mass would swing with a shorter period.",
+          "vi": {
+            "text": "Quả nặng có khối lượng gấp đôi sẽ dao động với chu kì ngắn hơn."
+          },
+          "true": false
+        },
+        {
+          "text": "Its true period equals T₀, about {@smallAnglePeriod} s.",
+          "vi": {
+            "text": "Chu kì thực của nó bằng T₀, khoảng {@smallAnglePeriod} s."
+          },
+          "true": false,
+          "check": {
+            "expr": "@smallAnglePeriod",
+            "equals": "period"
+          }
+        }
+      ]
+    },
+    {
+      "id": "moon-period",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["period"],
+      "set": {
+        "length": 2,
+        "gravity": 1.62,
+        "angle": 10
+      },
+      "stem": "On the Moon (g = {gravity} m/s²) a pendulum {length} m long swings through a small angle. What is its period?",
+      "explain": "T₀ = 2π√(L/g) = 2π√({length}/{gravity}) ≈ {@smallAnglePeriod} s. Earth’s g would give {=2*pi*sqrt(length/9.81)} s; π√(L/g) is only half a period.",
+      "vi": {
+        "stem": "Trên Mặt Trăng (g = {gravity} m/s²), một con lắc dài {length} m dao động với góc lệch nhỏ. Chu kì của nó bằng bao nhiêu?",
+        "explain": "T₀ = 2π√(L/g) = 2π√({length}/{gravity}) ≈ {@smallAnglePeriod} s. Dùng g của Trái Đất sẽ ra {=2*pi*sqrt(length/9.81)} s; π√(L/g) chỉ là nửa chu kì."
+      },
+      "options": [
+        {
+          "text": "{@smallAnglePeriod} s",
+          "vi": {
+            "text": "{@smallAnglePeriod} s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2*pi*sqrt(length/gravity)",
+            "equals": "smallAnglePeriod"
+          }
+        },
+        {
+          "text": "{=2*pi*sqrt(gravity/length)} s",
+          "vi": {
+            "text": "{=2*pi*sqrt(gravity/length)} s"
+          },
+          "check": {
+            "expr": "2*pi*sqrt(gravity/length)",
+            "equals": "smallAnglePeriod"
+          }
+        },
+        {
+          "text": "{=2*pi*sqrt(length/9.81)} s",
+          "vi": {
+            "text": "{=2*pi*sqrt(length/9.81)} s"
+          },
+          "check": {
+            "expr": "2*pi*sqrt(length/9.81)",
+            "equals": "smallAnglePeriod"
+          }
+        },
+        {
+          "text": "{=pi*sqrt(length/gravity)} s",
+          "vi": {
+            "text": "{=pi*sqrt(length/gravity)} s"
+          },
+          "check": {
+            "expr": "pi*sqrt(length/gravity)",
+            "equals": "smallAnglePeriod"
+          }
+        }
+      ]
+    },
+    {
+      "id": "energy",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["energy"],
+      "set": {
+        "length": 1.5,
+        "angle": 30,
+        "gravity": 9.81
+      },
+      "stem": "A {mass} kg bob on a {length} m rod is pulled aside to {angle}° and released from rest (g = {gravity} m/s²). Taking the lowest point as zero, what is its mechanical energy?",
+      "explain": "Raised by h = L(1 − cos θ₀), E = mgL(1 − cos θ₀) = {mass}·{gravity}·{length}·(1 − cos {angle}°) ≈ {@energy} J.",
+      "vi": {
+        "stem": "Quả nặng {mass} kg gắn trên thanh dài {length} m được kéo lệch {angle}° rồi thả nhẹ (g = {gravity} m/s²). Chọn mốc thế năng tại vị trí thấp nhất, cơ năng của nó bằng bao nhiêu?",
+        "explain": "Quả nặng được nâng lên h = L(1 − cos θ₀), nên E = mgL(1 − cos θ₀) = {mass}·{gravity}·{length}·(1 − cos {angle}°) ≈ {@energy} J."
+      },
+      "options": [
+        {
+          "text": "{@energy} J",
+          "vi": {
+            "text": "{@energy} J"
+          },
+          "correct": true,
+          "check": {
+            "expr": "mass*gravity*length*(1-cos(rad(angle)))",
+            "equals": "energy"
+          }
+        },
+        {
+          "text": "{=mass*gravity*length*sin(rad(angle))} J",
+          "vi": {
+            "text": "{=mass*gravity*length*sin(rad(angle))} J"
+          },
+          "check": {
+            "expr": "mass*gravity*length*sin(rad(angle))",
+            "equals": "energy"
+          }
+        },
+        {
+          "text": "{=mass*gravity*length*cos(rad(angle))} J",
+          "vi": {
+            "text": "{=mass*gravity*length*cos(rad(angle))} J"
+          },
+          "check": {
+            "expr": "mass*gravity*length*cos(rad(angle))",
+            "equals": "energy"
+          }
+        },
+        {
+          "text": "{=mass*gravity*length} J",
+          "vi": {
+            "text": "{=mass*gravity*length} J"
+          },
+          "check": {
+            "expr": "mass*gravity*length",
+            "equals": "energy"
+          }
+        }
+      ]
+    },
+    {
+      "id": "max-speed",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["energy"],
+      "set": {
+        "length": 1,
+        "angle": 20,
+        "gravity": 9.81
+      },
+      "stem": "A pendulum {length} m long is released from rest at {angle}° on Earth (g = {gravity} m/s²). What is the bob’s greatest speed?",
+      "explain": "At the lowest point all the energy is kinetic: ½mv² = mgL(1 − cos θ₀), so v = √(2gL(1 − cos θ₀)) ≈ {@maxSpeed} m/s; the mass cancels.",
+      "vi": {
+        "stem": "Một con lắc dài {length} m được thả nhẹ từ góc lệch {angle}° trên Trái Đất (g = {gravity} m/s²). Tốc độ lớn nhất của quả nặng bằng bao nhiêu?",
+        "explain": "Tại vị trí thấp nhất toàn bộ cơ năng là động năng: ½mv² = mgL(1 − cos θ₀), nên v = √(2gL(1 − cos θ₀)) ≈ {@maxSpeed} m/s; khối lượng bị triệt tiêu."
+      },
+      "options": [
+        {
+          "text": "{@maxSpeed} m/s",
+          "vi": {
+            "text": "{@maxSpeed} m/s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "sqrt(2*gravity*length*(1-cos(rad(angle))))",
+            "equals": "maxSpeed"
+          }
+        },
+        {
+          "text": "{=sqrt(2*gravity*length)} m/s",
+          "vi": {
+            "text": "{=sqrt(2*gravity*length)} m/s"
+          },
+          "check": {
+            "expr": "sqrt(2*gravity*length)",
+            "equals": "maxSpeed"
+          }
+        },
+        {
+          "text": "{=sqrt(gravity*length*(1-cos(rad(angle))))} m/s",
+          "vi": {
+            "text": "{=sqrt(gravity*length*(1-cos(rad(angle))))} m/s"
+          },
+          "check": {
+            "expr": "sqrt(gravity*length*(1-cos(rad(angle))))",
+            "equals": "maxSpeed"
+          }
+        },
+        {
+          "text": "{=2*gravity*length*(1-cos(rad(angle)))} m/s",
+          "vi": {
+            "text": "{=2*gravity*length*(1-cos(rad(angle)))} m/s"
+          },
+          "check": {
+            "expr": "2*gravity*length*(1-cos(rad(angle)))",
+            "equals": "maxSpeed"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-mars",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["period", "dependence"],
+      "set": {
+        "length": 0.5,
+        "angle": 10,
+        "gravity": 3.71
+      },
+      "stem": "On Mars (g = {gravity} m/s²) a pendulum {length} m long swings through a small angle. Decide whether each statement is true or false.",
+      "explain": "T₀ = 2π√({length}/{gravity}) ≈ {@smallAnglePeriod} s. On Earth g is larger, so the period is shorter. T ∝ √L: half the length gives 1/√2 of the period, not half.",
+      "vi": {
+        "stem": "Trên Sao Hỏa (g = {gravity} m/s²), một con lắc dài {length} m dao động với góc lệch nhỏ. Mỗi nhận định sau đúng hay sai?",
+        "explain": "T₀ = 2π√({length}/{gravity}) ≈ {@smallAnglePeriod} s. Trên Trái Đất g lớn hơn nên chu kì ngắn hơn. T tỉ lệ với √L: chiều dài giảm một nửa thì chu kì giảm √2 lần, không phải một nửa."
+      },
+      "statements": [
+        {
+          "text": "Its period is about {@smallAnglePeriod} s.",
+          "vi": {
+            "text": "Chu kì của nó khoảng {@smallAnglePeriod} s."
+          },
+          "true": true,
+          "check": {
+            "expr": "2*pi*sqrt(length/gravity)",
+            "equals": "smallAnglePeriod"
+          }
+        },
+        {
+          "text": "On Earth the same pendulum would have a shorter period.",
+          "vi": {
+            "text": "Trên Trái Đất, cùng con lắc đó sẽ có chu kì ngắn hơn."
+          },
+          "true": true
+        },
+        {
+          "text": "Halving the length would halve the period.",
+          "vi": {
+            "text": "Giảm chiều dài một nửa thì chu kì giảm một nửa."
+          },
+          "true": false
+        },
+        {
+          "text": "Its period is about {=2*pi*sqrt(length/9.81)} s.",
+          "vi": {
+            "text": "Chu kì của nó khoảng {=2*pi*sqrt(length/9.81)} s."
+          },
+          "true": false,
+          "check": {
+            "expr": "2*pi*sqrt(length/9.81)",
+            "equals": "smallAnglePeriod"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-g",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["period", "dependence"],
+      "set": {
+        "length": 1.5,
+        "angle": 5,
+        "gravity": 3.71
+      },
+      "stem": "On an unknown planet a pendulum {length} m long swings through a small angle, and its period is found to be {@smallAnglePeriod|4} s. What is g there?",
+      "explain": "From T = 2π√(L/g): g = 4π²L/T² = 4π²·{length}/{@smallAnglePeriod|4}² ≈ {=4*pi^2*length/@smallAnglePeriod^2} m/s² (Mars). Forgetting to square T, or the 4π², gives the other values.",
+      "vi": {
+        "stem": "Trên một hành tinh chưa biết, con lắc dài {length} m dao động với góc lệch nhỏ và đo được chu kì {@smallAnglePeriod|4} s. Gia tốc trọng trường ở đó bằng bao nhiêu?",
+        "explain": "Từ T = 2π√(L/g) suy ra g = 4π²L/T² = 4π²·{length}/{@smallAnglePeriod|4}² ≈ {=4*pi^2*length/@smallAnglePeriod^2} m/s² (Sao Hỏa). Quên bình phương T hoặc quên 4π² sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{=4*pi^2*length/@smallAnglePeriod^2} m/s²",
+          "vi": {
+            "text": "{=4*pi^2*length/@smallAnglePeriod^2} m/s²"
+          },
+          "correct": true
+        },
+        {
+          "text": "{=4*pi^2*length/@smallAnglePeriod} m/s²",
+          "vi": {
+            "text": "{=4*pi^2*length/@smallAnglePeriod} m/s²"
+          }
+        },
+        {
+          "text": "{=length/@smallAnglePeriod^2} m/s²",
+          "vi": {
+            "text": "{=length/@smallAnglePeriod^2} m/s²"
+          }
+        },
+        {
+          "text": "{=2*pi*length/@smallAnglePeriod^2} m/s²",
+          "vi": {
+            "text": "{=2*pi*length/@smallAnglePeriod^2} m/s²"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-timer",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["large-angle", "oscillation"],
+      "set": {
+        "length": 1,
+        "angle": 10,
+        "gravity": 9.81,
+        "resolution": 0.01
+      },
+      "stem": "A pendulum {length} m long is released at {angle}° on Earth (g = {gravity} m/s²) and its period is timed with a timer of resolution {resolution} s. Decide whether each statement is true or false.",
+      "explain": "The exact period is {@period|4} s, a little above T₀ = {@smallAnglePeriod|4} s. The timer shows the nearest 0.01 s, {=round(@period/resolution)*resolution} s, with u = d/√12 ≈ {=resolution/sqrt(12)|2} s from the resolution alone. Timing ten periods and dividing by ten makes that share ten times smaller, not larger.",
+      "vi": {
+        "stem": "Một con lắc dài {length} m được thả từ góc lệch {angle}° trên Trái Đất (g = {gravity} m/s²), chu kì được đo bằng đồng hồ có độ phân giải {resolution} s. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Chu kì chính xác là {@period|4} s, lớn hơn T₀ = {@smallAnglePeriod|4} s một chút. Đồng hồ hiển thị giá trị gần nhất theo 0,01 s là {=round(@period/resolution)*resolution} s, với u = d/√12 ≈ {=resolution/sqrt(12)|2} s chỉ do độ phân giải. Đo thời gian mười chu kì rồi chia cho mười làm phần này nhỏ đi mười lần chứ không lớn lên."
+      },
+      "statements": [
+        {
+          "text": "The model’s exact period is about {@period|4} s.",
+          "vi": {
+            "text": "Chu kì chính xác theo mô hình khoảng {@period|4} s."
+          },
+          "true": true,
+          "check": {
+            "expr": "@period",
+            "equals": "period"
+          }
+        },
+        {
+          "text": "The timer shows {=round(@period/resolution)*resolution} s.",
+          "vi": {
+            "text": "Đồng hồ hiển thị {=round(@period/resolution)*resolution} s."
+          },
+          "true": true
+        },
+        {
+          "text": "The standard uncertainty from the resolution alone is about {=resolution/sqrt(12)|2} s.",
+          "vi": {
+            "text": "Độ không đảm bảo chuẩn chỉ do độ phân giải khoảng {=resolution/sqrt(12)|2} s."
+          },
+          "true": true
+        },
+        {
+          "text": "Timing ten periods and dividing by ten makes the resolution’s share of the uncertainty in T ten times larger.",
+          "vi": {
+            "text": "Đo thời gian mười chu kì rồi chia cho mười làm phần độ không đảm bảo của T do độ phân giải lớn lên mười lần."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "frequency",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["oscillation"],
+      "stem": "The frequency f of a pendulum and its period T are related by…",
+      "explain": "The frequency is the number of oscillations per second, f = 1/T, in hertz (Hz).",
+      "vi": {
+        "stem": "Tần số f và chu kì T của con lắc liên hệ với nhau bởi…",
+        "explain": "Tần số là số dao động thực hiện trong một giây, f = 1/T, đơn vị héc (Hz)."
+      },
+      "options": [
+        {
+          "text": "f = 1/T",
+          "vi": {
+            "text": "f = 1/T"
+          },
+          "correct": true
+        },
+        {
+          "text": "f = T",
+          "vi": {
+            "text": "f = T"
+          }
+        },
+        {
+          "text": "f = 2π·T",
+          "vi": {
+            "text": "f = 2π·T"
+          }
+        },
+        {
+          "text": "f = T/2π",
+          "vi": {
+            "text": "f = T/2π"
+          }
+        }
+      ]
+    },
+    {
+      "id": "smaller-swing",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["dependence", "oscillation"],
+      "stem": "A pendulum swinging through 10° is instead let go from 5° (still a small angle). Its period…",
+      "explain": "For small swings T₀ = 2π√(L/g) does not depend on the amplitude: the smaller swing is slower over a shorter path, in the same time.",
+      "vi": {
+        "stem": "Một con lắc đang dao động với góc lệch 10° được thả lại từ góc 5° (vẫn là góc nhỏ). Chu kì của nó…",
+        "explain": "Với dao động nhỏ, T₀ = 2π√(L/g) không phụ thuộc biên độ: dao động nhỏ hơn thì chậm hơn trên quãng đường ngắn hơn, trong cùng thời gian."
+      },
+      "options": [
+        {
+          "text": "stays practically the same",
+          "vi": {
+            "text": "gần như không đổi"
+          },
+          "correct": true
+        },
+        {
+          "text": "halves",
+          "vi": {
+            "text": "giảm một nửa"
+          }
+        },
+        {
+          "text": "doubles",
+          "vi": {
+            "text": "tăng gấp đôi"
+          }
+        },
+        {
+          "text": "becomes √2 times shorter",
+          "vi": {
+            "text": "giảm √2 lần"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-energy-swing",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["energy", "oscillation"],
+      "stem": "A pendulum swings without friction; potential energy is measured from the lowest point. Decide whether each statement is true or false.",
+      "explain": "At the lowest point the potential energy is zero and the kinetic energy greatest; without friction their sum, the mechanical energy, stays the same. At each end the bob stops for an instant, but gravity still pulls it back: its acceleration there is not zero.",
+      "vi": {
+        "stem": "Một con lắc dao động không ma sát; chọn mốc thế năng tại vị trí thấp nhất. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Tại vị trí thấp nhất thế năng bằng 0 và động năng lớn nhất; không có ma sát thì tổng của chúng, tức cơ năng, không đổi. Ở mỗi biên quả nặng dừng lại trong khoảnh khắc, nhưng trọng lực vẫn kéo nó trở lại: gia tốc tại đó khác 0."
+      },
+      "statements": [
+        {
+          "text": "At the lowest point the kinetic energy is greatest.",
+          "vi": {
+            "text": "Tại vị trí thấp nhất, động năng lớn nhất."
+          },
+          "true": true
+        },
+        {
+          "text": "The mechanical energy is the same at every point of the swing.",
+          "vi": {
+            "text": "Cơ năng như nhau ở mọi vị trí trong quá trình dao động."
+          },
+          "true": true
+        },
+        {
+          "text": "At each end of the swing the bob’s acceleration is zero.",
+          "vi": {
+            "text": "Ở mỗi vị trí biên, gia tốc của quả nặng bằng 0."
+          },
+          "true": false
+        },
+        {
+          "text": "The bob’s speed is the same at both ends of the swing.",
+          "vi": {
+            "text": "Tốc độ của quả nặng ở hai biên bằng nhau."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "frequency-value",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["period", "oscillation"],
+      "set": {
+        "length": 2.5,
+        "gravity": 9.81,
+        "angle": 10
+      },
+      "stem": "A pendulum {length} m long swings through a small angle on Earth (g = {gravity} m/s²). What is its frequency?",
+      "explain": "T₀ = 2π√(L/g) ≈ {@smallAnglePeriod} s, so f = 1/T₀ ≈ {=1/@smallAnglePeriod} Hz. √(g/L) is the angular frequency ω in rad/s, not f; T₀ itself is the period.",
+      "vi": {
+        "stem": "Một con lắc dài {length} m dao động với góc lệch nhỏ trên Trái Đất (g = {gravity} m/s²). Tần số của nó bằng bao nhiêu?",
+        "explain": "T₀ = 2π√(L/g) ≈ {@smallAnglePeriod} s, nên f = 1/T₀ ≈ {=1/@smallAnglePeriod} Hz. √(g/L) là tần số góc ω (rad/s), không phải f; còn T₀ là chu kì."
+      },
+      "options": [
+        {
+          "text": "{=1/@smallAnglePeriod} Hz",
+          "vi": {
+            "text": "{=1/@smallAnglePeriod} Hz"
+          },
+          "correct": true,
+          "check": {
+            "expr": "1/(1/(2*pi*sqrt(length/gravity)))",
+            "equals": "smallAnglePeriod"
+          }
+        },
+        {
+          "text": "{=sqrt(gravity/length)} Hz",
+          "vi": {
+            "text": "{=sqrt(gravity/length)} Hz"
+          },
+          "check": {
+            "expr": "1/sqrt(gravity/length)",
+            "equals": "smallAnglePeriod"
+          }
+        },
+        {
+          "text": "{@smallAnglePeriod} Hz",
+          "vi": {
+            "text": "{@smallAnglePeriod} Hz"
+          },
+          "check": {
+            "expr": "1/@smallAnglePeriod",
+            "equals": "smallAnglePeriod"
+          }
+        },
+        {
+          "text": "{=sqrt(length/gravity)/(2*pi)} Hz",
+          "vi": {
+            "text": "{=sqrt(length/gravity)/(2*pi)} Hz"
+          },
+          "check": {
+            "expr": "1/(sqrt(length/gravity)/(2*pi))",
+            "equals": "smallAnglePeriod"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-jupiter",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["period", "energy", "dependence"],
+      "set": {
+        "length": 0.5,
+        "gravity": 24.79,
+        "angle": 20
+      },
+      "stem": "On Jupiter (g = {gravity} m/s²) a {mass} kg bob on a rod {length} m long is let go from rest at {angle}°. Decide whether each statement is true or false.",
+      "explain": "T₀ = 2π√(L/g) ≈ {@smallAnglePeriod} s; with the lowest point as zero, E = m·g·L(1 − cos θ₀) ≈ {@energy} J and v_max = √(2gL(1 − cos θ₀)) ≈ {@maxSpeed} m/s. Earth’s g is smaller, so there the period would be longer, not shorter.",
+      "vi": {
+        "stem": "Trên Sao Mộc (g = {gravity} m/s²), quả nặng {mass} kg gắn trên thanh dài {length} m được thả nhẹ từ góc lệch {angle}°. Mỗi nhận định sau đúng hay sai?",
+        "explain": "T₀ = 2π√(L/g) ≈ {@smallAnglePeriod} s; chọn mốc thế năng tại vị trí thấp nhất, E = m·g·L(1 − cos θ₀) ≈ {@energy} J và v_max = √(2gL(1 − cos θ₀)) ≈ {@maxSpeed} m/s. g của Trái Đất nhỏ hơn nên ở đó chu kì dài hơn chứ không ngắn hơn."
+      },
+      "statements": [
+        {
+          "text": "The small-angle period is about {@smallAnglePeriod} s.",
+          "vi": {
+            "text": "Chu kì dao động nhỏ khoảng {@smallAnglePeriod} s."
+          },
+          "true": true,
+          "check": {
+            "expr": "2*pi*sqrt(length/gravity)",
+            "equals": "smallAnglePeriod"
+          }
+        },
+        {
+          "text": "The mechanical energy is about {@energy} J.",
+          "vi": {
+            "text": "Cơ năng khoảng {@energy} J."
+          },
+          "true": true,
+          "check": {
+            "expr": "mass*gravity*length*(1-cos(rad(angle)))",
+            "equals": "energy"
+          }
+        },
+        {
+          "text": "The bob’s greatest speed is about {@maxSpeed} m/s.",
+          "vi": {
+            "text": "Tốc độ lớn nhất của quả nặng khoảng {@maxSpeed} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "sqrt(2*gravity*length*(1-cos(rad(angle))))",
+            "equals": "maxSpeed"
+          }
+        },
+        {
+          "text": "On Earth the same pendulum would have a shorter period.",
+          "vi": {
+            "text": "Trên Trái Đất, cùng con lắc đó sẽ có chu kì ngắn hơn."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "find-length",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["period"],
+      "set": {
+        "length": 1,
+        "gravity": 9.81,
+        "angle": 5
+      },
+      "stem": "On Earth (g = {gravity} m/s²) a pendulum swinging through a small angle has a period of {@smallAnglePeriod|4} s. How long is it?",
+      "explain": "T₀ = 2π√(L/g) gives L = g·T₀²/(4π²) = {gravity}·{@smallAnglePeriod|4}²/(4π²) ≈ {=gravity*@smallAnglePeriod^2/(4*pi^2)} m. Writing 2π for 4π², not squaring T₀, or putting g below gives the other values.",
+      "vi": {
+        "stem": "Trên Trái Đất (g = {gravity} m/s²), một con lắc dao động với góc lệch nhỏ có chu kì {@smallAnglePeriod|4} s. Chiều dài của nó bằng bao nhiêu?",
+        "explain": "T₀ = 2π√(L/g) cho L = g·T₀²/(4π²) = {gravity}·{@smallAnglePeriod|4}²/(4π²) ≈ {=gravity*@smallAnglePeriod^2/(4*pi^2)} m. Viết 2π thay cho 4π², không bình phương T₀, hoặc đặt g ở mẫu sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{=gravity*@smallAnglePeriod^2/(4*pi^2)} m",
+          "vi": {
+            "text": "{=gravity*@smallAnglePeriod^2/(4*pi^2)} m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2*pi*sqrt((gravity*@smallAnglePeriod^2/(4*pi^2))/gravity)",
+            "equals": "smallAnglePeriod"
+          }
+        },
+        {
+          "text": "{=gravity*@smallAnglePeriod^2/(2*pi)} m",
+          "vi": {
+            "text": "{=gravity*@smallAnglePeriod^2/(2*pi)} m"
+          },
+          "check": {
+            "expr": "2*pi*sqrt((gravity*@smallAnglePeriod^2/(2*pi))/gravity)",
+            "equals": "smallAnglePeriod"
+          }
+        },
+        {
+          "text": "{=gravity*@smallAnglePeriod/(4*pi^2)} m",
+          "vi": {
+            "text": "{=gravity*@smallAnglePeriod/(4*pi^2)} m"
+          },
+          "check": {
+            "expr": "2*pi*sqrt((gravity*@smallAnglePeriod/(4*pi^2))/gravity)",
+            "equals": "smallAnglePeriod"
+          }
+        },
+        {
+          "text": "{=@smallAnglePeriod^2/(4*pi^2*gravity)} m",
+          "vi": {
+            "text": "{=@smallAnglePeriod^2/(4*pi^2*gravity)} m"
+          },
+          "check": {
+            "expr": "2*pi*sqrt((@smallAnglePeriod^2/(4*pi^2*gravity))/gravity)",
+            "equals": "smallAnglePeriod"
+          }
+        }
+      ]
+    },
+    {
+      "id": "twice-as-many",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["dependence", "period"],
+      "set": {
+        "length": 2,
+        "gravity": 9.81,
+        "angle": 5
+      },
+      "stem": "In the same time, a pendulum {=length/4} m long makes twice as many small swings as a second pendulum at the same place. How long is the second pendulum?",
+      "explain": "Twice as many swings means half the period, so the second pendulum’s period is twice as long. T ∝ √L, so its length is 2² = 4 times as long: 4 × {=length/4} = {length} m. Twice the length forgets the square root; dividing turns the ratio over.",
+      "vi": {
+        "stem": "Trong cùng một khoảng thời gian, con lắc dài {=length/4} m thực hiện số dao động nhỏ gấp đôi con lắc thứ hai đặt cùng nơi. Con lắc thứ hai dài bao nhiêu?",
+        "explain": "Số dao động gấp đôi nghĩa là chu kì bằng một nửa, nên chu kì của con lắc thứ hai dài gấp đôi. T tỉ lệ với √L, nên chiều dài của nó gấp 2² = 4 lần: 4 × {=length/4} = {length} m. Lấy gấp đôi chiều dài là quên dấu căn; chia ra là đảo ngược tỉ số."
+      },
+      "options": [
+        {
+          "text": "{length} m",
+          "vi": {
+            "text": "{length} m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2*(2*pi*sqrt((length/4)/gravity))",
+            "equals": "smallAnglePeriod"
+          }
+        },
+        {
+          "text": "{=length/2} m",
+          "vi": {
+            "text": "{=length/2} m"
+          },
+          "check": {
+            "expr": "2*pi*sqrt((length/2)/gravity)",
+            "equals": "smallAnglePeriod"
+          }
+        },
+        {
+          "text": "{=length/16} m",
+          "vi": {
+            "text": "{=length/16} m"
+          },
+          "check": {
+            "expr": "2*pi*sqrt((length/16)/gravity)",
+            "equals": "smallAnglePeriod"
+          }
+        },
+        {
+          "text": "{=length/4*sqrt(2)|3} m",
+          "vi": {
+            "text": "{=length/4*sqrt(2)|3} m"
+          },
+          "check": {
+            "expr": "2*pi*sqrt((length/4*sqrt(2))/gravity)",
+            "equals": "smallAnglePeriod"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-45",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["large-angle", "energy"],
+      "set": {
+        "length": 2,
+        "gravity": 9.81,
+        "angle": 45
+      },
+      "stem": "A {mass} kg bob on a rod {length} m long is let go from rest at {angle}° on Earth (g = {gravity} m/s²). Decide whether each statement is true or false.",
+      "explain": "At {angle}° the exact period, {@period|4} s, is longer than T₀ = {@smallAnglePeriod|4} s. E = m·g·L(1 − cos θ₀) ≈ {@energy} J and v_max ≈ {@maxSpeed} m/s. 1 − cos θ₀ is not proportional to θ₀: from half the angle the energy is about a quarter, not a half.",
+      "vi": {
+        "stem": "Quả nặng {mass} kg gắn trên thanh dài {length} m được thả nhẹ từ góc lệch {angle}° trên Trái Đất (g = {gravity} m/s²). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Ở {angle}°, chu kì chính xác {@period|4} s dài hơn T₀ = {@smallAnglePeriod|4} s. E = m·g·L(1 − cos θ₀) ≈ {@energy} J và v_max ≈ {@maxSpeed} m/s. 1 − cos θ₀ không tỉ lệ thuận với θ₀: thả từ nửa góc đó thì cơ năng chỉ còn khoảng một phần tư chứ không phải một nửa."
+      },
+      "statements": [
+        {
+          "text": "The true period equals T₀ = {@smallAnglePeriod|4} s.",
+          "vi": {
+            "text": "Chu kì thực bằng T₀ = {@smallAnglePeriod|4} s."
+          },
+          "true": false,
+          "check": {
+            "expr": "@smallAnglePeriod",
+            "equals": "period"
+          }
+        },
+        {
+          "text": "The bob’s greatest speed is about {@maxSpeed} m/s.",
+          "vi": {
+            "text": "Tốc độ lớn nhất của quả nặng khoảng {@maxSpeed} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "sqrt(2*gravity*length*(1-cos(rad(angle))))",
+            "equals": "maxSpeed"
+          }
+        },
+        {
+          "text": "The mechanical energy is about {@energy} J.",
+          "vi": {
+            "text": "Cơ năng khoảng {@energy} J."
+          },
+          "true": true,
+          "check": {
+            "expr": "mass*gravity*length*(1-cos(rad(angle)))",
+            "equals": "energy"
+          }
+        },
+        {
+          "text": "Let go from half this angle, the bob would have half this energy.",
+          "vi": {
+            "text": "Thả từ một nửa góc này, quả nặng sẽ có cơ năng bằng một nửa."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

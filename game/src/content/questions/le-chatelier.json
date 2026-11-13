@@ -1,0 +1,1025 @@
+{
+  "id": "le-chatelier",
+  "skills": [
+    {
+      "id": "equilibrium",
+      "name": "Dynamic equilibrium",
+      "advice": "Re-read what “at equilibrium” means: both reactions still go on, at equal rates, so the amounts stop changing — they are not equal to each other. Watch the syringe settle at the station after each change.",
+      "vi": {
+        "name": "Cân bằng động",
+        "advice": "Đọc lại ý nghĩa của “trạng thái cân bằng”: cả phản ứng thuận và nghịch vẫn xảy ra với tốc độ bằng nhau, nên lượng các chất không đổi — chứ không phải bằng nhau. Quan sát xi-lanh ổn định trở lại trên trạm sau mỗi thay đổi."
+      }
+    },
+    {
+      "id": "temperature",
+      "name": "Temperature shifts the equilibrium and changes K",
+      "advice": "Write ΔH beside the forward arrow (N₂O₄ ⇌ 2NO₂, ΔH > 0). Heating favours the endothermic direction; cooling the exothermic one. Only temperature changes K — try the ice bath and the hot bath at the station.",
+      "vi": {
+        "name": "Nhiệt độ làm chuyển dịch cân bằng và thay đổi K",
+        "advice": "Ghi ΔH bên mũi tên chiều thuận (N₂O₄ ⇌ 2NO₂, ΔH > 0). Tăng nhiệt độ, cân bằng chuyển dịch theo chiều thu nhiệt; giảm nhiệt độ, theo chiều tỏa nhiệt. Chỉ nhiệt độ làm thay đổi K — thử chậu nước đá và chậu nước nóng trên trạm."
+      }
+    },
+    {
+      "id": "pressure",
+      "name": "Pressure and volume: count the gas molecules",
+      "advice": "Count the gas molecules on each side (1 N₂O₄ against 2 NO₂). Squeezing favours the side with fewer; pulling out favours the side with more. Compare the colour just after squeezing and once it has settled.",
+      "vi": {
+        "name": "Áp suất và thể tích: đếm số phân tử khí",
+        "advice": "Đếm số phân tử khí ở mỗi vế (1 N₂O₄ so với 2 NO₂). Nén khí, cân bằng chuyển dịch về phía ít phân tử khí hơn; giãn khí, về phía nhiều phân tử hơn. So sánh màu ngay sau khi nén và khi đã ổn định."
+      }
+    },
+    {
+      "id": "amounts",
+      "name": "Amounts at equilibrium",
+      "advice": "Set up the table: start n₀ of N₂O₄; x splits; at equilibrium N₂O₄ = n₀ − x and NO₂ = 2x. Then α = x/n₀ and [NO₂] = n(NO₂)/V (mmol/mL = mol/L).",
+      "vi": {
+        "name": "Tính lượng chất ở trạng thái cân bằng",
+        "advice": "Lập bảng: ban đầu n₀ mol N₂O₄; x mol phân li; ở cân bằng N₂O₄ còn n₀ − x và NO₂ là 2x. Khi đó α = x/n₀ và [NO₂] = n(NO₂)/V (mmol/mL = mol/L)."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "what-equilibrium",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["equilibrium"],
+      "stem": "The sealed syringe holds N₂O₄ ⇌ 2NO₂ at equilibrium. Which statement is true?",
+      "explain": "Equilibrium is dynamic: N₂O₄ still splits and NO₂ still pairs up, at equal rates, so the amounts stay constant without being equal.",
+      "vi": {
+        "stem": "Xi-lanh kín chứa hệ N₂O₄ ⇌ 2NO₂ ở trạng thái cân bằng. Phát biểu nào sau đây đúng?",
+        "explain": "Cân bằng hóa học là cân bằng động: N₂O₄ vẫn phân li và NO₂ vẫn kết hợp, với tốc độ bằng nhau, nên lượng các chất không đổi nhưng không nhất thiết bằng nhau."
+      },
+      "options": [
+        {
+          "text": "The forward and reverse reactions go on at equal rates",
+          "vi": {
+            "text": "Phản ứng thuận và phản ứng nghịch vẫn xảy ra với tốc độ bằng nhau"
+          },
+          "correct": true
+        },
+        {
+          "text": "Both reactions have stopped",
+          "vi": {
+            "text": "Cả hai phản ứng đã dừng lại"
+          }
+        },
+        {
+          "text": "The amounts of NO₂ and N₂O₄ are equal",
+          "vi": {
+            "text": "Số mol NO₂ và N₂O₄ bằng nhau"
+          }
+        },
+        {
+          "text": "Only NO₂ is left in the syringe",
+          "vi": {
+            "text": "Trong xi-lanh chỉ còn NO₂"
+          }
+        }
+      ]
+    },
+    {
+      "id": "colours",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["equilibrium"],
+      "stem": "What colours are the two gases?",
+      "explain": "NO₂ is reddish-brown and N₂O₄ is colourless, so the depth of the brown colour shows how much NO₂ there is.",
+      "vi": {
+        "stem": "Hai chất khí trong hệ có màu gì?",
+        "explain": "NO₂ có màu nâu đỏ, N₂O₄ không màu, nên độ đậm của màu nâu cho biết lượng NO₂ nhiều hay ít."
+      },
+      "options": [
+        {
+          "text": "NO₂ reddish-brown, N₂O₄ colourless",
+          "vi": {
+            "text": "NO₂ màu nâu đỏ, N₂O₄ không màu"
+          },
+          "correct": true
+        },
+        {
+          "text": "NO₂ colourless, N₂O₄ reddish-brown",
+          "vi": {
+            "text": "NO₂ không màu, N₂O₄ màu nâu đỏ"
+          }
+        },
+        {
+          "text": "Both reddish-brown",
+          "vi": {
+            "text": "Cả hai đều màu nâu đỏ"
+          }
+        },
+        {
+          "text": "Both colourless",
+          "vi": {
+            "text": "Cả hai đều không màu"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-basics",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["equilibrium", "temperature"],
+      "stem": "For the equilibrium N₂O₄(g) ⇌ 2NO₂(g), ΔrH° = +57.2 kJ/mol, decide whether each statement is true or false.",
+      "explain": "ΔrH° > 0: the forward reaction is endothermic. At equilibrium the amounts stay constant. A catalyst speeds both directions equally and does not shift the equilibrium. Le Chatelier: the system shifts to oppose a change.",
+      "vi": {
+        "stem": "Với cân bằng N₂O₄(g) ⇌ 2NO₂(g), ΔrH° = +57,2 kJ/mol, mỗi nhận định sau đúng hay sai?",
+        "explain": "ΔrH° > 0: phản ứng thuận thu nhiệt. Ở trạng thái cân bằng, lượng các chất không đổi. Chất xúc tác làm tăng tốc độ cả hai chiều như nhau, không làm chuyển dịch cân bằng. Nguyên lí Le Chatelier: cân bằng chuyển dịch theo chiều chống lại sự thay đổi."
+      },
+      "statements": [
+        {
+          "text": "The forward reaction, N₂O₄ → 2NO₂, is endothermic.",
+          "vi": {
+            "text": "Phản ứng thuận, N₂O₄ → 2NO₂, là phản ứng thu nhiệt."
+          },
+          "true": true
+        },
+        {
+          "text": "At equilibrium the amounts of NO₂ and N₂O₄ stay constant.",
+          "vi": {
+            "text": "Ở trạng thái cân bằng, số mol NO₂ và N₂O₄ không thay đổi."
+          },
+          "true": true
+        },
+        {
+          "text": "Adding a catalyst would shift the equilibrium towards NO₂.",
+          "vi": {
+            "text": "Thêm chất xúc tác sẽ làm cân bằng chuyển dịch về phía NO₂."
+          },
+          "true": false
+        },
+        {
+          "text": "When a condition changes, the equilibrium shifts in the direction that opposes the change.",
+          "vi": {
+            "text": "Khi một điều kiện thay đổi, cân bằng chuyển dịch theo chiều chống lại sự thay đổi đó."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "ice-bath",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["temperature"],
+      "stem": "The syringe is put into ice water at the same volume. The colour of the gas…",
+      "explain": "Cooling favours the exothermic direction, 2NO₂ → N₂O₄: less NO₂, so the brown fades.",
+      "vi": {
+        "stem": "Đặt xi-lanh vào chậu nước đá, giữ nguyên thể tích. Màu của khí trong xi-lanh",
+        "explain": "Giảm nhiệt độ, cân bằng chuyển dịch theo chiều tỏa nhiệt, 2NO₂ → N₂O₄: lượng NO₂ giảm nên màu nâu nhạt đi."
+      },
+      "options": [
+        {
+          "text": "becomes paler",
+          "vi": {
+            "text": "nhạt dần"
+          },
+          "correct": true
+        },
+        {
+          "text": "becomes darker brown",
+          "vi": {
+            "text": "đậm hơn"
+          }
+        },
+        {
+          "text": "does not change",
+          "vi": {
+            "text": "không thay đổi"
+          }
+        },
+        {
+          "text": "turns green",
+          "vi": {
+            "text": "chuyển sang màu xanh"
+          }
+        }
+      ]
+    },
+    {
+      "id": "squeeze",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["pressure"],
+      "stem": "At constant temperature the plunger is pushed in, halving the volume. Once the gas settles, the equilibrium has shifted…",
+      "explain": "A higher pressure favours the side with fewer gas molecules: one N₂O₄ against two NO₂, so towards N₂O₄. K does not change at constant temperature.",
+      "vi": {
+        "stem": "Ở nhiệt độ không đổi, đẩy pít-tông để thể tích giảm một nửa. Khi khí ổn định trở lại, cân bằng đã chuyển dịch",
+        "explain": "Áp suất tăng, cân bằng chuyển dịch về phía có ít phân tử khí hơn: một N₂O₄ so với hai NO₂, nên về phía N₂O₄. Ở nhiệt độ không đổi, K không thay đổi."
+      },
+      "options": [
+        {
+          "text": "towards N₂O₄",
+          "vi": {
+            "text": "về phía N₂O₄"
+          },
+          "correct": true
+        },
+        {
+          "text": "towards NO₂",
+          "vi": {
+            "text": "về phía NO₂"
+          }
+        },
+        {
+          "text": "not at all",
+          "vi": {
+            "text": "không chuyển dịch"
+          }
+        },
+        {
+          "text": "towards NO₂, because K grows",
+          "vi": {
+            "text": "về phía NO₂, vì K tăng"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-k",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["temperature", "pressure"],
+      "stem": "For N₂O₄(g) ⇌ 2NO₂(g), ΔrH° > 0, decide whether each statement is true or false.",
+      "explain": "For an endothermic reaction K grows with temperature, and heating shifts it towards NO₂. A change of volume shifts the equilibrium but leaves K unchanged. More gas in the same volume raises the pressure, so a smaller share of N₂O₄ splits.",
+      "vi": {
+        "stem": "Với cân bằng N₂O₄(g) ⇌ 2NO₂(g), ΔrH° > 0, mỗi nhận định sau đúng hay sai?",
+        "explain": "Với phản ứng thu nhiệt, K tăng khi nhiệt độ tăng, và tăng nhiệt độ làm cân bằng chuyển dịch về phía NO₂. Thay đổi thể tích làm cân bằng chuyển dịch nhưng không làm thay đổi K. Thêm khí vào cùng thể tích làm áp suất tăng, nên phần N₂O₄ phân li nhỏ hơn."
+      },
+      "statements": [
+        {
+          "text": "Heating increases the equilibrium constant.",
+          "vi": {
+            "text": "Tăng nhiệt độ làm hằng số cân bằng tăng."
+          },
+          "true": true
+        },
+        {
+          "text": "Squeezing the gas changes the equilibrium constant.",
+          "vi": {
+            "text": "Nén khí làm hằng số cân bằng thay đổi."
+          },
+          "true": false
+        },
+        {
+          "text": "Heating shifts the equilibrium towards NO₂.",
+          "vi": {
+            "text": "Tăng nhiệt độ làm cân bằng chuyển dịch về phía NO₂."
+          },
+          "true": true
+        },
+        {
+          "text": "With more gas in the same volume and temperature, a smaller share of the N₂O₄ dissociates.",
+          "vi": {
+            "text": "Với nhiều khí hơn trong cùng thể tích và nhiệt độ, phần N₂O₄ bị phân li nhỏ hơn."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "no2-concentration",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["amounts"],
+      "set": {
+        "endTemperature": 80,
+        "endVolume": 40
+      },
+      "stem": "At {endTemperature} °C the {endVolume} mL syringe holds {@no2|3} mmol of NO₂ at equilibrium. What is [NO₂]?",
+      "explain": "[NO₂] = n/V = {@no2|3} mmol/{endVolume} mL ≈ {@no2Concentration} mol/L (mmol per mL is mol per L).",
+      "vi": {
+        "stem": "Ở {endTemperature} °C, xi-lanh {endVolume} mL chứa {@no2|3} mmol NO₂ ở trạng thái cân bằng. Nồng độ [NO₂] là bao nhiêu?",
+        "explain": "[NO₂] = n/V = {@no2|3} mmol/{endVolume} mL ≈ {@no2Concentration} mol/L (mmol/mL bằng mol/L)."
+      },
+      "options": [
+        {
+          "text": "{@no2Concentration} mol/L",
+          "vi": {
+            "text": "{@no2Concentration} mol/L"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@no2/endVolume",
+            "equals": "no2Concentration"
+          }
+        },
+        {
+          "text": "{=@no2/endVolume/1000} mol/L",
+          "vi": {
+            "text": "{=@no2/endVolume/1000} mol/L"
+          },
+          "check": {
+            "expr": "@no2/endVolume/1000",
+            "equals": "no2Concentration"
+          }
+        },
+        {
+          "text": "{=@no2*1000/endVolume} mol/L",
+          "vi": {
+            "text": "{=@no2*1000/endVolume} mol/L"
+          },
+          "check": {
+            "expr": "@no2*1000/endVolume",
+            "equals": "no2Concentration"
+          }
+        },
+        {
+          "text": "{=@no2/(2*endVolume)} mol/L",
+          "vi": {
+            "text": "{=@no2/(2*endVolume)} mol/L"
+          },
+          "check": {
+            "expr": "@no2/(2*endVolume)",
+            "equals": "no2Concentration"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dissociation",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["amounts"],
+      "set": {
+        "endTemperature": 0
+      },
+      "stem": "The syringe holds n₀ = {=amount*1000} mmol counted as N₂O₄. In the ice bath ({endTemperature} °C) it settles with {@no2|3} mmol of NO₂. What share of the N₂O₄ is dissociated?",
+      "explain": "Each N₂O₄ that splits gives two NO₂: x = {@no2|3}/2 ≈ {=@no2/2|3} mmol, so α = x/n₀ ≈ {@dissociation}%.",
+      "vi": {
+        "stem": "Xi-lanh chứa n₀ = {=amount*1000} mmol khí tính theo N₂O₄. Trong chậu nước đá ({endTemperature} °C), hệ cân bằng với {@no2|3} mmol NO₂. Phần trăm N₂O₄ đã phân li là bao nhiêu?",
+        "explain": "Mỗi phân tử N₂O₄ phân li tạo hai phân tử NO₂: x = {@no2|3}/2 ≈ {=@no2/2|3} mmol, nên α = x/n₀ ≈ {@dissociation}%."
+      },
+      "options": [
+        {
+          "text": "{@dissociation}%",
+          "vi": {
+            "text": "{@dissociation}%"
+          },
+          "correct": true,
+          "check": {
+            "expr": "100*@no2/2/(amount*1000)",
+            "equals": "dissociation"
+          }
+        },
+        {
+          "text": "{=100*@no2/(amount*1000)}%",
+          "vi": {
+            "text": "{=100*@no2/(amount*1000)}%"
+          },
+          "check": {
+            "expr": "100*@no2/(amount*1000)",
+            "equals": "dissociation"
+          }
+        },
+        {
+          "text": "{=100*@n2o4/(amount*1000)}%",
+          "vi": {
+            "text": "{=100*@n2o4/(amount*1000)}%"
+          },
+          "check": {
+            "expr": "100*@n2o4/(amount*1000)",
+            "equals": "dissociation"
+          }
+        },
+        {
+          "text": "{=100*@no2/(@no2+@n2o4)}%",
+          "vi": {
+            "text": "{=100*@no2/(@no2+@n2o4)}%"
+          },
+          "check": {
+            "expr": "100*@no2/(@no2+@n2o4)",
+            "equals": "dissociation"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-room",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["amounts", "equilibrium"],
+      "set": {
+        "endTemperature": 25,
+        "endVolume": 40
+      },
+      "stem": "The syringe holds n₀ = {=amount*1000} mmol counted as N₂O₄ at {endTemperature} °C in {endVolume} mL; at equilibrium n(NO₂) = {@no2|3} mmol. Kp = e^(−ΔrG°/RT) with ΔrG° = +4.73 kJ/mol. Decide whether each statement is true or false.",
+      "explain": "Kp = e^(−4730/(8.314·298.15)) ≈ {@kp}, less than 1. n(N₂O₄) = n₀ − n(NO₂)/2 ≈ {@n2o4|3} mmol, and α = (n(NO₂)/2)/n₀ ≈ {@dissociation}%.",
+      "vi": {
+        "stem": "Xi-lanh chứa n₀ = {=amount*1000} mmol khí tính theo N₂O₄ ở {endTemperature} °C trong {endVolume} mL; ở cân bằng n(NO₂) = {@no2|3} mmol. Kp = e^(−ΔrG°/RT) với ΔrG° = +4,73 kJ/mol. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Kp = e^(−4730/(8,314·298,15)) ≈ {@kp}, nhỏ hơn 1. n(N₂O₄) = n₀ − n(NO₂)/2 ≈ {@n2o4|3} mmol, và α = (n(NO₂)/2)/n₀ ≈ {@dissociation}%."
+      },
+      "statements": [
+        {
+          "text": "Kp is about {@kp}.",
+          "vi": {
+            "text": "Kp khoảng {@kp}."
+          },
+          "true": true,
+          "check": {
+            "expr": "exp(-4730/(8.314462618*298.15))",
+            "equals": "kp"
+          }
+        },
+        {
+          "text": "Kp is greater than 1.",
+          "vi": {
+            "text": "Kp lớn hơn 1."
+          },
+          "true": false
+        },
+        {
+          "text": "At equilibrium there is {=amount*1000-@no2/2|3} mmol of N₂O₄.",
+          "vi": {
+            "text": "Ở cân bằng có {=amount*1000-@no2/2|3} mmol N₂O₄."
+          },
+          "true": true,
+          "check": {
+            "expr": "amount*1000-@no2/2",
+            "equals": "n2o4"
+          }
+        },
+        {
+          "text": "About {@dissociation}% of the N₂O₄ is dissociated.",
+          "vi": {
+            "text": "Khoảng {@dissociation}% N₂O₄ đã phân li."
+          },
+          "true": true,
+          "check": {
+            "expr": "100*@no2/2/(amount*1000)",
+            "equals": "dissociation"
+          }
+        }
+      ]
+    },
+    {
+      "id": "n2o4-left",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["amounts"],
+      "set": {
+        "endTemperature": 0
+      },
+      "stem": "The syringe holds n₀ = {=amount*1000} mmol counted as N₂O₄. At {endTemperature} °C it settles with {@no2|3} mmol of NO₂. How much N₂O₄ is there at equilibrium?",
+      "explain": "N₂O₄ → 2NO₂: making {@no2|3} mmol of NO₂ used half as much N₂O₄. n(N₂O₄) = {=amount*1000} − {@no2|3}/2 ≈ {@n2o4|3} mmol.",
+      "vi": {
+        "stem": "Xi-lanh chứa n₀ = {=amount*1000} mmol khí tính theo N₂O₄. Ở {endTemperature} °C, hệ cân bằng với {@no2|3} mmol NO₂. Lượng N₂O₄ ở trạng thái cân bằng là bao nhiêu?",
+        "explain": "N₂O₄ → 2NO₂: tạo ra {@no2|3} mmol NO₂ cần lượng N₂O₄ bằng một nửa. n(N₂O₄) = {=amount*1000} − {@no2|3}/2 ≈ {@n2o4|3} mmol."
+      },
+      "options": [
+        {
+          "text": "{@n2o4|3} mmol",
+          "vi": {
+            "text": "{@n2o4|3} mmol"
+          },
+          "correct": true,
+          "check": {
+            "expr": "amount*1000-@no2/2",
+            "equals": "n2o4"
+          }
+        },
+        {
+          "text": "{=amount*1000-@no2|3} mmol",
+          "vi": {
+            "text": "{=amount*1000-@no2|3} mmol"
+          },
+          "check": {
+            "expr": "amount*1000-@no2",
+            "equals": "n2o4"
+          }
+        },
+        {
+          "text": "{=amount*1000-2*@no2|3} mmol",
+          "vi": {
+            "text": "{=amount*1000-2*@no2|3} mmol"
+          },
+          "check": {
+            "expr": "amount*1000-2*@no2",
+            "equals": "n2o4"
+          }
+        },
+        {
+          "text": "{=@no2/2|3} mmol",
+          "vi": {
+            "text": "{=@no2/2|3} mmol"
+          },
+          "check": {
+            "expr": "@no2/2",
+            "equals": "n2o4"
+          }
+        }
+      ]
+    },
+    {
+      "id": "kp-hot",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["temperature"],
+      "set": {
+        "endTemperature": 80
+      },
+      "stem": "At 25 °C, Kp = {=exp(-4730/(8.314462618*298.15))|4} for N₂O₄ ⇌ 2NO₂, with ΔrH° = +57.2 kJ/mol taken as constant. By the van ’t Hoff equation, ln(K₂/K₁) = −(ΔH°/R)·(1/T₂ − 1/T₁), what is Kp at {endTemperature} °C?",
+      "explain": "In kelvin and J/mol: ln(K₂/K₁) = −(57200/8.314)·(1/{=endTemperature+273.15|5} − 1/298.15) ≈ {=-(57200/8.314462618)*(1/(endTemperature+273.15)-1/298.15)|3}, so Kp ≈ {@kp}: larger, as the reaction is endothermic.",
+      "vi": {
+        "stem": "Ở 25 °C, cân bằng N₂O₄ ⇌ 2NO₂ có Kp = {=exp(-4730/(8.314462618*298.15))|4}, với ΔrH° = +57,2 kJ/mol coi như không đổi. Theo phương trình van ’t Hoff, ln(K₂/K₁) = −(ΔH°/R)·(1/T₂ − 1/T₁), Kp ở {endTemperature} °C là bao nhiêu?",
+        "explain": "Dùng kelvin và J/mol: ln(K₂/K₁) = −(57200/8,314)·(1/{=endTemperature+273.15|5} − 1/298,15) ≈ {=-(57200/8.314462618)*(1/(endTemperature+273.15)-1/298.15)|3}, nên Kp ≈ {@kp}: lớn hơn, vì phản ứng thu nhiệt."
+      },
+      "options": [
+        {
+          "text": "{@kp}",
+          "vi": {
+            "text": "{@kp}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "exp(-4730/(8.314462618*298.15))*exp(-(57200/8.314462618)*(1/(endTemperature+273.15)-1/298.15))",
+            "equals": "kp"
+          }
+        },
+        {
+          "text": "{=exp(-4730/(8.314462618*298.15))*exp((57200/8.314462618)*(1/(endTemperature+273.15)-1/298.15))}",
+          "vi": {
+            "text": "{=exp(-4730/(8.314462618*298.15))*exp((57200/8.314462618)*(1/(endTemperature+273.15)-1/298.15))}"
+          },
+          "check": {
+            "expr": "exp(-4730/(8.314462618*298.15))*exp((57200/8.314462618)*(1/(endTemperature+273.15)-1/298.15))",
+            "equals": "kp"
+          }
+        },
+        {
+          "text": "{=exp(-4730/(8.314462618*298.15))*exp(-(57.2/8.314462618)*(1/(endTemperature+273.15)-1/298.15))|4}",
+          "vi": {
+            "text": "{=exp(-4730/(8.314462618*298.15))*exp(-(57.2/8.314462618)*(1/(endTemperature+273.15)-1/298.15))|4}"
+          },
+          "check": {
+            "expr": "exp(-4730/(8.314462618*298.15))*exp(-(57.2/8.314462618)*(1/(endTemperature+273.15)-1/298.15))",
+            "equals": "kp"
+          }
+        },
+        {
+          "text": "{=exp(-4730/(8.314462618*298.15))|4}",
+          "vi": {
+            "text": "{=exp(-4730/(8.314462618*298.15))|4}"
+          },
+          "check": {
+            "expr": "exp(-4730/(8.314462618*298.15))",
+            "equals": "kp"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-squeezed",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["pressure", "amounts", "equilibrium"],
+      "set": {
+        "endTemperature": 25,
+        "endVolume": 20
+      },
+      "stem": "At {endTemperature} °C the syringe (n₀ = {=amount*1000} mmol as N₂O₄) is squeezed from 40 mL, where n(NO₂) was 0.433 mmol, [NO₂] 0.0108 mol/L and p 75.4 kPa, to {endVolume} mL. At the new equilibrium n(NO₂) = {@no2|3} mmol. Decide whether each statement is true or false.",
+      "explain": "The shift towards N₂O₄ lowers n(NO₂) from 0.433 to {@no2|3} mmol, but in half the volume [NO₂] = {@no2|3}/{endVolume} ≈ {@no2Concentration} mol/L is still higher: the gas ends darker than before. Fewer molecules: p = {@pressure} kPa, less than twice 75.4 kPa. K does not depend on the volume: Kp = {@kp}.",
+      "vi": {
+        "stem": "Ở {endTemperature} °C, xi-lanh (n₀ = {=amount*1000} mmol tính theo N₂O₄) được nén từ 40 mL, khi đó n(NO₂) = 0,433 mmol, [NO₂] = 0,0108 mol/L và p = 75,4 kPa, xuống {endVolume} mL. Ở cân bằng mới n(NO₂) = {@no2|3} mmol. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Cân bằng chuyển dịch về phía N₂O₄ làm n(NO₂) giảm từ 0,433 xuống {@no2|3} mmol, nhưng trong một nửa thể tích, [NO₂] = {@no2|3}/{endVolume} ≈ {@no2Concentration} mol/L vẫn cao hơn: khí cuối cùng đậm màu hơn lúc đầu. Số phân tử khí giảm: p = {@pressure} kPa, nhỏ hơn hai lần 75,4 kPa. K không phụ thuộc thể tích: Kp = {@kp}."
+      },
+      "statements": [
+        {
+          "text": "At the new equilibrium [NO₂] is about {@no2Concentration} mol/L, so the gas ends darker than before the squeeze.",
+          "vi": {
+            "text": "Ở cân bằng mới, [NO₂] khoảng {@no2Concentration} mol/L, nên khí cuối cùng có màu đậm hơn trước khi nén."
+          },
+          "true": true,
+          "check": {
+            "expr": "@no2/endVolume",
+            "equals": "no2Concentration"
+          }
+        },
+        {
+          "text": "There is less NO₂ (in mmol) than before the squeeze.",
+          "vi": {
+            "text": "Số mmol NO₂ ít hơn so với trước khi nén."
+          },
+          "true": true
+        },
+        {
+          "text": "The pressure becomes exactly twice the 75.4 kPa it had at 40 mL.",
+          "vi": {
+            "text": "Áp suất tăng đúng gấp đôi so với 75,4 kPa lúc ở 40 mL."
+          },
+          "true": false,
+          "check": {
+            "expr": "2*75.39391458881178",
+            "equals": "pressure"
+          }
+        },
+        {
+          "text": "Kp is the same as before the squeeze.",
+          "vi": {
+            "text": "Kp không đổi so với trước khi nén."
+          },
+          "true": true,
+          "check": {
+            "expr": "exp(-4730/(8.314462618*298.15))",
+            "equals": "kp"
+          }
+        }
+      ]
+    },
+    {
+      "id": "principle",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["equilibrium"],
+      "stem": "By Le Chatelier's principle, when a system at equilibrium is disturbed (concentration, pressure or temperature changed), the equilibrium shifts in the direction that…",
+      "explain": "The shift opposes (reduces the effect of) the change: heating favours the endothermic direction, squeezing favours fewer gas molecules, adding a substance favours using it up.",
+      "vi": {
+        "stem": "Theo nguyên lí Le Chatelier, khi một hệ đang ở trạng thái cân bằng chịu một tác động (thay đổi nồng độ, áp suất hoặc nhiệt độ), cân bằng sẽ chuyển dịch theo chiều",
+        "explain": "Cân bằng chuyển dịch theo chiều làm giảm tác động đó: tăng nhiệt độ thì cân bằng chuyển theo chiều thu nhiệt, tăng áp suất thì chuyển theo chiều giảm số phân tử khí, thêm một chất thì chuyển theo chiều làm giảm chất đó."
+      },
+      "options": [
+        {
+          "text": "reduces the effect of the change",
+          "vi": {
+            "text": "làm giảm tác động bên ngoài đó"
+          },
+          "correct": true
+        },
+        {
+          "text": "increases the effect of the change",
+          "vi": {
+            "text": "làm tăng tác động bên ngoài đó"
+          }
+        },
+        {
+          "text": "always forms more products",
+          "vi": {
+            "text": "luôn tạo thêm sản phẩm"
+          }
+        },
+        {
+          "text": "stops both reactions",
+          "vi": {
+            "text": "làm dừng cả phản ứng thuận và phản ứng nghịch"
+          }
+        }
+      ]
+    },
+    {
+      "id": "catalyst",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["equilibrium"],
+      "stem": "A catalyst is added to a reaction mixture at equilibrium, at constant temperature. What happens?",
+      "explain": "A catalyst speeds up the forward and reverse reactions equally: the mixture reaches equilibrium sooner, but the position of equilibrium and K do not change.",
+      "vi": {
+        "stem": "Thêm chất xúc tác vào một hỗn hợp phản ứng đang ở trạng thái cân bằng, nhiệt độ không đổi. Điều gì xảy ra?",
+        "explain": "Chất xúc tác làm tăng tốc độ phản ứng thuận và phản ứng nghịch như nhau: hệ đạt cân bằng nhanh hơn, nhưng vị trí cân bằng và hằng số K không đổi."
+      },
+      "options": [
+        {
+          "text": "The equilibrium does not shift; it is only reached faster",
+          "vi": {
+            "text": "Cân bằng không chuyển dịch; chỉ đạt được nhanh hơn"
+          },
+          "correct": true
+        },
+        {
+          "text": "The equilibrium shifts towards the products",
+          "vi": {
+            "text": "Cân bằng chuyển dịch theo chiều tạo sản phẩm"
+          }
+        },
+        {
+          "text": "The equilibrium constant increases",
+          "vi": {
+            "text": "Hằng số cân bằng tăng"
+          }
+        },
+        {
+          "text": "Only the forward reaction speeds up",
+          "vi": {
+            "text": "Chỉ phản ứng thuận nhanh hơn"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-pull-out",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["pressure", "equilibrium"],
+      "stem": "At constant temperature the plunger of the syringe holding N₂O₄(g) ⇌ 2NO₂(g) is pulled out, doubling the volume. Decide whether each statement is true or false.",
+      "explain": "A larger volume lowers the pressure, so the equilibrium shifts towards more gas molecules: towards NO₂. Kp depends on temperature only, so it is unchanged. Straight after pulling, every concentration halves and the colour gets paler; the shift only partly darkens it again. The total pressure falls.",
+      "vi": {
+        "stem": "Ở nhiệt độ không đổi, kéo pít-tông của xi lanh chứa cân bằng N₂O₄(g) ⇌ 2NO₂(g) để thể tích tăng gấp đôi. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Thể tích lớn hơn làm giảm áp suất, nên cân bằng chuyển dịch theo chiều tăng số phân tử khí: chiều tạo NO₂. Kp chỉ phụ thuộc nhiệt độ nên không đổi. Ngay sau khi kéo, mọi nồng độ giảm một nửa và màu nhạt đi; sự chuyển dịch chỉ làm màu đậm lại một phần. Áp suất chung giảm."
+      },
+      "statements": [
+        {
+          "text": "The equilibrium shifts towards NO₂.",
+          "vi": {
+            "text": "Cân bằng chuyển dịch theo chiều tạo NO₂."
+          },
+          "true": true
+        },
+        {
+          "text": "Kp stays the same.",
+          "vi": {
+            "text": "Kp không đổi."
+          },
+          "true": true
+        },
+        {
+          "text": "The colour gets deeper straight after the plunger is pulled out.",
+          "vi": {
+            "text": "Ngay sau khi kéo pít-tông, màu khí đậm hơn."
+          },
+          "true": false
+        },
+        {
+          "text": "The total pressure in the syringe rises.",
+          "vi": {
+            "text": "Áp suất chung trong xi lanh tăng."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "pressure",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["amounts", "pressure"],
+      "set": {
+        "endTemperature": 25,
+        "endVolume": 80
+      },
+      "stem": "At {endTemperature} °C the {endVolume} mL syringe holds {@no2|3} mmol of NO₂ and {@n2o4|3} mmol of N₂O₄ at equilibrium. What is the total pressure? (R = 8.314 J/(mol·K))",
+      "explain": "Count every gas molecule: n = {@no2|3} + {@n2o4|3} = {=@no2+@n2o4|3} mmol. p = nRT/V = {=(@no2+@n2o4)/1000|3} mol·8.314·{=endTemperature+273.15} K/({endVolume}·10⁻⁶ m³) ≈ {@pressure} kPa. T in kelvin, V in m³.",
+      "vi": {
+        "stem": "Ở {endTemperature} °C, xi lanh {endVolume} mL chứa {@no2|3} mmol NO₂ và {@n2o4|3} mmol N₂O₄ ở trạng thái cân bằng. Áp suất chung là bao nhiêu? (R = 8,314 J/(mol·K))",
+        "explain": "Tính tất cả các phân tử khí: n = {@no2|3} + {@n2o4|3} = {=@no2+@n2o4|3} mmol. p = nRT/V = {=(@no2+@n2o4)/1000|3} mol·8,314·{=endTemperature+273.15} K/({endVolume}·10⁻⁶ m³) ≈ {@pressure} kPa. T tính bằng kelvin, V tính bằng m³."
+      },
+      "options": [
+        {
+          "text": "{=(@no2+@n2o4)/1000*8.314462618*(endTemperature+273.15)/(endVolume*1e-6)/1000} kPa",
+          "vi": {
+            "text": "{=(@no2+@n2o4)/1000*8.314462618*(endTemperature+273.15)/(endVolume*1e-6)/1000} kPa"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(@no2+@n2o4)/1000*8.314462618*(endTemperature+273.15)/(endVolume*1e-6)/1000",
+            "equals": "pressure"
+          }
+        },
+        {
+          "text": "{=@no2/1000*8.314462618*(endTemperature+273.15)/(endVolume*1e-6)/1000} kPa",
+          "vi": {
+            "text": "{=@no2/1000*8.314462618*(endTemperature+273.15)/(endVolume*1e-6)/1000} kPa"
+          },
+          "check": {
+            "expr": "@no2/1000*8.314462618*(endTemperature+273.15)/(endVolume*1e-6)/1000",
+            "equals": "pressure"
+          }
+        },
+        {
+          "text": "{=(@no2+@n2o4)/1000*8.314462618*endTemperature/(endVolume*1e-6)/1000} kPa",
+          "vi": {
+            "text": "{=(@no2+@n2o4)/1000*8.314462618*endTemperature/(endVolume*1e-6)/1000} kPa"
+          },
+          "check": {
+            "expr": "(@no2+@n2o4)/1000*8.314462618*endTemperature/(endVolume*1e-6)/1000",
+            "equals": "pressure"
+          }
+        },
+        {
+          "text": "{=(@no2+@n2o4)/1000*8.314462618*(endTemperature+273.15)/(endVolume*1e-3)/1000} kPa",
+          "vi": {
+            "text": "{=(@no2+@n2o4)/1000*8.314462618*(endTemperature+273.15)/(endVolume*1e-3)/1000} kPa"
+          },
+          "check": {
+            "expr": "(@no2+@n2o4)/1000*8.314462618*(endTemperature+273.15)/(endVolume*1e-3)/1000",
+            "equals": "pressure"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-warm",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["amounts"],
+      "set": {
+        "endTemperature": 50,
+        "endVolume": 40
+      },
+      "stem": "The syringe holds n₀ = {=amount*1000} mmol counted as N₂O₄. At {endTemperature} °C in {endVolume} mL it settles with {@no2|3} mmol of NO₂. Decide whether each statement is true or false.",
+      "explain": "Each N₂O₄ that dissociates gives 2 NO₂: n(N₂O₄) = n₀ − n(NO₂)/2 = {=amount*1000} − {=@no2/2|3} = {@n2o4|3} mmol, and α = (n(NO₂)/2)/n₀ = {@dissociation}%. [NO₂] = n/V = {@no2|3} mmol/{endVolume} mL = {@no2Concentration} mol/L (mmol/mL is mol/L). Forgetting the /2 doubles α.",
+      "vi": {
+        "stem": "Xi lanh chứa n₀ = {=amount*1000} mmol (tính theo N₂O₄). Ở {endTemperature} °C, thể tích {endVolume} mL, hệ đạt cân bằng với {@no2|3} mmol NO₂. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Mỗi phân tử N₂O₄ phân li tạo 2 NO₂: n(N₂O₄) = n₀ − n(NO₂)/2 = {=amount*1000} − {=@no2/2|3} = {@n2o4|3} mmol, và α = (n(NO₂)/2)/n₀ = {@dissociation}%. [NO₂] = n/V = {@no2|3} mmol/{endVolume} mL = {@no2Concentration} mol/L (mmol/mL chính là mol/L). Quên chia 2 sẽ làm α gấp đôi."
+      },
+      "statements": [
+        {
+          "text": "There is {=amount*1000-@no2/2|3} mmol of N₂O₄ at equilibrium.",
+          "vi": {
+            "text": "Ở trạng thái cân bằng có {=amount*1000-@no2/2|3} mmol N₂O₄."
+          },
+          "true": true,
+          "check": {
+            "expr": "amount*1000-@no2/2",
+            "equals": "n2o4"
+          }
+        },
+        {
+          "text": "{=100*@no2/2/(amount*1000)}% of the N₂O₄ is dissociated.",
+          "vi": {
+            "text": "Có {=100*@no2/2/(amount*1000)}% N₂O₄ đã phân li."
+          },
+          "true": true,
+          "check": {
+            "expr": "100*@no2/2/(amount*1000)",
+            "equals": "dissociation"
+          }
+        },
+        {
+          "text": "[NO₂] = {=1000*@no2/endVolume} mol/L.",
+          "vi": {
+            "text": "[NO₂] = {=1000*@no2/endVolume} mol/L."
+          },
+          "true": false,
+          "check": {
+            "expr": "1000*@no2/endVolume",
+            "equals": "no2Concentration"
+          }
+        },
+        {
+          "text": "{=100*@no2/(amount*1000)}% of the N₂O₄ is dissociated.",
+          "vi": {
+            "text": "Có {=100*@no2/(amount*1000)}% N₂O₄ đã phân li."
+          },
+          "true": false,
+          "check": {
+            "expr": "100*@no2/(amount*1000)",
+            "equals": "dissociation"
+          }
+        }
+      ]
+    },
+    {
+      "id": "kp-from-amounts",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["amounts", "equilibrium"],
+      "set": {
+        "endTemperature": 50,
+        "endVolume": 40
+      },
+      "stem": "At {endTemperature} °C the {endVolume} mL syringe holds {@no2|4} mmol of NO₂ and {@n2o4|4} mmol of N₂O₄ at equilibrium. What is Kp = (p(NO₂)/p°)²/(p(N₂O₄)/p°), with p° = 100 kPa? (R = 8.314 J/(mol·K))",
+      "explain": "Partial pressures p = nRT/V: p(NO₂) = {=@no2/1000*8.314462618*(endTemperature+273.15)/(endVolume*1e-6)/1000} kPa, p(N₂O₄) = {=@n2o4/1000*8.314462618*(endTemperature+273.15)/(endVolume*1e-6)/1000} kPa. Kp = ({=@no2/1000*8.314462618*(endTemperature+273.15)/(endVolume*1e-6)/1e5})²/{=@n2o4/1000*8.314462618*(endTemperature+273.15)/(endVolume*1e-6)/1e5} ≈ {@kp}. Leaving out the square, or using concentrations in mol/L (that is Kc), gives other numbers.",
+      "vi": {
+        "stem": "Ở {endTemperature} °C, xi lanh {endVolume} mL chứa {@no2|4} mmol NO₂ và {@n2o4|4} mmol N₂O₄ ở trạng thái cân bằng. Kp = (p(NO₂)/p°)²/(p(N₂O₄)/p°), với p° = 100 kPa, bằng bao nhiêu? (R = 8,314 J/(mol·K))",
+        "explain": "Áp suất riêng phần p = nRT/V: p(NO₂) = {=@no2/1000*8.314462618*(endTemperature+273.15)/(endVolume*1e-6)/1000} kPa, p(N₂O₄) = {=@n2o4/1000*8.314462618*(endTemperature+273.15)/(endVolume*1e-6)/1000} kPa. Kp = ({=@no2/1000*8.314462618*(endTemperature+273.15)/(endVolume*1e-6)/1e5})²/{=@n2o4/1000*8.314462618*(endTemperature+273.15)/(endVolume*1e-6)/1e5} ≈ {@kp}. Bỏ quên bình phương, hoặc dùng nồng độ mol/L (tức Kc), sẽ cho các giá trị khác."
+      },
+      "options": [
+        {
+          "text": "{=(@no2/1000*8.314462618*(endTemperature+273.15)/(endVolume*1e-6)/1e5)^2/(@n2o4/1000*8.314462618*(endTemperature+273.15)/(endVolume*1e-6)/1e5)}",
+          "vi": {
+            "text": "{=(@no2/1000*8.314462618*(endTemperature+273.15)/(endVolume*1e-6)/1e5)^2/(@n2o4/1000*8.314462618*(endTemperature+273.15)/(endVolume*1e-6)/1e5)}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(@no2/1000*8.314462618*(endTemperature+273.15)/(endVolume*1e-6)/1e5)^2/(@n2o4/1000*8.314462618*(endTemperature+273.15)/(endVolume*1e-6)/1e5)",
+            "equals": "kp"
+          }
+        },
+        {
+          "text": "{=@no2/@n2o4}",
+          "vi": {
+            "text": "{=@no2/@n2o4}"
+          },
+          "check": {
+            "expr": "@no2/@n2o4",
+            "equals": "kp"
+          }
+        },
+        {
+          "text": "{=(@no2/endVolume)^2/(@n2o4/endVolume)}",
+          "vi": {
+            "text": "{=(@no2/endVolume)^2/(@n2o4/endVolume)}"
+          },
+          "check": {
+            "expr": "(@no2/endVolume)^2/(@n2o4/endVolume)",
+            "equals": "kp"
+          }
+        },
+        {
+          "text": "{=(@no2/1000*8.314462618*(endTemperature+273.15)/(endVolume*1e-6)/1e3)^2/(@n2o4/1000*8.314462618*(endTemperature+273.15)/(endVolume*1e-6)/1e3)}",
+          "vi": {
+            "text": "{=(@no2/1000*8.314462618*(endTemperature+273.15)/(endVolume*1e-6)/1e3)^2/(@n2o4/1000*8.314462618*(endTemperature+273.15)/(endVolume*1e-6)/1e3)}"
+          },
+          "check": {
+            "expr": "(@no2/1000*8.314462618*(endTemperature+273.15)/(endVolume*1e-6)/1e3)^2/(@n2o4/1000*8.314462618*(endTemperature+273.15)/(endVolume*1e-6)/1e3)",
+            "equals": "kp"
+          }
+        }
+      ]
+    },
+    {
+      "id": "darkest",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["temperature", "pressure"],
+      "set": {
+        "endTemperature": 80,
+        "endVolume": 20
+      },
+      "stem": "The same syringe of N₂O₄ ⇌ 2NO₂ (ΔrH° > 0) is brought to four different settings. In which is the gas the deepest brown, that is, [NO₂] the highest?",
+      "explain": "Heating shifts the endothermic equilibrium towards NO₂. Squeezing shifts it back towards N₂O₄, but only partly: [NO₂] still rises, since the same gas is packed into a smaller volume. Hot and squeezed together gives the highest [NO₂], {@no2Concentration} mol/L here. At 80 mL there are more NO₂ molecules, but they are spread out.",
+      "vi": {
+        "stem": "Cùng một xi lanh chứa cân bằng N₂O₄ ⇌ 2NO₂ (ΔrH° > 0) được đưa về bốn điều kiện khác nhau. Ở điều kiện nào khí có màu nâu đậm nhất, tức [NO₂] lớn nhất?",
+        "explain": "Tăng nhiệt độ làm cân bằng thu nhiệt chuyển dịch theo chiều tạo NO₂. Nén khí làm cân bằng chuyển về phía N₂O₄, nhưng chỉ một phần: [NO₂] vẫn tăng vì cùng lượng khí bị dồn vào thể tích nhỏ hơn. Vừa nóng vừa nén cho [NO₂] lớn nhất, ở đây là {@no2Concentration} mol/L. Ở 80 mL có nhiều phân tử NO₂ hơn, nhưng chúng phân tán trong thể tích lớn."
+      },
+      "options": [
+        {
+          "text": "80 °C, 20 mL",
+          "vi": {
+            "text": "80 °C, 20 mL"
+          },
+          "correct": true
+        },
+        {
+          "text": "80 °C, 80 mL",
+          "vi": {
+            "text": "80 °C, 80 mL"
+          }
+        },
+        {
+          "text": "0 °C, 20 mL",
+          "vi": {
+            "text": "0 °C, 20 mL"
+          }
+        },
+        {
+          "text": "25 °C, 40 mL",
+          "vi": {
+            "text": "25 °C, 40 mL"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-hot-wide",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["temperature", "pressure", "amounts"],
+      "set": {
+        "endTemperature": 80,
+        "endVolume": 80
+      },
+      "stem": "The syringe (n₀ = {=amount*1000} mmol as N₂O₄) is taken from 25 °C and 40 mL, where n(NO₂) = 0.433 mmol, to {endTemperature} °C and {endVolume} mL. At the new equilibrium n(NO₂) = {@no2|3} mmol. Decide whether each statement is true or false.",
+      "explain": "Both heating (endothermic forward reaction) and the larger volume (more gas molecules) favour NO₂, so n(NO₂) rises from 0.433 to {@no2|3} mmol and α to {@dissociation}%. [NO₂] = {@no2|3}/{endVolume} = {@no2Concentration} mol/L. Kp depends on temperature only: at 80 °C it is the same at 20 mL as at 80 mL.",
+      "vi": {
+        "stem": "Xi lanh (n₀ = {=amount*1000} mmol tính theo N₂O₄) được chuyển từ 25 °C và 40 mL, khi đó n(NO₂) = 0,433 mmol, sang {endTemperature} °C và {endVolume} mL. Ở cân bằng mới n(NO₂) = {@no2|3} mmol. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Cả việc tăng nhiệt độ (phản ứng thuận thu nhiệt) và tăng thể tích (chiều tăng số phân tử khí) đều có lợi cho NO₂, nên n(NO₂) tăng từ 0,433 lên {@no2|3} mmol và α tăng lên {@dissociation}%. [NO₂] = {@no2|3}/{endVolume} = {@no2Concentration} mol/L. Kp chỉ phụ thuộc nhiệt độ: ở 80 °C, Kp tại 20 mL và tại 80 mL là như nhau."
+      },
+      "statements": [
+        {
+          "text": "Both changes shift the equilibrium towards NO₂.",
+          "vi": {
+            "text": "Cả hai thay đổi đều làm cân bằng chuyển dịch theo chiều tạo NO₂."
+          },
+          "true": true
+        },
+        {
+          "text": "[NO₂] is now {=@no2/endVolume} mol/L.",
+          "vi": {
+            "text": "Lúc này [NO₂] = {=@no2/endVolume} mol/L."
+          },
+          "true": true,
+          "check": {
+            "expr": "@no2/endVolume",
+            "equals": "no2Concentration"
+          }
+        },
+        {
+          "text": "The degree of dissociation is now lower than at 25 °C and 40 mL.",
+          "vi": {
+            "text": "Độ phân li lúc này nhỏ hơn ở 25 °C và 40 mL."
+          },
+          "true": false
+        },
+        {
+          "text": "Kp is larger here than at 80 °C and 20 mL, because the gas has more room.",
+          "vi": {
+            "text": "Kp ở đây lớn hơn ở 80 °C và 20 mL, vì khí có nhiều không gian hơn."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

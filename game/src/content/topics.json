@@ -1,0 +1,332 @@
+[
+  {
+    "id": "kinematics",
+    "subject": "physics",
+    "name": "Kinematics",
+    "vi": {
+      "name": "Động học"
+    },
+    "experiments": ["free-fall", "projectile-motion", "measuring-speed", "newtons-second-law"]
+  },
+  {
+    "id": "dynamics",
+    "subject": "physics",
+    "name": "Dynamics",
+    "vi": {
+      "name": "Động lực học"
+    },
+    "experiments": [
+      "newtons-second-law",
+      "atwood-machine",
+      "hookes-law",
+      "inclined-plane",
+      "circular-motion",
+      "force-composition",
+      "moment-of-force"
+    ]
+  },
+  {
+    "id": "conservation-laws",
+    "subject": "physics",
+    "name": "Conservation laws",
+    "vi": {
+      "name": "Các định luật bảo toàn"
+    },
+    "experiments": ["mechanical-energy", "collisions"]
+  },
+  {
+    "id": "fluids",
+    "subject": "physics",
+    "name": "Fluids",
+    "vi": {
+      "name": "Chất lưu"
+    },
+    "experiments": ["buoyancy", "liquid-pressure"]
+  },
+  {
+    "id": "oscillations-and-waves",
+    "subject": "physics",
+    "name": "Oscillations and waves",
+    "vi": {
+      "name": "Dao động và sóng"
+    },
+    "experiments": [
+      "pendulum",
+      "resonance",
+      "sound-frequency",
+      "ripple-tank",
+      "standing-wave",
+      "speed-of-sound"
+    ]
+  },
+  {
+    "id": "electricity",
+    "subject": "physics",
+    "name": "Electricity",
+    "vi": {
+      "name": "Điện học"
+    },
+    "experiments": ["electric-field", "ohms-law", "electrical-power", "capacitor", "cell-emf"]
+  },
+  {
+    "id": "optics",
+    "subject": "physics",
+    "name": "Optics",
+    "vi": {
+      "name": "Quang học"
+    },
+    "experiments": ["refraction", "reflection", "converging-lens", "double-slit"]
+  },
+  {
+    "id": "thermal-physics",
+    "subject": "physics",
+    "name": "Thermal physics",
+    "vi": {
+      "name": "Vật lí nhiệt"
+    },
+    "experiments": ["specific-heat", "latent-heat"]
+  },
+  {
+    "id": "ideal-gases",
+    "subject": "physics",
+    "name": "Ideal gases",
+    "vi": {
+      "name": "Khí lí tưởng"
+    },
+    "experiments": ["boyle", "charles"]
+  },
+  {
+    "id": "magnetism",
+    "subject": "physics",
+    "name": "Magnetism",
+    "vi": {
+      "name": "Từ trường"
+    },
+    "experiments": ["magnetic-force", "induction", "ac-generator"]
+  },
+  {
+    "id": "nuclear-physics",
+    "subject": "physics",
+    "name": "Nuclear physics",
+    "vi": {
+      "name": "Vật lí hạt nhân"
+    },
+    "experiments": ["radioactive-decay"]
+  },
+  {
+    "id": "acids-and-bases",
+    "subject": "chemistry",
+    "name": "Acids and bases",
+    "vi": {
+      "name": "Axit và bazơ"
+    },
+    "experiments": ["acid-base-titration", "ph-measurement"]
+  },
+  {
+    "id": "solutions",
+    "subject": "chemistry",
+    "name": "Solutions and concentration",
+    "vi": {
+      "name": "Dung dịch và nồng độ"
+    },
+    "experiments": ["dilution", "solubility"]
+  },
+  {
+    "id": "reaction-kinetics",
+    "subject": "chemistry",
+    "name": "Reaction rates",
+    "vi": {
+      "name": "Tốc độ phản ứng"
+    },
+    "experiments": ["reaction-rate", "collision-theory"]
+  },
+  {
+    "id": "states-of-matter",
+    "subject": "chemistry",
+    "name": "States of matter",
+    "vi": {
+      "name": "Các thể của chất"
+    },
+    "experiments": ["heating-curve"]
+  },
+  {
+    "id": "ions-and-precipitation",
+    "subject": "chemistry",
+    "name": "Ions in solution and precipitation",
+    "vi": {
+      "name": "Ion trong dung dịch và phản ứng kết tủa"
+    },
+    "experiments": ["precipitation"]
+  },
+  {
+    "id": "separating-mixtures",
+    "subject": "chemistry",
+    "name": "Separating mixtures",
+    "vi": {
+      "name": "Tách các chất ra khỏi hỗn hợp"
+    },
+    "experiments": ["separation"]
+  },
+  {
+    "id": "energy-in-reactions",
+    "subject": "chemistry",
+    "name": "Energy in reactions",
+    "vi": {
+      "name": "Năng lượng trong phản ứng hóa học"
+    },
+    "experiments": ["neutralisation"]
+  },
+  {
+    "id": "chemical-equilibrium",
+    "subject": "chemistry",
+    "name": "Chemical equilibrium",
+    "vi": {
+      "name": "Cân bằng hóa học"
+    },
+    "experiments": ["le-chatelier"]
+  },
+  {
+    "id": "electrochemistry",
+    "subject": "chemistry",
+    "name": "Electrochemistry",
+    "vi": {
+      "name": "Điện hóa học"
+    },
+    "experiments": ["galvanic-cell", "electrolysis", "halogens", "corrosion"]
+  },
+  {
+    "id": "organic-chemistry",
+    "subject": "chemistry",
+    "name": "Organic compounds",
+    "vi": {
+      "name": "Hợp chất hữu cơ"
+    },
+    "experiments": ["saponification"]
+  },
+  {
+    "id": "particle-models",
+    "subject": "chemistry",
+    "name": "Particles: models and simulations",
+    "vi": {
+      "name": "Hạt vi mô: mô hình và mô phỏng"
+    },
+    "experiments": ["gas-speeds", "atomic-structure", "orbitals", "molecule-shapes", "balancing"]
+  },
+  {
+    "id": "cells",
+    "subject": "biology",
+    "name": "Cells",
+    "vi": {
+      "name": "Tế bào"
+    },
+    "experiments": ["microscope", "cell-division"]
+  },
+  {
+    "id": "biological-molecules",
+    "subject": "biology",
+    "name": "Biological molecules",
+    "vi": {
+      "name": "Các phân tử sinh học"
+    },
+    "experiments": ["food-tests"]
+  },
+  {
+    "id": "membrane-transport",
+    "subject": "biology",
+    "name": "Transport across membranes",
+    "vi": {
+      "name": "Vận chuyển các chất qua màng"
+    },
+    "experiments": ["osmosis", "agar-diffusion", "plasmolysis"]
+  },
+  {
+    "id": "enzymes",
+    "subject": "biology",
+    "name": "Enzymes",
+    "vi": {
+      "name": "Enzyme"
+    },
+    "experiments": ["enzyme-activity"]
+  },
+  {
+    "id": "photosynthesis",
+    "subject": "biology",
+    "name": "Photosynthesis",
+    "vi": {
+      "name": "Quang hợp"
+    },
+    "experiments": ["photosynthesis"]
+  },
+  {
+    "id": "water-in-plants",
+    "subject": "biology",
+    "name": "Water in plants",
+    "vi": {
+      "name": "Trao đổi nước ở thực vật"
+    },
+    "experiments": ["transpiration"]
+  },
+  {
+    "id": "respiration",
+    "subject": "biology",
+    "name": "Respiration",
+    "vi": {
+      "name": "Hô hấp"
+    },
+    "experiments": ["seed-respiration", "fermentation"]
+  },
+  {
+    "id": "inheritance",
+    "subject": "biology",
+    "name": "Inheritance",
+    "vi": {
+      "name": "Di truyền học"
+    },
+    "experiments": ["mendelian-cross"]
+  },
+  {
+    "id": "ecology",
+    "subject": "biology",
+    "name": "Ecology",
+    "vi": {
+      "name": "Sinh thái học"
+    },
+    "experiments": ["mark-recapture", "logistic-growth", "predator-prey"]
+  },
+  {
+    "id": "genes-and-proteins",
+    "subject": "biology",
+    "name": "Genes, proteins and mutations",
+    "vi": {
+      "name": "Gen, prôtêin và đột biến"
+    },
+    "experiments": ["protein-synthesis", "dna-extraction", "karyotype"]
+  },
+  {
+    "id": "evolution",
+    "subject": "biology",
+    "name": "Evolution and populations",
+    "vi": {
+      "name": "Tiến hóa và quần thể"
+    },
+    "experiments": ["population-genetics"]
+  },
+  {
+    "id": "human-physiology",
+    "subject": "biology",
+    "name": "The human body",
+    "vi": {
+      "name": "Cơ thể người"
+    },
+    "experiments": ["heart-rate"]
+  },
+  {
+    "id": "plant-responses",
+    "subject": "biology",
+    "name": "Plant responses",
+    "vi": {
+      "name": "Cảm ứng ở thực vật"
+    },
+    "experiments": ["tropism"]
+  }
+]

@@ -1,0 +1,380 @@
+{
+  "id": "fermentation",
+  "name": "Fermentation by yeast",
+  "category": "biology",
+  "description": "Yeast can live without oxygen: it breaks glucose down to ethanol and carbon dioxide. Mix yeast with sugar solution in a flask and collect the gas in a balloon. How much CO₂ and ethanol are made, and how does temperature change the speed?",
+  "vi": {
+    "name": "Lên men rượu nhờ nấm men",
+    "description": "Nấm men có thể sống không cần ôxi: chúng phân giải glucôzơ thành êtanol và cacbon điôxit. Trộn nấm men với dung dịch đường trong bình và thu khí vào quả bóng. Bao nhiêu CO₂ và êtanol được tạo ra, và nhiệt độ làm tốc độ thay đổi thế nào?",
+    "note": "C₆H₁₂O₆ → 2 C₂H₅OH + 2 CO₂: mỗi mol glucôzơ cho đúng 2 mol êtanol và 2 mol CO₂ (khối lượng mol theo nguyên tử khối chuẩn IUPAC). Khí được thu ở nhiệt độ của bình và 1 atm: V = nRT/p. Tốc độ hấp thụ glucôzơ (1 g mỗi g nấm men mỗi giờ ở 30 °C), sự chậm lại khi hết đường (một nửa tốc độ ở 0,5 g) và ảnh hưởng của nhiệt độ (gấp đôi mỗi 10 °C, mất hoạt tính trên khoảng 45 °C) là minh họa, không phải của một chủng cụ thể. 20 phút lên men (1200 s) chạy trong 10 s. Quả bóng được vẽ đúng thể tích khí."
+  },
+  "requiredEquipment": ["yeast-flask"],
+  "model": "biology.fermentation",
+  "parameters": [
+    {
+      "id": "glucose",
+      "label": "Glucose",
+      "vi": {
+        "label": "Glucôzơ"
+      },
+      "unit": "g",
+      "default": 5,
+      "min": 1,
+      "max": 10,
+      "step": 1
+    },
+    {
+      "id": "yeast",
+      "label": "Yeast",
+      "vi": {
+        "label": "Nấm men"
+      },
+      "unit": "g",
+      "default": 2,
+      "min": 0.5,
+      "max": 3,
+      "step": 0.5
+    },
+    {
+      "id": "temperature",
+      "label": "Temperature",
+      "vi": {
+        "label": "Nhiệt độ"
+      },
+      "symbol": "T",
+      "unit": "°C",
+      "default": 35,
+      "min": 10,
+      "max": 60,
+      "step": 5
+    }
+  ],
+  "initialConditions": {
+    "uptake": 1,
+    "halfSaturation": 0.5,
+    "duration": 1200,
+    "speed": 120
+  },
+  "inputs": {
+    "uptake": {
+      "symbol": "u",
+      "unit": "g/(g·h)",
+      "desk": false
+    },
+    "halfSaturation": {
+      "symbol": "K",
+      "unit": "g",
+      "desk": false
+    },
+    "duration": {
+      "symbol": "t",
+      "unit": "s",
+      "desk": false
+    },
+    "speed": {
+      "symbol": "v",
+      "unit": "",
+      "desk": false
+    }
+  },
+  "simulation": {
+    "timeStep": 0.02,
+    "maxDuration": 12,
+    "sampleInterval": 0.05
+  },
+  "measurements": [
+    {
+      "id": "time",
+      "label": "Time",
+      "vi": {
+        "label": "Thời gian"
+      },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "time"
+    },
+    {
+      "id": "elapsed",
+      "label": "Fermentation time",
+      "vi": {
+        "label": "Thời gian lên men"
+      },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "elapsed"
+    },
+    {
+      "id": "co2",
+      "label": "CO₂ collected",
+      "vi": {
+        "label": "CO₂ thu được"
+      },
+      "symbol": "V",
+      "unit": "mL",
+      "variable": "co2"
+    },
+    {
+      "id": "rate",
+      "label": "Rate of gas production",
+      "vi": {
+        "label": "Tốc độ sinh khí"
+      },
+      "unit": "mL/min",
+      "variable": "rate"
+    },
+    {
+      "id": "ethanol",
+      "label": "Ethanol made",
+      "vi": {
+        "label": "Êtanol tạo ra"
+      },
+      "unit": "g",
+      "variable": "ethanol"
+    }
+  ],
+  "results": [
+    {
+      "id": "co2",
+      "label": "CO₂ collected",
+      "vi": {
+        "label": "CO₂ thu được"
+      },
+      "symbol": "V",
+      "unit": "mL",
+      "variable": "co2",
+      "reduce": "final"
+    },
+    {
+      "id": "ethanol",
+      "label": "Ethanol made",
+      "vi": {
+        "label": "Êtanol tạo ra"
+      },
+      "unit": "g",
+      "variable": "ethanol",
+      "reduce": "final"
+    },
+    {
+      "id": "used",
+      "label": "Glucose used",
+      "vi": {
+        "label": "Glucôzơ đã dùng"
+      },
+      "unit": "%",
+      "variable": "used",
+      "reduce": "final"
+    },
+    {
+      "id": "rate",
+      "label": "Fastest gas production",
+      "vi": {
+        "label": "Tốc độ sinh khí lớn nhất"
+      },
+      "unit": "mL/min",
+      "variable": "rate",
+      "reduce": "max"
+    }
+  ],
+  "graphs": [
+    {
+      "id": "co2-time",
+      "title": "CO₂ collected over time",
+      "vi": {
+        "title": "CO₂ thu được theo thời gian"
+      },
+      "x": "elapsed",
+      "y": ["co2"]
+    },
+    {
+      "id": "rate-time",
+      "title": "Rate of gas production",
+      "vi": {
+        "title": "Tốc độ sinh khí"
+      },
+      "x": "elapsed",
+      "y": ["rate"]
+    }
+  ],
+  "monitor": "co2-time",
+  "compare": [
+    {
+      "graph": "co2-time",
+      "series": "co2"
+    }
+  ],
+  "note": "C₆H₁₂O₆ → 2 C₂H₅OH + 2 CO₂: each mole of glucose gives exactly 2 mol of ethanol and 2 mol of CO₂ (molar masses from IUPAC standard atomic weights). The gas is collected at the flask’s temperature and 1 atm: V = nRT/p. The glucose uptake (1 g per g of yeast per hour at 30 °C), its slowing as the sugar runs out (half speed at 0.5 g) and the effect of temperature (doubling every 10 °C, lost above about 45 °C) are illustrative, not one strain’s. 20 minutes of fermentation (1200 s) run in 10 s. The balloon is drawn at the gas’s true volume.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the fermentation instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn về lên men trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "fermentation-instructions"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN at 35 °C: watch the bubbles and the balloon.",
+      "vi": {
+        "instruction": "Nhấn CHẠY ở 35 °C: quan sát bọt khí và quả bóng."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "temperature",
+      "instruction": "Press RESET and change the temperature with the dial.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI và đổi nhiệt độ bằng núm xoay."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "temperature"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Compare the CO₂ at 20, 35 and 55 °C.",
+      "vi": {
+        "instruction": "So sánh lượng CO₂ ở 20, 35 và 55 °C."
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET: which temperature is best for the yeast?",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI: nhiệt độ nào tốt nhất cho nấm men?"
+      },
+      "done": {
+        "kind": "reset"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "ethanol-per-gram",
+      "question": "Yeast ferments glucose: C₆H₁₂O₆ → 2C₂H₅OH + 2CO₂. What mass of ethanol does each gram of glucose give? (M: glucose 180.156, ethanol 46.069 g/mol)",
+      "vi": {
+        "question": "Nấm men lên men glucôzơ: C₆H₁₂O₆ → 2C₂H₅OH + 2CO₂. Mỗi gam glucôzơ tạo ra bao nhiêu gam êtanol? (M: glucôzơ 180,156, êtanol 46,069 g/mol)"
+      },
+      "set": { "temperature": 35 },
+      "find": [{ "theory": "ethanolPerGram", "symbol": "m_ethanol", "unit": "g/g" }],
+      "steps": [
+        {
+          "say": "One mole of glucose gives two moles of ethanol.",
+          "vi": { "say": "Một mol glucôzơ tạo ra hai mol êtanol." },
+          "write": "n(C₂H₅OH) = 2·n(C₆H₁₂O₆)"
+        },
+        {
+          "say": "Per gram: two times the ethanol’s molar mass over the glucose’s — about half the sugar’s mass becomes ethanol.",
+          "vi": {
+            "say": "Tính cho mỗi gam: hai lần khối lượng mol của êtanol chia khối lượng mol của glucôzơ — khoảng một nửa khối lượng đường thành êtanol."
+          },
+          "write": "m = 2·46.069/180.156 ≈ {@ethanolPerGram} g",
+          "check": { "expr": "2*46.069/180.156", "equals": "ethanolPerGram" }
+        }
+      ]
+    },
+    {
+      "id": "gas-per-gram",
+      "question": "At {temperature} °C and 1 atm (101 325 Pa), what volume of CO₂ does each gram of glucose fermented give?",
+      "vi": {
+        "question": "Ở {temperature} °C và 1 atm (101 325 Pa), mỗi gam glucôzơ lên men tạo ra bao nhiêu thể tích CO₂?"
+      },
+      "set": { "temperature": 25 },
+      "find": [{ "theory": "co2PerGram", "symbol": "V_CO₂", "unit": "mL/g" }],
+      "steps": [
+        {
+          "say": "Two moles of CO₂ for each mole of glucose, so 2/180.156 mol of gas per gram.",
+          "vi": { "say": "Mỗi mol glucôzơ cho hai mol CO₂, nên mỗi gam cho 2/180,156 mol khí." },
+          "write": "n = 2/180.156 mol"
+        },
+        {
+          "say": "The ideal gas law gives its volume: V = nRT/p, T in kelvin; times a million for mL. So 5 g, fully fermented, would give about {=5*@co2PerGram|3} mL.",
+          "vi": {
+            "say": "Phương trình trạng thái khí lí tưởng cho thể tích: V = nRT/p, T tính bằng kelvin; nhân một triệu để ra mL. Vậy 5 g lên men hết sẽ cho khoảng {=5*@co2PerGram|3} mL."
+          },
+          "write": "V = (2/180.156)·8.314·{=temperature+273.15|5}/101325 ≈ {@co2PerGram} mL",
+          "check": {
+            "expr": "2/180.156*8.314462618*(temperature+273.15)/101325*1e6",
+            "equals": "co2PerGram"
+          }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "Without oxygen yeast still gets energy from glucose by fermentation, making ethanol and carbon dioxide. Its enzymes work faster when warm — until they are damaged by heat.",
+    "vi": {
+      "summary": "Khi không có ôxi, nấm men vẫn lấy năng lượng từ glucôzơ bằng lên men, tạo ra êtanol và cacbon điôxit. Enzim của chúng hoạt động nhanh hơn khi ấm — cho tới khi bị nhiệt làm hỏng."
+    },
+    "parts": [
+      {
+        "id": "solution",
+        "name": "Yeast in sugar solution",
+        "role": "The yeast cells ferment the glucose.",
+        "vi": {
+          "name": "Nấm men trong dung dịch đường",
+          "role": "Các tế bào nấm men lên men glucôzơ."
+        },
+        "anchor": {
+          "part": "yeast-solution"
+        }
+      },
+      {
+        "id": "bubbles",
+        "name": "Bubbles of CO₂",
+        "role": "More bubbles: faster fermentation.",
+        "vi": {
+          "name": "Bọt khí CO₂",
+          "role": "Càng nhiều bọt: lên men càng nhanh."
+        },
+        "anchor": {
+          "part": "bubbles"
+        }
+      },
+      {
+        "id": "balloon",
+        "name": "Balloon",
+        "role": "Collects the CO₂: its size is the gas’s volume.",
+        "vi": {
+          "name": "Quả bóng",
+          "role": "Thu CO₂: kích thước của nó là thể tích khí."
+        },
+        "anchor": {
+          "part": "balloon"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "Glucose → 2 ethanol + 2 CO₂: each glucose molecule makes two of each. The ethanol stays in the flask; the CO₂ bubbles out.",
+        "vi": {
+          "text": "Glucôzơ → 2 êtanol + 2 CO₂: mỗi phân tử glucôzơ tạo ra hai phân tử mỗi chất. Êtanol ở lại trong bình; CO₂ sủi bọt bay ra."
+        },
+        "parts": ["solution", "bubbles"]
+      },
+      {
+        "text": "The gas fills the balloon: from its volume we know how much glucose was fermented (1 mol of gas ≈ 24 L at room temperature).",
+        "vi": {
+          "text": "Khí làm căng quả bóng: từ thể tích khí biết được lượng glucôzơ đã lên men (1 mol khí ≈ 24 L ở nhiệt độ phòng)."
+        },
+        "parts": ["balloon"]
+      },
+      {
+        "text": "Warmer yeast ferments faster, but above about 45 °C its enzymes are destroyed and the gas stops.",
+        "vi": {
+          "text": "Nấm men ấm hơn lên men nhanh hơn, nhưng trên khoảng 45 °C enzim bị phá hủy và khí ngừng sinh ra."
+        },
+        "parts": ["bubbles", "solution"]
+      }
+    ]
+  }
+}

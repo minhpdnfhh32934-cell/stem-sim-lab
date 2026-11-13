@@ -1,0 +1,1033 @@
+{
+  "id": "precipitation",
+  "skills": [
+    {
+      "id": "tests",
+      "name": "Which reagent tests which ion",
+      "advice": "Make a three-column table — AgNO₃ for Cl⁻, Br⁻, I⁻; Ba(NO₃)₂ for SO₄²⁻; NaOH for Cu²⁺, Fe³⁺ — with the colour of each precipitate (AgCl white, AgBr pale yellow, AgI yellow, BaSO₄ white, Cu(OH)₂ blue, Fe(OH)₃ red-brown). Fill it in from your runs at the station.",
+      "vi": {
+        "name": "Thuốc thử nhận biết từng ion",
+        "advice": "Lập bảng ba cột — AgNO₃ nhận biết Cl⁻, Br⁻, I⁻; Ba(NO₃)₂ nhận biết SO₄²⁻; NaOH nhận biết Cu²⁺, Fe³⁺ — kèm màu từng kết tủa (AgCl trắng, AgBr vàng nhạt, AgI vàng, BaSO₄ trắng, Cu(OH)₂ xanh lam, Fe(OH)₃ nâu đỏ). Điền bảng từ các lần chạy trên trạm."
+      }
+    },
+    {
+      "id": "equations",
+      "name": "Net ionic equations",
+      "advice": "Cross out the spectator ions (Na⁺, K⁺, NO₃⁻) and keep only the ions that form the solid; then balance the charges (Cu²⁺ needs 2OH⁻, Fe³⁺ needs 3OH⁻).",
+      "vi": {
+        "name": "Phương trình ion rút gọn",
+        "advice": "Gạch bỏ các ion không tham gia (Na⁺, K⁺, NO₃⁻), chỉ giữ các ion tạo chất rắn; sau đó cân bằng điện tích (Cu²⁺ cần 2OH⁻, Fe³⁺ cần 3OH⁻)."
+      }
+    },
+    {
+      "id": "amounts",
+      "name": "Amounts and the reagent that runs out",
+      "advice": "Use mL × mol/L = mmol and the ratio from the ionic equation; the volume that just uses up the sample’s ion is c_s·V_s·(ratio)/c_r. Compare with the station’s amount, which stops growing past that volume.",
+      "vi": {
+        "name": "Tính lượng kết tủa và chất phản ứng hết",
+        "advice": "Dùng mL × mol/L = mmol và tỉ lệ trong phương trình ion; thể tích thuốc thử vừa đủ kết tủa hết ion của mẫu là c_s·V_s·(tỉ lệ)/c_r. So sánh với lượng kết tủa trên trạm, lượng này không tăng nữa sau thể tích đó."
+      }
+    },
+    {
+      "id": "ksp",
+      "name": "When a precipitate forms: Q and Ksp",
+      "advice": "A precipitate appears only when the ion product Q of the mixed solution exceeds Ksp. Work out the ions’ concentrations after mixing (volumes add) before multiplying, with each raised to its coefficient.",
+      "vi": {
+        "name": "Khi nào có kết tủa: Q và Ksp",
+        "advice": "Kết tủa chỉ xuất hiện khi tích ion Q của dung dịch sau khi trộn lớn hơn Ksp. Tính nồng độ các ion sau khi trộn (thể tích cộng lại) trước khi nhân, mỗi nồng độ lũy thừa theo hệ số của nó."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "chloride-test",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["tests"],
+      "stem": "Which reagent is used to test a solution for chloride ions, Cl⁻?",
+      "explain": "Silver nitrate gives a white precipitate of silver chloride: Ag⁺ + Cl⁻ → AgCl↓.",
+      "vi": {
+        "stem": "Thuốc thử nào được dùng để nhận biết ion chloride, Cl⁻, trong dung dịch?",
+        "explain": "Dung dịch silver nitrate tạo kết tủa trắng silver chloride: Ag⁺ + Cl⁻ → AgCl↓."
+      },
+      "options": [
+        {
+          "text": "Silver nitrate, AgNO₃",
+          "vi": {
+            "text": "Dung dịch silver nitrate, AgNO₃"
+          },
+          "correct": true
+        },
+        {
+          "text": "Barium nitrate, Ba(NO₃)₂",
+          "vi": {
+            "text": "Dung dịch barium nitrate, Ba(NO₃)₂"
+          }
+        },
+        {
+          "text": "Sodium hydroxide, NaOH",
+          "vi": {
+            "text": "Dung dịch sodium hydroxide, NaOH"
+          }
+        },
+        {
+          "text": "Phenolphthalein",
+          "vi": {
+            "text": "Phenolphtalein"
+          }
+        }
+      ]
+    },
+    {
+      "id": "silver-iodide",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["tests"],
+      "stem": "Silver nitrate is added to potassium iodide solution. What colour is the precipitate?",
+      "explain": "Ag⁺ + I⁻ → AgI↓, a yellow precipitate (AgCl is white, AgBr pale yellow).",
+      "vi": {
+        "stem": "Nhỏ dung dịch silver nitrate vào dung dịch potassium iodide. Kết tủa có màu gì?",
+        "explain": "Ag⁺ + I⁻ → AgI↓, kết tủa màu vàng (AgCl màu trắng, AgBr màu vàng nhạt)."
+      },
+      "options": [
+        {
+          "text": "Yellow",
+          "vi": {
+            "text": "Vàng"
+          },
+          "correct": true
+        },
+        {
+          "text": "White",
+          "vi": {
+            "text": "Trắng"
+          }
+        },
+        {
+          "text": "Blue",
+          "vi": {
+            "text": "Xanh lam"
+          }
+        },
+        {
+          "text": "Red-brown",
+          "vi": {
+            "text": "Nâu đỏ"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-colours",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["tests"],
+      "stem": "Decide whether each statement about the precipitation tests is true or false.",
+      "explain": "Ba²⁺ + SO₄²⁻ gives white BaSO₄; Cu²⁺ + 2OH⁻ gives blue Cu(OH)₂; Fe³⁺ + 3OH⁻ gives red-brown Fe(OH)₃, not white. Deionised water holds no ions to precipitate.",
+      "vi": {
+        "stem": "Mỗi nhận định sau về các phản ứng tạo kết tủa dùng để nhận biết ion đúng hay sai?",
+        "explain": "Ba²⁺ + SO₄²⁻ tạo kết tủa trắng BaSO₄; Cu²⁺ + 2OH⁻ tạo kết tủa xanh lam Cu(OH)₂; Fe³⁺ + 3OH⁻ tạo kết tủa nâu đỏ Fe(OH)₃, không phải màu trắng. Nước khử ion không chứa ion nào để tạo kết tủa."
+      },
+      "statements": [
+        {
+          "text": "Barium nitrate gives a white precipitate with sodium sulfate.",
+          "vi": {
+            "text": "Barium nitrate tạo kết tủa trắng với sodium sulfate."
+          },
+          "true": true
+        },
+        {
+          "text": "Sodium hydroxide gives a blue precipitate with copper(II) sulfate.",
+          "vi": {
+            "text": "Sodium hydroxide tạo kết tủa xanh lam với copper(II) sulfate."
+          },
+          "true": true
+        },
+        {
+          "text": "Sodium hydroxide gives a white precipitate with iron(III) chloride.",
+          "vi": {
+            "text": "Sodium hydroxide tạo kết tủa trắng với iron(III) chloride."
+          },
+          "true": false
+        },
+        {
+          "text": "Deionised water (the blank) gives no precipitate with silver nitrate.",
+          "vi": {
+            "text": "Nước khử ion (mẫu trắng) không tạo kết tủa với silver nitrate."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "ionic-equation",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["equations"],
+      "stem": "Which is the net ionic equation for the reaction of silver nitrate with sodium chloride solution?",
+      "explain": "Na⁺ and NO₃⁻ stay dissolved (spectator ions); only Ag⁺ and Cl⁻ form the solid: Ag⁺ + Cl⁻ → AgCl↓.",
+      "vi": {
+        "stem": "Phương trình ion rút gọn của phản ứng giữa dung dịch silver nitrate và dung dịch sodium chloride là",
+        "explain": "Na⁺ và NO₃⁻ vẫn ở trong dung dịch (không tham gia phản ứng); chỉ Ag⁺ và Cl⁻ tạo thành chất rắn: Ag⁺ + Cl⁻ → AgCl↓."
+      },
+      "options": [
+        {
+          "text": "Ag⁺ + Cl⁻ → AgCl↓",
+          "vi": {
+            "text": "Ag⁺ + Cl⁻ → AgCl↓"
+          },
+          "correct": true
+        },
+        {
+          "text": "Na⁺ + NO₃⁻ → NaNO₃↓",
+          "vi": {
+            "text": "Na⁺ + NO₃⁻ → NaNO₃↓"
+          }
+        },
+        {
+          "text": "2Ag⁺ + Cl₂ → 2AgCl↓",
+          "vi": {
+            "text": "2Ag⁺ + Cl₂ → 2AgCl↓"
+          }
+        },
+        {
+          "text": "Ag⁺ + Cl⁻ → Ag + Cl",
+          "vi": {
+            "text": "Ag⁺ + Cl⁻ → Ag + Cl"
+          }
+        }
+      ]
+    },
+    {
+      "id": "blank",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["tests"],
+      "stem": "Why is each reagent also added to deionised water (a blank)?",
+      "explain": "The blank shows the reagent alone gives no precipitate, so a precipitate in a sample must come from that sample’s ions.",
+      "vi": {
+        "stem": "Vì sao mỗi thuốc thử cũng được nhỏ vào nước khử ion (mẫu trắng)?",
+        "explain": "Mẫu trắng cho thấy riêng thuốc thử không tạo kết tủa, nên kết tủa xuất hiện ở mẫu thử phải do các ion của mẫu đó."
+      },
+      "options": [
+        {
+          "text": "To show that the reagent alone gives no precipitate",
+          "vi": {
+            "text": "Để chứng tỏ riêng thuốc thử không tạo kết tủa"
+          },
+          "correct": true
+        },
+        {
+          "text": "To dilute the reagent before use",
+          "vi": {
+            "text": "Để pha loãng thuốc thử trước khi dùng"
+          }
+        },
+        {
+          "text": "To make the precipitates form faster",
+          "vi": {
+            "text": "Để kết tủa tạo thành nhanh hơn"
+          }
+        },
+        {
+          "text": "To measure the reagent’s concentration",
+          "vi": {
+            "text": "Để đo nồng độ thuốc thử"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-identify",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["tests", "equations"],
+      "stem": "Unlabelled tubes hold NaCl, KBr, KI, Na₂SO₄, CuSO₄ and FeCl₃ solutions. Decide whether each statement is true or false.",
+      "explain": "AgNO₃ tells the halides apart by colour (white, pale yellow, yellow). Ba(NO₃)₂ precipitates sulfate only. NaOH gives blue Cu(OH)₂ and red-brown Fe(OH)₃. NaCl and KBr both give no precipitate with Ba(NO₃)₂, so it cannot tell them apart.",
+      "vi": {
+        "stem": "Các ống nghiệm không nhãn chứa các dung dịch NaCl, KBr, KI, Na₂SO₄, CuSO₄ và FeCl₃. Mỗi nhận định sau đúng hay sai?",
+        "explain": "AgNO₃ phân biệt các muối halide nhờ màu kết tủa (trắng, vàng nhạt, vàng). Ba(NO₃)₂ chỉ tạo kết tủa với sulfate. NaOH cho Cu(OH)₂ xanh lam và Fe(OH)₃ nâu đỏ. NaCl và KBr đều không tạo kết tủa với Ba(NO₃)₂, nên không phân biệt được bằng thuốc thử này."
+      },
+      "statements": [
+        {
+          "text": "Silver nitrate tells NaCl, KBr and KI apart by the colour of the precipitate.",
+          "vi": {
+            "text": "Silver nitrate phân biệt được NaCl, KBr và KI nhờ màu của kết tủa."
+          },
+          "true": true
+        },
+        {
+          "text": "Barium nitrate gives a precipitate with Na₂SO₄ but not with NaCl.",
+          "vi": {
+            "text": "Barium nitrate tạo kết tủa với Na₂SO₄ nhưng không tạo kết tủa với NaCl."
+          },
+          "true": true
+        },
+        {
+          "text": "Sodium hydroxide tells CuSO₄ and FeCl₃ apart.",
+          "vi": {
+            "text": "Sodium hydroxide phân biệt được CuSO₄ và FeCl₃."
+          },
+          "true": true
+        },
+        {
+          "text": "Barium nitrate tells NaCl and KBr apart.",
+          "vi": {
+            "text": "Barium nitrate phân biệt được NaCl và KBr."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "chloride-volume",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["amounts", "equations"],
+      "set": {
+        "sample": 0,
+        "reagent": 0,
+        "sampleConcentration": 0.01
+      },
+      "stem": "Silver nitrate ({reagentConcentration} mol/L) is added to {sampleVolume} mL of NaCl solution ({sampleConcentration} mol/L). What volume of AgNO₃ just precipitates all the chloride?",
+      "explain": "Ag⁺ + Cl⁻ → AgCl↓, 1 : 1: n(Cl⁻) = {sampleConcentration}·{sampleVolume} = {=sampleConcentration*sampleVolume} mmol, so V = {=sampleConcentration*sampleVolume}/{reagentConcentration} = {@equivalenceVolume} mL.",
+      "vi": {
+        "stem": "Nhỏ dung dịch AgNO₃ {reagentConcentration} mol/L vào {sampleVolume} mL dung dịch NaCl {sampleConcentration} mol/L. Thể tích AgNO₃ vừa đủ để kết tủa hết ion chloride là bao nhiêu?",
+        "explain": "Ag⁺ + Cl⁻ → AgCl↓, tỉ lệ 1 : 1: n(Cl⁻) = {sampleConcentration}·{sampleVolume} = {=sampleConcentration*sampleVolume} mmol, nên V = {=sampleConcentration*sampleVolume}/{reagentConcentration} = {@equivalenceVolume} mL."
+      },
+      "options": [
+        {
+          "text": "{@equivalenceVolume} mL",
+          "vi": {
+            "text": "{@equivalenceVolume} mL"
+          },
+          "correct": true,
+          "check": {
+            "expr": "sampleConcentration*sampleVolume/reagentConcentration",
+            "equals": "equivalenceVolume"
+          }
+        },
+        {
+          "text": "{=reagentConcentration*sampleVolume/sampleConcentration} mL",
+          "vi": {
+            "text": "{=reagentConcentration*sampleVolume/sampleConcentration} mL"
+          },
+          "check": {
+            "expr": "reagentConcentration*sampleVolume/sampleConcentration",
+            "equals": "equivalenceVolume"
+          }
+        },
+        {
+          "text": "{sampleVolume} mL",
+          "vi": {
+            "text": "{sampleVolume} mL"
+          },
+          "check": {
+            "expr": "sampleVolume",
+            "equals": "equivalenceVolume"
+          }
+        },
+        {
+          "text": "{=sampleConcentration*sampleVolume/(2*reagentConcentration)} mL",
+          "vi": {
+            "text": "{=sampleConcentration*sampleVolume/(2*reagentConcentration)} mL"
+          },
+          "check": {
+            "expr": "sampleConcentration*sampleVolume/(2*reagentConcentration)",
+            "equals": "equivalenceVolume"
+          }
+        }
+      ]
+    },
+    {
+      "id": "iron-volume",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["amounts", "equations"],
+      "set": {
+        "sample": 5,
+        "reagent": 2,
+        "sampleConcentration": 0.02
+      },
+      "stem": "Sodium hydroxide ({reagentConcentration} mol/L) is added to {sampleVolume} mL of FeCl₃ solution ({sampleConcentration} mol/L). What volume of NaOH just precipitates all the iron as Fe(OH)₃?",
+      "explain": "Fe³⁺ + 3OH⁻ → Fe(OH)₃↓: each Fe³⁺ takes three OH⁻. V = 3·{sampleConcentration}·{sampleVolume}/{reagentConcentration} = {@equivalenceVolume} mL.",
+      "vi": {
+        "stem": "Nhỏ dung dịch NaOH {reagentConcentration} mol/L vào {sampleVolume} mL dung dịch FeCl₃ {sampleConcentration} mol/L. Thể tích NaOH vừa đủ để kết tủa hết sắt dưới dạng Fe(OH)₃ là bao nhiêu?",
+        "explain": "Fe³⁺ + 3OH⁻ → Fe(OH)₃↓: mỗi ion Fe³⁺ cần ba ion OH⁻. V = 3·{sampleConcentration}·{sampleVolume}/{reagentConcentration} = {@equivalenceVolume} mL."
+      },
+      "options": [
+        {
+          "text": "{@equivalenceVolume} mL",
+          "vi": {
+            "text": "{@equivalenceVolume} mL"
+          },
+          "correct": true,
+          "check": {
+            "expr": "3*sampleConcentration*sampleVolume/reagentConcentration",
+            "equals": "equivalenceVolume"
+          }
+        },
+        {
+          "text": "{=sampleConcentration*sampleVolume/reagentConcentration} mL",
+          "vi": {
+            "text": "{=sampleConcentration*sampleVolume/reagentConcentration} mL"
+          },
+          "check": {
+            "expr": "sampleConcentration*sampleVolume/reagentConcentration",
+            "equals": "equivalenceVolume"
+          }
+        },
+        {
+          "text": "{=2*sampleConcentration*sampleVolume/reagentConcentration} mL",
+          "vi": {
+            "text": "{=2*sampleConcentration*sampleVolume/reagentConcentration} mL"
+          },
+          "check": {
+            "expr": "2*sampleConcentration*sampleVolume/reagentConcentration",
+            "equals": "equivalenceVolume"
+          }
+        },
+        {
+          "text": "{=sampleConcentration*sampleVolume/(3*reagentConcentration)} mL",
+          "vi": {
+            "text": "{=sampleConcentration*sampleVolume/(3*reagentConcentration)} mL"
+          },
+          "check": {
+            "expr": "sampleConcentration*sampleVolume/(3*reagentConcentration)",
+            "equals": "equivalenceVolume"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-iodide",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["amounts", "tests"],
+      "set": {
+        "sample": 2,
+        "reagent": 0,
+        "reagentVolume": 2,
+        "sampleConcentration": 0.02
+      },
+      "stem": "{reagentVolume} mL of AgNO₃ ({reagentConcentration} mol/L) is added to {sampleVolume} mL of KI solution ({sampleConcentration} mol/L); M(AgI) = 234.77 g/mol. Decide whether each statement is true or false.",
+      "explain": "Yellow AgI forms. n(Ag⁺) = {=reagentConcentration*reagentVolume} mmol is less than n(I⁻) = {=sampleConcentration*sampleVolume} mmol, so silver runs out: n(AgI) ≈ {@amount|3} mmol, m = {@amount|3}·234.77/1000 ≈ {@mass|3} g. Only {@precipitatedPercent|3}% of the iodide has precipitated.",
+      "vi": {
+        "stem": "Nhỏ {reagentVolume} mL dung dịch AgNO₃ {reagentConcentration} mol/L vào {sampleVolume} mL dung dịch KI {sampleConcentration} mol/L; M(AgI) = 234,77 g/mol. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Tạo kết tủa vàng AgI. n(Ag⁺) = {=reagentConcentration*reagentVolume} mmol nhỏ hơn n(I⁻) = {=sampleConcentration*sampleVolume} mmol, nên Ag⁺ hết: n(AgI) ≈ {@amount|3} mmol, m = {@amount|3}·234,77/1000 ≈ {@mass|3} g. Mới chỉ {@precipitatedPercent|3}% ion iodide bị kết tủa."
+      },
+      "statements": [
+        {
+          "text": "A yellow precipitate of AgI forms.",
+          "vi": {
+            "text": "Xuất hiện kết tủa vàng AgI."
+          },
+          "true": true,
+          "check": {
+            "expr": "3",
+            "equals": "product"
+          }
+        },
+        {
+          "text": "About {=reagentConcentration*reagentVolume} mmol of AgI forms.",
+          "vi": {
+            "text": "Có khoảng {=reagentConcentration*reagentVolume} mmol AgI tạo thành."
+          },
+          "true": true,
+          "check": {
+            "expr": "reagentConcentration*reagentVolume",
+            "equals": "amount"
+          }
+        },
+        {
+          "text": "The precipitate weighs about {=reagentConcentration*reagentVolume*234.77/1000|3} g.",
+          "vi": {
+            "text": "Khối lượng kết tủa khoảng {=reagentConcentration*reagentVolume*234.77/1000|3} g."
+          },
+          "true": true,
+          "check": {
+            "expr": "@amount*234.77/1000",
+            "equals": "mass"
+          }
+        },
+        {
+          "text": "All the iodide in the tube has precipitated.",
+          "vi": {
+            "text": "Toàn bộ ion iodide trong ống đã kết tủa."
+          },
+          "true": false,
+          "check": {
+            "expr": "100",
+            "equals": "precipitatedPercent"
+          }
+        }
+      ]
+    },
+    {
+      "id": "copper-mass",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["amounts", "equations"],
+      "set": {
+        "sample": 4,
+        "reagent": 2,
+        "reagentVolume": 2,
+        "sampleConcentration": 0.02
+      },
+      "stem": "{reagentVolume} mL of NaOH ({reagentConcentration} mol/L) is added to {sampleVolume} mL of CuSO₄ solution ({sampleConcentration} mol/L). What mass of Cu(OH)₂ (97.56 g/mol) forms?",
+      "explain": "Cu²⁺ + 2OH⁻ → Cu(OH)₂↓. n(OH⁻) = {=reagentConcentration*reagentVolume} mmol is the smaller share (it would need {=2*sampleConcentration*sampleVolume} mmol for all the copper): n(Cu(OH)₂) = {=reagentConcentration*reagentVolume}/2 = {=reagentConcentration*reagentVolume/2} mmol, m ≈ {@mass|3} g.",
+      "vi": {
+        "stem": "Nhỏ {reagentVolume} mL dung dịch NaOH {reagentConcentration} mol/L vào {sampleVolume} mL dung dịch CuSO₄ {sampleConcentration} mol/L. Khối lượng Cu(OH)₂ (97,56 g/mol) tạo thành là bao nhiêu?",
+        "explain": "Cu²⁺ + 2OH⁻ → Cu(OH)₂↓. n(OH⁻) = {=reagentConcentration*reagentVolume} mmol là chất hết (cần {=2*sampleConcentration*sampleVolume} mmol mới kết tủa hết đồng): n(Cu(OH)₂) = {=reagentConcentration*reagentVolume}/2 = {=reagentConcentration*reagentVolume/2} mmol, m ≈ {@mass|3} g."
+      },
+      "options": [
+        {
+          "text": "{=reagentConcentration*reagentVolume/2*97.56/1000|3} g",
+          "vi": {
+            "text": "{=reagentConcentration*reagentVolume/2*97.56/1000|3} g"
+          },
+          "correct": true,
+          "check": {
+            "expr": "reagentConcentration*reagentVolume/2*97.56/1000",
+            "equals": "mass"
+          }
+        },
+        {
+          "text": "{=reagentConcentration*reagentVolume*97.56/1000|3} g",
+          "vi": {
+            "text": "{=reagentConcentration*reagentVolume*97.56/1000|3} g"
+          },
+          "check": {
+            "expr": "reagentConcentration*reagentVolume*97.56/1000",
+            "equals": "mass"
+          }
+        },
+        {
+          "text": "{=sampleConcentration*sampleVolume*97.56/1000|3} g",
+          "vi": {
+            "text": "{=sampleConcentration*sampleVolume*97.56/1000|3} g"
+          },
+          "check": {
+            "expr": "sampleConcentration*sampleVolume*97.56/1000",
+            "equals": "mass"
+          }
+        },
+        {
+          "text": "{=reagentConcentration*reagentVolume/2*97.56|3} g",
+          "vi": {
+            "text": "{=reagentConcentration*reagentVolume/2*97.56|3} g"
+          },
+          "check": {
+            "expr": "reagentConcentration*reagentVolume/2*97.56",
+            "equals": "mass"
+          }
+        }
+      ]
+    },
+    {
+      "id": "no-silver-sulfate",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["ksp"],
+      "set": {
+        "sample": 3,
+        "reagent": 0,
+        "reagentVolume": 10,
+        "sampleConcentration": 0.02
+      },
+      "stem": "{reagentVolume} mL of AgNO₃ ({reagentConcentration} mol/L) is added to {sampleVolume} mL of Na₂SO₄ ({sampleConcentration} mol/L), and no precipitate appears, though silver sulfate is only slightly soluble (Ksp(Ag₂SO₄) = 1.2·10⁻⁵). Why?",
+      "explain": "After mixing ({=sampleVolume+reagentVolume} mL): [Ag⁺] = {=reagentConcentration*reagentVolume/(sampleVolume+reagentVolume)|3} and [SO₄²⁻] = {=sampleConcentration*sampleVolume/(sampleVolume+reagentVolume)|3} mol/L, so Q = [Ag⁺]²·[SO₄²⁻] ≈ {=(reagentConcentration*reagentVolume/(sampleVolume+reagentVolume))^2*(sampleConcentration*sampleVolume/(sampleVolume+reagentVolume))|3}, only {@saturation|2} of Ksp: below it, nothing precipitates.",
+      "vi": {
+        "stem": "Nhỏ {reagentVolume} mL dung dịch AgNO₃ {reagentConcentration} mol/L vào {sampleVolume} mL dung dịch Na₂SO₄ {sampleConcentration} mol/L thì không thấy kết tủa, dù silver sulfate là chất ít tan (Ksp(Ag₂SO₄) = 1,2·10⁻⁵). Vì sao?",
+        "explain": "Sau khi trộn ({=sampleVolume+reagentVolume} mL): [Ag⁺] = {=reagentConcentration*reagentVolume/(sampleVolume+reagentVolume)|3} và [SO₄²⁻] = {=sampleConcentration*sampleVolume/(sampleVolume+reagentVolume)|3} mol/L, nên Q = [Ag⁺]²·[SO₄²⁻] ≈ {=(reagentConcentration*reagentVolume/(sampleVolume+reagentVolume))^2*(sampleConcentration*sampleVolume/(sampleVolume+reagentVolume))|3}, chỉ bằng {@saturation|2} lần Ksp: nhỏ hơn Ksp nên không có kết tủa."
+      },
+      "options": [
+        {
+          "text": "The ion product [Ag⁺]²[SO₄²⁻] stays below Ksp: Q/Ksp ≈ {@saturation|2}",
+          "vi": {
+            "text": "Tích ion [Ag⁺]²[SO₄²⁻] vẫn nhỏ hơn Ksp: Q/Ksp ≈ {@saturation|2}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(reagentConcentration*reagentVolume/(sampleVolume+reagentVolume))^2*(sampleConcentration*sampleVolume/(sampleVolume+reagentVolume))/1.2e-5",
+            "equals": "saturation"
+          }
+        },
+        {
+          "text": "Silver ions never react with sulfate ions",
+          "vi": {
+            "text": "Ion bạc không bao giờ phản ứng với ion sulfate"
+          }
+        },
+        {
+          "text": "The sodium ions take up all the sulfate",
+          "vi": {
+            "text": "Các ion sodium đã kết hợp hết với ion sulfate"
+          }
+        },
+        {
+          "text": "The ion product is far above Ksp, so the solid dissolves at once",
+          "vi": {
+            "text": "Tích ion lớn hơn Ksp rất nhiều nên chất rắn tan ngay"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-iron-chloride",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["amounts", "tests", "equations"],
+      "set": {
+        "sample": 5,
+        "reagent": 0,
+        "reagentVolume": 10,
+        "sampleConcentration": 0.02
+      },
+      "stem": "{reagentVolume} mL of AgNO₃ ({reagentConcentration} mol/L) is added to {sampleVolume} mL of FeCl₃ solution ({sampleConcentration} mol/L). Decide whether each statement is true or false.",
+      "explain": "Each FeCl₃ gives three Cl⁻: n(Cl⁻) = 3·{sampleConcentration}·{sampleVolume} = {=3*sampleConcentration*sampleVolume} mmol, which needs {@equivalenceVolume} mL of AgNO₃. With {reagentVolume} mL, Ag⁺ ({=reagentConcentration*reagentVolume} mmol) runs out: about {@amount|3} mmol of white AgCl, {@precipitatedPercent|3}% of the chloride. The precipitate is AgCl; Fe(OH)₃ needs OH⁻, which AgNO₃ does not supply.",
+      "vi": {
+        "stem": "Nhỏ {reagentVolume} mL dung dịch AgNO₃ {reagentConcentration} mol/L vào {sampleVolume} mL dung dịch FeCl₃ {sampleConcentration} mol/L. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Mỗi FeCl₃ cho ba ion Cl⁻: n(Cl⁻) = 3·{sampleConcentration}·{sampleVolume} = {=3*sampleConcentration*sampleVolume} mmol, cần {@equivalenceVolume} mL AgNO₃. Với {reagentVolume} mL, Ag⁺ ({=reagentConcentration*reagentVolume} mmol) hết: tạo khoảng {@amount|3} mmol AgCl trắng, bằng {@precipitatedPercent|3}% lượng chloride. Kết tủa là AgCl; Fe(OH)₃ cần ion OH⁻, mà AgNO₃ không cung cấp."
+      },
+      "statements": [
+        {
+          "text": "{@equivalenceVolume} mL of AgNO₃ would precipitate all the chloride.",
+          "vi": {
+            "text": "Cần {@equivalenceVolume} mL AgNO₃ để kết tủa hết ion chloride."
+          },
+          "true": true,
+          "check": {
+            "expr": "3*sampleConcentration*sampleVolume/reagentConcentration",
+            "equals": "equivalenceVolume"
+          }
+        },
+        {
+          "text": "About {@amount|3} mmol of AgCl forms.",
+          "vi": {
+            "text": "Có khoảng {@amount|3} mmol AgCl tạo thành."
+          },
+          "true": true
+        },
+        {
+          "text": "The precipitate is red-brown Fe(OH)₃.",
+          "vi": {
+            "text": "Kết tủa là Fe(OH)₃ màu nâu đỏ."
+          },
+          "true": false,
+          "check": {
+            "expr": "7",
+            "equals": "product"
+          }
+        },
+        {
+          "text": "Only about {@precipitatedPercent|3}% of the chloride has precipitated.",
+          "vi": {
+            "text": "Mới chỉ khoảng {@precipitatedPercent|3}% lượng chloride bị kết tủa."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "sulfate-test",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["tests"],
+      "stem": "Which reagent is used to test a solution for sulfate ions, SO₄²⁻?",
+      "explain": "Barium ions form a white precipitate of barium sulfate, Ba²⁺ + SO₄²⁻ → BaSO₄↓, which does not dissolve in dilute acid. Silver nitrate tests for halides; sodium hydroxide for metal ions such as Cu²⁺ and Fe³⁺.",
+      "vi": {
+        "stem": "Thuốc thử nào được dùng để nhận biết ion sulfate, SO₄²⁻, trong dung dịch?",
+        "explain": "Ion barium tạo kết tủa trắng barium sulfate, Ba²⁺ + SO₄²⁻ → BaSO₄↓, không tan trong acid loãng. Silver nitrate dùng để nhận biết ion halide; sodium hydroxide dùng cho các ion kim loại như Cu²⁺ và Fe³⁺."
+      },
+      "options": [
+        {
+          "text": "Barium nitrate, Ba(NO₃)₂",
+          "vi": {
+            "text": "Barium nitrate, Ba(NO₃)₂"
+          },
+          "correct": true
+        },
+        {
+          "text": "Silver nitrate, AgNO₃",
+          "vi": {
+            "text": "Silver nitrate, AgNO₃"
+          }
+        },
+        {
+          "text": "Sodium hydroxide, NaOH",
+          "vi": {
+            "text": "Sodium hydroxide, NaOH"
+          }
+        },
+        {
+          "text": "Phenolphthalein",
+          "vi": {
+            "text": "Phenolphthalein"
+          }
+        }
+      ]
+    },
+    {
+      "id": "barium-equation",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["equations"],
+      "stem": "Which is the net ionic equation for the reaction of barium nitrate with sodium sulfate solution?",
+      "explain": "Only barium and sulfate ions leave the solution as a solid: Ba²⁺ + SO₄²⁻ → BaSO₄↓. Na⁺ and NO₃⁻ are spectator ions: sodium nitrate, barium nitrate and sodium sulfate are all soluble.",
+      "vi": {
+        "stem": "Phương trình ion rút gọn của phản ứng giữa dung dịch barium nitrate và dung dịch sodium sulfate là",
+        "explain": "Chỉ có ion barium và ion sulfate tách ra khỏi dung dịch dưới dạng chất rắn: Ba²⁺ + SO₄²⁻ → BaSO₄↓. Na⁺ và NO₃⁻ là ion không tham gia phản ứng: sodium nitrate, barium nitrate và sodium sulfate đều tan."
+      },
+      "options": [
+        {
+          "text": "Ba²⁺ + SO₄²⁻ → BaSO₄↓",
+          "vi": {
+            "text": "Ba²⁺ + SO₄²⁻ → BaSO₄↓"
+          },
+          "correct": true
+        },
+        {
+          "text": "Na⁺ + NO₃⁻ → NaNO₃↓",
+          "vi": {
+            "text": "Na⁺ + NO₃⁻ → NaNO₃↓"
+          }
+        },
+        {
+          "text": "2Na⁺ + SO₄²⁻ → Na₂SO₄↓",
+          "vi": {
+            "text": "2Na⁺ + SO₄²⁻ → Na₂SO₄↓"
+          }
+        },
+        {
+          "text": "Ba²⁺ + 2NO₃⁻ → Ba(NO₃)₂↓",
+          "vi": {
+            "text": "Ba²⁺ + 2NO₃⁻ → Ba(NO₃)₂↓"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-spectators",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["tests", "equations", "ksp"],
+      "stem": "The station's reagents (0.02 mol/L) are added to its sample solutions. Decide whether each statement is true or false.",
+      "explain": "In AgNO₃ + NaCl only Ag⁺ and Cl⁻ react; Na⁺ and NO₃⁻ stay in solution. BaSO₄ is white. At these dilute concentrations silver sulfate stays below its Ksp, so AgNO₃ gives no precipitate with Na₂SO₄. NaOH with Fe³⁺ gives red-brown Fe(OH)₃; the blue precipitate is Cu(OH)₂.",
+      "vi": {
+        "stem": "Cho các thuốc thử của trạm (0,02 mol/L) vào các dung dịch mẫu. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Trong phản ứng AgNO₃ + NaCl chỉ có Ag⁺ và Cl⁻ phản ứng; Na⁺ và NO₃⁻ vẫn ở trong dung dịch. BaSO₄ có màu trắng. Ở các nồng độ loãng này, silver sulfate chưa đạt Ksp, nên AgNO₃ không tạo kết tủa với Na₂SO₄. NaOH với Fe³⁺ tạo Fe(OH)₃ màu nâu đỏ; kết tủa màu xanh lam là Cu(OH)₂."
+      },
+      "statements": [
+        {
+          "text": "In AgNO₃ + NaCl, the Na⁺ and NO₃⁻ ions are spectator ions.",
+          "vi": {
+            "text": "Trong phản ứng AgNO₃ + NaCl, các ion Na⁺ và NO₃⁻ không tham gia phản ứng."
+          },
+          "true": true
+        },
+        {
+          "text": "Barium sulfate is a white precipitate.",
+          "vi": {
+            "text": "Barium sulfate là kết tủa màu trắng."
+          },
+          "true": true
+        },
+        {
+          "text": "AgNO₃ added to the Na₂SO₄ solution gives a heavy white precipitate of Ag₂SO₄.",
+          "vi": {
+            "text": "Cho AgNO₃ vào dung dịch Na₂SO₄ tạo nhiều kết tủa trắng Ag₂SO₄."
+          },
+          "true": false
+        },
+        {
+          "text": "NaOH added to FeCl₃ solution gives a blue precipitate.",
+          "vi": {
+            "text": "Cho NaOH vào dung dịch FeCl₃ tạo kết tủa màu xanh lam."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "bromide-mass",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["amounts", "equations"],
+      "set": {
+        "sample": 1,
+        "reagent": 0,
+        "reagentVolume": 10,
+        "sampleConcentration": 0.01
+      },
+      "stem": "{reagentVolume} mL of AgNO₃ ({reagentConcentration} mol/L) is added to {sampleVolume} mL of KBr solution ({sampleConcentration} mol/L). What mass of AgBr (187.77 g/mol) forms?",
+      "explain": "Ag⁺ + Br⁻ → AgBr↓. n(Ag⁺) = {=reagentConcentration*reagentVolume} mmol, n(Br⁻) = {=sampleConcentration*sampleVolume} mmol: bromide runs out, so n(AgBr) ≈ {=sampleConcentration*sampleVolume} mmol and m ≈ {=sampleConcentration*sampleVolume}·187.77/1000 ≈ {@mass|3} g (mmol → mol).",
+      "vi": {
+        "stem": "Cho {reagentVolume} mL dung dịch AgNO₃ ({reagentConcentration} mol/L) vào {sampleVolume} mL dung dịch KBr ({sampleConcentration} mol/L). Khối lượng AgBr (187,77 g/mol) tạo thành là bao nhiêu?",
+        "explain": "Ag⁺ + Br⁻ → AgBr↓. n(Ag⁺) = {=reagentConcentration*reagentVolume} mmol, n(Br⁻) = {=sampleConcentration*sampleVolume} mmol: bromide hết trước, nên n(AgBr) ≈ {=sampleConcentration*sampleVolume} mmol và m ≈ {=sampleConcentration*sampleVolume}·187,77/1000 ≈ {@mass|3} g (đổi mmol sang mol)."
+      },
+      "options": [
+        {
+          "text": "{=sampleConcentration*sampleVolume*187.77/1000|3} g",
+          "vi": {
+            "text": "{=sampleConcentration*sampleVolume*187.77/1000|3} g"
+          },
+          "correct": true,
+          "check": {
+            "expr": "sampleConcentration*sampleVolume*187.77/1000",
+            "equals": "mass"
+          }
+        },
+        {
+          "text": "{=reagentConcentration*reagentVolume*187.77/1000|3} g",
+          "vi": {
+            "text": "{=reagentConcentration*reagentVolume*187.77/1000|3} g"
+          },
+          "check": {
+            "expr": "reagentConcentration*reagentVolume*187.77/1000",
+            "equals": "mass"
+          }
+        },
+        {
+          "text": "{=sampleConcentration*sampleVolume*187.77|3} g",
+          "vi": {
+            "text": "{=sampleConcentration*sampleVolume*187.77|3} g"
+          },
+          "check": {
+            "expr": "sampleConcentration*sampleVolume*187.77",
+            "equals": "mass"
+          }
+        },
+        {
+          "text": "{=sampleConcentration*sampleVolume*143.32/1000|3} g",
+          "vi": {
+            "text": "{=sampleConcentration*sampleVolume*143.32/1000|3} g"
+          },
+          "check": {
+            "expr": "sampleConcentration*sampleVolume*143.32/1000",
+            "equals": "mass"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-iron-hydroxide",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["amounts", "equations", "tests"],
+      "set": {
+        "sample": 5,
+        "reagent": 2,
+        "reagentVolume": 5,
+        "sampleConcentration": 0.01
+      },
+      "stem": "{reagentVolume} mL of NaOH ({reagentConcentration} mol/L) is added to {sampleVolume} mL of FeCl₃ solution ({sampleConcentration} mol/L). Decide whether each statement is true or false.",
+      "explain": "Fe³⁺ + 3OH⁻ → Fe(OH)₃↓, red-brown. All the iron would need 3·{sampleConcentration}·{sampleVolume}/{reagentConcentration} = {@equivalenceVolume} mL. With {reagentVolume} mL, OH⁻ ({=reagentConcentration*reagentVolume} mmol) runs out: n(Fe(OH)₃) = {=reagentConcentration*reagentVolume}/3 ≈ {@amount|3} mmol, {@precipitatedPercent|3}% of the iron.",
+      "vi": {
+        "stem": "Cho {reagentVolume} mL dung dịch NaOH ({reagentConcentration} mol/L) vào {sampleVolume} mL dung dịch FeCl₃ ({sampleConcentration} mol/L). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Fe³⁺ + 3OH⁻ → Fe(OH)₃↓, màu nâu đỏ. Để kết tủa hết sắt cần 3·{sampleConcentration}·{sampleVolume}/{reagentConcentration} = {@equivalenceVolume} mL. Với {reagentVolume} mL, OH⁻ ({=reagentConcentration*reagentVolume} mmol) hết trước: n(Fe(OH)₃) = {=reagentConcentration*reagentVolume}/3 ≈ {@amount|3} mmol, tức {@precipitatedPercent|3}% lượng sắt."
+      },
+      "statements": [
+        {
+          "text": "A red-brown precipitate of Fe(OH)₃ forms.",
+          "vi": {
+            "text": "Có kết tủa Fe(OH)₃ màu nâu đỏ tạo thành."
+          },
+          "true": true,
+          "check": {
+            "expr": "7",
+            "equals": "product"
+          }
+        },
+        {
+          "text": "{=3*sampleConcentration*sampleVolume/reagentConcentration} mL of the NaOH would precipitate all the iron.",
+          "vi": {
+            "text": "Cần {=3*sampleConcentration*sampleVolume/reagentConcentration} mL dung dịch NaOH để kết tủa hết sắt."
+          },
+          "true": true,
+          "check": {
+            "expr": "3*sampleConcentration*sampleVolume/reagentConcentration",
+            "equals": "equivalenceVolume"
+          }
+        },
+        {
+          "text": "{=reagentConcentration*reagentVolume} mmol of Fe(OH)₃ forms.",
+          "vi": {
+            "text": "Có {=reagentConcentration*reagentVolume} mmol Fe(OH)₃ tạo thành."
+          },
+          "true": false,
+          "check": {
+            "expr": "reagentConcentration*reagentVolume",
+            "equals": "amount"
+          }
+        },
+        {
+          "text": "About {=100*reagentConcentration*reagentVolume/3/(sampleConcentration*sampleVolume)|3}% of the iron has precipitated.",
+          "vi": {
+            "text": "Khoảng {=100*reagentConcentration*reagentVolume/3/(sampleConcentration*sampleVolume)|3}% lượng sắt đã kết tủa."
+          },
+          "true": true,
+          "check": {
+            "expr": "100*reagentConcentration*reagentVolume/3/(sampleConcentration*sampleVolume)",
+            "equals": "precipitatedPercent"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-bromide-concentration",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["amounts", "equations"],
+      "set": {
+        "sample": 1,
+        "reagent": 0,
+        "sampleConcentration": 0.005
+      },
+      "stem": "AgNO₃ ({reagentConcentration} mol/L) is run into {sampleVolume} mL of a KBr solution of unknown concentration. No more precipitate forms after {@equivalenceVolume} mL. What is the KBr concentration?",
+      "explain": "At that point n(Ag⁺) = n(Br⁻) (1 : 1): {reagentConcentration}·{@equivalenceVolume} = {=reagentConcentration*@equivalenceVolume} mmol in {sampleVolume} mL, so c = {=reagentConcentration*@equivalenceVolume}/{sampleVolume} = {=reagentConcentration*@equivalenceVolume/sampleVolume} mol/L. Turning the ratio over, or forgetting to divide by the sample volume, are the traps.",
+      "vi": {
+        "stem": "Nhỏ dần dung dịch AgNO₃ ({reagentConcentration} mol/L) vào {sampleVolume} mL dung dịch KBr chưa biết nồng độ. Sau khi thêm {@equivalenceVolume} mL thì không còn kết tủa tạo thêm. Nồng độ KBr là bao nhiêu?",
+        "explain": "Khi đó n(Ag⁺) = n(Br⁻) (tỉ lệ 1 : 1): {reagentConcentration}·{@equivalenceVolume} = {=reagentConcentration*@equivalenceVolume} mmol trong {sampleVolume} mL, nên c = {=reagentConcentration*@equivalenceVolume}/{sampleVolume} = {=reagentConcentration*@equivalenceVolume/sampleVolume} mol/L. Lật ngược tỉ số, hoặc quên chia cho thể tích mẫu, là các bẫy thường gặp."
+      },
+      "options": [
+        {
+          "text": "{=reagentConcentration*@equivalenceVolume/sampleVolume} mol/L",
+          "vi": {
+            "text": "{=reagentConcentration*@equivalenceVolume/sampleVolume} mol/L"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(reagentConcentration*@equivalenceVolume/sampleVolume)*sampleVolume/reagentConcentration",
+            "equals": "equivalenceVolume"
+          }
+        },
+        {
+          "text": "{=reagentConcentration*sampleVolume/@equivalenceVolume} mol/L",
+          "vi": {
+            "text": "{=reagentConcentration*sampleVolume/@equivalenceVolume} mol/L"
+          },
+          "check": {
+            "expr": "(reagentConcentration*sampleVolume/@equivalenceVolume)*sampleVolume/reagentConcentration",
+            "equals": "equivalenceVolume"
+          }
+        },
+        {
+          "text": "{=reagentConcentration*@equivalenceVolume} mol/L",
+          "vi": {
+            "text": "{=reagentConcentration*@equivalenceVolume} mol/L"
+          },
+          "check": {
+            "expr": "(reagentConcentration*@equivalenceVolume)*sampleVolume/reagentConcentration",
+            "equals": "equivalenceVolume"
+          }
+        },
+        {
+          "text": "{=reagentConcentration*@equivalenceVolume/(2*sampleVolume)} mol/L",
+          "vi": {
+            "text": "{=reagentConcentration*@equivalenceVolume/(2*sampleVolume)} mol/L"
+          },
+          "check": {
+            "expr": "(reagentConcentration*@equivalenceVolume/(2*sampleVolume))*sampleVolume/reagentConcentration",
+            "equals": "equivalenceVolume"
+          }
+        }
+      ]
+    },
+    {
+      "id": "two-tests",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["tests"],
+      "stem": "A solution gives a white precipitate with barium nitrate and a blue precipitate with sodium hydroxide. Which solution is it?",
+      "explain": "White with Ba²⁺ shows sulfate (BaSO₄); blue with OH⁻ shows copper(II) (Cu(OH)₂): copper(II) sulfate. Na₂SO₄ gives no precipitate with NaOH; FeCl₃ gives red-brown Fe(OH)₃ and no BaSO₄; NaCl reacts with neither.",
+      "vi": {
+        "stem": "Một dung dịch tạo kết tủa trắng với barium nitrate và kết tủa xanh lam với sodium hydroxide. Đó là dung dịch nào?",
+        "explain": "Kết tủa trắng với Ba²⁺ cho thấy có ion sulfate (BaSO₄); kết tủa xanh lam với OH⁻ cho thấy có ion copper(II) (Cu(OH)₂): copper(II) sulfate. Na₂SO₄ không tạo kết tủa với NaOH; FeCl₃ tạo Fe(OH)₃ màu nâu đỏ và không tạo BaSO₄; NaCl không phản ứng với cả hai thuốc thử."
+      },
+      "options": [
+        {
+          "text": "CuSO₄",
+          "vi": {
+            "text": "CuSO₄"
+          },
+          "correct": true
+        },
+        {
+          "text": "Na₂SO₄",
+          "vi": {
+            "text": "Na₂SO₄"
+          }
+        },
+        {
+          "text": "FeCl₃",
+          "vi": {
+            "text": "FeCl₃"
+          }
+        },
+        {
+          "text": "NaCl",
+          "vi": {
+            "text": "NaCl"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-silver-excess",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["amounts", "equations"],
+      "set": {
+        "sample": 0,
+        "reagent": 0,
+        "reagentVolume": 10,
+        "sampleConcentration": 0.005
+      },
+      "stem": "{reagentVolume} mL of AgNO₃ ({reagentConcentration} mol/L) is added to {sampleVolume} mL of NaCl solution ({sampleConcentration} mol/L). Decide whether each statement is true or false.",
+      "explain": "n(Cl⁻) = {=sampleConcentration*sampleVolume} mmol needs only {sampleConcentration}·{sampleVolume}/{reagentConcentration} = {@equivalenceVolume} mL of AgNO₃; beyond that the chloride is used up and extra Ag⁺ forms no more AgCl. So about {=sampleConcentration*sampleVolume} mmol of AgCl forms, not the {=reagentConcentration*reagentVolume} mmol of Ag⁺ added.",
+      "vi": {
+        "stem": "Cho {reagentVolume} mL dung dịch AgNO₃ ({reagentConcentration} mol/L) vào {sampleVolume} mL dung dịch NaCl ({sampleConcentration} mol/L). Mỗi nhận định sau đúng hay sai?",
+        "explain": "n(Cl⁻) = {=sampleConcentration*sampleVolume} mmol chỉ cần {sampleConcentration}·{sampleVolume}/{reagentConcentration} = {@equivalenceVolume} mL AgNO₃; sau đó chloride đã hết và Ag⁺ thêm vào không tạo thêm AgCl. Vì vậy chỉ khoảng {=sampleConcentration*sampleVolume} mmol AgCl tạo thành, không phải {=reagentConcentration*reagentVolume} mmol Ag⁺ đã thêm vào."
+      },
+      "statements": [
+        {
+          "text": "The chloride is the ion that runs out.",
+          "vi": {
+            "text": "Ion chloride là ion hết trước."
+          },
+          "true": true
+        },
+        {
+          "text": "{=sampleConcentration*sampleVolume/reagentConcentration} mL of the AgNO₃ is enough to precipitate all the chloride.",
+          "vi": {
+            "text": "{=sampleConcentration*sampleVolume/reagentConcentration} mL dung dịch AgNO₃ là đủ để kết tủa hết chloride."
+          },
+          "true": true,
+          "check": {
+            "expr": "sampleConcentration*sampleVolume/reagentConcentration",
+            "equals": "equivalenceVolume"
+          }
+        },
+        {
+          "text": "Each extra millilitre of AgNO₃ beyond that point forms more AgCl.",
+          "vi": {
+            "text": "Sau thời điểm đó, mỗi mL AgNO₃ thêm vào lại tạo thêm AgCl."
+          },
+          "true": false
+        },
+        {
+          "text": "{=reagentConcentration*reagentVolume} mmol of AgCl forms.",
+          "vi": {
+            "text": "Có {=reagentConcentration*reagentVolume} mmol AgCl tạo thành."
+          },
+          "true": false,
+          "check": {
+            "expr": "reagentConcentration*reagentVolume",
+            "equals": "amount"
+          }
+        }
+      ]
+    }
+  ]
+}

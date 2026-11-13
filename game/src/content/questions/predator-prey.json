@@ -1,0 +1,1056 @@
+{
+  "id": "predator-prey",
+  "skills": [
+    {
+      "id": "cycles",
+      "name": "Predator–prey cycles",
+      "advice": "Run the station and pause at each turning point: say which population is rising and why. Remember the order: prey peak first, predators a little later.",
+      "vi": {
+        "name": "Chu kì biến động số lượng vật săn mồi – con mồi",
+        "advice": "Chạy trạm và dừng ở mỗi điểm đổi chiều: nói rõ quần thể nào đang tăng và vì sao. Ghi nhớ thứ tự: con mồi đạt đỉnh trước, vật săn mồi đạt đỉnh muộn hơn một chút."
+      }
+    },
+    {
+      "id": "equilibrium",
+      "name": "The equilibrium: x* = γ/δ, y* = α/β",
+      "advice": "Derive the equilibrium yourself: the foxes stay level when δx = γ, the rabbits when α = βy. The trap: the rabbits’ level is set by the foxes’ rates, and the other way round. Start the station at (100, 50) and see nothing change.",
+      "vi": {
+        "name": "Điểm cân bằng: x* = γ/δ, y* = α/β",
+        "advice": "Tự suy ra điểm cân bằng: số cáo không đổi khi δx = γ, số thỏ không đổi khi α = βy. Bẫy thường gặp: mức cân bằng của thỏ do các hệ số của cáo quyết định, và ngược lại. Cho trạm bắt đầu ở (100, 50) và thấy số lượng không thay đổi."
+      }
+    },
+    {
+      "id": "period",
+      "name": "The period of small cycles: 2π/√(αγ)",
+      "advice": "Practise T = 2π/√(αγ) for a few pairs of rates, and check on the graph that the peaks are about T apart. It holds for small cycles near the equilibrium.",
+      "vi": {
+        "name": "Chu kì của các dao động nhỏ: 2π/√(αγ)",
+        "advice": "Luyện tính T = 2π/√(αγ) với vài cặp hệ số, rồi kiểm tra trên đồ thị rằng các đỉnh cách nhau khoảng T. Công thức đúng cho các dao động nhỏ quanh điểm cân bằng."
+      }
+    },
+    {
+      "id": "ecology",
+      "name": "Reading the model’s terms and its limits",
+      "advice": "Name each term of the equations aloud: αx births, βxy rabbits eaten, δxy foxes fed, γy fox deaths. Then ask what happens when one population is zero, and remember that the rates here are illustrative.",
+      "vi": {
+        "name": "Ý nghĩa các số hạng của mô hình và giới hạn của nó",
+        "advice": "Tự gọi tên từng số hạng của phương trình: αx là thỏ sinh ra, βxy là thỏ bị ăn, δxy là cáo được nuôi thêm, γy là cáo chết. Sau đó xét điều gì xảy ra khi một quần thể bằng 0, và nhớ rằng các hệ số ở đây chỉ là minh họa."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "who-peaks",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["cycles"],
+      "stem": "In the rabbit and fox cycles, the foxes’ numbers peak…",
+      "explain": "The foxes need many rabbits to feed on before they can multiply, so their peak comes a little after the rabbits’.",
+      "vi": {
+        "stem": "Trong chu kì biến động số lượng thỏ và cáo, số lượng cáo đạt đỉnh…",
+        "explain": "Cáo cần nhiều thỏ làm thức ăn trước khi tăng số lượng, nên đỉnh của cáo đến muộn hơn đỉnh của thỏ một chút."
+      },
+      "options": [
+        {
+          "text": "a little after the rabbits’ peak",
+          "vi": {
+            "text": "muộn hơn đỉnh của thỏ một chút"
+          },
+          "correct": true
+        },
+        {
+          "text": "at the same moment as the rabbits’ peak",
+          "vi": {
+            "text": "cùng lúc với đỉnh của thỏ"
+          }
+        },
+        {
+          "text": "a little before the rabbits’ peak",
+          "vi": {
+            "text": "sớm hơn đỉnh của thỏ một chút"
+          }
+        },
+        {
+          "text": "never: they stay constant",
+          "vi": {
+            "text": "không bao giờ: số lượng cáo luôn không đổi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "term-beta",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["ecology"],
+      "stem": "In dx/dt = αx − βxy for the rabbits, the term βxy stands for…",
+      "explain": "βxy grows with both the rabbits and the foxes: it is the rabbits eaten by foxes. αx are the rabbits born.",
+      "vi": {
+        "stem": "Trong phương trình của thỏ dx/dt = αx − βxy, số hạng βxy biểu thị…",
+        "explain": "βxy tăng theo cả số thỏ và số cáo: đó là số thỏ bị cáo ăn. αx là số thỏ được sinh ra."
+      },
+      "options": [
+        {
+          "text": "the rabbits eaten by foxes",
+          "vi": {
+            "text": "số thỏ bị cáo ăn"
+          },
+          "correct": true
+        },
+        {
+          "text": "the rabbits born",
+          "vi": {
+            "text": "số thỏ được sinh ra"
+          }
+        },
+        {
+          "text": "the foxes born",
+          "vi": {
+            "text": "số cáo được sinh ra"
+          }
+        },
+        {
+          "text": "the foxes that die",
+          "vi": {
+            "text": "số cáo bị chết"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-basic",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["cycles", "ecology"],
+      "stem": "In the Lotka–Volterra model dx/dt = αx − βxy (rabbits) and dy/dt = δxy − γy (foxes), with β = {predation} and δ = {conversion}. Decide whether each statement is true or false.",
+      "explain": "Rabbits are the prey, foxes the predators. Plenty of rabbits feed the foxes, which then increase. With no foxes, dx/dt = αx: the rabbits grow without limit in this model. With no rabbits, dy/dt = −γy: the foxes die out.",
+      "vi": {
+        "stem": "Trong mô hình Lotka–Volterra dx/dt = αx − βxy (thỏ) và dy/dt = δxy − γy (cáo), với β = {predation} và δ = {conversion}. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Thỏ là con mồi, cáo là vật săn mồi. Nhiều thỏ thì cáo có nhiều thức ăn và tăng số lượng. Khi không có cáo, dx/dt = αx: trong mô hình này số thỏ tăng không giới hạn. Khi không có thỏ, dy/dt = −γy: cáo bị chết dần hết."
+      },
+      "statements": [
+        {
+          "text": "The rabbits are the prey and the foxes the predators.",
+          "vi": {
+            "text": "Thỏ là con mồi, cáo là vật săn mồi."
+          },
+          "true": true
+        },
+        {
+          "text": "When rabbits are plentiful, the fox population grows.",
+          "vi": {
+            "text": "Khi thỏ dồi dào, số lượng cáo tăng lên."
+          },
+          "true": true
+        },
+        {
+          "text": "With no foxes, the rabbits in the model would decline to zero.",
+          "vi": {
+            "text": "Khi không có cáo, số thỏ trong mô hình sẽ giảm dần về 0."
+          },
+          "true": false
+        },
+        {
+          "text": "With no rabbits, the foxes in the model would die out.",
+          "vi": {
+            "text": "Khi không có thỏ, cáo trong mô hình sẽ chết dần hết."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "why-rabbits-fall",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["cycles"],
+      "stem": "Why do the rabbits decline while the foxes are near their peak?",
+      "explain": "With many foxes, βxy exceeds αx: more rabbits are eaten than are born. Once the rabbits are few, the foxes starve and fall too.",
+      "vi": {
+        "stem": "Vì sao số thỏ giảm khi số cáo ở gần đỉnh?",
+        "explain": "Khi có nhiều cáo, βxy lớn hơn αx: số thỏ bị ăn nhiều hơn số thỏ sinh ra. Khi thỏ còn ít, cáo thiếu thức ăn và cũng giảm theo."
+      },
+      "options": [
+        {
+          "text": "Many foxes eat more rabbits than are born",
+          "vi": {
+            "text": "Nhiều cáo ăn số thỏ nhiều hơn số thỏ được sinh ra"
+          },
+          "correct": true
+        },
+        {
+          "text": "The rabbits run out of grass",
+          "vi": {
+            "text": "Thỏ hết cỏ để ăn"
+          }
+        },
+        {
+          "text": "The rabbits stop breeding when foxes are near",
+          "vi": {
+            "text": "Thỏ ngừng sinh sản khi có cáo ở gần"
+          }
+        },
+        {
+          "text": "The foxes and rabbits compete for the same food",
+          "vi": {
+            "text": "Cáo và thỏ cạnh tranh cùng một nguồn thức ăn"
+          }
+        }
+      ]
+    },
+    {
+      "id": "start-at-equilibrium",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["equilibrium"],
+      "stem": "The populations start exactly at the equilibrium, x* = γ/δ rabbits and y* = α/β foxes. In the model they…",
+      "explain": "At the equilibrium dx/dt = 0 and dy/dt = 0: births balance losses for both, so nothing changes.",
+      "vi": {
+        "stem": "Hai quần thể bắt đầu đúng tại điểm cân bằng, x* = γ/δ con thỏ và y* = α/β con cáo. Trong mô hình, chúng…",
+        "explain": "Tại điểm cân bằng dx/dt = 0 và dy/dt = 0: số sinh ra bằng số mất đi ở cả hai loài, nên không có gì thay đổi."
+      },
+      "options": [
+        {
+          "text": "stay the same",
+          "vi": {
+            "text": "giữ nguyên số lượng"
+          },
+          "correct": true
+        },
+        {
+          "text": "cycle with the largest swings",
+          "vi": {
+            "text": "dao động với biên độ lớn nhất"
+          }
+        },
+        {
+          "text": "both die out",
+          "vi": {
+            "text": "đều chết hết"
+          }
+        },
+        {
+          "text": "both grow without limit",
+          "vi": {
+            "text": "đều tăng không giới hạn"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-equilibrium",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["equilibrium", "period"],
+      "set": {
+        "preyBirth": 1,
+        "predatorDeath": 1
+      },
+      "stem": "In the Lotka–Volterra model dx/dt = αx − βxy (rabbits) and dy/dt = δxy − γy (foxes), with β = {predation} and δ = {conversion}. Here α = {preyBirth} and γ = {predatorDeath} per day. Decide whether each statement is true or false.",
+      "explain": "x* = γ/δ = {@preyEquilibrium}: a larger γ raises it. α sets the foxes’ level y* = α/β = {@predatorEquilibrium}, not the rabbits’. Small cycles last 2π/√(αγ) ≈ {@period} days.",
+      "vi": {
+        "stem": "Trong mô hình Lotka–Volterra dx/dt = αx − βxy (thỏ) và dy/dt = δxy − γy (cáo), với β = {predation} và δ = {conversion}. Ở đây α = {preyBirth} và γ = {predatorDeath} mỗi ngày. Mỗi nhận định sau đúng hay sai?",
+        "explain": "x* = γ/δ = {@preyEquilibrium}: γ lớn hơn thì x* lớn hơn. α quyết định mức cân bằng của cáo y* = α/β = {@predatorEquilibrium}, không phải của thỏ. Các dao động nhỏ có chu kì 2π/√(αγ) ≈ {@period} ngày."
+      },
+      "statements": [
+        {
+          "text": "The rabbits’ equilibrium is γ/δ = {@preyEquilibrium}.",
+          "vi": {
+            "text": "Số thỏ ở trạng thái cân bằng là γ/δ = {@preyEquilibrium}."
+          },
+          "true": true,
+          "check": {
+            "expr": "predatorDeath/conversion",
+            "equals": "preyEquilibrium"
+          }
+        },
+        {
+          "text": "A higher fox death rate γ raises the rabbits’ equilibrium.",
+          "vi": {
+            "text": "Tỉ lệ chết của cáo γ cao hơn làm tăng số thỏ ở trạng thái cân bằng."
+          },
+          "true": true
+        },
+        {
+          "text": "A higher rabbit birth rate α raises the rabbits’ equilibrium.",
+          "vi": {
+            "text": "Tỉ lệ sinh của thỏ α cao hơn làm tăng số thỏ ở trạng thái cân bằng."
+          },
+          "true": false
+        },
+        {
+          "text": "Small cycles last about {@period} days.",
+          "vi": {
+            "text": "Các dao động nhỏ có chu kì khoảng {@period} ngày."
+          },
+          "true": true,
+          "check": {
+            "expr": "2*pi/sqrt(preyBirth*predatorDeath)",
+            "equals": "period"
+          }
+        }
+      ]
+    },
+    {
+      "id": "prey-equilibrium",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["equilibrium"],
+      "set": {
+        "preyBirth": 1.5,
+        "predatorDeath": 0.5
+      },
+      "stem": "In the Lotka–Volterra model dx/dt = αx − βxy (rabbits) and dy/dt = δxy − γy (foxes), with β = {predation} and δ = {conversion}. Rabbits are born at α = {preyBirth} and foxes die at γ = {predatorDeath} per day. How many rabbits keep the foxes steady?",
+      "explain": "dy/dt = y(δx − γ) = 0 when x = γ/δ = {predatorDeath}/{conversion} = {@preyEquilibrium}.",
+      "vi": {
+        "stem": "Trong mô hình Lotka–Volterra dx/dt = αx − βxy (thỏ) và dy/dt = δxy − γy (cáo), với β = {predation} và δ = {conversion}. Thỏ sinh ra với α = {preyBirth} và cáo chết với γ = {predatorDeath} mỗi ngày. Cần bao nhiêu con thỏ để số cáo không đổi?",
+        "explain": "dy/dt = y(δx − γ) = 0 khi x = γ/δ = {predatorDeath}/{conversion} = {@preyEquilibrium}."
+      },
+      "options": [
+        {
+          "text": "{@preyEquilibrium}",
+          "vi": {
+            "text": "{@preyEquilibrium}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "predatorDeath/conversion",
+            "equals": "preyEquilibrium"
+          }
+        },
+        {
+          "text": "{=preyBirth/conversion}",
+          "vi": {
+            "text": "{=preyBirth/conversion}"
+          },
+          "check": {
+            "expr": "preyBirth/conversion",
+            "equals": "preyEquilibrium"
+          }
+        },
+        {
+          "text": "{=predatorDeath/predation}",
+          "vi": {
+            "text": "{=predatorDeath/predation}"
+          },
+          "check": {
+            "expr": "predatorDeath/predation",
+            "equals": "preyEquilibrium"
+          }
+        },
+        {
+          "text": "{=conversion/predatorDeath}",
+          "vi": {
+            "text": "{=conversion/predatorDeath}"
+          },
+          "check": {
+            "expr": "conversion/predatorDeath",
+            "equals": "preyEquilibrium"
+          }
+        }
+      ]
+    },
+    {
+      "id": "predator-equilibrium",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["equilibrium"],
+      "set": {
+        "preyBirth": 0.8,
+        "predatorDeath": 1.2
+      },
+      "stem": "In the Lotka–Volterra model dx/dt = αx − βxy (rabbits) and dy/dt = δxy − γy (foxes), with β = {predation} and δ = {conversion}. Rabbits are born at α = {preyBirth} and foxes die at γ = {predatorDeath} per day. How many foxes keep the rabbits steady?",
+      "explain": "dx/dt = x(α − βy) = 0 when y = α/β = {preyBirth}/{predation} = {@predatorEquilibrium}.",
+      "vi": {
+        "stem": "Trong mô hình Lotka–Volterra dx/dt = αx − βxy (thỏ) và dy/dt = δxy − γy (cáo), với β = {predation} và δ = {conversion}. Thỏ sinh ra với α = {preyBirth} và cáo chết với γ = {predatorDeath} mỗi ngày. Cần bao nhiêu con cáo để số thỏ không đổi?",
+        "explain": "dx/dt = x(α − βy) = 0 khi y = α/β = {preyBirth}/{predation} = {@predatorEquilibrium}."
+      },
+      "options": [
+        {
+          "text": "{@predatorEquilibrium}",
+          "vi": {
+            "text": "{@predatorEquilibrium}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "preyBirth/predation",
+            "equals": "predatorEquilibrium"
+          }
+        },
+        {
+          "text": "{=predatorDeath/predation}",
+          "vi": {
+            "text": "{=predatorDeath/predation}"
+          },
+          "check": {
+            "expr": "predatorDeath/predation",
+            "equals": "predatorEquilibrium"
+          }
+        },
+        {
+          "text": "{=preyBirth/conversion}",
+          "vi": {
+            "text": "{=preyBirth/conversion}"
+          },
+          "check": {
+            "expr": "preyBirth/conversion",
+            "equals": "predatorEquilibrium"
+          }
+        },
+        {
+          "text": "{=predation/preyBirth}",
+          "vi": {
+            "text": "{=predation/preyBirth}"
+          },
+          "check": {
+            "expr": "predation/preyBirth",
+            "equals": "predatorEquilibrium"
+          }
+        }
+      ]
+    },
+    {
+      "id": "cycle-period",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["period"],
+      "set": {
+        "preyBirth": 0.5,
+        "predatorDeath": 0.5
+      },
+      "stem": "Rabbits are born at α = {preyBirth} and foxes die at γ = {predatorDeath} per day (Lotka–Volterra). Near the equilibrium the populations cycle with T = 2π/√(αγ). How long is one cycle?",
+      "explain": "√(αγ) = √({preyBirth}·{predatorDeath}) = {=sqrt(preyBirth*predatorDeath)}: T = 2π/{=sqrt(preyBirth*predatorDeath)} ≈ {@period} days.",
+      "vi": {
+        "stem": "Thỏ sinh ra với α = {preyBirth} và cáo chết với γ = {predatorDeath} mỗi ngày (mô hình Lotka–Volterra). Gần điểm cân bằng, hai quần thể dao động với chu kì T = 2π/√(αγ). Một chu kì kéo dài bao lâu?",
+        "explain": "√(αγ) = √({preyBirth}·{predatorDeath}) = {=sqrt(preyBirth*predatorDeath)}: T = 2π/{=sqrt(preyBirth*predatorDeath)} ≈ {@period} ngày."
+      },
+      "options": [
+        {
+          "text": "{@period} days",
+          "vi": {
+            "text": "{@period} ngày"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2*pi/sqrt(preyBirth*predatorDeath)",
+            "equals": "period"
+          }
+        },
+        {
+          "text": "{=2*pi/(preyBirth*predatorDeath)} days",
+          "vi": {
+            "text": "{=2*pi/(preyBirth*predatorDeath)} ngày"
+          },
+          "check": {
+            "expr": "2*pi/(preyBirth*predatorDeath)",
+            "equals": "period"
+          }
+        },
+        {
+          "text": "{=2*pi*sqrt(preyBirth*predatorDeath)} days",
+          "vi": {
+            "text": "{=2*pi*sqrt(preyBirth*predatorDeath)} ngày"
+          },
+          "check": {
+            "expr": "2*pi*sqrt(preyBirth*predatorDeath)",
+            "equals": "period"
+          }
+        },
+        {
+          "text": "{=pi/sqrt(preyBirth*predatorDeath)} days",
+          "vi": {
+            "text": "{=pi/sqrt(preyBirth*predatorDeath)} ngày"
+          },
+          "check": {
+            "expr": "pi/sqrt(preyBirth*predatorDeath)",
+            "equals": "period"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-meadow",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["equilibrium", "period"],
+      "set": {
+        "preyBirth": 1.5,
+        "predatorDeath": 0.5
+      },
+      "stem": "In the Lotka–Volterra model dx/dt = αx − βxy (rabbits) and dy/dt = δxy − γy (foxes), with β = {predation} and δ = {conversion}. Here α = {preyBirth} and γ = {predatorDeath} per day. Decide whether each statement is true or false.",
+      "explain": "x* = γ/δ = {@preyEquilibrium} and y* = α/β = {@predatorEquilibrium}. T = 2π/√(αγ) ≈ {@period} days, not 2π/(αγ). Starting away from (x*, y*), the populations cycle; they do not stay put.",
+      "vi": {
+        "stem": "Trong mô hình Lotka–Volterra dx/dt = αx − βxy (thỏ) và dy/dt = δxy − γy (cáo), với β = {predation} và δ = {conversion}. Ở đây α = {preyBirth} và γ = {predatorDeath} mỗi ngày. Mỗi nhận định sau đúng hay sai?",
+        "explain": "x* = γ/δ = {@preyEquilibrium} và y* = α/β = {@predatorEquilibrium}. T = 2π/√(αγ) ≈ {@period} ngày, không phải 2π/(αγ). Nếu bắt đầu khác (x*, y*), hai quần thể sẽ dao động chứ không giữ nguyên."
+      },
+      "statements": [
+        {
+          "text": "The foxes hold steady when there are {@preyEquilibrium} rabbits.",
+          "vi": {
+            "text": "Số cáo không đổi khi có {@preyEquilibrium} con thỏ."
+          },
+          "true": true,
+          "check": {
+            "expr": "predatorDeath/conversion",
+            "equals": "preyEquilibrium"
+          }
+        },
+        {
+          "text": "The rabbits hold steady when there are {@predatorEquilibrium} foxes.",
+          "vi": {
+            "text": "Số thỏ không đổi khi có {@predatorEquilibrium} con cáo."
+          },
+          "true": true,
+          "check": {
+            "expr": "preyBirth/predation",
+            "equals": "predatorEquilibrium"
+          }
+        },
+        {
+          "text": "Small cycles last about {=2*pi/(preyBirth*predatorDeath)} days.",
+          "vi": {
+            "text": "Các dao động nhỏ có chu kì khoảng {=2*pi/(preyBirth*predatorDeath)} ngày."
+          },
+          "true": false,
+          "check": {
+            "expr": "2*pi/(preyBirth*predatorDeath)",
+            "equals": "period"
+          }
+        },
+        {
+          "text": "Starting with {=2*@preyEquilibrium} rabbits and {@predatorEquilibrium} foxes, both populations stay the same.",
+          "vi": {
+            "text": "Nếu bắt đầu với {=2*@preyEquilibrium} con thỏ và {@predatorEquilibrium} con cáo, cả hai quần thể giữ nguyên số lượng."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "disease-foxes",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["equilibrium", "ecology"],
+      "set": {
+        "preyBirth": 1,
+        "predatorDeath": 1.5
+      },
+      "stem": "In the Lotka–Volterra model dx/dt = αx − βxy (rabbits) and dy/dt = δxy − γy (foxes), with β = {predation} and δ = {conversion}. A disease raises the foxes’ death rate γ from 1 to {predatorDeath} per day; the rabbits’ birth rate stays α = {preyBirth}. What are the new equilibrium numbers?",
+      "explain": "x* = γ/δ = {predatorDeath}/{conversion} = {@preyEquilibrium} rabbits (up from {=1/conversion}); y* = α/β = {@predatorEquilibrium} foxes, unchanged: the foxes’ level depends only on the rabbits’ birth rate. More fox deaths mean more rabbits on average, not fewer foxes.",
+      "vi": {
+        "stem": "Trong mô hình Lotka–Volterra dx/dt = αx − βxy (thỏ) và dy/dt = δxy − γy (cáo), với β = {predation} và δ = {conversion}. Một dịch bệnh làm tỉ lệ chết của cáo γ tăng từ 1 lên {predatorDeath} mỗi ngày; tỉ lệ sinh của thỏ vẫn là α = {preyBirth}. Số lượng ở trạng thái cân bằng mới là bao nhiêu?",
+        "explain": "x* = γ/δ = {predatorDeath}/{conversion} = {@preyEquilibrium} con thỏ (tăng từ {=1/conversion}); y* = α/β = {@predatorEquilibrium} con cáo, không đổi: mức cân bằng của cáo chỉ phụ thuộc tỉ lệ sinh của thỏ. Cáo chết nhiều hơn làm số thỏ trung bình tăng, chứ không làm giảm số cáo."
+      },
+      "options": [
+        {
+          "text": "{@preyEquilibrium} rabbits and {@predatorEquilibrium} foxes",
+          "vi": {
+            "text": "{@preyEquilibrium} con thỏ và {@predatorEquilibrium} con cáo"
+          },
+          "correct": true,
+          "check": {
+            "expr": "predatorDeath/conversion",
+            "equals": "preyEquilibrium"
+          }
+        },
+        {
+          "text": "{=1/conversion} rabbits and {=preyBirth/predation/predatorDeath} foxes",
+          "vi": {
+            "text": "{=1/conversion} con thỏ và {=preyBirth/predation/predatorDeath} con cáo"
+          },
+          "check": {
+            "expr": "1/conversion",
+            "equals": "preyEquilibrium"
+          }
+        },
+        {
+          "text": "{@preyEquilibrium} rabbits and {=predatorDeath/predation} foxes",
+          "vi": {
+            "text": "{@preyEquilibrium} con thỏ và {=predatorDeath/predation} con cáo"
+          },
+          "check": {
+            "expr": "predatorDeath/predation",
+            "equals": "predatorEquilibrium"
+          }
+        },
+        {
+          "text": "{=1/(predatorDeath*conversion)} rabbits and {@predatorEquilibrium} foxes",
+          "vi": {
+            "text": "{=1/(predatorDeath*conversion)} con thỏ và {@predatorEquilibrium} con cáo"
+          },
+          "check": {
+            "expr": "1/(predatorDeath*conversion)",
+            "equals": "preyEquilibrium"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-start",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["cycles", "equilibrium", "ecology"],
+      "set": {
+        "prey": 60,
+        "predators": 30,
+        "preyBirth": 1,
+        "predatorDeath": 1
+      },
+      "stem": "In the Lotka–Volterra model dx/dt = αx − βxy (rabbits) and dy/dt = δxy − γy (foxes), with β = {predation} and δ = {conversion}. α = {preyBirth} and γ = {predatorDeath} per day; the meadow starts with {prey} rabbits and {predators} foxes. Decide whether each statement is true or false.",
+      "explain": "At the start dx/dt = {prey}·({preyBirth} − {predation}·{predators}) = {=prey*(preyBirth-predation*predators)} > 0 and dy/dt = {predators}·({conversion}·{prey} − {predatorDeath}) = {=predators*(conversion*prey-predatorDeath)} < 0. The rabbits fall only while the foxes exceed y* = α/β = {@predatorEquilibrium}. The model’s cycles neither grow nor fade: they repeat. Real lynx and snowshoe hare records in Canada also show the predator’s peaks after the prey’s.",
+      "vi": {
+        "stem": "Trong mô hình Lotka–Volterra dx/dt = αx − βxy (thỏ) và dy/dt = δxy − γy (cáo), với β = {predation} và δ = {conversion}. α = {preyBirth} và γ = {predatorDeath} mỗi ngày; đồng cỏ ban đầu có {prey} con thỏ và {predators} con cáo. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Lúc đầu dx/dt = {prey}·({preyBirth} − {predation}·{predators}) = {=prey*(preyBirth-predation*predators)} > 0 và dy/dt = {predators}·({conversion}·{prey} − {predatorDeath}) = {=predators*(conversion*prey-predatorDeath)} < 0. Số thỏ chỉ giảm khi số cáo vượt quá y* = α/β = {@predatorEquilibrium}. Dao động trong mô hình không lớn dần cũng không tắt dần: chúng lặp lại. Số liệu thực về thỏ rừng và mèo rừng (linh miêu) Canada cũng cho thấy đỉnh của vật săn mồi đến sau đỉnh của con mồi."
+      },
+      "statements": [
+        {
+          "text": "At the start the rabbits increase while the foxes decrease.",
+          "vi": {
+            "text": "Lúc đầu số thỏ tăng còn số cáo giảm."
+          },
+          "true": true
+        },
+        {
+          "text": "The rabbits decline only while there are more than {@predatorEquilibrium} foxes.",
+          "vi": {
+            "text": "Số thỏ chỉ giảm khi có nhiều hơn {@predatorEquilibrium} con cáo."
+          },
+          "true": true,
+          "check": {
+            "expr": "preyBirth/predation",
+            "equals": "predatorEquilibrium"
+          }
+        },
+        {
+          "text": "In this model the cycles slowly die away to the equilibrium.",
+          "vi": {
+            "text": "Trong mô hình này, các dao động tắt dần về điểm cân bằng."
+          },
+          "true": false
+        },
+        {
+          "text": "Records of lynx and snowshoe hares in Canada also show the predator’s peaks following the prey’s.",
+          "vi": {
+            "text": "Số liệu về thỏ rừng và mèo rừng (linh miêu) Canada cũng cho thấy đỉnh số lượng của vật săn mồi đến sau đỉnh của con mồi."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "no-foxes",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["ecology", "cycles"],
+      "stem": "In the Lotka–Volterra model dx/dt = αx − βxy, if there were no foxes (y = 0) the rabbits would…",
+      "explain": "With y = 0, dx/dt = αx: the rabbits grow exponentially without limit. The model has no carrying capacity for the prey; a real population would be limited by food and space.",
+      "vi": {
+        "stem": "Trong mô hình Lotka – Volterra dx/dt = αx − βxy, nếu không có cáo (y = 0) thì quần thể thỏ sẽ…",
+        "explain": "Khi y = 0, dx/dt = αx: số thỏ tăng theo hàm mũ không giới hạn. Mô hình không có sức chứa môi trường cho con mồi; quần thể thật sẽ bị giới hạn bởi thức ăn và nơi ở."
+      },
+      "options": [
+        {
+          "text": "grow exponentially without limit",
+          "vi": {
+            "text": "tăng theo hàm mũ không giới hạn"
+          },
+          "correct": true
+        },
+        {
+          "text": "level off at a carrying capacity",
+          "vi": {
+            "text": "ổn định ở mức sức chứa của môi trường"
+          }
+        },
+        {
+          "text": "keep cycling as before",
+          "vi": {
+            "text": "tiếp tục dao động như trước"
+          }
+        },
+        {
+          "text": "die out",
+          "vi": {
+            "text": "bị diệt vong"
+          }
+        }
+      ]
+    },
+    {
+      "id": "more-rabbit-births",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["equilibrium"],
+      "stem": "In the model the equilibrium is x* = γ/δ rabbits and y* = α/β foxes. A milder winter raises the rabbits’ birth rate α. Which equilibrium changes?",
+      "explain": "x* = γ/δ does not contain α, so the rabbits’ average stays the same; y* = α/β rises: the extra rabbits are eaten, and the foxes’ average increases.",
+      "vi": {
+        "stem": "Trong mô hình, điểm cân bằng là x* = γ/δ con thỏ và y* = α/β con cáo. Một mùa đông ấm hơn làm tăng tốc độ sinh của thỏ α. Giá trị cân bằng nào thay đổi?",
+        "explain": "x* = γ/δ không chứa α, nên số thỏ trung bình không đổi; y* = α/β tăng: số thỏ sinh thêm bị ăn, và số cáo trung bình tăng lên."
+      },
+      "options": [
+        {
+          "text": "Only the foxes’ y* rises",
+          "vi": {
+            "text": "Chỉ y* của cáo tăng"
+          },
+          "correct": true
+        },
+        {
+          "text": "Only the rabbits’ x* rises",
+          "vi": {
+            "text": "Chỉ x* của thỏ tăng"
+          }
+        },
+        {
+          "text": "Both x* and y* rise",
+          "vi": {
+            "text": "Cả x* và y* đều tăng"
+          }
+        },
+        {
+          "text": "Neither: the equilibrium does not depend on α",
+          "vi": {
+            "text": "Không giá trị nào: điểm cân bằng không phụ thuộc α"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-model",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["cycles", "ecology"],
+      "stem": "About the Lotka–Volterra model of rabbits and foxes: decide whether each statement is true or false.",
+      "explain": "The model gives the rabbits no carrying capacity, and in real ecosystems cycles also depend on the prey’s food, the weather and other species. Its cycles never die away: they keep the size set by the starting numbers (the quantity V is conserved), so the populations do not settle at the equilibrium.",
+      "vi": {
+        "stem": "Về mô hình Lotka – Volterra của thỏ và cáo, mỗi nhận định sau đúng hay sai?",
+        "explain": "Mô hình không có sức chứa môi trường cho thỏ, và trong hệ sinh thái thật, các chu kì còn phụ thuộc vào thức ăn của con mồi, thời tiết và các loài khác. Dao động của mô hình không bao giờ tắt dần: biên độ do số lượng ban đầu quyết định (đại lượng V được bảo toàn), nên các quần thể không ổn định ở điểm cân bằng."
+      },
+      "statements": [
+        {
+          "text": "The model gives the rabbits no carrying capacity.",
+          "vi": {
+            "text": "Mô hình không có sức chứa môi trường cho thỏ."
+          },
+          "true": true
+        },
+        {
+          "text": "In real ecosystems the cycles also depend on the prey’s food, the weather and other species.",
+          "vi": {
+            "text": "Trong hệ sinh thái thật, các chu kì còn phụ thuộc vào thức ăn của con mồi, thời tiết và các loài khác."
+          },
+          "true": true
+        },
+        {
+          "text": "In the model, the size of the cycles is set by the starting numbers.",
+          "vi": {
+            "text": "Trong mô hình, biên độ dao động do số lượng ban đầu quyết định."
+          },
+          "true": true
+        },
+        {
+          "text": "In the model, the cycles die away and both populations settle at the equilibrium.",
+          "vi": {
+            "text": "Trong mô hình, dao động tắt dần và cả hai quần thể ổn định ở điểm cân bằng."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "fox-growth-now",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["equilibrium", "cycles"],
+      "set": {
+        "prey": 150,
+        "predators": 30,
+        "predatorDeath": 1
+      },
+      "stem": "The meadow holds {prey} rabbits and {predators} foxes. With dy/dt = δxy − γy, δ = {conversion} and γ = {predatorDeath} per day, how fast is the fox population changing at this moment?",
+      "explain": "dy/dt = y(δx − γ) = {predators}·({conversion}·{prey} − {predatorDeath}) = {=predators*(conversion*prey-predatorDeath)} foxes per day: rising, since there are more rabbits than x* = γ/δ = {@preyEquilibrium}.",
+      "vi": {
+        "stem": "Đồng cỏ có {prey} con thỏ và {predators} con cáo. Với dy/dt = δxy − γy, δ = {conversion} và γ = {predatorDeath} mỗi ngày, quần thể cáo đang thay đổi với tốc độ bao nhiêu tại thời điểm này?",
+        "explain": "dy/dt = y(δx − γ) = {predators}·({conversion}·{prey} − {predatorDeath}) = {=predators*(conversion*prey-predatorDeath)} con cáo mỗi ngày: đang tăng, vì số thỏ nhiều hơn x* = γ/δ = {@preyEquilibrium}."
+      },
+      "options": [
+        {
+          "text": "Rising by {=predators*(conversion*prey-predatorDeath)} foxes per day",
+          "vi": {
+            "text": "Tăng {=predators*(conversion*prey-predatorDeath)} con cáo mỗi ngày"
+          },
+          "correct": true,
+          "check": {
+            "expr": "prey-(predators*(conversion*prey-predatorDeath))/(predators*conversion)",
+            "equals": "preyEquilibrium"
+          }
+        },
+        {
+          "text": "Falling by {=predators*(conversion*prey-predatorDeath)} foxes per day",
+          "vi": {
+            "text": "Giảm {=predators*(conversion*prey-predatorDeath)} con cáo mỗi ngày"
+          },
+          "check": {
+            "expr": "prey+(predators*(conversion*prey-predatorDeath))/(predators*conversion)",
+            "equals": "preyEquilibrium"
+          }
+        },
+        {
+          "text": "Rising by {=conversion*prey*predators} foxes per day",
+          "vi": {
+            "text": "Tăng {=conversion*prey*predators} con cáo mỗi ngày"
+          },
+          "check": {
+            "expr": "prey-(conversion*prey*predators)/(predators*conversion)",
+            "equals": "preyEquilibrium"
+          }
+        },
+        {
+          "text": "Rising by {=conversion*prey-predatorDeath} foxes per day",
+          "vi": {
+            "text": "Tăng {=conversion*prey-predatorDeath} con cáo mỗi ngày"
+          },
+          "check": {
+            "expr": "prey-(conversion*prey-predatorDeath)/(predators*conversion)",
+            "equals": "preyEquilibrium"
+          }
+        }
+      ]
+    },
+    {
+      "id": "rabbit-growth-now",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["equilibrium", "cycles"],
+      "set": {
+        "prey": 60,
+        "predators": 80,
+        "preyBirth": 1
+      },
+      "stem": "The meadow holds {prey} rabbits and {predators} foxes. With dx/dt = αx − βxy, α = {preyBirth} per day and β = {predation}, how fast is the rabbit population changing at this moment?",
+      "explain": "dx/dt = x(α − βy) = {prey}·({preyBirth} − {predation}·{predators}) = {=prey*(preyBirth-predation*predators)} rabbits per day: falling, since there are more foxes than y* = α/β = {@predatorEquilibrium}.",
+      "vi": {
+        "stem": "Đồng cỏ có {prey} con thỏ và {predators} con cáo. Với dx/dt = αx − βxy, α = {preyBirth} mỗi ngày và β = {predation}, quần thể thỏ đang thay đổi với tốc độ bao nhiêu tại thời điểm này?",
+        "explain": "dx/dt = x(α − βy) = {prey}·({preyBirth} − {predation}·{predators}) = {=prey*(preyBirth-predation*predators)} con thỏ mỗi ngày: đang giảm, vì số cáo nhiều hơn y* = α/β = {@predatorEquilibrium}."
+      },
+      "options": [
+        {
+          "text": "{=prey*(preyBirth-predation*predators)} rabbits per day",
+          "vi": {
+            "text": "{=prey*(preyBirth-predation*predators)} con thỏ mỗi ngày"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(prey*(preyBirth-predation*predators))/(prey*predation)+predators",
+            "equals": "predatorEquilibrium"
+          }
+        },
+        {
+          "text": "{=-prey*(preyBirth-predation*predators)} rabbits per day",
+          "vi": {
+            "text": "{=-prey*(preyBirth-predation*predators)} con thỏ mỗi ngày"
+          },
+          "check": {
+            "expr": "(-prey*(preyBirth-predation*predators))/(prey*predation)+predators",
+            "equals": "predatorEquilibrium"
+          }
+        },
+        {
+          "text": "{=preyBirth*prey} rabbits per day",
+          "vi": {
+            "text": "{=preyBirth*prey} con thỏ mỗi ngày"
+          },
+          "check": {
+            "expr": "(preyBirth*prey)/(prey*predation)+predators",
+            "equals": "predatorEquilibrium"
+          }
+        },
+        {
+          "text": "{=-predation*prey*predators} rabbits per day",
+          "vi": {
+            "text": "{=-predation*prey*predators} con thỏ mỗi ngày"
+          },
+          "check": {
+            "expr": "(-predation*prey*predators)/(prey*predation)+predators",
+            "equals": "predatorEquilibrium"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-beta",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["equilibrium"],
+      "set": {
+        "preyBirth": 0.8
+      },
+      "stem": "Rabbits are born at α = {preyBirth} per day. Over many cycles the foxes average y* = {@predatorEquilibrium}. In dx/dt = αx − βxy, what is the predation coefficient β?",
+      "explain": "At equilibrium the rabbits neither grow nor fall: α − βy* = 0, so β = α/y* = {preyBirth}/{@predatorEquilibrium} = {=preyBirth/@predatorEquilibrium} per fox per day.",
+      "vi": {
+        "stem": "Thỏ sinh ra với tốc độ α = {preyBirth} mỗi ngày. Qua nhiều chu kì, số cáo trung bình là y* = {@predatorEquilibrium}. Trong dx/dt = αx − βxy, hệ số săn bắt β bằng bao nhiêu?",
+        "explain": "Ở trạng thái cân bằng, số thỏ không tăng cũng không giảm: α − βy* = 0, nên β = α/y* = {preyBirth}/{@predatorEquilibrium} = {=preyBirth/@predatorEquilibrium} trên mỗi con cáo mỗi ngày."
+      },
+      "options": [
+        {
+          "text": "{=preyBirth/@predatorEquilibrium}",
+          "vi": {
+            "text": "{=preyBirth/@predatorEquilibrium}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "preyBirth/(preyBirth/@predatorEquilibrium)",
+            "equals": "predatorEquilibrium"
+          }
+        },
+        {
+          "text": "{=@predatorEquilibrium/preyBirth}",
+          "vi": {
+            "text": "{=@predatorEquilibrium/preyBirth}"
+          },
+          "check": {
+            "expr": "preyBirth/(@predatorEquilibrium/preyBirth)",
+            "equals": "predatorEquilibrium"
+          }
+        },
+        {
+          "text": "{=preyBirth*@predatorEquilibrium}",
+          "vi": {
+            "text": "{=preyBirth*@predatorEquilibrium}"
+          },
+          "check": {
+            "expr": "preyBirth/(preyBirth*@predatorEquilibrium)",
+            "equals": "predatorEquilibrium"
+          }
+        },
+        {
+          "text": "{=1/@predatorEquilibrium}",
+          "vi": {
+            "text": "{=1/@predatorEquilibrium}"
+          },
+          "check": {
+            "expr": "preyBirth/(1/@predatorEquilibrium)",
+            "equals": "predatorEquilibrium"
+          }
+        }
+      ]
+    },
+    {
+      "id": "spraying-trap",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["equilibrium", "ecology"],
+      "set": {
+        "preyBirth": 0.8,
+        "predatorDeath": 1.2
+      },
+      "stem": "Insects and the beetles that eat them follow the model with α = γ = 1 per day (β = {predation}, δ = {conversion}). A spray kills both: the insects’ net growth rate falls to α = {preyBirth} and the beetles’ death rate rises to γ = {predatorDeath}. What happens to the average numbers?",
+      "explain": "x* = γ/δ = {predatorDeath}/{conversion} = {@preyEquilibrium}, up from 100; y* = α/β = {preyBirth}/{predation} = {@predatorEquilibrium}, down from 50. Spraying a pest that has a predator can raise the pest’s average: the predator suffers more (Volterra’s principle).",
+      "vi": {
+        "stem": "Một loài sâu và loài bọ ăn sâu tuân theo mô hình với α = γ = 1 mỗi ngày (β = {predation}, δ = {conversion}). Phun thuốc diệt cả hai loài: tốc độ tăng của sâu giảm còn α = {preyBirth} và tốc độ chết của bọ tăng lên γ = {predatorDeath}. Số lượng trung bình của chúng thay đổi thế nào?",
+        "explain": "x* = γ/δ = {predatorDeath}/{conversion} = {@preyEquilibrium}, tăng so với 100; y* = α/β = {preyBirth}/{predation} = {@predatorEquilibrium}, giảm so với 50. Phun thuốc diệt một loài sâu hại có thiên địch có thể làm số sâu trung bình tăng lên: thiên địch bị ảnh hưởng nặng hơn (nguyên lí Volterra)."
+      },
+      "options": [
+        {
+          "text": "Insects rise to {@preyEquilibrium}; beetles fall to {@predatorEquilibrium}",
+          "vi": {
+            "text": "Sâu tăng lên {@preyEquilibrium}; bọ giảm còn {@predatorEquilibrium}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "predatorDeath/conversion",
+            "equals": "preyEquilibrium"
+          }
+        },
+        {
+          "text": "Insects fall to {=100*preyBirth}; beetles fall to {@predatorEquilibrium}",
+          "vi": {
+            "text": "Sâu giảm còn {=100*preyBirth}; bọ giảm còn {@predatorEquilibrium}"
+          },
+          "check": {
+            "expr": "100*preyBirth",
+            "equals": "preyEquilibrium"
+          }
+        },
+        {
+          "text": "Insects stay at 100; beetles fall to {@predatorEquilibrium}",
+          "vi": {
+            "text": "Sâu giữ ở 100; bọ giảm còn {@predatorEquilibrium}"
+          },
+          "check": {
+            "expr": "100",
+            "equals": "preyEquilibrium"
+          }
+        },
+        {
+          "text": "Insects rise to {@preyEquilibrium}; beetles rise to {=predatorDeath/predation}",
+          "vi": {
+            "text": "Sâu tăng lên {@preyEquilibrium}; bọ tăng lên {=predatorDeath/predation}"
+          },
+          "check": {
+            "expr": "predatorDeath/predation",
+            "equals": "predatorEquilibrium"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-swap",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["equilibrium", "period"],
+      "set": {
+        "preyBirth": 0.5,
+        "predatorDeath": 1.8
+      },
+      "stem": "Rabbits are born at α = {preyBirth} and foxes die at γ = {predatorDeath} per day (β = {predation}, δ = {conversion}). Decide whether each statement is true or false.",
+      "explain": "x* = γ/δ = {@preyEquilibrium} rabbits, y* = α/β = {@predatorEquilibrium} foxes. Small cycles last T = 2π/√(αγ) = 2π/√{=preyBirth*predatorDeath} ≈ {@period|3} days. Swapping the rates (α = {predatorDeath}, γ = {preyBirth}) keeps αγ, so the period is unchanged, while the equilibrium becomes {=preyBirth/conversion} rabbits and {=predatorDeath/predation} foxes.",
+      "vi": {
+        "stem": "Thỏ sinh ra với tốc độ α = {preyBirth} và cáo chết với tốc độ γ = {predatorDeath} mỗi ngày (β = {predation}, δ = {conversion}). Mỗi nhận định sau đúng hay sai?",
+        "explain": "x* = γ/δ = {@preyEquilibrium} con thỏ, y* = α/β = {@predatorEquilibrium} con cáo. Dao động nhỏ có chu kì T = 2π/√(αγ) = 2π/√{=preyBirth*predatorDeath} ≈ {@period|3} ngày. Đổi chỗ hai tốc độ (α = {predatorDeath}, γ = {preyBirth}) vẫn giữ nguyên αγ, nên chu kì không đổi, còn điểm cân bằng trở thành {=preyBirth/conversion} con thỏ và {=predatorDeath/predation} con cáo."
+      },
+      "statements": [
+        {
+          "text": "The rabbits average about {@preyEquilibrium}.",
+          "vi": {
+            "text": "Số thỏ trung bình khoảng {@preyEquilibrium}."
+          },
+          "true": true,
+          "check": {
+            "expr": "predatorDeath/conversion",
+            "equals": "preyEquilibrium"
+          }
+        },
+        {
+          "text": "The foxes average about {@predatorEquilibrium}.",
+          "vi": {
+            "text": "Số cáo trung bình khoảng {@predatorEquilibrium}."
+          },
+          "true": true,
+          "check": {
+            "expr": "preyBirth/predation",
+            "equals": "predatorEquilibrium"
+          }
+        },
+        {
+          "text": "Small cycles last about {=2*pi/(preyBirth*predatorDeath)|3} days.",
+          "vi": {
+            "text": "Dao động nhỏ có chu kì khoảng {=2*pi/(preyBirth*predatorDeath)|3} ngày."
+          },
+          "true": false,
+          "check": {
+            "expr": "2*pi/(preyBirth*predatorDeath)",
+            "equals": "period"
+          }
+        },
+        {
+          "text": "Swapping the two rates, α = {predatorDeath} and γ = {preyBirth}, would leave the period unchanged.",
+          "vi": {
+            "text": "Đổi chỗ hai tốc độ, α = {predatorDeath} và γ = {preyBirth}, thì chu kì không đổi."
+          },
+          "true": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1037 @@
+{
+  "sounds": [
+    {
+      "id": "card-accepted",
+      "bus": "effects",
+      "volume": 0.5,
+      "distance": [0.5, 12],
+      "synth": {
+        "seconds": 0.22,
+        "layers": [
+          {
+            "tone": "triangle",
+            "hz": 2700,
+            "for": 0.07,
+            "attack": 0.002,
+            "release": 0.01,
+            "gain": 0.6
+          },
+          {
+            "tone": "triangle",
+            "hz": 3400,
+            "at": 0.1,
+            "for": 0.1,
+            "attack": 0.002,
+            "release": 0.02,
+            "gain": 0.6
+          }
+        ]
+      }
+    },
+    {
+      "id": "card-refused",
+      "bus": "effects",
+      "volume": 0.5,
+      "distance": [0.5, 12],
+      "synth": {
+        "seconds": 0.46,
+        "layers": [
+          {
+            "tone": "triangle",
+            "hz": 650,
+            "for": 0.12,
+            "attack": 0.003,
+            "release": 0.02,
+            "gain": 0.6
+          },
+          {
+            "tone": "triangle",
+            "hz": 650,
+            "at": 0.16,
+            "for": 0.12,
+            "attack": 0.003,
+            "release": 0.02,
+            "gain": 0.6
+          },
+          {
+            "tone": "triangle",
+            "hz": 650,
+            "at": 0.32,
+            "for": 0.12,
+            "attack": 0.003,
+            "release": 0.02,
+            "gain": 0.6
+          }
+        ]
+      }
+    },
+    {
+      "id": "door-opening",
+      "bus": "effects",
+      "volume": 0.6,
+      "pitch": 0.03,
+      "distance": [1, 20],
+      "synth": {
+        "seconds": 0.9,
+        "layers": [
+          {
+            "tone": "triangle",
+            "hz": 140,
+            "toHz": 190,
+            "for": 0.8,
+            "attack": 0.08,
+            "release": 0.25,
+            "gain": 0.12
+          },
+          {
+            "noise": "pink",
+            "filter": {
+              "type": "bandpass",
+              "hz": 700,
+              "q": 0.7
+            },
+            "for": 0.8,
+            "attack": 0.15,
+            "release": 0.35,
+            "gain": 0.5
+          },
+          {
+            "noise": "brown",
+            "filter": {
+              "type": "lowpass",
+              "hz": 250
+            },
+            "for": 0.75,
+            "attack": 0.1,
+            "release": 0.3,
+            "gain": 0.6
+          }
+        ]
+      }
+    },
+    {
+      "id": "door-closing",
+      "bus": "effects",
+      "volume": 0.6,
+      "pitch": 0.03,
+      "distance": [1, 20],
+      "synth": {
+        "seconds": 0.8,
+        "layers": [
+          {
+            "tone": "triangle",
+            "hz": 190,
+            "toHz": 140,
+            "for": 0.7,
+            "attack": 0.08,
+            "release": 0.2,
+            "gain": 0.12
+          },
+          {
+            "noise": "pink",
+            "filter": {
+              "type": "bandpass",
+              "hz": 700,
+              "q": 0.7
+            },
+            "for": 0.7,
+            "attack": 0.15,
+            "release": 0.25,
+            "gain": 0.5
+          },
+          {
+            "noise": "brown",
+            "filter": {
+              "type": "lowpass",
+              "hz": 250
+            },
+            "for": 0.7,
+            "attack": 0.1,
+            "release": 0.2,
+            "gain": 0.6
+          }
+        ]
+      }
+    },
+    {
+      "id": "door-closed",
+      "bus": "effects",
+      "volume": 0.7,
+      "pitch": 0.04,
+      "distance": [1, 20],
+      "synth": {
+        "seconds": 0.2,
+        "layers": [
+          {
+            "noise": "brown",
+            "filter": {
+              "type": "lowpass",
+              "hz": 180
+            },
+            "for": 0.14,
+            "attack": 0.002,
+            "release": 0.11,
+            "gain": 1.2
+          },
+          {
+            "noise": "pink",
+            "filter": {
+              "type": "bandpass",
+              "hz": 1200,
+              "q": 1
+            },
+            "for": 0.04,
+            "attack": 0.001,
+            "release": 0.03,
+            "gain": 0.3
+          }
+        ]
+      }
+    },
+    {
+      "id": "hinge-open",
+      "bus": "effects",
+      "volume": 0.6,
+      "pitch": 0.05,
+      "distance": [1, 18],
+      "files": ["doors/hinge-open-1.ogg", "doors/hinge-open-2.ogg"]
+    },
+    {
+      "id": "hinge-close",
+      "bus": "effects",
+      "volume": 0.6,
+      "pitch": 0.05,
+      "distance": [1, 18],
+      "files": [
+        "doors/hinge-close-1.ogg",
+        "doors/hinge-close-2.ogg",
+        "doors/hinge-close-3.ogg",
+        "doors/hinge-close-4.ogg"
+      ]
+    },
+    {
+      "id": "impact-metal",
+      "bus": "effects",
+      "volume": 0.7,
+      "pitch": 0.08,
+      "distance": [1, 18],
+      "files": [
+        "impacts/metal-1.ogg",
+        "impacts/metal-2.ogg",
+        "impacts/metal-3.ogg",
+        "impacts/metal-4.ogg",
+        "impacts/metal-5.ogg"
+      ]
+    },
+    {
+      "id": "impact-glass",
+      "bus": "effects",
+      "volume": 0.6,
+      "pitch": 0.08,
+      "distance": [1, 18],
+      "files": [
+        "impacts/glass-1.ogg",
+        "impacts/glass-2.ogg",
+        "impacts/glass-3.ogg",
+        "impacts/glass-4.ogg",
+        "impacts/glass-5.ogg"
+      ]
+    },
+    {
+      "id": "impact-hard",
+      "bus": "effects",
+      "volume": 0.6,
+      "pitch": 0.08,
+      "distance": [1, 18],
+      "files": [
+        "impacts/plate-1.ogg",
+        "impacts/plate-2.ogg",
+        "impacts/plate-3.ogg",
+        "impacts/plate-4.ogg",
+        "impacts/plate-5.ogg"
+      ]
+    },
+    {
+      "id": "impact-soft",
+      "bus": "effects",
+      "volume": 0.6,
+      "pitch": 0.08,
+      "distance": [1, 18],
+      "files": [
+        "impacts/generic-1.ogg",
+        "impacts/generic-2.ogg",
+        "impacts/generic-3.ogg",
+        "impacts/generic-4.ogg",
+        "impacts/generic-5.ogg"
+      ]
+    },
+    {
+      "id": "slide-open",
+      "bus": "effects",
+      "volume": 0.55,
+      "pitch": 0.04,
+      "distance": [1, 18],
+      "synth": {
+        "seconds": 0.6,
+        "layers": [
+          {
+            "noise": "white",
+            "filter": {
+              "type": "highpass",
+              "hz": 2600
+            },
+            "for": 0.32,
+            "attack": 0.01,
+            "release": 0.26,
+            "gain": 0.45
+          },
+          {
+            "noise": "pink",
+            "filter": {
+              "type": "bandpass",
+              "hz": 900,
+              "q": 0.8
+            },
+            "for": 0.4,
+            "attack": 0.03,
+            "release": 0.3,
+            "gain": 0.35
+          },
+          {
+            "tone": "sine",
+            "hz": 90,
+            "toHz": 60,
+            "at": 0,
+            "for": 0.12,
+            "attack": 0.004,
+            "release": 0.1,
+            "gain": 0.25
+          }
+        ]
+      }
+    },
+    {
+      "id": "slide-close",
+      "bus": "effects",
+      "volume": 0.55,
+      "pitch": 0.04,
+      "distance": [1, 18],
+      "synth": {
+        "seconds": 0.8,
+        "layers": [
+          {
+            "noise": "white",
+            "filter": {
+              "type": "highpass",
+              "hz": 2600
+            },
+            "for": 0.32,
+            "attack": 0.01,
+            "release": 0.26,
+            "gain": 0.45
+          },
+          {
+            "noise": "pink",
+            "filter": {
+              "type": "bandpass",
+              "hz": 900,
+              "q": 0.8
+            },
+            "for": 0.4,
+            "attack": 0.03,
+            "release": 0.3,
+            "gain": 0.35
+          },
+          {
+            "tone": "sine",
+            "hz": 90,
+            "toHz": 60,
+            "at": 0.5,
+            "for": 0.12,
+            "attack": 0.004,
+            "release": 0.1,
+            "gain": 0.45
+          }
+        ]
+      }
+    },
+    {
+      "id": "run-start",
+      "bus": "effects",
+      "volume": 0.55,
+      "pitch": 0,
+      "distance": [1, 16],
+      "synth": {
+        "seconds": 0.45,
+        "layers": [
+          {
+            "noise": "white",
+            "filter": {
+              "type": "bandpass",
+              "hz": 2500,
+              "q": 3
+            },
+            "for": 0.012,
+            "attack": 0.0005,
+            "release": 0.008,
+            "gain": 0.35
+          },
+          {
+            "tone": "triangle",
+            "hz": 1046.5,
+            "at": 0.02,
+            "for": 0.09,
+            "attack": 0.003,
+            "release": 0.03,
+            "gain": 0.4
+          },
+          {
+            "tone": "triangle",
+            "hz": 1568,
+            "at": 0.15,
+            "for": 0.16,
+            "attack": 0.003,
+            "release": 0.12,
+            "gain": 0.4
+          },
+          {
+            "tone": "sine",
+            "hz": 3136,
+            "at": 0.15,
+            "for": 0.1,
+            "attack": 0.003,
+            "release": 0.09,
+            "gain": 0.06
+          }
+        ]
+      }
+    },
+    {
+      "id": "switch",
+      "bus": "effects",
+      "volume": 0.5,
+      "pitch": 0.06,
+      "distance": [0.5, 10],
+      "synth": {
+        "seconds": 0.05,
+        "layers": [
+          {
+            "noise": "white",
+            "filter": {
+              "type": "highpass",
+              "hz": 3000
+            },
+            "for": 0.006,
+            "attack": 0.0005,
+            "release": 0.004,
+            "gain": 0.9
+          },
+          {
+            "noise": "white",
+            "filter": {
+              "type": "bandpass",
+              "hz": 1400,
+              "q": 2
+            },
+            "at": 0.002,
+            "for": 0.02,
+            "attack": 0.0005,
+            "release": 0.015,
+            "gain": 0.7
+          },
+          {
+            "tone": "triangle",
+            "hz": 2200,
+            "for": 0.012,
+            "attack": 0.0005,
+            "release": 0.01,
+            "gain": 0.15
+          }
+        ]
+      }
+    },
+    {
+      "id": "step-concrete",
+      "bus": "effects",
+      "volume": 0.55,
+      "pitch": 0.06,
+      "distance": [1, 20],
+      "files": [
+        "footsteps/concrete-1.ogg",
+        "footsteps/concrete-2.ogg",
+        "footsteps/concrete-3.ogg",
+        "footsteps/concrete-4.ogg",
+        "footsteps/concrete-5.ogg"
+      ]
+    },
+    {
+      "id": "step-vinyl",
+      "bus": "effects",
+      "volume": 0.35,
+      "pitch": 0.06,
+      "distance": [1, 16],
+      "files": [
+        "footsteps/concrete-1.ogg",
+        "footsteps/concrete-2.ogg",
+        "footsteps/concrete-3.ogg",
+        "footsteps/concrete-4.ogg",
+        "footsteps/concrete-5.ogg"
+      ]
+    },
+    {
+      "id": "step-wood",
+      "bus": "effects",
+      "volume": 0.55,
+      "pitch": 0.06,
+      "distance": [1, 20],
+      "files": [
+        "footsteps/wood-1.ogg",
+        "footsteps/wood-2.ogg",
+        "footsteps/wood-3.ogg",
+        "footsteps/wood-4.ogg",
+        "footsteps/wood-5.ogg"
+      ]
+    },
+    {
+      "id": "ui-click",
+      "bus": "interface",
+      "positional": false,
+      "volume": 0.35,
+      "pitch": 0.03,
+      "synth": {
+        "seconds": 0.04,
+        "layers": [
+          {
+            "noise": "white",
+            "filter": {
+              "type": "highpass",
+              "hz": 2500
+            },
+            "for": 0.008,
+            "attack": 0.0005,
+            "release": 0.006,
+            "gain": 0.6
+          },
+          {
+            "tone": "triangle",
+            "hz": 1500,
+            "for": 0.03,
+            "attack": 0.001,
+            "release": 0.025,
+            "gain": 0.25
+          }
+        ]
+      }
+    },
+    {
+      "id": "ui-step",
+      "bus": "interface",
+      "positional": false,
+      "volume": 0.35,
+      "synth": {
+        "seconds": 0.42,
+        "layers": [
+          {
+            "tone": "sine",
+            "hz": 880,
+            "for": 0.18,
+            "attack": 0.004,
+            "release": 0.15,
+            "gain": 0.4
+          },
+          {
+            "tone": "sine",
+            "hz": 1318.5,
+            "at": 0.09,
+            "for": 0.3,
+            "attack": 0.004,
+            "release": 0.25,
+            "gain": 0.4
+          },
+          {
+            "tone": "sine",
+            "hz": 2637,
+            "at": 0.09,
+            "for": 0.2,
+            "attack": 0.004,
+            "release": 0.18,
+            "gain": 0.08
+          }
+        ]
+      }
+    },
+    {
+      "id": "ui-task",
+      "bus": "interface",
+      "positional": false,
+      "volume": 0.35,
+      "synth": {
+        "seconds": 0.9,
+        "layers": [
+          {
+            "tone": "sine",
+            "hz": 523.25,
+            "for": 0.5,
+            "attack": 0.004,
+            "release": 0.45,
+            "gain": 0.25
+          },
+          {
+            "tone": "sine",
+            "hz": 659.26,
+            "at": 0.11,
+            "for": 0.5,
+            "attack": 0.004,
+            "release": 0.45,
+            "gain": 0.25
+          },
+          {
+            "tone": "sine",
+            "hz": 783.99,
+            "at": 0.22,
+            "for": 0.5,
+            "attack": 0.004,
+            "release": 0.45,
+            "gain": 0.25
+          },
+          {
+            "tone": "sine",
+            "hz": 1046.5,
+            "at": 0.33,
+            "for": 0.55,
+            "attack": 0.004,
+            "release": 0.5,
+            "gain": 0.25
+          }
+        ]
+      }
+    },
+    {
+      "id": "ui-refused",
+      "bus": "interface",
+      "positional": false,
+      "volume": 0.35,
+      "synth": {
+        "seconds": 0.32,
+        "layers": [
+          {
+            "tone": "triangle",
+            "hz": 196,
+            "for": 0.11,
+            "attack": 0.003,
+            "release": 0.03,
+            "gain": 0.7
+          },
+          {
+            "tone": "triangle",
+            "hz": 175,
+            "at": 0.13,
+            "for": 0.16,
+            "attack": 0.003,
+            "release": 0.05,
+            "gain": 0.7
+          }
+        ]
+      }
+    },
+    {
+      "id": "air-quiet",
+      "bus": "room",
+      "positional": false,
+      "volume": 0.5,
+      "synth": {
+        "seconds": 8,
+        "loop": true,
+        "layers": [
+          {
+            "noise": "pink",
+            "filter": {
+              "type": "lowpass",
+              "hz": 500
+            },
+            "gain": 0.05
+          },
+          {
+            "noise": "brown",
+            "filter": {
+              "type": "lowpass",
+              "hz": 120
+            },
+            "gain": 0.12
+          }
+        ]
+      }
+    },
+    {
+      "id": "air-cleanroom",
+      "bus": "room",
+      "positional": false,
+      "volume": 0.7,
+      "synth": {
+        "seconds": 8,
+        "loop": true,
+        "layers": [
+          {
+            "noise": "pink",
+            "filter": {
+              "type": "lowpass",
+              "hz": 2500
+            },
+            "gain": 0.18
+          },
+          {
+            "noise": "pink",
+            "filter": {
+              "type": "bandpass",
+              "hz": 400,
+              "q": 0.5
+            },
+            "gain": 0.12
+          },
+          {
+            "noise": "brown",
+            "filter": {
+              "type": "lowpass",
+              "hz": 150
+            },
+            "gain": 0.3
+          },
+          {
+            "tone": "triangle",
+            "hz": 100,
+            "gain": 0.01
+          }
+        ]
+      }
+    },
+    {
+      "id": "air-lab",
+      "bus": "room",
+      "positional": false,
+      "volume": 0.6,
+      "synth": {
+        "seconds": 8,
+        "loop": true,
+        "layers": [
+          {
+            "noise": "pink",
+            "filter": {
+              "type": "lowpass",
+              "hz": 900
+            },
+            "gain": 0.09
+          },
+          {
+            "noise": "brown",
+            "filter": {
+              "type": "lowpass",
+              "hz": 140
+            },
+            "gain": 0.2
+          },
+          {
+            "tone": "sine",
+            "hz": 100,
+            "gain": 0.006
+          },
+          {
+            "tone": "sine",
+            "hz": 200,
+            "gain": 0.003
+          }
+        ]
+      }
+    },
+    {
+      "id": "air-extract-fan",
+      "bus": "room",
+      "positional": false,
+      "volume": 0.5,
+      "synth": {
+        "seconds": 8,
+        "loop": true,
+        "layers": [
+          {
+            "noise": "pink",
+            "filter": {
+              "type": "bandpass",
+              "hz": 450,
+              "q": 0.8
+            },
+            "wobble": {
+              "hz": 0.5,
+              "depth": 0.15
+            },
+            "gain": 0.25
+          },
+          {
+            "tone": "triangle",
+            "hz": 150,
+            "gain": 0.02
+          }
+        ]
+      }
+    },
+    {
+      "id": "air-hall",
+      "bus": "room",
+      "positional": false,
+      "volume": 0.6,
+      "synth": {
+        "seconds": 8,
+        "loop": true,
+        "layers": [
+          {
+            "noise": "brown",
+            "filter": {
+              "type": "lowpass",
+              "hz": 100
+            },
+            "gain": 0.25
+          },
+          {
+            "noise": "pink",
+            "filter": {
+              "type": "lowpass",
+              "hz": 350
+            },
+            "wobble": {
+              "hz": 0.125,
+              "depth": 0.3
+            },
+            "gain": 0.07
+          }
+        ]
+      }
+    },
+    {
+      "id": "spark",
+      "bus": "effects",
+      "volume": 0.7,
+      "pitch": 0.1,
+      "distance": [0.5, 14],
+      "synth": {
+        "seconds": 0.18,
+        "layers": [
+          {
+            "noise": "white",
+            "filter": {
+              "type": "highpass",
+              "hz": 3200
+            },
+            "for": 0.03,
+            "attack": 0.0005,
+            "release": 0.03,
+            "gain": 0.6
+          },
+          {
+            "noise": "white",
+            "filter": {
+              "type": "bandpass",
+              "hz": 1200,
+              "q": 1.5
+            },
+            "at": 0.01,
+            "for": 0.08,
+            "attack": 0.001,
+            "release": 0.07,
+            "gain": 0.35
+          },
+          {
+            "tone": "square",
+            "hz": 160,
+            "toHz": 60,
+            "for": 0.06,
+            "attack": 0.001,
+            "release": 0.05,
+            "gain": 0.12
+          }
+        ]
+      }
+    },
+    {
+      "id": "fire",
+      "bus": "effects",
+      "volume": 0.6,
+      "pitch": 0.15,
+      "distance": [1, 16],
+      "synth": {
+        "seconds": 0.9,
+        "layers": [
+          {
+            "noise": "brown",
+            "filter": {
+              "type": "lowpass",
+              "hz": 700
+            },
+            "for": 0.9,
+            "attack": 0.15,
+            "release": 0.3,
+            "gain": 0.49
+          },
+          {
+            "noise": "white",
+            "filter": {
+              "type": "bandpass",
+              "hz": 2600,
+              "q": 3
+            },
+            "at": 0.12,
+            "for": 0.03,
+            "attack": 0.001,
+            "release": 0.025,
+            "gain": 0.35
+          },
+          {
+            "noise": "white",
+            "filter": {
+              "type": "bandpass",
+              "hz": 3400,
+              "q": 3
+            },
+            "at": 0.41,
+            "for": 0.02,
+            "attack": 0.001,
+            "release": 0.02,
+            "gain": 0.32
+          },
+          {
+            "noise": "white",
+            "filter": {
+              "type": "bandpass",
+              "hz": 1900,
+              "q": 3
+            },
+            "at": 0.66,
+            "for": 0.03,
+            "attack": 0.001,
+            "release": 0.025,
+            "gain": 0.28
+          }
+        ]
+      }
+    },
+    {
+      "id": "spray",
+      "bus": "effects",
+      "volume": 0.6,
+      "distance": [0.5, 12],
+      "synth": {
+        "seconds": 0.3,
+        "layers": [
+          {
+            "noise": "white",
+            "filter": {
+              "type": "highpass",
+              "hz": 1800
+            },
+            "for": 0.3,
+            "attack": 0.02,
+            "release": 0.04,
+            "gain": 0.45
+          },
+          {
+            "noise": "pink",
+            "filter": {
+              "type": "bandpass",
+              "hz": 700,
+              "q": 0.7
+            },
+            "for": 0.3,
+            "attack": 0.02,
+            "release": 0.04,
+            "gain": 0.25
+          }
+        ]
+      }
+    },
+    {
+      "id": "alarm",
+      "bus": "effects",
+      "volume": 0.35,
+      "distance": [2, 40],
+      "synth": {
+        "seconds": 0.5,
+        "layers": [
+          {
+            "tone": "square",
+            "hz": 3100,
+            "for": 0.45,
+            "attack": 0.005,
+            "release": 0.02,
+            "gain": 0.21
+          }
+        ]
+      }
+    },
+    {
+      "id": "siren",
+      "bus": "effects",
+      "volume": 0.4,
+      "positional": false,
+      "synth": {
+        "seconds": 1.4,
+        "layers": [
+          {
+            "tone": "sawtooth",
+            "hz": 620,
+            "toHz": 1050,
+            "for": 0.7,
+            "attack": 0.05,
+            "release": 0.05,
+            "gain": 0.17
+          },
+          {
+            "tone": "sawtooth",
+            "hz": 1050,
+            "toHz": 620,
+            "at": 0.7,
+            "for": 0.7,
+            "attack": 0.05,
+            "release": 0.1,
+            "gain": 0.17
+          }
+        ]
+      }
+    }
+  ],
+  "cues": {
+    "card-accepted": "card-accepted",
+    "card-refused": "card-refused",
+    "door-opening": "door-opening",
+    "door-closing": "door-closing",
+    "door-closed": "door-closed",
+    "hinge-open": "hinge-open",
+    "hinge-close": "hinge-close",
+    "switch": "switch",
+    "run-start": "run-start",
+    "slide-open": "slide-open",
+    "slide-close": "slide-close",
+    "ui-click": "ui-click",
+    "ui-step": "ui-step",
+    "ui-task": "ui-task",
+    "ui-refused": "ui-refused",
+    "spark": "spark",
+    "fire": "fire",
+    "spray": "spray",
+    "alarm": "alarm",
+    "siren": "siren"
+  },
+  "footsteps": {
+    "vinyl": "step-vinyl",
+    "wood": "step-wood",
+    "tile": "step-concrete",
+    "stone": "step-concrete",
+    "concrete": "step-concrete"
+  },
+  "impacts": {
+    "metal": "impact-metal",
+    "glass": "impact-glass",
+    "satin": "impact-hard",
+    "plastic": "impact-hard",
+    "painted": "impact-hard",
+    "matte": "impact-soft",
+    "rubber": "impact-soft",
+    "light": "impact-soft"
+  }
+}

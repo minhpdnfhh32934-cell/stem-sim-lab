@@ -1,0 +1,1056 @@
+{
+  "id": "ac-generator",
+  "skills": [
+    {
+      "id": "principle",
+      "name": "How a turning coil makes an emf",
+      "advice": "Re-read: the flux linkage NBA·cos ωt keeps changing as the coil turns, so by Faraday’s law an emf is induced. Face square to the field: flux greatest, emf zero; edge-on: flux zero, emf greatest.",
+      "vi": {
+        "name": "Khung dây quay sinh ra suất điện động như thế nào",
+        "advice": "Đọc lại: từ thông móc vòng NBA·cos ωt biến thiên liên tục khi khung quay, nên theo định luật Fa-ra-đây có suất điện động cảm ứng. Mặt khung vuông góc với từ trường: từ thông lớn nhất, suất điện động bằng 0; mặt khung song song với từ trường: từ thông bằng 0, suất điện động lớn nhất."
+      }
+    },
+    {
+      "id": "peak",
+      "name": "Peak emf: E₀ = N·B·A·ω",
+      "advice": "Learn E₀ = N·B·A·ω with ω = 2πf and A in m² (100 cm² = 0.01 m²). Trap: forgetting the 2π, or giving N·B·A, which is the flux linkage, not the emf.",
+      "vi": {
+        "name": "Suất điện động cực đại: E₀ = N·B·A·ω",
+        "advice": "Nhớ E₀ = N·B·A·ω với ω = 2πf và A tính bằng m² (100 cm² = 0,01 m²). Lỗi hay gặp: quên 2π, hoặc lấy N·B·A — đó là từ thông móc vòng, không phải suất điện động."
+      }
+    },
+    {
+      "id": "ac",
+      "name": "Alternating current: frequency and rms",
+      "advice": "The emf reverses every half turn, so its frequency is the turning frequency; the rms value is E₀/√2. Watch the voltmeter swing both ways at the station.",
+      "vi": {
+        "name": "Dòng điện xoay chiều: tần số và giá trị hiệu dụng",
+        "advice": "Suất điện động đổi chiều sau mỗi nửa vòng quay, nên tần số của nó bằng tần số quay; giá trị hiệu dụng là E₀/√2. Quan sát kim vôn kế lệch về hai phía trên trạm."
+      }
+    },
+    {
+      "id": "factors",
+      "name": "What sets the peak",
+      "advice": "Change one thing at a time: twice N, B or f gives twice E₀; only turning faster also raises the frequency.",
+      "vi": {
+        "name": "Các yếu tố quyết định giá trị cực đại",
+        "advice": "Thay đổi từng yếu tố một: N, B hoặc f gấp đôi thì E₀ gấp đôi; chỉ khi quay nhanh hơn thì tần số mới tăng theo."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "square-face",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["principle"],
+      "stem": "At the instant the coil’s face is square to the magnetic field, its emf is…",
+      "explain": "The flux is greatest there but not changing for that instant, so the emf is zero.",
+      "vi": {
+        "stem": "Tại thời điểm mặt khung dây vuông góc với đường sức từ, suất điện động của khung…",
+        "explain": "Lúc đó từ thông lớn nhất nhưng tức thời không biến thiên, nên suất điện động bằng 0."
+      },
+      "options": [
+        {
+          "text": "zero",
+          "vi": {
+            "text": "bằng 0"
+          },
+          "correct": true
+        },
+        {
+          "text": "at its greatest",
+          "vi": {
+            "text": "lớn nhất"
+          }
+        },
+        {
+          "text": "half its peak",
+          "vi": {
+            "text": "bằng một nửa giá trị cực đại"
+          }
+        },
+        {
+          "text": "equal to its rms value",
+          "vi": {
+            "text": "bằng giá trị hiệu dụng"
+          }
+        }
+      ]
+    },
+    {
+      "id": "peak-formula",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["peak"],
+      "stem": "A coil of N turns, each of area A, turns at angular velocity ω in a uniform field B. Its peak emf is…",
+      "explain": "E₀ = N·B·A·ω.",
+      "vi": {
+        "stem": "Khung dây N vòng, mỗi vòng diện tích A, quay với tốc độ góc ω trong từ trường đều B. Suất điện động cực đại của khung là…",
+        "explain": "E₀ = N·B·A·ω."
+      },
+      "options": [
+        {
+          "text": "E₀ = N·B·A·ω",
+          "vi": {
+            "text": "E₀ = N·B·A·ω"
+          },
+          "correct": true
+        },
+        {
+          "text": "E₀ = N·B·A",
+          "vi": {
+            "text": "E₀ = N·B·A"
+          }
+        },
+        {
+          "text": "E₀ = N·B·A/ω",
+          "vi": {
+            "text": "E₀ = N·B·A/ω"
+          }
+        },
+        {
+          "text": "E₀ = N·B·ω",
+          "vi": {
+            "text": "E₀ = N·B·ω"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-ac",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["ac", "principle"],
+      "stem": "A coil turns steadily between the poles of a magnet; a voltmeter is joined to it. Decide whether each statement is true or false.",
+      "explain": "The emf reverses every half turn, at the turning frequency; rms = E₀/√2, not E₀·√2; the flux linkage is greatest with the face square to the field.",
+      "vi": {
+        "stem": "Một khung dây quay đều giữa hai cực nam châm; vôn kế được nối với khung. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Suất điện động đổi chiều sau mỗi nửa vòng, tần số bằng tần số quay; giá trị hiệu dụng = E₀/√2, không phải E₀·√2; từ thông móc vòng lớn nhất khi mặt khung vuông góc với từ trường."
+      },
+      "statements": [
+        {
+          "text": "The emf reverses every half turn.",
+          "vi": {
+            "text": "Suất điện động đổi chiều sau mỗi nửa vòng quay."
+          },
+          "true": true
+        },
+        {
+          "text": "The frequency of the emf equals the number of turns of the coil per second.",
+          "vi": {
+            "text": "Tần số của suất điện động bằng số vòng quay của khung trong một giây."
+          },
+          "true": true
+        },
+        {
+          "text": "The rms emf is the peak times √2.",
+          "vi": {
+            "text": "Suất điện động hiệu dụng bằng giá trị cực đại nhân √2."
+          },
+          "true": false
+        },
+        {
+          "text": "The flux linkage is greatest with the coil’s face square to the field.",
+          "vi": {
+            "text": "Từ thông móc vòng lớn nhất khi mặt khung vuông góc với từ trường."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "faster",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["factors", "ac"],
+      "stem": "The coil is turned twice as fast. The peak emf and the frequency of the AC…",
+      "explain": "E₀ = N·B·A·2πf and the frequency is f: both double.",
+      "vi": {
+        "stem": "Quay khung dây nhanh gấp đôi. Suất điện động cực đại và tần số của dòng xoay chiều…",
+        "explain": "E₀ = N·B·A·2πf và tần số bằng f: cả hai đều tăng gấp đôi."
+      },
+      "options": [
+        {
+          "text": "both double",
+          "vi": {
+            "text": "đều tăng gấp đôi"
+          },
+          "correct": true
+        },
+        {
+          "text": "the peak doubles, the frequency stays",
+          "vi": {
+            "text": "E₀ tăng gấp đôi, tần số không đổi"
+          }
+        },
+        {
+          "text": "the frequency doubles, the peak stays",
+          "vi": {
+            "text": "tần số tăng gấp đôi, E₀ không đổi"
+          }
+        },
+        {
+          "text": "both stay the same",
+          "vi": {
+            "text": "đều không đổi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "more-turns",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["factors"],
+      "stem": "The coil is rewound with twice as many turns and turned at the same speed. The peak emf and the frequency…",
+      "explain": "E₀ ∝ N, but the frequency is set by the turning only.",
+      "vi": {
+        "stem": "Quấn lại khung với số vòng dây gấp đôi và quay với tốc độ như cũ. Suất điện động cực đại và tần số…",
+        "explain": "E₀ tỉ lệ với N, còn tần số chỉ do tốc độ quay quyết định."
+      },
+      "options": [
+        {
+          "text": "the peak doubles, the frequency stays",
+          "vi": {
+            "text": "E₀ tăng gấp đôi, tần số không đổi"
+          },
+          "correct": true
+        },
+        {
+          "text": "both double",
+          "vi": {
+            "text": "đều tăng gấp đôi"
+          }
+        },
+        {
+          "text": "the frequency doubles, the peak stays",
+          "vi": {
+            "text": "tần số tăng gấp đôi, E₀ không đổi"
+          }
+        },
+        {
+          "text": "the peak halves",
+          "vi": {
+            "text": "E₀ giảm một nửa"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-2hz",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["peak", "ac"],
+      "set": {
+        "frequency": 2,
+        "turns": 200,
+        "field": 0.2
+      },
+      "stem": "A coil of {turns} turns of area {area} m² turns {frequency} times a second in a field of {field} T. Decide whether each statement is true or false.",
+      "explain": "E₀ = N·B·A·2πf ≈ {@peak} V; rms = E₀/√2 ≈ {@rms} V; the emf alternates at {frequency} Hz. N·B·A = {@linkage} Wb is the flux linkage, not the peak emf.",
+      "vi": {
+        "stem": "Khung dây {turns} vòng, diện tích {area} m², quay {frequency} vòng/giây trong từ trường {field} T. Mỗi nhận định sau đúng hay sai?",
+        "explain": "E₀ = N·B·A·2πf ≈ {@peak} V; giá trị hiệu dụng = E₀/√2 ≈ {@rms} V; suất điện động biến thiên với tần số {frequency} Hz. N·B·A = {@linkage} Wb là từ thông móc vòng, không phải suất điện động cực đại."
+      },
+      "statements": [
+        {
+          "text": "The peak emf is about {@peak} V.",
+          "vi": {
+            "text": "Suất điện động cực đại khoảng {@peak} V."
+          },
+          "true": true,
+          "check": {
+            "expr": "turns*field*area*2*pi*frequency",
+            "equals": "peak"
+          }
+        },
+        {
+          "text": "The rms emf is about {@rms} V.",
+          "vi": {
+            "text": "Suất điện động hiệu dụng khoảng {@rms} V."
+          },
+          "true": true,
+          "check": {
+            "expr": "turns*field*area*2*pi*frequency/sqrt(2)",
+            "equals": "rms"
+          }
+        },
+        {
+          "text": "The emf alternates {frequency} times a second.",
+          "vi": {
+            "text": "Suất điện động biến thiên tuần hoàn {frequency} lần mỗi giây."
+          },
+          "true": true
+        },
+        {
+          "text": "The peak emf is N·B·A = {@linkage} V.",
+          "vi": {
+            "text": "Suất điện động cực đại bằng N·B·A = {@linkage} V."
+          },
+          "true": false,
+          "check": {
+            "expr": "@linkage",
+            "equals": "peak"
+          }
+        }
+      ]
+    },
+    {
+      "id": "peak",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["peak"],
+      "set": {
+        "frequency": 1.5,
+        "turns": 300,
+        "field": 0.3
+      },
+      "stem": "A coil of {turns} turns of area {area} m² turns {frequency} times a second in a field of {field} T. What is its peak emf?",
+      "explain": "E₀ = N·B·A·ω = {turns}·{field}·{area}·2π·{frequency} ≈ {@peak} V.",
+      "vi": {
+        "stem": "Khung dây {turns} vòng, diện tích {area} m², quay {frequency} vòng/giây trong từ trường {field} T. Suất điện động cực đại bằng bao nhiêu?",
+        "explain": "E₀ = N·B·A·ω = {turns}·{field}·{area}·2π·{frequency} ≈ {@peak} V."
+      },
+      "options": [
+        {
+          "text": "{@peak} V",
+          "vi": {
+            "text": "{@peak} V"
+          },
+          "correct": true,
+          "check": {
+            "expr": "turns*field*area*2*pi*frequency",
+            "equals": "peak"
+          }
+        },
+        {
+          "text": "{=turns*field*area*frequency} V",
+          "vi": {
+            "text": "{=turns*field*area*frequency} V"
+          },
+          "check": {
+            "expr": "turns*field*area*frequency",
+            "equals": "peak"
+          }
+        },
+        {
+          "text": "{=turns*field*area} V",
+          "vi": {
+            "text": "{=turns*field*area} V"
+          },
+          "check": {
+            "expr": "turns*field*area",
+            "equals": "peak"
+          }
+        },
+        {
+          "text": "{=turns*field*area*2*pi*frequency*sqrt(2)} V",
+          "vi": {
+            "text": "{=turns*field*area*2*pi*frequency*sqrt(2)} V"
+          },
+          "check": {
+            "expr": "turns*field*area*2*pi*frequency*sqrt(2)",
+            "equals": "peak"
+          }
+        }
+      ]
+    },
+    {
+      "id": "rms",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["ac"],
+      "set": {
+        "frequency": 2,
+        "turns": 200,
+        "field": 0.2
+      },
+      "stem": "A generator’s emf has a peak of {@peak} V. What is its rms value?",
+      "explain": "E = E₀/√2 = {@peak}/√2 ≈ {@rms} V.",
+      "vi": {
+        "stem": "Suất điện động của máy phát có giá trị cực đại {@peak} V. Giá trị hiệu dụng bằng bao nhiêu?",
+        "explain": "E = E₀/√2 = {@peak}/√2 ≈ {@rms} V."
+      },
+      "options": [
+        {
+          "text": "{@rms} V",
+          "vi": {
+            "text": "{@rms} V"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@peak/sqrt(2)",
+            "equals": "rms"
+          }
+        },
+        {
+          "text": "{=@peak*sqrt(2)} V",
+          "vi": {
+            "text": "{=@peak*sqrt(2)} V"
+          },
+          "check": {
+            "expr": "@peak*sqrt(2)",
+            "equals": "rms"
+          }
+        },
+        {
+          "text": "{=@peak/2} V",
+          "vi": {
+            "text": "{=@peak/2} V"
+          },
+          "check": {
+            "expr": "@peak/2",
+            "equals": "rms"
+          }
+        },
+        {
+          "text": "{@peak} V",
+          "vi": {
+            "text": "{@peak} V"
+          },
+          "check": {
+            "expr": "@peak",
+            "equals": "rms"
+          }
+        }
+      ]
+    },
+    {
+      "id": "linkage",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["principle"],
+      "set": {
+        "frequency": 0.5,
+        "turns": 500,
+        "field": 0.5
+      },
+      "stem": "A coil of {turns} turns, each of area {area} m² (100 cm²), turns in a field of {field} T. What is its greatest flux linkage?",
+      "explain": "With the face square to the field: NΦ₀ = N·B·A = {turns}·{field}·{area} = {@linkage} Wb. Using A = 100 (cm²) as if in m² gives 10⁴ times too much.",
+      "vi": {
+        "stem": "Khung dây {turns} vòng, mỗi vòng diện tích {area} m² (100 cm²), quay trong từ trường {field} T. Từ thông móc vòng lớn nhất bằng bao nhiêu?",
+        "explain": "Khi mặt khung vuông góc với từ trường: NΦ₀ = N·B·A = {turns}·{field}·{area} = {@linkage} Wb. Dùng A = 100 (cm²) như thể là m² sẽ ra lớn gấp 10⁴ lần."
+      },
+      "options": [
+        {
+          "text": "{@linkage} Wb",
+          "vi": {
+            "text": "{@linkage} Wb"
+          },
+          "correct": true,
+          "check": {
+            "expr": "turns*field*area",
+            "equals": "linkage"
+          }
+        },
+        {
+          "text": "{=field*area} Wb",
+          "vi": {
+            "text": "{=field*area} Wb"
+          },
+          "check": {
+            "expr": "field*area",
+            "equals": "linkage"
+          }
+        },
+        {
+          "text": "{=turns*field*area*2*pi*frequency} Wb",
+          "vi": {
+            "text": "{=turns*field*area*2*pi*frequency} Wb"
+          },
+          "check": {
+            "expr": "turns*field*area*2*pi*frequency",
+            "equals": "linkage"
+          }
+        },
+        {
+          "text": "{=turns*field*100} Wb",
+          "vi": {
+            "text": "{=turns*field*100} Wb"
+          },
+          "check": {
+            "expr": "turns*field*100",
+            "equals": "linkage"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-slow",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["peak", "principle", "ac"],
+      "set": {
+        "frequency": 0.5,
+        "turns": 500,
+        "field": 0.5
+      },
+      "stem": "A coil of {turns} turns of area {area} m² turns {frequency} times a second in a field of {field} T. Decide whether each statement is true or false.",
+      "explain": "NΦ₀ = N·B·A = {@linkage} Wb; E₀ = NΦ₀·2πf ≈ {@peak} V; one turn takes 1/f = {=1/frequency} s. The emf is greatest edge-on, not face-on.",
+      "vi": {
+        "stem": "Khung dây {turns} vòng, diện tích {area} m², quay {frequency} vòng/giây trong từ trường {field} T. Mỗi nhận định sau đúng hay sai?",
+        "explain": "NΦ₀ = N·B·A = {@linkage} Wb; E₀ = NΦ₀·2πf ≈ {@peak} V; mỗi vòng quay mất 1/f = {=1/frequency} s. Suất điện động lớn nhất khi mặt khung song song với từ trường, không phải khi vuông góc."
+      },
+      "statements": [
+        {
+          "text": "The greatest flux linkage is {@linkage} Wb.",
+          "vi": {
+            "text": "Từ thông móc vòng lớn nhất bằng {@linkage} Wb."
+          },
+          "true": true,
+          "check": {
+            "expr": "turns*field*area",
+            "equals": "linkage"
+          }
+        },
+        {
+          "text": "The peak emf is about {@peak} V.",
+          "vi": {
+            "text": "Suất điện động cực đại khoảng {@peak} V."
+          },
+          "true": true,
+          "check": {
+            "expr": "@linkage*2*pi*frequency",
+            "equals": "peak"
+          }
+        },
+        {
+          "text": "One cycle of the emf takes {=1/frequency} s.",
+          "vi": {
+            "text": "Một chu kì của suất điện động kéo dài {=1/frequency} s."
+          },
+          "true": true
+        },
+        {
+          "text": "The emf is greatest when the coil’s face is square to the field.",
+          "vi": {
+            "text": "Suất điện động lớn nhất khi mặt khung vuông góc với từ trường."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "find-b",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["peak", "factors"],
+      "set": {
+        "frequency": 2,
+        "turns": 200,
+        "field": 0.2
+      },
+      "stem": "A coil of {turns} turns of area {area} m² turns {frequency} times a second, and its peak emf is {@peak} V. What field is it turning in?",
+      "explain": "E₀ = N·B·A·2πf, so B = E₀/(N·A·2πf) = {@peak}/({turns}·{area}·2π·{frequency}) ≈ {=@peak/(turns*area*2*pi*frequency)} T.",
+      "vi": {
+        "stem": "Khung dây {turns} vòng, diện tích {area} m², quay {frequency} vòng/giây, suất điện động cực đại là {@peak} V. Cảm ứng từ của từ trường bằng bao nhiêu?",
+        "explain": "E₀ = N·B·A·2πf, nên B = E₀/(N·A·2πf) = {@peak}/({turns}·{area}·2π·{frequency}) ≈ {=@peak/(turns*area*2*pi*frequency)} T."
+      },
+      "options": [
+        {
+          "text": "{=@peak/(turns*area*2*pi*frequency)} T",
+          "vi": {
+            "text": "{=@peak/(turns*area*2*pi*frequency)} T"
+          },
+          "correct": true
+        },
+        {
+          "text": "{=@peak/(turns*area*frequency)} T",
+          "vi": {
+            "text": "{=@peak/(turns*area*frequency)} T"
+          }
+        },
+        {
+          "text": "{=@peak/(turns*area)} T",
+          "vi": {
+            "text": "{=@peak/(turns*area)} T"
+          }
+        },
+        {
+          "text": "{=@peak*turns*area*2*pi*frequency} T",
+          "vi": {
+            "text": "{=@peak*turns*area*2*pi*frequency} T"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-fast",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["factors", "ac", "peak"],
+      "set": {
+        "frequency": 3,
+        "turns": 500,
+        "field": 0.5
+      },
+      "stem": "A coil of {turns} turns of area {area} m² turns {frequency} times a second in a field of {field} T. (A real generator turns 50 times a second.) Decide whether each statement is true or false.",
+      "explain": "E₀ ≈ {@peak} V, rms ≈ {@rms} V. At 50 turns a second the same coil would give E₀ = {=@peak*50/frequency} V at 50 Hz. Halving f halves the peak and the rms — and the frequency too.",
+      "vi": {
+        "stem": "Khung dây {turns} vòng, diện tích {area} m², quay {frequency} vòng/giây trong từ trường {field} T. (Máy phát thật quay 50 vòng mỗi giây.) Mỗi nhận định sau đúng hay sai?",
+        "explain": "E₀ ≈ {@peak} V, giá trị hiệu dụng ≈ {@rms} V. Quay 50 vòng/giây, cùng khung dây đó sẽ cho E₀ = {=@peak*50/frequency} V với tần số 50 Hz. Giảm f một nửa thì E₀, giá trị hiệu dụng và cả tần số đều giảm một nửa."
+      },
+      "statements": [
+        {
+          "text": "The peak emf is about {@peak} V.",
+          "vi": {
+            "text": "Suất điện động cực đại khoảng {@peak} V."
+          },
+          "true": true,
+          "check": {
+            "expr": "turns*field*area*2*pi*frequency",
+            "equals": "peak"
+          }
+        },
+        {
+          "text": "The rms emf is about {@rms} V.",
+          "vi": {
+            "text": "Suất điện động hiệu dụng khoảng {@rms} V."
+          },
+          "true": true,
+          "check": {
+            "expr": "@peak/sqrt(2)",
+            "equals": "rms"
+          }
+        },
+        {
+          "text": "Turned 50 times a second, the same coil would give a peak of about {=@peak*50/frequency} V.",
+          "vi": {
+            "text": "Quay 50 vòng mỗi giây, cùng khung dây đó sẽ cho giá trị cực đại khoảng {=@peak*50/frequency} V."
+          },
+          "true": true
+        },
+        {
+          "text": "Turning it half as fast would halve the peak but keep the frequency.",
+          "vi": {
+            "text": "Quay chậm đi một nửa thì E₀ giảm một nửa nhưng tần số giữ nguyên."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "emf-frequency",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["ac"],
+      "stem": "A generator’s coil makes f revolutions per second. The frequency of the alternating emf it produces is…",
+      "explain": "Each revolution gives one full cycle of the emf (one positive and one negative half), so the emf’s frequency equals the coil’s revolutions per second, f. 2πf is the angular velocity ω, in rad/s.",
+      "vi": {
+        "stem": "Khung dây của máy phát quay f vòng trong một giây. Tần số của suất điện động xoay chiều mà nó tạo ra là…",
+        "explain": "Mỗi vòng quay cho một chu kì đầy đủ của suất điện động (một nửa dương, một nửa âm), nên tần số của suất điện động bằng số vòng quay trong một giây, f. Còn 2πf là tốc độ góc ω, tính bằng rad/s."
+      },
+      "options": [
+        {
+          "text": "f",
+          "vi": {
+            "text": "f"
+          },
+          "correct": true
+        },
+        {
+          "text": "2f",
+          "vi": {
+            "text": "2f"
+          }
+        },
+        {
+          "text": "f/2",
+          "vi": {
+            "text": "f/2"
+          }
+        },
+        {
+          "text": "2πf",
+          "vi": {
+            "text": "2πf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "weaker-magnet",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["factors", "ac"],
+      "stem": "The magnet is replaced by one whose field is half as strong; the coil turns at the same speed. The peak emf and the frequency…",
+      "explain": "E₀ = N·B·A·ω is proportional to B, so it halves; the frequency is set only by how fast the coil turns, so it stays the same.",
+      "vi": {
+        "stem": "Thay nam châm bằng một nam châm có cảm ứng từ chỉ bằng một nửa; khung dây vẫn quay với tốc độ cũ. Suất điện động cực đại và tần số…",
+        "explain": "E₀ = N·B·S·ω tỉ lệ với B nên giảm một nửa; tần số chỉ phụ thuộc vào tốc độ quay của khung nên không đổi."
+      },
+      "options": [
+        {
+          "text": "the peak halves; the frequency stays the same",
+          "vi": {
+            "text": "suất điện động cực đại giảm một nửa; tần số không đổi"
+          },
+          "correct": true
+        },
+        {
+          "text": "both halve",
+          "vi": {
+            "text": "cả hai đều giảm một nửa"
+          }
+        },
+        {
+          "text": "the peak falls to a quarter; the frequency stays the same",
+          "vi": {
+            "text": "suất điện động cực đại giảm còn một phần tư; tần số không đổi"
+          }
+        },
+        {
+          "text": "the peak stays the same; the frequency halves",
+          "vi": {
+            "text": "suất điện động cực đại không đổi; tần số giảm một nửa"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-flux",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["principle", "ac"],
+      "stem": "A coil turns steadily in a uniform magnetic field. Decide whether each statement about its emf is true or false.",
+      "explain": "The emf is the rate of change of the flux linkage: it is zero when the flux is greatest (face square to the field) and greatest when the face is parallel to the field. It changes sign twice per revolution, so over a whole period its average is zero; E₀/√2 is the rms value, not the average. NΦ₀ = N·B·A does not depend on the speed.",
+      "vi": {
+        "stem": "Một khung dây quay đều trong từ trường đều. Mỗi nhận định sau về suất điện động của nó đúng hay sai?",
+        "explain": "Suất điện động bằng tốc độ biến thiên của từ thông: nó bằng 0 khi từ thông cực đại (mặt khung vuông góc với đường sức) và cực đại khi mặt khung song song với đường sức. Nó đổi dấu hai lần trong mỗi vòng quay, nên giá trị trung bình trong cả chu kì bằng 0; E₀/√2 là giá trị hiệu dụng chứ không phải giá trị trung bình. NΦ₀ = N·B·S không phụ thuộc tốc độ quay."
+      },
+      "statements": [
+        {
+          "text": "The emf is zero at the instant the flux through the coil is greatest.",
+          "vi": {
+            "text": "Suất điện động bằng 0 tại thời điểm từ thông qua khung dây cực đại."
+          },
+          "true": true
+        },
+        {
+          "text": "The emf changes sign twice in each revolution.",
+          "vi": {
+            "text": "Suất điện động đổi dấu hai lần trong mỗi vòng quay."
+          },
+          "true": true
+        },
+        {
+          "text": "The average of the emf over one whole period is E₀/√2.",
+          "vi": {
+            "text": "Giá trị trung bình của suất điện động trong một chu kì bằng E₀/√2."
+          },
+          "true": false
+        },
+        {
+          "text": "Turning the coil twice as fast doubles its greatest flux linkage NΦ₀.",
+          "vi": {
+            "text": "Quay khung nhanh gấp đôi thì từ thông cực đại NΦ₀ qua khung tăng gấp đôi."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "rms-direct",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["peak", "ac"],
+      "set": {
+        "frequency": 2.5,
+        "turns": 400,
+        "field": 0.15
+      },
+      "stem": "A coil of {turns} turns of area {area} m² turns {frequency} times a second in a field of {field} T. What does an AC voltmeter (rms) read across it, with no current drawn?",
+      "explain": "E₀ = N·B·A·2πf = {turns}·{field}·{area}·2π·{frequency} ≈ {@peak} V, and the rms value is E₀/√2 ≈ {@rms} V. Forgetting 2π, or multiplying by √2, gives the other values.",
+      "vi": {
+        "stem": "Một khung dây {turns} vòng, diện tích mỗi vòng {area} m², quay {frequency} vòng/s trong từ trường {field} T. Vôn kế xoay chiều (chỉ giá trị hiệu dụng) mắc vào hai đầu khung, không lấy dòng điện, chỉ bao nhiêu?",
+        "explain": "E₀ = N·B·S·2πf = {turns}·{field}·{area}·2π·{frequency} ≈ {@peak} V, và giá trị hiệu dụng là E = E₀/√2 ≈ {@rms} V. Quên 2π hoặc nhân với √2 sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{@rms} V",
+          "vi": {
+            "text": "{@rms} V"
+          },
+          "correct": true,
+          "check": {
+            "expr": "turns*field*area*2*pi*frequency/sqrt(2)",
+            "equals": "rms"
+          }
+        },
+        {
+          "text": "{@peak} V",
+          "vi": {
+            "text": "{@peak} V"
+          },
+          "check": {
+            "expr": "@peak",
+            "equals": "rms"
+          }
+        },
+        {
+          "text": "{=turns*field*area*frequency/sqrt(2)} V",
+          "vi": {
+            "text": "{=turns*field*area*frequency/sqrt(2)} V"
+          },
+          "check": {
+            "expr": "turns*field*area*frequency/sqrt(2)",
+            "equals": "rms"
+          }
+        },
+        {
+          "text": "{=@peak*sqrt(2)} V",
+          "vi": {
+            "text": "{=@peak*sqrt(2)} V"
+          },
+          "check": {
+            "expr": "@peak*sqrt(2)",
+            "equals": "rms"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-350",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["peak", "ac"],
+      "set": {
+        "frequency": 1,
+        "turns": 350,
+        "field": 0.4
+      },
+      "stem": "A coil of {turns} turns of area {area} m² turns at {frequency} revolution per second in a field of {field} T. Decide whether each statement is true or false.",
+      "explain": "NΦ₀ = N·B·A = {@linkage} Wb; E₀ = NΦ₀·ω = {@linkage}·2π·{frequency} ≈ {@peak} V; the rms value is E₀/√2 ≈ {@rms} V. Leaving out 2π gives {=turns*field*area*frequency} V, which is not the peak.",
+      "vi": {
+        "stem": "Một khung dây {turns} vòng, diện tích mỗi vòng {area} m², quay {frequency} vòng/s trong từ trường {field} T. Mỗi nhận định sau đúng hay sai?",
+        "explain": "NΦ₀ = N·B·S = {@linkage} Wb; E₀ = NΦ₀·ω = {@linkage}·2π·{frequency} ≈ {@peak} V; giá trị hiệu dụng E = E₀/√2 ≈ {@rms} V. Bỏ quên 2π sẽ ra {=turns*field*area*frequency} V, không phải giá trị cực đại."
+      },
+      "statements": [
+        {
+          "text": "The greatest flux linkage is {@linkage} Wb.",
+          "vi": {
+            "text": "Từ thông cực đại qua khung là {@linkage} Wb."
+          },
+          "true": true,
+          "check": {
+            "expr": "turns*field*area",
+            "equals": "linkage"
+          }
+        },
+        {
+          "text": "The peak emf is about {@peak} V.",
+          "vi": {
+            "text": "Suất điện động cực đại khoảng {@peak} V."
+          },
+          "true": true,
+          "check": {
+            "expr": "turns*field*area*2*pi*frequency",
+            "equals": "peak"
+          }
+        },
+        {
+          "text": "The peak emf is {=turns*field*area*frequency} V.",
+          "vi": {
+            "text": "Suất điện động cực đại bằng {=turns*field*area*frequency} V."
+          },
+          "true": false,
+          "check": {
+            "expr": "turns*field*area*frequency",
+            "equals": "peak"
+          }
+        },
+        {
+          "text": "The rms emf is about {=@peak*sqrt(2)} V.",
+          "vi": {
+            "text": "Suất điện động hiệu dụng khoảng {=@peak*sqrt(2)} V."
+          },
+          "true": false,
+          "check": {
+            "expr": "@peak*sqrt(2)",
+            "equals": "rms"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-turns",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["peak", "factors"],
+      "set": {
+        "frequency": 1.5,
+        "turns": 250,
+        "field": 0.3
+      },
+      "stem": "A coil of area {area} m² turns {frequency} times a second in a field of {field} T, and the peak of its emf is {@peak|4} V. How many turns has the coil?",
+      "explain": "N = E₀/(B·A·2πf) = {@peak|4}/({field}·{area}·2π·{frequency}) = {turns}. Leaving out 2π, or using ω = f, gives a number 2π times too large; dividing by √2 treats the peak as an rms value.",
+      "vi": {
+        "stem": "Một khung dây diện tích mỗi vòng {area} m² quay {frequency} vòng/s trong từ trường {field} T, suất điện động cực đại của nó là {@peak|4} V. Khung dây có bao nhiêu vòng?",
+        "explain": "N = E₀/(B·S·2πf) = {@peak|4}/({field}·{area}·2π·{frequency}) = {turns}. Bỏ quên 2π (lấy ω = f) cho số vòng lớn gấp 2π lần; chia cho √2 là coi giá trị cực đại như giá trị hiệu dụng."
+      },
+      "options": [
+        {
+          "text": "{turns}",
+          "vi": {
+            "text": "{turns}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "turns*field*area*2*pi*frequency",
+            "equals": "peak"
+          }
+        },
+        {
+          "text": "{=@peak/(field*area*frequency)|3}",
+          "vi": {
+            "text": "{=@peak/(field*area*frequency)|3}"
+          },
+          "check": {
+            "expr": "(@peak/(field*area*frequency))*field*area*2*pi*frequency",
+            "equals": "peak"
+          }
+        },
+        {
+          "text": "{=@peak/(field*area*2*pi*frequency*sqrt(2))|3}",
+          "vi": {
+            "text": "{=@peak/(field*area*2*pi*frequency*sqrt(2))|3}"
+          },
+          "check": {
+            "expr": "(@peak/(field*area*2*pi*frequency*sqrt(2)))*field*area*2*pi*frequency",
+            "equals": "peak"
+          }
+        },
+        {
+          "text": "{=@peak/(field*area*2*pi)|3}",
+          "vi": {
+            "text": "{=@peak/(field*area*2*pi)|3}"
+          },
+          "check": {
+            "expr": "(@peak/(field*area*2*pi))*field*area*2*pi*frequency",
+            "equals": "peak"
+          }
+        }
+      ]
+    },
+    {
+      "id": "rewound",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["factors", "peak"],
+      "set": {
+        "frequency": 3,
+        "turns": 150,
+        "field": 0.2
+      },
+      "stem": "A coil of 300 turns turning once a second gives a peak emf of {=@peak*300*1/(turns*frequency)} V. It is rewound with {turns} turns (same area, same field) and turned {frequency} times a second. What is the new peak emf?",
+      "explain": "E₀ ∝ N·f: the turns are ×{=turns/300}, the frequency ×{frequency}, so the peak is ×{=turns*frequency/300}: {=@peak*300/(turns*frequency)} × {=turns*frequency/300} = {@peak} V. Using only one of the two changes gives the wrong values.",
+      "vi": {
+        "stem": "Một khung dây 300 vòng quay 1 vòng/s cho suất điện động cực đại {=@peak*300*1/(turns*frequency)} V. Quấn lại khung với {turns} vòng (cùng diện tích, cùng từ trường) và cho quay {frequency} vòng/s. Suất điện động cực đại mới bằng bao nhiêu?",
+        "explain": "E₀ tỉ lệ với N·f: số vòng nhân {=turns/300}, tần số nhân {frequency}, nên E₀ nhân {=turns*frequency/300}: {=@peak*300/(turns*frequency)} × {=turns*frequency/300} = {@peak} V. Chỉ tính một trong hai thay đổi sẽ ra các giá trị sai."
+      },
+      "options": [
+        {
+          "text": "{@peak} V",
+          "vi": {
+            "text": "{@peak} V"
+          },
+          "correct": true,
+          "check": {
+            "expr": "turns*field*area*2*pi*frequency",
+            "equals": "peak"
+          }
+        },
+        {
+          "text": "{=@peak*300/(turns*frequency)*frequency} V",
+          "vi": {
+            "text": "{=@peak*300/(turns*frequency)*frequency} V"
+          },
+          "check": {
+            "expr": "@peak*300/(turns*frequency)*frequency",
+            "equals": "peak"
+          }
+        },
+        {
+          "text": "{=@peak*300/(turns*frequency)*turns/300} V",
+          "vi": {
+            "text": "{=@peak*300/(turns*frequency)*turns/300} V"
+          },
+          "check": {
+            "expr": "@peak*300/(turns*frequency)*turns/300",
+            "equals": "peak"
+          }
+        },
+        {
+          "text": "{=@peak*300/(turns*frequency)*300/turns*frequency} V",
+          "vi": {
+            "text": "{=@peak*300/(turns*frequency)*300/turns*frequency} V"
+          },
+          "check": {
+            "expr": "@peak*300/(turns*frequency)*300/turns*frequency",
+            "equals": "peak"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-same-peak",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["peak", "factors", "ac"],
+      "set": {
+        "frequency": 2.5,
+        "turns": 150,
+        "field": 0.45
+      },
+      "stem": "A coil of {turns} turns of area {area} m² turns {frequency} times a second in a field of {field} T. Decide whether each statement is true or false.",
+      "explain": "ω = 2πf ≈ {=2*pi*frequency} rad/s, so E₀ = N·B·A·ω ≈ {@peak} V and E = E₀/√2 ≈ {@rms} V. E₀ ∝ N·B·f: doubling N while halving B changes nothing; at half the frequency the field must be doubled, to {=2*field} T, not halved.",
+      "vi": {
+        "stem": "Một khung dây {turns} vòng, diện tích mỗi vòng {area} m², quay {frequency} vòng/s trong từ trường {field} T. Mỗi nhận định sau đúng hay sai?",
+        "explain": "ω = 2πf ≈ {=2*pi*frequency} rad/s, nên E₀ = N·B·S·ω ≈ {@peak} V và E = E₀/√2 ≈ {@rms} V. E₀ tỉ lệ với N·B·f: tăng N gấp đôi đồng thời giảm B một nửa thì E₀ không đổi; khi tần số giảm một nửa, muốn giữ E₀ thì phải tăng B gấp đôi, lên {=2*field} T, chứ không phải giảm một nửa."
+      },
+      "statements": [
+        {
+          "text": "The peak emf is about {@peak} V.",
+          "vi": {
+            "text": "Suất điện động cực đại khoảng {@peak} V."
+          },
+          "true": true,
+          "check": {
+            "expr": "turns*field*area*2*pi*frequency",
+            "equals": "peak"
+          }
+        },
+        {
+          "text": "An AC voltmeter across the coil (no current drawn) reads about {@rms} V.",
+          "vi": {
+            "text": "Vôn kế xoay chiều mắc vào hai đầu khung (không lấy dòng) chỉ khoảng {@rms} V."
+          },
+          "true": true,
+          "check": {
+            "expr": "@peak/sqrt(2)",
+            "equals": "rms"
+          }
+        },
+        {
+          "text": "Doubling the turns and halving the field together leave the peak emf unchanged.",
+          "vi": {
+            "text": "Tăng số vòng gấp đôi đồng thời giảm cảm ứng từ một nửa thì suất điện động cực đại không đổi."
+          },
+          "true": true
+        },
+        {
+          "text": "To keep this peak at half the frequency, the field must be lowered to {=field/2} T.",
+          "vi": {
+            "text": "Để giữ nguyên suất điện động cực đại khi tần số giảm một nửa, phải giảm cảm ứng từ xuống {=field/2} T."
+          },
+          "true": false,
+          "check": {
+            "expr": "turns*(field/2)*area*2*pi*(frequency/2)",
+            "equals": "peak"
+          }
+        }
+      ]
+    }
+  ]
+}

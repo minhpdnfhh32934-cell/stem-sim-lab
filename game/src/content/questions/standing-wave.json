@@ -1,0 +1,1041 @@
+{
+  "id": "standing-wave",
+  "skills": [
+    {
+      "id": "condition",
+      "name": "Condition for a standing wave",
+      "advice": "A string fixed at both ends holds a whole number of half-wavelengths: L = n·λ/2, with nodes at both ends and n loops. Draw the 1-, 2- and 3-loop patterns and count nodes and antinodes.",
+      "vi": {
+        "name": "Điều kiện có sóng dừng",
+        "advice": "Sợi dây hai đầu cố định có sóng dừng khi chiều dài bằng số nguyên lần nửa bước sóng: L = n·λ/2, hai đầu là nút và có n bó. Vẽ các trường hợp 1, 2, 3 bó rồi đếm số nút và số bụng."
+      }
+    },
+    {
+      "id": "nodes",
+      "name": "Nodes and antinodes",
+      "advice": "Neighbouring nodes are λ/2 apart, a node and the next antinode λ/4. Neighbouring loops swing in opposite directions. With n loops there are n + 1 nodes, counting both ends.",
+      "vi": {
+        "name": "Nút và bụng sóng",
+        "advice": "Hai nút liền kề cách nhau λ/2, một nút và bụng kế tiếp cách nhau λ/4. Hai bó liền kề dao động ngược pha. Có n bó thì có n + 1 nút, kể cả hai đầu."
+      }
+    },
+    {
+      "id": "speed",
+      "name": "Wave speed on a string: v = √(T/μ)",
+      "advice": "The tension is the hanging weight, T = m·g; μ is in kg/m (1 g/m = 0.001 kg/m). Four times the mass doubles v, not quadruples it.",
+      "vi": {
+        "name": "Tốc độ sóng trên dây: v = √(T/μ)",
+        "advice": "Lực căng bằng trọng lượng vật treo, T = m·g; μ tính bằng kg/m (1 g/m = 0,001 kg/m). Khối lượng treo gấp bốn thì v chỉ gấp đôi, không phải gấp bốn."
+      }
+    },
+    {
+      "id": "frequency",
+      "name": "Frequencies of the loops: f_n = n·v/(2L)",
+      "advice": "f_n = n·v/(2L): f_n against n is a straight line through the origin of slope v/(2L). Run 1 to 5 loops at the station and plot it.",
+      "vi": {
+        "name": "Tần số các họa âm: f_n = n·v/(2L)",
+        "advice": "f_n = n·v/(2L): đồ thị f_n theo n là đường thẳng qua gốc tọa độ, hệ số góc v/(2L). Chạy từ 1 đến 5 bó trên trạm rồi vẽ đồ thị."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "condition",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["condition"],
+      "stem": "A string of length L fixed at both ends carries a standing wave when…",
+      "explain": "Both ends must be nodes: L = n·λ/2, n = 1, 2, 3 …",
+      "vi": {
+        "stem": "Sợi dây dài L hai đầu cố định có sóng dừng khi…",
+        "explain": "Hai đầu phải là nút: L = n·λ/2, n = 1, 2, 3 …"
+      },
+      "options": [
+        {
+          "text": "L = n·λ/2",
+          "vi": {
+            "text": "L = n·λ/2"
+          },
+          "correct": true
+        },
+        {
+          "text": "L = n·λ",
+          "vi": {
+            "text": "L = n·λ"
+          }
+        },
+        {
+          "text": "L = (2n + 1)·λ/4",
+          "vi": {
+            "text": "L = (2n + 1)·λ/4"
+          }
+        },
+        {
+          "text": "L = n·λ/4",
+          "vi": {
+            "text": "L = n·λ/4"
+          }
+        }
+      ]
+    },
+    {
+      "id": "node-spacing",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["nodes"],
+      "stem": "In a standing wave, two neighbouring nodes are separated by…",
+      "explain": "Each loop is half a wavelength long: λ/2.",
+      "vi": {
+        "stem": "Trong sóng dừng, hai nút liền kề cách nhau…",
+        "explain": "Mỗi bó dài nửa bước sóng: λ/2."
+      },
+      "options": [
+        {
+          "text": "λ/2",
+          "vi": {
+            "text": "λ/2"
+          },
+          "correct": true
+        },
+        {
+          "text": "λ",
+          "vi": {
+            "text": "λ"
+          }
+        },
+        {
+          "text": "λ/4",
+          "vi": {
+            "text": "λ/4"
+          }
+        },
+        {
+          "text": "2λ",
+          "vi": {
+            "text": "2λ"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-loops",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["nodes", "condition"],
+      "stem": "A string fixed at both ends shows a standing wave of several loops. Decide whether each statement is true or false.",
+      "explain": "Both ends are nodes; antinodes swing widest; the standing wave is the sum of the sent and reflected waves; neighbouring loops swing in opposite directions.",
+      "vi": {
+        "stem": "Một sợi dây hai đầu cố định có sóng dừng với nhiều bó. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Hai đầu là nút; bụng dao động mạnh nhất; sóng dừng là tổng của sóng tới và sóng phản xạ; hai bó liền kề dao động ngược pha."
+      },
+      "statements": [
+        {
+          "text": "Both ends of the string are nodes.",
+          "vi": {
+            "text": "Hai đầu dây là nút sóng."
+          },
+          "true": true
+        },
+        {
+          "text": "The antinodes swing the widest.",
+          "vi": {
+            "text": "Các bụng sóng dao động với biên độ lớn nhất."
+          },
+          "true": true
+        },
+        {
+          "text": "The standing wave forms from the wave sent along the string and the wave reflected back.",
+          "vi": {
+            "text": "Sóng dừng hình thành từ sóng truyền trên dây và sóng phản xạ trở lại."
+          },
+          "true": true
+        },
+        {
+          "text": "Neighbouring loops swing in the same direction at each instant.",
+          "vi": {
+            "text": "Hai bó liền kề luôn dao động cùng chiều tại mỗi thời điểm."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "four-times-mass",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["speed", "frequency"],
+      "stem": "The hanging mass is made four times larger, with the same number of loops. The frequency needed…",
+      "explain": "T four times larger gives v = √(T/μ) twice as large, and f_n = n·v/(2L) doubles.",
+      "vi": {
+        "stem": "Tăng khối lượng treo lên gấp bốn lần, giữ nguyên số bó. Tần số cần thiết…",
+        "explain": "T tăng 4 lần thì v = √(T/μ) tăng 2 lần, nên f_n = n·v/(2L) tăng gấp đôi."
+      },
+      "options": [
+        {
+          "text": "doubles",
+          "vi": {
+            "text": "tăng gấp đôi"
+          },
+          "correct": true
+        },
+        {
+          "text": "becomes four times larger",
+          "vi": {
+            "text": "tăng gấp bốn lần"
+          }
+        },
+        {
+          "text": "halves",
+          "vi": {
+            "text": "giảm một nửa"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "more-loops",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["frequency", "condition"],
+      "stem": "With the same tension, the frequency is raised from 2 loops to 4 loops standing. The wavelength…",
+      "explain": "λ = 2L/n: twice n, half λ (and f doubles, v stays).",
+      "vi": {
+        "stem": "Với cùng lực căng, tăng tần số để từ 2 bó chuyển thành 4 bó. Bước sóng…",
+        "explain": "λ = 2L/n: n gấp đôi thì λ giảm một nửa (f tăng gấp đôi, v không đổi)."
+      },
+      "options": [
+        {
+          "text": "halves",
+          "vi": {
+            "text": "giảm một nửa"
+          },
+          "correct": true
+        },
+        {
+          "text": "doubles",
+          "vi": {
+            "text": "tăng gấp đôi"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "becomes four times smaller",
+          "vi": {
+            "text": "giảm bốn lần"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-three",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["speed", "condition", "nodes"],
+      "set": {
+        "loops": 3,
+        "hangingMass": 0.4
+      },
+      "stem": "A {stringLength} m string of {=linearDensity*1000} g/m is pulled taut by {hangingMass} kg (g = {gravity} m/s²) and shows {loops} loops. Decide whether each statement is true or false.",
+      "explain": "v = √(m·g/μ) ≈ {@waveSpeed} m/s; λ = 2L/n ≈ {@wavelength} m; f = n·v/(2L) ≈ {@resonantFrequency} Hz. 3 loops have 4 nodes, the two ends included.",
+      "vi": {
+        "stem": "Sợi dây dài {stringLength} m, {=linearDensity*1000} g/m, được kéo căng bởi vật {hangingMass} kg (g = {gravity} m/s²) và có {loops} bó sóng. Mỗi nhận định sau đúng hay sai?",
+        "explain": "v = √(m·g/μ) ≈ {@waveSpeed} m/s; λ = 2L/n ≈ {@wavelength} m; f = n·v/(2L) ≈ {@resonantFrequency} Hz. 3 bó có 4 nút, kể cả hai đầu."
+      },
+      "statements": [
+        {
+          "text": "Waves travel along it at about {@waveSpeed} m/s.",
+          "vi": {
+            "text": "Sóng truyền trên dây với tốc độ khoảng {@waveSpeed} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "sqrt(hangingMass*gravity/linearDensity)",
+            "equals": "waveSpeed"
+          }
+        },
+        {
+          "text": "The wavelength is about {@wavelength} m.",
+          "vi": {
+            "text": "Bước sóng khoảng {@wavelength} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "2*stringLength/loops",
+            "equals": "wavelength"
+          }
+        },
+        {
+          "text": "The generator runs at about {@resonantFrequency} Hz.",
+          "vi": {
+            "text": "Máy phát dao động với tần số khoảng {@resonantFrequency} Hz."
+          },
+          "true": true,
+          "check": {
+            "expr": "loops*sqrt(hangingMass*gravity/linearDensity)/(2*stringLength)",
+            "equals": "resonantFrequency"
+          }
+        },
+        {
+          "text": "The string has 3 nodes.",
+          "vi": {
+            "text": "Sợi dây có 3 nút sóng."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "wave-speed",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["speed"],
+      "set": {
+        "hangingMass": 0.2
+      },
+      "stem": "A string of {=linearDensity*1000} g/m is kept taut by a {hangingMass} kg mass (g = {gravity} m/s²). How fast do waves travel along it?",
+      "explain": "T = m·g; v = √(T/μ) = √({hangingMass}·{gravity}/{linearDensity}) ≈ {@waveSpeed} m/s, with μ in kg/m.",
+      "vi": {
+        "stem": "Sợi dây {=linearDensity*1000} g/m được kéo căng bởi vật {hangingMass} kg (g = {gravity} m/s²). Sóng truyền trên dây với tốc độ bao nhiêu?",
+        "explain": "T = m·g; v = √(T/μ) = √({hangingMass}·{gravity}/{linearDensity}) ≈ {@waveSpeed} m/s, với μ tính bằng kg/m."
+      },
+      "options": [
+        {
+          "text": "{@waveSpeed} m/s",
+          "vi": {
+            "text": "{@waveSpeed} m/s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "sqrt(hangingMass*gravity/linearDensity)",
+            "equals": "waveSpeed"
+          }
+        },
+        {
+          "text": "{=sqrt(hangingMass/linearDensity)} m/s",
+          "vi": {
+            "text": "{=sqrt(hangingMass/linearDensity)} m/s"
+          },
+          "check": {
+            "expr": "sqrt(hangingMass/linearDensity)",
+            "equals": "waveSpeed"
+          }
+        },
+        {
+          "text": "{=hangingMass*gravity/linearDensity} m/s",
+          "vi": {
+            "text": "{=hangingMass*gravity/linearDensity} m/s"
+          },
+          "check": {
+            "expr": "hangingMass*gravity/linearDensity",
+            "equals": "waveSpeed"
+          }
+        },
+        {
+          "text": "{=sqrt(hangingMass*gravity/(linearDensity*1000))} m/s",
+          "vi": {
+            "text": "{=sqrt(hangingMass*gravity/(linearDensity*1000))} m/s"
+          },
+          "check": {
+            "expr": "sqrt(hangingMass*gravity/(linearDensity*1000))",
+            "equals": "waveSpeed"
+          }
+        }
+      ]
+    },
+    {
+      "id": "wavelength",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["condition"],
+      "set": {
+        "loops": 4,
+        "hangingMass": 0.2
+      },
+      "stem": "A {stringLength} m string fixed at both ends shows {loops} loops. What is the wavelength?",
+      "explain": "L = n·λ/2, so λ = 2L/n = 2·{stringLength}/{loops} = {@wavelength} m.",
+      "vi": {
+        "stem": "Sợi dây dài {stringLength} m hai đầu cố định có {loops} bó sóng. Bước sóng bằng bao nhiêu?",
+        "explain": "L = n·λ/2, nên λ = 2L/n = 2·{stringLength}/{loops} = {@wavelength} m."
+      },
+      "options": [
+        {
+          "text": "{@wavelength} m",
+          "vi": {
+            "text": "{@wavelength} m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2*stringLength/loops",
+            "equals": "wavelength"
+          }
+        },
+        {
+          "text": "{=stringLength/loops} m",
+          "vi": {
+            "text": "{=stringLength/loops} m"
+          },
+          "check": {
+            "expr": "stringLength/loops",
+            "equals": "wavelength"
+          }
+        },
+        {
+          "text": "{=4*stringLength/loops} m",
+          "vi": {
+            "text": "{=4*stringLength/loops} m"
+          },
+          "check": {
+            "expr": "4*stringLength/loops",
+            "equals": "wavelength"
+          }
+        },
+        {
+          "text": "{=2*stringLength*loops} m",
+          "vi": {
+            "text": "{=2*stringLength*loops} m"
+          },
+          "check": {
+            "expr": "2*stringLength*loops",
+            "equals": "wavelength"
+          }
+        }
+      ]
+    },
+    {
+      "id": "frequency",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["frequency"],
+      "set": {
+        "loops": 3,
+        "hangingMass": 0.1
+      },
+      "stem": "Waves travel at {@waveSpeed} m/s along a {stringLength} m string fixed at both ends. At what frequency do {loops} loops stand?",
+      "explain": "f_n = n·v/(2L) = {loops}·{@waveSpeed}/(2·{stringLength}) ≈ {@resonantFrequency} Hz.",
+      "vi": {
+        "stem": "Sóng truyền với tốc độ {@waveSpeed} m/s trên sợi dây dài {stringLength} m hai đầu cố định. Ở tần số nào thì có {loops} bó sóng?",
+        "explain": "f_n = n·v/(2L) = {loops}·{@waveSpeed}/(2·{stringLength}) ≈ {@resonantFrequency} Hz."
+      },
+      "options": [
+        {
+          "text": "{@resonantFrequency} Hz",
+          "vi": {
+            "text": "{@resonantFrequency} Hz"
+          },
+          "correct": true,
+          "check": {
+            "expr": "loops*@waveSpeed/(2*stringLength)",
+            "equals": "resonantFrequency"
+          }
+        },
+        {
+          "text": "{=loops*@waveSpeed/stringLength} Hz",
+          "vi": {
+            "text": "{=loops*@waveSpeed/stringLength} Hz"
+          },
+          "check": {
+            "expr": "loops*@waveSpeed/stringLength",
+            "equals": "resonantFrequency"
+          }
+        },
+        {
+          "text": "{=@waveSpeed/(2*stringLength)} Hz",
+          "vi": {
+            "text": "{=@waveSpeed/(2*stringLength)} Hz"
+          },
+          "check": {
+            "expr": "@waveSpeed/(2*stringLength)",
+            "equals": "resonantFrequency"
+          }
+        },
+        {
+          "text": "{=loops*@waveSpeed/(4*stringLength)} Hz",
+          "vi": {
+            "text": "{=loops*@waveSpeed/(4*stringLength)} Hz"
+          },
+          "check": {
+            "expr": "loops*@waveSpeed/(4*stringLength)",
+            "equals": "resonantFrequency"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-five",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["condition", "nodes", "frequency"],
+      "set": {
+        "loops": 5,
+        "hangingMass": 0.1
+      },
+      "stem": "A {stringLength} m string (μ = {=linearDensity*1000} g/m, {hangingMass} kg hanging) shows {loops} loops. Decide whether each statement is true or false.",
+      "explain": "λ = 2L/n = {@wavelength} m, so nodes are λ/2 = {=@wavelength/2} m apart; f = n·v/(2L) ≈ {@resonantFrequency} Hz. 5 loops have 6 nodes.",
+      "vi": {
+        "stem": "Sợi dây dài {stringLength} m (μ = {=linearDensity*1000} g/m, treo {hangingMass} kg) có {loops} bó sóng. Mỗi nhận định sau đúng hay sai?",
+        "explain": "λ = 2L/n = {@wavelength} m, nên các nút cách nhau λ/2 = {=@wavelength/2} m; f = n·v/(2L) ≈ {@resonantFrequency} Hz. 5 bó có 6 nút."
+      },
+      "statements": [
+        {
+          "text": "The wavelength is {@wavelength} m.",
+          "vi": {
+            "text": "Bước sóng bằng {@wavelength} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "2*stringLength/loops",
+            "equals": "wavelength"
+          }
+        },
+        {
+          "text": "The frequency is about {@resonantFrequency} Hz.",
+          "vi": {
+            "text": "Tần số khoảng {@resonantFrequency} Hz."
+          },
+          "true": true,
+          "check": {
+            "expr": "loops*sqrt(hangingMass*gravity/linearDensity)/(2*stringLength)",
+            "equals": "resonantFrequency"
+          }
+        },
+        {
+          "text": "Neighbouring nodes are {=@wavelength/2} m apart.",
+          "vi": {
+            "text": "Hai nút liền kề cách nhau {=@wavelength/2} m."
+          },
+          "true": true
+        },
+        {
+          "text": "There are 5 nodes on the string.",
+          "vi": {
+            "text": "Trên dây có 5 nút sóng."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "find-mu",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["speed", "frequency"],
+      "set": {
+        "loops": 2,
+        "hangingMass": 0.2
+      },
+      "stem": "A {stringLength} m string pulled by a {hangingMass} kg mass (g = {gravity} m/s²) shows {loops} loops at {@resonantFrequency|4} Hz. What is its mass per metre?",
+      "explain": "λ = 2L/n = {@wavelength} m, v = λ·f ≈ {=@wavelength*@resonantFrequency} m/s; μ = T/v² = m·g/v² ≈ {=hangingMass*gravity/(@wavelength*@resonantFrequency)^2} kg/m.",
+      "vi": {
+        "stem": "Sợi dây dài {stringLength} m được kéo bởi vật {hangingMass} kg (g = {gravity} m/s²) có {loops} bó sóng ở tần số {@resonantFrequency|4} Hz. Khối lượng trên một mét dây bằng bao nhiêu?",
+        "explain": "λ = 2L/n = {@wavelength} m, v = λ·f ≈ {=@wavelength*@resonantFrequency} m/s; μ = T/v² = m·g/v² ≈ {=hangingMass*gravity/(@wavelength*@resonantFrequency)^2} kg/m."
+      },
+      "options": [
+        {
+          "text": "{=hangingMass*gravity/(@wavelength*@resonantFrequency)^2} kg/m",
+          "vi": {
+            "text": "{=hangingMass*gravity/(@wavelength*@resonantFrequency)^2} kg/m"
+          },
+          "correct": true
+        },
+        {
+          "text": "{=hangingMass*gravity/(@wavelength*@resonantFrequency)} kg/m",
+          "vi": {
+            "text": "{=hangingMass*gravity/(@wavelength*@resonantFrequency)} kg/m"
+          }
+        },
+        {
+          "text": "{=hangingMass/(@wavelength*@resonantFrequency)^2} kg/m",
+          "vi": {
+            "text": "{=hangingMass/(@wavelength*@resonantFrequency)^2} kg/m"
+          }
+        },
+        {
+          "text": "{=(@wavelength*@resonantFrequency)^2/(hangingMass*gravity)} kg/m",
+          "vi": {
+            "text": "{=(@wavelength*@resonantFrequency)^2/(hangingMass*gravity)} kg/m"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-graph",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["frequency", "speed"],
+      "set": {
+        "loops": 3,
+        "hangingMass": 0.2,
+        "rulerResolution": 0.005
+      },
+      "stem": "A {stringLength} m string pulled by {hangingMass} kg shows {loops} loops; the wavelength is read on a rule of resolution {rulerResolution} m. Decide whether each statement is true or false.",
+      "explain": "f_n against n has slope v/(2L) ≈ {@frequencyPerLoop} Hz per loop. λ = {@wavelength|4} m reads as {=round(@wavelength/rulerResolution)*rulerResolution} m, giving v ≈ {=round(@wavelength/rulerResolution)*rulerResolution*@resonantFrequency} m/s. Twice the mass gives √2 times v, not twice.",
+      "vi": {
+        "stem": "Sợi dây dài {stringLength} m được kéo bởi vật {hangingMass} kg có {loops} bó sóng; bước sóng được đọc trên thước có độ phân giải {rulerResolution} m. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Đồ thị f_n theo n có hệ số góc v/(2L) ≈ {@frequencyPerLoop} Hz mỗi bó. λ = {@wavelength|4} m được đọc là {=round(@wavelength/rulerResolution)*rulerResolution} m, cho v ≈ {=round(@wavelength/rulerResolution)*rulerResolution*@resonantFrequency} m/s. Khối lượng gấp đôi thì v tăng √2 lần, không phải gấp đôi."
+      },
+      "statements": [
+        {
+          "text": "f_n against n is a line through the origin of slope about {@frequencyPerLoop} Hz.",
+          "vi": {
+            "text": "Đồ thị f_n theo n là đường thẳng qua gốc tọa độ có hệ số góc khoảng {@frequencyPerLoop} Hz."
+          },
+          "true": true,
+          "check": {
+            "expr": "sqrt(hangingMass*gravity/linearDensity)/(2*stringLength)",
+            "equals": "frequencyPerLoop"
+          }
+        },
+        {
+          "text": "The rule reads λ as {=round(@wavelength/rulerResolution)*rulerResolution} m.",
+          "vi": {
+            "text": "Thước đọc được λ là {=round(@wavelength/rulerResolution)*rulerResolution} m."
+          },
+          "true": true
+        },
+        {
+          "text": "From that reading v = λ·f ≈ {=round(@wavelength/rulerResolution)*rulerResolution*@resonantFrequency} m/s.",
+          "vi": {
+            "text": "Từ số đọc đó, v = λ·f ≈ {=round(@wavelength/rulerResolution)*rulerResolution*@resonantFrequency} m/s."
+          },
+          "true": true
+        },
+        {
+          "text": "Doubling the hanging mass would double the wave speed.",
+          "vi": {
+            "text": "Tăng gấp đôi khối lượng treo thì tốc độ sóng tăng gấp đôi."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "node-antinode",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["nodes"],
+      "stem": "In a standing wave, a node and the neighbouring antinode are separated by…",
+      "explain": "Nodes are λ/2 apart and antinodes lie midway between them, so a node and the next antinode are λ/4 apart.",
+      "vi": {
+        "stem": "Trong sóng dừng, một nút và bụng sóng liền kề cách nhau…",
+        "explain": "Hai nút liên tiếp cách nhau λ/2 và bụng nằm chính giữa hai nút, nên một nút và bụng liền kề cách nhau λ/4."
+      },
+      "options": [
+        {
+          "text": "λ/4",
+          "vi": {
+            "text": "λ/4"
+          },
+          "correct": true
+        },
+        {
+          "text": "λ/2",
+          "vi": {
+            "text": "λ/2"
+          }
+        },
+        {
+          "text": "λ",
+          "vi": {
+            "text": "λ"
+          }
+        },
+        {
+          "text": "2λ",
+          "vi": {
+            "text": "2λ"
+          }
+        }
+      ]
+    },
+    {
+      "id": "lighter-string",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["speed"],
+      "stem": "A lighter string (smaller mass per metre μ) is pulled by the same hanging mass. The speed of waves on it…",
+      "explain": "v = √(T/μ): with the same tension T, a smaller μ gives a larger wave speed.",
+      "vi": {
+        "stem": "Một sợi dây nhẹ hơn (khối lượng trên mỗi mét μ nhỏ hơn) được kéo căng bởi cùng vật treo. Tốc độ sóng trên dây…",
+        "explain": "v = √(T/μ): cùng lực căng T, μ nhỏ hơn thì tốc độ sóng lớn hơn."
+      },
+      "options": [
+        {
+          "text": "increases",
+          "vi": {
+            "text": "tăng"
+          },
+          "correct": true
+        },
+        {
+          "text": "decreases",
+          "vi": {
+            "text": "giảm"
+          }
+        },
+        {
+          "text": "stays the same, since the tension is the same",
+          "vi": {
+            "text": "không đổi, vì lực căng không đổi"
+          }
+        },
+        {
+          "text": "becomes zero",
+          "vi": {
+            "text": "bằng 0"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-motion",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["nodes", "condition"],
+      "stem": "A string fixed at both ends shows a standing wave of several loops. Decide whether each statement is true or false.",
+      "explain": "The nodes stay at rest. All points of one loop move in step, and neighbouring loops move in opposite directions. A standing wave is two equal waves travelling opposite ways, so it carries no net energy along the string.",
+      "vi": {
+        "stem": "Một sợi dây hai đầu cố định có sóng dừng với nhiều bó sóng. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Các nút đứng yên. Mọi điểm trong một bó sóng dao động cùng pha, hai bó liền kề dao động ngược pha nhau. Sóng dừng là sự chồng chất của hai sóng như nhau truyền ngược chiều, nên không truyền năng lượng dọc theo dây."
+      },
+      "statements": [
+        {
+          "text": "The nodes do not move.",
+          "vi": {
+            "text": "Các nút không dao động."
+          },
+          "true": true
+        },
+        {
+          "text": "All points of one loop move in step.",
+          "vi": {
+            "text": "Mọi điểm trong một bó sóng dao động cùng pha."
+          },
+          "true": true
+        },
+        {
+          "text": "Neighbouring loops move in opposite directions.",
+          "vi": {
+            "text": "Hai bó sóng liền kề dao động ngược pha nhau."
+          },
+          "true": true
+        },
+        {
+          "text": "A standing wave carries energy along the string from one end to the other.",
+          "vi": {
+            "text": "Sóng dừng truyền năng lượng dọc theo dây từ đầu này sang đầu kia."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "five-loops",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["frequency", "speed"],
+      "set": {
+        "loops": 5,
+        "hangingMass": 0.4
+      },
+      "stem": "Waves travel at {@waveSpeed|4} m/s along a {stringLength} m string fixed at both ends. At what frequency do {loops} loops stand on it?",
+      "explain": "f_n = n·v/(2L) = {loops}·{@waveSpeed|4}/(2·{stringLength}) ≈ {@resonantFrequency} Hz. v/(2L) is one loop; n·v/L counts each loop as a whole wavelength.",
+      "vi": {
+        "stem": "Sóng truyền với tốc độ {@waveSpeed|4} m/s trên sợi dây dài {stringLength} m hai đầu cố định. Ở tần số nào thì trên dây có {loops} bó sóng?",
+        "explain": "f_n = n·v/(2L) = {loops}·{@waveSpeed|4}/(2·{stringLength}) ≈ {@resonantFrequency} Hz. v/(2L) ứng với một bó sóng; n·v/L là coi mỗi bó sóng là một bước sóng."
+      },
+      "options": [
+        {
+          "text": "{@resonantFrequency} Hz",
+          "vi": {
+            "text": "{@resonantFrequency} Hz"
+          },
+          "correct": true,
+          "check": {
+            "expr": "loops*@waveSpeed/(2*stringLength)",
+            "equals": "resonantFrequency"
+          }
+        },
+        {
+          "text": "{=loops*@waveSpeed/stringLength} Hz",
+          "vi": {
+            "text": "{=loops*@waveSpeed/stringLength} Hz"
+          },
+          "check": {
+            "expr": "loops*@waveSpeed/stringLength",
+            "equals": "resonantFrequency"
+          }
+        },
+        {
+          "text": "{=@waveSpeed/(2*stringLength)} Hz",
+          "vi": {
+            "text": "{=@waveSpeed/(2*stringLength)} Hz"
+          },
+          "check": {
+            "expr": "@waveSpeed/(2*stringLength)",
+            "equals": "resonantFrequency"
+          }
+        },
+        {
+          "text": "{=loops*@waveSpeed/(4*stringLength)} Hz",
+          "vi": {
+            "text": "{=loops*@waveSpeed/(4*stringLength)} Hz"
+          },
+          "check": {
+            "expr": "loops*@waveSpeed/(4*stringLength)",
+            "equals": "resonantFrequency"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-two-400",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["speed", "frequency", "condition"],
+      "set": {
+        "loops": 2,
+        "hangingMass": 0.4
+      },
+      "stem": "A {stringLength} m string of {=linearDensity*1000} g/m is pulled taut by {hangingMass} kg (g = {gravity} m/s²) and shows {loops} loops. Decide whether each statement is true or false.",
+      "explain": "T = m·g = {=hangingMass*gravity} N, so v = √(T/μ) ≈ {@waveSpeed} m/s (not T/μ). λ = 2L/n = {@wavelength} m and f = v/λ ≈ {@resonantFrequency} Hz.",
+      "vi": {
+        "stem": "Sợi dây dài {stringLength} m, {=linearDensity*1000} g/m, được kéo căng bởi vật {hangingMass} kg (g = {gravity} m/s²) và có {loops} bó sóng. Mỗi nhận định sau đúng hay sai?",
+        "explain": "T = m·g = {=hangingMass*gravity} N, nên v = √(T/μ) ≈ {@waveSpeed} m/s (không phải T/μ). λ = 2L/n = {@wavelength} m và f = v/λ ≈ {@resonantFrequency} Hz."
+      },
+      "statements": [
+        {
+          "text": "Waves travel along it at about {@waveSpeed} m/s.",
+          "vi": {
+            "text": "Sóng truyền trên dây với tốc độ khoảng {@waveSpeed} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "sqrt(hangingMass*gravity/linearDensity)",
+            "equals": "waveSpeed"
+          }
+        },
+        {
+          "text": "The wavelength is {@wavelength} m.",
+          "vi": {
+            "text": "Bước sóng bằng {@wavelength} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "2*stringLength/loops",
+            "equals": "wavelength"
+          }
+        },
+        {
+          "text": "The vibrator runs at about {@resonantFrequency} Hz.",
+          "vi": {
+            "text": "Cần rung dao động với tần số khoảng {@resonantFrequency} Hz."
+          },
+          "true": true,
+          "check": {
+            "expr": "@waveSpeed/@wavelength",
+            "equals": "resonantFrequency"
+          }
+        },
+        {
+          "text": "The wave speed is T/μ = {=hangingMass*gravity/linearDensity} m/s.",
+          "vi": {
+            "text": "Tốc độ sóng bằng T/μ = {=hangingMass*gravity/linearDensity} m/s."
+          },
+          "true": false,
+          "check": {
+            "expr": "hangingMass*gravity/linearDensity",
+            "equals": "waveSpeed"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-hanging-mass",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["speed", "frequency"],
+      "set": {
+        "loops": 3,
+        "hangingMass": 0.2
+      },
+      "stem": "A {stringLength} m string of {=linearDensity*1000} g/m shows {loops} loops at {@resonantFrequency|4} Hz (g = {gravity} m/s²). What mass hangs from it?",
+      "explain": "v = 2L·f/n = {=2*stringLength*@resonantFrequency/loops|4} m/s, and v² = m·g/μ gives m = μ·v²/g ≈ {=linearDensity*(2*stringLength*@resonantFrequency/loops)^2/gravity|3} kg. Forgetting g, the 2, or the square gives the other values.",
+      "vi": {
+        "stem": "Sợi dây dài {stringLength} m, {=linearDensity*1000} g/m, có {loops} bó sóng ở tần số {@resonantFrequency|4} Hz (g = {gravity} m/s²). Vật treo ở đầu dây có khối lượng bao nhiêu?",
+        "explain": "v = 2L·f/n = {=2*stringLength*@resonantFrequency/loops|4} m/s, và v² = m·g/μ cho m = μ·v²/g ≈ {=linearDensity*(2*stringLength*@resonantFrequency/loops)^2/gravity|3} kg. Quên g, quên số 2 hoặc quên bình phương sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{=linearDensity*(2*stringLength*@resonantFrequency/loops)^2/gravity|3} kg",
+          "vi": {
+            "text": "{=linearDensity*(2*stringLength*@resonantFrequency/loops)^2/gravity|3} kg"
+          },
+          "correct": true,
+          "check": {
+            "expr": "sqrt((linearDensity*(2*stringLength*@resonantFrequency/loops)^2/gravity)*gravity/linearDensity)*loops/(2*stringLength)",
+            "equals": "resonantFrequency"
+          }
+        },
+        {
+          "text": "{=linearDensity*(2*stringLength*@resonantFrequency/loops)^2|3} kg",
+          "vi": {
+            "text": "{=linearDensity*(2*stringLength*@resonantFrequency/loops)^2|3} kg"
+          },
+          "check": {
+            "expr": "sqrt((linearDensity*(2*stringLength*@resonantFrequency/loops)^2)*gravity/linearDensity)*loops/(2*stringLength)",
+            "equals": "resonantFrequency"
+          }
+        },
+        {
+          "text": "{=linearDensity*(stringLength*@resonantFrequency/loops)^2/gravity|3} kg",
+          "vi": {
+            "text": "{=linearDensity*(stringLength*@resonantFrequency/loops)^2/gravity|3} kg"
+          },
+          "check": {
+            "expr": "sqrt((linearDensity*(stringLength*@resonantFrequency/loops)^2/gravity)*gravity/linearDensity)*loops/(2*stringLength)",
+            "equals": "resonantFrequency"
+          }
+        },
+        {
+          "text": "{=linearDensity*2*stringLength*@resonantFrequency/(loops*gravity)|3} kg",
+          "vi": {
+            "text": "{=linearDensity*2*stringLength*@resonantFrequency/(loops*gravity)|3} kg"
+          },
+          "check": {
+            "expr": "sqrt((linearDensity*2*stringLength*@resonantFrequency/(loops*gravity))*gravity/linearDensity)*loops/(2*stringLength)",
+            "equals": "resonantFrequency"
+          }
+        }
+      ]
+    },
+    {
+      "id": "mu-from-slope",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["frequency", "speed"],
+      "set": {
+        "loops": 4,
+        "hangingMass": 0.1
+      },
+      "stem": "With {hangingMass} kg hanging (g = {gravity} m/s²) from a {stringLength} m string, the frequencies for 1, 2, 3… loops lie on a line through the origin of slope {@frequencyPerLoop|4} Hz per loop. What is the string’s mass per metre?",
+      "explain": "f_n = n·v/(2L): the slope is v/(2L), so v = 2L·slope = {=2*stringLength*@frequencyPerLoop|4} m/s and μ = T/v² = m·g/(2L·slope)² ≈ {=hangingMass*gravity/(2*stringLength*@frequencyPerLoop)^2*1000|3} g/m. Taking the slope as v, or not squaring, gives the other values; turning the ratio over gives the last.",
+      "vi": {
+        "stem": "Với vật {hangingMass} kg treo ở đầu dây (g = {gravity} m/s²), sợi dây dài {stringLength} m có các tần số ứng với 1, 2, 3… bó sóng nằm trên một đường thẳng qua gốc tọa độ, hệ số góc {@frequencyPerLoop|4} Hz cho mỗi bó. Khối lượng trên một mét của dây bằng bao nhiêu?",
+        "explain": "f_n = n·v/(2L): hệ số góc là v/(2L), nên v = 2L·hệ số góc = {=2*stringLength*@frequencyPerLoop|4} m/s và μ = T/v² = m·g/(2L·hệ số góc)² ≈ {=hangingMass*gravity/(2*stringLength*@frequencyPerLoop)^2*1000|3} g/m. Coi hệ số góc là v, hoặc không bình phương, sẽ ra các giá trị còn lại; đảo ngược tỉ số sẽ ra giá trị cuối."
+      },
+      "options": [
+        {
+          "text": "{=hangingMass*gravity/(2*stringLength*@frequencyPerLoop)^2*1000|3} g/m",
+          "vi": {
+            "text": "{=hangingMass*gravity/(2*stringLength*@frequencyPerLoop)^2*1000|3} g/m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "sqrt(hangingMass*gravity/(hangingMass*gravity/(2*stringLength*@frequencyPerLoop)^2))/(2*stringLength)",
+            "equals": "frequencyPerLoop"
+          }
+        },
+        {
+          "text": "{=hangingMass*gravity/@frequencyPerLoop^2*1000|3} g/m",
+          "vi": {
+            "text": "{=hangingMass*gravity/@frequencyPerLoop^2*1000|3} g/m"
+          },
+          "check": {
+            "expr": "sqrt(hangingMass*gravity/(hangingMass*gravity/@frequencyPerLoop^2))/(2*stringLength)",
+            "equals": "frequencyPerLoop"
+          }
+        },
+        {
+          "text": "{=hangingMass*gravity/(2*stringLength*@frequencyPerLoop)*1000|3} g/m",
+          "vi": {
+            "text": "{=hangingMass*gravity/(2*stringLength*@frequencyPerLoop)*1000|3} g/m"
+          },
+          "check": {
+            "expr": "sqrt(hangingMass*gravity/(hangingMass*gravity/(2*stringLength*@frequencyPerLoop)))/(2*stringLength)",
+            "equals": "frequencyPerLoop"
+          }
+        },
+        {
+          "text": "{=(2*stringLength*@frequencyPerLoop)^2/(hangingMass*gravity)|3} g/m",
+          "vi": {
+            "text": "{=(2*stringLength*@frequencyPerLoop)^2/(hangingMass*gravity)|3} g/m"
+          },
+          "check": {
+            "expr": "sqrt(hangingMass*gravity/((2*stringLength*@frequencyPerLoop)^2/(hangingMass*gravity)/1000))/(2*stringLength)",
+            "equals": "frequencyPerLoop"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-three-loops",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["nodes", "speed", "frequency"],
+      "set": {
+        "loops": 3,
+        "hangingMass": 0.1,
+        "rulerResolution": 0.005
+      },
+      "stem": "A {stringLength} m string pulled by {hangingMass} kg shows {loops} loops at {@resonantFrequency|4} Hz. Decide whether each statement is true or false.",
+      "explain": "λ = 2L/n = {@wavelength|3} m, so neighbouring nodes are λ/2 = {=@wavelength/2|3} m apart, and neighbouring antinodes too, not λ. With 0.4 kg hanging the tension is four times larger and v twice as large, so the same 3 loops need twice the frequency, {=2*@resonantFrequency|4} Hz.",
+      "vi": {
+        "stem": "Sợi dây dài {stringLength} m được kéo căng bởi vật {hangingMass} kg có {loops} bó sóng ở tần số {@resonantFrequency|4} Hz. Mỗi nhận định sau đúng hay sai?",
+        "explain": "λ = 2L/n = {@wavelength|3} m, nên hai nút liên tiếp cách nhau λ/2 = {=@wavelength/2|3} m, hai bụng liên tiếp cũng vậy, không phải λ. Khi treo 0,4 kg, lực căng lớn gấp bốn và v lớn gấp đôi, nên cùng 3 bó sóng cần tần số gấp đôi, {=2*@resonantFrequency|4} Hz."
+      },
+      "statements": [
+        {
+          "text": "The wavelength is {@wavelength|3} m.",
+          "vi": {
+            "text": "Bước sóng bằng {@wavelength|3} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "2*stringLength/loops",
+            "equals": "wavelength"
+          }
+        },
+        {
+          "text": "Neighbouring nodes are {=@wavelength/2|3} m apart.",
+          "vi": {
+            "text": "Hai nút liên tiếp cách nhau {=@wavelength/2|3} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "2*(@wavelength/2)",
+            "equals": "wavelength"
+          }
+        },
+        {
+          "text": "With 0.4 kg hanging, the same {loops} loops would need {=2*@resonantFrequency|4} Hz.",
+          "vi": {
+            "text": "Khi treo 0,4 kg, cùng {loops} bó sóng đó cần tần số {=2*@resonantFrequency|4} Hz."
+          },
+          "true": true,
+          "check": {
+            "expr": "(2*@resonantFrequency)/sqrt(0.4/hangingMass)",
+            "equals": "resonantFrequency"
+          }
+        },
+        {
+          "text": "Neighbouring antinodes are a whole wavelength, {@wavelength|3} m, apart.",
+          "vi": {
+            "text": "Hai bụng liên tiếp cách nhau đúng một bước sóng, {@wavelength|3} m."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

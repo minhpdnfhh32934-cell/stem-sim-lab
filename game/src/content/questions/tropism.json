@@ -1,0 +1,992 @@
+{
+  "id": "tropism",
+  "skills": [
+    {
+      "id": "tip-senses",
+      "name": "Darwin’s experiments: the tip senses the light",
+      "advice": "Run all five conditions at the station and make a table: intact, base covered → bend; tip covered, tip cut off → no bend. Then say what each pair of runs proves, not just what happened.",
+      "vi": {
+        "name": "Thí nghiệm của Darwin: đỉnh ngọn cảm nhận ánh sáng",
+        "advice": "Chạy cả năm điều kiện trên trạm và lập bảng: nguyên vẹn, che phần gốc → uốn cong; che đỉnh ngọn, cắt đỉnh ngọn → không uốn cong. Sau đó nêu mỗi cặp thí nghiệm chứng minh điều gì, không chỉ mô tả hiện tượng."
+      }
+    },
+    {
+      "id": "auxin",
+      "name": "Auxin and unequal growth",
+      "advice": "Re-read the Explain view: auxin made in the tip moves to the shaded side, whose cells elongate faster, so the shoot curves towards the light. The trap: the lit side does not grow faster.",
+      "vi": {
+        "name": "Auxin và sự sinh trưởng không đều",
+        "advice": "Đọc lại màn Giải thích: auxin được tạo ra ở đỉnh ngọn di chuyển sang phía khuất sáng, các tế bào phía đó kéo dài nhanh hơn nên ngọn cong về phía ánh sáng. Bẫy thường gặp: phía được chiếu sáng không sinh trưởng nhanh hơn."
+      }
+    },
+    {
+      "id": "gravitropism",
+      "name": "Gravitropism of shoots and roots",
+      "advice": "Lay the pot on its side at the station: auxin gathers on the lower side and the shoot turns up (negative gravitropism). Learn the contrast with roots, which turn down because there the same auxin slows elongation.",
+      "vi": {
+        "name": "Hướng trọng lực của thân và rễ",
+        "advice": "Đặt nằm chậu cây trên trạm: auxin tập trung ở mặt dưới và ngọn cong lên (hướng trọng lực âm). Ghi nhớ điểm khác với rễ: rễ cong xuống vì ở rễ, nồng độ auxin cao đó lại ức chế sự kéo dài tế bào."
+      }
+    },
+    {
+      "id": "reading-results",
+      "name": "Reading the bend: angle, sign and time",
+      "advice": "Learn the model’s curve θ = θ_max·(1 − e^(−t/τ)) with its illustrative 45° and 2 h, and its sign: a bend to the right is positive. Work out θ after 1, 2 and 4 time constants and compare with the run.",
+      "vi": {
+        "name": "Đọc kết quả uốn cong: góc, dấu và thời gian",
+        "advice": "Nắm đường cong của mô hình θ = θ_max·(1 − e^(−t/τ)) với các giá trị minh họa 45° và 2 h, và quy ước dấu: cong sang phải là dương. Tự tính θ sau 1, 2 và 4 hằng số thời gian rồi so sánh với kết quả chạy."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "which-part",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["tip-senses"],
+      "stem": "In Darwin’s experiments on oat seedlings lit from one side, which part of the shoot senses the light?",
+      "explain": "Covering the tip or cutting it off stops the bending; covering the base does not. So the tip senses the light.",
+      "vi": {
+        "stem": "Trong thí nghiệm của Darwin với cây mầm yến mạch được chiếu sáng từ một phía, bộ phận nào của ngọn cảm nhận ánh sáng?",
+        "explain": "Che đỉnh ngọn hoặc cắt đỉnh ngọn thì cây không uốn cong; che phần gốc thì cây vẫn uốn cong. Vậy đỉnh ngọn là bộ phận cảm nhận ánh sáng."
+      },
+      "options": [
+        {
+          "text": "The tip",
+          "vi": {
+            "text": "Đỉnh ngọn"
+          },
+          "correct": true
+        },
+        {
+          "text": "The base of the shoot",
+          "vi": {
+            "text": "Phần gốc của thân"
+          }
+        },
+        {
+          "text": "The roots",
+          "vi": {
+            "text": "Rễ"
+          }
+        },
+        {
+          "text": "Every part of the shoot equally",
+          "vi": {
+            "text": "Mọi phần của ngọn như nhau"
+          }
+        }
+      ]
+    },
+    {
+      "id": "which-hormone",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["auxin"],
+      "stem": "Which plant hormone, made in the shoot tip, makes the shaded side grow faster?",
+      "explain": "Auxin, made in the tip, moves to the shaded side and makes its cells elongate faster.",
+      "vi": {
+        "stem": "Hormone thực vật nào, được tạo ra ở đỉnh ngọn, làm phía khuất sáng sinh trưởng nhanh hơn?",
+        "explain": "Auxin được tạo ra ở đỉnh ngọn, di chuyển sang phía khuất sáng và làm các tế bào phía đó kéo dài nhanh hơn."
+      },
+      "options": [
+        {
+          "text": "Auxin",
+          "vi": {
+            "text": "Auxin"
+          },
+          "correct": true
+        },
+        {
+          "text": "Gibberellin",
+          "vi": {
+            "text": "Gibberellin"
+          }
+        },
+        {
+          "text": "Cytokinin",
+          "vi": {
+            "text": "Cytokinin"
+          }
+        },
+        {
+          "text": "Abscisic acid (ABA)",
+          "vi": {
+            "text": "Axit abscisic (ABA)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-tropisms",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["tip-senses", "gravitropism"],
+      "stem": "About tropisms in seedlings: decide whether each statement is true or false.",
+      "explain": "Shoots bend towards one-sided light (positive phototropism) and turn upwards when laid flat (negative gravitropism). With the tip cut off they do not bend. Roots grow down, towards gravity: positive gravitropism.",
+      "vi": {
+        "stem": "Về tính hướng động ở cây mầm, mỗi nhận định sau đúng hay sai?",
+        "explain": "Thân cong về phía nguồn sáng một phía (hướng sáng dương) và cong lên khi đặt nằm ngang (hướng trọng lực âm). Khi bị cắt đỉnh ngọn, cây không uốn cong. Rễ mọc xuống, theo hướng trọng lực: hướng trọng lực dương."
+      },
+      "statements": [
+        {
+          "text": "A shoot lit from one side bends towards the light.",
+          "vi": {
+            "text": "Thân được chiếu sáng từ một phía sẽ cong về phía ánh sáng."
+          },
+          "true": true
+        },
+        {
+          "text": "Seedlings with their tips cut off still bend towards the light.",
+          "vi": {
+            "text": "Cây mầm bị cắt đỉnh ngọn vẫn cong về phía ánh sáng."
+          },
+          "true": false
+        },
+        {
+          "text": "A shoot laid on its side turns to grow upwards.",
+          "vi": {
+            "text": "Thân cây đặt nằm ngang sẽ cong lên phía trên."
+          },
+          "true": true
+        },
+        {
+          "text": "Roots grow away from gravity: negative gravitropism.",
+          "vi": {
+            "text": "Rễ mọc ngược hướng trọng lực: hướng trọng lực âm."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "why-bend",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["auxin"],
+      "stem": "Why does a shoot lit from the right bend to the right?",
+      "explain": "Auxin moves to the shaded (left) side; its cells elongate faster, so the left side grows longer and the shoot curves towards the light.",
+      "vi": {
+        "stem": "Vì sao thân được chiếu sáng từ phía phải lại cong về phía phải?",
+        "explain": "Auxin di chuyển sang phía khuất sáng (bên trái); các tế bào phía đó kéo dài nhanh hơn, nên phía trái dài hơn và ngọn cong về phía ánh sáng."
+      },
+      "options": [
+        {
+          "text": "Auxin moves to the shaded left side, whose cells then elongate faster",
+          "vi": {
+            "text": "Auxin di chuyển sang phía trái khuất sáng, làm các tế bào phía đó kéo dài nhanh hơn"
+          },
+          "correct": true
+        },
+        {
+          "text": "Auxin moves to the lit right side, whose cells then elongate faster",
+          "vi": {
+            "text": "Auxin di chuyển sang phía phải được chiếu sáng, làm các tế bào phía đó kéo dài nhanh hơn"
+          }
+        },
+        {
+          "text": "Light kills the cells on the right side",
+          "vi": {
+            "text": "Ánh sáng làm chết các tế bào ở phía phải"
+          }
+        },
+        {
+          "text": "The right side photosynthesises more, so it grows faster",
+          "vi": {
+            "text": "Phía phải quang hợp nhiều hơn nên sinh trưởng nhanh hơn"
+          }
+        }
+      ]
+    },
+    {
+      "id": "base-covered",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["tip-senses"],
+      "stem": "Seedlings have an opaque sleeve over the base of the shoot, the tip left uncovered, and are lit from one side. They…",
+      "explain": "The tip still senses the light, and the bending happens below it: the shoots bend towards the light, as intact ones do.",
+      "vi": {
+        "stem": "Các cây mầm được bọc một ống chắn sáng ở phần gốc của thân, đỉnh ngọn để hở, và được chiếu sáng từ một phía. Các cây mầm sẽ…",
+        "explain": "Đỉnh ngọn vẫn cảm nhận được ánh sáng, và sự uốn cong xảy ra ở phía dưới đỉnh: các cây mầm vẫn cong về phía ánh sáng như cây nguyên vẹn."
+      },
+      "options": [
+        {
+          "text": "bend towards the light",
+          "vi": {
+            "text": "cong về phía ánh sáng"
+          },
+          "correct": true
+        },
+        {
+          "text": "do not bend",
+          "vi": {
+            "text": "không uốn cong"
+          }
+        },
+        {
+          "text": "bend away from the light",
+          "vi": {
+            "text": "cong theo hướng ngược với ánh sáng"
+          }
+        },
+        {
+          "text": "bend towards the light only at the base",
+          "vi": {
+            "text": "chỉ cong về phía ánh sáng ở phần gốc"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-on-its-side",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["gravitropism", "auxin"],
+      "stem": "A pot of seedlings is laid on its side in the dark. Decide whether each statement is true or false.",
+      "explain": "Auxin gathers on the lower side of the shoot; that side grows faster, so the shoot curves upwards. There is no light: this is gravitropism. In roots the same build-up slows the lower side, so roots curve down.",
+      "vi": {
+        "stem": "Một chậu cây mầm được đặt nằm ngang trong bóng tối. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Auxin tập trung ở mặt dưới của thân; mặt dưới sinh trưởng nhanh hơn nên thân cong lên. Không có ánh sáng: đây là hướng trọng lực. Ở rễ, auxin tập trung như vậy lại làm mặt dưới sinh trưởng chậm hơn, nên rễ cong xuống."
+      },
+      "statements": [
+        {
+          "text": "Auxin collects on the lower side of the shoot.",
+          "vi": {
+            "text": "Auxin tập trung ở mặt dưới của thân."
+          },
+          "true": true
+        },
+        {
+          "text": "The lower side grows faster than the upper side, so the shoot curves upwards.",
+          "vi": {
+            "text": "Mặt dưới sinh trưởng nhanh hơn mặt trên, nên thân cong lên."
+          },
+          "true": true
+        },
+        {
+          "text": "The shoot turns up because it grows towards the light.",
+          "vi": {
+            "text": "Thân cong lên vì nó mọc về phía ánh sáng."
+          },
+          "true": false
+        },
+        {
+          "text": "In a root laid flat, auxin on the lower side makes the root curve upwards too.",
+          "vi": {
+            "text": "Ở rễ đặt nằm ngang, auxin ở mặt dưới cũng làm rễ cong lên."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "tip-covered-angle",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["tip-senses", "reading-results"],
+      "set": {
+        "condition": 1,
+        "light": 1
+      },
+      "stem": "Seedlings with an opaque cap on the tip are lit from the right for {duration} s. In the model an intact shoot bends towards θ_max = {bendAngle}° with τ = {bendTime} s (illustrative). What bend does the model give these seedlings?",
+      "explain": "With the tip covered, nothing senses the light: no auxin moves to one side and the bend stays {@angle}°. Intact seedlings would reach {=bendAngle*(1-exp(-duration/bendTime))}° in that time.",
+      "vi": {
+        "stem": "Các cây mầm có mũ chắn sáng ở đỉnh ngọn được chiếu sáng từ phía phải trong {duration} s. Trong mô hình, ngọn nguyên vẹn cong dần tới θ_max = {bendAngle}° với τ = {bendTime} s (giá trị minh họa). Mô hình cho các cây mầm này góc uốn bao nhiêu?",
+        "explain": "Đỉnh ngọn bị che nên không có bộ phận nào cảm nhận ánh sáng: auxin không bị phân bố lệch về một phía và góc uốn vẫn là {@angle}°. Cây nguyên vẹn sẽ đạt {=bendAngle*(1-exp(-duration/bendTime))}° trong cùng thời gian."
+      },
+      "options": [
+        {
+          "text": "0° (no bend)",
+          "vi": {
+            "text": "0° (không uốn cong)"
+          },
+          "correct": true,
+          "check": {
+            "expr": "0",
+            "equals": "angle"
+          }
+        },
+        {
+          "text": "about {=bendAngle*(1-exp(-duration/bendTime))}° towards the light",
+          "vi": {
+            "text": "khoảng {=bendAngle*(1-exp(-duration/bendTime))}° về phía ánh sáng"
+          },
+          "check": {
+            "expr": "bendAngle*(1-exp(-duration/bendTime))",
+            "equals": "angle"
+          }
+        },
+        {
+          "text": "about {=bendAngle*(1-exp(-duration/bendTime))}° away from the light",
+          "vi": {
+            "text": "khoảng {=bendAngle*(1-exp(-duration/bendTime))}° ngược phía ánh sáng"
+          },
+          "check": {
+            "expr": "-bendAngle*(1-exp(-duration/bendTime))",
+            "equals": "angle"
+          }
+        },
+        {
+          "text": "{bendAngle}° towards the light",
+          "vi": {
+            "text": "{bendAngle}° về phía ánh sáng"
+          },
+          "check": {
+            "expr": "bendAngle",
+            "equals": "angle"
+          }
+        }
+      ]
+    },
+    {
+      "id": "intact-angle",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["reading-results"],
+      "set": {
+        "condition": 0,
+        "light": 1
+      },
+      "stem": "Intact seedlings are lit from the right. The model’s bend grows as θ = θ_max·(1 − e^(−t/τ)), with θ_max = {bendAngle}° and τ = {bendTime} s (illustrative). What is the bend after {duration} s?",
+      "explain": "t/τ = {duration}/{bendTime} = {=duration/bendTime}: θ = {bendAngle}·(1 − e^(−{=duration/bendTime})) ≈ {@angle}°, nearly the full bend.",
+      "vi": {
+        "stem": "Các cây mầm nguyên vẹn được chiếu sáng từ phía phải. Trong mô hình, góc uốn tăng theo θ = θ_max·(1 − e^(−t/τ)), với θ_max = {bendAngle}° và τ = {bendTime} s (giá trị minh họa). Góc uốn sau {duration} s là bao nhiêu?",
+        "explain": "t/τ = {duration}/{bendTime} = {=duration/bendTime}: θ = {bendAngle}·(1 − e^(−{=duration/bendTime})) ≈ {@angle}°, gần bằng góc uốn tối đa."
+      },
+      "options": [
+        {
+          "text": "{@angle}°",
+          "vi": {
+            "text": "{@angle}°"
+          },
+          "correct": true,
+          "check": {
+            "expr": "bendAngle*(1-exp(-duration/bendTime))",
+            "equals": "angle"
+          }
+        },
+        {
+          "text": "{=bendAngle*duration/bendTime}°",
+          "vi": {
+            "text": "{=bendAngle*duration/bendTime}°"
+          },
+          "check": {
+            "expr": "bendAngle*duration/bendTime",
+            "equals": "angle"
+          }
+        },
+        {
+          "text": "{=bendAngle*exp(-duration/bendTime)}°",
+          "vi": {
+            "text": "{=bendAngle*exp(-duration/bendTime)}°"
+          },
+          "check": {
+            "expr": "bendAngle*exp(-duration/bendTime)",
+            "equals": "angle"
+          }
+        },
+        {
+          "text": "{=bendAngle*(1-exp(-1))}°",
+          "vi": {
+            "text": "{=bendAngle*(1-exp(-1))}°"
+          },
+          "check": {
+            "expr": "bendAngle*(1-exp(-1))",
+            "equals": "angle"
+          }
+        }
+      ]
+    },
+    {
+      "id": "side-angle",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["gravitropism", "reading-results"],
+      "set": {
+        "condition": 4
+      },
+      "stem": "A pot is laid on its side in the dark. In the model the shoots turn towards upright, θ = 90°·(1 − e^(−t/τ)) with τ = {bendTime} s (illustrative). How far have they turned after {duration} s?",
+      "explain": "No light is needed: gravity alone turns them. θ = 90·(1 − e^(−{=duration/bendTime})) ≈ {@angle}°, not quite the full 90°.",
+      "vi": {
+        "stem": "Một chậu cây được đặt nằm ngang trong bóng tối. Trong mô hình, ngọn cây quay dần về hướng thẳng đứng, θ = 90°·(1 − e^(−t/τ)) với τ = {bendTime} s (giá trị minh họa). Sau {duration} s ngọn đã quay được bao nhiêu độ?",
+        "explain": "Không cần ánh sáng: chỉ riêng trọng lực đã làm ngọn cong lên. θ = 90·(1 − e^(−{=duration/bendTime})) ≈ {@angle}°, chưa đạt hẳn 90°."
+      },
+      "options": [
+        {
+          "text": "{@angle}°",
+          "vi": {
+            "text": "{@angle}°"
+          },
+          "correct": true,
+          "check": {
+            "expr": "90*(1-exp(-duration/bendTime))",
+            "equals": "angle"
+          }
+        },
+        {
+          "text": "{=bendAngle*(1-exp(-duration/bendTime))}°",
+          "vi": {
+            "text": "{=bendAngle*(1-exp(-duration/bendTime))}°"
+          },
+          "check": {
+            "expr": "bendAngle*(1-exp(-duration/bendTime))",
+            "equals": "angle"
+          }
+        },
+        {
+          "text": "90°",
+          "vi": {
+            "text": "90°"
+          },
+          "check": {
+            "expr": "90",
+            "equals": "angle"
+          }
+        },
+        {
+          "text": "0° (there is no light)",
+          "vi": {
+            "text": "0° (vì không có ánh sáng)"
+          },
+          "check": {
+            "expr": "0",
+            "equals": "angle"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-base-covered",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["tip-senses", "reading-results"],
+      "set": {
+        "condition": 2,
+        "light": -1
+      },
+      "stem": "Seedlings with the base covered (tip uncovered) are lit from the left for {duration} s; bends to the right are counted positive (θ_max = {bendAngle}°, τ = {bendTime} s, illustrative). Decide whether each statement is true or false.",
+      "explain": "The tip senses the light from the left, auxin goes to the shaded right side, and the shoots bend left: θ ≈ {@angle}°, negative. Covering the base does not stop auxin moving down the shaded side.",
+      "vi": {
+        "stem": "Các cây mầm được che phần gốc (đỉnh ngọn để hở) và chiếu sáng từ phía trái trong {duration} s; góc cong sang phải được tính là dương (θ_max = {bendAngle}°, τ = {bendTime} s, giá trị minh họa). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Đỉnh ngọn cảm nhận ánh sáng từ phía trái, auxin chuyển sang phía phải khuất sáng, và ngọn cong sang trái: θ ≈ {@angle}°, mang dấu âm. Che phần gốc không ngăn auxin di chuyển xuống dọc phía khuất sáng."
+      },
+      "statements": [
+        {
+          "text": "The shoots bend.",
+          "vi": {
+            "text": "Các ngọn cây uốn cong."
+          },
+          "true": true,
+          "check": {
+            "expr": "1",
+            "equals": "bends"
+          }
+        },
+        {
+          "text": "The bend after {duration} s is about {=-bendAngle*(1-exp(-duration/bendTime))}°, towards the left.",
+          "vi": {
+            "text": "Góc uốn sau {duration} s khoảng {=-bendAngle*(1-exp(-duration/bendTime))}°, về phía trái."
+          },
+          "true": true,
+          "check": {
+            "expr": "-bendAngle*(1-exp(-duration/bendTime))",
+            "equals": "angle"
+          }
+        },
+        {
+          "text": "The shoots bend to the right, by about {=bendAngle*(1-exp(-duration/bendTime))}°.",
+          "vi": {
+            "text": "Các ngọn cây cong sang phải, khoảng {=bendAngle*(1-exp(-duration/bendTime))}°."
+          },
+          "true": false,
+          "check": {
+            "expr": "bendAngle*(1-exp(-duration/bendTime))",
+            "equals": "angle"
+          }
+        },
+        {
+          "text": "Covering the base stops the auxin from reaching the shaded side.",
+          "vi": {
+            "text": "Che phần gốc ngăn auxin đi tới phía khuất sáng."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "darwin-conclusion",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["tip-senses", "auxin"],
+      "stem": "Seedlings with the tip covered do not bend; seedlings with the base covered do. Which conclusion do the two results together support?",
+      "explain": "The light is sensed at the tip, but the curve forms lower down, under the uncovered tip: something must pass from the tip to the region that bends — the signal later identified as auxin.",
+      "vi": {
+        "stem": "Cây mầm bị che đỉnh ngọn thì không uốn cong; cây mầm bị che phần gốc thì vẫn uốn cong. Hai kết quả này cùng cho phép rút ra kết luận nào?",
+        "explain": "Ánh sáng được cảm nhận ở đỉnh ngọn, nhưng chỗ uốn cong lại ở phía dưới: phải có một tín hiệu truyền từ đỉnh xuống vùng uốn cong — tín hiệu sau này được xác định là auxin."
+      },
+      "options": [
+        {
+          "text": "The tip senses the light and a signal passes from it to the part below that bends",
+          "vi": {
+            "text": "Đỉnh ngọn cảm nhận ánh sáng và một tín hiệu truyền từ đỉnh xuống phần bên dưới, nơi uốn cong"
+          },
+          "correct": true
+        },
+        {
+          "text": "The base senses the light and the tip does the bending",
+          "vi": {
+            "text": "Phần gốc cảm nhận ánh sáng còn đỉnh ngọn thực hiện việc uốn cong"
+          }
+        },
+        {
+          "text": "The cap stops photosynthesis, so the shoot has no energy to bend",
+          "vi": {
+            "text": "Mũ chắn sáng làm ngừng quang hợp nên ngọn không có năng lượng để uốn cong"
+          }
+        },
+        {
+          "text": "Light destroys auxin at the base of the shoot",
+          "vi": {
+            "text": "Ánh sáng phá hủy auxin ở phần gốc của thân"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-tip-cut",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["tip-senses", "auxin", "reading-results"],
+      "set": {
+        "condition": 3,
+        "light": 1
+      },
+      "stem": "Seedlings with the tip cut off are lit from the right for {duration} s (model: θ_max = {bendAngle}°, τ = {bendTime} s, illustrative). Decide whether each statement is true or false.",
+      "explain": "Without the tip there is no sensor and no auxin source: the bend stays {@angle}°. Intact seedlings lit the same way, the control, reach {=bendAngle*(1-exp(-duration/bendTime))}°. The cut seedling is still alive; it just does not bend.",
+      "vi": {
+        "stem": "Các cây mầm bị cắt đỉnh ngọn được chiếu sáng từ phía phải trong {duration} s (mô hình: θ_max = {bendAngle}°, τ = {bendTime} s, giá trị minh họa). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Không có đỉnh ngọn thì không có bộ phận cảm nhận và không có nguồn auxin: góc uốn vẫn là {@angle}°. Cây mầm nguyên vẹn được chiếu sáng như vậy (đối chứng) đạt {=bendAngle*(1-exp(-duration/bendTime))}°. Cây bị cắt đỉnh vẫn sống, chỉ là không uốn cong."
+      },
+      "statements": [
+        {
+          "text": "The model gives a bend of {@angle}° after {duration} s.",
+          "vi": {
+            "text": "Mô hình cho góc uốn {@angle}° sau {duration} s."
+          },
+          "true": true,
+          "check": {
+            "expr": "0",
+            "equals": "angle"
+          }
+        },
+        {
+          "text": "Together with the intact seedlings, this shows that the tip is needed for the bending.",
+          "vi": {
+            "text": "Khi so sánh với cây nguyên vẹn, kết quả này cho thấy đỉnh ngọn cần thiết cho sự uốn cong."
+          },
+          "true": true
+        },
+        {
+          "text": "The control, intact seedlings lit the same way, bends by about {=bendAngle*(1-exp(-duration/bendTime))}°.",
+          "vi": {
+            "text": "Đối chứng là các cây mầm nguyên vẹn được chiếu sáng như vậy, uốn cong khoảng {=bendAngle*(1-exp(-duration/bendTime))}°."
+          },
+          "true": true
+        },
+        {
+          "text": "The shoots do not bend because cutting off the tip kills the seedling.",
+          "vi": {
+            "text": "Ngọn không uốn cong vì cắt đỉnh ngọn làm chết cây mầm."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "phototropism-name",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["tip-senses"],
+      "stem": "A shoot growing towards light that comes from one side shows…",
+      "explain": "Phototropism is a growth movement whose direction is set by the direction of the light. Gravitropism answers gravity; a nastic movement (such as Mimosa leaves folding) does not depend on the stimulus’s direction.",
+      "vi": {
+        "stem": "Thân cây mọc về phía ánh sáng chiếu từ một phía là biểu hiện của…",
+        "explain": "Tính hướng sáng là vận động sinh trưởng có hướng do hướng của ánh sáng quyết định. Tính hướng trọng lực đáp ứng với trọng lực; ứng động (như lá cây trinh nữ cụp lại) không phụ thuộc vào hướng của tác nhân kích thích."
+      },
+      "options": [
+        {
+          "text": "phototropism",
+          "vi": {
+            "text": "tính hướng sáng"
+          },
+          "correct": true
+        },
+        {
+          "text": "gravitropism",
+          "vi": {
+            "text": "tính hướng trọng lực"
+          }
+        },
+        {
+          "text": "a nastic movement",
+          "vi": {
+            "text": "ứng động"
+          }
+        },
+        {
+          "text": "photoperiodism",
+          "vi": {
+            "text": "quang chu kì"
+          }
+        }
+      ]
+    },
+    {
+      "id": "boysen-jensen",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["auxin", "tip-senses"],
+      "stem": "Boysen-Jensen cut off the tips of oat seedlings and put them back on a thin block of gelatin; the shoots still bent towards the light. With a sheet of mica in place of the gelatin they did not. What does this show?",
+      "explain": "Gelatin lets dissolved substances through, mica does not: the signal from the tip is a chemical that moves down into the shoot — later identified as auxin.",
+      "vi": {
+        "stem": "Boysen-Jensen cắt đỉnh ngọn cây mầm yến mạch rồi đặt lại trên một lớp gelatin mỏng; ngọn cây vẫn uốn cong về phía ánh sáng. Khi thay gelatin bằng một tấm mica thì ngọn không uốn cong. Thí nghiệm này cho thấy điều gì?",
+        "explain": "Gelatin cho các chất hòa tan đi qua, mica thì không: tín hiệu từ đỉnh ngọn là một chất hóa học di chuyển xuống phần thân phía dưới — sau này được xác định là auxin."
+      },
+      "options": [
+        {
+          "text": "The tip sends a chemical signal down into the shoot",
+          "vi": {
+            "text": "Đỉnh ngọn gửi một tín hiệu hóa học xuống phần thân phía dưới"
+          },
+          "correct": true
+        },
+        {
+          "text": "The signal from the tip travels as an electrical impulse along nerves",
+          "vi": {
+            "text": "Tín hiệu từ đỉnh ngọn truyền dưới dạng xung điện dọc theo dây thần kinh"
+          }
+        },
+        {
+          "text": "Gelatin itself makes shoots bend",
+          "vi": {
+            "text": "Bản thân gelatin làm ngọn cây uốn cong"
+          }
+        },
+        {
+          "text": "Mica blocks the light from reaching the tip",
+          "vi": {
+            "text": "Mica chắn không cho ánh sáng tới đỉnh ngọn"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-responses",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["gravitropism", "tip-senses"],
+      "stem": "About plant responses to stimuli: decide whether each statement is true or false.",
+      "explain": "A tropism is directional growth, set by the direction of the stimulus. Roots grow down, towards gravity (positive gravitropism). The folding of Mimosa leaves when touched is a nastic movement, not a tropism. The 45° bend and the 2-hour time constant are the simulation’s illustrative values.",
+      "vi": {
+        "stem": "Về các phản ứng của thực vật với kích thích, mỗi nhận định sau đúng hay sai?",
+        "explain": "Hướng động là vận động sinh trưởng có hướng, do hướng của tác nhân kích thích quyết định. Rễ mọc xuống, theo hướng trọng lực (hướng trọng lực dương). Lá cây trinh nữ cụp lại khi bị chạm là ứng động, không phải hướng động. Góc uốn 45° và hằng số thời gian 2 giờ là giá trị minh họa của mô phỏng."
+      },
+      "statements": [
+        {
+          "text": "In a tropism, the direction of growth depends on the direction of the stimulus.",
+          "vi": {
+            "text": "Ở hướng động, hướng sinh trưởng phụ thuộc vào hướng của tác nhân kích thích."
+          },
+          "true": true
+        },
+        {
+          "text": "Roots grow towards gravity: they are positively gravitropic.",
+          "vi": {
+            "text": "Rễ mọc theo hướng trọng lực: rễ có tính hướng trọng lực dương."
+          },
+          "true": true
+        },
+        {
+          "text": "The folding of Mimosa leaves when touched is a tropism.",
+          "vi": {
+            "text": "Lá cây trinh nữ cụp lại khi bị chạm là một kiểu hướng động."
+          },
+          "true": false
+        },
+        {
+          "text": "In this simulation, the 45° bend and its 2-hour time constant are illustrative values.",
+          "vi": {
+            "text": "Trong mô phỏng này, góc uốn 45° và hằng số thời gian 2 giờ là các giá trị minh họa."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "lit-from-left",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["reading-results", "auxin"],
+      "set": {
+        "condition": 0,
+        "light": -1
+      },
+      "stem": "Intact seedlings are lit from the left for {duration} s. In the model the bend grows as θ_max·(1 − e^(−t/τ)), with θ_max = {bendAngle}° and τ = {bendTime} s (illustrative). Which way do they bend, and by about how much?",
+      "explain": "Auxin moves to the shaded right side, which grows faster, so the shoots bend left, towards the light: {bendAngle}·(1 − e^(−{duration}/{bendTime})) ≈ {=abs(@angle)|3}°. θ_max is only reached after a very long time.",
+      "vi": {
+        "stem": "Các cây mầm nguyên vẹn được chiếu sáng từ phía trái trong {duration} s. Trong mô hình, góc uốn tăng theo θ_max·(1 − e^(−t/τ)), với θ_max = {bendAngle}° và τ = {bendTime} s (giá trị minh họa). Các ngọn cây cong về phía nào, và khoảng bao nhiêu độ?",
+        "explain": "Auxin di chuyển sang phía phải khuất sáng, làm phía đó sinh trưởng nhanh hơn, nên ngọn cây cong sang trái, về phía ánh sáng: {bendAngle}·(1 − e^(−{duration}/{bendTime})) ≈ {=abs(@angle)|3}°. Chỉ sau thời gian rất dài mới đạt θ_max."
+      },
+      "options": [
+        {
+          "text": "To the left, by about {=abs(@angle)|3}°",
+          "vi": {
+            "text": "Sang trái, khoảng {=abs(@angle)|3}°"
+          },
+          "correct": true,
+          "check": {
+            "expr": "-bendAngle*(1-exp(-duration/bendTime))",
+            "equals": "angle"
+          }
+        },
+        {
+          "text": "To the right, by about {=abs(@angle)|3}°",
+          "vi": {
+            "text": "Sang phải, khoảng {=abs(@angle)|3}°"
+          },
+          "check": {
+            "expr": "bendAngle*(1-exp(-duration/bendTime))",
+            "equals": "angle"
+          }
+        },
+        {
+          "text": "To the left, by exactly {bendAngle}°",
+          "vi": {
+            "text": "Sang trái, đúng {bendAngle}°"
+          },
+          "check": {
+            "expr": "-bendAngle",
+            "equals": "angle"
+          }
+        },
+        {
+          "text": "Not at all: they grow straight up",
+          "vi": {
+            "text": "Không cong: chúng mọc thẳng lên"
+          },
+          "check": {
+            "expr": "0",
+            "equals": "angle"
+          }
+        }
+      ]
+    },
+    {
+      "id": "lit-from-above",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["auxin", "reading-results"],
+      "set": {
+        "condition": 0,
+        "light": 0
+      },
+      "stem": "Intact seedlings are lit from straight above for {duration} s. What does the model show?",
+      "explain": "Light from above reaches every side of the tip alike, so auxin stays evenly spread: every side grows at the same rate and the shoots grow straight up, a bend of {@angle}°.",
+      "vi": {
+        "stem": "Các cây mầm nguyên vẹn được chiếu sáng từ ngay phía trên trong {duration} s. Mô hình cho kết quả gì?",
+        "explain": "Ánh sáng từ trên chiếu đều mọi phía của đỉnh ngọn, nên auxin phân bố đều: mọi phía sinh trưởng với tốc độ như nhau và ngọn cây mọc thẳng lên, góc uốn {@angle}°."
+      },
+      "options": [
+        {
+          "text": "They grow straight up: auxin stays evenly spread",
+          "vi": {
+            "text": "Mọc thẳng lên: auxin vẫn phân bố đều"
+          },
+          "correct": true,
+          "check": {
+            "expr": "0",
+            "equals": "angle"
+          }
+        },
+        {
+          "text": "They bend by about {=bendAngle*(1-exp(-duration/bendTime))|3}°, as when lit from one side",
+          "vi": {
+            "text": "Cong khoảng {=bendAngle*(1-exp(-duration/bendTime))|3}°, như khi chiếu sáng từ một phía"
+          },
+          "check": {
+            "expr": "bendAngle*(1-exp(-duration/bendTime))",
+            "equals": "angle"
+          }
+        },
+        {
+          "text": "They bend by about {=bendAngle/2*(1-exp(-duration/bendTime))|3}°, half as much",
+          "vi": {
+            "text": "Cong khoảng {=bendAngle/2*(1-exp(-duration/bendTime))|3}°, bằng một nửa"
+          },
+          "check": {
+            "expr": "bendAngle/2*(1-exp(-duration/bendTime))",
+            "equals": "angle"
+          }
+        },
+        {
+          "text": "They bend downwards, away from the light",
+          "vi": {
+            "text": "Cong xuống dưới, tránh xa ánh sáng"
+          },
+          "check": {
+            "expr": "-90",
+            "equals": "angle"
+          }
+        }
+      ]
+    },
+    {
+      "id": "half-bend-time",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["reading-results"],
+      "set": {
+        "condition": 0,
+        "light": 1
+      },
+      "stem": "In the model an intact shoot lit from one side bends as θ = θ_max·(1 − e^(−t/τ)), with θ_max = {bendAngle}° and τ = {bendTime} s (illustrative). After how long has it bent half of θ_max?",
+      "explain": "1 − e^(−t/τ) = ½ gives e^(−t/τ) = ½, t = τ·ln 2 = {bendTime}·0.693 ≈ {=bendTime*ln(2)|3} s, about {=bendTime*ln(2)/60|2} minutes. After τ itself the bend is 63 % of θ_max, not 50 %.",
+      "vi": {
+        "stem": "Trong mô hình, ngọn cây nguyên vẹn được chiếu sáng từ một phía uốn cong theo θ = θ_max·(1 − e^(−t/τ)), với θ_max = {bendAngle}° và τ = {bendTime} s (giá trị minh họa). Sau bao lâu thì góc uốn bằng một nửa θ_max?",
+        "explain": "1 − e^(−t/τ) = ½ cho e^(−t/τ) = ½, t = τ·ln 2 = {bendTime}·0,693 ≈ {=bendTime*ln(2)|3} s, khoảng {=bendTime*ln(2)/60|2} phút. Sau đúng τ, góc uốn bằng 63 % θ_max, không phải 50 %."
+      },
+      "options": [
+        {
+          "text": "{=bendTime*ln(2)|3} s",
+          "vi": {
+            "text": "{=bendTime*ln(2)|3} s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "bendAngle*2*(1-exp(-bendTime*ln(2)/bendTime))*(1-exp(-duration/bendTime))",
+            "equals": "angle"
+          }
+        },
+        {
+          "text": "{=bendTime/2} s",
+          "vi": {
+            "text": "{=bendTime/2} s"
+          },
+          "check": {
+            "expr": "bendAngle*2*(1-exp(-(bendTime/2)/bendTime))*(1-exp(-duration/bendTime))",
+            "equals": "angle"
+          }
+        },
+        {
+          "text": "{bendTime} s",
+          "vi": {
+            "text": "{bendTime} s"
+          },
+          "check": {
+            "expr": "bendAngle*2*(1-exp(-bendTime/bendTime))*(1-exp(-duration/bendTime))",
+            "equals": "angle"
+          }
+        },
+        {
+          "text": "{=2*bendTime} s",
+          "vi": {
+            "text": "{=2*bendTime} s"
+          },
+          "check": {
+            "expr": "bendAngle*2*(1-exp(-(2*bendTime)/bendTime))*(1-exp(-duration/bendTime))",
+            "equals": "angle"
+          }
+        }
+      ]
+    },
+    {
+      "id": "cap-control",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["tip-senses", "reading-results"],
+      "stem": "Seedlings with an opaque cap on the tip do not bend. A critic says the cap may simply damage the tip or press on it. Which extra group answers this objection?",
+      "explain": "A transparent cap is the same object on the tip, but it lets the light through. If those seedlings bend, it is the darkness of the tip, not the cap itself, that stopped the bending. Cutting off the tip or covering the base tests other questions.",
+      "vi": {
+        "stem": "Các cây mầm có mũ chắn sáng ở đỉnh ngọn thì không uốn cong. Có ý kiến cho rằng có thể chính chiếc mũ làm tổn thương hoặc đè lên đỉnh ngọn. Cần thêm nhóm cây nào để trả lời ý kiến đó?",
+        "explain": "Mũ trong suốt cũng là một vật đội lên đỉnh ngọn, nhưng cho ánh sáng đi qua. Nếu các cây mầm đó vẫn uốn cong, thì chính việc đỉnh ngọn bị che tối, chứ không phải bản thân chiếc mũ, đã ngăn sự uốn cong. Cắt đỉnh ngọn hay che phần gốc là để trả lời những câu hỏi khác."
+      },
+      "options": [
+        {
+          "text": "Seedlings with a transparent cap on the tip, lit the same way",
+          "vi": {
+            "text": "Cây mầm đội mũ trong suốt ở đỉnh ngọn, chiếu sáng như nhau"
+          },
+          "correct": true
+        },
+        {
+          "text": "Seedlings with the tip cut off, lit the same way",
+          "vi": {
+            "text": "Cây mầm bị cắt đỉnh ngọn, chiếu sáng như nhau"
+          }
+        },
+        {
+          "text": "Seedlings with the base covered, lit the same way",
+          "vi": {
+            "text": "Cây mầm bị che phần gốc, chiếu sáng như nhau"
+          }
+        },
+        {
+          "text": "Capped seedlings kept in the dark",
+          "vi": {
+            "text": "Cây mầm đội mũ chắn sáng để trong tối"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-predict",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["tip-senses", "auxin", "reading-results"],
+      "set": {
+        "condition": 0,
+        "light": 1
+      },
+      "stem": "Intact seedlings lit from the right bend by {@angle|3}° in {duration} s (model: θ_max = {bendAngle}°, τ = {bendTime} s, illustrative). Decide whether each statement is true or false about this and other set-ups.",
+      "explain": "{bendAngle}·(1 − e^(−{duration}/{bendTime})) ≈ {@angle|3}°. An opaque cap on the tip stops the bend (0°); a transparent cap lets the tip sense the light, so they still bend. Light from straight above gives no bend at all, not half the bend.",
+      "vi": {
+        "stem": "Các cây mầm nguyên vẹn được chiếu sáng từ phía phải uốn cong {@angle|3}° trong {duration} s (mô hình: θ_max = {bendAngle}°, τ = {bendTime} s, giá trị minh họa). Mỗi nhận định sau về thí nghiệm này và các cách bố trí khác đúng hay sai?",
+        "explain": "{bendAngle}·(1 − e^(−{duration}/{bendTime})) ≈ {@angle|3}°. Mũ chắn sáng ở đỉnh ngọn làm ngọn không uốn cong (0°); mũ trong suốt vẫn cho đỉnh ngọn cảm nhận ánh sáng nên ngọn vẫn uốn cong. Ánh sáng chiếu thẳng từ trên xuống không làm ngọn uốn cong chút nào, chứ không phải uốn một nửa."
+      },
+      "statements": [
+        {
+          "text": "The bend after {duration} s is about {@angle|3}°, towards the right.",
+          "vi": {
+            "text": "Góc uốn sau {duration} s khoảng {@angle|3}°, về phía phải."
+          },
+          "true": true,
+          "check": {
+            "expr": "bendAngle*(1-exp(-duration/bendTime))",
+            "equals": "angle"
+          }
+        },
+        {
+          "text": "With an opaque cap on the tip, the seedlings would not bend.",
+          "vi": {
+            "text": "Nếu đội mũ chắn sáng ở đỉnh ngọn, các cây mầm sẽ không uốn cong."
+          },
+          "true": true
+        },
+        {
+          "text": "With a transparent cap on the tip, the seedlings would still bend.",
+          "vi": {
+            "text": "Nếu đội mũ trong suốt ở đỉnh ngọn, các cây mầm vẫn uốn cong."
+          },
+          "true": true
+        },
+        {
+          "text": "Lit from straight above, they would bend about {=@angle/2|3}°, half as much.",
+          "vi": {
+            "text": "Nếu chiếu sáng thẳng từ trên xuống, chúng sẽ uốn khoảng {=@angle/2|3}°, bằng một nửa."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1026 @@
+{
+  "id": "reaction-rate",
+  "name": "Reaction rate: crystal violet fading",
+  "category": "chemistry",
+  "description": "Violet crystal violet dye is mixed with an excess of sodium hydroxide and fades to colourless as it reacts, CV⁺ + OH⁻ → CVOH. A colorimeter follows the colour: by Beer–Lambert its absorbance A is proportional to the dye's concentration. With the hydroxide in excess the reaction is pseudo-first order: ln A falls in a straight line with time, slope −k′, and the half-life ln 2/k′ does not depend on how much dye you start with. Over several runs, k′ against [OH⁻] gives the second-order rate constant k, and runs at different temperatures give the activation energy (Arrhenius). A simplified teaching model with approximate constants.",
+  "vi": {
+    "name": "Tốc độ phản ứng: tím tinh thể mất màu",
+    "description": "Thuốc nhuộm tím tinh thể (crystal violet) được trộn với lượng dư natri hiđroxit và nhạt dần đến không màu khi phản ứng, CV⁺ + OH⁻ → CVOH. Máy so màu theo dõi màu dung dịch: theo định luật Beer–Lambert, độ hấp thụ quang A tỉ lệ với nồng độ thuốc nhuộm. Khi OH⁻ rất dư, phản ứng là bậc một giả: ln A giảm tuyến tính theo thời gian với độ dốc −k′, và chu kỳ bán phản ứng ln 2/k′ không phụ thuộc lượng thuốc nhuộm ban đầu. Qua nhiều lần chạy, đồ thị k′ theo [OH⁻] cho hằng số tốc độ bậc hai k, còn các lần chạy ở nhiệt độ khác nhau cho năng lượng hoạt hóa (phương trình Arrhenius). Đây là mô hình dạy học đơn giản hóa, với các hằng số gần đúng.",
+    "note": "Định luật tốc độ: −d[CV⁺]/dt = k·[CV⁺]·[OH⁻]. Khi [OH⁻] lớn hơn ít nhất 100 lần nồng độ thuốc nhuộm, [OH⁻] gần như không đổi (thay đổi dưới 1 %) và được coi là hằng số: −d[CV⁺]/dt = k′·[CV⁺] với k′ = k·[OH⁻]₀ (bậc một giả), nên c = c₀·e^(−k′t) và ln A = ln A₀ − k′t. Beer–Lambert: A = ε·l·c, với ε ≈ 1·10⁵ L/(mol·cm) ở khoảng 590 nm (giá trị gần đúng trong tài liệu dạy học; tài liệu khác nhau cho 8,7·10⁴ đến 1·10⁵) và cuvet l = 1 cm; sản phẩm CVOH coi như không hấp thụ. Arrhenius: k(T) = k₂₅·exp((Eₐ/R)(1/T₂₅ − 1/T)), với k₂₅ ≈ 0,1 L/(mol·s) ở 25 °C và Eₐ ≈ 60 kJ/mol — các giá trị gần đúng, nằm trong khoảng các số liệu công bố (khoảng 0,05–0,2 L/(mol·s) và 50–65 kJ/mol), phụ thuộc lực ion và điều kiện đo; R = 8,314 J/(mol·K). Lý thuyết là các giá trị tính theo công thức; kết quả mô phỏng được đọc từ chính đường độ hấp thụ của lần chạy: k′ = ln(A₀/A)/t, và t½ là lúc A giảm còn A₀/2. Lần chạy kết thúc khi thuốc nhuộm còn ¼ ban đầu (hai chu kỳ bán phản ứng). Đây không phải số liệu phòng thí nghiệm: phản ứng thật còn phụ thuộc lực ion, độ tinh khiết của thuốc nhuộm, nhiệt độ dao động và máy so màu (ánh sáng lạc, độ trôi đường nền), và có thể không đúng hoàn toàn bậc một theo OH⁻."
+  },
+  "requiredEquipment": ["colorimeter"],
+  "model": "chemistry.first-order-kinetics",
+  "presentation": "2d-workspace",
+  "workspace": {
+    "pieces": [
+      {
+        "id": "bath",
+        "kind": "water-bath",
+        "slot": "bath",
+        "label": "Thermostatted water bath",
+        "vi": {
+          "label": "Bể ổn nhiệt"
+        },
+        "owns": ["temperature", "initialConcentration", "naoh"],
+        "shows": [
+          {
+            "input": "referenceRate"
+          },
+          {
+            "input": "activationEnergy"
+          }
+        ]
+      },
+      {
+        "id": "beaker",
+        "kind": "beaker",
+        "slot": "bench",
+        "label": "Mixing beaker",
+        "vi": {
+          "label": "Cốc trộn"
+        },
+        "owns": [],
+        "shows": [
+          {
+            "variable": "absorbance"
+          }
+        ]
+      },
+      {
+        "id": "cuvette",
+        "kind": "cuvette",
+        "slot": "colorimeter.slot",
+        "label": "Cuvette",
+        "vi": {
+          "label": "Cuvet"
+        },
+        "owns": [],
+        "shows": [
+          {
+            "variable": "absorbance"
+          }
+        ]
+      },
+      {
+        "id": "colorimeter",
+        "kind": "colorimeter",
+        "slot": "colorimeter",
+        "label": "Colorimeter, 590 nm",
+        "vi": {
+          "label": "Máy so màu, 590 nm"
+        },
+        "owns": [],
+        "shows": [
+          {
+            "variable": "absorbance"
+          }
+        ]
+      },
+      {
+        "id": "timer",
+        "kind": "timer",
+        "slot": "timer",
+        "label": "Timer",
+        "vi": {
+          "label": "Đồng hồ bấm giờ"
+        },
+        "owns": ["timerResolution"],
+        "shows": [
+          {
+            "variable": "elapsed"
+          },
+          {
+            "variable": "halfTime"
+          },
+          {
+            "instrument": "halfLife"
+          }
+        ]
+      }
+    ],
+    "materials": [
+      {
+        "id": "dye-2",
+        "kind": "solution",
+        "label": "Crystal violet flask: c₀ = 2 µmol/L in the mixture",
+        "vi": {
+          "label": "Bình tím tinh thể: c₀ = 2 µmol/L trong hỗn hợp"
+        },
+        "sets": {
+          "parameter": "initialConcentration",
+          "value": 0.000002
+        }
+      },
+      {
+        "id": "dye-5",
+        "kind": "solution",
+        "label": "Crystal violet flask: c₀ = 5 µmol/L in the mixture",
+        "vi": {
+          "label": "Bình tím tinh thể: c₀ = 5 µmol/L trong hỗn hợp"
+        },
+        "sets": {
+          "parameter": "initialConcentration",
+          "value": 0.000005
+        }
+      },
+      {
+        "id": "dye-10",
+        "kind": "solution",
+        "label": "Crystal violet flask: c₀ = 10 µmol/L in the mixture",
+        "vi": {
+          "label": "Bình tím tinh thể: c₀ = 10 µmol/L trong hỗn hợp"
+        },
+        "sets": {
+          "parameter": "initialConcentration",
+          "value": 0.00001
+        }
+      },
+      {
+        "id": "naoh-010",
+        "kind": "solution",
+        "label": "NaOH flask (plastic): [OH⁻]₀ = 0.1 mol/L in the mixture",
+        "vi": {
+          "label": "Bình NaOH (nhựa): [OH⁻]₀ = 0,1 mol/L trong hỗn hợp"
+        },
+        "formula": "NaOH",
+        "sets": {
+          "parameter": "naoh",
+          "value": 0.1
+        }
+      },
+      {
+        "id": "naoh-015",
+        "kind": "solution",
+        "label": "NaOH flask (plastic): [OH⁻]₀ = 0.15 mol/L in the mixture",
+        "vi": {
+          "label": "Bình NaOH (nhựa): [OH⁻]₀ = 0,15 mol/L trong hỗn hợp"
+        },
+        "formula": "NaOH",
+        "sets": {
+          "parameter": "naoh",
+          "value": 0.15
+        }
+      },
+      {
+        "id": "naoh-020",
+        "kind": "solution",
+        "label": "NaOH flask (plastic): [OH⁻]₀ = 0.2 mol/L in the mixture",
+        "vi": {
+          "label": "Bình NaOH (nhựa): [OH⁻]₀ = 0,2 mol/L trong hỗn hợp"
+        },
+        "formula": "NaOH",
+        "sets": {
+          "parameter": "naoh",
+          "value": 0.2
+        }
+      },
+      {
+        "id": "naoh-025",
+        "kind": "solution",
+        "label": "NaOH flask (plastic): [OH⁻]₀ = 0.25 mol/L in the mixture",
+        "vi": {
+          "label": "Bình NaOH (nhựa): [OH⁻]₀ = 0,25 mol/L trong hỗn hợp"
+        },
+        "formula": "NaOH",
+        "sets": {
+          "parameter": "naoh",
+          "value": 0.25
+        }
+      }
+    ],
+    "setup": [
+      {
+        "id": "dye-2",
+        "instruction": "Put the crystal violet flask (c₀ = 2 µmol/L in the mixture) in the water bath.",
+        "refusal": "Put the crystal violet flask in the water bath first.",
+        "vi": {
+          "instruction": "Đặt bình tím tinh thể (c₀ = 2 µmol/L trong hỗn hợp) vào bể ổn nhiệt.",
+          "refusal": "Hãy đặt bình tím tinh thể vào bể ổn nhiệt trước."
+        },
+        "place": "dye-2",
+        "onto": "bath",
+        "when": {
+          "parameter": "initialConcentration",
+          "values": [0.000002]
+        }
+      },
+      {
+        "id": "dye-5",
+        "instruction": "Put the crystal violet flask (c₀ = 5 µmol/L in the mixture) in the water bath.",
+        "refusal": "Put the crystal violet flask in the water bath first.",
+        "vi": {
+          "instruction": "Đặt bình tím tinh thể (c₀ = 5 µmol/L trong hỗn hợp) vào bể ổn nhiệt.",
+          "refusal": "Hãy đặt bình tím tinh thể vào bể ổn nhiệt trước."
+        },
+        "place": "dye-5",
+        "onto": "bath",
+        "when": {
+          "parameter": "initialConcentration",
+          "values": [0.000005]
+        }
+      },
+      {
+        "id": "dye-10",
+        "instruction": "Put the crystal violet flask (c₀ = 10 µmol/L in the mixture) in the water bath.",
+        "refusal": "Put the crystal violet flask in the water bath first.",
+        "vi": {
+          "instruction": "Đặt bình tím tinh thể (c₀ = 10 µmol/L trong hỗn hợp) vào bể ổn nhiệt.",
+          "refusal": "Hãy đặt bình tím tinh thể vào bể ổn nhiệt trước."
+        },
+        "place": "dye-10",
+        "onto": "bath",
+        "when": {
+          "parameter": "initialConcentration",
+          "values": [0.00001]
+        }
+      },
+      {
+        "id": "naoh-010",
+        "instruction": "Put the NaOH flask ([OH⁻]₀ = 0.1 mol/L in the mixture) in the water bath.",
+        "refusal": "Put the NaOH flask in the water bath first.",
+        "vi": {
+          "instruction": "Đặt bình NaOH ([OH⁻]₀ = 0,1 mol/L trong hỗn hợp) vào bể ổn nhiệt.",
+          "refusal": "Hãy đặt bình NaOH vào bể ổn nhiệt trước."
+        },
+        "place": "naoh-010",
+        "onto": "bath",
+        "when": {
+          "parameter": "naoh",
+          "values": [0.1]
+        }
+      },
+      {
+        "id": "naoh-015",
+        "instruction": "Put the NaOH flask ([OH⁻]₀ = 0.15 mol/L in the mixture) in the water bath.",
+        "refusal": "Put the NaOH flask in the water bath first.",
+        "vi": {
+          "instruction": "Đặt bình NaOH ([OH⁻]₀ = 0,15 mol/L trong hỗn hợp) vào bể ổn nhiệt.",
+          "refusal": "Hãy đặt bình NaOH vào bể ổn nhiệt trước."
+        },
+        "place": "naoh-015",
+        "onto": "bath",
+        "when": {
+          "parameter": "naoh",
+          "values": [0.15]
+        }
+      },
+      {
+        "id": "naoh-020",
+        "instruction": "Put the NaOH flask ([OH⁻]₀ = 0.2 mol/L in the mixture) in the water bath.",
+        "refusal": "Put the NaOH flask in the water bath first.",
+        "vi": {
+          "instruction": "Đặt bình NaOH ([OH⁻]₀ = 0,2 mol/L trong hỗn hợp) vào bể ổn nhiệt.",
+          "refusal": "Hãy đặt bình NaOH vào bể ổn nhiệt trước."
+        },
+        "place": "naoh-020",
+        "onto": "bath",
+        "when": {
+          "parameter": "naoh",
+          "values": [0.2]
+        }
+      },
+      {
+        "id": "naoh-025",
+        "instruction": "Put the NaOH flask ([OH⁻]₀ = 0.25 mol/L in the mixture) in the water bath.",
+        "refusal": "Put the NaOH flask in the water bath first.",
+        "vi": {
+          "instruction": "Đặt bình NaOH ([OH⁻]₀ = 0,25 mol/L trong hỗn hợp) vào bể ổn nhiệt.",
+          "refusal": "Hãy đặt bình NaOH vào bể ổn nhiệt trước."
+        },
+        "place": "naoh-025",
+        "onto": "bath",
+        "when": {
+          "parameter": "naoh",
+          "values": [0.25]
+        }
+      },
+      {
+        "id": "cuvette",
+        "instruction": "Put the cuvette in the colorimeter slot.",
+        "refusal": "Put the cuvette in the colorimeter slot first.",
+        "vi": {
+          "instruction": "Đặt cuvet vào khe của máy so màu.",
+          "refusal": "Hãy đặt cuvet vào khe của máy so màu trước."
+        },
+        "place": "cuvette",
+        "onto": "colorimeter"
+      }
+    ],
+    "runLabel": "Mix and start the timer",
+    "vi": {
+      "runLabel": "Trộn và bấm giờ"
+    }
+  },
+  "parameters": [
+    {
+      "id": "initialConcentration",
+      "label": "Starting dye concentration",
+      "vi": {
+        "label": "Nồng độ thuốc nhuộm ban đầu"
+      },
+      "symbol": "c₀",
+      "unit": "mol/L",
+      "default": 0.00001,
+      "min": 0.000002,
+      "max": 0.00001,
+      "presets": [
+        {
+          "label": "2 µmol/L",
+          "vi": {
+            "label": "2 µmol/L"
+          },
+          "value": 0.000002
+        },
+        {
+          "label": "5 µmol/L",
+          "vi": {
+            "label": "5 µmol/L"
+          },
+          "value": 0.000005
+        },
+        {
+          "label": "10 µmol/L",
+          "vi": {
+            "label": "10 µmol/L"
+          },
+          "value": 0.00001
+        }
+      ]
+    },
+    {
+      "id": "naoh",
+      "label": "NaOH concentration",
+      "vi": {
+        "label": "Nồng độ NaOH"
+      },
+      "symbol": "[OH⁻]₀",
+      "unit": "mol/L",
+      "default": 0.2,
+      "min": 0.1,
+      "max": 0.25,
+      "presets": [
+        {
+          "label": "0.1 mol/L",
+          "vi": {
+            "label": "0,1 mol/L"
+          },
+          "value": 0.1
+        },
+        {
+          "label": "0.15 mol/L",
+          "vi": {
+            "label": "0,15 mol/L"
+          },
+          "value": 0.15
+        },
+        {
+          "label": "0.2 mol/L",
+          "vi": {
+            "label": "0,2 mol/L"
+          },
+          "value": 0.2
+        },
+        {
+          "label": "0.25 mol/L",
+          "vi": {
+            "label": "0,25 mol/L"
+          },
+          "value": 0.25
+        }
+      ]
+    },
+    {
+      "id": "temperature",
+      "label": "Water-bath temperature",
+      "vi": {
+        "label": "Nhiệt độ bể ổn nhiệt"
+      },
+      "symbol": "θ",
+      "unit": "°C",
+      "default": 25,
+      "min": 20,
+      "max": 45,
+      "presets": [
+        {
+          "label": "20 °C",
+          "vi": {
+            "label": "20 °C"
+          },
+          "value": 20
+        },
+        {
+          "label": "25 °C",
+          "vi": {
+            "label": "25 °C"
+          },
+          "value": 25
+        },
+        {
+          "label": "35 °C",
+          "vi": {
+            "label": "35 °C"
+          },
+          "value": 35
+        },
+        {
+          "label": "45 °C",
+          "vi": {
+            "label": "45 °C"
+          },
+          "value": 45
+        }
+      ]
+    },
+    {
+      "id": "timerResolution",
+      "label": "Timer resolution",
+      "vi": {
+        "label": "Độ phân giải đồng hồ bấm giờ"
+      },
+      "symbol": "d",
+      "unit": "s",
+      "default": 0.1,
+      "min": 0.1,
+      "max": 5,
+      "presets": [
+        {
+          "label": "0.1 s",
+          "vi": {
+            "label": "0,1 s"
+          },
+          "value": 0.1
+        },
+        {
+          "label": "1 s",
+          "vi": {
+            "label": "1 s"
+          },
+          "value": 1
+        },
+        {
+          "label": "5 s",
+          "vi": {
+            "label": "5 s"
+          },
+          "value": 5
+        }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "referenceRate": 0.1,
+    "referenceTemperature": 25,
+    "activationEnergy": 60000,
+    "absorptivity": 10000000,
+    "pathLength": 0.01,
+    "endFraction": 0.25
+  },
+  "inputs": {
+    "referenceRate": {
+      "symbol": "k₂₅",
+      "unit": "L/(mol·s)"
+    },
+    "activationEnergy": {
+      "symbol": "Eₐ",
+      "unit": "J/mol"
+    },
+    "referenceTemperature": {
+      "symbol": "T₂₅",
+      "unit": "°C",
+      "desk": false
+    },
+    "absorptivity": {
+      "symbol": "ε",
+      "unit": "L/(mol·m)",
+      "desk": false
+    },
+    "pathLength": {
+      "symbol": "l",
+      "unit": "m",
+      "desk": false
+    },
+    "endFraction": {
+      "symbol": "c_end/c₀",
+      "unit": "",
+      "desk": false
+    }
+  },
+  "simulation": {
+    "timeStep": 0.05,
+    "maxDuration": 300,
+    "sampleInterval": 0.5
+  },
+  "measurements": [
+    {
+      "id": "concentration",
+      "label": "Dye concentration",
+      "vi": {
+        "label": "Nồng độ thuốc nhuộm"
+      },
+      "symbol": "c",
+      "unit": "mol/L",
+      "variable": "concentration"
+    },
+    {
+      "id": "absorbance",
+      "label": "Absorbance",
+      "vi": {
+        "label": "Độ hấp thụ quang"
+      },
+      "symbol": "A",
+      "unit": "",
+      "variable": "absorbance"
+    },
+    {
+      "id": "lnAbsorbance",
+      "label": "Natural log of absorbance",
+      "vi": {
+        "label": "Logarit tự nhiên của độ hấp thụ"
+      },
+      "symbol": "ln A",
+      "unit": "",
+      "variable": "lnAbsorbance"
+    },
+    {
+      "id": "extent",
+      "label": "Fraction of dye reacted",
+      "vi": {
+        "label": "Phần thuốc nhuộm đã phản ứng"
+      },
+      "symbol": "1 − c/c₀",
+      "unit": "",
+      "variable": "extent"
+    }
+  ],
+  "results": [
+    {
+      "id": "initialAbsorbance",
+      "label": "Starting absorbance A₀",
+      "vi": {
+        "label": "Độ hấp thụ ban đầu A₀"
+      },
+      "symbol": "A₀",
+      "unit": "",
+      "variable": "absorbance",
+      "reduce": "max",
+      "theory": "initialAbsorbance"
+    },
+    {
+      "id": "rateConstant",
+      "label": "Pseudo-first-order rate constant k′ = ln(A₀/A)/t",
+      "vi": {
+        "label": "Hằng số tốc độ bậc một giả k′ = ln(A₀/A)/t"
+      },
+      "symbol": "k′",
+      "unit": "1/s",
+      "variable": "observedRate",
+      "reduce": "final",
+      "theory": "rateConstant"
+    },
+    {
+      "id": "halfLife",
+      "label": "Half-life t½ (A falls to A₀/2)",
+      "vi": {
+        "label": "Chu kỳ bán phản ứng t½ (A giảm còn A₀/2)"
+      },
+      "symbol": "t½",
+      "unit": "s",
+      "variable": "halfTime",
+      "reduce": "final",
+      "theory": "halfLife",
+      "classes": [
+        {
+          "max": 20,
+          "label": "Fast",
+          "vi": {
+            "label": "Nhanh"
+          }
+        },
+        {
+          "max": 60,
+          "label": "Moderate",
+          "vi": {
+            "label": "Vừa phải"
+          }
+        },
+        {
+          "label": "Slow",
+          "vi": {
+            "label": "Chậm"
+          }
+        }
+      ]
+    },
+    {
+      "id": "finalAbsorbance",
+      "label": "Absorbance at the end",
+      "vi": {
+        "label": "Độ hấp thụ lúc kết thúc"
+      },
+      "symbol": "A_end",
+      "unit": "",
+      "variable": "absorbance",
+      "reduce": "final",
+      "theory": "finalAbsorbance"
+    },
+    {
+      "id": "finalConcentration",
+      "label": "Dye concentration at the end",
+      "vi": {
+        "label": "Nồng độ thuốc nhuộm lúc kết thúc"
+      },
+      "symbol": "c_end",
+      "unit": "mol/L",
+      "variable": "concentration",
+      "reduce": "final",
+      "theory": "finalConcentration"
+    },
+    {
+      "id": "lnRateRatio",
+      "label": "ln(k/k₂₅), k = k′/[OH⁻]₀",
+      "vi": {
+        "label": "ln(k/k₂₅), với k = k′/[OH⁻]₀"
+      },
+      "symbol": "ln(k/k₂₅)",
+      "unit": "",
+      "variable": "lnRateRatio",
+      "reduce": "final",
+      "theory": "lnRateRatio"
+    },
+    {
+      "id": "inverseTemperatureShift",
+      "label": "1/T₂₅ − 1/T (in kelvin)",
+      "vi": {
+        "label": "1/T₂₅ − 1/T (theo kelvin)"
+      },
+      "symbol": "1/T₂₅ − 1/T",
+      "unit": "1/K",
+      "variable": "inverseTemperatureShift",
+      "reduce": "final",
+      "theory": "inverseTemperatureShift"
+    }
+  ],
+  "graphs": [
+    {
+      "id": "ln-absorbance-time",
+      "title": "ln A against time",
+      "vi": {
+        "title": "ln A theo thời gian"
+      },
+      "x": "time",
+      "y": ["lnAbsorbance"]
+    },
+    {
+      "id": "absorbance-time",
+      "title": "Absorbance against time",
+      "vi": {
+        "title": "Độ hấp thụ quang theo thời gian"
+      },
+      "x": "time",
+      "y": ["absorbance"],
+      "mark": "halfLife"
+    },
+    {
+      "id": "concentration-time",
+      "title": "Dye concentration against time",
+      "vi": {
+        "title": "Nồng độ thuốc nhuộm theo thời gian"
+      },
+      "x": "time",
+      "y": ["concentration"],
+      "mark": "halfLife"
+    },
+    {
+      "id": "extent-time",
+      "title": "Fraction reacted against time",
+      "vi": {
+        "title": "Phần đã phản ứng theo thời gian"
+      },
+      "x": "time",
+      "y": ["extent"]
+    }
+  ],
+  "monitor": "ln-absorbance-time",
+  "compare": [
+    {
+      "graph": "ln-absorbance-time"
+    },
+    {
+      "graph": "absorbance-time"
+    }
+  ],
+  "instruments": [
+    {
+      "result": "halfLife",
+      "quantity": "Half-life t½",
+      "name": "Timer (started when the solutions are mixed)",
+      "resolution": "timerResolution",
+      "excludes": "the delay between mixing and starting the timer, judging by eye when the colorimeter shows A₀/2, the temperature drifting in the bath and the colorimeter's own noise and calibration",
+      "vi": {
+        "quantity": "Chu kỳ bán phản ứng t½",
+        "name": "Đồng hồ bấm giờ (bấm khi trộn hai dung dịch)",
+        "excludes": "độ trễ giữa lúc trộn và lúc bấm đồng hồ, việc nhận biết bằng mắt khi máy so màu chỉ A₀/2, nhiệt độ bể dao động và nhiễu cũng như sai số hiệu chuẩn của chính máy so màu"
+      }
+    }
+  ],
+  "note": "Rate law: −d[CV⁺]/dt = k·[CV⁺]·[OH⁻]. With [OH⁻] at least 100 times the dye, it hardly changes (by under 1 %) and is taken as constant: −d[CV⁺]/dt = k′·[CV⁺] with k′ = k·[OH⁻]₀ (pseudo-first order), so c = c₀·e^(−k′t) and ln A = ln A₀ − k′t. Beer–Lambert: A = ε·l·c, with ε ≈ 1·10⁵ L/(mol·cm) near 590 nm (an approximate teaching value; sources give 8.7·10⁴ to 1·10⁵) and a 1 cm cuvette; the product CVOH is taken as colourless. Arrhenius: k(T) = k₂₅·exp((Eₐ/R)(1/T₂₅ − 1/T)), with k₂₅ ≈ 0.1 L/(mol·s) at 25 °C and Eₐ ≈ 60 kJ/mol — approximate values within the published spread (about 0.05–0.2 L/(mol·s) and 50–65 kJ/mol), which depends on ionic strength and conditions; R = 8.314 J/(mol·K). The theory is the formulas' values; the simulated results are read from the run's own absorbance trace: k′ = ln(A₀/A)/t, and t½ when A falls to A₀/2. The run ends when a quarter of the dye is left (two half-lives). Not lab data: a real reaction also depends on ionic strength, the dye's purity, the bath's temperature and the colorimeter (stray light, baseline drift), and may not be exactly first order in OH⁻.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the reaction-rate instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn về tốc độ phản ứng trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "reaction-rate-instructions"
+      }
+    },
+    {
+      "id": "work",
+      "instruction": "Go to the colorimeter and press E to work at the bench.",
+      "vi": {
+        "instruction": "Đến máy so màu và nhấn E để làm việc tại bàn thí nghiệm."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "colorimeter"
+      }
+    },
+    {
+      "id": "temperature",
+      "instruction": "Choose the water-bath temperature θ on the water bath.",
+      "vi": {
+        "instruction": "Chọn nhiệt độ bể ổn nhiệt θ trên bể."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "temperature"
+      }
+    },
+    {
+      "id": "cuvette",
+      "instruction": "Put the dye and NaOH flasks in the bath and the cuvette in the colorimeter slot.",
+      "vi": {
+        "instruction": "Đặt bình thuốc nhuộm và bình NaOH vào bể, đặt cuvet vào khe máy so màu."
+      },
+      "done": {
+        "kind": "setup",
+        "step": "cuvette"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Mix the solutions and start the timer (RUN): watch the violet colour fade.",
+      "vi": {
+        "instruction": "Trộn các dung dịch và bấm giờ (CHẠY): quan sát màu tím nhạt dần."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Read k′ and t½ in the notebook, and check that ln A against time is a straight line.",
+      "vi": {
+        "instruction": "Đọc k′ và t½ trong sổ ghi chép, và kiểm tra ln A theo thời gian là một đường thẳng."
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, change [OH⁻] or the temperature, and run again.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, đổi [OH⁻] hoặc nhiệt độ rồi chạy lại."
+      },
+      "done": {
+        "kind": "reset"
+      }
+    }
+  ],
+  "analyses": [
+    {
+      "id": "order",
+      "title": "Rate constant k′ against NaOH concentration",
+      "note": "Each run's k′ is read from its own ln A line. Pseudo-first order means k′ = k·[OH⁻]₀: at one temperature the runs lie on a line through the origin whose slope is the second-order rate constant k. Only runs at the same temperature are fitted together; the starting dye concentration may differ, since k′ does not depend on it.",
+      "vi": {
+        "title": "Hằng số tốc độ k′ theo nồng độ NaOH",
+        "note": "k′ của mỗi lần chạy được đọc từ chính đường ln A của lần chạy đó. Bậc một giả nghĩa là k′ = k·[OH⁻]₀: ở cùng một nhiệt độ, các điểm nằm trên một đường thẳng qua gốc tọa độ, có độ dốc là hằng số tốc độ bậc hai k. Chỉ các lần chạy cùng nhiệt độ mới được khớp chung; nồng độ thuốc nhuộm ban đầu có thể khác nhau, vì k′ không phụ thuộc vào nó."
+      },
+      "x": "naoh",
+      "y": "rateConstant",
+      "group": ["temperature"],
+      "columns": ["naoh", "initialConcentration", "rateConstant", "halfLife"],
+      "slope": {
+        "label": "Second-order rate constant",
+        "vi": {
+          "label": "Hằng số tốc độ bậc hai"
+        },
+        "symbol": "k",
+        "unit": "L/(mol·s)",
+        "theory": "secondOrderRate"
+      }
+    },
+    {
+      "id": "arrhenius",
+      "title": "Arrhenius plot: ln(k/k₂₅) against 1/T₂₅ − 1/T",
+      "note": "From ln k = ln A_f − Eₐ/(R·T): between 25 °C and T, ln(k/k₂₅) = (Eₐ/R)(1/T₂₅ − 1/T), a line through the origin whose slope is Eₐ/R, in kelvin. The activation energy is Eₐ = R × slope, with R = 8.314 J/(mol·K). k = k′/[OH⁻]₀ is each run's own. Only runs with the same NaOH concentration are fitted together.",
+      "vi": {
+        "title": "Đồ thị Arrhenius: ln(k/k₂₅) theo 1/T₂₅ − 1/T",
+        "note": "Từ ln k = ln A_f − Eₐ/(R·T): giữa 25 °C và T, ln(k/k₂₅) = (Eₐ/R)(1/T₂₅ − 1/T), một đường thẳng qua gốc tọa độ có độ dốc là Eₐ/R, tính theo kelvin. Năng lượng hoạt hóa Eₐ = R × độ dốc, với R = 8,314 J/(mol·K). k = k′/[OH⁻]₀ là của chính mỗi lần chạy. Chỉ các lần chạy cùng nồng độ NaOH mới được khớp chung."
+      },
+      "x": "inverseTemperatureShift",
+      "y": "lnRateRatio",
+      "group": ["naoh"],
+      "columns": ["temperature", "naoh", "rateConstant", "inverseTemperatureShift", "lnRateRatio"],
+      "slope": {
+        "label": "Activation temperature Eₐ/R",
+        "vi": {
+          "label": "Nhiệt độ hoạt hóa Eₐ/R"
+        },
+        "symbol": "Eₐ/R",
+        "unit": "K",
+        "theory": "activationTemperature"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "pseudo-first-order",
+      "question": "Crystal violet fades in NaOH at {naoh} mol/L, at {referenceTemperature} °C, where k = {referenceRate} L/(mol·s) (an approximate value). Find the pseudo-first-order rate constant and the half-life.",
+      "vi": {
+        "question": "Tím tinh thể mất màu trong NaOH {naoh} mol/L ở {referenceTemperature} °C, khi đó k = {referenceRate} L/(mol·s) (giá trị gần đúng). Tìm hằng số tốc độ giả bậc một và chu kì bán hủy."
+      },
+      "set": { "initialConcentration": 0.000005, "naoh": 0.1, "temperature": 25 },
+      "find": [{ "theory": "rateConstant", "unit": "s⁻¹" }, { "theory": "halfLife" }],
+      "steps": [
+        {
+          "say": "OH⁻ is in such excess that it hardly changes: the rate k·[CV⁺]·[OH⁻] acts as first order, with k′ = k·[OH⁻]₀.",
+          "vi": {
+            "say": "OH⁻ dư rất nhiều nên nồng độ hầu như không đổi: tốc độ k·[CV⁺]·[OH⁻] trở thành bậc một, với k′ = k·[OH⁻]₀."
+          },
+          "write": "k′ = k·[OH⁻]₀ = {referenceRate}·{naoh} = {@rateConstant} s⁻¹",
+          "check": { "expr": "referenceRate*naoh", "equals": "rateConstant" }
+        },
+        {
+          "say": "A first-order reaction halves in the same time whatever the concentration: t½ = ln 2/k′.",
+          "vi": {
+            "say": "Phản ứng bậc một giảm một nửa sau cùng một khoảng thời gian, bất kể nồng độ: t½ = ln 2/k′."
+          },
+          "write": "t½ = ln 2/k′ = 0.693/{@rateConstant} ≈ {@halfLife} s",
+          "check": { "expr": "ln(2)/@rateConstant", "equals": "halfLife" }
+        }
+      ]
+    },
+    {
+      "id": "warmer-bath",
+      "question": "The same reaction at {temperature} °C, with [OH⁻]₀ = {naoh} mol/L, Eₐ ≈ {=activationEnergy/1000} kJ/mol and k = {referenceRate} L/(mol·s) at 25 °C (approximate values). Find k′ and the half-life.",
+      "vi": {
+        "question": "Cùng phản ứng ở {temperature} °C, với [OH⁻]₀ = {naoh} mol/L, Eₐ ≈ {=activationEnergy/1000} kJ/mol và k = {referenceRate} L/(mol·s) ở 25 °C (giá trị gần đúng). Tìm k′ và chu kì bán hủy."
+      },
+      "set": { "initialConcentration": 0.000005, "naoh": 0.2, "temperature": 35 },
+      "find": [{ "theory": "rateConstant", "unit": "s⁻¹" }, { "theory": "halfLife" }],
+      "steps": [
+        {
+          "say": "The Arrhenius equation carries k from 25 °C to the new temperature, both in kelvin: k = k₂₅·e^((Eₐ/R)(1/T₂₅ − 1/T)), with Eₐ/R = {=activationEnergy/8.31446261815324|4} K. k comes out in L/(mol·s).",
+          "vi": {
+            "say": "Phương trình Arrhenius chuyển k từ 25 °C sang nhiệt độ mới, cả hai tính bằng kelvin: k = k₂₅·e^((Eₐ/R)(1/T₂₅ − 1/T)), với Eₐ/R = {=activationEnergy/8.31446261815324|4} K. k tính bằng L/(mol·s)."
+          },
+          "write": "k = 0.1·e^({=activationEnergy/8.31446261815324|4}·(1/298.15 − 1/{=temperature+273.15|5})) ≈ {@secondOrderRate}",
+          "check": {
+            "expr": "referenceRate*exp(activationEnergy/8.31446261815324*(1/(referenceTemperature+273.15)-1/(temperature+273.15)))",
+            "equals": "secondOrderRate"
+          }
+        },
+        {
+          "say": "Times the hydroxide concentration gives the pseudo-first-order constant.",
+          "vi": { "say": "Nhân với nồng độ hiđroxit được hằng số tốc độ giả bậc một." },
+          "write": "k′ = {@secondOrderRate}·{naoh} ≈ {@rateConstant} s⁻¹",
+          "check": { "expr": "@secondOrderRate*naoh", "equals": "rateConstant" }
+        },
+        {
+          "say": "Ten degrees warmer roughly doubles the rate, so the half-life is much shorter.",
+          "vi": {
+            "say": "Nóng hơn mười độ thì tốc độ tăng khoảng gấp đôi, nên chu kì bán hủy ngắn hơn nhiều."
+          },
+          "write": "t½ = ln 2/k′ ≈ {@halfLife} s",
+          "check": { "expr": "ln(2)/@rateConstant", "equals": "halfLife" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "Violet crystal violet dye fades as it reacts with sodium hydroxide; a colorimeter follows the colour, and how fast it fades gives the rate constant of the reaction.",
+    "vi": {
+      "summary": "Thuốc nhuộm tím tinh thể (crystal violet) nhạt màu dần khi phản ứng với natri hiđroxit; máy so màu theo dõi màu sắc, và tốc độ nhạt màu cho biết hằng số tốc độ của phản ứng."
+    },
+    "parts": [
+      {
+        "id": "colorimeter",
+        "name": "Colorimeter",
+        "role": "Shines 590 nm light through the cuvette and shows the absorbance A.",
+        "vi": {
+          "name": "Máy so màu",
+          "role": "Chiếu ánh sáng 590 nm qua cuvet và hiển thị độ hấp thụ quang A."
+        },
+        "anchor": {
+          "at": [0.02, -0.059, 0.015]
+        }
+      },
+      {
+        "id": "cuvette",
+        "name": "Cuvette",
+        "role": "Holds the reacting mixture in the colorimeter’s slot; its violet fades.",
+        "vi": {
+          "name": "Cuvet",
+          "role": "Chứa hỗn hợp đang phản ứng trong khe của máy so màu; màu tím của nó nhạt dần."
+        },
+        "anchor": {
+          "at": [-0.03, -0.024, -0.08]
+        }
+      },
+      {
+        "id": "bath",
+        "name": "Water bath",
+        "role": "Keeps the dye and NaOH flasks at the temperature θ set on it.",
+        "vi": {
+          "name": "Bể ổn nhiệt",
+          "role": "Giữ các bình thuốc nhuộm và NaOH ở nhiệt độ θ đặt trên bể."
+        },
+        "anchor": {
+          "at": [-0.3, -0.04, 0.11]
+        }
+      },
+      {
+        "id": "thermometer",
+        "name": "Thermometer",
+        "role": "Reads the bath’s temperature.",
+        "vi": {
+          "name": "Nhiệt kế",
+          "role": "Đọc nhiệt độ của bể."
+        },
+        "anchor": {
+          "part": "thermometer"
+        }
+      },
+      {
+        "id": "timer",
+        "name": "Timer",
+        "role": "Counts the time from mixing, to its resolution d.",
+        "vi": {
+          "name": "Đồng hồ bấm giờ",
+          "role": "Đếm thời gian từ lúc trộn, theo độ phân giải d."
+        },
+        "anchor": {
+          "at": [0.33, -0.1, 0.13]
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "The dye CV⁺ reacts with hydroxide ions to a colourless product: CV⁺ + OH⁻ → CVOH. As it reacts, the violet colour fades.",
+        "vi": {
+          "text": "Thuốc nhuộm CV⁺ phản ứng với ion hiđroxit tạo sản phẩm không màu: CV⁺ + OH⁻ → CVOH. Khi phản ứng xảy ra, màu tím nhạt dần."
+        },
+        "parts": ["cuvette"]
+      },
+      {
+        "text": "The colorimeter measures the colour: by Beer–Lambert the absorbance A = ε·l·c is proportional to the dye’s concentration c. So A falling means the dye being used up.",
+        "vi": {
+          "text": "Máy so màu đo màu sắc: theo định luật Beer–Lambert, độ hấp thụ A = ε·l·c tỉ lệ với nồng độ thuốc nhuộm c. Vì vậy A giảm nghĩa là thuốc nhuộm đang bị tiêu thụ."
+        },
+        "parts": ["colorimeter", "cuvette"]
+      },
+      {
+        "text": "The rate is k·[CV⁺]·[OH⁻]. The hydroxide is in large excess, so it hardly changes: the rate is just k′·[CV⁺], with k′ = k·[OH⁻]₀ — pseudo-first order.",
+        "vi": {
+          "text": "Tốc độ phản ứng là k·[CV⁺]·[OH⁻]. Hiđroxit dùng rất dư nên hầu như không đổi: tốc độ chỉ còn k′·[CV⁺], với k′ = k·[OH⁻]₀ — phản ứng bậc một giả."
+        },
+        "parts": ["cuvette"]
+      },
+      {
+        "text": "Then c = c₀·e^(−k′t): ln A falls in a straight line with time, slope −k′, and the half-life ln 2/k′ is the same whatever dye you start with.",
+        "vi": {
+          "text": "Khi đó c = c₀·e^(−k′t): ln A giảm tuyến tính theo thời gian với hệ số góc −k′, và chu kỳ bán hủy ln 2/k′ như nhau dù nồng độ thuốc nhuộm ban đầu là bao nhiêu."
+        },
+        "parts": ["colorimeter", "timer"]
+      },
+      {
+        "text": "More NaOH makes k′ larger; so does a warmer bath — the rate constant rises with temperature (Arrhenius). Over several runs, k′ against [OH⁻] gives k, and ln k against 1/T the activation energy.",
+        "vi": {
+          "text": "Nhiều NaOH hơn làm k′ lớn hơn; bể ấm hơn cũng vậy — hằng số tốc độ tăng theo nhiệt độ (phương trình Arrhenius). Qua nhiều lần chạy, k′ theo [OH⁻] cho k, và ln k theo 1/T cho năng lượng hoạt hóa."
+        },
+        "parts": ["bath", "thermometer"]
+      },
+      {
+        "text": "The results give A₀, k′ and t½ read from the run’s own absorbance, beside the formulas. A teaching model with approximate constants, not lab data.",
+        "vi": {
+          "text": "Phần kết quả cho A₀, k′ và t½ đọc từ chính đường hấp thụ của lần chạy, bên cạnh các công thức. Đây là mô hình dạy học với các hằng số gần đúng, không phải số liệu thực nghiệm."
+        },
+        "parts": ["colorimeter"]
+      }
+    ]
+  }
+}

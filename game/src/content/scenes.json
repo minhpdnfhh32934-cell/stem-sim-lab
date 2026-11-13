@@ -1,0 +1,94 @@
+[
+  {
+    "id": "main-menu",
+    "kind": "menu",
+    "displayName": "Main Menu",
+    "vi": {
+      "displayName": "Màn hình chính"
+    }
+  },
+  {
+    "id": "preparation-room",
+    "kind": "world",
+    "displayName": "Preparation Room",
+    "vi": {
+      "displayName": "Phòng chuẩn bị"
+    },
+    "rooms": ["preparation-room", "cleanroom-corridor"],
+    "lighting": "enhanced",
+    "spawn": {
+      "position": [0, 0, 1],
+      "yaw": 0
+    }
+  },
+  {
+    "id": "teacher-room",
+    "kind": "world",
+    "displayName": "Teacher Room",
+    "vi": {
+      "displayName": "Phòng giáo viên"
+    },
+    "rooms": ["teacher-room", "teacher-bathroom"],
+    "lighting": "enhanced",
+    "spawn": {
+      "position": [-1.5, 0, 0],
+      "yaw": -1.5708
+    }
+  },
+  {
+    "id": "simlab-hub",
+    "kind": "world",
+    "displayName": "SIMLAB Hub",
+    "vi": {
+      "displayName": "Sảnh SIMLAB"
+    },
+    "rooms": ["simlab-hub"],
+    "lighting": "enhanced",
+    "spawn": {
+      "position": [0, 0, 4.5],
+      "yaw": 0
+    }
+  },
+  {
+    "id": "physics-lab",
+    "kind": "world",
+    "displayName": "Physics Laboratory",
+    "vi": {
+      "displayName": "Phòng thí nghiệm Vật lý"
+    },
+    "rooms": ["physics-lab", "projectile-range", "pendulum-bay", "waves-optics"],
+    "lighting": "enhanced",
+    "spawn": {
+      "position": [-4, 0, 0],
+      "yaw": -1.5708
+    }
+  },
+  {
+    "id": "chemistry-lab",
+    "kind": "world",
+    "displayName": "Chemistry Laboratory",
+    "vi": {
+      "displayName": "Phòng thí nghiệm Hóa học"
+    },
+    "rooms": ["chemistry-lab", "chemistry-annex"],
+    "lighting": "enhanced",
+    "spawn": {
+      "position": [0, 0, 3],
+      "yaw": 0
+    }
+  },
+  {
+    "id": "biology-lab",
+    "kind": "world",
+    "displayName": "Biology Laboratory",
+    "vi": {
+      "displayName": "Phòng thí nghiệm Sinh học"
+    },
+    "rooms": ["biology-lab", "biology-annex"],
+    "lighting": "enhanced",
+    "spawn": {
+      "position": [4, 0, 0],
+      "yaw": 1.5708
+    }
+  }
+]

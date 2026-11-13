@@ -1,0 +1,379 @@
+{
+  "id": "standing-wave",
+  "name": "Standing waves on a string",
+  "category": "physics",
+  "description": "A string runs 1 m from a vibration generator over a pulley, kept taut by slotted masses. Raise the generator's frequency slowly: at certain frequencies the string stands still in loops, its nodes motionless and its antinodes swinging wide — a standing wave. With n loops the string holds n half-wavelengths, and the frequency is f_n = n·v/(2L), v = √(T/μ) the speed of waves on it. Measure the loops, read the frequency, and find the wave speed v = λ·f.",
+  "vi": {
+    "name": "Sóng dừng trên sợi dây",
+    "description": "Một sợi dây dài 1 m nối từ máy phát dao động, vắt qua ròng rọc và được kéo căng bởi các quả nặng có rãnh. Tăng dần tần số của máy phát: ở một số tần số nhất định, dây đứng yên thành các bó sóng, các nút đứng yên còn các bụng dao động mạnh — đó là sóng dừng. Với n bó sóng, chiều dài dây bằng n nửa bước sóng, và tần số là f_n = n·v/(2L), với v = √(T/μ) là tốc độ truyền sóng trên dây. Đo khoảng cách giữa các nút, đọc tần số, rồi tính tốc độ truyền sóng v = λ·f.",
+    "note": "Sóng tới và sóng phản xạ trên dây có hai đầu cố định chồng lên nhau tạo thành sóng dừng khi chiều dài dây bằng một số nguyên lần nửa bước sóng, L = n·λ/2: hai đầu dây là nút, giữa chúng có n bó sóng. Tốc độ truyền sóng trên dây phụ thuộc lực căng T và khối lượng trên một đơn vị chiều dài μ của dây: v = √(T/μ), nên tần số để có n bó là f_n = n·v/(2L). Ở đây μ = 1,0 g/m và T = m·g với m là khối lượng treo. Khi chạy, tần số của máy phát được tăng đều từ 60 % của f_n đến f_n trong 4 s rồi giữ nguyên 1 s — như khi vặn núm tần số cho đến khi n bó sóng đứng yên và lớn nhất. Biên độ tại bụng là đáp ứng của dạng dao động thứ n với biên độ 0,4 mm của máy phát, a/√((1 − r²)² + (2ζr)²) với r = f/f_n và hệ số tắt dần ζ = 0,02 (giá trị minh họa); các dạng dao động khác được bỏ qua. Chạy với nhiều số bó n: đồ thị f_n theo n là đường thẳng đi qua gốc tọa độ có hệ số góc v/(2L). Đây là mô hình dạy học đơn giản hóa: dây đồng chất, hoàn toàn mềm, đầu nối với máy phát coi là một nút, lực căng không đổi khi dây dao động. Thước đọc bước sóng mô phỏng theo độ phân giải d của nó (bội số gần nhất của d, độ bất định d/√12 chỉ do độ phân giải); không có sai số ngẫu nhiên nào được thêm vào. Trong phòng thí nghiệm thật, đầu dây nối với máy phát dao động một chút nên không hẳn là nút, dây có độ cứng riêng và ma sát ở ròng rọc làm lực căng khác m·g một chút, nên các tần số đo được lệch đôi chút."
+  },
+  "requiredEquipment": ["string-vibrator"],
+  "model": "waves.standing-string",
+  "parameters": [
+    {
+      "id": "loops",
+      "label": "Loops on the string",
+      "vi": { "label": "Số bó sóng trên dây" },
+      "symbol": "n",
+      "unit": "",
+      "default": 2,
+      "min": 1,
+      "max": 5,
+      "presets": [
+        { "label": "1 loop", "vi": { "label": "1 bó" }, "value": 1 },
+        { "label": "2 loops", "vi": { "label": "2 bó" }, "value": 2 },
+        { "label": "3 loops", "vi": { "label": "3 bó" }, "value": 3 },
+        { "label": "4 loops", "vi": { "label": "4 bó" }, "value": 4 },
+        { "label": "5 loops", "vi": { "label": "5 bó" }, "value": 5 }
+      ]
+    },
+    {
+      "id": "hangingMass",
+      "label": "Hanging mass",
+      "vi": { "label": "Khối lượng treo" },
+      "symbol": "m",
+      "unit": "kg",
+      "default": 0.1,
+      "min": 0.1,
+      "max": 0.4,
+      "presets": [
+        { "label": "100 g", "vi": { "label": "100 g" }, "value": 0.1 },
+        { "label": "200 g", "vi": { "label": "200 g" }, "value": 0.2 },
+        { "label": "400 g", "vi": { "label": "400 g" }, "value": 0.4 }
+      ]
+    },
+    {
+      "id": "rulerResolution",
+      "label": "Ruler resolution",
+      "vi": { "label": "Độ phân giải của thước" },
+      "symbol": "d",
+      "unit": "m",
+      "default": 0.001,
+      "min": 0.001,
+      "max": 0.005,
+      "presets": [
+        { "label": "1 mm", "vi": { "label": "1 mm" }, "value": 0.001 },
+        { "label": "5 mm", "vi": { "label": "5 mm" }, "value": 0.005 }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "stringLength": 1,
+    "linearDensity": 0.001,
+    "gravity": 9.81,
+    "driveAmplitude": 0.0004,
+    "dampingRatio": 0.02,
+    "sweepTime": 4,
+    "holdTime": 1
+  },
+  "inputs": {
+    "stringLength": { "symbol": "L", "unit": "m" },
+    "linearDensity": { "symbol": "μ", "unit": "kg/m" },
+    "gravity": { "symbol": "g", "unit": "m/s²", "desk": false },
+    "driveAmplitude": { "symbol": "a", "unit": "m", "desk": false },
+    "dampingRatio": { "symbol": "ζ", "unit": "", "desk": false },
+    "sweepTime": { "symbol": "t_sweep", "unit": "s", "desk": false },
+    "holdTime": { "symbol": "t_hold", "unit": "s", "desk": false }
+  },
+  "simulation": { "timeStep": 0.01, "maxDuration": 7, "sampleInterval": 0.02 },
+  "measurements": [
+    {
+      "id": "frequency",
+      "label": "Generator frequency",
+      "vi": { "label": "Tần số của máy phát" },
+      "symbol": "f",
+      "unit": "Hz",
+      "variable": "frequency"
+    },
+    {
+      "id": "amplitude",
+      "label": "Swing at an antinode",
+      "vi": { "label": "Biên độ tại bụng sóng" },
+      "symbol": "A",
+      "unit": "m",
+      "variable": "amplitude"
+    }
+  ],
+  "results": [
+    {
+      "id": "resonantFrequency",
+      "label": "Frequency for n loops f_n",
+      "vi": { "label": "Tần số ứng với n bó sóng f_n" },
+      "symbol": "f_n",
+      "unit": "Hz",
+      "variable": "resonantFrequency",
+      "reduce": "final",
+      "theory": "resonantFrequency"
+    },
+    {
+      "id": "wavelength",
+      "label": "Wavelength λ = 2L/n",
+      "vi": { "label": "Bước sóng λ = 2L/n" },
+      "symbol": "λ",
+      "unit": "m",
+      "variable": "wavelength",
+      "reduce": "final",
+      "theory": "wavelength"
+    },
+    {
+      "id": "waveSpeed",
+      "label": "Wave speed v = λ·f_n",
+      "vi": { "label": "Tốc độ truyền sóng v = λ·f_n" },
+      "symbol": "v",
+      "unit": "m/s",
+      "variable": "waveSpeed",
+      "reduce": "final",
+      "theory": "waveSpeed"
+    }
+  ],
+  "instruments": [
+    {
+      "result": "wavelength",
+      "quantity": "Wavelength λ, twice the distance between nodes",
+      "name": "Metre rule along the string",
+      "resolution": "rulerResolution",
+      "excludes": "judging where a node is on a blurred moving string, the generator's end not quite a node, and the string's stiffness and the pulley's friction, which change the wave itself",
+      "vi": {
+        "quantity": "Bước sóng λ, bằng hai lần khoảng cách giữa hai nút",
+        "name": "Thước mét dọc theo dây",
+        "excludes": "việc xác định vị trí nút trên sợi dây đang rung mờ, đầu dây nối với máy phát không hẳn là nút, cùng độ cứng của dây và ma sát ở ròng rọc, những yếu tố làm thay đổi chính sóng trên dây"
+      }
+    }
+  ],
+  "graphs": [
+    {
+      "id": "amplitude-frequency",
+      "title": "Swing at an antinode as the frequency is raised",
+      "vi": { "title": "Biên độ tại bụng sóng khi tần số tăng dần" },
+      "x": "frequency",
+      "y": ["amplitude"],
+      "yLabel": "A"
+    }
+  ],
+  "monitor": "amplitude-frequency",
+  "compare": [{ "graph": "amplitude-frequency" }],
+  "analyses": [
+    {
+      "id": "frequency-loops",
+      "title": "Frequency against the number of loops (f_n = n·v/(2L))",
+      "note": "Each run is one point: the frequency f_n at which n loops stand on the string, against n. Runs with the same hanging mass are fitted together. f_n = n·v/(2L): a straight line through the origin of slope v/(2L) — twice it, times L, is the wave speed. Change only the number of loops between runs; a heavier mass makes the line steeper (v = √(T/μ)).",
+      "vi": {
+        "title": "Tần số theo số bó sóng (f_n = n·v/(2L))",
+        "note": "Mỗi lần chạy là một điểm: tần số f_n để có n bó sóng trên dây, theo n. Các lần chạy cùng khối lượng treo được khớp chung. f_n = n·v/(2L): một đường thẳng đi qua gốc tọa độ có hệ số góc v/(2L) — nhân đôi hệ số góc rồi nhân với L được tốc độ truyền sóng. Giữa các lần chạy chỉ thay đổi số bó sóng; khối lượng treo lớn hơn làm đường dốc hơn (v = √(T/μ))."
+      },
+      "x": "loops",
+      "y": "resonantFrequency",
+      "group": ["hangingMass"],
+      "columns": ["hangingMass", "loops", "resonantFrequency", "wavelength", "waveSpeed"],
+      "slope": {
+        "label": "Slope of f_n against n",
+        "vi": { "label": "Hệ số góc của f_n theo n" },
+        "symbol": "v/(2L)",
+        "unit": "Hz",
+        "theory": "frequencyPerLoop"
+      }
+    }
+  ],
+  "note": "The wave sent along a string fixed at both ends and the wave reflected back add into a standing wave when the string holds a whole number of half-wavelengths, L = n·λ/2: both ends are nodes, with n loops between. Waves travel along it at a speed set by its tension T and its mass per unit length μ, v = √(T/μ), so n loops stand at f_n = n·v/(2L). Here μ = 1.0 g/m and T = m·g, m the hanging mass. During the run the generator's frequency is raised steadily from 60 % of f_n to f_n in 4 s and held 1 s — as when its knob is turned until n loops stand still and large. The swing at an antinode is the n-th mode's response to the generator's 0.4 mm, a/√((1 − r²)² + (2ζr)²) with r = f/f_n and a damping ratio ζ = 0.02 (an illustrative value); the other modes are left out. Run with several numbers of loops: f_n against n is a straight line through the origin of slope v/(2L). A simplified teaching model: a uniform, perfectly flexible string, the generator's end taken as a node, the tension unchanged as it swings. The rule reads the simulated wavelength to its resolution d (the nearest multiple of d, with the uncertainty d/√12 from the resolution alone); no random error is added. In a real lab the generator's end moves a little, so it is not quite a node, the string has some stiffness and the pulley's friction makes the tension differ a little from m·g, so the frequencies measured differ a little.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the standing waves instructions on the board.",
+      "vi": { "instruction": "Đọc hướng dẫn thí nghiệm sóng dừng trên bảng." },
+      "done": { "kind": "inspected", "item": "standing-wave-instructions" }
+    },
+    {
+      "id": "loops",
+      "instruction": "Choose how many loops to find with its dial on the control desk.",
+      "vi": { "instruction": "Chọn số bó sóng cần tìm bằng núm xoay trên bàn điều khiển." },
+      "done": { "kind": "adjusted", "parameter": "loops" }
+    },
+    {
+      "id": "mass",
+      "instruction": "Set the hanging mass that keeps the string taut.",
+      "vi": { "instruction": "Đặt khối lượng treo để kéo căng dây." },
+      "done": { "kind": "adjusted", "parameter": "hangingMass" }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the generator's frequency rises until the loops stand still; watch the string.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: tần số của máy phát tăng dần đến khi các bó sóng đứng yên; quan sát sợi dây."
+      },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read f_n, λ and v = λ·f_n on the results monitor.",
+      "vi": { "instruction": "Đọc f_n, λ và v = λ·f_n trên màn hình kết quả." },
+      "done": { "kind": "viewed" }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, change only the number of loops and run again to add a point to the analysis.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, chỉ thay đổi số bó sóng rồi chạy lại để thêm một điểm vào đồ thị phân tích."
+      },
+      "done": { "kind": "reset" }
+    }
+  ],
+  "examples": [
+    {
+      "id": "three-loops",
+      "question": "A string {stringLength} m long of {=linearDensity*1000} g/m is pulled taut by a {hangingMass} kg mass (g = {gravity} m/s²). Find the waves’ speed and the frequency at which {loops} loops stand.",
+      "vi": {
+        "question": "Một sợi dây dài {stringLength} m, khối lượng {=linearDensity*1000} g/m, được kéo căng bởi vật {hangingMass} kg (g = {gravity} m/s²). Tìm tốc độ truyền sóng trên dây và tần số để trên dây có {loops} bó sóng."
+      },
+      "set": { "loops": 3, "hangingMass": 0.4 },
+      "find": [{ "theory": "waveSpeed" }, { "theory": "resonantFrequency" }],
+      "steps": [
+        {
+          "say": "The tension is the hanging weight, and the speed on a string is √(T/μ), μ in kilograms per metre.",
+          "vi": {
+            "say": "Lực căng dây bằng trọng lượng vật treo, và tốc độ sóng trên dây bằng √(T/μ), với μ tính bằng kg/m."
+          },
+          "write": "v = √(m·g/μ) = √({hangingMass}·{gravity}/{linearDensity}) ≈ {@waveSpeed} m/s",
+          "check": { "expr": "sqrt(hangingMass*gravity/linearDensity)", "equals": "waveSpeed" }
+        },
+        {
+          "say": "Both ends are nodes, so n loops fit n half-wavelengths: L = n·λ/2, and f = n·v/(2L).",
+          "vi": {
+            "say": "Hai đầu dây là nút, nên n bó sóng ứng với n nửa bước sóng: L = n·λ/2, và f = n·v/(2L)."
+          },
+          "write": "f = n·v/(2L) = {loops}·{@waveSpeed}/(2·{stringLength}) ≈ {@resonantFrequency} Hz",
+          "check": { "expr": "loops*@waveSpeed/(2*stringLength)", "equals": "resonantFrequency" }
+        }
+      ]
+    },
+    {
+      "id": "four-loops",
+      "question": "The same {stringLength} m string carries {hangingMass} kg and shows {loops} loops. Find the wavelength, the speed and the frequency.",
+      "vi": {
+        "question": "Cùng sợi dây dài {stringLength} m treo vật {hangingMass} kg và có {loops} bó sóng. Tìm bước sóng, tốc độ truyền sóng và tần số."
+      },
+      "set": { "loops": 4, "hangingMass": 0.2 },
+      "find": [{ "theory": "wavelength" }, { "theory": "resonantFrequency" }],
+      "steps": [
+        {
+          "say": "Each loop is half a wavelength.",
+          "vi": { "say": "Mỗi bó sóng dài nửa bước sóng." },
+          "write": "λ = 2L/n = 2·{stringLength}/{loops} = {@wavelength} m",
+          "check": { "expr": "2*stringLength/loops", "equals": "wavelength" }
+        },
+        {
+          "say": "The speed comes from the tension and the string’s mass per metre.",
+          "vi": { "say": "Tốc độ sóng xác định bởi lực căng và khối lượng trên một mét dây." },
+          "write": "v = √(m·g/μ) = √({hangingMass}·{gravity}/{linearDensity}) ≈ {@waveSpeed} m/s",
+          "check": { "expr": "sqrt(hangingMass*gravity/linearDensity)", "equals": "waveSpeed" }
+        },
+        {
+          "say": "Then f = v/λ.",
+          "vi": { "say": "Từ đó f = v/λ." },
+          "write": "f = v/λ = {@waveSpeed}/{@wavelength} ≈ {@resonantFrequency} Hz",
+          "check": { "expr": "@waveSpeed/@wavelength", "equals": "resonantFrequency" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "A taut string shaken at one end stands still in loops at certain frequencies — a standing wave — and the number of loops tells how many half-wavelengths fit on it.",
+    "vi": {
+      "summary": "Một sợi dây căng được rung ở một đầu sẽ tạo thành các bó sóng đứng yên ở những tần số nhất định — sóng dừng — và số bó sóng cho biết trên dây có bao nhiêu nửa bước sóng."
+    },
+    "parts": [
+      {
+        "id": "generator",
+        "name": "Vibration generator",
+        "role": "Shakes the string’s end at a frequency f that rises during the run.",
+        "vi": {
+          "name": "Máy phát dao động",
+          "role": "Rung đầu dây với tần số f tăng dần trong lúc chạy."
+        },
+        "anchor": {
+          "at": [-0.57, -0.06, 0.06]
+        }
+      },
+      {
+        "id": "string",
+        "name": "String, L = 1 m",
+        "role": "Fixed at both ends; 1.0 g per metre. Drawn as the eye sees it: its swing’s outline.",
+        "vi": {
+          "name": "Sợi dây, L = 1 m",
+          "role": "Cố định ở hai đầu; 1.0 g mỗi mét. Được vẽ như mắt nhìn thấy: đường bao của dao động."
+        },
+        "anchor": {
+          "part": "string"
+        }
+      },
+      {
+        "id": "pulley",
+        "name": "Pulley",
+        "role": "The string’s other end runs over it: a fixed point, a node.",
+        "vi": {
+          "name": "Ròng rọc",
+          "role": "Đầu kia của dây vắt qua nó: một điểm cố định, một nút sóng."
+        },
+        "anchor": {
+          "at": [0.525, 0.055, 0.006]
+        }
+      },
+      {
+        "id": "masses",
+        "name": "Hanging mass m",
+        "role": "Keeps the string taut: the tension is T = m·g.",
+        "vi": {
+          "name": "Vật treo m",
+          "role": "Giữ cho dây căng: lực căng là T = m·g."
+        },
+        "anchor": {
+          "at": [0.55, -0.075, 0.025]
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "The generator sends a wave along the string; at the pulley it is reflected back. The two waves travel through each other.",
+        "vi": {
+          "text": "Máy phát gửi một sóng dọc theo dây; tại ròng rọc sóng bị phản xạ trở lại. Hai sóng truyền chồng lên nhau."
+        },
+        "parts": ["generator", "string", "pulley"]
+      },
+      {
+        "text": "At most frequencies the string hardly moves. But when the string holds a whole number of half-wavelengths, L = n·λ/2, they add into a standing wave: loops that swing wide between points that do not move.",
+        "vi": {
+          "text": "Ở phần lớn các tần số, dây hầu như không dao động. Nhưng khi trên dây có một số nguyên lần nửa bước sóng, L = n·λ/2, chúng cộng lại thành sóng dừng: các bó sóng dao động mạnh giữa những điểm đứng yên."
+        },
+        "parts": ["string"]
+      },
+      {
+        "text": "The still points are nodes, the middles of the loops antinodes. Both ends are nodes, with n loops between them: the wavelength is λ = 2L/n.",
+        "vi": {
+          "text": "Các điểm đứng yên là nút sóng, điểm giữa mỗi bó là bụng sóng. Hai đầu dây là nút, với n bó sóng ở giữa: bước sóng là λ = 2L/n."
+        },
+        "parts": ["string", "pulley", "generator"]
+      },
+      {
+        "text": "Waves travel along the string at v = √(T/μ), set by the tension T = m·g and the mass per metre μ. So n loops stand at f_n = n·v/(2L). A heavier mass makes the string tauter, the waves faster and every f_n higher.",
+        "vi": {
+          "text": "Sóng truyền trên dây với tốc độ v = √(T/μ), phụ thuộc lực căng T = m·g và khối lượng trên mỗi mét dây μ. Vì vậy n bó sóng xuất hiện ở tần số f_n = n·v/(2L). Vật treo nặng hơn làm dây căng hơn, sóng nhanh hơn và mọi f_n cao hơn."
+        },
+        "parts": ["masses", "string"]
+      },
+      {
+        "text": "During the run the frequency rises to f_n, as when the knob is turned until n loops stand still and large. The results give f_n, λ and v = λ·f_n; change only n: f_n against n is a line through the origin.",
+        "vi": {
+          "text": "Trong lúc chạy, tần số tăng dần tới f_n, như khi vặn núm cho tới khi n bó sóng đứng yên và lớn nhất. Phần kết quả cho f_n, λ và v = λ·f_n; chỉ đổi n: f_n theo n là đường thẳng qua gốc tọa độ."
+        },
+        "parts": ["generator", "string"]
+      },
+      {
+        "text": "A simplified model: a uniform, perfectly flexible string, the generator’s end taken as a node, the tension unchanged. In a real lab the generator’s end moves a little and the pulley has friction.",
+        "vi": {
+          "text": "Mô hình đơn giản hóa: dây đồng chất, mềm hoàn toàn, đầu nối máy phát được coi là nút, lực căng không đổi. Trong thực tế, đầu nối máy phát có dịch chuyển một chút và ròng rọc có ma sát."
+        },
+        "parts": ["generator", "pulley"]
+      }
+    ]
+  }
+}

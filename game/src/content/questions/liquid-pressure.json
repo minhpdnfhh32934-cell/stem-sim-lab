@@ -1,0 +1,1037 @@
+{
+  "id": "liquid-pressure",
+  "skills": [
+    {
+      "id": "hydrostatic",
+      "name": "Pressure at a depth: p = p0 + ρ·g·h",
+      "advice": "Learn p = p0 + ρ·g·h: ρ·g·h is the weight of the liquid column above per unit area, p0 the air’s pressure on the surface. Pressure is in pascals, 1 Pa = 1 N/m²; depths in metres.",
+      "vi": {
+        "name": "Áp suất ở độ sâu h: p = p0 + ρ·g·h",
+        "advice": "Nhớ p = p0 + ρ·g·h: ρ·g·h là trọng lượng cột chất lỏng phía trên trên một đơn vị diện tích, p0 là áp suất khí quyển trên mặt thoáng. Áp suất đo bằng pascal, 1 Pa = 1 N/m²; độ sâu tính bằng mét."
+      }
+    },
+    {
+      "id": "depth",
+      "name": "Pressure grows with depth",
+      "advice": "Run at 5, 10, 20 cm: ρ·g·h grows in proportion to h — but the total p does not double, because p0 stays. Trap: doubling the whole p.",
+      "vi": {
+        "name": "Áp suất tăng theo độ sâu",
+        "advice": "Chạy ở 5, 10, 20 cm: ρ·g·h tăng tỉ lệ với h — nhưng áp suất toàn phần p không tăng gấp đôi, vì p0 giữ nguyên. Lỗi hay gặp: nhân đôi cả p."
+      }
+    },
+    {
+      "id": "liquid",
+      "name": "Denser liquids press harder",
+      "advice": "At one depth compare water, salt water and ethanol: ρ·g·h is largest for the densest liquid. The densities are handbook values at 20 °C.",
+      "vi": {
+        "name": "Chất lỏng có khối lượng riêng lớn hơn gây áp suất lớn hơn",
+        "advice": "Ở cùng một độ sâu, so sánh nước, nước muối và etanol: ρ·g·h lớn nhất với chất lỏng có khối lượng riêng lớn nhất. Các khối lượng riêng là giá trị tra cứu ở 20 °C."
+      }
+    },
+    {
+      "id": "manometer",
+      "name": "Reading a U-tube manometer",
+      "advice": "The manometer’s water balances the extra pressure: ρ_w·g·Δh = ρ·g·h, so Δh = (ρ/ρ_w)·h. It shows the part above p0, read to the scale’s resolution.",
+      "vi": {
+        "name": "Đọc áp kế chữ U",
+        "advice": "Nước trong áp kế cân bằng với phần áp suất tăng thêm: ρ_w·g·Δh = ρ·g·h, nên Δh = (ρ/ρ_w)·h. Áp kế chỉ phần vượt quá p0, đọc theo độ phân giải của thước."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "formula",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["hydrostatic"],
+      "stem": "The pressure at a depth h below the surface of a liquid of density ρ, with air pressure p0 on the surface, is…",
+      "explain": "p = p0 + ρ·g·h: the air’s pressure plus the weight of the liquid column above per unit area.",
+      "vi": {
+        "stem": "Áp suất tại độ sâu h dưới mặt thoáng của chất lỏng khối lượng riêng ρ, áp suất khí quyển trên mặt thoáng là p0, bằng…",
+        "explain": "p = p0 + ρ·g·h: áp suất khí quyển cộng trọng lượng cột chất lỏng phía trên trên một đơn vị diện tích."
+      },
+      "options": [
+        {
+          "text": "p0 + ρ·g·h",
+          "vi": {
+            "text": "p0 + ρ·g·h"
+          },
+          "correct": true
+        },
+        {
+          "text": "p0 − ρ·g·h",
+          "vi": {
+            "text": "p0 − ρ·g·h"
+          }
+        },
+        {
+          "text": "ρ·g·h/p0",
+          "vi": {
+            "text": "ρ·g·h/p0"
+          }
+        },
+        {
+          "text": "p0 + ρ·h",
+          "vi": {
+            "text": "p0 + ρ·h"
+          }
+        }
+      ]
+    },
+    {
+      "id": "unit",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["hydrostatic"],
+      "stem": "The SI unit of pressure, the pascal, is the same as…",
+      "explain": "Pressure is force per area: 1 Pa = 1 N/m².",
+      "vi": {
+        "stem": "Đơn vị SI của áp suất là pascal, bằng…",
+        "explain": "Áp suất là lực trên diện tích: 1 Pa = 1 N/m²."
+      },
+      "options": [
+        {
+          "text": "N/m²",
+          "vi": {
+            "text": "N/m²"
+          },
+          "correct": true
+        },
+        {
+          "text": "N·m",
+          "vi": {
+            "text": "N·m"
+          }
+        },
+        {
+          "text": "N/m",
+          "vi": {
+            "text": "N/m"
+          }
+        },
+        {
+          "text": "kg/m³",
+          "vi": {
+            "text": "kg/m³"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-liquid",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["depth", "liquid", "manometer"],
+      "stem": "A probe is lowered into a tank of liquid at rest and joined to a U-tube manometer. Decide whether each statement is true or false.",
+      "explain": "Pressure grows with depth and acts equally in all directions at one point of a liquid at rest; ethanol is less dense than water, so it presses less; the manometer shows ρ·g·h, the part above the air’s pressure.",
+      "vi": {
+        "stem": "Một đầu dò được hạ vào bể chất lỏng đứng yên và nối với áp kế chữ U. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Áp suất tăng theo độ sâu và tại một điểm trong chất lỏng đứng yên, áp suất tác dụng như nhau theo mọi hướng; etanol có khối lượng riêng nhỏ hơn nước nên gây áp suất nhỏ hơn; áp kế chỉ ρ·g·h, phần vượt quá áp suất khí quyển."
+      },
+      "statements": [
+        {
+          "text": "The pressure on the probe grows as it goes deeper.",
+          "vi": {
+            "text": "Áp suất lên đầu dò tăng khi nó xuống sâu hơn."
+          },
+          "true": true
+        },
+        {
+          "text": "At one point in a liquid at rest the pressure acts equally in all directions.",
+          "vi": {
+            "text": "Tại một điểm trong chất lỏng đứng yên, áp suất tác dụng như nhau theo mọi hướng."
+          },
+          "true": true
+        },
+        {
+          "text": "At the same depth, ethanol presses harder than water.",
+          "vi": {
+            "text": "Ở cùng độ sâu, etanol gây áp suất lớn hơn nước."
+          },
+          "true": false
+        },
+        {
+          "text": "The manometer shows the pressure above the air’s pressure, ρ·g·h.",
+          "vi": {
+            "text": "Áp kế chỉ phần áp suất vượt quá áp suất khí quyển, ρ·g·h."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "double-depth",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["depth"],
+      "stem": "The probe is moved twice as deep in the same liquid. The pressure due to the liquid, ρ·g·h…",
+      "explain": "ρ·g·h is proportional to h: twice the depth, twice ρ·g·h.",
+      "vi": {
+        "stem": "Đưa đầu dò xuống sâu gấp đôi trong cùng chất lỏng. Áp suất do chất lỏng gây ra, ρ·g·h…",
+        "explain": "ρ·g·h tỉ lệ với h: độ sâu gấp đôi thì ρ·g·h gấp đôi."
+      },
+      "options": [
+        {
+          "text": "doubles",
+          "vi": {
+            "text": "tăng gấp đôi"
+          },
+          "correct": true
+        },
+        {
+          "text": "becomes four times larger",
+          "vi": {
+            "text": "tăng gấp bốn lần"
+          }
+        },
+        {
+          "text": "halves",
+          "vi": {
+            "text": "giảm một nửa"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "which-liquid",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["liquid", "manometer"],
+      "stem": "At the same depth, which liquid in the tank gives the largest difference of levels in the manometer?",
+      "explain": "Δh = (ρ/ρ_w)·h: the densest liquid, salt water (1197.2 kg/m³), gives the largest Δh.",
+      "vi": {
+        "stem": "Ở cùng độ sâu, chất lỏng nào trong bể làm độ chênh mực nước của áp kế lớn nhất?",
+        "explain": "Δh = (ρ/ρ_w)·h: chất lỏng có khối lượng riêng lớn nhất, nước muối (1197,2 kg/m³), cho Δh lớn nhất."
+      },
+      "options": [
+        {
+          "text": "salt water (26 % NaCl)",
+          "vi": {
+            "text": "nước muối (NaCl 26 %)"
+          },
+          "correct": true
+        },
+        {
+          "text": "water",
+          "vi": {
+            "text": "nước"
+          }
+        },
+        {
+          "text": "ethanol",
+          "vi": {
+            "text": "etanol"
+          }
+        },
+        {
+          "text": "all give the same difference",
+          "vi": {
+            "text": "cả ba cho cùng độ chênh"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-water",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["hydrostatic", "manometer", "depth"],
+      "set": {
+        "liquid": 0,
+        "depth": 0.1
+      },
+      "stem": "The probe is {depth} m under water ({@density|5} kg/m³); the air presses on the surface with {airPressure|6} Pa (g = {gravity} m/s²). Decide whether each statement is true or false.",
+      "explain": "ρ·g·h ≈ {@gaugePressure} Pa; p = p0 + ρ·g·h ≈ {@pressure|6} Pa; with water in both, Δh = h. Doubling h doubles ρ·g·h but not p.",
+      "vi": {
+        "stem": "Đầu dò ở độ sâu {depth} m trong nước ({@density|5} kg/m³); không khí ép lên mặt thoáng với {airPressure|6} Pa (g = {gravity} m/s²). Mỗi nhận định sau đúng hay sai?",
+        "explain": "ρ·g·h ≈ {@gaugePressure} Pa; p = p0 + ρ·g·h ≈ {@pressure|6} Pa; khi cả bể và áp kế đều là nước thì Δh = h. Tăng gấp đôi h làm ρ·g·h gấp đôi nhưng p thì không."
+      },
+      "statements": [
+        {
+          "text": "The water adds about {@gaugePressure} Pa to the air’s pressure.",
+          "vi": {
+            "text": "Nước làm áp suất tăng thêm khoảng {@gaugePressure} Pa so với áp suất khí quyển."
+          },
+          "true": true,
+          "check": {
+            "expr": "@density*gravity*depth",
+            "equals": "gaugePressure"
+          }
+        },
+        {
+          "text": "The manometer’s levels differ by {depth} m.",
+          "vi": {
+            "text": "Hai mực nước của áp kế chênh nhau {depth} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "depth",
+            "equals": "manometerDifference"
+          }
+        },
+        {
+          "text": "The total pressure at the probe is about {@pressure|6} Pa.",
+          "vi": {
+            "text": "Áp suất toàn phần tại đầu dò khoảng {@pressure|6} Pa."
+          },
+          "true": true,
+          "check": {
+            "expr": "airPressure+@density*gravity*depth",
+            "equals": "pressure"
+          }
+        },
+        {
+          "text": "At twice the depth the total pressure would be twice as large.",
+          "vi": {
+            "text": "Ở độ sâu gấp đôi, áp suất toàn phần sẽ lớn gấp đôi."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "gauge",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["hydrostatic", "liquid"],
+      "set": {
+        "liquid": 1,
+        "depth": 0.2
+      },
+      "stem": "The probe is {depth} m deep in salt water ({@density|5} kg/m³). What pressure does the salt water add there (g = {gravity} m/s²)?",
+      "explain": "ρ·g·h = {@density|5}·{gravity}·{depth} ≈ {@gaugePressure} Pa.",
+      "vi": {
+        "stem": "Đầu dò ở độ sâu {depth} m trong nước muối ({@density|5} kg/m³). Nước muối làm áp suất tại đó tăng thêm bao nhiêu (g = {gravity} m/s²)?",
+        "explain": "ρ·g·h = {@density|5}·{gravity}·{depth} ≈ {@gaugePressure} Pa."
+      },
+      "options": [
+        {
+          "text": "{@gaugePressure} Pa",
+          "vi": {
+            "text": "{@gaugePressure} Pa"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@density*gravity*depth",
+            "equals": "gaugePressure"
+          }
+        },
+        {
+          "text": "{=@density*depth} Pa",
+          "vi": {
+            "text": "{=@density*depth} Pa"
+          },
+          "check": {
+            "expr": "@density*depth",
+            "equals": "gaugePressure"
+          }
+        },
+        {
+          "text": "{=@density*gravity/depth} Pa",
+          "vi": {
+            "text": "{=@density*gravity/depth} Pa"
+          },
+          "check": {
+            "expr": "@density*gravity/depth",
+            "equals": "gaugePressure"
+          }
+        },
+        {
+          "text": "{=@density*gravity*depth*100} Pa",
+          "vi": {
+            "text": "{=@density*gravity*depth*100} Pa"
+          },
+          "check": {
+            "expr": "@density*gravity*depth*100",
+            "equals": "gaugePressure"
+          }
+        }
+      ]
+    },
+    {
+      "id": "total",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["hydrostatic"],
+      "set": {
+        "liquid": 0,
+        "depth": 0.25
+      },
+      "stem": "The probe is {depth} m under water ({@density|5} kg/m³); the air above presses with {airPressure|6} Pa. What is the total pressure at the probe (g = {gravity} m/s²)?",
+      "explain": "p = p0 + ρ·g·h = {airPressure|6} + {@gaugePressure} ≈ {@pressure|6} Pa.",
+      "vi": {
+        "stem": "Đầu dò ở độ sâu {depth} m trong nước ({@density|5} kg/m³); không khí phía trên ép với {airPressure|6} Pa. Áp suất toàn phần tại đầu dò bằng bao nhiêu (g = {gravity} m/s²)?",
+        "explain": "p = p0 + ρ·g·h = {airPressure|6} + {@gaugePressure} ≈ {@pressure|6} Pa."
+      },
+      "options": [
+        {
+          "text": "{@pressure|6} Pa",
+          "vi": {
+            "text": "{@pressure|6} Pa"
+          },
+          "correct": true,
+          "check": {
+            "expr": "airPressure+@density*gravity*depth",
+            "equals": "pressure"
+          }
+        },
+        {
+          "text": "{@gaugePressure|6} Pa",
+          "vi": {
+            "text": "{@gaugePressure|6} Pa"
+          },
+          "check": {
+            "expr": "@density*gravity*depth",
+            "equals": "pressure"
+          }
+        },
+        {
+          "text": "{=airPressure-@gaugePressure|6} Pa",
+          "vi": {
+            "text": "{=airPressure-@gaugePressure|6} Pa"
+          },
+          "check": {
+            "expr": "airPressure-@density*gravity*depth",
+            "equals": "pressure"
+          }
+        },
+        {
+          "text": "{=airPressure+@density*depth|6} Pa",
+          "vi": {
+            "text": "{=airPressure+@density*depth|6} Pa"
+          },
+          "check": {
+            "expr": "airPressure+@density*depth",
+            "equals": "pressure"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ethanol-manometer",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["manometer", "liquid"],
+      "set": {
+        "liquid": 2,
+        "depth": 0.2
+      },
+      "stem": "The probe is {depth} m deep in ethanol ({@density|5} kg/m³); the manometer holds water ({manometerDensity} kg/m³). By how much do its levels differ?",
+      "explain": "ρ_w·g·Δh = ρ·g·h: Δh = (ρ/ρ_w)·h = ({@density|5}/{manometerDensity})·{depth} ≈ {@manometerDifference} m — less than the depth, ethanol being lighter.",
+      "vi": {
+        "stem": "Đầu dò ở độ sâu {depth} m trong etanol ({@density|5} kg/m³); áp kế chứa nước ({manometerDensity} kg/m³). Hai mực nước của áp kế chênh nhau bao nhiêu?",
+        "explain": "ρ_w·g·Δh = ρ·g·h: Δh = (ρ/ρ_w)·h = ({@density|5}/{manometerDensity})·{depth} ≈ {@manometerDifference} m — nhỏ hơn độ sâu, vì etanol nhẹ hơn nước."
+      },
+      "options": [
+        {
+          "text": "{@manometerDifference} m",
+          "vi": {
+            "text": "{@manometerDifference} m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@density/manometerDensity*depth",
+            "equals": "manometerDifference"
+          }
+        },
+        {
+          "text": "{=manometerDensity/@density*depth} m",
+          "vi": {
+            "text": "{=manometerDensity/@density*depth} m"
+          },
+          "check": {
+            "expr": "manometerDensity/@density*depth",
+            "equals": "manometerDifference"
+          }
+        },
+        {
+          "text": "{depth} m",
+          "vi": {
+            "text": "{depth} m"
+          },
+          "check": {
+            "expr": "depth",
+            "equals": "manometerDifference"
+          }
+        },
+        {
+          "text": "{=@density*gravity*depth/manometerDensity} m",
+          "vi": {
+            "text": "{=@density*gravity*depth/manometerDensity} m"
+          },
+          "check": {
+            "expr": "@density*gravity*depth/manometerDensity",
+            "equals": "manometerDifference"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-salt",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["manometer", "liquid", "depth"],
+      "set": {
+        "liquid": 1,
+        "depth": 0.15
+      },
+      "stem": "The probe is {depth} m deep in salt water ({@density|5} kg/m³); the manometer holds water ({manometerDensity} kg/m³) (g = {gravity} m/s²). Decide whether each statement is true or false.",
+      "explain": "ρ·g·h ≈ {@gaugePressure} Pa; Δh = (ρ/ρ_w)·h ≈ {@manometerDifference|3} m, more than h; ethanol would give less. ρ·g·h against h has slope ρ·g ≈ {@weightDensity} Pa/m, not ρ.",
+      "vi": {
+        "stem": "Đầu dò ở độ sâu {depth} m trong nước muối ({@density|5} kg/m³); áp kế chứa nước ({manometerDensity} kg/m³) (g = {gravity} m/s²). Mỗi nhận định sau đúng hay sai?",
+        "explain": "ρ·g·h ≈ {@gaugePressure} Pa; Δh = (ρ/ρ_w)·h ≈ {@manometerDifference|3} m, lớn hơn h; etanol sẽ cho giá trị nhỏ hơn. Đồ thị ρ·g·h theo h có hệ số góc ρ·g ≈ {@weightDensity} Pa/m, không phải ρ."
+      },
+      "statements": [
+        {
+          "text": "The salt water adds about {@gaugePressure} Pa.",
+          "vi": {
+            "text": "Nước muối làm áp suất tăng thêm khoảng {@gaugePressure} Pa."
+          },
+          "true": true,
+          "check": {
+            "expr": "@density*gravity*depth",
+            "equals": "gaugePressure"
+          }
+        },
+        {
+          "text": "The manometer’s levels differ by about {@manometerDifference|3} m, more than the depth.",
+          "vi": {
+            "text": "Hai mực nước của áp kế chênh nhau khoảng {@manometerDifference|3} m, lớn hơn độ sâu."
+          },
+          "true": true,
+          "check": {
+            "expr": "@density/manometerDensity*depth",
+            "equals": "manometerDifference"
+          }
+        },
+        {
+          "text": "In ethanol at the same depth the difference would be smaller.",
+          "vi": {
+            "text": "Trong etanol ở cùng độ sâu, độ chênh sẽ nhỏ hơn."
+          },
+          "true": true
+        },
+        {
+          "text": "Plotting ρ·g·h against h for salt water gives a line of slope {@density|5} Pa/m.",
+          "vi": {
+            "text": "Đồ thị ρ·g·h theo h của nước muối là đường thẳng có hệ số góc {@density|5} Pa/m."
+          },
+          "true": false,
+          "check": {
+            "expr": "@density",
+            "equals": "weightDensity"
+          }
+        }
+      ]
+    },
+    {
+      "id": "depth-from-reading",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["manometer", "hydrostatic"],
+      "set": {
+        "liquid": 1,
+        "depth": 0.25
+      },
+      "stem": "In salt water ({@density|5} kg/m³) the water manometer ({manometerDensity} kg/m³) shows a difference Δh = {@manometerDifference|4} m. How deep is the probe?",
+      "explain": "ρ·g·h = ρ_w·g·Δh, so h = Δh·ρ_w/ρ = {@manometerDifference|4}·{manometerDensity}/{@density|5} ≈ {=@manometerDifference*manometerDensity/@density} m. Taking h = Δh forgets that salt water is denser.",
+      "vi": {
+        "stem": "Trong nước muối ({@density|5} kg/m³), áp kế nước ({manometerDensity} kg/m³) cho độ chênh Δh = {@manometerDifference|4} m. Đầu dò đang ở độ sâu bao nhiêu?",
+        "explain": "ρ·g·h = ρ_w·g·Δh, nên h = Δh·ρ_w/ρ = {@manometerDifference|4}·{manometerDensity}/{@density|5} ≈ {=@manometerDifference*manometerDensity/@density} m. Lấy h = Δh là quên rằng nước muối nặng hơn nước."
+      },
+      "options": [
+        {
+          "text": "{=@manometerDifference*manometerDensity/@density} m",
+          "vi": {
+            "text": "{=@manometerDifference*manometerDensity/@density} m"
+          },
+          "correct": true
+        },
+        {
+          "text": "{@manometerDifference} m",
+          "vi": {
+            "text": "{@manometerDifference} m"
+          }
+        },
+        {
+          "text": "{=@manometerDifference*@density/manometerDensity} m",
+          "vi": {
+            "text": "{=@manometerDifference*@density/manometerDensity} m"
+          }
+        },
+        {
+          "text": "{=@manometerDifference*@density*gravity/manometerDensity} m",
+          "vi": {
+            "text": "{=@manometerDifference*@density*gravity/manometerDensity} m"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-scale",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["manometer", "liquid"],
+      "set": {
+        "liquid": 2,
+        "depth": 0.15,
+        "rulerResolution": 0.002
+      },
+      "stem": "The probe is {depth} m deep in ethanol ({@density|5} kg/m³); the manometer’s scale reads to {rulerResolution} m. Decide whether each statement is true or false.",
+      "explain": "Δh = (ρ/ρ_w)·h ≈ {@manometerDifference|4} m, read as {=round(@manometerDifference/rulerResolution)*rulerResolution} m; u = d/√12 ≈ {=rulerResolution/sqrt(12)|2} m from the resolution alone. A real membrane’s stiffness takes up some of the pressure, so the measured Δh comes out smaller, not larger.",
+      "vi": {
+        "stem": "Đầu dò ở độ sâu {depth} m trong etanol ({@density|5} kg/m³); thước của áp kế có độ phân giải {rulerResolution} m. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Δh = (ρ/ρ_w)·h ≈ {@manometerDifference|4} m, đọc được {=round(@manometerDifference/rulerResolution)*rulerResolution} m; u = d/√12 ≈ {=rulerResolution/sqrt(12)|2} m chỉ do độ phân giải. Màng thật có độ cứng nên hấp thụ một phần áp suất, làm Δh đo được nhỏ hơn chứ không lớn hơn."
+      },
+      "statements": [
+        {
+          "text": "The model’s level difference is about {@manometerDifference|4} m.",
+          "vi": {
+            "text": "Độ chênh mực theo mô hình khoảng {@manometerDifference|4} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "@density/manometerDensity*depth",
+            "equals": "manometerDifference"
+          }
+        },
+        {
+          "text": "The scale shows {=round(@manometerDifference/rulerResolution)*rulerResolution} m.",
+          "vi": {
+            "text": "Thước hiển thị {=round(@manometerDifference/rulerResolution)*rulerResolution} m."
+          },
+          "true": true
+        },
+        {
+          "text": "The standard uncertainty from the resolution alone is about {=rulerResolution/sqrt(12)|2} m.",
+          "vi": {
+            "text": "Độ không đảm bảo chuẩn chỉ do độ phân giải khoảng {=rulerResolution/sqrt(12)|2} m."
+          },
+          "true": true
+        },
+        {
+          "text": "A real membrane’s stiffness would make the measured difference larger.",
+          "vi": {
+            "text": "Độ cứng của màng thật sẽ làm độ chênh đo được lớn hơn."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "all-directions",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["hydrostatic"],
+      "stem": "At a point inside a liquid at rest, the pressure acts…",
+      "explain": "A liquid at rest presses equally in all directions at a given point; turning the probe’s opening sideways or up at the same depth does not change the manometer.",
+      "vi": {
+        "stem": "Tại một điểm trong lòng chất lỏng đứng yên, áp suất tác dụng…",
+        "explain": "Chất lỏng đứng yên gây áp suất như nhau theo mọi hướng tại một điểm; quay miệng đầu dò sang ngang hay hướng lên ở cùng độ sâu thì áp kế chữ U không thay đổi."
+      },
+      "options": [
+        {
+          "text": "equally in all directions",
+          "vi": {
+            "text": "như nhau theo mọi hướng"
+          },
+          "correct": true
+        },
+        {
+          "text": "only downwards",
+          "vi": {
+            "text": "chỉ hướng xuống dưới"
+          }
+        },
+        {
+          "text": "only upwards",
+          "vi": {
+            "text": "chỉ hướng lên trên"
+          }
+        },
+        {
+          "text": "only on the walls of the vessel",
+          "vi": {
+            "text": "chỉ lên thành bình"
+          }
+        }
+      ]
+    },
+    {
+      "id": "vessel-shape",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["depth"],
+      "stem": "A narrow tube and a wide tank hold the same liquid to the same depth. The pressure the liquid adds at their bottoms is…",
+      "explain": "ρ·g·h depends only on the liquid and the depth, not on the shape or width of the vessel or on how much liquid it holds: the two are the same.",
+      "vi": {
+        "stem": "Một ống hẹp và một bể rộng chứa cùng một chất lỏng đến cùng độ sâu. Áp suất do chất lỏng gây ra ở đáy của chúng…",
+        "explain": "ρ·g·h chỉ phụ thuộc chất lỏng và độ sâu, không phụ thuộc hình dạng, độ rộng của bình hay lượng chất lỏng nó chứa: hai áp suất bằng nhau."
+      },
+      "options": [
+        {
+          "text": "the same in both",
+          "vi": {
+            "text": "bằng nhau"
+          },
+          "correct": true
+        },
+        {
+          "text": "larger in the wide tank, which holds more liquid",
+          "vi": {
+            "text": "lớn hơn ở bể rộng, vì nó chứa nhiều chất lỏng hơn"
+          }
+        },
+        {
+          "text": "larger in the narrow tube",
+          "vi": {
+            "text": "lớn hơn ở ống hẹp"
+          }
+        },
+        {
+          "text": "in the ratio of their widths",
+          "vi": {
+            "text": "tỉ lệ với độ rộng của chúng"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-manometer",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["manometer", "depth", "liquid"],
+      "stem": "A probe in a tank of liquid is joined to a U-tube manometer of water, the other arm open to the air. Decide whether each statement is true or false.",
+      "explain": "At one depth in one liquid at rest, the pressure is the same everywhere. ρ·g·h is proportional to h, so twice the depth doubles the manometer’s difference. With one arm open to the air, the manometer shows only the pressure the liquid adds, not p0. Ethanol is less dense than the manometer’s water, so Δh is smaller than the depth.",
+      "vi": {
+        "stem": "Một đầu dò đặt trong bể chất lỏng được nối với áp kế chữ U chứa nước, nhánh kia hở thông với không khí. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Ở cùng một độ sâu trong cùng một chất lỏng đứng yên, áp suất như nhau ở mọi điểm. ρ·g·h tỉ lệ với h, nên độ sâu gấp đôi thì độ chênh mực nước trong áp kế gấp đôi. Vì một nhánh hở thông với không khí, áp kế chỉ cho biết phần áp suất do chất lỏng gây ra, không gồm p0. Etanol có khối lượng riêng nhỏ hơn nước trong áp kế nên Δh nhỏ hơn độ sâu."
+      },
+      "statements": [
+        {
+          "text": "At the same depth in the same liquid, the pressure is the same everywhere in the tank.",
+          "vi": {
+            "text": "Ở cùng độ sâu trong cùng chất lỏng, áp suất như nhau ở mọi chỗ trong bể."
+          },
+          "true": true
+        },
+        {
+          "text": "Twice the depth doubles the difference of levels in the manometer.",
+          "vi": {
+            "text": "Độ sâu gấp đôi thì độ chênh mực chất lỏng trong áp kế gấp đôi."
+          },
+          "true": true
+        },
+        {
+          "text": "The manometer’s difference of levels includes the air pressure p0.",
+          "vi": {
+            "text": "Độ chênh mực trong áp kế bao gồm cả áp suất khí quyển p0."
+          },
+          "true": false
+        },
+        {
+          "text": "In ethanol the difference of levels is smaller than the probe’s depth.",
+          "vi": {
+            "text": "Trong etanol, độ chênh mực nhỏ hơn độ sâu của đầu dò."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "salt-total",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["hydrostatic"],
+      "set": {
+        "liquid": 1,
+        "depth": 0.1
+      },
+      "stem": "The probe is {depth} m deep in salt water ({@density|5} kg/m³); the air presses on the surface with {airPressure|6} Pa (g = {gravity} m/s²). What is the total pressure at the probe?",
+      "explain": "p = p0 + ρ·g·h = {airPressure|6} + {@density|5}·{gravity}·{depth} ≈ {@pressure|6} Pa. ρ·g·h alone leaves out the air; ρ·h leaves out g.",
+      "vi": {
+        "stem": "Đầu dò ở độ sâu {depth} m trong nước muối ({@density|5} kg/m³); không khí ép lên mặt thoáng với áp suất {airPressure|6} Pa (g = {gravity} m/s²). Áp suất toàn phần tại đầu dò bằng bao nhiêu?",
+        "explain": "p = p0 + ρ·g·h = {airPressure|6} + {@density|5}·{gravity}·{depth} ≈ {@pressure|6} Pa. Chỉ lấy ρ·g·h là bỏ quên áp suất khí quyển; ρ·h là bỏ quên g."
+      },
+      "options": [
+        {
+          "text": "{@pressure|6} Pa",
+          "vi": {
+            "text": "{@pressure|6} Pa"
+          },
+          "correct": true,
+          "check": {
+            "expr": "airPressure+@density*gravity*depth",
+            "equals": "pressure"
+          }
+        },
+        {
+          "text": "{@gaugePressure|4} Pa",
+          "vi": {
+            "text": "{@gaugePressure|4} Pa"
+          },
+          "check": {
+            "expr": "@gaugePressure",
+            "equals": "pressure"
+          }
+        },
+        {
+          "text": "{=airPressure+@density*depth|6} Pa",
+          "vi": {
+            "text": "{=airPressure+@density*depth|6} Pa"
+          },
+          "check": {
+            "expr": "airPressure+@density*depth",
+            "equals": "pressure"
+          }
+        },
+        {
+          "text": "{=airPressure-@density*gravity*depth|6} Pa",
+          "vi": {
+            "text": "{=airPressure-@density*gravity*depth|6} Pa"
+          },
+          "check": {
+            "expr": "airPressure-@density*gravity*depth",
+            "equals": "pressure"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-5cm",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["hydrostatic", "manometer", "depth"],
+      "set": {
+        "liquid": 0,
+        "depth": 0.05
+      },
+      "stem": "The probe is {depth} m under water ({@density|5} kg/m³); the manometer holds water too; p0 = {airPressure|6} Pa (g = {gravity} m/s²). Decide whether each statement is true or false.",
+      "explain": "ρ·g·h ≈ {@gaugePressure|4} Pa, so p ≈ {@pressure|6} Pa. With the same liquid in tank and manometer, Δh equals the depth, {@manometerDifference} m. At four times the depth ρ·g·h is four times as large, {=4*@gaugePressure|4} Pa, not twice.",
+      "vi": {
+        "stem": "Đầu dò ở độ sâu {depth} m trong nước ({@density|5} kg/m³); áp kế cũng chứa nước; p0 = {airPressure|6} Pa (g = {gravity} m/s²). Mỗi nhận định sau đúng hay sai?",
+        "explain": "ρ·g·h ≈ {@gaugePressure|4} Pa, nên p ≈ {@pressure|6} Pa. Khi bể và áp kế chứa cùng một chất lỏng, Δh bằng độ sâu, {@manometerDifference} m. Ở độ sâu gấp bốn, ρ·g·h lớn gấp bốn, {=4*@gaugePressure|4} Pa, chứ không phải gấp đôi."
+      },
+      "statements": [
+        {
+          "text": "The water adds about {@gaugePressure|4} Pa at the probe.",
+          "vi": {
+            "text": "Nước gây ra thêm khoảng {@gaugePressure|4} Pa tại đầu dò."
+          },
+          "true": true,
+          "check": {
+            "expr": "@density*gravity*depth",
+            "equals": "gaugePressure"
+          }
+        },
+        {
+          "text": "The manometer shows a difference of {@manometerDifference} m, the probe’s depth.",
+          "vi": {
+            "text": "Áp kế cho độ chênh mực {@manometerDifference} m, bằng độ sâu của đầu dò."
+          },
+          "true": true,
+          "check": {
+            "expr": "@gaugePressure/(manometerDensity*gravity)",
+            "equals": "manometerDifference"
+          }
+        },
+        {
+          "text": "The total pressure at the probe is about {@pressure|6} Pa.",
+          "vi": {
+            "text": "Áp suất toàn phần tại đầu dò khoảng {@pressure|6} Pa."
+          },
+          "true": true,
+          "check": {
+            "expr": "airPressure+@gaugePressure",
+            "equals": "pressure"
+          }
+        },
+        {
+          "text": "At four times the depth the water would add {=2*@gaugePressure|4} Pa.",
+          "vi": {
+            "text": "Ở độ sâu gấp bốn lần, nước sẽ gây ra thêm {=2*@gaugePressure|4} Pa."
+          },
+          "true": false,
+          "check": {
+            "expr": "(2*@gaugePressure)/4",
+            "equals": "gaugePressure"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-density",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["manometer", "liquid"],
+      "set": {
+        "liquid": 1,
+        "depth": 0.15
+      },
+      "stem": "The probe is {depth} m deep in an unknown liquid; the water manometer ({manometerDensity} kg/m³) shows a difference of {@manometerDifference|4} m. What is the liquid’s density?",
+      "explain": "The manometer balances the liquid’s pressure: ρ·g·h = ρ_w·g·Δh, so ρ = ρ_w·Δh/h = {manometerDensity}·{@manometerDifference|4}/{depth} ≈ {=manometerDensity*@manometerDifference/depth|4} kg/m³ (salt water). Turning the ratio over, or leaving out ρ_w or h, gives the other values.",
+      "vi": {
+        "stem": "Đầu dò ở độ sâu {depth} m trong một chất lỏng chưa biết; áp kế chữ U chứa nước ({manometerDensity} kg/m³) cho độ chênh mực {@manometerDifference|4} m. Khối lượng riêng của chất lỏng bằng bao nhiêu?",
+        "explain": "Áp kế cân bằng với áp suất của chất lỏng: ρ·g·h = ρ_n·g·Δh, nên ρ = ρ_n·Δh/h = {manometerDensity}·{@manometerDifference|4}/{depth} ≈ {=manometerDensity*@manometerDifference/depth|4} kg/m³ (nước muối). Đảo ngược tỉ số, hoặc bỏ quên ρ_n hay h, sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{=manometerDensity*@manometerDifference/depth|4} kg/m³",
+          "vi": {
+            "text": "{=manometerDensity*@manometerDifference/depth|4} kg/m³"
+          },
+          "correct": true,
+          "check": {
+            "expr": "manometerDensity*@manometerDifference/depth*gravity",
+            "equals": "weightDensity"
+          }
+        },
+        {
+          "text": "{=manometerDensity*depth/@manometerDifference|4} kg/m³",
+          "vi": {
+            "text": "{=manometerDensity*depth/@manometerDifference|4} kg/m³"
+          },
+          "check": {
+            "expr": "manometerDensity*depth/@manometerDifference*gravity",
+            "equals": "weightDensity"
+          }
+        },
+        {
+          "text": "{=manometerDensity*@manometerDifference|4} kg/m³",
+          "vi": {
+            "text": "{=manometerDensity*@manometerDifference|4} kg/m³"
+          },
+          "check": {
+            "expr": "manometerDensity*@manometerDifference*gravity",
+            "equals": "weightDensity"
+          }
+        },
+        {
+          "text": "{=@manometerDifference/depth|3} kg/m³",
+          "vi": {
+            "text": "{=@manometerDifference/depth|3} kg/m³"
+          },
+          "check": {
+            "expr": "@manometerDifference/depth*gravity",
+            "equals": "weightDensity"
+          }
+        }
+      ]
+    },
+    {
+      "id": "same-pressure-depth",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["liquid", "depth"],
+      "set": {
+        "liquid": 2,
+        "depth": 0.15
+      },
+      "stem": "At {@manometerDifference|3} m under water ({manometerDensity} kg/m³) the water adds a certain pressure. At what depth in ethanol ({@density|5} kg/m³) does the ethanol add the same pressure?",
+      "explain": "ρ_e·g·h_e = ρ_w·g·h_w, so h_e = h_w·ρ_w/ρ_e = {@manometerDifference|3}·{manometerDensity}/{@density|5} ≈ {=@manometerDifference*manometerDensity/@density} m: deeper, since ethanol is less dense. Turning the ratio over gives a smaller depth.",
+      "vi": {
+        "stem": "Ở độ sâu {@manometerDifference|3} m dưới nước ({manometerDensity} kg/m³), nước gây ra một áp suất nhất định. Ở độ sâu nào trong etanol ({@density|5} kg/m³) thì etanol gây ra cùng áp suất đó?",
+        "explain": "ρ_e·g·h_e = ρ_n·g·h_n, nên h_e = h_n·ρ_n/ρ_e = {@manometerDifference|3}·{manometerDensity}/{@density|5} ≈ {=@manometerDifference*manometerDensity/@density} m: sâu hơn, vì etanol có khối lượng riêng nhỏ hơn. Đảo ngược tỉ số sẽ ra độ sâu nhỏ hơn."
+      },
+      "options": [
+        {
+          "text": "{=@manometerDifference*manometerDensity/@density} m",
+          "vi": {
+            "text": "{=@manometerDifference*manometerDensity/@density} m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@density*gravity*(@manometerDifference*manometerDensity/@density)",
+            "equals": "gaugePressure"
+          }
+        },
+        {
+          "text": "{=@manometerDifference*@density/manometerDensity} m",
+          "vi": {
+            "text": "{=@manometerDifference*@density/manometerDensity} m"
+          },
+          "check": {
+            "expr": "@density*gravity*(@manometerDifference*@density/manometerDensity)",
+            "equals": "gaugePressure"
+          }
+        },
+        {
+          "text": "{@manometerDifference|3} m",
+          "vi": {
+            "text": "{@manometerDifference|3} m"
+          },
+          "check": {
+            "expr": "@density*gravity*@manometerDifference",
+            "equals": "gaugePressure"
+          }
+        },
+        {
+          "text": "{=@manometerDifference*(manometerDensity/@density)^2} m",
+          "vi": {
+            "text": "{=@manometerDifference*(manometerDensity/@density)^2} m"
+          },
+          "check": {
+            "expr": "@density*gravity*(@manometerDifference*(manometerDensity/@density)^2)",
+            "equals": "gaugePressure"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-salt-25",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["manometer", "liquid"],
+      "set": {
+        "liquid": 1,
+        "depth": 0.25
+      },
+      "stem": "The probe is {depth} m deep in salt water ({@density|5} kg/m³); the manometer holds water ({manometerDensity} kg/m³). Decide whether each statement is true or false.",
+      "explain": "ρ·g·h = ρ_w·g·Δh gives Δh = h·ρ/ρ_w ≈ {@manometerDifference|4} m, more than the depth because salt water is denser than the manometer’s water. With salt water in the manometer, Δh would equal the depth. The manometer’s other arm is open to the air, so p0 acts on both sides and cancels: Δh does not depend on it.",
+      "vi": {
+        "stem": "Đầu dò ở độ sâu {depth} m trong nước muối ({@density|5} kg/m³); áp kế chứa nước ({manometerDensity} kg/m³). Mỗi nhận định sau đúng hay sai?",
+        "explain": "ρ·g·h = ρ_n·g·Δh cho Δh = h·ρ/ρ_n ≈ {@manometerDifference|4} m, lớn hơn độ sâu vì nước muối có khối lượng riêng lớn hơn nước trong áp kế. Nếu áp kế chứa nước muối thì Δh bằng độ sâu. Nhánh kia của áp kế hở thông với không khí nên p0 tác dụng lên cả hai phía và triệt tiêu: Δh không phụ thuộc p0."
+      },
+      "statements": [
+        {
+          "text": "The manometer shows Δh ≈ {@manometerDifference|4} m.",
+          "vi": {
+            "text": "Áp kế cho Δh ≈ {@manometerDifference|4} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "depth*@density/manometerDensity",
+            "equals": "manometerDifference"
+          }
+        },
+        {
+          "text": "Δh is larger than the probe’s depth.",
+          "vi": {
+            "text": "Δh lớn hơn độ sâu của đầu dò."
+          },
+          "true": true
+        },
+        {
+          "text": "With salt water in the manometer instead, Δh would equal the depth.",
+          "vi": {
+            "text": "Nếu áp kế chứa nước muối thay cho nước thì Δh sẽ bằng độ sâu."
+          },
+          "true": true
+        },
+        {
+          "text": "On a day of higher air pressure, Δh would be larger.",
+          "vi": {
+            "text": "Vào ngày áp suất khí quyển cao hơn, Δh sẽ lớn hơn."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

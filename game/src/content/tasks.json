@@ -1,0 +1,728 @@
+[
+  {
+    "id": "dilution-by-hand",
+    "room": "chemistry-lab",
+    "title": "Dilution by hand: C₁V₁ = C₂V₂",
+    "description": "The dilution step by step, from the reagent cabinet to the reading of C₂.",
+    "vi": {
+      "title": "Pha loãng bằng tay: C₁V₁ = C₂V₂",
+      "description": "Pha loãng từng bước, từ tủ hóa chất đến khi đọc C₂."
+    },
+    "steps": [
+      {
+        "id": "open-cabinet",
+        "instruction": "Open the reagent cabinet (E).",
+        "vi": {
+          "instruction": "Mở tủ hóa chất (E)."
+        },
+        "objects": ["reagent-cabinet"],
+        "done": {
+          "kind": "state",
+          "key": "open",
+          "value": true
+        }
+      },
+      {
+        "id": "take-stock",
+        "instruction": "Take a stock bottle: its label shows C₁ (hold C to read it).",
+        "vi": {
+          "instruction": "Lấy một chai dung dịch gốc: nhãn ghi C₁ (giữ C để đọc)."
+        },
+        "objects": ["stock-5", "stock-10", "stock-20", "stock-40"],
+        "done": {
+          "kind": "grabbed"
+        }
+      },
+      {
+        "id": "bottle-down",
+        "instruction": "Set the bottle down on the bench (E).",
+        "vi": {
+          "instruction": "Đặt chai xuống bàn (E)."
+        },
+        "objects": ["stock-5", "stock-10", "stock-20", "stock-40"],
+        "done": {
+          "kind": "set-down"
+        }
+      },
+      {
+        "id": "take-flask",
+        "instruction": "Take a volumetric flask from the cabinet: its capacity is V₂.",
+        "vi": {
+          "instruction": "Lấy một bình định mức trong tủ: dung tích của nó là V₂."
+        },
+        "objects": ["flask-25", "flask-50", "flask-100", "flask-250"],
+        "done": {
+          "kind": "grabbed"
+        }
+      },
+      {
+        "id": "flask-on-tile",
+        "instruction": "Stand the flask on the white tile (E).",
+        "vi": {
+          "instruction": "Đặt bình lên tấm sứ trắng (E)."
+        },
+        "objects": ["dilution-tile"],
+        "done": {
+          "kind": "setup",
+          "station": "dilution",
+          "step": "flask"
+        }
+      },
+      {
+        "id": "take-pipette",
+        "instruction": "Take a volumetric pipette: it delivers V₁.",
+        "vi": {
+          "instruction": "Lấy một pipet bầu: nó cho ra đúng V₁."
+        },
+        "objects": ["pipette-1", "pipette-2", "pipette-5", "pipette-10"],
+        "done": {
+          "kind": "grabbed"
+        }
+      },
+      {
+        "id": "fill-pipette",
+        "instruction": "Hold the pipette over the stock bottle and press E: it fills to its mark.",
+        "vi": {
+          "instruction": "Đưa pipet lên trên chai dung dịch gốc và nhấn E: pipet hút đến vạch."
+        },
+        "objects": ["stock-5", "stock-10", "stock-20", "stock-40"],
+        "done": {
+          "kind": "setup",
+          "station": "dilution",
+          "step": "aspirate"
+        }
+      },
+      {
+        "id": "deliver",
+        "instruction": "Hold the pipette over the flask and press E to deliver the stock.",
+        "vi": {
+          "instruction": "Đưa pipet lên trên bình và nhấn E để cho dung dịch gốc vào."
+        },
+        "objects": ["flask-25", "flask-50", "flask-100", "flask-250"],
+        "done": {
+          "kind": "setup",
+          "station": "dilution",
+          "step": "dispense"
+        }
+      },
+      {
+        "id": "take-wash-bottle",
+        "instruction": "Set the pipette down (the rack holds it upright) and take the wash bottle.",
+        "vi": {
+          "instruction": "Đặt pipet xuống (giá giữ pipet đứng) và lấy bình tia."
+        },
+        "objects": ["wash-bottle"],
+        "done": {
+          "kind": "grabbed"
+        }
+      },
+      {
+        "id": "to-the-mark",
+        "instruction": "Hold the nozzle over the flask's neck and squeeze (hold R) until the water reaches the mark.",
+        "vi": {
+          "instruction": "Đưa vòi lên trên cổ bình và bóp (giữ R) cho đến khi nước tới vạch."
+        },
+        "objects": ["flask-25", "flask-50", "flask-100", "flask-250"],
+        "done": {
+          "kind": "completed",
+          "station": "dilution"
+        }
+      },
+      {
+        "id": "mix",
+        "instruction": "Set the wash bottle down, put the stopper in (F), take the flask and turn it over (hold R).",
+        "vi": {
+          "instruction": "Đặt bình tia xuống, đậy nút (F), cầm bình lên và lật ngược (giữ R)."
+        },
+        "objects": ["flask-25", "flask-50", "flask-100", "flask-250"],
+        "done": {
+          "kind": "setup",
+          "station": "dilution",
+          "step": "mix"
+        }
+      },
+      {
+        "id": "sample",
+        "instruction": "Take the stopper out (F) and tilt a sample into the colorimeter's cuvette (hold R).",
+        "vi": {
+          "instruction": "Mở nút (F) và nghiêng bình rót một ít mẫu vào cuvet của máy so màu (giữ R)."
+        },
+        "objects": ["dilution"],
+        "done": {
+          "kind": "setup",
+          "station": "dilution",
+          "step": "cuvette"
+        }
+      },
+      {
+        "id": "read",
+        "instruction": "Read C₂ and the absorbance on the results monitor (E), and check C₂ = C₁·V₁/V₂ by hand.",
+        "vi": {
+          "instruction": "Đọc C₂ và độ hấp thụ quang trên màn hình kết quả (E), rồi tự tính lại C₂ = C₁·V₁/V₂."
+        },
+        "objects": ["dilution-monitor"],
+        "done": {
+          "kind": "viewed",
+          "station": "dilution"
+        }
+      }
+    ]
+  },
+  {
+    "id": "chemistry-glassware",
+    "room": "chemistry-lab",
+    "title": "Get to know the glassware",
+    "description": "Find each piece of the dilution's glassware in the cabinet, look at it closely and set it down.",
+    "vi": {
+      "title": "Làm quen dụng cụ thủy tinh",
+      "description": "Tìm từng dụng cụ của bài pha loãng trong tủ, xem kỹ và đặt xuống."
+    },
+    "steps": [
+      {
+        "id": "open-cabinet",
+        "instruction": "Open the reagent cabinet (E).",
+        "vi": {
+          "instruction": "Mở tủ hóa chất (E)."
+        },
+        "objects": ["reagent-cabinet"],
+        "done": {
+          "kind": "state",
+          "key": "open",
+          "value": true
+        }
+      },
+      {
+        "id": "stock-bottle",
+        "instruction": "Take a stock bottle and read its label (hold C): the substance and its concentration C₁.",
+        "vi": {
+          "instruction": "Lấy một chai dung dịch gốc và đọc nhãn (giữ C): tên chất và nồng độ C₁."
+        },
+        "objects": ["stock-5", "stock-10", "stock-20", "stock-40"],
+        "done": {
+          "kind": "grabbed"
+        }
+      },
+      {
+        "id": "stock-bottle-down",
+        "instruction": "Set it down on the bench (E).",
+        "vi": {
+          "instruction": "Đặt chai xuống bàn (E)."
+        },
+        "objects": ["stock-5", "stock-10", "stock-20", "stock-40"],
+        "done": {
+          "kind": "set-down"
+        }
+      },
+      {
+        "id": "flask",
+        "instruction": "Take a volumetric flask: the ring on its neck is the mark, the print gives its volume at 20 °C.",
+        "vi": {
+          "instruction": "Lấy một bình định mức: vòng trên cổ là vạch, chữ in ghi thể tích ở 20 °C."
+        },
+        "objects": ["flask-25", "flask-50", "flask-100", "flask-250"],
+        "done": {
+          "kind": "grabbed"
+        }
+      },
+      {
+        "id": "flask-down",
+        "instruction": "Set it down (E).",
+        "vi": {
+          "instruction": "Đặt bình xuống (E)."
+        },
+        "objects": ["flask-25", "flask-50", "flask-100", "flask-250"],
+        "done": {
+          "kind": "set-down"
+        }
+      },
+      {
+        "id": "pipette",
+        "instruction": "Take a volumetric pipette: it delivers the volume printed on its bulb, filled to the ring above it.",
+        "vi": {
+          "instruction": "Lấy một pipet bầu: nó cho ra đúng thể tích in trên bầu khi hút đến vòng vạch phía trên."
+        },
+        "objects": ["pipette-1", "pipette-2", "pipette-5", "pipette-10"],
+        "done": {
+          "kind": "grabbed"
+        }
+      },
+      {
+        "id": "pipette-down",
+        "instruction": "Set it down; the pipette rack holds it upright (E).",
+        "vi": {
+          "instruction": "Đặt pipet xuống; giá pipet giữ nó đứng thẳng (E)."
+        },
+        "objects": ["pipette-1", "pipette-2", "pipette-5", "pipette-10"],
+        "done": {
+          "kind": "set-down"
+        }
+      },
+      {
+        "id": "wash-bottle",
+        "instruction": "Take the wash bottle: the water leaves through the tip of its bent nozzle.",
+        "vi": {
+          "instruction": "Lấy bình tia: nước chảy ra từ đầu vòi cong."
+        },
+        "objects": ["wash-bottle"],
+        "done": {
+          "kind": "grabbed"
+        }
+      },
+      {
+        "id": "wash-bottle-down",
+        "instruction": "Set it down (E).",
+        "vi": {
+          "instruction": "Đặt bình tia xuống (E)."
+        },
+        "objects": ["wash-bottle"],
+        "done": {
+          "kind": "set-down"
+        }
+      },
+      {
+        "id": "colorimeter",
+        "instruction": "Inspect the colorimeter (E): its cuvette takes the sample it reads at 590 nm.",
+        "vi": {
+          "instruction": "Xem máy so màu (E): cuvet của máy chứa mẫu được đo ở 590 nm."
+        },
+        "objects": ["dilution"],
+        "done": {
+          "kind": "inspected"
+        }
+      }
+    ]
+  },
+  {
+    "id": "chemistry-lights",
+    "room": "chemistry-lab",
+    "title": "The light switch",
+    "description": "The lab's lights are switched at the door.",
+    "vi": {
+      "title": "Công tắc đèn",
+      "description": "Đèn của phòng được bật tắt ở công tắc cạnh cửa."
+    },
+    "steps": [
+      {
+        "id": "off",
+        "instruction": "Switch the lights off at the switch beside the door (E).",
+        "vi": {
+          "instruction": "Tắt đèn ở công tắc cạnh cửa (E)."
+        },
+        "objects": ["light-switch"],
+        "done": {
+          "kind": "state",
+          "key": "lightsOff",
+          "value": true
+        }
+      },
+      {
+        "id": "on",
+        "instruction": "Switch them on again (E).",
+        "vi": {
+          "instruction": "Bật đèn lại (E)."
+        },
+        "objects": ["light-switch"],
+        "done": {
+          "kind": "state",
+          "key": "lightsOff",
+          "value": false
+        }
+      }
+    ]
+  },
+  {
+    "id": "titration-by-hand",
+    "room": "chemistry-lab",
+    "title": "Titration by hand",
+    "description": "The acid–base titration at the west bench, from the burette to the reading: find the acid’s concentration.",
+    "vi": {
+      "title": "Chuẩn độ bằng tay",
+      "description": "Chuẩn độ axit – bazơ ở bàn phía tây, từ buret đến số đọc: tìm nồng độ của axit."
+    },
+    "steps": [
+      {
+        "id": "read",
+        "instruction": "Read the titration board (E).",
+        "vi": {
+          "instruction": "Đọc bảng hướng dẫn chuẩn độ (E)."
+        },
+        "objects": ["titration-instructions"],
+        "done": {
+          "kind": "inspected"
+        }
+      },
+      {
+        "id": "take-naoh",
+        "instruction": "Take a NaOH bottle: its label shows c_b.",
+        "vi": {
+          "instruction": "Lấy một chai NaOH: nhãn ghi c_b."
+        },
+        "objects": ["naoh-005", "naoh-01", "naoh-02"],
+        "done": {
+          "kind": "grabbed"
+        }
+      },
+      {
+        "id": "fill",
+        "instruction": "Stand at the bench in front of the burette, look at its mouth and hold R: your hand takes the bottle over it and pours. Stop when the level reaches the 0 mark.",
+        "vi": {
+          "instruction": "Đứng ở bàn trước buret, nhìn vào miệng buret và giữ R: tay em đưa chai tới trên miệng buret và rót. Dừng lại khi mực chất lỏng chạm vạch 0."
+        },
+        "objects": ["burette"],
+        "done": {
+          "kind": "setup",
+          "station": "titration",
+          "step": "fill-01",
+          "or": ["fill-005", "fill-02"]
+        }
+      },
+      {
+        "id": "take-burette-again",
+        "instruction": "Set the bottle down and pick the burette up.",
+        "vi": {
+          "instruction": "Đặt chai xuống rồi cầm buret lên."
+        },
+        "objects": ["burette"],
+        "done": {
+          "kind": "grabbed"
+        }
+      },
+      {
+        "id": "clamp",
+        "instruction": "Clamp it on the retort stand (E at the clamp): its tip goes over the white tile.",
+        "vi": {
+          "instruction": "Kẹp buret lên giá sắt (nhấn E vào kẹp): đầu buret ở trên tấm sứ trắng."
+        },
+        "objects": ["titration"],
+        "done": {
+          "kind": "setup",
+          "station": "titration",
+          "step": "clamp"
+        }
+      },
+      {
+        "id": "take-pipette",
+        "instruction": "Take a volumetric pipette from the rack: its size is V_a.",
+        "vi": {
+          "instruction": "Lấy một pipet bầu trên giá: dung tích của nó là V_a."
+        },
+        "objects": ["titration-pipette-10", "titration-pipette-20", "titration-pipette-25"],
+        "done": {
+          "kind": "grabbed"
+        }
+      },
+      {
+        "id": "aspirate",
+        "instruction": "Fill the pipette to its mark from the HCl bottle (E).",
+        "vi": {
+          "instruction": "Hút dung dịch HCl vào pipet đến vạch (E)."
+        },
+        "objects": ["hcl"],
+        "done": {
+          "kind": "setup",
+          "station": "titration",
+          "step": "aspirate"
+        }
+      },
+      {
+        "id": "dispense",
+        "instruction": "Deliver it into the conical flask (E).",
+        "vi": {
+          "instruction": "Cho dung dịch trong pipet vào bình tam giác (E)."
+        },
+        "objects": ["conical-flask"],
+        "done": {
+          "kind": "setup",
+          "station": "titration",
+          "step": "dispense"
+        }
+      },
+      {
+        "id": "take-indicator",
+        "instruction": "Set the pipette down and take an indicator bottle: phenolphthalein or methyl orange.",
+        "vi": {
+          "instruction": "Đặt pipet xuống và lấy một lọ chất chỉ thị: phenolphtalein hoặc metyl da cam."
+        },
+        "objects": ["phenolphthalein", "methyl-orange"],
+        "done": {
+          "kind": "grabbed"
+        }
+      },
+      {
+        "id": "indicator",
+        "instruction": "Add a few drops to the flask (E).",
+        "vi": {
+          "instruction": "Nhỏ vài giọt vào bình (E)."
+        },
+        "objects": ["conical-flask"],
+        "done": {
+          "kind": "setup",
+          "station": "titration",
+          "step": "indicator-pp",
+          "or": ["indicator-mo"]
+        }
+      },
+      {
+        "id": "take-flask",
+        "instruction": "Set the bottle down and take the flask.",
+        "vi": {
+          "instruction": "Đặt lọ xuống và cầm bình tam giác lên."
+        },
+        "objects": ["conical-flask"],
+        "done": {
+          "kind": "grabbed"
+        }
+      },
+      {
+        "id": "tile",
+        "instruction": "Stand it on the white tile under the burette tip (E).",
+        "vi": {
+          "instruction": "Đặt bình lên tấm sứ trắng dưới đầu buret (E)."
+        },
+        "objects": ["titration"],
+        "done": {
+          "kind": "setup",
+          "station": "titration",
+          "step": "tile"
+        }
+      },
+      {
+        "id": "open-tap",
+        "instruction": "Aim at the burette on the stand and press E: the tap opens. The base runs at a fixed 0.25 mL/s, so this takes from under half a minute to about three minutes (it depends on V_a and c_b). Watch the burette’s level fall (9 mm per mL); the flask is wide, its level rises only a few millimetres.",
+        "vi": {
+          "instruction": "Nhắm vào buret trên giá và nhấn E: van mở. Bazơ chảy cố định 0,25 mL/s nên mất từ dưới nửa phút đến khoảng ba phút (tùy V_a và c_b). Hãy nhìn mực buret tụt xuống (9 mm mỗi mL); bình tam giác rộng nên mực trong bình chỉ dâng vài milimét."
+        },
+        "objects": ["burette"],
+        "done": {
+          "kind": "state",
+          "key": "tapOpen",
+          "value": true
+        }
+      },
+      {
+        "id": "close-tap",
+        "instruction": "Watch the flask: near the end the colour changes within a second or two (phenolphthalein: colourless to pink; methyl orange: red to yellow). Press E the moment it changes and stays — later, and the reading overshoots.",
+        "vi": {
+          "instruction": "Quan sát bình: gần cuối màu đổi chỉ trong một, hai giây (phenolphtalein: không màu sang hồng; metyl da cam: đỏ sang vàng). Nhấn E ngay khi màu đổi và giữ nguyên — chậm hơn thì số đọc sẽ vượt quá điểm cuối."
+        },
+        "objects": ["burette", "conical-flask"],
+        "done": {
+          "kind": "state",
+          "key": "tapOpen",
+          "value": false
+        }
+      },
+      {
+        "id": "record",
+        "instruction": "With the tap closed, press F at the stand to record the burette reading: the run ends there.",
+        "vi": {
+          "instruction": "Khi van đã khóa, nhấn F tại giá để ghi số đọc trên buret: lần chạy kết thúc ở đó."
+        },
+        "objects": ["burette"],
+        "done": {
+          "kind": "completed",
+          "station": "titration"
+        }
+      },
+      {
+        "id": "results",
+        "instruction": "Read the results on the monitor (E) and check your c_a.",
+        "vi": {
+          "instruction": "Đọc kết quả trên màn hình (E) và kiểm tra c_a của em."
+        },
+        "objects": ["titration-monitor"],
+        "done": {
+          "kind": "viewed",
+          "station": "titration"
+        }
+      }
+    ]
+  },
+  {
+    "id": "heating-curve",
+    "room": "chemistry-lab",
+    "title": "The heating curve",
+    "description": "Melt 0.05 kg of ice and boil the water on the hot plate, step by step, and read its heating curve.",
+    "vi": {
+      "title": "Đường cong đun nóng",
+      "description": "Làm nóng chảy 0,05 kg nước đá rồi đun sôi trên bếp điện, từng bước, và đọc đường cong đun nóng."
+    },
+    "steps": [
+      {
+        "id": "read",
+        "instruction": "Read the heating curve board on the east wall (E).",
+        "vi": {
+          "instruction": "Đọc bảng hướng dẫn đường cong đun nóng trên tường phía đông (E)."
+        },
+        "objects": ["heating-instructions"],
+        "done": {
+          "kind": "inspected"
+        }
+      },
+      {
+        "id": "mass",
+        "instruction": "Go to the hot plate and press E to work at it. Set the mass of ice m on the beaker to 0.05 kg.",
+        "vi": {
+          "instruction": "Đến bếp điện và nhấn E để làm việc. Đặt khối lượng nước đá m trên cốc là 0,05 kg."
+        },
+        "objects": ["heating"],
+        "done": {
+          "kind": "state",
+          "key": "param.mass",
+          "value": 0.05
+        }
+      },
+      {
+        "id": "start-temperature",
+        "instruction": "Set the ice’s starting temperature T₀ to −20 °C.",
+        "vi": {
+          "instruction": "Đặt nhiệt độ ban đầu của nước đá T₀ là −20 °C."
+        },
+        "objects": ["heating"],
+        "done": {
+          "kind": "state",
+          "key": "param.startTemperature",
+          "value": -20
+        }
+      },
+      {
+        "id": "power",
+        "instruction": "Set the hot plate’s power P to 800 W.",
+        "vi": {
+          "instruction": "Đặt công suất bếp P là 800 W."
+        },
+        "objects": ["heating"],
+        "done": {
+          "kind": "state",
+          "key": "param.power",
+          "value": 800
+        }
+      },
+      {
+        "id": "run",
+        "instruction": "Press RUN: the thermometer climbs to 0 °C, stays there while the ice melts, climbs again and stays at 100 °C while the water boils (about a minute).",
+        "vi": {
+          "instruction": "Nhấn CHẠY: nhiệt kế tăng đến 0 °C, đứng yên trong lúc đá tan, tăng tiếp rồi đứng ở 100 °C khi nước sôi (khoảng một phút)."
+        },
+        "objects": ["heating"],
+        "done": {
+          "kind": "completed",
+          "station": "heating"
+        }
+      },
+      {
+        "id": "results",
+        "instruction": "Open the results (E at the hot plate) and read the melting time and the two flat parts of the curve.",
+        "vi": {
+          "instruction": "Mở kết quả (E tại bếp điện) và đọc thời gian nóng chảy cùng hai đoạn nằm ngang của đường cong."
+        },
+        "objects": ["heating"],
+        "done": {
+          "kind": "viewed",
+          "station": "heating"
+        }
+      }
+    ]
+  },
+  {
+    "id": "reaction-rate",
+    "room": "chemistry-lab",
+    "title": "The rate of a reaction",
+    "description": "Crystal violet fading in NaOH at the colorimeter on the back bench: measure k′ and t½.",
+    "vi": {
+      "title": "Tốc độ phản ứng",
+      "description": "Tím tinh thể mất màu trong NaOH tại máy so màu ở bàn phía sau: đo k′ và t½."
+    },
+    "steps": [
+      {
+        "id": "read",
+        "instruction": "Read the reaction-rate board on the back wall (E).",
+        "vi": {
+          "instruction": "Đọc bảng hướng dẫn tốc độ phản ứng trên tường phía sau (E)."
+        },
+        "objects": ["kinetics-instructions"],
+        "done": {
+          "kind": "inspected"
+        }
+      },
+      {
+        "id": "temperature",
+        "instruction": "Go to the colorimeter and press E: its workspace opens. Set the water bath to 35 °C.",
+        "vi": {
+          "instruction": "Đến máy so màu và nhấn E: bàn làm việc mở ra. Đặt bể ổn nhiệt ở 35 °C."
+        },
+        "objects": ["kinetics"],
+        "done": {
+          "kind": "state",
+          "key": "param.temperature",
+          "value": 35
+        }
+      },
+      {
+        "id": "dye",
+        "instruction": "Put the crystal violet flask in the water bath.",
+        "vi": {
+          "instruction": "Đặt bình tím tinh thể vào bể ổn nhiệt."
+        },
+        "objects": ["kinetics"],
+        "done": {
+          "kind": "setup",
+          "station": "kinetics",
+          "step": "dye-10",
+          "or": ["dye-2", "dye-5"]
+        }
+      },
+      {
+        "id": "naoh",
+        "instruction": "Put the NaOH flask in the water bath.",
+        "vi": {
+          "instruction": "Đặt bình NaOH vào bể ổn nhiệt."
+        },
+        "objects": ["kinetics"],
+        "done": {
+          "kind": "setup",
+          "station": "kinetics",
+          "step": "naoh-020",
+          "or": ["naoh-010", "naoh-015", "naoh-025"]
+        }
+      },
+      {
+        "id": "cuvette",
+        "instruction": "Put the cuvette in the colorimeter’s slot.",
+        "vi": {
+          "instruction": "Đặt cuvet vào khe của máy so màu."
+        },
+        "objects": ["kinetics"],
+        "done": {
+          "kind": "setup",
+          "station": "kinetics",
+          "step": "cuvette"
+        }
+      },
+      {
+        "id": "run",
+        "instruction": "Press RUN: the solutions mix and the timer starts. Watch the violet fade and A fall on the graph.",
+        "vi": {
+          "instruction": "Nhấn CHẠY: các dung dịch trộn vào nhau và đồng hồ bắt đầu chạy. Quan sát màu tím nhạt dần và A giảm trên đồ thị."
+        },
+        "objects": ["kinetics"],
+        "done": {
+          "kind": "completed",
+          "station": "kinetics"
+        }
+      },
+      {
+        "id": "results",
+        "instruction": "Open the results and read k′ and t½; check that ln A against time is a straight line.",
+        "vi": {
+          "instruction": "Mở kết quả và đọc k′ và t½; kiểm tra ln A theo thời gian là một đường thẳng."
+        },
+        "objects": ["kinetics"],
+        "done": {
+          "kind": "viewed",
+          "station": "kinetics"
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,1067 @@
+{
+  "id": "projectile-motion",
+  "skills": [
+    {
+      "id": "components",
+      "name": "Two motions at once",
+      "advice": "Split v₀ into v₀·cos θ across and v₀·sin θ up. Across, nothing acts: the speed stays constant; up and down, gravity gives −g. Watch the ball’s shadow on the floor in a run: it moves evenly.",
+      "vi": {
+        "name": "Hai chuyển động thành phần",
+        "advice": "Phân tích v₀ thành v₀·cos θ theo phương ngang và v₀·sin θ theo phương thẳng đứng. Theo phương ngang không có lực tác dụng nên vận tốc không đổi; theo phương thẳng đứng gia tốc là −g. Quan sát bóng của quả bóng trên sàn khi chạy thí nghiệm: nó chuyển động đều."
+      }
+    },
+    {
+      "id": "time-range",
+      "name": "Flight time and range",
+      "advice": "On level ground learn t = 2v₀·sin θ/g and L = v₀²·sin 2θ/g. Try at the station: 45° goes farthest, and 30° and 60° land at the same place. Trap: v₀·sin θ/g is only the time to the top.",
+      "vi": {
+        "name": "Thời gian bay và tầm xa",
+        "advice": "Trên mặt phẳng ngang, nhớ t = 2v₀·sin θ/g và L = v₀²·sin 2θ/g. Thử trên trạm: góc 45° bay xa nhất, góc 30° và 60° rơi cùng một chỗ. Lỗi hay gặp: v₀·sin θ/g chỉ là thời gian lên đến đỉnh."
+      }
+    },
+    {
+      "id": "height",
+      "name": "Maximum height",
+      "advice": "At the top the vertical velocity is zero, so (v₀·sin θ)² = 2gH. Use the vertical component only — not the whole v₀, not v₀·cos θ.",
+      "vi": {
+        "name": "Độ cao cực đại",
+        "advice": "Tại đỉnh quỹ đạo vận tốc theo phương thẳng đứng bằng 0, nên (v₀·sin θ)² = 2gH. Chỉ dùng thành phần thẳng đứng — không dùng cả v₀, cũng không dùng v₀·cos θ."
+      }
+    },
+    {
+      "id": "gravity",
+      "name": "Gravity, launch height and the real world",
+      "advice": "Compare the same shot on the Moon, Mars, Earth and Jupiter: t and L go as 1/g. For a horizontal throw from a height h, t = √(2h/g) and L = v₀·t. Remember the model leaves out air resistance.",
+      "vi": {
+        "name": "Trọng trường, độ cao ném và thực tế",
+        "advice": "So sánh cùng một cú ném trên Mặt Trăng, Sao Hỏa, Trái Đất và Sao Mộc: t và L tỉ lệ với 1/g. Với vật ném ngang từ độ cao h, t = √(2h/g) và L = v₀·t. Nhớ rằng mô hình bỏ qua lực cản không khí."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "horizontal-velocity",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["components"],
+      "stem": "A ball is thrown at an angle above the horizontal, with no air resistance. During the flight, the horizontal component of its velocity…",
+      "explain": "No force acts across, so v₀·cos θ stays the same all the flight; only the vertical component is changed by gravity.",
+      "vi": {
+        "stem": "Một quả bóng được ném xiên lên, bỏ qua lực cản không khí. Trong khi bay, thành phần nằm ngang của vận tốc…",
+        "explain": "Theo phương ngang không có lực tác dụng nên v₀·cos θ không đổi trong suốt quá trình bay; chỉ thành phần thẳng đứng bị trọng lực làm thay đổi."
+      },
+      "options": [
+        {
+          "text": "stays constant",
+          "vi": {
+            "text": "không đổi"
+          },
+          "correct": true
+        },
+        {
+          "text": "falls to zero at the top",
+          "vi": {
+            "text": "giảm về 0 tại đỉnh quỹ đạo"
+          }
+        },
+        {
+          "text": "grows by g every second",
+          "vi": {
+            "text": "tăng thêm g sau mỗi giây"
+          }
+        },
+        {
+          "text": "reverses at the top",
+          "vi": {
+            "text": "đổi chiều tại đỉnh quỹ đạo"
+          }
+        }
+      ]
+    },
+    {
+      "id": "top-velocity",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["components", "height"],
+      "stem": "At the highest point of its path, the velocity of a ball thrown at an angle θ (0 < θ < 90°) is…",
+      "explain": "At the top the vertical component is zero and the horizontal one is still v₀·cos θ, so the velocity is horizontal.",
+      "vi": {
+        "stem": "Tại điểm cao nhất của quỹ đạo, vận tốc của quả bóng được ném xiên góc θ (0 < θ < 90°) là…",
+        "explain": "Tại đỉnh, thành phần thẳng đứng bằng 0 còn thành phần nằm ngang vẫn là v₀·cos θ, nên vận tốc nằm ngang."
+      },
+      "options": [
+        {
+          "text": "horizontal, of size v₀·cos θ",
+          "vi": {
+            "text": "nằm ngang, có độ lớn v₀·cos θ"
+          },
+          "correct": true
+        },
+        {
+          "text": "zero",
+          "vi": {
+            "text": "bằng 0"
+          }
+        },
+        {
+          "text": "vertical, of size v₀·sin θ",
+          "vi": {
+            "text": "thẳng đứng, có độ lớn v₀·sin θ"
+          }
+        },
+        {
+          "text": "equal to v₀",
+          "vi": {
+            "text": "bằng v₀"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-path",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["components", "gravity"],
+      "stem": "A ball is launched at an angle above the horizontal and flies without air resistance. Decide whether each statement is true or false.",
+      "explain": "The path is a parabola; the acceleration is g downwards all the flight, the top included; mass does not appear in the motion.",
+      "vi": {
+        "stem": "Một quả bóng được ném xiên lên và bay, bỏ qua lực cản không khí. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Quỹ đạo là một parabol; gia tốc luôn bằng g hướng xuống trong suốt quá trình bay, kể cả tại đỉnh; khối lượng không ảnh hưởng đến chuyển động."
+      },
+      "statements": [
+        {
+          "text": "Its path is a parabola.",
+          "vi": {
+            "text": "Quỹ đạo của nó là một parabol."
+          },
+          "true": true
+        },
+        {
+          "text": "Its acceleration is g, downwards, throughout the flight.",
+          "vi": {
+            "text": "Gia tốc của nó luôn bằng g và hướng xuống trong suốt quá trình bay."
+          },
+          "true": true
+        },
+        {
+          "text": "At the top of the path its acceleration is zero.",
+          "vi": {
+            "text": "Tại đỉnh quỹ đạo, gia tốc của nó bằng 0."
+          },
+          "true": false
+        },
+        {
+          "text": "A heavier ball launched the same way would land closer.",
+          "vi": {
+            "text": "Một quả bóng nặng hơn được ném y như vậy sẽ rơi gần hơn."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "best-angle",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["time-range"],
+      "stem": "With the same launch speed, from and onto level ground, which angle gives the longest range?",
+      "explain": "L = v₀²·sin 2θ/g is largest when sin 2θ = 1, i.e. θ = 45°.",
+      "vi": {
+        "stem": "Với cùng tốc độ ném, ném từ mặt đất và rơi xuống mặt đất nằm ngang, góc ném nào cho tầm xa lớn nhất?",
+        "explain": "L = v₀²·sin 2θ/g lớn nhất khi sin 2θ = 1, tức θ = 45°."
+      },
+      "options": [
+        {
+          "text": "45°",
+          "vi": {
+            "text": "45°"
+          },
+          "correct": true
+        },
+        {
+          "text": "30°",
+          "vi": {
+            "text": "30°"
+          }
+        },
+        {
+          "text": "60°",
+          "vi": {
+            "text": "60°"
+          }
+        },
+        {
+          "text": "90°",
+          "vi": {
+            "text": "90°"
+          }
+        }
+      ]
+    },
+    {
+      "id": "complementary",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["time-range", "height"],
+      "stem": "Two balls are launched from the ground at the same speed, one at 30° and one at 60°. Which is true?",
+      "explain": "sin 2θ is the same for 30° and 60° (sin 60° = sin 120°), so the ranges are equal; the 60° ball goes higher and stays up longer.",
+      "vi": {
+        "stem": "Hai quả bóng được ném từ mặt đất với cùng tốc độ, một quả ở góc 30° và một quả ở góc 60°. Phát biểu nào sau đây đúng?",
+        "explain": "sin 2θ bằng nhau với 30° và 60° (sin 60° = sin 120°), nên tầm xa bằng nhau; quả ném góc 60° lên cao hơn và bay lâu hơn."
+      },
+      "options": [
+        {
+          "text": "They land the same distance away.",
+          "vi": {
+            "text": "Chúng rơi cách chỗ ném cùng một khoảng."
+          },
+          "correct": true
+        },
+        {
+          "text": "The 60° ball lands twice as far.",
+          "vi": {
+            "text": "Quả ném góc 60° rơi xa gấp đôi."
+          }
+        },
+        {
+          "text": "The 30° ball stays in the air longer.",
+          "vi": {
+            "text": "Quả ném góc 30° bay lâu hơn."
+          }
+        },
+        {
+          "text": "They reach the same greatest height.",
+          "vi": {
+            "text": "Chúng đạt cùng độ cao cực đại."
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-earth",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["time-range", "gravity"],
+      "set": {
+        "velocity": 8,
+        "angle": 45,
+        "gravity": 9.81
+      },
+      "stem": "A ball is launched from the floor at {velocity} m/s, {angle}° above the horizontal, on Earth (g = {gravity} m/s²), with no air resistance. Decide whether each statement is true or false.",
+      "explain": "t = 2v₀·sin θ/g ≈ {@flightTime} s. L ∝ v₀², so twice v₀ gives four times L. A smaller g (Moon) gives a longer flight. Landing at launch height, it lands at its launch speed, {@impactSpeed} m/s.",
+      "vi": {
+        "stem": "Một quả bóng được ném từ mặt sàn với vận tốc {velocity} m/s, hợp với phương ngang góc {angle}°, trên Trái Đất (g = {gravity} m/s²), bỏ qua lực cản không khí. Mỗi nhận định sau đúng hay sai?",
+        "explain": "t = 2v₀·sin θ/g ≈ {@flightTime} s. L tỉ lệ với v₀², nên v₀ gấp đôi thì L gấp bốn. g nhỏ hơn (Mặt Trăng) thì bay xa hơn. Rơi về đúng độ cao ném, bóng chạm sàn với đúng tốc độ ném, {@impactSpeed} m/s."
+      },
+      "statements": [
+        {
+          "text": "It stays in the air for about {@flightTime} s.",
+          "vi": {
+            "text": "Nó bay trong khoảng {@flightTime} s."
+          },
+          "true": true,
+          "check": {
+            "expr": "2*velocity*sin(rad(angle))/gravity",
+            "equals": "flightTime"
+          }
+        },
+        {
+          "text": "Launched at twice the speed, it would land twice as far.",
+          "vi": {
+            "text": "Nếu ném với tốc độ gấp đôi, nó sẽ rơi xa gấp đôi."
+          },
+          "true": false
+        },
+        {
+          "text": "The same shot on the Moon would land farther away.",
+          "vi": {
+            "text": "Cùng cú ném đó trên Mặt Trăng sẽ rơi xa hơn."
+          },
+          "true": true
+        },
+        {
+          "text": "It lands at {velocity} m/s, the speed it was launched at.",
+          "vi": {
+            "text": "Nó chạm sàn với tốc độ {velocity} m/s, đúng bằng tốc độ ném."
+          },
+          "true": true,
+          "check": {
+            "expr": "velocity",
+            "equals": "impactSpeed"
+          }
+        }
+      ]
+    },
+    {
+      "id": "flight-time",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["time-range"],
+      "set": {
+        "velocity": 6,
+        "angle": 30,
+        "gravity": 9.81
+      },
+      "stem": "A ball is launched from the floor at {velocity} m/s, {angle}° above the horizontal (g = {gravity} m/s², no air resistance). How long is it in the air?",
+      "explain": "It lands when its height is back to zero: t = 2v₀·sin θ/g = 2·{velocity}·sin {angle}°/{gravity} ≈ {@flightTime} s. v₀·sin θ/g is only the time to the top.",
+      "vi": {
+        "stem": "Một quả bóng được ném từ mặt sàn với vận tốc {velocity} m/s, hợp với phương ngang góc {angle}° (g = {gravity} m/s², bỏ qua lực cản không khí). Bóng bay trong bao lâu?",
+        "explain": "Bóng chạm sàn khi độ cao trở về 0: t = 2v₀·sin θ/g = 2·{velocity}·sin {angle}°/{gravity} ≈ {@flightTime} s. v₀·sin θ/g chỉ là thời gian lên đến đỉnh."
+      },
+      "options": [
+        {
+          "text": "{@flightTime} s",
+          "vi": {
+            "text": "{@flightTime} s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2*velocity*sin(rad(angle))/gravity",
+            "equals": "flightTime"
+          }
+        },
+        {
+          "text": "{=velocity*sin(rad(angle))/gravity} s",
+          "vi": {
+            "text": "{=velocity*sin(rad(angle))/gravity} s"
+          },
+          "check": {
+            "expr": "velocity*sin(rad(angle))/gravity",
+            "equals": "flightTime"
+          }
+        },
+        {
+          "text": "{=2*velocity*cos(rad(angle))/gravity} s",
+          "vi": {
+            "text": "{=2*velocity*cos(rad(angle))/gravity} s"
+          },
+          "check": {
+            "expr": "2*velocity*cos(rad(angle))/gravity",
+            "equals": "flightTime"
+          }
+        },
+        {
+          "text": "{=2*velocity/gravity} s",
+          "vi": {
+            "text": "{=2*velocity/gravity} s"
+          },
+          "check": {
+            "expr": "2*velocity/gravity",
+            "equals": "flightTime"
+          }
+        }
+      ]
+    },
+    {
+      "id": "range",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["time-range"],
+      "set": {
+        "velocity": 5,
+        "angle": 40,
+        "gravity": 9.81
+      },
+      "stem": "A ball is launched from the floor at {velocity} m/s, {angle}° above the horizontal (g = {gravity} m/s², no air resistance). How far from the launch point does it land?",
+      "explain": "L = v₀²·sin 2θ/g = {velocity}²·sin {=2*angle}°/{gravity} ≈ {@range} m.",
+      "vi": {
+        "stem": "Một quả bóng được ném từ mặt sàn với vận tốc {velocity} m/s, hợp với phương ngang góc {angle}° (g = {gravity} m/s², bỏ qua lực cản không khí). Bóng rơi cách điểm ném bao xa?",
+        "explain": "L = v₀²·sin 2θ/g = {velocity}²·sin {=2*angle}°/{gravity} ≈ {@range} m."
+      },
+      "options": [
+        {
+          "text": "{@range} m",
+          "vi": {
+            "text": "{@range} m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "velocity^2*sin(rad(2*angle))/gravity",
+            "equals": "range"
+          }
+        },
+        {
+          "text": "{=velocity^2*sin(rad(angle))/gravity} m",
+          "vi": {
+            "text": "{=velocity^2*sin(rad(angle))/gravity} m"
+          },
+          "check": {
+            "expr": "velocity^2*sin(rad(angle))/gravity",
+            "equals": "range"
+          }
+        },
+        {
+          "text": "{=velocity^2*sin(rad(2*angle))/(2*gravity)} m",
+          "vi": {
+            "text": "{=velocity^2*sin(rad(2*angle))/(2*gravity)} m"
+          },
+          "check": {
+            "expr": "velocity^2*sin(rad(2*angle))/(2*gravity)",
+            "equals": "range"
+          }
+        },
+        {
+          "text": "{=velocity*sin(rad(2*angle))/gravity} m",
+          "vi": {
+            "text": "{=velocity*sin(rad(2*angle))/gravity} m"
+          },
+          "check": {
+            "expr": "velocity*sin(rad(2*angle))/gravity",
+            "equals": "range"
+          }
+        }
+      ]
+    },
+    {
+      "id": "max-height",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["height"],
+      "set": {
+        "velocity": 7,
+        "angle": 60,
+        "gravity": 9.81
+      },
+      "stem": "A ball is launched from the floor at {velocity} m/s, {angle}° above the horizontal (g = {gravity} m/s²). What is the greatest height it reaches?",
+      "explain": "At the top the vertical velocity is zero: H = (v₀·sin θ)²/(2g) = ({velocity}·sin {angle}°)²/(2·{gravity}) ≈ {@maxHeight} m.",
+      "vi": {
+        "stem": "Một quả bóng được ném từ mặt sàn với vận tốc {velocity} m/s, hợp với phương ngang góc {angle}° (g = {gravity} m/s²). Độ cao cực đại mà bóng đạt được là bao nhiêu?",
+        "explain": "Tại đỉnh vận tốc theo phương thẳng đứng bằng 0: H = (v₀·sin θ)²/(2g) = ({velocity}·sin {angle}°)²/(2·{gravity}) ≈ {@maxHeight} m."
+      },
+      "options": [
+        {
+          "text": "{@maxHeight} m",
+          "vi": {
+            "text": "{@maxHeight} m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(velocity*sin(rad(angle)))^2/(2*gravity)",
+            "equals": "maxHeight"
+          }
+        },
+        {
+          "text": "{=(velocity*sin(rad(angle)))^2/gravity} m",
+          "vi": {
+            "text": "{=(velocity*sin(rad(angle)))^2/gravity} m"
+          },
+          "check": {
+            "expr": "(velocity*sin(rad(angle)))^2/gravity",
+            "equals": "maxHeight"
+          }
+        },
+        {
+          "text": "{=velocity^2/(2*gravity)} m",
+          "vi": {
+            "text": "{=velocity^2/(2*gravity)} m"
+          },
+          "check": {
+            "expr": "velocity^2/(2*gravity)",
+            "equals": "maxHeight"
+          }
+        },
+        {
+          "text": "{=(velocity*cos(rad(angle)))^2/(2*gravity)} m",
+          "vi": {
+            "text": "{=(velocity*cos(rad(angle)))^2/(2*gravity)} m"
+          },
+          "check": {
+            "expr": "(velocity*cos(rad(angle)))^2/(2*gravity)",
+            "equals": "maxHeight"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-mars",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["time-range", "height", "gravity"],
+      "set": {
+        "velocity": 4,
+        "angle": 45,
+        "gravity": 3.71
+      },
+      "stem": "On Mars (g = {gravity} m/s²) a ball is launched from the ground at {velocity} m/s, {angle}° above the horizontal. Decide whether each statement is true or false.",
+      "explain": "L = v₀²·sin 2θ/g ≈ {@range} m and H = (v₀·sin θ)²/(2g) ≈ {@maxHeight} m; at 45° L = v₀²/g = 4H. The flight time is 2v₀·sin θ/g ≈ {@flightTime} s; v₀·sin θ/g is only the rise.",
+      "vi": {
+        "stem": "Trên Sao Hỏa (g = {gravity} m/s²), một quả bóng được ném từ mặt đất với vận tốc {velocity} m/s, hợp với phương ngang góc {angle}°. Mỗi nhận định sau đúng hay sai?",
+        "explain": "L = v₀²·sin 2θ/g ≈ {@range} m và H = (v₀·sin θ)²/(2g) ≈ {@maxHeight} m; ở góc 45° thì L = v₀²/g = 4H. Thời gian bay là 2v₀·sin θ/g ≈ {@flightTime} s; v₀·sin θ/g chỉ là thời gian đi lên."
+      },
+      "statements": [
+        {
+          "text": "Its range is about {@range} m.",
+          "vi": {
+            "text": "Tầm xa của nó khoảng {@range} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "velocity^2*sin(rad(2*angle))/gravity",
+            "equals": "range"
+          }
+        },
+        {
+          "text": "Its greatest height is about {@maxHeight} m.",
+          "vi": {
+            "text": "Độ cao cực đại của nó khoảng {@maxHeight} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "(velocity*sin(rad(angle)))^2/(2*gravity)",
+            "equals": "maxHeight"
+          }
+        },
+        {
+          "text": "Its range is four times its greatest height.",
+          "vi": {
+            "text": "Tầm xa của nó gấp bốn lần độ cao cực đại."
+          },
+          "true": true,
+          "check": {
+            "expr": "4*@maxHeight",
+            "equals": "range"
+          }
+        },
+        {
+          "text": "It is in the air for about {=velocity*sin(rad(angle))/gravity} s.",
+          "vi": {
+            "text": "Nó bay trong khoảng {=velocity*sin(rad(angle))/gravity} s."
+          },
+          "true": false,
+          "check": {
+            "expr": "velocity*sin(rad(angle))/gravity",
+            "equals": "flightTime"
+          }
+        }
+      ]
+    },
+    {
+      "id": "table-throw",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["gravity", "components"],
+      "set": {
+        "height": 1.25,
+        "angle": 0,
+        "velocity": 3,
+        "gravity": 9.81
+      },
+      "stem": "Suppose the launcher stood on a table {height} m high and fired the ball horizontally at {velocity} m/s (g = {gravity} m/s², no air resistance). How far from the foot of the table would the ball land?",
+      "explain": "The fall takes t = √(2h/g) = √(2·{height}/{gravity}) ≈ {@flightTime} s, the same as a free fall; across it moves at v₀ all that time: L = v₀·t ≈ {@range} m. The level-ground formula v₀²·sin 2θ/g does not apply here.",
+      "vi": {
+        "stem": "Giả sử súng bắn được đặt trên mặt bàn cao {height} m và bắn quả bóng theo phương ngang với vận tốc {velocity} m/s (g = {gravity} m/s², bỏ qua lực cản không khí). Bóng rơi cách chân bàn bao xa?",
+        "explain": "Thời gian rơi t = √(2h/g) = √(2·{height}/{gravity}) ≈ {@flightTime} s, như vật rơi tự do; theo phương ngang bóng đi với vận tốc v₀ trong suốt thời gian đó: L = v₀·t ≈ {@range} m. Công thức v₀²·sin 2θ/g cho mặt phẳng ngang không áp dụng ở đây."
+      },
+      "options": [
+        {
+          "text": "{@range} m",
+          "vi": {
+            "text": "{@range} m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "velocity*sqrt(2*height/gravity)",
+            "equals": "range"
+          }
+        },
+        {
+          "text": "{=velocity*sqrt(height/gravity)} m",
+          "vi": {
+            "text": "{=velocity*sqrt(height/gravity)} m"
+          },
+          "check": {
+            "expr": "velocity*sqrt(height/gravity)",
+            "equals": "range"
+          }
+        },
+        {
+          "text": "{=velocity*2*height/gravity} m",
+          "vi": {
+            "text": "{=velocity*2*height/gravity} m"
+          },
+          "check": {
+            "expr": "velocity*2*height/gravity",
+            "equals": "range"
+          }
+        },
+        {
+          "text": "{=velocity^2/gravity} m",
+          "vi": {
+            "text": "{=velocity^2/gravity} m"
+          },
+          "check": {
+            "expr": "velocity^2/gravity",
+            "equals": "range"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-analysis",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["time-range", "gravity"],
+      "set": {
+        "velocity": 10,
+        "angle": 30,
+        "gravity": 9.81,
+        "resolution": 0.01
+      },
+      "stem": "A ball is launched from the floor at {velocity} m/s, {angle}° above the horizontal (g = {gravity} m/s²), and its range is read with a tape of resolution {resolution} m. Decide whether each statement is true or false.",
+      "explain": "L = v₀²·sin 2θ/g ≈ {@range|4} m; the tape shows it to the nearest 0.01 m. 60° has the same sin 2θ, so the same range. The rise takes half the flight, {=@flightTime/2} s. Air resistance, left out of the model, would shorten a real range.",
+      "vi": {
+        "stem": "Một quả bóng được ném từ mặt sàn với vận tốc {velocity} m/s, hợp với phương ngang góc {angle}° (g = {gravity} m/s²), tầm xa được đọc bằng thước dây có độ phân giải {resolution} m. Mỗi nhận định sau đúng hay sai?",
+        "explain": "L = v₀²·sin 2θ/g ≈ {@range|4} m; thước dây hiển thị giá trị gần nhất theo 0,01 m. Góc 60° có cùng sin 2θ nên cùng tầm xa. Thời gian đi lên bằng nửa thời gian bay, {=@flightTime/2} s. Lực cản không khí (mô hình bỏ qua) sẽ làm tầm xa thực tế ngắn hơn."
+      },
+      "statements": [
+        {
+          "text": "The tape reads {=round(@range/resolution)*resolution} m.",
+          "vi": {
+            "text": "Thước dây đọc được {=round(@range/resolution)*resolution} m."
+          },
+          "true": true
+        },
+        {
+          "text": "Launched at 60° with the same speed, it would land at the same place.",
+          "vi": {
+            "text": "Nếu ném ở góc 60° với cùng tốc độ, nó sẽ rơi đúng chỗ đó."
+          },
+          "true": true
+        },
+        {
+          "text": "It reaches the top of its path after {=@flightTime/2} s.",
+          "vi": {
+            "text": "Nó lên đến đỉnh quỹ đạo sau {=@flightTime/2} s."
+          },
+          "true": true
+        },
+        {
+          "text": "With air resistance a real ball would land farther than the model says.",
+          "vi": {
+            "text": "Khi có lực cản không khí, quả bóng thật sẽ rơi xa hơn mô hình dự đoán."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "path-shape",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["components"],
+      "stem": "Without air resistance, a ball launched at an angle above the horizontal follows a path that is…",
+      "explain": "Horizontally it moves at a constant speed, vertically with constant acceleration g, so its height is a quadratic function of its horizontal distance: the path is a parabola.",
+      "vi": {
+        "stem": "Bỏ qua sức cản không khí, một quả bóng được ném xiên lên so với phương ngang chuyển động theo quỹ đạo là…",
+        "explain": "Theo phương ngang nó chuyển động thẳng đều, theo phương thẳng đứng nó chuyển động với gia tốc không đổi g, nên độ cao là hàm bậc hai của tầm xa theo phương ngang: quỹ đạo là một đường parabol."
+      },
+      "options": [
+        {
+          "text": "a parabola",
+          "vi": {
+            "text": "một đường parabol"
+          },
+          "correct": true
+        },
+        {
+          "text": "an arc of a circle",
+          "vi": {
+            "text": "một cung tròn"
+          }
+        },
+        {
+          "text": "two straight lines, up and then down",
+          "vi": {
+            "text": "hai đoạn thẳng, đi lên rồi đi xuống"
+          }
+        },
+        {
+          "text": "a straight line",
+          "vi": {
+            "text": "một đường thẳng"
+          }
+        }
+      ]
+    },
+    {
+      "id": "double-speed",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["time-range"],
+      "stem": "A ball is launched from the ground at the same angle but at twice the speed. Its range on level ground…",
+      "explain": "L = v₀²·sin 2θ/g: the range grows with the square of the launch speed, so twice the speed gives four times the range.",
+      "vi": {
+        "stem": "Một quả bóng được ném từ mặt đất với cùng góc ném nhưng tốc độ ban đầu gấp đôi. Tầm xa của nó trên mặt đất nằm ngang…",
+        "explain": "L = v₀²·sin 2θ/g: tầm xa tỉ lệ với bình phương tốc độ ban đầu, nên tốc độ gấp đôi thì tầm xa gấp bốn."
+      },
+      "options": [
+        {
+          "text": "becomes four times larger",
+          "vi": {
+            "text": "tăng gấp bốn lần"
+          },
+          "correct": true
+        },
+        {
+          "text": "doubles",
+          "vi": {
+            "text": "tăng gấp đôi"
+          }
+        },
+        {
+          "text": "becomes √2 times larger",
+          "vi": {
+            "text": "tăng √2 lần"
+          }
+        },
+        {
+          "text": "stays the same, since the angle is the same",
+          "vi": {
+            "text": "không đổi, vì góc ném không đổi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-two-motions",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["components", "time-range"],
+      "stem": "A ball is launched from level ground at an angle and lands on the same ground, without air resistance. Decide whether each statement is true or false.",
+      "explain": "Vertically the ball is in free fall with acceleration g, so at the top its vertical velocity is zero, and the way up takes as long as the way down. Its mass does not appear in any of the equations: a heavier ball with the same launch goes just as far.",
+      "vi": {
+        "stem": "Một quả bóng được ném xiên từ mặt đất nằm ngang và rơi xuống chính mặt đất đó, bỏ qua sức cản không khí. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Theo phương thẳng đứng, bóng rơi tự do với gia tốc g, nên ở điểm cao nhất vận tốc theo phương thẳng đứng bằng 0, và thời gian đi lên bằng thời gian đi xuống. Khối lượng không có mặt trong phương trình nào: quả bóng nặng hơn ném giống hệt thì bay xa đúng như vậy."
+      },
+      "statements": [
+        {
+          "text": "Its vertical motion has a constant acceleration g, downwards.",
+          "vi": {
+            "text": "Chuyển động theo phương thẳng đứng của nó có gia tốc không đổi g, hướng xuống."
+          },
+          "true": true
+        },
+        {
+          "text": "At the top of the path its vertical velocity is zero.",
+          "vi": {
+            "text": "Ở điểm cao nhất, vận tốc theo phương thẳng đứng bằng 0."
+          },
+          "true": true
+        },
+        {
+          "text": "The way up takes as long as the way down.",
+          "vi": {
+            "text": "Thời gian đi lên bằng thời gian đi xuống."
+          },
+          "true": true
+        },
+        {
+          "text": "A heavier ball launched the same way goes farther.",
+          "vi": {
+            "text": "Quả bóng nặng hơn được ném y như vậy sẽ bay xa hơn."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "range-30",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["time-range"],
+      "set": {
+        "velocity": 9,
+        "angle": 30,
+        "gravity": 9.81
+      },
+      "stem": "A ball is launched from the floor at {velocity} m/s, {angle}° above the horizontal (g = {gravity} m/s², no air resistance). How far away does it land?",
+      "explain": "L = v₀²·sin 2θ/g = {velocity}²·sin {=2*angle}°/{gravity} ≈ {@range} m. sin θ instead of sin 2θ, the factor 2 left out of the flight time, or v₀²/g (the 45° range) give the other values.",
+      "vi": {
+        "stem": "Một quả bóng được ném từ sàn với tốc độ {velocity} m/s, hợp với phương ngang góc {angle}° (g = {gravity} m/s², bỏ qua sức cản không khí). Nó rơi xuống cách chỗ ném bao xa?",
+        "explain": "L = v₀²·sin 2θ/g = {velocity}²·sin {=2*angle}°/{gravity} ≈ {@range} m. Dùng sin θ thay cho sin 2θ, quên số 2 trong thời gian bay, hoặc dùng v₀²/g (tầm xa khi ném 45°) sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{@range} m",
+          "vi": {
+            "text": "{@range} m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "velocity^2*sin(2*rad(angle))/gravity",
+            "equals": "range"
+          }
+        },
+        {
+          "text": "{=velocity^2*sin(rad(angle))/gravity} m",
+          "vi": {
+            "text": "{=velocity^2*sin(rad(angle))/gravity} m"
+          },
+          "check": {
+            "expr": "velocity^2*sin(rad(angle))/gravity",
+            "equals": "range"
+          }
+        },
+        {
+          "text": "{=velocity^2*sin(rad(angle))*cos(rad(angle))/gravity} m",
+          "vi": {
+            "text": "{=velocity^2*sin(rad(angle))*cos(rad(angle))/gravity} m"
+          },
+          "check": {
+            "expr": "velocity^2*sin(rad(angle))*cos(rad(angle))/gravity",
+            "equals": "range"
+          }
+        },
+        {
+          "text": "{=velocity^2/gravity} m",
+          "vi": {
+            "text": "{=velocity^2/gravity} m"
+          },
+          "check": {
+            "expr": "velocity^2/gravity",
+            "equals": "range"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-60",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["height", "time-range", "components"],
+      "set": {
+        "velocity": 12,
+        "angle": 60,
+        "gravity": 9.81
+      },
+      "stem": "A ball is launched from the floor at {velocity} m/s, {angle}° above the horizontal (g = {gravity} m/s², no air resistance). Decide whether each statement is true or false.",
+      "explain": "H = (v₀·sin θ)²/(2g) ≈ {@maxHeight} m; t = 2v₀·sin θ/g ≈ {@flightTime} s. At the top it still moves horizontally at v₀·cos θ = {=velocity*cos(rad(angle))} m/s, not zero. Landing at the height it left, it lands at its launch speed, {@impactSpeed} m/s.",
+      "vi": {
+        "stem": "Một quả bóng được ném từ sàn với tốc độ {velocity} m/s, hợp với phương ngang góc {angle}° (g = {gravity} m/s², bỏ qua sức cản không khí). Mỗi nhận định sau đúng hay sai?",
+        "explain": "H = (v₀·sin θ)²/(2g) ≈ {@maxHeight} m; t = 2v₀·sin θ/g ≈ {@flightTime} s. Ở điểm cao nhất bóng vẫn chuyển động theo phương ngang với v₀·cos θ = {=velocity*cos(rad(angle))} m/s, không phải bằng 0. Rơi xuống đúng độ cao lúc ném, nó chạm sàn với tốc độ bằng tốc độ ném, {@impactSpeed} m/s."
+      },
+      "statements": [
+        {
+          "text": "It rises to about {@maxHeight} m.",
+          "vi": {
+            "text": "Nó lên đến độ cao khoảng {@maxHeight} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "(velocity*sin(rad(angle)))^2/(2*gravity)",
+            "equals": "maxHeight"
+          }
+        },
+        {
+          "text": "It is in the air for about {@flightTime} s.",
+          "vi": {
+            "text": "Nó bay trong không khí khoảng {@flightTime} s."
+          },
+          "true": true,
+          "check": {
+            "expr": "2*velocity*sin(rad(angle))/gravity",
+            "equals": "flightTime"
+          }
+        },
+        {
+          "text": "At the top of its path its speed is zero.",
+          "vi": {
+            "text": "Ở điểm cao nhất, tốc độ của nó bằng 0."
+          },
+          "true": false
+        },
+        {
+          "text": "It lands at {@impactSpeed} m/s.",
+          "vi": {
+            "text": "Nó chạm sàn với tốc độ {@impactSpeed} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "velocity",
+            "equals": "impactSpeed"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-speed",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["time-range"],
+      "set": {
+        "velocity": 7,
+        "angle": 45,
+        "gravity": 9.81
+      },
+      "stem": "A ball launched from the floor at 45° (g = {gravity} m/s², no air resistance) lands {@range|4} m away. What was its launch speed?",
+      "explain": "At 45°, sin 2θ = 1, so L = v₀²/g and v₀ = √(L·g) = √({@range|4}·{gravity}) ≈ {=sqrt(@range*gravity)} m/s. Halving or doubling L·g, or forgetting the root, gives the other values.",
+      "vi": {
+        "stem": "Một quả bóng được ném từ sàn với góc 45° (g = {gravity} m/s², bỏ qua sức cản không khí) rơi xuống cách chỗ ném {@range|4} m. Tốc độ ném của nó bằng bao nhiêu?",
+        "explain": "Ở 45°, sin 2θ = 1, nên L = v₀²/g và v₀ = √(L·g) = √({@range|4}·{gravity}) ≈ {=sqrt(@range*gravity)} m/s. Chia đôi hay nhân đôi L·g, hoặc quên khai căn, sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{=sqrt(@range*gravity)} m/s",
+          "vi": {
+            "text": "{=sqrt(@range*gravity)} m/s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "sqrt(@range*gravity)^2*sin(2*rad(angle))/gravity",
+            "equals": "range"
+          }
+        },
+        {
+          "text": "{=sqrt(@range*gravity/2)} m/s",
+          "vi": {
+            "text": "{=sqrt(@range*gravity/2)} m/s"
+          },
+          "check": {
+            "expr": "(@range*gravity/2)*sin(2*rad(angle))/gravity",
+            "equals": "range"
+          }
+        },
+        {
+          "text": "{=sqrt(2*@range*gravity)} m/s",
+          "vi": {
+            "text": "{=sqrt(2*@range*gravity)} m/s"
+          },
+          "check": {
+            "expr": "(2*@range*gravity)*sin(2*rad(angle))/gravity",
+            "equals": "range"
+          }
+        },
+        {
+          "text": "{=@range*gravity} m/s",
+          "vi": {
+            "text": "{=@range*gravity} m/s"
+          },
+          "check": {
+            "expr": "(@range*gravity)^2*sin(2*rad(angle))/gravity",
+            "equals": "range"
+          }
+        }
+      ]
+    },
+    {
+      "id": "table-impact",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["components", "gravity"],
+      "set": {
+        "height": 0.8,
+        "angle": 0,
+        "velocity": 4,
+        "gravity": 9.81
+      },
+      "stem": "Suppose the launcher stood on a table {height} m high and fired the ball horizontally at {velocity} m/s (g = {gravity} m/s², no air resistance). With what speed does the ball reach the floor?",
+      "explain": "The horizontal velocity stays {velocity} m/s; the vertical one grows to √(2gh) = {=sqrt(2*gravity*height)} m/s. They are at right angles, so v = √(v₀² + 2gh) ≈ {@impactSpeed} m/s. Adding the two speeds ignores their directions; either part alone is not the speed.",
+      "vi": {
+        "stem": "Giả sử bệ phóng đặt trên mặt bàn cao {height} m và bắn bóng theo phương ngang với tốc độ {velocity} m/s (g = {gravity} m/s², bỏ qua sức cản không khí). Bóng chạm sàn với tốc độ bao nhiêu?",
+        "explain": "Vận tốc theo phương ngang giữ nguyên {velocity} m/s; vận tốc theo phương thẳng đứng tăng đến √(2gh) = {=sqrt(2*gravity*height)} m/s. Hai thành phần vuông góc với nhau nên v = √(v₀² + 2gh) ≈ {@impactSpeed} m/s. Cộng trực tiếp hai tốc độ là bỏ qua hướng của chúng; mỗi thành phần riêng lẻ không phải tốc độ của bóng."
+      },
+      "options": [
+        {
+          "text": "{@impactSpeed} m/s",
+          "vi": {
+            "text": "{@impactSpeed} m/s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "sqrt(velocity^2+2*gravity*height)",
+            "equals": "impactSpeed"
+          }
+        },
+        {
+          "text": "{=velocity+sqrt(2*gravity*height)} m/s",
+          "vi": {
+            "text": "{=velocity+sqrt(2*gravity*height)} m/s"
+          },
+          "check": {
+            "expr": "velocity+sqrt(2*gravity*height)",
+            "equals": "impactSpeed"
+          }
+        },
+        {
+          "text": "{velocity} m/s",
+          "vi": {
+            "text": "{velocity} m/s"
+          },
+          "check": {
+            "expr": "velocity",
+            "equals": "impactSpeed"
+          }
+        },
+        {
+          "text": "{=sqrt(2*gravity*height)} m/s",
+          "vi": {
+            "text": "{=sqrt(2*gravity*height)} m/s"
+          },
+          "check": {
+            "expr": "sqrt(2*gravity*height)",
+            "equals": "impactSpeed"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-moon",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["gravity", "time-range"],
+      "set": {
+        "velocity": 6,
+        "angle": 30,
+        "gravity": 1.62
+      },
+      "stem": "On the Moon (g = {gravity} m/s²) a ball is launched from the ground at {velocity} m/s, {angle}° above the horizontal. Decide whether each statement is true or false.",
+      "explain": "L = v₀²·sin 2θ/g ≈ {@range} m and t = 2v₀·sin θ/g ≈ {@flightTime} s. sin 2θ is the same at 30° and 60°, so the range is too. Both L and t are proportional to 1/g: on Earth (9.81 m/s²) the range would be {=@range*gravity/9.81} m and the flight 9.81/1.62 ≈ {=9.81/gravity|3} times shorter, not √(9.81/1.62) times.",
+      "vi": {
+        "stem": "Trên Mặt Trăng (g = {gravity} m/s²), một quả bóng được ném từ mặt đất với tốc độ {velocity} m/s, hợp với phương ngang góc {angle}°. Mỗi nhận định sau đúng hay sai?",
+        "explain": "L = v₀²·sin 2θ/g ≈ {@range} m và t = 2v₀·sin θ/g ≈ {@flightTime} s. sin 2θ ở 30° và 60° bằng nhau nên tầm xa cũng bằng nhau. Cả L và t đều tỉ lệ với 1/g: trên Trái Đất (9,81 m/s²) tầm xa chỉ là {=@range*gravity/9.81} m và thời gian bay ngắn hơn 9,81/1,62 ≈ {=9.81/gravity|3} lần, không phải √(9,81/1,62) lần."
+      },
+      "statements": [
+        {
+          "text": "It lands about {@range} m away.",
+          "vi": {
+            "text": "Nó rơi xuống cách chỗ ném khoảng {@range} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "velocity^2*sin(2*rad(angle))/gravity",
+            "equals": "range"
+          }
+        },
+        {
+          "text": "Launched at 60° at the same speed, it would land just as far away.",
+          "vi": {
+            "text": "Ném với góc 60° và cùng tốc độ, nó sẽ rơi xa đúng như vậy."
+          },
+          "true": true
+        },
+        {
+          "text": "On Earth the same launch would land {=@range*gravity/9.81} m away.",
+          "vi": {
+            "text": "Trên Trái Đất, cú ném giống hệt sẽ rơi cách chỗ ném {=@range*gravity/9.81} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "(@range*gravity/9.81)*9.81/gravity",
+            "equals": "range"
+          }
+        },
+        {
+          "text": "On Earth the flight would be √(9.81/1.62) ≈ {=sqrt(9.81/gravity)|3} times shorter.",
+          "vi": {
+            "text": "Trên Trái Đất, thời gian bay sẽ ngắn hơn √(9,81/1,62) ≈ {=sqrt(9.81/gravity)|3} lần."
+          },
+          "true": false,
+          "check": {
+            "expr": "sqrt(9.81/gravity)*(2*velocity*sin(rad(angle))/9.81)",
+            "equals": "flightTime"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,888 @@
+{
+  "id": "mechanical-energy",
+  "name": "Conservation of mechanical energy",
+  "category": "physics",
+  "description": "A low-friction cart is released from rest on a curved track shaped like a valley: down a straight ramp, round a curve onto a level section and up the same shape on the far side. Light gate A at the bottom times the card flag on the cart, so w/Δt gives its speed and ½m·v² its kinetic energy, to compare with the potential energy m·g·h it started with. Light gate B, part way up the far ramp, catches it while it has both kinds of energy, and a ruler there shows how high it climbs before it stops and turns back. Rolling resistance and air drag take a few percent of the energy on the way — more with a card sail fitted to the cart.",
+  "vi": {
+    "name": "Bảo toàn cơ năng",
+    "description": "Một xe lăn ma sát nhỏ được thả không vận tốc đầu trên một máng cong hình lòng chảo: xuống một dốc thẳng, qua một đoạn cong để vào đoạn nằm ngang, rồi lên một dốc giống hệt ở phía bên kia. Cổng quang điện A ở đáy máng đo thời gian tấm chắn sáng trên xe che tia sáng, nên w/Δt cho tốc độ của xe và ½m·v² cho động năng của nó, để so sánh với thế năng m·g·h lúc thả. Cổng quang điện B ở lưng chừng dốc bên kia đo xe khi nó vừa có động năng vừa có thế năng, và thước đặt ở đó cho biết xe lên cao được bao nhiêu trước khi dừng lại rồi trôi ngược về. Lực cản lăn và lực cản không khí làm hao hụt vài phần trăm năng lượng trên đường đi — nhiều hơn khi gắn thêm tấm bìa cản gió lên xe.",
+    "note": "Đây là một mô hình dạy học có nêu rõ các nguồn hao hụt, không phải mô hình của một chiếc xe thật cụ thể; các hằng số chỉ mang tính minh họa. Cơ năng E = Eₖ + Eₚ (SGK kí hiệu W = Wđ + Wt), với động năng Eₖ = ½m·v² và thế năng Eₚ = m·g·y, chọn mốc thế năng ở đoạn nằm ngang (g = 9,81 m/s²). Nếu không có hao hụt, cơ năng luôn bằng m·g·h, nên xe tới cổng A với tốc độ √(2gh), không phụ thuộc khối lượng của xe hay hình dạng của máng, và lên lại đúng độ cao h. Ở đây có hai nguồn hao hụt. Thứ nhất là lực cản lăn μ_r·N, với μ_r = 0,003 gộp cả lực cản lăn của bánh xe và ma sát ở ổ trục (một giá trị minh họa cho xe ma sát nhỏ, không phải số đo); trên các đoạn cong, áp lực N = m(g·cos φ + v²/R) lớn hơn vì máng còn phải đẩy xe đi theo đường cong. Thứ hai là lực cản không khí ½ρ·C_d·A·v², với ρ = 1,2 kg/m³ (không khí ở khoảng 20 °C), C_d·A của riêng xe là 0,005 m² (minh họa: mặt trước khoảng 0,1 × 0,05 m với C_d ≈ 1) cộng với 1,17 × diện tích tấm bìa (hệ số cản của một tấm phẳng hình vuông đặt vuông góc với dòng khí, theo Hoerner); hai phần này được cộng đơn giản, như thể tấm bìa và xe không che chắn cho nhau. Công thắng các lực cản biến thành nhiệt và âm thanh, và Eₖ + Eₚ + công đó luôn bằng m·g·h. Máng gồm hai dốc thẳng nghiêng 30° nối với đoạn nằm ngang dài 0,3 m bằng các cung tròn bán kính 0,3 m, nên độ dốc thay đổi liên tục và không mất năng lượng ở chỗ nối. Tia sáng của cổng A ở giữa đoạn nằm ngang, của cổng B ở chỗ máng cao 0,06 m so với đoạn nằm ngang. Mỗi cổng đo thời gian Δt tấm chắn sáng rộng w = 0,025 m che tia sáng: w/Δt là tốc độ trung bình trong lúc tấm chắn đi qua — ở cổng A gần như đúng bằng tốc độ tại đó, còn ở cổng B, nơi xe đang chậm dần trên dốc, nhỏ hơn tốc độ tại tia sáng tới khoảng 1 %. Cột lý thuyết là dự đoán của chính mô hình, tính bằng công thức (trên mỗi đoạn thẳng và mỗi cung tròn, v² biến đổi theo một quy luật tuyến tính giải được), và kết quả chạy khớp với nó tốt hơn nhiều so với số chữ số hiển thị; các hao hụt có mặt trong cả hai, còn √(2gh) và đường thẳng hệ số góc 1 của phần phân tích cho biết riêng định luật bảo toàn sẽ cho kết quả gì. Xe được coi như một chất điểm trên máng với bánh xe không có khối lượng: bánh xe thật quay cũng giữ một phần động năng (có thể tới vài phần trăm), nên tốc độ đo được thấp hơn một chút ngay cả khi không có hao hụt. Lần chạy kết thúc khi xe dừng trên dốc bên kia, ở độ cao h′ đọc trên thước; phần cơ năng còn lại là h′/h. Nhãn đánh giá: còn trên 95 % là gần như bảo toàn; từ 90 đến 95 % là hao hụt ít; dưới 90 % là hao hụt nhiều."
+  },
+  "requiredEquipment": ["energy-track"],
+  "model": "mechanics.energy-track",
+  "parameters": [
+    {
+      "id": "releaseHeight",
+      "label": "Release height",
+      "vi": {
+        "label": "Độ cao thả"
+      },
+      "symbol": "h",
+      "unit": "m",
+      "default": 0.2,
+      "min": 0.1,
+      "max": 0.3,
+      "presets": [
+        {
+          "label": "0.10 m",
+          "vi": {
+            "label": "0,10 m"
+          },
+          "value": 0.1
+        },
+        {
+          "label": "0.15 m",
+          "vi": {
+            "label": "0,15 m"
+          },
+          "value": 0.15
+        },
+        {
+          "label": "0.20 m",
+          "vi": {
+            "label": "0,20 m"
+          },
+          "value": 0.2
+        },
+        {
+          "label": "0.25 m",
+          "vi": {
+            "label": "0,25 m"
+          },
+          "value": 0.25
+        },
+        {
+          "label": "0.30 m",
+          "vi": {
+            "label": "0,30 m"
+          },
+          "value": 0.3
+        }
+      ]
+    },
+    {
+      "id": "mass",
+      "label": "Cart mass",
+      "vi": {
+        "label": "Khối lượng xe"
+      },
+      "symbol": "m",
+      "unit": "kg",
+      "default": 0.5,
+      "min": 0.25,
+      "max": 1,
+      "presets": [
+        {
+          "label": "0.25 kg (cart alone)",
+          "vi": {
+            "label": "0,25 kg (xe không)"
+          },
+          "value": 0.25
+        },
+        {
+          "label": "0.50 kg (1 bar)",
+          "vi": {
+            "label": "0,50 kg (1 thanh gia trọng)"
+          },
+          "value": 0.5
+        },
+        {
+          "label": "0.75 kg (2 bars)",
+          "vi": {
+            "label": "0,75 kg (2 thanh gia trọng)"
+          },
+          "value": 0.75
+        },
+        {
+          "label": "1.00 kg (3 bars)",
+          "vi": {
+            "label": "1,00 kg (3 thanh gia trọng)"
+          },
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "sailArea",
+      "label": "Card sail",
+      "vi": {
+        "label": "Tấm bìa cản gió"
+      },
+      "symbol": "A_sail",
+      "unit": "m²",
+      "default": 0,
+      "min": 0,
+      "max": 0.04,
+      "presets": [
+        {
+          "label": "No sail",
+          "vi": {
+            "label": "Không gắn bìa"
+          },
+          "value": 0
+        },
+        {
+          "label": "10 × 10 cm card",
+          "vi": {
+            "label": "Bìa 10 × 10 cm"
+          },
+          "value": 0.01
+        },
+        {
+          "label": "15 × 15 cm card",
+          "vi": {
+            "label": "Bìa 15 × 15 cm"
+          },
+          "value": 0.0225
+        },
+        {
+          "label": "20 × 20 cm card",
+          "vi": {
+            "label": "Bìa 20 × 20 cm"
+          },
+          "value": 0.04
+        }
+      ]
+    },
+    {
+      "id": "timerResolution",
+      "label": "Timer resolution",
+      "vi": {
+        "label": "Độ phân giải của đồng hồ đo thời gian"
+      },
+      "symbol": "d",
+      "unit": "s",
+      "default": 0.001,
+      "min": 0.0001,
+      "max": 0.01,
+      "presets": [
+        {
+          "label": "0.0001 s",
+          "vi": {
+            "label": "0,0001 s"
+          },
+          "value": 0.0001
+        },
+        {
+          "label": "0.001 s",
+          "vi": {
+            "label": "0,001 s"
+          },
+          "value": 0.001
+        },
+        {
+          "label": "0.01 s",
+          "vi": {
+            "label": "0,01 s"
+          },
+          "value": 0.01
+        }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "gravity": 9.81,
+    "flagWidth": 0.025,
+    "gateHeight": 0.06,
+    "rampAngle": 30,
+    "arcRadius": 0.3,
+    "flatLength": 0.3,
+    "rampLength": 0.72,
+    "rollingResistance": 0.003,
+    "cartDragArea": 0.005,
+    "sailDragCoefficient": 1.17,
+    "airDensity": 1.2
+  },
+  "inputs": {
+    "gravity": {
+      "symbol": "g",
+      "unit": "m/s²"
+    },
+    "flagWidth": {
+      "symbol": "w",
+      "unit": "m"
+    },
+    "gateHeight": {
+      "symbol": "h_B",
+      "unit": "m",
+      "desk": false
+    },
+    "rampAngle": {
+      "symbol": "α",
+      "unit": "°",
+      "desk": false
+    },
+    "arcRadius": {
+      "symbol": "R",
+      "unit": "m",
+      "desk": false
+    },
+    "flatLength": {
+      "symbol": "L_flat",
+      "unit": "m",
+      "desk": false
+    },
+    "rampLength": {
+      "symbol": "L_ramp",
+      "unit": "m",
+      "desk": false
+    },
+    "rollingResistance": {
+      "symbol": "μ_r",
+      "unit": "",
+      "desk": false
+    },
+    "cartDragArea": {
+      "symbol": "C_d·A",
+      "unit": "m²",
+      "desk": false
+    },
+    "sailDragCoefficient": {
+      "symbol": "C_d,sail",
+      "unit": "",
+      "desk": false
+    },
+    "airDensity": {
+      "symbol": "ρ",
+      "unit": "kg/m³",
+      "desk": false
+    }
+  },
+  "simulation": {
+    "timeStep": 0.001,
+    "maxDuration": 10,
+    "sampleInterval": 0.01
+  },
+  "measurements": [
+    {
+      "id": "speed",
+      "label": "Speed",
+      "vi": {
+        "label": "Tốc độ"
+      },
+      "symbol": "v",
+      "unit": "m/s",
+      "variable": "speed"
+    },
+    {
+      "id": "height",
+      "label": "Height above the level section",
+      "vi": {
+        "label": "Độ cao so với đoạn nằm ngang"
+      },
+      "symbol": "y",
+      "unit": "m",
+      "variable": "height"
+    },
+    {
+      "id": "kineticEnergy",
+      "label": "Kinetic energy",
+      "vi": {
+        "label": "Động năng"
+      },
+      "symbol": "Eₖ",
+      "unit": "J",
+      "variable": "kineticEnergy"
+    },
+    {
+      "id": "potentialEnergy",
+      "label": "Potential energy",
+      "vi": {
+        "label": "Thế năng"
+      },
+      "symbol": "Eₚ",
+      "unit": "J",
+      "variable": "potentialEnergy"
+    },
+    {
+      "id": "mechanicalEnergy",
+      "label": "Mechanical energy",
+      "vi": {
+        "label": "Cơ năng"
+      },
+      "symbol": "E",
+      "unit": "J",
+      "variable": "mechanicalEnergy"
+    },
+    {
+      "id": "energyLost",
+      "label": "Energy lost to resistance",
+      "vi": {
+        "label": "Năng lượng hao hụt do lực cản"
+      },
+      "symbol": "ΔE",
+      "unit": "J",
+      "variable": "energyLost"
+    },
+    {
+      "id": "dragLoss",
+      "label": "Work against air drag",
+      "vi": {
+        "label": "Công thắng lực cản không khí"
+      },
+      "symbol": "W_air",
+      "unit": "J",
+      "variable": "dragLoss"
+    },
+    {
+      "id": "rollingLoss",
+      "label": "Work against rolling resistance",
+      "vi": {
+        "label": "Công thắng lực cản lăn"
+      },
+      "symbol": "W_roll",
+      "unit": "J",
+      "variable": "rollingLoss"
+    },
+    {
+      "id": "x",
+      "label": "Horizontal position from gate A",
+      "vi": {
+        "label": "Vị trí theo phương ngang, tính từ cổng A"
+      },
+      "symbol": "x",
+      "unit": "m",
+      "variable": "x"
+    }
+  ],
+  "results": [
+    {
+      "id": "startEnergy",
+      "label": "Potential energy at the release, m·g·h",
+      "vi": {
+        "label": "Thế năng lúc thả, m·g·h"
+      },
+      "symbol": "Eₚ₀",
+      "unit": "J",
+      "variable": "potentialEnergy",
+      "reduce": "max",
+      "theory": "startEnergy"
+    },
+    {
+      "id": "kineticA",
+      "label": "Kinetic energy at gate A",
+      "vi": {
+        "label": "Động năng tại cổng A"
+      },
+      "symbol": "Eₖ_A",
+      "unit": "J",
+      "variable": "kineticA",
+      "reduce": "final",
+      "theory": "kineticA"
+    },
+    {
+      "id": "turnHeight",
+      "label": "Height reached on the far ramp",
+      "vi": {
+        "label": "Độ cao xe lên được ở dốc bên kia"
+      },
+      "symbol": "h′",
+      "unit": "m",
+      "variable": "height",
+      "reduce": "final",
+      "theory": "turnHeight"
+    },
+    {
+      "id": "retained",
+      "label": "Mechanical energy kept, h′/h",
+      "vi": {
+        "label": "Phần cơ năng còn lại, h′/h"
+      },
+      "symbol": "E′/E₀",
+      "unit": "%",
+      "variable": "retained",
+      "reduce": "final",
+      "theory": "retained",
+      "classes": [
+        {
+          "max": 90,
+          "label": "Large losses",
+          "vi": {
+            "label": "Hao hụt nhiều"
+          }
+        },
+        {
+          "max": 95,
+          "label": "Small losses",
+          "vi": {
+            "label": "Hao hụt ít"
+          }
+        },
+        {
+          "label": "Nearly conserved",
+          "vi": {
+            "label": "Gần như bảo toàn"
+          }
+        }
+      ]
+    },
+    {
+      "id": "gateTimeA",
+      "label": "Blocking time at gate A",
+      "vi": {
+        "label": "Thời gian chắn sáng ở cổng A"
+      },
+      "symbol": "Δt_A",
+      "unit": "s",
+      "variable": "gateTimeA",
+      "reduce": "final",
+      "theory": "gateTimeA"
+    },
+    {
+      "id": "speedA",
+      "label": "Speed at gate A, w/Δt_A",
+      "vi": {
+        "label": "Tốc độ tại cổng A, w/Δt_A"
+      },
+      "symbol": "v_A",
+      "unit": "m/s",
+      "variable": "speedA",
+      "reduce": "final",
+      "theory": "speedA"
+    },
+    {
+      "id": "idealSpeedA",
+      "label": "Speed at A without losses, √(2gh)",
+      "vi": {
+        "label": "Tốc độ tại A nếu không hao hụt, √(2gh)"
+      },
+      "symbol": "√(2gh)",
+      "unit": "m/s",
+      "variable": "idealSpeedA",
+      "reduce": "final",
+      "theory": "idealSpeedA"
+    },
+    {
+      "id": "energyLost",
+      "label": "Energy lost to drag and rolling resistance",
+      "vi": {
+        "label": "Năng lượng hao hụt do lực cản"
+      },
+      "symbol": "ΔE",
+      "unit": "J",
+      "variable": "energyLost",
+      "reduce": "final",
+      "theory": "energyLost"
+    },
+    {
+      "id": "gateTimeB",
+      "label": "Blocking time at gate B",
+      "vi": {
+        "label": "Thời gian chắn sáng ở cổng B"
+      },
+      "symbol": "Δt_B",
+      "unit": "s",
+      "variable": "gateTimeB",
+      "reduce": "final",
+      "theory": "gateTimeB"
+    },
+    {
+      "id": "speedB",
+      "label": "Speed at gate B, w/Δt_B",
+      "vi": {
+        "label": "Tốc độ tại cổng B, w/Δt_B"
+      },
+      "symbol": "v_B",
+      "unit": "m/s",
+      "variable": "speedB",
+      "reduce": "final",
+      "theory": "speedB"
+    },
+    {
+      "id": "energyB",
+      "label": "Mechanical energy at gate B, m·g·h_B + ½m·v_B²",
+      "vi": {
+        "label": "Cơ năng tại cổng B, m·g·h_B + ½m·v_B²"
+      },
+      "symbol": "E_B",
+      "unit": "J",
+      "variable": "energyB",
+      "reduce": "final",
+      "theory": "energyB"
+    }
+  ],
+  "graphs": [
+    {
+      "id": "energy-time",
+      "title": "Energy against time",
+      "vi": {
+        "title": "Năng lượng theo thời gian"
+      },
+      "x": "time",
+      "y": ["potentialEnergy", "kineticEnergy", "mechanicalEnergy", "energyLost"],
+      "yLabel": "E"
+    },
+    {
+      "id": "energy-position",
+      "title": "Energy along the track",
+      "vi": {
+        "title": "Năng lượng dọc theo máng"
+      },
+      "x": "x",
+      "y": ["potentialEnergy", "kineticEnergy", "mechanicalEnergy"],
+      "yLabel": "E"
+    },
+    {
+      "id": "speed-time",
+      "title": "Speed against time",
+      "vi": {
+        "title": "Tốc độ theo thời gian"
+      },
+      "x": "time",
+      "y": ["speed"]
+    },
+    {
+      "id": "losses-time",
+      "title": "Work against air drag and rolling resistance",
+      "vi": {
+        "title": "Công thắng lực cản không khí và lực cản lăn"
+      },
+      "x": "time",
+      "y": ["dragLoss", "rollingLoss"],
+      "yLabel": "W"
+    }
+  ],
+  "monitor": "energy-time",
+  "compare": [
+    {
+      "graph": "energy-time",
+      "series": "mechanicalEnergy"
+    },
+    {
+      "graph": "speed-time"
+    }
+  ],
+  "instruments": [
+    {
+      "result": "gateTimeA",
+      "quantity": "Blocking time Δt_A at gate A",
+      "name": "Light gate A and digital timer",
+      "resolution": "timerResolution",
+      "excludes": "how square the flag stands to the beam and how sharp its edges are, the width of the beam itself, and the timer's start and stop delays",
+      "vi": {
+        "quantity": "Thời gian chắn sáng Δt_A ở cổng A",
+        "name": "Cổng quang điện A và đồng hồ đo thời gian hiện số",
+        "excludes": "độ vuông góc của tấm chắn sáng với tia sáng và độ sắc của mép tấm chắn, bề rộng của chính tia sáng, cùng độ trễ khi đồng hồ bắt đầu và dừng đếm"
+      }
+    },
+    {
+      "result": "gateTimeB",
+      "quantity": "Blocking time Δt_B at gate B",
+      "name": "Light gate B and digital timer",
+      "resolution": "timerResolution",
+      "excludes": "how square the flag stands to the beam and how sharp its edges are, the width of the beam itself, and the timer's start and stop delays",
+      "vi": {
+        "quantity": "Thời gian chắn sáng Δt_B ở cổng B",
+        "name": "Cổng quang điện B và đồng hồ đo thời gian hiện số",
+        "excludes": "độ vuông góc của tấm chắn sáng với tia sáng và độ sắc của mép tấm chắn, bề rộng của chính tia sáng, cùng độ trễ khi đồng hồ bắt đầu và dừng đếm"
+      }
+    }
+  ],
+  "analyses": [
+    {
+      "id": "energy-conservation",
+      "title": "Kinetic energy at the bottom against potential energy at the release",
+      "note": "Each run is one point: x is the potential energy m·g·h the cart starts with, y its kinetic energy ½m·(w/Δt_A)² at gate A, where its potential energy is zero. If mechanical energy were conserved, every point would lie on the dashed line y = x, of slope 1: that line is the law being tested, not the model's own curve. Rolling resistance and air drag take a little energy on the way down, so the points lie a little below the line and the fitted slope a is a little under 1; 1 − a is roughly the share lost. Only runs with the same cart mass and the same sail are fitted together, since a lighter cart or a bigger sail loses a larger share to drag: change only the release height between runs. With a large sail the points bend slightly downwards, because drag grows with v².",
+      "vi": {
+        "title": "Động năng ở đáy máng theo thế năng lúc thả",
+        "note": "Mỗi lần chạy là một điểm: x là thế năng m·g·h của xe lúc thả, y là động năng ½m·(w/Δt_A)² của xe tại cổng A, nơi thế năng bằng 0. Nếu cơ năng được bảo toàn, mọi điểm sẽ nằm trên đường nét đứt y = x có hệ số góc 1: đường này là định luật đang được kiểm chứng, không phải đường của chính mô hình. Lực cản lăn và lực cản không khí lấy đi một ít năng lượng trên đường xuống, nên các điểm nằm thấp hơn đường đó một chút và hệ số góc a của đường khớp nhỏ hơn 1 một chút; 1 − a xấp xỉ phần năng lượng bị hao hụt. Chỉ các lần chạy có cùng khối lượng xe và cùng tấm bìa mới được khớp chung, vì xe nhẹ hơn hoặc tấm bìa lớn hơn thì mất phần lớn hơn do lực cản không khí: giữa các lần chạy chỉ thay đổi độ cao thả. Với tấm bìa lớn, các điểm hơi cong xuống, vì lực cản không khí tăng theo v²."
+      },
+      "x": "startEnergy",
+      "y": "kineticA",
+      "group": ["mass", "sailArea"],
+      "columns": [
+        "releaseHeight",
+        "mass",
+        "sailArea",
+        "startEnergy",
+        "kineticA",
+        "energyLost",
+        "retained"
+      ],
+      "slope": {
+        "label": "Kinetic energy at A per joule of potential energy",
+        "vi": {
+          "label": "Động năng tại A trên mỗi jun thế năng"
+        },
+        "symbol": "a",
+        "unit": "",
+        "theory": "energySlope"
+      }
+    }
+  ],
+  "note": "A teaching model with its losses stated, not a model of one real cart; its constants are illustrative. Mechanical energy E = Eₖ + Eₚ, with kinetic energy Eₖ = ½m·v² and potential energy Eₚ = m·g·y measured from the level section (g = 9.81 m/s²). Without losses E stays m·g·h, so the cart would reach gate A at √(2gh), whatever its mass and the shape of the track, and climb back to h. Two losses act here. Rolling resistance μ_r·N, with μ_r = 0.003 lumping the wheels' rolling and the bearings' friction (an illustrative low-friction value, not a measurement); on the curves the normal force N = m(g·cos φ + v²/R) is larger, because the track also pushes the cart round them. And air drag ½ρ·C_d·A·v², with ρ = 1.2 kg/m³ (air near 20 °C) and C_d·A the cart's own 0.005 m² (illustrative: a front of about 0.1 × 0.05 m at C_d ≈ 1) plus 1.17 × the card sail's area (the drag coefficient of a square flat plate facing the flow, after Hoerner), simply added, as if the sail and the cart did not shelter each other. The work done against them turns into heat and sound, and Eₖ + Eₚ + that work stays m·g·h at every instant. The track: straight ramps at 30° joined to a 0.3 m level section by arcs of radius 0.3 m, so its slope changes smoothly and no energy is lost at the joints. Gate A's beam is at the middle of the level section, gate B's where the track is 0.06 m above it. Each gate times the card flag, w = 0.025 m wide, while it blocks the beam: w/Δt is the mean speed over the flag — at gate A practically the speed there, at gate B, where the cart slows on the slope, up to about 1 % below the speed at the beam. The theory column is the model's own prediction, worked out in closed form (along each straight piece and each arc, v² follows a linear law that can be solved), and the run agrees with it far beyond the digits shown; the losses are in both, while √(2gh) and the analysis' line of slope 1 show what conservation alone would give. The cart is a point on the track with massless wheels: a real cart's spinning wheels also hold some of its kinetic energy (a few percent at most), so its measured speed is a little lower even without losses. The run ends when the cart stops on the far ramp, at the height h′ read on the ruler there; the share of mechanical energy kept is h′/h. Its labels: above 95 % kept, nearly conserved; 90–95 %, small losses; below 90 %, large losses.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the mechanical energy instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn thí nghiệm bảo toàn cơ năng trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "mechanical-energy-instructions"
+      }
+    },
+    {
+      "id": "height",
+      "instruction": "Set the release height h with its dial on the control desk: the cart waits at that height on the near ramp.",
+      "vi": {
+        "instruction": "Đặt độ cao thả h bằng núm xoay trên bàn điều khiển: xe chờ ở độ cao đó trên dốc bên này."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "releaseHeight"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN to release the cart: watch it pass light gate A at the bottom and gate B on the far ramp, then stop and turn back.",
+      "vi": {
+        "instruction": "Nhấn CHẠY để thả xe: quan sát xe đi qua cổng quang điện A ở đáy máng và cổng B trên dốc bên kia, rồi dừng lại và trôi ngược về."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "On the results monitor, compare Eₚ at the release with Eₖ at gate A and E at gate B, and read the height h′ the cart reached.",
+      "vi": {
+        "instruction": "Trên màn hình kết quả, so sánh Eₚ lúc thả với Eₖ tại cổng A và cơ năng E tại cổng B, rồi đọc độ cao h′ mà xe lên được."
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, change only the release height and run again to add a point to Eₖ against Eₚ.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, chỉ thay đổi độ cao thả rồi chạy lại để thêm một điểm vào đồ thị Eₖ theo Eₚ."
+      },
+      "done": {
+        "kind": "reset"
+      }
+    },
+    {
+      "id": "sail",
+      "instruction": "Fit a card sail with its dial and run again: how much more energy is lost?",
+      "vi": {
+        "instruction": "Gắn tấm bìa cản gió bằng núm xoay của nó rồi chạy lại: năng lượng hao hụt nhiều thêm bao nhiêu?"
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "sailArea"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "without-losses",
+      "question": "A {mass} kg cart is let go {releaseHeight} m above the level section of the track. Find its potential energy there, and the speed it would reach on the level if no energy were lost (g = {gravity} m/s²).",
+      "vi": {
+        "question": "Một xe {mass} kg được thả ở độ cao {releaseHeight} m so với đoạn đường ray nằm ngang. Tìm thế năng của xe ở đó, và tốc độ xe đạt được trên đoạn nằm ngang nếu không mất năng lượng (g = {gravity} m/s²)."
+      },
+      "set": { "releaseHeight": 0.3, "mass": 0.75 },
+      "find": [{ "theory": "startEnergy" }, { "theory": "idealSpeedA" }],
+      "steps": [
+        {
+          "say": "Potential energy measured from the level section: m·g·h.",
+          "vi": { "say": "Thế năng chọn mốc tại đoạn nằm ngang: m·g·h." },
+          "write": "Eₚ₀ = m·g·h = {mass}·{gravity}·{releaseHeight} ≈ {@startEnergy} J",
+          "check": { "expr": "mass*gravity*releaseHeight", "equals": "startEnergy" }
+        },
+        {
+          "say": "Without losses it all becomes kinetic energy: ½m·v² = m·g·h. The mass cancels, so every cart would reach the same speed.",
+          "vi": {
+            "say": "Nếu không mất mát, toàn bộ thế năng chuyển thành động năng: ½m·v² = m·g·h. Khối lượng triệt tiêu, nên xe nào cũng đạt cùng tốc độ."
+          },
+          "write": "v = √(2gh) = √(2·{gravity}·{releaseHeight}) ≈ {@idealSpeedA} m/s",
+          "check": { "expr": "sqrt(2*gravity*releaseHeight)", "equals": "idealSpeedA" }
+        }
+      ]
+    },
+    {
+      "id": "with-a-sail",
+      "question": "A {mass} kg cart with a card sail of {sailArea} m² is let go {releaseHeight} m up. Gate A’s {flagWidth} m flag is timed Δt_A = {@gateTimeA|4} s, and the cart stops {@turnHeight|3} m up the far ramp. Find its kinetic energy at A and the share of the mechanical energy kept.",
+      "vi": {
+        "question": "Một xe {mass} kg gắn cánh buồm bìa {sailArea} m² được thả ở độ cao {releaseHeight} m. Cờ chắn rộng {flagWidth} m qua cổng A trong Δt_A = {@gateTimeA|4} s, và xe dừng ở độ cao {@turnHeight|3} m trên dốc bên kia. Tìm động năng của xe tại A và phần trăm cơ năng còn lại."
+      },
+      "set": { "releaseHeight": 0.2, "mass": 0.5, "sailArea": 0.04 },
+      "find": [{ "theory": "kineticA" }, { "theory": "retained" }],
+      "steps": [
+        {
+          "say": "At the start all its mechanical energy is potential energy.",
+          "vi": { "say": "Lúc đầu toàn bộ cơ năng của xe là thế năng." },
+          "write": "E₀ = m·g·h = {mass}·{gravity}·{releaseHeight} ≈ {@startEnergy} J",
+          "check": { "expr": "mass*gravity*releaseHeight", "equals": "startEnergy" }
+        },
+        {
+          "say": "At gate A the speed is the flag’s width over its time.",
+          "vi": { "say": "Tại cổng A, tốc độ bằng bề rộng cờ chắn chia cho thời gian che." },
+          "write": "v_A = w/Δt_A = {flagWidth}/{@gateTimeA|4} ≈ {@speedA|4} m/s",
+          "check": { "expr": "flagWidth/@gateTimeA", "equals": "speedA" }
+        },
+        {
+          "say": "Its kinetic energy there is less than E₀: rolling resistance and the air’s drag on the sail took some.",
+          "vi": {
+            "say": "Động năng tại đó nhỏ hơn E₀: lực cản lăn và lực cản không khí lên cánh buồm đã lấy đi một phần."
+          },
+          "write": "Eₖ = ½m·v_A² = ½·{mass}·{@speedA|4}² ≈ {@kineticA} J",
+          "check": { "expr": "0.5*mass*@speedA^2", "equals": "kineticA" }
+        },
+        {
+          "say": "Where it stops it has only potential energy again, so the share kept is h′/h.",
+          "vi": {
+            "say": "Tại chỗ dừng xe lại chỉ có thế năng, nên phần cơ năng còn lại bằng h′/h."
+          },
+          "write": "E′/E₀ = h′/h = {@turnHeight|3}/{releaseHeight} ≈ {@retained}%",
+          "check": { "expr": "100*@turnHeight/releaseHeight", "equals": "retained" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "A cart rolls down into a valley-shaped track and up the far side: its potential energy turns into kinetic energy and back, and the height it climbs to shows how much was lost on the way.",
+    "vi": {
+      "summary": "Một xe lăn xuống đường ray hình lòng chảo rồi leo lên phía bên kia: thế năng của nó chuyển thành động năng rồi ngược lại, và độ cao nó leo tới cho biết bao nhiêu năng lượng đã mất trên đường đi."
+    },
+    "parts": [
+      {
+        "id": "track",
+        "name": "Valley track",
+        "role": "Two 30° ramps joined to a level section by smooth curves, so no energy is lost at the joints.",
+        "vi": {
+          "name": "Đường ray lòng chảo",
+          "role": "Hai dốc nghiêng 30° nối với đoạn nằm ngang bằng các cung tròn trơn, nên không mất năng lượng ở chỗ nối."
+        },
+        "anchor": {
+          "at": [0.1, -0.25, 0.06]
+        }
+      },
+      {
+        "id": "cart",
+        "name": "Cart, mass m",
+        "role": "A low-friction cart with a card flag w = 0.025 m wide, and a card sail when one is fitted.",
+        "vi": {
+          "name": "Xe lăn, khối lượng m",
+          "role": "Xe ma sát nhỏ mang tấm chắn rộng w = 0.025 m, và một cánh buồm bằng bìa khi được lắp."
+        },
+        "anchor": {
+          "part": "cart"
+        }
+      },
+      {
+        "id": "release",
+        "name": "Release ruler",
+        "role": "Its red index marks the release height h, where the latch holds the cart.",
+        "vi": {
+          "name": "Thước độ cao thả",
+          "role": "Vạch đỏ chỉ độ cao thả h, nơi chốt giữ xe."
+        },
+        "anchor": {
+          "part": "pointer"
+        }
+      },
+      {
+        "id": "gate-a",
+        "name": "Light gate A",
+        "role": "At the bottom, on the level section: times the flag to give the speed v_A.",
+        "vi": {
+          "name": "Cổng quang A",
+          "role": "Ở đáy, trên đoạn nằm ngang: đo thời gian tấm chắn đi qua để tính tốc độ v_A."
+        },
+        "anchor": {
+          "part": "lamp-a"
+        }
+      },
+      {
+        "id": "gate-b",
+        "name": "Light gate B",
+        "role": "Part way up the far ramp, 0.06 m above the level section: the cart has both kinds of energy there.",
+        "vi": {
+          "name": "Cổng quang B",
+          "role": "Ở lưng chừng dốc bên kia, cao 0.06 m so với đoạn nằm ngang: tại đó xe có cả hai dạng năng lượng."
+        },
+        "anchor": {
+          "part": "lamp-b"
+        }
+      },
+      {
+        "id": "timer",
+        "name": "Timer",
+        "role": "Shows each gate’s blocking time Δt, to its resolution d.",
+        "vi": {
+          "name": "Đồng hồ đo thời gian",
+          "role": "Hiển thị thời gian che chùm sáng Δt của mỗi cổng, theo độ phân giải d."
+        },
+        "anchor": {
+          "part": "timer-panel"
+        }
+      },
+      {
+        "id": "far-ruler",
+        "name": "Far ruler",
+        "role": "Reads the height h′ where the cart stops on the far ramp.",
+        "vi": {
+          "name": "Thước phía bên kia",
+          "role": "Đọc độ cao h′ nơi xe dừng lại trên dốc bên kia."
+        },
+        "anchor": {
+          "at": [0.58, -0.075, 0.075]
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "Held at the height h, the cart has potential energy Eₚ = m·g·h, measured from the level section. Let go, it rolls down and speeds up.",
+        "vi": {
+          "text": "Được giữ ở độ cao h, xe có thế năng Eₚ = m·g·h, tính từ đoạn nằm ngang. Khi thả ra, nó lăn xuống và nhanh dần."
+        },
+        "parts": ["cart", "release", "track"]
+      },
+      {
+        "text": "At the bottom the height is gone and the cart is fastest: its energy is now kinetic, Eₖ = ½m·v². Gate A times the flag, so v_A = w/Δt.",
+        "vi": {
+          "text": "Ở đáy, độ cao bằng 0 và xe chạy nhanh nhất: năng lượng của nó lúc này là động năng, Eₖ = ½m·v². Cổng A đo thời gian tấm chắn đi qua, nên v_A = w/Δt."
+        },
+        "parts": ["cart", "gate-a", "timer"]
+      },
+      {
+        "text": "Mechanical energy E = Eₖ + Eₚ. Without losses it would stay m·g·h: the cart would pass A at √(2gh), whatever its mass, and climb back to h.",
+        "vi": {
+          "text": "Cơ năng E = Eₖ + Eₚ. Nếu không có hao phí, nó luôn bằng m·g·h: xe sẽ qua A với tốc độ √(2gh), dù khối lượng bao nhiêu, và leo lại tới độ cao h."
+        },
+        "parts": ["cart", "track"]
+      },
+      {
+        "text": "Up the far ramp it slows down, turning kinetic energy back into potential energy. At gate B it has both: E_B = m·g·h_B + ½m·v_B².",
+        "vi": {
+          "text": "Khi lên dốc bên kia, xe chậm dần, động năng lại chuyển thành thế năng. Tại cổng B nó có cả hai: E_B = m·g·h_B + ½m·v_B²."
+        },
+        "parts": ["gate-b", "cart"]
+      },
+      {
+        "text": "Rolling resistance and air drag take a little energy on the way, turning it into heat and sound, so the cart stops at h′ a little below h. A card sail adds drag and loses more.",
+        "vi": {
+          "text": "Lực cản lăn và lực cản không khí lấy đi một ít năng lượng trên đường, biến thành nhiệt và âm thanh, nên xe dừng ở độ cao h′ thấp hơn h một chút. Lắp cánh buồm thì lực cản lớn hơn và mất nhiều năng lượng hơn."
+        },
+        "parts": ["far-ruler", "cart"]
+      },
+      {
+        "text": "The results compare m·g·h with Eₖ at A and E at B, and give the share of energy kept, h′/h. Change only h and run again to plot Eₖ against Eₚ: without losses it is a line of slope 1.",
+        "vi": {
+          "text": "Phần kết quả so sánh m·g·h với Eₖ tại A và E tại B, và cho tỉ lệ năng lượng còn lại h′/h. Chỉ đổi h rồi chạy lại để vẽ Eₖ theo Eₚ: nếu không có hao phí, đó là đường thẳng có hệ số góc 1."
+        },
+        "parts": ["timer", "far-ruler"]
+      },
+      {
+        "text": "The cart is treated as a point with massless wheels, and its losses use illustrative constants: a real cart’s spinning wheels also hold a little of its energy.",
+        "vi": {
+          "text": "Xe được coi là một chất điểm có bánh không khối lượng, và các hao phí dùng hằng số minh họa: bánh xe quay của xe thật cũng giữ một ít năng lượng."
+        },
+        "parts": ["cart"]
+      }
+    ]
+  }
+}

@@ -1,0 +1,1065 @@
+{
+  "id": "speed-of-sound",
+  "skills": [
+    {
+      "id": "tube",
+      "name": "Resonance in a tube closed at one end",
+      "advice": "Re-read: the water’s surface is a node, the mouth nearly an antinode. So the column resonates at about λ/4, 3λ/4, … Draw the standing wave in the tube for the first two resonances.",
+      "vi": {
+        "name": "Cộng hưởng trong ống một đầu kín",
+        "advice": "Đọc lại: mặt nước là nút, miệng ống gần như là bụng. Vì vậy cột khí cộng hưởng ở khoảng λ/4, 3λ/4, … Vẽ sóng dừng trong ống ứng với hai lần cộng hưởng đầu tiên."
+      }
+    },
+    {
+      "id": "wavelength",
+      "name": "Wavelength from two resonances",
+      "advice": "Use λ = 2(L2 − L1): the end correction cancels. Trap: λ = 4·L1, which leaves it in. Lower the water at the station and read both loud points.",
+      "vi": {
+        "name": "Bước sóng từ hai vị trí cộng hưởng",
+        "advice": "Dùng λ = 2(L2 − L1): độ hiệu chỉnh đầu ống bị triệt tiêu. Lỗi hay gặp: λ = 4·L1, vẫn còn chứa độ hiệu chỉnh. Hạ mực nước trên trạm và đọc cả hai vị trí âm to nhất."
+      }
+    },
+    {
+      "id": "speed",
+      "name": "Speed of sound: v = f·λ",
+      "advice": "v = f·λ. A higher fork has a shorter wavelength, but the speed in the same air does not change. Try the 384, 440 and 512 Hz forks.",
+      "vi": {
+        "name": "Tốc độ truyền âm: v = f·λ",
+        "advice": "v = f·λ. Âm thoa tần số cao hơn có bước sóng ngắn hơn, nhưng tốc độ âm trong cùng không khí không đổi. Thử với âm thoa 384, 440 và 512 Hz."
+      }
+    },
+    {
+      "id": "temperature",
+      "name": "Temperature and the end correction",
+      "advice": "In dry air v = 331.3·√(1 + t/273.15) m/s, about 343 m/s at 20 °C: warmer air carries sound faster. The end correction e ≈ 0.6·r puts the antinode a little above the mouth: L1 = λ/4 − e.",
+      "vi": {
+        "name": "Nhiệt độ và độ hiệu chỉnh đầu ống",
+        "advice": "Trong không khí khô v = 331,3·√(1 + t/273,15) m/s, khoảng 343 m/s ở 20 °C: không khí càng ấm âm truyền càng nhanh. Độ hiệu chỉnh e ≈ 0,6·r đặt bụng sóng cao hơn miệng ống một chút: L1 = λ/4 − e."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "water-node",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["tube"],
+      "stem": "When the air column above the water resonates, the water’s surface is…",
+      "explain": "The water stops the air moving: a displacement node; the open mouth is nearly an antinode.",
+      "vi": {
+        "stem": "Khi cột khí phía trên mặt nước cộng hưởng, mặt nước là…",
+        "explain": "Mặt nước ngăn không khí dịch chuyển: đó là một nút; miệng ống hở gần như là một bụng."
+      },
+      "options": [
+        {
+          "text": "a node",
+          "vi": {
+            "text": "một nút sóng"
+          },
+          "correct": true
+        },
+        {
+          "text": "an antinode",
+          "vi": {
+            "text": "một bụng sóng"
+          }
+        },
+        {
+          "text": "neither a node nor an antinode",
+          "vi": {
+            "text": "không phải nút cũng không phải bụng"
+          }
+        },
+        {
+          "text": "the source of the sound",
+          "vi": {
+            "text": "nguồn phát âm"
+          }
+        }
+      ]
+    },
+    {
+      "id": "v-f-lambda",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["speed"],
+      "stem": "The speed v, frequency f and wavelength λ of a sound are related by…",
+      "explain": "v = f·λ.",
+      "vi": {
+        "stem": "Tốc độ v, tần số f và bước sóng λ của âm liên hệ với nhau bởi…",
+        "explain": "v = f·λ."
+      },
+      "options": [
+        {
+          "text": "v = f·λ",
+          "vi": {
+            "text": "v = f·λ"
+          },
+          "correct": true
+        },
+        {
+          "text": "v = f/λ",
+          "vi": {
+            "text": "v = f/λ"
+          }
+        },
+        {
+          "text": "v = λ/f",
+          "vi": {
+            "text": "v = λ/f"
+          }
+        },
+        {
+          "text": "v = 2f·λ",
+          "vi": {
+            "text": "v = 2f·λ"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-tube",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["tube", "wavelength", "temperature"],
+      "stem": "A tuning fork sounds over a tube of air above water whose level is slowly lowered. Decide whether each statement is true or false.",
+      "explain": "The first resonance is about λ/4, the next half a wavelength further; the end correction cancels in L2 − L1; warmer air carries sound faster.",
+      "vi": {
+        "stem": "Một âm thoa phát âm phía trên ống chứa cột khí trên mặt nước, mực nước được hạ dần. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Lần cộng hưởng đầu ở khoảng λ/4, lần tiếp theo xa thêm nửa bước sóng; độ hiệu chỉnh đầu ống triệt tiêu trong L2 − L1; không khí ấm hơn truyền âm nhanh hơn."
+      },
+      "statements": [
+        {
+          "text": "The first resonance comes at an air column of about a quarter wavelength.",
+          "vi": {
+            "text": "Lần cộng hưởng thứ nhất xảy ra khi cột khí dài khoảng một phần tư bước sóng."
+          },
+          "true": true
+        },
+        {
+          "text": "The two first resonance lengths differ by half a wavelength.",
+          "vi": {
+            "text": "Hai chiều dài cộng hưởng đầu tiên chênh nhau nửa bước sóng."
+          },
+          "true": true
+        },
+        {
+          "text": "Warmer air carries sound more slowly.",
+          "vi": {
+            "text": "Không khí ấm hơn truyền âm chậm hơn."
+          },
+          "true": false
+        },
+        {
+          "text": "The end correction cancels in L2 − L1.",
+          "vi": {
+            "text": "Độ hiệu chỉnh đầu ống bị triệt tiêu trong hiệu L2 − L1."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "higher-fork",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["speed", "wavelength"],
+      "stem": "A fork of higher frequency is used in the same room. The two resonance points…",
+      "explain": "The speed is the same, so λ = v/f is shorter and L2 − L1 = λ/2 is smaller.",
+      "vi": {
+        "stem": "Dùng âm thoa có tần số cao hơn trong cùng phòng. Hai vị trí cộng hưởng…",
+        "explain": "Tốc độ âm không đổi, nên λ = v/f ngắn hơn và L2 − L1 = λ/2 nhỏ hơn."
+      },
+      "options": [
+        {
+          "text": "come closer together",
+          "vi": {
+            "text": "gần nhau hơn"
+          },
+          "correct": true
+        },
+        {
+          "text": "move further apart",
+          "vi": {
+            "text": "xa nhau hơn"
+          }
+        },
+        {
+          "text": "stay as far apart as before",
+          "vi": {
+            "text": "cách nhau như cũ"
+          }
+        },
+        {
+          "text": "merge into one",
+          "vi": {
+            "text": "trùng nhau"
+          }
+        }
+      ]
+    },
+    {
+      "id": "warmer",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["temperature"],
+      "stem": "With the same fork, the room is warmer. The wavelength of its sound…",
+      "explain": "Warmer air: larger v, so λ = v/f is longer (f is the fork’s).",
+      "vi": {
+        "stem": "Với cùng âm thoa, phòng ấm hơn. Bước sóng của âm…",
+        "explain": "Không khí ấm hơn: v lớn hơn, nên λ = v/f dài hơn (f do âm thoa quyết định)."
+      },
+      "options": [
+        {
+          "text": "is longer",
+          "vi": {
+            "text": "dài hơn"
+          },
+          "correct": true
+        },
+        {
+          "text": "is shorter",
+          "vi": {
+            "text": "ngắn hơn"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "becomes zero",
+          "vi": {
+            "text": "bằng 0"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-512",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["speed", "temperature", "tube"],
+      "set": {
+        "frequency": 512,
+        "temperature": 20
+      },
+      "stem": "A {frequency} Hz fork sounds over a tube of radius {tubeRadius} m at {temperature} °C, in dry air. Decide whether each statement is true or false.",
+      "explain": "v = 331.3·√(1 + t/273.15) ≈ {@speedOfSound} m/s; λ = v/f ≈ {@wavelength} m; e = 0.6·r = {@endCorrection} m, so L1 = λ/4 − e ≈ {@firstResonance} m, not λ/4 = {=@wavelength/4} m.",
+      "vi": {
+        "stem": "Âm thoa {frequency} Hz phát âm phía trên ống bán kính {tubeRadius} m ở {temperature} °C, không khí khô. Mỗi nhận định sau đúng hay sai?",
+        "explain": "v = 331,3·√(1 + t/273,15) ≈ {@speedOfSound} m/s; λ = v/f ≈ {@wavelength} m; e = 0,6·r = {@endCorrection} m, nên L1 = λ/4 − e ≈ {@firstResonance} m, không phải λ/4 = {=@wavelength/4} m."
+      },
+      "statements": [
+        {
+          "text": "The speed of sound is about {@speedOfSound} m/s.",
+          "vi": {
+            "text": "Tốc độ âm khoảng {@speedOfSound} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "331.3*sqrt(1+temperature/273.15)",
+            "equals": "speedOfSound"
+          }
+        },
+        {
+          "text": "The wavelength is about {@wavelength} m.",
+          "vi": {
+            "text": "Bước sóng khoảng {@wavelength} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "331.3*sqrt(1+temperature/273.15)/frequency",
+            "equals": "wavelength"
+          }
+        },
+        {
+          "text": "The first resonance is at exactly λ/4 = {=@wavelength/4} m.",
+          "vi": {
+            "text": "Lần cộng hưởng thứ nhất xảy ra đúng tại λ/4 = {=@wavelength/4} m."
+          },
+          "true": false,
+          "check": {
+            "expr": "@wavelength/4",
+            "equals": "firstResonance"
+          }
+        },
+        {
+          "text": "The end correction is about {@endCorrection} m.",
+          "vi": {
+            "text": "Độ hiệu chỉnh đầu ống khoảng {@endCorrection} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "0.6*tubeRadius",
+            "equals": "endCorrection"
+          }
+        }
+      ]
+    },
+    {
+      "id": "wavelength",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["wavelength"],
+      "set": {
+        "frequency": 440,
+        "temperature": 20
+      },
+      "stem": "A fork resonates with air columns of L1 = {@firstResonance} m and L2 = {@secondResonance} m. What is the wavelength?",
+      "explain": "L2 − L1 = λ/2, so λ = 2(L2 − L1) ≈ {@wavelength} m. 4·L1 leaves the end correction in.",
+      "vi": {
+        "stem": "Âm thoa cộng hưởng với cột khí dài L1 = {@firstResonance} m và L2 = {@secondResonance} m. Bước sóng bằng bao nhiêu?",
+        "explain": "L2 − L1 = λ/2, nên λ = 2(L2 − L1) ≈ {@wavelength} m. 4·L1 vẫn còn chứa độ hiệu chỉnh đầu ống."
+      },
+      "options": [
+        {
+          "text": "{=2*(@secondResonance-@firstResonance)} m",
+          "vi": {
+            "text": "{=2*(@secondResonance-@firstResonance)} m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2*(@secondResonance-@firstResonance)",
+            "equals": "wavelength"
+          }
+        },
+        {
+          "text": "{=@secondResonance-@firstResonance} m",
+          "vi": {
+            "text": "{=@secondResonance-@firstResonance} m"
+          },
+          "check": {
+            "expr": "@secondResonance-@firstResonance",
+            "equals": "wavelength"
+          }
+        },
+        {
+          "text": "{=4*@firstResonance} m",
+          "vi": {
+            "text": "{=4*@firstResonance} m"
+          },
+          "check": {
+            "expr": "4*@firstResonance",
+            "equals": "wavelength"
+          }
+        },
+        {
+          "text": "{=(@secondResonance-@firstResonance)/2} m",
+          "vi": {
+            "text": "{=(@secondResonance-@firstResonance)/2} m"
+          },
+          "check": {
+            "expr": "(@secondResonance-@firstResonance)/2",
+            "equals": "wavelength"
+          }
+        }
+      ]
+    },
+    {
+      "id": "speed",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["speed"],
+      "set": {
+        "frequency": 384,
+        "temperature": 30
+      },
+      "stem": "A {frequency} Hz fork’s sound has a wavelength of {@wavelength} m. What is the speed of sound?",
+      "explain": "v = f·λ = {frequency}·{@wavelength} ≈ {@speedOfSound} m/s.",
+      "vi": {
+        "stem": "Âm do âm thoa {frequency} Hz phát ra có bước sóng {@wavelength} m. Tốc độ truyền âm bằng bao nhiêu?",
+        "explain": "v = f·λ = {frequency}·{@wavelength} ≈ {@speedOfSound} m/s."
+      },
+      "options": [
+        {
+          "text": "{=frequency*@wavelength} m/s",
+          "vi": {
+            "text": "{=frequency*@wavelength} m/s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "frequency*@wavelength",
+            "equals": "speedOfSound"
+          }
+        },
+        {
+          "text": "{=frequency/@wavelength} m/s",
+          "vi": {
+            "text": "{=frequency/@wavelength} m/s"
+          },
+          "check": {
+            "expr": "frequency/@wavelength",
+            "equals": "speedOfSound"
+          }
+        },
+        {
+          "text": "{=@wavelength/frequency} m/s",
+          "vi": {
+            "text": "{=@wavelength/frequency} m/s"
+          },
+          "check": {
+            "expr": "@wavelength/frequency",
+            "equals": "speedOfSound"
+          }
+        },
+        {
+          "text": "{=2*frequency*@wavelength} m/s",
+          "vi": {
+            "text": "{=2*frequency*@wavelength} m/s"
+          },
+          "check": {
+            "expr": "2*frequency*@wavelength",
+            "equals": "speedOfSound"
+          }
+        }
+      ]
+    },
+    {
+      "id": "temperature",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["temperature"],
+      "set": {
+        "temperature": 25
+      },
+      "stem": "What is the speed of sound in dry air at {temperature} °C, taking v = 331.3·√(1 + t/273.15) m/s?",
+      "explain": "v = 331.3·√(1 + {temperature}/273.15) ≈ {@speedOfSound} m/s, t in °C.",
+      "vi": {
+        "stem": "Tốc độ truyền âm trong không khí khô ở {temperature} °C bằng bao nhiêu, biết v = 331,3·√(1 + t/273,15) m/s?",
+        "explain": "v = 331,3·√(1 + {temperature}/273,15) ≈ {@speedOfSound} m/s, với t tính bằng °C."
+      },
+      "options": [
+        {
+          "text": "{@speedOfSound} m/s",
+          "vi": {
+            "text": "{@speedOfSound} m/s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "331.3*sqrt(1+temperature/273.15)",
+            "equals": "speedOfSound"
+          }
+        },
+        {
+          "text": "331.3 m/s",
+          "vi": {
+            "text": "331.3 m/s"
+          },
+          "check": {
+            "expr": "331.3",
+            "equals": "speedOfSound"
+          }
+        },
+        {
+          "text": "{=331.3*(1+temperature/273.15)} m/s",
+          "vi": {
+            "text": "{=331.3*(1+temperature/273.15)} m/s"
+          },
+          "check": {
+            "expr": "331.3*(1+temperature/273.15)",
+            "equals": "speedOfSound"
+          }
+        },
+        {
+          "text": "{=331.3*sqrt(1+(temperature+273.15)/273.15)} m/s",
+          "vi": {
+            "text": "{=331.3*sqrt(1+(temperature+273.15)/273.15)} m/s"
+          },
+          "check": {
+            "expr": "331.3*sqrt(1+(temperature+273.15)/273.15)",
+            "equals": "speedOfSound"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-384",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["tube", "temperature"],
+      "set": {
+        "frequency": 384,
+        "temperature": 15
+      },
+      "stem": "A {frequency} Hz fork sounds over a tube of radius {tubeRadius} m at {temperature} °C. Decide whether each statement is true or false.",
+      "explain": "v ≈ {@speedOfSound} m/s, λ ≈ {@wavelength} m; L1 = λ/4 − 0.6r ≈ {@firstResonance} m and L2 = 3λ/4 − 0.6r ≈ {@secondResonance} m. Because of the end correction L2 is not 3·L1.",
+      "vi": {
+        "stem": "Âm thoa {frequency} Hz phát âm phía trên ống bán kính {tubeRadius} m ở {temperature} °C. Mỗi nhận định sau đúng hay sai?",
+        "explain": "v ≈ {@speedOfSound} m/s, λ ≈ {@wavelength} m; L1 = λ/4 − 0,6r ≈ {@firstResonance} m và L2 = 3λ/4 − 0,6r ≈ {@secondResonance} m. Do có độ hiệu chỉnh đầu ống nên L2 không bằng 3·L1."
+      },
+      "statements": [
+        {
+          "text": "The speed of sound is about {@speedOfSound} m/s.",
+          "vi": {
+            "text": "Tốc độ âm khoảng {@speedOfSound} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "331.3*sqrt(1+temperature/273.15)",
+            "equals": "speedOfSound"
+          }
+        },
+        {
+          "text": "The first resonance is at about {@firstResonance} m.",
+          "vi": {
+            "text": "Lần cộng hưởng thứ nhất ở khoảng {@firstResonance} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "@wavelength/4-0.6*tubeRadius",
+            "equals": "firstResonance"
+          }
+        },
+        {
+          "text": "The second resonance is at about {@secondResonance} m.",
+          "vi": {
+            "text": "Lần cộng hưởng thứ hai ở khoảng {@secondResonance} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "3*@wavelength/4-0.6*tubeRadius",
+            "equals": "secondResonance"
+          }
+        },
+        {
+          "text": "L2 is exactly three times L1.",
+          "vi": {
+            "text": "L2 đúng bằng ba lần L1."
+          },
+          "true": false,
+          "check": {
+            "expr": "3*@firstResonance",
+            "equals": "secondResonance"
+          }
+        }
+      ]
+    },
+    {
+      "id": "end-correction",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["tube", "wavelength"],
+      "set": {
+        "frequency": 440,
+        "temperature": 20
+      },
+      "stem": "The resonances are found at L1 = {@firstResonance|4} m and L2 = {@secondResonance|4} m. Taking L1 = λ/4 − e and L2 = 3λ/4 − e, what is the end correction e?",
+      "explain": "λ/4 = (L2 − L1)/2 ≈ {=(@secondResonance-@firstResonance)/2} m, so e = λ/4 − L1 = (L2 − 3L1)/2 ≈ {@endCorrection} m (= 0.6·r).",
+      "vi": {
+        "stem": "Các vị trí cộng hưởng là L1 = {@firstResonance|4} m và L2 = {@secondResonance|4} m. Với L1 = λ/4 − e và L2 = 3λ/4 − e, độ hiệu chỉnh đầu ống e bằng bao nhiêu?",
+        "explain": "λ/4 = (L2 − L1)/2 ≈ {=(@secondResonance-@firstResonance)/2} m, nên e = λ/4 − L1 = (L2 − 3L1)/2 ≈ {@endCorrection} m (= 0,6·r)."
+      },
+      "options": [
+        {
+          "text": "{=(@secondResonance-3*@firstResonance)/2} m",
+          "vi": {
+            "text": "{=(@secondResonance-3*@firstResonance)/2} m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(@secondResonance-3*@firstResonance)/2",
+            "equals": "endCorrection"
+          }
+        },
+        {
+          "text": "{=@secondResonance-3*@firstResonance} m",
+          "vi": {
+            "text": "{=@secondResonance-3*@firstResonance} m"
+          },
+          "check": {
+            "expr": "@secondResonance-3*@firstResonance",
+            "equals": "endCorrection"
+          }
+        },
+        {
+          "text": "{=(3*@firstResonance-@secondResonance)/2} m",
+          "vi": {
+            "text": "{=(3*@firstResonance-@secondResonance)/2} m"
+          },
+          "check": {
+            "expr": "(3*@firstResonance-@secondResonance)/2",
+            "equals": "endCorrection"
+          }
+        },
+        {
+          "text": "{=(@secondResonance-@firstResonance)/2} m",
+          "vi": {
+            "text": "{=(@secondResonance-@firstResonance)/2} m"
+          },
+          "check": {
+            "expr": "(@secondResonance-@firstResonance)/2",
+            "equals": "endCorrection"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-scale",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["wavelength", "temperature"],
+      "set": {
+        "frequency": 512,
+        "temperature": 20,
+        "rulerResolution": 0.005
+      },
+      "stem": "A {frequency} Hz fork resonates at L1 = {@firstResonance|4} m and L2 = {@secondResonance|4} m; the scale reads to {rulerResolution} m. Decide whether each statement is true or false.",
+      "explain": "The scale shows L1 as {=round(@firstResonance/rulerResolution)*rulerResolution} m and L2 as {=round(@secondResonance/rulerResolution)*rulerResolution} m, giving λ ≈ {=2*(round(@secondResonance/rulerResolution)-round(@firstResonance/rulerResolution))*rulerResolution} m. Humid air carries sound a little faster than dry air. 4·L1 = {=4*@firstResonance} m does not agree with 2(L2 − L1) because of the end correction.",
+      "vi": {
+        "stem": "Âm thoa {frequency} Hz cộng hưởng tại L1 = {@firstResonance|4} m và L2 = {@secondResonance|4} m; thước có độ phân giải {rulerResolution} m. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Thước hiển thị L1 là {=round(@firstResonance/rulerResolution)*rulerResolution} m và L2 là {=round(@secondResonance/rulerResolution)*rulerResolution} m, cho λ ≈ {=2*(round(@secondResonance/rulerResolution)-round(@firstResonance/rulerResolution))*rulerResolution} m. Không khí ẩm truyền âm nhanh hơn không khí khô một chút. 4·L1 = {=4*@firstResonance} m không khớp với 2(L2 − L1) vì có độ hiệu chỉnh đầu ống."
+      },
+      "statements": [
+        {
+          "text": "The scale shows L1 as {=round(@firstResonance/rulerResolution)*rulerResolution} m.",
+          "vi": {
+            "text": "Thước hiển thị L1 là {=round(@firstResonance/rulerResolution)*rulerResolution} m."
+          },
+          "true": true
+        },
+        {
+          "text": "The two readings give λ ≈ {=2*(round(@secondResonance/rulerResolution)-round(@firstResonance/rulerResolution))*rulerResolution} m.",
+          "vi": {
+            "text": "Hai số đọc cho λ ≈ {=2*(round(@secondResonance/rulerResolution)-round(@firstResonance/rulerResolution))*rulerResolution} m."
+          },
+          "true": true
+        },
+        {
+          "text": "In humid air the real speed of sound would be a little higher than this model’s.",
+          "vi": {
+            "text": "Trong không khí ẩm, tốc độ âm thực tế sẽ lớn hơn một chút so với mô hình."
+          },
+          "true": true
+        },
+        {
+          "text": "4·L1 gives the same wavelength as 2(L2 − L1).",
+          "vi": {
+            "text": "4·L1 cho cùng bước sóng với 2(L2 − L1)."
+          },
+          "true": false,
+          "check": {
+            "expr": "4*@firstResonance",
+            "equals": "wavelength"
+          }
+        }
+      ]
+    },
+    {
+      "id": "longitudinal",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["speed"],
+      "stem": "In air, sound travels as…",
+      "explain": "Sound in air is a longitudinal wave: the air is squeezed and stretched along the direction the wave travels.",
+      "vi": {
+        "stem": "Trong không khí, âm truyền đi dưới dạng…",
+        "explain": "Âm trong không khí là sóng dọc: không khí bị nén và dãn theo phương truyền sóng."
+      },
+      "options": [
+        {
+          "text": "a longitudinal wave",
+          "vi": {
+            "text": "sóng dọc"
+          },
+          "correct": true
+        },
+        {
+          "text": "a transverse wave",
+          "vi": {
+            "text": "sóng ngang"
+          }
+        },
+        {
+          "text": "an electromagnetic wave",
+          "vi": {
+            "text": "sóng điện từ"
+          }
+        },
+        {
+          "text": "a stream of air flowing from the fork",
+          "vi": {
+            "text": "một luồng không khí chảy ra từ âm thoa"
+          }
+        }
+      ]
+    },
+    {
+      "id": "first-length",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["tube"],
+      "stem": "At the first (shortest) resonance of a tube closed at one end, the air column is, apart from the end correction, about…",
+      "explain": "The closed end (the water) is a node and the open end an antinode: the shortest column holds a quarter of a wavelength, L₁ + e = λ/4.",
+      "vi": {
+        "stem": "Ở lần cộng hưởng thứ nhất (cột khí ngắn nhất) của ống một đầu kín, nếu bỏ qua phần hiệu chỉnh đầu ống, cột khí dài khoảng…",
+        "explain": "Đầu kín (mặt nước) là nút, đầu hở là bụng: cột khí ngắn nhất chứa một phần tư bước sóng, L₁ + e = λ/4."
+      },
+      "options": [
+        {
+          "text": "λ/4",
+          "vi": {
+            "text": "λ/4"
+          },
+          "correct": true
+        },
+        {
+          "text": "λ/2",
+          "vi": {
+            "text": "λ/2"
+          }
+        },
+        {
+          "text": "λ",
+          "vi": {
+            "text": "λ"
+          }
+        },
+        {
+          "text": "3λ/4",
+          "vi": {
+            "text": "3λ/4"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-columns",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["tube", "wavelength", "temperature"],
+      "stem": "A tuning fork sounds over a tube of air above water; the water level is lowered to find two resonances. Decide whether each statement is true or false.",
+      "explain": "The two resonances are half a wavelength apart: L₂ − L₁ = λ/2. The antinode lies a little beyond the open end (the end correction). The speed of sound in air rises with temperature. A higher-frequency fork has a shorter wavelength, so both resonance lengths are shorter.",
+      "vi": {
+        "stem": "Một âm thoa phát âm trên miệng ống chứa không khí phía trên mặt nước; hạ dần mực nước để tìm hai vị trí cộng hưởng. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Hai vị trí cộng hưởng cách nhau nửa bước sóng: L₂ − L₁ = λ/2. Bụng sóng nằm hơi lệch ra ngoài miệng ống (hiệu chỉnh đầu ống). Tốc độ âm trong không khí tăng theo nhiệt độ. Âm thoa tần số cao hơn có bước sóng ngắn hơn, nên cả hai chiều dài cộng hưởng đều ngắn hơn."
+      },
+      "statements": [
+        {
+          "text": "The two resonance lengths differ by half a wavelength.",
+          "vi": {
+            "text": "Hai chiều dài cộng hưởng chênh nhau nửa bước sóng."
+          },
+          "true": true
+        },
+        {
+          "text": "The antinode at the open end lies a little beyond the tube’s mouth.",
+          "vi": {
+            "text": "Bụng sóng ở đầu hở nằm hơi lệch ra ngoài miệng ống."
+          },
+          "true": true
+        },
+        {
+          "text": "The speed of sound in air does not depend on the temperature.",
+          "vi": {
+            "text": "Tốc độ âm trong không khí không phụ thuộc nhiệt độ."
+          },
+          "true": false
+        },
+        {
+          "text": "A fork of higher frequency gives shorter resonance lengths.",
+          "vi": {
+            "text": "Âm thoa có tần số cao hơn cho các chiều dài cộng hưởng ngắn hơn."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "wavelength-30",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["speed", "temperature"],
+      "set": {
+        "frequency": 512,
+        "temperature": 30
+      },
+      "stem": "At {temperature} °C sound travels at {@speedOfSound|4} m/s in dry air. What is the wavelength of a {frequency} Hz fork’s sound?",
+      "explain": "λ = v/f = {@speedOfSound|4}/{frequency} ≈ {@wavelength} m. f/v has the wrong unit; v/(2f) is the distance between the two resonances and v/(4f) the first column length without its end correction.",
+      "vi": {
+        "stem": "Ở {temperature} °C, âm truyền trong không khí khô với tốc độ {@speedOfSound|4} m/s. Bước sóng của âm do âm thoa {frequency} Hz phát ra bằng bao nhiêu?",
+        "explain": "λ = v/f = {@speedOfSound|4}/{frequency} ≈ {@wavelength} m. f/v sai đơn vị; v/(2f) là khoảng cách giữa hai vị trí cộng hưởng, còn v/(4f) là chiều dài cột khí thứ nhất khi chưa trừ hiệu chỉnh đầu ống."
+      },
+      "options": [
+        {
+          "text": "{@wavelength} m",
+          "vi": {
+            "text": "{@wavelength} m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@speedOfSound/frequency",
+            "equals": "wavelength"
+          }
+        },
+        {
+          "text": "{=frequency/@speedOfSound} m",
+          "vi": {
+            "text": "{=frequency/@speedOfSound} m"
+          },
+          "check": {
+            "expr": "frequency/@speedOfSound",
+            "equals": "wavelength"
+          }
+        },
+        {
+          "text": "{=@speedOfSound/(4*frequency)} m",
+          "vi": {
+            "text": "{=@speedOfSound/(4*frequency)} m"
+          },
+          "check": {
+            "expr": "@speedOfSound/(4*frequency)",
+            "equals": "wavelength"
+          }
+        },
+        {
+          "text": "{=@speedOfSound/(2*frequency)} m",
+          "vi": {
+            "text": "{=@speedOfSound/(2*frequency)} m"
+          },
+          "check": {
+            "expr": "@speedOfSound/(2*frequency)",
+            "equals": "wavelength"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-440-15",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["wavelength", "speed", "tube"],
+      "set": {
+        "frequency": 440,
+        "temperature": 15
+      },
+      "stem": "A {frequency} Hz fork sounds over a tube of radius {tubeRadius} m at {temperature} °C, in dry air. Decide whether each statement is true or false.",
+      "explain": "v = 331.3·√(1 + t/273.15) ≈ {@speedOfSound|4} m/s and λ = v/f ≈ {@wavelength} m. The resonances are at L₁ ≈ {@firstResonance} m and L₂ ≈ {@secondResonance} m, and 2(L₂ − L₁) = λ. L₁ is not exactly λ/4 = {=@wavelength/4} m: the end correction e = {@endCorrection} m is missing from it.",
+      "vi": {
+        "stem": "Một âm thoa {frequency} Hz phát âm trên ống có bán kính {tubeRadius} m ở {temperature} °C, trong không khí khô. Mỗi nhận định sau đúng hay sai?",
+        "explain": "v = 331,3·√(1 + t/273,15) ≈ {@speedOfSound|4} m/s và λ = v/f ≈ {@wavelength} m. Các vị trí cộng hưởng ở L₁ ≈ {@firstResonance} m và L₂ ≈ {@secondResonance} m, và 2(L₂ − L₁) = λ. L₁ không đúng bằng λ/4 = {=@wavelength/4} m: nó thiếu phần hiệu chỉnh đầu ống e = {@endCorrection} m."
+      },
+      "statements": [
+        {
+          "text": "The speed of sound is about {@speedOfSound|4} m/s.",
+          "vi": {
+            "text": "Tốc độ âm khoảng {@speedOfSound|4} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "331.3*sqrt(1+temperature/273.15)",
+            "equals": "speedOfSound"
+          }
+        },
+        {
+          "text": "The wavelength is about {@wavelength} m.",
+          "vi": {
+            "text": "Bước sóng khoảng {@wavelength} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "@speedOfSound/frequency",
+            "equals": "wavelength"
+          }
+        },
+        {
+          "text": "Twice the distance between the two resonances is {=2*(@secondResonance-@firstResonance)} m, the wavelength.",
+          "vi": {
+            "text": "Hai lần khoảng cách giữa hai vị trí cộng hưởng là {=2*(@secondResonance-@firstResonance)} m, bằng bước sóng."
+          },
+          "true": true,
+          "check": {
+            "expr": "2*(@secondResonance-@firstResonance)",
+            "equals": "wavelength"
+          }
+        },
+        {
+          "text": "The first resonance is at exactly λ/4 = {=@wavelength/4} m.",
+          "vi": {
+            "text": "Vị trí cộng hưởng thứ nhất đúng bằng λ/4 = {=@wavelength/4} m."
+          },
+          "true": false,
+          "check": {
+            "expr": "@wavelength/4",
+            "equals": "firstResonance"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-frequency",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["wavelength", "speed"],
+      "set": {
+        "frequency": 384,
+        "temperature": 25
+      },
+      "stem": "At {temperature} °C (v = {@speedOfSound|4} m/s) a fork resonates with air columns of L₁ = {@firstResonance|4} m and L₂ = {@secondResonance|4} m. What is its frequency?",
+      "explain": "λ = 2(L₂ − L₁) = {=2*(@secondResonance-@firstResonance)|4} m, so f = v/λ ≈ {=@speedOfSound/(2*(@secondResonance-@firstResonance))} Hz. Using L₂ − L₁ as λ doubles f; 4(L₂ − L₁) halves it; v/(4L₁) leaves out the end correction.",
+      "vi": {
+        "stem": "Ở {temperature} °C (v = {@speedOfSound|4} m/s), một âm thoa cộng hưởng với các cột khí L₁ = {@firstResonance|4} m và L₂ = {@secondResonance|4} m. Tần số của nó bằng bao nhiêu?",
+        "explain": "λ = 2(L₂ − L₁) = {=2*(@secondResonance-@firstResonance)|4} m, nên f = v/λ ≈ {=@speedOfSound/(2*(@secondResonance-@firstResonance))} Hz. Coi L₂ − L₁ là λ sẽ làm f gấp đôi; lấy 4(L₂ − L₁) làm f giảm một nửa; v/(4L₁) là bỏ qua hiệu chỉnh đầu ống."
+      },
+      "options": [
+        {
+          "text": "{=@speedOfSound/(2*(@secondResonance-@firstResonance))} Hz",
+          "vi": {
+            "text": "{=@speedOfSound/(2*(@secondResonance-@firstResonance))} Hz"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@speedOfSound/(@speedOfSound/(2*(@secondResonance-@firstResonance)))",
+            "equals": "wavelength"
+          }
+        },
+        {
+          "text": "{=@speedOfSound/(@secondResonance-@firstResonance)} Hz",
+          "vi": {
+            "text": "{=@speedOfSound/(@secondResonance-@firstResonance)} Hz"
+          },
+          "check": {
+            "expr": "@speedOfSound/(@speedOfSound/(@secondResonance-@firstResonance))",
+            "equals": "wavelength"
+          }
+        },
+        {
+          "text": "{=@speedOfSound/(4*(@secondResonance-@firstResonance))} Hz",
+          "vi": {
+            "text": "{=@speedOfSound/(4*(@secondResonance-@firstResonance))} Hz"
+          },
+          "check": {
+            "expr": "@speedOfSound/(@speedOfSound/(4*(@secondResonance-@firstResonance)))",
+            "equals": "wavelength"
+          }
+        },
+        {
+          "text": "{=@speedOfSound/(4*@firstResonance)} Hz",
+          "vi": {
+            "text": "{=@speedOfSound/(4*@firstResonance)} Hz"
+          },
+          "check": {
+            "expr": "@speedOfSound/(@speedOfSound/(4*@firstResonance))",
+            "equals": "wavelength"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-temperature",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["temperature"],
+      "set": {
+        "frequency": 512,
+        "temperature": 30
+      },
+      "stem": "Sound is measured to travel at {@speedOfSound|4} m/s in dry air. Taking v = 331.3·√(1 + t/273.15) m/s, what is the air’s temperature?",
+      "explain": "(v/331.3)² = 1 + t/273.15, so t = 273.15·((v/331.3)² − 1) ≈ {=273.15*((@speedOfSound/331.3)^2-1)|3} °C. Forgetting to square gives too low a value; leaving out the −1 gives the absolute temperature in kelvins.",
+      "vi": {
+        "stem": "Đo được tốc độ âm trong không khí khô là {@speedOfSound|4} m/s. Lấy v = 331,3·√(1 + t/273,15) m/s, nhiệt độ không khí bằng bao nhiêu?",
+        "explain": "(v/331,3)² = 1 + t/273,15, nên t = 273,15·((v/331,3)² − 1) ≈ {=273.15*((@speedOfSound/331.3)^2-1)|3} °C. Quên bình phương sẽ ra giá trị quá nhỏ; bỏ số −1 sẽ ra nhiệt độ tuyệt đối tính bằng kelvin."
+      },
+      "options": [
+        {
+          "text": "{=273.15*((@speedOfSound/331.3)^2-1)|3} °C",
+          "vi": {
+            "text": "{=273.15*((@speedOfSound/331.3)^2-1)|3} °C"
+          },
+          "correct": true,
+          "check": {
+            "expr": "331.3*sqrt(1+(273.15*((@speedOfSound/331.3)^2-1))/273.15)",
+            "equals": "speedOfSound"
+          }
+        },
+        {
+          "text": "{=273.15*(@speedOfSound/331.3-1)|3} °C",
+          "vi": {
+            "text": "{=273.15*(@speedOfSound/331.3-1)|3} °C"
+          },
+          "check": {
+            "expr": "331.3*sqrt(1+(273.15*(@speedOfSound/331.3-1))/273.15)",
+            "equals": "speedOfSound"
+          }
+        },
+        {
+          "text": "{=273.15*(@speedOfSound/331.3)^2|4} °C",
+          "vi": {
+            "text": "{=273.15*(@speedOfSound/331.3)^2|4} °C"
+          },
+          "check": {
+            "expr": "331.3*sqrt(1+(273.15*(@speedOfSound/331.3)^2)/273.15)",
+            "equals": "speedOfSound"
+          }
+        },
+        {
+          "text": "{=273.15*(1-(331.3/@speedOfSound)^2)|3} °C",
+          "vi": {
+            "text": "{=273.15*(1-(331.3/@speedOfSound)^2)|3} °C"
+          },
+          "check": {
+            "expr": "331.3*sqrt(1+(273.15*(1-(331.3/@speedOfSound)^2))/273.15)",
+            "equals": "speedOfSound"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-end-correction",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["tube", "temperature", "wavelength"],
+      "set": {
+        "frequency": 384,
+        "temperature": 30,
+        "rulerResolution": 0.005
+      },
+      "stem": "A {frequency} Hz fork sounds over a tube of radius {tubeRadius} m at {temperature} °C. Decide whether each statement is true or false.",
+      "explain": "The end correction is e = 0.6·r = {@endCorrection} m, and L₁ + e = λ/4 = {=@wavelength/4} m. 4·L₁ = {=4*@firstResonance} m falls short of λ = {@wavelength} m, which is why λ is taken from L₂ − L₁, where e cancels. Warmer air has a faster sound and a longer λ, so the resonances are farther apart than at 15 °C, not closer.",
+      "vi": {
+        "stem": "Một âm thoa {frequency} Hz phát âm trên ống có bán kính {tubeRadius} m ở {temperature} °C. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Hiệu chỉnh đầu ống là e = 0,6·r = {@endCorrection} m, và L₁ + e = λ/4 = {=@wavelength/4} m. 4·L₁ = {=4*@firstResonance} m nhỏ hơn λ = {@wavelength} m, vì thế λ được tính từ L₂ − L₁, trong đó e bị triệt tiêu. Không khí ấm hơn cho tốc độ âm lớn hơn và λ dài hơn, nên các vị trí cộng hưởng cách xa nhau hơn so với ở 15 °C, không gần hơn."
+      },
+      "statements": [
+        {
+          "text": "The end correction is {@endCorrection} m.",
+          "vi": {
+            "text": "Hiệu chỉnh đầu ống bằng {@endCorrection} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "0.6*tubeRadius",
+            "equals": "endCorrection"
+          }
+        },
+        {
+          "text": "L₁ + e = λ/4 ≈ {=@wavelength/4} m.",
+          "vi": {
+            "text": "L₁ + e = λ/4 ≈ {=@wavelength/4} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "4*(@firstResonance+@endCorrection)",
+            "equals": "wavelength"
+          }
+        },
+        {
+          "text": "4·L₁ = {=4*@firstResonance} m is a little shorter than λ.",
+          "vi": {
+            "text": "4·L₁ = {=4*@firstResonance} m ngắn hơn λ một chút."
+          },
+          "true": true
+        },
+        {
+          "text": "At {temperature} °C the two resonances are closer together than at 15 °C.",
+          "vi": {
+            "text": "Ở {temperature} °C, hai vị trí cộng hưởng gần nhau hơn so với ở 15 °C."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

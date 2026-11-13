@@ -1,0 +1,1059 @@
+{
+  "id": "orbitals",
+  "skills": [
+    {
+      "id": "shapes",
+      "name": "Shapes of s, p and d orbitals",
+      "advice": "Draw the three pictures from memory — s a sphere, p two lobes (a dumbbell), d four lobes — then compare with the point clouds at the station. An orbital is a region of high probability, not a path.",
+      "vi": {
+        "name": "Hình dạng orbital s, p và d",
+        "advice": "Tự vẽ lại ba hình — orbital s hình cầu, orbital p hai thùy (hình số tám nổi), orbital d bốn thùy — rồi so sánh với đám mây điểm trên trạm. Orbital là vùng có xác suất tìm thấy electron lớn, không phải quỹ đạo."
+      }
+    },
+    {
+      "id": "quantum",
+      "name": "Quantum numbers n and l",
+      "advice": "Read a subshell name as n then a letter for l: s = 0, p = 1, d = 2, with l from 0 to n − 1. Write n and l for each orbital at the station before reading its results.",
+      "vi": {
+        "name": "Số lượng tử n và l",
+        "advice": "Đọc tên phân lớp theo n rồi chữ cái ứng với l: s = 0, p = 1, d = 2, với l từ 0 đến n − 1. Ghi n và l của mỗi orbital trên trạm trước khi đọc kết quả."
+      }
+    },
+    {
+      "id": "nodes",
+      "name": "Nodes: n − l − 1 radial, l angular",
+      "advice": "Learn the two counts and their sum n − 1. Scan 2s, 3s and 3p at the station and count where the radial probability drops to zero.",
+      "vi": {
+        "name": "Mặt nút: n − l − 1 nút xuyên tâm, l nút góc",
+        "advice": "Ghi nhớ hai công thức đếm và tổng n − 1. Quét orbital 2s, 3s và 3p trên trạm và đếm số lần xác suất xuyên tâm giảm về 0."
+      }
+    },
+    {
+      "id": "distance",
+      "name": "How far the electron is: peak and mean distance",
+      "advice": "Remember ⟨r⟩ = (a₀/2)·(3n² − l(l + 1)) and the peaks a₀ (1s), 4a₀ (2p), 9a₀ (3d). Compare orbitals of the same n and of different n at the station: n matters most.",
+      "vi": {
+        "name": "Electron ở xa hạt nhân bao nhiêu: khoảng cách có xác suất lớn nhất và trung bình",
+        "advice": "Ghi nhớ ⟨r⟩ = (a₀/2)·(3n² − l(l + 1)) và các đỉnh a₀ (1s), 4a₀ (2p), 9a₀ (3d). So sánh các orbital cùng n và khác n trên trạm: n ảnh hưởng nhiều nhất."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "s-shape",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["shapes"],
+      "stem": "What is the shape of an s orbital?",
+      "explain": "An s orbital (l = 0) is spherically symmetric: a sphere around the nucleus.",
+      "vi": {
+        "stem": "Orbital s có hình dạng gì?",
+        "explain": "Orbital s (l = 0) đối xứng cầu: hình cầu bao quanh hạt nhân."
+      },
+      "options": [
+        {
+          "text": "A sphere",
+          "vi": {
+            "text": "Hình cầu"
+          },
+          "correct": true
+        },
+        {
+          "text": "Two lobes (a dumbbell)",
+          "vi": {
+            "text": "Hai thùy (hình số tám nổi)"
+          }
+        },
+        {
+          "text": "Four lobes (a cloverleaf)",
+          "vi": {
+            "text": "Bốn thùy (hình hoa thị)"
+          }
+        },
+        {
+          "text": "A flat ring",
+          "vi": {
+            "text": "Một vòng tròn phẳng"
+          }
+        }
+      ]
+    },
+    {
+      "id": "three-d",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["quantum"],
+      "stem": "Which quantum numbers describe a 3d orbital?",
+      "explain": "3 is n; d stands for l = 2 (s 0, p 1, d 2), allowed as l ≤ n − 1.",
+      "vi": {
+        "stem": "Orbital 3d ứng với các số lượng tử nào?",
+        "explain": "3 là n; d ứng với l = 2 (s 0, p 1, d 2), thỏa mãn l ≤ n − 1."
+      },
+      "options": [
+        {
+          "text": "n = 3, l = 2",
+          "vi": {
+            "text": "n = 3, l = 2"
+          },
+          "correct": true
+        },
+        {
+          "text": "n = 3, l = 3",
+          "vi": {
+            "text": "n = 3, l = 3"
+          }
+        },
+        {
+          "text": "n = 2, l = 3",
+          "vi": {
+            "text": "n = 2, l = 3"
+          }
+        },
+        {
+          "text": "n = 3, l = 1",
+          "vi": {
+            "text": "n = 3, l = 1"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-orbitals",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["shapes"],
+      "stem": "Decide whether each statement about atomic orbitals is true or false.",
+      "explain": "An orbital is the region where the electron is most likely to be found, not a fixed path. A p orbital has two lobes on opposite sides of the nucleus. Each orbital holds at most two electrons, of opposite spin.",
+      "vi": {
+        "stem": "Mỗi nhận định sau về orbital nguyên tử đúng hay sai?",
+        "explain": "Orbital là vùng không gian quanh hạt nhân mà xác suất tìm thấy electron lớn nhất, không phải một quỹ đạo cố định. Orbital p có hai thùy ở hai phía đối diện của hạt nhân. Mỗi orbital chứa tối đa hai electron có chiều tự quay ngược nhau."
+      },
+      "statements": [
+        {
+          "text": "An orbital is a region around the nucleus where the electron is most likely to be found.",
+          "vi": {
+            "text": "Orbital là vùng không gian quanh hạt nhân mà xác suất có mặt electron lớn nhất."
+          },
+          "true": true
+        },
+        {
+          "text": "A 2p orbital has two lobes on opposite sides of the nucleus.",
+          "vi": {
+            "text": "Orbital 2p có hai thùy nằm ở hai phía đối diện của hạt nhân."
+          },
+          "true": true
+        },
+        {
+          "text": "The electron moves along a fixed circular path around the nucleus.",
+          "vi": {
+            "text": "Electron chuyển động trên một quỹ đạo tròn cố định quanh hạt nhân."
+          },
+          "true": false
+        },
+        {
+          "text": "Each orbital holds at most two electrons.",
+          "vi": {
+            "text": "Mỗi orbital chứa tối đa hai electron."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "radial-3s",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["nodes", "quantum"],
+      "set": {
+        "orbital": 3
+      },
+      "stem": "How many radial nodes (spheres where the electron is never found) has a 3s orbital?",
+      "explain": "Radial nodes: n − l − 1 = 3 − 0 − 1 = {@radialNodes}.",
+      "vi": {
+        "stem": "Orbital 3s có bao nhiêu nút xuyên tâm (mặt cầu mà electron không bao giờ có mặt)?",
+        "explain": "Số nút xuyên tâm: n − l − 1 = 3 − 0 − 1 = {@radialNodes}."
+      },
+      "options": [
+        {
+          "text": "2",
+          "vi": {
+            "text": "2"
+          },
+          "correct": true,
+          "check": {
+            "expr": "3-0-1",
+            "equals": "radialNodes"
+          }
+        },
+        {
+          "text": "3",
+          "vi": {
+            "text": "3"
+          },
+          "check": {
+            "expr": "3",
+            "equals": "radialNodes"
+          }
+        },
+        {
+          "text": "1",
+          "vi": {
+            "text": "1"
+          },
+          "check": {
+            "expr": "1",
+            "equals": "radialNodes"
+          }
+        },
+        {
+          "text": "0",
+          "vi": {
+            "text": "0"
+          },
+          "check": {
+            "expr": "0",
+            "equals": "radialNodes"
+          }
+        }
+      ]
+    },
+    {
+      "id": "farthest",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["distance"],
+      "stem": "In the hydrogen atom, ⟨r⟩ = (a₀/2)·(3n² − l(l + 1)). Which of these orbitals has the largest mean distance from the nucleus?",
+      "explain": "3s: 13.5a₀; 3p: 12.5a₀; 3d: 10.5a₀; 2s: 6a₀. n matters most; for the same n, a smaller l is farther out on average.",
+      "vi": {
+        "stem": "Trong nguyên tử hydrogen, ⟨r⟩ = (a₀/2)·(3n² − l(l + 1)). Orbital nào sau đây có khoảng cách trung bình đến hạt nhân lớn nhất?",
+        "explain": "3s: 13,5a₀; 3p: 12,5a₀; 3d: 10,5a₀; 2s: 6a₀. n ảnh hưởng nhiều nhất; với cùng n, l nhỏ hơn thì trung bình ở xa hơn."
+      },
+      "options": [
+        {
+          "text": "3s",
+          "vi": {
+            "text": "3s"
+          },
+          "correct": true
+        },
+        {
+          "text": "3p",
+          "vi": {
+            "text": "3p"
+          }
+        },
+        {
+          "text": "3d",
+          "vi": {
+            "text": "3d"
+          }
+        },
+        {
+          "text": "2s",
+          "vi": {
+            "text": "2s"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-2p",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["nodes", "distance", "shapes"],
+      "set": {
+        "orbital": 2
+      },
+      "stem": "For the hydrogen atom’s 2p orbital (n = 2, l = 1; a₀ = 52.92 pm), decide whether each statement is true or false.",
+      "explain": "l = 1: one angular node, a plane through the nucleus; n − l − 1 = 0 radial nodes. Its most probable distance is 4a₀ ≈ {@peakRadius|4} pm. On the nodal plane, through the nucleus, the electron is never found.",
+      "vi": {
+        "stem": "Với orbital 2p của nguyên tử hydrogen (n = 2, l = 1; a₀ = 52,92 pm), mỗi nhận định sau đúng hay sai?",
+        "explain": "l = 1: một nút góc, là mặt phẳng đi qua hạt nhân; n − l − 1 = 0 nút xuyên tâm. Khoảng cách có xác suất lớn nhất là 4a₀ ≈ {@peakRadius|4} pm. Trên mặt phẳng nút, đi qua hạt nhân, không bao giờ tìm thấy electron."
+      },
+      "statements": [
+        {
+          "text": "It has one angular node, a plane through the nucleus.",
+          "vi": {
+            "text": "Nó có một nút góc, là một mặt phẳng đi qua hạt nhân."
+          },
+          "true": true,
+          "check": {
+            "expr": "1",
+            "equals": "angularNodes"
+          }
+        },
+        {
+          "text": "It has no radial node.",
+          "vi": {
+            "text": "Nó không có nút xuyên tâm."
+          },
+          "true": true,
+          "check": {
+            "expr": "2-1-1",
+            "equals": "radialNodes"
+          }
+        },
+        {
+          "text": "Its most probable distance from the nucleus is about {@peakRadius|4} pm.",
+          "vi": {
+            "text": "Khoảng cách có xác suất lớn nhất đến hạt nhân khoảng {@peakRadius|4} pm."
+          },
+          "true": true,
+          "check": {
+            "expr": "4*52.9177210903",
+            "equals": "peakRadius"
+          }
+        },
+        {
+          "text": "The electron is most likely to be found at the nucleus itself.",
+          "vi": {
+            "text": "Electron có xác suất có mặt lớn nhất ngay tại hạt nhân."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "mean-2s",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["distance"],
+      "set": {
+        "orbital": 1
+      },
+      "stem": "For the hydrogen atom’s 2s orbital (n = 2, l = 0), find the mean distance of the electron from the nucleus, ⟨r⟩ = (a₀/2)·(3n² − l(l + 1)), with a₀ = 52.92 pm.",
+      "explain": "⟨r⟩ = (a₀/2)·(3·2² − 0) = 6a₀ ≈ {@meanRadius|4} pm.",
+      "vi": {
+        "stem": "Với orbital 2s của nguyên tử hydrogen (n = 2, l = 0), tính khoảng cách trung bình của electron đến hạt nhân, ⟨r⟩ = (a₀/2)·(3n² − l(l + 1)), với a₀ = 52,92 pm.",
+        "explain": "⟨r⟩ = (a₀/2)·(3·2² − 0) = 6a₀ ≈ {@meanRadius|4} pm."
+      },
+      "options": [
+        {
+          "text": "{@meanRadius|4} pm",
+          "vi": {
+            "text": "{@meanRadius|4} pm"
+          },
+          "correct": true,
+          "check": {
+            "expr": "52.9177210903/2*(3*2^2-0)",
+            "equals": "meanRadius"
+          }
+        },
+        {
+          "text": "{=4*52.9177210903|4} pm",
+          "vi": {
+            "text": "{=4*52.9177210903|4} pm"
+          },
+          "check": {
+            "expr": "4*52.9177210903",
+            "equals": "meanRadius"
+          }
+        },
+        {
+          "text": "{=52.9177210903/2*(3*2^2-1*2)|4} pm",
+          "vi": {
+            "text": "{=52.9177210903/2*(3*2^2-1*2)|4} pm"
+          },
+          "check": {
+            "expr": "52.9177210903/2*(3*2^2-1*2)",
+            "equals": "meanRadius"
+          }
+        },
+        {
+          "text": "{=52.9177210903/2*3*2|4} pm",
+          "vi": {
+            "text": "{=52.9177210903/2*3*2|4} pm"
+          },
+          "check": {
+            "expr": "52.9177210903/2*3*2",
+            "equals": "meanRadius"
+          }
+        }
+      ]
+    },
+    {
+      "id": "nodes-3p",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["nodes", "quantum"],
+      "set": {
+        "orbital": 4
+      },
+      "stem": "How many radial and angular nodes has a 3p orbital?",
+      "explain": "n = 3, l = 1: radial n − l − 1 = {@radialNodes}, angular l = {@angularNodes}; together n − 1 = 2.",
+      "vi": {
+        "stem": "Orbital 3p có bao nhiêu nút xuyên tâm và bao nhiêu nút góc?",
+        "explain": "n = 3, l = 1: số nút xuyên tâm n − l − 1 = {@radialNodes}, số nút góc l = {@angularNodes}; tổng cộng n − 1 = 2."
+      },
+      "options": [
+        {
+          "text": "1 radial node and 1 angular node",
+          "vi": {
+            "text": "1 nút xuyên tâm và 1 nút góc"
+          },
+          "correct": true,
+          "check": {
+            "expr": "3-1-1",
+            "equals": "radialNodes"
+          }
+        },
+        {
+          "text": "2 radial nodes and no angular node",
+          "vi": {
+            "text": "2 nút xuyên tâm và không có nút góc"
+          },
+          "check": {
+            "expr": "2",
+            "equals": "radialNodes"
+          }
+        },
+        {
+          "text": "No radial node and 2 angular nodes",
+          "vi": {
+            "text": "Không có nút xuyên tâm và 2 nút góc"
+          },
+          "check": {
+            "expr": "0",
+            "equals": "radialNodes"
+          }
+        },
+        {
+          "text": "1 radial node and 2 angular nodes",
+          "vi": {
+            "text": "1 nút xuyên tâm và 2 nút góc"
+          },
+          "check": {
+            "expr": "2",
+            "equals": "angularNodes"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-3d",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["nodes", "distance"],
+      "set": {
+        "orbital": 5
+      },
+      "stem": "For the hydrogen atom’s 3d orbital (n = 3, l = 2; a₀ = 52.92 pm), decide whether each statement is true or false.",
+      "explain": "Radial nodes n − l − 1 = 0; angular nodes l = 2. Its peak is at 9a₀ ≈ {@peakRadius|4} pm. ⟨r⟩ = (a₀/2)·(27 − 6) = 10.5a₀ ≈ {@meanRadius|4} pm — the 13.5a₀ of 3s forgets the l(l + 1).",
+      "vi": {
+        "stem": "Với orbital 3d của nguyên tử hydrogen (n = 3, l = 2; a₀ = 52,92 pm), mỗi nhận định sau đúng hay sai?",
+        "explain": "Số nút xuyên tâm n − l − 1 = 0; số nút góc l = 2. Đỉnh ở 9a₀ ≈ {@peakRadius|4} pm. ⟨r⟩ = (a₀/2)·(27 − 6) = 10,5a₀ ≈ {@meanRadius|4} pm — giá trị 13,5a₀ của 3s là do quên số hạng l(l + 1)."
+      },
+      "statements": [
+        {
+          "text": "It has no radial node.",
+          "vi": {
+            "text": "Nó không có nút xuyên tâm."
+          },
+          "true": true,
+          "check": {
+            "expr": "3-2-1",
+            "equals": "radialNodes"
+          }
+        },
+        {
+          "text": "It has 2 angular nodes.",
+          "vi": {
+            "text": "Nó có 2 nút góc."
+          },
+          "true": true,
+          "check": {
+            "expr": "2",
+            "equals": "angularNodes"
+          }
+        },
+        {
+          "text": "Its most probable distance is about {@peakRadius|4} pm.",
+          "vi": {
+            "text": "Khoảng cách có xác suất lớn nhất khoảng {@peakRadius|4} pm."
+          },
+          "true": true,
+          "check": {
+            "expr": "9*52.9177210903",
+            "equals": "peakRadius"
+          }
+        },
+        {
+          "text": "Its mean distance is about {=13.5*52.9177210903|4} pm.",
+          "vi": {
+            "text": "Khoảng cách trung bình khoảng {=13.5*52.9177210903|4} pm."
+          },
+          "true": false,
+          "check": {
+            "expr": "13.5*52.9177210903",
+            "equals": "meanRadius"
+          }
+        }
+      ]
+    },
+    {
+      "id": "peak-1s",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["distance"],
+      "set": {
+        "orbital": 0
+      },
+      "stem": "At what distance from the nucleus is a hydrogen 1s electron most likely to be found? (a₀ = 52.92 pm)",
+      "explain": "The radial probability r²·R(r)² peaks at the Bohr radius, a₀ ≈ {@peakRadius|4} pm; the mean distance, 1.5a₀ ≈ {@meanRadius|4} pm, is farther. Although |ψ|² is largest at the nucleus, the shell there has almost no volume.",
+      "vi": {
+        "stem": "Electron 1s của nguyên tử hydrogen có xác suất có mặt lớn nhất ở khoảng cách nào đến hạt nhân? (a₀ = 52,92 pm)",
+        "explain": "Mật độ xác suất xuyên tâm r²·R(r)² cực đại tại bán kính Bohr, a₀ ≈ {@peakRadius|4} pm; khoảng cách trung bình, 1,5a₀ ≈ {@meanRadius|4} pm, xa hơn. Dù |ψ|² lớn nhất tại hạt nhân, lớp vỏ cầu ở đó hầu như không có thể tích."
+      },
+      "options": [
+        {
+          "text": "{@peakRadius|4} pm",
+          "vi": {
+            "text": "{@peakRadius|4} pm"
+          },
+          "correct": true,
+          "check": {
+            "expr": "52.9177210903",
+            "equals": "peakRadius"
+          }
+        },
+        {
+          "text": "{=1.5*52.9177210903|4} pm",
+          "vi": {
+            "text": "{=1.5*52.9177210903|4} pm"
+          },
+          "check": {
+            "expr": "1.5*52.9177210903",
+            "equals": "peakRadius"
+          }
+        },
+        {
+          "text": "0 pm (at the nucleus)",
+          "vi": {
+            "text": "0 pm (tại hạt nhân)"
+          },
+          "check": {
+            "expr": "0",
+            "equals": "peakRadius"
+          }
+        },
+        {
+          "text": "{=2*52.9177210903|4} pm",
+          "vi": {
+            "text": "{=2*52.9177210903|4} pm"
+          },
+          "check": {
+            "expr": "2*52.9177210903",
+            "equals": "peakRadius"
+          }
+        }
+      ]
+    },
+    {
+      "id": "which-orbital",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["nodes", "quantum"],
+      "stem": "An orbital has 2 radial nodes and 1 angular node. Which orbital is it?",
+      "explain": "Angular nodes give l = 1 (a p orbital); radial nodes n − l − 1 = 2 give n = 4: 4p. (3p has 1 radial node; 3d and 4d have 2 angular nodes.)",
+      "vi": {
+        "stem": "Một orbital có 2 nút xuyên tâm và 1 nút góc. Đó là orbital nào?",
+        "explain": "Số nút góc cho l = 1 (orbital p); số nút xuyên tâm n − l − 1 = 2 cho n = 4: 4p. (3p có 1 nút xuyên tâm; 3d và 4d có 2 nút góc.)"
+      },
+      "options": [
+        {
+          "text": "4p",
+          "vi": {
+            "text": "4p"
+          },
+          "correct": true
+        },
+        {
+          "text": "3p",
+          "vi": {
+            "text": "3p"
+          }
+        },
+        {
+          "text": "3d",
+          "vi": {
+            "text": "3d"
+          }
+        },
+        {
+          "text": "4d",
+          "vi": {
+            "text": "4d"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-2s-scan",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["nodes", "distance"],
+      "set": {
+        "orbital": 1
+      },
+      "stem": "The station scans the radial probability P(r) of the hydrogen 2s orbital (a₀ = 52.92 pm). Decide whether each statement about the scan is true or false.",
+      "explain": "P(r) for 2s has a small inner peak, a node at 2a₀ where it drops to zero, and its main peak at (3 + √5)a₀ ≈ {@peakRadius|4} pm, well beyond the 1s peak at a₀. Its long tail pulls the mean out to 6a₀ ≈ {@meanRadius|4} pm. The inner peak means a 2s electron is sometimes inside the node.",
+      "vi": {
+        "stem": "Trạm quét mật độ xác suất xuyên tâm P(r) của orbital 2s trong nguyên tử hydrogen (a₀ = 52,92 pm). Mỗi nhận định sau về kết quả quét đúng hay sai?",
+        "explain": "P(r) của 2s có một đỉnh nhỏ phía trong, một nút tại 2a₀ nơi P giảm về 0, và đỉnh chính ở (3 + √5)a₀ ≈ {@peakRadius|4} pm, xa hơn nhiều so với đỉnh 1s ở a₀. Phần đuôi dài kéo khoảng cách trung bình ra 6a₀ ≈ {@meanRadius|4} pm. Đỉnh phía trong cho thấy electron 2s đôi khi ở bên trong mặt nút."
+      },
+      "statements": [
+        {
+          "text": "The main peak is at about {@peakRadius|4} pm, farther out than the 1s peak at a₀.",
+          "vi": {
+            "text": "Đỉnh chính ở khoảng {@peakRadius|4} pm, xa hơn đỉnh 1s ở a₀."
+          },
+          "true": true,
+          "check": {
+            "expr": "(3+sqrt(5))*52.9177210903",
+            "equals": "peakRadius"
+          }
+        },
+        {
+          "text": "The scan passes one radial node, where P(r) drops to zero.",
+          "vi": {
+            "text": "Khi quét, P(r) giảm về 0 tại một nút xuyên tâm."
+          },
+          "true": true,
+          "check": {
+            "expr": "2-0-1",
+            "equals": "radialNodes"
+          }
+        },
+        {
+          "text": "The mean distance, about {@meanRadius|4} pm, is larger than the most probable distance.",
+          "vi": {
+            "text": "Khoảng cách trung bình, khoảng {@meanRadius|4} pm, lớn hơn khoảng cách có xác suất lớn nhất."
+          },
+          "true": true,
+          "check": {
+            "expr": "6*52.9177210903",
+            "equals": "meanRadius"
+          }
+        },
+        {
+          "text": "A 2s electron is never found closer to the nucleus than the node.",
+          "vi": {
+            "text": "Electron 2s không bao giờ có mặt ở gần hạt nhân hơn mặt nút."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "p-shape",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["shapes"],
+      "stem": "What is the shape of a p orbital?",
+      "explain": "A p orbital has two lobes on opposite sides of the nucleus along one axis (a dumbbell), with a nodal plane through the nucleus between them. The sphere is an s orbital; four lobes in a clover are typical of d orbitals.",
+      "vi": {
+        "stem": "Orbital p có hình dạng gì?",
+        "explain": "Orbital p gồm hai thùy nằm hai phía đối diện của hạt nhân dọc theo một trục (hình số tám nổi), giữa chúng là một mặt phẳng nút đi qua hạt nhân. Hình cầu là orbital s; bốn thùy hình hoa thị là đặc trưng của các orbital d."
+      },
+      "options": [
+        {
+          "text": "Two lobes along one axis (a dumbbell)",
+          "vi": {
+            "text": "Hai thùy dọc theo một trục (hình số tám nổi)"
+          },
+          "correct": true
+        },
+        {
+          "text": "A sphere",
+          "vi": {
+            "text": "Hình cầu"
+          }
+        },
+        {
+          "text": "Four lobes in a clover-leaf pattern",
+          "vi": {
+            "text": "Bốn thùy dạng hoa thị"
+          }
+        },
+        {
+          "text": "A flat ring around the nucleus",
+          "vi": {
+            "text": "Một vòng phẳng quanh hạt nhân"
+          }
+        }
+      ]
+    },
+    {
+      "id": "angular-2p",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["nodes", "quantum"],
+      "set": {
+        "orbital": 2
+      },
+      "stem": "How many angular nodes (nodal planes through the nucleus) has a 2p orbital?",
+      "explain": "The number of angular nodes is l, and l = 1 for every p orbital: {@angularNodes} nodal plane, between the two lobes. Its radial nodes are n − l − 1 = {@radialNodes}.",
+      "vi": {
+        "stem": "Orbital 2p có bao nhiêu nút góc (mặt phẳng nút đi qua hạt nhân)?",
+        "explain": "Số nút góc bằng l, và l = 1 với mọi orbital p: {@angularNodes} mặt phẳng nút, nằm giữa hai thùy. Số nút xuyên tâm của nó là n − l − 1 = {@radialNodes}."
+      },
+      "options": [
+        {
+          "text": "1",
+          "vi": {
+            "text": "1"
+          },
+          "correct": true,
+          "check": {
+            "expr": "1",
+            "equals": "angularNodes"
+          }
+        },
+        {
+          "text": "0",
+          "vi": {
+            "text": "0"
+          },
+          "check": {
+            "expr": "0",
+            "equals": "angularNodes"
+          }
+        },
+        {
+          "text": "2",
+          "vi": {
+            "text": "2"
+          },
+          "check": {
+            "expr": "2",
+            "equals": "angularNodes"
+          }
+        },
+        {
+          "text": "3",
+          "vi": {
+            "text": "3"
+          },
+          "check": {
+            "expr": "3",
+            "equals": "angularNodes"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-quantum",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["quantum", "nodes"],
+      "stem": "Decide whether each statement about the quantum numbers n and l is true or false.",
+      "explain": "l runs from 0 to n − 1: for n = 3, l = 0, 1, 2 (3s, 3p, 3d); for n = 2 there is no l = 2, so no 2d orbital. An orbital has l angular nodes and n − l − 1 radial ones, so orbitals of the same n can have different numbers of radial nodes (3s two, 3p one, 3d none).",
+      "vi": {
+        "stem": "Mỗi nhận định sau về các số lượng tử n và l đúng hay sai?",
+        "explain": "l nhận các giá trị từ 0 đến n − 1: với n = 3, l = 0, 1, 2 (3s, 3p, 3d); với n = 2 không có l = 2, nên không có orbital 2d. Một orbital có l nút góc và n − l − 1 nút xuyên tâm, nên các orbital cùng n có thể có số nút xuyên tâm khác nhau (3s có hai, 3p có một, 3d không có)."
+      },
+      "statements": [
+        {
+          "text": "For n = 3, l can be 0, 1 or 2.",
+          "vi": {
+            "text": "Với n = 3, l có thể bằng 0, 1 hoặc 2."
+          },
+          "true": true
+        },
+        {
+          "text": "A 2d orbital exists.",
+          "vi": {
+            "text": "Tồn tại orbital 2d."
+          },
+          "true": false
+        },
+        {
+          "text": "The number of angular nodes of an orbital equals l.",
+          "vi": {
+            "text": "Số nút góc của một orbital bằng l."
+          },
+          "true": true
+        },
+        {
+          "text": "All orbitals with the same n have the same number of radial nodes.",
+          "vi": {
+            "text": "Mọi orbital có cùng n đều có cùng số nút xuyên tâm."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "mean-3p",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["distance", "quantum"],
+      "set": {
+        "orbital": 4
+      },
+      "stem": "For the hydrogen atom's 3p orbital (n = 3, l = 1), find the mean distance of the electron from the nucleus, ⟨r⟩ = (a₀/2)·(3n² − l(l + 1)), with a₀ = 52.92 pm.",
+      "explain": "l(l + 1) = 1·2 = 2, so ⟨r⟩ = (a₀/2)·(3·3² − 2) = 12.5a₀ ≈ {@meanRadius} pm. Leaving out the l term gives the 3s value; l(l + 1) is 2, not 1; and the factor 1/2 must stay.",
+      "vi": {
+        "stem": "Với orbital 3p của nguyên tử hydrogen (n = 3, l = 1), tính khoảng cách trung bình từ electron đến hạt nhân, ⟨r⟩ = (a₀/2)·(3n² − l(l + 1)), với a₀ = 52,92 pm.",
+        "explain": "l(l + 1) = 1·2 = 2, nên ⟨r⟩ = (a₀/2)·(3·3² − 2) = 12,5a₀ ≈ {@meanRadius} pm. Bỏ số hạng chứa l sẽ được giá trị của 3s; l(l + 1) bằng 2 chứ không phải 1; và không được bỏ thừa số 1/2."
+      },
+      "options": [
+        {
+          "text": "{=52.9177210903/2*(3*3^2-1*2)} pm",
+          "vi": {
+            "text": "{=52.9177210903/2*(3*3^2-1*2)} pm"
+          },
+          "correct": true,
+          "check": {
+            "expr": "52.9177210903/2*(3*3^2-1*2)",
+            "equals": "meanRadius"
+          }
+        },
+        {
+          "text": "{=52.9177210903/2*(3*3^2)} pm",
+          "vi": {
+            "text": "{=52.9177210903/2*(3*3^2)} pm"
+          },
+          "check": {
+            "expr": "52.9177210903/2*(3*3^2)",
+            "equals": "meanRadius"
+          }
+        },
+        {
+          "text": "{=52.9177210903/2*(3*3^2-1)} pm",
+          "vi": {
+            "text": "{=52.9177210903/2*(3*3^2-1)} pm"
+          },
+          "check": {
+            "expr": "52.9177210903/2*(3*3^2-1)",
+            "equals": "meanRadius"
+          }
+        },
+        {
+          "text": "{=52.9177210903*(3*3^2-1*2)} pm",
+          "vi": {
+            "text": "{=52.9177210903*(3*3^2-1*2)} pm"
+          },
+          "check": {
+            "expr": "52.9177210903*(3*3^2-1*2)",
+            "equals": "meanRadius"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-3s",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["nodes", "distance"],
+      "set": {
+        "orbital": 3
+      },
+      "stem": "For the hydrogen atom's 3s orbital (n = 3, l = 0; a₀ = 52.92 pm), decide whether each statement is true or false.",
+      "explain": "Radial nodes n − l − 1 = {@radialNodes}; angular nodes l = {@angularNodes}. ⟨r⟩ = (a₀/2)·3·3² = 13.5a₀ ≈ {@meanRadius} pm. A larger n puts the electron farther out on average: a 3s electron is farther from the nucleus than a 2s one.",
+      "vi": {
+        "stem": "Với orbital 3s của nguyên tử hydrogen (n = 3, l = 0; a₀ = 52,92 pm), mỗi nhận định sau đúng hay sai?",
+        "explain": "Số nút xuyên tâm n − l − 1 = {@radialNodes}; số nút góc l = {@angularNodes}. ⟨r⟩ = (a₀/2)·3·3² = 13,5a₀ ≈ {@meanRadius} pm. n lớn hơn thì electron trung bình ở xa hạt nhân hơn: electron 3s ở xa hạt nhân hơn electron 2s."
+      },
+      "statements": [
+        {
+          "text": "It has 2 radial nodes.",
+          "vi": {
+            "text": "Nó có 2 nút xuyên tâm."
+          },
+          "true": true,
+          "check": {
+            "expr": "3-0-1",
+            "equals": "radialNodes"
+          }
+        },
+        {
+          "text": "It has no angular node.",
+          "vi": {
+            "text": "Nó không có nút góc."
+          },
+          "true": true,
+          "check": {
+            "expr": "0",
+            "equals": "angularNodes"
+          }
+        },
+        {
+          "text": "The electron's mean distance from the nucleus is about {=52.9177210903/2*(3*3^2)} pm.",
+          "vi": {
+            "text": "Khoảng cách trung bình từ electron đến hạt nhân khoảng {=52.9177210903/2*(3*3^2)} pm."
+          },
+          "true": true,
+          "check": {
+            "expr": "52.9177210903/2*(3*3^2)",
+            "equals": "meanRadius"
+          }
+        },
+        {
+          "text": "On average, a 3s electron is closer to the nucleus than a 2s electron.",
+          "vi": {
+            "text": "Trung bình, electron 3s ở gần hạt nhân hơn electron 2s."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "which-from-mean",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["distance", "quantum", "nodes"],
+      "set": {
+        "orbital": 4
+      },
+      "stem": "A hydrogen orbital has one angular node, and its electron's mean distance from the nucleus is {@meanRadius} pm (a₀ = 52.92 pm; ⟨r⟩ = (a₀/2)·(3n² − l(l + 1))). Which orbital is it?",
+      "explain": "One angular node: l = 1. ⟨r⟩/a₀ = {@meanRadius}/52.92 ≈ {=@meanRadius/52.9177210903|3}, so 3n² − 2 = {=2*@meanRadius/52.9177210903|3} and n² = 9: n = 3, the 3p orbital. 2p would give 5a₀; 3s (no angular node) 13.5a₀; 3d (two angular nodes) 10.5a₀.",
+      "vi": {
+        "stem": "Một orbital của nguyên tử hydrogen có một nút góc, và khoảng cách trung bình từ electron đến hạt nhân là {@meanRadius} pm (a₀ = 52,92 pm; ⟨r⟩ = (a₀/2)·(3n² − l(l + 1))). Đó là orbital nào?",
+        "explain": "Một nút góc: l = 1. ⟨r⟩/a₀ = {@meanRadius}/52,92 ≈ {=@meanRadius/52.9177210903|3}, nên 3n² − 2 = {=2*@meanRadius/52.9177210903|3} và n² = 9: n = 3, orbital 3p. Orbital 2p cho 5a₀; 3s (không có nút góc) cho 13,5a₀; 3d (hai nút góc) cho 10,5a₀."
+      },
+      "options": [
+        {
+          "text": "3p",
+          "vi": {
+            "text": "3p"
+          },
+          "correct": true,
+          "check": {
+            "expr": "52.9177210903/2*(3*3^2-1*2)",
+            "equals": "meanRadius"
+          }
+        },
+        {
+          "text": "2p",
+          "vi": {
+            "text": "2p"
+          },
+          "check": {
+            "expr": "52.9177210903/2*(3*2^2-1*2)",
+            "equals": "meanRadius"
+          }
+        },
+        {
+          "text": "3s",
+          "vi": {
+            "text": "3s"
+          },
+          "check": {
+            "expr": "52.9177210903/2*(3*3^2)",
+            "equals": "meanRadius"
+          }
+        },
+        {
+          "text": "3d",
+          "vi": {
+            "text": "3d"
+          },
+          "check": {
+            "expr": "52.9177210903/2*(3*3^2-2*3)",
+            "equals": "meanRadius"
+          }
+        }
+      ]
+    },
+    {
+      "id": "same-total-nodes",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["nodes", "quantum"],
+      "set": {
+        "orbital": 4
+      },
+      "stem": "A 3s orbital has two nodes in all. Which orbital also has two nodes in all, but exactly one of them radial?",
+      "explain": "Nodes in all: (n − l − 1) + l = n − 1, so every n = 3 orbital has two. 3p has n − l − 1 = {@radialNodes} radial and l = {@angularNodes} angular node. 3d has two angular and no radial node; 2s and 2p have only one node in all.",
+      "vi": {
+        "stem": "Orbital 3s có tổng cộng hai nút. Orbital nào cũng có tổng cộng hai nút, nhưng chỉ đúng một trong số đó là nút xuyên tâm?",
+        "explain": "Tổng số nút: (n − l − 1) + l = n − 1, nên mọi orbital có n = 3 đều có hai nút. 3p có n − l − 1 = {@radialNodes} nút xuyên tâm và l = {@angularNodes} nút góc. 3d có hai nút góc và không có nút xuyên tâm; 2s và 2p chỉ có tổng cộng một nút."
+      },
+      "options": [
+        {
+          "text": "3p",
+          "vi": {
+            "text": "3p"
+          },
+          "correct": true,
+          "check": {
+            "expr": "1",
+            "equals": "radialNodes"
+          }
+        },
+        {
+          "text": "3d",
+          "vi": {
+            "text": "3d"
+          }
+        },
+        {
+          "text": "2s",
+          "vi": {
+            "text": "2s"
+          }
+        },
+        {
+          "text": "2p",
+          "vi": {
+            "text": "2p"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-2s-2p",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["distance", "nodes", "quantum"],
+      "set": {
+        "orbital": 1
+      },
+      "stem": "The hydrogen atom's 2s and 2p orbitals are compared (a₀ = 52.92 pm; ⟨r⟩ = (a₀/2)·(3n² − l(l + 1))). Decide whether each statement is true or false.",
+      "explain": "⟨r⟩(2s) = 6a₀ ≈ {@meanRadius} pm, larger than ⟨r⟩(2p) = 5a₀ ≈ {=52.9177210903/2*(3*2^2-2)} pm. Each has one node: 2s a radial one, 2p an angular one. In the hydrogen atom the energy depends on n only, so 2s and 2p have the same energy. The 2s probability peaks at about {@peakRadius|3} pm, not at 4a₀ ≈ {=4*52.9177210903|3} pm as 2p does.",
+      "vi": {
+        "stem": "So sánh các orbital 2s và 2p của nguyên tử hydrogen (a₀ = 52,92 pm; ⟨r⟩ = (a₀/2)·(3n² − l(l + 1))). Mỗi nhận định sau đúng hay sai?",
+        "explain": "⟨r⟩(2s) = 6a₀ ≈ {@meanRadius} pm, lớn hơn ⟨r⟩(2p) = 5a₀ ≈ {=52.9177210903/2*(3*2^2-2)} pm. Mỗi orbital có một nút: 2s có một nút xuyên tâm, 2p có một nút góc. Trong nguyên tử hydrogen, năng lượng chỉ phụ thuộc n, nên 2s và 2p có cùng năng lượng. Xác suất của 2s đạt cực đại ở khoảng {@peakRadius|3} pm, không phải ở 4a₀ ≈ {=4*52.9177210903|3} pm như 2p."
+      },
+      "statements": [
+        {
+          "text": "The 2s electron's mean distance, about {=52.9177210903/2*(3*2^2)} pm, is larger than the 2p electron's.",
+          "vi": {
+            "text": "Khoảng cách trung bình của electron 2s, khoảng {=52.9177210903/2*(3*2^2)} pm, lớn hơn của electron 2p."
+          },
+          "true": true,
+          "check": {
+            "expr": "52.9177210903/2*(3*2^2)",
+            "equals": "meanRadius"
+          }
+        },
+        {
+          "text": "Each of the two orbitals has one node in all.",
+          "vi": {
+            "text": "Mỗi orbital trong hai orbital này có tổng cộng một nút."
+          },
+          "true": true
+        },
+        {
+          "text": "In the hydrogen atom, 2s is lower in energy than 2p because it has a radial node.",
+          "vi": {
+            "text": "Trong nguyên tử hydrogen, orbital 2s có năng lượng thấp hơn 2p vì nó có một nút xuyên tâm."
+          },
+          "true": false
+        },
+        {
+          "text": "The 2s probability P(r) peaks at 4a₀ ≈ {=4*52.9177210903|3} pm, like that of 2p.",
+          "vi": {
+            "text": "Xác suất P(r) của 2s đạt cực đại ở 4a₀ ≈ {=4*52.9177210903|3} pm, giống như 2p."
+          },
+          "true": false,
+          "check": {
+            "expr": "4*52.9177210903",
+            "equals": "peakRadius"
+          }
+        }
+      ]
+    }
+  ]
+}

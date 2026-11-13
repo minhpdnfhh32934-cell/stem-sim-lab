@@ -1,0 +1,1035 @@
+{
+  "id": "measuring-speed",
+  "skills": [
+    {
+      "id": "gate-speed",
+      "name": "Speed at a gate: v = d/Δt",
+      "advice": "Remember what the timer counts: how long the ball blocks the beam, while it moves its own diameter d. So v = d/Δt — the ball’s diameter, not the gate’s position.",
+      "vi": {
+        "name": "Tốc độ tại cổng: v = d/Δt",
+        "advice": "Nhớ đồng hồ đo gì: khoảng thời gian viên bi chắn chùm tia, trong lúc bi đi được quãng đường bằng đường kính d của nó. Vì vậy v = d/Δt — dùng đường kính viên bi, không dùng vị trí của cổng."
+      }
+    },
+    {
+      "id": "average-speed",
+      "name": "Average speed between gates",
+      "advice": "The average speed is the distance between the gates over the time between them: AB/t_AB. For a ball speeding up it lies between v_A and v_B.",
+      "vi": {
+        "name": "Tốc độ trung bình giữa hai cổng",
+        "advice": "Tốc độ trung bình bằng khoảng cách giữa hai cổng chia cho thời gian đi giữa chúng: AB/t_AB. Với viên bi nhanh dần, nó nằm giữa v_A và v_B."
+      }
+    },
+    {
+      "id": "acceleration",
+      "name": "Rolling acceleration and v² = 2ax",
+      "advice": "Learn a = (5/7)·g·sin α for this rolling ball (the model’s simplification) and v² = 2a·x from rest. Move gate B at the station and check that v² grows in proportion to x; set the calculator to degrees.",
+      "vi": {
+        "name": "Gia tốc khi lăn và v² = 2ax",
+        "advice": "Nhớ a = (5/7)·g·sin α cho viên bi lăn này (giả thiết đơn giản hóa của mô hình) và v² = 2a·x khi xuất phát từ nghỉ. Dịch cổng B trên trạm và kiểm tra v² tỉ lệ với x; nhớ để máy tính ở chế độ độ."
+      }
+    },
+    {
+      "id": "timer",
+      "name": "Reading the timer",
+      "advice": "The timer shows the nearest multiple of its resolution d_t, with u = d_t/√12 from the resolution alone. Compare runs at 0.0001 s and 0.01 s: a short Δt needs a fine timer.",
+      "vi": {
+        "name": "Đọc đồng hồ đo thời gian",
+        "advice": "Đồng hồ hiển thị bội số gần nhất của độ phân giải d_t, với u = d_t/√12 chỉ do độ phân giải. So sánh các lần đo với 0,0001 s và 0,01 s: Δt ngắn cần đồng hồ có độ phân giải nhỏ."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "what-gate-measures",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["gate-speed"],
+      "stem": "A photogate connected to a digital timer measures directly…",
+      "explain": "The timer counts how long the beam is blocked; the speed is worked out from that time and the ball’s diameter.",
+      "vi": {
+        "stem": "Cổng quang điện nối với đồng hồ hiện số đo trực tiếp…",
+        "explain": "Đồng hồ đếm khoảng thời gian chùm tia bị chắn; tốc độ được tính từ thời gian đó và đường kính viên bi."
+      },
+      "options": [
+        {
+          "text": "the time its beam is blocked by the ball",
+          "vi": {
+            "text": "khoảng thời gian chùm tia bị viên bi chắn"
+          },
+          "correct": true
+        },
+        {
+          "text": "the speed of the ball",
+          "vi": {
+            "text": "tốc độ của viên bi"
+          }
+        },
+        {
+          "text": "the distance the ball has rolled",
+          "vi": {
+            "text": "quãng đường viên bi đã lăn"
+          }
+        },
+        {
+          "text": "the acceleration of the ball",
+          "vi": {
+            "text": "gia tốc của viên bi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "speed-formula",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["gate-speed"],
+      "stem": "A ball of diameter d blocks a photogate’s beam for a time Δt. Its speed at the gate is taken as…",
+      "explain": "While the beam is blocked the ball moves its own diameter, so v = d/Δt; d is small, so this is practically the speed at that instant.",
+      "vi": {
+        "stem": "Viên bi đường kính d chắn chùm tia của cổng quang điện trong thời gian Δt. Tốc độ của bi tại cổng được lấy bằng…",
+        "explain": "Trong lúc chùm tia bị chắn, viên bi đi được quãng đường bằng đường kính của nó, nên v = d/Δt; vì d nhỏ nên đây gần như là tốc độ tức thời."
+      },
+      "options": [
+        {
+          "text": "v = d/Δt",
+          "vi": {
+            "text": "v = d/Δt"
+          },
+          "correct": true
+        },
+        {
+          "text": "v = Δt/d",
+          "vi": {
+            "text": "v = Δt/d"
+          }
+        },
+        {
+          "text": "v = d·Δt",
+          "vi": {
+            "text": "v = d·Δt"
+          }
+        },
+        {
+          "text": "v = d/(2Δt)",
+          "vi": {
+            "text": "v = d/(2Δt)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-gates",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["gate-speed", "average-speed"],
+      "stem": "A ball released at rest rolls down a tilted rail through photogate A and then photogate B. Decide whether each statement is true or false.",
+      "explain": "The ball speeds up, so v_B > v_A and it blocks gate B for a shorter time. The average speed is AB/t_AB. The magnet releases it at rest.",
+      "vi": {
+        "stem": "Một viên bi được thả không vận tốc đầu, lăn xuống máng nghiêng qua cổng quang điện A rồi đến cổng B. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Viên bi nhanh dần nên v_B > v_A và nó chắn cổng B trong thời gian ngắn hơn. Tốc độ trung bình là AB/t_AB. Nam châm điện thả bi không vận tốc đầu."
+      },
+      "statements": [
+        {
+          "text": "The average speed between the gates is AB/t_AB.",
+          "vi": {
+            "text": "Tốc độ trung bình giữa hai cổng bằng AB/t_AB."
+          },
+          "true": true
+        },
+        {
+          "text": "The ball is faster at gate B than at gate A.",
+          "vi": {
+            "text": "Tại cổng B viên bi có tốc độ lớn hơn tại cổng A."
+          },
+          "true": true
+        },
+        {
+          "text": "The ball blocks gate B for longer than gate A.",
+          "vi": {
+            "text": "Viên bi chắn cổng B lâu hơn chắn cổng A."
+          },
+          "true": false
+        },
+        {
+          "text": "The electromagnet gives the ball a push when it lets go.",
+          "vi": {
+            "text": "Nam châm điện đẩy viên bi một cái khi thả nó ra."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "gate-farther",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["gate-speed", "acceleration"],
+      "stem": "Gate B is moved farther down the rail. The time Δt_B for which the ball blocks it…",
+      "explain": "Farther down the ball is faster, so it crosses its own diameter in less time: Δt_B = d/v_B gets shorter.",
+      "vi": {
+        "stem": "Dịch cổng B xa hơn xuống phía dưới máng. Thời gian Δt_B viên bi chắn cổng B…",
+        "explain": "Càng xuống thấp viên bi càng nhanh, nên nó đi hết quãng đường bằng đường kính của mình trong thời gian ngắn hơn: Δt_B = d/v_B giảm."
+      },
+      "options": [
+        {
+          "text": "gets shorter",
+          "vi": {
+            "text": "giảm đi"
+          },
+          "correct": true
+        },
+        {
+          "text": "gets longer",
+          "vi": {
+            "text": "tăng lên"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "becomes zero",
+          "vi": {
+            "text": "bằng 0"
+          }
+        }
+      ]
+    },
+    {
+      "id": "four-times-distance",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["acceleration"],
+      "stem": "The ball rolls from rest with constant acceleration. Compared with its speed after rolling x, its speed after rolling 4x is…",
+      "explain": "v² = 2a·x, so v ∝ √x: four times the distance gives twice the speed.",
+      "vi": {
+        "stem": "Viên bi lăn từ trạng thái nghỉ với gia tốc không đổi. So với tốc độ khi đã lăn được x, tốc độ khi lăn được 4x…",
+        "explain": "v² = 2a·x nên v tỉ lệ với √x: quãng đường gấp bốn thì tốc độ gấp đôi."
+      },
+      "options": [
+        {
+          "text": "twice as large",
+          "vi": {
+            "text": "lớn gấp đôi"
+          },
+          "correct": true
+        },
+        {
+          "text": "four times as large",
+          "vi": {
+            "text": "lớn gấp bốn lần"
+          }
+        },
+        {
+          "text": "sixteen times as large",
+          "vi": {
+            "text": "lớn gấp mười sáu lần"
+          }
+        },
+        {
+          "text": "the same",
+          "vi": {
+            "text": "bằng nhau"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-rail",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["acceleration", "average-speed"],
+      "set": {
+        "angle": 10,
+        "gateB": 0.8
+      },
+      "stem": "In the model a solid steel ball rolls without slipping from rest down a rail at {angle}° (g = {gravity} m/s²); gate A is {gateA} m and gate B {gateB} m down the rail. Decide whether each statement is true or false.",
+      "explain": "a = (5/7)·g·sin α ≈ {@acceleration} m/s², less than the g·sin α ≈ {=gravity*sin(rad(angle))} m/s² of a frictionless slider, because part of the energy turns the ball. Speeding up, v_A < AB/t_AB < v_B. A steeper rail gives a larger a.",
+      "vi": {
+        "stem": "Trong mô hình, một viên bi thép đặc lăn không trượt từ trạng thái nghỉ xuống máng nghiêng {angle}° (g = {gravity} m/s²); cổng A cách điểm thả {gateA} m, cổng B cách {gateB} m. Mỗi nhận định sau đúng hay sai?",
+        "explain": "a = (5/7)·g·sin α ≈ {@acceleration} m/s², nhỏ hơn g·sin α ≈ {=gravity*sin(rad(angle))} m/s² của vật trượt không ma sát, vì một phần năng lượng làm bi quay. Bi nhanh dần nên v_A < AB/t_AB < v_B. Máng dốc hơn thì a lớn hơn."
+      },
+      "statements": [
+        {
+          "text": "The model’s acceleration is about {@acceleration} m/s².",
+          "vi": {
+            "text": "Gia tốc theo mô hình khoảng {@acceleration} m/s²."
+          },
+          "true": true,
+          "check": {
+            "expr": "5/7*gravity*sin(rad(angle))",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "A block sliding without friction down the same rail would speed up faster.",
+          "vi": {
+            "text": "Một vật trượt không ma sát xuống cùng máng đó sẽ có gia tốc lớn hơn."
+          },
+          "true": true
+        },
+        {
+          "text": "The average speed between the gates lies between v_A and v_B.",
+          "vi": {
+            "text": "Tốc độ trung bình giữa hai cổng nằm giữa v_A và v_B."
+          },
+          "true": true
+        },
+        {
+          "text": "Tilting the rail more steeply makes the acceleration smaller.",
+          "vi": {
+            "text": "Tăng độ dốc của máng thì gia tốc giảm đi."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "speed-at-b",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["gate-speed"],
+      "set": {
+        "angle": 15,
+        "gateB": 0.6
+      },
+      "stem": "A ball of diameter {ballDiameter} m blocks gate B, {gateB} m down the rail, for Δt_B = {@blockedB|4} s. What is its speed at gate B?",
+      "explain": "v_B = d/Δt_B = {ballDiameter}/{@blockedB|4} ≈ {@speedB} m/s. The gate’s position is not the distance moved while the beam is blocked.",
+      "vi": {
+        "stem": "Viên bi đường kính {ballDiameter} m chắn cổng B (cách điểm thả {gateB} m) trong Δt_B = {@blockedB|4} s. Tốc độ của bi tại cổng B bằng bao nhiêu?",
+        "explain": "v_B = d/Δt_B = {ballDiameter}/{@blockedB|4} ≈ {@speedB} m/s. Vị trí của cổng không phải là quãng đường bi đi trong lúc chắn chùm tia."
+      },
+      "options": [
+        {
+          "text": "{@speedB} m/s",
+          "vi": {
+            "text": "{@speedB} m/s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "ballDiameter/@blockedB",
+            "equals": "speedB"
+          }
+        },
+        {
+          "text": "{=gateB/@blockedB} m/s",
+          "vi": {
+            "text": "{=gateB/@blockedB} m/s"
+          },
+          "check": {
+            "expr": "gateB/@blockedB",
+            "equals": "speedB"
+          }
+        },
+        {
+          "text": "{=ballDiameter/(2*@blockedB)} m/s",
+          "vi": {
+            "text": "{=ballDiameter/(2*@blockedB)} m/s"
+          },
+          "check": {
+            "expr": "ballDiameter/(2*@blockedB)",
+            "equals": "speedB"
+          }
+        },
+        {
+          "text": "{=@blockedB/ballDiameter} m/s",
+          "vi": {
+            "text": "{=@blockedB/ballDiameter} m/s"
+          },
+          "check": {
+            "expr": "@blockedB/ballDiameter",
+            "equals": "speedB"
+          }
+        }
+      ]
+    },
+    {
+      "id": "average",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["average-speed"],
+      "set": {
+        "angle": 5,
+        "gateB": 0.9
+      },
+      "stem": "Gate A is {gateA} m and gate B {gateB} m down the rail. The timer gives t_AB = {@timeAB|4} s from A to B. What is the average speed between the gates?",
+      "explain": "v_AB = (x_B − x_A)/t_AB = {=gateB-gateA}/{@timeAB|4} ≈ {@averageSpeed} m/s.",
+      "vi": {
+        "stem": "Cổng A cách điểm thả {gateA} m, cổng B cách {gateB} m. Đồng hồ đo được t_AB = {@timeAB|4} s từ A đến B. Tốc độ trung bình giữa hai cổng bằng bao nhiêu?",
+        "explain": "v_AB = (x_B − x_A)/t_AB = {=gateB-gateA}/{@timeAB|4} ≈ {@averageSpeed} m/s."
+      },
+      "options": [
+        {
+          "text": "{@averageSpeed} m/s",
+          "vi": {
+            "text": "{@averageSpeed} m/s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(gateB-gateA)/@timeAB",
+            "equals": "averageSpeed"
+          }
+        },
+        {
+          "text": "{=gateB/@timeAB} m/s",
+          "vi": {
+            "text": "{=gateB/@timeAB} m/s"
+          },
+          "check": {
+            "expr": "gateB/@timeAB",
+            "equals": "averageSpeed"
+          }
+        },
+        {
+          "text": "{=(gateB+gateA)/@timeAB} m/s",
+          "vi": {
+            "text": "{=(gateB+gateA)/@timeAB} m/s"
+          },
+          "check": {
+            "expr": "(gateB+gateA)/@timeAB",
+            "equals": "averageSpeed"
+          }
+        },
+        {
+          "text": "{=(gateB-gateA)*@timeAB} m/s",
+          "vi": {
+            "text": "{=(gateB-gateA)*@timeAB} m/s"
+          },
+          "check": {
+            "expr": "(gateB-gateA)*@timeAB",
+            "equals": "averageSpeed"
+          }
+        }
+      ]
+    },
+    {
+      "id": "acceleration",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["acceleration"],
+      "set": {
+        "angle": 15
+      },
+      "stem": "In the model, a solid ball rolls without slipping down a rail tilted at {angle}° (g = {gravity} m/s²). What is its acceleration?",
+      "explain": "a = (5/7)·g·sin α = (5/7)·{gravity}·sin {angle}° ≈ {@acceleration} m/s². g·sin α would be a frictionless slider; sin of 15 radians is a calculator left in radian mode.",
+      "vi": {
+        "stem": "Trong mô hình, một viên bi đặc lăn không trượt xuống máng nghiêng {angle}° (g = {gravity} m/s²). Gia tốc của bi bằng bao nhiêu?",
+        "explain": "a = (5/7)·g·sin α = (5/7)·{gravity}·sin {angle}° ≈ {@acceleration} m/s². g·sin α là của vật trượt không ma sát; lấy sin của 15 rad là do để máy tính ở chế độ radian."
+      },
+      "options": [
+        {
+          "text": "{@acceleration} m/s²",
+          "vi": {
+            "text": "{@acceleration} m/s²"
+          },
+          "correct": true,
+          "check": {
+            "expr": "5/7*gravity*sin(rad(angle))",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "{=gravity*sin(rad(angle))} m/s²",
+          "vi": {
+            "text": "{=gravity*sin(rad(angle))} m/s²"
+          },
+          "check": {
+            "expr": "gravity*sin(rad(angle))",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "{=5/7*gravity*cos(rad(angle))} m/s²",
+          "vi": {
+            "text": "{=5/7*gravity*cos(rad(angle))} m/s²"
+          },
+          "check": {
+            "expr": "5/7*gravity*cos(rad(angle))",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "{=5/7*gravity*sin(angle)} m/s²",
+          "vi": {
+            "text": "{=5/7*gravity*sin(angle)} m/s²"
+          },
+          "check": {
+            "expr": "5/7*gravity*sin(angle)",
+            "equals": "acceleration"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-speeds",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["acceleration", "gate-speed"],
+      "set": {
+        "angle": 10,
+        "gateB": 0.5
+      },
+      "stem": "On a rail at {angle}° the model’s ball rolls from rest with a = {@acceleration} m/s²; gate A is {gateA} m and gate B {gateB} m from the start. Decide whether each statement is true or false.",
+      "explain": "v = √(2a·x): at B √(2·{@acceleration}·{gateB}) ≈ {@centreSpeedB} m/s; at A √(2·{@acceleration}·{gateA}) ≈ {@centreSpeedA} m/s (forgetting the 2 gives {=sqrt(@acceleration*gateA)}). v ∝ √x, so v_B/v_A = √(x_B/x_A).",
+      "vi": {
+        "stem": "Trên máng nghiêng {angle}°, viên bi của mô hình lăn từ nghỉ với a = {@acceleration} m/s²; cổng A cách điểm xuất phát {gateA} m, cổng B cách {gateB} m. Mỗi nhận định sau đúng hay sai?",
+        "explain": "v = √(2a·x): tại B √(2·{@acceleration}·{gateB}) ≈ {@centreSpeedB} m/s; tại A √(2·{@acceleration}·{gateA}) ≈ {@centreSpeedA} m/s (quên số 2 sẽ ra {=sqrt(@acceleration*gateA)}). v tỉ lệ với √x nên v_B/v_A = √(x_B/x_A)."
+      },
+      "statements": [
+        {
+          "text": "Its speed at gate B is about {@centreSpeedB} m/s.",
+          "vi": {
+            "text": "Tốc độ của bi tại cổng B khoảng {@centreSpeedB} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "sqrt(2*@acceleration*gateB)",
+            "equals": "centreSpeedB"
+          }
+        },
+        {
+          "text": "Its speed at gate A is about {=sqrt(@acceleration*gateA)} m/s.",
+          "vi": {
+            "text": "Tốc độ của bi tại cổng A khoảng {=sqrt(@acceleration*gateA)} m/s."
+          },
+          "true": false,
+          "check": {
+            "expr": "sqrt(@acceleration*gateA)",
+            "equals": "centreSpeedA"
+          }
+        },
+        {
+          "text": "Its speed at B is √(x_B/x_A) ≈ {=sqrt(gateB/gateA)} times its speed at A.",
+          "vi": {
+            "text": "Tốc độ tại B gấp √(x_B/x_A) ≈ {=sqrt(gateB/gateA)} lần tốc độ tại A."
+          },
+          "true": true,
+          "check": {
+            "expr": "@centreSpeedA*sqrt(gateB/gateA)",
+            "equals": "centreSpeedB"
+          }
+        },
+        {
+          "text": "Its speed at B is x_B/x_A ≈ {=gateB/gateA} times its speed at A.",
+          "vi": {
+            "text": "Tốc độ tại B gấp x_B/x_A ≈ {=gateB/gateA} lần tốc độ tại A."
+          },
+          "true": false,
+          "check": {
+            "expr": "@centreSpeedA*gateB/gateA",
+            "equals": "centreSpeedB"
+          }
+        }
+      ]
+    },
+    {
+      "id": "g-from-slope",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["acceleration"],
+      "set": {
+        "angle": 5
+      },
+      "stem": "On a rail at {angle}°, runs with gate B at several distances x give a straight line of v² against x with slope k = {@twiceAcceleration|4} m/s². Taking the model’s a = (5/7)·g·sin α, what value of g do these runs give?",
+      "explain": "v² = 2a·x, so k = 2a and a = k/2 ≈ {=@twiceAcceleration/2} m/s²; then g = 7a/(5·sin α) = 7k/(10·sin {angle}°) ≈ {=7*@twiceAcceleration/(10*sin(rad(angle)))} m/s². Forgetting the ½ or the 5/7 gives the other values.",
+      "vi": {
+        "stem": "Trên máng nghiêng {angle}°, các lần đo với cổng B ở nhiều khoảng cách x cho đồ thị v² theo x là đường thẳng có hệ số góc k = {@twiceAcceleration|4} m/s². Dùng a = (5/7)·g·sin α của mô hình, các lần đo này cho g bằng bao nhiêu?",
+        "explain": "v² = 2a·x nên k = 2a và a = k/2 ≈ {=@twiceAcceleration/2} m/s²; suy ra g = 7a/(5·sin α) = 7k/(10·sin {angle}°) ≈ {=7*@twiceAcceleration/(10*sin(rad(angle)))} m/s². Quên ½ hoặc quên 5/7 sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{=7*@twiceAcceleration/(10*sin(rad(angle)))} m/s²",
+          "vi": {
+            "text": "{=7*@twiceAcceleration/(10*sin(rad(angle)))} m/s²"
+          },
+          "correct": true
+        },
+        {
+          "text": "{=@twiceAcceleration/(2*sin(rad(angle)))} m/s²",
+          "vi": {
+            "text": "{=@twiceAcceleration/(2*sin(rad(angle)))} m/s²"
+          }
+        },
+        {
+          "text": "{=7*@twiceAcceleration/(5*sin(rad(angle)))} m/s²",
+          "vi": {
+            "text": "{=7*@twiceAcceleration/(5*sin(rad(angle)))} m/s²"
+          }
+        },
+        {
+          "text": "{=@twiceAcceleration/sin(rad(angle))} m/s²",
+          "vi": {
+            "text": "{=@twiceAcceleration/sin(rad(angle))} m/s²"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-timer",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["timer", "gate-speed"],
+      "set": {
+        "angle": 15,
+        "gateB": 0.9,
+        "timerResolution": 0.001
+      },
+      "stem": "On a rail at {angle}°, the model’s ball blocks gate B ({gateB} m down) for Δt_B = {@blockedB|4} s. The timer’s resolution is {timerResolution} s and the ball’s diameter {ballDiameter} m. Decide whether each statement is true or false.",
+      "explain": "The timer shows the nearest 0.001 s, {=round(@blockedB/timerResolution)*timerResolution} s; its u = d_t/√12 ≈ {=timerResolution/sqrt(12)|2} s is about {=100*timerResolution/sqrt(12)/@blockedB|2} % of Δt_B, so a 0.01 s timer would be far too coarse. v_B = d/Δt_B ≈ {@speedB} m/s; x_B/Δt_B is not a speed at the gate.",
+      "vi": {
+        "stem": "Trên máng nghiêng {angle}°, viên bi của mô hình chắn cổng B (cách điểm thả {gateB} m) trong Δt_B = {@blockedB|4} s. Độ phân giải của đồng hồ là {timerResolution} s, đường kính bi {ballDiameter} m. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Đồng hồ hiển thị giá trị gần nhất theo 0,001 s là {=round(@blockedB/timerResolution)*timerResolution} s; u = d_t/√12 ≈ {=timerResolution/sqrt(12)|2} s, khoảng {=100*timerResolution/sqrt(12)/@blockedB|2} % của Δt_B, nên đồng hồ 0,01 s là quá thô. v_B = d/Δt_B ≈ {@speedB} m/s; x_B/Δt_B không phải tốc độ tại cổng."
+      },
+      "statements": [
+        {
+          "text": "The timer shows {=round(@blockedB/timerResolution)*timerResolution} s.",
+          "vi": {
+            "text": "Đồng hồ hiển thị {=round(@blockedB/timerResolution)*timerResolution} s."
+          },
+          "true": true
+        },
+        {
+          "text": "The speed at gate B is about {@speedB} m/s.",
+          "vi": {
+            "text": "Tốc độ tại cổng B khoảng {@speedB} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "ballDiameter/@blockedB",
+            "equals": "speedB"
+          }
+        },
+        {
+          "text": "A timer of resolution 0.01 s would measure Δt_B just as well.",
+          "vi": {
+            "text": "Đồng hồ có độ phân giải 0,01 s cũng đo Δt_B tốt như vậy."
+          },
+          "true": false
+        },
+        {
+          "text": "The speed at gate B is about {=gateB/@blockedB} m/s.",
+          "vi": {
+            "text": "Tốc độ tại cổng B khoảng {=gateB/@blockedB} m/s."
+          },
+          "true": false,
+          "check": {
+            "expr": "gateB/@blockedB",
+            "equals": "speedB"
+          }
+        }
+      ]
+    },
+    {
+      "id": "average-definition",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["average-speed"],
+      "stem": "Gate A is at x_A and gate B at x_B down the rail; the timer gives t_AB from A to B. The average speed between the gates is…",
+      "explain": "Average speed is the distance travelled divided by the time taken: v_AB = (x_B − x_A)/t_AB. x_B/t_AB would use the distance from the top, which the ball did not cover in t_AB.",
+      "vi": {
+        "stem": "Cổng A ở vị trí x_A và cổng B ở vị trí x_B dọc theo máng; đồng hồ đo được thời gian t_AB từ A đến B. Tốc độ trung bình giữa hai cổng là…",
+        "explain": "Tốc độ trung bình bằng quãng đường đi được chia cho thời gian đi hết quãng đường đó: v_AB = (x_B − x_A)/t_AB. x_B/t_AB là dùng khoảng cách từ đầu máng, quãng đường mà bi không đi hết trong t_AB."
+      },
+      "options": [
+        {
+          "text": "(x_B − x_A)/t_AB",
+          "vi": {
+            "text": "(x_B − x_A)/t_AB"
+          },
+          "correct": true
+        },
+        {
+          "text": "t_AB/(x_B − x_A)",
+          "vi": {
+            "text": "t_AB/(x_B − x_A)"
+          }
+        },
+        {
+          "text": "(x_B − x_A)·t_AB",
+          "vi": {
+            "text": "(x_B − x_A)·t_AB"
+          }
+        },
+        {
+          "text": "x_B/t_AB",
+          "vi": {
+            "text": "x_B/t_AB"
+          }
+        }
+      ]
+    },
+    {
+      "id": "steeper-rail",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["acceleration"],
+      "stem": "The rail is tilted more steeply (from 5° to 15°). The ball’s acceleration down it…",
+      "explain": "The part of gravity along the rail is g·sin α, so the acceleration grows with sin α: a steeper rail gives a larger acceleration (for a rolling solid ball, a = (5/7)·g·sin α).",
+      "vi": {
+        "stem": "Tăng độ nghiêng của máng (từ 5° lên 15°). Gia tốc của viên bi khi lăn xuống…",
+        "explain": "Thành phần trọng lực dọc theo máng là g·sin α, nên gia tốc tăng theo sin α: máng dốc hơn thì gia tốc lớn hơn (với bi đặc lăn không trượt, a = (5/7)·g·sin α)."
+      },
+      "options": [
+        {
+          "text": "increases",
+          "vi": {
+            "text": "tăng"
+          },
+          "correct": true
+        },
+        {
+          "text": "decreases",
+          "vi": {
+            "text": "giảm"
+          }
+        },
+        {
+          "text": "stays the same, since g does not change",
+          "vi": {
+            "text": "không đổi, vì g không đổi"
+          }
+        },
+        {
+          "text": "becomes zero",
+          "vi": {
+            "text": "bằng 0"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-readings",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["gate-speed", "average-speed", "acceleration"],
+      "stem": "A ball let go at rest rolls down a tilted rail through gate A and then gate B. Decide whether each statement is true or false.",
+      "explain": "The ball speeds up, so it crosses B’s beam faster: Δt_B < Δt_A. d/Δt is its average speed while it crosses the beam. Between the gates its average speed lies between v_A and v_B. From rest with constant a, v = √(2ax): twice the distance gives √2 times the speed, not twice.",
+      "vi": {
+        "stem": "Một viên bi được thả không vận tốc đầu lăn xuống máng nghiêng, đi qua cổng A rồi cổng B. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Bi chuyển động nhanh dần nên đi qua chùm sáng ở B nhanh hơn: Δt_B < Δt_A. d/Δt là tốc độ trung bình của bi trong lúc nó che chùm sáng. Giữa hai cổng, tốc độ trung bình nằm giữa v_A và v_B. Từ nghỉ với a không đổi, v = √(2ax): quãng đường gấp đôi thì tốc độ gấp √2 lần, không phải gấp đôi."
+      },
+      "statements": [
+        {
+          "text": "The ball blocks gate B for a shorter time than gate A.",
+          "vi": {
+            "text": "Thời gian bi che cổng B ngắn hơn thời gian che cổng A."
+          },
+          "true": true
+        },
+        {
+          "text": "d/Δt is the ball’s average speed while it crosses the beam.",
+          "vi": {
+            "text": "d/Δt là tốc độ trung bình của bi trong lúc nó đi qua chùm sáng."
+          },
+          "true": true
+        },
+        {
+          "text": "The average speed between the gates lies between v_A and v_B.",
+          "vi": {
+            "text": "Tốc độ trung bình giữa hai cổng nằm giữa v_A và v_B."
+          },
+          "true": true
+        },
+        {
+          "text": "After rolling twice as far from rest, the ball is twice as fast.",
+          "vi": {
+            "text": "Sau khi lăn được quãng đường gấp đôi kể từ lúc thả, bi có tốc độ gấp đôi."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "centre-speed",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["acceleration"],
+      "set": {
+        "angle": 10,
+        "gateB": 0.7
+      },
+      "stem": "The ball rolls from rest down the rail with a = {@acceleration} m/s². How fast is it moving when its centre is {gateB} m down the rail?",
+      "explain": "From rest with constant a: v² = 2a·x, so v = √(2·{@acceleration}·{gateB}) ≈ {@centreSpeedB} m/s. Forgetting the root or the 2, or measuring from gate A, gives the other values.",
+      "vi": {
+        "stem": "Viên bi lăn không vận tốc đầu xuống máng với a = {@acceleration} m/s². Khi tâm bi đã đi được {gateB} m dọc theo máng thì tốc độ của nó bằng bao nhiêu?",
+        "explain": "Từ nghỉ với a không đổi: v² = 2a·x, nên v = √(2·{@acceleration}·{gateB}) ≈ {@centreSpeedB} m/s. Quên khai căn, quên số 2, hoặc tính quãng đường từ cổng A sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{@centreSpeedB} m/s",
+          "vi": {
+            "text": "{@centreSpeedB} m/s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "sqrt(2*@acceleration*gateB)",
+            "equals": "centreSpeedB"
+          }
+        },
+        {
+          "text": "{=2*@acceleration*gateB} m/s",
+          "vi": {
+            "text": "{=2*@acceleration*gateB} m/s"
+          },
+          "check": {
+            "expr": "2*@acceleration*gateB",
+            "equals": "centreSpeedB"
+          }
+        },
+        {
+          "text": "{=sqrt(@acceleration*gateB)} m/s",
+          "vi": {
+            "text": "{=sqrt(@acceleration*gateB)} m/s"
+          },
+          "check": {
+            "expr": "sqrt(@acceleration*gateB)",
+            "equals": "centreSpeedB"
+          }
+        },
+        {
+          "text": "{=sqrt(2*@acceleration*(gateB-gateA))} m/s",
+          "vi": {
+            "text": "{=sqrt(2*@acceleration*(gateB-gateA))} m/s"
+          },
+          "check": {
+            "expr": "sqrt(2*@acceleration*(gateB-gateA))",
+            "equals": "centreSpeedB"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-5deg",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["acceleration", "gate-speed", "average-speed"],
+      "set": {
+        "angle": 5,
+        "gateB": 0.6
+      },
+      "stem": "In the model a solid ball of diameter {ballDiameter} m rolls without slipping from rest down a rail at {angle}° (g = {gravity} m/s²); gate A is {gateA} m and gate B {gateB} m down. Decide whether each statement is true or false.",
+      "explain": "Rolling, a = (5/7)·g·sin α ≈ {@acceleration} m/s², less than g·sin α ≈ {=gravity*sin(rad(angle))} m/s² for a block sliding without friction, because part of the energy goes into spinning. The gates give v_A = d/Δt_A ≈ {@speedA} m/s and v_AB = (x_B − x_A)/t_AB ≈ {@averageSpeed} m/s.",
+      "vi": {
+        "stem": "Trong mô hình, một viên bi đặc đường kính {ballDiameter} m lăn không trượt, không vận tốc đầu xuống máng nghiêng {angle}° (g = {gravity} m/s²); cổng A cách đầu máng {gateA} m, cổng B cách {gateB} m. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Khi lăn, a = (5/7)·g·sin α ≈ {@acceleration} m/s², nhỏ hơn g·sin α ≈ {=gravity*sin(rad(angle))} m/s² của vật trượt không ma sát, vì một phần năng lượng dùng để làm bi quay. Các cổng cho v_A = d/Δt_A ≈ {@speedA} m/s và v_AB = (x_B − x_A)/t_AB ≈ {@averageSpeed} m/s."
+      },
+      "statements": [
+        {
+          "text": "The ball’s acceleration is about {@acceleration} m/s².",
+          "vi": {
+            "text": "Gia tốc của bi khoảng {@acceleration} m/s²."
+          },
+          "true": true,
+          "check": {
+            "expr": "5/7*gravity*sin(rad(angle))",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "The ball’s acceleration is g·sin α ≈ {=gravity*sin(rad(angle))} m/s².",
+          "vi": {
+            "text": "Gia tốc của bi bằng g·sin α ≈ {=gravity*sin(rad(angle))} m/s²."
+          },
+          "true": false,
+          "check": {
+            "expr": "gravity*sin(rad(angle))",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "Gate A gives v_A ≈ {@speedA} m/s.",
+          "vi": {
+            "text": "Cổng A cho v_A ≈ {@speedA} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "ballDiameter/@blockedA",
+            "equals": "speedA"
+          }
+        },
+        {
+          "text": "The average speed between the gates is about {@averageSpeed} m/s.",
+          "vi": {
+            "text": "Tốc độ trung bình giữa hai cổng khoảng {@averageSpeed} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "(gateB-gateA)/@timeAB",
+            "equals": "averageSpeed"
+          }
+        }
+      ]
+    },
+    {
+      "id": "a-from-speeds",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["acceleration", "gate-speed"],
+      "set": {
+        "angle": 15,
+        "gateB": 0.8
+      },
+      "stem": "The ball’s centre passes gate A ({gateA} m down) at {@centreSpeedA|4} m/s and gate B ({gateB} m down) at {@centreSpeedB|4} m/s. What is its acceleration?",
+      "explain": "v_B² − v_A² = 2a(x_B − x_A), so a = ({@centreSpeedB|4}² − {@centreSpeedA|4}²)/(2·{=gateB-gateA}) ≈ {@acceleration} m/s². Leaving out the 2, subtracting the speeds before squaring, or forgetting v_A gives the other values.",
+      "vi": {
+        "stem": "Tâm viên bi đi qua cổng A (cách đầu máng {gateA} m) với tốc độ {@centreSpeedA|4} m/s và qua cổng B (cách {gateB} m) với tốc độ {@centreSpeedB|4} m/s. Gia tốc của bi bằng bao nhiêu?",
+        "explain": "v_B² − v_A² = 2a(x_B − x_A), nên a = ({@centreSpeedB|4}² − {@centreSpeedA|4}²)/(2·{=gateB-gateA}) ≈ {@acceleration} m/s². Bỏ quên số 2, trừ hai tốc độ trước rồi mới bình phương, hoặc quên v_A sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{=(@centreSpeedB^2-@centreSpeedA^2)/(2*(gateB-gateA))} m/s²",
+          "vi": {
+            "text": "{=(@centreSpeedB^2-@centreSpeedA^2)/(2*(gateB-gateA))} m/s²"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(@centreSpeedB^2-@centreSpeedA^2)/(2*(gateB-gateA))",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "{=(@centreSpeedB^2-@centreSpeedA^2)/(gateB-gateA)} m/s²",
+          "vi": {
+            "text": "{=(@centreSpeedB^2-@centreSpeedA^2)/(gateB-gateA)} m/s²"
+          },
+          "check": {
+            "expr": "(@centreSpeedB^2-@centreSpeedA^2)/(gateB-gateA)",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "{=(@centreSpeedB-@centreSpeedA)^2/(2*(gateB-gateA))} m/s²",
+          "vi": {
+            "text": "{=(@centreSpeedB-@centreSpeedA)^2/(2*(gateB-gateA))} m/s²"
+          },
+          "check": {
+            "expr": "(@centreSpeedB-@centreSpeedA)^2/(2*(gateB-gateA))",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "{=@centreSpeedB^2/(2*(gateB-gateA))} m/s²",
+          "vi": {
+            "text": "{=@centreSpeedB^2/(2*(gateB-gateA))} m/s²"
+          },
+          "check": {
+            "expr": "@centreSpeedB^2/(2*(gateB-gateA))",
+            "equals": "acceleration"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-angle",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["acceleration"],
+      "set": {
+        "angle": 15
+      },
+      "stem": "In the model, a solid ball rolling without slipping down the rail has a = {@acceleration|4} m/s² (g = {gravity} m/s²). At what angle is the rail tilted?",
+      "explain": "a = (5/7)·g·sin α, so sin α = 7a/(5g) = {=7*@acceleration/(5*gravity)|3} and α = {angle}°. a = g·sin α treats the ball as sliding; leaving the calculator in radians gives the angle in radians.",
+      "vi": {
+        "stem": "Trong mô hình, viên bi đặc lăn không trượt xuống máng có a = {@acceleration|4} m/s² (g = {gravity} m/s²). Máng nghiêng một góc bao nhiêu?",
+        "explain": "a = (5/7)·g·sin α, nên sin α = 7a/(5g) = {=7*@acceleration/(5*gravity)|3} và α = {angle}°. Dùng a = g·sin α là coi bi như trượt; để máy tính ở chế độ rađian sẽ ra góc tính bằng rađian."
+      },
+      "options": [
+        {
+          "text": "{=deg(asin(7*@acceleration/(5*gravity)))|3}°",
+          "vi": {
+            "text": "{=deg(asin(7*@acceleration/(5*gravity)))|3}°"
+          },
+          "correct": true,
+          "check": {
+            "expr": "5/7*gravity*7*@acceleration/(5*gravity)",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "{=deg(asin(@acceleration/gravity))|3}°",
+          "vi": {
+            "text": "{=deg(asin(@acceleration/gravity))|3}°"
+          },
+          "check": {
+            "expr": "5/7*gravity*@acceleration/gravity",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "{=deg(asin(5*@acceleration/(7*gravity)))|3}°",
+          "vi": {
+            "text": "{=deg(asin(5*@acceleration/(7*gravity)))|3}°"
+          },
+          "check": {
+            "expr": "5/7*gravity*5*@acceleration/(7*gravity)",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "{=asin(7*@acceleration/(5*gravity))|3}°",
+          "vi": {
+            "text": "{=asin(7*@acceleration/(5*gravity))|3}°"
+          },
+          "check": {
+            "expr": "5/7*gravity*sin(rad(asin(7*@acceleration/(5*gravity))))",
+            "equals": "acceleration"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-coarse-timer",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["timer", "gate-speed"],
+      "set": {
+        "angle": 10,
+        "gateB": 0.9,
+        "timerResolution": 0.01
+      },
+      "stem": "The ball of diameter {ballDiameter} m blocks gate B ({gateB} m down a rail at {angle}°) for Δt_B; the timer’s resolution is {timerResolution} s. Decide whether each statement is true or false.",
+      "explain": "Δt_B = d/v_B ≈ {@blockedB|4} s; the timer shows the nearest multiple of 0.01 s, {=round(@blockedB/timerResolution)*timerResolution} s. The resolution’s share of the uncertainty, u = d_t/√12 ≈ {=timerResolution/sqrt(12)|2} s, is about {=timerResolution/sqrt(12)/@blockedB*100|2} % of Δt_B, so v_B from this timer is rough. A finer timer changes the reading, not the ball’s motion.",
+      "vi": {
+        "stem": "Viên bi đường kính {ballDiameter} m che cổng B (cách đầu máng nghiêng {angle}° một đoạn {gateB} m) trong thời gian Δt_B; độ phân giải của đồng hồ là {timerResolution} s. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Δt_B = d/v_B ≈ {@blockedB|4} s; đồng hồ hiển thị bội số gần nhất của 0,01 s là {=round(@blockedB/timerResolution)*timerResolution} s. Phần độ không đảm bảo do độ phân giải, u = d_t/√12 ≈ {=timerResolution/sqrt(12)|2} s, bằng khoảng {=timerResolution/sqrt(12)/@blockedB*100|2} % của Δt_B, nên v_B tính từ đồng hồ này khá thô. Đồng hồ chính xác hơn chỉ thay đổi số đọc, không thay đổi chuyển động của bi."
+      },
+      "statements": [
+        {
+          "text": "The model’s Δt_B is about {@blockedB|4} s.",
+          "vi": {
+            "text": "Δt_B theo mô hình khoảng {@blockedB|4} s."
+          },
+          "true": true,
+          "check": {
+            "expr": "ballDiameter/@speedB",
+            "equals": "blockedB"
+          }
+        },
+        {
+          "text": "The timer shows {=round(@blockedB/timerResolution)*timerResolution} s.",
+          "vi": {
+            "text": "Đồng hồ hiển thị {=round(@blockedB/timerResolution)*timerResolution} s."
+          },
+          "true": true
+        },
+        {
+          "text": "The resolution alone gives Δt_B a relative uncertainty of about {=timerResolution/sqrt(12)/@blockedB*100|2} %.",
+          "vi": {
+            "text": "Riêng độ phân giải đã gây ra độ không đảm bảo tương đối của Δt_B khoảng {=timerResolution/sqrt(12)/@blockedB*100|2} %."
+          },
+          "true": true
+        },
+        {
+          "text": "A timer of 0.0001 s would make the ball block gate B for a different time.",
+          "vi": {
+            "text": "Dùng đồng hồ có độ phân giải 0,0001 s sẽ làm bi che cổng B trong một khoảng thời gian khác."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1059 @@
+{
+  "id": "atomic-structure",
+  "skills": [
+    {
+      "id": "filling",
+      "name": "Filling order: 1s 2s 2p 3s 3p 4s 3d 4p",
+      "advice": "Write the order 1s 2s 2p 3s 3p 4s 3d 4p from memory and the capacities s 2, p 6, d 10. Build Fe and Br at the station and watch 4s fill before 3d; remember Cr and Cu end as 3d⁵ 4s¹ and 3d¹⁰ 4s¹.",
+      "vi": {
+        "name": "Thứ tự điền: 1s 2s 2p 3s 3p 4s 3d 4p",
+        "advice": "Tự viết lại thứ tự 1s 2s 2p 3s 3p 4s 3d 4p và số electron tối đa: s 2, p 6, d 10. Xây nguyên tử Fe và Br trên trạm để thấy 4s được điền trước 3d; nhớ Cr và Cu kết thúc ở 3d⁵ 4s¹ và 3d¹⁰ 4s¹."
+      }
+    },
+    {
+      "id": "shells",
+      "name": "Electrons per shell (K, L, M, N)",
+      "advice": "Group the subshells by n: 3d belongs to shell M even though it fills after 4s. Count the electrons per shell from the configuration, not by filling 2, 8, 8 — that rule fails from Z = 21 on.",
+      "vi": {
+        "name": "Số electron mỗi lớp (K, L, M, N)",
+        "advice": "Gom các phân lớp theo n: 3d thuộc lớp M dù được điền sau 4s. Đếm electron mỗi lớp từ cấu hình electron, đừng điền theo kiểu 2, 8, 8 — cách đó sai từ Z = 21 trở đi."
+      }
+    },
+    {
+      "id": "unpaired",
+      "name": "Orbitals and unpaired electrons (Hund’s rule)",
+      "advice": "Draw the boxes of the last subshell: in a p or d subshell put one electron in each orbital before pairing any. Check your count against the station’s unpaired electrons for N, O, Fe and Cr.",
+      "vi": {
+        "name": "Orbital và electron độc thân (quy tắc Hund)",
+        "advice": "Vẽ các ô orbital của phân lớp cuối: trong phân lớp p hoặc d, mỗi orbital nhận một electron trước rồi mới ghép đôi. So số electron độc thân em đếm được với kết quả của trạm cho N, O, Fe và Cr."
+      }
+    },
+    {
+      "id": "periodic",
+      "name": "Period and group from the configuration",
+      "advice": "Period = the number of shells (the highest n); for s- and p-block elements the group comes from the outer electrons (ns np: group A number, or 10 + it from group 13). Practise on Na, Cl, K and Br, then check at the station.",
+      "vi": {
+        "name": "Chu kì và nhóm từ cấu hình electron",
+        "advice": "Chu kì = số lớp electron (n lớn nhất); với nguyên tố s và p, nhóm suy ra từ electron lớp ngoài cùng (ns np: số thứ tự nhóm A, hay 10 + số đó kể từ nhóm 13). Luyện với Na, Cl, K và Br rồi kiểm tra lại trên trạm."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "p-capacity",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["filling"],
+      "stem": "At most how many electrons can a p subshell hold?",
+      "explain": "A p subshell has three orbitals, each holding two electrons: 6.",
+      "vi": {
+        "stem": "Một phân lớp p chứa tối đa bao nhiêu electron?",
+        "explain": "Phân lớp p có ba orbital, mỗi orbital chứa tối đa hai electron: 6 electron."
+      },
+      "options": [
+        {
+          "text": "6",
+          "vi": {
+            "text": "6"
+          },
+          "correct": true
+        },
+        {
+          "text": "2",
+          "vi": {
+            "text": "2"
+          }
+        },
+        {
+          "text": "10",
+          "vi": {
+            "text": "10"
+          }
+        },
+        {
+          "text": "8",
+          "vi": {
+            "text": "8"
+          }
+        }
+      ]
+    },
+    {
+      "id": "after-3p",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["filling"],
+      "stem": "In a ground-state atom, which subshell fills right after 3p?",
+      "explain": "By energy the order is … 3s 3p 4s 3d 4p: 4s lies lower than 3d, so it fills first.",
+      "vi": {
+        "stem": "Trong nguyên tử ở trạng thái cơ bản, phân lớp nào được điền electron ngay sau phân lớp 3p?",
+        "explain": "Theo năng lượng, thứ tự là … 3s 3p 4s 3d 4p: 4s có mức năng lượng thấp hơn 3d nên được điền trước."
+      },
+      "options": [
+        {
+          "text": "4s",
+          "vi": {
+            "text": "4s"
+          },
+          "correct": true
+        },
+        {
+          "text": "3d",
+          "vi": {
+            "text": "3d"
+          }
+        },
+        {
+          "text": "4p",
+          "vi": {
+            "text": "4p"
+          }
+        },
+        {
+          "text": "3f",
+          "vi": {
+            "text": "3f"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-shells",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["shells", "filling"],
+      "stem": "Decide whether each statement about shells and subshells is true or false.",
+      "explain": "Shell n holds at most 2n² electrons: L (n = 2) 8, M (n = 3) 18. Shell K has only the 1s subshell; the subshells of one shell have different energies.",
+      "vi": {
+        "stem": "Mỗi nhận định sau về lớp và phân lớp electron đúng hay sai?",
+        "explain": "Lớp thứ n chứa tối đa 2n² electron: lớp L (n = 2) chứa 8, lớp M (n = 3) chứa 18. Lớp K chỉ có phân lớp 1s; các phân lớp trong cùng một lớp có năng lượng khác nhau."
+      },
+      "statements": [
+        {
+          "text": "Shell L (n = 2) holds at most 8 electrons.",
+          "vi": {
+            "text": "Lớp L (n = 2) chứa tối đa 8 electron."
+          },
+          "true": true
+        },
+        {
+          "text": "Shell M (n = 3) holds at most 18 electrons.",
+          "vi": {
+            "text": "Lớp M (n = 3) chứa tối đa 18 electron."
+          },
+          "true": true
+        },
+        {
+          "text": "Shell K has the subshells 1s and 1p.",
+          "vi": {
+            "text": "Lớp K gồm hai phân lớp 1s và 1p."
+          },
+          "true": false
+        },
+        {
+          "text": "All the electrons of one shell have exactly the same energy.",
+          "vi": {
+            "text": "Mọi electron trong cùng một lớp có năng lượng hoàn toàn như nhau."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "iron-configuration",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["filling"],
+      "stem": "Which is the electron configuration of iron, Fe (Z = 26), in its ground state?",
+      "explain": "After [Ar] (18 electrons), 4s fills before 3d: 4s² takes two, and the last six go into 3d: [Ar] 3d⁶ 4s².",
+      "vi": {
+        "stem": "Cấu hình electron của nguyên tử sắt, Fe (Z = 26), ở trạng thái cơ bản là",
+        "explain": "Sau [Ar] (18 electron), phân lớp 4s được điền trước 3d: 4s² nhận hai electron, sáu electron cuối vào 3d: [Ar] 3d⁶ 4s²."
+      },
+      "options": [
+        {
+          "text": "[Ar] 3d⁶ 4s²",
+          "vi": {
+            "text": "[Ar] 3d⁶ 4s²"
+          },
+          "correct": true
+        },
+        {
+          "text": "[Ar] 3d⁸",
+          "vi": {
+            "text": "[Ar] 3d⁸"
+          }
+        },
+        {
+          "text": "[Ar] 4s² 4p⁶",
+          "vi": {
+            "text": "[Ar] 4s² 4p⁶"
+          }
+        },
+        {
+          "text": "[Ar] 3d⁴ 4s² 4p²",
+          "vi": {
+            "text": "[Ar] 3d⁴ 4s² 4p²"
+          }
+        }
+      ]
+    },
+    {
+      "id": "nitrogen-unpaired",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["unpaired"],
+      "set": {
+        "atomicNumber": 7
+      },
+      "stem": "How many unpaired electrons has a ground-state nitrogen atom, N (Z = {atomicNumber})?",
+      "explain": "N: 1s² 2s² 2p³. By Hund’s rule the three 2p electrons go one to each 2p orbital before any pair: 3 unpaired.",
+      "vi": {
+        "stem": "Nguyên tử nitrogen, N (Z = {atomicNumber}), ở trạng thái cơ bản có bao nhiêu electron độc thân?",
+        "explain": "N: 1s² 2s² 2p³. Theo quy tắc Hund, ba electron 2p phân bố vào ba orbital 2p, mỗi orbital một electron, trước khi ghép đôi: 3 electron độc thân."
+      },
+      "options": [
+        {
+          "text": "3",
+          "vi": {
+            "text": "3"
+          },
+          "correct": true,
+          "check": {
+            "expr": "3",
+            "equals": "unpaired"
+          }
+        },
+        {
+          "text": "1",
+          "vi": {
+            "text": "1"
+          },
+          "check": {
+            "expr": "1",
+            "equals": "unpaired"
+          }
+        },
+        {
+          "text": "5",
+          "vi": {
+            "text": "5"
+          },
+          "check": {
+            "expr": "5",
+            "equals": "unpaired"
+          }
+        },
+        {
+          "text": "0",
+          "vi": {
+            "text": "0"
+          },
+          "check": {
+            "expr": "0",
+            "equals": "unpaired"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-sulfur",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["filling", "unpaired", "periodic"],
+      "set": {
+        "atomicNumber": 16
+      },
+      "stem": "Sulfur, S, has Z = {atomicNumber}. Decide whether each statement about a ground-state S atom is true or false.",
+      "explain": "S: 1s² 2s² 2p⁶ 3s² 3p⁴. Its outer shell (M) has {@outerElectrons} electrons; the four 3p electrons fill three orbitals as one pair and two single ones: {@unpaired} unpaired. Three shells: period {@period}.",
+      "vi": {
+        "stem": "Sulfur, S, có Z = {atomicNumber}. Mỗi nhận định sau về nguyên tử S ở trạng thái cơ bản đúng hay sai?",
+        "explain": "S: 1s² 2s² 2p⁶ 3s² 3p⁴. Lớp ngoài cùng (lớp M) có {@outerElectrons} electron; bốn electron 3p chiếm ba orbital thành một cặp và hai electron đơn: {@unpaired} electron độc thân. Có ba lớp electron: chu kì {@period}."
+      },
+      "statements": [
+        {
+          "text": "Its configuration is 1s² 2s² 2p⁶ 3s² 3p⁴.",
+          "vi": {
+            "text": "Cấu hình electron của nó là 1s² 2s² 2p⁶ 3s² 3p⁴."
+          },
+          "true": true
+        },
+        {
+          "text": "It has 6 electrons in its outer shell.",
+          "vi": {
+            "text": "Nó có 6 electron ở lớp ngoài cùng."
+          },
+          "true": true,
+          "check": {
+            "expr": "6",
+            "equals": "outerElectrons"
+          }
+        },
+        {
+          "text": "It has 2 unpaired electrons.",
+          "vi": {
+            "text": "Nó có 2 electron độc thân."
+          },
+          "true": true,
+          "check": {
+            "expr": "2",
+            "equals": "unpaired"
+          }
+        },
+        {
+          "text": "It is in period 2.",
+          "vi": {
+            "text": "Nó thuộc chu kì 2."
+          },
+          "true": false,
+          "check": {
+            "expr": "2",
+            "equals": "period"
+          }
+        }
+      ]
+    },
+    {
+      "id": "iron-shell-m",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["shells", "filling"],
+      "set": {
+        "atomicNumber": 26
+      },
+      "stem": "Iron, Fe, has Z = {atomicNumber}. How many electrons are in its shell M (n = 3) in the ground state?",
+      "explain": "Fe: [Ar] 3d⁶ 4s². Shell M holds 3s² 3p⁶ and the six 3d electrons: 2 + 6 + 6 = {@shellM}; the two 4s electrons are in shell N.",
+      "vi": {
+        "stem": "Sắt, Fe, có Z = {atomicNumber}. Ở trạng thái cơ bản, lớp M (n = 3) của nguyên tử Fe có bao nhiêu electron?",
+        "explain": "Fe: [Ar] 3d⁶ 4s². Lớp M gồm 3s² 3p⁶ và sáu electron 3d: 2 + 6 + 6 = {@shellM}; hai electron 4s thuộc lớp N."
+      },
+      "options": [
+        {
+          "text": "{@shellM}",
+          "vi": {
+            "text": "{@shellM}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2+6+6",
+            "equals": "shellM"
+          }
+        },
+        {
+          "text": "{=atomicNumber-10}",
+          "vi": {
+            "text": "{=atomicNumber-10}"
+          },
+          "check": {
+            "expr": "atomicNumber-10",
+            "equals": "shellM"
+          }
+        },
+        {
+          "text": "8",
+          "vi": {
+            "text": "8"
+          },
+          "check": {
+            "expr": "8",
+            "equals": "shellM"
+          }
+        },
+        {
+          "text": "18",
+          "vi": {
+            "text": "18"
+          },
+          "check": {
+            "expr": "18",
+            "equals": "shellM"
+          }
+        }
+      ]
+    },
+    {
+      "id": "chlorine-position",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["periodic"],
+      "set": {
+        "atomicNumber": 17
+      },
+      "stem": "Chlorine, Cl, has Z = {atomicNumber}. Where is it in the periodic table?",
+      "explain": "Cl: 1s² 2s² 2p⁶ 3s² 3p⁵ — three shells, so period {@period}; seven outer electrons (3s² 3p⁵) in the p block: group {@group} (VIIA).",
+      "vi": {
+        "stem": "Chlorine, Cl, có Z = {atomicNumber}. Vị trí của Cl trong bảng tuần hoàn là",
+        "explain": "Cl: 1s² 2s² 2p⁶ 3s² 3p⁵ — có ba lớp electron nên thuộc chu kì {@period}; bảy electron lớp ngoài cùng (3s² 3p⁵), nguyên tố p: nhóm {@group} (VIIA)."
+      },
+      "options": [
+        {
+          "text": "Period 3, group 17 (VIIA)",
+          "vi": {
+            "text": "Chu kì 3, nhóm 17 (VIIA)"
+          },
+          "correct": true,
+          "check": {
+            "expr": "17",
+            "equals": "group"
+          }
+        },
+        {
+          "text": "Period 7, group 3 (IIIB)",
+          "vi": {
+            "text": "Chu kì 7, nhóm 3 (IIIB)"
+          },
+          "check": {
+            "expr": "7",
+            "equals": "period"
+          }
+        },
+        {
+          "text": "Period 2, group 17 (VIIA)",
+          "vi": {
+            "text": "Chu kì 2, nhóm 17 (VIIA)"
+          },
+          "check": {
+            "expr": "2",
+            "equals": "period"
+          }
+        },
+        {
+          "text": "Period 3, group 15 (VA)",
+          "vi": {
+            "text": "Chu kì 3, nhóm 15 (VA)"
+          },
+          "check": {
+            "expr": "15",
+            "equals": "group"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-potassium",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["shells", "filling", "periodic"],
+      "set": {
+        "atomicNumber": 19
+      },
+      "stem": "Potassium, K, has Z = {atomicNumber}. Decide whether each statement about a ground-state K atom is true or false.",
+      "explain": "K: 1s² 2s² 2p⁶ 3s² 3p⁶ 4s¹ — 4s fills before 3d, so the shells hold {@shellK}, {@shellL}, {@shellM}, {@shellN}: period {@period}, with {@unpaired} unpaired electron.",
+      "vi": {
+        "stem": "Potassium, K, có Z = {atomicNumber}. Mỗi nhận định sau về nguyên tử K ở trạng thái cơ bản đúng hay sai?",
+        "explain": "K: 1s² 2s² 2p⁶ 3s² 3p⁶ 4s¹ — phân lớp 4s được điền trước 3d, nên các lớp chứa {@shellK}, {@shellL}, {@shellM}, {@shellN} electron: chu kì {@period}, có {@unpaired} electron độc thân."
+      },
+      "statements": [
+        {
+          "text": "Its shell M holds 8 electrons.",
+          "vi": {
+            "text": "Lớp M của nó có 8 electron."
+          },
+          "true": true,
+          "check": {
+            "expr": "8",
+            "equals": "shellM"
+          }
+        },
+        {
+          "text": "Its last electron goes into the 3d subshell.",
+          "vi": {
+            "text": "Electron cuối cùng của nó được điền vào phân lớp 3d."
+          },
+          "true": false
+        },
+        {
+          "text": "It is in period 4.",
+          "vi": {
+            "text": "Nó thuộc chu kì 4."
+          },
+          "true": true,
+          "check": {
+            "expr": "4",
+            "equals": "period"
+          }
+        },
+        {
+          "text": "It has 1 unpaired electron.",
+          "vi": {
+            "text": "Nó có 1 electron độc thân."
+          },
+          "true": true,
+          "check": {
+            "expr": "1",
+            "equals": "unpaired"
+          }
+        }
+      ]
+    },
+    {
+      "id": "bromine-shell-n",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["shells", "filling"],
+      "set": {
+        "atomicNumber": 35
+      },
+      "stem": "Bromine, Br, has Z = {atomicNumber}. How many electrons are in its shell N (n = 4) in the ground state?",
+      "explain": "Br: [Ar] 3d¹⁰ 4s² 4p⁵. The 3d electrons belong to shell M (18 in all); shell N holds 4s² 4p⁵ = {@shellN}.",
+      "vi": {
+        "stem": "Bromine, Br, có Z = {atomicNumber}. Ở trạng thái cơ bản, lớp N (n = 4) của nguyên tử Br có bao nhiêu electron?",
+        "explain": "Br: [Ar] 3d¹⁰ 4s² 4p⁵. Các electron 3d thuộc lớp M (lớp M có 18 electron); lớp N gồm 4s² 4p⁵ = {@shellN} electron."
+      },
+      "options": [
+        {
+          "text": "{@shellN}",
+          "vi": {
+            "text": "{@shellN}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2+5",
+            "equals": "shellN"
+          }
+        },
+        {
+          "text": "{=atomicNumber-18}",
+          "vi": {
+            "text": "{=atomicNumber-18}"
+          },
+          "check": {
+            "expr": "atomicNumber-18",
+            "equals": "shellN"
+          }
+        },
+        {
+          "text": "5",
+          "vi": {
+            "text": "5"
+          },
+          "check": {
+            "expr": "5",
+            "equals": "shellN"
+          }
+        },
+        {
+          "text": "2",
+          "vi": {
+            "text": "2"
+          },
+          "check": {
+            "expr": "2",
+            "equals": "shellN"
+          }
+        }
+      ]
+    },
+    {
+      "id": "which-element",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["unpaired", "periodic"],
+      "stem": "An atom X of a main-group element has its outermost electrons in shell M, and three unpaired electrons in its ground state. X is…",
+      "explain": "Shell M outermost: period 3. Three unpaired electrons in a p subshell means p³ (one in each orbital): 3s² 3p³, Z = 15, phosphorus. N (2p³) is in period 2, As (4p³) in period 4, and Al (3p¹) has one unpaired electron.",
+      "vi": {
+        "stem": "Nguyên tử X của một nguyên tố nhóm A có các electron ngoài cùng thuộc lớp M và có ba electron độc thân ở trạng thái cơ bản. X là",
+        "explain": "Lớp ngoài cùng là lớp M: chu kì 3. Ba electron độc thân trong phân lớp p ứng với p³ (mỗi orbital một electron): 3s² 3p³, Z = 15, phosphorus. N (2p³) thuộc chu kì 2, As (4p³) thuộc chu kì 4, còn Al (3p¹) chỉ có một electron độc thân."
+      },
+      "options": [
+        {
+          "text": "P (Z = 15)",
+          "vi": {
+            "text": "P (Z = 15)"
+          },
+          "correct": true
+        },
+        {
+          "text": "N (Z = 7)",
+          "vi": {
+            "text": "N (Z = 7)"
+          }
+        },
+        {
+          "text": "Al (Z = 13)",
+          "vi": {
+            "text": "Al (Z = 13)"
+          }
+        },
+        {
+          "text": "As (Z = 33)",
+          "vi": {
+            "text": "As (Z = 33)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-chromium",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["filling", "unpaired", "shells", "periodic"],
+      "set": {
+        "atomicNumber": 24
+      },
+      "stem": "Chromium, Cr, has Z = {atomicNumber}. Decide whether each statement about a ground-state Cr atom is true or false.",
+      "explain": "A half-filled 3d subshell is more stable, so Cr is [Ar] 3d⁵ 4s¹, not 3d⁴ 4s². Five single 3d electrons and the 4s¹ one: {@unpaired} unpaired. Shell N holds only 4s¹: {@shellN} electron. Four shells and 4s¹ 3d⁵: period {@period}, group {@group} (VIB).",
+      "vi": {
+        "stem": "Chromium, Cr, có Z = {atomicNumber}. Mỗi nhận định sau về nguyên tử Cr ở trạng thái cơ bản đúng hay sai?",
+        "explain": "Phân lớp 3d bán bão hòa bền hơn, nên Cr có cấu hình [Ar] 3d⁵ 4s¹ chứ không phải 3d⁴ 4s². Năm electron 3d đơn và electron 4s¹: {@unpaired} electron độc thân. Lớp N chỉ có 4s¹: {@shellN} electron. Bốn lớp electron và 3d⁵ 4s¹: chu kì {@period}, nhóm {@group} (VIB)."
+      },
+      "statements": [
+        {
+          "text": "Its configuration is [Ar] 3d⁵ 4s¹, not [Ar] 3d⁴ 4s².",
+          "vi": {
+            "text": "Cấu hình electron của nó là [Ar] 3d⁵ 4s¹, không phải [Ar] 3d⁴ 4s²."
+          },
+          "true": true
+        },
+        {
+          "text": "It has 6 unpaired electrons.",
+          "vi": {
+            "text": "Nó có 6 electron độc thân."
+          },
+          "true": true,
+          "check": {
+            "expr": "6",
+            "equals": "unpaired"
+          }
+        },
+        {
+          "text": "Its shell N holds 2 electrons.",
+          "vi": {
+            "text": "Lớp N của nó có 2 electron."
+          },
+          "true": false,
+          "check": {
+            "expr": "2",
+            "equals": "shellN"
+          }
+        },
+        {
+          "text": "It is in period 4, group 6 (VIB).",
+          "vi": {
+            "text": "Nó thuộc chu kì 4, nhóm 6 (VIB)."
+          },
+          "true": true,
+          "check": {
+            "expr": "6",
+            "equals": "group"
+          }
+        }
+      ]
+    },
+    {
+      "id": "shell-m-capacity",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["shells"],
+      "stem": "At most how many electrons can shell M (n = 3) hold?",
+      "explain": "Shell n holds at most 2n² electrons: for n = 3, 2·3² = 18 (3s² 3p⁶ 3d¹⁰). 8 is shell L's capacity, or the eight outer electrons of a noble gas.",
+      "vi": {
+        "stem": "Lớp M (n = 3) chứa tối đa bao nhiêu electron?",
+        "explain": "Lớp thứ n chứa tối đa 2n² electron: với n = 3, 2·3² = 18 (3s² 3p⁶ 3d¹⁰). 8 là số electron tối đa của lớp L, hoặc là tám electron lớp ngoài cùng của khí hiếm."
+      },
+      "options": [
+        {
+          "text": "18",
+          "vi": {
+            "text": "18"
+          },
+          "correct": true
+        },
+        {
+          "text": "8",
+          "vi": {
+            "text": "8"
+          }
+        },
+        {
+          "text": "32",
+          "vi": {
+            "text": "32"
+          }
+        },
+        {
+          "text": "9",
+          "vi": {
+            "text": "9"
+          }
+        }
+      ]
+    },
+    {
+      "id": "oxygen-unpaired",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["unpaired"],
+      "set": {
+        "atomicNumber": 8
+      },
+      "stem": "How many unpaired electrons has a ground-state oxygen atom, O (Z = {atomicNumber})?",
+      "explain": "O: 1s² 2s² 2p⁴. The four 2p electrons go one into each of the three 2p orbitals first (Hund's rule), then the fourth pairs up: ↑↓ ↑ ↑ — {@unpaired} unpaired electrons. 4 counts the 2p electrons, 6 the outer electrons.",
+      "vi": {
+        "stem": "Ở trạng thái cơ bản, nguyên tử oxygen, O (Z = {atomicNumber}), có bao nhiêu electron độc thân?",
+        "explain": "O: 1s² 2s² 2p⁴. Bốn electron 2p điền mỗi orbital một electron trước (quy tắc Hund), electron thứ tư mới ghép đôi: ↑↓ ↑ ↑ — có {@unpaired} electron độc thân. 4 là số electron 2p, 6 là số electron lớp ngoài cùng."
+      },
+      "options": [
+        {
+          "text": "2",
+          "vi": {
+            "text": "2"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2",
+            "equals": "unpaired"
+          }
+        },
+        {
+          "text": "4",
+          "vi": {
+            "text": "4"
+          },
+          "check": {
+            "expr": "4",
+            "equals": "unpaired"
+          }
+        },
+        {
+          "text": "6",
+          "vi": {
+            "text": "6"
+          },
+          "check": {
+            "expr": "6",
+            "equals": "unpaired"
+          }
+        },
+        {
+          "text": "0",
+          "vi": {
+            "text": "0"
+          },
+          "check": {
+            "expr": "0",
+            "equals": "unpaired"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-magnesium",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["shells", "unpaired", "periodic"],
+      "set": {
+        "atomicNumber": 12
+      },
+      "stem": "Magnesium, Mg, has Z = {atomicNumber}. Decide whether each statement about a ground-state Mg atom is true or false.",
+      "explain": "Mg: 1s² 2s² 2p⁶ 3s² — shells {@shellK}, {@shellL}, {@shellM}. The 3s orbital holds a pair, so there are {@unpaired} unpaired electrons. Three shells: period {@period}; two outer s electrons: group {@group} (IIA).",
+      "vi": {
+        "stem": "Magnesium, Mg, có Z = {atomicNumber}. Mỗi nhận định sau về nguyên tử Mg ở trạng thái cơ bản đúng hay sai?",
+        "explain": "Mg: 1s² 2s² 2p⁶ 3s² — các lớp có {@shellK}, {@shellL}, {@shellM} electron. Orbital 3s chứa một cặp electron, nên có {@unpaired} electron độc thân. Ba lớp electron: chu kì {@period}; hai electron s lớp ngoài cùng: nhóm {@group} (IIA)."
+      },
+      "statements": [
+        {
+          "text": "Its outermost shell holds 2 electrons.",
+          "vi": {
+            "text": "Lớp ngoài cùng của nó có 2 electron."
+          },
+          "true": true,
+          "check": {
+            "expr": "2",
+            "equals": "outerElectrons"
+          }
+        },
+        {
+          "text": "It has 2 unpaired electrons.",
+          "vi": {
+            "text": "Nó có 2 electron độc thân."
+          },
+          "true": false,
+          "check": {
+            "expr": "2",
+            "equals": "unpaired"
+          }
+        },
+        {
+          "text": "It is in period 3.",
+          "vi": {
+            "text": "Nó thuộc chu kì 3."
+          },
+          "true": true,
+          "check": {
+            "expr": "3",
+            "equals": "period"
+          }
+        },
+        {
+          "text": "It is in group 2 (IIA).",
+          "vi": {
+            "text": "Nó thuộc nhóm 2 (IIA)."
+          },
+          "true": true,
+          "check": {
+            "expr": "2",
+            "equals": "group"
+          }
+        }
+      ]
+    },
+    {
+      "id": "calcium-shells",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["shells", "filling"],
+      "set": {
+        "atomicNumber": 20
+      },
+      "stem": "Calcium, Ca, has Z = {atomicNumber}. How are its electrons spread over the shells K, L, M, N in the ground state?",
+      "explain": "Ca: 1s² 2s² 2p⁶ 3s² 3p⁶ 4s² — 4s fills before 3d, so the last two electrons go to shell N: {@shellK}, {@shellL}, {@shellM}, {@shellN}. Putting them in shell M (2, 8, 10) forgets the filling order.",
+      "vi": {
+        "stem": "Calcium, Ca, có Z = {atomicNumber}. Ở trạng thái cơ bản, các electron của Ca phân bố trên các lớp K, L, M, N như thế nào?",
+        "explain": "Ca: 1s² 2s² 2p⁶ 3s² 3p⁶ 4s² — phân lớp 4s được điền trước 3d, nên hai electron cuối vào lớp N: {@shellK}, {@shellL}, {@shellM}, {@shellN}. Xếp chúng vào lớp M (2, 8, 10) là quên thứ tự điền electron."
+      },
+      "options": [
+        {
+          "text": "2, 8, 8, 2",
+          "vi": {
+            "text": "2, 8, 8, 2"
+          },
+          "correct": true,
+          "check": {
+            "expr": "8",
+            "equals": "shellM"
+          }
+        },
+        {
+          "text": "2, 8, 10",
+          "vi": {
+            "text": "2, 8, 10"
+          },
+          "check": {
+            "expr": "10",
+            "equals": "shellM"
+          }
+        },
+        {
+          "text": "2, 8, 9, 1",
+          "vi": {
+            "text": "2, 8, 9, 1"
+          },
+          "check": {
+            "expr": "9",
+            "equals": "shellM"
+          }
+        },
+        {
+          "text": "2, 8, 18, 2",
+          "vi": {
+            "text": "2, 8, 18, 2"
+          },
+          "check": {
+            "expr": "18",
+            "equals": "shellM"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-zinc",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["shells", "unpaired", "periodic"],
+      "set": {
+        "atomicNumber": 30
+      },
+      "stem": "Zinc, Zn, has Z = {atomicNumber}. Decide whether each statement about a ground-state Zn atom is true or false.",
+      "explain": "Zn: [Ar] 3d¹⁰ 4s². Shell M holds 3s² 3p⁶ 3d¹⁰ = {@shellM} electrons and shell N 4s² = {@outerElectrons}. Every orbital is full, so there are {@unpaired} unpaired electrons. Four shells, d block with s² d¹⁰: period {@period}, group {@group} (IIB).",
+      "vi": {
+        "stem": "Zinc, Zn, có Z = {atomicNumber}. Mỗi nhận định sau về nguyên tử Zn ở trạng thái cơ bản đúng hay sai?",
+        "explain": "Zn: [Ar] 3d¹⁰ 4s². Lớp M gồm 3s² 3p⁶ 3d¹⁰ = {@shellM} electron và lớp N gồm 4s² = {@outerElectrons} electron. Mọi orbital đều đã đủ cặp, nên có {@unpaired} electron độc thân. Bốn lớp electron, nguyên tố d với s² d¹⁰: chu kì {@period}, nhóm {@group} (IIB)."
+      },
+      "statements": [
+        {
+          "text": "Its shell M holds 18 electrons.",
+          "vi": {
+            "text": "Lớp M của nó có 18 electron."
+          },
+          "true": true,
+          "check": {
+            "expr": "18",
+            "equals": "shellM"
+          }
+        },
+        {
+          "text": "It has 2 unpaired electrons.",
+          "vi": {
+            "text": "Nó có 2 electron độc thân."
+          },
+          "true": false,
+          "check": {
+            "expr": "2",
+            "equals": "unpaired"
+          }
+        },
+        {
+          "text": "Its outermost shell holds 2 electrons.",
+          "vi": {
+            "text": "Lớp ngoài cùng của nó có 2 electron."
+          },
+          "true": true,
+          "check": {
+            "expr": "2",
+            "equals": "outerElectrons"
+          }
+        },
+        {
+          "text": "It is in group 12 (IIB).",
+          "vi": {
+            "text": "Nó thuộc nhóm 12 (IIB)."
+          },
+          "true": true,
+          "check": {
+            "expr": "12",
+            "equals": "group"
+          }
+        }
+      ]
+    },
+    {
+      "id": "which-from-shells",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["filling", "shells"],
+      "set": {
+        "atomicNumber": 24
+      },
+      "stem": "In its ground state, an atom X has {@shellM} electrons in shell M and {@shellN} electron in shell N. X is…",
+      "explain": "K and L are full (2 + 8), so Z = 2 + 8 + {@shellM} + {@shellN} = {=2+8+@shellM+@shellN}: chromium, [Ar] 3d⁵ 4s¹ — the half-filled 3d⁵ is more stable than 3d⁴ 4s². Mn is 2, 8, 13, 2; V is 2, 8, 11, 2; Fe is 2, 8, 14, 2.",
+      "vi": {
+        "stem": "Ở trạng thái cơ bản, nguyên tử X có {@shellM} electron ở lớp M và {@shellN} electron ở lớp N. X là",
+        "explain": "Lớp K và L đã đầy (2 + 8), nên Z = 2 + 8 + {@shellM} + {@shellN} = {=2+8+@shellM+@shellN}: chromium, [Ar] 3d⁵ 4s¹ — phân lớp 3d⁵ bán bão hòa bền hơn cấu hình 3d⁴ 4s². Mn là 2, 8, 13, 2; V là 2, 8, 11, 2; Fe là 2, 8, 14, 2."
+      },
+      "options": [
+        {
+          "text": "Cr (Z = 24)",
+          "vi": {
+            "text": "Cr (Z = 24)"
+          },
+          "correct": true
+        },
+        {
+          "text": "Mn (Z = 25)",
+          "vi": {
+            "text": "Mn (Z = 25)"
+          }
+        },
+        {
+          "text": "V (Z = 23)",
+          "vi": {
+            "text": "V (Z = 23)"
+          }
+        },
+        {
+          "text": "Fe (Z = 26)",
+          "vi": {
+            "text": "Fe (Z = 26)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "same-group-pair",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["periodic", "filling"],
+      "stem": "Which pair of elements is in the same group of the periodic table?",
+      "explain": "O (2s² 2p⁴) and S (3s² 3p⁴) both end in s² p⁴: group 16 (VIA). The others share an outer-electron count but not a group: He (1s²) is a noble gas, group 18, while Mg (3s²) is in group 2; Zn (3d¹⁰ 4s²) is in group 12, K (4s¹) in group 1 and Cu (3d¹⁰ 4s¹) in group 11.",
+      "vi": {
+        "stem": "Cặp nguyên tố nào sau đây thuộc cùng một nhóm trong bảng tuần hoàn?",
+        "explain": "O (2s² 2p⁴) và S (3s² 3p⁴) đều có cấu hình lớp ngoài cùng s² p⁴: nhóm 16 (VIA). Các cặp còn lại có cùng số electron lớp ngoài cùng nhưng khác nhóm: He (1s²) là khí hiếm, nhóm 18, còn Mg (3s²) thuộc nhóm 2; Zn (3d¹⁰ 4s²) thuộc nhóm 12, K (4s¹) thuộc nhóm 1 và Cu (3d¹⁰ 4s¹) thuộc nhóm 11."
+      },
+      "options": [
+        {
+          "text": "O (Z = 8) and S (Z = 16)",
+          "vi": {
+            "text": "O (Z = 8) và S (Z = 16)"
+          },
+          "correct": true
+        },
+        {
+          "text": "He (Z = 2) and Mg (Z = 12)",
+          "vi": {
+            "text": "He (Z = 2) và Mg (Z = 12)"
+          }
+        },
+        {
+          "text": "Mg (Z = 12) and Zn (Z = 30)",
+          "vi": {
+            "text": "Mg (Z = 12) và Zn (Z = 30)"
+          }
+        },
+        {
+          "text": "K (Z = 19) and Cu (Z = 29)",
+          "vi": {
+            "text": "K (Z = 19) và Cu (Z = 29)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-copper",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["filling", "shells", "unpaired", "periodic"],
+      "set": {
+        "atomicNumber": 29
+      },
+      "stem": "Copper, Cu, has Z = {atomicNumber}. Decide whether each statement about a ground-state Cu atom is true or false.",
+      "explain": "A filled 3d subshell is lower in energy, so Cu is [Ar] 3d¹⁰ 4s¹, not 3d⁹ 4s². Shell M: 3s² 3p⁶ 3d¹⁰ = {@shellM}. Only 4s¹ is unpaired: {@unpaired}, as in K (4s¹). But Cu is a d-block element with s¹ d¹⁰: group {@group} (IB), not group 1 with K.",
+      "vi": {
+        "stem": "Copper, Cu, có Z = {atomicNumber}. Mỗi nhận định sau về nguyên tử Cu ở trạng thái cơ bản đúng hay sai?",
+        "explain": "Phân lớp 3d bão hòa bền hơn, nên Cu có cấu hình [Ar] 3d¹⁰ 4s¹, không phải 3d⁹ 4s². Lớp M: 3s² 3p⁶ 3d¹⁰ = {@shellM} electron. Chỉ có 4s¹ là độc thân: {@unpaired} electron, giống K (4s¹). Nhưng Cu là nguyên tố d với s¹ d¹⁰: nhóm {@group} (IB), không cùng nhóm 1 với K."
+      },
+      "statements": [
+        {
+          "text": "Its configuration is [Ar] 3d⁹ 4s².",
+          "vi": {
+            "text": "Cấu hình electron của nó là [Ar] 3d⁹ 4s²."
+          },
+          "true": false
+        },
+        {
+          "text": "Its shell M holds 18 electrons.",
+          "vi": {
+            "text": "Lớp M của nó có 18 electron."
+          },
+          "true": true,
+          "check": {
+            "expr": "18",
+            "equals": "shellM"
+          }
+        },
+        {
+          "text": "Like potassium, it has one unpaired electron.",
+          "vi": {
+            "text": "Giống potassium, nó có một electron độc thân."
+          },
+          "true": true,
+          "check": {
+            "expr": "1",
+            "equals": "unpaired"
+          }
+        },
+        {
+          "text": "With one outer electron, it is in group 1 (IA), like potassium.",
+          "vi": {
+            "text": "Có một electron lớp ngoài cùng nên nó thuộc nhóm 1 (IA), giống potassium."
+          },
+          "true": false,
+          "check": {
+            "expr": "1",
+            "equals": "group"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1011 @@
+{
+  "id": "protein-synthesis",
+  "skills": [
+    {
+      "id": "transcription",
+      "name": "Transcription: DNA → mRNA",
+      "advice": "Practise writing the mRNA from the coding strand (the same bases, U for T) and from the template strand (the complementary bases). Watch the station copy the β-globin gene base by base.",
+      "vi": {
+        "name": "Phiên mã: DNA → mRNA",
+        "advice": "Luyện viết mRNA từ mạch mã hóa (giống trình tự, thay T bằng U) và từ mạch khuôn (bổ sung). Quan sát trạm sao chép gene β-globin từng nucleotide."
+      }
+    },
+    {
+      "id": "translation",
+      "name": "Translation: codons and amino acids",
+      "advice": "Remember: three bases make one codon, one codon one amino acid; translation starts at AUG and stops at UAA, UAG or UGA, which code for no amino acid. Count codons on the station’s mRNA.",
+      "vi": {
+        "name": "Dịch mã: codon và amino acid",
+        "advice": "Ghi nhớ: ba nucleotide tạo một codon, mỗi codon mã hóa một amino acid; dịch mã bắt đầu ở AUG và kết thúc ở UAA, UAG hoặc UGA, các codon này không mã hóa amino acid. Đếm số codon trên mRNA của trạm."
+      }
+    },
+    {
+      "id": "mutations",
+      "name": "Point mutations and their effects",
+      "advice": "Run all four mutations at the station and fill a table: silent (same amino acid), missense (one changed), nonsense (a stop: shorter), frameshift (every codon after it changed). Explain each from the codons, not from memory.",
+      "vi": {
+        "name": "Đột biến điểm và hậu quả",
+        "advice": "Chạy cả bốn loại đột biến trên trạm và lập bảng: đột biến im lặng (amino acid không đổi), sai nghĩa (đổi một amino acid), vô nghĩa (xuất hiện codon kết thúc: chuỗi ngắn lại), dịch khung (mọi codon phía sau thay đổi). Giải thích mỗi trường hợp dựa vào các codon, không học thuộc."
+      }
+    },
+    {
+      "id": "sickle-cell",
+      "name": "Sickle-cell anaemia: one base, one amino acid",
+      "advice": "Trace the sickle-cell change from DNA to protein: GAG → GTG on the coding strand, GAG → GUG on the mRNA, glutamic acid → valine at position 6 (counting without the Met). Mind the numbering: it is the 7th codon when AUG counts as the 1st.",
+      "vi": {
+        "name": "Bệnh hồng cầu hình liềm: một nucleotide, một amino acid",
+        "advice": "Lần theo đột biến gây bệnh hồng cầu hình liềm từ DNA đến protein: GAG → GTG trên mạch mã hóa, GAG → GUG trên mRNA, glutamic acid → valine ở vị trí 6 (không tính Met). Chú ý cách đánh số: đó là codon thứ 7 nếu tính AUG là codon thứ nhất."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "uracil",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["transcription"],
+      "stem": "In mRNA, which base takes the place of thymine (T)?",
+      "explain": "RNA uses uracil (U) where DNA has thymine (T); A, G and C are the same.",
+      "vi": {
+        "stem": "Trong mRNA, loại nucleotide nào thay thế cho thymine (T)?",
+        "explain": "RNA dùng uracil (U) ở vị trí mà DNA có thymine (T); A, G và C giữ nguyên."
+      },
+      "options": [
+        {
+          "text": "Uracil (U)",
+          "vi": {
+            "text": "Uracil (U)"
+          },
+          "correct": true
+        },
+        {
+          "text": "Adenine (A)",
+          "vi": {
+            "text": "Adenine (A)"
+          }
+        },
+        {
+          "text": "Cytosine (C)",
+          "vi": {
+            "text": "Cytosine (C)"
+          }
+        },
+        {
+          "text": "Guanine (G)",
+          "vi": {
+            "text": "Guanine (G)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "codon",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["translation"],
+      "stem": "A codon is…",
+      "explain": "A codon is a triplet of adjacent mRNA bases that codes for one amino acid (or a stop).",
+      "vi": {
+        "stem": "Codon là…",
+        "explain": "Codon là bộ ba nucleotide liền kề trên mRNA, mã hóa một amino acid (hoặc tín hiệu kết thúc)."
+      },
+      "options": [
+        {
+          "text": "three adjacent mRNA bases that code for one amino acid",
+          "vi": {
+            "text": "bộ ba nucleotide liền kề trên mRNA mã hóa một amino acid"
+          },
+          "correct": true
+        },
+        {
+          "text": "one base of the mRNA",
+          "vi": {
+            "text": "một nucleotide của mRNA"
+          }
+        },
+        {
+          "text": "a whole gene",
+          "vi": {
+            "text": "cả một gene"
+          }
+        },
+        {
+          "text": "an amino acid joined to the chain",
+          "vi": {
+            "text": "một amino acid gắn vào chuỗi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-code",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["translation", "transcription"],
+      "stem": "About transcription and translation: decide whether each statement is true or false.",
+      "explain": "Translation starts at AUG and ends at UAA, UAG or UGA. Transcription copies DNA into mRNA in the nucleus (in eukaryotes); the ribosome translates. Each amino acid is coded by three bases, not two.",
+      "vi": {
+        "stem": "Về phiên mã và dịch mã, mỗi nhận định sau đúng hay sai?",
+        "explain": "Dịch mã bắt đầu ở AUG và kết thúc ở UAA, UAG hoặc UGA. Phiên mã sao chép DNA thành mRNA trong nhân (ở sinh vật nhân thực); ribosome thực hiện dịch mã. Mỗi amino acid được mã hóa bởi ba nucleotide, không phải hai."
+      },
+      "statements": [
+        {
+          "text": "Translation starts at the codon AUG.",
+          "vi": {
+            "text": "Dịch mã bắt đầu tại codon AUG."
+          },
+          "true": true
+        },
+        {
+          "text": "UAA, UAG and UGA are stop codons.",
+          "vi": {
+            "text": "UAA, UAG và UGA là các codon kết thúc."
+          },
+          "true": true
+        },
+        {
+          "text": "Transcription takes place on the ribosome.",
+          "vi": {
+            "text": "Phiên mã diễn ra trên ribosome."
+          },
+          "true": false
+        },
+        {
+          "text": "Each amino acid is coded by a sequence of two bases.",
+          "vi": {
+            "text": "Mỗi amino acid được mã hóa bởi một trình tự gồm hai nucleotide."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "silent",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["mutations", "translation"],
+      "stem": "The substitution GAG → GAA leaves the protein unchanged. Why?",
+      "explain": "GAG and GAA both code for glutamic acid: the genetic code is degenerate, with several codons for most amino acids.",
+      "vi": {
+        "stem": "Đột biến thay thế GAG → GAA không làm thay đổi protein. Vì sao?",
+        "explain": "GAG và GAA đều mã hóa glutamic acid: mã di truyền có tính thoái hóa, phần lớn amino acid được mã hóa bởi nhiều codon."
+      },
+      "options": [
+        {
+          "text": "Both codons code for the same amino acid",
+          "vi": {
+            "text": "Cả hai codon cùng mã hóa một loại amino acid"
+          },
+          "correct": true
+        },
+        {
+          "text": "The changed base is not transcribed",
+          "vi": {
+            "text": "Nucleotide bị thay đổi không được phiên mã"
+          }
+        },
+        {
+          "text": "GAA is a stop codon",
+          "vi": {
+            "text": "GAA là codon kết thúc"
+          }
+        },
+        {
+          "text": "The ribosome repairs the change",
+          "vi": {
+            "text": "Ribosome sửa lại sai sót đó"
+          }
+        }
+      ]
+    },
+    {
+      "id": "frameshift-worse",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["mutations"],
+      "stem": "Why does adding one base usually change a protein more than replacing one base?",
+      "explain": "The ribosome reads in threes from AUG: an added base shifts the reading frame, so every codon after it is read differently (often reaching an early stop). A substitution changes one codon at most.",
+      "vi": {
+        "stem": "Vì sao thêm một nucleotide thường làm protein thay đổi nhiều hơn thay thế một nucleotide?",
+        "explain": "Ribosome đọc từng bộ ba bắt đầu từ AUG: thêm một nucleotide làm dịch khung đọc, nên mọi codon phía sau đều bị đọc khác đi (thường gặp sớm codon kết thúc). Thay thế chỉ thay đổi nhiều nhất một codon."
+      },
+      "options": [
+        {
+          "text": "It shifts the reading frame, changing every codon after it",
+          "vi": {
+            "text": "Nó làm dịch khung đọc, thay đổi mọi codon phía sau"
+          },
+          "correct": true
+        },
+        {
+          "text": "It always creates a stop codon at the start",
+          "vi": {
+            "text": "Nó luôn tạo codon kết thúc ngay ở đầu"
+          }
+        },
+        {
+          "text": "It changes the base pairing of the whole gene",
+          "vi": {
+            "text": "Nó làm thay đổi sự bắt cặp của toàn bộ gene"
+          }
+        },
+        {
+          "text": "An added base cannot be transcribed",
+          "vi": {
+            "text": "Nucleotide thêm vào không thể được phiên mã"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-mutations",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["mutations", "sickle-cell"],
+      "stem": "About point mutations: decide whether each statement is true or false.",
+      "explain": "In sickle-cell anaemia one base change (GAG → GUG on the mRNA) puts valine for glutamic acid. A nonsense mutation creates a stop, so the chain is shorter. A silent mutation changes the DNA, not the amino acids. A frameshift changes every codon after the insertion, not just one.",
+      "vi": {
+        "stem": "Về đột biến điểm, mỗi nhận định sau đúng hay sai?",
+        "explain": "Trong bệnh hồng cầu hình liềm, một thay đổi nucleotide (GAG → GUG trên mRNA) làm valine thay cho glutamic acid. Đột biến vô nghĩa tạo codon kết thúc nên chuỗi ngắn hơn. Đột biến im lặng thay đổi DNA nhưng không đổi amino acid. Đột biến dịch khung thay đổi mọi codon sau vị trí thêm, không chỉ một codon."
+      },
+      "statements": [
+        {
+          "text": "In sickle-cell anaemia one base change makes valine replace glutamic acid.",
+          "vi": {
+            "text": "Trong bệnh hồng cầu hình liềm, một thay đổi nucleotide làm valine thay thế glutamic acid."
+          },
+          "true": true
+        },
+        {
+          "text": "A nonsense mutation creates a stop codon, so the protein is shorter.",
+          "vi": {
+            "text": "Đột biến vô nghĩa tạo codon kết thúc, nên protein ngắn hơn."
+          },
+          "true": true
+        },
+        {
+          "text": "A silent mutation changes the DNA but not the amino acid sequence.",
+          "vi": {
+            "text": "Đột biến im lặng làm thay đổi DNA nhưng không đổi trình tự amino acid."
+          },
+          "true": true
+        },
+        {
+          "text": "A frameshift changes only the codon where the base was added.",
+          "vi": {
+            "text": "Đột biến dịch khung chỉ làm thay đổi codon tại vị trí thêm nucleotide."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "write-mrna",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["transcription"],
+      "stem": "The coding strand of the gene begins ATG GTG CAC. What does the mRNA read?",
+      "explain": "The mRNA has the coding strand’s sequence with U for T: AUG GUG CAC. UAC CAC GUG is complementary to the coding strand — that is copied from the wrong strand.",
+      "vi": {
+        "stem": "Mạch mã hóa của gene bắt đầu bằng ATG GTG CAC. Trình tự mRNA tương ứng là gì?",
+        "explain": "mRNA có trình tự giống mạch mã hóa, thay T bằng U: AUG GUG CAC. UAC CAC GUG bổ sung với mạch mã hóa — đó là sao chép nhầm mạch."
+      },
+      "options": [
+        {
+          "text": "AUG GUG CAC",
+          "vi": {
+            "text": "AUG GUG CAC"
+          },
+          "correct": true
+        },
+        {
+          "text": "UAC CAC GUG",
+          "vi": {
+            "text": "UAC CAC GUG"
+          }
+        },
+        {
+          "text": "TAC CAC GTG",
+          "vi": {
+            "text": "TAC CAC GTG"
+          }
+        },
+        {
+          "text": "AUG GTG CAC",
+          "vi": {
+            "text": "AUG GTG CAC"
+          }
+        }
+      ]
+    },
+    {
+      "id": "fragment-length",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["translation"],
+      "set": {
+        "mutation": 0
+      },
+      "stem": "The fragment of the β-globin gene has {@bases} bases on its coding strand, starting at ATG, with no stop codon in it. How many amino acids does the ribosome join from it?",
+      "explain": "{@bases} bases make {@bases}/3 = {@length} codons, one amino acid each (the first is Met, from AUG).",
+      "vi": {
+        "stem": "Đoạn gene β-globin có {@bases} nucleotide trên mạch mã hóa, bắt đầu bằng ATG, không có codon kết thúc. Ribosome nối được bao nhiêu amino acid từ đoạn này?",
+        "explain": "{@bases} nucleotide tạo {@bases}/3 = {@length} codon, mỗi codon một amino acid (amino acid đầu tiên là Met, từ AUG)."
+      },
+      "options": [
+        {
+          "text": "{@length}",
+          "vi": {
+            "text": "{@length}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@bases/3",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "{@bases}",
+          "vi": {
+            "text": "{@bases}"
+          },
+          "check": {
+            "expr": "@bases",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "{=@bases*3}",
+          "vi": {
+            "text": "{=@bases*3}"
+          },
+          "check": {
+            "expr": "@bases*3",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "{=@bases/3-1}",
+          "vi": {
+            "text": "{=@bases/3-1}"
+          },
+          "check": {
+            "expr": "@bases/3-1",
+            "equals": "length"
+          }
+        }
+      ]
+    },
+    {
+      "id": "nonsense-length",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["mutations", "translation"],
+      "set": {
+        "mutation": 3
+      },
+      "stem": "In the same {@bases}-base fragment, the 7th codon (counting ATG as the 1st) changes from GAG to TAG. How many amino acids does the protein now have?",
+      "explain": "TAG is read as UAG, a stop codon, which codes for no amino acid: only the first 7 − 1 = {@length} codons are translated.",
+      "vi": {
+        "stem": "Trong cùng đoạn gene {@bases} nucleotide, codon thứ 7 (tính ATG là codon thứ nhất) đổi từ GAG thành TAG. Protein khi đó có bao nhiêu amino acid?",
+        "explain": "TAG được phiên mã thành UAG, một codon kết thúc, không mã hóa amino acid: chỉ 7 − 1 = {@length} codon đầu được dịch mã."
+      },
+      "options": [
+        {
+          "text": "{@length}",
+          "vi": {
+            "text": "{@length}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "7-1",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "7",
+          "vi": {
+            "text": "7"
+          },
+          "check": {
+            "expr": "7",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "{=@bases/3}",
+          "vi": {
+            "text": "{=@bases/3}"
+          },
+          "check": {
+            "expr": "@bases/3",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "5",
+          "vi": {
+            "text": "5"
+          },
+          "check": {
+            "expr": "7-2",
+            "equals": "length"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-sickle",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["sickle-cell", "mutations"],
+      "set": {
+        "mutation": 1
+      },
+      "stem": "The sickle-cell mutation changes GAG to GTG in the 7th codon (counting ATG as the 1st) of the {@bases}-base fragment. Decide whether each statement is true or false.",
+      "explain": "GTG is read as GUG on the mRNA: valine for glutamic acid (Glu6Val). The chain keeps its {@length} amino acids and {@changed} of them changes. GUG is not a stop codon.",
+      "vi": {
+        "stem": "Đột biến gây bệnh hồng cầu hình liềm đổi GAG thành GTG ở codon thứ 7 (tính ATG là codon thứ nhất) của đoạn gene {@bases} nucleotide. Mỗi nhận định sau đúng hay sai?",
+        "explain": "GTG được phiên mã thành GUG trên mRNA: valine thay cho glutamic acid (Glu6Val). Chuỗi vẫn có {@length} amino acid và {@changed} amino acid bị thay đổi. GUG không phải codon kết thúc."
+      },
+      "statements": [
+        {
+          "text": "The protein fragment still has {@length} amino acids.",
+          "vi": {
+            "text": "Đoạn protein vẫn có {@length} amino acid."
+          },
+          "true": true,
+          "check": {
+            "expr": "@bases/3",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "{@changed} amino acid changes: glutamic acid becomes valine.",
+          "vi": {
+            "text": "Có {@changed} amino acid thay đổi: glutamic acid thành valine."
+          },
+          "true": true,
+          "check": {
+            "expr": "1",
+            "equals": "changed"
+          }
+        },
+        {
+          "text": "On the mRNA the codon GAG becomes GUG.",
+          "vi": {
+            "text": "Trên mRNA, codon GAG trở thành GUG."
+          },
+          "true": true
+        },
+        {
+          "text": "The changed codon is read as a stop codon.",
+          "vi": {
+            "text": "Codon bị thay đổi được đọc thành codon kết thúc."
+          },
+          "true": false,
+          "check": {
+            "expr": "2",
+            "equals": "effect"
+          }
+        }
+      ]
+    },
+    {
+      "id": "frameshift-result",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["mutations", "translation"],
+      "set": {
+        "mutation": 4
+      },
+      "stem": "One A is added after the 3rd codon of the fragment, so the coding strand now reads ATG GTG CAC ACT GAC TCC TGA… instead of ATG GTG CAC CTG ACT CCT GAG…. What is the protein made?",
+      "explain": "From the 4th codon every triplet is new: ACU (Thr), GAC (Asp), UCC (Ser), then UGA, a stop. The chain has {@length} amino acids, the last {@changed} of them different from the normal Leu, Thr, Pro.",
+      "vi": {
+        "stem": "Thêm một A vào sau codon thứ 3 của đoạn gene, nên mạch mã hóa trở thành ATG GTG CAC ACT GAC TCC TGA… thay vì ATG GTG CAC CTG ACT CCT GAG…. Protein tạo thành như thế nào?",
+        "explain": "Từ codon thứ 4, mọi bộ ba đều mới: ACU (Thr), GAC (Asp), UCC (Ser), rồi UGA là codon kết thúc. Chuỗi có {@length} amino acid, {@changed} amino acid cuối khác với Leu, Thr, Pro bình thường."
+      },
+      "options": [
+        {
+          "text": "{@length} amino acids, the last {@changed} of them changed",
+          "vi": {
+            "text": "{@length} amino acid, {@changed} amino acid cuối bị thay đổi"
+          },
+          "correct": true,
+          "check": {
+            "expr": "3",
+            "equals": "changed"
+          }
+        },
+        {
+          "text": "11 amino acids, only one of them changed",
+          "vi": {
+            "text": "11 amino acid, chỉ một amino acid bị thay đổi"
+          },
+          "check": {
+            "expr": "11",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "{@length} amino acids, none of them changed",
+          "vi": {
+            "text": "{@length} amino acid, không amino acid nào bị thay đổi"
+          },
+          "check": {
+            "expr": "0",
+            "equals": "changed"
+          }
+        },
+        {
+          "text": "12 amino acids, all after the insertion changed",
+          "vi": {
+            "text": "12 amino acid, mọi amino acid sau vị trí thêm đều bị thay đổi"
+          },
+          "check": {
+            "expr": "12",
+            "equals": "length"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-silent",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["mutations", "translation", "sickle-cell"],
+      "set": {
+        "mutation": 2
+      },
+      "stem": "The 7th codon of the fragment changes from GAG to GAA, and the results are compared with the station’s other mutations. Decide whether each statement is true or false.",
+      "explain": "GAA still codes for glutamic acid: {@changed} amino acids change and the chain keeps {@length}. Of the station’s mutations the frameshift changes the protein most. The DNA has changed even though the protein has not.",
+      "vi": {
+        "stem": "Codon thứ 7 của đoạn gene đổi từ GAG thành GAA, và kết quả được so sánh với các đột biến khác trên trạm. Mỗi nhận định sau đúng hay sai?",
+        "explain": "GAA vẫn mã hóa glutamic acid: {@changed} amino acid thay đổi và chuỗi vẫn có {@length} amino acid. Trong các đột biến trên trạm, đột biến dịch khung làm protein thay đổi nhiều nhất. DNA đã thay đổi dù protein không đổi."
+      },
+      "statements": [
+        {
+          "text": "{@changed} amino acids change.",
+          "vi": {
+            "text": "Có {@changed} amino acid thay đổi."
+          },
+          "true": true,
+          "check": {
+            "expr": "0",
+            "equals": "changed"
+          }
+        },
+        {
+          "text": "The chain still has {@length} amino acids.",
+          "vi": {
+            "text": "Chuỗi vẫn có {@length} amino acid."
+          },
+          "true": true,
+          "check": {
+            "expr": "@bases/3",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "Of the station’s four mutations, the frameshift changes the protein the most.",
+          "vi": {
+            "text": "Trong bốn đột biến trên trạm, đột biến dịch khung làm protein thay đổi nhiều nhất."
+          },
+          "true": true
+        },
+        {
+          "text": "The DNA itself is unchanged by a silent mutation.",
+          "vi": {
+            "text": "Đột biến im lặng không làm thay đổi DNA."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "where-translation",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["translation"],
+      "stem": "In a eukaryotic cell, translation takes place…",
+      "explain": "The mRNA is made in the nucleus by transcription, then leaves through the nuclear pores; ribosomes in the cytoplasm (free or on the rough endoplasmic reticulum) translate it into a polypeptide.",
+      "vi": {
+        "stem": "Ở tế bào nhân thực, quá trình dịch mã diễn ra…",
+        "explain": "mRNA được tạo ra trong nhân nhờ phiên mã, rồi đi ra ngoài qua lỗ nhân; các ribosome trong tế bào chất (tự do hoặc bám trên lưới nội chất hạt) dịch mã nó thành chuỗi polypeptide."
+      },
+      "options": [
+        {
+          "text": "on ribosomes in the cytoplasm",
+          "vi": {
+            "text": "trên ribosome trong tế bào chất"
+          },
+          "correct": true
+        },
+        {
+          "text": "on the DNA in the nucleus",
+          "vi": {
+            "text": "trên DNA trong nhân"
+          }
+        },
+        {
+          "text": "in the nucleolus",
+          "vi": {
+            "text": "trong nhân con"
+          }
+        },
+        {
+          "text": "in the Golgi apparatus",
+          "vi": {
+            "text": "trong bộ máy Golgi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "anticodon",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["translation"],
+      "stem": "An mRNA codon reads 5′-GAG-3′ (glutamic acid). Which anticodon on the tRNA pairs with it?",
+      "explain": "The anticodon pairs with the codon by complementary base pairing, A–U and G–C, antiparallel: 3′-CUC-5′. tRNA has U, not T.",
+      "vi": {
+        "stem": "Một codon trên mRNA là 5′-GAG-3′ (glutamic acid). Anticodon nào trên tRNA khớp với codon này?",
+        "explain": "Anticodon khớp với codon theo nguyên tắc bổ sung, A – U và G – C, ngược chiều nhau: 3′-CUC-5′. tRNA có U, không có T."
+      },
+      "options": [
+        {
+          "text": "3′-CUC-5′",
+          "vi": {
+            "text": "3′-CUC-5′"
+          },
+          "correct": true
+        },
+        {
+          "text": "3′-CTC-5′",
+          "vi": {
+            "text": "3′-CTC-5′"
+          }
+        },
+        {
+          "text": "3′-GAG-5′",
+          "vi": {
+            "text": "3′-GAG-5′"
+          }
+        },
+        {
+          "text": "3′-GUG-5′",
+          "vi": {
+            "text": "3′-GUG-5′"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-flow",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["transcription", "translation", "mutations"],
+      "stem": "About how the β-globin gene is expressed: decide whether each statement is true or false.",
+      "explain": "RNA polymerase reads the template strand in the nucleus and makes an mRNA with the coding strand’s sequence, U in place of T. Each amino acid is coded by three bases. The code is redundant, so a substitution can leave the protein unchanged (GAG → GAA).",
+      "vi": {
+        "stem": "Về sự biểu hiện của gene β-globin, mỗi nhận định sau đúng hay sai?",
+        "explain": "RNA polymerase đọc mạch khuôn trong nhân và tổng hợp mRNA có trình tự giống mạch mã hóa, với U thay cho T. Mỗi amino acid được mã hóa bởi ba nucleotide. Mã di truyền có tính thoái hóa, nên một thay thế có thể không làm thay đổi protein (GAG → GAA)."
+      },
+      "statements": [
+        {
+          "text": "Transcription happens in the nucleus, using the template strand of the DNA.",
+          "vi": {
+            "text": "Phiên mã diễn ra trong nhân, dựa trên mạch khuôn của DNA."
+          },
+          "true": true
+        },
+        {
+          "text": "The mRNA has the coding strand’s sequence, with U in place of T.",
+          "vi": {
+            "text": "mRNA có trình tự giống mạch mã hóa, với U thay cho T."
+          },
+          "true": true
+        },
+        {
+          "text": "Each amino acid is coded by a group of three bases.",
+          "vi": {
+            "text": "Mỗi amino acid được mã hóa bởi một bộ ba nucleotide."
+          },
+          "true": true
+        },
+        {
+          "text": "Every change of one base in a gene changes its protein.",
+          "vi": {
+            "text": "Mọi thay đổi một nucleotide trong gene đều làm thay đổi protein của nó."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "frame-length",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["translation"],
+      "set": {
+        "mutation": 0
+      },
+      "stem": "A short polypeptide of {@length} amino acids (Met included) is coded by a reading frame that runs from the start codon AUG to a stop codon. How many bases long is that reading frame on the mRNA?",
+      "explain": "{@length} amino acids need {@length} codons, plus one stop codon that codes for none: ({@length} + 1) × 3 = {=3*(@length+1)} bases.",
+      "vi": {
+        "stem": "Một chuỗi polypeptide ngắn gồm {@length} amino acid (kể cả Met) được mã hóa bởi một khung đọc chạy từ codon mở đầu AUG đến một codon kết thúc. Khung đọc đó trên mRNA dài bao nhiêu nucleotide?",
+        "explain": "{@length} amino acid cần {@length} codon, cộng thêm một codon kết thúc không mã hóa amino acid nào: ({@length} + 1) × 3 = {=3*(@length+1)} nucleotide."
+      },
+      "options": [
+        {
+          "text": "{=3*(@length+1)}",
+          "vi": {
+            "text": "{=3*(@length+1)}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(3*(@length+1))/3-1",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "{=3*@length}",
+          "vi": {
+            "text": "{=3*@length}"
+          },
+          "check": {
+            "expr": "(3*@length)/3-1",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "{=@length+1}",
+          "vi": {
+            "text": "{=@length+1}"
+          },
+          "check": {
+            "expr": "(@length+1)/3-1",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "{=3*(@length-1)}",
+          "vi": {
+            "text": "{=3*(@length-1)}"
+          },
+          "check": {
+            "expr": "(3*(@length-1))/3-1",
+            "equals": "length"
+          }
+        }
+      ]
+    },
+    {
+      "id": "codon-deleted",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["mutations", "translation"],
+      "set": {
+        "mutation": 0
+      },
+      "stem": "The normal fragment codes {@length} amino acids. Suppose the three bases of the 7th codon (GAG, counting ATG as the 1st) were deleted. What would the fragment code?",
+      "explain": "Removing a whole codon keeps the reading frame: one glutamic acid is lost and the rest is unchanged, {@length} − 1 = {=@length-1} amino acids. Deleting one or two bases would shift the frame instead.",
+      "vi": {
+        "stem": "Đoạn gene bình thường mã hóa {@length} amino acid. Giả sử ba nucleotide của codon thứ 7 (GAG, tính ATG là codon thứ 1) bị mất. Đoạn gene khi đó mã hóa gì?",
+        "explain": "Mất nguyên một codon thì khung đọc được giữ nguyên: mất một glutamic acid, phần còn lại không đổi, còn {@length} − 1 = {=@length-1} amino acid. Mất một hoặc hai nucleotide thì khung đọc sẽ bị dịch."
+      },
+      "options": [
+        {
+          "text": "{=@length-1} amino acids: one Glu lost, the rest unchanged",
+          "vi": {
+            "text": "{=@length-1} amino acid: mất một Glu, phần còn lại không đổi"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(@length-1)+1",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "{=@length-3} amino acids: one lost for each base deleted",
+          "vi": {
+            "text": "{=@length-3} amino acid: mỗi nucleotide mất làm mất một amino acid"
+          },
+          "check": {
+            "expr": "(@length-3)+1",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "{=@length-1} amino acids, every one after codon 6 changed by a frameshift",
+          "vi": {
+            "text": "{=@length-1} amino acid, mọi amino acid sau codon 6 đều thay đổi do dịch khung"
+          }
+        },
+        {
+          "text": "{@length} amino acids: the code is redundant, so nothing changes",
+          "vi": {
+            "text": "{@length} amino acid: mã di truyền có tính thoái hóa nên không có gì thay đổi"
+          },
+          "check": {
+            "expr": "@length+1",
+            "equals": "length"
+          }
+        }
+      ]
+    },
+    {
+      "id": "which-mutation",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["mutations", "translation"],
+      "set": {
+        "mutation": 3
+      },
+      "stem": "A mutant fragment codes only {@length} amino acids, and those {@length} are exactly the first {@length} of the normal protein. Which of the station’s mutations gives this?",
+      "explain": "The protein is cut short with nothing changed before the cut: a nonsense mutation, GAG → TAG making a stop codon. The frameshift also ends after {@length} amino acids, but three of them differ from the normal ones; the silent and sickle-cell substitutions keep the full length.",
+      "vi": {
+        "stem": "Một đoạn gene đột biến chỉ mã hóa {@length} amino acid, và {@length} amino acid đó giống hệt {@length} amino acid đầu tiên của protein bình thường. Đột biến nào trong các đột biến của trạm cho kết quả này?",
+        "explain": "Protein bị ngắn lại mà không có gì thay đổi trước chỗ ngắt: đó là đột biến vô nghĩa, GAG → TAG tạo codon kết thúc. Đột biến dịch khung cũng kết thúc sau {@length} amino acid, nhưng ba trong số đó khác với bình thường; các thay thế đồng nghĩa và hồng cầu hình liềm giữ nguyên độ dài."
+      },
+      "options": [
+        {
+          "text": "GAG → TAG, a nonsense mutation",
+          "vi": {
+            "text": "GAG → TAG, đột biến vô nghĩa"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2",
+            "equals": "effect"
+          }
+        },
+        {
+          "text": "One A inserted, a frameshift",
+          "vi": {
+            "text": "Thêm một A, đột biến dịch khung"
+          },
+          "check": {
+            "expr": "3",
+            "equals": "effect"
+          }
+        },
+        {
+          "text": "GAG → GTG, the sickle-cell substitution",
+          "vi": {
+            "text": "GAG → GTG, thay thế gây hồng cầu hình liềm"
+          },
+          "check": {
+            "expr": "1",
+            "equals": "effect"
+          }
+        },
+        {
+          "text": "GAG → GAA, a silent substitution",
+          "vi": {
+            "text": "GAG → GAA, thay thế đồng nghĩa"
+          },
+          "check": {
+            "expr": "0",
+            "equals": "effect"
+          }
+        }
+      ]
+    },
+    {
+      "id": "trna-and-bonds",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["translation"],
+      "set": {
+        "mutation": 0
+      },
+      "stem": "The ribosome translates a reading frame of {@length} codons for amino acids followed by a stop codon. How many tRNAs bring amino acids, and how many peptide bonds are formed?",
+      "explain": "One tRNA brings each of the {@length} amino acids; the stop codon is read by a release factor, not a tRNA. {@length} amino acids in a chain are joined by {@length} − 1 = {=@length-1} peptide bonds.",
+      "vi": {
+        "stem": "Ribosome dịch mã một khung đọc gồm {@length} codon mã hóa amino acid và tiếp theo là một codon kết thúc. Có bao nhiêu tRNA mang amino acid tới, và bao nhiêu liên kết peptide được hình thành?",
+        "explain": "Mỗi amino acid trong {@length} amino acid do một tRNA mang tới; codon kết thúc được nhận biết bởi yếu tố giải phóng, không phải tRNA. {@length} amino acid trong một chuỗi được nối bởi {@length} − 1 = {=@length-1} liên kết peptide."
+      },
+      "options": [
+        {
+          "text": "{@length} tRNAs; {=@length-1} peptide bonds",
+          "vi": {
+            "text": "{@length} tRNA; {=@length-1} liên kết peptide"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(@length-1)+1",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "{@length} tRNAs; {@length} peptide bonds",
+          "vi": {
+            "text": "{@length} tRNA; {@length} liên kết peptide"
+          },
+          "check": {
+            "expr": "@length+1",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "{=@length+1} tRNAs, one for the stop codon; {@length} peptide bonds",
+          "vi": {
+            "text": "{=@length+1} tRNA, một cho codon kết thúc; {@length} liên kết peptide"
+          },
+          "check": {
+            "expr": "@length+1",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "{=3*@length} tRNAs, one for each base; {=3*@length-1} peptide bonds",
+          "vi": {
+            "text": "{=3*@length} tRNA, mỗi nucleotide một tRNA; {=3*@length-1} liên kết peptide"
+          },
+          "check": {
+            "expr": "(3*@length-1)+1",
+            "equals": "length"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-frameshift",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["mutations", "translation"],
+      "set": {
+        "mutation": 4
+      },
+      "stem": "One A is inserted after the 3rd codon of the 33-base fragment. Decide whether each statement is true or false.",
+      "explain": "The coding strand now has {@bases} bases. From the 4th codon on every codon is read one base later: ACT GAC TCC TGA…, so the protein is {@length} amino acids long, {@changed} of them different from the normal ones, and TGA stops it. A nonsense mutation also gives {@length} amino acids, but all normal. Inserting three bases would add one codon and keep the frame after it.",
+      "vi": {
+        "stem": "Một nucleotide A được thêm vào sau codon thứ 3 của đoạn gene dài 33 nucleotide. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Mạch mã hóa lúc này có {@bases} nucleotide. Từ codon thứ 4 trở đi, mỗi codon bị đọc lệch một nucleotide: ACT GAC TCC TGA…, nên protein dài {@length} amino acid, trong đó {@changed} amino acid khác bình thường, và TGA làm dừng dịch mã. Đột biến vô nghĩa cũng cho {@length} amino acid, nhưng tất cả đều bình thường. Thêm ba nucleotide sẽ thêm một codon và giữ nguyên khung đọc phía sau."
+      },
+      "statements": [
+        {
+          "text": "The coding strand now has {@bases} bases.",
+          "vi": {
+            "text": "Mạch mã hóa lúc này có {@bases} nucleotide."
+          },
+          "true": true,
+          "check": {
+            "expr": "33+1",
+            "equals": "bases"
+          }
+        },
+        {
+          "text": "The protein is {@length} amino acids long, as long as with the nonsense mutation.",
+          "vi": {
+            "text": "Protein dài {@length} amino acid, bằng với khi có đột biến vô nghĩa."
+          },
+          "true": true,
+          "check": {
+            "expr": "6",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "{@changed} of its amino acids differ from the normal protein’s.",
+          "vi": {
+            "text": "Có {@changed} amino acid của nó khác với protein bình thường."
+          },
+          "true": true,
+          "check": {
+            "expr": "3",
+            "equals": "changed"
+          }
+        },
+        {
+          "text": "Inserting three bases instead of one would also shift every codon after it.",
+          "vi": {
+            "text": "Nếu thêm ba nucleotide thay vì một thì mọi codon phía sau cũng bị dịch khung."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

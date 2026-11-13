@@ -1,0 +1,1026 @@
+{
+  "id": "ripple-tank",
+  "skills": [
+    {
+      "id": "coherent",
+      "name": "Coherent sources and interference",
+      "advice": "Re-read: coherent sources have the same frequency and a constant phase difference. Both dippers hang from one bar, so they are in phase. Watch the still and the strongly vibrating lines in a run.",
+      "vi": {
+        "name": "Nguồn kết hợp và giao thoa",
+        "advice": "Đọc lại: hai nguồn kết hợp có cùng tần số và hiệu số pha không đổi. Hai mũi nhọn gắn trên cùng một cần rung nên dao động cùng pha. Quan sát các đường đứng yên và dao động mạnh khi chạy thí nghiệm."
+      }
+    },
+    {
+      "id": "conditions",
+      "name": "Maxima and minima",
+      "advice": "For in-phase sources: maxima where the path difference is a whole number of wavelengths, d₂ − d₁ = kλ; minima half way, d₂ − d₁ = (k + ½)λ. On S1S2 neighbouring maxima are λ/2 apart.",
+      "vi": {
+        "name": "Cực đại và cực tiểu",
+        "advice": "Với hai nguồn cùng pha: cực đại khi hiệu đường đi bằng số nguyên lần bước sóng, d₂ − d₁ = kλ; cực tiểu khi d₂ − d₁ = (k + ½)λ. Trên đoạn S1S2, hai cực đại liền kề cách nhau λ/2."
+      }
+    },
+    {
+      "id": "wavelength",
+      "name": "Wavelength from the maxima",
+      "advice": "Count n maxima and measure the span L from first to last: n maxima have n − 1 gaps, so λ/2 = L/(n − 1). Trap: dividing by n.",
+      "vi": {
+        "name": "Bước sóng từ các cực đại",
+        "advice": "Đếm n cực đại và đo khoảng L từ cực đại đầu đến cực đại cuối: n cực đại có n − 1 khoảng, nên λ/2 = L/(n − 1). Lỗi hay gặp: chia cho n."
+      }
+    },
+    {
+      "id": "speed",
+      "name": "Wave speed: v = λ·f",
+      "advice": "v = λ·f. A higher frequency gives a shorter wavelength. In water the speed itself changes a little with the frequency (dispersion), so compare runs at 10 and 25 Hz.",
+      "vi": {
+        "name": "Tốc độ truyền sóng: v = λ·f",
+        "advice": "v = λ·f. Tần số cao hơn thì bước sóng ngắn hơn. Trong nước, tốc độ truyền sóng cũng thay đổi chút ít theo tần số (tán sắc), hãy so sánh các lần chạy ở 10 Hz và 25 Hz."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "coherent",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["coherent"],
+      "stem": "Two wave sources are coherent when they have…",
+      "explain": "Coherent: the same frequency and a phase difference that does not change.",
+      "vi": {
+        "stem": "Hai nguồn sóng là hai nguồn kết hợp khi chúng có…",
+        "explain": "Hai nguồn kết hợp: cùng tần số và có hiệu số pha không đổi theo thời gian."
+      },
+      "options": [
+        {
+          "text": "the same frequency and a constant phase difference",
+          "vi": {
+            "text": "cùng tần số và hiệu số pha không đổi theo thời gian"
+          },
+          "correct": true
+        },
+        {
+          "text": "the same amplitude only",
+          "vi": {
+            "text": "chỉ cần cùng biên độ"
+          }
+        },
+        {
+          "text": "the same position",
+          "vi": {
+            "text": "cùng vị trí"
+          }
+        },
+        {
+          "text": "different frequencies",
+          "vi": {
+            "text": "tần số khác nhau"
+          }
+        }
+      ]
+    },
+    {
+      "id": "spacing",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["conditions"],
+      "stem": "On the line between two in-phase sources, neighbouring maxima are separated by…",
+      "explain": "Moving x along S1S2 changes the path difference by 2x, so the next maximum is λ/2 away.",
+      "vi": {
+        "stem": "Trên đoạn thẳng nối hai nguồn cùng pha, hai cực đại liền kề cách nhau…",
+        "explain": "Dịch đi x trên S1S2 làm hiệu đường đi thay đổi 2x, nên cực đại kế tiếp cách λ/2."
+      },
+      "options": [
+        {
+          "text": "λ/2",
+          "vi": {
+            "text": "λ/2"
+          },
+          "correct": true
+        },
+        {
+          "text": "λ",
+          "vi": {
+            "text": "λ"
+          }
+        },
+        {
+          "text": "2λ",
+          "vi": {
+            "text": "2λ"
+          }
+        },
+        {
+          "text": "λ/4",
+          "vi": {
+            "text": "λ/4"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-pattern",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["conditions", "coherent"],
+      "stem": "Two dippers on one vibrating bar make two sets of circular water waves. Decide whether each statement is true or false.",
+      "explain": "In phase, maxima are at path differences kλ and minima at (k + ½)λ, where crest meets trough.",
+      "vi": {
+        "stem": "Hai mũi nhọn gắn trên cùng một cần rung tạo ra hai hệ sóng tròn trên mặt nước. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Hai nguồn cùng pha: cực đại tại hiệu đường đi kλ, cực tiểu tại (k + ½)λ, nơi đỉnh sóng gặp hõm sóng."
+      },
+      "statements": [
+        {
+          "text": "The water vibrates most where the path difference is a whole number of wavelengths.",
+          "vi": {
+            "text": "Nước dao động mạnh nhất tại những điểm có hiệu đường đi bằng số nguyên lần bước sóng."
+          },
+          "true": true
+        },
+        {
+          "text": "The water stays still where the path difference is a whole number of wavelengths.",
+          "vi": {
+            "text": "Nước đứng yên tại những điểm có hiệu đường đi bằng số nguyên lần bước sóng."
+          },
+          "true": false
+        },
+        {
+          "text": "The two dippers vibrate in phase.",
+          "vi": {
+            "text": "Hai mũi nhọn dao động cùng pha."
+          },
+          "true": true
+        },
+        {
+          "text": "At a minimum, a crest of one wave meets a trough of the other.",
+          "vi": {
+            "text": "Tại một cực tiểu, đỉnh sóng của sóng này gặp hõm sóng của sóng kia."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "higher-frequency",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["speed"],
+      "stem": "The vibrator’s frequency is raised from 10 Hz to 25 Hz. The wavelength of the water waves…",
+      "explain": "λ = v/f: a higher f gives a shorter λ (v itself changes only a little).",
+      "vi": {
+        "stem": "Tăng tần số cần rung từ 10 Hz lên 25 Hz. Bước sóng của sóng nước…",
+        "explain": "λ = v/f: f lớn hơn thì λ ngắn hơn (bản thân v chỉ thay đổi chút ít)."
+      },
+      "options": [
+        {
+          "text": "becomes shorter",
+          "vi": {
+            "text": "ngắn đi"
+          },
+          "correct": true
+        },
+        {
+          "text": "becomes longer",
+          "vi": {
+            "text": "dài ra"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "becomes zero",
+          "vi": {
+            "text": "bằng 0"
+          }
+        }
+      ]
+    },
+    {
+      "id": "wider-sources",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["conditions"],
+      "stem": "At the same frequency, the sources are moved further apart. The number of maxima between them…",
+      "explain": "The maxima stay λ/2 apart, so a longer S1S2 holds more of them.",
+      "vi": {
+        "stem": "Ở cùng tần số, dịch hai nguồn ra xa nhau hơn. Số cực đại giữa hai nguồn…",
+        "explain": "Các cực đại vẫn cách nhau λ/2, nên đoạn S1S2 dài hơn chứa nhiều cực đại hơn."
+      },
+      "options": [
+        {
+          "text": "increases",
+          "vi": {
+            "text": "tăng"
+          },
+          "correct": true
+        },
+        {
+          "text": "decreases",
+          "vi": {
+            "text": "giảm"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "becomes zero",
+          "vi": {
+            "text": "bằng 0"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-20hz",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["wavelength", "speed"],
+      "set": {
+        "frequency": 20,
+        "sourceSeparation": 0.06
+      },
+      "stem": "The dippers, {sourceSeparation} m apart, vibrate at {frequency} Hz; the water waves have λ = {@wavelengthFromMaxima|3} m. Decide whether each statement is true or false.",
+      "explain": "Maxima on S1S2 are λ/2 ≈ {@maximaSpacing} m apart; {@maxima} of them fit between the sources. v = λ·f ≈ {@waveSpeed} m/s. At 10 Hz the waves would be longer.",
+      "vi": {
+        "stem": "Hai mũi nhọn cách nhau {sourceSeparation} m dao động với tần số {frequency} Hz; sóng nước có λ = {@wavelengthFromMaxima|3} m. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Các cực đại trên S1S2 cách nhau λ/2 ≈ {@maximaSpacing} m; có {@maxima} cực đại giữa hai nguồn. v = λ·f ≈ {@waveSpeed} m/s. Ở 10 Hz sóng sẽ dài hơn."
+      },
+      "statements": [
+        {
+          "text": "There are {@maxima} maxima between the sources.",
+          "vi": {
+            "text": "Có {@maxima} cực đại giữa hai nguồn."
+          },
+          "true": true
+        },
+        {
+          "text": "Neighbouring maxima are about {@maximaSpacing} m apart.",
+          "vi": {
+            "text": "Hai cực đại liền kề cách nhau khoảng {@maximaSpacing} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "@wavelengthFromMaxima/2",
+            "equals": "maximaSpacing"
+          }
+        },
+        {
+          "text": "The waves travel at about {@waveSpeed} m/s.",
+          "vi": {
+            "text": "Sóng truyền với tốc độ khoảng {@waveSpeed} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "@wavelengthFromMaxima*frequency",
+            "equals": "waveSpeed"
+          }
+        },
+        {
+          "text": "At 10 Hz the wavelength would be shorter.",
+          "vi": {
+            "text": "Ở 10 Hz bước sóng sẽ ngắn hơn."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "wavelength",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["wavelength"],
+      "set": {
+        "frequency": 20
+      },
+      "stem": "Along the line between the sources there are {@maxima} maxima, and the ruler reads L = {@maximaSpan|3} m from the first to the last. What is the wavelength?",
+      "explain": "{@maxima} maxima have {=@maxima-1} gaps of λ/2: λ = 2L/(n − 1) = 2·{@maximaSpan|3}/{=@maxima-1} ≈ {@wavelengthFromMaxima} m.",
+      "vi": {
+        "stem": "Trên đoạn nối hai nguồn có {@maxima} cực đại, thước đo được L = {@maximaSpan|3} m từ cực đại đầu đến cực đại cuối. Bước sóng bằng bao nhiêu?",
+        "explain": "{@maxima} cực đại tạo thành {=@maxima-1} khoảng λ/2: λ = 2L/(n − 1) = 2·{@maximaSpan|3}/{=@maxima-1} ≈ {@wavelengthFromMaxima} m."
+      },
+      "options": [
+        {
+          "text": "{@wavelengthFromMaxima} m",
+          "vi": {
+            "text": "{@wavelengthFromMaxima} m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2*@maximaSpan/(@maxima-1)",
+            "equals": "wavelengthFromMaxima"
+          }
+        },
+        {
+          "text": "{=@maximaSpan/(@maxima-1)} m",
+          "vi": {
+            "text": "{=@maximaSpan/(@maxima-1)} m"
+          },
+          "check": {
+            "expr": "@maximaSpan/(@maxima-1)",
+            "equals": "wavelengthFromMaxima"
+          }
+        },
+        {
+          "text": "{=2*@maximaSpan/@maxima} m",
+          "vi": {
+            "text": "{=2*@maximaSpan/@maxima} m"
+          },
+          "check": {
+            "expr": "2*@maximaSpan/@maxima",
+            "equals": "wavelengthFromMaxima"
+          }
+        },
+        {
+          "text": "{=@maximaSpan/@maxima} m",
+          "vi": {
+            "text": "{=@maximaSpan/@maxima} m"
+          },
+          "check": {
+            "expr": "@maximaSpan/@maxima",
+            "equals": "wavelengthFromMaxima"
+          }
+        }
+      ]
+    },
+    {
+      "id": "speed",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["speed"],
+      "set": {
+        "frequency": 15
+      },
+      "stem": "At {frequency} Hz the water waves have a wavelength of {@wavelengthFromMaxima|3} m. How fast do they travel?",
+      "explain": "v = λ·f = {@wavelengthFromMaxima|3}·{frequency} ≈ {@waveSpeed} m/s.",
+      "vi": {
+        "stem": "Ở tần số {frequency} Hz, sóng nước có bước sóng {@wavelengthFromMaxima|3} m. Sóng truyền với tốc độ bao nhiêu?",
+        "explain": "v = λ·f = {@wavelengthFromMaxima|3}·{frequency} ≈ {@waveSpeed} m/s."
+      },
+      "options": [
+        {
+          "text": "{@waveSpeed} m/s",
+          "vi": {
+            "text": "{@waveSpeed} m/s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@wavelengthFromMaxima*frequency",
+            "equals": "waveSpeed"
+          }
+        },
+        {
+          "text": "{=@wavelengthFromMaxima/frequency} m/s",
+          "vi": {
+            "text": "{=@wavelengthFromMaxima/frequency} m/s"
+          },
+          "check": {
+            "expr": "@wavelengthFromMaxima/frequency",
+            "equals": "waveSpeed"
+          }
+        },
+        {
+          "text": "{=frequency/@wavelengthFromMaxima} m/s",
+          "vi": {
+            "text": "{=frequency/@wavelengthFromMaxima} m/s"
+          },
+          "check": {
+            "expr": "frequency/@wavelengthFromMaxima",
+            "equals": "waveSpeed"
+          }
+        },
+        {
+          "text": "{=@wavelengthFromMaxima*frequency/2} m/s",
+          "vi": {
+            "text": "{=@wavelengthFromMaxima*frequency/2} m/s"
+          },
+          "check": {
+            "expr": "@wavelengthFromMaxima*frequency/2",
+            "equals": "waveSpeed"
+          }
+        }
+      ]
+    },
+    {
+      "id": "gap",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["conditions"],
+      "set": {
+        "frequency": 25,
+        "sourceSeparation": 0.04
+      },
+      "stem": "At {frequency} Hz the wavelength is {@wavelengthFromMaxima|3} m. How far apart are neighbouring maxima on the line between the sources?",
+      "explain": "λ/2 = {@wavelengthFromMaxima|3}/2 ≈ {@maximaSpacing} m.",
+      "vi": {
+        "stem": "Ở tần số {frequency} Hz bước sóng là {@wavelengthFromMaxima|3} m. Trên đoạn nối hai nguồn, hai cực đại liền kề cách nhau bao xa?",
+        "explain": "λ/2 = {@wavelengthFromMaxima|3}/2 ≈ {@maximaSpacing} m."
+      },
+      "options": [
+        {
+          "text": "{@maximaSpacing} m",
+          "vi": {
+            "text": "{@maximaSpacing} m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@wavelengthFromMaxima/2",
+            "equals": "maximaSpacing"
+          }
+        },
+        {
+          "text": "{@wavelengthFromMaxima} m",
+          "vi": {
+            "text": "{@wavelengthFromMaxima} m"
+          },
+          "check": {
+            "expr": "@wavelengthFromMaxima",
+            "equals": "maximaSpacing"
+          }
+        },
+        {
+          "text": "{=2*@wavelengthFromMaxima} m",
+          "vi": {
+            "text": "{=2*@wavelengthFromMaxima} m"
+          },
+          "check": {
+            "expr": "2*@wavelengthFromMaxima",
+            "equals": "maximaSpacing"
+          }
+        },
+        {
+          "text": "{=@wavelengthFromMaxima/4} m",
+          "vi": {
+            "text": "{=@wavelengthFromMaxima/4} m"
+          },
+          "check": {
+            "expr": "@wavelengthFromMaxima/4",
+            "equals": "maximaSpacing"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-10hz",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["wavelength", "speed"],
+      "set": {
+        "frequency": 10,
+        "sourceSeparation": 0.08
+      },
+      "stem": "At {frequency} Hz, with the sources {sourceSeparation} m apart, {@maxima} maxima span L = {@maximaSpan|3} m. Decide whether each statement is true or false.",
+      "explain": "λ/2 = L/(n − 1) ≈ {@maximaSpacing} m; v = 2·(λ/2)·f ≈ {@waveSpeed} m/s. For water the speed changes a little with f (dispersion); the wavelength is set by the water and f, not by how hard the dippers move.",
+      "vi": {
+        "stem": "Ở tần số {frequency} Hz, hai nguồn cách nhau {sourceSeparation} m, {@maxima} cực đại trải dài L = {@maximaSpan|3} m. Mỗi nhận định sau đúng hay sai?",
+        "explain": "λ/2 = L/(n − 1) ≈ {@maximaSpacing} m; v = 2·(λ/2)·f ≈ {@waveSpeed} m/s. Với sóng nước, tốc độ thay đổi chút ít theo f (tán sắc); bước sóng do nước và f quyết định, không phụ thuộc mũi nhọn dao động mạnh hay yếu."
+      },
+      "statements": [
+        {
+          "text": "Neighbouring maxima are about {@maximaSpacing} m apart.",
+          "vi": {
+            "text": "Hai cực đại liền kề cách nhau khoảng {@maximaSpacing} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "@maximaSpan/(@maxima-1)",
+            "equals": "maximaSpacing"
+          }
+        },
+        {
+          "text": "The waves travel at about {@waveSpeed} m/s.",
+          "vi": {
+            "text": "Sóng truyền với tốc độ khoảng {@waveSpeed} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "2*@maximaSpacing*frequency",
+            "equals": "waveSpeed"
+          }
+        },
+        {
+          "text": "In water the waves’ speed changes a little with the frequency.",
+          "vi": {
+            "text": "Trong nước, tốc độ sóng thay đổi chút ít theo tần số."
+          },
+          "true": true
+        },
+        {
+          "text": "The wavelength is set by how far the dippers move up and down.",
+          "vi": {
+            "text": "Bước sóng do biên độ dao động của mũi nhọn quyết định."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "frequency",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["speed", "conditions"],
+      "set": {
+        "frequency": 20
+      },
+      "stem": "Water waves travel at {@waveSpeed|3} m/s, and neighbouring maxima between two in-phase dippers are {@maximaSpacing|3} m apart. At what frequency do the dippers vibrate?",
+      "explain": "The gap is λ/2, so λ = 2·{@maximaSpacing|3} m; f = v/λ = {@waveSpeed|3}/{=2*@maximaSpacing|3} ≈ {=@waveSpeed/(2*@maximaSpacing)} Hz. Taking the gap as λ halves the answer.",
+      "vi": {
+        "stem": "Sóng nước truyền với tốc độ {@waveSpeed|3} m/s, và hai cực đại liền kề giữa hai mũi nhọn cùng pha cách nhau {@maximaSpacing|3} m. Hai mũi nhọn dao động với tần số bao nhiêu?",
+        "explain": "Khoảng cách đó là λ/2, nên λ = 2·{@maximaSpacing|3} m; f = v/λ = {@waveSpeed|3}/{=2*@maximaSpacing|3} ≈ {=@waveSpeed/(2*@maximaSpacing)} Hz. Lấy khoảng cách đó làm λ sẽ được kết quả bằng một nửa."
+      },
+      "options": [
+        {
+          "text": "{=@waveSpeed/(2*@maximaSpacing)} Hz",
+          "vi": {
+            "text": "{=@waveSpeed/(2*@maximaSpacing)} Hz"
+          },
+          "correct": true
+        },
+        {
+          "text": "{=@waveSpeed/@maximaSpacing} Hz",
+          "vi": {
+            "text": "{=@waveSpeed/@maximaSpacing} Hz"
+          }
+        },
+        {
+          "text": "{=@waveSpeed*2*@maximaSpacing} Hz",
+          "vi": {
+            "text": "{=@waveSpeed*2*@maximaSpacing} Hz"
+          }
+        },
+        {
+          "text": "{=@waveSpeed/(4*@maximaSpacing)} Hz",
+          "vi": {
+            "text": "{=@waveSpeed/(4*@maximaSpacing)} Hz"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-ruler",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["wavelength", "coherent"],
+      "set": {
+        "frequency": 20,
+        "sourceSeparation": 0.06,
+        "rulerResolution": 0.001
+      },
+      "stem": "At {frequency} Hz, {@maxima} maxima span L = {@maximaSpan|4} m; the ruler reads to {rulerResolution} m. Decide whether each statement is true or false.",
+      "explain": "The ruler shows {=round(@maximaSpan/rulerResolution)*rulerResolution} m, giving λ = 2·{=round(@maximaSpan/rulerResolution)*rulerResolution}/{=@maxima-1} ≈ {=2*round(@maximaSpan/rulerResolution)*rulerResolution/(@maxima-1)} m. Measuring across many gaps shares the reading’s uncertainty among them. The model leaves out waves reflected from the tank’s sides.",
+      "vi": {
+        "stem": "Ở tần số {frequency} Hz, {@maxima} cực đại trải dài L = {@maximaSpan|4} m; thước có độ phân giải {rulerResolution} m. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Thước hiển thị {=round(@maximaSpan/rulerResolution)*rulerResolution} m, cho λ = 2·{=round(@maximaSpan/rulerResolution)*rulerResolution}/{=@maxima-1} ≈ {=2*round(@maximaSpan/rulerResolution)*rulerResolution/(@maxima-1)} m. Đo qua nhiều khoảng giúp chia nhỏ độ không đảm bảo của số đọc cho mỗi khoảng. Mô hình bỏ qua sóng phản xạ từ thành chậu."
+      },
+      "statements": [
+        {
+          "text": "The ruler shows L as {=round(@maximaSpan/rulerResolution)*rulerResolution} m.",
+          "vi": {
+            "text": "Thước hiển thị L là {=round(@maximaSpan/rulerResolution)*rulerResolution} m."
+          },
+          "true": true
+        },
+        {
+          "text": "From that reading λ ≈ {=2*round(@maximaSpan/rulerResolution)*rulerResolution/(@maxima-1)} m.",
+          "vi": {
+            "text": "Từ số đọc đó, λ ≈ {=2*round(@maximaSpan/rulerResolution)*rulerResolution/(@maxima-1)} m."
+          },
+          "true": true
+        },
+        {
+          "text": "Measuring the span over many maxima gives λ/2 more precisely than measuring one gap.",
+          "vi": {
+            "text": "Đo khoảng cách qua nhiều cực đại cho λ/2 chính xác hơn đo một khoảng."
+          },
+          "true": true
+        },
+        {
+          "text": "The model includes the waves reflected from the tank’s sides.",
+          "vi": {
+            "text": "Mô hình có tính đến sóng phản xạ từ thành chậu."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "wavelength-definition",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["speed"],
+      "stem": "The wavelength of a water wave is…",
+      "explain": "The wavelength λ is the distance between two neighbouring crests (or troughs): the distance the wave travels in one period, λ = v·T = v/f.",
+      "vi": {
+        "stem": "Bước sóng của sóng nước là…",
+        "explain": "Bước sóng λ là khoảng cách giữa hai đỉnh sóng (hoặc hai hõm sóng) liên tiếp: quãng đường sóng truyền được trong một chu kì, λ = v·T = v/f."
+      },
+      "options": [
+        {
+          "text": "the distance between two neighbouring crests",
+          "vi": {
+            "text": "khoảng cách giữa hai đỉnh sóng liên tiếp"
+          },
+          "correct": true
+        },
+        {
+          "text": "the height of a crest above the still water",
+          "vi": {
+            "text": "độ cao của đỉnh sóng so với mặt nước yên lặng"
+          }
+        },
+        {
+          "text": "the time between two crests passing a point",
+          "vi": {
+            "text": "thời gian giữa hai đỉnh sóng liên tiếp đi qua một điểm"
+          }
+        },
+        {
+          "text": "the distance between a crest and the next trough",
+          "vi": {
+            "text": "khoảng cách giữa một đỉnh sóng và hõm sóng kế tiếp"
+          }
+        }
+      ]
+    },
+    {
+      "id": "midpoint",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["conditions"],
+      "stem": "Two dippers on one bar make in-phase waves. The point midway between them, on the line joining them, is…",
+      "explain": "It is the same distance from both sources, so the path difference is 0 = 0·λ: the two waves arrive in phase and the point is a maximum (the central one).",
+      "vi": {
+        "stem": "Hai mũi nhọn gắn trên cùng một thanh tạo ra hai sóng cùng pha. Điểm chính giữa hai nguồn, trên đường nối chúng, là…",
+        "explain": "Điểm đó cách đều hai nguồn nên hiệu đường đi bằng 0 = 0·λ: hai sóng tới cùng pha và điểm đó là một cực đại (cực đại trung tâm)."
+      },
+      "options": [
+        {
+          "text": "a maximum",
+          "vi": {
+            "text": "một cực đại"
+          },
+          "correct": true
+        },
+        {
+          "text": "a minimum",
+          "vi": {
+            "text": "một cực tiểu"
+          }
+        },
+        {
+          "text": "neither: its water does not move",
+          "vi": {
+            "text": "không phải cả hai: nước ở đó không dao động"
+          }
+        },
+        {
+          "text": "a maximum or a minimum, depending on the frequency",
+          "vi": {
+            "text": "cực đại hay cực tiểu tùy vào tần số"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-conditions",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["conditions", "coherent", "speed"],
+      "stem": "Two point sources make circular water waves that overlap. Decide whether each statement is true or false.",
+      "explain": "For in-phase sources, maxima lie where d₂ − d₁ = kλ and minima where d₂ − d₁ = (k + ½)λ. A steady pattern needs coherent sources: the same frequency and a constant phase difference. The speed of water waves depends on the depth, so shallower water changes the wavelength at the same frequency.",
+      "vi": {
+        "stem": "Hai nguồn điểm tạo ra hai hệ sóng tròn trên mặt nước chồng lên nhau. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Với hai nguồn cùng pha, cực đại nằm ở những điểm có d₂ − d₁ = kλ và cực tiểu ở những điểm có d₂ − d₁ = (k + ½)λ. Muốn có hình ảnh giao thoa ổn định, hai nguồn phải kết hợp: cùng tần số và có hiệu số pha không đổi. Tốc độ sóng nước phụ thuộc độ sâu, nên nước nông hơn làm bước sóng thay đổi ở cùng tần số."
+      },
+      "statements": [
+        {
+          "text": "For in-phase sources, maxima lie where the path difference is a whole number of wavelengths.",
+          "vi": {
+            "text": "Với hai nguồn cùng pha, cực đại nằm ở những điểm có hiệu đường đi bằng một số nguyên lần bước sóng."
+          },
+          "true": true
+        },
+        {
+          "text": "Minima lie where the path difference is (k + ½)λ.",
+          "vi": {
+            "text": "Cực tiểu nằm ở những điểm có hiệu đường đi bằng (k + ½)λ."
+          },
+          "true": true
+        },
+        {
+          "text": "Two sources of different frequencies give a steady interference pattern.",
+          "vi": {
+            "text": "Hai nguồn có tần số khác nhau cho hình ảnh giao thoa ổn định."
+          },
+          "true": false
+        },
+        {
+          "text": "In shallower water the waves of the same frequency have a different wavelength.",
+          "vi": {
+            "text": "Ở chỗ nước nông hơn, sóng cùng tần số có bước sóng khác."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "spacing-from-span",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["wavelength"],
+      "set": {
+        "frequency": 15,
+        "sourceSeparation": 0.08
+      },
+      "stem": "Along the line between the sources there are {@maxima} maxima, and the ruler reads L = {@maximaSpan|3} m from the first to the last. How far apart are neighbouring maxima?",
+      "explain": "{@maxima} maxima have {=@maxima-1} gaps between them, so the spacing is L/(n − 1) = {@maximaSpan|3}/{=@maxima-1} ≈ {@maximaSpacing|3} m (λ/2). Dividing by n counts one gap too many; 2L/(n − 1) is the wavelength.",
+      "vi": {
+        "stem": "Trên đoạn thẳng nối hai nguồn có {@maxima} cực đại, thước đo được khoảng cách từ cực đại đầu đến cực đại cuối là L = {@maximaSpan|3} m. Hai cực đại liên tiếp cách nhau bao xa?",
+        "explain": "{@maxima} cực đại có {=@maxima-1} khoảng ở giữa, nên khoảng cách là L/(n − 1) = {@maximaSpan|3}/{=@maxima-1} ≈ {@maximaSpacing|3} m (bằng λ/2). Chia cho n là đếm thừa một khoảng; 2L/(n − 1) là bước sóng."
+      },
+      "options": [
+        {
+          "text": "{=@maximaSpan/(@maxima-1)|3} m",
+          "vi": {
+            "text": "{=@maximaSpan/(@maxima-1)|3} m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@maximaSpan/(@maxima-1)",
+            "equals": "maximaSpacing"
+          }
+        },
+        {
+          "text": "{=@maximaSpan/@maxima|3} m",
+          "vi": {
+            "text": "{=@maximaSpan/@maxima|3} m"
+          },
+          "check": {
+            "expr": "@maximaSpan/@maxima",
+            "equals": "maximaSpacing"
+          }
+        },
+        {
+          "text": "{=2*@maximaSpan/(@maxima-1)|3} m",
+          "vi": {
+            "text": "{=2*@maximaSpan/(@maxima-1)|3} m"
+          },
+          "check": {
+            "expr": "2*@maximaSpan/(@maxima-1)",
+            "equals": "maximaSpacing"
+          }
+        },
+        {
+          "text": "{=@maximaSpan/(@maxima+1)|3} m",
+          "vi": {
+            "text": "{=@maximaSpan/(@maxima+1)|3} m"
+          },
+          "check": {
+            "expr": "@maximaSpan/(@maxima+1)",
+            "equals": "maximaSpacing"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-25hz",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["wavelength", "speed"],
+      "set": {
+        "frequency": 25,
+        "sourceSeparation": 0.06
+      },
+      "stem": "At {frequency} Hz the water waves have λ = {@wavelengthFromMaxima|3} m. Decide whether each statement is true or false.",
+      "explain": "Neighbouring maxima on the line between the sources are λ/2 ≈ {@maximaSpacing|3} m apart, not λ. The waves travel at v = λ·f ≈ {@waveSpeed|3} m/s, and one period lasts 1/f = {=1/frequency} s.",
+      "vi": {
+        "stem": "Ở tần số {frequency} Hz, sóng nước có λ = {@wavelengthFromMaxima|3} m. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Hai cực đại liên tiếp trên đoạn nối hai nguồn cách nhau λ/2 ≈ {@maximaSpacing|3} m, không phải λ. Sóng truyền với tốc độ v = λ·f ≈ {@waveSpeed|3} m/s, và một chu kì kéo dài 1/f = {=1/frequency} s."
+      },
+      "statements": [
+        {
+          "text": "Neighbouring maxima are about {@maximaSpacing|3} m apart.",
+          "vi": {
+            "text": "Hai cực đại liên tiếp cách nhau khoảng {@maximaSpacing|3} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "@wavelengthFromMaxima/2",
+            "equals": "maximaSpacing"
+          }
+        },
+        {
+          "text": "The waves travel at about {@waveSpeed|3} m/s.",
+          "vi": {
+            "text": "Sóng truyền với tốc độ khoảng {@waveSpeed|3} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "@wavelengthFromMaxima*frequency",
+            "equals": "waveSpeed"
+          }
+        },
+        {
+          "text": "Neighbouring maxima are a whole wavelength, {@wavelengthFromMaxima|3} m, apart.",
+          "vi": {
+            "text": "Hai cực đại liên tiếp cách nhau đúng một bước sóng, {@wavelengthFromMaxima|3} m."
+          },
+          "true": false,
+          "check": {
+            "expr": "@wavelengthFromMaxima",
+            "equals": "maximaSpacing"
+          }
+        },
+        {
+          "text": "One period of the waves lasts {=1/frequency} s.",
+          "vi": {
+            "text": "Một chu kì của sóng kéo dài {=1/frequency} s."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "count-maxima",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["conditions", "wavelength"],
+      "set": {
+        "frequency": 20,
+        "sourceSeparation": 0.08
+      },
+      "stem": "Two in-phase dippers are {sourceSeparation} m apart and the waves have λ = {@wavelengthFromMaxima|3} m. How many maxima lie on the line between them (not counting the sources)?",
+      "explain": "A maximum needs |d₂ − d₁| = kλ with |kλ| < {sourceSeparation} m, so k runs from −{=round(sourceSeparation/@wavelengthFromMaxima-0.5)} to {=round(sourceSeparation/@wavelengthFromMaxima-0.5)}: {@maxima} maxima, the central one included. Forgetting k = 0, or the maxima on one side, gives the other values.",
+      "vi": {
+        "stem": "Hai mũi nhọn dao động cùng pha cách nhau {sourceSeparation} m và sóng có λ = {@wavelengthFromMaxima|3} m. Trên đoạn thẳng nối hai nguồn (không kể hai nguồn) có bao nhiêu cực đại?",
+        "explain": "Cực đại cần |d₂ − d₁| = kλ với |kλ| < {sourceSeparation} m, nên k chạy từ −{=round(sourceSeparation/@wavelengthFromMaxima-0.5)} đến {=round(sourceSeparation/@wavelengthFromMaxima-0.5)}: có {@maxima} cực đại, kể cả cực đại trung tâm. Quên k = 0, hoặc chỉ đếm một phía, sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{@maxima}",
+          "vi": {
+            "text": "{@maxima}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2*round(sourceSeparation/@wavelengthFromMaxima-0.5)+1",
+            "equals": "maxima"
+          }
+        },
+        {
+          "text": "{=@maxima-1}",
+          "vi": {
+            "text": "{=@maxima-1}"
+          },
+          "check": {
+            "expr": "@maxima-1",
+            "equals": "maxima"
+          }
+        },
+        {
+          "text": "{=(@maxima-1)/2}",
+          "vi": {
+            "text": "{=(@maxima-1)/2}"
+          },
+          "check": {
+            "expr": "(@maxima-1)/2",
+            "equals": "maxima"
+          }
+        },
+        {
+          "text": "{=@maxima+2}",
+          "vi": {
+            "text": "{=@maxima+2}"
+          },
+          "check": {
+            "expr": "@maxima+2",
+            "equals": "maxima"
+          }
+        }
+      ]
+    },
+    {
+      "id": "frequency-from-span",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["wavelength", "speed"],
+      "set": {
+        "frequency": 10,
+        "sourceSeparation": 0.06
+      },
+      "stem": "Water waves travel at {@waveSpeed|3} m/s. Between two in-phase dippers, {@maxima} maxima span L = {@maximaSpan|3} m. At what frequency does the vibrator run?",
+      "explain": "Neighbouring maxima are λ/2 apart: λ = 2L/(n − 1) = {@wavelengthFromMaxima|3} m, and f = v/λ = v(n − 1)/(2L) ≈ {=@waveSpeed*(@maxima-1)/(2*@maximaSpan)|3} Hz. Taking L/(n − 1) as λ doubles f; dividing by n instead of n − 1, or by the whole span, gives the others.",
+      "vi": {
+        "stem": "Sóng nước truyền với tốc độ {@waveSpeed|3} m/s. Giữa hai mũi nhọn cùng pha, {@maxima} cực đại trải trên đoạn L = {@maximaSpan|3} m. Cần rung dao động với tần số bao nhiêu?",
+        "explain": "Hai cực đại liên tiếp cách nhau λ/2: λ = 2L/(n − 1) = {@wavelengthFromMaxima|3} m, và f = v/λ = v(n − 1)/(2L) ≈ {=@waveSpeed*(@maxima-1)/(2*@maximaSpan)|3} Hz. Coi L/(n − 1) là λ sẽ làm f gấp đôi; chia cho n thay cho n − 1, hoặc chia cho cả đoạn L, sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{=@waveSpeed*(@maxima-1)/(2*@maximaSpan)|3} Hz",
+          "vi": {
+            "text": "{=@waveSpeed*(@maxima-1)/(2*@maximaSpan)|3} Hz"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@waveSpeed/(@waveSpeed*(@maxima-1)/(2*@maximaSpan))",
+            "equals": "wavelengthFromMaxima"
+          }
+        },
+        {
+          "text": "{=@waveSpeed*(@maxima-1)/@maximaSpan|3} Hz",
+          "vi": {
+            "text": "{=@waveSpeed*(@maxima-1)/@maximaSpan|3} Hz"
+          },
+          "check": {
+            "expr": "@waveSpeed/(@waveSpeed*(@maxima-1)/@maximaSpan)",
+            "equals": "wavelengthFromMaxima"
+          }
+        },
+        {
+          "text": "{=@waveSpeed*@maxima/(2*@maximaSpan)|3} Hz",
+          "vi": {
+            "text": "{=@waveSpeed*@maxima/(2*@maximaSpan)|3} Hz"
+          },
+          "check": {
+            "expr": "@waveSpeed/(@waveSpeed*@maxima/(2*@maximaSpan))",
+            "equals": "wavelengthFromMaxima"
+          }
+        },
+        {
+          "text": "{=@waveSpeed/@maximaSpan|3} Hz",
+          "vi": {
+            "text": "{=@waveSpeed/@maximaSpan|3} Hz"
+          },
+          "check": {
+            "expr": "@waveSpeed/(@waveSpeed/@maximaSpan)",
+            "equals": "wavelengthFromMaxima"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-10hz-4cm",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["conditions", "speed", "wavelength"],
+      "set": {
+        "frequency": 10,
+        "sourceSeparation": 0.04
+      },
+      "stem": "At {frequency} Hz, with the dippers {sourceSeparation} m apart, the waves have λ = {@wavelengthFromMaxima|3} m. Decide whether each statement is true or false.",
+      "explain": "|kλ| < {sourceSeparation} m allows k = −1, 0, 1: {@maxima} maxima. At 25 Hz the wavelength is shorter, so more maxima fit between the sources. v = λ·f ≈ {@waveSpeed|3} m/s; λ/f has the wrong unit and value.",
+      "vi": {
+        "stem": "Ở tần số {frequency} Hz, hai mũi nhọn cách nhau {sourceSeparation} m, sóng có λ = {@wavelengthFromMaxima|3} m. Mỗi nhận định sau đúng hay sai?",
+        "explain": "|kλ| < {sourceSeparation} m cho phép k = −1, 0, 1: có {@maxima} cực đại. Ở 25 Hz bước sóng ngắn hơn nên có nhiều cực đại hơn nằm giữa hai nguồn. v = λ·f ≈ {@waveSpeed|3} m/s; λ/f sai cả đơn vị lẫn giá trị."
+      },
+      "statements": [
+        {
+          "text": "There are {@maxima} maxima between the sources.",
+          "vi": {
+            "text": "Giữa hai nguồn có {@maxima} cực đại."
+          },
+          "true": true,
+          "check": {
+            "expr": "2*round(sourceSeparation/@wavelengthFromMaxima-0.5)+1",
+            "equals": "maxima"
+          }
+        },
+        {
+          "text": "At 25 Hz more maxima would lie between the sources.",
+          "vi": {
+            "text": "Ở 25 Hz sẽ có nhiều cực đại hơn nằm giữa hai nguồn."
+          },
+          "true": true
+        },
+        {
+          "text": "The waves travel at about {@waveSpeed|3} m/s.",
+          "vi": {
+            "text": "Sóng truyền với tốc độ khoảng {@waveSpeed|3} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "@wavelengthFromMaxima*frequency",
+            "equals": "waveSpeed"
+          }
+        },
+        {
+          "text": "The waves travel at λ/f ≈ {=@wavelengthFromMaxima/frequency|3} m/s.",
+          "vi": {
+            "text": "Sóng truyền với tốc độ λ/f ≈ {=@wavelengthFromMaxima/frequency|3} m/s."
+          },
+          "true": false,
+          "check": {
+            "expr": "@wavelengthFromMaxima/frequency",
+            "equals": "waveSpeed"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,487 @@
+{
+  "id": "measuring-speed",
+  "name": "Measuring speed with photogates",
+  "category": "physics",
+  "description": "A steel ball 2 cm across is held by an electromagnet at the top of a rail tilted at an angle α. RUN releases it: it rolls down through two photogates, A 0.30 m down the rail and B at the distance set at the desk. The digital timer gives how long each beam was blocked, Δt_A and Δt_B, and the time t_AB from A to B. The speed at a gate is v = d/Δt, with d the ball's diameter; the average speed between the gates is AB/t_AB. The ball speeds up as it rolls: v_B is larger than v_A, and v² grows in proportion to the distance rolled.",
+  "vi": {
+    "name": "Đo tốc độ bằng cổng quang điện",
+    "description": "Một viên bi thép đường kính 2 cm được nam châm điện giữ ở đầu trên của một máng nghiêng góc α. Nhấn CHẠY để thả bi: bi lăn xuống, đi qua hai cổng quang điện, cổng A cách điểm thả 0,30 m dọc theo máng và cổng B ở khoảng cách đặt tại bàn. Đồng hồ đo thời gian hiện số cho biết thời gian mỗi chùm tia bị chắn, Δt_A và Δt_B, và thời gian t_AB bi đi từ A đến B. Tốc độ của bi tại một cổng là v = d/Δt, với d là đường kính viên bi; tốc độ trung bình giữa hai cổng là AB/t_AB. Bi lăn ngày càng nhanh: v_B lớn hơn v_A, và v² tăng tỉ lệ thuận với quãng đường bi đã lăn.",
+    "note": "Đồng hồ hiện số đo thời gian chùm tia hồng ngoại của cổng quang điện bị viên bi chắn: chùm tia đi qua đường kính của viên bi, nên nó bị chắn trong khi tâm viên bi còn cách cổng không quá d/2. Tốc độ v = d/Δt là tốc độ trung bình khi bi đi qua quãng đường bằng chính đường kính của nó; vì d nhỏ, sách giáo khoa coi đó là tốc độ tức thời của bi tại cổng (ở đây chênh dưới 0,1 % so với tốc độ của tâm bi khi đi qua chùm tia). Tốc độ trung bình giữa hai cổng là quãng đường AB chia cho thời gian t_AB. Đây là mô hình dạy học đơn giản hóa: viên bi đặc lăn không trượt trên máng, nên gia tốc của nó là a = (5/7)·g·sin α, nhỏ hơn g·sin α của một vật trượt không ma sát vì một phần thế năng chuyển thành động năng quay; không có lực cản lăn, không có lực cản không khí, và bi được thả không vận tốc đầu đúng ở điểm 0 của máng. Từ s = ½·a·t², tốc độ khi tâm bi đi được quãng đường x là v = √(2·a·x): chạy với nhiều khoảng cách của cổng B, đồ thị (d/Δt_B)² theo khoảng cách đó là một đường thẳng có hệ số góc 2a. Đồng hồ đọc thời gian mô phỏng theo độ phân giải d_t của nó (bội số gần nhất của d_t, độ bất định d_t/√12 chỉ do độ phân giải); không có sai số ngẫu nhiên nào được thêm vào, và các tốc độ được tính từ các thời gian mô phỏng, không phải từ số đọc. Trong phòng thí nghiệm thật, bi lăn trên hai mép của máng nên gia tốc nhỏ hơn một chút, có lực cản lăn, chùm tia có bề rộng riêng và cổng có thể không đặt đúng ngang tâm bi, nên các thời gian đo được lệch đôi chút so với các giá trị này."
+  },
+  "requiredEquipment": ["photogate-rail"],
+  "model": "kinematics.photogate-speed",
+  "parameters": [
+    {
+      "id": "angle",
+      "label": "Rail angle",
+      "vi": { "label": "Góc nghiêng của máng" },
+      "symbol": "α",
+      "unit": "°",
+      "default": 10,
+      "min": 5,
+      "max": 15,
+      "presets": [
+        { "label": "5°", "vi": { "label": "5°" }, "value": 5 },
+        { "label": "10°", "vi": { "label": "10°" }, "value": 10 },
+        { "label": "15°", "vi": { "label": "15°" }, "value": 15 }
+      ]
+    },
+    {
+      "id": "gateB",
+      "label": "Gate B down the rail",
+      "vi": { "label": "Vị trí cổng B trên máng" },
+      "symbol": "x_B",
+      "unit": "m",
+      "default": 0.8,
+      "min": 0.5,
+      "max": 0.9,
+      "presets": [
+        { "label": "0.5 m", "vi": { "label": "0,5 m" }, "value": 0.5 },
+        { "label": "0.6 m", "vi": { "label": "0,6 m" }, "value": 0.6 },
+        { "label": "0.7 m", "vi": { "label": "0,7 m" }, "value": 0.7 },
+        { "label": "0.8 m", "vi": { "label": "0,8 m" }, "value": 0.8 },
+        { "label": "0.9 m", "vi": { "label": "0,9 m" }, "value": 0.9 }
+      ]
+    },
+    {
+      "id": "timerResolution",
+      "label": "Timer resolution",
+      "vi": { "label": "Độ phân giải của đồng hồ" },
+      "symbol": "d_t",
+      "unit": "s",
+      "default": 0.001,
+      "min": 0.0001,
+      "max": 0.01,
+      "presets": [
+        { "label": "0.0001 s", "vi": { "label": "0,0001 s" }, "value": 0.0001 },
+        { "label": "0.001 s", "vi": { "label": "0,001 s" }, "value": 0.001 },
+        { "label": "0.01 s", "vi": { "label": "0,01 s" }, "value": 0.01 }
+      ]
+    }
+  ],
+  "initialConditions": { "gravity": 9.81, "ballDiameter": 0.02, "gateA": 0.3, "railLength": 1 },
+  "inputs": {
+    "gravity": { "symbol": "g", "unit": "m/s²", "desk": false },
+    "ballDiameter": { "symbol": "d", "unit": "m" },
+    "gateA": { "symbol": "x_A", "unit": "m" },
+    "railLength": { "symbol": "L", "unit": "m", "desk": false }
+  },
+  "simulation": { "timeStep": 0.0005, "maxDuration": 5, "sampleInterval": 0.01 },
+  "measurements": [
+    {
+      "id": "distance",
+      "label": "Distance down the rail",
+      "vi": { "label": "Quãng đường trên máng" },
+      "symbol": "s",
+      "unit": "m",
+      "variable": "distance"
+    },
+    {
+      "id": "speed",
+      "label": "Speed of the ball",
+      "vi": { "label": "Tốc độ của viên bi" },
+      "symbol": "v",
+      "unit": "m/s",
+      "variable": "speed"
+    },
+    {
+      "id": "labTime",
+      "label": "Time",
+      "vi": { "label": "Thời gian" },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "clock"
+    }
+  ],
+  "results": [
+    {
+      "id": "blockedA",
+      "label": "Time gate A was blocked Δt_A",
+      "vi": { "label": "Thời gian chắn cổng A, Δt_A" },
+      "symbol": "Δt_A",
+      "unit": "s",
+      "variable": "blockedA",
+      "reduce": "final",
+      "theory": "blockedA"
+    },
+    {
+      "id": "blockedB",
+      "label": "Time gate B was blocked Δt_B",
+      "vi": { "label": "Thời gian chắn cổng B, Δt_B" },
+      "symbol": "Δt_B",
+      "unit": "s",
+      "variable": "blockedB",
+      "reduce": "final",
+      "theory": "blockedB"
+    },
+    {
+      "id": "timeAB",
+      "label": "Time from A to B t_AB",
+      "vi": { "label": "Thời gian đi từ A đến B, t_AB" },
+      "symbol": "t_AB",
+      "unit": "s",
+      "variable": "timeAB",
+      "reduce": "final",
+      "theory": "timeAB"
+    },
+    {
+      "id": "speedA",
+      "label": "Speed at gate A, v_A = d/Δt_A",
+      "vi": { "label": "Tốc độ tại cổng A, v_A = d/Δt_A" },
+      "symbol": "v_A",
+      "unit": "m/s",
+      "variable": "speedA",
+      "reduce": "final",
+      "theory": "speedA"
+    },
+    {
+      "id": "speedB",
+      "label": "Speed at gate B, v_B = d/Δt_B",
+      "vi": { "label": "Tốc độ tại cổng B, v_B = d/Δt_B" },
+      "symbol": "v_B",
+      "unit": "m/s",
+      "variable": "speedB",
+      "reduce": "final",
+      "theory": "speedB"
+    },
+    {
+      "id": "averageSpeed",
+      "label": "Average speed from A to B, AB/t_AB",
+      "vi": { "label": "Tốc độ trung bình từ A đến B, AB/t_AB" },
+      "symbol": "v_AB",
+      "unit": "m/s",
+      "variable": "averageSpeed",
+      "reduce": "final",
+      "theory": "averageSpeed"
+    },
+    {
+      "id": "speedBSquared",
+      "label": "Square of the speed at gate B, v_B²",
+      "vi": { "label": "Bình phương tốc độ tại cổng B, v_B²" },
+      "symbol": "v_B²",
+      "unit": "m²/s²",
+      "variable": "speedBSquared",
+      "reduce": "final",
+      "theory": "speedBSquared"
+    },
+    {
+      "id": "acceleration",
+      "label": "Acceleration of the ball (model)",
+      "vi": { "label": "Gia tốc của viên bi (mô hình)" },
+      "symbol": "a",
+      "unit": "m/s²",
+      "variable": "acceleration",
+      "reduce": "final",
+      "theory": "acceleration"
+    }
+  ],
+  "instruments": [
+    {
+      "result": "blockedA",
+      "quantity": "Time Δt_A gate A was blocked",
+      "name": "Digital timer",
+      "resolution": "timerResolution",
+      "excludes": "the timer's own accuracy, the beam's width and how far it passes from the ball's centre, the ball's diameter as measured, and the ball rolling on the rail's two edges, which change the time itself",
+      "vi": {
+        "quantity": "Thời gian Δt_A chùm tia cổng A bị chắn",
+        "name": "Đồng hồ đo thời gian hiện số",
+        "excludes": "độ chính xác riêng của đồng hồ, bề rộng của chùm tia và độ lệch của nó so với tâm viên bi, sai số khi đo đường kính viên bi, và việc bi lăn trên hai mép máng, những yếu tố làm thay đổi chính thời gian đo"
+      }
+    },
+    {
+      "result": "blockedB",
+      "quantity": "Time Δt_B gate B was blocked",
+      "name": "Digital timer",
+      "resolution": "timerResolution",
+      "excludes": "the timer's own accuracy, the beam's width and how far it passes from the ball's centre, the ball's diameter as measured, and the ball rolling on the rail's two edges, which change the time itself",
+      "vi": {
+        "quantity": "Thời gian Δt_B chùm tia cổng B bị chắn",
+        "name": "Đồng hồ đo thời gian hiện số",
+        "excludes": "độ chính xác riêng của đồng hồ, bề rộng của chùm tia và độ lệch của nó so với tâm viên bi, sai số khi đo đường kính viên bi, và việc bi lăn trên hai mép máng, những yếu tố làm thay đổi chính thời gian đo"
+      }
+    },
+    {
+      "result": "timeAB",
+      "quantity": "Time t_AB from gate A to gate B",
+      "name": "Digital timer",
+      "resolution": "timerResolution",
+      "excludes": "the timer's own accuracy, where each gate stands on the rail as measured, and rolling resistance, which changes the time itself",
+      "vi": {
+        "quantity": "Thời gian t_AB từ cổng A đến cổng B",
+        "name": "Đồng hồ đo thời gian hiện số",
+        "excludes": "độ chính xác riêng của đồng hồ, sai số khi đo vị trí mỗi cổng trên máng, và lực cản lăn, yếu tố làm thay đổi chính thời gian đo"
+      }
+    }
+  ],
+  "graphs": [
+    {
+      "id": "distance-time",
+      "title": "Distance down the rail against time",
+      "vi": { "title": "Quãng đường trên máng theo thời gian" },
+      "x": "labTime",
+      "y": ["distance"],
+      "yLabel": "s"
+    },
+    {
+      "id": "speed-time",
+      "title": "Speed against time",
+      "vi": { "title": "Tốc độ theo thời gian" },
+      "x": "labTime",
+      "y": ["speed"],
+      "yLabel": "v"
+    }
+  ],
+  "monitor": "speed-time",
+  "compare": [{ "graph": "speed-time" }],
+  "analyses": [
+    {
+      "id": "speed-squared-distance",
+      "title": "v_B² against the distance to gate B (v² = 2·a·x)",
+      "note": "Each run is one point: the square of the speed at gate B, (d/Δt_B)², against how far down the rail gate B stands. Runs at the same rail angle are fitted together. The ball starts from rest with a constant acceleration a, so v² = 2·a·x: a straight line through the origin of slope 2a. Change only gate B's distance between runs; half the slope is the ball's acceleration, (5/7)·g·sin α for a ball rolling without slipping.",
+      "vi": {
+        "title": "v_B² theo khoảng cách đến cổng B (v² = 2·a·x)",
+        "note": "Mỗi lần chạy là một điểm: bình phương tốc độ tại cổng B, (d/Δt_B)², theo vị trí của cổng B trên máng. Các lần chạy cùng góc nghiêng được khớp chung. Bi bắt đầu từ trạng thái nghỉ và có gia tốc không đổi a, nên v² = 2·a·x: một đường thẳng đi qua gốc tọa độ có hệ số góc 2a. Giữa các lần chạy chỉ thay đổi vị trí cổng B; một nửa hệ số góc là gia tốc của bi, (5/7)·g·sin α với bi lăn không trượt."
+      },
+      "x": "gateB",
+      "y": "speedBSquared",
+      "group": ["angle"],
+      "columns": ["angle", "gateB", "blockedB", "speedB", "speedBSquared"],
+      "slope": {
+        "label": "Slope of v_B² against x_B",
+        "vi": { "label": "Hệ số góc của v_B² theo x_B" },
+        "symbol": "2a",
+        "unit": "m/s²",
+        "theory": "twiceAcceleration"
+      }
+    }
+  ],
+  "note": "The digital timer counts how long a photogate's infrared beam is blocked by the ball: the beam crosses the ball's diameter, so it is blocked while the ball's centre is within d/2 of the gate. The speed v = d/Δt is the ball's average speed over its own diameter; d is small, so the textbook takes it as the ball's instantaneous speed at the gate (here within 0.1 % of the centre's speed as it crosses the beam). The average speed between the gates is the distance AB over the time t_AB. A simplified teaching model: a solid ball rolling without slipping, so its acceleration is a = (5/7)·g·sin α, less than the g·sin α of a frictionless slider because part of its energy goes into turning; no rolling resistance, no air, and the ball released at rest exactly at the rail's zero. From s = ½·a·t², the speed after the centre has rolled x is v = √(2·a·x): run with gate B at several distances, and (d/Δt_B)² against that distance is a straight line of slope 2a. The timer reads the simulated times to its resolution d_t (the nearest multiple of d_t, with the uncertainty d_t/√12 from the resolution alone); no random error is added, and the speeds are worked out from the simulated times, not from the readings. In a real lab the ball rolls on the rail's two edges, so it speeds up a little more slowly, rolling resistance slows it, the beam has a width of its own and may not cross the ball's centre, so the measured times differ a little from these.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the measuring speed instructions on the board.",
+      "vi": { "instruction": "Đọc hướng dẫn thí nghiệm đo tốc độ trên bảng." },
+      "done": { "kind": "inspected", "item": "measuring-speed-instructions" }
+    },
+    {
+      "id": "angle",
+      "instruction": "Set the rail's angle α with its dial on the control desk.",
+      "vi": { "instruction": "Đặt góc nghiêng α của máng bằng núm xoay trên bàn điều khiển." },
+      "done": { "kind": "adjusted", "parameter": "angle" }
+    },
+    {
+      "id": "gate",
+      "instruction": "Set how far down the rail gate B stands.",
+      "vi": { "instruction": "Đặt vị trí của cổng B trên máng." },
+      "done": { "kind": "adjusted", "parameter": "gateB" }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the magnet lets the ball go; watch the timer's lamps as it passes the gates.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: nam châm thả viên bi; quan sát đèn của đồng hồ khi bi đi qua các cổng."
+      },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read Δt_A, Δt_B and t_AB on the results monitor, and the speeds v_A = d/Δt_A, v_B = d/Δt_B and AB/t_AB: which is largest?",
+      "vi": {
+        "instruction": "Đọc Δt_A, Δt_B và t_AB trên màn hình kết quả, cùng các tốc độ v_A = d/Δt_A, v_B = d/Δt_B và AB/t_AB: tốc độ nào lớn nhất?"
+      },
+      "done": { "kind": "viewed" }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, move gate B and run again to add a point to the v² analysis.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, dời cổng B rồi chạy lại để thêm một điểm vào đồ thị phân tích v²."
+      },
+      "done": { "kind": "reset" }
+    }
+  ],
+  "examples": [
+    {
+      "id": "speed-at-gate",
+      "question": "A ball of diameter {ballDiameter} m rolls from rest down a rail at {angle}°. Gate B, {gateB} m along, is blocked for Δt_B = {@blockedB|4} s. Find the ball’s speed there and the acceleration the theory gives (g = {gravity} m/s²).",
+      "vi": {
+        "question": "Một viên bi đường kính {ballDiameter} m lăn không vận tốc đầu xuống máng nghiêng {angle}°. Cổng quang B, cách điểm thả {gateB} m, bị che trong Δt_B = {@blockedB|4} s. Tìm tốc độ của bi tại đó và gia tốc theo lí thuyết (g = {gravity} m/s²)."
+      },
+      "set": { "angle": 15, "gateB": 0.6 },
+      "find": [{ "theory": "speedB" }, { "theory": "acceleration" }],
+      "steps": [
+        {
+          "say": "The beam is blocked while the ball moves its own diameter: d/Δt is its mean speed over that short distance, taken as its speed at the gate.",
+          "vi": {
+            "say": "Chùm tia bị che trong lúc bi đi được một đoạn bằng đường kính của nó: d/Δt là tốc độ trung bình trên đoạn rất ngắn đó, được coi là tốc độ tức thời tại cổng."
+          },
+          "write": "v_B = d/Δt_B = {ballDiameter}/{@blockedB|4} ≈ {@speedB} m/s",
+          "check": { "expr": "ballDiameter/@blockedB", "equals": "speedB" }
+        },
+        {
+          "say": "A solid ball rolling without slipping speeds up at (5/7)·g·sin α — less than g·sin α, because part of its energy goes into turning.",
+          "vi": {
+            "say": "Viên bi đặc lăn không trượt có gia tốc (5/7)·g·sin α — nhỏ hơn g·sin α, vì một phần năng lượng dùng để làm bi quay."
+          },
+          "write": "a = (5/7)·{gravity}·sin {angle}° ≈ {@acceleration} m/s²",
+          "check": { "expr": "5/7*gravity*sin(rad(angle))", "equals": "acceleration" }
+        },
+        {
+          "say": "Check: from rest, v² = 2·a·x gives nearly the same speed at x_B.",
+          "vi": { "say": "Kiểm tra: từ nghỉ, v² = 2·a·x cho tốc độ tại x_B gần như bằng thế." },
+          "write": "v = √(2·a·x_B) = √(2·{@acceleration}·{gateB}) ≈ {@centreSpeedB} m/s",
+          "check": { "expr": "sqrt(2*@acceleration*gateB)", "equals": "centreSpeedB" }
+        }
+      ]
+    },
+    {
+      "id": "average-speed",
+      "question": "Gate A is {gateA} m and gate B {gateB} m along the rail at {angle}°. The timer reads Δt_A = {@blockedA|4} s at gate A and t_AB = {@timeAB|4} s from A to B. Find the speed at A and the average speed between the gates.",
+      "vi": {
+        "question": "Cổng A cách điểm thả {gateA} m, cổng B cách {gateB} m trên máng nghiêng {angle}°. Đồng hồ đo được Δt_A = {@blockedA|4} s tại cổng A và t_AB = {@timeAB|4} s từ A đến B. Tìm tốc độ tại A và tốc độ trung bình giữa hai cổng."
+      },
+      "set": { "angle": 5, "gateB": 0.9 },
+      "find": [{ "theory": "speedA" }, { "theory": "averageSpeed" }],
+      "steps": [
+        {
+          "say": "At gate A, the diameter over the time the beam is blocked.",
+          "vi": { "say": "Tại cổng A, lấy đường kính chia cho thời gian chùm tia bị che." },
+          "write": "v_A = d/Δt_A = {ballDiameter}/{@blockedA|4} ≈ {@speedA|4} m/s",
+          "check": { "expr": "ballDiameter/@blockedA", "equals": "speedA" }
+        },
+        {
+          "say": "The average speed between the gates is the distance AB over the time between them.",
+          "vi": {
+            "say": "Tốc độ trung bình giữa hai cổng bằng quãng đường AB chia cho thời gian đi giữa hai cổng."
+          },
+          "write": "v_AB = (x_B − x_A)/t_AB = {=gateB-gateA}/{@timeAB|4} ≈ {@averageSpeed} m/s",
+          "check": { "expr": "(gateB-gateA)/@timeAB", "equals": "averageSpeed" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "A ball rolls down a tilted rail through two photogates; the time it blocks each beam gives its speed there, and it is faster at the lower gate because it speeds up as it rolls.",
+    "vi": {
+      "summary": "Một viên bi lăn xuống máng nghiêng qua hai cổng quang điện; thời gian nó che mỗi chùm sáng cho biết tốc độ của nó tại đó, và nó nhanh hơn ở cổng phía dưới vì nó nhanh dần khi lăn."
+    },
+    "parts": [
+      {
+        "id": "rail",
+        "name": "Tilted rail",
+        "role": "An aluminium channel tilted at the angle α set at the desk.",
+        "vi": {
+          "name": "Máng nghiêng",
+          "role": "Máng nhôm nghiêng góc α đặt ở bàn điều khiển."
+        },
+        "anchor": {
+          "part": "rail"
+        }
+      },
+      {
+        "id": "magnet",
+        "name": "Electromagnet",
+        "role": "Holds the steel ball at the top of the rail and lets it go, at rest, when RUN is pressed.",
+        "vi": {
+          "name": "Nam châm điện",
+          "role": "Giữ viên bi thép ở đầu máng và thả nó, không vận tốc đầu, khi nhấn CHẠY."
+        },
+        "anchor": {
+          "part": "magnet"
+        }
+      },
+      {
+        "id": "ball",
+        "name": "Steel ball, d = 2 cm",
+        "role": "Rolls down the rail; its diameter d is the length each beam is blocked over.",
+        "vi": {
+          "name": "Viên bi thép, d = 2 cm",
+          "role": "Lăn xuống máng; đường kính d của nó là quãng đường mà mỗi chùm sáng bị che."
+        },
+        "anchor": {
+          "part": "ball"
+        }
+      },
+      {
+        "id": "gate-a",
+        "name": "Photogate A",
+        "role": "0.30 m down the rail: times how long the ball blocks its beam, Δt_A.",
+        "vi": {
+          "name": "Cổng quang điện A",
+          "role": "Cách đầu máng 0.30 m: đo thời gian viên bi che chùm sáng, Δt_A."
+        },
+        "anchor": {
+          "part": "gate-a"
+        }
+      },
+      {
+        "id": "gate-b",
+        "name": "Photogate B",
+        "role": "At the distance x_B set at the desk: times Δt_B.",
+        "vi": {
+          "name": "Cổng quang điện B",
+          "role": "Ở khoảng cách x_B đặt tại bàn điều khiển: đo Δt_B."
+        },
+        "anchor": {
+          "part": "gate-b"
+        }
+      },
+      {
+        "id": "timer",
+        "name": "Digital timer",
+        "role": "Gives Δt_A, Δt_B and the time t_AB from A to B, to its resolution; a lamp lights while each beam is blocked.",
+        "vi": {
+          "name": "Đồng hồ đo thời gian hiện số",
+          "role": "Cho Δt_A, Δt_B và thời gian t_AB từ A tới B, theo độ phân giải của nó; mỗi đèn sáng khi chùm sáng tương ứng bị che."
+        },
+        "anchor": {
+          "part": "timer"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "The magnet lets the ball go at the top of the rail. It rolls down, faster and faster.",
+        "vi": {
+          "text": "Nam châm thả viên bi ở đầu máng. Nó lăn xuống, ngày càng nhanh."
+        },
+        "parts": ["magnet", "ball", "rail"]
+      },
+      {
+        "text": "As the ball passes a photogate it blocks the gate’s infrared beam for a short time Δt — while its centre is within d/2 of the gate.",
+        "vi": {
+          "text": "Khi viên bi đi qua cổng quang điện, nó che chùm tia hồng ngoại của cổng trong một khoảng thời gian ngắn Δt — khi tâm của nó còn cách cổng không quá d/2."
+        },
+        "parts": ["gate-a", "gate-b", "ball"]
+      },
+      {
+        "text": "The speed at a gate is v = d/Δt: the average over the ball’s own small diameter, so practically its speed at that instant.",
+        "vi": {
+          "text": "Tốc độ tại một cổng là v = d/Δt: tốc độ trung bình trên quãng đường nhỏ bằng đường kính viên bi, nên thực tế là tốc độ tức thời của nó tại đó."
+        },
+        "parts": ["ball", "timer"]
+      },
+      {
+        "text": "The average speed between the gates is the distance AB over the time t_AB. The ball speeds up, so v_A < AB/t_AB < v_B.",
+        "vi": {
+          "text": "Tốc độ trung bình giữa hai cổng là quãng đường AB chia cho thời gian t_AB. Viên bi nhanh dần, nên v_A < AB/t_AB < v_B."
+        },
+        "parts": ["gate-a", "gate-b", "timer"]
+      },
+      {
+        "text": "Rolling without slipping, the ball accelerates at a = (5/7)·g·sin α, less than a sliding body, because part of its energy goes into turning. After rolling x, v = √(2·a·x).",
+        "vi": {
+          "text": "Lăn không trượt, viên bi có gia tốc a = (5/7)·g·sin α, nhỏ hơn vật trượt, vì một phần năng lượng của nó dùng để quay. Sau khi lăn được x, v = √(2·a·x)."
+        },
+        "parts": ["ball", "rail"]
+      },
+      {
+        "text": "The results compare the times and speeds with theory. Move gate B and run again: v_B² against the distance rolled is a straight line of slope 2a.",
+        "vi": {
+          "text": "Phần kết quả so sánh các thời gian và tốc độ với lý thuyết. Dời cổng B rồi chạy lại: v_B² theo quãng đường đã lăn là đường thẳng có hệ số góc 2a."
+        },
+        "parts": ["gate-b", "timer"]
+      }
+    ]
+  }
+}

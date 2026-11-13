@@ -1,0 +1,1114 @@
+{
+  "id": "balancing",
+  "skills": [
+    {
+      "id": "atoms",
+      "name": "Conservation of atoms: coefficients, not subscripts",
+      "advice": "Re-read what a coefficient and a subscript mean: 2H₂O is two molecules, each with two H. Balance only by changing coefficients — changing a subscript makes another substance.",
+      "vi": {
+        "name": "Bảo toàn nguyên tử: hệ số, không phải chỉ số",
+        "advice": "Đọc lại ý nghĩa của hệ số và chỉ số: 2H₂O là hai phân tử, mỗi phân tử có hai nguyên tử H. Chỉ cân bằng bằng cách thay đổi hệ số — đổi chỉ số là tạo ra chất khác."
+      }
+    },
+    {
+      "id": "inspection",
+      "name": "Balancing by inspection",
+      "advice": "Balance the element that appears in fewest formulas first (C, then H, then O for a combustion), and use the lowest common multiple for pairs such as Cl₂ and AlCl₃. At the station count the atoms after every step until each element matches.",
+      "vi": {
+        "name": "Cân bằng bằng phương pháp quan sát",
+        "advice": "Cân bằng trước nguyên tố có mặt trong ít công thức nhất (với phản ứng cháy: C, rồi H, rồi O), và dùng bội chung nhỏ nhất cho các cặp như Cl₂ và AlCl₃. Trên trạm, đếm lại số nguyên tử sau mỗi bước cho đến khi mọi nguyên tố đều khớp."
+      }
+    },
+    {
+      "id": "mass",
+      "name": "Conservation of mass and masses from the equation",
+      "advice": "Turn the given mass into moles (n = m/M), use the coefficients as the mole ratio, then turn back into grams. Remember that a gas taking part (O₂ in, O₂ or CO₂ out) counts in the mass balance.",
+      "vi": {
+        "name": "Bảo toàn khối lượng và tính khối lượng theo phương trình",
+        "advice": "Đổi khối lượng đã cho ra số mol (n = m/M), dùng hệ số làm tỉ lệ số mol, rồi đổi lại ra gam. Nhớ rằng chất khí tham gia (O₂ phản ứng, O₂ hay CO₂ sinh ra) cũng được tính trong bảo toàn khối lượng."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "what-changes",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["atoms"],
+      "stem": "To balance a chemical equation, what may you change?",
+      "explain": "Only the coefficients in front of the formulas: a subscript belongs to the formula, and changing it would describe another substance.",
+      "vi": {
+        "stem": "Khi cân bằng phương trình hóa học, ta được phép thay đổi",
+        "explain": "Chỉ hệ số đặt trước các công thức hóa học: chỉ số thuộc về công thức, đổi chỉ số là mô tả một chất khác."
+      },
+      "options": [
+        {
+          "text": "The coefficients in front of the formulas",
+          "vi": {
+            "text": "các hệ số đặt trước công thức hóa học"
+          },
+          "correct": true
+        },
+        {
+          "text": "The subscripts in the formulas",
+          "vi": {
+            "text": "các chỉ số trong công thức hóa học"
+          }
+        },
+        {
+          "text": "The products formed",
+          "vi": {
+            "text": "các chất sản phẩm tạo thành"
+          }
+        },
+        {
+          "text": "Both the coefficients and the subscripts",
+          "vi": {
+            "text": "cả hệ số và chỉ số"
+          }
+        }
+      ]
+    },
+    {
+      "id": "what-conserved",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["atoms", "mass"],
+      "stem": "In every chemical reaction, which of these stays the same?",
+      "explain": "Atoms are only rearranged, so the number of atoms of each element — and hence the total mass — is conserved. Molecules, moles and gas volumes can change (N₂ + 3H₂ → 2NH₃: four molecules become two).",
+      "vi": {
+        "stem": "Trong mọi phản ứng hóa học, đại lượng nào sau đây được bảo toàn?",
+        "explain": "Các nguyên tử chỉ được sắp xếp lại, nên số nguyên tử của mỗi nguyên tố — và do đó tổng khối lượng — được bảo toàn. Số phân tử, số mol và thể tích khí có thể thay đổi (N₂ + 3H₂ → 2NH₃: bốn phân tử thành hai)."
+      },
+      "options": [
+        {
+          "text": "The number of atoms of each element",
+          "vi": {
+            "text": "Số nguyên tử của mỗi nguyên tố"
+          },
+          "correct": true
+        },
+        {
+          "text": "The number of molecules",
+          "vi": {
+            "text": "Số phân tử"
+          }
+        },
+        {
+          "text": "The total amount of substance (in mol)",
+          "vi": {
+            "text": "Tổng số mol các chất"
+          }
+        },
+        {
+          "text": "The total volume of the gases",
+          "vi": {
+            "text": "Tổng thể tích các chất khí"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-meaning",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["atoms", "mass"],
+      "stem": "Decide whether each statement about chemical equations is true or false.",
+      "explain": "2H₂O is two water molecules. Subscripts are fixed by the formula. Mass is conserved, but the number of molecules need not be: N₂ + 3H₂ → 2NH₃ turns four molecules into two.",
+      "vi": {
+        "stem": "Mỗi nhận định sau về phương trình hóa học đúng hay sai?",
+        "explain": "2H₂O là hai phân tử nước. Chỉ số do công thức quy định, không được đổi. Khối lượng được bảo toàn, nhưng số phân tử thì không nhất thiết: N₂ + 3H₂ → 2NH₃ biến bốn phân tử thành hai."
+      },
+      "statements": [
+        {
+          "text": "In 2H₂O the coefficient 2 means two molecules of water.",
+          "vi": {
+            "text": "Trong 2H₂O, hệ số 2 cho biết có hai phân tử nước."
+          },
+          "true": true
+        },
+        {
+          "text": "The subscript 2 in O₂ may be changed to balance the oxygen atoms.",
+          "vi": {
+            "text": "Có thể đổi chỉ số 2 trong O₂ để cân bằng số nguyên tử oxygen."
+          },
+          "true": false
+        },
+        {
+          "text": "The total mass of the reactants equals the total mass of the products.",
+          "vi": {
+            "text": "Tổng khối lượng các chất tham gia bằng tổng khối lượng các sản phẩm."
+          },
+          "true": true
+        },
+        {
+          "text": "Every balanced equation has the same number of molecules on both sides.",
+          "vi": {
+            "text": "Mọi phương trình đã cân bằng đều có số phân tử ở hai vế bằng nhau."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "ammonia",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["inspection", "atoms"],
+      "set": {
+        "reaction": 2
+      },
+      "stem": "Which is the balanced equation for the synthesis of ammonia from nitrogen and hydrogen?",
+      "explain": "Two N on the left need 2NH₃; those hold six H, so 3H₂: N₂ + 3H₂ → 2NH₃ (2 N and 6 H on each side).",
+      "vi": {
+        "stem": "Phương trình nào sau đây là phương trình đã cân bằng của phản ứng tổng hợp ammonia từ nitrogen và hydrogen?",
+        "explain": "Hai nguyên tử N ở vế trái cần 2NH₃; 2NH₃ chứa sáu H nên cần 3H₂: N₂ + 3H₂ → 2NH₃ (mỗi vế có 2 N và 6 H)."
+      },
+      "options": [
+        {
+          "text": "N₂ + 3H₂ → 2NH₃",
+          "vi": {
+            "text": "N₂ + 3H₂ → 2NH₃"
+          },
+          "correct": true,
+          "check": {
+            "expr": "3",
+            "equals": "coefficientB"
+          }
+        },
+        {
+          "text": "N₂ + H₂ → 2NH₃",
+          "vi": {
+            "text": "N₂ + H₂ → 2NH₃"
+          },
+          "check": {
+            "expr": "1",
+            "equals": "coefficientB"
+          }
+        },
+        {
+          "text": "N₂ + 3H₂ → NH₃",
+          "vi": {
+            "text": "N₂ + 3H₂ → NH₃"
+          },
+          "check": {
+            "expr": "1",
+            "equals": "coefficientC"
+          }
+        },
+        {
+          "text": "2N₂ + 3H₂ → 2NH₃",
+          "vi": {
+            "text": "2N₂ + 3H₂ → 2NH₃"
+          },
+          "check": {
+            "expr": "2",
+            "equals": "coefficientA"
+          }
+        }
+      ]
+    },
+    {
+      "id": "potassium-chlorate",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["inspection", "atoms"],
+      "set": {
+        "reaction": 6
+      },
+      "stem": "Potassium chlorate decomposes on heating: KClO₃ → KCl + O₂. Which is the balanced equation, with the smallest whole-number coefficients?",
+      "explain": "Three O in KClO₃ and two in O₂: the lowest common multiple is 6, so 2KClO₃ and 3O₂, then 2KCl for K and Cl: 2KClO₃ → 2KCl + 3O₂.",
+      "vi": {
+        "stem": "Potassium chlorate bị nhiệt phân: KClO₃ → KCl + O₂. Phương trình nào đã được cân bằng với các hệ số nguyên tối giản?",
+        "explain": "KClO₃ có ba O, O₂ có hai O: bội chung nhỏ nhất là 6, nên 2KClO₃ và 3O₂, rồi 2KCl để cân bằng K và Cl: 2KClO₃ → 2KCl + 3O₂."
+      },
+      "options": [
+        {
+          "text": "2KClO₃ → 2KCl + 3O₂",
+          "vi": {
+            "text": "2KClO₃ → 2KCl + 3O₂"
+          },
+          "correct": true,
+          "check": {
+            "expr": "3",
+            "equals": "coefficientC"
+          }
+        },
+        {
+          "text": "KClO₃ → KCl + O₃",
+          "vi": {
+            "text": "KClO₃ → KCl + O₃"
+          }
+        },
+        {
+          "text": "2KClO₃ → 2KCl + 2O₂",
+          "vi": {
+            "text": "2KClO₃ → 2KCl + 2O₂"
+          },
+          "check": {
+            "expr": "2",
+            "equals": "coefficientC"
+          }
+        },
+        {
+          "text": "4KClO₃ → 4KCl + 6O₂",
+          "vi": {
+            "text": "4KClO₃ → 4KCl + 6O₂"
+          },
+          "check": {
+            "expr": "4",
+            "equals": "coefficientA"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-aluminium",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["inspection", "atoms"],
+      "set": {
+        "reaction": 4
+      },
+      "stem": "Aluminium burns in chlorine: Al + Cl₂ → AlCl₃. Decide whether each statement about balancing it is true or false.",
+      "explain": "Cl comes in twos (Cl₂) and threes (AlCl₃): the lowest common multiple is 6, so 3Cl₂ and 2AlCl₃, then 2Al: 2Al + 3Cl₂ → 2AlCl₃, with 6 Cl on each side and coefficients adding to 7. Writing Cl₃ would change a formula.",
+      "vi": {
+        "stem": "Nhôm cháy trong khí chlorine: Al + Cl₂ → AlCl₃. Mỗi nhận định sau về việc cân bằng phương trình này đúng hay sai?",
+        "explain": "Cl đi theo cặp hai (Cl₂) và bộ ba (AlCl₃): bội chung nhỏ nhất là 6, nên 3Cl₂ và 2AlCl₃, rồi 2Al: 2Al + 3Cl₂ → 2AlCl₃, mỗi vế có 6 Cl và tổng các hệ số bằng 7. Viết Cl₃ là đã đổi công thức."
+      },
+      "statements": [
+        {
+          "text": "The balanced equation is 2Al + 3Cl₂ → 2AlCl₃.",
+          "vi": {
+            "text": "Phương trình đã cân bằng là 2Al + 3Cl₂ → 2AlCl₃."
+          },
+          "true": true,
+          "check": {
+            "expr": "3",
+            "equals": "coefficientB"
+          }
+        },
+        {
+          "text": "Each side of the balanced equation has 6 chlorine atoms.",
+          "vi": {
+            "text": "Mỗi vế của phương trình đã cân bằng có 6 nguyên tử chlorine."
+          },
+          "true": true
+        },
+        {
+          "text": "Writing Al + Cl₃ → AlCl₃ is a correct way to balance it.",
+          "vi": {
+            "text": "Viết Al + Cl₃ → AlCl₃ là một cách cân bằng đúng."
+          },
+          "true": false
+        },
+        {
+          "text": "The coefficients of the balanced equation add up to 5.",
+          "vi": {
+            "text": "Tổng các hệ số của phương trình đã cân bằng bằng 5."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "methane-products",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["mass", "inspection"],
+      "set": {
+        "reaction": 0,
+        "mass": 16
+      },
+      "stem": "{mass} g of methane burns completely in oxygen: CH₄ + 2O₂ → CO₂ + 2H₂O. What is the total mass of the products? (M: CH₄ 16.043; CO₂ 44.009; H₂O 18.015 g/mol)",
+      "explain": "n(CH₄) = {mass}/16.043 ≈ {=mass/16.043} mol; it gives as many mol of CO₂ and twice as many of H₂O: m = {=mass/16.043}·(44.009 + 2·18.015) ≈ {@productMass} g — the mass of the methane plus the oxygen it used.",
+      "vi": {
+        "stem": "{mass} g methane cháy hoàn toàn trong oxygen: CH₄ + 2O₂ → CO₂ + 2H₂O. Tổng khối lượng các sản phẩm là bao nhiêu? (M: CH₄ 16,043; CO₂ 44,009; H₂O 18,015 g/mol)",
+        "explain": "n(CH₄) = {mass}/16,043 ≈ {=mass/16.043} mol; tạo ra số mol CO₂ bằng như vậy và số mol H₂O gấp đôi: m = {=mass/16.043}·(44,009 + 2·18,015) ≈ {@productMass} g — bằng khối lượng methane cộng khối lượng oxygen đã phản ứng."
+      },
+      "options": [
+        {
+          "text": "{@productMass} g",
+          "vi": {
+            "text": "{@productMass} g"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(mass/16.043)*(44.009+2*18.015)",
+            "equals": "productMass"
+          }
+        },
+        {
+          "text": "{=(mass/16.043)*(44.009+18.015)} g",
+          "vi": {
+            "text": "{=(mass/16.043)*(44.009+18.015)} g"
+          },
+          "check": {
+            "expr": "(mass/16.043)*(44.009+18.015)",
+            "equals": "productMass"
+          }
+        },
+        {
+          "text": "{mass} g",
+          "vi": {
+            "text": "{mass} g"
+          },
+          "check": {
+            "expr": "mass",
+            "equals": "productMass"
+          }
+        },
+        {
+          "text": "{=mass+(mass/16.043)*31.998} g",
+          "vi": {
+            "text": "{=mass+(mass/16.043)*31.998} g"
+          },
+          "check": {
+            "expr": "mass+(mass/16.043)*31.998",
+            "equals": "productMass"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ammonia-mass",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["mass"],
+      "set": {
+        "reaction": 2,
+        "mass": 28
+      },
+      "stem": "{mass} g of nitrogen reacts completely with hydrogen: N₂ + 3H₂ → 2NH₃. What mass of ammonia forms? (M: N₂ 28.014; NH₃ 17.031 g/mol)",
+      "explain": "n(N₂) = {mass}/28.014 ≈ {=mass/28.014} mol; each mol of N₂ gives 2 mol of NH₃: m = 2·{=mass/28.014}·17.031 ≈ {@productMass} g, the same as the N₂ and H₂ used.",
+      "vi": {
+        "stem": "{mass} g nitrogen phản ứng hết với hydrogen: N₂ + 3H₂ → 2NH₃. Khối lượng ammonia tạo thành là bao nhiêu? (M: N₂ 28,014; NH₃ 17,031 g/mol)",
+        "explain": "n(N₂) = {mass}/28,014 ≈ {=mass/28.014} mol; mỗi mol N₂ tạo 2 mol NH₃: m = 2·{=mass/28.014}·17,031 ≈ {@productMass} g, bằng tổng khối lượng N₂ và H₂ đã phản ứng."
+      },
+      "options": [
+        {
+          "text": "{@productMass} g",
+          "vi": {
+            "text": "{@productMass} g"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2*(mass/28.014)*17.031",
+            "equals": "productMass"
+          }
+        },
+        {
+          "text": "{=(mass/28.014)*17.031} g",
+          "vi": {
+            "text": "{=(mass/28.014)*17.031} g"
+          },
+          "check": {
+            "expr": "(mass/28.014)*17.031",
+            "equals": "productMass"
+          }
+        },
+        {
+          "text": "{=3*(mass/28.014)*17.031} g",
+          "vi": {
+            "text": "{=3*(mass/28.014)*17.031} g"
+          },
+          "check": {
+            "expr": "3*(mass/28.014)*17.031",
+            "equals": "productMass"
+          }
+        },
+        {
+          "text": "{mass} g",
+          "vi": {
+            "text": "{mass} g"
+          },
+          "check": {
+            "expr": "mass",
+            "equals": "productMass"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-propane",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["inspection", "mass"],
+      "set": {
+        "reaction": 3,
+        "mass": 44
+      },
+      "stem": "{mass} g of propane burns completely: C₃H₈ + O₂ → CO₂ + H₂O (unbalanced). M: C₃H₈ 44.097; O₂ 31.998; CO₂ 44.009; H₂O 18.015 g/mol. Decide whether each statement is true or false.",
+      "explain": "C first (3CO₂), then H (4H₂O), then O: 6 + 4 = 10 O, so 5O₂: C₃H₈ + 5O₂ → 3CO₂ + 4H₂O. n(C₃H₈) ≈ {=mass/44.097} mol needs {=5*mass/44.097} mol O₂ ≈ {=5*(mass/44.097)*31.998} g; the products weigh as much as propane and oxygen together, ≈ {@productMass} g.",
+      "vi": {
+        "stem": "{mass} g propane cháy hoàn toàn: C₃H₈ + O₂ → CO₂ + H₂O (chưa cân bằng). M: C₃H₈ 44,097; O₂ 31,998; CO₂ 44,009; H₂O 18,015 g/mol. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Cân bằng C trước (3CO₂), rồi H (4H₂O), rồi O: 6 + 4 = 10 nguyên tử O, nên 5O₂: C₃H₈ + 5O₂ → 3CO₂ + 4H₂O. n(C₃H₈) ≈ {=mass/44.097} mol cần {=5*mass/44.097} mol O₂ ≈ {=5*(mass/44.097)*31.998} g; khối lượng sản phẩm bằng tổng khối lượng propane và oxygen, ≈ {@productMass} g."
+      },
+      "statements": [
+        {
+          "text": "The coefficient of O₂ in the balanced equation is 5.",
+          "vi": {
+            "text": "Hệ số của O₂ trong phương trình đã cân bằng là 5."
+          },
+          "true": true,
+          "check": {
+            "expr": "5",
+            "equals": "coefficientB"
+          }
+        },
+        {
+          "text": "It uses about {=5*(mass/44.097)*31.998} g of oxygen.",
+          "vi": {
+            "text": "Phản ứng dùng hết khoảng {=5*(mass/44.097)*31.998} g oxygen."
+          },
+          "true": true,
+          "check": {
+            "expr": "mass+5*(mass/44.097)*31.998",
+            "equals": "reactantMass"
+          }
+        },
+        {
+          "text": "The products weigh about {@productMass} g in all.",
+          "vi": {
+            "text": "Tổng khối lượng các sản phẩm khoảng {@productMass} g."
+          },
+          "true": true,
+          "check": {
+            "expr": "(mass/44.097)*(3*44.009+4*18.015)",
+            "equals": "productMass"
+          }
+        },
+        {
+          "text": "Each mole of propane gives 3 mol of water.",
+          "vi": {
+            "text": "Mỗi mol propane tạo ra 3 mol nước."
+          },
+          "true": false,
+          "check": {
+            "expr": "3",
+            "equals": "coefficientD"
+          }
+        }
+      ]
+    },
+    {
+      "id": "blast-furnace",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["mass", "inspection"],
+      "set": {
+        "reaction": 5,
+        "mass": 80
+      },
+      "stem": "In a blast furnace, {mass} g of Fe₂O₃ is reduced completely by CO: Fe₂O₃ + 3CO → 2Fe + 3CO₂. What is the total mass of the products? (M: Fe₂O₃ 159.687; CO 28.010 g/mol)",
+      "explain": "Mass is conserved: the products weigh as much as the Fe₂O₃ and the CO used. n(Fe₂O₃) ≈ {=mass/159.687} mol needs 3 times as much CO: m = {mass} + 3·{=mass/159.687}·28.010 ≈ {@productMass} g.",
+      "vi": {
+        "stem": "Trong lò cao, {mass} g Fe₂O₃ bị CO khử hoàn toàn: Fe₂O₃ + 3CO → 2Fe + 3CO₂. Tổng khối lượng các sản phẩm là bao nhiêu? (M: Fe₂O₃ 159,687; CO 28,010 g/mol)",
+        "explain": "Khối lượng được bảo toàn: khối lượng sản phẩm bằng khối lượng Fe₂O₃ và CO đã phản ứng. n(Fe₂O₃) ≈ {=mass/159.687} mol cần lượng CO gấp 3 lần: m = {mass} + 3·{=mass/159.687}·28,010 ≈ {@productMass} g."
+      },
+      "options": [
+        {
+          "text": "{@productMass} g",
+          "vi": {
+            "text": "{@productMass} g"
+          },
+          "correct": true,
+          "check": {
+            "expr": "mass+3*(mass/159.687)*28.01",
+            "equals": "productMass"
+          }
+        },
+        {
+          "text": "{=mass+(mass/159.687)*28.01} g",
+          "vi": {
+            "text": "{=mass+(mass/159.687)*28.01} g"
+          },
+          "check": {
+            "expr": "mass+(mass/159.687)*28.01",
+            "equals": "productMass"
+          }
+        },
+        {
+          "text": "{=2*(mass/159.687)*55.845} g",
+          "vi": {
+            "text": "{=2*(mass/159.687)*55.845} g"
+          },
+          "check": {
+            "expr": "2*(mass/159.687)*55.845",
+            "equals": "productMass"
+          }
+        },
+        {
+          "text": "{mass} g",
+          "vi": {
+            "text": "{mass} g"
+          },
+          "check": {
+            "expr": "mass",
+            "equals": "productMass"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ethanol-products",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["inspection", "mass"],
+      "set": {
+        "reaction": 7,
+        "mass": 46
+      },
+      "stem": "{mass} g of ethanol burns completely: C₂H₅OH + O₂ → CO₂ + H₂O (unbalanced). What is the total mass of the products? (M: C₂H₅OH 46.069; CO₂ 44.009; H₂O 18.015 g/mol)",
+      "explain": "Balance C (2CO₂), then all six H (3H₂O — the H of OH counts too), then O: 4 + 3 − 1 = 6 O from 3O₂: C₂H₅OH + 3O₂ → 2CO₂ + 3H₂O. n ≈ {=mass/46.069} mol, so m = {=mass/46.069}·(2·44.009 + 3·18.015) ≈ {@productMass} g. The oxygen used counts too: the products weigh more than the ethanol alone.",
+      "vi": {
+        "stem": "{mass} g ethanol cháy hoàn toàn: C₂H₅OH + O₂ → CO₂ + H₂O (chưa cân bằng). Tổng khối lượng các sản phẩm là bao nhiêu? (M: C₂H₅OH 46,069; CO₂ 44,009; H₂O 18,015 g/mol)",
+        "explain": "Cân bằng C (2CO₂), rồi cả sáu H (3H₂O — tính cả H của nhóm OH), rồi O: 4 + 3 − 1 = 6 nguyên tử O từ 3O₂: C₂H₅OH + 3O₂ → 2CO₂ + 3H₂O. n ≈ {=mass/46.069} mol, nên m = {=mass/46.069}·(2·44,009 + 3·18,015) ≈ {@productMass} g. Oxygen đã phản ứng cũng được tính: sản phẩm nặng hơn lượng ethanol ban đầu."
+      },
+      "options": [
+        {
+          "text": "{@productMass} g",
+          "vi": {
+            "text": "{@productMass} g"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(mass/46.069)*(2*44.009+3*18.015)",
+            "equals": "productMass"
+          }
+        },
+        {
+          "text": "{=(mass/46.069)*(44.009+18.015)} g",
+          "vi": {
+            "text": "{=(mass/46.069)*(44.009+18.015)} g"
+          },
+          "check": {
+            "expr": "(mass/46.069)*(44.009+18.015)",
+            "equals": "productMass"
+          }
+        },
+        {
+          "text": "{=(mass/46.069)*(2*44.009+2.5*18.015)} g",
+          "vi": {
+            "text": "{=(mass/46.069)*(2*44.009+2.5*18.015)} g"
+          },
+          "check": {
+            "expr": "(mass/46.069)*(2*44.009+2.5*18.015)",
+            "equals": "productMass"
+          }
+        },
+        {
+          "text": "{mass} g",
+          "vi": {
+            "text": "{mass} g"
+          },
+          "check": {
+            "expr": "mass",
+            "equals": "productMass"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-chlorate-mass",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["mass", "inspection"],
+      "set": {
+        "reaction": 6,
+        "mass": 24.5
+      },
+      "stem": "{mass} g of KClO₃ is heated until it has all decomposed: 2KClO₃ → 2KCl + 3O₂ (M: KClO₃ 122.545; KCl 74.548; O₂ 31.998 g/mol). Decide whether each statement is true or false.",
+      "explain": "n(KClO₃) ≈ {=mass/122.545} mol gives as much KCl ≈ {=(mass/122.545)*74.548} g and 3/2 as much O₂ ≈ {=1.5*(mass/122.545)*31.998} g; together {@productMass} g, the mass heated. The O₂ escapes, so the solid left weighs less than the KClO₃.",
+      "vi": {
+        "stem": "Nung {mass} g KClO₃ đến khi phân hủy hoàn toàn: 2KClO₃ → 2KCl + 3O₂ (M: KClO₃ 122,545; KCl 74,548; O₂ 31,998 g/mol). Mỗi nhận định sau đúng hay sai?",
+        "explain": "n(KClO₃) ≈ {=mass/122.545} mol tạo số mol KCl bằng như vậy, ≈ {=(mass/122.545)*74.548} g, và số mol O₂ gấp 3/2, ≈ {=1.5*(mass/122.545)*31.998} g; tổng cộng {@productMass} g, đúng bằng khối lượng đã nung. O₂ thoát ra ngoài nên chất rắn còn lại nhẹ hơn lượng KClO₃ ban đầu."
+      },
+      "statements": [
+        {
+          "text": "Two moles of KClO₃ give 3 mol of O₂.",
+          "vi": {
+            "text": "Hai mol KClO₃ tạo ra 3 mol O₂."
+          },
+          "true": true,
+          "check": {
+            "expr": "3",
+            "equals": "coefficientC"
+          }
+        },
+        {
+          "text": "The KCl and the O₂ formed weigh {@productMass} g together.",
+          "vi": {
+            "text": "Tổng khối lượng KCl và O₂ tạo thành là {@productMass} g."
+          },
+          "true": true,
+          "check": {
+            "expr": "mass",
+            "equals": "productMass"
+          }
+        },
+        {
+          "text": "The solid left after heating weighs as much as the KClO₃ heated.",
+          "vi": {
+            "text": "Chất rắn còn lại sau khi nung có khối lượng bằng khối lượng KClO₃ đem nung."
+          },
+          "true": false
+        },
+        {
+          "text": "About {=1.5*(mass/122.545)*31.998} g of oxygen is given off.",
+          "vi": {
+            "text": "Có khoảng {=1.5*(mass/122.545)*31.998} g oxygen thoát ra."
+          },
+          "true": true,
+          "check": {
+            "expr": "(mass/122.545)*74.548+1.5*(mass/122.545)*31.998",
+            "equals": "productMass"
+          }
+        }
+      ]
+    },
+    {
+      "id": "coefficient-name",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["atoms"],
+      "stem": "In the equation CH₄ + 2O₂ → CO₂ + 2H₂O, what is the 2 written in front of O₂ called?",
+      "explain": "A number in front of a formula is a coefficient: it counts the particles (or moles) of that substance. The small 2 in O₂ is a subscript, part of the formula itself.",
+      "vi": {
+        "stem": "Trong phương trình CH₄ + 2O₂ → CO₂ + 2H₂O, số 2 viết trước O₂ được gọi là gì?",
+        "explain": "Số viết trước công thức hóa học là hệ số: nó cho biết số phân tử (hay số mol) của chất đó. Số 2 nhỏ trong O₂ là chỉ số, một phần của chính công thức."
+      },
+      "options": [
+        {
+          "text": "A coefficient",
+          "vi": {
+            "text": "Hệ số"
+          },
+          "correct": true
+        },
+        {
+          "text": "A subscript",
+          "vi": {
+            "text": "Chỉ số"
+          }
+        },
+        {
+          "text": "An oxidation number",
+          "vi": {
+            "text": "Số oxi hóa"
+          }
+        },
+        {
+          "text": "A molar mass",
+          "vi": {
+            "text": "Khối lượng mol"
+          }
+        }
+      ]
+    },
+    {
+      "id": "hydrogen-burns",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["inspection", "atoms"],
+      "set": {
+        "reaction": 1
+      },
+      "stem": "Hydrogen burns in oxygen to form water. Which is the balanced equation, with the smallest whole-number coefficients?",
+      "explain": "H₂ + O₂ → H₂O has 2 O on the left and 1 on the right: put 2 before H₂O, then 2 before H₂ — 2H₂ + O₂ → 2H₂O. Writing H₂O₂ changes the substance; 4H₂ + 2O₂ → 4H₂O is balanced but not with the smallest coefficients; O is not how oxygen gas is written.",
+      "vi": {
+        "stem": "Hydrogen cháy trong oxygen tạo thành nước. Phương trình hóa học đã cân bằng với hệ số là các số nguyên tối giản là",
+        "explain": "H₂ + O₂ → H₂O có 2 nguyên tử O bên trái và 1 bên phải: đặt 2 trước H₂O, rồi 2 trước H₂ — 2H₂ + O₂ → 2H₂O. Viết H₂O₂ là đổi sang chất khác; 4H₂ + 2O₂ → 4H₂O cân bằng nhưng hệ số chưa tối giản; khí oxygen không viết là O."
+      },
+      "options": [
+        {
+          "text": "2H₂ + O₂ → 2H₂O",
+          "vi": {
+            "text": "2H₂ + O₂ → 2H₂O"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2",
+            "equals": "coefficientA"
+          }
+        },
+        {
+          "text": "H₂ + O₂ → H₂O₂",
+          "vi": {
+            "text": "H₂ + O₂ → H₂O₂"
+          }
+        },
+        {
+          "text": "4H₂ + 2O₂ → 4H₂O",
+          "vi": {
+            "text": "4H₂ + 2O₂ → 4H₂O"
+          },
+          "check": {
+            "expr": "4",
+            "equals": "coefficientA"
+          }
+        },
+        {
+          "text": "H₂ + O → H₂O",
+          "vi": {
+            "text": "H₂ + O → H₂O"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-iron-oxide",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["inspection", "atoms"],
+      "set": {
+        "reaction": 5
+      },
+      "stem": "Iron(III) oxide is reduced by carbon monoxide: Fe₂O₃ + CO → Fe + CO₂ (unbalanced). Decide whether each statement about balancing it is true or false.",
+      "explain": "Fe first: 2Fe. Each CO takes one O from Fe₂O₃ and becomes CO₂, so the three O of Fe₂O₃ need 3CO, giving 3CO₂: Fe₂O₃ + 3CO → 2Fe + 3CO₂. Each side then has 3 + 3 = 6 O atoms. Writing 2Fe alone leaves O and C unbalanced.",
+      "vi": {
+        "stem": "Iron(III) oxide bị carbon monoxide khử: Fe₂O₃ + CO → Fe + CO₂ (chưa cân bằng). Mỗi nhận định sau về việc cân bằng phương trình này đúng hay sai?",
+        "explain": "Cân bằng Fe trước: 2Fe. Mỗi phân tử CO lấy một nguyên tử O của Fe₂O₃ để thành CO₂, nên ba nguyên tử O của Fe₂O₃ cần 3CO, tạo 3CO₂: Fe₂O₃ + 3CO → 2Fe + 3CO₂. Khi đó mỗi vế có 3 + 3 = 6 nguyên tử O. Chỉ thêm 2 trước Fe thì O và C vẫn chưa cân bằng."
+      },
+      "statements": [
+        {
+          "text": "The coefficient of Fe in the balanced equation is 2.",
+          "vi": {
+            "text": "Hệ số của Fe trong phương trình đã cân bằng là 2."
+          },
+          "true": true,
+          "check": {
+            "expr": "2",
+            "equals": "coefficientC"
+          }
+        },
+        {
+          "text": "The coefficient of CO in the balanced equation is 3.",
+          "vi": {
+            "text": "Hệ số của CO trong phương trình đã cân bằng là 3."
+          },
+          "true": true,
+          "check": {
+            "expr": "3",
+            "equals": "coefficientB"
+          }
+        },
+        {
+          "text": "In the balanced equation each side has 3 oxygen atoms.",
+          "vi": {
+            "text": "Trong phương trình đã cân bằng, mỗi vế có 3 nguyên tử oxygen."
+          },
+          "true": false
+        },
+        {
+          "text": "Writing 2 in front of Fe, and changing nothing else, balances the equation.",
+          "vi": {
+            "text": "Chỉ cần đặt hệ số 2 trước Fe, không đổi gì khác, là phương trình đã cân bằng."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "chlorine-needed",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["mass", "inspection"],
+      "set": {
+        "reaction": 4,
+        "mass": 54
+      },
+      "stem": "{mass} g of aluminium burns completely in chlorine: 2Al + 3Cl₂ → 2AlCl₃. What mass of chlorine is used? (M: Al 26.982; Cl₂ 70.900 g/mol)",
+      "explain": "n(Al) = {mass}/26.982 ≈ {=mass/26.982} mol; the equation needs 3 mol Cl₂ for 2 mol Al: n(Cl₂) = 1.5·{=mass/26.982} ≈ {=1.5*mass/26.982} mol, m = {=1.5*mass/26.982}·70.900 ≈ {=1.5*(mass/26.982)*70.9} g. With the aluminium: {@reactantMass} g of reactants, as much as the AlCl₃ formed.",
+      "vi": {
+        "stem": "Đốt cháy hoàn toàn {mass} g aluminium trong chlorine: 2Al + 3Cl₂ → 2AlCl₃. Khối lượng chlorine đã phản ứng là bao nhiêu? (M: Al 26,982; Cl₂ 70,900 g/mol)",
+        "explain": "n(Al) = {mass}/26,982 ≈ {=mass/26.982} mol; theo phương trình, 2 mol Al cần 3 mol Cl₂: n(Cl₂) = 1,5·{=mass/26.982} ≈ {=1.5*mass/26.982} mol, m = {=1.5*mass/26.982}·70,900 ≈ {=1.5*(mass/26.982)*70.9} g. Cộng với aluminium: {@reactantMass} g chất phản ứng, bằng khối lượng AlCl₃ tạo thành."
+      },
+      "options": [
+        {
+          "text": "{=1.5*(mass/26.982)*70.9} g",
+          "vi": {
+            "text": "{=1.5*(mass/26.982)*70.9} g"
+          },
+          "correct": true,
+          "check": {
+            "expr": "mass+1.5*(mass/26.982)*70.9",
+            "equals": "reactantMass"
+          }
+        },
+        {
+          "text": "{=(mass/26.982)*70.9} g",
+          "vi": {
+            "text": "{=(mass/26.982)*70.9} g"
+          },
+          "check": {
+            "expr": "mass+(mass/26.982)*70.9",
+            "equals": "reactantMass"
+          }
+        },
+        {
+          "text": "{=3*(mass/26.982)*70.9} g",
+          "vi": {
+            "text": "{=3*(mass/26.982)*70.9} g"
+          },
+          "check": {
+            "expr": "mass+3*(mass/26.982)*70.9",
+            "equals": "reactantMass"
+          }
+        },
+        {
+          "text": "{=1.5*(mass/26.982)*35.45} g",
+          "vi": {
+            "text": "{=1.5*(mass/26.982)*35.45} g"
+          },
+          "check": {
+            "expr": "mass+1.5*(mass/26.982)*35.45",
+            "equals": "reactantMass"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-water",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["mass", "inspection"],
+      "set": {
+        "reaction": 1,
+        "mass": 4
+      },
+      "stem": "{mass} g of hydrogen burns completely in oxygen: H₂ + O₂ → H₂O (unbalanced). M: H₂ 2.016; O₂ 31.998; H₂O 18.015 g/mol. Decide whether each statement is true or false.",
+      "explain": "2H₂ + O₂ → 2H₂O. n(H₂) = {mass}/2.016 ≈ {=mass/2.016} mol needs half as much O₂ ≈ {=0.5*mass/2.016} mol ≈ {=0.5*(mass/2.016)*31.998} g, and gives as much H₂O as H₂: ≈ {@productMass} g — the mass of the hydrogen and the oxygen together, not of the hydrogen alone.",
+      "vi": {
+        "stem": "Đốt cháy hoàn toàn {mass} g hydrogen trong oxygen: H₂ + O₂ → H₂O (chưa cân bằng). M: H₂ 2,016; O₂ 31,998; H₂O 18,015 g/mol. Mỗi nhận định sau đúng hay sai?",
+        "explain": "2H₂ + O₂ → 2H₂O. n(H₂) = {mass}/2,016 ≈ {=mass/2.016} mol cần lượng O₂ bằng một nửa ≈ {=0.5*mass/2.016} mol ≈ {=0.5*(mass/2.016)*31.998} g, và tạo lượng H₂O bằng lượng H₂: ≈ {@productMass} g — bằng tổng khối lượng hydrogen và oxygen, không phải chỉ của hydrogen."
+      },
+      "statements": [
+        {
+          "text": "In the balanced equation the coefficient of H₂O is 2.",
+          "vi": {
+            "text": "Trong phương trình đã cân bằng, hệ số của H₂O là 2."
+          },
+          "true": true,
+          "check": {
+            "expr": "2",
+            "equals": "coefficientC"
+          }
+        },
+        {
+          "text": "About {=0.5*(mass/2.016)*31.998} g of oxygen is used.",
+          "vi": {
+            "text": "Lượng oxygen đã phản ứng khoảng {=0.5*(mass/2.016)*31.998} g."
+          },
+          "true": true,
+          "check": {
+            "expr": "mass+0.5*(mass/2.016)*31.998",
+            "equals": "reactantMass"
+          }
+        },
+        {
+          "text": "About {=(mass/2.016)*18.015} g of water forms.",
+          "vi": {
+            "text": "Khối lượng nước tạo thành khoảng {=(mass/2.016)*18.015} g."
+          },
+          "true": true,
+          "check": {
+            "expr": "(mass/2.016)*18.015",
+            "equals": "productMass"
+          }
+        },
+        {
+          "text": "The water formed weighs {mass} g, as much as the hydrogen burned.",
+          "vi": {
+            "text": "Nước tạo thành nặng {mass} g, bằng khối lượng hydrogen đã cháy."
+          },
+          "true": false,
+          "check": {
+            "expr": "mass",
+            "equals": "productMass"
+          }
+        }
+      ]
+    },
+    {
+      "id": "propane-burned",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["mass", "inspection"],
+      "set": {
+        "reaction": 3,
+        "mass": 22
+      },
+      "stem": "Some propane burns completely in oxygen: C₃H₈ + O₂ → CO₂ + H₂O (unbalanced). The CO₂ and H₂O formed weigh {@productMass} g together. What mass of propane burned? (M: C₃H₈ 44.097; CO₂ 44.009; H₂O 18.015 g/mol)",
+      "explain": "Balance first: C₃H₈ + 5O₂ → 3CO₂ + 4H₂O. Each mol of propane gives 3·44.009 + 4·18.015 = 204.087 g of products, so n = {@productMass}/204.087 ≈ {=@productMass/204.087} mol and m = {=@productMass/204.087}·44.097 ≈ {mass} g. The products weigh more than the propane: the oxygen's mass is in them too.",
+      "vi": {
+        "stem": "Đốt cháy hoàn toàn một lượng propane trong oxygen: C₃H₈ + O₂ → CO₂ + H₂O (chưa cân bằng). Tổng khối lượng CO₂ và H₂O tạo thành là {@productMass} g. Khối lượng propane đã cháy là bao nhiêu? (M: C₃H₈ 44,097; CO₂ 44,009; H₂O 18,015 g/mol)",
+        "explain": "Cân bằng trước: C₃H₈ + 5O₂ → 3CO₂ + 4H₂O. Mỗi mol propane tạo 3·44,009 + 4·18,015 = 204,087 g sản phẩm, nên n = {@productMass}/204,087 ≈ {=@productMass/204.087} mol và m = {=@productMass/204.087}·44,097 ≈ {mass} g. Sản phẩm nặng hơn propane vì khối lượng oxygen cũng nằm trong đó."
+      },
+      "options": [
+        {
+          "text": "{=@productMass*44.097/(3*44.009+4*18.015)} g",
+          "vi": {
+            "text": "{=@productMass*44.097/(3*44.009+4*18.015)} g"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(@productMass*44.097/(3*44.009+4*18.015))*(3*44.009+4*18.015)/44.097",
+            "equals": "productMass"
+          }
+        },
+        {
+          "text": "{=@productMass*44.097/(44.009+18.015)} g",
+          "vi": {
+            "text": "{=@productMass*44.097/(44.009+18.015)} g"
+          },
+          "check": {
+            "expr": "(@productMass*44.097/(44.009+18.015))*(3*44.009+4*18.015)/44.097",
+            "equals": "productMass"
+          }
+        },
+        {
+          "text": "{@productMass} g",
+          "vi": {
+            "text": "{@productMass} g"
+          },
+          "check": {
+            "expr": "@productMass*(3*44.009+4*18.015)/44.097",
+            "equals": "productMass"
+          }
+        },
+        {
+          "text": "{=@productMass*44.097/(3*44.009)} g",
+          "vi": {
+            "text": "{=@productMass*44.097/(3*44.009)} g"
+          },
+          "check": {
+            "expr": "(@productMass*44.097/(3*44.009))*(3*44.009+4*18.015)/44.097",
+            "equals": "productMass"
+          }
+        }
+      ]
+    },
+    {
+      "id": "chlorate-heated",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["mass", "inspection"],
+      "set": {
+        "reaction": 6,
+        "mass": 49
+      },
+      "stem": "A sample of KClO₃ is heated until it has all decomposed: KClO₃ → KCl + O₂ (unbalanced). The solid loses {=1.5*(mass/122.545)*31.998} g, the oxygen given off. What mass of KClO₃ was heated? (M: KClO₃ 122.545; O₂ 31.998 g/mol)",
+      "explain": "2KClO₃ → 2KCl + 3O₂. n(O₂) = {=1.5*(mass/122.545)*31.998}/31.998 ≈ {=1.5*mass/122.545} mol, and 3 mol O₂ come from 2 mol KClO₃: n(KClO₃) = (2/3)·{=1.5*mass/122.545} ≈ {=mass/122.545} mol, m ≈ {=mass/122.545}·122.545 = {mass} g. Taking the ratio as 1 : 1, dropping the 2, or using O (16) instead of O₂ are the traps.",
+      "vi": {
+        "stem": "Nung một mẫu KClO₃ đến khi phân hủy hoàn toàn: KClO₃ → KCl + O₂ (chưa cân bằng). Khối lượng chất rắn giảm {=1.5*(mass/122.545)*31.998} g, chính là khối lượng oxygen thoát ra. Khối lượng KClO₃ đã nung là bao nhiêu? (M: KClO₃ 122,545; O₂ 31,998 g/mol)",
+        "explain": "2KClO₃ → 2KCl + 3O₂. n(O₂) = {=1.5*(mass/122.545)*31.998}/31,998 ≈ {=1.5*mass/122.545} mol, mà 3 mol O₂ sinh ra từ 2 mol KClO₃: n(KClO₃) = (2/3)·{=1.5*mass/122.545} ≈ {=mass/122.545} mol, m ≈ {=mass/122.545}·122,545 = {mass} g. Lấy tỉ lệ 1 : 1, bỏ quên hệ số 2, hoặc dùng O (16) thay cho O₂ là các bẫy thường gặp."
+      },
+      "options": [
+        {
+          "text": "{=(1.5*(mass/122.545)*31.998)*2*122.545/(3*31.998)} g",
+          "vi": {
+            "text": "{=(1.5*(mass/122.545)*31.998)*2*122.545/(3*31.998)} g"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(1.5*(mass/122.545)*31.998)*2*122.545/(3*31.998)",
+            "equals": "productMass"
+          }
+        },
+        {
+          "text": "{=(1.5*(mass/122.545)*31.998)*122.545/31.998} g",
+          "vi": {
+            "text": "{=(1.5*(mass/122.545)*31.998)*122.545/31.998} g"
+          },
+          "check": {
+            "expr": "(1.5*(mass/122.545)*31.998)*122.545/31.998",
+            "equals": "productMass"
+          }
+        },
+        {
+          "text": "{=(1.5*(mass/122.545)*31.998)*122.545/(3*31.998)} g",
+          "vi": {
+            "text": "{=(1.5*(mass/122.545)*31.998)*122.545/(3*31.998)} g"
+          },
+          "check": {
+            "expr": "(1.5*(mass/122.545)*31.998)*122.545/(3*31.998)",
+            "equals": "productMass"
+          }
+        },
+        {
+          "text": "{=(1.5*(mass/122.545)*31.998)*2*122.545/(3*15.999)} g",
+          "vi": {
+            "text": "{=(1.5*(mass/122.545)*31.998)*2*122.545/(3*15.999)} g"
+          },
+          "check": {
+            "expr": "(1.5*(mass/122.545)*31.998)*2*122.545/(3*15.999)",
+            "equals": "productMass"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-ethanol-oxygen",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["inspection", "mass"],
+      "set": {
+        "reaction": 7,
+        "mass": 23
+      },
+      "stem": "{mass} g of ethanol burns completely: C₂H₅OH + O₂ → CO₂ + H₂O (unbalanced). M: C₂H₅OH 46.069; O₂ 31.998; CO₂ 44.009; H₂O 18.015 g/mol. Decide whether each statement is true or false.",
+      "explain": "C₂H₅OH + 3O₂ → 2CO₂ + 3H₂O (all six H, the one in OH too). n ≈ {=mass/46.069} mol uses 3 times as much O₂ ≈ {=3*(mass/46.069)*31.998} g and gives {=2*(mass/46.069)*44.009} g CO₂ and {=3*(mass/46.069)*18.015} g H₂O. Counting only the five H of C₂H₅ would give 2.5H₂O and {=2.5*(mass/46.069)*18.015} g — wrong.",
+      "vi": {
+        "stem": "Đốt cháy hoàn toàn {mass} g ethanol: C₂H₅OH + O₂ → CO₂ + H₂O (chưa cân bằng). M: C₂H₅OH 46,069; O₂ 31,998; CO₂ 44,009; H₂O 18,015 g/mol. Mỗi nhận định sau đúng hay sai?",
+        "explain": "C₂H₅OH + 3O₂ → 2CO₂ + 3H₂O (đủ sáu nguyên tử H, kể cả H trong nhóm OH). n ≈ {=mass/46.069} mol cần lượng O₂ gấp 3 ≈ {=3*(mass/46.069)*31.998} g, tạo {=2*(mass/46.069)*44.009} g CO₂ và {=3*(mass/46.069)*18.015} g H₂O. Nếu chỉ đếm năm nguyên tử H của C₂H₅ sẽ được 2,5H₂O và {=2.5*(mass/46.069)*18.015} g — sai."
+      },
+      "statements": [
+        {
+          "text": "Each mole of ethanol needs 3 mol of O₂.",
+          "vi": {
+            "text": "Mỗi mol ethanol cần 3 mol O₂."
+          },
+          "true": true,
+          "check": {
+            "expr": "3",
+            "equals": "coefficientB"
+          }
+        },
+        {
+          "text": "About {=3*(mass/46.069)*31.998} g of oxygen is used.",
+          "vi": {
+            "text": "Lượng oxygen đã phản ứng khoảng {=3*(mass/46.069)*31.998} g."
+          },
+          "true": true,
+          "check": {
+            "expr": "mass+3*(mass/46.069)*31.998",
+            "equals": "reactantMass"
+          }
+        },
+        {
+          "text": "About {=2*(mass/46.069)*44.009} g of CO₂ forms.",
+          "vi": {
+            "text": "Khối lượng CO₂ tạo thành khoảng {=2*(mass/46.069)*44.009} g."
+          },
+          "true": true,
+          "check": {
+            "expr": "2*(mass/46.069)*44.009+3*(mass/46.069)*18.015",
+            "equals": "productMass"
+          }
+        },
+        {
+          "text": "About {=2.5*(mass/46.069)*18.015} g of water forms.",
+          "vi": {
+            "text": "Khối lượng nước tạo thành khoảng {=2.5*(mass/46.069)*18.015} g."
+          },
+          "true": false,
+          "check": {
+            "expr": "2*(mass/46.069)*44.009+2.5*(mass/46.069)*18.015",
+            "equals": "productMass"
+          }
+        }
+      ]
+    }
+  ]
+}

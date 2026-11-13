@@ -1,0 +1,1016 @@
+{
+  "id": "mark-recapture",
+  "skills": [
+    {
+      "id": "lincoln-petersen",
+      "name": "The Lincoln–Petersen estimate: N ≈ M·C/R",
+      "advice": "Start from R/C ≈ M/N (the marked share of the catch equals the marked share of the population) and rearrange it yourself to N ≈ M·C/R. At the station work out M·C/R from your own R before reading the monitor.",
+      "vi": {
+        "name": "Ước lượng Lincoln – Petersen: N ≈ M·C/R",
+        "advice": "Bắt đầu từ R/C ≈ M/N (tỉ lệ cá thể đánh dấu trong mẫu bắt lại bằng tỉ lệ cá thể đánh dấu trong quần thể) rồi tự biến đổi thành N ≈ M·C/R. Trên trạm, tự tính M·C/R từ R của em trước khi đọc màn hình kết quả."
+      }
+    },
+    {
+      "id": "assumptions",
+      "name": "The method’s assumptions",
+      "advice": "Learn the four assumptions: a closed population (no births, deaths or migration between the catches), no marks lost, marked and unmarked equally likely to be caught, and good mixing. For each, say whether breaking it makes N̂ too high or too low.",
+      "vi": {
+        "name": "Các giả thiết của phương pháp",
+        "advice": "Học thuộc bốn giả thiết: quần thể kín (không sinh, tử, xuất cư, nhập cư giữa hai lần bắt), dấu không bị mất, cá thể có đánh dấu và không đánh dấu có khả năng bị bắt như nhau, và trộn đều. Với mỗi giả thiết, nêu khi bị vi phạm thì N̂ lớn hơn hay nhỏ hơn thực tế."
+      }
+    },
+    {
+      "id": "expected-recaptures",
+      "name": "Expected recaptures and their scatter",
+      "advice": "Practise E(R) = C·M/N for a supposed N, and the variance C·p(1 − p)(N − C)/(N − 1) with p = M/N. Take several catches at the station and see R scatter about its expected value.",
+      "vi": {
+        "name": "Số cá thể đánh dấu kì vọng bắt lại và độ dao động",
+        "advice": "Luyện E(R) = C·M/N với một N giả định, và phương sai C·p(1 − p)(N − C)/(N − 1) với p = M/N. Bắt nhiều mẫu trên trạm và quan sát R dao động quanh giá trị kì vọng."
+      }
+    },
+    {
+      "id": "precision",
+      "name": "How sure the estimate is",
+      "advice": "Compare catches of 30 and 100 beans: larger M and C give a larger R and estimates that agree better. Learn Chapman’s estimate, (M + 1)(C + 1)/(R + 1) − 1, which runs less high in small samples.",
+      "vi": {
+        "name": "Độ tin cậy của ước lượng",
+        "advice": "So sánh các mẫu bắt 30 và 100 hạt: M và C lớn hơn cho R lớn hơn và các ước lượng khớp nhau hơn. Học công thức Chapman, (M + 1)(C + 1)/(R + 1) − 1, cho kết quả ít bị lệch cao hơn khi mẫu nhỏ."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "formula",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["lincoln-petersen"],
+      "stem": "M individuals are marked and released; later C are caught, R of them marked. The Lincoln–Petersen estimate of the population size N is…",
+      "explain": "R/C ≈ M/N, so N ≈ M·C/R.",
+      "vi": {
+        "stem": "Đánh dấu và thả M cá thể; lần sau bắt C cá thể, trong đó có R cá thể đã đánh dấu. Ước lượng Lincoln – Petersen của kích thước quần thể N là…",
+        "explain": "R/C ≈ M/N, nên N ≈ M·C/R."
+      },
+      "options": [
+        {
+          "text": "N ≈ M·C/R",
+          "vi": {
+            "text": "N ≈ M·C/R"
+          },
+          "correct": true
+        },
+        {
+          "text": "N ≈ R·C/M",
+          "vi": {
+            "text": "N ≈ R·C/M"
+          }
+        },
+        {
+          "text": "N ≈ M·R/C",
+          "vi": {
+            "text": "N ≈ M·R/C"
+          }
+        },
+        {
+          "text": "N ≈ M + C − R",
+          "vi": {
+            "text": "N ≈ M + C − R"
+          }
+        }
+      ]
+    },
+    {
+      "id": "assumption",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["assumptions"],
+      "stem": "Which of these is an assumption of the mark–recapture method?",
+      "explain": "The population must be closed between the two catches: no births, deaths, immigration or emigration, or M/N changes.",
+      "vi": {
+        "stem": "Điều nào sau đây là một giả thiết của phương pháp đánh dấu – bắt lại?",
+        "explain": "Quần thể phải kín giữa hai lần bắt: không có sinh, tử, nhập cư hay xuất cư, nếu không tỉ lệ M/N sẽ thay đổi."
+      },
+      "options": [
+        {
+          "text": "No births, deaths or migration happen between the two catches",
+          "vi": {
+            "text": "Không có sinh, tử hay di cư xảy ra giữa hai lần bắt"
+          },
+          "correct": true
+        },
+        {
+          "text": "Marked individuals are easier to catch than unmarked ones",
+          "vi": {
+            "text": "Cá thể đã đánh dấu dễ bị bắt hơn cá thể chưa đánh dấu"
+          }
+        },
+        {
+          "text": "Some marks fall off before the second catch",
+          "vi": {
+            "text": "Một số dấu bị mất trước lần bắt thứ hai"
+          }
+        },
+        {
+          "text": "The second catch includes every marked individual",
+          "vi": {
+            "text": "Lần bắt thứ hai bắt được toàn bộ cá thể đã đánh dấu"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-terms",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["lincoln-petersen", "assumptions"],
+      "stem": "About the mark–recapture method: decide whether each statement is true or false.",
+      "explain": "M is the number marked and released; R the marked ones in the second catch. The marked individuals must mix back in before the second catch. The point of the method is to estimate N without counting every individual.",
+      "vi": {
+        "stem": "Về phương pháp đánh dấu – bắt lại, mỗi nhận định sau đúng hay sai?",
+        "explain": "M là số cá thể được đánh dấu và thả ra; R là số cá thể có đánh dấu trong lần bắt thứ hai. Cá thể đánh dấu phải được trộn lẫn trở lại trước lần bắt thứ hai. Mục đích của phương pháp là ước lượng N mà không cần đếm từng cá thể."
+      },
+      "statements": [
+        {
+          "text": "M is the number of individuals caught, marked and released the first time.",
+          "vi": {
+            "text": "M là số cá thể được bắt, đánh dấu và thả ra ở lần đầu."
+          },
+          "true": true
+        },
+        {
+          "text": "R is the number of marked individuals found in the second catch.",
+          "vi": {
+            "text": "R là số cá thể đã đánh dấu có trong lần bắt thứ hai."
+          },
+          "true": true
+        },
+        {
+          "text": "The marked individuals must mix back into the population before the second catch.",
+          "vi": {
+            "text": "Các cá thể đánh dấu phải được trộn lẫn trở lại vào quần thể trước lần bắt thứ hai."
+          },
+          "true": true
+        },
+        {
+          "text": "The method needs every individual in the population to be counted.",
+          "vi": {
+            "text": "Phương pháp này cần đếm toàn bộ cá thể trong quần thể."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "why-ratio",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["lincoln-petersen", "assumptions"],
+      "stem": "Why can the share of marked individuals in the second catch, R/C, be used for M/N?",
+      "explain": "Once the marked ones have mixed evenly, a random catch is a fair sample: the marked share in it matches the marked share in the whole population.",
+      "vi": {
+        "stem": "Vì sao có thể dùng tỉ lệ cá thể đánh dấu trong lần bắt thứ hai, R/C, thay cho M/N?",
+        "explain": "Khi các cá thể đánh dấu đã trộn đều, một lần bắt ngẫu nhiên là một mẫu đại diện: tỉ lệ cá thể đánh dấu trong mẫu bằng tỉ lệ đó trong cả quần thể."
+      },
+      "options": [
+        {
+          "text": "The marked ones have mixed evenly, so a random catch holds them in the same share as the population",
+          "vi": {
+            "text": "Các cá thể đánh dấu đã trộn đều, nên mẫu bắt ngẫu nhiên có tỉ lệ cá thể đánh dấu như trong quần thể"
+          },
+          "correct": true
+        },
+        {
+          "text": "Marked individuals are always caught first",
+          "vi": {
+            "text": "Các cá thể đánh dấu luôn bị bắt trước"
+          }
+        },
+        {
+          "text": "The second catch is always the same size as the first",
+          "vi": {
+            "text": "Lần bắt thứ hai luôn có số lượng bằng lần đầu"
+          }
+        },
+        {
+          "text": "Every marked individual is caught again",
+          "vi": {
+            "text": "Mọi cá thể đánh dấu đều bị bắt lại"
+          }
+        }
+      ]
+    },
+    {
+      "id": "trap-shy",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["assumptions", "lincoln-petersen"],
+      "stem": "In a field study, animals caught once learn to avoid the traps. How does this affect the estimate N ≈ M·C/R?",
+      "explain": "Fewer marked animals are recaptured, so R is too small and M·C/R comes out too high.",
+      "vi": {
+        "stem": "Trong một nghiên cứu thực địa, các con vật đã bị bắt một lần học được cách tránh bẫy. Điều này ảnh hưởng thế nào đến ước lượng N ≈ M·C/R?",
+        "explain": "Ít con vật đánh dấu bị bắt lại hơn, nên R quá nhỏ và M·C/R lớn hơn thực tế."
+      },
+      "options": [
+        {
+          "text": "N is overestimated, because R is too small",
+          "vi": {
+            "text": "N bị ước lượng cao hơn thực tế, vì R quá nhỏ"
+          },
+          "correct": true
+        },
+        {
+          "text": "N is underestimated, because R is too large",
+          "vi": {
+            "text": "N bị ước lượng thấp hơn thực tế, vì R quá lớn"
+          }
+        },
+        {
+          "text": "N is unaffected, because C stays the same",
+          "vi": {
+            "text": "N không bị ảnh hưởng, vì C không đổi"
+          }
+        },
+        {
+          "text": "N comes out as zero",
+          "vi": {
+            "text": "N bằng 0"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-scatter",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["precision", "expected-recaptures"],
+      "stem": "Beans are drawn from a jar of marked and unmarked beans. Decide whether each statement is true or false.",
+      "explain": "R is a matter of chance, so catches differ; larger catches give estimates that agree better. With R = 0, M·C/R has no value. Chapman’s estimate is nearly unbiased on average, but any one catch still misses N by chance.",
+      "vi": {
+        "stem": "Bốc các hạt đậu từ một lọ có hạt đánh dấu và hạt không đánh dấu. Mỗi nhận định sau đúng hay sai?",
+        "explain": "R phụ thuộc vào ngẫu nhiên nên các lần bắt khác nhau; mẫu bắt lớn hơn cho các ước lượng khớp nhau hơn. Khi R = 0, M·C/R không có giá trị. Ước lượng Chapman gần như không chệch về trung bình, nhưng mỗi lần bắt vẫn có thể lệch khỏi N do ngẫu nhiên."
+      },
+      "statements": [
+        {
+          "text": "Different catches from the same jar give different R by chance.",
+          "vi": {
+            "text": "Các lần bắt khác nhau từ cùng một lọ cho R khác nhau do ngẫu nhiên."
+          },
+          "true": true
+        },
+        {
+          "text": "A larger catch C usually gives a more reliable estimate.",
+          "vi": {
+            "text": "Mẫu bắt C lớn hơn thường cho ước lượng đáng tin cậy hơn."
+          },
+          "true": true
+        },
+        {
+          "text": "If R = 0, the Lincoln–Petersen estimate cannot be worked out.",
+          "vi": {
+            "text": "Nếu R = 0 thì không tính được ước lượng Lincoln – Petersen."
+          },
+          "true": true
+        },
+        {
+          "text": "Chapman’s estimate from any single catch equals the true N exactly.",
+          "vi": {
+            "text": "Ước lượng Chapman từ bất kì lần bắt nào cũng đúng bằng N thực."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "estimate",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["lincoln-petersen"],
+      "set": {
+        "populationSize": 400,
+        "marked": 80,
+        "caught": 50
+      },
+      "stem": "Suppose another jar of beans is sampled. M = {marked} beans are marked and mixed back in; a catch of C = {caught} holds R = {@expectedRecaptured} marked beans. What is the Lincoln–Petersen estimate of the number of beans?",
+      "explain": "N ≈ M·C/R = {marked}·{caught}/{@expectedRecaptured} = {=marked*caught/@expectedRecaptured}.",
+      "vi": {
+        "stem": "Giả sử lấy mẫu một lọ đậu khác. Đánh dấu M = {marked} hạt rồi trộn lại; một lần bắt C = {caught} hạt có R = {@expectedRecaptured} hạt đã đánh dấu. Ước lượng Lincoln – Petersen của số hạt đậu trong lọ là bao nhiêu?",
+        "explain": "N ≈ M·C/R = {marked}·{caught}/{@expectedRecaptured} = {=marked*caught/@expectedRecaptured}."
+      },
+      "options": [
+        {
+          "text": "{=marked*caught/@expectedRecaptured}",
+          "vi": {
+            "text": "{=marked*caught/@expectedRecaptured}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "caught*marked/(marked*caught/@expectedRecaptured)",
+            "equals": "expectedRecaptured"
+          }
+        },
+        {
+          "text": "{=@expectedRecaptured*caught/marked}",
+          "vi": {
+            "text": "{=@expectedRecaptured*caught/marked}"
+          },
+          "check": {
+            "expr": "caught*marked/(@expectedRecaptured*caught/marked)",
+            "equals": "expectedRecaptured"
+          }
+        },
+        {
+          "text": "{=marked*@expectedRecaptured/caught}",
+          "vi": {
+            "text": "{=marked*@expectedRecaptured/caught}"
+          },
+          "check": {
+            "expr": "caught*marked/(marked*@expectedRecaptured/caught)",
+            "equals": "expectedRecaptured"
+          }
+        },
+        {
+          "text": "{=marked+caught-@expectedRecaptured}",
+          "vi": {
+            "text": "{=marked+caught-@expectedRecaptured}"
+          },
+          "check": {
+            "expr": "caught*marked/(marked+caught-@expectedRecaptured)",
+            "equals": "expectedRecaptured"
+          }
+        }
+      ]
+    },
+    {
+      "id": "expected-r",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["expected-recaptures"],
+      "set": {
+        "populationSize": 500,
+        "marked": 50,
+        "caught": 100
+      },
+      "stem": "Suppose a closed population of N = {populationSize}. M = {marked} are marked and released; later a catch of C = {caught} is taken. How many marked individuals do you expect in it?",
+      "explain": "The marked share is M/N = {=marked/populationSize}: E(R) = C·M/N = {caught}·{marked}/{populationSize} = {@expectedRecaptured}.",
+      "vi": {
+        "stem": "Giả sử một quần thể kín có N = {populationSize} cá thể. Đánh dấu và thả M = {marked} cá thể; sau đó bắt C = {caught} cá thể. Số cá thể đánh dấu kì vọng có trong mẫu bắt là bao nhiêu?",
+        "explain": "Tỉ lệ cá thể đánh dấu là M/N = {=marked/populationSize}: E(R) = C·M/N = {caught}·{marked}/{populationSize} = {@expectedRecaptured}."
+      },
+      "options": [
+        {
+          "text": "{@expectedRecaptured}",
+          "vi": {
+            "text": "{@expectedRecaptured}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "caught*marked/populationSize",
+            "equals": "expectedRecaptured"
+          }
+        },
+        {
+          "text": "{=populationSize*marked/caught}",
+          "vi": {
+            "text": "{=populationSize*marked/caught}"
+          },
+          "check": {
+            "expr": "populationSize*marked/caught",
+            "equals": "expectedRecaptured"
+          }
+        },
+        {
+          "text": "{=caught*populationSize/marked}",
+          "vi": {
+            "text": "{=caught*populationSize/marked}"
+          },
+          "check": {
+            "expr": "caught*populationSize/marked",
+            "equals": "expectedRecaptured"
+          }
+        },
+        {
+          "text": "{=marked/populationSize}",
+          "vi": {
+            "text": "{=marked/populationSize}"
+          },
+          "check": {
+            "expr": "marked/populationSize",
+            "equals": "expectedRecaptured"
+          }
+        }
+      ]
+    },
+    {
+      "id": "chapman",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["precision", "lincoln-petersen"],
+      "set": {
+        "populationSize": 1000,
+        "marked": 80,
+        "caught": 100
+      },
+      "stem": "Suppose another jar: M = {marked} marked, a catch of C = {caught} with R = {@expectedRecaptured} marked. What is Chapman’s estimate, (M + 1)(C + 1)/(R + 1) − 1?",
+      "explain": "({marked} + 1)({caught} + 1)/({@expectedRecaptured} + 1) − 1 = {=(marked+1)*(caught+1)/(@expectedRecaptured+1)-1}. The Lincoln–Petersen estimate, {=marked*caught/@expectedRecaptured}, runs higher in small samples.",
+      "vi": {
+        "stem": "Giả sử một lọ khác: M = {marked} hạt đánh dấu, một lần bắt C = {caught} hạt có R = {@expectedRecaptured} hạt đánh dấu. Ước lượng Chapman, (M + 1)(C + 1)/(R + 1) − 1, bằng bao nhiêu?",
+        "explain": "({marked} + 1)({caught} + 1)/({@expectedRecaptured} + 1) − 1 = {=(marked+1)*(caught+1)/(@expectedRecaptured+1)-1}. Ước lượng Lincoln – Petersen, {=marked*caught/@expectedRecaptured}, thường cao hơn khi mẫu nhỏ."
+      },
+      "options": [
+        {
+          "text": "{=(marked+1)*(caught+1)/(@expectedRecaptured+1)-1}",
+          "vi": {
+            "text": "{=(marked+1)*(caught+1)/(@expectedRecaptured+1)-1}"
+          },
+          "correct": true
+        },
+        {
+          "text": "{=marked*caught/@expectedRecaptured}",
+          "vi": {
+            "text": "{=marked*caught/@expectedRecaptured}"
+          }
+        },
+        {
+          "text": "{=(marked+1)*(caught+1)/@expectedRecaptured-1}",
+          "vi": {
+            "text": "{=(marked+1)*(caught+1)/@expectedRecaptured-1}"
+          }
+        },
+        {
+          "text": "{=marked*caught/(@expectedRecaptured+1)}",
+          "vi": {
+            "text": "{=marked*caught/(@expectedRecaptured+1)}"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-supposed",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["expected-recaptures", "lincoln-petersen"],
+      "set": {
+        "populationSize": 300,
+        "marked": 30,
+        "caught": 80
+      },
+      "stem": "Suppose a closed population of N = {populationSize}, with M = {marked} marked and a catch of C = {caught}. Decide whether each statement is true or false.",
+      "explain": "M/N = {=marked/populationSize}, so E(R) = {caught}·{=marked/populationSize} = {@expectedRecaptured}; with that R, M·C/R gives back {=marked*caught/@expectedRecaptured}. A larger R, {=@expectedRecaptured+2}, gives {=marked*caught/(@expectedRecaptured+2)}, smaller than N.",
+      "vi": {
+        "stem": "Giả sử một quần thể kín có N = {populationSize}, M = {marked} cá thể được đánh dấu và mẫu bắt C = {caught}. Mỗi nhận định sau đúng hay sai?",
+        "explain": "M/N = {=marked/populationSize}, nên E(R) = {caught}·{=marked/populationSize} = {@expectedRecaptured}; với R đó, M·C/R cho lại {=marked*caught/@expectedRecaptured}. R lớn hơn, {=@expectedRecaptured+2}, cho {=marked*caught/(@expectedRecaptured+2)}, nhỏ hơn N."
+      },
+      "statements": [
+        {
+          "text": "The marked share of the population is {=marked/populationSize}.",
+          "vi": {
+            "text": "Tỉ lệ cá thể đánh dấu trong quần thể là {=marked/populationSize}."
+          },
+          "true": true
+        },
+        {
+          "text": "The expected number of marked individuals in the catch is {@expectedRecaptured}.",
+          "vi": {
+            "text": "Số cá thể đánh dấu kì vọng trong mẫu bắt là {@expectedRecaptured}."
+          },
+          "true": true,
+          "check": {
+            "expr": "caught*marked/populationSize",
+            "equals": "expectedRecaptured"
+          }
+        },
+        {
+          "text": "If R comes out at {@expectedRecaptured}, M·C/R gives back {=marked*caught/@expectedRecaptured}.",
+          "vi": {
+            "text": "Nếu R đúng bằng {@expectedRecaptured}, M·C/R cho lại {=marked*caught/@expectedRecaptured}."
+          },
+          "true": true
+        },
+        {
+          "text": "A catch with R = {=@expectedRecaptured+2} would give an estimate larger than {populationSize}.",
+          "vi": {
+            "text": "Một lần bắt có R = {=@expectedRecaptured+2} sẽ cho ước lượng lớn hơn {populationSize}."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "lost-marks",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["assumptions", "lincoln-petersen"],
+      "set": {
+        "populationSize": 400,
+        "marked": 80,
+        "caught": 50
+      },
+      "stem": "Suppose a pond holds {populationSize} newts. {marked} are marked and released, but half of the marks wash off before the second catch. A catch of {caught} then shows only {=@expectedRecaptured/2} marked newts instead of the {@expectedRecaptured} expected. What does M·C/R give?",
+      "explain": "M·C/R = {marked}·{caught}/{=@expectedRecaptured/2} = {=marked*caught/(@expectedRecaptured/2)}: twice the true {populationSize}. Lost marks make R too small, so N is overestimated.",
+      "vi": {
+        "stem": "Giả sử một ao có {populationSize} con sa giông. Đánh dấu và thả {marked} con, nhưng một nửa số dấu bị trôi mất trước lần bắt thứ hai. Lần bắt {caught} con khi đó chỉ thấy {=@expectedRecaptured/2} con có dấu thay vì {@expectedRecaptured} con như kì vọng. M·C/R cho kết quả nào?",
+        "explain": "M·C/R = {marked}·{caught}/{=@expectedRecaptured/2} = {=marked*caught/(@expectedRecaptured/2)}: gấp đôi giá trị thật {populationSize}. Dấu bị mất làm R quá nhỏ, nên N bị ước lượng cao hơn thực tế."
+      },
+      "options": [
+        {
+          "text": "{=marked*caught/(@expectedRecaptured/2)}: twice the true size",
+          "vi": {
+            "text": "{=marked*caught/(@expectedRecaptured/2)}: gấp đôi kích thước thật"
+          },
+          "correct": true
+        },
+        {
+          "text": "{=marked*caught/@expectedRecaptured}: the lost marks do not matter",
+          "vi": {
+            "text": "{=marked*caught/@expectedRecaptured}: dấu bị mất không ảnh hưởng"
+          }
+        },
+        {
+          "text": "{=marked*caught/(2*@expectedRecaptured)}: half the true size",
+          "vi": {
+            "text": "{=marked*caught/(2*@expectedRecaptured)}: bằng một nửa kích thước thật"
+          }
+        },
+        {
+          "text": "{=(@expectedRecaptured/2)*caught/marked}: far below the true size",
+          "vi": {
+            "text": "{=(@expectedRecaptured/2)*caught/marked}: nhỏ hơn nhiều so với kích thước thật"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-variance",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["precision", "expected-recaptures"],
+      "set": {
+        "populationSize": 1000,
+        "marked": 80,
+        "caught": 100
+      },
+      "stem": "Suppose a closed population of N = {populationSize}, with M = {marked} marked and a catch of C = {caught} drawn without replacement. Decide whether each statement is true or false.",
+      "explain": "E(R) = {@expectedRecaptured}; Var(R) = C·p(1 − p)(N − C)/(N − 1) ≈ {@recapturedVariance|3}, so R typically lands within about √Var ≈ {=sqrt(@recapturedVariance)|2} of E(R). A catch with R = 5 gives M·C/R = {=marked*caught/5}, too high. Marking fewer beans gives a smaller R and estimates that scatter more.",
+      "vi": {
+        "stem": "Giả sử một quần thể kín có N = {populationSize}, M = {marked} cá thể được đánh dấu và mẫu bắt C = {caught} được lấy không hoàn lại. Mỗi nhận định sau đúng hay sai?",
+        "explain": "E(R) = {@expectedRecaptured}; Var(R) = C·p(1 − p)(N − C)/(N − 1) ≈ {@recapturedVariance|3}, nên R thường lệch khỏi E(R) khoảng √Var ≈ {=sqrt(@recapturedVariance)|2}. Một lần bắt có R = 5 cho M·C/R = {=marked*caught/5}, cao hơn thực tế. Đánh dấu ít hạt hơn cho R nhỏ hơn và các ước lượng dao động nhiều hơn."
+      },
+      "statements": [
+        {
+          "text": "The expected number of marked individuals in the catch is {@expectedRecaptured}.",
+          "vi": {
+            "text": "Số cá thể đánh dấu kì vọng trong mẫu bắt là {@expectedRecaptured}."
+          },
+          "true": true,
+          "check": {
+            "expr": "caught*marked/populationSize",
+            "equals": "expectedRecaptured"
+          }
+        },
+        {
+          "text": "The variance of R is about {@recapturedVariance|3}, so a real R usually lies within about {=sqrt(@recapturedVariance)|2} of the expected value.",
+          "vi": {
+            "text": "Phương sai của R khoảng {@recapturedVariance|3}, nên R thực tế thường lệch khỏi giá trị kì vọng khoảng {=sqrt(@recapturedVariance)|2}."
+          },
+          "true": true,
+          "check": {
+            "expr": "caught*(marked/populationSize)*(1-marked/populationSize)*(populationSize-caught)/(populationSize-1)",
+            "equals": "recapturedVariance"
+          }
+        },
+        {
+          "text": "A catch with R = 5 would give the estimate {=marked*caught/5}, larger than the true size.",
+          "vi": {
+            "text": "Một lần bắt có R = 5 sẽ cho ước lượng {=marked*caught/5}, lớn hơn kích thước thật."
+          },
+          "true": true
+        },
+        {
+          "text": "Marking 30 beans instead of {marked} would make the estimates more reliable.",
+          "vi": {
+            "text": "Đánh dấu 30 hạt thay vì {marked} hạt sẽ làm các ước lượng đáng tin cậy hơn."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "closed-meaning",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["assumptions"],
+      "stem": "The method assumes a “closed” population between the two catches. This means…",
+      "explain": "Closed means no births, deaths, immigration or emigration between the catches, so M and N stay the same while the marked individuals mix in.",
+      "vi": {
+        "stem": "Phương pháp này giả định quần thể là “kín” giữa hai lần bắt. Điều đó có nghĩa là…",
+        "explain": "Quần thể kín nghĩa là giữa hai lần bắt không có sinh, tử, nhập cư hay xuất cư, nên M và N không đổi trong khi các cá thể đã đánh dấu hòa lẫn vào quần thể."
+      },
+      "options": [
+        {
+          "text": "no births, deaths, immigration or emigration between the catches",
+          "vi": {
+            "text": "giữa hai lần bắt không có sinh, tử, nhập cư hay xuất cư"
+          },
+          "correct": true
+        },
+        {
+          "text": "the animals are kept in a fenced enclosure for the study",
+          "vi": {
+            "text": "các con vật bị nhốt trong khu rào kín suốt thời gian nghiên cứu"
+          }
+        },
+        {
+          "text": "only one species lives in the habitat",
+          "vi": {
+            "text": "chỉ có một loài sống trong môi trường đó"
+          }
+        },
+        {
+          "text": "every individual is caught in the second catch",
+          "vi": {
+            "text": "mọi cá thể đều bị bắt trong lần bắt thứ hai"
+          }
+        }
+      ]
+    },
+    {
+      "id": "trap-happy",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["assumptions", "lincoln-petersen"],
+      "stem": "Some voles learn that the traps hold bait and come back to them, so marked voles are caught again more often than unmarked ones. How does this affect the estimate N ≈ M·C/R?",
+      "explain": "Marked voles are over-represented in the second catch, so R is too large and M·C/R is too small: the population is underestimated.",
+      "vi": {
+        "stem": "Một số con chuột đồng học được rằng trong bẫy có mồi nên quay lại bẫy, vì vậy chuột đã đánh dấu bị bắt lại nhiều hơn chuột chưa đánh dấu. Điều này ảnh hưởng thế nào đến ước lượng N ≈ M·C/R?",
+        "explain": "Chuột đã đánh dấu chiếm tỉ lệ quá cao trong lần bắt thứ hai, nên R quá lớn và M·C/R quá nhỏ: kích thước quần thể bị ước lượng thấp hơn thực tế."
+      },
+      "options": [
+        {
+          "text": "R is too large, so N is underestimated",
+          "vi": {
+            "text": "R quá lớn nên N bị ước lượng thấp hơn thực tế"
+          },
+          "correct": true
+        },
+        {
+          "text": "R is too small, so N is overestimated",
+          "vi": {
+            "text": "R quá nhỏ nên N bị ước lượng cao hơn thực tế"
+          }
+        },
+        {
+          "text": "R is too large, so N is overestimated",
+          "vi": {
+            "text": "R quá lớn nên N bị ước lượng cao hơn thực tế"
+          }
+        },
+        {
+          "text": "It has no effect, since C stays the same",
+          "vi": {
+            "text": "Không ảnh hưởng, vì C không đổi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-field",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["assumptions", "precision", "lincoln-petersen"],
+      "stem": "About using mark–recapture in the field: decide whether each statement is true or false.",
+      "explain": "Larger catches give more recaptures and a more precise estimate. With R = 0, M·C/R cannot be worked out. Marks must not harm the animals or change how they behave or are caught. Plants and fixed animals such as barnacles can be counted directly in quadrats; mark–recapture is for animals that move.",
+      "vi": {
+        "stem": "Về việc dùng phương pháp đánh dấu – bắt lại ngoài thực địa, mỗi nhận định sau đúng hay sai?",
+        "explain": "Bắt được nhiều cá thể hơn thì số cá thể bắt lại nhiều hơn và ước lượng chính xác hơn. Khi R = 0, không thể tính M·C/R. Dấu đánh không được gây hại cho con vật hay làm thay đổi tập tính và khả năng bị bắt của chúng. Thực vật và động vật sống bám như con hà có thể đếm trực tiếp trong ô tiêu chuẩn; phương pháp đánh dấu – bắt lại dùng cho động vật di chuyển."
+      },
+      "statements": [
+        {
+          "text": "Larger catches, with more recaptures, give a more precise estimate.",
+          "vi": {
+            "text": "Bắt được nhiều cá thể hơn, có nhiều cá thể bắt lại hơn, thì ước lượng chính xác hơn."
+          },
+          "true": true
+        },
+        {
+          "text": "If no marked individual is recaptured (R = 0), M·C/R cannot be worked out.",
+          "vi": {
+            "text": "Nếu không bắt lại được cá thể đánh dấu nào (R = 0), thì không tính được M·C/R."
+          },
+          "true": true
+        },
+        {
+          "text": "The marks must not harm the animals or change their behaviour.",
+          "vi": {
+            "text": "Dấu đánh không được gây hại hay làm thay đổi tập tính của con vật."
+          },
+          "true": true
+        },
+        {
+          "text": "Mark–recapture is the best way to estimate a population of trees or barnacles.",
+          "vi": {
+            "text": "Đánh dấu – bắt lại là cách tốt nhất để ước lượng quần thể cây gỗ hoặc con hà."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "density",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["lincoln-petersen"],
+      "set": {
+        "populationSize": 500,
+        "marked": 50,
+        "caught": 80
+      },
+      "stem": "In a 2.5 ha meadow, {marked} grasshoppers are marked and released; a later catch of {caught} holds {@expectedRecaptured} marked ones. What is the estimated density of grasshoppers?",
+      "explain": "N ≈ M·C/R = {marked}·{caught}/{@expectedRecaptured} = {=marked*caught/@expectedRecaptured}; density = {=marked*caught/@expectedRecaptured}/2.5 = {=marked*caught/@expectedRecaptured/2.5} per ha.",
+      "vi": {
+        "stem": "Trên một bãi cỏ rộng 2,5 ha, người ta đánh dấu {marked} con châu chấu rồi thả ra; lần bắt sau được {caught} con, trong đó có {@expectedRecaptured} con đã đánh dấu. Mật độ châu chấu ước lượng là bao nhiêu?",
+        "explain": "N ≈ M·C/R = {marked}·{caught}/{@expectedRecaptured} = {=marked*caught/@expectedRecaptured}; mật độ = {=marked*caught/@expectedRecaptured}/2,5 = {=marked*caught/@expectedRecaptured/2.5} con/ha."
+      },
+      "options": [
+        {
+          "text": "{=marked*caught/@expectedRecaptured/2.5} per ha",
+          "vi": {
+            "text": "{=marked*caught/@expectedRecaptured/2.5} con/ha"
+          },
+          "correct": true,
+          "check": {
+            "expr": "marked*caught/((marked*caught/@expectedRecaptured/2.5)*2.5)",
+            "equals": "expectedRecaptured"
+          }
+        },
+        {
+          "text": "{=marked*caught/@expectedRecaptured} per ha",
+          "vi": {
+            "text": "{=marked*caught/@expectedRecaptured} con/ha"
+          },
+          "check": {
+            "expr": "marked*caught/((marked*caught/@expectedRecaptured)*2.5)",
+            "equals": "expectedRecaptured"
+          }
+        },
+        {
+          "text": "{=marked*caught/@expectedRecaptured*2.5} per ha",
+          "vi": {
+            "text": "{=marked*caught/@expectedRecaptured*2.5} con/ha"
+          },
+          "check": {
+            "expr": "marked*caught/((marked*caught/@expectedRecaptured*2.5)*2.5)",
+            "equals": "expectedRecaptured"
+          }
+        },
+        {
+          "text": "{=(marked+caught)/2.5} per ha",
+          "vi": {
+            "text": "{=(marked+caught)/2.5} con/ha"
+          },
+          "check": {
+            "expr": "marked*caught/(((marked+caught)/2.5)*2.5)",
+            "equals": "expectedRecaptured"
+          }
+        }
+      ]
+    },
+    {
+      "id": "catch-size",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["expected-recaptures"],
+      "set": {
+        "populationSize": 500,
+        "marked": 50,
+        "caught": 100
+      },
+      "stem": "Suppose a closed population of N = {populationSize}, with M = {marked} marked. How many must the second catch take for {@expectedRecaptured} marked individuals to be expected in it?",
+      "explain": "The expected share marked is M/N = {marked}/{populationSize} = {=marked/populationSize}: R = C·M/N, so C = R·N/M = {@expectedRecaptured}·{populationSize}/{marked} = {=@expectedRecaptured*populationSize/marked}.",
+      "vi": {
+        "stem": "Giả sử một quần thể kín có N = {populationSize}, trong đó M = {marked} cá thể đã đánh dấu. Lần bắt thứ hai phải bắt bao nhiêu cá thể để kì vọng có {@expectedRecaptured} cá thể đánh dấu?",
+        "explain": "Tỉ lệ đánh dấu kì vọng là M/N = {marked}/{populationSize} = {=marked/populationSize}: R = C·M/N, nên C = R·N/M = {@expectedRecaptured}·{populationSize}/{marked} = {=@expectedRecaptured*populationSize/marked}."
+      },
+      "options": [
+        {
+          "text": "{=@expectedRecaptured*populationSize/marked}",
+          "vi": {
+            "text": "{=@expectedRecaptured*populationSize/marked}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(@expectedRecaptured*populationSize/marked)*marked/populationSize",
+            "equals": "expectedRecaptured"
+          }
+        },
+        {
+          "text": "{=@expectedRecaptured*marked/populationSize}",
+          "vi": {
+            "text": "{=@expectedRecaptured*marked/populationSize}"
+          },
+          "check": {
+            "expr": "(@expectedRecaptured*marked/populationSize)*marked/populationSize",
+            "equals": "expectedRecaptured"
+          }
+        },
+        {
+          "text": "{=populationSize/@expectedRecaptured}",
+          "vi": {
+            "text": "{=populationSize/@expectedRecaptured}"
+          },
+          "check": {
+            "expr": "(populationSize/@expectedRecaptured)*marked/populationSize",
+            "equals": "expectedRecaptured"
+          }
+        },
+        {
+          "text": "{=@expectedRecaptured+marked}",
+          "vi": {
+            "text": "{=@expectedRecaptured+marked}"
+          },
+          "check": {
+            "expr": "(@expectedRecaptured+marked)*marked/populationSize",
+            "equals": "expectedRecaptured"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-marked",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["lincoln-petersen", "expected-recaptures"],
+      "set": {
+        "populationSize": 400,
+        "marked": 50,
+        "caught": 80
+      },
+      "stem": "Suppose a pond holds N = {populationSize} fish. A catch of {caught} holds {@expectedRecaptured} marked fish, just as many as expected. How many fish had been marked and released?",
+      "explain": "R/C = M/N, so M = R·N/C = {@expectedRecaptured}·{populationSize}/{caught} = {=@expectedRecaptured*populationSize/caught}.",
+      "vi": {
+        "stem": "Giả sử một ao có N = {populationSize} con cá. Một lần bắt được {caught} con, trong đó có {@expectedRecaptured} con đã đánh dấu, đúng bằng số kì vọng. Trước đó đã đánh dấu và thả bao nhiêu con cá?",
+        "explain": "R/C = M/N, nên M = R·N/C = {@expectedRecaptured}·{populationSize}/{caught} = {=@expectedRecaptured*populationSize/caught}."
+      },
+      "options": [
+        {
+          "text": "{=@expectedRecaptured*populationSize/caught}",
+          "vi": {
+            "text": "{=@expectedRecaptured*populationSize/caught}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "caught*(@expectedRecaptured*populationSize/caught)/populationSize",
+            "equals": "expectedRecaptured"
+          }
+        },
+        {
+          "text": "{=@expectedRecaptured*caught/populationSize}",
+          "vi": {
+            "text": "{=@expectedRecaptured*caught/populationSize}"
+          },
+          "check": {
+            "expr": "caught*(@expectedRecaptured*caught/populationSize)/populationSize",
+            "equals": "expectedRecaptured"
+          }
+        },
+        {
+          "text": "{=populationSize/@expectedRecaptured}",
+          "vi": {
+            "text": "{=populationSize/@expectedRecaptured}"
+          },
+          "check": {
+            "expr": "caught*(populationSize/@expectedRecaptured)/populationSize",
+            "equals": "expectedRecaptured"
+          }
+        },
+        {
+          "text": "{=caught*populationSize/@expectedRecaptured}",
+          "vi": {
+            "text": "{=caught*populationSize/@expectedRecaptured}"
+          },
+          "check": {
+            "expr": "caught*(caught*populationSize/@expectedRecaptured)/populationSize",
+            "equals": "expectedRecaptured"
+          }
+        }
+      ]
+    },
+    {
+      "id": "births-between",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["assumptions", "lincoln-petersen"],
+      "set": {
+        "populationSize": 500,
+        "marked": 50,
+        "caught": 100
+      },
+      "stem": "Suppose a pond holds {=populationSize-100} newts when {marked} are marked. Before the second catch, 100 unmarked young join them (none die or leave). A catch of {caught} then holds {@expectedRecaptured} marked newts. What does M·C/R give?",
+      "explain": "The marked newts are now {marked} of {populationSize}: R = {caught}·{marked}/{populationSize} = {@expectedRecaptured}, and M·C/R = {=marked*caught/@expectedRecaptured} — the population at the second catch, young included, not the {=populationSize-100} there were at marking. The births broke the closed-population assumption.",
+      "vi": {
+        "stem": "Giả sử một ao có {=populationSize-100} con sa giông lúc đánh dấu {marked} con. Trước lần bắt thứ hai, có thêm 100 con non chưa đánh dấu (không con nào chết hay rời đi). Lần bắt {caught} con sau đó có {@expectedRecaptured} con đã đánh dấu. M·C/R cho kết quả là bao nhiêu?",
+        "explain": "Lúc này số sa giông đánh dấu là {marked} trên {populationSize}: R = {caught}·{marked}/{populationSize} = {@expectedRecaptured}, và M·C/R = {=marked*caught/@expectedRecaptured} — là số lượng ở lần bắt thứ hai, kể cả con non, chứ không phải {=populationSize-100} con lúc đánh dấu. Sự sinh sản đã phá vỡ giả thiết quần thể kín."
+      },
+      "options": [
+        {
+          "text": "{=marked*caught/@expectedRecaptured}: the population at the second catch, young included",
+          "vi": {
+            "text": "{=marked*caught/@expectedRecaptured}: số lượng ở lần bắt thứ hai, kể cả con non"
+          },
+          "correct": true,
+          "check": {
+            "expr": "marked*caught/(marked*caught/@expectedRecaptured)",
+            "equals": "expectedRecaptured"
+          }
+        },
+        {
+          "text": "{=populationSize-100}: the births do not change the estimate",
+          "vi": {
+            "text": "{=populationSize-100}: các con non không làm thay đổi ước lượng"
+          },
+          "check": {
+            "expr": "marked*caught/(populationSize-100)",
+            "equals": "expectedRecaptured"
+          }
+        },
+        {
+          "text": "{=populationSize-200}: the young must be taken off once more",
+          "vi": {
+            "text": "{=populationSize-200}: phải trừ thêm một lần số con non"
+          },
+          "check": {
+            "expr": "marked*caught/(populationSize-200)",
+            "equals": "expectedRecaptured"
+          }
+        },
+        {
+          "text": "{=populationSize+100}: the young are counted twice",
+          "vi": {
+            "text": "{=populationSize+100}: các con non bị tính hai lần"
+          },
+          "check": {
+            "expr": "marked*caught/(populationSize+100)",
+            "equals": "expectedRecaptured"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-one-catch",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["precision", "expected-recaptures", "lincoln-petersen"],
+      "set": {
+        "populationSize": 800,
+        "marked": 80,
+        "caught": 100
+      },
+      "stem": "Suppose a closed population of N = {populationSize}, with M = {marked} marked and a catch of C = {caught} drawn without replacement. Decide whether each statement is true or false.",
+      "explain": "Expected R = C·M/N = {@expectedRecaptured}. The variance is C·p(1 − p)(N − C)/(N − 1) ≈ {@recapturedVariance|3}, so R typically varies by about √{@recapturedVariance|3} ≈ {=sqrt(@recapturedVariance)|2}. A catch with R = {=@expectedRecaptured+3}, quite possible, gives M·C/R ≈ {=marked*caught/(@expectedRecaptured+3)|3}, well below N: one catch can mislead. Bigger M and C give more recaptures and a more precise estimate, not a less precise one.",
+      "vi": {
+        "stem": "Giả sử một quần thể kín có N = {populationSize}, với M = {marked} cá thể đánh dấu và một lần bắt C = {caught} cá thể không hoàn lại. Mỗi nhận định sau đúng hay sai?",
+        "explain": "R kì vọng = C·M/N = {@expectedRecaptured}. Phương sai là C·p(1 − p)(N − C)/(N − 1) ≈ {@recapturedVariance|3}, nên R thường dao động khoảng √{@recapturedVariance|3} ≈ {=sqrt(@recapturedVariance)|2}. Một lần bắt có R = {=@expectedRecaptured+3}, hoàn toàn có thể xảy ra, cho M·C/R ≈ {=marked*caught/(@expectedRecaptured+3)|3}, thấp hơn N khá nhiều: một lần bắt có thể gây sai lệch. M và C lớn hơn cho nhiều cá thể bắt lại hơn và ước lượng chính xác hơn, không phải kém chính xác hơn."
+      },
+      "statements": [
+        {
+          "text": "About {@expectedRecaptured} marked individuals are expected in the catch.",
+          "vi": {
+            "text": "Kì vọng có khoảng {@expectedRecaptured} cá thể đánh dấu trong lần bắt."
+          },
+          "true": true,
+          "check": {
+            "expr": "caught*marked/populationSize",
+            "equals": "expectedRecaptured"
+          }
+        },
+        {
+          "text": "R typically varies from catch to catch by about {=sqrt(@recapturedVariance)|2}.",
+          "vi": {
+            "text": "Từ lần bắt này sang lần bắt khác, R thường dao động khoảng {=sqrt(@recapturedVariance)|2}."
+          },
+          "true": true,
+          "check": {
+            "expr": "caught*(marked/populationSize)*(1-marked/populationSize)*(populationSize-caught)/(populationSize-1)",
+            "equals": "recapturedVariance"
+          }
+        },
+        {
+          "text": "A catch with R = {=@expectedRecaptured+3} would give an estimate of about {=marked*caught/(@expectedRecaptured+3)|3}, below the true N.",
+          "vi": {
+            "text": "Một lần bắt có R = {=@expectedRecaptured+3} sẽ cho ước lượng khoảng {=marked*caught/(@expectedRecaptured+3)|3}, thấp hơn N thực."
+          },
+          "true": true,
+          "check": {
+            "expr": "marked*caught/(marked*caught/(@expectedRecaptured+3))-3",
+            "equals": "expectedRecaptured"
+          }
+        },
+        {
+          "text": "Marking and catching twice as many would make the estimate less precise.",
+          "vi": {
+            "text": "Đánh dấu và bắt số lượng gấp đôi sẽ làm ước lượng kém chính xác hơn."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,413 @@
+{
+  "id": "cell-emf",
+  "name": "EMF and internal resistance of a cell",
+  "category": "physics",
+  "description": "A cell drives a rheostat through a switch and an ammeter; a voltmeter reads the voltage across the cell's terminals. With the switch open the voltmeter reads the cell's EMF E. Closed, current flows and the voltage drops: some of the EMF is lost inside the cell, across its internal resistance r. Run with the rheostat at several settings and plot U against I: a straight line U = E − r·I whose intercept is E and whose slope is −r.",
+  "vi": {
+    "name": "Đo suất điện động và điện trở trong của pin",
+    "description": "Một pin cấp điện cho biến trở qua khóa K và ampe kế; vôn kế đo hiệu điện thế giữa hai cực của pin. Khi khóa K mở, vôn kế chỉ suất điện động E của pin. Khi đóng khóa, có dòng điện chạy qua và hiệu điện thế giảm xuống: một phần suất điện động bị mất ngay trong pin, trên điện trở trong r của nó. Chạy với nhiều giá trị của biến trở rồi vẽ đồ thị U theo I: một đường thẳng U = E − r·I cắt trục tung tại E và có hệ số góc −r.",
+    "note": "Định luật Ôm cho toàn mạch: cường độ dòng điện I = E/(R + r), và hiệu điện thế giữa hai cực của pin U = E − I·r = I·R. Khi mạch hở (I = 0), U = E: vôn kế lý tưởng đọc được suất điện động. Khi dòng điện càng lớn, hiệu điện thế giữa hai cực càng giảm vì độ giảm thế I·r trên điện trở trong. Đồ thị U theo I của nhiều lần đo với cùng một pin là đường thẳng: giao điểm với trục tung là E, hệ số góc là −r. Các pin trên bảng: một pin 1,5 V mới, một pin 1,5 V đã dùng và một bộ hai pin mới mắc nối tiếp (3 V); điện trở trong của chúng là các giá trị minh họa trong khoảng đo được của pin kiềm AA (pin mới cỡ 0,1–0,3 Ω, tăng dần khi pin cũ đi) và là ẩn số cần tìm. Khóa K đóng 0,5 s sau khi nhấn CHẠY. Đây là mô hình dạy học đơn giản hóa: vôn kế và ampe kế lý tưởng, dây nối không có điện trở, E và r của pin không đổi trong lúc đo. Các đồng hồ đọc giá trị mô phỏng theo độ phân giải d của chúng (bội số gần nhất của d, độ bất định d/√12 chỉ do độ phân giải); không có sai số ngẫu nhiên nào được thêm vào. Trong phòng thí nghiệm thật, E và r của pin thay đổi khi pin đang cung cấp dòng điện và khi pin nóng lên, ampe kế có điện trở riêng, nên nên đo nhanh và ngắt khóa giữa các lần đo."
+  },
+  "requiredEquipment": ["cell-board"],
+  "model": "electric.cell-emf",
+  "parameters": [
+    {
+      "id": "cell",
+      "label": "Cell",
+      "vi": { "label": "Pin" },
+      "unit": "",
+      "default": 0,
+      "min": 0,
+      "max": 2,
+      "presets": [
+        { "label": "New 1.5 V cell", "vi": { "label": "Pin 1,5 V mới" }, "value": 0 },
+        { "label": "Used 1.5 V cell", "vi": { "label": "Pin 1,5 V đã dùng" }, "value": 1 },
+        { "label": "Two new cells (3 V)", "vi": { "label": "Hai pin mới (3 V)" }, "value": 2 }
+      ]
+    },
+    {
+      "id": "rheostat",
+      "label": "Rheostat",
+      "vi": { "label": "Biến trở" },
+      "symbol": "R",
+      "unit": "Ω",
+      "default": 4,
+      "min": 1,
+      "max": 10,
+      "presets": [
+        { "label": "1 Ω", "vi": { "label": "1 Ω" }, "value": 1 },
+        { "label": "2 Ω", "vi": { "label": "2 Ω" }, "value": 2 },
+        { "label": "4 Ω", "vi": { "label": "4 Ω" }, "value": 4 },
+        { "label": "6 Ω", "vi": { "label": "6 Ω" }, "value": 6 },
+        { "label": "10 Ω", "vi": { "label": "10 Ω" }, "value": 10 }
+      ]
+    },
+    {
+      "id": "voltmeterResolution",
+      "label": "Voltmeter resolution",
+      "vi": { "label": "Độ phân giải của vôn kế" },
+      "symbol": "d_U",
+      "unit": "V",
+      "default": 0.01,
+      "min": 0.001,
+      "max": 0.1,
+      "presets": [
+        { "label": "0.001 V", "vi": { "label": "0,001 V" }, "value": 0.001 },
+        { "label": "0.01 V", "vi": { "label": "0,01 V" }, "value": 0.01 },
+        { "label": "0.1 V", "vi": { "label": "0,1 V" }, "value": 0.1 }
+      ]
+    },
+    {
+      "id": "ammeterResolution",
+      "label": "Ammeter resolution",
+      "vi": { "label": "Độ phân giải của ampe kế" },
+      "symbol": "d_I",
+      "unit": "A",
+      "default": 0.01,
+      "min": 0.001,
+      "max": 0.1,
+      "presets": [
+        { "label": "0.001 A", "vi": { "label": "0,001 A" }, "value": 0.001 },
+        { "label": "0.01 A", "vi": { "label": "0,01 A" }, "value": 0.01 },
+        { "label": "0.1 A", "vi": { "label": "0,1 A" }, "value": 0.1 }
+      ]
+    }
+  ],
+  "initialConditions": { "switchTime": 0.5, "duration": 3 },
+  "inputs": {
+    "switchTime": { "symbol": "t_K", "unit": "s", "desk": false },
+    "duration": { "symbol": "t_end", "unit": "s", "desk": false }
+  },
+  "simulation": { "timeStep": 0.01, "maxDuration": 5, "sampleInterval": 0.02 },
+  "measurements": [
+    {
+      "id": "voltage",
+      "label": "Terminal voltage",
+      "vi": { "label": "Hiệu điện thế giữa hai cực" },
+      "symbol": "U",
+      "unit": "V",
+      "variable": "voltage"
+    },
+    {
+      "id": "current",
+      "label": "Current",
+      "vi": { "label": "Cường độ dòng điện" },
+      "symbol": "I",
+      "unit": "A",
+      "variable": "current"
+    },
+    {
+      "id": "labTime",
+      "label": "Time",
+      "vi": { "label": "Thời gian" },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "clock"
+    }
+  ],
+  "results": [
+    {
+      "id": "voltage",
+      "label": "Terminal voltage U with the switch closed",
+      "vi": { "label": "Hiệu điện thế U giữa hai cực khi đóng khóa" },
+      "symbol": "U",
+      "unit": "V",
+      "variable": "voltage",
+      "reduce": "final",
+      "theory": "voltage"
+    },
+    {
+      "id": "current",
+      "label": "Current I",
+      "vi": { "label": "Cường độ dòng điện I" },
+      "symbol": "I",
+      "unit": "A",
+      "variable": "current",
+      "reduce": "final",
+      "theory": "current"
+    },
+    {
+      "id": "power",
+      "label": "Power into the rheostat U·I",
+      "vi": { "label": "Công suất trên biến trở U·I" },
+      "symbol": "P",
+      "unit": "W",
+      "variable": "power",
+      "reduce": "final",
+      "theory": "power"
+    }
+  ],
+  "instruments": [
+    {
+      "result": "voltage",
+      "quantity": "Terminal voltage U",
+      "name": "Digital voltmeter",
+      "resolution": "voltmeterResolution",
+      "excludes": "the meter's calibration, and the cell's EMF and internal resistance changing as it delivers current and warms, which change the voltage itself",
+      "vi": {
+        "quantity": "Hiệu điện thế U giữa hai cực",
+        "name": "Vôn kế hiện số",
+        "excludes": "sai số hiệu chuẩn của đồng hồ, cùng suất điện động và điện trở trong của pin thay đổi khi pin cung cấp dòng điện và nóng lên, những yếu tố làm thay đổi chính hiệu điện thế"
+      }
+    },
+    {
+      "result": "current",
+      "quantity": "Current I",
+      "name": "Digital ammeter",
+      "resolution": "ammeterResolution",
+      "excludes": "the meter's calibration and its own resistance, which changes the current itself",
+      "vi": {
+        "quantity": "Cường độ dòng điện I",
+        "name": "Ampe kế hiện số",
+        "excludes": "sai số hiệu chuẩn của đồng hồ và điện trở riêng của nó, yếu tố làm thay đổi chính cường độ dòng điện"
+      }
+    }
+  ],
+  "graphs": [
+    {
+      "id": "readings-time",
+      "title": "Terminal voltage and current against time",
+      "vi": { "title": "Hiệu điện thế và cường độ dòng điện theo thời gian" },
+      "x": "labTime",
+      "y": ["voltage", "current"],
+      "yLabel": "U, I"
+    }
+  ],
+  "monitor": "readings-time",
+  "compare": [{ "graph": "readings-time", "series": "voltage" }],
+  "analyses": [
+    {
+      "id": "voltage-current",
+      "title": "Terminal voltage against current for one cell (U = E − r·I)",
+      "note": "Each run is one point: the terminal voltage U against the current I. Runs with the same cell are fitted together, at different rheostat settings. U = E − r·I: a straight line whose intercept on the U axis is the EMF E and whose slope is −r, the internal resistance with a minus sign. Change only the rheostat between runs.",
+      "vi": {
+        "title": "Hiệu điện thế giữa hai cực theo cường độ dòng điện, với một pin (U = E − r·I)",
+        "note": "Mỗi lần chạy là một điểm: hiệu điện thế U giữa hai cực theo cường độ dòng điện I. Các lần chạy cùng một pin được khớp chung, với các giá trị biến trở khác nhau. U = E − r·I: một đường thẳng cắt trục U tại suất điện động E và có hệ số góc −r, bằng điện trở trong với dấu trừ. Giữa các lần chạy chỉ thay đổi biến trở."
+      },
+      "x": "current",
+      "y": "voltage",
+      "group": ["cell"],
+      "columns": ["cell", "rheostat", "current", "voltage", "power"],
+      "slope": {
+        "label": "Slope of U against I (−r)",
+        "vi": { "label": "Hệ số góc của U theo I (−r)" },
+        "symbol": "−r",
+        "unit": "Ω",
+        "theory": "negativeInternalResistance",
+        "intercept": "emf"
+      }
+    }
+  ],
+  "note": "Ohm's law for the whole circuit: I = E/(R + r), and the voltage across the cell's terminals is U = E − I·r = I·R. With the circuit open (I = 0), U = E: an ideal voltmeter reads the EMF. The more current flows, the more the terminal voltage drops, by I·r across the internal resistance. Runs with one cell plot U against I as a straight line: its intercept on the U axis is E, its slope −r. The cells on the board: a new 1.5 V cell, a used 1.5 V cell and a pack of two new cells in series (3 V); their internal resistances are illustrative values in the range measured for AA alkaline cells (a new one some 0.1–0.3 Ω, rising as it is used) and are what you find. The switch K closes 0.5 s after RUN. A simplified teaching model: ideal meters, leads without resistance, the cell's E and r constant while it is measured. The meters read the simulated values to their resolution d (the nearest multiple of d, with the uncertainty d/√12 from the resolution alone); no random error is added. In a real lab a cell's E and r change as it delivers current and warms, and the ammeter has its own resistance, so measure quickly and open the switch between readings.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the EMF and internal resistance instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn thí nghiệm suất điện động và điện trở trong trên bảng."
+      },
+      "done": { "kind": "inspected", "item": "cell-emf-instructions" }
+    },
+    {
+      "id": "cell",
+      "instruction": "Choose the cell with its dial on the control desk.",
+      "vi": { "instruction": "Chọn pin bằng núm xoay trên bàn điều khiển." },
+      "done": { "kind": "adjusted", "parameter": "cell" }
+    },
+    {
+      "id": "rheostat",
+      "instruction": "Set the rheostat R.",
+      "vi": { "instruction": "Đặt giá trị biến trở R." },
+      "done": { "kind": "adjusted", "parameter": "rheostat" }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the voltmeter reads E with the switch open, then K closes after 0.5 s.",
+      "vi": { "instruction": "Nhấn CHẠY: vôn kế chỉ E khi khóa K mở, rồi K đóng sau 0,5 s." },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read U, I and U·I on the results monitor.",
+      "vi": { "instruction": "Đọc U, I và U·I trên màn hình kết quả." },
+      "done": { "kind": "viewed" }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, change only the rheostat and run again to add a point to the U–I line.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, chỉ thay đổi biến trở rồi chạy lại để thêm một điểm vào đường U–I."
+      },
+      "done": { "kind": "reset" }
+    }
+  ],
+  "examples": [
+    {
+      "id": "current-and-power",
+      "question": "A new 1.5 V cell drives a current through the rheostat set to {rheostat} Ω. The voltmeter across the cell reads U = {@voltage|4} V. Find the current and the power the rheostat takes.",
+      "vi": {
+        "question": "Một pin mới 1,5 V cho dòng điện chạy qua biến trở đặt ở {rheostat} Ω. Vôn kế mắc vào hai cực pin chỉ U = {@voltage|4} V. Tìm cường độ dòng điện và công suất tiêu thụ trên biến trở."
+      },
+      "set": { "cell": 0, "rheostat": 2 },
+      "find": [{ "theory": "current" }, { "theory": "power" }],
+      "steps": [
+        {
+          "say": "The voltage across the cell’s terminals is the voltage across the rheostat, so Ohm’s law for the rheostat gives the current.",
+          "vi": {
+            "say": "Hiệu điện thế giữa hai cực pin chính là hiệu điện thế trên biến trở, nên định luật Ôm cho biến trở cho ta cường độ dòng điện."
+          },
+          "write": "I = U/R = {@voltage|4}/{rheostat} ≈ {@current} A",
+          "check": { "expr": "@voltage/rheostat", "equals": "current" }
+        },
+        {
+          "say": "The power is the voltage times the current.",
+          "vi": { "say": "Công suất bằng hiệu điện thế nhân cường độ dòng điện." },
+          "write": "P = U·I ≈ {@voltage|4}·{@current} ≈ {@power} W",
+          "check": { "expr": "@voltage*@current", "equals": "power" }
+        }
+      ]
+    },
+    {
+      "id": "terminal-voltage",
+      "question": "Two new cells in series: with the switch open the voltmeter reads {@emf} V. Closed, with the rheostat at {rheostat} Ω, the ammeter reads I = {@current|3} A. Find the terminal voltage and say why it is less than {@emf} V.",
+      "vi": {
+        "question": "Bộ hai pin mới mắc nối tiếp: khi khóa K mở, vôn kế chỉ {@emf} V. Đóng K với biến trở {rheostat} Ω, ampe kế chỉ I = {@current|3} A. Tìm hiệu điện thế giữa hai cực của bộ pin và giải thích vì sao nó nhỏ hơn {@emf} V."
+      },
+      "set": { "cell": 2, "rheostat": 6 },
+      "find": [{ "theory": "voltage" }, { "theory": "power" }],
+      "steps": [
+        {
+          "say": "With the switch open no current flows, so the voltmeter reads the EMF itself.",
+          "vi": { "say": "Khi K mở, không có dòng điện, nên vôn kế chỉ đúng suất điện động." },
+          "write": "I = 0  →  U = E"
+        },
+        {
+          "say": "Closed, the terminal voltage is the voltage across the outside circuit, I times R. Part of E is used inside the cells, across their internal resistance, so U is less than E.",
+          "vi": {
+            "say": "Khi đóng K, hiệu điện thế giữa hai cực bằng hiệu điện thế mạch ngoài, I nhân R. Một phần E bị tiêu hao bên trong pin, trên điện trở trong, nên U nhỏ hơn E."
+          },
+          "write": "U = I·R = {@current|3}·{rheostat} ≈ {@voltage} V < E",
+          "check": { "expr": "@current*rheostat", "equals": "voltage" }
+        },
+        {
+          "say": "The power given to the rheostat is U times I.",
+          "vi": { "say": "Công suất cung cấp cho biến trở bằng U nhân I." },
+          "write": "P = U·I ≈ {@power} W",
+          "check": { "expr": "@voltage*@current", "equals": "power" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "A cell’s voltage drops when it drives a current, because part of its EMF is lost across its own internal resistance; plotting U against I finds both.",
+    "vi": {
+      "summary": "Hiệu điện thế của pin giảm khi nó cung cấp dòng điện, vì một phần suất điện động bị mất trên điện trở trong của chính nó; vẽ U theo I sẽ tìm được cả hai đại lượng."
+    },
+    "parts": [
+      {
+        "id": "cell",
+        "name": "Cell",
+        "role": "The source: its EMF E drives the current, through its internal resistance r.",
+        "vi": {
+          "name": "Pin",
+          "role": "Nguồn điện: suất điện động E của nó đẩy dòng điện chạy, qua điện trở trong r."
+        },
+        "anchor": {
+          "at": [-0.17, -0.053, 0.08]
+        }
+      },
+      {
+        "id": "rheostat",
+        "name": "Rheostat R",
+        "role": "A resistance you set: smaller R draws more current.",
+        "vi": {
+          "name": "Biến trở R",
+          "role": "Điện trở có thể điều chỉnh: R nhỏ hơn thì dòng điện lớn hơn."
+        },
+        "anchor": {
+          "at": [-0.01, -0.05, 0.08]
+        }
+      },
+      {
+        "id": "switch",
+        "name": "Switch K",
+        "role": "Open at first, then closed 0.5 s after RUN.",
+        "vi": {
+          "name": "Khóa K",
+          "role": "Lúc đầu mở, đóng lại 0.5 s sau khi nhấn CHẠY."
+        },
+        "anchor": {
+          "part": "lever"
+        }
+      },
+      {
+        "id": "voltmeter",
+        "name": "Voltmeter",
+        "role": "Across the cell’s terminals: reads the terminal voltage U.",
+        "vi": {
+          "name": "Vôn kế",
+          "role": "Mắc vào hai cực của pin: đọc hiệu điện thế mạch ngoài U."
+        },
+        "anchor": {
+          "part": "voltmeter"
+        }
+      },
+      {
+        "id": "ammeter",
+        "name": "Ammeter",
+        "role": "In the circuit: reads the current I.",
+        "vi": {
+          "name": "Ampe kế",
+          "role": "Mắc trong mạch: đọc cường độ dòng điện I."
+        },
+        "anchor": {
+          "part": "ammeter"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "With the switch open no current flows, and the voltmeter reads the cell’s EMF E.",
+        "vi": {
+          "text": "Khi khóa mở, không có dòng điện, và vôn kế chỉ suất điện động E của pin."
+        },
+        "parts": ["switch", "voltmeter", "cell"]
+      },
+      {
+        "text": "Close the switch: a current I flows through the rheostat, and the voltmeter’s reading drops.",
+        "vi": {
+          "text": "Đóng khóa: dòng điện I chạy qua biến trở, và số chỉ của vôn kế giảm xuống."
+        },
+        "parts": ["switch", "rheostat", "ammeter", "voltmeter"]
+      },
+      {
+        "text": "The current also flows through the cell itself, which has an internal resistance r: part of the EMF, I·r, is lost inside it. So U = E − I·r.",
+        "vi": {
+          "text": "Dòng điện cũng chạy qua chính pin, vốn có điện trở trong r: một phần suất điện động, I·r, bị mất bên trong nó. Vì vậy U = E − I·r."
+        },
+        "parts": ["cell", "voltmeter"]
+      },
+      {
+        "text": "Ohm’s law for the whole circuit: I = E/(R + r). A smaller R draws more current, and the more current, the further U drops.",
+        "vi": {
+          "text": "Định luật Ôm cho toàn mạch: I = E/(R + r). R nhỏ hơn thì dòng điện lớn hơn, và dòng điện càng lớn thì U càng giảm."
+        },
+        "parts": ["rheostat", "ammeter"]
+      },
+      {
+        "text": "Run with one cell at several rheostat settings and plot U against I: a straight line whose intercept on the U axis is E and whose slope is −r. That is how you find them.",
+        "vi": {
+          "text": "Chạy với cùng một pin ở nhiều giá trị biến trở rồi vẽ U theo I: một đường thẳng cắt trục U tại E và có hệ số góc −r. Đó là cách tìm ra chúng."
+        },
+        "parts": ["voltmeter", "ammeter", "rheostat"]
+      },
+      {
+        "text": "The meters read in steps of their resolution d. The model keeps E and r constant; a real cell’s change as it delivers current and warms, so measure quickly.",
+        "vi": {
+          "text": "Các đồng hồ đọc theo từng bước bằng độ phân giải d. Mô hình giữ E và r không đổi; với pin thật, chúng thay đổi khi pin cung cấp dòng điện và nóng lên, nên cần đo nhanh."
+        },
+        "parts": ["cell"]
+      }
+    ]
+  }
+}

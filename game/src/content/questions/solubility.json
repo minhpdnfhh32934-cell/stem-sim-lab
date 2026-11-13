@@ -1,0 +1,1002 @@
+{
+  "id": "solubility",
+  "skills": [
+    {
+      "id": "definition",
+      "name": "Solubility and saturated solutions",
+      "advice": "Learn the definition word for word: S is the largest mass of solid that dissolves in 100 g of water at a given temperature, giving a saturated solution. Keep S apart from the mass percentage C% = S/(100 + S)·100%.",
+      "vi": {
+        "name": "Độ tan và dung dịch bão hòa",
+        "advice": "Học thuộc định nghĩa: độ tan S là khối lượng chất tan lớn nhất hòa tan được trong 100 g nước ở một nhiệt độ xác định để tạo thành dung dịch bão hòa. Phân biệt S với nồng độ phần trăm C% = S/(100 + S)·100%."
+      }
+    },
+    {
+      "id": "temperature",
+      "name": "Solubility changes with temperature",
+      "advice": "Compare the three solids at 20, 40, 60 and 80 °C at the station: KNO₃ rises steeply, KCl moderately, NaCl hardly at all. Predict what crystallises when a hot saturated solution cools.",
+      "vi": {
+        "name": "Độ tan thay đổi theo nhiệt độ",
+        "advice": "So sánh ba chất rắn ở 20, 40, 60 và 80 °C trên trạm: độ tan của KNO₃ tăng mạnh, KCl tăng vừa phải, NaCl hầu như không đổi. Dự đoán chất nào kết tinh khi làm nguội dung dịch bão hòa nóng."
+      }
+    },
+    {
+      "id": "scaling",
+      "name": "Scaling to the water you have: m = S·m_w/100",
+      "advice": "Write the proportion S g in 100 g of water ↔ m g in m_w g before calculating. Here the beaker holds 50 g of water, so it dissolves half of S; whatever is weighed in above that stays as residue.",
+      "vi": {
+        "name": "Quy đổi theo lượng nước: m = S·m_w/100",
+        "advice": "Lập tỉ lệ S g trong 100 g nước ↔ m g trong m_w g trước khi tính. Ở đây cốc chứa 50 g nước, nên chỉ hòa tan được một nửa S; phần chất rắn cân vào vượt quá lượng đó còn lại thành chất rắn không tan."
+      }
+    },
+    {
+      "id": "measurement",
+      "name": "Measuring solubility: residue and errors",
+      "advice": "The dissolved mass is the mass weighed in minus the dried residue. For each slip — a damp residue, too short a stir, water evaporating — decide whether the residue, and so S, comes out too large or too small.",
+      "vi": {
+        "name": "Đo độ tan: chất rắn còn lại và sai số",
+        "advice": "Khối lượng đã tan bằng khối lượng cân vào trừ khối lượng chất rắn còn lại sau khi sấy. Với mỗi sai sót — chất rắn còn ẩm, khuấy quá ngắn, nước bay hơi — xác định khối lượng chất rắn còn lại, và do đó S, lớn hơn hay nhỏ hơn thực tế."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "define",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["definition"],
+      "stem": "The solubility of a solid in water at a given temperature is…",
+      "explain": "Solubility S is the largest mass of the solid that 100 g of water can dissolve at that temperature, making a saturated solution.",
+      "vi": {
+        "stem": "Độ tan của một chất rắn trong nước ở một nhiệt độ xác định là",
+        "explain": "Độ tan S là khối lượng lớn nhất của chất rắn có thể tan trong 100 g nước ở nhiệt độ đó để tạo thành dung dịch bão hòa."
+      },
+      "options": [
+        {
+          "text": "the largest mass of it that dissolves in 100 g of water",
+          "vi": {
+            "text": "khối lượng lớn nhất của chất đó tan được trong 100 g nước"
+          },
+          "correct": true
+        },
+        {
+          "text": "the mass of it that dissolves in 100 g of solution",
+          "vi": {
+            "text": "khối lượng của chất đó tan trong 100 g dung dịch"
+          }
+        },
+        {
+          "text": "the mass of it that dissolves in 1 L of water",
+          "vi": {
+            "text": "khối lượng của chất đó tan trong 1 L nước"
+          }
+        },
+        {
+          "text": "how fast it dissolves when stirred",
+          "vi": {
+            "text": "tốc độ hòa tan của chất đó khi khuấy"
+          }
+        }
+      ]
+    },
+    {
+      "id": "saturated",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["definition"],
+      "stem": "A solution that can dissolve no more of the solid at that temperature is called…",
+      "explain": "It is saturated: its concentration has reached the solubility. An unsaturated solution can still dissolve more.",
+      "vi": {
+        "stem": "Dung dịch không thể hòa tan thêm chất rắn đó ở nhiệt độ đang xét được gọi là",
+        "explain": "Đó là dung dịch bão hòa: nồng độ đã đạt độ tan. Dung dịch chưa bão hòa còn hòa tan thêm được."
+      },
+      "options": [
+        {
+          "text": "saturated",
+          "vi": {
+            "text": "dung dịch bão hòa"
+          },
+          "correct": true
+        },
+        {
+          "text": "unsaturated",
+          "vi": {
+            "text": "dung dịch chưa bão hòa"
+          }
+        },
+        {
+          "text": "dilute",
+          "vi": {
+            "text": "dung dịch loãng"
+          }
+        },
+        {
+          "text": "neutral",
+          "vi": {
+            "text": "dung dịch trung tính"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-temperature",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["temperature", "definition"],
+      "stem": "Decide whether each statement about the solubility of KNO₃, NaCl and KCl in water is true or false.",
+      "explain": "For these solids S increases with temperature — steeply for KNO₃, only slightly for NaCl. Stirring makes a solid dissolve faster but does not change how much can dissolve.",
+      "vi": {
+        "stem": "Mỗi nhận định sau về độ tan của KNO₃, NaCl và KCl trong nước đúng hay sai?",
+        "explain": "Với các chất rắn này, S tăng theo nhiệt độ — tăng mạnh với KNO₃, chỉ tăng nhẹ với NaCl. Khuấy làm chất rắn tan nhanh hơn nhưng không làm thay đổi lượng tối đa có thể tan."
+      },
+      "statements": [
+        {
+          "text": "The solubility of each of these solids increases with temperature.",
+          "vi": {
+            "text": "Độ tan của mỗi chất rắn này tăng khi nhiệt độ tăng."
+          },
+          "true": true
+        },
+        {
+          "text": "The solubility of NaCl changes only a little between 20 °C and 80 °C.",
+          "vi": {
+            "text": "Độ tan của NaCl chỉ thay đổi ít trong khoảng từ 20 °C đến 80 °C."
+          },
+          "true": true
+        },
+        {
+          "text": "KNO₃ is less soluble at 60 °C than at 20 °C.",
+          "vi": {
+            "text": "KNO₃ tan ở 60 °C kém hơn ở 20 °C."
+          },
+          "true": false
+        },
+        {
+          "text": "Stirring increases the solubility of a solid.",
+          "vi": {
+            "text": "Khuấy làm tăng độ tan của chất rắn."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "stirring",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["definition", "measurement"],
+      "stem": "The beaker is stirred for 15 minutes before the residue is filtered off. What does the stirring do?",
+      "explain": "Stirring speeds up dissolving so the solution reaches saturation in the time allowed; it does not change the solubility itself.",
+      "vi": {
+        "stem": "Cốc được khuấy trong 15 phút trước khi lọc lấy chất rắn còn lại. Việc khuấy có tác dụng gì?",
+        "explain": "Khuấy làm chất rắn tan nhanh hơn để dung dịch kịp đạt bão hòa trong thời gian cho phép; khuấy không làm thay đổi độ tan."
+      },
+      "options": [
+        {
+          "text": "It makes the solid dissolve faster, so the solution reaches saturation",
+          "vi": {
+            "text": "Làm chất rắn tan nhanh hơn để dung dịch đạt bão hòa"
+          },
+          "correct": true
+        },
+        {
+          "text": "It increases the solubility",
+          "vi": {
+            "text": "Làm tăng độ tan"
+          }
+        },
+        {
+          "text": "It warms the water to 80 °C",
+          "vi": {
+            "text": "Làm nước nóng lên đến 80 °C"
+          }
+        },
+        {
+          "text": "It makes the residue dissolve completely",
+          "vi": {
+            "text": "Làm chất rắn còn lại tan hết"
+          }
+        }
+      ]
+    },
+    {
+      "id": "cooling",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["temperature"],
+      "stem": "A saturated solution of KNO₃ at 60 °C is cooled to 20 °C. What happens?",
+      "explain": "The solubility of KNO₃ falls a lot on cooling, so the water can hold less: the extra KNO₃ crystallises out.",
+      "vi": {
+        "stem": "Làm nguội dung dịch KNO₃ bão hòa từ 60 °C xuống 20 °C. Hiện tượng gì xảy ra?",
+        "explain": "Độ tan của KNO₃ giảm mạnh khi làm nguội, nên nước giữ được ít chất tan hơn: phần KNO₃ dư kết tinh tách ra."
+      },
+      "options": [
+        {
+          "text": "Crystals of KNO₃ form",
+          "vi": {
+            "text": "KNO₃ kết tinh tách ra"
+          },
+          "correct": true
+        },
+        {
+          "text": "Nothing happens",
+          "vi": {
+            "text": "Không có hiện tượng gì"
+          }
+        },
+        {
+          "text": "More KNO₃ can now dissolve",
+          "vi": {
+            "text": "Hòa tan được thêm KNO₃"
+          }
+        },
+        {
+          "text": "The water boils away",
+          "vi": {
+            "text": "Nước bay hơi hết"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-nacl",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["scaling", "temperature"],
+      "set": {
+        "solute": 1,
+        "temperature": 20,
+        "soluteMass": 30
+      },
+      "stem": "{soluteMass} g of NaCl is stirred into {waterMass} g of water at {temperature} °C, where the solubility of NaCl is {@solubility|4} g per 100 g of water (handbook). Decide whether each statement is true or false.",
+      "explain": "{waterMass} g of water dissolves at most {@solubility|4}·{waterMass}/100 ≈ {@saturationMass|4} g, so {soluteMass} g does not all dissolve: the solution is saturated. NaCl’s solubility rises only slightly with temperature (about 38 g/100 g at 80 °C), so heating would still leave solid.",
+      "vi": {
+        "stem": "Khuấy {soluteMass} g NaCl vào {waterMass} g nước ở {temperature} °C, nhiệt độ mà độ tan của NaCl là {@solubility|4} g trong 100 g nước (sổ tay tra cứu). Mỗi nhận định sau đúng hay sai?",
+        "explain": "{waterMass} g nước hòa tan tối đa {@solubility|4}·{waterMass}/100 ≈ {@saturationMass|4} g, nên {soluteMass} g không tan hết: dung dịch bão hòa. Độ tan của NaCl chỉ tăng nhẹ theo nhiệt độ (khoảng 38 g/100 g ở 80 °C), nên đun nóng vẫn còn chất rắn."
+      },
+      "statements": [
+        {
+          "text": "{waterMass} g of water can dissolve at most about {@saturationMass|4} g of NaCl.",
+          "vi": {
+            "text": "{waterMass} g nước hòa tan được tối đa khoảng {@saturationMass|4} g NaCl."
+          },
+          "true": true,
+          "check": {
+            "expr": "@solubility*waterMass/100",
+            "equals": "saturationMass"
+          }
+        },
+        {
+          "text": "All {soluteMass} g of NaCl dissolves.",
+          "vi": {
+            "text": "Toàn bộ {soluteMass} g NaCl tan hết."
+          },
+          "true": false
+        },
+        {
+          "text": "The solution left in the beaker is saturated.",
+          "vi": {
+            "text": "Dung dịch trong cốc là dung dịch bão hòa."
+          },
+          "true": true
+        },
+        {
+          "text": "Heating the beaker to 80 °C would dissolve all {soluteMass} g.",
+          "vi": {
+            "text": "Đun cốc đến 80 °C thì toàn bộ {soluteMass} g sẽ tan hết."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "dissolved-kno3",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["scaling"],
+      "set": {
+        "solute": 0,
+        "temperature": 60,
+        "soluteMass": 60
+      },
+      "stem": "At {temperature} °C the solubility of KNO₃ is {@solubility|4} g per 100 g of water (handbook). {soluteMass} g of KNO₃ is stirred into {waterMass} g of water until saturated. What mass dissolves?",
+      "explain": "m = S·m_w/100 = {@solubility|4}·{waterMass}/100 ≈ {@saturationMass|4} g, less than {soluteMass} g: about {=soluteMass-@saturationMass|2} g stays solid.",
+      "vi": {
+        "stem": "Ở {temperature} °C, độ tan của KNO₃ là {@solubility|4} g trong 100 g nước (sổ tay tra cứu). Khuấy {soluteMass} g KNO₃ vào {waterMass} g nước đến khi bão hòa. Khối lượng KNO₃ đã tan là bao nhiêu?",
+        "explain": "m = S·m_w/100 = {@solubility|4}·{waterMass}/100 ≈ {@saturationMass|4} g, nhỏ hơn {soluteMass} g: khoảng {=soluteMass-@saturationMass|2} g còn lại ở dạng rắn."
+      },
+      "options": [
+        {
+          "text": "{@saturationMass|4} g",
+          "vi": {
+            "text": "{@saturationMass|4} g"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@solubility*waterMass/100",
+            "equals": "finalDissolved"
+          }
+        },
+        {
+          "text": "{@solubility|4} g",
+          "vi": {
+            "text": "{@solubility|4} g"
+          },
+          "check": {
+            "expr": "@solubility",
+            "equals": "finalDissolved"
+          }
+        },
+        {
+          "text": "{soluteMass} g",
+          "vi": {
+            "text": "{soluteMass} g"
+          },
+          "check": {
+            "expr": "soluteMass",
+            "equals": "finalDissolved"
+          }
+        },
+        {
+          "text": "{=@solubility*100/waterMass|3} g",
+          "vi": {
+            "text": "{=@solubility*100/waterMass|3} g"
+          },
+          "check": {
+            "expr": "@solubility*100/waterMass",
+            "equals": "finalDissolved"
+          }
+        }
+      ]
+    },
+    {
+      "id": "residue-kcl",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["scaling", "measurement"],
+      "set": {
+        "solute": 2,
+        "temperature": 20,
+        "soluteMass": 40
+      },
+      "stem": "At {temperature} °C the solubility of KCl is {@solubility|4} g per 100 g of water (handbook). {soluteMass} g of KCl is stirred into {waterMass} g of water until saturated, and the undissolved solid is filtered off and dried. What does it weigh?",
+      "explain": "{waterMass} g of water dissolves {@solubility|4}·{waterMass}/100 ≈ {@saturationMass|4} g; the residue is {soluteMass} − {@saturationMass|4} ≈ {=soluteMass-@saturationMass|4} g.",
+      "vi": {
+        "stem": "Ở {temperature} °C, độ tan của KCl là {@solubility|4} g trong 100 g nước (sổ tay tra cứu). Khuấy {soluteMass} g KCl vào {waterMass} g nước đến khi bão hòa, rồi lọc lấy phần chất rắn không tan và sấy khô. Khối lượng phần chất rắn đó là bao nhiêu?",
+        "explain": "{waterMass} g nước hòa tan {@solubility|4}·{waterMass}/100 ≈ {@saturationMass|4} g; chất rắn còn lại là {soluteMass} − {@saturationMass|4} ≈ {=soluteMass-@saturationMass|4} g."
+      },
+      "options": [
+        {
+          "text": "{=soluteMass-@saturationMass|4} g",
+          "vi": {
+            "text": "{=soluteMass-@saturationMass|4} g"
+          },
+          "correct": true,
+          "check": {
+            "expr": "soluteMass-@solubility*waterMass/100",
+            "equals": "finalResidue"
+          }
+        },
+        {
+          "text": "{=soluteMass-@solubility|4} g",
+          "vi": {
+            "text": "{=soluteMass-@solubility|4} g"
+          },
+          "check": {
+            "expr": "soluteMass-@solubility",
+            "equals": "finalResidue"
+          }
+        },
+        {
+          "text": "{@saturationMass|4} g",
+          "vi": {
+            "text": "{@saturationMass|4} g"
+          },
+          "check": {
+            "expr": "@solubility*waterMass/100",
+            "equals": "finalResidue"
+          }
+        },
+        {
+          "text": "0 g",
+          "vi": {
+            "text": "0 g"
+          },
+          "check": {
+            "expr": "0",
+            "equals": "finalResidue"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-kno3",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["scaling", "definition"],
+      "set": {
+        "solute": 0,
+        "temperature": 20,
+        "soluteMass": 30
+      },
+      "stem": "{soluteMass} g of KNO₃ is stirred into {waterMass} g of water at {temperature} °C, where its solubility is {@solubility|4} g per 100 g of water (handbook). Decide whether each statement is true or false.",
+      "explain": "{waterMass} g of water dissolves {@saturationMass|4} g; {=soluteMass-@saturationMass|4} g stays solid. The saturated solution holds {@solubility|4} g per 100 g of water, but its mass percentage is S/(100 + S) ≈ {=100*@solubility/(100+@solubility)|3}%, not {@solubility|4}%.",
+      "vi": {
+        "stem": "Khuấy {soluteMass} g KNO₃ vào {waterMass} g nước ở {temperature} °C, nhiệt độ mà độ tan của nó là {@solubility|4} g trong 100 g nước (sổ tay tra cứu). Mỗi nhận định sau đúng hay sai?",
+        "explain": "{waterMass} g nước hòa tan {@saturationMass|4} g; {=soluteMass-@saturationMass|4} g còn lại ở dạng rắn. Dung dịch bão hòa chứa {@solubility|4} g trong 100 g nước, nhưng nồng độ phần trăm là S/(100 + S) ≈ {=100*@solubility/(100+@solubility)|3}%, không phải {@solubility|4}%."
+      },
+      "statements": [
+        {
+          "text": "At most about {@saturationMass|4} g of KNO₃ dissolves.",
+          "vi": {
+            "text": "Tối đa khoảng {@saturationMass|4} g KNO₃ tan được."
+          },
+          "true": true,
+          "check": {
+            "expr": "@solubility*waterMass/100",
+            "equals": "saturationMass"
+          }
+        },
+        {
+          "text": "About {=soluteMass-@saturationMass|4} g of KNO₃ stays undissolved.",
+          "vi": {
+            "text": "Khoảng {=soluteMass-@saturationMass|4} g KNO₃ không tan."
+          },
+          "true": true,
+          "check": {
+            "expr": "soluteMass-@solubility*waterMass/100",
+            "equals": "finalResidue"
+          }
+        },
+        {
+          "text": "The saturated solution holds about {@finalConcentration|3} g of KNO₃ per 100 g of water.",
+          "vi": {
+            "text": "Dung dịch bão hòa chứa khoảng {@finalConcentration|3} g KNO₃ trong 100 g nước."
+          },
+          "true": true,
+          "check": {
+            "expr": "@solubility",
+            "equals": "finalConcentration"
+          }
+        },
+        {
+          "text": "The mass percentage of KNO₃ in the saturated solution is {@solubility|4}%.",
+          "vi": {
+            "text": "Nồng độ phần trăm của KNO₃ trong dung dịch bão hòa là {@solubility|4}%."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "solubility-from-mass",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["definition", "scaling"],
+      "set": {
+        "solute": 1,
+        "temperature": 80
+      },
+      "stem": "At {temperature} °C, {waterMass} g of water dissolves at most {@saturationMass|4} g of NaCl. What is the solubility of NaCl at this temperature?",
+      "explain": "S is per 100 g of water: S = {@saturationMass|4}·100/{waterMass} ≈ {@solubility|4} g/100 g. Dividing by the solution’s mass gives the mass percentage instead.",
+      "vi": {
+        "stem": "Ở {temperature} °C, {waterMass} g nước hòa tan tối đa {@saturationMass|4} g NaCl. Độ tan của NaCl ở nhiệt độ này là bao nhiêu?",
+        "explain": "S tính cho 100 g nước: S = {@saturationMass|4}·100/{waterMass} ≈ {@solubility|4} g/100 g. Chia cho khối lượng dung dịch thì được nồng độ phần trăm, không phải độ tan."
+      },
+      "options": [
+        {
+          "text": "{=@saturationMass*100/waterMass|3} g/100 g",
+          "vi": {
+            "text": "{=@saturationMass*100/waterMass|3} g/100 g"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@saturationMass*100/waterMass",
+            "equals": "solubility"
+          }
+        },
+        {
+          "text": "{@saturationMass|4} g/100 g",
+          "vi": {
+            "text": "{@saturationMass|4} g/100 g"
+          },
+          "check": {
+            "expr": "@saturationMass",
+            "equals": "solubility"
+          }
+        },
+        {
+          "text": "{=@saturationMass*waterMass/100|3} g/100 g",
+          "vi": {
+            "text": "{=@saturationMass*waterMass/100|3} g/100 g"
+          },
+          "check": {
+            "expr": "@saturationMass*waterMass/100",
+            "equals": "solubility"
+          }
+        },
+        {
+          "text": "{=100*@saturationMass/(waterMass+@saturationMass)|3} g/100 g",
+          "vi": {
+            "text": "{=100*@saturationMass/(waterMass+@saturationMass)|3} g/100 g"
+          },
+          "check": {
+            "expr": "100*@saturationMass/(waterMass+@saturationMass)",
+            "equals": "solubility"
+          }
+        }
+      ]
+    },
+    {
+      "id": "crystals-on-cooling",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["temperature", "scaling"],
+      "set": {
+        "solute": 0,
+        "temperature": 20,
+        "soluteMass": 60
+      },
+      "stem": "{waterMass} g of water saturated with KNO₃ at 60 °C holds 54.6 g of it (S = 109.2 g/100 g, handbook). The solution is cooled to {temperature} °C, where S = {@solubility|4} g/100 g. What mass of KNO₃ crystallises?",
+      "explain": "At {temperature} °C, {waterMass} g of water holds only {@solubility|4}·{waterMass}/100 ≈ {@saturationMass|4} g; the rest crystallises: 54.6 − {@saturationMass|4} ≈ {=54.6-@saturationMass|3} g. Subtracting the solubilities directly (109.2 − {@solubility|4}) is per 100 g of water — twice too much here.",
+      "vi": {
+        "stem": "{waterMass} g nước bão hòa KNO₃ ở 60 °C chứa 54,6 g KNO₃ (S = 109,2 g/100 g, sổ tay tra cứu). Làm nguội dung dịch đến {temperature} °C, nhiệt độ mà S = {@solubility|4} g/100 g. Khối lượng KNO₃ kết tinh là bao nhiêu?",
+        "explain": "Ở {temperature} °C, {waterMass} g nước chỉ giữ được {@solubility|4}·{waterMass}/100 ≈ {@saturationMass|4} g; phần còn lại kết tinh: 54,6 − {@saturationMass|4} ≈ {=54.6-@saturationMass|3} g. Lấy hiệu hai độ tan (109,2 − {@solubility|4}) là tính cho 100 g nước — gấp đôi trường hợp này."
+      },
+      "options": [
+        {
+          "text": "{=54.6-@saturationMass|3} g",
+          "vi": {
+            "text": "{=54.6-@saturationMass|3} g"
+          },
+          "correct": true
+        },
+        {
+          "text": "{=109.2-@solubility|3} g",
+          "vi": {
+            "text": "{=109.2-@solubility|3} g"
+          }
+        },
+        {
+          "text": "{@saturationMass|4} g",
+          "vi": {
+            "text": "{@saturationMass|4} g"
+          }
+        },
+        {
+          "text": "54.6 g",
+          "vi": {
+            "text": "54,6 g"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-errors",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["measurement", "scaling"],
+      "set": {
+        "solute": 2,
+        "temperature": 20,
+        "soluteMass": 40
+      },
+      "stem": "{soluteMass} g of KCl is stirred into {waterMass} g of water at {temperature} °C (S = {@solubility|4} g/100 g, handbook) for 15 minutes; the residue is filtered off, dried and weighed, and S is worked out from it. Decide whether each statement is true or false.",
+      "explain": "Expected residue: {soluteMass} − {@saturationMass|4} ≈ {@finalResidue|4} g. A damp residue weighs too much, so the dissolved mass and S come out too low. Water evaporating leaves less water to dissolve the solid: a larger residue. Stirring too briefly also leaves more solid — not less.",
+      "vi": {
+        "stem": "Khuấy {soluteMass} g KCl vào {waterMass} g nước ở {temperature} °C (S = {@solubility|4} g/100 g, sổ tay tra cứu) trong 15 phút; lọc lấy chất rắn còn lại, sấy khô, cân, rồi tính S từ kết quả đó. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Khối lượng chất rắn còn lại dự kiến: {soluteMass} − {@saturationMass|4} ≈ {@finalResidue|4} g. Chất rắn còn ẩm cân nặng hơn, nên khối lượng đã tan và S tính được thấp hơn thực tế. Nước bay hơi làm còn ít nước để hòa tan: chất rắn còn lại nhiều hơn. Khuấy quá ngắn cũng làm chất rắn còn lại nhiều hơn — không phải ít hơn."
+      },
+      "statements": [
+        {
+          "text": "The dried residue should weigh about {@finalResidue|4} g.",
+          "vi": {
+            "text": "Chất rắn còn lại sau khi sấy dự kiến nặng khoảng {@finalResidue|4} g."
+          },
+          "true": true,
+          "check": {
+            "expr": "soluteMass-@solubility*waterMass/100",
+            "equals": "finalResidue"
+          }
+        },
+        {
+          "text": "Weighing the residue while still damp makes the calculated solubility too low.",
+          "vi": {
+            "text": "Cân chất rắn khi còn ẩm làm độ tan tính được thấp hơn thực tế."
+          },
+          "true": true
+        },
+        {
+          "text": "If some water evaporates from the beaker, the residue comes out larger.",
+          "vi": {
+            "text": "Nếu một phần nước trong cốc bay hơi, khối lượng chất rắn còn lại sẽ lớn hơn."
+          },
+          "true": true
+        },
+        {
+          "text": "Stirring for only 1 minute instead of 15 would give a smaller residue.",
+          "vi": {
+            "text": "Chỉ khuấy 1 phút thay vì 15 phút sẽ cho khối lượng chất rắn còn lại nhỏ hơn."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "unsaturated",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["definition"],
+      "stem": "A solution that can still dissolve more of the solid at that temperature is called…",
+      "explain": "Below the solubility the solution is unsaturated: more solid still dissolves. At the solubility it is saturated; a supersaturated solution holds more than the solubility and is unstable.",
+      "vi": {
+        "stem": "Dung dịch vẫn còn hòa tan thêm được chất rắn ở nhiệt độ đó được gọi là",
+        "explain": "Khi nồng độ còn dưới độ tan, dung dịch chưa bão hòa: chất rắn vẫn tan thêm được. Khi đạt độ tan, dung dịch bão hòa; dung dịch quá bão hòa chứa nhiều chất tan hơn độ tan và không bền."
+      },
+      "options": [
+        {
+          "text": "an unsaturated solution",
+          "vi": {
+            "text": "dung dịch chưa bão hòa"
+          },
+          "correct": true
+        },
+        {
+          "text": "a saturated solution",
+          "vi": {
+            "text": "dung dịch bão hòa"
+          }
+        },
+        {
+          "text": "a supersaturated solution",
+          "vi": {
+            "text": "dung dịch quá bão hòa"
+          }
+        },
+        {
+          "text": "a suspension",
+          "vi": {
+            "text": "huyền phù"
+          }
+        }
+      ]
+    },
+    {
+      "id": "cooling-nacl",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["temperature"],
+      "stem": "Crystallising by cooling a hot saturated solution works well for KNO₃ but gives very few crystals of NaCl. Why?",
+      "explain": "The crystals that form on cooling are the difference between the solubilities at the two temperatures. KNO₃'s solubility falls steeply on cooling; NaCl's hardly changes between 20 °C and 80 °C (about 36 to 38 g/100 g), so almost nothing comes out.",
+      "vi": {
+        "stem": "Kết tinh bằng cách làm lạnh dung dịch bão hòa nóng cho hiệu quả tốt với KNO₃ nhưng thu được rất ít tinh thể NaCl. Vì sao?",
+        "explain": "Lượng tinh thể tách ra khi làm lạnh bằng hiệu độ tan ở hai nhiệt độ. Độ tan của KNO₃ giảm mạnh khi làm lạnh; độ tan của NaCl gần như không đổi từ 20 °C đến 80 °C (khoảng 36 đến 38 g/100 g nước), nên hầu như không có tinh thể tách ra."
+      },
+      "options": [
+        {
+          "text": "The solubility of NaCl hardly changes with temperature",
+          "vi": {
+            "text": "Độ tan của NaCl hầu như không thay đổi theo nhiệt độ"
+          },
+          "correct": true
+        },
+        {
+          "text": "NaCl is insoluble in water",
+          "vi": {
+            "text": "NaCl không tan trong nước"
+          }
+        },
+        {
+          "text": "NaCl is more soluble in cold water than in hot",
+          "vi": {
+            "text": "NaCl tan trong nước lạnh nhiều hơn trong nước nóng"
+          }
+        },
+        {
+          "text": "NaCl decomposes when it is heated in water",
+          "vi": {
+            "text": "NaCl bị phân hủy khi đun nóng trong nước"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-saturation",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["scaling", "definition", "measurement"],
+      "stem": "Solubility S is given in g of solid per 100 g of water. Decide whether each statement is true or false.",
+      "explain": "S is a property of the substance at that temperature: 50 g of water dissolves S·50/100, half of S, whatever amount of water is used. Stirring only helps the solution reach S sooner; it does not raise S. Solid still lying at the bottom after long stirring shows the solution is saturated.",
+      "vi": {
+        "stem": "Độ tan S được tính bằng số gam chất rắn tan trong 100 g nước. Mỗi nhận định sau đúng hay sai?",
+        "explain": "S là tính chất của chất ở nhiệt độ đó: 50 g nước hòa tan được S·50/100, tức một nửa S, và S không phụ thuộc lượng nước đem dùng. Khuấy chỉ giúp dung dịch đạt đến S nhanh hơn, không làm tăng S. Chất rắn vẫn còn dưới đáy sau khi khuấy lâu chứng tỏ dung dịch đã bão hòa."
+      },
+      "statements": [
+        {
+          "text": "50 g of water dissolves at most half of S grams of the solid.",
+          "vi": {
+            "text": "50 g nước hòa tan được tối đa một nửa S gam chất rắn."
+          },
+          "true": true
+        },
+        {
+          "text": "The value of S depends on how much water is used.",
+          "vi": {
+            "text": "Giá trị của S phụ thuộc vào lượng nước đem dùng."
+          },
+          "true": false
+        },
+        {
+          "text": "Stirring for longer raises the solubility.",
+          "vi": {
+            "text": "Khuấy lâu hơn làm tăng độ tan."
+          },
+          "true": false
+        },
+        {
+          "text": "Solid left at the bottom after long stirring shows that the solution is saturated.",
+          "vi": {
+            "text": "Chất rắn còn lại dưới đáy sau khi khuấy lâu chứng tỏ dung dịch đã bão hòa."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "dissolved-kcl",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["scaling"],
+      "set": {
+        "solute": 2,
+        "temperature": 60,
+        "soluteMass": 30
+      },
+      "stem": "At {temperature} °C the solubility of KCl is {@solubility|4} g per 100 g of water (handbook). {soluteMass} g of KCl is stirred into {waterMass} g of water until saturated. What mass dissolves?",
+      "explain": "{waterMass} g of water dissolves at most S·m_w/100 = {@solubility|4}·{waterMass}/100 ≈ {@saturationMass} g, less than the {soluteMass} g added: that much dissolves and the rest stays solid. S itself is per 100 g of water, not per {waterMass} g.",
+      "vi": {
+        "stem": "Ở {temperature} °C, độ tan của KCl là {@solubility|4} g trong 100 g nước (số liệu tra cứu). Khuấy {soluteMass} g KCl vào {waterMass} g nước đến khi bão hòa. Khối lượng KCl đã tan là bao nhiêu?",
+        "explain": "{waterMass} g nước hòa tan được tối đa S·m_n/100 = {@solubility|4}·{waterMass}/100 ≈ {@saturationMass} g, ít hơn {soluteMass} g đã cho vào: chỉ tan được lượng đó, phần còn lại vẫn ở dạng rắn. Bản thân S tính cho 100 g nước, không phải cho {waterMass} g."
+      },
+      "options": [
+        {
+          "text": "{=@solubility*waterMass/100} g",
+          "vi": {
+            "text": "{=@solubility*waterMass/100} g"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@solubility*waterMass/100",
+            "equals": "finalDissolved"
+          }
+        },
+        {
+          "text": "{@solubility} g",
+          "vi": {
+            "text": "{@solubility} g"
+          },
+          "check": {
+            "expr": "@solubility",
+            "equals": "finalDissolved"
+          }
+        },
+        {
+          "text": "{soluteMass} g",
+          "vi": {
+            "text": "{soluteMass} g"
+          },
+          "check": {
+            "expr": "soluteMass",
+            "equals": "finalDissolved"
+          }
+        },
+        {
+          "text": "{=@solubility*100/waterMass} g",
+          "vi": {
+            "text": "{=@solubility*100/waterMass} g"
+          },
+          "check": {
+            "expr": "@solubility*100/waterMass",
+            "equals": "finalDissolved"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-kno3-warm",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["scaling", "definition"],
+      "set": {
+        "solute": 0,
+        "temperature": 40,
+        "soluteMass": 30
+      },
+      "stem": "{soluteMass} g of KNO₃ is stirred into {waterMass} g of water at {temperature} °C, where its solubility is {@solubility|4} g per 100 g of water (handbook). Decide whether each statement is true or false.",
+      "explain": "{waterMass} g of water could dissolve up to {@saturationMass} g, more than {soluteMass} g: all of it dissolves and the solution is unsaturated. Its concentration is {soluteMass}·100/{waterMass} = {@finalConcentration|3} g/100 g, {@finalSaturation|3}% of S. The {@solubility|4} g is per 100 g of water, not for {waterMass} g.",
+      "vi": {
+        "stem": "Khuấy {soluteMass} g KNO₃ vào {waterMass} g nước ở {temperature} °C, nhiệt độ mà độ tan của nó là {@solubility|4} g trong 100 g nước (số liệu tra cứu). Mỗi nhận định sau đúng hay sai?",
+        "explain": "{waterMass} g nước có thể hòa tan tối đa {@saturationMass} g, nhiều hơn {soluteMass} g: toàn bộ lượng đó tan hết và dung dịch chưa bão hòa. Nồng độ là {soluteMass}·100/{waterMass} = {@finalConcentration|3} g/100 g nước, bằng {@finalSaturation|3}% S. Giá trị {@solubility|4} g tính cho 100 g nước, không phải cho {waterMass} g."
+      },
+      "statements": [
+        {
+          "text": "All {soluteMass} g of KNO₃ dissolves.",
+          "vi": {
+            "text": "Toàn bộ {soluteMass} g KNO₃ đều tan."
+          },
+          "true": true,
+          "check": {
+            "expr": "soluteMass",
+            "equals": "finalDissolved"
+          }
+        },
+        {
+          "text": "The solution is saturated.",
+          "vi": {
+            "text": "Dung dịch đã bão hòa."
+          },
+          "true": false
+        },
+        {
+          "text": "Its concentration is {=100*soluteMass/waterMass} g per 100 g of water.",
+          "vi": {
+            "text": "Nồng độ của dung dịch là {=100*soluteMass/waterMass} g trong 100 g nước."
+          },
+          "true": true,
+          "check": {
+            "expr": "100*soluteMass/waterMass",
+            "equals": "finalConcentration"
+          }
+        },
+        {
+          "text": "At most {@solubility|4} g of KNO₃ could dissolve in this water.",
+          "vi": {
+            "text": "Lượng nước này hòa tan được tối đa {@solubility|4} g KNO₃."
+          },
+          "true": false,
+          "check": {
+            "expr": "@solubility",
+            "equals": "saturationMass"
+          }
+        }
+      ]
+    },
+    {
+      "id": "which-temperature",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["temperature", "scaling"],
+      "set": {
+        "solute": 0,
+        "temperature": 40,
+        "soluteMass": 40
+      },
+      "stem": "{soluteMass} g of KNO₃ is stirred into {waterMass} g of water at one of the station's temperatures until saturated, and {@finalResidue|3} g stays undissolved. KNO₃'s solubility (handbook) is about 31.9 g/100 g at 20 °C, 62.9 at 40 °C, 109 at 60 °C and 170 at 80 °C. At which temperature?",
+      "explain": "Dissolved: {soluteMass} − {@finalResidue|3} ≈ {=soluteMass-@finalResidue|3} g in {waterMass} g, so S ≈ {=(soluteMass-@finalResidue)*100/waterMass|3} g/100 g: 40 °C. At 20 °C, {=soluteMass-31.9*waterMass/100|3} g would be left; at 60 °C and 80 °C all {soluteMass} g dissolves. Using S without scaling to {waterMass} g of water is the trap.",
+      "vi": {
+        "stem": "Khuấy {soluteMass} g KNO₃ vào {waterMass} g nước ở một trong các nhiệt độ của trạm đến khi bão hòa, còn {@finalResidue|3} g không tan. Độ tan của KNO₃ (số liệu tra cứu) khoảng 31,9 g/100 g nước ở 20 °C, 62,9 ở 40 °C, 109 ở 60 °C và 170 ở 80 °C. Thí nghiệm làm ở nhiệt độ nào?",
+        "explain": "Lượng đã tan: {soluteMass} − {@finalResidue|3} ≈ {=soluteMass-@finalResidue|3} g trong {waterMass} g nước, nên S ≈ {=(soluteMass-@finalResidue)*100/waterMass|3} g/100 g nước: 40 °C. Ở 20 °C sẽ còn {=soluteMass-31.9*waterMass/100|3} g không tan; ở 60 °C và 80 °C toàn bộ {soluteMass} g đều tan. Dùng S mà không quy đổi theo {waterMass} g nước là bẫy thường gặp."
+      },
+      "options": [
+        {
+          "text": "40 °C",
+          "vi": {
+            "text": "40 °C"
+          },
+          "correct": true
+        },
+        {
+          "text": "20 °C",
+          "vi": {
+            "text": "20 °C"
+          }
+        },
+        {
+          "text": "60 °C",
+          "vi": {
+            "text": "60 °C"
+          }
+        },
+        {
+          "text": "80 °C",
+          "vi": {
+            "text": "80 °C"
+          }
+        }
+      ]
+    },
+    {
+      "id": "most-crystals",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["temperature", "scaling"],
+      "set": {
+        "solute": 0,
+        "temperature": 80
+      },
+      "stem": "Saturated solutions of KNO₃, KCl and NaCl, each in {waterMass} g of water at 80 °C, are cooled to 20 °C. Which gives the most crystals?",
+      "explain": "Crystals = (S(80 °C) − S(20 °C))·m_w/100. KNO₃'s solubility falls steeply, from {@solubility|3} g/100 g at 80 °C to about 32 at 20 °C: about {=(@solubility-31.9)*waterMass/100|3} g of crystals. KCl's falls only from about 51 to 34, NaCl's from about 38 to 36. The same water does not mean the same crystals: each salt has its own curve.",
+      "vi": {
+        "stem": "Các dung dịch bão hòa KNO₃, KCl và NaCl, mỗi dung dịch trong {waterMass} g nước ở 80 °C, được làm lạnh đến 20 °C. Dung dịch nào cho nhiều tinh thể nhất?",
+        "explain": "Lượng tinh thể = (S(80 °C) − S(20 °C))·m_n/100. Độ tan của KNO₃ giảm mạnh, từ {@solubility|3} g/100 g nước ở 80 °C xuống khoảng 32 ở 20 °C: khoảng {=(@solubility-31.9)*waterMass/100|3} g tinh thể. Độ tan của KCl chỉ giảm từ khoảng 51 xuống 34, của NaCl từ khoảng 38 xuống 36. Cùng lượng nước không có nghĩa là cùng lượng tinh thể: mỗi muối có đường cong độ tan riêng."
+      },
+      "options": [
+        {
+          "text": "KNO₃",
+          "vi": {
+            "text": "KNO₃"
+          },
+          "correct": true
+        },
+        {
+          "text": "KCl",
+          "vi": {
+            "text": "KCl"
+          }
+        },
+        {
+          "text": "NaCl",
+          "vi": {
+            "text": "NaCl"
+          }
+        },
+        {
+          "text": "All give the same mass, since the water is the same",
+          "vi": {
+            "text": "Cả ba như nhau, vì lượng nước như nhau"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-hot-salt",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["temperature", "scaling", "measurement"],
+      "set": {
+        "solute": 1,
+        "temperature": 80,
+        "soluteMass": 20
+      },
+      "stem": "{soluteMass} g of NaCl is stirred into {waterMass} g of water at {temperature} °C, where its solubility is {@solubility|4} g per 100 g of water (handbook), for 15 minutes. Decide whether each statement is true or false.",
+      "explain": "{waterMass} g of water dissolves at most {@solubility|4}·{waterMass}/100 ≈ {@saturationMass} g, so about {@finalResidue|3} g stays solid even at {temperature} °C: NaCl's solubility changes little with temperature, unlike KNO₃'s. Another {waterMass} g of water would dissolve up to another {@saturationMass|3} g, enough for the rest. Stirring longer cannot dissolve more than the solubility.",
+      "vi": {
+        "stem": "Khuấy {soluteMass} g NaCl vào {waterMass} g nước ở {temperature} °C trong 15 phút; ở nhiệt độ này độ tan của NaCl là {@solubility|4} g trong 100 g nước (số liệu tra cứu). Mỗi nhận định sau đúng hay sai?",
+        "explain": "{waterMass} g nước hòa tan được tối đa {@solubility|4}·{waterMass}/100 ≈ {@saturationMass} g, nên còn khoảng {@finalResidue|3} g chất rắn ngay cả ở {temperature} °C: độ tan của NaCl thay đổi ít theo nhiệt độ, khác với KNO₃. Thêm {waterMass} g nước nữa sẽ hòa tan thêm được tối đa {@saturationMass|3} g, đủ cho phần còn lại. Khuấy lâu hơn không thể làm tan nhiều hơn độ tan."
+      },
+      "statements": [
+        {
+          "text": "At most about {=@solubility*waterMass/100} g of NaCl dissolves.",
+          "vi": {
+            "text": "Lượng NaCl tan được tối đa khoảng {=@solubility*waterMass/100} g."
+          },
+          "true": true,
+          "check": {
+            "expr": "@solubility*waterMass/100",
+            "equals": "saturationMass"
+          }
+        },
+        {
+          "text": "Between 20 °C and 80 °C, NaCl's solubility changes much less than KNO₃'s.",
+          "vi": {
+            "text": "Từ 20 °C đến 80 °C, độ tan của NaCl thay đổi ít hơn nhiều so với KNO₃."
+          },
+          "true": true
+        },
+        {
+          "text": "Adding another {waterMass} g of water would let all the NaCl dissolve.",
+          "vi": {
+            "text": "Thêm {waterMass} g nước nữa thì toàn bộ NaCl sẽ tan hết."
+          },
+          "true": true
+        },
+        {
+          "text": "Stirring for longer at {temperature} °C would dissolve the solid that is left.",
+          "vi": {
+            "text": "Khuấy lâu hơn ở {temperature} °C sẽ làm tan hết phần chất rắn còn lại."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,384 @@
+{
+  "id": "ac-generator",
+  "name": "The AC generator",
+  "category": "physics",
+  "description": "Turn a coil of wire between the poles of a magnet and a voltage appears: as the coil turns, the magnetic flux through it keeps changing, and by Faraday’s law that induces an emf. Watch the voltmeter swing one way, then the other — alternating current — and see how the turns, the field and the speed set its peak.",
+  "vi": {
+    "name": "Máy phát điện xoay chiều",
+    "description": "Quay một khung dây giữa hai cực nam châm và một điện áp xuất hiện: khi khung quay, từ thông qua nó liên tục thay đổi, và theo định luật Fa-ra-đây điều đó sinh ra suất điện động cảm ứng. Quan sát kim vôn kế lệch sang một phía rồi sang phía kia — dòng điện xoay chiều — và xem số vòng dây, từ trường và tốc độ quay quyết định giá trị cực đại thế nào.",
+    "note": "Khung dây N vòng, diện tích A = 100 cm², quay đều với tần số f trong từ trường đều B. Từ thông móc vòng NΦ = NBA cos ωt; theo định luật Fa-ra-đây, ε = −d(NΦ)/dt = NBAω sin ωt: suất điện động xoay chiều có giá trị cực đại E₀ = NBAω, tần số f, giá trị hiệu dụng E₀/√2. Tính chính xác trong 3 vòng quay. Khung bắt đầu ở vị trí mặt khung vuông góc với từ trường (từ thông lớn nhất, suất điện động bằng không). Tốc độ quay chậm để nhìn rõ (máy phát thật quay 50 vòng/s). Độ sáng bóng đèn tỉ lệ với ε² (minh họa)."
+  },
+  "requiredEquipment": ["ac-generator"],
+  "model": "physics.ac-generator",
+  "parameters": [
+    {
+      "id": "frequency",
+      "label": "Turns per second",
+      "vi": {
+        "label": "Số vòng quay mỗi giây"
+      },
+      "symbol": "f",
+      "unit": "Hz",
+      "default": 1,
+      "min": 0.5,
+      "max": 3,
+      "step": 0.5
+    },
+    {
+      "id": "turns",
+      "label": "Turns of wire on the coil",
+      "vi": {
+        "label": "Số vòng dây của khung"
+      },
+      "symbol": "N",
+      "unit": "",
+      "default": 200,
+      "min": 50,
+      "max": 500,
+      "step": 50
+    },
+    {
+      "id": "field",
+      "label": "Magnetic field",
+      "vi": {
+        "label": "Cảm ứng từ"
+      },
+      "symbol": "B",
+      "unit": "T",
+      "default": 0.2,
+      "min": 0.05,
+      "max": 0.5,
+      "step": 0.05
+    }
+  ],
+  "initialConditions": {
+    "area": 0.01,
+    "periods": 3
+  },
+  "inputs": {
+    "area": {
+      "symbol": "A",
+      "unit": "m²",
+      "desk": false
+    },
+    "periods": {
+      "symbol": "n",
+      "unit": "",
+      "desk": false
+    }
+  },
+  "simulation": {
+    "timeStep": 0.002,
+    "maxDuration": 8,
+    "sampleInterval": 0.01
+  },
+  "measurements": [
+    {
+      "id": "time",
+      "label": "Time",
+      "vi": {
+        "label": "Thời gian"
+      },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "time"
+    },
+    {
+      "id": "angle",
+      "label": "Coil angle",
+      "vi": {
+        "label": "Góc quay của khung"
+      },
+      "symbol": "α",
+      "unit": "°",
+      "variable": "angle"
+    },
+    {
+      "id": "linkage",
+      "label": "Flux linkage",
+      "vi": {
+        "label": "Từ thông móc vòng"
+      },
+      "symbol": "NΦ",
+      "unit": "Wb",
+      "variable": "linkage"
+    },
+    {
+      "id": "emf",
+      "label": "Induced emf",
+      "vi": {
+        "label": "Suất điện động cảm ứng"
+      },
+      "symbol": "ε",
+      "unit": "V",
+      "variable": "emf"
+    }
+  ],
+  "results": [
+    {
+      "id": "peak",
+      "label": "Peak emf",
+      "vi": {
+        "label": "Suất điện động cực đại"
+      },
+      "symbol": "E₀",
+      "unit": "V",
+      "variable": "emf",
+      "reduce": "max",
+      "theory": "peak"
+    },
+    {
+      "id": "rms",
+      "label": "RMS emf (over whole turns)",
+      "vi": {
+        "label": "Suất điện động hiệu dụng (qua các vòng trọn)"
+      },
+      "symbol": "E",
+      "unit": "V",
+      "variable": "rms",
+      "reduce": "final",
+      "theory": "rms"
+    },
+    {
+      "id": "linkage",
+      "label": "Greatest flux linkage",
+      "vi": {
+        "label": "Từ thông móc vòng lớn nhất"
+      },
+      "symbol": "NΦ₀",
+      "unit": "Wb",
+      "variable": "linkage",
+      "reduce": "max",
+      "theory": "linkage"
+    }
+  ],
+  "graphs": [
+    {
+      "id": "emf-time",
+      "title": "Emf and flux linkage as the coil turns",
+      "vi": {
+        "title": "Suất điện động và từ thông khi khung quay"
+      },
+      "x": "time",
+      "y": ["emf"]
+    },
+    {
+      "id": "linkage-time",
+      "title": "Flux linkage",
+      "vi": {
+        "title": "Từ thông móc vòng"
+      },
+      "x": "time",
+      "y": ["linkage"]
+    }
+  ],
+  "monitor": "emf-time",
+  "compare": [
+    {
+      "graph": "emf-time",
+      "series": "emf"
+    }
+  ],
+  "note": "A coil of N turns and area A = 100 cm² turns steadily f times a second in a uniform field B. Its flux linkage NΦ = NBA cos ωt; by Faraday’s law ε = −d(NΦ)/dt = NBAω sin ωt: an alternating emf of peak E₀ = NBAω, frequency f, rms E₀/√2. Exact, over 3 turns. The coil starts with its face square to the field (flux greatest, emf zero). The turning is slow to be seen (a real generator turns 50 times a second). The bulb’s brightness goes as ε² (illustrative).",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the AC generator instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn về máy phát điện xoay chiều trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "ac-generator-instructions"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: watch the needle swing as the coil turns.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: quan sát kim lệch khi khung quay."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Read the peak emf; where is the coil when it peaks?",
+      "vi": {
+        "instruction": "Đọc suất điện động cực đại; khung ở vị trí nào khi đạt cực đại?"
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "frequency",
+      "instruction": "Press RESET and turn it twice as fast with the dial.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI và quay nhanh gấp đôi bằng núm xoay."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "frequency"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Run again: what happened to the peak and the frequency?",
+      "vi": {
+        "instruction": "Chạy lại: giá trị cực đại và tần số thay đổi thế nào?"
+      },
+      "done": {
+        "kind": "reset"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "peak-and-rms",
+      "question": "A coil of {turns} turns, each of area {area} m², turns {frequency} times a second in a uniform field of {field} T. Find the peak and the rms value of its emf.",
+      "vi": {
+        "question": "Một khung dây gồm {turns} vòng, mỗi vòng có diện tích {area} m², quay đều {frequency} vòng mỗi giây trong từ trường đều có cảm ứng từ {field} T. Tìm giá trị cực đại và giá trị hiệu dụng của suất điện động."
+      },
+      "set": { "frequency": 2, "turns": 200, "field": 0.2 },
+      "find": [{ "theory": "peak" }, { "theory": "rms" }],
+      "steps": [
+        {
+          "say": "The flux linkage is N·B·A·cos ωt. By Faraday’s law the emf is its rate of change, so its peak is N·B·A·ω, with ω = 2πf.",
+          "vi": {
+            "say": "Từ thông qua khung là N·B·A·cos ωt. Theo định luật Faraday, suất điện động bằng tốc độ biến thiên của từ thông, nên giá trị cực đại của nó là N·B·A·ω, với ω = 2πf."
+          },
+          "write": "E₀ = N·B·A·ω,  ω = 2πf"
+        },
+        {
+          "say": "Put in the numbers.",
+          "vi": { "say": "Thay số vào." },
+          "write": "E₀ = {turns}·{field}·{area}·2π·{frequency} ≈ {@peak} V",
+          "check": { "expr": "turns*field*area*2*pi*frequency", "equals": "peak" }
+        },
+        {
+          "say": "For a sine-shaped emf the rms value is the peak divided by root two.",
+          "vi": {
+            "say": "Với suất điện động biến thiên điều hòa, giá trị hiệu dụng bằng giá trị cực đại chia căn hai."
+          },
+          "write": "E = E₀/√2 = {@peak}/√2 ≈ {@rms} V",
+          "check": { "expr": "@peak/sqrt(2)", "equals": "rms" }
+        }
+      ]
+    },
+    {
+      "id": "flux-linkage",
+      "question": "A coil of {turns} turns of area {area} m² turns {frequency} times a second in a field of {field} T. Find its greatest flux linkage and the peak emf.",
+      "vi": {
+        "question": "Một khung dây {turns} vòng, diện tích {area} m², quay {frequency} vòng mỗi giây trong từ trường {field} T. Tìm từ thông cực đại qua cả khung và suất điện động cực đại."
+      },
+      "set": { "frequency": 0.5, "turns": 500, "field": 0.5 },
+      "find": [{ "theory": "linkage" }, { "theory": "peak" }],
+      "steps": [
+        {
+          "say": "The flux is greatest when the coil’s face is square to the field: then each turn holds B·A, and the whole coil N times that.",
+          "vi": {
+            "say": "Từ thông lớn nhất khi mặt khung vuông góc với đường sức: khi đó mỗi vòng có B·A, cả khung gấp N lần."
+          },
+          "write": "NΦ₀ = N·B·A = {turns}·{field}·{area} = {@linkage} Wb",
+          "check": { "expr": "turns*field*area", "equals": "linkage" }
+        },
+        {
+          "say": "The peak emf is the greatest flux linkage times the angular velocity ω = 2πf.",
+          "vi": {
+            "say": "Suất điện động cực đại bằng từ thông cực đại nhân với tốc độ góc ω = 2πf."
+          },
+          "write": "E₀ = NΦ₀·2πf = {@linkage}·2π·{frequency} ≈ {@peak} V",
+          "check": { "expr": "@linkage*2*pi*frequency", "equals": "peak" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "A turning coil in a magnetic field has a changing flux through it, so an emf is induced (Faraday’s law). It reverses every half turn: alternating current, peak NBAω.",
+    "vi": {
+      "summary": "Khung dây quay trong từ trường có từ thông qua nó thay đổi, nên xuất hiện suất điện động cảm ứng (định luật Fa-ra-đây). Nó đổi chiều mỗi nửa vòng quay: dòng điện xoay chiều, giá trị cực đại NBAω."
+    },
+    "parts": [
+      {
+        "id": "magnets",
+        "name": "Magnets",
+        "role": "N (red) and S (blue) make a uniform field across the coil.",
+        "vi": {
+          "name": "Nam châm",
+          "role": "Cực N (đỏ) và S (xanh) tạo từ trường đều qua khung dây."
+        },
+        "anchor": {
+          "part": "magnet-north"
+        }
+      },
+      {
+        "id": "coil",
+        "name": "Coil",
+        "role": "N turns of wire, turned by the axle.",
+        "vi": {
+          "name": "Khung dây",
+          "role": "N vòng dây, quay quanh trục."
+        },
+        "anchor": {
+          "part": "coil"
+        }
+      },
+      {
+        "id": "rings",
+        "name": "Slip rings and brushes",
+        "role": "Keep the turning coil connected to the circuit.",
+        "vi": {
+          "name": "Vành khuyên và chổi quét",
+          "role": "Giữ khung dây đang quay luôn nối với mạch ngoài."
+        },
+        "anchor": {
+          "part": "slip-rings"
+        }
+      },
+      {
+        "id": "meter",
+        "name": "Voltmeter (centre zero)",
+        "role": "Swings right for one direction, left for the other.",
+        "vi": {
+          "name": "Vôn kế (số 0 ở giữa)",
+          "role": "Lệch phải khi theo một chiều, lệch trái khi theo chiều ngược lại."
+        },
+        "anchor": {
+          "part": "voltmeter"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "Face square to the field, the most field lines pass through the coil, but they are not changing for an instant: emf zero.",
+        "vi": {
+          "text": "Khi mặt khung vuông góc với từ trường, nhiều đường sức đi qua khung nhất, nhưng tức thời chúng không thay đổi: suất điện động bằng không."
+        },
+        "parts": ["coil", "magnets"]
+      },
+      {
+        "text": "A quarter turn later the coil is edge-on: the flux is passing zero and changing fastest — the emf is greatest, NBAω.",
+        "vi": {
+          "text": "Một phần tư vòng sau khung song song với từ trường: từ thông đi qua không và biến thiên nhanh nhất — suất điện động lớn nhất, NBAω."
+        },
+        "parts": ["coil", "meter"]
+      },
+      {
+        "text": "Each half turn the coil’s sides swap places and the emf reverses: the needle swings both ways — alternating current, at the frequency of turning.",
+        "vi": {
+          "text": "Mỗi nửa vòng hai cạnh khung đổi chỗ và suất điện động đổi chiều: kim lệch về hai phía — dòng điện xoay chiều, cùng tần số quay."
+        },
+        "parts": ["meter", "rings"]
+      },
+      {
+        "text": "More turns, a stronger field or faster turning give a larger peak. Turning faster also raises the frequency.",
+        "vi": {
+          "text": "Nhiều vòng dây hơn, từ trường mạnh hơn hoặc quay nhanh hơn cho giá trị cực đại lớn hơn. Quay nhanh hơn còn làm tăng tần số."
+        },
+        "parts": ["coil", "magnets"]
+      }
+    ]
+  }
+}

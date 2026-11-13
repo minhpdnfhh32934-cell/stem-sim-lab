@@ -1,0 +1,521 @@
+{
+  "id": "radioactive-decay",
+  "name": "Radioactive decay and half-life (simulation)",
+  "category": "physics",
+  "description": "A simulation: a Geiger–Müller tube faces a radioactive source and a counter counts its clicks in equal intervals. The counts are random — no two runs give the same numbers — but on average they fall by half every half-life. Subtract the background, plot ln(counts) against time and the points scatter about a straight line whose slope gives the half-life. No radioactive source is used: the counts are drawn at random by the computer, as a real source would give them.",
+  "vi": {
+    "name": "Sự phóng xạ và chu kì bán rã (mô phỏng)",
+    "description": "Một mô phỏng: một ống đếm Geiger–Müller hướng vào một nguồn phóng xạ và máy đếm đếm số xung trong những khoảng thời gian bằng nhau. Số đếm là ngẫu nhiên — không có hai lần chạy nào cho cùng các con số — nhưng trung bình chúng giảm một nửa sau mỗi chu kì bán rã. Trừ đi phông nền, vẽ ln(số đếm) theo thời gian thì các điểm phân tán quanh một đường thẳng có hệ số góc cho biết chu kì bán rã. Không dùng nguồn phóng xạ nào: số đếm được máy tính rút ngẫu nhiên, đúng như một nguồn thật sẽ cho.",
+    "note": "Số hạt nhân chưa phân rã giảm theo N = N0·e^(−λt), với hằng số phóng xạ λ = ln 2/T½; tốc độ đếm giảm theo cùng quy luật, R0·e^(−λt). Trong mỗi khoảng Δt, số đếm là ngẫu nhiên theo phân bố Poisson với giá trị trung bình R0/λ·(e^(−λt) − e^(−λ(t + Δt))) + B·Δt, trong đó B = 0,4 xung/s là phông nền (giá trị minh họa; phông nền thật thường vài phần mười xung mỗi giây). Các số ngẫu nhiên được rút từ một hạt giống: cùng một lần đếm cho cùng các số, lần đếm khác cho các số khác. Sau mỗi khoảng, chu kì bán rã được khớp từ các số đếm đến lúc đó: một đường thẳng bình phương tối thiểu của ln(N − B·Δt) theo thời điểm giữa khoảng (bỏ các khoảng có N ≤ B·Δt), T½ = −ln 2/hệ số góc; nó dao động quanh giá trị thật, ít hơn khi nguồn mạnh và đếm lâu. Chu kì bán rã của protactini-234m là 1,159 phút ≈ 69,5 s (ENSDF, National Nuclear Data Center); các đồng vị 30 s và 150 s chỉ là mô phỏng. Đây là mô phỏng (quyết định D4 của hợp đồng Phase T): bỏ qua thời gian chết của ống đếm và hình học của nguồn. Thời gian được tua nhanh: 10 giây trong phòng thí nghiệm trong mỗi giây chạy."
+  },
+  "requiredEquipment": ["decay-counter"],
+  "model": "nuclear.decay-counter",
+  "parameters": [
+    {
+      "id": "halfLife",
+      "label": "Source",
+      "vi": {
+        "label": "Nguồn"
+      },
+      "symbol": "T½",
+      "unit": "s",
+      "default": 69.54,
+      "min": 30,
+      "max": 150,
+      "presets": [
+        {
+          "label": "Protactinium-234m (69.5 s)",
+          "vi": {
+            "label": "Protactini-234m (69,5 s)"
+          },
+          "value": 69.54
+        },
+        {
+          "label": "Simulated, 30 s",
+          "vi": {
+            "label": "Mô phỏng, 30 s"
+          },
+          "value": 30
+        },
+        {
+          "label": "Simulated, 150 s",
+          "vi": {
+            "label": "Mô phỏng, 150 s"
+          },
+          "value": 150
+        }
+      ]
+    },
+    {
+      "id": "initialRate",
+      "label": "Count rate at the start",
+      "vi": {
+        "label": "Tốc độ đếm lúc đầu"
+      },
+      "symbol": "R0",
+      "unit": "1/s",
+      "default": 40,
+      "min": 10,
+      "max": 60,
+      "presets": [
+        {
+          "label": "10 /s",
+          "vi": {
+            "label": "10 /s"
+          },
+          "value": 10
+        },
+        {
+          "label": "40 /s",
+          "vi": {
+            "label": "40 /s"
+          },
+          "value": 40
+        },
+        {
+          "label": "60 /s",
+          "vi": {
+            "label": "60 /s"
+          },
+          "value": 60
+        }
+      ]
+    },
+    {
+      "id": "countInterval",
+      "label": "Counting interval",
+      "vi": {
+        "label": "Khoảng thời gian đếm"
+      },
+      "symbol": "Δt",
+      "unit": "s",
+      "default": 10,
+      "min": 5,
+      "max": 20,
+      "presets": [
+        {
+          "label": "5 s",
+          "vi": {
+            "label": "5 s"
+          },
+          "value": 5
+        },
+        {
+          "label": "10 s",
+          "vi": {
+            "label": "10 s"
+          },
+          "value": 10
+        },
+        {
+          "label": "20 s",
+          "vi": {
+            "label": "20 s"
+          },
+          "value": 20
+        }
+      ]
+    },
+    {
+      "id": "draw",
+      "label": "Count number (the random draw)",
+      "vi": {
+        "label": "Lần đếm (lần rút ngẫu nhiên)"
+      },
+      "symbol": "#",
+      "unit": "",
+      "default": 1,
+      "min": 1,
+      "max": 5,
+      "presets": [
+        {
+          "label": "1",
+          "vi": {
+            "label": "1"
+          },
+          "value": 1
+        },
+        {
+          "label": "2",
+          "vi": {
+            "label": "2"
+          },
+          "value": 2
+        },
+        {
+          "label": "3",
+          "vi": {
+            "label": "3"
+          },
+          "value": 3
+        },
+        {
+          "label": "4",
+          "vi": {
+            "label": "4"
+          },
+          "value": 4
+        },
+        {
+          "label": "5",
+          "vi": {
+            "label": "5"
+          },
+          "value": 5
+        }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "background": 0.4,
+    "duration": 300,
+    "timeLapse": 10
+  },
+  "inputs": {
+    "background": {
+      "symbol": "B",
+      "unit": "1/s"
+    },
+    "duration": {
+      "symbol": "t_end",
+      "unit": "s"
+    },
+    "timeLapse": {
+      "symbol": "k_t",
+      "unit": "",
+      "desk": false
+    }
+  },
+  "simulation": {
+    "timeStep": 0.02,
+    "maxDuration": 32,
+    "sampleInterval": 0.1
+  },
+  "measurements": [
+    {
+      "id": "countRate",
+      "label": "Count rate in the last interval",
+      "vi": {
+        "label": "Tốc độ đếm trong khoảng vừa qua"
+      },
+      "symbol": "N/Δt",
+      "unit": "1/s",
+      "variable": "countRate"
+    },
+    {
+      "id": "counts",
+      "label": "Counts in the last interval",
+      "vi": {
+        "label": "Số đếm trong khoảng vừa qua"
+      },
+      "symbol": "N",
+      "unit": "",
+      "variable": "counts"
+    },
+    {
+      "id": "totalCounts",
+      "label": "Total counts",
+      "vi": {
+        "label": "Tổng số đếm"
+      },
+      "symbol": "ΣN",
+      "unit": "",
+      "variable": "totalCounts"
+    },
+    {
+      "id": "labTime",
+      "label": "Time",
+      "vi": {
+        "label": "Thời gian"
+      },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "labTime"
+    }
+  ],
+  "results": [
+    {
+      "id": "halfLifeSeen",
+      "label": "Half-life fitted from the counts",
+      "vi": {
+        "label": "Chu kì bán rã khớp từ số đếm"
+      },
+      "symbol": "T½",
+      "unit": "s",
+      "variable": "halfLifeSeen",
+      "reduce": "final",
+      "theory": "halfLife"
+    },
+    {
+      "id": "totalCounts",
+      "label": "Total counts",
+      "vi": {
+        "label": "Tổng số đếm"
+      },
+      "symbol": "ΣN",
+      "unit": "",
+      "variable": "totalCounts",
+      "reduce": "final"
+    },
+    {
+      "id": "firstRate",
+      "label": "Largest count rate (first interval)",
+      "vi": {
+        "label": "Tốc độ đếm lớn nhất (khoảng đầu tiên)"
+      },
+      "symbol": "N₁/Δt",
+      "unit": "1/s",
+      "variable": "countRate",
+      "reduce": "max"
+    }
+  ],
+  "graphs": [
+    {
+      "id": "rate-time",
+      "title": "Count rate against time",
+      "vi": {
+        "title": "Tốc độ đếm theo thời gian"
+      },
+      "x": "labTime",
+      "y": ["countRate"],
+      "yLabel": "N/Δt"
+    }
+  ],
+  "monitor": "rate-time",
+  "compare": [
+    {
+      "graph": "rate-time"
+    }
+  ],
+  "scatters": [
+    {
+      "id": "half-life-draws",
+      "title": "Fitted half-life of each count",
+      "vi": {
+        "title": "Chu kì bán rã khớp được ở mỗi lần đếm"
+      },
+      "x": "draw",
+      "y": "halfLifeSeen"
+    }
+  ],
+  "note": "The undecayed nuclei fall as N = N0·e^(−λt), with the decay constant λ = ln 2/T½; the count rate falls the same way, R0·e^(−λt). In each interval Δt the count is random, Poisson with the mean R0/λ·(e^(−λt) − e^(−λ(t + Δt))) + B·Δt, where B = 0.4 counts/s is the background (illustrative; real backgrounds are a few tenths of a count per second). The random numbers come from a seed: the same count number gives the same counts, another count number other counts. After each interval the half-life is fitted from the counts so far: a least-squares line through ln(N − B·Δt) against each interval's middle (intervals where N ≤ B·Δt are left out), T½ = −ln 2/slope; it scatters about the true value, less for a strong source and a long count. The half-life of protactinium-234m is 1.159 min ≈ 69.5 s (ENSDF, National Nuclear Data Center); the 30 s and 150 s sources are simulated only. A simulation (decision D4 of the Phase T contract): the tube's dead time and the source's geometry are left out. Time is compressed: 10 lab seconds each run second.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the radioactive decay instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn thí nghiệm phóng xạ trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "radioactive-decay-instructions"
+      }
+    },
+    {
+      "id": "source",
+      "instruction": "Choose the source with its dial on the control desk.",
+      "vi": {
+        "instruction": "Chọn nguồn bằng núm xoay trên bàn điều khiển."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "halfLife"
+      }
+    },
+    {
+      "id": "draw",
+      "instruction": "Choose the count number: each gives its own random counts.",
+      "vi": {
+        "instruction": "Chọn lần đếm: mỗi lần cho một bộ số đếm ngẫu nhiên riêng."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "draw"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the counter counts for 5 minutes; watch the lamp flash less and less.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: máy đếm đếm trong 5 phút; quan sát đèn nháy thưa dần."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Read the fitted half-life on the results monitor and compare it with the source's.",
+      "vi": {
+        "instruction": "Đọc chu kì bán rã khớp được trên màn hình kết quả và so sánh với chu kì của nguồn."
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, choose another count number and run again: the counts differ, the half-life stays.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, chọn lần đếm khác rồi chạy lại: số đếm khác đi, chu kì bán rã vẫn vậy."
+      },
+      "done": {
+        "kind": "reset"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "decay-constant",
+      "question": "A source has a half-life of {halfLife} s. Find its decay constant.",
+      "vi": {
+        "question": "Một nguồn phóng xạ có chu kì bán rã {halfLife} s. Tìm hằng số phóng xạ của nó."
+      },
+      "set": { "halfLife": 150 },
+      "find": [{ "theory": "decayConstant", "symbol": "λ", "unit": "s⁻¹" }],
+      "steps": [
+        {
+          "say": "The nuclei left fall as N = N₀·e^(−λt). After one half-life half are left.",
+          "vi": {
+            "say": "Số hạt nhân còn lại giảm theo N = N₀·e^(−λt). Sau một chu kì bán rã còn lại một nửa."
+          },
+          "write": "e^(−λ·T½) = ½  →  λ = ln 2/T½"
+        },
+        {
+          "say": "Put in the half-life.",
+          "vi": { "say": "Thay chu kì bán rã vào." },
+          "write": "λ = ln 2/{halfLife} ≈ {@decayConstant} s⁻¹",
+          "check": { "expr": "ln(2)/halfLife", "equals": "decayConstant" }
+        }
+      ]
+    },
+    {
+      "id": "first-count",
+      "question": "Protactinium-234m (T½ = {halfLife} s) starts at a count rate of {initialRate} counts per second; the background is {background} counts/s. How many counts do you expect in the first {countInterval} s?",
+      "vi": {
+        "question": "Protactini-234m (T½ = {halfLife} s) có tốc độ đếm ban đầu {initialRate} xung mỗi giây; phông nền là {background} xung/s. Trong {countInterval} s đầu tiên, số đếm trung bình là bao nhiêu?"
+      },
+      "set": { "halfLife": 69.54, "initialRate": 60, "countInterval": 5 },
+      "find": [{ "theory": "firstCount", "symbol": "N₁", "unit": "" }],
+      "steps": [
+        {
+          "say": "First the decay constant.",
+          "vi": { "say": "Trước hết tính hằng số phóng xạ." },
+          "write": "λ = ln 2/T½ = ln 2/{halfLife} ≈ {@decayConstant} s⁻¹",
+          "check": { "expr": "ln(2)/halfLife", "equals": "decayConstant" }
+        },
+        {
+          "say": "The rate falls as R₀·e^(−λt); adding it up over the interval gives R₀/λ·(1 − e^(−λΔt)) from the source, and the background adds B·Δt. Counts are random: this is the mean, and a real count scatters around it.",
+          "vi": {
+            "say": "Tốc độ đếm giảm theo R₀·e^(−λt); cộng dồn trong khoảng thời gian đó được R₀/λ·(1 − e^(−λΔt)) từ nguồn, cộng thêm phông nền B·Δt. Số đếm là ngẫu nhiên: đây là giá trị trung bình, số đếm thực tế dao động quanh nó."
+          },
+          "write": "N₁ = {=initialRate/@decayConstant*(1-exp(-@decayConstant*countInterval))} + {@backgroundCount} ≈ {@firstCount}",
+          "check": {
+            "expr": "initialRate/@decayConstant*(1-exp(-@decayConstant*countInterval))+background*countInterval",
+            "equals": "firstCount"
+          }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "A simulation: a Geiger–Müller tube counts the clicks from a radioactive source; the counts are random, but on average they halve every half-life.",
+    "vi": {
+      "summary": "Một mô phỏng: ống Geiger–Müller đếm các xung từ một nguồn phóng xạ; số đếm là ngẫu nhiên, nhưng trung bình cứ sau mỗi chu kỳ bán rã thì giảm một nửa."
+    },
+    "parts": [
+      {
+        "id": "source",
+        "name": "Source in its holder",
+        "role": "A sealed source in a lead block, facing the tube. Simulated: no radioactive source is used.",
+        "vi": {
+          "name": "Nguồn trong giá đỡ",
+          "role": "Nguồn kín đặt trong khối chì, hướng về phía ống đếm. Chỉ là mô phỏng: không dùng nguồn phóng xạ thật."
+        },
+        "anchor": {
+          "at": [-0.134, 0.02, 0.01]
+        }
+      },
+      {
+        "id": "tube",
+        "name": "Geiger–Müller tube",
+        "role": "Gives a click for each radiation it detects.",
+        "vi": {
+          "name": "Ống Geiger–Müller",
+          "role": "Phát một xung mỗi khi phát hiện một tia phóng xạ."
+        },
+        "anchor": {
+          "at": [-0.06, 0.02, 0.011]
+        }
+      },
+      {
+        "id": "counter",
+        "name": "Counter",
+        "role": "Counts the clicks in equal intervals Δt.",
+        "vi": {
+          "name": "Máy đếm",
+          "role": "Đếm số xung trong các khoảng thời gian bằng nhau Δt."
+        },
+        "anchor": {
+          "at": [0.14, 0.02, 0.061]
+        }
+      },
+      {
+        "id": "lamp",
+        "name": "Count lamp",
+        "role": "Glows brighter at a higher count rate.",
+        "vi": {
+          "name": "Đèn báo",
+          "role": "Sáng hơn khi tốc độ đếm cao hơn."
+        },
+        "anchor": {
+          "part": "lamp"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "The source’s unstable nuclei decay one by one, each giving out radiation. The tube clicks for each one it catches, and the counter counts the clicks in each interval Δt.",
+        "vi": {
+          "text": "Các hạt nhân không bền của nguồn lần lượt phân rã, mỗi hạt phát ra một tia phóng xạ. Ống đếm phát một xung cho mỗi tia nó bắt được, và máy đếm đếm số xung trong mỗi khoảng Δt."
+        },
+        "parts": ["source", "tube", "counter"]
+      },
+      {
+        "text": "No one can say when a given nucleus will decay: the counts are random, and no two runs give the same numbers. Each count number here is its own random draw.",
+        "vi": {
+          "text": "Không ai biết trước khi nào một hạt nhân sẽ phân rã: số đếm là ngẫu nhiên, và không có hai lần chạy nào cho cùng các con số. Mỗi số thứ tự lần đếm ở đây là một lần rút ngẫu nhiên riêng."
+        },
+        "parts": ["counter"]
+      },
+      {
+        "text": "On average the nuclei left fall as N = N0·e^(−λt), with λ = ln 2/T½: after each half-life T½ half are left, and the count rate falls the same way.",
+        "vi": {
+          "text": "Trung bình, số hạt nhân còn lại giảm theo N = N0·e^(−λt), với λ = ln 2/T½: sau mỗi chu kỳ bán rã T½ còn lại một nửa, và tốc độ đếm cũng giảm như vậy."
+        },
+        "parts": ["source", "lamp"]
+      },
+      {
+        "text": "The tube also counts a small background from around the room, which must be subtracted. Then ln(counts) against time scatters about a straight line of slope −λ, which gives T½ = ln 2/λ.",
+        "vi": {
+          "text": "Ống đếm cũng đếm cả một phông nền nhỏ từ môi trường xung quanh, cần phải trừ đi. Khi đó ln(số đếm) theo thời gian phân tán quanh một đường thẳng có hệ số góc −λ, từ đó T½ = ln 2/λ."
+        },
+        "parts": ["tube", "counter"]
+      },
+      {
+        "text": "The results give the half-life fitted from the counts beside the source’s. It scatters about the true value — less for a strong source and a long count. Another count number gives other counts but the same half-life.",
+        "vi": {
+          "text": "Phần kết quả cho chu kỳ bán rã tính từ số đếm bên cạnh giá trị của nguồn. Nó phân tán quanh giá trị thật — ít hơn khi nguồn mạnh và đếm lâu. Số thứ tự lần đếm khác cho số đếm khác nhưng cùng chu kỳ bán rã."
+        },
+        "parts": ["counter"]
+      },
+      {
+        "text": "The tube’s dead time and the source’s geometry are left out. Time runs 10 times faster than in the lab.",
+        "vi": {
+          "text": "Mô hình bỏ qua thời gian chết của ống đếm và hình dạng hình học của nguồn. Thời gian chạy nhanh gấp 10 lần so với trong phòng thí nghiệm."
+        },
+        "parts": ["tube", "source"]
+      }
+    ]
+  }
+}

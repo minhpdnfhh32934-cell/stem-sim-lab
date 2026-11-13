@@ -1,0 +1,1033 @@
+{
+  "id": "heart-rate",
+  "skills": [
+    {
+      "id": "max-rate",
+      "name": "Age-predicted maximum: 208 − 0.7 × age",
+      "advice": "Learn the Tanaka formula the station uses, HR_max = 208 − 0.7 × age, and try it for your own age and a grandparent’s. The trap: the older formula 220 − age gives other numbers; use the one the question states.",
+      "vi": {
+        "name": "Nhịp tim tối đa theo tuổi: 208 − 0,7 × tuổi",
+        "advice": "Ghi nhớ công thức Tanaka mà trạm sử dụng, HR_max = 208 − 0,7 × tuổi, và thử tính cho tuổi của em và của ông bà. Bẫy thường gặp: công thức cũ 220 − tuổi cho kết quả khác; hãy dùng đúng công thức đề bài cho."
+      }
+    },
+    {
+      "id": "target-rate",
+      "name": "Target heart rate (Karvonen)",
+      "advice": "Practise the Karvonen target: resting rate + intensity × (maximum − resting rate). The intensity multiplies the reserve, not the maximum. Run the station at 50 % and 80 % and check the peak against your sum.",
+      "vi": {
+        "name": "Nhịp tim mục tiêu (Karvonen)",
+        "advice": "Luyện công thức Karvonen: nhịp nghỉ + cường độ × (nhịp tối đa − nhịp nghỉ). Cường độ nhân với phần dự trữ nhịp tim, không phải nhân với nhịp tối đa. Chạy trạm ở 50 % và 80 % rồi so sánh nhịp đỉnh với kết quả tự tính."
+      }
+    },
+    {
+      "id": "cardiac-output",
+      "name": "Cardiac output = heart rate × stroke volume",
+      "advice": "Re-read the definitions: stroke volume is per beat (mL), cardiac output per minute (L/min). Multiply beats/min by mL and divide by 1000 for L/min; check that a resting heart gives about 5 L/min.",
+      "vi": {
+        "name": "Lưu lượng tim = nhịp tim × thể tích tâm thu",
+        "advice": "Đọc lại định nghĩa: thể tích tâm thu là lượng máu mỗi nhịp (mL), lưu lượng tim là lượng máu mỗi phút (L/min). Nhân nhịp/phút với mL rồi chia 1000 để ra L/min; kiểm tra rằng tim lúc nghỉ cho khoảng 5 L/min."
+      }
+    },
+    {
+      "id": "physiology",
+      "name": "Why the heart speeds up and recovers",
+      "advice": "Explain the chain aloud: working muscles use more O₂ and make more CO₂; nerves and adrenaline raise the heart rate; at rest it falls back. Watch the ECG during a run: one QRS spike per beat.",
+      "vi": {
+        "name": "Vì sao tim đập nhanh lên và hồi phục",
+        "advice": "Tự giải thích chuỗi sự kiện: cơ hoạt động dùng nhiều O₂ hơn và tạo nhiều CO₂ hơn; hệ thần kinh và adrenaline làm tăng nhịp tim; khi nghỉ nhịp tim giảm dần. Quan sát điện tâm đồ khi chạy trạm: mỗi nhịp có một phức bộ QRS."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "output-definition",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["cardiac-output"],
+      "stem": "Cardiac output is…",
+      "explain": "Cardiac output is the blood pumped each minute: heart rate × stroke volume. The stroke volume is the blood pumped in one beat.",
+      "vi": {
+        "stem": "Lưu lượng tim là…",
+        "explain": "Lưu lượng tim là lượng máu tim bơm đi trong một phút: nhịp tim × thể tích tâm thu. Thể tích tâm thu là lượng máu bơm đi trong một nhịp."
+      },
+      "options": [
+        {
+          "text": "the volume of blood the heart pumps each minute",
+          "vi": {
+            "text": "thể tích máu tim bơm đi trong một phút"
+          },
+          "correct": true
+        },
+        {
+          "text": "the volume of blood the heart pumps in one beat",
+          "vi": {
+            "text": "thể tích máu tim bơm đi trong một nhịp"
+          }
+        },
+        {
+          "text": "the number of heartbeats each minute",
+          "vi": {
+            "text": "số nhịp tim trong một phút"
+          }
+        },
+        {
+          "text": "the pressure of the blood in the arteries",
+          "vi": {
+            "text": "áp lực của máu trong động mạch"
+          }
+        }
+      ]
+    },
+    {
+      "id": "why-faster",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["physiology"],
+      "stem": "During exercise the heart beats faster mainly because the working muscles…",
+      "explain": "Working muscles respire faster: they need more O₂ and glucose and make more CO₂, so more blood must flow through them each minute.",
+      "vi": {
+        "stem": "Khi vận động, tim đập nhanh hơn chủ yếu vì các cơ đang hoạt động…",
+        "explain": "Cơ hoạt động hô hấp mạnh hơn: cần nhiều O₂ và glucose hơn, thải nhiều CO₂ hơn, nên cần nhiều máu chảy qua chúng hơn mỗi phút."
+      },
+      "options": [
+        {
+          "text": "need more oxygen and glucose and make more carbon dioxide",
+          "vi": {
+            "text": "cần nhiều oxygen, glucose hơn và thải nhiều carbon dioxide hơn"
+          },
+          "correct": true
+        },
+        {
+          "text": "need less blood than at rest",
+          "vi": {
+            "text": "cần ít máu hơn lúc nghỉ"
+          }
+        },
+        {
+          "text": "make oxygen that must be carried away",
+          "vi": {
+            "text": "tạo ra oxygen cần được mang đi"
+          }
+        },
+        {
+          "text": "stop using glucose",
+          "vi": {
+            "text": "ngừng sử dụng glucose"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-basic",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["physiology", "max-rate", "cardiac-output"],
+      "stem": "About the heart during exercise and rest: decide whether each statement is true or false.",
+      "explain": "Each beat gives one QRS spike on the ECG, and after exercise the rate falls back towards rest. The maximum, 208 − 0.7 × age, falls with age. The stroke volume is per beat; per minute is the cardiac output.",
+      "vi": {
+        "stem": "Về hoạt động của tim khi vận động và khi nghỉ, mỗi nhận định sau đúng hay sai?",
+        "explain": "Mỗi nhịp tim tạo một phức bộ QRS trên điện tâm đồ, và sau vận động nhịp tim giảm dần về mức nghỉ. Nhịp tối đa 208 − 0,7 × tuổi giảm theo tuổi. Thể tích tâm thu tính cho một nhịp; tính cho một phút là lưu lượng tim."
+      },
+      "statements": [
+        {
+          "text": "Each heartbeat gives one QRS spike on the ECG.",
+          "vi": {
+            "text": "Mỗi nhịp tim tạo ra một phức bộ QRS trên điện tâm đồ."
+          },
+          "true": true
+        },
+        {
+          "text": "The age-predicted maximum heart rate rises with age.",
+          "vi": {
+            "text": "Nhịp tim tối đa theo tuổi tăng lên khi tuổi tăng."
+          },
+          "true": false
+        },
+        {
+          "text": "After exercise the heart rate falls back towards its resting value.",
+          "vi": {
+            "text": "Sau khi vận động, nhịp tim giảm dần về giá trị lúc nghỉ."
+          },
+          "true": true
+        },
+        {
+          "text": "The stroke volume is the volume of blood pumped in one minute.",
+          "vi": {
+            "text": "Thể tích tâm thu là thể tích máu được bơm đi trong một phút."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "age-compare",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["max-rate"],
+      "stem": "By HR_max = 208 − 0.7 × age, how does a 60-year-old’s maximum heart rate compare with a 20-year-old’s?",
+      "explain": "The difference is 0.7 × (60 − 20) = {=0.7*(60-20)} beats/min, lower for the older person.",
+      "vi": {
+        "stem": "Theo HR_max = 208 − 0,7 × tuổi, nhịp tim tối đa của người 60 tuổi so với người 20 tuổi như thế nào?",
+        "explain": "Chênh lệch là 0,7 × (60 − 20) = {=0.7*(60-20)} nhịp/phút, thấp hơn ở người lớn tuổi."
+      },
+      "options": [
+        {
+          "text": "{=0.7*(60-20)} beats/min lower",
+          "vi": {
+            "text": "thấp hơn {=0.7*(60-20)} nhịp/phút"
+          },
+          "correct": true
+        },
+        {
+          "text": "{=0.7*(60-20)} beats/min higher",
+          "vi": {
+            "text": "cao hơn {=0.7*(60-20)} nhịp/phút"
+          }
+        },
+        {
+          "text": "{=60-20} beats/min lower",
+          "vi": {
+            "text": "thấp hơn {=60-20} nhịp/phút"
+          }
+        },
+        {
+          "text": "the same",
+          "vi": {
+            "text": "bằng nhau"
+          }
+        }
+      ]
+    },
+    {
+      "id": "double-rate",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["cardiac-output"],
+      "stem": "During exercise the heart rate doubles while the stroke volume stays the same. The cardiac output…",
+      "explain": "Q = HR × SV: with SV unchanged, Q is proportional to HR, so it doubles.",
+      "vi": {
+        "stem": "Khi vận động, nhịp tim tăng gấp đôi còn thể tích tâm thu không đổi. Lưu lượng tim…",
+        "explain": "Q = HR × SV: SV không đổi thì Q tỉ lệ thuận với HR, nên Q tăng gấp đôi."
+      },
+      "options": [
+        {
+          "text": "doubles",
+          "vi": {
+            "text": "tăng gấp đôi"
+          },
+          "correct": true
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "becomes four times as large",
+          "vi": {
+            "text": "tăng gấp bốn lần"
+          }
+        },
+        {
+          "text": "halves",
+          "vi": {
+            "text": "giảm một nửa"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-target",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["target-rate", "physiology"],
+      "stem": "The exercise target is HR = resting rate + intensity × (maximum − resting rate). Decide whether each statement is true or false.",
+      "explain": "A higher intensity gives a higher target, and at 100 % the target is the maximum itself. The model keeps the stroke volume at 70 mL, but in real people it rises with exercise. A fitter heart recovers faster.",
+      "vi": {
+        "stem": "Nhịp tim mục tiêu khi vận động là HR = nhịp nghỉ + cường độ × (nhịp tối đa − nhịp nghỉ). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Cường độ cao hơn cho nhịp mục tiêu cao hơn, và ở 100 % nhịp mục tiêu bằng chính nhịp tối đa. Mô hình giữ thể tích tâm thu 70 mL, nhưng ở người thật thể tích này tăng khi vận động. Tim khỏe hơn hồi phục nhanh hơn."
+      },
+      "statements": [
+        {
+          "text": "A higher exercise intensity gives a higher target heart rate.",
+          "vi": {
+            "text": "Cường độ vận động cao hơn cho nhịp tim mục tiêu cao hơn."
+          },
+          "true": true
+        },
+        {
+          "text": "At 100 % intensity the target equals the age-predicted maximum.",
+          "vi": {
+            "text": "Ở cường độ 100 %, nhịp mục tiêu bằng nhịp tim tối đa theo tuổi."
+          },
+          "true": true
+        },
+        {
+          "text": "The model keeps the stroke volume at 70 mL during exercise, just as a real heart does.",
+          "vi": {
+            "text": "Mô hình giữ thể tích tâm thu 70 mL khi vận động, đúng như tim thật."
+          },
+          "true": false
+        },
+        {
+          "text": "A fitter heart usually returns to its resting rate faster after exercise.",
+          "vi": {
+            "text": "Tim khỏe hơn thường trở về nhịp nghỉ nhanh hơn sau vận động."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "max-30",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["max-rate"],
+      "set": {
+        "age": 30
+      },
+      "stem": "Using HR_max = 208 − 0.7 × age, what is the age-predicted maximum heart rate of a {age}-year-old?",
+      "explain": "HR_max = 208 − 0.7·{age} = {@maxRate|4} beats/min. 220 − age is an older formula, not this one.",
+      "vi": {
+        "stem": "Dùng công thức HR_max = 208 − 0,7 × tuổi, nhịp tim tối đa theo tuổi của một người {age} tuổi là bao nhiêu?",
+        "explain": "HR_max = 208 − 0,7·{age} = {@maxRate|4} nhịp/phút. 220 − tuổi là một công thức cũ, không phải công thức này."
+      },
+      "options": [
+        {
+          "text": "{@maxRate|4} beats/min",
+          "vi": {
+            "text": "{@maxRate|4} nhịp/phút"
+          },
+          "correct": true,
+          "check": {
+            "expr": "208-0.7*age",
+            "equals": "maxRate"
+          }
+        },
+        {
+          "text": "{=220-age} beats/min",
+          "vi": {
+            "text": "{=220-age} nhịp/phút"
+          },
+          "check": {
+            "expr": "220-age",
+            "equals": "maxRate"
+          }
+        },
+        {
+          "text": "{=(208-age)*0.7|4} beats/min",
+          "vi": {
+            "text": "{=(208-age)*0.7|4} nhịp/phút"
+          },
+          "check": {
+            "expr": "(208-age)*0.7",
+            "equals": "maxRate"
+          }
+        },
+        {
+          "text": "{=208+0.7*age|4} beats/min",
+          "vi": {
+            "text": "{=208+0.7*age|4} nhịp/phút"
+          },
+          "check": {
+            "expr": "208+0.7*age",
+            "equals": "maxRate"
+          }
+        }
+      ]
+    },
+    {
+      "id": "peak-50",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["target-rate", "max-rate"],
+      "set": {
+        "age": 50,
+        "restingRate": 60,
+        "intensity": 80
+      },
+      "stem": "A {age}-year-old with a resting rate of {restingRate} beats/min exercises for 3 minutes at {intensity}% of the heart-rate reserve. The rate climbs towards the target (time constant 30 s, illustrative) and is all but there after 3 minutes. What is the highest rate?",
+      "explain": "HR_max = 208 − 0.7·{age} = {@maxRate|4}; target = {restingRate} + {=intensity/100}·({@maxRate|4} − {restingRate}) = {=restingRate+intensity/100*(@maxRate-restingRate)|4}; after 3 minutes the rate is {@peakRate|4} beats/min.",
+      "vi": {
+        "stem": "Một người {age} tuổi có nhịp nghỉ {restingRate} nhịp/phút vận động trong 3 phút ở cường độ {intensity}% dự trữ nhịp tim. Nhịp tim tăng dần tới nhịp mục tiêu (hằng số thời gian 30 s, giá trị minh họa) và sau 3 phút gần như đạt mục tiêu. Nhịp tim cao nhất là bao nhiêu?",
+        "explain": "HR_max = 208 − 0,7·{age} = {@maxRate|4}; nhịp mục tiêu = {restingRate} + {=intensity/100}·({@maxRate|4} − {restingRate}) = {=restingRate+intensity/100*(@maxRate-restingRate)|4}; sau 3 phút nhịp tim đạt {@peakRate|4} nhịp/phút."
+      },
+      "options": [
+        {
+          "text": "{@peakRate|4} beats/min",
+          "vi": {
+            "text": "{@peakRate|4} nhịp/phút"
+          },
+          "correct": true,
+          "check": {
+            "expr": "restingRate+intensity/100*(@maxRate-restingRate)*(1-exp(-exercise/riseTime))",
+            "equals": "peakRate"
+          }
+        },
+        {
+          "text": "{=intensity/100*@maxRate|4} beats/min",
+          "vi": {
+            "text": "{=intensity/100*@maxRate|4} nhịp/phút"
+          },
+          "check": {
+            "expr": "intensity/100*@maxRate",
+            "equals": "peakRate"
+          }
+        },
+        {
+          "text": "{=restingRate+intensity/100*@maxRate|4} beats/min",
+          "vi": {
+            "text": "{=restingRate+intensity/100*@maxRate|4} nhịp/phút"
+          },
+          "check": {
+            "expr": "restingRate+intensity/100*@maxRate",
+            "equals": "peakRate"
+          }
+        },
+        {
+          "text": "{=intensity/100*(@maxRate-restingRate)|4} beats/min",
+          "vi": {
+            "text": "{=intensity/100*(@maxRate-restingRate)|4} nhịp/phút"
+          },
+          "check": {
+            "expr": "intensity/100*(@maxRate-restingRate)",
+            "equals": "peakRate"
+          }
+        }
+      ]
+    },
+    {
+      "id": "peak-output",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["cardiac-output"],
+      "set": {
+        "age": 16,
+        "restingRate": 70,
+        "intensity": 70
+      },
+      "stem": "A {age}-year-old (resting rate {restingRate} beats/min) reaches {@peakRate|4} beats/min at {intensity}% intensity. Each beat pumps {strokeVolume} mL (illustrative). What is the highest cardiac output?",
+      "explain": "Q = HR·SV = {@peakRate|4}·{strokeVolume} mL/min = {@peakOutput} L/min (÷ 1000 for litres).",
+      "vi": {
+        "stem": "Một người {age} tuổi (nhịp nghỉ {restingRate} nhịp/phút) đạt {@peakRate|4} nhịp/phút ở cường độ {intensity}%. Mỗi nhịp bơm {strokeVolume} mL máu (giá trị minh họa). Lưu lượng tim cao nhất là bao nhiêu?",
+        "explain": "Q = HR·SV = {@peakRate|4}·{strokeVolume} mL/phút = {@peakOutput} L/min (chia 1000 để đổi ra lít)."
+      },
+      "options": [
+        {
+          "text": "{@peakOutput} L/min",
+          "vi": {
+            "text": "{@peakOutput} L/min"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@peakRate*strokeVolume/1000",
+            "equals": "peakOutput"
+          }
+        },
+        {
+          "text": "{=@peakRate*strokeVolume} L/min",
+          "vi": {
+            "text": "{=@peakRate*strokeVolume} L/min"
+          },
+          "check": {
+            "expr": "@peakRate*strokeVolume",
+            "equals": "peakOutput"
+          }
+        },
+        {
+          "text": "{=@peakRate/strokeVolume} L/min",
+          "vi": {
+            "text": "{=@peakRate/strokeVolume} L/min"
+          },
+          "check": {
+            "expr": "@peakRate/strokeVolume",
+            "equals": "peakOutput"
+          }
+        },
+        {
+          "text": "{=restingRate*strokeVolume/1000} L/min",
+          "vi": {
+            "text": "{=restingRate*strokeVolume/1000} L/min"
+          },
+          "check": {
+            "expr": "restingRate*strokeVolume/1000",
+            "equals": "peakOutput"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-30",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["max-rate", "target-rate", "cardiac-output"],
+      "set": {
+        "age": 30,
+        "restingRate": 65,
+        "intensity": 75
+      },
+      "stem": "A {age}-year-old (resting rate {restingRate} beats/min) exercises for 3 minutes at {intensity}% of the heart-rate reserve; the stroke volume is {strokeVolume} mL (illustrative). Decide whether each statement is true or false.",
+      "explain": "HR_max = {@maxRate|4}; the reserve is {@maxRate|4} − {restingRate} = {=@maxRate-restingRate|4}; the peak is {@peakRate|4}. Q = {@peakRate|4}·{strokeVolume}/1000 = {@peakOutput} L/min: without ÷ 1000 the number is in mL/min.",
+      "vi": {
+        "stem": "Một người {age} tuổi (nhịp nghỉ {restingRate} nhịp/phút) vận động 3 phút ở cường độ {intensity}% dự trữ nhịp tim; thể tích tâm thu là {strokeVolume} mL (giá trị minh họa). Mỗi nhận định sau đúng hay sai?",
+        "explain": "HR_max = {@maxRate|4}; dự trữ nhịp tim là {@maxRate|4} − {restingRate} = {=@maxRate-restingRate|4}; nhịp đỉnh là {@peakRate|4}. Q = {@peakRate|4}·{strokeVolume}/1000 = {@peakOutput} L/min: nếu không chia 1000 thì đơn vị là mL/phút."
+      },
+      "statements": [
+        {
+          "text": "The age-predicted maximum is {@maxRate|4} beats/min.",
+          "vi": {
+            "text": "Nhịp tim tối đa theo tuổi là {@maxRate|4} nhịp/phút."
+          },
+          "true": true,
+          "check": {
+            "expr": "208-0.7*age",
+            "equals": "maxRate"
+          }
+        },
+        {
+          "text": "The highest rate reached is about {@peakRate|4} beats/min.",
+          "vi": {
+            "text": "Nhịp tim cao nhất đạt được khoảng {@peakRate|4} nhịp/phút."
+          },
+          "true": true,
+          "check": {
+            "expr": "restingRate+intensity/100*(@maxRate-restingRate)*(1-exp(-exercise/riseTime))",
+            "equals": "peakRate"
+          }
+        },
+        {
+          "text": "The heart-rate reserve is {=@maxRate-restingRate|4} beats/min.",
+          "vi": {
+            "text": "Dự trữ nhịp tim là {=@maxRate-restingRate|4} nhịp/phút."
+          },
+          "true": true
+        },
+        {
+          "text": "The highest cardiac output is about {=@peakRate*strokeVolume|4} L/min.",
+          "vi": {
+            "text": "Lưu lượng tim cao nhất khoảng {=@peakRate*strokeVolume|4} L/min."
+          },
+          "true": false,
+          "check": {
+            "expr": "@peakRate*strokeVolume",
+            "equals": "peakOutput"
+          }
+        }
+      ]
+    },
+    {
+      "id": "which-intensity",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["target-rate", "max-rate"],
+      "set": {
+        "age": 20,
+        "restingRate": 70,
+        "intensity": 50
+      },
+      "stem": "A {age}-year-old with a resting rate of {restingRate} beats/min wants a target heart rate of {=restingRate+intensity/100*(@maxRate-restingRate)|4} beats/min (HR_max = 208 − 0.7 × age). At what share of the heart-rate reserve should they exercise?",
+      "explain": "HR_max = {@maxRate|4}, so the reserve is {=@maxRate-restingRate|4}. Intensity = (target − rest)/(max − rest) = {=restingRate+intensity/100*(@maxRate-restingRate)-restingRate|4}/{=@maxRate-restingRate|4} = {intensity}%.",
+      "vi": {
+        "stem": "Một người {age} tuổi có nhịp nghỉ {restingRate} nhịp/phút muốn đạt nhịp tim mục tiêu {=restingRate+intensity/100*(@maxRate-restingRate)|4} nhịp/phút (HR_max = 208 − 0,7 × tuổi). Người đó cần vận động ở cường độ bao nhiêu phần trăm dự trữ nhịp tim?",
+        "explain": "HR_max = {@maxRate|4}, nên dự trữ nhịp tim là {=@maxRate-restingRate|4}. Cường độ = (mục tiêu − nhịp nghỉ)/(nhịp tối đa − nhịp nghỉ) = {=restingRate+intensity/100*(@maxRate-restingRate)-restingRate|4}/{=@maxRate-restingRate|4} = {intensity}%."
+      },
+      "options": [
+        {
+          "text": "{intensity}%",
+          "vi": {
+            "text": "{intensity}%"
+          },
+          "correct": true
+        },
+        {
+          "text": "{=100*(restingRate+intensity/100*(@maxRate-restingRate))/@maxRate|3}%",
+          "vi": {
+            "text": "{=100*(restingRate+intensity/100*(@maxRate-restingRate))/@maxRate|3}%"
+          }
+        },
+        {
+          "text": "{=100*(restingRate+intensity/100*(@maxRate-restingRate)-restingRate)/@maxRate|3}%",
+          "vi": {
+            "text": "{=100*(restingRate+intensity/100*(@maxRate-restingRate)-restingRate)/@maxRate|3}%"
+          }
+        },
+        {
+          "text": "{=100*(restingRate+intensity/100*(@maxRate-restingRate))/(@maxRate-restingRate)|3}%",
+          "vi": {
+            "text": "{=100*(restingRate+intensity/100*(@maxRate-restingRate))/(@maxRate-restingRate)|3}%"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-recovery",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["physiology", "cardiac-output", "target-rate"],
+      "set": {
+        "age": 16,
+        "restingRate": 70,
+        "intensity": 70
+      },
+      "stem": "A {age}-year-old (resting rate {restingRate} beats/min) exercises for 3 minutes at {intensity}% intensity, reaching {@peakRate|4} beats/min, then rests for 2 minutes. In the model the rate falls back with a time constant of {fallTime} s and the stroke volume stays {strokeVolume} mL (illustrative). Decide whether each statement is true or false.",
+      "explain": "After {recovery} s of rest: HR = {restingRate} + ({@peakRate|4} − {restingRate})·e^(−{recovery}/{fallTime}) ≈ {@finalRate|3}, still above rest. With SV fixed, Q_peak/Q_rest = {@peakRate|4}/{restingRate} ≈ {=@peakRate/restingRate|3}. The stroke volume does not set the rate. The rise is fastest at first, then levels off.",
+      "vi": {
+        "stem": "Một người {age} tuổi (nhịp nghỉ {restingRate} nhịp/phút) vận động 3 phút ở cường độ {intensity}%, đạt {@peakRate|4} nhịp/phút, rồi nghỉ 2 phút. Trong mô hình, nhịp tim giảm dần với hằng số thời gian {fallTime} s và thể tích tâm thu giữ ở {strokeVolume} mL (giá trị minh họa). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Sau {recovery} s nghỉ: HR = {restingRate} + ({@peakRate|4} − {restingRate})·e^(−{recovery}/{fallTime}) ≈ {@finalRate|3}, vẫn cao hơn nhịp nghỉ. Khi SV không đổi, Q_đỉnh/Q_nghỉ = {@peakRate|4}/{restingRate} ≈ {=@peakRate/restingRate|3}. Thể tích tâm thu không quyết định nhịp tim. Nhịp tim tăng nhanh nhất lúc đầu rồi chậm dần."
+      },
+      "statements": [
+        {
+          "text": "After 2 minutes of rest the rate is about {@finalRate|3} beats/min, still above the resting rate.",
+          "vi": {
+            "text": "Sau 2 phút nghỉ, nhịp tim khoảng {@finalRate|3} nhịp/phút, vẫn cao hơn nhịp nghỉ."
+          },
+          "true": true,
+          "check": {
+            "expr": "restingRate+(@peakRate-restingRate)*exp(-recovery/fallTime)",
+            "equals": "finalRate"
+          }
+        },
+        {
+          "text": "At the peak the cardiac output is about {=@peakRate/restingRate|3} times the resting cardiac output.",
+          "vi": {
+            "text": "Ở thời điểm cao nhất, lưu lượng tim gấp khoảng {=@peakRate/restingRate|3} lần lưu lượng tim lúc nghỉ."
+          },
+          "true": true
+        },
+        {
+          "text": "In the model, doubling the stroke volume would double the highest heart rate.",
+          "vi": {
+            "text": "Trong mô hình, tăng thể tích tâm thu lên gấp đôi sẽ làm nhịp tim cao nhất tăng gấp đôi."
+          },
+          "true": false
+        },
+        {
+          "text": "The rate climbs fastest at the start of exercise and then levels off towards the target.",
+          "vi": {
+            "text": "Nhịp tim tăng nhanh nhất lúc bắt đầu vận động, sau đó chậm dần và tiến tới nhịp mục tiêu."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "pacemaker",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["physiology"],
+      "stem": "Each heartbeat starts with an impulse from…",
+      "explain": "The sinoatrial node in the wall of the right atrium is the heart’s natural pacemaker; its impulses spread to the atrioventricular node, the bundle of His and the Purkinje fibres.",
+      "vi": {
+        "stem": "Mỗi nhịp đập của tim bắt đầu bằng xung thần kinh phát ra từ…",
+        "explain": "Nút xoang nhĩ ở thành tâm nhĩ phải là nơi tự phát nhịp của tim; xung từ đó lan tới nút nhĩ thất, bó His và mạng Purkinje."
+      },
+      "options": [
+        {
+          "text": "the sinoatrial node",
+          "vi": {
+            "text": "nút xoang nhĩ"
+          },
+          "correct": true
+        },
+        {
+          "text": "the Purkinje fibres",
+          "vi": {
+            "text": "mạng Purkinje"
+          }
+        },
+        {
+          "text": "the aorta",
+          "vi": {
+            "text": "động mạch chủ"
+          }
+        },
+        {
+          "text": "the left ventricle",
+          "vi": {
+            "text": "tâm thất trái"
+          }
+        }
+      ]
+    },
+    {
+      "id": "athlete-rest",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["cardiac-output", "physiology"],
+      "stem": "A trained athlete often has a lower resting heart rate than an untrained person of the same age. The best explanation is that…",
+      "explain": "Training enlarges and strengthens the heart, so each beat pumps more blood. At rest the body needs about the same cardiac output, so fewer beats are needed: output = rate × stroke volume.",
+      "vi": {
+        "stem": "Một vận động viên được luyện tập thường có nhịp tim lúc nghỉ thấp hơn người không luyện tập cùng tuổi. Giải thích hợp lí nhất là…",
+        "explain": "Luyện tập làm tim to và khỏe hơn, nên mỗi nhịp bơm được nhiều máu hơn. Lúc nghỉ, cơ thể cần lưu lượng tim gần như nhau, nên cần ít nhịp hơn: lưu lượng tim = nhịp tim × thể tích tâm thu."
+      },
+      "options": [
+        {
+          "text": "a larger stroke volume gives the same cardiac output with fewer beats",
+          "vi": {
+            "text": "thể tích tâm thu lớn hơn nên cần ít nhịp hơn vẫn đạt cùng lưu lượng tim"
+          },
+          "correct": true
+        },
+        {
+          "text": "the athlete’s muscles need no oxygen at rest",
+          "vi": {
+            "text": "cơ của vận động viên không cần oxi lúc nghỉ"
+          }
+        },
+        {
+          "text": "the athlete’s heart pumps less blood each minute",
+          "vi": {
+            "text": "tim của vận động viên bơm ít máu hơn mỗi phút"
+          }
+        },
+        {
+          "text": "the athlete’s maximum heart rate is higher",
+          "vi": {
+            "text": "nhịp tim tối đa của vận động viên cao hơn"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-model-limits",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["physiology", "max-rate", "cardiac-output"],
+      "stem": "About the heart-rate simulation and its model: decide whether each statement is true or false.",
+      "explain": "The stroke volume is fixed at 70 mL here, an illustrative value; in a real body it rises with exercise too. 208 − 0.7 × age predicts the average maximum for an age; one person’s can differ by 10 beats/min or more. The ECG is an illustrative trace, not a recording. Sympathetic nerves and adrenaline speed the heart during exercise.",
+      "vi": {
+        "stem": "Về mô phỏng nhịp tim và mô hình của nó, mỗi nhận định sau đúng hay sai?",
+        "explain": "Thể tích tâm thu ở đây được giữ cố định 70 mL, là giá trị minh họa; trong cơ thể thật, nó cũng tăng khi vận động. 208 − 0,7 × tuổi dự đoán nhịp tim tối đa trung bình của một độ tuổi; ở từng người có thể chênh lệch 10 nhịp/phút hoặc hơn. Điện tâm đồ là đường minh họa, không phải bản ghi thật. Dây thần kinh giao cảm và adrenaline làm tim đập nhanh hơn khi vận động."
+      },
+      "statements": [
+        {
+          "text": "In this simulation the stroke volume is fixed at an illustrative 70 mL, though in fact it rises with exercise.",
+          "vi": {
+            "text": "Trong mô phỏng này, thể tích tâm thu được giữ cố định ở giá trị minh họa 70 mL, dù thực tế nó tăng khi vận động."
+          },
+          "true": true
+        },
+        {
+          "text": "208 − 0.7 × age gives an average for the age; one person’s maximum can differ from it.",
+          "vi": {
+            "text": "208 − 0,7 × tuổi cho giá trị trung bình theo độ tuổi; nhịp tim tối đa của từng người có thể khác."
+          },
+          "true": true
+        },
+        {
+          "text": "The ECG trace on the screen is a recording of a real heart.",
+          "vi": {
+            "text": "Đường điện tâm đồ trên màn hình là bản ghi của một trái tim thật."
+          },
+          "true": false
+        },
+        {
+          "text": "During exercise the sympathetic nerves speed up the heart.",
+          "vi": {
+            "text": "Khi vận động, dây thần kinh giao cảm làm tim đập nhanh hơn."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "reserve",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["target-rate", "max-rate"],
+      "set": {
+        "age": 20,
+        "restingRate": 60
+      },
+      "stem": "The heart-rate reserve is the maximum rate minus the resting rate. What is it for a {age}-year-old with a resting rate of {restingRate} beats/min, using HR_max = 208 − 0.7 × age?",
+      "explain": "HR_max = 208 − 0.7·{age} = {@maxRate} beats/min; reserve = {@maxRate} − {restingRate} = {=@maxRate-restingRate} beats/min. (220 − age is a different, older formula.)",
+      "vi": {
+        "stem": "Dự trữ nhịp tim bằng nhịp tim tối đa trừ nhịp tim lúc nghỉ. Dùng HR_max = 208 − 0,7 × tuổi, dự trữ nhịp tim của một người {age} tuổi có nhịp tim lúc nghỉ {restingRate} nhịp/phút là bao nhiêu?",
+        "explain": "HR_max = 208 − 0,7·{age} = {@maxRate} nhịp/phút; dự trữ = {@maxRate} − {restingRate} = {=@maxRate-restingRate} nhịp/phút. (220 − tuổi là một công thức khác, cũ hơn.)"
+      },
+      "options": [
+        {
+          "text": "{=@maxRate-restingRate} beats/min",
+          "vi": {
+            "text": "{=@maxRate-restingRate} nhịp/phút"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(@maxRate-restingRate)+restingRate",
+            "equals": "maxRate"
+          }
+        },
+        {
+          "text": "{=220-age-restingRate} beats/min",
+          "vi": {
+            "text": "{=220-age-restingRate} nhịp/phút"
+          },
+          "check": {
+            "expr": "(220-age-restingRate)+restingRate",
+            "equals": "maxRate"
+          }
+        },
+        {
+          "text": "{=@maxRate+restingRate} beats/min",
+          "vi": {
+            "text": "{=@maxRate+restingRate} nhịp/phút"
+          },
+          "check": {
+            "expr": "(@maxRate+restingRate)+restingRate",
+            "equals": "maxRate"
+          }
+        },
+        {
+          "text": "{@maxRate} beats/min",
+          "vi": {
+            "text": "{@maxRate} nhịp/phút"
+          },
+          "check": {
+            "expr": "@maxRate+restingRate",
+            "equals": "maxRate"
+          }
+        }
+      ]
+    },
+    {
+      "id": "output-at-rest",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["cardiac-output"],
+      "set": {
+        "restingRate": 72
+      },
+      "stem": "At rest the heart beats {restingRate} times per minute and each beat pumps {strokeVolume} mL (illustrative). What is the cardiac output at rest?",
+      "explain": "Output = {restingRate} beats/min × {strokeVolume} mL = {=restingRate*strokeVolume} mL/min = {=restingRate*strokeVolume/1000|3} L/min.",
+      "vi": {
+        "stem": "Lúc nghỉ, tim đập {restingRate} nhịp mỗi phút và mỗi nhịp bơm {strokeVolume} mL máu (giá trị minh họa). Lưu lượng tim lúc nghỉ là bao nhiêu?",
+        "explain": "Lưu lượng = {restingRate} nhịp/phút × {strokeVolume} mL = {=restingRate*strokeVolume} mL/phút = {=restingRate*strokeVolume/1000|3} L/phút."
+      },
+      "options": [
+        {
+          "text": "{=restingRate*strokeVolume/1000|3} L/min",
+          "vi": {
+            "text": "{=restingRate*strokeVolume/1000|3} L/phút"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(restingRate*strokeVolume/1000)/restingRate*@peakRate",
+            "equals": "peakOutput"
+          }
+        },
+        {
+          "text": "{=restingRate*strokeVolume} L/min",
+          "vi": {
+            "text": "{=restingRate*strokeVolume} L/phút"
+          },
+          "check": {
+            "expr": "(restingRate*strokeVolume)/restingRate*@peakRate",
+            "equals": "peakOutput"
+          }
+        },
+        {
+          "text": "{=restingRate*strokeVolume/60000|3} L/min",
+          "vi": {
+            "text": "{=restingRate*strokeVolume/60000|3} L/phút"
+          },
+          "check": {
+            "expr": "(restingRate*strokeVolume/60000)/restingRate*@peakRate",
+            "equals": "peakOutput"
+          }
+        },
+        {
+          "text": "{=strokeVolume/restingRate|3} L/min",
+          "vi": {
+            "text": "{=strokeVolume/restingRate|3} L/phút"
+          },
+          "check": {
+            "expr": "(strokeVolume/restingRate)/restingRate*@peakRate",
+            "equals": "peakOutput"
+          }
+        }
+      ]
+    },
+    {
+      "id": "age-from-max",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["max-rate"],
+      "set": {
+        "age": 50
+      },
+      "stem": "By HR_max = 208 − 0.7 × age, a person’s age-predicted maximum heart rate is {@maxRate} beats/min. How old are they?",
+      "explain": "208 − 0.7·age = {@maxRate}, so age = (208 − {@maxRate})/0.7 = {=(208-@maxRate)/0.7} years. Using 220 − HR_max mixes in another formula.",
+      "vi": {
+        "stem": "Theo HR_max = 208 − 0,7 × tuổi, nhịp tim tối đa dự đoán của một người là {@maxRate} nhịp/phút. Người đó bao nhiêu tuổi?",
+        "explain": "208 − 0,7·tuổi = {@maxRate}, nên tuổi = (208 − {@maxRate})/0,7 = {=(208-@maxRate)/0.7} tuổi. Dùng 220 − HR_max là lẫn sang một công thức khác."
+      },
+      "options": [
+        {
+          "text": "{=(208-@maxRate)/0.7} years",
+          "vi": {
+            "text": "{=(208-@maxRate)/0.7} tuổi"
+          },
+          "correct": true,
+          "check": {
+            "expr": "208-0.7*((208-@maxRate)/0.7)",
+            "equals": "maxRate"
+          }
+        },
+        {
+          "text": "{=220-@maxRate} years",
+          "vi": {
+            "text": "{=220-@maxRate} tuổi"
+          },
+          "check": {
+            "expr": "208-0.7*(220-@maxRate)",
+            "equals": "maxRate"
+          }
+        },
+        {
+          "text": "{=208-@maxRate} years",
+          "vi": {
+            "text": "{=208-@maxRate} tuổi"
+          },
+          "check": {
+            "expr": "208-0.7*(208-@maxRate)",
+            "equals": "maxRate"
+          }
+        },
+        {
+          "text": "{=(208-@maxRate)*0.7|3} years",
+          "vi": {
+            "text": "{=(208-@maxRate)*0.7|3} tuổi"
+          },
+          "check": {
+            "expr": "208-0.7*((208-@maxRate)*0.7)",
+            "equals": "maxRate"
+          }
+        }
+      ]
+    },
+    {
+      "id": "intensity-from-output",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["target-rate", "cardiac-output", "max-rate"],
+      "set": {
+        "age": 20,
+        "restingRate": 70,
+        "intensity": 70
+      },
+      "stem": "A {age}-year-old (resting rate {restingRate} beats/min) exercises for 3 minutes. At the end the cardiac output is {@peakOutput|4} L/min, with {strokeVolume} mL per beat (illustrative). At what share of the heart-rate reserve were they exercising? (HR_max = 208 − 0.7 × age)",
+      "explain": "Rate = {@peakOutput|4}·1000/{strokeVolume} ≈ {=@peakOutput*1000/strokeVolume|4} beats/min; HR_max = {@maxRate}, reserve = {=@maxRate-restingRate}; share = ({=@peakOutput*1000/strokeVolume|4} − {restingRate})/{=@maxRate-restingRate} ≈ {=100*(@peakOutput*1000/strokeVolume-restingRate)/(@maxRate-restingRate)|2}%.",
+      "vi": {
+        "stem": "Một người {age} tuổi (nhịp tim lúc nghỉ {restingRate} nhịp/phút) vận động trong 3 phút. Cuối thời gian đó, lưu lượng tim là {@peakOutput|4} L/phút, mỗi nhịp bơm {strokeVolume} mL (giá trị minh họa). Người đó đã vận động ở mức bao nhiêu phần trăm dự trữ nhịp tim? (HR_max = 208 − 0,7 × tuổi)",
+        "explain": "Nhịp tim = {@peakOutput|4}·1000/{strokeVolume} ≈ {=@peakOutput*1000/strokeVolume|4} nhịp/phút; HR_max = {@maxRate}, dự trữ = {=@maxRate-restingRate}; tỉ lệ = ({=@peakOutput*1000/strokeVolume|4} − {restingRate})/{=@maxRate-restingRate} ≈ {=100*(@peakOutput*1000/strokeVolume-restingRate)/(@maxRate-restingRate)|2}%."
+      },
+      "options": [
+        {
+          "text": "About {=100*(@peakOutput*1000/strokeVolume-restingRate)/(@maxRate-restingRate)|2}%",
+          "vi": {
+            "text": "Khoảng {=100*(@peakOutput*1000/strokeVolume-restingRate)/(@maxRate-restingRate)|2}%"
+          },
+          "correct": true,
+          "check": {
+            "expr": "restingRate+(100*(@peakOutput*1000/strokeVolume-restingRate)/(@maxRate-restingRate))/100*(@maxRate-restingRate)",
+            "equals": "peakRate"
+          }
+        },
+        {
+          "text": "About {=100*@peakOutput*1000/strokeVolume/@maxRate|2}%",
+          "vi": {
+            "text": "Khoảng {=100*@peakOutput*1000/strokeVolume/@maxRate|2}%"
+          },
+          "check": {
+            "expr": "restingRate+(100*@peakOutput*1000/strokeVolume/@maxRate)/100*(@maxRate-restingRate)",
+            "equals": "peakRate"
+          }
+        },
+        {
+          "text": "About {=100*(@peakOutput*1000/strokeVolume-restingRate)/@maxRate|2}%",
+          "vi": {
+            "text": "Khoảng {=100*(@peakOutput*1000/strokeVolume-restingRate)/@maxRate|2}%"
+          },
+          "check": {
+            "expr": "restingRate+(100*(@peakOutput*1000/strokeVolume-restingRate)/@maxRate)/100*(@maxRate-restingRate)",
+            "equals": "peakRate"
+          }
+        },
+        {
+          "text": "About {=100*(@peakOutput*1000/strokeVolume-restingRate)/(208-restingRate)|2}%",
+          "vi": {
+            "text": "Khoảng {=100*(@peakOutput*1000/strokeVolume-restingRate)/(208-restingRate)|2}%"
+          },
+          "check": {
+            "expr": "restingRate+(100*(@peakOutput*1000/strokeVolume-restingRate)/(208-restingRate))/100*(@maxRate-restingRate)",
+            "equals": "peakRate"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-40",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["max-rate", "target-rate", "cardiac-output"],
+      "set": {
+        "age": 40,
+        "restingRate": 60,
+        "intensity": 60
+      },
+      "stem": "A {age}-year-old (resting rate {restingRate} beats/min) exercises for {exercise} s at {intensity}% of the heart-rate reserve. The rate climbs towards the target with a time constant of {riseTime} s; each beat pumps {strokeVolume} mL (illustrative). Decide whether each statement is true or false.",
+      "explain": "HR_max = 208 − 0.7·{age} = {@maxRate}; target = {restingRate} + {=intensity/100}·({@maxRate} − {restingRate}) = {=restingRate+intensity/100*(@maxRate-restingRate)|4}; after {exercise} s the rate is {restingRate} + ({=intensity/100*(@maxRate-restingRate)|4})·(1 − e^(−{exercise}/{riseTime})) ≈ {@peakRate|4}. A 20-year-old’s maximum is 0.7·20 = 14 beats/min higher, so at {intensity}% their target is {=intensity/100*0.7*(age-20)|3} beats/min higher. Output = {@peakRate|4}·{strokeVolume}/1000 ≈ {@peakOutput|3} L/min: the mL must be changed into L.",
+      "vi": {
+        "stem": "Một người {age} tuổi (nhịp tim lúc nghỉ {restingRate} nhịp/phút) vận động {exercise} s ở mức {intensity}% dự trữ nhịp tim. Nhịp tim tăng dần tới nhịp mục tiêu với hằng số thời gian {riseTime} s; mỗi nhịp bơm {strokeVolume} mL (giá trị minh họa). Mỗi nhận định sau đúng hay sai?",
+        "explain": "HR_max = 208 − 0,7·{age} = {@maxRate}; nhịp mục tiêu = {restingRate} + {=intensity/100}·({@maxRate} − {restingRate}) = {=restingRate+intensity/100*(@maxRate-restingRate)|4}; sau {exercise} s nhịp tim là {restingRate} + ({=intensity/100*(@maxRate-restingRate)|4})·(1 − e^(−{exercise}/{riseTime})) ≈ {@peakRate|4}. Nhịp tối đa của người 20 tuổi cao hơn 0,7·20 = 14 nhịp/phút, nên ở {intensity}%, nhịp mục tiêu của họ cao hơn {=intensity/100*0.7*(age-20)|3} nhịp/phút. Lưu lượng = {@peakRate|4}·{strokeVolume}/1000 ≈ {@peakOutput|3} L/phút: phải đổi mL sang L."
+      },
+      "statements": [
+        {
+          "text": "The age-predicted maximum is {@maxRate} beats/min.",
+          "vi": {
+            "text": "Nhịp tim tối đa dự đoán theo tuổi là {@maxRate} nhịp/phút."
+          },
+          "true": true,
+          "check": {
+            "expr": "208-0.7*age",
+            "equals": "maxRate"
+          }
+        },
+        {
+          "text": "After {exercise} s the rate is about {@peakRate|4} beats/min, just short of the target.",
+          "vi": {
+            "text": "Sau {exercise} s, nhịp tim khoảng {@peakRate|4} nhịp/phút, chỉ thấp hơn nhịp mục tiêu một chút."
+          },
+          "true": true,
+          "check": {
+            "expr": "restingRate+intensity/100*(@maxRate-restingRate)*(1-exp(-exercise/riseTime))",
+            "equals": "peakRate"
+          }
+        },
+        {
+          "text": "A 20-year-old with the same resting rate, at the same intensity, would aim {=intensity/100*0.7*(age-20)|3} beats/min higher.",
+          "vi": {
+            "text": "Một người 20 tuổi có cùng nhịp tim lúc nghỉ, vận động cùng cường độ, sẽ có nhịp mục tiêu cao hơn {=intensity/100*0.7*(age-20)|3} nhịp/phút."
+          },
+          "true": true,
+          "check": {
+            "expr": "208-0.7*20-0.7*(age-20)",
+            "equals": "maxRate"
+          }
+        },
+        {
+          "text": "The highest cardiac output is about {=@peakRate*strokeVolume|3} L/min.",
+          "vi": {
+            "text": "Lưu lượng tim cao nhất khoảng {=@peakRate*strokeVolume|3} L/phút."
+          },
+          "true": false,
+          "check": {
+            "expr": "@peakRate*strokeVolume",
+            "equals": "peakOutput"
+          }
+        }
+      ]
+    }
+  ]
+}

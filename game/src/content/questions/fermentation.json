@@ -1,0 +1,1013 @@
+{
+  "id": "fermentation",
+  "skills": [
+    {
+      "id": "equation",
+      "name": "Alcoholic fermentation: the equation and where it happens",
+      "advice": "Write C₆H₁₂O₆ → 2 C₂H₅OH + 2 CO₂ from memory and say where it happens (the cytoplasm, without O₂). Compare it with aerobic respiration: less ATP, and ethanol is left over.",
+      "vi": {
+        "name": "Lên men rượu: phương trình và nơi diễn ra",
+        "advice": "Tự viết lại C₆H₁₂O₆ → 2 C₂H₅OH + 2 CO₂ và nêu nơi diễn ra (tế bào chất, không cần O₂). So sánh với hô hấp hiếu khí: ít ATP hơn và còn lại sản phẩm là ethanol."
+      }
+    },
+    {
+      "id": "stoichiometry",
+      "name": "Masses from the equation",
+      "advice": "Go grams → moles → moles → grams: 1 mol glucose (180.156 g) gives 2 mol ethanol (2 × 46.069 g). Check the station’s example: about half the sugar’s mass becomes ethanol. Mind the factor 2.",
+      "vi": {
+        "name": "Tính khối lượng theo phương trình",
+        "advice": "Đi theo các bước gam → mol → mol → gam: 1 mol glucose (180,156 g) cho 2 mol ethanol (2 × 46,069 g). Đối chiếu với ví dụ của trạm: khoảng một nửa khối lượng đường trở thành ethanol. Chú ý hệ số 2."
+      }
+    },
+    {
+      "id": "gas-volume",
+      "name": "Volume of the CO₂: V = nRT/p",
+      "advice": "Practise V = nRT/p with T in kelvin (°C + 273.15), p in Pa and V in m³, then ×10⁶ for mL. Two moles of CO₂ per mole of glucose; compare 25 °C and 35 °C at the station.",
+      "vi": {
+        "name": "Thể tích CO₂: V = nRT/p",
+        "advice": "Luyện V = nRT/p với T theo kelvin (°C + 273,15), p theo Pa và V theo m³, rồi nhân 10⁶ để ra mL. Mỗi mol glucose cho hai mol CO₂; so sánh kết quả ở 25 °C và 35 °C trên trạm."
+      }
+    },
+    {
+      "id": "temperature-effect",
+      "name": "Temperature and the yeast’s enzymes",
+      "advice": "Run the station at 20, 35 and 55 °C and compare the balloons. Explain with enzymes: faster when warmer (the model doubles every 10 °C, illustrative), destroyed above about 45 °C.",
+      "vi": {
+        "name": "Nhiệt độ và enzyme của nấm men",
+        "advice": "Chạy trạm ở 20, 35 và 55 °C rồi so sánh các quả bóng. Giải thích bằng hoạt động của enzyme: ấm hơn thì nhanh hơn (mô hình tăng gấp đôi mỗi 10 °C, giá trị minh họa), bị phá hủy khi trên khoảng 45 °C."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "products",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["equation"],
+      "stem": "Yeast ferments glucose without oxygen. The products are…",
+      "explain": "Alcoholic fermentation: C₆H₁₂O₆ → 2 C₂H₅OH + 2 CO₂, ethanol and carbon dioxide.",
+      "vi": {
+        "stem": "Nấm men lên men glucose khi không có oxygen. Sản phẩm tạo thành là…",
+        "explain": "Lên men rượu: C₆H₁₂O₆ → 2 C₂H₅OH + 2 CO₂, tạo ethanol và carbon dioxide."
+      },
+      "options": [
+        {
+          "text": "ethanol and carbon dioxide",
+          "vi": {
+            "text": "ethanol và carbon dioxide"
+          },
+          "correct": true
+        },
+        {
+          "text": "lactic acid only",
+          "vi": {
+            "text": "chỉ có lactic acid"
+          }
+        },
+        {
+          "text": "carbon dioxide and water",
+          "vi": {
+            "text": "carbon dioxide và nước"
+          }
+        },
+        {
+          "text": "oxygen and ethanol",
+          "vi": {
+            "text": "oxygen và ethanol"
+          }
+        }
+      ]
+    },
+    {
+      "id": "where",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["equation"],
+      "stem": "Alcoholic fermentation in yeast takes place…",
+      "explain": "Fermentation needs no oxygen and happens in the cytoplasm; aerobic respiration finishes in the mitochondria.",
+      "vi": {
+        "stem": "Quá trình lên men rượu ở nấm men diễn ra…",
+        "explain": "Lên men không cần oxygen và diễn ra trong tế bào chất; hô hấp hiếu khí hoàn tất ở ti thể."
+      },
+      "options": [
+        {
+          "text": "without oxygen, in the cytoplasm",
+          "vi": {
+            "text": "khi không có oxygen, trong tế bào chất"
+          },
+          "correct": true
+        },
+        {
+          "text": "only with oxygen, in the mitochondria",
+          "vi": {
+            "text": "chỉ khi có oxygen, trong ti thể"
+          }
+        },
+        {
+          "text": "without oxygen, in the mitochondria",
+          "vi": {
+            "text": "khi không có oxygen, trong ti thể"
+          }
+        },
+        {
+          "text": "only in light, in the chloroplasts",
+          "vi": {
+            "text": "chỉ khi có ánh sáng, trong lục lạp"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-basic",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["equation", "temperature-effect"],
+      "stem": "Yeast ferments sugar solution in a flask with a balloon on top. Decide whether each statement is true or false.",
+      "explain": "Each glucose gives 2 ethanol + 2 CO₂, and the balloon fills with CO₂. Yeast is a single-celled fungus. Fermentation yields much less ATP per glucose than aerobic respiration.",
+      "vi": {
+        "stem": "Nấm men lên men dung dịch đường trong bình có buộc bóng ở miệng. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Mỗi phân tử glucose cho 2 ethanol + 2 CO₂, và bóng phồng lên do CO₂. Nấm men là nấm đơn bào. Lên men tạo ra ít ATP trên mỗi phân tử glucose hơn nhiều so với hô hấp hiếu khí."
+      },
+      "statements": [
+        {
+          "text": "Each glucose molecule gives two molecules of ethanol and two of carbon dioxide.",
+          "vi": {
+            "text": "Mỗi phân tử glucose cho hai phân tử ethanol và hai phân tử carbon dioxide."
+          },
+          "true": true
+        },
+        {
+          "text": "The gas that fills the balloon is oxygen.",
+          "vi": {
+            "text": "Khí làm phồng quả bóng là oxygen."
+          },
+          "true": false
+        },
+        {
+          "text": "Yeast is a single-celled fungus.",
+          "vi": {
+            "text": "Nấm men là một loại nấm đơn bào."
+          },
+          "true": true
+        },
+        {
+          "text": "Fermentation gives more ATP per glucose than aerobic respiration.",
+          "vi": {
+            "text": "Lên men tạo ra nhiều ATP trên mỗi phân tử glucose hơn hô hấp hiếu khí."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "hot-yeast",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["temperature-effect"],
+      "stem": "At 55 °C the balloon hardly fills. Why?",
+      "explain": "The yeast’s enzymes are proteins: above about 45 °C they are denatured, so fermentation stops.",
+      "vi": {
+        "stem": "Ở 55 °C quả bóng hầu như không phồng lên. Vì sao?",
+        "explain": "Enzyme của nấm men là protein: trên khoảng 45 °C chúng bị biến tính, nên quá trình lên men dừng lại."
+      },
+      "options": [
+        {
+          "text": "The yeast’s enzymes are denatured by the heat",
+          "vi": {
+            "text": "Enzyme của nấm men bị biến tính do nhiệt độ cao"
+          },
+          "correct": true
+        },
+        {
+          "text": "The heat breaks the glucose down before the yeast can use it",
+          "vi": {
+            "text": "Nhiệt độ cao phân hủy glucose trước khi nấm men sử dụng"
+          }
+        },
+        {
+          "text": "The yeast ferments so fast that the gas escapes unseen",
+          "vi": {
+            "text": "Nấm men lên men nhanh đến mức khí thoát ra mà không quan sát được"
+          }
+        },
+        {
+          "text": "Warm yeast switches to making oxygen",
+          "vi": {
+            "text": "Nấm men khi ấm chuyển sang tạo ra oxygen"
+          }
+        }
+      ]
+    },
+    {
+      "id": "twenty-to-thirty",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["temperature-effect"],
+      "stem": "In the model the yeast’s rate doubles for every 10 °C (an illustrative value) below about 45 °C. Warming it from 20 °C to 30 °C makes the fermentation…",
+      "explain": "A 10 °C rise doubles the rate: about twice as fast. Only above about 45 °C does warming slow it down.",
+      "vi": {
+        "stem": "Trong mô hình, tốc độ của nấm men tăng gấp đôi khi nhiệt độ tăng 10 °C (giá trị minh họa) ở dưới khoảng 45 °C. Làm ấm từ 20 °C lên 30 °C thì quá trình lên men…",
+        "explain": "Tăng 10 °C thì tốc độ tăng gấp đôi: nhanh gấp khoảng hai lần. Chỉ khi trên khoảng 45 °C, tăng nhiệt mới làm chậm lại."
+      },
+      "options": [
+        {
+          "text": "about twice as fast",
+          "vi": {
+            "text": "nhanh gấp khoảng hai lần"
+          },
+          "correct": true
+        },
+        {
+          "text": "about half as fast",
+          "vi": {
+            "text": "chậm còn khoảng một nửa"
+          }
+        },
+        {
+          "text": "about ten times as fast",
+          "vi": {
+            "text": "nhanh gấp khoảng mười lần"
+          }
+        },
+        {
+          "text": "no faster",
+          "vi": {
+            "text": "không nhanh hơn"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-amounts",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["stoichiometry", "gas-volume", "equation"],
+      "stem": "About the products of the fermentation in the flask: decide whether each statement is true or false.",
+      "explain": "V = nRT/p: the same moles of gas fill more at a higher T. The ethanol stays in the solution; the CO₂ fills the balloon. The total CO₂ is set by the glucose, not the yeast: more yeast only ferments it faster. When the glucose is used up, fermentation stops.",
+      "vi": {
+        "stem": "Về sản phẩm của quá trình lên men trong bình, mỗi nhận định sau đúng hay sai?",
+        "explain": "V = nRT/p: cùng số mol khí chiếm thể tích lớn hơn ở nhiệt độ cao hơn. Ethanol ở lại trong dung dịch; CO₂ làm phồng bóng. Tổng lượng CO₂ do lượng glucose quyết định chứ không do lượng nấm men: thêm nấm men chỉ làm lên men nhanh hơn. Khi hết glucose, quá trình lên men dừng lại."
+      },
+      "statements": [
+        {
+          "text": "The same mass of glucose, fully fermented, gives a slightly larger volume of CO₂ at a higher temperature.",
+          "vi": {
+            "text": "Cùng một khối lượng glucose, khi lên men hết, cho thể tích CO₂ lớn hơn một chút ở nhiệt độ cao hơn."
+          },
+          "true": true
+        },
+        {
+          "text": "The ethanol stays in the flask while the CO₂ bubbles out into the balloon.",
+          "vi": {
+            "text": "Ethanol ở lại trong bình còn CO₂ sủi bọt lên và đi vào quả bóng."
+          },
+          "true": true
+        },
+        {
+          "text": "Doubling the yeast doubles the total CO₂ that 5 g of glucose gives once fully fermented.",
+          "vi": {
+            "text": "Tăng gấp đôi lượng nấm men thì tổng lượng CO₂ mà 5 g glucose cho ra khi lên men hết cũng tăng gấp đôi."
+          },
+          "true": false
+        },
+        {
+          "text": "Fermentation stops once all the glucose is used up.",
+          "vi": {
+            "text": "Quá trình lên men dừng lại khi glucose đã được dùng hết."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "ethanol-mass",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["stoichiometry"],
+      "set": {
+        "glucose": 5,
+        "temperature": 35
+      },
+      "stem": "Yeast fully ferments {glucose} g of glucose (M = 180.156 g/mol) to ethanol (M = 46.069 g/mol). What mass of ethanol is made?",
+      "explain": "n(glucose) = {glucose}/180.156 mol; n(ethanol) = 2·n(glucose); m = {glucose}·2·46.069/180.156 = {glucose}·{@ethanolPerGram} ≈ {=glucose*@ethanolPerGram} g.",
+      "vi": {
+        "stem": "Nấm men lên men hoàn toàn {glucose} g glucose (M = 180,156 g/mol) thành ethanol (M = 46,069 g/mol). Khối lượng ethanol tạo thành là bao nhiêu?",
+        "explain": "n(glucose) = {glucose}/180,156 mol; n(ethanol) = 2·n(glucose); m = {glucose}·2·46,069/180,156 = {glucose}·{@ethanolPerGram} ≈ {=glucose*@ethanolPerGram} g."
+      },
+      "options": [
+        {
+          "text": "{=glucose*2*46.069/180.156} g",
+          "vi": {
+            "text": "{=glucose*2*46.069/180.156} g"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2*46.069/180.156",
+            "equals": "ethanolPerGram"
+          }
+        },
+        {
+          "text": "{=glucose*46.069/180.156} g",
+          "vi": {
+            "text": "{=glucose*46.069/180.156} g"
+          },
+          "check": {
+            "expr": "46.069/180.156",
+            "equals": "ethanolPerGram"
+          }
+        },
+        {
+          "text": "{=glucose*180.156/(2*46.069)} g",
+          "vi": {
+            "text": "{=glucose*180.156/(2*46.069)} g"
+          },
+          "check": {
+            "expr": "180.156/(2*46.069)",
+            "equals": "ethanolPerGram"
+          }
+        },
+        {
+          "text": "{=glucose*46.069/(2*180.156)} g",
+          "vi": {
+            "text": "{=glucose*46.069/(2*180.156)} g"
+          },
+          "check": {
+            "expr": "46.069/(2*180.156)",
+            "equals": "ethanolPerGram"
+          }
+        }
+      ]
+    },
+    {
+      "id": "gas-25",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["gas-volume", "stoichiometry"],
+      "set": {
+        "glucose": 5,
+        "temperature": 25
+      },
+      "stem": "{glucose} g of glucose (180.156 g/mol) is fully fermented at {temperature} °C and 101 325 Pa. What volume of CO₂ is made? (R = 8.314 J/(mol·K))",
+      "explain": "n(CO₂) = 2·{glucose}/180.156 = {=2*glucose/180.156} mol; V = nRT/p with T = {=temperature+273.15|5} K: {=2*glucose/180.156*8.314462618*(temperature+273.15)/101325|3} m³ ≈ {=glucose*@co2PerGram} mL.",
+      "vi": {
+        "stem": "{glucose} g glucose (180,156 g/mol) được lên men hoàn toàn ở {temperature} °C và 101 325 Pa. Thể tích CO₂ tạo thành là bao nhiêu? (R = 8,314 J/(mol·K))",
+        "explain": "n(CO₂) = 2·{glucose}/180,156 = {=2*glucose/180.156} mol; V = nRT/p với T = {=temperature+273.15|5} K: {=2*glucose/180.156*8.314462618*(temperature+273.15)/101325|3} m³ ≈ {=glucose*@co2PerGram} mL."
+      },
+      "options": [
+        {
+          "text": "{=glucose*2/180.156*8.314462618*(temperature+273.15)/101325*1e6} mL",
+          "vi": {
+            "text": "{=glucose*2/180.156*8.314462618*(temperature+273.15)/101325*1e6} mL"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2/180.156*8.314462618*(temperature+273.15)/101325*1e6",
+            "equals": "co2PerGram"
+          }
+        },
+        {
+          "text": "{=glucose*2/180.156*8.314462618*temperature/101325*1e6} mL",
+          "vi": {
+            "text": "{=glucose*2/180.156*8.314462618*temperature/101325*1e6} mL"
+          },
+          "check": {
+            "expr": "2/180.156*8.314462618*temperature/101325*1e6",
+            "equals": "co2PerGram"
+          }
+        },
+        {
+          "text": "{=glucose*1/180.156*8.314462618*(temperature+273.15)/101325*1e6} mL",
+          "vi": {
+            "text": "{=glucose*1/180.156*8.314462618*(temperature+273.15)/101325*1e6} mL"
+          },
+          "check": {
+            "expr": "1/180.156*8.314462618*(temperature+273.15)/101325*1e6",
+            "equals": "co2PerGram"
+          }
+        },
+        {
+          "text": "{=glucose*2/180.156*8.314462618*(temperature+273.15)/101325} mL",
+          "vi": {
+            "text": "{=glucose*2/180.156*8.314462618*(temperature+273.15)/101325} mL"
+          },
+          "check": {
+            "expr": "2/180.156*8.314462618*(temperature+273.15)/101325",
+            "equals": "co2PerGram"
+          }
+        }
+      ]
+    },
+    {
+      "id": "gas-per-gram",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["gas-volume"],
+      "set": {
+        "temperature": 30
+      },
+      "stem": "What volume of CO₂ does each gram of glucose (180.156 g/mol) give when fermented at {temperature} °C and 101.325 kPa?",
+      "explain": "V = (2/180.156)·8.314·{=temperature+273.15|5}/101 325 m³ ≈ {@co2PerGram} mL. 22.4 L/mol holds only at 0 °C; p must be in Pa, not kPa.",
+      "vi": {
+        "stem": "Mỗi gam glucose (180,156 g/mol) khi lên men ở {temperature} °C và 101,325 kPa cho bao nhiêu thể tích CO₂?",
+        "explain": "V = (2/180,156)·8,314·{=temperature+273.15|5}/101 325 m³ ≈ {@co2PerGram} mL. Giá trị 22,4 L/mol chỉ đúng ở 0 °C; p phải tính theo Pa, không phải kPa."
+      },
+      "options": [
+        {
+          "text": "{@co2PerGram} mL",
+          "vi": {
+            "text": "{@co2PerGram} mL"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2/180.156*8.314462618*(temperature+273.15)/101325*1e6",
+            "equals": "co2PerGram"
+          }
+        },
+        {
+          "text": "{=2/180.156*22400} mL",
+          "vi": {
+            "text": "{=2/180.156*22400} mL"
+          },
+          "check": {
+            "expr": "2/180.156*22400",
+            "equals": "co2PerGram"
+          }
+        },
+        {
+          "text": "{=1/180.156*8.314462618*(temperature+273.15)/101325*1e6} mL",
+          "vi": {
+            "text": "{=1/180.156*8.314462618*(temperature+273.15)/101325*1e6} mL"
+          },
+          "check": {
+            "expr": "1/180.156*8.314462618*(temperature+273.15)/101325*1e6",
+            "equals": "co2PerGram"
+          }
+        },
+        {
+          "text": "{=2/180.156*8.314462618*(temperature+273.15)/101.325*1e6} mL",
+          "vi": {
+            "text": "{=2/180.156*8.314462618*(temperature+273.15)/101.325*1e6} mL"
+          },
+          "check": {
+            "expr": "2/180.156*8.314462618*(temperature+273.15)/101.325*1e6",
+            "equals": "co2PerGram"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-ten-grams",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["stoichiometry", "gas-volume"],
+      "set": {
+        "glucose": 10,
+        "temperature": 35
+      },
+      "stem": "{glucose} g of glucose (180.156 g/mol) is fully fermented at {temperature} °C and 101 325 Pa (ethanol 46.069 g/mol). Decide whether each statement is true or false.",
+      "explain": "Ethanol: {glucose}·{@ethanolPerGram} ≈ {=glucose*@ethanolPerGram} g. CO₂: {glucose}·{@co2PerGram} ≈ {=glucose*@co2PerGram} mL. The CO₂ is 2·{glucose}/180.156 = {=2*glucose/180.156} mol, twice the glucose’s moles. At 20 °C the same gas takes up less volume (V ∝ T).",
+      "vi": {
+        "stem": "{glucose} g glucose (180,156 g/mol) được lên men hoàn toàn ở {temperature} °C và 101 325 Pa (ethanol 46,069 g/mol). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Ethanol: {glucose}·{@ethanolPerGram} ≈ {=glucose*@ethanolPerGram} g. CO₂: {glucose}·{@co2PerGram} ≈ {=glucose*@co2PerGram} mL. Lượng CO₂ là 2·{glucose}/180,156 = {=2*glucose/180.156} mol, gấp đôi số mol glucose. Ở 20 °C cùng lượng khí đó chiếm thể tích nhỏ hơn (V tỉ lệ với T)."
+      },
+      "statements": [
+        {
+          "text": "About {=glucose*2*46.069/180.156} g of ethanol is made.",
+          "vi": {
+            "text": "Khoảng {=glucose*2*46.069/180.156} g ethanol được tạo thành."
+          },
+          "true": true,
+          "check": {
+            "expr": "2*46.069/180.156",
+            "equals": "ethanolPerGram"
+          }
+        },
+        {
+          "text": "About {=glucose*2/180.156*8.314462618*(temperature+273.15)/101325*1e6} mL of CO₂ is made.",
+          "vi": {
+            "text": "Khoảng {=glucose*2/180.156*8.314462618*(temperature+273.15)/101325*1e6} mL CO₂ được tạo thành."
+          },
+          "true": true,
+          "check": {
+            "expr": "2/180.156*8.314462618*(temperature+273.15)/101325*1e6",
+            "equals": "co2PerGram"
+          }
+        },
+        {
+          "text": "The CO₂ made is {=glucose/180.156} mol, as many moles as the glucose.",
+          "vi": {
+            "text": "Lượng CO₂ tạo thành là {=glucose/180.156} mol, bằng số mol glucose."
+          },
+          "true": false
+        },
+        {
+          "text": "At 20 °C the same CO₂ would take up a smaller volume.",
+          "vi": {
+            "text": "Ở 20 °C, cùng lượng CO₂ đó sẽ chiếm thể tích nhỏ hơn."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "balloon-to-glucose",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["gas-volume", "stoichiometry"],
+      "set": {
+        "temperature": 20
+      },
+      "stem": "At {temperature} °C and 101 325 Pa the balloon holds {=2*@co2PerGram|4} mL of CO₂, and all the glucose has been fermented. What mass of glucose (180.156 g/mol) was in the flask?",
+      "explain": "n(CO₂) = pV/RT = 101 325·{=2*@co2PerGram*1e-6|4}/(8.314·{=temperature+273.15|5}) ≈ {=101325*2*@co2PerGram*1e-6/(8.314462618*(temperature+273.15))} mol; glucose is half of that, {=101325*@co2PerGram*1e-6/(8.314462618*(temperature+273.15))} mol, so m ≈ {=101325*@co2PerGram*1e-6/(8.314462618*(temperature+273.15))*180.156} g.",
+      "vi": {
+        "stem": "Ở {temperature} °C và 101 325 Pa, quả bóng chứa {=2*@co2PerGram|4} mL CO₂, và toàn bộ glucose đã được lên men. Khối lượng glucose (180,156 g/mol) ban đầu trong bình là bao nhiêu?",
+        "explain": "n(CO₂) = pV/RT = 101 325·{=2*@co2PerGram*1e-6|4}/(8,314·{=temperature+273.15|5}) ≈ {=101325*2*@co2PerGram*1e-6/(8.314462618*(temperature+273.15))} mol; số mol glucose bằng một nửa, {=101325*@co2PerGram*1e-6/(8.314462618*(temperature+273.15))} mol, nên m ≈ {=101325*@co2PerGram*1e-6/(8.314462618*(temperature+273.15))*180.156} g."
+      },
+      "options": [
+        {
+          "text": "{=101325*@co2PerGram*1e-6/(8.314462618*(temperature+273.15))*180.156} g",
+          "vi": {
+            "text": "{=101325*@co2PerGram*1e-6/(8.314462618*(temperature+273.15))*180.156} g"
+          },
+          "correct": true
+        },
+        {
+          "text": "{=101325*2*@co2PerGram*1e-6/(8.314462618*(temperature+273.15))*180.156} g",
+          "vi": {
+            "text": "{=101325*2*@co2PerGram*1e-6/(8.314462618*(temperature+273.15))*180.156} g"
+          }
+        },
+        {
+          "text": "{=101325*@co2PerGram*1e-6/(8.314462618*temperature)*180.156} g",
+          "vi": {
+            "text": "{=101325*@co2PerGram*1e-6/(8.314462618*temperature)*180.156} g"
+          }
+        },
+        {
+          "text": "{=101325*@co2PerGram*1e-6/(8.314462618*(temperature+273.15))*180.156/2} g",
+          "vi": {
+            "text": "{=101325*@co2PerGram*1e-6/(8.314462618*(temperature+273.15))*180.156/2} g"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-design",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["temperature-effect", "gas-volume"],
+      "set": {
+        "glucose": 5,
+        "yeast": 2,
+        "temperature": 30
+      },
+      "stem": "{yeast} g of yeast ferments {glucose} g of glucose at {temperature} °C and 1 atm, and the balloon is compared with runs at other temperatures. Decide whether each statement is true or false.",
+      "explain": "Above about 45 °C the enzymes are damaged, so in 20 minutes a 55 °C flask fills its balloon less than a 35 °C one. All {glucose} g gives {glucose}·{@co2PerGram} ≈ {=glucose*@co2PerGram} mL at {temperature} °C. The doubling every 10 °C is illustrative, not one strain’s. More yeast speeds the fermentation up but cannot make more CO₂ than the glucose gives.",
+      "vi": {
+        "stem": "{yeast} g nấm men lên men {glucose} g glucose ở {temperature} °C và 1 atm, và quả bóng được so sánh với các lần chạy ở nhiệt độ khác. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Trên khoảng 45 °C enzyme bị tổn thương, nên trong 20 phút bóng của bình ở 55 °C phồng ít hơn bình ở 35 °C. Toàn bộ {glucose} g glucose cho {glucose}·{@co2PerGram} ≈ {=glucose*@co2PerGram} mL ở {temperature} °C. Việc tăng gấp đôi mỗi 10 °C chỉ là giá trị minh họa, không phải của một chủng cụ thể. Thêm nấm men làm lên men nhanh hơn nhưng không tạo nhiều CO₂ hơn lượng glucose cho phép."
+      },
+      "statements": [
+        {
+          "text": "In 20 minutes the balloon fills less at 55 °C than at 35 °C, because the yeast’s enzymes are damaged above about 45 °C.",
+          "vi": {
+            "text": "Trong 20 phút, bóng ở 55 °C phồng ít hơn ở 35 °C vì enzyme của nấm men bị tổn thương khi trên khoảng 45 °C."
+          },
+          "true": true
+        },
+        {
+          "text": "If all {glucose} g is fermented at {temperature} °C, the balloon holds about {=glucose*2/180.156*8.314462618*(temperature+273.15)/101325*1e6} mL.",
+          "vi": {
+            "text": "Nếu toàn bộ {glucose} g được lên men ở {temperature} °C, quả bóng chứa khoảng {=glucose*2/180.156*8.314462618*(temperature+273.15)/101325*1e6} mL."
+          },
+          "true": true,
+          "check": {
+            "expr": "2/180.156*8.314462618*(temperature+273.15)/101325*1e6",
+            "equals": "co2PerGram"
+          }
+        },
+        {
+          "text": "The model’s doubling every 10 °C is a measured property of one yeast strain.",
+          "vi": {
+            "text": "Việc tăng gấp đôi mỗi 10 °C trong mô hình là đặc tính đo được của một chủng nấm men cụ thể."
+          },
+          "true": false
+        },
+        {
+          "text": "With the same glucose, more yeast fills the balloon faster but not larger in the end.",
+          "vi": {
+            "text": "Với cùng lượng glucose, nhiều nấm men hơn làm bóng phồng nhanh hơn nhưng cuối cùng không lớn hơn."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "atp-yield",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["equation"],
+      "stem": "Alcoholic fermentation of one molecule of glucose gives the yeast a net gain of…",
+      "explain": "Only glycolysis makes ATP in fermentation: a net 2 ATP per glucose. Aerobic respiration, which oxidises glucose fully, gives far more (about 30–32 ATP).",
+      "vi": {
+        "stem": "Lên men rượu một phân tử glucose cho nấm men thu được số ATP thực là…",
+        "explain": "Trong lên men, ATP chỉ được tạo ra ở giai đoạn đường phân: thực thu 2 ATP cho mỗi phân tử glucose. Hô hấp hiếu khí oxi hóa hoàn toàn glucose nên tạo ra nhiều hơn rất nhiều (khoảng 30–32 ATP)."
+      },
+      "options": [
+        {
+          "text": "2 ATP",
+          "vi": {
+            "text": "2 ATP"
+          },
+          "correct": true
+        },
+        {
+          "text": "about 32 ATP",
+          "vi": {
+            "text": "khoảng 32 ATP"
+          }
+        },
+        {
+          "text": "no ATP at all",
+          "vi": {
+            "text": "không có ATP nào"
+          }
+        },
+        {
+          "text": "2 ATP for each molecule of CO₂ given off",
+          "vi": {
+            "text": "2 ATP cho mỗi phân tử CO₂ thải ra"
+          }
+        }
+      ]
+    },
+    {
+      "id": "limewater",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["equation"],
+      "stem": "How can you show that the gas filling the balloon is carbon dioxide?",
+      "explain": "CO₂ bubbled through limewater (Ca(OH)₂ solution) turns it milky as insoluble CaCO₃ forms. CO₂ does not relight a glowing splint (that is oxygen) and does not burn with a pop (that is hydrogen).",
+      "vi": {
+        "stem": "Làm thế nào để chứng minh khí làm căng quả bóng là carbon dioxide?",
+        "explain": "Dẫn CO₂ qua nước vôi trong (dung dịch Ca(OH)₂) thì nước vôi bị vẩn đục do tạo CaCO₃ không tan. CO₂ không làm que đóm còn tàn đỏ bùng cháy (đó là oxi) và không cháy nổ lách tách (đó là hiđro)."
+      },
+      "options": [
+        {
+          "text": "Bubble it through limewater, which turns milky",
+          "vi": {
+            "text": "Dẫn khí qua nước vôi trong, nước vôi bị vẩn đục"
+          },
+          "correct": true
+        },
+        {
+          "text": "Hold a glowing splint in it, which relights",
+          "vi": {
+            "text": "Đưa que đóm còn tàn đỏ vào, que đóm bùng cháy"
+          }
+        },
+        {
+          "text": "Put a lit splint to it, which goes out with a squeaky pop",
+          "vi": {
+            "text": "Đưa que đóm đang cháy vào, khí cháy nổ lách tách"
+          }
+        },
+        {
+          "text": "Add iodine solution to the flask, which turns blue-black",
+          "vi": {
+            "text": "Nhỏ dung dịch iodine vào bình, dung dịch chuyển xanh tím đen"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-conditions",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["equation", "temperature-effect"],
+      "stem": "About yeast and the conditions of fermentation: decide whether each statement is true or false.",
+      "explain": "Yeast is a single-celled fungus that respires aerobically when oxygen is present and ferments without it. Fermentation breaks glucose down only partly: ethanol still holds much energy. A layer of oil on the solution keeps air out. The uptake rate here is the simulation’s illustrative value, not one strain’s.",
+      "vi": {
+        "stem": "Về nấm men và điều kiện của quá trình lên men, mỗi nhận định sau đúng hay sai?",
+        "explain": "Nấm men là nấm đơn bào, hô hấp hiếu khí khi có oxi và lên men khi không có oxi. Lên men chỉ phân giải glucose không hoàn toàn: ethanol vẫn còn chứa nhiều năng lượng. Lớp dầu phủ trên dung dịch ngăn không khí. Tốc độ hấp thụ ở đây là giá trị minh họa của mô phỏng, không phải của một chủng cụ thể."
+      },
+      "statements": [
+        {
+          "text": "Yeast is a single-celled fungus that can respire with or without oxygen.",
+          "vi": {
+            "text": "Nấm men là nấm đơn bào, có thể hô hấp khi có hoặc không có oxi."
+          },
+          "true": true
+        },
+        {
+          "text": "In fermentation the glucose is broken down completely to CO₂ and water.",
+          "vi": {
+            "text": "Trong lên men, glucose bị phân giải hoàn toàn thành CO₂ và nước."
+          },
+          "true": false
+        },
+        {
+          "text": "A layer of oil on the sugar solution helps keep oxygen out.",
+          "vi": {
+            "text": "Lớp dầu phủ trên dung dịch đường giúp ngăn oxi đi vào."
+          },
+          "true": true
+        },
+        {
+          "text": "In this simulation, the yeast’s uptake of 1 g of glucose per g of yeast per hour at 30 °C is an illustrative value.",
+          "vi": {
+            "text": "Trong mô phỏng này, tốc độ hấp thụ 1 g glucose cho mỗi g nấm men mỗi giờ ở 30 °C là giá trị minh họa."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "ethanol-moles",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["stoichiometry"],
+      "set": {
+        "glucose": 9
+      },
+      "stem": "{glucose} g of glucose (180.156 g/mol) is fully fermented. How many moles of ethanol are made?",
+      "explain": "n(glucose) = {glucose}/180.156 ≈ {=glucose/180.156|3} mol; each mole gives 2 mol of ethanol: {=2*glucose/180.156|3} mol (that is {=glucose*@ethanolPerGram|3} g).",
+      "vi": {
+        "stem": "Lên men hoàn toàn {glucose} g glucose (180,156 g/mol). Số mol ethanol tạo thành là bao nhiêu?",
+        "explain": "n(glucose) = {glucose}/180,156 ≈ {=glucose/180.156|3} mol; mỗi mol glucose cho 2 mol ethanol: {=2*glucose/180.156|3} mol (tức {=glucose*@ethanolPerGram|3} g)."
+      },
+      "options": [
+        {
+          "text": "{=2*glucose/180.156|3} mol",
+          "vi": {
+            "text": "{=2*glucose/180.156|3} mol"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(2*glucose/180.156)*46.069/glucose",
+            "equals": "ethanolPerGram"
+          }
+        },
+        {
+          "text": "{=glucose/180.156|3} mol",
+          "vi": {
+            "text": "{=glucose/180.156|3} mol"
+          },
+          "check": {
+            "expr": "(glucose/180.156)*46.069/glucose",
+            "equals": "ethanolPerGram"
+          }
+        },
+        {
+          "text": "{=glucose/46.069|3} mol",
+          "vi": {
+            "text": "{=glucose/46.069|3} mol"
+          },
+          "check": {
+            "expr": "(glucose/46.069)*46.069/glucose",
+            "equals": "ethanolPerGram"
+          }
+        },
+        {
+          "text": "{=2*glucose/46.069|3} mol",
+          "vi": {
+            "text": "{=2*glucose/46.069|3} mol"
+          },
+          "check": {
+            "expr": "(2*glucose/46.069)*46.069/glucose",
+            "equals": "ethanolPerGram"
+          }
+        }
+      ]
+    },
+    {
+      "id": "glucose-from-ethanol",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["stoichiometry"],
+      "stem": "A flask of fermenting sugar has made {=4*@ethanolPerGram|3} g of ethanol (46.069 g/mol). What mass of glucose (180.156 g/mol) has the yeast used?",
+      "explain": "n(ethanol) = {=4*@ethanolPerGram|3}/46.069 ≈ {=4*@ethanolPerGram/46.069|3} mol; glucose is half of that: {=2*@ethanolPerGram/46.069|3} mol × 180.156 ≈ {=4*@ethanolPerGram/@ethanolPerGram|3} g.",
+      "vi": {
+        "stem": "Một bình đường đang lên men đã tạo ra {=4*@ethanolPerGram|3} g ethanol (46,069 g/mol). Nấm men đã sử dụng bao nhiêu gam glucose (180,156 g/mol)?",
+        "explain": "n(ethanol) = {=4*@ethanolPerGram|3}/46,069 ≈ {=4*@ethanolPerGram/46.069|3} mol; số mol glucose bằng một nửa: {=2*@ethanolPerGram/46.069|3} mol × 180,156 ≈ {=4*@ethanolPerGram/@ethanolPerGram|3} g."
+      },
+      "options": [
+        {
+          "text": "{=4*@ethanolPerGram/@ethanolPerGram|3} g",
+          "vi": {
+            "text": "{=4*@ethanolPerGram/@ethanolPerGram|3} g"
+          },
+          "correct": true,
+          "check": {
+            "expr": "4*@ethanolPerGram/(4*@ethanolPerGram/@ethanolPerGram)",
+            "equals": "ethanolPerGram"
+          }
+        },
+        {
+          "text": "{=4*@ethanolPerGram*@ethanolPerGram|3} g",
+          "vi": {
+            "text": "{=4*@ethanolPerGram*@ethanolPerGram|3} g"
+          },
+          "check": {
+            "expr": "4*@ethanolPerGram/(4*@ethanolPerGram*@ethanolPerGram)",
+            "equals": "ethanolPerGram"
+          }
+        },
+        {
+          "text": "{=4*@ethanolPerGram/46.069*180.156|3} g",
+          "vi": {
+            "text": "{=4*@ethanolPerGram/46.069*180.156|3} g"
+          },
+          "check": {
+            "expr": "4*@ethanolPerGram/(4*@ethanolPerGram/46.069*180.156)",
+            "equals": "ethanolPerGram"
+          }
+        },
+        {
+          "text": "{=4*@ethanolPerGram|3} g, as mass is conserved",
+          "vi": {
+            "text": "{=4*@ethanolPerGram|3} g, vì khối lượng được bảo toàn"
+          },
+          "check": {
+            "expr": "4*@ethanolPerGram/(4*@ethanolPerGram)",
+            "equals": "ethanolPerGram"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ethanol-from-balloon",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["gas-volume", "stoichiometry"],
+      "set": {
+        "temperature": 25
+      },
+      "stem": "At {temperature} °C and 101 325 Pa the balloon has collected {=3*@co2PerGram|4} mL of CO₂. What mass of ethanol (46.069 g/mol) has been made alongside it? (R = 8.314 J/(mol·K))",
+      "explain": "n(CO₂) = pV/RT = 101 325·{=3*@co2PerGram|4}·10⁻⁶/(8.314·{=temperature+273.15|5}) ≈ {=3*2/180.156|3} mol. The equation gives one ethanol for each CO₂, so n(ethanol) is the same: × 46.069 ≈ {=3*@ethanolPerGram|3} g.",
+      "vi": {
+        "stem": "Ở {temperature} °C và 101 325 Pa, quả bóng đã thu được {=3*@co2PerGram|4} mL CO₂. Khối lượng ethanol (46,069 g/mol) được tạo ra cùng lúc là bao nhiêu? (R = 8,314 J/(mol·K))",
+        "explain": "n(CO₂) = pV/RT = 101 325·{=3*@co2PerGram|4}·10⁻⁶/(8,314·{=temperature+273.15|5}) ≈ {=3*2/180.156|3} mol. Theo phương trình, mỗi phân tử CO₂ đi kèm một phân tử ethanol, nên n(ethanol) bằng n(CO₂): × 46,069 ≈ {=3*@ethanolPerGram|3} g."
+      },
+      "options": [
+        {
+          "text": "{=3*@ethanolPerGram|3} g",
+          "vi": {
+            "text": "{=3*@ethanolPerGram|3} g"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(3*@ethanolPerGram)/3",
+            "equals": "ethanolPerGram"
+          }
+        },
+        {
+          "text": "{=3*@ethanolPerGram/2|3} g",
+          "vi": {
+            "text": "{=3*@ethanolPerGram/2|3} g"
+          },
+          "check": {
+            "expr": "(3*@ethanolPerGram/2)/3",
+            "equals": "ethanolPerGram"
+          }
+        },
+        {
+          "text": "{=3*2/180.156*44.009|3} g",
+          "vi": {
+            "text": "{=3*2/180.156*44.009|3} g"
+          },
+          "check": {
+            "expr": "(3*2/180.156*44.009)/3",
+            "equals": "ethanolPerGram"
+          }
+        },
+        {
+          "text": "{=3*@ethanolPerGram*2|3} g",
+          "vi": {
+            "text": "{=3*@ethanolPerGram*2|3} g"
+          },
+          "check": {
+            "expr": "(3*@ethanolPerGram*2)/3",
+            "equals": "ethanolPerGram"
+          }
+        }
+      ]
+    },
+    {
+      "id": "warm-balloon-trap",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["gas-volume", "temperature-effect"],
+      "set": {
+        "temperature": 40
+      },
+      "stem": "Two flasks hold the same glucose; one is kept at 20 °C, the other at {temperature} °C, until all the glucose is fermented. The model’s rate doubles for every 10 °C (illustrative). How many times the 20 °C balloon’s volume is the {temperature} °C balloon’s at the end?",
+      "explain": "The same glucose gives the same moles of CO₂ whatever the rate: the warmer flask only finishes sooner. At 1 atm V ∝ T: ({temperature} + 273.15)/(20 + 273.15) ≈ {=(temperature+273.15)/293.15|3}. The factor 4 (2 × 2 for 20 °C) is the rate, not the amount.",
+      "vi": {
+        "stem": "Hai bình chứa cùng lượng glucose; một bình giữ ở 20 °C, bình kia ở {temperature} °C, cho đến khi toàn bộ glucose được lên men. Trong mô hình, tốc độ tăng gấp đôi sau mỗi 10 °C (giá trị minh họa). Cuối cùng, thể tích quả bóng ở {temperature} °C gấp bao nhiêu lần quả bóng ở 20 °C?",
+        "explain": "Cùng lượng glucose cho cùng số mol CO₂, dù tốc độ thế nào: bình ấm hơn chỉ kết thúc sớm hơn. Ở 1 atm V ∝ T: ({temperature} + 273,15)/(20 + 273,15) ≈ {=(temperature+273.15)/293.15|3}. Hệ số 4 (2 × 2 cho 20 °C) là của tốc độ, không phải của lượng khí."
+      },
+      "options": [
+        {
+          "text": "About {=(temperature+273.15)/293.15|3}: the same moles of CO₂, a warmer gas",
+          "vi": {
+            "text": "Khoảng {=(temperature+273.15)/293.15|3}: cùng số mol CO₂, khí ấm hơn"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2/180.156*8.314462618*293.15/101325*1e6*(temperature+273.15)/293.15",
+            "equals": "co2PerGram"
+          }
+        },
+        {
+          "text": "4: the rate doubles twice from 20 °C to {temperature} °C",
+          "vi": {
+            "text": "4: tốc độ tăng gấp đôi hai lần từ 20 °C đến {temperature} °C"
+          },
+          "check": {
+            "expr": "2/180.156*8.314462618*293.15/101325*1e6*4",
+            "equals": "co2PerGram"
+          }
+        },
+        {
+          "text": "{=temperature/20}: the ratio of the temperatures",
+          "vi": {
+            "text": "{=temperature/20}: tỉ số hai nhiệt độ"
+          },
+          "check": {
+            "expr": "2/180.156*8.314462618*293.15/101325*1e6*temperature/20",
+            "equals": "co2PerGram"
+          }
+        },
+        {
+          "text": "Exactly 1: the same glucose gives the same volume",
+          "vi": {
+            "text": "Đúng 1: cùng lượng glucose cho cùng thể tích"
+          },
+          "check": {
+            "expr": "2/180.156*8.314462618*293.15/101325*1e6*1",
+            "equals": "co2PerGram"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-mass-balance",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["stoichiometry", "gas-volume"],
+      "set": {
+        "glucose": 6,
+        "temperature": 30
+      },
+      "stem": "{glucose} g of glucose (180.156 g/mol) is fully fermented at {temperature} °C and 101 325 Pa (ethanol 46.069 g/mol, CO₂ 44.009 g/mol). Decide whether each statement is true or false.",
+      "explain": "Ethanol: {glucose}·{@ethanolPerGram|4} ≈ {=glucose*@ethanolPerGram|3} g. CO₂: {glucose}·2·44.009/180.156 ≈ {=glucose*2*44.009/180.156|3} g; together they make the {glucose} g of glucose, as mass is conserved. The gas fills {=glucose*@co2PerGram|3} mL at {temperature} °C; half of that would mean half the glucose was used. More yeast only ferments the glucose faster: the ethanol per gram is fixed by the equation.",
+      "vi": {
+        "stem": "Lên men hoàn toàn {glucose} g glucose (180,156 g/mol) ở {temperature} °C và 101 325 Pa (ethanol 46,069 g/mol, CO₂ 44,009 g/mol). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Ethanol: {glucose}·{@ethanolPerGram|4} ≈ {=glucose*@ethanolPerGram|3} g. CO₂: {glucose}·2·44,009/180,156 ≈ {=glucose*2*44.009/180.156|3} g; cộng lại đúng bằng {glucose} g glucose, vì khối lượng được bảo toàn. Khí chiếm {=glucose*@co2PerGram|3} mL ở {temperature} °C; chỉ một nửa thể tích đó có nghĩa là mới dùng một nửa lượng glucose. Nhiều nấm men hơn chỉ làm glucose được lên men nhanh hơn: lượng ethanol trên mỗi gam glucose do phương trình quyết định."
+      },
+      "statements": [
+        {
+          "text": "About {=glucose*@ethanolPerGram|3} g of ethanol is made.",
+          "vi": {
+            "text": "Khoảng {=glucose*@ethanolPerGram|3} g ethanol được tạo thành."
+          },
+          "true": true,
+          "check": {
+            "expr": "2*46.069/180.156",
+            "equals": "ethanolPerGram"
+          }
+        },
+        {
+          "text": "The CO₂ made weighs {=glucose-glucose*@ethanolPerGram|3} g, so ethanol and CO₂ together weigh as much as the glucose.",
+          "vi": {
+            "text": "Khối lượng CO₂ tạo thành là {=glucose-glucose*@ethanolPerGram|3} g, nên tổng khối lượng ethanol và CO₂ bằng khối lượng glucose."
+          },
+          "true": true,
+          "check": {
+            "expr": "1-2*44.009/180.156",
+            "equals": "ethanolPerGram"
+          }
+        },
+        {
+          "text": "When all the glucose is used, the balloon holds {=glucose*@co2PerGram/2|3} mL of CO₂.",
+          "vi": {
+            "text": "Khi toàn bộ glucose được sử dụng, quả bóng chứa {=glucose*@co2PerGram/2|3} mL CO₂."
+          },
+          "true": false,
+          "check": {
+            "expr": "(glucose*@co2PerGram/2)/glucose",
+            "equals": "co2PerGram"
+          }
+        },
+        {
+          "text": "Twice the yeast would make twice the ethanol from the same {glucose} g of glucose.",
+          "vi": {
+            "text": "Gấp đôi lượng nấm men thì từ cùng {glucose} g glucose sẽ tạo ra gấp đôi lượng ethanol."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

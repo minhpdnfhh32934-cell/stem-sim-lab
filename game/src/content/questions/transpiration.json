@@ -1,0 +1,1032 @@
+{
+  "id": "transpiration",
+  "skills": [
+    {
+      "id": "potometer",
+      "name": "The bubble potometer",
+      "advice": "Learn what the potometer measures: the water taken up, taken to equal the water lost. Practise V = π(d/2)²·x with the bore’s diameter halved and m³ turned into mL (× 10⁶). Re-read why the shoot is cut and sealed under water.",
+      "vi": {
+        "name": "Thí nghiệm đo thoát hơi nước bằng ống mao quản (potometer)",
+        "advice": "Nắm rõ dụng cụ đo được gì: lượng nước cây hút vào, được coi bằng lượng nước thoát ra. Luyện V = π(d/2)²·x, nhớ chia đôi đường kính ống và đổi m³ sang mL (× 10⁶). Đọc lại vì sao phải cắt và lắp cành cây trong nước."
+      }
+    },
+    {
+      "id": "factors",
+      "name": "What speeds transpiration up",
+      "advice": "Change one factor at a time at the station — light, humidity, the fan — and explain each: light opens the stomata, dry air raises the deficit D = e_s(1 − RH), moving air thins the still layer.",
+      "vi": {
+        "name": "Các yếu tố ảnh hưởng đến thoát hơi nước",
+        "advice": "Trên trạm, mỗi lần chỉ thay đổi một yếu tố — ánh sáng, độ ẩm, quạt — và giải thích: ánh sáng làm khí khổng mở, không khí khô làm tăng độ thiếu hụt hơi nước D = e_s(1 − RH), gió làm mỏng lớp không khí tĩnh quanh lá."
+      }
+    },
+    {
+      "id": "stomata",
+      "name": "Stomata and the path of water",
+      "advice": "Re-read the leaf structure lesson: most water vapour leaves through the stomata, opened and closed by guard cells; the waxy cuticle lets little through. In the dark the stomata are nearly closed.",
+      "vi": {
+        "name": "Khí khổng và con đường thoát hơi nước",
+        "advice": "Ôn lại bài cấu tạo lá: phần lớn hơi nước thoát qua khí khổng, được đóng mở nhờ tế bào khí khổng; lớp cutin chỉ cho rất ít hơi nước đi qua. Trong tối, khí khổng gần như đóng."
+      }
+    },
+    {
+      "id": "conductance",
+      "name": "Conductances in series: E = g·D/P",
+      "advice": "Work g from 1/g = 1/g_s + 1/g_b (like resistors in series), then E = g·D/P in mmol/(m²·s). Compare which of g_s and g_b is smaller in the dark and in bright still air: that one limits the rate.",
+      "vi": {
+        "name": "Độ dẫn mắc nối tiếp: E = g·D/P",
+        "advice": "Tính g từ 1/g = 1/g_s + 1/g_b (giống điện trở mắc nối tiếp), rồi E = g·D/P theo mmol/(m²·s). So sánh g_s và g_b khi trời tối và khi sáng mạnh, lặng gió: độ dẫn nào nhỏ hơn sẽ giới hạn tốc độ."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "where-vapour",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["stomata"],
+      "stem": "Most of the water vapour a leaf loses leaves through…",
+      "explain": "The stomata, pores between pairs of guard cells; the waxy cuticle lets little vapour through.",
+      "vi": {
+        "stem": "Phần lớn hơi nước thoát ra khỏi lá đi qua…",
+        "explain": "Khí khổng, các lỗ nhỏ giữa hai tế bào khí khổng; lớp cutin chỉ cho rất ít hơi nước đi qua."
+      },
+      "options": [
+        {
+          "text": "the stomata",
+          "vi": {
+            "text": "khí khổng"
+          },
+          "correct": true
+        },
+        {
+          "text": "the cuticle",
+          "vi": {
+            "text": "lớp cutin"
+          }
+        },
+        {
+          "text": "the xylem of the stem",
+          "vi": {
+            "text": "mạch gỗ của thân"
+          }
+        },
+        {
+          "text": "the roots",
+          "vi": {
+            "text": "rễ"
+          }
+        }
+      ]
+    },
+    {
+      "id": "what-measured",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["potometer"],
+      "stem": "A bubble potometer directly measures…",
+      "explain": "The bubble moves as the shoot draws water up: it measures the water taken up, which is taken to equal the water lost (a shoot keeps about 1 %).",
+      "vi": {
+        "stem": "Thí nghiệm dùng ống mao quản có bọt khí (potometer) đo trực tiếp…",
+        "explain": "Bọt khí di chuyển khi cành hút nước lên: dụng cụ đo lượng nước được hút vào, coi như bằng lượng nước thoát ra (cành cây giữ lại khoảng 1 %)."
+      },
+      "options": [
+        {
+          "text": "the water taken up by the shoot",
+          "vi": {
+            "text": "lượng nước cành cây hút vào"
+          },
+          "correct": true
+        },
+        {
+          "text": "the water vapour leaving each stoma",
+          "vi": {
+            "text": "lượng hơi nước thoát ra từ mỗi khí khổng"
+          }
+        },
+        {
+          "text": "the oxygen given off by the leaves",
+          "vi": {
+            "text": "lượng oxygen do lá thải ra"
+          }
+        },
+        {
+          "text": "the sugar carried in the phloem",
+          "vi": {
+            "text": "lượng đường vận chuyển trong mạch rây"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-factors",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["factors", "stomata"],
+      "stem": "About what changes the rate of transpiration: decide whether each statement is true or false.",
+      "explain": "Light opens the stomata and moving air thins the still layer: both speed transpiration up. Humid air lowers the vapour-pressure deficit, so it slows transpiration. In the dark the stomata are nearly closed.",
+      "vi": {
+        "stem": "Về các yếu tố làm thay đổi tốc độ thoát hơi nước, mỗi nhận định sau đúng hay sai?",
+        "explain": "Ánh sáng làm khí khổng mở và gió làm mỏng lớp không khí tĩnh: cả hai đều làm tăng thoát hơi nước. Không khí ẩm làm giảm độ thiếu hụt hơi nước nên làm chậm thoát hơi nước. Trong tối khí khổng gần như đóng."
+      },
+      "statements": [
+        {
+          "text": "Light opens the stomata.",
+          "vi": {
+            "text": "Ánh sáng làm khí khổng mở."
+          },
+          "true": true
+        },
+        {
+          "text": "Moving air speeds transpiration up.",
+          "vi": {
+            "text": "Gió làm tăng tốc độ thoát hơi nước."
+          },
+          "true": true
+        },
+        {
+          "text": "Humid air speeds transpiration up.",
+          "vi": {
+            "text": "Không khí ẩm làm tăng tốc độ thoát hơi nước."
+          },
+          "true": false
+        },
+        {
+          "text": "In the dark the stomata are nearly closed.",
+          "vi": {
+            "text": "Trong tối, khí khổng gần như đóng."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "humid-slower",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["factors"],
+      "stem": "At the same temperature, raising the humidity from 50 % to 90 % slows transpiration because…",
+      "explain": "The deficit D = e_s(1 − RH) falls from half of e_s to a tenth: less difference in vapour between the leaf and the air drives the water out.",
+      "vi": {
+        "stem": "Ở cùng nhiệt độ, tăng độ ẩm không khí từ 50 % lên 90 % làm thoát hơi nước chậm lại vì…",
+        "explain": "Độ thiếu hụt hơi nước D = e_s(1 − RH) giảm từ một nửa e_s xuống một phần mười: chênh lệch hơi nước giữa lá và không khí nhỏ hơn nên lực đẩy hơi nước ra ngoài yếu hơn."
+      },
+      "options": [
+        {
+          "text": "the vapour-pressure deficit between leaf and air falls",
+          "vi": {
+            "text": "độ thiếu hụt hơi nước giữa lá và không khí giảm"
+          },
+          "correct": true
+        },
+        {
+          "text": "the stomata are opened wider",
+          "vi": {
+            "text": "khí khổng mở rộng hơn"
+          }
+        },
+        {
+          "text": "the boundary layer becomes thinner",
+          "vi": {
+            "text": "lớp không khí tĩnh quanh lá mỏng hơn"
+          }
+        },
+        {
+          "text": "the leaf takes water vapour back from the air",
+          "vi": {
+            "text": "lá hấp thụ ngược hơi nước từ không khí"
+          }
+        }
+      ]
+    },
+    {
+      "id": "fan-on",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["conductance", "factors"],
+      "stem": "In still air a thick layer of moist air lies over the leaf. Turning the fan on…",
+      "explain": "Moving air thins the boundary layer, raising its conductance g_b; with g_s unchanged the total g rises, and so does E = g·D/P.",
+      "vi": {
+        "stem": "Khi lặng gió, một lớp không khí ẩm dày bao quanh lá. Bật quạt sẽ…",
+        "explain": "Gió làm mỏng lớp không khí tĩnh, tăng độ dẫn g_b; với g_s không đổi, độ dẫn tổng g tăng nên E = g·D/P cũng tăng."
+      },
+      "options": [
+        {
+          "text": "thins that layer, raising g_b and the rate",
+          "vi": {
+            "text": "làm mỏng lớp đó, tăng g_b và tốc độ thoát hơi nước"
+          },
+          "correct": true
+        },
+        {
+          "text": "closes the stomata, lowering the rate",
+          "vi": {
+            "text": "làm khí khổng đóng lại, giảm tốc độ thoát hơi nước"
+          }
+        },
+        {
+          "text": "raises the humidity round the leaf",
+          "vi": {
+            "text": "làm tăng độ ẩm quanh lá"
+          }
+        },
+        {
+          "text": "changes nothing, as only light matters",
+          "vi": {
+            "text": "không thay đổi gì, vì chỉ có ánh sáng ảnh hưởng"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-setup",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["potometer", "conductance"],
+      "stem": "About the potometer and the model: decide whether each statement is true or false.",
+      "explain": "The shoot draws water in along the capillary, so the bubble moves towards it. The stem is cut and fitted under water so no air blocks its xylem. A real shoot keeps about 1 % of the water for growth and photosynthesis. Vapour passes the stomata and the still layer in series, so the narrower one limits it most.",
+      "vi": {
+        "stem": "Về dụng cụ đo và mô hình, mỗi nhận định sau đúng hay sai?",
+        "explain": "Cành hút nước qua ống mao quản nên bọt khí di chuyển về phía cành. Thân được cắt và lắp trong nước để không khí không làm tắc mạch gỗ. Cành thật giữ lại khoảng 1 % lượng nước cho sinh trưởng và quang hợp. Hơi nước đi qua khí khổng và lớp không khí tĩnh nối tiếp nhau, nên lớp nào hẹp hơn sẽ giới hạn nhiều nhất."
+      },
+      "statements": [
+        {
+          "text": "The air bubble moves towards the shoot as the shoot draws water up.",
+          "vi": {
+            "text": "Bọt khí di chuyển về phía cành khi cành hút nước lên."
+          },
+          "true": true
+        },
+        {
+          "text": "The shoot is cut and fitted under water, so that no air blocks its xylem.",
+          "vi": {
+            "text": "Cành được cắt và lắp vào dụng cụ trong nước để không khí không làm tắc mạch gỗ."
+          },
+          "true": true
+        },
+        {
+          "text": "The shoot keeps none of the water it takes up: all of it is lost as vapour.",
+          "vi": {
+            "text": "Cành không giữ lại chút nước nào: toàn bộ nước hút vào đều thoát ra dưới dạng hơi."
+          },
+          "true": false
+        },
+        {
+          "text": "Water vapour passes the stomata and the still air layer in series, so the narrower of the two limits it most.",
+          "vi": {
+            "text": "Hơi nước đi qua khí khổng và lớp không khí tĩnh nối tiếp nhau, nên lớp nào hẹp hơn sẽ giới hạn nhiều nhất."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "uptake-from-distance",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["potometer"],
+      "stem": "In {duration} s the bubble moves {@distance|3} m along a capillary of bore diameter {boreDiameter} m. What volume of water has the shoot taken up?",
+      "explain": "V = π(d/2)²·x = π·({=boreDiameter/2})²·{@distance|3} ≈ {=pi*(boreDiameter/2)^2*@distance|3} m³ = {@uptake|3} mL (1 m³ = 10⁶ mL). Using d instead of d/2 gives four times too much.",
+      "vi": {
+        "stem": "Trong {duration} s, bọt khí di chuyển {@distance|3} m dọc ống mao quản có đường kính trong {boreDiameter} m. Cành đã hút vào bao nhiêu mL nước?",
+        "explain": "V = π(d/2)²·x = π·({=boreDiameter/2})²·{@distance|3} ≈ {=pi*(boreDiameter/2)^2*@distance|3} m³ = {@uptake|3} mL (1 m³ = 10⁶ mL). Dùng d thay cho d/2 sẽ ra gấp bốn lần."
+      },
+      "options": [
+        {
+          "text": "{@uptake|3} mL",
+          "vi": {
+            "text": "{@uptake|3} mL"
+          },
+          "correct": true,
+          "check": {
+            "expr": "pi*(boreDiameter/2)^2*@distance*1e6",
+            "equals": "uptake"
+          }
+        },
+        {
+          "text": "{=pi*boreDiameter^2*@distance*1e6|3} mL",
+          "vi": {
+            "text": "{=pi*boreDiameter^2*@distance*1e6|3} mL"
+          },
+          "check": {
+            "expr": "pi*boreDiameter^2*@distance*1e6",
+            "equals": "uptake"
+          }
+        },
+        {
+          "text": "{=pi*(boreDiameter/2)^2*@distance|3} mL",
+          "vi": {
+            "text": "{=pi*(boreDiameter/2)^2*@distance|3} mL"
+          },
+          "check": {
+            "expr": "pi*(boreDiameter/2)^2*@distance",
+            "equals": "uptake"
+          }
+        },
+        {
+          "text": "{=pi*boreDiameter*@distance*1e6|3} mL",
+          "vi": {
+            "text": "{=pi*boreDiameter*@distance*1e6|3} mL"
+          },
+          "check": {
+            "expr": "pi*boreDiameter*@distance*1e6",
+            "equals": "uptake"
+          }
+        }
+      ]
+    },
+    {
+      "id": "deficit-30",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["factors"],
+      "set": {
+        "humidity": 30,
+        "airSpeed": 1
+      },
+      "stem": "Saturated air at {temperature} °C has a vapour pressure e_s = {=0.61121*exp(17.502*temperature/(temperature+240.97))|4} kPa. The room is at {humidity}% relative humidity. What is the vapour-pressure deficit D = e_s·(1 − RH/100)?",
+      "explain": "D = {=0.61121*exp(17.502*temperature/(temperature+240.97))|4}·(1 − {=humidity/100}) ≈ {@vapourDeficit|3} kPa: the room lacks this much vapour compared with the leaf’s saturated air.",
+      "vi": {
+        "stem": "Không khí bão hòa ở {temperature} °C có áp suất hơi e_s = {=0.61121*exp(17.502*temperature/(temperature+240.97))|4} kPa. Độ ẩm tương đối trong phòng là {humidity}%. Độ thiếu hụt áp suất hơi D = e_s·(1 − RH/100) bằng bao nhiêu?",
+        "explain": "D = {=0.61121*exp(17.502*temperature/(temperature+240.97))|4}·(1 − {=humidity/100}) ≈ {@vapourDeficit|3} kPa: không khí trong phòng thiếu chừng ấy hơi nước so với không khí bão hòa trong lá."
+      },
+      "options": [
+        {
+          "text": "{@vapourDeficit|3} kPa",
+          "vi": {
+            "text": "{@vapourDeficit|3} kPa"
+          },
+          "correct": true,
+          "check": {
+            "expr": "0.61121*exp(17.502*temperature/(temperature+240.97))*(100-humidity)/100",
+            "equals": "vapourDeficit"
+          }
+        },
+        {
+          "text": "{=0.61121*exp(17.502*temperature/(temperature+240.97))*humidity/100|3} kPa",
+          "vi": {
+            "text": "{=0.61121*exp(17.502*temperature/(temperature+240.97))*humidity/100|3} kPa"
+          },
+          "check": {
+            "expr": "0.61121*exp(17.502*temperature/(temperature+240.97))*humidity/100",
+            "equals": "vapourDeficit"
+          }
+        },
+        {
+          "text": "{=0.61121*exp(17.502*temperature/(temperature+240.97))|3} kPa",
+          "vi": {
+            "text": "{=0.61121*exp(17.502*temperature/(temperature+240.97))|3} kPa"
+          },
+          "check": {
+            "expr": "0.61121*exp(17.502*temperature/(temperature+240.97))",
+            "equals": "vapourDeficit"
+          }
+        },
+        {
+          "text": "{=(100-humidity)/100/(0.61121*exp(17.502*temperature/(temperature+240.97)))|3} kPa",
+          "vi": {
+            "text": "{=(100-humidity)/100/(0.61121*exp(17.502*temperature/(temperature+240.97)))|3} kPa"
+          },
+          "check": {
+            "expr": "(100-humidity)/100/(0.61121*exp(17.502*temperature/(temperature+240.97)))",
+            "equals": "vapourDeficit"
+          }
+        }
+      ]
+    },
+    {
+      "id": "series-g",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["conductance"],
+      "set": {
+        "illuminance": 20000,
+        "airSpeed": 0.1
+      },
+      "stem": "At {illuminance} lux in still air ({airSpeed} m/s), the stomatal conductance is g_s = {@stomatalConductance|3} and the boundary-layer conductance g_b = {@boundaryConductance|3} mol/(m²·s) (model values). What is the total conductance g, with 1/g = 1/g_s + 1/g_b?",
+      "explain": "In series: g = g_s·g_b/(g_s + g_b) ≈ {@conductance|3} mol/(m²·s), smaller than either.",
+      "vi": {
+        "stem": "Ở {illuminance} lux, lặng gió ({airSpeed} m/s), độ dẫn khí khổng là g_s = {@stomatalConductance|3} và độ dẫn lớp không khí tĩnh g_b = {@boundaryConductance|3} mol/(m²·s) (giá trị mô hình). Độ dẫn tổng g bằng bao nhiêu, biết 1/g = 1/g_s + 1/g_b?",
+        "explain": "Mắc nối tiếp: g = g_s·g_b/(g_s + g_b) ≈ {@conductance|3} mol/(m²·s), nhỏ hơn cả hai."
+      },
+      "options": [
+        {
+          "text": "{@conductance|3} mol/(m²·s)",
+          "vi": {
+            "text": "{@conductance|3} mol/(m²·s)"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@stomatalConductance*@boundaryConductance/(@stomatalConductance+@boundaryConductance)",
+            "equals": "conductance"
+          }
+        },
+        {
+          "text": "{=@stomatalConductance+@boundaryConductance|3} mol/(m²·s)",
+          "vi": {
+            "text": "{=@stomatalConductance+@boundaryConductance|3} mol/(m²·s)"
+          },
+          "check": {
+            "expr": "@stomatalConductance+@boundaryConductance",
+            "equals": "conductance"
+          }
+        },
+        {
+          "text": "{=(@stomatalConductance+@boundaryConductance)/2|3} mol/(m²·s)",
+          "vi": {
+            "text": "{=(@stomatalConductance+@boundaryConductance)/2|3} mol/(m²·s)"
+          },
+          "check": {
+            "expr": "(@stomatalConductance+@boundaryConductance)/2",
+            "equals": "conductance"
+          }
+        },
+        {
+          "text": "{=@stomatalConductance*@boundaryConductance|3} mol/(m²·s)",
+          "vi": {
+            "text": "{=@stomatalConductance*@boundaryConductance|3} mol/(m²·s)"
+          },
+          "check": {
+            "expr": "@stomatalConductance*@boundaryConductance",
+            "equals": "conductance"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-dry-windy",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["conductance", "factors"],
+      "set": {
+        "humidity": 30,
+        "airSpeed": 1
+      },
+      "stem": "A shoot at {illuminance} lux and {temperature} °C is in air at {humidity}% humidity with the fan at {airSpeed} m/s (air at 101.325 kPa; model values). Decide whether each statement is true or false.",
+      "explain": "D = e_s(1 − RH) ≈ {@vapourDeficit|3} kPa; g = g_s·g_b/(g_s + g_b) ≈ {@conductance|3} mol/(m²·s); E = 1000·g·D/P ≈ {@transpirationRate|3} mmol/(m²·s). With the fan off g_b falls, and so does E.",
+      "vi": {
+        "stem": "Một cành cây ở {illuminance} lux và {temperature} °C, trong không khí có độ ẩm {humidity}%, quạt thổi {airSpeed} m/s (áp suất không khí 101,325 kPa; giá trị mô hình). Mỗi nhận định sau đúng hay sai?",
+        "explain": "D = e_s(1 − RH) ≈ {@vapourDeficit|3} kPa; g = g_s·g_b/(g_s + g_b) ≈ {@conductance|3} mol/(m²·s); E = 1000·g·D/P ≈ {@transpirationRate|3} mmol/(m²·s). Khi tắt quạt, g_b giảm nên E cũng giảm."
+      },
+      "statements": [
+        {
+          "text": "The vapour-pressure deficit is about {@vapourDeficit|3} kPa.",
+          "vi": {
+            "text": "Độ thiếu hụt áp suất hơi khoảng {@vapourDeficit|3} kPa."
+          },
+          "true": true,
+          "check": {
+            "expr": "0.61121*exp(17.502*temperature/(temperature+240.97))*(100-humidity)/100",
+            "equals": "vapourDeficit"
+          }
+        },
+        {
+          "text": "The total conductance is about {@conductance|3} mol/(m²·s).",
+          "vi": {
+            "text": "Độ dẫn tổng khoảng {@conductance|3} mol/(m²·s)."
+          },
+          "true": true,
+          "check": {
+            "expr": "@stomatalConductance*@boundaryConductance/(@stomatalConductance+@boundaryConductance)",
+            "equals": "conductance"
+          }
+        },
+        {
+          "text": "The rate of transpiration is about {@transpirationRate|3} mmol/(m²·s).",
+          "vi": {
+            "text": "Tốc độ thoát hơi nước khoảng {@transpirationRate|3} mmol/(m²·s)."
+          },
+          "true": true,
+          "check": {
+            "expr": "1000*@conductance*@vapourDeficit/101.325",
+            "equals": "transpirationRate"
+          }
+        },
+        {
+          "text": "With the fan off, the rate would be higher.",
+          "vi": {
+            "text": "Nếu tắt quạt, tốc độ thoát hơi nước sẽ cao hơn."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "water-lost",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["conductance", "potometer"],
+      "stem": "A shoot with a leaf area of {leafArea} m² transpires at E = {@transpirationRate|3} mmol/(m²·s) for {duration} s. Water is 18.015 g/mol, density 0.9982 g/mL. What volume of water does it lose?",
+      "explain": "n = E·A·t = {@transpirationRate|3}·10⁻³·{leafArea}·{duration} ≈ {=@transpirationRate/1000*leafArea*duration|3} mol; m = n·18.015 g; V = m/0.9982 ≈ {@uptake|3} mL — what the potometer reads, as uptake equals loss.",
+      "vi": {
+        "stem": "Một cành có diện tích lá {leafArea} m² thoát hơi nước với E = {@transpirationRate|3} mmol/(m²·s) trong {duration} s. Nước có M = 18,015 g/mol, khối lượng riêng 0,9982 g/mL. Cành mất bao nhiêu mL nước?",
+        "explain": "n = E·A·t = {@transpirationRate|3}·10⁻³·{leafArea}·{duration} ≈ {=@transpirationRate/1000*leafArea*duration|3} mol; m = n·18,015 g; V = m/0,9982 ≈ {@uptake|3} mL — đúng bằng số đo của dụng cụ, vì lượng nước hút vào bằng lượng nước mất đi."
+      },
+      "options": [
+        {
+          "text": "{@uptake|3} mL",
+          "vi": {
+            "text": "{@uptake|3} mL"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@transpirationRate/1000*leafArea*duration*18.015/0.9982",
+            "equals": "uptake"
+          }
+        },
+        {
+          "text": "{=@transpirationRate*leafArea*duration*18.015/0.9982|3} mL",
+          "vi": {
+            "text": "{=@transpirationRate*leafArea*duration*18.015/0.9982|3} mL"
+          },
+          "check": {
+            "expr": "@transpirationRate*leafArea*duration*18.015/0.9982",
+            "equals": "uptake"
+          }
+        },
+        {
+          "text": "{=@transpirationRate/1000*leafArea*18.015/0.9982|3} mL",
+          "vi": {
+            "text": "{=@transpirationRate/1000*leafArea*18.015/0.9982|3} mL"
+          },
+          "check": {
+            "expr": "@transpirationRate/1000*leafArea*18.015/0.9982",
+            "equals": "uptake"
+          }
+        },
+        {
+          "text": "{=@transpirationRate/1000*leafArea*duration|3} mL",
+          "vi": {
+            "text": "{=@transpirationRate/1000*leafArea*duration|3} mL"
+          },
+          "check": {
+            "expr": "@transpirationRate/1000*leafArea*duration",
+            "equals": "uptake"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-dark",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["stomata", "conductance", "factors"],
+      "set": {
+        "illuminance": 0
+      },
+      "stem": "The shoot is in the dark (0 lux) in still air ({airSpeed} m/s) at {humidity}% humidity. In the model g_s = 0.01 + 0.29·I/(I + 5000) mol/(m²·s) (illustrative). Decide whether each statement is true or false.",
+      "explain": "In the dark g_s = {@stomatalConductance} mol/(m²·s), far below g_b = {@boundaryConductance|3}: the stomata make up {@stomatalShare|3}% of the resistance, so they limit the rate and the fan would hardly help. The bubble moves only {@distance|2} m in 5 minutes.",
+      "vi": {
+        "stem": "Cành cây ở trong tối (0 lux), lặng gió ({airSpeed} m/s), độ ẩm {humidity}%. Trong mô hình g_s = 0,01 + 0,29·I/(I + 5000) mol/(m²·s) (giá trị minh họa). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Trong tối g_s = {@stomatalConductance} mol/(m²·s), nhỏ hơn nhiều so với g_b = {@boundaryConductance|3}: khí khổng chiếm {@stomatalShare|3}% tổng trở kháng, nên khí khổng giới hạn tốc độ và bật quạt hầu như không có tác dụng. Bọt khí chỉ di chuyển {@distance|2} m trong 5 phút."
+      },
+      "statements": [
+        {
+          "text": "The stomatal conductance is only {@stomatalConductance} mol/(m²·s).",
+          "vi": {
+            "text": "Độ dẫn khí khổng chỉ còn {@stomatalConductance} mol/(m²·s)."
+          },
+          "true": true,
+          "check": {
+            "expr": "0.01+0.29*illuminance/(illuminance+5000)",
+            "equals": "stomatalConductance"
+          }
+        },
+        {
+          "text": "The stomata make up about {@stomatalShare|3}% of the resistance to water vapour, so they limit the rate.",
+          "vi": {
+            "text": "Khí khổng chiếm khoảng {@stomatalShare|3}% tổng trở kháng đối với hơi nước, nên khí khổng giới hạn tốc độ."
+          },
+          "true": true,
+          "check": {
+            "expr": "100*@boundaryConductance/(@stomatalConductance+@boundaryConductance)",
+            "equals": "stomatalShare"
+          }
+        },
+        {
+          "text": "Turning the fan on in the dark would raise the rate several times.",
+          "vi": {
+            "text": "Bật quạt trong tối sẽ làm tốc độ thoát hơi nước tăng lên vài lần."
+          },
+          "true": false
+        },
+        {
+          "text": "In 5 minutes the bubble moves only about {@distance|2} m.",
+          "vi": {
+            "text": "Trong 5 phút, bọt khí chỉ di chuyển khoảng {@distance|2} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "@uptake*1e-6/(pi*(boreDiameter/2)^2)",
+            "equals": "distance"
+          }
+        }
+      ]
+    },
+    {
+      "id": "guard-cells",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["stomata"],
+      "stem": "Each stoma is opened and closed by a pair of…",
+      "explain": "Two guard cells surround each stoma: as they take up water and swell they bend apart and open it; as they lose water they close it.",
+      "vi": {
+        "stem": "Mỗi khí khổng được đóng, mở nhờ một đôi…",
+        "explain": "Hai tế bào hạt đậu bao quanh mỗi khí khổng: khi chúng hút nước và trương lên thì cong ra làm khí khổng mở; khi mất nước thì khí khổng đóng lại."
+      },
+      "options": [
+        {
+          "text": "guard cells",
+          "vi": {
+            "text": "tế bào hạt đậu (tế bào bảo vệ)"
+          },
+          "correct": true
+        },
+        {
+          "text": "xylem vessels",
+          "vi": {
+            "text": "mạch gỗ"
+          }
+        },
+        {
+          "text": "root hair cells",
+          "vi": {
+            "text": "tế bào lông hút"
+          }
+        },
+        {
+          "text": "palisade cells",
+          "vi": {
+            "text": "tế bào mô giậu"
+          }
+        }
+      ]
+    },
+    {
+      "id": "why-light",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["stomata", "factors"],
+      "stem": "Why does a shoot transpire faster in bright light?",
+      "explain": "Light opens the stomata, which lets CO₂ in for photosynthesis; water vapour then escapes through the open pores. The light itself does not push water out.",
+      "vi": {
+        "stem": "Vì sao cành cây thoát hơi nước nhanh hơn khi có ánh sáng mạnh?",
+        "explain": "Ánh sáng làm khí khổng mở để CO₂ đi vào cho quang hợp; khi đó hơi nước thoát ra qua các lỗ khí đang mở. Bản thân ánh sáng không đẩy nước ra ngoài."
+      },
+      "options": [
+        {
+          "text": "Light opens the stomata, which lets CO₂ in and water vapour out",
+          "vi": {
+            "text": "Ánh sáng làm khí khổng mở, cho CO₂ đi vào và hơi nước đi ra"
+          },
+          "correct": true
+        },
+        {
+          "text": "Light makes the air more humid around the leaf",
+          "vi": {
+            "text": "Ánh sáng làm không khí quanh lá ẩm hơn"
+          }
+        },
+        {
+          "text": "Light closes the stomata, so water is forced out through the cuticle",
+          "vi": {
+            "text": "Ánh sáng làm khí khổng đóng, nên nước bị ép ra qua lớp cutin"
+          }
+        },
+        {
+          "text": "Light makes the xylem pump water upwards",
+          "vi": {
+            "text": "Ánh sáng làm mạch gỗ bơm nước lên trên"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-roles",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["potometer", "stomata"],
+      "stem": "About transpiration and the potometer: decide whether each statement is true or false.",
+      "explain": "Water evaporating from the leaves pulls a continuous column of water up the xylem (cohesion–tension); this is passive, with no ATP used to lift it. Evaporation also cools the leaf. A potometer measures the water taken up, which is close to the water lost (about 1 % is kept).",
+      "vi": {
+        "stem": "Về thoát hơi nước và dụng cụ đo (potometer), mỗi nhận định sau đúng hay sai?",
+        "explain": "Nước bốc hơi ở lá kéo cột nước liên tục đi lên trong mạch gỗ (lực liên kết – sức căng); đây là quá trình thụ động, không dùng ATP để đưa nước lên. Sự bốc hơi còn làm lá mát đi. Potometer đo lượng nước được hút vào, gần bằng lượng nước mất đi (khoảng 1 % được giữ lại)."
+      },
+      "statements": [
+        {
+          "text": "Transpiration pulls water up the xylem from the roots.",
+          "vi": {
+            "text": "Thoát hơi nước kéo nước từ rễ đi lên trong mạch gỗ."
+          },
+          "true": true
+        },
+        {
+          "text": "Transpiration helps to cool the leaf.",
+          "vi": {
+            "text": "Thoát hơi nước giúp làm mát lá."
+          },
+          "true": true
+        },
+        {
+          "text": "The potometer measures water taken up, which is close to the water lost.",
+          "vi": {
+            "text": "Potometer đo lượng nước được hút vào, gần bằng lượng nước mất đi."
+          },
+          "true": true
+        },
+        {
+          "text": "The xylem moves water upwards by active transport, using ATP.",
+          "vi": {
+            "text": "Mạch gỗ vận chuyển nước lên trên bằng vận chuyển chủ động, dùng ATP."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "gs-half-light",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["stomata", "conductance"],
+      "set": {
+        "illuminance": 5000
+      },
+      "stem": "In this simulation the stomatal conductance is g_s = 0.01 + 0.29·I/(I + 5000) mol/(m²·s) (illustrative). What is g_s at {illuminance} lux?",
+      "explain": "g_s = 0.01 + 0.29·{illuminance}/({illuminance} + 5000) = 0.01 + 0.29·{=illuminance/(illuminance+5000)} = {@stomatalConductance|3} mol/(m²·s). The 0.01 is the dark value through the cuticle and closed stomata.",
+      "vi": {
+        "stem": "Trong mô phỏng này, độ dẫn khí khổng là g_s = 0,01 + 0,29·I/(I + 5000) mol/(m²·s) (giá trị minh họa). g_s ở {illuminance} lux bằng bao nhiêu?",
+        "explain": "g_s = 0,01 + 0,29·{illuminance}/({illuminance} + 5000) = 0,01 + 0,29·{=illuminance/(illuminance+5000)} = {@stomatalConductance|3} mol/(m²·s). Số hạng 0,01 là giá trị trong tối, qua lớp cutin và khí khổng đóng."
+      },
+      "options": [
+        {
+          "text": "{@stomatalConductance|3} mol/(m²·s)",
+          "vi": {
+            "text": "{@stomatalConductance|3} mol/(m²·s)"
+          },
+          "correct": true,
+          "check": {
+            "expr": "0.01+0.29*illuminance/(illuminance+5000)",
+            "equals": "stomatalConductance"
+          }
+        },
+        {
+          "text": "{=0.29*illuminance/(illuminance+5000)|3} mol/(m²·s)",
+          "vi": {
+            "text": "{=0.29*illuminance/(illuminance+5000)|3} mol/(m²·s)"
+          },
+          "check": {
+            "expr": "0.29*illuminance/(illuminance+5000)",
+            "equals": "stomatalConductance"
+          }
+        },
+        {
+          "text": "{=0.01+0.29|3} mol/(m²·s)",
+          "vi": {
+            "text": "{=0.01+0.29|3} mol/(m²·s)"
+          },
+          "check": {
+            "expr": "0.01+0.29",
+            "equals": "stomatalConductance"
+          }
+        },
+        {
+          "text": "{=0.3*illuminance/(illuminance+5000)|3} mol/(m²·s)",
+          "vi": {
+            "text": "{=0.3*illuminance/(illuminance+5000)|3} mol/(m²·s)"
+          },
+          "check": {
+            "expr": "0.3*illuminance/(illuminance+5000)",
+            "equals": "stomatalConductance"
+          }
+        }
+      ]
+    },
+    {
+      "id": "rate-from-g",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["conductance", "factors"],
+      "stem": "A leaf has a total conductance g = {@conductance|3} mol/(m²·s), and the air’s vapour-pressure deficit is D = {@vapourDeficit|3} kPa at P = 101.325 kPa. Using E = g·D/P, what is the transpiration rate in mmol/(m²·s)?",
+      "explain": "E = {@conductance|3}·{@vapourDeficit|3}/101.325 ≈ {=@conductance*@vapourDeficit/101.325|3} mol/(m²·s) = {@transpirationRate|3} mmol/(m²·s): ×1000 for mmol, and D divided by the air pressure.",
+      "vi": {
+        "stem": "Một lá có độ dẫn tổng g = {@conductance|3} mol/(m²·s), độ thiếu hụt áp suất hơi nước của không khí là D = {@vapourDeficit|3} kPa ở P = 101,325 kPa. Dùng E = g·D/P, tốc độ thoát hơi nước tính theo mmol/(m²·s) là bao nhiêu?",
+        "explain": "E = {@conductance|3}·{@vapourDeficit|3}/101,325 ≈ {=@conductance*@vapourDeficit/101.325|3} mol/(m²·s) = {@transpirationRate|3} mmol/(m²·s): nhân 1000 để đổi sang mmol, và D chia cho áp suất không khí."
+      },
+      "options": [
+        {
+          "text": "{=1000*@conductance*@vapourDeficit/101.325|3}",
+          "vi": {
+            "text": "{=1000*@conductance*@vapourDeficit/101.325|3}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "1000*@conductance*@vapourDeficit/101.325",
+            "equals": "transpirationRate"
+          }
+        },
+        {
+          "text": "{=@conductance*@vapourDeficit/101.325|3}",
+          "vi": {
+            "text": "{=@conductance*@vapourDeficit/101.325|3}"
+          },
+          "check": {
+            "expr": "@conductance*@vapourDeficit/101.325",
+            "equals": "transpirationRate"
+          }
+        },
+        {
+          "text": "{=1000*@conductance*@vapourDeficit|3}",
+          "vi": {
+            "text": "{=1000*@conductance*@vapourDeficit|3}"
+          },
+          "check": {
+            "expr": "1000*@conductance*@vapourDeficit",
+            "equals": "transpirationRate"
+          }
+        },
+        {
+          "text": "{=1000*@conductance*101.325/@vapourDeficit|4}",
+          "vi": {
+            "text": "{=1000*@conductance*101.325/@vapourDeficit|4}"
+          },
+          "check": {
+            "expr": "1000*@conductance*101.325/@vapourDeficit",
+            "equals": "transpirationRate"
+          }
+        }
+      ]
+    },
+    {
+      "id": "who-controls",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["conductance", "stomata"],
+      "set": {
+        "illuminance": 20000,
+        "airSpeed": 3
+      },
+      "stem": "In bright light ({illuminance} lux) with the fan at {airSpeed} m/s, g_s = {@stomatalConductance|3} and g_b = {@boundaryConductance|3} mol/(m²·s) (model values). The resistances 1/g_s and 1/g_b add up in series. What share of the total resistance lies in the stomata, and what then controls the rate?",
+      "explain": "Stomatal share = (1/g_s)/(1/g_s + 1/g_b) = g_b/(g_s + g_b) = {@boundaryConductance|3}/{=@stomatalConductance+@boundaryConductance|3} ≈ {@stomatalShare|2}%. Most of the resistance is in the stomata, so opening or closing them controls the rate; more wind adds little.",
+      "vi": {
+        "stem": "Trong ánh sáng mạnh ({illuminance} lux) với quạt ở {airSpeed} m/s, g_s = {@stomatalConductance|3} và g_b = {@boundaryConductance|3} mol/(m²·s) (giá trị của mô hình). Các điện trở 1/g_s và 1/g_b mắc nối tiếp nên cộng lại. Phần điện trở nằm ở khí khổng chiếm bao nhiêu phần trăm điện trở tổng, và khi đó yếu tố nào điều khiển tốc độ thoát hơi nước?",
+        "explain": "Phần của khí khổng = (1/g_s)/(1/g_s + 1/g_b) = g_b/(g_s + g_b) = {@boundaryConductance|3}/{=@stomatalConductance+@boundaryConductance|3} ≈ {@stomatalShare|2}%. Phần lớn điện trở nằm ở khí khổng, nên sự đóng mở khí khổng điều khiển tốc độ; gió mạnh hơn chỉ thêm được rất ít."
+      },
+      "options": [
+        {
+          "text": "About {@stomatalShare|2}%: the stomata control the rate",
+          "vi": {
+            "text": "Khoảng {@stomatalShare|2}%: khí khổng điều khiển tốc độ"
+          },
+          "correct": true,
+          "check": {
+            "expr": "100*@boundaryConductance/(@stomatalConductance+@boundaryConductance)",
+            "equals": "stomatalShare"
+          }
+        },
+        {
+          "text": "About {=100*@stomatalConductance/(@stomatalConductance+@boundaryConductance)|2}%: the boundary layer controls the rate",
+          "vi": {
+            "text": "Khoảng {=100*@stomatalConductance/(@stomatalConductance+@boundaryConductance)|2}%: lớp không khí sát lá điều khiển tốc độ"
+          },
+          "check": {
+            "expr": "100*@stomatalConductance/(@stomatalConductance+@boundaryConductance)",
+            "equals": "stomatalShare"
+          }
+        },
+        {
+          "text": "50%: two resistances in series always share equally",
+          "vi": {
+            "text": "50%: hai điện trở nối tiếp luôn chia đều"
+          },
+          "check": {
+            "expr": "50",
+            "equals": "stomatalShare"
+          }
+        },
+        {
+          "text": "About {=100*@stomatalConductance/@boundaryConductance|2}%: the boundary layer controls the rate",
+          "vi": {
+            "text": "Khoảng {=100*@stomatalConductance/@boundaryConductance|2}%: lớp không khí sát lá điều khiển tốc độ"
+          },
+          "check": {
+            "expr": "100*@stomatalConductance/@boundaryConductance",
+            "equals": "stomatalShare"
+          }
+        }
+      ]
+    },
+    {
+      "id": "time-to-fill-scale",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["potometer"],
+      "stem": "In {duration} s the bubble moves {@distance|3} m along the potometer’s {scaleLength} m scale. If the rate stays the same, how long after the start does the bubble reach the end of the scale?",
+      "explain": "Speed = {@distance|3}/{duration} m/s; time = {scaleLength} ÷ that = {scaleLength}·{duration}/{@distance|3} ≈ {=scaleLength*duration/@distance|3} s, about {=scaleLength*duration/@distance/60|2} minutes.",
+      "vi": {
+        "stem": "Trong {duration} s, bọt khí di chuyển {@distance|3} m dọc theo thước dài {scaleLength} m của potometer. Nếu tốc độ không đổi, sau bao lâu kể từ lúc bắt đầu thì bọt khí tới cuối thước?",
+        "explain": "Tốc độ = {@distance|3}/{duration} m/s; thời gian = {scaleLength} : tốc độ đó = {scaleLength}·{duration}/{@distance|3} ≈ {=scaleLength*duration/@distance|3} s, khoảng {=scaleLength*duration/@distance/60|2} phút."
+      },
+      "options": [
+        {
+          "text": "{=scaleLength*duration/@distance|3} s",
+          "vi": {
+            "text": "{=scaleLength*duration/@distance|3} s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "scaleLength*duration/(scaleLength*duration/@distance)",
+            "equals": "distance"
+          }
+        },
+        {
+          "text": "{=@distance*duration/scaleLength|3} s",
+          "vi": {
+            "text": "{=@distance*duration/scaleLength|3} s"
+          },
+          "check": {
+            "expr": "scaleLength*duration/(@distance*duration/scaleLength)",
+            "equals": "distance"
+          }
+        },
+        {
+          "text": "{=scaleLength/@distance|3} s",
+          "vi": {
+            "text": "{=scaleLength/@distance|3} s"
+          },
+          "check": {
+            "expr": "scaleLength*duration/(scaleLength/@distance)",
+            "equals": "distance"
+          }
+        },
+        {
+          "text": "{=(scaleLength-@distance)*duration/@distance|3} s",
+          "vi": {
+            "text": "{=(scaleLength-@distance)*duration/@distance|3} s"
+          },
+          "check": {
+            "expr": "scaleLength*duration/((scaleLength-@distance)*duration/@distance)",
+            "equals": "distance"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-humid-windy",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["factors", "conductance"],
+      "set": {
+        "illuminance": 10000,
+        "humidity": 90,
+        "airSpeed": 3
+      },
+      "stem": "A shoot at {illuminance} lux and {temperature} °C stands in very humid air ({humidity}%) with the fan at {airSpeed} m/s; g_s = {@stomatalConductance|3} and g_b = {@boundaryConductance|3} mol/(m²·s) (model values). Decide whether each statement is true or false.",
+      "explain": "D = e_s·(1 − {humidity}/100) ≈ {@vapourDeficit|3} kPa. Conductances in series: 1/g = 1/g_s + 1/g_b, g ≈ {@conductance|3} mol/(m²·s) — less than either, not their sum {=@stomatalConductance+@boundaryConductance|3}. E = 1000·g·D/P ≈ {@transpirationRate|3} mmol/(m²·s): the wind cannot make up for the small D. At 100 % humidity D = 0 and, in the model, transpiration stops.",
+      "vi": {
+        "stem": "Một cành cây ở {illuminance} lux và {temperature} °C đặt trong không khí rất ẩm ({humidity}%) với quạt ở {airSpeed} m/s; g_s = {@stomatalConductance|3} và g_b = {@boundaryConductance|3} mol/(m²·s) (giá trị của mô hình). Mỗi nhận định sau đúng hay sai?",
+        "explain": "D = e_s·(1 − {humidity}/100) ≈ {@vapourDeficit|3} kPa. Các độ dẫn mắc nối tiếp: 1/g = 1/g_s + 1/g_b, g ≈ {@conductance|3} mol/(m²·s) — nhỏ hơn từng độ dẫn, không phải tổng {=@stomatalConductance+@boundaryConductance|3}. E = 1000·g·D/P ≈ {@transpirationRate|3} mmol/(m²·s): gió không bù được D quá nhỏ. Ở độ ẩm 100 %, D = 0 và trong mô hình sự thoát hơi nước dừng lại."
+      },
+      "statements": [
+        {
+          "text": "The vapour-pressure deficit is about {@vapourDeficit|3} kPa.",
+          "vi": {
+            "text": "Độ thiếu hụt áp suất hơi nước khoảng {@vapourDeficit|3} kPa."
+          },
+          "true": true,
+          "check": {
+            "expr": "0.61121*exp(17.502*temperature/(temperature+240.97))*(100-humidity)/100",
+            "equals": "vapourDeficit"
+          }
+        },
+        {
+          "text": "The total conductance is g_s + g_b ≈ {=@stomatalConductance+@boundaryConductance|3} mol/(m²·s).",
+          "vi": {
+            "text": "Độ dẫn tổng bằng g_s + g_b ≈ {=@stomatalConductance+@boundaryConductance|3} mol/(m²·s)."
+          },
+          "true": false,
+          "check": {
+            "expr": "@stomatalConductance+@boundaryConductance",
+            "equals": "conductance"
+          }
+        },
+        {
+          "text": "The transpiration rate is about {@transpirationRate|3} mmol/(m²·s).",
+          "vi": {
+            "text": "Tốc độ thoát hơi nước khoảng {@transpirationRate|3} mmol/(m²·s)."
+          },
+          "true": true,
+          "check": {
+            "expr": "1000*@conductance*@vapourDeficit/101.325",
+            "equals": "transpirationRate"
+          }
+        },
+        {
+          "text": "In the model, at 100 % humidity transpiration would stop.",
+          "vi": {
+            "text": "Trong mô hình, ở độ ẩm 100 % sự thoát hơi nước sẽ dừng lại."
+          },
+          "true": true
+        }
+      ]
+    }
+  ]
+}

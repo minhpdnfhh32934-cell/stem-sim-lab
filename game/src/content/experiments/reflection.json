@@ -1,0 +1,595 @@
+{
+  "id": "reflection",
+  "name": "Reflection from a plane mirror",
+  "category": "physics",
+  "description": "A narrow ray from a ray box meets a plane mirror standing on the centre of a protractor disc. A run turns the ray box from the disc's 0° mark to the chosen angle θ, so the graphs trace the law of reflection: the reflected ray leaves on the other side of the mirror's normal, and the angle of reflection i′ equals the angle of incidence i. The mirror can be turned on its turntable by α, away from the ray box: the ray then meets it at i = θ + α, and the reflected ray moves by 2α on the disc — twice the mirror's turn, the principle of the optical lever.",
+  "vi": {
+    "name": "Phản xạ ánh sáng trên gương phẳng",
+    "description": "Một tia sáng hẹp từ đèn chiếu tới một gương phẳng đặt đứng tại tâm của đĩa chia độ. Mỗi lần chạy, đèn chiếu được xoay từ vạch 0° của đĩa đến góc θ đã chọn, nên các đồ thị vẽ ra định luật phản xạ ánh sáng: tia phản xạ đi ra ở phía bên kia pháp tuyến của gương, và góc phản xạ i′ bằng góc tới i. Gương có thể được xoay trên đế quay một góc α, ra xa đèn chiếu: khi đó tia sáng tới gương với góc tới i = θ + α, và tia phản xạ dịch đi 2α trên đĩa — gấp đôi góc quay của gương, đó là nguyên lý của đòn bẩy quang học.",
+    "note": "Đây là mô hình dạy học đơn giản hóa của quang hình học, không phải phép đo chính xác của phòng thí nghiệm. Gương được coi là gương phẳng lý tưởng tráng bạc ở mặt trước, mặt phản xạ đi qua tâm đĩa; tia sáng chiếu đúng vào tâm và không có bề rộng. Tia phản xạ được tính từ tia tới và pháp tuyến của gương theo định luật phản xạ viết dưới dạng véctơ, r = d − 2(d·n)n, rồi các góc được đo từ pháp tuyến như khi dùng thước đo góc: góc phản xạ i′ bằng góc tới i, tia phản xạ nằm ở phía bên kia pháp tuyến, và góc hợp bởi tia tới và tia phản xạ là i + i′ = 2i. Các góc trên đĩa được tính từ vạch 0°, là pháp tuyến của gương khi gương chưa xoay: đèn chiếu ở góc θ về một phía; pháp tuyến của gương (đã xoay một góc α) và tia phản xạ (ở góc φ) ở phía bên kia, nên i = θ + α và φ = θ + 2α. Giữ đèn chiếu đứng yên và xoay gương một góc α thì tia phản xạ quay đi 2α. Gương chỉ xoay ra xa đèn chiếu, và θ + α luôn nhỏ hơn 90°, để tia sáng luôn tới mặt trước của gương. Đèn chiếu xoay với tốc độ 10 °/s, chỉ để trình diễn: các góc chỉ phụ thuộc vào vị trí của đèn, không phụ thuộc tốc độ xoay. Không mô phỏng: lượng ánh sáng gương phản xạ (khoảng 90 % với gương nhôm) và độ sáng của các tia; tia phản xạ mờ thứ hai và độ dịch ngang nhỏ của tia ở gương tráng bạc mặt sau tấm kính (khoảng 1,5 mm ở góc tới 45° với kính dày 2 mm); bề rộng và độ loe của tia sáng. Kết quả mô phỏng không có sai số ngẫu nhiên; số đọc trên đĩa chia độ chỉ tính đến độ phân giải của nó."
+  },
+  "requiredEquipment": ["mirror-board"],
+  "model": "optics.reflection",
+  "parameters": [
+    {
+      "id": "rayAngle",
+      "label": "Ray box angle on the disc",
+      "vi": {
+        "label": "Góc của đèn chiếu trên đĩa"
+      },
+      "symbol": "θ",
+      "unit": "°",
+      "default": 30,
+      "min": 0,
+      "max": 60,
+      "step": 15,
+      "presets": [
+        {
+          "label": "15°",
+          "value": 15
+        },
+        {
+          "label": "30°",
+          "value": 30
+        },
+        {
+          "label": "45°",
+          "value": 45
+        },
+        {
+          "label": "60°",
+          "value": 60
+        }
+      ]
+    },
+    {
+      "id": "mirrorTurn",
+      "label": "Mirror turn",
+      "vi": {
+        "label": "Góc quay của gương"
+      },
+      "symbol": "α",
+      "unit": "°",
+      "default": 0,
+      "min": 0,
+      "max": 15,
+      "step": 5,
+      "presets": [
+        {
+          "label": "0° (square)",
+          "vi": {
+            "label": "0° (chưa xoay)"
+          },
+          "value": 0
+        },
+        {
+          "label": "5°",
+          "value": 5
+        },
+        {
+          "label": "10°",
+          "value": 10
+        },
+        {
+          "label": "15°",
+          "value": 15
+        }
+      ]
+    },
+    {
+      "id": "resolution",
+      "label": "Reading resolution",
+      "vi": {
+        "label": "Độ phân giải khi đọc góc"
+      },
+      "symbol": "d",
+      "unit": "°",
+      "default": 1,
+      "min": 0.5,
+      "max": 5,
+      "step": 0.5,
+      "presets": [
+        {
+          "label": "0.5°",
+          "value": 0.5
+        },
+        {
+          "label": "1°",
+          "value": 1
+        },
+        {
+          "label": "2°",
+          "value": 2
+        },
+        {
+          "label": "5°",
+          "value": 5
+        }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "sweepRate": 10
+  },
+  "inputs": {
+    "sweepRate": {
+      "symbol": "ω",
+      "unit": "°/s",
+      "desk": false
+    }
+  },
+  "simulation": {
+    "timeStep": 0.01,
+    "maxDuration": 10,
+    "sampleInterval": 0.05
+  },
+  "measurements": [
+    {
+      "id": "incidence",
+      "label": "Angle of incidence",
+      "vi": {
+        "label": "Góc tới"
+      },
+      "symbol": "i",
+      "unit": "°",
+      "variable": "incidenceDeg"
+    },
+    {
+      "id": "reflection",
+      "label": "Angle of reflection",
+      "vi": {
+        "label": "Góc phản xạ"
+      },
+      "symbol": "i′",
+      "unit": "°",
+      "variable": "reflectionDeg"
+    },
+    {
+      "id": "ray-box",
+      "label": "Ray box on the disc",
+      "vi": {
+        "label": "Vị trí đèn chiếu trên đĩa"
+      },
+      "symbol": "θ",
+      "unit": "°",
+      "variable": "rayBoxDeg"
+    },
+    {
+      "id": "reflected",
+      "label": "Reflected ray on the disc",
+      "vi": {
+        "label": "Vị trí tia phản xạ trên đĩa"
+      },
+      "symbol": "φ",
+      "unit": "°",
+      "variable": "reflectedDeg"
+    },
+    {
+      "id": "between",
+      "label": "Angle between the incident and reflected rays",
+      "vi": {
+        "label": "Góc hợp bởi tia tới và tia phản xạ"
+      },
+      "symbol": "i + i′",
+      "unit": "°",
+      "variable": "betweenDeg"
+    }
+  ],
+  "results": [
+    {
+      "id": "incidence",
+      "label": "Angle of incidence i",
+      "vi": {
+        "label": "Góc tới i"
+      },
+      "symbol": "i",
+      "unit": "°",
+      "variable": "incidenceDeg",
+      "reduce": "final",
+      "theory": "incidenceDeg"
+    },
+    {
+      "id": "reflection",
+      "label": "Angle of reflection i′",
+      "vi": {
+        "label": "Góc phản xạ i′"
+      },
+      "symbol": "i′",
+      "unit": "°",
+      "variable": "reflectionDeg",
+      "reduce": "final",
+      "theory": "reflectionDeg"
+    },
+    {
+      "id": "between",
+      "label": "Angle between the incident and reflected rays",
+      "vi": {
+        "label": "Góc hợp bởi tia tới và tia phản xạ"
+      },
+      "symbol": "i + i′",
+      "unit": "°",
+      "variable": "betweenDeg",
+      "reduce": "final",
+      "theory": "betweenDeg"
+    },
+    {
+      "id": "reflected",
+      "label": "Reflected ray on the disc φ",
+      "vi": {
+        "label": "Vị trí tia phản xạ trên đĩa φ"
+      },
+      "symbol": "φ",
+      "unit": "°",
+      "variable": "reflectedDeg",
+      "reduce": "final",
+      "theory": "reflectedDeg"
+    }
+  ],
+  "graphs": [
+    {
+      "id": "law",
+      "title": "Angle of reflection against angle of incidence",
+      "vi": {
+        "title": "Góc phản xạ theo góc tới"
+      },
+      "x": "incidence",
+      "y": ["reflection"],
+      "mark": "incidenceDeg"
+    },
+    {
+      "id": "disc",
+      "title": "Reflected ray against ray box, on the disc",
+      "vi": {
+        "title": "Vị trí tia phản xạ theo vị trí đèn chiếu, trên đĩa"
+      },
+      "x": "ray-box",
+      "y": ["reflected"]
+    }
+  ],
+  "monitor": "law",
+  "compare": [
+    {
+      "graph": "law"
+    },
+    {
+      "graph": "disc"
+    }
+  ],
+  "instruments": [
+    {
+      "result": "incidence",
+      "quantity": "Angle of incidence i",
+      "name": "Protractor disc",
+      "resolution": "resolution",
+      "excludes": "lining the ray and the mirror's normal mark up with the scale by eye, the width of the ray, and how well the mirror's face sits over the disc's centre",
+      "vi": {
+        "quantity": "Góc tới i",
+        "name": "Đĩa chia độ",
+        "excludes": "việc dóng tia sáng và vạch pháp tuyến của gương với vạch chia bằng mắt, bề rộng của tia sáng, và độ chính xác khi đặt mặt gương đi qua tâm đĩa"
+      }
+    },
+    {
+      "result": "reflection",
+      "quantity": "Angle of reflection i′",
+      "name": "Protractor disc",
+      "resolution": "resolution",
+      "excludes": "lining the ray and the mirror's normal mark up with the scale by eye, the width and spreading of the ray, and how well the mirror's face sits over the disc's centre",
+      "vi": {
+        "quantity": "Góc phản xạ i′",
+        "name": "Đĩa chia độ",
+        "excludes": "việc dóng tia sáng và vạch pháp tuyến của gương với vạch chia bằng mắt, bề rộng và độ loe của tia sáng, và độ chính xác khi đặt mặt gương đi qua tâm đĩa"
+      }
+    },
+    {
+      "result": "reflected",
+      "quantity": "Reflected ray on the disc φ",
+      "name": "Protractor disc",
+      "resolution": "resolution",
+      "excludes": "lining the ray up with the scale by eye, the width and spreading of the ray, and how well the mirror's face sits over the disc's centre",
+      "vi": {
+        "quantity": "Vị trí tia phản xạ trên đĩa φ",
+        "name": "Đĩa chia độ",
+        "excludes": "việc dóng tia sáng với vạch chia bằng mắt, bề rộng và độ loe của tia sáng, và độ chính xác khi đặt mặt gương đi qua tâm đĩa"
+      }
+    }
+  ],
+  "note": "A simplified teaching model of geometrical optics, not a lab-grade measurement. The mirror is an ideal plane front-surface mirror whose reflecting face passes through the disc's centre; the ray is aimed at the centre and has no width. The reflected ray is computed from the incident ray and the mirror's normal by the law of reflection in vector form, r = d − 2(d·n)n, and its angles are then measured from the normal as a protractor would: the angle of reflection i′ equals the angle of incidence i, the reflected ray lies on the other side of the normal, and the angle between the incident and reflected rays is i + i′ = 2i. Angles on the disc are counted from its 0° line, the mirror's normal when it is square: the ray box at θ on one side; the mirror's normal (turned by α) and the reflected ray (at φ) on the other, so i = θ + α and φ = θ + 2α. With the ray box fixed, turning the mirror by α turns the reflected ray by 2α. The mirror turns away from the ray box only, and θ + α stays below 90°, so the ray always meets the mirror's front. The ray box turns at 10 °/s, a presentation pace: the angles depend only on where it stands, not on how fast it turns. Not modelled: how much light the mirror reflects (about 90 % for an aluminium mirror) and the brightness of the rays; the faint second reflection and the small sideways shift of a mirror silvered on the back of its glass (about 1.5 mm at 45° for 2 mm glass); the ray's width and spread. The simulated results carry no random error; a protractor reading accounts only for its resolution.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the reflection instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn thí nghiệm phản xạ ánh sáng trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "reflection-instructions"
+      }
+    },
+    {
+      "id": "angle",
+      "instruction": "With the mirror square (α = 0°), set the ray box angle θ with its dial on the control desk.",
+      "vi": {
+        "instruction": "Khi gương chưa xoay (α = 0°), đặt góc θ của đèn chiếu bằng núm xoay trên bàn điều khiển."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "rayAngle"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the ray box turns from 0° to θ. Watch the reflected ray turn the other way.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: đèn chiếu xoay từ 0° đến θ. Quan sát tia phản xạ quay theo chiều ngược lại."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Read i and i′ on the results monitor: is the angle of reflection equal to the angle of incidence?",
+      "vi": {
+        "instruction": "Đọc i và i′ trên màn hình kết quả: góc phản xạ có bằng góc tới không?"
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "mirror",
+      "instruction": "Keep θ, turn the mirror by α and run again: the reflected ray moves by 2α on the disc.",
+      "vi": {
+        "instruction": "Giữ nguyên θ, xoay gương một góc α rồi chạy lại: tia phản xạ dịch đi 2α trên đĩa."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "mirrorTurn"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, change θ or α, and run again.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, thay đổi θ hoặc α, rồi chạy lại."
+      },
+      "done": {
+        "kind": "reset"
+      }
+    }
+  ],
+  "analyses": [
+    {
+      "id": "law",
+      "title": "Angle of reflection against angle of incidence (law of reflection)",
+      "note": "For every ray the angle of reflection equals the angle of incidence, whatever the angle: so the runs lie on one straight line through the origin, of slope 1. Runs with the same mirror turn α are fitted together; every α gives the same line.",
+      "vi": {
+        "title": "Góc phản xạ theo góc tới (định luật phản xạ ánh sáng)",
+        "note": "Với mọi tia sáng, góc phản xạ bằng góc tới, dù góc tới bằng bao nhiêu: nên các lần chạy nằm trên cùng một đường thẳng qua gốc tọa độ, có hệ số góc bằng 1. Các lần chạy có cùng góc quay α của gương được khớp chung; với mọi α ta đều được cùng một đường thẳng."
+      },
+      "x": "incidence",
+      "y": "reflection",
+      "group": ["mirrorTurn"],
+      "columns": ["rayAngle", "mirrorTurn", "incidence", "reflection", "between"],
+      "slope": {
+        "label": "Angle of reflection per degree of incidence, the slope",
+        "vi": {
+          "label": "Góc phản xạ ứng với mỗi độ của góc tới, bằng hệ số góc"
+        },
+        "symbol": "Δi′/Δi",
+        "unit": "",
+        "theory": "lawSlope"
+      }
+    },
+    {
+      "id": "lever",
+      "title": "Reflected ray on the disc against mirror turn (optical lever)",
+      "note": "With the ray box fixed at θ, turning the mirror by α turns its normal by α: the angle of incidence grows by α and the reflected ray turns by 2α. Its place on the disc is φ = θ + 2α, a straight line against α of slope 2 whose intercept is θ, where the square mirror sends it. Only runs with the same ray box angle θ are fitted together.",
+      "vi": {
+        "title": "Vị trí tia phản xạ trên đĩa theo góc quay của gương (đòn bẩy quang học)",
+        "note": "Khi đèn chiếu đứng yên ở góc θ, xoay gương một góc α thì pháp tuyến của gương cũng quay α: góc tới tăng thêm α và tia phản xạ quay đi 2α. Vị trí của nó trên đĩa là φ = θ + 2α, một đường thẳng theo α có hệ số góc bằng 2 và hệ số chặn bằng θ — vị trí của tia phản xạ khi gương chưa xoay. Chỉ các lần chạy có cùng góc θ của đèn chiếu mới được khớp chung."
+      },
+      "x": "mirrorTurn",
+      "y": "reflected",
+      "group": ["rayAngle"],
+      "columns": ["mirrorTurn", "incidence", "reflection", "reflected"],
+      "slope": {
+        "label": "Turn of the reflected ray per degree of mirror turn, the slope",
+        "vi": {
+          "label": "Góc quay của tia phản xạ ứng với mỗi độ quay của gương, bằng hệ số góc"
+        },
+        "symbol": "Δφ/Δα",
+        "unit": "",
+        "theory": "leverSlope",
+        "intercept": "leverIntercept"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "law-of-reflection",
+      "question": "The mirror is square to the 0° line and the ray box shines at {rayAngle}° to it. Find the angle of reflection, and the angle between the incident and reflected rays.",
+      "vi": {
+        "question": "Gương vuông góc với vạch 0° và hộp đèn chiếu tia sáng lệch {rayAngle}° so với vạch đó. Tìm góc phản xạ, và góc giữa tia tới với tia phản xạ."
+      },
+      "set": { "rayAngle": 45, "mirrorTurn": 0 },
+      "find": [{ "theory": "reflectionDeg" }, { "theory": "betweenDeg" }],
+      "steps": [
+        {
+          "say": "With the mirror square, its normal is the 0° line, so the angle of incidence is the ray box’s angle.",
+          "vi": {
+            "say": "Khi gương đặt vuông góc, pháp tuyến của gương chính là vạch 0°, nên góc tới bằng góc của hộp đèn."
+          },
+          "write": "i = θ = {@incidenceDeg}°",
+          "check": { "expr": "rayAngle", "equals": "incidenceDeg" }
+        },
+        {
+          "say": "Law of reflection: the angle of reflection equals the angle of incidence, on the other side of the normal.",
+          "vi": {
+            "say": "Định luật phản xạ: góc phản xạ bằng góc tới, tia phản xạ nằm ở phía bên kia pháp tuyến."
+          },
+          "write": "i′ = i = {@reflectionDeg}°",
+          "check": { "expr": "@incidenceDeg", "equals": "reflectionDeg" }
+        },
+        {
+          "say": "The angle between the two rays is the sum.",
+          "vi": { "say": "Góc giữa hai tia bằng tổng hai góc." },
+          "write": "i + i′ = 2i = {@betweenDeg}°",
+          "check": { "expr": "2*@incidenceDeg", "equals": "betweenDeg" }
+        }
+      ]
+    },
+    {
+      "id": "turned-mirror",
+      "question": "The ray box stays at {rayAngle}° and the mirror is turned {mirrorTurn}° away from it. Find the new angle of incidence and where the reflected ray now points.",
+      "vi": {
+        "question": "Hộp đèn giữ ở {rayAngle}° và gương được quay đi {mirrorTurn}° ra xa hộp đèn. Tìm góc tới mới và vị trí tia phản xạ lúc này."
+      },
+      "set": { "rayAngle": 30, "mirrorTurn": 10 },
+      "find": [{ "theory": "incidenceDeg" }, { "theory": "reflectedDeg" }],
+      "steps": [
+        {
+          "say": "Turning the mirror turns its normal by the same angle, away from the ray: the angle of incidence grows by α.",
+          "vi": {
+            "say": "Quay gương thì pháp tuyến quay cùng một góc, ra xa tia tới: góc tới tăng thêm α."
+          },
+          "write": "i = θ + α = {rayAngle} + {mirrorTurn} = {@incidenceDeg}°",
+          "check": { "expr": "rayAngle+mirrorTurn", "equals": "incidenceDeg" }
+        },
+        {
+          "say": "The reflected ray is i on the other side of the turned normal, at α + i = θ + 2α on the disc: turning the mirror by α turns the reflected ray by 2α.",
+          "vi": {
+            "say": "Tia phản xạ lệch góc i ở phía bên kia pháp tuyến đã quay, tức là ở vị trí α + i = θ + 2α trên đĩa: quay gương góc α thì tia phản xạ quay góc 2α."
+          },
+          "write": "φ = θ + 2α = {rayAngle} + 2·{mirrorTurn} = {@reflectedDeg}°",
+          "check": { "expr": "rayAngle+2*mirrorTurn", "equals": "reflectedDeg" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "A ray of light bounces off a plane mirror at the same angle it arrives at; turning the mirror turns the reflected ray by twice as much.",
+    "vi": {
+      "summary": "Tia sáng phản xạ trên gương phẳng với góc bằng góc tới; xoay gương thì tia phản xạ quay một góc gấp đôi."
+    },
+    "parts": [
+      {
+        "id": "ray-box",
+        "name": "Ray box",
+        "role": "Sends a narrow ray at the mirror’s centre; a run turns it from 0° to θ.",
+        "vi": {
+          "name": "Hộp chiếu tia sáng",
+          "role": "Chiếu một tia hẹp tới tâm gương; mỗi lần chạy, nó quay từ 0° tới θ."
+        },
+        "anchor": {
+          "part": "ray-box"
+        }
+      },
+      {
+        "id": "mirror",
+        "name": "Plane mirror",
+        "role": "Stands on a turntable at the disc’s centre; it can be turned by α.",
+        "vi": {
+          "name": "Gương phẳng",
+          "role": "Đặt trên bàn xoay ở tâm đĩa; có thể xoay một góc α."
+        },
+        "anchor": {
+          "part": "glass"
+        }
+      },
+      {
+        "id": "normal",
+        "name": "Normal pointer",
+        "role": "Lies along the mirror’s normal, at right angles to its face, and reads α.",
+        "vi": {
+          "name": "Kim pháp tuyến",
+          "role": "Nằm dọc theo pháp tuyến của gương, vuông góc với mặt gương, và chỉ góc α."
+        },
+        "anchor": {
+          "part": "pointer"
+        }
+      },
+      {
+        "id": "disc",
+        "name": "Protractor disc",
+        "role": "Reads the rays’ angles; its 0° line is the normal when the mirror is square.",
+        "vi": {
+          "name": "Đĩa chia độ",
+          "role": "Đọc góc của các tia sáng; đường 0° của nó là pháp tuyến khi gương đặt thẳng."
+        },
+        "anchor": {
+          "part": "disc"
+        }
+      },
+      {
+        "id": "incident",
+        "name": "Incident ray",
+        "role": "The ray from the ray box to the mirror.",
+        "vi": {
+          "name": "Tia tới",
+          "role": "Tia sáng từ hộp chiếu tia tới gương."
+        },
+        "anchor": {
+          "part": "incident"
+        }
+      },
+      {
+        "id": "reflected",
+        "name": "Reflected ray",
+        "role": "Leaves the mirror on the other side of the normal.",
+        "vi": {
+          "name": "Tia phản xạ",
+          "role": "Rời gương ở phía bên kia pháp tuyến."
+        },
+        "anchor": {
+          "part": "reflected"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "The ray box sends a narrow ray to the mirror’s centre. The angle of incidence i is measured from the normal, the line at right angles to the mirror.",
+        "vi": {
+          "text": "Hộp chiếu tia sáng chiếu một tia hẹp tới tâm gương. Góc tới i được đo từ pháp tuyến, đường vuông góc với mặt gương."
+        },
+        "parts": ["ray-box", "mirror", "normal", "incident"]
+      },
+      {
+        "text": "The reflected ray leaves on the other side of the normal, and the angle of reflection i′ equals the angle of incidence i. The two rays and the normal lie in one plane.",
+        "vi": {
+          "text": "Tia phản xạ đi ra ở phía bên kia pháp tuyến, và góc phản xạ i′ bằng góc tới i. Hai tia sáng và pháp tuyến cùng nằm trong một mặt phẳng."
+        },
+        "parts": ["mirror", "normal", "disc", "reflected"]
+      },
+      {
+        "text": "A run turns the ray box from 0° to θ, so the reflected ray turns the other way: the angle between the two rays is always i + i′ = 2i.",
+        "vi": {
+          "text": "Mỗi lần chạy, hộp chiếu quay từ 0° tới θ, nên tia phản xạ quay theo chiều ngược lại: góc giữa hai tia luôn bằng i + i′ = 2i."
+        },
+        "parts": ["ray-box", "disc", "incident", "reflected"]
+      },
+      {
+        "text": "Turn the mirror by α, keeping the ray box still: its normal turns by α, so the ray meets it at i = θ + α, and the reflected ray moves by 2α on the disc — the principle of the optical lever.",
+        "vi": {
+          "text": "Xoay gương một góc α, giữ nguyên hộp chiếu: pháp tuyến quay một góc α, nên tia tới gương với i = θ + α, và tia phản xạ dịch đi 2α trên đĩa — đó là nguyên lý đòn bẩy quang học."
+        },
+        "parts": ["mirror", "normal", "disc"]
+      },
+      {
+        "text": "The results give i, i′, i + i′ and where the reflected ray falls on the disc, φ = θ + 2α; a protractor reading accounts only for its resolution d.",
+        "vi": {
+          "text": "Phần kết quả cho i, i′, i + i′ và vị trí tia phản xạ trên đĩa, φ = θ + 2α; số đọc trên thước đo góc chỉ tính tới độ phân giải d của nó."
+        },
+        "parts": ["disc"]
+      },
+      {
+        "text": "The mirror is ideal, silvered on its front face. How much light it reflects, and the faint second reflection of a real glass mirror, are left out.",
+        "vi": {
+          "text": "Gương được coi là lý tưởng, tráng bạc ở mặt trước. Mô hình bỏ qua lượng ánh sáng gương phản xạ được và ảnh phản xạ thứ hai mờ của gương kính thật."
+        },
+        "parts": ["mirror"]
+      }
+    ]
+  }
+}

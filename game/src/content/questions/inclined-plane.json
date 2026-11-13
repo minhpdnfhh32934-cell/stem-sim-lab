@@ -1,0 +1,1083 @@
+{
+  "id": "inclined-plane",
+  "skills": [
+    {
+      "id": "forces",
+      "name": "Forces on a ramp",
+      "advice": "Draw the three forces every time: weight m·g, normal force N = m·g·cos θ, friction along the ramp. Split the weight: m·g·sin θ along the ramp, m·g·cos θ into it.",
+      "vi": {
+        "name": "Các lực trên mặt phẳng nghiêng",
+        "advice": "Lần nào cũng vẽ đủ ba lực: trọng lực m·g, phản lực N = m·g·cos θ, lực ma sát dọc mặt nghiêng. Phân tích trọng lực: m·g·sin θ dọc mặt nghiêng, m·g·cos θ vuông góc với mặt nghiêng."
+      }
+    },
+    {
+      "id": "static",
+      "name": "Static friction and the critical angle",
+      "advice": "Static friction is only as large as it must be, up to μs·N; the block stays put while tan θ ≤ μs. Raise θ a degree at a time at the station and find the angle where it starts to slide.",
+      "vi": {
+        "name": "Ma sát nghỉ và góc giới hạn",
+        "advice": "Lực ma sát nghỉ chỉ lớn đúng bằng mức cần thiết, tối đa μs·N; vật đứng yên khi tan θ ≤ μs. Trên trạm, tăng θ từng độ một và tìm góc mà vật bắt đầu trượt."
+      }
+    },
+    {
+      "id": "sliding",
+      "name": "Sliding: a = g(sin θ − μk·cos θ)",
+      "advice": "Write Newton’s second law along the ramp: m·a = m·g·sin θ − μk·m·g·cos θ, so the mass cancels. Then use s = ½at², v² = 2as. Trap: using μs once it slides, or adding friction instead of subtracting.",
+      "vi": {
+        "name": "Khi trượt: a = g(sin θ − μk·cos θ)",
+        "advice": "Viết định luật II Newton theo phương dọc mặt nghiêng: m·a = m·g·sin θ − μk·m·g·cos θ, khối lượng bị triệt tiêu. Sau đó dùng s = ½at², v² = 2as. Lỗi hay gặp: dùng μs khi vật đã trượt, hoặc cộng lực ma sát thay vì trừ."
+      }
+    },
+    {
+      "id": "energy",
+      "name": "Energy and the heat from friction",
+      "advice": "The potential energy lost goes into kinetic energy and heat Q = μk·N·s: Eₖ = m·g·L·sin θ − Q. Compare the energy bars of a run on Teflon and on steel.",
+      "vi": {
+        "name": "Năng lượng và nhiệt do ma sát",
+        "advice": "Thế năng mất đi chuyển thành động năng và nhiệt lượng Q = μk·N·s: Eₖ = m·g·L·sin θ − Q. So sánh các cột năng lượng của một lần chạy trên Teflon và trên thép."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "normal-force",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["forces"],
+      "stem": "A block of mass m rests on a ramp at angle θ. The normal force of the ramp on it is…",
+      "explain": "Perpendicular to the ramp the forces balance: N = m·g·cos θ.",
+      "vi": {
+        "stem": "Một vật khối lượng m nằm trên mặt phẳng nghiêng góc θ. Phản lực của mặt nghiêng lên vật bằng…",
+        "explain": "Theo phương vuông góc với mặt nghiêng các lực cân bằng: N = m·g·cos θ."
+      },
+      "options": [
+        {
+          "text": "m·g·cos θ",
+          "vi": {
+            "text": "m·g·cos θ"
+          },
+          "correct": true
+        },
+        {
+          "text": "m·g",
+          "vi": {
+            "text": "m·g"
+          }
+        },
+        {
+          "text": "m·g·sin θ",
+          "vi": {
+            "text": "m·g·sin θ"
+          }
+        },
+        {
+          "text": "m·g·tan θ",
+          "vi": {
+            "text": "m·g·tan θ"
+          }
+        }
+      ]
+    },
+    {
+      "id": "kinetic-friction",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["sliding", "forces"],
+      "stem": "A block slides down a ramp; the coefficient of kinetic friction is μk and the normal force N. The friction force on it is…",
+      "explain": "Kinetic friction is μk·N = μk·m·g·cos θ, along the ramp, opposite the motion.",
+      "vi": {
+        "stem": "Một vật trượt xuống mặt phẳng nghiêng; hệ số ma sát trượt là μk, phản lực là N. Lực ma sát tác dụng lên vật bằng…",
+        "explain": "Lực ma sát trượt bằng μk·N = μk·m·g·cos θ, dọc mặt nghiêng, ngược chiều chuyển động."
+      },
+      "options": [
+        {
+          "text": "μk·N",
+          "vi": {
+            "text": "μk·N"
+          },
+          "correct": true
+        },
+        {
+          "text": "μk·m·g",
+          "vi": {
+            "text": "μk·m·g"
+          }
+        },
+        {
+          "text": "μs·N",
+          "vi": {
+            "text": "μs·N"
+          }
+        },
+        {
+          "text": "μk·m·g·sin θ",
+          "vi": {
+            "text": "μk·m·g·sin θ"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-forces",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["forces", "static"],
+      "stem": "A block is placed on a ramp at an angle θ. Decide whether each statement is true or false.",
+      "explain": "m·g·sin θ pulls it down the ramp; at rest static friction is only m·g·sin θ, not always μs·N; sliding, friction points up the ramp; in this model μk never exceeds μs.",
+      "vi": {
+        "stem": "Một vật được đặt trên mặt phẳng nghiêng góc θ. Mỗi nhận định sau đúng hay sai?",
+        "explain": "m·g·sin θ kéo vật xuống dọc mặt nghiêng; khi vật đứng yên, ma sát nghỉ chỉ bằng m·g·sin θ, không phải lúc nào cũng bằng μs·N; khi trượt xuống, ma sát hướng lên dọc mặt nghiêng; trong mô hình này μk không bao giờ lớn hơn μs."
+      },
+      "statements": [
+        {
+          "text": "The part of its weight along the ramp is m·g·sin θ.",
+          "vi": {
+            "text": "Thành phần của trọng lực dọc theo mặt nghiêng là m·g·sin θ."
+          },
+          "true": true
+        },
+        {
+          "text": "While it stays at rest, the static friction on it always equals μs·N.",
+          "vi": {
+            "text": "Khi vật đứng yên, lực ma sát nghỉ tác dụng lên nó luôn bằng μs·N."
+          },
+          "true": false
+        },
+        {
+          "text": "While it slides down, friction on it points up the ramp.",
+          "vi": {
+            "text": "Khi vật trượt xuống, lực ma sát tác dụng lên nó hướng lên dọc mặt nghiêng."
+          },
+          "true": true
+        },
+        {
+          "text": "For the surfaces in this model, μk is never larger than μs.",
+          "vi": {
+            "text": "Với các cặp bề mặt trong mô hình này, μk không bao giờ lớn hơn μs."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "starts-sliding",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["static"],
+      "stem": "A ramp is tilted slowly from flat. The block on it starts to slide once…",
+      "explain": "It slides when m·g·sin θ exceeds μs·m·g·cos θ, i.e. tan θ > μs.",
+      "vi": {
+        "stem": "Nghiêng dần một mặt phẳng từ vị trí nằm ngang. Vật trên đó bắt đầu trượt khi…",
+        "explain": "Vật trượt khi m·g·sin θ lớn hơn μs·m·g·cos θ, tức là tan θ > μs."
+      },
+      "options": [
+        {
+          "text": "tan θ > μs",
+          "vi": {
+            "text": "tan θ > μs"
+          },
+          "correct": true
+        },
+        {
+          "text": "sin θ > μs",
+          "vi": {
+            "text": "sin θ > μs"
+          }
+        },
+        {
+          "text": "cos θ < μk",
+          "vi": {
+            "text": "cos θ < μk"
+          }
+        },
+        {
+          "text": "tan θ > μk",
+          "vi": {
+            "text": "tan θ > μk"
+          }
+        }
+      ]
+    },
+    {
+      "id": "heavier-block",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["sliding"],
+      "stem": "A block slides down a ramp. A block twice as heavy, of the same surfaces, slides down the same ramp. Its acceleration is…",
+      "explain": "a = g(sin θ − μk·cos θ): both the pull down the ramp and friction are proportional to m, so the mass cancels.",
+      "vi": {
+        "stem": "Một vật trượt xuống mặt phẳng nghiêng. Một vật nặng gấp đôi, cùng loại bề mặt, trượt trên cùng mặt nghiêng đó. Gia tốc của nó…",
+        "explain": "a = g(sin θ − μk·cos θ): cả lực kéo xuống dọc mặt nghiêng và lực ma sát đều tỉ lệ với m, nên khối lượng bị triệt tiêu."
+      },
+      "options": [
+        {
+          "text": "the same",
+          "vi": {
+            "text": "bằng gia tốc của vật kia"
+          },
+          "correct": true
+        },
+        {
+          "text": "twice as large",
+          "vi": {
+            "text": "lớn gấp đôi"
+          }
+        },
+        {
+          "text": "half as large",
+          "vi": {
+            "text": "bằng một nửa"
+          }
+        },
+        {
+          "text": "zero",
+          "vi": {
+            "text": "bằng 0"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-wood",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["static"],
+      "set": {
+        "angle": 10,
+        "surface": 3,
+        "mass": 1
+      },
+      "stem": "A {mass} kg wooden block is let go on a wooden ramp at {angle}° (μs = {@staticFriction}, μk = {@kineticFriction}, approximate handbook values; g = {gravity} m/s²). Decide whether each statement is true or false.",
+      "explain": "tan {angle}° ≈ {=tan(rad(angle))} < μs, so it stays put. Static friction balances m·g·sin θ ≈ {@frictionForce} N, less than its limit μs·N ≈ {=@staticFriction*mass*gravity*cos(rad(angle))} N. The critical angle is arctan μs ≈ {@criticalAngle}°.",
+      "vi": {
+        "stem": "Một khối gỗ {mass} kg được thả trên mặt nghiêng bằng gỗ góc {angle}° (μs = {@staticFriction}, μk = {@kineticFriction}, giá trị gần đúng theo sổ tay; g = {gravity} m/s²). Mỗi nhận định sau đúng hay sai?",
+        "explain": "tan {angle}° ≈ {=tan(rad(angle))} < μs nên vật đứng yên. Ma sát nghỉ cân bằng với m·g·sin θ ≈ {@frictionForce} N, nhỏ hơn giới hạn μs·N ≈ {=@staticFriction*mass*gravity*cos(rad(angle))} N. Góc giới hạn là arctan μs ≈ {@criticalAngle}°."
+      },
+      "statements": [
+        {
+          "text": "The block stays at rest.",
+          "vi": {
+            "text": "Vật đứng yên."
+          },
+          "true": true,
+          "check": {
+            "expr": "0",
+            "equals": "slides"
+          }
+        },
+        {
+          "text": "The friction on it is about {@frictionForce} N.",
+          "vi": {
+            "text": "Lực ma sát tác dụng lên vật khoảng {@frictionForce} N."
+          },
+          "true": true,
+          "check": {
+            "expr": "mass*gravity*sin(rad(angle))",
+            "equals": "frictionForce"
+          }
+        },
+        {
+          "text": "The friction on it is μs·N ≈ {=@staticFriction*mass*gravity*cos(rad(angle))} N.",
+          "vi": {
+            "text": "Lực ma sát tác dụng lên vật bằng μs·N ≈ {=@staticFriction*mass*gravity*cos(rad(angle))} N."
+          },
+          "true": false,
+          "check": {
+            "expr": "@staticFriction*mass*gravity*cos(rad(angle))",
+            "equals": "frictionForce"
+          }
+        },
+        {
+          "text": "It would start to slide above about {@criticalAngle}°.",
+          "vi": {
+            "text": "Vật sẽ bắt đầu trượt khi góc nghiêng lớn hơn khoảng {@criticalAngle}°."
+          },
+          "true": true,
+          "check": {
+            "expr": "deg(atan(@staticFriction))",
+            "equals": "criticalAngle"
+          }
+        }
+      ]
+    },
+    {
+      "id": "acceleration",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["sliding"],
+      "set": {
+        "angle": 40,
+        "surface": 3,
+        "length": 1.5
+      },
+      "stem": "A wooden block slides from rest down a wooden ramp at {angle}° (μk = {@kineticFriction}, an approximate handbook value; g = {gravity} m/s²). What is its acceleration?",
+      "explain": "a = g(sin θ − μk·cos θ) = {gravity}(sin {angle}° − {@kineticFriction}·cos {angle}°) ≈ {@acceleration} m/s².",
+      "vi": {
+        "stem": "Một khối gỗ trượt từ nghỉ xuống mặt nghiêng bằng gỗ góc {angle}° (μk = {@kineticFriction}, giá trị gần đúng theo sổ tay; g = {gravity} m/s²). Gia tốc của vật bằng bao nhiêu?",
+        "explain": "a = g(sin θ − μk·cos θ) = {gravity}(sin {angle}° − {@kineticFriction}·cos {angle}°) ≈ {@acceleration} m/s²."
+      },
+      "options": [
+        {
+          "text": "{@acceleration} m/s²",
+          "vi": {
+            "text": "{@acceleration} m/s²"
+          },
+          "correct": true,
+          "check": {
+            "expr": "gravity*(sin(rad(angle))-@kineticFriction*cos(rad(angle)))",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "{=gravity*sin(rad(angle))} m/s²",
+          "vi": {
+            "text": "{=gravity*sin(rad(angle))} m/s²"
+          },
+          "check": {
+            "expr": "gravity*sin(rad(angle))",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "{=gravity*(sin(rad(angle))-@staticFriction*cos(rad(angle)))} m/s²",
+          "vi": {
+            "text": "{=gravity*(sin(rad(angle))-@staticFriction*cos(rad(angle)))} m/s²"
+          },
+          "check": {
+            "expr": "gravity*(sin(rad(angle))-@staticFriction*cos(rad(angle)))",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "{=gravity*(sin(rad(angle))+@kineticFriction*cos(rad(angle)))} m/s²",
+          "vi": {
+            "text": "{=gravity*(sin(rad(angle))+@kineticFriction*cos(rad(angle)))} m/s²"
+          },
+          "check": {
+            "expr": "gravity*(sin(rad(angle))+@kineticFriction*cos(rad(angle)))",
+            "equals": "acceleration"
+          }
+        }
+      ]
+    },
+    {
+      "id": "final-speed",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["sliding"],
+      "set": {
+        "angle": 30,
+        "surface": 2,
+        "length": 1
+      },
+      "stem": "A block slides from rest {length} m down a ramp with a = {@acceleration} m/s². What is its speed at the foot?",
+      "explain": "From rest, v² = 2a·L: v = √(2·{@acceleration}·{length}) ≈ {@finalSpeed} m/s. √(2gL·sin θ) would leave out friction.",
+      "vi": {
+        "stem": "Một vật trượt từ nghỉ {length} m xuống mặt nghiêng với a = {@acceleration} m/s². Tốc độ của vật ở chân mặt nghiêng bằng bao nhiêu?",
+        "explain": "Xuất phát từ nghỉ, v² = 2a·L: v = √(2·{@acceleration}·{length}) ≈ {@finalSpeed} m/s. √(2gL·sin θ) là đã bỏ qua ma sát."
+      },
+      "options": [
+        {
+          "text": "{@finalSpeed} m/s",
+          "vi": {
+            "text": "{@finalSpeed} m/s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "sqrt(2*@acceleration*length)",
+            "equals": "finalSpeed"
+          }
+        },
+        {
+          "text": "{=sqrt(2*gravity*length*sin(rad(angle)))} m/s",
+          "vi": {
+            "text": "{=sqrt(2*gravity*length*sin(rad(angle)))} m/s"
+          },
+          "check": {
+            "expr": "sqrt(2*gravity*length*sin(rad(angle)))",
+            "equals": "finalSpeed"
+          }
+        },
+        {
+          "text": "{=sqrt(@acceleration*length)} m/s",
+          "vi": {
+            "text": "{=sqrt(@acceleration*length)} m/s"
+          },
+          "check": {
+            "expr": "sqrt(@acceleration*length)",
+            "equals": "finalSpeed"
+          }
+        },
+        {
+          "text": "{=2*@acceleration*length} m/s",
+          "vi": {
+            "text": "{=2*@acceleration*length} m/s"
+          },
+          "check": {
+            "expr": "2*@acceleration*length",
+            "equals": "finalSpeed"
+          }
+        }
+      ]
+    },
+    {
+      "id": "critical-angle",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["static"],
+      "set": {
+        "angle": 20,
+        "surface": 4,
+        "mass": 1
+      },
+      "stem": "A steel block rests on a steel ramp (μs = {@staticFriction}, μk = {@kineticFriction}, approximate handbook values). What is the steepest angle at which it can stay at rest?",
+      "explain": "At the limit m·g·sin θ = μs·m·g·cos θ, so tan θ_c = μs = {@staticFriction} and θ_c ≈ {@criticalAngle}°.",
+      "vi": {
+        "stem": "Một khối thép nằm trên mặt nghiêng bằng thép (μs = {@staticFriction}, μk = {@kineticFriction}, giá trị gần đúng theo sổ tay). Góc nghiêng lớn nhất mà vật còn đứng yên được là bao nhiêu?",
+        "explain": "Ở giới hạn m·g·sin θ = μs·m·g·cos θ, nên tan θ_c = μs = {@staticFriction} và θ_c ≈ {@criticalAngle}°."
+      },
+      "options": [
+        {
+          "text": "{@criticalAngle}°",
+          "vi": {
+            "text": "{@criticalAngle}°"
+          },
+          "correct": true,
+          "check": {
+            "expr": "deg(atan(@staticFriction))",
+            "equals": "criticalAngle"
+          }
+        },
+        {
+          "text": "{=deg(asin(@staticFriction))}°",
+          "vi": {
+            "text": "{=deg(asin(@staticFriction))}°"
+          },
+          "check": {
+            "expr": "deg(asin(@staticFriction))",
+            "equals": "criticalAngle"
+          }
+        },
+        {
+          "text": "{=deg(atan(@kineticFriction))}°",
+          "vi": {
+            "text": "{=deg(atan(@kineticFriction))}°"
+          },
+          "check": {
+            "expr": "deg(atan(@kineticFriction))",
+            "equals": "criticalAngle"
+          }
+        },
+        {
+          "text": "{=deg(acos(@staticFriction))}°",
+          "vi": {
+            "text": "{=deg(acos(@staticFriction))}°"
+          },
+          "check": {
+            "expr": "deg(acos(@staticFriction))",
+            "equals": "criticalAngle"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-energy",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["energy"],
+      "set": {
+        "angle": 30,
+        "surface": 3,
+        "mass": 0.5,
+        "length": 1
+      },
+      "stem": "A {mass} kg wooden block slides {length} m from rest down a wooden ramp at {angle}° (μk = {@kineticFriction}; g = {gravity} m/s²); potential energy is measured from the foot. Decide whether each statement is true or false.",
+      "explain": "ΔEₚ = m·g·L·sin θ ≈ {@potentialEnergyLost} J; Q = μk·m·g·cos θ·L ≈ {@frictionWork} J; Eₖ = ΔEₚ − Q ≈ {@kineticEnergy} J. The mechanical energy falls by Q, so it is not conserved.",
+      "vi": {
+        "stem": "Khối gỗ {mass} kg trượt từ nghỉ {length} m xuống mặt nghiêng bằng gỗ góc {angle}° (μk = {@kineticFriction}; g = {gravity} m/s²); mốc thế năng tại chân mặt nghiêng. Mỗi nhận định sau đúng hay sai?",
+        "explain": "ΔEₚ = m·g·L·sin θ ≈ {@potentialEnergyLost} J; Q = μk·m·g·cos θ·L ≈ {@frictionWork} J; Eₖ = ΔEₚ − Q ≈ {@kineticEnergy} J. Cơ năng giảm đúng bằng Q nên không được bảo toàn."
+      },
+      "statements": [
+        {
+          "text": "It loses about {@potentialEnergyLost} J of potential energy.",
+          "vi": {
+            "text": "Thế năng của nó giảm khoảng {@potentialEnergyLost} J."
+          },
+          "true": true,
+          "check": {
+            "expr": "mass*gravity*length*sin(rad(angle))",
+            "equals": "potentialEnergyLost"
+          }
+        },
+        {
+          "text": "Friction turns about {@frictionWork} J into heat.",
+          "vi": {
+            "text": "Ma sát làm khoảng {@frictionWork} J chuyển thành nhiệt."
+          },
+          "true": true,
+          "check": {
+            "expr": "@kineticFriction*mass*gravity*cos(rad(angle))*length",
+            "equals": "frictionWork"
+          }
+        },
+        {
+          "text": "Its kinetic energy at the foot is about {@kineticEnergy} J.",
+          "vi": {
+            "text": "Động năng của nó ở chân mặt nghiêng khoảng {@kineticEnergy} J."
+          },
+          "true": true,
+          "check": {
+            "expr": "@potentialEnergyLost-@frictionWork",
+            "equals": "kineticEnergy"
+          }
+        },
+        {
+          "text": "Its kinetic energy at the foot equals the potential energy it lost.",
+          "vi": {
+            "text": "Động năng của nó ở chân mặt nghiêng bằng thế năng đã mất."
+          },
+          "true": false,
+          "check": {
+            "expr": "@potentialEnergyLost",
+            "equals": "kineticEnergy"
+          }
+        }
+      ]
+    },
+    {
+      "id": "travel-time",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["sliding"],
+      "set": {
+        "angle": 45,
+        "surface": 3,
+        "length": 1.5
+      },
+      "stem": "A wooden block slides from rest {length} m down a wooden ramp at {angle}° (μk = {@kineticFriction}; g = {gravity} m/s²). How long does it take?",
+      "explain": "First a = g(sin θ − μk·cos θ) ≈ {@acceleration} m/s²; then L = ½at² gives t = √(2L/a) ≈ {@travelTime} s. Leaving out friction gives {=sqrt(2*length/(gravity*sin(rad(angle))))} s.",
+      "vi": {
+        "stem": "Khối gỗ trượt từ nghỉ {length} m xuống mặt nghiêng bằng gỗ góc {angle}° (μk = {@kineticFriction}; g = {gravity} m/s²). Vật trượt hết quãng đường đó trong bao lâu?",
+        "explain": "Trước hết a = g(sin θ − μk·cos θ) ≈ {@acceleration} m/s²; sau đó L = ½at² cho t = √(2L/a) ≈ {@travelTime} s. Bỏ qua ma sát sẽ ra {=sqrt(2*length/(gravity*sin(rad(angle))))} s."
+      },
+      "options": [
+        {
+          "text": "{@travelTime} s",
+          "vi": {
+            "text": "{@travelTime} s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "sqrt(2*length/(gravity*(sin(rad(angle))-@kineticFriction*cos(rad(angle)))))",
+            "equals": "travelTime"
+          }
+        },
+        {
+          "text": "{=sqrt(2*length/(gravity*sin(rad(angle))))} s",
+          "vi": {
+            "text": "{=sqrt(2*length/(gravity*sin(rad(angle))))} s"
+          },
+          "check": {
+            "expr": "sqrt(2*length/(gravity*sin(rad(angle))))",
+            "equals": "travelTime"
+          }
+        },
+        {
+          "text": "{=sqrt(length/@acceleration)} s",
+          "vi": {
+            "text": "{=sqrt(length/@acceleration)} s"
+          },
+          "check": {
+            "expr": "sqrt(length/@acceleration)",
+            "equals": "travelTime"
+          }
+        },
+        {
+          "text": "{=2*length/@acceleration} s",
+          "vi": {
+            "text": "{=2*length/@acceleration} s"
+          },
+          "check": {
+            "expr": "2*length/@acceleration",
+            "equals": "travelTime"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-teflon",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["static", "sliding"],
+      "set": {
+        "angle": 3,
+        "surface": 1,
+        "length": 1
+      },
+      "stem": "A Teflon block is let go on a Teflon ramp at only {angle}° (μs = μk = {@staticFriction}, approximate handbook values; g = {gravity} m/s²); the ramp is {length} m long. Decide whether each statement is true or false.",
+      "explain": "tan {angle}° ≈ {=tan(rad(angle))} > μs, so it slides, but slowly: a = g(sin θ − μk·cos θ) ≈ {@acceleration} m/s², taking √(2L/a) ≈ {@travelTime} s. On wood (μs ≈ 0.35) it would stay put at this angle. The mass cancels.",
+      "vi": {
+        "stem": "Một khối Teflon được thả trên mặt nghiêng bằng Teflon chỉ nghiêng {angle}° (μs = μk = {@staticFriction}, giá trị gần đúng theo sổ tay; g = {gravity} m/s²); mặt nghiêng dài {length} m. Mỗi nhận định sau đúng hay sai?",
+        "explain": "tan {angle}° ≈ {=tan(rad(angle))} > μs nên vật trượt, nhưng rất chậm: a = g(sin θ − μk·cos θ) ≈ {@acceleration} m/s², mất √(2L/a) ≈ {@travelTime} s. Trên gỗ (μs ≈ 0,35) vật sẽ đứng yên ở góc này. Khối lượng bị triệt tiêu."
+      },
+      "statements": [
+        {
+          "text": "It slides, because tan {angle}° is larger than μs.",
+          "vi": {
+            "text": "Vật trượt, vì tan {angle}° lớn hơn μs."
+          },
+          "true": true,
+          "check": {
+            "expr": "1",
+            "equals": "slides"
+          }
+        },
+        {
+          "text": "Its acceleration is about {@acceleration} m/s².",
+          "vi": {
+            "text": "Gia tốc của vật khoảng {@acceleration} m/s²."
+          },
+          "true": true,
+          "check": {
+            "expr": "gravity*(sin(rad(angle))-@kineticFriction*cos(rad(angle)))",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "It takes about {@travelTime} s to slide {length} m.",
+          "vi": {
+            "text": "Vật mất khoảng {@travelTime} s để trượt {length} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "sqrt(2*length/@acceleration)",
+            "equals": "travelTime"
+          }
+        },
+        {
+          "text": "A wooden block on a wooden ramp at the same angle would slide faster.",
+          "vi": {
+            "text": "Khối gỗ trên mặt nghiêng bằng gỗ ở cùng góc đó sẽ trượt nhanh hơn."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "down-slope",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["forces"],
+      "stem": "A block of mass m is on a ramp at angle θ. The part of its weight along the slope is…",
+      "explain": "The weight m·g splits into m·g·sin θ along the slope (pulling the block down it) and m·g·cos θ into the slope (balanced by the normal force).",
+      "vi": {
+        "stem": "Một vật khối lượng m nằm trên mặt phẳng nghiêng góc θ. Thành phần của trọng lực song song với mặt nghiêng là…",
+        "explain": "Trọng lực m·g được phân tích thành m·g·sin θ song song với mặt nghiêng (kéo vật xuống dốc) và m·g·cos θ vuông góc với mặt nghiêng (cân bằng với phản lực)."
+      },
+      "options": [
+        {
+          "text": "m·g·sin θ",
+          "vi": {
+            "text": "m·g·sin θ"
+          },
+          "correct": true
+        },
+        {
+          "text": "m·g·cos θ",
+          "vi": {
+            "text": "m·g·cos θ"
+          }
+        },
+        {
+          "text": "m·g·tan θ",
+          "vi": {
+            "text": "m·g·tan θ"
+          }
+        },
+        {
+          "text": "m·g",
+          "vi": {
+            "text": "m·g"
+          }
+        }
+      ]
+    },
+    {
+      "id": "steeper-friction",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["forces", "sliding"],
+      "stem": "A block slides down a ramp. The ramp is made steeper; the surfaces are the same. The kinetic friction on the block…",
+      "explain": "Kinetic friction is μk·N with N = m·g·cos θ. A steeper ramp has a smaller cos θ, so the normal force and the friction both become smaller.",
+      "vi": {
+        "stem": "Một vật trượt xuống mặt phẳng nghiêng. Tăng độ dốc của mặt nghiêng; các mặt tiếp xúc giữ nguyên. Lực ma sát trượt tác dụng lên vật…",
+        "explain": "Lực ma sát trượt bằng μk·N với N = m·g·cos θ. Mặt nghiêng dốc hơn thì cos θ nhỏ hơn, nên phản lực và lực ma sát đều nhỏ đi."
+      },
+      "options": [
+        {
+          "text": "becomes smaller",
+          "vi": {
+            "text": "nhỏ đi"
+          },
+          "correct": true
+        },
+        {
+          "text": "becomes larger",
+          "vi": {
+            "text": "lớn lên"
+          }
+        },
+        {
+          "text": "stays the same, since μk is the same",
+          "vi": {
+            "text": "không đổi, vì μk không đổi"
+          }
+        },
+        {
+          "text": "becomes zero",
+          "vi": {
+            "text": "bằng 0"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-friction",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["static", "sliding"],
+      "stem": "A block is put on a ramp of angle θ. Decide whether each statement is true or false.",
+      "explain": "At rest, static friction is only as large as it needs to be: it balances m·g·sin θ, and only at the point of slipping does it reach μs·N. Sliding, the friction is μk·N. The block starts to slide when tan θ > μs, which does not involve the mass.",
+      "vi": {
+        "stem": "Một vật được đặt trên mặt phẳng nghiêng góc θ. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Khi vật đứng yên, lực ma sát nghỉ chỉ lớn vừa đủ: nó cân bằng với m·g·sin θ, và chỉ khi vật sắp trượt mới đạt μs·N. Khi vật trượt, lực ma sát là μk·N. Vật bắt đầu trượt khi tan θ > μs, điều kiện này không chứa khối lượng."
+      },
+      "statements": [
+        {
+          "text": "At rest, the static friction on the block equals m·g·sin θ.",
+          "vi": {
+            "text": "Khi vật đứng yên, lực ma sát nghỉ tác dụng lên vật bằng m·g·sin θ."
+          },
+          "true": true
+        },
+        {
+          "text": "At rest, the static friction is always μs·N.",
+          "vi": {
+            "text": "Khi vật đứng yên, lực ma sát nghỉ luôn bằng μs·N."
+          },
+          "true": false
+        },
+        {
+          "text": "Sliding, the friction on the block is μk·N.",
+          "vi": {
+            "text": "Khi vật trượt, lực ma sát tác dụng lên vật bằng μk·N."
+          },
+          "true": true
+        },
+        {
+          "text": "A heavier block of the same material starts to slide at the same angle.",
+          "vi": {
+            "text": "Một vật nặng hơn cùng chất liệu bắt đầu trượt ở cùng góc nghiêng."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "sliding-friction",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["sliding", "forces"],
+      "set": {
+        "angle": 40,
+        "surface": 4,
+        "mass": 2
+      },
+      "stem": "A {mass} kg steel block slides down a steel ramp at {angle}° (μk = {@kineticFriction}, an approximate handbook value; g = {gravity} m/s²). What is the friction force on it?",
+      "explain": "f = μk·N = μk·m·g·cos θ = {@kineticFriction}·{mass}·{gravity}·cos {angle}° ≈ {@frictionForce} N. Using sin θ, the whole weight, or the whole pull down the slope gives the other values.",
+      "vi": {
+        "stem": "Một khối thép {mass} kg trượt xuống mặt phẳng nghiêng bằng thép góc {angle}° (μk = {@kineticFriction}, giá trị gần đúng theo sổ tay; g = {gravity} m/s²). Lực ma sát tác dụng lên nó bằng bao nhiêu?",
+        "explain": "F_ms = μk·N = μk·m·g·cos θ = {@kineticFriction}·{mass}·{gravity}·cos {angle}° ≈ {@frictionForce} N. Dùng sin θ, dùng cả trọng lượng, hoặc lấy cả thành phần trọng lực kéo vật xuống dốc sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{@frictionForce} N",
+          "vi": {
+            "text": "{@frictionForce} N"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@kineticFriction*mass*gravity*cos(rad(angle))",
+            "equals": "frictionForce"
+          }
+        },
+        {
+          "text": "{=mass*gravity*sin(rad(angle))} N",
+          "vi": {
+            "text": "{=mass*gravity*sin(rad(angle))} N"
+          },
+          "check": {
+            "expr": "mass*gravity*sin(rad(angle))",
+            "equals": "frictionForce"
+          }
+        },
+        {
+          "text": "{=@kineticFriction*mass*gravity} N",
+          "vi": {
+            "text": "{=@kineticFriction*mass*gravity} N"
+          },
+          "check": {
+            "expr": "@kineticFriction*mass*gravity",
+            "equals": "frictionForce"
+          }
+        },
+        {
+          "text": "{=@kineticFriction*mass*gravity*sin(rad(angle))} N",
+          "vi": {
+            "text": "{=@kineticFriction*mass*gravity*sin(rad(angle))} N"
+          },
+          "check": {
+            "expr": "@kineticFriction*mass*gravity*sin(rad(angle))",
+            "equals": "frictionForce"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-wood-20",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["sliding", "static"],
+      "set": {
+        "angle": 20,
+        "surface": 3,
+        "mass": 1,
+        "length": 1
+      },
+      "stem": "A {mass} kg wooden block is let go on a wooden ramp {length} m long at {angle}° (μs = {@staticFriction}, μk = {@kineticFriction}, approximate handbook values; g = {gravity} m/s²). Decide whether each statement is true or false.",
+      "explain": "tan {angle}° ≈ {=tan(rad(angle))|3} is more than μs, so the block slides. N = m·g·cos θ ≈ {@normalForce} N; a = g(sin θ − μk·cos θ) ≈ {@acceleration} m/s², and at the foot v = √(2aL) ≈ {@finalSpeed} m/s.",
+      "vi": {
+        "stem": "Một khối gỗ {mass} kg được thả trên mặt phẳng nghiêng bằng gỗ dài {length} m, góc {angle}° (μs = {@staticFriction}, μk = {@kineticFriction}, giá trị gần đúng theo sổ tay; g = {gravity} m/s²). Mỗi nhận định sau đúng hay sai?",
+        "explain": "tan {angle}° ≈ {=tan(rad(angle))|3} lớn hơn μs nên vật trượt. N = m·g·cos θ ≈ {@normalForce} N; a = g(sin θ − μk·cos θ) ≈ {@acceleration} m/s², và ở chân dốc v = √(2aL) ≈ {@finalSpeed} m/s."
+      },
+      "statements": [
+        {
+          "text": "The block stays at rest, because the ramp is so shallow.",
+          "vi": {
+            "text": "Vật đứng yên vì mặt nghiêng quá thoải."
+          },
+          "true": false
+        },
+        {
+          "text": "The normal force on it is about {@normalForce} N.",
+          "vi": {
+            "text": "Phản lực của mặt nghiêng lên vật khoảng {@normalForce} N."
+          },
+          "true": true,
+          "check": {
+            "expr": "mass*gravity*cos(rad(angle))",
+            "equals": "normalForce"
+          }
+        },
+        {
+          "text": "It slides down with a ≈ {@acceleration} m/s².",
+          "vi": {
+            "text": "Vật trượt xuống với a ≈ {@acceleration} m/s²."
+          },
+          "true": true,
+          "check": {
+            "expr": "gravity*(sin(rad(angle))-@kineticFriction*cos(rad(angle)))",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "It reaches the foot at about {@finalSpeed} m/s.",
+          "vi": {
+            "text": "Vật đến chân dốc với tốc độ khoảng {@finalSpeed} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "sqrt(2*@acceleration*length)",
+            "equals": "finalSpeed"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-mu",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["sliding"],
+      "set": {
+        "angle": 30,
+        "surface": 2,
+        "length": 1
+      },
+      "stem": "A block slides down a ramp at {angle}° with a measured acceleration of {@acceleration|4} m/s² (g = {gravity} m/s²). What is the coefficient of kinetic friction?",
+      "explain": "a = g(sin θ − μk·cos θ) gives μk = (g·sin θ − a)/(g·cos θ) = ({gravity}·sin {angle}° − {@acceleration|4})/({gravity}·cos {angle}°) ≈ {=(gravity*sin(rad(angle))-@acceleration)/(gravity*cos(rad(angle)))|2}. tan θ is the critical-angle rule for a block at rest, not for one sliding.",
+      "vi": {
+        "stem": "Một vật trượt xuống mặt phẳng nghiêng góc {angle}° với gia tốc đo được là {@acceleration|4} m/s² (g = {gravity} m/s²). Hệ số ma sát trượt bằng bao nhiêu?",
+        "explain": "a = g(sin θ − μk·cos θ) cho μk = (g·sin θ − a)/(g·cos θ) = ({gravity}·sin {angle}° − {@acceleration|4})/({gravity}·cos {angle}°) ≈ {=(gravity*sin(rad(angle))-@acceleration)/(gravity*cos(rad(angle)))|2}. tan θ là điều kiện góc tới hạn cho vật đứng yên, không áp dụng cho vật đang trượt."
+      },
+      "options": [
+        {
+          "text": "{=(gravity*sin(rad(angle))-@acceleration)/(gravity*cos(rad(angle)))|2}",
+          "vi": {
+            "text": "{=(gravity*sin(rad(angle))-@acceleration)/(gravity*cos(rad(angle)))|2}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(gravity*sin(rad(angle))-@acceleration)/(gravity*cos(rad(angle)))",
+            "equals": "kineticFriction"
+          }
+        },
+        {
+          "text": "{=tan(rad(angle))|2}",
+          "vi": {
+            "text": "{=tan(rad(angle))|2}"
+          },
+          "check": {
+            "expr": "tan(rad(angle))",
+            "equals": "kineticFriction"
+          }
+        },
+        {
+          "text": "{=@acceleration/(gravity*cos(rad(angle)))|2}",
+          "vi": {
+            "text": "{=@acceleration/(gravity*cos(rad(angle)))|2}"
+          },
+          "check": {
+            "expr": "@acceleration/(gravity*cos(rad(angle)))",
+            "equals": "kineticFriction"
+          }
+        },
+        {
+          "text": "{=(gravity*sin(rad(angle))-@acceleration)/gravity|2}",
+          "vi": {
+            "text": "{=(gravity*sin(rad(angle))-@acceleration)/gravity|2}"
+          },
+          "check": {
+            "expr": "(gravity*sin(rad(angle))-@acceleration)/gravity",
+            "equals": "kineticFriction"
+          }
+        }
+      ]
+    },
+    {
+      "id": "heat-from-speed",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["energy"],
+      "set": {
+        "angle": 45,
+        "surface": 3,
+        "mass": 2,
+        "length": 1.5
+      },
+      "stem": "A {mass} kg block slides from rest {length} m down a ramp at {angle}°, losing {@potentialEnergyLost|4} J of potential energy, and reaches the foot at {@finalSpeed|4} m/s. How much heat does friction produce?",
+      "explain": "The energy lost by gravity goes partly into motion and partly into heat: Q = ΔEp − ½m·v² = {@potentialEnergyLost|4} − ½·{mass}·{@finalSpeed|4}² ≈ {@frictionWork} J (= μk·N·L).",
+      "vi": {
+        "stem": "Một vật {mass} kg trượt không vận tốc đầu {length} m xuống mặt phẳng nghiêng góc {angle}°, thế năng giảm {@potentialEnergyLost|4} J, và đến chân dốc với tốc độ {@finalSpeed|4} m/s. Lực ma sát sinh ra bao nhiêu nhiệt?",
+        "explain": "Phần thế năng mất đi chuyển một phần thành động năng, một phần thành nhiệt: Q = ΔWt − ½m·v² = {@potentialEnergyLost|4} − ½·{mass}·{@finalSpeed|4}² ≈ {@frictionWork} J (= μk·N·L)."
+      },
+      "options": [
+        {
+          "text": "{@frictionWork} J",
+          "vi": {
+            "text": "{@frictionWork} J"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@potentialEnergyLost-0.5*mass*@finalSpeed^2",
+            "equals": "frictionWork"
+          }
+        },
+        {
+          "text": "{=0.5*mass*@finalSpeed^2} J",
+          "vi": {
+            "text": "{=0.5*mass*@finalSpeed^2} J"
+          },
+          "check": {
+            "expr": "0.5*mass*@finalSpeed^2",
+            "equals": "frictionWork"
+          }
+        },
+        {
+          "text": "{@potentialEnergyLost} J",
+          "vi": {
+            "text": "{@potentialEnergyLost} J"
+          },
+          "check": {
+            "expr": "@potentialEnergyLost",
+            "equals": "frictionWork"
+          }
+        },
+        {
+          "text": "{=@potentialEnergyLost+0.5*mass*@finalSpeed^2} J",
+          "vi": {
+            "text": "{=@potentialEnergyLost+0.5*mass*@finalSpeed^2} J"
+          },
+          "check": {
+            "expr": "@potentialEnergyLost+0.5*mass*@finalSpeed^2",
+            "equals": "frictionWork"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-steel-30",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["static", "forces"],
+      "set": {
+        "angle": 30,
+        "surface": 4,
+        "mass": 1
+      },
+      "stem": "A {mass} kg steel block is put on a steel ramp at {angle}° (μs = {@staticFriction}, μk = {@kineticFriction}, approximate handbook values; g = {gravity} m/s²). Decide whether each statement is true or false.",
+      "explain": "tan {angle}° ≈ {=tan(rad(angle))|3} is less than μs, so the block stays at rest: the critical angle is {@criticalAngle|3}°. Static friction then balances the pull down the slope, m·g·sin θ ≈ {@frictionForce} N, less than its limit μs·N ≈ {@staticFrictionLimit} N. Tilted to 40°, beyond the critical angle, it would slide.",
+      "vi": {
+        "stem": "Một khối thép {mass} kg được đặt trên mặt phẳng nghiêng bằng thép góc {angle}° (μs = {@staticFriction}, μk = {@kineticFriction}, giá trị gần đúng theo sổ tay; g = {gravity} m/s²). Mỗi nhận định sau đúng hay sai?",
+        "explain": "tan {angle}° ≈ {=tan(rad(angle))|3} nhỏ hơn μs nên vật đứng yên: góc tới hạn là {@criticalAngle|3}°. Khi đó lực ma sát nghỉ cân bằng với thành phần kéo vật xuống dốc, m·g·sin θ ≈ {@frictionForce} N, nhỏ hơn giá trị cực đại μs·N ≈ {@staticFrictionLimit} N. Nghiêng đến 40°, vượt góc tới hạn, vật sẽ trượt."
+      },
+      "statements": [
+        {
+          "text": "The block stays at rest.",
+          "vi": {
+            "text": "Vật đứng yên."
+          },
+          "true": true
+        },
+        {
+          "text": "The friction on it is about {@frictionForce} N.",
+          "vi": {
+            "text": "Lực ma sát tác dụng lên vật khoảng {@frictionForce} N."
+          },
+          "true": true,
+          "check": {
+            "expr": "mass*gravity*sin(rad(angle))",
+            "equals": "frictionForce"
+          }
+        },
+        {
+          "text": "The friction on it is μs·N ≈ {@staticFrictionLimit} N.",
+          "vi": {
+            "text": "Lực ma sát tác dụng lên vật bằng μs·N ≈ {@staticFrictionLimit} N."
+          },
+          "true": false,
+          "check": {
+            "expr": "@staticFrictionLimit",
+            "equals": "frictionForce"
+          }
+        },
+        {
+          "text": "Tilted to 40°, it would slide.",
+          "vi": {
+            "text": "Nếu nghiêng đến 40°, vật sẽ trượt."
+          },
+          "true": true
+        }
+      ]
+    }
+  ]
+}

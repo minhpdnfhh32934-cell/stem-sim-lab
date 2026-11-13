@@ -1,0 +1,1048 @@
+{
+  "id": "radioactive-decay",
+  "skills": [
+    {
+      "id": "random",
+      "name": "Decay is random",
+      "advice": "No one can say when a given nucleus will decay, so counts scatter: run the same source with another count number and compare. A small background from the room must be subtracted.",
+      "vi": {
+        "name": "Phóng xạ là ngẫu nhiên",
+        "advice": "Không ai biết trước khi nào một hạt nhân cụ thể phân rã, nên số đếm dao động ngẫu nhiên: chạy cùng nguồn với lần đếm khác rồi so sánh. Phải trừ đi phông nền nhỏ từ môi trường."
+      }
+    },
+    {
+      "id": "law",
+      "name": "The decay law and half-life",
+      "advice": "N = N₀·e^(−λt): after each half-life half is left — ½, ¼, ⅛ … Trap: thinking it is all gone after two half-lives.",
+      "vi": {
+        "name": "Định luật phóng xạ và chu kì bán rã",
+        "advice": "N = N₀·e^(−λt): sau mỗi chu kì bán rã còn lại một nửa — ½, ¼, ⅛ … Lỗi hay gặp: nghĩ rằng sau hai chu kì bán rã thì phân rã hết."
+      }
+    },
+    {
+      "id": "constant",
+      "name": "Decay constant: λ = ln 2/T½",
+      "advice": "Learn λ = ln 2/T½ and back, T½ = ln 2/λ, with times in seconds (λ in s⁻¹). A longer half-life means a smaller λ.",
+      "vi": {
+        "name": "Hằng số phóng xạ: λ = ln 2/T½",
+        "advice": "Nhớ λ = ln 2/T½ và chiều ngược lại T½ = ln 2/λ, với thời gian tính bằng giây (λ tính bằng s⁻¹). Chu kì bán rã càng dài thì λ càng nhỏ."
+      }
+    },
+    {
+      "id": "analysis",
+      "name": "Counting and the ln graph",
+      "advice": "Subtract the background B·Δt from each count, plot ln(counts) against time: the points scatter about a line of slope −λ. A strong source and a long count give a steadier half-life. The 30 s and 150 s sources are simulated only.",
+      "vi": {
+        "name": "Đếm xung và đồ thị ln",
+        "advice": "Trừ phông nền B·Δt khỏi mỗi số đếm, vẽ ln(số đếm) theo thời gian: các điểm phân bố quanh đường thẳng hệ số góc −λ. Nguồn mạnh và đếm lâu cho chu kì bán rã ổn định hơn. Các nguồn 30 s và 150 s chỉ là mô phỏng."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "half-life",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["law"],
+      "stem": "The half-life of a radioactive source is the time in which…",
+      "explain": "T½: half of the undecayed nuclei decay (and the count rate halves).",
+      "vi": {
+        "stem": "Chu kì bán rã của một chất phóng xạ là khoảng thời gian để…",
+        "explain": "T½: một nửa số hạt nhân chưa phân rã bị phân rã (và tốc độ đếm giảm một nửa)."
+      },
+      "options": [
+        {
+          "text": "half of the undecayed nuclei decay",
+          "vi": {
+            "text": "một nửa số hạt nhân chưa phân rã bị phân rã"
+          },
+          "correct": true
+        },
+        {
+          "text": "all the nuclei decay",
+          "vi": {
+            "text": "toàn bộ số hạt nhân bị phân rã"
+          }
+        },
+        {
+          "text": "the count rate doubles",
+          "vi": {
+            "text": "tốc độ đếm tăng gấp đôi"
+          }
+        },
+        {
+          "text": "one nucleus decays",
+          "vi": {
+            "text": "một hạt nhân bị phân rã"
+          }
+        }
+      ]
+    },
+    {
+      "id": "lambda",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["constant"],
+      "stem": "The decay constant λ and the half-life T½ are related by…",
+      "explain": "e^(−λT½) = ½ gives λ = ln 2/T½.",
+      "vi": {
+        "stem": "Hằng số phóng xạ λ và chu kì bán rã T½ liên hệ với nhau bởi…",
+        "explain": "e^(−λT½) = ½ cho λ = ln 2/T½."
+      },
+      "options": [
+        {
+          "text": "λ = ln 2/T½",
+          "vi": {
+            "text": "λ = ln 2/T½"
+          },
+          "correct": true
+        },
+        {
+          "text": "λ = T½/ln 2",
+          "vi": {
+            "text": "λ = T½/ln 2"
+          }
+        },
+        {
+          "text": "λ = ln 2·T½",
+          "vi": {
+            "text": "λ = ln 2·T½"
+          }
+        },
+        {
+          "text": "λ = 1/T½",
+          "vi": {
+            "text": "λ = 1/T½"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-random",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["random", "law"],
+      "stem": "A Geiger–Müller tube counts the clicks from a radioactive source in equal intervals. Decide whether each statement is true or false.",
+      "explain": "Each decay is random; the background must be subtracted; another run gives other counts; after two half-lives a quarter is left.",
+      "vi": {
+        "stem": "Một ống Geiger–Müller đếm số xung từ một nguồn phóng xạ trong những khoảng thời gian bằng nhau. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Mỗi phân rã là ngẫu nhiên; phải trừ phông nền; lần đo khác cho số đếm khác; sau hai chu kì bán rã còn một phần tư."
+      },
+      "statements": [
+        {
+          "text": "When a given nucleus will decay cannot be predicted.",
+          "vi": {
+            "text": "Không thể biết trước khi nào một hạt nhân cụ thể sẽ phân rã."
+          },
+          "true": true
+        },
+        {
+          "text": "The background count must be subtracted from each count.",
+          "vi": {
+            "text": "Phải trừ phông nền khỏi mỗi số đếm."
+          },
+          "true": true
+        },
+        {
+          "text": "Run again, the source gives exactly the same counts.",
+          "vi": {
+            "text": "Đo lại lần nữa, nguồn cho đúng những số đếm như cũ."
+          },
+          "true": false
+        },
+        {
+          "text": "After two half-lives a quarter of the nuclei are left.",
+          "vi": {
+            "text": "Sau hai chu kì bán rã còn lại một phần tư số hạt nhân."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "three-half-lives",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["law"],
+      "stem": "What fraction of the undecayed nuclei is left after three half-lives?",
+      "explain": "½ · ½ · ½ = ⅛.",
+      "vi": {
+        "stem": "Sau ba chu kì bán rã, số hạt nhân chưa phân rã còn lại bao nhiêu phần?",
+        "explain": "½ · ½ · ½ = ⅛."
+      },
+      "options": [
+        {
+          "text": "1/8",
+          "vi": {
+            "text": "1/8"
+          },
+          "correct": true
+        },
+        {
+          "text": "1/3",
+          "vi": {
+            "text": "1/3"
+          }
+        },
+        {
+          "text": "1/6",
+          "vi": {
+            "text": "1/6"
+          }
+        },
+        {
+          "text": "0",
+          "vi": {
+            "text": "0"
+          }
+        }
+      ]
+    },
+    {
+      "id": "straight-graph",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["analysis"],
+      "stem": "After subtracting the background, which graph of the counts N against time t is a straight line?",
+      "explain": "N = N₀·e^(−λt), so ln N = ln N₀ − λt: ln N against t is a line of slope −λ.",
+      "vi": {
+        "stem": "Sau khi trừ phông nền, đồ thị nào của số đếm N theo thời gian t là đường thẳng?",
+        "explain": "N = N₀·e^(−λt), nên ln N = ln N₀ − λt: ln N theo t là đường thẳng hệ số góc −λ."
+      },
+      "options": [
+        {
+          "text": "ln N against t",
+          "vi": {
+            "text": "ln N theo t"
+          },
+          "correct": true
+        },
+        {
+          "text": "N against t",
+          "vi": {
+            "text": "N theo t"
+          }
+        },
+        {
+          "text": "N against 1/t",
+          "vi": {
+            "text": "N theo 1/t"
+          }
+        },
+        {
+          "text": "ln N against ln t",
+          "vi": {
+            "text": "ln N theo ln t"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-30s",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["constant", "law"],
+      "set": {
+        "halfLife": 30
+      },
+      "stem": "A simulated source has a half-life of {halfLife} s. Decide whether each statement is true or false.",
+      "explain": "λ = ln 2/T½ ≈ {@decayConstant} s⁻¹; after 60 s (two half-lives) the rate is a quarter; after 15 s it is 1/√2 ≈ 71 %, not half. A longer half-life has a smaller λ.",
+      "vi": {
+        "stem": "Một nguồn mô phỏng có chu kì bán rã {halfLife} s. Mỗi nhận định sau đúng hay sai?",
+        "explain": "λ = ln 2/T½ ≈ {@decayConstant} s⁻¹; sau 60 s (hai chu kì bán rã) tốc độ đếm còn một phần tư; sau 15 s còn 1/√2 ≈ 71 %, không phải một nửa. Chu kì bán rã dài hơn thì λ nhỏ hơn."
+      },
+      "statements": [
+        {
+          "text": "Its decay constant is about {@decayConstant} s⁻¹.",
+          "vi": {
+            "text": "Hằng số phóng xạ của nó khoảng {@decayConstant} s⁻¹."
+          },
+          "true": true,
+          "check": {
+            "expr": "ln(2)/halfLife",
+            "equals": "decayConstant"
+          }
+        },
+        {
+          "text": "After 60 s its count rate is a quarter of the start.",
+          "vi": {
+            "text": "Sau 60 s, tốc độ đếm còn một phần tư so với lúc đầu."
+          },
+          "true": true
+        },
+        {
+          "text": "After 15 s its count rate is half of the start.",
+          "vi": {
+            "text": "Sau 15 s, tốc độ đếm còn một nửa so với lúc đầu."
+          },
+          "true": false
+        },
+        {
+          "text": "A source with a longer half-life has a smaller decay constant.",
+          "vi": {
+            "text": "Nguồn có chu kì bán rã dài hơn thì hằng số phóng xạ nhỏ hơn."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "decay-constant",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["constant"],
+      "set": {
+        "halfLife": 150
+      },
+      "stem": "A source has a half-life of {halfLife} s. What is its decay constant?",
+      "explain": "λ = ln 2/T½ = 0.693/{halfLife} ≈ {@decayConstant} s⁻¹.",
+      "vi": {
+        "stem": "Một nguồn có chu kì bán rã {halfLife} s. Hằng số phóng xạ của nó bằng bao nhiêu?",
+        "explain": "λ = ln 2/T½ = 0,693/{halfLife} ≈ {@decayConstant} s⁻¹."
+      },
+      "options": [
+        {
+          "text": "{@decayConstant} s⁻¹",
+          "vi": {
+            "text": "{@decayConstant} s⁻¹"
+          },
+          "correct": true,
+          "check": {
+            "expr": "ln(2)/halfLife",
+            "equals": "decayConstant"
+          }
+        },
+        {
+          "text": "{=halfLife/ln(2)} s⁻¹",
+          "vi": {
+            "text": "{=halfLife/ln(2)} s⁻¹"
+          },
+          "check": {
+            "expr": "halfLife/ln(2)",
+            "equals": "decayConstant"
+          }
+        },
+        {
+          "text": "{=1/halfLife} s⁻¹",
+          "vi": {
+            "text": "{=1/halfLife} s⁻¹"
+          },
+          "check": {
+            "expr": "1/halfLife",
+            "equals": "decayConstant"
+          }
+        },
+        {
+          "text": "{=ln(2)*halfLife} s⁻¹",
+          "vi": {
+            "text": "{=ln(2)*halfLife} s⁻¹"
+          },
+          "check": {
+            "expr": "ln(2)*halfLife",
+            "equals": "decayConstant"
+          }
+        }
+      ]
+    },
+    {
+      "id": "background",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["random"],
+      "set": {
+        "initialRate": 10,
+        "countInterval": 20
+      },
+      "stem": "The background is {background} counts per second. How many background counts are expected in each {countInterval} s interval?",
+      "explain": "B·Δt = {background}·{countInterval} = {@backgroundCount} counts, on average.",
+      "vi": {
+        "stem": "Phông nền là {background} xung mỗi giây. Trong mỗi khoảng {countInterval} s, có bao nhiêu xung phông nền?",
+        "explain": "B·Δt = {background}·{countInterval} = {@backgroundCount} xung, tính trung bình."
+      },
+      "options": [
+        {
+          "text": "{@backgroundCount}",
+          "vi": {
+            "text": "{@backgroundCount}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "background*countInterval",
+            "equals": "backgroundCount"
+          }
+        },
+        {
+          "text": "{=background/countInterval}",
+          "vi": {
+            "text": "{=background/countInterval}"
+          },
+          "check": {
+            "expr": "background/countInterval",
+            "equals": "backgroundCount"
+          }
+        },
+        {
+          "text": "{background}",
+          "vi": {
+            "text": "{background}"
+          },
+          "check": {
+            "expr": "background",
+            "equals": "backgroundCount"
+          }
+        },
+        {
+          "text": "{=countInterval/background}",
+          "vi": {
+            "text": "{=countInterval/background}"
+          },
+          "check": {
+            "expr": "countInterval/background",
+            "equals": "backgroundCount"
+          }
+        }
+      ]
+    },
+    {
+      "id": "first-count",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["law", "random"],
+      "set": {
+        "halfLife": 30,
+        "initialRate": 20,
+        "countInterval": 20
+      },
+      "stem": "A simulated source (T½ = {halfLife} s, λ ≈ {@decayConstant} s⁻¹) starts at {initialRate} counts per second; the background is {background} counts/s. What count is expected, on average, in the first {countInterval} s?",
+      "explain": "The rate falls during the interval: R₀/λ·(1 − e^(−λΔt)) ≈ {=initialRate/@decayConstant*(1-exp(-@decayConstant*countInterval))} from the source, plus B·Δt = {@backgroundCount}: about {@firstCount}. R₀·Δt forgets the decay during the interval.",
+      "vi": {
+        "stem": "Một nguồn mô phỏng (T½ = {halfLife} s, λ ≈ {@decayConstant} s⁻¹) có tốc độ đếm ban đầu {initialRate} xung/s; phông nền {background} xung/s. Trung bình có bao nhiêu xung trong {countInterval} s đầu tiên?",
+        "explain": "Tốc độ đếm giảm trong khoảng đó: R₀/λ·(1 − e^(−λΔt)) ≈ {=initialRate/@decayConstant*(1-exp(-@decayConstant*countInterval))} xung từ nguồn, cộng B·Δt = {@backgroundCount}: khoảng {@firstCount}. R₀·Δt là quên mất sự phân rã trong khoảng thời gian đó."
+      },
+      "options": [
+        {
+          "text": "{@firstCount}",
+          "vi": {
+            "text": "{@firstCount}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "initialRate/@decayConstant*(1-exp(-@decayConstant*countInterval))+background*countInterval",
+            "equals": "firstCount"
+          }
+        },
+        {
+          "text": "{=initialRate*countInterval+background*countInterval}",
+          "vi": {
+            "text": "{=initialRate*countInterval+background*countInterval}"
+          },
+          "check": {
+            "expr": "initialRate*countInterval+background*countInterval",
+            "equals": "firstCount"
+          }
+        },
+        {
+          "text": "{=initialRate/@decayConstant*(1-exp(-@decayConstant*countInterval))}",
+          "vi": {
+            "text": "{=initialRate/@decayConstant*(1-exp(-@decayConstant*countInterval))}"
+          },
+          "check": {
+            "expr": "initialRate/@decayConstant*(1-exp(-@decayConstant*countInterval))",
+            "equals": "firstCount"
+          }
+        },
+        {
+          "text": "{=initialRate*countInterval}",
+          "vi": {
+            "text": "{=initialRate*countInterval}"
+          },
+          "check": {
+            "expr": "initialRate*countInterval",
+            "equals": "firstCount"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-pa",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["constant", "random"],
+      "set": {
+        "halfLife": 69.54,
+        "initialRate": 40,
+        "countInterval": 10
+      },
+      "stem": "Protactinium-234m (T½ = {halfLife} s) starts at {initialRate} counts per second, counted in {countInterval} s intervals; the background is {background} counts/s. Decide whether each statement is true or false.",
+      "explain": "λ = ln 2/T½ ≈ {@decayConstant} s⁻¹; the first interval’s mean count is about {@firstCount}, of which {@backgroundCount} is background. Counts are random, so a real count scatters around that mean.",
+      "vi": {
+        "stem": "Protactini-234m (T½ = {halfLife} s) có tốc độ đếm ban đầu {initialRate} xung/s, đếm theo từng khoảng {countInterval} s; phông nền {background} xung/s. Mỗi nhận định sau đúng hay sai?",
+        "explain": "λ = ln 2/T½ ≈ {@decayConstant} s⁻¹; số đếm trung bình trong khoảng đầu tiên khoảng {@firstCount}, trong đó {@backgroundCount} là phông nền. Số đếm là ngẫu nhiên nên số đếm thật dao động quanh giá trị trung bình đó."
+      },
+      "statements": [
+        {
+          "text": "Its decay constant is about {@decayConstant} s⁻¹.",
+          "vi": {
+            "text": "Hằng số phóng xạ của nó khoảng {@decayConstant} s⁻¹."
+          },
+          "true": true,
+          "check": {
+            "expr": "ln(2)/halfLife",
+            "equals": "decayConstant"
+          }
+        },
+        {
+          "text": "The mean count in the first interval is about {@firstCount}.",
+          "vi": {
+            "text": "Số đếm trung bình trong khoảng đầu tiên khoảng {@firstCount}."
+          },
+          "true": true,
+          "check": {
+            "expr": "initialRate/@decayConstant*(1-exp(-@decayConstant*countInterval))+background*countInterval",
+            "equals": "firstCount"
+          }
+        },
+        {
+          "text": "About {@backgroundCount} of each interval’s counts are background.",
+          "vi": {
+            "text": "Khoảng {@backgroundCount} xung trong mỗi khoảng là phông nền."
+          },
+          "true": true,
+          "check": {
+            "expr": "background*countInterval",
+            "equals": "backgroundCount"
+          }
+        },
+        {
+          "text": "Every run gives exactly {=round(@firstCount)} counts in the first interval.",
+          "vi": {
+            "text": "Lần chạy nào cũng cho đúng {=round(@firstCount)} xung trong khoảng đầu tiên."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "from-slope",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["analysis", "constant"],
+      "set": {
+        "halfLife": 150
+      },
+      "stem": "For a simulated source, ln(N − B·Δt) against time scatters about a line of slope −{@decayConstant|3} s⁻¹. What half-life does this give?",
+      "explain": "The slope is −λ, so λ = {@decayConstant|3} s⁻¹ and T½ = ln 2/λ ≈ {=ln(2)/@decayConstant} s.",
+      "vi": {
+        "stem": "Với một nguồn mô phỏng, đồ thị ln(N − B·Δt) theo thời gian phân bố quanh đường thẳng có hệ số góc −{@decayConstant|3} s⁻¹. Chu kì bán rã tương ứng bằng bao nhiêu?",
+        "explain": "Hệ số góc bằng −λ, nên λ = {@decayConstant|3} s⁻¹ và T½ = ln 2/λ ≈ {=ln(2)/@decayConstant} s."
+      },
+      "options": [
+        {
+          "text": "{=ln(2)/@decayConstant} s",
+          "vi": {
+            "text": "{=ln(2)/@decayConstant} s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "ln(2)/@decayConstant",
+            "equals": "halfLife"
+          }
+        },
+        {
+          "text": "{=1/@decayConstant} s",
+          "vi": {
+            "text": "{=1/@decayConstant} s"
+          },
+          "check": {
+            "expr": "1/@decayConstant",
+            "equals": "halfLife"
+          }
+        },
+        {
+          "text": "{=@decayConstant/ln(2)} s",
+          "vi": {
+            "text": "{=@decayConstant/ln(2)} s"
+          },
+          "check": {
+            "expr": "@decayConstant/ln(2)",
+            "equals": "halfLife"
+          }
+        },
+        {
+          "text": "{=ln(2)*@decayConstant} s",
+          "vi": {
+            "text": "{=ln(2)*@decayConstant} s"
+          },
+          "check": {
+            "expr": "ln(2)*@decayConstant",
+            "equals": "halfLife"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-weak",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["analysis", "random"],
+      "set": {
+        "halfLife": 30,
+        "initialRate": 10,
+        "countInterval": 5,
+        "draw": 1
+      },
+      "stem": "A weak simulated source (T½ = {halfLife} s, {initialRate} counts per second at the start) is counted in {countInterval} s intervals; the background is {background} counts/s. Decide whether each statement is true or false.",
+      "explain": "The first interval’s mean is about {@firstCount} counts; later intervals fall towards B·Δt = {@backgroundCount}, and those with N ≤ B·Δt are left out of the fit. With so few counts the fitted half-life scatters widely: a strong source and a long count steady it. The background cannot be ignored here.",
+      "vi": {
+        "stem": "Một nguồn mô phỏng yếu (T½ = {halfLife} s, tốc độ đếm ban đầu {initialRate} xung/s) được đếm theo từng khoảng {countInterval} s; phông nền {background} xung/s. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Số đếm trung bình của khoảng đầu tiên khoảng {@firstCount} xung; các khoảng sau giảm dần về B·Δt = {@backgroundCount}, và những khoảng có N ≤ B·Δt bị loại khỏi phép khớp. Với số đếm ít như vậy, chu kì bán rã khớp được dao động nhiều: nguồn mạnh và đếm lâu sẽ cho kết quả ổn định hơn. Ở đây không thể bỏ qua phông nền."
+      },
+      "statements": [
+        {
+          "text": "The mean count in the first interval is about {@firstCount}.",
+          "vi": {
+            "text": "Số đếm trung bình trong khoảng đầu tiên khoảng {@firstCount}."
+          },
+          "true": true,
+          "check": {
+            "expr": "initialRate/@decayConstant*(1-exp(-@decayConstant*countInterval))+background*countInterval",
+            "equals": "firstCount"
+          }
+        },
+        {
+          "text": "Intervals whose count is no more than the background B·Δt are left out of the fit.",
+          "vi": {
+            "text": "Những khoảng có số đếm không lớn hơn phông nền B·Δt bị loại khỏi phép khớp."
+          },
+          "true": true
+        },
+        {
+          "text": "With a source this weak, the fitted half-life scatters more than with a strong one.",
+          "vi": {
+            "text": "Với nguồn yếu như vậy, chu kì bán rã khớp được dao động nhiều hơn so với nguồn mạnh."
+          },
+          "true": true
+        },
+        {
+          "text": "The background is so small that it need not be subtracted.",
+          "vi": {
+            "text": "Phông nền nhỏ đến mức không cần trừ đi."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "becquerel",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["law"],
+      "stem": "The activity of a radioactive source is measured in becquerels. One becquerel is…",
+      "explain": "1 Bq is one decay per second. The activity H = λ·N falls with time just as N does.",
+      "vi": {
+        "stem": "Độ phóng xạ của một nguồn phóng xạ được đo bằng becơren. Một becơren là…",
+        "explain": "1 Bq là một phân rã trong một giây. Độ phóng xạ H = λ·N giảm theo thời gian giống như N."
+      },
+      "options": [
+        {
+          "text": "one decay per second",
+          "vi": {
+            "text": "một phân rã trong một giây"
+          },
+          "correct": true
+        },
+        {
+          "text": "one decay per minute",
+          "vi": {
+            "text": "một phân rã trong một phút"
+          }
+        },
+        {
+          "text": "the time for half the nuclei to decay",
+          "vi": {
+            "text": "thời gian để một nửa số hạt nhân phân rã"
+          }
+        },
+        {
+          "text": "one gram of radioactive material",
+          "vi": {
+            "text": "một gam chất phóng xạ"
+          }
+        }
+      ]
+    },
+    {
+      "id": "heated-source",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["random", "law"],
+      "stem": "A radioactive source is heated strongly. Its half-life…",
+      "explain": "Radioactive decay happens inside the nucleus; temperature, pressure and chemical changes do not affect it, so the half-life stays the same.",
+      "vi": {
+        "stem": "Một nguồn phóng xạ bị nung nóng mạnh. Chu kì bán rã của nó…",
+        "explain": "Phân rã phóng xạ xảy ra bên trong hạt nhân; nhiệt độ, áp suất hay biến đổi hóa học không ảnh hưởng đến nó, nên chu kì bán rã không đổi."
+      },
+      "options": [
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          },
+          "correct": true
+        },
+        {
+          "text": "becomes shorter",
+          "vi": {
+            "text": "ngắn đi"
+          }
+        },
+        {
+          "text": "becomes longer",
+          "vi": {
+            "text": "dài ra"
+          }
+        },
+        {
+          "text": "becomes zero: the source decays at once",
+          "vi": {
+            "text": "bằng 0: nguồn phân rã hết ngay"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-halves",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["law", "constant", "random"],
+      "stem": "Decide whether each statement about the decay of a radioactive source is true or false.",
+      "explain": "Each half-life halves what is left: after two, a quarter remains, never none. Every undecayed nucleus has the same chance of decaying per second, λ. λ = ln 2/T½, so a larger λ means a shorter half-life.",
+      "vi": {
+        "stem": "Mỗi nhận định sau về sự phân rã của một nguồn phóng xạ đúng hay sai?",
+        "explain": "Sau mỗi chu kì bán rã, lượng còn lại giảm một nửa: sau hai chu kì còn một phần tư, không bao giờ hết hẳn. Mỗi hạt nhân chưa phân rã có cùng xác suất phân rã trong một giây, λ. λ = ln 2/T½, nên λ lớn hơn thì chu kì bán rã ngắn hơn."
+      },
+      "statements": [
+        {
+          "text": "After two half-lives a quarter of the undecayed nuclei remain.",
+          "vi": {
+            "text": "Sau hai chu kì bán rã, còn lại một phần tư số hạt nhân chưa phân rã."
+          },
+          "true": true
+        },
+        {
+          "text": "Every undecayed nucleus has the same chance of decaying in the next second.",
+          "vi": {
+            "text": "Mỗi hạt nhân chưa phân rã có cùng xác suất phân rã trong giây tiếp theo."
+          },
+          "true": true
+        },
+        {
+          "text": "After two half-lives the source has decayed completely.",
+          "vi": {
+            "text": "Sau hai chu kì bán rã, nguồn đã phân rã hết."
+          },
+          "true": false
+        },
+        {
+          "text": "A larger decay constant means a shorter half-life.",
+          "vi": {
+            "text": "Hằng số phóng xạ lớn hơn thì chu kì bán rã ngắn hơn."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "rate-later",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["law"],
+      "set": {
+        "halfLife": 150,
+        "initialRate": 60
+      },
+      "stem": "A simulated source (T½ = {halfLife} s) gives {initialRate} counts per second at the start, after the background is taken away. What does it give {=2*halfLife} s later?",
+      "explain": "{=2*halfLife} s is two half-lives: R = R₀/2² = {initialRate}/4 = {=initialRate/4} per second. One halving gives {=initialRate/2}; R₀·e⁻² uses e where the base should be 2 (or λt in the exponent).",
+      "vi": {
+        "stem": "Một nguồn mô phỏng (T½ = {halfLife} s) cho {initialRate} xung mỗi giây lúc đầu, sau khi đã trừ phông. Sau {=2*halfLife} s nó cho bao nhiêu xung mỗi giây?",
+        "explain": "{=2*halfLife} s là hai chu kì bán rã: R = R₀/2² = {initialRate}/4 = {=initialRate/4} xung mỗi giây. Chỉ chia đôi một lần sẽ ra {=initialRate/2}; R₀·e⁻² là dùng cơ số e thay cho 2 (hoặc thay cho λt ở số mũ)."
+      },
+      "options": [
+        {
+          "text": "{=initialRate/4} per second",
+          "vi": {
+            "text": "{=initialRate/4} xung mỗi giây"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2*halfLife*ln(2)/ln(initialRate/(initialRate/4))",
+            "equals": "halfLife"
+          }
+        },
+        {
+          "text": "{=initialRate/2} per second",
+          "vi": {
+            "text": "{=initialRate/2} xung mỗi giây"
+          },
+          "check": {
+            "expr": "2*halfLife*ln(2)/ln(initialRate/(initialRate/2))",
+            "equals": "halfLife"
+          }
+        },
+        {
+          "text": "{=initialRate/8} per second",
+          "vi": {
+            "text": "{=initialRate/8} xung mỗi giây"
+          },
+          "check": {
+            "expr": "2*halfLife*ln(2)/ln(initialRate/(initialRate/8))",
+            "equals": "halfLife"
+          }
+        },
+        {
+          "text": "{=initialRate*exp(-2)|3} per second",
+          "vi": {
+            "text": "{=initialRate*exp(-2)|3} xung mỗi giây"
+          },
+          "check": {
+            "expr": "2*halfLife*ln(2)/ln(initialRate/(initialRate*exp(-2)))",
+            "equals": "halfLife"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-pa-60",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["constant", "analysis"],
+      "set": {
+        "halfLife": 69.54,
+        "initialRate": 60,
+        "countInterval": 10
+      },
+      "stem": "Protactinium-234m (T½ = {halfLife} s) gives {initialRate} counts per second at the start; the background is {background} counts per second, and counts are taken in {countInterval} s intervals. Decide whether each statement is true or false.",
+      "explain": "λ = ln 2/T½ ≈ {@decayConstant|3} s⁻¹ (not T½/ln 2). The background adds B·Δt = {@backgroundCount} counts to every interval. After one half-life the source’s own rate is half, {=initialRate/2} per second, with the background still on top.",
+      "vi": {
+        "stem": "Protactini-234m (T½ = {halfLife} s) cho {initialRate} xung mỗi giây lúc đầu; phông là {background} xung mỗi giây, và số đếm được ghi trong từng khoảng {countInterval} s. Mỗi nhận định sau đúng hay sai?",
+        "explain": "λ = ln 2/T½ ≈ {@decayConstant|3} s⁻¹ (không phải T½/ln 2). Phông cộng thêm B·Δt = {@backgroundCount} xung vào mỗi khoảng đếm. Sau một chu kì bán rã, tốc độ đếm của riêng nguồn còn một nửa, {=initialRate/2} xung mỗi giây, vẫn cộng thêm phông."
+      },
+      "statements": [
+        {
+          "text": "The decay constant is about {@decayConstant|3} s⁻¹.",
+          "vi": {
+            "text": "Hằng số phóng xạ khoảng {@decayConstant|3} s⁻¹."
+          },
+          "true": true,
+          "check": {
+            "expr": "ln(2)/halfLife",
+            "equals": "decayConstant"
+          }
+        },
+        {
+          "text": "Each interval holds about {@backgroundCount} background counts.",
+          "vi": {
+            "text": "Mỗi khoảng đếm có khoảng {@backgroundCount} xung do phông."
+          },
+          "true": true,
+          "check": {
+            "expr": "background*countInterval",
+            "equals": "backgroundCount"
+          }
+        },
+        {
+          "text": "After {halfLife} s the source’s own rate is {=initialRate/2} counts per second.",
+          "vi": {
+            "text": "Sau {halfLife} s, tốc độ đếm của riêng nguồn là {=initialRate/2} xung mỗi giây."
+          },
+          "true": true
+        },
+        {
+          "text": "The decay constant is T½/ln 2 ≈ {=halfLife/ln(2)|3} s⁻¹.",
+          "vi": {
+            "text": "Hằng số phóng xạ bằng T½/ln 2 ≈ {=halfLife/ln(2)|3} s⁻¹."
+          },
+          "true": false,
+          "check": {
+            "expr": "halfLife/ln(2)",
+            "equals": "decayConstant"
+          }
+        }
+      ]
+    },
+    {
+      "id": "first-interval",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["law", "analysis"],
+      "set": {
+        "halfLife": 30,
+        "initialRate": 60,
+        "countInterval": 10
+      },
+      "stem": "A simulated source (T½ = {halfLife} s, λ ≈ {@decayConstant|4} s⁻¹) starts at {initialRate} counts per second; the background is {background} per second. How many counts are expected in the first {countInterval} s?",
+      "explain": "The source’s rate falls during the interval: its counts are R₀(1 − e^(−λΔt))/λ ≈ {=@firstCount-@backgroundCount}, plus the background B·Δt = {@backgroundCount}: about {@firstCount} in all. R₀·Δt ignores the decay; leaving out the background gives the third value.",
+      "vi": {
+        "stem": "Một nguồn mô phỏng (T½ = {halfLife} s, λ ≈ {@decayConstant|4} s⁻¹) bắt đầu với {initialRate} xung mỗi giây; phông là {background} xung mỗi giây. Trong {countInterval} s đầu tiên dự kiến đếm được bao nhiêu xung?",
+        "explain": "Tốc độ đếm của nguồn giảm ngay trong khoảng đếm: số xung của nguồn là R₀(1 − e^(−λΔt))/λ ≈ {=@firstCount-@backgroundCount}, cộng thêm phông B·Δt = {@backgroundCount}: tổng cộng khoảng {@firstCount}. R₀·Δt là bỏ qua sự phân rã; bỏ phông sẽ ra giá trị thứ ba."
+      },
+      "options": [
+        {
+          "text": "{@firstCount}",
+          "vi": {
+            "text": "{@firstCount}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "initialRate*(1-exp(-@decayConstant*countInterval))/@decayConstant+background*countInterval",
+            "equals": "firstCount"
+          }
+        },
+        {
+          "text": "{=initialRate*countInterval+@backgroundCount}",
+          "vi": {
+            "text": "{=initialRate*countInterval+@backgroundCount}"
+          },
+          "check": {
+            "expr": "initialRate*countInterval+@backgroundCount",
+            "equals": "firstCount"
+          }
+        },
+        {
+          "text": "{=@firstCount-@backgroundCount}",
+          "vi": {
+            "text": "{=@firstCount-@backgroundCount}"
+          },
+          "check": {
+            "expr": "@firstCount-@backgroundCount",
+            "equals": "firstCount"
+          }
+        },
+        {
+          "text": "{=initialRate*countInterval*exp(-@decayConstant*countInterval)}",
+          "vi": {
+            "text": "{=initialRate*countInterval*exp(-@decayConstant*countInterval)}"
+          },
+          "check": {
+            "expr": "initialRate*countInterval*exp(-@decayConstant*countInterval)",
+            "equals": "firstCount"
+          }
+        }
+      ]
+    },
+    {
+      "id": "half-life-from-rates",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["law", "constant"],
+      "set": {
+        "halfLife": 150,
+        "initialRate": 40
+      },
+      "stem": "With the background taken away, a source’s count rate falls from {initialRate} to {=initialRate*exp(-@decayConstant*100)|4} counts per second in 100 s. What is its half-life?",
+      "explain": "R = R₀·e^(−λt): λ = ln(R₀/R)/t ≈ {=ln(1/exp(-@decayConstant*100))/100|3} s⁻¹ and T½ = ln 2/λ ≈ {=ln(2)/@decayConstant|3} s. 1/λ is the mean life, not the half-life; assuming the rate falls in a straight line gives the last value.",
+      "vi": {
+        "stem": "Sau khi trừ phông, tốc độ đếm của một nguồn giảm từ {initialRate} xuống {=initialRate*exp(-@decayConstant*100)|4} xung mỗi giây trong 100 s. Chu kì bán rã của nó bằng bao nhiêu?",
+        "explain": "R = R₀·e^(−λt): λ = ln(R₀/R)/t ≈ {=ln(1/exp(-@decayConstant*100))/100|3} s⁻¹ và T½ = ln 2/λ ≈ {=ln(2)/@decayConstant|3} s. 1/λ là thời gian sống trung bình, không phải chu kì bán rã; giả sử tốc độ đếm giảm theo đường thẳng sẽ ra giá trị cuối."
+      },
+      "options": [
+        {
+          "text": "{=100*ln(2)/ln(1/exp(-@decayConstant*100))|3} s",
+          "vi": {
+            "text": "{=100*ln(2)/ln(1/exp(-@decayConstant*100))|3} s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "ln(2)/(100*ln(2)/ln(1/exp(-@decayConstant*100)))",
+            "equals": "decayConstant"
+          }
+        },
+        {
+          "text": "{=100/ln(1/exp(-@decayConstant*100))|3} s",
+          "vi": {
+            "text": "{=100/ln(1/exp(-@decayConstant*100))|3} s"
+          },
+          "check": {
+            "expr": "ln(2)/(100/ln(1/exp(-@decayConstant*100)))",
+            "equals": "decayConstant"
+          }
+        },
+        {
+          "text": "{=100*ln(1/exp(-@decayConstant*100))/ln(2)|3} s",
+          "vi": {
+            "text": "{=100*ln(1/exp(-@decayConstant*100))/ln(2)|3} s"
+          },
+          "check": {
+            "expr": "ln(2)/(100*ln(1/exp(-@decayConstant*100))/ln(2))",
+            "equals": "decayConstant"
+          }
+        },
+        {
+          "text": "{=100*0.5/(1-exp(-@decayConstant*100))|3} s",
+          "vi": {
+            "text": "{=100*0.5/(1-exp(-@decayConstant*100))|3} s"
+          },
+          "check": {
+            "expr": "ln(2)/(100*0.5/(1-exp(-@decayConstant*100)))",
+            "equals": "decayConstant"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-ln-graph",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["analysis", "random", "constant"],
+      "set": {
+        "halfLife": 30,
+        "initialRate": 60,
+        "countInterval": 5
+      },
+      "stem": "A simulated source (T½ = {halfLife} s) is counted in {countInterval} s intervals; ln(N − B·Δt) is plotted against time. Decide whether each statement is true or false.",
+      "explain": "N − B·Δt ∝ e^(−λt), so its ln falls on a straight line of slope −λ = −{@decayConstant|3} s⁻¹, and T½ = ln 2/|slope| = {halfLife} s. Without taking the background away, the late points level off instead of falling. After five half-lives about 3 % of the source is left and the background never stops: the tube keeps clicking.",
+      "vi": {
+        "stem": "Một nguồn mô phỏng (T½ = {halfLife} s) được đếm trong từng khoảng {countInterval} s; vẽ đồ thị ln(N − B·Δt) theo thời gian. Mỗi nhận định sau đúng hay sai?",
+        "explain": "N − B·Δt tỉ lệ với e^(−λt), nên ln của nó nằm trên một đường thẳng có hệ số góc −λ = −{@decayConstant|3} s⁻¹, và T½ = ln 2/|hệ số góc| = {halfLife} s. Nếu không trừ phông, các điểm về sau chững lại thay vì tiếp tục giảm. Sau năm chu kì bán rã nguồn còn khoảng 3 % và phông không bao giờ mất: ống đếm vẫn kêu."
+      },
+      "statements": [
+        {
+          "text": "The points scatter about a line of slope −{@decayConstant|3} s⁻¹.",
+          "vi": {
+            "text": "Các điểm phân bố quanh một đường thẳng có hệ số góc −{@decayConstant|3} s⁻¹."
+          },
+          "true": true,
+          "check": {
+            "expr": "ln(2)/halfLife",
+            "equals": "decayConstant"
+          }
+        },
+        {
+          "text": "ln 2 divided by the size of the slope gives T½ = {=ln(2)/@decayConstant|3} s.",
+          "vi": {
+            "text": "Lấy ln 2 chia cho độ lớn hệ số góc được T½ = {=ln(2)/@decayConstant|3} s."
+          },
+          "true": true,
+          "check": {
+            "expr": "ln(2)/@decayConstant",
+            "equals": "halfLife"
+          }
+        },
+        {
+          "text": "Without taking the background away, the late points would level off.",
+          "vi": {
+            "text": "Nếu không trừ phông, các điểm về sau sẽ chững lại."
+          },
+          "true": true
+        },
+        {
+          "text": "After five half-lives, {=5*halfLife} s, the tube stops clicking.",
+          "vi": {
+            "text": "Sau năm chu kì bán rã, tức {=5*halfLife} s, ống đếm ngừng kêu."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

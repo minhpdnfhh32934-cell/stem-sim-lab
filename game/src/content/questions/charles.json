@@ -1,0 +1,1078 @@
+{
+  "id": "charles",
+  "skills": [
+    {
+      "id": "law",
+      "name": "Charles’s law: V/T = constant",
+      "advice": "Re-read the conditions: a fixed mass of gas at constant pressure. Then V is proportional to the absolute temperature T — in kelvin, never in °C.",
+      "vi": {
+        "name": "Định luật Charles: V/T = hằng số",
+        "advice": "Đọc lại điều kiện: khối lượng khí xác định, áp suất không đổi. Khi đó V tỉ lệ thuận với nhiệt độ tuyệt đối T — tính bằng kelvin, không bao giờ dùng °C."
+      }
+    },
+    {
+      "id": "kelvin",
+      "name": "Kelvin and Celsius",
+      "advice": "Always convert first: T = t + 273.15 K. Trap: scaling with °C, which would give zero volume at 0 °C. Cool the column in ice at the station: it shrinks, but nowhere near zero.",
+      "vi": {
+        "name": "Nhiệt giai Kelvin và Celsius",
+        "advice": "Luôn đổi trước: T = t + 273,15 K. Lỗi hay gặp: tính tỉ lệ theo °C, như vậy ở 0 °C thể tích sẽ bằng 0. Làm lạnh cột khí bằng nước đá trên trạm: cột co lại nhưng còn xa mới bằng 0."
+      }
+    },
+    {
+      "id": "graph",
+      "name": "The line to absolute zero",
+      "advice": "Plot L against t for several runs: a straight line of slope L0/T0, which extended reaches L = 0 at −273.15 °C. Practise finding that intercept from two points.",
+      "vi": {
+        "name": "Đường thẳng tới độ không tuyệt đối",
+        "advice": "Vẽ L theo t qua nhiều lần đo: đường thẳng có hệ số góc L0/T0, kéo dài cắt L = 0 tại −273,15 °C. Luyện cách tìm giao điểm đó từ hai điểm đo."
+      }
+    },
+    {
+      "id": "measurement",
+      "name": "Reading the column and real effects",
+      "advice": "The tube’s even bore makes length stand for volume. The ruler and thermometer show the nearest multiple of their resolution d, u = d/√12. Water vapour, a lagging thermometer and a sticking bead are left out of the model.",
+      "vi": {
+        "name": "Đọc chiều dài cột khí và các ảnh hưởng thực tế",
+        "advice": "Ống có tiết diện đều nên chiều dài đại diện cho thể tích. Thước và nhiệt kế hiển thị bội số gần nhất của độ phân giải d, u = d/√12. Mô hình bỏ qua hơi nước, nhiệt kế chậm theo kịp và giọt chất lỏng bị kẹt."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "conditions",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["law"],
+      "stem": "Charles’s law applies to a fixed mass of gas whose…",
+      "explain": "Charles’s law: constant pressure; then V/T is constant.",
+      "vi": {
+        "stem": "Định luật Charles áp dụng cho một khối lượng khí xác định có…",
+        "explain": "Định luật Charles: áp suất không đổi; khi đó V/T không đổi."
+      },
+      "options": [
+        {
+          "text": "pressure stays the same",
+          "vi": {
+            "text": "áp suất không đổi"
+          },
+          "correct": true
+        },
+        {
+          "text": "volume stays the same",
+          "vi": {
+            "text": "thể tích không đổi"
+          }
+        },
+        {
+          "text": "temperature stays the same",
+          "vi": {
+            "text": "nhiệt độ không đổi"
+          }
+        },
+        {
+          "text": "pressure and volume both change freely",
+          "vi": {
+            "text": "áp suất và thể tích thay đổi tùy ý"
+          }
+        }
+      ]
+    },
+    {
+      "id": "kelvin",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["kelvin"],
+      "stem": "The room is at {startTemperature} °C. Its absolute temperature is…",
+      "explain": "T = t + 273.15 = {=startTemperature+273.15|5} K.",
+      "vi": {
+        "stem": "Phòng ở nhiệt độ {startTemperature} °C. Nhiệt độ tuyệt đối của phòng là…",
+        "explain": "T = t + 273,15 = {=startTemperature+273.15|5} K."
+      },
+      "options": [
+        {
+          "text": "{=startTemperature+273.15|5} K",
+          "vi": {
+            "text": "{=startTemperature+273.15|5} K"
+          },
+          "correct": true
+        },
+        {
+          "text": "{=273.15-startTemperature|5} K",
+          "vi": {
+            "text": "{=273.15-startTemperature|5} K"
+          }
+        },
+        {
+          "text": "{startTemperature} K",
+          "vi": {
+            "text": "{startTemperature} K"
+          }
+        },
+        {
+          "text": "{=startTemperature-273.15|5} K",
+          "vi": {
+            "text": "{=startTemperature-273.15|5} K"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-column",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["law", "graph", "measurement"],
+      "stem": "A column of air trapped by a bead in a tube of even bore is warmed in a water bath at constant pressure. Decide whether each statement is true or false.",
+      "explain": "The warmed air expands and pushes the bead up; with an even bore the length stands for the volume; V is proportional to T in kelvin, not to t in °C; the line of L against t reaches zero at −273.15 °C.",
+      "vi": {
+        "stem": "Một cột không khí bị giọt chất lỏng nhốt trong ống có tiết diện đều được làm nóng trong bể nước ở áp suất không đổi. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Khí nóng lên giãn nở và đẩy giọt chất lỏng lên; ống có tiết diện đều nên chiều dài đại diện cho thể tích; V tỉ lệ với T theo kelvin, không phải với t theo °C; đường thẳng L theo t cắt L = 0 tại −273,15 °C."
+      },
+      "statements": [
+        {
+          "text": "As the air warms, the bead moves up the tube.",
+          "vi": {
+            "text": "Khi không khí nóng lên, giọt chất lỏng dịch lên phía trên ống."
+          },
+          "true": true
+        },
+        {
+          "text": "Because the bore is even, the column’s length is proportional to its volume.",
+          "vi": {
+            "text": "Vì tiết diện ống đều nên chiều dài cột khí tỉ lệ với thể tích của nó."
+          },
+          "true": true
+        },
+        {
+          "text": "The volume is proportional to the temperature in °C.",
+          "vi": {
+            "text": "Thể tích tỉ lệ thuận với nhiệt độ theo °C."
+          },
+          "true": false
+        },
+        {
+          "text": "The line of length against temperature, extended, reaches zero length at −273.15 °C.",
+          "vi": {
+            "text": "Đường thẳng chiều dài theo nhiệt độ, khi kéo dài, cắt chiều dài bằng 0 tại −273,15 °C."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "20-to-40",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["law", "kelvin"],
+      "set": {
+        "bathTemperature": 40,
+        "startLength": 0.1
+      },
+      "stem": "At constant pressure, air is warmed from {startTemperature} °C to {bathTemperature} °C. Its volume…",
+      "explain": "V ∝ T: ({bathTemperature} + 273.15)/({startTemperature} + 273.15) ≈ {=(bathTemperature+273.15)/(startTemperature+273.15)}: a few percent more, not double — doubling t in °C does not double T.",
+      "vi": {
+        "stem": "Ở áp suất không đổi, không khí được làm nóng từ {startTemperature} °C lên {bathTemperature} °C. Thể tích của nó…",
+        "explain": "V tỉ lệ với T: ({bathTemperature} + 273,15)/({startTemperature} + 273,15) ≈ {=(bathTemperature+273.15)/(startTemperature+273.15)}: chỉ tăng vài phần trăm, không phải gấp đôi — t theo °C tăng gấp đôi không có nghĩa T tăng gấp đôi."
+      },
+      "options": [
+        {
+          "text": "grows about {=(bathTemperature+273.15)/(startTemperature+273.15)} times",
+          "vi": {
+            "text": "tăng khoảng {=(bathTemperature+273.15)/(startTemperature+273.15)} lần"
+          },
+          "correct": true,
+          "check": {
+            "expr": "startLength*(bathTemperature+273.15)/(startTemperature+273.15)",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "doubles",
+          "vi": {
+            "text": "tăng gấp đôi"
+          },
+          "check": {
+            "expr": "2*startLength",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          },
+          "check": {
+            "expr": "startLength",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "halves",
+          "vi": {
+            "text": "giảm một nửa"
+          },
+          "check": {
+            "expr": "startLength/2",
+            "equals": "length"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ice",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["kelvin"],
+      "stem": "The column, measured at 20 °C, is cooled at constant pressure to 0 °C in melting ice. Its length…",
+      "explain": "L ∝ T: 273.15/293.15 ≈ 0.93, so it shrinks by about 7 % — it does not vanish at 0 °C, which is 273.15 K.",
+      "vi": {
+        "stem": "Cột khí, đo ở 20 °C, được làm lạnh ở áp suất không đổi đến 0 °C trong nước đá đang tan. Chiều dài của nó…",
+        "explain": "L tỉ lệ với T: 273,15/293,15 ≈ 0,93, nên cột co lại khoảng 7 % — không biến mất ở 0 °C, vì 0 °C là 273,15 K."
+      },
+      "options": [
+        {
+          "text": "gets a little shorter",
+          "vi": {
+            "text": "ngắn đi một chút"
+          },
+          "correct": true
+        },
+        {
+          "text": "becomes zero",
+          "vi": {
+            "text": "bằng 0"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "gets longer",
+          "vi": {
+            "text": "dài ra"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-80",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["law", "kelvin", "graph"],
+      "set": {
+        "bathTemperature": 80,
+        "startLength": 0.1
+      },
+      "stem": "An air column {startLength} m long at {startTemperature} °C is warmed at constant pressure to {bathTemperature} °C. Decide whether each statement is true or false.",
+      "explain": "L = L0·T/T0 = {startLength}·{=bathTemperature+273.15|5}/{=startTemperature+273.15|5} ≈ {@length|4} m — not L0·80/20. Each kelvin adds L0/T0 ≈ {@lengthPerKelvin} m. The faster molecules push the bead out until the pressure is the room’s again.",
+      "vi": {
+        "stem": "Một cột khí dài {startLength} m ở {startTemperature} °C được làm nóng ở áp suất không đổi đến {bathTemperature} °C. Mỗi nhận định sau đúng hay sai?",
+        "explain": "L = L0·T/T0 = {startLength}·{=bathTemperature+273.15|5}/{=startTemperature+273.15|5} ≈ {@length|4} m — không phải L0·80/20. Mỗi kelvin làm cột dài thêm L0/T0 ≈ {@lengthPerKelvin} m. Các phân tử chuyển động nhanh hơn đẩy giọt chất lỏng ra cho đến khi áp suất lại bằng áp suất phòng."
+      },
+      "statements": [
+        {
+          "text": "The column becomes about {@length|4} m long.",
+          "vi": {
+            "text": "Cột khí dài khoảng {@length|4} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "startLength*(bathTemperature+273.15)/(startTemperature+273.15)",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "The column becomes {=startLength*bathTemperature/startTemperature} m long.",
+          "vi": {
+            "text": "Cột khí dài {=startLength*bathTemperature/startTemperature} m."
+          },
+          "true": false,
+          "check": {
+            "expr": "startLength*bathTemperature/startTemperature",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "Each kelvin of warming lengthens it by about {@lengthPerKelvin} m.",
+          "vi": {
+            "text": "Mỗi kelvin tăng thêm làm cột dài thêm khoảng {@lengthPerKelvin} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "startLength/(startTemperature+273.15)",
+            "equals": "lengthPerKelvin"
+          }
+        },
+        {
+          "text": "It expands because its molecules move faster.",
+          "vi": {
+            "text": "Cột khí giãn nở vì các phân tử chuyển động nhanh hơn."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "length",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["law", "kelvin"],
+      "set": {
+        "bathTemperature": 80,
+        "startLength": 0.1
+      },
+      "stem": "An air column {startLength} m long at {startTemperature} °C is warmed at constant pressure to {bathTemperature} °C. How long is it now?",
+      "explain": "L = L0·T/T0 = {startLength}·{=bathTemperature+273.15|5}/{=startTemperature+273.15|5} ≈ {@length|4} m.",
+      "vi": {
+        "stem": "Cột khí dài {startLength} m ở {startTemperature} °C được làm nóng ở áp suất không đổi đến {bathTemperature} °C. Chiều dài của nó lúc này là bao nhiêu?",
+        "explain": "L = L0·T/T0 = {startLength}·{=bathTemperature+273.15|5}/{=startTemperature+273.15|5} ≈ {@length|4} m."
+      },
+      "options": [
+        {
+          "text": "{@length|4} m",
+          "vi": {
+            "text": "{@length|4} m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "startLength*(bathTemperature+273.15)/(startTemperature+273.15)",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "{=startLength*bathTemperature/startTemperature|4} m",
+          "vi": {
+            "text": "{=startLength*bathTemperature/startTemperature|4} m"
+          },
+          "check": {
+            "expr": "startLength*bathTemperature/startTemperature",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "{=startLength*(1+(bathTemperature-startTemperature)/273)|4} m",
+          "vi": {
+            "text": "{=startLength*(1+(bathTemperature-startTemperature)/273)|4} m"
+          },
+          "check": {
+            "expr": "startLength*(1+(bathTemperature-startTemperature)/273)",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "{=startLength*(startTemperature+273.15)/(bathTemperature+273.15)|4} m",
+          "vi": {
+            "text": "{=startLength*(startTemperature+273.15)/(bathTemperature+273.15)|4} m"
+          },
+          "check": {
+            "expr": "startLength*(startTemperature+273.15)/(bathTemperature+273.15)",
+            "equals": "length"
+          }
+        }
+      ]
+    },
+    {
+      "id": "per-kelvin",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["graph", "kelvin"],
+      "set": {
+        "bathTemperature": 0,
+        "startLength": 0.12
+      },
+      "stem": "An air column is {startLength} m long at {startTemperature} °C. At constant pressure, by how much does its length change for each kelvin?",
+      "explain": "L ∝ T, so ΔL/ΔT = L0/T0 = {startLength}/{=startTemperature+273.15|5} ≈ {@lengthPerKelvin} m/K.",
+      "vi": {
+        "stem": "Cột khí dài {startLength} m ở {startTemperature} °C. Ở áp suất không đổi, chiều dài của nó thay đổi bao nhiêu khi nhiệt độ thay đổi 1 K?",
+        "explain": "L tỉ lệ với T, nên ΔL/ΔT = L0/T0 = {startLength}/{=startTemperature+273.15|5} ≈ {@lengthPerKelvin} m/K."
+      },
+      "options": [
+        {
+          "text": "{@lengthPerKelvin} m/K",
+          "vi": {
+            "text": "{@lengthPerKelvin} m/K"
+          },
+          "correct": true,
+          "check": {
+            "expr": "startLength/(startTemperature+273.15)",
+            "equals": "lengthPerKelvin"
+          }
+        },
+        {
+          "text": "{=startLength/startTemperature} m/K",
+          "vi": {
+            "text": "{=startLength/startTemperature} m/K"
+          },
+          "check": {
+            "expr": "startLength/startTemperature",
+            "equals": "lengthPerKelvin"
+          }
+        },
+        {
+          "text": "{=startLength/273.15} m/K",
+          "vi": {
+            "text": "{=startLength/273.15} m/K"
+          },
+          "check": {
+            "expr": "startLength/273.15",
+            "equals": "lengthPerKelvin"
+          }
+        },
+        {
+          "text": "{=startLength*(startTemperature+273.15)} m/K",
+          "vi": {
+            "text": "{=startLength*(startTemperature+273.15)} m/K"
+          },
+          "check": {
+            "expr": "startLength*(startTemperature+273.15)",
+            "equals": "lengthPerKelvin"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ice-length",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["kelvin"],
+      "set": {
+        "bathTemperature": 0,
+        "startLength": 0.08
+      },
+      "stem": "An air column {startLength} m long at {startTemperature} °C is cooled at constant pressure to {bathTemperature} °C. How long is it now?",
+      "explain": "L = L0·273.15/{=startTemperature+273.15|5} ≈ {@length|4} m. Scaling with °C would wrongly give 0 m.",
+      "vi": {
+        "stem": "Cột khí dài {startLength} m ở {startTemperature} °C được làm lạnh ở áp suất không đổi đến {bathTemperature} °C. Chiều dài của nó lúc này là bao nhiêu?",
+        "explain": "L = L0·273,15/{=startTemperature+273.15|5} ≈ {@length|4} m. Tính theo °C sẽ sai thành 0 m."
+      },
+      "options": [
+        {
+          "text": "{@length|4} m",
+          "vi": {
+            "text": "{@length|4} m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "startLength*273.15/(startTemperature+273.15)",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "{=startLength*bathTemperature/startTemperature} m",
+          "vi": {
+            "text": "{=startLength*bathTemperature/startTemperature} m"
+          },
+          "check": {
+            "expr": "startLength*bathTemperature/startTemperature",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "{startLength} m",
+          "vi": {
+            "text": "{startLength} m"
+          },
+          "check": {
+            "expr": "startLength",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "{=startLength*(startTemperature+273.15)/273.15|4} m",
+          "vi": {
+            "text": "{=startLength*(startTemperature+273.15)/273.15|4} m"
+          },
+          "check": {
+            "expr": "startLength*(startTemperature+273.15)/273.15",
+            "equals": "length"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-40",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["graph", "kelvin"],
+      "set": {
+        "bathTemperature": 40,
+        "startLength": 0.12
+      },
+      "stem": "An air column {startLength} m long at {startTemperature} °C is warmed at constant pressure to {bathTemperature} °C. Decide whether each statement is true or false.",
+      "explain": "T = {=bathTemperature+273.15|5} K; L = L0·T/T0 ≈ {@length|4} m. The line of L against t meets 0 °C at L0·273.15/T0 ≈ {@lengthAtZeroCelsius|4} m, and its slope is L0/T0 ≈ {@lengthPerKelvin} m/K, not L0/t0.",
+      "vi": {
+        "stem": "Cột khí dài {startLength} m ở {startTemperature} °C được làm nóng ở áp suất không đổi đến {bathTemperature} °C. Mỗi nhận định sau đúng hay sai?",
+        "explain": "T = {=bathTemperature+273.15|5} K; L = L0·T/T0 ≈ {@length|4} m. Đường thẳng L theo t cắt trục 0 °C tại L0·273,15/T0 ≈ {@lengthAtZeroCelsius|4} m, và hệ số góc là L0/T0 ≈ {@lengthPerKelvin} m/K, không phải L0/t0."
+      },
+      "statements": [
+        {
+          "text": "The water’s absolute temperature is {=bathTemperature+273.15|5} K.",
+          "vi": {
+            "text": "Nhiệt độ tuyệt đối của nước là {=bathTemperature+273.15|5} K."
+          },
+          "true": true
+        },
+        {
+          "text": "The column becomes about {@length|4} m long.",
+          "vi": {
+            "text": "Cột khí dài khoảng {@length|4} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "startLength*(bathTemperature+273.15)/(startTemperature+273.15)",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "The line of L against t meets t = 0 °C at about {@lengthAtZeroCelsius|4} m.",
+          "vi": {
+            "text": "Đường thẳng L theo t cắt t = 0 °C tại khoảng {@lengthAtZeroCelsius|4} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "startLength*273.15/(startTemperature+273.15)",
+            "equals": "lengthAtZeroCelsius"
+          }
+        },
+        {
+          "text": "The line’s slope is L0/t0 = {=startLength/startTemperature} m/°C.",
+          "vi": {
+            "text": "Hệ số góc của đường thẳng là L0/t0 = {=startLength/startTemperature} m/°C."
+          },
+          "true": false,
+          "check": {
+            "expr": "startLength/startTemperature",
+            "equals": "lengthPerKelvin"
+          }
+        }
+      ]
+    },
+    {
+      "id": "absolute-zero",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["graph"],
+      "set": {
+        "bathTemperature": 80,
+        "startLength": 0.1
+      },
+      "stem": "An air column is {startLength} m long at {startTemperature} °C and {@length|4} m at {bathTemperature} °C, at constant pressure. Extending the straight line of L against t, at what temperature would L be zero?",
+      "explain": "Slope = ({@length|4} − {startLength})/({bathTemperature} − {startTemperature}) ≈ {=(@length-startLength)/(bathTemperature-startTemperature)} m/°C. From the 20 °C point, L reaches 0 after L0/slope ≈ {=startLength*(bathTemperature-startTemperature)/(@length-startLength)|5} °C more cooling: t = {startTemperature} − {=startLength*(bathTemperature-startTemperature)/(@length-startLength)|5} ≈ {@absoluteZero|5} °C.",
+      "vi": {
+        "stem": "Ở áp suất không đổi, cột khí dài {startLength} m ở {startTemperature} °C và {@length|4} m ở {bathTemperature} °C. Kéo dài đường thẳng L theo t, chiều dài bằng 0 ở nhiệt độ nào?",
+        "explain": "Hệ số góc = ({@length|4} − {startLength})/({bathTemperature} − {startTemperature}) ≈ {=(@length-startLength)/(bathTemperature-startTemperature)} m/°C. Từ điểm 20 °C, L giảm về 0 sau khi hạ thêm L0/hệ số góc ≈ {=startLength*(bathTemperature-startTemperature)/(@length-startLength)|5} °C: t = {startTemperature} − {=startLength*(bathTemperature-startTemperature)/(@length-startLength)|5} ≈ {@absoluteZero|5} °C."
+      },
+      "options": [
+        {
+          "text": "{=startTemperature-startLength*(bathTemperature-startTemperature)/(@length-startLength)|5} °C",
+          "vi": {
+            "text": "{=startTemperature-startLength*(bathTemperature-startTemperature)/(@length-startLength)|5} °C"
+          },
+          "correct": true,
+          "check": {
+            "expr": "startTemperature-startLength*(bathTemperature-startTemperature)/(@length-startLength)",
+            "equals": "absoluteZero"
+          }
+        },
+        {
+          "text": "{=-startLength*(bathTemperature-startTemperature)/(@length-startLength)|5} °C",
+          "vi": {
+            "text": "{=-startLength*(bathTemperature-startTemperature)/(@length-startLength)|5} °C"
+          },
+          "check": {
+            "expr": "-startLength*(bathTemperature-startTemperature)/(@length-startLength)",
+            "equals": "absoluteZero"
+          }
+        },
+        {
+          "text": "0 °C",
+          "vi": {
+            "text": "0 °C"
+          },
+          "check": {
+            "expr": "0",
+            "equals": "absoluteZero"
+          }
+        },
+        {
+          "text": "{=startTemperature-startLength*(bathTemperature-startTemperature)/@length|3} °C",
+          "vi": {
+            "text": "{=startTemperature-startLength*(bathTemperature-startTemperature)/@length|3} °C"
+          },
+          "check": {
+            "expr": "startTemperature-startLength*(bathTemperature-startTemperature)/@length",
+            "equals": "absoluteZero"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-ruler",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["measurement", "law"],
+      "set": {
+        "bathTemperature": 60,
+        "startLength": 0.1,
+        "rulerResolution": 0.001
+      },
+      "stem": "An air column {startLength} m long at {startTemperature} °C is warmed at constant pressure to {bathTemperature} °C and read on a ruler of resolution {rulerResolution} m. Decide whether each statement is true or false.",
+      "explain": "L ≈ {@length|4} m reads as {=round(@length/rulerResolution)*rulerResolution} m; u = d/√12 ≈ {=rulerResolution/sqrt(12)|2} m from the resolution alone. Water vapour in a real column lengthens it at high temperatures, it does not shorten it.",
+      "vi": {
+        "stem": "Cột khí dài {startLength} m ở {startTemperature} °C được làm nóng ở áp suất không đổi đến {bathTemperature} °C và đọc trên thước có độ chia {rulerResolution} m. Mỗi nhận định sau đúng hay sai?",
+        "explain": "L ≈ {@length|4} m đọc được {=round(@length/rulerResolution)*rulerResolution} m; u = d/√12 ≈ {=rulerResolution/sqrt(12)|2} m chỉ do độ phân giải. Hơi nước trong cột khí thật làm cột dài thêm ở nhiệt độ cao, không làm nó ngắn đi."
+      },
+      "statements": [
+        {
+          "text": "The model’s column is about {@length|4} m long.",
+          "vi": {
+            "text": "Cột khí theo mô hình dài khoảng {@length|4} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "startLength*(bathTemperature+273.15)/(startTemperature+273.15)",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "The ruler reads {=round(@length/rulerResolution)*rulerResolution} m.",
+          "vi": {
+            "text": "Thước đọc được {=round(@length/rulerResolution)*rulerResolution} m."
+          },
+          "true": true
+        },
+        {
+          "text": "The ruler’s standard uncertainty from its resolution alone is about {=rulerResolution/sqrt(12)|2} m.",
+          "vi": {
+            "text": "Độ không đảm bảo chuẩn của thước chỉ do độ phân giải khoảng {=rulerResolution/sqrt(12)|2} m."
+          },
+          "true": true
+        },
+        {
+          "text": "In a real lab, water vapour in the column would make it shorter at high temperatures.",
+          "vi": {
+            "text": "Trong thí nghiệm thật, hơi nước trong cột khí sẽ làm cột ngắn đi ở nhiệt độ cao."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "which-t",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["kelvin", "law"],
+      "stem": "In Charles’s law, V/T = constant at constant pressure, the temperature T is…",
+      "explain": "V is proportional to the absolute (thermodynamic) temperature T in kelvins, T = t + 273.15. It is not proportional to the Celsius temperature t.",
+      "vi": {
+        "stem": "Trong định luật Charles, V/T = hằng số khi áp suất không đổi, nhiệt độ T là…",
+        "explain": "V tỉ lệ thuận với nhiệt độ tuyệt đối (nhiệt độ nhiệt động) T tính bằng kelvin, T = t + 273,15. V không tỉ lệ thuận với nhiệt độ Celsius t."
+      },
+      "options": [
+        {
+          "text": "the absolute temperature, in kelvins",
+          "vi": {
+            "text": "nhiệt độ tuyệt đối, tính bằng kelvin"
+          },
+          "correct": true
+        },
+        {
+          "text": "the Celsius temperature, in °C",
+          "vi": {
+            "text": "nhiệt độ Celsius, tính bằng °C"
+          }
+        },
+        {
+          "text": "the rise in temperature since the start",
+          "vi": {
+            "text": "độ tăng nhiệt độ kể từ lúc đầu"
+          }
+        },
+        {
+          "text": "the temperature of the water bath minus the room’s",
+          "vi": {
+            "text": "nhiệt độ của bể nước trừ nhiệt độ phòng"
+          }
+        }
+      ]
+    },
+    {
+      "id": "even-bore",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["measurement", "law"],
+      "stem": "Why must the tube holding the air column have an even bore (the same cross-section all along)?",
+      "explain": "V = S·L: with the same cross-section S everywhere, the column’s volume is proportional to its length, so the length read on the ruler can stand for the volume in V/T = constant.",
+      "vi": {
+        "stem": "Vì sao ống chứa cột không khí phải có tiết diện đều (tiết diện như nhau dọc theo ống)?",
+        "explain": "V = S·L: khi tiết diện S như nhau ở mọi chỗ, thể tích cột khí tỉ lệ thuận với chiều dài của nó, nên có thể dùng chiều dài đọc trên thước thay cho thể tích trong V/T = hằng số."
+      },
+      "options": [
+        {
+          "text": "So the column’s length is proportional to its volume",
+          "vi": {
+            "text": "Để chiều dài cột khí tỉ lệ thuận với thể tích của nó"
+          },
+          "correct": true
+        },
+        {
+          "text": "So the air keeps the same pressure as the water bath",
+          "vi": {
+            "text": "Để không khí có cùng áp suất với bể nước"
+          }
+        },
+        {
+          "text": "So the air warms faster than the water",
+          "vi": {
+            "text": "Để không khí nóng lên nhanh hơn nước"
+          }
+        },
+        {
+          "text": "So the column’s length stays the same",
+          "vi": {
+            "text": "Để chiều dài cột khí không đổi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-isobaric",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["law", "kelvin", "graph"],
+      "stem": "A fixed mass of air is warmed at constant pressure. Decide whether each statement is true or false.",
+      "explain": "V = V₀·T/T₀ with T in kelvins, so V grows linearly with t in °C too, but it is not proportional to t: from 20 °C to 40 °C, T only goes from 293 K to 313 K. The V–t line, extended, reaches V = 0 at −273.15 °C. The bead moves until the air inside is at the outside pressure, which keeps the pressure constant.",
+      "vi": {
+        "stem": "Một lượng không khí xác định được đun nóng ở áp suất không đổi. Mỗi nhận định sau đúng hay sai?",
+        "explain": "V = V₀·T/T₀ với T tính bằng kelvin, nên V cũng tăng tuyến tính theo t (°C), nhưng không tỉ lệ thuận với t: từ 20 °C đến 40 °C, T chỉ tăng từ 293 K lên 313 K. Kéo dài đường V–t, nó gặp V = 0 tại −273,15 °C. Giọt chất lỏng dịch chuyển cho đến khi áp suất khí bên trong bằng áp suất bên ngoài, nhờ đó áp suất được giữ không đổi."
+      },
+      "statements": [
+        {
+          "text": "The volume grows linearly with the Celsius temperature.",
+          "vi": {
+            "text": "Thể tích tăng tuyến tính theo nhiệt độ Celsius."
+          },
+          "true": true
+        },
+        {
+          "text": "Warmed from 20 °C to 40 °C, the volume doubles.",
+          "vi": {
+            "text": "Khi đun nóng từ 20 °C lên 40 °C, thể tích tăng gấp đôi."
+          },
+          "true": false
+        },
+        {
+          "text": "The V–t line, extended, reaches V = 0 at about −273 °C.",
+          "vi": {
+            "text": "Kéo dài đường V–t, nó gặp V = 0 tại khoảng −273 °C."
+          },
+          "true": true
+        },
+        {
+          "text": "The bead stays fixed, so the pressure of the air rises as it warms.",
+          "vi": {
+            "text": "Giọt chất lỏng đứng yên nên áp suất của không khí tăng khi nó nóng lên."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "find-temperature",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["law", "kelvin"],
+      "set": {
+        "bathTemperature": 80,
+        "startLength": 0.08
+      },
+      "stem": "An air column {startLength} m long at {startTemperature} °C is warmed at constant pressure until it is {@length|4} m long. What is the bath’s temperature?",
+      "explain": "T = T₀·L/L₀ = 293.15 K × {@length|4}/{startLength} ≈ {=(bathTemperature+273.15)} K, that is {bathTemperature} °C. Working in °C gives {=startTemperature*@length/startLength|3} °C; forgetting to subtract 273.15 gives the kelvin value as °C.",
+      "vi": {
+        "stem": "Một cột không khí dài {startLength} m ở {startTemperature} °C được đun nóng ở áp suất không đổi cho đến khi dài {@length|4} m. Nhiệt độ của bể nước bằng bao nhiêu?",
+        "explain": "T = T₀·L/L₀ = 293,15 K × {@length|4}/{startLength} ≈ {=(bathTemperature+273.15)} K, tức {bathTemperature} °C. Tính theo °C sẽ ra {=startTemperature*@length/startLength|3} °C; quên trừ 273,15 là lấy giá trị kelvin làm °C."
+      },
+      "options": [
+        {
+          "text": "{bathTemperature} °C",
+          "vi": {
+            "text": "{bathTemperature} °C"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(bathTemperature+273.15)*@lengthPerKelvin",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "{=startTemperature*@length/startLength|3} °C",
+          "vi": {
+            "text": "{=startTemperature*@length/startLength|3} °C"
+          },
+          "check": {
+            "expr": "(startTemperature*@length/startLength+273.15)*@lengthPerKelvin",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "{=293.15*@length/startLength|4} °C",
+          "vi": {
+            "text": "{=293.15*@length/startLength|4} °C"
+          },
+          "check": {
+            "expr": "(293.15*@length/startLength+273.15)*@lengthPerKelvin",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "{=293.15*startLength/@length-273.15|3} °C",
+          "vi": {
+            "text": "{=293.15*startLength/@length-273.15|3} °C"
+          },
+          "check": {
+            "expr": "(293.15*startLength/@length)*@lengthPerKelvin",
+            "equals": "length"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-60",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["law", "graph"],
+      "set": {
+        "bathTemperature": 60,
+        "startLength": 0.08
+      },
+      "stem": "An air column {startLength} m long at {startTemperature} °C is warmed at constant pressure to {bathTemperature} °C. Decide whether each statement is true or false.",
+      "explain": "L = L₀·T/T₀ = {startLength}·333.15/293.15 ≈ {@length|4} m: it grows by L₀/T₀ ≈ {@lengthPerKelvin|3} m per kelvin, and at 0 °C it would be {@lengthAtZeroCelsius|4} m. L₀·60/20 wrongly uses °C.",
+      "vi": {
+        "stem": "Một cột không khí dài {startLength} m ở {startTemperature} °C được đun nóng ở áp suất không đổi đến {bathTemperature} °C. Mỗi nhận định sau đúng hay sai?",
+        "explain": "L = L₀·T/T₀ = {startLength}·333,15/293,15 ≈ {@length|4} m: nó dài thêm L₀/T₀ ≈ {@lengthPerKelvin|3} m mỗi kelvin, và ở 0 °C nó sẽ dài {@lengthAtZeroCelsius|4} m. L₀·60/20 là dùng sai nhiệt độ °C."
+      },
+      "statements": [
+        {
+          "text": "The column becomes about {@length|4} m long.",
+          "vi": {
+            "text": "Cột khí dài khoảng {@length|4} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "startLength*(bathTemperature+273.15)/(startTemperature+273.15)",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "It grows by about {@lengthPerKelvin|3} m for each kelvin.",
+          "vi": {
+            "text": "Mỗi kelvin nó dài thêm khoảng {@lengthPerKelvin|3} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "startLength/(startTemperature+273.15)",
+            "equals": "lengthPerKelvin"
+          }
+        },
+        {
+          "text": "The column becomes {=startLength*bathTemperature/startTemperature|3} m long.",
+          "vi": {
+            "text": "Cột khí dài {=startLength*bathTemperature/startTemperature|3} m."
+          },
+          "true": false,
+          "check": {
+            "expr": "startLength*bathTemperature/startTemperature",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "At 0 °C the same air would be about {@lengthAtZeroCelsius|4} m long.",
+          "vi": {
+            "text": "Ở 0 °C, lượng khí đó sẽ dài khoảng {@lengthAtZeroCelsius|4} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "startLength*273.15/(startTemperature+273.15)",
+            "equals": "lengthAtZeroCelsius"
+          }
+        }
+      ]
+    },
+    {
+      "id": "intercept",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["graph", "kelvin"],
+      "set": {
+        "bathTemperature": 80,
+        "startLength": 0.1
+      },
+      "stem": "A column {startLength} m long at {startTemperature} °C is warmed at constant pressure, and its length L is plotted against the temperature t in °C. Where does the straight line cross the L axis (t = 0 °C)?",
+      "explain": "L = L₀·(t + 273.15)/293.15: at t = 0 °C, L = {startLength} × 273.15/293.15 ≈ {@lengthAtZeroCelsius|4} m. The line does not pass through the origin, because L is proportional to T in kelvins, not to t; it reaches L = 0 at −273.15 °C.",
+      "vi": {
+        "stem": "Một cột khí dài {startLength} m ở {startTemperature} °C được đun nóng ở áp suất không đổi; vẽ đồ thị chiều dài L theo nhiệt độ t tính bằng °C. Đường thẳng cắt trục L (t = 0 °C) tại đâu?",
+        "explain": "L = L₀·(t + 273,15)/293,15: tại t = 0 °C, L = {startLength} × 273,15/293,15 ≈ {@lengthAtZeroCelsius|4} m. Đường thẳng không đi qua gốc tọa độ vì L tỉ lệ thuận với T tính bằng kelvin chứ không phải với t; nó gặp L = 0 tại −273,15 °C."
+      },
+      "options": [
+        {
+          "text": "{@lengthAtZeroCelsius|4} m",
+          "vi": {
+            "text": "{@lengthAtZeroCelsius|4} m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "startLength*273.15/293.15",
+            "equals": "lengthAtZeroCelsius"
+          }
+        },
+        {
+          "text": "0 m, at the origin",
+          "vi": {
+            "text": "0 m, tại gốc tọa độ"
+          },
+          "check": {
+            "expr": "0",
+            "equals": "lengthAtZeroCelsius"
+          }
+        },
+        {
+          "text": "{startLength} m",
+          "vi": {
+            "text": "{startLength} m"
+          },
+          "check": {
+            "expr": "startLength",
+            "equals": "lengthAtZeroCelsius"
+          }
+        },
+        {
+          "text": "{=startLength*293.15/273.15|4} m",
+          "vi": {
+            "text": "{=startLength*293.15/273.15|4} m"
+          },
+          "check": {
+            "expr": "startLength*293.15/273.15",
+            "equals": "lengthAtZeroCelsius"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-start-length",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["law", "kelvin"],
+      "set": {
+        "bathTemperature": 80,
+        "startLength": 0.12
+      },
+      "stem": "Warmed at constant pressure from {startTemperature} °C to {bathTemperature} °C, an air column ends {@length|4} m long. How long was it at {startTemperature} °C?",
+      "explain": "L₀ = L·T₀/T = {@length|4} × 293.15/353.15 ≈ {startLength} m. Using °C (×20/80) shrinks it far too much; turning the ratio over makes it longer than at the end.",
+      "vi": {
+        "stem": "Được đun nóng ở áp suất không đổi từ {startTemperature} °C đến {bathTemperature} °C, một cột không khí cuối cùng dài {@length|4} m. Lúc ở {startTemperature} °C nó dài bao nhiêu?",
+        "explain": "L₀ = L·T₀/T = {@length|4} × 293,15/353,15 ≈ {startLength} m. Dùng °C (nhân 20/80) làm nó ngắn đi quá nhiều; đảo ngược tỉ số lại làm nó dài hơn lúc cuối."
+      },
+      "options": [
+        {
+          "text": "{=@length*(startTemperature+273.15)/(bathTemperature+273.15)|3} m",
+          "vi": {
+            "text": "{=@length*(startTemperature+273.15)/(bathTemperature+273.15)|3} m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(@length*(startTemperature+273.15)/(bathTemperature+273.15))*(bathTemperature+273.15)/(startTemperature+273.15)",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "{=@length*startTemperature/bathTemperature|3} m",
+          "vi": {
+            "text": "{=@length*startTemperature/bathTemperature|3} m"
+          },
+          "check": {
+            "expr": "(@length*startTemperature/bathTemperature)*(bathTemperature+273.15)/(startTemperature+273.15)",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "{=@length*(bathTemperature+273.15)/(startTemperature+273.15)|3} m",
+          "vi": {
+            "text": "{=@length*(bathTemperature+273.15)/(startTemperature+273.15)|3} m"
+          },
+          "check": {
+            "expr": "(@length*(bathTemperature+273.15)/(startTemperature+273.15))*(bathTemperature+273.15)/(startTemperature+273.15)",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "{=@length-@lengthPerKelvin*startTemperature|3} m",
+          "vi": {
+            "text": "{=@length-@lengthPerKelvin*startTemperature|3} m"
+          },
+          "check": {
+            "expr": "(@length-@lengthPerKelvin*startTemperature)*(bathTemperature+273.15)/(startTemperature+273.15)",
+            "equals": "length"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-half-mm",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["measurement", "law"],
+      "set": {
+        "bathTemperature": 40,
+        "startLength": 0.1,
+        "rulerResolution": 0.0005
+      },
+      "stem": "An air column {startLength} m long at {startTemperature} °C is warmed at constant pressure to {bathTemperature} °C and read with a ruler of resolution {=rulerResolution*1000} mm. Decide whether each statement is true or false.",
+      "explain": "L = L₀·313.15/293.15 ≈ {@length|4} m, a rise of {=@length-startLength|3} m, only about {=(@length/startLength-1)*100|2} % because T rises from 293 K to 313 K, not twice. The ruler shows the nearest {=rulerResolution*1000} mm: {=round(@length/rulerResolution)*rulerResolution} m.",
+      "vi": {
+        "stem": "Một cột không khí dài {startLength} m ở {startTemperature} °C được đun nóng ở áp suất không đổi đến {bathTemperature} °C và được đọc bằng thước có độ phân giải {=rulerResolution*1000} mm. Mỗi nhận định sau đúng hay sai?",
+        "explain": "L = L₀·313,15/293,15 ≈ {@length|4} m, tăng thêm {=@length-startLength|3} m, chỉ khoảng {=(@length/startLength-1)*100|2} % vì T tăng từ 293 K lên 313 K chứ không tăng gấp đôi. Thước hiển thị giá trị gần nhất theo {=rulerResolution*1000} mm: {=round(@length/rulerResolution)*rulerResolution} m."
+      },
+      "statements": [
+        {
+          "text": "The column becomes about {@length|4} m long.",
+          "vi": {
+            "text": "Cột khí dài khoảng {@length|4} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "startLength*(bathTemperature+273.15)/(startTemperature+273.15)",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "It grows by about {=@length-startLength|3} m.",
+          "vi": {
+            "text": "Nó dài thêm khoảng {=@length-startLength|3} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "startLength+(@length-startLength)",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "The ruler shows {=round(@length/rulerResolution)*rulerResolution} m.",
+          "vi": {
+            "text": "Thước chỉ {=round(@length/rulerResolution)*rulerResolution} m."
+          },
+          "true": true
+        },
+        {
+          "text": "The column doubles in length, because the temperature doubles.",
+          "vi": {
+            "text": "Cột khí dài gấp đôi, vì nhiệt độ tăng gấp đôi."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

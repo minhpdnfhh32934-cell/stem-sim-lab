@@ -1,0 +1,348 @@
+{
+  "id": "logistic-growth",
+  "name": "Population growth: the logistic curve",
+  "category": "biology",
+  "description": "Put a few yeast cells in fresh broth: at first their number doubles again and again, then food and space run short and growth slows until the population levels off at the carrying capacity K. Watch the cells in the flask and the S-shaped curve, and find where the population grows fastest.",
+  "vi": {
+    "name": "Sự tăng trưởng của quần thể: đường cong logistic",
+    "description": "Cho vài tế bào nấm men vào môi trường nuôi cấy mới: lúc đầu số lượng tăng gấp đôi liên tục, rồi thức ăn và chỗ ở thiếu dần, tốc độ tăng chậm lại cho tới khi quần thể ổn định ở sức chứa môi trường K. Quan sát các tế bào trong bình và đường cong hình chữ S, và tìm lúc quần thể tăng nhanh nhất.",
+    "note": "Phương trình logistic dN/dt = rN(1 − N/K), giải chính xác: N(t) = K / (1 + (K − N₀)/N₀ · e^(−rt)). Quần thể đạt K/2 vào ngày ln((K − N₀)/N₀)/r, khi đó tăng nhanh nhất với tốc độ rK/4. r và K đặt tại bàn điều khiển (giá trị minh họa, không phải của một loài cụ thể). 20 ngày nuôi cấy chạy trong 10 s. Bình hiện một chấm cho mỗi tế bào."
+  },
+  "requiredEquipment": ["culture-flask"],
+  "model": "biology.logistic-growth",
+  "parameters": [
+    {
+      "id": "rate",
+      "label": "Growth rate",
+      "vi": {
+        "label": "Tốc độ tăng trưởng"
+      },
+      "symbol": "r",
+      "unit": "1/day",
+      "default": 0.8,
+      "min": 0.2,
+      "max": 2,
+      "step": 0.1
+    },
+    {
+      "id": "capacity",
+      "label": "Carrying capacity",
+      "vi": {
+        "label": "Sức chứa môi trường"
+      },
+      "symbol": "K",
+      "unit": "",
+      "default": 500,
+      "min": 100,
+      "max": 1000,
+      "step": 50
+    },
+    {
+      "id": "start",
+      "label": "Starting population",
+      "vi": {
+        "label": "Số lượng ban đầu"
+      },
+      "symbol": "N₀",
+      "unit": "",
+      "default": 5,
+      "min": 1,
+      "max": 50,
+      "step": 1
+    }
+  ],
+  "initialConditions": {
+    "days": 20,
+    "daysPerSecond": 2
+  },
+  "inputs": {
+    "days": {
+      "symbol": "T",
+      "unit": "day",
+      "desk": false
+    },
+    "daysPerSecond": {
+      "symbol": "v",
+      "unit": "day/s",
+      "desk": false
+    }
+  },
+  "simulation": {
+    "timeStep": 0.02,
+    "maxDuration": 12,
+    "sampleInterval": 0.05
+  },
+  "measurements": [
+    {
+      "id": "time",
+      "label": "Time",
+      "vi": {
+        "label": "Thời gian"
+      },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "time"
+    },
+    {
+      "id": "day",
+      "label": "Day",
+      "vi": {
+        "label": "Ngày"
+      },
+      "unit": "day",
+      "variable": "day"
+    },
+    {
+      "id": "population",
+      "label": "Population",
+      "vi": {
+        "label": "Số lượng cá thể"
+      },
+      "symbol": "N",
+      "unit": "",
+      "variable": "population"
+    },
+    {
+      "id": "growth",
+      "label": "Growth rate of the population",
+      "vi": {
+        "label": "Tốc độ tăng của quần thể"
+      },
+      "symbol": "dN/dt",
+      "unit": "1/day",
+      "variable": "growth"
+    }
+  ],
+  "results": [
+    {
+      "id": "population",
+      "label": "Population at the end",
+      "vi": {
+        "label": "Số lượng cuối cùng"
+      },
+      "symbol": "N",
+      "unit": "",
+      "variable": "population",
+      "reduce": "final",
+      "theory": "population"
+    },
+    {
+      "id": "halfDay",
+      "label": "Day the population reached K/2",
+      "vi": {
+        "label": "Ngày quần thể đạt K/2"
+      },
+      "unit": "day",
+      "variable": "halfDay",
+      "reduce": "final",
+      "theory": "halfDay"
+    },
+    {
+      "id": "peakGrowth",
+      "label": "Fastest growth (at K/2: rK/4)",
+      "vi": {
+        "label": "Tốc độ tăng lớn nhất (tại K/2: rK/4)"
+      },
+      "symbol": "dN/dt",
+      "unit": "1/day",
+      "variable": "growth",
+      "reduce": "max",
+      "theory": "peakGrowth"
+    }
+  ],
+  "graphs": [
+    {
+      "id": "n-day",
+      "title": "Population over the days: the S curve",
+      "vi": {
+        "title": "Số lượng cá thể theo ngày: đường cong chữ S"
+      },
+      "x": "day",
+      "y": ["population"]
+    },
+    {
+      "id": "growth-day",
+      "title": "How fast it grows",
+      "vi": {
+        "title": "Tốc độ tăng của quần thể"
+      },
+      "x": "day",
+      "y": ["growth"]
+    }
+  ],
+  "monitor": "n-day",
+  "compare": [
+    {
+      "graph": "n-day",
+      "series": "population"
+    }
+  ],
+  "note": "The logistic equation dN/dt = rN(1 − N/K), solved exactly: N(t) = K / (1 + (K − N₀)/N₀ · e^(−rt)). The population reaches K/2 on day ln((K − N₀)/N₀)/r, growing fastest there at rK/4. r and K are set at the desk (illustrative values, not one species’). 20 days of culture run in 10 s. The flask shows a dot per cell.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the population growth instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn về tăng trưởng quần thể trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "logistic-growth-instructions"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: watch the flask fill and the S curve.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: quan sát bình đầy dần và đường cong chữ S."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Read the day it reached K/2 and the fastest growth.",
+      "vi": {
+        "instruction": "Đọc ngày đạt K/2 và tốc độ tăng lớn nhất."
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "capacity",
+      "instruction": "Press RESET and change K with the dial.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI và đổi K bằng núm xoay."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "capacity"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Run again: where does the curve level off now?",
+      "vi": {
+        "instruction": "Chạy lại: đường cong ổn định ở đâu?"
+      },
+      "done": {
+        "kind": "reset"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "half-capacity",
+      "question": "Yeast grows logistically from N₀ = {start} cells with r = {rate} per day and carrying capacity K = {capacity}. On which day does it reach K/2, and how fast is it growing then?",
+      "vi": {
+        "question": "Quần thể nấm men tăng trưởng theo đường cong logistic từ N₀ = {start} tế bào, với r = {rate} mỗi ngày và sức chứa K = {capacity}. Vào ngày nào quần thể đạt K/2, và khi đó tốc độ tăng là bao nhiêu?"
+      },
+      "set": { "rate": 0.5, "capacity": 1000, "start": 10 },
+      "find": [
+        { "theory": "halfDay", "symbol": "t", "unit": "day" },
+        { "theory": "peakGrowth", "unit": "day⁻¹" }
+      ],
+      "steps": [
+        {
+          "say": "The logistic curve: N = K/(1 + ((K − N₀)/N₀)·e^(−rt)). It reaches K/2 when the bracket is 2, that is e^(rt) = (K − N₀)/N₀.",
+          "vi": {
+            "say": "Đường cong logistic: N = K/(1 + ((K − N₀)/N₀)·e^(−rt)). Quần thể đạt K/2 khi mẫu số bằng 2, tức là e^(rt) = (K − N₀)/N₀."
+          },
+          "write": "t = ln((K − N₀)/N₀)/r = ln({=(capacity-start)/start})/{rate} ≈ {@halfDay} day",
+          "check": { "expr": "ln((capacity-start)/start)/rate", "equals": "halfDay" }
+        },
+        {
+          "say": "dN/dt = rN(1 − N/K) is largest at N = K/2: r·K/4.",
+          "vi": { "say": "dN/dt = rN(1 − N/K) lớn nhất khi N = K/2: bằng r·K/4." },
+          "write": "dN/dt = r·K/4 = {rate}·{capacity}/4 = {@peakGrowth} day⁻¹",
+          "check": { "expr": "rate*capacity/4", "equals": "peakGrowth" }
+        }
+      ]
+    },
+    {
+      "id": "population-after-20-days",
+      "question": "A culture starts at N₀ = {start} with r = {rate} per day and K = {capacity}. What is the population after {days} days, and when did it pass K/2?",
+      "vi": {
+        "question": "Một quần thể bắt đầu với N₀ = {start}, r = {rate} mỗi ngày và K = {capacity}. Sau {days} ngày quần thể có bao nhiêu cá thể, và nó vượt K/2 vào ngày nào?"
+      },
+      "set": { "rate": 0.3, "capacity": 500, "start": 5 },
+      "find": [{ "theory": "population" }, { "theory": "halfDay", "symbol": "t", "unit": "day" }],
+      "steps": [
+        {
+          "say": "Put t = {days} days into the logistic curve.",
+          "vi": { "say": "Thay t = {days} ngày vào đường cong logistic." },
+          "write": "N = {capacity}/(1 + {=(capacity-start)/start}·e^(−{rate}·{days})) ≈ {@population}",
+          "check": {
+            "expr": "capacity/(1+(capacity-start)/start*exp(-rate*days))",
+            "equals": "population"
+          }
+        },
+        {
+          "say": "K/2 is reached when e^(rt) = (K − N₀)/N₀; after that the growth slows down as the population nears K.",
+          "vi": {
+            "say": "Quần thể đạt K/2 khi e^(rt) = (K − N₀)/N₀; sau đó tốc độ tăng chậm lại khi số lượng tiến gần K."
+          },
+          "write": "t = ln({=(capacity-start)/start})/{rate} ≈ {@halfDay} day",
+          "check": { "expr": "ln((capacity-start)/start)/rate", "equals": "halfDay" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "A population grows fastest when it is half the size its environment can hold. Below that it is limited by how few there are; above, by food and space running out.",
+    "vi": {
+      "summary": "Quần thể tăng nhanh nhất khi đạt một nửa sức chứa của môi trường. Trước đó bị giới hạn vì còn ít cá thể; sau đó vì thức ăn và chỗ ở cạn dần."
+    },
+    "parts": [
+      {
+        "id": "cells",
+        "name": "Yeast cells",
+        "role": "One dot per cell: count them grow.",
+        "vi": {
+          "name": "Tế bào nấm men",
+          "role": "Mỗi chấm là một tế bào: đếm số tăng lên."
+        },
+        "anchor": {
+          "part": "cells"
+        }
+      },
+      {
+        "id": "broth",
+        "name": "Culture broth",
+        "role": "Food and space are limited: they set the carrying capacity K.",
+        "vi": {
+          "name": "Môi trường nuôi cấy",
+          "role": "Thức ăn và chỗ ở có hạn: chúng quyết định sức chứa K."
+        },
+        "anchor": {
+          "part": "broth"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "At first each cell divides freely: the more cells, the faster they increase — almost exponential growth.",
+        "vi": {
+          "text": "Lúc đầu mỗi tế bào phân chia tự do: càng nhiều tế bào thì tăng càng nhanh — gần như tăng theo hàm mũ."
+        },
+        "parts": ["cells"]
+      },
+      {
+        "text": "As the broth fills, food runs short and waste builds up: each cell divides less often. The factor (1 − N/K) slows the growth.",
+        "vi": {
+          "text": "Khi bình đầy dần, thức ăn thiếu và chất thải tích tụ: mỗi tế bào phân chia ít hơn. Thừa số (1 − N/K) làm chậm tốc độ tăng."
+        },
+        "parts": ["broth", "cells"]
+      },
+      {
+        "text": "Growth is fastest at N = K/2, then slows to zero: the population levels off at K — the S-shaped (logistic) curve.",
+        "vi": {
+          "text": "Tốc độ tăng lớn nhất khi N = K/2, rồi giảm dần về không: quần thể ổn định ở K — đường cong hình chữ S (logistic)."
+        },
+        "parts": ["cells"]
+      }
+    ]
+  }
+}

@@ -1,0 +1,504 @@
+{
+  "id": "hookes-law",
+  "name": "Hooke's law",
+  "category": "physics",
+  "description": "A mass hangs from a spring. Held at rest, or pulled away from rest and let go, it swings about its rest position and comes to rest where the spring's pull balances its weight. At rest the extension Δl gives the stiffness k = m·g/Δl (Hooke's law); the swing gives its period, against T₀ = 2π√(m/k) and the damped T_d, and how fast the swings die away; over several runs, T² against m gives k again.",
+  "vi": {
+    "name": "Định luật Húc",
+    "description": "Một vật nặng treo vào lò xo. Giữ ở vị trí cân bằng, hoặc kéo lệch khỏi vị trí cân bằng rồi thả ra, vật dao động quanh vị trí cân bằng rồi dừng lại ở nơi lực đàn hồi cân bằng với trọng lượng. Khi vật đứng yên, độ dãn Δl cho độ cứng k = m·g/Δl (định luật Húc); dao động cho chu kỳ, so với T₀ = 2π√(m/k) và chu kỳ tắt dần T_d, cùng tốc độ tắt dần của biên độ; qua nhiều lần chạy, đồ thị T² theo m lại cho k.",
+    "note": "Tĩnh học (định luật Húc): khi vật đứng yên, lực kéo k·Δl của lò xo cân bằng với trọng lượng, k·Δl = m·g, với Δl = L − L₀ là độ dãn tính từ chiều dài tự nhiên L₀ — không phải chiều dài toàn phần của lò xo — nên k = m·g/Δl. Động lực học: với x là độ dãn (chiều dương hướng xuống) và y = x − Δl là li độ so với vị trí cân bằng, m·x″ + c·x′ + k·x = m·g trở thành m·y″ + c·y′ + k·y = 0. Vật được giữ ở li độ y₀ rồi thả ra từ trạng thái nghỉ; lực cản là một số hạng nhớt đơn giản hóa c·x′ với c = 2ζ·√(k·m): ζ < 1 thì dao động với chu kỳ tắt dần T_d = 2π/ω_d, ω_d = ω₀√(1 − ζ²), ω₀ = √(k/m), biên độ giảm theo e^(−ζω₀t); ζ = 1 thì trở về không dao động (tới hạn); ζ > 1 thì trở về chậm (quá tới hạn). T₀ = 2π√(m/k) là chu kỳ khi không có lực cản. Lần chạy kết thúc khi dao động còn lại nhỏ hơn 0,1 % của Δl; kết quả khi đứng yên được đọc lúc đó, lệch lý thuyết không quá khoảng 0,1 %. Giả định: lò xo lý tưởng — tuyến tính, không khối lượng và đàn hồi — chuyển động theo phương thẳng đứng, trong trọng trường đều g = 9,81 m/s². Vật luôn ở giữa Δl − |y₀| và Δl + |y₀|: giá treo từ chối lần chạy có thể vượt giới hạn đàn hồi 0,60 m hoặc làm lò xo ngắn hơn chiều dài tự nhiên. Lò xo thật còn có khối lượng riêng và hơi chùng, và lực cản của nó đến từ không khí và kim loại, không đúng hệt như mô hình."
+  },
+  "requiredEquipment": ["spring-stand"],
+  "model": "mechanics.spring",
+  "parameters": [
+    {
+      "id": "mass",
+      "label": "Hanging mass",
+      "vi": { "label": "Khối lượng vật treo" },
+      "symbol": "m",
+      "unit": "kg",
+      "default": 0.5,
+      "min": 0.05,
+      "max": 5,
+      "presets": [
+        { "label": "0.05 kg", "vi": { "label": "0.05 kg" }, "value": 0.05 },
+        { "label": "0.1 kg", "vi": { "label": "0.1 kg" }, "value": 0.1 },
+        { "label": "0.2 kg", "vi": { "label": "0.2 kg" }, "value": 0.2 },
+        { "label": "0.3 kg", "vi": { "label": "0.3 kg" }, "value": 0.3 },
+        { "label": "0.5 kg", "vi": { "label": "0.5 kg" }, "value": 0.5 },
+        { "label": "1 kg", "vi": { "label": "1 kg" }, "value": 1 },
+        { "label": "2 kg", "vi": { "label": "2 kg" }, "value": 2 },
+        { "label": "3 kg", "vi": { "label": "3 kg" }, "value": 3 },
+        { "label": "5 kg", "vi": { "label": "5 kg" }, "value": 5 }
+      ]
+    },
+    {
+      "id": "stiffness",
+      "label": "Spring stiffness",
+      "vi": { "label": "Độ cứng lò xo" },
+      "symbol": "k",
+      "unit": "N/m",
+      "default": 20,
+      "min": 5,
+      "max": 200,
+      "presets": [
+        { "label": "5 N/m", "value": 5 },
+        { "label": "10 N/m", "value": 10 },
+        { "label": "20 N/m", "value": 20 },
+        { "label": "50 N/m", "value": 50 },
+        { "label": "100 N/m", "value": 100 },
+        { "label": "200 N/m", "value": 200 }
+      ]
+    },
+    {
+      "id": "resolution",
+      "label": "Ruler resolution",
+      "vi": { "label": "Độ phân giải thước" },
+      "symbol": "d",
+      "unit": "m",
+      "default": 0.001,
+      "min": 0.001,
+      "max": 0.01,
+      "presets": [
+        { "label": "0.001 m", "value": 0.001 },
+        { "label": "0.005 m", "value": 0.005 },
+        { "label": "0.01 m", "value": 0.01 }
+      ]
+    },
+    {
+      "id": "offset",
+      "label": "Start below rest",
+      "vi": { "label": "Li độ ban đầu dưới vị trí cân bằng" },
+      "symbol": "y₀",
+      "unit": "m",
+      "default": 0.1,
+      "min": -0.1,
+      "max": 0.2,
+      "presets": [
+        { "label": "−0.1 m", "value": -0.1 },
+        { "label": "−0.05 m", "value": -0.05 },
+        { "label": "−0.02 m", "value": -0.02 },
+        { "label": "0 m", "value": 0 },
+        { "label": "0.02 m", "value": 0.02 },
+        { "label": "0.05 m", "value": 0.05 },
+        { "label": "0.1 m", "value": 0.1 },
+        { "label": "0.2 m", "value": 0.2 }
+      ]
+    },
+    {
+      "id": "damping",
+      "label": "Damping ratio",
+      "vi": { "label": "Tỉ số cản" },
+      "symbol": "ζ",
+      "unit": "",
+      "default": 0.1,
+      "min": 0.05,
+      "max": 2,
+      "presets": [
+        { "label": "0.05", "value": 0.05 },
+        { "label": "0.1", "value": 0.1 },
+        { "label": "0.2", "value": 0.2 },
+        { "label": "0.5", "value": 0.5 },
+        { "label": "1", "value": 1 },
+        { "label": "2", "value": 2 }
+      ]
+    }
+  ],
+  "initialConditions": { "gravity": 9.81, "naturalLength": 0.2 },
+  "inputs": {
+    "gravity": { "symbol": "g", "unit": "m/s²" },
+    "naturalLength": { "symbol": "L₀", "unit": "m" }
+  },
+  "simulation": { "timeStep": 0.001, "maxDuration": 60, "sampleInterval": 0.01 },
+  "measurements": [
+    {
+      "id": "extension",
+      "label": "Extension",
+      "vi": { "label": "Độ dãn" },
+      "symbol": "Δl",
+      "unit": "m",
+      "variable": "extension"
+    },
+    {
+      "id": "displacement",
+      "label": "Displacement from rest",
+      "vi": { "label": "Li độ so với vị trí cân bằng" },
+      "symbol": "y",
+      "unit": "m",
+      "variable": "displacement"
+    },
+    {
+      "id": "velocity",
+      "label": "Velocity",
+      "vi": { "label": "Vận tốc" },
+      "symbol": "v",
+      "unit": "m/s",
+      "variable": "velocity"
+    },
+    {
+      "id": "length",
+      "label": "Spring length",
+      "vi": { "label": "Chiều dài lò xo" },
+      "symbol": "L",
+      "unit": "m",
+      "variable": "length"
+    },
+    {
+      "id": "force",
+      "label": "Spring force",
+      "vi": { "label": "Lực đàn hồi" },
+      "symbol": "F",
+      "unit": "N",
+      "variable": "force"
+    }
+  ],
+  "results": [
+    {
+      "id": "load",
+      "label": "Weight m·g",
+      "vi": { "label": "Trọng lượng m·g" },
+      "symbol": "m·g",
+      "unit": "N",
+      "variable": "load",
+      "reduce": "final",
+      "theory": "load"
+    },
+    {
+      "id": "length",
+      "label": "Spring length L at rest",
+      "vi": { "label": "Chiều dài lò xo L khi đứng yên" },
+      "symbol": "L",
+      "unit": "m",
+      "variable": "length",
+      "reduce": "final",
+      "theory": "length"
+    },
+    {
+      "id": "extension",
+      "label": "Extension Δl = L − L₀ at rest",
+      "vi": { "label": "Độ dãn Δl = L − L₀ khi đứng yên" },
+      "symbol": "Δl",
+      "unit": "m",
+      "variable": "extension",
+      "reduce": "final",
+      "theory": "extension"
+    },
+    {
+      "id": "stiffness",
+      "label": "Stiffness m·g/Δl",
+      "vi": { "label": "Độ cứng m·g/Δl" },
+      "symbol": "m·g/Δl",
+      "unit": "N/m",
+      "variable": "ratio",
+      "reduce": "final",
+      "theory": "stiffness"
+    }
+  ],
+  "graphs": [
+    {
+      "id": "force-extension",
+      "title": "Spring force against extension",
+      "vi": { "title": "Lực đàn hồi theo độ dãn" },
+      "x": "extension",
+      "y": ["force"],
+      "mark": "extension"
+    },
+    {
+      "id": "extension-time",
+      "title": "Extension against time",
+      "vi": { "title": "Độ dãn theo thời gian" },
+      "x": "time",
+      "y": ["extension"]
+    },
+    {
+      "id": "displacement-time",
+      "title": "Displacement from rest against time",
+      "vi": { "title": "Li độ theo thời gian" },
+      "x": "time",
+      "y": ["displacement"]
+    }
+  ],
+  "monitor": "force-extension",
+  "compare": [{ "graph": "force-extension" }, { "graph": "displacement-time" }],
+  "oscillation": {
+    "measurement": "displacement",
+    "period0": "period0",
+    "periodDamped": "periodDamped",
+    "decayRate": "decayRate",
+    "envelope0": "envelope0",
+    "dampingRatio": "dampingRatio"
+  },
+  "analyses": [
+    {
+      "id": "hooke",
+      "title": "Weight against extension at rest (Hooke's law)",
+      "vi": { "title": "Trọng lượng theo độ dãn khi đứng yên (định luật Húc)" },
+      "x": "extension",
+      "y": "load",
+      "group": ["stiffness"],
+      "columns": ["mass", "load", "naturalLength", "length", "extension", "stiffness"],
+      "slope": {
+        "label": "Stiffness",
+        "vi": { "label": "Độ cứng" },
+        "symbol": "k",
+        "unit": "N/m",
+        "theory": "stiffness"
+      }
+    },
+    {
+      "id": "period",
+      "title": "Period squared against mass",
+      "note": "T is the period measured from each run's swing, the damped one, T_d = 2π/ω_d: so T² = 4π²·m/(k(1 − ζ²)), a line through the origin whose slope a gives 4π²/a = k(1 − ζ²) — the spring's k lowered by the damping, by 1 % at ζ = 0.1 and 0.25 % at ζ = 0.05. That is the value it is compared with. Only runs with the same spring and the same ζ are fitted together; the starting y₀ may differ, since the period of a linear spring does not depend on how far it swings.",
+      "vi": {
+        "title": "Bình phương chu kỳ theo khối lượng",
+        "note": "T là chu kỳ đo được từ dao động của mỗi lần chạy, tức chu kỳ tắt dần T_d = 2π/ω_d: nên T² = 4π²·m/(k(1 − ζ²)), một đường thẳng qua gốc tọa độ có độ dốc a cho 4π²/a = k(1 − ζ²) — độ cứng k của lò xo bị lực cản làm giảm đi, 1 % khi ζ = 0,1 và 0,25 % khi ζ = 0,05. Đó là giá trị được dùng để so sánh. Chỉ các lần chạy cùng lò xo và cùng ζ mới được khớp chung; li độ ban đầu y₀ có thể khác nhau, vì chu kỳ của lò xo tuyến tính không phụ thuộc biên độ."
+      },
+      "x": "mass",
+      "y": "oscillation.periodSquared",
+      "group": ["stiffness", "damping"],
+      "columns": ["mass", "offset", "oscillation.period", "oscillation.periodSquared"],
+      "slope": {
+        "label": "Slope of T² against m",
+        "vi": { "label": "Độ dốc của T² theo m" },
+        "symbol": "a",
+        "unit": "s²/kg",
+        "theory": "periodSquaredSlope"
+      },
+      "derived": {
+        "label": "Stiffness lowered by damping, 4π²/a",
+        "vi": { "label": "Độ cứng giảm do lực cản, 4π²/a" },
+        "symbol": "k(1 − ζ²)",
+        "unit": "N/m",
+        "numerator": 39.47841760435743,
+        "theory": "dampedStiffness"
+      }
+    }
+  ],
+  "instruments": [
+    {
+      "result": "extension",
+      "quantity": "Extension Δl",
+      "name": "Ruler (zeroed at the natural length)",
+      "resolution": "resolution",
+      "excludes": "reading the scale by eye (parallax), where the pointer sits and the ruler's own calibration",
+      "vi": {
+        "quantity": "Độ dãn Δl",
+        "name": "Thước (vạch 0 tại chiều dài tự nhiên)",
+        "excludes": "việc đọc vạch bằng mắt (thị sai), vị trí kim chỉ và sai số hiệu chuẩn của chính thước"
+      }
+    }
+  ],
+  "note": "Statics (Hooke's law): at rest the spring's pull k·Δl balances the weight, k·Δl = m·g, with Δl = L − L₀ the extension from the natural length L₀ — not the spring's whole length — so k = m·g/Δl. Dynamics: with x the extension (downward positive) and y = x − Δl the displacement from rest, m·x″ + c·x′ + k·x = m·g becomes m·y″ + c·y′ + k·y = 0. The mass is held at y₀ from rest and let go at rest; the damping is a simplified viscous term c·x′ with c = 2ζ·√(k·m): ζ < 1 swings with the damped period T_d = 2π/ω_d, ω_d = ω₀√(1 − ζ²), ω₀ = √(k/m), its swings shrinking as e^(−ζω₀t); ζ = 1 returns without swinging (critical); ζ > 1 creeps back (overdamped). T₀ = 2π√(m/k) is the period without damping. The run ends once the swing left is below 0.1 % of Δl; the results at rest are read then, within about 0.1 % of the theory. Assumed: an ideal spring — linear, massless and elastic — moving vertically, in uniform g = 9.81 m/s². The mass stays between Δl − |y₀| and Δl + |y₀|: the stand refuses a run that could pass its 0.60 m elastic limit or take the spring shorter than its natural length. A real spring has its own mass and a little slack, and its damping comes from the air and the metal, not exactly as modelled.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the Hooke's law instructions on the board.",
+      "vi": { "instruction": "Đọc hướng dẫn định luật Húc trên bảng." },
+      "done": { "kind": "inspected", "item": "hookes-law-instructions" }
+    },
+    {
+      "id": "mass",
+      "instruction": "Set the hanging mass m and the spring k with their dials on the control desk.",
+      "vi": {
+        "instruction": "Đặt khối lượng vật treo m và chọn lò xo k bằng các núm xoay trên bàn điều khiển."
+      },
+      "done": { "kind": "adjusted", "parameter": "mass" }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN to let the mass go: watch it bounce, then come to rest.",
+      "vi": { "instruction": "Nhấn CHẠY để thả vật: quan sát vật nhún lên xuống rồi dừng lại." },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read Δl at rest and the force–extension graph on the results monitor.",
+      "vi": {
+        "instruction": "Đọc Δl khi vật đứng yên và đồ thị lực theo độ dãn trên màn hình kết quả."
+      },
+      "done": { "kind": "viewed" }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, change m or the spring, and run again.",
+      "vi": { "instruction": "Nhấn ĐẶT LẠI, thay đổi m hoặc lò xo, rồi chạy lại." },
+      "done": { "kind": "reset" }
+    }
+  ],
+  "examples": [
+    {
+      "id": "extension",
+      "question": "A {mass} kg mass hangs at rest from a spring of stiffness {stiffness} N/m and natural length {naturalLength} m (g = {gravity} m/s²). Find the extension and the spring’s length.",
+      "vi": {
+        "question": "Treo vật {mass} kg đứng yên vào lò xo có độ cứng {stiffness} N/m, chiều dài tự nhiên {naturalLength} m (g = {gravity} m/s²). Tìm độ dãn và chiều dài của lò xo."
+      },
+      "set": { "mass": 0.2, "stiffness": 50, "offset": 0.02 },
+      "find": [{ "theory": "extension" }, { "theory": "length" }],
+      "steps": [
+        {
+          "say": "At rest the spring’s pull k·Δl balances the weight m·g.",
+          "vi": { "say": "Khi vật đứng yên, lực đàn hồi k·Δl cân bằng với trọng lực m·g." },
+          "write": "Δl = m·g/k = {mass}·{gravity}/{stiffness} ≈ {@extension} m",
+          "check": { "expr": "mass*gravity/stiffness", "equals": "extension" }
+        },
+        {
+          "say": "Δl is the extension from the natural length, not the whole length: add it to L₀.",
+          "vi": {
+            "say": "Δl là độ dãn so với chiều dài tự nhiên, không phải cả chiều dài lò xo: cộng nó vào L₀."
+          },
+          "write": "L = L₀ + Δl = {naturalLength} + {@extension} ≈ {@length} m",
+          "check": { "expr": "naturalLength+@extension", "equals": "length" }
+        }
+      ]
+    },
+    {
+      "id": "period-with-damping",
+      "question": "A {mass} kg mass on a spring of stiffness {stiffness} N/m is pulled down and let go; its damping ratio is ζ = {damping}. Find the period without damping, and the period it actually swings with.",
+      "vi": {
+        "question": "Vật {mass} kg gắn vào lò xo độ cứng {stiffness} N/m được kéo xuống rồi thả nhẹ; tỉ số tắt dần là ζ = {damping}. Tìm chu kì khi không có lực cản, và chu kì dao động thực của vật."
+      },
+      "set": { "mass": 1, "stiffness": 100, "damping": 0.2, "offset": 0.05 },
+      "find": [
+        { "theory": "period0", "symbol": "T₀", "unit": "s" },
+        { "theory": "periodDamped", "symbol": "T_d", "unit": "s" }
+      ],
+      "steps": [
+        {
+          "say": "Without damping a mass on a spring swings with T₀ = 2π√(m/k), whatever the amplitude.",
+          "vi": {
+            "say": "Khi không có lực cản, con lắc lò xo dao động với chu kì T₀ = 2π√(m/k), không phụ thuộc biên độ."
+          },
+          "write": "T₀ = 2π√(m/k) = 2π√({mass}/{stiffness}) ≈ {@period0} s",
+          "check": { "expr": "2*pi*sqrt(mass/stiffness)", "equals": "period0" }
+        },
+        {
+          "say": "Damping slows the swing a little: the damped period is T₀ divided by √(1 − ζ²).",
+          "vi": {
+            "say": "Lực cản làm dao động chậm đi một chút: chu kì dao động tắt dần bằng T₀ chia √(1 − ζ²)."
+          },
+          "write": "T_d = T₀/√(1 − ζ²) = {@period0}/√(1 − {damping}²) ≈ {@periodDamped} s",
+          "check": { "expr": "@period0/sqrt(1-damping^2)", "equals": "periodDamped" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "A mass hung on a spring stretches it until the spring’s pull balances the weight; the stretch is proportional to the force (Hooke’s law), and the mass bounces with a period set by m and k.",
+    "vi": {
+      "summary": "Một vật treo vào lò xo làm lò xo dãn ra cho tới khi lực đàn hồi cân bằng với trọng lượng; độ dãn tỉ lệ với lực (định luật Húc), và vật dao động với chu kỳ do m và k quyết định."
+    },
+    "parts": [
+      {
+        "id": "support",
+        "name": "Support arm",
+        "role": "Holds the top of the spring fixed.",
+        "vi": {
+          "name": "Thanh treo",
+          "role": "Giữ cố định đầu trên của lò xo."
+        },
+        "anchor": {
+          "part": "arm"
+        }
+      },
+      {
+        "id": "spring",
+        "name": "Spring, stiffness k",
+        "role": "Pulls back with the force k·Δl when stretched by Δl from its natural length L₀ = 0.2 m.",
+        "vi": {
+          "name": "Lò xo, độ cứng k",
+          "role": "Kéo ngược lại với lực k·Δl khi bị dãn Δl so với chiều dài tự nhiên L₀ = 0.2 m."
+        },
+        "anchor": {
+          "part": "coil"
+        }
+      },
+      {
+        "id": "masses",
+        "name": "Hanging mass m",
+        "role": "The slotted masses on their hanger; their weight m·g stretches the spring.",
+        "vi": {
+          "name": "Vật nặng m",
+          "role": "Các quả nặng có rãnh trên móc treo; trọng lượng m·g của chúng làm lò xo dãn."
+        },
+        "anchor": {
+          "part": "masses"
+        }
+      },
+      {
+        "id": "pointer",
+        "name": "Pointer",
+        "role": "The red mark on the hanger; it shows on the ruler where the spring’s end is.",
+        "vi": {
+          "name": "Kim chỉ",
+          "role": "Vạch đỏ trên móc treo; cho biết vị trí đầu lò xo trên thước."
+        },
+        "anchor": {
+          "part": "pointer"
+        }
+      },
+      {
+        "id": "ruler",
+        "name": "Ruler",
+        "role": "Zeroed at the natural length, so it reads the extension Δl directly.",
+        "vi": {
+          "name": "Thước",
+          "role": "Vạch 0 đặt tại chiều dài tự nhiên, nên đọc trực tiếp độ dãn Δl."
+        },
+        "anchor": {
+          "part": "ruler"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "With nothing hung, the spring has its natural length L₀ and the pointer is at zero on the ruler.",
+        "vi": {
+          "text": "Khi chưa treo gì, lò xo có chiều dài tự nhiên L₀ và kim chỉ ở vạch 0 của thước."
+        },
+        "parts": ["spring", "pointer", "ruler"]
+      },
+      {
+        "text": "Hang the mass m: its weight m·g pulls the spring down. The spring stretches until its pull k·Δl balances the weight — then the mass is at rest.",
+        "vi": {
+          "text": "Treo vật m: trọng lượng m·g kéo lò xo xuống. Lò xo dãn cho tới khi lực đàn hồi k·Δl cân bằng với trọng lượng — lúc đó vật đứng yên."
+        },
+        "parts": ["masses", "spring", "support"]
+      },
+      {
+        "text": "Hooke’s law: k·Δl = m·g, so k = m·g/Δl. Δl is the extension from L₀, not the spring’s whole length. Twice the mass gives twice the extension.",
+        "vi": {
+          "text": "Định luật Húc: k·Δl = m·g, nên k = m·g/Δl. Δl là độ dãn so với L₀, không phải toàn bộ chiều dài lò xo. Khối lượng gấp đôi thì độ dãn gấp đôi."
+        },
+        "parts": ["spring", "masses", "ruler"]
+      },
+      {
+        "text": "Let go from y₀ below rest, the mass bounces about its rest position. Without damping its period is T₀ = 2π√(m/k): a heavier mass or a softer spring swings more slowly.",
+        "vi": {
+          "text": "Thả từ vị trí cách vị trí cân bằng y₀, vật dao động quanh vị trí cân bằng. Khi không có tắt dần, chu kỳ là T₀ = 2π√(m/k): vật nặng hơn hoặc lò xo mềm hơn thì dao động chậm hơn."
+        },
+        "parts": ["masses", "spring", "pointer"]
+      },
+      {
+        "text": "The damping ratio ζ makes the swings die away: below 1 they shrink and the period is a little longer, T_d; at 1 or more the mass creeps back without swinging.",
+        "vi": {
+          "text": "Hệ số tắt dần ζ làm dao động tắt dần: khi nhỏ hơn 1, biên độ giảm dần và chu kỳ T_d dài hơn một chút; khi bằng hoặc lớn hơn 1, vật trở về từ từ mà không dao động."
+        },
+        "parts": ["masses"]
+      },
+      {
+        "text": "The results give the weight, the length and the extension at rest and k = m·g/Δl against theory, read on the ruler in steps of its resolution d. Over several runs, weight against extension is a straight line of slope k.",
+        "vi": {
+          "text": "Phần kết quả cho trọng lượng, chiều dài và độ dãn khi đứng yên cùng k = m·g/Δl so với lý thuyết, đọc trên thước theo từng bước bằng độ phân giải d. Qua nhiều lần chạy, đồ thị trọng lượng theo độ dãn là đường thẳng có hệ số góc k."
+        },
+        "parts": ["ruler", "pointer"]
+      },
+      {
+        "text": "The spring is ideal: linear, massless and elastic. The stand refuses a run that would stretch it past its 0.60 m elastic limit.",
+        "vi": {
+          "text": "Lò xo được coi là lý tưởng: tuyến tính, không khối lượng và đàn hồi hoàn toàn. Giá treo từ chối lần chạy có thể kéo lò xo vượt giới hạn đàn hồi 0.60 m."
+        },
+        "parts": ["spring", "support"]
+      }
+    ]
+  }
+}

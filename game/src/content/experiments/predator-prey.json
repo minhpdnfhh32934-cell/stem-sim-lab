@@ -1,0 +1,378 @@
+{
+  "id": "predator-prey",
+  "name": "Predator and prey: the Lotka–Volterra cycles",
+  "category": "biology",
+  "description": "Rabbits breed; foxes eat rabbits. More rabbits feed more foxes, more foxes eat more rabbits, fewer rabbits starve the foxes — and the rabbits recover. Watch the two populations rise and fall in cycles on the meadow and on the graph, the foxes always a little behind.",
+  "vi": {
+    "name": "Vật ăn thịt và con mồi: chu kì Lotka–Volterra",
+    "description": "Thỏ sinh sản; cáo ăn thỏ. Nhiều thỏ thì nuôi được nhiều cáo, nhiều cáo thì ăn nhiều thỏ, ít thỏ thì cáo thiếu thức ăn — và thỏ lại tăng. Quan sát hai quần thể tăng giảm theo chu kì trên đồng cỏ và trên đồ thị, cáo luôn chậm hơn một chút.",
+    "note": "Mô hình Lotka–Volterra: dx/dt = αx − βxy (con mồi), dy/dt = δxy − γy (vật ăn thịt), giải bằng RK4 với bước con 0,002 ngày; đại lượng V = δx − γ ln x + βy − α ln y được bảo toàn (kiểm tra trong bài kiểm thử). Các quần thể dao động quanh điểm cân bằng x* = γ/δ, y* = α/β; với dao động nhỏ, chu kì gần bằng 2π/√(αγ). β = 0,02 và δ = 0,01 cố định; các hệ số là minh họa, không phải của một hệ sinh thái cụ thể. 30 ngày chạy trong 15 s. Đồng cỏ hiện một con thỏ cho mỗi con mồi, một con cáo cho mỗi vật ăn thịt."
+  },
+  "requiredEquipment": ["meadow"],
+  "model": "biology.predator-prey",
+  "parameters": [
+    {
+      "id": "prey",
+      "label": "Rabbits at the start",
+      "vi": {
+        "label": "Số thỏ ban đầu"
+      },
+      "symbol": "x₀",
+      "unit": "",
+      "default": 60,
+      "min": 10,
+      "max": 300,
+      "step": 10
+    },
+    {
+      "id": "predators",
+      "label": "Foxes at the start",
+      "vi": {
+        "label": "Số cáo ban đầu"
+      },
+      "symbol": "y₀",
+      "unit": "",
+      "default": 30,
+      "min": 5,
+      "max": 150,
+      "step": 5
+    },
+    {
+      "id": "preyBirth",
+      "label": "Rabbit birth rate",
+      "vi": {
+        "label": "Tốc độ sinh của thỏ"
+      },
+      "symbol": "α",
+      "unit": "1/day",
+      "default": 1,
+      "min": 0.3,
+      "max": 2,
+      "step": 0.1
+    },
+    {
+      "id": "predatorDeath",
+      "label": "Fox death rate",
+      "vi": {
+        "label": "Tốc độ chết của cáo"
+      },
+      "symbol": "γ",
+      "unit": "1/day",
+      "default": 1,
+      "min": 0.3,
+      "max": 2,
+      "step": 0.1
+    }
+  ],
+  "initialConditions": {
+    "predation": 0.02,
+    "conversion": 0.01,
+    "days": 30,
+    "daysPerSecond": 2
+  },
+  "inputs": {
+    "predation": {
+      "symbol": "β",
+      "unit": "",
+      "desk": false
+    },
+    "conversion": {
+      "symbol": "δ",
+      "unit": "",
+      "desk": false
+    },
+    "days": {
+      "symbol": "T",
+      "unit": "day",
+      "desk": false
+    },
+    "daysPerSecond": {
+      "symbol": "v",
+      "unit": "day/s",
+      "desk": false
+    }
+  },
+  "simulation": {
+    "timeStep": 0.02,
+    "maxDuration": 18,
+    "sampleInterval": 0.05
+  },
+  "measurements": [
+    {
+      "id": "time",
+      "label": "Time",
+      "vi": {
+        "label": "Thời gian"
+      },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "time"
+    },
+    {
+      "id": "day",
+      "label": "Day",
+      "vi": {
+        "label": "Ngày"
+      },
+      "unit": "day",
+      "variable": "day"
+    },
+    {
+      "id": "prey",
+      "label": "Rabbits",
+      "vi": {
+        "label": "Số thỏ"
+      },
+      "symbol": "x",
+      "unit": "",
+      "variable": "prey"
+    },
+    {
+      "id": "predators",
+      "label": "Foxes",
+      "vi": {
+        "label": "Số cáo"
+      },
+      "symbol": "y",
+      "unit": "",
+      "variable": "predators"
+    }
+  ],
+  "results": [
+    {
+      "id": "preyPeak",
+      "label": "Most rabbits",
+      "vi": {
+        "label": "Số thỏ nhiều nhất"
+      },
+      "unit": "",
+      "variable": "prey",
+      "reduce": "max"
+    },
+    {
+      "id": "preyLow",
+      "label": "Fewest rabbits",
+      "vi": {
+        "label": "Số thỏ ít nhất"
+      },
+      "unit": "",
+      "variable": "prey",
+      "reduce": "min"
+    },
+    {
+      "id": "predatorPeak",
+      "label": "Most foxes",
+      "vi": {
+        "label": "Số cáo nhiều nhất"
+      },
+      "unit": "",
+      "variable": "predators",
+      "reduce": "max"
+    },
+    {
+      "id": "predatorLow",
+      "label": "Fewest foxes",
+      "vi": {
+        "label": "Số cáo ít nhất"
+      },
+      "unit": "",
+      "variable": "predators",
+      "reduce": "min"
+    }
+  ],
+  "graphs": [
+    {
+      "id": "populations-day",
+      "title": "Rabbits and foxes over the days",
+      "vi": {
+        "title": "Số thỏ và số cáo theo ngày"
+      },
+      "x": "day",
+      "y": ["prey", "predators"]
+    },
+    {
+      "id": "phase",
+      "title": "Foxes against rabbits: a closed loop",
+      "vi": {
+        "title": "Số cáo theo số thỏ: một vòng khép kín"
+      },
+      "x": "prey",
+      "y": ["predators"]
+    }
+  ],
+  "monitor": "populations-day",
+  "compare": [
+    {
+      "graph": "populations-day",
+      "series": "prey"
+    }
+  ],
+  "note": "The Lotka–Volterra model: dx/dt = αx − βxy (prey), dy/dt = δxy − γy (predators), solved by RK4 in sub-steps of 0.002 day; V = δx − γ ln x + βy − α ln y is conserved (checked in the tests). The populations cycle around the equilibrium x* = γ/δ, y* = α/β; for small cycles the period is close to 2π/√(αγ). β = 0.02 and δ = 0.01 are fixed; the rates are illustrative, not one ecosystem’s. 30 days run in 15 s. The meadow shows a rabbit per prey and a fox per predator.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the predator and prey instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn về vật ăn thịt và con mồi trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "predator-prey-instructions"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: watch the rabbits and foxes rise and fall.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: quan sát số thỏ và số cáo tăng giảm."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Which peaks first, rabbits or foxes?",
+      "vi": {
+        "instruction": "Số thỏ hay số cáo đạt đỉnh trước?"
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "prey",
+      "instruction": "Press RESET and start with 100 rabbits and 50 foxes.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI và bắt đầu với 100 con thỏ, 50 con cáo."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "prey"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Run again: why do the numbers stay the same?",
+      "vi": {
+        "instruction": "Chạy lại: vì sao số lượng không đổi?"
+      },
+      "done": {
+        "kind": "reset"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "equilibrium",
+      "question": "Rabbits are born at α = {preyBirth} per day and foxes die at γ = {predatorDeath} per day; β = {predation} and δ = {conversion} (Lotka–Volterra). Find the populations at which both stay steady.",
+      "vi": {
+        "question": "Thỏ sinh với tốc độ α = {preyBirth} mỗi ngày và cáo chết với tốc độ γ = {predatorDeath} mỗi ngày; β = {predation} và δ = {conversion} (Lotka–Volterra). Tìm số lượng thỏ và cáo mà tại đó cả hai không đổi."
+      },
+      "set": { "preyBirth": 1.5, "predatorDeath": 0.5 },
+      "find": [
+        { "theory": "preyEquilibrium", "symbol": "x*", "unit": "" },
+        { "theory": "predatorEquilibrium", "symbol": "y*", "unit": "" }
+      ],
+      "steps": [
+        {
+          "say": "The foxes hold steady when dy/dt = δxy − γy = 0: when there are just enough rabbits.",
+          "vi": { "say": "Số cáo không đổi khi dy/dt = δxy − γy = 0: khi số thỏ vừa đủ." },
+          "write": "x* = γ/δ = {predatorDeath}/{conversion} = {@preyEquilibrium}",
+          "check": { "expr": "predatorDeath/conversion", "equals": "preyEquilibrium" }
+        },
+        {
+          "say": "The rabbits hold steady when dx/dt = αx − βxy = 0: when the foxes eat exactly as many as are born.",
+          "vi": {
+            "say": "Số thỏ không đổi khi dx/dt = αx − βxy = 0: khi cáo ăn đúng bằng số thỏ được sinh ra."
+          },
+          "write": "y* = α/β = {preyBirth}/{predation} = {@predatorEquilibrium}",
+          "check": { "expr": "preyBirth/predation", "equals": "predatorEquilibrium" }
+        }
+      ]
+    },
+    {
+      "id": "cycle-period",
+      "question": "With α = {preyBirth} per day and γ = {predatorDeath} per day, the populations cycle around the equilibrium. Find the rabbits’ equilibrium and the period of small cycles.",
+      "vi": {
+        "question": "Với α = {preyBirth} mỗi ngày và γ = {predatorDeath} mỗi ngày, số lượng hai loài dao động quanh trạng thái cân bằng. Tìm số thỏ cân bằng và chu kì của các dao động nhỏ."
+      },
+      "set": { "preyBirth": 1, "predatorDeath": 2 },
+      "find": [
+        { "theory": "preyEquilibrium", "symbol": "x*", "unit": "" },
+        { "theory": "period", "symbol": "T", "unit": "day" }
+      ],
+      "steps": [
+        {
+          "say": "Foxes that die faster need more rabbits to hold steady.",
+          "vi": { "say": "Cáo chết nhanh hơn thì cần nhiều thỏ hơn để giữ số lượng không đổi." },
+          "write": "x* = γ/δ = {predatorDeath}/{conversion} = {@preyEquilibrium}",
+          "check": { "expr": "predatorDeath/conversion", "equals": "preyEquilibrium" }
+        },
+        {
+          "say": "Near the equilibrium the populations swing like an oscillation of angular frequency √(αγ).",
+          "vi": {
+            "say": "Gần trạng thái cân bằng, số lượng hai loài dao động như một dao động có tần số góc √(αγ)."
+          },
+          "write": "T = 2π/√(αγ) = 2π/√({preyBirth}·{predatorDeath}) ≈ {@period} day",
+          "check": { "expr": "2*pi/sqrt(preyBirth*predatorDeath)", "equals": "period" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "Predators and prey control each other: the prey’s numbers feed the predators, the predators’ numbers eat the prey. Their populations cycle, the predators’ peak after the prey’s.",
+    "vi": {
+      "summary": "Vật ăn thịt và con mồi khống chế lẫn nhau: số con mồi nuôi vật ăn thịt, số vật ăn thịt quyết định số con mồi bị ăn. Hai quần thể dao động theo chu kì, đỉnh của vật ăn thịt đến sau đỉnh của con mồi."
+    },
+    "parts": [
+      {
+        "id": "prey",
+        "name": "Rabbits (prey)",
+        "role": "Breed fast when few foxes are about.",
+        "vi": {
+          "name": "Thỏ (con mồi)",
+          "role": "Sinh sản nhanh khi ít cáo."
+        },
+        "anchor": {
+          "part": "prey"
+        }
+      },
+      {
+        "id": "predators",
+        "name": "Foxes (predators)",
+        "role": "Multiply when food is plenty, starve when it is scarce.",
+        "vi": {
+          "name": "Cáo (vật ăn thịt)",
+          "role": "Tăng khi nhiều thức ăn, chết đói khi thức ăn khan hiếm."
+        },
+        "anchor": {
+          "part": "predators"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "Few foxes: the rabbits breed and their number climbs.",
+        "vi": {
+          "text": "Ít cáo: thỏ sinh sản và số lượng tăng lên."
+        },
+        "parts": ["prey"]
+      },
+      {
+        "text": "Plenty of rabbits feed the foxes, so the foxes increase — a little later.",
+        "vi": {
+          "text": "Nhiều thỏ nuôi được cáo nên số cáo tăng — chậm hơn một chút."
+        },
+        "parts": ["predators", "prey"]
+      },
+      {
+        "text": "Many foxes eat more rabbits than are born: the rabbits fall, then the foxes starve and fall too — and the cycle starts again.",
+        "vi": {
+          "text": "Nhiều cáo ăn thỏ nhiều hơn số thỏ sinh ra: số thỏ giảm, rồi cáo thiếu thức ăn cũng giảm — và chu kì lặp lại."
+        },
+        "parts": ["predators", "prey"]
+      }
+    ]
+  }
+}

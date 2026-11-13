@@ -1,0 +1,400 @@
+{
+  "id": "double-slit",
+  "name": "Young's double slit: the wavelength of laser light",
+  "category": "physics",
+  "description": "Shine a laser through two narrow slits a fraction of a millimetre apart onto a white screen: instead of two bright lines, a row of bright and dark fringes appears — the light from the two slits interferes. The fringes are i = λ·D/a apart, D the distance to the screen and a the slits' separation. Measure the width of ten fringes, work out i, and from it the wavelength of the light, λ = i·a/D. Red light gives wider fringes than green; a farther screen spreads them more.",
+  "vi": {
+    "name": "Thí nghiệm Y-âng: đo bước sóng ánh sáng laser",
+    "description": "Chiếu tia laser qua hai khe hẹp cách nhau một phần nhỏ của milimét lên một màn trắng: thay vì hai vạch sáng, trên màn hiện ra một dãy vân sáng và vân tối xen kẽ — ánh sáng từ hai khe giao thoa với nhau. Khoảng vân là i = λ·D/a, với D là khoảng cách từ hai khe đến màn và a là khoảng cách giữa hai khe. Đo bề rộng của mười khoảng vân, tính i, rồi suy ra bước sóng của ánh sáng, λ = i·a/D. Ánh sáng đỏ cho khoảng vân rộng hơn ánh sáng lục; màn đặt càng xa, các vân càng giãn ra.",
+    "note": "Hai khe được chiếu bởi cùng một chùm laser nên là hai nguồn kết hợp. Tại một điểm trên màn cách vân trung tâm y, hiệu đường đi của hai sóng là a·y/D (với góc nhỏ): vân sáng khi hiệu đường đi bằng một số nguyên lần bước sóng, nên các vân sáng cách nhau i = λ·D/a. Mỗi khe có bề rộng b cũng làm ánh sáng nhiễu xạ: cường độ trên màn là I/I0 = cos²(π·a·y/(λD)) nhân với hàm bao [sin(π·b·y/(λD))/(π·b·y/(λD))]², nên các vân mờ dần ra hai bên và vân thứ a/b bị khuyết (ở đây a/b = 6 với khe rộng 0,05 mm cách nhau 0,3 mm). Khi chạy, một cảm biến ánh sáng quét ngang màn trong 4 s và đo cường độ tại vị trí của nó. Đo bề rộng L của 10 khoảng vân bằng thước: i = L/10 và λ = i·a/D. Chạy với nhiều khoảng cách D: đồ thị i theo D là đường thẳng đi qua gốc tọa độ có hệ số góc λ/a. Bước sóng: laser đỏ 650 nm, laser lục 532 nm. Đây là mô hình dạy học đơn giản hóa: ánh sáng đơn sắc và kết hợp hoàn toàn, khe lý tưởng, màn phẳng, góc nhỏ. Thước đọc bề rộng mô phỏng theo độ phân giải d của nó (bội số gần nhất của d, độ bất định d/√12 chỉ do độ phân giải); không có sai số ngẫu nhiên nào được thêm vào. Trong phòng thí nghiệm thật, mép của các vân không rõ nét, khoảng cách giữa hai khe và khoảng cách đến màn đều có sai số đo, nên bước sóng tìm được lệch đôi chút. Không bao giờ nhìn thẳng vào tia laser."
+  },
+  "requiredEquipment": ["double-slit-bench"],
+  "model": "optics.double-slit",
+  "parameters": [
+    {
+      "id": "wavelength",
+      "label": "Laser",
+      "vi": { "label": "Laser" },
+      "symbol": "λ",
+      "unit": "m",
+      "default": 6.5e-7,
+      "min": 5.32e-7,
+      "max": 6.5e-7,
+      "presets": [
+        { "label": "Red (650 nm)", "vi": { "label": "Đỏ (650 nm)" }, "value": 6.5e-7 },
+        { "label": "Green (532 nm)", "vi": { "label": "Lục (532 nm)" }, "value": 5.32e-7 }
+      ]
+    },
+    {
+      "id": "slitSeparation",
+      "label": "Slit separation",
+      "vi": { "label": "Khoảng cách giữa hai khe" },
+      "symbol": "a",
+      "unit": "m",
+      "default": 0.0003,
+      "min": 0.0002,
+      "max": 0.0005,
+      "presets": [
+        { "label": "0.2 mm", "vi": { "label": "0,2 mm" }, "value": 0.0002 },
+        { "label": "0.3 mm", "vi": { "label": "0,3 mm" }, "value": 0.0003 },
+        { "label": "0.5 mm", "vi": { "label": "0,5 mm" }, "value": 0.0005 }
+      ]
+    },
+    {
+      "id": "screenDistance",
+      "label": "Slits to screen",
+      "vi": { "label": "Khoảng cách từ hai khe đến màn" },
+      "symbol": "D",
+      "unit": "m",
+      "default": 1,
+      "min": 0.5,
+      "max": 1.5,
+      "presets": [
+        { "label": "0.5 m", "vi": { "label": "0,5 m" }, "value": 0.5 },
+        { "label": "1.0 m", "vi": { "label": "1,0 m" }, "value": 1 },
+        { "label": "1.5 m", "vi": { "label": "1,5 m" }, "value": 1.5 }
+      ]
+    },
+    {
+      "id": "rulerResolution",
+      "label": "Ruler resolution",
+      "vi": { "label": "Độ phân giải của thước" },
+      "symbol": "d",
+      "unit": "m",
+      "default": 0.001,
+      "min": 0.0005,
+      "max": 0.001,
+      "presets": [
+        { "label": "0.5 mm", "vi": { "label": "0,5 mm" }, "value": 0.0005 },
+        { "label": "1 mm", "vi": { "label": "1 mm" }, "value": 0.001 }
+      ]
+    }
+  ],
+  "initialConditions": { "slitWidth": 5e-5, "scanSpan": 0.03, "scanTime": 4 },
+  "inputs": {
+    "slitWidth": { "symbol": "b", "unit": "m" },
+    "scanSpan": { "symbol": "s", "unit": "m", "desk": false },
+    "scanTime": { "symbol": "t_scan", "unit": "s", "desk": false }
+  },
+  "simulation": { "timeStep": 0.005, "maxDuration": 5, "sampleInterval": 0.01 },
+  "measurements": [
+    {
+      "id": "intensity",
+      "label": "Light at the sensor",
+      "vi": { "label": "Cường độ sáng tại cảm biến" },
+      "symbol": "I/I0",
+      "unit": "",
+      "variable": "intensity"
+    },
+    {
+      "id": "sensor",
+      "label": "Sensor across the screen",
+      "vi": { "label": "Vị trí cảm biến trên màn" },
+      "symbol": "y",
+      "unit": "m",
+      "variable": "sensor"
+    }
+  ],
+  "results": [
+    {
+      "id": "tenFringes",
+      "label": "Width of ten fringes L",
+      "vi": { "label": "Bề rộng mười khoảng vân L" },
+      "symbol": "L",
+      "unit": "m",
+      "variable": "tenFringes",
+      "reduce": "final",
+      "theory": "tenFringes"
+    },
+    {
+      "id": "fringeSpacing",
+      "label": "Fringe spacing i = L/10",
+      "vi": { "label": "Khoảng vân i = L/10" },
+      "symbol": "i",
+      "unit": "m",
+      "variable": "fringeSpacing",
+      "reduce": "final",
+      "theory": "fringeSpacing"
+    },
+    {
+      "id": "wavelengthFromFringes",
+      "label": "Wavelength λ = i·a/D",
+      "vi": { "label": "Bước sóng λ = i·a/D" },
+      "symbol": "λ",
+      "unit": "m",
+      "variable": "wavelengthFromFringes",
+      "reduce": "final",
+      "theory": "wavelengthFromFringes"
+    }
+  ],
+  "instruments": [
+    {
+      "result": "tenFringes",
+      "quantity": "Width L of ten fringes",
+      "name": "Ruler on the screen",
+      "resolution": "rulerResolution",
+      "excludes": "judging the fringes' blurred edges, the slit separation and the screen distance as measured, and the screen not quite square to the beam",
+      "vi": {
+        "quantity": "Bề rộng L của mười khoảng vân",
+        "name": "Thước trên màn",
+        "excludes": "việc xác định mép mờ của các vân, sai số khi đo khoảng cách giữa hai khe và khoảng cách đến màn, và màn không hoàn toàn vuông góc với chùm tia"
+      }
+    }
+  ],
+  "graphs": [
+    {
+      "id": "intensity-position",
+      "title": "Light across the screen",
+      "vi": { "title": "Cường độ sáng trên màn" },
+      "x": "sensor",
+      "y": ["intensity"],
+      "yLabel": "I/I0"
+    }
+  ],
+  "monitor": "intensity-position",
+  "compare": [{ "graph": "intensity-position" }],
+  "analyses": [
+    {
+      "id": "spacing-distance",
+      "title": "Fringe spacing against the screen's distance (i = λ·D/a)",
+      "note": "Each run is one point: the fringe spacing i against the distance D from the slits to the screen. Runs with the same laser and slits are fitted together. i = λ·D/a: a straight line through the origin whose slope is λ/a; multiply it by a for the wavelength. Change only D between runs.",
+      "vi": {
+        "title": "Khoảng vân theo khoảng cách đến màn (i = λ·D/a)",
+        "note": "Mỗi lần chạy là một điểm: khoảng vân i theo khoảng cách D từ hai khe đến màn. Các lần chạy cùng laser và cùng hai khe được khớp chung. i = λ·D/a: một đường thẳng đi qua gốc tọa độ có hệ số góc λ/a; nhân hệ số góc với a để được bước sóng. Giữa các lần chạy chỉ thay đổi D."
+      },
+      "x": "screenDistance",
+      "y": "fringeSpacing",
+      "group": ["wavelength", "slitSeparation"],
+      "columns": ["wavelength", "slitSeparation", "screenDistance", "tenFringes", "fringeSpacing"],
+      "slope": {
+        "label": "Slope of i against D",
+        "vi": { "label": "Hệ số góc của i theo D" },
+        "symbol": "λ/a",
+        "unit": "",
+        "theory": "spacingSlope"
+      }
+    }
+  ],
+  "note": "Both slits are lit by one laser beam, so they are two coherent sources. At a point y from the central fringe the two waves' paths differ by a·y/D (small angles): bright where that is a whole number of wavelengths, so the bright fringes are i = λ·D/a apart. Each slit of width b also diffracts the light: the intensity on the screen is I/I0 = cos²(π·a·y/(λD)) times the envelope [sin(π·b·y/(λD))/(π·b·y/(λD))]², so the fringes fade to the sides and the (a/b)th is missing (here a/b = 6 with 0.05 mm slits 0.3 mm apart). During the run a light sensor crosses the screen in 4 s, reading the intensity where it is. Measure the width L of 10 fringes with a ruler: i = L/10 and λ = i·a/D. Run at several distances D: i against D is a straight line through the origin of slope λ/a. Wavelengths: red laser 650 nm, green 532 nm. A simplified teaching model: perfectly monochromatic and coherent light, ideal slits, a flat screen, small angles. The ruler reads the simulated width to its resolution d (the nearest multiple of d, with the uncertainty d/√12 from the resolution alone); no random error is added. In a real lab the fringes' edges are blurred, and the slit separation and the screen distance have their own errors, so the wavelength found differs a little. Never look into a laser beam.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the double slit instructions on the board.",
+      "vi": { "instruction": "Đọc hướng dẫn thí nghiệm Y-âng trên bảng." },
+      "done": { "kind": "inspected", "item": "double-slit-instructions" }
+    },
+    {
+      "id": "laser",
+      "instruction": "Choose the laser with its dial on the control desk.",
+      "vi": { "instruction": "Chọn laser bằng núm xoay trên bàn điều khiển." },
+      "done": { "kind": "adjusted", "parameter": "wavelength" }
+    },
+    {
+      "id": "distance",
+      "instruction": "Set the distance D from the slits to the screen.",
+      "vi": { "instruction": "Đặt khoảng cách D từ hai khe đến màn." },
+      "done": { "kind": "adjusted", "parameter": "screenDistance" }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the laser lights the slits and the sensor crosses the fringes.",
+      "vi": { "instruction": "Nhấn CHẠY: laser chiếu sáng hai khe và cảm biến quét qua các vân." },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read L, i and λ = i·a/D on the results monitor.",
+      "vi": { "instruction": "Đọc L, i và λ = i·a/D trên màn hình kết quả." },
+      "done": { "kind": "viewed" }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, change only D and run again to add a point to the analysis.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, chỉ thay đổi D rồi chạy lại để thêm một điểm vào đồ thị phân tích."
+      },
+      "done": { "kind": "reset" }
+    }
+  ],
+  "examples": [
+    {
+      "id": "fringe-spacing",
+      "question": "Red laser light of wavelength {=wavelength*1e9} nm falls on two slits {=slitSeparation*1000} mm apart; the screen is {screenDistance} m away. Find the fringe spacing and the width of ten fringes.",
+      "vi": {
+        "question": "Ánh sáng laser đỏ bước sóng {=wavelength*1e9} nm chiếu vào hai khe cách nhau {=slitSeparation*1000} mm; màn đặt cách hai khe {screenDistance} m. Tìm khoảng vân và bề rộng của mười khoảng vân."
+      },
+      "set": { "wavelength": 6.5e-7, "slitSeparation": 0.0003, "screenDistance": 1.5 },
+      "find": [{ "theory": "fringeSpacing" }, { "theory": "tenFringes" }],
+      "steps": [
+        {
+          "say": "Neighbouring bright fringes are one wavelength of path difference apart: i = λD/a, with every length in metres.",
+          "vi": {
+            "say": "Hai vân sáng liền kề ứng với hiệu đường đi chênh nhau một bước sóng: i = λD/a, mọi độ dài tính bằng mét."
+          },
+          "write": "i = λ·D/a = {wavelength}·{screenDistance}/{slitSeparation} ≈ {@fringeSpacing} m",
+          "check": { "expr": "wavelength*screenDistance/slitSeparation", "equals": "fringeSpacing" }
+        },
+        {
+          "say": "Ten fringes span ten spacings — that is why we measure ten: the ruler’s error is shared out.",
+          "vi": {
+            "say": "Mười khoảng vân dài gấp mười lần i — vì thế ta đo mười khoảng vân: sai số của thước được chia nhỏ."
+          },
+          "write": "L = 10·i ≈ {@tenFringes} m",
+          "check": { "expr": "10*@fringeSpacing", "equals": "tenFringes" }
+        }
+      ]
+    },
+    {
+      "id": "spacing-against-distance",
+      "question": "Green light of {=wavelength*1e9} nm passes two slits {=slitSeparation*1000} mm apart, and the spacing i is plotted against the screen distance D. Find the slope of the line, and i at D = {screenDistance} m.",
+      "vi": {
+        "question": "Ánh sáng lục {=wavelength*1e9} nm qua hai khe cách nhau {=slitSeparation*1000} mm; vẽ đồ thị khoảng vân i theo khoảng cách màn D. Tìm hệ số góc của đường thẳng, và i khi D = {screenDistance} m."
+      },
+      "set": { "wavelength": 5.32e-7, "slitSeparation": 0.0002, "screenDistance": 0.5 },
+      "find": [
+        { "theory": "spacingSlope", "symbol": "i/D", "unit": "" },
+        { "theory": "fringeSpacing" }
+      ],
+      "steps": [
+        {
+          "say": "i = λD/a is proportional to D: a straight line through the origin, of slope λ/a.",
+          "vi": {
+            "say": "i = λD/a tỉ lệ thuận với D: đồ thị là đường thẳng qua gốc tọa độ, hệ số góc λ/a."
+          },
+          "write": "i/D = λ/a = {wavelength}/{slitSeparation} ≈ {@spacingSlope}",
+          "check": { "expr": "wavelength/slitSeparation", "equals": "spacingSlope" }
+        },
+        {
+          "say": "At the given distance, multiply the slope by D.",
+          "vi": { "say": "Tại khoảng cách đã cho, nhân hệ số góc với D." },
+          "write": "i = (λ/a)·D = {@spacingSlope}·{screenDistance} ≈ {@fringeSpacing} m",
+          "check": { "expr": "@spacingSlope*screenDistance", "equals": "fringeSpacing" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "Laser light through two narrow slits makes a row of bright and dark fringes on a screen — the two waves interfere — and the fringes’ spacing gives the light’s wavelength.",
+    "vi": {
+      "summary": "Ánh sáng laser đi qua hai khe hẹp tạo trên màn một dãy vân sáng và vân tối — hai sóng giao thoa với nhau — và khoảng vân cho biết bước sóng của ánh sáng."
+    },
+    "parts": [
+      {
+        "id": "laser",
+        "name": "Laser",
+        "role": "A red (650 nm) or green (532 nm) laser: light of one wavelength λ. Never look into the beam.",
+        "vi": {
+          "name": "Đèn laser",
+          "role": "Laser đỏ (650 nm) hoặc xanh lục (532 nm): ánh sáng có một bước sóng λ. Không bao giờ nhìn thẳng vào chùm tia."
+        },
+        "anchor": {
+          "at": [-0.85, 0.03, 0.03]
+        }
+      },
+      {
+        "id": "slits",
+        "name": "Double slit",
+        "role": "Two narrow slits a apart, lit by the same beam: two coherent sources.",
+        "vi": {
+          "name": "Khe Y-âng",
+          "role": "Hai khe hẹp cách nhau a, được chiếu bởi cùng một chùm tia: hai nguồn kết hợp."
+        },
+        "anchor": {
+          "at": [-0.75, 0.03, 0.04]
+        }
+      },
+      {
+        "id": "beam",
+        "name": "Beam",
+        "role": "The laser’s light along the rail.",
+        "vi": {
+          "name": "Chùm tia",
+          "role": "Ánh sáng laser truyền dọc theo ray."
+        },
+        "anchor": {
+          "part": "beam"
+        }
+      },
+      {
+        "id": "screen",
+        "name": "Screen at distance D",
+        "role": "A white screen D from the slits, set at the desk.",
+        "vi": {
+          "name": "Màn cách khe D",
+          "role": "Màn trắng cách hai khe một khoảng D, đặt ở bàn điều khiển."
+        },
+        "anchor": {
+          "part": "screen"
+        }
+      },
+      {
+        "id": "fringes",
+        "name": "Fringes",
+        "role": "Bright and dark bands, drawn at their real spacing i.",
+        "vi": {
+          "name": "Vân giao thoa",
+          "role": "Các vạch sáng và tối, được vẽ đúng khoảng vân thật i."
+        },
+        "anchor": {
+          "part": "fringes"
+        }
+      },
+      {
+        "id": "sensor",
+        "name": "Light sensor",
+        "role": "Crosses the screen during the run, reading the brightness where it is.",
+        "vi": {
+          "name": "Cảm biến ánh sáng",
+          "role": "Quét ngang màn trong lúc chạy, đo độ sáng tại vị trí của nó."
+        },
+        "anchor": {
+          "part": "sensor"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "The laser lights both slits with one beam, so the slits send out two waves in step: two coherent sources.",
+        "vi": {
+          "text": "Laser chiếu sáng cả hai khe bằng một chùm tia, nên hai khe phát ra hai sóng cùng pha: hai nguồn kết hợp."
+        },
+        "parts": ["laser", "beam", "slits"]
+      },
+      {
+        "text": "Instead of two bright lines, the screen shows a row of bright and dark fringes: the light from the two slits interferes.",
+        "vi": {
+          "text": "Thay vì hai vạch sáng, trên màn xuất hiện một dãy vân sáng và vân tối: ánh sáng từ hai khe giao thoa với nhau."
+        },
+        "parts": ["screen", "fringes"]
+      },
+      {
+        "text": "At a point on the screen the two waves have travelled different distances. Where the difference is a whole number of wavelengths they add up (bright); where it is a half-number they cancel (dark).",
+        "vi": {
+          "text": "Tại một điểm trên màn, hai sóng đã đi những quãng đường khác nhau. Nơi hiệu đường đi bằng một số nguyên lần bước sóng, chúng tăng cường nhau (vân sáng); nơi bằng một số bán nguyên lần, chúng triệt tiêu nhau (vân tối)."
+        },
+        "parts": ["slits", "fringes"]
+      },
+      {
+        "text": "So the bright fringes are i = λ·D/a apart. Measure the width L of ten fringes: i = L/10, and λ = i·a/D.",
+        "vi": {
+          "text": "Vì vậy các vân sáng cách nhau i = λ·D/a. Đo bề rộng L của mười khoảng vân: i = L/10, và λ = i·a/D."
+        },
+        "parts": ["fringes", "screen", "sensor"]
+      },
+      {
+        "text": "Red light (longer λ) gives wider fringes than green; a farther screen spreads them more; slits farther apart squeeze them closer.",
+        "vi": {
+          "text": "Ánh sáng đỏ (λ dài hơn) cho khoảng vân rộng hơn ánh sáng xanh lục; màn càng xa thì vân càng giãn ra; hai khe càng xa nhau thì vân càng sít lại."
+        },
+        "parts": ["laser", "screen", "slits"]
+      },
+      {
+        "text": "Each slit also spreads the light, so the fringes fade towards the sides. The results give L, i and λ, the ruler reading to its resolution d; change only D: i against D is a line through the origin of slope λ/a.",
+        "vi": {
+          "text": "Mỗi khe cũng làm ánh sáng nhiễu xạ, nên các vân mờ dần về hai bên. Phần kết quả cho L, i và λ, thước đọc theo độ phân giải d; chỉ đổi D: i theo D là đường thẳng qua gốc tọa độ có hệ số góc λ/a."
+        },
+        "parts": ["fringes", "screen"]
+      }
+    ]
+  }
+}

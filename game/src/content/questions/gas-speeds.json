@@ -1,0 +1,1068 @@
+{
+  "id": "gas-speeds",
+  "skills": [
+    {
+      "id": "distribution",
+      "name": "The Maxwell–Boltzmann distribution",
+      "advice": "Sketch the curve for one gas at two temperatures before running the station: the hotter one peaks at a higher speed and is lower and wider, with the same area (all the molecules). Then compare a light and a heavy gas at one temperature.",
+      "vi": {
+        "name": "Phân bố Maxwell–Boltzmann",
+        "advice": "Phác họa đường phân bố của một chất khí ở hai nhiệt độ trước khi chạy trạm: ở nhiệt độ cao hơn, đỉnh dịch về tốc độ lớn hơn, thấp hơn và rộng hơn, diện tích không đổi (toàn bộ số phân tử). Sau đó so sánh một khí nhẹ và một khí nặng ở cùng nhiệt độ."
+      }
+    },
+    {
+      "id": "speeds",
+      "name": "Three speeds: v_p = √(2RT/M), v̄ = √(8RT/πM), v_rms = √(3RT/M)",
+      "advice": "Learn the three formulas side by side: only the number in front changes (2, 8/π ≈ 2.55, 3), so always v_p < v̄ < v_rms. Check each against the station’s peak, mean and rms readings.",
+      "vi": {
+        "name": "Ba loại tốc độ: v_p = √(2RT/M), v̄ = √(8RT/πM), v_rms = √(3RT/M)",
+        "advice": "Học ba công thức cạnh nhau: chỉ hệ số phía trước thay đổi (2; 8/π ≈ 2,55; 3), nên luôn có v_p < v̄ < v_rms. Kiểm tra từng công thức với số đo đỉnh, trung bình và căn quân phương trên trạm."
+      }
+    },
+    {
+      "id": "units",
+      "name": "Units: M in kg/mol, T in kelvin",
+      "advice": "Convert before substituting: 28 g/mol is 0.028 kg/mol, and °C must become K. A speed of a few m/s or of hundreds of km/s for a gas at room temperature means a unit slipped.",
+      "vi": {
+        "name": "Đơn vị: M tính bằng kg/mol, T tính bằng kelvin",
+        "advice": "Đổi đơn vị trước khi thay số: 28 g/mol là 0,028 kg/mol, và °C phải đổi sang K. Nếu tính ra tốc độ khí ở nhiệt độ phòng chỉ vài m/s hoặc hàng trăm km/s thì đã nhầm đơn vị."
+      }
+    },
+    {
+      "id": "scaling",
+      "name": "How the speeds scale: √T and 1/√M",
+      "advice": "Use ratios instead of recalculating: four times T doubles every speed; a gas eight times heavier is √8 ≈ 2.8 times slower. Check with He and O₂ at the station.",
+      "vi": {
+        "name": "Tốc độ thay đổi theo √T và 1/√M",
+        "advice": "Dùng tỉ số thay vì tính lại từ đầu: T tăng bốn lần thì mọi tốc độ tăng gấp đôi; khí nặng gấp tám lần thì chậm hơn √8 ≈ 2,8 lần. Kiểm tra bằng He và O₂ trên trạm."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "spread",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["distribution"],
+      "stem": "In a sample of gas at one temperature, the molecules…",
+      "explain": "Collisions keep sharing out energy, so the molecules have a spread of speeds — the Maxwell–Boltzmann distribution — around a most probable speed.",
+      "vi": {
+        "stem": "Trong một lượng khí ở một nhiệt độ xác định, các phân tử",
+        "explain": "Các va chạm liên tục phân chia lại năng lượng, nên các phân tử có tốc độ phân bố trong một khoảng — phân bố Maxwell–Boltzmann — quanh một tốc độ có xác suất lớn nhất."
+      },
+      "options": [
+        {
+          "text": "move with a spread of different speeds",
+          "vi": {
+            "text": "chuyển động với nhiều tốc độ khác nhau"
+          },
+          "correct": true
+        },
+        {
+          "text": "all move at the same speed",
+          "vi": {
+            "text": "đều chuyển động với cùng một tốc độ"
+          }
+        },
+        {
+          "text": "are almost at rest",
+          "vi": {
+            "text": "gần như đứng yên"
+          }
+        },
+        {
+          "text": "move at speeds that do not depend on temperature",
+          "vi": {
+            "text": "có tốc độ không phụ thuộc nhiệt độ"
+          }
+        }
+      ]
+    },
+    {
+      "id": "order",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["speeds"],
+      "stem": "For any gas at a given temperature, the most probable speed v_p, the mean speed v̄ and the root-mean-square speed v_rms are in the order…",
+      "explain": "v_p = √(2RT/M), v̄ = √(8RT/πM) ≈ √(2.55RT/M), v_rms = √(3RT/M): the factors 2 < 2.55 < 3.",
+      "vi": {
+        "stem": "Với một chất khí ở nhiệt độ xác định, tốc độ có xác suất lớn nhất v_p, tốc độ trung bình v̄ và tốc độ căn quân phương v_rms được sắp xếp theo thứ tự",
+        "explain": "v_p = √(2RT/M), v̄ = √(8RT/πM) ≈ √(2,55RT/M), v_rms = √(3RT/M): các hệ số 2 < 2,55 < 3."
+      },
+      "options": [
+        {
+          "text": "v_p < v̄ < v_rms",
+          "vi": {
+            "text": "v_p < v̄ < v_rms"
+          },
+          "correct": true
+        },
+        {
+          "text": "v_rms < v̄ < v_p",
+          "vi": {
+            "text": "v_rms < v̄ < v_p"
+          }
+        },
+        {
+          "text": "v̄ < v_p < v_rms",
+          "vi": {
+            "text": "v̄ < v_p < v_rms"
+          }
+        },
+        {
+          "text": "v_p = v̄ = v_rms",
+          "vi": {
+            "text": "v_p = v̄ = v_rms"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-curve",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["distribution"],
+      "stem": "Decide whether each statement about the Maxwell–Boltzmann distribution of a gas is true or false.",
+      "explain": "Heating moves the peak to higher speeds and makes the curve lower and wider; the area under it stands for all the molecules, so it does not change. Lighter molecules move faster at the same temperature.",
+      "vi": {
+        "stem": "Mỗi nhận định sau về phân bố Maxwell–Boltzmann của một chất khí đúng hay sai?",
+        "explain": "Tăng nhiệt độ làm đỉnh dịch về phía tốc độ lớn hơn, đường cong thấp và rộng hơn; diện tích dưới đường cong ứng với toàn bộ số phân tử nên không đổi. Ở cùng nhiệt độ, phân tử nhẹ hơn chuyển động nhanh hơn."
+      },
+      "statements": [
+        {
+          "text": "Raising the temperature moves the peak to higher speeds.",
+          "vi": {
+            "text": "Tăng nhiệt độ làm đỉnh của đường phân bố dịch về phía tốc độ lớn hơn."
+          },
+          "true": true
+        },
+        {
+          "text": "At the same temperature, lighter molecules move faster on average.",
+          "vi": {
+            "text": "Ở cùng nhiệt độ, phân tử nhẹ hơn có tốc độ trung bình lớn hơn."
+          },
+          "true": true
+        },
+        {
+          "text": "The area under the curve grows as the temperature rises.",
+          "vi": {
+            "text": "Diện tích dưới đường phân bố tăng khi nhiệt độ tăng."
+          },
+          "true": false
+        },
+        {
+          "text": "At a higher temperature the curve is lower and wider.",
+          "vi": {
+            "text": "Ở nhiệt độ cao hơn, đường phân bố thấp hơn và rộng hơn."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "helium-oxygen",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["scaling"],
+      "set": {
+        "gas": 0,
+        "temperature": 300
+      },
+      "stem": "At {temperature} K, how does the root-mean-square speed of helium (M = 4.0026 g/mol) compare with that of oxygen, O₂ (M = 31.998 g/mol)?",
+      "explain": "v_rms ∝ 1/√M: v(He)/v(O₂) = √(31.998/4.0026) ≈ {=sqrt(31.998/4.0026)|3}. The ratio of the masses, about 8, is not the ratio of the speeds.",
+      "vi": {
+        "stem": "Ở {temperature} K, tốc độ căn quân phương của helium (M = 4,0026 g/mol) so với của oxygen, O₂ (M = 31,998 g/mol) như thế nào?",
+        "explain": "v_rms tỉ lệ với 1/√M: v(He)/v(O₂) = √(31,998/4,0026) ≈ {=sqrt(31.998/4.0026)|3}. Tỉ số khối lượng mol, khoảng 8, không phải tỉ số tốc độ."
+      },
+      "options": [
+        {
+          "text": "about {=sqrt(31.998/4.0026)|3} times faster",
+          "vi": {
+            "text": "nhanh hơn khoảng {=sqrt(31.998/4.0026)|3} lần"
+          },
+          "correct": true,
+          "check": {
+            "expr": "sqrt(3*8.314462618*temperature/0.031998)*sqrt(31.998/4.0026)",
+            "equals": "rms"
+          }
+        },
+        {
+          "text": "about {=31.998/4.0026|3} times faster",
+          "vi": {
+            "text": "nhanh hơn khoảng {=31.998/4.0026|3} lần"
+          },
+          "check": {
+            "expr": "sqrt(3*8.314462618*temperature/0.031998)*31.998/4.0026",
+            "equals": "rms"
+          }
+        },
+        {
+          "text": "the same",
+          "vi": {
+            "text": "bằng nhau"
+          },
+          "check": {
+            "expr": "sqrt(3*8.314462618*temperature/0.031998)",
+            "equals": "rms"
+          }
+        },
+        {
+          "text": "about {=sqrt(31.998/4.0026)|3} times slower",
+          "vi": {
+            "text": "chậm hơn khoảng {=sqrt(31.998/4.0026)|3} lần"
+          },
+          "check": {
+            "expr": "sqrt(3*8.314462618*temperature/0.031998)/sqrt(31.998/4.0026)",
+            "equals": "rms"
+          }
+        }
+      ]
+    },
+    {
+      "id": "four-times-t",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["scaling"],
+      "stem": "A gas is heated from 300 K to 1200 K. Its molecules’ root-mean-square speed…",
+      "explain": "v_rms = √(3RT/M) ∝ √T: four times the temperature gives √4 = 2 times the speed.",
+      "vi": {
+        "stem": "Một chất khí được đun nóng từ 300 K lên 1200 K. Tốc độ căn quân phương của các phân tử",
+        "explain": "v_rms = √(3RT/M) tỉ lệ với √T: nhiệt độ tăng bốn lần thì tốc độ tăng √4 = 2 lần."
+      },
+      "options": [
+        {
+          "text": "doubles",
+          "vi": {
+            "text": "tăng gấp đôi"
+          },
+          "correct": true
+        },
+        {
+          "text": "becomes four times larger",
+          "vi": {
+            "text": "tăng gấp bốn lần"
+          }
+        },
+        {
+          "text": "becomes sixteen times larger",
+          "vi": {
+            "text": "tăng gấp mười sáu lần"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-nitrogen",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["speeds", "distribution"],
+      "set": {
+        "gas": 1,
+        "temperature": 300
+      },
+      "stem": "Nitrogen, N₂ (M = 0.028014 kg/mol), is at {temperature} K. Decide whether each statement is true or false.",
+      "explain": "v_p = √(2RT/M) ≈ {@mostProbable} m/s; v_rms = √(3RT/M) ≈ {@rms} m/s is larger. About {@fastShare|2}% of the molecules are faster than 1000 m/s. CO₂ is heavier, so at the same T its peak is at a lower speed.",
+      "vi": {
+        "stem": "Khí nitrogen, N₂ (M = 0,028014 kg/mol), ở {temperature} K. Mỗi nhận định sau đúng hay sai?",
+        "explain": "v_p = √(2RT/M) ≈ {@mostProbable} m/s; v_rms = √(3RT/M) ≈ {@rms} m/s, lớn hơn. Khoảng {@fastShare|2}% số phân tử có tốc độ lớn hơn 1000 m/s. CO₂ nặng hơn nên ở cùng nhiệt độ, đỉnh phân bố của nó ở tốc độ nhỏ hơn."
+      },
+      "statements": [
+        {
+          "text": "The most probable speed is about {@mostProbable} m/s.",
+          "vi": {
+            "text": "Tốc độ có xác suất lớn nhất khoảng {@mostProbable} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "sqrt(2*8.314462618*temperature/0.028014)",
+            "equals": "mostProbable"
+          }
+        },
+        {
+          "text": "The root-mean-square speed is larger than the most probable speed.",
+          "vi": {
+            "text": "Tốc độ căn quân phương lớn hơn tốc độ có xác suất lớn nhất."
+          },
+          "true": true
+        },
+        {
+          "text": "About {@fastShare|2}% of the molecules move faster than 1000 m/s.",
+          "vi": {
+            "text": "Khoảng {@fastShare|2}% số phân tử chuyển động nhanh hơn 1000 m/s."
+          },
+          "true": true
+        },
+        {
+          "text": "CO₂ at the same temperature would have a higher most probable speed.",
+          "vi": {
+            "text": "Ở cùng nhiệt độ, CO₂ có tốc độ có xác suất lớn nhất cao hơn."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "nitrogen-peak",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["speeds", "units"],
+      "set": {
+        "gas": 1,
+        "temperature": 300
+      },
+      "stem": "Nitrogen, N₂ (M = 28.014 g/mol), is at {temperature} K. What is its most probable molecular speed? (R = 8.314 J/(mol·K))",
+      "explain": "With M in kg/mol: v_p = √(2RT/M) = √(2·8.314·{temperature}/0.028014) ≈ {@mostProbable} m/s.",
+      "vi": {
+        "stem": "Khí nitrogen, N₂ (M = 28,014 g/mol), ở {temperature} K. Tốc độ có xác suất lớn nhất của các phân tử là bao nhiêu? (R = 8,314 J/(mol·K))",
+        "explain": "Với M tính bằng kg/mol: v_p = √(2RT/M) = √(2·8,314·{temperature}/0,028014) ≈ {@mostProbable} m/s."
+      },
+      "options": [
+        {
+          "text": "{@mostProbable} m/s",
+          "vi": {
+            "text": "{@mostProbable} m/s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "sqrt(2*8.314462618*temperature/0.028014)",
+            "equals": "mostProbable"
+          }
+        },
+        {
+          "text": "{=sqrt(2*8.314462618*temperature/28.014)} m/s",
+          "vi": {
+            "text": "{=sqrt(2*8.314462618*temperature/28.014)} m/s"
+          },
+          "check": {
+            "expr": "sqrt(2*8.314462618*temperature/28.014)",
+            "equals": "mostProbable"
+          }
+        },
+        {
+          "text": "{=sqrt(3*8.314462618*temperature/0.028014)} m/s",
+          "vi": {
+            "text": "{=sqrt(3*8.314462618*temperature/0.028014)} m/s"
+          },
+          "check": {
+            "expr": "sqrt(3*8.314462618*temperature/0.028014)",
+            "equals": "mostProbable"
+          }
+        },
+        {
+          "text": "{=sqrt(2*8.314462618*(temperature-273.15)/0.028014)} m/s",
+          "vi": {
+            "text": "{=sqrt(2*8.314462618*(temperature-273.15)/0.028014)} m/s"
+          },
+          "check": {
+            "expr": "sqrt(2*8.314462618*(temperature-273.15)/0.028014)",
+            "equals": "mostProbable"
+          }
+        }
+      ]
+    },
+    {
+      "id": "helium-mean",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["speeds", "units"],
+      "set": {
+        "gas": 0,
+        "temperature": 100
+      },
+      "stem": "Helium (M = 4.0026 g/mol) is cooled to {temperature} K. What is the mean speed of its atoms? (R = 8.314 J/(mol·K))",
+      "explain": "v̄ = √(8RT/(πM)) = √(8·8.314·{temperature}/(π·0.0040026)) ≈ {@mean} m/s — light atoms are fast even when cold.",
+      "vi": {
+        "stem": "Helium (M = 4,0026 g/mol) được làm lạnh đến {temperature} K. Tốc độ trung bình của các nguyên tử là bao nhiêu? (R = 8,314 J/(mol·K))",
+        "explain": "v̄ = √(8RT/(πM)) = √(8·8,314·{temperature}/(π·0,0040026)) ≈ {@mean} m/s — nguyên tử nhẹ chuyển động nhanh ngay cả khi lạnh."
+      },
+      "options": [
+        {
+          "text": "{@mean} m/s",
+          "vi": {
+            "text": "{@mean} m/s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "sqrt(8*8.314462618*temperature/(pi*0.0040026))",
+            "equals": "mean"
+          }
+        },
+        {
+          "text": "{=sqrt(8*8.314462618*temperature/0.0040026)} m/s",
+          "vi": {
+            "text": "{=sqrt(8*8.314462618*temperature/0.0040026)} m/s"
+          },
+          "check": {
+            "expr": "sqrt(8*8.314462618*temperature/0.0040026)",
+            "equals": "mean"
+          }
+        },
+        {
+          "text": "{=sqrt(8*8.314462618*temperature/(pi*4.0026))} m/s",
+          "vi": {
+            "text": "{=sqrt(8*8.314462618*temperature/(pi*4.0026))} m/s"
+          },
+          "check": {
+            "expr": "sqrt(8*8.314462618*temperature/(pi*4.0026))",
+            "equals": "mean"
+          }
+        },
+        {
+          "text": "{=sqrt(2*8.314462618*temperature/0.0040026)} m/s",
+          "vi": {
+            "text": "{=sqrt(2*8.314462618*temperature/0.0040026)} m/s"
+          },
+          "check": {
+            "expr": "sqrt(2*8.314462618*temperature/0.0040026)",
+            "equals": "mean"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-oxygen",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["speeds", "scaling"],
+      "set": {
+        "gas": 2,
+        "temperature": 600
+      },
+      "stem": "Oxygen, O₂ (M = 0.031998 kg/mol), is at {temperature} K (R = 8.314 J/(mol·K)). Decide whether each statement is true or false.",
+      "explain": "v_p = √(2RT/M) ≈ {@mostProbable} m/s, v̄ = √(8RT/πM) ≈ {@mean} m/s, v_rms = √(3RT/M) ≈ {@rms} m/s = v_p·√(3/2). At 150 K (a quarter of the temperature) every speed halves.",
+      "vi": {
+        "stem": "Khí oxygen, O₂ (M = 0,031998 kg/mol), ở {temperature} K (R = 8,314 J/(mol·K)). Mỗi nhận định sau đúng hay sai?",
+        "explain": "v_p = √(2RT/M) ≈ {@mostProbable} m/s, v̄ = √(8RT/πM) ≈ {@mean} m/s, v_rms = √(3RT/M) ≈ {@rms} m/s = v_p·√(3/2). Ở 150 K (một phần tư nhiệt độ), mọi tốc độ giảm một nửa."
+      },
+      "statements": [
+        {
+          "text": "The most probable speed is about {@mostProbable} m/s.",
+          "vi": {
+            "text": "Tốc độ có xác suất lớn nhất khoảng {@mostProbable} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "sqrt(2*8.314462618*temperature/0.031998)",
+            "equals": "mostProbable"
+          }
+        },
+        {
+          "text": "The mean speed is about {@mean} m/s.",
+          "vi": {
+            "text": "Tốc độ trung bình khoảng {@mean} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "sqrt(8*8.314462618*temperature/(pi*0.031998))",
+            "equals": "mean"
+          }
+        },
+        {
+          "text": "The root-mean-square speed is about {=@mostProbable*1.5} m/s.",
+          "vi": {
+            "text": "Tốc độ căn quân phương khoảng {=@mostProbable*1.5} m/s."
+          },
+          "true": false,
+          "check": {
+            "expr": "@mostProbable*1.5",
+            "equals": "rms"
+          }
+        },
+        {
+          "text": "At 150 K its most probable speed would be about {=@mostProbable/2} m/s.",
+          "vi": {
+            "text": "Ở 150 K, tốc độ có xác suất lớn nhất của nó khoảng {=@mostProbable/2} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "sqrt(2*8.314462618*150/0.031998)*2",
+            "equals": "mostProbable"
+          }
+        }
+      ]
+    },
+    {
+      "id": "co2-rms",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["speeds", "units"],
+      "set": {
+        "gas": 3,
+        "temperature": 1200
+      },
+      "stem": "Carbon dioxide (M = 44.009 g/mol) is at {temperature} K. What is the root-mean-square speed of its molecules? (R = 8.314 J/(mol·K))",
+      "explain": "v_rms = √(3RT/M) = √(3·8.314·{temperature}/0.044009) ≈ {@rms} m/s.",
+      "vi": {
+        "stem": "Khí carbon dioxide (M = 44,009 g/mol) ở {temperature} K. Tốc độ căn quân phương của các phân tử là bao nhiêu? (R = 8,314 J/(mol·K))",
+        "explain": "v_rms = √(3RT/M) = √(3·8,314·{temperature}/0,044009) ≈ {@rms} m/s."
+      },
+      "options": [
+        {
+          "text": "{@rms} m/s",
+          "vi": {
+            "text": "{@rms} m/s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "sqrt(3*8.314462618*temperature/0.044009)",
+            "equals": "rms"
+          }
+        },
+        {
+          "text": "{=3*8.314462618*temperature/0.044009} m/s",
+          "vi": {
+            "text": "{=3*8.314462618*temperature/0.044009} m/s"
+          },
+          "check": {
+            "expr": "3*8.314462618*temperature/0.044009",
+            "equals": "rms"
+          }
+        },
+        {
+          "text": "{=sqrt(3*8.314462618*temperature/44.009)} m/s",
+          "vi": {
+            "text": "{=sqrt(3*8.314462618*temperature/44.009)} m/s"
+          },
+          "check": {
+            "expr": "sqrt(3*8.314462618*temperature/44.009)",
+            "equals": "rms"
+          }
+        },
+        {
+          "text": "{=sqrt(2*8.314462618*temperature/0.044009)} m/s",
+          "vi": {
+            "text": "{=sqrt(2*8.314462618*temperature/0.044009)} m/s"
+          },
+          "check": {
+            "expr": "sqrt(2*8.314462618*temperature/0.044009)",
+            "equals": "rms"
+          }
+        }
+      ]
+    },
+    {
+      "id": "same-speed",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["scaling", "speeds"],
+      "set": {
+        "gas": 0,
+        "temperature": 100
+      },
+      "stem": "At what temperature do oxygen molecules, O₂ (M = 31.998 g/mol), have the same root-mean-square speed as helium atoms (M = 4.0026 g/mol) at {temperature} K?",
+      "explain": "Equal √(3RT/M) needs equal T/M: T(O₂) = {temperature}·31.998/4.0026 ≈ {=temperature*31.998/4.0026|3} K. Then both have v_rms ≈ {@rms} m/s.",
+      "vi": {
+        "stem": "Ở nhiệt độ nào thì phân tử oxygen, O₂ (M = 31,998 g/mol), có tốc độ căn quân phương bằng tốc độ căn quân phương của nguyên tử helium (M = 4,0026 g/mol) ở {temperature} K?",
+        "explain": "Để √(3RT/M) bằng nhau thì T/M phải bằng nhau: T(O₂) = {temperature}·31,998/4,0026 ≈ {=temperature*31.998/4.0026|3} K. Khi đó cả hai có v_rms ≈ {@rms} m/s."
+      },
+      "options": [
+        {
+          "text": "{=temperature*31.998/4.0026|3} K",
+          "vi": {
+            "text": "{=temperature*31.998/4.0026|3} K"
+          },
+          "correct": true,
+          "check": {
+            "expr": "sqrt(3*8.314462618*(temperature*31.998/4.0026)/0.031998)",
+            "equals": "rms"
+          }
+        },
+        {
+          "text": "{=temperature*sqrt(31.998/4.0026)|3} K",
+          "vi": {
+            "text": "{=temperature*sqrt(31.998/4.0026)|3} K"
+          },
+          "check": {
+            "expr": "sqrt(3*8.314462618*(temperature*sqrt(31.998/4.0026))/0.031998)",
+            "equals": "rms"
+          }
+        },
+        {
+          "text": "{=temperature*4.0026/31.998|3} K",
+          "vi": {
+            "text": "{=temperature*4.0026/31.998|3} K"
+          },
+          "check": {
+            "expr": "sqrt(3*8.314462618*(temperature*4.0026/31.998)/0.031998)",
+            "equals": "rms"
+          }
+        },
+        {
+          "text": "{temperature} K",
+          "vi": {
+            "text": "{temperature} K"
+          },
+          "check": {
+            "expr": "sqrt(3*8.314462618*temperature/0.031998)",
+            "equals": "rms"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-compare",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["scaling", "speeds", "distribution"],
+      "set": {
+        "gas": 0,
+        "temperature": 300
+      },
+      "stem": "Helium (M = 0.0040026 kg/mol) and nitrogen, N₂ (M = 0.028014 kg/mol), are both at {temperature} K. Decide whether each statement is true or false.",
+      "explain": "Helium: v̄ = √(8RT/πM) ≈ {@mean} m/s, and v_rms/v_p = √(3/2) ≈ 1.22 for every gas. Speeds go as √T: doubling T multiplies v_p by √2, not 2. At one T the speeds go as 1/√M: √(28.014/4.0026) ≈ {=sqrt(28.014/4.0026)|3}.",
+      "vi": {
+        "stem": "Helium (M = 0,0040026 kg/mol) và nitrogen, N₂ (M = 0,028014 kg/mol), cùng ở {temperature} K. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Helium: v̄ = √(8RT/πM) ≈ {@mean} m/s, và v_rms/v_p = √(3/2) ≈ 1,22 với mọi chất khí. Tốc độ tỉ lệ với √T: tăng T gấp đôi thì v_p tăng √2 lần, không phải 2 lần. Ở cùng T, tốc độ tỉ lệ với 1/√M: √(28,014/4,0026) ≈ {=sqrt(28.014/4.0026)|3}."
+      },
+      "statements": [
+        {
+          "text": "The helium atoms’ mean speed is about {@mean} m/s.",
+          "vi": {
+            "text": "Tốc độ trung bình của nguyên tử helium khoảng {@mean} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "sqrt(8*8.314462618*temperature/(pi*0.0040026))",
+            "equals": "mean"
+          }
+        },
+        {
+          "text": "For helium, v_rms is about {=@mostProbable*sqrt(1.5)} m/s, √(3/2) times its most probable speed.",
+          "vi": {
+            "text": "Với helium, v_rms khoảng {=@mostProbable*sqrt(1.5)} m/s, bằng √(3/2) lần tốc độ có xác suất lớn nhất."
+          },
+          "true": true,
+          "check": {
+            "expr": "@mostProbable*sqrt(1.5)",
+            "equals": "rms"
+          }
+        },
+        {
+          "text": "Doubling the temperature doubles helium’s most probable speed.",
+          "vi": {
+            "text": "Tăng nhiệt độ gấp đôi thì tốc độ có xác suất lớn nhất của helium tăng gấp đôi."
+          },
+          "true": false
+        },
+        {
+          "text": "Helium atoms are on average about {=sqrt(28.014/4.0026)|3} times faster than nitrogen molecules.",
+          "vi": {
+            "text": "Trung bình nguyên tử helium nhanh hơn phân tử nitrogen khoảng {=sqrt(28.014/4.0026)|3} lần."
+          },
+          "true": true,
+          "check": {
+            "expr": "sqrt(8*8.314462618*temperature/(pi*0.028014))*sqrt(28.014/4.0026)",
+            "equals": "mean"
+          }
+        }
+      ]
+    },
+    {
+      "id": "molar-mass-unit",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["units"],
+      "stem": "In v_rms = √(3RT/M), with R = 8.314 J/(mol·K) and T in kelvin, the molar mass M must be in…",
+      "explain": "J = kg·m²/s², so RT/M comes out in m²/s² only when M is in kg/mol: 28.014 g/mol is 0.028014 kg/mol.",
+      "vi": {
+        "stem": "Trong công thức v_rms = √(3RT/M), với R = 8,314 J/(mol·K) và T tính bằng kelvin, khối lượng mol M phải tính bằng",
+        "explain": "J = kg·m²/s², nên RT/M chỉ có đơn vị m²/s² khi M tính bằng kg/mol: 28,014 g/mol là 0,028014 kg/mol."
+      },
+      "options": [
+        {
+          "text": "kg/mol",
+          "vi": {
+            "text": "kg/mol"
+          },
+          "correct": true
+        },
+        {
+          "text": "g/mol",
+          "vi": {
+            "text": "g/mol"
+          }
+        },
+        {
+          "text": "g",
+          "vi": {
+            "text": "g"
+          }
+        },
+        {
+          "text": "mol/kg",
+          "vi": {
+            "text": "mol/kg"
+          }
+        }
+      ]
+    },
+    {
+      "id": "same-energy",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["scaling", "distribution"],
+      "stem": "Helium and carbon dioxide are at the same temperature. Their particles have the same…",
+      "explain": "Temperature sets the mean kinetic energy of translation, (3/2)kT per particle, for every gas. To carry the same energy, the light helium atoms must move much faster than the heavy CO₂ molecules.",
+      "vi": {
+        "stem": "Helium và carbon dioxide ở cùng nhiệt độ. Các hạt của hai khí có cùng",
+        "explain": "Nhiệt độ quyết định động năng tịnh tiến trung bình, (3/2)kT cho mỗi hạt, với mọi chất khí. Để có cùng động năng, các nguyên tử helium nhẹ phải chuyển động nhanh hơn nhiều so với các phân tử CO₂ nặng."
+      },
+      "options": [
+        {
+          "text": "mean kinetic energy",
+          "vi": {
+            "text": "động năng trung bình"
+          },
+          "correct": true
+        },
+        {
+          "text": "root-mean-square speed",
+          "vi": {
+            "text": "tốc độ căn quân phương"
+          }
+        },
+        {
+          "text": "most probable speed",
+          "vi": {
+            "text": "tốc độ có xác suất lớn nhất"
+          }
+        },
+        {
+          "text": "momentum",
+          "vi": {
+            "text": "động lượng"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-heating",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["distribution", "scaling"],
+      "stem": "A gas is heated and its Maxwell–Boltzmann speed distribution is drawn again. Decide whether each statement is true or false.",
+      "explain": "Heating moves the peak (v_p ∝ √T) to higher speeds; the curve spreads out, so the peak gets lower. The area under the curve is the whole sample, so it stays the same. At any temperature the molecules have a spread of speeds; cooling narrows it but never gives them all one speed.",
+      "vi": {
+        "stem": "Một chất khí được đun nóng và đường phân bố tốc độ Maxwell–Boltzmann của nó được vẽ lại. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Khi đun nóng, đỉnh (v_p ∝ √T) dịch về phía tốc độ lớn hơn; đường cong trải rộng ra nên đỉnh thấp xuống. Diện tích dưới đường cong ứng với toàn bộ mẫu khí nên không đổi. Ở mọi nhiệt độ, các phân tử có tốc độ phân bố trong một khoảng; làm lạnh làm khoảng đó hẹp lại nhưng không bao giờ làm mọi phân tử có cùng một tốc độ."
+      },
+      "statements": [
+        {
+          "text": "The peak of the curve moves to higher speeds.",
+          "vi": {
+            "text": "Đỉnh của đường cong dịch về phía tốc độ lớn hơn."
+          },
+          "true": true
+        },
+        {
+          "text": "The peak of the curve gets taller.",
+          "vi": {
+            "text": "Đỉnh của đường cong cao hơn."
+          },
+          "true": false
+        },
+        {
+          "text": "The area under the curve stays the same.",
+          "vi": {
+            "text": "Diện tích dưới đường cong không đổi."
+          },
+          "true": true
+        },
+        {
+          "text": "Cooled enough, all the molecules would move at one and the same speed.",
+          "vi": {
+            "text": "Nếu làm lạnh đủ, mọi phân tử sẽ chuyển động với cùng một tốc độ."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "oxygen-rms",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["speeds", "units"],
+      "set": {
+        "gas": 2,
+        "temperature": 300
+      },
+      "stem": "Oxygen, O₂ (M = 31.998 g/mol), is at {temperature} K. What is the root-mean-square speed of its molecules? (R = 8.314 J/(mol·K))",
+      "explain": "v_rms = √(3RT/M) = √(3·8.314·{temperature}/0.031998) ≈ {@rms} m/s, with M in kg/mol and O₂, not O. √(2RT/M) ≈ {@mostProbable} m/s is the most probable speed.",
+      "vi": {
+        "stem": "Oxygen, O₂ (M = 31,998 g/mol), ở {temperature} K. Tốc độ căn quân phương của các phân tử là bao nhiêu? (R = 8,314 J/(mol·K))",
+        "explain": "v_rms = √(3RT/M) = √(3·8,314·{temperature}/0,031998) ≈ {@rms} m/s, với M tính bằng kg/mol và là của O₂, không phải O. √(2RT/M) ≈ {@mostProbable} m/s là tốc độ có xác suất lớn nhất."
+      },
+      "options": [
+        {
+          "text": "{@rms} m/s",
+          "vi": {
+            "text": "{@rms} m/s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "sqrt(3*8.314462618*temperature/0.031998)",
+            "equals": "rms"
+          }
+        },
+        {
+          "text": "{=sqrt(2*8.314462618*temperature/0.031998)} m/s",
+          "vi": {
+            "text": "{=sqrt(2*8.314462618*temperature/0.031998)} m/s"
+          },
+          "check": {
+            "expr": "sqrt(2*8.314462618*temperature/0.031998)",
+            "equals": "rms"
+          }
+        },
+        {
+          "text": "{=sqrt(3*8.314462618*temperature/31.998)} m/s",
+          "vi": {
+            "text": "{=sqrt(3*8.314462618*temperature/31.998)} m/s"
+          },
+          "check": {
+            "expr": "sqrt(3*8.314462618*temperature/31.998)",
+            "equals": "rms"
+          }
+        },
+        {
+          "text": "{=sqrt(3*8.314462618*temperature/0.015999)} m/s",
+          "vi": {
+            "text": "{=sqrt(3*8.314462618*temperature/0.015999)} m/s"
+          },
+          "check": {
+            "expr": "sqrt(3*8.314462618*temperature/0.015999)",
+            "equals": "rms"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-co2",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["speeds", "units"],
+      "set": {
+        "gas": 3,
+        "temperature": 300
+      },
+      "stem": "Carbon dioxide (M = 0.044009 kg/mol) is at {temperature} K (R = 8.314 J/(mol·K)). Decide whether each statement is true or false.",
+      "explain": "v_p = √(2RT/M) ≈ {@mostProbable} m/s; v̄ = √(8RT/(πM)) ≈ {@mean} m/s — without π it would be {=sqrt(8*8.314462618*temperature/0.044009)} m/s; v_rms = v_p·√(3/2) ≈ {@rms} m/s. T must be in kelvin: using {=temperature-273.15} (°C) gives {=sqrt(3*8.314462618*(temperature-273.15)/0.044009)} m/s.",
+      "vi": {
+        "stem": "Carbon dioxide (M = 0,044009 kg/mol) ở {temperature} K (R = 8,314 J/(mol·K)). Mỗi nhận định sau đúng hay sai?",
+        "explain": "v_p = √(2RT/M) ≈ {@mostProbable} m/s; v̄ = √(8RT/(πM)) ≈ {@mean} m/s — bỏ π sẽ thành {=sqrt(8*8.314462618*temperature/0.044009)} m/s; v_rms = v_p·√(3/2) ≈ {@rms} m/s. T phải tính bằng kelvin: dùng {=temperature-273.15} (°C) sẽ được {=sqrt(3*8.314462618*(temperature-273.15)/0.044009)} m/s."
+      },
+      "statements": [
+        {
+          "text": "The most probable speed is about {@mostProbable} m/s.",
+          "vi": {
+            "text": "Tốc độ có xác suất lớn nhất khoảng {@mostProbable} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "sqrt(2*8.314462618*temperature/0.044009)",
+            "equals": "mostProbable"
+          }
+        },
+        {
+          "text": "The mean speed is about {=sqrt(8*8.314462618*temperature/0.044009)} m/s.",
+          "vi": {
+            "text": "Tốc độ trung bình khoảng {=sqrt(8*8.314462618*temperature/0.044009)} m/s."
+          },
+          "true": false,
+          "check": {
+            "expr": "sqrt(8*8.314462618*temperature/0.044009)",
+            "equals": "mean"
+          }
+        },
+        {
+          "text": "The root-mean-square speed is v_p·√(3/2) ≈ {=@mostProbable*sqrt(3/2)} m/s.",
+          "vi": {
+            "text": "Tốc độ căn quân phương bằng v_p·√(3/2) ≈ {=@mostProbable*sqrt(3/2)} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "@mostProbable*sqrt(3/2)",
+            "equals": "rms"
+          }
+        },
+        {
+          "text": "The root-mean-square speed is about {=sqrt(3*8.314462618*(temperature-273.15)/0.044009)} m/s.",
+          "vi": {
+            "text": "Tốc độ căn quân phương khoảng {=sqrt(3*8.314462618*(temperature-273.15)/0.044009)} m/s."
+          },
+          "true": false,
+          "check": {
+            "expr": "sqrt(3*8.314462618*(temperature-273.15)/0.044009)",
+            "equals": "rms"
+          }
+        }
+      ]
+    },
+    {
+      "id": "which-gas",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["speeds", "units"],
+      "set": {
+        "gas": 2,
+        "temperature": 600
+      },
+      "stem": "A sample of one of the station's gases at {temperature} K has a root-mean-square speed of {@rms} m/s. Which gas is it? (R = 8.314 J/(mol·K))",
+      "explain": "Turn v_rms = √(3RT/M) round: M = 3RT/v_rms² = 3·8.314·{temperature}/{@rms}² ≈ {=3*8.314462618*temperature/@rms^2} kg/mol = {=3000*8.314462618*temperature/@rms^2} g/mol: oxygen, O₂.",
+      "vi": {
+        "stem": "Một mẫu của một trong các khí trên trạm, ở {temperature} K, có tốc độ căn quân phương {@rms} m/s. Đó là khí nào? (R = 8,314 J/(mol·K))",
+        "explain": "Biến đổi v_rms = √(3RT/M): M = 3RT/v_rms² = 3·8,314·{temperature}/{@rms}² ≈ {=3*8.314462618*temperature/@rms^2} kg/mol = {=3000*8.314462618*temperature/@rms^2} g/mol: oxygen, O₂."
+      },
+      "options": [
+        {
+          "text": "Oxygen, O₂",
+          "vi": {
+            "text": "Oxygen, O₂"
+          },
+          "correct": true,
+          "check": {
+            "expr": "sqrt(3*8.314462618*temperature/0.031998)",
+            "equals": "rms"
+          }
+        },
+        {
+          "text": "Nitrogen, N₂",
+          "vi": {
+            "text": "Nitrogen, N₂"
+          },
+          "check": {
+            "expr": "sqrt(3*8.314462618*temperature/0.028014)",
+            "equals": "rms"
+          }
+        },
+        {
+          "text": "Carbon dioxide, CO₂",
+          "vi": {
+            "text": "Carbon dioxide, CO₂"
+          },
+          "check": {
+            "expr": "sqrt(3*8.314462618*temperature/0.044009)",
+            "equals": "rms"
+          }
+        },
+        {
+          "text": "Helium, He",
+          "vi": {
+            "text": "Helium, He"
+          },
+          "check": {
+            "expr": "sqrt(3*8.314462618*temperature/0.0040026)",
+            "equals": "rms"
+          }
+        }
+      ]
+    },
+    {
+      "id": "most-fast",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["scaling", "distribution"],
+      "set": {
+        "gas": 1,
+        "temperature": 1200
+      },
+      "stem": "Which sample has the largest share of particles faster than 1000 m/s?",
+      "explain": "The whole distribution depends on T/M only (v_p = √(2RT/M)). T/M in K·mol/g: helium at 100 K {=100/4.0026|3}; N₂ at 1200 K {=temperature/28.014|3}; CO₂ at 1200 K {=1200/44.009|3}; O₂ at 600 K {=600/31.998|3}. Nitrogen at 1200 K has the largest, so the fastest spread: {@fastShare}% of its molecules beat 1000 m/s. Being the lightest is not enough for cold helium.",
+      "vi": {
+        "stem": "Mẫu khí nào có tỉ lệ hạt chuyển động nhanh hơn 1000 m/s lớn nhất?",
+        "explain": "Toàn bộ đường phân bố chỉ phụ thuộc T/M (v_p = √(2RT/M)). T/M tính theo K·mol/g: helium ở 100 K là {=100/4.0026|3}; N₂ ở 1200 K là {=temperature/28.014|3}; CO₂ ở 1200 K là {=1200/44.009|3}; O₂ ở 600 K là {=600/31.998|3}. Nitrogen ở 1200 K có T/M lớn nhất, nên phân bố lệch về tốc độ cao nhất: {@fastShare}% số phân tử nhanh hơn 1000 m/s. Helium nhẹ nhất nhưng ở nhiệt độ thấp thì chưa đủ."
+      },
+      "options": [
+        {
+          "text": "Nitrogen, N₂, at 1200 K",
+          "vi": {
+            "text": "Nitrogen, N₂, ở 1200 K"
+          },
+          "correct": true
+        },
+        {
+          "text": "Helium, He, at 100 K",
+          "vi": {
+            "text": "Helium, He, ở 100 K"
+          }
+        },
+        {
+          "text": "Carbon dioxide, CO₂, at 1200 K",
+          "vi": {
+            "text": "Carbon dioxide, CO₂, ở 1200 K"
+          }
+        },
+        {
+          "text": "Oxygen, O₂, at 600 K",
+          "vi": {
+            "text": "Oxygen, O₂, ở 600 K"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-hot-helium",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["scaling", "speeds", "distribution"],
+      "set": {
+        "gas": 0,
+        "temperature": 1200
+      },
+      "stem": "Helium (M = 0.0040026 kg/mol) is heated from 300 K to {temperature} K (R = 8.314 J/(mol·K)). Decide whether each statement is true or false.",
+      "explain": "v_rms ∝ √T: four times T doubles it, to {@rms} m/s. At one temperature v_rms ∝ 1/√M: helium is √(44.009/4.0026) ≈ {=sqrt(44.009/4.0026)} times as fast as CO₂. Both have the same mean kinetic energy at the same T. The speed is not √ of the temperature rise: √(3R·900/M) ≈ {=sqrt(3*8.314462618*900/0.0040026)} m/s is not the gain.",
+      "vi": {
+        "stem": "Helium (M = 0,0040026 kg/mol) được đun nóng từ 300 K đến {temperature} K (R = 8,314 J/(mol·K)). Mỗi nhận định sau đúng hay sai?",
+        "explain": "v_rms ∝ √T: T tăng 4 lần thì v_rms tăng gấp đôi, thành {@rms} m/s. Ở cùng nhiệt độ v_rms ∝ 1/√M: helium nhanh gấp √(44,009/4,0026) ≈ {=sqrt(44.009/4.0026)} lần CO₂. Ở cùng T, hai khí có cùng động năng trung bình. Tốc độ tăng thêm không tính bằng căn của độ tăng nhiệt độ: √(3R·900/M) ≈ {=sqrt(3*8.314462618*900/0.0040026)} m/s không phải phần tốc độ tăng thêm."
+      },
+      "statements": [
+        {
+          "text": "Its root-mean-square speed doubles, to about {=2*sqrt(3*8.314462618*300/0.0040026)} m/s.",
+          "vi": {
+            "text": "Tốc độ căn quân phương của nó tăng gấp đôi, lên khoảng {=2*sqrt(3*8.314462618*300/0.0040026)} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "2*sqrt(3*8.314462618*300/0.0040026)",
+            "equals": "rms"
+          }
+        },
+        {
+          "text": "At {temperature} K its atoms are about {=sqrt(44.009/4.0026)} times as fast (rms) as CO₂ molecules at {temperature} K.",
+          "vi": {
+            "text": "Ở {temperature} K, các nguyên tử helium nhanh gấp khoảng {=sqrt(44.009/4.0026)} lần (theo v_rms) các phân tử CO₂ ở {temperature} K."
+          },
+          "true": true,
+          "check": {
+            "expr": "sqrt(3*8.314462618*temperature/0.044009)*sqrt(44.009/4.0026)",
+            "equals": "rms"
+          }
+        },
+        {
+          "text": "At the same temperature, CO₂ molecules have a larger mean kinetic energy than helium atoms because they are heavier.",
+          "vi": {
+            "text": "Ở cùng nhiệt độ, phân tử CO₂ có động năng trung bình lớn hơn nguyên tử helium vì chúng nặng hơn."
+          },
+          "true": false
+        },
+        {
+          "text": "Its root-mean-square speed rises by {=sqrt(3*8.314462618*900/0.0040026)} m/s.",
+          "vi": {
+            "text": "Tốc độ căn quân phương của nó tăng thêm {=sqrt(3*8.314462618*900/0.0040026)} m/s."
+          },
+          "true": false,
+          "check": {
+            "expr": "sqrt(3*8.314462618*300/0.0040026)+sqrt(3*8.314462618*900/0.0040026)",
+            "equals": "rms"
+          }
+        }
+      ]
+    }
+  ]
+}

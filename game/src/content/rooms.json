@@ -1,0 +1,2131 @@
+[
+  {
+    "id": "preparation-room",
+    "displayName": "Preparation Room",
+    "vi": {
+      "displayName": "Phòng chuẩn bị"
+    },
+    "bounds": {
+      "min": [-3, 0, -3],
+      "max": [3, 3, 3]
+    },
+    "floorColor": "#a3896b",
+    "floor": "vinyl",
+    "ambience": "air-quiet",
+    "wallColor": "#e8e2d6",
+    "lights": [
+      {
+        "fixture": "light-1",
+        "role": "key"
+      },
+      {
+        "fixture": "light-2",
+        "role": "fill"
+      }
+    ],
+    "openings": [
+      {
+        "wall": "north",
+        "center": 0,
+        "width": 1.2,
+        "height": 2.2
+      },
+      {
+        "wall": "east",
+        "center": 1,
+        "width": 0.9,
+        "height": 2
+      }
+    ],
+    "placements": [
+      {
+        "id": "bed",
+        "item": "bed",
+        "position": [-2.3, 0, 1.8]
+      },
+      {
+        "id": "desk",
+        "item": "desk",
+        "position": [2.2, 0, -2.5]
+      },
+      {
+        "id": "desk-lamp",
+        "item": "desk-lamp",
+        "position": [2.5, 0.75, -2.55]
+      },
+      {
+        "id": "wardrobe",
+        "item": "wardrobe",
+        "position": [-2.7, 0, -1.2],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "lab-coat",
+        "item": "lab-coat",
+        "position": [-2.7, 0.75, -1.5],
+        "rotationY": 1.5708,
+        "params": {
+          "container": "wardrobe"
+        }
+      },
+      {
+        "id": "safety-goggles",
+        "item": "safety-goggles",
+        "position": [-2.7, 1.2, -0.9],
+        "rotationY": 1.5708,
+        "params": {
+          "container": "wardrobe"
+        }
+      },
+      {
+        "id": "face-shield",
+        "item": "face-shield",
+        "position": [-2.68, 1.45, -0.9],
+        "rotationY": 1.5708,
+        "params": {
+          "container": "wardrobe"
+        }
+      },
+      {
+        "id": "notice-board",
+        "item": "notice-board",
+        "position": [-2.2, 1.1, -2.97]
+      },
+      {
+        "id": "door-teacher",
+        "item": "sliding-door",
+        "position": [2.95, 0, 1],
+        "rotationY": 1.5708,
+        "params": {
+          "targetScene": "teacher-room",
+          "label": "Go to Teacher Room",
+          "arrival": "teacher-room/door-preparation"
+        },
+        "vi": {
+          "label": "Đến phòng giáo viên"
+        }
+      },
+      {
+        "id": "chair",
+        "item": "chair",
+        "position": [2.2, 0, -1.85]
+      },
+      {
+        "id": "mirror",
+        "item": "full-length-mirror",
+        "position": [-2.985, 0.15, 0.1],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "light-1",
+        "item": "ceiling-light",
+        "position": [0, 2.94, -1.2]
+      },
+      {
+        "id": "light-2",
+        "item": "ceiling-light",
+        "position": [0, 2.94, 1.6]
+      },
+      {
+        "id": "architrave-corridor",
+        "item": "prep-architrave",
+        "position": [0, 0, -3]
+      },
+      {
+        "id": "sign-corridor",
+        "item": "sign-corridor-entry",
+        "position": [0, 2.4, -2.985]
+      },
+      {
+        "id": "sign-ppe",
+        "item": "sign-ppe",
+        "position": [-2.985, 2.12, -1.2],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "door-teacher-header",
+        "item": "door-header-clean",
+        "position": [2.93, 2.2, 0.56],
+        "rotationY": -1.5708
+      },
+      {
+        "id": "door-teacher-rail",
+        "item": "door-rail",
+        "position": [2.98, 2.11, 0.5],
+        "rotationY": -1.5708
+      },
+      {
+        "id": "door-teacher-jamb",
+        "item": "door-jamb-clean",
+        "position": [2.9775, 0, 1.55],
+        "rotationY": -1.5708
+      },
+      {
+        "id": "trim-1",
+        "item": "ceiling-trim",
+        "position": [0, 2.935, -1.2]
+      },
+      {
+        "id": "trim-2",
+        "item": "ceiling-trim",
+        "position": [0, 2.935, 1.6]
+      },
+      {
+        "id": "diffuser",
+        "item": "ceiling-diffuser",
+        "position": [-2.1, 2.96, 0.2]
+      },
+      {
+        "id": "return",
+        "item": "ceiling-return",
+        "position": [2.1, 2.97, 0.2],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "access-panel",
+        "item": "ceiling-access-panel",
+        "position": [-2.1, 2.985, -2.3]
+      }
+    ]
+  },
+  {
+    "id": "cleanroom-corridor",
+    "displayName": "Cleanroom corridor",
+    "vi": {
+      "displayName": "Hành lang phòng sạch"
+    },
+    "bounds": {
+      "min": [-1.5, 0, -11.25],
+      "max": [1.5, 3, -3.25]
+    },
+    "floorColor": "#b9c4cc",
+    "floor": "vinyl",
+    "ambience": "air-cleanroom",
+    "wallColor": "#f4f7f9",
+    "lights": [
+      {
+        "fixture": "light-2",
+        "role": "key"
+      },
+      {
+        "fixture": "light-1",
+        "role": "fill"
+      }
+    ],
+    "openings": [
+      {
+        "wall": "south",
+        "center": 0,
+        "width": 1.2,
+        "height": 2.2
+      },
+      {
+        "wall": "north",
+        "center": 0,
+        "width": 0.9,
+        "height": 2
+      }
+    ],
+    "placements": [
+      {
+        "id": "lockers",
+        "item": "locker",
+        "position": [-1.25, 0, -4.6],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "gowning-bench",
+        "item": "gowning-bench",
+        "position": [1.25, 0, -5]
+      },
+      {
+        "id": "wash-basin",
+        "item": "wash-basin",
+        "position": [-1.25, 0, -7.6],
+        "rotationY": 1.5708,
+        "params": {
+          "action": "wash",
+          "label": "Wash hands"
+        },
+        "vi": {
+          "label": "Rửa tay"
+        }
+      },
+      {
+        "id": "faucet",
+        "item": "faucet",
+        "position": [-1.4, 1.05, -7.6]
+      },
+      {
+        "id": "soap-dispenser",
+        "item": "soap-dispenser",
+        "position": [-1.45, 1.1, -7.15],
+        "params": {
+          "action": "take-soap",
+          "label": "Take soap"
+        },
+        "vi": {
+          "label": "Lấy xà phòng"
+        }
+      },
+      {
+        "id": "paper-towels",
+        "item": "paper-towels",
+        "position": [-1.44, 1.05, -8.15],
+        "params": {
+          "action": "dry-hands",
+          "label": "Dry hands"
+        },
+        "vi": {
+          "label": "Lau khô tay"
+        }
+      },
+      {
+        "id": "hand-sanitizer",
+        "item": "hand-sanitizer",
+        "position": [-1.45, 1.1, -8.6],
+        "params": {
+          "action": "sanitize",
+          "label": "Rub in hand sanitizer"
+        },
+        "vi": {
+          "label": "Xoa dung dịch sát khuẩn tay"
+        }
+      },
+      {
+        "id": "glove-dispenser",
+        "item": "nitrile-gloves",
+        "position": [-1.43, 1.1, -9.1],
+        "params": {
+          "dispenser": true
+        }
+      },
+      {
+        "id": "ppe-shelf",
+        "item": "ppe-shelf",
+        "position": [1.3, 0, -7.6],
+        "rotationY": -1.5708
+      },
+      {
+        "id": "door-hub",
+        "item": "sliding-door",
+        "position": [0, 0, -11.2],
+        "params": {
+          "targetScene": "simlab-hub",
+          "label": "Enter the clean area (SIMLAB Hub)",
+          "arrival": "simlab-hub/door-preparation"
+        },
+        "vi": {
+          "label": "Vào khu vực sạch (Sảnh SIMLAB)"
+        }
+      },
+      {
+        "id": "light-1",
+        "item": "ceiling-light",
+        "position": [0, 2.94, -5],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "light-2",
+        "item": "ceiling-light",
+        "position": [0, 2.94, -8.6],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "floor-clean",
+        "item": "floor-zone-clean",
+        "position": [0, -0.006, -7.95]
+      },
+      {
+        "id": "boundary-line",
+        "item": "floor-line-boundary",
+        "position": [0, -0.005, -5.9]
+      },
+      {
+        "id": "sign-clean-area",
+        "item": "sign-clean-area",
+        "position": [1.485, 1.6, -6.4],
+        "rotationY": -1.5708
+      },
+      {
+        "id": "splashback",
+        "item": "handwash-splashback",
+        "position": [-1.5, 0.9, -8.15],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "sign-handwash",
+        "item": "sign-handwash",
+        "position": [-1.485, 1.52, -8.15],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "waste-bin",
+        "item": "pedal-bin",
+        "position": [-1.33, 0, -8.37],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "sign-emergency",
+        "item": "sign-emergency",
+        "position": [1.485, 1.4, -3.95],
+        "rotationY": -1.5708
+      },
+      {
+        "id": "sign-hub",
+        "item": "sign-hub-entry",
+        "position": [0, 2.28, -11.235]
+      },
+      {
+        "id": "rail-1",
+        "item": "corridor-wall-rail",
+        "position": [1.4825, 0.85, -4.3],
+        "rotationY": -1.5708
+      },
+      {
+        "id": "rail-2",
+        "item": "corridor-wall-rail",
+        "position": [1.4825, 0.85, -6],
+        "rotationY": -1.5708
+      },
+      {
+        "id": "rail-3",
+        "item": "corridor-wall-rail",
+        "position": [1.4825, 0.85, -9.15],
+        "rotationY": -1.5708
+      },
+      {
+        "id": "door-hub-header",
+        "item": "door-header-clean",
+        "position": [0.44, 2.2, -11.18]
+      },
+      {
+        "id": "door-hub-rail",
+        "item": "door-rail",
+        "position": [0.5, 2.11, -11.23]
+      },
+      {
+        "id": "door-hub-jamb",
+        "item": "door-jamb-clean",
+        "position": [-0.55, 0, -11.2275]
+      },
+      {
+        "id": "door-hub-sign",
+        "item": "door-plate-clean",
+        "position": [-0.8, 1.475, -11.246]
+      },
+      {
+        "id": "trim-1",
+        "item": "ceiling-trim",
+        "position": [0, 2.935, -5],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "trim-2",
+        "item": "ceiling-trim",
+        "position": [0, 2.935, -8.6],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "diffuser",
+        "item": "ceiling-diffuser",
+        "position": [0, 2.96, -6.8]
+      },
+      {
+        "id": "return",
+        "item": "ceiling-return",
+        "position": [0, 2.97, -10.4]
+      },
+      {
+        "id": "access-panel",
+        "item": "ceiling-access-panel",
+        "position": [0, 2.985, -3.9]
+      }
+    ]
+  },
+  {
+    "id": "teacher-room",
+    "displayName": "Teacher Room",
+    "vi": {
+      "displayName": "Phòng giáo viên"
+    },
+    "bounds": {
+      "min": [-2.5, 0, -2.5],
+      "max": [2.5, 3, 2.5]
+    },
+    "floorColor": "#8f7a63",
+    "floor": "wood",
+    "ambience": "air-quiet",
+    "wallColor": "#e3e6dc",
+    "lights": [
+      {
+        "fixture": "light-1",
+        "role": "key"
+      }
+    ],
+    "openings": [
+      {
+        "wall": "south",
+        "center": -1.5,
+        "width": 1,
+        "height": 2.1
+      },
+      {
+        "wall": "west",
+        "center": 0,
+        "width": 0.9,
+        "height": 2
+      }
+    ],
+    "placements": [
+      {
+        "id": "desk",
+        "item": "desk",
+        "position": [0, 0, -2.1]
+      },
+      {
+        "id": "pc",
+        "item": "teacher-pc",
+        "position": [0, 0.75, -2.25]
+      },
+      {
+        "id": "cabinet",
+        "item": "teacher-cabinet",
+        "position": [2.25, 0, -1.4],
+        "rotationY": -1.5708
+      },
+      {
+        "id": "bed",
+        "item": "bed",
+        "position": [1.95, 0, 1.45]
+      },
+      {
+        "id": "door-preparation",
+        "item": "sliding-door",
+        "position": [-2.45, 0, 0],
+        "rotationY": 1.5708,
+        "params": {
+          "targetScene": "preparation-room",
+          "label": "Back to Preparation Room",
+          "arrival": "preparation-room/door-teacher"
+        },
+        "vi": {
+          "label": "Quay lại phòng chuẩn bị"
+        }
+      },
+      {
+        "id": "bookshelf",
+        "item": "teacher-bookshelf",
+        "position": [-1.75, 0, -2.325]
+      },
+      {
+        "id": "chair",
+        "item": "chair",
+        "position": [-0.95, 0, -2.05]
+      },
+      {
+        "id": "whiteboard",
+        "item": "whiteboard",
+        "position": [0, 1.25, -2.47]
+      },
+      {
+        "id": "light-1",
+        "item": "ceiling-light",
+        "position": [0, 2.94, 0]
+      },
+      {
+        "id": "door-preparation-header",
+        "item": "door-header",
+        "position": [-2.43, 2.2, -0.44],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "door-preparation-rail",
+        "item": "door-rail",
+        "position": [-2.48, 2.11, -0.5],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "door-preparation-jamb",
+        "item": "door-jamb",
+        "position": [-2.4775, 0, 0.55],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "trim",
+        "item": "ceiling-trim",
+        "position": [0, 2.935, 0]
+      },
+      {
+        "id": "diffuser",
+        "item": "ceiling-diffuser",
+        "position": [1.5, 2.96, 1.5]
+      },
+      {
+        "id": "return",
+        "item": "ceiling-return",
+        "position": [-1.5, 2.97, -1.5]
+      },
+      {
+        "id": "door",
+        "item": "wc-door",
+        "position": [-1.5, 0, 2.45],
+        "rotationY": 3.14159
+      },
+      {
+        "id": "sign-wc",
+        "item": "sign-wc",
+        "position": [-0.74, 1.5, 2.485],
+        "rotationY": 3.14159
+      }
+    ]
+  },
+  {
+    "id": "teacher-bathroom",
+    "displayName": "Teacher's bathroom",
+    "vi": {
+      "displayName": "Nhà vệ sinh phòng giáo viên"
+    },
+    "bounds": {
+      "min": [-2.5, 0, 2.75],
+      "max": [-0.5, 3, 4.75]
+    },
+    "floorColor": "#b9c2c7",
+    "floor": "tile",
+    "ambience": "air-extract-fan",
+    "wallColor": "#dfe8ec",
+    "lights": [
+      {
+        "fixture": "light-1",
+        "role": "key"
+      }
+    ],
+    "openings": [
+      {
+        "wall": "north",
+        "center": -1.5,
+        "width": 1,
+        "height": 2.1
+      }
+    ],
+    "placements": [
+      {
+        "id": "wc",
+        "item": "teacher-wc",
+        "position": [-2.1, 0, 4.4],
+        "rotationY": 3.14159
+      },
+      {
+        "id": "sink",
+        "item": "teacher-sink",
+        "position": [-0.72, 0, 3.9],
+        "rotationY": -1.5708
+      },
+      {
+        "id": "light-1",
+        "item": "ceiling-light-small",
+        "position": [-1.5, 2.94, 3.75]
+      },
+      {
+        "id": "tiles-south",
+        "item": "wall-tiles",
+        "position": [-1.5, 0.1, 4.7425],
+        "rotationY": 3.14159
+      },
+      {
+        "id": "tiles-west",
+        "item": "wall-tiles",
+        "position": [-2.4925, 0.1, 3.75],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "tiles-east",
+        "item": "wall-tiles",
+        "position": [-0.5075, 0.1, 3.75],
+        "rotationY": -1.5708
+      },
+      {
+        "id": "trim",
+        "item": "ceiling-trim-small",
+        "position": [-1.5, 2.935, 3.75]
+      },
+      {
+        "id": "vent",
+        "item": "vent-grille-small",
+        "position": [-2.1, 2.97, 4.35]
+      },
+      {
+        "id": "tiles-north-west",
+        "item": "wall-tiles-narrow",
+        "position": [-2.25, 0.1, 2.7575]
+      },
+      {
+        "id": "tiles-north-east",
+        "item": "wall-tiles-narrow",
+        "position": [-0.75, 0.1, 2.7575]
+      },
+      {
+        "id": "splashback",
+        "item": "wall-tiles-splash",
+        "position": [-0.5075, 1.2, 3.9],
+        "rotationY": -1.5708
+      },
+      {
+        "id": "mirror",
+        "item": "washroom-mirror",
+        "position": [-0.525, 1.05, 3.9],
+        "rotationY": -1.5708
+      },
+      {
+        "id": "mirror-light",
+        "item": "mirror-light",
+        "position": [-0.55, 1.83, 3.9],
+        "rotationY": -1.5708
+      },
+      {
+        "id": "soap",
+        "item": "washroom-soap",
+        "position": [-0.555, 1, 4.4],
+        "rotationY": 3.14159
+      },
+      {
+        "id": "towels",
+        "item": "washroom-towels",
+        "position": [-0.85, 1.1, 4.685],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "bin",
+        "item": "washroom-bin",
+        "position": [-0.8, 0, 4.55],
+        "rotationY": 3.14159
+      },
+      {
+        "id": "roll-holder",
+        "item": "toilet-roll-holder",
+        "position": [-2.425, 0.65, 3.95],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "sign",
+        "item": "sign-washroom",
+        "position": [-0.75, 1.4, 2.78]
+      }
+    ]
+  },
+  {
+    "id": "simlab-hub",
+    "glassFloor": {
+      "x": [-9, 9],
+      "z": [-8, 2]
+    },
+    "displayName": "SIMLAB Hub",
+    "vi": {
+      "displayName": "Sảnh SIMLAB"
+    },
+    "bounds": {
+      "min": [-13, 0, -12],
+      "max": [13, 9, 6]
+    },
+    "floorColor": "#c9ced3",
+    "floor": "stone",
+    "ambience": "air-hall",
+    "wallColor": "#f1f4f7",
+    "lights": [
+      {
+        "fixture": "oculus",
+        "role": "key",
+        "lux": 2.6
+      },
+      {
+        "fixture": "light-2",
+        "role": "fill",
+        "lux": 1
+      },
+      {
+        "fixture": "light-5",
+        "role": "fill",
+        "lux": 1
+      }
+    ],
+    "openings": [
+      {
+        "wall": "west",
+        "center": -3,
+        "width": 0.9,
+        "height": 2
+      },
+      {
+        "wall": "north",
+        "center": 0,
+        "width": 0.9,
+        "height": 2
+      },
+      {
+        "wall": "east",
+        "center": -3,
+        "width": 0.9,
+        "height": 2
+      },
+      {
+        "wall": "south",
+        "center": 0,
+        "width": 0.9,
+        "height": 2
+      }
+    ],
+    "placements": [
+      {
+        "id": "door-chemistry",
+        "item": "sliding-door",
+        "position": [0, 0, -11.95],
+        "params": {
+          "targetScene": "chemistry-lab",
+          "label": "Enter Chemistry Lab",
+          "arrival": "chemistry-lab/door-hub"
+        },
+        "vi": {
+          "label": "Vào phòng thí nghiệm Hóa học"
+        }
+      },
+      {
+        "id": "door-physics",
+        "item": "sliding-door",
+        "position": [12.95, 0, -3],
+        "rotationY": 1.5708,
+        "params": {
+          "targetScene": "physics-lab",
+          "label": "Enter Physics Lab",
+          "arrival": "physics-lab/door-hub"
+        },
+        "vi": {
+          "label": "Vào phòng thí nghiệm Vật lý"
+        }
+      },
+      {
+        "id": "door-biology",
+        "item": "sliding-door",
+        "position": [-12.95, 0, -3],
+        "rotationY": 1.5708,
+        "params": {
+          "targetScene": "biology-lab",
+          "label": "Enter Biology Lab",
+          "arrival": "biology-lab/door-hub"
+        },
+        "vi": {
+          "label": "Vào phòng thí nghiệm Sinh học"
+        }
+      },
+      {
+        "id": "door-preparation",
+        "item": "sliding-door",
+        "position": [0, 0, 5.95],
+        "params": {
+          "targetScene": "preparation-room",
+          "label": "Back to Preparation Room",
+          "arrival": "cleanroom-corridor/door-hub"
+        },
+        "vi": {
+          "label": "Quay lại phòng chuẩn bị"
+        }
+      },
+      {
+        "id": "column-1",
+        "item": "hub-column",
+        "position": [-9.5, 0, -8.5]
+      },
+      {
+        "id": "column-2",
+        "item": "hub-column",
+        "position": [-3.5, 0, -8.5]
+      },
+      {
+        "id": "column-3",
+        "item": "hub-column",
+        "position": [3.5, 0, -8.5]
+      },
+      {
+        "id": "column-4",
+        "item": "hub-column",
+        "position": [9.5, 0, -8.5]
+      },
+      {
+        "id": "column-5",
+        "item": "hub-column",
+        "position": [-9.5, 0, 2.5]
+      },
+      {
+        "id": "column-6",
+        "item": "hub-column",
+        "position": [-3.5, 0, 2.5]
+      },
+      {
+        "id": "column-7",
+        "item": "hub-column",
+        "position": [3.5, 0, 2.5]
+      },
+      {
+        "id": "column-8",
+        "item": "hub-column",
+        "position": [9.5, 0, 2.5]
+      },
+      {
+        "id": "column-9",
+        "item": "hub-column",
+        "position": [9.5, 0, -6.5]
+      },
+      {
+        "id": "column-10",
+        "item": "hub-column",
+        "position": [9.5, 0, 0.5]
+      },
+      {
+        "id": "column-11",
+        "item": "hub-column",
+        "position": [-9.5, 0, -6.5]
+      },
+      {
+        "id": "column-12",
+        "item": "hub-column",
+        "position": [-9.5, 0, 0.5]
+      },
+      {
+        "id": "beam-x-1",
+        "item": "hub-beam-x",
+        "position": [0, 8.4, -8.5]
+      },
+      {
+        "id": "beam-x-2",
+        "item": "hub-beam-x",
+        "position": [0, 8.4, 2.5]
+      },
+      {
+        "id": "beam-z-1",
+        "item": "hub-beam-z",
+        "position": [-9.5, 8.5, -3]
+      },
+      {
+        "id": "beam-z-2",
+        "item": "hub-beam-z",
+        "position": [9.5, 8.5, -3]
+      },
+      {
+        "id": "pilaster-1",
+        "item": "hub-pilaster",
+        "position": [-9.5, 0, -11.9]
+      },
+      {
+        "id": "pilaster-2",
+        "item": "hub-pilaster",
+        "position": [9.5, 0, -11.9]
+      },
+      {
+        "id": "pilaster-3",
+        "item": "hub-pilaster",
+        "position": [-9.5, 0, 5.9],
+        "rotationY": 3.14159
+      },
+      {
+        "id": "pilaster-4",
+        "item": "hub-pilaster",
+        "position": [9.5, 0, 5.9],
+        "rotationY": 3.14159
+      },
+      {
+        "id": "pilaster-5",
+        "item": "hub-pilaster",
+        "position": [12.9, 0, -8.5],
+        "rotationY": -1.5708
+      },
+      {
+        "id": "pilaster-6",
+        "item": "hub-pilaster",
+        "position": [12.9, 0, 2.5],
+        "rotationY": -1.5708
+      },
+      {
+        "id": "pilaster-7",
+        "item": "hub-pilaster",
+        "position": [-12.9, 0, -8.5],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "pilaster-8",
+        "item": "hub-pilaster",
+        "position": [-12.9, 0, 2.5],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "clerestory-n",
+        "item": "hub-clerestory-long",
+        "position": [0, 6.6, -11.97]
+      },
+      {
+        "id": "clerestory-s",
+        "item": "hub-clerestory-long",
+        "position": [0, 6.6, 5.97],
+        "rotationY": 3.14159
+      },
+      {
+        "id": "clerestory-e",
+        "item": "hub-clerestory-short",
+        "position": [12.97, 6.6, -3],
+        "rotationY": -1.5708
+      },
+      {
+        "id": "clerestory-w",
+        "item": "hub-clerestory-short",
+        "position": [-12.97, 6.6, -3],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "oculus",
+        "item": "hub-oculus",
+        "position": [0, 8.75, -3]
+      },
+      {
+        "id": "light-1",
+        "item": "hub-light-panel",
+        "position": [-6.5, 8.92, -10.25]
+      },
+      {
+        "id": "light-2",
+        "item": "hub-light-panel",
+        "position": [0, 8.92, -10.25]
+      },
+      {
+        "id": "light-3",
+        "item": "hub-light-panel",
+        "position": [6.5, 8.92, -10.25]
+      },
+      {
+        "id": "light-4",
+        "item": "hub-light-panel",
+        "position": [-6.5, 8.92, 4.25]
+      },
+      {
+        "id": "light-5",
+        "item": "hub-light-panel",
+        "position": [0, 8.92, 4.25]
+      },
+      {
+        "id": "light-6",
+        "item": "hub-light-panel",
+        "position": [6.5, 8.92, 4.25]
+      },
+      {
+        "id": "light-7",
+        "item": "hub-light-panel",
+        "position": [-11.25, 8.92, -5.5],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "light-8",
+        "item": "hub-light-panel",
+        "position": [-11.25, 8.92, -0.5],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "light-9",
+        "item": "hub-light-panel",
+        "position": [11.25, 8.92, -5.5],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "light-10",
+        "item": "hub-light-panel",
+        "position": [11.25, 8.92, -0.5],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "floor-emblem",
+        "item": "hub-floor-emblem",
+        "position": [0, -0.006, -3]
+      },
+      {
+        "id": "emblem",
+        "item": "simlab-emblem",
+        "position": [0, 3.4, -3]
+      },
+      {
+        "id": "wordmark",
+        "item": "sign-hub-wordmark",
+        "position": [0, 4.6, 5.97],
+        "rotationY": 3.14159
+      },
+      {
+        "id": "sign-chemistry",
+        "item": "sign-hub-chemistry",
+        "position": [0, 3.05, -11.91]
+      },
+      {
+        "id": "sign-physics",
+        "item": "sign-hub-physics",
+        "position": [12.91, 3.05, -3],
+        "rotationY": -1.5708
+      },
+      {
+        "id": "sign-biology",
+        "item": "sign-hub-biology",
+        "position": [-12.91, 3.05, -3],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "sign-preparation",
+        "item": "sign-hub-preparation",
+        "position": [0, 3.05, 5.91],
+        "rotationY": 3.14159
+      },
+      {
+        "id": "directory",
+        "item": "hub-directory",
+        "position": [-2, 0, 2.2]
+      },
+      {
+        "id": "reception",
+        "item": "hub-reception",
+        "position": [0, 0, -7.5]
+      },
+      {
+        "id": "pendant",
+        "item": "hub-pendant",
+        "position": [0, 3, -7.5]
+      },
+      {
+        "id": "bench-1",
+        "item": "hub-bench",
+        "position": [-12.4, 0, -10.2],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "bench-2",
+        "item": "hub-bench",
+        "position": [-12.4, 0, 3.8],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "bench-3",
+        "item": "hub-bench",
+        "position": [12.4, 0, -10.2],
+        "rotationY": -1.5708
+      },
+      {
+        "id": "bench-4",
+        "item": "hub-bench",
+        "position": [12.4, 0, 3.8],
+        "rotationY": -1.5708
+      },
+      {
+        "id": "planter-1",
+        "item": "hub-planter",
+        "position": [-6.5, 0, -8.5]
+      },
+      {
+        "id": "planter-2",
+        "item": "hub-planter",
+        "position": [6.5, 0, -8.5]
+      },
+      {
+        "id": "planter-3",
+        "item": "hub-planter",
+        "position": [-6.5, 0, 2.5]
+      },
+      {
+        "id": "planter-4",
+        "item": "hub-planter",
+        "position": [6.5, 0, 2.5]
+      },
+      {
+        "id": "path-light-1",
+        "item": "hub-path-light",
+        "position": [-1.25, -0.006, -9.25]
+      },
+      {
+        "id": "path-light-2",
+        "item": "hub-path-light",
+        "position": [1.25, -0.006, -9.25]
+      },
+      {
+        "id": "path-light-3",
+        "item": "hub-path-light",
+        "position": [-1.25, -0.006, 3.1]
+      },
+      {
+        "id": "path-light-4",
+        "item": "hub-path-light",
+        "position": [1.25, -0.006, 3.1]
+      },
+      {
+        "id": "path-light-5",
+        "item": "hub-path-light",
+        "position": [-10.2, -0.006, -4],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "path-light-6",
+        "item": "hub-path-light",
+        "position": [-10.2, -0.006, -2],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "path-light-7",
+        "item": "hub-path-light",
+        "position": [10.2, -0.006, -4],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "path-light-8",
+        "item": "hub-path-light",
+        "position": [10.2, -0.006, -2],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "floor-field",
+        "item": "hub-floor-field",
+        "position": [0, -0.009, -3]
+      },
+      {
+        "id": "wainscot-n-1",
+        "item": "hub-wainscot-long",
+        "position": [-7.55, 0, -11.98]
+      },
+      {
+        "id": "wainscot-n-2",
+        "item": "hub-wainscot-long",
+        "position": [7.55, 0, -11.98]
+      },
+      {
+        "id": "wainscot-s-1",
+        "item": "hub-wainscot-long",
+        "position": [-7.55, 0, 5.98],
+        "rotationY": 3.14159
+      },
+      {
+        "id": "wainscot-s-2",
+        "item": "hub-wainscot-long",
+        "position": [7.55, 0, 5.98],
+        "rotationY": 3.14159
+      },
+      {
+        "id": "wainscot-e-1",
+        "item": "hub-wainscot-short",
+        "position": [12.98, 0, -9.255],
+        "rotationY": -1.5708
+      },
+      {
+        "id": "wainscot-e-2",
+        "item": "hub-wainscot-short",
+        "position": [12.98, 0, 3.255],
+        "rotationY": -1.5708
+      },
+      {
+        "id": "wainscot-w-1",
+        "item": "hub-wainscot-short",
+        "position": [-12.98, 0, -9.255],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "wainscot-w-2",
+        "item": "hub-wainscot-short",
+        "position": [-12.98, 0, 3.255],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "sign-mount-chemistry",
+        "item": "hub-sign-mount-chemistry",
+        "position": [0, 2.8, -11.965]
+      },
+      {
+        "id": "sign-mount-physics",
+        "item": "hub-sign-mount-physics",
+        "position": [12.965, 2.8, -3],
+        "rotationY": -1.5708
+      },
+      {
+        "id": "sign-mount-biology",
+        "item": "hub-sign-mount-biology",
+        "position": [-12.965, 2.8, -3],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "sign-mount-preparation",
+        "item": "hub-sign-mount-preparation",
+        "position": [0, 2.8, 5.965],
+        "rotationY": 3.14159
+      },
+      {
+        "id": "periodic-table",
+        "item": "hub-periodic-table",
+        "position": [-5.6, 1.5, -11.97]
+      },
+      {
+        "id": "atom-display",
+        "item": "hub-atom-display",
+        "position": [5.6, 1.5, -11.9]
+      },
+      {
+        "id": "progress-board",
+        "item": "hub-progress-board",
+        "position": [-5.6, 1.5, 5.97],
+        "rotationY": 3.14159
+      },
+      {
+        "id": "dna-display",
+        "item": "hub-dna-display",
+        "position": [-12.9, 1.5, -6.6],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "wave-display",
+        "item": "hub-wave-display",
+        "position": [12.94, 2, -6.6],
+        "rotationY": -1.5708
+      },
+      {
+        "id": "ring-bench-1",
+        "item": "hub-bench",
+        "position": [-3.394, 0, -6.394],
+        "rotationY": 0.7854
+      },
+      {
+        "id": "ring-bench-2",
+        "item": "hub-bench",
+        "position": [3.394, 0, -6.394],
+        "rotationY": -0.7854
+      },
+      {
+        "id": "ring-bench-3",
+        "item": "hub-bench",
+        "position": [3.394, 0, 0.394],
+        "rotationY": 0.7854
+      },
+      {
+        "id": "ring-bench-4",
+        "item": "hub-bench",
+        "position": [-3.394, 0, 0.394],
+        "rotationY": -0.7854
+      },
+      {
+        "id": "lounge-table-1",
+        "item": "hub-low-table",
+        "position": [-11.4, 0, -10.2]
+      },
+      {
+        "id": "lounge-table-2",
+        "item": "hub-low-table",
+        "position": [-11.4, 0, 3.8]
+      },
+      {
+        "id": "lounge-table-3",
+        "item": "hub-low-table",
+        "position": [11.4, 0, -10.2]
+      },
+      {
+        "id": "lounge-table-4",
+        "item": "hub-low-table",
+        "position": [11.4, 0, 3.8]
+      },
+      {
+        "id": "lounge-bench-1",
+        "item": "hub-bench",
+        "position": [-10.4, 0, -10.2],
+        "rotationY": 1.5707963267948966
+      },
+      {
+        "id": "lounge-bench-2",
+        "item": "hub-bench",
+        "position": [-10.4, 0, 3.8],
+        "rotationY": 1.5707963267948966
+      },
+      {
+        "id": "lounge-bench-3",
+        "item": "hub-bench",
+        "position": [10.4, 0, -10.2],
+        "rotationY": -1.5707963267948966
+      },
+      {
+        "id": "lounge-bench-4",
+        "item": "hub-bench",
+        "position": [10.4, 0, 3.8],
+        "rotationY": -1.5707963267948966
+      },
+      {
+        "id": "reception-logo",
+        "item": "sign-hub-reception",
+        "position": [0, 0.51, -7.1225]
+      },
+      {
+        "id": "door-chemistry-header",
+        "item": "door-header-lobby",
+        "position": [0.44, 2.2, -11.93]
+      },
+      {
+        "id": "door-chemistry-rail",
+        "item": "door-rail",
+        "position": [0.5, 2.11, -11.98]
+      },
+      {
+        "id": "door-chemistry-jamb",
+        "item": "door-jamb-lobby",
+        "position": [-0.55, 0, -11.9775]
+      },
+      {
+        "id": "door-physics-header",
+        "item": "door-header-lobby",
+        "position": [12.93, 2.2, -3.44],
+        "rotationY": -1.5708
+      },
+      {
+        "id": "door-physics-rail",
+        "item": "door-rail",
+        "position": [12.98, 2.11, -3.5],
+        "rotationY": -1.5708
+      },
+      {
+        "id": "door-physics-jamb",
+        "item": "door-jamb-lobby",
+        "position": [12.9775, 0, -2.45],
+        "rotationY": -1.5708
+      },
+      {
+        "id": "door-biology-header",
+        "item": "door-header-lobby",
+        "position": [-12.93, 2.2, -3.44],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "door-biology-rail",
+        "item": "door-rail",
+        "position": [-12.98, 2.11, -3.5],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "door-biology-jamb",
+        "item": "door-jamb-lobby",
+        "position": [-12.9775, 0, -2.45],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "door-preparation-header",
+        "item": "door-header-lobby",
+        "position": [0.44, 2.2, 5.93],
+        "rotationY": 3.14159
+      },
+      {
+        "id": "door-preparation-rail",
+        "item": "door-rail",
+        "position": [0.5, 2.11, 5.98],
+        "rotationY": 3.14159
+      },
+      {
+        "id": "door-preparation-jamb",
+        "item": "door-jamb-lobby",
+        "position": [-0.55, 0, 5.9775],
+        "rotationY": 3.14159
+      },
+      {
+        "id": "coffer",
+        "item": "hub-coffer",
+        "position": [0, 8.5, -3]
+      },
+      {
+        "id": "rib-east",
+        "item": "hub-rib",
+        "position": [6.79, 8.65, -3],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "rib-west",
+        "item": "hub-rib",
+        "position": [-6.79, 8.65, -3],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "laptop",
+        "item": "hub-laptop",
+        "position": [0.55, 1.1, -7.3],
+        "rotationY": 0
+      }
+    ]
+  },
+  {
+    "id": "physics-lab",
+    "displayName": "Physics Laboratory",
+    "vi": {
+      "displayName": "Phòng thí nghiệm Vật lý"
+    },
+    "bounds": {
+      "min": [-5, 0, -7.5],
+      "max": [19, 5, 7.5]
+    },
+    "floorColor": "#8d99a6",
+    "floor": "vinyl",
+    "style": "starship-deck",
+    "ambience": "air-lab",
+    "wallColor": "#56606a",
+    "lights": [
+      {
+        "fixture": "light-1",
+        "role": "key",
+        "lux": 3.8,
+        "penumbra": 0.25,
+        "reachHeight": 0.9
+      },
+      {
+        "fixture": "light-2",
+        "role": "fill",
+        "lux": 3
+      },
+      {
+        "fixture": "light-3",
+        "role": "fill",
+        "lux": 3
+      },
+      {
+        "fixture": "light-teacher",
+        "role": "fill",
+        "lux": 3
+      },
+      {
+        "fixture": "light-cabinets",
+        "role": "fill",
+        "lux": 3
+      }
+    ],
+    "openings": [
+      {
+        "wall": "south",
+        "center": -2,
+        "width": 2,
+        "height": 2.6
+      },
+      {
+        "wall": "north",
+        "center": -3,
+        "width": 2,
+        "height": 2.6
+      },
+      {
+        "wall": "west",
+        "center": 0,
+        "width": 0.9,
+        "height": 2
+      },
+      {
+        "wall": "east",
+        "center": 0,
+        "width": 2,
+        "height": 2.6
+      }
+    ],
+    "placements": [
+      {
+        "id": "lamp",
+        "item": "desk-lamp",
+        "position": [-2.567, 0.9, -4.674]
+      },
+      {
+        "id": "door-hub",
+        "item": "sliding-door",
+        "position": [-4.95, 0, 0],
+        "rotationY": 1.5708,
+        "params": {
+          "targetScene": "simlab-hub",
+          "label": "Back to SIMLAB Hub",
+          "arrival": "simlab-hub/door-physics"
+        },
+        "vi": {
+          "label": "Quay lại Sảnh SIMLAB"
+        }
+      },
+      {
+        "id": "light-1",
+        "item": "ceiling-light",
+        "position": [7, 4.94, 0]
+      },
+      {
+        "id": "light-2",
+        "item": "ceiling-light",
+        "position": [0.333, 4.94, 0]
+      },
+      {
+        "id": "light-3",
+        "item": "ceiling-light",
+        "position": [13.667, 4.94, 0]
+      },
+      {
+        "id": "light-teacher",
+        "item": "ceiling-light-small",
+        "position": [-2.333, 4.94, -4.474]
+      },
+      {
+        "id": "light-cabinets",
+        "item": "ceiling-light-small",
+        "position": [-2.333, 4.94, 4.211]
+      },
+      {
+        "id": "door-hub-rail",
+        "item": "door-rail",
+        "position": [-4.98, 2.11, -0.5],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "diffuser-1",
+        "item": "ceiling-diffuser",
+        "position": [7, 4.96, -4.605]
+      },
+      {
+        "id": "diffuser-2",
+        "item": "ceiling-diffuser",
+        "position": [7, 4.96, 4.605]
+      },
+      {
+        "id": "return",
+        "item": "ceiling-return",
+        "position": [10.333, 4.97, 0],
+        "rotationY": 1.5708
+      }
+    ]
+  },
+  {
+    "id": "waves-optics",
+    "displayName": "Waves & Optics Room",
+    "vi": {
+      "displayName": "Phòng Sóng và Quang học"
+    },
+    "bounds": {
+      "min": [19.25, 0, -5.7],
+      "max": [29.25, 3.5, 5.7]
+    },
+    "floorColor": "#6b7480",
+    "floor": "vinyl",
+    "dark": true,
+    "ambience": "air-lab",
+    "wallColor": "#b9bec8",
+    "lights": [
+      {
+        "fixture": "light-1",
+        "role": "fill",
+        "lux": 2.4
+      }
+    ],
+    "openings": [
+      {
+        "wall": "west",
+        "center": 0,
+        "width": 2,
+        "height": 2.6
+      }
+    ],
+    "placements": [
+      {
+        "id": "light-1",
+        "item": "ceiling-light",
+        "position": [24.25, 3.44, -2.2]
+      },
+      {
+        "id": "light-2",
+        "item": "ceiling-light",
+        "position": [24.25, 3.44, 2.2]
+      }
+    ]
+  },
+  {
+    "id": "projectile-range",
+    "displayName": "Projectile range",
+    "vi": {
+      "displayName": "Khu ném xiên"
+    },
+    "bounds": {
+      "min": [-5, 0, 7.75],
+      "max": [21, 6, 15.75]
+    },
+    "floorColor": "#6f7a84",
+    "floor": "concrete",
+    "style": "starship-deck",
+    "ambience": "air-hall",
+    "wallColor": "#56606a",
+    "lights": [
+      {
+        "fixture": "light-2",
+        "role": "key",
+        "lux": 3.8,
+        "penumbra": 0.25,
+        "reachHeight": 0.9
+      },
+      {
+        "fixture": "light-4",
+        "role": "fill",
+        "lux": 3
+      }
+    ],
+    "openings": [
+      {
+        "wall": "north",
+        "center": -2,
+        "width": 2,
+        "height": 2.6
+      }
+    ],
+    "placements": [
+      {
+        "id": "light-1",
+        "item": "ceiling-light",
+        "position": [0, 5.94, 11.75]
+      },
+      {
+        "id": "light-2",
+        "item": "ceiling-light",
+        "position": [6, 5.94, 11.75]
+      },
+      {
+        "id": "light-3",
+        "item": "ceiling-light",
+        "position": [12, 5.94, 11.75]
+      },
+      {
+        "id": "light-4",
+        "item": "ceiling-light",
+        "position": [18, 5.94, 11.75]
+      },
+      {
+        "id": "diffuser-1",
+        "item": "ceiling-diffuser",
+        "position": [3, 5.96, 11.75]
+      },
+      {
+        "id": "diffuser-2",
+        "item": "ceiling-diffuser",
+        "position": [9, 5.96, 11.75]
+      },
+      {
+        "id": "diffuser-3",
+        "item": "ceiling-diffuser",
+        "position": [15, 5.96, 11.75]
+      }
+    ]
+  },
+  {
+    "id": "chemistry-lab",
+    "displayName": "Chemistry Laboratory",
+    "vi": {
+      "displayName": "Phòng thí nghiệm Hóa học"
+    },
+    "bounds": {
+      "min": [-10, 0, -11],
+      "max": [10, 4.5, 4]
+    },
+    "floorColor": "#8ea394",
+    "floor": "vinyl",
+    "style": "orbital-module",
+    "ambience": "air-lab",
+    "wallColor": "#a7b8b5",
+    "lights": [
+      {
+        "fixture": "light-1",
+        "role": "key",
+        "lux": 3.8,
+        "penumbra": 0.25,
+        "reachHeight": 0.9
+      },
+      {
+        "fixture": "light-2",
+        "role": "fill",
+        "lux": 3
+      },
+      {
+        "fixture": "light-3",
+        "role": "fill",
+        "lux": 3
+      },
+      {
+        "fixture": "light-4",
+        "role": "fill",
+        "lux": 3
+      },
+      {
+        "fixture": "light-5",
+        "role": "fill",
+        "lux": 3
+      }
+    ],
+    "openings": [
+      {
+        "wall": "south",
+        "center": 0,
+        "width": 0.9,
+        "height": 2
+      },
+      {
+        "wall": "west",
+        "center": -4.2,
+        "width": 2,
+        "height": 2.6
+      }
+    ],
+    "placements": [
+      {
+        "id": "door-hub",
+        "item": "sliding-door",
+        "position": [0, 0, 3.95],
+        "params": {
+          "targetScene": "simlab-hub",
+          "label": "Back to SIMLAB Hub",
+          "arrival": "simlab-hub/door-chemistry"
+        },
+        "vi": {
+          "label": "Quay lại Sảnh SIMLAB"
+        }
+      },
+      {
+        "id": "light-1",
+        "item": "ceiling-light",
+        "position": [0, 4.44, -3.5]
+      },
+      {
+        "id": "light-2",
+        "item": "ceiling-light",
+        "position": [5, 4.44, -7.316]
+      },
+      {
+        "id": "door-hub-rail",
+        "item": "door-rail",
+        "position": [0.5, 2.11, 3.98],
+        "rotationY": 3.14159
+      },
+      {
+        "id": "diffuser-1",
+        "item": "ceiling-diffuser",
+        "position": [0, 4.46, 1.632]
+      },
+      {
+        "id": "diffuser-2",
+        "item": "ceiling-diffuser",
+        "position": [0, 4.46, -9.421]
+      },
+      {
+        "id": "return",
+        "item": "ceiling-return",
+        "position": [0, 4.47, -7.316],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "light-3",
+        "item": "ceiling-light",
+        "position": [-5, 4.44, -0.211]
+      },
+      {
+        "id": "light-4",
+        "item": "ceiling-light",
+        "position": [5, 4.44, -0.211]
+      },
+      {
+        "id": "light-5",
+        "item": "ceiling-light",
+        "position": [-5, 4.44, -7.316]
+      }
+    ]
+  },
+  {
+    "id": "chemistry-annex",
+    "displayName": "Chemistry Practice Room",
+    "vi": {
+      "displayName": "Phòng thực hành Hóa học"
+    },
+    "bounds": {
+      "min": [-30.25, 0, -11],
+      "max": [-10.25, 4.5, 4]
+    },
+    "floorColor": "#8ea394",
+    "floor": "vinyl",
+    "style": "orbital-module",
+    "ambience": "air-lab",
+    "wallColor": "#a7b8b5",
+    "lights": [
+      {
+        "fixture": "light-1",
+        "role": "key",
+        "lux": 3.8,
+        "penumbra": 0.25,
+        "reachHeight": 0.9
+      },
+      {
+        "fixture": "light-2",
+        "role": "fill",
+        "lux": 3.6
+      },
+      {
+        "fixture": "light-3",
+        "role": "fill",
+        "lux": 3.6
+      }
+    ],
+    "openings": [
+      {
+        "wall": "east",
+        "center": -4.2,
+        "width": 2,
+        "height": 2.6
+      }
+    ],
+    "placements": [
+      {
+        "id": "light-1",
+        "item": "ceiling-light",
+        "position": [-20.25, 4.44, -3.5]
+      },
+      {
+        "id": "light-2",
+        "item": "ceiling-light",
+        "position": [-25.5, 4.44, -6]
+      },
+      {
+        "id": "light-3",
+        "item": "ceiling-light",
+        "position": [-15, 4.44, -1]
+      }
+    ]
+  },
+  {
+    "id": "biology-lab",
+    "displayName": "Biology Laboratory",
+    "vi": {
+      "displayName": "Phòng thí nghiệm Sinh học"
+    },
+    "bounds": {
+      "min": [-15, 0, -7.5],
+      "max": [5, 4.5, 7.5]
+    },
+    "floorColor": "#a39a85",
+    "floor": "stone",
+    "style": "greenhouse",
+    "ambience": "air-lab",
+    "wallColor": "#a48b6c",
+    "lights": [
+      {
+        "fixture": "light-1",
+        "role": "key",
+        "lux": 3.8,
+        "penumbra": 0.25,
+        "reachHeight": 0.9
+      },
+      {
+        "fixture": "light-2",
+        "role": "fill",
+        "lux": 3
+      },
+      {
+        "fixture": "light-3",
+        "role": "fill",
+        "lux": 3
+      },
+      {
+        "fixture": "light-4",
+        "role": "fill",
+        "lux": 3
+      },
+      {
+        "fixture": "light-5",
+        "role": "fill",
+        "lux": 3
+      }
+    ],
+    "openings": [
+      {
+        "wall": "east",
+        "center": 0,
+        "width": 0.9,
+        "height": 2
+      },
+      {
+        "wall": "west",
+        "center": 3.5,
+        "width": 2,
+        "height": 2.6
+      }
+    ],
+    "placements": [
+      {
+        "id": "door-hub",
+        "item": "sliding-door",
+        "position": [4.95, 0, 0],
+        "rotationY": 1.5708,
+        "params": {
+          "targetScene": "simlab-hub",
+          "label": "Back to SIMLAB Hub",
+          "arrival": "simlab-hub/door-biology"
+        },
+        "vi": {
+          "label": "Quay lại Sảnh SIMLAB"
+        }
+      },
+      {
+        "id": "light-1",
+        "item": "ceiling-light",
+        "position": [-5, 4.44, 0]
+      },
+      {
+        "id": "light-2",
+        "item": "ceiling-light",
+        "position": [0, 4.44, -3.421]
+      },
+      {
+        "id": "door-hub-rail",
+        "item": "door-rail",
+        "position": [4.98, 2.11, -0.5],
+        "rotationY": -1.5708
+      },
+      {
+        "id": "diffuser-1",
+        "item": "ceiling-diffuser",
+        "position": [-5, 4.46, 4.737]
+      },
+      {
+        "id": "diffuser-2",
+        "item": "ceiling-diffuser",
+        "position": [-5, 4.46, -4.737]
+      },
+      {
+        "id": "return",
+        "item": "ceiling-return",
+        "position": [-5, 4.47, -3.421],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "light-3",
+        "item": "ceiling-light",
+        "position": [-10, 4.44, 3.421]
+      },
+      {
+        "id": "light-4",
+        "item": "ceiling-light",
+        "position": [0, 4.44, 3.421]
+      },
+      {
+        "id": "light-5",
+        "item": "ceiling-light",
+        "position": [-10, 4.44, -3.421]
+      }
+    ]
+  },
+  {
+    "id": "biology-annex",
+    "displayName": "Biology Practice Room",
+    "vi": {
+      "displayName": "Phòng thực hành Sinh học"
+    },
+    "bounds": {
+      "min": [-35.25, 0, -7.5],
+      "max": [-15.25, 4.5, 7.5]
+    },
+    "floorColor": "#a39a85",
+    "floor": "stone",
+    "style": "greenhouse",
+    "ambience": "air-lab",
+    "wallColor": "#a48b6c",
+    "lights": [
+      {
+        "fixture": "light-1",
+        "role": "key",
+        "lux": 3.8,
+        "penumbra": 0.25,
+        "reachHeight": 0.9
+      },
+      {
+        "fixture": "light-2",
+        "role": "fill",
+        "lux": 3.6
+      },
+      {
+        "fixture": "light-3",
+        "role": "fill",
+        "lux": 3.6
+      }
+    ],
+    "openings": [
+      {
+        "wall": "east",
+        "center": 3.5,
+        "width": 2,
+        "height": 2.6
+      }
+    ],
+    "placements": [
+      {
+        "id": "light-1",
+        "item": "ceiling-light",
+        "position": [-25.25, 4.44, 0]
+      },
+      {
+        "id": "light-2",
+        "item": "ceiling-light",
+        "position": [-30.5, 4.44, -3.5]
+      },
+      {
+        "id": "light-3",
+        "item": "ceiling-light",
+        "position": [-20, 4.44, 3.5]
+      }
+    ]
+  },
+  {
+    "id": "pendulum-bay",
+    "displayName": "Pendulum bay",
+    "vi": {
+      "displayName": "Khu con lắc"
+    },
+    "bounds": {
+      "min": [-5, 0, -15.75],
+      "max": [5, 4.5, -7.75]
+    },
+    "floorColor": "#7c8794",
+    "floor": "concrete",
+    "style": "starship-deck",
+    "ambience": "air-hall",
+    "wallColor": "#56606a",
+    "lights": [
+      {
+        "fixture": "light-1",
+        "role": "key",
+        "lux": 4.6,
+        "penumbra": 0.25,
+        "reachHeight": 0.9
+      }
+    ],
+    "openings": [
+      {
+        "wall": "south",
+        "center": -3,
+        "width": 2,
+        "height": 2.6
+      }
+    ],
+    "placements": [
+      {
+        "id": "light-1",
+        "item": "ceiling-light",
+        "position": [0, 4.44, -11.75]
+      },
+      {
+        "id": "light-2",
+        "item": "ceiling-light",
+        "position": [0, 4.44, -9.1]
+      },
+      {
+        "id": "diffuser-1",
+        "item": "ceiling-diffuser",
+        "position": [-2.5, 4.46, -9.1]
+      },
+      {
+        "id": "diffuser-2",
+        "item": "ceiling-diffuser",
+        "position": [2.5, 4.46, -9.1]
+      },
+      {
+        "id": "return",
+        "item": "ceiling-return",
+        "position": [0, 4.47, -14.7]
+      }
+    ]
+  }
+]

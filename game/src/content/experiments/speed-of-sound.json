@@ -1,0 +1,389 @@
+{
+  "id": "speed-of-sound",
+  "name": "The speed of sound with a resonance tube",
+  "category": "physics",
+  "description": "Hold a sounding tuning fork over a glass tube of water, then lower the water slowly: at certain lengths of the air column above it the sound swells loud — the column resonates. The first loud point is about a quarter of a wavelength down, the second three quarters: their distance apart is half a wavelength. So λ = 2(L2 − L1), and the speed of sound is v = f·λ. Compare it with v = 331.3·√(1 + t/273.15) m/s at the room's temperature.",
+  "vi": {
+    "name": "Đo tốc độ truyền âm bằng ống cộng hưởng",
+    "description": "Giữ một âm thoa đang rung trên miệng một ống thủy tinh chứa nước, rồi hạ dần mực nước: ở một số chiều dài nhất định của cột không khí phía trên, âm thanh to hẳn lên — cột không khí cộng hưởng. Vị trí âm to thứ nhất cách miệng ống khoảng một phần tư bước sóng, vị trí thứ hai khoảng ba phần tư: khoảng cách giữa chúng bằng nửa bước sóng. Do đó λ = 2(L2 − L1), và tốc độ truyền âm là v = f·λ. So sánh với v = 331,3·√(1 + t/273,15) m/s ở nhiệt độ của phòng.",
+    "note": "Cột không khí trong ống bị mặt nước bịt kín ở đáy và hở ở miệng: khi cộng hưởng, mặt nước là một nút và miệng ống gần một bụng sóng, nên chiều dài cột khí cộng với hiệu chỉnh đầu ống e bằng một số lẻ lần một phần tư bước sóng: L1 = λ/4 − e, L2 = 3λ/4 − e. Hiệu chỉnh e ≈ 0,6·r (r là bán kính ống, ở đây 1,5 cm) vì bụng sóng nằm hơi phía trên miệng ống; lấy hiệu L2 − L1 = λ/2 thì e bị khử. Tốc độ âm trong không khí khô tăng theo nhiệt độ: v = 331,3·√(1 + t/273,15) m/s, khoảng 343 m/s ở 20 °C. Độ to theo chiều dài cột khí là một đường cộng hưởng δ/√(cos²(2π(l + e)/λ) + δ²) với δ = 0,05 (độ nhọn minh họa). Khi chạy, mực nước được hạ đều 10 cm/s cho đến khi cột khí vượt qua vị trí cộng hưởng thứ hai. Đây là mô hình dạy học đơn giản hóa: không khí khô, âm thoa phát âm thuần, ống thẳng và đều. Thước đọc L1 và L2 mô phỏng theo độ phân giải d của nó (bội số gần nhất của d, độ bất định d/√12 chỉ do độ phân giải); không có sai số ngẫu nhiên nào được thêm vào, và λ, v được tính từ các chiều dài mô phỏng, không phải từ số đọc. Trong phòng thí nghiệm thật, khó xác định chính xác chỗ âm to nhất bằng tai, độ ẩm làm âm truyền nhanh hơn một chút, và hiệu chỉnh đầu ống phụ thuộc vào hình dạng miệng ống, nên tốc độ đo được lệch đôi chút."
+  },
+  "requiredEquipment": ["resonance-tube-rig"],
+  "model": "waves.resonance-tube",
+  "parameters": [
+    {
+      "id": "frequency",
+      "label": "Tuning fork",
+      "vi": { "label": "Âm thoa" },
+      "symbol": "f",
+      "unit": "Hz",
+      "default": 512,
+      "min": 384,
+      "max": 512,
+      "presets": [
+        { "label": "384 Hz", "vi": { "label": "384 Hz" }, "value": 384 },
+        { "label": "440 Hz", "vi": { "label": "440 Hz" }, "value": 440 },
+        { "label": "512 Hz", "vi": { "label": "512 Hz" }, "value": 512 }
+      ]
+    },
+    {
+      "id": "temperature",
+      "label": "Room temperature",
+      "vi": { "label": "Nhiệt độ phòng" },
+      "symbol": "t",
+      "unit": "°C",
+      "default": 20,
+      "min": 15,
+      "max": 30,
+      "presets": [
+        { "label": "15 °C", "vi": { "label": "15 °C" }, "value": 15 },
+        { "label": "20 °C", "vi": { "label": "20 °C" }, "value": 20 },
+        { "label": "25 °C", "vi": { "label": "25 °C" }, "value": 25 },
+        { "label": "30 °C", "vi": { "label": "30 °C" }, "value": 30 }
+      ]
+    },
+    {
+      "id": "rulerResolution",
+      "label": "Scale resolution",
+      "vi": { "label": "Độ phân giải của thước" },
+      "symbol": "d",
+      "unit": "m",
+      "default": 0.001,
+      "min": 0.001,
+      "max": 0.005,
+      "presets": [
+        { "label": "1 mm", "vi": { "label": "1 mm" }, "value": 0.001 },
+        { "label": "5 mm", "vi": { "label": "5 mm" }, "value": 0.005 }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "tubeRadius": 0.015,
+    "tubeLength": 0.8,
+    "startColumn": 0.05,
+    "lowerSpeed": 0.1
+  },
+  "inputs": {
+    "tubeRadius": { "symbol": "r", "unit": "m" },
+    "tubeLength": { "symbol": "L_ống", "unit": "m", "desk": false },
+    "startColumn": { "symbol": "l0", "unit": "m", "desk": false },
+    "lowerSpeed": { "symbol": "u", "unit": "m/s", "desk": false }
+  },
+  "simulation": { "timeStep": 0.005, "maxDuration": 10, "sampleInterval": 0.01 },
+  "measurements": [
+    {
+      "id": "loudness",
+      "label": "Loudness",
+      "vi": { "label": "Độ to của âm" },
+      "symbol": "I",
+      "unit": "",
+      "variable": "loudness"
+    },
+    {
+      "id": "column",
+      "label": "Air column above the water",
+      "vi": { "label": "Chiều dài cột không khí" },
+      "symbol": "l",
+      "unit": "m",
+      "variable": "column"
+    }
+  ],
+  "results": [
+    {
+      "id": "firstResonance",
+      "label": "First resonance L1",
+      "vi": { "label": "Vị trí cộng hưởng thứ nhất L1" },
+      "symbol": "L1",
+      "unit": "m",
+      "variable": "firstResonance",
+      "reduce": "final",
+      "theory": "firstResonance"
+    },
+    {
+      "id": "secondResonance",
+      "label": "Second resonance L2",
+      "vi": { "label": "Vị trí cộng hưởng thứ hai L2" },
+      "symbol": "L2",
+      "unit": "m",
+      "variable": "secondResonance",
+      "reduce": "final",
+      "theory": "secondResonance"
+    },
+    {
+      "id": "wavelength",
+      "label": "Wavelength λ = 2(L2 − L1)",
+      "vi": { "label": "Bước sóng λ = 2(L2 − L1)" },
+      "symbol": "λ",
+      "unit": "m",
+      "variable": "wavelength",
+      "reduce": "final",
+      "theory": "wavelength"
+    },
+    {
+      "id": "speedOfSound",
+      "label": "Speed of sound v = f·λ",
+      "vi": { "label": "Tốc độ truyền âm v = f·λ" },
+      "symbol": "v",
+      "unit": "m/s",
+      "variable": "speedOfSound",
+      "reduce": "final",
+      "theory": "speedOfSound"
+    }
+  ],
+  "instruments": [
+    {
+      "result": "firstResonance",
+      "quantity": "First resonance L1",
+      "name": "Scale beside the tube",
+      "resolution": "rulerResolution",
+      "excludes": "judging by ear where the sound is loudest, parallax against the scale, and the air's humidity, which changes the speed itself",
+      "vi": {
+        "quantity": "Vị trí cộng hưởng thứ nhất L1",
+        "name": "Thước bên cạnh ống",
+        "excludes": "việc xác định bằng tai chỗ âm to nhất, sai số thị sai khi đọc thước, và độ ẩm của không khí, yếu tố làm thay đổi chính tốc độ truyền âm"
+      }
+    },
+    {
+      "result": "secondResonance",
+      "quantity": "Second resonance L2",
+      "name": "Scale beside the tube",
+      "resolution": "rulerResolution",
+      "excludes": "judging by ear where the sound is loudest, parallax against the scale, and the air's humidity, which changes the speed itself",
+      "vi": {
+        "quantity": "Vị trí cộng hưởng thứ hai L2",
+        "name": "Thước bên cạnh ống",
+        "excludes": "việc xác định bằng tai chỗ âm to nhất, sai số thị sai khi đọc thước, và độ ẩm của không khí, yếu tố làm thay đổi chính tốc độ truyền âm"
+      }
+    }
+  ],
+  "graphs": [
+    {
+      "id": "loudness-column",
+      "title": "Loudness against the air column's length",
+      "vi": { "title": "Độ to của âm theo chiều dài cột không khí" },
+      "x": "column",
+      "y": ["loudness"],
+      "yLabel": "I"
+    }
+  ],
+  "monitor": "loudness-column",
+  "compare": [{ "graph": "loudness-column" }],
+  "scatters": [
+    {
+      "id": "speed-temperature",
+      "title": "Speed of sound against the room's temperature",
+      "vi": { "title": "Tốc độ truyền âm theo nhiệt độ phòng" },
+      "x": "temperature",
+      "y": "speedOfSound"
+    }
+  ],
+  "note": "The air column is closed at the bottom by the water and open at the mouth: at resonance the water's surface is a node and the mouth nearly an antinode, so the column's length plus the end correction e is an odd number of quarter-wavelengths: L1 = λ/4 − e, L2 = 3λ/4 − e. The end correction e ≈ 0.6·r (r the tube's radius, here 1.5 cm) because the antinode lies a little above the mouth; the difference L2 − L1 = λ/2 cancels it. The speed of sound in dry air rises with temperature: v = 331.3·√(1 + t/273.15) m/s, about 343 m/s at 20 °C. The loudness against the column's length is a resonance curve δ/√(cos²(2π(l + e)/λ) + δ²) with δ = 0.05 (an illustrative sharpness). During the run the water is lowered steadily at 10 cm/s until the column is past the second resonance. A simplified teaching model: dry air, a fork sounding a pure tone, a straight uniform tube. The scale reads L1 and L2 to its resolution d (the nearest multiple of d, with the uncertainty d/√12 from the resolution alone); no random error is added, and λ and v are worked out from the simulated lengths, not from the readings. In a real lab the loudest point is hard to judge by ear, humidity makes sound a little faster, and the end correction depends on the mouth's shape, so the measured speed differs a little.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the speed of sound instructions on the board.",
+      "vi": { "instruction": "Đọc hướng dẫn thí nghiệm đo tốc độ truyền âm trên bảng." },
+      "done": { "kind": "inspected", "item": "speed-of-sound-instructions" }
+    },
+    {
+      "id": "fork",
+      "instruction": "Choose the tuning fork with its dial on the control desk.",
+      "vi": { "instruction": "Chọn âm thoa bằng núm xoay trên bàn điều khiển." },
+      "done": { "kind": "adjusted", "parameter": "frequency" }
+    },
+    {
+      "id": "temperature",
+      "instruction": "Set the room's temperature.",
+      "vi": { "instruction": "Đặt nhiệt độ phòng." },
+      "done": { "kind": "adjusted", "parameter": "temperature" }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the water goes down; listen for the two loud points.",
+      "vi": { "instruction": "Nhấn CHẠY: mực nước hạ dần; lắng nghe hai vị trí âm to." },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read L1, L2, λ = 2(L2 − L1) and v = f·λ on the results monitor.",
+      "vi": { "instruction": "Đọc L1, L2, λ = 2(L2 − L1) và v = f·λ trên màn hình kết quả." },
+      "done": { "kind": "viewed" }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, change the fork or the temperature and run again.",
+      "vi": { "instruction": "Nhấn ĐẶT LẠI, đổi âm thoa hoặc nhiệt độ rồi chạy lại." },
+      "done": { "kind": "reset" }
+    }
+  ],
+  "examples": [
+    {
+      "id": "warm-day",
+      "question": "On a {temperature} °C day a {frequency} Hz fork sounds over the tube. Find the speed of sound in the dry air and the wavelength.",
+      "vi": {
+        "question": "Vào một ngày {temperature} °C, âm thoa {frequency} Hz phát âm trên miệng ống. Tìm tốc độ truyền âm trong không khí khô và bước sóng."
+      },
+      "set": { "frequency": 384, "temperature": 30 },
+      "find": [{ "theory": "speedOfSound" }, { "theory": "wavelength" }],
+      "steps": [
+        {
+          "say": "The speed of sound in dry air rises with temperature: v = 331.3·√(1 + t/273.15) m/s.",
+          "vi": {
+            "say": "Tốc độ âm trong không khí khô tăng theo nhiệt độ: v = 331,3·√(1 + t/273,15) m/s."
+          },
+          "write": "v = 331.3·√(1 + {temperature}/273.15) ≈ {@speedOfSound} m/s",
+          "check": { "expr": "331.3*sqrt(1+temperature/273.15)", "equals": "speedOfSound" }
+        },
+        {
+          "say": "The wavelength is the speed over the frequency.",
+          "vi": { "say": "Bước sóng bằng tốc độ chia cho tần số." },
+          "write": "λ = v/f = {@speedOfSound}/{frequency} ≈ {@wavelength} m",
+          "check": { "expr": "@speedOfSound/frequency", "equals": "wavelength" }
+        }
+      ]
+    },
+    {
+      "id": "two-resonances",
+      "question": "A {frequency} Hz fork sounds over a tube of radius {tubeRadius} m at {temperature} °C. At what lengths of the air column will it resonate first and second?",
+      "vi": {
+        "question": "Âm thoa {frequency} Hz phát âm trên miệng ống có bán kính {tubeRadius} m ở {temperature} °C. Cột không khí dài bao nhiêu thì xảy ra cộng hưởng lần thứ nhất và lần thứ hai?"
+      },
+      "set": { "frequency": 440, "temperature": 20 },
+      "find": [{ "theory": "firstResonance" }, { "theory": "secondResonance" }],
+      "steps": [
+        {
+          "say": "First the wavelength, from the speed of sound at this temperature.",
+          "vi": { "say": "Trước hết tính bước sóng từ tốc độ âm ở nhiệt độ này." },
+          "write": "λ = v/f = 331.3·√(1 + {temperature}/273.15)/{frequency} ≈ {@wavelength} m",
+          "check": { "expr": "331.3*sqrt(1+temperature/273.15)/frequency", "equals": "wavelength" }
+        },
+        {
+          "say": "Closed at the water, open at the mouth: the column plus the end correction e ≈ 0.6·r is a quarter wavelength.",
+          "vi": {
+            "say": "Ống kín ở mặt nước, hở ở miệng: chiều dài cột khí cộng với độ hiệu chỉnh đầu ống e ≈ 0,6·r bằng một phần tư bước sóng."
+          },
+          "write": "L1 = λ/4 − 0.6r = {@wavelength}/4 − 0.6·{tubeRadius} ≈ {@firstResonance} m",
+          "check": { "expr": "@wavelength/4-0.6*tubeRadius", "equals": "firstResonance" }
+        },
+        {
+          "say": "The next resonance is half a wavelength longer: three quarter-wavelengths.",
+          "vi": { "say": "Lần cộng hưởng tiếp theo dài hơn nửa bước sóng: ba phần tư bước sóng." },
+          "write": "L2 = 3λ/4 − 0.6r ≈ {@secondResonance} m",
+          "check": { "expr": "3*@wavelength/4-0.6*tubeRadius", "equals": "secondResonance" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "A tuning fork over a tube of air sounds loudest when the air column fits its wave — a quarter, then three quarters of a wavelength; the distance between the two loud points gives the wavelength, and so the speed of sound.",
+    "vi": {
+      "summary": "Âm thoa đặt trên một ống chứa không khí kêu to nhất khi cột khí vừa khớp với sóng của nó — một phần tư, rồi ba phần tư bước sóng; khoảng cách giữa hai vị trí kêu to cho biết bước sóng, và từ đó tốc độ âm thanh."
+    },
+    "parts": [
+      {
+        "id": "fork",
+        "name": "Tuning fork, f",
+        "role": "Held over the tube’s mouth: sounds one pure tone of frequency f.",
+        "vi": {
+          "name": "Âm thoa, f",
+          "role": "Đặt trên miệng ống: phát ra một âm đơn có tần số f."
+        },
+        "anchor": {
+          "at": [-0.05, 0.49, 0.01]
+        }
+      },
+      {
+        "id": "tube",
+        "name": "Glass tube",
+        "role": "Open at the top, closed below by the water: the air column inside resonates.",
+        "vi": {
+          "name": "Ống thủy tinh",
+          "role": "Hở ở trên, được nước bịt kín ở dưới: cột khí bên trong cộng hưởng."
+        },
+        "anchor": {
+          "part": "glass"
+        }
+      },
+      {
+        "id": "water",
+        "name": "Water in the tube",
+        "role": "Its surface closes the air column; lowering it lengthens the column.",
+        "vi": {
+          "name": "Nước trong ống",
+          "role": "Mặt nước bịt kín cột khí; hạ mặt nước xuống thì cột khí dài thêm."
+        },
+        "anchor": {
+          "part": "water"
+        }
+      },
+      {
+        "id": "reservoir",
+        "name": "Reservoir",
+        "role": "Joined to the tube by a hose: lowering it lowers the water in the tube.",
+        "vi": {
+          "name": "Bình chứa nước",
+          "role": "Nối với ống bằng ống mềm: hạ bình xuống thì mực nước trong ống hạ theo."
+        },
+        "anchor": {
+          "part": "reservoir"
+        }
+      },
+      {
+        "id": "scale",
+        "name": "Scale",
+        "role": "Beside the tube, 0 at the mouth: reads the air column’s length L.",
+        "vi": {
+          "name": "Thước",
+          "role": "Đặt cạnh ống, vạch 0 ở miệng ống: đọc chiều dài L của cột khí."
+        },
+        "anchor": {
+          "at": [-0.095, 0.015, 0.012]
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "The fork sounds over the tube while the water is slowly lowered, so the air column above it grows longer.",
+        "vi": {
+          "text": "Âm thoa kêu trên miệng ống trong khi mực nước được hạ xuống từ từ, nên cột khí phía trên ngày càng dài ra."
+        },
+        "parts": ["fork", "tube", "water", "reservoir"]
+      },
+      {
+        "text": "The sound goes down the column and is reflected by the water. At certain lengths the reflected wave meets the fork’s in step and the sound swells loud: the column resonates.",
+        "vi": {
+          "text": "Âm truyền xuống cột khí và bị mặt nước phản xạ. Ở một số chiều dài nhất định, sóng phản xạ gặp sóng của âm thoa cùng pha và âm to lên: cột khí cộng hưởng."
+        },
+        "parts": ["tube", "water"]
+      },
+      {
+        "text": "At resonance the water’s surface is a node and the mouth nearly an antinode. So the first loud point is about λ/4 down, the second about 3λ/4.",
+        "vi": {
+          "text": "Khi cộng hưởng, mặt nước là một nút sóng và miệng ống gần như là một bụng sóng. Vì vậy vị trí kêu to thứ nhất cách miệng khoảng λ/4, vị trí thứ hai khoảng 3λ/4."
+        },
+        "parts": ["water", "tube", "scale"]
+      },
+      {
+        "text": "The antinode lies a little above the mouth (the end correction), but it cancels in the difference: L2 − L1 = λ/2, so λ = 2(L2 − L1) and the speed of sound is v = f·λ.",
+        "vi": {
+          "text": "Bụng sóng nằm cao hơn miệng ống một chút (hiệu chỉnh đầu ống), nhưng nó bị triệt tiêu khi lấy hiệu: L2 − L1 = λ/2, nên λ = 2(L2 − L1) và tốc độ âm thanh là v = f·λ."
+        },
+        "parts": ["scale"]
+      },
+      {
+        "text": "A higher-pitched fork has a shorter wavelength, so the loud points come closer together; the speed stays the same. Warmer air carries sound faster: v = 331.3·√(1 + t/273.15) m/s.",
+        "vi": {
+          "text": "Âm thoa có tần số cao hơn thì bước sóng ngắn hơn, nên các vị trí kêu to gần nhau hơn; tốc độ âm vẫn như cũ. Không khí ấm hơn truyền âm nhanh hơn: v = 331.3·√(1 + t/273.15) m/s."
+        },
+        "parts": ["fork"]
+      },
+      {
+        "text": "The results give L1, L2, λ and v, the scale reading to its resolution d. The model takes dry air and a pure tone; in a real lab the loudest point is hard to judge by ear.",
+        "vi": {
+          "text": "Phần kết quả cho L1, L2, λ và v, thước đọc theo độ phân giải d. Mô hình coi không khí là khô và âm là âm đơn; trong thực tế rất khó xác định vị trí to nhất bằng tai."
+        },
+        "parts": ["scale"]
+      }
+    ]
+  }
+}

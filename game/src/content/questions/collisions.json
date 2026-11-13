@@ -1,0 +1,1091 @@
+{
+  "id": "collisions",
+  "skills": [
+    {
+      "id": "momentum",
+      "name": "Momentum and its conservation",
+      "advice": "Learn p = m·v (a vector, kg·m/s) and that the total momentum of the two gliders is the same before and after any collision on the frictionless track. Check it in every run’s results.",
+      "vi": {
+        "name": "Động lượng và định luật bảo toàn động lượng",
+        "advice": "Nhớ p = m·v (đại lượng vectơ, kg·m/s) và tổng động lượng của hai xe trước và sau mọi va chạm trên máng không ma sát là như nhau. Kiểm tra điều này trong kết quả của mỗi lần chạy."
+      }
+    },
+    {
+      "id": "elastic",
+      "name": "Elastic collisions",
+      "advice": "With e = 1 both momentum and kinetic energy are kept; then v_B′ = 2m_A·u_A/(m_A + m_B). Try equal masses at the station: A stops dead and B moves off at u_A.",
+      "vi": {
+        "name": "Va chạm đàn hồi",
+        "advice": "Với e = 1, cả động lượng và động năng đều được bảo toàn; khi đó v_B′ = 2m_A·u_A/(m_A + m_B). Thử hai xe cùng khối lượng trên trạm: A dừng hẳn còn B chạy đi với tốc độ u_A."
+      }
+    },
+    {
+      "id": "inelastic",
+      "name": "Inelastic collisions and energy lost",
+      "advice": "With Velcro (e = 0) the gliders stick: v = m_A·u_A/(m_A + m_B), and kinetic energy is lost to heat and sound. Trap: assuming kinetic energy is kept in every collision.",
+      "vi": {
+        "name": "Va chạm mềm và động năng mất đi",
+        "advice": "Với băng nhám dính (e = 0) hai xe dính nhau: v = m_A·u_A/(m_A + m_B), và động năng bị mất đi thành nhiệt và âm. Lỗi hay gặp: cho rằng động năng luôn được bảo toàn trong mọi va chạm."
+      }
+    },
+    {
+      "id": "measurement",
+      "name": "Gate times and restitution",
+      "advice": "Each gate gives v = L/Δt with the card length L. For bumpers with e between 0 and 1, use both laws: momentum, and v_B′ − v_A′ = e·u_A. The e values are illustrative bumper properties.",
+      "vi": {
+        "name": "Thời gian qua cổng và hệ số phục hồi",
+        "advice": "Mỗi cổng cho v = L/Δt với L là chiều dài tấm chắn. Với đệm có e từ 0 đến 1, dùng cả hai định luật: bảo toàn động lượng, và v_B′ − v_A′ = e·u_A. Các giá trị e là tính chất minh họa của đệm va chạm."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "momentum-def",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["momentum"],
+      "stem": "The momentum of a body of mass m moving with velocity v is…",
+      "explain": "p = m·v, a vector in the direction of v, in kg·m/s.",
+      "vi": {
+        "stem": "Động lượng của vật khối lượng m chuyển động với vận tốc v là…",
+        "explain": "p = m·v, là vectơ cùng hướng với v, đơn vị kg·m/s."
+      },
+      "options": [
+        {
+          "text": "p = m·v",
+          "vi": {
+            "text": "p = m·v"
+          },
+          "correct": true
+        },
+        {
+          "text": "p = ½m·v²",
+          "vi": {
+            "text": "p = ½m·v²"
+          }
+        },
+        {
+          "text": "p = m/v",
+          "vi": {
+            "text": "p = m/v"
+          }
+        },
+        {
+          "text": "p = m·a",
+          "vi": {
+            "text": "p = m·a"
+          }
+        }
+      ]
+    },
+    {
+      "id": "conserved",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["momentum"],
+      "stem": "Two gliders collide on a level, frictionless air track. Which quantity is the same before and after every collision?",
+      "explain": "No outside force acts along the track, so the total momentum is conserved; kinetic energy only in an elastic collision.",
+      "vi": {
+        "stem": "Hai xe va chạm trên máng đệm khí nằm ngang không ma sát. Đại lượng nào như nhau trước và sau mọi va chạm?",
+        "explain": "Không có ngoại lực tác dụng dọc máng nên tổng động lượng được bảo toàn; động năng chỉ bảo toàn trong va chạm đàn hồi."
+      },
+      "options": [
+        {
+          "text": "the total momentum of the two gliders",
+          "vi": {
+            "text": "tổng động lượng của hai xe"
+          },
+          "correct": true
+        },
+        {
+          "text": "the total kinetic energy of the two gliders",
+          "vi": {
+            "text": "tổng động năng của hai xe"
+          }
+        },
+        {
+          "text": "the velocity of each glider",
+          "vi": {
+            "text": "vận tốc của từng xe"
+          }
+        },
+        {
+          "text": "the momentum of each glider",
+          "vi": {
+            "text": "động lượng của từng xe"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-types",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["momentum", "elastic", "inelastic"],
+      "stem": "Glider A moves towards glider B, which is at rest, on a frictionless air track. Decide whether each statement is true or false.",
+      "explain": "Momentum is a vector; with Velcro they move off together; kinetic energy is kept only in an elastic collision; equal gliders colliding elastically swap velocities.",
+      "vi": {
+        "stem": "Xe A chuyển động về phía xe B đang đứng yên trên máng đệm khí không ma sát. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Động lượng là đại lượng vectơ; với băng nhám dính hai xe chuyển động cùng nhau; động năng chỉ bảo toàn trong va chạm đàn hồi; hai xe cùng khối lượng va chạm đàn hồi thì trao đổi vận tốc cho nhau."
+      },
+      "statements": [
+        {
+          "text": "Momentum is a vector quantity.",
+          "vi": {
+            "text": "Động lượng là một đại lượng vectơ."
+          },
+          "true": true
+        },
+        {
+          "text": "With Velcro the gliders stick and move on together.",
+          "vi": {
+            "text": "Với băng nhám dính, hai xe dính vào nhau và chuyển động cùng nhau."
+          },
+          "true": true
+        },
+        {
+          "text": "The total kinetic energy is the same before and after every collision.",
+          "vi": {
+            "text": "Tổng động năng trước và sau mọi va chạm là như nhau."
+          },
+          "true": false
+        },
+        {
+          "text": "If the gliders have equal masses and collide elastically, A stops and B moves off at A’s speed.",
+          "vi": {
+            "text": "Nếu hai xe cùng khối lượng và va chạm đàn hồi, A dừng lại còn B chuyển động với tốc độ ban đầu của A."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "equal-elastic",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["elastic"],
+      "stem": "Glider A (0.3 kg) at speed u hits glider B (0.3 kg) at rest with elastic bumpers. After the collision…",
+      "explain": "Equal masses, elastic: momentum and kinetic energy are both kept only if they swap velocities.",
+      "vi": {
+        "stem": "Xe A (0,3 kg) với tốc độ u va chạm với xe B (0,3 kg) đang đứng yên, đệm va chạm đàn hồi. Sau va chạm…",
+        "explain": "Hai xe cùng khối lượng, va chạm đàn hồi: chỉ khi trao đổi vận tốc thì cả động lượng và động năng mới được bảo toàn."
+      },
+      "options": [
+        {
+          "text": "A stops and B moves off at u",
+          "vi": {
+            "text": "A dừng lại, B chuyển động với tốc độ u"
+          },
+          "correct": true
+        },
+        {
+          "text": "both move on at u/2",
+          "vi": {
+            "text": "cả hai cùng chuyển động với tốc độ u/2"
+          }
+        },
+        {
+          "text": "A bounces back at u and B stays at rest",
+          "vi": {
+            "text": "A bật ngược lại với tốc độ u, B đứng yên"
+          }
+        },
+        {
+          "text": "both stop",
+          "vi": {
+            "text": "cả hai cùng dừng lại"
+          }
+        }
+      ]
+    },
+    {
+      "id": "velcro-energy",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["inelastic"],
+      "stem": "The gliders stick together with Velcro. Compared with before the collision, afterwards the total kinetic energy…",
+      "explain": "A perfectly inelastic collision keeps the momentum but loses kinetic energy to heat and sound.",
+      "vi": {
+        "stem": "Hai xe dính vào nhau bằng băng nhám. So với trước va chạm, sau va chạm tổng động năng…",
+        "explain": "Va chạm mềm bảo toàn động lượng nhưng mất một phần động năng thành nhiệt và âm."
+      },
+      "options": [
+        {
+          "text": "is smaller",
+          "vi": {
+            "text": "nhỏ hơn"
+          },
+          "correct": true
+        },
+        {
+          "text": "is the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "is larger",
+          "vi": {
+            "text": "lớn hơn"
+          }
+        },
+        {
+          "text": "is zero",
+          "vi": {
+            "text": "bằng 0"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-stick",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["inelastic", "momentum"],
+      "set": {
+        "massA": 0.3,
+        "speed": 0.4,
+        "restitution": 0
+      },
+      "stem": "Glider A ({massA} kg) at {speed} m/s hits glider B ({massB} kg) at rest; Velcro makes them stick. Decide whether each statement is true or false.",
+      "explain": "v = m_A·u_A/(m_A + m_B) = {@velocityB} m/s; p = {@momentumBefore} kg·m/s before and after; the kinetic energy kept is m_A/(m_A + m_B) = {@kineticPercent}%, the rest becomes heat and sound.",
+      "vi": {
+        "stem": "Xe A ({massA} kg) chuyển động với {speed} m/s va chạm với xe B ({massB} kg) đang đứng yên; băng nhám làm hai xe dính nhau. Mỗi nhận định sau đúng hay sai?",
+        "explain": "v = m_A·u_A/(m_A + m_B) = {@velocityB} m/s; p = {@momentumBefore} kg·m/s trước và sau va chạm; phần động năng còn lại là m_A/(m_A + m_B) = {@kineticPercent}%, phần còn lại chuyển thành nhiệt và âm."
+      },
+      "statements": [
+        {
+          "text": "They move on together at {@velocityB} m/s.",
+          "vi": {
+            "text": "Hai xe chuyển động cùng nhau với {@velocityB} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "massA*speed/(massA+massB)",
+            "equals": "velocityB"
+          }
+        },
+        {
+          "text": "The total momentum after is {@momentumBefore} kg·m/s, as before.",
+          "vi": {
+            "text": "Tổng động lượng sau va chạm là {@momentumBefore} kg·m/s, như trước va chạm."
+          },
+          "true": true,
+          "check": {
+            "expr": "massA*speed",
+            "equals": "momentumAfter"
+          }
+        },
+        {
+          "text": "They keep {@kineticPercent}% of the kinetic energy.",
+          "vi": {
+            "text": "Hai xe giữ lại {@kineticPercent}% động năng."
+          },
+          "true": true,
+          "check": {
+            "expr": "100*massA/(massA+massB)",
+            "equals": "kineticPercent"
+          }
+        },
+        {
+          "text": "The kinetic energy after equals the kinetic energy before.",
+          "vi": {
+            "text": "Động năng sau va chạm bằng động năng trước va chạm."
+          },
+          "true": false,
+          "check": {
+            "expr": "@kineticBefore",
+            "equals": "kineticAfter"
+          }
+        }
+      ]
+    },
+    {
+      "id": "momentum-before",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["momentum"],
+      "set": {
+        "massA": 0.4,
+        "speed": 0.5
+      },
+      "stem": "Glider A ({massA} kg) moves at {speed} m/s towards glider B, at rest. What is the total momentum before the collision?",
+      "explain": "B is at rest, so p = m_A·u_A = {massA}·{speed} = {@momentumBefore} kg·m/s.",
+      "vi": {
+        "stem": "Xe A ({massA} kg) chuyển động với {speed} m/s về phía xe B đang đứng yên. Tổng động lượng trước va chạm bằng bao nhiêu?",
+        "explain": "B đứng yên nên p = m_A·u_A = {massA}·{speed} = {@momentumBefore} kg·m/s."
+      },
+      "options": [
+        {
+          "text": "{@momentumBefore} kg·m/s",
+          "vi": {
+            "text": "{@momentumBefore} kg·m/s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "massA*speed",
+            "equals": "momentumBefore"
+          }
+        },
+        {
+          "text": "{=0.5*massA*speed^2} kg·m/s",
+          "vi": {
+            "text": "{=0.5*massA*speed^2} kg·m/s"
+          },
+          "check": {
+            "expr": "0.5*massA*speed^2",
+            "equals": "momentumBefore"
+          }
+        },
+        {
+          "text": "{=massA*speed^2} kg·m/s",
+          "vi": {
+            "text": "{=massA*speed^2} kg·m/s"
+          },
+          "check": {
+            "expr": "massA*speed^2",
+            "equals": "momentumBefore"
+          }
+        },
+        {
+          "text": "{=(massA+massB)*speed} kg·m/s",
+          "vi": {
+            "text": "{=(massA+massB)*speed} kg·m/s"
+          },
+          "check": {
+            "expr": "(massA+massB)*speed",
+            "equals": "momentumBefore"
+          }
+        }
+      ]
+    },
+    {
+      "id": "stick-velocity",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["inelastic", "momentum"],
+      "set": {
+        "massA": 0.2,
+        "speed": 0.3,
+        "restitution": 0
+      },
+      "stem": "Glider A ({massA} kg) at {speed} m/s hits glider B ({massB} kg) at rest, and they stick. What is their common velocity?",
+      "explain": "Momentum: m_A·u_A = (m_A + m_B)·v, so v = {massA}·{speed}/({massA} + {massB}) = {@velocityB} m/s.",
+      "vi": {
+        "stem": "Xe A ({massA} kg) chuyển động với {speed} m/s va chạm với xe B ({massB} kg) đang đứng yên, hai xe dính nhau. Vận tốc chung của chúng bằng bao nhiêu?",
+        "explain": "Bảo toàn động lượng: m_A·u_A = (m_A + m_B)·v, nên v = {massA}·{speed}/({massA} + {massB}) = {@velocityB} m/s."
+      },
+      "options": [
+        {
+          "text": "{@velocityB} m/s",
+          "vi": {
+            "text": "{@velocityB} m/s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "massA*speed/(massA+massB)",
+            "equals": "velocityB"
+          }
+        },
+        {
+          "text": "{=massA*speed/massB} m/s",
+          "vi": {
+            "text": "{=massA*speed/massB} m/s"
+          },
+          "check": {
+            "expr": "massA*speed/massB",
+            "equals": "velocityB"
+          }
+        },
+        {
+          "text": "{=speed/2} m/s",
+          "vi": {
+            "text": "{=speed/2} m/s"
+          },
+          "check": {
+            "expr": "speed/2",
+            "equals": "velocityB"
+          }
+        },
+        {
+          "text": "{speed} m/s",
+          "vi": {
+            "text": "{speed} m/s"
+          },
+          "check": {
+            "expr": "speed",
+            "equals": "velocityB"
+          }
+        }
+      ]
+    },
+    {
+      "id": "elastic-b",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["elastic"],
+      "set": {
+        "massA": 0.5,
+        "speed": 0.4,
+        "restitution": 1
+      },
+      "stem": "Glider A ({massA} kg) at {speed} m/s collides elastically with glider B ({massB} kg) at rest. What is B’s velocity after the collision?",
+      "explain": "Momentum and kinetic energy both kept: v_B′ = 2m_A·u_A/(m_A + m_B) = 2·{massA}·{speed}/({massA} + {massB}) = {@velocityB} m/s.",
+      "vi": {
+        "stem": "Xe A ({massA} kg) chuyển động với {speed} m/s va chạm đàn hồi với xe B ({massB} kg) đang đứng yên. Vận tốc của B sau va chạm bằng bao nhiêu?",
+        "explain": "Bảo toàn cả động lượng và động năng: v_B′ = 2m_A·u_A/(m_A + m_B) = 2·{massA}·{speed}/({massA} + {massB}) = {@velocityB} m/s."
+      },
+      "options": [
+        {
+          "text": "{@velocityB} m/s",
+          "vi": {
+            "text": "{@velocityB} m/s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2*massA*speed/(massA+massB)",
+            "equals": "velocityB"
+          }
+        },
+        {
+          "text": "{=massA*speed/(massA+massB)} m/s",
+          "vi": {
+            "text": "{=massA*speed/(massA+massB)} m/s"
+          },
+          "check": {
+            "expr": "massA*speed/(massA+massB)",
+            "equals": "velocityB"
+          }
+        },
+        {
+          "text": "{speed} m/s",
+          "vi": {
+            "text": "{speed} m/s"
+          },
+          "check": {
+            "expr": "speed",
+            "equals": "velocityB"
+          }
+        },
+        {
+          "text": "{=massA*speed/massB} m/s",
+          "vi": {
+            "text": "{=massA*speed/massB} m/s"
+          },
+          "check": {
+            "expr": "massA*speed/massB",
+            "equals": "velocityB"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-gates",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["measurement", "elastic"],
+      "set": {
+        "massA": 0.3,
+        "speed": 0.2,
+        "restitution": 1
+      },
+      "stem": "Glider A ({massA} kg) at {speed} m/s collides elastically with glider B ({massB} kg) at rest; each card is L = {flagLength} m long. Decide whether each statement is true or false.",
+      "explain": "Gate 1: Δt = L/u = {@gateTimeA} s. Equal masses swap velocities, so B passes gate 2 just as fast: the same time. Eₖ = ½m_A·u_A² = {@kineticBefore} J; m_A·u_A² is twice that.",
+      "vi": {
+        "stem": "Xe A ({massA} kg) chuyển động với {speed} m/s va chạm đàn hồi với xe B ({massB} kg) đang đứng yên; mỗi tấm chắn dài L = {flagLength} m. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Cổng 1: Δt = L/u = {@gateTimeA} s. Hai xe cùng khối lượng trao đổi vận tốc, nên B qua cổng 2 nhanh như vậy: cùng thời gian. Eₖ = ½m_A·u_A² = {@kineticBefore} J; m_A·u_A² gấp đôi giá trị đó."
+      },
+      "statements": [
+        {
+          "text": "A’s card blocks gate 1 for {@gateTimeA} s.",
+          "vi": {
+            "text": "Tấm chắn của A chắn cổng 1 trong {@gateTimeA} s."
+          },
+          "true": true,
+          "check": {
+            "expr": "flagLength/speed",
+            "equals": "gateTimeA"
+          }
+        },
+        {
+          "text": "B’s card blocks gate 2 for the same time as A’s blocked gate 1.",
+          "vi": {
+            "text": "Tấm chắn của B chắn cổng 2 trong thời gian bằng thời gian tấm chắn của A chắn cổng 1."
+          },
+          "true": true,
+          "check": {
+            "expr": "@gateTimeA",
+            "equals": "gateTimeB"
+          }
+        },
+        {
+          "text": "The kinetic energy before the collision is {@kineticBefore} J.",
+          "vi": {
+            "text": "Động năng trước va chạm bằng {@kineticBefore} J."
+          },
+          "true": true,
+          "check": {
+            "expr": "0.5*massA*speed^2",
+            "equals": "kineticBefore"
+          }
+        },
+        {
+          "text": "The kinetic energy before the collision is {=massA*speed^2} J.",
+          "vi": {
+            "text": "Động năng trước va chạm bằng {=massA*speed^2} J."
+          },
+          "true": false,
+          "check": {
+            "expr": "massA*speed^2",
+            "equals": "kineticBefore"
+          }
+        }
+      ]
+    },
+    {
+      "id": "partial-a",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["measurement", "momentum"],
+      "set": {
+        "massA": 0.3,
+        "speed": 0.4,
+        "restitution": 0.5
+      },
+      "stem": "Glider A ({massA} kg) at {speed} m/s hits glider B ({massB} kg) at rest; the soft pads have e = {restitution}. What is A’s velocity just after the collision?",
+      "explain": "Momentum m_A·u_A = m_A·v_A′ + m_B·v_B′ and restitution v_B′ − v_A′ = e·u_A give v_B′ = {@velocityB} m/s and v_A′ = u_A(m_A − e·m_B)/(m_A + m_B) = {@velocityA} m/s: A follows B, slowly.",
+      "vi": {
+        "stem": "Xe A ({massA} kg) chuyển động với {speed} m/s va chạm với xe B ({massB} kg) đang đứng yên; đệm mềm có e = {restitution}. Vận tốc của A ngay sau va chạm bằng bao nhiêu?",
+        "explain": "Bảo toàn động lượng m_A·u_A = m_A·v_A′ + m_B·v_B′ và v_B′ − v_A′ = e·u_A cho v_B′ = {@velocityB} m/s và v_A′ = u_A(m_A − e·m_B)/(m_A + m_B) = {@velocityA} m/s: A đi theo B, chậm."
+      },
+      "options": [
+        {
+          "text": "{@velocityA} m/s",
+          "vi": {
+            "text": "{@velocityA} m/s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "speed*(massA-restitution*massB)/(massA+massB)",
+            "equals": "velocityA"
+          }
+        },
+        {
+          "text": "{=speed*(massA-massB)/(massA+massB)} m/s",
+          "vi": {
+            "text": "{=speed*(massA-massB)/(massA+massB)} m/s"
+          },
+          "check": {
+            "expr": "speed*(massA-massB)/(massA+massB)",
+            "equals": "velocityA"
+          }
+        },
+        {
+          "text": "{=-speed*(massA-restitution*massB)/(massA+massB)} m/s",
+          "vi": {
+            "text": "{=-speed*(massA-restitution*massB)/(massA+massB)} m/s"
+          },
+          "check": {
+            "expr": "-speed*(massA-restitution*massB)/(massA+massB)",
+            "equals": "velocityA"
+          }
+        },
+        {
+          "text": "{=massA*speed/(massA+massB)} m/s",
+          "vi": {
+            "text": "{=massA*speed/(massA+massB)} m/s"
+          },
+          "check": {
+            "expr": "massA*speed/(massA+massB)",
+            "equals": "velocityA"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-springs",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["measurement", "momentum", "inelastic"],
+      "set": {
+        "massA": 0.2,
+        "speed": 0.5,
+        "restitution": 0.9
+      },
+      "stem": "Glider A ({massA} kg) at {speed} m/s hits glider B ({massB} kg) at rest with spring bumpers, e = {restitution} (an illustrative value). Decide whether each statement is true or false.",
+      "explain": "Kept: 1 − (1 − e²)·m_B/(m_A + m_B) = {@kineticPercent|3}% of the kinetic energy — not all, since e < 1. Momentum is kept. v_A′ = u_A(m_A − e·m_B)/(m_A + m_B) = {@velocityA} m/s < 0: the lighter A bounces back.",
+      "vi": {
+        "stem": "Xe A ({massA} kg) chuyển động với {speed} m/s va chạm với xe B ({massB} kg) đang đứng yên, đệm lò xo e = {restitution} (giá trị minh họa). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Phần động năng còn lại: 1 − (1 − e²)·m_B/(m_A + m_B) = {@kineticPercent|3}% — không phải toàn bộ, vì e < 1. Động lượng được bảo toàn. v_A′ = u_A(m_A − e·m_B)/(m_A + m_B) = {@velocityA} m/s < 0: xe A nhẹ hơn bật ngược lại."
+      },
+      "statements": [
+        {
+          "text": "They keep about {@kineticPercent|3}% of the kinetic energy.",
+          "vi": {
+            "text": "Hai xe giữ lại khoảng {@kineticPercent|3}% động năng."
+          },
+          "true": true,
+          "check": {
+            "expr": "100*(1-(1-restitution^2)*massB/(massA+massB))",
+            "equals": "kineticPercent"
+          }
+        },
+        {
+          "text": "The total momentum after is {@momentumAfter} kg·m/s.",
+          "vi": {
+            "text": "Tổng động lượng sau va chạm là {@momentumAfter} kg·m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "massA*speed",
+            "equals": "momentumAfter"
+          }
+        },
+        {
+          "text": "Glider A bounces back, with velocity about {@velocityA} m/s.",
+          "vi": {
+            "text": "Xe A bật ngược lại với vận tốc khoảng {@velocityA} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "speed*(massA-restitution*massB)/(massA+massB)",
+            "equals": "velocityA"
+          }
+        },
+        {
+          "text": "With e = {restitution} the kinetic energy is fully kept.",
+          "vi": {
+            "text": "Với e = {restitution}, động năng được bảo toàn hoàn toàn."
+          },
+          "true": false,
+          "check": {
+            "expr": "@kineticBefore",
+            "equals": "kineticAfter"
+          }
+        }
+      ]
+    },
+    {
+      "id": "momentum-unit",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["momentum"],
+      "stem": "The SI unit of momentum is…",
+      "explain": "p = m·v: kilograms times metres per second, kg·m/s (the same as N·s). kg·m/s² is the newton, a unit of force.",
+      "vi": {
+        "stem": "Đơn vị của động lượng trong hệ SI là…",
+        "explain": "p = m·v: kilôgam nhân mét trên giây, kg·m/s (cũng bằng N·s). kg·m/s² là niutơn, đơn vị của lực."
+      },
+      "options": [
+        {
+          "text": "kg·m/s",
+          "vi": {
+            "text": "kg·m/s"
+          },
+          "correct": true
+        },
+        {
+          "text": "kg·m/s²",
+          "vi": {
+            "text": "kg·m/s²"
+          }
+        },
+        {
+          "text": "N/s",
+          "vi": {
+            "text": "N/s"
+          }
+        },
+        {
+          "text": "J/s",
+          "vi": {
+            "text": "J/s"
+          }
+        }
+      ]
+    },
+    {
+      "id": "heavy-elastic",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["elastic", "momentum"],
+      "stem": "A heavier glider A hits a lighter glider B at rest with elastic bumpers. After the collision…",
+      "explain": "Elastically, v_A′ = (m_A − m_B)u/(m_A + m_B) and v_B′ = 2m_A·u/(m_A + m_B). With m_A > m_B both are positive and v_B′ > v_A′: A keeps going forward, more slowly, and B moves off ahead of it, faster.",
+      "vi": {
+        "stem": "Xe A nặng hơn va chạm với xe B nhẹ hơn đang đứng yên, có đệm đàn hồi. Sau va chạm…",
+        "explain": "Va chạm đàn hồi: v_A′ = (m_A − m_B)u/(m_A + m_B) và v_B′ = 2m_A·u/(m_A + m_B). Khi m_A > m_B cả hai đều dương và v_B′ > v_A′: A tiếp tục đi tới nhưng chậm hơn, còn B chạy lên phía trước nhanh hơn."
+      },
+      "options": [
+        {
+          "text": "A keeps going forward, more slowly than B",
+          "vi": {
+            "text": "A tiếp tục đi tới, chậm hơn B"
+          },
+          "correct": true
+        },
+        {
+          "text": "A stops and B moves off at A’s speed",
+          "vi": {
+            "text": "A dừng lại và B chuyển động với tốc độ ban đầu của A"
+          }
+        },
+        {
+          "text": "A bounces back",
+          "vi": {
+            "text": "A bật ngược trở lại"
+          }
+        },
+        {
+          "text": "A and B move off together",
+          "vi": {
+            "text": "A và B chuyển động cùng nhau"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-velcro",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["inelastic", "momentum"],
+      "stem": "Two gliders on a level, frictionless air track collide and stick together with Velcro (e = 0). Decide whether each statement is true or false.",
+      "explain": "No outside force acts along the track, so momentum is conserved in every collision. Sticking is perfectly inelastic: some kinetic energy is turned into heat, sound and the deformation of the Velcro, not destroyed. e = 0 means no speed of separation: the gliders move on with one common velocity.",
+      "vi": {
+        "stem": "Hai xe trên đệm khí nằm ngang, không ma sát, va chạm rồi dính vào nhau nhờ băng dính gai (e = 0). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Không có ngoại lực theo phương đệm khí nên động lượng được bảo toàn trong mọi va chạm. Dính vào nhau là va chạm mềm: một phần động năng chuyển thành nhiệt, âm thanh và biến dạng của băng dính chứ không mất đi. e = 0 nghĩa là không có tốc độ tách rời: hai xe chuyển động tiếp với cùng một vận tốc."
+      },
+      "statements": [
+        {
+          "text": "The total momentum is the same before and after the collision.",
+          "vi": {
+            "text": "Tổng động lượng trước và sau va chạm bằng nhau."
+          },
+          "true": true
+        },
+        {
+          "text": "The total kinetic energy after the collision is less than before.",
+          "vi": {
+            "text": "Tổng động năng sau va chạm nhỏ hơn trước va chạm."
+          },
+          "true": true
+        },
+        {
+          "text": "The kinetic energy lost simply disappears.",
+          "vi": {
+            "text": "Phần động năng mất đi biến mất hoàn toàn."
+          },
+          "true": false
+        },
+        {
+          "text": "After the collision both gliders move with the same velocity.",
+          "vi": {
+            "text": "Sau va chạm hai xe chuyển động với cùng một vận tốc."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "stick-energy",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["inelastic", "momentum"],
+      "set": {
+        "massA": 0.4,
+        "speed": 0.3,
+        "restitution": 0
+      },
+      "stem": "Glider A ({massA} kg) at {speed} m/s hits glider B ({massB} kg) at rest, and they stick. What is their total kinetic energy afterwards?",
+      "explain": "v = m_A·u/(m_A + m_B) ≈ {@velocityB} m/s, so E_k′ = ½(m_A + m_B)v² ≈ {@kineticAfter} J, less than the {@kineticBefore} J before. Using only A’s mass, or the speed before, gives the other values.",
+      "vi": {
+        "stem": "Xe A ({massA} kg) chuyển động với {speed} m/s va chạm với xe B ({massB} kg) đang đứng yên, sau đó hai xe dính vào nhau. Tổng động năng của chúng sau va chạm bằng bao nhiêu?",
+        "explain": "v = m_A·u/(m_A + m_B) ≈ {@velocityB} m/s, nên W_đ′ = ½(m_A + m_B)v² ≈ {@kineticAfter} J, nhỏ hơn {@kineticBefore} J lúc trước. Chỉ dùng khối lượng của A, hoặc dùng tốc độ lúc trước, sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{@kineticAfter} J",
+          "vi": {
+            "text": "{@kineticAfter} J"
+          },
+          "correct": true,
+          "check": {
+            "expr": "0.5*(massA+massB)*(massA*speed/(massA+massB))^2",
+            "equals": "kineticAfter"
+          }
+        },
+        {
+          "text": "{@kineticBefore} J",
+          "vi": {
+            "text": "{@kineticBefore} J"
+          },
+          "check": {
+            "expr": "@kineticBefore",
+            "equals": "kineticAfter"
+          }
+        },
+        {
+          "text": "{=0.5*massA*@velocityB^2} J",
+          "vi": {
+            "text": "{=0.5*massA*@velocityB^2} J"
+          },
+          "check": {
+            "expr": "0.5*massA*@velocityB^2",
+            "equals": "kineticAfter"
+          }
+        },
+        {
+          "text": "{=0.5*(massA+massB)*speed^2} J",
+          "vi": {
+            "text": "{=0.5*(massA+massB)*speed^2} J"
+          },
+          "check": {
+            "expr": "0.5*(massA+massB)*speed^2",
+            "equals": "kineticAfter"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-bounce",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["elastic", "momentum"],
+      "set": {
+        "massA": 0.2,
+        "speed": 0.4,
+        "restitution": 1
+      },
+      "stem": "Glider A ({massA} kg) at {speed} m/s collides elastically with glider B ({massB} kg) at rest. Decide whether each statement is true or false.",
+      "explain": "v_B′ = 2m_A·u/(m_A + m_B) ≈ {@velocityB} m/s; v_A′ = (m_A − m_B)u/(m_A + m_B) ≈ {@velocityA} m/s: the lighter A bounces back. The kinetic energy after, ½m_A·v_A′² + ½m_B·v_B′², equals the {@kineticBefore} J before. A stops only when the masses are equal.",
+      "vi": {
+        "stem": "Xe A ({massA} kg) chuyển động với {speed} m/s va chạm đàn hồi với xe B ({massB} kg) đang đứng yên. Mỗi nhận định sau đúng hay sai?",
+        "explain": "v_B′ = 2m_A·u/(m_A + m_B) ≈ {@velocityB} m/s; v_A′ = (m_A − m_B)u/(m_A + m_B) ≈ {@velocityA} m/s: xe A nhẹ hơn bật ngược lại. Động năng sau va chạm, ½m_A·v_A′² + ½m_B·v_B′², bằng {@kineticBefore} J lúc trước. A chỉ dừng lại khi hai khối lượng bằng nhau."
+      },
+      "statements": [
+        {
+          "text": "B moves off at about {@velocityB} m/s.",
+          "vi": {
+            "text": "B chuyển động với tốc độ khoảng {@velocityB} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "2*massA*speed/(massA+massB)",
+            "equals": "velocityB"
+          }
+        },
+        {
+          "text": "A moves back at about {=-@velocityA} m/s.",
+          "vi": {
+            "text": "A chuyển động ngược lại với tốc độ khoảng {=-@velocityA} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "(massA-massB)*speed/(massA+massB)",
+            "equals": "velocityA"
+          }
+        },
+        {
+          "text": "The total kinetic energy afterwards is {=0.5*massA*@velocityA^2+0.5*massB*@velocityB^2} J, as before.",
+          "vi": {
+            "text": "Tổng động năng sau va chạm bằng {=0.5*massA*@velocityA^2+0.5*massB*@velocityB^2} J, như lúc trước."
+          },
+          "true": true,
+          "check": {
+            "expr": "0.5*massA*@velocityA^2+0.5*massB*@velocityB^2",
+            "equals": "kineticBefore"
+          }
+        },
+        {
+          "text": "A stops dead after the collision.",
+          "vi": {
+            "text": "A dừng hẳn lại sau va chạm."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "find-restitution",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["measurement", "inelastic"],
+      "set": {
+        "massA": 0.4,
+        "speed": 0.5,
+        "restitution": 0.5
+      },
+      "stem": "Glider A ({massA} kg) at {speed} m/s hits glider B ({massB} kg) at rest. Afterwards the gates give v_A′ = {@velocityA|3} m/s and v_B′ = {@velocityB|3} m/s. What is the coefficient of restitution of the bumpers?",
+      "explain": "e = (speed of separation)/(speed of approach) = (v_B′ − v_A′)/u = ({@velocityB|3} − {@velocityA|3})/{speed} = {=(@velocityB-@velocityA)/speed|2}. v_B′/u forgets that A is still moving; the share of kinetic energy kept is not e.",
+      "vi": {
+        "stem": "Xe A ({massA} kg) chuyển động với {speed} m/s va chạm với xe B ({massB} kg) đang đứng yên. Sau va chạm các cổng quang điện cho v_A′ = {@velocityA|3} m/s và v_B′ = {@velocityB|3} m/s. Hệ số phục hồi của đệm bằng bao nhiêu?",
+        "explain": "e = (tốc độ tách rời)/(tốc độ tiến lại gần) = (v_B′ − v_A′)/u = ({@velocityB|3} − {@velocityA|3})/{speed} = {=(@velocityB-@velocityA)/speed|2}. Lấy v_B′/u là quên rằng A vẫn đang chuyển động; tỉ lệ động năng còn lại không phải là e."
+      },
+      "options": [
+        {
+          "text": "{=(@velocityB-@velocityA)/speed|2}",
+          "vi": {
+            "text": "{=(@velocityB-@velocityA)/speed|2}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(1+(@velocityB-@velocityA)/speed)*massA*speed/(massA+massB)",
+            "equals": "velocityB"
+          }
+        },
+        {
+          "text": "{=@velocityB/speed|2}",
+          "vi": {
+            "text": "{=@velocityB/speed|2}"
+          },
+          "check": {
+            "expr": "(1+@velocityB/speed)*massA*speed/(massA+massB)",
+            "equals": "velocityB"
+          }
+        },
+        {
+          "text": "{=(@velocityB+@velocityA)/speed|2}",
+          "vi": {
+            "text": "{=(@velocityB+@velocityA)/speed|2}"
+          },
+          "check": {
+            "expr": "(1+(@velocityB+@velocityA)/speed)*massA*speed/(massA+massB)",
+            "equals": "velocityB"
+          }
+        },
+        {
+          "text": "{=@kineticPercent/100|2}",
+          "vi": {
+            "text": "{=@kineticPercent/100|2}"
+          },
+          "check": {
+            "expr": "(1+@kineticPercent/100)*massA*speed/(massA+massB)",
+            "equals": "velocityB"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-mass-a",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["momentum", "inelastic"],
+      "set": {
+        "massA": 0.5,
+        "speed": 0.2,
+        "restitution": 0
+      },
+      "stem": "Glider A at {speed} m/s hits glider B ({massB} kg) at rest, and they stick and move on at {@velocityB|3} m/s. What is A’s mass?",
+      "explain": "m_A·u = (m_A + m_B)·v, so m_A = m_B·v/(u − v) = {massB}·{@velocityB|3}/({speed} − {@velocityB|3}) = {massA} kg. m_B·v/u forgets A’s own mass after the collision; turning the ratio over gives the others.",
+      "vi": {
+        "stem": "Xe A chuyển động với {speed} m/s va chạm với xe B ({massB} kg) đang đứng yên, hai xe dính vào nhau và cùng chuyển động với {@velocityB|3} m/s. Khối lượng của A bằng bao nhiêu?",
+        "explain": "m_A·u = (m_A + m_B)·v, nên m_A = m_B·v/(u − v) = {massB}·{@velocityB|3}/({speed} − {@velocityB|3}) = {massA} kg. m_B·v/u là quên khối lượng của chính A sau va chạm; đảo ngược tỉ số sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{=massB*@velocityB/(speed-@velocityB)|3} kg",
+          "vi": {
+            "text": "{=massB*@velocityB/(speed-@velocityB)|3} kg"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(massB*@velocityB/(speed-@velocityB))*speed/(massB*@velocityB/(speed-@velocityB)+massB)",
+            "equals": "velocityB"
+          }
+        },
+        {
+          "text": "{=massB*@velocityB/speed|3} kg",
+          "vi": {
+            "text": "{=massB*@velocityB/speed|3} kg"
+          },
+          "check": {
+            "expr": "(massB*@velocityB/speed)*speed/(massB*@velocityB/speed+massB)",
+            "equals": "velocityB"
+          }
+        },
+        {
+          "text": "{=massB*(speed-@velocityB)/@velocityB|3} kg",
+          "vi": {
+            "text": "{=massB*(speed-@velocityB)/@velocityB|3} kg"
+          },
+          "check": {
+            "expr": "(massB*(speed-@velocityB)/@velocityB)*speed/(massB*(speed-@velocityB)/@velocityB+massB)",
+            "equals": "velocityB"
+          }
+        },
+        {
+          "text": "{=massB*speed/@velocityB|3} kg",
+          "vi": {
+            "text": "{=massB*speed/@velocityB|3} kg"
+          },
+          "check": {
+            "expr": "(massB*speed/@velocityB)*speed/(massB*speed/@velocityB+massB)",
+            "equals": "velocityB"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-gate-times",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["measurement", "inelastic", "momentum"],
+      "set": {
+        "massA": 0.5,
+        "speed": 0.3,
+        "restitution": 0.9
+      },
+      "stem": "Glider A ({massA} kg) at {speed} m/s hits glider B ({massB} kg) at rest with spring bumpers, e = {restitution}; each card is {flagLength} m long. Decide whether each statement is true or false.",
+      "explain": "Gate 1 is blocked for L/u = {@gateTimeA|3} s. B leaves at v_B′ = (1 + e)m_A·u/(m_A + m_B) ≈ {@velocityB} m/s, blocking gate 2 for {@gateTimeB|3} s. The share of kinetic energy kept is 1 − (1 − e²)m_B/(m_A + m_B) ≈ {@kineticPercent|3} %, not e = {=restitution*100} %. Momentum is {@momentumBefore} kg·m/s before and after.",
+      "vi": {
+        "stem": "Xe A ({massA} kg) chuyển động với {speed} m/s va chạm với xe B ({massB} kg) đang đứng yên, có đệm lò xo, e = {restitution}; mỗi tấm chắn sáng dài {flagLength} m. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Cổng 1 bị che trong L/u = {@gateTimeA|3} s. B rời đi với v_B′ = (1 + e)m_A·u/(m_A + m_B) ≈ {@velocityB} m/s, che cổng 2 trong {@gateTimeB|3} s. Tỉ lệ động năng còn lại là 1 − (1 − e²)m_B/(m_A + m_B) ≈ {@kineticPercent|3} %, không phải e = {=restitution*100} %. Động lượng trước và sau đều bằng {@momentumBefore} kg·m/s."
+      },
+      "statements": [
+        {
+          "text": "A’s card blocks gate 1 for about {@gateTimeA|3} s.",
+          "vi": {
+            "text": "Tấm chắn của A che cổng 1 trong khoảng {@gateTimeA|3} s."
+          },
+          "true": true,
+          "check": {
+            "expr": "flagLength/speed",
+            "equals": "gateTimeA"
+          }
+        },
+        {
+          "text": "B’s card blocks gate 2 for about {@gateTimeB|3} s.",
+          "vi": {
+            "text": "Tấm chắn của B che cổng 2 trong khoảng {@gateTimeB|3} s."
+          },
+          "true": true,
+          "check": {
+            "expr": "flagLength/((1+restitution)*massA*speed/(massA+massB))",
+            "equals": "gateTimeB"
+          }
+        },
+        {
+          "text": "About {@kineticPercent|3} % of the kinetic energy is kept.",
+          "vi": {
+            "text": "Khoảng {@kineticPercent|3} % động năng được giữ lại."
+          },
+          "true": true,
+          "check": {
+            "expr": "100*(1-(1-restitution^2)*massB/(massA+massB))",
+            "equals": "kineticPercent"
+          }
+        },
+        {
+          "text": "The share of kinetic energy kept equals e, {=restitution*100} %.",
+          "vi": {
+            "text": "Tỉ lệ động năng được giữ lại bằng e, tức {=restitution*100} %."
+          },
+          "true": false,
+          "check": {
+            "expr": "restitution*100",
+            "equals": "kineticPercent"
+          }
+        }
+      ]
+    }
+  ]
+}

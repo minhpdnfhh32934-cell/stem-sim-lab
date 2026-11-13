@@ -1,0 +1,1046 @@
+{
+  "id": "enzyme-activity",
+  "skills": [
+    {
+      "id": "enzyme-basics",
+      "name": "Enzymes and the catalase reaction",
+      "advice": "Write 2 H₂O₂ → 2 H₂O + O₂ and name the enzyme, substrate and products. Re-read how an enzyme works: the substrate binds the active site, and the enzyme is not used up.",
+      "vi": {
+        "name": "Enzyme và phản ứng của catalase",
+        "advice": "Viết 2 H₂O₂ → 2 H₂O + O₂ và gọi tên enzyme, cơ chất, sản phẩm. Đọc lại cơ chế hoạt động của enzyme: cơ chất liên kết với trung tâm hoạt động, và enzyme không bị tiêu hao."
+      }
+    },
+    {
+      "id": "michaelis-menten",
+      "name": "Substrate and the rate: v₀ = V_max·S₀/(K_m + S₀)",
+      "advice": "Run S₀ = 0.05, 0.1, 0.5 and 1 mol/L at the station and plot the initial rates: they rise, then level off at V_max. Remember the two landmarks: v₀ = V_max/2 at S₀ = K_m, and V_max ∝ the enzyme added.",
+      "vi": {
+        "name": "Nồng độ cơ chất và tốc độ: v₀ = V_max·S₀/(K_m + S₀)",
+        "advice": "Chạy S₀ = 0,05; 0,1; 0,5 và 1 mol/L trên trạm và vẽ đồ thị tốc độ ban đầu: tốc độ tăng rồi chững lại ở V_max. Ghi nhớ hai mốc: v₀ = V_max/2 khi S₀ = K_m, và V_max tỉ lệ với lượng enzyme thêm vào."
+      }
+    },
+    {
+      "id": "temperature-ph",
+      "name": "Temperature, pH and denaturation",
+      "advice": "Compare runs at 20, 37 and 50 °C and at pH 4, 7 and 10. Explain the rise (faster collisions, Q₁₀ = 2 here) and the fall (the protein unfolds). The model’s constants are illustrative, and its unfolding is instant, unlike a real enzyme.",
+      "vi": {
+        "name": "Nhiệt độ, pH và sự biến tính",
+        "advice": "So sánh các lần chạy ở 20, 37 và 50 °C và ở pH 4, 7 và 10. Giải thích phần tăng (va chạm nhanh hơn, Q₁₀ = 2 trong mô hình) và phần giảm (protein bị biến tính). Các hằng số của mô hình là minh họa, và sự biến tính trong mô hình xảy ra tức thì, khác với enzyme thật."
+      }
+    },
+    {
+      "id": "oxygen-yield",
+      "name": "How much oxygen: ½·S₀·V_mix·V_m",
+      "advice": "Go mol/L × mL = mmol of peroxide, half of it as O₂, × 24.06 mL/mmol at 20 °C. The traps: forgetting the ½ from the equation, or using 22.4 L/mol, which holds at 0 °C.",
+      "vi": {
+        "name": "Lượng oxygen tạo ra: ½·S₀·V_mix·V_m",
+        "advice": "Tính mol/L × mL = mmol H₂O₂, một nửa số đó là O₂, nhân 24,06 mL/mmol ở 20 °C. Bẫy thường gặp: quên hệ số ½ của phương trình, hoặc dùng 22,4 L/mol vốn chỉ đúng ở 0 °C."
+      }
+    },
+    {
+      "id": "lineweaver-burk",
+      "name": "The Lineweaver–Burk plot",
+      "advice": "Plot 1/v against 1/S₀ from your runs: a straight line of slope K_m/V_max and intercept 1/V_max; slope ÷ intercept = K_m. The trap: the line does not pass through the origin.",
+      "vi": {
+        "name": "Đồ thị Lineweaver – Burk",
+        "advice": "Vẽ đồ thị 1/v theo 1/S₀ từ các lần chạy: một đường thẳng có hệ số góc K_m/V_max và tung độ gốc 1/V_max; hệ số góc chia tung độ gốc bằng K_m. Bẫy thường gặp: đường thẳng không đi qua gốc tọa độ."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "catalase-reaction",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["enzyme-basics"],
+      "stem": "Catalase speeds up the reaction…",
+      "explain": "Catalase breaks hydrogen peroxide down: 2 H₂O₂ → 2 H₂O + O₂; the oxygen is collected.",
+      "vi": {
+        "stem": "Catalase xúc tác cho phản ứng…",
+        "explain": "Catalase phân giải hydrogen peroxide: 2 H₂O₂ → 2 H₂O + O₂; khí oxygen được thu lại."
+      },
+      "options": [
+        {
+          "text": "2 H₂O₂ → 2 H₂O + O₂",
+          "vi": {
+            "text": "2 H₂O₂ → 2 H₂O + O₂"
+          },
+          "correct": true
+        },
+        {
+          "text": "2 H₂O → 2 H₂ + O₂",
+          "vi": {
+            "text": "2 H₂O → 2 H₂ + O₂"
+          }
+        },
+        {
+          "text": "2 H₂O + O₂ → 2 H₂O₂",
+          "vi": {
+            "text": "2 H₂O + O₂ → 2 H₂O₂"
+          }
+        },
+        {
+          "text": "H₂O₂ → H₂ + O₂",
+          "vi": {
+            "text": "H₂O₂ → H₂ + O₂"
+          }
+        }
+      ]
+    },
+    {
+      "id": "why-falls-hot",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["temperature-ph"],
+      "stem": "Above its optimum temperature, an enzyme’s activity falls because…",
+      "explain": "An enzyme is a protein: heat unfolds (denatures) it, and its active site loses the shape that fits the substrate.",
+      "vi": {
+        "stem": "Ở nhiệt độ cao hơn nhiệt độ tối ưu, hoạt tính của enzyme giảm vì…",
+        "explain": "Enzyme là protein: nhiệt độ cao làm nó biến tính, trung tâm hoạt động mất cấu hình phù hợp với cơ chất."
+      },
+      "options": [
+        {
+          "text": "the protein unfolds (denatures) and its active site loses its shape",
+          "vi": {
+            "text": "protein bị biến tính và trung tâm hoạt động mất cấu hình"
+          },
+          "correct": true
+        },
+        {
+          "text": "the molecules move more slowly",
+          "vi": {
+            "text": "các phân tử chuyển động chậm hơn"
+          }
+        },
+        {
+          "text": "the enzyme is used up by the reaction",
+          "vi": {
+            "text": "enzyme bị tiêu hao trong phản ứng"
+          }
+        },
+        {
+          "text": "the substrate turns into enzyme",
+          "vi": {
+            "text": "cơ chất chuyển hóa thành enzyme"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-basic",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["enzyme-basics", "temperature-ph", "michaelis-menten"],
+      "stem": "About the catalase experiment: decide whether each statement is true or false.",
+      "explain": "Enzymes are biological catalysts, not used up. The O₂ is collected in a gas syringe. In the model catalase works best at pH 7. More extract means more enzyme and a higher V_max, not a lower one.",
+      "vi": {
+        "stem": "Về thí nghiệm với catalase, mỗi nhận định sau đúng hay sai?",
+        "explain": "Enzyme là chất xúc tác sinh học, không bị tiêu hao. Khí O₂ được thu bằng xi lanh thu khí. Trong mô hình, catalase hoạt động mạnh nhất ở pH 7. Thêm dịch chiết là thêm enzyme, V_max tăng chứ không giảm."
+      },
+      "statements": [
+        {
+          "text": "Enzymes are biological catalysts: they are not used up by the reaction.",
+          "vi": {
+            "text": "Enzyme là chất xúc tác sinh học: chúng không bị tiêu hao trong phản ứng."
+          },
+          "true": true
+        },
+        {
+          "text": "The oxygen given off is collected in a gas syringe.",
+          "vi": {
+            "text": "Khí oxygen giải phóng ra được thu vào xi lanh thu khí."
+          },
+          "true": true
+        },
+        {
+          "text": "In the model the catalase works best at pH 7.",
+          "vi": {
+            "text": "Trong mô hình, catalase hoạt động mạnh nhất ở pH 7."
+          },
+          "true": true
+        },
+        {
+          "text": "Adding more catalase extract lowers the maximum rate V_max.",
+          "vi": {
+            "text": "Thêm dịch chiết catalase làm giảm tốc độ tối đa V_max."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "at-km",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["michaelis-menten"],
+      "stem": "When the peroxide concentration S₀ equals K_m, the initial rate is…",
+      "explain": "v₀ = V_max·K_m/(K_m + K_m) = V_max/2: K_m is the concentration giving half the maximum rate.",
+      "vi": {
+        "stem": "Khi nồng độ hydrogen peroxide S₀ bằng K_m, tốc độ ban đầu bằng…",
+        "explain": "v₀ = V_max·K_m/(K_m + K_m) = V_max/2: K_m là nồng độ cơ chất cho tốc độ bằng một nửa tốc độ tối đa."
+      },
+      "options": [
+        {
+          "text": "half of V_max",
+          "vi": {
+            "text": "một nửa V_max"
+          },
+          "correct": true
+        },
+        {
+          "text": "V_max",
+          "vi": {
+            "text": "V_max"
+          }
+        },
+        {
+          "text": "twice V_max",
+          "vi": {
+            "text": "gấp đôi V_max"
+          }
+        },
+        {
+          "text": "zero",
+          "vi": {
+            "text": "bằng 0"
+          }
+        }
+      ]
+    },
+    {
+      "id": "levels-off",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["michaelis-menten", "enzyme-basics"],
+      "stem": "At high peroxide concentrations the initial rate levels off. Why?",
+      "explain": "Nearly every enzyme molecule is already busy: its active sites are saturated, so more substrate cannot speed it up. Only more enzyme raises V_max.",
+      "vi": {
+        "stem": "Ở nồng độ hydrogen peroxide cao, tốc độ ban đầu chững lại. Vì sao?",
+        "explain": "Hầu hết các phân tử enzyme đều đang hoạt động: trung tâm hoạt động đã bão hòa, nên thêm cơ chất cũng không tăng tốc độ được. Chỉ thêm enzyme mới làm tăng V_max."
+      },
+      "options": [
+        {
+          "text": "The enzyme’s active sites are all busy (saturated)",
+          "vi": {
+            "text": "Trung tâm hoạt động của enzyme đều đã bão hòa"
+          },
+          "correct": true
+        },
+        {
+          "text": "The peroxide denatures the enzyme",
+          "vi": {
+            "text": "Hydrogen peroxide làm biến tính enzyme"
+          }
+        },
+        {
+          "text": "The oxygen made stops the reaction",
+          "vi": {
+            "text": "Khí oxygen tạo ra làm dừng phản ứng"
+          }
+        },
+        {
+          "text": "The enzyme is used up",
+          "vi": {
+            "text": "Enzyme bị tiêu hao hết"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-factors",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["temperature-ph", "michaelis-menten"],
+      "stem": "About what changes the catalase’s rate in the model: decide whether each statement is true or false.",
+      "explain": "V_max = a·E·f, so doubling E doubles V_max. Below the optimum Q₁₀ = 2 doubles the rate every 10 °C. The activity is highest at pH 7 and lower at pH 4 and 10. The model unfolds the enzyme at once and by temperature alone; a real enzyme denatures more the longer it is heated.",
+      "vi": {
+        "stem": "Về các yếu tố làm thay đổi tốc độ của catalase trong mô hình, mỗi nhận định sau đúng hay sai?",
+        "explain": "V_max = a·E·f, nên E tăng gấp đôi thì V_max tăng gấp đôi. Dưới nhiệt độ tối ưu, Q₁₀ = 2 làm tốc độ tăng gấp đôi mỗi 10 °C. Hoạt tính cao nhất ở pH 7 và thấp hơn ở pH 4 và 10. Mô hình cho enzyme biến tính tức thì và chỉ phụ thuộc nhiệt độ; enzyme thật bị biến tính nhiều hơn khi bị đun nóng lâu hơn."
+      },
+      "statements": [
+        {
+          "text": "Doubling the extract doubles V_max.",
+          "vi": {
+            "text": "Tăng gấp đôi lượng dịch chiết thì V_max tăng gấp đôi."
+          },
+          "true": true
+        },
+        {
+          "text": "Below the optimum, the rate roughly doubles for each 10 °C rise (Q₁₀ = 2, illustrative).",
+          "vi": {
+            "text": "Dưới nhiệt độ tối ưu, tốc độ tăng khoảng gấp đôi khi nhiệt độ tăng thêm 10 °C (Q₁₀ = 2, giá trị minh họa)."
+          },
+          "true": true
+        },
+        {
+          "text": "The enzyme is more active at pH 4 and at pH 10 than at pH 7.",
+          "vi": {
+            "text": "Enzyme hoạt động mạnh hơn ở pH 4 và pH 10 so với ở pH 7."
+          },
+          "true": false
+        },
+        {
+          "text": "In the model unfolding is instant and depends on the temperature alone, whereas a real enzyme denatures more the longer it is heated.",
+          "vi": {
+            "text": "Trong mô hình, sự biến tính xảy ra tức thì và chỉ phụ thuộc nhiệt độ, còn enzyme thật bị biến tính nhiều hơn khi bị đun nóng lâu hơn."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "initial-rate",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["michaelis-menten"],
+      "set": {
+        "substrate": 0.3
+      },
+      "stem": "With {enzymeVolume} mL of extract at {temperature} °C and pH {pH}, V_max = {@vmax|3} mol/(L·s); K_m = {km} mol/L (illustrative). What is the initial rate with S₀ = {substrate} mol/L?",
+      "explain": "v₀ = V_max·S₀/(K_m + S₀) = {@vmax|3}·{substrate}/({km} + {substrate}) ≈ {@initialRate|3} mol/(L·s).",
+      "vi": {
+        "stem": "Với {enzymeVolume} mL dịch chiết ở {temperature} °C và pH {pH}, V_max = {@vmax|3} mol/(L·s); K_m = {km} mol/L (giá trị minh họa). Tốc độ ban đầu khi S₀ = {substrate} mol/L là bao nhiêu?",
+        "explain": "v₀ = V_max·S₀/(K_m + S₀) = {@vmax|3}·{substrate}/({km} + {substrate}) ≈ {@initialRate|3} mol/(L·s)."
+      },
+      "options": [
+        {
+          "text": "{@initialRate|3} mol/(L·s)",
+          "vi": {
+            "text": "{@initialRate|3} mol/(L·s)"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@vmax*substrate/(km+substrate)",
+            "equals": "initialRate"
+          }
+        },
+        {
+          "text": "{=@vmax*km/(km+substrate)|3} mol/(L·s)",
+          "vi": {
+            "text": "{=@vmax*km/(km+substrate)|3} mol/(L·s)"
+          },
+          "check": {
+            "expr": "@vmax*km/(km+substrate)",
+            "equals": "initialRate"
+          }
+        },
+        {
+          "text": "{=@vmax*substrate/km|3} mol/(L·s)",
+          "vi": {
+            "text": "{=@vmax*substrate/km|3} mol/(L·s)"
+          },
+          "check": {
+            "expr": "@vmax*substrate/km",
+            "equals": "initialRate"
+          }
+        },
+        {
+          "text": "{=@vmax/2|3} mol/(L·s)",
+          "vi": {
+            "text": "{=@vmax/2|3} mol/(L·s)"
+          },
+          "check": {
+            "expr": "@vmax/2",
+            "equals": "initialRate"
+          }
+        }
+      ]
+    },
+    {
+      "id": "max-oxygen",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["oxygen-yield"],
+      "set": {
+        "substrate": 0.2
+      },
+      "stem": "The tube holds {mixtureVolume} mL of {substrate} mol/L hydrogen peroxide. If all of it is broken down, what volume of oxygen is collected at 20 °C and 101.325 kPa (molar volume {molarVolume} L/mol)?",
+      "explain": "{substrate} mol/L × {mixtureVolume} mL = {=substrate*mixtureVolume} mmol H₂O₂; 2 H₂O₂ → O₂ gives {=substrate*mixtureVolume/2} mmol O₂ × {molarVolume} mL/mmol ≈ {@maxOxygen} mL.",
+      "vi": {
+        "stem": "Ống nghiệm chứa {mixtureVolume} mL hydrogen peroxide {substrate} mol/L. Nếu toàn bộ bị phân giải, thể tích oxygen thu được ở 20 °C và 101,325 kPa (thể tích mol {molarVolume} L/mol) là bao nhiêu?",
+        "explain": "{substrate} mol/L × {mixtureVolume} mL = {=substrate*mixtureVolume} mmol H₂O₂; 2 H₂O₂ → O₂ cho {=substrate*mixtureVolume/2} mmol O₂ × {molarVolume} mL/mmol ≈ {@maxOxygen} mL."
+      },
+      "options": [
+        {
+          "text": "{@maxOxygen} mL",
+          "vi": {
+            "text": "{@maxOxygen} mL"
+          },
+          "correct": true,
+          "check": {
+            "expr": "substrate*mixtureVolume/2*molarVolume",
+            "equals": "maxOxygen"
+          }
+        },
+        {
+          "text": "{=substrate*mixtureVolume*molarVolume} mL",
+          "vi": {
+            "text": "{=substrate*mixtureVolume*molarVolume} mL"
+          },
+          "check": {
+            "expr": "substrate*mixtureVolume*molarVolume",
+            "equals": "maxOxygen"
+          }
+        },
+        {
+          "text": "{=substrate*mixtureVolume*2*molarVolume} mL",
+          "vi": {
+            "text": "{=substrate*mixtureVolume*2*molarVolume} mL"
+          },
+          "check": {
+            "expr": "substrate*mixtureVolume*2*molarVolume",
+            "equals": "maxOxygen"
+          }
+        },
+        {
+          "text": "{=substrate*mixtureVolume/2*22.4} mL",
+          "vi": {
+            "text": "{=substrate*mixtureVolume/2*22.4} mL"
+          },
+          "check": {
+            "expr": "substrate*mixtureVolume/2*22.4",
+            "equals": "maxOxygen"
+          }
+        }
+      ]
+    },
+    {
+      "id": "vmax-extract",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["michaelis-menten", "temperature-ph"],
+      "set": {
+        "enzymeVolume": 2,
+        "temperature": 25,
+        "pH": 6
+      },
+      "stem": "{enzymeVolume} mL of extract is used at {temperature} °C and pH {pH}, where the relative activity is f = {@activityFactor|3}. The specific activity is a = {specificActivity} mol/(L·s) per mL (illustrative). What is V_max = a·E·f?",
+      "explain": "V_max = {specificActivity}·{enzymeVolume}·{@activityFactor|3} ≈ {@vmax|3} mol/(L·s).",
+      "vi": {
+        "stem": "Dùng {enzymeVolume} mL dịch chiết ở {temperature} °C và pH {pH}, khi đó hoạt tính tương đối f = {@activityFactor|3}. Hoạt tính riêng a = {specificActivity} mol/(L·s) cho mỗi mL (giá trị minh họa). V_max = a·E·f bằng bao nhiêu?",
+        "explain": "V_max = {specificActivity}·{enzymeVolume}·{@activityFactor|3} ≈ {@vmax|3} mol/(L·s)."
+      },
+      "options": [
+        {
+          "text": "{@vmax|3} mol/(L·s)",
+          "vi": {
+            "text": "{@vmax|3} mol/(L·s)"
+          },
+          "correct": true,
+          "check": {
+            "expr": "specificActivity*enzymeVolume*@activityFactor",
+            "equals": "vmax"
+          }
+        },
+        {
+          "text": "{=specificActivity*@activityFactor|3} mol/(L·s)",
+          "vi": {
+            "text": "{=specificActivity*@activityFactor|3} mol/(L·s)"
+          },
+          "check": {
+            "expr": "specificActivity*@activityFactor",
+            "equals": "vmax"
+          }
+        },
+        {
+          "text": "{=specificActivity*enzymeVolume|3} mol/(L·s)",
+          "vi": {
+            "text": "{=specificActivity*enzymeVolume|3} mol/(L·s)"
+          },
+          "check": {
+            "expr": "specificActivity*enzymeVolume",
+            "equals": "vmax"
+          }
+        },
+        {
+          "text": "{=specificActivity*enzymeVolume/@activityFactor|3} mol/(L·s)",
+          "vi": {
+            "text": "{=specificActivity*enzymeVolume/@activityFactor|3} mol/(L·s)"
+          },
+          "check": {
+            "expr": "specificActivity*enzymeVolume/@activityFactor",
+            "equals": "vmax"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-lineweaver",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["lineweaver-burk", "michaelis-menten"],
+      "set": {
+        "substrate": 0.5
+      },
+      "stem": "At {temperature} °C and pH {pH}, {enzymeVolume} mL of extract gives V_max = {@vmax|3} mol/(L·s); K_m = {km} mol/L (illustrative). The runs are plotted as 1/v₀ against 1/S₀. Decide whether each statement is true or false.",
+      "explain": "1/v₀ = (K_m/V_max)·(1/S₀) + 1/V_max: slope {km}/{@vmax|3} ≈ {@lineweaverSlope|3} s, intercept 1/{@vmax|3} ≈ {@lineweaverIntercept|3} L·s/mol, and slope ÷ intercept = K_m = {km} mol/L. The intercept is not 0, so the line misses the origin.",
+      "vi": {
+        "stem": "Ở {temperature} °C và pH {pH}, {enzymeVolume} mL dịch chiết cho V_max = {@vmax|3} mol/(L·s); K_m = {km} mol/L (giá trị minh họa). Các lần chạy được biểu diễn trên đồ thị 1/v₀ theo 1/S₀. Mỗi nhận định sau đúng hay sai?",
+        "explain": "1/v₀ = (K_m/V_max)·(1/S₀) + 1/V_max: hệ số góc {km}/{@vmax|3} ≈ {@lineweaverSlope|3} s, tung độ gốc 1/{@vmax|3} ≈ {@lineweaverIntercept|3} L·s/mol, và hệ số góc chia tung độ gốc bằng K_m = {km} mol/L. Tung độ gốc khác 0 nên đường thẳng không đi qua gốc tọa độ."
+      },
+      "statements": [
+        {
+          "text": "The line’s slope is K_m/V_max ≈ {@lineweaverSlope|3} s.",
+          "vi": {
+            "text": "Hệ số góc của đường thẳng là K_m/V_max ≈ {@lineweaverSlope|3} s."
+          },
+          "true": true,
+          "check": {
+            "expr": "km/@vmax",
+            "equals": "lineweaverSlope"
+          }
+        },
+        {
+          "text": "Its intercept on the 1/v₀ axis is 1/V_max ≈ {@lineweaverIntercept|3} L·s/mol.",
+          "vi": {
+            "text": "Tung độ gốc trên trục 1/v₀ là 1/V_max ≈ {@lineweaverIntercept|3} L·s/mol."
+          },
+          "true": true,
+          "check": {
+            "expr": "1/@vmax",
+            "equals": "lineweaverIntercept"
+          }
+        },
+        {
+          "text": "The slope divided by the intercept gives K_m = {km} mol/L.",
+          "vi": {
+            "text": "Hệ số góc chia cho tung độ gốc bằng K_m = {km} mol/L."
+          },
+          "true": true
+        },
+        {
+          "text": "The line passes through the origin.",
+          "vi": {
+            "text": "Đường thẳng đi qua gốc tọa độ."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "half-time",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["michaelis-menten", "oxygen-yield"],
+      "set": {
+        "substrate": 1,
+        "enzymeVolume": 2
+      },
+      "stem": "{enzymeVolume} mL of extract acts on {substrate} mol/L peroxide at {temperature} °C and pH {pH}, with V_max = {@vmax|3} mol/(L·s) and K_m = {km} mol/L (illustrative). Integrating Michaelis–Menten, K_m·ln(S₀/S) + S₀ − S = V_max·t. How long until half the peroxide is broken down?",
+      "explain": "Put S = S₀/2: K_m·ln 2 + S₀/2 = V_max·t½, so t½ = ({km}·ln 2 + {=substrate/2})/{@vmax|3} ≈ {@halfTime} s. Ignoring the slowdown (S₀/2V_max) or the saturation (K_m·ln2/V_max) gives the wrong time.",
+      "vi": {
+        "stem": "{enzymeVolume} mL dịch chiết tác dụng với hydrogen peroxide {substrate} mol/L ở {temperature} °C và pH {pH}, với V_max = {@vmax|3} mol/(L·s) và K_m = {km} mol/L (giá trị minh họa). Lấy tích phân phương trình Michaelis – Menten: K_m·ln(S₀/S) + S₀ − S = V_max·t. Sau bao lâu thì một nửa lượng hydrogen peroxide bị phân giải?",
+        "explain": "Thay S = S₀/2: K_m·ln 2 + S₀/2 = V_max·t½, nên t½ = ({km}·ln 2 + {=substrate/2})/{@vmax|3} ≈ {@halfTime} s. Bỏ qua sự chậm dần (S₀/2V_max) hoặc bỏ qua sự bão hòa (K_m·ln2/V_max) đều cho kết quả sai."
+      },
+      "options": [
+        {
+          "text": "{@halfTime} s",
+          "vi": {
+            "text": "{@halfTime} s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(km*ln(2)+substrate/2)/@vmax",
+            "equals": "halfTime"
+          }
+        },
+        {
+          "text": "{=substrate/2/@vmax} s",
+          "vi": {
+            "text": "{=substrate/2/@vmax} s"
+          },
+          "check": {
+            "expr": "substrate/2/@vmax",
+            "equals": "halfTime"
+          }
+        },
+        {
+          "text": "{=km*ln(2)/@vmax} s",
+          "vi": {
+            "text": "{=km*ln(2)/@vmax} s"
+          },
+          "check": {
+            "expr": "km*ln(2)/@vmax",
+            "equals": "halfTime"
+          }
+        },
+        {
+          "text": "{=(km+substrate)*ln(2)/@vmax} s",
+          "vi": {
+            "text": "{=(km+substrate)*ln(2)/@vmax} s"
+          },
+          "check": {
+            "expr": "(km+substrate)*ln(2)/@vmax",
+            "equals": "halfTime"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-hot-bath",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["temperature-ph", "enzyme-basics", "michaelis-menten"],
+      "set": {
+        "temperature": 50,
+        "pH": 7
+      },
+      "stem": "The bath is set to {temperature} °C at pH {pH}. In the model f_T = g(T)/g(T_opt), g(T) = Q₁₀^((T − Tm)/10)/(1 + e^((T − Tm)/w)), with Q₁₀ = {q10}, Tm = {meltTemperature} °C and w = {meltWidth} °C (illustrative). Decide whether each statement is true or false.",
+      "explain": "At {temperature} °C most of the enzyme is unfolded: f = {@activityFactor|3}. g(T) peaks at T_opt = Tm + w·ln(s/(1 − s)), s = w·ln Q₁₀/10, ≈ {@optimumTemperature|3} °C. A real catalase heated at 50 °C denatures for good, so it would not fully recover on cooling. The 10-s mean rate is below v₀ because the substrate is used up.",
+      "vi": {
+        "stem": "Bể ổn nhiệt được đặt ở {temperature} °C, pH {pH}. Trong mô hình f_T = g(T)/g(T_tối ưu), g(T) = Q₁₀^((T − Tm)/10)/(1 + e^((T − Tm)/w)), với Q₁₀ = {q10}, Tm = {meltTemperature} °C và w = {meltWidth} °C (giá trị minh họa). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Ở {temperature} °C phần lớn enzyme đã bị biến tính: f = {@activityFactor|3}. g(T) đạt cực đại tại T_tối ưu = Tm + w·ln(s/(1 − s)), s = w·ln Q₁₀/10, ≈ {@optimumTemperature|3} °C. Catalase thật bị đun ở 50 °C sẽ biến tính không hồi phục, nên khi làm nguội không lấy lại hoàn toàn hoạt tính. Tốc độ trung bình trong 10 s đầu thấp hơn v₀ vì cơ chất bị tiêu hao dần."
+      },
+      "statements": [
+        {
+          "text": "The relative activity is only about {@activityFactor|3}.",
+          "vi": {
+            "text": "Hoạt tính tương đối chỉ khoảng {@activityFactor|3}."
+          },
+          "true": true,
+          "check": {
+            "expr": "@temperatureFactor*@pHFactor",
+            "equals": "activityFactor"
+          }
+        },
+        {
+          "text": "The model’s optimum temperature is about {@optimumTemperature|3} °C.",
+          "vi": {
+            "text": "Nhiệt độ tối ưu của mô hình khoảng {@optimumTemperature|3} °C."
+          },
+          "true": true,
+          "check": {
+            "expr": "meltTemperature+meltWidth*ln((meltWidth*ln(q10)/10)/(1-meltWidth*ln(q10)/10))",
+            "equals": "optimumTemperature"
+          }
+        },
+        {
+          "text": "A real catalase heated at {temperature} °C would always regain its full activity when cooled back to 37 °C.",
+          "vi": {
+            "text": "Catalase thật bị đun ở {temperature} °C luôn lấy lại hoàn toàn hoạt tính khi được làm nguội về 37 °C."
+          },
+          "true": false
+        },
+        {
+          "text": "The mean rate over the first 10 s is lower than the initial rate v₀, because the peroxide is being used up.",
+          "vi": {
+            "text": "Tốc độ trung bình trong 10 s đầu thấp hơn tốc độ ban đầu v₀ vì hydrogen peroxide bị tiêu hao dần."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "active-site",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["enzyme-basics"],
+      "stem": "The part of an enzyme molecule where the substrate binds and reacts is called…",
+      "explain": "The substrate binds at the active site, a region whose shape and charges fit the substrate; that fit makes an enzyme specific.",
+      "vi": {
+        "stem": "Vùng trên phân tử enzyme nơi cơ chất liên kết và phản ứng được gọi là…",
+        "explain": "Cơ chất liên kết với enzyme tại trung tâm hoạt động, một vùng có hình dạng và điện tích phù hợp với cơ chất; sự phù hợp đó tạo nên tính đặc hiệu của enzyme."
+      },
+      "options": [
+        {
+          "text": "the active site",
+          "vi": {
+            "text": "trung tâm hoạt động"
+          },
+          "correct": true
+        },
+        {
+          "text": "the peptide bond",
+          "vi": {
+            "text": "liên kết peptide"
+          }
+        },
+        {
+          "text": "the product",
+          "vi": {
+            "text": "sản phẩm"
+          }
+        },
+        {
+          "text": "the cell membrane",
+          "vi": {
+            "text": "màng tế bào"
+          }
+        }
+      ]
+    },
+    {
+      "id": "why-ph-matters",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["temperature-ph"],
+      "stem": "Moving the pH far from the enzyme’s optimum lowers its activity, mainly because…",
+      "explain": "H⁺ and OH⁻ change the charges on the amino acids of the enzyme, especially at its active site; the bonds holding its shape change, so the substrate no longer fits as well. Far from the optimum the enzyme can be denatured.",
+      "vi": {
+        "stem": "Khi pH lệch xa pH tối ưu, hoạt tính của enzyme giảm, chủ yếu là vì…",
+        "explain": "H⁺ và OH⁻ làm thay đổi điện tích của các amino acid trong enzyme, nhất là ở trung tâm hoạt động; các liên kết giữ cấu hình của enzyme thay đổi nên cơ chất không còn khớp tốt. Ở pH quá xa tối ưu, enzyme có thể bị biến tính."
+      },
+      "options": [
+        {
+          "text": "the charges on its amino acids change, altering the shape of its active site",
+          "vi": {
+            "text": "điện tích của các amino acid thay đổi, làm biến đổi cấu hình trung tâm hoạt động"
+          },
+          "correct": true
+        },
+        {
+          "text": "the acid or base breaks down the substrate before the enzyme can",
+          "vi": {
+            "text": "axit hoặc bazơ phân giải cơ chất trước khi enzyme kịp tác dụng"
+          }
+        },
+        {
+          "text": "the molecules move more slowly at a low or high pH",
+          "vi": {
+            "text": "các phân tử chuyển động chậm hơn khi pH thấp hoặc cao"
+          }
+        },
+        {
+          "text": "the enzyme is used up faster away from its optimum",
+          "vi": {
+            "text": "enzyme bị tiêu hao nhanh hơn khi ở xa pH tối ưu"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-enzyme-model",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["enzyme-basics", "temperature-ph", "michaelis-menten"],
+      "stem": "About catalase and how this simulation models it: decide whether each statement is true or false.",
+      "explain": "An enzyme comes out of the reaction unchanged and works again. In this simulation denaturation is instant and depends only on T; a real enzyme denatures irreversibly, more the longer it is hot. Cold slows an enzyme without denaturing it. V_max = a·E·f_T·f_pH grows with the extract volume E, while K_m stays the same.",
+      "vi": {
+        "stem": "Về catalase và cách mô phỏng này mô hình hóa nó, mỗi nhận định sau đúng hay sai?",
+        "explain": "Enzyme không bị biến đổi sau phản ứng và được dùng lại. Trong mô phỏng này, sự biến tính xảy ra tức thời và chỉ phụ thuộc T; enzyme thật bị biến tính không thuận nghịch, càng để lâu ở nhiệt độ cao càng nhiều. Nhiệt độ thấp làm enzyme hoạt động chậm lại nhưng không làm nó biến tính. V_max = a·E·f_T·f_pH tăng theo thể tích dịch chiết E, còn K_m không đổi."
+      },
+      "statements": [
+        {
+          "text": "Catalase is not used up: each molecule breaks down many peroxide molecules.",
+          "vi": {
+            "text": "Catalase không bị tiêu hao: mỗi phân tử enzyme phân giải được rất nhiều phân tử peroxide."
+          },
+          "true": true
+        },
+        {
+          "text": "In this simulation denaturation is instant and depends only on the temperature, unlike a real enzyme.",
+          "vi": {
+            "text": "Trong mô phỏng này, sự biến tính xảy ra tức thời và chỉ phụ thuộc nhiệt độ, khác với enzyme thật."
+          },
+          "true": true
+        },
+        {
+          "text": "Keeping the enzyme at 5 °C denatures it permanently.",
+          "vi": {
+            "text": "Giữ enzyme ở 5 °C làm enzyme bị biến tính vĩnh viễn."
+          },
+          "true": false
+        },
+        {
+          "text": "In the model, using more extract raises V_max but leaves K_m unchanged.",
+          "vi": {
+            "text": "Trong mô hình, dùng nhiều dịch chiết hơn làm tăng V_max nhưng không làm thay đổi K_m."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "ph-factor-5",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["temperature-ph"],
+      "set": {
+        "pH": 5
+      },
+      "stem": "In this simulation the pH factor is the illustrative bell curve f_pH = exp(−(pH − pH_opt)²/(2σ²)), with pH_opt = {optimumPH} and σ = {pHWidth}. What is f_pH at pH {pH}?",
+      "explain": "f_pH = exp(−({pH} − {optimumPH})²/(2·{pHWidth}²)) = exp(−{=(pH-optimumPH)^2}/{=2*pHWidth^2}) ≈ {@pHFactor|3}: at pH {pH} the enzyme keeps about {=100*@pHFactor|2}% of its activity at the optimum pH.",
+      "vi": {
+        "stem": "Trong mô phỏng này, hệ số pH là đường cong hình chuông minh họa f_pH = exp(−(pH − pH_tối ưu)²/(2σ²)), với pH_tối ưu = {optimumPH} và σ = {pHWidth}. f_pH ở pH {pH} bằng bao nhiêu?",
+        "explain": "f_pH = exp(−({pH} − {optimumPH})²/(2·{pHWidth}²)) = exp(−{=(pH-optimumPH)^2}/{=2*pHWidth^2}) ≈ {@pHFactor|3}: ở pH {pH}, enzyme còn khoảng {=100*@pHFactor|2}% hoạt tính so với ở pH tối ưu."
+      },
+      "options": [
+        {
+          "text": "{@pHFactor|3}",
+          "vi": {
+            "text": "{@pHFactor|3}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "exp(-(pH-optimumPH)^2/(2*pHWidth^2))",
+            "equals": "pHFactor"
+          }
+        },
+        {
+          "text": "{=exp(-(pH-optimumPH)^2/pHWidth^2)|3}",
+          "vi": {
+            "text": "{=exp(-(pH-optimumPH)^2/pHWidth^2)|3}"
+          },
+          "check": {
+            "expr": "exp(-(pH-optimumPH)^2/pHWidth^2)",
+            "equals": "pHFactor"
+          }
+        },
+        {
+          "text": "{=exp(-(pH-optimumPH)^2/(2*pHWidth))|3}",
+          "vi": {
+            "text": "{=exp(-(pH-optimumPH)^2/(2*pHWidth))|3}"
+          },
+          "check": {
+            "expr": "exp(-(pH-optimumPH)^2/(2*pHWidth))",
+            "equals": "pHFactor"
+          }
+        },
+        {
+          "text": "{=exp(-(pH-optimumPH)/(2*pHWidth^2))|3}",
+          "vi": {
+            "text": "{=exp(-(pH-optimumPH)/(2*pHWidth^2))|3}"
+          },
+          "check": {
+            "expr": "exp(-(pH-optimumPH)/(2*pHWidth^2))",
+            "equals": "pHFactor"
+          }
+        }
+      ]
+    },
+    {
+      "id": "oxygen-per-second",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["oxygen-yield", "michaelis-menten"],
+      "set": {
+        "substrate": 0.5
+      },
+      "stem": "The peroxide in the {mixtureVolume} mL mixture starts breaking down at v₀ = {@initialRate|3} mol/(L·s). 2 H₂O₂ → 2 H₂O + O₂; the molar volume is {molarVolume} L/mol. At this rate, how much oxygen is given off each second?",
+      "explain": "Peroxide broken down per second: {@initialRate|3}·{mixtureVolume}/1000 mol; half as many moles of O₂; × {molarVolume} L/mol × 1000: {=@initialRate*mixtureVolume/2*molarVolume|3} mL/s.",
+      "vi": {
+        "stem": "Peroxide trong {mixtureVolume} mL hỗn hợp bắt đầu bị phân giải với tốc độ v₀ = {@initialRate|3} mol/(L·s). 2 H₂O₂ → 2 H₂O + O₂; thể tích mol là {molarVolume} L/mol. Với tốc độ này, mỗi giây giải phóng bao nhiêu oxi?",
+        "explain": "Lượng peroxide bị phân giải mỗi giây: {@initialRate|3}·{mixtureVolume}/1000 mol; số mol O₂ bằng một nửa; × {molarVolume} L/mol × 1000: {=@initialRate*mixtureVolume/2*molarVolume|3} mL/s."
+      },
+      "options": [
+        {
+          "text": "{=@initialRate*mixtureVolume/2*molarVolume|3} mL/s",
+          "vi": {
+            "text": "{=@initialRate*mixtureVolume/2*molarVolume|3} mL/s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(@initialRate*mixtureVolume/2*molarVolume)*2/(mixtureVolume*molarVolume)",
+            "equals": "initialRate"
+          }
+        },
+        {
+          "text": "{=@initialRate*mixtureVolume*molarVolume|3} mL/s",
+          "vi": {
+            "text": "{=@initialRate*mixtureVolume*molarVolume|3} mL/s"
+          },
+          "check": {
+            "expr": "(@initialRate*mixtureVolume*molarVolume)*2/(mixtureVolume*molarVolume)",
+            "equals": "initialRate"
+          }
+        },
+        {
+          "text": "{=@initialRate*mixtureVolume*2*molarVolume|3} mL/s",
+          "vi": {
+            "text": "{=@initialRate*mixtureVolume*2*molarVolume|3} mL/s"
+          },
+          "check": {
+            "expr": "(@initialRate*mixtureVolume*2*molarVolume)*2/(mixtureVolume*molarVolume)",
+            "equals": "initialRate"
+          }
+        },
+        {
+          "text": "{=@initialRate*mixtureVolume*1000/2*molarVolume|3} mL/s",
+          "vi": {
+            "text": "{=@initialRate*mixtureVolume*1000/2*molarVolume|3} mL/s"
+          },
+          "check": {
+            "expr": "(@initialRate*mixtureVolume*1000/2*molarVolume)*2/(mixtureVolume*molarVolume)",
+            "equals": "initialRate"
+          }
+        }
+      ]
+    },
+    {
+      "id": "km-from-plot",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["lineweaver-burk", "michaelis-menten"],
+      "set": {
+        "temperature": 40,
+        "enzymeVolume": 1.5
+      },
+      "stem": "Runs with one extract are plotted as 1/v₀ against 1/S₀. The straight line has slope {@lineweaverSlope|3} s and crosses the 1/v₀ axis at {@lineweaverIntercept|3} L·s/mol. What K_m does this give?",
+      "explain": "1/v₀ = (K_m/V_max)·(1/S₀) + 1/V_max: the intercept is 1/V_max, so V_max = 1/{@lineweaverIntercept|3} ≈ {=1/@lineweaverIntercept|3} mol/(L·s), and K_m = slope/intercept = {@lineweaverSlope|3}/{@lineweaverIntercept|3} ≈ {=@lineweaverSlope/@lineweaverIntercept|3} mol/L.",
+      "vi": {
+        "stem": "Các lần chạy với cùng một dịch chiết được vẽ dưới dạng 1/v₀ theo 1/S₀. Đường thẳng thu được có hệ số góc {@lineweaverSlope|3} s và cắt trục 1/v₀ tại {@lineweaverIntercept|3} L·s/mol. K_m tính được là bao nhiêu?",
+        "explain": "1/v₀ = (K_m/V_max)·(1/S₀) + 1/V_max: tung độ gốc là 1/V_max, nên V_max = 1/{@lineweaverIntercept|3} ≈ {=1/@lineweaverIntercept|3} mol/(L·s), và K_m = hệ số góc/tung độ gốc = {@lineweaverSlope|3}/{@lineweaverIntercept|3} ≈ {=@lineweaverSlope/@lineweaverIntercept|3} mol/L."
+      },
+      "options": [
+        {
+          "text": "{=@lineweaverSlope/@lineweaverIntercept|3} mol/L",
+          "vi": {
+            "text": "{=@lineweaverSlope/@lineweaverIntercept|3} mol/L"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(1/@lineweaverIntercept)/(@lineweaverSlope/@lineweaverIntercept)",
+            "equals": "firstOrderConstant"
+          }
+        },
+        {
+          "text": "{=@lineweaverIntercept/@lineweaverSlope|3} mol/L",
+          "vi": {
+            "text": "{=@lineweaverIntercept/@lineweaverSlope|3} mol/L"
+          },
+          "check": {
+            "expr": "(1/@lineweaverIntercept)/(@lineweaverIntercept/@lineweaverSlope)",
+            "equals": "firstOrderConstant"
+          }
+        },
+        {
+          "text": "{=1/@lineweaverIntercept|3} mol/L",
+          "vi": {
+            "text": "{=1/@lineweaverIntercept|3} mol/L"
+          },
+          "check": {
+            "expr": "(1/@lineweaverIntercept)/(1/@lineweaverIntercept)",
+            "equals": "firstOrderConstant"
+          }
+        },
+        {
+          "text": "{=@lineweaverSlope|3} mol/L",
+          "vi": {
+            "text": "{=@lineweaverSlope|3} mol/L"
+          },
+          "check": {
+            "expr": "(1/@lineweaverIntercept)/@lineweaverSlope",
+            "equals": "firstOrderConstant"
+          }
+        }
+      ]
+    },
+    {
+      "id": "extract-to-match",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["temperature-ph", "michaelis-menten"],
+      "set": {
+        "temperature": 30,
+        "pH": 7,
+        "enzymeVolume": 1
+      },
+      "stem": "At the optimum (about {=@optimumTemperature|3} °C, pH {optimumPH}) 1 mL of extract gives V_max = a = {specificActivity} mol/(L·s) (illustrative). At {temperature} °C and pH {pH} the model’s temperature factor is f_T = {@temperatureFactor|3}. How much extract gives the same V_max at {temperature} °C?",
+      "explain": "V_max = a·E·f_T·f_pH, and f_pH = 1 at pH {pH}: a·E·{@temperatureFactor|3} = a needs E = 1/{@temperatureFactor|3} ≈ {=1/@temperatureFactor|3} mL. 2 mL assumes the rate halves, as Q₁₀ = 2 says for 10 °C lower; but {temperature} °C is not 10 °C below the optimum, and f_T also counts the share of enzyme unfolded near the optimum.",
+      "vi": {
+        "stem": "Ở điều kiện tối ưu (khoảng {=@optimumTemperature|3} °C, pH {optimumPH}), 1 mL dịch chiết cho V_max = a = {specificActivity} mol/(L·s) (giá trị minh họa). Ở {temperature} °C và pH {pH}, hệ số nhiệt độ của mô hình là f_T = {@temperatureFactor|3}. Cần bao nhiêu dịch chiết để có cùng V_max ở {temperature} °C?",
+        "explain": "V_max = a·E·f_T·f_pH, và f_pH = 1 ở pH {pH}: a·E·{@temperatureFactor|3} = a nên E = 1/{@temperatureFactor|3} ≈ {=1/@temperatureFactor|3} mL. Đáp án 2 mL giả định tốc độ giảm một nửa, như Q₁₀ = 2 cho khi nhiệt độ thấp hơn 10 °C; nhưng {temperature} °C không thấp hơn nhiệt độ tối ưu đúng 10 °C, và f_T còn tính cả phần enzyme bị duỗi xoắn gần nhiệt độ tối ưu."
+      },
+      "options": [
+        {
+          "text": "{=1/@temperatureFactor|3} mL",
+          "vi": {
+            "text": "{=1/@temperatureFactor|3} mL"
+          },
+          "correct": true,
+          "check": {
+            "expr": "specificActivity/(1/@temperatureFactor)",
+            "equals": "vmax"
+          }
+        },
+        {
+          "text": "{=@temperatureFactor|3} mL",
+          "vi": {
+            "text": "{=@temperatureFactor|3} mL"
+          },
+          "check": {
+            "expr": "specificActivity/@temperatureFactor",
+            "equals": "vmax"
+          }
+        },
+        {
+          "text": "2 mL, since the rate doubles every 10 °C",
+          "vi": {
+            "text": "2 mL, vì tốc độ tăng gấp đôi sau mỗi 10 °C"
+          },
+          "check": {
+            "expr": "specificActivity/2",
+            "equals": "vmax"
+          }
+        },
+        {
+          "text": "1 mL: the amount of extract does not change V_max",
+          "vi": {
+            "text": "1 mL: lượng dịch chiết không làm thay đổi V_max"
+          },
+          "check": {
+            "expr": "specificActivity/1",
+            "equals": "vmax"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-low-substrate",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["michaelis-menten"],
+      "set": {
+        "substrate": 0.05
+      },
+      "stem": "{enzymeVolume} mL of extract acts on {substrate} mol/L peroxide at {temperature} °C and pH {pH}: V_max = {@vmax|3} mol/(L·s), K_m = {km} mol/L (illustrative). Decide whether each statement is true or false.",
+      "explain": "v₀ = {@vmax|3}·{substrate}/({km} + {substrate}) ≈ {@initialRate|3} mol/(L·s). The straight-line estimate (V_max/K_m)·S₀ = {=@firstOrderConstant*substrate|3} only holds when S₀ ≪ K_m; here S₀ = K_m/2, so it is too high. Doubling S₀ multiplies v₀ by {=(2*substrate/(km+2*substrate))/(substrate/(km+substrate))|3}, less than 2. Half-time (S₀/2 + K_m·ln2)/V_max ≈ {@halfTime|3} s is shorter than at 0.5 mol/L, since there is less peroxide to break down.",
+      "vi": {
+        "stem": "{enzymeVolume} mL dịch chiết tác dụng với peroxide {substrate} mol/L ở {temperature} °C và pH {pH}: V_max = {@vmax|3} mol/(L·s), K_m = {km} mol/L (giá trị minh họa). Mỗi nhận định sau đúng hay sai?",
+        "explain": "v₀ = {@vmax|3}·{substrate}/({km} + {substrate}) ≈ {@initialRate|3} mol/(L·s). Ước lượng tuyến tính (V_max/K_m)·S₀ = {=@firstOrderConstant*substrate|3} chỉ đúng khi S₀ ≪ K_m; ở đây S₀ = K_m/2 nên ước lượng đó quá lớn. Tăng S₀ gấp đôi thì v₀ tăng {=(2*substrate/(km+2*substrate))/(substrate/(km+substrate))|3} lần, nhỏ hơn 2. Thời gian phân giải một nửa (S₀/2 + K_m·ln2)/V_max ≈ {@halfTime|3} s ngắn hơn so với ở 0,5 mol/L, vì lượng peroxide cần phân giải ít hơn."
+      },
+      "statements": [
+        {
+          "text": "The initial rate is about {@initialRate|3} mol/(L·s).",
+          "vi": {
+            "text": "Tốc độ ban đầu khoảng {@initialRate|3} mol/(L·s)."
+          },
+          "true": true,
+          "check": {
+            "expr": "@vmax*substrate/(km+substrate)",
+            "equals": "initialRate"
+          }
+        },
+        {
+          "text": "The initial rate equals (V_max/K_m)·S₀ = {=@firstOrderConstant*substrate|3} mol/(L·s).",
+          "vi": {
+            "text": "Tốc độ ban đầu bằng (V_max/K_m)·S₀ = {=@firstOrderConstant*substrate|3} mol/(L·s)."
+          },
+          "true": false,
+          "check": {
+            "expr": "@firstOrderConstant*substrate",
+            "equals": "initialRate"
+          }
+        },
+        {
+          "text": "Doubling S₀ would multiply the initial rate by about {=(2*substrate/(km+2*substrate))/(substrate/(km+substrate))|3}, less than 2.",
+          "vi": {
+            "text": "Tăng S₀ gấp đôi thì tốc độ ban đầu tăng khoảng {=(2*substrate/(km+2*substrate))/(substrate/(km+substrate))|3} lần, nhỏ hơn 2."
+          },
+          "true": true,
+          "check": {
+            "expr": "@vmax*(2*substrate/(km+2*substrate))/((2*substrate/(km+2*substrate))/(substrate/(km+substrate)))",
+            "equals": "initialRate"
+          }
+        },
+        {
+          "text": "Half of this peroxide is broken down sooner than half of 0.5 mol/L peroxide would be with the same extract.",
+          "vi": {
+            "text": "Một nửa lượng peroxide này được phân giải nhanh hơn so với một nửa lượng peroxide 0,5 mol/L khi dùng cùng dịch chiết."
+          },
+          "true": true
+        }
+      ]
+    }
+  ]
+}

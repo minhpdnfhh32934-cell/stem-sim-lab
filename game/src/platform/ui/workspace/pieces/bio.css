@@ -1,0 +1,373 @@
+/* Biology workspace pieces. Tokens from styles.css; the accent is the lab's (chlorophyll green
+   by default), cyan stays for focus rings. No backdrop-filter. */
+
+.bio-piece {
+  --bio-accent: rgb(var(--lab-accent-rgb, 108 199 154));
+  --bio-line: #9fb0c0;
+  /* Text on the stage takes the lab stage ink; controls on dark surfaces keep the light ink. */
+  --bio-dim: color-mix(in srgb, var(--ws-ink, #e8eef4) 75%, transparent);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  color: var(--ws-ink, #e8eef4);
+  font-size: var(--text-sm, 13px);
+}
+
+.bio-title {
+  margin: 0;
+  font-size: var(--text-xs, 12px);
+  font-weight: 600;
+  letter-spacing: var(--label-tracking, 0.12em);
+  text-transform: uppercase;
+  color: var(--bio-dim);
+}
+
+.bio-drawing {
+  width: 100%;
+  max-width: 280px;
+  height: auto;
+}
+
+/* Drawing parts */
+.bio-glass {
+  fill: rgb(255 255 255 / 10%);
+  stroke: var(--bio-line);
+  stroke-width: 1.5;
+}
+.bio-cover {
+  fill: rgb(255 255 255 / 25%);
+}
+.bio-metal {
+  fill: #c9ced3;
+  stroke: #6f7b86;
+  stroke-width: 1;
+}
+.bio-metal-line {
+  fill: none;
+  stroke: #c9ced3;
+  stroke-width: 1.5;
+}
+.bio-hole {
+  fill: #07080a;
+}
+.bio-clip {
+  fill: #6f7b86;
+}
+.bio-lens {
+  fill: #2a2e33;
+  stroke: #c9ced3;
+}
+.bio-marker {
+  fill: var(--bio-accent);
+}
+.bio-knob {
+  fill: #1f2327;
+  stroke: #c9ced3;
+  stroke-width: 2;
+}
+.bio-index {
+  fill: #eceff1;
+}
+.bio-lamp {
+  stroke: var(--bio-line);
+  stroke-width: 2;
+}
+.bio-flesh {
+  fill: #efe2ae;
+  stroke: #8d7f4a;
+}
+.bio-lens-frame {
+  fill: #f3f1ea;
+  stroke: var(--bio-line);
+  stroke-width: 3;
+}
+.bio-membrane {
+  stroke: #7a5a2e;
+  stroke-width: 4;
+  fill: none;
+}
+.bio-arrow {
+  stroke: #236b4d;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.bio-mercury {
+  fill: #d94a3a;
+}
+.bio-bubble {
+  fill: rgb(255 255 255 / 55%);
+  stroke: #cfe3ec;
+}
+.bio-gas {
+  fill: rgb(255 255 255 / 70%);
+}
+.bio-stem {
+  fill: none;
+  stroke: #4f9a44;
+  stroke-width: 3;
+}
+.bio-leaf {
+  fill: #4f9a44;
+  transform-box: fill-box;
+}
+.bio-glow {
+  fill: #fff3d8;
+}
+.bio-lamp-body {
+  fill: #c9ced3;
+  stroke: #6f7b86;
+}
+.bio-blade {
+  fill: #9fb0c0;
+}
+.bio-gauge {
+  fill: none;
+  stroke: var(--bio-line);
+  stroke-width: 3;
+}
+.bio-needle {
+  stroke: #e8eef4;
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+.bio-guard {
+  fill: #6fae5c;
+  stroke: #2f6a3c;
+  stroke-width: 2;
+}
+.bio-pore {
+  fill: #07080a;
+}
+.bio-pot {
+  fill: #a35a3a;
+}
+.bio-pod {
+  fill: #7fbf6a;
+  stroke: #2f6a3c;
+}
+.bio-seed {
+  stroke: rgb(0 0 0 / 35%);
+}
+.bio-cell {
+  stroke: rgb(0 0 0 / 35%);
+}
+.bio-cell-text {
+  font-size: 11px;
+  fill: #1b2430;
+}
+.bio-tray {
+  fill: rgb(255 255 255 / 8%);
+  stroke: var(--bio-line);
+}
+.bio-expected {
+  stroke: #e8eef4;
+  stroke-width: 2;
+  stroke-dasharray: 3 2;
+  fill: none;
+}
+
+/* Rows, readouts */
+.bio-row {
+  display: flex;
+  gap: 6px;
+  align-items: baseline;
+  margin: 0;
+}
+.bio-symbol {
+  color: var(--bio-dim);
+}
+.bio-value,
+.bio-lcd {
+  font-variant-numeric: tabular-nums;
+}
+.bio-lcd {
+  display: inline-block;
+  padding: 2px 8px;
+  border: 1px solid var(--line-strong, #4fb3d9);
+  border-radius: 4px;
+  background: #0d1116;
+  font-family: var(--font-mono, monospace);
+  font-size: var(--text-lg, 16px);
+  color: var(--bio-accent);
+}
+.bio-note,
+.bio-class,
+.bio-count,
+.bio-status,
+.bio-genotype {
+  margin: 0;
+  color: var(--bio-dim);
+}
+.bio-refusal {
+  margin: 0;
+  min-height: 1.2em;
+  color: var(--caution-ink, #ecd2b4);
+}
+.bio-refusal:empty {
+  display: none;
+}
+
+/* Choices: native radios, one card or chip per preset */
+.bio-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.bio-chip,
+.bio-card {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-height: var(--control-height, 32px);
+  padding: 4px 10px;
+  border: 1px solid var(--line, rgb(79 179 217 / 22%));
+  border-radius: 999px;
+  background: var(--surface-raised, rgb(18 30 46 / 92%));
+  color: var(--ink, #e8eef4);
+  cursor: pointer;
+}
+.bio-card {
+  border-radius: var(--radius-xl, 14px);
+}
+.bio-chip input,
+.bio-card input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.bio-chip:has(input:checked),
+.bio-card:has(input:checked) {
+  border-color: var(--bio-accent);
+  background:
+    linear-gradient(
+      rgb(var(--lab-accent-rgb, 108 199 154) / 22%),
+      rgb(var(--lab-accent-rgb, 108 199 154) / 22%)
+    ),
+    var(--surface-raised, rgb(18 30 46 / 92%));
+}
+.bio-chip:has(input:focus-visible),
+.bio-card:has(input:focus-visible) {
+  outline: 2px solid var(--accent, #4fb3d9);
+  outline-offset: 2px;
+}
+.bio-chip:has(input[aria-disabled='true']),
+.bio-card:has(input[aria-disabled='true']),
+.bio-step[aria-disabled='true'] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.bio-thumb {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+}
+.bio-bottle {
+  width: 36px;
+  height: 50px;
+}
+.bio-cylinder {
+  width: 60px;
+  height: 24px;
+}
+.bio-seed-icon {
+  width: 28px;
+  height: 28px;
+}
+
+/* Buttons the pieces own */
+.bio-step,
+.bio-toggle {
+  min-height: var(--control-height, 32px);
+  padding: 4px 12px;
+  border: 1px solid var(--line-strong, #4fb3d9);
+  border-radius: 6px;
+  background: var(--surface-raised, rgb(18 30 46 / 92%));
+  color: var(--ink, #e8eef4);
+  font: inherit;
+  cursor: pointer;
+}
+.bio-step[aria-pressed='true'],
+.bio-toggle[aria-pressed='true'] {
+  border-color: var(--bio-accent);
+  background:
+    linear-gradient(
+      rgb(var(--lab-accent-rgb, 108 199 154) / 22%),
+      rgb(var(--lab-accent-rgb, 108 199 154) / 22%)
+    ),
+    var(--surface-raised, rgb(18 30 46 / 92%));
+}
+.bio-step:focus-visible,
+.bio-toggle:focus-visible {
+  outline: 2px solid var(--accent, #4fb3d9);
+  outline-offset: 2px;
+}
+.bio-steps,
+.bio-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* The eyepiece field: the brightest thing on screen */
+.bio-field {
+  position: relative;
+  width: min(62vh, 46vw, 100%);
+  aspect-ratio: 1;
+  margin-inline: auto;
+}
+.bio-field-canvas,
+.bio-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+.bio-overlay {
+  pointer-events: none;
+}
+.bio-measure-line,
+.bio-measure-ticks {
+  fill: none;
+  stroke: #1b2430;
+  stroke-width: 3;
+}
+.bio-measure-ticks {
+  stroke: #236b4d;
+}
+.bio-standby {
+  position: absolute;
+  inset: auto 0 12% 0;
+  margin: 0;
+  text-align: center;
+  color: #c9ced3;
+  pointer-events: none;
+}
+.bio-standby:empty {
+  display: none;
+}
+.bio-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.bio-legend:empty {
+  display: none;
+}
+.bio-swatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 6px;
+  border: 1px solid var(--bio-line);
+  border-radius: 3px;
+  vertical-align: -1px;
+}

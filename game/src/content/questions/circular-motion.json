@@ -1,0 +1,1074 @@
+{
+  "id": "circular-motion",
+  "skills": [
+    {
+      "id": "kinematics",
+      "name": "Period, angular velocity, speed",
+      "advice": "Learn the chain T → ω = 2π/T → v = ω·r → a = ω²·r = v²/r. Use r, the radius of the circle, and keep ω in rad/s.",
+      "vi": {
+        "name": "Chu kì, tốc độ góc, tốc độ",
+        "advice": "Nhớ chuỗi công thức T → ω = 2π/T → v = ω·r → a = ω²·r = v²/r. Dùng r là bán kính quỹ đạo, và để ω theo rad/s."
+      }
+    },
+    {
+      "id": "centripetal",
+      "name": "Centripetal force: M·g = m·ω²·L",
+      "advice": "The hanger hangs at rest, so the string’s pull is its weight M·g, and that pull keeps the bung on the circle: M·g = m·ω²·L. Try a heavier hanger at the station and watch the bung speed up.",
+      "vi": {
+        "name": "Lực hướng tâm: M·g = m·ω²·L",
+        "advice": "Vật treo đứng yên nên lực căng dây bằng trọng lượng M·g của nó, và lực này giữ nút cao su chuyển động tròn: M·g = m·ω²·L. Thử treo thêm khối lượng trên trạm và quan sát nút quay nhanh hơn."
+      }
+    },
+    {
+      "id": "droop",
+      "name": "The drooping string: sin β = m/M, r = L·cos β",
+      "advice": "The string’s upward part holds the bung up: M·g·sin β = m·g. The circle’s radius is the horizontal part of the string, r = L·cos β — slightly less than L. The masses are illustrative.",
+      "vi": {
+        "name": "Dây chúc xuống: sin β = m/M, r = L·cos β",
+        "advice": "Thành phần thẳng đứng của lực căng giữ nút cao su: M·g·sin β = m·g. Bán kính quỹ đạo là hình chiếu nằm ngang của dây, r = L·cos β — nhỏ hơn L một chút. Các khối lượng chỉ mang tính minh họa."
+      }
+    },
+    {
+      "id": "timing",
+      "name": "Timing turns and reading graphs",
+      "advice": "Time N = 10 turns and divide: T = t_N/N, which makes the stopwatch’s share of the error N times smaller. Over runs, T² against L and M·g against ω² are straight lines through the origin.",
+      "vi": {
+        "name": "Đo thời gian nhiều vòng và đọc đồ thị",
+        "advice": "Đo thời gian N = 10 vòng rồi chia: T = t_N/N, cách này làm phần sai số do đồng hồ bấm giây nhỏ đi N lần. Qua nhiều lần đo, T² theo L và M·g theo ω² là các đường thẳng đi qua gốc tọa độ."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "acceleration-direction",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["kinematics"],
+      "stem": "In uniform circular motion, the acceleration of the body…",
+      "explain": "The speed is constant but the direction of the velocity keeps turning: the acceleration ω²·r points to the centre.",
+      "vi": {
+        "stem": "Trong chuyển động tròn đều, gia tốc của vật…",
+        "explain": "Tốc độ không đổi nhưng hướng của vận tốc liên tục thay đổi: gia tốc ω²·r hướng vào tâm quỹ đạo."
+      },
+      "options": [
+        {
+          "text": "points towards the centre of the circle",
+          "vi": {
+            "text": "hướng vào tâm quỹ đạo"
+          },
+          "correct": true
+        },
+        {
+          "text": "is zero, since the speed is constant",
+          "vi": {
+            "text": "bằng 0 vì tốc độ không đổi"
+          }
+        },
+        {
+          "text": "points along the velocity",
+          "vi": {
+            "text": "cùng hướng với vận tốc"
+          }
+        },
+        {
+          "text": "points away from the centre",
+          "vi": {
+            "text": "hướng ra xa tâm quỹ đạo"
+          }
+        }
+      ]
+    },
+    {
+      "id": "omega-period",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["kinematics"],
+      "stem": "The angular velocity ω of a body going round a circle with period T is…",
+      "explain": "One turn is 2π rad in a time T: ω = 2π/T.",
+      "vi": {
+        "stem": "Tốc độ góc ω của vật chuyển động tròn với chu kì T là…",
+        "explain": "Một vòng là 2π rad trong thời gian T: ω = 2π/T."
+      },
+      "options": [
+        {
+          "text": "ω = 2π/T",
+          "vi": {
+            "text": "ω = 2π/T"
+          },
+          "correct": true
+        },
+        {
+          "text": "ω = 2π·T",
+          "vi": {
+            "text": "ω = 2π·T"
+          }
+        },
+        {
+          "text": "ω = T/(2π)",
+          "vi": {
+            "text": "ω = T/(2π)"
+          }
+        },
+        {
+          "text": "ω = 1/T",
+          "vi": {
+            "text": "ω = 1/T"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-bung",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["kinematics", "centripetal"],
+      "stem": "A rubber bung is whirled steadily in a horizontal circle; its string runs down a tube to a hanger at rest. Decide whether each statement is true or false.",
+      "explain": "The speed is constant but the velocity turns, so it is not constant. The string’s pull, equal to the hanger’s weight, is the centripetal force; the hanger hangs at rest.",
+      "vi": {
+        "stem": "Một nút cao su được quay đều trên đường tròn nằm ngang; dây của nó luồn qua ống xuống một vật treo đứng yên. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Tốc độ không đổi nhưng vận tốc đổi hướng nên vận tốc không phải không đổi. Lực căng dây, bằng trọng lượng vật treo, đóng vai trò lực hướng tâm; vật treo đứng yên."
+      },
+      "statements": [
+        {
+          "text": "The bung’s speed is constant.",
+          "vi": {
+            "text": "Tốc độ của nút cao su không đổi."
+          },
+          "true": true
+        },
+        {
+          "text": "The bung’s velocity is constant.",
+          "vi": {
+            "text": "Vận tốc của nút cao su không đổi."
+          },
+          "true": false
+        },
+        {
+          "text": "The string’s pull, equal to the hanger’s weight, keeps the bung on the circle.",
+          "vi": {
+            "text": "Lực căng dây, bằng trọng lượng vật treo, giữ cho nút cao su chuyển động tròn."
+          },
+          "true": true
+        },
+        {
+          "text": "The hanger speeds up downwards while the bung whirls.",
+          "vi": {
+            "text": "Vật treo chuyển động nhanh dần xuống dưới trong khi nút cao su quay."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "heavier-hanger",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["centripetal"],
+      "stem": "The hanging mass M is increased; the string length L and the bung stay the same. The bung’s period…",
+      "explain": "M·g = m·ω²·L: a larger pull gives a larger ω, so T = 2π/ω is shorter.",
+      "vi": {
+        "stem": "Tăng khối lượng vật treo M, giữ nguyên chiều dài dây L và nút cao su. Chu kì quay của nút…",
+        "explain": "M·g = m·ω²·L: lực kéo lớn hơn thì ω lớn hơn, nên T = 2π/ω ngắn hơn."
+      },
+      "options": [
+        {
+          "text": "gets shorter",
+          "vi": {
+            "text": "giảm"
+          },
+          "correct": true
+        },
+        {
+          "text": "gets longer",
+          "vi": {
+            "text": "tăng"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "becomes zero",
+          "vi": {
+            "text": "bằng 0"
+          }
+        }
+      ]
+    },
+    {
+      "id": "four-times-hanger",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["centripetal"],
+      "stem": "The hanging mass is made four times larger (L and the bung unchanged). The angular velocity…",
+      "explain": "ω = √(M·g/(m·L)): four times M gives √4 = 2 times ω.",
+      "vi": {
+        "stem": "Tăng khối lượng vật treo lên gấp bốn lần (giữ nguyên L và nút cao su). Tốc độ góc…",
+        "explain": "ω = √(M·g/(m·L)): M tăng 4 lần thì ω tăng √4 = 2 lần."
+      },
+      "options": [
+        {
+          "text": "doubles",
+          "vi": {
+            "text": "tăng gấp đôi"
+          },
+          "correct": true
+        },
+        {
+          "text": "becomes four times larger",
+          "vi": {
+            "text": "tăng gấp bốn lần"
+          }
+        },
+        {
+          "text": "halves",
+          "vi": {
+            "text": "giảm một nửa"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-whirl",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["centripetal", "kinematics"],
+      "set": {
+        "length": 0.3,
+        "hangingMass": 0.2,
+        "bungMass": 0.04
+      },
+      "stem": "A {bungMass} kg bung whirls on a string L = {length} m long, held by a {hangingMass} kg hanger (illustrative values; g = {gravity} m/s²). Decide whether each statement is true or false.",
+      "explain": "The tension is M·g ≈ {@tension} N; M·g = m·ω²·L gives ω ≈ {@angularVelocity} rad/s. T² = 4π²m·L/(M·g) ∝ L. A heavier bung (same M, L) needs a smaller ω.",
+      "vi": {
+        "stem": "Nút cao su {bungMass} kg quay trên dây dài L = {length} m, được giữ bởi vật treo {hangingMass} kg (các giá trị minh họa; g = {gravity} m/s²). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Lực căng bằng M·g ≈ {@tension} N; M·g = m·ω²·L cho ω ≈ {@angularVelocity} rad/s. T² = 4π²m·L/(M·g) tỉ lệ với L. Nút nặng hơn (cùng M, L) thì ω nhỏ hơn."
+      },
+      "statements": [
+        {
+          "text": "The string’s tension is about {@tension} N.",
+          "vi": {
+            "text": "Lực căng dây khoảng {@tension} N."
+          },
+          "true": true,
+          "check": {
+            "expr": "hangingMass*gravity",
+            "equals": "tension"
+          }
+        },
+        {
+          "text": "The bung’s angular velocity is about {@angularVelocity} rad/s.",
+          "vi": {
+            "text": "Tốc độ góc của nút khoảng {@angularVelocity} rad/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "sqrt(hangingMass*gravity/(bungMass*length))",
+            "equals": "angularVelocity"
+          }
+        },
+        {
+          "text": "Doubling L would double T².",
+          "vi": {
+            "text": "Tăng L gấp đôi thì T² tăng gấp đôi."
+          },
+          "true": true
+        },
+        {
+          "text": "A heavier bung on the same string and hanger would go round faster.",
+          "vi": {
+            "text": "Nút cao su nặng hơn với cùng dây và vật treo sẽ quay nhanh hơn."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "period",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["centripetal", "kinematics"],
+      "set": {
+        "length": 0.25,
+        "hangingMass": 0.3,
+        "bungMass": 0.03
+      },
+      "stem": "A {bungMass} kg bung whirls on a string L = {length} m long, held taut by a {hangingMass} kg hanger (g = {gravity} m/s²). What is its period?",
+      "explain": "M·g = m·ω²·L, so T = 2π/ω = 2π√(m·L/(M·g)) = 2π√({bungMass}·{length}/({hangingMass}·{gravity})) ≈ {@period} s.",
+      "vi": {
+        "stem": "Nút cao su {bungMass} kg quay trên dây dài L = {length} m, dây được giữ căng bởi vật treo {hangingMass} kg (g = {gravity} m/s²). Chu kì quay của nút bằng bao nhiêu?",
+        "explain": "M·g = m·ω²·L nên T = 2π/ω = 2π√(m·L/(M·g)) = 2π√({bungMass}·{length}/({hangingMass}·{gravity})) ≈ {@period} s."
+      },
+      "options": [
+        {
+          "text": "{@period} s",
+          "vi": {
+            "text": "{@period} s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2*pi*sqrt(bungMass*length/(hangingMass*gravity))",
+            "equals": "period"
+          }
+        },
+        {
+          "text": "{=2*pi*sqrt(hangingMass*length/(bungMass*gravity))} s",
+          "vi": {
+            "text": "{=2*pi*sqrt(hangingMass*length/(bungMass*gravity))} s"
+          },
+          "check": {
+            "expr": "2*pi*sqrt(hangingMass*length/(bungMass*gravity))",
+            "equals": "period"
+          }
+        },
+        {
+          "text": "{=2*pi*sqrt(bungMass*length/hangingMass)} s",
+          "vi": {
+            "text": "{=2*pi*sqrt(bungMass*length/hangingMass)} s"
+          },
+          "check": {
+            "expr": "2*pi*sqrt(bungMass*length/hangingMass)",
+            "equals": "period"
+          }
+        },
+        {
+          "text": "{=sqrt(bungMass*length/(hangingMass*gravity))} s",
+          "vi": {
+            "text": "{=sqrt(bungMass*length/(hangingMass*gravity))} s"
+          },
+          "check": {
+            "expr": "sqrt(bungMass*length/(hangingMass*gravity))",
+            "equals": "period"
+          }
+        }
+      ]
+    },
+    {
+      "id": "speed",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["kinematics", "droop"],
+      "set": {
+        "length": 0.4,
+        "hangingMass": 0.1,
+        "bungMass": 0.05
+      },
+      "stem": "A bung goes round a circle of radius r = {@radius} m (its string, L = {length} m, droops) with ω = {@angularVelocity} rad/s. What is its speed?",
+      "explain": "v = ω·r = {@angularVelocity}·{@radius} ≈ {@speed} m/s. Using L for r overestimates it; ω²·r is the acceleration.",
+      "vi": {
+        "stem": "Nút cao su chuyển động trên đường tròn bán kính r = {@radius} m (dây dài L = {length} m bị chúc xuống) với ω = {@angularVelocity} rad/s. Tốc độ của nút bằng bao nhiêu?",
+        "explain": "v = ω·r = {@angularVelocity}·{@radius} ≈ {@speed} m/s. Dùng L thay cho r sẽ ra giá trị quá lớn; ω²·r là gia tốc."
+      },
+      "options": [
+        {
+          "text": "{@speed} m/s",
+          "vi": {
+            "text": "{@speed} m/s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@angularVelocity*@radius",
+            "equals": "speed"
+          }
+        },
+        {
+          "text": "{=@angularVelocity*length} m/s",
+          "vi": {
+            "text": "{=@angularVelocity*length} m/s"
+          },
+          "check": {
+            "expr": "@angularVelocity*length",
+            "equals": "speed"
+          }
+        },
+        {
+          "text": "{=@angularVelocity^2*@radius} m/s",
+          "vi": {
+            "text": "{=@angularVelocity^2*@radius} m/s"
+          },
+          "check": {
+            "expr": "@angularVelocity^2*@radius",
+            "equals": "speed"
+          }
+        },
+        {
+          "text": "{=@angularVelocity/@radius} m/s",
+          "vi": {
+            "text": "{=@angularVelocity/@radius} m/s"
+          },
+          "check": {
+            "expr": "@angularVelocity/@radius",
+            "equals": "speed"
+          }
+        }
+      ]
+    },
+    {
+      "id": "centripetal-acceleration",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["kinematics"],
+      "set": {
+        "length": 0.3,
+        "hangingMass": 0.2,
+        "bungMass": 0.04
+      },
+      "stem": "A bung goes round a circle of radius {@radius} m at a steady {@speed} m/s. What is its centripetal acceleration?",
+      "explain": "a = v²/r = {@speed}²/{@radius} ≈ {@acceleration} m/s², towards the centre.",
+      "vi": {
+        "stem": "Nút cao su chuyển động đều trên đường tròn bán kính {@radius} m với tốc độ {@speed} m/s. Gia tốc hướng tâm của nó bằng bao nhiêu?",
+        "explain": "a = v²/r = {@speed}²/{@radius} ≈ {@acceleration} m/s², hướng vào tâm."
+      },
+      "options": [
+        {
+          "text": "{@acceleration} m/s²",
+          "vi": {
+            "text": "{@acceleration} m/s²"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@speed^2/@radius",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "{=@speed/@radius} m/s²",
+          "vi": {
+            "text": "{=@speed/@radius} m/s²"
+          },
+          "check": {
+            "expr": "@speed/@radius",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "{=@speed^2*@radius} m/s²",
+          "vi": {
+            "text": "{=@speed^2*@radius} m/s²"
+          },
+          "check": {
+            "expr": "@speed^2*@radius",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "text": "{=@speed^2/(2*@radius)} m/s²",
+          "vi": {
+            "text": "{=@speed^2/(2*@radius)} m/s²"
+          },
+          "check": {
+            "expr": "@speed^2/(2*@radius)",
+            "equals": "acceleration"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-droop",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["droop"],
+      "set": {
+        "length": 0.4,
+        "hangingMass": 0.1,
+        "bungMass": 0.05
+      },
+      "stem": "A {bungMass} kg bung whirls on a string L = {length} m long held by a {hangingMass} kg hanger; the string slopes down from the tube at an angle β below the horizontal. Decide whether each statement is true or false.",
+      "explain": "Vertically M·g·sin β = m·g: sin β = m/M = {=bungMass/hangingMass}, β ≈ {@droopAngle}°; r = L·cos β ≈ {@radius} m. A heavier hanger makes sin β smaller: the string droops less.",
+      "vi": {
+        "stem": "Nút cao su {bungMass} kg quay trên dây dài L = {length} m được giữ bởi vật treo {hangingMass} kg; dây chúc xuống từ miệng ống một góc β so với phương ngang. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Theo phương thẳng đứng M·g·sin β = m·g: sin β = m/M = {=bungMass/hangingMass}, β ≈ {@droopAngle}°; r = L·cos β ≈ {@radius} m. Vật treo nặng hơn làm sin β nhỏ hơn: dây chúc ít hơn."
+      },
+      "statements": [
+        {
+          "text": "The string droops at about {@droopAngle}° below the horizontal.",
+          "vi": {
+            "text": "Dây chúc xuống khoảng {@droopAngle}° so với phương ngang."
+          },
+          "true": true,
+          "check": {
+            "expr": "deg(asin(bungMass/hangingMass))",
+            "equals": "droopAngle"
+          }
+        },
+        {
+          "text": "The radius of the circle is about {@radius} m.",
+          "vi": {
+            "text": "Bán kính quỹ đạo khoảng {@radius} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "length*cos(rad(@droopAngle))",
+            "equals": "radius"
+          }
+        },
+        {
+          "text": "The droop angle is arctan(m/M) ≈ {=deg(atan(bungMass/hangingMass))}°.",
+          "vi": {
+            "text": "Góc chúc bằng arctan(m/M) ≈ {=deg(atan(bungMass/hangingMass))}°."
+          },
+          "true": false,
+          "check": {
+            "expr": "deg(atan(bungMass/hangingMass))",
+            "equals": "droopAngle"
+          }
+        },
+        {
+          "text": "A heavier hanger, with the same bung, would make the string droop more.",
+          "vi": {
+            "text": "Vật treo nặng hơn, với cùng nút cao su, sẽ làm dây chúc xuống nhiều hơn."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "omega-from-turns",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["timing", "kinematics"],
+      "set": {
+        "length": 0.35,
+        "hangingMass": 0.3,
+        "bungMass": 0.05,
+        "stopwatchResolution": 0.01
+      },
+      "stem": "A bung is timed over N = {timedTurns} turns: t_N = {@timeForTurns|4} s. What is its angular velocity?",
+      "explain": "T = t_N/N = {@timeForTurns|4}/{timedTurns} ≈ {@period} s; ω = 2π/T ≈ {@angularVelocity} rad/s. 2π/t_N forgets to divide by N; N/t_N is the number of turns per second, not ω.",
+      "vi": {
+        "stem": "Đo thời gian nút cao su quay N = {timedTurns} vòng được t_N = {@timeForTurns|4} s. Tốc độ góc của nút bằng bao nhiêu?",
+        "explain": "T = t_N/N = {@timeForTurns|4}/{timedTurns} ≈ {@period} s; ω = 2π/T ≈ {@angularVelocity} rad/s. 2π/t_N là quên chia cho N; N/t_N là số vòng quay mỗi giây, không phải ω."
+      },
+      "options": [
+        {
+          "text": "{@angularVelocity} rad/s",
+          "vi": {
+            "text": "{@angularVelocity} rad/s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2*pi*timedTurns/@timeForTurns",
+            "equals": "angularVelocity"
+          }
+        },
+        {
+          "text": "{=2*pi/@timeForTurns} rad/s",
+          "vi": {
+            "text": "{=2*pi/@timeForTurns} rad/s"
+          },
+          "check": {
+            "expr": "2*pi/@timeForTurns",
+            "equals": "angularVelocity"
+          }
+        },
+        {
+          "text": "{=timedTurns/@timeForTurns} rad/s",
+          "vi": {
+            "text": "{=timedTurns/@timeForTurns} rad/s"
+          },
+          "check": {
+            "expr": "timedTurns/@timeForTurns",
+            "equals": "angularVelocity"
+          }
+        },
+        {
+          "text": "{=2*pi*@timeForTurns/timedTurns} rad/s",
+          "vi": {
+            "text": "{=2*pi*@timeForTurns/timedTurns} rad/s"
+          },
+          "check": {
+            "expr": "2*pi*@timeForTurns/timedTurns",
+            "equals": "angularVelocity"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-analysis",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["timing", "centripetal", "droop"],
+      "set": {
+        "length": 0.3,
+        "hangingMass": 0.2,
+        "bungMass": 0.04,
+        "stopwatchResolution": 0.2
+      },
+      "stem": "A {bungMass} kg bung on a string L = {length} m long is held by a {hangingMass} kg hanger; {timedTurns} turns are timed with a stopwatch of resolution {stopwatchResolution} s. Decide whether each statement is true or false.",
+      "explain": "t_N = {@timeForTurns|4} s, shown as {=round(@timeForTurns/stopwatchResolution)*stopwatchResolution} s; dividing by N shrinks the stopwatch’s error in T N times. T² = (4π²m/(M·g))·L: slope ≈ {@periodSquaredSlope} s²/m. M·g = m·ω²·L: the slope of M·g against ω² is m·L ≈ {@forceSlope} kg·m, not m·r.",
+      "vi": {
+        "stem": "Nút cao su {bungMass} kg trên dây dài L = {length} m được giữ bởi vật treo {hangingMass} kg; thời gian {timedTurns} vòng được đo bằng đồng hồ bấm giây có độ phân giải {stopwatchResolution} s. Mỗi nhận định sau đúng hay sai?",
+        "explain": "t_N = {@timeForTurns|4} s, hiển thị {=round(@timeForTurns/stopwatchResolution)*stopwatchResolution} s; chia cho N làm sai số của T do đồng hồ nhỏ đi N lần. T² = (4π²m/(M·g))·L: hệ số góc ≈ {@periodSquaredSlope} s²/m. M·g = m·ω²·L: hệ số góc của M·g theo ω² là m·L ≈ {@forceSlope} kg·m, không phải m·r."
+      },
+      "statements": [
+        {
+          "text": "The stopwatch shows t_N as {=round(@timeForTurns/stopwatchResolution)*stopwatchResolution} s.",
+          "vi": {
+            "text": "Đồng hồ hiển thị t_N là {=round(@timeForTurns/stopwatchResolution)*stopwatchResolution} s."
+          },
+          "true": true
+        },
+        {
+          "text": "Timing {timedTurns} turns makes the stopwatch’s share of the error in T {timedTurns} times smaller.",
+          "vi": {
+            "text": "Đo thời gian {timedTurns} vòng làm phần sai số của T do đồng hồ bấm giây nhỏ đi {timedTurns} lần."
+          },
+          "true": true
+        },
+        {
+          "text": "Over runs with different L, T² against L is a straight line through the origin of slope about {@periodSquaredSlope} s²/m.",
+          "vi": {
+            "text": "Qua các lần đo với L khác nhau, T² theo L là đường thẳng qua gốc tọa độ có hệ số góc khoảng {@periodSquaredSlope} s²/m."
+          },
+          "true": true,
+          "check": {
+            "expr": "4*pi^2*bungMass/(hangingMass*gravity)",
+            "equals": "periodSquaredSlope"
+          }
+        },
+        {
+          "text": "Over runs with different M, M·g against ω² is a straight line of slope m·r ≈ {=bungMass*@radius} kg·m.",
+          "vi": {
+            "text": "Qua các lần đo với M khác nhau, M·g theo ω² là đường thẳng có hệ số góc m·r ≈ {=bungMass*@radius} kg·m."
+          },
+          "true": false,
+          "check": {
+            "expr": "bungMass*@radius",
+            "equals": "forceSlope"
+          }
+        }
+      ]
+    },
+    {
+      "id": "acceleration-formula",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["kinematics"],
+      "stem": "A body goes round a circle of radius r at a steady speed v. Its centripetal acceleration is…",
+      "explain": "a = v²/r = ω²·r, pointing to the centre. v/r is the angular velocity ω, not an acceleration.",
+      "vi": {
+        "stem": "Một vật chuyển động tròn đều trên đường tròn bán kính r với tốc độ v. Gia tốc hướng tâm của nó là…",
+        "explain": "a = v²/r = ω²·r, hướng vào tâm. v/r là tốc độ góc ω, không phải gia tốc."
+      },
+      "options": [
+        {
+          "text": "a = v²/r",
+          "vi": {
+            "text": "a = v²/r"
+          },
+          "correct": true
+        },
+        {
+          "text": "a = v/r",
+          "vi": {
+            "text": "a = v/r"
+          }
+        },
+        {
+          "text": "a = v·r",
+          "vi": {
+            "text": "a = v·r"
+          }
+        },
+        {
+          "text": "a = v²·r",
+          "vi": {
+            "text": "a = v²·r"
+          }
+        }
+      ]
+    },
+    {
+      "id": "longer-string",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["centripetal"],
+      "stem": "The bung’s string is made longer; the hanger and the bung stay the same. Its period…",
+      "explain": "M·g = m·ω²·L, so ω = √(M·g/(m·L)) and T = 2π√(m·L/(M·g)): a longer string gives a longer period, in proportion to √L.",
+      "vi": {
+        "stem": "Tăng chiều dài dây của nút cao su; vật treo và nút cao su giữ nguyên. Chu kì quay của nút…",
+        "explain": "M·g = m·ω²·L, nên ω = √(M·g/(m·L)) và T = 2π√(m·L/(M·g)): dây dài hơn thì chu kì dài hơn, tỉ lệ với √L."
+      },
+      "options": [
+        {
+          "text": "becomes longer, in proportion to √L",
+          "vi": {
+            "text": "dài hơn, tỉ lệ với √L"
+          },
+          "correct": true
+        },
+        {
+          "text": "becomes shorter",
+          "vi": {
+            "text": "ngắn hơn"
+          }
+        },
+        {
+          "text": "stays the same, because the hanger is the same",
+          "vi": {
+            "text": "không đổi, vì vật treo không đổi"
+          }
+        },
+        {
+          "text": "becomes longer, in proportion to L",
+          "vi": {
+            "text": "dài hơn, tỉ lệ với L"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-force",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["centripetal", "kinematics"],
+      "stem": "A bung is whirled steadily in a circle on a string. Decide whether each statement is true or false.",
+      "explain": "The centripetal force is not an extra force: it is the resultant towards the centre, here the horizontal part of the string’s pull. The speed is constant but the velocity’s direction keeps changing, so the bung accelerates. If the string broke, the bung would fly off along the tangent, not outwards along the radius.",
+      "vi": {
+        "stem": "Một nút cao su được quay đều trên một vòng tròn nhờ sợi dây. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Lực hướng tâm không phải là một lực riêng: nó là hợp lực hướng vào tâm, ở đây là thành phần nằm ngang của lực căng dây. Tốc độ không đổi nhưng hướng của vận tốc luôn thay đổi nên nút có gia tốc. Nếu dây đứt, nút bay ra theo phương tiếp tuyến chứ không bay ra xa theo phương bán kính."
+      },
+      "statements": [
+        {
+          "text": "The horizontal part of the string’s pull provides the centripetal force.",
+          "vi": {
+            "text": "Thành phần nằm ngang của lực căng dây đóng vai trò lực hướng tâm."
+          },
+          "true": true
+        },
+        {
+          "text": "The bung’s speed is constant, but its velocity is not.",
+          "vi": {
+            "text": "Tốc độ của nút không đổi nhưng vận tốc của nó thay đổi."
+          },
+          "true": true
+        },
+        {
+          "text": "The centripetal force acts on the bung in addition to the string’s pull and its weight.",
+          "vi": {
+            "text": "Lực hướng tâm tác dụng lên nút ngoài lực căng dây và trọng lực."
+          },
+          "true": false
+        },
+        {
+          "text": "If the string broke, the bung would fly outwards along the radius.",
+          "vi": {
+            "text": "Nếu dây đứt, nút sẽ bay ra xa tâm theo phương bán kính."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "angular-velocity",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["centripetal", "kinematics"],
+      "set": {
+        "length": 0.2,
+        "hangingMass": 0.4,
+        "bungMass": 0.03
+      },
+      "stem": "A {bungMass} kg bung whirls on a string L = {length} m long, held by a {hangingMass} kg hanger (g = {gravity} m/s²). What is its angular velocity?",
+      "explain": "M·g = m·ω²·L gives ω = √(M·g/(m·L)) = √({hangingMass}·{gravity}/({bungMass}·{length})) ≈ {@angularVelocity} rad/s. Swapping the masses, or forgetting the square root or L, gives the other values.",
+      "vi": {
+        "stem": "Một nút cao su {bungMass} kg quay trên sợi dây dài L = {length} m, được giữ bởi vật treo {hangingMass} kg (g = {gravity} m/s²). Tốc độ góc của nó bằng bao nhiêu?",
+        "explain": "M·g = m·ω²·L cho ω = √(M·g/(m·L)) = √({hangingMass}·{gravity}/({bungMass}·{length})) ≈ {@angularVelocity} rad/s. Đổi chỗ hai khối lượng, quên khai căn hoặc quên L sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{@angularVelocity} rad/s",
+          "vi": {
+            "text": "{@angularVelocity} rad/s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "sqrt(hangingMass*gravity/(bungMass*length))",
+            "equals": "angularVelocity"
+          }
+        },
+        {
+          "text": "{=sqrt(bungMass*gravity/(hangingMass*length))} rad/s",
+          "vi": {
+            "text": "{=sqrt(bungMass*gravity/(hangingMass*length))} rad/s"
+          },
+          "check": {
+            "expr": "sqrt(bungMass*gravity/(hangingMass*length))",
+            "equals": "angularVelocity"
+          }
+        },
+        {
+          "text": "{=hangingMass*gravity/(bungMass*length)} rad/s",
+          "vi": {
+            "text": "{=hangingMass*gravity/(bungMass*length)} rad/s"
+          },
+          "check": {
+            "expr": "hangingMass*gravity/(bungMass*length)",
+            "equals": "angularVelocity"
+          }
+        },
+        {
+          "text": "{=sqrt(hangingMass*gravity/bungMass)} rad/s",
+          "vi": {
+            "text": "{=sqrt(hangingMass*gravity/bungMass)} rad/s"
+          },
+          "check": {
+            "expr": "sqrt(hangingMass*gravity/bungMass)",
+            "equals": "angularVelocity"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-350",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["centripetal", "droop", "kinematics"],
+      "set": {
+        "length": 0.35,
+        "hangingMass": 0.2,
+        "bungMass": 0.05
+      },
+      "stem": "A {bungMass} kg bung whirls on a string L = {length} m long, held by a {hangingMass} kg hanger at rest (g = {gravity} m/s²). Decide whether each statement is true or false.",
+      "explain": "The string pulls with M·g = {@tension|3} N. Its vertical part holds the bung up: sin β = m/M, β ≈ {@droopAngle|3}°. T = 2π√(m·L/(M·g)) ≈ {@period} s. The circle’s radius is L·cos β ≈ {@radius} m, a little less than L.",
+      "vi": {
+        "stem": "Một nút cao su {bungMass} kg quay trên sợi dây dài L = {length} m, được giữ bởi vật treo {hangingMass} kg đứng yên (g = {gravity} m/s²). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Lực căng dây bằng M·g = {@tension|3} N. Thành phần thẳng đứng của nó giữ nút không rơi: sin β = m/M, β ≈ {@droopAngle|3}°. T = 2π√(m·L/(M·g)) ≈ {@period} s. Bán kính quỹ đạo là L·cos β ≈ {@radius} m, nhỏ hơn L một chút."
+      },
+      "statements": [
+        {
+          "text": "The string pulls with about {@tension|3} N.",
+          "vi": {
+            "text": "Lực căng dây khoảng {@tension|3} N."
+          },
+          "true": true,
+          "check": {
+            "expr": "hangingMass*gravity",
+            "equals": "tension"
+          }
+        },
+        {
+          "text": "The string slopes down about {@droopAngle|3}° below the horizontal.",
+          "vi": {
+            "text": "Sợi dây chếch xuống dưới phương ngang khoảng {@droopAngle|3}°."
+          },
+          "true": true,
+          "check": {
+            "expr": "deg(asin(bungMass/hangingMass))",
+            "equals": "droopAngle"
+          }
+        },
+        {
+          "text": "The period is about {@period} s.",
+          "vi": {
+            "text": "Chu kì quay khoảng {@period} s."
+          },
+          "true": true,
+          "check": {
+            "expr": "2*pi*sqrt(bungMass*length/(hangingMass*gravity))",
+            "equals": "period"
+          }
+        },
+        {
+          "text": "The radius of the circle is the whole length L = {length} m.",
+          "vi": {
+            "text": "Bán kính quỹ đạo bằng đúng chiều dài dây L = {length} m."
+          },
+          "true": false,
+          "check": {
+            "expr": "length",
+            "equals": "radius"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-hanger",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["centripetal", "timing"],
+      "set": {
+        "length": 0.3,
+        "hangingMass": 0.3,
+        "bungMass": 0.04
+      },
+      "stem": "A {bungMass} kg bung on a string L = {length} m long goes round with a period of {@period|4} s (g = {gravity} m/s²). What mass hangs from the string?",
+      "explain": "T = 2π√(m·L/(M·g)) gives M = 4π²·m·L/(g·T²) = 4π²·{bungMass}·{length}/({gravity}·{@period|4}²) ≈ {=4*pi^2*bungMass*length/(gravity*@period^2)|3} kg. Leaving out 4π², writing 2π, or not squaring T gives the other values.",
+      "vi": {
+        "stem": "Một nút cao su {bungMass} kg trên sợi dây dài L = {length} m quay với chu kì {@period|4} s (g = {gravity} m/s²). Khối lượng vật treo ở đầu dây bằng bao nhiêu?",
+        "explain": "T = 2π√(m·L/(M·g)) cho M = 4π²·m·L/(g·T²) = 4π²·{bungMass}·{length}/({gravity}·{@period|4}²) ≈ {=4*pi^2*bungMass*length/(gravity*@period^2)|3} kg. Bỏ quên 4π², viết 2π hoặc không bình phương T sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{=4*pi^2*bungMass*length/(gravity*@period^2)|3} kg",
+          "vi": {
+            "text": "{=4*pi^2*bungMass*length/(gravity*@period^2)|3} kg"
+          },
+          "correct": true,
+          "check": {
+            "expr": "4*pi^2*bungMass*length/(gravity*@period^2)*gravity",
+            "equals": "tension"
+          }
+        },
+        {
+          "text": "{=bungMass*length/(gravity*@period^2)|3} kg",
+          "vi": {
+            "text": "{=bungMass*length/(gravity*@period^2)|3} kg"
+          },
+          "check": {
+            "expr": "bungMass*length/(gravity*@period^2)*gravity",
+            "equals": "tension"
+          }
+        },
+        {
+          "text": "{=2*pi*bungMass*length/(gravity*@period^2)|3} kg",
+          "vi": {
+            "text": "{=2*pi*bungMass*length/(gravity*@period^2)|3} kg"
+          },
+          "check": {
+            "expr": "2*pi*bungMass*length/(gravity*@period^2)*gravity",
+            "equals": "tension"
+          }
+        },
+        {
+          "text": "{=4*pi^2*bungMass*length/(gravity*@period)|3} kg",
+          "vi": {
+            "text": "{=4*pi^2*bungMass*length/(gravity*@period)|3} kg"
+          },
+          "check": {
+            "expr": "4*pi^2*bungMass*length/(gravity*@period)*gravity",
+            "equals": "tension"
+          }
+        }
+      ]
+    },
+    {
+      "id": "t-squared-slope",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["timing", "centripetal"],
+      "set": {
+        "length": 0.3,
+        "hangingMass": 0.2,
+        "bungMass": 0.05
+      },
+      "stem": "With the {bungMass} kg bung and the {hangingMass} kg hanger kept, the string length L is changed and T² is plotted against L (g = {gravity} m/s²). The points lie on a straight line through the origin. What is its slope?",
+      "explain": "T² = 4π²·m·L/(M·g), so the slope is 4π²·m/(M·g) = 4π²·{bungMass}/({hangingMass}·{gravity}) ≈ {@periodSquaredSlope} s²/m. Swapping m and M, using 2π, or leaving out g gives the other values.",
+      "vi": {
+        "stem": "Giữ nguyên nút cao su {bungMass} kg và vật treo {hangingMass} kg, thay đổi chiều dài dây L rồi vẽ đồ thị T² theo L (g = {gravity} m/s²). Các điểm nằm trên một đường thẳng đi qua gốc tọa độ. Hệ số góc của nó bằng bao nhiêu?",
+        "explain": "T² = 4π²·m·L/(M·g), nên hệ số góc là 4π²·m/(M·g) = 4π²·{bungMass}/({hangingMass}·{gravity}) ≈ {@periodSquaredSlope} s²/m. Đổi chỗ m và M, dùng 2π hoặc quên g sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{@periodSquaredSlope} s²/m",
+          "vi": {
+            "text": "{@periodSquaredSlope} s²/m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "4*pi^2*bungMass/(hangingMass*gravity)",
+            "equals": "periodSquaredSlope"
+          }
+        },
+        {
+          "text": "{=4*pi^2*hangingMass/(bungMass*gravity)} s²/m",
+          "vi": {
+            "text": "{=4*pi^2*hangingMass/(bungMass*gravity)} s²/m"
+          },
+          "check": {
+            "expr": "4*pi^2*hangingMass/(bungMass*gravity)",
+            "equals": "periodSquaredSlope"
+          }
+        },
+        {
+          "text": "{=2*pi*bungMass/(hangingMass*gravity)} s²/m",
+          "vi": {
+            "text": "{=2*pi*bungMass/(hangingMass*gravity)} s²/m"
+          },
+          "check": {
+            "expr": "2*pi*bungMass/(hangingMass*gravity)",
+            "equals": "periodSquaredSlope"
+          }
+        },
+        {
+          "text": "{=4*pi^2*bungMass/hangingMass} s²/m",
+          "vi": {
+            "text": "{=4*pi^2*bungMass/hangingMass} s²/m"
+          },
+          "check": {
+            "expr": "4*pi^2*bungMass/hangingMass",
+            "equals": "periodSquaredSlope"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-force-graph",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["centripetal", "droop", "timing"],
+      "set": {
+        "length": 0.25,
+        "hangingMass": 0.4,
+        "bungMass": 0.04
+      },
+      "stem": "A {bungMass} kg bung on a string L = {length} m long is held by a {hangingMass} kg hanger (g = {gravity} m/s²). Decide whether each statement is true or false.",
+      "explain": "For different hangers M·g = m·L·ω²: a line through the origin of slope m·L = {@forceSlope} kg·m. The force towards the centre is the horizontal part of the pull, m·ω²·r = M·g·cos β ≈ {@centripetalForce|4} N, a little less than M·g = {@tension|4} N, because the string droops. ω ∝ √M, so four times the hanger halves the period.",
+      "vi": {
+        "stem": "Một nút cao su {bungMass} kg trên sợi dây dài L = {length} m được giữ bởi vật treo {hangingMass} kg (g = {gravity} m/s²). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Với các vật treo khác nhau M·g = m·L·ω²: một đường thẳng qua gốc tọa độ với hệ số góc m·L = {@forceSlope} kg·m. Lực hướng tâm là thành phần nằm ngang của lực căng, m·ω²·r = M·g·cos β ≈ {@centripetalForce|4} N, nhỏ hơn M·g = {@tension|4} N một chút vì dây chếch xuống. ω tỉ lệ với √M, nên vật treo nặng gấp bốn thì chu kì giảm một nửa."
+      },
+      "statements": [
+        {
+          "text": "Plotting M·g against ω² for several hangers gives a line through the origin of slope {@forceSlope} kg·m.",
+          "vi": {
+            "text": "Vẽ M·g theo ω² với nhiều vật treo cho một đường thẳng qua gốc tọa độ có hệ số góc {@forceSlope} kg·m."
+          },
+          "true": true,
+          "check": {
+            "expr": "bungMass*length",
+            "equals": "forceSlope"
+          }
+        },
+        {
+          "text": "The centripetal force on the bung is about {@centripetalForce|4} N.",
+          "vi": {
+            "text": "Lực hướng tâm tác dụng lên nút khoảng {@centripetalForce|4} N."
+          },
+          "true": true,
+          "check": {
+            "expr": "bungMass*@angularVelocity^2*@radius",
+            "equals": "centripetalForce"
+          }
+        },
+        {
+          "text": "A hanger four times as heavy would halve the period.",
+          "vi": {
+            "text": "Vật treo nặng gấp bốn lần sẽ làm chu kì giảm một nửa."
+          },
+          "true": true
+        },
+        {
+          "text": "The centripetal force equals the hanger’s weight, {@tension|4} N, exactly.",
+          "vi": {
+            "text": "Lực hướng tâm bằng đúng trọng lượng vật treo, {@tension|4} N."
+          },
+          "true": false,
+          "check": {
+            "expr": "@tension",
+            "equals": "centripetalForce"
+          }
+        }
+      ]
+    }
+  ]
+}

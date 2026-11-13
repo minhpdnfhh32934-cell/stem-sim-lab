@@ -1,0 +1,444 @@
+{
+  "id": "precipitation",
+  "name": "Testing for ions: precipitation reactions",
+  "category": "chemistry",
+  "description": "Run a test reagent — silver nitrate, barium nitrate or sodium hydroxide — into a solution and watch for a precipitate: an insoluble solid that clouds the tube. Its colour tells which ion was there: white silver chloride, cream silver bromide, yellow silver iodide, white barium sulfate, pale blue copper(II) hydroxide, red-brown iron(III) hydroxide. Water and the solutions that form no insoluble salt stay clear.",
+  "vi": {
+    "name": "Nhận biết ion: phản ứng tạo kết tủa",
+    "description": "Cho thuốc thử — bạc nitrat, bari nitrat hoặc natri hiđroxit — chảy vào một dung dịch và quan sát kết tủa: chất rắn không tan làm đục ống nghiệm. Màu của kết tủa cho biết ion có trong dung dịch: bạc clorua màu trắng, bạc bromua màu vàng nhạt, bạc iođua màu vàng, bari sunfat màu trắng, đồng(II) hiđroxit màu xanh lam nhạt, sắt(III) hiđroxit màu nâu đỏ. Nước và các dung dịch không tạo muối khó tan vẫn trong suốt.",
+    "note": "Mô hình dạy học đơn giản hóa của phân tích định tính, chỉ gồm một danh sách phản ứng xác định (không phải mọi tổ hợp tùy ý). Thuốc thử chảy vào ống chứa 5 mL mẫu với tốc độ 0,5 mL/s; ở mỗi thể tích V đã thêm, hỗn hợp được coi là đã trộn đều và ở trạng thái cân bằng (không có quá bão hòa, không có tạo mầm chậm), hoạt độ bằng nồng độ và thể tích cộng được. Muối khó tan chỉ kết tủa khi tích ion Q của dung dịch vượt quá tích số tan Ksp; khi đó nó kết tủa cho tới khi các ion còn lại thỏa mãn Q = Ksp. Ksp ở 25 °C theo CRC Handbook (Cu(OH)₂ theo Dean's Analytical Chemistry Handbook). Bỏ qua: H⁺/OH⁻ của nước, sự thủy phân của ion kim loại (Fe³⁺ có tính axit), muối bazơ, phức chất. Ở nồng độ của trạm, Ag₂SO₄ (tan tương đối nhiều) không kết tủa. Hiđroxit là dạng gel có lượng nước thay đổi: khối lượng ở đây tính theo công thức. Kết quả mô phỏng không có sai số ngẫu nhiên."
+  },
+  "requiredEquipment": ["precipitation-rack"],
+  "model": "chemistry.precipitation",
+  "parameters": [
+    {
+      "id": "sample",
+      "label": "Test solution",
+      "vi": { "label": "Dung dịch cần thử" },
+      "unit": "",
+      "default": 0,
+      "min": 0,
+      "max": 6,
+      "presets": [
+        { "label": "Sodium chloride NaCl", "vi": { "label": "Natri clorua NaCl" }, "value": 0 },
+        { "label": "Potassium bromide KBr", "vi": { "label": "Kali bromua KBr" }, "value": 1 },
+        { "label": "Potassium iodide KI", "vi": { "label": "Kali iođua KI" }, "value": 2 },
+        { "label": "Sodium sulfate Na₂SO₄", "vi": { "label": "Natri sunfat Na₂SO₄" }, "value": 3 },
+        {
+          "label": "Copper(II) sulfate CuSO₄",
+          "vi": { "label": "Đồng(II) sunfat CuSO₄" },
+          "value": 4
+        },
+        {
+          "label": "Iron(III) chloride FeCl₃",
+          "vi": { "label": "Sắt(III) clorua FeCl₃" },
+          "value": 5
+        },
+        {
+          "label": "Deionised water (blank)",
+          "vi": { "label": "Nước khử ion (mẫu trắng)" },
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": "reagent",
+      "label": "Test reagent",
+      "vi": { "label": "Thuốc thử" },
+      "unit": "",
+      "default": 0,
+      "min": 0,
+      "max": 2,
+      "presets": [
+        { "label": "Silver nitrate AgNO₃", "vi": { "label": "Bạc nitrat AgNO₃" }, "value": 0 },
+        {
+          "label": "Barium nitrate Ba(NO₃)₂",
+          "vi": { "label": "Bari nitrat Ba(NO₃)₂" },
+          "value": 1
+        },
+        { "label": "Sodium hydroxide NaOH", "vi": { "label": "Natri hiđroxit NaOH" }, "value": 2 }
+      ]
+    },
+    {
+      "id": "reagentVolume",
+      "label": "Reagent added",
+      "vi": { "label": "Thể tích thuốc thử thêm vào" },
+      "symbol": "V_r",
+      "unit": "mL",
+      "default": 5,
+      "min": 1,
+      "max": 10,
+      "presets": [
+        { "label": "1 mL", "vi": { "label": "1 mL" }, "value": 1 },
+        { "label": "2 mL", "vi": { "label": "2 mL" }, "value": 2 },
+        { "label": "5 mL", "vi": { "label": "5 mL" }, "value": 5 },
+        { "label": "10 mL", "vi": { "label": "10 mL" }, "value": 10 }
+      ]
+    },
+    {
+      "id": "sampleConcentration",
+      "label": "Test solution's concentration",
+      "vi": { "label": "Nồng độ dung dịch cần thử" },
+      "symbol": "c_s",
+      "unit": "mol/L",
+      "default": 0.02,
+      "min": 0.005,
+      "max": 0.02,
+      "presets": [
+        { "label": "0.005 mol/L", "vi": { "label": "0,005 mol/L" }, "value": 0.005 },
+        { "label": "0.01 mol/L", "vi": { "label": "0,01 mol/L" }, "value": 0.01 },
+        { "label": "0.02 mol/L", "vi": { "label": "0,02 mol/L" }, "value": 0.02 }
+      ]
+    }
+  ],
+  "initialConditions": { "sampleVolume": 5, "reagentConcentration": 0.02, "flowRate": 0.5 },
+  "inputs": {
+    "sampleVolume": { "symbol": "V_s", "unit": "mL" },
+    "reagentConcentration": { "symbol": "c_r", "unit": "mol/L" },
+    "flowRate": { "symbol": "q", "unit": "mL/s", "desk": false }
+  },
+  "simulation": { "timeStep": 0.05, "maxDuration": 30, "sampleInterval": 0.25 },
+  "measurements": [
+    {
+      "id": "volume",
+      "label": "Reagent added",
+      "vi": { "label": "Thuốc thử đã thêm" },
+      "symbol": "V",
+      "unit": "mL",
+      "variable": "volumeAdded"
+    },
+    {
+      "id": "amount",
+      "label": "Precipitate formed",
+      "vi": { "label": "Lượng kết tủa đã tạo" },
+      "symbol": "n",
+      "unit": "mmol",
+      "variable": "precipitateAmount"
+    },
+    {
+      "id": "percent",
+      "label": "Sample's ion precipitated",
+      "vi": { "label": "Phần ion của mẫu đã kết tủa" },
+      "symbol": "p",
+      "unit": "%",
+      "variable": "precipitatedPercent"
+    }
+  ],
+  "results": [
+    {
+      "id": "product",
+      "label": "What forms in the tube",
+      "vi": { "label": "Chất tạo thành trong ống" },
+      "unit": "",
+      "variable": "product",
+      "reduce": "final",
+      "format": "integer",
+      "theory": "product",
+      "classes": [
+        {
+          "max": 0,
+          "label": "Nothing: the tube stays clear",
+          "vi": { "label": "Không có gì: ống vẫn trong" }
+        },
+        {
+          "max": 1,
+          "label": "White precipitate: silver chloride AgCl",
+          "vi": { "label": "Kết tủa trắng: bạc clorua AgCl" }
+        },
+        {
+          "max": 2,
+          "label": "Cream precipitate: silver bromide AgBr",
+          "vi": { "label": "Kết tủa vàng nhạt: bạc bromua AgBr" }
+        },
+        {
+          "max": 3,
+          "label": "Yellow precipitate: silver iodide AgI",
+          "vi": { "label": "Kết tủa vàng: bạc iođua AgI" }
+        },
+        {
+          "max": 4,
+          "label": "White precipitate: barium sulfate BaSO₄",
+          "vi": { "label": "Kết tủa trắng: bari sunfat BaSO₄" }
+        },
+        {
+          "max": 5,
+          "label": "White precipitate: silver sulfate Ag₂SO₄",
+          "vi": { "label": "Kết tủa trắng: bạc sunfat Ag₂SO₄" }
+        },
+        {
+          "max": 6,
+          "label": "Pale blue precipitate: copper(II) hydroxide Cu(OH)₂",
+          "vi": { "label": "Kết tủa xanh lam nhạt: đồng(II) hiđroxit Cu(OH)₂" }
+        },
+        {
+          "label": "Red-brown precipitate: iron(III) hydroxide Fe(OH)₃",
+          "vi": { "label": "Kết tủa nâu đỏ: sắt(III) hiđroxit Fe(OH)₃" }
+        }
+      ]
+    },
+    {
+      "id": "amount",
+      "label": "Amount of precipitate",
+      "vi": { "label": "Lượng kết tủa" },
+      "symbol": "n",
+      "unit": "mmol",
+      "variable": "precipitateAmount",
+      "reduce": "final",
+      "theory": "amount"
+    },
+    {
+      "id": "mass",
+      "label": "Mass of precipitate (dry, by formula)",
+      "vi": { "label": "Khối lượng kết tủa (khô, theo công thức)" },
+      "symbol": "m",
+      "unit": "g",
+      "variable": "precipitateMass",
+      "reduce": "final",
+      "theory": "mass"
+    },
+    {
+      "id": "percent",
+      "label": "Sample's ion precipitated",
+      "vi": { "label": "Phần ion của mẫu đã kết tủa" },
+      "symbol": "p",
+      "unit": "%",
+      "variable": "precipitatedPercent",
+      "reduce": "final",
+      "theory": "precipitatedPercent"
+    },
+    {
+      "id": "saturation",
+      "label": "Ion product over Ksp in the liquid",
+      "vi": { "label": "Tỉ số tích ion trên Ksp trong dung dịch" },
+      "symbol": "Q/Ksp",
+      "unit": "",
+      "variable": "saturation",
+      "reduce": "final",
+      "theory": "saturation"
+    }
+  ],
+  "graphs": [
+    {
+      "id": "amount-volume",
+      "title": "Precipitate formed against reagent added",
+      "vi": { "title": "Lượng kết tủa theo thể tích thuốc thử đã thêm" },
+      "x": "volume",
+      "y": ["amount"]
+    }
+  ],
+  "monitor": "amount-volume",
+  "compare": [{ "graph": "amount-volume", "series": "amount" }],
+  "note": "A simplified teaching model of qualitative analysis, from a fixed list of reactions (never an arbitrary combination). The reagent runs into the tube holding 5 mL of sample at 0.5 mL/s; at every volume V added the mixture is taken as mixed and at equilibrium (no supersaturation, no slow nucleation), with activities equal to concentrations and volumes adding. A sparingly soluble salt precipitates only once the ion product Q of the solution exceeds its solubility product Ksp; it then precipitates until the ions left satisfy Q = Ksp. Ksp at 25 °C from the CRC Handbook (Cu(OH)₂ from Dean's Analytical Chemistry Handbook). Left out: water's own H⁺/OH⁻, the metal ions' hydrolysis (acidic Fe³⁺), basic salts and complexes. At the station's concentrations Ag₂SO₄ (fairly soluble) never forms. Hydroxides are gels of variable water content: their mass here is that of the formula. The simulated results carry no random error.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the ion tests instructions on the board.",
+      "vi": { "instruction": "Đọc hướng dẫn nhận biết ion trên bảng." },
+      "done": { "kind": "inspected", "item": "precipitation-instructions" }
+    },
+    {
+      "id": "sample",
+      "instruction": "Choose the test solution with its dial on the control desk.",
+      "vi": { "instruction": "Chọn dung dịch cần thử bằng núm xoay trên bàn điều khiển." },
+      "done": { "kind": "adjusted", "parameter": "sample" }
+    },
+    {
+      "id": "reagent",
+      "instruction": "Choose the test reagent, and how much of it to add.",
+      "vi": { "instruction": "Chọn thuốc thử và thể tích cần thêm." },
+      "done": { "kind": "adjusted", "parameter": "reagent" }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the reagent runs into the tube; watch for a precipitate and its colour.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: thuốc thử chảy vào ống; quan sát có kết tủa không và màu của nó."
+      },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read what formed, how much, and how much of the sample's ion it holds on the results monitor.",
+      "vi": {
+        "instruction": "Đọc chất tạo thành, lượng của nó và phần ion của mẫu đã kết tủa trên màn hình kết quả."
+      },
+      "done": { "kind": "viewed" }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, try the same reagent on another solution (or another reagent) and compare.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, thử cùng thuốc thử với dung dịch khác (hoặc thuốc thử khác) rồi so sánh."
+      },
+      "done": { "kind": "reset" }
+    }
+  ],
+  "examples": [
+    {
+      "id": "silver-chloride",
+      "question": "Silver nitrate ({reagentConcentration} mol/L) is added to {sampleVolume} mL of sodium chloride at {sampleConcentration} mol/L. At what volume is the chloride used up, and what mass of AgCl forms with {reagentVolume} mL added?",
+      "vi": {
+        "question": "Thêm bạc nitrat ({reagentConcentration} mol/L) vào {sampleVolume} mL dung dịch natri clorua {sampleConcentration} mol/L. Thể tích thuốc thử bao nhiêu thì hết clorua, và khi đã thêm {reagentVolume} mL thì tạo thành bao nhiêu gam AgCl?"
+      },
+      "set": { "sample": 0, "reagent": 0, "reagentVolume": 10 },
+      "find": [
+        { "theory": "equivalenceVolume", "symbol": "V_eq", "unit": "mL" },
+        { "theory": "mass" }
+      ],
+      "steps": [
+        {
+          "say": "Ag⁺ + Cl⁻ → AgCl↓, one to one: the chloride is used up when as many millimoles of Ag⁺ have gone in.",
+          "vi": {
+            "say": "Ag⁺ + Cl⁻ → AgCl↓, tỉ lệ 1 : 1: clorua hết khi lượng Ag⁺ cho vào bằng lượng Cl⁻ (tính theo mmol)."
+          },
+          "write": "V_eq = c_s·V_s/c_r = {sampleConcentration}·{sampleVolume}/{reagentConcentration} = {@equivalenceVolume} mL",
+          "check": {
+            "expr": "sampleConcentration*sampleVolume/reagentConcentration",
+            "equals": "equivalenceVolume"
+          }
+        },
+        {
+          "say": "{reagentVolume} mL is past that, so practically all the chloride precipitates: n = {@amount|4} mmol (the tiny rest stays dissolved, as Ksp allows). M(AgCl) = 143.32 g/mol.",
+          "vi": {
+            "say": "{reagentVolume} mL đã vượt quá thể tích đó, nên gần như toàn bộ clorua kết tủa: n = {@amount|4} mmol (một lượng rất nhỏ còn tan, theo Ksp). M(AgCl) = 143,32 g/mol."
+          },
+          "write": "m = n·M = {@amount|4}·143.32/1000 ≈ {@mass} g",
+          "check": { "expr": "@amount*143.32/1000", "equals": "mass" }
+        }
+      ]
+    },
+    {
+      "id": "copper-hydroxide",
+      "question": "Sodium hydroxide ({reagentConcentration} mol/L) is added to {sampleVolume} mL of copper(II) sulfate at {sampleConcentration} mol/L. What volume would precipitate all the copper, and what share of it has precipitated after {reagentVolume} mL?",
+      "vi": {
+        "question": "Thêm natri hiđroxit ({reagentConcentration} mol/L) vào {sampleVolume} mL dung dịch đồng(II) sunfat {sampleConcentration} mol/L. Cần bao nhiêu mL để kết tủa hết đồng, và sau khi thêm {reagentVolume} mL thì bao nhiêu phần trăm đồng đã kết tủa?"
+      },
+      "set": { "sample": 4, "reagent": 2, "reagentVolume": 2 },
+      "find": [
+        { "theory": "equivalenceVolume", "symbol": "V_eq", "unit": "mL" },
+        { "theory": "precipitatedPercent" }
+      ],
+      "steps": [
+        {
+          "say": "Cu²⁺ + 2OH⁻ → Cu(OH)₂↓: each copper ion takes two hydroxide ions.",
+          "vi": { "say": "Cu²⁺ + 2OH⁻ → Cu(OH)₂↓: mỗi ion đồng cần hai ion hiđroxit." },
+          "write": "V_eq = 2·c_s·V_s/c_r = 2·{sampleConcentration}·{sampleVolume}/{reagentConcentration} = {@equivalenceVolume} mL",
+          "check": {
+            "expr": "2*sampleConcentration*sampleVolume/reagentConcentration",
+            "equals": "equivalenceVolume"
+          }
+        },
+        {
+          "say": "With only {reagentVolume} mL the hydroxide runs out first: n(Cu(OH)₂) = {@amount|3} mmol, out of {=sampleConcentration*sampleVolume} mmol of Cu²⁺.",
+          "vi": {
+            "say": "Chỉ với {reagentVolume} mL thì hiđroxit hết trước: n(Cu(OH)₂) = {@amount|3} mmol, trên tổng số {=sampleConcentration*sampleVolume} mmol Cu²⁺."
+          },
+          "write": "p = {@amount|3}/{=sampleConcentration*sampleVolume} ≈ {@precipitatedPercent}%",
+          "check": {
+            "expr": "100*@amount/(sampleConcentration*sampleVolume)",
+            "equals": "precipitatedPercent"
+          }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "Some pairs of ions cannot stay dissolved together: mixed, they join into an insoluble solid, a precipitate, whose colour tells which ion was in the solution.",
+    "vi": {
+      "summary": "Một số cặp ion không thể cùng tồn tại trong dung dịch: khi trộn lẫn, chúng kết hợp thành chất rắn không tan, gọi là kết tủa, và màu của kết tủa cho biết ion nào có trong dung dịch."
+    },
+    "parts": [
+      {
+        "id": "samples",
+        "name": "Test solutions",
+        "role": "Seven solutions to test, in small tubes: each holds different ions (copper sulfate blue, iron(III) chloride yellow).",
+        "vi": {
+          "name": "Các dung dịch cần thử",
+          "role": "Bảy dung dịch cần thử trong các ống nhỏ: mỗi dung dịch chứa các ion khác nhau (đồng sunfat màu xanh lam, sắt(III) clorua màu vàng)."
+        },
+        "anchor": { "part": "samples" }
+      },
+      {
+        "id": "reagents",
+        "name": "Test reagents",
+        "role": "Silver nitrate (finds Cl⁻, Br⁻, I⁻), barium nitrate (finds SO₄²⁻), sodium hydroxide (finds Cu²⁺, Fe³⁺).",
+        "vi": {
+          "name": "Các thuốc thử",
+          "role": "Bạc nitrat (nhận biết Cl⁻, Br⁻, I⁻), bari nitrat (nhận biết SO₄²⁻), natri hiđroxit (nhận biết Cu²⁺, Fe³⁺)."
+        },
+        "anchor": { "at": [0.17, -0.09, 0.02] }
+      },
+      {
+        "id": "dropper",
+        "name": "Dropper",
+        "role": "Runs the reagent into the tube, 0.5 mL each second.",
+        "vi": { "name": "Ống nhỏ giọt", "role": "Cho thuốc thử chảy vào ống, 0,5 mL mỗi giây." },
+        "anchor": { "part": "dropper" }
+      },
+      {
+        "id": "tube",
+        "name": "Boiling tube",
+        "role": "Holds 5 mL of the test solution; the reagent mixes into it.",
+        "vi": {
+          "name": "Ống nghiệm lớn",
+          "role": "Chứa 5 mL dung dịch cần thử; thuốc thử được trộn vào đó."
+        },
+        "anchor": { "part": "liquid" }
+      },
+      {
+        "id": "precipitate",
+        "name": "Precipitate",
+        "role": "The insoluble solid that forms, in its own colour; it clouds the liquid, then settles.",
+        "vi": {
+          "name": "Kết tủa",
+          "role": "Chất rắn không tan tạo thành, có màu riêng; nó làm đục chất lỏng rồi lắng xuống."
+        },
+        "anchor": { "part": "solid" }
+      }
+    ],
+    "steps": [
+      {
+        "text": "Salts dissolve as ions: silver nitrate gives Ag⁺ and NO₃⁻, sodium chloride Na⁺ and Cl⁻. In each tube the ions move freely in the water.",
+        "vi": {
+          "text": "Muối tan phân li thành ion: bạc nitrat cho Ag⁺ và NO₃⁻, natri clorua cho Na⁺ và Cl⁻. Trong mỗi ống, các ion chuyển động tự do trong nước."
+        },
+        "parts": ["samples", "reagents"]
+      },
+      {
+        "text": "Press RUN: the reagent runs into the test solution. If two of the ions now together form an insoluble salt, they leave the water as a solid: Ag⁺ + Cl⁻ → AgCl↓.",
+        "vi": {
+          "text": "Nhấn CHẠY: thuốc thử chảy vào dung dịch cần thử. Nếu hai ion lúc này gặp nhau tạo thành muối không tan, chúng tách khỏi nước thành chất rắn: Ag⁺ + Cl⁻ → AgCl↓."
+        },
+        "parts": ["dropper", "tube", "precipitate"]
+      },
+      {
+        "text": "The colour identifies the ion: with silver nitrate, white AgCl means chloride, cream AgBr bromide, yellow AgI iodide. With barium nitrate, white BaSO₄ means sulfate.",
+        "vi": {
+          "text": "Màu cho biết ion: với bạc nitrat, AgCl trắng là clorua, AgBr vàng nhạt là bromua, AgI vàng là iođua. Với bari nitrat, BaSO₄ trắng là sunfat."
+        },
+        "parts": ["precipitate", "reagents"]
+      },
+      {
+        "text": "Sodium hydroxide finds metal ions: Cu²⁺ + 2OH⁻ → Cu(OH)₂↓ pale blue, Fe³⁺ + 3OH⁻ → Fe(OH)₃↓ red-brown. A solution with no such ion — water, the blank — stays clear.",
+        "vi": {
+          "text": "Natri hiđroxit nhận biết ion kim loại: Cu²⁺ + 2OH⁻ → Cu(OH)₂↓ xanh lam nhạt, Fe³⁺ + 3OH⁻ → Fe(OH)₃↓ nâu đỏ. Dung dịch không có ion đó — nước, mẫu trắng — vẫn trong suốt."
+        },
+        "parts": ["samples", "precipitate"]
+      },
+      {
+        "text": "A solid forms only once the ion product passes the solubility product, Q > Ksp; AgI's Ksp is so small that a trace is enough, while Ag₂SO₄ is soluble enough to stay dissolved here.",
+        "vi": {
+          "text": "Chất rắn chỉ xuất hiện khi tích ion vượt quá tích số tan, Q > Ksp; Ksp của AgI rất nhỏ nên chỉ cần một lượng vết, còn Ag₂SO₄ tan đủ nhiều nên ở đây vẫn tan hết."
+        },
+        "parts": ["tube"]
+      },
+      {
+        "text": "How much forms is set by the ion that runs out first. The graph shows the amount rising with the reagent added, then levelling off once all of the sample's ion is in the solid.",
+        "vi": {
+          "text": "Lượng kết tủa do ion hết trước quyết định. Đồ thị cho thấy lượng kết tủa tăng theo thể tích thuốc thử, rồi không đổi nữa khi toàn bộ ion của mẫu đã vào chất rắn."
+        },
+        "parts": ["precipitate", "dropper"]
+      }
+    ]
+  }
+}

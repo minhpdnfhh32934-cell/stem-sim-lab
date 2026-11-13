@@ -1,0 +1,1029 @@
+{
+  "id": "galvanic-cell",
+  "skills": [
+    {
+      "id": "cell",
+      "name": "How a galvanic cell works",
+      "advice": "Label a sketch of the Daniell cell yourself: anode (−, oxidation, Zn → Zn²⁺ + 2e⁻), cathode (+, reduction, Cu²⁺ + 2e⁻ → Cu), electrons through the wire from − to +, ions through the salt bridge. Check each label against the station.",
+      "vi": {
+        "name": "Cấu tạo và hoạt động của pin điện hóa",
+        "advice": "Tự ghi chú sơ đồ pin Daniell: anode (−, sự oxi hóa, Zn → Zn²⁺ + 2e⁻), cathode (+, sự khử, Cu²⁺ + 2e⁻ → Cu), electron đi qua dây dẫn từ cực âm sang cực dương, ion di chuyển qua cầu muối. Đối chiếu từng chú thích với trạm."
+      }
+    },
+    {
+      "id": "series",
+      "name": "Standard potentials and the emf: E°cell = E°(+) − E°(−)",
+      "advice": "Find the higher E° first: that electrode is the cathode (+). Subtract, never add, and never multiply E° by a coefficient (2Ag⁺ still uses +0.80 V). Try every pair at the station at 1 mol/L.",
+      "vi": {
+        "name": "Thế điện cực chuẩn và sức điện động: E°pin = E°(+) − E°(−)",
+        "advice": "Tìm E° lớn hơn trước: điện cực đó là cathode (+). Lấy hiệu, không lấy tổng, và không nhân E° với hệ số (2Ag⁺ vẫn dùng +0,80 V). Thử mọi cặp điện cực trên trạm ở nồng độ 1 mol/L."
+      }
+    },
+    {
+      "id": "concentration",
+      "name": "Concentration and the emf",
+      "advice": "Think of each electrode as an equilibrium Mⁿ⁺ + ne⁻ ⇌ M: fewer metal ions lower its potential. Dilute the copper side, then the zinc side, at the station and predict the sign of the change before you look.",
+      "vi": {
+        "name": "Ảnh hưởng của nồng độ đến sức điện động",
+        "advice": "Coi mỗi điện cực là một cân bằng Mⁿ⁺ + ne⁻ ⇌ M: ít ion kim loại hơn thì thế điện cực thấp hơn. Trên trạm, pha loãng dung dịch bên đồng rồi bên kẽm, và dự đoán chiều thay đổi trước khi xem kết quả."
+      }
+    },
+    {
+      "id": "reading",
+      "name": "Reading the voltmeter",
+      "advice": "Remember why a high-resistance voltmeter reads the emf (it draws almost no current) and what a resolution d does to the reading (nearest multiple of d). Change the resolution at the station and watch the last digit.",
+      "vi": {
+        "name": "Đọc số chỉ của vôn kế",
+        "advice": "Nhớ vì sao vôn kế điện trở rất lớn đo được sức điện động (hầu như không có dòng điện chạy qua) và độ chia d ảnh hưởng thế nào đến số đọc (bội số gần nhất của d). Đổi độ chia trên trạm và quan sát chữ số cuối."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "anode",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["cell"],
+      "stem": "In the Daniell cell (Zn | Zn²⁺ ‖ Cu²⁺ | Cu), the anode is…",
+      "explain": "Zinc has the lower E°, so it is oxidised: Zn → Zn²⁺ + 2e⁻. The electrode where oxidation happens is the anode, the negative terminal of a galvanic cell.",
+      "vi": {
+        "stem": "Trong pin Daniell (Zn | Zn²⁺ ‖ Cu²⁺ | Cu), anode là",
+        "explain": "Kẽm có E° nhỏ hơn nên bị oxi hóa: Zn → Zn²⁺ + 2e⁻. Điện cực xảy ra sự oxi hóa là anode, cực âm của pin điện hóa."
+      },
+      "options": [
+        {
+          "text": "the zinc electrode, where Zn → Zn²⁺ + 2e⁻",
+          "vi": {
+            "text": "điện cực kẽm, nơi xảy ra Zn → Zn²⁺ + 2e⁻"
+          },
+          "correct": true
+        },
+        {
+          "text": "the copper electrode, where Cu → Cu²⁺ + 2e⁻",
+          "vi": {
+            "text": "điện cực đồng, nơi xảy ra Cu → Cu²⁺ + 2e⁻"
+          }
+        },
+        {
+          "text": "the zinc electrode, where Zn²⁺ + 2e⁻ → Zn",
+          "vi": {
+            "text": "điện cực kẽm, nơi xảy ra Zn²⁺ + 2e⁻ → Zn"
+          }
+        },
+        {
+          "text": "the salt bridge",
+          "vi": {
+            "text": "cầu muối"
+          }
+        }
+      ]
+    },
+    {
+      "id": "salt-bridge",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["cell"],
+      "stem": "What does the salt bridge of a galvanic cell do?",
+      "explain": "Ions move through the salt bridge, closing the circuit and keeping each solution electrically neutral; electrons go through the external wire, not the bridge.",
+      "vi": {
+        "stem": "Cầu muối trong pin điện hóa có vai trò gì?",
+        "explain": "Các ion di chuyển qua cầu muối, khép kín mạch điện và giữ cho mỗi dung dịch trung hòa về điện; electron đi qua dây dẫn bên ngoài, không đi qua cầu muối."
+      },
+      "options": [
+        {
+          "text": "It lets ions move between the solutions, closing the circuit and keeping them neutral",
+          "vi": {
+            "text": "Cho ion di chuyển giữa hai dung dịch, khép kín mạch và giữ các dung dịch trung hòa điện"
+          },
+          "correct": true
+        },
+        {
+          "text": "It carries the electrons from zinc to copper",
+          "vi": {
+            "text": "Dẫn electron từ kẽm sang đồng"
+          }
+        },
+        {
+          "text": "It supplies the Cu²⁺ ions used at the cathode",
+          "vi": {
+            "text": "Cung cấp ion Cu²⁺ cho cathode"
+          }
+        },
+        {
+          "text": "It stops the two metals from reacting",
+          "vi": {
+            "text": "Ngăn không cho hai kim loại phản ứng"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-daniell",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["cell", "series"],
+      "stem": "A Daniell cell (zinc in Zn²⁺, copper in Cu²⁺, joined by a salt bridge) supplies a current. Decide whether each statement is true or false.",
+      "explain": "Zinc (E° −0.76 V) is the anode, the negative terminal; electrons leave it through the wire to copper (E° +0.34 V), where Cu²⁺ is reduced and copper is deposited.",
+      "vi": {
+        "stem": "Pin Daniell (kẽm nhúng trong dung dịch Zn²⁺, đồng nhúng trong dung dịch Cu²⁺, nối bằng cầu muối) đang phát điện. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Kẽm (E° −0,76 V) là anode, cực âm; electron rời kẽm qua dây dẫn sang đồng (E° +0,34 V), nơi Cu²⁺ bị khử và đồng bám lên điện cực."
+      },
+      "statements": [
+        {
+          "text": "Electrons flow through the wire from the zinc to the copper.",
+          "vi": {
+            "text": "Electron di chuyển qua dây dẫn từ kẽm sang đồng."
+          },
+          "true": true
+        },
+        {
+          "text": "The copper electrode gains mass.",
+          "vi": {
+            "text": "Khối lượng điện cực đồng tăng lên."
+          },
+          "true": true
+        },
+        {
+          "text": "The zinc electrode is the positive terminal.",
+          "vi": {
+            "text": "Điện cực kẽm là cực dương."
+          },
+          "true": false
+        },
+        {
+          "text": "E°(Cu²⁺/Cu) is higher than E°(Zn²⁺/Zn).",
+          "vi": {
+            "text": "E°(Cu²⁺/Cu) lớn hơn E°(Zn²⁺/Zn)."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "largest-emf",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["series"],
+      "stem": "With all solutions at 1 mol/L (E°: Mg²⁺/Mg −2.372, Zn²⁺/Zn −0.762, Fe²⁺/Fe −0.447, Pb²⁺/Pb −0.126, Cu²⁺/Cu +0.342 V), which cell has the largest emf?",
+      "explain": "The emf is E°(Cu²⁺/Cu) − E°(anode): the further the anode metal lies below copper, the larger it is. Magnesium is lowest: 0.342 − (−2.372) ≈ 2.71 V.",
+      "vi": {
+        "stem": "Với các dung dịch đều 1 mol/L (E°: Mg²⁺/Mg −2,372; Zn²⁺/Zn −0,762; Fe²⁺/Fe −0,447; Pb²⁺/Pb −0,126; Cu²⁺/Cu +0,342 V), pin nào có sức điện động lớn nhất?",
+        "explain": "Sức điện động bằng E°(Cu²⁺/Cu) − E°(anode): kim loại làm anode có E° càng thấp so với đồng thì sức điện động càng lớn. Magnesium thấp nhất: 0,342 − (−2,372) ≈ 2,71 V."
+      },
+      "options": [
+        {
+          "text": "Mg | Cu",
+          "vi": {
+            "text": "Mg | Cu"
+          },
+          "correct": true
+        },
+        {
+          "text": "Zn | Cu",
+          "vi": {
+            "text": "Zn | Cu"
+          }
+        },
+        {
+          "text": "Fe | Cu",
+          "vi": {
+            "text": "Fe | Cu"
+          }
+        },
+        {
+          "text": "Pb | Cu",
+          "vi": {
+            "text": "Pb | Cu"
+          }
+        }
+      ]
+    },
+    {
+      "id": "copper-silver",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["series", "cell"],
+      "stem": "A cell is made of copper in Cu²⁺ and silver in Ag⁺ (E°: Cu²⁺/Cu +0.342 V, Ag⁺/Ag +0.800 V). Which statement describes its anode?",
+      "explain": "Copper has the lower E°, so here copper is the anode and is oxidised, Cu → Cu²⁺ + 2e⁻, while Ag⁺ is reduced on the silver. Copper is the cathode in the Daniell cell, but the anode here: it depends on the partner.",
+      "vi": {
+        "stem": "Một pin được ghép từ đồng nhúng trong dung dịch Cu²⁺ và bạc nhúng trong dung dịch Ag⁺ (E°: Cu²⁺/Cu +0,342 V; Ag⁺/Ag +0,800 V). Phát biểu nào mô tả đúng anode của pin?",
+        "explain": "Đồng có E° nhỏ hơn nên ở pin này đồng là anode và bị oxi hóa, Cu → Cu²⁺ + 2e⁻, còn Ag⁺ bị khử trên điện cực bạc. Trong pin Daniell đồng là cathode, nhưng ở đây là anode: vai trò phụ thuộc vào điện cực ghép cùng."
+      },
+      "options": [
+        {
+          "text": "Copper, which is oxidised to Cu²⁺",
+          "vi": {
+            "text": "Đồng, bị oxi hóa thành Cu²⁺"
+          },
+          "correct": true
+        },
+        {
+          "text": "Silver, which is oxidised to Ag⁺",
+          "vi": {
+            "text": "Bạc, bị oxi hóa thành Ag⁺"
+          }
+        },
+        {
+          "text": "Copper, on which Cu²⁺ is reduced",
+          "vi": {
+            "text": "Đồng, trên đó Cu²⁺ bị khử"
+          }
+        },
+        {
+          "text": "Silver, on which Ag⁺ is reduced",
+          "vi": {
+            "text": "Bạc, trên đó Ag⁺ bị khử"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-running",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["cell", "concentration", "reading"],
+      "stem": "A Daniell cell runs for a long time. Decide whether each statement is true or false.",
+      "explain": "The cell reaction is Zn + Cu²⁺ → Zn²⁺ + Cu: Cu²⁺ is used up, so the blue fades. Magnesium lies further below copper than zinc, so it gives a larger emf. Without the salt bridge the circuit is open: no current and no emf reading.",
+      "vi": {
+        "stem": "Pin Daniell hoạt động trong thời gian dài. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Phản ứng trong pin là Zn + Cu²⁺ → Zn²⁺ + Cu: Cu²⁺ bị tiêu hao nên màu xanh nhạt dần. Magnesium có E° thấp hơn kẽm nhiều so với đồng, nên cho sức điện động lớn hơn. Bỏ cầu muối thì mạch hở: không có dòng điện và vôn kế không đo được sức điện động."
+      },
+      "statements": [
+        {
+          "text": "The overall reaction is Zn + Cu²⁺ → Zn²⁺ + Cu.",
+          "vi": {
+            "text": "Phản ứng xảy ra trong pin là Zn + Cu²⁺ → Zn²⁺ + Cu."
+          },
+          "true": true
+        },
+        {
+          "text": "The blue colour of the copper(II) sulfate solution slowly fades.",
+          "vi": {
+            "text": "Màu xanh của dung dịch copper(II) sulfate nhạt dần."
+          },
+          "true": true
+        },
+        {
+          "text": "Replacing the zinc half-cell by a magnesium one gives a larger emf.",
+          "vi": {
+            "text": "Thay điện cực kẽm bằng điện cực magnesium thì sức điện động lớn hơn."
+          },
+          "true": true
+        },
+        {
+          "text": "If the salt bridge is taken out, the voltmeter still reads the same emf.",
+          "vi": {
+            "text": "Nếu rút cầu muối ra, vôn kế vẫn chỉ cùng giá trị sức điện động."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "zinc-silver",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["series"],
+      "set": {
+        "pair": 3,
+        "leftConcentration": 1,
+        "rightConcentration": 1
+      },
+      "stem": "A cell is made of zinc in 1 mol/L Zn²⁺ and silver in 1 mol/L Ag⁺ at 25 °C (E°: Zn²⁺/Zn −0.7618 V, Ag⁺/Ag +0.7996 V). What is its emf?",
+      "explain": "Silver is the cathode: E = E°(+) − E°(−) = 0.7996 − (−0.7618) = {@emf|4} V. The coefficient 2 in Zn + 2Ag⁺ → Zn²⁺ + 2Ag does not double E°.",
+      "vi": {
+        "stem": "Một pin được ghép từ kẽm nhúng trong dung dịch Zn²⁺ 1 mol/L và bạc nhúng trong dung dịch Ag⁺ 1 mol/L ở 25 °C (E°: Zn²⁺/Zn −0,7618 V; Ag⁺/Ag +0,7996 V). Sức điện động của pin là bao nhiêu?",
+        "explain": "Bạc là cathode: E = E°(+) − E°(−) = 0,7996 − (−0,7618) = {@emf|4} V. Hệ số 2 trong Zn + 2Ag⁺ → Zn²⁺ + 2Ag không làm E° tăng gấp đôi."
+      },
+      "options": [
+        {
+          "text": "{@emf|4} V",
+          "vi": {
+            "text": "{@emf|4} V"
+          },
+          "correct": true,
+          "check": {
+            "expr": "0.7996-(-0.7618)",
+            "equals": "emf"
+          }
+        },
+        {
+          "text": "{=0.7996-0.7618|4} V",
+          "vi": {
+            "text": "{=0.7996-0.7618|4} V"
+          },
+          "check": {
+            "expr": "0.7996-0.7618",
+            "equals": "emf"
+          }
+        },
+        {
+          "text": "{=2*0.7996-(-0.7618)|4} V",
+          "vi": {
+            "text": "{=2*0.7996-(-0.7618)|4} V"
+          },
+          "check": {
+            "expr": "2*0.7996-(-0.7618)",
+            "equals": "emf"
+          }
+        },
+        {
+          "text": "{=-0.7618-0.7996|4} V",
+          "vi": {
+            "text": "{=-0.7618-0.7996|4} V"
+          },
+          "check": {
+            "expr": "-0.7618-0.7996",
+            "equals": "emf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "iron-copper",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["series"],
+      "set": {
+        "pair": 1,
+        "leftConcentration": 1,
+        "rightConcentration": 1
+      },
+      "stem": "A cell is made of iron in 1 mol/L Fe²⁺ and copper in 1 mol/L Cu²⁺ at 25 °C (E°: Fe²⁺/Fe −0.447 V, Cu²⁺/Cu +0.3419 V). What is its emf?",
+      "explain": "Copper has the higher E°, so it is the cathode: E = 0.3419 − (−0.447) = {@emf|4} V.",
+      "vi": {
+        "stem": "Một pin được ghép từ sắt nhúng trong dung dịch Fe²⁺ 1 mol/L và đồng nhúng trong dung dịch Cu²⁺ 1 mol/L ở 25 °C (E°: Fe²⁺/Fe −0,447 V; Cu²⁺/Cu +0,3419 V). Sức điện động của pin là bao nhiêu?",
+        "explain": "Đồng có E° lớn hơn nên là cathode: E = 0,3419 − (−0,447) = {@emf|4} V."
+      },
+      "options": [
+        {
+          "text": "{@emf|4} V",
+          "vi": {
+            "text": "{@emf|4} V"
+          },
+          "correct": true,
+          "check": {
+            "expr": "0.3419-(-0.447)",
+            "equals": "emf"
+          }
+        },
+        {
+          "text": "{=0.3419+(-0.447)|4} V",
+          "vi": {
+            "text": "{=0.3419+(-0.447)|4} V"
+          },
+          "check": {
+            "expr": "0.3419+(-0.447)",
+            "equals": "emf"
+          }
+        },
+        {
+          "text": "{=-0.447-0.3419|4} V",
+          "vi": {
+            "text": "{=-0.447-0.3419|4} V"
+          },
+          "check": {
+            "expr": "-0.447-0.3419",
+            "equals": "emf"
+          }
+        },
+        {
+          "text": "0.3419 V",
+          "vi": {
+            "text": "0.3419 V"
+          },
+          "check": {
+            "expr": "0.3419",
+            "equals": "emf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-magnesium",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["series", "cell"],
+      "set": {
+        "pair": 4,
+        "leftConcentration": 1,
+        "rightConcentration": 1
+      },
+      "stem": "A cell is made of magnesium in 1 mol/L Mg²⁺ and copper in 1 mol/L Cu²⁺ at 25 °C (E°: Mg²⁺/Mg −2.372 V, Cu²⁺/Cu +0.3419 V). Decide whether each statement is true or false.",
+      "explain": "Magnesium has the lower E°: it is the anode (−) and dissolves, Mg → Mg²⁺ + 2e⁻; electrons flow through the wire from magnesium to copper. E = 0.3419 − (−2.372) = {@emf|4} V.",
+      "vi": {
+        "stem": "Một pin được ghép từ magnesium nhúng trong dung dịch Mg²⁺ 1 mol/L và đồng nhúng trong dung dịch Cu²⁺ 1 mol/L ở 25 °C (E°: Mg²⁺/Mg −2,372 V; Cu²⁺/Cu +0,3419 V). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Magnesium có E° nhỏ hơn: là anode (−) và tan dần, Mg → Mg²⁺ + 2e⁻; electron đi qua dây dẫn từ magnesium sang đồng. E = 0,3419 − (−2,372) = {@emf|4} V."
+      },
+      "statements": [
+        {
+          "text": "Magnesium is the negative electrode.",
+          "vi": {
+            "text": "Magnesium là điện cực âm."
+          },
+          "true": true
+        },
+        {
+          "text": "The emf is about {@emf|4} V.",
+          "vi": {
+            "text": "Sức điện động khoảng {@emf|4} V."
+          },
+          "true": true,
+          "check": {
+            "expr": "0.3419-(-2.372)",
+            "equals": "emf"
+          }
+        },
+        {
+          "text": "Electrons flow through the wire from the copper to the magnesium.",
+          "vi": {
+            "text": "Electron đi qua dây dẫn từ đồng sang magnesium."
+          },
+          "true": false
+        },
+        {
+          "text": "The magnesium electrode loses mass as the cell works.",
+          "vi": {
+            "text": "Khối lượng điện cực magnesium giảm dần khi pin hoạt động."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "voltmeter-reading",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["reading", "series"],
+      "set": {
+        "pair": 0,
+        "leftConcentration": 1,
+        "rightConcentration": 1,
+        "voltmeterResolution": 0.1
+      },
+      "stem": "A Daniell cell at 1 mol/L and 25 °C has an emf of {@emf|5} V. A high-resistance voltmeter that reads to {voltmeterResolution} V is connected across it. What does it show?",
+      "explain": "The voltmeter draws almost no current, so it reads the emf, shown as the nearest multiple of {voltmeterResolution} V: {=round(@emf/voltmeterResolution)*voltmeterResolution} V.",
+      "vi": {
+        "stem": "Pin Daniell ở nồng độ 1 mol/L và 25 °C có sức điện động {@emf|5} V. Mắc vào hai cực của pin một vôn kế có điện trở rất lớn, độ chia {voltmeterResolution} V. Vôn kế chỉ bao nhiêu?",
+        "explain": "Vôn kế hầu như không cho dòng điện đi qua nên đo được sức điện động, hiển thị bằng bội số gần nhất của {voltmeterResolution} V: {=round(@emf/voltmeterResolution)*voltmeterResolution} V."
+      },
+      "options": [
+        {
+          "text": "{=round(@emf/voltmeterResolution)*voltmeterResolution} V",
+          "vi": {
+            "text": "{=round(@emf/voltmeterResolution)*voltmeterResolution} V"
+          },
+          "correct": true
+        },
+        {
+          "text": "{=round(@emf/voltmeterResolution)*voltmeterResolution-voltmeterResolution} V",
+          "vi": {
+            "text": "{=round(@emf/voltmeterResolution)*voltmeterResolution-voltmeterResolution} V"
+          }
+        },
+        {
+          "text": "{=round(@emf/voltmeterResolution)*voltmeterResolution+voltmeterResolution} V",
+          "vi": {
+            "text": "{=round(@emf/voltmeterResolution)*voltmeterResolution+voltmeterResolution} V"
+          }
+        },
+        {
+          "text": "0 V",
+          "vi": {
+            "text": "0 V"
+          }
+        }
+      ]
+    },
+    {
+      "id": "add-cells",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["series"],
+      "set": {
+        "pair": 3,
+        "leftConcentration": 1,
+        "rightConcentration": 1
+      },
+      "stem": "At 1 mol/L and 25 °C the Zn | Cu cell has an emf of 1.1037 V and the Cu | Ag cell 0.4577 V. Without any table of E°, what is the emf of the Zn | Ag cell?",
+      "explain": "E(Zn|Cu) = E°Cu − E°Zn and E(Cu|Ag) = E°Ag − E°Cu; adding them, E°Cu cancels: E°Ag − E°Zn = 1.1037 + 0.4577 = {@emf|5} V.",
+      "vi": {
+        "stem": "Ở 1 mol/L và 25 °C, pin Zn | Cu có sức điện động 1,1037 V và pin Cu | Ag có 0,4577 V. Không dùng bảng E°, sức điện động của pin Zn | Ag là bao nhiêu?",
+        "explain": "E(Zn|Cu) = E°Cu − E°Zn và E(Cu|Ag) = E°Ag − E°Cu; cộng hai biểu thức, E°Cu triệt tiêu: E°Ag − E°Zn = 1,1037 + 0,4577 = {@emf|5} V."
+      },
+      "options": [
+        {
+          "text": "{=1.1037+0.4577|5} V",
+          "vi": {
+            "text": "{=1.1037+0.4577|5} V"
+          },
+          "correct": true,
+          "check": {
+            "expr": "1.1037+0.4577",
+            "equals": "emf"
+          }
+        },
+        {
+          "text": "{=1.1037-0.4577|5} V",
+          "vi": {
+            "text": "{=1.1037-0.4577|5} V"
+          },
+          "check": {
+            "expr": "1.1037-0.4577",
+            "equals": "emf"
+          }
+        },
+        {
+          "text": "{=(1.1037+0.4577)/2|5} V",
+          "vi": {
+            "text": "{=(1.1037+0.4577)/2|5} V"
+          },
+          "check": {
+            "expr": "(1.1037+0.4577)/2",
+            "equals": "emf"
+          }
+        },
+        {
+          "text": "{=1.1037*0.4577|5} V",
+          "vi": {
+            "text": "{=1.1037*0.4577|5} V"
+          },
+          "check": {
+            "expr": "1.1037*0.4577",
+            "equals": "emf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-dilute-copper",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["concentration", "series"],
+      "set": {
+        "pair": 0,
+        "leftConcentration": 1,
+        "rightConcentration": 0.01
+      },
+      "stem": "In a Daniell cell at 25 °C the copper side is diluted to {rightConcentration} mol/L Cu²⁺; the zinc side stays at {leftConcentration} mol/L Zn²⁺. The copper electrode follows E = E° + (RT/2F)·ln[Cu²⁺], with RT/2F ≈ 0.01285 V (E°: Zn²⁺/Zn −0.7618 V, Cu²⁺/Cu +0.3419 V). Decide whether each statement is true or false.",
+      "explain": "E(Cu) = 0.3419 + 0.01285·ln {rightConcentration} ≈ {@cathodePotential|4} V; the zinc side is still standard, so E = {@cathodePotential|4} − (−0.7618) ≈ {@emf|4} V, lower than 1.1037 V. Fewer Cu²⁺ lower the cathode’s potential; fewer Zn²⁺ would lower the anode’s and so raise the emf.",
+      "vi": {
+        "stem": "Trong pin Daniell ở 25 °C, dung dịch bên đồng được pha loãng thành Cu²⁺ {rightConcentration} mol/L; bên kẽm vẫn là Zn²⁺ {leftConcentration} mol/L. Thế điện cực đồng tuân theo E = E° + (RT/2F)·ln[Cu²⁺], với RT/2F ≈ 0,01285 V (E°: Zn²⁺/Zn −0,7618 V; Cu²⁺/Cu +0,3419 V). Mỗi nhận định sau đúng hay sai?",
+        "explain": "E(Cu) = 0,3419 + 0,01285·ln {rightConcentration} ≈ {@cathodePotential|4} V; bên kẽm vẫn ở điều kiện chuẩn, nên E = {@cathodePotential|4} − (−0,7618) ≈ {@emf|4} V, nhỏ hơn 1,1037 V. Ít ion Cu²⁺ hơn làm thế của cathode giảm; ít ion Zn²⁺ hơn sẽ làm thế của anode giảm và do đó làm sức điện động tăng."
+      },
+      "statements": [
+        {
+          "text": "The copper electrode’s potential is about {@cathodePotential|4} V.",
+          "vi": {
+            "text": "Thế điện cực đồng khoảng {@cathodePotential|4} V."
+          },
+          "true": true,
+          "check": {
+            "expr": "0.3419+8.314462618*(temperature+273.15)/(2*96485.33212331)*ln(rightConcentration)",
+            "equals": "cathodePotential"
+          }
+        },
+        {
+          "text": "The emf is about {@emf|4} V.",
+          "vi": {
+            "text": "Sức điện động của pin khoảng {@emf|4} V."
+          },
+          "true": true,
+          "check": {
+            "expr": "@cathodePotential-(-0.7618)",
+            "equals": "emf"
+          }
+        },
+        {
+          "text": "Diluting the Cu²⁺ solution raises the emf.",
+          "vi": {
+            "text": "Pha loãng dung dịch Cu²⁺ làm sức điện động tăng."
+          },
+          "true": false
+        },
+        {
+          "text": "Diluting the Zn²⁺ solution instead would raise the emf.",
+          "vi": {
+            "text": "Nếu pha loãng dung dịch Zn²⁺ thay vào đó thì sức điện động tăng."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "cathode-reaction",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["cell"],
+      "stem": "In the Daniell cell (Zn | Zn²⁺ ‖ Cu²⁺ | Cu), which half-reaction takes place at the cathode?",
+      "explain": "The cathode is where reduction happens: Cu²⁺ ions take electrons and deposit as copper, Cu²⁺ + 2e⁻ → Cu. Zinc is oxidised at the anode, Zn → Zn²⁺ + 2e⁻.",
+      "vi": {
+        "stem": "Trong pin Daniell (Zn | Zn²⁺ ‖ Cu²⁺ | Cu), bán phản ứng nào xảy ra ở cathode?",
+        "explain": "Cathode là nơi xảy ra sự khử: ion Cu²⁺ nhận electron và bám vào điện cực dưới dạng đồng, Cu²⁺ + 2e⁻ → Cu. Kẽm bị oxi hóa ở anode, Zn → Zn²⁺ + 2e⁻."
+      },
+      "options": [
+        {
+          "text": "Cu²⁺ + 2e⁻ → Cu",
+          "vi": {
+            "text": "Cu²⁺ + 2e⁻ → Cu"
+          },
+          "correct": true
+        },
+        {
+          "text": "Zn → Zn²⁺ + 2e⁻",
+          "vi": {
+            "text": "Zn → Zn²⁺ + 2e⁻"
+          }
+        },
+        {
+          "text": "Cu → Cu²⁺ + 2e⁻",
+          "vi": {
+            "text": "Cu → Cu²⁺ + 2e⁻"
+          }
+        },
+        {
+          "text": "Zn²⁺ + 2e⁻ → Zn",
+          "vi": {
+            "text": "Zn²⁺ + 2e⁻ → Zn"
+          }
+        }
+      ]
+    },
+    {
+      "id": "electron-flow",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["cell"],
+      "stem": "While a Daniell cell supplies a current, the electrons…",
+      "explain": "Zinc is oxidised and releases electrons, which travel through the external wire to the copper, where Cu²⁺ takes them. Electrons never pass through the salt bridge: ions move there and keep the solutions neutral.",
+      "vi": {
+        "stem": "Khi pin Daniell đang phát điện, các electron",
+        "explain": "Kẽm bị oxi hóa và giải phóng electron, các electron này đi qua dây dẫn ngoài sang điện cực đồng, tại đó ion Cu²⁺ nhận electron. Electron không bao giờ đi qua cầu muối: trong cầu muối chỉ có các ion di chuyển để giữ cho các dung dịch trung hòa điện."
+      },
+      "options": [
+        {
+          "text": "flow through the external wire from the zinc to the copper",
+          "vi": {
+            "text": "đi qua dây dẫn ngoài từ điện cực kẽm sang điện cực đồng"
+          },
+          "correct": true
+        },
+        {
+          "text": "flow through the external wire from the copper to the zinc",
+          "vi": {
+            "text": "đi qua dây dẫn ngoài từ điện cực đồng sang điện cực kẽm"
+          }
+        },
+        {
+          "text": "flow through the salt bridge from the zinc to the copper",
+          "vi": {
+            "text": "đi qua cầu muối từ bên kẽm sang bên đồng"
+          }
+        },
+        {
+          "text": "do not move: only ions move in a galvanic cell",
+          "vi": {
+            "text": "không di chuyển: trong pin điện hóa chỉ có ion di chuyển"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-lead",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["cell", "series"],
+      "set": {
+        "pair": 2,
+        "leftConcentration": 1,
+        "rightConcentration": 1
+      },
+      "stem": "A cell is made of lead in 1 mol/L Pb²⁺ and copper in 1 mol/L Cu²⁺ at 25 °C (E°: Pb²⁺/Pb −0.1262 V, Cu²⁺/Cu +0.3419 V). Decide whether each statement is true or false.",
+      "explain": "Lead has the lower E°, so lead is the anode (Pb → Pb²⁺ + 2e⁻) and the copper electrode gains copper. E° = E°(+) − E°(−) = 0.3419 − (−0.1262) = {@emf|4} V; adding the two values as written gives 0.2157 V, which is wrong.",
+      "vi": {
+        "stem": "Một pin gồm điện cực chì trong dung dịch Pb²⁺ 1 mol/L và điện cực đồng trong dung dịch Cu²⁺ 1 mol/L ở 25 °C (E°: Pb²⁺/Pb −0,1262 V, Cu²⁺/Cu +0,3419 V). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Chì có E° nhỏ hơn, nên chì là anode (Pb → Pb²⁺ + 2e⁻) và điện cực đồng được bám thêm đồng. E° = E°(+) − E°(−) = 0,3419 − (−0,1262) = {@emf|4} V; cộng hai giá trị như đã cho được 0,2157 V là sai."
+      },
+      "statements": [
+        {
+          "text": "Lead is the anode.",
+          "vi": {
+            "text": "Chì là anode."
+          },
+          "true": true
+        },
+        {
+          "text": "The emf of the cell is {=0.3419-(-0.1262)|4} V.",
+          "vi": {
+            "text": "Suất điện động của pin là {=0.3419-(-0.1262)|4} V."
+          },
+          "true": true,
+          "check": {
+            "expr": "0.3419-(-0.1262)",
+            "equals": "emf"
+          }
+        },
+        {
+          "text": "The copper electrode gets thinner as the cell runs.",
+          "vi": {
+            "text": "Điện cực đồng mỏng dần khi pin hoạt động."
+          },
+          "true": false
+        },
+        {
+          "text": "The emf of the cell is {=0.3419+(-0.1262)|4} V.",
+          "vi": {
+            "text": "Suất điện động của pin là {=0.3419+(-0.1262)|4} V."
+          },
+          "true": false,
+          "check": {
+            "expr": "0.3419+(-0.1262)",
+            "equals": "emf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "gibbs-zinc-silver",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["series"],
+      "set": {
+        "pair": 3,
+        "leftConcentration": 1,
+        "rightConcentration": 1
+      },
+      "stem": "The Zn | Ag cell at 1 mol/L and 25 °C runs Zn + 2Ag⁺ → Zn²⁺ + 2Ag and has an emf of {@emf|5} V. What is ΔG of this reaction? (F = 96 485 C/mol)",
+      "explain": "Two electrons pass per Zn (and per 2Ag⁺): n = {@electrons}. ΔG = −n·F·E = −{@electrons}·96 485·{@emf|5}/1000 ≈ {@gibbsEnergy} kJ/mol, negative because the cell reaction is spontaneous. Taking n = 1 for Ag⁺ halves it.",
+      "vi": {
+        "stem": "Pin Zn | Ag ở 1 mol/L và 25 °C xảy ra phản ứng Zn + 2Ag⁺ → Zn²⁺ + 2Ag và có suất điện động {@emf|5} V. ΔG của phản ứng này là bao nhiêu? (F = 96 485 C/mol)",
+        "explain": "Mỗi Zn (và mỗi 2Ag⁺) trao đổi hai electron: n = {@electrons}. ΔG = −n·F·E = −{@electrons}·96 485·{@emf|5}/1000 ≈ {@gibbsEnergy} kJ/mol, âm vì phản ứng trong pin là tự diễn biến. Lấy n = 1 theo Ag⁺ sẽ chỉ được một nửa."
+      },
+      "options": [
+        {
+          "text": "{@gibbsEnergy} kJ/mol",
+          "vi": {
+            "text": "{@gibbsEnergy} kJ/mol"
+          },
+          "correct": true,
+          "check": {
+            "expr": "-2*96485.33212331*@emf/1000",
+            "equals": "gibbsEnergy"
+          }
+        },
+        {
+          "text": "{=-96485.33212331*@emf/1000} kJ/mol",
+          "vi": {
+            "text": "{=-96485.33212331*@emf/1000} kJ/mol"
+          },
+          "check": {
+            "expr": "-96485.33212331*@emf/1000",
+            "equals": "gibbsEnergy"
+          }
+        },
+        {
+          "text": "{=2*96485.33212331*@emf/1000} kJ/mol",
+          "vi": {
+            "text": "{=2*96485.33212331*@emf/1000} kJ/mol"
+          },
+          "check": {
+            "expr": "2*96485.33212331*@emf/1000",
+            "equals": "gibbsEnergy"
+          }
+        },
+        {
+          "text": "{=-2*96485.33212331*@emf} kJ/mol",
+          "vi": {
+            "text": "{=-2*96485.33212331*@emf} kJ/mol"
+          },
+          "check": {
+            "expr": "-2*96485.33212331*@emf",
+            "equals": "gibbsEnergy"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-dilute-zinc",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["concentration", "series"],
+      "set": {
+        "pair": 0,
+        "leftConcentration": 0.01,
+        "rightConcentration": 1
+      },
+      "stem": "In a Daniell cell at 25 °C the zinc side is diluted to {leftConcentration} mol/L Zn²⁺; the copper side stays at {rightConcentration} mol/L Cu²⁺. Each electrode follows E = E° + (RT/nF)·ln[Mⁿ⁺], with RT/F ≈ 0.02569 V (E°: Zn²⁺/Zn −0.7618 V, Cu²⁺/Cu +0.3419 V). Decide whether each statement is true or false.",
+      "explain": "For Zn²⁺ n = 2: E_L = −0.7618 + (0.02569/2)·ln {leftConcentration} ≈ {@anodePotential|4} V, lower than E°. The emf, E_R − E_L = 0.3419 − ({@anodePotential|4}) ≈ {@emf|4} V, rises above 1.1037 V: fewer Zn²⁺ ions favour Zn → Zn²⁺. Using n = 1 gives {=0.3419-(-0.7618+0.025693*ln(leftConcentration))|4} V — wrong.",
+      "vi": {
+        "stem": "Trong pin Daniell ở 25 °C, bên kẽm được pha loãng thành Zn²⁺ {leftConcentration} mol/L; bên đồng giữ nguyên Cu²⁺ {rightConcentration} mol/L. Mỗi điện cực tuân theo E = E° + (RT/nF)·ln[Mⁿ⁺], với RT/F ≈ 0,02569 V (E°: Zn²⁺/Zn −0,7618 V, Cu²⁺/Cu +0,3419 V). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Với Zn²⁺, n = 2: E_L = −0,7618 + (0,02569/2)·ln {leftConcentration} ≈ {@anodePotential|4} V, thấp hơn E°. Suất điện động E_R − E_L = 0,3419 − ({@anodePotential|4}) ≈ {@emf|4} V, lớn hơn 1,1037 V: ít ion Zn²⁺ hơn thì quá trình Zn → Zn²⁺ thuận lợi hơn. Dùng n = 1 sẽ được {=0.3419-(-0.7618+0.025693*ln(leftConcentration))|4} V — sai."
+      },
+      "statements": [
+        {
+          "text": "The zinc electrode's potential is about {@anodePotential|4} V.",
+          "vi": {
+            "text": "Thế điện cực của kẽm khoảng {@anodePotential|4} V."
+          },
+          "true": true,
+          "check": {
+            "expr": "-0.7618+(8.314462618*(temperature+273.15)/(2*96485.33212331))*ln(leftConcentration)",
+            "equals": "anodePotential"
+          }
+        },
+        {
+          "text": "The emf is about {=0.3419-(-0.7618+(8.314462618*(temperature+273.15)/(2*96485.33212331))*ln(leftConcentration))|4} V.",
+          "vi": {
+            "text": "Suất điện động khoảng {=0.3419-(-0.7618+(8.314462618*(temperature+273.15)/(2*96485.33212331))*ln(leftConcentration))|4} V."
+          },
+          "true": true,
+          "check": {
+            "expr": "0.3419-(-0.7618+(8.314462618*(temperature+273.15)/(2*96485.33212331))*ln(leftConcentration))",
+            "equals": "emf"
+          }
+        },
+        {
+          "text": "Diluting the Zn²⁺ solution lowers the emf of the cell.",
+          "vi": {
+            "text": "Pha loãng dung dịch Zn²⁺ làm giảm suất điện động của pin."
+          },
+          "true": false
+        },
+        {
+          "text": "The emf is about {=0.3419-(-0.7618+(8.314462618*(temperature+273.15)/96485.33212331)*ln(leftConcentration))|4} V.",
+          "vi": {
+            "text": "Suất điện động khoảng {=0.3419-(-0.7618+(8.314462618*(temperature+273.15)/96485.33212331)*ln(leftConcentration))|4} V."
+          },
+          "true": false,
+          "check": {
+            "expr": "0.3419-(-0.7618+(8.314462618*(temperature+273.15)/96485.33212331)*ln(leftConcentration))",
+            "equals": "emf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-copper-concentration",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["concentration", "reading"],
+      "set": {
+        "pair": 0,
+        "leftConcentration": 1,
+        "rightConcentration": 0.001
+      },
+      "stem": "A Daniell cell at 25 °C has its zinc side at 1 mol/L Zn²⁺; the copper side holds an unknown concentration of Cu²⁺. The voltmeter reads {@emf|4} V. What is [Cu²⁺]? (E°cell = 1.1037 V; RT/F ≈ 0.02569 V)",
+      "explain": "Only the copper electrode is off standard: E = 1.1037 + (0.02569/2)·ln[Cu²⁺]. ln[Cu²⁺] = ({@emf|4} − 1.1037)/0.012846 ≈ {=ln(rightConcentration)|3}, so [Cu²⁺] ≈ {rightConcentration} mol/L. Using n = 1 instead of 2 gives {=sqrt(rightConcentration)|3} mol/L.",
+      "vi": {
+        "stem": "Một pin Daniell ở 25 °C có bên kẽm là Zn²⁺ 1 mol/L; bên đồng chứa Cu²⁺ với nồng độ chưa biết. Vôn kế chỉ {@emf|4} V. [Cu²⁺] bằng bao nhiêu? (E°pin = 1,1037 V; RT/F ≈ 0,02569 V)",
+        "explain": "Chỉ có điện cực đồng không ở điều kiện chuẩn: E = 1,1037 + (0,02569/2)·ln[Cu²⁺]. ln[Cu²⁺] = ({@emf|4} − 1,1037)/0,012846 ≈ {=ln(rightConcentration)|3}, nên [Cu²⁺] ≈ {rightConcentration} mol/L. Dùng n = 1 thay cho 2 sẽ được {=sqrt(rightConcentration)|3} mol/L."
+      },
+      "options": [
+        {
+          "text": "{rightConcentration} mol/L",
+          "vi": {
+            "text": "{rightConcentration} mol/L"
+          },
+          "correct": true,
+          "check": {
+            "expr": "0.3419+(8.314462618*(temperature+273.15)/(2*96485.33212331))*ln(rightConcentration)+0.7618",
+            "equals": "emf"
+          }
+        },
+        {
+          "text": "{=sqrt(rightConcentration)|3} mol/L",
+          "vi": {
+            "text": "{=sqrt(rightConcentration)|3} mol/L"
+          },
+          "check": {
+            "expr": "0.3419+(8.314462618*(temperature+273.15)/(2*96485.33212331))*ln(sqrt(rightConcentration))+0.7618",
+            "equals": "emf"
+          }
+        },
+        {
+          "text": "0.01 mol/L",
+          "vi": {
+            "text": "0,01 mol/L"
+          },
+          "check": {
+            "expr": "0.3419+(8.314462618*(temperature+273.15)/(2*96485.33212331))*ln(0.01)+0.7618",
+            "equals": "emf"
+          }
+        },
+        {
+          "text": "0.1 mol/L",
+          "vi": {
+            "text": "0,1 mol/L"
+          },
+          "check": {
+            "expr": "0.3419+(8.314462618*(temperature+273.15)/(2*96485.33212331))*ln(0.1)+0.7618",
+            "equals": "emf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "raise-emf",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["concentration", "cell"],
+      "set": {
+        "pair": 0,
+        "leftConcentration": 0.001,
+        "rightConcentration": 1
+      },
+      "stem": "A Daniell cell starts with both solutions at 1 mol/L (emf 1.1037 V at 25 °C). Which single change raises its emf?",
+      "explain": "E = E°cell + (RT/2F)·ln([Cu²⁺]/[Zn²⁺]). Diluting Zn²⁺ to 0.001 mol/L raises it to {@emf|4} V. Diluting Cu²⁺ lowers it; diluting both equally leaves the ratio, and the emf, unchanged; the size of the plates does not enter the emf at all.",
+      "vi": {
+        "stem": "Một pin Daniell ban đầu có hai dung dịch đều 1 mol/L (suất điện động 1,1037 V ở 25 °C). Thay đổi nào sau đây (chỉ một thay đổi) làm suất điện động tăng?",
+        "explain": "E = E°pin + (RT/2F)·ln([Cu²⁺]/[Zn²⁺]). Pha loãng Zn²⁺ thành 0,001 mol/L làm E tăng lên {@emf|4} V. Pha loãng Cu²⁺ làm E giảm; pha loãng cả hai như nhau thì tỉ lệ nồng độ, và E, không đổi; kích thước tấm điện cực hoàn toàn không ảnh hưởng đến suất điện động."
+      },
+      "options": [
+        {
+          "text": "Diluting the Zn²⁺ solution to 0.001 mol/L",
+          "vi": {
+            "text": "Pha loãng dung dịch Zn²⁺ thành 0,001 mol/L"
+          },
+          "correct": true
+        },
+        {
+          "text": "Diluting the Cu²⁺ solution to 0.001 mol/L",
+          "vi": {
+            "text": "Pha loãng dung dịch Cu²⁺ thành 0,001 mol/L"
+          }
+        },
+        {
+          "text": "Diluting both solutions to 0.001 mol/L",
+          "vi": {
+            "text": "Pha loãng cả hai dung dịch thành 0,001 mol/L"
+          }
+        },
+        {
+          "text": "Using zinc and copper plates twice as large",
+          "vi": {
+            "text": "Dùng tấm kẽm và tấm đồng lớn gấp đôi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-dilute-silver",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["concentration", "series", "cell"],
+      "set": {
+        "pair": 5,
+        "leftConcentration": 1,
+        "rightConcentration": 0.01
+      },
+      "stem": "A Cu | Ag cell at 25 °C has copper in {leftConcentration} mol/L Cu²⁺ and silver in {rightConcentration} mol/L Ag⁺; it runs Cu + 2Ag⁺ → Cu²⁺ + 2Ag. E = E° + (RT/nF)·ln[Mⁿ⁺], RT/F ≈ 0.02569 V (E°: Cu²⁺/Cu +0.3419 V, Ag⁺/Ag +0.7996 V; F = 96 485 C/mol). Decide whether each statement is true or false.",
+      "explain": "For Ag⁺ n = 1: E_R = 0.7996 + 0.02569·ln {rightConcentration} ≈ {@cathodePotential|4} V, so E = {@cathodePotential|4} − 0.3419 ≈ {@emf|4} V — still positive, so silver stays the cathode and copper the anode. ΔG = −2·96 485·{@emf|4}/1000 ≈ {@gibbsEnergy} kJ/mol. Using RT/2F for silver would give {=0.7996+0.012846*ln(rightConcentration)-0.3419|4} V.",
+      "vi": {
+        "stem": "Một pin Cu | Ag ở 25 °C gồm đồng trong dung dịch Cu²⁺ {leftConcentration} mol/L và bạc trong dung dịch Ag⁺ {rightConcentration} mol/L; phản ứng trong pin là Cu + 2Ag⁺ → Cu²⁺ + 2Ag. E = E° + (RT/nF)·ln[Mⁿ⁺], RT/F ≈ 0,02569 V (E°: Cu²⁺/Cu +0,3419 V, Ag⁺/Ag +0,7996 V; F = 96 485 C/mol). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Với Ag⁺, n = 1: E_R = 0,7996 + 0,02569·ln {rightConcentration} ≈ {@cathodePotential|4} V, nên E = {@cathodePotential|4} − 0,3419 ≈ {@emf|4} V — vẫn dương, nên bạc vẫn là cathode và đồng là anode. ΔG = −2·96 485·{@emf|4}/1000 ≈ {@gibbsEnergy} kJ/mol. Dùng RT/2F cho điện cực bạc sẽ được {=0.7996+0.012846*ln(rightConcentration)-0.3419|4} V."
+      },
+      "statements": [
+        {
+          "text": "The silver electrode's potential is about {@cathodePotential|4} V.",
+          "vi": {
+            "text": "Thế điện cực của bạc khoảng {@cathodePotential|4} V."
+          },
+          "true": true,
+          "check": {
+            "expr": "0.7996+(8.314462618*(temperature+273.15)/96485.33212331)*ln(rightConcentration)",
+            "equals": "cathodePotential"
+          }
+        },
+        {
+          "text": "ΔG of the cell reaction is about {=-2*96485.33212331*@emf/1000} kJ/mol.",
+          "vi": {
+            "text": "ΔG của phản ứng trong pin khoảng {=-2*96485.33212331*@emf/1000} kJ/mol."
+          },
+          "true": true,
+          "check": {
+            "expr": "-2*96485.33212331*@emf/1000",
+            "equals": "gibbsEnergy"
+          }
+        },
+        {
+          "text": "Diluting the Ag⁺ has made silver the anode.",
+          "vi": {
+            "text": "Việc pha loãng Ag⁺ đã làm bạc trở thành anode."
+          },
+          "true": false
+        },
+        {
+          "text": "The emf is about {=0.7996+(8.314462618*(temperature+273.15)/(2*96485.33212331))*ln(rightConcentration)-0.3419|4} V.",
+          "vi": {
+            "text": "Suất điện động khoảng {=0.7996+(8.314462618*(temperature+273.15)/(2*96485.33212331))*ln(rightConcentration)-0.3419|4} V."
+          },
+          "true": false,
+          "check": {
+            "expr": "0.7996+(8.314462618*(temperature+273.15)/(2*96485.33212331))*ln(rightConcentration)-0.3419",
+            "equals": "emf"
+          }
+        }
+      ]
+    }
+  ]
+}

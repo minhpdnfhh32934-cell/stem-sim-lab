@@ -1,0 +1,1033 @@
+{
+  "id": "induction",
+  "skills": [
+    {
+      "id": "faraday",
+      "name": "Faraday’s law: e = −N·ΔΦ/Δt",
+      "advice": "An emf is induced only while the flux through the coil changes; its size is N times the rate of change of flux. Stop the magnet inside the coil in your mind: no change, no current.",
+      "vi": {
+        "name": "Định luật Fa-ra-đây: e = −N·ΔΦ/Δt",
+        "advice": "Suất điện động cảm ứng chỉ xuất hiện khi từ thông qua cuộn dây biến thiên; độ lớn bằng N lần tốc độ biến thiên từ thông. Hãy hình dung nam châm dừng trong cuộn dây: không biến thiên thì không có dòng điện."
+      }
+    },
+    {
+      "id": "lenz",
+      "name": "Lenz’s law and the two kicks",
+      "advice": "The induced current opposes the change that makes it: flux rising as the magnet comes in, falling as it leaves, so the two kicks are opposite. Turning the magnet round reverses both.",
+      "vi": {
+        "name": "Định luật Len-xơ và hai lần kim lệch",
+        "advice": "Dòng điện cảm ứng có chiều chống lại sự biến thiên sinh ra nó: từ thông tăng khi nam châm đi vào, giảm khi đi ra, nên kim lệch hai lần ngược chiều nhau. Quay ngược nam châm thì cả hai lần đều đổi chiều."
+      }
+    },
+    {
+      "id": "factors",
+      "name": "Speed and turns",
+      "advice": "The peak emf is proportional to the magnet’s speed v and to the number of turns N. Try 0.2, 0.5, 1 m/s and 200, 400, 800 turns at the station.",
+      "vi": {
+        "name": "Tốc độ và số vòng dây",
+        "advice": "Suất điện động đỉnh tỉ lệ với tốc độ v của nam châm và với số vòng dây N. Thử 0,2; 0,5; 1 m/s và 200, 400, 800 vòng trên trạm."
+      }
+    },
+    {
+      "id": "reading",
+      "name": "Flux, current and readings",
+      "advice": "The induced current is e/R. An average emf is the flux change over the time it takes. The data logger shows the nearest multiple of its resolution; the magnet’s moment is illustrative.",
+      "vi": {
+        "name": "Từ thông, dòng điện và số đọc",
+        "advice": "Dòng điện cảm ứng bằng e/R. Suất điện động trung bình bằng độ biến thiên từ thông chia cho thời gian biến thiên. Bộ ghi dữ liệu hiển thị bội số gần nhất của độ phân giải; mô-men từ của nam châm là giá trị minh họa."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "faraday",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["faraday"],
+      "stem": "The emf induced in a coil of N turns when the flux through each turn changes by ΔΦ in a time Δt is…",
+      "explain": "Faraday’s law with Lenz’s minus sign: e = −N·ΔΦ/Δt.",
+      "vi": {
+        "stem": "Suất điện động cảm ứng trong cuộn dây N vòng khi từ thông qua mỗi vòng biến thiên ΔΦ trong thời gian Δt là…",
+        "explain": "Định luật Fa-ra-đây với dấu trừ của định luật Len-xơ: e = −N·ΔΦ/Δt."
+      },
+      "options": [
+        {
+          "text": "e = −N·ΔΦ/Δt",
+          "vi": {
+            "text": "e = −N·ΔΦ/Δt"
+          },
+          "correct": true
+        },
+        {
+          "text": "e = N·Φ",
+          "vi": {
+            "text": "e = N·Φ"
+          }
+        },
+        {
+          "text": "e = −ΔΦ/(N·Δt)",
+          "vi": {
+            "text": "e = −ΔΦ/(N·Δt)"
+          }
+        },
+        {
+          "text": "e = N·Δt/ΔΦ",
+          "vi": {
+            "text": "e = N·Δt/ΔΦ"
+          }
+        }
+      ]
+    },
+    {
+      "id": "lenz",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["lenz"],
+      "stem": "Lenz’s law says that the induced current…",
+      "explain": "The induced current’s own field opposes the change of flux that produces it.",
+      "vi": {
+        "stem": "Định luật Len-xơ phát biểu rằng dòng điện cảm ứng…",
+        "explain": "Từ trường của dòng điện cảm ứng chống lại sự biến thiên của từ thông sinh ra nó."
+      },
+      "options": [
+        {
+          "text": "opposes the change of flux that produces it",
+          "vi": {
+            "text": "có chiều chống lại sự biến thiên của từ thông sinh ra nó"
+          },
+          "correct": true
+        },
+        {
+          "text": "always flows the same way round the coil",
+          "vi": {
+            "text": "luôn chạy cùng một chiều trong cuộn dây"
+          }
+        },
+        {
+          "text": "helps the change of flux that produces it",
+          "vi": {
+            "text": "có chiều làm tăng sự biến thiên của từ thông sinh ra nó"
+          }
+        },
+        {
+          "text": "flows only while the magnet is at rest",
+          "vi": {
+            "text": "chỉ xuất hiện khi nam châm đứng yên"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-kicks",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["faraday", "lenz", "factors"],
+      "stem": "A bar magnet moves straight through a coil joined to a centre-zero galvanometer. Decide whether each statement is true or false.",
+      "explain": "No change of flux, no current; entry and exit give opposite kicks; turning the magnet round reverses both; a faster magnet gives a larger emf.",
+      "vi": {
+        "stem": "Một nam châm thẳng chuyển động xuyên qua cuộn dây nối với điện kế có số 0 ở giữa. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Không có biến thiên từ thông thì không có dòng điện; khi vào và khi ra kim lệch ngược chiều; quay ngược nam châm thì cả hai đổi chiều; nam châm chuyển động nhanh hơn thì suất điện động lớn hơn."
+      },
+      "statements": [
+        {
+          "text": "A magnet held still inside the coil makes no current.",
+          "vi": {
+            "text": "Nam châm đứng yên trong cuộn dây không tạo ra dòng điện."
+          },
+          "true": true
+        },
+        {
+          "text": "The needle kicks one way as the magnet comes in and the other way as it leaves.",
+          "vi": {
+            "text": "Kim lệch về một phía khi nam châm đi vào và về phía ngược lại khi nam châm đi ra."
+          },
+          "true": true
+        },
+        {
+          "text": "Turning the magnet round reverses both kicks.",
+          "vi": {
+            "text": "Quay ngược nam châm thì cả hai lần kim lệch đều đổi chiều."
+          },
+          "true": true
+        },
+        {
+          "text": "The induced emf does not depend on how fast the magnet moves.",
+          "vi": {
+            "text": "Suất điện động cảm ứng không phụ thuộc vào tốc độ của nam châm."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "double-speed",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["factors"],
+      "stem": "The magnet passes through the coil twice as fast. The peak emf…",
+      "explain": "The flux changes twice as fast, so e = −N·ΔΦ/Δt doubles.",
+      "vi": {
+        "stem": "Cho nam châm đi qua cuộn dây nhanh gấp đôi. Suất điện động đỉnh…",
+        "explain": "Từ thông biến thiên nhanh gấp đôi, nên e = −N·ΔΦ/Δt tăng gấp đôi."
+      },
+      "options": [
+        {
+          "text": "doubles",
+          "vi": {
+            "text": "tăng gấp đôi"
+          },
+          "correct": true
+        },
+        {
+          "text": "halves",
+          "vi": {
+            "text": "giảm một nửa"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "becomes four times larger",
+          "vi": {
+            "text": "tăng gấp bốn lần"
+          }
+        }
+      ]
+    },
+    {
+      "id": "half-turns",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["factors", "faraday"],
+      "stem": "A coil with half as many turns is used, the magnet moving as before. The peak emf…",
+      "explain": "Each turn adds its own emf: e ∝ N, so half N gives half e.",
+      "vi": {
+        "stem": "Dùng cuộn dây có số vòng bằng một nửa, nam châm chuyển động như cũ. Suất điện động đỉnh…",
+        "explain": "Mỗi vòng dây góp phần suất điện động của nó: e tỉ lệ với N, nên N giảm một nửa thì e giảm một nửa."
+      },
+      "options": [
+        {
+          "text": "halves",
+          "vi": {
+            "text": "giảm một nửa"
+          },
+          "correct": true
+        },
+        {
+          "text": "doubles",
+          "vi": {
+            "text": "tăng gấp đôi"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "becomes four times smaller",
+          "vi": {
+            "text": "giảm bốn lần"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-north",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["lenz", "factors"],
+      "set": {
+        "speed": 0.5,
+        "turns": 400,
+        "polarity": 1
+      },
+      "stem": "The magnet (an illustrative dipole) passes north pole first at {speed} m/s through a coil of {turns} turns. Decide whether each statement is true or false.",
+      "explain": "The peak emf is {@peakEmf} V; north first, the first pulse is negative ({@firstPeak} V) and the second positive ({@secondPeak} V). With 800 turns the peak would double, not quadruple.",
+      "vi": {
+        "stem": "Nam châm (lưỡng cực minh họa) đi qua cuộn dây {turns} vòng với cực Bắc đi trước, tốc độ {speed} m/s. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Suất điện động đỉnh là {@peakEmf} V; cực Bắc đi trước thì xung thứ nhất âm ({@firstPeak} V) và xung thứ hai dương ({@secondPeak} V). Với 800 vòng, suất điện động đỉnh tăng gấp đôi, không phải gấp bốn."
+      },
+      "statements": [
+        {
+          "text": "The peak emf is about {@peakEmf} V.",
+          "vi": {
+            "text": "Suất điện động đỉnh khoảng {@peakEmf} V."
+          },
+          "true": true,
+          "check": {
+            "expr": "3*1.25663706212e-6*magnetMoment*turns*speed/(4*coilRadius^2*(5/4)^(5/2))",
+            "equals": "peakEmf"
+          }
+        },
+        {
+          "text": "The first pulse is negative, about {@firstPeak} V.",
+          "vi": {
+            "text": "Xung thứ nhất âm, khoảng {@firstPeak} V."
+          },
+          "true": true,
+          "check": {
+            "expr": "-@peakEmf",
+            "equals": "firstPeak"
+          }
+        },
+        {
+          "text": "The second pulse is positive, about {@secondPeak} V.",
+          "vi": {
+            "text": "Xung thứ hai dương, khoảng {@secondPeak} V."
+          },
+          "true": true,
+          "check": {
+            "expr": "@peakEmf",
+            "equals": "secondPeak"
+          }
+        },
+        {
+          "text": "With 800 turns the peak emf would be four times as large.",
+          "vi": {
+            "text": "Với 800 vòng, suất điện động đỉnh sẽ lớn gấp bốn."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "scale-up",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["factors"],
+      "set": {
+        "speed": 1,
+        "turns": 800
+      },
+      "stem": "At 0.2 m/s through 200 turns the peak emf is {=@peakEmf/20} V. What is it at {speed} m/s through {turns} turns?",
+      "explain": "e ∝ v·N: 5 times the speed and 4 times the turns give 20 times the emf: {@peakEmf} V.",
+      "vi": {
+        "stem": "Ở tốc độ 0,2 m/s qua cuộn 200 vòng, suất điện động đỉnh là {=@peakEmf/20} V. Ở {speed} m/s qua cuộn {turns} vòng thì bằng bao nhiêu?",
+        "explain": "e tỉ lệ với v·N: tốc độ gấp 5 và số vòng gấp 4 thì suất điện động gấp 20: {@peakEmf} V."
+      },
+      "options": [
+        {
+          "text": "{@peakEmf} V",
+          "vi": {
+            "text": "{@peakEmf} V"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@peakEmf",
+            "equals": "peakEmf"
+          }
+        },
+        {
+          "text": "{=@peakEmf/4} V",
+          "vi": {
+            "text": "{=@peakEmf/4} V"
+          },
+          "check": {
+            "expr": "@peakEmf/4",
+            "equals": "peakEmf"
+          }
+        },
+        {
+          "text": "{=@peakEmf/5} V",
+          "vi": {
+            "text": "{=@peakEmf/5} V"
+          },
+          "check": {
+            "expr": "@peakEmf/5",
+            "equals": "peakEmf"
+          }
+        },
+        {
+          "text": "{=@peakEmf*9/20} V",
+          "vi": {
+            "text": "{=@peakEmf*9/20} V"
+          },
+          "check": {
+            "expr": "@peakEmf*9/20",
+            "equals": "peakEmf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "current",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["reading"],
+      "set": {
+        "speed": 0.5,
+        "turns": 400
+      },
+      "stem": "The peak emf is {@peakEmf} V and the coil and galvanometer together have R = {circuitResistance} Ω. What is the peak current?",
+      "explain": "I = e/R = {@peakEmf}/{circuitResistance} ≈ {=@peakEmf/circuitResistance} A.",
+      "vi": {
+        "stem": "Suất điện động đỉnh là {@peakEmf} V, cuộn dây và điện kế có điện trở tổng R = {circuitResistance} Ω. Cường độ dòng điện đỉnh bằng bao nhiêu?",
+        "explain": "I = e/R = {@peakEmf}/{circuitResistance} ≈ {=@peakEmf/circuitResistance} A."
+      },
+      "options": [
+        {
+          "text": "{=@peakEmf/circuitResistance} A",
+          "vi": {
+            "text": "{=@peakEmf/circuitResistance} A"
+          },
+          "correct": true
+        },
+        {
+          "text": "{=@peakEmf*circuitResistance} A",
+          "vi": {
+            "text": "{=@peakEmf*circuitResistance} A"
+          }
+        },
+        {
+          "text": "{=circuitResistance/@peakEmf} A",
+          "vi": {
+            "text": "{=circuitResistance/@peakEmf} A"
+          }
+        },
+        {
+          "text": "{=@peakEmf/(circuitResistance*turns)} A",
+          "vi": {
+            "text": "{=@peakEmf/(circuitResistance*turns)} A"
+          }
+        }
+      ]
+    },
+    {
+      "id": "per-speed",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["factors"],
+      "set": {
+        "speed": 0.5,
+        "turns": 400
+      },
+      "stem": "At {speed} m/s the peak emf is {@peakEmf} V. Plotting the peak emf against the speed gives a line through the origin. What is its slope?",
+      "explain": "|e|max ∝ v, so the slope is {@peakEmf}/{speed} = {@peakPerSpeed} V·s/m.",
+      "vi": {
+        "stem": "Ở tốc độ {speed} m/s, suất điện động đỉnh là {@peakEmf} V. Đồ thị suất điện động đỉnh theo tốc độ là đường thẳng qua gốc tọa độ. Hệ số góc của nó bằng bao nhiêu?",
+        "explain": "|e|max tỉ lệ với v, nên hệ số góc bằng {@peakEmf}/{speed} = {@peakPerSpeed} V·s/m."
+      },
+      "options": [
+        {
+          "text": "{@peakPerSpeed} V·s/m",
+          "vi": {
+            "text": "{@peakPerSpeed} V·s/m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@peakEmf/speed",
+            "equals": "peakPerSpeed"
+          }
+        },
+        {
+          "text": "{=@peakEmf*speed} V·s/m",
+          "vi": {
+            "text": "{=@peakEmf*speed} V·s/m"
+          },
+          "check": {
+            "expr": "@peakEmf*speed",
+            "equals": "peakPerSpeed"
+          }
+        },
+        {
+          "text": "{=speed/@peakEmf} V·s/m",
+          "vi": {
+            "text": "{=speed/@peakEmf} V·s/m"
+          },
+          "check": {
+            "expr": "speed/@peakEmf",
+            "equals": "peakPerSpeed"
+          }
+        },
+        {
+          "text": "{@peakEmf} V·s/m",
+          "vi": {
+            "text": "{@peakEmf} V·s/m"
+          },
+          "check": {
+            "expr": "@peakEmf",
+            "equals": "peakPerSpeed"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-south",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["lenz", "reading"],
+      "set": {
+        "speed": 0.2,
+        "turns": 200,
+        "polarity": -1
+      },
+      "stem": "The magnet passes south pole first at {speed} m/s through a coil of {turns} turns (R = {circuitResistance} Ω). Decide whether each statement is true or false.",
+      "explain": "Peak {@peakEmf} V; reversing the magnet reverses the pulses, so the first is now positive ({@firstPeak} V) and the second negative. The peak current is e/R ≈ {=@peakEmf/circuitResistance} A.",
+      "vi": {
+        "stem": "Nam châm đi qua cuộn dây {turns} vòng với cực Nam đi trước, tốc độ {speed} m/s (R = {circuitResistance} Ω). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Đỉnh {@peakEmf} V; quay ngược nam châm làm các xung đổi chiều, nên xung thứ nhất bây giờ dương ({@firstPeak} V) và xung thứ hai âm. Dòng điện đỉnh e/R ≈ {=@peakEmf/circuitResistance} A."
+      },
+      "statements": [
+        {
+          "text": "The peak emf is about {@peakEmf} V.",
+          "vi": {
+            "text": "Suất điện động đỉnh khoảng {@peakEmf} V."
+          },
+          "true": true,
+          "check": {
+            "expr": "3*1.25663706212e-6*magnetMoment*turns*speed/(4*coilRadius^2*(5/4)^(5/2))",
+            "equals": "peakEmf"
+          }
+        },
+        {
+          "text": "The first pulse is positive.",
+          "vi": {
+            "text": "Xung thứ nhất dương."
+          },
+          "true": true,
+          "check": {
+            "expr": "@peakEmf",
+            "equals": "firstPeak"
+          }
+        },
+        {
+          "text": "The peak current is about {=@peakEmf/circuitResistance} A.",
+          "vi": {
+            "text": "Dòng điện đỉnh khoảng {=@peakEmf/circuitResistance} A."
+          },
+          "true": true
+        },
+        {
+          "text": "The first pulse is negative, as with the north pole first.",
+          "vi": {
+            "text": "Xung thứ nhất âm, giống như khi cực Bắc đi trước."
+          },
+          "true": false,
+          "check": {
+            "expr": "-@peakEmf",
+            "equals": "firstPeak"
+          }
+        }
+      ]
+    },
+    {
+      "id": "average",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["faraday", "reading"],
+      "set": {
+        "speed": 0.5,
+        "turns": 400
+      },
+      "stem": "The flux linkage N·Φ with the magnet at the coil’s centre is {@fluxLinkage} Wb, and practically zero where the magnet starts, {startDistance} m away. The magnet moves at {speed} m/s. What average emf is induced while it comes in?",
+      "explain": "Δt = {startDistance}/{speed} = {=startDistance/speed} s; |e|avg = N·ΔΦ/Δt ≈ {@fluxLinkage}/{=startDistance/speed} ≈ {=@fluxLinkage*speed/startDistance} V — well below the peak, {@peakEmf} V, because most of the change happens close to the coil.",
+      "vi": {
+        "stem": "Từ thông móc vòng N·Φ khi nam châm ở tâm cuộn dây là {@fluxLinkage} Wb, và gần như bằng 0 ở vị trí xuất phát cách {startDistance} m. Nam châm chuyển động với tốc độ {speed} m/s. Suất điện động trung bình khi nam châm đi vào bằng bao nhiêu?",
+        "explain": "Δt = {startDistance}/{speed} = {=startDistance/speed} s; |e|tb = N·ΔΦ/Δt ≈ {@fluxLinkage}/{=startDistance/speed} ≈ {=@fluxLinkage*speed/startDistance} V — nhỏ hơn nhiều so với giá trị đỉnh {@peakEmf} V, vì phần lớn sự biến thiên xảy ra khi nam châm ở gần cuộn dây."
+      },
+      "options": [
+        {
+          "text": "{=@fluxLinkage*speed/startDistance} V",
+          "vi": {
+            "text": "{=@fluxLinkage*speed/startDistance} V"
+          },
+          "correct": true
+        },
+        {
+          "text": "{=@fluxLinkage*startDistance/speed} V",
+          "vi": {
+            "text": "{=@fluxLinkage*startDistance/speed} V"
+          }
+        },
+        {
+          "text": "{@fluxLinkage} V",
+          "vi": {
+            "text": "{@fluxLinkage} V"
+          }
+        },
+        {
+          "text": "{=@fluxLinkage*speed/startDistance/turns} V",
+          "vi": {
+            "text": "{=@fluxLinkage*speed/startDistance/turns} V"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-logger",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["reading", "factors"],
+      "set": {
+        "speed": 1,
+        "turns": 800,
+        "voltageResolution": 0.01
+      },
+      "stem": "The magnet passes at {speed} m/s through {turns} turns; the data logger reads the peak to {voltageResolution} V. Decide whether each statement is true or false.",
+      "explain": "|e|max ≈ {@peakEmf|4} V, shown as {=round(@peakEmf/voltageResolution)*voltageResolution} V; |e|max/v = {@peakPerSpeed} V·s/m. A real galvanometer’s needle has inertia and cannot follow the top of a fast pulse, so it reads less.",
+      "vi": {
+        "stem": "Nam châm đi qua cuộn {turns} vòng với tốc độ {speed} m/s; bộ ghi dữ liệu đọc giá trị đỉnh với độ phân giải {voltageResolution} V. Mỗi nhận định sau đúng hay sai?",
+        "explain": "|e|max ≈ {@peakEmf|4} V, hiển thị {=round(@peakEmf/voltageResolution)*voltageResolution} V; |e|max/v = {@peakPerSpeed} V·s/m. Kim điện kế thật có quán tính nên không theo kịp đỉnh của xung nhanh, vì vậy chỉ giá trị nhỏ hơn."
+      },
+      "statements": [
+        {
+          "text": "The model’s peak emf is about {@peakEmf|4} V.",
+          "vi": {
+            "text": "Suất điện động đỉnh theo mô hình khoảng {@peakEmf|4} V."
+          },
+          "true": true,
+          "check": {
+            "expr": "3*1.25663706212e-6*magnetMoment*turns*speed/(4*coilRadius^2*(5/4)^(5/2))",
+            "equals": "peakEmf"
+          }
+        },
+        {
+          "text": "The data logger shows {=round(@peakEmf/voltageResolution)*voltageResolution} V.",
+          "vi": {
+            "text": "Bộ ghi dữ liệu hiển thị {=round(@peakEmf/voltageResolution)*voltageResolution} V."
+          },
+          "true": true
+        },
+        {
+          "text": "The peak emf divided by the speed is {@peakPerSpeed} V·s/m.",
+          "vi": {
+            "text": "Suất điện động đỉnh chia cho tốc độ bằng {@peakPerSpeed} V·s/m."
+          },
+          "true": true,
+          "check": {
+            "expr": "@peakEmf/speed",
+            "equals": "peakPerSpeed"
+          }
+        },
+        {
+          "text": "A real galvanometer’s needle would follow the top of this fast pulse exactly.",
+          "vi": {
+            "text": "Kim của điện kế thật sẽ theo kịp chính xác đỉnh của xung nhanh này."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "weber",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["faraday"],
+      "stem": "The SI unit of magnetic flux is the…",
+      "explain": "Φ = B·S·cos α is measured in webers: 1 Wb = 1 T·m². The tesla is the unit of the magnetic field B; the henry is the unit of inductance.",
+      "vi": {
+        "stem": "Đơn vị của từ thông trong hệ SI là…",
+        "explain": "Φ = B·S·cos α có đơn vị vêbe: 1 Wb = 1 T·m². Tesla là đơn vị của cảm ứng từ B; henry là đơn vị của độ tự cảm."
+      },
+      "options": [
+        {
+          "text": "weber (Wb)",
+          "vi": {
+            "text": "vêbe (Wb)"
+          },
+          "correct": true
+        },
+        {
+          "text": "tesla (T)",
+          "vi": {
+            "text": "tesla (T)"
+          }
+        },
+        {
+          "text": "henry (H)",
+          "vi": {
+            "text": "henry (H)"
+          }
+        },
+        {
+          "text": "volt (V)",
+          "vi": {
+            "text": "vôn (V)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "magnet-still",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["faraday", "reading"],
+      "stem": "The magnet is pushed into the coil and then held still at its centre. While it is held still, the galvanometer reads…",
+      "explain": "An emf is induced only while the flux through the coil changes. A magnet at rest gives a large but constant flux, so ΔΦ/Δt = 0 and the reading is zero.",
+      "vi": {
+        "stem": "Đẩy nam châm vào trong cuộn dây rồi giữ yên nó ở chính giữa cuộn dây. Trong lúc nam châm đứng yên, điện kế chỉ…",
+        "explain": "Suất điện động cảm ứng chỉ xuất hiện khi từ thông qua cuộn dây biến thiên. Nam châm đứng yên tạo ra từ thông lớn nhưng không đổi, nên ΔΦ/Δt = 0 và điện kế chỉ số 0."
+      },
+      "options": [
+        {
+          "text": "zero",
+          "vi": {
+            "text": "số 0"
+          },
+          "correct": true
+        },
+        {
+          "text": "its largest value, since the flux is greatest",
+          "vi": {
+            "text": "giá trị lớn nhất, vì từ thông lớn nhất"
+          }
+        },
+        {
+          "text": "a steady current in one direction",
+          "vi": {
+            "text": "một dòng điện không đổi theo một chiều"
+          }
+        },
+        {
+          "text": "a current that keeps changing direction",
+          "vi": {
+            "text": "một dòng điện liên tục đổi chiều"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-coil",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["lenz", "faraday"],
+      "stem": "A bar magnet passes straight through a coil joined to a centre-zero galvanometer. Decide whether each statement is true or false.",
+      "explain": "Entering, the flux grows; leaving, it falls: by Lenz’s law the current flows one way, then the other. Turning the magnet round reverses both kicks. Only the relative motion matters: moving the coil over a magnet at rest induces the same emf.",
+      "vi": {
+        "stem": "Một thanh nam châm đi thẳng qua cuộn dây nối với điện kế có số 0 ở giữa. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Khi nam châm đi vào, từ thông tăng; khi đi ra, từ thông giảm: theo định luật Lenz dòng điện chạy theo một chiều rồi đổi sang chiều kia. Quay ngược nam châm thì cả hai lần lệch đều đổi chiều. Chỉ chuyển động tương đối là quan trọng: cho cuộn dây chuyển động quanh nam châm đứng yên cũng sinh ra suất điện động như vậy."
+      },
+      "statements": [
+        {
+          "text": "The current while the magnet enters flows the opposite way to while it leaves.",
+          "vi": {
+            "text": "Dòng điện khi nam châm đi vào có chiều ngược với khi nam châm đi ra."
+          },
+          "true": true
+        },
+        {
+          "text": "With the magnet turned round (south pole first), both kicks are reversed.",
+          "vi": {
+            "text": "Quay ngược nam châm (cực nam đi trước) thì cả hai lần lệch đều đổi chiều."
+          },
+          "true": true
+        },
+        {
+          "text": "Moving the coil over a magnet at rest induces no emf.",
+          "vi": {
+            "text": "Cho cuộn dây chuyển động trong khi nam châm đứng yên thì không có suất điện động cảm ứng."
+          },
+          "true": false
+        },
+        {
+          "text": "The induced current always flows so as to help the magnet’s motion.",
+          "vi": {
+            "text": "Dòng điện cảm ứng luôn có chiều sao cho hỗ trợ chuyển động của nam châm."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "second-kick",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["lenz", "reading"],
+      "set": {
+        "speed": 0.5,
+        "turns": 400,
+        "polarity": -1
+      },
+      "stem": "The magnet passes south pole first at {speed} m/s through {turns} turns, and the first kick peaks at {@firstPeak} V. What is the second peak, as the magnet leaves?",
+      "explain": "Leaving, the flux falls instead of growing, so the emf has the other sign; at a steady speed the exit mirrors the entry, so it is {@secondPeak} V, the same size with the opposite sign.",
+      "vi": {
+        "stem": "Nam châm đi qua cuộn dây {turns} vòng với tốc độ {speed} m/s, cực nam đi trước, và lần lệch thứ nhất đạt cực đại {@firstPeak} V. Giá trị cực đại thứ hai, khi nam châm đi ra, bằng bao nhiêu?",
+        "explain": "Khi đi ra, từ thông giảm thay vì tăng nên suất điện động đổi dấu; với tốc độ không đổi, lúc ra đối xứng với lúc vào, nên nó bằng {@secondPeak} V: cùng độ lớn, ngược dấu."
+      },
+      "options": [
+        {
+          "text": "{@secondPeak} V",
+          "vi": {
+            "text": "{@secondPeak} V"
+          },
+          "correct": true,
+          "check": {
+            "expr": "-@firstPeak",
+            "equals": "secondPeak"
+          }
+        },
+        {
+          "text": "{@firstPeak} V",
+          "vi": {
+            "text": "{@firstPeak} V"
+          },
+          "check": {
+            "expr": "@firstPeak",
+            "equals": "secondPeak"
+          }
+        },
+        {
+          "text": "0 V",
+          "vi": {
+            "text": "0 V"
+          },
+          "check": {
+            "expr": "0",
+            "equals": "secondPeak"
+          }
+        },
+        {
+          "text": "{=-2*@firstPeak} V",
+          "vi": {
+            "text": "{=-2*@firstPeak} V"
+          },
+          "check": {
+            "expr": "-2*@firstPeak",
+            "equals": "secondPeak"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-slow",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["factors", "reading"],
+      "set": {
+        "speed": 0.2,
+        "turns": 800,
+        "polarity": 1
+      },
+      "stem": "The magnet (an illustrative dipole) passes at {speed} m/s through a coil of {turns} turns; coil and galvanometer together have R = {circuitResistance} Ω. Decide whether each statement is true or false.",
+      "explain": "In this simulation the peak emf is {@peakEmf} V; the peak current is e/R ≈ {=@peakEmf/circuitResistance*1000} mA. The peak is proportional to N and to v: half the turns give half, {=@peakEmf/2} V, and 5 times the speed gives 5 times, {=@peakEmf*5} V, not 25 times.",
+      "vi": {
+        "stem": "Nam châm (một lưỡng cực mang tính minh họa) đi qua cuộn dây {turns} vòng với tốc độ {speed} m/s; cuộn dây và điện kế có điện trở tổng R = {circuitResistance} Ω. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Trong mô phỏng này suất điện động cực đại là {@peakEmf} V; cường độ dòng điện cực đại là e/R ≈ {=@peakEmf/circuitResistance*1000} mA. Giá trị cực đại tỉ lệ với N và với v: số vòng giảm một nửa thì nó giảm một nửa, {=@peakEmf/2} V; tốc độ tăng 5 lần thì nó tăng 5 lần, {=@peakEmf*5} V, chứ không phải 25 lần."
+      },
+      "statements": [
+        {
+          "text": "The peak current is about {=@peakEmf/circuitResistance*1000} mA.",
+          "vi": {
+            "text": "Cường độ dòng điện cực đại khoảng {=@peakEmf/circuitResistance*1000} mA."
+          },
+          "true": true,
+          "check": {
+            "expr": "(@peakEmf/circuitResistance)*circuitResistance",
+            "equals": "peakEmf"
+          }
+        },
+        {
+          "text": "With 400 turns at the same speed, the peak would be {=@peakEmf/2} V.",
+          "vi": {
+            "text": "Với 400 vòng và cùng tốc độ, giá trị cực đại sẽ là {=@peakEmf/2} V."
+          },
+          "true": true,
+          "check": {
+            "expr": "(@peakEmf/2)*turns/400",
+            "equals": "peakEmf"
+          }
+        },
+        {
+          "text": "At 1 m/s the peak would be {=@peakEmf*25} V.",
+          "vi": {
+            "text": "Ở tốc độ 1 m/s, giá trị cực đại sẽ là {=@peakEmf*25} V."
+          },
+          "true": false,
+          "check": {
+            "expr": "(@peakEmf*25)*speed/1",
+            "equals": "peakEmf"
+          }
+        },
+        {
+          "text": "At 1 m/s the peak would be {=@peakEmf*5} V.",
+          "vi": {
+            "text": "Ở tốc độ 1 m/s, giá trị cực đại sẽ là {=@peakEmf*5} V."
+          },
+          "true": true,
+          "check": {
+            "expr": "(@peakEmf*5)*speed/1",
+            "equals": "peakEmf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-speed",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["factors"],
+      "set": {
+        "speed": 1,
+        "turns": 800
+      },
+      "stem": "At 0.5 m/s through 400 turns, the peak emf is {=@peakEmf*200/(speed*turns)} V. With {turns} turns the peak is {@peakEmf} V. At what speed did the magnet pass?",
+      "explain": "e ∝ N·v: the peak is {=@peakEmf/(@peakEmf*200/(speed*turns))} times larger, and {turns}/400 = {=turns/400} of that comes from the turns, so v = 0.5 × {=@peakEmf/(@peakEmf*200/(speed*turns))}/{=turns/400} = {speed} m/s. Forgetting the turns, or turning their ratio over, gives the other values.",
+      "vi": {
+        "stem": "Với tốc độ 0,5 m/s qua cuộn 400 vòng, suất điện động cực đại là {=@peakEmf*200/(speed*turns)} V. Với cuộn {turns} vòng, giá trị cực đại là {@peakEmf} V. Nam châm đã đi qua với tốc độ bao nhiêu?",
+        "explain": "e tỉ lệ với N·v: giá trị cực đại lớn gấp {=@peakEmf/(@peakEmf*200/(speed*turns))} lần, trong đó số vòng góp {turns}/400 = {=turns/400} lần, nên v = 0,5 × {=@peakEmf/(@peakEmf*200/(speed*turns))}/{=turns/400} = {speed} m/s. Quên tính số vòng, hoặc đảo ngược tỉ số vòng, sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{=0.5*(@peakEmf/(@peakEmf*200/(speed*turns)))*400/turns} m/s",
+          "vi": {
+            "text": "{=0.5*(@peakEmf/(@peakEmf*200/(speed*turns)))*400/turns} m/s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(0.5*(@peakEmf/(@peakEmf*200/(speed*turns)))*400/turns)*@peakEmf/speed",
+            "equals": "peakEmf"
+          }
+        },
+        {
+          "text": "{=0.5*(@peakEmf/(@peakEmf*200/(speed*turns)))} m/s",
+          "vi": {
+            "text": "{=0.5*(@peakEmf/(@peakEmf*200/(speed*turns)))} m/s"
+          },
+          "check": {
+            "expr": "(0.5*(@peakEmf/(@peakEmf*200/(speed*turns))))*@peakEmf/speed",
+            "equals": "peakEmf"
+          }
+        },
+        {
+          "text": "{=0.5*(@peakEmf/(@peakEmf*200/(speed*turns)))*turns/400} m/s",
+          "vi": {
+            "text": "{=0.5*(@peakEmf/(@peakEmf*200/(speed*turns)))*turns/400} m/s"
+          },
+          "check": {
+            "expr": "(0.5*(@peakEmf/(@peakEmf*200/(speed*turns)))*turns/400)*@peakEmf/speed",
+            "equals": "peakEmf"
+          }
+        },
+        {
+          "text": "{=0.5*((@peakEmf*200/(speed*turns))/@peakEmf)*400/turns} m/s",
+          "vi": {
+            "text": "{=0.5*((@peakEmf*200/(speed*turns))/@peakEmf)*400/turns} m/s"
+          },
+          "check": {
+            "expr": "(0.5*((@peakEmf*200/(speed*turns))/@peakEmf)*400/turns)*@peakEmf/speed",
+            "equals": "peakEmf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "charge-entering",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["reading", "faraday"],
+      "set": {
+        "speed": 0.5,
+        "turns": 400
+      },
+      "stem": "The flux linkage N·Φ with the magnet at the coil’s centre is {@fluxLinkage} Wb, and practically zero where the magnet starts. Coil and galvanometer together have R = {circuitResistance} Ω. What charge flows round the circuit while the magnet moves in to the centre?",
+      "explain": "I = e/R = (Δ(NΦ)/Δt)/R, so q = I·Δt = Δ(NΦ)/R = {@fluxLinkage}/{circuitResistance} ≈ {=@fluxLinkage/circuitResistance} C, whatever the speed: a faster magnet gives a larger current for a shorter time. The peak current e/R is a current, not a charge.",
+      "vi": {
+        "stem": "Từ thông qua cuộn dây N·Φ khi nam châm ở chính giữa cuộn dây là {@fluxLinkage} Wb, và gần như bằng 0 tại chỗ nam châm xuất phát. Cuộn dây và điện kế có điện trở tổng R = {circuitResistance} Ω. Điện lượng chạy qua mạch trong lúc nam châm đi vào đến chính giữa bằng bao nhiêu?",
+        "explain": "I = e/R = (Δ(NΦ)/Δt)/R, nên q = I·Δt = Δ(NΦ)/R = {@fluxLinkage}/{circuitResistance} ≈ {=@fluxLinkage/circuitResistance} C, với bất kì tốc độ nào: nam châm nhanh hơn cho dòng lớn hơn trong thời gian ngắn hơn. e/R cực đại là cường độ dòng điện, không phải điện lượng."
+      },
+      "options": [
+        {
+          "text": "{=@fluxLinkage/circuitResistance} C",
+          "vi": {
+            "text": "{=@fluxLinkage/circuitResistance} C"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(@fluxLinkage/circuitResistance)*circuitResistance",
+            "equals": "fluxLinkage"
+          }
+        },
+        {
+          "text": "{=@fluxLinkage*circuitResistance} C",
+          "vi": {
+            "text": "{=@fluxLinkage*circuitResistance} C"
+          },
+          "check": {
+            "expr": "(@fluxLinkage*circuitResistance)*circuitResistance",
+            "equals": "fluxLinkage"
+          }
+        },
+        {
+          "text": "{=@peakEmf/circuitResistance} C",
+          "vi": {
+            "text": "{=@peakEmf/circuitResistance} C"
+          },
+          "check": {
+            "expr": "(@peakEmf/circuitResistance)*circuitResistance",
+            "equals": "fluxLinkage"
+          }
+        },
+        {
+          "text": "{=@fluxLinkage/(circuitResistance*speed)} C",
+          "vi": {
+            "text": "{=@fluxLinkage/(circuitResistance*speed)} C"
+          },
+          "check": {
+            "expr": "(@fluxLinkage/(circuitResistance*speed))*circuitResistance",
+            "equals": "fluxLinkage"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-fast",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["factors", "reading", "faraday"],
+      "set": {
+        "speed": 1,
+        "turns": 400
+      },
+      "stem": "The magnet (an illustrative dipole) passes at {speed} m/s through {turns} turns; coil and galvanometer have R = {circuitResistance} Ω. Decide whether each statement is true or false.",
+      "explain": "In this simulation the peak emf is {@peakEmf} V, and runs at several speeds lie on a line through the origin of slope {@peakPerSpeed} V per m/s. Faster, the same change of flux happens in less time: the kicks are taller and narrower. The charge in each kick, Δ(NΦ)/R, does not depend on the speed.",
+      "vi": {
+        "stem": "Nam châm (một lưỡng cực mang tính minh họa) đi qua cuộn dây {turns} vòng với tốc độ {speed} m/s; cuộn dây và điện kế có R = {circuitResistance} Ω. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Trong mô phỏng này suất điện động cực đại là {@peakEmf} V, và các lần chạy ở nhiều tốc độ nằm trên một đường thẳng qua gốc tọa độ có hệ số góc {@peakPerSpeed} V trên m/s. Nhanh hơn thì cùng một độ biến thiên từ thông xảy ra trong thời gian ngắn hơn: các lần lệch cao hơn và hẹp hơn. Điện lượng trong mỗi lần lệch, Δ(NΦ)/R, không phụ thuộc tốc độ."
+      },
+      "statements": [
+        {
+          "text": "The peak emf is about {@peakEmf} V.",
+          "vi": {
+            "text": "Suất điện động cực đại khoảng {@peakEmf} V."
+          },
+          "true": true,
+          "check": {
+            "expr": "@peakPerSpeed*speed",
+            "equals": "peakEmf"
+          }
+        },
+        {
+          "text": "The peak emf against the speed is a line through the origin of slope {@peakPerSpeed} V per m/s.",
+          "vi": {
+            "text": "Đồ thị suất điện động cực đại theo tốc độ là đường thẳng qua gốc tọa độ có hệ số góc {@peakPerSpeed} V trên m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "@peakEmf/speed",
+            "equals": "peakPerSpeed"
+          }
+        },
+        {
+          "text": "Compared with 0.5 m/s, each kick is taller and narrower.",
+          "vi": {
+            "text": "So với khi đi 0,5 m/s, mỗi lần lệch cao hơn và hẹp hơn."
+          },
+          "true": true
+        },
+        {
+          "text": "Twice as much charge flows in each kick as at 0.5 m/s.",
+          "vi": {
+            "text": "Điện lượng chạy qua trong mỗi lần lệch gấp đôi so với khi đi 0,5 m/s."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

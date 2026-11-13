@@ -1,0 +1,320 @@
+{
+  "id": "collision-theory",
+  "name": "Collision theory: why heat and concentration speed reactions",
+  "category": "chemistry",
+  "description": "Molecules react only when they collide hard enough: with at least the activation energy Ea. Watch A and B turn into P in the box, and see how temperature and concentration change the rate. A 10 °C rise nearly doubles it — not because collisions become much more frequent, but because many more of them carry enough energy.",
+  "vi": {
+    "name": "Thuyết va chạm: vì sao nhiệt độ và nồng độ làm phản ứng nhanh hơn",
+    "description": "Phân tử chỉ phản ứng khi va chạm đủ mạnh: có năng lượng tối thiểu bằng năng lượng hoạt hóa Ea. Quan sát A và B biến thành P trong hộp, và xem nhiệt độ, nồng độ làm thay đổi tốc độ phản ứng ra sao. Tăng nhiệt độ 10 °C làm tốc độ gần gấp đôi — không phải vì va chạm nhiều hơn hẳn, mà vì có thêm rất nhiều va chạm đủ năng lượng.",
+    "note": "Mô hình dạy học của phản ứng bậc hai A + B → P trong dung dịch, A và B cùng nồng độ ban đầu c₀. Phân tử chỉ phản ứng khi va chạm với năng lượng theo đường nối tâm ít nhất bằng năng lượng hoạt hóa Ea; tỉ lệ va chạm như vậy là e^(−Ea/RT) (chính xác với mô hình va chạm đơn giản này), và hằng số tốc độ là k = A·e^(−Ea/RT) (phương trình Arrhenius). Tốc độ là k·[A][B]; khi lượng A bằng B, [A](t) = c₀/(1 + k·c₀·t), chính xác. Thừa số trước hàm mũ A = 5,1·10⁸ L/(mol·s) (tần số va chạm có hướng phù hợp) là một giá trị dạy học — các so sánh mà nó cho là chính xác: tỉ lệ va chạm đủ năng lượng, ảnh hưởng của việc tăng 10 K hay tăng gấp đôi nồng độ. Trong hộp, các hạt chuyển động như khí ở nhiệt độ đã chọn (vẽ chậm lại) và đổi thành P theo phần trăm đã phản ứng: chỉ là hình minh họa, không phải cơ chế phản ứng."
+  },
+  "requiredEquipment": ["reaction-box"],
+  "model": "chemistry.collision-theory",
+  "parameters": [
+    {
+      "id": "temperature",
+      "label": "Temperature",
+      "vi": { "label": "Nhiệt độ" },
+      "symbol": "T",
+      "unit": "K",
+      "default": 300,
+      "min": 280,
+      "max": 340,
+      "presets": [
+        { "label": "280 K", "vi": { "label": "280 K" }, "value": 280 },
+        { "label": "300 K", "vi": { "label": "300 K" }, "value": 300 },
+        { "label": "310 K", "vi": { "label": "310 K" }, "value": 310 },
+        { "label": "320 K", "vi": { "label": "320 K" }, "value": 320 },
+        { "label": "340 K", "vi": { "label": "340 K" }, "value": 340 }
+      ]
+    },
+    {
+      "id": "activationEnergy",
+      "label": "Activation energy",
+      "vi": { "label": "Năng lượng hoạt hóa" },
+      "symbol": "Ea",
+      "unit": "kJ/mol",
+      "default": 50,
+      "min": 40,
+      "max": 60,
+      "presets": [
+        { "label": "40 kJ/mol", "vi": { "label": "40 kJ/mol" }, "value": 40 },
+        { "label": "50 kJ/mol", "vi": { "label": "50 kJ/mol" }, "value": 50 },
+        { "label": "60 kJ/mol", "vi": { "label": "60 kJ/mol" }, "value": 60 }
+      ]
+    },
+    {
+      "id": "concentration",
+      "label": "Concentration of A and of B",
+      "vi": { "label": "Nồng độ của A và của B" },
+      "symbol": "c₀",
+      "unit": "mol/L",
+      "default": 0.1,
+      "min": 0.05,
+      "max": 0.2,
+      "presets": [
+        { "label": "0.05 mol/L", "vi": { "label": "0,05 mol/L" }, "value": 0.05 },
+        { "label": "0.1 mol/L", "vi": { "label": "0,1 mol/L" }, "value": 0.1 },
+        { "label": "0.2 mol/L", "vi": { "label": "0,2 mol/L" }, "value": 0.2 }
+      ]
+    }
+  ],
+  "initialConditions": { "preExponential": 510000000, "runTime": 60 },
+  "inputs": {
+    "preExponential": { "symbol": "A", "unit": "L/(mol·s)", "desk": false },
+    "runTime": { "symbol": "t_run", "unit": "s" }
+  },
+  "simulation": { "timeStep": 0.05, "maxDuration": 70, "sampleInterval": 0.25 },
+  "measurements": [
+    {
+      "id": "time",
+      "label": "Time",
+      "vi": { "label": "Thời gian" },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "time"
+    },
+    {
+      "id": "product",
+      "label": "Product concentration",
+      "vi": { "label": "Nồng độ sản phẩm" },
+      "symbol": "[P]",
+      "unit": "mol/L",
+      "variable": "product"
+    },
+    {
+      "id": "rate",
+      "label": "Rate of reaction",
+      "vi": { "label": "Tốc độ phản ứng" },
+      "symbol": "v",
+      "unit": "mol/(L·s)",
+      "variable": "rate"
+    }
+  ],
+  "results": [
+    {
+      "id": "share",
+      "label": "Collisions with at least Ea",
+      "vi": { "label": "Phần va chạm có năng lượng ít nhất bằng Ea" },
+      "symbol": "e^(−Ea/RT)",
+      "unit": "%",
+      "variable": "energeticShare",
+      "reduce": "final",
+      "theory": "energeticShare"
+    },
+    {
+      "id": "initialRate",
+      "label": "Initial rate",
+      "vi": { "label": "Tốc độ ban đầu" },
+      "symbol": "v₀",
+      "unit": "mol/(L·s)",
+      "variable": "rate",
+      "reduce": "max",
+      "theory": "initialRate"
+    },
+    {
+      "id": "conversion",
+      "label": "A used up after 60 s",
+      "vi": { "label": "Phần A đã phản ứng sau 60 s" },
+      "symbol": "α",
+      "unit": "%",
+      "variable": "conversion",
+      "reduce": "final",
+      "theory": "conversion"
+    }
+  ],
+  "graphs": [
+    {
+      "id": "product-time",
+      "title": "Product formed against time",
+      "vi": { "title": "Sản phẩm tạo thành theo thời gian" },
+      "x": "time",
+      "y": ["product"]
+    },
+    {
+      "id": "rate-time",
+      "title": "Rate of reaction against time",
+      "vi": { "title": "Tốc độ phản ứng theo thời gian" },
+      "x": "time",
+      "y": ["rate"]
+    }
+  ],
+  "monitor": "product-time",
+  "compare": [{ "graph": "product-time", "series": "product" }],
+  "note": "A teaching model of a second-order reaction A + B → P in solution, A and B at the same starting concentration c₀. Molecules react only when they collide with at least the activation energy Ea along their line of centres; the share of collisions that do is e^(−Ea/RT) (exact for that simple collision model), and the rate constant is k = A·e^(−Ea/RT) (the Arrhenius equation). The rate is k·[A][B]; with equal amounts [A](t) = c₀/(1 + k·c₀·t), exactly. The pre-exponential factor A = 5.1·10⁸ L/(mol·s) (the rate of suitably oriented collisions) is a teaching value — the comparisons it makes are exact: the energetic share, the effect of a 10 K rise or of a doubled concentration. In the box the balls move as a gas would at the chosen temperature (slowed down) and turn into P by the share reacted: a picture, not the reaction's mechanism.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the collision theory instructions on the board.",
+      "vi": { "instruction": "Đọc hướng dẫn về thuyết va chạm trên bảng." },
+      "done": { "kind": "inspected", "item": "collision-theory-instructions" }
+    },
+    {
+      "id": "temperature",
+      "instruction": "Set the temperature with its dial.",
+      "vi": { "instruction": "Đặt nhiệt độ bằng núm xoay." },
+      "done": { "kind": "adjusted", "parameter": "temperature" }
+    },
+    {
+      "id": "energy",
+      "instruction": "Set the activation energy and the concentration.",
+      "vi": { "instruction": "Đặt năng lượng hoạt hóa và nồng độ." },
+      "done": { "kind": "adjusted", "parameter": "activationEnergy" }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: watch A and B turn into P.",
+      "vi": { "instruction": "Nhấn CHẠY: quan sát A và B biến thành P." },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read the share of energetic collisions and the initial rate.",
+      "vi": { "instruction": "Đọc phần va chạm đủ năng lượng và tốc độ ban đầu." },
+      "done": { "kind": "viewed" }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, raise the temperature by 10 K and run again: how much faster?",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, tăng nhiệt độ thêm 10 K rồi chạy lại: nhanh hơn bao nhiêu?"
+      },
+      "done": { "kind": "reset" }
+    }
+  ],
+  "examples": [
+    {
+      "id": "warmer-faster",
+      "question": "A reaction has Ea = {activationEnergy} kJ/mol and runs at {temperature} K. What share of collisions have enough energy, and what is the rate constant? (A = 5.1·10⁸ L/(mol·s), a teaching value)",
+      "vi": {
+        "question": "Một phản ứng có Ea = {activationEnergy} kJ/mol, xảy ra ở {temperature} K. Bao nhiêu phần va chạm có đủ năng lượng, và hằng số tốc độ bằng bao nhiêu? (A = 5,1·10⁸ L/(mol·s), giá trị minh họa)"
+      },
+      "set": { "temperature": 320, "activationEnergy": 50 },
+      "find": [
+        { "theory": "energeticShare" },
+        { "theory": "rateConstant", "symbol": "k", "unit": "L/(mol·s)" }
+      ],
+      "steps": [
+        {
+          "say": "Only collisions with at least Ea react; their share is e^(−Ea/RT), with Ea in joules per mole.",
+          "vi": {
+            "say": "Chỉ những va chạm có năng lượng ít nhất bằng Ea mới gây phản ứng; tỉ lệ của chúng là e^(−Ea/RT), với Ea tính bằng J/mol."
+          },
+          "write": "e^(−Ea/RT) = e^(−{activationEnergy}000/(8.314·{temperature})) ≈ {@energeticShare}%",
+          "check": {
+            "expr": "100*exp(-activationEnergy*1000/(8.314462618*temperature))",
+            "equals": "energeticShare"
+          }
+        },
+        {
+          "say": "The Arrhenius equation: the rate constant is A times that share.",
+          "vi": { "say": "Phương trình Arrhenius: hằng số tốc độ bằng A nhân với tỉ lệ đó." },
+          "write": "k = 5.1×10⁸·{=exp(-activationEnergy*1000/(8.314462618*temperature))} ≈ {@rateConstant} L/(mol·s)",
+          "check": {
+            "expr": "preExponential*exp(-activationEnergy*1000/(8.314462618*temperature))",
+            "equals": "rateConstant"
+          }
+        }
+      ]
+    },
+    {
+      "id": "half-life",
+      "question": "At {temperature} K with Ea = {activationEnergy} kJ/mol, A and B start at {concentration} mol/L each. Find the initial rate and the half-life (A = 5.1·10⁸ L/(mol·s), a teaching value).",
+      "vi": {
+        "question": "Ở {temperature} K với Ea = {activationEnergy} kJ/mol, A và B ban đầu cùng nồng độ {concentration} mol/L. Tìm tốc độ ban đầu và thời gian bán phản ứng (A = 5,1·10⁸ L/(mol·s), giá trị minh họa)."
+      },
+      "set": { "temperature": 280, "activationEnergy": 50, "concentration": 0.1 },
+      "find": [{ "theory": "initialRate" }, { "theory": "halfLife", "symbol": "t½", "unit": "s" }],
+      "steps": [
+        {
+          "say": "First the rate constant from the Arrhenius equation.",
+          "vi": { "say": "Trước hết tính hằng số tốc độ theo phương trình Arrhenius." },
+          "write": "k = 5.1×10⁸·e^(−{activationEnergy}000/(8.314·{temperature})) ≈ {@rateConstant}",
+          "check": {
+            "expr": "preExponential*exp(-activationEnergy*1000/(8.314462618*temperature))",
+            "equals": "rateConstant"
+          }
+        },
+        {
+          "say": "The rate is k·[A]·[B], both at c₀ at the start.",
+          "vi": { "say": "Tốc độ phản ứng bằng k·[A]·[B], lúc đầu cả hai đều bằng c₀." },
+          "write": "v₀ = k·c₀² = {@rateConstant}·{concentration}² ≈ {@initialRate} mol/(L·s)",
+          "check": { "expr": "@rateConstant*concentration^2", "equals": "initialRate" }
+        },
+        {
+          "say": "With equal amounts, [A] = c₀/(1 + k·c₀·t): it is halved when k·c₀·t = 1.",
+          "vi": {
+            "say": "Với lượng bằng nhau, [A] = c₀/(1 + k·c₀·t): giảm một nửa khi k·c₀·t = 1."
+          },
+          "write": "t½ = 1/(k·c₀) = 1/({@rateConstant}·{concentration}) ≈ {@halfLife} s",
+          "check": { "expr": "1/(@rateConstant*concentration)", "equals": "halfLife" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "A reaction happens only when particles collide with enough energy; raising the temperature gives many more collisions that energy, and raising the concentration gives more collisions.",
+    "vi": {
+      "summary": "Phản ứng chỉ xảy ra khi các hạt va chạm với đủ năng lượng; tăng nhiệt độ làm có thêm rất nhiều va chạm đủ năng lượng, còn tăng nồng độ làm có thêm nhiều va chạm."
+    },
+    "parts": [
+      {
+        "id": "molecules",
+        "name": "Molecules A, B and P",
+        "role": "A (blue) and B (green) collide; some collisions make the product P (violet).",
+        "vi": {
+          "name": "Các phân tử A, B và P",
+          "role": "A (xanh lam) và B (xanh lục) va chạm; một số va chạm tạo ra sản phẩm P (tím)."
+        },
+        "anchor": { "part": "molecules" }
+      },
+      {
+        "id": "box",
+        "name": "The reaction vessel",
+        "role": "The more molecules in it (higher concentration), the more often they meet.",
+        "vi": {
+          "name": "Bình phản ứng",
+          "role": "Càng nhiều phân tử trong đó (nồng độ càng cao) thì chúng gặp nhau càng thường xuyên."
+        },
+        "anchor": { "part": "box" }
+      }
+    ],
+    "steps": [
+      {
+        "text": "To react, A and B must collide. Most collisions are too gentle: they bounce apart unchanged. Only those with at least the activation energy Ea break bonds and make P.",
+        "vi": {
+          "text": "Để phản ứng, A và B phải va chạm. Phần lớn va chạm quá nhẹ: chúng bật ra mà không thay đổi. Chỉ những va chạm có năng lượng ít nhất bằng năng lượng hoạt hóa Ea mới phá vỡ liên kết và tạo ra P."
+        },
+        "parts": ["molecules"]
+      },
+      {
+        "text": "The share of collisions with enough energy is e^(−Ea/RT): tiny (about 2 in a billion for 50 kJ/mol at 300 K), but it grows fast with temperature.",
+        "vi": {
+          "text": "Tỉ lệ va chạm đủ năng lượng là e^(−Ea/RT): rất nhỏ (khoảng 2 phần tỉ với 50 kJ/mol ở 300 K), nhưng tăng rất nhanh theo nhiệt độ."
+        },
+        "parts": ["molecules"]
+      },
+      {
+        "text": "Raise the temperature by 10 K: the molecules move only about 2 % faster, but the energetic share nearly doubles — so the rate nearly doubles. This is the Arrhenius equation k = A·e^(−Ea/RT).",
+        "vi": {
+          "text": "Tăng nhiệt độ thêm 10 K: phân tử chỉ chuyển động nhanh hơn khoảng 2 %, nhưng tỉ lệ va chạm đủ năng lượng gần gấp đôi — nên tốc độ phản ứng gần gấp đôi. Đó là phương trình Arrhenius k = A·e^(−Ea/RT)."
+        },
+        "parts": ["molecules", "box"]
+      },
+      {
+        "text": "Double the concentration: twice as many A meet twice as many B, so collisions — and the rate k·[A][B] — become four times as frequent.",
+        "vi": {
+          "text": "Tăng gấp đôi nồng độ: số A gấp đôi gặp số B gấp đôi, nên số va chạm — và tốc độ k·[A][B] — tăng gấp bốn."
+        },
+        "parts": ["box"]
+      },
+      {
+        "text": "As A and B are used up the rate falls; the graph of P against time levels off. A catalyst would lower Ea and speed every collision's chance.",
+        "vi": {
+          "text": "Khi A và B bị tiêu thụ, tốc độ giảm dần; đồ thị P theo thời gian chậm lại và nằm ngang. Chất xúc tác làm giảm Ea nên làm tăng cơ hội phản ứng của mọi va chạm."
+        },
+        "parts": ["molecules"]
+      }
+    ]
+  }
+}

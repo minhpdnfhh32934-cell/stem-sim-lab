@@ -1,0 +1,360 @@
+{
+  "id": "free-fall",
+  "name": "Free fall",
+  "category": "physics",
+  "description": "A steel ball is released from rest at a chosen height h and falls without air resistance. Its height, velocity and acceleration are measured until it reaches the floor, and the fall time and impact velocity are compared with the theory.",
+  "requiredEquipment": ["drop-tower"],
+  "model": "kinematics.free-fall",
+  "parameters": [
+    {
+      "id": "height",
+      "label": "Drop height",
+      "vi": { "label": "Độ cao thả" },
+      "symbol": "h",
+      "unit": "m",
+      "default": 1.5,
+      "min": 0.2,
+      "max": 3,
+      "step": 0.1
+    },
+    {
+      "id": "gravity",
+      "label": "Gravitational acceleration",
+      "vi": { "label": "Gia tốc trọng trường" },
+      "symbol": "g",
+      "unit": "m/s²",
+      "default": 9.81,
+      "min": 1,
+      "max": 25,
+      "step": 0.1,
+      "presets": [
+        { "label": "Moon", "vi": { "label": "Mặt Trăng" }, "value": 1.62 },
+        { "label": "Mars", "vi": { "label": "Sao Hỏa" }, "value": 3.71 },
+        { "label": "Earth", "vi": { "label": "Trái Đất" }, "value": 9.81 },
+        { "label": "Jupiter", "vi": { "label": "Sao Mộc" }, "value": 24.79 }
+      ]
+    },
+    {
+      "id": "resolution",
+      "label": "Timer resolution",
+      "vi": { "label": "Độ phân giải đồng hồ" },
+      "symbol": "d",
+      "unit": "s",
+      "default": 0.01,
+      "min": 0.001,
+      "max": 0.1,
+      "presets": [
+        { "label": "0.001 s", "value": 0.001 },
+        { "label": "0.01 s", "value": 0.01 },
+        { "label": "0.1 s", "value": 0.1 }
+      ]
+    }
+  ],
+  "initialConditions": { "initialVelocity": 0 },
+  "inputs": { "initialVelocity": { "symbol": "v₀", "unit": "m/s" } },
+  "simulation": { "timeStep": 0.001, "maxDuration": 60, "sampleInterval": 0.01 },
+  "measurements": [
+    {
+      "id": "height",
+      "label": "Height",
+      "vi": { "label": "Độ cao" },
+      "symbol": "y",
+      "unit": "m",
+      "variable": "y"
+    },
+    {
+      "id": "velocity",
+      "label": "Velocity",
+      "vi": { "label": "Vận tốc" },
+      "symbol": "v",
+      "unit": "m/s",
+      "variable": "v"
+    },
+    {
+      "id": "acceleration",
+      "label": "Acceleration",
+      "vi": { "label": "Gia tốc" },
+      "symbol": "a",
+      "unit": "m/s²",
+      "variable": "a"
+    }
+  ],
+  "results": [
+    {
+      "id": "fall-time",
+      "label": "Fall time",
+      "vi": { "label": "Thời gian rơi" },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "time",
+      "reduce": "final",
+      "theory": "fallTime"
+    },
+    {
+      "id": "impact-velocity",
+      "label": "Impact velocity",
+      "vi": { "label": "Vận tốc chạm sàn" },
+      "symbol": "v",
+      "unit": "m/s",
+      "variable": "v",
+      "reduce": "final",
+      "theory": "impactVelocity"
+    }
+  ],
+  "graphs": [
+    {
+      "id": "height-time",
+      "title": "Height against time",
+      "vi": { "title": "Độ cao theo thời gian" },
+      "x": "time",
+      "y": ["height"],
+      "mark": "fallTime"
+    },
+    {
+      "id": "velocity-time",
+      "title": "Velocity against time",
+      "vi": { "title": "Vận tốc theo thời gian" },
+      "x": "time",
+      "y": ["velocity"]
+    },
+    {
+      "id": "acceleration-time",
+      "title": "Acceleration against time",
+      "vi": { "title": "Gia tốc theo thời gian" },
+      "x": "time",
+      "y": ["acceleration"]
+    }
+  ],
+  "monitor": "height-time",
+  "compare": [{ "graph": "height-time" }, { "graph": "velocity-time" }],
+  "instruments": [
+    {
+      "result": "fall-time",
+      "quantity": "Fall time t",
+      "name": "Timer (light gates)",
+      "resolution": "resolution",
+      "excludes": "the timer's calibration and when its light gates trigger (or a person's reaction time with a stopwatch)",
+      "vi": {
+        "quantity": "Thời gian rơi t",
+        "name": "Đồng hồ (cổng quang)",
+        "excludes": "sai số hiệu chuẩn của đồng hồ và thời điểm cổng quang kích hoạt (hoặc thời gian phản xạ của người bấm đồng hồ bấm giây)"
+      }
+    }
+  ],
+  "note": "Theory, for a release from rest without air resistance: t = √(2h/g) and v = −√(2gh), with h the height of the ball's lowest point above the floor. Velocity is positive upwards, so the ball lands with a negative velocity; its acceleration is −g throughout. The mass does not enter: every ball falls the same way.",
+  "vi": {
+    "name": "Rơi tự do",
+    "description": "Một viên bi thép được thả từ trạng thái nghỉ ở độ cao h đã chọn và rơi không có lực cản không khí. Độ cao, vận tốc và gia tốc của nó được đo cho đến khi chạm sàn; thời gian rơi và vận tốc chạm sàn được so sánh với lý thuyết.",
+    "note": "Lý thuyết, cho vật thả từ trạng thái nghỉ không có lực cản không khí: t = √(2h/g) và v = −√(2gh), với h là độ cao điểm thấp nhất của bi so với sàn. Vận tốc dương hướng lên, nên bi chạm sàn với vận tốc âm; gia tốc của nó luôn bằng −g. Khối lượng không ảnh hưởng: mọi viên bi đều rơi như nhau."
+  },
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the free-fall instructions on the board.",
+      "vi": { "instruction": "Đọc hướng dẫn rơi tự do trên bảng." },
+      "done": { "kind": "inspected", "item": "free-fall-instructions" }
+    },
+    {
+      "id": "height",
+      "instruction": "Set the drop height h with its dial on the control desk.",
+      "vi": { "instruction": "Đặt độ cao thả h bằng núm xoay của nó trên bàn điều khiển." },
+      "done": { "kind": "adjusted", "parameter": "height" }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN and watch the ball fall.",
+      "vi": { "instruction": "Nhấn CHẠY và quan sát bi rơi." },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read the fall time against theory on the results monitor.",
+      "vi": { "instruction": "Đọc thời gian rơi so với lý thuyết trên màn hình kết quả." },
+      "done": { "kind": "viewed" }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, change h or g and run again to compare.",
+      "vi": { "instruction": "Nhấn ĐẶT LẠI, đổi h hoặc g rồi chạy lại để so sánh." },
+      "done": { "kind": "reset" }
+    }
+  ],
+  "explain": {
+    "summary": "A steel ball dropped from rest speeds up as it falls; the time to reach the floor depends only on the height and on gravity — not on the ball.",
+    "vi": {
+      "summary": "Một viên bi thép thả rơi không vận tốc đầu chuyển động nhanh dần khi rơi; thời gian chạm sàn chỉ phụ thuộc vào độ cao và gia tốc trọng trường — không phụ thuộc vào viên bi."
+    },
+    "parts": [
+      {
+        "id": "ball",
+        "name": "Steel ball",
+        "role": "The falling body; only gravity acts on it (no air resistance is modelled).",
+        "vi": {
+          "name": "Viên bi thép",
+          "role": "Vật rơi; chỉ có trọng lực tác dụng lên nó (mô hình bỏ qua lực cản không khí)."
+        },
+        "anchor": { "part": "ball" }
+      },
+      {
+        "id": "clamp",
+        "name": "Release clamp",
+        "role": "Holds the ball still, then opens its jaws: the ball starts from rest, v₀ = 0.",
+        "vi": {
+          "name": "Kẹp thả",
+          "role": "Giữ viên bi đứng yên rồi mở hai má kẹp: viên bi bắt đầu rơi từ trạng thái nghỉ, v₀ = 0."
+        },
+        "anchor": { "part": "release-head" }
+      },
+      {
+        "id": "index",
+        "name": "Height index",
+        "role": "The red line on the carriage marks the drop height h on the scale.",
+        "vi": {
+          "name": "Vạch chỉ độ cao",
+          "role": "Vạch đỏ trên giá trượt chỉ độ cao thả h trên thước."
+        },
+        "anchor": { "part": "index" }
+      },
+      {
+        "id": "scale",
+        "name": "Height scale",
+        "role": "Reads heights from the floor; h is the ball’s lowest point above the floor.",
+        "vi": {
+          "name": "Thước đo độ cao",
+          "role": "Đọc độ cao tính từ sàn; h là độ cao điểm thấp nhất của viên bi so với sàn."
+        },
+        "anchor": { "part": "height-scale" }
+      },
+      {
+        "id": "gate",
+        "name": "Light gate",
+        "role": "At the bottom, where the ball arrives; the timer gives the fall time t.",
+        "vi": {
+          "name": "Cổng quang",
+          "role": "Đặt ở dưới cùng, nơi viên bi rơi tới; đồng hồ cho thời gian rơi t."
+        },
+        "anchor": { "part": "gate-bar" }
+      },
+      {
+        "id": "mat",
+        "name": "Landing mat",
+        "role": "The floor of the fall: the run ends when the ball reaches it.",
+        "vi": {
+          "name": "Tấm đệm",
+          "role": "Mặt sàn của chuyển động rơi: lần chạy kết thúc khi viên bi chạm tới nó."
+        },
+        "anchor": { "part": "mat" }
+      }
+    ],
+    "steps": [
+      {
+        "text": "The clamp holds the ball at rest at the height h, then opens. Nothing pushes the ball: gravity alone pulls it down.",
+        "vi": {
+          "text": "Kẹp giữ viên bi đứng yên ở độ cao h rồi mở ra. Không có gì đẩy viên bi: chỉ trọng lực kéo nó xuống."
+        },
+        "parts": ["clamp", "ball", "index", "scale"]
+      },
+      {
+        "text": "As it falls it goes faster and faster: its velocity grows by g every second. Its acceleration is −g the whole way down (velocity counts positive upwards).",
+        "vi": {
+          "text": "Khi rơi nó chuyển động ngày càng nhanh: mỗi giây vận tốc tăng thêm g. Gia tốc của nó bằng −g trong suốt quá trình rơi (chiều dương của vận tốc hướng lên)."
+        },
+        "parts": ["ball"]
+      },
+      {
+        "text": "Starting from rest, the height fallen grows as ½·g·t². So the fall from h takes t = √(2h/g), and the ball reaches the floor at v = −√(2gh).",
+        "vi": {
+          "text": "Xuất phát từ trạng thái nghỉ, quãng đường rơi tăng theo ½·g·t². Vì vậy rơi từ độ cao h mất t = √(2h/g), và viên bi chạm sàn với vận tốc v = −√(2gh)."
+        },
+        "parts": ["ball", "scale", "mat"]
+      },
+      {
+        "text": "Four times the height gives only twice the fall time. Raise or lower h at the desk, or change g, and compare runs.",
+        "vi": {
+          "text": "Độ cao gấp bốn thì thời gian rơi chỉ gấp đôi. Tăng hoặc giảm h ở bàn điều khiển, hoặc đổi g, rồi so sánh các lần chạy."
+        },
+        "parts": ["index", "scale"]
+      },
+      {
+        "text": "The mass does not appear in the formulas: without air resistance every ball falls the same way.",
+        "vi": {
+          "text": "Khối lượng không có mặt trong các công thức: khi không có lực cản không khí, mọi viên bi đều rơi như nhau."
+        },
+        "parts": ["ball"]
+      },
+      {
+        "text": "The results put the timed fall t and the impact velocity beside √(2h/g) and −√(2gh). The timer reads in steps of its resolution d.",
+        "vi": {
+          "text": "Phần kết quả đặt thời gian rơi t đo được và vận tốc chạm sàn bên cạnh √(2h/g) và −√(2gh). Đồng hồ đọc theo từng bước bằng độ phân giải d của nó."
+        },
+        "parts": ["gate", "mat"]
+      }
+    ]
+  },
+  "examples": [
+    {
+      "id": "moon-drop",
+      "question": "On the Moon (g = {gravity} m/s²) a ball is dropped from {height} m. How long does it fall, and with what velocity does it hit the ground?",
+      "vi": {
+        "question": "Trên Mặt Trăng (g = {gravity} m/s²), một quả bóng được thả rơi từ độ cao {height} m. Nó rơi trong bao lâu, và chạm đất với vận tốc bao nhiêu?"
+      },
+      "set": { "height": 2, "gravity": 1.62 },
+      "find": [{ "theory": "fallTime" }, { "theory": "impactVelocity" }],
+      "steps": [
+        {
+          "say": "Dropped from rest, it speeds up evenly at g: the height fallen grows with the square of the time.",
+          "vi": {
+            "say": "Thả không vận tốc đầu, nó nhanh dần đều với gia tốc g: quãng đường rơi tăng theo bình phương thời gian."
+          },
+          "write": "h = ½·g·t²"
+        },
+        {
+          "say": "So the time is the square root of two h over g.",
+          "vi": { "say": "Vậy thời gian rơi bằng căn bậc hai của hai h chia g." },
+          "write": "t = √(2h/g) = √(2·{height}/{gravity}) ≈ {@fallTime} s",
+          "check": { "expr": "sqrt(2*height/gravity)", "equals": "fallTime" }
+        },
+        {
+          "say": "Its velocity grows by g every second, downwards. Taking up as positive, v is minus g times t: the minus sign means down.",
+          "vi": {
+            "say": "Mỗi giây vận tốc tăng thêm g, hướng xuống. Chọn chiều dương hướng lên thì v bằng trừ g nhân t: dấu trừ nghĩa là hướng xuống."
+          },
+          "write": "v = −g·t = −{gravity}·{@fallTime} ≈ {@impactVelocity} m/s",
+          "check": { "expr": "-gravity*@fallTime", "equals": "impactVelocity" }
+        }
+      ]
+    },
+    {
+      "id": "earth-speed",
+      "question": "On Earth (g = {gravity} m/s²) a ball falls {height} m. With what speed does it land? Work it out without the time.",
+      "vi": {
+        "question": "Trên Trái Đất (g = {gravity} m/s²), một quả bóng rơi {height} m. Nó chạm đất với vận tốc bao nhiêu? Hãy tính mà không cần thời gian."
+      },
+      "set": { "height": 3, "gravity": 9.81 },
+      "find": [{ "theory": "impactVelocity" }, { "theory": "fallTime" }],
+      "steps": [
+        {
+          "say": "Without the time, use v² = v₀² + 2gh; it starts from rest, so v₀ is zero.",
+          "vi": {
+            "say": "Không cần thời gian, ta dùng v² = v₀² + 2gh; vật thả không vận tốc đầu nên v₀ = 0."
+          },
+          "write": "v² = v₀² + 2gh,  v₀ = 0"
+        },
+        {
+          "say": "So the speed is the square root of two g h; it moves down, so with up positive the velocity is negative.",
+          "vi": {
+            "say": "Vậy tốc độ bằng căn bậc hai của hai g h; vật đi xuống, nên với chiều dương hướng lên thì vận tốc mang dấu âm."
+          },
+          "write": "v = −√(2gh) = −√(2·{gravity}·{height}) ≈ {@impactVelocity} m/s",
+          "check": { "expr": "-sqrt(2*gravity*height)", "equals": "impactVelocity" }
+        },
+        {
+          "say": "And the time follows from the speed: t is the speed over g.",
+          "vi": { "say": "Còn thời gian suy ra từ tốc độ: t bằng tốc độ chia g." },
+          "write": "t = |v|/g = {=abs(@impactVelocity)}/{gravity} ≈ {@fallTime} s",
+          "check": { "expr": "abs(@impactVelocity)/gravity", "equals": "fallTime" }
+        }
+      ]
+    }
+  ]
+}

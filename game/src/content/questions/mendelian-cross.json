@@ -1,0 +1,1049 @@
+{
+  "id": "mendelian-cross",
+  "skills": [
+    {
+      "id": "segregation",
+      "name": "Law of segregation",
+      "advice": "Write the gametes of each parent gene by gene: Yy gives Y and y in equal shares, YY only Y. Practise the monohybrid crosses Yy × Yy (3 : 1) and Yy × yy (1 : 1) before combining two genes.",
+      "vi": {
+        "name": "Quy luật phân li",
+        "advice": "Viết giao tử của từng cây bố mẹ theo từng gene: Yy cho Y và y với tỉ lệ ngang nhau, YY chỉ cho Y. Luyện các phép lai một cặp tính trạng Yy × Yy (3 : 1) và Yy × yy (1 : 1) trước khi kết hợp hai gene."
+      }
+    },
+    {
+      "id": "independent-assortment",
+      "name": "Law of independent assortment",
+      "advice": "Multiply the two genes’ ratios: (3 : 1)(3 : 1) = 9 : 3 : 3 : 1, (1 : 1)(1 : 1) = 1 : 1 : 1 : 1, (1 : 1)(3 : 1) = 3 : 1 : 3 : 1. Check each with the station’s parent dials.",
+      "vi": {
+        "name": "Quy luật phân li độc lập",
+        "advice": "Nhân tỉ lệ của hai gene với nhau: (3 : 1)(3 : 1) = 9 : 3 : 3 : 1, (1 : 1)(1 : 1) = 1 : 1 : 1 : 1, (1 : 1)(3 : 1) = 3 : 1 : 3 : 1. Kiểm tra từng trường hợp bằng các núm chọn cây bố mẹ trên trạm."
+      }
+    },
+    {
+      "id": "expected-counts",
+      "name": "Expected numbers of offspring",
+      "advice": "Expected count = number of seeds × probability of the class (the product of its two traits’ probabilities). Work them for 100 and 556 seeds and compare with the station’s dishes.",
+      "vi": {
+        "name": "Số lượng đời con kì vọng",
+        "advice": "Số lượng kì vọng = tổng số hạt × xác suất của lớp kiểu hình (tích xác suất của hai tính trạng). Tính cho 100 và 556 hạt rồi so sánh với số hạt trong các đĩa trên trạm."
+      }
+    },
+    {
+      "id": "chi-square",
+      "name": "The χ² test",
+      "advice": "Practise χ² = Σ(O − E)²/E on Mendel’s 315 : 101 : 108 : 32, with E from the ratio, never O. Learn ν = classes − 1, the rule E ≥ 5, and that a large p means the difference can be chance.",
+      "vi": {
+        "name": "Phép thử χ²",
+        "advice": "Luyện χ² = Σ(O − E)²/E với số liệu 315 : 101 : 108 : 32 của Menđen, E tính từ tỉ lệ lý thuyết, không phải O. Ghi nhớ ν = số lớp − 1, điều kiện E ≥ 5, và p lớn nghĩa là sai khác có thể do ngẫu nhiên."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "gametes-yy",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["segregation"],
+      "stem": "By the law of segregation, a plant Yy forms gametes…",
+      "explain": "Each gamete gets one allele of the gene: half carry Y, half carry y.",
+      "vi": {
+        "stem": "Theo quy luật phân li, cây có kiểu gene Yy tạo ra giao tử…",
+        "explain": "Mỗi giao tử nhận một allele của gene: một nửa mang Y, một nửa mang y."
+      },
+      "options": [
+        {
+          "text": "Y and y, in equal shares",
+          "vi": {
+            "text": "Y và y với tỉ lệ ngang nhau"
+          },
+          "correct": true
+        },
+        {
+          "text": "Y only",
+          "vi": {
+            "text": "chỉ mang Y"
+          }
+        },
+        {
+          "text": "Yy, carrying both alleles",
+          "vi": {
+            "text": "Yy, mang cả hai allele"
+          }
+        },
+        {
+          "text": "YY and yy, in equal shares",
+          "vi": {
+            "text": "YY và yy với tỉ lệ ngang nhau"
+          }
+        }
+      ]
+    },
+    {
+      "id": "f2-ratio",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["independent-assortment"],
+      "stem": "The cross YyRr × YyRr gives seeds whose phenotypes (yellow round : yellow wrinkled : green round : green wrinkled) are in the ratio…",
+      "explain": "Each gene gives 3 : 1 and they assort independently: (3 : 1)(3 : 1) = 9 : 3 : 3 : 1.",
+      "vi": {
+        "stem": "Phép lai YyRr × YyRr cho các hạt có tỉ lệ kiểu hình (vàng trơn : vàng nhăn : xanh trơn : xanh nhăn) là…",
+        "explain": "Mỗi gene cho tỉ lệ 3 : 1 và hai gene phân li độc lập: (3 : 1)(3 : 1) = 9 : 3 : 3 : 1."
+      },
+      "options": [
+        {
+          "text": "9 : 3 : 3 : 1",
+          "vi": {
+            "text": "9 : 3 : 3 : 1"
+          },
+          "correct": true
+        },
+        {
+          "text": "1 : 1 : 1 : 1",
+          "vi": {
+            "text": "1 : 1 : 1 : 1"
+          }
+        },
+        {
+          "text": "3 : 1 : 3 : 1",
+          "vi": {
+            "text": "3 : 1 : 3 : 1"
+          }
+        },
+        {
+          "text": "1 : 3 : 3 : 9",
+          "vi": {
+            "text": "1 : 3 : 3 : 9"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-basic",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["segregation", "independent-assortment", "chi-square"],
+      "stem": "In peas, yellow seed (Y) is dominant over green (y) and round (R) over wrinkled (r). Decide whether each statement is true or false.",
+      "explain": "YyRr makes four gamete types in equal shares; a test cross uses the homozygous recessive yyrr. Yellow is dominant, not green. The χ² test needs every expected count to be at least 5.",
+      "vi": {
+        "stem": "Ở đậu Hà Lan, hạt vàng (Y) trội so với hạt xanh (y), hạt trơn (R) trội so với hạt nhăn (r). Mỗi nhận định sau đúng hay sai?",
+        "explain": "YyRr tạo bốn loại giao tử với tỉ lệ ngang nhau; phép lai phân tích dùng cây đồng hợp lặn yyrr. Hạt vàng là tính trạng trội, không phải hạt xanh. Phép thử χ² cần mọi số lượng kì vọng ít nhất bằng 5."
+      },
+      "statements": [
+        {
+          "text": "YyRr forms four kinds of gametes, YR, Yr, yR and yr, in equal shares.",
+          "vi": {
+            "text": "Cây YyRr tạo bốn loại giao tử YR, Yr, yR và yr với tỉ lệ ngang nhau."
+          },
+          "true": true
+        },
+        {
+          "text": "A test cross crosses the plant with the homozygous recessive yyrr.",
+          "vi": {
+            "text": "Phép lai phân tích là lai cây đó với cây đồng hợp lặn yyrr."
+          },
+          "true": true
+        },
+        {
+          "text": "Green seed colour (yy) is dominant over yellow.",
+          "vi": {
+            "text": "Màu hạt xanh (yy) trội so với màu hạt vàng."
+          },
+          "true": false
+        },
+        {
+          "text": "The χ² test needs every expected count to be at least 5.",
+          "vi": {
+            "text": "Phép thử χ² cần mọi số lượng kì vọng ít nhất bằng 5."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "why-9331",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["independent-assortment"],
+      "stem": "Why does YyRr × YyRr give a 9 : 3 : 3 : 1 ratio?",
+      "explain": "The two genes lie on different chromosomes and assort independently, so each gene’s 3 : 1 combines with the other’s: the probabilities multiply.",
+      "vi": {
+        "stem": "Vì sao phép lai YyRr × YyRr cho tỉ lệ 9 : 3 : 3 : 1?",
+        "explain": "Hai gene nằm trên hai nhiễm sắc thể khác nhau và phân li độc lập, nên tỉ lệ 3 : 1 của gene này kết hợp với tỉ lệ 3 : 1 của gene kia: các xác suất nhân với nhau."
+      },
+      "options": [
+        {
+          "text": "The two genes assort independently, so their 3 : 1 ratios multiply",
+          "vi": {
+            "text": "Hai gene phân li độc lập, nên các tỉ lệ 3 : 1 của chúng nhân với nhau"
+          },
+          "correct": true
+        },
+        {
+          "text": "The two genes lie close together on one chromosome",
+          "vi": {
+            "text": "Hai gene nằm gần nhau trên cùng một nhiễm sắc thể"
+          }
+        },
+        {
+          "text": "Y is dominant over R",
+          "vi": {
+            "text": "Allele Y trội so với allele R"
+          }
+        },
+        {
+          "text": "Crossing over always joins Y with R",
+          "vi": {
+            "text": "Trao đổi chéo luôn gắn Y với R"
+          }
+        }
+      ]
+    },
+    {
+      "id": "test-cross-share",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["segregation", "independent-assortment"],
+      "set": {
+        "parent1": 11,
+        "parent2": 0,
+        "offspring": 100
+      },
+      "stem": "In the test cross YyRr × yyrr, what share of the seeds is expected to be green and wrinkled?",
+      "explain": "yyrr passes only y and r, so a seed is green with probability ½ and wrinkled with ½: ½ × ½ = {@probabilityGreenWrinkled}.",
+      "vi": {
+        "stem": "Trong phép lai phân tích YyRr × yyrr, tỉ lệ hạt xanh, nhăn dự kiến là bao nhiêu?",
+        "explain": "Cây yyrr chỉ cho giao tử yr, nên hạt xanh với xác suất ½ và nhăn với xác suất ½: ½ × ½ = {@probabilityGreenWrinkled}."
+      },
+      "options": [
+        {
+          "text": "1/4",
+          "vi": {
+            "text": "1/4"
+          },
+          "correct": true,
+          "check": {
+            "expr": "1/4",
+            "equals": "probabilityGreenWrinkled"
+          }
+        },
+        {
+          "text": "1/16",
+          "vi": {
+            "text": "1/16"
+          },
+          "check": {
+            "expr": "1/16",
+            "equals": "probabilityGreenWrinkled"
+          }
+        },
+        {
+          "text": "9/16",
+          "vi": {
+            "text": "9/16"
+          },
+          "check": {
+            "expr": "9/16",
+            "equals": "probabilityGreenWrinkled"
+          }
+        },
+        {
+          "text": "1/2",
+          "vi": {
+            "text": "1/2"
+          },
+          "check": {
+            "expr": "1/2",
+            "equals": "probabilityGreenWrinkled"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-chi",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["chi-square", "expected-counts"],
+      "stem": "Seeds from a cross are counted into four phenotype classes and compared with the expected ratio by a χ² test. Decide whether each statement is true or false.",
+      "explain": "More seeds bring the shares nearer the ratio. A large p means chance alone could easily give such a difference. p ≤ 0.05 happens by chance in about 1 sample in 20 even when the ratio is right, so it proves nothing on its own. Four classes give ν = 4 − 1 = 3.",
+      "vi": {
+        "stem": "Các hạt của một phép lai được đếm theo bốn lớp kiểu hình và so sánh với tỉ lệ lý thuyết bằng phép thử χ². Mỗi nhận định sau đúng hay sai?",
+        "explain": "Đếm càng nhiều hạt thì tỉ lệ càng gần tỉ lệ lý thuyết. p lớn nghĩa là chỉ do ngẫu nhiên cũng dễ có sai khác như vậy. Ngay cả khi tỉ lệ lý thuyết đúng, p ≤ 0,05 vẫn xảy ra ngẫu nhiên ở khoảng 1 trong 20 mẫu, nên tự nó không chứng minh điều gì. Bốn lớp kiểu hình cho ν = 4 − 1 = 3."
+      },
+      "statements": [
+        {
+          "text": "The more seeds counted, the closer the shares usually come to the expected ratio.",
+          "vi": {
+            "text": "Đếm càng nhiều hạt thì tỉ lệ thường càng gần với tỉ lệ lý thuyết."
+          },
+          "true": true
+        },
+        {
+          "text": "A large p-value means the difference from the expected ratio could easily be due to chance.",
+          "vi": {
+            "text": "Giá trị p lớn nghĩa là sai khác so với tỉ lệ lý thuyết có thể dễ dàng do ngẫu nhiên."
+          },
+          "true": true
+        },
+        {
+          "text": "If one sample gives p ≤ 0.05, Mendel’s laws are proven wrong.",
+          "vi": {
+            "text": "Nếu một mẫu cho p ≤ 0,05 thì các quy luật Menđen bị chứng minh là sai."
+          },
+          "true": false
+        },
+        {
+          "text": "With four phenotype classes the test has 3 degrees of freedom.",
+          "vi": {
+            "text": "Với bốn lớp kiểu hình, phép thử có 3 bậc tự do."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "f2-yellow-round",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["expected-counts", "independent-assortment"],
+      "set": {
+        "parent1": 11,
+        "parent2": 11,
+        "offspring": 556
+      },
+      "stem": "YyRr × YyRr gives {offspring} seeds. How many yellow round seeds do you expect?",
+      "explain": "P(yellow) = ¾, P(round) = ¾: yellow round = {offspring}·9/16 = {@expectedYellowRound|5}.",
+      "vi": {
+        "stem": "Phép lai YyRr × YyRr cho {offspring} hạt. Số hạt vàng, trơn dự kiến là bao nhiêu?",
+        "explain": "P(vàng) = ¾, P(trơn) = ¾: vàng trơn = {offspring}·9/16 = {@expectedYellowRound|5}."
+      },
+      "options": [
+        {
+          "text": "{@expectedYellowRound|5}",
+          "vi": {
+            "text": "{@expectedYellowRound|5}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "offspring*9/16",
+            "equals": "expectedYellowRound"
+          }
+        },
+        {
+          "text": "{=offspring*3/16|5}",
+          "vi": {
+            "text": "{=offspring*3/16|5}"
+          },
+          "check": {
+            "expr": "offspring*3/16",
+            "equals": "expectedYellowRound"
+          }
+        },
+        {
+          "text": "{=offspring*3/4|5}",
+          "vi": {
+            "text": "{=offspring*3/4|5}"
+          },
+          "check": {
+            "expr": "offspring*3/4",
+            "equals": "expectedYellowRound"
+          }
+        },
+        {
+          "text": "{=offspring/4|5}",
+          "vi": {
+            "text": "{=offspring/4|5}"
+          },
+          "check": {
+            "expr": "offspring/4",
+            "equals": "expectedYellowRound"
+          }
+        }
+      ]
+    },
+    {
+      "id": "yyrr-cross",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["expected-counts", "segregation"],
+      "set": {
+        "parent1": 11,
+        "parent2": 1,
+        "offspring": 1000
+      },
+      "stem": "YyRr × yyRr gives {offspring} seeds. How many yellow round seeds do you expect?",
+      "explain": "Yy × yy gives yellow ½; Rr × Rr gives round ¾: {offspring}·½·¾ = {@expectedYellowRound}. 9/16 belongs to YyRr × YyRr only.",
+      "vi": {
+        "stem": "Phép lai YyRr × yyRr cho {offspring} hạt. Số hạt vàng, trơn dự kiến là bao nhiêu?",
+        "explain": "Yy × yy cho hạt vàng ½; Rr × Rr cho hạt trơn ¾: {offspring}·½·¾ = {@expectedYellowRound}. Tỉ lệ 9/16 chỉ đúng với YyRr × YyRr."
+      },
+      "options": [
+        {
+          "text": "{@expectedYellowRound}",
+          "vi": {
+            "text": "{@expectedYellowRound}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "offspring*1/2*3/4",
+            "equals": "expectedYellowRound"
+          }
+        },
+        {
+          "text": "{=offspring*9/16}",
+          "vi": {
+            "text": "{=offspring*9/16}"
+          },
+          "check": {
+            "expr": "offspring*9/16",
+            "equals": "expectedYellowRound"
+          }
+        },
+        {
+          "text": "{=offspring/4}",
+          "vi": {
+            "text": "{=offspring/4}"
+          },
+          "check": {
+            "expr": "offspring/4",
+            "equals": "expectedYellowRound"
+          }
+        },
+        {
+          "text": "{=offspring*3/16}",
+          "vi": {
+            "text": "{=offspring*3/16}"
+          },
+          "check": {
+            "expr": "offspring*3/16",
+            "equals": "expectedYellowRound"
+          }
+        }
+      ]
+    },
+    {
+      "id": "mendel-chi",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["chi-square", "expected-counts"],
+      "set": {
+        "parent1": 11,
+        "parent2": 11,
+        "offspring": 556
+      },
+      "stem": "Mendel counted {offspring} F2 seeds of YyRr × YyRr: 315 yellow round, 101 yellow wrinkled, 108 green round, 32 green wrinkled. The expected numbers are {@expectedYellowRound|5}, {@expectedYellowWrinkled|5}, {@expectedGreenRound|5} and {@expectedGreenWrinkled|4}. What is χ² = Σ(O − E)²/E?",
+      "explain": "χ² = (315 − {@expectedYellowRound|5})²/{@expectedYellowRound|5} + (101 − {@expectedYellowWrinkled|5})²/{@expectedYellowWrinkled|5} + (108 − {@expectedGreenRound|5})²/{@expectedGreenRound|5} + (32 − {@expectedGreenWrinkled|4})²/{@expectedGreenWrinkled|4} ≈ {=(315-@expectedYellowRound)^2/@expectedYellowRound+(101-@expectedYellowWrinkled)^2/@expectedYellowWrinkled+(108-@expectedGreenRound)^2/@expectedGreenRound+(32-@expectedGreenWrinkled)^2/@expectedGreenWrinkled|2}: small, so the counts fit 9 : 3 : 3 : 1 well.",
+      "vi": {
+        "stem": "Menđen đếm được {offspring} hạt F2 của phép lai YyRr × YyRr: 315 vàng trơn, 101 vàng nhăn, 108 xanh trơn, 32 xanh nhăn. Số lượng kì vọng là {@expectedYellowRound|5}, {@expectedYellowWrinkled|5}, {@expectedGreenRound|5} và {@expectedGreenWrinkled|4}. χ² = Σ(O − E)²/E bằng bao nhiêu?",
+        "explain": "χ² = (315 − {@expectedYellowRound|5})²/{@expectedYellowRound|5} + (101 − {@expectedYellowWrinkled|5})²/{@expectedYellowWrinkled|5} + (108 − {@expectedGreenRound|5})²/{@expectedGreenRound|5} + (32 − {@expectedGreenWrinkled|4})²/{@expectedGreenWrinkled|4} ≈ {=(315-@expectedYellowRound)^2/@expectedYellowRound+(101-@expectedYellowWrinkled)^2/@expectedYellowWrinkled+(108-@expectedGreenRound)^2/@expectedGreenRound+(32-@expectedGreenWrinkled)^2/@expectedGreenWrinkled|2}: nhỏ, nên số liệu phù hợp tốt với tỉ lệ 9 : 3 : 3 : 1."
+      },
+      "options": [
+        {
+          "text": "{=(315-@expectedYellowRound)^2/@expectedYellowRound+(101-@expectedYellowWrinkled)^2/@expectedYellowWrinkled+(108-@expectedGreenRound)^2/@expectedGreenRound+(32-@expectedGreenWrinkled)^2/@expectedGreenWrinkled|3}",
+          "vi": {
+            "text": "{=(315-@expectedYellowRound)^2/@expectedYellowRound+(101-@expectedYellowWrinkled)^2/@expectedYellowWrinkled+(108-@expectedGreenRound)^2/@expectedGreenRound+(32-@expectedGreenWrinkled)^2/@expectedGreenWrinkled|3}"
+          },
+          "correct": true
+        },
+        {
+          "text": "{=(315-@expectedYellowRound)^2/315+(101-@expectedYellowWrinkled)^2/101+(108-@expectedGreenRound)^2/108+(32-@expectedGreenWrinkled)^2/32|3}",
+          "vi": {
+            "text": "{=(315-@expectedYellowRound)^2/315+(101-@expectedYellowWrinkled)^2/101+(108-@expectedGreenRound)^2/108+(32-@expectedGreenWrinkled)^2/32|3}"
+          }
+        },
+        {
+          "text": "{=(315-@expectedYellowRound)^2+(101-@expectedYellowWrinkled)^2+(108-@expectedGreenRound)^2+(32-@expectedGreenWrinkled)^2|3}",
+          "vi": {
+            "text": "{=(315-@expectedYellowRound)^2+(101-@expectedYellowWrinkled)^2+(108-@expectedGreenRound)^2+(32-@expectedGreenWrinkled)^2|3}"
+          }
+        },
+        {
+          "text": "{=(315-@expectedYellowRound)/@expectedYellowRound+(101-@expectedYellowWrinkled)/@expectedYellowWrinkled+(108-@expectedGreenRound)/@expectedGreenRound+(32-@expectedGreenWrinkled)/@expectedGreenWrinkled|2}",
+          "vi": {
+            "text": "{=(315-@expectedYellowRound)/@expectedYellowRound+(101-@expectedYellowWrinkled)/@expectedYellowWrinkled+(108-@expectedGreenRound)/@expectedGreenRound+(32-@expectedGreenWrinkled)/@expectedGreenWrinkled|2}"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-test-cross",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["expected-counts", "chi-square"],
+      "set": {
+        "parent1": 11,
+        "parent2": 0,
+        "offspring": 100
+      },
+      "stem": "A test cross YyRr × yyrr gives {offspring} seeds. Decide whether each statement is true or false.",
+      "explain": "Each class is ½ × ½ = ¼: {@expectedYellowRound} yellow round and {@expectedGreenWrinkled} green wrinkled. Yellow seeds are ½: {@expectedYellow}, not ¾. Four classes: ν = {@degreesOfFreedom}.",
+      "vi": {
+        "stem": "Phép lai phân tích YyRr × yyrr cho {offspring} hạt. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Mỗi lớp kiểu hình chiếm ½ × ½ = ¼: {@expectedYellowRound} hạt vàng trơn và {@expectedGreenWrinkled} hạt xanh nhăn. Hạt vàng chiếm ½: {@expectedYellow}, không phải ¾. Bốn lớp kiểu hình: ν = {@degreesOfFreedom}."
+      },
+      "statements": [
+        {
+          "text": "About {@expectedYellowRound} yellow round seeds are expected.",
+          "vi": {
+            "text": "Dự kiến có khoảng {@expectedYellowRound} hạt vàng, trơn."
+          },
+          "true": true,
+          "check": {
+            "expr": "offspring/4",
+            "equals": "expectedYellowRound"
+          }
+        },
+        {
+          "text": "About {@expectedGreenWrinkled} green wrinkled seeds are expected.",
+          "vi": {
+            "text": "Dự kiến có khoảng {@expectedGreenWrinkled} hạt xanh, nhăn."
+          },
+          "true": true,
+          "check": {
+            "expr": "offspring/4",
+            "equals": "expectedGreenWrinkled"
+          }
+        },
+        {
+          "text": "About {=offspring*3/4} yellow seeds are expected.",
+          "vi": {
+            "text": "Dự kiến có khoảng {=offspring*3/4} hạt vàng."
+          },
+          "true": false,
+          "check": {
+            "expr": "offspring*3/4",
+            "equals": "expectedYellow"
+          }
+        },
+        {
+          "text": "The χ² test has {@degreesOfFreedom} degrees of freedom.",
+          "vi": {
+            "text": "Phép thử χ² có {@degreesOfFreedom} bậc tự do."
+          },
+          "true": true,
+          "check": {
+            "expr": "4-1",
+            "equals": "degreesOfFreedom"
+          }
+        }
+      ]
+    },
+    {
+      "id": "which-parents",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["independent-assortment", "segregation"],
+      "stem": "A cross gives yellow and green seeds in a 3 : 1 ratio, and round and wrinkled seeds in a 1 : 1 ratio. Which parents could give this?",
+      "explain": "Colour 3 : 1 needs Yy × Yy; shape 1 : 1 needs Rr × rr: YyRr × Yyrr. YyRr × yyRr gives the reverse (1 : 1 colour, 3 : 1 shape).",
+      "vi": {
+        "stem": "Một phép lai cho hạt vàng và hạt xanh theo tỉ lệ 3 : 1, hạt trơn và hạt nhăn theo tỉ lệ 1 : 1. Cặp bố mẹ nào có thể cho kết quả này?",
+        "explain": "Màu hạt 3 : 1 cần Yy × Yy; hình dạng 1 : 1 cần Rr × rr: YyRr × Yyrr. Phép lai YyRr × yyRr cho kết quả ngược lại (màu 1 : 1, hình dạng 3 : 1)."
+      },
+      "options": [
+        {
+          "text": "YyRr × Yyrr",
+          "vi": {
+            "text": "YyRr × Yyrr"
+          },
+          "correct": true
+        },
+        {
+          "text": "YyRr × yyRr",
+          "vi": {
+            "text": "YyRr × yyRr"
+          }
+        },
+        {
+          "text": "YyRr × YyRr",
+          "vi": {
+            "text": "YyRr × YyRr"
+          }
+        },
+        {
+          "text": "YyRr × yyrr",
+          "vi": {
+            "text": "YyRr × yyrr"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-small-sample",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["chi-square", "expected-counts", "independent-assortment"],
+      "set": {
+        "parent1": 11,
+        "parent2": 10,
+        "offspring": 16
+      },
+      "stem": "YyRr × Yyrr, and only {offspring} seeds are counted. Decide whether each statement is true or false.",
+      "explain": "Yellow ¾ × round ½: the classes are 3/8, 3/8, 1/8, 1/8 — {@expectedYellowRound}, {@expectedYellowWrinkled}, {@expectedGreenRound}, {@expectedGreenWrinkled}. The smallest, {@smallestExpected}, is below 5, so χ² is unreliable; 1000 seeds would raise it to {=1000*@smallestExpected/offspring}.",
+      "vi": {
+        "stem": "Phép lai YyRr × Yyrr và chỉ đếm {offspring} hạt. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Vàng ¾ × trơn ½: các lớp chiếm 3/8, 3/8, 1/8, 1/8 — {@expectedYellowRound}, {@expectedYellowWrinkled}, {@expectedGreenRound}, {@expectedGreenWrinkled}. Số nhỏ nhất, {@smallestExpected}, dưới 5 nên phép thử χ² không đáng tin cậy; đếm 1000 hạt sẽ nâng số đó lên {=1000*@smallestExpected/offspring}."
+      },
+      "statements": [
+        {
+          "text": "{@expectedGreenRound} green round seeds are expected.",
+          "vi": {
+            "text": "Dự kiến có {@expectedGreenRound} hạt xanh, trơn."
+          },
+          "true": true,
+          "check": {
+            "expr": "offspring*(1-@probabilityYellow)*@probabilityRound",
+            "equals": "expectedGreenRound"
+          }
+        },
+        {
+          "text": "The χ² test is unreliable here, since the smallest expected count, {@smallestExpected}, is below 5.",
+          "vi": {
+            "text": "Phép thử χ² không đáng tin cậy ở đây, vì số lượng kì vọng nhỏ nhất, {@smallestExpected}, nhỏ hơn 5."
+          },
+          "true": true,
+          "check": {
+            "expr": "offspring/8",
+            "equals": "smallestExpected"
+          }
+        },
+        {
+          "text": "Counting 1000 seeds would raise the smallest expected count to {=1000*@smallestExpected/offspring}.",
+          "vi": {
+            "text": "Đếm 1000 hạt sẽ nâng số lượng kì vọng nhỏ nhất lên {=1000*@smallestExpected/offspring}."
+          },
+          "true": true
+        },
+        {
+          "text": "{=offspring*3/16} yellow wrinkled seeds are expected.",
+          "vi": {
+            "text": "Dự kiến có {=offspring*3/16} hạt vàng, nhăn."
+          },
+          "true": false,
+          "check": {
+            "expr": "offspring*3/16",
+            "equals": "expectedYellowWrinkled"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dominant",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["segregation"],
+      "stem": "Pure-breeding yellow peas (YY) crossed with pure-breeding green peas (yy) give only yellow seeds in F1. Yellow is therefore…",
+      "explain": "The F1 are all Yy and look yellow: the yellow allele shows its effect over the green one, so yellow is dominant and green recessive.",
+      "vi": {
+        "stem": "Lai cây đậu hạt vàng thuần chủng (YY) với cây đậu hạt xanh thuần chủng (yy), F1 toàn hạt vàng. Vậy tính trạng hạt vàng là…",
+        "explain": "F1 đều có kiểu gene Yy và có hạt vàng: allele quy định hạt vàng át allele quy định hạt xanh, nên hạt vàng là tính trạng trội, hạt xanh là tính trạng lặn."
+      },
+      "options": [
+        {
+          "text": "dominant",
+          "vi": {
+            "text": "tính trạng trội"
+          },
+          "correct": true
+        },
+        {
+          "text": "recessive",
+          "vi": {
+            "text": "tính trạng lặn"
+          }
+        },
+        {
+          "text": "codominant",
+          "vi": {
+            "text": "tính trạng đồng trội"
+          }
+        },
+        {
+          "text": "sex-linked",
+          "vi": {
+            "text": "tính trạng liên kết với giới tính"
+          }
+        }
+      ]
+    },
+    {
+      "id": "test-cross-purpose",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["segregation", "independent-assortment"],
+      "stem": "Why is a yellow round plant crossed with a green wrinkled one (yyrr) in a test cross?",
+      "explain": "yyrr gives only yr gametes, which hide nothing: each offspring shows the alleles of the gamete from the yellow round plant. The offspring’s phenotypes and their ratio reveal its genotype.",
+      "vi": {
+        "stem": "Vì sao trong phép lai phân tích, cây hạt vàng, trơn được lai với cây hạt xanh, nhăn (yyrr)?",
+        "explain": "Cây yyrr chỉ cho giao tử yr, không che lấp allele nào: mỗi cây con biểu hiện đúng các allele trong giao tử của cây hạt vàng, trơn. Kiểu hình của đời con và tỉ lệ của chúng cho biết kiểu gene của cây đó."
+      },
+      "options": [
+        {
+          "text": "To find out the yellow round plant’s genotype from the offspring’s phenotypes",
+          "vi": {
+            "text": "Để xác định kiểu gene của cây hạt vàng, trơn dựa vào kiểu hình của đời con"
+          },
+          "correct": true
+        },
+        {
+          "text": "To make all the offspring pure-breeding",
+          "vi": {
+            "text": "Để mọi cây con đều thuần chủng"
+          }
+        },
+        {
+          "text": "Because yyrr plants give more seeds",
+          "vi": {
+            "text": "Vì cây yyrr cho nhiều hạt hơn"
+          }
+        },
+        {
+          "text": "To turn the recessive alleles into dominant ones",
+          "vi": {
+            "text": "Để biến các allele lặn thành allele trội"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-gametes",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["segregation", "independent-assortment"],
+      "stem": "About the gametes of pea plants (the two genes on different chromosomes): decide whether each statement is true or false.",
+      "explain": "Each gamete gets one allele of each gene. YyRr gives 2 × 2 = 4 kinds of gametes in equal shares; YYRr gives 1 × 2 = 2 (YR and Yr). The 9 : 3 : 3 : 1 ratio needs independent assortment; genes linked on one chromosome do not give it.",
+      "vi": {
+        "stem": "Về giao tử của cây đậu (hai gene nằm trên hai nhiễm sắc thể khác nhau), mỗi nhận định sau đúng hay sai?",
+        "explain": "Mỗi giao tử nhận một allele của mỗi gene. Cây YyRr cho 2 × 2 = 4 loại giao tử với tỉ lệ ngang nhau; cây YYRr cho 1 × 2 = 2 loại (YR và Yr). Tỉ lệ 9 : 3 : 3 : 1 đòi hỏi các gene phân li độc lập; các gene liên kết trên cùng một nhiễm sắc thể không cho tỉ lệ đó."
+      },
+      "statements": [
+        {
+          "text": "Each gamete carries one allele of each gene.",
+          "vi": {
+            "text": "Mỗi giao tử mang một allele của mỗi gene."
+          },
+          "true": true
+        },
+        {
+          "text": "A YYRr plant forms two kinds of gametes, YR and Yr.",
+          "vi": {
+            "text": "Cây YYRr tạo hai loại giao tử là YR và Yr."
+          },
+          "true": true
+        },
+        {
+          "text": "A YyRr plant forms its four kinds of gametes in equal shares.",
+          "vi": {
+            "text": "Cây YyRr tạo bốn loại giao tử với tỉ lệ ngang nhau."
+          },
+          "true": true
+        },
+        {
+          "text": "Two genes close together on one chromosome also give a 9 : 3 : 3 : 1 ratio in F2.",
+          "vi": {
+            "text": "Hai gene nằm gần nhau trên cùng một nhiễm sắc thể cũng cho tỉ lệ 9 : 3 : 3 : 1 ở F2."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "two-single-heterozygotes",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["segregation", "independent-assortment"],
+      "set": {
+        "parent1": 10,
+        "parent2": 1
+      },
+      "stem": "Yyrr (yellow, wrinkled) is crossed with yyRr (green, round). What share of the seeds is expected to be green and wrinkled?",
+      "explain": "Yy × yy gives ½ green; rr × Rr gives ½ wrinkled. The genes assort independently: ½ × ½ = 1/4. The cross gives four phenotypes in a 1 : 1 : 1 : 1 ratio.",
+      "vi": {
+        "stem": "Lai cây Yyrr (hạt vàng, nhăn) với cây yyRr (hạt xanh, trơn). Tỉ lệ hạt xanh, nhăn dự kiến là bao nhiêu?",
+        "explain": "Yy × yy cho ½ hạt xanh; rr × Rr cho ½ hạt nhăn. Hai gene phân li độc lập: ½ × ½ = 1/4. Phép lai cho bốn kiểu hình với tỉ lệ 1 : 1 : 1 : 1."
+      },
+      "options": [
+        {
+          "text": "1/4",
+          "vi": {
+            "text": "1/4"
+          },
+          "correct": true,
+          "check": {
+            "expr": "1/2*1/2",
+            "equals": "probabilityGreenWrinkled"
+          }
+        },
+        {
+          "text": "1/16",
+          "vi": {
+            "text": "1/16"
+          },
+          "check": {
+            "expr": "1/16",
+            "equals": "probabilityGreenWrinkled"
+          }
+        },
+        {
+          "text": "3/16",
+          "vi": {
+            "text": "3/16"
+          },
+          "check": {
+            "expr": "3/16",
+            "equals": "probabilityGreenWrinkled"
+          }
+        },
+        {
+          "text": "1/2",
+          "vi": {
+            "text": "1/2"
+          },
+          "check": {
+            "expr": "1/2",
+            "equals": "probabilityGreenWrinkled"
+          }
+        }
+      ]
+    },
+    {
+      "id": "yellow-wrinkled-count",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["expected-counts", "independent-assortment"],
+      "set": {
+        "parent1": 11,
+        "parent2": 10,
+        "offspring": 800
+      },
+      "stem": "YyRr × Yyrr gives {offspring} seeds. How many yellow wrinkled seeds do you expect?",
+      "explain": "Yy × Yy gives ¾ yellow; Rr × rr gives ½ wrinkled: ¾ × ½ = 3/8, and {offspring} × 3/8 = {@expectedYellowWrinkled}.",
+      "vi": {
+        "stem": "Phép lai YyRr × Yyrr thu được {offspring} hạt. Dự kiến có bao nhiêu hạt vàng, nhăn?",
+        "explain": "Yy × Yy cho ¾ hạt vàng; Rr × rr cho ½ hạt nhăn: ¾ × ½ = 3/8, và {offspring} × 3/8 = {@expectedYellowWrinkled}."
+      },
+      "options": [
+        {
+          "text": "{=offspring*3/8}",
+          "vi": {
+            "text": "{=offspring*3/8}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "offspring*3/4*1/2",
+            "equals": "expectedYellowWrinkled"
+          }
+        },
+        {
+          "text": "{=offspring*3/16}",
+          "vi": {
+            "text": "{=offspring*3/16}"
+          },
+          "check": {
+            "expr": "offspring*3/16",
+            "equals": "expectedYellowWrinkled"
+          }
+        },
+        {
+          "text": "{=offspring*1/4}",
+          "vi": {
+            "text": "{=offspring*1/4}"
+          },
+          "check": {
+            "expr": "offspring*1/4",
+            "equals": "expectedYellowWrinkled"
+          }
+        },
+        {
+          "text": "{=offspring*9/16}",
+          "vi": {
+            "text": "{=offspring*9/16}"
+          },
+          "check": {
+            "expr": "offspring*9/16",
+            "equals": "expectedYellowWrinkled"
+          }
+        }
+      ]
+    },
+    {
+      "id": "true-breeding-share",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["segregation", "independent-assortment"],
+      "set": {
+        "parent1": 11,
+        "parent2": 11
+      },
+      "stem": "In the F2 of YyRr × YyRr, what share of the plants is homozygous for both genes, so that it breeds true?",
+      "explain": "For each gene, Yy × Yy gives ¼ YY + ¼ yy = ½ homozygous; likewise for R. Independently: ½ × ½ = 1/4 — YYRR, YYrr, yyRR and yyrr, each 1/16 ({=@probabilityGreenWrinkled} is the share of yyrr alone).",
+      "vi": {
+        "stem": "Ở F2 của phép lai YyRr × YyRr, tỉ lệ cây đồng hợp về cả hai gene (thuần chủng) là bao nhiêu?",
+        "explain": "Với mỗi gene, Yy × Yy cho ¼ YY + ¼ yy = ½ đồng hợp; gene R cũng vậy. Hai gene độc lập: ½ × ½ = 1/4 — gồm YYRR, YYrr, yyRR và yyrr, mỗi loại 1/16 ({=@probabilityGreenWrinkled} là tỉ lệ riêng của yyrr)."
+      },
+      "options": [
+        {
+          "text": "1/4",
+          "vi": {
+            "text": "1/4"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(1/4)/4",
+            "equals": "probabilityGreenWrinkled"
+          }
+        },
+        {
+          "text": "1/16",
+          "vi": {
+            "text": "1/16"
+          },
+          "check": {
+            "expr": "(1/16)/4",
+            "equals": "probabilityGreenWrinkled"
+          }
+        },
+        {
+          "text": "1/2",
+          "vi": {
+            "text": "1/2"
+          },
+          "check": {
+            "expr": "(1/2)/4",
+            "equals": "probabilityGreenWrinkled"
+          }
+        },
+        {
+          "text": "9/16",
+          "vi": {
+            "text": "9/16"
+          },
+          "check": {
+            "expr": "(9/16)/4",
+            "equals": "probabilityGreenWrinkled"
+          }
+        }
+      ]
+    },
+    {
+      "id": "pure-yellow-round",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["segregation", "independent-assortment", "expected-counts"],
+      "set": {
+        "parent1": 11,
+        "parent2": 11
+      },
+      "stem": "From the F2 of YyRr × YyRr, a yellow round seed is picked at random. What is the probability that it is YYRR?",
+      "explain": "Yellow round seeds are {@probabilityYellowRound} = 9/16 of the F2; YYRR is 1/16 of the F2. Among the yellow round ones: (1/16)/(9/16) = 1/9. 1/16 is the share among all the F2, not among the yellow round seeds.",
+      "vi": {
+        "stem": "Chọn ngẫu nhiên một hạt vàng, trơn ở F2 của phép lai YyRr × YyRr. Xác suất để hạt đó có kiểu gene YYRR là bao nhiêu?",
+        "explain": "Hạt vàng, trơn chiếm {@probabilityYellowRound} = 9/16 số hạt F2; YYRR chiếm 1/16 số hạt F2. Trong số hạt vàng, trơn: (1/16)/(9/16) = 1/9. 1/16 là tỉ lệ trong toàn bộ F2, không phải trong số hạt vàng, trơn."
+      },
+      "options": [
+        {
+          "text": "1/9",
+          "vi": {
+            "text": "1/9"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(1/16)/(1/9)",
+            "equals": "probabilityYellowRound"
+          }
+        },
+        {
+          "text": "1/16",
+          "vi": {
+            "text": "1/16"
+          },
+          "check": {
+            "expr": "(1/16)/(1/16)",
+            "equals": "probabilityYellowRound"
+          }
+        },
+        {
+          "text": "4/9",
+          "vi": {
+            "text": "4/9"
+          },
+          "check": {
+            "expr": "(1/16)/(4/9)",
+            "equals": "probabilityYellowRound"
+          }
+        },
+        {
+          "text": "1/3",
+          "vi": {
+            "text": "1/3"
+          },
+          "check": {
+            "expr": "(1/16)/(1/3)",
+            "equals": "probabilityYellowRound"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-f2-1000",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["expected-counts", "chi-square", "independent-assortment"],
+      "set": {
+        "parent1": 11,
+        "parent2": 11,
+        "offspring": 1000
+      },
+      "stem": "YyRr × YyRr gives {offspring} seeds, to be compared with the expected ratio by a χ² test. Decide whether each statement is true or false.",
+      "explain": "Expected: yellow {@expectedYellow} (¾), yellow wrinkled {@expectedYellowWrinkled} (3/16), green wrinkled {@expectedGreenWrinkled} (1/16). Four classes give 4 − 1 = {@degreesOfFreedom} degrees of freedom. {=offspring/16} would be the count of a 1/16 class, not of yellow wrinkled.",
+      "vi": {
+        "stem": "Phép lai YyRr × YyRr thu được {offspring} hạt, cần so sánh với tỉ lệ lý thuyết bằng phép thử χ². Mỗi nhận định sau đúng hay sai?",
+        "explain": "Dự kiến: hạt vàng {@expectedYellow} (¾), vàng nhăn {@expectedYellowWrinkled} (3/16), xanh nhăn {@expectedGreenWrinkled} (1/16). Bốn lớp kiểu hình cho 4 − 1 = {@degreesOfFreedom} bậc tự do. {=offspring/16} là số lượng của một lớp chiếm 1/16, không phải của lớp vàng nhăn."
+      },
+      "statements": [
+        {
+          "text": "About {@expectedYellow} yellow seeds are expected.",
+          "vi": {
+            "text": "Dự kiến có khoảng {@expectedYellow} hạt vàng."
+          },
+          "true": true,
+          "check": {
+            "expr": "offspring*3/4",
+            "equals": "expectedYellow"
+          }
+        },
+        {
+          "text": "About {@expectedGreenWrinkled} green wrinkled seeds are expected.",
+          "vi": {
+            "text": "Dự kiến có khoảng {@expectedGreenWrinkled} hạt xanh, nhăn."
+          },
+          "true": true,
+          "check": {
+            "expr": "offspring/16",
+            "equals": "expectedGreenWrinkled"
+          }
+        },
+        {
+          "text": "About {=offspring/16} yellow wrinkled seeds are expected.",
+          "vi": {
+            "text": "Dự kiến có khoảng {=offspring/16} hạt vàng, nhăn."
+          },
+          "true": false,
+          "check": {
+            "expr": "offspring/16",
+            "equals": "expectedYellowWrinkled"
+          }
+        },
+        {
+          "text": "The χ² test on the four classes has {@degreesOfFreedom} degrees of freedom.",
+          "vi": {
+            "text": "Phép thử χ² với bốn lớp kiểu hình có {@degreesOfFreedom} bậc tự do."
+          },
+          "true": true,
+          "check": {
+            "expr": "4-1",
+            "equals": "degreesOfFreedom"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,832 @@
+{
+  "id": "food-tests",
+  "skills": [
+    {
+      "id": "reagents",
+      "name": "The four tests and their colours",
+      "advice": "Make a table of reagent → molecule → positive colour → negative colour: iodine (starch, blue-black), Benedict’s (reducing sugar, brick-red when heated), biuret (protein, violet), Sudan III (lipid, red layer). Say it from memory before each run.",
+      "vi": {
+        "name": "Bốn phép thử và màu sắc của chúng",
+        "advice": "Lập bảng thuốc thử → chất cần nhận biết → màu khi dương tính → màu khi âm tính: iodine (tinh bột, xanh tím đen), Benedict (đường khử, đỏ gạch khi đun nóng), biuret (protein, tím), Sudan III (lipid, lớp màu đỏ). Tự nhắc lại từ trí nhớ trước mỗi lần chạy."
+      }
+    },
+    {
+      "id": "procedure",
+      "name": "Carrying out the tests fairly",
+      "advice": "Remember which test needs heat (only Benedict’s, in a boiling water bath), why a water control is tested beside the samples, and how dirty tubes or pipettes can give false results.",
+      "vi": {
+        "name": "Tiến hành các phép thử đúng cách",
+        "advice": "Ghi nhớ phép thử nào cần đun (chỉ Benedict, trong nồi cách thủy sôi), vì sao cần ống đối chứng là nước cất, và vì sao ống nghiệm hay pipette bẩn có thể cho kết quả sai."
+      }
+    },
+    {
+      "id": "interpretation",
+      "name": "Working out what a sample holds",
+      "advice": "Read all four results of a sample together before deciding. Watch the trap: sucrose is not a reducing sugar, so a sucrose solution gives no colour in any of the four tests, just like water.",
+      "vi": {
+        "name": "Suy luận thành phần của mẫu",
+        "advice": "Xem xét cả bốn kết quả của một mẫu trước khi kết luận. Chú ý bẫy: sucrose không phải đường khử, nên dung dịch sucrose không đổi màu ở cả bốn phép thử, giống như nước cất."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "iodine",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["reagents"],
+      "stem": "Iodine solution turns blue-black with…",
+      "explain": "Iodine is held in the coiled chain of starch, giving a blue-black colour.",
+      "vi": {
+        "stem": "Dung dịch iodine chuyển sang màu xanh tím đen khi gặp…",
+        "explain": "Iodine bị giữ trong chuỗi xoắn của tinh bột, tạo màu xanh tím đen."
+      },
+      "options": [
+        {
+          "text": "starch",
+          "vi": {
+            "text": "tinh bột"
+          },
+          "correct": true
+        },
+        {
+          "text": "glucose",
+          "vi": {
+            "text": "glucose"
+          }
+        },
+        {
+          "text": "protein",
+          "vi": {
+            "text": "protein"
+          }
+        },
+        {
+          "text": "fat",
+          "vi": {
+            "text": "chất béo"
+          }
+        }
+      ]
+    },
+    {
+      "id": "biuret",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["reagents"],
+      "stem": "The biuret reagent turns violet with…",
+      "explain": "The Cu²⁺ of the biuret reagent turns violet with the peptide bonds of a protein.",
+      "vi": {
+        "stem": "Thuốc thử biuret chuyển sang màu tím khi gặp…",
+        "explain": "Ion Cu²⁺ trong thuốc thử biuret tạo màu tím với các liên kết peptide của protein."
+      },
+      "options": [
+        {
+          "text": "a protein",
+          "vi": {
+            "text": "protein"
+          },
+          "correct": true
+        },
+        {
+          "text": "a reducing sugar",
+          "vi": {
+            "text": "đường khử"
+          }
+        },
+        {
+          "text": "starch",
+          "vi": {
+            "text": "tinh bột"
+          }
+        },
+        {
+          "text": "a lipid",
+          "vi": {
+            "text": "lipid"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-colours",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["reagents", "procedure"],
+      "stem": "About the tests for biological molecules: decide whether each statement is true or false.",
+      "explain": "Sudan III dissolves in fat, which floats as a red-stained layer. Benedict’s gives a brick-red precipitate with a reducing sugar in a boiling water bath. Biuret turns violet, not blue-black, with protein. Iodine solution is yellow-brown before it meets starch.",
+      "vi": {
+        "stem": "Về các phép thử nhận biết một số phân tử sinh học, mỗi nhận định sau đúng hay sai?",
+        "explain": "Sudan III tan trong chất béo, lớp chất béo nổi lên và bắt màu đỏ. Benedict tạo kết tủa đỏ gạch với đường khử khi đun cách thủy sôi. Biuret chuyển màu tím, không phải xanh tím đen, khi gặp protein. Dung dịch iodine có màu vàng nâu trước khi gặp tinh bột."
+      },
+      "statements": [
+        {
+          "text": "Sudan III stains a lipid red; the lipid floats as a layer.",
+          "vi": {
+            "text": "Sudan III nhuộm lipid thành màu đỏ; lipid nổi lên thành một lớp."
+          },
+          "true": true
+        },
+        {
+          "text": "Benedict’s reagent gives a brick-red precipitate with a reducing sugar when heated in a boiling water bath.",
+          "vi": {
+            "text": "Thuốc thử Benedict tạo kết tủa màu đỏ gạch với đường khử khi đun cách thủy sôi."
+          },
+          "true": true
+        },
+        {
+          "text": "The biuret reagent turns blue-black with protein.",
+          "vi": {
+            "text": "Thuốc thử biuret chuyển màu xanh tím đen khi gặp protein."
+          },
+          "true": false
+        },
+        {
+          "text": "Iodine solution is yellow-brown before it reacts.",
+          "vi": {
+            "text": "Dung dịch iodine có màu vàng nâu trước khi phản ứng."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "why-heat",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["procedure", "reagents"],
+      "stem": "Why must the Benedict’s test be heated in a boiling water bath?",
+      "explain": "The reducing sugar reduces the blue Cu²⁺ to brick-red Cu₂O only when heated; at room temperature the reagent stays blue even with glucose.",
+      "vi": {
+        "stem": "Vì sao phép thử Benedict phải được đun cách thủy sôi?",
+        "explain": "Đường khử chỉ khử Cu²⁺ màu xanh thành Cu₂O màu đỏ gạch khi được đun nóng; ở nhiệt độ phòng thuốc thử vẫn giữ màu xanh dù có glucose."
+      },
+      "options": [
+        {
+          "text": "The reducing sugar turns Cu²⁺ into brick-red Cu₂O only when heated",
+          "vi": {
+            "text": "Đường khử chỉ chuyển Cu²⁺ thành Cu₂O màu đỏ gạch khi được đun nóng"
+          },
+          "correct": true
+        },
+        {
+          "text": "Heat kills microbes that would eat the sugar",
+          "vi": {
+            "text": "Nhiệt độ cao tiêu diệt vi sinh vật sẽ ăn đường"
+          }
+        },
+        {
+          "text": "Heat breaks starch down into glucose",
+          "vi": {
+            "text": "Nhiệt độ cao phân giải tinh bột thành glucose"
+          }
+        },
+        {
+          "text": "Heat boils off the water so the colour is darker",
+          "vi": {
+            "text": "Đun làm nước bay hơi để màu đậm hơn"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sucrose-blue",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["interpretation", "reagents"],
+      "stem": "A sucrose solution is heated with Benedict’s reagent in a boiling water bath, and it stays blue. Why?",
+      "explain": "Sucrose is not a reducing sugar: its glucose and fructose are joined through their reducing groups, so it cannot reduce Cu²⁺.",
+      "vi": {
+        "stem": "Đun cách thủy sôi dung dịch sucrose với thuốc thử Benedict, hỗn hợp vẫn giữ màu xanh. Vì sao?",
+        "explain": "Sucrose không phải đường khử: glucose và fructose trong phân tử liên kết với nhau qua nhóm có tính khử, nên sucrose không khử được Cu²⁺."
+      },
+      "options": [
+        {
+          "text": "Sucrose is not a reducing sugar",
+          "vi": {
+            "text": "Sucrose không phải đường khử"
+          },
+          "correct": true
+        },
+        {
+          "text": "Sucrose is a protein, not a sugar",
+          "vi": {
+            "text": "Sucrose là protein, không phải đường"
+          }
+        },
+        {
+          "text": "Benedict’s test needs no heating, so heat stops it",
+          "vi": {
+            "text": "Phép thử Benedict không cần đun, nên đun làm phản ứng dừng lại"
+          }
+        },
+        {
+          "text": "Sucrose turns Benedict’s reagent violet instead",
+          "vi": {
+            "text": "Sucrose làm thuốc thử Benedict chuyển sang màu tím"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-controls",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["procedure", "interpretation"],
+      "stem": "About carrying out and reading the tests: decide whether each statement is true or false.",
+      "explain": "Distilled water tested beside the samples is the control for comparing colours. A negative test leaves the reagent its own colour. A dirty pipette can carry a substance into another tube and give a false result. In a real lab Benedict’s colour runs green, yellow, orange to brick red as the sugar rises.",
+      "vi": {
+        "stem": "Về cách tiến hành và đọc kết quả các phép thử, mỗi nhận định sau đúng hay sai?",
+        "explain": "Nước cất được thử song song với các mẫu là ống đối chứng để so sánh màu. Phép thử âm tính thì thuốc thử giữ nguyên màu. Pipette bẩn có thể mang chất sang ống khác và cho kết quả sai. Trong phòng thí nghiệm thật, màu Benedict chuyển từ xanh lục, vàng, cam đến đỏ gạch khi lượng đường tăng."
+      },
+      "statements": [
+        {
+          "text": "A tube of distilled water tested with each reagent serves as a control.",
+          "vi": {
+            "text": "Một ống nước cất được thử với từng thuốc thử đóng vai trò ống đối chứng."
+          },
+          "true": true
+        },
+        {
+          "text": "A negative test leaves the reagent its own colour.",
+          "vi": {
+            "text": "Phép thử âm tính thì thuốc thử giữ nguyên màu của nó."
+          },
+          "true": true
+        },
+        {
+          "text": "A dirty pipette can give a false positive result.",
+          "vi": {
+            "text": "Pipette bẩn có thể cho kết quả dương tính giả."
+          },
+          "true": true
+        },
+        {
+          "text": "In a real lab, Benedict’s test gives the same brick red whatever the amount of reducing sugar.",
+          "vi": {
+            "text": "Trong phòng thí nghiệm thật, phép thử Benedict luôn cho cùng một màu đỏ gạch dù lượng đường khử nhiều hay ít."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "starch-sample",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["interpretation", "reagents"],
+      "stem": "An unknown sample turns blue-black with iodine, stays blue with Benedict’s reagent (heated) and with the biuret reagent, and shows no red layer with Sudan III. It holds…",
+      "explain": "Only the iodine test is positive: the sample holds starch, and no reducing sugar, protein or lipid.",
+      "vi": {
+        "stem": "Một mẫu chưa biết chuyển màu xanh tím đen với iodine, vẫn giữ màu xanh với thuốc thử Benedict (có đun) và với thuốc thử biuret, và không có lớp đỏ với Sudan III. Mẫu này chứa…",
+        "explain": "Chỉ phép thử iodine dương tính: mẫu chứa tinh bột, không có đường khử, protein hay lipid."
+      },
+      "options": [
+        {
+          "text": "starch",
+          "vi": {
+            "text": "tinh bột"
+          },
+          "correct": true
+        },
+        {
+          "text": "glucose",
+          "vi": {
+            "text": "glucose"
+          }
+        },
+        {
+          "text": "protein",
+          "vi": {
+            "text": "protein"
+          }
+        },
+        {
+          "text": "nothing: it is water",
+          "vi": {
+            "text": "không chứa gì: đó là nước"
+          }
+        }
+      ]
+    },
+    {
+      "id": "glucose-sample",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["interpretation", "reagents"],
+      "stem": "An unknown sample gives no colour change with iodine, biuret or Sudan III, but a brick-red precipitate with Benedict’s reagent heated in a boiling water bath. It holds…",
+      "explain": "A brick-red precipitate with heated Benedict’s shows a reducing sugar, such as glucose; sucrose would leave it blue.",
+      "vi": {
+        "stem": "Một mẫu chưa biết không đổi màu với iodine, biuret và Sudan III, nhưng tạo kết tủa đỏ gạch với thuốc thử Benedict khi đun cách thủy sôi. Mẫu này chứa…",
+        "explain": "Kết tủa đỏ gạch với Benedict khi đun cho thấy có đường khử, ví dụ glucose; sucrose sẽ không làm đổi màu."
+      },
+      "options": [
+        {
+          "text": "a reducing sugar such as glucose",
+          "vi": {
+            "text": "một loại đường khử như glucose"
+          },
+          "correct": true
+        },
+        {
+          "text": "sucrose",
+          "vi": {
+            "text": "sucrose"
+          }
+        },
+        {
+          "text": "starch",
+          "vi": {
+            "text": "tinh bột"
+          }
+        },
+        {
+          "text": "a protein",
+          "vi": {
+            "text": "protein"
+          }
+        }
+      ]
+    },
+    {
+      "id": "all-negative",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["interpretation"],
+      "stem": "An unknown sample gives no colour change in any of the four tests, Benedict’s included (heated). In this lab each sample holds one pure substance in water, or nothing. What could it be?",
+      "explain": "Water gives no colour in any test; so does sucrose, which is not a reducing sugar and is none of the other three kinds of molecule. The four tests alone cannot tell them apart.",
+      "vi": {
+        "stem": "Một mẫu chưa biết không đổi màu ở cả bốn phép thử, kể cả Benedict (có đun). Trong phòng thí nghiệm này, mỗi mẫu chứa một chất tinh khiết trong nước, hoặc không chứa gì. Mẫu đó có thể là gì?",
+        "explain": "Nước cất không làm đổi màu ở phép thử nào; sucrose cũng vậy, vì không phải đường khử và không thuộc ba loại phân tử còn lại. Chỉ với bốn phép thử này thì không phân biệt được hai mẫu đó."
+      },
+      "options": [
+        {
+          "text": "Distilled water, or a sucrose solution",
+          "vi": {
+            "text": "Nước cất, hoặc dung dịch sucrose"
+          },
+          "correct": true
+        },
+        {
+          "text": "Distilled water only",
+          "vi": {
+            "text": "Chỉ có thể là nước cất"
+          }
+        },
+        {
+          "text": "A glucose solution",
+          "vi": {
+            "text": "Dung dịch glucose"
+          }
+        },
+        {
+          "text": "A starch suspension",
+          "vi": {
+            "text": "Hỗn dịch tinh bột"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-unheated",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["procedure", "interpretation"],
+      "stem": "A student tests a sample with Benedict’s reagent but forgets to put the tube in the boiling water bath; the tube stays blue. Decide whether each statement is true or false.",
+      "explain": "Unheated, Benedict’s stays blue even with glucose, so the result says nothing; the test must be repeated in the bath. Iodine, biuret and Sudan III need no heating. Heated, a glucose sample gives the brick-red precipitate.",
+      "vi": {
+        "stem": "Một học sinh thử một mẫu bằng thuốc thử Benedict nhưng quên đặt ống nghiệm vào nồi cách thủy sôi; ống nghiệm vẫn giữ màu xanh. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Khi không đun, Benedict vẫn giữ màu xanh dù có glucose, nên kết quả này không cho biết gì; cần làm lại trong nồi cách thủy sôi. Iodine, biuret và Sudan III không cần đun. Khi được đun, mẫu glucose tạo kết tủa đỏ gạch."
+      },
+      "statements": [
+        {
+          "text": "The result shows that the sample holds no reducing sugar.",
+          "vi": {
+            "text": "Kết quả cho thấy mẫu không chứa đường khử."
+          },
+          "true": false
+        },
+        {
+          "text": "The test must be repeated in a boiling water bath.",
+          "vi": {
+            "text": "Cần làm lại phép thử trong nồi cách thủy sôi."
+          },
+          "true": true
+        },
+        {
+          "text": "The iodine, biuret and Sudan III tests need no heating.",
+          "vi": {
+            "text": "Các phép thử iodine, biuret và Sudan III không cần đun nóng."
+          },
+          "true": true
+        },
+        {
+          "text": "Heated properly, a glucose sample would give a brick-red precipitate.",
+          "vi": {
+            "text": "Nếu được đun đúng cách, mẫu glucose sẽ tạo kết tủa đỏ gạch."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "milk",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["interpretation", "reagents"],
+      "stem": "Unlike the lab’s single-substance samples, milk turns violet with the biuret reagent and also shows a red-stained layer with Sudan III. What do the two results show?",
+      "explain": "Each test finds its own molecule: violet means protein, the red layer means lipid. A real food can hold several substances at once.",
+      "vi": {
+        "stem": "Khác với các mẫu chỉ chứa một chất trong phòng thí nghiệm, sữa chuyển màu tím với thuốc thử biuret và đồng thời có lớp bắt màu đỏ với Sudan III. Hai kết quả này cho thấy điều gì?",
+        "explain": "Mỗi phép thử nhận biết một loại phân tử: màu tím cho thấy có protein, lớp đỏ cho thấy có lipid. Thực phẩm thật có thể chứa đồng thời nhiều chất."
+      },
+      "options": [
+        {
+          "text": "Milk holds both protein and lipid",
+          "vi": {
+            "text": "Sữa chứa cả protein và lipid"
+          },
+          "correct": true
+        },
+        {
+          "text": "Milk holds starch",
+          "vi": {
+            "text": "Sữa chứa tinh bột"
+          }
+        },
+        {
+          "text": "One result must be false, since a sample can hold only one substance",
+          "vi": {
+            "text": "Một trong hai kết quả phải sai, vì mỗi mẫu chỉ chứa một chất"
+          }
+        },
+        {
+          "text": "Sudan III reacts with protein",
+          "vi": {
+            "text": "Sudan III phản ứng với protein"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-table",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["interpretation", "reagents", "procedure"],
+      "stem": "Four other samples, each one pure substance in water or plain water, are tested. P turns blue-black with iodine; Q gives a brick-red precipitate with Benedict’s (heated); R changes colour in none of the four tests; S turns violet with biuret. Decide whether each statement is true or false.",
+      "explain": "P holds starch and Q a reducing sugar. R could be water or a sucrose solution: the four tests cannot tell them apart. S holds a protein; a lipid would show as a red layer with Sudan III.",
+      "vi": {
+        "stem": "Thử bốn mẫu khác, mỗi mẫu là một chất tinh khiết trong nước hoặc chỉ là nước. P chuyển màu xanh tím đen với iodine; Q tạo kết tủa đỏ gạch với Benedict (có đun); R không đổi màu ở cả bốn phép thử; S chuyển màu tím với biuret. Mỗi nhận định sau đúng hay sai?",
+        "explain": "P chứa tinh bột và Q chứa đường khử. R có thể là nước cất hoặc dung dịch sucrose: bốn phép thử không phân biệt được hai mẫu này. S chứa protein; lipid sẽ tạo lớp màu đỏ với Sudan III."
+      },
+      "statements": [
+        {
+          "text": "P holds starch.",
+          "vi": {
+            "text": "Mẫu P chứa tinh bột."
+          },
+          "true": true
+        },
+        {
+          "text": "Q holds a reducing sugar such as glucose.",
+          "vi": {
+            "text": "Mẫu Q chứa đường khử như glucose."
+          },
+          "true": true
+        },
+        {
+          "text": "R must be distilled water.",
+          "vi": {
+            "text": "Mẫu R chắc chắn là nước cất."
+          },
+          "true": false
+        },
+        {
+          "text": "S holds a lipid.",
+          "vi": {
+            "text": "Mẫu S chứa lipid."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "sudan",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["reagents"],
+      "stem": "Sudan III is used to test for…",
+      "explain": "Sudan III is a red dye that dissolves in fats and oils: a lipid shows as a red-stained oily layer floating on the water.",
+      "vi": {
+        "stem": "Thuốc thử Sudan III được dùng để nhận biết…",
+        "explain": "Sudan III là thuốc nhuộm màu đỏ tan trong dầu, mỡ: lipid hiện ra thành lớp dầu nhuộm đỏ nổi trên mặt nước."
+      },
+      "options": [
+        {
+          "text": "lipids",
+          "vi": {
+            "text": "lipid"
+          },
+          "correct": true
+        },
+        {
+          "text": "starch",
+          "vi": {
+            "text": "tinh bột"
+          }
+        },
+        {
+          "text": "proteins",
+          "vi": {
+            "text": "protein"
+          }
+        },
+        {
+          "text": "reducing sugars",
+          "vi": {
+            "text": "đường khử"
+          }
+        }
+      ]
+    },
+    {
+      "id": "brick-red-is",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["reagents"],
+      "stem": "In a positive Benedict’s test, what is the brick-red precipitate?",
+      "explain": "Benedict’s reagent is blue from its Cu²⁺ ions. When heated, a reducing sugar reduces Cu²⁺ to Cu⁺, which comes out as copper(I) oxide, Cu₂O: the brick-red precipitate.",
+      "vi": {
+        "stem": "Trong phép thử Benedict cho kết quả dương tính, kết tủa đỏ gạch là chất gì?",
+        "explain": "Thuốc thử Benedict có màu xanh lam do ion Cu²⁺. Khi đun nóng, đường khử khử Cu²⁺ thành Cu⁺, tạo kết tủa copper(I) oxide Cu₂O màu đỏ gạch."
+      },
+      "options": [
+        {
+          "text": "Copper(I) oxide, Cu₂O, formed as the sugar reduces Cu²⁺",
+          "vi": {
+            "text": "Copper(I) oxide Cu₂O, tạo thành khi đường khử Cu²⁺"
+          },
+          "correct": true
+        },
+        {
+          "text": "The sugar itself, caramelised by the heat",
+          "vi": {
+            "text": "Chính đường bị cháy thành caramel do nhiệt"
+          }
+        },
+        {
+          "text": "Copper(II) hydroxide, formed as the sugar oxidises Cu⁺",
+          "vi": {
+            "text": "Copper(II) hydroxide, tạo thành khi đường oxi hóa Cu⁺"
+          }
+        },
+        {
+          "text": "A complex of Cu²⁺ with the peptide bonds",
+          "vi": {
+            "text": "Phức chất của Cu²⁺ với các liên kết peptide"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-reagents",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["reagents", "procedure"],
+      "stem": "About the reagents and the controls: decide whether each statement is true or false.",
+      "explain": "A tube of distilled water with each reagent is the control: it shows the reagent’s own colour, to compare with. Only Benedict’s test is heated; the biuret test works cold. Iodine is yellow-brown and stays so with any sugar but starch. Sudan III dissolves in fat, not in water.",
+      "vi": {
+        "stem": "Về các thuốc thử và ống đối chứng, mỗi nhận định sau đúng hay sai?",
+        "explain": "Ống nước cất với mỗi thuốc thử là ống đối chứng: nó cho thấy màu vốn có của thuốc thử để so sánh. Chỉ phép thử Benedict cần đun nóng; phép thử biuret thực hiện ở nhiệt độ thường. Dung dịch iodine màu vàng nâu và giữ nguyên màu đó với mọi loại đường trừ tinh bột. Sudan III tan trong chất béo, không tan trong nước."
+      },
+      "statements": [
+        {
+          "text": "A tube of distilled water with the reagent shows the reagent’s own colour, as a control.",
+          "vi": {
+            "text": "Ống nước cất có thuốc thử cho thấy màu vốn có của thuốc thử, dùng làm đối chứng."
+          },
+          "true": true
+        },
+        {
+          "text": "The biuret test must be heated in a boiling water bath, like Benedict’s.",
+          "vi": {
+            "text": "Phép thử biuret phải đun cách thủy sôi, giống phép thử Benedict."
+          },
+          "true": false
+        },
+        {
+          "text": "Iodine solution stays yellow-brown with a glucose solution.",
+          "vi": {
+            "text": "Dung dịch iodine vẫn giữ màu vàng nâu với dung dịch glucose."
+          },
+          "true": true
+        },
+        {
+          "text": "Sudan III dissolves in fat but not in water.",
+          "vi": {
+            "text": "Sudan III tan trong chất béo nhưng không tan trong nước."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "after-hydrolysis",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["interpretation", "reagents"],
+      "stem": "A sample shows no change in any of the four tests, Benedict’s (heated) included. A portion is boiled with dilute hydrochloric acid, neutralised with sodium hydrogencarbonate and tested again with Benedict’s reagent in a boiling water bath: a brick-red precipitate forms. The sample most likely holds…",
+      "explain": "Sucrose is not a reducing sugar, so it leaves Benedict’s blue. Boiling with acid hydrolyses it into glucose and fructose, both reducing sugars, which then give the brick-red precipitate. The acid is neutralised first because Benedict’s works in alkaline conditions.",
+      "vi": {
+        "stem": "Một mẫu không đổi màu ở cả bốn phép thử, kể cả phép thử Benedict (có đun nóng). Lấy một phần mẫu đun sôi với dung dịch hydrochloric acid loãng, trung hòa bằng sodium hydrogencarbonate rồi thử lại với thuốc thử Benedict trong nồi cách thủy sôi: xuất hiện kết tủa đỏ gạch. Mẫu này nhiều khả năng chứa…",
+        "explain": "Sucrose không phải là đường khử nên không làm đổi màu thuốc thử Benedict. Đun với axit làm sucrose thủy phân thành glucose và fructose, đều là đường khử, nên khi đó tạo kết tủa đỏ gạch. Phải trung hòa axit trước vì phép thử Benedict cần môi trường kiềm."
+      },
+      "options": [
+        {
+          "text": "sucrose, a non-reducing sugar hydrolysed by the acid into reducing sugars",
+          "vi": {
+            "text": "sucrose, một đường không khử bị axit thủy phân thành các đường khử"
+          },
+          "correct": true
+        },
+        {
+          "text": "glucose, which only reacts after it is boiled with acid",
+          "vi": {
+            "text": "glucose, chất chỉ phản ứng sau khi đun với axit"
+          }
+        },
+        {
+          "text": "starch, since acid turns starch into sucrose",
+          "vi": {
+            "text": "tinh bột, vì axit biến tinh bột thành sucrose"
+          }
+        },
+        {
+          "text": "distilled water only: the acid itself gives the precipitate",
+          "vi": {
+            "text": "chỉ có nước cất: chính axit tạo ra kết tủa"
+          }
+        }
+      ]
+    },
+    {
+      "id": "amylase-tube",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["interpretation", "procedure"],
+      "stem": "Starch solution is mixed with saliva (which holds amylase) and kept at 37 °C until the starch is fully digested. The mixture is then tested with iodine solution and with Benedict’s reagent in a boiling water bath. What is seen?",
+      "explain": "Amylase breaks starch down into maltose, a reducing sugar. With the starch gone, iodine stays yellow-brown; the maltose gives a brick-red precipitate with Benedict’s reagent when heated.",
+      "vi": {
+        "stem": "Trộn dung dịch tinh bột với nước bọt (có enzyme amylase) và giữ ở 37 °C đến khi tinh bột bị phân giải hết. Sau đó thử hỗn hợp bằng dung dịch iodine và bằng thuốc thử Benedict trong nồi cách thủy sôi. Kết quả quan sát được là gì?",
+        "explain": "Amylase phân giải tinh bột thành maltose, một loại đường khử. Không còn tinh bột nên iodine giữ màu vàng nâu; maltose cho kết tủa đỏ gạch với thuốc thử Benedict khi đun nóng."
+      },
+      "options": [
+        {
+          "text": "Iodine stays yellow-brown; Benedict’s gives a brick-red precipitate",
+          "vi": {
+            "text": "Iodine giữ màu vàng nâu; Benedict cho kết tủa đỏ gạch"
+          },
+          "correct": true
+        },
+        {
+          "text": "Iodine turns blue-black; Benedict’s stays blue",
+          "vi": {
+            "text": "Iodine chuyển xanh tím đen; Benedict vẫn xanh lam"
+          }
+        },
+        {
+          "text": "Iodine turns blue-black; Benedict’s gives a brick-red precipitate",
+          "vi": {
+            "text": "Iodine chuyển xanh tím đen; Benedict cho kết tủa đỏ gạch"
+          }
+        },
+        {
+          "text": "Iodine stays yellow-brown; Benedict’s stays blue",
+          "vi": {
+            "text": "Iodine giữ màu vàng nâu; Benedict vẫn xanh lam"
+          }
+        }
+      ]
+    },
+    {
+      "id": "mixture",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["interpretation", "reagents"],
+      "stem": "A solution holds both glucose and egg albumen, and nothing else. Which set of results does it give?",
+      "explain": "Each test finds its own substance in a mixture: glucose gives the brick-red precipitate with Benedict’s (heated) and the albumen turns biuret violet; with no starch and no fat, iodine stays yellow-brown and Sudan III shows no red layer.",
+      "vi": {
+        "stem": "Một dung dịch chỉ chứa glucose và lòng trắng trứng (albumin). Dung dịch này cho bộ kết quả nào?",
+        "explain": "Trong hỗn hợp, mỗi phép thử nhận biết chất của riêng nó: glucose cho kết tủa đỏ gạch với Benedict (đun nóng) và albumin làm biuret chuyển tím; không có tinh bột và chất béo nên iodine giữ màu vàng nâu và Sudan III không cho lớp đỏ."
+      },
+      "options": [
+        {
+          "text": "Iodine: no change; Benedict’s (heated): brick-red; biuret: violet; Sudan III: no red layer",
+          "vi": {
+            "text": "Iodine: không đổi màu; Benedict (đun nóng): đỏ gạch; biuret: tím; Sudan III: không có lớp đỏ"
+          },
+          "correct": true
+        },
+        {
+          "text": "Iodine: no change; Benedict’s (heated): brick-red; biuret: blue; Sudan III: no red layer",
+          "vi": {
+            "text": "Iodine: không đổi màu; Benedict (đun nóng): đỏ gạch; biuret: xanh lam; Sudan III: không có lớp đỏ"
+          }
+        },
+        {
+          "text": "Iodine: blue-black; Benedict’s (heated): brick-red; biuret: violet; Sudan III: no red layer",
+          "vi": {
+            "text": "Iodine: xanh tím đen; Benedict (đun nóng): đỏ gạch; biuret: tím; Sudan III: không có lớp đỏ"
+          }
+        },
+        {
+          "text": "Iodine: no change; Benedict’s (heated): blue; biuret: violet; Sudan III: red layer",
+          "vi": {
+            "text": "Iodine: không đổi màu; Benedict (đun nóng): xanh lam; biuret: tím; Sudan III: có lớp đỏ"
+          }
+        }
+      ]
+    },
+    {
+      "id": "two-tests-enough",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["interpretation", "procedure", "reagents"],
+      "stem": "Three unlabelled tubes hold glucose, sucrose and starch solutions, one each. Which two tests are enough to tell all three apart?",
+      "explain": "Iodine picks out the starch (blue-black). Benedict’s reagent, heated, then picks out the glucose (brick-red); the tube that changes in neither is sucrose. Benedict’s alone leaves sucrose and starch both blue; biuret finds neither sugar; unheated Benedict’s finds no sugar at all.",
+      "vi": {
+        "stem": "Ba ống nghiệm không dán nhãn lần lượt chứa dung dịch glucose, sucrose và tinh bột, mỗi ống một chất. Hai phép thử nào là đủ để phân biệt cả ba ống?",
+        "explain": "Iodine nhận ra tinh bột (xanh tím đen). Sau đó thuốc thử Benedict có đun nóng nhận ra glucose (đỏ gạch); ống không đổi màu ở cả hai phép thử là sucrose. Chỉ dùng Benedict thì sucrose và tinh bột đều giữ màu xanh lam; biuret không nhận ra loại đường nào; Benedict không đun nóng thì không nhận ra đường nào cả."
+      },
+      "options": [
+        {
+          "text": "Iodine solution, and Benedict’s reagent in a boiling water bath",
+          "vi": {
+            "text": "Dung dịch iodine, và thuốc thử Benedict đun cách thủy sôi"
+          },
+          "correct": true
+        },
+        {
+          "text": "Benedict’s reagent in a boiling water bath, used twice",
+          "vi": {
+            "text": "Thuốc thử Benedict đun cách thủy sôi, dùng hai lần"
+          }
+        },
+        {
+          "text": "Iodine solution, and the biuret reagent",
+          "vi": {
+            "text": "Dung dịch iodine, và thuốc thử biuret"
+          }
+        },
+        {
+          "text": "Iodine solution, and Benedict’s reagent at room temperature",
+          "vi": {
+            "text": "Dung dịch iodine, và thuốc thử Benedict ở nhiệt độ phòng"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-sample-y",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["interpretation", "reagents"],
+      "stem": "A food extract Y gives a brick-red precipitate with Benedict’s reagent (heated) and turns violet with the biuret reagent; iodine stays yellow-brown and Sudan III shows no red layer. Decide whether each statement is true or false.",
+      "explain": "Y holds a reducing sugar and a protein, and no starch (iodine stays yellow-brown). Benedict’s test does not say which reducing sugar: glucose, fructose and maltose all give the precipitate. Sucrose gives no colour in any of the four tests, so these results cannot rule it out.",
+      "vi": {
+        "stem": "Dịch chiết thực phẩm Y cho kết tủa đỏ gạch với thuốc thử Benedict (đun nóng) và chuyển tím với thuốc thử biuret; iodine giữ màu vàng nâu và Sudan III không cho lớp đỏ. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Y chứa đường khử và protein, không chứa tinh bột (iodine giữ màu vàng nâu). Phép thử Benedict không cho biết đó là đường khử nào: glucose, fructose và maltose đều tạo kết tủa. Sucrose không làm đổi màu ở cả bốn phép thử, nên các kết quả này không loại trừ được sucrose."
+      },
+      "statements": [
+        {
+          "text": "Y contains a reducing sugar and a protein.",
+          "vi": {
+            "text": "Y chứa đường khử và protein."
+          },
+          "true": true
+        },
+        {
+          "text": "Y contains no starch.",
+          "vi": {
+            "text": "Y không chứa tinh bột."
+          },
+          "true": true
+        },
+        {
+          "text": "Since Benedict’s test was positive, Y contains no sucrose.",
+          "vi": {
+            "text": "Vì phép thử Benedict dương tính nên Y không chứa sucrose."
+          },
+          "true": false
+        },
+        {
+          "text": "The reducing sugar in Y must be glucose.",
+          "vi": {
+            "text": "Đường khử trong Y chắc chắn là glucose."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

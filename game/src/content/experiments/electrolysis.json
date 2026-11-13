@@ -1,0 +1,484 @@
+{
+  "id": "electrolysis",
+  "name": "Electrolysis of copper sulfate: Faraday's laws",
+  "category": "chemistry",
+  "description": "Pass a steady current through copper sulfate solution between two copper plates. Copper plates out on the negative plate (the cathode) and dissolves from the positive one (the anode). Weigh the cathode before and after: the mass gained is proportional to the charge passed, Q = I·t — Faraday's law.",
+  "vi": {
+    "name": "Điện phân dung dịch đồng sunfat: định luật Fa-ra-đây",
+    "description": "Cho dòng điện không đổi chạy qua dung dịch đồng sunfat giữa hai tấm đồng. Đồng bám lên tấm nối với cực âm (catot) và tan ra từ tấm nối với cực dương (anot). Cân catot trước và sau: khối lượng tăng thêm tỉ lệ với điện lượng đã chạy qua, Q = I·t — định luật Fa-ra-đây.",
+    "note": "Mô hình dạy học đơn giản hóa. Dòng điện không đổi I chạy trong thời gian t (thời gian phòng thí nghiệm; hiển thị nhanh hơn 60 lần). Ở catot Cu²⁺ + 2e⁻ → Cu bám lên; ở anot bằng đồng Cu → Cu²⁺ + 2e⁻ tan ra cùng khối lượng, nên màu dung dịch không đổi. Mọi electron đều dùng cho các phản ứng này (hiệu suất dòng 100 %: không có khí hiđro hay oxi thoát ra — một giản lược), nên catot tăng m = I·t·M/(2F) với M(Cu) = 63,546 g/mol và F = 96 485 C/mol, anot giảm đúng chừng đó. Lớp đồng trên tấm được vẽ dày hơn thật nhiều để nhìn thấy. Kết quả mô phỏng không có sai số ngẫu nhiên; số đọc của cân chỉ được làm tròn theo độ phân giải d."
+  },
+  "requiredEquipment": ["electrolysis-cell"],
+  "model": "chemistry.electrolysis",
+  "parameters": [
+    {
+      "id": "current",
+      "label": "Current",
+      "vi": {
+        "label": "Cường độ dòng điện"
+      },
+      "symbol": "I",
+      "unit": "A",
+      "default": 0.5,
+      "min": 0.2,
+      "max": 1,
+      "presets": [
+        {
+          "label": "0.2 A",
+          "vi": {
+            "label": "0,2 A"
+          },
+          "value": 0.2
+        },
+        {
+          "label": "0.5 A",
+          "vi": {
+            "label": "0,5 A"
+          },
+          "value": 0.5
+        },
+        {
+          "label": "1.0 A",
+          "vi": {
+            "label": "1,0 A"
+          },
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "duration",
+      "label": "Time the current flows",
+      "vi": {
+        "label": "Thời gian cho dòng điện chạy"
+      },
+      "symbol": "t",
+      "unit": "s",
+      "default": 1200,
+      "min": 300,
+      "max": 1800,
+      "presets": [
+        {
+          "label": "5 min",
+          "vi": {
+            "label": "5 phút"
+          },
+          "value": 300
+        },
+        {
+          "label": "10 min",
+          "vi": {
+            "label": "10 phút"
+          },
+          "value": 600
+        },
+        {
+          "label": "20 min",
+          "vi": {
+            "label": "20 phút"
+          },
+          "value": 1200
+        },
+        {
+          "label": "30 min",
+          "vi": {
+            "label": "30 phút"
+          },
+          "value": 1800
+        }
+      ]
+    },
+    {
+      "id": "balanceResolution",
+      "label": "Balance resolution",
+      "vi": {
+        "label": "Độ phân giải của cân"
+      },
+      "symbol": "d",
+      "unit": "g",
+      "default": 0.001,
+      "min": 0.001,
+      "max": 0.01,
+      "presets": [
+        {
+          "label": "0.01 g",
+          "vi": {
+            "label": "0,01 g"
+          },
+          "value": 0.01
+        },
+        {
+          "label": "0.001 g",
+          "vi": {
+            "label": "0,001 g"
+          },
+          "value": 0.001
+        }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "timeLapse": 60
+  },
+  "inputs": {
+    "timeLapse": {
+      "symbol": "k",
+      "unit": "",
+      "desk": false
+    }
+  },
+  "simulation": {
+    "timeStep": 0.05,
+    "maxDuration": 40,
+    "sampleInterval": 0.25
+  },
+  "measurements": [
+    {
+      "id": "time",
+      "label": "Time the current has flowed",
+      "vi": {
+        "label": "Thời gian dòng điện đã chạy"
+      },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "time"
+    },
+    {
+      "id": "charge",
+      "label": "Charge passed",
+      "vi": {
+        "label": "Điện lượng đã chạy qua"
+      },
+      "symbol": "Q",
+      "unit": "C",
+      "variable": "charge"
+    },
+    {
+      "id": "gain",
+      "label": "Cathode's gain in mass",
+      "vi": {
+        "label": "Khối lượng catot tăng thêm"
+      },
+      "symbol": "Δm",
+      "unit": "g",
+      "variable": "cathodeGain"
+    }
+  ],
+  "results": [
+    {
+      "id": "gain",
+      "label": "Copper deposited on the cathode",
+      "vi": {
+        "label": "Đồng bám lên catot"
+      },
+      "symbol": "Δm",
+      "unit": "g",
+      "variable": "cathodeGain",
+      "reduce": "final",
+      "theory": "mass"
+    },
+    {
+      "id": "loss",
+      "label": "Copper dissolved from the anode",
+      "vi": {
+        "label": "Đồng tan ra từ anot"
+      },
+      "symbol": "Δm_a",
+      "unit": "g",
+      "variable": "anodeLoss",
+      "reduce": "final",
+      "theory": "mass"
+    },
+    {
+      "id": "charge",
+      "label": "Charge passed Q = I·t",
+      "vi": {
+        "label": "Điện lượng Q = I·t"
+      },
+      "symbol": "Q",
+      "unit": "C",
+      "variable": "charge",
+      "reduce": "final",
+      "theory": "charge"
+    },
+    {
+      "id": "electrons",
+      "label": "Electrons passed Q/F",
+      "vi": {
+        "label": "Số mol electron Q/F"
+      },
+      "symbol": "n(e⁻)",
+      "unit": "mmol",
+      "variable": "electrons",
+      "reduce": "final",
+      "theory": "electrons"
+    }
+  ],
+  "instruments": [
+    {
+      "result": "gain",
+      "quantity": "Gain in mass of the dried cathode",
+      "name": "Analytical balance",
+      "resolution": "balanceResolution",
+      "excludes": "copper that flakes off, the plate not fully dried, the current drifting, and some charge spent on hydrogen",
+      "vi": {
+        "quantity": "Khối lượng catot tăng thêm sau khi sấy khô",
+        "name": "Cân phân tích",
+        "excludes": "đồng bong ra, tấm chưa khô hẳn, dòng điện bị trôi, và một phần điện lượng dùng để tạo khí hiđro"
+      }
+    }
+  ],
+  "graphs": [
+    {
+      "id": "mass-charge",
+      "title": "Copper deposited against charge passed",
+      "vi": {
+        "title": "Lượng đồng bám theo điện lượng đã chạy qua"
+      },
+      "x": "charge",
+      "y": ["gain"]
+    }
+  ],
+  "monitor": "mass-charge",
+  "compare": [
+    {
+      "graph": "mass-charge",
+      "series": "gain"
+    }
+  ],
+  "analyses": [
+    {
+      "id": "faraday",
+      "title": "Copper deposited against charge, all runs",
+      "note": "Each run is one point: the cathode's gain against Q = I·t. Whatever the current and the time, the points lie on one straight line through the origin, of slope M/(2F) = 0.329 mg per coulomb: the mass depends only on the charge.",
+      "vi": {
+        "title": "Lượng đồng bám theo điện lượng, mọi lần chạy",
+        "note": "Mỗi lần chạy là một điểm: khối lượng catot tăng thêm theo Q = I·t. Dù cường độ và thời gian thế nào, các điểm đều nằm trên một đường thẳng qua gốc tọa độ, hệ số góc M/(2F) = 0,329 mg mỗi culông: khối lượng chỉ phụ thuộc vào điện lượng."
+      },
+      "x": "charge",
+      "y": "gain",
+      "group": ["balanceResolution"],
+      "columns": ["current", "duration", "charge", "gain"],
+      "slope": {
+        "label": "Copper per coulomb",
+        "vi": {
+          "label": "Lượng đồng trên mỗi culông"
+        },
+        "symbol": "k",
+        "unit": "g/C",
+        "theory": "massPerCoulomb"
+      }
+    }
+  ],
+  "note": "A simplified teaching model. A steady current I flows for a time t (lab time; shown 60 times faster). At the cathode Cu²⁺ + 2e⁻ → Cu plates out; at the copper anode Cu → Cu²⁺ + 2e⁻ dissolves the same mass, so the solution's colour stays the same. Every electron goes into these reactions (100 % current efficiency: no hydrogen or oxygen given off — a simplification), so the cathode gains m = I·t·M/(2F) with M(Cu) = 63.546 g/mol and F = 96 485 C/mol, and the anode loses as much. The copper layer on the plates is drawn far thicker than true so it can be seen. The simulated results carry no random error; the balance's reading is only rounded to its resolution d.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the electrolysis instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn điện phân trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "electrolysis-instructions"
+      }
+    },
+    {
+      "id": "current",
+      "instruction": "Set the current with its dial on the control desk.",
+      "vi": {
+        "instruction": "Đặt cường độ dòng điện bằng núm xoay trên bàn điều khiển."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "current"
+      }
+    },
+    {
+      "id": "duration",
+      "instruction": "Set how long the current flows.",
+      "vi": {
+        "instruction": "Đặt thời gian cho dòng điện chạy."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "duration"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: watch fresh copper build up on the cathode.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: quan sát lớp đồng mới bám dần lên catot."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Read the cathode's gain and the charge passed on the results monitor.",
+      "vi": {
+        "instruction": "Đọc khối lượng catot tăng thêm và điện lượng đã chạy qua trên màn hình kết quả."
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, double the current (or the time) and run again: what happens to the mass?",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, tăng gấp đôi cường độ (hoặc thời gian) rồi chạy lại: khối lượng thay đổi thế nào?"
+      },
+      "done": {
+        "kind": "reset"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "copper-plated",
+      "question": "A current of {current} A flows for {duration} s through copper(II) sulfate between copper electrodes. Find the charge and the mass of copper plated on the cathode.",
+      "vi": {
+        "question": "Dòng điện {current} A chạy trong {duration} s qua dung dịch đồng(II) sunfat với hai điện cực bằng đồng. Tìm điện lượng và khối lượng đồng bám vào catot."
+      },
+      "set": { "current": 1, "duration": 1800 },
+      "find": [{ "theory": "charge" }, { "theory": "mass" }],
+      "steps": [
+        {
+          "say": "Charge is current times time.",
+          "vi": { "say": "Điện lượng bằng cường độ dòng điện nhân thời gian." },
+          "write": "Q = I·t = {current}·{duration} = {@charge} C",
+          "check": { "expr": "current*duration", "equals": "charge" }
+        },
+        {
+          "say": "Cu²⁺ + 2e⁻ → Cu: two moles of electrons, 2F of charge, plate one mole of copper, 63.546 g. F = 96 485 C/mol.",
+          "vi": {
+            "say": "Cu²⁺ + 2e⁻ → Cu: hai mol electron, tức điện lượng 2F, giải phóng một mol đồng, 63,546 g. F = 96 485 C/mol."
+          },
+          "write": "m = Q·M/(2F) = {@charge}·63.546/(2·96485) ≈ {@mass} g",
+          "check": { "expr": "@charge*63.546/(2*96485.33212331)", "equals": "mass" }
+        }
+      ]
+    },
+    {
+      "id": "electrons-then-copper",
+      "question": "A current of {current} A flows for {duration} s through the copper cell. How many millimoles of electrons pass, and what mass of copper plates out?",
+      "vi": {
+        "question": "Dòng điện {current} A chạy trong {duration} s qua bình điện phân đồng. Có bao nhiêu mmol electron đi qua, và bao nhiêu gam đồng bám vào catot?"
+      },
+      "set": { "current": 0.2, "duration": 600 },
+      "find": [{ "theory": "electrons" }, { "theory": "mass" }],
+      "steps": [
+        {
+          "say": "The charge divided by the Faraday constant is the amount of electrons.",
+          "vi": { "say": "Điện lượng chia hằng số Faraday cho số mol electron." },
+          "write": "n(e⁻) = I·t/F = {current}·{duration}/96485 ≈ {@electrons} mmol",
+          "check": { "expr": "current*duration/96485.33212331*1000", "equals": "electrons" }
+        },
+        {
+          "say": "Each copper atom takes two electrons, so half as many moles of copper, times 63.546 g/mol.",
+          "vi": {
+            "say": "Mỗi nguyên tử đồng nhận hai electron, nên số mol đồng bằng một nửa, nhân với 63,546 g/mol."
+          },
+          "write": "m = (n(e⁻)/2)·M = ({@electrons}/2)·63.546/1000 ≈ {@mass} g",
+          "check": { "expr": "@electrons/2*63.546/1000", "equals": "mass" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "An electric current through a solution of ions drives a chemical change: copper ions take electrons at the negative plate and become copper metal.",
+    "vi": {
+      "summary": "Dòng điện chạy qua dung dịch chứa ion gây ra biến đổi hóa học: ion đồng nhận electron ở tấm nối cực âm và trở thành kim loại đồng."
+    },
+    "parts": [
+      {
+        "id": "supply",
+        "name": "DC power supply",
+        "role": "Pushes a steady current I; its ammeter shows it.",
+        "vi": {
+          "name": "Nguồn điện một chiều",
+          "role": "Tạo dòng điện không đổi I; ampe kế của nó cho biết cường độ."
+        },
+        "anchor": {
+          "part": "supply"
+        }
+      },
+      {
+        "id": "cathode",
+        "name": "Cathode (−)",
+        "role": "The plate joined to the negative terminal: Cu²⁺ ions take electrons here and plate out as copper.",
+        "vi": {
+          "name": "Catot (−)",
+          "role": "Tấm nối với cực âm: ion Cu²⁺ nhận electron ở đây và bám lên thành đồng."
+        },
+        "anchor": {
+          "part": "cathode"
+        }
+      },
+      {
+        "id": "anode",
+        "name": "Anode (+)",
+        "role": "The plate joined to the positive terminal: copper atoms give up electrons and dissolve as Cu²⁺.",
+        "vi": {
+          "name": "Anot (+)",
+          "role": "Tấm nối với cực dương: nguyên tử đồng nhường electron và tan ra thành Cu²⁺."
+        },
+        "anchor": {
+          "part": "anode"
+        }
+      },
+      {
+        "id": "solution",
+        "name": "Copper(II) sulfate solution",
+        "role": "Carries the current by its ions: Cu²⁺ move to the cathode, SO₄²⁻ to the anode.",
+        "vi": {
+          "name": "Dung dịch đồng(II) sunfat",
+          "role": "Dẫn điện nhờ các ion: Cu²⁺ di chuyển về catot, SO₄²⁻ về anot."
+        },
+        "anchor": {
+          "part": "solution"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "In the solution copper sulfate is split into ions, Cu²⁺ and SO₄²⁻. They are free to move, so the solution conducts.",
+        "vi": {
+          "text": "Trong dung dịch, đồng sunfat phân li thành ion Cu²⁺ và SO₄²⁻. Chúng di chuyển tự do nên dung dịch dẫn điện."
+        },
+        "parts": ["solution"]
+      },
+      {
+        "text": "Switch on: the supply pushes electrons into the cathode. Cu²⁺ ions there take two each: Cu²⁺ + 2e⁻ → Cu. A pink layer of fresh copper builds up.",
+        "vi": {
+          "text": "Bật nguồn: nguồn đẩy electron vào catot. Mỗi ion Cu²⁺ ở đó nhận hai electron: Cu²⁺ + 2e⁻ → Cu. Một lớp đồng mới màu hồng bám dần lên."
+        },
+        "parts": ["supply", "cathode"]
+      },
+      {
+        "text": "At the anode copper atoms give up electrons: Cu → Cu²⁺ + 2e⁻. The anode loses exactly the copper the cathode gains, so the solution keeps its blue.",
+        "vi": {
+          "text": "Ở anot, nguyên tử đồng nhường electron: Cu → Cu²⁺ + 2e⁻. Anot mất đúng lượng đồng mà catot nhận được, nên dung dịch vẫn giữ màu xanh."
+        },
+        "parts": ["anode", "solution"]
+      },
+      {
+        "text": "Faraday's law: the mass changed is proportional to the charge Q = I·t. Each mole of copper needs 2 moles of electrons, 2 × 96 485 C: m = Q·M/(2F).",
+        "vi": {
+          "text": "Định luật Fa-ra-đây: khối lượng chất biến đổi tỉ lệ với điện lượng Q = I·t. Mỗi mol đồng cần 2 mol electron, tức 2 × 96 485 C: m = Q·M/(2F)."
+        },
+        "parts": ["supply", "cathode"]
+      },
+      {
+        "text": "Double the current or the time and twice the copper plates out; plot the gain against Q for all runs: one straight line through the origin.",
+        "vi": {
+          "text": "Tăng gấp đôi cường độ hoặc thời gian thì lượng đồng bám cũng gấp đôi; vẽ khối lượng tăng theo Q cho mọi lần chạy: một đường thẳng qua gốc tọa độ."
+        },
+        "parts": ["cathode"]
+      }
+    ]
+  }
+}

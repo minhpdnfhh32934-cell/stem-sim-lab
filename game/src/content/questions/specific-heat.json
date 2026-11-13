@@ -1,0 +1,1038 @@
+{
+  "id": "specific-heat",
+  "skills": [
+    {
+      "id": "definition",
+      "name": "Specific heat capacity",
+      "advice": "Re-read the definition: c is the energy to warm 1 kg by 1 K, in J/(kg·K); water’s handbook value is about 4181 J/(kg·K). A rise of 1 K equals a rise of 1 °C.",
+      "vi": {
+        "name": "Nhiệt dung riêng",
+        "advice": "Đọc lại định nghĩa: c là nhiệt lượng cần để 1 kg chất tăng thêm 1 K, đơn vị J/(kg·K); giá trị tra cứu của nước khoảng 4181 J/(kg·K). Tăng 1 K cũng là tăng 1 °C."
+      }
+    },
+    {
+      "id": "energy",
+      "name": "Energy from the heater: E = P·t",
+      "advice": "The joulemeter counts E = P·t, with t in seconds. Check one run by hand: 40 W for 300 s is 12 000 J.",
+      "vi": {
+        "name": "Năng lượng từ dây đốt: E = P·t",
+        "advice": "Joulemeter đếm E = P·t, với t tính bằng giây. Tự kiểm tra một lần đo: 40 W trong 300 s là 12 000 J."
+      }
+    },
+    {
+      "id": "balance",
+      "name": "The heat balance: E = (m·c + C)·ΔT",
+      "advice": "The energy warms both the water (m·c) and the calorimeter (C). Practise both ways: ΔT from E, and c = (E/ΔT − C)/m. Trap: forgetting C.",
+      "vi": {
+        "name": "Phương trình cân bằng nhiệt: E = (m·c + C)·ΔT",
+        "advice": "Năng lượng làm nóng cả nước (m·c) và nhiệt lượng kế (C). Luyện cả hai chiều: tìm ΔT từ E, và c = (E/ΔT − C)/m. Lỗi hay gặp: quên C."
+      }
+    },
+    {
+      "id": "losses",
+      "name": "Heat lost to the room",
+      "advice": "The calorimeter loses heat (k = 0.1 W/K, illustrative), so ΔT is smaller than E/(m·c + C) and c worked out comes out high — more for long heating. Compare runs of different power and mass.",
+      "vi": {
+        "name": "Nhiệt hao hụt ra môi trường",
+        "advice": "Nhiệt lượng kế bị mất nhiệt (k = 0,1 W/K, minh họa), nên ΔT nhỏ hơn E/(m·c + C) và c tính được lớn hơn thực tế — càng đun lâu càng lệch nhiều. So sánh các lần đo với công suất và khối lượng khác nhau."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "definition",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["definition"],
+      "stem": "The specific heat capacity of a substance is the energy needed to…",
+      "explain": "c: the energy for 1 kg to warm by 1 K.",
+      "vi": {
+        "stem": "Nhiệt dung riêng của một chất là nhiệt lượng cần để…",
+        "explain": "c: nhiệt lượng cần cung cấp để 1 kg chất đó tăng thêm 1 K."
+      },
+      "options": [
+        {
+          "text": "warm 1 kg of it by 1 K",
+          "vi": {
+            "text": "làm 1 kg chất đó tăng thêm 1 K"
+          },
+          "correct": true
+        },
+        {
+          "text": "melt 1 kg of it",
+          "vi": {
+            "text": "làm nóng chảy 1 kg chất đó"
+          }
+        },
+        {
+          "text": "warm the whole body by 1 K",
+          "vi": {
+            "text": "làm cả vật tăng thêm 1 K"
+          }
+        },
+        {
+          "text": "boil 1 kg of it",
+          "vi": {
+            "text": "làm sôi 1 kg chất đó"
+          }
+        }
+      ]
+    },
+    {
+      "id": "unit",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["definition"],
+      "stem": "The SI unit of specific heat capacity is…",
+      "explain": "c = Q/(m·ΔT): J/(kg·K).",
+      "vi": {
+        "stem": "Đơn vị SI của nhiệt dung riêng là…",
+        "explain": "c = Q/(m·ΔT): J/(kg·K)."
+      },
+      "options": [
+        {
+          "text": "J/(kg·K)",
+          "vi": {
+            "text": "J/(kg·K)"
+          },
+          "correct": true
+        },
+        {
+          "text": "J/kg",
+          "vi": {
+            "text": "J/kg"
+          }
+        },
+        {
+          "text": "J/K",
+          "vi": {
+            "text": "J/K"
+          }
+        },
+        {
+          "text": "W/(kg·K)",
+          "vi": {
+            "text": "W/(kg·K)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-setup",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["energy", "balance", "losses"],
+      "stem": "A heater warms stirred water in an insulated calorimeter; a joulemeter counts the energy. Decide whether each statement is true or false.",
+      "explain": "E = P·t; stirring keeps one temperature; the calorimeter takes part of the energy; heat lost to the room makes ΔT smaller, so c comes out too high, not too low.",
+      "vi": {
+        "stem": "Một dây đốt làm nóng nước được khuấy đều trong nhiệt lượng kế cách nhiệt; joulemeter đếm năng lượng. Mỗi nhận định sau đúng hay sai?",
+        "explain": "E = P·t; khuấy giữ cho nước một nhiệt độ; nhiệt lượng kế nhận một phần năng lượng; nhiệt mất ra phòng làm ΔT nhỏ hơn, nên c tính được lớn hơn, không phải nhỏ hơn."
+      },
+      "statements": [
+        {
+          "text": "The joulemeter counts the energy E = P·t.",
+          "vi": {
+            "text": "Joulemeter đếm năng lượng E = P·t."
+          },
+          "true": true
+        },
+        {
+          "text": "Stirring keeps all the water at one temperature.",
+          "vi": {
+            "text": "Khuấy giúp toàn bộ nước có cùng một nhiệt độ."
+          },
+          "true": true
+        },
+        {
+          "text": "The calorimeter itself takes some of the energy.",
+          "vi": {
+            "text": "Bản thân nhiệt lượng kế cũng nhận một phần năng lượng."
+          },
+          "true": true
+        },
+        {
+          "text": "Heat lost to the room makes the c worked out come out too low.",
+          "vi": {
+            "text": "Nhiệt mất ra phòng làm giá trị c tính được nhỏ hơn thực tế."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "double-mass",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["balance"],
+      "stem": "Leaving out losses and the calorimeter, twice the mass of water is heated with the same energy. Its temperature rise…",
+      "explain": "ΔT = E/(m·c): twice m, half ΔT.",
+      "vi": {
+        "stem": "Bỏ qua hao hụt và nhiệt lượng kế, đun lượng nước gấp đôi với cùng năng lượng. Độ tăng nhiệt độ…",
+        "explain": "ΔT = E/(m·c): m gấp đôi thì ΔT giảm một nửa."
+      },
+      "options": [
+        {
+          "text": "halves",
+          "vi": {
+            "text": "giảm một nửa"
+          },
+          "correct": true
+        },
+        {
+          "text": "doubles",
+          "vi": {
+            "text": "tăng gấp đôi"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "becomes four times smaller",
+          "vi": {
+            "text": "giảm bốn lần"
+          }
+        }
+      ]
+    },
+    {
+      "id": "why-high",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["losses"],
+      "stem": "Why does c = (E/ΔT − C)/m come out slightly higher than the handbook value in this experiment?",
+      "explain": "Part of E leaks to the room, so ΔT is smaller than if all E stayed: E/ΔT is too large.",
+      "vi": {
+        "stem": "Vì sao trong thí nghiệm này c = (E/ΔT − C)/m lớn hơn giá trị tra cứu một chút?",
+        "explain": "Một phần E thoát ra phòng nên ΔT nhỏ hơn so với khi giữ được toàn bộ E: E/ΔT quá lớn."
+      },
+      "options": [
+        {
+          "text": "Some heat is lost to the room, so ΔT is smaller than it would be.",
+          "vi": {
+            "text": "Một phần nhiệt mất ra phòng nên ΔT nhỏ hơn lẽ ra phải có."
+          },
+          "correct": true
+        },
+        {
+          "text": "The joulemeter counts too little energy.",
+          "vi": {
+            "text": "Joulemeter đếm thiếu năng lượng."
+          }
+        },
+        {
+          "text": "The calorimeter takes no heat.",
+          "vi": {
+            "text": "Nhiệt lượng kế không nhận nhiệt."
+          }
+        },
+        {
+          "text": "The water gets heavier as it warms.",
+          "vi": {
+            "text": "Nước nặng hơn khi nóng lên."
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-60w",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["balance", "losses", "energy"],
+      "set": {
+        "power": 60,
+        "waterMass": 0.3
+      },
+      "stem": "A {power} W heater warms {waterMass} kg of water (c = 4181 J/(kg·K)) in a calorimeter of C = {calorimeterCapacity} J/K (illustrative) for {heatingTime} s. Decide whether each statement is true or false.",
+      "explain": "E = P·t = {@energy} J; with no loss ΔT₀ = E/(m·c + C) ≈ {@lossFreeRise} K; the loss makes the real rise {@temperatureRise} K. Leaving out C gives {=@energy/(waterMass*4181)} K.",
+      "vi": {
+        "stem": "Dây đốt {power} W làm nóng {waterMass} kg nước (c = 4181 J/(kg·K)) trong nhiệt lượng kế C = {calorimeterCapacity} J/K (minh họa) trong {heatingTime} s. Mỗi nhận định sau đúng hay sai?",
+        "explain": "E = P·t = {@energy} J; nếu không hao hụt ΔT₀ = E/(m·c + C) ≈ {@lossFreeRise} K; do hao hụt, độ tăng thực là {@temperatureRise} K. Bỏ qua C sẽ ra {=@energy/(waterMass*4181)} K."
+      },
+      "statements": [
+        {
+          "text": "The heater gives {@energy} J.",
+          "vi": {
+            "text": "Dây đốt cung cấp {@energy} J."
+          },
+          "true": true,
+          "check": {
+            "expr": "power*heatingTime",
+            "equals": "energy"
+          }
+        },
+        {
+          "text": "With no heat lost, the rise would be about {@lossFreeRise} K.",
+          "vi": {
+            "text": "Nếu không mất nhiệt, độ tăng nhiệt độ khoảng {@lossFreeRise} K."
+          },
+          "true": true,
+          "check": {
+            "expr": "@energy/(waterMass*4181+calorimeterCapacity)",
+            "equals": "lossFreeRise"
+          }
+        },
+        {
+          "text": "The real rise is a little smaller, about {@temperatureRise} K.",
+          "vi": {
+            "text": "Độ tăng thực tế nhỏ hơn một chút, khoảng {@temperatureRise} K."
+          },
+          "true": true,
+          "check": {
+            "expr": "(power/lossCoefficient)*(1-exp(-lossCoefficient*heatingTime/(waterMass*4181+calorimeterCapacity)))",
+            "equals": "temperatureRise"
+          }
+        },
+        {
+          "text": "E/(m·c), leaving out the calorimeter, gives the same loss-free rise.",
+          "vi": {
+            "text": "E/(m·c), bỏ qua nhiệt lượng kế, cho cùng độ tăng nhiệt độ khi không hao hụt."
+          },
+          "true": false,
+          "check": {
+            "expr": "@energy/(waterMass*4181)",
+            "equals": "lossFreeRise"
+          }
+        }
+      ]
+    },
+    {
+      "id": "energy",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["energy"],
+      "set": {
+        "power": 40
+      },
+      "stem": "A {power} W heater runs for {heatingTime} s. How much energy does the joulemeter count?",
+      "explain": "E = P·t = {power}·{heatingTime} = {@energy} J.",
+      "vi": {
+        "stem": "Dây đốt {power} W hoạt động trong {heatingTime} s. Joulemeter đếm được bao nhiêu năng lượng?",
+        "explain": "E = P·t = {power}·{heatingTime} = {@energy} J."
+      },
+      "options": [
+        {
+          "text": "{@energy} J",
+          "vi": {
+            "text": "{@energy} J"
+          },
+          "correct": true,
+          "check": {
+            "expr": "power*heatingTime",
+            "equals": "energy"
+          }
+        },
+        {
+          "text": "{=power/heatingTime} J",
+          "vi": {
+            "text": "{=power/heatingTime} J"
+          },
+          "check": {
+            "expr": "power/heatingTime",
+            "equals": "energy"
+          }
+        },
+        {
+          "text": "{=heatingTime/power} J",
+          "vi": {
+            "text": "{=heatingTime/power} J"
+          },
+          "check": {
+            "expr": "heatingTime/power",
+            "equals": "energy"
+          }
+        },
+        {
+          "text": "{=power*heatingTime/60} J",
+          "vi": {
+            "text": "{=power*heatingTime/60} J"
+          },
+          "check": {
+            "expr": "power*heatingTime/60",
+            "equals": "energy"
+          }
+        }
+      ]
+    },
+    {
+      "id": "loss-free",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["balance"],
+      "set": {
+        "power": 60,
+        "waterMass": 0.3
+      },
+      "stem": "A {power} W heater warms {waterMass} kg of water (c = 4181 J/(kg·K)) in a calorimeter of C = {calorimeterCapacity} J/K for {heatingTime} s. If no heat were lost, by how much would the temperature rise?",
+      "explain": "E = {@energy} J warms water and calorimeter: ΔT₀ = E/(m·c + C) = {@energy}/({waterMass}·4181 + {calorimeterCapacity}) ≈ {@lossFreeRise} K.",
+      "vi": {
+        "stem": "Dây đốt {power} W làm nóng {waterMass} kg nước (c = 4181 J/(kg·K)) trong nhiệt lượng kế C = {calorimeterCapacity} J/K trong {heatingTime} s. Nếu không mất nhiệt, nhiệt độ tăng thêm bao nhiêu?",
+        "explain": "E = {@energy} J làm nóng cả nước và nhiệt lượng kế: ΔT₀ = E/(m·c + C) = {@energy}/({waterMass}·4181 + {calorimeterCapacity}) ≈ {@lossFreeRise} K."
+      },
+      "options": [
+        {
+          "text": "{@lossFreeRise} K",
+          "vi": {
+            "text": "{@lossFreeRise} K"
+          },
+          "correct": true,
+          "check": {
+            "expr": "power*heatingTime/(waterMass*4181+calorimeterCapacity)",
+            "equals": "lossFreeRise"
+          }
+        },
+        {
+          "text": "{=@energy/(waterMass*4181)} K",
+          "vi": {
+            "text": "{=@energy/(waterMass*4181)} K"
+          },
+          "check": {
+            "expr": "@energy/(waterMass*4181)",
+            "equals": "lossFreeRise"
+          }
+        },
+        {
+          "text": "{=@energy/(waterMass*(4181+calorimeterCapacity))} K",
+          "vi": {
+            "text": "{=@energy/(waterMass*(4181+calorimeterCapacity))} K"
+          },
+          "check": {
+            "expr": "@energy/(waterMass*(4181+calorimeterCapacity))",
+            "equals": "lossFreeRise"
+          }
+        },
+        {
+          "text": "{=@energy/4181} K",
+          "vi": {
+            "text": "{=@energy/4181} K"
+          },
+          "check": {
+            "expr": "@energy/4181",
+            "equals": "lossFreeRise"
+          }
+        }
+      ]
+    },
+    {
+      "id": "worked-c",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["balance", "losses"],
+      "set": {
+        "power": 40,
+        "waterMass": 0.2
+      },
+      "stem": "{waterMass} kg of water in a calorimeter of C = {calorimeterCapacity} J/K takes E = {@energy} J and warms by ΔT = {@temperatureRise|4} K. What value of c does c = (E/ΔT − C)/m give?",
+      "explain": "c = ({@energy}/{@temperatureRise|4} − {calorimeterCapacity})/{waterMass} ≈ {=(@energy/@temperatureRise-calorimeterCapacity)/waterMass|4} J/(kg·K) — a little above 4181, because some heat leaked away.",
+      "vi": {
+        "stem": "{waterMass} kg nước trong nhiệt lượng kế C = {calorimeterCapacity} J/K nhận E = {@energy} J và nóng thêm ΔT = {@temperatureRise|4} K. Công thức c = (E/ΔT − C)/m cho giá trị c bằng bao nhiêu?",
+        "explain": "c = ({@energy}/{@temperatureRise|4} − {calorimeterCapacity})/{waterMass} ≈ {=(@energy/@temperatureRise-calorimeterCapacity)/waterMass|4} J/(kg·K) — lớn hơn 4181 một chút, vì một phần nhiệt đã thoát ra ngoài."
+      },
+      "options": [
+        {
+          "text": "{=(@energy/@temperatureRise-calorimeterCapacity)/waterMass|4} J/(kg·K)",
+          "vi": {
+            "text": "{=(@energy/@temperatureRise-calorimeterCapacity)/waterMass|4} J/(kg·K)"
+          },
+          "correct": true
+        },
+        {
+          "text": "{=@energy/(waterMass*@temperatureRise)|4} J/(kg·K)",
+          "vi": {
+            "text": "{=@energy/(waterMass*@temperatureRise)|4} J/(kg·K)"
+          }
+        },
+        {
+          "text": "{=(@energy/@temperatureRise+calorimeterCapacity)/waterMass|4} J/(kg·K)",
+          "vi": {
+            "text": "{=(@energy/@temperatureRise+calorimeterCapacity)/waterMass|4} J/(kg·K)"
+          }
+        },
+        {
+          "text": "{=@energy/(waterMass*@temperatureRise)-calorimeterCapacity|4} J/(kg·K)",
+          "vi": {
+            "text": "{=@energy/(waterMass*@temperatureRise)-calorimeterCapacity|4} J/(kg·K)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-20w",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["balance", "losses"],
+      "set": {
+        "power": 20,
+        "waterMass": 0.1
+      },
+      "stem": "A {power} W heater warms {waterMass} kg of water (c = 4181 J/(kg·K), C = {calorimeterCapacity} J/K) for {heatingTime} s, from the room’s {roomTemperature} °C. Decide whether each statement is true or false.",
+      "explain": "m·c + C = {@heatCapacity} J/K; with the loss ΔT ≈ {@temperatureRise} K, so T ≈ {@finalTemperature} °C — less than E/(m·c + C) ≈ {@lossFreeRise} K would give, so c worked out comes out above 4181.",
+      "vi": {
+        "stem": "Dây đốt {power} W làm nóng {waterMass} kg nước (c = 4181 J/(kg·K), C = {calorimeterCapacity} J/K) trong {heatingTime} s, từ nhiệt độ phòng {roomTemperature} °C. Mỗi nhận định sau đúng hay sai?",
+        "explain": "m·c + C = {@heatCapacity} J/K; do hao hụt ΔT ≈ {@temperatureRise} K, nên T ≈ {@finalTemperature} °C — nhỏ hơn mức E/(m·c + C) ≈ {@lossFreeRise} K, vì vậy c tính được lớn hơn 4181."
+      },
+      "statements": [
+        {
+          "text": "Water and calorimeter together take {@heatCapacity} J for each kelvin.",
+          "vi": {
+            "text": "Nước và nhiệt lượng kế cần {@heatCapacity} J cho mỗi kelvin."
+          },
+          "true": true,
+          "check": {
+            "expr": "waterMass*4181+calorimeterCapacity",
+            "equals": "heatCapacity"
+          }
+        },
+        {
+          "text": "The water ends at about {@finalTemperature} °C.",
+          "vi": {
+            "text": "Nước có nhiệt độ cuối khoảng {@finalTemperature} °C."
+          },
+          "true": true,
+          "check": {
+            "expr": "roomTemperature+(power/lossCoefficient)*(1-exp(-lossCoefficient*heatingTime/(waterMass*4181+calorimeterCapacity)))",
+            "equals": "finalTemperature"
+          }
+        },
+        {
+          "text": "The rise is exactly E/(m·c + C).",
+          "vi": {
+            "text": "Độ tăng nhiệt độ đúng bằng E/(m·c + C)."
+          },
+          "true": false,
+          "check": {
+            "expr": "@energy/@heatCapacity",
+            "equals": "temperatureRise"
+          }
+        },
+        {
+          "text": "c worked out as (E/ΔT − C)/m comes out above 4181 J/(kg·K).",
+          "vi": {
+            "text": "c tính theo (E/ΔT − C)/m lớn hơn 4181 J/(kg·K)."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "final-temperature",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["losses", "balance"],
+      "set": {
+        "power": 20,
+        "waterMass": 0.1
+      },
+      "stem": "A {power} W heater warms {waterMass} kg of water (c = 4181 J/(kg·K), C = {calorimeterCapacity} J/K) for {heatingTime} s from {roomTemperature} °C. The calorimeter loses k = {lossCoefficient} W per kelvin above the room (illustrative), so ΔT = (P/k)(1 − e^(−k·t/(m·c + C))). What is the final temperature?",
+      "explain": "m·c + C = {@heatCapacity} J/K; ΔT = ({power}/{lossCoefficient})(1 − e^(−{lossCoefficient}·{heatingTime}/{@heatCapacity})) ≈ {@temperatureRise} K; T = {roomTemperature} + ΔT ≈ {@finalTemperature} °C. Without the loss it would be {=roomTemperature+@lossFreeRise} °C; P/k is only the limit after a very long time.",
+      "vi": {
+        "stem": "Dây đốt {power} W làm nóng {waterMass} kg nước (c = 4181 J/(kg·K), C = {calorimeterCapacity} J/K) trong {heatingTime} s từ {roomTemperature} °C. Nhiệt lượng kế mất k = {lossCoefficient} W cho mỗi kelvin cao hơn nhiệt độ phòng (minh họa), nên ΔT = (P/k)(1 − e^(−k·t/(m·c + C))). Nhiệt độ cuối bằng bao nhiêu?",
+        "explain": "m·c + C = {@heatCapacity} J/K; ΔT = ({power}/{lossCoefficient})(1 − e^(−{lossCoefficient}·{heatingTime}/{@heatCapacity})) ≈ {@temperatureRise} K; T = {roomTemperature} + ΔT ≈ {@finalTemperature} °C. Nếu không hao hụt sẽ là {=roomTemperature+@lossFreeRise} °C; P/k chỉ là giới hạn sau thời gian rất dài."
+      },
+      "options": [
+        {
+          "text": "{@finalTemperature} °C",
+          "vi": {
+            "text": "{@finalTemperature} °C"
+          },
+          "correct": true,
+          "check": {
+            "expr": "roomTemperature+(power/lossCoefficient)*(1-exp(-lossCoefficient*heatingTime/(waterMass*4181+calorimeterCapacity)))",
+            "equals": "finalTemperature"
+          }
+        },
+        {
+          "text": "{=roomTemperature+@lossFreeRise} °C",
+          "vi": {
+            "text": "{=roomTemperature+@lossFreeRise} °C"
+          },
+          "check": {
+            "expr": "roomTemperature+@lossFreeRise",
+            "equals": "finalTemperature"
+          }
+        },
+        {
+          "text": "{@temperatureRise} °C",
+          "vi": {
+            "text": "{@temperatureRise} °C"
+          },
+          "check": {
+            "expr": "@temperatureRise",
+            "equals": "finalTemperature"
+          }
+        },
+        {
+          "text": "{=roomTemperature+power/lossCoefficient} °C",
+          "vi": {
+            "text": "{=roomTemperature+power/lossCoefficient} °C"
+          },
+          "check": {
+            "expr": "roomTemperature+power/lossCoefficient",
+            "equals": "finalTemperature"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-reading",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["losses", "energy", "balance"],
+      "set": {
+        "power": 40,
+        "waterMass": 0.2,
+        "thermometerResolution": 1,
+        "joulemeterResolution": 100
+      },
+      "stem": "A {power} W heater warms {waterMass} kg of water for {heatingTime} s; the thermometer reads to {thermometerResolution} °C and the joulemeter to {joulemeterResolution} J. Decide whether each statement is true or false.",
+      "explain": "E = {@energy} J shows as {=round(@energy/joulemeterResolution)*joulemeterResolution} J; T = {@finalTemperature|4} °C shows as {=round(@finalTemperature/thermometerResolution)*thermometerResolution} °C. A coarser thermometer makes ΔT, and so c, less precise. Longer heating loses more heat, so c drifts further above 4181.",
+      "vi": {
+        "stem": "Dây đốt {power} W làm nóng {waterMass} kg nước trong {heatingTime} s; nhiệt kế có độ phân giải {thermometerResolution} °C, joulemeter có độ phân giải {joulemeterResolution} J. Mỗi nhận định sau đúng hay sai?",
+        "explain": "E = {@energy} J hiển thị {=round(@energy/joulemeterResolution)*joulemeterResolution} J; T = {@finalTemperature|4} °C hiển thị {=round(@finalTemperature/thermometerResolution)*thermometerResolution} °C. Nhiệt kế thô hơn làm ΔT, và do đó c, kém chính xác hơn. Đun lâu hơn thì mất nhiệt nhiều hơn, nên c càng lệch lên trên 4181."
+      },
+      "statements": [
+        {
+          "text": "The joulemeter shows {=round(@energy/joulemeterResolution)*joulemeterResolution} J.",
+          "vi": {
+            "text": "Joulemeter hiển thị {=round(@energy/joulemeterResolution)*joulemeterResolution} J."
+          },
+          "true": true
+        },
+        {
+          "text": "The thermometer shows the final temperature as {=round(@finalTemperature/thermometerResolution)*thermometerResolution} °C.",
+          "vi": {
+            "text": "Nhiệt kế hiển thị nhiệt độ cuối là {=round(@finalTemperature/thermometerResolution)*thermometerResolution} °C."
+          },
+          "true": true
+        },
+        {
+          "text": "A thermometer reading to 1 °C gives a more precise c than one reading to 0.1 °C.",
+          "vi": {
+            "text": "Nhiệt kế có độ phân giải 1 °C cho c chính xác hơn nhiệt kế 0,1 °C."
+          },
+          "true": false
+        },
+        {
+          "text": "Heating for longer makes the worked c drift further above 4181 J/(kg·K).",
+          "vi": {
+            "text": "Đun lâu hơn làm giá trị c tính được càng lệch lên trên 4181 J/(kg·K)."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "heat-formula",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["definition"],
+      "stem": "The heat needed to raise the temperature of a mass m of a substance of specific heat capacity c by ΔT is…",
+      "explain": "Q = m·c·ΔT: twice the mass, or twice the rise, needs twice the heat.",
+      "vi": {
+        "stem": "Nhiệt lượng cần để làm nóng khối lượng m của một chất có nhiệt dung riêng c tăng thêm ΔT là…",
+        "explain": "Q = m·c·ΔT: khối lượng gấp đôi, hoặc độ tăng nhiệt độ gấp đôi, thì cần nhiệt lượng gấp đôi."
+      },
+      "options": [
+        {
+          "text": "Q = m·c·ΔT",
+          "vi": {
+            "text": "Q = m·c·ΔT"
+          },
+          "correct": true
+        },
+        {
+          "text": "Q = m·c/ΔT",
+          "vi": {
+            "text": "Q = m·c/ΔT"
+          }
+        },
+        {
+          "text": "Q = c·ΔT/m",
+          "vi": {
+            "text": "Q = c·ΔT/m"
+          }
+        },
+        {
+          "text": "Q = m·ΔT/c",
+          "vi": {
+            "text": "Q = m·ΔT/c"
+          }
+        }
+      ]
+    },
+    {
+      "id": "stirring",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["balance"],
+      "stem": "Why is the water stirred while the heater runs?",
+      "explain": "Stirring spreads the heat evenly, so the thermometer reads the temperature of all the water, not of a hot layer near the heater.",
+      "vi": {
+        "stem": "Vì sao phải khuấy nước trong lúc dây đốt hoạt động?",
+        "explain": "Khuấy giúp nhiệt phân bố đều, để nhiệt kế đo đúng nhiệt độ của toàn bộ lượng nước chứ không phải của lớp nước nóng gần dây đốt."
+      },
+      "options": [
+        {
+          "text": "So all the water is at the same temperature as the thermometer reads",
+          "vi": {
+            "text": "Để toàn bộ nước có cùng nhiệt độ với số chỉ của nhiệt kế"
+          },
+          "correct": true
+        },
+        {
+          "text": "So the water takes in more energy than the heater gives",
+          "vi": {
+            "text": "Để nước nhận nhiều năng lượng hơn dây đốt cung cấp"
+          }
+        },
+        {
+          "text": "So the calorimeter takes in no heat",
+          "vi": {
+            "text": "Để nhiệt lượng kế không nhận nhiệt"
+          }
+        },
+        {
+          "text": "So the water cools down faster",
+          "vi": {
+            "text": "Để nước nguội nhanh hơn"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-calorimeter",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["definition", "balance", "losses"],
+      "stem": "A heater warms water in a calorimeter; a joulemeter counts the energy. Decide whether each statement is true or false.",
+      "explain": "Water’s c, about 4.2 kJ/(kg·K), is much larger than that of metals, so it warms slowly. Part of the energy warms the calorimeter (C·ΔT). Heat lost to the room makes the measured rise smaller, not larger. Without losses, twice the power for the same time gives twice the energy and twice the rise.",
+      "vi": {
+        "stem": "Một dây đốt làm nóng nước trong nhiệt lượng kế; jun kế đo năng lượng. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Nhiệt dung riêng của nước, khoảng 4,2 kJ/(kg·K), lớn hơn nhiều so với kim loại, nên nước nóng lên chậm. Một phần năng lượng làm nóng nhiệt lượng kế (C·ΔT). Nhiệt tỏa ra môi trường làm độ tăng nhiệt độ đo được nhỏ hơn chứ không lớn hơn. Bỏ qua hao phí, công suất gấp đôi trong cùng thời gian cho năng lượng gấp đôi và độ tăng nhiệt độ gấp đôi."
+      },
+      "statements": [
+        {
+          "text": "Water warms more slowly than the same mass of a metal given the same energy.",
+          "vi": {
+            "text": "Nhận cùng một năng lượng, nước nóng lên chậm hơn cùng khối lượng kim loại."
+          },
+          "true": true
+        },
+        {
+          "text": "Part of the heater’s energy warms the calorimeter itself.",
+          "vi": {
+            "text": "Một phần năng lượng của dây đốt làm nóng chính nhiệt lượng kế."
+          },
+          "true": true
+        },
+        {
+          "text": "Heat lost to the room makes the measured temperature rise larger.",
+          "vi": {
+            "text": "Nhiệt tỏa ra môi trường làm độ tăng nhiệt độ đo được lớn hơn."
+          },
+          "true": false
+        },
+        {
+          "text": "Leaving out losses, twice the heater power for the same time gives twice the rise.",
+          "vi": {
+            "text": "Bỏ qua hao phí, công suất dây đốt gấp đôi trong cùng thời gian cho độ tăng nhiệt độ gấp đôi."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "heat-capacity",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["balance"],
+      "set": {
+        "power": 40,
+        "waterMass": 0.3
+      },
+      "stem": "{waterMass} kg of water (c = {@specificHeat|4} J/(kg·K)) is in a calorimeter of heat capacity C = {calorimeterCapacity} J/K. How much energy warms them together by 1 K?",
+      "explain": "Water and calorimeter warm together: m·c + C = {waterMass}·{@specificHeat|4} + {calorimeterCapacity} = {@heatCapacity|4} J/K. m·c alone forgets the calorimeter.",
+      "vi": {
+        "stem": "{waterMass} kg nước (c = {@specificHeat|4} J/(kg·K)) đựng trong nhiệt lượng kế có nhiệt dung C = {calorimeterCapacity} J/K. Cần bao nhiêu năng lượng để cả hai cùng nóng thêm 1 K?",
+        "explain": "Nước và nhiệt lượng kế cùng nóng lên: m·c + C = {waterMass}·{@specificHeat|4} + {calorimeterCapacity} = {@heatCapacity|4} J/K. Chỉ lấy m·c là quên nhiệt lượng kế."
+      },
+      "options": [
+        {
+          "text": "{@heatCapacity|4} J",
+          "vi": {
+            "text": "{@heatCapacity|4} J"
+          },
+          "correct": true,
+          "check": {
+            "expr": "waterMass*@specificHeat+calorimeterCapacity",
+            "equals": "heatCapacity"
+          }
+        },
+        {
+          "text": "{=waterMass*@specificHeat|4} J",
+          "vi": {
+            "text": "{=waterMass*@specificHeat|4} J"
+          },
+          "check": {
+            "expr": "waterMass*@specificHeat",
+            "equals": "heatCapacity"
+          }
+        },
+        {
+          "text": "{=waterMass*(@specificHeat+calorimeterCapacity)|4} J",
+          "vi": {
+            "text": "{=waterMass*(@specificHeat+calorimeterCapacity)|4} J"
+          },
+          "check": {
+            "expr": "waterMass*(@specificHeat+calorimeterCapacity)",
+            "equals": "heatCapacity"
+          }
+        },
+        {
+          "text": "{=waterMass*@specificHeat-calorimeterCapacity|4} J",
+          "vi": {
+            "text": "{=waterMass*@specificHeat-calorimeterCapacity|4} J"
+          },
+          "check": {
+            "expr": "waterMass*@specificHeat-calorimeterCapacity",
+            "equals": "heatCapacity"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-60w-02",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["energy", "balance", "losses"],
+      "set": {
+        "power": 60,
+        "waterMass": 0.2
+      },
+      "stem": "A {power} W heater warms {waterMass} kg of water (c = {@specificHeat|4} J/(kg·K)) in a calorimeter of C = {calorimeterCapacity} J/K for {heatingTime} s. Decide whether each statement is true or false.",
+      "explain": "E = P·t = {@energy} J. Without losses, ΔT = E/(m·c + C) ≈ {@lossFreeRise|3} K; with the simulation’s illustrative loss to the room the rise is a little smaller, {@temperatureRise|3} K. E/(m·c) = {=@energy/(waterMass*@specificHeat)|3} K forgets the calorimeter.",
+      "vi": {
+        "stem": "Một dây đốt {power} W làm nóng {waterMass} kg nước (c = {@specificHeat|4} J/(kg·K)) trong nhiệt lượng kế có C = {calorimeterCapacity} J/K trong {heatingTime} s. Mỗi nhận định sau đúng hay sai?",
+        "explain": "E = P·t = {@energy} J. Không có hao phí, ΔT = E/(m·c + C) ≈ {@lossFreeRise|3} K; với hao phí ra môi trường (giá trị minh họa của mô phỏng), độ tăng nhỏ hơn một chút, {@temperatureRise|3} K. E/(m·c) = {=@energy/(waterMass*@specificHeat)|3} K là quên nhiệt lượng kế."
+      },
+      "statements": [
+        {
+          "text": "The joulemeter counts {@energy} J.",
+          "vi": {
+            "text": "Jun kế đếm được {@energy} J."
+          },
+          "true": true,
+          "check": {
+            "expr": "power*heatingTime",
+            "equals": "energy"
+          }
+        },
+        {
+          "text": "Without losses the water would warm by about {@lossFreeRise|3} K.",
+          "vi": {
+            "text": "Nếu không có hao phí, nước sẽ nóng thêm khoảng {@lossFreeRise|3} K."
+          },
+          "true": true,
+          "check": {
+            "expr": "@energy/(waterMass*@specificHeat+calorimeterCapacity)",
+            "equals": "lossFreeRise"
+          }
+        },
+        {
+          "text": "With the loss to the room it warms a little less, by about {@temperatureRise|3} K.",
+          "vi": {
+            "text": "Có hao phí ra môi trường, nước nóng thêm ít hơn một chút, khoảng {@temperatureRise|3} K."
+          },
+          "true": true
+        },
+        {
+          "text": "Without losses it would warm by E/(m·c) ≈ {=@energy/(waterMass*@specificHeat)|3} K.",
+          "vi": {
+            "text": "Nếu không có hao phí, nước sẽ nóng thêm E/(m·c) ≈ {=@energy/(waterMass*@specificHeat)|3} K."
+          },
+          "true": false,
+          "check": {
+            "expr": "@energy/(waterMass*@specificHeat)",
+            "equals": "lossFreeRise"
+          }
+        }
+      ]
+    },
+    {
+      "id": "time-needed",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["energy", "balance"],
+      "set": {
+        "power": 40,
+        "waterMass": 0.3
+      },
+      "stem": "Leaving out losses, how long must a {power} W heater run to warm {waterMass} kg of water (c = {@specificHeat|4} J/(kg·K)) in a calorimeter of C = {calorimeterCapacity} J/K by {@lossFreeRise|4} K?",
+      "explain": "P·t = (m·c + C)·ΔT, so t = (m·c + C)·ΔT/P = {@heatCapacity|4}·{@lossFreeRise|4}/{power} ≈ {=@heatCapacity*@lossFreeRise/power} s. Leaving out C, or m, gives too short a time.",
+      "vi": {
+        "stem": "Bỏ qua hao phí, dây đốt {power} W phải hoạt động bao lâu để làm {waterMass} kg nước (c = {@specificHeat|4} J/(kg·K)) trong nhiệt lượng kế có C = {calorimeterCapacity} J/K nóng thêm {@lossFreeRise|4} K?",
+        "explain": "P·t = (m·c + C)·ΔT, nên t = (m·c + C)·ΔT/P = {@heatCapacity|4}·{@lossFreeRise|4}/{power} ≈ {=@heatCapacity*@lossFreeRise/power} s. Bỏ quên C, hoặc quên m, sẽ ra thời gian quá ngắn."
+      },
+      "options": [
+        {
+          "text": "{=@heatCapacity*@lossFreeRise/power} s",
+          "vi": {
+            "text": "{=@heatCapacity*@lossFreeRise/power} s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "power*(@heatCapacity*@lossFreeRise/power)/@heatCapacity",
+            "equals": "lossFreeRise"
+          }
+        },
+        {
+          "text": "{=waterMass*@specificHeat*@lossFreeRise/power} s",
+          "vi": {
+            "text": "{=waterMass*@specificHeat*@lossFreeRise/power} s"
+          },
+          "check": {
+            "expr": "power*(waterMass*@specificHeat*@lossFreeRise/power)/@heatCapacity",
+            "equals": "lossFreeRise"
+          }
+        },
+        {
+          "text": "{=(@specificHeat+calorimeterCapacity)*@lossFreeRise/power} s",
+          "vi": {
+            "text": "{=(@specificHeat+calorimeterCapacity)*@lossFreeRise/power} s"
+          },
+          "check": {
+            "expr": "power*((@specificHeat+calorimeterCapacity)*@lossFreeRise/power)/@heatCapacity",
+            "equals": "lossFreeRise"
+          }
+        },
+        {
+          "text": "{=power*@lossFreeRise/@heatCapacity|3} s",
+          "vi": {
+            "text": "{=power*@lossFreeRise/@heatCapacity|3} s"
+          },
+          "check": {
+            "expr": "power*(power*@lossFreeRise/@heatCapacity)/@heatCapacity",
+            "equals": "lossFreeRise"
+          }
+        }
+      ]
+    },
+    {
+      "id": "heat-lost",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["losses", "balance"],
+      "set": {
+        "power": 60,
+        "waterMass": 0.1
+      },
+      "stem": "A {power} W heater gives {@energy} J to {waterMass} kg of water in a calorimeter (m·c + C = {@heatCapacity|4} J/K), which warms by {@temperatureRise|4} K. How much heat was lost to the room?",
+      "explain": "Water and calorimeter kept (m·c + C)·ΔT = {@heatCapacity|4}·{@temperatureRise|4} ≈ {=@heatCapacity*@temperatureRise|4} J; the rest, E − (m·c + C)·ΔT ≈ {=@energy-@heatCapacity*@temperatureRise|3} J, went to the room. Counting only the water’s m·c·ΔT also counts the calorimeter’s share as lost.",
+      "vi": {
+        "stem": "Một dây đốt {power} W cung cấp {@energy} J cho {waterMass} kg nước trong nhiệt lượng kế (m·c + C = {@heatCapacity|4} J/K), làm chúng nóng thêm {@temperatureRise|4} K. Bao nhiêu nhiệt đã tỏa ra môi trường?",
+        "explain": "Nước và nhiệt lượng kế giữ lại (m·c + C)·ΔT = {@heatCapacity|4}·{@temperatureRise|4} ≈ {=@heatCapacity*@temperatureRise|4} J; phần còn lại, E − (m·c + C)·ΔT ≈ {=@energy-@heatCapacity*@temperatureRise|3} J, tỏa ra môi trường. Chỉ tính m·c·ΔT của nước là đã tính cả phần của nhiệt lượng kế vào hao phí."
+      },
+      "options": [
+        {
+          "text": "{=@energy-@heatCapacity*@temperatureRise|3} J",
+          "vi": {
+            "text": "{=@energy-@heatCapacity*@temperatureRise|3} J"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(@energy-@heatCapacity*@temperatureRise)+@heatCapacity*@temperatureRise",
+            "equals": "energy"
+          }
+        },
+        {
+          "text": "{=@energy-waterMass*@specificHeat*@temperatureRise|3} J",
+          "vi": {
+            "text": "{=@energy-waterMass*@specificHeat*@temperatureRise|3} J"
+          },
+          "check": {
+            "expr": "(@energy-waterMass*@specificHeat*@temperatureRise)+@heatCapacity*@temperatureRise",
+            "equals": "energy"
+          }
+        },
+        {
+          "text": "{=calorimeterCapacity*@temperatureRise|3} J",
+          "vi": {
+            "text": "{=calorimeterCapacity*@temperatureRise|3} J"
+          },
+          "check": {
+            "expr": "(calorimeterCapacity*@temperatureRise)+@heatCapacity*@temperatureRise",
+            "equals": "energy"
+          }
+        },
+        {
+          "text": "0 J",
+          "vi": {
+            "text": "0 J"
+          },
+          "check": {
+            "expr": "0+@heatCapacity*@temperatureRise",
+            "equals": "energy"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-find-c",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["balance", "losses", "definition"],
+      "set": {
+        "power": 40,
+        "waterMass": 0.2,
+        "thermometerResolution": 0.1
+      },
+      "stem": "A {power} W heater gives E = {@energy} J to {waterMass} kg of water in a calorimeter of C = {calorimeterCapacity} J/K. Decide whether each statement is true or false.",
+      "explain": "Without losses, ΔT = {@lossFreeRise|4} K and c = (E/ΔT − C)/m = {@specificHeat|4} J/(kg·K). The measured rise, {@temperatureRise|4} K, is a little smaller because of the loss to the room, so it gives c slightly too high. Leaving C out, c = E/(m·ΔT), comes out higher still, not smaller.",
+      "vi": {
+        "stem": "Một dây đốt {power} W cung cấp E = {@energy} J cho {waterMass} kg nước trong nhiệt lượng kế có C = {calorimeterCapacity} J/K. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Không có hao phí, ΔT = {@lossFreeRise|4} K và c = (E/ΔT − C)/m = {@specificHeat|4} J/(kg·K). Độ tăng đo được, {@temperatureRise|4} K, nhỏ hơn một chút do hao phí ra môi trường, nên cho c hơi lớn. Bỏ qua C, c = E/(m·ΔT), còn lớn hơn nữa chứ không nhỏ hơn."
+      },
+      "statements": [
+        {
+          "text": "Water and calorimeter together need {@heatCapacity|4} J per kelvin.",
+          "vi": {
+            "text": "Nước và nhiệt lượng kế cần tổng cộng {@heatCapacity|4} J cho mỗi kelvin."
+          },
+          "true": true,
+          "check": {
+            "expr": "waterMass*@specificHeat+calorimeterCapacity",
+            "equals": "heatCapacity"
+          }
+        },
+        {
+          "text": "From the loss-free rise, c = (E/ΔT − C)/m ≈ {=(@energy/@lossFreeRise-calorimeterCapacity)/waterMass|4} J/(kg·K).",
+          "vi": {
+            "text": "Từ độ tăng khi không có hao phí, c = (E/ΔT − C)/m ≈ {=(@energy/@lossFreeRise-calorimeterCapacity)/waterMass|4} J/(kg·K)."
+          },
+          "true": true,
+          "check": {
+            "expr": "(@energy/@lossFreeRise-calorimeterCapacity)/waterMass",
+            "equals": "specificHeat"
+          }
+        },
+        {
+          "text": "Using the measured rise, {@temperatureRise|4} K, gives c a little too high.",
+          "vi": {
+            "text": "Dùng độ tăng đo được, {@temperatureRise|4} K, cho c hơi lớn."
+          },
+          "true": true
+        },
+        {
+          "text": "Leaving out the calorimeter makes c come out smaller.",
+          "vi": {
+            "text": "Bỏ qua nhiệt lượng kế làm c tính ra nhỏ hơn."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

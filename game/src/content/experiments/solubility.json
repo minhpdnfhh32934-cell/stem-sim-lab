@@ -1,0 +1,430 @@
+{
+  "id": "solubility",
+  "name": "Solubility and temperature",
+  "category": "chemistry",
+  "description": "Weigh a solid — potassium nitrate, sodium chloride or potassium chloride — tip it into 50 g of water held at a set temperature on a hot-plate stirrer, and stir for 15 minutes. If the water can hold it all, the last crystal dissolves; if not, the solution is saturated and the rest stays on the beaker's floor. Filter, dry and weigh the residue: the mass that dissolved gives the solubility, in grams per 100 g of water. Potassium nitrate dissolves far more in hot water than in cold; sodium chloride hardly more.",
+  "vi": {
+    "name": "Độ tan và nhiệt độ",
+    "description": "Cân một chất rắn — kali nitrat, natri clorua hoặc kali clorua — cho vào 50 g nước được giữ ở nhiệt độ đặt sẵn trên bếp khuấy từ, rồi khuấy trong 15 phút. Nếu nước hòa tan được hết, tinh thể cuối cùng sẽ tan; nếu không, dung dịch bão hòa và phần còn lại nằm dưới đáy cốc. Lọc, sấy khô rồi cân phần chất rắn còn lại: khối lượng đã tan cho biết độ tan, tính bằng gam chất tan trong 100 g nước. Kali nitrat tan trong nước nóng nhiều hơn hẳn trong nước lạnh; natri clorua hầu như không tan thêm.",
+    "note": "Độ tan S là khối lượng chất tan lớn nhất hòa tan được trong 100 g nước ở một nhiệt độ, tạo thành dung dịch bão hòa. Các giá trị lấy từ Sổ tay Hóa học và Vật lý CRC (CRC Handbook of Chemistry and Physics, xuất bản lần thứ 91, 2010), nội suy tuyến tính giữa các cột nhiệt độ của bảng (đúng tại các cột, và mọi giá trị đặt sẵn đều nằm trên một cột): ở 20 °C, KNO₃ khoảng 31,9 g, NaCl khoảng 35,9 g và KCl khoảng 34,0 g trong 100 g nước; ở 60 °C, KNO₃ khoảng 109 g. 50 g nước hòa tan được nhiều nhất m_bh = S·50/100. Tốc độ hòa tan là một giá trị minh họa: khi khuấy, chất rắn tan theo định luật Noyes–Whitney với bề mặt không đổi, nhanh lúc đầu và chậm dần khi dung dịch gần bão hòa, với cùng một hằng số thời gian 60 s cho mọi chất và nhiệt độ (thực tế chất tan nhanh hơn khi nóng, khi khuấy mạnh và khi tinh thể nhỏ). Bếp giữ nhiệt độ không đổi, nước không bay hơi và không có hiện tượng quá bão hòa. Thời gian được nén: 15 phút khuấy hiển thị trong 30 s. Cân đọc khối lượng mô phỏng theo độ phân giải d của nó (bội số gần nhất của d, độ bất định d/√12 chỉ do độ phân giải); không có sai số ngẫu nhiên nào được thêm vào. Trong phòng thí nghiệm thật, chất rắn khô còn giữ một ít dung dịch bám trên giấy lọc, một ít nước bay hơi khi đun nóng, và tinh thể lớn tan chậm hơn, nên khối lượng cân được lệch đôi chút so với các giá trị này."
+  },
+  "requiredEquipment": ["solubility-station"],
+  "model": "chemistry.solubility",
+  "parameters": [
+    {
+      "id": "solute",
+      "label": "Solid",
+      "vi": { "label": "Chất rắn" },
+      "unit": "",
+      "default": 0,
+      "min": 0,
+      "max": 2,
+      "presets": [
+        { "label": "Potassium nitrate KNO₃", "vi": { "label": "Kali nitrat KNO₃" }, "value": 0 },
+        { "label": "Sodium chloride NaCl", "vi": { "label": "Natri clorua NaCl" }, "value": 1 },
+        { "label": "Potassium chloride KCl", "vi": { "label": "Kali clorua KCl" }, "value": 2 }
+      ]
+    },
+    {
+      "id": "temperature",
+      "label": "Water temperature",
+      "vi": { "label": "Nhiệt độ của nước" },
+      "symbol": "T",
+      "unit": "°C",
+      "default": 20,
+      "min": 20,
+      "max": 80,
+      "presets": [
+        { "label": "20 °C", "vi": { "label": "20 °C" }, "value": 20 },
+        { "label": "40 °C", "vi": { "label": "40 °C" }, "value": 40 },
+        { "label": "60 °C", "vi": { "label": "60 °C" }, "value": 60 },
+        { "label": "80 °C", "vi": { "label": "80 °C" }, "value": 80 }
+      ]
+    },
+    {
+      "id": "soluteMass",
+      "label": "Mass of solid weighed",
+      "vi": { "label": "Khối lượng chất rắn đã cân" },
+      "symbol": "m",
+      "unit": "g",
+      "default": 20,
+      "min": 5,
+      "max": 60,
+      "presets": [
+        { "label": "5 g", "vi": { "label": "5 g" }, "value": 5 },
+        { "label": "10 g", "vi": { "label": "10 g" }, "value": 10 },
+        { "label": "20 g", "vi": { "label": "20 g" }, "value": 20 },
+        { "label": "30 g", "vi": { "label": "30 g" }, "value": 30 },
+        { "label": "40 g", "vi": { "label": "40 g" }, "value": 40 },
+        { "label": "60 g", "vi": { "label": "60 g" }, "value": 60 }
+      ]
+    },
+    {
+      "id": "balanceResolution",
+      "label": "Balance resolution",
+      "vi": { "label": "Độ phân giải của cân" },
+      "symbol": "d_m",
+      "unit": "g",
+      "default": 0.01,
+      "min": 0.001,
+      "max": 0.1,
+      "presets": [
+        { "label": "0.001 g", "vi": { "label": "0,001 g" }, "value": 0.001 },
+        { "label": "0.01 g", "vi": { "label": "0,01 g" }, "value": 0.01 },
+        { "label": "0.1 g", "vi": { "label": "0,1 g" }, "value": 0.1 }
+      ]
+    }
+  ],
+  "initialConditions": { "waterMass": 50, "stirTime": 900, "timeConstant": 60, "timeLapse": 30 },
+  "inputs": {
+    "waterMass": { "symbol": "m_w", "unit": "g" },
+    "stirTime": { "symbol": "t_stir", "unit": "s" },
+    "timeConstant": { "symbol": "τ", "unit": "s", "desk": false },
+    "timeLapse": { "symbol": "k", "unit": "", "desk": false }
+  },
+  "simulation": { "timeStep": 0.02, "maxDuration": 40, "sampleInterval": 0.2 },
+  "measurements": [
+    {
+      "id": "dissolved",
+      "label": "Mass dissolved",
+      "vi": { "label": "Khối lượng đã tan" },
+      "symbol": "m_tan",
+      "unit": "g",
+      "variable": "dissolved"
+    },
+    {
+      "id": "undissolved",
+      "label": "Mass still solid",
+      "vi": { "label": "Khối lượng chưa tan" },
+      "symbol": "m_rắn",
+      "unit": "g",
+      "variable": "undissolved"
+    },
+    {
+      "id": "stirring",
+      "label": "Stirring time",
+      "vi": { "label": "Thời gian khuấy" },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "labTime"
+    }
+  ],
+  "results": [
+    {
+      "id": "residue",
+      "label": "Dried residue m_rắn",
+      "vi": { "label": "Chất rắn còn lại sau khi sấy m_rắn" },
+      "symbol": "m_rắn",
+      "unit": "g",
+      "variable": "undissolved",
+      "reduce": "final",
+      "theory": "finalResidue"
+    },
+    {
+      "id": "dissolved",
+      "label": "Mass dissolved m − m_rắn",
+      "vi": { "label": "Khối lượng đã tan m − m_rắn" },
+      "symbol": "m_tan",
+      "unit": "g",
+      "variable": "dissolved",
+      "reduce": "final",
+      "theory": "finalDissolved"
+    },
+    {
+      "id": "concentration",
+      "label": "Concentration (g per 100 g of water)",
+      "vi": { "label": "Nồng độ (g trong 100 g nước)" },
+      "symbol": "C",
+      "unit": "g/100 g",
+      "variable": "concentration",
+      "reduce": "final",
+      "theory": "finalConcentration"
+    },
+    {
+      "id": "saturation",
+      "label": "Degree of saturation",
+      "vi": { "label": "Mức độ bão hòa" },
+      "symbol": "C/S",
+      "unit": "%",
+      "variable": "saturation",
+      "reduce": "final",
+      "theory": "finalSaturation"
+    },
+    {
+      "id": "solubility",
+      "label": "Solubility at this temperature (table)",
+      "vi": { "label": "Độ tan ở nhiệt độ này (bảng số liệu)" },
+      "symbol": "S",
+      "unit": "g/100 g",
+      "variable": "solubility",
+      "reduce": "final",
+      "theory": "solubility"
+    }
+  ],
+  "instruments": [
+    {
+      "result": "residue",
+      "quantity": "Mass of the dried residue",
+      "name": "Top-pan balance",
+      "resolution": "balanceResolution",
+      "excludes": "the balance's calibration and drift, solution left on the filter paper and crystals lost with it, water not fully dried off, and water evaporating while the beaker is hot, which change the mass itself",
+      "vi": {
+        "quantity": "Khối lượng chất rắn còn lại sau khi sấy",
+        "name": "Cân điện tử",
+        "excludes": "sai số hiệu chuẩn và độ trôi của cân, dung dịch còn bám trên giấy lọc và tinh thể mất theo, nước chưa được sấy khô hết, và nước bay hơi khi cốc còn nóng, những yếu tố làm thay đổi chính khối lượng đo"
+      }
+    }
+  ],
+  "graphs": [
+    {
+      "id": "dissolving",
+      "title": "Mass dissolved and still solid against stirring time",
+      "vi": { "title": "Khối lượng đã tan và chưa tan theo thời gian khuấy" },
+      "x": "stirring",
+      "y": ["dissolved", "undissolved"],
+      "yLabel": "m"
+    }
+  ],
+  "monitor": "dissolving",
+  "compare": [{ "graph": "dissolving", "series": "dissolved" }],
+  "analyses": [
+    {
+      "id": "residue-mass",
+      "title": "Residue against the mass weighed, at one solid and temperature",
+      "note": "Each run is one point: the dried residue against the mass of solid weighed. Runs with the same solid at the same temperature are fitted together. Below saturation everything dissolves and the residue is 0; above it the solution holds m_sat and every gram more stays solid, so the runs that leave a residue lie on a line of slope 1 that crosses 0 g at the mass the water can hold — the solubility in 50 g of water. Use only masses that leave a residue in this fit; change only the mass between runs, then repeat at another temperature.",
+      "vi": {
+        "title": "Chất rắn còn lại theo khối lượng đã cân, cùng một chất và cùng nhiệt độ",
+        "note": "Mỗi lần chạy là một điểm: khối lượng chất rắn còn lại sau khi sấy theo khối lượng chất rắn đã cân. Các lần chạy cùng một chất ở cùng nhiệt độ được khớp chung. Dưới mức bão hòa, chất rắn tan hết và phần còn lại bằng 0; trên mức đó, dung dịch chứa m_bh và mỗi gam thêm vào đều không tan, nên các lần chạy còn chất rắn nằm trên một đường thẳng có hệ số góc 1, cắt trục 0 g tại khối lượng mà nước hòa tan được — độ tan trong 50 g nước. Chỉ dùng những khối lượng còn để lại chất rắn trong phép khớp này; giữa các lần chạy chỉ thay đổi khối lượng, rồi lặp lại ở nhiệt độ khác."
+      },
+      "x": "soluteMass",
+      "y": "residue",
+      "group": ["solute", "temperature"],
+      "columns": ["solute", "temperature", "soluteMass", "residue", "dissolved"],
+      "slope": {
+        "label": "Slope of the residue against the mass weighed",
+        "vi": { "label": "Hệ số góc của chất rắn còn lại theo khối lượng đã cân" },
+        "symbol": "k",
+        "unit": "",
+        "theory": "residueSlope",
+        "intercept": "residueIntercept"
+      }
+    }
+  ],
+  "note": "The solubility S is the largest mass of a solid that 100 g of water can dissolve at a temperature, making a saturated solution. Its values are the CRC Handbook of Chemistry and Physics' (91st ed., 2010), interpolated linearly between the table's temperature columns (exact at them, and every preset lies on one): at 20 °C about 31.9 g of KNO₃, 35.9 g of NaCl and 34.0 g of KCl per 100 g of water; at 60 °C about 109 g of KNO₃. 50 g of water can hold at most m_sat = S·50/100. How fast it dissolves is an illustrative value: stirred, the solid dissolves by the Noyes–Whitney law with a constant surface, fast at first and slower as the solution nears saturation, with one time constant of 60 s for every solid and temperature (really, solids dissolve faster when hot, stirred harder and finely ground). The hot plate holds the temperature, no water evaporates and nothing is supersaturated. Time is compressed: 15 minutes of stirring are shown in 30 s. The balance reads the simulated mass to its resolution d (the nearest multiple of d, with the uncertainty d/√12 from the resolution alone); no random error is added. In a real lab the dried residue holds a little solution soaked into the filter paper, a little water evaporates from a hot beaker, and large crystals dissolve more slowly, so the weighed masses differ a little from these.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the solubility instructions on the board.",
+      "vi": { "instruction": "Đọc hướng dẫn thí nghiệm độ tan trên bảng." },
+      "done": { "kind": "inspected", "item": "solubility-instructions" }
+    },
+    {
+      "id": "solid",
+      "instruction": "Choose the solid with its dial on the control desk.",
+      "vi": { "instruction": "Chọn chất rắn bằng núm xoay trên bàn điều khiển." },
+      "done": { "kind": "adjusted", "parameter": "solute" }
+    },
+    {
+      "id": "temperature",
+      "instruction": "Set the water's temperature, and the mass of solid to weigh.",
+      "vi": { "instruction": "Đặt nhiệt độ của nước và khối lượng chất rắn cần cân." },
+      "done": { "kind": "adjusted", "parameter": "temperature" }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the solid goes into the water and is stirred for 15 minutes; watch the crystals on the beaker's floor.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: chất rắn được cho vào nước và khuấy trong 15 phút; quan sát các tinh thể dưới đáy cốc."
+      },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read the residue, the mass dissolved and the concentration on the results monitor: is the solution saturated?",
+      "vi": {
+        "instruction": "Đọc khối lượng chất rắn còn lại, khối lượng đã tan và nồng độ trên màn hình kết quả: dung dịch đã bão hòa chưa?"
+      },
+      "done": { "kind": "viewed" }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, change only the mass (or only the temperature) and run again.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, chỉ thay đổi khối lượng (hoặc chỉ thay đổi nhiệt độ) rồi chạy lại."
+      },
+      "done": { "kind": "reset" }
+    }
+  ],
+  "examples": [
+    {
+      "id": "potassium-nitrate",
+      "question": "At {temperature} °C the solubility of KNO₃ is {@solubility|4} g per 100 g of water (handbook). What mass dissolves in {waterMass} g of water, and does all of {soluteMass} g dissolve?",
+      "vi": {
+        "question": "Ở {temperature} °C độ tan của KNO₃ là {@solubility|4} g trong 100 g nước (sổ tay). Bao nhiêu gam tan được trong {waterMass} g nước, và {soluteMass} g có tan hết không?"
+      },
+      "set": { "solute": 0, "temperature": 60, "soluteMass": 60 },
+      "find": [{ "theory": "saturationMass", "symbol": "m_sat", "unit": "g" }],
+      "steps": [
+        {
+          "say": "Solubility is per 100 g of water: scale it to the water we have.",
+          "vi": { "say": "Độ tan tính cho 100 g nước: quy đổi theo lượng nước đang có." },
+          "write": "m_sat = S·m_w/100 = {@solubility|4}·{waterMass}/100 ≈ {@saturationMass} g",
+          "check": { "expr": "@solubility*waterMass/100", "equals": "saturationMass" }
+        },
+        {
+          "say": "{soluteMass} g is more than that, so the solution saturates and about {=soluteMass-@saturationMass|2} g stays solid.",
+          "vi": {
+            "say": "{soluteMass} g nhiều hơn lượng đó, nên dung dịch bão hòa và khoảng {=soluteMass-@saturationMass|2} g còn lại ở dạng rắn."
+          },
+          "write": "{soluteMass} g > m_sat"
+        }
+      ]
+    },
+    {
+      "id": "solubility-from-mass",
+      "question": "At {temperature} °C, {waterMass} g of water dissolves at most {@saturationMass|4} g of sodium chloride. Find the solubility of NaCl at this temperature.",
+      "vi": {
+        "question": "Ở {temperature} °C, {waterMass} g nước hòa tan tối đa {@saturationMass|4} g natri clorua. Tìm độ tan của NaCl ở nhiệt độ này."
+      },
+      "set": { "solute": 1, "temperature": 80 },
+      "find": [{ "theory": "solubility" }],
+      "steps": [
+        {
+          "say": "Solubility is the mass that saturates 100 g of water.",
+          "vi": { "say": "Độ tan là khối lượng chất tan làm bão hòa 100 g nước." },
+          "write": "S = m_sat·100/m_w"
+        },
+        {
+          "say": "Scale from {waterMass} g to 100 g of water.",
+          "vi": { "say": "Quy đổi từ {waterMass} g sang 100 g nước." },
+          "write": "S = {@saturationMass|4}·100/{waterMass} ≈ {@solubility} g/100 g",
+          "check": { "expr": "@saturationMass*100/waterMass", "equals": "solubility" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "Water at a given temperature can dissolve only so much of a solid; the rest stays undissolved. Weighing what is left finds the solubility, and it changes with temperature.",
+    "vi": {
+      "summary": "Nước ở một nhiệt độ nhất định chỉ hòa tan được một lượng chất rắn có hạn; phần còn lại không tan. Cân phần còn lại sẽ tìm được độ tan, và độ tan thay đổi theo nhiệt độ."
+    },
+    "parts": [
+      {
+        "id": "jars",
+        "name": "Reagent jars",
+        "role": "Potassium nitrate, sodium chloride and potassium chloride; the chosen jar’s cap is off.",
+        "vi": {
+          "name": "Lọ hóa chất",
+          "role": "Kali nitrat, natri clorua và kali clorua; lọ được chọn đã mở nắp."
+        },
+        "anchor": {
+          "part": "caps"
+        }
+      },
+      {
+        "id": "balance",
+        "name": "Balance",
+        "role": "Weighs the solid m before, and the dried residue after, to its resolution d.",
+        "vi": {
+          "name": "Cân",
+          "role": "Cân chất rắn m lúc đầu, và phần rắn đã sấy khô lúc sau, theo độ phân giải d."
+        },
+        "anchor": {
+          "part": "balance-digits"
+        }
+      },
+      {
+        "id": "water",
+        "name": "Beaker of 50 g water",
+        "role": "Where the solid is tipped and stirred for 15 minutes.",
+        "vi": {
+          "name": "Cốc chứa 50 g nước",
+          "role": "Nơi chất rắn được đổ vào và khuấy trong 15 phút."
+        },
+        "anchor": {
+          "part": "water"
+        }
+      },
+      {
+        "id": "crystals",
+        "name": "Undissolved crystals",
+        "role": "What the water cannot hold stays on the beaker’s floor.",
+        "vi": {
+          "name": "Tinh thể không tan",
+          "role": "Phần chất rắn mà nước không hòa tan được nằm lại ở đáy cốc."
+        },
+        "anchor": {
+          "at": [-0.2, -0.14, 0.03]
+        }
+      },
+      {
+        "id": "plate",
+        "name": "Hot-plate stirrer",
+        "role": "Holds the water at the temperature T and stirs it.",
+        "vi": {
+          "name": "Bếp điện có khuấy từ",
+          "role": "Giữ nước ở nhiệt độ T và khuấy đều."
+        },
+        "anchor": {
+          "part": "plate"
+        }
+      },
+      {
+        "id": "funnel",
+        "name": "Filter funnel",
+        "role": "Filters off the undissolved solid, which is then dried and weighed.",
+        "vi": {
+          "name": "Phễu lọc",
+          "role": "Lọc tách phần chất rắn không tan, sau đó sấy khô và cân."
+        },
+        "anchor": {
+          "at": [0, -0.06, 0.08]
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "A weighed mass m of the solid is tipped into 50 g of water, held at the temperature T and stirred.",
+        "vi": {
+          "text": "Một khối lượng m chất rắn đã cân được đổ vào 50 g nước, giữ ở nhiệt độ T và khuấy đều."
+        },
+        "parts": ["jars", "balance", "water", "plate"]
+      },
+      {
+        "text": "The solid dissolves, fast at first, then more slowly as the solution fills up. If the water can hold it all, the last crystal disappears.",
+        "vi": {
+          "text": "Chất rắn tan ra, lúc đầu nhanh, rồi chậm dần khi dung dịch gần bão hòa. Nếu nước hòa tan được hết, tinh thể cuối cùng sẽ biến mất."
+        },
+        "parts": ["water", "crystals"]
+      },
+      {
+        "text": "If not, the solution becomes saturated — it holds the most it can at that temperature — and the rest stays on the floor. 50 g of water can hold at most S·50/100 grams, S the solubility.",
+        "vi": {
+          "text": "Nếu không, dung dịch trở nên bão hòa — đã hòa tan tối đa ở nhiệt độ đó — và phần còn lại nằm ở đáy cốc. 50 g nước hòa tan được tối đa S·50/100 gam, với S là độ tan."
+        },
+        "parts": ["crystals", "water"]
+      },
+      {
+        "text": "Filter, dry and weigh the residue. The mass that dissolved, m − m_rắn, per 100 g of water is the concentration; when crystals were left over, it is the solubility S.",
+        "vi": {
+          "text": "Lọc, sấy khô rồi cân phần rắn còn lại. Khối lượng đã tan, m − m_rắn, tính cho 100 g nước là nồng độ; khi còn dư tinh thể, đó chính là độ tan S."
+        },
+        "parts": ["funnel", "balance"]
+      },
+      {
+        "text": "Change the temperature: potassium nitrate dissolves far more in hot water than in cold, sodium chloride hardly more.",
+        "vi": {
+          "text": "Đổi nhiệt độ: kali nitrat tan trong nước nóng nhiều hơn hẳn so với nước lạnh, còn natri clorua hầu như không tan thêm."
+        },
+        "parts": ["plate", "jars"]
+      },
+      {
+        "text": "The results give the residue, the mass dissolved, the concentration and how saturated it is, beside the table’s S. The dissolving speed is illustrative, and time runs 30 times faster.",
+        "vi": {
+          "text": "Phần kết quả cho phần rắn còn lại, khối lượng đã tan, nồng độ và mức độ bão hòa, bên cạnh độ tan S theo bảng. Tốc độ hòa tan chỉ mang tính minh họa, và thời gian chạy nhanh gấp 30 lần."
+        },
+        "parts": ["balance"]
+      }
+    ]
+  }
+}

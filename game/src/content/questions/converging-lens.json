@@ -1,0 +1,1061 @@
+{
+  "id": "converging-lens",
+  "skills": [
+    {
+      "id": "formula",
+      "name": "The lens formula: 1/u + 1/v = 1/f",
+      "advice": "Learn 1/u + 1/v = 1/f with distances from the lens, real positive (the textbook’s d and d′), so v = u·f/(u − f). A negative v means a virtual image on the object’s side.",
+      "vi": {
+        "name": "Công thức thấu kính: 1/u + 1/v = 1/f",
+        "advice": "Nhớ 1/d + 1/d′ = 1/f với khoảng cách tính từ thấu kính, ảnh thật mang dấu dương, nên d′ = d·f/(d − f). d′ âm nghĩa là ảnh ảo, cùng phía với vật."
+      }
+    },
+    {
+      "id": "magnification",
+      "name": "Magnification and image size",
+      "advice": "k = −v/u: negative for an inverted (real) image, positive for an upright (virtual) one; h′ = k·h. Trap: forgetting the minus sign.",
+      "vi": {
+        "name": "Số phóng đại và độ lớn của ảnh",
+        "advice": "k = −d′/d: âm với ảnh ngược chiều (ảnh thật), dương với ảnh cùng chiều (ảnh ảo); h′ = k·h. Lỗi hay gặp: quên dấu trừ."
+      }
+    },
+    {
+      "id": "cases",
+      "name": "Where the image forms",
+      "advice": "Learn the cases: u > 2f real, inverted, smaller; u = 2f same size; f < u < 2f real, inverted, larger; u < f virtual, upright, larger. Try u = 0.08, 0.25, 0.30, 0.60 m at the station.",
+      "vi": {
+        "name": "Vị trí và tính chất của ảnh",
+        "advice": "Nhớ các trường hợp: d > 2f ảnh thật, ngược chiều, nhỏ hơn vật; d = 2f bằng vật; f < d < 2f ảnh thật, ngược chiều, lớn hơn vật; d < f ảnh ảo, cùng chiều, lớn hơn vật. Thử d = 0,08; 0,25; 0,30; 0,60 m trên trạm."
+      }
+    },
+    {
+      "id": "measure",
+      "name": "Finding f from runs",
+      "advice": "From one run f = u·v/(u + v). Over several runs 1/v against 1/u is a line of slope −1 and intercept 1/f; u·v against u + v is a line of slope f. A scale reads to its resolution d.",
+      "vi": {
+        "name": "Xác định tiêu cự từ các lần đo",
+        "advice": "Từ một lần đo f = d·d′/(d + d′). Qua nhiều lần đo, 1/d′ theo 1/d là đường thẳng hệ số góc −1 và tung độ gốc 1/f; d·d′ theo d + d′ là đường thẳng hệ số góc f. Thước đọc theo độ phân giải d của nó."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "formula",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["formula"],
+      "stem": "For a thin converging lens, the object distance u, image distance v and focal length f are related by…",
+      "explain": "The lens formula: 1/u + 1/v = 1/f.",
+      "vi": {
+        "stem": "Với thấu kính hội tụ mỏng, khoảng cách vật u, khoảng cách ảnh v và tiêu cự f liên hệ với nhau bởi…",
+        "explain": "Công thức thấu kính: 1/u + 1/v = 1/f."
+      },
+      "options": [
+        {
+          "text": "1/u + 1/v = 1/f",
+          "vi": {
+            "text": "1/u + 1/v = 1/f"
+          },
+          "correct": true
+        },
+        {
+          "text": "1/u − 1/v = 1/f",
+          "vi": {
+            "text": "1/u − 1/v = 1/f"
+          }
+        },
+        {
+          "text": "u + v = f",
+          "vi": {
+            "text": "u + v = f"
+          }
+        },
+        {
+          "text": "u·v = f",
+          "vi": {
+            "text": "u·v = f"
+          }
+        }
+      ]
+    },
+    {
+      "id": "inside-f",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["cases"],
+      "stem": "An object stands closer to a converging lens than its focal length (u < f). The image is…",
+      "explain": "u < f: v < 0, so the image is virtual, upright and larger — a magnifying glass.",
+      "vi": {
+        "stem": "Vật đặt trong khoảng tiêu cự của thấu kính hội tụ (u < f). Ảnh của vật là…",
+        "explain": "u < f: v < 0, nên ảnh là ảnh ảo, cùng chiều và lớn hơn vật — như kính lúp."
+      },
+      "options": [
+        {
+          "text": "virtual, upright and larger",
+          "vi": {
+            "text": "ảnh ảo, cùng chiều và lớn hơn vật"
+          },
+          "correct": true
+        },
+        {
+          "text": "real, inverted and smaller",
+          "vi": {
+            "text": "ảnh thật, ngược chiều và nhỏ hơn vật"
+          }
+        },
+        {
+          "text": "real, inverted and the same size",
+          "vi": {
+            "text": "ảnh thật, ngược chiều và bằng vật"
+          }
+        },
+        {
+          "text": "real and upright",
+          "vi": {
+            "text": "ảnh thật, cùng chiều"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-images",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["cases", "magnification", "measure"],
+      "stem": "An object is placed in front of a thin converging lens of focal length f. Decide whether each statement is true or false.",
+      "explain": "A real image is inverted (k < 0); at u = 2f it is the same size; a virtual image cannot be caught on a screen; one run gives f = u·v/(u + v).",
+      "vi": {
+        "stem": "Một vật được đặt trước thấu kính hội tụ mỏng có tiêu cự f. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Ảnh thật luôn ngược chiều (k < 0); khi u = 2f ảnh bằng vật; ảnh ảo không hứng được trên màn; một lần đo cho f = u·v/(u + v)."
+      },
+      "statements": [
+        {
+          "text": "A real image is inverted.",
+          "vi": {
+            "text": "Ảnh thật luôn ngược chiều với vật."
+          },
+          "true": true
+        },
+        {
+          "text": "At u = 2f the image is the same size as the object.",
+          "vi": {
+            "text": "Khi u = 2f, ảnh có độ lớn bằng vật."
+          },
+          "true": true
+        },
+        {
+          "text": "A virtual image can be caught on the screen.",
+          "vi": {
+            "text": "Ảnh ảo có thể hứng được trên màn."
+          },
+          "true": false
+        },
+        {
+          "text": "From one run, f = u·v/(u + v).",
+          "vi": {
+            "text": "Từ một lần đo, f = u·v/(u + v)."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "object-closer",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["cases", "formula"],
+      "stem": "An object is moved from far away towards the focal point of a converging lens (u stays greater than f). The real image…",
+      "explain": "v = u·f/(u − f) grows as u falls towards f, and |k| = v/u grows too.",
+      "vi": {
+        "stem": "Dịch vật từ rất xa lại gần tiêu điểm của thấu kính hội tụ (u vẫn lớn hơn f). Ảnh thật…",
+        "explain": "v = u·f/(u − f) tăng khi u giảm dần về f, và |k| = v/u cũng tăng."
+      },
+      "options": [
+        {
+          "text": "moves away from the lens and gets larger",
+          "vi": {
+            "text": "dịch ra xa thấu kính và lớn dần"
+          },
+          "correct": true
+        },
+        {
+          "text": "moves towards the lens and gets smaller",
+          "vi": {
+            "text": "dịch lại gần thấu kính và nhỏ dần"
+          }
+        },
+        {
+          "text": "stays where it is",
+          "vi": {
+            "text": "đứng yên"
+          }
+        },
+        {
+          "text": "becomes virtual at once",
+          "vi": {
+            "text": "trở thành ảnh ảo ngay"
+          }
+        }
+      ]
+    },
+    {
+      "id": "between-f-2f",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["cases"],
+      "stem": "An object stands between f and 2f from a converging lens. Its image is…",
+      "explain": "f < u < 2f gives v > 2f: a real, inverted, enlarged image.",
+      "vi": {
+        "stem": "Vật đặt trong khoảng từ f đến 2f trước thấu kính hội tụ. Ảnh của vật là…",
+        "explain": "f < u < 2f cho v > 2f: ảnh thật, ngược chiều, lớn hơn vật."
+      },
+      "options": [
+        {
+          "text": "real, inverted and larger",
+          "vi": {
+            "text": "ảnh thật, ngược chiều, lớn hơn vật"
+          },
+          "correct": true
+        },
+        {
+          "text": "real, inverted and smaller",
+          "vi": {
+            "text": "ảnh thật, ngược chiều, nhỏ hơn vật"
+          }
+        },
+        {
+          "text": "virtual, upright and larger",
+          "vi": {
+            "text": "ảnh ảo, cùng chiều, lớn hơn vật"
+          }
+        },
+        {
+          "text": "virtual, upright and smaller",
+          "vi": {
+            "text": "ảnh ảo, cùng chiều, nhỏ hơn vật"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-2f",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["cases", "magnification"],
+      "set": {
+        "focalLength": 0.1,
+        "objectDistance": 0.2
+      },
+      "stem": "A {objectHeight} m object stands {objectDistance} m from a converging lens of focal length {focalLength} m. Decide whether each statement is true or false.",
+      "explain": "u = 2f: v = u·f/(u − f) = {@imageDistance} m = 2f, k = −v/u = {@magnification}, h′ = k·h = {@imageHeight} m: real, inverted, same size.",
+      "vi": {
+        "stem": "Vật cao {objectHeight} m đặt cách thấu kính hội tụ tiêu cự {focalLength} m một khoảng {objectDistance} m. Mỗi nhận định sau đúng hay sai?",
+        "explain": "u = 2f: v = u·f/(u − f) = {@imageDistance} m = 2f, k = −v/u = {@magnification}, h′ = k·h = {@imageHeight} m: ảnh thật, ngược chiều, bằng vật."
+      },
+      "statements": [
+        {
+          "text": "The image forms {@imageDistance} m behind the lens.",
+          "vi": {
+            "text": "Ảnh hiện ra sau thấu kính {@imageDistance} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "objectDistance*focalLength/(objectDistance-focalLength)",
+            "equals": "imageDistance"
+          }
+        },
+        {
+          "text": "The magnification is {@magnification}.",
+          "vi": {
+            "text": "Số phóng đại bằng {@magnification}."
+          },
+          "true": true,
+          "check": {
+            "expr": "-objectDistance*focalLength/(objectDistance-focalLength)/objectDistance",
+            "equals": "magnification"
+          }
+        },
+        {
+          "text": "The image is upright.",
+          "vi": {
+            "text": "Ảnh cùng chiều với vật."
+          },
+          "true": false
+        },
+        {
+          "text": "The image height is {@imageHeight} m: the same size, inverted.",
+          "vi": {
+            "text": "Chiều cao ảnh là {@imageHeight} m: bằng vật và ngược chiều."
+          },
+          "true": true,
+          "check": {
+            "expr": "-objectHeight",
+            "equals": "imageHeight"
+          }
+        }
+      ]
+    },
+    {
+      "id": "image-distance",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["formula"],
+      "set": {
+        "focalLength": 0.1,
+        "objectDistance": 0.25
+      },
+      "stem": "An object stands {objectDistance} m from a converging lens of focal length {focalLength} m. How far behind the lens is the image?",
+      "explain": "v = u·f/(u − f) = {objectDistance}·{focalLength}/({objectDistance} − {focalLength}) ≈ {@imageDistance} m: real.",
+      "vi": {
+        "stem": "Vật đặt cách thấu kính hội tụ tiêu cự {focalLength} m một khoảng {objectDistance} m. Ảnh cách thấu kính bao xa?",
+        "explain": "v = u·f/(u − f) = {objectDistance}·{focalLength}/({objectDistance} − {focalLength}) ≈ {@imageDistance} m: ảnh thật."
+      },
+      "options": [
+        {
+          "text": "{@imageDistance} m",
+          "vi": {
+            "text": "{@imageDistance} m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "objectDistance*focalLength/(objectDistance-focalLength)",
+            "equals": "imageDistance"
+          }
+        },
+        {
+          "text": "{=objectDistance*focalLength/(objectDistance+focalLength)} m",
+          "vi": {
+            "text": "{=objectDistance*focalLength/(objectDistance+focalLength)} m"
+          },
+          "check": {
+            "expr": "objectDistance*focalLength/(objectDistance+focalLength)",
+            "equals": "imageDistance"
+          }
+        },
+        {
+          "text": "{=objectDistance-focalLength} m",
+          "vi": {
+            "text": "{=objectDistance-focalLength} m"
+          },
+          "check": {
+            "expr": "objectDistance-focalLength",
+            "equals": "imageDistance"
+          }
+        },
+        {
+          "text": "{=objectDistance*focalLength/(focalLength-objectDistance)} m",
+          "vi": {
+            "text": "{=objectDistance*focalLength/(focalLength-objectDistance)} m"
+          },
+          "check": {
+            "expr": "objectDistance*focalLength/(focalLength-objectDistance)",
+            "equals": "imageDistance"
+          }
+        }
+      ]
+    },
+    {
+      "id": "magnification",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["magnification"],
+      "set": {
+        "focalLength": 0.15,
+        "objectDistance": 0.4
+      },
+      "stem": "An object stands {objectDistance} m from a converging lens and its image forms {@imageDistance} m behind it. What is the magnification?",
+      "explain": "k = −v/u = −{@imageDistance}/{objectDistance} = {@magnification}: inverted and smaller.",
+      "vi": {
+        "stem": "Vật đặt cách thấu kính hội tụ {objectDistance} m và ảnh hiện ra sau thấu kính {@imageDistance} m. Số phóng đại bằng bao nhiêu?",
+        "explain": "k = −v/u = −{@imageDistance}/{objectDistance} = {@magnification}: ảnh ngược chiều và nhỏ hơn vật."
+      },
+      "options": [
+        {
+          "text": "{@magnification}",
+          "vi": {
+            "text": "{@magnification}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "-@imageDistance/objectDistance",
+            "equals": "magnification"
+          }
+        },
+        {
+          "text": "{=@imageDistance/objectDistance}",
+          "vi": {
+            "text": "{=@imageDistance/objectDistance}"
+          },
+          "check": {
+            "expr": "@imageDistance/objectDistance",
+            "equals": "magnification"
+          }
+        },
+        {
+          "text": "{=-objectDistance/@imageDistance}",
+          "vi": {
+            "text": "{=-objectDistance/@imageDistance}"
+          },
+          "check": {
+            "expr": "-objectDistance/@imageDistance",
+            "equals": "magnification"
+          }
+        },
+        {
+          "text": "{=objectDistance/@imageDistance}",
+          "vi": {
+            "text": "{=objectDistance/@imageDistance}"
+          },
+          "check": {
+            "expr": "objectDistance/@imageDistance",
+            "equals": "magnification"
+          }
+        }
+      ]
+    },
+    {
+      "id": "focal-length",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["measure"],
+      "set": {
+        "focalLength": 0.2,
+        "objectDistance": 0.3
+      },
+      "stem": "On the bench a sharp image forms with u = {objectDistance} m and v = {@imageDistance} m. What focal length does this run give?",
+      "explain": "f = u·v/(u + v) = {objectDistance}·{@imageDistance}/({objectDistance} + {@imageDistance}) = {@focalLength} m.",
+      "vi": {
+        "stem": "Trên băng quang học, ảnh rõ nét thu được với u = {objectDistance} m và v = {@imageDistance} m. Lần đo này cho tiêu cự bằng bao nhiêu?",
+        "explain": "f = u·v/(u + v) = {objectDistance}·{@imageDistance}/({objectDistance} + {@imageDistance}) = {@focalLength} m."
+      },
+      "options": [
+        {
+          "text": "{=objectDistance*@imageDistance/(objectDistance+@imageDistance)} m",
+          "vi": {
+            "text": "{=objectDistance*@imageDistance/(objectDistance+@imageDistance)} m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "objectDistance*@imageDistance/(objectDistance+@imageDistance)",
+            "equals": "focalLength"
+          }
+        },
+        {
+          "text": "{=(objectDistance+@imageDistance)/(objectDistance*@imageDistance)} m",
+          "vi": {
+            "text": "{=(objectDistance+@imageDistance)/(objectDistance*@imageDistance)} m"
+          },
+          "check": {
+            "expr": "(objectDistance+@imageDistance)/(objectDistance*@imageDistance)",
+            "equals": "focalLength"
+          }
+        },
+        {
+          "text": "{=objectDistance*@imageDistance/(@imageDistance-objectDistance)} m",
+          "vi": {
+            "text": "{=objectDistance*@imageDistance/(@imageDistance-objectDistance)} m"
+          },
+          "check": {
+            "expr": "objectDistance*@imageDistance/(@imageDistance-objectDistance)",
+            "equals": "focalLength"
+          }
+        },
+        {
+          "text": "{=(objectDistance+@imageDistance)/2} m",
+          "vi": {
+            "text": "{=(objectDistance+@imageDistance)/2} m"
+          },
+          "check": {
+            "expr": "(objectDistance+@imageDistance)/2",
+            "equals": "focalLength"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-magnifier",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["cases", "magnification", "formula"],
+      "set": {
+        "focalLength": 0.15,
+        "objectDistance": 0.08
+      },
+      "stem": "A {objectHeight} m object stands {objectDistance} m from a converging lens of focal length {focalLength} m. Decide whether each statement is true or false.",
+      "explain": "u < f: v = u·f/(u − f) ≈ {@imageDistance} m < 0, a virtual image; k = −v/u ≈ {@magnification}, upright and larger; h′ ≈ {@imageHeight} m. No screen can catch it.",
+      "vi": {
+        "stem": "Vật cao {objectHeight} m đặt cách thấu kính hội tụ tiêu cự {focalLength} m một khoảng {objectDistance} m. Mỗi nhận định sau đúng hay sai?",
+        "explain": "u < f: v = u·f/(u − f) ≈ {@imageDistance} m < 0, ảnh ảo; k = −v/u ≈ {@magnification}, cùng chiều và lớn hơn vật; h′ ≈ {@imageHeight} m. Không màn nào hứng được ảnh này."
+      },
+      "statements": [
+        {
+          "text": "v ≈ {@imageDistance} m: the image is virtual.",
+          "vi": {
+            "text": "v ≈ {@imageDistance} m: ảnh là ảnh ảo."
+          },
+          "true": true,
+          "check": {
+            "expr": "objectDistance*focalLength/(objectDistance-focalLength)",
+            "equals": "imageDistance"
+          }
+        },
+        {
+          "text": "The magnification is about {@magnification}: upright and larger.",
+          "vi": {
+            "text": "Số phóng đại khoảng {@magnification}: ảnh cùng chiều và lớn hơn vật."
+          },
+          "true": true,
+          "check": {
+            "expr": "-objectDistance*focalLength/(objectDistance-focalLength)/objectDistance",
+            "equals": "magnification"
+          }
+        },
+        {
+          "text": "The image is about {@imageHeight} m tall.",
+          "vi": {
+            "text": "Ảnh cao khoảng {@imageHeight} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "objectHeight*focalLength/(focalLength-objectDistance)",
+            "equals": "imageHeight"
+          }
+        },
+        {
+          "text": "A sharp image of it can be caught on the screen.",
+          "vi": {
+            "text": "Có thể hứng được ảnh rõ nét của vật trên màn."
+          },
+          "true": false,
+          "check": {
+            "expr": "1",
+            "equals": "sharp"
+          }
+        }
+      ]
+    },
+    {
+      "id": "image-height",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["magnification", "formula"],
+      "set": {
+        "focalLength": 0.1,
+        "objectDistance": 0.15
+      },
+      "stem": "A {objectHeight} m object stands {objectDistance} m from a converging lens of focal length {focalLength} m. How tall is its image, and which way up?",
+      "explain": "v = u·f/(u − f) = {@imageDistance} m; k = −v/u = {@magnification}; h′ = k·h = {@imageHeight} m: {=abs(@imageHeight)} m tall, inverted.",
+      "vi": {
+        "stem": "Vật cao {objectHeight} m đặt cách thấu kính hội tụ tiêu cự {focalLength} m một khoảng {objectDistance} m. Ảnh cao bao nhiêu và có chiều thế nào?",
+        "explain": "v = u·f/(u − f) = {@imageDistance} m; k = −v/u = {@magnification}; h′ = k·h = {@imageHeight} m: cao {=abs(@imageHeight)} m, ngược chiều."
+      },
+      "options": [
+        {
+          "text": "{=abs(@imageHeight)} m, inverted",
+          "vi": {
+            "text": "{=abs(@imageHeight)} m, ngược chiều"
+          },
+          "correct": true,
+          "check": {
+            "expr": "-objectHeight*objectDistance*focalLength/(objectDistance-focalLength)/objectDistance",
+            "equals": "imageHeight"
+          }
+        },
+        {
+          "text": "{=abs(@imageHeight)} m, upright",
+          "vi": {
+            "text": "{=abs(@imageHeight)} m, cùng chiều"
+          }
+        },
+        {
+          "text": "{=objectHeight*objectDistance/@imageDistance} m, inverted",
+          "vi": {
+            "text": "{=objectHeight*objectDistance/@imageDistance} m, ngược chiều"
+          },
+          "check": {
+            "expr": "-objectHeight*objectDistance/@imageDistance",
+            "equals": "imageHeight"
+          }
+        },
+        {
+          "text": "{=objectHeight*focalLength/objectDistance} m, inverted",
+          "vi": {
+            "text": "{=objectHeight*focalLength/objectDistance} m, ngược chiều"
+          },
+          "check": {
+            "expr": "-objectHeight*focalLength/objectDistance",
+            "equals": "imageHeight"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-graphs",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["measure"],
+      "set": {
+        "focalLength": 0.15,
+        "objectDistance": 0.32,
+        "resolution": 0.005
+      },
+      "stem": "Several runs are made with the {focalLength} m lens; in this one u = {objectDistance} m, and the scale reads to {resolution} m. Decide whether each statement is true or false.",
+      "explain": "1/v = 1/f − 1/u: slope {@reciprocalSlope}, intercept 1/f = {@power} m⁻¹. v = {@imageDistance|4} m reads as {=round(@imageDistance/resolution)*resolution} m. u·v = f·(u + v): slope f, not 1/f.",
+      "vi": {
+        "stem": "Thực hiện nhiều lần đo với thấu kính {focalLength} m; ở lần này u = {objectDistance} m, thước đọc với độ phân giải {resolution} m. Mỗi nhận định sau đúng hay sai?",
+        "explain": "1/v = 1/f − 1/u: hệ số góc {@reciprocalSlope}, tung độ gốc 1/f = {@power} m⁻¹. v = {@imageDistance|4} m được đọc là {=round(@imageDistance/resolution)*resolution} m. u·v = f·(u + v): hệ số góc là f, không phải 1/f."
+      },
+      "statements": [
+        {
+          "text": "1/v against 1/u is a straight line of slope −1.",
+          "vi": {
+            "text": "Đồ thị 1/v theo 1/u là đường thẳng có hệ số góc −1."
+          },
+          "true": true,
+          "check": {
+            "expr": "-1",
+            "equals": "reciprocalSlope"
+          }
+        },
+        {
+          "text": "Its intercept is 1/f ≈ {@power} m⁻¹.",
+          "vi": {
+            "text": "Tung độ gốc của nó là 1/f ≈ {@power} m⁻¹."
+          },
+          "true": true,
+          "check": {
+            "expr": "1/focalLength",
+            "equals": "power"
+          }
+        },
+        {
+          "text": "The scale reads v as {=round(@imageDistance/resolution)*resolution} m.",
+          "vi": {
+            "text": "Thước đọc v là {=round(@imageDistance/resolution)*resolution} m."
+          },
+          "true": true
+        },
+        {
+          "text": "u·v against u + v is a straight line of slope 1/f.",
+          "vi": {
+            "text": "Đồ thị u·v theo u + v là đường thẳng có hệ số góc 1/f."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "power-unit",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["formula"],
+      "stem": "The power of a lens of focal length f (in metres) is…",
+      "explain": "D = 1/f, in dioptres (dp) when f is in metres: a converging lens of f = 0.2 m has D = 5 dp. A shorter focal length means a stronger lens.",
+      "vi": {
+        "stem": "Độ tụ của một thấu kính có tiêu cự f (tính bằng mét) là…",
+        "explain": "D = 1/f, tính bằng điôp (dp) khi f tính bằng mét: thấu kính hội tụ có f = 0,2 m thì D = 5 dp. Tiêu cự càng ngắn thì thấu kính càng mạnh."
+      },
+      "options": [
+        {
+          "text": "D = 1/f, in dioptres",
+          "vi": {
+            "text": "D = 1/f, đơn vị điôp"
+          },
+          "correct": true
+        },
+        {
+          "text": "D = f, in dioptres",
+          "vi": {
+            "text": "D = f, đơn vị điôp"
+          }
+        },
+        {
+          "text": "D = 1/f, in metres",
+          "vi": {
+            "text": "D = 1/f, đơn vị mét"
+          }
+        },
+        {
+          "text": "D = 2/f, in dioptres",
+          "vi": {
+            "text": "D = 2/f, đơn vị điôp"
+          }
+        }
+      ]
+    },
+    {
+      "id": "half-covered",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["cases"],
+      "stem": "A sharp image is on the screen. Half of the lens is then covered with a card. The image on the screen…",
+      "explain": "Every part of the lens sends light from each point of the object to the same image point, so the uncovered half still forms the whole image, in the same place; only half as much light arrives, so it is dimmer.",
+      "vi": {
+        "stem": "Trên màn đang có ảnh rõ nét. Sau đó che một nửa thấu kính bằng một tấm bìa. Ảnh trên màn…",
+        "explain": "Mọi phần của thấu kính đều đưa ánh sáng từ mỗi điểm của vật đến cùng một điểm ảnh, nên nửa còn lại vẫn tạo được toàn bộ ảnh, ở đúng vị trí cũ; chỉ có nửa lượng ánh sáng tới nên ảnh tối hơn."
+      },
+      "options": [
+        {
+          "text": "is still whole and in the same place, but dimmer",
+          "vi": {
+            "text": "vẫn đầy đủ và ở vị trí cũ, nhưng tối hơn"
+          },
+          "correct": true
+        },
+        {
+          "text": "loses the half on the covered side",
+          "vi": {
+            "text": "mất đi một nửa ở phía bị che"
+          }
+        },
+        {
+          "text": "becomes half as large",
+          "vi": {
+            "text": "nhỏ đi một nửa"
+          }
+        },
+        {
+          "text": "moves to twice the distance from the lens",
+          "vi": {
+            "text": "dịch ra xa thấu kính gấp đôi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-real-virtual",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["cases", "formula"],
+      "stem": "An object stands in front of a thin converging lens of focal length f. Decide whether each statement is true or false.",
+      "explain": "A real image (u > f) can be caught on a screen; a virtual one (u < f) cannot, and it is upright and larger, as in a magnifying glass. With the object at 2f the image is at 2f, not at the focal point. As u falls towards f, v = uf/(u − f) grows without limit.",
+      "vi": {
+        "stem": "Một vật đặt trước thấu kính hội tụ mỏng có tiêu cự f. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Ảnh thật (u > f) hứng được trên màn; ảnh ảo (u < f) thì không, nó cùng chiều và lớn hơn vật, như ở kính lúp. Vật ở 2f thì ảnh ở 2f, không phải ở tiêu điểm. Khi u giảm dần về f, v = uf/(u − f) tăng lên không giới hạn."
+      },
+      "statements": [
+        {
+          "text": "A real image can be caught on a screen.",
+          "vi": {
+            "text": "Ảnh thật hứng được trên màn."
+          },
+          "true": true
+        },
+        {
+          "text": "With the object closer than f, the image is virtual, upright and larger.",
+          "vi": {
+            "text": "Khi vật ở gần thấu kính hơn f, ảnh là ảnh ảo, cùng chiều và lớn hơn vật."
+          },
+          "true": true
+        },
+        {
+          "text": "With the object at 2f, the image forms at the focal point.",
+          "vi": {
+            "text": "Khi vật ở 2f, ảnh tạo thành tại tiêu điểm."
+          },
+          "true": false
+        },
+        {
+          "text": "As the object moves towards the focal point from outside, the image moves further from the lens.",
+          "vi": {
+            "text": "Khi vật dịch lại gần tiêu điểm từ phía ngoài, ảnh dịch ra xa thấu kính hơn."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "lens-power",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["formula"],
+      "set": {
+        "focalLength": 0.2,
+        "objectDistance": 0.3
+      },
+      "stem": "What is the power of a converging lens of focal length {=focalLength*100} cm?",
+      "explain": "D = 1/f with f in metres: 1/{focalLength} m = {@power} dp. Leaving f in centimetres gives 0.05 or 20; f itself is not the power.",
+      "vi": {
+        "stem": "Độ tụ của thấu kính hội tụ có tiêu cự {=focalLength*100} cm bằng bao nhiêu?",
+        "explain": "D = 1/f với f tính bằng mét: 1/{focalLength} m = {@power} dp. Để f theo xentimét sẽ ra 0,05 hoặc 20; bản thân f không phải độ tụ."
+      },
+      "options": [
+        {
+          "text": "{@power} dp",
+          "vi": {
+            "text": "{@power} dp"
+          },
+          "correct": true,
+          "check": {
+            "expr": "1/focalLength",
+            "equals": "power"
+          }
+        },
+        {
+          "text": "{=1/(focalLength*100)} dp",
+          "vi": {
+            "text": "{=1/(focalLength*100)} dp"
+          },
+          "check": {
+            "expr": "1/(focalLength*100)",
+            "equals": "power"
+          }
+        },
+        {
+          "text": "{=focalLength*100} dp",
+          "vi": {
+            "text": "{=focalLength*100} dp"
+          },
+          "check": {
+            "expr": "focalLength*100",
+            "equals": "power"
+          }
+        },
+        {
+          "text": "{focalLength} dp",
+          "vi": {
+            "text": "{focalLength} dp"
+          },
+          "check": {
+            "expr": "focalLength",
+            "equals": "power"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-40cm",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["formula", "magnification"],
+      "set": {
+        "focalLength": 0.1,
+        "objectDistance": 0.4
+      },
+      "stem": "A {objectHeight} m object stands {objectDistance} m from a converging lens of focal length {focalLength} m. Decide whether each statement is true or false.",
+      "explain": "v = uf/(u − f) = {objectDistance}·{focalLength}/({objectDistance} − {focalLength}) ≈ {@imageDistance} m; k = −v/u ≈ {@magnification}: the image is real, inverted and smaller. The object and the image are u + v ≈ {@distanceSum} m apart.",
+      "vi": {
+        "stem": "Một vật cao {objectHeight} m đặt cách thấu kính hội tụ có tiêu cự {focalLength} m một khoảng {objectDistance} m. Mỗi nhận định sau đúng hay sai?",
+        "explain": "v = uf/(u − f) = {objectDistance}·{focalLength}/({objectDistance} − {focalLength}) ≈ {@imageDistance} m; k = −v/u ≈ {@magnification}: ảnh thật, ngược chiều và nhỏ hơn vật. Vật và ảnh cách nhau u + v ≈ {@distanceSum} m."
+      },
+      "statements": [
+        {
+          "text": "The image forms about {@imageDistance} m behind the lens.",
+          "vi": {
+            "text": "Ảnh tạo thành sau thấu kính, cách thấu kính khoảng {@imageDistance} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "objectDistance*focalLength/(objectDistance-focalLength)",
+            "equals": "imageDistance"
+          }
+        },
+        {
+          "text": "The magnification is about {@magnification}.",
+          "vi": {
+            "text": "Số phóng đại ảnh khoảng {@magnification}."
+          },
+          "true": true,
+          "check": {
+            "expr": "-@imageDistance/objectDistance",
+            "equals": "magnification"
+          }
+        },
+        {
+          "text": "The image is upright.",
+          "vi": {
+            "text": "Ảnh cùng chiều với vật."
+          },
+          "true": false
+        },
+        {
+          "text": "The object and the image are about {@distanceSum} m apart.",
+          "vi": {
+            "text": "Vật và ảnh cách nhau khoảng {@distanceSum} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "objectDistance+@imageDistance",
+            "equals": "distanceSum"
+          }
+        }
+      ]
+    },
+    {
+      "id": "f-from-screen",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["measure", "formula"],
+      "set": {
+        "focalLength": 0.15,
+        "objectDistance": 0.25
+      },
+      "stem": "The screen is {@distanceSum} m from the object, and a sharp image forms on it with the lens {objectDistance} m from the object. What is the focal length?",
+      "explain": "v = {@distanceSum} − {objectDistance} = {@imageDistance} m, so f = u·v/(u + v) = {objectDistance}·{@imageDistance}/{@distanceSum} = {focalLength} m. (u + v)/4 holds only when u = v = 2f; v itself is not f.",
+      "vi": {
+        "stem": "Màn đặt cách vật {@distanceSum} m, và trên màn có ảnh rõ nét khi thấu kính cách vật {objectDistance} m. Tiêu cự của thấu kính bằng bao nhiêu?",
+        "explain": "v = {@distanceSum} − {objectDistance} = {@imageDistance} m, nên f = u·v/(u + v) = {objectDistance}·{@imageDistance}/{@distanceSum} = {focalLength} m. (u + v)/4 chỉ đúng khi u = v = 2f; bản thân v không phải là f."
+      },
+      "options": [
+        {
+          "text": "{=objectDistance*(@distanceSum-objectDistance)/@distanceSum} m",
+          "vi": {
+            "text": "{=objectDistance*(@distanceSum-objectDistance)/@distanceSum} m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "objectDistance*(@distanceSum-objectDistance)/@distanceSum",
+            "equals": "focalLength"
+          }
+        },
+        {
+          "text": "{=@distanceSum/4} m",
+          "vi": {
+            "text": "{=@distanceSum/4} m"
+          },
+          "check": {
+            "expr": "@distanceSum/4",
+            "equals": "focalLength"
+          }
+        },
+        {
+          "text": "{=@distanceSum-objectDistance} m",
+          "vi": {
+            "text": "{=@distanceSum-objectDistance} m"
+          },
+          "check": {
+            "expr": "@distanceSum-objectDistance",
+            "equals": "focalLength"
+          }
+        },
+        {
+          "text": "{=objectDistance*@distanceSum/(@distanceSum-objectDistance)} m",
+          "vi": {
+            "text": "{=objectDistance*@distanceSum/(@distanceSum-objectDistance)} m"
+          },
+          "check": {
+            "expr": "objectDistance*@distanceSum/(@distanceSum-objectDistance)",
+            "equals": "focalLength"
+          }
+        }
+      ]
+    },
+    {
+      "id": "object-for-k",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["magnification", "cases"],
+      "set": {
+        "focalLength": 0.1,
+        "objectDistance": 0.15
+      },
+      "stem": "A converging lens of focal length {focalLength} m must give a real image {=-@magnification} times as large as the object. How far from the lens must the object stand?",
+      "explain": "Real image: v = |k|·u and 1/u + 1/v = 1/f give u = f(1 + 1/|k|) = {focalLength}·(1 + 1/{=-@magnification}) = {objectDistance} m. f(1 + |k|) is where the image forms; f/|k| is inside f, where the image would be virtual; 2f gives an image the same size.",
+      "vi": {
+        "stem": "Một thấu kính hội tụ có tiêu cự {focalLength} m phải cho ảnh thật lớn gấp {=-@magnification} lần vật. Phải đặt vật cách thấu kính bao xa?",
+        "explain": "Ảnh thật: v = |k|·u và 1/u + 1/v = 1/f cho u = f(1 + 1/|k|) = {focalLength}·(1 + 1/{=-@magnification}) = {objectDistance} m. f(1 + |k|) là vị trí của ảnh; f/|k| nằm trong khoảng tiêu cự, khi đó ảnh là ảnh ảo; 2f cho ảnh bằng vật."
+      },
+      "options": [
+        {
+          "text": "{objectDistance} m",
+          "vi": {
+            "text": "{objectDistance} m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "-(objectDistance*focalLength/(objectDistance-focalLength))/objectDistance",
+            "equals": "magnification"
+          }
+        },
+        {
+          "text": "{=focalLength*(1-@magnification)} m",
+          "vi": {
+            "text": "{=focalLength*(1-@magnification)} m"
+          },
+          "check": {
+            "expr": "-(focalLength*(1-@magnification)*focalLength/(focalLength*(1-@magnification)-focalLength))/(focalLength*(1-@magnification))",
+            "equals": "magnification"
+          }
+        },
+        {
+          "text": "{=focalLength/(-@magnification)} m",
+          "vi": {
+            "text": "{=focalLength/(-@magnification)} m"
+          },
+          "check": {
+            "expr": "-(focalLength/(-@magnification)*focalLength/(focalLength/(-@magnification)-focalLength))/(focalLength/(-@magnification))",
+            "equals": "magnification"
+          }
+        },
+        {
+          "text": "{=2*focalLength} m",
+          "vi": {
+            "text": "{=2*focalLength} m"
+          },
+          "check": {
+            "expr": "-(2*focalLength*focalLength/(2*focalLength-focalLength))/(2*focalLength)",
+            "equals": "magnification"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-60cm",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["formula", "measure", "cases"],
+      "set": {
+        "focalLength": 0.2,
+        "objectDistance": 0.6
+      },
+      "stem": "An object stands {objectDistance} m from a converging lens of focal length {focalLength} m. Decide whether each statement is true or false.",
+      "explain": "v = uf/(u − f) = {@imageDistance} m. 1/u + 1/v = {@inverseObjectDistance|3} + {@inverseImageDistance|3} = {@power} m⁻¹ = 1/f. f = u·v/(u + v) = {@distanceProduct}/{@distanceSum} = {focalLength} m, as found from runs. Moving the object nearer (still beyond f) moves the image further away and makes it larger, not smaller.",
+      "vi": {
+        "stem": "Một vật đặt cách thấu kính hội tụ có tiêu cự {focalLength} m một khoảng {objectDistance} m. Mỗi nhận định sau đúng hay sai?",
+        "explain": "v = uf/(u − f) = {@imageDistance} m. 1/u + 1/v = {@inverseObjectDistance|3} + {@inverseImageDistance|3} = {@power} m⁻¹ = 1/f. f = u·v/(u + v) = {@distanceProduct}/{@distanceSum} = {focalLength} m, đúng như cách tìm f từ các lần đo. Dịch vật lại gần (vẫn ở ngoài f) thì ảnh dịch ra xa và lớn hơn chứ không nhỏ đi."
+      },
+      "statements": [
+        {
+          "text": "The image forms {@imageDistance} m behind the lens.",
+          "vi": {
+            "text": "Ảnh tạo thành sau thấu kính, cách thấu kính {@imageDistance} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "objectDistance*focalLength/(objectDistance-focalLength)",
+            "equals": "imageDistance"
+          }
+        },
+        {
+          "text": "1/u + 1/v comes to {@power} m⁻¹.",
+          "vi": {
+            "text": "1/u + 1/v bằng {@power} m⁻¹."
+          },
+          "true": true,
+          "check": {
+            "expr": "@inverseObjectDistance+@inverseImageDistance",
+            "equals": "power"
+          }
+        },
+        {
+          "text": "u·v/(u + v) = {=@distanceProduct/@distanceSum} m, the focal length.",
+          "vi": {
+            "text": "u·v/(u + v) = {=@distanceProduct/@distanceSum} m, bằng tiêu cự."
+          },
+          "true": true,
+          "check": {
+            "expr": "@distanceProduct/@distanceSum",
+            "equals": "focalLength"
+          }
+        },
+        {
+          "text": "Moving the object nearer the lens (still beyond f) makes the image smaller.",
+          "vi": {
+            "text": "Dịch vật lại gần thấu kính (vẫn ở ngoài f) thì ảnh nhỏ đi."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

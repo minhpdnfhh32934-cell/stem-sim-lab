@@ -1,0 +1,1040 @@
+{
+  "id": "microscope",
+  "skills": [
+    {
+      "id": "magnification",
+      "name": "The compound microscope and its magnification",
+      "advice": "Name the parts at the station (objective, eyepiece, stage, fine focus, lamp) and practise M = M_eye × M_obj for the 4×, 10× and 40× objectives. The trap: the two magnifications multiply, they do not add.",
+      "vi": {
+        "name": "Kính hiển vi quang học và độ phóng đại",
+        "advice": "Gọi tên các bộ phận trên trạm (vật kính, thị kính, bàn kính, ốc vi cấp, đèn) và luyện tính M = M_thị kính × M_vật kính với các vật kính 4×, 10× và 40×. Bẫy thường gặp: hai độ phóng đại được nhân với nhau, không cộng."
+      }
+    },
+    {
+      "id": "field-of-view",
+      "name": "Field of view: FOV = FN/M_obj",
+      "advice": "Work out the field for each objective from FN = 18 mm (4.5, 1.8 and 0.45 mm), then convert to µm (× 1000). Change the objective at the station and watch the field narrow; divide by the objective only, not by the total magnification.",
+      "vi": {
+        "name": "Đường kính thị trường: FOV = FN/M_vật kính",
+        "advice": "Tính đường kính thị trường cho từng vật kính từ FN = 18 mm (4,5; 1,8 và 0,45 mm), rồi đổi sang µm (× 1000). Đổi vật kính trên trạm và quan sát thị trường hẹp lại; chỉ chia cho độ phóng đại của vật kính, không chia cho độ phóng đại tổng."
+      }
+    },
+    {
+      "id": "cell-size",
+      "name": "Measuring cells by counting across the field",
+      "advice": "Count the whole cells across the field and divide: L ≈ FOV/n. Count at low power where many cells fit, keep the units (µm), and do not divide by the magnification again — the field is already a real length.",
+      "vi": {
+        "name": "Đo kích thước tế bào bằng cách đếm số tế bào trên thị trường",
+        "advice": "Đếm số tế bào nguyên vẹn nằm dọc theo đường kính thị trường rồi chia: L ≈ FOV/n. Đếm ở vật kính nhỏ, nơi có nhiều tế bào, giữ đúng đơn vị (µm), và không chia thêm cho độ phóng đại — đường kính thị trường đã là kích thước thật."
+      }
+    },
+    {
+      "id": "staining-focus",
+      "name": "Stains, contrast and focus",
+      "advice": "Learn each slide’s own stain: iodine for onion epidermis, methylene blue for cheek cells, none needed for Elodea (green chloroplasts) — do not carry one slide’s method to another. Then try the fine focus at 4× and 40×: the sharp zone is much thinner at high power.",
+      "vi": {
+        "name": "Thuốc nhuộm, độ tương phản và lấy nét",
+        "advice": "Ghi nhớ thuốc nhuộm riêng của từng mẫu: iodine cho biểu bì hành, xanh methylene cho tế bào niêm mạc miệng, rong đuôi chó (Elodea) không cần nhuộm (lục lạp màu xanh) — không áp dụng cách làm của mẫu này cho mẫu khác. Sau đó thử ốc vi cấp ở 4× và 40×: vùng ảnh rõ nét mỏng hơn nhiều ở độ phóng đại lớn."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "first-image",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["magnification"],
+      "stem": "Which part of a compound microscope makes the first enlarged image of the specimen?",
+      "explain": "The objective, just above the slide, makes the first enlarged image; the eyepiece enlarges that image again.",
+      "vi": {
+        "stem": "Bộ phận nào của kính hiển vi quang học tạo ra ảnh phóng đại đầu tiên của mẫu vật?",
+        "explain": "Vật kính, nằm ngay trên tiêu bản, tạo ảnh phóng đại đầu tiên; thị kính phóng đại tiếp ảnh đó."
+      },
+      "options": [
+        {
+          "text": "The objective",
+          "vi": {
+            "text": "Vật kính"
+          },
+          "correct": true
+        },
+        {
+          "text": "The eyepiece",
+          "vi": {
+            "text": "Thị kính"
+          }
+        },
+        {
+          "text": "The stage",
+          "vi": {
+            "text": "Bàn kính"
+          }
+        },
+        {
+          "text": "The lamp",
+          "vi": {
+            "text": "Đèn chiếu sáng"
+          }
+        }
+      ]
+    },
+    {
+      "id": "cheek-stain",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["staining-focus"],
+      "stem": "Which stain is usually used on human cheek cells to show their nuclei?",
+      "explain": "Methylene blue stains the cheek cells’ nuclei blue. Iodine suits onion epidermis and stains cheek cells only weakly; a stain only adds to Elodea, whose chloroplasts already show.",
+      "vi": {
+        "stem": "Thuốc nhuộm nào thường được dùng cho tế bào niêm mạc miệng người để làm rõ nhân?",
+        "explain": "Xanh methylene nhuộm nhân tế bào niêm mạc miệng thành màu xanh. Iodine phù hợp với biểu bì hành và chỉ nhuộm yếu tế bào niêm mạc miệng; với rong đuôi chó, lục lạp đã đủ tương phản."
+      },
+      "options": [
+        {
+          "text": "Methylene blue",
+          "vi": {
+            "text": "Xanh methylene"
+          },
+          "correct": true
+        },
+        {
+          "text": "Iodine solution",
+          "vi": {
+            "text": "Dung dịch iodine"
+          }
+        },
+        {
+          "text": "No stain: the cells are already green",
+          "vi": {
+            "text": "Không cần nhuộm: tế bào đã có màu xanh lục"
+          }
+        },
+        {
+          "text": "Benedict’s reagent",
+          "vi": {
+            "text": "Thuốc thử Benedict"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-slides",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["staining-focus", "magnification", "field-of-view"],
+      "stem": "About observing cells under the school microscope: decide whether each statement is true or false.",
+      "explain": "Elodea’s green chloroplasts give contrast without a stain, and iodine is the usual stain for onion epidermis. The fine focus moves the stage, not the magnification; a stronger objective shows a smaller part of the slide.",
+      "vi": {
+        "stem": "Về việc quan sát tế bào dưới kính hiển vi ở trường, mỗi nhận định sau đúng hay sai?",
+        "explain": "Lục lạp màu xanh của rong đuôi chó tạo độ tương phản mà không cần nhuộm, và iodine là thuốc nhuộm thường dùng cho biểu bì hành. Ốc vi cấp nâng hạ bàn kính chứ không đổi độ phóng đại; vật kính càng mạnh thì phần tiêu bản thấy được càng nhỏ."
+      },
+      "statements": [
+        {
+          "text": "Elodea leaf cells can be seen without a stain, because their chloroplasts are green.",
+          "vi": {
+            "text": "Tế bào lá rong đuôi chó có thể quan sát mà không cần nhuộm, vì lục lạp có màu xanh lục."
+          },
+          "true": true
+        },
+        {
+          "text": "Iodine solution is the usual stain for onion epidermis cells.",
+          "vi": {
+            "text": "Dung dịch iodine là thuốc nhuộm thường dùng cho tế bào biểu bì hành."
+          },
+          "true": true
+        },
+        {
+          "text": "Turning the fine-focus knob changes the magnification.",
+          "vi": {
+            "text": "Vặn ốc vi cấp làm thay đổi độ phóng đại."
+          },
+          "true": false
+        },
+        {
+          "text": "Turning to a stronger objective shows a larger part of the slide.",
+          "vi": {
+            "text": "Chuyển sang vật kính mạnh hơn thì thấy được phần tiêu bản lớn hơn."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "ten-to-forty",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["field-of-view"],
+      "stem": "The objective is changed from 10× to 40×. The diameter of the field of view…",
+      "explain": "FOV = FN/M_obj: four times the objective gives a quarter of the field (1.8 mm → 0.45 mm).",
+      "vi": {
+        "stem": "Chuyển vật kính từ 10× sang 40×. Đường kính thị trường…",
+        "explain": "FOV = FN/M_vật kính: độ phóng đại vật kính tăng 4 lần thì thị trường còn một phần tư (1,8 mm → 0,45 mm)."
+      },
+      "options": [
+        {
+          "text": "becomes a quarter as wide",
+          "vi": {
+            "text": "giảm còn một phần tư"
+          },
+          "correct": true
+        },
+        {
+          "text": "becomes four times as wide",
+          "vi": {
+            "text": "tăng gấp bốn lần"
+          }
+        },
+        {
+          "text": "halves",
+          "vi": {
+            "text": "giảm một nửa"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "unstained-onion",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["staining-focus"],
+      "stem": "Unstained onion epidermis is hard to see in a bright-field microscope because…",
+      "explain": "Its cells are almost colourless, so they give little contrast against the bright background; iodine stains the nuclei and walls yellow-brown.",
+      "vi": {
+        "stem": "Biểu bì hành không nhuộm khó quan sát dưới kính hiển vi trường sáng vì…",
+        "explain": "Tế bào gần như không màu nên ít tương phản với nền sáng; iodine nhuộm nhân và thành tế bào thành màu vàng nâu."
+      },
+      "options": [
+        {
+          "text": "its cells are almost colourless and give little contrast",
+          "vi": {
+            "text": "tế bào gần như không màu nên ít tương phản"
+          },
+          "correct": true
+        },
+        {
+          "text": "its cells are too small for a school microscope",
+          "vi": {
+            "text": "tế bào quá nhỏ so với kính hiển vi ở trường"
+          }
+        },
+        {
+          "text": "its cells move out of the field",
+          "vi": {
+            "text": "tế bào di chuyển ra khỏi thị trường"
+          }
+        },
+        {
+          "text": "its cell walls block all the light",
+          "vi": {
+            "text": "thành tế bào chặn hết ánh sáng"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-power",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["field-of-view", "cell-size", "staining-focus"],
+      "stem": "About changing the objective and the focus: decide whether each statement is true or false.",
+      "explain": "A narrower field holds fewer cells; the depth of field is thinner at high power (about 55 µm at 4×, 1.3 µm at 40× here). Count where many cells fit, at low power. The image is sharpest with the specimen in the focal plane.",
+      "vi": {
+        "stem": "Về việc đổi vật kính và lấy nét, mỗi nhận định sau đúng hay sai?",
+        "explain": "Thị trường hẹp hơn chứa ít tế bào hơn; độ sâu trường ảnh mỏng hơn ở độ phóng đại lớn (ở đây khoảng 55 µm với 4×, 1,3 µm với 40×). Nên đếm ở vật kính nhỏ, nơi có nhiều tế bào. Ảnh rõ nhất khi mẫu nằm đúng mặt phẳng tiêu."
+      },
+      "statements": [
+        {
+          "text": "At a higher magnification fewer cells fit across the field of view.",
+          "vi": {
+            "text": "Ở độ phóng đại lớn hơn, số tế bào nằm dọc đường kính thị trường ít hơn."
+          },
+          "true": true
+        },
+        {
+          "text": "The depth of field is thinner with the 40× objective than with the 4×.",
+          "vi": {
+            "text": "Độ sâu trường ảnh với vật kính 40× mỏng hơn với vật kính 4×."
+          },
+          "true": true
+        },
+        {
+          "text": "To measure a cell’s length by counting, it is best to count at the highest power.",
+          "vi": {
+            "text": "Để đo chiều dài tế bào bằng cách đếm, tốt nhất nên đếm ở độ phóng đại lớn nhất."
+          },
+          "true": false
+        },
+        {
+          "text": "The image is sharpest when the specimen lies in the focal plane.",
+          "vi": {
+            "text": "Ảnh rõ nét nhất khi mẫu vật nằm đúng mặt phẳng tiêu."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "total-4x",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["magnification"],
+      "set": {
+        "objective": 4
+      },
+      "stem": "A {eyepiece}× eyepiece is used with the {objective}× objective. What is the total magnification?",
+      "explain": "M = M_eye × M_obj = {eyepiece}·{objective} = {@magnification}×.",
+      "vi": {
+        "stem": "Dùng thị kính {eyepiece}× với vật kính {objective}×. Độ phóng đại tổng là bao nhiêu?",
+        "explain": "M = M_thị kính × M_vật kính = {eyepiece}·{objective} = {@magnification}×."
+      },
+      "options": [
+        {
+          "text": "{@magnification}×",
+          "vi": {
+            "text": "{@magnification}×"
+          },
+          "correct": true,
+          "check": {
+            "expr": "eyepiece*objective",
+            "equals": "magnification"
+          }
+        },
+        {
+          "text": "{=eyepiece+objective}×",
+          "vi": {
+            "text": "{=eyepiece+objective}×"
+          },
+          "check": {
+            "expr": "eyepiece+objective",
+            "equals": "magnification"
+          }
+        },
+        {
+          "text": "{=eyepiece/objective}×",
+          "vi": {
+            "text": "{=eyepiece/objective}×"
+          },
+          "check": {
+            "expr": "eyepiece/objective",
+            "equals": "magnification"
+          }
+        },
+        {
+          "text": "{objective}×",
+          "vi": {
+            "text": "{objective}×"
+          },
+          "check": {
+            "expr": "objective",
+            "equals": "magnification"
+          }
+        }
+      ]
+    },
+    {
+      "id": "fov-40x",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["field-of-view"],
+      "set": {
+        "objective": 40
+      },
+      "stem": "The eyepiece has a field number FN = {fieldNumber} mm and the {objective}× objective is in use. What is the diameter of the field of view, in µm?",
+      "explain": "FOV = FN/M_obj = {fieldNumber} mm/{objective} = {=fieldNumber/objective} mm = {@fieldOfView} µm. Divide by the objective only, and 1 mm = 1000 µm.",
+      "vi": {
+        "stem": "Thị kính có chỉ số thị trường FN = {fieldNumber} mm và đang dùng vật kính {objective}×. Đường kính thị trường bằng bao nhiêu µm?",
+        "explain": "FOV = FN/M_vật kính = {fieldNumber} mm/{objective} = {=fieldNumber/objective} mm = {@fieldOfView} µm. Chỉ chia cho độ phóng đại vật kính, và 1 mm = 1000 µm."
+      },
+      "options": [
+        {
+          "text": "{@fieldOfView} µm",
+          "vi": {
+            "text": "{@fieldOfView} µm"
+          },
+          "correct": true,
+          "check": {
+            "expr": "fieldNumber*1000/objective",
+            "equals": "fieldOfView"
+          }
+        },
+        {
+          "text": "{=fieldNumber*1000/(eyepiece*objective)} µm",
+          "vi": {
+            "text": "{=fieldNumber*1000/(eyepiece*objective)} µm"
+          },
+          "check": {
+            "expr": "fieldNumber*1000/(eyepiece*objective)",
+            "equals": "fieldOfView"
+          }
+        },
+        {
+          "text": "{=fieldNumber/objective} µm",
+          "vi": {
+            "text": "{=fieldNumber/objective} µm"
+          },
+          "check": {
+            "expr": "fieldNumber/objective",
+            "equals": "fieldOfView"
+          }
+        },
+        {
+          "text": "{=fieldNumber*1000/eyepiece} µm",
+          "vi": {
+            "text": "{=fieldNumber*1000/eyepiece} µm"
+          },
+          "check": {
+            "expr": "fieldNumber*1000/eyepiece",
+            "equals": "fieldOfView"
+          }
+        }
+      ]
+    },
+    {
+      "id": "cheek-length",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["cell-size"],
+      "set": {
+        "specimen": 1,
+        "stain": 2,
+        "objective": 10,
+        "focus": 0
+      },
+      "stem": "Cheek cells stained with methylene blue are in focus under the {objective}× objective (field of view {@fieldOfView} µm). {@cellsCountable} whole cells lie side by side across the field. About how long is one cell?",
+      "explain": "L = FOV/n = {@fieldOfView}/{@cellsCountable} = {@countableLength} µm. The field is already a real length: dividing by the magnification again would make the cell 100 times too small.",
+      "vi": {
+        "stem": "Tế bào niêm mạc miệng nhuộm xanh methylene được lấy nét dưới vật kính {objective}× (đường kính thị trường {@fieldOfView} µm). Có {@cellsCountable} tế bào nguyên vẹn nằm cạnh nhau dọc theo đường kính thị trường. Mỗi tế bào dài khoảng bao nhiêu?",
+        "explain": "L = FOV/n = {@fieldOfView}/{@cellsCountable} = {@countableLength} µm. Đường kính thị trường đã là kích thước thật: chia thêm cho độ phóng đại sẽ làm tế bào nhỏ đi 100 lần."
+      },
+      "options": [
+        {
+          "text": "{=@fieldOfView/@cellsCountable} µm",
+          "vi": {
+            "text": "{=@fieldOfView/@cellsCountable} µm"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@fieldOfView/@cellsCountable",
+            "equals": "countableLength"
+          }
+        },
+        {
+          "text": "{=@fieldOfView/(@cellsCountable*@magnification)} µm",
+          "vi": {
+            "text": "{=@fieldOfView/(@cellsCountable*@magnification)} µm"
+          },
+          "check": {
+            "expr": "@fieldOfView/(@cellsCountable*@magnification)",
+            "equals": "countableLength"
+          }
+        },
+        {
+          "text": "{=fieldNumber/objective/@cellsCountable} µm",
+          "vi": {
+            "text": "{=fieldNumber/objective/@cellsCountable} µm"
+          },
+          "check": {
+            "expr": "fieldNumber/objective/@cellsCountable",
+            "equals": "countableLength"
+          }
+        },
+        {
+          "text": "{=@fieldOfView*@cellsCountable} µm",
+          "vi": {
+            "text": "{=@fieldOfView*@cellsCountable} µm"
+          },
+          "check": {
+            "expr": "@fieldOfView*@cellsCountable",
+            "equals": "countableLength"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-onion-4x",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["field-of-view", "cell-size"],
+      "set": {
+        "specimen": 0,
+        "stain": 1,
+        "objective": 4,
+        "focus": 0
+      },
+      "stem": "Onion epidermis stained with iodine is in focus under the {objective}× objective, with a {eyepiece}× eyepiece of field number {fieldNumber} mm. Decide whether each statement is true or false.",
+      "explain": "FOV = {fieldNumber}/{objective} mm = {@fieldOfView} µm; {@cellsCountable} whole cells fit across it, so L = {@fieldOfView}/{@cellsCountable} = {@countableLength} µm = {=@countableLength/1000} mm. With the 40× objective the field is 10 times narrower (40/4), not 40 times.",
+      "vi": {
+        "stem": "Biểu bì hành nhuộm iodine được lấy nét dưới vật kính {objective}×, thị kính {eyepiece}× có chỉ số thị trường {fieldNumber} mm. Mỗi nhận định sau đúng hay sai?",
+        "explain": "FOV = {fieldNumber}/{objective} mm = {@fieldOfView} µm; có {@cellsCountable} tế bào nguyên vẹn nằm dọc thị trường, nên L = {@fieldOfView}/{@cellsCountable} = {@countableLength} µm = {=@countableLength/1000} mm. Với vật kính 40×, thị trường hẹp đi 10 lần (40/4), không phải 40 lần."
+      },
+      "statements": [
+        {
+          "text": "The field of view is {@fieldOfView} µm, that is {=@fieldOfView/1000} mm, across.",
+          "vi": {
+            "text": "Đường kính thị trường là {@fieldOfView} µm, tức {=@fieldOfView/1000} mm."
+          },
+          "true": true,
+          "check": {
+            "expr": "fieldNumber*1000/objective",
+            "equals": "fieldOfView"
+          }
+        },
+        {
+          "text": "{@cellsCountable} whole cells fit across the field.",
+          "vi": {
+            "text": "Có {@cellsCountable} tế bào nguyên vẹn nằm dọc theo đường kính thị trường."
+          },
+          "true": true,
+          "check": {
+            "expr": "@fieldOfView/@cellLength",
+            "equals": "cellsCountable"
+          }
+        },
+        {
+          "text": "One cell is about {=@fieldOfView/@cellsCountable} µm long.",
+          "vi": {
+            "text": "Mỗi tế bào dài khoảng {=@fieldOfView/@cellsCountable} µm."
+          },
+          "true": true,
+          "check": {
+            "expr": "@fieldOfView/@cellsCountable",
+            "equals": "countableLength"
+          }
+        },
+        {
+          "text": "With the 40× objective the field of view would be 40 times narrower.",
+          "vi": {
+            "text": "Với vật kính 40×, đường kính thị trường sẽ hẹp đi 40 lần."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "why-low-power",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["cell-size", "field-of-view"],
+      "stem": "Onion cells are counted across the field at 4× and again at 10×, and each count gives a length L = FOV/n. Why is the 4× estimate the better one?",
+      "explain": "Only whole cells are counted, so the part-cell left over at the edge makes FOV/n too long by up to 1/n. Many cells fit across the wide 4× field, so that error is a small share; across the 10× field only a few fit.",
+      "vi": {
+        "stem": "Đếm tế bào biểu bì hành dọc đường kính thị trường ở vật kính 4× và ở 10×, mỗi lần tính được L = FOV/n. Vì sao ước lượng ở 4× tốt hơn?",
+        "explain": "Chỉ đếm tế bào nguyên vẹn, nên phần tế bào bị bỏ ở mép làm FOV/n dài hơn thực tế tối đa 1/n. Thị trường rộng ở 4× chứa nhiều tế bào nên sai số đó chiếm tỉ lệ nhỏ; ở 10× chỉ có ít tế bào."
+      },
+      "options": [
+        {
+          "text": "More whole cells fit across the wide field, so the part-cell left uncounted at the edge is a smaller share of the count",
+          "vi": {
+            "text": "Thị trường rộng chứa nhiều tế bào nguyên vẹn hơn, nên phần tế bào không được đếm ở mép chiếm tỉ lệ nhỏ hơn"
+          },
+          "correct": true
+        },
+        {
+          "text": "The 4× objective magnifies the cells more",
+          "vi": {
+            "text": "Vật kính 4× phóng đại tế bào nhiều hơn"
+          }
+        },
+        {
+          "text": "Cells are larger when seen at low power",
+          "vi": {
+            "text": "Tế bào có kích thước lớn hơn khi quan sát ở độ phóng đại nhỏ"
+          }
+        },
+        {
+          "text": "The depth of field is thinner at 4×, so the image is sharper",
+          "vi": {
+            "text": "Độ sâu trường ảnh ở 4× mỏng hơn nên ảnh rõ hơn"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-elodea-blur",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["staining-focus", "cell-size"],
+      "set": {
+        "specimen": 2,
+        "stain": 0,
+        "objective": 40,
+        "focus": 2
+      },
+      "stem": "An unstained Elodea leaf is viewed with the {objective}× objective (NA 0.65) in light of λ = {wavelength} µm, the stage {focus} µm from the focal plane. In the model the depth of field is d = λ/NA² and the sharpness index S = 1/(1 + (2Δz/d)²); cells can be counted only if S > 0.1. Decide whether each statement is true or false.",
+      "explain": "d = {wavelength}/0.65² ≈ {@depthOfField|2} µm, so 2 µm off gives S ≈ {@sharpness|2}: too blurred to count. With the 4× objective (NA 0.10) d ≈ {=wavelength/0.1^2|2} µm and the same offset gives S ≈ {=1/(1+(2*focus/(wavelength/0.1^2))^2)|3}. Elodea needs no stain: its chloroplasts give the contrast.",
+      "vi": {
+        "stem": "Quan sát lá rong đuôi chó không nhuộm bằng vật kính {objective}× (NA 0,65) với ánh sáng λ = {wavelength} µm, bàn kính lệch {focus} µm so với mặt phẳng tiêu. Trong mô hình, độ sâu trường ảnh d = λ/NA² và chỉ số độ nét S = 1/(1 + (2Δz/d)²); chỉ đếm được tế bào khi S > 0,1. Mỗi nhận định sau đúng hay sai?",
+        "explain": "d = {wavelength}/0,65² ≈ {@depthOfField|2} µm, nên lệch 2 µm cho S ≈ {@sharpness|2}: quá mờ để đếm. Với vật kính 4× (NA 0,10), d ≈ {=wavelength/0.1^2|2} µm và cùng độ lệch cho S ≈ {=1/(1+(2*focus/(wavelength/0.1^2))^2)|3}. Rong đuôi chó không cần nhuộm: lục lạp tạo độ tương phản."
+      },
+      "statements": [
+        {
+          "text": "The depth of field is about {@depthOfField|2} µm.",
+          "vi": {
+            "text": "Độ sâu trường ảnh khoảng {@depthOfField|2} µm."
+          },
+          "true": true,
+          "check": {
+            "expr": "wavelength/0.65^2",
+            "equals": "depthOfField"
+          }
+        },
+        {
+          "text": "The sharpness index is about {@sharpness|2}, too blurred for the cells to be counted.",
+          "vi": {
+            "text": "Chỉ số độ nét khoảng {@sharpness|2}, quá mờ để đếm tế bào."
+          },
+          "true": true,
+          "check": {
+            "expr": "1/(1+(2*focus/(wavelength/0.65^2))^2)",
+            "equals": "sharpness"
+          }
+        },
+        {
+          "text": "With the 4× objective the same offset would leave the image almost sharp, S ≈ {=1/(1+(2*focus/(wavelength/0.1^2))^2)|3}.",
+          "vi": {
+            "text": "Với vật kính 4×, cùng độ lệch đó ảnh vẫn gần như rõ nét, S ≈ {=1/(1+(2*focus/(wavelength/0.1^2))^2)|3}."
+          },
+          "true": true
+        },
+        {
+          "text": "The cells cannot be counted because Elodea must be stained to be seen.",
+          "vi": {
+            "text": "Không đếm được tế bào vì rong đuôi chó phải được nhuộm mới quan sát được."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "coarse-low-power",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["staining-focus"],
+      "stem": "Which focusing knob should be used only with the low-power objective?",
+      "explain": "The coarse focus moves the stage a long way per turn; with the high-power objective, which sits very close to the slide, it can crush the slide. At high power only the fine focus is used.",
+      "vi": {
+        "stem": "Ốc điều chỉnh nào chỉ nên dùng với vật kính có độ phóng đại nhỏ?",
+        "explain": "Ốc sơ cấp dịch chuyển bàn kính một đoạn lớn sau mỗi vòng xoay; với vật kính có độ phóng đại lớn, rất gần tiêu bản, nó có thể làm vỡ tiêu bản. Ở độ phóng đại lớn chỉ dùng ốc vi cấp."
+      },
+      "options": [
+        {
+          "text": "The coarse focus knob",
+          "vi": {
+            "text": "Ốc sơ cấp"
+          },
+          "correct": true
+        },
+        {
+          "text": "The fine focus knob",
+          "vi": {
+            "text": "Ốc vi cấp"
+          }
+        },
+        {
+          "text": "The diaphragm lever",
+          "vi": {
+            "text": "Cần điều chỉnh màn chắn sáng"
+          }
+        },
+        {
+          "text": "The stage clips",
+          "vi": {
+            "text": "Kẹp giữ tiêu bản"
+          }
+        }
+      ]
+    },
+    {
+      "id": "image-moves",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["magnification"],
+      "stem": "A student moves the slide slightly to the left on the stage. Which way does the cell move in the image seen through the eyepiece?",
+      "explain": "A compound light microscope gives an inverted image, upside down and left–right reversed, so the image moves the opposite way: to the right.",
+      "vi": {
+        "stem": "Một học sinh đẩy nhẹ tiêu bản sang trái trên bàn kính. Trong ảnh nhìn qua thị kính, tế bào di chuyển theo chiều nào?",
+        "explain": "Kính hiển vi quang học cho ảnh ngược chiều, đảo cả trên – dưới và trái – phải, nên ảnh di chuyển theo chiều ngược lại: sang phải."
+      },
+      "options": [
+        {
+          "text": "To the right, because the image is inverted",
+          "vi": {
+            "text": "Sang phải, vì ảnh ngược chiều với vật"
+          },
+          "correct": true
+        },
+        {
+          "text": "To the left, the same way as the slide",
+          "vi": {
+            "text": "Sang trái, cùng chiều với tiêu bản"
+          }
+        },
+        {
+          "text": "Upwards, because the mirror turns it through 90°",
+          "vi": {
+            "text": "Lên trên, vì gương quay ảnh đi 90°"
+          }
+        },
+        {
+          "text": "It does not move, because the image is magnified",
+          "vi": {
+            "text": "Không di chuyển, vì ảnh đã được phóng đại"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-light-microscope",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["magnification", "staining-focus", "cell-size"],
+      "stem": "About the light microscope and this simulation of it: decide whether each statement is true or false.",
+      "explain": "Light must pass through the specimen, so it must be thin, ideally one layer of cells. The 40× objective has a far smaller depth of field than the 4×. A light microscope resolves about 0.2 µm, far too coarse for ribosomes (about 20–30 nm), which need an electron microscope. The contrast values here are stated values for each slide and stain, not measurements.",
+      "vi": {
+        "stem": "Về kính hiển vi quang học và mô phỏng của nó, mỗi nhận định sau đúng hay sai?",
+        "explain": "Ánh sáng phải đi xuyên qua mẫu vật, nên mẫu phải mỏng, tốt nhất là một lớp tế bào. Vật kính 40× có độ sâu trường ảnh nhỏ hơn nhiều so với vật kính 4×. Kính hiển vi quang học phân giải được khoảng 0,2 µm, quá thô để thấy ribosome (khoảng 20–30 nm); muốn thấy ribosome cần kính hiển vi điện tử. Các giá trị độ tương phản ở đây là giá trị cho sẵn với mỗi tiêu bản và thuốc nhuộm, không phải số đo."
+      },
+      "statements": [
+        {
+          "text": "The specimen must be thin, so that light can pass through it.",
+          "vi": {
+            "text": "Mẫu vật phải mỏng để ánh sáng có thể đi xuyên qua."
+          },
+          "true": true
+        },
+        {
+          "text": "The 40× objective has a smaller depth of field than the 4× objective.",
+          "vi": {
+            "text": "Vật kính 40× có độ sâu trường ảnh nhỏ hơn vật kính 4×."
+          },
+          "true": true
+        },
+        {
+          "text": "At 400× a light microscope shows the ribosomes of a cheek cell.",
+          "vi": {
+            "text": "Ở độ phóng đại 400×, kính hiển vi quang học cho thấy ribosome của tế bào niêm mạc miệng."
+          },
+          "true": false
+        },
+        {
+          "text": "In this simulation, each slide’s contrast is a stated value, not a measurement.",
+          "vi": {
+            "text": "Trong mô phỏng này, độ tương phản của mỗi tiêu bản là giá trị cho sẵn, không phải số đo."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "fov-10x",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["field-of-view"],
+      "set": {
+        "objective": 10
+      },
+      "stem": "The eyepiece’s field number is FN = {fieldNumber} mm, and the field of view’s diameter is FN divided by the objective’s magnification. What is the diameter with the {objective}× objective?",
+      "explain": "FOV = FN/M_obj = {fieldNumber}/{objective} = {=fieldNumber/objective} mm = {@fieldOfView} µm. The eyepiece’s 10× is already counted in the field number, so do not divide by the total {@magnification}×.",
+      "vi": {
+        "stem": "Chỉ số thị trường của thị kính là FN = {fieldNumber} mm, và đường kính thị trường bằng FN chia cho độ phóng đại của vật kính. Đường kính thị trường khi dùng vật kính {objective}× là bao nhiêu?",
+        "explain": "FOV = FN/M_vật kính = {fieldNumber}/{objective} = {=fieldNumber/objective} mm = {@fieldOfView} µm. Độ phóng đại 10× của thị kính đã được tính trong chỉ số thị trường, nên không chia cho độ phóng đại tổng {@magnification}×."
+      },
+      "options": [
+        {
+          "text": "{=fieldNumber/objective} mm",
+          "vi": {
+            "text": "{=fieldNumber/objective} mm"
+          },
+          "correct": true,
+          "check": {
+            "expr": "fieldNumber/objective*1000",
+            "equals": "fieldOfView"
+          }
+        },
+        {
+          "text": "{=fieldNumber/(objective*eyepiece)} mm",
+          "vi": {
+            "text": "{=fieldNumber/(objective*eyepiece)} mm"
+          },
+          "check": {
+            "expr": "fieldNumber/(objective*eyepiece)*1000",
+            "equals": "fieldOfView"
+          }
+        },
+        {
+          "text": "{=fieldNumber/4} mm",
+          "vi": {
+            "text": "{=fieldNumber/4} mm"
+          },
+          "check": {
+            "expr": "fieldNumber/4*1000",
+            "equals": "fieldOfView"
+          }
+        },
+        {
+          "text": "{=fieldNumber*objective} mm",
+          "vi": {
+            "text": "{=fieldNumber*objective} mm"
+          },
+          "check": {
+            "expr": "fieldNumber*objective*1000",
+            "equals": "fieldOfView"
+          }
+        }
+      ]
+    },
+    {
+      "id": "cheek-cells-across",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["cell-size", "field-of-view"],
+      "set": {
+        "specimen": 1,
+        "stain": 2,
+        "objective": 10,
+        "focus": 0
+      },
+      "stem": "With the {objective}× objective the field of view is {@fieldOfView} µm across. A cheek cell is about {@cellLength} µm long. About how many cheek cells fit end to end across the field?",
+      "explain": "{@fieldOfView}/{@cellLength} = {@cellsAcross}. Both lengths must be in the same unit, and the field’s width already accounts for the magnification.",
+      "vi": {
+        "stem": "Với vật kính {objective}×, thị trường có đường kính {@fieldOfView} µm. Một tế bào niêm mạc miệng dài khoảng {@cellLength} µm. Khoảng bao nhiêu tế bào niêm mạc miệng xếp nối tiếp vừa ngang thị trường?",
+        "explain": "{@fieldOfView}/{@cellLength} = {@cellsAcross}. Hai độ dài phải cùng đơn vị, và đường kính thị trường đã tính đến độ phóng đại."
+      },
+      "options": [
+        {
+          "text": "{@cellsAcross}",
+          "vi": {
+            "text": "{@cellsAcross}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@fieldOfView/@cellLength",
+            "equals": "cellsAcross"
+          }
+        },
+        {
+          "text": "{=@fieldOfView/@cellLength/eyepiece}",
+          "vi": {
+            "text": "{=@fieldOfView/@cellLength/eyepiece}"
+          },
+          "check": {
+            "expr": "@fieldOfView/@cellLength/eyepiece",
+            "equals": "cellsAcross"
+          }
+        },
+        {
+          "text": "{=@fieldOfView/@cellLength*objective}",
+          "vi": {
+            "text": "{=@fieldOfView/@cellLength*objective}"
+          },
+          "check": {
+            "expr": "@fieldOfView/@cellLength*objective",
+            "equals": "cellsAcross"
+          }
+        },
+        {
+          "text": "{=fieldNumber*1000/4/@cellLength}",
+          "vi": {
+            "text": "{=fieldNumber*1000/4/@cellLength}"
+          },
+          "check": {
+            "expr": "fieldNumber*1000/4/@cellLength",
+            "equals": "cellsAcross"
+          }
+        }
+      ]
+    },
+    {
+      "id": "switch-to-40x",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["field-of-view", "cell-size"],
+      "set": {
+        "specimen": 0,
+        "stain": 1,
+        "objective": 40,
+        "focus": 0
+      },
+      "stem": "With the 10× objective, {=@cellsAcross*4} onion cells fit end to end across the field. The student turns to the 40× objective. About how many cells now fit across the field?",
+      "explain": "The field’s diameter is FN/M_obj, so going from 10× to 40× divides it by 4: {=@cellsAcross*4}/4 = {@cellsAcross} cells. Dividing by 16 would be for the field’s area, not its width.",
+      "vi": {
+        "stem": "Với vật kính 10×, có {=@cellsAcross*4} tế bào vảy hành xếp nối tiếp vừa ngang thị trường. Học sinh chuyển sang vật kính 40×. Lúc này khoảng bao nhiêu tế bào xếp vừa ngang thị trường?",
+        "explain": "Đường kính thị trường bằng FN/M_vật kính, nên chuyển từ 10× sang 40× làm nó giảm 4 lần: {=@cellsAcross*4}/4 = {@cellsAcross} tế bào. Chia cho 16 là dành cho diện tích thị trường, không phải đường kính."
+      },
+      "options": [
+        {
+          "text": "{@cellsAcross}",
+          "vi": {
+            "text": "{@cellsAcross}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(@cellsAcross*4)/4",
+            "equals": "cellsAcross"
+          }
+        },
+        {
+          "text": "{=@cellsAcross*4/16}",
+          "vi": {
+            "text": "{=@cellsAcross*4/16}"
+          },
+          "check": {
+            "expr": "(@cellsAcross*4)/16",
+            "equals": "cellsAcross"
+          }
+        },
+        {
+          "text": "{=@cellsAcross*4*4}",
+          "vi": {
+            "text": "{=@cellsAcross*4*4}"
+          },
+          "check": {
+            "expr": "(@cellsAcross*4)*4",
+            "equals": "cellsAcross"
+          }
+        },
+        {
+          "text": "{=@cellsAcross*4}: the cells are the same size",
+          "vi": {
+            "text": "{=@cellsAcross*4}: tế bào vẫn có kích thước như cũ"
+          },
+          "check": {
+            "expr": "@cellsAcross*4",
+            "equals": "cellsAcross"
+          }
+        }
+      ]
+    },
+    {
+      "id": "real-length-from-photo",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["cell-size", "magnification"],
+      "set": {
+        "specimen": 2,
+        "stain": 0,
+        "objective": 40,
+        "focus": 0
+      },
+      "stem": "A photo of an Elodea leaf is printed at {@magnification}× magnification. One cell in it measures {=@cellLength*@magnification/1000} mm. What is the cell’s actual length?",
+      "explain": "Actual size = image size/magnification = {=@cellLength*@magnification/1000} mm/{@magnification} = {=@cellLength/1000} mm = {@cellLength} µm (1 mm = 1000 µm).",
+      "vi": {
+        "stem": "Ảnh chụp lá rong đuôi chó (Elodea) được in với độ phóng đại {@magnification}×. Một tế bào trong ảnh dài {=@cellLength*@magnification/1000} mm. Chiều dài thật của tế bào là bao nhiêu?",
+        "explain": "Kích thước thật = kích thước ảnh/độ phóng đại = {=@cellLength*@magnification/1000} mm/{@magnification} = {=@cellLength/1000} mm = {@cellLength} µm (1 mm = 1000 µm)."
+      },
+      "options": [
+        {
+          "text": "{@cellLength} µm",
+          "vi": {
+            "text": "{@cellLength} µm"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(@cellLength*@magnification/1000)*1000/@magnification",
+            "equals": "cellLength"
+          }
+        },
+        {
+          "text": "{=@cellLength/1000} µm",
+          "vi": {
+            "text": "{=@cellLength/1000} µm"
+          },
+          "check": {
+            "expr": "(@cellLength*@magnification/1000)/@magnification",
+            "equals": "cellLength"
+          }
+        },
+        {
+          "text": "{=@cellLength*@magnification/objective} µm",
+          "vi": {
+            "text": "{=@cellLength*@magnification/objective} µm"
+          },
+          "check": {
+            "expr": "(@cellLength*@magnification/1000)*1000/objective",
+            "equals": "cellLength"
+          }
+        },
+        {
+          "text": "{=@cellLength*@magnification*@magnification/1000} µm",
+          "vi": {
+            "text": "{=@cellLength*@magnification*@magnification/1000} µm"
+          },
+          "check": {
+            "expr": "(@cellLength*@magnification/1000)*@magnification",
+            "equals": "cellLength"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-cheek-400",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["magnification", "field-of-view", "cell-size", "staining-focus"],
+      "set": {
+        "specimen": 1,
+        "stain": 2,
+        "objective": 40,
+        "focus": 0
+      },
+      "stem": "Cheek cells stained with methylene blue are viewed with the {objective}× objective and a {eyepiece}× eyepiece (FN = {fieldNumber} mm); a cheek cell is about {@cellLength} µm long. Decide whether each statement is true or false.",
+      "explain": "Total magnification {eyepiece} × {objective} = {@magnification}×. Field of view {fieldNumber}/{objective} = {=fieldNumber/objective} mm = {@fieldOfView} µm, so about {@fieldOfView}/{@cellLength} = {@cellsAcross} cells fit across. The 40× objective’s depth of field, about {@depthOfField|2} µm, is far smaller than the 4× objective’s {=0.55/0.1^2|2} µm: the fine focus matters most here.",
+      "vi": {
+        "stem": "Tế bào niêm mạc miệng nhuộm xanh methylene được quan sát bằng vật kính {objective}× và thị kính {eyepiece}× (FN = {fieldNumber} mm); một tế bào niêm mạc miệng dài khoảng {@cellLength} µm. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Độ phóng đại tổng {eyepiece} × {objective} = {@magnification}×. Thị trường {fieldNumber}/{objective} = {=fieldNumber/objective} mm = {@fieldOfView} µm, nên khoảng {@fieldOfView}/{@cellLength} = {@cellsAcross} tế bào xếp vừa ngang thị trường. Độ sâu trường ảnh của vật kính 40×, khoảng {@depthOfField|2} µm, nhỏ hơn rất nhiều so với của vật kính 4× là {=0.55/0.1^2|2} µm: ở đây ốc vi cấp là quan trọng nhất."
+      },
+      "statements": [
+        {
+          "text": "The total magnification is {@magnification}×.",
+          "vi": {
+            "text": "Độ phóng đại tổng là {@magnification}×."
+          },
+          "true": true,
+          "check": {
+            "expr": "eyepiece*objective",
+            "equals": "magnification"
+          }
+        },
+        {
+          "text": "The field of view is {=fieldNumber/objective} mm across.",
+          "vi": {
+            "text": "Đường kính thị trường là {=fieldNumber/objective} mm."
+          },
+          "true": true,
+          "check": {
+            "expr": "fieldNumber/objective*1000",
+            "equals": "fieldOfView"
+          }
+        },
+        {
+          "text": "About {@cellsAcross} cheek cells fit end to end across the field.",
+          "vi": {
+            "text": "Khoảng {@cellsAcross} tế bào niêm mạc miệng xếp nối tiếp vừa ngang thị trường."
+          },
+          "true": true,
+          "check": {
+            "expr": "@fieldOfView/@cellLength",
+            "equals": "cellsAcross"
+          }
+        },
+        {
+          "text": "The depth of field is as large as with the 4× objective, about {=0.55/0.1^2|2} µm.",
+          "vi": {
+            "text": "Độ sâu trường ảnh lớn bằng khi dùng vật kính 4×, khoảng {=0.55/0.1^2|2} µm."
+          },
+          "true": false,
+          "check": {
+            "expr": "0.55/0.1^2",
+            "equals": "depthOfField"
+          }
+        }
+      ]
+    }
+  ]
+}

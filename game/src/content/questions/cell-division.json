@@ -1,0 +1,1053 @@
+{
+  "id": "cell-division",
+  "skills": [
+    {
+      "id": "stages",
+      "name": "Stages of the cell cycle and mitosis",
+      "advice": "Draw one chromosome pair through interphase (S: copied), prophase, metaphase (one row at the equator), anaphase (sisters to the poles) and telophase. Run mitosis at the station and name each stage aloud before the board does.",
+      "vi": {
+        "name": "Các kì của chu kì tế bào và nguyên phân",
+        "advice": "Vẽ một cặp nhiễm sắc thể qua kì trung gian (pha S: nhân đôi), kì đầu, kì giữa (xếp một hàng ở mặt phẳng xích đạo), kì sau (các chromatid chị em về hai cực) và kì cuối. Chạy nguyên phân trên trạm và tự gọi tên từng kì trước khi bảng hiện ra."
+      }
+    },
+    {
+      "id": "counting",
+      "name": "Counting chromosomes, chromatids and DNA",
+      "advice": "Count chromosomes by centromeres: a doubled chromosome is one chromosome of two chromatids. Make a table of n, chromatids and C for every stage; the trap is anaphase of mitosis, where the cell briefly holds 4n single chromosomes.",
+      "vi": {
+        "name": "Đếm số nhiễm sắc thể, chromatid và DNA",
+        "advice": "Đếm nhiễm sắc thể theo số tâm động: một nhiễm sắc thể kép là một nhiễm sắc thể gồm hai chromatid. Lập bảng số nhiễm sắc thể, số chromatid và hàm lượng DNA (C) cho từng kì; bẫy thường gặp là kì sau nguyên phân, khi tế bào tạm thời có 4n nhiễm sắc thể đơn."
+      }
+    },
+    {
+      "id": "mitosis-meiosis",
+      "name": "Mitosis and meiosis compared",
+      "advice": "Compare the outcomes side by side: mitosis, two cells of 2n identical to the parent (growth, repair); meiosis, four cells of n, each a new mix (gametes). Run both at the station with the same 2n and compare the results.",
+      "vi": {
+        "name": "So sánh nguyên phân và giảm phân",
+        "advice": "So sánh kết quả hai quá trình: nguyên phân tạo hai tế bào 2n giống tế bào mẹ (sinh trưởng, tái tạo); giảm phân tạo bốn tế bào n, mỗi tế bào một tổ hợp mới (giao tử). Chạy cả hai trên trạm với cùng 2n rồi so sánh kết quả."
+      }
+    },
+    {
+      "id": "meiosis-stages",
+      "name": "What each division of meiosis separates",
+      "advice": "Remember: meiosis I separates the homologous pairs (2n → n, still doubled), meiosis II separates the sister chromatids. Watch the red and blue chromosomes in a meiosis run: each pair turns its own way.",
+      "vi": {
+        "name": "Mỗi lần phân bào của giảm phân tách cái gì",
+        "advice": "Ghi nhớ: giảm phân I tách các cặp nhiễm sắc thể tương đồng (2n → n, vẫn ở trạng thái kép), giảm phân II tách các chromatid chị em. Quan sát các nhiễm sắc thể đỏ và xanh khi chạy giảm phân: mỗi cặp phân li theo một hướng riêng."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "dna-copied",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["stages"],
+      "stem": "A cell copies its DNA during…",
+      "explain": "DNA is replicated in the S phase of interphase, before the division begins: each chromosome becomes two sister chromatids.",
+      "vi": {
+        "stem": "Tế bào nhân đôi DNA trong…",
+        "explain": "DNA nhân đôi ở pha S của kì trung gian, trước khi phân bào bắt đầu: mỗi nhiễm sắc thể trở thành hai chromatid chị em."
+      },
+      "options": [
+        {
+          "text": "the S phase of interphase",
+          "vi": {
+            "text": "pha S của kì trung gian"
+          },
+          "correct": true
+        },
+        {
+          "text": "prophase",
+          "vi": {
+            "text": "kì đầu"
+          }
+        },
+        {
+          "text": "metaphase",
+          "vi": {
+            "text": "kì giữa"
+          }
+        },
+        {
+          "text": "anaphase",
+          "vi": {
+            "text": "kì sau"
+          }
+        }
+      ]
+    },
+    {
+      "id": "meiosis-result",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["mitosis-meiosis"],
+      "stem": "From one diploid (2n) cell, meiosis gives…",
+      "explain": "Meiosis divides twice after one copying of the DNA: four cells, each with the haploid number n.",
+      "vi": {
+        "stem": "Từ một tế bào lưỡng bội (2n), giảm phân tạo ra…",
+        "explain": "Giảm phân gồm hai lần phân bào sau một lần nhân đôi DNA: tạo bốn tế bào, mỗi tế bào có bộ nhiễm sắc thể đơn bội n."
+      },
+      "options": [
+        {
+          "text": "four cells, each with n chromosomes",
+          "vi": {
+            "text": "bốn tế bào, mỗi tế bào có n nhiễm sắc thể"
+          },
+          "correct": true
+        },
+        {
+          "text": "two cells, each with 2n chromosomes",
+          "vi": {
+            "text": "hai tế bào, mỗi tế bào có 2n nhiễm sắc thể"
+          }
+        },
+        {
+          "text": "four cells, each with 2n chromosomes",
+          "vi": {
+            "text": "bốn tế bào, mỗi tế bào có 2n nhiễm sắc thể"
+          }
+        },
+        {
+          "text": "two cells, each with n chromosomes",
+          "vi": {
+            "text": "hai tế bào, mỗi tế bào có n nhiễm sắc thể"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-stages",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["stages", "meiosis-stages"],
+      "stem": "About mitosis and meiosis: decide whether each statement is true or false.",
+      "explain": "In mitosis the doubled chromosomes line up in one row at metaphase and the sisters separate at anaphase. Meiosis I separates the homologous pairs, not the sisters; gametes are made by meiosis, not mitosis.",
+      "vi": {
+        "stem": "Về nguyên phân và giảm phân, mỗi nhận định sau đúng hay sai?",
+        "explain": "Trong nguyên phân, các nhiễm sắc thể kép xếp thành một hàng ở kì giữa và các chromatid chị em tách nhau ở kì sau. Giảm phân I tách các cặp nhiễm sắc thể tương đồng chứ không tách chromatid chị em; giao tử được tạo ra qua giảm phân, không phải nguyên phân."
+      },
+      "statements": [
+        {
+          "text": "At metaphase of mitosis the doubled chromosomes line up in one row at the equator.",
+          "vi": {
+            "text": "Ở kì giữa của nguyên phân, các nhiễm sắc thể kép xếp thành một hàng trên mặt phẳng xích đạo."
+          },
+          "true": true
+        },
+        {
+          "text": "At anaphase of mitosis the sister chromatids separate and move to opposite poles.",
+          "vi": {
+            "text": "Ở kì sau của nguyên phân, các chromatid chị em tách nhau và đi về hai cực của tế bào."
+          },
+          "true": true
+        },
+        {
+          "text": "In meiosis I the two sister chromatids of each chromosome separate.",
+          "vi": {
+            "text": "Trong giảm phân I, hai chromatid chị em của mỗi nhiễm sắc thể tách nhau."
+          },
+          "true": false
+        },
+        {
+          "text": "Animals make their eggs and sperm by mitosis.",
+          "vi": {
+            "text": "Động vật tạo ra trứng và tinh trùng bằng nguyên phân."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "identical-daughters",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["mitosis-meiosis", "stages"],
+      "stem": "Why are the two cells made by mitosis genetically identical to the parent cell?",
+      "explain": "In the S phase every chromosome is copied exactly; at anaphase the two sisters go to opposite poles, so each new cell gets one copy of every chromosome.",
+      "vi": {
+        "stem": "Vì sao hai tế bào con tạo ra qua nguyên phân có bộ gene giống hệt tế bào mẹ?",
+        "explain": "Ở pha S, mỗi nhiễm sắc thể được nhân đôi chính xác; ở kì sau hai chromatid chị em đi về hai cực, nên mỗi tế bào con nhận đúng một bản sao của mọi nhiễm sắc thể."
+      },
+      "options": [
+        {
+          "text": "Every chromosome is copied, and each new cell gets one copy of every chromosome",
+          "vi": {
+            "text": "Mọi nhiễm sắc thể đều được nhân đôi, và mỗi tế bào con nhận một bản sao của mọi nhiễm sắc thể"
+          },
+          "correct": true
+        },
+        {
+          "text": "Each new cell gets one chromosome of each homologous pair",
+          "vi": {
+            "text": "Mỗi tế bào con nhận một nhiễm sắc thể của mỗi cặp tương đồng"
+          }
+        },
+        {
+          "text": "Crossing over makes the chromosomes of the new cells alike",
+          "vi": {
+            "text": "Trao đổi chéo làm cho nhiễm sắc thể của các tế bào con giống nhau"
+          }
+        },
+        {
+          "text": "The cell divides twice, so the differences cancel out",
+          "vi": {
+            "text": "Tế bào phân chia hai lần nên các khác biệt triệt tiêu nhau"
+          }
+        }
+      ]
+    },
+    {
+      "id": "halved-when",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["meiosis-stages"],
+      "stem": "In meiosis, the number of chromosomes in each cell is halved (2n → n) by…",
+      "explain": "Meiosis I sends the two chromosomes of each homologous pair to different cells: each cell keeps n chromosomes, still doubled. Meiosis II then splits the sisters without changing that number.",
+      "vi": {
+        "stem": "Trong giảm phân, số nhiễm sắc thể trong mỗi tế bào giảm đi một nửa (2n → n) là do…",
+        "explain": "Giảm phân I đưa hai nhiễm sắc thể của mỗi cặp tương đồng về hai tế bào khác nhau: mỗi tế bào còn n nhiễm sắc thể, vẫn ở trạng thái kép. Giảm phân II tách các chromatid chị em mà không làm thay đổi số đó."
+      },
+      "options": [
+        {
+          "text": "meiosis I, which separates the homologous pairs",
+          "vi": {
+            "text": "giảm phân I, khi các cặp nhiễm sắc thể tương đồng phân li"
+          },
+          "correct": true
+        },
+        {
+          "text": "meiosis II, which separates the sister chromatids",
+          "vi": {
+            "text": "giảm phân II, khi các chromatid chị em tách nhau"
+          }
+        },
+        {
+          "text": "the S phase, which halves the DNA",
+          "vi": {
+            "text": "pha S, khi lượng DNA giảm một nửa"
+          }
+        },
+        {
+          "text": "fertilisation, which joins two gametes",
+          "vi": {
+            "text": "thụ tinh, khi hai giao tử kết hợp"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-fly-mitosis",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["counting", "stages"],
+      "set": {
+        "division": 0,
+        "diploid": 8
+      },
+      "stem": "A fruit-fly body cell (2n = {diploid}) divides by mitosis. Decide whether each statement is true or false.",
+      "explain": "After S each of the {diploid} chromosomes has two chromatids: {=2*diploid} chromatids. At anaphase the sisters separate: {@peakChromosomes} single chromosomes. Each new cell has 2n = {@chromosomes} chromosomes and {@dna}C of DNA, like the parent in G1.",
+      "vi": {
+        "stem": "Một tế bào sinh dưỡng của ruồi giấm (2n = {diploid}) nguyên phân. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Sau pha S, mỗi nhiễm sắc thể trong {diploid} nhiễm sắc thể có hai chromatid: {=2*diploid} chromatid. Ở kì sau các chromatid chị em tách nhau: {@peakChromosomes} nhiễm sắc thể đơn. Mỗi tế bào con có 2n = {@chromosomes} nhiễm sắc thể và {@dna}C DNA, như tế bào mẹ ở pha G1."
+      },
+      "statements": [
+        {
+          "text": "After the S phase the cell holds {=2*diploid} chromatids.",
+          "vi": {
+            "text": "Sau pha S, tế bào có {=2*diploid} chromatid."
+          },
+          "true": true
+        },
+        {
+          "text": "At anaphase the cell holds {@peakChromosomes} single chromosomes.",
+          "vi": {
+            "text": "Ở kì sau, tế bào có {@peakChromosomes} nhiễm sắc thể đơn."
+          },
+          "true": true,
+          "check": {
+            "expr": "2*diploid",
+            "equals": "peakChromosomes"
+          }
+        },
+        {
+          "text": "Each new cell has {=diploid/2} chromosomes.",
+          "vi": {
+            "text": "Mỗi tế bào con có {=diploid/2} nhiễm sắc thể."
+          },
+          "true": false,
+          "check": {
+            "expr": "diploid/2",
+            "equals": "chromosomes"
+          }
+        },
+        {
+          "text": "Each new cell holds {@dna}C of DNA, as much as the parent cell in G1.",
+          "vi": {
+            "text": "Mỗi tế bào con chứa {@dna}C DNA, bằng tế bào mẹ ở pha G1."
+          },
+          "true": true,
+          "check": {
+            "expr": "2",
+            "equals": "dna"
+          }
+        }
+      ]
+    },
+    {
+      "id": "human-anaphase",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["counting"],
+      "set": {
+        "division": 0,
+        "diploid": 46
+      },
+      "stem": "A human body cell (2n = {diploid}) divides by mitosis. How many single chromosomes does it hold at anaphase?",
+      "explain": "At anaphase the {diploid} doubled chromosomes split into their sisters: 4n = 2·{diploid} = {@peakChromosomes} single chromosomes, still in one cell.",
+      "vi": {
+        "stem": "Một tế bào sinh dưỡng của người (2n = {diploid}) nguyên phân. Ở kì sau, tế bào có bao nhiêu nhiễm sắc thể đơn?",
+        "explain": "Ở kì sau, {diploid} nhiễm sắc thể kép tách thành các chromatid chị em: 4n = 2·{diploid} = {@peakChromosomes} nhiễm sắc thể đơn, vẫn trong một tế bào."
+      },
+      "options": [
+        {
+          "text": "{@peakChromosomes}",
+          "vi": {
+            "text": "{@peakChromosomes}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2*diploid",
+            "equals": "peakChromosomes"
+          }
+        },
+        {
+          "text": "{diploid}",
+          "vi": {
+            "text": "{diploid}"
+          },
+          "check": {
+            "expr": "diploid",
+            "equals": "peakChromosomes"
+          }
+        },
+        {
+          "text": "{=diploid/2}",
+          "vi": {
+            "text": "{=diploid/2}"
+          },
+          "check": {
+            "expr": "diploid/2",
+            "equals": "peakChromosomes"
+          }
+        },
+        {
+          "text": "{=4*diploid}",
+          "vi": {
+            "text": "{=4*diploid}"
+          },
+          "check": {
+            "expr": "4*diploid",
+            "equals": "peakChromosomes"
+          }
+        }
+      ]
+    },
+    {
+      "id": "onion-meiosis",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["counting", "meiosis-stages"],
+      "set": {
+        "division": 1,
+        "diploid": 16
+      },
+      "stem": "A cell in an onion flower bud (2n = {diploid}) goes through meiosis. How many chromosomes does each of the four cells made have?",
+      "explain": "Meiosis I separates the pairs, meiosis II the sisters: each cell ends with n = {diploid}/2 = {@chromosomes} chromosomes.",
+      "vi": {
+        "stem": "Một tế bào trong nụ hoa hành (2n = {diploid}) giảm phân. Mỗi tế bào trong bốn tế bào tạo thành có bao nhiêu nhiễm sắc thể?",
+        "explain": "Giảm phân I tách các cặp tương đồng, giảm phân II tách các chromatid chị em: mỗi tế bào có n = {diploid}/2 = {@chromosomes} nhiễm sắc thể."
+      },
+      "options": [
+        {
+          "text": "{@chromosomes}",
+          "vi": {
+            "text": "{@chromosomes}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "diploid/2",
+            "equals": "chromosomes"
+          }
+        },
+        {
+          "text": "{diploid}",
+          "vi": {
+            "text": "{diploid}"
+          },
+          "check": {
+            "expr": "diploid",
+            "equals": "chromosomes"
+          }
+        },
+        {
+          "text": "{=diploid/4}",
+          "vi": {
+            "text": "{=diploid/4}"
+          },
+          "check": {
+            "expr": "diploid/4",
+            "equals": "chromosomes"
+          }
+        },
+        {
+          "text": "{=2*diploid}",
+          "vi": {
+            "text": "{=2*diploid}"
+          },
+          "check": {
+            "expr": "2*diploid",
+            "equals": "chromosomes"
+          }
+        }
+      ]
+    },
+    {
+      "id": "meiosis-most",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["counting", "meiosis-stages"],
+      "set": {
+        "division": 1,
+        "diploid": 46
+      },
+      "stem": "A human cell (2n = {diploid}) goes through meiosis. What is the largest number of chromosomes (counted by centromeres) one cell holds at any stage?",
+      "explain": "In meiosis I the cell holds 2n = {diploid} doubled chromosomes; at anaphase II each cell holds 2n single ones. Unlike mitosis, a cell never holds 4n: the most is {@peakChromosomes}.",
+      "vi": {
+        "stem": "Một tế bào người (2n = {diploid}) giảm phân. Số nhiễm sắc thể lớn nhất (đếm theo tâm động) mà một tế bào có ở bất kì kì nào là bao nhiêu?",
+        "explain": "Trong giảm phân I, tế bào có 2n = {diploid} nhiễm sắc thể kép; ở kì sau II, mỗi tế bào có 2n nhiễm sắc thể đơn. Khác với nguyên phân, tế bào không bao giờ có 4n: nhiều nhất là {@peakChromosomes}."
+      },
+      "options": [
+        {
+          "text": "{@peakChromosomes}",
+          "vi": {
+            "text": "{@peakChromosomes}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "diploid",
+            "equals": "peakChromosomes"
+          }
+        },
+        {
+          "text": "{=2*diploid}",
+          "vi": {
+            "text": "{=2*diploid}"
+          },
+          "check": {
+            "expr": "2*diploid",
+            "equals": "peakChromosomes"
+          }
+        },
+        {
+          "text": "{=diploid/2}",
+          "vi": {
+            "text": "{=diploid/2}"
+          },
+          "check": {
+            "expr": "diploid/2",
+            "equals": "peakChromosomes"
+          }
+        },
+        {
+          "text": "{=4*diploid}",
+          "vi": {
+            "text": "{=4*diploid}"
+          },
+          "check": {
+            "expr": "4*diploid",
+            "equals": "peakChromosomes"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-human-meiosis",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["counting", "mitosis-meiosis"],
+      "set": {
+        "division": 1,
+        "diploid": 46
+      },
+      "stem": "A human cell (2n = {diploid}) goes through meiosis. Decide whether each statement is true or false.",
+      "explain": "One cell gives {@cells} cells, each with n = {@chromosomes} chromosomes and {@dna}C of DNA (half the 2C of a G1 cell). Each pair goes its own way in meiosis I, so the cells are new combinations, not copies.",
+      "vi": {
+        "stem": "Một tế bào người (2n = {diploid}) giảm phân. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Một tế bào tạo ra {@cells} tế bào, mỗi tế bào có n = {@chromosomes} nhiễm sắc thể và {@dna}C DNA (một nửa của 2C ở tế bào pha G1). Mỗi cặp phân li theo một hướng riêng ở giảm phân I, nên các tế bào con là những tổ hợp mới, không giống hệt nhau."
+      },
+      "statements": [
+        {
+          "text": "Each cell made has {@chromosomes} chromosomes.",
+          "vi": {
+            "text": "Mỗi tế bào tạo thành có {@chromosomes} nhiễm sắc thể."
+          },
+          "true": true,
+          "check": {
+            "expr": "diploid/2",
+            "equals": "chromosomes"
+          }
+        },
+        {
+          "text": "{@cells} cells are made from the one cell.",
+          "vi": {
+            "text": "Từ một tế bào ban đầu tạo ra {@cells} tế bào."
+          },
+          "true": true,
+          "check": {
+            "expr": "4",
+            "equals": "cells"
+          }
+        },
+        {
+          "text": "Each cell made holds 2C of DNA.",
+          "vi": {
+            "text": "Mỗi tế bào tạo thành chứa 2C DNA."
+          },
+          "true": false,
+          "check": {
+            "expr": "2",
+            "equals": "dna"
+          }
+        },
+        {
+          "text": "The cells made are genetically identical to one another.",
+          "vi": {
+            "text": "Các tế bào tạo thành có bộ gene giống hệt nhau."
+          },
+          "true": false,
+          "check": {
+            "expr": "1",
+            "equals": "identical"
+          }
+        }
+      ]
+    },
+    {
+      "id": "metaphase-two",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["counting", "meiosis-stages"],
+      "set": {
+        "division": 1,
+        "diploid": 8
+      },
+      "stem": "A fruit-fly cell (2n = {diploid}) is in meiosis. What does each cell hold at metaphase II?",
+      "explain": "Meiosis I has left each cell n = {=diploid/2} chromosomes, still doubled ({=diploid} chromatids); they line up in one row at metaphase II and the sisters separate only at anaphase II.",
+      "vi": {
+        "stem": "Một tế bào ruồi giấm (2n = {diploid}) đang giảm phân. Ở kì giữa II, mỗi tế bào có…",
+        "explain": "Giảm phân I đã để lại cho mỗi tế bào n = {=diploid/2} nhiễm sắc thể, vẫn ở trạng thái kép ({=diploid} chromatid); chúng xếp thành một hàng ở kì giữa II và các chromatid chị em chỉ tách nhau ở kì sau II."
+      },
+      "options": [
+        {
+          "text": "{=diploid/2} doubled chromosomes ({=diploid} chromatids)",
+          "vi": {
+            "text": "{=diploid/2} nhiễm sắc thể kép ({=diploid} chromatid)"
+          },
+          "correct": true
+        },
+        {
+          "text": "{diploid} single chromosomes",
+          "vi": {
+            "text": "{diploid} nhiễm sắc thể đơn"
+          }
+        },
+        {
+          "text": "{=diploid/2} single chromosomes",
+          "vi": {
+            "text": "{=diploid/2} nhiễm sắc thể đơn"
+          }
+        },
+        {
+          "text": "{diploid} doubled chromosomes ({=2*diploid} chromatids)",
+          "vi": {
+            "text": "{diploid} nhiễm sắc thể kép ({=2*diploid} chromatid)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-onion-root",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["mitosis-meiosis", "counting", "stages"],
+      "set": {
+        "division": 0,
+        "diploid": 16
+      },
+      "stem": "Cells of an onion root tip (2n = {diploid}) are dividing. Decide whether each statement is true or false.",
+      "explain": "Root-tip cells divide by mitosis: a cell with {@peakChromosomes} single chromosomes moving to the poles is at anaphase, and the DNA per cell goes 2C → 4C → 2C. With no spindle (as with colchicine) the copied chromosomes stay in one cell: 4n = {=2*diploid}. The new cells keep 2n = {@chromosomes}; pollen is made by meiosis in the anthers.",
+      "vi": {
+        "stem": "Các tế bào ở đầu rễ hành (2n = {diploid}) đang phân chia. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Tế bào đầu rễ phân chia bằng nguyên phân: tế bào có {@peakChromosomes} nhiễm sắc thể đơn đang đi về hai cực là ở kì sau, và hàm lượng DNA mỗi tế bào thay đổi 2C → 4C → 2C. Nếu không hình thành thoi phân bào (như khi xử lí colchicine), các nhiễm sắc thể đã nhân đôi ở lại trong một tế bào: 4n = {=2*diploid}. Tế bào con giữ 2n = {@chromosomes}; hạt phấn được tạo ra qua giảm phân trong bao phấn."
+      },
+      "statements": [
+        {
+          "text": "A cell with {=2*diploid} single chromosomes moving to the two poles is at anaphase of mitosis.",
+          "vi": {
+            "text": "Tế bào có {=2*diploid} nhiễm sắc thể đơn đang đi về hai cực là tế bào ở kì sau của nguyên phân."
+          },
+          "true": true,
+          "check": {
+            "expr": "2*diploid",
+            "equals": "peakChromosomes"
+          }
+        },
+        {
+          "text": "Over one cell cycle the DNA in a cell goes 2C → 4C → 2C.",
+          "vi": {
+            "text": "Trong một chu kì tế bào, hàm lượng DNA trong tế bào thay đổi theo 2C → 4C → 2C."
+          },
+          "true": true
+        },
+        {
+          "text": "If no spindle formed (as with colchicine), the cell would end with 4n = {=2*diploid} chromosomes.",
+          "vi": {
+            "text": "Nếu thoi phân bào không hình thành (như khi xử lí colchicine), tế bào sẽ có 4n = {=2*diploid} nhiễm sắc thể."
+          },
+          "true": true
+        },
+        {
+          "text": "Root-tip mitosis makes cells with {=diploid/2} chromosomes, which become pollen.",
+          "vi": {
+            "text": "Nguyên phân ở đầu rễ tạo ra các tế bào có {=diploid/2} nhiễm sắc thể, sau đó trở thành hạt phấn."
+          },
+          "true": false,
+          "check": {
+            "expr": "diploid/2",
+            "equals": "chromosomes"
+          }
+        }
+      ]
+    },
+    {
+      "id": "spindle",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["stages"],
+      "stem": "During division, which structure pulls the chromosomes (or chromatids) to the two poles of the cell?",
+      "explain": "Spindle fibres attach at the centromeres and pull the chromosomes apart. With no spindle (as with colchicine) they are not separated.",
+      "vi": {
+        "stem": "Trong quá trình phân bào, cấu trúc nào kéo các nhiễm sắc thể (hoặc chromatid) về hai cực của tế bào?",
+        "explain": "Các sợi thoi phân bào đính vào tâm động và kéo các nhiễm sắc thể tách nhau. Không có thoi phân bào (như khi xử lí colchicine) thì chúng không phân li được."
+      },
+      "options": [
+        {
+          "text": "The spindle fibres",
+          "vi": {
+            "text": "Các sợi thoi phân bào"
+          },
+          "correct": true
+        },
+        {
+          "text": "The nuclear envelope",
+          "vi": {
+            "text": "Màng nhân"
+          }
+        },
+        {
+          "text": "The nucleolus",
+          "vi": {
+            "text": "Nhân con"
+          }
+        },
+        {
+          "text": "The cell membrane",
+          "vi": {
+            "text": "Màng sinh chất"
+          }
+        }
+      ]
+    },
+    {
+      "id": "plant-cytokinesis",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["stages"],
+      "stem": "At the end of mitosis an onion root-tip cell divides its cytoplasm differently from an animal cell. How?",
+      "explain": "A plant cell has a rigid wall and cannot pinch in: a cell plate (new wall) forms at the equator. An animal cell pinches in with a cleavage furrow.",
+      "vi": {
+        "stem": "Ở cuối nguyên phân, tế bào đầu rễ hành phân chia tế bào chất khác với tế bào động vật. Khác như thế nào?",
+        "explain": "Tế bào thực vật có thành tế bào cứng nên không thắt lại được: một vách ngăn (thành tế bào mới) hình thành ở mặt phẳng xích đạo. Tế bào động vật phân chia bằng cách thắt eo ở giữa."
+      },
+      "options": [
+        {
+          "text": "A new cell wall forms at the equator between the two nuclei",
+          "vi": {
+            "text": "Hình thành vách ngăn ở mặt phẳng xích đạo, giữa hai nhân"
+          },
+          "correct": true
+        },
+        {
+          "text": "The cell membrane pinches in at the equator",
+          "vi": {
+            "text": "Màng tế bào thắt eo lại ở mặt phẳng xích đạo"
+          }
+        },
+        {
+          "text": "It does not divide its cytoplasm, so it keeps two nuclei",
+          "vi": {
+            "text": "Không phân chia tế bào chất, nên tế bào có hai nhân"
+          }
+        },
+        {
+          "text": "Its cytoplasm divides before its chromosomes are copied",
+          "vi": {
+            "text": "Tế bào chất phân chia trước khi nhiễm sắc thể nhân đôi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-meaning",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["mitosis-meiosis", "meiosis-stages"],
+      "stem": "About the meaning of mitosis and meiosis: decide whether each statement is true or false.",
+      "explain": "Mitosis keeps the chromosome number, so it serves growth and repair. Meiosis halves it, and fertilisation restores 2n; crossing over in prophase I and independent assortment make gametes differ (this simulation does not draw crossing over). Root-tip cells are somatic: they divide by mitosis.",
+      "vi": {
+        "stem": "Về ý nghĩa của nguyên phân và giảm phân, mỗi nhận định sau đúng hay sai?",
+        "explain": "Nguyên phân giữ nguyên số nhiễm sắc thể, nên là cơ sở của sự sinh trưởng và tái sinh mô. Giảm phân làm số nhiễm sắc thể giảm một nửa, thụ tinh khôi phục bộ 2n; trao đổi chéo ở kì đầu I và phân li độc lập tạo ra các giao tử khác nhau (mô phỏng này không vẽ trao đổi chéo). Tế bào đầu rễ là tế bào sinh dưỡng: chúng phân chia bằng nguyên phân."
+      },
+      "statements": [
+        {
+          "text": "Mitosis is the basis of growth and of the repair of damaged tissue.",
+          "vi": {
+            "text": "Nguyên phân là cơ sở của sự sinh trưởng và tái sinh các mô bị tổn thương."
+          },
+          "true": true
+        },
+        {
+          "text": "Meiosis halves the chromosome number, and fertilisation restores the diploid number 2n.",
+          "vi": {
+            "text": "Giảm phân làm số nhiễm sắc thể giảm một nửa, và thụ tinh khôi phục bộ nhiễm sắc thể lưỡng bội 2n."
+          },
+          "true": true
+        },
+        {
+          "text": "Crossing over between homologous chromosomes in prophase I gives new combinations of alleles.",
+          "vi": {
+            "text": "Trao đổi chéo giữa các nhiễm sắc thể tương đồng ở kì đầu I tạo ra các tổ hợp allele mới."
+          },
+          "true": true
+        },
+        {
+          "text": "Cells of an onion root tip make gametes by meiosis.",
+          "vi": {
+            "text": "Các tế bào đầu rễ hành tạo giao tử bằng giảm phân."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "human-metaphase-chromatids",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["counting", "stages"],
+      "set": {
+        "division": 0,
+        "diploid": 46
+      },
+      "stem": "A human cell (2n = {diploid}) is at metaphase of mitosis. How many chromatids does it hold?",
+      "explain": "At metaphase the {diploid} chromosomes are doubled, each of 2 sister chromatids: 2·{diploid} = {=2*diploid} chromatids. At anaphase they separate into {@peakChromosomes} single chromosomes.",
+      "vi": {
+        "stem": "Một tế bào người (2n = {diploid}) đang ở kì giữa của nguyên phân. Tế bào có bao nhiêu chromatid?",
+        "explain": "Ở kì giữa, {diploid} nhiễm sắc thể ở trạng thái kép, mỗi chiếc gồm 2 chromatid chị em: 2·{diploid} = {=2*diploid} chromatid. Đến kì sau chúng tách thành {@peakChromosomes} nhiễm sắc thể đơn."
+      },
+      "options": [
+        {
+          "text": "{=2*diploid}",
+          "vi": {
+            "text": "{=2*diploid}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2*diploid",
+            "equals": "peakChromosomes"
+          }
+        },
+        {
+          "text": "{diploid}",
+          "vi": {
+            "text": "{diploid}"
+          },
+          "check": {
+            "expr": "diploid",
+            "equals": "peakChromosomes"
+          }
+        },
+        {
+          "text": "{=diploid/2}",
+          "vi": {
+            "text": "{=diploid/2}"
+          },
+          "check": {
+            "expr": "diploid/2",
+            "equals": "peakChromosomes"
+          }
+        },
+        {
+          "text": "{=4*diploid}",
+          "vi": {
+            "text": "{=4*diploid}"
+          },
+          "check": {
+            "expr": "4*diploid",
+            "equals": "peakChromosomes"
+          }
+        }
+      ]
+    },
+    {
+      "id": "supplied-chromosomes",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["counting"],
+      "set": {
+        "division": 0,
+        "diploid": 8
+      },
+      "stem": "A fruit-fly cell (2n = {diploid}) divides by mitosis 3 times in a row. Each division makes {@cells} cells of {@chromosomes} chromosomes. How many chromosomes must the cell’s surroundings supply for all these divisions?",
+      "explain": "3 divisions make {@cells}³ = {=@cells^3} cells holding {=@cells^3*@chromosomes} chromosomes; the first cell already had {@chromosomes}, so the surroundings supply ({=@cells^3} − 1)·{@chromosomes} = {=(@cells^3-1)*@chromosomes}.",
+      "vi": {
+        "stem": "Một tế bào ruồi giấm (2n = {diploid}) nguyên phân liên tiếp 3 lần. Mỗi lần phân bào tạo ra {@cells} tế bào có {@chromosomes} nhiễm sắc thể. Môi trường nội bào phải cung cấp nguyên liệu tương đương bao nhiêu nhiễm sắc thể đơn cho cả quá trình?",
+        "explain": "3 lần nguyên phân tạo ra {@cells}³ = {=@cells^3} tế bào chứa {=@cells^3*@chromosomes} nhiễm sắc thể; tế bào ban đầu đã có sẵn {@chromosomes} chiếc, nên môi trường cung cấp ({=@cells^3} − 1)·{@chromosomes} = {=(@cells^3-1)*@chromosomes}."
+      },
+      "options": [
+        {
+          "text": "{=(@cells^3-1)*@chromosomes}",
+          "vi": {
+            "text": "{=(@cells^3-1)*@chromosomes}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(@cells^3-1)*@chromosomes/(@cells^3-1)",
+            "equals": "chromosomes"
+          }
+        },
+        {
+          "text": "{=@cells^3*@chromosomes}",
+          "vi": {
+            "text": "{=@cells^3*@chromosomes}"
+          },
+          "check": {
+            "expr": "@cells^3*@chromosomes/(@cells^3-1)",
+            "equals": "chromosomes"
+          }
+        },
+        {
+          "text": "{=3*@chromosomes}",
+          "vi": {
+            "text": "{=3*@chromosomes}"
+          },
+          "check": {
+            "expr": "3*@chromosomes/(@cells^3-1)",
+            "equals": "chromosomes"
+          }
+        },
+        {
+          "text": "{=(@cells^3-1)*@chromosomes/2}",
+          "vi": {
+            "text": "{=(@cells^3-1)*@chromosomes/2}"
+          },
+          "check": {
+            "expr": "(@cells^3-1)*@chromosomes/2/(@cells^3-1)",
+            "equals": "chromosomes"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-diploid",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["counting", "stages", "mitosis-meiosis"],
+      "set": {
+        "division": 0,
+        "diploid": 16
+      },
+      "stem": "A root-tip cell at anaphase of mitosis holds {@peakChromosomes} single chromosomes. What is the species’ diploid number, and how many chromosomes does each of its gametes hold?",
+      "explain": "At anaphase of mitosis the sister chromatids have separated, so the cell holds twice 2n: 2n = {@peakChromosomes}/2 = {=@peakChromosomes/2}. Gametes, made by meiosis, hold n = {=@peakChromosomes/4}.",
+      "vi": {
+        "stem": "Một tế bào đầu rễ ở kì sau của nguyên phân có {@peakChromosomes} nhiễm sắc thể đơn. Bộ nhiễm sắc thể lưỡng bội của loài là bao nhiêu, và mỗi giao tử của loài có bao nhiêu nhiễm sắc thể?",
+        "explain": "Ở kì sau nguyên phân, các chromatid chị em đã tách nhau, nên tế bào có số nhiễm sắc thể gấp đôi 2n: 2n = {@peakChromosomes}/2 = {=@peakChromosomes/2}. Giao tử được tạo ra qua giảm phân có n = {=@peakChromosomes/4}."
+      },
+      "options": [
+        {
+          "text": "2n = {=@peakChromosomes/2}; n = {=@peakChromosomes/4}",
+          "vi": {
+            "text": "2n = {=@peakChromosomes/2}; n = {=@peakChromosomes/4}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@peakChromosomes/2",
+            "equals": "chromosomes"
+          }
+        },
+        {
+          "text": "2n = {@peakChromosomes}; n = {=@peakChromosomes/2}",
+          "vi": {
+            "text": "2n = {@peakChromosomes}; n = {=@peakChromosomes/2}"
+          },
+          "check": {
+            "expr": "@peakChromosomes",
+            "equals": "chromosomes"
+          }
+        },
+        {
+          "text": "2n = {=@peakChromosomes/4}; n = {=@peakChromosomes/8}",
+          "vi": {
+            "text": "2n = {=@peakChromosomes/4}; n = {=@peakChromosomes/8}"
+          },
+          "check": {
+            "expr": "@peakChromosomes/4",
+            "equals": "chromosomes"
+          }
+        },
+        {
+          "text": "2n = {=2*@peakChromosomes}; n = {@peakChromosomes}",
+          "vi": {
+            "text": "2n = {=2*@peakChromosomes}; n = {@peakChromosomes}"
+          },
+          "check": {
+            "expr": "2*@peakChromosomes",
+            "equals": "chromosomes"
+          }
+        }
+      ]
+    },
+    {
+      "id": "how-many-divisions",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["counting"],
+      "set": {
+        "division": 0,
+        "diploid": 8
+      },
+      "stem": "A cell with 2n = {diploid} divides by mitosis several times in a row. The cells it makes hold {=8*diploid} chromosomes in all. How many times did it divide?",
+      "explain": "Each mitosis doubles the cells and keeps {@chromosomes} chromosomes in each: after k divisions {@cells}^k·{@chromosomes} = {=8*diploid}, so {@cells}^k = 8 and k = 3.",
+      "vi": {
+        "stem": "Một tế bào có 2n = {diploid} nguyên phân liên tiếp một số lần. Các tế bào con tạo thành chứa tổng cộng {=8*diploid} nhiễm sắc thể. Tế bào đã nguyên phân bao nhiêu lần?",
+        "explain": "Mỗi lần nguyên phân số tế bào tăng gấp đôi và mỗi tế bào vẫn có {@chromosomes} nhiễm sắc thể: sau k lần, {@cells}^k·{@chromosomes} = {=8*diploid}, nên {@cells}^k = 8 và k = 3."
+      },
+      "options": [
+        {
+          "text": "3",
+          "vi": {
+            "text": "3"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@cells^3*@chromosomes/8",
+            "equals": "chromosomes"
+          }
+        },
+        {
+          "text": "8",
+          "vi": {
+            "text": "8"
+          },
+          "check": {
+            "expr": "@cells^8*@chromosomes/8",
+            "equals": "chromosomes"
+          }
+        },
+        {
+          "text": "4",
+          "vi": {
+            "text": "4"
+          },
+          "check": {
+            "expr": "@cells^4*@chromosomes/8",
+            "equals": "chromosomes"
+          }
+        },
+        {
+          "text": "2",
+          "vi": {
+            "text": "2"
+          },
+          "check": {
+            "expr": "@cells^2*@chromosomes/8",
+            "equals": "chromosomes"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-fly-meiosis",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["counting", "meiosis-stages", "mitosis-meiosis"],
+      "set": {
+        "division": 1,
+        "diploid": 8
+      },
+      "stem": "A fruit-fly cell (2n = {diploid}) divides by meiosis. Decide whether each statement is true or false.",
+      "explain": "Metaphase I: {diploid} doubled chromosomes ({=2*diploid} chromatids) in homologous pairs. Meiosis I halves the number: each cell has {=diploid/2} doubled chromosomes, which split at anaphase II into {diploid} single ones. The {@cells} cells made hold {@chromosomes} chromosomes and {@dna}C of DNA. Independent assortment of {=diploid/2} pairs alone gives 2^{=diploid/2} = {=2^(diploid/2)} kinds of gametes.",
+      "vi": {
+        "stem": "Một tế bào ruồi giấm (2n = {diploid}) thực hiện giảm phân. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Kì giữa I: {diploid} nhiễm sắc thể kép ({=2*diploid} chromatid) xếp thành từng cặp tương đồng. Giảm phân I làm số nhiễm sắc thể giảm một nửa: mỗi tế bào có {=diploid/2} nhiễm sắc thể kép, đến kì sau II tách thành {diploid} nhiễm sắc thể đơn. {@cells} tế bào tạo thành mỗi tế bào có {@chromosomes} nhiễm sắc thể và {@dna}C DNA. Riêng sự phân li độc lập của {=diploid/2} cặp đã cho 2^{=diploid/2} = {=2^(diploid/2)} loại giao tử."
+      },
+      "statements": [
+        {
+          "text": "At metaphase I the cell holds {diploid} doubled chromosomes, {=2*diploid} chromatids in all.",
+          "vi": {
+            "text": "Ở kì giữa I, tế bào có {diploid} nhiễm sắc thể kép, tổng cộng {=2*diploid} chromatid."
+          },
+          "true": true,
+          "check": {
+            "expr": "diploid",
+            "equals": "peakChromosomes"
+          }
+        },
+        {
+          "text": "At anaphase II each cell holds {diploid} single chromosomes.",
+          "vi": {
+            "text": "Ở kì sau II, mỗi tế bào có {diploid} nhiễm sắc thể đơn."
+          },
+          "true": true,
+          "check": {
+            "expr": "diploid",
+            "equals": "peakChromosomes"
+          }
+        },
+        {
+          "text": "Each of the {@cells} cells made holds {=diploid/2} chromosomes and 2C of DNA.",
+          "vi": {
+            "text": "Mỗi tế bào trong {@cells} tế bào tạo thành có {=diploid/2} nhiễm sắc thể và 2C DNA."
+          },
+          "true": false,
+          "check": {
+            "expr": "2",
+            "equals": "dna"
+          }
+        },
+        {
+          "text": "Independent assortment of the homologous pairs alone can give {=2^(diploid/2)} kinds of gametes.",
+          "vi": {
+            "text": "Riêng sự phân li độc lập của các cặp nhiễm sắc thể tương đồng có thể tạo ra {=2^(diploid/2)} loại giao tử."
+          },
+          "true": true,
+          "check": {
+            "expr": "log(2^(diploid/2))/log(2)",
+            "equals": "chromosomes"
+          }
+        }
+      ]
+    }
+  ]
+}

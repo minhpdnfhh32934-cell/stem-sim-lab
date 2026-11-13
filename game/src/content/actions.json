@@ -1,0 +1,1857 @@
+[
+  {
+    "id": "coat-off",
+    "on": {
+      "action": "take-off",
+      "wornOn": "body"
+    },
+    "seconds": 2.4,
+    "stepIn": true,
+    "swap": 1.08,
+    "carry": [[1.08, 2.04]],
+    "place": 2.04,
+    "keys": [
+      {
+        "t": 0.21,
+        "right": {
+          "offset": [0.07, 0.76, 0.16],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "left": {
+          "offset": [-0.07, 0.76, 0.16],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "look": -65
+      },
+      {
+        "t": 0.48,
+        "right": {
+          "offset": [0.22, 0.8, -0.05],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "left": {
+          "offset": [-0.22, 0.8, -0.05],
+          "palm": "in",
+          "fingers": "grip"
+        }
+      },
+      {
+        "t": 0.78,
+        "right": {
+          "offset": [-0.18, 0.52, 0.02],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "left": {
+          "offset": [-0.2, 0.5, -0.1],
+          "palm": "down",
+          "fingers": "open"
+        }
+      },
+      {
+        "t": 1.08,
+        "right": {
+          "offset": [0.2, 0.5, -0.08],
+          "palm": "down",
+          "fingers": "open"
+        },
+        "left": {
+          "offset": [0.18, 0.55, 0.05],
+          "palm": "in",
+          "fingers": "grip"
+        }
+      },
+      {
+        "t": 1.38,
+        "right": {
+          "offset": [0.12, 0.7, 0.3],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "left": {
+          "offset": [-0.12, 0.55, 0.05],
+          "palm": "down",
+          "fingers": "open"
+        },
+        "look": -40
+      },
+      {
+        "t": 1.74,
+        "right": {
+          "at": "target",
+          "offset": [0, 0.2, 0],
+          "palm": "forward",
+          "fingers": "grip"
+        }
+      },
+      {
+        "t": 2.04,
+        "right": {
+          "at": "target",
+          "offset": [0, 0.15, 0],
+          "palm": "forward",
+          "fingers": "open"
+        }
+      }
+    ]
+  },
+  {
+    "id": "coat-on",
+    "on": {
+      "action": "wear",
+      "wornOn": "body"
+    },
+    "seconds": 2.52,
+    "stepIn": true,
+    "place": 0.27,
+    "carry": [[0.27, 1.56]],
+    "swap": 1.56,
+    "keys": [
+      {
+        "t": 0.27,
+        "right": {
+          "at": "target",
+          "offset": [0, 0.2, 0],
+          "palm": "forward",
+          "fingers": "grip"
+        }
+      },
+      {
+        "t": 0.54,
+        "right": {
+          "offset": [0.1, 0.85, 0.25],
+          "palm": "in",
+          "fingers": "grip"
+        }
+      },
+      {
+        "t": 0.78,
+        "right": {
+          "offset": [-0.02, 0.85, 0.15],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "left": {
+          "offset": [-0.2, 0.55, 0.05],
+          "palm": "down",
+          "fingers": "open"
+        }
+      },
+      {
+        "t": 1.14,
+        "right": {
+          "offset": [0.15, 0.86, -0.05],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "left": {
+          "offset": [-0.18, 0.6, 0.08],
+          "palm": "down",
+          "fingers": "open"
+        }
+      },
+      {
+        "t": 1.44,
+        "right": {
+          "offset": [0.22, 0.6, 0],
+          "palm": "down",
+          "fingers": "open"
+        },
+        "left": {
+          "offset": [-0.15, 0.62, 0.12],
+          "palm": "in",
+          "fingers": "open"
+        }
+      },
+      {
+        "t": 1.8,
+        "right": {
+          "offset": [0.07, 0.77, 0.16],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "left": {
+          "offset": [-0.07, 0.77, 0.16],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "look": -65
+      },
+      {
+        "t": 2.1,
+        "right": {
+          "offset": [0.07, 0.7, 0.14],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "left": {
+          "offset": [-0.07, 0.7, 0.14],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "look": -68
+      },
+      {
+        "t": 2.34,
+        "right": {
+          "offset": [0.04, 0.6, 0.15],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "left": {
+          "offset": [-0.04, 0.6, 0.15],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "look": -70
+      }
+    ]
+  },
+  {
+    "id": "goggles-on",
+    "on": {
+      "action": "wear",
+      "wornOn": "eyes"
+    },
+    "seconds": 1.56,
+    "stepIn": true,
+    "place": 0.24,
+    "carry": [[0.24, 0.78]],
+    "swap": 0.78,
+    "keys": [
+      {
+        "t": 0.24,
+        "right": {
+          "at": "target",
+          "offset": [0, 0, 0],
+          "palm": "forward",
+          "fingers": "grip"
+        }
+      },
+      {
+        "t": 0.54,
+        "right": {
+          "offset": [0.07, 0.85, 0.3],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "left": {
+          "offset": [-0.07, 0.85, 0.3],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "look": -20
+      },
+      {
+        "t": 0.78,
+        "right": {
+          "offset": [0.07, 0.93, 0.12],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "left": {
+          "offset": [-0.07, 0.93, 0.12],
+          "palm": "in",
+          "fingers": "grip"
+        }
+      },
+      {
+        "t": 1.02,
+        "right": {
+          "offset": [0.08, 0.99, -0.05],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "left": {
+          "offset": [-0.08, 0.99, -0.05],
+          "palm": "in",
+          "fingers": "grip"
+        }
+      },
+      {
+        "t": 1.26,
+        "right": {
+          "offset": [0.08, 0.93, 0.06],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "left": {
+          "offset": [-0.08, 0.93, 0.06],
+          "palm": "in",
+          "fingers": "grip"
+        }
+      }
+    ]
+  },
+  {
+    "id": "goggles-off",
+    "on": {
+      "action": "take-off",
+      "wornOn": "eyes"
+    },
+    "seconds": 1.44,
+    "stepIn": true,
+    "swap": 0.6,
+    "carry": [[0.6, 1.14]],
+    "place": 1.14,
+    "keys": [
+      {
+        "t": 0.24,
+        "right": {
+          "offset": [0.08, 0.93, 0.06],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "left": {
+          "offset": [-0.08, 0.93, 0.06],
+          "palm": "in",
+          "fingers": "grip"
+        }
+      },
+      {
+        "t": 0.48,
+        "right": {
+          "offset": [0.08, 0.99, -0.05],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "left": {
+          "offset": [-0.08, 0.99, -0.05],
+          "palm": "in",
+          "fingers": "grip"
+        }
+      },
+      {
+        "t": 0.72,
+        "right": {
+          "offset": [0.07, 0.85, 0.3],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "left": {
+          "offset": [-0.07, 0.85, 0.3],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "look": -20
+      },
+      {
+        "t": 1.14,
+        "right": {
+          "at": "target",
+          "offset": [0, 0, 0],
+          "palm": "forward",
+          "fingers": "grip"
+        }
+      }
+    ]
+  },
+  {
+    "id": "shield-on",
+    "on": {
+      "action": "wear",
+      "wornOn": "face"
+    },
+    "seconds": 1.56,
+    "stepIn": true,
+    "place": 0.24,
+    "carry": [[0.24, 0.78]],
+    "swap": 0.78,
+    "keys": [
+      {
+        "t": 0.24,
+        "right": {
+          "at": "target",
+          "offset": [0, 0, 0],
+          "palm": "forward",
+          "fingers": "grip"
+        }
+      },
+      {
+        "t": 0.54,
+        "right": {
+          "offset": [0.07, 0.85, 0.3],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "left": {
+          "offset": [-0.07, 0.85, 0.3],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "look": -20
+      },
+      {
+        "t": 0.78,
+        "right": {
+          "offset": [0.07, 0.96, 0.12],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "left": {
+          "offset": [-0.07, 0.96, 0.12],
+          "palm": "in",
+          "fingers": "grip"
+        }
+      },
+      {
+        "t": 1.02,
+        "right": {
+          "offset": [0.08, 1.02, -0.05],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "left": {
+          "offset": [-0.08, 1.02, -0.05],
+          "palm": "in",
+          "fingers": "grip"
+        }
+      },
+      {
+        "t": 1.26,
+        "right": {
+          "offset": [0.08, 0.96, 0.06],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "left": {
+          "offset": [-0.08, 0.96, 0.06],
+          "palm": "in",
+          "fingers": "grip"
+        }
+      }
+    ]
+  },
+  {
+    "id": "shield-off",
+    "on": {
+      "action": "take-off",
+      "wornOn": "face"
+    },
+    "seconds": 1.44,
+    "stepIn": true,
+    "swap": 0.6,
+    "carry": [[0.6, 1.14]],
+    "place": 1.14,
+    "keys": [
+      {
+        "t": 0.24,
+        "right": {
+          "offset": [0.08, 0.96, 0.06],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "left": {
+          "offset": [-0.08, 0.96, 0.06],
+          "palm": "in",
+          "fingers": "grip"
+        }
+      },
+      {
+        "t": 0.48,
+        "right": {
+          "offset": [0.08, 1.02, -0.05],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "left": {
+          "offset": [-0.08, 1.02, -0.05],
+          "palm": "in",
+          "fingers": "grip"
+        }
+      },
+      {
+        "t": 0.72,
+        "right": {
+          "offset": [0.07, 0.85, 0.3],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "left": {
+          "offset": [-0.07, 0.85, 0.3],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "look": -20
+      },
+      {
+        "t": 1.14,
+        "right": {
+          "at": "target",
+          "offset": [0, 0, 0],
+          "palm": "forward",
+          "fingers": "grip"
+        }
+      }
+    ]
+  },
+  {
+    "id": "gloves-on",
+    "on": {
+      "action": "wear",
+      "wornOn": "hands"
+    },
+    "seconds": 3,
+    "stepIn": true,
+    "prop": "glove",
+    "carry": [
+      [0.36, 0.96],
+      [1.56, 1.92]
+    ],
+    "swap": 1.2,
+    "keys": [
+      {
+        "t": 0.24,
+        "right": {
+          "at": "target",
+          "offset": [0, 0, 0],
+          "palm": "forward",
+          "fingers": "grip"
+        }
+      },
+      {
+        "t": 0.48,
+        "right": {
+          "at": "target",
+          "offset": [0.06, -0.03, 0],
+          "palm": "forward",
+          "fingers": "grip"
+        }
+      },
+      {
+        "t": 0.72,
+        "right": {
+          "offset": [0.05, 0.62, 0.3],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "left": {
+          "offset": [-0.12, 0.6, 0.35],
+          "palm": "forward",
+          "fingers": "open"
+        },
+        "look": -45
+      },
+      {
+        "t": 0.96,
+        "right": {
+          "offset": [0.08, 0.62, 0.28],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "left": {
+          "offset": [0, 0.62, 0.32],
+          "palm": "forward",
+          "fingers": "open"
+        },
+        "look": -45
+      },
+      {
+        "t": 1.2,
+        "right": {
+          "offset": [0.06, 0.58, 0.22],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "left": {
+          "offset": [0, 0.62, 0.34],
+          "palm": "forward",
+          "fingers": "open"
+        },
+        "look": -45
+      },
+      {
+        "t": 1.44,
+        "right": {
+          "at": "target",
+          "offset": [0, 0, 0],
+          "palm": "forward",
+          "fingers": "grip"
+        },
+        "left": {
+          "offset": [-0.1, 0.58, 0.3],
+          "palm": "forward",
+          "fingers": "open"
+        },
+        "look": -45
+      },
+      {
+        "t": 1.68,
+        "right": {
+          "at": "target",
+          "offset": [0.06, -0.03, 0],
+          "palm": "forward",
+          "fingers": "grip"
+        },
+        "look": -45
+      },
+      {
+        "t": 1.92,
+        "right": {
+          "offset": [-0.08, 0.6, 0.35],
+          "palm": "forward",
+          "fingers": "open"
+        },
+        "left": {
+          "offset": [0.08, 0.62, 0.3],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "look": -45
+      },
+      {
+        "t": 2.16,
+        "right": {
+          "offset": [0.02, 0.62, 0.33],
+          "palm": "forward",
+          "fingers": "open"
+        },
+        "left": {
+          "offset": [-0.06, 0.58, 0.24],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "look": -45
+      },
+      {
+        "t": 2.4,
+        "right": {
+          "offset": [-0.08, 0.55, 0.25],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "left": {
+          "offset": [-0.12, 0.56, 0.3],
+          "palm": "forward",
+          "fingers": "open"
+        },
+        "look": -45
+      },
+      {
+        "t": 2.64,
+        "right": {
+          "offset": [0.12, 0.56, 0.3],
+          "palm": "forward",
+          "fingers": "open"
+        },
+        "left": {
+          "offset": [0.08, 0.55, 0.25],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "look": -45
+      },
+      {
+        "t": 2.88,
+        "right": {
+          "offset": [0.02, 0.6, 0.3],
+          "palm": "in",
+          "fingers": "open"
+        },
+        "left": {
+          "offset": [-0.02, 0.6, 0.3],
+          "palm": "in",
+          "fingers": "open"
+        },
+        "look": -45
+      }
+    ]
+  },
+  {
+    "id": "gloves-off",
+    "on": {
+      "action": "discard"
+    },
+    "seconds": 2.4,
+    "stepIn": true,
+    "prop": "glove",
+    "carry": [[0.6, 1.98]],
+    "swap": 1.56,
+    "keys": [
+      {
+        "t": 0.24,
+        "right": {
+          "offset": [-0.1, 0.58, 0.27],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "left": {
+          "offset": [-0.12, 0.58, 0.32],
+          "palm": "forward",
+          "fingers": "open"
+        },
+        "look": -50
+      },
+      {
+        "t": 0.6,
+        "right": {
+          "offset": [-0.02, 0.6, 0.38],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "left": {
+          "offset": [-0.14, 0.57, 0.26],
+          "palm": "forward",
+          "fingers": "open"
+        },
+        "look": -50
+      },
+      {
+        "t": 0.84,
+        "right": {
+          "offset": [0.04, 0.58, 0.3],
+          "palm": "in",
+          "fingers": "fist"
+        },
+        "left": {
+          "offset": [0.02, 0.56, 0.27],
+          "palm": "forward",
+          "fingers": "open"
+        },
+        "look": -50
+      },
+      {
+        "t": 1.2,
+        "right": {
+          "offset": [0.14, 0.57, 0.25],
+          "palm": "in",
+          "fingers": "fist"
+        },
+        "left": {
+          "offset": [0.1, 0.6, 0.36],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "look": -50
+      },
+      {
+        "t": 1.56,
+        "right": {
+          "offset": [0.04, 0.6, 0.32],
+          "palm": "in",
+          "fingers": "fist"
+        },
+        "left": {
+          "offset": [-0.1, 0.55, 0.2],
+          "palm": "down",
+          "fingers": "open"
+        },
+        "look": -50
+      },
+      {
+        "t": 1.92,
+        "right": {
+          "at": "target",
+          "offset": [0, 0.25, 0],
+          "palm": "forward",
+          "fingers": "fist"
+        },
+        "look": -60
+      },
+      {
+        "t": 2.1,
+        "right": {
+          "at": "target",
+          "offset": [0, 0.2, 0],
+          "palm": "forward",
+          "fingers": "open"
+        },
+        "look": -60
+      }
+    ]
+  },
+  {
+    "id": "open",
+    "on": {
+      "action": "open"
+    },
+    "seconds": 0.7,
+    "keys": [
+      {
+        "t": 0.3,
+        "right": {
+          "at": "target",
+          "offset": [0, 0, 0],
+          "fingers": "grip"
+        }
+      }
+    ]
+  },
+  {
+    "id": "close",
+    "on": {
+      "action": "close"
+    },
+    "seconds": 0.7,
+    "keys": [
+      {
+        "t": 0.3,
+        "right": {
+          "at": "target",
+          "offset": [0, 0, 0]
+        }
+      }
+    ]
+  },
+  {
+    "id": "switch-on",
+    "on": {
+      "action": "activate"
+    },
+    "seconds": 0.6,
+    "keys": [
+      {
+        "t": 0.25,
+        "right": {
+          "at": "target",
+          "offset": [0, 0, 0],
+          "fingers": "fist"
+        }
+      }
+    ]
+  },
+  {
+    "id": "switch-off",
+    "on": {
+      "action": "deactivate"
+    },
+    "seconds": 0.6,
+    "keys": [
+      {
+        "t": 0.25,
+        "right": {
+          "at": "target",
+          "offset": [0, 0, 0],
+          "fingers": "fist"
+        }
+      }
+    ]
+  },
+  {
+    "id": "lights-off",
+    "on": {
+      "action": "lights-off"
+    },
+    "seconds": 0.6,
+    "keys": [
+      {
+        "t": 0.25,
+        "right": {
+          "at": "target",
+          "offset": [0, 0, 0],
+          "fingers": "fist"
+        }
+      }
+    ]
+  },
+  {
+    "id": "lights-on",
+    "on": {
+      "action": "lights-on"
+    },
+    "seconds": 0.6,
+    "keys": [
+      {
+        "t": 0.25,
+        "right": {
+          "at": "target",
+          "offset": [0, 0, 0],
+          "fingers": "fist"
+        }
+      }
+    ]
+  },
+  {
+    "id": "water-on",
+    "on": {
+      "action": "water-on"
+    },
+    "seconds": 1.27,
+    "stepIn": true,
+    "keys": [
+      {
+        "t": 0.52,
+        "right": {
+          "at": "target",
+          "offset": [0, 0, 0],
+          "palm": "forward",
+          "fingers": "open"
+        }
+      },
+      {
+        "t": 0.64,
+        "right": {
+          "at": "target",
+          "offset": [0, 0, 0],
+          "palm": "forward",
+          "fingers": "grip"
+        }
+      },
+      {
+        "t": 0.83,
+        "right": {
+          "at": "target",
+          "offset": [0, 0, 0.03],
+          "palm": "forward",
+          "fingers": "grip"
+        }
+      },
+      {
+        "t": 0.94,
+        "right": {
+          "at": "target",
+          "offset": [0, 0, 0.03],
+          "palm": "forward",
+          "fingers": "open"
+        }
+      }
+    ],
+    "effect": 0.71
+  },
+  {
+    "id": "water-off",
+    "on": {
+      "action": "water-off"
+    },
+    "seconds": 1.27,
+    "stepIn": true,
+    "keys": [
+      {
+        "t": 0.52,
+        "right": {
+          "at": "target",
+          "offset": [0, 0, 0],
+          "palm": "forward",
+          "fingers": "open"
+        }
+      },
+      {
+        "t": 0.64,
+        "right": {
+          "at": "target",
+          "offset": [0, 0, 0],
+          "palm": "forward",
+          "fingers": "grip"
+        }
+      },
+      {
+        "t": 0.83,
+        "right": {
+          "at": "target",
+          "offset": [0, 0, 0.03],
+          "palm": "forward",
+          "fingers": "grip"
+        }
+      },
+      {
+        "t": 0.94,
+        "right": {
+          "at": "target",
+          "offset": [0, 0, 0.03],
+          "palm": "forward",
+          "fingers": "open"
+        }
+      }
+    ],
+    "effect": 0.71
+  },
+  {
+    "id": "pick-up-from-floor",
+    "on": {
+      "action": "grab",
+      "below": 0.45
+    },
+    "seconds": 1.6,
+    "stepIn": true,
+    "effect": 0.85,
+    "keys": [
+      {
+        "t": 0.3,
+        "lean": 0.35,
+        "look": -50
+      },
+      {
+        "t": 0.75,
+        "right": {
+          "at": "target",
+          "offset": [0, 0.08, 0],
+          "palm": "down",
+          "fingers": "open"
+        },
+        "lean": 0.75,
+        "look": -70
+      },
+      {
+        "t": 0.85,
+        "right": {
+          "at": "target",
+          "offset": [0, 0.05, 0],
+          "palm": "down",
+          "fingers": "grip"
+        },
+        "lean": 0.75,
+        "look": -70
+      },
+      {
+        "t": 1.25,
+        "right": {
+          "at": "target",
+          "offset": [0, 0.05, 0],
+          "palm": "down",
+          "fingers": "grip"
+        },
+        "lean": 0.25,
+        "look": -35
+      }
+    ]
+  },
+  {
+    "id": "set-down",
+    "on": {
+      "released": "set-down"
+    },
+    "seconds": 0.45,
+    "keys": [
+      {
+        "t": 0.2,
+        "right": {
+          "at": "target",
+          "offset": [0, 0.05, 0],
+          "fingers": "grip"
+        }
+      }
+    ]
+  },
+  {
+    "id": "throw",
+    "on": {
+      "released": "throw"
+    },
+    "seconds": 0.45,
+    "keys": [
+      {
+        "t": 0.05,
+        "right": {
+          "offset": [0.22, 0.85, 0.45]
+        }
+      }
+    ]
+  },
+  {
+    "id": "pipette-fill",
+    "on": {
+      "action": "fill"
+    },
+    "seconds": 1,
+    "keys": [
+      {
+        "t": 0.35,
+        "left": {
+          "at": "target",
+          "offset": [0, 0, 0],
+          "fingers": "grip"
+        },
+        "lean": 0.25
+      }
+    ]
+  },
+  {
+    "id": "pipette-deliver",
+    "on": {
+      "action": "deliver"
+    },
+    "seconds": 1,
+    "keys": [
+      {
+        "t": 0.35,
+        "left": {
+          "at": "target",
+          "offset": [0, 0, 0],
+          "fingers": "grip"
+        },
+        "lean": 0.25
+      }
+    ]
+  },
+  {
+    "id": "drops",
+    "on": {
+      "action": "drops"
+    },
+    "seconds": 0.9,
+    "keys": [
+      {
+        "t": 0.35,
+        "left": {
+          "at": "target",
+          "offset": [0, 0, 0],
+          "fingers": "grip"
+        },
+        "lean": 0.25
+      }
+    ]
+  },
+  {
+    "id": "tap-open",
+    "on": {
+      "action": "open-tap"
+    },
+    "seconds": 0.6,
+    "keys": [
+      {
+        "t": 0.25,
+        "right": {
+          "at": "target",
+          "offset": [0, -0.25, 0],
+          "fingers": "grip"
+        }
+      }
+    ]
+  },
+  {
+    "id": "tap-close",
+    "on": {
+      "action": "close-tap"
+    },
+    "seconds": 0.6,
+    "keys": [
+      {
+        "t": 0.25,
+        "right": {
+          "at": "target",
+          "offset": [0, -0.25, 0],
+          "fingers": "grip"
+        }
+      }
+    ]
+  },
+  {
+    "id": "stopper-in",
+    "on": {
+      "action": "stopper"
+    },
+    "seconds": 0.6,
+    "keys": [
+      {
+        "t": 0.25,
+        "right": {
+          "at": "target",
+          "offset": [0, 0.06, 0],
+          "fingers": "grip"
+        }
+      }
+    ]
+  },
+  {
+    "id": "stopper-out",
+    "on": {
+      "action": "unstopper"
+    },
+    "seconds": 0.6,
+    "keys": [
+      {
+        "t": 0.25,
+        "right": {
+          "at": "target",
+          "offset": [0, 0.06, 0],
+          "fingers": "grip"
+        }
+      }
+    ]
+  },
+  {
+    "id": "clamp",
+    "on": {
+      "action": "clamp"
+    },
+    "seconds": 0.6,
+    "keys": [
+      {
+        "t": 0.25,
+        "right": {
+          "at": "target",
+          "offset": [0, 0.2, 0],
+          "fingers": "grip"
+        }
+      }
+    ]
+  },
+  {
+    "id": "unclamp",
+    "on": {
+      "action": "unclamp"
+    },
+    "seconds": 0.6,
+    "keys": [
+      {
+        "t": 0.25,
+        "right": {
+          "at": "target",
+          "offset": [0, 0.2, 0],
+          "fingers": "grip"
+        }
+      }
+    ]
+  },
+  {
+    "id": "dial-up",
+    "on": {
+      "action": "raise"
+    },
+    "seconds": 0.3,
+    "waits": false,
+    "keys": [
+      {
+        "t": 0.12,
+        "right": {
+          "at": "target",
+          "offset": [0, 0, 0],
+          "fingers": "grip"
+        }
+      }
+    ]
+  },
+  {
+    "id": "dial-down",
+    "on": {
+      "action": "lower"
+    },
+    "seconds": 0.3,
+    "waits": false,
+    "keys": [
+      {
+        "t": 0.12,
+        "right": {
+          "at": "target",
+          "offset": [0, 0, 0],
+          "fingers": "grip"
+        }
+      }
+    ]
+  },
+  {
+    "id": "button-run",
+    "on": {
+      "action": "run"
+    },
+    "seconds": 0.45,
+    "waits": false,
+    "keys": [
+      {
+        "t": 0.18,
+        "right": {
+          "at": "target",
+          "offset": [0, 0.02, 0],
+          "fingers": "fist"
+        }
+      }
+    ]
+  },
+  {
+    "id": "button-stop",
+    "on": {
+      "action": "stop"
+    },
+    "seconds": 0.45,
+    "waits": false,
+    "keys": [
+      {
+        "t": 0.18,
+        "right": {
+          "at": "target",
+          "offset": [0, 0.02, 0],
+          "fingers": "fist"
+        }
+      }
+    ]
+  },
+  {
+    "id": "button-reset",
+    "on": {
+      "action": "reset"
+    },
+    "seconds": 0.45,
+    "waits": false,
+    "keys": [
+      {
+        "t": 0.18,
+        "right": {
+          "at": "target",
+          "offset": [0, 0.02, 0],
+          "fingers": "fist"
+        }
+      }
+    ]
+  },
+  {
+    "id": "button-clear",
+    "on": {
+      "action": "clear"
+    },
+    "seconds": 0.45,
+    "waits": false,
+    "keys": [
+      {
+        "t": 0.18,
+        "right": {
+          "at": "target",
+          "offset": [0, 0.02, 0],
+          "fingers": "fist"
+        }
+      }
+    ]
+  },
+  {
+    "id": "load",
+    "on": {
+      "action": "load"
+    },
+    "seconds": 0.5,
+    "keys": [
+      {
+        "t": 0.2,
+        "right": {
+          "at": "target",
+          "offset": [0, 0, 0],
+          "fingers": "grip"
+        }
+      }
+    ]
+  },
+  {
+    "id": "unload",
+    "on": {
+      "action": "unload"
+    },
+    "seconds": 0.5,
+    "keys": [
+      {
+        "t": 0.2,
+        "right": {
+          "at": "target",
+          "offset": [0, 0, 0],
+          "fingers": "grip"
+        }
+      }
+    ]
+  },
+  {
+    "id": "door-open",
+    "on": {
+      "action": "travel"
+    },
+    "seconds": 1.5,
+    "effect": 0.85,
+    "carry": [[0.3, 1.3]],
+    "prop": "card",
+    "keys": [
+      {
+        "t": 0.3,
+        "right": {
+          "offset": [0.22, 0.5, 0.02],
+          "palm": "in",
+          "fingers": "grip"
+        }
+      },
+      {
+        "t": 0.8,
+        "right": {
+          "at": "target",
+          "offset": [0, 0, 0],
+          "palm": "out",
+          "fingers": "grip"
+        }
+      },
+      {
+        "t": 1,
+        "right": {
+          "at": "target",
+          "offset": [0, 0, 0],
+          "palm": "out",
+          "fingers": "grip"
+        }
+      },
+      {
+        "t": 1.3,
+        "right": {
+          "offset": [0.22, 0.5, 0.02],
+          "palm": "in",
+          "fingers": "grip"
+        }
+      }
+    ]
+  },
+  {
+    "id": "door-close",
+    "on": {
+      "action": "close-door"
+    },
+    "seconds": 1.5,
+    "effect": 0.85,
+    "carry": [[0.3, 1.3]],
+    "prop": "card",
+    "keys": [
+      {
+        "t": 0.3,
+        "right": {
+          "offset": [0.22, 0.5, 0.02],
+          "palm": "in",
+          "fingers": "grip"
+        }
+      },
+      {
+        "t": 0.8,
+        "right": {
+          "at": "target",
+          "offset": [0, 0, 0],
+          "palm": "out",
+          "fingers": "grip"
+        }
+      },
+      {
+        "t": 1,
+        "right": {
+          "at": "target",
+          "offset": [0, 0, 0],
+          "palm": "out",
+          "fingers": "grip"
+        }
+      },
+      {
+        "t": 1.3,
+        "right": {
+          "offset": [0.22, 0.5, 0.02],
+          "palm": "in",
+          "fingers": "grip"
+        }
+      }
+    ]
+  },
+  {
+    "id": "take-soap",
+    "on": {
+      "action": "take-soap"
+    },
+    "seconds": 1.27,
+    "stepIn": true,
+    "effect": 0.71,
+    "keys": [
+      {
+        "t": 0.52,
+        "right": {
+          "at": "target",
+          "offset": [0, -0.03, 0],
+          "palm": "up",
+          "fingers": "grip"
+        }
+      },
+      {
+        "t": 0.94,
+        "right": {
+          "at": "target",
+          "offset": [0, -0.04, 0],
+          "palm": "up",
+          "fingers": "grip"
+        }
+      }
+    ]
+  },
+  {
+    "id": "sanitize",
+    "on": {
+      "action": "sanitize"
+    },
+    "seconds": 1.27,
+    "stepIn": true,
+    "effect": 0.71,
+    "keys": [
+      {
+        "t": 0.52,
+        "right": {
+          "at": "target",
+          "offset": [0, -0.03, 0],
+          "palm": "up",
+          "fingers": "grip"
+        }
+      },
+      {
+        "t": 0.94,
+        "right": {
+          "at": "target",
+          "offset": [0, -0.04, 0],
+          "palm": "up",
+          "fingers": "grip"
+        }
+      }
+    ]
+  },
+  {
+    "id": "dry-hands",
+    "on": {
+      "action": "dry-hands"
+    },
+    "seconds": 2.04,
+    "stepIn": true,
+    "effect": 0.3,
+    "prop": "towel",
+    "carry": [[0.42, 1.8]],
+    "keys": [
+      {
+        "t": 0.24,
+        "right": {
+          "at": "target",
+          "offset": [0, 0, -0.04],
+          "palm": "forward",
+          "fingers": "grip"
+        },
+        "left": {
+          "at": "target",
+          "offset": [0, 0, 0.04],
+          "palm": "forward",
+          "fingers": "grip"
+        }
+      },
+      {
+        "t": 0.42,
+        "right": {
+          "at": "target",
+          "offset": [0.1, -0.08, -0.04],
+          "palm": "forward",
+          "fingers": "grip"
+        },
+        "left": {
+          "at": "target",
+          "offset": [0.1, -0.08, 0.04],
+          "palm": "forward",
+          "fingers": "grip"
+        }
+      },
+      {
+        "t": 0.66,
+        "right": {
+          "offset": [0.03, 0.6, 0.3],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "left": {
+          "offset": [-0.03, 0.6, 0.3],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "look": -45
+      },
+      {
+        "t": 0.9,
+        "right": {
+          "offset": [-0.02, 0.61, 0.32],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "left": {
+          "offset": [0.03, 0.59, 0.3],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "look": -45
+      },
+      {
+        "t": 1.14,
+        "right": {
+          "offset": [0.04, 0.6, 0.29],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "left": {
+          "offset": [-0.04, 0.61, 0.31],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "look": -45
+      },
+      {
+        "t": 1.38,
+        "right": {
+          "offset": [0.01, 0.58, 0.3],
+          "palm": "forward",
+          "fingers": "grip"
+        },
+        "left": {
+          "offset": [-0.01, 0.6, 0.31],
+          "palm": "up",
+          "fingers": "grip"
+        },
+        "look": -45
+      },
+      {
+        "t": 1.62,
+        "right": {
+          "offset": [0.03, 0.6, 0.3],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "left": {
+          "offset": [-0.03, 0.6, 0.3],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "look": -45
+      },
+      {
+        "t": 1.8,
+        "right": {
+          "offset": [0.16, 0.5, 0.2],
+          "palm": "down",
+          "fingers": "fist"
+        },
+        "look": -50
+      }
+    ]
+  },
+  {
+    "id": "take-paper",
+    "on": {
+      "action": "take-paper"
+    },
+    "seconds": 1.5,
+    "stepIn": true,
+    "effect": 0.65,
+    "carry": [[0.65, 1.35]],
+    "prop": "paper",
+    "keys": [
+      {
+        "t": 0.15,
+        "right": {
+          "offset": [0.2, 0.62, 0.25],
+          "palm": "in",
+          "fingers": "open"
+        }
+      },
+      {
+        "t": 0.55,
+        "right": {
+          "at": "target",
+          "offset": [0, 0, 0],
+          "palm": "in",
+          "fingers": "open"
+        }
+      },
+      {
+        "t": 0.65,
+        "right": {
+          "at": "target",
+          "offset": [0, 0, 0],
+          "palm": "in",
+          "fingers": "grip"
+        }
+      },
+      {
+        "t": 0.95,
+        "right": {
+          "offset": [0.12, 0.72, 0.35],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "look": -12
+      },
+      {
+        "t": 1.35,
+        "right": {
+          "offset": [0.22, 0.5, 0.02],
+          "palm": "in",
+          "fingers": "grip"
+        }
+      }
+    ]
+  },
+  {
+    "id": "give-paper",
+    "on": {
+      "action": "give-paper"
+    },
+    "seconds": 1.6,
+    "stepIn": true,
+    "effect": 0.85,
+    "carry": [[0.1, 0.85]],
+    "prop": "paper",
+    "keys": [
+      {
+        "t": 0.1,
+        "right": {
+          "offset": [0.22, 0.5, 0.02],
+          "palm": "in",
+          "fingers": "grip"
+        }
+      },
+      {
+        "t": 0.45,
+        "right": {
+          "offset": [0.15, 0.72, 0.3],
+          "palm": "in",
+          "fingers": "grip"
+        },
+        "look": -8
+      },
+      {
+        "t": 0.8,
+        "right": {
+          "at": "target",
+          "offset": [0, 0, 0],
+          "palm": "in",
+          "fingers": "grip"
+        }
+      },
+      {
+        "t": 0.85,
+        "right": {
+          "at": "target",
+          "offset": [0, 0, 0],
+          "palm": "in",
+          "fingers": "open"
+        }
+      },
+      {
+        "t": 1.2,
+        "right": {
+          "offset": [0.18, 0.6, 0.25],
+          "palm": "in",
+          "fingers": "open"
+        }
+      }
+    ]
+  },
+  {
+    "id": "wash-hands",
+    "on": {
+      "action": "wash-hands"
+    },
+    "seconds": 3.3,
+    "stepIn": true,
+    "effect": 3,
+    "keys": [
+      {
+        "t": 0.45,
+        "right": {
+          "at": "target",
+          "offset": [-0.03, -0.07, 0.05],
+          "palm": "in",
+          "fingers": "open"
+        },
+        "left": {
+          "at": "target",
+          "offset": [0.03, -0.08, 0.05],
+          "palm": "in",
+          "fingers": "open"
+        },
+        "look": -40
+      },
+      {
+        "t": 0.8,
+        "right": {
+          "at": "target",
+          "offset": [0.03, -0.07, 0.05],
+          "palm": "in",
+          "fingers": "open"
+        },
+        "left": {
+          "at": "target",
+          "offset": [-0.03, -0.08, 0.05],
+          "palm": "in",
+          "fingers": "open"
+        }
+      },
+      {
+        "t": 1.15,
+        "right": {
+          "at": "target",
+          "offset": [-0.03, -0.07, 0.05],
+          "palm": "in",
+          "fingers": "open"
+        },
+        "left": {
+          "at": "target",
+          "offset": [0.03, -0.08, 0.05],
+          "palm": "in",
+          "fingers": "open"
+        }
+      },
+      {
+        "t": 1.5,
+        "right": {
+          "at": "target",
+          "offset": [0.03, -0.07, 0.05],
+          "palm": "in",
+          "fingers": "open"
+        },
+        "left": {
+          "at": "target",
+          "offset": [-0.03, -0.08, 0.05],
+          "palm": "in",
+          "fingers": "open"
+        }
+      },
+      {
+        "t": 1.85,
+        "right": {
+          "at": "target",
+          "offset": [-0.03, -0.07, 0.05],
+          "palm": "in",
+          "fingers": "open"
+        },
+        "left": {
+          "at": "target",
+          "offset": [0.03, -0.08, 0.05],
+          "palm": "in",
+          "fingers": "open"
+        }
+      },
+      {
+        "t": 2.2,
+        "right": {
+          "at": "target",
+          "offset": [0.03, -0.07, 0.05],
+          "palm": "in",
+          "fingers": "open"
+        },
+        "left": {
+          "at": "target",
+          "offset": [-0.03, -0.08, 0.05],
+          "palm": "in",
+          "fingers": "open"
+        }
+      },
+      {
+        "t": 2.55,
+        "right": {
+          "at": "target",
+          "offset": [-0.03, -0.07, 0.05],
+          "palm": "in",
+          "fingers": "open"
+        },
+        "left": {
+          "at": "target",
+          "offset": [0.03, -0.08, 0.05],
+          "palm": "in",
+          "fingers": "open"
+        }
+      },
+      {
+        "t": 2.9,
+        "right": {
+          "at": "target",
+          "offset": [0.03, -0.07, 0.05],
+          "palm": "in",
+          "fingers": "open"
+        },
+        "left": {
+          "at": "target",
+          "offset": [-0.03, -0.08, 0.05],
+          "palm": "in",
+          "fingers": "open"
+        }
+      }
+    ]
+  }
+]

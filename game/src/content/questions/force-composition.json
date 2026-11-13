@@ -1,0 +1,1093 @@
+{
+  "id": "force-composition",
+  "skills": [
+    {
+      "id": "parallelogram",
+      "name": "Parallelogram rule: R² = F1² + F2² + 2F1F2·cos α",
+      "advice": "Draw F1 and F2 from one point and complete the parallelogram: the diagonal is R. Practise the formula with α = 0°, 60°, 90°, 120°; trap: a minus sign, which is the triangle’s law of cosines with the other angle.",
+      "vi": {
+        "name": "Quy tắc hình bình hành: R² = F1² + F2² + 2F1F2·cos α",
+        "advice": "Vẽ F1 và F2 chung gốc rồi dựng hình bình hành: đường chéo là R. Luyện công thức với α = 0°, 60°, 90°, 120°; lỗi hay gặp: dùng dấu trừ, đó là định lí côsin trong tam giác với góc còn lại."
+      }
+    },
+    {
+      "id": "equilibrium",
+      "name": "Three forces in balance",
+      "advice": "When the ring rests, the three forces add to zero: F3 is equal and opposite to the resultant of F1 and F2. Turn the third balance at the station until the ring sits on the mark.",
+      "vi": {
+        "name": "Ba lực cân bằng",
+        "advice": "Khi vòng nằm yên, ba lực có tổng bằng 0: F3 bằng và ngược chiều với hợp lực của F1 và F2. Trên trạm, xoay lực kế thứ ba cho tới khi vòng nằm đúng vạch tâm."
+      }
+    },
+    {
+      "id": "angle",
+      "name": "How the angle changes the resultant",
+      "advice": "Run α = 30° to 150° with the same forces: R shrinks as α grows, from near F1 + F2 towards |F1 − F2|. Learn the special cases: 90° gives √(F1² + F2²); equal forces at 120° give R = F.",
+      "vi": {
+        "name": "Góc giữa hai lực ảnh hưởng đến hợp lực",
+        "advice": "Chạy α từ 30° đến 150° với cùng hai lực: R giảm khi α tăng, từ gần F1 + F2 về phía |F1 − F2|. Nhớ các trường hợp đặc biệt: 90° cho √(F1² + F2²); hai lực bằng nhau hợp góc 120° cho R = F."
+      }
+    },
+    {
+      "id": "direction",
+      "name": "Direction of the resultant and graphs",
+      "advice": "The resultant makes θ with F1, tan θ = F2·sin α/(F1 + F2·cos α); it bisects α only when F1 = F2. Over several angles, F3² against cos α is a line of slope 2F1F2 and intercept F1² + F2².",
+      "vi": {
+        "name": "Hướng của hợp lực và đồ thị",
+        "advice": "Hợp lực hợp với F1 góc θ, tan θ = F2·sin α/(F1 + F2·cos α); nó chỉ nằm trên phân giác của α khi F1 = F2. Qua nhiều góc, F3² theo cos α là đường thẳng hệ số góc 2F1F2 và tung độ gốc F1² + F2²."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "rule",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["parallelogram"],
+      "stem": "Two concurrent forces act on a ring at an angle to each other. Their resultant is found by…",
+      "explain": "Forces are vectors: the resultant is the diagonal of the parallelogram they form.",
+      "vi": {
+        "stem": "Hai lực đồng quy tác dụng lên một vòng nhẫn, hợp với nhau một góc. Hợp lực của chúng được tìm bằng…",
+        "explain": "Lực là đại lượng vectơ: hợp lực là đường chéo của hình bình hành dựng trên hai lực."
+      },
+      "options": [
+        {
+          "text": "the parallelogram rule",
+          "vi": {
+            "text": "quy tắc hình bình hành"
+          },
+          "correct": true
+        },
+        {
+          "text": "adding their sizes",
+          "vi": {
+            "text": "cộng độ lớn của chúng"
+          }
+        },
+        {
+          "text": "subtracting the smaller from the larger",
+          "vi": {
+            "text": "lấy lực lớn trừ lực nhỏ"
+          }
+        },
+        {
+          "text": "multiplying their sizes",
+          "vi": {
+            "text": "nhân độ lớn của chúng"
+          }
+        }
+      ]
+    },
+    {
+      "id": "third-force",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["equilibrium"],
+      "stem": "A ring rests under three forces F1, F2 and F3. Then F3 is…",
+      "explain": "At rest the forces add to zero, so F3 = −(F1 + F2) as vectors.",
+      "vi": {
+        "stem": "Một vòng nhẫn nằm cân bằng dưới tác dụng của ba lực F1, F2 và F3. Khi đó F3…",
+        "explain": "Khi cân bằng, tổng ba lực bằng 0, nên F3 = −(F1 + F2) theo vectơ."
+      },
+      "options": [
+        {
+          "text": "equal in size and opposite in direction to the resultant of F1 and F2",
+          "vi": {
+            "text": "cùng độ lớn và ngược chiều với hợp lực của F1 và F2"
+          },
+          "correct": true
+        },
+        {
+          "text": "always equal to F1 + F2 in size",
+          "vi": {
+            "text": "luôn có độ lớn bằng F1 + F2"
+          }
+        },
+        {
+          "text": "perpendicular to the resultant of F1 and F2",
+          "vi": {
+            "text": "vuông góc với hợp lực của F1 và F2"
+          }
+        },
+        {
+          "text": "in the same direction as the resultant of F1 and F2",
+          "vi": {
+            "text": "cùng chiều với hợp lực của F1 và F2"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-rule",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["parallelogram", "angle", "direction"],
+      "stem": "Two forces F1 and F2 act on a point at an angle α to each other; R is their resultant. Decide whether each statement is true or false.",
+      "explain": "|F1 − F2| ≤ R ≤ F1 + F2; at α = 0 R = F1 + F2; at 90° R = √(F1² + F2²); R bisects α only when F1 = F2.",
+      "vi": {
+        "stem": "Hai lực F1 và F2 tác dụng vào một điểm, hợp với nhau góc α; R là hợp lực của chúng. Mỗi nhận định sau đúng hay sai?",
+        "explain": "|F1 − F2| ≤ R ≤ F1 + F2; khi α = 0 thì R = F1 + F2; khi α = 90° thì R = √(F1² + F2²); R chỉ nằm trên phân giác của α khi F1 = F2."
+      },
+      "statements": [
+        {
+          "text": "R lies between |F1 − F2| and F1 + F2.",
+          "vi": {
+            "text": "R nằm trong khoảng từ |F1 − F2| đến F1 + F2."
+          },
+          "true": true
+        },
+        {
+          "text": "When α = 0°, R = F1 + F2.",
+          "vi": {
+            "text": "Khi α = 0° thì R = F1 + F2."
+          },
+          "true": true
+        },
+        {
+          "text": "When α = 90°, R = F1 + F2.",
+          "vi": {
+            "text": "Khi α = 90° thì R = F1 + F2."
+          },
+          "true": false
+        },
+        {
+          "text": "R always lies along the bisector of the angle between F1 and F2.",
+          "vi": {
+            "text": "R luôn nằm trên đường phân giác của góc giữa F1 và F2."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "wider-angle",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["angle"],
+      "stem": "F1 and F2 keep their sizes while the angle between them is opened from 30° to 150°. Their resultant…",
+      "explain": "R² = F1² + F2² + 2F1F2·cos α and cos α falls as α grows, so R decreases.",
+      "vi": {
+        "stem": "Giữ nguyên độ lớn F1 và F2, tăng góc giữa chúng từ 30° lên 150°. Hợp lực của chúng…",
+        "explain": "R² = F1² + F2² + 2F1F2·cos α, mà cos α giảm khi α tăng, nên R giảm."
+      },
+      "options": [
+        {
+          "text": "decreases",
+          "vi": {
+            "text": "giảm"
+          },
+          "correct": true
+        },
+        {
+          "text": "increases",
+          "vi": {
+            "text": "tăng"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "first increases, then decreases",
+          "vi": {
+            "text": "tăng rồi giảm"
+          }
+        }
+      ]
+    },
+    {
+      "id": "equal-120",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["angle", "parallelogram"],
+      "set": {
+        "force1": 3,
+        "force2": 3,
+        "angle": 120
+      },
+      "stem": "Two forces of {force1} N each act on the ring at {angle}° to each other. What is the size of their resultant?",
+      "explain": "R² = F² + F² + 2F²·cos 120° = F², so R = F = {@resultant} N: the parallelogram is two equilateral triangles.",
+      "vi": {
+        "stem": "Hai lực, mỗi lực {force1} N, tác dụng lên vòng nhẫn và hợp với nhau góc {angle}°. Độ lớn hợp lực của chúng bằng bao nhiêu?",
+        "explain": "R² = F² + F² + 2F²·cos 120° = F², nên R = F = {@resultant} N: hình bình hành gồm hai tam giác đều."
+      },
+      "options": [
+        {
+          "text": "{force1} N",
+          "vi": {
+            "text": "{force1} N"
+          },
+          "correct": true,
+          "check": {
+            "expr": "force1",
+            "equals": "resultant"
+          }
+        },
+        {
+          "text": "{=2*force1} N",
+          "vi": {
+            "text": "{=2*force1} N"
+          },
+          "check": {
+            "expr": "2*force1",
+            "equals": "resultant"
+          }
+        },
+        {
+          "text": "{=force1*sqrt(3)} N",
+          "vi": {
+            "text": "{=force1*sqrt(3)} N"
+          },
+          "check": {
+            "expr": "force1*sqrt(3)",
+            "equals": "resultant"
+          }
+        },
+        {
+          "text": "{=force1*sqrt(2)} N",
+          "vi": {
+            "text": "{=force1*sqrt(2)} N"
+          },
+          "check": {
+            "expr": "force1*sqrt(2)",
+            "equals": "resultant"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-right-angle",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["parallelogram", "equilibrium", "direction"],
+      "set": {
+        "force1": 3,
+        "force2": 4,
+        "angle": 90
+      },
+      "stem": "F1 = {force1} N and F2 = {force2} N pull the ring at {angle}° to each other; a third balance holds it at rest. Decide whether each statement is true or false.",
+      "explain": "R = √(3² + 4²) = {@resultant} N, at θ = arctan(4/3) ≈ {@resultantAngle}° from F1. F3 = R in size but points opposite to it.",
+      "vi": {
+        "stem": "F1 = {force1} N và F2 = {force2} N kéo vòng nhẫn theo hai hướng hợp nhau {angle}°; lực kế thứ ba giữ vòng cân bằng. Mỗi nhận định sau đúng hay sai?",
+        "explain": "R = √(3² + 4²) = {@resultant} N, hợp với F1 góc θ = arctan(4/3) ≈ {@resultantAngle}°. F3 có độ lớn bằng R nhưng ngược chiều với R."
+      },
+      "statements": [
+        {
+          "text": "The third balance reads {=sqrt(force1^2+force2^2)} N.",
+          "vi": {
+            "text": "Lực kế thứ ba chỉ {=sqrt(force1^2+force2^2)} N."
+          },
+          "true": true,
+          "check": {
+            "expr": "sqrt(force1^2+force2^2)",
+            "equals": "resultant"
+          }
+        },
+        {
+          "text": "The third balance reads {=force1+force2} N.",
+          "vi": {
+            "text": "Lực kế thứ ba chỉ {=force1+force2} N."
+          },
+          "true": false,
+          "check": {
+            "expr": "force1+force2",
+            "equals": "resultant"
+          }
+        },
+        {
+          "text": "The resultant of F1 and F2 makes about {@resultantAngle}° with F1.",
+          "vi": {
+            "text": "Hợp lực của F1 và F2 hợp với F1 góc khoảng {@resultantAngle}°."
+          },
+          "true": true,
+          "check": {
+            "expr": "deg(atan(force2/force1))",
+            "equals": "resultantAngle"
+          }
+        },
+        {
+          "text": "The third balance pulls in the direction of the resultant of F1 and F2.",
+          "vi": {
+            "text": "Lực kế thứ ba kéo theo cùng hướng với hợp lực của F1 và F2."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "resultant-60",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["parallelogram"],
+      "set": {
+        "force1": 3,
+        "force2": 4,
+        "angle": 60
+      },
+      "stem": "F1 = {force1} N and F2 = {force2} N act on the ring at {angle}° to each other. What is the size of their resultant?",
+      "explain": "R = √(F1² + F2² + 2F1F2·cos α) = √({force1}² + {force2}² + 2·{force1}·{force2}·cos {angle}°) ≈ {@resultant} N.",
+      "vi": {
+        "stem": "F1 = {force1} N và F2 = {force2} N tác dụng lên vòng nhẫn, hợp với nhau góc {angle}°. Độ lớn hợp lực bằng bao nhiêu?",
+        "explain": "R = √(F1² + F2² + 2F1F2·cos α) = √({force1}² + {force2}² + 2·{force1}·{force2}·cos {angle}°) ≈ {@resultant} N."
+      },
+      "options": [
+        {
+          "text": "{@resultant} N",
+          "vi": {
+            "text": "{@resultant} N"
+          },
+          "correct": true,
+          "check": {
+            "expr": "sqrt(force1^2+force2^2+2*force1*force2*cos(rad(angle)))",
+            "equals": "resultant"
+          }
+        },
+        {
+          "text": "{=sqrt(force1^2+force2^2-2*force1*force2*cos(rad(angle)))} N",
+          "vi": {
+            "text": "{=sqrt(force1^2+force2^2-2*force1*force2*cos(rad(angle)))} N"
+          },
+          "check": {
+            "expr": "sqrt(force1^2+force2^2-2*force1*force2*cos(rad(angle)))",
+            "equals": "resultant"
+          }
+        },
+        {
+          "text": "{=force1+force2} N",
+          "vi": {
+            "text": "{=force1+force2} N"
+          },
+          "check": {
+            "expr": "force1+force2",
+            "equals": "resultant"
+          }
+        },
+        {
+          "text": "{=sqrt(force1^2+force2^2)} N",
+          "vi": {
+            "text": "{=sqrt(force1^2+force2^2)} N"
+          },
+          "check": {
+            "expr": "sqrt(force1^2+force2^2)",
+            "equals": "resultant"
+          }
+        }
+      ]
+    },
+    {
+      "id": "direction",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["direction"],
+      "set": {
+        "force1": 3,
+        "force2": 2,
+        "angle": 120
+      },
+      "stem": "F1 = {force1} N and F2 = {force2} N act at {angle}° to each other. What angle does their resultant make with F1?",
+      "explain": "tan θ = F2·sin α/(F1 + F2·cos α) = {force2}·sin {angle}°/({force1} + {force2}·cos {angle}°), θ ≈ {@resultantAngle}°. It is not α/2: the forces are not equal.",
+      "vi": {
+        "stem": "F1 = {force1} N và F2 = {force2} N hợp với nhau góc {angle}°. Hợp lực của chúng hợp với F1 một góc bằng bao nhiêu?",
+        "explain": "tan θ = F2·sin α/(F1 + F2·cos α) = {force2}·sin {angle}°/({force1} + {force2}·cos {angle}°), θ ≈ {@resultantAngle}°. Không phải α/2 vì hai lực không bằng nhau."
+      },
+      "options": [
+        {
+          "text": "{@resultantAngle}°",
+          "vi": {
+            "text": "{@resultantAngle}°"
+          },
+          "correct": true,
+          "check": {
+            "expr": "deg(atan(force2*sin(rad(angle))/(force1+force2*cos(rad(angle)))))",
+            "equals": "resultantAngle"
+          }
+        },
+        {
+          "text": "{=deg(atan(force2/force1))}°",
+          "vi": {
+            "text": "{=deg(atan(force2/force1))}°"
+          },
+          "check": {
+            "expr": "deg(atan(force2/force1))",
+            "equals": "resultantAngle"
+          }
+        },
+        {
+          "text": "{=angle/2}°",
+          "vi": {
+            "text": "{=angle/2}°"
+          },
+          "check": {
+            "expr": "angle/2",
+            "equals": "resultantAngle"
+          }
+        },
+        {
+          "text": "{=deg(atan(force2*sin(rad(angle))/force1))}°",
+          "vi": {
+            "text": "{=deg(atan(force2*sin(rad(angle))/force1))}°"
+          },
+          "check": {
+            "expr": "deg(atan(force2*sin(rad(angle))/force1))",
+            "equals": "resultantAngle"
+          }
+        }
+      ]
+    },
+    {
+      "id": "equal-forces",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["parallelogram", "angle"],
+      "set": {
+        "force1": 4,
+        "force2": 4,
+        "angle": 30
+      },
+      "stem": "Two forces of {force1} N each act on the ring at {angle}° to each other. What is their resultant?",
+      "explain": "For equal forces the parallelogram is a rhombus: R = 2F·cos(α/2) = 2·{force1}·cos {=angle/2}° ≈ {@resultant} N.",
+      "vi": {
+        "stem": "Hai lực, mỗi lực {force1} N, tác dụng lên vòng nhẫn và hợp với nhau góc {angle}°. Hợp lực bằng bao nhiêu?",
+        "explain": "Với hai lực bằng nhau, hình bình hành là hình thoi: R = 2F·cos(α/2) = 2·{force1}·cos {=angle/2}° ≈ {@resultant} N."
+      },
+      "options": [
+        {
+          "text": "{@resultant} N",
+          "vi": {
+            "text": "{@resultant} N"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2*force1*cos(rad(angle/2))",
+            "equals": "resultant"
+          }
+        },
+        {
+          "text": "{=2*force1} N",
+          "vi": {
+            "text": "{=2*force1} N"
+          },
+          "check": {
+            "expr": "2*force1",
+            "equals": "resultant"
+          }
+        },
+        {
+          "text": "{=2*force1*sin(rad(angle/2))} N",
+          "vi": {
+            "text": "{=2*force1*sin(rad(angle/2))} N"
+          },
+          "check": {
+            "expr": "2*force1*sin(rad(angle/2))",
+            "equals": "resultant"
+          }
+        },
+        {
+          "text": "{=force1*sqrt(2)} N",
+          "vi": {
+            "text": "{=force1*sqrt(2)} N"
+          },
+          "check": {
+            "expr": "force1*sqrt(2)",
+            "equals": "resultant"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-150",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["parallelogram", "angle"],
+      "set": {
+        "force1": 2,
+        "force2": 3,
+        "angle": 150
+      },
+      "stem": "F1 = {force1} N and F2 = {force2} N pull the ring at {angle}° to each other. Decide whether each statement is true or false.",
+      "explain": "cos {angle}° < 0, so R² < F1² + F2²: R = √(F1² + F2² + 2F1F2·cos α) ≈ {@resultant} N, smaller than F2 itself; F1 + F2 = {=force1+force2} N only if they pulled together.",
+      "vi": {
+        "stem": "F1 = {force1} N và F2 = {force2} N kéo vòng nhẫn theo hai hướng hợp nhau góc {angle}°. Mỗi nhận định sau đúng hay sai?",
+        "explain": "cos {angle}° < 0 nên R² < F1² + F2²: R = √(F1² + F2² + 2F1F2·cos α) ≈ {@resultant} N, còn nhỏ hơn cả F2; F1 + F2 = {=force1+force2} N chỉ khi hai lực cùng hướng."
+      },
+      "statements": [
+        {
+          "text": "Their resultant is about {@resultant} N.",
+          "vi": {
+            "text": "Hợp lực của chúng khoảng {@resultant} N."
+          },
+          "true": true,
+          "check": {
+            "expr": "sqrt(force1^2+force2^2+2*force1*force2*cos(rad(angle)))",
+            "equals": "resultant"
+          }
+        },
+        {
+          "text": "Their resultant is smaller than F2.",
+          "vi": {
+            "text": "Hợp lực của chúng nhỏ hơn F2."
+          },
+          "true": true
+        },
+        {
+          "text": "The third balance reads {=force1+force2} N.",
+          "vi": {
+            "text": "Lực kế thứ ba chỉ {=force1+force2} N."
+          },
+          "true": false,
+          "check": {
+            "expr": "force1+force2",
+            "equals": "resultant"
+          }
+        },
+        {
+          "text": "Since cos α is negative, R² is less than F1² + F2².",
+          "vi": {
+            "text": "Vì cos α âm nên R² nhỏ hơn F1² + F2²."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "graph-slope",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["direction", "parallelogram"],
+      "set": {
+        "force1": 3,
+        "force2": 4
+      },
+      "stem": "With F1 = {force1} N and F2 = {force2} N, runs at several angles α give F3² against cos α as a straight line. What is its slope?",
+      "explain": "F3² = R² = (F1² + F2²) + 2F1F2·cos α: a line in cos α with slope 2F1F2 = {@productTwice} N² and intercept F1² + F2² = {@squaresSum} N².",
+      "vi": {
+        "stem": "Với F1 = {force1} N và F2 = {force2} N, các lần đo ở nhiều góc α cho đồ thị F3² theo cos α là một đường thẳng. Hệ số góc của nó bằng bao nhiêu?",
+        "explain": "F3² = R² = (F1² + F2²) + 2F1F2·cos α: đường thẳng theo cos α với hệ số góc 2F1F2 = {@productTwice} N² và tung độ gốc F1² + F2² = {@squaresSum} N²."
+      },
+      "options": [
+        {
+          "text": "{@productTwice} N²",
+          "vi": {
+            "text": "{@productTwice} N²"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2*force1*force2",
+            "equals": "productTwice"
+          }
+        },
+        {
+          "text": "{=force1*force2} N²",
+          "vi": {
+            "text": "{=force1*force2} N²"
+          },
+          "check": {
+            "expr": "force1*force2",
+            "equals": "productTwice"
+          }
+        },
+        {
+          "text": "{=force1^2+force2^2} N²",
+          "vi": {
+            "text": "{=force1^2+force2^2} N²"
+          },
+          "check": {
+            "expr": "force1^2+force2^2",
+            "equals": "productTwice"
+          }
+        },
+        {
+          "text": "{=2*(force1+force2)} N²",
+          "vi": {
+            "text": "{=2*(force1+force2)} N²"
+          },
+          "check": {
+            "expr": "2*(force1+force2)",
+            "equals": "productTwice"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-reading",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["equilibrium", "parallelogram", "direction"],
+      "set": {
+        "force1": 3,
+        "force2": 4,
+        "angle": 120,
+        "balanceResolution": 0.1
+      },
+      "stem": "F1 = {force1} N and F2 = {force2} N act at {angle}°; the third balance, of resolution {balanceResolution} N, holds the ring at rest. Decide whether each statement is true or false.",
+      "explain": "R ≈ {@resultant|4} N, so the balance shows {=round(@resultant/balanceResolution)*balanceResolution} N. A coarser 0.2 N balance gives a less precise reading. The graph’s intercept is F1² + F2² = {@squaresSum} N².",
+      "vi": {
+        "stem": "F1 = {force1} N và F2 = {force2} N hợp với nhau góc {angle}°; lực kế thứ ba, độ phân giải {balanceResolution} N, giữ vòng cân bằng. Mỗi nhận định sau đúng hay sai?",
+        "explain": "R ≈ {@resultant|4} N, nên lực kế hiển thị {=round(@resultant/balanceResolution)*balanceResolution} N. Lực kế thô hơn (0,2 N) cho số đọc kém chính xác hơn. Tung độ gốc của đồ thị là F1² + F2² = {@squaresSum} N²."
+      },
+      "statements": [
+        {
+          "text": "The resultant of F1 and F2 is about {@resultant|4} N.",
+          "vi": {
+            "text": "Hợp lực của F1 và F2 khoảng {@resultant|4} N."
+          },
+          "true": true,
+          "check": {
+            "expr": "sqrt(force1^2+force2^2+2*force1*force2*cos(rad(angle)))",
+            "equals": "resultant"
+          }
+        },
+        {
+          "text": "The third balance shows {=round(@resultant/balanceResolution)*balanceResolution} N.",
+          "vi": {
+            "text": "Lực kế thứ ba hiển thị {=round(@resultant/balanceResolution)*balanceResolution} N."
+          },
+          "true": true
+        },
+        {
+          "text": "A balance of resolution 0.2 N would give a more precise reading.",
+          "vi": {
+            "text": "Lực kế có độ phân giải 0,2 N sẽ cho số đọc chính xác hơn."
+          },
+          "true": false
+        },
+        {
+          "text": "The line of F3² against cos α for these forces meets cos α = 0 at {@squaresSum} N².",
+          "vi": {
+            "text": "Đường thẳng F3² theo cos α với hai lực này cắt trục cos α = 0 tại {@squaresSum} N²."
+          },
+          "true": true,
+          "check": {
+            "expr": "force1^2+force2^2",
+            "equals": "squaresSum"
+          }
+        }
+      ]
+    },
+    {
+      "id": "range",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["parallelogram", "angle"],
+      "stem": "Whatever the angle between them, the resultant R of two forces F1 and F2 always lies…",
+      "explain": "R is largest, F1 + F2, when the forces point the same way (α = 0) and smallest, |F1 − F2|, when they are opposite (α = 180°); for any other angle it lies between.",
+      "vi": {
+        "stem": "Dù góc giữa chúng bằng bao nhiêu, hợp lực F của hai lực F1 và F2 luôn thỏa mãn…",
+        "explain": "F lớn nhất, bằng F1 + F2, khi hai lực cùng chiều (α = 0) và nhỏ nhất, bằng |F1 − F2|, khi hai lực ngược chiều (α = 180°); với mọi góc khác, F nằm giữa hai giá trị đó."
+      },
+      "options": [
+        {
+          "text": "|F1 − F2| ≤ R ≤ F1 + F2",
+          "vi": {
+            "text": "|F1 − F2| ≤ F ≤ F1 + F2"
+          },
+          "correct": true
+        },
+        {
+          "text": "R = F1 + F2",
+          "vi": {
+            "text": "F = F1 + F2"
+          }
+        },
+        {
+          "text": "R ≥ F1 + F2",
+          "vi": {
+            "text": "F ≥ F1 + F2"
+          }
+        },
+        {
+          "text": "R = √(F1² + F2²)",
+          "vi": {
+            "text": "F = √(F1² + F2²)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "remove-one",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["equilibrium"],
+      "stem": "A ring is at rest under three forces F1, F2 and F3. If F1 is suddenly removed, the ring starts to move…",
+      "explain": "At rest, F2 + F3 = −F1: the resultant of the other two is equal and opposite to F1. Once F1 is gone, that resultant is unbalanced, so the ring accelerates in the direction opposite to F1.",
+      "vi": {
+        "stem": "Một vòng nhẫn đứng yên dưới tác dụng của ba lực F1, F2 và F3. Nếu đột ngột bỏ lực F1, vòng bắt đầu chuyển động…",
+        "explain": "Khi đứng yên, hợp lực của F2 và F3 bằng −F1: cùng độ lớn, ngược chiều với F1. Khi bỏ F1, hợp lực đó không còn được cân bằng nên vòng chuyển động theo chiều ngược với F1."
+      },
+      "options": [
+        {
+          "text": "in the direction opposite to F1",
+          "vi": {
+            "text": "theo chiều ngược với F1"
+          },
+          "correct": true
+        },
+        {
+          "text": "in the direction of F1",
+          "vi": {
+            "text": "theo chiều của F1"
+          }
+        },
+        {
+          "text": "along F2",
+          "vi": {
+            "text": "theo phương của F2"
+          }
+        },
+        {
+          "text": "nowhere: it stays at rest",
+          "vi": {
+            "text": "không chuyển động: vẫn đứng yên"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-resultant",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["parallelogram", "equilibrium", "angle"],
+      "stem": "Two forces F1 and F2 act on a ring at an angle α; a third force F3 holds it at rest. Decide whether each statement is true or false.",
+      "explain": "R² = F1² + F2² + 2F1F2·cos α. At α = 90° the cos term is zero, so R = √(F1² + F2²), less than F1 + F2. At wide angles R can be smaller than either force (2 N and 3 N at 150° give about 1.6 N). F3 balances R: the same size, the opposite direction.",
+      "vi": {
+        "stem": "Hai lực F1 và F2 tác dụng lên một vòng nhẫn, hợp với nhau góc α; lực thứ ba F3 giữ vòng đứng yên. Mỗi nhận định sau đúng hay sai?",
+        "explain": "F² = F1² + F2² + 2F1F2·cos α. Khi α = 90°, số hạng cos bằng 0 nên F = √(F1² + F2²), nhỏ hơn F1 + F2. Khi góc lớn, F có thể nhỏ hơn cả hai lực thành phần (2 N và 3 N hợp góc 150° cho khoảng 1,6 N). F3 cân bằng với hợp lực: cùng độ lớn, ngược chiều."
+      },
+      "statements": [
+        {
+          "text": "R² = F1² + F2² + 2F1F2·cos α.",
+          "vi": {
+            "text": "F² = F1² + F2² + 2F1F2·cos α."
+          },
+          "true": true
+        },
+        {
+          "text": "At α = 90° the resultant is F1 + F2.",
+          "vi": {
+            "text": "Khi α = 90°, hợp lực bằng F1 + F2."
+          },
+          "true": false
+        },
+        {
+          "text": "The resultant can be smaller than each of the two forces.",
+          "vi": {
+            "text": "Hợp lực có thể nhỏ hơn cả hai lực thành phần."
+          },
+          "true": true
+        },
+        {
+          "text": "F3 has the size of the resultant and points the opposite way.",
+          "vi": {
+            "text": "F3 có độ lớn bằng hợp lực và ngược chiều với hợp lực."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "right-angle",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["parallelogram"],
+      "set": {
+        "force1": 2,
+        "force2": 4,
+        "angle": 90
+      },
+      "stem": "F1 = {force1} N and F2 = {force2} N pull the ring at {angle}° to each other. What is the size of their resultant?",
+      "explain": "At 90°, cos α = 0, so R = √(F1² + F2²) = √({force1}² + {force2}²) ≈ {@resultant} N. Adding the sizes, subtracting them, or forgetting the root gives the other values.",
+      "vi": {
+        "stem": "F1 = {force1} N và F2 = {force2} N kéo vòng nhẫn theo hai phương hợp với nhau góc {angle}°. Độ lớn hợp lực của chúng bằng bao nhiêu?",
+        "explain": "Ở 90°, cos α = 0 nên F = √(F1² + F2²) = √({force1}² + {force2}²) ≈ {@resultant} N. Cộng hay trừ hai độ lớn, hoặc quên khai căn, sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{@resultant} N",
+          "vi": {
+            "text": "{@resultant} N"
+          },
+          "correct": true,
+          "check": {
+            "expr": "sqrt(force1^2+force2^2)",
+            "equals": "resultant"
+          }
+        },
+        {
+          "text": "{=force1+force2} N",
+          "vi": {
+            "text": "{=force1+force2} N"
+          },
+          "check": {
+            "expr": "force1+force2",
+            "equals": "resultant"
+          }
+        },
+        {
+          "text": "{=force2-force1} N",
+          "vi": {
+            "text": "{=force2-force1} N"
+          },
+          "check": {
+            "expr": "force2-force1",
+            "equals": "resultant"
+          }
+        },
+        {
+          "text": "{=force1^2+force2^2} N",
+          "vi": {
+            "text": "{=force1^2+force2^2} N"
+          },
+          "check": {
+            "expr": "force1^2+force2^2",
+            "equals": "resultant"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-60",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["parallelogram", "direction"],
+      "set": {
+        "force1": 4,
+        "force2": 2,
+        "angle": 60
+      },
+      "stem": "F1 = {force1} N and F2 = {force2} N pull the ring at {angle}° to each other. Decide whether each statement is true or false.",
+      "explain": "R² = {force1}² + {force2}² + 2·{force1}·{force2}·cos {angle}° = {@resultantSquared} N², so R ≈ {@resultant} N. With a minus sign the rule gives {=sqrt(force1^2+force2^2-2*force1*force2*cos(rad(angle)))} N, the third side of the triangle for the opposite angle. tan θ = F2 sin α/(F1 + F2 cos α) gives θ ≈ {@resultantAngle|3}° from F1.",
+      "vi": {
+        "stem": "F1 = {force1} N và F2 = {force2} N kéo vòng nhẫn theo hai phương hợp với nhau góc {angle}°. Mỗi nhận định sau đúng hay sai?",
+        "explain": "F² = {force1}² + {force2}² + 2·{force1}·{force2}·cos {angle}° = {@resultantSquared} N², nên F ≈ {@resultant} N. Dùng dấu trừ sẽ ra {=sqrt(force1^2+force2^2-2*force1*force2*cos(rad(angle)))} N, là cạnh tam giác ứng với góc bù. tan θ = F2 sin α/(F1 + F2 cos α) cho θ ≈ {@resultantAngle|3}° so với F1."
+      },
+      "statements": [
+        {
+          "text": "R² = {@resultantSquared} N².",
+          "vi": {
+            "text": "F² = {@resultantSquared} N²."
+          },
+          "true": true,
+          "check": {
+            "expr": "force1^2+force2^2+2*force1*force2*cos(rad(angle))",
+            "equals": "resultantSquared"
+          }
+        },
+        {
+          "text": "The resultant is about {@resultant} N.",
+          "vi": {
+            "text": "Hợp lực có độ lớn khoảng {@resultant} N."
+          },
+          "true": true,
+          "check": {
+            "expr": "sqrt(force1^2+force2^2+2*force1*force2*cos(rad(angle)))",
+            "equals": "resultant"
+          }
+        },
+        {
+          "text": "The resultant is about {=sqrt(force1^2+force2^2-2*force1*force2*cos(rad(angle)))} N.",
+          "vi": {
+            "text": "Hợp lực có độ lớn khoảng {=sqrt(force1^2+force2^2-2*force1*force2*cos(rad(angle)))} N."
+          },
+          "true": false,
+          "check": {
+            "expr": "sqrt(force1^2+force2^2-2*force1*force2*cos(rad(angle)))",
+            "equals": "resultant"
+          }
+        },
+        {
+          "text": "The resultant makes about {@resultantAngle|3}° with F1.",
+          "vi": {
+            "text": "Hợp lực hợp với F1 một góc khoảng {@resultantAngle|3}°."
+          },
+          "true": true,
+          "check": {
+            "expr": "deg(atan(force2*sin(rad(angle))/(force1+force2*cos(rad(angle)))))",
+            "equals": "resultantAngle"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-angle",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["parallelogram", "angle"],
+      "set": {
+        "force1": 3,
+        "force2": 4,
+        "angle": 120
+      },
+      "stem": "F1 = {force1} N and F2 = {force2} N pull the ring, and the third balance holding it at rest reads {@resultant|4} N. What is the angle between F1 and F2?",
+      "explain": "F3 = R, and R² = F1² + F2² + 2F1F2·cos α gives cos α = (R² − F1² − F2²)/(2F1F2) = ({@resultantSquared|4} − {force1}² − {force2}²)/(2·{force1}·{force2}) = {=cos(rad(angle))|2}, so α = {angle}°. Writing the rule with a minus sign gives the supplementary angle; leaving out the 2 gives the other.",
+      "vi": {
+        "stem": "F1 = {force1} N và F2 = {force2} N kéo vòng nhẫn, lực kế thứ ba giữ vòng đứng yên chỉ {@resultant|4} N. Góc giữa F1 và F2 bằng bao nhiêu?",
+        "explain": "F3 = F, và F² = F1² + F2² + 2F1F2·cos α cho cos α = (F² − F1² − F2²)/(2F1F2) = ({@resultantSquared|4} − {force1}² − {force2}²)/(2·{force1}·{force2}) = {=cos(rad(angle))|2}, nên α = {angle}°. Viết quy tắc với dấu trừ sẽ ra góc bù; bỏ quên số 2 sẽ ra giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{=deg(acos((@resultantSquared-force1^2-force2^2)/(2*force1*force2)))|3}°",
+          "vi": {
+            "text": "{=deg(acos((@resultantSquared-force1^2-force2^2)/(2*force1*force2)))|3}°"
+          },
+          "correct": true,
+          "check": {
+            "expr": "sqrt(force1^2+force2^2+2*force1*force2*cos(acos((@resultantSquared-force1^2-force2^2)/(2*force1*force2))))",
+            "equals": "resultant"
+          }
+        },
+        {
+          "text": "{=deg(acos((force1^2+force2^2-@resultantSquared)/(2*force1*force2)))|3}°",
+          "vi": {
+            "text": "{=deg(acos((force1^2+force2^2-@resultantSquared)/(2*force1*force2)))|3}°"
+          },
+          "check": {
+            "expr": "sqrt(force1^2+force2^2+2*force1*force2*cos(acos((force1^2+force2^2-@resultantSquared)/(2*force1*force2))))",
+            "equals": "resultant"
+          }
+        },
+        {
+          "text": "{=deg(acos((@resultantSquared-force1^2-force2^2)/(force1*force2)))|3}°",
+          "vi": {
+            "text": "{=deg(acos((@resultantSquared-force1^2-force2^2)/(force1*force2)))|3}°"
+          },
+          "check": {
+            "expr": "sqrt(force1^2+force2^2+2*force1*force2*cos(acos((@resultantSquared-force1^2-force2^2)/(force1*force2))))",
+            "equals": "resultant"
+          }
+        },
+        {
+          "text": "90°",
+          "vi": {
+            "text": "90°"
+          },
+          "check": {
+            "expr": "sqrt(force1^2+force2^2+2*force1*force2*cos(rad(90)))",
+            "equals": "resultant"
+          }
+        }
+      ]
+    },
+    {
+      "id": "graph-intercept",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["direction", "parallelogram"],
+      "set": {
+        "force1": 2,
+        "force2": 3,
+        "angle": 90
+      },
+      "stem": "With F1 = {force1} N and F2 = {force2} N, runs at several angles α give F3² against cos α as a straight line. Where does it cross the F3² axis (cos α = 0)?",
+      "explain": "F3² = R² = (F1² + F2²) + (2F1F2)·cos α: the intercept is F1² + F2² = {@squaresSum} N² and the slope 2F1F2 = {@productTwice} N². (F1 + F2)² is the value at cos α = 1, not at 0.",
+      "vi": {
+        "stem": "Với F1 = {force1} N và F2 = {force2} N, các lần đo ở nhiều góc α cho đồ thị F3² theo cos α là một đường thẳng. Đường thẳng cắt trục F3² (cos α = 0) tại đâu?",
+        "explain": "F3² = F² = (F1² + F2²) + (2F1F2)·cos α: tung độ gốc là F1² + F2² = {@squaresSum} N² và hệ số góc là 2F1F2 = {@productTwice} N². (F1 + F2)² là giá trị tại cos α = 1, không phải tại 0."
+      },
+      "options": [
+        {
+          "text": "{@squaresSum} N²",
+          "vi": {
+            "text": "{@squaresSum} N²"
+          },
+          "correct": true,
+          "check": {
+            "expr": "force1^2+force2^2",
+            "equals": "squaresSum"
+          }
+        },
+        {
+          "text": "{@productTwice} N²",
+          "vi": {
+            "text": "{@productTwice} N²"
+          },
+          "check": {
+            "expr": "@productTwice",
+            "equals": "squaresSum"
+          }
+        },
+        {
+          "text": "{=(force1+force2)^2} N²",
+          "vi": {
+            "text": "{=(force1+force2)^2} N²"
+          },
+          "check": {
+            "expr": "(force1+force2)^2",
+            "equals": "squaresSum"
+          }
+        },
+        {
+          "text": "{=force1*force2} N²",
+          "vi": {
+            "text": "{=force1*force2} N²"
+          },
+          "check": {
+            "expr": "force1*force2",
+            "equals": "squaresSum"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-equal-150",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["angle", "direction", "equilibrium"],
+      "set": {
+        "force1": 3,
+        "force2": 3,
+        "angle": 150
+      },
+      "stem": "Two forces of {force1} N each pull the ring at {angle}° to each other; a third balance holds it at rest. Decide whether each statement is true or false.",
+      "explain": "For equal forces the parallelogram is a rhombus: R = 2F·cos(α/2) = 2·{force1}·cos {=angle/2}° ≈ {@resultant} N, along the bisector, {@resultantAngle|3}° from F1. That is less than either force. F3 points opposite to R, so it makes 180° − {@resultantAngle|3}° = {=180-@resultantAngle|3}° with F1.",
+      "vi": {
+        "stem": "Hai lực, mỗi lực {force1} N, kéo vòng nhẫn theo hai phương hợp với nhau góc {angle}°; lực kế thứ ba giữ vòng đứng yên. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Với hai lực bằng nhau, hình bình hành là hình thoi: F = 2F1·cos(α/2) = 2·{force1}·cos {=angle/2}° ≈ {@resultant} N, theo đường phân giác, hợp với F1 góc {@resultantAngle|3}°. Giá trị đó nhỏ hơn mỗi lực thành phần. F3 ngược chiều với hợp lực nên hợp với F1 góc 180° − {@resultantAngle|3}° = {=180-@resultantAngle|3}°."
+      },
+      "statements": [
+        {
+          "text": "The resultant is 2F·cos(α/2) ≈ {@resultant} N.",
+          "vi": {
+            "text": "Hợp lực bằng 2F·cos(α/2) ≈ {@resultant} N."
+          },
+          "true": true,
+          "check": {
+            "expr": "2*force1*cos(rad(angle/2))",
+            "equals": "resultant"
+          }
+        },
+        {
+          "text": "The resultant bisects the angle: it makes {=angle/2}° with F1.",
+          "vi": {
+            "text": "Hợp lực nằm trên đường phân giác: hợp với F1 góc {=angle/2}°."
+          },
+          "true": true,
+          "check": {
+            "expr": "angle/2",
+            "equals": "resultantAngle"
+          }
+        },
+        {
+          "text": "The resultant is larger than each of the two forces.",
+          "vi": {
+            "text": "Hợp lực lớn hơn mỗi lực thành phần."
+          },
+          "true": false
+        },
+        {
+          "text": "F3 makes about {=180-@resultantAngle|3}° with F1.",
+          "vi": {
+            "text": "F3 hợp với F1 một góc khoảng {=180-@resultantAngle|3}°."
+          },
+          "true": true,
+          "check": {
+            "expr": "180-(180-@resultantAngle)",
+            "equals": "resultantAngle"
+          }
+        }
+      ]
+    }
+  ]
+}

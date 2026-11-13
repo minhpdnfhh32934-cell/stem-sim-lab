@@ -1,0 +1,988 @@
+{
+  "id": "karyotype",
+  "skills": [
+    {
+      "id": "normal-karyotype",
+      "name": "The normal human karyotype",
+      "advice": "Learn 2n = 46 = 44 autosomes (22 pairs) + XX or XY, and that a gamete has n = 23. Run 46,XX and 46,XY at the station and count the autosomes and the sex chromosomes yourself.",
+      "vi": {
+        "name": "Bộ nhiễm sắc thể bình thường của người",
+        "advice": "Ghi nhớ 2n = 46 = 44 nhiễm sắc thể thường (22 cặp) + XX hoặc XY, và giao tử có n = 23. Chạy 46,XX và 46,XY trên trạm rồi tự đếm số nhiễm sắc thể thường và nhiễm sắc thể giới tính."
+      }
+    },
+    {
+      "id": "aneuploidy",
+      "name": "Trisomies and monosomies, and their syndromes",
+      "advice": "Learn the table: +21 Down, +18 Edwards, +13 Patau (autosomes); 45,X Turner, 47,XXY Klinefelter (sex chromosomes). Read each formula as 2n + 1 or 2n − 1, then check its counts at the station.",
+      "vi": {
+        "name": "Thể ba, thể một và các hội chứng",
+        "advice": "Học thuộc bảng: +21 Down, +18 Edwards, +13 Patau (nhiễm sắc thể thường); 45,X Turner, 47,XXY Klinefelter (nhiễm sắc thể giới tính). Đọc mỗi công thức thành 2n + 1 hoặc 2n − 1 rồi kiểm tra số đếm trên trạm."
+      }
+    },
+    {
+      "id": "nondisjunction",
+      "name": "How an extra or missing chromosome arises",
+      "advice": "Draw a pair failing to separate in meiosis I and in meiosis II, and the gametes each gives (n + 1, n − 1, n). Then join each with a normal gamete to see 2n + 1 and 2n − 1.",
+      "vi": {
+        "name": "Cơ chế phát sinh thể thừa hoặc thiếu nhiễm sắc thể",
+        "advice": "Vẽ sơ đồ một cặp nhiễm sắc thể không phân li ở giảm phân I và ở giảm phân II, cùng các giao tử tạo ra (n + 1, n − 1, n). Sau đó cho từng giao tử kết hợp với giao tử bình thường để thấy 2n + 1 và 2n − 1."
+      }
+    },
+    {
+      "id": "sex-determination",
+      "name": "Sex chromosomes and sex determination",
+      "advice": "Remember that in humans the Y decides male: compare 45,X (female) and 47,XXY (male) at the station. The trap: counting the X chromosomes does not decide the sex.",
+      "vi": {
+        "name": "Nhiễm sắc thể giới tính và cơ chế xác định giới tính",
+        "advice": "Ghi nhớ ở người nhiễm sắc thể Y quyết định giới tính nam: so sánh 45,X (nữ) và 47,XXY (nam) trên trạm. Bẫy thường gặp: số lượng nhiễm sắc thể X không quyết định giới tính."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "normal-count",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["normal-karyotype"],
+      "stem": "A normal human body cell holds…",
+      "explain": "2n = 46: 22 pairs of autosomes (44) and one pair of sex chromosomes, XX or XY.",
+      "vi": {
+        "stem": "Một tế bào sinh dưỡng bình thường của người chứa…",
+        "explain": "2n = 46: 22 cặp nhiễm sắc thể thường (44 chiếc) và một cặp nhiễm sắc thể giới tính, XX hoặc XY."
+      },
+      "options": [
+        {
+          "text": "46 chromosomes: 22 pairs of autosomes and one pair of sex chromosomes",
+          "vi": {
+            "text": "46 nhiễm sắc thể: 22 cặp nhiễm sắc thể thường và một cặp nhiễm sắc thể giới tính"
+          },
+          "correct": true
+        },
+        {
+          "text": "23 chromosomes: 22 autosomes and one sex chromosome",
+          "vi": {
+            "text": "23 nhiễm sắc thể: 22 nhiễm sắc thể thường và một nhiễm sắc thể giới tính"
+          }
+        },
+        {
+          "text": "46 pairs of chromosomes",
+          "vi": {
+            "text": "46 cặp nhiễm sắc thể"
+          }
+        },
+        {
+          "text": "46 chromosomes: 23 pairs of autosomes and no sex chromosomes",
+          "vi": {
+            "text": "46 nhiễm sắc thể: 23 cặp nhiễm sắc thể thường và không có nhiễm sắc thể giới tính"
+          }
+        }
+      ]
+    },
+    {
+      "id": "down-cause",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["aneuploidy"],
+      "stem": "Down syndrome is caused by…",
+      "explain": "Down syndrome is trisomy 21: three copies of chromosome 21, 47 chromosomes in all.",
+      "vi": {
+        "stem": "Hội chứng Down là do…",
+        "explain": "Hội chứng Down là thể ba nhiễm sắc thể số 21: ba chiếc số 21, tổng cộng 47 nhiễm sắc thể."
+      },
+      "options": [
+        {
+          "text": "three copies of chromosome 21",
+          "vi": {
+            "text": "ba nhiễm sắc thể số 21"
+          },
+          "correct": true
+        },
+        {
+          "text": "three copies of chromosome 18",
+          "vi": {
+            "text": "ba nhiễm sắc thể số 18"
+          }
+        },
+        {
+          "text": "a single X chromosome and no second sex chromosome",
+          "vi": {
+            "text": "chỉ có một nhiễm sắc thể X và không có nhiễm sắc thể giới tính thứ hai"
+          }
+        },
+        {
+          "text": "the sex chromosomes XXY",
+          "vi": {
+            "text": "bộ nhiễm sắc thể giới tính XXY"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-syndromes",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["aneuploidy", "sex-determination"],
+      "stem": "About chromosome syndromes in humans: decide whether each statement is true or false.",
+      "explain": "Turner is 45,X and Patau is trisomy 13. Klinefelter (47,XXY) has a Y, so the person is male. Edwards is trisomy 18, an autosome.",
+      "vi": {
+        "stem": "Về các hội chứng do đột biến số lượng nhiễm sắc thể ở người, mỗi nhận định sau đúng hay sai?",
+        "explain": "Turner là 45,X và Patau là thể ba nhiễm sắc thể số 13. Klinefelter (47,XXY) có nhiễm sắc thể Y nên là nam. Edwards là thể ba nhiễm sắc thể số 18, một nhiễm sắc thể thường."
+      },
+      "statements": [
+        {
+          "text": "Turner syndrome has the karyotype 45,X.",
+          "vi": {
+            "text": "Hội chứng Turner có bộ nhiễm sắc thể 45,X."
+          },
+          "true": true
+        },
+        {
+          "text": "People with Klinefelter syndrome are female.",
+          "vi": {
+            "text": "Người mắc hội chứng Klinefelter là nữ."
+          },
+          "true": false
+        },
+        {
+          "text": "Patau syndrome is a trisomy of chromosome 13.",
+          "vi": {
+            "text": "Hội chứng Patau là thể ba nhiễm sắc thể số 13."
+          },
+          "true": true
+        },
+        {
+          "text": "Edwards syndrome is a trisomy of a sex chromosome.",
+          "vi": {
+            "text": "Hội chứng Edwards là thể ba của một nhiễm sắc thể giới tính."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "down-origin",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["nondisjunction"],
+      "stem": "Down syndrome most often arises when…",
+      "explain": "If pair 21 fails to separate in meiosis, a gamete gets two chromosomes 21; fertilised by a normal gamete it gives a zygote with three (47 chromosomes).",
+      "vi": {
+        "stem": "Hội chứng Down thường phát sinh khi…",
+        "explain": "Nếu cặp số 21 không phân li trong giảm phân, một giao tử nhận hai nhiễm sắc thể số 21; khi thụ tinh với giao tử bình thường sẽ tạo hợp tử có ba chiếc (47 nhiễm sắc thể)."
+      },
+      "options": [
+        {
+          "text": "chromosome pair 21 fails to separate in meiosis, giving a gamete with two chromosomes 21",
+          "vi": {
+            "text": "cặp nhiễm sắc thể số 21 không phân li trong giảm phân, tạo giao tử mang hai nhiễm sắc thể số 21"
+          },
+          "correct": true
+        },
+        {
+          "text": "a gene on chromosome 21 changes by a point mutation",
+          "vi": {
+            "text": "một gene trên nhiễm sắc thể số 21 bị đột biến điểm"
+          }
+        },
+        {
+          "text": "chromosome 21 is lost when the embryo’s cells divide",
+          "vi": {
+            "text": "nhiễm sắc thể số 21 bị mất khi các tế bào phôi phân chia"
+          }
+        },
+        {
+          "text": "crossing over between chromosomes 21 and X",
+          "vi": {
+            "text": "trao đổi chéo giữa nhiễm sắc thể số 21 và nhiễm sắc thể X"
+          }
+        }
+      ]
+    },
+    {
+      "id": "xxy-male",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["sex-determination"],
+      "stem": "Why does a person with the karyotype 47,XXY develop as a male?",
+      "explain": "In humans the Y chromosome decides maleness, whatever the number of X chromosomes: 47,XXY is male, 45,X is female.",
+      "vi": {
+        "stem": "Vì sao người có bộ nhiễm sắc thể 47,XXY phát triển thành nam?",
+        "explain": "Ở người, nhiễm sắc thể Y quyết định giới tính nam, dù có bao nhiêu nhiễm sắc thể X: 47,XXY là nam, 45,X là nữ."
+      },
+      "options": [
+        {
+          "text": "The Y chromosome is present",
+          "vi": {
+            "text": "Vì có nhiễm sắc thể Y"
+          },
+          "correct": true
+        },
+        {
+          "text": "Two X chromosomes make a person male",
+          "vi": {
+            "text": "Vì hai nhiễm sắc thể X quy định giới tính nam"
+          }
+        },
+        {
+          "text": "Any cell with 47 chromosomes develops as male",
+          "vi": {
+            "text": "Vì mọi tế bào có 47 nhiễm sắc thể đều phát triển thành nam"
+          }
+        },
+        {
+          "text": "The extra chromosome is an autosome",
+          "vi": {
+            "text": "Vì nhiễm sắc thể thừa là nhiễm sắc thể thường"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-normal",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["normal-karyotype", "sex-determination"],
+      "stem": "About the normal human karyotype: decide whether each statement is true or false.",
+      "explain": "In a karyogram the autosome pairs are numbered 1–22, roughly largest first. A normal male is XY. A gamete has n = 23, one of them a sex chromosome. A woman’s body cells have 44 autosomes (22 pairs), not 22.",
+      "vi": {
+        "stem": "Về bộ nhiễm sắc thể bình thường của người, mỗi nhận định sau đúng hay sai?",
+        "explain": "Trên tiêu bản bộ nhiễm sắc thể, các cặp nhiễm sắc thể thường được đánh số 1–22, đại thể từ lớn đến nhỏ. Nam bình thường là XY. Giao tử có n = 23, trong đó một chiếc là nhiễm sắc thể giới tính. Tế bào sinh dưỡng của nữ có 44 nhiễm sắc thể thường (22 cặp), không phải 22."
+      },
+      "statements": [
+        {
+          "text": "In a karyogram the autosome pairs are numbered 1 to 22, roughly from largest to smallest.",
+          "vi": {
+            "text": "Trên tiêu bản bộ nhiễm sắc thể, các cặp nhiễm sắc thể thường được đánh số từ 1 đến 22, đại thể từ lớn đến nhỏ."
+          },
+          "true": true
+        },
+        {
+          "text": "A normal male karyotype includes a Y chromosome.",
+          "vi": {
+            "text": "Bộ nhiễm sắc thể của nam bình thường có một nhiễm sắc thể Y."
+          },
+          "true": true
+        },
+        {
+          "text": "A sperm cell carries 23 chromosomes, one of them a sex chromosome.",
+          "vi": {
+            "text": "Một tinh trùng mang 23 nhiễm sắc thể, trong đó có một nhiễm sắc thể giới tính."
+          },
+          "true": true
+        },
+        {
+          "text": "A normal woman’s body cells hold 22 autosomes.",
+          "vi": {
+            "text": "Tế bào sinh dưỡng của nữ bình thường chứa 22 nhiễm sắc thể thường."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "edwards-autosomes",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["aneuploidy", "normal-karyotype"],
+      "set": {
+        "karyotype": 3
+      },
+      "stem": "A karyotype reads 47,XX,+18 (Edwards syndrome). How many autosomes does each body cell hold?",
+      "explain": "A normal cell has 44 autosomes; chromosome 18 is an autosome, so the extra copy gives 44 + 1 = {@autosomes}. The other two chromosomes are the sex chromosomes XX.",
+      "vi": {
+        "stem": "Một bộ nhiễm sắc thể được ghi là 47,XX,+18 (hội chứng Edwards). Mỗi tế bào sinh dưỡng chứa bao nhiêu nhiễm sắc thể thường?",
+        "explain": "Tế bào bình thường có 44 nhiễm sắc thể thường; nhiễm sắc thể số 18 là nhiễm sắc thể thường nên chiếc thừa cho 44 + 1 = {@autosomes}. Hai chiếc còn lại là nhiễm sắc thể giới tính XX."
+      },
+      "options": [
+        {
+          "text": "{@autosomes}",
+          "vi": {
+            "text": "{@autosomes}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "44+1",
+            "equals": "autosomes"
+          }
+        },
+        {
+          "text": "44",
+          "vi": {
+            "text": "44"
+          },
+          "check": {
+            "expr": "44",
+            "equals": "autosomes"
+          }
+        },
+        {
+          "text": "47",
+          "vi": {
+            "text": "47"
+          },
+          "check": {
+            "expr": "47",
+            "equals": "autosomes"
+          }
+        },
+        {
+          "text": "46",
+          "vi": {
+            "text": "46"
+          },
+          "check": {
+            "expr": "46",
+            "equals": "autosomes"
+          }
+        }
+      ]
+    },
+    {
+      "id": "klinefelter-counts",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["aneuploidy", "sex-determination"],
+      "set": {
+        "karyotype": 6
+      },
+      "stem": "A man has Klinefelter syndrome, 47,XXY. What does each of his body cells hold?",
+      "explain": "46 + 1 = {@chromosomes} chromosomes: 44 autosomes and the sex chromosomes XXY, so {@x} X and {@y} Y.",
+      "vi": {
+        "stem": "Một người nam mắc hội chứng Klinefelter, 47,XXY. Mỗi tế bào sinh dưỡng của người này có…",
+        "explain": "46 + 1 = {@chromosomes} nhiễm sắc thể: 44 nhiễm sắc thể thường và bộ nhiễm sắc thể giới tính XXY, tức {@x} X và {@y} Y."
+      },
+      "options": [
+        {
+          "text": "{@chromosomes} chromosomes, two of them X",
+          "vi": {
+            "text": "{@chromosomes} nhiễm sắc thể, trong đó có hai nhiễm sắc thể X"
+          },
+          "correct": true,
+          "check": {
+            "expr": "46+1",
+            "equals": "chromosomes"
+          }
+        },
+        {
+          "text": "47 chromosomes, one of them X",
+          "vi": {
+            "text": "47 nhiễm sắc thể, trong đó có một nhiễm sắc thể X"
+          },
+          "check": {
+            "expr": "1",
+            "equals": "x"
+          }
+        },
+        {
+          "text": "45 chromosomes, two of them X",
+          "vi": {
+            "text": "45 nhiễm sắc thể, trong đó có hai nhiễm sắc thể X"
+          },
+          "check": {
+            "expr": "46-1",
+            "equals": "chromosomes"
+          }
+        },
+        {
+          "text": "48 chromosomes, two of them X",
+          "vi": {
+            "text": "48 nhiễm sắc thể, trong đó có hai nhiễm sắc thể X"
+          },
+          "check": {
+            "expr": "48",
+            "equals": "chromosomes"
+          }
+        }
+      ]
+    },
+    {
+      "id": "read-karyogram",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["aneuploidy"],
+      "set": {
+        "karyotype": 4
+      },
+      "stem": "A karyogram shows three copies of chromosome 13 and the sex chromosomes XY. Which formula and syndrome is it?",
+      "explain": "Trisomy 13 in a male: 46 + 1 = {@chromosomes} chromosomes, written 47,XY,+13 — Patau syndrome. Down syndrome is +21.",
+      "vi": {
+        "stem": "Một tiêu bản bộ nhiễm sắc thể cho thấy ba nhiễm sắc thể số 13 và cặp nhiễm sắc thể giới tính XY. Đó là công thức và hội chứng nào?",
+        "explain": "Thể ba nhiễm sắc thể số 13 ở nam: 46 + 1 = {@chromosomes} nhiễm sắc thể, ghi là 47,XY,+13 — hội chứng Patau. Hội chứng Down là +21."
+      },
+      "options": [
+        {
+          "text": "47,XY,+13 — Patau syndrome",
+          "vi": {
+            "text": "47,XY,+13 — hội chứng Patau"
+          },
+          "correct": true,
+          "check": {
+            "expr": "46+1",
+            "equals": "chromosomes"
+          }
+        },
+        {
+          "text": "47,XY,+13 — Down syndrome",
+          "vi": {
+            "text": "47,XY,+13 — hội chứng Down"
+          }
+        },
+        {
+          "text": "46,XY,+13 — Patau syndrome",
+          "vi": {
+            "text": "46,XY,+13 — hội chứng Patau"
+          },
+          "check": {
+            "expr": "46",
+            "equals": "chromosomes"
+          }
+        },
+        {
+          "text": "45,XY,−13 — Edwards syndrome",
+          "vi": {
+            "text": "45,XY,−13 — hội chứng Edwards"
+          },
+          "check": {
+            "expr": "46-1",
+            "equals": "chromosomes"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-down",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["aneuploidy", "normal-karyotype"],
+      "set": {
+        "karyotype": 2
+      },
+      "stem": "A boy’s karyotype is 47,XY,+21. Decide whether each statement is true or false.",
+      "explain": "Trisomy 21: 46 + 1 = {@chromosomes} chromosomes, 44 + 1 = {@autosomes} autosomes, and one Y. It is a trisomy (2n + 1), not a monosomy.",
+      "vi": {
+        "stem": "Bộ nhiễm sắc thể của một bé trai là 47,XY,+21. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Thể ba nhiễm sắc thể số 21: 46 + 1 = {@chromosomes} nhiễm sắc thể, 44 + 1 = {@autosomes} nhiễm sắc thể thường, và một nhiễm sắc thể Y. Đây là thể ba (2n + 1), không phải thể một."
+      },
+      "statements": [
+        {
+          "text": "Each body cell holds {@chromosomes} chromosomes.",
+          "vi": {
+            "text": "Mỗi tế bào sinh dưỡng chứa {@chromosomes} nhiễm sắc thể."
+          },
+          "true": true,
+          "check": {
+            "expr": "46+1",
+            "equals": "chromosomes"
+          }
+        },
+        {
+          "text": "{@autosomes} of them are autosomes.",
+          "vi": {
+            "text": "Trong đó có {@autosomes} nhiễm sắc thể thường."
+          },
+          "true": true,
+          "check": {
+            "expr": "44+1",
+            "equals": "autosomes"
+          }
+        },
+        {
+          "text": "Each body cell holds 2 Y chromosomes.",
+          "vi": {
+            "text": "Mỗi tế bào sinh dưỡng chứa 2 nhiễm sắc thể Y."
+          },
+          "true": false,
+          "check": {
+            "expr": "2",
+            "equals": "y"
+          }
+        },
+        {
+          "text": "The karyotype is a monosomy, 2n − 1.",
+          "vi": {
+            "text": "Đây là thể một, 2n − 1."
+          },
+          "true": false,
+          "check": {
+            "expr": "46-1",
+            "equals": "chromosomes"
+          }
+        }
+      ]
+    },
+    {
+      "id": "four-sperm",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["nondisjunction"],
+      "stem": "In one cell of a man’s testis, chromosome pair 21 fails to separate in meiosis I; meiosis II is normal. The four sperm made from it carry…",
+      "explain": "Both chromosomes 21 go to one cell in meiosis I: that cell gives two sperm with 24 chromosomes, the other two with 22. None is normal. A failure in meiosis II instead would give one 24, one 22 and two 23.",
+      "vi": {
+        "stem": "Ở một tế bào sinh tinh của một người nam, cặp nhiễm sắc thể số 21 không phân li ở giảm phân I; giảm phân II diễn ra bình thường. Bốn tinh trùng tạo ra từ tế bào này mang…",
+        "explain": "Cả hai nhiễm sắc thể số 21 đi về một tế bào ở giảm phân I: tế bào đó tạo hai tinh trùng 24 nhiễm sắc thể, tế bào kia tạo hai tinh trùng 22 nhiễm sắc thể. Không có tinh trùng nào bình thường. Nếu rối loạn ở giảm phân II thì tạo một tinh trùng 24, một tinh trùng 22 và hai tinh trùng 23."
+      },
+      "options": [
+        {
+          "text": "two with 24 chromosomes and two with 22",
+          "vi": {
+            "text": "hai tinh trùng 24 nhiễm sắc thể và hai tinh trùng 22 nhiễm sắc thể"
+          },
+          "correct": true
+        },
+        {
+          "text": "one with 24, one with 22 and two with 23 chromosomes",
+          "vi": {
+            "text": "một tinh trùng 24, một tinh trùng 22 và hai tinh trùng 23 nhiễm sắc thể"
+          }
+        },
+        {
+          "text": "four with 23 chromosomes",
+          "vi": {
+            "text": "bốn tinh trùng 23 nhiễm sắc thể"
+          }
+        },
+        {
+          "text": "four with 24 chromosomes",
+          "vi": {
+            "text": "bốn tinh trùng 24 nhiễm sắc thể"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-klinefelter-origin",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["nondisjunction", "aneuploidy", "sex-determination"],
+      "set": {
+        "karyotype": 6
+      },
+      "stem": "A person’s karyotype is 47,XXY (Klinefelter syndrome). Decide whether each statement is true or false.",
+      "explain": "Each cell holds {@chromosomes} chromosomes, {@x} of them X. An XX egg (non-disjunction in the mother) fertilised by a Y sperm, or a normal X egg fertilised by an XY sperm (non-disjunction in the father’s meiosis I), both give XXY: the extra X may come from either parent. The Y makes the person male.",
+      "vi": {
+        "stem": "Bộ nhiễm sắc thể của một người là 47,XXY (hội chứng Klinefelter). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Mỗi tế bào có {@chromosomes} nhiễm sắc thể, trong đó {@x} chiếc X. Trứng XX (không phân li ở mẹ) thụ tinh với tinh trùng Y, hoặc trứng X bình thường thụ tinh với tinh trùng XY (không phân li ở giảm phân I của bố), đều cho XXY: nhiễm sắc thể X thừa có thể đến từ bố hoặc mẹ. Nhiễm sắc thể Y quy định giới tính nam."
+      },
+      "statements": [
+        {
+          "text": "Each body cell holds {@chromosomes} chromosomes, {@x} of them X.",
+          "vi": {
+            "text": "Mỗi tế bào sinh dưỡng chứa {@chromosomes} nhiễm sắc thể, trong đó có {@x} nhiễm sắc thể X."
+          },
+          "true": true,
+          "check": {
+            "expr": "46+1",
+            "equals": "chromosomes"
+          }
+        },
+        {
+          "text": "It can arise from an XX egg, made by non-disjunction, fertilised by a sperm carrying Y.",
+          "vi": {
+            "text": "Có thể phát sinh do trứng XX (tạo ra do không phân li) thụ tinh với tinh trùng mang Y."
+          },
+          "true": true
+        },
+        {
+          "text": "The extra X can only come from the mother.",
+          "vi": {
+            "text": "Nhiễm sắc thể X thừa chỉ có thể đến từ mẹ."
+          },
+          "true": false
+        },
+        {
+          "text": "The person develops as a female because there are two X chromosomes.",
+          "vi": {
+            "text": "Người này phát triển thành nữ vì có hai nhiễm sắc thể X."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "which-stage",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["normal-karyotype"],
+      "stem": "To prepare a karyotype, the chromosomes are photographed in dividing cells at…",
+      "explain": "At metaphase the chromosomes are most condensed and each is a clear doubled chromosome, so their size, centromere position and bands can be compared.",
+      "vi": {
+        "stem": "Để lập bộ nhiễm sắc thể (karyotype), người ta chụp ảnh các nhiễm sắc thể của tế bào đang phân chia ở…",
+        "explain": "Ở kì giữa, các nhiễm sắc thể co xoắn cực đại và mỗi chiếc là một nhiễm sắc thể kép rõ ràng, nên có thể so sánh kích thước, vị trí tâm động và các băng của chúng."
+      },
+      "options": [
+        {
+          "text": "metaphase, when they are most condensed",
+          "vi": {
+            "text": "kì giữa, khi chúng co xoắn cực đại"
+          },
+          "correct": true
+        },
+        {
+          "text": "interphase, when the DNA is copied",
+          "vi": {
+            "text": "kì trung gian, khi DNA nhân đôi"
+          }
+        },
+        {
+          "text": "telophase, when the nuclei re-form",
+          "vi": {
+            "text": "kì cuối, khi nhân mới hình thành"
+          }
+        },
+        {
+          "text": "any stage: chromosomes always look the same",
+          "vi": {
+            "text": "bất kì kì nào: nhiễm sắc thể luôn có hình dạng như nhau"
+          }
+        }
+      ]
+    },
+    {
+      "id": "why-no-45y",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["sex-determination", "aneuploidy"],
+      "stem": "A person with 45,X (Turner syndrome) can survive, but an embryo with 45,Y (no X) is never born. Why?",
+      "explain": "The X chromosome carries many genes every cell needs; the small Y carries few genes, mostly for male development. A cell without any X lacks essential genes.",
+      "vi": {
+        "stem": "Người có bộ nhiễm sắc thể 45,X (hội chứng Turner) có thể sống, nhưng phôi 45,Y (không có X) không bao giờ được sinh ra. Vì sao?",
+        "explain": "Nhiễm sắc thể X mang nhiều gene cần thiết cho mọi tế bào; nhiễm sắc thể Y nhỏ, mang ít gene, chủ yếu liên quan đến sự phát triển giới tính nam. Tế bào không có X thiếu các gene thiết yếu."
+      },
+      "options": [
+        {
+          "text": "The X carries many genes every cell needs; the Y carries few",
+          "vi": {
+            "text": "X mang nhiều gene cần cho mọi tế bào; Y mang rất ít gene"
+          },
+          "correct": true
+        },
+        {
+          "text": "A Y chromosome cannot be copied without an X",
+          "vi": {
+            "text": "Nhiễm sắc thể Y không thể nhân đôi nếu không có X"
+          }
+        },
+        {
+          "text": "Males always need two sex chromosomes, females only one",
+          "vi": {
+            "text": "Nam luôn cần hai nhiễm sắc thể giới tính, nữ chỉ cần một"
+          }
+        },
+        {
+          "text": "45 chromosomes is too few for any human cell",
+          "vi": {
+            "text": "45 nhiễm sắc thể là quá ít đối với mọi tế bào người"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-method",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["normal-karyotype", "aneuploidy"],
+      "stem": "About making and reading a human karyotype: decide whether each statement is true or false.",
+      "explain": "Chromosomes are paired and ordered by size, centromere position and banding. A karyotype shows changes in number or large changes in structure, not a single changed base in a gene. The risk of trisomy 21 rises with the mother’s age. Mature red blood cells have no nucleus, so they cannot be used.",
+      "vi": {
+        "stem": "Về cách lập và đọc bộ nhiễm sắc thể của người, mỗi nhận định sau đúng hay sai?",
+        "explain": "Các nhiễm sắc thể được xếp thành cặp và theo thứ tự dựa vào kích thước, vị trí tâm động và các băng. Bộ nhiễm sắc thể cho thấy biến đổi về số lượng hoặc biến đổi lớn về cấu trúc, không cho thấy sự thay đổi một cặp nucleotide trong gene. Nguy cơ thể ba nhiễm sắc thể 21 tăng theo tuổi mẹ. Hồng cầu trưởng thành không có nhân nên không dùng được."
+      },
+      "statements": [
+        {
+          "text": "The chromosomes are paired by size, centromere position and banding pattern.",
+          "vi": {
+            "text": "Các nhiễm sắc thể được xếp cặp dựa vào kích thước, vị trí tâm động và kiểu băng."
+          },
+          "true": true
+        },
+        {
+          "text": "A karyotype can show a trisomy but not a single-base change in a gene.",
+          "vi": {
+            "text": "Bộ nhiễm sắc thể có thể cho thấy thể ba nhưng không cho thấy sự thay đổi một cặp nucleotide trong gene."
+          },
+          "true": true
+        },
+        {
+          "text": "The risk of a child with Down syndrome rises with the mother’s age.",
+          "vi": {
+            "text": "Nguy cơ sinh con mắc hội chứng Down tăng theo tuổi của người mẹ."
+          },
+          "true": true
+        },
+        {
+          "text": "A karyotype can be made from mature red blood cells.",
+          "vi": {
+            "text": "Có thể lập bộ nhiễm sắc thể từ hồng cầu trưởng thành."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "sperm-autosomes",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["normal-karyotype", "sex-determination"],
+      "set": {
+        "karyotype": 1
+      },
+      "stem": "A man’s body cells are 46,XY, with {@autosomes} autosomes. How many autosomes does each of his normal sperm carry?",
+      "explain": "Meiosis halves every pair: {@autosomes}/2 = {=@autosomes/2} autosomes, plus one sex chromosome (X or Y), 23 in all.",
+      "vi": {
+        "stem": "Tế bào sinh dưỡng của một người nam có bộ nhiễm sắc thể 46,XY, với {@autosomes} nhiễm sắc thể thường. Mỗi tinh trùng bình thường của người này mang bao nhiêu nhiễm sắc thể thường?",
+        "explain": "Giảm phân chia đôi mọi cặp: {@autosomes}/2 = {=@autosomes/2} nhiễm sắc thể thường, cộng thêm một nhiễm sắc thể giới tính (X hoặc Y), tổng cộng 23."
+      },
+      "options": [
+        {
+          "text": "{=@autosomes/2}",
+          "vi": {
+            "text": "{=@autosomes/2}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2*(@autosomes/2)",
+            "equals": "autosomes"
+          }
+        },
+        {
+          "text": "{=@autosomes/2+1}",
+          "vi": {
+            "text": "{=@autosomes/2+1}"
+          },
+          "check": {
+            "expr": "2*(@autosomes/2+1)",
+            "equals": "autosomes"
+          }
+        },
+        {
+          "text": "{@autosomes}",
+          "vi": {
+            "text": "{@autosomes}"
+          },
+          "check": {
+            "expr": "2*@autosomes",
+            "equals": "autosomes"
+          }
+        },
+        {
+          "text": "{=@autosomes/4}",
+          "vi": {
+            "text": "{=@autosomes/4}"
+          },
+          "check": {
+            "expr": "2*(@autosomes/4)",
+            "equals": "autosomes"
+          }
+        }
+      ]
+    },
+    {
+      "id": "patau-chromatids",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["aneuploidy"],
+      "set": {
+        "karyotype": 4
+      },
+      "stem": "A body cell of a baby with Patau syndrome, 47,XY,+13, is at metaphase of mitosis. How many chromatids does it hold?",
+      "explain": "The cell has {@chromosomes} chromosomes, each doubled into two sister chromatids at metaphase: 2·{@chromosomes} = {=2*@chromosomes} chromatids.",
+      "vi": {
+        "stem": "Một tế bào sinh dưỡng của trẻ mắc hội chứng Patau, 47,XY,+13, đang ở kì giữa của nguyên phân. Tế bào có bao nhiêu chromatid?",
+        "explain": "Tế bào có {@chromosomes} nhiễm sắc thể, ở kì giữa mỗi chiếc là nhiễm sắc thể kép gồm hai chromatid chị em: 2·{@chromosomes} = {=2*@chromosomes} chromatid."
+      },
+      "options": [
+        {
+          "text": "{=2*@chromosomes}",
+          "vi": {
+            "text": "{=2*@chromosomes}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(2*@chromosomes)/2",
+            "equals": "chromosomes"
+          }
+        },
+        {
+          "text": "{@chromosomes}",
+          "vi": {
+            "text": "{@chromosomes}"
+          },
+          "check": {
+            "expr": "@chromosomes/2",
+            "equals": "chromosomes"
+          }
+        },
+        {
+          "text": "{=2*(@chromosomes-1)}",
+          "vi": {
+            "text": "{=2*(@chromosomes-1)}"
+          },
+          "check": {
+            "expr": "2*(@chromosomes-1)/2",
+            "equals": "chromosomes"
+          }
+        },
+        {
+          "text": "{=3*@chromosomes}",
+          "vi": {
+            "text": "{=3*@chromosomes}"
+          },
+          "check": {
+            "expr": "3*@chromosomes/2",
+            "equals": "chromosomes"
+          }
+        }
+      ]
+    },
+    {
+      "id": "read-down-karyogram",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["aneuploidy", "sex-determination", "normal-karyotype"],
+      "set": {
+        "karyotype": 2
+      },
+      "stem": "A karyogram shows {@chromosomes} chromosomes: chromosome 21 has three copies, and the sex chromosomes are one X and one Y. Which formula is it, and how many autosomes does each body cell hold?",
+      "explain": "One extra chromosome 21 with XY: 47,XY,+21, Down syndrome in a boy. Autosomes = {@chromosomes} − 2 sex chromosomes = {@autosomes}.",
+      "vi": {
+        "stem": "Hình ảnh bộ nhiễm sắc thể có {@chromosomes} nhiễm sắc thể: nhiễm sắc thể 21 có ba chiếc, nhiễm sắc thể giới tính gồm một X và một Y. Đó là bộ nhiễm sắc thể nào, và mỗi tế bào sinh dưỡng có bao nhiêu nhiễm sắc thể thường?",
+        "explain": "Thừa một nhiễm sắc thể 21 với cặp XY: 47,XY,+21, hội chứng Down ở bé trai. Số nhiễm sắc thể thường = {@chromosomes} − 2 nhiễm sắc thể giới tính = {@autosomes}."
+      },
+      "options": [
+        {
+          "text": "47,XY,+21; {@autosomes} autosomes",
+          "vi": {
+            "text": "47,XY,+21; {@autosomes} nhiễm sắc thể thường"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@chromosomes-@x-@y",
+            "equals": "autosomes"
+          }
+        },
+        {
+          "text": "47,XY,+21; {=@autosomes-1} autosomes",
+          "vi": {
+            "text": "47,XY,+21; {=@autosomes-1} nhiễm sắc thể thường"
+          },
+          "check": {
+            "expr": "@chromosomes-@x-@y-1",
+            "equals": "autosomes"
+          }
+        },
+        {
+          "text": "47,XXY; {=@chromosomes-3} autosomes",
+          "vi": {
+            "text": "47,XXY; {=@chromosomes-3} nhiễm sắc thể thường"
+          },
+          "check": {
+            "expr": "@chromosomes-3",
+            "equals": "autosomes"
+          }
+        },
+        {
+          "text": "47,XX,+21; {@autosomes} autosomes",
+          "vi": {
+            "text": "47,XX,+21; {@autosomes} nhiễm sắc thể thường"
+          },
+          "check": {
+            "expr": "@chromosomes-2-@x",
+            "equals": "autosomes"
+          }
+        }
+      ]
+    },
+    {
+      "id": "down-meiosis-two",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["nondisjunction", "aneuploidy"],
+      "stem": "A child with Down syndrome has three chromosomes 21. Two of them came from the mother and are identical copies, made from the two sister chromatids of one chromosome. Where did the non-disjunction happen?",
+      "explain": "Sister chromatids separate in meiosis II. If they fail to, one egg gets both identical copies. Non-disjunction in meiosis I would give the egg two different homologous chromosomes 21, one from each of the mother’s parents.",
+      "vi": {
+        "stem": "Một trẻ mắc hội chứng Down có ba nhiễm sắc thể 21. Hai chiếc nhận từ mẹ giống hệt nhau, được tạo ra từ hai chromatid chị em của cùng một nhiễm sắc thể. Sự không phân li đã xảy ra ở đâu?",
+        "explain": "Các chromatid chị em tách nhau ở giảm phân II. Nếu chúng không phân li, một trứng nhận cả hai bản giống hệt nhau. Không phân li ở giảm phân I sẽ cho trứng hai nhiễm sắc thể 21 tương đồng khác nhau, một chiếc có nguồn gốc từ ông ngoại, một chiếc từ bà ngoại."
+      },
+      "options": [
+        {
+          "text": "In meiosis II in the mother",
+          "vi": {
+            "text": "Ở giảm phân II của mẹ"
+          },
+          "correct": true
+        },
+        {
+          "text": "In meiosis I in the mother",
+          "vi": {
+            "text": "Ở giảm phân I của mẹ"
+          }
+        },
+        {
+          "text": "In meiosis II in the father",
+          "vi": {
+            "text": "Ở giảm phân II của bố"
+          }
+        },
+        {
+          "text": "In the first mitosis of the zygote, in the father’s chromosome",
+          "vi": {
+            "text": "Ở lần nguyên phân đầu tiên của hợp tử, trên nhiễm sắc thể của bố"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-turner",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["aneuploidy", "sex-determination", "nondisjunction"],
+      "set": {
+        "karyotype": 5
+      },
+      "stem": "A girl’s karyotype is 45,X (Turner syndrome). Decide whether each statement is true or false.",
+      "explain": "Each body cell holds {@chromosomes} chromosomes: {@autosomes} autosomes and {@x} X, no Y — a monosomy (2n − 1), and with no Y she develops as a female. A normal egg (X) fertilised by a sperm with no sex chromosome, made by non-disjunction in the father, gives 45,X. She has {=@autosomes/2} pairs of autosomes but no pair of sex chromosomes.",
+      "vi": {
+        "stem": "Bộ nhiễm sắc thể của một bé gái là 45,X (hội chứng Turner). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Mỗi tế bào sinh dưỡng có {@chromosomes} nhiễm sắc thể: {@autosomes} nhiễm sắc thể thường và {@x} nhiễm sắc thể X, không có Y — thể một (2n − 1), và vì không có Y nên phát triển thành nữ. Trứng bình thường (X) thụ tinh với tinh trùng không mang nhiễm sắc thể giới tính, tạo ra do không phân li ở bố, sẽ cho hợp tử 45,X. Bé có {=@autosomes/2} cặp nhiễm sắc thể thường nhưng không có cặp nhiễm sắc thể giới tính."
+      },
+      "statements": [
+        {
+          "text": "Each body cell holds {@chromosomes} chromosomes, {@x} of them X and none Y.",
+          "vi": {
+            "text": "Mỗi tế bào sinh dưỡng có {@chromosomes} nhiễm sắc thể, trong đó có {@x} nhiễm sắc thể X và không có Y."
+          },
+          "true": true,
+          "check": {
+            "expr": "46-1",
+            "equals": "chromosomes"
+          }
+        },
+        {
+          "text": "The karyotype is a monosomy, 2n − 1.",
+          "vi": {
+            "text": "Đây là thể một, 2n − 1."
+          },
+          "true": true
+        },
+        {
+          "text": "It can arise when a normal egg is fertilised by a sperm that carries no sex chromosome.",
+          "vi": {
+            "text": "Có thể phát sinh khi trứng bình thường thụ tinh với tinh trùng không mang nhiễm sắc thể giới tính."
+          },
+          "true": true
+        },
+        {
+          "text": "Her body cells hold {=@autosomes/2} pairs of autosomes and one pair of sex chromosomes.",
+          "vi": {
+            "text": "Tế bào sinh dưỡng của bé có {=@autosomes/2} cặp nhiễm sắc thể thường và một cặp nhiễm sắc thể giới tính."
+          },
+          "true": false,
+          "check": {
+            "expr": "@autosomes+2",
+            "equals": "chromosomes"
+          }
+        }
+      ]
+    }
+  ]
+}

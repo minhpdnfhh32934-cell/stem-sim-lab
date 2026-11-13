@@ -1,0 +1,294 @@
+{
+  "id": "gas-speeds",
+  "name": "Speeds of gas molecules: the Maxwell–Boltzmann distribution",
+  "category": "chemistry",
+  "description": "Watch the molecules of a gas in a box: they do not all move at one speed. A few are slow, a few very fast, most in between — the Maxwell–Boltzmann distribution. Scan the speeds to draw the curve and find its peak, the most probable speed. Heat the gas or choose a lighter one and the whole curve shifts to faster speeds and spreads out.",
+  "vi": {
+    "name": "Tốc độ của phân tử khí: phân bố Maxwell–Boltzmann",
+    "description": "Quan sát các phân tử khí trong một chiếc hộp: chúng không chuyển động cùng một tốc độ. Một số chậm, một số rất nhanh, phần lớn ở khoảng giữa — đó là phân bố Maxwell–Boltzmann. Quét các tốc độ để vẽ đường cong và tìm đỉnh của nó, tốc độ có xác suất lớn nhất. Đun nóng khí hoặc chọn khí nhẹ hơn thì cả đường cong dịch sang phía tốc độ lớn hơn và trải rộng ra.",
+    "note": "Mô hình dạy học của khí lí tưởng ở trạng thái cân bằng. Tốc độ phân tử tuân theo f(v) = 4π·(M/2πRT)^(3/2)·v²·e^(−Mv²/2RT), M là khối lượng mol (kg/mol, theo nguyên tử khối chuẩn IUPAC). Lượt chạy quét tốc độ từ 0 tới 3·v_p trong 20 s, đọc f(v) và phần F(v) số phân tử chậm hơn v; đỉnh mà nó đi qua là tốc độ có xác suất lớn nhất v_p = √(2RT/M). 400 phân tử lấy mẫu phân bố theo các phân vị đều nhau; tốc độ trung bình và tốc độ căn quân phương được tính từ tập đó như từ một phép đo, so với v̄ = √(8RT/πM) và v_rms = √(3RT/M). Các phân tử không va chạm nhau (khí lí tưởng); bỏ qua hiệu ứng lượng tử. Trong hộp, các hạt được vẽ chậm lại (khoảng 0,4 mm/s cho mỗi m/s) và tô màu từ xanh (chậm) qua trắng tới đỏ (nhanh)."
+  },
+  "requiredEquipment": ["gas-box"],
+  "model": "chemistry.gas-speeds",
+  "parameters": [
+    {
+      "id": "gas",
+      "label": "Gas",
+      "vi": { "label": "Chất khí" },
+      "unit": "",
+      "default": 1,
+      "min": 0,
+      "max": 3,
+      "presets": [
+        { "label": "Helium He (4 g/mol)", "vi": { "label": "Heli He (4 g/mol)" }, "value": 0 },
+        { "label": "Nitrogen N₂ (28 g/mol)", "vi": { "label": "Nitơ N₂ (28 g/mol)" }, "value": 1 },
+        { "label": "Oxygen O₂ (32 g/mol)", "vi": { "label": "Oxi O₂ (32 g/mol)" }, "value": 2 },
+        {
+          "label": "Carbon dioxide CO₂ (44 g/mol)",
+          "vi": { "label": "Cacbon đioxit CO₂ (44 g/mol)" },
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": "temperature",
+      "label": "Temperature",
+      "vi": { "label": "Nhiệt độ" },
+      "symbol": "T",
+      "unit": "K",
+      "default": 300,
+      "min": 100,
+      "max": 1200,
+      "presets": [
+        { "label": "100 K", "vi": { "label": "100 K" }, "value": 100 },
+        { "label": "300 K", "vi": { "label": "300 K" }, "value": 300 },
+        { "label": "600 K", "vi": { "label": "600 K" }, "value": 600 },
+        { "label": "1200 K", "vi": { "label": "1200 K" }, "value": 1200 }
+      ]
+    }
+  ],
+  "initialConditions": { "particles": 400, "scanTime": 20 },
+  "inputs": {
+    "particles": { "symbol": "N", "unit": "" },
+    "scanTime": { "symbol": "t_scan", "unit": "s", "desk": false }
+  },
+  "simulation": { "timeStep": 0.02, "maxDuration": 25, "sampleInterval": 0.1 },
+  "measurements": [
+    {
+      "id": "speed",
+      "label": "Speed",
+      "vi": { "label": "Tốc độ" },
+      "symbol": "v",
+      "unit": "m/s",
+      "variable": "speed"
+    },
+    {
+      "id": "density",
+      "label": "Share of molecules per km/s",
+      "vi": { "label": "Tỉ lệ phân tử trên mỗi km/s" },
+      "symbol": "f(v)",
+      "unit": "s/km",
+      "variable": "density"
+    },
+    {
+      "id": "share",
+      "label": "Molecules slower than v",
+      "vi": { "label": "Phần phân tử chậm hơn v" },
+      "symbol": "F(v)",
+      "unit": "%",
+      "variable": "share"
+    }
+  ],
+  "results": [
+    {
+      "id": "peak",
+      "label": "Most probable speed (the peak)",
+      "vi": { "label": "Tốc độ có xác suất lớn nhất (đỉnh)" },
+      "symbol": "v_p",
+      "unit": "m/s",
+      "variable": "peakSpeed",
+      "reduce": "final",
+      "theory": "mostProbable"
+    },
+    {
+      "id": "mean",
+      "label": "Mean speed of the molecules",
+      "vi": { "label": "Tốc độ trung bình của các phân tử" },
+      "symbol": "v̄",
+      "unit": "m/s",
+      "variable": "meanSpeed",
+      "reduce": "final",
+      "theory": "mean"
+    },
+    {
+      "id": "rms",
+      "label": "Root-mean-square speed",
+      "vi": { "label": "Tốc độ căn quân phương" },
+      "symbol": "v_rms",
+      "unit": "m/s",
+      "variable": "rmsSpeed",
+      "reduce": "final",
+      "theory": "rms"
+    }
+  ],
+  "graphs": [
+    {
+      "id": "distribution",
+      "title": "The speed distribution f(v)",
+      "vi": { "title": "Phân bố tốc độ f(v)" },
+      "x": "speed",
+      "y": ["density"]
+    },
+    {
+      "id": "cumulative",
+      "title": "Molecules slower than v",
+      "vi": { "title": "Phần phân tử chậm hơn v" },
+      "x": "speed",
+      "y": ["share"]
+    }
+  ],
+  "monitor": "distribution",
+  "compare": [{ "graph": "distribution", "series": "density" }],
+  "note": "A teaching model of an ideal gas at equilibrium. The molecules' speeds follow f(v) = 4π·(M/2πRT)^(3/2)·v²·e^(−Mv²/2RT), M the molar mass (kg/mol, from the IUPAC standard atomic weights). The run scans speed from 0 to 3·v_p in 20 s, reading f(v) and the share F(v) of molecules slower than v; the peak it passes is the most probable speed v_p = √(2RT/M). 400 molecules sample the distribution by evenly spaced quantiles; their mean and root-mean-square speeds are worked out from that set as from a measurement, against v̄ = √(8RT/πM) and v_rms = √(3RT/M). The molecules do not collide with each other (an ideal gas); quantum effects are left out. In the box the balls are drawn slowed down (about 0.4 mm/s per m/s) and coloured from blue (slow) through white to red (fast).",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the gas speeds instructions on the board.",
+      "vi": { "instruction": "Đọc hướng dẫn về tốc độ phân tử khí trên bảng." },
+      "done": { "kind": "inspected", "item": "gas-speeds-instructions" }
+    },
+    {
+      "id": "gas",
+      "instruction": "Choose the gas with its dial; watch the molecules in the box.",
+      "vi": { "instruction": "Chọn chất khí bằng núm xoay; quan sát các phân tử trong hộp." },
+      "done": { "kind": "adjusted", "parameter": "gas" }
+    },
+    {
+      "id": "temperature",
+      "instruction": "Set the temperature.",
+      "vi": { "instruction": "Đặt nhiệt độ." },
+      "done": { "kind": "adjusted", "parameter": "temperature" }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the speeds are scanned and the distribution is drawn.",
+      "vi": { "instruction": "Nhấn CHẠY: các tốc độ được quét và phân bố được vẽ ra." },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read the most probable, mean and rms speeds.",
+      "vi": {
+        "instruction": "Đọc tốc độ có xác suất lớn nhất, tốc độ trung bình và tốc độ căn quân phương."
+      },
+      "done": { "kind": "viewed" }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, heat the gas (or choose helium) and compare the curves.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, đun nóng khí (hoặc chọn heli) rồi so sánh các đường cong."
+      },
+      "done": { "kind": "reset" }
+    }
+  ],
+  "examples": [
+    {
+      "id": "nitrogen-speeds",
+      "question": "Nitrogen (M = 0.028014 kg/mol) is at {temperature} K. Find its molecules’ most probable speed and their root-mean-square speed.",
+      "vi": {
+        "question": "Khí nitơ (M = 0,028014 kg/mol) ở {temperature} K. Tìm tốc độ có xác suất lớn nhất và tốc độ căn quân phương của các phân tử."
+      },
+      "set": { "gas": 1, "temperature": 300 },
+      "find": [{ "theory": "mostProbable" }, { "theory": "rms" }],
+      "steps": [
+        {
+          "say": "The peak of the Maxwell distribution: v_p = √(2RT/M), with M in kilograms per mole.",
+          "vi": { "say": "Đỉnh của phân bố Maxwell: v_p = √(2RT/M), với M tính bằng kg/mol." },
+          "write": "v_p = √(2·8.314·{temperature}/0.028014) ≈ {@mostProbable} m/s",
+          "check": { "expr": "sqrt(2*8.314462618*temperature/0.028014)", "equals": "mostProbable" }
+        },
+        {
+          "say": "The root-mean-square speed has 3 in place of 2: a little faster than the peak.",
+          "vi": {
+            "say": "Tốc độ căn quân phương có hệ số 3 thay cho 2: lớn hơn tốc độ ở đỉnh một chút."
+          },
+          "write": "v_rms = √(3RT/M) = v_p·√(3/2) ≈ {@rms} m/s",
+          "check": { "expr": "@mostProbable*sqrt(3/2)", "equals": "rms" }
+        }
+      ]
+    },
+    {
+      "id": "cold-helium",
+      "question": "Helium (M = 0.0040026 kg/mol) is cooled to {temperature} K. Find the mean speed of its atoms and their most probable speed.",
+      "vi": {
+        "question": "Khí heli (M = 0,0040026 kg/mol) được làm lạnh tới {temperature} K. Tìm tốc độ trung bình và tốc độ có xác suất lớn nhất của các nguyên tử."
+      },
+      "set": { "gas": 0, "temperature": 100 },
+      "find": [{ "theory": "mean" }, { "theory": "mostProbable" }],
+      "steps": [
+        {
+          "say": "The mean speed is √(8RT/(πM)). Light atoms move fast even when cold.",
+          "vi": {
+            "say": "Tốc độ trung bình bằng √(8RT/(πM)). Nguyên tử nhẹ chuyển động nhanh ngay cả khi lạnh."
+          },
+          "write": "v̄ = √(8·8.314·{temperature}/(π·0.0040026)) ≈ {@mean} m/s",
+          "check": { "expr": "sqrt(8*8.314462618*temperature/(pi*0.0040026))", "equals": "mean" }
+        },
+        {
+          "say": "The most probable speed is a little lower: v_p = √(2RT/M) = v̄·√(π/4).",
+          "vi": {
+            "say": "Tốc độ có xác suất lớn nhất thấp hơn một chút: v_p = √(2RT/M) = v̄·√(π/4)."
+          },
+          "write": "v_p = v̄·√(π/4) = {@mean}·√(π/4) ≈ {@mostProbable} m/s",
+          "check": { "expr": "@mean*sqrt(pi/4)", "equals": "mostProbable" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "In a gas the molecules move at many different speeds; temperature sets their average energy, so a hotter or lighter gas has faster molecules.",
+    "vi": {
+      "summary": "Trong chất khí, các phân tử chuyển động với rất nhiều tốc độ khác nhau; nhiệt độ quyết định năng lượng trung bình của chúng, nên khí nóng hơn hoặc nhẹ hơn có phân tử nhanh hơn."
+    },
+    "parts": [
+      {
+        "id": "molecules",
+        "name": "Molecules",
+        "role": "Each ball keeps its own speed: blue slow, white typical, red fast.",
+        "vi": {
+          "name": "Các phân tử",
+          "role": "Mỗi hạt giữ tốc độ riêng của nó: xanh là chậm, trắng là điển hình, đỏ là nhanh."
+        },
+        "anchor": { "part": "molecules" }
+      },
+      {
+        "id": "box",
+        "name": "The box of gas",
+        "role": "The molecules fly straight and bounce off its walls; their hits are the gas's pressure.",
+        "vi": {
+          "name": "Hộp chứa khí",
+          "role": "Các phân tử bay thẳng và bật lại khi chạm thành hộp; những va chạm đó tạo nên áp suất của khí."
+        },
+        "anchor": { "part": "box" }
+      }
+    ],
+    "steps": [
+      {
+        "text": "Gas molecules fly in straight lines, bouncing off the walls and each other, so their speeds keep changing — but taken together their spread of speeds stays the same at one temperature.",
+        "vi": {
+          "text": "Phân tử khí bay theo đường thẳng, va chạm với thành hộp và với nhau nên tốc độ của chúng luôn thay đổi — nhưng xét chung, sự phân bố tốc độ không đổi ở một nhiệt độ."
+        },
+        "parts": ["molecules", "box"]
+      },
+      {
+        "text": "That spread is the Maxwell–Boltzmann distribution: few molecules near zero, a peak at the most probable speed v_p, then a long tail of very fast ones.",
+        "vi": {
+          "text": "Sự phân bố đó là phân bố Maxwell–Boltzmann: rất ít phân tử có tốc độ gần bằng không, đỉnh ở tốc độ có xác suất lớn nhất v_p, sau đó là một đuôi dài gồm các phân tử rất nhanh."
+        },
+        "parts": ["molecules"]
+      },
+      {
+        "text": "Three speeds describe it: v_p = √(2RT/M), the mean v̄ = √(8RT/πM), and the root-mean-square v_rms = √(3RT/M), which gives the average kinetic energy ½Mv_rms² = (3/2)RT per mole.",
+        "vi": {
+          "text": "Ba tốc độ mô tả nó: v_p = √(2RT/M), tốc độ trung bình v̄ = √(8RT/πM), và tốc độ căn quân phương v_rms = √(3RT/M), cho động năng trung bình ½Mv_rms² = (3/2)RT trên mỗi mol."
+        },
+        "parts": ["molecules"]
+      },
+      {
+        "text": "Heat the gas: the curve moves to higher speeds and flattens — more molecules are very fast. Four times the temperature doubles every speed.",
+        "vi": {
+          "text": "Đun nóng khí: đường cong dịch sang tốc độ cao hơn và thấp xuống — nhiều phân tử rất nhanh hơn. Nhiệt độ tăng bốn lần thì mọi tốc độ tăng gấp đôi."
+        },
+        "parts": ["molecules", "box"]
+      },
+      {
+        "text": "Lighter molecules move faster at the same temperature: helium (4 g/mol) is about 2.6 times faster than nitrogen (28 g/mol). The fast tail is why reactions speed up when heated.",
+        "vi": {
+          "text": "Ở cùng nhiệt độ, phân tử nhẹ hơn chuyển động nhanh hơn: heli (4 g/mol) nhanh hơn nitơ (28 g/mol) khoảng 2,6 lần. Đuôi tốc độ cao chính là lí do phản ứng nhanh lên khi đun nóng."
+        },
+        "parts": ["molecules"]
+      }
+    ]
+  }
+}

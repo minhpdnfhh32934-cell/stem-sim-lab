@@ -1,0 +1,305 @@
+{
+  "id": "food-tests",
+  "name": "Tests for biological molecules: unknown samples",
+  "category": "biology",
+  "description": "Six stoppered bottles, A to F, each hold one substance dissolved or shaken in water — a sugar, starch, a protein, a fat, or nothing at all — but their labels do not say which. Test them: iodine solution turns blue-black with starch; Benedict's reagent, heated in a boiling water bath, gives a brick-red precipitate with a reducing sugar; the biuret reagent turns violet with a protein; Sudan III stains a fat red, floating as a layer. Choose the sample, the test and whether to heat, and work out what each bottle holds.",
+  "vi": {
+    "name": "Nhận biết các phân tử sinh học: các mẫu chưa biết",
+    "description": "Sáu lọ đậy nút, từ A đến F, mỗi lọ chứa một chất hòa tan hoặc lắc đều trong nước — một loại đường, tinh bột, một protein, chất béo, hoặc không có gì — nhưng nhãn không ghi đó là chất gì. Hãy thử chúng: dung dịch iodine chuyển màu xanh tím đen với tinh bột; thuốc thử Benedict, khi đun trong nồi cách thủy sôi, cho kết tủa đỏ gạch với đường khử; thuốc thử biuret chuyển màu tím với protein; Sudan III nhuộm đỏ chất béo, nổi thành một lớp. Chọn mẫu, phép thử và có đun nóng hay không, rồi suy ra mỗi lọ chứa gì.",
+    "note": "Quy tắc của bốn phép thử theo sách giáo khoa (KNTT Sinh học 10, bài thực hành nhận biết một số phân tử sinh học; Benedict 1909): iodine trong kali iodide (màu vàng nâu) chuyển xanh tím đen với tinh bột, do iodine nằm trong vòng xoắn của tinh bột; thuốc thử Benedict (màu xanh lam, Cu²⁺ trong dung dịch citrate kiềm) cho kết tủa Cu₂O màu đỏ gạch với đường khử, nhưng chỉ khi được đun trong nồi cách thủy sôi; saccharose không phải đường khử nên thuốc thử vẫn xanh lam; thuốc thử biuret (màu xanh lam, Cu²⁺ trong NaOH) chuyển tím với liên kết peptide của protein; Sudan III (thuốc nhuộm đỏ) tan trong chất béo: lipid nổi thành một lớp nhuộm đỏ. Phép thử không tìm thấy chất của nó thì thuốc thử giữ nguyên màu. Mỗi mẫu là một chất tinh khiết trong nước cất, đủ đậm để cho màu đầy đủ; một mẫu là nước cất làm đối chứng. Thực phẩm thật chứa nhiều chất (sữa có lactose, protein và chất béo), và màu Benedict chuyển từ xanh lục, vàng, cam đến đỏ gạch theo nồng độ đường — mô hình này không mô tả điều đó, vì không có nguồn nào cho các ngưỡng của những mẫu này. Thời gian để màu hiện lên (2 phút, hiển thị trong 10 giây) là minh họa: trong phòng thí nghiệm, iodine cho màu ngay, Benedict sau 2–5 phút trong nồi cách thủy, biuret trong vài phút. Màu và kết quả dương tính là kết luận định tính, không có dụng cụ đo và không có sai số đọc. Trong phòng thí nghiệm thật, ống nghiệm hay ống hút bẩn có thể làm sai kết quả, và màu yếu khó phân biệt nếu không có ống đối chứng bên cạnh."
+  },
+  "requiredEquipment": ["food-test-rack"],
+  "model": "biology.food-tests",
+  "parameters": [
+    {
+      "id": "sample",
+      "label": "Sample",
+      "vi": { "label": "Mẫu" },
+      "unit": "",
+      "default": 0,
+      "min": 0,
+      "max": 5,
+      "presets": [
+        { "label": "Sample A", "vi": { "label": "Mẫu A" }, "value": 0 },
+        { "label": "Sample B", "vi": { "label": "Mẫu B" }, "value": 1 },
+        { "label": "Sample C", "vi": { "label": "Mẫu C" }, "value": 2 },
+        { "label": "Sample D", "vi": { "label": "Mẫu D" }, "value": 3 },
+        { "label": "Sample E", "vi": { "label": "Mẫu E" }, "value": 4 },
+        { "label": "Sample F", "vi": { "label": "Mẫu F" }, "value": 5 }
+      ]
+    },
+    {
+      "id": "test",
+      "label": "Test",
+      "vi": { "label": "Phép thử" },
+      "unit": "",
+      "default": 0,
+      "min": 0,
+      "max": 3,
+      "presets": [
+        {
+          "label": "Iodine solution (starch)",
+          "vi": { "label": "Dung dịch iodine (tinh bột)" },
+          "value": 0
+        },
+        {
+          "label": "Benedict's reagent (reducing sugar)",
+          "vi": { "label": "Thuốc thử Benedict (đường khử)" },
+          "value": 1
+        },
+        {
+          "label": "Biuret reagent (protein)",
+          "vi": { "label": "Thuốc thử biuret (protein)" },
+          "value": 2
+        },
+        {
+          "label": "Sudan III (lipid)",
+          "vi": { "label": "Sudan III (lipid)" },
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": "heated",
+      "label": "Water bath",
+      "vi": { "label": "Nồi cách thủy" },
+      "unit": "",
+      "default": 1,
+      "min": 0,
+      "max": 1,
+      "presets": [
+        {
+          "label": "Off (room temperature)",
+          "vi": { "label": "Tắt (nhiệt độ phòng)" },
+          "value": 0
+        },
+        {
+          "label": "Boiling",
+          "vi": { "label": "Đun sôi" },
+          "value": 1
+        }
+      ]
+    }
+  ],
+  "initialConditions": { "developTime": 120, "timeLapse": 12 },
+  "inputs": {
+    "developTime": { "symbol": "t", "unit": "s", "desk": false },
+    "timeLapse": { "symbol": "k", "unit": "", "desk": false }
+  },
+  "simulation": { "timeStep": 0.02, "maxDuration": 12, "sampleInterval": 0.1 },
+  "measurements": [
+    {
+      "id": "development",
+      "label": "Colour development",
+      "vi": { "label": "Mức độ hiện màu" },
+      "symbol": "d",
+      "unit": "",
+      "variable": "development"
+    },
+    {
+      "id": "timing",
+      "label": "Time since the reagent was added",
+      "vi": { "label": "Thời gian từ khi nhỏ thuốc thử" },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "elapsed"
+    }
+  ],
+  "results": [
+    {
+      "id": "colour",
+      "label": "What the tube shows",
+      "vi": { "label": "Màu trong ống nghiệm" },
+      "unit": "",
+      "variable": "colour",
+      "reduce": "final",
+      "format": "integer",
+      "theory": "colour",
+      "classes": [
+        {
+          "max": 0,
+          "label": "No change: the reagent keeps its own colour",
+          "vi": { "label": "Không đổi: thuốc thử giữ nguyên màu" }
+        },
+        { "max": 1, "label": "Blue-black", "vi": { "label": "Xanh tím đen" } },
+        {
+          "max": 2,
+          "label": "Brick-red precipitate",
+          "vi": { "label": "Kết tủa đỏ gạch" }
+        },
+        { "max": 3, "label": "Violet", "vi": { "label": "Màu tím" } },
+        {
+          "label": "Red-stained oily layer on top",
+          "vi": { "label": "Lớp dầu nhuộm đỏ nổi phía trên" }
+        }
+      ]
+    },
+    {
+      "id": "positive",
+      "label": "The test's molecule found",
+      "vi": { "label": "Có chất mà phép thử tìm" },
+      "unit": "",
+      "variable": "positive",
+      "reduce": "final",
+      "format": "integer",
+      "theory": "positive",
+      "classes": [
+        { "max": 0, "label": "Negative", "vi": { "label": "Âm tính" } },
+        { "label": "Positive", "vi": { "label": "Dương tính" } }
+      ]
+    }
+  ],
+  "graphs": [
+    {
+      "id": "development-time",
+      "title": "Colour development against time",
+      "vi": { "title": "Mức độ hiện màu theo thời gian" },
+      "x": "timing",
+      "y": ["development"]
+    }
+  ],
+  "monitor": "development-time",
+  "note": "The rules of the four tests, as the textbook gives them (KNTT Sinh học 10, the practical on recognising some biological molecules; Benedict 1909): iodine in potassium iodide (yellow-brown) turns blue-black with starch, its iodine held in the starch's helix; Benedict's reagent (blue, Cu²⁺ in alkaline citrate) gives a brick-red precipitate of Cu₂O with a reducing sugar, but only when heated in a boiling water bath; sucrose is not a reducing sugar and leaves it blue; the biuret reagent (blue, Cu²⁺ in sodium hydroxide) turns violet with a protein's peptide bonds; Sudan III (a red dye) dissolves in fat: a lipid floats as a red-stained layer. A test that does not find its molecule leaves the reagent its own colour. Each sample is one pure substance in distilled water, strong enough to give the full colour; one sample is distilled water, the control. Real foods hold several substances (milk: lactose, protein and fat), and Benedict's colour runs green, yellow, orange to brick red with the sugar's concentration — this model leaves that out, as no source fixes the thresholds for these samples. The time the colour takes to appear (2 minutes, shown in 10 seconds) is illustrative: in a lab iodine shows at once, Benedict's after 2–5 min in the bath, biuret within a few minutes. The colour and the positive result are qualitative findings, with no instrument and no reading error. In a real lab a dirty tube or pipette can give a false result, and a faint colour is hard to judge without a control tube beside it.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the food test instructions on the board.",
+      "vi": { "instruction": "Đọc hướng dẫn thí nghiệm nhận biết phân tử sinh học trên bảng." },
+      "done": { "kind": "inspected", "item": "food-tests-instructions" }
+    },
+    {
+      "id": "sample",
+      "instruction": "Choose a sample, A to F, with its dial on the control desk.",
+      "vi": { "instruction": "Chọn một mẫu, từ A đến F, bằng núm xoay trên bàn điều khiển." },
+      "done": { "kind": "adjusted", "parameter": "sample" }
+    },
+    {
+      "id": "test",
+      "instruction": "Choose the test; for Benedict's, keep the water bath boiling.",
+      "vi": { "instruction": "Chọn phép thử; với thuốc thử Benedict, giữ nồi cách thủy đang sôi." },
+      "done": { "kind": "adjusted", "parameter": "test" }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN and watch the colour in the tube.",
+      "vi": { "instruction": "Nhấn CHẠY và quan sát màu trong ống nghiệm." },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read what the tube shows on the results monitor: positive or negative?",
+      "vi": {
+        "instruction": "Đọc màu trong ống nghiệm trên màn hình kết quả: dương tính hay âm tính?"
+      },
+      "done": { "kind": "viewed" }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET and test again until you know what each bottle holds; which sample is the water control?",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI và thử tiếp cho đến khi biết mỗi lọ chứa gì; mẫu nào là nước cất đối chứng?"
+      },
+      "done": { "kind": "reset" }
+    }
+  ],
+  "explain": {
+    "summary": "Each kind of biological molecule changes the colour of its own test reagent; testing an unknown sample with each reagent in turn tells what it holds.",
+    "vi": {
+      "summary": "Mỗi loại phân tử sinh học làm thuốc thử riêng của nó đổi màu; lần lượt thử một mẫu chưa biết với từng thuốc thử sẽ cho biết nó chứa chất gì."
+    },
+    "parts": [
+      {
+        "id": "bottles",
+        "name": "Sample bottles A–F",
+        "role": "Each holds one substance in water — or nothing at all; their labels do not say which.",
+        "vi": {
+          "name": "Lọ mẫu A–F",
+          "role": "Mỗi lọ chứa một chất trong nước — hoặc không có chất nào; nhãn không ghi đó là chất gì."
+        },
+        "anchor": {
+          "at": [-0.24, -0.04, 0.02]
+        }
+      },
+      {
+        "id": "tube",
+        "name": "Test tube",
+        "role": "The chosen sample with the chosen reagent: its colour is the result.",
+        "vi": {
+          "name": "Ống nghiệm",
+          "role": "Mẫu đã chọn cùng thuốc thử đã chọn: màu của nó là kết quả."
+        },
+        "anchor": {
+          "part": "liquid"
+        }
+      },
+      {
+        "id": "bath",
+        "name": "Water bath",
+        "role": "A beaker of boiling water the tube stands in: Benedict’s test needs it.",
+        "vi": {
+          "name": "Bể nước sôi",
+          "role": "Cốc nước sôi để đặt ống nghiệm vào: phép thử Benedict cần đun nóng."
+        },
+        "anchor": {
+          "at": [0.2, -0.01, 0.06]
+        }
+      },
+      {
+        "id": "plate",
+        "name": "Hot plate",
+        "role": "Its ring glows while it keeps the water bath boiling.",
+        "vi": {
+          "name": "Bếp điện",
+          "role": "Vòng nhiệt của bếp sáng lên khi nó giữ cho bể nước sôi."
+        },
+        "anchor": {
+          "part": "ring"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "Choose a sample bottle and a test. A few drops of the reagent go into the sample in the tube, and you watch the colour.",
+        "vi": {
+          "text": "Chọn một lọ mẫu và một phép thử. Nhỏ vài giọt thuốc thử vào mẫu trong ống nghiệm và quan sát màu."
+        },
+        "parts": ["bottles", "tube"]
+      },
+      {
+        "text": "Iodine solution (yellow-brown) turns blue-black with starch: the iodine is held in the starch’s coiled chain.",
+        "vi": {
+          "text": "Dung dịch iốt (màu vàng nâu) chuyển xanh tím đen khi có tinh bột: iốt bị giữ trong chuỗi xoắn của tinh bột."
+        },
+        "parts": ["tube"]
+      },
+      {
+        "text": "Benedict’s reagent (blue) gives a brick-red precipitate with a reducing sugar — but only heated in the boiling water bath. Sucrose is not a reducing sugar and leaves it blue.",
+        "vi": {
+          "text": "Thuốc thử Benedict (màu xanh lam) tạo kết tủa đỏ gạch với đường khử — nhưng chỉ khi đun trong bể nước sôi. Saccarozơ không phải đường khử nên dung dịch vẫn xanh lam."
+        },
+        "parts": ["tube", "bath", "plate"]
+      },
+      {
+        "text": "The biuret reagent (blue) turns violet with a protein’s peptide bonds. Sudan III, a red dye, dissolves in fat: a lipid floats as a red-stained layer.",
+        "vi": {
+          "text": "Thuốc thử biure (màu xanh lam) chuyển tím khi có liên kết peptit của protein. Sudan III, một thuốc nhuộm đỏ, tan trong chất béo: lipit nổi thành một lớp nhuộm đỏ."
+        },
+        "parts": ["tube"]
+      },
+      {
+        "text": "A test that does not find its molecule leaves the reagent its own colour. One of the bottles may hold nothing but water: a control to compare the colours with.",
+        "vi": {
+          "text": "Phép thử không tìm thấy phân tử của nó thì thuốc thử giữ nguyên màu. Có thể có một lọ chỉ chứa nước: lọ đối chứng để so sánh màu."
+        },
+        "parts": ["bottles", "tube"]
+      },
+      {
+        "text": "Test each bottle with each reagent and work out what it holds from the colours. In this model each sample is one pure substance; real foods hold several.",
+        "vi": {
+          "text": "Thử mỗi lọ với từng thuốc thử và dựa vào màu để suy ra lọ đó chứa gì. Trong mô hình này mỗi mẫu là một chất tinh khiết; thực phẩm thật chứa nhiều chất."
+        },
+        "parts": ["bottles"]
+      }
+    ]
+  }
+}

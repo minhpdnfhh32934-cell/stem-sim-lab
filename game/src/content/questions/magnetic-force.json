@@ -1,0 +1,1073 @@
+{
+  "id": "magnetic-force",
+  "skills": [
+    {
+      "id": "law",
+      "name": "Force on a current: F = B·I·L·sin α",
+      "advice": "Learn F = B·I·L·sin α, B in tesla, L in metres, α the angle between wire and field: largest at 90°, zero along the field. The force is at right angles to both the wire and the field (left-hand rule).",
+      "vi": {
+        "name": "Lực từ lên dòng điện: F = B·I·L·sin α",
+        "advice": "Nhớ F = B·I·L·sin α, B tính bằng tesla, L bằng mét, α là góc giữa dây và từ trường: lớn nhất khi 90°, bằng 0 khi dây song song với từ trường. Lực vuông góc với cả dây và từ trường (quy tắc bàn tay trái)."
+      }
+    },
+    {
+      "id": "factors",
+      "name": "What the force depends on",
+      "advice": "Change one thing at a time at the station: twice I, twice F; twice L, twice F; 90° to 30°, half F (sin 30° = 0.5). Reversing the current reverses the force.",
+      "vi": {
+        "name": "Lực từ phụ thuộc những yếu tố nào",
+        "advice": "Trên trạm, mỗi lần thay đổi một yếu tố: I gấp đôi thì F gấp đôi; L gấp đôi thì F gấp đôi; từ 90° xuống 30° thì F giảm một nửa (sin 30° = 0,5). Đổi chiều dòng điện thì lực đổi chiều."
+      }
+    },
+    {
+      "id": "balance",
+      "name": "Reading the force on a balance",
+      "advice": "The wire pushes the magnet back with the same force (Newton’s third law), so the balance changes by Δm = F/g, and F = Δm·g. Keep Δm in kg. The balance shows the nearest multiple of its resolution.",
+      "vi": {
+        "name": "Đo lực từ bằng cân",
+        "advice": "Dây dẫn đẩy ngược lại nam châm với lực bằng như vậy (định luật III Newton), nên số chỉ của cân thay đổi Δm = F/g, và F = Δm·g. Để Δm theo kg. Cân hiển thị bội số gần nhất của độ phân giải."
+      }
+    },
+    {
+      "id": "find-b",
+      "name": "Finding B from F against I",
+      "advice": "Run at several currents: F against I is a straight line of slope B·L·sin α, so B = slope/(L·sin α). The station’s field is the value you find, so the questions here suppose other magnets.",
+      "vi": {
+        "name": "Tìm B từ đồ thị F theo I",
+        "advice": "Đo ở nhiều cường độ dòng điện: F theo I là đường thẳng hệ số góc B·L·sin α, nên B = hệ số góc/(L·sin α). Cảm ứng từ của trạm là giá trị em phải tự tìm, nên các câu hỏi ở đây giả sử những nam châm khác."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "formula",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["law"],
+      "stem": "A length L of straight wire carrying a current I makes an angle α with a uniform magnetic field B. The force on it is…",
+      "explain": "F = B·I·L·sin α.",
+      "vi": {
+        "stem": "Đoạn dây dẫn thẳng dài L mang dòng điện I đặt trong từ trường đều B, hợp với đường sức góc α. Lực từ tác dụng lên đoạn dây là…",
+        "explain": "F = B·I·L·sin α."
+      },
+      "options": [
+        {
+          "text": "F = B·I·L·sin α",
+          "vi": {
+            "text": "F = B·I·L·sin α"
+          },
+          "correct": true
+        },
+        {
+          "text": "F = B·I·L·cos α",
+          "vi": {
+            "text": "F = B·I·L·cos α"
+          }
+        },
+        {
+          "text": "F = B·I/L",
+          "vi": {
+            "text": "F = B·I/L"
+          }
+        },
+        {
+          "text": "F = B·L/I",
+          "vi": {
+            "text": "F = B·L/I"
+          }
+        }
+      ]
+    },
+    {
+      "id": "unit",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["law"],
+      "stem": "The SI unit of magnetic field (magnetic induction) B is the…",
+      "explain": "B is measured in tesla, T = N/(A·m).",
+      "vi": {
+        "stem": "Đơn vị SI của cảm ứng từ B là…",
+        "explain": "Cảm ứng từ đo bằng tesla, T = N/(A·m)."
+      },
+      "options": [
+        {
+          "text": "tesla (T)",
+          "vi": {
+            "text": "tesla (T)"
+          },
+          "correct": true
+        },
+        {
+          "text": "weber (Wb)",
+          "vi": {
+            "text": "vêbe (Wb)"
+          }
+        },
+        {
+          "text": "newton (N)",
+          "vi": {
+            "text": "niutơn (N)"
+          }
+        },
+        {
+          "text": "ampere per metre (A/m)",
+          "vi": {
+            "text": "ampe trên mét (A/m)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-direction",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["law", "factors"],
+      "stem": "A straight wire carrying a current runs through a uniform magnetic field. Decide whether each statement is true or false.",
+      "explain": "F = B·I·L·sin α: largest at 90°, zero along the field; the force is at right angles to the field, not along it; reversing I reverses F.",
+      "vi": {
+        "stem": "Một dây dẫn thẳng mang dòng điện đặt trong từ trường đều. Mỗi nhận định sau đúng hay sai?",
+        "explain": "F = B·I·L·sin α: lớn nhất khi 90°, bằng 0 khi dây song song với đường sức; lực vuông góc với từ trường chứ không dọc theo nó; đổi chiều I thì F đổi chiều."
+      },
+      "statements": [
+        {
+          "text": "The force is largest when the wire is at right angles to the field.",
+          "vi": {
+            "text": "Lực từ lớn nhất khi dây dẫn vuông góc với đường sức từ."
+          },
+          "true": true
+        },
+        {
+          "text": "A wire along the field feels no force.",
+          "vi": {
+            "text": "Dây dẫn đặt song song với đường sức từ không chịu lực từ."
+          },
+          "true": true
+        },
+        {
+          "text": "Reversing the current reverses the force.",
+          "vi": {
+            "text": "Đổi chiều dòng điện thì lực từ đổi chiều."
+          },
+          "true": true
+        },
+        {
+          "text": "The force points along the field lines.",
+          "vi": {
+            "text": "Lực từ hướng dọc theo đường sức từ."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "double-current",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["factors", "balance"],
+      "stem": "The current in the wire is doubled. The change in the balance’s reading…",
+      "explain": "F ∝ I and Δm = F/g, so Δm doubles.",
+      "vi": {
+        "stem": "Tăng cường độ dòng điện trong dây lên gấp đôi. Độ thay đổi số chỉ của cân…",
+        "explain": "F tỉ lệ với I và Δm = F/g, nên Δm tăng gấp đôi."
+      },
+      "options": [
+        {
+          "text": "doubles",
+          "vi": {
+            "text": "tăng gấp đôi"
+          },
+          "correct": true
+        },
+        {
+          "text": "halves",
+          "vi": {
+            "text": "giảm một nửa"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "becomes four times larger",
+          "vi": {
+            "text": "tăng gấp bốn lần"
+          }
+        }
+      ]
+    },
+    {
+      "id": "to-30",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["factors"],
+      "stem": "The magnet is turned so the angle between the wire and the field goes from 90° to 30°. The force…",
+      "explain": "F ∝ sin α: sin 30° = 0.5, so the force halves.",
+      "vi": {
+        "stem": "Xoay nam châm để góc giữa dây và từ trường đổi từ 90° sang 30°. Lực từ…",
+        "explain": "F tỉ lệ với sin α: sin 30° = 0,5, nên lực giảm một nửa."
+      },
+      "options": [
+        {
+          "text": "halves",
+          "vi": {
+            "text": "giảm một nửa"
+          },
+          "correct": true
+        },
+        {
+          "text": "becomes three times smaller",
+          "vi": {
+            "text": "giảm ba lần"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "becomes zero",
+          "vi": {
+            "text": "bằng 0"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-supposed",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["law", "balance"],
+      "set": {
+        "fieldStrength": 0.05,
+        "current": 2,
+        "wireLength": 0.04,
+        "angle": 90
+      },
+      "stem": "Suppose the magnet’s field were B = {fieldStrength} T. A wire with {wireLength} m in the field, at {angle}° to it, carries {current} A (g = {gravity} m/s²). Decide whether each statement is true or false.",
+      "explain": "F = B·I·L = {@force} N; Δm = F/g ≈ {@balanceReading} kg, not F itself. At 30° the force would be half.",
+      "vi": {
+        "stem": "Giả sử từ trường của nam châm là B = {fieldStrength} T. Dây dẫn có {wireLength} m nằm trong từ trường, hợp với đường sức {angle}°, mang dòng điện {current} A (g = {gravity} m/s²). Mỗi nhận định sau đúng hay sai?",
+        "explain": "F = B·I·L = {@force} N; Δm = F/g ≈ {@balanceReading} kg, chứ không phải bằng F. Ở 30° lực sẽ giảm một nửa."
+      },
+      "statements": [
+        {
+          "text": "The force on the wire is {@force} N.",
+          "vi": {
+            "text": "Lực từ tác dụng lên dây bằng {@force} N."
+          },
+          "true": true,
+          "check": {
+            "expr": "fieldStrength*current*wireLength*sin(rad(angle))",
+            "equals": "force"
+          }
+        },
+        {
+          "text": "The balance’s reading changes by about {@balanceReading} kg.",
+          "vi": {
+            "text": "Số chỉ của cân thay đổi khoảng {@balanceReading} kg."
+          },
+          "true": true,
+          "check": {
+            "expr": "fieldStrength*current*wireLength*sin(rad(angle))/gravity",
+            "equals": "balanceReading"
+          }
+        },
+        {
+          "text": "At 30° to the field the force would be half as large.",
+          "vi": {
+            "text": "Khi dây hợp với đường sức 30°, lực từ sẽ giảm một nửa."
+          },
+          "true": true
+        },
+        {
+          "text": "The balance’s reading changes by {@force} kg.",
+          "vi": {
+            "text": "Số chỉ của cân thay đổi {@force} kg."
+          },
+          "true": false,
+          "check": {
+            "expr": "@force",
+            "equals": "balanceReading"
+          }
+        }
+      ]
+    },
+    {
+      "id": "force-60",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["law"],
+      "set": {
+        "fieldStrength": 0.08,
+        "current": 3,
+        "wireLength": 0.08,
+        "angle": 60
+      },
+      "stem": "Suppose a magnet with B = {fieldStrength} T. {wireLength} m of wire carrying {current} A lies in its field at {angle}° to it. What force acts on the wire?",
+      "explain": "F = B·I·L·sin α = {fieldStrength}·{current}·{wireLength}·sin {angle}° ≈ {@force} N.",
+      "vi": {
+        "stem": "Giả sử một nam châm có B = {fieldStrength} T. Đoạn dây dài {wireLength} m mang dòng điện {current} A nằm trong từ trường, hợp với đường sức {angle}°. Lực từ tác dụng lên dây bằng bao nhiêu?",
+        "explain": "F = B·I·L·sin α = {fieldStrength}·{current}·{wireLength}·sin {angle}° ≈ {@force} N."
+      },
+      "options": [
+        {
+          "text": "{@force} N",
+          "vi": {
+            "text": "{@force} N"
+          },
+          "correct": true,
+          "check": {
+            "expr": "fieldStrength*current*wireLength*sin(rad(angle))",
+            "equals": "force"
+          }
+        },
+        {
+          "text": "{=fieldStrength*current*wireLength} N",
+          "vi": {
+            "text": "{=fieldStrength*current*wireLength} N"
+          },
+          "check": {
+            "expr": "fieldStrength*current*wireLength",
+            "equals": "force"
+          }
+        },
+        {
+          "text": "{=fieldStrength*current*wireLength*cos(rad(angle))} N",
+          "vi": {
+            "text": "{=fieldStrength*current*wireLength*cos(rad(angle))} N"
+          },
+          "check": {
+            "expr": "fieldStrength*current*wireLength*cos(rad(angle))",
+            "equals": "force"
+          }
+        },
+        {
+          "text": "{=fieldStrength*current/wireLength*sin(rad(angle))} N",
+          "vi": {
+            "text": "{=fieldStrength*current/wireLength*sin(rad(angle))} N"
+          },
+          "check": {
+            "expr": "fieldStrength*current/wireLength*sin(rad(angle))",
+            "equals": "force"
+          }
+        }
+      ]
+    },
+    {
+      "id": "from-balance",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["balance"],
+      "set": {
+        "fieldStrength": 0.05,
+        "current": 2,
+        "wireLength": 0.08,
+        "angle": 90
+      },
+      "stem": "When the current is switched on, the balance’s reading changes by Δm = {@balanceReading|3} kg (g = {gravity} m/s²). What force acts on the wire?",
+      "explain": "By Newton’s third law the wire pushes the magnet as hard: F = Δm·g = {@balanceReading|3}·{gravity} ≈ {@force} N.",
+      "vi": {
+        "stem": "Khi bật dòng điện, số chỉ của cân thay đổi Δm = {@balanceReading|3} kg (g = {gravity} m/s²). Lực từ tác dụng lên dây bằng bao nhiêu?",
+        "explain": "Theo định luật III Newton, dây đẩy nam châm với lực bằng như vậy: F = Δm·g = {@balanceReading|3}·{gravity} ≈ {@force} N."
+      },
+      "options": [
+        {
+          "text": "{@force} N",
+          "vi": {
+            "text": "{@force} N"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@balanceReading*gravity",
+            "equals": "force"
+          }
+        },
+        {
+          "text": "{@balanceReading} N",
+          "vi": {
+            "text": "{@balanceReading} N"
+          },
+          "check": {
+            "expr": "@balanceReading",
+            "equals": "force"
+          }
+        },
+        {
+          "text": "{=@balanceReading/gravity} N",
+          "vi": {
+            "text": "{=@balanceReading/gravity} N"
+          },
+          "check": {
+            "expr": "@balanceReading/gravity",
+            "equals": "force"
+          }
+        },
+        {
+          "text": "{=@balanceReading*gravity*1000} N",
+          "vi": {
+            "text": "{=@balanceReading*gravity*1000} N"
+          },
+          "check": {
+            "expr": "@balanceReading*gravity*1000",
+            "equals": "force"
+          }
+        }
+      ]
+    },
+    {
+      "id": "reading",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["balance", "law"],
+      "set": {
+        "fieldStrength": 0.1,
+        "current": 1,
+        "wireLength": 0.04,
+        "angle": 90
+      },
+      "stem": "Suppose a magnet with B = {fieldStrength} T: {wireLength} m of wire square to its field carries {current} A, so F = {@force} N. By how much does the balance under the magnet change (g = {gravity} m/s²)?",
+      "explain": "Δm = F/g = {@force}/{gravity} ≈ {@balanceReading} kg.",
+      "vi": {
+        "stem": "Giả sử một nam châm có B = {fieldStrength} T: đoạn dây {wireLength} m vuông góc với từ trường mang dòng điện {current} A, nên F = {@force} N. Số chỉ của cân dưới nam châm thay đổi bao nhiêu (g = {gravity} m/s²)?",
+        "explain": "Δm = F/g = {@force}/{gravity} ≈ {@balanceReading} kg."
+      },
+      "options": [
+        {
+          "text": "{@balanceReading} kg",
+          "vi": {
+            "text": "{@balanceReading} kg"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@force/gravity",
+            "equals": "balanceReading"
+          }
+        },
+        {
+          "text": "{=@force*gravity} kg",
+          "vi": {
+            "text": "{=@force*gravity} kg"
+          },
+          "check": {
+            "expr": "@force*gravity",
+            "equals": "balanceReading"
+          }
+        },
+        {
+          "text": "{@force} kg",
+          "vi": {
+            "text": "{@force} kg"
+          },
+          "check": {
+            "expr": "@force",
+            "equals": "balanceReading"
+          }
+        },
+        {
+          "text": "{=@force/(gravity*1000)} kg",
+          "vi": {
+            "text": "{=@force/(gravity*1000)} kg"
+          },
+          "check": {
+            "expr": "@force/(gravity*1000)",
+            "equals": "balanceReading"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-30",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["law", "factors"],
+      "set": {
+        "fieldStrength": 0.05,
+        "current": 3,
+        "wireLength": 0.02,
+        "angle": 30
+      },
+      "stem": "Suppose B = {fieldStrength} T. {wireLength} m of wire at {angle}° to the field carries {current} A. Decide whether each statement is true or false.",
+      "explain": "F = B·I·L·sin 30° = {@force} N; F/I = B·L·sin α = {@forcePerAmpere} N/A. Square to the field the force would double; twice L doubles F, not quadruples it.",
+      "vi": {
+        "stem": "Giả sử B = {fieldStrength} T. Đoạn dây {wireLength} m hợp với đường sức {angle}° mang dòng điện {current} A. Mỗi nhận định sau đúng hay sai?",
+        "explain": "F = B·I·L·sin 30° = {@force} N; F/I = B·L·sin α = {@forcePerAmpere} N/A. Khi vuông góc với từ trường, lực sẽ tăng gấp đôi; L gấp đôi thì F gấp đôi, không phải gấp bốn."
+      },
+      "statements": [
+        {
+          "text": "The force is about {@force} N.",
+          "vi": {
+            "text": "Lực từ khoảng {@force} N."
+          },
+          "true": true,
+          "check": {
+            "expr": "fieldStrength*current*wireLength*sin(rad(angle))",
+            "equals": "force"
+          }
+        },
+        {
+          "text": "F/I is about {@forcePerAmpere} N/A.",
+          "vi": {
+            "text": "F/I khoảng {@forcePerAmpere} N/A."
+          },
+          "true": true,
+          "check": {
+            "expr": "fieldStrength*wireLength*sin(rad(angle))",
+            "equals": "forcePerAmpere"
+          }
+        },
+        {
+          "text": "Square to the field, the force would be twice as large.",
+          "vi": {
+            "text": "Khi dây vuông góc với từ trường, lực sẽ lớn gấp đôi."
+          },
+          "true": true
+        },
+        {
+          "text": "Twice the length of wire in the field would make the force four times larger.",
+          "vi": {
+            "text": "Chiều dài dây trong từ trường gấp đôi thì lực sẽ lớn gấp bốn."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "find-b",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["find-b"],
+      "set": {
+        "fieldStrength": 0.05,
+        "wireLength": 0.04,
+        "angle": 90
+      },
+      "stem": "Suppose another magnet: runs at several currents give F against I as a straight line of slope {@forcePerAmpere} N/A, with {wireLength} m of wire square to the field. What is its field B?",
+      "explain": "The slope is B·L·sin α, so B = {@forcePerAmpere}/({wireLength}·sin {angle}°) = {=@forcePerAmpere/(wireLength*sin(rad(angle)))} T.",
+      "vi": {
+        "stem": "Giả sử một nam châm khác: các lần đo ở nhiều cường độ dòng điện cho đồ thị F theo I là đường thẳng có hệ số góc {@forcePerAmpere} N/A, với đoạn dây {wireLength} m vuông góc với từ trường. Cảm ứng từ B của nam châm này bằng bao nhiêu?",
+        "explain": "Hệ số góc bằng B·L·sin α, nên B = {@forcePerAmpere}/({wireLength}·sin {angle}°) = {=@forcePerAmpere/(wireLength*sin(rad(angle)))} T."
+      },
+      "options": [
+        {
+          "text": "{=@forcePerAmpere/(wireLength*sin(rad(angle)))} T",
+          "vi": {
+            "text": "{=@forcePerAmpere/(wireLength*sin(rad(angle)))} T"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@forcePerAmpere/(wireLength*sin(rad(angle)))",
+            "equals": "field"
+          }
+        },
+        {
+          "text": "{=@forcePerAmpere*wireLength} T",
+          "vi": {
+            "text": "{=@forcePerAmpere*wireLength} T"
+          },
+          "check": {
+            "expr": "@forcePerAmpere*wireLength",
+            "equals": "field"
+          }
+        },
+        {
+          "text": "{=@forcePerAmpere/(wireLength*gravity)} T",
+          "vi": {
+            "text": "{=@forcePerAmpere/(wireLength*gravity)} T"
+          },
+          "check": {
+            "expr": "@forcePerAmpere/(wireLength*gravity)",
+            "equals": "field"
+          }
+        },
+        {
+          "text": "{=@forcePerAmpere*gravity/wireLength} T",
+          "vi": {
+            "text": "{=@forcePerAmpere*gravity/wireLength} T"
+          },
+          "check": {
+            "expr": "@forcePerAmpere*gravity/wireLength",
+            "equals": "field"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-resolution",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["balance", "find-b"],
+      "set": {
+        "fieldStrength": 0.05,
+        "current": 1,
+        "wireLength": 0.02,
+        "angle": 30,
+        "balanceResolution": 0.00001
+      },
+      "stem": "Suppose B = {fieldStrength} T; {wireLength} m of wire at {angle}° to the field carries {current} A; the balance reads to {balanceResolution} kg. Decide whether each statement is true or false.",
+      "explain": "Δm = F/g ≈ {@balanceReading|3} kg, shown as {=round(@balanceReading/balanceResolution)*balanceResolution} kg; u = d/√12 ≈ {=balanceResolution/sqrt(12)|2} kg, about {=100*balanceResolution/sqrt(12)/@balanceReading|2} % of Δm. Larger currents (a larger Δm) make that share smaller; a finer balance gives a more precise F, not a less precise one.",
+      "vi": {
+        "stem": "Giả sử B = {fieldStrength} T; đoạn dây {wireLength} m hợp với từ trường {angle}° mang dòng điện {current} A; cân có độ phân giải {balanceResolution} kg. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Δm = F/g ≈ {@balanceReading|3} kg, hiển thị {=round(@balanceReading/balanceResolution)*balanceResolution} kg; u = d/√12 ≈ {=balanceResolution/sqrt(12)|2} kg, khoảng {=100*balanceResolution/sqrt(12)/@balanceReading|2} % của Δm. Dòng điện lớn hơn (Δm lớn hơn) làm tỉ lệ này nhỏ đi; cân có độ phân giải nhỏ hơn cho F chính xác hơn, không phải kém hơn."
+      },
+      "statements": [
+        {
+          "text": "The balance’s reading changes by about {@balanceReading|3} kg.",
+          "vi": {
+            "text": "Số chỉ của cân thay đổi khoảng {@balanceReading|3} kg."
+          },
+          "true": true,
+          "check": {
+            "expr": "fieldStrength*current*wireLength*sin(rad(angle))/gravity",
+            "equals": "balanceReading"
+          }
+        },
+        {
+          "text": "The balance shows the change as {=round(@balanceReading/balanceResolution)*balanceResolution} kg.",
+          "vi": {
+            "text": "Cân hiển thị độ thay đổi là {=round(@balanceReading/balanceResolution)*balanceResolution} kg."
+          },
+          "true": true
+        },
+        {
+          "text": "From the resolution alone, u is about {=100*balanceResolution/sqrt(12)/@balanceReading|2} % of Δm.",
+          "vi": {
+            "text": "Chỉ do độ phân giải, u khoảng {=100*balanceResolution/sqrt(12)/@balanceReading|2} % của Δm."
+          },
+          "true": true
+        },
+        {
+          "text": "A balance reading to 0.001 g would give a less precise force.",
+          "vi": {
+            "text": "Cân có độ phân giải 0,001 g sẽ cho lực từ kém chính xác hơn."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "left-hand",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["law"],
+      "stem": "The direction of the force on a current-carrying wire in a magnetic field is found with…",
+      "explain": "The left-hand rule: field lines into the palm, the fingers along the current, the thumb gives the force. The right-hand grip rule gives the field around a current.",
+      "vi": {
+        "stem": "Chiều của lực từ tác dụng lên đoạn dây dẫn mang dòng điện đặt trong từ trường được xác định bằng…",
+        "explain": "Quy tắc bàn tay trái: đường sức từ hướng vào lòng bàn tay, chiều từ cổ tay đến các ngón tay là chiều dòng điện, ngón cái choãi ra chỉ chiều lực từ. Quy tắc nắm tay phải cho chiều của từ trường do dòng điện sinh ra."
+      },
+      "options": [
+        {
+          "text": "the left-hand rule",
+          "vi": {
+            "text": "quy tắc bàn tay trái"
+          },
+          "correct": true
+        },
+        {
+          "text": "the right-hand grip rule",
+          "vi": {
+            "text": "quy tắc nắm tay phải"
+          }
+        },
+        {
+          "text": "Lenz’s law",
+          "vi": {
+            "text": "định luật Lenz"
+          }
+        },
+        {
+          "text": "Ohm’s law",
+          "vi": {
+            "text": "định luật Ohm"
+          }
+        }
+      ]
+    },
+    {
+      "id": "parallel-wire",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["factors"],
+      "stem": "The wire is turned to lie along the field lines (α = 0), the current unchanged. The force on it…",
+      "explain": "F = B·I·L·sin α, and sin 0 = 0: a wire parallel to the field feels no force at all.",
+      "vi": {
+        "stem": "Xoay đoạn dây cho nằm dọc theo đường sức từ (α = 0), cường độ dòng điện giữ nguyên. Lực từ tác dụng lên nó…",
+        "explain": "F = B·I·L·sin α, mà sin 0 = 0: đoạn dây song song với đường sức từ không chịu lực từ."
+      },
+      "options": [
+        {
+          "text": "becomes zero",
+          "vi": {
+            "text": "bằng 0"
+          },
+          "correct": true
+        },
+        {
+          "text": "becomes the largest it can be",
+          "vi": {
+            "text": "lớn nhất"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "halves",
+          "vi": {
+            "text": "giảm một nửa"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-force",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["law", "balance"],
+      "stem": "A straight wire carrying a current lies in a uniform magnetic field, at an angle to it; the magnet stands on a balance. Decide whether each statement is true or false.",
+      "explain": "The force is at right angles to both the wire and the field. Reversing the current reverses it. The wire pushes back on the magnet with an equal and opposite force, so the balance’s reading changes by Δm = F/g. sin α is largest at 90°, so the force is largest there, not at 45°.",
+      "vi": {
+        "stem": "Một đoạn dây dẫn thẳng mang dòng điện đặt trong từ trường đều, hợp với đường sức một góc; nam châm đặt trên cân. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Lực từ vuông góc với cả đoạn dây và đường sức từ. Đổi chiều dòng điện thì lực đổi chiều. Dây tác dụng ngược lại lên nam châm một lực bằng và ngược chiều, nên số chỉ của cân thay đổi Δm = F/g. sin α lớn nhất ở 90°, nên lực lớn nhất ở đó chứ không phải ở 45°."
+      },
+      "statements": [
+        {
+          "text": "The force is at right angles to both the wire and the field.",
+          "vi": {
+            "text": "Lực từ vuông góc với cả đoạn dây và đường sức từ."
+          },
+          "true": true
+        },
+        {
+          "text": "Reversing the current reverses the force.",
+          "vi": {
+            "text": "Đổi chiều dòng điện thì lực từ đổi chiều."
+          },
+          "true": true
+        },
+        {
+          "text": "The balance’s reading changes by Δm = F/g.",
+          "vi": {
+            "text": "Số chỉ của cân thay đổi một lượng Δm = F/g."
+          },
+          "true": true
+        },
+        {
+          "text": "The force is largest when the wire is at 45° to the field.",
+          "vi": {
+            "text": "Lực từ lớn nhất khi dây hợp với đường sức góc 45°."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "balance-grams",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["balance", "law"],
+      "set": {
+        "fieldStrength": 0.06,
+        "current": 3,
+        "wireLength": 0.08,
+        "angle": 90
+      },
+      "stem": "Suppose B = {fieldStrength} T. {wireLength} m of wire square to the field carries {current} A (g = {gravity} m/s²). By how much does the balance’s reading change?",
+      "explain": "F = B·I·L = {fieldStrength}·{current}·{wireLength} = {@force} N, and Δm = F/g ≈ {=@balanceReading*1000} g. Writing F in newtons as grams, or multiplying by g, gives the other values.",
+      "vi": {
+        "stem": "Giả sử B = {fieldStrength} T. Đoạn dây dài {wireLength} m vuông góc với đường sức mang dòng điện {current} A (g = {gravity} m/s²). Số chỉ của cân thay đổi bao nhiêu?",
+        "explain": "F = B·I·L = {fieldStrength}·{current}·{wireLength} = {@force} N, và Δm = F/g ≈ {=@balanceReading*1000} g. Lấy F (N) làm gam, hoặc nhân với g, sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{=@balanceReading*1000} g",
+          "vi": {
+            "text": "{=@balanceReading*1000} g"
+          },
+          "correct": true,
+          "check": {
+            "expr": "fieldStrength*current*wireLength/gravity",
+            "equals": "balanceReading"
+          }
+        },
+        {
+          "text": "{=@force*1000} g",
+          "vi": {
+            "text": "{=@force*1000} g"
+          },
+          "check": {
+            "expr": "@force",
+            "equals": "balanceReading"
+          }
+        },
+        {
+          "text": "{=@force*gravity*1000} g",
+          "vi": {
+            "text": "{=@force*gravity*1000} g"
+          },
+          "check": {
+            "expr": "@force*gravity",
+            "equals": "balanceReading"
+          }
+        },
+        {
+          "text": "{@force} g",
+          "vi": {
+            "text": "{@force} g"
+          },
+          "check": {
+            "expr": "@force/1000",
+            "equals": "balanceReading"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-60deg",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["law", "find-b"],
+      "set": {
+        "fieldStrength": 0.06,
+        "current": 2,
+        "wireLength": 0.08,
+        "angle": 60
+      },
+      "stem": "Suppose B = {fieldStrength} T. {wireLength} m of wire at {angle}° to the field carries {current} A (g = {gravity} m/s²). Decide whether each statement is true or false.",
+      "explain": "F = B·I·L·sin α ≈ {@force} N; with cos α it would be {=fieldStrength*current*wireLength*cos(rad(angle))} N. F/I = B·L·sin α ≈ {@forcePerAmpere} N/A, the slope of F against I. Δm = F/g ≈ {=@balanceReading*1000} g.",
+      "vi": {
+        "stem": "Giả sử B = {fieldStrength} T. Đoạn dây dài {wireLength} m hợp với đường sức góc {angle}° mang dòng điện {current} A (g = {gravity} m/s²). Mỗi nhận định sau đúng hay sai?",
+        "explain": "F = B·I·L·sin α ≈ {@force} N; nếu dùng cos α sẽ ra {=fieldStrength*current*wireLength*cos(rad(angle))} N. F/I = B·L·sin α ≈ {@forcePerAmpere} N/A, là hệ số góc của đồ thị F theo I. Δm = F/g ≈ {=@balanceReading*1000} g."
+      },
+      "statements": [
+        {
+          "text": "The force on the wire is about {@force} N.",
+          "vi": {
+            "text": "Lực từ tác dụng lên đoạn dây khoảng {@force} N."
+          },
+          "true": true,
+          "check": {
+            "expr": "fieldStrength*current*wireLength*sin(rad(angle))",
+            "equals": "force"
+          }
+        },
+        {
+          "text": "The force on the wire is about {=fieldStrength*current*wireLength*cos(rad(angle))} N.",
+          "vi": {
+            "text": "Lực từ tác dụng lên đoạn dây khoảng {=fieldStrength*current*wireLength*cos(rad(angle))} N."
+          },
+          "true": false,
+          "check": {
+            "expr": "fieldStrength*current*wireLength*cos(rad(angle))",
+            "equals": "force"
+          }
+        },
+        {
+          "text": "F against I is a line through the origin of slope {@forcePerAmpere} N/A.",
+          "vi": {
+            "text": "Đồ thị F theo I là đường thẳng qua gốc tọa độ có hệ số góc {@forcePerAmpere} N/A."
+          },
+          "true": true,
+          "check": {
+            "expr": "fieldStrength*wireLength*sin(rad(angle))",
+            "equals": "forcePerAmpere"
+          }
+        },
+        {
+          "text": "The balance’s reading changes by about {=@balanceReading*1000} g.",
+          "vi": {
+            "text": "Số chỉ của cân thay đổi khoảng {=@balanceReading*1000} g."
+          },
+          "true": true,
+          "check": {
+            "expr": "@force/gravity",
+            "equals": "balanceReading"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-current",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["law", "balance"],
+      "set": {
+        "fieldStrength": 0.05,
+        "current": 3,
+        "wireLength": 0.04,
+        "angle": 30
+      },
+      "stem": "Suppose B = {fieldStrength} T. {wireLength} m of wire lies at {angle}° to the field; when the current is switched on, the balance’s reading changes by {=@balanceReading*1000|3} g (g = {gravity} m/s²). What current flows?",
+      "explain": "F = Δm·g = {=@force|3} N, and F = B·I·L·sin α gives I = F/(B·L·sin α) = {=@force|3}/({fieldStrength}·{wireLength}·sin {angle}°) = {current} A. Leaving out sin α, using cos α, or forgetting g gives the other values.",
+      "vi": {
+        "stem": "Giả sử B = {fieldStrength} T. Đoạn dây dài {wireLength} m hợp với đường sức góc {angle}°; khi đóng mạch, số chỉ của cân thay đổi {=@balanceReading*1000|3} g (g = {gravity} m/s²). Cường độ dòng điện bằng bao nhiêu?",
+        "explain": "F = Δm·g = {=@force|3} N, và F = B·I·L·sin α cho I = F/(B·L·sin α) = {=@force|3}/({fieldStrength}·{wireLength}·sin {angle}°) = {current} A. Bỏ quên sin α, dùng cos α, hoặc quên g sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{=@balanceReading*gravity/(fieldStrength*wireLength*sin(rad(angle)))|3} A",
+          "vi": {
+            "text": "{=@balanceReading*gravity/(fieldStrength*wireLength*sin(rad(angle)))|3} A"
+          },
+          "correct": true,
+          "check": {
+            "expr": "fieldStrength*(@balanceReading*gravity/(fieldStrength*wireLength*sin(rad(angle))))*wireLength*sin(rad(angle))",
+            "equals": "force"
+          }
+        },
+        {
+          "text": "{=@balanceReading*gravity/(fieldStrength*wireLength)|3} A",
+          "vi": {
+            "text": "{=@balanceReading*gravity/(fieldStrength*wireLength)|3} A"
+          },
+          "check": {
+            "expr": "fieldStrength*(@balanceReading*gravity/(fieldStrength*wireLength))*wireLength*sin(rad(angle))",
+            "equals": "force"
+          }
+        },
+        {
+          "text": "{=@balanceReading*gravity/(fieldStrength*wireLength*cos(rad(angle)))|3} A",
+          "vi": {
+            "text": "{=@balanceReading*gravity/(fieldStrength*wireLength*cos(rad(angle)))|3} A"
+          },
+          "check": {
+            "expr": "fieldStrength*(@balanceReading*gravity/(fieldStrength*wireLength*cos(rad(angle))))*wireLength*sin(rad(angle))",
+            "equals": "force"
+          }
+        },
+        {
+          "text": "{=@balanceReading/(fieldStrength*wireLength*sin(rad(angle)))|3} A",
+          "vi": {
+            "text": "{=@balanceReading/(fieldStrength*wireLength*sin(rad(angle)))|3} A"
+          },
+          "check": {
+            "expr": "fieldStrength*(@balanceReading/(fieldStrength*wireLength*sin(rad(angle))))*wireLength*sin(rad(angle))",
+            "equals": "force"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-angle",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["factors", "law"],
+      "set": {
+        "fieldStrength": 0.06,
+        "current": 2,
+        "wireLength": 0.08,
+        "angle": 30
+      },
+      "stem": "Suppose B = {fieldStrength} T. {wireLength} m of wire carries {current} A and feels a force of {@force|3} N. What angle does the wire make with the field?",
+      "explain": "sin α = F/(B·I·L) = {@force|3}/({fieldStrength}·{current}·{wireLength}) = {=@force/(fieldStrength*current*wireLength)|2}, so α = {angle}°. Taking cos α gives the complement; leaving out L gives a tiny angle; forgetting to switch the calculator to degrees gives the angle in radians.",
+      "vi": {
+        "stem": "Giả sử B = {fieldStrength} T. Đoạn dây dài {wireLength} m mang dòng điện {current} A chịu lực từ {@force|3} N. Dây hợp với đường sức góc bao nhiêu?",
+        "explain": "sin α = F/(B·I·L) = {@force|3}/({fieldStrength}·{current}·{wireLength}) = {=@force/(fieldStrength*current*wireLength)|2}, nên α = {angle}°. Lấy cos α sẽ ra góc phụ; bỏ quên L sẽ ra một góc rất nhỏ; quên chuyển máy tính sang chế độ độ sẽ ra góc tính bằng rađian."
+      },
+      "options": [
+        {
+          "text": "{=deg(asin(@force/(fieldStrength*current*wireLength)))|3}°",
+          "vi": {
+            "text": "{=deg(asin(@force/(fieldStrength*current*wireLength)))|3}°"
+          },
+          "correct": true,
+          "check": {
+            "expr": "fieldStrength*current*wireLength*sin(asin(@force/(fieldStrength*current*wireLength)))",
+            "equals": "force"
+          }
+        },
+        {
+          "text": "{=deg(acos(@force/(fieldStrength*current*wireLength)))|3}°",
+          "vi": {
+            "text": "{=deg(acos(@force/(fieldStrength*current*wireLength)))|3}°"
+          },
+          "check": {
+            "expr": "fieldStrength*current*wireLength*sin(acos(@force/(fieldStrength*current*wireLength)))",
+            "equals": "force"
+          }
+        },
+        {
+          "text": "{=deg(asin(@force/(fieldStrength*current)))|3}°",
+          "vi": {
+            "text": "{=deg(asin(@force/(fieldStrength*current)))|3}°"
+          },
+          "check": {
+            "expr": "fieldStrength*current*wireLength*sin(asin(@force/(fieldStrength*current)))",
+            "equals": "force"
+          }
+        },
+        {
+          "text": "{=asin(@force/(fieldStrength*current*wireLength))|3}°",
+          "vi": {
+            "text": "{=asin(@force/(fieldStrength*current*wireLength))|3}°"
+          },
+          "check": {
+            "expr": "fieldStrength*current*wireLength*sin(rad(asin(@force/(fieldStrength*current*wireLength))))",
+            "equals": "force"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-small",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["balance", "factors"],
+      "set": {
+        "fieldStrength": 0.06,
+        "current": 1,
+        "wireLength": 0.02,
+        "angle": 90,
+        "balanceResolution": 0.000001
+      },
+      "stem": "Suppose B = {fieldStrength} T. {wireLength} m of wire square to the field carries {current} A; the balance reads to {=balanceResolution*1000} g (g = {gravity} m/s²). Decide whether each statement is true or false.",
+      "explain": "F = B·I·L = {@force} N and Δm = F/g ≈ {=@balanceReading*1000|4} g, which the balance shows as {=round(@balanceReading/balanceResolution)*balanceResolution*1000} g. Doubling both I and L makes F four times larger, not twice. A reading taken from a run of several currents (the slope of F against I) is less affected by one balance step than a single reading.",
+      "vi": {
+        "stem": "Giả sử B = {fieldStrength} T. Đoạn dây dài {wireLength} m vuông góc với đường sức mang dòng điện {current} A; cân đọc được đến {=balanceResolution*1000} g (g = {gravity} m/s²). Mỗi nhận định sau đúng hay sai?",
+        "explain": "F = B·I·L = {@force} N và Δm = F/g ≈ {=@balanceReading*1000|4} g, cân hiển thị là {=round(@balanceReading/balanceResolution)*balanceResolution*1000} g. Tăng gấp đôi cả I và L thì F tăng bốn lần chứ không phải hai lần. Kết quả lấy từ nhiều lần đo ở các cường độ khác nhau (hệ số góc của đồ thị F theo I) ít bị ảnh hưởng bởi một vạch chia của cân hơn một lần đo đơn lẻ."
+      },
+      "statements": [
+        {
+          "text": "The force on the wire is {@force} N.",
+          "vi": {
+            "text": "Lực từ tác dụng lên đoạn dây bằng {@force} N."
+          },
+          "true": true,
+          "check": {
+            "expr": "fieldStrength*current*wireLength",
+            "equals": "force"
+          }
+        },
+        {
+          "text": "The balance shows a change of {=round(@balanceReading/balanceResolution)*balanceResolution*1000} g.",
+          "vi": {
+            "text": "Cân cho thấy số chỉ thay đổi {=round(@balanceReading/balanceResolution)*balanceResolution*1000} g."
+          },
+          "true": true
+        },
+        {
+          "text": "Doubling both the current and the length in the field doubles the force.",
+          "vi": {
+            "text": "Tăng gấp đôi cả cường độ dòng điện và chiều dài dây trong từ trường thì lực từ tăng gấp đôi."
+          },
+          "true": false
+        },
+        {
+          "text": "B found from the slope of F against I over several currents is less affected by one balance step than B from one reading.",
+          "vi": {
+            "text": "B tìm từ hệ số góc của đồ thị F theo I qua nhiều cường độ ít bị ảnh hưởng bởi một vạch chia của cân hơn B tìm từ một lần đo."
+          },
+          "true": true
+        }
+      ]
+    }
+  ]
+}

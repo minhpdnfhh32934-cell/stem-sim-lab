@@ -1,0 +1,226 @@
+{
+  "id": "corrosion",
+  "name": "What makes iron rust: conditions for corrosion",
+  "category": "chemistry",
+  "description": "Six iron nails, each kept in different conditions for a week: in water open to the air, in dry air, in boiled water under oil, in salt water, wrapped in copper, wrapped in zinc. Watch which ones rust: iron needs both water and oxygen; salt and contact with copper speed it up; zinc in contact corrodes instead of the iron and protects it.",
+  "vi": {
+    "name": "Vì sao sắt bị gỉ: điều kiện của sự ăn mòn",
+    "description": "Sáu chiếc đinh sắt, mỗi chiếc giữ trong điều kiện khác nhau trong một tuần: trong nước có tiếp xúc không khí, trong không khí khô, trong nước đã đun sôi phủ dầu, trong nước muối, quấn dây đồng, quấn kẽm. Quan sát chiếc nào bị gỉ: sắt cần cả nước và oxi; muối và việc tiếp xúc với đồng làm gỉ nhanh hơn; kẽm tiếp xúc với sắt bị ăn mòn thay cho sắt và bảo vệ nó.",
+    "note": "Mô hình định tính dạy học. Mỗi ống chứa một đinh sắt trong điều kiện của nó. Bề mặt đinh gỉ dần theo 1 − e^(−r·t/τ), với r là tốc độ tương đối của ống và τ = 10 ngày là hằng số thời gian dạy học. Chỉ THỨ TỰ giữa các ống là kết quả của thí nghiệm (cần cả nước và không khí; muối làm nhanh hơn; tiếp xúc với kim loại kém hoạt động hơn như đồng làm sắt bị ăn mòn nhanh hơn; kẽm tiếp xúc bị ăn mòn thay cho sắt — bảo vệ hi sinh); các con số r (1; 0; 0; 2,5; 2; 0) và τ chỉ để minh họa thứ tự đó, không phải tốc độ đo được. Mỗi ngày hiển thị trong 2 giây."
+  },
+  "requiredEquipment": ["rusting-tubes"],
+  "model": "chemistry.corrosion",
+  "parameters": [
+    {
+      "id": "tube",
+      "label": "Conditions of the nail",
+      "vi": { "label": "Điều kiện của đinh sắt" },
+      "unit": "",
+      "default": 0,
+      "min": 0,
+      "max": 5,
+      "presets": [
+        { "label": "Water and air", "vi": { "label": "Nước và không khí" }, "value": 0 },
+        {
+          "label": "Dry air (calcium chloride)",
+          "vi": { "label": "Không khí khô (canxi clorua)" },
+          "value": 1
+        },
+        {
+          "label": "Boiled water under oil (no air)",
+          "vi": { "label": "Nước đun sôi phủ dầu (không có không khí)" },
+          "value": 2
+        },
+        { "label": "Salt water and air", "vi": { "label": "Nước muối và không khí" }, "value": 3 },
+        { "label": "Wrapped in copper", "vi": { "label": "Quấn dây đồng" }, "value": 4 },
+        { "label": "Wrapped in zinc", "vi": { "label": "Quấn kẽm" }, "value": 5 }
+      ]
+    },
+    {
+      "id": "days",
+      "label": "Days left",
+      "vi": { "label": "Số ngày để" },
+      "symbol": "t",
+      "unit": "d",
+      "default": 7,
+      "min": 1,
+      "max": 14,
+      "presets": [
+        { "label": "1 day", "vi": { "label": "1 ngày" }, "value": 1 },
+        { "label": "3 days", "vi": { "label": "3 ngày" }, "value": 3 },
+        { "label": "7 days", "vi": { "label": "7 ngày" }, "value": 7 },
+        { "label": "14 days", "vi": { "label": "14 ngày" }, "value": 14 }
+      ]
+    }
+  ],
+  "initialConditions": { "timeConstant": 10, "dayLength": 2 },
+  "inputs": {
+    "timeConstant": { "symbol": "τ", "unit": "d", "desk": false },
+    "dayLength": { "symbol": "s/d", "unit": "s", "desk": false }
+  },
+  "simulation": { "timeStep": 0.05, "maxDuration": 40, "sampleInterval": 0.25 },
+  "measurements": [
+    {
+      "id": "days",
+      "label": "Days",
+      "vi": { "label": "Số ngày" },
+      "symbol": "t",
+      "unit": "d",
+      "variable": "days"
+    },
+    {
+      "id": "rust",
+      "label": "Rust on the nail",
+      "vi": { "label": "Mức gỉ trên đinh" },
+      "symbol": "R",
+      "unit": "",
+      "variable": "rust"
+    }
+  ],
+  "results": [
+    {
+      "id": "rust",
+      "label": "Rust on the nail (0 bright, 1 covered)",
+      "vi": { "label": "Mức gỉ trên đinh (0 sáng bóng, 1 gỉ kín)" },
+      "symbol": "R",
+      "unit": "",
+      "variable": "rust",
+      "reduce": "final",
+      "theory": "rust",
+      "classes": [
+        { "max": 0.001, "label": "No rust", "vi": { "label": "Không gỉ" } },
+        { "max": 0.3, "label": "A little rust", "vi": { "label": "Gỉ ít" } },
+        { "max": 0.7, "label": "Clearly rusted", "vi": { "label": "Gỉ rõ" } },
+        { "label": "Heavily rusted", "vi": { "label": "Gỉ nhiều" } }
+      ]
+    },
+    {
+      "id": "zinc",
+      "label": "Zinc corroded instead (0–1)",
+      "vi": { "label": "Kẽm bị ăn mòn thay (0–1)" },
+      "symbol": "Z",
+      "unit": "",
+      "variable": "zincCorroded",
+      "reduce": "final",
+      "theory": "zincCorroded"
+    }
+  ],
+  "graphs": [
+    {
+      "id": "rust-days",
+      "title": "Rust on the nail against days",
+      "vi": { "title": "Mức gỉ trên đinh theo số ngày" },
+      "x": "days",
+      "y": ["rust"]
+    }
+  ],
+  "monitor": "rust-days",
+  "compare": [{ "graph": "rust-days", "series": "rust" }],
+  "note": "A qualitative teaching model. Each tube holds an iron nail in its conditions. The nail's surface rusts as 1 − e^(−r·t/τ), r the tube's relative rate and τ = 10 days a teaching time constant. Only the ORDER of the tubes is the experiment's result (both water and air are needed; salt speeds it; contact with a less reactive metal such as copper makes the iron corrode faster; zinc in contact corrodes instead of the iron — sacrificial protection); the numbers r (1, 0, 0, 2.5, 2, 0) and τ only illustrate that order and are not measured rates. Each day is shown in 2 s.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the rusting instructions on the board.",
+      "vi": { "instruction": "Đọc hướng dẫn về sự gỉ sắt trên bảng." },
+      "done": { "kind": "inspected", "item": "corrosion-instructions" }
+    },
+    {
+      "id": "tube",
+      "instruction": "Choose the nail's conditions with the dial.",
+      "vi": { "instruction": "Chọn điều kiện của đinh sắt bằng núm xoay." },
+      "done": { "kind": "adjusted", "parameter": "tube" }
+    },
+    {
+      "id": "days",
+      "instruction": "Choose how many days to leave it.",
+      "vi": { "instruction": "Chọn số ngày để đinh." },
+      "done": { "kind": "adjusted", "parameter": "days" }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the days pass; watch the nail.",
+      "vi": { "instruction": "Nhấn CHẠY: các ngày trôi qua; quan sát chiếc đinh." },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read how rusted the nail is.",
+      "vi": { "instruction": "Đọc mức độ gỉ của chiếc đinh." },
+      "done": { "kind": "viewed" }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET and try every tube: what does iron need to rust?",
+      "vi": { "instruction": "Nhấn ĐẶT LẠI và thử mọi ống: sắt cần gì để bị gỉ?" },
+      "done": { "kind": "reset" }
+    }
+  ],
+  "explain": {
+    "summary": "Iron rusts only when water and oxygen reach it together; salt and other metals change how fast, and zinc can sacrifice itself to protect it.",
+    "vi": {
+      "summary": "Sắt chỉ bị gỉ khi nước và oxi cùng tiếp xúc với nó; muối và các kim loại khác làm thay đổi tốc độ, còn kẽm có thể tự hi sinh để bảo vệ sắt."
+    },
+    "parts": [
+      {
+        "id": "nail",
+        "name": "Iron nail",
+        "role": "Turns from bright grey to rust brown as its iron is oxidised.",
+        "vi": {
+          "name": "Đinh sắt",
+          "role": "Chuyển từ màu xám sáng sang nâu gỉ khi sắt bị oxi hóa."
+        },
+        "anchor": { "part": "nail" }
+      },
+      {
+        "id": "conditions",
+        "name": "The tube's conditions",
+        "role": "Water, dry air, boiled water under oil or salt water: what reaches the iron.",
+        "vi": {
+          "name": "Điều kiện trong ống",
+          "role": "Nước, không khí khô, nước đun sôi phủ dầu hoặc nước muối: những gì tiếp xúc với sắt."
+        },
+        "anchor": { "part": "conditions" }
+      },
+      {
+        "id": "rack",
+        "name": "The six tubes",
+        "role": "All the conditions side by side, to compare.",
+        "vi": {
+          "name": "Sáu ống nghiệm",
+          "role": "Tất cả các điều kiện đặt cạnh nhau để so sánh."
+        },
+        "anchor": { "part": "rack" }
+      }
+    ],
+    "steps": [
+      {
+        "text": "Rust is hydrated iron(III) oxide. It forms when iron is oxidised by oxygen with water present: 4Fe + 3O₂ + 2xH₂O → 2Fe₂O₃·xH₂O.",
+        "vi": {
+          "text": "Gỉ sắt là sắt(III) oxit ngậm nước. Nó tạo thành khi sắt bị oxi oxi hóa với sự có mặt của nước: 4Fe + 3O₂ + 2xH₂O → 2Fe₂O₃·xH₂O."
+        },
+        "parts": ["nail"]
+      },
+      {
+        "text": "Take away either one and it stops: in dry air (calcium chloride takes the water) or in boiled water under oil (no dissolved oxygen) the nail stays bright.",
+        "vi": {
+          "text": "Thiếu một trong hai thì không gỉ: trong không khí khô (canxi clorua hút hết hơi nước) hoặc trong nước đã đun sôi phủ dầu (không có oxi hòa tan), đinh vẫn sáng bóng."
+        },
+        "parts": ["conditions", "rack"]
+      },
+      {
+        "text": "Salt water rusts it faster: the dissolved ions make the water conduct, which speeds the electrochemical reactions of corrosion.",
+        "vi": {
+          "text": "Nước muối làm gỉ nhanh hơn: các ion hòa tan làm nước dẫn điện, đẩy nhanh các phản ứng điện hóa của sự ăn mòn."
+        },
+        "parts": ["conditions", "nail"]
+      },
+      {
+        "text": "Touching copper, a less reactive metal, the iron becomes the anode of a tiny cell and corrodes faster. Touching zinc, a more reactive metal, the zinc corrodes instead and the iron is protected — sacrificial protection, as on galvanised steel.",
+        "vi": {
+          "text": "Khi tiếp xúc với đồng, kim loại kém hoạt động hơn, sắt trở thành cực âm của một pin nhỏ và bị ăn mòn nhanh hơn. Khi tiếp xúc với kẽm, kim loại hoạt động mạnh hơn, kẽm bị ăn mòn thay và sắt được bảo vệ — bảo vệ bằng kim loại hi sinh, như tôn mạ kẽm."
+        },
+        "parts": ["nail", "rack"]
+      }
+    ]
+  }
+}
