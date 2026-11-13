@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "product": "SimLab",
   "repository": "https://github.com/minhpdnfhh32934-cell/stem-sim-lab",
-  "evidenceCheckedAt": "2026-11-12",
+  "evidenceCheckedAt": "2026-11-13",
   "overview": [
     "SimLab (tên cũ: STEM Sim Lab) là ứng dụng desktop mô phỏng Vật lý, Hóa học và Sinh học cho người học, chạy ngay trên máy (Tauri 2 + React). Mọi con số do chương trình tính bằng mô hình ghi trong Thẻ Khoa học; AI chỉ đọc đề và giải thích bằng lời.",
     "Dự án bắt đầu ngày 28/09/2026: Phase 0–7 (khung app, lõi tính toán, Vật lý, AI đọc đề, Hóa học, Sinh học, dự án và bộ cài Windows) xong trong hai ngày đầu. Tiếp theo là giai đoạn 3b (học bằng khám phá, an toàn khi dùng AI, hai bộ cài), bản fork 'Thầy AI' (09–12/10/2026) mà nay là AI Teacher, rồi đổi tên thành SimLab ở 0.5.0 và đợt rà soát toàn diện G0–G5 cho 0.6.0. Bản 0.7.0 và 0.7.1 đưa cả 11 bài Sinh học lên hình 3D. Bản 0.8.0 (không phát hành riêng) và 0.8.1 (chưa phát hành) bám sách Kết nối tri thức, thêm nhiều bài mới và thay toàn bộ giao diện bằng Bàn thí nghiệm.",
@@ -163,10 +163,15 @@
       "date": "2026-11-11T17:25:52Z",
       "text": "Bàn thí nghiệm thành giao diện duy nhất (PR #198, B8)",
       "evidence": "PR #198 mergedAt 2026-11-11T17:25:52Z (gh pr view 198), merge commit f2e535e"
+    },
+    {
+      "date": "2026-11-13T14:23:52Z",
+      "text": "Phát hành 0.8.1 (v0.8.1): giao diện Bàn thí nghiệm, nhiều bài mới theo sách Kết nối tri thức, trò chơi SimLab 3D, AI Teacher mới",
+      "evidence": "GitHub Release v0.8.1, published_at 2026-11-13T14:23:52Z (gh api releases/latest)"
     }
   ],
   "openQuestions": [
-    "Ngày tạo tag: cả 8 tag (v0.2.0, v0.3.0, v0.4.1, v0.5.0, v0.5.2, v0.6.0, v0.7.0, v0.7.1) là tag nhẹ (lightweight), nên git không lưu thời điểm tạo tag; dates.tagged để trống. Cần audit log của GitHub, log của bước phát hành hoặc chủ repo xác nhận.",
+    "Ngày tạo tag: cả 9 tag (v0.2.0, v0.3.0, v0.4.1, v0.5.0, v0.5.2, v0.6.0, v0.7.0, v0.7.1, v0.8.1) là tag nhẹ (lightweight), nên git không lưu thời điểm tạo tag; dates.tagged để trống. Cần audit log của GitHub, log của bước phát hành hoặc chủ repo xác nhận.",
     "0.1.0: có hai bản dựng thử (artifact) ngày 29/09/2026 nhưng không có tag hay GitHub Release; cần quyết định có nhắc bản này trong ghi chú phát hành công khai hay không.",
     "0.4.0: chỉ có tên tệp ZIP, hàng PROGRESS 'fork-0.4.0' và CLAUDE.md; chưa mở ZIP để xem package.json, và chưa biết ZIP được gửi cho ai, ngày nào (ngày sửa tệp không phải ngày phân phối).",
     "0.4.2 và 0.4.3: chỉ là nhãn trong tài liệu, chưa bao giờ là số phiên bản thật. Số test của 0.4.3 mâu thuẫn: PROGRESS ghi 491 unit, 48 E2E, Rust 63 + 57; mô tả PR #8 ghi 484 test, E2E 48/48, Rust 58 test.",
@@ -177,16 +182,16 @@
   "versions": [
     {
       "version": "0.8.1",
-      "status": "in-review",
-      "statusNote": "PR phiên bản của issue #194 mở ngày 12/11/2026; chưa phát hành. Gộp mọi thay đổi của 0.8.0 (bản đó không phát hành riêng). Phần web và phần lõi cùng lên 0.8.1 vì lõi Rust đã đổi kể từ 0.7.1 (thư viện Cargo, PR #125 và #199), nên ứng dụng 0.7.1 cài từ GitHub sẽ được báo cài bộ cài mới thay vì cập nhật trong app. Bản Store: gói 0.8.1.0, người dùng nộp tay trong Partner Center. notesReady đặt true ngày 12/11/2026 theo lời đồng ý của người dùng, sau khi rà ghi chú.",
+      "status": "released",
+      "statusNote": "Phát hành 13/11/2026 từ main @ a171a0f (lượt Release 43438967262). Gộp mọi thay đổi của 0.8.0 (bản đó không phát hành riêng). Phần web và phần lõi cùng số 0.8.1 vì lõi Rust đã đổi kể từ 0.7.1 (thư viện Cargo, PR #125 và #199), nên ứng dụng 0.7.1 cài từ GitHub được báo cài bộ cài mới thay vì cập nhật trong app. Không bắt buộc cập nhật (minRequired để trống). Bản Store: gói 0.8.1.0, người dùng nộp tay trong Partner Center. notesReady đặt true ngày 12/11/2026 theo lời đồng ý của người dùng, sau khi rà ghi chú.",
       "channel": "github",
       "dates": {
         "devStart": "2026-10-25T23:08:42Z",
         "firstCommit": "2026-11-01T18:58:55Z",
-        "lastCommit": "2026-11-12T22:24:28+07:00",
-        "merged": null,
-        "built": null,
-        "released": null,
+        "lastCommit": "2026-11-13T14:22:52+07:00",
+        "merged": "2026-11-13T08:05:47Z",
+        "built": "2026-11-13T14:23:38Z",
+        "released": "2026-11-13T14:23:52Z",
         "tagged": null
       },
       "evidence": [
@@ -199,26 +204,34 @@
         "PR #198 Bàn thí nghiệm thành giao diện duy nhất (B8, #193), gộp f2e535e 2026-11-11T17:25:52Z; PR #203 chữ theo Cỡ chữ, ảnh thẻ, nút Thoát trình chiếu, nút sáng/tối (#202), gộp bbd8ac2 2026-11-11T18:40:40Z; PR #204 Tệp → \"Thông tin máy\" (#201), gộp b91cc61 2026-11-11T19:10:27Z",
         "Vấn đề đã biết của 0.8.0 đã sửa: lời giải thích chép công thức của một bước không còn bị ẩn, commit c38ab29 2026-11-09T08:28:52+07:00; vẫn còn: đường chỉ tên ở Phiêu bạt di truyền 3D (work-log 2089e0d, #70 UI-49) và xếp lớp chờ giáo viên duyệt (DATA_REVIEW KNTT-*)",
         "Giới hạn ghi ở vấn đề đã biết: Kepler đơn vị tương đối (PR #177), tinh thể chưa có hằng số mạng (DATA_REVIEW CRY-3), chuẩn độ chỉ acid mạnh – base mạnh (CLAUDE.md, mục Acid–base titration)",
-        "lastCommit (cập nhật sau #233): d9ede91 2026-11-12T22:24:28+07:00 'docs(194): 0.8.1 work-log — check results', commit cuối không phải commit gộp trên main e289f69 (git log -1 --no-merges main); trước đó ghi 2026-11-12T01:36:14+07:00. 304 commit không phải commit gộp từ cd6cdd6 (git rev-list --no-merges --count cd6cdd6..d9ede91). Nếu PR game (#236) vào main trước khi phát hành thì lastCommit đổi theo commit cuối của nó."
+        "lastCommit (cập nhật sau #233): d9ede91 2026-11-12T22:24:28+07:00 'docs(194): 0.8.1 work-log — check results', commit cuối không phải commit gộp trên main e289f69 (git log -1 --no-merges main); trước đó ghi 2026-11-12T01:36:14+07:00. 304 commit không phải commit gộp từ cd6cdd6 (git rev-list --no-merges --count cd6cdd6..d9ede91). Nếu PR game (#236) vào main trước khi phát hành thì lastCommit đổi theo commit cuối của nó.",
+        "lastCommit (sau #249): 780de38 2026-11-13T14:22:52+07:00 'docs(game): \"with the owner's permission\" in the three asset source notes', commit cuối không phải commit gộp trên main a171a0f (git log -1 --no-merges a171a0f); 338 commit không phải commit gộp từ cd6cdd6 (git rev-list --no-merges --count cd6cdd6..a171a0f)",
+        "merged: PR #249 (mã nguồn game trong game/) gộp a171a0f 2026-11-13T08:05:47Z, PR cuối vào main trước khi phát hành; PR phiên bản #206 gộp 60c4814 2026-11-11T23:18:16Z, sau đó #233, #237, #247 bổ sung ghi chú 0.8.1 (gh pr list --state merged)",
+        "built: lượt Release 43438967262 (workflow_dispatch, main, a171a0f), job 'Build Windows installers' xong 2026-11-13T14:23:38Z",
+        "released: GitHub Release v0.8.1 'SimLab 0.8.1', published_at 2026-11-13T14:23:52Z, target a171a0f, latest; tệp: SimLab_0.8.1_x64-setup.exe, SimLab_0.8.1_x64_en-US.msi, web-bundle.zip, web-update.json, SHA256SUMS.txt",
+        "web-update.json: webVersion 0.8.1, minNative 0.8.1, minRequired \"\" (không bắt buộc), có signature và signatureV2",
+        "tagged: tag nhẹ (lightweight), git không lưu ngày tạo tag"
       ],
       "tests": [
         "CI 8/8 xanh trên lượt cuối trước khi gộp của PR #198, #203, #204 (gh pr checks; laptop xác nhận khi bật tự gộp)",
         "PR #204: npm run check 5036 đạt (1 bỏ qua có sẵn); E2E đủ nhóm trên máy bàn 214/214 đạt (docs/work-log/2026-11-12-201-machine-info.md)",
-        "PR #203: npm run check 5033 đạt; E2E đủ nhóm trên máy bàn 212/212 đạt (docs/work-log/2026-11-12-202-bench-text-theme-exit.md)"
+        "PR #203: npm run check 5033 đạt; E2E đủ nhóm trên máy bàn 212/212 đạt (docs/work-log/2026-11-12-202-bench-text-theme-exit.md)",
+        "13/11/2026 trên máy Windows, cây mã giống hệt main a171a0f (cùng tree 6d4a35d): npm run test:slow 2/2 đạt (bước bắt buộc trước mỗi bản, docs/RELEASE.md)",
+        "CI và Security checks xanh trên main a171a0f (gh run list, 13/11/2026); lượt Release 43438967262: job 'Tests before packaging' đạt"
       ],
       "refs": {
-        "tag": null,
-        "tagSha": null,
-        "releaseUrl": null,
+        "tag": "v0.8.1",
+        "tagSha": "a171a0f2419a36db4205da4ba65420c3a916111e",
+        "releaseUrl": "https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.8.1",
         "prs": [
           104, 108, 110, 111, 114, 117, 118, 120, 122, 123, 124, 125, 126, 129, 130, 131, 132, 133,
           135, 137, 139, 141, 143, 145, 147, 149, 151, 153, 155, 157, 159, 161, 163, 165, 167, 169,
           171, 173, 175, 177, 179, 181, 183, 185, 187, 189, 191, 196, 197, 198, 199, 203, 204, 206,
           207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224,
           225, 226, 227, 228, 229, 230, 231, 232, 233, 235, 236, 237, 238, 239, 240, 241, 242, 243,
-          244, 245, 246
+          244, 245, 246, 247, 248, 249
         ],
-        "commits": ["7cc29de", "226bf09"],
+        "commits": ["7cc29de", "780de38"],
         "branches": ["main", "feat/194-release-0.8.1"]
       },
       "publicNotes": {
