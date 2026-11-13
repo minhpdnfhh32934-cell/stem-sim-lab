@@ -2,7 +2,7 @@ import { GraduationCap, Info, Lock, PencilRuler, RotateCcw, ShieldCheck } from '
 import { useT } from '@/app/i18n';
 import { useProfileStore } from '@/app/learner/profileStore';
 import { openLab, openTopic, subjectOf } from '@/app/topics';
-import { useSafetyStore } from '@/safety/safetyStore';
+import { teacherLocked, useSafetyStore } from '@/safety/safetyStore';
 import { openTeacher } from '@/teacher/teacherStore';
 import { SceneStill } from './SceneStill';
 
@@ -16,7 +16,7 @@ import { SceneStill } from './SceneStill';
 export function BenchLanding() {
   const t = useT();
   const lastTopic = useProfileStore((s) => s.lastTopic);
-  const minor = useSafetyStore((s) => s.status?.minor === true);
+  const minor = useSafetyStore(teacherLocked);
   const lastSubject = lastTopic ? subjectOf(lastTopic) : undefined;
 
   return (

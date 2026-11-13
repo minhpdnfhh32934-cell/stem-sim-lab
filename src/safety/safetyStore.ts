@@ -33,6 +33,15 @@ export function setSafetyStatus(status: SafetyStatus): void {
   useSafetyStore.setState({ status });
 }
 
+/**
+ * AI Teacher's door is locked: the learner answered "under 18" (the AI stays off; the gate in Rust
+ * refuses every AI call). The one rule every way into AI Teacher follows: the launch card, the
+ * notebook's "Hỏi AI" tab, Ctrl+K, "Hỏi thầy" in the 3D lessons and `openTeacher` itself.
+ */
+export function teacherLocked(s: SafetyUiState): boolean {
+  return s.status?.minor === true;
+}
+
 /** Should the first-run gate be on screen? */
 export function gateVisible(s: SafetyUiState): boolean {
   const st = s.status;

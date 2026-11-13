@@ -26,7 +26,7 @@ import { ScienceCard } from '@/science-card/ScienceCard';
 import { ChatPanel } from '@/teacher/chat/ChatPanel';
 import { openTeacher, useTeacherStore } from '@/teacher/teacherStore';
 import { useChatStore } from '@/teacher/chat/chatStore';
-import { useSafetyStore } from '@/safety/safetyStore';
+import { teacherLocked, useSafetyStore } from '@/safety/safetyStore';
 import { EmptyState } from '@/ui/EmptyState';
 import { IconButton } from '@/ui/IconButton';
 import { useScrollCue } from '@/ui/useScrollCue';
@@ -126,7 +126,7 @@ export function Notebook({ push, pinnedOnly = false }: { push: boolean; pinnedOn
   // its X, the rail tab, Esc, another tab or another room.
   const chatShown = open && tab === 'ai';
   // Under 18 the tab is a lock and one explanation, no chat and no key field (§9.10).
-  const minor = useSafetyStore((s) => s.status?.minor === true);
+  const minor = useSafetyStore(teacherLocked);
   useEffect(() => {
     if (!chatShown) return;
     return () => {

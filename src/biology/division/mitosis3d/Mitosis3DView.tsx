@@ -20,6 +20,7 @@ import {
 import * as THREE from 'three';
 import { useLocalized } from '@/app/i18n/localized';
 import { formatNumber, useT } from '@/app/i18n';
+import { teacherLocked, useSafetyStore } from '@/safety/safetyStore';
 import { openTeacherWithQuestion } from '@/teacher/teacherStore';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useResolvedTheme } from '@/app/theme/useApplyTheme';
@@ -256,6 +257,8 @@ function PartInfo({
   const cardRef = useRef<HTMLElement>(null);
   const headRef = useRef<HTMLDivElement>(null);
   useCardHeadFit(slotRef, cardRef, headRef);
+  // Under 18 AI Teacher's door is locked: no "Hỏi thầy" button that leads nowhere.
+  const teacherOff = useSafetyStore(teacherLocked);
   const askTeacher = () => {
     // A part the card says cannot be seen now gets a question that does not assume it is there
     // (e.g. the spindle in G1, the nucleus at metaphase).
@@ -276,17 +279,19 @@ function PartInfo({
         <div ref={headRef} className="m3d__info-head">
           <strong>{Lz(info.name)}</strong>
           <div className="m3d__info-actions">
-            <button
-              type="button"
-              className="btn m3d__ask"
-              aria-label={t('teacher.askMitosisPart')}
-              data-tip={t('teacher.askMitosisPart')}
-              data-tip-side="top"
-              onClick={askTeacher}
-            >
-              <GraduationCap size={16} aria-hidden="true" />
-              {t('teacher.askMitosisPartShort')}
-            </button>
+            {!teacherOff && (
+              <button
+                type="button"
+                className="btn m3d__ask"
+                aria-label={t('teacher.askMitosisPart')}
+                data-tip={t('teacher.askMitosisPart')}
+                data-tip-side="top"
+                onClick={askTeacher}
+              >
+                <GraduationCap size={16} aria-hidden="true" />
+                {t('teacher.askMitosisPartShort')}
+              </button>
+            )}
             <IconButton
               icon={X}
               size="lg"
