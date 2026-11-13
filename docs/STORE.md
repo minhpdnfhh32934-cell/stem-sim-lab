@@ -24,7 +24,8 @@ Quyết định của người dùng (13/10/2026):
   `store/listing/screenshots/`, cho cả tiếng Việt và tiếng Anh): **gửi duyệt ngày 26/10/2026**, chọn
   **giữ lại**: duyệt xong, người dùng bấm **Publish now** thì ảnh mới mới hiện trên Store.
 - Bản nộp 4 (gói `SimLab_0.8.1.0_x64.msix`, gồm cả 0.8.0 vì 0.8.0 không phát hành riêng): **gửi
-  duyệt ngày 13/11/2026**, chọn **giữ lại** (duyệt xong, người dùng bấm **Publish now**). Gói lấy từ
+  duyệt ngày 13/11/2026**, chọn **giữ lại**; **đã lên Store** (kiểm tra ngày 14/11/2026: Partner Center
+  báo "Your product is now updated", mục Store presence là bản nộp 4). Gói lấy từ
   artifact **simlab-store** của lượt Release 43438967262 (19,4 MB, danh tính `FPTTECH.SimLab`,
   `Version="0.8.1.0"`, Partner Center báo "Validated"). Trang Store tiếng Việt và tiếng Anh: chữ
   "Có gì mới" của 0.8.1 và **7 ảnh** 0.8.1 (bỏ ảnh 2 AI Teacher theo lựa chọn của người dùng ngày
