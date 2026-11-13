@@ -23,10 +23,14 @@ Quyết định của người dùng (13/10/2026):
 - Bản nộp 3 (cùng gói 0.7.1.0, chỉ thay ảnh chụp trên trang Store bằng 8 ảnh mới trong
   `store/listing/screenshots/`, cho cả tiếng Việt và tiếng Anh): **gửi duyệt ngày 26/10/2026**, chọn
   **giữ lại**: duyệt xong, người dùng bấm **Publish now** thì ảnh mới mới hiện trên Store.
-- Bản nộp 4 (gói `SimLab_0.8.1.0_x64.msix`, gồm cả 0.8.0 vì 0.8.0 không phát hành riêng): **chưa
-  nộp**. Ngày 12/11/2026 máy bàn dựng thử gói bằng `node scripts/store/make-msix.mjs` từ bản dựng
-  `npm run tauri build` của nhánh #194: tạo gói thành công (13,6 MB, danh tính `FPTTECH.SimLab`,
-  `Version="0.8.1.0"`). Gói để nộp thật lấy từ artifact **simlab-store** của lượt Release (bước 7).
+- Bản nộp 4 (gói `SimLab_0.8.1.0_x64.msix`, gồm cả 0.8.0 vì 0.8.0 không phát hành riêng): **gửi
+  duyệt ngày 13/11/2026**, chọn **giữ lại** (duyệt xong, người dùng bấm **Publish now**). Gói lấy từ
+  artifact **simlab-store** của lượt Release 43438967262 (19,4 MB, danh tính `FPTTECH.SimLab`,
+  `Version="0.8.1.0"`, Partner Center báo "Validated"). Trang Store tiếng Việt và tiếng Anh: chữ
+  "Có gì mới" của 0.8.1 và **7 ảnh** 0.8.1 (bỏ ảnh 2 AI Teacher theo lựa chọn của người dùng ngày
+  13/11/2026, vì ảnh đó chụp lúc chưa kết nối AI và trước giao diện AI Teacher mới); bản nộp sau thêm
+  ảnh AI Teacher mới theo mục "Chụp lại ảnh AI Teacher". Lý do `runFullTrust` dán lại như bước 5.
+  Ngày 12/11/2026 máy bàn đã dựng thử gói bằng `node scripts/store/make-msix.mjs` (13,6 MB).
 - Ảnh chụp 0.8.1 (8 ảnh PNG 1366×768, giao diện Bàn thí nghiệm, thứ tự = tên tệp): 1 sinh thái 3D
   (Con mồi – vật ăn thịt), 2 AI Teacher, 3 giao thoa sóng hai nguồn, 4 ADN → mARN → Protein 3D,
   5 chuẩn độ acid – base, 6 nguyên phân 3D, 7 Science Studio, 8 trang mở đầu. Chụp bằng
