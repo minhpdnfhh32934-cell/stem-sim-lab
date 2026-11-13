@@ -24,7 +24,9 @@ test('SimLab 3D opens over the lab, single player only, and closes back to the l
   await page.getByRole('button', { name: 'SimLab 3D', exact: true }).click();
   const dialog = page.getByRole('dialog', { name: 'SimLab 3D' });
   await expect(dialog).toBeVisible();
-  await expect(dialog.getByText('Bản thử nghiệm')).toBeVisible();
+  // The released game: no "Bản thử nghiệm" label or note in its bar (user decision 13/11/2026).
+  await expect(dialog.getByText('Bản thử nghiệm')).toHaveCount(0);
+  await expect(dialog.getByText(/đang chờ giáo viên duyệt/)).toHaveCount(0);
   const game = page.frameLocator('iframe[title="Trò chơi SimLab 3D"]');
   // The game's own menu, in the app's language (its first visit).
   await expect(game.getByRole('button', { name: 'Chơi', exact: true })).toBeVisible({

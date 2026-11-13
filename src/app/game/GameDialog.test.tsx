@@ -20,8 +20,12 @@ describe('SimLab 3D window (docs/GAME.md)', () => {
     });
     const frame = screen.getByTitle('Trò chơi SimLab 3D');
     expect(frame.getAttribute('src')).toMatch(/game\/index\.html$/);
-    expect(screen.getByText('Bản thử nghiệm')).toBeInTheDocument();
-    expect(screen.getByText(/đang chờ giáo viên duyệt/)).toBeInTheDocument();
+    // The released game (user decision 13/11/2026): the bar is the way back and the title only.
+    expect(screen.queryByText('Bản thử nghiệm')).toBeNull();
+    expect(screen.queryByText(/đang chờ giáo viên duyệt/)).toBeNull();
+    const bar = document.querySelector('.game-dialog__bar');
+    expect(bar?.children).toHaveLength(2);
+    expect(screen.getByRole('heading', { name: 'SimLab 3D' })).toBeInTheDocument();
   });
 
   it('"Về SimLab" closes it and drops the frame (its GPU context goes with it)', async () => {

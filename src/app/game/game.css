@@ -29,20 +29,6 @@
   font-size: var(--text-lg);
   white-space: nowrap;
 }
-.game-dialog__badge {
-  flex: none;
-  padding: 2px var(--space-2);
-  border: 1px solid var(--border-strong);
-  border-radius: 999px;
-  font-size: var(--text-caption);
-  color: var(--text-muted);
-}
-.game-dialog__note {
-  margin: 0;
-  min-width: 0;
-  font-size: var(--text-note);
-  color: var(--text-muted);
-}
 .game-dialog__frame {
   flex: 1;
   width: 100%;
