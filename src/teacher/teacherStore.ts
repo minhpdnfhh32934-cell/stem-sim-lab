@@ -3,8 +3,11 @@ import { useNavigationStore } from '@/app/navigationStore';
 import { stopSpeaking } from './voice/speak';
 import { useChatStore } from './chat/chatStore';
 
-/** The two layouts of the AI teacher screen (PROMPT_PHAN_2 B4.1). */
-export type TeacherLayout = 'talk' | 'board';
+/**
+ * The pages of the AI teacher screen: the two layouts (PROMPT_PHAN_2 B4.1) and, in Advanced mode
+ * only, "Ghi nhớ" and "Lượt dùng" (#234 step 5).
+ */
+export type TeacherLayout = 'talk' | 'board' | 'memory' | 'usage';
 
 interface TeacherState {
   /** The "Dạy học bằng AI" screen replaces the workspace while open. */
