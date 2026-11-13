@@ -579,13 +579,13 @@
         },
         {
           "area": "ui",
-          "vi": "Hoá học: Chuẩn độ acid – base, Tinh thể kim loại và NaCl 3D, giản đồ năng lượng phản ứng, lọc phân tử theo nhóm chức.",
-          "en": "Chemistry: Acid–base titration, metal and NaCl crystals in 3D, the reaction energy diagram, molecules filtered by functional group."
+          "vi": "Hoá học và Sinh học: Chuẩn độ acid – base, Tinh thể kim loại và NaCl 3D, giản đồ năng lượng phản ứng, lọc phân tử theo nhóm chức; Tế bào nhân sơ và nhân thực (3D và 2D), Từ tế bào đến DNA.",
+          "en": "Chemistry and Biology: Acid–base titration, metal and NaCl crystals in 3D, the reaction energy diagram, molecules filtered by functional group; prokaryotic and eukaryotic cells (3D and 2D), From cell to DNA."
         },
         {
-          "area": "bio3d",
-          "vi": "Sinh học: Tế bào nhân sơ và nhân thực (3D và 2D), Từ tế bào đến DNA.",
-          "en": "Biology: Prokaryotic and eukaryotic cells (3D and 2D), From cell to DNA."
+          "area": "teacher",
+          "vi": "Mới: trò chơi SimLab 3D (Virtual Lab → SimLab 3D), và AI Teacher có quả cầu sáng theo việc thầy đang làm cùng tab Trò chuyện · Bảng giảng.",
+          "en": "New: the SimLab 3D game (Virtual Lab → SimLab 3D), and AI Teacher with a glowing orb that follows what the teacher is doing, plus Conversation · Whiteboard tabs."
         },
         {
           "area": "ui",

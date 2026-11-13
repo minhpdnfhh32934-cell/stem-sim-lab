@@ -185,8 +185,8 @@ Bản 0.8.1 có giao diện mới "Bàn thí nghiệm" và gộp mọi thay đ�
 
 - Giao diện mới Bàn thí nghiệm: chọn bài trên kệ, chỉnh thông số ở khay, bấm Chạy ở mép bàn.
 - Bài Vật lí mới: Chuyển động tròn đều, Sóng dừng, Giao thoa sóng, Điện trường, Mạch điện một chiều, Dao động cưỡng bức, Hoạ âm và chuỗi Fourier, Định luật II Kepler.
-- Hoá học: Chuẩn độ acid – base, Tinh thể kim loại và NaCl 3D, giản đồ năng lượng phản ứng, lọc phân tử theo nhóm chức.
-- Sinh học: Tế bào nhân sơ và nhân thực (3D và 2D), Từ tế bào đến DNA.
+- Hoá học và Sinh học: Chuẩn độ acid – base, Tinh thể kim loại và NaCl 3D, giản đồ năng lượng phản ứng, lọc phân tử theo nhóm chức; Tế bào nhân sơ và nhân thực (3D và 2D), Từ tế bào đến DNA.
+- Mới: trò chơi SimLab 3D (Virtual Lab → SimLab 3D), và AI Teacher có quả cầu sáng theo việc thầy đang làm cùng tab Trò chuyện · Bảng giảng.
 - Dễ đọc hơn (chữ, nút, bàn phím), và các bài có chuyển động lặp lại chạy liên tục tới khi em bấm Tạm dừng.
 
 **Bằng chứng**

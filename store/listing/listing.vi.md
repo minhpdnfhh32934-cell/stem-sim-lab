@@ -51,6 +51,7 @@ Bản 0.8.1:
 - Hoá học: Chuẩn độ acid – base, Tinh thể kim loại và NaCl 3D, giản đồ năng lượng phản ứng, lọc phân tử theo nhóm chức.
 - Sinh học: Tế bào nhân sơ và nhân thực (3D và 2D), Từ tế bào đến DNA.
 - AI Teacher mới: quả cầu hạt sáng theo việc thầy đang làm và theo giọng đọc, tab Trò chuyện · Bảng giảng, câu trả lời trên thẻ kính; chế độ Nâng cao có thêm Ghi nhớ và Lượt dùng.
+- Trò chơi SimLab 3D: phòng thí nghiệm 3D nhìn qua mắt người chơi, mở từ Virtual Lab → SimLab 3D (chơi một người).
 - Thư viện chọn được Lớp 10, 11, 12 theo sách Kết nối tri thức; Phòng thí nghiệm nay tên là Virtual Lab.
 - Dễ đọc và dễ bấm hơn: chữ nhỏ nhất 12 px, vùng bấm ít nhất 40 px, viền rõ khi dùng bàn phím, tên dài không bị cắt.
 - Các bài có chuyển động lặp lại (giao thoa, sóng dừng, con lắc, con mồi – vật ăn thịt…) chạy liên tục tới khi bấm Tạm dừng; Thẻ Khoa học báo khi năng lượng trôi.
