@@ -1,4 +1,6 @@
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { TERMS_VERSION } from '@/safety/safety';
+import { useSafetyStore } from '@/safety/safetyStore';
 import userEvent from '@testing-library/user-event';
 import { StrictMode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -122,6 +124,16 @@ afterEach(() => {
 });
 
 describe('"Hỏi thầy về bộ phận này" in the 3D mitosis view', () => {
+  it('under 18 (AI Teacher’s door is locked) there is no "Hỏi thầy" button', () => {
+    useSafetyStore.setState({
+      status: { termsVersion: TERMS_VERSION, answered: true, aiAllowed: false, minor: true },
+    });
+    renderView();
+    pick('Tâm động');
+    expect(screen.getByRole('complementary')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: ASK })).toBeNull();
+  });
+
   it('appears only while a part is picked, as a full-size button', () => {
     renderView();
     expect(screen.queryByRole('button', { name: ASK })).toBeNull();

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { useNavigationStore } from '@/app/navigationStore';
+import { teacherLocked, useSafetyStore } from '@/safety/safetyStore';
 import { stopSpeaking } from './voice/speak';
 import { useChatStore } from './chat/chatStore';
 
@@ -35,6 +36,8 @@ export const useTeacherStore = create<TeacherState>()((set) => ({
 }));
 
 export function openTeacher(): void {
+  // Under 18 the door stays locked whichever way it is asked (#245 follow-up: Ctrl+K opened it).
+  if (teacherLocked(useSafetyStore.getState())) return;
   useChatStore.getState().setIncludeScreen(false);
   useNavigationStore.getState().setScreen('teacher');
   useTeacherStore.setState({ open: true, layout: 'talk', draft: null });
@@ -45,6 +48,7 @@ export function openTeacher(): void {
  * này" in the 3D mitosis view. The learner reads it, may change it and sends it themselves.
  */
 export function openTeacherWithQuestion(question: string): void {
+  if (teacherLocked(useSafetyStore.getState())) return;
   openTeacher();
   useTeacherStore.setState({ draft: question });
 }

@@ -5,6 +5,8 @@ import { formatNumber } from '@/app/i18n';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import type { BenchmarkResult } from '@/perf/benchmark';
 import { usePerfStore } from '@/perf/perfStore';
+import { TERMS_VERSION } from '@/safety/safety';
+import { useSafetyStore } from '@/safety/safetyStore';
 import { closeTeacher, useTeacherStore } from '@/teacher/teacherStore';
 import { fakeRenderer } from '@/ui/three/testing';
 import type { RendererLike } from '@/ui/three/renderer';
@@ -284,6 +286,26 @@ describe('Meiosis3DView', () => {
     fireEvent.click(within(card).getByRole('button', { name: 'Hỏi thầy về bộ phận này' }));
     expect(useTeacherStore.getState().draft).toMatch(/em không thấy rõ bộ phận/);
     closeTeacher();
+  });
+
+  it('under 18 (AI Teacher’s door is locked) the part card has no "Hỏi thầy" button', () => {
+    useSafetyStore.setState({
+      status: { termsVersion: TERMS_VERSION, answered: true, aiAllowed: false, minor: true },
+    });
+    const { factory } = fakeRenderer();
+    render(
+      <>
+        <Meiosis3DView createRenderer={factory} />
+        <Meiosis3DParts />
+      </>,
+    );
+    act(() => {
+      useMeiosis3D.setState({ t: tl2().keyTime('metaphase1') });
+    });
+    const parts = screen.getByRole('group', { name: 'Bộ phận tế bào' });
+    fireEvent.click(within(parts).getByRole('button', { name: 'Điểm bắt chéo (trao đổi chéo)' }));
+    const card = screen.getByRole('complementary');
+    expect(within(card).queryByRole('button', { name: 'Hỏi thầy về bộ phận này' })).toBeNull();
   });
 
   it('the crossover switch and the new random run rebuild the timeline', () => {
