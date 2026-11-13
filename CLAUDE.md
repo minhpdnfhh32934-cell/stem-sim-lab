@@ -121,6 +121,19 @@ release history and old work-logs keep the old name). The user accepted:
   `boardAsk.ts`; a picture (`selectionImage.ts`) only when no text was circled, and only to a
   picture-reading model on this computer (`src/teacher/chat/pictureReader.ts`), never online.
   The AI never places anything; board fonts (OFL, Vietnamese) are bundled via `@fontsource`.
+- **AI Teacher station (#234, 0.8.1; `docs/AI_TUTOR.md` "AI Teacher's station"):** the tutor page
+  has its own stage (`--teacher-*` tokens), numbered tabs and an orb instead of the face.
+  `src/teacher/orb/` (`points` / `neighbors` / `states` / `orbScene` / `OrbView`; `ORB_BUDGET`
+  Medium 300 points / 700 pairs, High 600 / 1500; Low tier, no WebGL 2 or a lost context → the SVG
+  rings and the face; reduced motion → drawn once). `useOrbState(typing)`: `ChatPanel` reports a
+  question being typed through `onComposingChange` (never a native `input` listener calling
+  setState: it wiped the box). `src/teacher/voice/voiceLevel.ts`: voices the app plays pass an
+  `AnalyserNode` (RMS), the Windows voice gives a pulse per word (an illustration); nothing is
+  recorded. `src/teacher/screen/glide.ts` moves the orb between layouts with one FLIP transform.
+  The tabs are the layout radios (`teacherStore.layout`), numbered by position; Advanced adds
+  `memory` / `usage` (`MemoryView`, `UsageView`: the Rust `ai_usage` counter and `dailyCap`, no
+  estimate). The connection chip shows only while an AI can answer; answers sit on glass cards
+  (opaque on Low), never a `backdrop-filter`. E2E `tests/e2e/bench/teacher-station.spec.ts`.
 - **GPU choice (0.4.2):** WebView2 ignores the page's `powerPreference` (hybrid laptops get the
   integrated card). `src-tauri/src/gpu.rs` saves the card as PCI ids in `gpu.json` (4–8 hex
   digits: ACPI ids such as Windows-on-ARM `QCOM` are 8; LUIDs change per
@@ -153,7 +166,8 @@ release-notes` generates `docs/VERSION_HISTORY.md`, `docs/CHANGELOG.md` and
   `release-notes/google-docs.html` (never edit generated files). A version's `notesReady` becomes
   true only when its notes are reviewed for a real release; never describe an unreleased version
   as released or invent a date. In-app box and Settings → "Lịch sử phiên bản": `src/app/whatsnew/`
-  (`stemsim.whatsnew`). Procedure: `release-notes/README.md`.
+  (`stemsim.whatsnew`). A version has at most 5 `learnerHighlights` (the parser rejects a sixth):
+  merge or drop a line to add one. Procedure: `release-notes/README.md`.
 
 ## Giao diện Bàn thí nghiệm (0.8.1)
 
@@ -188,7 +202,10 @@ B0–B8 in its §14, merged from 08/11):
   `recipes.test.ts` and `division3d/looks.test.ts` run on bench light/dark too. Light
   `--chart-1…7` keep their hues with the lightness spread out (≥ 3 : 1); the light 3D terrain is
   deep green with light soil, the dark `--m3d-water-line` 0.15, and the mutation lesson's start/stop
-  marks read `--dna3d-start` / `--dna3d-stop`. Never lower a floor.
+  marks read `--dna3d-start` / `--dna3d-stop`. AI Teacher's station (#234) has its own
+  `--teacher-bg`, `-glow`, `-accent`, `-warn`, `-line`, `-text`, `-text-muted`, `-glass`,
+  `-glass-solid` (light and dark); `tokens.test.ts` checks their text ≥ 4.5 : 1 on the stage, the
+  glow and the glass. Never lower a floor.
 - **Shell (B1, #115):** `src/app/bench/` — `shellMode.ts` (`BenchContext`), `BenchShell` (sets
   `data-shell`, loads the bench fonts; launch / library / studio / teacher rooms reuse their
   screens until B3–B7), `BenchHeader` (breadcrumb, "Đề bài" sheet with `ProblemInput`),
@@ -347,6 +364,10 @@ Progress log: `docs/PROGRESS.md`.
   → user merges. Commands in `.claude/commands/`, shared permissions in `.claude/settings.json`
   (merge, release and pushes to `main` denied). Setup guide: `docs/TWO_MACHINE_WORKFLOW.md`.
 - One issue = one branch = one machine. The Lead never commits to the Builder's branch.
+- **Every PR targets `main`** (user decision 13/11/2026): never open a PR on another PR's branch.
+  When work needs a change that is not on `main` yet, wait for that PR to merge, then merge `main`
+  into the branch. #240 and #243 were merged into their base branches, not `main`, and needed the
+  extra PRs #241 and #244.
 - `scripts/agents/watch.ps1 -Role lead|builder` connects the machines: it polls labels
   (`needs-plan`, `approved`, `needs-review`, `changes-requested`, `agent-ping`) and runs
   `claude -p` on the matching command; `needs-human`/`agent-failed` stop the loop. `-Role both`
@@ -583,6 +604,10 @@ Progress log: `docs/PROGRESS.md`.
   `ai_set_key` needs the 18+ confirmation. Never move the gate into the web page only. Bump
   `TERMS_VERSION` (Rust **and** `src/safety/safety.ts`) when the
   terms change.
+- **One age rule for AI Teacher (#246):** `teacherLocked` (`src/safety/safetyStore.ts`, the
+  launch card's rule: the learner answered "under 18") guards every way into AI Teacher: the launch
+  card, the notebook's "Hỏi AI" tab, Ctrl+K, the 3D lessons' "Hỏi thầy" and `openTeacher` /
+  `openTeacherWithQuestion` themselves. A new way in uses the same function, never a new condition.
 - Web side `src/safety/`: AgeGate, SafetySettings, AiContentBar (label + report — put it on every
   new AI output), CrisisCard, PrivacyDialog, `moderation.ts` (`checkInput` before every AI call,
   `outputIsSafe` on every AI text). The incident log stores **kind + time only**.
@@ -834,7 +859,10 @@ Progress log: `docs/PROGRESS.md`.
   3D, "Từ tế bào đến DNA", showcase mode, "Thông tin máy", and #205 (a readable interface: text
   ≥ 12 px, targets ≥ 40 px, focus rings, uncut labels; periodic lessons run until paused; energy
   drift on the Science Card; reduced motion opens lessons paused; its last eight PRs merged through
-  the train PR #231). Web and native parts are both 0.8.1 (0.7.1 installs need the new installer);
+  the train PR #231), AI Teacher's station (#234: orb, stage, numbered tabs, glass cards, Advanced
+  "Ghi nhớ" / "Lượt dùng"; PRs #235–#245, #247), the SimLab 3D game shipped as released (#236,
+  #242; `docs/GAME.md`, its science still pending GAME-1) and one age rule for AI Teacher (#246).
+  Web and native parts are both 0.8.1 (0.7.1 installs need the new installer);
   Store package 0.8.1.0, to be submitted by hand in Partner Center
 - [ ] Phase 8+: extensions (MASTER_PROMPT §6.2, advanced 3D/biology) — only on request
 
