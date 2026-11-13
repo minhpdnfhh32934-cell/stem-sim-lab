@@ -1,5 +1,7 @@
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
+import { TERMS_VERSION } from '@/safety/safety';
+import { useSafetyStore } from '@/safety/safetyStore';
 import { closeTeacher, useTeacherStore } from '@/teacher/teacherStore';
 import { CommandPalette } from './CommandPalette';
 import { useCommandPalette } from './commands';
@@ -24,6 +26,37 @@ describe('command palette: the AI Teacher pages', () => {
       expect(useTeacherStore.getState().open).toBe(true);
     });
     expect(useTeacherStore.getState().layout).toBe(layout);
+  });
+});
+
+describe('command palette: AI Teacher follows the launch page’s age lock', () => {
+  afterEach(() => {
+    useCommandPalette.setState({ open: false });
+  });
+
+  const teacherCommands = () => {
+    render(<CommandPalette />);
+    act(() => {
+      useCommandPalette.setState({ open: true });
+    });
+    fireEvent.change(screen.getByRole('combobox'), { target: { value: 'AI Teacher' } });
+    return screen.queryAllByRole('option', { name: /AI Teacher —/ }).map((o) => o.textContent);
+  };
+
+  it('under 18 (the door is locked): no command opens AI Teacher', () => {
+    useSafetyStore.setState({
+      status: { termsVersion: TERMS_VERSION, answered: true, aiAllowed: false, minor: true },
+    });
+    expect(teacherCommands()).toEqual([]);
+  });
+
+  it('18 and over: both pages are offered', () => {
+    useSafetyStore.setState({
+      status: { termsVersion: TERMS_VERSION, answered: true, aiAllowed: true, minor: false },
+    });
+    const found = teacherCommands();
+    expect(found.some((t) => t.includes('AI Teacher — trò chuyện'))).toBe(true);
+    expect(found.some((t) => t.includes('AI Teacher — giảng trên bảng'))).toBe(true);
   });
 });
 

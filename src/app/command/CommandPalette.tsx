@@ -29,6 +29,7 @@ import { useResolvedTheme } from '@/app/theme/useApplyTheme';
 import { goHome, openLab, openStudio, openTopic } from '@/app/topics';
 import { checkForUpdate, updatesSupported } from '@/app/update/updater';
 import { SETTINGS_SECTIONS, SUBJECTS, useWorkspaceStore } from '@/app/workspaceStore';
+import { teacherLocked, useSafetyStore } from '@/safety/safetyStore';
 import { openTeacher, useTeacherStore } from '@/teacher/teacherStore';
 import { cx } from '@/ui/cx';
 import { rankCommands, useCommandPalette, type Command } from './commands';
@@ -43,6 +44,8 @@ export function CommandPalette() {
   const uiMode = useSettingsStore((s) => s.uiMode);
   const locale = useSettingsStore((s) => s.locale);
   const hasSimulation = useWorkspaceStore((s) => s.hasSimulation);
+  // Under 18 AI Teacher's door is locked (launch page): no command opens it either.
+  const teacherOff = useSafetyStore(teacherLocked);
   const ref = useRef<HTMLDialogElement>(null);
   const input = useRef<HTMLInputElement>(null);
   const list = useRef<HTMLUListElement>(null);
@@ -206,8 +209,8 @@ export function CommandPalette() {
         run: () => void checkForUpdate(),
       });
     }
-    return items;
-  }, [t, theme, uiMode, locale, hasSimulation]);
+    return teacherOff ? items.filter((c) => c.id !== 'go.teacher' && c.id !== 'go.board') : items;
+  }, [t, theme, uiMode, locale, hasSimulation, teacherOff]);
 
   // Nothing is ranked or rendered while closed (the list would repeat every topic in the page).
   const results = useMemo(
