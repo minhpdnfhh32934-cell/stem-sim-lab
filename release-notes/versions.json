@@ -215,7 +215,8 @@
           135, 137, 139, 141, 143, 145, 147, 149, 151, 153, 155, 157, 159, 161, 163, 165, 167, 169,
           171, 173, 175, 177, 179, 181, 183, 185, 187, 189, 191, 196, 197, 198, 199, 203, 204, 206,
           207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224,
-          225, 226, 227, 228, 229, 230, 231, 232
+          225, 226, 227, 228, 229, 230, 231, 232, 233, 235, 236, 237, 238, 239, 240, 241, 242, 243,
+          244, 245, 246
         ],
         "commits": ["7cc29de", "226bf09"],
         "branches": ["main", "feat/194-release-0.8.1"]
@@ -330,6 +331,11 @@
             "area": "ui",
             "vi": "Trò chơi SimLab 3D: một phòng thí nghiệm 3D nhìn qua mắt người chơi, mở từ Virtual Lab → SimLab 3D. Em chuẩn bị đồ bảo hộ rồi làm các thí nghiệm rơi tự do, ném xiên, con lắc và lò xo. Chỉ chơi một người.",
             "en": "SimLab 3D game: a first-person 3D laboratory, opened from Virtual Lab → SimLab 3D. Put on your safety gear, then run the free fall, projectile, pendulum and spring experiments. Single player only."
+          },
+          {
+            "area": "teacher",
+            "vi": "AI Teacher có diện mạo mới: một quả cầu hạt sáng đổi theo việc thầy đang làm (chờ, nghe em gõ, suy nghĩ, giảng) và phồng lên theo giọng đọc; sân khấu riêng cho giao diện sáng và tối; tab 01 Trò chuyện · 02 Bảng giảng; câu trả lời nằm trên thẻ kính. Khi sang Bảng giảng, quả cầu thu nhỏ về góc. Ở chế độ Nâng cao có thêm tab Ghi nhớ (thầy đang nhớ gì của cuộc trò chuyện) và Lượt dùng (số lượt AI trực tuyến hôm nay so với giới hạn em đặt).",
+            "en": "AI Teacher has a new look: a glowing particle orb that shows what the teacher is doing (waiting, listening while you type, thinking, teaching) and swells with the voice; its own stage in the light and dark themes; tabs 01 Conversation · 02 Whiteboard; answers on glass cards. On the whiteboard the orb shrinks to the corner. Advanced mode adds a Memory tab (what the teacher keeps of the conversation) and a Usage tab (today's online AI calls against the limit you set)."
           }
         ],
         "improved": [
@@ -494,6 +500,11 @@
             "area": "ui",
             "vi": "Sau khi bấm Tạm dừng, thời gian đứng đúng chỗ đã bấm.",
             "en": "After Pause, the time stays exactly where you pressed it."
+          },
+          {
+            "area": "teacher",
+            "vi": "Khi em đã trả lời “chưa đủ 18 tuổi”, không còn lối nào mở trang AI Teacher (Ctrl+K hay nút “Hỏi thầy” trong 3D Nguyên phân, Giảm phân), đúng như thẻ AI Teacher bị khoá ở trang đầu.",
+            "en": "After answering “under 18”, no way opens the AI Teacher page any more (Ctrl+K or “Ask the teacher” in the 3D mitosis and meiosis lessons), just as the AI Teacher card on the launch page is locked."
           }
         ],
         "security": [
@@ -568,13 +579,13 @@
         },
         {
           "area": "ui",
-          "vi": "Hoá học: Chuẩn độ acid – base, Tinh thể kim loại và NaCl 3D, giản đồ năng lượng phản ứng, lọc phân tử theo nhóm chức.",
-          "en": "Chemistry: Acid–base titration, metal and NaCl crystals in 3D, the reaction energy diagram, molecules filtered by functional group."
+          "vi": "Hoá học và Sinh học: Chuẩn độ acid – base, Tinh thể kim loại và NaCl 3D, giản đồ năng lượng phản ứng, lọc phân tử theo nhóm chức; Tế bào nhân sơ và nhân thực (3D và 2D), Từ tế bào đến DNA.",
+          "en": "Chemistry and Biology: Acid–base titration, metal and NaCl crystals in 3D, the reaction energy diagram, molecules filtered by functional group; prokaryotic and eukaryotic cells (3D and 2D), From cell to DNA."
         },
         {
-          "area": "bio3d",
-          "vi": "Sinh học: Tế bào nhân sơ và nhân thực (3D và 2D), Từ tế bào đến DNA.",
-          "en": "Biology: Prokaryotic and eukaryotic cells (3D and 2D), From cell to DNA."
+          "area": "teacher",
+          "vi": "Mới: trò chơi SimLab 3D (Virtual Lab → SimLab 3D), và AI Teacher có quả cầu sáng theo việc thầy đang làm cùng tab Trò chuyện · Bảng giảng.",
+          "en": "New: the SimLab 3D game (Virtual Lab → SimLab 3D), and AI Teacher with a glowing orb that follows what the teacher is doing, plus Conversation · Whiteboard tabs."
         },
         {
           "area": "ui",
