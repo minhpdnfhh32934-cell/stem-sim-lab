@@ -1,0 +1,1044 @@
+{
+  "id": "collision-theory",
+  "skills": [
+    {
+      "id": "collisions",
+      "name": "Effective collisions and activation energy",
+      "advice": "Re-read the collision model: particles react only when they collide with at least Ea (and a suitable orientation). Watch the box at the station and say why most collisions do nothing.",
+      "vi": {
+        "name": "Va chạm hiệu quả và năng lượng hoạt hóa",
+        "advice": "Đọc lại thuyết va chạm: các hạt chỉ phản ứng khi va chạm với năng lượng ít nhất bằng Ea (và đúng hướng). Quan sát hộp mô phỏng trên trạm và tự giải thích vì sao phần lớn va chạm không gây phản ứng."
+      }
+    },
+    {
+      "id": "temperature",
+      "name": "Temperature: the share e^(−Ea/RT) and k = A·e^(−Ea/RT)",
+      "advice": "Practise the Arrhenius equation with Ea in J/mol (×1000) and T in kelvin, and e, not 10. At the station compare 300 K with 310 K: the share of energetic collisions nearly doubles, the collision rate hardly changes.",
+      "vi": {
+        "name": "Nhiệt độ: tỉ lệ e^(−Ea/RT) và k = A·e^(−Ea/RT)",
+        "advice": "Luyện phương trình Arrhenius với Ea tính bằng J/mol (nhân 1000) và T tính bằng kelvin, dùng e chứ không phải 10. Trên trạm, so sánh 300 K với 310 K: tỉ lệ va chạm đủ năng lượng gần gấp đôi, còn số va chạm hầu như không đổi."
+      }
+    },
+    {
+      "id": "concentration",
+      "name": "Concentration: v = k·[A]·[B]",
+      "advice": "Write the rate law before calculating: here v = k·[A]·[B], so doubling both concentrations makes the rate four times larger, and k does not change with concentration. Check it at the station with 0.05, 0.1 and 0.2 mol/L.",
+      "vi": {
+        "name": "Nồng độ: v = k·[A]·[B]",
+        "advice": "Viết biểu thức tốc độ trước khi tính: ở đây v = k·[A]·[B], nên tăng cả hai nồng độ lên gấp đôi thì tốc độ tăng bốn lần, còn k không đổi theo nồng độ. Kiểm tra trên trạm với 0,05; 0,1 và 0,2 mol/L."
+      }
+    },
+    {
+      "id": "progress",
+      "name": "How far the reaction goes: half-life and conversion",
+      "advice": "For A + B with equal starting amounts, [A] = c₀/(1 + k·c₀·t), so t½ = 1/(k·c₀) — not ln2/k, which is first order. Read the share used up after 60 s from the station and check it with the formula.",
+      "vi": {
+        "name": "Phản ứng tiến triển: thời gian bán phản ứng và phần đã phản ứng",
+        "advice": "Với A + B có nồng độ ban đầu bằng nhau, [A] = c₀/(1 + k·c₀·t), nên t½ = 1/(k·c₀) — không phải ln2/k của phản ứng bậc một. Đọc phần A đã phản ứng sau 60 s trên trạm và kiểm tra lại bằng công thức."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "activation-energy",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["collisions"],
+      "stem": "The activation energy of a reaction is…",
+      "explain": "Ea is the least energy a collision must bring for the particles to react; collisions with less just bounce.",
+      "vi": {
+        "stem": "Năng lượng hoạt hóa của một phản ứng là",
+        "explain": "Ea là năng lượng tối thiểu mà va chạm phải có để các hạt phản ứng; va chạm có năng lượng nhỏ hơn chỉ làm các hạt bật ra."
+      },
+      "options": [
+        {
+          "text": "the minimum energy colliding particles need in order to react",
+          "vi": {
+            "text": "năng lượng tối thiểu các hạt va chạm cần có để phản ứng xảy ra"
+          },
+          "correct": true
+        },
+        {
+          "text": "the energy the reaction gives out",
+          "vi": {
+            "text": "năng lượng mà phản ứng tỏa ra"
+          }
+        },
+        {
+          "text": "the average kinetic energy of the particles",
+          "vi": {
+            "text": "động năng trung bình của các hạt"
+          }
+        },
+        {
+          "text": "the energy needed to break every bond in the reactants",
+          "vi": {
+            "text": "năng lượng cần để phá vỡ mọi liên kết trong chất phản ứng"
+          }
+        }
+      ]
+    },
+    {
+      "id": "rate-unit",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["concentration"],
+      "stem": "The initial rate v₀ of a reaction in solution (how fast the concentration of a reactant falls) is measured in…",
+      "explain": "A rate is a change of concentration per unit time: mol/L per second, mol/(L·s). L/(mol·s) is the unit of k for this second-order reaction.",
+      "vi": {
+        "stem": "Tốc độ ban đầu v₀ của một phản ứng trong dung dịch (nồng độ chất phản ứng giảm nhanh hay chậm) có đơn vị là",
+        "explain": "Tốc độ phản ứng là biến thiên nồng độ trong một đơn vị thời gian: mol/L mỗi giây, mol/(L·s). L/(mol·s) là đơn vị của k với phản ứng bậc hai này."
+      },
+      "options": [
+        {
+          "text": "mol/(L·s)",
+          "vi": {
+            "text": "mol/(L·s)"
+          },
+          "correct": true
+        },
+        {
+          "text": "L/(mol·s)",
+          "vi": {
+            "text": "L/(mol·s)"
+          }
+        },
+        {
+          "text": "mol/L",
+          "vi": {
+            "text": "mol/L"
+          }
+        },
+        {
+          "text": "kJ/mol",
+          "vi": {
+            "text": "kJ/mol"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-collisions",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["collisions", "temperature", "concentration"],
+      "stem": "Decide whether each statement about collision theory is true or false.",
+      "explain": "Only collisions with at least Ea react. Heating raises the share of such collisions; a higher concentration means more collisions per second. A catalyst gives a path of lower Ea — it does not raise it.",
+      "vi": {
+        "stem": "Mỗi nhận định sau về thuyết va chạm đúng hay sai?",
+        "explain": "Chỉ những va chạm có năng lượng ít nhất bằng Ea mới gây phản ứng. Tăng nhiệt độ làm tăng tỉ lệ các va chạm đó; tăng nồng độ làm tăng số va chạm mỗi giây. Chất xúc tác tạo con đường phản ứng có Ea thấp hơn — không làm tăng Ea."
+      },
+      "statements": [
+        {
+          "text": "Not every collision between A and B leads to a reaction.",
+          "vi": {
+            "text": "Không phải mọi va chạm giữa A và B đều dẫn đến phản ứng."
+          },
+          "true": true
+        },
+        {
+          "text": "Raising the temperature increases the share of collisions with at least Ea.",
+          "vi": {
+            "text": "Tăng nhiệt độ làm tăng tỉ lệ các va chạm có năng lượng ít nhất bằng Ea."
+          },
+          "true": true
+        },
+        {
+          "text": "A catalyst speeds a reaction by raising its Ea.",
+          "vi": {
+            "text": "Chất xúc tác làm phản ứng nhanh hơn bằng cách tăng Ea."
+          },
+          "true": false
+        },
+        {
+          "text": "Increasing the concentrations increases the number of collisions per second.",
+          "vi": {
+            "text": "Tăng nồng độ các chất phản ứng làm tăng số va chạm trong mỗi giây."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "why-ten-degrees",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["temperature", "collisions"],
+      "stem": "A 10 °C rise nearly doubles the rate of many reactions. The main reason is that…",
+      "explain": "Collisions become only a few per cent more frequent, but the share with at least Ea, e^(−Ea/RT), grows by a large factor: far more collisions are effective.",
+      "vi": {
+        "stem": "Tăng nhiệt độ thêm 10 °C làm tốc độ của nhiều phản ứng tăng gần gấp đôi. Nguyên nhân chủ yếu là",
+        "explain": "Số va chạm chỉ tăng vài phần trăm, nhưng tỉ lệ va chạm có năng lượng ít nhất bằng Ea, e^(−Ea/RT), tăng lên nhiều lần: số va chạm hiệu quả tăng mạnh."
+      },
+      "options": [
+        {
+          "text": "many more collisions carry at least the activation energy",
+          "vi": {
+            "text": "có thêm rất nhiều va chạm mang năng lượng ít nhất bằng năng lượng hoạt hóa"
+          },
+          "correct": true
+        },
+        {
+          "text": "the particles collide twice as often",
+          "vi": {
+            "text": "các hạt va chạm với nhau thường xuyên gấp đôi"
+          }
+        },
+        {
+          "text": "the activation energy falls by half",
+          "vi": {
+            "text": "năng lượng hoạt hóa giảm đi một nửa"
+          }
+        },
+        {
+          "text": "the concentrations of A and B increase",
+          "vi": {
+            "text": "nồng độ của A và B tăng lên"
+          }
+        }
+      ]
+    },
+    {
+      "id": "double-both",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["concentration"],
+      "stem": "For A + B → P with v = k·[A]·[B], both starting concentrations are doubled at the same temperature. The initial rate…",
+      "explain": "k is unchanged at the same temperature; v₀ = k·(2c₀)·(2c₀) = 4·k·c₀².",
+      "vi": {
+        "stem": "Với phản ứng A + B → P có v = k·[A]·[B], tăng nồng độ ban đầu của cả A và B lên gấp đôi ở cùng nhiệt độ. Tốc độ ban đầu",
+        "explain": "Ở cùng nhiệt độ k không đổi; v₀ = k·(2c₀)·(2c₀) = 4·k·c₀²."
+      },
+      "options": [
+        {
+          "text": "becomes 4 times larger",
+          "vi": {
+            "text": "tăng 4 lần"
+          },
+          "correct": true
+        },
+        {
+          "text": "becomes 2 times larger",
+          "vi": {
+            "text": "tăng 2 lần"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "becomes 8 times larger",
+          "vi": {
+            "text": "tăng 8 lần"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-factors",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["temperature", "concentration", "progress"],
+      "stem": "For the reaction A + B → P at the station (v = k·[A]·[B], k = A·e^(−Ea/RT)), decide whether each statement is true or false.",
+      "explain": "A larger Ea makes e^(−Ea/RT) smaller at the same T. k depends on T and Ea, not on concentration. A higher T raises k. As A and B are used up, the rate k·[A]·[B] falls.",
+      "vi": {
+        "stem": "Với phản ứng A + B → P ở trạm (v = k·[A]·[B], k = A·e^(−Ea/RT)), mỗi nhận định sau đúng hay sai?",
+        "explain": "Ea lớn hơn thì e^(−Ea/RT) nhỏ hơn ở cùng nhiệt độ. k phụ thuộc T và Ea, không phụ thuộc nồng độ. T cao hơn thì k lớn hơn. Khi A và B bị tiêu hao, tốc độ k·[A]·[B] giảm dần."
+      },
+      "statements": [
+        {
+          "text": "At the same temperature, a reaction with a larger Ea has a smaller share of effective collisions.",
+          "vi": {
+            "text": "Ở cùng nhiệt độ, phản ứng có Ea lớn hơn thì tỉ lệ va chạm hiệu quả nhỏ hơn."
+          },
+          "true": true
+        },
+        {
+          "text": "Increasing the starting concentrations increases the rate constant k.",
+          "vi": {
+            "text": "Tăng nồng độ ban đầu làm tăng hằng số tốc độ k."
+          },
+          "true": false
+        },
+        {
+          "text": "Raising the temperature increases k.",
+          "vi": {
+            "text": "Tăng nhiệt độ làm tăng k."
+          },
+          "true": true
+        },
+        {
+          "text": "The rate is largest at the start and falls as A and B are used up.",
+          "vi": {
+            "text": "Tốc độ lớn nhất lúc bắt đầu và giảm dần khi A và B bị tiêu hao."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "energetic-share",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["temperature"],
+      "set": {
+        "temperature": 320,
+        "activationEnergy": 50
+      },
+      "stem": "A reaction has Ea = {activationEnergy} kJ/mol and runs at {temperature} K (R = 8.314 J/(mol·K)). What percentage of collisions carry at least Ea, e^(−Ea/RT)?",
+      "explain": "With Ea in J/mol: Ea/RT = {activationEnergy}000/(8.314·{temperature}) ≈ {=activationEnergy*1000/(8.314462618*temperature)}, so e^(−Ea/RT) ≈ {=exp(-activationEnergy*1000/(8.314462618*temperature))} = {@energeticShare}%.",
+      "vi": {
+        "stem": "Một phản ứng có Ea = {activationEnergy} kJ/mol, xảy ra ở {temperature} K (R = 8,314 J/(mol·K)). Phần trăm số va chạm có năng lượng ít nhất bằng Ea, e^(−Ea/RT), là bao nhiêu?",
+        "explain": "Đổi Ea ra J/mol: Ea/RT = {activationEnergy}000/(8,314·{temperature}) ≈ {=activationEnergy*1000/(8.314462618*temperature)}, nên e^(−Ea/RT) ≈ {=exp(-activationEnergy*1000/(8.314462618*temperature))} = {@energeticShare}%."
+      },
+      "options": [
+        {
+          "text": "{@energeticShare}%",
+          "vi": {
+            "text": "{@energeticShare}%"
+          },
+          "correct": true,
+          "check": {
+            "expr": "100*exp(-activationEnergy*1000/(8.314462618*temperature))",
+            "equals": "energeticShare"
+          }
+        },
+        {
+          "text": "{=100*exp(-activationEnergy/(8.314462618*temperature))}%",
+          "vi": {
+            "text": "{=100*exp(-activationEnergy/(8.314462618*temperature))}%"
+          },
+          "check": {
+            "expr": "100*exp(-activationEnergy/(8.314462618*temperature))",
+            "equals": "energeticShare"
+          }
+        },
+        {
+          "text": "{=exp(-activationEnergy*1000/(8.314462618*temperature))}%",
+          "vi": {
+            "text": "{=exp(-activationEnergy*1000/(8.314462618*temperature))}%"
+          },
+          "check": {
+            "expr": "exp(-activationEnergy*1000/(8.314462618*temperature))",
+            "equals": "energeticShare"
+          }
+        },
+        {
+          "text": "{=100*10^(-activationEnergy*1000/(8.314462618*temperature))}%",
+          "vi": {
+            "text": "{=100*10^(-activationEnergy*1000/(8.314462618*temperature))}%"
+          },
+          "check": {
+            "expr": "100*10^(-activationEnergy*1000/(8.314462618*temperature))",
+            "equals": "energeticShare"
+          }
+        }
+      ]
+    },
+    {
+      "id": "initial-rate",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["concentration"],
+      "set": {
+        "temperature": 300,
+        "activationEnergy": 50,
+        "concentration": 0.2
+      },
+      "stem": "At {temperature} K the rate constant of A + B → P is k = {@rateConstant|4} L/(mol·s). A and B both start at {concentration} mol/L. What is the initial rate?",
+      "explain": "v₀ = k·[A]·[B] = k·c₀² = {@rateConstant|4}·{concentration}² ≈ {@initialRate} mol/(L·s).",
+      "vi": {
+        "stem": "Ở {temperature} K, hằng số tốc độ của phản ứng A + B → P là k = {@rateConstant|4} L/(mol·s). Nồng độ ban đầu của A và của B đều là {concentration} mol/L. Tốc độ ban đầu của phản ứng là bao nhiêu?",
+        "explain": "v₀ = k·[A]·[B] = k·c₀² = {@rateConstant|4}·{concentration}² ≈ {@initialRate} mol/(L·s)."
+      },
+      "options": [
+        {
+          "text": "{@initialRate} mol/(L·s)",
+          "vi": {
+            "text": "{@initialRate} mol/(L·s)"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@rateConstant*concentration^2",
+            "equals": "initialRate"
+          }
+        },
+        {
+          "text": "{=@rateConstant*concentration} mol/(L·s)",
+          "vi": {
+            "text": "{=@rateConstant*concentration} mol/(L·s)"
+          },
+          "check": {
+            "expr": "@rateConstant*concentration",
+            "equals": "initialRate"
+          }
+        },
+        {
+          "text": "{=@rateConstant*(2*concentration)^2} mol/(L·s)",
+          "vi": {
+            "text": "{=@rateConstant*(2*concentration)^2} mol/(L·s)"
+          },
+          "check": {
+            "expr": "@rateConstant*(2*concentration)^2",
+            "equals": "initialRate"
+          }
+        },
+        {
+          "text": "{=2*@rateConstant*concentration} mol/(L·s)",
+          "vi": {
+            "text": "{=2*@rateConstant*concentration} mol/(L·s)"
+          },
+          "check": {
+            "expr": "2*@rateConstant*concentration",
+            "equals": "initialRate"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-half-life",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["temperature", "progress"],
+      "set": {
+        "temperature": 280,
+        "activationEnergy": 50,
+        "concentration": 0.1
+      },
+      "stem": "At {temperature} K, A + B → P has Ea = {activationEnergy} kJ/mol and A = 5.1·10⁸ L/(mol·s) (a teaching value); A and B start at {concentration} mol/L each and [A] = c₀/(1 + k·c₀·t). Decide whether each statement is true or false.",
+      "explain": "k = 5.1·10⁸·e^(−Ea/RT) ≈ {@rateConstant} L/(mol·s). [A] halves when k·c₀·t = 1: t½ = 1/(k·c₀) ≈ {@halfLife} s (ln2/k is the first-order formula). After 60 s, 1 − 1/(1 + k·c₀·60) ≈ {@conversion}% has reacted.",
+      "vi": {
+        "stem": "Ở {temperature} K, phản ứng A + B → P có Ea = {activationEnergy} kJ/mol và A = 5,1·10⁸ L/(mol·s) (giá trị minh họa cho dạy học); nồng độ ban đầu của A và B đều là {concentration} mol/L và [A] = c₀/(1 + k·c₀·t). Mỗi nhận định sau đúng hay sai?",
+        "explain": "k = 5,1·10⁸·e^(−Ea/RT) ≈ {@rateConstant} L/(mol·s). [A] giảm một nửa khi k·c₀·t = 1: t½ = 1/(k·c₀) ≈ {@halfLife} s (ln2/k là công thức của phản ứng bậc một). Sau 60 s, đã phản ứng 1 − 1/(1 + k·c₀·60) ≈ {@conversion}%."
+      },
+      "statements": [
+        {
+          "text": "The rate constant is about {@rateConstant} L/(mol·s).",
+          "vi": {
+            "text": "Hằng số tốc độ khoảng {@rateConstant} L/(mol·s)."
+          },
+          "true": true,
+          "check": {
+            "expr": "preExponential*exp(-activationEnergy*1000/(8.314462618*temperature))",
+            "equals": "rateConstant"
+          }
+        },
+        {
+          "text": "Half of A has reacted after about {@halfLife} s.",
+          "vi": {
+            "text": "Sau khoảng {@halfLife} s, một nửa lượng A đã phản ứng."
+          },
+          "true": true,
+          "check": {
+            "expr": "1/(@rateConstant*concentration)",
+            "equals": "halfLife"
+          }
+        },
+        {
+          "text": "The half-life is ln2/k ≈ {=ln(2)/@rateConstant} s.",
+          "vi": {
+            "text": "Thời gian bán phản ứng là ln2/k ≈ {=ln(2)/@rateConstant} s."
+          },
+          "true": false,
+          "check": {
+            "expr": "ln(2)/@rateConstant",
+            "equals": "halfLife"
+          }
+        },
+        {
+          "text": "After 60 s, about {@conversion}% of A has reacted.",
+          "vi": {
+            "text": "Sau 60 s, khoảng {@conversion}% lượng A đã phản ứng."
+          },
+          "true": true,
+          "check": {
+            "expr": "100*(1-1/(1+@rateConstant*concentration*runTime))",
+            "equals": "conversion"
+          }
+        }
+      ]
+    },
+    {
+      "id": "conversion",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["progress"],
+      "set": {
+        "temperature": 310,
+        "activationEnergy": 50,
+        "concentration": 0.1
+      },
+      "stem": "At {temperature} K, A + B → P has k = {@rateConstant} L/(mol·s); A and B start at {concentration} mol/L each, and [A] = c₀/(1 + k·c₀·t). What percentage of A has reacted after 60 s?",
+      "explain": "k·c₀·t = {@rateConstant}·{concentration}·60 ≈ {=@rateConstant*concentration*60}; the share left is 1/(1 + {=@rateConstant*concentration*60}) ≈ {=100/(1+@rateConstant*concentration*60)}%, so {@conversion}% has reacted.",
+      "vi": {
+        "stem": "Ở {temperature} K, phản ứng A + B → P có k = {@rateConstant} L/(mol·s); nồng độ ban đầu của A và B đều là {concentration} mol/L, và [A] = c₀/(1 + k·c₀·t). Sau 60 s, bao nhiêu phần trăm lượng A đã phản ứng?",
+        "explain": "k·c₀·t = {@rateConstant}·{concentration}·60 ≈ {=@rateConstant*concentration*60}; phần còn lại là 1/(1 + {=@rateConstant*concentration*60}) ≈ {=100/(1+@rateConstant*concentration*60)}%, nên đã phản ứng {@conversion}%."
+      },
+      "options": [
+        {
+          "text": "{@conversion}%",
+          "vi": {
+            "text": "{@conversion}%"
+          },
+          "correct": true,
+          "check": {
+            "expr": "100*(1-1/(1+@rateConstant*concentration*60))",
+            "equals": "conversion"
+          }
+        },
+        {
+          "text": "{=100/(1+@rateConstant*concentration*60)}%",
+          "vi": {
+            "text": "{=100/(1+@rateConstant*concentration*60)}%"
+          },
+          "check": {
+            "expr": "100/(1+@rateConstant*concentration*60)",
+            "equals": "conversion"
+          }
+        },
+        {
+          "text": "{=100*(1-1/(1+@rateConstant*60))}%",
+          "vi": {
+            "text": "{=100*(1-1/(1+@rateConstant*60))}%"
+          },
+          "check": {
+            "expr": "100*(1-1/(1+@rateConstant*60))",
+            "equals": "conversion"
+          }
+        },
+        {
+          "text": "{=100*(1-exp(-@rateConstant*concentration*60))|4}%",
+          "vi": {
+            "text": "{=100*(1-exp(-@rateConstant*concentration*60))|4}%"
+          },
+          "check": {
+            "expr": "100*(1-exp(-@rateConstant*concentration*60))",
+            "equals": "conversion"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ten-kelvin-ratio",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["temperature", "collisions"],
+      "set": {
+        "temperature": 310,
+        "activationEnergy": 50
+      },
+      "stem": "A reaction with Ea = {activationEnergy} kJ/mol is warmed from 300 K to {temperature} K (A unchanged; R = 8.314 J/(mol·K)). By what factor does its rate constant grow?",
+      "explain": "k₂/k₁ = e^((Ea/R)(1/300 − 1/{temperature})) = e^({=activationEnergy*1000/8.314462618*(1/300-1/temperature)}) ≈ {=exp(activationEnergy*1000/8.314462618*(1/300-1/temperature))}: close to 2, but not exactly. The collision rate grows only as √T, by {=sqrt(temperature/300)|3} times.",
+      "vi": {
+        "stem": "Một phản ứng có Ea = {activationEnergy} kJ/mol được làm nóng từ 300 K lên {temperature} K (A không đổi; R = 8,314 J/(mol·K)). Hằng số tốc độ của nó tăng lên bao nhiêu lần?",
+        "explain": "k₂/k₁ = e^((Ea/R)(1/300 − 1/{temperature})) = e^({=activationEnergy*1000/8.314462618*(1/300-1/temperature)}) ≈ {=exp(activationEnergy*1000/8.314462618*(1/300-1/temperature))}: gần bằng 2 nhưng không đúng bằng 2. Số va chạm chỉ tăng theo √T, khoảng {=sqrt(temperature/300)|3} lần."
+      },
+      "options": [
+        {
+          "text": "about {=exp(activationEnergy*1000/8.314462618*(1/300-1/temperature))} times",
+          "vi": {
+            "text": "khoảng {=exp(activationEnergy*1000/8.314462618*(1/300-1/temperature))} lần"
+          },
+          "correct": true,
+          "check": {
+            "expr": "preExponential*exp(-activationEnergy*1000/(8.314462618*300))*exp(activationEnergy*1000/8.314462618*(1/300-1/temperature))",
+            "equals": "rateConstant"
+          }
+        },
+        {
+          "text": "about {=temperature/300|3} times",
+          "vi": {
+            "text": "khoảng {=temperature/300|3} lần"
+          },
+          "check": {
+            "expr": "preExponential*exp(-activationEnergy*1000/(8.314462618*300))*temperature/300",
+            "equals": "rateConstant"
+          }
+        },
+        {
+          "text": "exactly 2 times",
+          "vi": {
+            "text": "đúng 2 lần"
+          },
+          "check": {
+            "expr": "preExponential*exp(-activationEnergy*1000/(8.314462618*300))*2",
+            "equals": "rateConstant"
+          }
+        },
+        {
+          "text": "about {=sqrt(temperature/300)|3} times",
+          "vi": {
+            "text": "khoảng {=sqrt(temperature/300)|3} lần"
+          },
+          "check": {
+            "expr": "preExponential*exp(-activationEnergy*1000/(8.314462618*300))*sqrt(temperature/300)",
+            "equals": "rateConstant"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-hot-dilute",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["temperature", "concentration", "progress"],
+      "set": {
+        "temperature": 340,
+        "activationEnergy": 60,
+        "concentration": 0.05
+      },
+      "stem": "At {temperature} K, A + B → P has Ea = {activationEnergy} kJ/mol and A = 5.1·10⁸ L/(mol·s) (a teaching value); A and B start at {concentration} mol/L each. Decide whether each statement is true or false.",
+      "explain": "e^(−Ea/RT) = e^(−{activationEnergy}000/(8.314·{temperature})) ≈ {@energeticShare}%; k ≈ {@rateConstant} L/(mol·s) and t½ = 1/(k·c₀) ≈ {@halfLife} s. Doubling c₀ halves t½ (it is 1/(k·c₀)). The mean speed grows only as √T — from 300 K by {=sqrt(temperature/300)|3} times — while the share of energetic collisions grows far more.",
+      "vi": {
+        "stem": "Ở {temperature} K, phản ứng A + B → P có Ea = {activationEnergy} kJ/mol và A = 5,1·10⁸ L/(mol·s) (giá trị minh họa); nồng độ ban đầu của A và B đều là {concentration} mol/L. Mỗi nhận định sau đúng hay sai?",
+        "explain": "e^(−Ea/RT) = e^(−{activationEnergy}000/(8,314·{temperature})) ≈ {@energeticShare}%; k ≈ {@rateConstant} L/(mol·s) và t½ = 1/(k·c₀) ≈ {@halfLife} s. Tăng c₀ gấp đôi thì t½ giảm một nửa (vì t½ = 1/(k·c₀)). Tốc độ trung bình của phân tử chỉ tăng theo √T — từ 300 K tăng {=sqrt(temperature/300)|3} lần — trong khi tỉ lệ va chạm đủ năng lượng tăng mạnh hơn nhiều."
+      },
+      "statements": [
+        {
+          "text": "About {@energeticShare}% of collisions carry at least Ea.",
+          "vi": {
+            "text": "Khoảng {@energeticShare}% số va chạm có năng lượng ít nhất bằng Ea."
+          },
+          "true": true,
+          "check": {
+            "expr": "100*exp(-activationEnergy*1000/(8.314462618*temperature))",
+            "equals": "energeticShare"
+          }
+        },
+        {
+          "text": "The half-life is about {@halfLife} s.",
+          "vi": {
+            "text": "Thời gian bán phản ứng khoảng {@halfLife} s."
+          },
+          "true": true,
+          "check": {
+            "expr": "1/(preExponential*exp(-activationEnergy*1000/(8.314462618*temperature))*concentration)",
+            "equals": "halfLife"
+          }
+        },
+        {
+          "text": "Starting with {=2*concentration} mol/L of each would double the half-life.",
+          "vi": {
+            "text": "Nếu nồng độ ban đầu của mỗi chất là {=2*concentration} mol/L thì thời gian bán phản ứng tăng gấp đôi."
+          },
+          "true": false
+        },
+        {
+          "text": "Compared with 300 K, the molecules move only about {=sqrt(temperature/300)|3} times faster on average, yet k is many times larger.",
+          "vi": {
+            "text": "So với 300 K, các phân tử chỉ chuyển động nhanh hơn khoảng {=sqrt(temperature/300)|3} lần, nhưng k lớn hơn nhiều lần."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "effective-collision",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["collisions"],
+      "stem": "An effective collision is a collision between reactant particles that…",
+      "explain": "Only collisions with at least the activation energy and a suitable orientation break and make bonds: those are effective and give products. Most collisions are not effective.",
+      "vi": {
+        "stem": "Va chạm hiệu quả là va chạm giữa các hạt chất phản ứng mà",
+        "explain": "Chỉ những va chạm có năng lượng ít nhất bằng năng lượng hoạt hóa và có hướng phù hợp mới phá vỡ và hình thành liên kết: đó là va chạm hiệu quả, tạo ra sản phẩm. Phần lớn các va chạm không hiệu quả."
+      },
+      "options": [
+        {
+          "text": "has at least the activation energy and a suitable orientation, so it forms products",
+          "vi": {
+            "text": "có năng lượng ít nhất bằng năng lượng hoạt hóa và có hướng phù hợp, nên tạo ra sản phẩm"
+          },
+          "correct": true
+        },
+        {
+          "text": "happens at any speed, as long as the particles touch",
+          "vi": {
+            "text": "xảy ra với tốc độ bất kì, miễn là các hạt chạm nhau"
+          }
+        },
+        {
+          "text": "happens between a particle and the wall of the flask",
+          "vi": {
+            "text": "xảy ra giữa một hạt và thành bình"
+          }
+        },
+        {
+          "text": "happens between two product particles",
+          "vi": {
+            "text": "xảy ra giữa hai hạt sản phẩm"
+          }
+        }
+      ]
+    },
+    {
+      "id": "catalyst",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["collisions"],
+      "stem": "A catalyst speeds up a reaction mainly because it…",
+      "explain": "A catalyst opens another pathway with a lower activation energy, so at the same temperature a larger share of collisions are effective. It does not heat the mixture, add reactant or get used up.",
+      "vi": {
+        "stem": "Chất xúc tác làm tăng tốc độ phản ứng chủ yếu vì nó",
+        "explain": "Chất xúc tác tạo ra một con đường phản ứng khác có năng lượng hoạt hóa thấp hơn, nên ở cùng nhiệt độ, tỉ lệ va chạm hiệu quả lớn hơn. Nó không làm nóng hỗn hợp, không thêm chất phản ứng và không bị tiêu hao."
+      },
+      "options": [
+        {
+          "text": "provides a pathway with a lower activation energy",
+          "vi": {
+            "text": "tạo ra con đường phản ứng có năng lượng hoạt hóa thấp hơn"
+          },
+          "correct": true
+        },
+        {
+          "text": "raises the temperature of the mixture",
+          "vi": {
+            "text": "làm tăng nhiệt độ của hỗn hợp"
+          }
+        },
+        {
+          "text": "raises the concentration of the reactants",
+          "vi": {
+            "text": "làm tăng nồng độ các chất phản ứng"
+          }
+        },
+        {
+          "text": "is used up and gives its energy to the reactants",
+          "vi": {
+            "text": "bị tiêu hao và truyền năng lượng của nó cho các chất phản ứng"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-compare",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["collisions", "temperature", "concentration", "progress"],
+      "stem": "For the reaction A + B → P at the station (v = k·[A]·[B], k = A·e^(−Ea/RT), A and B starting equal), decide whether each statement is true or false.",
+      "explain": "At one temperature, the smaller Ea has the larger share e^(−Ea/RT). Warming raises the collision rate a little, but the rate mainly grows because many more collisions carry Ea. With both concentrations halved, v = k·c₀² falls to a quarter. In this simulation t½ = 1/(k·c₀), so a smaller c₀ means a longer half-life.",
+      "vi": {
+        "stem": "Với phản ứng A + B → P trên trạm (v = k·[A]·[B], k = A·e^(−Ea/RT), A và B có nồng độ ban đầu bằng nhau), mỗi nhận định sau đúng hay sai?",
+        "explain": "Ở cùng nhiệt độ, Ea nhỏ hơn thì tỉ lệ e^(−Ea/RT) lớn hơn. Khi đun nóng, số va chạm tăng không nhiều; tốc độ tăng chủ yếu vì có nhiều va chạm hơn đạt Ea. Khi cả hai nồng độ giảm một nửa, v = k·c₀² giảm còn một phần tư. Trong mô phỏng này t½ = 1/(k·c₀), nên c₀ nhỏ hơn thì thời gian bán phản ứng dài hơn."
+      },
+      "statements": [
+        {
+          "text": "At the same temperature, a reaction with Ea = 40 kJ/mol has a larger share of energetic collisions than one with Ea = 60 kJ/mol.",
+          "vi": {
+            "text": "Ở cùng nhiệt độ, phản ứng có Ea = 40 kJ/mol có tỉ lệ va chạm đủ năng lượng lớn hơn phản ứng có Ea = 60 kJ/mol."
+          },
+          "true": true
+        },
+        {
+          "text": "Warming speeds the reaction up mainly because the particles collide more often.",
+          "vi": {
+            "text": "Đun nóng làm phản ứng nhanh hơn chủ yếu vì các hạt va chạm thường xuyên hơn."
+          },
+          "true": false
+        },
+        {
+          "text": "Halving the starting concentrations of both A and B halves the initial rate.",
+          "vi": {
+            "text": "Giảm một nửa nồng độ ban đầu của cả A và B thì tốc độ ban đầu giảm một nửa."
+          },
+          "true": false
+        },
+        {
+          "text": "In this simulation, a smaller c₀ gives a longer half-life.",
+          "vi": {
+            "text": "Trong mô phỏng này, c₀ nhỏ hơn thì thời gian bán phản ứng dài hơn."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "rate-constant",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["temperature"],
+      "set": {
+        "temperature": 340,
+        "activationEnergy": 60
+      },
+      "stem": "A + B → P has Ea = {activationEnergy} kJ/mol and A = 5.1·10⁸ L/(mol·s) (a teaching value). What is its rate constant at {temperature} K? (R = 8.314 J/(mol·K))",
+      "explain": "Ea must be in J/mol: e^(−{activationEnergy}000/(8.314·{temperature})) ≈ {=exp(-activationEnergy*1000/(8.314462618*temperature))}, and k = 5.1·10⁸·{=exp(-activationEnergy*1000/(8.314462618*temperature))} ≈ {@rateConstant} L/(mol·s). Leaving Ea in kJ makes the exponential nearly 1; forgetting A leaves only the share.",
+      "vi": {
+        "stem": "Phản ứng A + B → P có Ea = {activationEnergy} kJ/mol và A = 5,1·10⁸ L/(mol·s) (giá trị dùng trong dạy học). Hằng số tốc độ của phản ứng ở {temperature} K là bao nhiêu? (R = 8,314 J/(mol·K))",
+        "explain": "Ea phải đổi ra J/mol: e^(−{activationEnergy}000/(8,314·{temperature})) ≈ {=exp(-activationEnergy*1000/(8.314462618*temperature))}, và k = 5,1·10⁸·{=exp(-activationEnergy*1000/(8.314462618*temperature))} ≈ {@rateConstant} L/(mol·s). Để Ea theo kJ thì hàm mũ gần bằng 1; quên A thì chỉ còn tỉ lệ va chạm đủ năng lượng."
+      },
+      "options": [
+        {
+          "text": "{@rateConstant} L/(mol·s)",
+          "vi": {
+            "text": "{@rateConstant} L/(mol·s)"
+          },
+          "correct": true,
+          "check": {
+            "expr": "preExponential*exp(-activationEnergy*1000/(8.314462618*temperature))",
+            "equals": "rateConstant"
+          }
+        },
+        {
+          "text": "{=preExponential*exp(-activationEnergy/(8.314462618*temperature))} L/(mol·s)",
+          "vi": {
+            "text": "{=preExponential*exp(-activationEnergy/(8.314462618*temperature))} L/(mol·s)"
+          },
+          "check": {
+            "expr": "preExponential*exp(-activationEnergy/(8.314462618*temperature))",
+            "equals": "rateConstant"
+          }
+        },
+        {
+          "text": "{=exp(-activationEnergy*1000/(8.314462618*temperature))} L/(mol·s)",
+          "vi": {
+            "text": "{=exp(-activationEnergy*1000/(8.314462618*temperature))} L/(mol·s)"
+          },
+          "check": {
+            "expr": "exp(-activationEnergy*1000/(8.314462618*temperature))",
+            "equals": "rateConstant"
+          }
+        },
+        {
+          "text": "{=preExponential*exp(-activationEnergy*1000/(8.314462618*(temperature-273)))} L/(mol·s)",
+          "vi": {
+            "text": "{=preExponential*exp(-activationEnergy*1000/(8.314462618*(temperature-273)))} L/(mol·s)"
+          },
+          "check": {
+            "expr": "preExponential*exp(-activationEnergy*1000/(8.314462618*(temperature-273)))",
+            "equals": "rateConstant"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-rate-run",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["temperature", "concentration", "progress"],
+      "set": {
+        "temperature": 320,
+        "activationEnergy": 50,
+        "concentration": 0.05
+      },
+      "stem": "At {temperature} K, A + B → P has Ea = {activationEnergy} kJ/mol and A = 5.1·10⁸ L/(mol·s) (a teaching value); A and B start at {concentration} mol/L each, and [A] = c₀/(1 + k·c₀·t). Decide whether each statement is true or false.",
+      "explain": "k = 5.1·10⁸·e^(−{activationEnergy}000/(8.314·{temperature})) ≈ {@rateConstant} L/(mol·s). v₀ = k·c₀² = {@rateConstant}·{concentration}² ≈ {@initialRate} mol/(L·s) — c₀ is squared, once for A and once for B. Doubling both c₀ multiplies v₀ by 4. After {runTime} s: k·c₀·t ≈ {=@rateConstant*concentration*runTime}, so {@conversion}% has reacted.",
+      "vi": {
+        "stem": "Ở {temperature} K, phản ứng A + B → P có Ea = {activationEnergy} kJ/mol và A = 5,1·10⁸ L/(mol·s) (giá trị dùng trong dạy học); A và B đều có nồng độ ban đầu {concentration} mol/L, và [A] = c₀/(1 + k·c₀·t). Mỗi nhận định sau đúng hay sai?",
+        "explain": "k = 5,1·10⁸·e^(−{activationEnergy}000/(8,314·{temperature})) ≈ {@rateConstant} L/(mol·s). v₀ = k·c₀² = {@rateConstant}·{concentration}² ≈ {@initialRate} mol/(L·s) — c₀ được bình phương, một lần cho A và một lần cho B. Tăng gấp đôi cả hai nồng độ thì v₀ tăng 4 lần. Sau {runTime} s: k·c₀·t ≈ {=@rateConstant*concentration*runTime}, nên {@conversion}% A đã phản ứng."
+      },
+      "statements": [
+        {
+          "text": "The rate constant is about {@rateConstant} L/(mol·s).",
+          "vi": {
+            "text": "Hằng số tốc độ khoảng {@rateConstant} L/(mol·s)."
+          },
+          "true": true,
+          "check": {
+            "expr": "preExponential*exp(-activationEnergy*1000/(8.314462618*temperature))",
+            "equals": "rateConstant"
+          }
+        },
+        {
+          "text": "The initial rate is about {=@rateConstant*concentration} mol/(L·s).",
+          "vi": {
+            "text": "Tốc độ ban đầu khoảng {=@rateConstant*concentration} mol/(L·s)."
+          },
+          "true": false,
+          "check": {
+            "expr": "@rateConstant*concentration",
+            "equals": "initialRate"
+          }
+        },
+        {
+          "text": "Starting both A and B at {=2*concentration} mol/L would make the initial rate {=4*@initialRate} mol/(L·s).",
+          "vi": {
+            "text": "Nếu A và B đều có nồng độ ban đầu {=2*concentration} mol/L thì tốc độ ban đầu là {=4*@initialRate} mol/(L·s)."
+          },
+          "true": true,
+          "check": {
+            "expr": "@rateConstant*(2*concentration)^2/4",
+            "equals": "initialRate"
+          }
+        },
+        {
+          "text": "After {runTime} s about {@conversion}% of A has reacted.",
+          "vi": {
+            "text": "Sau {runTime} s, khoảng {@conversion}% A đã phản ứng."
+          },
+          "true": true,
+          "check": {
+            "expr": "100*@rateConstant*concentration*runTime/(1+@rateConstant*concentration*runTime)",
+            "equals": "conversion"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-activation-energy",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["temperature", "collisions"],
+      "set": {
+        "temperature": 320,
+        "activationEnergy": 60,
+        "concentration": 0.1
+      },
+      "stem": "The rate constant of A + B → P is {=preExponential*exp(-activationEnergy*1000/(8.314462618*300))} L/(mol·s) at 300 K and {@rateConstant} L/(mol·s) at {temperature} K (A unchanged). What is its activation energy? (R = 8.314 J/(mol·K))",
+      "explain": "Dividing the two Arrhenius equations removes A: ln(k₂/k₁) = (Ea/R)·(1/300 − 1/{temperature}). ln({=exp(activationEnergy*1000/8.314462618*(1/300-1/temperature))}) ≈ {=activationEnergy*1000/8.314462618*(1/300-1/temperature)}, so Ea = 8.314·{=activationEnergy*1000/8.314462618*(1/300-1/temperature)}/(1/300 − 1/{temperature}) ≈ {activationEnergy} kJ/mol. Using log instead of ln gives {=activationEnergy/ln(10)} kJ/mol.",
+      "vi": {
+        "stem": "Hằng số tốc độ của phản ứng A + B → P là {=preExponential*exp(-activationEnergy*1000/(8.314462618*300))} L/(mol·s) ở 300 K và {@rateConstant} L/(mol·s) ở {temperature} K (A không đổi). Năng lượng hoạt hóa của phản ứng là bao nhiêu? (R = 8,314 J/(mol·K))",
+        "explain": "Chia hai phương trình Arrhenius cho nhau để khử A: ln(k₂/k₁) = (Ea/R)·(1/300 − 1/{temperature}). ln({=exp(activationEnergy*1000/8.314462618*(1/300-1/temperature))}) ≈ {=activationEnergy*1000/8.314462618*(1/300-1/temperature)}, nên Ea = 8,314·{=activationEnergy*1000/8.314462618*(1/300-1/temperature)}/(1/300 − 1/{temperature}) ≈ {activationEnergy} kJ/mol. Dùng log thập phân thay cho ln sẽ được {=activationEnergy/ln(10)} kJ/mol."
+      },
+      "options": [
+        {
+          "text": "{activationEnergy} kJ/mol",
+          "vi": {
+            "text": "{activationEnergy} kJ/mol"
+          },
+          "correct": true,
+          "check": {
+            "expr": "preExponential*exp(-activationEnergy*1000/(8.314462618*temperature))",
+            "equals": "rateConstant"
+          }
+        },
+        {
+          "text": "{=activationEnergy/ln(10)} kJ/mol",
+          "vi": {
+            "text": "{=activationEnergy/ln(10)} kJ/mol"
+          },
+          "check": {
+            "expr": "preExponential*exp(-(activationEnergy/ln(10))*1000/(8.314462618*temperature))",
+            "equals": "rateConstant"
+          }
+        },
+        {
+          "text": "50 kJ/mol",
+          "vi": {
+            "text": "50 kJ/mol"
+          },
+          "check": {
+            "expr": "preExponential*exp(-50*1000/(8.314462618*temperature))",
+            "equals": "rateConstant"
+          }
+        },
+        {
+          "text": "40 kJ/mol",
+          "vi": {
+            "text": "40 kJ/mol"
+          },
+          "check": {
+            "expr": "preExponential*exp(-40*1000/(8.314462618*temperature))",
+            "equals": "rateConstant"
+          }
+        }
+      ]
+    },
+    {
+      "id": "biggest-effect",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["temperature", "concentration", "collisions"],
+      "set": {
+        "temperature": 300,
+        "activationEnergy": 50,
+        "concentration": 0.1
+      },
+      "stem": "A + B → P runs at {temperature} K with Ea = {activationEnergy} kJ/mol and A and B at {concentration} mol/L each (v = k·[A]·[B]). Which single change raises the initial rate the most? (R = 8.314 J/(mol·K))",
+      "explain": "Doubling both concentrations: v₀ × 2² = 4. Warming to 310 K: k × e^((Ea/R)(1/300 − 1/310)) ≈ {=exp(activationEnergy*1000/8.314462618*(1/300-1/310))}; to 320 K: ≈ {=exp(activationEnergy*1000/8.314462618*(1/300-1/320))}. A catalyst lowering Ea to 40 kJ/mol: k × e^(10000/(8.314·300)) ≈ {=exp(10000/(8.314462618*300))} — by far the most.",
+      "vi": {
+        "stem": "Phản ứng A + B → P diễn ra ở {temperature} K với Ea = {activationEnergy} kJ/mol, A và B đều có nồng độ {concentration} mol/L (v = k·[A]·[B]). Thay đổi nào sau đây (chỉ một thay đổi) làm tốc độ ban đầu tăng nhiều nhất? (R = 8,314 J/(mol·K))",
+        "explain": "Tăng gấp đôi cả hai nồng độ: v₀ × 2² = 4. Đun đến 310 K: k × e^((Ea/R)(1/300 − 1/310)) ≈ {=exp(activationEnergy*1000/8.314462618*(1/300-1/310))}; đến 320 K: ≈ {=exp(activationEnergy*1000/8.314462618*(1/300-1/320))}. Dùng chất xúc tác hạ Ea xuống 40 kJ/mol: k × e^(10000/(8,314·300)) ≈ {=exp(10000/(8.314462618*300))} — lớn hơn hẳn."
+      },
+      "options": [
+        {
+          "text": "A catalyst that lowers Ea to 40 kJ/mol",
+          "vi": {
+            "text": "Dùng chất xúc tác hạ Ea xuống 40 kJ/mol"
+          },
+          "correct": true
+        },
+        {
+          "text": "Starting A and B at 0.2 mol/L each",
+          "vi": {
+            "text": "Tăng nồng độ ban đầu của A và B lên 0,2 mol/L"
+          }
+        },
+        {
+          "text": "Warming the mixture to 320 K",
+          "vi": {
+            "text": "Đun nóng hỗn hợp đến 320 K"
+          }
+        },
+        {
+          "text": "Warming the mixture to 310 K",
+          "vi": {
+            "text": "Đun nóng hỗn hợp đến 310 K"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-slow",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["progress", "concentration", "temperature"],
+      "set": {
+        "temperature": 280,
+        "activationEnergy": 60,
+        "concentration": 0.2
+      },
+      "stem": "At {temperature} K, A + B → P has Ea = {activationEnergy} kJ/mol and A = 5.1·10⁸ L/(mol·s) (a teaching value); A and B start at {concentration} mol/L each, and [A] = c₀/(1 + k·c₀·t). Decide whether each statement is true or false.",
+      "explain": "k ≈ {@rateConstant} L/(mol·s), so t½ = 1/(k·c₀) ≈ {@halfLife} s and after {runTime} s only {@conversion}% has reacted. Here t½ = 1/(k·[A]) grows as [A] falls: the second half-life (from c₀/2 to c₀/4) lasts twice the first. With c₀ halved, v₀ = k·c₀² falls to {=@initialRate/4} mol/(L·s).",
+      "vi": {
+        "stem": "Ở {temperature} K, phản ứng A + B → P có Ea = {activationEnergy} kJ/mol và A = 5,1·10⁸ L/(mol·s) (giá trị dùng trong dạy học); A và B đều có nồng độ ban đầu {concentration} mol/L, và [A] = c₀/(1 + k·c₀·t). Mỗi nhận định sau đúng hay sai?",
+        "explain": "k ≈ {@rateConstant} L/(mol·s), nên t½ = 1/(k·c₀) ≈ {@halfLife} s và sau {runTime} s chỉ {@conversion}% A đã phản ứng. Ở đây t½ = 1/(k·[A]) tăng khi [A] giảm: lần bán phản ứng thứ hai (từ c₀/2 xuống c₀/4) kéo dài gấp đôi lần thứ nhất. Khi c₀ giảm một nửa, v₀ = k·c₀² giảm còn {=@initialRate/4} mol/(L·s)."
+      },
+      "statements": [
+        {
+          "text": "The half-life is about {@halfLife} s.",
+          "vi": {
+            "text": "Thời gian bán phản ứng khoảng {@halfLife} s."
+          },
+          "true": true,
+          "check": {
+            "expr": "1/(@rateConstant*concentration)",
+            "equals": "halfLife"
+          }
+        },
+        {
+          "text": "After {runTime} s about {=100*@rateConstant*concentration*runTime/(1+@rateConstant*concentration*runTime)}% of A has reacted.",
+          "vi": {
+            "text": "Sau {runTime} s, khoảng {=100*@rateConstant*concentration*runTime/(1+@rateConstant*concentration*runTime)}% A đã phản ứng."
+          },
+          "true": true,
+          "check": {
+            "expr": "100*@rateConstant*concentration*runTime/(1+@rateConstant*concentration*runTime)",
+            "equals": "conversion"
+          }
+        },
+        {
+          "text": "Going from c₀/2 to c₀/4 takes as long as going from c₀ to c₀/2.",
+          "vi": {
+            "text": "Thời gian để [A] giảm từ c₀/2 xuống c₀/4 bằng thời gian để [A] giảm từ c₀ xuống c₀/2."
+          },
+          "true": false
+        },
+        {
+          "text": "Starting A and B at {=concentration/2} mol/L each would make the initial rate {=@initialRate/2} mol/(L·s).",
+          "vi": {
+            "text": "Nếu A và B đều có nồng độ ban đầu {=concentration/2} mol/L thì tốc độ ban đầu là {=@initialRate/2} mol/(L·s)."
+          },
+          "true": false,
+          "check": {
+            "expr": "@rateConstant*(concentration/2)^2*2",
+            "equals": "initialRate"
+          }
+        }
+      ]
+    }
+  ]
+}

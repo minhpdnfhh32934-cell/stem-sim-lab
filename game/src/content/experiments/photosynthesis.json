@@ -1,0 +1,815 @@
+{
+  "id": "photosynthesis",
+  "name": "Rate of photosynthesis",
+  "category": "biology",
+  "description": "A sprig of pondweed (Elodea) in sodium hydrogencarbonate solution, in a water bath behind a heat filter, releases bubbles of oxygen under a lamp. Move the lamp, change the hydrogencarbonate (the CO₂ source) and the temperature, then collect the gas for one minute: the bubbles counted and the volume in the capillary give the rate. In dim light (far lamp) light is the main limiting factor: however much CO₂ or warmth there is, the rate stays below the limit the light sets. Closer, the rate levels off at a plateau that more CO₂ or warmth raises. Plotting 1/rate against d² gives a straight line whose slope is set by the light alone and whose intercept is set by CO₂ and temperature.",
+  "vi": {
+    "name": "Tốc độ quang hợp",
+    "description": "Một cành rong (Elodea) ngâm trong dung dịch NaHCO₃, đặt trong chậu nước điều nhiệt sau một tấm lọc nhiệt, thải ra các bọt khí oxi dưới ánh đèn. Dịch chuyển đèn, thay đổi nồng độ NaHCO₃ (nguồn CO₂) và nhiệt độ, rồi thu khí trong một phút: số bọt khí đếm được và thể tích khí trong ống mao dẫn cho biết tốc độ quang hợp. Khi ánh sáng yếu (đèn ở xa), ánh sáng là yếu tố giới hạn chính: dù nhiều CO₂ hay ấm đến đâu, tốc độ vẫn thấp hơn mức giới hạn do ánh sáng đặt ra. Khi đèn gần hơn, tốc độ chững lại ở một mức bão hòa, và mức này tăng khi có thêm CO₂ hoặc ấm hơn. Đồ thị 1/tốc độ theo d² là một đường thẳng: độ dốc chỉ do ánh sáng quyết định, còn tung độ gốc do CO₂ và nhiệt độ quyết định.",
+    "note": "Đây là mô hình dạy học đơn giản hóa về các yếu tố giới hạn, không phải số liệu đo của rong Elodea. Cường độ ánh sáng theo định luật nghịch đảo bình phương của một nguồn điểm, I = I₀·(d₀/d)², với I₀ = 10 000 lux tại d₀ = 0,10 m (giá trị minh họa của một đèn bàn sáng). Tốc độ thải O₂ không đổi trong một lần chạy và theo đường cong hyperbol của đáp ứng ánh sáng: P = αI·P_c/(αI + P_c), tức là 1/P = 1/(αI) + 1/P_c. Khi ánh sáng yếu, P ≈ αI với α = 2·10⁻⁶ mL/s cho mỗi lux, như nhau ở mọi nồng độ CO₂ và nhiệt độ. Mức bão hòa P_c = P_max · C/(C + K_C) · f(T), với P_max = 0,01 mL/s (0,6 mL/phút), K_C = 0,005 mol/L; f(T) = 2^((T − 30)/10) đến 30 °C (Q₁₀ = 2), rồi giảm tuyến tính về 0 ở 45 °C khi enzyme bị biến tính. Mọi hằng số đều là giá trị minh họa. Thể tích V = P·t, số bọt khí là phần nguyên của V/0,01 mL (một bọt khí khoảng 2,7 mm). Ánh sáng là yếu tố giới hạn khi αI < P_c (tốc độ dưới một nửa mức bão hòa); nếu không, yếu tố giới hạn là thừa số nhỏ hơn giữa CO₂ và nhiệt độ. Trên 30 °C, nhiệt độ là yếu tố giới hạn vì quá nóng: làm mát mới tăng tốc độ. Đây là một quy ước dạy học, không phải phép phân tích độ nhạy. Tấm lọc nhiệt và chậu nước giữ nhiệt độ cố định, nên đèn chỉ thay đổi ánh sáng. Mô hình không tính hô hấp (không có điểm bù ánh sáng), thời gian cành rong cần để ổn định sau mỗi thay đổi, khí khác O₂ trong bọt, O₂ hòa tan vào nước, kích thước thật của đèn khi đặt gần, lượng NaHCO₃ bị tiêu hao, và các góc gãy của định luật Blackman (đường cong ở đây trơn)."
+  },
+  "requiredEquipment": ["pondweed-lamp"],
+  "model": "biology.photosynthesis",
+  "presentation": "observation",
+  "workspace": {
+    "pieces": [
+      {
+        "id": "lamp",
+        "kind": "lamp-rule",
+        "slot": "back-left",
+        "label": "Bench lamp on a steel rule",
+        "vi": {
+          "label": "Đèn bàn trượt trên thước thép"
+        },
+        "owns": ["distance"],
+        "shows": [
+          {
+            "variable": "intensity"
+          },
+          {
+            "variable": "distanceSquared"
+          }
+        ]
+      },
+      {
+        "id": "filter",
+        "kind": "heat-filter",
+        "slot": "back-left",
+        "label": "Heat filter (a tank of water)",
+        "vi": {
+          "label": "Tấm lọc nhiệt (bể nước)"
+        },
+        "owns": [],
+        "shows": []
+      },
+      {
+        "id": "carbonate",
+        "kind": "solution-bottle",
+        "slot": "front-left",
+        "label": "Sodium hydrogencarbonate solutions",
+        "vi": {
+          "label": "Dung dịch NaHCO₃"
+        },
+        "owns": ["carbonate"],
+        "shows": []
+      },
+      {
+        "id": "bath",
+        "kind": "bio-water-bath",
+        "slot": "back-centre",
+        "label": "Water bath",
+        "vi": {
+          "label": "Chậu nước ổn nhiệt"
+        },
+        "owns": ["temperature"],
+        "shows": []
+      },
+      {
+        "id": "plant",
+        "kind": "plant",
+        "slot": "back-centre",
+        "label": "Pondweed under an inverted funnel",
+        "vi": {
+          "label": "Cành rong dưới phễu úp ngược"
+        },
+        "owns": [],
+        "shows": [
+          {
+            "variable": "bubbles"
+          }
+        ]
+      },
+      {
+        "id": "capillary",
+        "kind": "capillary-scale",
+        "slot": "back-right",
+        "label": "Graduated capillary",
+        "vi": {
+          "label": "Ống mao dẫn có vạch chia"
+        },
+        "owns": ["resolution"],
+        "shows": [
+          {
+            "variable": "volume"
+          },
+          {
+            "instrument": "volume"
+          }
+        ]
+      },
+      {
+        "id": "stopwatch",
+        "kind": "bio-stopwatch",
+        "slot": "front-centre",
+        "label": "Stopwatch",
+        "vi": {
+          "label": "Đồng hồ bấm giờ"
+        },
+        "owns": [],
+        "shows": [
+          {
+            "variable": "elapsed"
+          },
+          {
+            "input": "duration"
+          }
+        ]
+      }
+    ],
+    "materials": [],
+    "setup": [],
+    "runLabel": "Start",
+    "vi": {
+      "runLabel": "Bắt đầu"
+    }
+  },
+  "parameters": [
+    {
+      "id": "distance",
+      "label": "Lamp distance",
+      "vi": {
+        "label": "Khoảng cách đèn"
+      },
+      "symbol": "d",
+      "unit": "m",
+      "default": 0.1,
+      "min": 0.05,
+      "max": 0.5,
+      "step": 0.01,
+      "presets": [
+        {
+          "label": "0.05 m",
+          "value": 0.05,
+          "vi": {
+            "label": "0,05 m"
+          }
+        },
+        {
+          "label": "0.1 m",
+          "value": 0.1,
+          "vi": {
+            "label": "0,1 m"
+          }
+        },
+        {
+          "label": "0.2 m",
+          "value": 0.2,
+          "vi": {
+            "label": "0,2 m"
+          }
+        },
+        {
+          "label": "0.4 m",
+          "value": 0.4,
+          "vi": {
+            "label": "0,4 m"
+          }
+        }
+      ]
+    },
+    {
+      "id": "carbonate",
+      "label": "Hydrogencarbonate concentration",
+      "vi": {
+        "label": "Nồng độ NaHCO₃"
+      },
+      "symbol": "C",
+      "unit": "mol/L",
+      "default": 0.05,
+      "min": 0.001,
+      "max": 0.05,
+      "step": 0.001,
+      "presets": [
+        {
+          "label": "0.002 mol/L",
+          "value": 0.002,
+          "vi": {
+            "label": "0,002 mol/L"
+          }
+        },
+        {
+          "label": "0.005 mol/L",
+          "value": 0.005,
+          "vi": {
+            "label": "0,005 mol/L"
+          }
+        },
+        {
+          "label": "0.01 mol/L",
+          "value": 0.01,
+          "vi": {
+            "label": "0,01 mol/L"
+          }
+        },
+        {
+          "label": "0.05 mol/L",
+          "value": 0.05,
+          "vi": {
+            "label": "0,05 mol/L"
+          }
+        }
+      ]
+    },
+    {
+      "id": "temperature",
+      "label": "Water bath temperature",
+      "vi": {
+        "label": "Nhiệt độ chậu nước"
+      },
+      "symbol": "T",
+      "unit": "°C",
+      "default": 25,
+      "min": 5,
+      "max": 40,
+      "step": 1,
+      "presets": [
+        {
+          "label": "10 °C",
+          "value": 10,
+          "vi": {
+            "label": "10 °C"
+          }
+        },
+        {
+          "label": "20 °C",
+          "value": 20,
+          "vi": {
+            "label": "20 °C"
+          }
+        },
+        {
+          "label": "30 °C",
+          "value": 30,
+          "vi": {
+            "label": "30 °C"
+          }
+        },
+        {
+          "label": "40 °C",
+          "value": 40,
+          "vi": {
+            "label": "40 °C"
+          }
+        }
+      ]
+    },
+    {
+      "id": "resolution",
+      "label": "Capillary scale resolution",
+      "vi": {
+        "label": "Độ chia nhỏ nhất của ống mao dẫn"
+      },
+      "symbol": "δV",
+      "unit": "mL",
+      "default": 0.01,
+      "min": 0.005,
+      "max": 0.2,
+      "step": 0.005,
+      "presets": [
+        {
+          "label": "0.01 mL",
+          "value": 0.01,
+          "vi": {
+            "label": "0,01 mL"
+          }
+        },
+        {
+          "label": "0.05 mL",
+          "value": 0.05,
+          "vi": {
+            "label": "0,05 mL"
+          }
+        },
+        {
+          "label": "0.2 mL",
+          "value": 0.2,
+          "vi": {
+            "label": "0,2 mL"
+          }
+        }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "duration": 60
+  },
+  "inputs": {
+    "duration": {
+      "symbol": "t",
+      "unit": "s"
+    }
+  },
+  "simulation": {
+    "timeStep": 0.05,
+    "maxDuration": 120,
+    "sampleInterval": 0.5
+  },
+  "measurements": [
+    {
+      "id": "volume",
+      "label": "O₂ collected",
+      "vi": {
+        "label": "Thể tích O₂ thu được"
+      },
+      "symbol": "V",
+      "unit": "mL",
+      "variable": "volume"
+    },
+    {
+      "id": "bubbles",
+      "label": "Bubbles counted",
+      "vi": {
+        "label": "Số bọt khí đếm được"
+      },
+      "symbol": "N",
+      "unit": "",
+      "variable": "bubbles"
+    },
+    {
+      "id": "rate",
+      "label": "Rate V/t",
+      "vi": {
+        "label": "Tốc độ V/t"
+      },
+      "symbol": "V/t",
+      "unit": "mL/s",
+      "variable": "meanRate"
+    }
+  ],
+  "results": [
+    {
+      "id": "intensity",
+      "label": "Light intensity at the plant",
+      "vi": {
+        "label": "Cường độ ánh sáng tại cây"
+      },
+      "symbol": "I",
+      "unit": "lux",
+      "variable": "intensity",
+      "reduce": "final",
+      "theory": "intensity"
+    },
+    {
+      "id": "distanceSquared",
+      "label": "Square of the lamp distance d²",
+      "vi": {
+        "label": "Bình phương khoảng cách đèn d²"
+      },
+      "symbol": "d²",
+      "unit": "m²",
+      "variable": "distanceSquared",
+      "reduce": "final",
+      "theory": "distanceSquared"
+    },
+    {
+      "id": "volume",
+      "label": "O₂ collected in the run",
+      "vi": {
+        "label": "Thể tích O₂ thu được trong lần chạy"
+      },
+      "symbol": "V",
+      "unit": "mL",
+      "variable": "volume",
+      "reduce": "final",
+      "theory": "volume"
+    },
+    {
+      "id": "bubbles",
+      "label": "Bubbles counted in the run",
+      "vi": {
+        "label": "Số bọt khí đếm được trong lần chạy"
+      },
+      "symbol": "N",
+      "unit": "",
+      "variable": "bubbles",
+      "reduce": "final",
+      "theory": "bubbles"
+    },
+    {
+      "id": "rate",
+      "label": "Rate of O₂ release V/t",
+      "vi": {
+        "label": "Tốc độ thải O₂ V/t"
+      },
+      "symbol": "V/t",
+      "unit": "mL/s",
+      "variable": "meanRate",
+      "reduce": "final",
+      "theory": "rate"
+    },
+    {
+      "id": "inverseRate",
+      "label": "Time per mL of O₂, 1/rate",
+      "vi": {
+        "label": "Thời gian cho mỗi mL O₂, 1/tốc độ"
+      },
+      "symbol": "t/V",
+      "unit": "s/mL",
+      "variable": "inverseRate",
+      "reduce": "final",
+      "theory": "inverseRate"
+    },
+    {
+      "id": "limiting",
+      "label": "Limiting factor",
+      "vi": {
+        "label": "Yếu tố giới hạn"
+      },
+      "symbol": "limit",
+      "unit": "",
+      "variable": "limiting",
+      "reduce": "final",
+      "theory": "limiting",
+      "classes": [
+        {
+          "max": 1.5,
+          "label": "Light",
+          "vi": {
+            "label": "Ánh sáng"
+          }
+        },
+        {
+          "max": 2.5,
+          "label": "Carbon dioxide",
+          "vi": {
+            "label": "Khí CO₂"
+          }
+        },
+        {
+          "label": "Temperature",
+          "vi": {
+            "label": "Nhiệt độ"
+          }
+        }
+      ]
+    }
+  ],
+  "graphs": [
+    {
+      "id": "volume-time",
+      "title": "O₂ collected against time",
+      "vi": {
+        "title": "Thể tích O₂ thu được theo thời gian"
+      },
+      "x": "time",
+      "y": ["volume"]
+    },
+    {
+      "id": "bubbles-time",
+      "title": "Bubbles counted against time",
+      "vi": {
+        "title": "Số bọt khí đếm được theo thời gian"
+      },
+      "x": "time",
+      "y": ["bubbles"]
+    }
+  ],
+  "monitor": "volume-time",
+  "compare": [
+    {
+      "graph": "volume-time"
+    }
+  ],
+  "analyses": [
+    {
+      "id": "light",
+      "title": "1/rate against the square of the lamp distance d²",
+      "note": "Each run is one point: its t/V (1/rate) against d². Light falls off as 1/d², so 1/rate = d²/(α·I₀·d₀²) + 1/P_c: a straight line at every lamp distance. Its slope 1/(α·I₀·d₀²) comes from the light alone and is the same for every hydrogencarbonate and temperature. Its intercept b is 1/P_c, the time per mL at the plateau, which more CO₂ or warmth lowers. The dashed theory line is the model's own line, with its slope and its intercept 1/P_c. Only runs with the same hydrogencarbonate and temperature are fitted together.",
+      "vi": {
+        "title": "1/tốc độ theo bình phương khoảng cách đèn d²",
+        "note": "Mỗi lần chạy là một điểm: t/V (1/tốc độ) theo d². Cường độ ánh sáng giảm theo 1/d², nên 1/tốc độ = d²/(α·I₀·d₀²) + 1/P_c: một đường thẳng ở mọi khoảng cách đèn. Độ dốc 1/(α·I₀·d₀²) chỉ do ánh sáng quyết định và như nhau ở mọi nồng độ NaHCO₃ và nhiệt độ. Tung độ gốc b bằng 1/P_c, thời gian để thu mỗi mL khi đã bão hòa ánh sáng; thêm CO₂ hoặc ấm hơn thì b giảm. Đường lý thuyết nét đứt là chính đường của mô hình, với độ dốc và tung độ gốc 1/P_c của nó. Chỉ các lần chạy cùng nồng độ NaHCO₃ và cùng nhiệt độ mới được khớp chung."
+      },
+      "x": "distanceSquared",
+      "y": "inverseRate",
+      "group": ["carbonate", "temperature"],
+      "columns": [
+        "distance",
+        "distanceSquared",
+        "intensity",
+        "bubbles",
+        "volume",
+        "rate",
+        "inverseRate",
+        "limiting"
+      ],
+      "slope": {
+        "label": "Slope of 1/rate against d²",
+        "vi": {
+          "label": "Độ dốc của 1/tốc độ theo d²"
+        },
+        "symbol": "a",
+        "unit": "s/(mL·m²)",
+        "theory": "inverseRateSlope",
+        "intercept": "inverseRateIntercept"
+      }
+    }
+  ],
+  "instruments": [
+    {
+      "result": "volume",
+      "quantity": "O₂ volume V",
+      "name": "Capillary tube scale",
+      "resolution": "resolution",
+      "excludes": "reading the gas column by eye, gas left in the tube or dissolved in the water, and gases other than O₂ in the bubbles",
+      "vi": {
+        "quantity": "Thể tích O₂ V",
+        "name": "Thang chia của ống mao dẫn",
+        "excludes": "việc đọc cột khí bằng mắt, khí còn đọng trong ống hoặc hòa tan vào nước, và các khí khác O₂ trong bọt khí"
+      }
+    }
+  ],
+  "note": "A simplified teaching model of limiting factors, not measured data for Elodea. Light follows the inverse square law of a point lamp, I = I₀·(d₀/d)², with I₀ = 10 000 lux at d₀ = 0.10 m (an illustrative bright bench lamp). The rate of O₂ release is constant during a run and follows the rectangular-hyperbola light-response curve: P = αI·P_c/(αI + P_c), that is 1/P = 1/(αI) + 1/P_c. In dim light P ≈ αI, with α = 2·10⁻⁶ mL/s per lux, the same at every CO₂ and temperature. The plateau P_c = P_max · C/(C + K_C) · f(T), with P_max = 0.01 mL/s (0.6 mL a minute) and K_C = 0.005 mol/L; f(T) = 2^((T − 30)/10) up to 30 °C (Q₁₀ = 2), then falling linearly to 0 at 45 °C as enzymes denature. All the constants are illustrative. The volume V = P·t; the bubbles counted are the whole number of 0.01 mL bubbles (about 2.7 mm across) in V. Light is the limiting factor while αI < P_c (the rate below half its plateau); otherwise it is the smaller of the CO₂ and temperature factors. Above 30 °C temperature limits because it is too hot: cooling, not warming, raises the rate. This is a teaching convention, not a sensitivity analysis. The heat filter and the water bath keep the temperature fixed, so the lamp changes only the light. Not modelled: respiration (there is no compensation point), the minutes a sprig needs to settle after each change, gases other than O₂ in the bubbles, O₂ dissolving in the water, the lamp's real size close up, the hydrogencarbonate used up, and the sharp corners of Blackman's law (the curve here is smooth).",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the photosynthesis instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn thí nghiệm quang hợp trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "photosynthesis-instructions"
+      }
+    },
+    {
+      "id": "work",
+      "instruction": "Go to the pondweed and lamp and press E to work at the bench.",
+      "vi": {
+        "instruction": "Đến cành rong và đèn rồi nhấn E để làm việc tại bàn thí nghiệm."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "pondweed-lamp"
+      }
+    },
+    {
+      "id": "distance",
+      "instruction": "Set the lamp distance d on its rule.",
+      "vi": {
+        "instruction": "Đặt khoảng cách đèn d trên thước."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "distance"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Press START to collect the gas for one minute: watch the bubbles rise into the capillary.",
+      "vi": {
+        "instruction": "Nhấn BẮT ĐẦU để thu khí trong một phút: quan sát các bọt khí nổi lên vào ống mao dẫn."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Read the bubbles counted, the volume V and the rate in the notebook.",
+      "vi": {
+        "instruction": "Đọc số bọt khí, thể tích V và tốc độ quang hợp trong sổ ghi chép."
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, move the lamp, and run again to plot 1/rate against d².",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, dịch chuyển đèn rồi chạy lại để vẽ đồ thị 1/tốc độ theo d²."
+      },
+      "done": {
+        "kind": "reset"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "light-limited",
+      "question": "An Elodea sprig is lit by a lamp {distance} m away (10 000 lux at 0.10 m), with {carbonate} mol/L hydrogencarbonate at {temperature} °C. Find the light intensity and the rate of oxygen release. (All the model’s constants are illustrative.)",
+      "vi": {
+        "question": "Một cành rong đuôi chó được chiếu bằng đèn đặt cách {distance} m (10 000 lux ở 0,10 m), trong dung dịch hiđrocacbonat {carbonate} mol/L ở {temperature} °C. Tìm cường độ ánh sáng và tốc độ thải oxi. (Mọi hằng số của mô hình đều là giá trị minh họa.)"
+      },
+      "set": { "distance": 0.2, "carbonate": 0.05, "temperature": 25 },
+      "find": [{ "theory": "intensity" }, { "theory": "rate" }],
+      "steps": [
+        {
+          "say": "Inverse square law: twice as far, a quarter of the light.",
+          "vi": {
+            "say": "Định luật nghịch đảo bình phương: xa gấp đôi thì ánh sáng chỉ còn một phần tư."
+          },
+          "write": "I = 10000·(0.1/{distance})² = {@intensity} lux",
+          "check": { "expr": "10000*(0.1/distance)^2", "equals": "intensity" }
+        },
+        {
+          "say": "The plateau set by CO₂ and temperature: P_c = 0.01·C/(C + 0.005)·2^((T − 30)/10) mL/s.",
+          "vi": {
+            "say": "Mức bão hòa do CO₂ và nhiệt độ quyết định: P_c = 0,01·C/(C + 0,005)·2^((T − 30)/10) mL/s."
+          },
+          "write": "P_c = 0.01·{carbonate}/({carbonate} + 0.005)·{=2^((temperature-30)/10)} ≈ {@saturatedRate}",
+          "check": {
+            "expr": "0.01*carbonate/(carbonate+0.005)*2^((temperature-30)/10)",
+            "equals": "saturatedRate"
+          }
+        },
+        {
+          "say": "The light-response curve: 1/P = 1/(αI) + 1/P_c, with α = 2·10⁻⁶ mL/s per lux. Here αI = {=2e-6*@intensity|3} mL/s, less than P_c: light limits.",
+          "vi": {
+            "say": "Đường cong đáp ứng ánh sáng: 1/P = 1/(αI) + 1/P_c, với α = 2·10⁻⁶ mL/s cho mỗi lux. Ở đây αI = {=2e-6*@intensity|3} mL/s, nhỏ hơn P_c: ánh sáng là nhân tố giới hạn."
+          },
+          "write": "P = αI·P_c/(αI + P_c) ≈ {@rate} mL/s",
+          "check": {
+            "expr": "2e-6*@intensity*@saturatedRate/(2e-6*@intensity+@saturatedRate)",
+            "equals": "rate"
+          }
+        }
+      ]
+    },
+    {
+      "id": "carbon-dioxide-limited",
+      "question": "The lamp is close, {distance} m away, but the water holds only {carbonate} mol/L hydrogencarbonate at {temperature} °C. Find the plateau rate and the oxygen given out in {duration} s.",
+      "vi": {
+        "question": "Đèn đặt gần, cách {distance} m, nhưng nước chỉ có {carbonate} mol/L hiđrocacbonat ở {temperature} °C. Tìm tốc độ bão hòa và thể tích oxi thải ra trong {duration} s."
+      },
+      "set": { "distance": 0.05, "carbonate": 0.002, "temperature": 30 },
+      "find": [
+        { "theory": "saturatedRate", "symbol": "P_c", "unit": "mL/s" },
+        { "theory": "volume" }
+      ],
+      "steps": [
+        {
+          "say": "At 30 °C the temperature factor is 1; the CO₂ factor is C/(C + 0.005), small here.",
+          "vi": {
+            "say": "Ở 30 °C hệ số nhiệt độ bằng 1; hệ số CO₂ là C/(C + 0,005), ở đây rất nhỏ."
+          },
+          "write": "P_c = 0.01·{carbonate}/({carbonate} + 0.005) ≈ {@saturatedRate} mL/s",
+          "check": {
+            "expr": "0.01*carbonate/(carbonate+0.005)*2^((temperature-30)/10)",
+            "equals": "saturatedRate"
+          }
+        },
+        {
+          "say": "The light gives αI = 2·10⁻⁶ × {@intensity} = {=2e-6*@intensity|3} mL/s, far above P_c: more light hardly helps, CO₂ limits.",
+          "vi": {
+            "say": "Ánh sáng cho αI = 2·10⁻⁶ × {@intensity} = {=2e-6*@intensity|3} mL/s, lớn hơn nhiều so với P_c: tăng ánh sáng gần như không giúp ích, CO₂ là nhân tố giới hạn."
+          },
+          "write": "P = αI·P_c/(αI + P_c) ≈ {@rate} mL/s",
+          "check": {
+            "expr": "2e-6*@intensity*@saturatedRate/(2e-6*@intensity+@saturatedRate)",
+            "equals": "rate"
+          }
+        },
+        {
+          "say": "The rate is steady, so the volume is rate times time.",
+          "vi": { "say": "Tốc độ không đổi, nên thể tích bằng tốc độ nhân thời gian." },
+          "write": "V = P·t = {@rate}·{duration} ≈ {@volume} mL",
+          "check": { "expr": "@rate*duration", "equals": "volume" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "A pondweed sprig under a lamp gives off bubbles of oxygen as it photosynthesises; the rate is held back by whichever factor — light, CO₂ or temperature — is in shortest supply.",
+    "vi": {
+      "summary": "Một cành rong đuôi chó dưới đèn giải phóng các bọt khí oxi khi quang hợp; tốc độ bị giới hạn bởi yếu tố đang thiếu nhất — ánh sáng, CO₂ hay nhiệt độ."
+    },
+    "parts": [
+      {
+        "id": "sprig",
+        "name": "Pondweed sprig",
+        "role": "Elodea, lying under an upturned funnel; bubbles leave its cut end.",
+        "vi": {
+          "name": "Cành rong đuôi chó",
+          "role": "Rong Elodea, nằm dưới một phễu úp ngược; bọt khí thoát ra từ đầu cắt."
+        },
+        "anchor": {
+          "at": [0.245, -0.215, 0.06]
+        }
+      },
+      {
+        "id": "solution",
+        "name": "Hydrogencarbonate solution",
+        "role": "Gives the plant its CO₂: the concentration C sets how much.",
+        "vi": {
+          "name": "Dung dịch hiđrocacbonat",
+          "role": "Cung cấp CO₂ cho cây: nồng độ C quyết định lượng CO₂."
+        },
+        "anchor": {
+          "at": [0.245, -0.18, 0.075]
+        }
+      },
+      {
+        "id": "capillary",
+        "name": "Capillary",
+        "role": "Collects the gas from the funnel; its scale reads the volume V.",
+        "vi": {
+          "name": "Ống mao quản",
+          "role": "Thu khí từ phễu; vạch chia của nó đọc thể tích V."
+        },
+        "anchor": {
+          "part": "capillary-scale"
+        }
+      },
+      {
+        "id": "lamp",
+        "name": "Lamp",
+        "role": "The light source; moved along the rule to the distance d.",
+        "vi": {
+          "name": "Đèn",
+          "role": "Nguồn sáng; được dịch chuyển dọc thước tới khoảng cách d."
+        },
+        "anchor": {
+          "part": "lamp"
+        }
+      },
+      {
+        "id": "rule",
+        "name": "Rule and index",
+        "role": "The red index reads the lamp’s distance d from the plant.",
+        "vi": {
+          "name": "Thước và vạch chỉ",
+          "role": "Vạch đỏ chỉ khoảng cách d từ đèn tới cây."
+        },
+        "anchor": {
+          "part": "lamp-index"
+        }
+      },
+      {
+        "id": "filter",
+        "name": "Heat filter",
+        "role": "A thin tank of water: it lets the light through but stops the lamp’s heat.",
+        "vi": {
+          "name": "Tấm lọc nhiệt",
+          "role": "Bể nước mỏng: cho ánh sáng đi qua nhưng chặn nhiệt của đèn."
+        },
+        "anchor": {
+          "at": [0.2035, -0.17, 0.09]
+        }
+      },
+      {
+        "id": "thermometer",
+        "name": "Thermometer",
+        "role": "Reads the water bath’s temperature T.",
+        "vi": {
+          "name": "Nhiệt kế",
+          "role": "Đọc nhiệt độ T của bể nước."
+        },
+        "anchor": {
+          "part": "alcohol"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "In light the sprig photosynthesises, taking in CO₂ and giving off oxygen, which rises in bubbles into the capillary. The bubbles in one minute, and the volume collected, give the rate.",
+        "vi": {
+          "text": "Khi có ánh sáng, cành rong quang hợp, lấy CO₂ và thải khí oxi; oxi nổi lên thành bọt vào ống mao quản. Số bọt trong một phút và thể tích thu được cho biết tốc độ quang hợp."
+        },
+        "parts": ["sprig", "capillary"]
+      },
+      {
+        "text": "The light at the plant falls with the square of the lamp’s distance: I = I₀·(d₀/d)². The heat filter keeps the lamp from warming the water, so moving it changes only the light.",
+        "vi": {
+          "text": "Ánh sáng chiếu tới cây giảm theo bình phương khoảng cách tới đèn: I = I₀·(d₀/d)². Tấm lọc nhiệt ngăn đèn làm nóng nước, nên dịch chuyển đèn chỉ làm thay đổi ánh sáng."
+        },
+        "parts": ["lamp", "rule", "filter"]
+      },
+      {
+        "text": "In dim light (lamp far away) light is the limiting factor: more CO₂ or warmth hardly helps, and the rate grows with the light.",
+        "vi": {
+          "text": "Khi ánh sáng yếu (đèn ở xa), ánh sáng là nhân tố giới hạn: thêm CO₂ hay tăng nhiệt độ hầu như không giúp được gì, và tốc độ tăng theo ánh sáng."
+        },
+        "parts": ["lamp", "sprig"]
+      },
+      {
+        "text": "Closer, the rate levels off at a plateau set by the CO₂ (the hydrogencarbonate) and the temperature: now one of them limits, and raising it raises the plateau.",
+        "vi": {
+          "text": "Khi đèn gần hơn, tốc độ chững lại ở một mức cao nhất do CO₂ (hiđrocacbonat) và nhiệt độ quyết định: lúc này một trong hai yếu tố đó giới hạn, và tăng nó sẽ nâng mức cao nhất lên."
+        },
+        "parts": ["solution", "thermometer"]
+      },
+      {
+        "text": "Warmth speeds the plant’s enzymes up to about 30 °C; hotter, they start to denature and the rate falls, so then cooling, not warming, helps.",
+        "vi": {
+          "text": "Nhiệt độ cao làm enzim của cây hoạt động nhanh hơn tới khoảng 30 °C; nóng hơn nữa, chúng bắt đầu biến tính và tốc độ giảm, nên khi đó làm mát chứ không phải làm ấm mới có ích."
+        },
+        "parts": ["thermometer"]
+      },
+      {
+        "text": "The results give I, V, the bubbles, the rate and the limiting factor; the capillary reads to its resolution δV. Move the lamp and plot 1/rate against d²: a straight line whose slope is set by the light, its intercept by CO₂ and temperature.",
+        "vi": {
+          "text": "Phần kết quả cho I, V, số bọt, tốc độ và nhân tố giới hạn; ống mao quản đọc theo độ phân giải δV. Dịch chuyển đèn rồi vẽ 1/tốc độ theo d²: một đường thẳng có hệ số góc do ánh sáng quyết định, tung độ gốc do CO₂ và nhiệt độ quyết định."
+        },
+        "parts": ["capillary", "rule"]
+      },
+      {
+        "text": "A teaching model with illustrative constants: respiration, the minutes a sprig needs to settle, and gases other than oxygen in the bubbles are left out.",
+        "vi": {
+          "text": "Mô hình dạy học với các hằng số minh họa: bỏ qua hô hấp, thời gian vài phút để cành rong ổn định, và các khí khác ngoài oxi trong bọt khí."
+        },
+        "parts": ["sprig"]
+      }
+    ]
+  }
+}

@@ -1,0 +1,765 @@
+{
+  "id": "refraction",
+  "name": "Refraction and total internal reflection",
+  "category": "physics",
+  "description": "A narrow ray from a ray box meets the flat face of a semicircular block at its centre, on a protractor disc. Entering the block from the air, the ray bends towards the normal; leaving it through the flat face, it bends away, and beyond the critical angle it does not leave at all: it is totally reflected. A run turns the ray box from 0° to the chosen angle of incidence, so the graphs trace the whole law. The angle of reflection equals the angle of incidence; Snell's law n₁·sin i = n₂·sin r gives the angle of refraction; over several runs, sin of the ray's angle in air against sin of its angle in the block is a straight line whose slope is the block's refractive index n.",
+  "vi": {
+    "name": "Khúc xạ ánh sáng và phản xạ toàn phần",
+    "description": "Một tia sáng hẹp từ đèn chiếu tới tâm mặt phẳng của một khối bán trụ đặt trên đĩa chia độ. Đi từ không khí vào khối, tia sáng lệch lại gần pháp tuyến; đi từ khối ra không khí qua mặt phẳng, tia lệch xa pháp tuyến, và khi góc tới lớn hơn góc giới hạn thì tia không ló ra nữa: ánh sáng bị phản xạ toàn phần. Mỗi lần chạy, đèn được xoay từ 0° đến góc tới đã chọn, nên các đồ thị vẽ ra toàn bộ định luật. Góc phản xạ bằng góc tới; định luật khúc xạ n₁·sin i = n₂·sin r cho góc khúc xạ; qua nhiều lần chạy, sin góc của tia trong không khí theo sin góc của tia trong khối là một đường thẳng có hệ số góc bằng chiết suất n của khối.",
+    "note": "Đây là mô hình dạy học đơn giản hóa của quang hình học, không phải phép đo chính xác của phòng thí nghiệm. Tia sáng gặp mặt phẳng của khối tại tâm, nên khi đi trong khối nó luôn đi theo một bán kính và qua mặt cong không bị lệch: chỉ có một mặt phân cách khúc xạ. Phản xạ: góc phản xạ i′ = i. Khúc xạ: n₁·sin i = n₂·sin r, với n₁ = 1, n₂ = n khi tia đi vào khối và n₁ = n, n₂ = 1 khi tia đi ra. Khi tia đi ra, góc giới hạn i_gh thỏa mãn sin i_gh = 1/n; với i > i_gh không còn tia khúc xạ và ánh sáng bị phản xạ toàn phần. Phần ánh sáng bị phản xạ R tính theo công thức Fresnel cho ánh sáng không phân cực, (Rs + Rp)/2; R = 1 khi phản xạ toàn phần. Khi đã phản xạ toàn phần, các giá trị của tia khúc xạ là của tia khúc xạ cuối cùng — tia đi sát mặt phân cách (r = 90°) tại đúng góc giới hạn. Giả định: chiết suất của không khí lấy bằng 1 (thật ra là 1,0003, chênh 0,03 %); một bước sóng, không có tán sắc; môi trường trong suốt, đồng chất, không hấp thụ; mặt khối nhẵn; tia sáng không có bề rộng; bỏ qua ánh sáng phản xạ ở mặt cong. Chiết suất của các vật liệu là giá trị điển hình ở 589 nm: nước 1,33 (20 °C), acrylic (thủy tinh hữu cơ) 1,49, thủy tinh crown 1,52, thủy tinh flint 1,62. Kết quả mô phỏng không có sai số ngẫu nhiên; số đọc trên đĩa chia độ chỉ tính đến độ phân giải của nó."
+  },
+  "requiredEquipment": ["ray-optics-board"],
+  "model": "optics.refraction",
+  "parameters": [
+    {
+      "id": "index",
+      "label": "Block material (refractive index)",
+      "vi": {
+        "label": "Vật liệu khối (chiết suất)"
+      },
+      "symbol": "n",
+      "unit": "",
+      "default": 1.49,
+      "min": 1.3,
+      "max": 1.7,
+      "step": 0.01,
+      "presets": [
+        {
+          "label": "Water 1.33",
+          "vi": {
+            "label": "Nước 1,33"
+          },
+          "value": 1.33
+        },
+        {
+          "label": "Acrylic 1.49",
+          "vi": {
+            "label": "Acrylic 1,49"
+          },
+          "value": 1.49
+        },
+        {
+          "label": "Crown glass 1.52",
+          "vi": {
+            "label": "Thủy tinh crown 1,52"
+          },
+          "value": 1.52
+        },
+        {
+          "label": "Flint glass 1.62",
+          "vi": {
+            "label": "Thủy tinh flint 1,62"
+          },
+          "value": 1.62
+        }
+      ]
+    },
+    {
+      "id": "direction",
+      "label": "Ray direction",
+      "vi": {
+        "label": "Chiều truyền của tia sáng"
+      },
+      "unit": "",
+      "default": 0,
+      "min": 0,
+      "max": 1,
+      "step": 1,
+      "presets": [
+        {
+          "label": "Air → block",
+          "vi": {
+            "label": "Không khí → khối"
+          },
+          "value": 0
+        },
+        {
+          "label": "Block → air",
+          "vi": {
+            "label": "Khối → không khí"
+          },
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "angle",
+      "label": "Angle of incidence",
+      "vi": {
+        "label": "Góc tới"
+      },
+      "symbol": "i",
+      "unit": "°",
+      "default": 20,
+      "min": 0,
+      "max": 85,
+      "step": 1,
+      "presets": [
+        {
+          "label": "20°",
+          "value": 20
+        },
+        {
+          "label": "40°",
+          "value": 40
+        },
+        {
+          "label": "60°",
+          "value": 60
+        },
+        {
+          "label": "80°",
+          "value": 80
+        }
+      ]
+    },
+    {
+      "id": "resolution",
+      "label": "Reading resolution",
+      "vi": {
+        "label": "Độ phân giải khi đọc góc"
+      },
+      "symbol": "d",
+      "unit": "°",
+      "default": 1,
+      "min": 0.5,
+      "max": 5,
+      "step": 0.5,
+      "presets": [
+        {
+          "label": "0.5°",
+          "value": 0.5
+        },
+        {
+          "label": "1°",
+          "value": 1
+        },
+        {
+          "label": "2°",
+          "value": 2
+        },
+        {
+          "label": "5°",
+          "value": 5
+        }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "sweepRate": 10
+  },
+  "inputs": {
+    "sweepRate": {
+      "symbol": "ω",
+      "unit": "°/s"
+    }
+  },
+  "simulation": {
+    "timeStep": 0.01,
+    "maxDuration": 12,
+    "sampleInterval": 0.05
+  },
+  "measurements": [
+    {
+      "id": "incidence",
+      "label": "Angle of incidence",
+      "vi": {
+        "label": "Góc tới"
+      },
+      "symbol": "i",
+      "unit": "°",
+      "variable": "incidenceDeg"
+    },
+    {
+      "id": "reflection",
+      "label": "Angle of reflection",
+      "vi": {
+        "label": "Góc phản xạ"
+      },
+      "symbol": "i′",
+      "unit": "°",
+      "variable": "reflectionDeg"
+    },
+    {
+      "id": "last-incidence",
+      "label": "Angle of incidence of the last refracted ray",
+      "vi": {
+        "label": "Góc tới của tia khúc xạ cuối cùng"
+      },
+      "symbol": "i_r",
+      "unit": "°",
+      "variable": "lastIncidenceDeg"
+    },
+    {
+      "id": "refraction",
+      "label": "Angle of refraction of the last refracted ray",
+      "vi": {
+        "label": "Góc khúc xạ của tia khúc xạ cuối cùng"
+      },
+      "symbol": "r",
+      "unit": "°",
+      "variable": "refractionDeg"
+    },
+    {
+      "id": "sin-block",
+      "label": "sin of the last refracted ray's angle in the block",
+      "vi": {
+        "label": "sin góc trong khối của tia khúc xạ cuối cùng"
+      },
+      "symbol": "sin θ_block",
+      "unit": "",
+      "variable": "sinBlock"
+    },
+    {
+      "id": "sin-air",
+      "label": "sin of the last refracted ray's angle in air",
+      "vi": {
+        "label": "sin góc trong không khí của tia khúc xạ cuối cùng"
+      },
+      "symbol": "sin θ_air",
+      "unit": "",
+      "variable": "sinAir"
+    },
+    {
+      "id": "reflectance",
+      "label": "Reflected fraction",
+      "vi": {
+        "label": "Phần ánh sáng phản xạ"
+      },
+      "symbol": "R",
+      "unit": "",
+      "variable": "reflectance"
+    },
+    {
+      "id": "tir",
+      "label": "Total internal reflection",
+      "vi": {
+        "label": "Phản xạ toàn phần"
+      },
+      "symbol": "TIR",
+      "unit": "",
+      "variable": "tir"
+    }
+  ],
+  "results": [
+    {
+      "id": "incidence",
+      "label": "Angle of incidence i",
+      "vi": {
+        "label": "Góc tới i"
+      },
+      "symbol": "i",
+      "unit": "°",
+      "variable": "incidenceDeg",
+      "reduce": "final",
+      "theory": "incidenceDeg"
+    },
+    {
+      "id": "reflection",
+      "label": "Angle of reflection i′",
+      "vi": {
+        "label": "Góc phản xạ i′"
+      },
+      "symbol": "i′",
+      "unit": "°",
+      "variable": "reflectionDeg",
+      "reduce": "final",
+      "theory": "reflectionDeg"
+    },
+    {
+      "id": "tir",
+      "label": "Total internal reflection",
+      "vi": {
+        "label": "Phản xạ toàn phần"
+      },
+      "symbol": "TIR",
+      "unit": "",
+      "variable": "tir",
+      "reduce": "final",
+      "theory": "tir",
+      "classes": [
+        {
+          "max": 0.5,
+          "label": "No",
+          "vi": {
+            "label": "Không"
+          }
+        },
+        {
+          "label": "Yes",
+          "vi": {
+            "label": "Có"
+          }
+        }
+      ]
+    },
+    {
+      "id": "last-incidence",
+      "label": "Angle of incidence of the last refracted ray",
+      "vi": {
+        "label": "Góc tới của tia khúc xạ cuối cùng"
+      },
+      "symbol": "i_r",
+      "unit": "°",
+      "variable": "lastIncidenceDeg",
+      "reduce": "final",
+      "theory": "lastIncidenceDeg"
+    },
+    {
+      "id": "refraction",
+      "label": "Angle of refraction r of the last refracted ray",
+      "vi": {
+        "label": "Góc khúc xạ r của tia khúc xạ cuối cùng"
+      },
+      "symbol": "r",
+      "unit": "°",
+      "variable": "refractionDeg",
+      "reduce": "final",
+      "theory": "refractionDeg"
+    },
+    {
+      "id": "sin-block",
+      "label": "sin of the last refracted ray's angle in the block",
+      "vi": {
+        "label": "sin góc trong khối của tia khúc xạ cuối cùng"
+      },
+      "symbol": "sin θ_block",
+      "unit": "",
+      "variable": "sinBlock",
+      "reduce": "final",
+      "theory": "sinBlock"
+    },
+    {
+      "id": "sin-air",
+      "label": "sin of the last refracted ray's angle in air",
+      "vi": {
+        "label": "sin góc trong không khí của tia khúc xạ cuối cùng"
+      },
+      "symbol": "sin θ_air",
+      "unit": "",
+      "variable": "sinAir",
+      "reduce": "final",
+      "theory": "sinAir"
+    },
+    {
+      "id": "reflectance",
+      "label": "Reflected fraction R (Fresnel)",
+      "vi": {
+        "label": "Phần ánh sáng phản xạ R (Fresnel)"
+      },
+      "symbol": "R",
+      "unit": "",
+      "variable": "reflectance",
+      "reduce": "final",
+      "theory": "reflectance"
+    }
+  ],
+  "graphs": [
+    {
+      "id": "refraction-incidence",
+      "title": "Angle of refraction against angle of incidence",
+      "vi": {
+        "title": "Góc khúc xạ theo góc tới"
+      },
+      "x": "last-incidence",
+      "y": ["refraction"],
+      "mark": "criticalAngleDeg"
+    },
+    {
+      "id": "reflectance-incidence",
+      "title": "Reflected fraction against angle of incidence",
+      "vi": {
+        "title": "Phần ánh sáng phản xạ theo góc tới"
+      },
+      "x": "incidence",
+      "y": ["reflectance"],
+      "mark": "criticalAngleDeg"
+    },
+    {
+      "id": "snell",
+      "title": "sin (air) against sin (block)",
+      "vi": {
+        "title": "sin (không khí) theo sin (khối)"
+      },
+      "x": "sin-block",
+      "y": ["sin-air"]
+    }
+  ],
+  "monitor": "refraction-incidence",
+  "compare": [
+    {
+      "graph": "refraction-incidence"
+    },
+    {
+      "graph": "reflectance-incidence"
+    },
+    {
+      "graph": "snell"
+    }
+  ],
+  "instruments": [
+    {
+      "result": "incidence",
+      "quantity": "Angle of incidence i",
+      "name": "Protractor disc",
+      "resolution": "resolution",
+      "excludes": "lining the ray up with the scale by eye, the width of the ray and where the block sits on the disc",
+      "vi": {
+        "quantity": "Góc tới i",
+        "name": "Đĩa chia độ",
+        "excludes": "việc dóng tia sáng với vạch chia bằng mắt, bề rộng của tia sáng và vị trí đặt khối trên đĩa"
+      }
+    },
+    {
+      "result": "reflection",
+      "quantity": "Angle of reflection i′",
+      "name": "Protractor disc",
+      "resolution": "resolution",
+      "excludes": "lining the ray up with the scale by eye, the width of the ray and where the block sits on the disc",
+      "vi": {
+        "quantity": "Góc phản xạ i′",
+        "name": "Đĩa chia độ",
+        "excludes": "việc dóng tia sáng với vạch chia bằng mắt, bề rộng của tia sáng và vị trí đặt khối trên đĩa"
+      }
+    },
+    {
+      "result": "refraction",
+      "quantity": "Angle of refraction r of the last refracted ray",
+      "name": "Protractor disc",
+      "resolution": "resolution",
+      "excludes": "lining the ray up with the scale by eye, the width and spreading of the ray, and where the block sits on the disc",
+      "vi": {
+        "quantity": "Góc khúc xạ r của tia khúc xạ cuối cùng",
+        "name": "Đĩa chia độ",
+        "excludes": "việc dóng tia sáng với vạch chia bằng mắt, bề rộng và độ loe của tia sáng, và vị trí đặt khối trên đĩa"
+      }
+    },
+    {
+      "result": "last-incidence",
+      "quantity": "Angle of incidence of the last refracted ray",
+      "name": "Protractor disc",
+      "resolution": "resolution",
+      "excludes": "judging by eye when the refracted ray vanishes: it fades gradually as it grazes the face",
+      "vi": {
+        "quantity": "Góc tới của tia khúc xạ cuối cùng",
+        "name": "Đĩa chia độ",
+        "excludes": "việc dùng mắt để xác định lúc tia khúc xạ biến mất: tia mờ dần khi đi sát mặt phân cách"
+      }
+    }
+  ],
+  "note": "A simplified teaching model of geometrical optics, not a lab-grade measurement. The ray meets the block's flat face at its centre, so inside the block it always travels along a radius and crosses the curved face undeviated: there is a single refracting boundary. Reflection: the angle of reflection i′ = i. Refraction: n₁·sin i = n₂·sin r, with n₁ = 1, n₂ = n entering the block and n₁ = n, n₂ = 1 leaving it. Leaving, the critical angle C has sin C = 1/n; for i > C there is no refracted ray and the light is totally reflected. The reflected fraction R is the Fresnel reflectance of unpolarised light, (Rs + Rp)/2; R = 1 under total internal reflection. Once the light is totally reflected, the refracted-ray values are those of the last refracted ray — the one grazing the face (r = 90°) at exactly the critical angle. Assumed: air's refractive index taken as 1 (it is 1.0003, a 0.03 % difference); one wavelength, no dispersion; clear, uniform, non-absorbing media; a smooth face; a ray with no width; the light reflected at the curved face is ignored. The materials' indices are typical values at 589 nm: water 1.33 (20 °C), acrylic 1.49, crown glass 1.52, flint glass 1.62. The simulated results carry no random error; a protractor reading accounts only for its resolution.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the refraction instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn thí nghiệm khúc xạ ánh sáng trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "refraction-instructions"
+      }
+    },
+    {
+      "id": "material",
+      "instruction": "Choose the block's material with the dial on the control desk.",
+      "vi": {
+        "instruction": "Chọn vật liệu của khối bằng núm xoay trên bàn điều khiển."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "index"
+      }
+    },
+    {
+      "id": "angle",
+      "instruction": "Set the angle of incidence i.",
+      "vi": {
+        "instruction": "Đặt góc tới i."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "angle"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the ray box turns from 0° to i. Watch the refracted ray bend.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: đèn chiếu xoay từ 0° đến i. Quan sát tia khúc xạ bị lệch."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Read i, i′ and r on the results monitor and compare them with Snell's law.",
+      "vi": {
+        "instruction": "Đọc i, i′ và r trên màn hình kết quả và so sánh với định luật khúc xạ."
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "direction",
+      "instruction": "Turn the ray to go from the block into the air and find the angle where the refracted ray disappears.",
+      "vi": {
+        "instruction": "Đổi chiều tia sáng để đi từ khối ra không khí và tìm góc tới mà tia khúc xạ biến mất."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "direction"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, change i, and run again.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, thay đổi i, rồi chạy lại."
+      },
+      "done": {
+        "kind": "reset"
+      }
+    }
+  ],
+  "analyses": [
+    {
+      "id": "snell",
+      "title": "sin of the angle in air against sin of the angle in the block (Snell's law)",
+      "note": "For every ray, sin (angle in air) = n·sin (angle in the block), whichever way the light travels: so runs into and out of the block lie on one straight line through the origin, whose slope is the refractive index n. Only runs with the same block are fitted together. A totally reflected run gives the last refracted ray, the grazing one at the critical angle (sin = 1/n in the block, 1 in air), which also lies on the line.",
+      "vi": {
+        "title": "sin góc trong không khí theo sin góc trong khối (định luật khúc xạ)",
+        "note": "Với mọi tia sáng, sin (góc trong không khí) = n·sin (góc trong khối), dù ánh sáng truyền theo chiều nào: nên các lần chạy đi vào và đi ra khỏi khối cùng nằm trên một đường thẳng qua gốc tọa độ, có hệ số góc bằng chiết suất n. Chỉ các lần chạy cùng một khối mới được khớp chung. Lần chạy bị phản xạ toàn phần cho tia khúc xạ cuối cùng, tia đi sát mặt phân cách tại góc giới hạn (sin = 1/n trong khối, bằng 1 trong không khí), điểm này cũng nằm trên đường thẳng."
+      },
+      "x": "sin-block",
+      "y": "sin-air",
+      "group": ["index"],
+      "columns": [
+        "direction",
+        "incidence",
+        "last-incidence",
+        "refraction",
+        "tir",
+        "sin-block",
+        "sin-air"
+      ],
+      "slope": {
+        "label": "Refractive index, the slope",
+        "vi": {
+          "label": "Chiết suất, bằng hệ số góc"
+        },
+        "symbol": "n",
+        "unit": "",
+        "theory": "index"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "into-glass",
+      "question": "A ray in air meets crown glass (n = {index}) at {angle}° to the normal. Find the angle of refraction.",
+      "vi": {
+        "question": "Một tia sáng truyền từ không khí tới thủy tinh crown (n = {index}) với góc tới {angle}°. Tìm góc khúc xạ."
+      },
+      "set": { "index": 1.52, "direction": 0, "angle": 40 },
+      "find": [{ "theory": "sinBlock" }, { "theory": "refractionDeg" }],
+      "steps": [
+        {
+          "say": "Snell’s law, with air’s index taken as 1.",
+          "vi": { "say": "Định luật khúc xạ, coi chiết suất không khí bằng 1." },
+          "write": "n₁·sin i = n₂·sin r  →  sin r = sin i/n"
+        },
+        {
+          "say": "Put in the numbers.",
+          "vi": { "say": "Thay số." },
+          "write": "sin r = sin {angle}°/{index} ≈ {@sinBlock}",
+          "check": { "expr": "sin(rad(angle))/index", "equals": "sinBlock" }
+        },
+        {
+          "say": "The ray bends towards the normal: r is smaller than i.",
+          "vi": { "say": "Tia khúc xạ lệch lại gần pháp tuyến: r nhỏ hơn i." },
+          "write": "r = arcsin {@sinBlock} ≈ {@refractionDeg}°",
+          "check": { "expr": "deg(asin(sin(rad(angle))/index))", "equals": "refractionDeg" }
+        }
+      ]
+    },
+    {
+      "id": "leaving-acrylic",
+      "question": "Inside acrylic (n = {index}) a ray meets the flat face at {angle}° and leaves into air. Find the critical angle, and the angle of refraction.",
+      "vi": {
+        "question": "Trong khối acrylic (n = {index}), một tia sáng tới mặt phẳng với góc tới {angle}° rồi ló ra không khí. Tìm góc giới hạn phản xạ toàn phần và góc khúc xạ."
+      },
+      "set": { "index": 1.49, "direction": 1, "angle": 40 },
+      "find": [
+        { "theory": "criticalAngleDeg", "symbol": "C", "unit": "°" },
+        { "theory": "refractionDeg" }
+      ],
+      "steps": [
+        {
+          "say": "Going from the denser medium into air, the refracted ray grazes the face (r = 90°) at the critical angle: sin C = 1/n.",
+          "vi": {
+            "say": "Khi truyền từ môi trường chiết quang hơn ra không khí, tia khúc xạ đi sát mặt phân cách (r = 90°) tại góc giới hạn: sin C = 1/n."
+          },
+          "write": "sin C = 1/n = 1/{index}  →  C ≈ {@criticalAngleDeg}°",
+          "check": { "expr": "deg(asin(1/index))", "equals": "criticalAngleDeg" }
+        },
+        {
+          "say": "{angle}° is less than C, so the light still gets out, bent away from the normal.",
+          "vi": { "say": "{angle}° nhỏ hơn C nên ánh sáng vẫn ló ra được, lệch xa pháp tuyến." },
+          "write": "sin r = n·sin i = {index}·sin {angle}°  →  r ≈ {@refractionDeg}°",
+          "check": { "expr": "deg(asin(index*sin(rad(angle))))", "equals": "refractionDeg" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "Light bends where it crosses from air into a transparent block and back (refraction); going out of the block too steeply, it cannot leave at all and is totally reflected.",
+    "vi": {
+      "summary": "Ánh sáng bị gãy khúc khi đi từ không khí vào một khối trong suốt và ngược lại (khúc xạ); khi đi ra khỏi khối với góc quá lớn, nó không ra được và bị phản xạ toàn phần."
+    },
+    "parts": [
+      {
+        "id": "ray-box",
+        "name": "Ray box",
+        "role": "Sends a narrow ray at the centre of the block’s flat face; a run turns it from 0° to the angle i.",
+        "vi": {
+          "name": "Hộp chiếu tia sáng",
+          "role": "Chiếu một tia sáng hẹp tới tâm mặt phẳng của khối; mỗi lần chạy, nó quay từ 0° tới góc i."
+        },
+        "anchor": {
+          "part": "ray-box"
+        }
+      },
+      {
+        "id": "slit",
+        "name": "Slit",
+        "role": "Lets out a narrow ray; it lights while the run is on.",
+        "vi": {
+          "name": "Khe sáng",
+          "role": "Cho một tia sáng hẹp đi ra; sáng lên trong khi chạy."
+        },
+        "anchor": {
+          "part": "slit"
+        }
+      },
+      {
+        "id": "block",
+        "name": "Semicircular block, index n",
+        "role": "Water, acrylic or glass. The ray meets its flat face at the centre, so inside it always runs along a radius.",
+        "vi": {
+          "name": "Khối bán trụ, chiết suất n",
+          "role": "Nước, nhựa acrylic hoặc thủy tinh. Tia sáng tới tâm mặt phẳng của khối, nên bên trong nó luôn đi theo một bán kính."
+        },
+        "anchor": {
+          "part": "block"
+        }
+      },
+      {
+        "id": "disc",
+        "name": "Protractor disc",
+        "role": "Reads the angles of the rays from the normal.",
+        "vi": {
+          "name": "Đĩa chia độ",
+          "role": "Đọc góc của các tia sáng so với pháp tuyến."
+        },
+        "anchor": {
+          "part": "disc"
+        }
+      },
+      {
+        "id": "normal",
+        "name": "Normal (0° line)",
+        "role": "The line at right angles to the flat face, through its centre; every angle is measured from it.",
+        "vi": {
+          "name": "Pháp tuyến (đường 0°)",
+          "role": "Đường vuông góc với mặt phẳng của khối, đi qua tâm; mọi góc đều đo từ nó."
+        },
+        "anchor": {
+          "at": [0.115, -0.0165, 0]
+        }
+      },
+      {
+        "id": "incident",
+        "name": "Incident ray",
+        "role": "The ray from the ray box, arriving at the block’s face.",
+        "vi": {
+          "name": "Tia tới",
+          "role": "Tia sáng từ hộp chiếu tia, tới mặt khối."
+        },
+        "anchor": {
+          "part": "incident"
+        }
+      },
+      {
+        "id": "reflected",
+        "name": "Reflected ray",
+        "role": "The part bounced back at the face: angle i′ = i.",
+        "vi": {
+          "name": "Tia phản xạ",
+          "role": "Phần ánh sáng bị hắt lại ở mặt khối: góc i′ = i."
+        },
+        "anchor": {
+          "part": "reflected"
+        }
+      },
+      {
+        "id": "refracted",
+        "name": "Refracted ray",
+        "role": "The part that crosses into the block, bent at angle r.",
+        "vi": {
+          "name": "Tia khúc xạ",
+          "role": "Phần đi vào khối, bị lệch hướng với góc r."
+        },
+        "anchor": {
+          "part": "refracted"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "The ray box sends a narrow ray to the centre of the block’s flat face, at the angle of incidence i from the normal.",
+        "vi": {
+          "text": "Hộp chiếu tia sáng chiếu một tia hẹp tới tâm mặt phẳng của khối, với góc tới i so với pháp tuyến."
+        },
+        "parts": ["ray-box", "slit", "block", "normal", "incident"]
+      },
+      {
+        "text": "Part of the light is reflected at the face: the angle of reflection i′ equals i.",
+        "vi": {
+          "text": "Một phần ánh sáng bị phản xạ tại mặt phân cách: góc phản xạ i′ bằng i."
+        },
+        "parts": ["block", "disc", "reflected"]
+      },
+      {
+        "text": "The rest crosses into the block and bends towards the normal, because light is slower in it. Snell’s law: n₁·sin i = n₂·sin r. Inside, the ray runs along a radius and leaves the curved face without bending.",
+        "vi": {
+          "text": "Phần còn lại đi vào khối và bị lệch về phía pháp tuyến, vì ánh sáng truyền chậm hơn trong khối. Định luật khúc xạ: n₁·sin i = n₂·sin r. Bên trong, tia sáng đi theo một bán kính và ra khỏi mặt cong mà không bị lệch."
+        },
+        "parts": ["block", "normal", "disc", "refracted"]
+      },
+      {
+        "text": "Turn the ray round to go from the block into the air: it bends away from the normal. Beyond the critical angle C, with sin C = 1/n, no ray leaves at all — the light is totally reflected.",
+        "vi": {
+          "text": "Đổi chiều tia sáng để đi từ khối ra không khí: nó bị lệch ra xa pháp tuyến. Khi góc tới vượt quá góc giới hạn C, với sin C = 1/n, không có tia nào ló ra — ánh sáng bị phản xạ toàn phần."
+        },
+        "parts": ["ray-box", "block"]
+      },
+      {
+        "text": "A higher index n bends the ray more and has a smaller critical angle. Choose the material and compare.",
+        "vi": {
+          "text": "Chiết suất n càng lớn thì tia sáng bị lệch càng nhiều và góc giới hạn càng nhỏ. Chọn vật liệu và so sánh."
+        },
+        "parts": ["block"]
+      },
+      {
+        "text": "The results give i, i′, r and the reflected fraction R; a protractor reading accounts only for its resolution d. Over several runs, sin of the angle in air against sin of the angle in the block is a straight line whose slope is n.",
+        "vi": {
+          "text": "Phần kết quả cho i, i′, r và tỉ lệ ánh sáng phản xạ R; số đọc trên thước đo góc chỉ tính tới độ phân giải d của nó. Qua nhiều lần chạy, sin góc trong không khí theo sin góc trong khối là đường thẳng có hệ số góc n."
+        },
+        "parts": ["disc"]
+      }
+    ]
+  }
+}

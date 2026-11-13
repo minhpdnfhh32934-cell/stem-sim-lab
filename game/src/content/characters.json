@@ -1,0 +1,364 @@
+[
+  {
+    "id": "researcher-male",
+    "displayName": "Khoa",
+    "role": "Physicist",
+    "trait": "Calm and methodical: checks every number twice before he believes it.",
+    "vi": {
+      "displayName": "Khoa",
+      "role": "Nhà vật lý",
+      "trait": "Điềm tĩnh và cẩn thận: kiểm tra mọi con số hai lần rồi mới tin."
+    },
+    "gender": "male",
+    "appearance": {
+      "heightM": 1.75,
+      "skinTone": "#e0b899",
+      "hairColor": "#1b1a1f",
+      "shoulderM": 0.44,
+      "hipM": 0.34,
+      "waistM": 0.33,
+      "build": 1.05,
+      "muscle": 0.35,
+      "watch": true,
+      "hair": "spiky",
+      "eyeColor": "#3b2a1e",
+      "clothes": {
+        "top": "#f2f3f4",
+        "bottom": "#3f5f8f",
+        "shoes": "#1f2228",
+        "accent": "#e6c46a",
+        "neck": "crew",
+        "skirt": false,
+        "jacket": "zip",
+        "jacketColour": "#1b1d22",
+        "jacketTrim": "#e6c22e",
+        "footwear": "sneakers"
+      },
+      "glasses": "shades"
+    },
+    "outfit": { "default": "lab-coat" },
+    "profile": {
+      "pose": "arms-crossed",
+      "seat": 6,
+      "coat": false
+    }
+  },
+  {
+    "id": "researcher-female",
+    "displayName": "Lan",
+    "role": "Chemist",
+    "trait": "Warm and cheerful: knows everyone's name and everyone's experiment.",
+    "vi": {
+      "displayName": "Lan",
+      "role": "Nhà hóa học",
+      "trait": "Ấm áp và vui vẻ: biết tên mọi người và cả thí nghiệm của từng người."
+    },
+    "gender": "female",
+    "appearance": {
+      "heightM": 1.65,
+      "skinTone": "#ecc4a4",
+      "hairColor": "#3a6fd8",
+      "shoulderM": 0.36,
+      "hipM": 0.37,
+      "waistM": 0.27,
+      "bustM": 0.025,
+      "build": 0.95,
+      "earrings": true,
+      "hair": "bob",
+      "eyeColor": "#7b4b35",
+      "lashes": true,
+      "blush": true,
+      "clothes": {
+        "top": "#2e8a5e",
+        "bottom": "#2a2a30",
+        "shoes": "#2e8a5e",
+        "accent": "#1b1d22",
+        "neck": "crew",
+        "skirt": true,
+        "footwear": "heels"
+      }
+    },
+    "outfit": { "default": "lab-coat" },
+    "profile": {
+      "pose": "wave",
+      "seat": 2,
+      "coat": true
+    }
+  },
+  {
+    "id": "intern-minh",
+    "displayName": "Minh",
+    "role": "Physics intern",
+    "trait": "Full of energy: asks a question before you finish yours.",
+    "vi": {
+      "displayName": "Minh",
+      "role": "Thực tập sinh vật lý",
+      "trait": "Tràn đầy năng lượng: hỏi lại trước khi bạn kịp hỏi xong."
+    },
+    "gender": "male",
+    "appearance": {
+      "heightM": 1.66,
+      "skinTone": "#d9a982",
+      "hairColor": "#e6c46a",
+      "shoulderM": 0.4,
+      "hipM": 0.32,
+      "waistM": 0.3,
+      "build": 0.95,
+      "hair": "spiky",
+      "eyeColor": "#2e2118",
+      "clothes": {
+        "top": "#f07f2a",
+        "bottom": "#1f2228",
+        "shoes": "#f07f2a",
+        "accent": "#f6f2ea",
+        "neck": "hood",
+        "skirt": false,
+        "logo": true,
+        "legs": "joggers",
+        "footwear": "sneakers",
+        "gloves": "fingerless"
+      }
+    },
+    "outfit": { "default": "lab-coat" },
+    "profile": {
+      "pose": "thumbs-up",
+      "seat": 4,
+      "coat": false
+    }
+  },
+  {
+    "id": "intern-vy",
+    "displayName": "Vy",
+    "role": "Biology intern",
+    "trait": "Quiet and careful: her notebook has an answer for most things.",
+    "vi": {
+      "displayName": "Vy",
+      "role": "Thực tập sinh sinh học",
+      "trait": "Ít nói và chu đáo: cuốn sổ của cô có câu trả lời cho hầu hết mọi chuyện."
+    },
+    "gender": "female",
+    "appearance": {
+      "heightM": 1.52,
+      "skinTone": "#f1cdb0",
+      "hairColor": "#1b1a1f",
+      "shoulderM": 0.34,
+      "hipM": 0.35,
+      "waistM": 0.26,
+      "bustM": 0.02,
+      "build": 0.9,
+      "hair": "long",
+      "eyeColor": "#3a2a22",
+      "lashes": true,
+      "blush": true,
+      "glasses": "round",
+      "clothes": {
+        "top": "#16171b",
+        "bottom": "#1f2026",
+        "shoes": "#16171b",
+        "accent": "#8a5cc7",
+        "neck": "collar",
+        "skirt": true,
+        "sleeves": "none",
+        "gloves": "long",
+        "footwear": "kneeBoots",
+        "choker": true
+      }
+    },
+    "outfit": { "default": "lab-coat" },
+    "profile": {
+      "pose": "notes",
+      "seat": 1,
+      "coat": false
+    }
+  },
+  {
+    "id": "technician-huy",
+    "displayName": "Huy",
+    "role": "Lab technician",
+    "trait": "Practical and steady: if it is broken, he has already fixed it.",
+    "vi": {
+      "displayName": "Huy",
+      "role": "Kỹ thuật viên phòng thí nghiệm",
+      "trait": "Thực tế và vững vàng: cái gì hỏng thì anh đã sửa xong rồi."
+    },
+    "gender": "male",
+    "appearance": {
+      "heightM": 1.83,
+      "skinTone": "#c98f68",
+      "hairColor": "#c0392b",
+      "shoulderM": 0.52,
+      "hipM": 0.37,
+      "waistM": 0.35,
+      "build": 1.25,
+      "muscle": 1,
+      "watch": true,
+      "hair": "short",
+      "eyeColor": "#2b2420",
+      "beard": true,
+      "clothes": {
+        "top": "#5a1f22",
+        "bottom": "#1f2228",
+        "shoes": "#16171b",
+        "accent": "#c0392b",
+        "neck": "crew",
+        "skirt": false,
+        "sleeves": "none",
+        "jacket": "vest",
+        "jacketColour": "#24272d",
+        "jacketTrim": "#4b5059",
+        "legs": "cargo",
+        "footwear": "boots",
+        "gloves": "fingerless",
+        "bandage": true,
+        "ripped": true
+      }
+    },
+    "outfit": { "default": "lab-coat" },
+    "profile": {
+      "pose": "hands-on-hips",
+      "seat": 0,
+      "coat": false
+    }
+  },
+  {
+    "id": "biologist-mai",
+    "displayName": "Mai",
+    "role": "Senior biologist",
+    "trait": "Confident and clear: leads the project and listens before she decides.",
+    "vi": {
+      "displayName": "Mai",
+      "role": "Nhà sinh học chính",
+      "trait": "Tự tin và rõ ràng: dẫn dắt dự án, lắng nghe rồi mới quyết định."
+    },
+    "gender": "female",
+    "appearance": {
+      "heightM": 1.7,
+      "skinTone": "#e2b48f",
+      "hairColor": "#7b4bb7",
+      "shoulderM": 0.37,
+      "hipM": 0.41,
+      "waistM": 0.25,
+      "bustM": 0.045,
+      "watch": true,
+      "earrings": true,
+      "hair": "bob",
+      "eyeColor": "#5a3a28",
+      "lashes": true,
+      "glasses": "square",
+      "clothes": {
+        "top": "#f4f5f6",
+        "bottom": "#26315a",
+        "shoes": "#4a2e22",
+        "accent": "#c0392b",
+        "neck": "bow",
+        "skirt": false,
+        "jacket": "sweaterVest",
+        "jacketColour": "#6b2433",
+        "jacketTrim": "#6b2433",
+        "legs": "pleated",
+        "legwear": "tights",
+        "legwearColour": "#1b1c22",
+        "footwear": "loafers"
+      }
+    },
+    "outfit": { "default": "lab-coat" },
+    "profile": {
+      "pose": "presenting",
+      "seat": 3,
+      "coat": true
+    }
+  },
+  {
+    "id": "scientist-tuan",
+    "displayName": "Tuấn",
+    "role": "Computational scientist",
+    "trait": "Thoughtful and dry-humoured: happiest when the simulation agrees with the lab.",
+    "vi": {
+      "displayName": "Tuấn",
+      "role": "Nhà khoa học tính toán",
+      "trait": "Trầm tư và hài hước kiểu khô khan: vui nhất khi mô phỏng khớp với thí nghiệm."
+    },
+    "gender": "male",
+    "appearance": {
+      "heightM": 1.86,
+      "skinTone": "#edc9a8",
+      "hairColor": "#4b3a8f",
+      "shoulderM": 0.41,
+      "hipM": 0.32,
+      "waistM": 0.29,
+      "build": 0.8,
+      "watch": true,
+      "hair": "curly",
+      "eyeColor": "#241a14",
+      "glasses": "square",
+      "clothes": {
+        "top": "#6a4bc4",
+        "bottom": "#4b3a8f",
+        "shoes": "#7b4bb7",
+        "accent": "#37b77f",
+        "neck": "hood",
+        "skirt": false,
+        "blocks": true,
+        "legs": "joggers",
+        "footwear": "sneakers"
+      }
+    },
+    "outfit": { "default": "lab-coat" },
+    "profile": {
+      "pose": "thinking",
+      "seat": 7,
+      "coat": false
+    }
+  },
+  {
+    "id": "intern-linh",
+    "displayName": "Linh",
+    "role": "Chemistry intern",
+    "trait": "Playful and bold: turns every break into a small adventure.",
+    "vi": {
+      "displayName": "Linh",
+      "role": "Thực tập sinh hóa học",
+      "trait": "Tinh nghịch và mạnh dạn: biến mỗi giờ giải lao thành một chuyến phiêu lưu nhỏ."
+    },
+    "gender": "female",
+    "appearance": {
+      "heightM": 1.6,
+      "skinTone": "#e8bf9c",
+      "hairColor": "#e86a9a",
+      "shoulderM": 0.345,
+      "hipM": 0.378,
+      "waistM": 0.224,
+      "bustM": 0.04,
+      "earrings": true,
+      "hair": "ponytail",
+      "eyeColor": "#4b3122",
+      "lashes": true,
+      "blush": false,
+      "clothes": {
+        "top": "#1b1d22",
+        "bottom": "#1b1d22",
+        "shoes": "#16171b",
+        "accent": "#c9cdd4",
+        "neck": "crew",
+        "skirt": false,
+        "sleeves": "none",
+        "crop": true,
+        "jacket": "cropped",
+        "jacketColour": "#a3242b",
+        "jacketTrim": "#c9cdd4",
+        "legs": "shorts",
+        "footwear": "thighBoots",
+        "gloves": "fingerless",
+        "choker": true
+      },
+      "allure": true,
+      "build": 0.94
+    },
+    "outfit": { "default": "lab-coat" },
+    "profile": {
+      "pose": "peace",
+      "seat": 5,
+      "coat": false
+    }
+  }
+]

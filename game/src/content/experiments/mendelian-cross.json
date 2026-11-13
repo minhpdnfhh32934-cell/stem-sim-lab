@@ -1,0 +1,551 @@
+{
+  "id": "mendelian-cross",
+  "name": "Mendel's laws: a dihybrid cross in peas",
+  "category": "biology",
+  "description": "Two pea plants are crossed, each with its genotype for two genes: seed colour (yellow Y over green y) and seed shape (round R over wrinkled r). Their offspring are the seeds in the pods. Choose the two parents, the number of seeds and which sample of pods to shell, then count the seeds one by one into four dishes: yellow round, yellow wrinkled, green round and green wrinkled. Compare the counts with the ratio Mendel's laws predict — 9 : 3 : 3 : 1 for YyRr × YyRr, 1 : 1 : 1 : 1 for the test cross with yyrr — and judge the difference with the χ² test.",
+  "vi": {
+    "name": "Các quy luật Menđen: phép lai hai cặp tính trạng ở đậu Hà Lan",
+    "description": "Hai cây đậu Hà Lan được lai với nhau, mỗi cây có kiểu gene về hai gene: màu hạt (vàng Y trội so với xanh y) và hình dạng hạt (trơn R trội so với nhăn r). Đời con của chúng là các hạt trong quả. Chọn hai cây bố mẹ, số hạt và mẫu quả để bóc, rồi đếm từng hạt vào bốn đĩa: vàng trơn, vàng nhăn, xanh trơn và xanh nhăn. So sánh số đếm với tỉ lệ mà các quy luật Menđen dự đoán — 9 : 3 : 3 : 1 với YyRr × YyRr, 1 : 1 : 1 : 1 với phép lai phân tích với yyrr — và đánh giá sai khác bằng phép thử χ².",
+    "note": "Mỗi cây bố mẹ truyền cho mỗi hạt một allele của mỗi gene; allele trội được truyền với xác suất bằng (số allele trội của cây)/2, tức 1, ½ hoặc 0 (quy luật phân li), và hai gene phân li độc lập với nhau (quy luật phân li độc lập: gene màu hạt I và gene hình dạng hạt R nằm trên hai nhiễm sắc thể khác nhau). Vì vậy P(vàng) = 1 − (1 − Y₁/2)(1 − Y₂/2), tương tự với hạt trơn, và mỗi kiểu hình có xác suất bằng tích xác suất của hai tính trạng. Giả thiết: mọi giao tử và hạt có sức sống như nhau, thụ tinh ngẫu nhiên, không có đột biến, không có liên kết gene, và mỗi hạt được phân loại đúng. Mỗi hạt lấy bốn lựa chọn khi giảm phân từ các bit ngẫu nhiên công bằng của một bộ sinh số có hạt giống (seed) — không phải Math.random — nên cùng một mẫu luôn cho cùng các hạt; số đếm dao động quanh N·p như một mẫu đa thức thật. Phép thử χ² của Pearson so sánh số đếm với tỉ lệ lý thuyết trên các lớp có thể xuất hiện: χ² = Σ (O − E)²/E, bậc tự do ν = số lớp − 1, p = Q(χ² | ν) tính bằng công thức đóng (Abramowitz & Stegun 26.4.4–5). Phép thử chỉ là gần đúng và cần mọi số đếm kỳ vọng E ≥ 5. Giả thuyết ở đây chính là tỉ lệ của mô hình, nên p ≤ 0,05 là một sự kiện ngẫu nhiên: khoảng 1 mẫu trong 20. Để so sánh: Menđen (1866) đếm 556 hạt F2 được 315 vàng trơn, 101 vàng nhăn, 108 xanh trơn và 32 xanh nhăn (χ² ≈ 0,47, p ≈ 0,93). Thời gian chỉ để nhịp việc đếm: mọi hạt được đếm trong 10 giây. Số hạt đếm được là số nguyên chính xác, không có dụng cụ đo và không có sai số đọc. Trong thực tế, một số hạt bị hỏng hoặc khó xếp loại (màu trung gian), và hạt hơi xanh có thể bị nhầm với hạt vàng."
+  },
+  "requiredEquipment": ["seed-tray"],
+  "model": "biology.genetics",
+  "parameters": [
+    {
+      "id": "parent1",
+      "label": "First parent's genotype",
+      "vi": { "label": "Kiểu gene của cây bố mẹ thứ nhất" },
+      "unit": "",
+      "default": 11,
+      "min": 0,
+      "max": 22,
+      "presets": [
+        { "label": "yyrr (green, wrinkled)", "vi": { "label": "yyrr (xanh, nhăn)" }, "value": 0 },
+        { "label": "yyRr (green, round)", "vi": { "label": "yyRr (xanh, trơn)" }, "value": 1 },
+        { "label": "yyRR (green, round)", "vi": { "label": "yyRR (xanh, trơn)" }, "value": 2 },
+        { "label": "Yyrr (yellow, wrinkled)", "vi": { "label": "Yyrr (vàng, nhăn)" }, "value": 10 },
+        { "label": "YyRr (yellow, round)", "vi": { "label": "YyRr (vàng, trơn)" }, "value": 11 },
+        { "label": "YYrr (yellow, wrinkled)", "vi": { "label": "YYrr (vàng, nhăn)" }, "value": 20 },
+        { "label": "YYRR (yellow, round)", "vi": { "label": "YYRR (vàng, trơn)" }, "value": 22 }
+      ]
+    },
+    {
+      "id": "parent2",
+      "label": "Second parent's genotype",
+      "vi": { "label": "Kiểu gene của cây bố mẹ thứ hai" },
+      "unit": "",
+      "default": 11,
+      "min": 0,
+      "max": 22,
+      "presets": [
+        { "label": "yyrr (green, wrinkled)", "vi": { "label": "yyrr (xanh, nhăn)" }, "value": 0 },
+        { "label": "yyRr (green, round)", "vi": { "label": "yyRr (xanh, trơn)" }, "value": 1 },
+        { "label": "yyRR (green, round)", "vi": { "label": "yyRR (xanh, trơn)" }, "value": 2 },
+        { "label": "Yyrr (yellow, wrinkled)", "vi": { "label": "Yyrr (vàng, nhăn)" }, "value": 10 },
+        { "label": "YyRr (yellow, round)", "vi": { "label": "YyRr (vàng, trơn)" }, "value": 11 },
+        { "label": "YYrr (yellow, wrinkled)", "vi": { "label": "YYrr (vàng, nhăn)" }, "value": 20 },
+        { "label": "YYRR (yellow, round)", "vi": { "label": "YYRR (vàng, trơn)" }, "value": 22 }
+      ]
+    },
+    {
+      "id": "offspring",
+      "label": "Seeds counted",
+      "vi": { "label": "Số hạt đếm" },
+      "symbol": "N",
+      "unit": "",
+      "default": 556,
+      "min": 16,
+      "max": 1000,
+      "presets": [
+        { "label": "16", "vi": { "label": "16" }, "value": 16 },
+        { "label": "100", "vi": { "label": "100" }, "value": 100 },
+        {
+          "label": "556 (as Mendel's F2)",
+          "vi": { "label": "556 (như F2 của Menđen)" },
+          "value": 556
+        },
+        { "label": "1000", "vi": { "label": "1000" }, "value": 1000 }
+      ]
+    },
+    {
+      "id": "sample",
+      "label": "Sample of pods",
+      "vi": { "label": "Mẫu quả" },
+      "symbol": "s",
+      "unit": "",
+      "default": 1,
+      "min": 1,
+      "max": 5,
+      "presets": [
+        { "label": "Sample 1", "vi": { "label": "Mẫu 1" }, "value": 1 },
+        { "label": "Sample 2", "vi": { "label": "Mẫu 2" }, "value": 2 },
+        { "label": "Sample 3", "vi": { "label": "Mẫu 3" }, "value": 3 },
+        { "label": "Sample 4", "vi": { "label": "Mẫu 4" }, "value": 4 },
+        { "label": "Sample 5", "vi": { "label": "Mẫu 5" }, "value": 5 }
+      ]
+    }
+  ],
+  "initialConditions": { "countTime": 10 },
+  "inputs": { "countTime": { "symbol": "t", "unit": "s", "desk": false } },
+  "simulation": { "timeStep": 0.02, "maxDuration": 12, "sampleInterval": 0.1 },
+  "measurements": [
+    {
+      "id": "counted",
+      "label": "Seeds counted so far",
+      "vi": { "label": "Số hạt đã đếm" },
+      "symbol": "n",
+      "unit": "",
+      "variable": "counted"
+    },
+    {
+      "id": "yellowRound",
+      "label": "Yellow, round",
+      "vi": { "label": "Vàng, trơn" },
+      "symbol": "YR",
+      "unit": "",
+      "variable": "yellowRound"
+    },
+    {
+      "id": "yellowWrinkled",
+      "label": "Yellow, wrinkled",
+      "vi": { "label": "Vàng, nhăn" },
+      "symbol": "Yr",
+      "unit": "",
+      "variable": "yellowWrinkled"
+    },
+    {
+      "id": "greenRound",
+      "label": "Green, round",
+      "vi": { "label": "Xanh, trơn" },
+      "symbol": "yR",
+      "unit": "",
+      "variable": "greenRound"
+    },
+    {
+      "id": "greenWrinkled",
+      "label": "Green, wrinkled",
+      "vi": { "label": "Xanh, nhăn" },
+      "symbol": "yr",
+      "unit": "",
+      "variable": "greenWrinkled"
+    },
+    {
+      "id": "yellowShare",
+      "label": "Share of yellow seeds",
+      "vi": { "label": "Tỉ lệ hạt vàng" },
+      "symbol": "f_Y",
+      "unit": "",
+      "variable": "yellowProportion"
+    }
+  ],
+  "results": [
+    {
+      "id": "yellowRound",
+      "label": "Yellow, round seeds",
+      "vi": { "label": "Hạt vàng, trơn" },
+      "symbol": "YR",
+      "unit": "",
+      "variable": "yellowRound",
+      "reduce": "final",
+      "format": "integer",
+      "theory": "expectedYellowRound"
+    },
+    {
+      "id": "yellowWrinkled",
+      "label": "Yellow, wrinkled seeds",
+      "vi": { "label": "Hạt vàng, nhăn" },
+      "symbol": "Yr",
+      "unit": "",
+      "variable": "yellowWrinkled",
+      "reduce": "final",
+      "format": "integer",
+      "theory": "expectedYellowWrinkled"
+    },
+    {
+      "id": "greenRound",
+      "label": "Green, round seeds",
+      "vi": { "label": "Hạt xanh, trơn" },
+      "symbol": "yR",
+      "unit": "",
+      "variable": "greenRound",
+      "reduce": "final",
+      "format": "integer",
+      "theory": "expectedGreenRound"
+    },
+    {
+      "id": "greenWrinkled",
+      "label": "Green, wrinkled seeds",
+      "vi": { "label": "Hạt xanh, nhăn" },
+      "symbol": "yr",
+      "unit": "",
+      "variable": "greenWrinkled",
+      "reduce": "final",
+      "format": "integer",
+      "theory": "expectedGreenWrinkled"
+    },
+    {
+      "id": "yellow",
+      "label": "Yellow seeds",
+      "vi": { "label": "Hạt vàng" },
+      "symbol": "Y",
+      "unit": "",
+      "variable": "yellow",
+      "reduce": "final",
+      "format": "integer",
+      "theory": "expectedYellow"
+    },
+    {
+      "id": "yellowShare",
+      "label": "Share of yellow seeds",
+      "vi": { "label": "Tỉ lệ hạt vàng" },
+      "symbol": "f_Y",
+      "unit": "",
+      "variable": "yellowProportion",
+      "reduce": "final",
+      "theory": "probabilityYellow"
+    },
+    {
+      "id": "roundShare",
+      "label": "Share of round seeds",
+      "vi": { "label": "Tỉ lệ hạt trơn" },
+      "symbol": "f_R",
+      "unit": "",
+      "variable": "roundProportion",
+      "reduce": "final",
+      "theory": "probabilityRound"
+    },
+    {
+      "id": "chiSquare",
+      "label": "χ² against the expected ratio",
+      "vi": { "label": "χ² so với tỉ lệ lý thuyết" },
+      "symbol": "χ²",
+      "unit": "",
+      "variable": "chiSquare",
+      "reduce": "final"
+    },
+    {
+      "id": "degreesOfFreedom",
+      "label": "Degrees of freedom",
+      "vi": { "label": "Bậc tự do" },
+      "symbol": "ν",
+      "unit": "",
+      "variable": "degreesOfFreedom",
+      "reduce": "final",
+      "format": "integer",
+      "theory": "degreesOfFreedom"
+    },
+    {
+      "id": "pValue",
+      "label": "Probability of a χ² this large by chance",
+      "vi": { "label": "Xác suất có χ² lớn như vậy do ngẫu nhiên" },
+      "symbol": "p",
+      "unit": "",
+      "variable": "pValue",
+      "reduce": "final",
+      "classes": [
+        {
+          "max": 0.05,
+          "label": "Differs from the ratio at the 5 % level",
+          "vi": { "label": "Sai khác với tỉ lệ ở mức ý nghĩa 5 %" }
+        },
+        {
+          "label": "Consistent with the ratio at the 5 % level",
+          "vi": { "label": "Phù hợp với tỉ lệ ở mức ý nghĩa 5 %" }
+        }
+      ]
+    },
+    {
+      "id": "smallestExpected",
+      "label": "Smallest expected count (the χ² test needs at least 5)",
+      "vi": { "label": "Số đếm kỳ vọng nhỏ nhất (phép thử χ² cần ít nhất 5)" },
+      "symbol": "E_min",
+      "unit": "",
+      "variable": "smallestExpected",
+      "reduce": "final",
+      "theory": "smallestExpected"
+    }
+  ],
+  "graphs": [
+    {
+      "id": "counts",
+      "title": "Seeds in each dish against seeds counted",
+      "vi": { "title": "Số hạt trong mỗi đĩa theo số hạt đã đếm" },
+      "x": "counted",
+      "y": ["yellowRound", "yellowWrinkled", "greenRound", "greenWrinkled"],
+      "yLabel": "count"
+    },
+    {
+      "id": "yellow-share",
+      "title": "Share of yellow seeds against seeds counted",
+      "vi": { "title": "Tỉ lệ hạt vàng theo số hạt đã đếm" },
+      "x": "counted",
+      "y": ["yellowShare"]
+    }
+  ],
+  "monitor": "counts",
+  "compare": [{ "graph": "yellow-share" }],
+  "analyses": [
+    {
+      "id": "yellow-seeds",
+      "title": "Yellow seeds against seeds counted (slope P(yellow))",
+      "note": "Each run is one point: the yellow seeds against the seeds counted N. Runs with the same two parents are fitted together, with different N or samples. The expected number is N·P(yellow), a straight line through the origin whose slope is the probability: 3/4 for Yy × Yy, 1/2 for Yy × yy, 1 when a parent is YY. The counts scatter about the line, less in proportion the more seeds are counted.",
+      "vi": {
+        "title": "Số hạt vàng theo số hạt đã đếm (hệ số góc P(vàng))",
+        "note": "Mỗi lần chạy là một điểm: số hạt vàng theo số hạt đã đếm N. Các lần chạy cùng hai cây bố mẹ được khớp chung, với N hoặc mẫu khác nhau. Số kỳ vọng là N·P(vàng), một đường thẳng đi qua gốc tọa độ có hệ số góc bằng xác suất: 3/4 với Yy × Yy, 1/2 với Yy × yy, 1 khi một cây bố mẹ là YY. Số đếm phân tán quanh đường thẳng, càng đếm nhiều hạt thì sai lệch tương đối càng nhỏ."
+      },
+      "x": "offspring",
+      "y": "yellow",
+      "group": ["parent1", "parent2"],
+      "columns": ["parent1", "parent2", "offspring", "sample", "yellow", "yellowShare"],
+      "slope": {
+        "label": "Slope of yellow seeds against N (P(yellow))",
+        "vi": { "label": "Hệ số góc của số hạt vàng theo N (P(vàng))" },
+        "symbol": "P(Y)",
+        "unit": "",
+        "theory": "probabilityYellow"
+      }
+    }
+  ],
+  "note": "Each parent passes each seed one allele of each gene, the dominant one with probability (its dominant alleles)/2 — 1, ½ or 0 (the law of segregation) — and the two genes independently of each other (the law of independent assortment: the seed-colour gene I and the seed-shape gene R lie on different chromosomes). So P(yellow) = 1 − (1 − Y₁/2)(1 − Y₂/2), the same for round, and each phenotype's probability is the product of its two traits'. Assumed: every gamete and seed equally viable, random fertilisation, no mutation, no linkage, every seed scored correctly. Each seed takes its four meiosis choices from fair bits of a seeded generator — never Math.random — so one sample always gives the same seeds; the counts scatter about N·p as a real multinomial sample does. Pearson's χ² compares the counts with the expected ratio over the classes that can occur: χ² = Σ (O − E)²/E, ν = classes − 1 degrees of freedom, p = Q(χ² | ν) in closed form (Abramowitz & Stegun 26.4.4–5). The test is an approximation that needs every expected count E ≥ 5. The hypothesis here is the model's own ratio, so p ≤ 0.05 is a chance event: about 1 sample in 20. For comparison, Mendel (1866) counted 556 F2 seeds: 315 yellow round, 101 yellow wrinkled, 108 green round and 32 green wrinkled (χ² ≈ 0.47, p ≈ 0.93). Time only paces the count: all the seeds are counted in 10 seconds. The counts are exact whole numbers, with no instrument and no reading error. In reality some seeds are damaged or hard to score (an in-between colour), and a pale green seed can be taken for a yellow one.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the pea cross instructions on the board.",
+      "vi": { "instruction": "Đọc hướng dẫn thí nghiệm lai đậu Hà Lan trên bảng." },
+      "done": { "kind": "inspected", "item": "pea-cross-instructions" }
+    },
+    {
+      "id": "parent1",
+      "instruction": "Choose the first parent's genotype with its dial on the control desk.",
+      "vi": {
+        "instruction": "Chọn kiểu gene của cây bố mẹ thứ nhất bằng núm xoay trên bàn điều khiển."
+      },
+      "done": { "kind": "adjusted", "parameter": "parent1" }
+    },
+    {
+      "id": "parent2",
+      "instruction": "Choose the second parent's genotype; then the number of seeds and the sample, if you wish.",
+      "vi": {
+        "instruction": "Chọn kiểu gene của cây bố mẹ thứ hai; sau đó chọn số hạt và mẫu quả nếu muốn."
+      },
+      "done": { "kind": "adjusted", "parameter": "parent2" }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN and watch the seeds sorted into the four dishes.",
+      "vi": { "instruction": "Nhấn CHẠY và quan sát các hạt được xếp vào bốn đĩa." },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read the four counts beside their expected numbers on the results monitor: does χ² say the difference could be chance?",
+      "vi": {
+        "instruction": "Đọc bốn số đếm bên cạnh số kỳ vọng trên màn hình kết quả: theo χ², sai khác có thể do ngẫu nhiên không?"
+      },
+      "done": { "kind": "viewed" }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, change the number of seeds or the sample and count again: the more seeds, the closer the shares to the ratio.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, thay đổi số hạt hoặc mẫu quả rồi đếm lại: càng nhiều hạt, các tỉ lệ càng gần tỉ lệ lý thuyết."
+      },
+      "done": { "kind": "reset" }
+    }
+  ],
+  "examples": [
+    {
+      "id": "dihybrid-f2",
+      "question": "Two pea plants YyRr × YyRr (yellow Y dominant to green y, round R to wrinkled r) give {offspring} seeds. How many yellow round and how many green wrinkled seeds do you expect?",
+      "vi": {
+        "question": "Lai hai cây đậu YyRr × YyRr (vàng Y trội so với xanh y, trơn R trội so với nhăn r) thu được {offspring} hạt. Số hạt vàng trơn và số hạt xanh nhăn dự kiến là bao nhiêu?"
+      },
+      "set": { "parent1": 11, "parent2": 11, "offspring": 556 },
+      "find": [
+        { "theory": "expectedYellowRound", "figures": 5 },
+        { "theory": "expectedGreenWrinkled", "figures": 4 }
+      ],
+      "steps": [
+        {
+          "say": "Yy × Yy: a seed is green only if both parents pass y, ¼; so yellow is ¾. The same for round.",
+          "vi": {
+            "say": "Yy × Yy: hạt chỉ có màu xanh khi cả hai bố mẹ đều cho y, xác suất ¼; vậy màu vàng là ¾. Tương tự với hạt trơn."
+          },
+          "write": "P(Y_) = 1 − ½·½ = {@probabilityYellow}",
+          "check": { "expr": "1-(1-1/2)*(1-1/2)", "equals": "probabilityYellow" }
+        },
+        {
+          "say": "The two genes assort independently: multiply the traits’ probabilities, 9/16 for yellow round.",
+          "vi": {
+            "say": "Hai gen phân li độc lập: nhân xác suất của từng tính trạng, vàng trơn là 9/16."
+          },
+          "write": "YR = N·¾·¾ = {offspring}·9/16 = {@expectedYellowRound|5}",
+          "check": {
+            "expr": "offspring*@probabilityYellow*@probabilityRound",
+            "equals": "expectedYellowRound"
+          }
+        },
+        {
+          "say": "Green wrinkled needs both recessive traits: ¼ · ¼ = 1/16.",
+          "vi": { "say": "Xanh nhăn cần cả hai tính trạng lặn: ¼ · ¼ = 1/16." },
+          "write": "yr = {offspring}·1/16 = {@expectedGreenWrinkled|4}",
+          "check": {
+            "expr": "offspring*(1-@probabilityYellow)*(1-@probabilityRound)",
+            "equals": "expectedGreenWrinkled"
+          }
+        }
+      ]
+    },
+    {
+      "id": "test-cross",
+      "question": "A test cross: YyRr × yyrr gives {offspring} seeds. How many yellow round and how many green wrinkled do you expect?",
+      "vi": {
+        "question": "Lai phân tích: YyRr × yyrr thu được {offspring} hạt. Số hạt vàng trơn và xanh nhăn dự kiến là bao nhiêu?"
+      },
+      "set": { "parent1": 11, "parent2": 0, "offspring": 100 },
+      "find": [{ "theory": "expectedYellowRound" }, { "theory": "expectedGreenWrinkled" }],
+      "steps": [
+        {
+          "say": "The yyrr parent passes only y and r, so each seed shows what the YyRr parent passed: Y or y with ½ each.",
+          "vi": {
+            "say": "Cây yyrr chỉ cho giao tử yr, nên kiểu hình mỗi hạt do giao tử của cây YyRr quyết định: Y hoặc y, mỗi loại ½."
+          },
+          "write": "P(Y_) = ½·1 = {@probabilityYellow}",
+          "check": { "expr": "1-(1-1/2)*(1-0)", "equals": "probabilityYellow" }
+        },
+        {
+          "say": "Four gamete types YR, Yr, yR, yr in equal shares: a 1 : 1 : 1 : 1 ratio.",
+          "vi": {
+            "say": "Bốn loại giao tử YR, Yr, yR, yr với tỉ lệ bằng nhau: tỉ lệ kiểu hình 1 : 1 : 1 : 1."
+          },
+          "write": "YR = {offspring}·½·½ = {@expectedYellowRound}",
+          "check": {
+            "expr": "offspring*@probabilityYellow*@probabilityRound",
+            "equals": "expectedYellowRound"
+          }
+        },
+        {
+          "say": "And the same for green wrinkled.",
+          "vi": { "say": "Tương tự với xanh nhăn." },
+          "write": "yr = {offspring}·½·½ = {@expectedGreenWrinkled}",
+          "check": {
+            "expr": "offspring*(1-@probabilityYellow)*(1-@probabilityRound)",
+            "equals": "expectedGreenWrinkled"
+          }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "Two pea plants are crossed and their seeds sorted by colour and shape; the counts come close to the ratios Mendel’s laws predict, and the χ² test judges whether the difference could be chance.",
+    "vi": {
+      "summary": "Lai hai cây đậu Hà Lan rồi phân loại hạt theo màu và hình dạng; số đếm gần với các tỉ lệ mà quy luật Menđen dự đoán, và phép thử χ² đánh giá liệu sự sai khác có thể do ngẫu nhiên hay không."
+    },
+    "parts": [
+      {
+        "id": "pods",
+        "name": "Tray of pods",
+        "role": "The cross’s offspring: the seeds in these pods are shelled and counted.",
+        "vi": {
+          "name": "Khay quả đậu",
+          "role": "Đời con của phép lai: hạt trong các quả đậu này được tách ra và đếm."
+        },
+        "anchor": {
+          "at": [-0.3, -0.06, 0.05]
+        }
+      },
+      {
+        "id": "yellow-round",
+        "name": "Dish: yellow round",
+        "role": "At least one Y and one R allele.",
+        "vi": {
+          "name": "Đĩa: vàng, trơn",
+          "role": "Có ít nhất một alen Y và một alen R."
+        },
+        "anchor": {
+          "at": [-0.08, -0.07, 0.03]
+        }
+      },
+      {
+        "id": "yellow-wrinkled",
+        "name": "Dish: yellow wrinkled",
+        "role": "At least one Y; rr.",
+        "vi": {
+          "name": "Đĩa: vàng, nhăn",
+          "role": "Có ít nhất một alen Y; rr."
+        },
+        "anchor": {
+          "at": [0.06, -0.07, 0.03]
+        }
+      },
+      {
+        "id": "green-round",
+        "name": "Dish: green round",
+        "role": "yy; at least one R.",
+        "vi": {
+          "name": "Đĩa: xanh, trơn",
+          "role": "yy; có ít nhất một alen R."
+        },
+        "anchor": {
+          "at": [0.2, -0.07, 0.03]
+        }
+      },
+      {
+        "id": "green-wrinkled",
+        "name": "Dish: green wrinkled",
+        "role": "yy and rr: both recessive traits.",
+        "vi": {
+          "name": "Đĩa: xanh, nhăn",
+          "role": "yy và rr: cả hai tính trạng lặn."
+        },
+        "anchor": {
+          "at": [0.34, -0.07, 0.03]
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "Each parent has two alleles of each gene: seed colour, yellow Y dominant over green y, and seed shape, round R dominant over wrinkled r.",
+        "vi": {
+          "text": "Mỗi cây bố mẹ có hai alen của mỗi gen: màu hạt, vàng Y trội so với xanh y, và hình dạng hạt, trơn R trội so với nhăn r."
+        },
+        "parts": ["pods"]
+      },
+      {
+        "text": "Law of segregation: each parent passes each seed one allele of each gene, either one with the same chance.",
+        "vi": {
+          "text": "Quy luật phân li: mỗi cây bố mẹ truyền cho mỗi hạt một alen của mỗi gen, mỗi alen có cơ hội như nhau."
+        },
+        "parts": ["pods"]
+      },
+      {
+        "text": "Law of independent assortment: the two genes lie on different chromosomes, so colour and shape are passed on independently. A phenotype’s chance is the product of its two traits’ chances.",
+        "vi": {
+          "text": "Quy luật phân li độc lập: hai gen nằm trên hai nhiễm sắc thể khác nhau, nên màu và hình dạng được di truyền độc lập. Xác suất của một kiểu hình bằng tích xác suất của hai tính trạng."
+        },
+        "parts": ["yellow-round", "yellow-wrinkled", "green-round", "green-wrinkled"]
+      },
+      {
+        "text": "So YyRr × YyRr gives 9 : 3 : 3 : 1, and the test cross with yyrr gives 1 : 1 : 1 : 1. The seeds are counted one by one into the four dishes.",
+        "vi": {
+          "text": "Vì vậy YyRr × YyRr cho tỉ lệ 9 : 3 : 3 : 1, và phép lai phân tích với yyrr cho 1 : 1 : 1 : 1. Hạt được đếm từng hạt vào bốn đĩa."
+        },
+        "parts": ["yellow-round", "yellow-wrinkled", "green-round", "green-wrinkled"]
+      },
+      {
+        "text": "Real counts scatter about the expected numbers by chance. The χ² test, χ² = Σ (O − E)²/E, measures how far off they are; p tells how often chance alone would give a χ² that large. It needs every expected count to be at least 5.",
+        "vi": {
+          "text": "Số đếm thực tế dao động ngẫu nhiên quanh số kỳ vọng. Phép thử χ², χ² = Σ (O − E)²/E, đo mức độ sai khác; p cho biết khả năng sự ngẫu nhiên tạo ra χ² lớn như vậy. Phép thử cần mọi số kỳ vọng ít nhất bằng 5."
+        },
+        "parts": ["yellow-round", "green-wrinkled"]
+      },
+      {
+        "text": "The more seeds counted, the closer the shares come to the ratio. Each sample of pods gives its own seeds; the model takes every seed as viable and correctly scored.",
+        "vi": {
+          "text": "Đếm càng nhiều hạt thì các tỉ lệ càng gần với tỉ lệ lý thuyết. Mỗi mẫu quả đậu cho một bộ hạt riêng; mô hình coi mọi hạt đều sống được và được phân loại đúng."
+        },
+        "parts": ["pods"]
+      }
+    ]
+  }
+}

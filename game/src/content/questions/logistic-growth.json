@@ -1,0 +1,1073 @@
+{
+  "id": "logistic-growth",
+  "skills": [
+    {
+      "id": "logistic-curve",
+      "name": "The S-shaped curve and the carrying capacity K",
+      "advice": "Sketch the S curve and label its parts: slow start, near-exponential rise, slowing, plateau at K. Run the station with two values of K and see where the curve levels off.",
+      "vi": {
+        "name": "Đường cong hình chữ S và sức chứa của môi trường K",
+        "advice": "Vẽ đường cong chữ S và chú thích các giai đoạn: tăng chậm lúc đầu, tăng gần theo hàm mũ, chậm dần, ổn định ở K. Chạy trạm với hai giá trị K và quan sát nơi đường cong đi ngang."
+      }
+    },
+    {
+      "id": "limiting-factors",
+      "name": "Exponential and logistic growth, and what limits them",
+      "advice": "Compare the J curve (unlimited resources) with the S curve (limited food and space, waste building up). Re-read the factor (1 − N/K) and say what it means when N is small and when N is near K.",
+      "vi": {
+        "name": "Tăng trưởng theo tiềm năng sinh học và tăng trưởng thực tế",
+        "advice": "So sánh đường cong chữ J (nguồn sống không giới hạn) với đường cong chữ S (thức ăn, chỗ ở có hạn, chất thải tích tụ). Đọc lại thừa số (1 − N/K) và giải thích ý nghĩa của nó khi N nhỏ và khi N gần K."
+      }
+    },
+    {
+      "id": "half-capacity",
+      "name": "Fastest growth at K/2: t = ln((K − N₀)/N₀)/r, rate rK/4",
+      "advice": "Practise the two results the station gives: the day K/2 is reached, ln((K − N₀)/N₀)/r (natural log), and the fastest growth there, rK/4. The traps: forgetting to divide by 4, or using log₁₀ instead of ln.",
+      "vi": {
+        "name": "Tăng trưởng nhanh nhất ở K/2: t = ln((K − N₀)/N₀)/r, tốc độ rK/4",
+        "advice": "Luyện hai kết quả mà trạm đưa ra: ngày quần thể đạt K/2, ln((K − N₀)/N₀)/r (logarit tự nhiên), và tốc độ tăng nhanh nhất lúc đó, rK/4. Bẫy thường gặp: quên chia 4, hoặc dùng log cơ số 10 thay cho ln."
+      }
+    },
+    {
+      "id": "logistic-formula",
+      "name": "Working out N(t)",
+      "advice": "Put the numbers into N = K/(1 + ((K − N₀)/N₀)·e^(−rt)) step by step: the bracket first, then the exponential. Compare with N₀·e^(rt), which ignores K, to see how much the limits matter.",
+      "vi": {
+        "name": "Tính số lượng cá thể N(t)",
+        "advice": "Thay số vào N = K/(1 + ((K − N₀)/N₀)·e^(−rt)) từng bước: tính phân số trước, rồi đến hàm mũ. So sánh với N₀·e^(rt), công thức bỏ qua K, để thấy giới hạn môi trường ảnh hưởng thế nào."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "what-is-k",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["logistic-curve"],
+      "stem": "In logistic growth, the carrying capacity K is…",
+      "explain": "K is the largest population the environment’s food and space can support: the population levels off there.",
+      "vi": {
+        "stem": "Trong tăng trưởng theo đường cong logistic, sức chứa của môi trường K là…",
+        "explain": "K là số lượng cá thể lớn nhất mà nguồn sống và không gian của môi trường có thể duy trì: quần thể ổn định ở mức đó."
+      },
+      "options": [
+        {
+          "text": "the largest population the environment can support",
+          "vi": {
+            "text": "số lượng cá thể tối đa mà môi trường có thể duy trì"
+          },
+          "correct": true
+        },
+        {
+          "text": "the population at the start",
+          "vi": {
+            "text": "số lượng cá thể lúc ban đầu"
+          }
+        },
+        {
+          "text": "the growth rate per day",
+          "vi": {
+            "text": "tốc độ tăng trưởng mỗi ngày"
+          }
+        },
+        {
+          "text": "the number of cells born each day",
+          "vi": {
+            "text": "số tế bào được sinh ra mỗi ngày"
+          }
+        }
+      ]
+    },
+    {
+      "id": "j-curve",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["limiting-factors"],
+      "stem": "A population living with unlimited food and space grows along a curve shaped like…",
+      "explain": "With nothing to limit it, every individual reproduces freely: exponential growth, a J-shaped curve. Limits turn it into an S.",
+      "vi": {
+        "stem": "Một quần thể sống trong điều kiện thức ăn và không gian không giới hạn tăng trưởng theo đường cong có hình…",
+        "explain": "Không có gì giới hạn, mọi cá thể sinh sản tự do: tăng trưởng theo hàm mũ, đường cong hình chữ J. Khi có giới hạn, đường cong chuyển thành hình chữ S."
+      },
+      "options": [
+        {
+          "text": "a J (exponential growth)",
+          "vi": {
+            "text": "chữ J (tăng trưởng theo tiềm năng sinh học)"
+          },
+          "correct": true
+        },
+        {
+          "text": "an S (logistic growth)",
+          "vi": {
+            "text": "chữ S (tăng trưởng logistic)"
+          }
+        },
+        {
+          "text": "a straight line",
+          "vi": {
+            "text": "một đường thẳng"
+          }
+        },
+        {
+          "text": "a bell",
+          "vi": {
+            "text": "hình chuông"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-basic",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["logistic-curve", "limiting-factors"],
+      "stem": "Yeast grows in a flask of broth following dN/dt = rN(1 − N/K). Decide whether each statement is true or false.",
+      "explain": "At N = K the factor (1 − N/K) is 0: growth stops and the population levels off at K. Food shortage and waste slow growth near K. Growth is fastest at K/2, not when the population is smallest.",
+      "vi": {
+        "stem": "Nấm men sinh trưởng trong bình môi trường nuôi cấy theo dN/dt = rN(1 − N/K). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Khi N = K, thừa số (1 − N/K) bằng 0: quần thể ngừng tăng và ổn định ở K. Thiếu thức ăn và chất thải tích tụ làm chậm tăng trưởng khi gần K. Quần thể tăng nhanh nhất ở K/2, không phải khi số lượng nhỏ nhất."
+      },
+      "statements": [
+        {
+          "text": "The population levels off at the carrying capacity K.",
+          "vi": {
+            "text": "Quần thể ổn định ở mức sức chứa của môi trường K."
+          },
+          "true": true
+        },
+        {
+          "text": "When N = K the growth dN/dt is zero.",
+          "vi": {
+            "text": "Khi N = K, tốc độ tăng trưởng dN/dt bằng 0."
+          },
+          "true": true
+        },
+        {
+          "text": "Food running short and waste building up slow the growth as N nears K.",
+          "vi": {
+            "text": "Thức ăn cạn dần và chất thải tích tụ làm chậm sự tăng trưởng khi N gần K."
+          },
+          "true": true
+        },
+        {
+          "text": "The population grows fastest when it is smallest.",
+          "vi": {
+            "text": "Quần thể tăng nhanh nhất khi số lượng cá thể nhỏ nhất."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "fastest-when",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["half-capacity"],
+      "stem": "When does a population in logistic growth increase fastest?",
+      "explain": "dN/dt = rN(1 − N/K) is a product: small when N is small, small again near K. It peaks at N = K/2, where it is rK/4.",
+      "vi": {
+        "stem": "Quần thể tăng trưởng theo đường cong logistic tăng nhanh nhất khi nào?",
+        "explain": "dN/dt = rN(1 − N/K) là một tích: nhỏ khi N nhỏ, và lại nhỏ khi N gần K. Nó đạt cực đại tại N = K/2, khi đó bằng rK/4."
+      },
+      "options": [
+        {
+          "text": "When N = K/2",
+          "vi": {
+            "text": "Khi N = K/2"
+          },
+          "correct": true
+        },
+        {
+          "text": "When N = K",
+          "vi": {
+            "text": "Khi N = K"
+          }
+        },
+        {
+          "text": "At the very start, when N = N₀",
+          "vi": {
+            "text": "Ngay lúc đầu, khi N = N₀"
+          }
+        },
+        {
+          "text": "When N = K/4",
+          "vi": {
+            "text": "Khi N = K/4"
+          }
+        }
+      ]
+    },
+    {
+      "id": "double-k",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["logistic-curve", "limiting-factors"],
+      "stem": "Twice as much broth is given, doubling the carrying capacity K; r and N₀ stay the same. The level at which the population settles…",
+      "explain": "The population levels off at K, so a doubled K doubles the plateau; r only sets how fast it gets there.",
+      "vi": {
+        "stem": "Lượng môi trường nuôi cấy tăng gấp đôi, làm sức chứa K tăng gấp đôi; r và N₀ không đổi. Mức mà quần thể ổn định…",
+        "explain": "Quần thể ổn định ở mức K, nên K tăng gấp đôi thì mức ổn định tăng gấp đôi; r chỉ quyết định tốc độ đạt tới mức đó."
+      },
+      "options": [
+        {
+          "text": "doubles",
+          "vi": {
+            "text": "tăng gấp đôi"
+          },
+          "correct": true
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "halves",
+          "vi": {
+            "text": "giảm một nửa"
+          }
+        },
+        {
+          "text": "becomes four times as large",
+          "vi": {
+            "text": "tăng gấp bốn lần"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-r1",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["half-capacity", "logistic-curve"],
+      "set": {
+        "rate": 1,
+        "capacity": 400,
+        "start": 4
+      },
+      "stem": "A culture starts with N₀ = {start} cells, with r = {rate} per day and K = {capacity}. Decide whether each statement is true or false.",
+      "explain": "The fastest growth is rK/4 = {@peakGrowth} per day, at N = K/2 = {=capacity/2}, not K/4. A larger r reaches K/2 sooner (t = ln((K − N₀)/N₀)/r). After {days} days N ≈ {@population|4}, all but K.",
+      "vi": {
+        "stem": "Một quần thể nuôi cấy bắt đầu với N₀ = {start} tế bào, r = {rate} mỗi ngày và K = {capacity}. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Tốc độ tăng nhanh nhất là rK/4 = {@peakGrowth} mỗi ngày, tại N = K/2 = {=capacity/2}, không phải K/4. r lớn hơn thì đạt K/2 sớm hơn (t = ln((K − N₀)/N₀)/r). Sau {days} ngày N ≈ {@population|4}, gần bằng K."
+      },
+      "statements": [
+        {
+          "text": "Its fastest growth is {@peakGrowth} cells per day.",
+          "vi": {
+            "text": "Tốc độ tăng nhanh nhất của nó là {@peakGrowth} tế bào mỗi ngày."
+          },
+          "true": true,
+          "check": {
+            "expr": "rate*capacity/4",
+            "equals": "peakGrowth"
+          }
+        },
+        {
+          "text": "With a larger r it would reach K/2 sooner.",
+          "vi": {
+            "text": "Nếu r lớn hơn, quần thể sẽ đạt K/2 sớm hơn."
+          },
+          "true": true
+        },
+        {
+          "text": "It grows fastest when it holds {=capacity/4} cells.",
+          "vi": {
+            "text": "Quần thể tăng nhanh nhất khi có {=capacity/4} tế bào."
+          },
+          "true": false
+        },
+        {
+          "text": "After {days} days it holds about {@population|4} cells, close to K.",
+          "vi": {
+            "text": "Sau {days} ngày, quần thể có khoảng {@population|4} tế bào, gần bằng K."
+          },
+          "true": true,
+          "check": {
+            "expr": "capacity/(1+(capacity-start)/start*exp(-rate*days))",
+            "equals": "population"
+          }
+        }
+      ]
+    },
+    {
+      "id": "half-day",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["half-capacity"],
+      "set": {
+        "rate": 0.4,
+        "capacity": 600,
+        "start": 5
+      },
+      "stem": "A culture starts with N₀ = {start} cells, with r = {rate} per day and K = {capacity}. On which day does it reach K/2?",
+      "explain": "K/2 is reached when e^(rt) = (K − N₀)/N₀ = {=(capacity-start)/start}: t = ln({=(capacity-start)/start})/{rate} ≈ {@halfDay} day. ln, not log₁₀; divide by r, do not multiply.",
+      "vi": {
+        "stem": "Một quần thể nuôi cấy bắt đầu với N₀ = {start} tế bào, r = {rate} mỗi ngày và K = {capacity}. Vào ngày thứ bao nhiêu quần thể đạt K/2?",
+        "explain": "Quần thể đạt K/2 khi e^(rt) = (K − N₀)/N₀ = {=(capacity-start)/start}: t = ln({=(capacity-start)/start})/{rate} ≈ {@halfDay} ngày. Dùng ln, không dùng log₁₀; chia cho r, không nhân."
+      },
+      "options": [
+        {
+          "text": "day {@halfDay}",
+          "vi": {
+            "text": "ngày {@halfDay}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "ln((capacity-start)/start)/rate",
+            "equals": "halfDay"
+          }
+        },
+        {
+          "text": "day {=log((capacity-start)/start)/rate}",
+          "vi": {
+            "text": "ngày {=log((capacity-start)/start)/rate}"
+          },
+          "check": {
+            "expr": "log((capacity-start)/start)/rate",
+            "equals": "halfDay"
+          }
+        },
+        {
+          "text": "day {=ln((capacity-start)/start)*rate}",
+          "vi": {
+            "text": "ngày {=ln((capacity-start)/start)*rate}"
+          },
+          "check": {
+            "expr": "ln((capacity-start)/start)*rate",
+            "equals": "halfDay"
+          }
+        },
+        {
+          "text": "day {=ln(2)/rate}",
+          "vi": {
+            "text": "ngày {=ln(2)/rate}"
+          },
+          "check": {
+            "expr": "ln(2)/rate",
+            "equals": "halfDay"
+          }
+        }
+      ]
+    },
+    {
+      "id": "peak-growth",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["half-capacity"],
+      "set": {
+        "rate": 0.5,
+        "capacity": 1000,
+        "start": 10
+      },
+      "stem": "A culture grows logistically with r = {rate} per day and K = {capacity} (N₀ = {start}). What is its fastest growth, in cells per day?",
+      "explain": "At N = K/2: dN/dt = r·(K/2)·(1 − ½) = rK/4 = {rate}·{capacity}/4 = {@peakGrowth} per day.",
+      "vi": {
+        "stem": "Một quần thể nuôi cấy tăng trưởng theo đường cong logistic với r = {rate} mỗi ngày và K = {capacity} (N₀ = {start}). Tốc độ tăng nhanh nhất của nó là bao nhiêu tế bào mỗi ngày?",
+        "explain": "Tại N = K/2: dN/dt = r·(K/2)·(1 − ½) = rK/4 = {rate}·{capacity}/4 = {@peakGrowth} mỗi ngày."
+      },
+      "options": [
+        {
+          "text": "{@peakGrowth}",
+          "vi": {
+            "text": "{@peakGrowth}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "rate*capacity/4",
+            "equals": "peakGrowth"
+          }
+        },
+        {
+          "text": "{=rate*capacity}",
+          "vi": {
+            "text": "{=rate*capacity}"
+          },
+          "check": {
+            "expr": "rate*capacity",
+            "equals": "peakGrowth"
+          }
+        },
+        {
+          "text": "{=rate*capacity/2}",
+          "vi": {
+            "text": "{=rate*capacity/2}"
+          },
+          "check": {
+            "expr": "rate*capacity/2",
+            "equals": "peakGrowth"
+          }
+        },
+        {
+          "text": "{=rate*start}",
+          "vi": {
+            "text": "{=rate*start}"
+          },
+          "check": {
+            "expr": "rate*start",
+            "equals": "peakGrowth"
+          }
+        }
+      ]
+    },
+    {
+      "id": "population-20",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["logistic-formula"],
+      "set": {
+        "rate": 0.3,
+        "capacity": 500,
+        "start": 5
+      },
+      "stem": "A culture starts with N₀ = {start}, with r = {rate} per day and K = {capacity}. Using N = K/(1 + ((K − N₀)/N₀)·e^(−rt)), what is the population after {days} days?",
+      "explain": "N = {capacity}/(1 + {=(capacity-start)/start}·e^(−{=rate*days})) ≈ {@population}. Exponential growth, N₀·e^(rt) ≈ {=start*exp(rate*days)}, would overshoot K.",
+      "vi": {
+        "stem": "Một quần thể nuôi cấy bắt đầu với N₀ = {start}, r = {rate} mỗi ngày và K = {capacity}. Dùng N = K/(1 + ((K − N₀)/N₀)·e^(−rt)), số lượng cá thể sau {days} ngày là bao nhiêu?",
+        "explain": "N = {capacity}/(1 + {=(capacity-start)/start}·e^(−{=rate*days})) ≈ {@population}. Tăng trưởng hàm mũ N₀·e^(rt) ≈ {=start*exp(rate*days)} sẽ vượt quá K."
+      },
+      "options": [
+        {
+          "text": "{@population}",
+          "vi": {
+            "text": "{@population}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "capacity/(1+(capacity-start)/start*exp(-rate*days))",
+            "equals": "population"
+          }
+        },
+        {
+          "text": "{=start*exp(rate*days)}",
+          "vi": {
+            "text": "{=start*exp(rate*days)}"
+          },
+          "check": {
+            "expr": "start*exp(rate*days)",
+            "equals": "population"
+          }
+        },
+        {
+          "text": "{=capacity/(1+exp(-rate*days))}",
+          "vi": {
+            "text": "{=capacity/(1+exp(-rate*days))}"
+          },
+          "check": {
+            "expr": "capacity/(1+exp(-rate*days))",
+            "equals": "population"
+          }
+        },
+        {
+          "text": "{=start*(1+rate*days)}",
+          "vi": {
+            "text": "{=start*(1+rate*days)}"
+          },
+          "check": {
+            "expr": "start*(1+rate*days)",
+            "equals": "population"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-1000",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["logistic-formula", "half-capacity", "limiting-factors"],
+      "set": {
+        "rate": 0.5,
+        "capacity": 1000,
+        "start": 10
+      },
+      "stem": "A culture starts with N₀ = {start}, with r = {rate} per day and K = {capacity}, and grows for {days} days. Decide whether each statement is true or false.",
+      "explain": "t(K/2) = ln({=(capacity-start)/start})/{rate} ≈ {@halfDay} day, where the growth is rK/4 = {@peakGrowth} per day. N({days}) ≈ {@population}. Without limits N₀·e^(rt) would be {=start*exp(rate*days)}, far above the logistic value.",
+      "vi": {
+        "stem": "Một quần thể nuôi cấy bắt đầu với N₀ = {start}, r = {rate} mỗi ngày và K = {capacity}, sinh trưởng trong {days} ngày. Mỗi nhận định sau đúng hay sai?",
+        "explain": "t(K/2) = ln({=(capacity-start)/start})/{rate} ≈ {@halfDay} ngày, khi đó tốc độ tăng là rK/4 = {@peakGrowth} mỗi ngày. N({days}) ≈ {@population}. Nếu không có giới hạn, N₀·e^(rt) sẽ là {=start*exp(rate*days)}, lớn hơn rất nhiều so với giá trị logistic."
+      },
+      "statements": [
+        {
+          "text": "It reaches K/2 on day {@halfDay}.",
+          "vi": {
+            "text": "Quần thể đạt K/2 vào ngày {@halfDay}."
+          },
+          "true": true,
+          "check": {
+            "expr": "ln((capacity-start)/start)/rate",
+            "equals": "halfDay"
+          }
+        },
+        {
+          "text": "At that moment it grows by {@peakGrowth} cells per day.",
+          "vi": {
+            "text": "Tại thời điểm đó, quần thể tăng {@peakGrowth} tế bào mỗi ngày."
+          },
+          "true": true,
+          "check": {
+            "expr": "rate*capacity/4",
+            "equals": "peakGrowth"
+          }
+        },
+        {
+          "text": "After {days} days it holds about {@population} cells.",
+          "vi": {
+            "text": "Sau {days} ngày, quần thể có khoảng {@population} tế bào."
+          },
+          "true": true,
+          "check": {
+            "expr": "capacity/(1+(capacity-start)/start*exp(-rate*days))",
+            "equals": "population"
+          }
+        },
+        {
+          "text": "After {days} days it holds about {=start*exp(rate*days)} cells, as unlimited growth would give.",
+          "vi": {
+            "text": "Sau {days} ngày, quần thể có khoảng {=start*exp(rate*days)} tế bào, như khi tăng trưởng không giới hạn."
+          },
+          "true": false,
+          "check": {
+            "expr": "start*exp(rate*days)",
+            "equals": "population"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-r",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["half-capacity"],
+      "set": {
+        "rate": 0.4,
+        "capacity": 600,
+        "start": 5
+      },
+      "stem": "A culture starting with N₀ = {start} cells in a flask with K = {capacity} reaches K/2 on day {@halfDay}. What is its growth rate r?",
+      "explain": "From t = ln((K − N₀)/N₀)/r: r = ln({=(capacity-start)/start})/{@halfDay} ≈ {rate} per day. Check: ln({=(capacity-start)/start})/{rate} ≈ {@halfDay} day.",
+      "vi": {
+        "stem": "Một quần thể nuôi cấy bắt đầu với N₀ = {start} tế bào trong bình có K = {capacity}, đạt K/2 vào ngày {@halfDay}. Tốc độ tăng trưởng r của nó là bao nhiêu?",
+        "explain": "Từ t = ln((K − N₀)/N₀)/r suy ra r = ln({=(capacity-start)/start})/{@halfDay} ≈ {rate} mỗi ngày. Kiểm tra: ln({=(capacity-start)/start})/{rate} ≈ {@halfDay} ngày."
+      },
+      "options": [
+        {
+          "text": "{rate} per day",
+          "vi": {
+            "text": "{rate} mỗi ngày"
+          },
+          "correct": true,
+          "check": {
+            "expr": "ln((capacity-start)/start)/rate",
+            "equals": "halfDay"
+          }
+        },
+        {
+          "text": "{=@halfDay/ln((capacity-start)/start)} per day",
+          "vi": {
+            "text": "{=@halfDay/ln((capacity-start)/start)} mỗi ngày"
+          },
+          "check": {
+            "expr": "ln((capacity-start)/start)/(@halfDay/ln((capacity-start)/start))",
+            "equals": "halfDay"
+          }
+        },
+        {
+          "text": "{=log((capacity-start)/start)/@halfDay} per day",
+          "vi": {
+            "text": "{=log((capacity-start)/start)/@halfDay} mỗi ngày"
+          },
+          "check": {
+            "expr": "ln((capacity-start)/start)/(log((capacity-start)/start)/@halfDay)",
+            "equals": "halfDay"
+          }
+        },
+        {
+          "text": "{=ln(2)/@halfDay} per day",
+          "vi": {
+            "text": "{=ln(2)/@halfDay} mỗi ngày"
+          },
+          "check": {
+            "expr": "ln((capacity-start)/start)/(ln(2)/@halfDay)",
+            "equals": "halfDay"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-default",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["logistic-curve", "half-capacity", "logistic-formula"],
+      "set": {
+        "rate": 0.8,
+        "capacity": 500,
+        "start": 5
+      },
+      "stem": "A culture starts with N₀ = {start} cells, with r = {rate} per day and K = {capacity}, and grows for {days} days. Decide whether each statement is true or false.",
+      "explain": "K/2 = {=capacity/2} is passed on day ln({=(capacity-start)/start})/{rate} ≈ {@halfDay}, where the growth is largest, rK/4 = {@peakGrowth} per day; after it the growth slows. With K doubled, t(K/2) = ln({=(2*capacity-start)/start})/{rate} ≈ {=ln((2*capacity-start)/start)/rate} day, not twice as long. At day {days} N ≈ {@population|4}: practically K, so growth has almost stopped.",
+      "vi": {
+        "stem": "Một quần thể nuôi cấy bắt đầu với N₀ = {start} tế bào, r = {rate} mỗi ngày và K = {capacity}, sinh trưởng trong {days} ngày. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Quần thể vượt K/2 = {=capacity/2} vào ngày ln({=(capacity-start)/start})/{rate} ≈ {@halfDay}, lúc tốc độ tăng lớn nhất, rK/4 = {@peakGrowth} mỗi ngày; sau đó tăng chậm dần. Nếu K tăng gấp đôi, t(K/2) = ln({=(2*capacity-start)/start})/{rate} ≈ {=ln((2*capacity-start)/start)/rate} ngày, không phải gấp đôi. Đến ngày {days}, N ≈ {@population|4}: gần như bằng K nên quần thể hầu như ngừng tăng."
+      },
+      "statements": [
+        {
+          "text": "It passes K/2 = {=capacity/2} on day {@halfDay}; after that its growth slows down.",
+          "vi": {
+            "text": "Quần thể vượt K/2 = {=capacity/2} vào ngày {@halfDay}; sau đó tốc độ tăng chậm dần."
+          },
+          "true": true,
+          "check": {
+            "expr": "ln((capacity-start)/start)/rate",
+            "equals": "halfDay"
+          }
+        },
+        {
+          "text": "Its largest growth is {@peakGrowth} cells per day.",
+          "vi": {
+            "text": "Tốc độ tăng lớn nhất của quần thể là {@peakGrowth} tế bào mỗi ngày."
+          },
+          "true": true,
+          "check": {
+            "expr": "rate*capacity/4",
+            "equals": "peakGrowth"
+          }
+        },
+        {
+          "text": "With K doubled, the day it reaches its new K/2 would double too.",
+          "vi": {
+            "text": "Nếu K tăng gấp đôi, ngày quần thể đạt K/2 mới cũng tăng gấp đôi."
+          },
+          "true": false
+        },
+        {
+          "text": "On day {days} it holds about {@population|4} cells, practically K, so its growth has almost stopped.",
+          "vi": {
+            "text": "Vào ngày {days}, quần thể có khoảng {@population|4} tế bào, gần như bằng K, nên hầu như ngừng tăng."
+          },
+          "true": true,
+          "check": {
+            "expr": "capacity/(1+(capacity-start)/start*exp(-rate*days))",
+            "equals": "population"
+          }
+        }
+      ]
+    },
+    {
+      "id": "density-dependent",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["limiting-factors"],
+      "stem": "Which of these limits a population more strongly the denser it becomes?",
+      "explain": "Competition for food grows with the number of individuals sharing it: a density-dependent factor, which is what brings growth to a halt at K. A frost, flood or fire strikes whatever the density.",
+      "vi": {
+        "stem": "Nhân tố nào sau đây hạn chế quần thể càng mạnh khi mật độ quần thể càng cao?",
+        "explain": "Cạnh tranh thức ăn tăng theo số cá thể cùng sử dụng nguồn thức ăn: đó là nhân tố phụ thuộc mật độ, chính nhân tố này làm sự tăng trưởng dừng lại ở K. Băng giá, lũ lụt hay cháy rừng tác động bất kể mật độ."
+      },
+      "options": [
+        {
+          "text": "Competition for food",
+          "vi": {
+            "text": "Cạnh tranh thức ăn"
+          },
+          "correct": true
+        },
+        {
+          "text": "A sudden frost",
+          "vi": {
+            "text": "Một đợt băng giá đột ngột"
+          }
+        },
+        {
+          "text": "A flood",
+          "vi": {
+            "text": "Lũ lụt"
+          }
+        },
+        {
+          "text": "A forest fire",
+          "vi": {
+            "text": "Cháy rừng"
+          }
+        }
+      ]
+    },
+    {
+      "id": "rate-against-n",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["half-capacity", "logistic-formula"],
+      "stem": "In the logistic model dN/dt = rN(1 − N/K). How does the growth rate dN/dt change as N goes from 0 to K?",
+      "explain": "rN(1 − N/K) is a downward parabola in N: 0 at N = 0, largest (rK/4) at N = K/2, and 0 again at N = K.",
+      "vi": {
+        "stem": "Trong mô hình logistic, dN/dt = rN(1 − N/K). Tốc độ tăng trưởng dN/dt thay đổi thế nào khi N tăng từ 0 đến K?",
+        "explain": "rN(1 − N/K) là một parabol quay bề lõm xuống theo N: bằng 0 khi N = 0, lớn nhất (rK/4) khi N = K/2, và lại bằng 0 khi N = K."
+      },
+      "options": [
+        {
+          "text": "It rises from 0 to a maximum at N = K/2, then falls back to 0 at N = K",
+          "vi": {
+            "text": "Tăng từ 0 đến cực đại khi N = K/2, rồi giảm về 0 khi N = K"
+          },
+          "correct": true
+        },
+        {
+          "text": "It rises all the way and is largest at N = K",
+          "vi": {
+            "text": "Tăng liên tục và lớn nhất khi N = K"
+          }
+        },
+        {
+          "text": "It is largest at N = 0 and falls steadily to 0 at N = K",
+          "vi": {
+            "text": "Lớn nhất khi N = 0 rồi giảm đều về 0 khi N = K"
+          }
+        },
+        {
+          "text": "It stays equal to r throughout",
+          "vi": {
+            "text": "Luôn bằng r"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-model",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["logistic-curve", "limiting-factors"],
+      "stem": "About the logistic model of the culture: decide whether each statement is true or false.",
+      "explain": "While N ≪ K, 1 − N/K ≈ 1 and growth is almost exponential. In the model r and K stay fixed for the whole run. Above K, 1 − N/K is negative, so the population falls back towards K. Real populations can overshoot K and oscillate, which this smooth model cannot show.",
+      "vi": {
+        "stem": "Về mô hình logistic của quần thể nuôi cấy, mỗi nhận định sau đúng hay sai?",
+        "explain": "Khi N ≪ K, 1 − N/K ≈ 1 nên quần thể tăng gần như theo hàm mũ. Trong mô hình, r và K không đổi suốt lần chạy. Khi N lớn hơn K, 1 − N/K âm nên quần thể giảm dần về K. Quần thể thật có thể vượt quá K rồi dao động, điều mà mô hình trơn này không thể hiện được."
+      },
+      "statements": [
+        {
+          "text": "While N is much smaller than K, the growth is almost exponential.",
+          "vi": {
+            "text": "Khi N nhỏ hơn nhiều so với K, quần thể tăng gần như theo hàm mũ."
+          },
+          "true": true
+        },
+        {
+          "text": "In this model r and K stay the same for the whole run.",
+          "vi": {
+            "text": "Trong mô hình này, r và K không thay đổi suốt lần chạy."
+          },
+          "true": true
+        },
+        {
+          "text": "A population started above K would keep growing.",
+          "vi": {
+            "text": "Một quần thể bắt đầu với số lượng lớn hơn K sẽ tiếp tục tăng."
+          },
+          "true": false
+        },
+        {
+          "text": "A real population may overshoot K and oscillate, which this model does not show.",
+          "vi": {
+            "text": "Quần thể thật có thể vượt quá K rồi dao động, điều mà mô hình này không thể hiện."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "growth-at-quarter",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["logistic-formula", "half-capacity"],
+      "set": {
+        "rate": 0.8,
+        "capacity": 500,
+        "start": 5
+      },
+      "stem": "A culture grows logistically with r = {rate} per day and K = {capacity} cells. How fast is it growing when it holds {=capacity/4} cells?",
+      "explain": "dN/dt = rN(1 − N/K) = {rate}·{=capacity/4}·(1 − 1/4) = {=rate*capacity/4*0.75} cells per day: three quarters of the fastest rate rK/4 = {@peakGrowth}.",
+      "vi": {
+        "stem": "Một quần thể nuôi cấy tăng trưởng theo logistic với r = {rate} mỗi ngày và K = {capacity} tế bào. Khi quần thể có {=capacity/4} tế bào, tốc độ tăng trưởng là bao nhiêu?",
+        "explain": "dN/dt = rN(1 − N/K) = {rate}·{=capacity/4}·(1 − 1/4) = {=rate*capacity/4*0.75} tế bào mỗi ngày: bằng ba phần tư tốc độ lớn nhất rK/4 = {@peakGrowth}."
+      },
+      "options": [
+        {
+          "text": "{=rate*capacity/4*0.75} cells per day",
+          "vi": {
+            "text": "{=rate*capacity/4*0.75} tế bào mỗi ngày"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(rate*capacity/4*0.75)/0.75",
+            "equals": "peakGrowth"
+          }
+        },
+        {
+          "text": "{=rate*capacity/4} cells per day",
+          "vi": {
+            "text": "{=rate*capacity/4} tế bào mỗi ngày"
+          },
+          "check": {
+            "expr": "(rate*capacity/4)/0.75",
+            "equals": "peakGrowth"
+          }
+        },
+        {
+          "text": "{=rate*capacity/4*0.25} cells per day",
+          "vi": {
+            "text": "{=rate*capacity/4*0.25} tế bào mỗi ngày"
+          },
+          "check": {
+            "expr": "(rate*capacity/4*0.25)/0.75",
+            "equals": "peakGrowth"
+          }
+        },
+        {
+          "text": "{=rate*capacity*0.75} cells per day",
+          "vi": {
+            "text": "{=rate*capacity*0.75} tế bào mỗi ngày"
+          },
+          "check": {
+            "expr": "(rate*capacity*0.75)/0.75",
+            "equals": "peakGrowth"
+          }
+        }
+      ]
+    },
+    {
+      "id": "early-doubling",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["logistic-formula", "logistic-curve"],
+      "set": {
+        "rate": 0.5,
+        "capacity": 1000,
+        "start": 10
+      },
+      "stem": "A culture of {start} cells grows with r = {rate} per day and K = {capacity}. While N is still far below K the growth is almost exponential, N ≈ N₀e^(rt). About how long does the culture take to double at first?",
+      "explain": "N₀e^(rt) = 2N₀ gives t = ln2/r = 0.693/{rate} ≈ {=ln(2)/rate|3} days. As N nears K the doubling slows, so this holds only early on.",
+      "vi": {
+        "stem": "Một quần thể nuôi cấy {start} tế bào tăng trưởng với r = {rate} mỗi ngày và K = {capacity}. Khi N còn nhỏ hơn nhiều so với K, quần thể tăng gần như theo hàm mũ, N ≈ N₀e^(rt). Lúc đầu, quần thể cần khoảng bao lâu để tăng gấp đôi?",
+        "explain": "N₀e^(rt) = 2N₀ cho t = ln2/r = 0,693/{rate} ≈ {=ln(2)/rate|3} ngày. Khi N gần K, thời gian tăng gấp đôi dài ra, nên kết quả này chỉ đúng lúc đầu."
+      },
+      "options": [
+        {
+          "text": "{=ln(2)/rate|3} days",
+          "vi": {
+            "text": "{=ln(2)/rate|3} ngày"
+          },
+          "correct": true,
+          "check": {
+            "expr": "ln((capacity-start)/start)/(ln(2)/(ln(2)/rate))",
+            "equals": "halfDay"
+          }
+        },
+        {
+          "text": "{=2/rate|3} days",
+          "vi": {
+            "text": "{=2/rate|3} ngày"
+          },
+          "check": {
+            "expr": "ln((capacity-start)/start)/(ln(2)/(2/rate))",
+            "equals": "halfDay"
+          }
+        },
+        {
+          "text": "{=1/rate|3} days",
+          "vi": {
+            "text": "{=1/rate|3} ngày"
+          },
+          "check": {
+            "expr": "ln((capacity-start)/start)/(ln(2)/(1/rate))",
+            "equals": "halfDay"
+          }
+        },
+        {
+          "text": "{=rate*ln(2)|3} days",
+          "vi": {
+            "text": "{=rate*ln(2)|3} ngày"
+          },
+          "check": {
+            "expr": "ln((capacity-start)/start)/(ln(2)/(rate*ln(2)))",
+            "equals": "halfDay"
+          }
+        }
+      ]
+    },
+    {
+      "id": "k-from-peak",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["half-capacity", "logistic-formula"],
+      "set": {
+        "rate": 0.8,
+        "capacity": 500,
+        "start": 5
+      },
+      "stem": "A culture with r = {rate} per day grows fastest at {@peakGrowth} cells per day. What is its carrying capacity K?",
+      "explain": "The fastest growth is at N = K/2: r·(K/2)·(1 − 1/2) = rK/4. So K = 4·{@peakGrowth}/{rate} = {=4*@peakGrowth/rate} cells.",
+      "vi": {
+        "stem": "Một quần thể nuôi cấy có r = {rate} mỗi ngày, tốc độ tăng nhanh nhất là {@peakGrowth} tế bào mỗi ngày. Sức chứa của môi trường K bằng bao nhiêu?",
+        "explain": "Quần thể tăng nhanh nhất khi N = K/2: r·(K/2)·(1 − 1/2) = rK/4. Vậy K = 4·{@peakGrowth}/{rate} = {=4*@peakGrowth/rate} tế bào."
+      },
+      "options": [
+        {
+          "text": "{=4*@peakGrowth/rate} cells",
+          "vi": {
+            "text": "{=4*@peakGrowth/rate} tế bào"
+          },
+          "correct": true,
+          "check": {
+            "expr": "rate*(4*@peakGrowth/rate)/4",
+            "equals": "peakGrowth"
+          }
+        },
+        {
+          "text": "{=@peakGrowth/rate} cells",
+          "vi": {
+            "text": "{=@peakGrowth/rate} tế bào"
+          },
+          "check": {
+            "expr": "rate*(@peakGrowth/rate)/4",
+            "equals": "peakGrowth"
+          }
+        },
+        {
+          "text": "{=2*@peakGrowth/rate} cells",
+          "vi": {
+            "text": "{=2*@peakGrowth/rate} tế bào"
+          },
+          "check": {
+            "expr": "rate*(2*@peakGrowth/rate)/4",
+            "equals": "peakGrowth"
+          }
+        },
+        {
+          "text": "{=4*@peakGrowth*rate} cells",
+          "vi": {
+            "text": "{=4*@peakGrowth*rate} tế bào"
+          },
+          "check": {
+            "expr": "rate*(4*@peakGrowth*rate)/4",
+            "equals": "peakGrowth"
+          }
+        }
+      ]
+    },
+    {
+      "id": "start-from-half-day",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["half-capacity", "logistic-formula"],
+      "set": {
+        "rate": 0.5,
+        "capacity": 1000,
+        "start": 10
+      },
+      "stem": "A culture with r = {rate} per day and K = {capacity} cells reaches K/2 after {@halfDay|4} days. With how many cells did it start? (N(t) = K/(1 + ((K − N₀)/N₀)·e^(−rt)))",
+      "explain": "At N = K/2 the denominator is 2: (K − N₀)/N₀ = e^(r·t½) = e^({rate}·{@halfDay|4}) ≈ {=exp(rate*@halfDay)|3}. So N₀ = K/(1 + e^(r·t½)) ≈ {=capacity/(1+exp(rate*@halfDay))|3} cells.",
+      "vi": {
+        "stem": "Một quần thể nuôi cấy có r = {rate} mỗi ngày và K = {capacity} tế bào đạt K/2 sau {@halfDay|4} ngày. Lúc đầu quần thể có bao nhiêu tế bào? (N(t) = K/(1 + ((K − N₀)/N₀)·e^(−rt)))",
+        "explain": "Khi N = K/2, mẫu số bằng 2: (K − N₀)/N₀ = e^(r·t½) = e^({rate}·{@halfDay|4}) ≈ {=exp(rate*@halfDay)|3}. Vậy N₀ = K/(1 + e^(r·t½)) ≈ {=capacity/(1+exp(rate*@halfDay))|3} tế bào."
+      },
+      "options": [
+        {
+          "text": "{=capacity/(1+exp(rate*@halfDay))|3} cells",
+          "vi": {
+            "text": "{=capacity/(1+exp(rate*@halfDay))|3} tế bào"
+          },
+          "correct": true,
+          "check": {
+            "expr": "ln((capacity-capacity/(1+exp(rate*@halfDay)))/(capacity/(1+exp(rate*@halfDay))))/rate",
+            "equals": "halfDay"
+          }
+        },
+        {
+          "text": "{=capacity/(2*exp(rate*@halfDay))|3} cells",
+          "vi": {
+            "text": "{=capacity/(2*exp(rate*@halfDay))|3} tế bào"
+          },
+          "check": {
+            "expr": "ln((capacity-capacity/(2*exp(rate*@halfDay)))/(capacity/(2*exp(rate*@halfDay))))/rate",
+            "equals": "halfDay"
+          }
+        },
+        {
+          "text": "{=capacity/(1+rate*@halfDay)|3} cells",
+          "vi": {
+            "text": "{=capacity/(1+rate*@halfDay)|3} tế bào"
+          },
+          "check": {
+            "expr": "ln((capacity-capacity/(1+rate*@halfDay))/(capacity/(1+rate*@halfDay)))/rate",
+            "equals": "halfDay"
+          }
+        },
+        {
+          "text": "{=capacity/(1+2^(rate*@halfDay))|3} cells",
+          "vi": {
+            "text": "{=capacity/(1+2^(rate*@halfDay))|3} tế bào"
+          },
+          "check": {
+            "expr": "ln((capacity-capacity/(1+2^(rate*@halfDay)))/(capacity/(1+2^(rate*@halfDay))))/rate",
+            "equals": "halfDay"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-fast-culture",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["half-capacity", "logistic-curve", "logistic-formula"],
+      "set": {
+        "rate": 1.5,
+        "capacity": 300,
+        "start": 3
+      },
+      "stem": "A culture of {start} cells grows with r = {rate} per day and K = {capacity} cells for {days} days. Decide whether each statement is true or false.",
+      "explain": "t½ = ln((K − N₀)/N₀)/r = ln({=(capacity-start)/start})/{rate} ≈ {@halfDay|3} days, ∝ 1/r: doubling r halves it. The fastest growth rK/4 = {@peakGrowth|3} per day is proportional to K, so doubling K doubles it. After {days} days N ≈ {@population|4}, at K, where growth has stopped.",
+      "vi": {
+        "stem": "Một quần thể nuôi cấy {start} tế bào tăng trưởng với r = {rate} mỗi ngày và K = {capacity} tế bào trong {days} ngày. Mỗi nhận định sau đúng hay sai?",
+        "explain": "t½ = ln((K − N₀)/N₀)/r = ln({=(capacity-start)/start})/{rate} ≈ {@halfDay|3} ngày, tỉ lệ nghịch với r: tăng r gấp đôi thì t½ giảm một nửa. Tốc độ tăng nhanh nhất rK/4 = {@peakGrowth|3} mỗi ngày tỉ lệ với K, nên tăng K gấp đôi thì tốc độ đó tăng gấp đôi. Sau {days} ngày, N ≈ {@population|4}, bằng K, lúc đó quần thể đã ngừng tăng."
+      },
+      "statements": [
+        {
+          "text": "It reaches K/2 after about {@halfDay|3} days.",
+          "vi": {
+            "text": "Quần thể đạt K/2 sau khoảng {@halfDay|3} ngày."
+          },
+          "true": true,
+          "check": {
+            "expr": "ln((capacity-start)/start)/rate",
+            "equals": "halfDay"
+          }
+        },
+        {
+          "text": "With r doubled (same N₀ and K) it would reach K/2 in half the time.",
+          "vi": {
+            "text": "Nếu r tăng gấp đôi (cùng N₀ và K), quần thể sẽ đạt K/2 trong một nửa thời gian."
+          },
+          "true": true
+        },
+        {
+          "text": "With K doubled (same r and N₀) its fastest growth would be {=2*@peakGrowth|3} cells per day.",
+          "vi": {
+            "text": "Nếu K tăng gấp đôi (cùng r và N₀), tốc độ tăng nhanh nhất sẽ là {=2*@peakGrowth|3} tế bào mỗi ngày."
+          },
+          "true": true,
+          "check": {
+            "expr": "rate*(2*capacity)/4/2",
+            "equals": "peakGrowth"
+          }
+        },
+        {
+          "text": "At the end of the {days} days it is still growing at its fastest rate.",
+          "vi": {
+            "text": "Cuối {days} ngày, quần thể vẫn đang tăng với tốc độ nhanh nhất."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

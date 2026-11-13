@@ -1,0 +1,1053 @@
+{
+  "id": "buoyancy",
+  "skills": [
+    {
+      "id": "archimedes",
+      "name": "Archimedes’ principle: F_b = ρ_f·g·V",
+      "advice": "Re-read Archimedes’ principle: the buoyant force is the weight of the liquid pushed aside, ρ_f·g·V — the liquid’s density, not the block’s. Watch the overflow can fill the cylinder in a run.",
+      "vi": {
+        "name": "Định luật Ác-si-mét: F_A = ρ_f·g·V",
+        "advice": "Đọc lại định luật Ác-si-mét: lực đẩy bằng trọng lượng phần chất lỏng bị vật chiếm chỗ, ρ_f·g·V — dùng khối lượng riêng của chất lỏng, không phải của vật. Quan sát bình tràn chảy vào ống đong khi chạy thí nghiệm."
+      }
+    },
+    {
+      "id": "apparent",
+      "name": "Apparent weight: W′ = W − F_b",
+      "advice": "The sensor reads the weight less the buoyant force; once the cube is fully under, the reading stops changing however deep it goes. Watch the force graph flatten.",
+      "vi": {
+        "name": "Trọng lượng biểu kiến: W′ = W − F_A",
+        "advice": "Cảm biến chỉ trọng lượng trừ lực đẩy; khi khối đã chìm hoàn toàn, số chỉ không đổi dù xuống sâu bao nhiêu. Quan sát đồ thị lực nằm ngang ra."
+      }
+    },
+    {
+      "id": "density",
+      "name": "Density from weight and volume",
+      "advice": "Find m = W/g first, then ρ = m/V with V the overflow volume in m³. Trap: dividing W by V without g.",
+      "vi": {
+        "name": "Khối lượng riêng từ trọng lượng và thể tích",
+        "advice": "Tìm m = W/g trước, sau đó ρ = m/V với V là thể tích nước tràn tính bằng m³. Lỗi hay gặp: lấy W chia V mà quên g."
+      }
+    },
+    {
+      "id": "float",
+      "name": "Floating and sinking",
+      "advice": "Compare densities: a block less dense than the liquid floats, with the fraction ρ/ρ_f of it under the surface; denser, it sinks. Try polypropylene in water and in salt water.",
+      "vi": {
+        "name": "Vật nổi và vật chìm",
+        "advice": "So sánh khối lượng riêng: vật có khối lượng riêng nhỏ hơn chất lỏng thì nổi, với phần chìm bằng ρ/ρ_f thể tích; lớn hơn thì chìm. Thử nhựa PP trong nước và trong nước muối."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "principle",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["archimedes"],
+      "stem": "A body under a liquid is pushed up by a buoyant force equal to…",
+      "explain": "Archimedes’ principle: the weight of the liquid the body pushes aside.",
+      "vi": {
+        "stem": "Một vật nhúng trong chất lỏng chịu lực đẩy hướng lên có độ lớn bằng…",
+        "explain": "Định luật Ác-si-mét: trọng lượng của phần chất lỏng bị vật chiếm chỗ."
+      },
+      "options": [
+        {
+          "text": "the weight of the liquid it pushes aside",
+          "vi": {
+            "text": "trọng lượng của phần chất lỏng bị vật chiếm chỗ"
+          },
+          "correct": true
+        },
+        {
+          "text": "the weight of the body",
+          "vi": {
+            "text": "trọng lượng của vật"
+          }
+        },
+        {
+          "text": "the weight of all the liquid in the can",
+          "vi": {
+            "text": "trọng lượng của toàn bộ chất lỏng trong bình"
+          }
+        },
+        {
+          "text": "the mass of the liquid it pushes aside",
+          "vi": {
+            "text": "khối lượng của phần chất lỏng bị vật chiếm chỗ"
+          }
+        }
+      ]
+    },
+    {
+      "id": "density-unit",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["density"],
+      "stem": "The SI unit of density is…",
+      "explain": "ρ = m/V: kilograms per cubic metre.",
+      "vi": {
+        "stem": "Đơn vị SI của khối lượng riêng là…",
+        "explain": "ρ = m/V: kilôgam trên mét khối."
+      },
+      "options": [
+        {
+          "text": "kg/m³",
+          "vi": {
+            "text": "kg/m³"
+          },
+          "correct": true
+        },
+        {
+          "text": "kg·m³",
+          "vi": {
+            "text": "kg·m³"
+          }
+        },
+        {
+          "text": "N/m³",
+          "vi": {
+            "text": "N/m³"
+          }
+        },
+        {
+          "text": "m³/kg",
+          "vi": {
+            "text": "m³/kg"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-under",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["archimedes", "apparent"],
+      "stem": "A solid cube is lowered on a force sensor into an overflow can full of liquid. Decide whether each statement is true or false.",
+      "explain": "Fully under, F_b = ρ_f·g·a³ at any depth; the overflow is the volume under the surface; the push comes from the larger pressure on the bottom face; F_b depends on the liquid and the volume, not on the cube’s material.",
+      "vi": {
+        "stem": "Một khối lập phương đặc treo dưới cảm biến lực được hạ vào bình tràn đầy chất lỏng. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Khi chìm hoàn toàn, F_A = ρ_f·g·a³ ở mọi độ sâu; thể tích nước tràn bằng thể tích phần chìm; lực đẩy sinh ra do áp suất lên mặt dưới lớn hơn lên mặt trên; F_A phụ thuộc chất lỏng và thể tích, không phụ thuộc chất làm vật."
+      },
+      "statements": [
+        {
+          "text": "Once fully under, the buoyant force does not change with depth.",
+          "vi": {
+            "text": "Khi đã chìm hoàn toàn, lực đẩy không thay đổi theo độ sâu."
+          },
+          "true": true
+        },
+        {
+          "text": "The liquid that overflows has the volume of the part of the cube under the surface.",
+          "vi": {
+            "text": "Chất lỏng tràn ra có thể tích bằng phần thể tích của khối nằm dưới mặt chất lỏng."
+          },
+          "true": true
+        },
+        {
+          "text": "The buoyant force comes from the liquid pressing harder on the bottom face than on the top.",
+          "vi": {
+            "text": "Lực đẩy sinh ra do chất lỏng ép lên mặt dưới mạnh hơn lên mặt trên."
+          },
+          "true": true
+        },
+        {
+          "text": "A copper cube gets a larger buoyant force than an aluminium cube of the same size.",
+          "vi": {
+            "text": "Khối đồng chịu lực đẩy lớn hơn khối nhôm cùng kích thước."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "salt-water",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["archimedes"],
+      "stem": "The same cube, fully under, is moved from water into salt water (denser). The buoyant force on it…",
+      "explain": "F_b = ρ_f·g·V: same V, larger ρ_f, larger F_b.",
+      "vi": {
+        "stem": "Chuyển cùng một khối đang chìm hoàn toàn từ nước sang nước muối (khối lượng riêng lớn hơn). Lực đẩy lên khối…",
+        "explain": "F_A = ρ_f·g·V: cùng V, ρ_f lớn hơn nên F_A lớn hơn."
+      },
+      "options": [
+        {
+          "text": "increases",
+          "vi": {
+            "text": "tăng"
+          },
+          "correct": true
+        },
+        {
+          "text": "decreases",
+          "vi": {
+            "text": "giảm"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "becomes zero",
+          "vi": {
+            "text": "bằng 0"
+          }
+        }
+      ]
+    },
+    {
+      "id": "which-floats",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["float"],
+      "stem": "Which of these cubes floats in water (998.2 kg/m³ at 20 °C)?",
+      "explain": "Only polypropylene (about 905 kg/m³) is less dense than water.",
+      "vi": {
+        "stem": "Khối nào sau đây nổi trong nước (998,2 kg/m³ ở 20 °C)?",
+        "explain": "Chỉ nhựa PP (khoảng 905 kg/m³) có khối lượng riêng nhỏ hơn nước."
+      },
+      "options": [
+        {
+          "text": "polypropylene, about 905 kg/m³",
+          "vi": {
+            "text": "nhựa PP, khoảng 905 kg/m³"
+          },
+          "correct": true
+        },
+        {
+          "text": "nylon 6,6, about 1140 kg/m³",
+          "vi": {
+            "text": "nilon 6,6, khoảng 1140 kg/m³"
+          }
+        },
+        {
+          "text": "aluminium, about 2700 kg/m³",
+          "vi": {
+            "text": "nhôm, khoảng 2700 kg/m³"
+          }
+        },
+        {
+          "text": "copper, about 8960 kg/m³",
+          "vi": {
+            "text": "đồng, khoảng 8960 kg/m³"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-plastic",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["apparent", "float"],
+      "set": {
+        "objectDensity": 905,
+        "fluidDensity": 998.2,
+        "edgeLength": 0.03
+      },
+      "stem": "A polypropylene cube ({objectDensity} kg/m³) of edge {edgeLength} m is held fully under water ({fluidDensity} kg/m³) by the sensor’s rod (g = {gravity} m/s²). Decide whether each statement is true or false.",
+      "explain": "W = ρ·a³·g ≈ {@weight} N, F_b = ρ_f·g·a³ ≈ {@buoyantForce} N, so W′ = W − F_b ≈ {@apparentWeight} N < 0: the rod pushes it down. Let go, it rises and floats.",
+      "vi": {
+        "stem": "Một khối nhựa PP ({objectDensity} kg/m³) cạnh {edgeLength} m được thanh của cảm biến giữ chìm hoàn toàn trong nước ({fluidDensity} kg/m³) (g = {gravity} m/s²). Mỗi nhận định sau đúng hay sai?",
+        "explain": "W = ρ·a³·g ≈ {@weight} N, F_A = ρ_f·g·a³ ≈ {@buoyantForce} N, nên W′ = W − F_A ≈ {@apparentWeight} N < 0: thanh phải đẩy khối xuống. Thả ra, khối nổi lên."
+      },
+      "statements": [
+        {
+          "text": "Its weight is about {@weight} N.",
+          "vi": {
+            "text": "Trọng lượng của khối khoảng {@weight} N."
+          },
+          "true": true,
+          "check": {
+            "expr": "objectDensity*edgeLength^3*gravity",
+            "equals": "weight"
+          }
+        },
+        {
+          "text": "The buoyant force on it is about {@buoyantForce} N.",
+          "vi": {
+            "text": "Lực đẩy lên khối khoảng {@buoyantForce} N."
+          },
+          "true": true,
+          "check": {
+            "expr": "fluidDensity*gravity*edgeLength^3",
+            "equals": "buoyantForce"
+          }
+        },
+        {
+          "text": "The sensor reads about {@apparentWeight} N: the rod pushes the cube down.",
+          "vi": {
+            "text": "Cảm biến chỉ khoảng {@apparentWeight} N: thanh đang đẩy khối xuống."
+          },
+          "true": true,
+          "check": {
+            "expr": "@weight-@buoyantForce",
+            "equals": "apparentWeight"
+          }
+        },
+        {
+          "text": "Let go, it would sink to the bottom.",
+          "vi": {
+            "text": "Nếu thả ra, khối sẽ chìm xuống đáy."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "buoyant-force",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["archimedes"],
+      "set": {
+        "objectDensity": 2700,
+        "fluidDensity": 998.2,
+        "edgeLength": 0.04
+      },
+      "stem": "An aluminium cube ({objectDensity} kg/m³) of edge {edgeLength} m is fully under water ({fluidDensity} kg/m³). What is the buoyant force on it (g = {gravity} m/s²)?",
+      "explain": "F_b = ρ_f·g·a³ = {fluidDensity}·{gravity}·{edgeLength}³ ≈ {@buoyantForce} N. Using the aluminium’s density gives its weight instead.",
+      "vi": {
+        "stem": "Một khối nhôm ({objectDensity} kg/m³) cạnh {edgeLength} m chìm hoàn toàn trong nước ({fluidDensity} kg/m³). Lực đẩy Ác-si-mét lên khối bằng bao nhiêu (g = {gravity} m/s²)?",
+        "explain": "F_A = ρ_f·g·a³ = {fluidDensity}·{gravity}·{edgeLength}³ ≈ {@buoyantForce} N. Dùng khối lượng riêng của nhôm thì lại ra trọng lượng của khối."
+      },
+      "options": [
+        {
+          "text": "{@buoyantForce} N",
+          "vi": {
+            "text": "{@buoyantForce} N"
+          },
+          "correct": true,
+          "check": {
+            "expr": "fluidDensity*gravity*edgeLength^3",
+            "equals": "buoyantForce"
+          }
+        },
+        {
+          "text": "{=objectDensity*gravity*edgeLength^3} N",
+          "vi": {
+            "text": "{=objectDensity*gravity*edgeLength^3} N"
+          },
+          "check": {
+            "expr": "objectDensity*gravity*edgeLength^3",
+            "equals": "buoyantForce"
+          }
+        },
+        {
+          "text": "{=fluidDensity*gravity*edgeLength^2} N",
+          "vi": {
+            "text": "{=fluidDensity*gravity*edgeLength^2} N"
+          },
+          "check": {
+            "expr": "fluidDensity*gravity*edgeLength^2",
+            "equals": "buoyantForce"
+          }
+        },
+        {
+          "text": "{=fluidDensity*edgeLength^3} N",
+          "vi": {
+            "text": "{=fluidDensity*edgeLength^3} N"
+          },
+          "check": {
+            "expr": "fluidDensity*edgeLength^3",
+            "equals": "buoyantForce"
+          }
+        }
+      ]
+    },
+    {
+      "id": "apparent-weight",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["apparent"],
+      "set": {
+        "objectDensity": 8960,
+        "fluidDensity": 998.2,
+        "edgeLength": 0.02
+      },
+      "stem": "A copper cube of edge {edgeLength} m weighs W = {@weight} N in air; fully under water ({fluidDensity} kg/m³) the buoyant force is {@buoyantForce} N. What does the sensor read now?",
+      "explain": "W′ = W − F_b = {@weight} − {@buoyantForce} ≈ {@apparentWeight} N.",
+      "vi": {
+        "stem": "Một khối đồng cạnh {edgeLength} m có trọng lượng W = {@weight} N trong không khí; khi chìm hoàn toàn trong nước ({fluidDensity} kg/m³) lực đẩy là {@buoyantForce} N. Cảm biến chỉ bao nhiêu?",
+        "explain": "W′ = W − F_A = {@weight} − {@buoyantForce} ≈ {@apparentWeight} N."
+      },
+      "options": [
+        {
+          "text": "{@apparentWeight} N",
+          "vi": {
+            "text": "{@apparentWeight} N"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@weight-@buoyantForce",
+            "equals": "apparentWeight"
+          }
+        },
+        {
+          "text": "{=@weight+@buoyantForce} N",
+          "vi": {
+            "text": "{=@weight+@buoyantForce} N"
+          },
+          "check": {
+            "expr": "@weight+@buoyantForce",
+            "equals": "apparentWeight"
+          }
+        },
+        {
+          "text": "{@weight} N",
+          "vi": {
+            "text": "{@weight} N"
+          },
+          "check": {
+            "expr": "@weight",
+            "equals": "apparentWeight"
+          }
+        },
+        {
+          "text": "{@buoyantForce} N",
+          "vi": {
+            "text": "{@buoyantForce} N"
+          },
+          "check": {
+            "expr": "@buoyantForce",
+            "equals": "apparentWeight"
+          }
+        }
+      ]
+    },
+    {
+      "id": "density",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["density"],
+      "set": {
+        "objectDensity": 1140,
+        "fluidDensity": 998.2,
+        "edgeLength": 0.03
+      },
+      "stem": "A cube weighs {@weight} N in air, and fully under it makes {@volume} m³ of liquid overflow (g = {gravity} m/s²). What is its density?",
+      "explain": "m = W/g ≈ {@mass} kg; ρ = m/V = {@mass}/{@volume} ≈ {@density} kg/m³ (nylon).",
+      "vi": {
+        "stem": "Một khối có trọng lượng {@weight} N trong không khí, và khi chìm hoàn toàn làm tràn ra {@volume} m³ chất lỏng (g = {gravity} m/s²). Khối lượng riêng của khối bằng bao nhiêu?",
+        "explain": "m = W/g ≈ {@mass} kg; ρ = m/V = {@mass}/{@volume} ≈ {@density} kg/m³ (nilon)."
+      },
+      "options": [
+        {
+          "text": "{=@weight/(gravity*@volume)} kg/m³",
+          "vi": {
+            "text": "{=@weight/(gravity*@volume)} kg/m³"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@weight/(gravity*@volume)",
+            "equals": "density"
+          }
+        },
+        {
+          "text": "{=@weight/@volume} kg/m³",
+          "vi": {
+            "text": "{=@weight/@volume} kg/m³"
+          },
+          "check": {
+            "expr": "@weight/@volume",
+            "equals": "density"
+          }
+        },
+        {
+          "text": "{=@weight*gravity/@volume} kg/m³",
+          "vi": {
+            "text": "{=@weight*gravity/@volume} kg/m³"
+          },
+          "check": {
+            "expr": "@weight*gravity/@volume",
+            "equals": "density"
+          }
+        },
+        {
+          "text": "{=gravity*@volume/@weight} kg/m³",
+          "vi": {
+            "text": "{=gravity*@volume/@weight} kg/m³"
+          },
+          "check": {
+            "expr": "gravity*@volume/@weight",
+            "equals": "density"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-ethanol",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["archimedes", "apparent"],
+      "set": {
+        "objectDensity": 2700,
+        "fluidDensity": 789.3,
+        "edgeLength": 0.03
+      },
+      "stem": "An aluminium cube ({objectDensity} kg/m³) of edge {edgeLength} m is lowered fully into ethanol ({fluidDensity} kg/m³) (g = {gravity} m/s²). Decide whether each statement is true or false.",
+      "explain": "V = a³ = {@volume} m³; F_b = ρ_f·g·V ≈ {@buoyantForce} N; W′ = W − F_b ≈ {@apparentWeight} N. Water is denser, so there F_b is larger and the reading smaller.",
+      "vi": {
+        "stem": "Một khối nhôm ({objectDensity} kg/m³) cạnh {edgeLength} m được hạ chìm hoàn toàn trong cồn ({fluidDensity} kg/m³) (g = {gravity} m/s²). Mỗi nhận định sau đúng hay sai?",
+        "explain": "V = a³ = {@volume} m³; F_A = ρ_f·g·V ≈ {@buoyantForce} N; W′ = W − F_A ≈ {@apparentWeight} N. Nước có khối lượng riêng lớn hơn nên ở đó F_A lớn hơn và số chỉ nhỏ hơn."
+      },
+      "statements": [
+        {
+          "text": "The buoyant force on it is about {@buoyantForce} N.",
+          "vi": {
+            "text": "Lực đẩy lên khối khoảng {@buoyantForce} N."
+          },
+          "true": true,
+          "check": {
+            "expr": "fluidDensity*gravity*edgeLength^3",
+            "equals": "buoyantForce"
+          }
+        },
+        {
+          "text": "The sensor reads about {@apparentWeight} N.",
+          "vi": {
+            "text": "Cảm biến chỉ khoảng {@apparentWeight} N."
+          },
+          "true": true,
+          "check": {
+            "expr": "objectDensity*edgeLength^3*gravity-fluidDensity*gravity*edgeLength^3",
+            "equals": "apparentWeight"
+          }
+        },
+        {
+          "text": "In water the sensor would read more than in ethanol.",
+          "vi": {
+            "text": "Trong nước, cảm biến sẽ chỉ lớn hơn trong cồn."
+          },
+          "true": false
+        },
+        {
+          "text": "{@volume} m³ of ethanol overflows into the cylinder.",
+          "vi": {
+            "text": "Có {@volume} m³ cồn tràn vào ống đong."
+          },
+          "true": true,
+          "check": {
+            "expr": "edgeLength^3",
+            "equals": "volume"
+          }
+        }
+      ]
+    },
+    {
+      "id": "floating-fraction",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["float", "archimedes"],
+      "set": {
+        "objectDensity": 905,
+        "fluidDensity": 1197.2,
+        "edgeLength": 0.03
+      },
+      "stem": "A polypropylene cube ({objectDensity} kg/m³) is let go under salt water ({fluidDensity} kg/m³) and floats. What fraction of its height is under the surface?",
+      "explain": "Floating, F_b = W: ρ_f·g·V_under = ρ·g·V, so V_under/V = ρ/ρ_f = {objectDensity}/{fluidDensity} ≈ {=100*objectDensity/fluidDensity}%. The rest, {=100-100*objectDensity/fluidDensity}%, is above.",
+      "vi": {
+        "stem": "Một khối nhựa PP ({objectDensity} kg/m³) được thả trong nước muối ({fluidDensity} kg/m³) và nổi lên. Phần chiều cao của khối nằm dưới mặt chất lỏng chiếm bao nhiêu phần trăm?",
+        "explain": "Khi nổi, F_A = W: ρ_f·g·V_chìm = ρ·g·V, nên V_chìm/V = ρ/ρ_f = {objectDensity}/{fluidDensity} ≈ {=100*objectDensity/fluidDensity}%. Phần còn lại, {=100-100*objectDensity/fluidDensity}%, nổi trên mặt."
+      },
+      "options": [
+        {
+          "text": "{=100*objectDensity/fluidDensity}%",
+          "vi": {
+            "text": "{=100*objectDensity/fluidDensity}%"
+          },
+          "correct": true
+        },
+        {
+          "text": "{=100-100*objectDensity/fluidDensity}%",
+          "vi": {
+            "text": "{=100-100*objectDensity/fluidDensity}%"
+          }
+        },
+        {
+          "text": "{=100*objectDensity/(objectDensity+fluidDensity)}%",
+          "vi": {
+            "text": "{=100*objectDensity/(objectDensity+fluidDensity)}%"
+          }
+        },
+        {
+          "text": "{=100*objectDensity/998.2}%",
+          "vi": {
+            "text": "{=100*objectDensity/998.2}%"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-sensor",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["apparent", "density", "archimedes"],
+      "set": {
+        "objectDensity": 2700,
+        "fluidDensity": 998.2,
+        "edgeLength": 0.03,
+        "forceResolution": 0.05
+      },
+      "stem": "An aluminium cube of edge {edgeLength} m is weighed in air and then fully under water with a force sensor of resolution {forceResolution} N (g = {gravity} m/s²). Decide whether each statement is true or false.",
+      "explain": "W − W′ = F_b = ρ_f·g·V ≈ {@buoyantForce} N: the two ways agree in the model. W ≈ {@weight|4} N shows as {=round(@weight/forceResolution)*forceResolution} N. ρ = W/(g·V) ≈ {@density} kg/m³. Fully under, the reading does not change with depth.",
+      "vi": {
+        "stem": "Một khối nhôm cạnh {edgeLength} m được cân trong không khí rồi khi chìm hoàn toàn trong nước bằng cảm biến lực có độ phân giải {forceResolution} N (g = {gravity} m/s²). Mỗi nhận định sau đúng hay sai?",
+        "explain": "W − W′ = F_A = ρ_f·g·V ≈ {@buoyantForce} N: hai cách tính trùng nhau trong mô hình. W ≈ {@weight|4} N hiển thị {=round(@weight/forceResolution)*forceResolution} N. ρ = W/(g·V) ≈ {@density} kg/m³. Khi đã chìm hoàn toàn, số chỉ không đổi theo độ sâu."
+      },
+      "statements": [
+        {
+          "text": "W − W′ equals ρ_f·g·V ≈ {@buoyantForce} N.",
+          "vi": {
+            "text": "W − W′ bằng ρ_f·g·V ≈ {@buoyantForce} N."
+          },
+          "true": true,
+          "check": {
+            "expr": "@weight-@apparentWeight",
+            "equals": "buoyantForce"
+          }
+        },
+        {
+          "text": "The sensor shows the weight in air as {=round(@weight/forceResolution)*forceResolution} N.",
+          "vi": {
+            "text": "Cảm biến hiển thị trọng lượng trong không khí là {=round(@weight/forceResolution)*forceResolution} N."
+          },
+          "true": true
+        },
+        {
+          "text": "W/(g·V) gives a density of about {@density} kg/m³.",
+          "vi": {
+            "text": "W/(g·V) cho khối lượng riêng khoảng {@density} kg/m³."
+          },
+          "true": true,
+          "check": {
+            "expr": "@weight/(gravity*@volume)",
+            "equals": "density"
+          }
+        },
+        {
+          "text": "Lowered deeper while fully under, the cube would make the reading fall further.",
+          "vi": {
+            "text": "Hạ khối xuống sâu hơn khi đã chìm hoàn toàn thì số chỉ sẽ tiếp tục giảm."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "direction",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["archimedes"],
+      "stem": "The buoyant force (Archimedes’ force) on a body in a liquid acts…",
+      "explain": "The liquid presses harder on the lower faces (deeper) than on the upper ones, so the resultant of its pressure forces points vertically upwards.",
+      "vi": {
+        "stem": "Lực đẩy Archimedes tác dụng lên một vật nhúng trong chất lỏng có hướng…",
+        "explain": "Chất lỏng ép lên mặt dưới (ở sâu hơn) mạnh hơn mặt trên, nên hợp lực của các lực áp suất hướng thẳng đứng từ dưới lên."
+      },
+      "options": [
+        {
+          "text": "vertically upwards",
+          "vi": {
+            "text": "thẳng đứng từ dưới lên"
+          },
+          "correct": true
+        },
+        {
+          "text": "vertically downwards",
+          "vi": {
+            "text": "thẳng đứng từ trên xuống"
+          }
+        },
+        {
+          "text": "horizontally, towards the wall of the can",
+          "vi": {
+            "text": "nằm ngang, về phía thành bình"
+          }
+        },
+        {
+          "text": "along the sensor’s string, whichever way it hangs",
+          "vi": {
+            "text": "dọc theo dây treo lực kế, dù dây treo theo hướng nào"
+          }
+        }
+      ]
+    },
+    {
+      "id": "same-size",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["archimedes"],
+      "stem": "An aluminium cube and a copper cube of the same size are both held fully under water. The buoyant force on the copper cube is…",
+      "explain": "F_b = ρ_f·g·V depends on the liquid and on the volume pushed aside, not on what the body is made of: same volume, same liquid, same force. The copper cube is heavier, so its apparent weight is larger.",
+      "vi": {
+        "stem": "Một khối lập phương nhôm và một khối lập phương đồng có cùng kích thước, cả hai được nhúng chìm hoàn toàn trong nước. Lực đẩy Archimedes lên khối đồng…",
+        "explain": "F_A = ρ_l·g·V chỉ phụ thuộc vào chất lỏng và thể tích phần chất lỏng bị chiếm chỗ, không phụ thuộc chất làm vật: cùng thể tích, cùng chất lỏng thì lực đẩy bằng nhau. Khối đồng nặng hơn nên trọng lượng biểu kiến của nó lớn hơn."
+      },
+      "options": [
+        {
+          "text": "equal to that on the aluminium cube",
+          "vi": {
+            "text": "bằng lực đẩy lên khối nhôm"
+          },
+          "correct": true
+        },
+        {
+          "text": "larger, because copper is denser",
+          "vi": {
+            "text": "lớn hơn, vì đồng có khối lượng riêng lớn hơn"
+          }
+        },
+        {
+          "text": "smaller, because copper is denser",
+          "vi": {
+            "text": "nhỏ hơn, vì đồng có khối lượng riêng lớn hơn"
+          }
+        },
+        {
+          "text": "zero, because copper sinks",
+          "vi": {
+            "text": "bằng 0, vì đồng chìm"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-lowering",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["archimedes", "apparent", "float"],
+      "stem": "A metal cube hanging from a force sensor is lowered slowly into water until it is fully under, and then lowered further without touching the bottom. Decide whether each statement is true or false.",
+      "explain": "While the cube goes in, the volume under grows, so F_b grows and the reading W − F_b falls. Once it is fully under, the volume pushed aside no longer changes, so F_b and the reading stay the same at any depth. F_b depends on the liquid’s density, not the cube’s; a body floats when it is less dense than the liquid.",
+      "vi": {
+        "stem": "Một khối lập phương kim loại treo vào lực kế được hạ từ từ vào nước cho đến khi chìm hoàn toàn, rồi tiếp tục hạ sâu hơn mà không chạm đáy. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Khi khối đang đi vào nước, thể tích phần chìm tăng nên F_A tăng và số chỉ W − F_A giảm. Khi đã chìm hoàn toàn, thể tích chất lỏng bị chiếm chỗ không đổi nên F_A và số chỉ không đổi ở mọi độ sâu. F_A phụ thuộc khối lượng riêng của chất lỏng chứ không phải của vật; vật nổi khi khối lượng riêng của nó nhỏ hơn của chất lỏng."
+      },
+      "statements": [
+        {
+          "text": "While the cube is going in, the sensor’s reading falls.",
+          "vi": {
+            "text": "Trong lúc khối đang đi vào nước, số chỉ của lực kế giảm dần."
+          },
+          "true": true
+        },
+        {
+          "text": "Once it is fully under, lowering it further leaves the buoyant force unchanged.",
+          "vi": {
+            "text": "Khi đã chìm hoàn toàn, hạ sâu thêm thì lực đẩy Archimedes không đổi."
+          },
+          "true": true
+        },
+        {
+          "text": "The buoyant force depends on the density of the cube’s metal.",
+          "vi": {
+            "text": "Lực đẩy Archimedes phụ thuộc vào khối lượng riêng của kim loại làm khối lập phương."
+          },
+          "true": false
+        },
+        {
+          "text": "A cube floats in a liquid when it is denser than the liquid.",
+          "vi": {
+            "text": "Một khối lập phương nổi trong chất lỏng khi khối lượng riêng của nó lớn hơn của chất lỏng."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "sea-water-force",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["archimedes"],
+      "set": {
+        "objectDensity": 8960,
+        "fluidDensity": 1024.8,
+        "edgeLength": 0.03
+      },
+      "stem": "A copper cube ({objectDensity} kg/m³) of edge {edgeLength} m is fully under sea water ({fluidDensity} kg/m³; g = {gravity} m/s²). What is the buoyant force on it?",
+      "explain": "F_b = ρ_f·g·a³ = {fluidDensity}·{gravity}·{edgeLength}³ ≈ {@buoyantForce} N. Using the copper’s density gives its weight; a² instead of a³, or leaving out g, gives the other values.",
+      "vi": {
+        "stem": "Một khối lập phương bằng đồng ({objectDensity} kg/m³) cạnh {edgeLength} m chìm hoàn toàn trong nước biển ({fluidDensity} kg/m³; g = {gravity} m/s²). Lực đẩy Archimedes tác dụng lên nó bằng bao nhiêu?",
+        "explain": "F_A = ρ_l·g·a³ = {fluidDensity}·{gravity}·{edgeLength}³ ≈ {@buoyantForce} N. Dùng khối lượng riêng của đồng sẽ ra trọng lượng của khối; dùng a² thay cho a³ hoặc bỏ quên g sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{@buoyantForce} N",
+          "vi": {
+            "text": "{@buoyantForce} N"
+          },
+          "correct": true,
+          "check": {
+            "expr": "fluidDensity*gravity*edgeLength^3",
+            "equals": "buoyantForce"
+          }
+        },
+        {
+          "text": "{=objectDensity*gravity*edgeLength^3} N",
+          "vi": {
+            "text": "{=objectDensity*gravity*edgeLength^3} N"
+          },
+          "check": {
+            "expr": "objectDensity*gravity*edgeLength^3",
+            "equals": "buoyantForce"
+          }
+        },
+        {
+          "text": "{=fluidDensity*gravity*edgeLength^2} N",
+          "vi": {
+            "text": "{=fluidDensity*gravity*edgeLength^2} N"
+          },
+          "check": {
+            "expr": "fluidDensity*gravity*edgeLength^2",
+            "equals": "buoyantForce"
+          }
+        },
+        {
+          "text": "{=fluidDensity*edgeLength^3} N",
+          "vi": {
+            "text": "{=fluidDensity*edgeLength^3} N"
+          },
+          "check": {
+            "expr": "fluidDensity*edgeLength^3",
+            "equals": "buoyantForce"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-nylon",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["archimedes", "float"],
+      "set": {
+        "objectDensity": 1140,
+        "fluidDensity": 1197.2,
+        "edgeLength": 0.04
+      },
+      "stem": "A nylon cube ({objectDensity} kg/m³) of edge {edgeLength} m is put into salt water ({fluidDensity} kg/m³; g = {gravity} m/s²). Decide whether each statement is true or false.",
+      "explain": "W = ρ·g·a³ ≈ {@weight} N; held fully under, F_b = ρ_f·g·a³ ≈ {@buoyantForce} N, more than W, so let go it rises and floats. Floating, F_b = W, so the share under is ρ/ρ_f ≈ {=objectDensity/fluidDensity*100|3} %.",
+      "vi": {
+        "stem": "Một khối lập phương bằng nylon ({objectDensity} kg/m³) cạnh {edgeLength} m được thả vào nước muối ({fluidDensity} kg/m³; g = {gravity} m/s²). Mỗi nhận định sau đúng hay sai?",
+        "explain": "P = ρ·g·a³ ≈ {@weight} N; khi giữ chìm hoàn toàn, F_A = ρ_l·g·a³ ≈ {@buoyantForce} N, lớn hơn P, nên thả ra thì khối nổi lên. Khi nổi, F_A = P nên phần chìm chiếm ρ/ρ_l ≈ {=objectDensity/fluidDensity*100|3} % thể tích."
+      },
+      "statements": [
+        {
+          "text": "Its weight is about {@weight} N.",
+          "vi": {
+            "text": "Trọng lượng của nó khoảng {@weight} N."
+          },
+          "true": true,
+          "check": {
+            "expr": "objectDensity*gravity*edgeLength^3",
+            "equals": "weight"
+          }
+        },
+        {
+          "text": "Held fully under, it is pushed up with about {@buoyantForce} N.",
+          "vi": {
+            "text": "Khi bị giữ chìm hoàn toàn, nó chịu lực đẩy lên khoảng {@buoyantForce} N."
+          },
+          "true": true,
+          "check": {
+            "expr": "fluidDensity*gravity*edgeLength^3",
+            "equals": "buoyantForce"
+          }
+        },
+        {
+          "text": "Let go fully under, it sinks to the bottom.",
+          "vi": {
+            "text": "Thả ra khi đang chìm hoàn toàn, nó chìm xuống đáy."
+          },
+          "true": false
+        },
+        {
+          "text": "Floating, about {=objectDensity/fluidDensity*100|3} % of its volume is under the surface.",
+          "vi": {
+            "text": "Khi nổi, khoảng {=objectDensity/fluidDensity*100|3} % thể tích của nó nằm dưới mặt chất lỏng."
+          },
+          "true": true,
+          "check": {
+            "expr": "(objectDensity/fluidDensity)*@buoyantForce",
+            "equals": "weight"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-liquid",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["apparent", "density"],
+      "set": {
+        "objectDensity": 2700,
+        "fluidDensity": 1197.2,
+        "edgeLength": 0.02
+      },
+      "stem": "A cube of edge {edgeLength} m weighs {@weight|4} N in air and {@apparentWeight|4} N fully under an unknown liquid (g = {gravity} m/s²). What is the liquid’s density?",
+      "explain": "F_b = W − W′ = {=@weight-@apparentWeight|4} N = ρ_f·g·a³, so ρ_f = (W − W′)/(g·a³) ≈ {=(@weight-@apparentWeight)/(gravity*edgeLength^3)|4} kg/m³. W/(g·a³) is the cube’s own density; W′/(g·a³) forgets to subtract.",
+      "vi": {
+        "stem": "Một khối lập phương cạnh {edgeLength} m có trọng lượng {@weight|4} N trong không khí và {@apparentWeight|4} N khi chìm hoàn toàn trong một chất lỏng chưa biết (g = {gravity} m/s²). Khối lượng riêng của chất lỏng bằng bao nhiêu?",
+        "explain": "F_A = P − P′ = {=@weight-@apparentWeight|4} N = ρ_l·g·a³, nên ρ_l = (P − P′)/(g·a³) ≈ {=(@weight-@apparentWeight)/(gravity*edgeLength^3)|4} kg/m³. P/(g·a³) là khối lượng riêng của chính khối lập phương; P′/(g·a³) là quên lấy hiệu."
+      },
+      "options": [
+        {
+          "text": "{=(@weight-@apparentWeight)/(gravity*edgeLength^3)|4} kg/m³",
+          "vi": {
+            "text": "{=(@weight-@apparentWeight)/(gravity*edgeLength^3)|4} kg/m³"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(@weight-@apparentWeight)/(gravity*edgeLength^3)*gravity",
+            "equals": "fluidWeightDensity"
+          }
+        },
+        {
+          "text": "{=@weight/(gravity*edgeLength^3)|4} kg/m³",
+          "vi": {
+            "text": "{=@weight/(gravity*edgeLength^3)|4} kg/m³"
+          },
+          "check": {
+            "expr": "@weight/(gravity*edgeLength^3)*gravity",
+            "equals": "fluidWeightDensity"
+          }
+        },
+        {
+          "text": "{=@apparentWeight/(gravity*edgeLength^3)|4} kg/m³",
+          "vi": {
+            "text": "{=@apparentWeight/(gravity*edgeLength^3)|4} kg/m³"
+          },
+          "check": {
+            "expr": "@apparentWeight/(gravity*edgeLength^3)*gravity",
+            "equals": "fluidWeightDensity"
+          }
+        },
+        {
+          "text": "{=(@weight-@apparentWeight)/(gravity*edgeLength^2)|4} kg/m³",
+          "vi": {
+            "text": "{=(@weight-@apparentWeight)/(gravity*edgeLength^2)|4} kg/m³"
+          },
+          "check": {
+            "expr": "(@weight-@apparentWeight)/(gravity*edgeLength^2)*gravity",
+            "equals": "fluidWeightDensity"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-edge",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["archimedes"],
+      "set": {
+        "objectDensity": 2700,
+        "fluidDensity": 998.2,
+        "edgeLength": 0.03
+      },
+      "stem": "A cube fully under water ({fluidDensity} kg/m³; g = {gravity} m/s²) is pushed up with {@buoyantForce|4} N. How long is its edge?",
+      "explain": "V = F_b/(ρ_f·g) = {@volume|3} m³, and a = ∛V = {edgeLength} m. Stopping at V, taking √ instead of ∛, or leaving out g gives the other values.",
+      "vi": {
+        "stem": "Một khối lập phương chìm hoàn toàn trong nước ({fluidDensity} kg/m³; g = {gravity} m/s²) chịu lực đẩy Archimedes {@buoyantForce|4} N. Cạnh của nó dài bao nhiêu?",
+        "explain": "V = F_A/(ρ_l·g) = {@volume|3} m³, và a = ∛V = {edgeLength} m. Dừng lại ở V, lấy căn bậc hai thay cho căn bậc ba, hoặc bỏ quên g sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{edgeLength} m",
+          "vi": {
+            "text": "{edgeLength} m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "fluidDensity*gravity*cbrt(@buoyantForce/(fluidDensity*gravity))^3",
+            "equals": "buoyantForce"
+          }
+        },
+        {
+          "text": "{=sqrt(@buoyantForce/(fluidDensity*gravity))|3} m",
+          "vi": {
+            "text": "{=sqrt(@buoyantForce/(fluidDensity*gravity))|3} m"
+          },
+          "check": {
+            "expr": "fluidDensity*gravity*sqrt(@buoyantForce/(fluidDensity*gravity))^3",
+            "equals": "buoyantForce"
+          }
+        },
+        {
+          "text": "{=@buoyantForce/(fluidDensity*gravity)|3} m",
+          "vi": {
+            "text": "{=@buoyantForce/(fluidDensity*gravity)|3} m"
+          },
+          "check": {
+            "expr": "fluidDensity*gravity*(@buoyantForce/(fluidDensity*gravity))^3",
+            "equals": "buoyantForce"
+          }
+        },
+        {
+          "text": "{=cbrt(@buoyantForce/fluidDensity)|3} m",
+          "vi": {
+            "text": "{=cbrt(@buoyantForce/fluidDensity)|3} m"
+          },
+          "check": {
+            "expr": "fluidDensity*gravity*cbrt(@buoyantForce/fluidDensity)^3",
+            "equals": "buoyantForce"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-two-liquids",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["apparent", "archimedes", "float"],
+      "set": {
+        "objectDensity": 2700,
+        "fluidDensity": 1197.2,
+        "edgeLength": 0.03
+      },
+      "stem": "An aluminium cube of edge {edgeLength} m is weighed fully under water (998.2 kg/m³) and then fully under salt water ({fluidDensity} kg/m³; g = {gravity} m/s²). Decide whether each statement is true or false.",
+      "explain": "In salt water W′ = W − ρ_f·g·a³ ≈ {@apparentWeight|4} N. From water to salt water F_b grows by (ρ_f − 998.2)·g·a³ ≈ {=(fluidDensity-998.2)*gravity*@volume|3} N, so the reading drops by that much; the weight in air is the same in both runs. Polypropylene (905 kg/m³) is less dense than both liquids, nylon (1140 kg/m³) only than salt water.",
+      "vi": {
+        "stem": "Một khối lập phương nhôm cạnh {edgeLength} m được cân khi chìm hoàn toàn trong nước (998,2 kg/m³), rồi khi chìm hoàn toàn trong nước muối ({fluidDensity} kg/m³; g = {gravity} m/s²). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Trong nước muối P′ = P − ρ_l·g·a³ ≈ {@apparentWeight|4} N. Từ nước sang nước muối, F_A tăng thêm (ρ_l − 998,2)·g·a³ ≈ {=(fluidDensity-998.2)*gravity*@volume|3} N, nên số chỉ giảm đúng chừng ấy; trọng lượng trong không khí như nhau ở cả hai lần. Polypropylene (905 kg/m³) nhẹ hơn cả hai chất lỏng, còn nylon (1140 kg/m³) chỉ nhẹ hơn nước muối."
+      },
+      "statements": [
+        {
+          "text": "Under salt water the sensor reads about {@apparentWeight|4} N.",
+          "vi": {
+            "text": "Trong nước muối, lực kế chỉ khoảng {@apparentWeight|4} N."
+          },
+          "true": true,
+          "check": {
+            "expr": "@weight-fluidDensity*gravity*edgeLength^3",
+            "equals": "apparentWeight"
+          }
+        },
+        {
+          "text": "The reading under salt water is about {=(fluidDensity-998.2)*gravity*@volume|3} N lower than under water.",
+          "vi": {
+            "text": "Số chỉ trong nước muối nhỏ hơn trong nước khoảng {=(fluidDensity-998.2)*gravity*@volume|3} N."
+          },
+          "true": true,
+          "check": {
+            "expr": "(@weight-998.2*gravity*@volume)-(fluidDensity-998.2)*gravity*@volume",
+            "equals": "apparentWeight"
+          }
+        },
+        {
+          "text": "The cube’s weight in air is different in the two runs.",
+          "vi": {
+            "text": "Trọng lượng của khối trong không khí ở hai lần cân là khác nhau."
+          },
+          "true": false
+        },
+        {
+          "text": "A polypropylene cube (905 kg/m³) would float in both liquids, a nylon one (1140 kg/m³) only in the salt water.",
+          "vi": {
+            "text": "Một khối polypropylene (905 kg/m³) sẽ nổi trong cả hai chất lỏng, còn khối nylon (1140 kg/m³) chỉ nổi trong nước muối."
+          },
+          "true": true
+        }
+      ]
+    }
+  ]
+}

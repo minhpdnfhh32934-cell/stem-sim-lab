@@ -1,0 +1,704 @@
+{
+  "id": "dilution",
+  "name": "Dilution: C₁V₁ = C₂V₂",
+  "category": "chemistry",
+  "description": "Make a dilute solution from a stock, as a lab makes its standards, with your own hands. Take a crystal violet stock bottle (concentration C₁), a volumetric pipette (V₁) and a volumetric flask (V₂) from the cabinet. The pipette transfers V₁ of the stock into the flask standing on the white tile; water from the wash bottle is added up to the mark, V₂, and the flask is stoppered and turned over to mix. Adding water changes the volume, not the amount of dye, so C₁·V₁ = C₂·V₂: the new concentration is C₂ = C₁·V₁/V₂, paler by the dilution factor V₂/V₁. A colorimeter then checks it: by Beer–Lambert its absorbance A is proportional to C₂. Over several runs from one stock, C₂ against V₁/V₂ is a straight line whose slope is the stock’s concentration, and A against C₂ is a calibration line.",
+  "vi": {
+    "name": "Pha loãng dung dịch: C₁V₁ = C₂V₂",
+    "description": "Pha một dung dịch loãng từ dung dịch gốc bằng chính đôi tay của bạn, như cách phòng thí nghiệm pha các dung dịch chuẩn. Lấy từ tủ một chai dung dịch gốc tím tinh thể (nồng độ C₁), một pipet bầu (V₁) và một bình định mức (V₂). Pipet chuyển V₁ dung dịch gốc vào bình đặt trên tấm sứ trắng; thêm nước từ bình tia đến vạch định mức V₂, đậy nút rồi lật ngược bình để trộn đều. Thêm nước chỉ làm tăng thể tích, không làm thay đổi lượng thuốc nhuộm, nên C₁·V₁ = C₂·V₂: nồng độ mới là C₂ = C₁·V₁/V₂, nhạt đi theo hệ số pha loãng V₂/V₁. Sau đó máy so màu kiểm tra dung dịch: theo định luật Beer–Lambert, độ hấp thụ quang A tỉ lệ với C₂. Qua nhiều lần chạy từ cùng một dung dịch gốc, đồ thị C₂ theo V₁/V₂ là một đường thẳng có độ dốc bằng nồng độ dung dịch gốc, còn đồ thị A theo C₂ là một đường chuẩn.",
+    "note": "Đây là một mô hình dạy học đã được đơn giản hóa. Pipet bầu lấy V₁ dung dịch gốc — tím tinh thể trong nước, nồng độ C₁ — cho vào bình định mức; thêm nước đến vạch định mức V₂, đậy nút rồi lật ngược bình để trộn đều. Nước chỉ làm tăng thể tích, không thêm thuốc nhuộm: lượng chất n = C₁·V₁ không đổi, nên C₂·V₂ = C₁·V₁ và C₂ = C₁·V₁/V₂, với hệ số pha loãng V₂/V₁. Thể tích tính bằng mL và nồng độ bằng mol/L, nên n = C·V/1000 tính bằng mol. Nước chảy vào nhanh hay chậm tùy bạn rót, và dung dịch được coi là luôn được trộn đều, nên nồng độ C₁·V₁/V giảm theo 1/V; trong phòng thí nghiệm, bình chỉ được trộn sau khi đã thêm nước đến vạch — cả tốc độ rót lẫn thời điểm trộn đều không làm thay đổi C₂. Lật ngược bình đã đậy nút là một bước của quy trình; mô hình đã coi dung dịch là được trộn đều nên bước này không làm đổi con số nào. Mô hình chỉ nhận thể tích dung dịch trong bình (việc rót giữ thể tích chính xác đến microlit); kích thước dụng cụ thủy tinh, thể tích các chai và tốc độ nước chảy là của căn phòng, không mô hình nào đọc chúng. Lượng nước đã thêm được hiển thị là V₂ − V₁, coi thể tích là cộng được (gần như đúng hoàn toàn ở nồng độ rất nhỏ như ở đây); C₂ không phụ thuộc vào giả định này, vì bình luôn được thêm nước đến đúng vạch. Sau đó một mẫu dung dịch đã pha được đo bằng máy so màu ở bước sóng 590 nm, trong cuvet 1 cm: theo định luật Beer–Lambert, A = ε·l·C₂, với ε ≈ 1·10⁵ L/(mol·cm) (1·10⁷ L/(mol·m)), cùng giá trị dạy học gần đúng như trong thí nghiệm tốc độ phản ứng (tài liệu khác nhau cho 8,7·10⁴ đến 1·10⁵); nước không hấp thụ ánh sáng. Máy so màu đọc A chính xác nhất trong khoảng 0,1 đến 1: dung dịch đậm hơn thì pha loãng thêm, dung dịch nhạt hơn thì dùng nhiều dung dịch gốc hơn. Các thiết lập cho A lớn hơn 2 hoặc nhỏ hơn 0,001, ngoài vùng tuyến tính của máy so màu và của định luật Beer–Lambert, sẽ bị từ chối; bình định mức không lớn hơn pipet cũng vậy. Ở chế độ nồng độ, máy so màu hiển thị C₂ làm tròn theo độ phân giải d, với hệ số của máy được coi là đúng bằng 1/(ε·l); bản thân giá trị C₂ mô phỏng không bao giờ bị làm tròn. Không được mô hình hóa: dung sai của dụng cụ thủy tinh (loại A: ±0,02 mL với pipet 10 mL, ±0,15 mL với bình 250 mL), việc đọc mặt khum ở vạch định mức hoặc thêm nước quá vạch, việc trộn chưa đều, nhiệt độ (dụng cụ thủy tinh được hiệu chuẩn ở 20 °C), và việc các phân tử thuốc nhuộm kết cặp với nhau ở nồng độ cao hơn, làm đường Beer–Lambert bị cong. Mô hình có tính tất định: các lần chạy lặp lại với cùng thiết lập cho kết quả giống hệt nhau."
+  },
+  "requiredEquipment": ["dilution-colorimeter", "dil-tile"],
+  "model": "chemistry.dilution",
+  "parameters": [
+    {
+      "id": "stockConcentration",
+      "label": "Stock solution (crystal violet)",
+      "vi": { "label": "Dung dịch gốc (tím tinh thể)" },
+      "symbol": "C₁",
+      "unit": "mol/L",
+      "default": 0.00002,
+      "min": 0.000005,
+      "max": 0.00004,
+      "presets": [
+        { "label": "5.00 µmol/L", "vi": { "label": "5,00 µmol/L" }, "value": 0.000005 },
+        { "label": "10.0 µmol/L", "vi": { "label": "10,0 µmol/L" }, "value": 0.00001 },
+        { "label": "20.0 µmol/L", "vi": { "label": "20,0 µmol/L" }, "value": 0.00002 },
+        { "label": "40.0 µmol/L", "vi": { "label": "40,0 µmol/L" }, "value": 0.00004 }
+      ]
+    },
+    {
+      "id": "stockVolume",
+      "label": "Stock volume (volumetric pipette)",
+      "vi": { "label": "Thể tích dung dịch gốc (pipet bầu)" },
+      "symbol": "V₁",
+      "unit": "mL",
+      "default": 5,
+      "min": 1,
+      "max": 10,
+      "presets": [
+        { "label": "1 mL pipette", "vi": { "label": "Pipet bầu 1 mL" }, "value": 1 },
+        { "label": "2 mL pipette", "vi": { "label": "Pipet bầu 2 mL" }, "value": 2 },
+        { "label": "5 mL pipette", "vi": { "label": "Pipet bầu 5 mL" }, "value": 5 },
+        { "label": "10 mL pipette", "vi": { "label": "Pipet bầu 10 mL" }, "value": 10 }
+      ]
+    },
+    {
+      "id": "finalVolume",
+      "label": "Final volume (volumetric flask)",
+      "vi": { "label": "Thể tích sau khi pha (bình định mức)" },
+      "symbol": "V₂",
+      "unit": "mL",
+      "default": 50,
+      "min": 25,
+      "max": 250,
+      "presets": [
+        { "label": "25 mL flask", "vi": { "label": "Bình định mức 25 mL" }, "value": 25 },
+        { "label": "50 mL flask", "vi": { "label": "Bình định mức 50 mL" }, "value": 50 },
+        { "label": "100 mL flask", "vi": { "label": "Bình định mức 100 mL" }, "value": 100 },
+        { "label": "250 mL flask", "vi": { "label": "Bình định mức 250 mL" }, "value": 250 }
+      ]
+    },
+    {
+      "id": "concentrationResolution",
+      "label": "Colorimeter resolution (concentration mode)",
+      "vi": { "label": "Độ phân giải của máy so màu (chế độ nồng độ)" },
+      "symbol": "d",
+      "unit": "mol/L",
+      "default": 1e-7,
+      "min": 1e-8,
+      "max": 0.000001,
+      "presets": [
+        { "label": "0.01 µmol/L", "vi": { "label": "0,01 µmol/L" }, "value": 1e-8 },
+        { "label": "0.1 µmol/L", "vi": { "label": "0,1 µmol/L" }, "value": 1e-7 },
+        { "label": "1 µmol/L", "vi": { "label": "1 µmol/L" }, "value": 0.000001 }
+      ]
+    }
+  ],
+  "initialConditions": { "fillTime": 10, "absorptivity": 10000000, "pathLength": 0.01 },
+  "inputs": {
+    "absorptivity": { "symbol": "ε", "unit": "L/(mol·m)", "desk": false },
+    "pathLength": { "symbol": "l", "unit": "m", "desk": false }
+  },
+  "simulation": { "timeStep": 0.02, "maxDuration": 12, "sampleInterval": 0.05 },
+  "measurements": [
+    {
+      "id": "volume",
+      "label": "Volume of solution in the flask",
+      "vi": { "label": "Thể tích dung dịch trong bình" },
+      "symbol": "V",
+      "unit": "mL",
+      "variable": "volume"
+    },
+    {
+      "id": "concentration",
+      "label": "Concentration",
+      "vi": { "label": "Nồng độ" },
+      "symbol": "C",
+      "unit": "mol/L",
+      "variable": "concentration"
+    },
+    {
+      "id": "waterAdded",
+      "label": "Water added",
+      "vi": { "label": "Lượng nước đã thêm" },
+      "symbol": "V − V₁",
+      "unit": "mL",
+      "variable": "waterAdded"
+    },
+    {
+      "id": "amount",
+      "label": "Amount of dye",
+      "vi": { "label": "Lượng thuốc nhuộm" },
+      "symbol": "n",
+      "unit": "mol",
+      "variable": "amount"
+    }
+  ],
+  "results": [
+    {
+      "id": "finalConcentration",
+      "label": "Concentration after dilution",
+      "vi": { "label": "Nồng độ sau khi pha loãng" },
+      "symbol": "C₂",
+      "unit": "mol/L",
+      "variable": "concentration",
+      "reduce": "final",
+      "theory": "finalConcentration"
+    },
+    {
+      "id": "absorbance",
+      "label": "Absorbance of the diluted solution (1 cm cell)",
+      "vi": { "label": "Độ hấp thụ quang của dung dịch đã pha (cuvet 1 cm)" },
+      "symbol": "A",
+      "unit": "",
+      "variable": "absorbance",
+      "reduce": "final",
+      "theory": "absorbance",
+      "classes": [
+        { "max": 0.1, "label": "Pale", "vi": { "label": "Nhạt" } },
+        { "max": 1, "label": "Best range", "vi": { "label": "Vùng đo tốt" } },
+        { "label": "Too dark", "vi": { "label": "Quá đậm" } }
+      ]
+    },
+    {
+      "id": "dilutionFactor",
+      "label": "Dilution factor",
+      "vi": { "label": "Hệ số pha loãng" },
+      "symbol": "V₂/V₁",
+      "unit": "",
+      "variable": "dilutionFactor",
+      "reduce": "final",
+      "theory": "dilutionFactor"
+    },
+    {
+      "id": "volumeRatio",
+      "label": "Fraction of the solution that is stock",
+      "vi": { "label": "Tỉ lệ dung dịch gốc trong dung dịch đã pha" },
+      "symbol": "V₁/V₂",
+      "unit": "",
+      "variable": "volumeRatio",
+      "reduce": "final",
+      "theory": "volumeRatio"
+    },
+    {
+      "id": "waterAdded",
+      "label": "Water added",
+      "vi": { "label": "Lượng nước đã thêm" },
+      "symbol": "V₂ − V₁",
+      "unit": "mL",
+      "variable": "waterAdded",
+      "reduce": "final",
+      "theory": "waterAdded"
+    },
+    {
+      "id": "amount",
+      "label": "Amount of dye (unchanged)",
+      "vi": { "label": "Lượng thuốc nhuộm (không đổi)" },
+      "symbol": "n",
+      "unit": "mol",
+      "variable": "amount",
+      "reduce": "final",
+      "theory": "amount"
+    }
+  ],
+  "graphs": [
+    {
+      "id": "concentration-volume",
+      "title": "Concentration against volume in the flask",
+      "vi": { "title": "Nồng độ theo thể tích dung dịch trong bình" },
+      "x": "volume",
+      "y": ["concentration"],
+      "mark": "finalVolume"
+    },
+    {
+      "id": "amount-volume",
+      "title": "Amount of dye against volume in the flask",
+      "vi": { "title": "Lượng thuốc nhuộm theo thể tích dung dịch trong bình" },
+      "x": "volume",
+      "y": ["amount"]
+    }
+  ],
+  "monitor": "concentration-volume",
+  "compare": [{ "graph": "concentration-volume" }],
+  "instruments": [
+    {
+      "result": "finalConcentration",
+      "quantity": "Concentration C₂ after dilution",
+      "name": "Colorimeter at 590 nm, concentration mode",
+      "resolution": "concentrationResolution",
+      "excludes": "the calibration (its factor is taken as exactly 1/(ε·l)), the lamp's and detector's noise and drift, stray light, a smudged or scratched cuvette, the tolerances of the pipette and the flask (class A: ±0.02 mL for a 10 mL pipette, ISO 648; ±0.15 mL for a 250 mL flask, ISO 1042), reading the meniscus at the mark, and mixing that is not complete",
+      "vi": {
+        "quantity": "Nồng độ C₂ sau khi pha loãng",
+        "name": "Máy so màu ở 590 nm, chế độ nồng độ",
+        "excludes": "việc hiệu chuẩn (hệ số của máy được coi là đúng bằng 1/(ε·l)), nhiễu và độ trôi của đèn và đầu thu, ánh sáng lạc, cuvet bị bẩn hoặc xước, dung sai của pipet và bình định mức (loại A: ±0,02 mL với pipet 10 mL, ISO 648; ±0,15 mL với bình 250 mL, ISO 1042), việc đọc mặt khum ở vạch định mức và việc trộn chưa đều"
+      }
+    }
+  ],
+  "analyses": [
+    {
+      "id": "dilution-law",
+      "title": "Concentration after dilution against the fraction of stock",
+      "note": "Each run is one point. From one stock, C₂ = C₁·(V₁/V₂): a straight line through the origin whose slope is the stock's concentration C₁, whichever pipette and flask give the fraction. Only runs from the same stock are fitted together; choose pipettes and flasks that spread V₁/V₂ out. The dashed theory line is C₂ = C₁·(V₁/V₂).",
+      "vi": {
+        "title": "Nồng độ sau khi pha loãng theo tỉ lệ dung dịch gốc",
+        "note": "Mỗi lần chạy là một điểm. Với cùng một dung dịch gốc, C₂ = C₁·(V₁/V₂): một đường thẳng đi qua gốc tọa độ có độ dốc bằng nồng độ dung dịch gốc C₁, dù tỉ lệ đó do pipet và bình định mức nào tạo ra. Chỉ các lần chạy từ cùng một dung dịch gốc mới được khớp chung; hãy chọn pipet và bình sao cho các giá trị V₁/V₂ trải rộng. Đường lý thuyết nét đứt là C₂ = C₁·(V₁/V₂)."
+      },
+      "x": "volumeRatio",
+      "y": "finalConcentration",
+      "group": ["stockConcentration"],
+      "columns": [
+        "stockConcentration",
+        "stockVolume",
+        "finalVolume",
+        "volumeRatio",
+        "finalConcentration"
+      ],
+      "slope": {
+        "label": "Slope of C₂ against V₁/V₂ (the stock concentration)",
+        "vi": { "label": "Độ dốc của C₂ theo V₁/V₂ (nồng độ dung dịch gốc)" },
+        "symbol": "a",
+        "unit": "mol/L",
+        "theory": "stockConcentration"
+      }
+    },
+    {
+      "id": "calibration",
+      "title": "Absorbance against concentration (calibration line)",
+      "note": "Each run is one point: a set of dilutions of one stock is a set of standards. By Beer–Lambert, A = ε·l·C₂: a straight line through the origin of slope ε·l, the same for every stock of this dye in this cell. Read backwards, a calibration line gives an unknown sample's concentration from its absorbance; keep the standards between about A = 0.1 and 1, where the colorimeter reads best. Only runs from the same stock are fitted together. The dashed theory line is A = ε·l·C₂.",
+      "vi": {
+        "title": "Độ hấp thụ quang theo nồng độ (đường chuẩn)",
+        "note": "Mỗi lần chạy là một điểm: một dãy dung dịch pha loãng từ cùng một dung dịch gốc là một dãy dung dịch chuẩn. Theo định luật Beer–Lambert, A = ε·l·C₂: một đường thẳng đi qua gốc tọa độ có độ dốc ε·l, như nhau với mọi dung dịch gốc của thuốc nhuộm này trong cùng một cuvet. Đọc ngược đường chuẩn sẽ cho nồng độ của một mẫu chưa biết từ độ hấp thụ quang của nó; hãy giữ các dung dịch chuẩn trong khoảng A = 0,1 đến 1, nơi máy so màu đọc chính xác nhất. Chỉ các lần chạy từ cùng một dung dịch gốc mới được khớp chung. Đường lý thuyết nét đứt là A = ε·l·C₂."
+      },
+      "x": "finalConcentration",
+      "y": "absorbance",
+      "group": ["stockConcentration"],
+      "columns": ["stockVolume", "finalVolume", "finalConcentration", "absorbance"],
+      "slope": {
+        "label": "Slope of A against C₂ (ε·l)",
+        "vi": { "label": "Độ dốc của A theo C₂ (ε·l)" },
+        "symbol": "ε·l",
+        "unit": "L/mol",
+        "theory": "absorbanceSlope"
+      }
+    }
+  ],
+  "note": "A simplified teaching model. A volumetric pipette delivers V₁ of the stock solution, crystal violet in water at C₁, into a volumetric flask; water is added up to the mark, V₂, and the flask is stoppered and inverted to mix. Water adds volume, not dye: the amount n = C₁·V₁ is unchanged, so C₂·V₂ = C₁·V₁ and C₂ = C₁·V₁/V₂, with the dilution factor V₂/V₁. Volumes are in mL and concentrations in mol/L, so n = C·V/1000 is in mol. The water goes in as fast as you pour it, and the solution is taken as mixed at every moment, its concentration C₁·V₁/V falling as 1/V; in the lab the flask is mixed once it is at the mark — neither how fast you pour nor the moment of mixing changes C₂. Turning the stoppered flask over is a step of the procedure; the model has already taken the solution as mixed, so it changes no number. The model is given only the volume in the flask (the pouring keeps it to the microlitre); the glassware’s sizes, the bottles’ volumes and how fast the water runs are the room’s own, and no model reads them. The water added is shown as V₂ − V₁, volumes taken as additive (very nearly so at these tiny concentrations); C₂ does not depend on that, as the flask is filled to its mark. A sample of the diluted solution is then read in a colorimeter at 590 nm, in a 1 cm cell: by Beer–Lambert A = ε·l·C₂, with ε ≈ 1·10⁵ L/(mol·cm) (1·10⁷ L/(mol·m)), the same approximate teaching value as in the reaction-rate experiment (sources give 8.7·10⁴ to 1·10⁵); water absorbs nothing. A colorimeter reads A most precisely between about 0.1 and 1: dilute a darker solution more, use more stock for a paler one. Settings that would give A above 2 or below 0.001, outside the colorimeter's and Beer–Lambert's linear range, are refused, and so is a flask no larger than the pipette. In concentration mode the colorimeter shows C₂ rounded to its resolution d, its factor taken as exactly 1/(ε·l); the simulated C₂ itself is never rounded. Not modelled: the glassware's tolerances (class A: ±0.02 mL for a 10 mL pipette, ±0.15 mL for a 250 mL flask), reading the meniscus at the mark or filling past it, incomplete mixing, temperature (glassware is calibrated at 20 °C), and dye molecules pairing up at higher concentrations, which bends the Beer–Lambert line. The model is deterministic: repeat runs with the same settings agree exactly.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the dilution instructions on the board.",
+      "vi": { "instruction": "Đọc hướng dẫn thí nghiệm pha loãng trên bảng." },
+      "done": { "kind": "inspected", "item": "dilution-instructions" }
+    },
+    {
+      "id": "flask",
+      "instruction": "Take a volumetric flask from the cabinet and stand it on the white tile.",
+      "vi": { "instruction": "Lấy một bình định mức từ tủ và đặt lên tấm sứ trắng." },
+      "done": { "kind": "setup", "step": "flask" }
+    },
+    {
+      "id": "aspirate",
+      "instruction": "Take a stock bottle and a pipette; fill the pipette from the bottle to its mark.",
+      "vi": {
+        "instruction": "Lấy một chai dung dịch gốc và một pipet bầu; hút dung dịch từ chai vào pipet đến vạch."
+      },
+      "done": { "kind": "setup", "step": "aspirate" }
+    },
+    {
+      "id": "dispense",
+      "instruction": "Deliver the pipette’s stock into the flask.",
+      "vi": { "instruction": "Cho dung dịch gốc trong pipet vào bình." },
+      "done": { "kind": "setup", "step": "dispense" }
+    },
+    {
+      "id": "water",
+      "instruction": "Squeeze the wash bottle over the flask’s neck until the water reaches the mark: watch the colour fade as the volume grows.",
+      "vi": {
+        "instruction": "Bóp bình tia trên cổ bình cho đến khi nước tới vạch định mức: quan sát màu nhạt dần khi thể tích tăng."
+      },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "mix",
+      "instruction": "Put the stopper in and turn the flask over to mix.",
+      "vi": { "instruction": "Đậy nút và lật ngược bình để trộn đều." },
+      "done": { "kind": "setup", "step": "mix" }
+    },
+    {
+      "id": "sample",
+      "instruction": "Take the stopper out and pour a sample into the colorimeter’s cuvette.",
+      "vi": { "instruction": "Mở nút và rót một mẫu vào cuvet của máy so màu." },
+      "done": { "kind": "setup", "step": "cuvette" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read C₂ and the absorbance on the results monitor, and check C₂ = C₁·V₁/V₂ by hand.",
+      "vi": {
+        "instruction": "Đọc C₂ và độ hấp thụ quang trên màn hình kết quả, rồi tự tính lại C₂ = C₁·V₁/V₂ để kiểm tra."
+      },
+      "done": { "kind": "viewed" }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, then Clear the bench, and dilute the same stock with other pipettes and flasks: plot C₂ against V₁/V₂.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI rồi Dọn bàn, và pha loãng cùng dung dịch gốc với pipet và bình định mức khác: vẽ đồ thị C₂ theo V₁/V₂."
+      },
+      "done": { "kind": "reset" }
+    }
+  ],
+  "presentation": "physical-lab",
+  "workspace": {
+    "pieces": [
+      {
+        "id": "stock-bottle",
+        "kind": "stock-bottle",
+        "slot": "s1",
+        "label": "Stock bottle",
+        "vi": { "label": "Chai dung dịch gốc" },
+        "owns": ["stockConcentration"]
+      },
+      {
+        "id": "pipette",
+        "kind": "pipette",
+        "slot": "s2",
+        "label": "Volumetric pipette",
+        "vi": { "label": "Pipet bầu" },
+        "owns": ["stockVolume"]
+      },
+      {
+        "id": "flask",
+        "kind": "flask",
+        "slot": "s3",
+        "label": "Volumetric flask",
+        "vi": { "label": "Bình định mức" },
+        "owns": ["finalVolume"]
+      },
+      {
+        "id": "wash-bottle",
+        "kind": "wash-bottle",
+        "slot": "s4",
+        "label": "Wash bottle",
+        "vi": { "label": "Bình tia" },
+        "owns": []
+      },
+      {
+        "id": "tile",
+        "kind": "tile",
+        "slot": "s5",
+        "label": "White tile",
+        "vi": { "label": "Tấm sứ trắng" },
+        "owns": []
+      },
+      {
+        "id": "colorimeter",
+        "kind": "colorimeter",
+        "slot": "s6",
+        "label": "Colorimeter",
+        "vi": { "label": "Máy so màu" },
+        "owns": ["concentrationResolution"]
+      },
+      {
+        "id": "cuvette",
+        "kind": "cuvette",
+        "slot": "s7",
+        "label": "Cuvette",
+        "vi": { "label": "Cuvet" },
+        "owns": []
+      }
+    ],
+    "materials": [
+      {
+        "id": "stock-5",
+        "kind": "stock",
+        "label": "Crystal violet stock, 5.00 µmol/L",
+        "vi": { "label": "Dung dịch gốc tím tinh thể 5,00 µmol/L" },
+        "sets": { "parameter": "stockConcentration", "value": 0.000005 }
+      },
+      {
+        "id": "stock-10",
+        "kind": "stock",
+        "label": "Crystal violet stock, 10.0 µmol/L",
+        "vi": { "label": "Dung dịch gốc tím tinh thể 10,0 µmol/L" },
+        "sets": { "parameter": "stockConcentration", "value": 0.00001 }
+      },
+      {
+        "id": "stock-20",
+        "kind": "stock",
+        "label": "Crystal violet stock, 20.0 µmol/L",
+        "vi": { "label": "Dung dịch gốc tím tinh thể 20,0 µmol/L" },
+        "sets": { "parameter": "stockConcentration", "value": 0.00002 }
+      },
+      {
+        "id": "stock-40",
+        "kind": "stock",
+        "label": "Crystal violet stock, 40.0 µmol/L",
+        "vi": { "label": "Dung dịch gốc tím tinh thể 40,0 µmol/L" },
+        "sets": { "parameter": "stockConcentration", "value": 0.00004 }
+      },
+      {
+        "id": "pipette-1",
+        "kind": "pipette",
+        "label": "1 mL volumetric pipette",
+        "vi": { "label": "Pipet bầu 1 mL" },
+        "sets": { "parameter": "stockVolume", "value": 1 }
+      },
+      {
+        "id": "pipette-2",
+        "kind": "pipette",
+        "label": "2 mL volumetric pipette",
+        "vi": { "label": "Pipet bầu 2 mL" },
+        "sets": { "parameter": "stockVolume", "value": 2 }
+      },
+      {
+        "id": "pipette-5",
+        "kind": "pipette",
+        "label": "5 mL volumetric pipette",
+        "vi": { "label": "Pipet bầu 5 mL" },
+        "sets": { "parameter": "stockVolume", "value": 5 }
+      },
+      {
+        "id": "pipette-10",
+        "kind": "pipette",
+        "label": "10 mL volumetric pipette",
+        "vi": { "label": "Pipet bầu 10 mL" },
+        "sets": { "parameter": "stockVolume", "value": 10 }
+      },
+      {
+        "id": "flask-25",
+        "kind": "flask",
+        "label": "25 mL volumetric flask",
+        "vi": { "label": "Bình định mức 25 mL" },
+        "sets": { "parameter": "finalVolume", "value": 25 }
+      },
+      {
+        "id": "flask-50",
+        "kind": "flask",
+        "label": "50 mL volumetric flask",
+        "vi": { "label": "Bình định mức 50 mL" },
+        "sets": { "parameter": "finalVolume", "value": 50 }
+      },
+      {
+        "id": "flask-100",
+        "kind": "flask",
+        "label": "100 mL volumetric flask",
+        "vi": { "label": "Bình định mức 100 mL" },
+        "sets": { "parameter": "finalVolume", "value": 100 }
+      },
+      {
+        "id": "flask-250",
+        "kind": "flask",
+        "label": "250 mL volumetric flask",
+        "vi": { "label": "Bình định mức 250 mL" },
+        "sets": { "parameter": "finalVolume", "value": 250 }
+      },
+      {
+        "id": "water",
+        "kind": "solvent",
+        "label": "Distilled water",
+        "vi": { "label": "Nước cất" }
+      }
+    ],
+    "setup": [
+      {
+        "id": "flask",
+        "instruction": "Stand the volumetric flask on the white tile.",
+        "refusal": "Stand the flask on the white tile first.",
+        "vi": {
+          "instruction": "Đặt bình định mức lên tấm sứ trắng.",
+          "refusal": "Hãy đặt bình lên tấm sứ trắng trước."
+        },
+        "place": "flask",
+        "onto": "tile",
+        "by": "set-down",
+        "locks": ["finalVolume"]
+      },
+      {
+        "id": "aspirate",
+        "instruction": "Fill the pipette to its mark from the stock bottle.",
+        "refusal": "Fill the pipette from the stock bottle first.",
+        "vi": {
+          "instruction": "Hút dung dịch gốc từ chai vào pipet đến vạch.",
+          "refusal": "Hãy hút dung dịch gốc vào pipet trước."
+        },
+        "place": "stock-bottle",
+        "onto": "pipette",
+        "by": "transfer",
+        "locks": ["stockConcentration", "stockVolume"]
+      },
+      {
+        "id": "dispense",
+        "instruction": "Deliver the stock in the pipette into the flask.",
+        "refusal": "Deliver the stock from the pipette into the flask first.",
+        "vi": {
+          "instruction": "Cho dung dịch gốc trong pipet vào bình.",
+          "refusal": "Hãy cho dung dịch gốc từ pipet vào bình trước."
+        },
+        "place": "pipette",
+        "onto": "flask",
+        "by": "transfer",
+        "after": ["flask", "aspirate"]
+      },
+      {
+        "id": "mix",
+        "instruction": "Put the stopper in the flask and turn it over to mix.",
+        "refusal": "Stopper the flask and turn it over to mix it first.",
+        "vi": {
+          "instruction": "Đậy nút bình và lật ngược để trộn đều.",
+          "refusal": "Hãy đậy nút bình và lật ngược để trộn đều trước."
+        },
+        "place": "flask",
+        "onto": "flask",
+        "by": "invert",
+        "phase": "after-run"
+      },
+      {
+        "id": "cuvette",
+        "instruction": "Pour a sample of the mixed solution into the cuvette.",
+        "refusal": "Pour a sample into the cuvette first.",
+        "vi": {
+          "instruction": "Rót một mẫu dung dịch đã trộn vào cuvet.",
+          "refusal": "Hãy rót một mẫu vào cuvet trước."
+        },
+        "place": "flask",
+        "onto": "cuvette",
+        "by": "transfer",
+        "after": ["mix"],
+        "phase": "after-run"
+      }
+    ],
+    "drive": { "place": "water", "onto": "flask" }
+  },
+  "examples": [
+    {
+      "id": "dilute-stock",
+      "question": "A {stockVolume} mL pipette of crystal violet at {=stockConcentration*1e6} µmol/L is made up to {finalVolume} mL with water. Find the new concentration and the dilution factor.",
+      "vi": {
+        "question": "Lấy {stockVolume} mL dung dịch tím tinh thể {=stockConcentration*1e6} µmol/L bằng pipet, pha loãng bằng nước tới {finalVolume} mL. Tìm nồng độ mới và hệ số pha loãng."
+      },
+      "set": { "stockConcentration": 0.00004, "stockVolume": 5, "finalVolume": 100 },
+      "find": [{ "theory": "finalConcentration" }, { "theory": "dilutionFactor" }],
+      "steps": [
+        {
+          "say": "Water adds volume, not dye: the amount of dye stays the same.",
+          "vi": {
+            "say": "Nước chỉ làm tăng thể tích, không thêm chất tan: lượng chất tan không đổi."
+          },
+          "write": "C₁·V₁ = C₂·V₂"
+        },
+        {
+          "say": "So the concentration falls by the ratio of the volumes.",
+          "vi": { "say": "Vậy nồng độ giảm theo tỉ số hai thể tích." },
+          "write": "C₂ = C₁·V₁/V₂ = {stockConcentration}·{stockVolume}/{finalVolume} = {@finalConcentration} mol/L",
+          "check": {
+            "expr": "stockConcentration*stockVolume/finalVolume",
+            "equals": "finalConcentration"
+          }
+        },
+        {
+          "say": "The dilution factor is how many times the volume grew.",
+          "vi": { "say": "Hệ số pha loãng là số lần thể tích tăng lên." },
+          "write": "V₂/V₁ = {finalVolume}/{stockVolume} = {@dilutionFactor}",
+          "check": { "expr": "finalVolume/stockVolume", "equals": "dilutionFactor" }
+        }
+      ]
+    },
+    {
+      "id": "absorbance",
+      "question": "{stockVolume} mL of {=stockConcentration*1e6} µmol/L crystal violet is made up to {finalVolume} mL and read in a 1 cm cell at 590 nm (ε ≈ 1·10⁵ L/(mol·cm), an approximate value). Find C₂ and the absorbance.",
+      "vi": {
+        "question": "Pha {stockVolume} mL dung dịch tím tinh thể {=stockConcentration*1e6} µmol/L thành {finalVolume} mL rồi đo trong cuvet 1 cm ở 590 nm (ε ≈ 1·10⁵ L/(mol·cm), giá trị gần đúng). Tìm C₂ và độ hấp thụ quang."
+      },
+      "set": { "stockConcentration": 0.00004, "stockVolume": 10, "finalVolume": 50 },
+      "find": [{ "theory": "finalConcentration" }, { "theory": "absorbance" }],
+      "steps": [
+        {
+          "say": "The dilution first.",
+          "vi": { "say": "Trước hết tính nồng độ sau khi pha loãng." },
+          "write": "C₂ = C₁·V₁/V₂ = {stockConcentration}·{stockVolume}/{finalVolume} = {@finalConcentration} mol/L",
+          "check": {
+            "expr": "stockConcentration*stockVolume/finalVolume",
+            "equals": "finalConcentration"
+          }
+        },
+        {
+          "say": "Beer–Lambert: A = ε·l·C. With ε in L/(mol·cm) and l = 1 cm, multiply by the concentration.",
+          "vi": {
+            "say": "Định luật Beer–Lambert: A = ε·l·C. Với ε tính bằng L/(mol·cm) và l = 1 cm, nhân với nồng độ."
+          },
+          "write": "A = ε·l·C₂ = 1×10⁵·1·{@finalConcentration} = {@absorbance}",
+          "check": { "expr": "absorptivity*pathLength*@finalConcentration", "equals": "absorbance" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "Adding water to a measured volume of stock solution makes it paler but keeps the same amount of dye, so C₁·V₁ = C₂·V₂; a colorimeter checks the new concentration.",
+    "vi": {
+      "summary": "Thêm nước vào một thể tích dung dịch gốc đã đo làm dung dịch nhạt màu hơn nhưng lượng chất tan không đổi, nên C₁·V₁ = C₂·V₂; máy so màu kiểm tra nồng độ mới."
+    },
+    "parts": [
+      {
+        "id": "colorimeter",
+        "name": "Colorimeter",
+        "role": "Shines 590 nm light through a sample of the diluted solution.",
+        "vi": {
+          "name": "Máy so màu",
+          "role": "Chiếu ánh sáng 590 nm qua một mẫu dung dịch đã pha loãng."
+        },
+        "anchor": {
+          "at": [0.11, -0.06, -0.03]
+        }
+      },
+      {
+        "id": "cuvette",
+        "name": "Cuvette",
+        "role": "Pour a sample of the mixed solution in here, in the colorimeter’s slot.",
+        "vi": {
+          "name": "Cuvet",
+          "role": "Rót một mẫu dung dịch đã trộn vào đây, trong khe của máy so màu."
+        },
+        "anchor": {
+          "at": [-0.03, 0, -0.08]
+        }
+      },
+      {
+        "id": "readout",
+        "name": "Readout",
+        "role": "Shows the absorbance A and, in concentration mode, C₂ to the resolution d.",
+        "vi": {
+          "name": "Màn hiển thị",
+          "role": "Hiển thị độ hấp thụ quang A và, ở chế độ nồng độ, C₂ theo độ phân giải d."
+        },
+        "anchor": {
+          "part": "reading"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "A volumetric pipette transfers V₁ of the crystal violet stock, concentration C₁, into a volumetric flask. It carries the amount of dye n = C₁·V₁.",
+        "vi": {
+          "text": "Pipet bầu lấy V₁ dung dịch tím tinh thể gốc, nồng độ C₁, cho vào bình định mức. Lượng chất tan nó mang theo là n = C₁·V₁."
+        },
+        "parts": []
+      },
+      {
+        "text": "Water from the wash bottle is added up to the flask’s mark, V₂, and the stoppered flask is turned over to mix. The colour fades as the volume grows.",
+        "vi": {
+          "text": "Thêm nước từ bình tia tới vạch mức của bình, V₂, rồi đậy nút và lật ngược bình để trộn đều. Màu nhạt dần khi thể tích tăng."
+        },
+        "parts": []
+      },
+      {
+        "text": "Water adds volume, not dye: the amount n stays the same. So C₁·V₁ = C₂·V₂, and C₂ = C₁·V₁/V₂ — paler by the dilution factor V₂/V₁.",
+        "vi": {
+          "text": "Nước chỉ làm tăng thể tích, không thêm chất tan: lượng chất tan n không đổi. Vì vậy C₁·V₁ = C₂·V₂, và C₂ = C₁·V₁/V₂ — loãng đi theo hệ số pha loãng V₂/V₁."
+        },
+        "parts": []
+      },
+      {
+        "text": "A sample goes into the colorimeter’s cuvette. By Beer–Lambert its absorbance A = ε·l·C₂ is proportional to the concentration, so the colorimeter can read C₂.",
+        "vi": {
+          "text": "Một mẫu được rót vào cuvet của máy so màu. Theo định luật Beer–Lambert, độ hấp thụ A = ε·l·C₂ tỉ lệ với nồng độ, nên máy so màu đọc được C₂."
+        },
+        "parts": ["cuvette", "colorimeter", "readout"]
+      },
+      {
+        "text": "A colorimeter reads best for A between about 0.1 and 1: dilute a dark stock more, use more stock for a pale one. Settings outside its linear range are refused.",
+        "vi": {
+          "text": "Máy so màu đọc chính xác nhất khi A trong khoảng 0.1 tới 1: pha loãng nhiều hơn với dung dịch gốc đậm, dùng nhiều dung dịch gốc hơn khi cần dung dịch nhạt. Các thiết lập nằm ngoài khoảng tuyến tính bị từ chối."
+        },
+        "parts": ["readout"]
+      },
+      {
+        "text": "Check C₂ = C₁·V₁/V₂ by hand against the reading. Over several runs from one stock, C₂ against V₁/V₂ is a line whose slope is C₁, and A against C₂ a calibration line. Glassware tolerances and mixing errors are not modelled.",
+        "vi": {
+          "text": "Tự tính C₂ = C₁·V₁/V₂ rồi so với số đọc. Qua nhiều lần pha từ cùng một dung dịch gốc, C₂ theo V₁/V₂ là đường thẳng có hệ số góc C₁, và A theo C₂ là đường chuẩn. Mô hình không tính sai số dụng cụ thủy tinh và sai số khi trộn."
+        },
+        "parts": ["readout"]
+      }
+    ]
+  }
+}

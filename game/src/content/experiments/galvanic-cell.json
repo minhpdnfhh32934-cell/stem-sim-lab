@@ -1,0 +1,363 @@
+{
+  "id": "galvanic-cell",
+  "name": "Galvanic cells: the Daniell cell and the electrochemical series",
+  "category": "chemistry",
+  "description": "Two metals, each in a solution of its own ions, joined by a salt bridge and wired to a voltmeter, make a battery: the more reactive metal gives up electrons, which flow through the wire to the other. Read the voltage of the zinc–copper Daniell cell and of other pairs, and see how the concentrations change it (the Nernst equation).",
+  "vi": {
+    "name": "Pin điện hóa: pin Đa-ni-en và dãy điện hóa",
+    "description": "Hai kim loại, mỗi kim loại nhúng trong dung dịch chứa ion của chính nó, nối với nhau bằng cầu muối và dây dẫn qua vôn kế, tạo thành một pin: kim loại hoạt động mạnh hơn nhường electron, electron chạy qua dây dẫn sang kim loại kia. Đọc suất điện động của pin kẽm–đồng (pin Đa-ni-en) và của các cặp khác, và xem nồng độ làm thay đổi nó ra sao (phương trình Nernst).",
+    "note": "Mô hình dạy học đơn giản hóa. Mỗi kim loại nhúng trong dung dịch ion của nó với nồng độ đã chọn (hoạt độ coi bằng nồng độ); thế điện cực tính theo phương trình Nernst E = E° + (RT/nF)·ln[Mⁿ⁺], với E° ở 25 °C lấy từ dãy điện hóa chuẩn (CRC Handbook): Mg²⁺/Mg −2,372; Zn²⁺/Zn −0,7618; Fe²⁺/Fe −0,447; Pb²⁺/Pb −0,1262; Cu²⁺/Cu +0,3419; Ag⁺/Ag +0,7996 V. Bỏ qua sự phụ thuộc của chính E° vào nhiệt độ (vài mV trong khoảng 0–60 °C), thế tiếp xúc ở cầu muối và lớp oxit trên kim loại. Vôn kế có điện trở rất lớn, không lấy dòng, nên đọc đúng suất điện động E_phải − E_trái; kim ổn định theo hằng số thời gian τ = 0,5 s (giá trị dạy học). Kết quả mô phỏng không có sai số ngẫu nhiên; số đọc của vôn kế chỉ được làm tròn theo độ phân giải d."
+  },
+  "requiredEquipment": ["galvanic-cell"],
+  "model": "chemistry.galvanic-cell",
+  "parameters": [
+    {
+      "id": "pair",
+      "label": "The two half-cells (left | right)",
+      "vi": { "label": "Hai điện cực (trái | phải)" },
+      "unit": "",
+      "default": 0,
+      "min": 0,
+      "max": 5,
+      "presets": [
+        {
+          "label": "Zn | Cu (the Daniell cell)",
+          "vi": { "label": "Zn | Cu (pin Đa-ni-en)" },
+          "value": 0
+        },
+        { "label": "Fe | Cu", "vi": { "label": "Fe | Cu" }, "value": 1 },
+        { "label": "Pb | Cu", "vi": { "label": "Pb | Cu" }, "value": 2 },
+        { "label": "Zn | Ag", "vi": { "label": "Zn | Ag" }, "value": 3 },
+        { "label": "Mg | Cu", "vi": { "label": "Mg | Cu" }, "value": 4 },
+        { "label": "Cu | Ag", "vi": { "label": "Cu | Ag" }, "value": 5 }
+      ]
+    },
+    {
+      "id": "leftConcentration",
+      "label": "Left solution's ion concentration",
+      "vi": { "label": "Nồng độ ion của dung dịch bên trái" },
+      "symbol": "c_L",
+      "unit": "mol/L",
+      "default": 1,
+      "min": 0.001,
+      "max": 1,
+      "presets": [
+        { "label": "1 mol/L", "vi": { "label": "1 mol/L" }, "value": 1 },
+        { "label": "0.1 mol/L", "vi": { "label": "0,1 mol/L" }, "value": 0.1 },
+        { "label": "0.01 mol/L", "vi": { "label": "0,01 mol/L" }, "value": 0.01 },
+        { "label": "0.001 mol/L", "vi": { "label": "0,001 mol/L" }, "value": 0.001 }
+      ]
+    },
+    {
+      "id": "rightConcentration",
+      "label": "Right solution's ion concentration",
+      "vi": { "label": "Nồng độ ion của dung dịch bên phải" },
+      "symbol": "c_R",
+      "unit": "mol/L",
+      "default": 1,
+      "min": 0.001,
+      "max": 1,
+      "presets": [
+        { "label": "1 mol/L", "vi": { "label": "1 mol/L" }, "value": 1 },
+        { "label": "0.1 mol/L", "vi": { "label": "0,1 mol/L" }, "value": 0.1 },
+        { "label": "0.01 mol/L", "vi": { "label": "0,01 mol/L" }, "value": 0.01 },
+        { "label": "0.001 mol/L", "vi": { "label": "0,001 mol/L" }, "value": 0.001 }
+      ]
+    },
+    {
+      "id": "voltmeterResolution",
+      "label": "Voltmeter resolution",
+      "vi": { "label": "Độ phân giải của vôn kế" },
+      "symbol": "d",
+      "unit": "V",
+      "default": 0.01,
+      "min": 0.001,
+      "max": 0.1,
+      "presets": [
+        { "label": "0.1 V", "vi": { "label": "0,1 V" }, "value": 0.1 },
+        { "label": "0.01 V", "vi": { "label": "0,01 V" }, "value": 0.01 },
+        { "label": "0.001 V", "vi": { "label": "0,001 V" }, "value": 0.001 }
+      ]
+    }
+  ],
+  "initialConditions": { "temperature": 25, "timeConstant": 0.5, "readTime": 5 },
+  "inputs": {
+    "temperature": { "symbol": "θ", "unit": "°C" },
+    "timeConstant": { "symbol": "τ", "unit": "s", "desk": false },
+    "readTime": { "symbol": "t_read", "unit": "s", "desk": false }
+  },
+  "simulation": { "timeStep": 0.02, "maxDuration": 10, "sampleInterval": 0.05 },
+  "measurements": [
+    {
+      "id": "time",
+      "label": "Time",
+      "vi": { "label": "Thời gian" },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "time"
+    },
+    {
+      "id": "reading",
+      "label": "Voltmeter reading",
+      "vi": { "label": "Số chỉ của vôn kế" },
+      "symbol": "U",
+      "unit": "V",
+      "variable": "reading"
+    }
+  ],
+  "results": [
+    {
+      "id": "emf",
+      "label": "Emf of the cell E = E_right − E_left",
+      "vi": { "label": "Suất điện động của pin E = E_phải − E_trái" },
+      "symbol": "E",
+      "unit": "V",
+      "variable": "emf",
+      "reduce": "final",
+      "theory": "emf"
+    },
+    {
+      "id": "anode",
+      "label": "Left electrode potential",
+      "vi": { "label": "Thế điện cực bên trái" },
+      "symbol": "E_L",
+      "unit": "V",
+      "variable": "anodePotential",
+      "reduce": "final",
+      "theory": "anodePotential"
+    },
+    {
+      "id": "cathode",
+      "label": "Right electrode potential",
+      "vi": { "label": "Thế điện cực bên phải" },
+      "symbol": "E_R",
+      "unit": "V",
+      "variable": "cathodePotential",
+      "reduce": "final",
+      "theory": "cathodePotential"
+    }
+  ],
+  "instruments": [
+    {
+      "result": "emf",
+      "quantity": "Emf of the cell",
+      "name": "Voltmeter",
+      "resolution": "voltmeterResolution",
+      "excludes": "the meter's calibration, the salt bridge's junction potential, oxide on the strips and impurities in the metals",
+      "vi": {
+        "quantity": "Suất điện động của pin",
+        "name": "Vôn kế",
+        "excludes": "sai số hiệu chuẩn của vôn kế, thế tiếp xúc ở cầu muối, lớp oxit trên thanh kim loại và tạp chất trong kim loại"
+      }
+    }
+  ],
+  "graphs": [
+    {
+      "id": "reading-time",
+      "title": "Voltmeter reading against time",
+      "vi": { "title": "Số chỉ của vôn kế theo thời gian" },
+      "x": "time",
+      "y": ["reading"]
+    }
+  ],
+  "monitor": "reading-time",
+  "compare": [{ "graph": "reading-time", "series": "reading" }],
+  "note": "A simplified teaching model. Each metal stands in a solution of its own ions at the chosen concentration (activities taken as concentrations); its electrode potential follows the Nernst equation E = E° + (RT/nF)·ln[Mⁿ⁺], with E° at 25 °C from the standard electrochemical series (CRC Handbook): Mg²⁺/Mg −2.372, Zn²⁺/Zn −0.7618, Fe²⁺/Fe −0.447, Pb²⁺/Pb −0.1262, Cu²⁺/Cu +0.3419, Ag⁺/Ag +0.7996 V. Left out: E°'s own temperature dependence (a few mV between 0 and 60 °C), the salt bridge's junction potential and oxide on the metals. The voltmeter has a very high resistance and draws no current, so it reads the emf E_right − E_left; its needle settles with a time constant τ = 0.5 s (a teaching value). The simulated results carry no random error; the voltmeter's reading is only rounded to its resolution d.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the galvanic cell instructions on the board.",
+      "vi": { "instruction": "Đọc hướng dẫn về pin điện hóa trên bảng." },
+      "done": { "kind": "inspected", "item": "galvanic-cell-instructions" }
+    },
+    {
+      "id": "pair",
+      "instruction": "Choose the two metals with the pair dial: start with zinc and copper.",
+      "vi": {
+        "instruction": "Chọn hai kim loại bằng núm xoay cặp điện cực: bắt đầu với kẽm và đồng."
+      },
+      "done": { "kind": "adjusted", "parameter": "pair" }
+    },
+    {
+      "id": "concentration",
+      "instruction": "Set the two solutions' concentrations (1 mol/L for the standard cell).",
+      "vi": { "instruction": "Đặt nồng độ của hai dung dịch (1 mol/L cho pin chuẩn)." },
+      "done": { "kind": "adjusted", "parameter": "rightConcentration" }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the circuit closes; read the voltmeter.",
+      "vi": { "instruction": "Nhấn CHẠY: mạch đóng; đọc số chỉ của vôn kế." },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read the emf and the two electrode potentials: which metal is the negative pole?",
+      "vi": { "instruction": "Đọc suất điện động và hai thế điện cực: kim loại nào là cực âm?" },
+      "done": { "kind": "viewed" }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, try another pair, or dilute one solution tenfold, and compare.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, thử cặp khác hoặc pha loãng một dung dịch mười lần rồi so sánh."
+      },
+      "done": { "kind": "reset" }
+    }
+  ],
+  "examples": [
+    {
+      "id": "daniell-cell",
+      "question": "A Daniell cell: zinc in 1 mol/L Zn²⁺ and copper in 1 mol/L Cu²⁺ at 25 °C (E°: Zn²⁺/Zn −0.7618 V, Cu²⁺/Cu +0.3419 V). Find its emf and the Gibbs energy change of the reaction.",
+      "vi": {
+        "question": "Pin Daniell: kẽm trong dung dịch Zn²⁺ 1 mol/L và đồng trong dung dịch Cu²⁺ 1 mol/L ở 25 °C (E°: Zn²⁺/Zn −0,7618 V, Cu²⁺/Cu +0,3419 V). Tìm suất điện động của pin và biến thiên năng lượng Gibbs của phản ứng."
+      },
+      "set": { "pair": 0, "leftConcentration": 1, "rightConcentration": 1 },
+      "find": [
+        { "theory": "emf", "figures": 5 },
+        { "theory": "gibbsEnergy", "symbol": "ΔG", "unit": "kJ/mol" }
+      ],
+      "steps": [
+        {
+          "say": "At 1 mol/L each electrode is at its standard potential. The emf is the cathode’s (copper, the higher) minus the anode’s (zinc).",
+          "vi": {
+            "say": "Ở nồng độ 1 mol/L, mỗi điện cực có thế điện cực chuẩn. Suất điện động bằng thế của catot (đồng, cao hơn) trừ thế của anot (kẽm)."
+          },
+          "write": "E = 0.3419 − (−0.7618) = {@emf|5} V",
+          "check": { "expr": "0.3419-(-0.7618)", "equals": "emf" }
+        },
+        {
+          "say": "Zn + Cu²⁺ → Zn²⁺ + Cu moves two electrons: ΔG = −n·F·E, negative, so the reaction goes by itself.",
+          "vi": {
+            "say": "Zn + Cu²⁺ → Zn²⁺ + Cu trao đổi hai electron: ΔG = −n·F·E, âm, nên phản ứng tự xảy ra."
+          },
+          "write": "ΔG = −2·96485·{@emf|5}/1000 ≈ {@gibbsEnergy} kJ/mol",
+          "check": { "expr": "-2*96485.33212331*@emf/1000", "equals": "gibbsEnergy" }
+        }
+      ]
+    },
+    {
+      "id": "diluted-copper",
+      "question": "In the Daniell cell the copper side is diluted to {rightConcentration} mol/L Cu²⁺; the zinc side stays at {leftConcentration} mol/L, at {temperature} °C. Find the copper electrode’s potential and the emf.",
+      "vi": {
+        "question": "Trong pin Daniell, dung dịch bên đồng được pha loãng còn Cu²⁺ {rightConcentration} mol/L; bên kẽm giữ {leftConcentration} mol/L, ở {temperature} °C. Tìm thế điện cực của đồng và suất điện động."
+      },
+      "set": { "pair": 0, "leftConcentration": 1, "rightConcentration": 0.01 },
+      "find": [
+        { "theory": "cathodePotential", "figures": 4 },
+        { "theory": "emf", "figures": 4 }
+      ],
+      "steps": [
+        {
+          "say": "The Nernst equation: E = E° + (RT/nF)·ln[Cu²⁺], with n = 2; at {=temperature+273.15|5} K, RT/2F = {=8.314462618*(temperature+273.15)/(2*96485.33212331)|4} V. Fewer copper ions lower the potential.",
+          "vi": {
+            "say": "Phương trình Nernst: E = E° + (RT/nF)·ln[Cu²⁺], với n = 2; ở {=temperature+273.15|5} K, RT/2F = {=8.314462618*(temperature+273.15)/(2*96485.33212331)|4} V. Ít ion đồng hơn thì thế điện cực giảm."
+          },
+          "write": "E_R = 0.3419 + (RT/2F)·ln {rightConcentration} ≈ {@cathodePotential|4} V",
+          "check": {
+            "expr": "0.3419+(8.314462618*(temperature+273.15)/(2*96485.33212331))*ln(rightConcentration)",
+            "equals": "cathodePotential"
+          }
+        },
+        {
+          "say": "The zinc side is still standard, so the emf drops by the same amount.",
+          "vi": { "say": "Bên kẽm vẫn ở điều kiện chuẩn, nên suất điện động giảm đúng lượng đó." },
+          "write": "E = E_R − E_L = {@cathodePotential|4} − (−0.7618) ≈ {@emf|4} V",
+          "check": { "expr": "@cathodePotential-(-0.7618)", "equals": "emf" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "A galvanic cell turns a chemical reaction into electricity: the more reactive metal gives up electrons, which flow through the wire to the other metal.",
+    "vi": {
+      "summary": "Pin điện hóa biến phản ứng hóa học thành điện năng: kim loại hoạt động mạnh hơn nhường electron, electron chạy qua dây dẫn sang kim loại kia."
+    },
+    "parts": [
+      {
+        "id": "left",
+        "name": "Left electrode (e.g. zinc)",
+        "role": "The more reactive metal: its atoms give up electrons and go into solution as ions — the anode, the negative pole.",
+        "vi": {
+          "name": "Điện cực trái (ví dụ kẽm)",
+          "role": "Kim loại hoạt động mạnh hơn: nguyên tử của nó nhường electron và tan vào dung dịch thành ion — anot, cực âm."
+        },
+        "anchor": { "part": "left-electrode" }
+      },
+      {
+        "id": "right",
+        "name": "Right electrode (e.g. copper)",
+        "role": "Takes the electrons: its ions in solution gain them and plate out as metal — the cathode, the positive pole.",
+        "vi": {
+          "name": "Điện cực phải (ví dụ đồng)",
+          "role": "Nhận electron: ion của nó trong dung dịch nhận electron và bám lên thành kim loại — catot, cực dương."
+        },
+        "anchor": { "part": "right-electrode" }
+      },
+      {
+        "id": "solutions",
+        "name": "Solutions of the metals' ions",
+        "role": "Each metal stands in its own ions (Cu²⁺ is blue); their concentrations shift the voltage.",
+        "vi": {
+          "name": "Dung dịch ion kim loại",
+          "role": "Mỗi kim loại nhúng trong ion của chính nó (Cu²⁺ màu xanh lam); nồng độ của chúng làm thay đổi hiệu điện thế."
+        },
+        "anchor": { "part": "right-solution" }
+      },
+      {
+        "id": "bridge",
+        "name": "Salt bridge",
+        "role": "Lets ions pass between the beakers to keep both solutions neutral, closing the circuit without mixing them.",
+        "vi": {
+          "name": "Cầu muối",
+          "role": "Cho ion đi qua giữa hai cốc để giữ hai dung dịch trung hòa điện, khép kín mạch mà không trộn lẫn chúng."
+        },
+        "anchor": { "part": "salt-bridge" }
+      },
+      {
+        "id": "voltmeter",
+        "name": "Voltmeter",
+        "role": "Reads the cell's emf without drawing current.",
+        "vi": { "name": "Vôn kế", "role": "Đọc suất điện động của pin mà không lấy dòng điện." },
+        "anchor": { "part": "voltmeter" }
+      }
+    ],
+    "steps": [
+      {
+        "text": "Zinc gives up electrons more easily than copper. In the zinc beaker: Zn → Zn²⁺ + 2e⁻. The electrons cannot cross the solution; they travel through the wire.",
+        "vi": {
+          "text": "Kẽm nhường electron dễ hơn đồng. Trong cốc kẽm: Zn → Zn²⁺ + 2e⁻. Electron không thể đi qua dung dịch; chúng đi qua dây dẫn."
+        },
+        "parts": ["left"]
+      },
+      {
+        "text": "At the copper strip the electrons are taken by copper ions: Cu²⁺ + 2e⁻ → Cu. Overall Zn + Cu²⁺ → Zn²⁺ + Cu — the same reaction as zinc in copper sulfate, but the electrons now do work in the circuit.",
+        "vi": {
+          "text": "Ở thanh đồng, electron được ion đồng nhận: Cu²⁺ + 2e⁻ → Cu. Tổng cộng Zn + Cu²⁺ → Zn²⁺ + Cu — cùng phản ứng như kẽm trong dung dịch đồng sunfat, nhưng giờ electron sinh công trong mạch."
+        },
+        "parts": ["right", "solutions"]
+      },
+      {
+        "text": "The salt bridge lets ions move between the beakers so neither solution builds up a charge; without it the flow stops at once.",
+        "vi": {
+          "text": "Cầu muối cho ion di chuyển giữa hai cốc để không dung dịch nào tích điện; không có nó dòng electron dừng ngay."
+        },
+        "parts": ["bridge"]
+      },
+      {
+        "text": "Each metal has a standard electrode potential E°; the cell's emf is E°(right) − E°(left): 0.34 − (−0.76) = 1.10 V for the Daniell cell. The further apart the metals in the series, the larger the voltage.",
+        "vi": {
+          "text": "Mỗi kim loại có thế điện cực chuẩn E°; suất điện động của pin là E°(phải) − E°(trái): 0,34 − (−0,76) = 1,10 V với pin Đa-ni-en. Hai kim loại càng xa nhau trong dãy điện hóa thì hiệu điện thế càng lớn."
+        },
+        "parts": ["left", "right", "voltmeter"]
+      },
+      {
+        "text": "Concentration matters too (Nernst): E = E° + (0.0592/n)·lg[ion] at 25 °C. Diluting the copper solution tenfold lowers the emf by about 0.03 V; diluting the zinc solution raises it.",
+        "vi": {
+          "text": "Nồng độ cũng ảnh hưởng (phương trình Nernst): E = E° + (0,0592/n)·lg[ion] ở 25 °C. Pha loãng dung dịch đồng mười lần làm suất điện động giảm khoảng 0,03 V; pha loãng dung dịch kẽm làm nó tăng."
+        },
+        "parts": ["solutions", "voltmeter"]
+      }
+    ]
+  }
+}

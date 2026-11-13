@@ -1,0 +1,441 @@
+{
+  "id": "separation",
+  "name": "Separating salt from sand: dissolve, filter, evaporate",
+  "category": "chemistry",
+  "description": "A mixture of salt and sand is stirred into water: the salt dissolves, the sand does not. Filtering keeps the sand on the paper and lets the salty water through; rinsing the sand washes out the salt it still holds. Heating the filtrate in an evaporating dish boils the water away and leaves the salt as white crystals, which are weighed. How much salt comes back depends on the water used and on the rinses.",
+  "vi": {
+    "name": "Tách muối ra khỏi cát: hòa tan, lọc, cô cạn",
+    "description": "Hỗn hợp muối và cát được khuấy với nước: muối tan, cát không tan. Lọc giữ cát lại trên giấy lọc và cho nước muối chảy qua; tráng cát giúp rửa trôi phần muối còn bám lại. Đun nước lọc trong bát sứ làm nước bay hơi hết, còn lại muối ở dạng tinh thể trắng để cân. Lượng muối thu lại phụ thuộc vào lượng nước dùng và số lần tráng.",
+    "note": "Mô hình dạy học đơn giản hóa cân bằng khối lượng và nhiệt, không phải mô hình lọc chính xác như phòng thí nghiệm. Muối tan tới độ tan của nó, 35,9 g trong 100 g nước ở 20 °C; phần dư vẫn ở dạng rắn cùng cát (quá ít nước). Bã ướt trên giấy lọc giữ lại 5 g nước (một hằng số minh họa cho loại cát và giấy này, không phải giá trị đo) chứa muối theo đúng tỉ lệ của dung dịch; mỗi lần tráng hòa với lượng nước bị giữ đó rồi chảy xuống, nên lượng muối còn lại giảm theo cấp số nhân: nhiều lần tráng nhỏ tốt hơn một lần tráng lớn. Nước lọc được đun với công suất có ích không đổi 300 W (minh họa): nóng lên tới điểm sôi (100 °C cộng độ tăng điểm sôi lí tưởng của dung dịch muối), rồi sôi và bay hơi; khi tỉ lệ muối/nước đạt độ tan ở 100 °C (39,2 g trong 100 g), muối bắt đầu kết tinh. Bỏ qua: nhiệt dung của bát và của muối, sự bay hơi dưới điểm sôi, hiện tượng bắn tóe khi gần khô. Thời gian được nén lại: mỗi giây chạy ứng với 30 giây trong phòng thí nghiệm. Kết quả mô phỏng không có sai số ngẫu nhiên; số đọc của cân chỉ được làm tròn theo độ phân giải d."
+  },
+  "requiredEquipment": ["separation-bench"],
+  "model": "chemistry.separation",
+  "parameters": [
+    {
+      "id": "saltMass",
+      "label": "Salt in the mixture",
+      "vi": { "label": "Khối lượng muối trong hỗn hợp" },
+      "symbol": "m_salt",
+      "unit": "g",
+      "default": 10,
+      "min": 5,
+      "max": 40,
+      "presets": [
+        { "label": "5 g", "vi": { "label": "5 g" }, "value": 5 },
+        { "label": "10 g", "vi": { "label": "10 g" }, "value": 10 },
+        { "label": "20 g", "vi": { "label": "20 g" }, "value": 20 },
+        { "label": "40 g", "vi": { "label": "40 g" }, "value": 40 }
+      ]
+    },
+    {
+      "id": "waterVolume",
+      "label": "Water to dissolve it",
+      "vi": { "label": "Thể tích nước để hòa tan" },
+      "symbol": "V_w",
+      "unit": "mL",
+      "default": 50,
+      "min": 25,
+      "max": 100,
+      "presets": [
+        { "label": "25 mL", "vi": { "label": "25 mL" }, "value": 25 },
+        { "label": "50 mL", "vi": { "label": "50 mL" }, "value": 50 },
+        { "label": "100 mL", "vi": { "label": "100 mL" }, "value": 100 }
+      ]
+    },
+    {
+      "id": "rinses",
+      "label": "Rinses of the sand",
+      "vi": { "label": "Số lần tráng cát" },
+      "symbol": "n",
+      "unit": "",
+      "default": 1,
+      "min": 0,
+      "max": 3,
+      "presets": [
+        { "label": "None", "vi": { "label": "Không tráng" }, "value": 0 },
+        { "label": "1", "vi": { "label": "1" }, "value": 1 },
+        { "label": "2", "vi": { "label": "2" }, "value": 2 },
+        { "label": "3", "vi": { "label": "3" }, "value": 3 }
+      ]
+    },
+    {
+      "id": "balanceResolution",
+      "label": "Balance resolution",
+      "vi": { "label": "Độ phân giải của cân" },
+      "symbol": "d",
+      "unit": "g",
+      "default": 0.01,
+      "min": 0.001,
+      "max": 0.1,
+      "presets": [
+        { "label": "0.1 g", "vi": { "label": "0,1 g" }, "value": 0.1 },
+        { "label": "0.01 g", "vi": { "label": "0,01 g" }, "value": 0.01 },
+        { "label": "0.001 g", "vi": { "label": "0,001 g" }, "value": 0.001 }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "sandMass": 10,
+    "rinseVolume": 10,
+    "retainedWater": 5,
+    "heaterPower": 300,
+    "timeLapse": 30
+  },
+  "inputs": {
+    "sandMass": { "symbol": "m_sand", "unit": "g" },
+    "rinseVolume": { "symbol": "V_rinse", "unit": "mL" },
+    "retainedWater": { "symbol": "m_held", "unit": "g", "desk": false },
+    "heaterPower": { "symbol": "P", "unit": "W", "desk": false },
+    "timeLapse": { "symbol": "k", "unit": "", "desk": false }
+  },
+  "simulation": { "timeStep": 0.05, "maxDuration": 120, "sampleInterval": 0.25 },
+  "measurements": [
+    {
+      "id": "time",
+      "label": "Heating time",
+      "vi": { "label": "Thời gian đun" },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "labTime"
+    },
+    {
+      "id": "temperature",
+      "label": "Temperature of the liquid",
+      "vi": { "label": "Nhiệt độ chất lỏng" },
+      "symbol": "θ",
+      "unit": "°C",
+      "variable": "temperature"
+    },
+    {
+      "id": "water",
+      "label": "Water left in the dish",
+      "vi": { "label": "Nước còn lại trong bát" },
+      "symbol": "m_w",
+      "unit": "g",
+      "variable": "waterMass"
+    },
+    {
+      "id": "crystals",
+      "label": "Salt crystals in the dish",
+      "vi": { "label": "Tinh thể muối trong bát" },
+      "symbol": "m_c",
+      "unit": "g",
+      "variable": "crystalMass"
+    }
+  ],
+  "results": [
+    {
+      "id": "crystals",
+      "label": "Salt recovered (dry crystals)",
+      "vi": { "label": "Muối thu lại (tinh thể khô)" },
+      "symbol": "m_c",
+      "unit": "g",
+      "variable": "crystalMass",
+      "reduce": "final",
+      "theory": "saltRecovered"
+    },
+    {
+      "id": "recovery",
+      "label": "Share of the salt recovered",
+      "vi": { "label": "Phần trăm muối thu lại" },
+      "symbol": "R",
+      "unit": "%",
+      "variable": "recovery",
+      "reduce": "final",
+      "theory": "recovery"
+    },
+    {
+      "id": "saltPercent",
+      "label": "Salt in the mixture, as found",
+      "vi": { "label": "Phần trăm muối trong hỗn hợp, theo kết quả" },
+      "symbol": "w",
+      "unit": "%",
+      "variable": "saltPercent",
+      "reduce": "final",
+      "theory": "saltPercent"
+    },
+    {
+      "id": "residue",
+      "label": "Dried residue on the paper",
+      "vi": { "label": "Bã khô trên giấy lọc" },
+      "symbol": "m_res",
+      "unit": "g",
+      "variable": "residueMass",
+      "reduce": "final",
+      "theory": "residueMass"
+    },
+    {
+      "id": "lost",
+      "label": "Salt left in the residue",
+      "vi": { "label": "Muối còn lại trong bã" },
+      "symbol": "m_lost",
+      "unit": "g",
+      "variable": "saltLost",
+      "reduce": "final",
+      "theory": "saltLost"
+    },
+    {
+      "id": "undissolved",
+      "label": "Salt the water could not dissolve",
+      "vi": { "label": "Muối không tan hết do thiếu nước" },
+      "symbol": "m_undiss",
+      "unit": "g",
+      "variable": "undissolvedSalt",
+      "reduce": "final",
+      "theory": "undissolvedSalt"
+    }
+  ],
+  "instruments": [
+    {
+      "result": "crystals",
+      "quantity": "Mass of the dry salt crystals",
+      "name": "Top-pan balance",
+      "resolution": "balanceResolution",
+      "excludes": "the balance's calibration and drift, crystals that spat out of the dish or stayed damp, and the dish's own mass weighed twice",
+      "vi": {
+        "quantity": "Khối lượng tinh thể muối khô",
+        "name": "Cân điện tử",
+        "excludes": "sai số hiệu chuẩn và độ trôi của cân, tinh thể bắn ra khỏi bát hoặc còn ẩm, và việc cân khối lượng bát hai lần"
+      }
+    }
+  ],
+  "graphs": [
+    {
+      "id": "heating",
+      "title": "Temperature of the liquid against heating time",
+      "vi": { "title": "Nhiệt độ chất lỏng theo thời gian đun" },
+      "x": "time",
+      "y": ["temperature"]
+    },
+    {
+      "id": "masses",
+      "title": "Water and crystals in the dish against heating time",
+      "vi": { "title": "Nước và tinh thể trong bát theo thời gian đun" },
+      "x": "time",
+      "y": ["water", "crystals"],
+      "yLabel": "m"
+    }
+  ],
+  "monitor": "masses",
+  "compare": [{ "graph": "masses", "series": "crystals" }],
+  "note": "A simplified teaching model of the mass balance and the heat, not a model of a real filtration to lab precision. The salt dissolves up to its solubility, 35.9 g per 100 g of water at 20 °C; any more stays solid with the sand (too little water). The wet residue on the paper holds 5 g of water (one illustrative constant for this sand and paper, not a measured property) carrying salt at the solution's own ratio; each rinse mixes with that held water and drains back to it, so the salt left falls geometrically: several small rinses beat one large one. The filtrate is heated at a constant net power of 300 W (illustrative): it warms to its boiling point (100 °C raised by the salt's ideal boiling-point elevation), then boils away; once the salt-to-water ratio reaches the solubility at 100 °C (39.2 g per 100 g) the salt crystallises. Left out: the dish's and the salt's heat capacity, evaporation below the boiling point, spitting near dryness. Time is compressed: each run second is 30 lab seconds. The simulated results carry no random error; the balance's reading is only rounded to its resolution d.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the separation instructions on the board.",
+      "vi": { "instruction": "Đọc hướng dẫn tách muối ra khỏi cát trên bảng." },
+      "done": { "kind": "inspected", "item": "separation-instructions" }
+    },
+    {
+      "id": "salt",
+      "instruction": "Set the salt in the mixture and the water to dissolve it with the dials.",
+      "vi": {
+        "instruction": "Đặt khối lượng muối trong hỗn hợp và thể tích nước để hòa tan bằng các núm xoay."
+      },
+      "done": { "kind": "adjusted", "parameter": "saltMass" }
+    },
+    {
+      "id": "rinses",
+      "instruction": "Choose how many times the sand on the paper is rinsed.",
+      "vi": { "instruction": "Chọn số lần tráng cát trên giấy lọc." },
+      "done": { "kind": "adjusted", "parameter": "rinses" }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the filtrate is heated; watch the water boil away and the crystals appear.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: nước lọc được đun; quan sát nước bay hơi và tinh thể xuất hiện."
+      },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read the salt recovered and how much was lost on the results monitor.",
+      "vi": { "instruction": "Đọc lượng muối thu lại và lượng muối bị mất trên màn hình kết quả." },
+      "done": { "kind": "viewed" }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, change only the rinses (or the water) and run again: which recovers more salt?",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, chỉ thay đổi số lần tráng (hoặc lượng nước) rồi chạy lại: cách nào thu lại nhiều muối hơn?"
+      },
+      "done": { "kind": "reset" }
+    }
+  ],
+  "examples": [
+    {
+      "id": "too-little-water",
+      "question": "{saltMass} g of salt mixed with sand is stirred into {waterVolume} mL of water at 20 °C (0.9982 g/mL). NaCl dissolves up to 35.9 g per 100 g of water. How much salt stays undissolved?",
+      "vi": {
+        "question": "Trộn {saltMass} g muối lẫn cát vào {waterVolume} mL nước ở 20 °C (0,9982 g/mL). NaCl tan tối đa 35,9 g trong 100 g nước. Có bao nhiêu gam muối không tan?"
+      },
+      "set": { "saltMass": 40, "waterVolume": 50 },
+      "find": [{ "theory": "undissolvedSalt" }],
+      "steps": [
+        {
+          "say": "The water’s mass is its volume times its density, {=waterVolume*0.9982|4} g. Each gram of it dissolves at most 0.359 g of salt.",
+          "vi": {
+            "say": "Khối lượng nước bằng thể tích nhân khối lượng riêng, {=waterVolume*0.9982|4} g. Mỗi gam nước hòa tan tối đa 0,359 g muối."
+          },
+          "write": "m_max = 0.359·m_w"
+        },
+        {
+          "say": "The rest of the salt stays solid with the sand.",
+          "vi": { "say": "Phần muối còn lại vẫn ở dạng rắn cùng với cát." },
+          "write": "m_undiss = {saltMass} − 0.359·{=waterVolume*0.9982|4} ≈ {@undissolvedSalt} g",
+          "check": { "expr": "saltMass-0.359*waterVolume*0.9982", "equals": "undissolvedSalt" }
+        }
+      ]
+    },
+    {
+      "id": "rinsing",
+      "question": "{saltMass} g of salt dissolves in {waterVolume} mL of water; the wet sand keeps {retainedWater} g of the solution’s water (an illustrative value). It is rinsed {rinses} times with {rinseVolume} mL. How much salt is lost with the sand, and how much is recovered?",
+      "vi": {
+        "question": "{saltMass} g muối tan hết trong {waterVolume} mL nước; cát ướt giữ lại {retainedWater} g nước của dung dịch (giá trị minh họa). Rửa cát {rinses} lần, mỗi lần {rinseVolume} mL. Bao nhiêu muối bị mất theo cát, và thu hồi được bao nhiêu?"
+      },
+      "set": { "saltMass": 10, "waterVolume": 50, "rinses": 2 },
+      "find": [{ "theory": "saltLost" }, { "theory": "saltRecovered" }],
+      "steps": [
+        {
+          "say": "The held water carries salt in the solution’s ratio, {retainedWater} g out of {=waterVolume*0.9982|4} g. Each rinse mixes with it and drains back, leaving the fraction q = {retainedWater}/({retainedWater} + {=rinseVolume*0.9982|4}) behind.",
+          "vi": {
+            "say": "Nước bị giữ lại mang muối theo đúng tỉ lệ của dung dịch, {retainedWater} g trên {=waterVolume*0.9982|4} g. Mỗi lần rửa, nước rửa trộn với nó rồi chảy đi, chỉ để lại phần q = {retainedWater}/({retainedWater} + {=rinseVolume*0.9982|4})."
+          },
+          "write": "m_lost = m·(5/m_w)·qⁿ ≈ {@saltLost} g",
+          "check": {
+            "expr": "saltMass*(retainedWater/(waterVolume*0.9982))*(retainedWater/(retainedWater+0.9982*rinseVolume))^rinses",
+            "equals": "saltLost"
+          }
+        },
+        {
+          "say": "The rest reaches the dish: several small rinses beat one large one.",
+          "vi": {
+            "say": "Phần còn lại vào bát cô cạn: rửa nhiều lần với ít nước tốt hơn rửa một lần với nhiều nước."
+          },
+          "write": "m_c = {saltMass} − {@saltLost} ≈ {@saltRecovered} g",
+          "check": { "expr": "saltMass-@saltLost", "equals": "saltRecovered" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "Salt dissolves in water, sand does not: dissolving, filtering and boiling the water away separate the two.",
+    "vi": {
+      "summary": "Muối tan trong nước, cát thì không: hòa tan, lọc rồi đun cho nước bay hơi sẽ tách được hai chất."
+    },
+    "parts": [
+      {
+        "id": "beaker",
+        "name": "Beaker: the mixture in water",
+        "role": "Salt and sand stirred into water: the salt dissolves, the sand sinks.",
+        "vi": {
+          "name": "Cốc: hỗn hợp trong nước",
+          "role": "Muối và cát được khuấy với nước: muối tan, cát chìm xuống."
+        },
+        "anchor": { "part": "beaker" }
+      },
+      {
+        "id": "funnel",
+        "name": "Filter funnel and paper",
+        "role": "The paper's tiny pores let the salty water through but hold back the sand grains.",
+        "vi": {
+          "name": "Phễu và giấy lọc",
+          "role": "Lỗ nhỏ của giấy lọc cho nước muối đi qua nhưng giữ lại hạt cát."
+        },
+        "anchor": { "part": "funnel" }
+      },
+      {
+        "id": "residue",
+        "name": "Residue (sand)",
+        "role": "What stays on the paper; still wet with some salty water, which rinsing washes through.",
+        "vi": {
+          "name": "Bã (cát)",
+          "role": "Phần còn lại trên giấy lọc; vẫn còn ướt nước muối, tráng sẽ rửa trôi phần đó."
+        },
+        "anchor": { "part": "residue" }
+      },
+      {
+        "id": "flask",
+        "name": "Flask: the filtrate",
+        "role": "The clear salty water that came through the paper.",
+        "vi": { "name": "Bình: nước lọc", "role": "Nước muối trong suốt đã đi qua giấy lọc." },
+        "anchor": { "part": "flask" }
+      },
+      {
+        "id": "dish",
+        "name": "Evaporating dish",
+        "role": "The filtrate is boiled here until only the salt is left.",
+        "vi": {
+          "name": "Bát sứ cô cạn",
+          "role": "Nước lọc được đun ở đây cho tới khi chỉ còn lại muối."
+        },
+        "anchor": { "part": "dish" }
+      },
+      {
+        "id": "plate",
+        "name": "Hot plate",
+        "role": "Heats the dish (300 W reach the liquid in this model).",
+        "vi": {
+          "name": "Bếp điện",
+          "role": "Đun nóng bát (trong mô hình, 300 W truyền vào chất lỏng)."
+        },
+        "anchor": { "part": "hot-plate" }
+      },
+      {
+        "id": "thermometer",
+        "name": "Thermometer",
+        "role": "Shows the liquid warming, then staying at its boiling point while the water boils away.",
+        "vi": {
+          "name": "Nhiệt kế",
+          "role": "Cho thấy chất lỏng nóng dần, rồi giữ ở điểm sôi trong khi nước sôi và bay hơi."
+        },
+        "anchor": { "part": "thermometer" }
+      }
+    ],
+    "steps": [
+      {
+        "text": "Salt and sand look alike, but only salt dissolves in water. Stirred into the water, the salt spreads through it as ions; the sand stays as grains.",
+        "vi": {
+          "text": "Muối và cát trông giống nhau, nhưng chỉ có muối tan trong nước. Khi khuấy vào nước, muối phân tán thành các ion; cát vẫn là những hạt rắn."
+        },
+        "parts": ["beaker"]
+      },
+      {
+        "text": "If there is too little water, not all the salt can dissolve: 100 g of water holds at most 35.9 g of salt at 20 °C. The rest stays with the sand and is lost.",
+        "vi": {
+          "text": "Nếu quá ít nước, muối không tan hết: 100 g nước chỉ hòa tan tối đa 35,9 g muối ở 20 °C. Phần còn lại ở lại cùng cát và bị mất."
+        },
+        "parts": ["beaker"]
+      },
+      {
+        "text": "Filtering: the paper holds back the sand and lets the salty water — the filtrate — through. The wet sand still holds some salty water; rinsing it with fresh water washes most of that salt through.",
+        "vi": {
+          "text": "Lọc: giấy lọc giữ cát lại và cho nước muối — nước lọc — đi qua. Cát ướt vẫn giữ một ít nước muối; tráng bằng nước sạch sẽ rửa phần lớn lượng muối đó xuống."
+        },
+        "parts": ["funnel", "residue", "flask"]
+      },
+      {
+        "text": "Heating: the filtrate warms up to its boiling point, a little above 100 °C because salt raises the boiling point, then the water boils away while the temperature stays level.",
+        "vi": {
+          "text": "Đun nóng: nước lọc nóng lên tới điểm sôi, cao hơn 100 °C một chút vì muối làm tăng điểm sôi, sau đó nước sôi và bay hơi trong khi nhiệt độ giữ không đổi."
+        },
+        "parts": ["dish", "plate", "thermometer"]
+      },
+      {
+        "text": "When the water left can no longer hold all the salt, crystals appear; by the time the dish is dry, all the salt that came through is there as white crystals.",
+        "vi": {
+          "text": "Khi lượng nước còn lại không đủ giữ hết muối, tinh thể xuất hiện; đến khi bát khô, toàn bộ muối đã đi qua giấy lọc nằm lại thành tinh thể trắng."
+        },
+        "parts": ["dish"]
+      },
+      {
+        "text": "Weigh the crystals and compare with the salt put in: the recovery. More water and more rinses recover more; the salt still in the residue is what was lost.",
+        "vi": {
+          "text": "Cân tinh thể và so với lượng muối ban đầu: đó là hiệu suất thu hồi. Nhiều nước hơn và tráng nhiều lần hơn thì thu lại được nhiều hơn; muối còn trong bã là phần bị mất."
+        },
+        "parts": ["dish", "residue"]
+      }
+    ]
+  }
+}

@@ -1,0 +1,1053 @@
+{
+  "id": "capacitor",
+  "skills": [
+    {
+      "id": "charging",
+      "name": "Charging through a resistor",
+      "advice": "Charging, U_C = E·(1 − e^(−t/τ)): fast at first, ever more slowly; the current E/R at the start falls towards zero. Watch the voltmeter and ammeter together in a run.",
+      "vi": {
+        "name": "Nạp điện cho tụ qua điện trở",
+        "advice": "Khi nạp, U_C = E·(1 − e^(−t/τ)): tăng nhanh lúc đầu rồi chậm dần; dòng điện ban đầu E/R giảm dần về 0. Quan sát cùng lúc vôn kế và ampe kế khi chạy thí nghiệm."
+      }
+    },
+    {
+      "id": "tau",
+      "name": "The time constant τ = R·C",
+      "advice": "τ = R·C, in seconds with R in ohms and C in farads (1 µF = 10⁻⁶ F). After one τ the charge reaches about 63 % of E; doubling R or C doubles τ.",
+      "vi": {
+        "name": "Hằng số thời gian τ = R·C",
+        "advice": "τ = R·C, tính bằng giây khi R tính bằng ôm và C bằng fara (1 µF = 10⁻⁶ F). Sau một τ tụ nạp tới khoảng 63 % E; tăng gấp đôi R hoặc C thì τ tăng gấp đôi."
+      }
+    },
+    {
+      "id": "discharge",
+      "name": "Discharging",
+      "advice": "Discharging, U_C = U₀·e^(−t/τ): after each τ only 37 % is left, and the current flows the other way. After 2τ, 0.37² ≈ 13.5 % is left — not 26 %.",
+      "vi": {
+        "name": "Phóng điện",
+        "advice": "Khi phóng điện, U_C = U₀·e^(−t/τ): sau mỗi τ chỉ còn 37 %, và dòng điện chạy theo chiều ngược lại. Sau 2τ còn 0,37² ≈ 13,5 % — không phải 26 %."
+      }
+    },
+    {
+      "id": "charge",
+      "name": "Charge and current",
+      "advice": "q = C·U: a full capacitor holds C·E. The current at the start of charging is E/R, since the empty capacitor has no voltage. A stopwatch reads τ to its resolution; real capacitors leak and have a wide tolerance.",
+      "vi": {
+        "name": "Điện tích và dòng điện",
+        "advice": "q = C·U: tụ nạp đầy có điện tích C·E. Dòng điện lúc bắt đầu nạp bằng E/R, vì tụ chưa tích điện có hiệu điện thế bằng 0. Đồng hồ bấm giây đọc τ theo độ phân giải; tụ thật bị rò điện và có sai số lớn."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "tau",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["tau"],
+      "stem": "The time constant of a capacitor C charging through a resistor R is…",
+      "explain": "τ = R·C.",
+      "vi": {
+        "stem": "Hằng số thời gian của tụ điện C nạp điện qua điện trở R là…",
+        "explain": "τ = R·C."
+      },
+      "options": [
+        {
+          "text": "τ = R·C",
+          "vi": {
+            "text": "τ = R·C"
+          },
+          "correct": true
+        },
+        {
+          "text": "τ = R/C",
+          "vi": {
+            "text": "τ = R/C"
+          }
+        },
+        {
+          "text": "τ = C/R",
+          "vi": {
+            "text": "τ = C/R"
+          }
+        },
+        {
+          "text": "τ = 1/(R·C)",
+          "vi": {
+            "text": "τ = 1/(R·C)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "one-tau",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["charging", "tau"],
+      "stem": "After one time constant of charging from empty, the capacitor’s voltage is about…",
+      "explain": "U_C = E(1 − 1/e) ≈ 63 % of E.",
+      "vi": {
+        "stem": "Sau một hằng số thời gian kể từ lúc bắt đầu nạp, hiệu điện thế của tụ vào khoảng…",
+        "explain": "U_C = E(1 − 1/e) ≈ 63 % của E."
+      },
+      "options": [
+        {
+          "text": "63 % of E",
+          "vi": {
+            "text": "63 % của E"
+          },
+          "correct": true
+        },
+        {
+          "text": "37 % of E",
+          "vi": {
+            "text": "37 % của E"
+          }
+        },
+        {
+          "text": "50 % of E",
+          "vi": {
+            "text": "50 % của E"
+          }
+        },
+        {
+          "text": "100 % of E",
+          "vi": {
+            "text": "100 % của E"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-rc",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["charging", "discharge"],
+      "stem": "A capacitor charges from a battery through a resistor, then discharges through it. Decide whether each statement is true or false.",
+      "explain": "The charging current is largest at the start; discharging, it flows the other way; after 5τ the capacitor is all but full (99.3 %); the voltage rises fast at first, not at a steady rate.",
+      "vi": {
+        "stem": "Một tụ điện được nạp từ nguồn qua điện trở, sau đó phóng điện qua chính điện trở đó. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Dòng nạp lớn nhất lúc bắt đầu; khi phóng điện dòng điện chạy theo chiều ngược lại; sau 5τ tụ gần như nạp đầy (99,3 %); hiệu điện thế tăng nhanh lúc đầu chứ không tăng đều."
+      },
+      "statements": [
+        {
+          "text": "The charging current is largest at the start.",
+          "vi": {
+            "text": "Dòng điện nạp lớn nhất lúc bắt đầu nạp."
+          },
+          "true": true
+        },
+        {
+          "text": "While it discharges the current flows the other way.",
+          "vi": {
+            "text": "Khi tụ phóng điện, dòng điện chạy theo chiều ngược lại."
+          },
+          "true": true
+        },
+        {
+          "text": "After 5τ of charging it is practically full.",
+          "vi": {
+            "text": "Sau 5τ nạp điện, tụ gần như đã đầy."
+          },
+          "true": true
+        },
+        {
+          "text": "Its voltage rises at a constant rate while it charges.",
+          "vi": {
+            "text": "Hiệu điện thế của tụ tăng đều theo thời gian khi nạp."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "double-r",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["tau"],
+      "stem": "The resistor is replaced by one of twice the resistance. Charging…",
+      "explain": "τ = R·C doubles: charging takes twice as long; the final voltage is still E.",
+      "vi": {
+        "stem": "Thay điện trở bằng điện trở có giá trị gấp đôi. Quá trình nạp điện…",
+        "explain": "τ = R·C tăng gấp đôi: thời gian nạp dài gấp đôi; hiệu điện thế cuối cùng vẫn bằng E."
+      },
+      "options": [
+        {
+          "text": "takes twice as long, to the same final voltage",
+          "vi": {
+            "text": "kéo dài gấp đôi, tới cùng hiệu điện thế cuối"
+          },
+          "correct": true
+        },
+        {
+          "text": "takes half as long",
+          "vi": {
+            "text": "chỉ mất một nửa thời gian"
+          }
+        },
+        {
+          "text": "reaches twice the voltage",
+          "vi": {
+            "text": "đạt hiệu điện thế gấp đôi"
+          }
+        },
+        {
+          "text": "is not changed",
+          "vi": {
+            "text": "không thay đổi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "two-tau-left",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["discharge"],
+      "stem": "A full capacitor discharges through a resistor. After two time constants, what share of its starting voltage is left?",
+      "explain": "U = U₀·e^(−2) ≈ {=100*exp(-2)|3} %: 37 % of 37 %.",
+      "vi": {
+        "stem": "Một tụ đã nạp đầy phóng điện qua điện trở. Sau hai hằng số thời gian, hiệu điện thế còn lại bao nhiêu phần trăm so với ban đầu?",
+        "explain": "U = U₀·e^(−2) ≈ {=100*exp(-2)|3} %: 37 % của 37 %."
+      },
+      "options": [
+        {
+          "text": "{=100*exp(-2)|3} %",
+          "vi": {
+            "text": "{=100*exp(-2)|3} %"
+          },
+          "correct": true
+        },
+        {
+          "text": "{=200*exp(-1)|3} %",
+          "vi": {
+            "text": "{=200*exp(-1)|3} %"
+          }
+        },
+        {
+          "text": "{=100*(1-exp(-2))|3} %",
+          "vi": {
+            "text": "{=100*(1-exp(-2))|3} %"
+          }
+        },
+        {
+          "text": "0 %",
+          "vi": {
+            "text": "0 %"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-2200",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["tau", "charging", "charge"],
+      "set": {
+        "resistance": 2200,
+        "capacitance": 0.00047,
+        "supply": 6
+      },
+      "stem": "A {=capacitance*1e6} µF capacitor charges through {resistance} Ω from a {supply} V battery. Decide whether each statement is true or false.",
+      "explain": "τ = R·C ≈ {@timeConstant} s; after τ, U_C = E(1 − e⁻¹) ≈ {@oneTauVoltage} V, not E/2; full, q = C·E = {@fullCharge} C.",
+      "vi": {
+        "stem": "Tụ {=capacitance*1e6} µF nạp điện qua điện trở {resistance} Ω từ nguồn {supply} V. Mỗi nhận định sau đúng hay sai?",
+        "explain": "τ = R·C ≈ {@timeConstant} s; sau τ, U_C = E(1 − e⁻¹) ≈ {@oneTauVoltage} V, không phải E/2; khi đầy, q = C·E = {@fullCharge} C."
+      },
+      "statements": [
+        {
+          "text": "The time constant is about {@timeConstant} s.",
+          "vi": {
+            "text": "Hằng số thời gian khoảng {@timeConstant} s."
+          },
+          "true": true,
+          "check": {
+            "expr": "resistance*capacitance",
+            "equals": "timeConstant"
+          }
+        },
+        {
+          "text": "After one time constant its voltage is about {@oneTauVoltage} V.",
+          "vi": {
+            "text": "Sau một hằng số thời gian, hiệu điện thế của tụ khoảng {@oneTauVoltage} V."
+          },
+          "true": true,
+          "check": {
+            "expr": "supply*(1-exp(-1))",
+            "equals": "oneTauVoltage"
+          }
+        },
+        {
+          "text": "Fully charged, it holds {@fullCharge} C.",
+          "vi": {
+            "text": "Khi nạp đầy, tụ tích điện tích {@fullCharge} C."
+          },
+          "true": true,
+          "check": {
+            "expr": "capacitance*supply",
+            "equals": "fullCharge"
+          }
+        },
+        {
+          "text": "After one time constant its voltage is half of {supply} V.",
+          "vi": {
+            "text": "Sau một hằng số thời gian, hiệu điện thế của tụ bằng một nửa {supply} V."
+          },
+          "true": false,
+          "check": {
+            "expr": "supply/2",
+            "equals": "oneTauVoltage"
+          }
+        }
+      ]
+    },
+    {
+      "id": "time-constant",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["tau"],
+      "set": {
+        "resistance": 4700,
+        "capacitance": 0.0022
+      },
+      "stem": "A {=capacitance*1e6} µF capacitor charges through a {resistance} Ω resistor. What is the time constant?",
+      "explain": "τ = R·C = {resistance}·{capacitance} ≈ {@timeConstant} s, with C in farads.",
+      "vi": {
+        "stem": "Tụ {=capacitance*1e6} µF nạp điện qua điện trở {resistance} Ω. Hằng số thời gian bằng bao nhiêu?",
+        "explain": "τ = R·C = {resistance}·{capacitance} ≈ {@timeConstant} s, với C tính bằng fara."
+      },
+      "options": [
+        {
+          "text": "{@timeConstant} s",
+          "vi": {
+            "text": "{@timeConstant} s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "resistance*capacitance",
+            "equals": "timeConstant"
+          }
+        },
+        {
+          "text": "{=resistance/capacitance} s",
+          "vi": {
+            "text": "{=resistance/capacitance} s"
+          },
+          "check": {
+            "expr": "resistance/capacitance",
+            "equals": "timeConstant"
+          }
+        },
+        {
+          "text": "{=capacitance/resistance} s",
+          "vi": {
+            "text": "{=capacitance/resistance} s"
+          },
+          "check": {
+            "expr": "capacitance/resistance",
+            "equals": "timeConstant"
+          }
+        },
+        {
+          "text": "{=resistance*capacitance*1e6} s",
+          "vi": {
+            "text": "{=resistance*capacitance*1e6} s"
+          },
+          "check": {
+            "expr": "resistance*capacitance*1e6",
+            "equals": "timeConstant"
+          }
+        }
+      ]
+    },
+    {
+      "id": "start-current",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["charge"],
+      "set": {
+        "resistance": 1000,
+        "supply": 9
+      },
+      "stem": "An empty capacitor is connected through {resistance} Ω to a {supply} V battery. What current flows at the first instant?",
+      "explain": "The empty capacitor has no voltage, so all of E is across R: I₀ = E/R = {supply}/{resistance} = {@peakCurrent} A.",
+      "vi": {
+        "stem": "Một tụ chưa tích điện được nối qua điện trở {resistance} Ω với nguồn {supply} V. Cường độ dòng điện ngay lúc đầu bằng bao nhiêu?",
+        "explain": "Tụ chưa tích điện có hiệu điện thế bằng 0, nên toàn bộ E đặt vào R: I₀ = E/R = {supply}/{resistance} = {@peakCurrent} A."
+      },
+      "options": [
+        {
+          "text": "{@peakCurrent} A",
+          "vi": {
+            "text": "{@peakCurrent} A"
+          },
+          "correct": true,
+          "check": {
+            "expr": "supply/resistance",
+            "equals": "peakCurrent"
+          }
+        },
+        {
+          "text": "{=supply*resistance} A",
+          "vi": {
+            "text": "{=supply*resistance} A"
+          },
+          "check": {
+            "expr": "supply*resistance",
+            "equals": "peakCurrent"
+          }
+        },
+        {
+          "text": "{=resistance/supply} A",
+          "vi": {
+            "text": "{=resistance/supply} A"
+          },
+          "check": {
+            "expr": "resistance/supply",
+            "equals": "peakCurrent"
+          }
+        },
+        {
+          "text": "0 A",
+          "vi": {
+            "text": "0 A"
+          },
+          "check": {
+            "expr": "0",
+            "equals": "peakCurrent"
+          }
+        }
+      ]
+    },
+    {
+      "id": "half-time",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["charging", "tau"],
+      "set": {
+        "resistance": 2200,
+        "capacitance": 0.001
+      },
+      "stem": "A capacitor charges through {resistance} Ω with τ = {@timeConstant} s. How long does its voltage take to reach half of E?",
+      "explain": "1 − e^(−t/τ) = ½ gives t = τ·ln 2 ≈ {@halfTime} s — less than τ, which is the 63 % point.",
+      "vi": {
+        "stem": "Một tụ nạp điện qua {resistance} Ω với τ = {@timeConstant} s. Sau bao lâu hiệu điện thế của tụ đạt một nửa E?",
+        "explain": "1 − e^(−t/τ) = ½ cho t = τ·ln 2 ≈ {@halfTime} s — nhỏ hơn τ, là thời điểm đạt 63 %."
+      },
+      "options": [
+        {
+          "text": "{@halfTime} s",
+          "vi": {
+            "text": "{@halfTime} s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@timeConstant*ln(2)",
+            "equals": "halfTime"
+          }
+        },
+        {
+          "text": "{=@timeConstant/2} s",
+          "vi": {
+            "text": "{=@timeConstant/2} s"
+          },
+          "check": {
+            "expr": "@timeConstant/2",
+            "equals": "halfTime"
+          }
+        },
+        {
+          "text": "{@timeConstant} s",
+          "vi": {
+            "text": "{@timeConstant} s"
+          },
+          "check": {
+            "expr": "@timeConstant",
+            "equals": "halfTime"
+          }
+        },
+        {
+          "text": "{=@timeConstant*log(2)} s",
+          "vi": {
+            "text": "{=@timeConstant*log(2)} s"
+          },
+          "check": {
+            "expr": "@timeConstant*log(2)",
+            "equals": "halfTime"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-3v",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["tau", "charge"],
+      "set": {
+        "resistance": 1000,
+        "capacitance": 0.0022,
+        "supply": 3
+      },
+      "stem": "A {=capacitance*1e6} µF capacitor charges through {resistance} Ω from a {supply} V battery. Decide whether each statement is true or false.",
+      "explain": "τ = R·C = {@timeConstant} s; I₀ = E/R = {@peakCurrent} A; full charge C·E = {@fullCharge} C. After one τ the current has fallen to 37 % of I₀, not to zero.",
+      "vi": {
+        "stem": "Tụ {=capacitance*1e6} µF nạp điện qua điện trở {resistance} Ω từ nguồn {supply} V. Mỗi nhận định sau đúng hay sai?",
+        "explain": "τ = R·C = {@timeConstant} s; I₀ = E/R = {@peakCurrent} A; điện tích khi đầy C·E = {@fullCharge} C. Sau một τ dòng điện giảm còn 37 % I₀, chưa bằng 0."
+      },
+      "statements": [
+        {
+          "text": "The time constant is {@timeConstant} s.",
+          "vi": {
+            "text": "Hằng số thời gian bằng {@timeConstant} s."
+          },
+          "true": true,
+          "check": {
+            "expr": "resistance*capacitance",
+            "equals": "timeConstant"
+          }
+        },
+        {
+          "text": "The current at the start is {@peakCurrent} A.",
+          "vi": {
+            "text": "Dòng điện lúc bắt đầu nạp bằng {@peakCurrent} A."
+          },
+          "true": true,
+          "check": {
+            "expr": "supply/resistance",
+            "equals": "peakCurrent"
+          }
+        },
+        {
+          "text": "Fully charged it holds {@fullCharge} C.",
+          "vi": {
+            "text": "Khi nạp đầy tụ có điện tích {@fullCharge} C."
+          },
+          "true": true,
+          "check": {
+            "expr": "capacitance*supply",
+            "equals": "fullCharge"
+          }
+        },
+        {
+          "text": "After one time constant the charging current has fallen to zero.",
+          "vi": {
+            "text": "Sau một hằng số thời gian, dòng điện nạp đã giảm về 0."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "two-tau",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["charging", "tau"],
+      "set": {
+        "resistance": 1000,
+        "capacitance": 0.001,
+        "supply": 6
+      },
+      "stem": "A {=capacitance*1e6} µF capacitor charges through {resistance} Ω from {supply} V, starting empty. What is its voltage {=2*@timeConstant} s later?",
+      "explain": "τ = R·C = {@timeConstant} s, so t = 2τ: U_C = E(1 − e⁻²) ≈ {=supply*(1-exp(-2))} V. Doubling the 63 % point linearly, or using the discharge formula, gives the wrong values.",
+      "vi": {
+        "stem": "Tụ {=capacitance*1e6} µF chưa tích điện được nạp qua {resistance} Ω từ nguồn {supply} V. Hiệu điện thế của tụ sau {=2*@timeConstant} s là bao nhiêu?",
+        "explain": "τ = R·C = {@timeConstant} s, nên t = 2τ: U_C = E(1 − e⁻²) ≈ {=supply*(1-exp(-2))} V. Nhân đôi tuyến tính mốc 63 %, hoặc dùng công thức phóng điện, đều cho kết quả sai."
+      },
+      "options": [
+        {
+          "text": "{=supply*(1-exp(-2))} V",
+          "vi": {
+            "text": "{=supply*(1-exp(-2))} V"
+          },
+          "correct": true
+        },
+        {
+          "text": "{=supply*exp(-2)} V",
+          "vi": {
+            "text": "{=supply*exp(-2)} V"
+          }
+        },
+        {
+          "text": "{=2*@oneTauVoltage} V",
+          "vi": {
+            "text": "{=2*@oneTauVoltage} V"
+          }
+        },
+        {
+          "text": "{@oneTauVoltage} V",
+          "vi": {
+            "text": "{@oneTauVoltage} V"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-stopwatch",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["tau", "charge"],
+      "set": {
+        "resistance": 2200,
+        "capacitance": 0.0022,
+        "supply": 6,
+        "timerResolution": 0.1
+      },
+      "stem": "A {=capacitance*1e6} µF capacitor charges through {resistance} Ω; the time it takes to reach 63 % of E is read on a stopwatch of resolution {timerResolution} s. Decide whether each statement is true or false.",
+      "explain": "τ = R·C ≈ {@timeConstant|4} s, shown as {=round(@timeConstant/timerResolution)*timerResolution} s, with u = d/√12 ≈ {=timerResolution/sqrt(12)|2} s. A real electrolytic capacitor (often ±20 %) and a leak or a voltmeter drawing current make a measured τ differ from R·C.",
+      "vi": {
+        "stem": "Tụ {=capacitance*1e6} µF nạp điện qua {resistance} Ω; thời gian để đạt 63 % E được đọc trên đồng hồ bấm giây có độ phân giải {timerResolution} s. Mỗi nhận định sau đúng hay sai?",
+        "explain": "τ = R·C ≈ {@timeConstant|4} s, hiển thị {=round(@timeConstant/timerResolution)*timerResolution} s, với u = d/√12 ≈ {=timerResolution/sqrt(12)|2} s. Tụ hóa thật (sai số thường ±20 %), sự rò điện hay vôn kế có dòng chạy qua đều làm τ đo được khác R·C."
+      },
+      "statements": [
+        {
+          "text": "The stopwatch shows {=round(@timeConstant/timerResolution)*timerResolution} s.",
+          "vi": {
+            "text": "Đồng hồ bấm giây hiển thị {=round(@timeConstant/timerResolution)*timerResolution} s."
+          },
+          "true": true
+        },
+        {
+          "text": "Its standard uncertainty from the resolution alone is about {=timerResolution/sqrt(12)|2} s.",
+          "vi": {
+            "text": "Độ không đảm bảo chuẩn chỉ do độ phân giải khoảng {=timerResolution/sqrt(12)|2} s."
+          },
+          "true": true
+        },
+        {
+          "text": "A real capacitor’s ±20 % tolerance can make the measured τ differ from R·C.",
+          "vi": {
+            "text": "Sai số ±20 % của tụ thật có thể làm τ đo được khác R·C."
+          },
+          "true": true
+        },
+        {
+          "text": "A real voltmeter drawing a little current would make the measured τ exactly R·C.",
+          "vi": {
+            "text": "Vôn kế thật có dòng nhỏ chạy qua sẽ làm τ đo được đúng bằng R·C."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "farad",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["charge"],
+      "stem": "The SI unit of capacitance is the…",
+      "explain": "Capacitance C = Q/U is measured in farads (F): 1 F = 1 C/V. The coulomb is the unit of charge, the volt of voltage, and Ω·F = s is the unit of τ = R·C.",
+      "vi": {
+        "stem": "Đơn vị của điện dung trong hệ SI là…",
+        "explain": "Điện dung C = Q/U có đơn vị là fara (F): 1 F = 1 C/V. Culông là đơn vị điện tích, vôn là đơn vị hiệu điện thế, còn Ω·F = s là đơn vị của τ = R·C."
+      },
+      "options": [
+        {
+          "text": "farad (F)",
+          "vi": {
+            "text": "fara (F)"
+          },
+          "correct": true
+        },
+        {
+          "text": "coulomb (C)",
+          "vi": {
+            "text": "culông (C)"
+          }
+        },
+        {
+          "text": "volt (V)",
+          "vi": {
+            "text": "vôn (V)"
+          }
+        },
+        {
+          "text": "ohm-second (Ω·s)",
+          "vi": {
+            "text": "ôm-giây (Ω·s)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "current-falls",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["charging", "charge"],
+      "stem": "An empty capacitor is connected to a battery through a resistor. While it charges, the current in the resistor…",
+      "explain": "At first the capacitor has no voltage, so all of E is across R and I₀ = E/R. As U_C grows, the voltage left for R shrinks, so the current falls, quickly at first and then ever more slowly, towards zero.",
+      "vi": {
+        "stem": "Một tụ điện chưa tích điện được nối với nguồn qua một điện trở. Trong lúc tụ tích điện, cường độ dòng điện qua điện trở…",
+        "explain": "Lúc đầu tụ chưa có hiệu điện thế nên toàn bộ E đặt lên R và I₀ = E/R. Khi U_C tăng, hiệu điện thế còn lại trên R giảm nên dòng điện giảm, lúc đầu giảm nhanh rồi chậm dần, tiến về 0."
+      },
+      "options": [
+        {
+          "text": "is largest at the start and falls towards zero",
+          "vi": {
+            "text": "lớn nhất lúc đầu rồi giảm dần về 0"
+          },
+          "correct": true
+        },
+        {
+          "text": "starts at zero and rises to E/R",
+          "vi": {
+            "text": "bắt đầu từ 0 rồi tăng dần đến E/R"
+          }
+        },
+        {
+          "text": "stays at E/R until the capacitor is full, then stops",
+          "vi": {
+            "text": "giữ bằng E/R cho đến khi tụ đầy rồi ngừng hẳn"
+          }
+        },
+        {
+          "text": "falls steadily (in a straight line) to zero after one τ",
+          "vi": {
+            "text": "giảm đều (theo đường thẳng) về 0 sau một τ"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-charge-facts",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["tau", "discharge", "charge"],
+      "stem": "A capacitor charges from a battery through a resistor and is then discharged through the same resistor. Decide whether each statement is true or false.",
+      "explain": "Discharging, the current flows the other way round the circuit. After 5τ the voltage is within e⁻⁵ ≈ 0.7 % of its end value. τ = R·C does not contain E: a larger supply charges to a higher voltage in the same time. The final charge Q = C·E does not depend on R, which only sets how fast it is reached.",
+      "vi": {
+        "stem": "Một tụ điện được tích điện từ nguồn qua một điện trở, sau đó phóng điện qua chính điện trở đó. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Khi phóng điện, dòng điện chạy theo chiều ngược lại trong mạch. Sau 5τ hiệu điện thế chỉ còn cách giá trị cuối khoảng e⁻⁵ ≈ 0,7 %. τ = R·C không chứa E: nguồn lớn hơn tích tụ đến hiệu điện thế cao hơn trong cùng thời gian. Điện tích cuối Q = C·E không phụ thuộc R; R chỉ quyết định tụ đầy nhanh hay chậm."
+      },
+      "statements": [
+        {
+          "text": "During discharge the current in the resistor flows the opposite way to during charging.",
+          "vi": {
+            "text": "Khi phóng điện, dòng điện qua điện trở có chiều ngược với khi tích điện."
+          },
+          "true": true
+        },
+        {
+          "text": "After five time constants the capacitor is practically full (over 99 %).",
+          "vi": {
+            "text": "Sau năm hằng số thời gian, tụ coi như đã đầy (hơn 99 %)."
+          },
+          "true": true
+        },
+        {
+          "text": "A larger supply voltage makes the capacitor take longer to reach 63 % of E.",
+          "vi": {
+            "text": "Nguồn có hiệu điện thế lớn hơn làm tụ mất nhiều thời gian hơn để đạt 63 % của E."
+          },
+          "true": false
+        },
+        {
+          "text": "The charge on the full capacitor depends on the resistor.",
+          "vi": {
+            "text": "Điện tích của tụ khi đã đầy phụ thuộc vào điện trở."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "full-charge",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["charge"],
+      "set": {
+        "capacitance": 0.0022,
+        "supply": 9
+      },
+      "stem": "A {=capacitance*1e6} µF capacitor is charged fully from a {supply} V battery. What charge does it hold?",
+      "explain": "Q = C·E = {capacitance} F × {supply} V = {@fullCharge} C = {=@fullCharge*1000} mC. ½C·E² is the energy stored, in joules; 63 % of Q is the charge after one τ only.",
+      "vi": {
+        "stem": "Một tụ điện {=capacitance*1e6} µF được tích điện đầy từ nguồn {supply} V. Điện tích của tụ bằng bao nhiêu?",
+        "explain": "Q = C·E = {capacitance} F × {supply} V = {@fullCharge} C = {=@fullCharge*1000} mC. ½C·E² là năng lượng tụ tích trữ (J); 63 % của Q chỉ là điện tích sau một τ."
+      },
+      "options": [
+        {
+          "text": "{=@fullCharge*1000} mC",
+          "vi": {
+            "text": "{=@fullCharge*1000} mC"
+          },
+          "correct": true,
+          "check": {
+            "expr": "capacitance*supply",
+            "equals": "fullCharge"
+          }
+        },
+        {
+          "text": "{=capacitance*supply^2/2*1000} mC",
+          "vi": {
+            "text": "{=capacitance*supply^2/2*1000} mC"
+          },
+          "check": {
+            "expr": "capacitance*supply^2/2",
+            "equals": "fullCharge"
+          }
+        },
+        {
+          "text": "{=capacitance*supply*(1-exp(-1))*1000} mC",
+          "vi": {
+            "text": "{=capacitance*supply*(1-exp(-1))*1000} mC"
+          },
+          "check": {
+            "expr": "capacitance*supply*(1-exp(-1))",
+            "equals": "fullCharge"
+          }
+        },
+        {
+          "text": "{=supply/capacitance} mC",
+          "vi": {
+            "text": "{=supply/capacitance} mC"
+          },
+          "check": {
+            "expr": "supply/capacitance/1000",
+            "equals": "fullCharge"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-4700",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["tau", "charging"],
+      "set": {
+        "resistance": 4700,
+        "capacitance": 0.00047,
+        "supply": 6
+      },
+      "stem": "A {=capacitance*1e6} µF capacitor charges from empty through {resistance} Ω from a {supply} V battery. Decide whether each statement is true or false.",
+      "explain": "τ = R·C = {@timeConstant} s; I₀ = E/R ≈ {=@peakCurrent*1000} mA; after τ, U_C = (1 − e⁻¹)·E ≈ {@oneTauVoltage} V. Half of E is reached at τ·ln 2 ≈ {@halfTime} s, not at τ/2.",
+      "vi": {
+        "stem": "Một tụ điện {=capacitance*1e6} µF chưa tích điện được nạp qua điện trở {resistance} Ω từ nguồn {supply} V. Mỗi nhận định sau đúng hay sai?",
+        "explain": "τ = R·C = {@timeConstant} s; I₀ = E/R ≈ {=@peakCurrent*1000} mA; sau một τ, U_C = (1 − e⁻¹)·E ≈ {@oneTauVoltage} V. Hiệu điện thế đạt một nửa E tại τ·ln 2 ≈ {@halfTime} s, không phải τ/2."
+      },
+      "statements": [
+        {
+          "text": "The time constant is about {@timeConstant} s.",
+          "vi": {
+            "text": "Hằng số thời gian khoảng {@timeConstant} s."
+          },
+          "true": true,
+          "check": {
+            "expr": "resistance*capacitance",
+            "equals": "timeConstant"
+          }
+        },
+        {
+          "text": "The current at the first instant is about {=@peakCurrent*1000} mA.",
+          "vi": {
+            "text": "Cường độ dòng điện ở thời điểm đầu khoảng {=@peakCurrent*1000} mA."
+          },
+          "true": true,
+          "check": {
+            "expr": "supply/resistance",
+            "equals": "peakCurrent"
+          }
+        },
+        {
+          "text": "After one time constant the capacitor’s voltage is about {@oneTauVoltage} V.",
+          "vi": {
+            "text": "Sau một hằng số thời gian, hiệu điện thế của tụ khoảng {@oneTauVoltage} V."
+          },
+          "true": true,
+          "check": {
+            "expr": "supply*(1-exp(-1))",
+            "equals": "oneTauVoltage"
+          }
+        },
+        {
+          "text": "Its voltage reaches half of E after τ/2 ≈ {=@timeConstant/2} s.",
+          "vi": {
+            "text": "Hiệu điện thế của tụ đạt một nửa E sau τ/2 ≈ {=@timeConstant/2} s."
+          },
+          "true": false,
+          "check": {
+            "expr": "@timeConstant/2",
+            "equals": "halfTime"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-c",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["tau", "charging"],
+      "set": {
+        "resistance": 2200,
+        "capacitance": 0.00047,
+        "supply": 6
+      },
+      "stem": "An empty capacitor charges through {resistance} Ω, and its voltage reaches half of E after {@halfTime|3} s. What is its capacitance?",
+      "explain": "U_C = E/2 when e^(−t/τ) = ½, so t½ = τ·ln 2 and C = t½/(R·ln 2) = {@halfTime|3}/({resistance}·0.693) ≈ {=@halfTime/(resistance*ln(2))*1e6|3} µF. Taking t½ as τ, or multiplying by ln 2, gives the other values.",
+      "vi": {
+        "stem": "Một tụ điện chưa tích điện được nạp qua điện trở {resistance} Ω, hiệu điện thế của nó đạt một nửa E sau {@halfTime|3} s. Điện dung của tụ bằng bao nhiêu?",
+        "explain": "U_C = E/2 khi e^(−t/τ) = ½, nên t½ = τ·ln 2 và C = t½/(R·ln 2) = {@halfTime|3}/({resistance}·0,693) ≈ {=@halfTime/(resistance*ln(2))*1e6|3} µF. Coi t½ là τ, hoặc nhân với ln 2, sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{=@halfTime/(resistance*ln(2))*1e6|3} µF",
+          "vi": {
+            "text": "{=@halfTime/(resistance*ln(2))*1e6|3} µF"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(@halfTime/(resistance*ln(2)))*resistance*ln(2)",
+            "equals": "halfTime"
+          }
+        },
+        {
+          "text": "{=@halfTime/resistance*1e6|3} µF",
+          "vi": {
+            "text": "{=@halfTime/resistance*1e6|3} µF"
+          },
+          "check": {
+            "expr": "(@halfTime/resistance)*resistance*ln(2)",
+            "equals": "halfTime"
+          }
+        },
+        {
+          "text": "{=@halfTime*ln(2)/resistance*1e6|3} µF",
+          "vi": {
+            "text": "{=@halfTime*ln(2)/resistance*1e6|3} µF"
+          },
+          "check": {
+            "expr": "(@halfTime*ln(2)/resistance)*resistance*ln(2)",
+            "equals": "halfTime"
+          }
+        },
+        {
+          "text": "{=2*@halfTime/resistance*1e6|3} µF",
+          "vi": {
+            "text": "{=2*@halfTime/resistance*1e6|3} µF"
+          },
+          "check": {
+            "expr": "(2*@halfTime/resistance)*resistance*ln(2)",
+            "equals": "halfTime"
+          }
+        }
+      ]
+    },
+    {
+      "id": "time-75",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["tau", "charging"],
+      "set": {
+        "resistance": 1000,
+        "capacitance": 0.0022,
+        "supply": 9
+      },
+      "stem": "A {=capacitance*1e6} µF capacitor charges from empty through {resistance} Ω. How long does its voltage take to reach 75 % of E?",
+      "explain": "1 − e^(−t/τ) = 0.75 gives e^(−t/τ) = 0.25, so t = τ·ln 4 = {@timeConstant} × 1.386 ≈ {=@timeConstant*ln(4)} s: two half-times. 0.75τ assumes a straight-line rise; τ·ln(4/3) is the time to fall to 75 % when discharging.",
+      "vi": {
+        "stem": "Một tụ điện {=capacitance*1e6} µF chưa tích điện được nạp qua điện trở {resistance} Ω. Sau bao lâu hiệu điện thế của tụ đạt 75 % của E?",
+        "explain": "1 − e^(−t/τ) = 0,75 cho e^(−t/τ) = 0,25, nên t = τ·ln 4 = {@timeConstant} × 1,386 ≈ {=@timeConstant*ln(4)} s: đúng hai lần thời gian nạp nửa. 0,75τ là coi hiệu điện thế tăng theo đường thẳng; τ·ln(4/3) là thời gian để giảm còn 75 % khi phóng điện."
+      },
+      "options": [
+        {
+          "text": "{=@timeConstant*ln(4)} s",
+          "vi": {
+            "text": "{=@timeConstant*ln(4)} s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@timeConstant*ln(4)/2",
+            "equals": "halfTime"
+          }
+        },
+        {
+          "text": "{=0.75*@timeConstant} s",
+          "vi": {
+            "text": "{=0.75*@timeConstant} s"
+          },
+          "check": {
+            "expr": "0.75*@timeConstant/2",
+            "equals": "halfTime"
+          }
+        },
+        {
+          "text": "{=@timeConstant*ln(4/3)} s",
+          "vi": {
+            "text": "{=@timeConstant*ln(4/3)} s"
+          },
+          "check": {
+            "expr": "@timeConstant*ln(4/3)/2",
+            "equals": "halfTime"
+          }
+        },
+        {
+          "text": "{=@timeConstant/ln(4)} s",
+          "vi": {
+            "text": "{=@timeConstant/ln(4)} s"
+          },
+          "check": {
+            "expr": "@timeConstant/ln(4)/2",
+            "equals": "halfTime"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-discharge",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["discharge", "charge", "tau"],
+      "set": {
+        "resistance": 4700,
+        "capacitance": 0.001,
+        "supply": 9
+      },
+      "stem": "A {=capacitance*1e6} µF capacitor is charged fully from {supply} V and then discharged through {resistance} Ω. Decide whether each statement is true or false.",
+      "explain": "Full, Q = C·E = {@fullCharge} C. Discharging, U = E·e^(−t/τ) with τ = {@timeConstant} s: it halves after τ·ln 2 ≈ {@halfTime} s, and after one τ it is e⁻¹·E ≈ {=supply*exp(-1)} V (37 %), not 63 %. Twice the resistance halves the starting current E/R.",
+      "vi": {
+        "stem": "Một tụ điện {=capacitance*1e6} µF được tích đầy từ nguồn {supply} V rồi phóng điện qua điện trở {resistance} Ω. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Khi đầy, Q = C·E = {@fullCharge} C. Khi phóng điện, U = E·e^(−t/τ) với τ = {@timeConstant} s: U giảm một nửa sau τ·ln 2 ≈ {@halfTime} s, và sau một τ còn e⁻¹·E ≈ {=supply*exp(-1)} V (37 %), không phải 63 %. Điện trở gấp đôi thì dòng điện ban đầu E/R giảm một nửa."
+      },
+      "statements": [
+        {
+          "text": "Full, the capacitor holds {@fullCharge} C.",
+          "vi": {
+            "text": "Khi đầy, tụ có điện tích {@fullCharge} C."
+          },
+          "true": true,
+          "check": {
+            "expr": "capacitance*supply",
+            "equals": "fullCharge"
+          }
+        },
+        {
+          "text": "Its voltage halves after about {@halfTime} s of discharge.",
+          "vi": {
+            "text": "Hiệu điện thế của tụ giảm một nửa sau khoảng {@halfTime} s phóng điện."
+          },
+          "true": true,
+          "check": {
+            "expr": "resistance*capacitance*ln(2)",
+            "equals": "halfTime"
+          }
+        },
+        {
+          "text": "After one time constant of discharge its voltage is about {@oneTauVoltage} V.",
+          "vi": {
+            "text": "Sau một hằng số thời gian phóng điện, hiệu điện thế của tụ khoảng {@oneTauVoltage} V."
+          },
+          "true": false,
+          "check": {
+            "expr": "supply-@oneTauVoltage",
+            "equals": "oneTauVoltage"
+          }
+        },
+        {
+          "text": "With a resistor twice as large, the discharge would start with twice the current.",
+          "vi": {
+            "text": "Với điện trở lớn gấp đôi, dòng điện lúc bắt đầu phóng điện sẽ lớn gấp đôi."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1095 @@
+{
+  "id": "ohms-law",
+  "skills": [
+    {
+      "id": "ohm",
+      "name": "Ohm’s law: I = U/R",
+      "advice": "Learn I = U/R for a resistor: for a fixed R the current is proportional to the voltage. Over runs at 1.5, 3, 6, 12 V, U against I is a straight line of slope R.",
+      "vi": {
+        "name": "Định luật Ôm: I = U/R",
+        "advice": "Nhớ I = U/R cho một điện trở: với R không đổi, cường độ dòng điện tỉ lệ thuận với hiệu điện thế. Qua các lần đo ở 1,5; 3; 6; 12 V, đồ thị U theo I là đường thẳng hệ số góc R."
+      }
+    },
+    {
+      "id": "series",
+      "name": "Resistors in series",
+      "advice": "In series one current flows through both and the voltages add: R = R1 + R2, U = U1 + U2, and the larger resistor takes the larger voltage.",
+      "vi": {
+        "name": "Đoạn mạch nối tiếp",
+        "advice": "Trong đoạn mạch nối tiếp, cùng một dòng điện chạy qua hai điện trở và hiệu điện thế cộng lại: R = R1 + R2, U = U1 + U2, điện trở lớn hơn có hiệu điện thế lớn hơn."
+      }
+    },
+    {
+      "id": "parallel",
+      "name": "Resistors in parallel",
+      "advice": "In parallel both have the same voltage and the currents add: 1/R = 1/R1 + 1/R2, so R is smaller than either. Trap: forgetting to invert 1/R at the end.",
+      "vi": {
+        "name": "Đoạn mạch song song",
+        "advice": "Trong đoạn mạch song song, hai điện trở có cùng hiệu điện thế và dòng điện cộng lại: 1/R = 1/R1 + 1/R2, nên R nhỏ hơn mỗi điện trở thành phần. Lỗi hay gặp: quên lấy nghịch đảo của 1/R ở bước cuối."
+      }
+    },
+    {
+      "id": "energy",
+      "name": "Power, energy and ideal meters",
+      "advice": "P = U·I = U²/R and E = P·t, with t the time the switch is closed. An ideal ammeter has no resistance, an ideal voltmeter infinite resistance.",
+      "vi": {
+        "name": "Công suất, điện năng và dụng cụ đo lí tưởng",
+        "advice": "P = U·I = U²/R và E = P·t, với t là thời gian khóa K đóng. Ampe kế lí tưởng có điện trở bằng 0, vôn kế lí tưởng có điện trở vô cùng lớn."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "law",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["ohm"],
+      "stem": "Ohm’s law for a resistor of resistance R with a voltage U across it gives the current…",
+      "explain": "I = U/R.",
+      "vi": {
+        "stem": "Định luật Ôm cho điện trở R có hiệu điện thế U giữa hai đầu cho cường độ dòng điện…",
+        "explain": "I = U/R."
+      },
+      "options": [
+        {
+          "text": "I = U/R",
+          "vi": {
+            "text": "I = U/R"
+          },
+          "correct": true
+        },
+        {
+          "text": "I = U·R",
+          "vi": {
+            "text": "I = U·R"
+          }
+        },
+        {
+          "text": "I = R/U",
+          "vi": {
+            "text": "I = R/U"
+          }
+        },
+        {
+          "text": "I = U²/R",
+          "vi": {
+            "text": "I = U²/R"
+          }
+        }
+      ]
+    },
+    {
+      "id": "series-current",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["series"],
+      "stem": "In a series circuit of two resistors…",
+      "explain": "In series there is one path: the same current flows through each resistor.",
+      "vi": {
+        "stem": "Trong đoạn mạch gồm hai điện trở mắc nối tiếp…",
+        "explain": "Mắc nối tiếp chỉ có một đường đi: cùng một dòng điện chạy qua mỗi điện trở."
+      },
+      "options": [
+        {
+          "text": "the same current flows through both",
+          "vi": {
+            "text": "cường độ dòng điện qua hai điện trở bằng nhau"
+          },
+          "correct": true
+        },
+        {
+          "text": "both have the same voltage",
+          "vi": {
+            "text": "hiệu điện thế giữa hai đầu mỗi điện trở bằng nhau"
+          }
+        },
+        {
+          "text": "the currents through them add up to the main current",
+          "vi": {
+            "text": "tổng cường độ dòng điện qua chúng bằng dòng mạch chính"
+          }
+        },
+        {
+          "text": "the equivalent resistance is smaller than either",
+          "vi": {
+            "text": "điện trở tương đương nhỏ hơn mỗi điện trở"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-circuits",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["parallel", "series", "energy"],
+      "stem": "Two resistors are connected to a DC supply, either in series or in parallel, with ideal meters. Decide whether each statement is true or false.",
+      "explain": "Parallel: same voltage, R smaller than the smallest; series: voltages add; an ideal ammeter has zero resistance, not a large one.",
+      "vi": {
+        "stem": "Hai điện trở được nối với nguồn một chiều, mắc nối tiếp hoặc song song, dùng dụng cụ đo lí tưởng. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Song song: cùng hiệu điện thế, R nhỏ hơn điện trở nhỏ nhất; nối tiếp: hiệu điện thế cộng lại; ampe kế lí tưởng có điện trở bằng 0, không phải rất lớn."
+      },
+      "statements": [
+        {
+          "text": "In parallel both resistors have the same voltage.",
+          "vi": {
+            "text": "Khi mắc song song, hai điện trở có cùng hiệu điện thế."
+          },
+          "true": true
+        },
+        {
+          "text": "In parallel the equivalent resistance is smaller than the smaller resistor.",
+          "vi": {
+            "text": "Khi mắc song song, điện trở tương đương nhỏ hơn điện trở nhỏ hơn."
+          },
+          "true": true
+        },
+        {
+          "text": "In series the voltages across the resistors add up to U.",
+          "vi": {
+            "text": "Khi mắc nối tiếp, tổng hiệu điện thế trên các điện trở bằng U."
+          },
+          "true": true
+        },
+        {
+          "text": "An ideal ammeter has a very large resistance.",
+          "vi": {
+            "text": "Ampe kế lí tưởng có điện trở rất lớn."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "double-voltage",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["ohm"],
+      "stem": "The voltage across the same resistor is doubled. The current…",
+      "explain": "I = U/R with R fixed: twice U, twice I.",
+      "vi": {
+        "stem": "Tăng gấp đôi hiệu điện thế giữa hai đầu cùng một điện trở. Cường độ dòng điện…",
+        "explain": "I = U/R với R không đổi: U gấp đôi thì I gấp đôi."
+      },
+      "options": [
+        {
+          "text": "doubles",
+          "vi": {
+            "text": "tăng gấp đôi"
+          },
+          "correct": true
+        },
+        {
+          "text": "halves",
+          "vi": {
+            "text": "giảm một nửa"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "becomes four times larger",
+          "vi": {
+            "text": "tăng gấp bốn lần"
+          }
+        }
+      ]
+    },
+    {
+      "id": "add-parallel",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["parallel"],
+      "stem": "A second resistor is connected in parallel with R1, at the same supply voltage. The main current…",
+      "explain": "The new branch adds its own current, I = I1 + I2: the equivalent resistance falls and the main current rises.",
+      "vi": {
+        "stem": "Mắc thêm một điện trở song song với R1, giữ nguyên hiệu điện thế nguồn. Cường độ dòng điện mạch chính…",
+        "explain": "Nhánh mới có dòng điện riêng, I = I1 + I2: điện trở tương đương giảm và dòng mạch chính tăng."
+      },
+      "options": [
+        {
+          "text": "increases",
+          "vi": {
+            "text": "tăng"
+          },
+          "correct": true
+        },
+        {
+          "text": "decreases",
+          "vi": {
+            "text": "giảm"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "becomes zero",
+          "vi": {
+            "text": "bằng 0"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-series",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["series", "ohm"],
+      "set": {
+        "voltage": 6,
+        "resistance1": 100,
+        "resistance2": 220,
+        "configuration": 1
+      },
+      "stem": "R1 = {resistance1} Ω and R2 = {resistance2} Ω are in series across {voltage} V. Decide whether each statement is true or false.",
+      "explain": "R = R1 + R2 = {@equivalentResistance} Ω; I = U/R ≈ {@current} A in both; U1 = I·R1 ≈ {@voltage1} V, U2 = I·R2 ≈ {@voltage2} V — the larger resistor takes the larger voltage.",
+      "vi": {
+        "stem": "R1 = {resistance1} Ω và R2 = {resistance2} Ω mắc nối tiếp vào hiệu điện thế {voltage} V. Mỗi nhận định sau đúng hay sai?",
+        "explain": "R = R1 + R2 = {@equivalentResistance} Ω; I = U/R ≈ {@current} A qua cả hai; U1 = I·R1 ≈ {@voltage1} V, U2 = I·R2 ≈ {@voltage2} V — điện trở lớn hơn có hiệu điện thế lớn hơn."
+      },
+      "statements": [
+        {
+          "text": "The equivalent resistance is {@equivalentResistance} Ω.",
+          "vi": {
+            "text": "Điện trở tương đương bằng {@equivalentResistance} Ω."
+          },
+          "true": true,
+          "check": {
+            "expr": "resistance1+resistance2",
+            "equals": "equivalentResistance"
+          }
+        },
+        {
+          "text": "The current is about {@current} A.",
+          "vi": {
+            "text": "Cường độ dòng điện khoảng {@current} A."
+          },
+          "true": true,
+          "check": {
+            "expr": "voltage/(resistance1+resistance2)",
+            "equals": "current"
+          }
+        },
+        {
+          "text": "The voltage across R1 is about {@voltage1} V.",
+          "vi": {
+            "text": "Hiệu điện thế giữa hai đầu R1 khoảng {@voltage1} V."
+          },
+          "true": true,
+          "check": {
+            "expr": "@current*resistance1",
+            "equals": "voltage1"
+          }
+        },
+        {
+          "text": "R1 and R2 have the same voltage across them.",
+          "vi": {
+            "text": "Hiệu điện thế giữa hai đầu R1 và R2 bằng nhau."
+          },
+          "true": false,
+          "check": {
+            "expr": "@voltage1",
+            "equals": "voltage2"
+          }
+        }
+      ]
+    },
+    {
+      "id": "series-current-value",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["series", "ohm"],
+      "set": {
+        "voltage": 12,
+        "resistance1": 470,
+        "resistance2": 1000,
+        "configuration": 1
+      },
+      "stem": "R1 = {resistance1} Ω and R2 = {resistance2} Ω are in series across {voltage} V. What current flows?",
+      "explain": "R = R1 + R2 = {@equivalentResistance} Ω; I = U/R = {voltage}/{@equivalentResistance} ≈ {@current} A.",
+      "vi": {
+        "stem": "R1 = {resistance1} Ω và R2 = {resistance2} Ω mắc nối tiếp vào hiệu điện thế {voltage} V. Cường độ dòng điện bằng bao nhiêu?",
+        "explain": "R = R1 + R2 = {@equivalentResistance} Ω; I = U/R = {voltage}/{@equivalentResistance} ≈ {@current} A."
+      },
+      "options": [
+        {
+          "text": "{@current} A",
+          "vi": {
+            "text": "{@current} A"
+          },
+          "correct": true,
+          "check": {
+            "expr": "voltage/(resistance1+resistance2)",
+            "equals": "current"
+          }
+        },
+        {
+          "text": "{=voltage/resistance1+voltage/resistance2} A",
+          "vi": {
+            "text": "{=voltage/resistance1+voltage/resistance2} A"
+          },
+          "check": {
+            "expr": "voltage/resistance1+voltage/resistance2",
+            "equals": "current"
+          }
+        },
+        {
+          "text": "{=voltage/resistance1} A",
+          "vi": {
+            "text": "{=voltage/resistance1} A"
+          },
+          "check": {
+            "expr": "voltage/resistance1",
+            "equals": "current"
+          }
+        },
+        {
+          "text": "{=voltage*(resistance1+resistance2)} A",
+          "vi": {
+            "text": "{=voltage*(resistance1+resistance2)} A"
+          },
+          "check": {
+            "expr": "voltage*(resistance1+resistance2)",
+            "equals": "current"
+          }
+        }
+      ]
+    },
+    {
+      "id": "parallel-resistance",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["parallel"],
+      "set": {
+        "voltage": 6,
+        "resistance1": 100,
+        "resistance2": 220,
+        "configuration": 2
+      },
+      "stem": "R1 = {resistance1} Ω and R2 = {resistance2} Ω are connected in parallel. What is their equivalent resistance?",
+      "explain": "1/R = 1/R1 + 1/R2, so R = R1·R2/(R1 + R2) = {resistance1}·{resistance2}/({resistance1} + {resistance2}) ≈ {@equivalentResistance} Ω, less than R1.",
+      "vi": {
+        "stem": "R1 = {resistance1} Ω và R2 = {resistance2} Ω mắc song song. Điện trở tương đương của chúng bằng bao nhiêu?",
+        "explain": "1/R = 1/R1 + 1/R2, nên R = R1·R2/(R1 + R2) = {resistance1}·{resistance2}/({resistance1} + {resistance2}) ≈ {@equivalentResistance} Ω, nhỏ hơn R1."
+      },
+      "options": [
+        {
+          "text": "{@equivalentResistance} Ω",
+          "vi": {
+            "text": "{@equivalentResistance} Ω"
+          },
+          "correct": true,
+          "check": {
+            "expr": "resistance1*resistance2/(resistance1+resistance2)",
+            "equals": "equivalentResistance"
+          }
+        },
+        {
+          "text": "{=resistance1+resistance2} Ω",
+          "vi": {
+            "text": "{=resistance1+resistance2} Ω"
+          },
+          "check": {
+            "expr": "resistance1+resistance2",
+            "equals": "equivalentResistance"
+          }
+        },
+        {
+          "text": "{=(resistance1+resistance2)/2} Ω",
+          "vi": {
+            "text": "{=(resistance1+resistance2)/2} Ω"
+          },
+          "check": {
+            "expr": "(resistance1+resistance2)/2",
+            "equals": "equivalentResistance"
+          }
+        },
+        {
+          "text": "{=1/resistance1+1/resistance2} Ω",
+          "vi": {
+            "text": "{=1/resistance1+1/resistance2} Ω"
+          },
+          "check": {
+            "expr": "1/resistance1+1/resistance2",
+            "equals": "equivalentResistance"
+          }
+        }
+      ]
+    },
+    {
+      "id": "power",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["energy"],
+      "set": {
+        "voltage": 12,
+        "resistance1": 470,
+        "configuration": 0
+      },
+      "stem": "A {resistance1} Ω resistor alone is connected across {voltage} V. What power does it take?",
+      "explain": "P = U²/R = {voltage}²/{resistance1} ≈ {@power} W (= U·I with I = {@current} A).",
+      "vi": {
+        "stem": "Một điện trở {resistance1} Ω được mắc riêng vào hiệu điện thế {voltage} V. Công suất tiêu thụ của nó bằng bao nhiêu?",
+        "explain": "P = U²/R = {voltage}²/{resistance1} ≈ {@power} W (= U·I với I = {@current} A)."
+      },
+      "options": [
+        {
+          "text": "{@power} W",
+          "vi": {
+            "text": "{@power} W"
+          },
+          "correct": true,
+          "check": {
+            "expr": "voltage^2/resistance1",
+            "equals": "power"
+          }
+        },
+        {
+          "text": "{=voltage/resistance1} W",
+          "vi": {
+            "text": "{=voltage/resistance1} W"
+          },
+          "check": {
+            "expr": "voltage/resistance1",
+            "equals": "power"
+          }
+        },
+        {
+          "text": "{=voltage^2*resistance1} W",
+          "vi": {
+            "text": "{=voltage^2*resistance1} W"
+          },
+          "check": {
+            "expr": "voltage^2*resistance1",
+            "equals": "power"
+          }
+        },
+        {
+          "text": "{=voltage*resistance1} W",
+          "vi": {
+            "text": "{=voltage*resistance1} W"
+          },
+          "check": {
+            "expr": "voltage*resistance1",
+            "equals": "power"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-parallel",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["parallel", "ohm"],
+      "set": {
+        "voltage": 6,
+        "resistance1": 220,
+        "resistance2": 470,
+        "configuration": 2
+      },
+      "stem": "R1 = {resistance1} Ω and R2 = {resistance2} Ω are in parallel across {voltage} V. Decide whether each statement is true or false.",
+      "explain": "Each has the whole {voltage} V: I1 = U/R1 ≈ {@current1} A, I2 = U/R2 ≈ {@current2} A, I = I1 + I2 ≈ {@current} A. The smaller resistor carries the larger current.",
+      "vi": {
+        "stem": "R1 = {resistance1} Ω và R2 = {resistance2} Ω mắc song song vào hiệu điện thế {voltage} V. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Mỗi điện trở có hiệu điện thế {voltage} V: I1 = U/R1 ≈ {@current1} A, I2 = U/R2 ≈ {@current2} A, I = I1 + I2 ≈ {@current} A. Điện trở nhỏ hơn có dòng điện lớn hơn."
+      },
+      "statements": [
+        {
+          "text": "The current through R1 is about {@current1} A.",
+          "vi": {
+            "text": "Cường độ dòng điện qua R1 khoảng {@current1} A."
+          },
+          "true": true,
+          "check": {
+            "expr": "voltage/resistance1",
+            "equals": "current1"
+          }
+        },
+        {
+          "text": "The current through R2 is about {@current2} A.",
+          "vi": {
+            "text": "Cường độ dòng điện qua R2 khoảng {@current2} A."
+          },
+          "true": true,
+          "check": {
+            "expr": "voltage/resistance2",
+            "equals": "current2"
+          }
+        },
+        {
+          "text": "The main current is about {@current} A.",
+          "vi": {
+            "text": "Cường độ dòng điện mạch chính khoảng {@current} A."
+          },
+          "true": true,
+          "check": {
+            "expr": "voltage/resistance1+voltage/resistance2",
+            "equals": "current"
+          }
+        },
+        {
+          "text": "The same current flows through R1 and R2.",
+          "vi": {
+            "text": "Cường độ dòng điện qua R1 và R2 bằng nhau."
+          },
+          "true": false,
+          "check": {
+            "expr": "@current1",
+            "equals": "current2"
+          }
+        }
+      ]
+    },
+    {
+      "id": "energy",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["energy", "series"],
+      "set": {
+        "voltage": 12,
+        "resistance1": 100,
+        "resistance2": 470,
+        "configuration": 1
+      },
+      "stem": "R1 = {resistance1} Ω and R2 = {resistance2} Ω in series are switched on across {voltage} V from t = {switchTime} s to t = {duration} s. How much electrical energy do they take?",
+      "explain": "R = {@equivalentResistance} Ω, P = U²/R ≈ {@power} W, t = {duration} − {switchTime} = {=duration-switchTime} s: E = P·t ≈ {@energy} J. Using the whole {duration} s, or stopping at P, gives the wrong answers.",
+      "vi": {
+        "stem": "R1 = {resistance1} Ω và R2 = {resistance2} Ω mắc nối tiếp được nối vào {voltage} V từ t = {switchTime} s đến t = {duration} s. Chúng tiêu thụ bao nhiêu điện năng?",
+        "explain": "R = {@equivalentResistance} Ω, P = U²/R ≈ {@power} W, t = {duration} − {switchTime} = {=duration-switchTime} s: E = P·t ≈ {@energy} J. Dùng cả {duration} s, hoặc dừng ở P, đều cho kết quả sai."
+      },
+      "options": [
+        {
+          "text": "{@energy} J",
+          "vi": {
+            "text": "{@energy} J"
+          },
+          "correct": true,
+          "check": {
+            "expr": "voltage^2/(resistance1+resistance2)*(duration-switchTime)",
+            "equals": "energy"
+          }
+        },
+        {
+          "text": "{=voltage^2/(resistance1+resistance2)*duration} J",
+          "vi": {
+            "text": "{=voltage^2/(resistance1+resistance2)*duration} J"
+          },
+          "check": {
+            "expr": "voltage^2/(resistance1+resistance2)*duration",
+            "equals": "energy"
+          }
+        },
+        {
+          "text": "{=voltage^2/(resistance1+resistance2)} J",
+          "vi": {
+            "text": "{=voltage^2/(resistance1+resistance2)} J"
+          },
+          "check": {
+            "expr": "voltage^2/(resistance1+resistance2)",
+            "equals": "energy"
+          }
+        },
+        {
+          "text": "{=voltage^2*(1/resistance1+1/resistance2)*(duration-switchTime)} J",
+          "vi": {
+            "text": "{=voltage^2*(1/resistance1+1/resistance2)*(duration-switchTime)} J"
+          },
+          "check": {
+            "expr": "voltage^2*(1/resistance1+1/resistance2)*(duration-switchTime)",
+            "equals": "energy"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-graph",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["ohm", "parallel"],
+      "set": {
+        "voltage": 3,
+        "resistance1": 220,
+        "resistance2": 470,
+        "configuration": 2
+      },
+      "stem": "R1 = {resistance1} Ω and R2 = {resistance2} Ω are in parallel; runs are made at several supply voltages and U is plotted against I. Decide whether each statement is true or false.",
+      "explain": "U = R·I with R = R1·R2/(R1 + R2) ≈ {@equivalentResistance} Ω, the slope — less than 220 Ω. At {voltage} V, I1 ≈ {@current1} A > I2 ≈ {@current2} A. Removing R2 takes its current away, so the main current falls.",
+      "vi": {
+        "stem": "R1 = {resistance1} Ω và R2 = {resistance2} Ω mắc song song; đo ở nhiều hiệu điện thế nguồn và vẽ U theo I. Mỗi nhận định sau đúng hay sai?",
+        "explain": "U = R·I với R = R1·R2/(R1 + R2) ≈ {@equivalentResistance} Ω là hệ số góc — nhỏ hơn 220 Ω. Ở {voltage} V, I1 ≈ {@current1} A > I2 ≈ {@current2} A. Bỏ R2 đi thì mất dòng qua nhánh đó, nên dòng mạch chính giảm."
+      },
+      "statements": [
+        {
+          "text": "The line’s slope is about {@equivalentResistance} Ω.",
+          "vi": {
+            "text": "Hệ số góc của đường thẳng khoảng {@equivalentResistance} Ω."
+          },
+          "true": true,
+          "check": {
+            "expr": "resistance1*resistance2/(resistance1+resistance2)",
+            "equals": "equivalentResistance"
+          }
+        },
+        {
+          "text": "The slope is smaller than {resistance1} Ω.",
+          "vi": {
+            "text": "Hệ số góc nhỏ hơn {resistance1} Ω."
+          },
+          "true": true
+        },
+        {
+          "text": "At {voltage} V, R1 carries about {@current1} A, more than R2.",
+          "vi": {
+            "text": "Ở {voltage} V, dòng qua R1 khoảng {@current1} A, lớn hơn dòng qua R2."
+          },
+          "true": true,
+          "check": {
+            "expr": "voltage/resistance1",
+            "equals": "current1"
+          }
+        },
+        {
+          "text": "Taking R2 out of the circuit would increase the main current.",
+          "vi": {
+            "text": "Tháo R2 ra khỏi mạch thì dòng điện mạch chính tăng."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "ohm-unit",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["ohm"],
+      "stem": "From R = U/I, one ohm is the same as…",
+      "explain": "R = U/I: a resistor of 1 Ω lets 1 A through when 1 V is across it, so 1 Ω = 1 V/A.",
+      "vi": {
+        "stem": "Từ R = U/I, một ôm bằng…",
+        "explain": "R = U/I: điện trở 1 Ω cho dòng điện 1 A chạy qua khi hiệu điện thế giữa hai đầu là 1 V, nên 1 Ω = 1 V/A."
+      },
+      "options": [
+        {
+          "text": "1 V/A",
+          "vi": {
+            "text": "1 V/A"
+          },
+          "correct": true
+        },
+        {
+          "text": "1 A/V",
+          "vi": {
+            "text": "1 A/V"
+          }
+        },
+        {
+          "text": "1 V·A",
+          "vi": {
+            "text": "1 V·A"
+          }
+        },
+        {
+          "text": "1 W/A",
+          "vi": {
+            "text": "1 W/A"
+          }
+        }
+      ]
+    },
+    {
+      "id": "two-equal",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["parallel"],
+      "stem": "Two equal resistors R are connected in parallel. Their equivalent resistance is…",
+      "explain": "1/R_eq = 1/R + 1/R = 2/R, so R_eq = R/2: two equal paths let twice the current through at the same voltage.",
+      "vi": {
+        "stem": "Hai điện trở bằng nhau, mỗi điện trở R, mắc song song. Điện trở tương đương của chúng bằng…",
+        "explain": "1/R_tđ = 1/R + 1/R = 2/R, nên R_tđ = R/2: hai nhánh như nhau cho dòng điện gấp đôi chạy qua ở cùng hiệu điện thế."
+      },
+      "options": [
+        {
+          "text": "R/2",
+          "vi": {
+            "text": "R/2"
+          },
+          "correct": true
+        },
+        {
+          "text": "2R",
+          "vi": {
+            "text": "2R"
+          }
+        },
+        {
+          "text": "R",
+          "vi": {
+            "text": "R"
+          }
+        },
+        {
+          "text": "R²",
+          "vi": {
+            "text": "R²"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-meters",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["series", "parallel", "energy"],
+      "stem": "Two resistors are connected to a DC supply with ideal meters. Decide whether each statement is true or false.",
+      "explain": "In parallel, 1/R_eq = 1/R1 + 1/R2 is larger than either 1/R, so R_eq is smaller than the smaller resistor. In series the same current flows, so the voltage shares in the ratio of the resistances. An ideal ammeter has almost no resistance (it goes in series); an ideal voltmeter has a very large resistance and goes in parallel with the part it measures.",
+      "vi": {
+        "stem": "Hai điện trở được nối với nguồn điện một chiều, dùng các đồng hồ đo lí tưởng. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Khi mắc song song, 1/R_tđ = 1/R1 + 1/R2 lớn hơn mỗi 1/R, nên R_tđ nhỏ hơn điện trở nhỏ nhất. Khi mắc nối tiếp, dòng điện như nhau nên hiệu điện thế chia theo tỉ lệ các điện trở. Ampe kế lí tưởng có điện trở gần bằng 0 (mắc nối tiếp); vôn kế lí tưởng có điện trở rất lớn và mắc song song với đoạn mạch cần đo."
+      },
+      "statements": [
+        {
+          "text": "In parallel, the equivalent resistance is smaller than the smaller resistor.",
+          "vi": {
+            "text": "Khi mắc song song, điện trở tương đương nhỏ hơn điện trở nhỏ hơn."
+          },
+          "true": true
+        },
+        {
+          "text": "In series, the voltage shares between the resistors in the ratio of their resistances.",
+          "vi": {
+            "text": "Khi mắc nối tiếp, hiệu điện thế chia cho các điện trở theo tỉ lệ điện trở của chúng."
+          },
+          "true": true
+        },
+        {
+          "text": "An ideal ammeter has a very large resistance.",
+          "vi": {
+            "text": "Ampe kế lí tưởng có điện trở rất lớn."
+          },
+          "true": false
+        },
+        {
+          "text": "An ideal voltmeter is connected in parallel with the part it measures.",
+          "vi": {
+            "text": "Vôn kế lí tưởng được mắc song song với đoạn mạch cần đo."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "series-u1",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["series", "ohm"],
+      "set": {
+        "voltage": 3,
+        "resistance1": 220,
+        "resistance2": 470,
+        "configuration": 1
+      },
+      "stem": "R1 = {resistance1} Ω and R2 = {resistance2} Ω are in series across {voltage} V. What does a voltmeter across R1 read?",
+      "explain": "I = U/(R1 + R2) = {@current|3} A, so U1 = I·R1 = U·R1/(R1 + R2) ≈ {@voltage1} V. U·R2/(R1 + R2) is the voltage across R2; the whole U is across both together.",
+      "vi": {
+        "stem": "R1 = {resistance1} Ω và R2 = {resistance2} Ω mắc nối tiếp vào hiệu điện thế {voltage} V. Vôn kế mắc vào hai đầu R1 chỉ bao nhiêu?",
+        "explain": "I = U/(R1 + R2) = {@current|3} A, nên U1 = I·R1 = U·R1/(R1 + R2) ≈ {@voltage1} V. U·R2/(R1 + R2) là hiệu điện thế giữa hai đầu R2; cả U là hiệu điện thế giữa hai đầu cả đoạn mạch."
+      },
+      "options": [
+        {
+          "text": "{@voltage1} V",
+          "vi": {
+            "text": "{@voltage1} V"
+          },
+          "correct": true,
+          "check": {
+            "expr": "voltage*resistance1/(resistance1+resistance2)",
+            "equals": "voltage1"
+          }
+        },
+        {
+          "text": "{@voltage2} V",
+          "vi": {
+            "text": "{@voltage2} V"
+          },
+          "check": {
+            "expr": "@voltage2",
+            "equals": "voltage1"
+          }
+        },
+        {
+          "text": "{voltage} V",
+          "vi": {
+            "text": "{voltage} V"
+          },
+          "check": {
+            "expr": "voltage",
+            "equals": "voltage1"
+          }
+        },
+        {
+          "text": "{=voltage*resistance1/resistance2} V",
+          "vi": {
+            "text": "{=voltage*resistance1/resistance2} V"
+          },
+          "check": {
+            "expr": "voltage*resistance1/resistance2",
+            "equals": "voltage1"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-branches",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["parallel", "ohm"],
+      "set": {
+        "voltage": 12,
+        "resistance1": 1000,
+        "resistance2": 470,
+        "configuration": 2
+      },
+      "stem": "R1 = {resistance1} Ω and R2 = {resistance2} Ω are in parallel across {voltage} V. Decide whether each statement is true or false.",
+      "explain": "Each branch has the full U: I1 = U/R1 = {=@current1*1000} mA, I2 = U/R2 ≈ {=@current2*1000} mA, and the main current is their sum, {=@current*1000} mA. R1 + R2 is the series value; in parallel R_eq ≈ {@equivalentResistance} Ω.",
+      "vi": {
+        "stem": "R1 = {resistance1} Ω và R2 = {resistance2} Ω mắc song song vào hiệu điện thế {voltage} V. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Mỗi nhánh có cả hiệu điện thế U: I1 = U/R1 = {=@current1*1000} mA, I2 = U/R2 ≈ {=@current2*1000} mA, và dòng điện mạch chính bằng tổng của chúng, {=@current*1000} mA. R1 + R2 là giá trị khi mắc nối tiếp; khi mắc song song R_tđ ≈ {@equivalentResistance} Ω."
+      },
+      "statements": [
+        {
+          "text": "The current in R1 is {=@current1*1000} mA.",
+          "vi": {
+            "text": "Cường độ dòng điện qua R1 bằng {=@current1*1000} mA."
+          },
+          "true": true,
+          "check": {
+            "expr": "voltage/resistance1",
+            "equals": "current1"
+          }
+        },
+        {
+          "text": "The current in R2 is about {=@current2*1000} mA.",
+          "vi": {
+            "text": "Cường độ dòng điện qua R2 khoảng {=@current2*1000} mA."
+          },
+          "true": true,
+          "check": {
+            "expr": "voltage/resistance2",
+            "equals": "current2"
+          }
+        },
+        {
+          "text": "The main current is about {=@current*1000} mA.",
+          "vi": {
+            "text": "Cường độ dòng điện mạch chính khoảng {=@current*1000} mA."
+          },
+          "true": true,
+          "check": {
+            "expr": "@current1+@current2",
+            "equals": "current"
+          }
+        },
+        {
+          "text": "The equivalent resistance is R1 + R2 = {=resistance1+resistance2} Ω.",
+          "vi": {
+            "text": "Điện trở tương đương bằng R1 + R2 = {=resistance1+resistance2} Ω."
+          },
+          "true": false,
+          "check": {
+            "expr": "resistance1+resistance2",
+            "equals": "equivalentResistance"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-r2",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["series", "ohm"],
+      "set": {
+        "voltage": 6,
+        "resistance1": 100,
+        "resistance2": 470,
+        "configuration": 1
+      },
+      "stem": "R1 = {resistance1} Ω and an unknown R2 are in series across {voltage} V, and the ammeter reads {=@current*1000|4} mA. What is R2?",
+      "explain": "R1 + R2 = U/I = {voltage}/{@current|4} = {@equivalentResistance|3} Ω, so R2 = U/I − R1 = {=voltage/@current-resistance1|3} Ω. U/I alone is the total; using the parallel rule gives the last value.",
+      "vi": {
+        "stem": "R1 = {resistance1} Ω và một điện trở R2 chưa biết mắc nối tiếp vào hiệu điện thế {voltage} V, ampe kế chỉ {=@current*1000|4} mA. R2 bằng bao nhiêu?",
+        "explain": "R1 + R2 = U/I = {voltage}/{@current|4} = {@equivalentResistance|3} Ω, nên R2 = U/I − R1 = {=voltage/@current-resistance1|3} Ω. Riêng U/I là điện trở toàn mạch; dùng công thức mắc song song sẽ ra giá trị cuối."
+      },
+      "options": [
+        {
+          "text": "{=voltage/@current-resistance1|3} Ω",
+          "vi": {
+            "text": "{=voltage/@current-resistance1|3} Ω"
+          },
+          "correct": true,
+          "check": {
+            "expr": "voltage/(resistance1+(voltage/@current-resistance1))",
+            "equals": "current"
+          }
+        },
+        {
+          "text": "{=voltage/@current|3} Ω",
+          "vi": {
+            "text": "{=voltage/@current|3} Ω"
+          },
+          "check": {
+            "expr": "voltage/(resistance1+voltage/@current)",
+            "equals": "current"
+          }
+        },
+        {
+          "text": "{=voltage/@current+resistance1|3} Ω",
+          "vi": {
+            "text": "{=voltage/@current+resistance1|3} Ω"
+          },
+          "check": {
+            "expr": "voltage/(resistance1+voltage/@current+resistance1)",
+            "equals": "current"
+          }
+        },
+        {
+          "text": "{=1/(1/resistance1-@current/voltage)|3} Ω",
+          "vi": {
+            "text": "{=1/(1/resistance1-@current/voltage)|3} Ω"
+          },
+          "check": {
+            "expr": "voltage/(resistance1+1/(1/resistance1-@current/voltage))",
+            "equals": "current"
+          }
+        }
+      ]
+    },
+    {
+      "id": "current-divider",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["parallel"],
+      "set": {
+        "voltage": 6,
+        "resistance1": 220,
+        "resistance2": 1000,
+        "configuration": 2
+      },
+      "stem": "R1 = {resistance1} Ω and R2 = {resistance2} Ω are in parallel, and the main current is {=@current*1000|4} mA. What current flows through R1?",
+      "explain": "Both branches have the same U = I·R_eq, so I1 = U/R1 = I·R2/(R1 + R2) = {=@current*1000|4} × {resistance2}/{=resistance1+resistance2} ≈ {=@current1*1000} mA: the smaller resistor takes the larger share. I·R1/(R1 + R2) is the current in R2.",
+      "vi": {
+        "stem": "R1 = {resistance1} Ω và R2 = {resistance2} Ω mắc song song, dòng điện mạch chính là {=@current*1000|4} mA. Cường độ dòng điện qua R1 bằng bao nhiêu?",
+        "explain": "Hai nhánh có cùng U = I·R_tđ, nên I1 = U/R1 = I·R2/(R1 + R2) = {=@current*1000|4} × {resistance2}/{=resistance1+resistance2} ≈ {=@current1*1000} mA: điện trở nhỏ hơn có dòng lớn hơn. I·R1/(R1 + R2) là dòng điện qua R2."
+      },
+      "options": [
+        {
+          "text": "{=@current*resistance2/(resistance1+resistance2)*1000} mA",
+          "vi": {
+            "text": "{=@current*resistance2/(resistance1+resistance2)*1000} mA"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@current*resistance2/(resistance1+resistance2)",
+            "equals": "current1"
+          }
+        },
+        {
+          "text": "{=@current*resistance1/(resistance1+resistance2)*1000} mA",
+          "vi": {
+            "text": "{=@current*resistance1/(resistance1+resistance2)*1000} mA"
+          },
+          "check": {
+            "expr": "@current*resistance1/(resistance1+resistance2)",
+            "equals": "current1"
+          }
+        },
+        {
+          "text": "{=@current/2*1000} mA",
+          "vi": {
+            "text": "{=@current/2*1000} mA"
+          },
+          "check": {
+            "expr": "@current/2",
+            "equals": "current1"
+          }
+        },
+        {
+          "text": "{=@current*resistance1/resistance2*1000} mA",
+          "vi": {
+            "text": "{=@current*resistance1/resistance2*1000} mA"
+          },
+          "check": {
+            "expr": "@current*resistance1/resistance2",
+            "equals": "current1"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-equal-pair",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["parallel", "series", "energy"],
+      "set": {
+        "voltage": 12,
+        "resistance1": 470,
+        "resistance2": 470,
+        "configuration": 2
+      },
+      "stem": "Two equal resistors of {resistance1} Ω are in parallel across {voltage} V. Decide whether each statement is true or false.",
+      "explain": "R_eq = R/2 = {@equivalentResistance} Ω and I = U/R_eq ≈ {=@current*1000} mA. In series R_eq would be 2R, four times as much, so the current would be a quarter, {=voltage/(resistance1+resistance2)*1000} mA. P = U²/R_eq: the parallel pair takes four times the power of the series pair, not twice.",
+      "vi": {
+        "stem": "Hai điện trở bằng nhau, mỗi điện trở {resistance1} Ω, mắc song song vào hiệu điện thế {voltage} V. Mỗi nhận định sau đúng hay sai?",
+        "explain": "R_tđ = R/2 = {@equivalentResistance} Ω và I = U/R_tđ ≈ {=@current*1000} mA. Khi mắc nối tiếp R_tđ = 2R, lớn gấp bốn, nên dòng điện chỉ bằng một phần tư, {=voltage/(resistance1+resistance2)*1000} mA. P = U²/R_tđ: cặp mắc song song tiêu thụ công suất gấp bốn lần cặp mắc nối tiếp, không phải gấp đôi."
+      },
+      "statements": [
+        {
+          "text": "Their equivalent resistance is {@equivalentResistance} Ω.",
+          "vi": {
+            "text": "Điện trở tương đương của chúng bằng {@equivalentResistance} Ω."
+          },
+          "true": true,
+          "check": {
+            "expr": "resistance1/2",
+            "equals": "equivalentResistance"
+          }
+        },
+        {
+          "text": "The main current is about {=@current*1000} mA.",
+          "vi": {
+            "text": "Cường độ dòng điện mạch chính khoảng {=@current*1000} mA."
+          },
+          "true": true,
+          "check": {
+            "expr": "voltage/(resistance1/2)",
+            "equals": "current"
+          }
+        },
+        {
+          "text": "In series across the same supply, the current would be {=voltage/(resistance1+resistance2)*1000} mA, a quarter of this.",
+          "vi": {
+            "text": "Khi mắc nối tiếp vào cùng nguồn, dòng điện sẽ là {=voltage/(resistance1+resistance2)*1000} mA, bằng một phần tư dòng điện này."
+          },
+          "true": true,
+          "check": {
+            "expr": "4*voltage/(resistance1+resistance2)",
+            "equals": "current"
+          }
+        },
+        {
+          "text": "In parallel they take twice the power they take in series.",
+          "vi": {
+            "text": "Khi mắc song song, chúng tiêu thụ công suất gấp đôi khi mắc nối tiếp."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,564 @@
+{
+  "id": "boyle",
+  "name": "Boyle's law: pressure and volume of a gas",
+  "category": "physics",
+  "description": "A sealed syringe holds air at the room's pressure; its nozzle is piped to a pressure gauge. Push the piston in slowly and the gauge rises: halve the volume and the pressure doubles. At one temperature, the pressure of a fixed mass of gas times its volume stays the same, p·V = constant, so p against 1/V is a straight line through the origin.",
+  "vi": {
+    "name": "Định luật Boyle: áp suất và thể tích của chất khí",
+    "description": "Một xilanh kín chứa không khí ở áp suất của phòng; đầu xilanh được nối với một áp kế. Đẩy pít-tông vào từ từ thì kim áp kế tăng: giảm thể tích còn một nửa thì áp suất tăng gấp đôi. Ở nhiệt độ không đổi, tích của áp suất và thể tích của một lượng khí xác định không đổi, p·V = hằng số, nên đồ thị p theo 1/V là một đường thẳng đi qua gốc tọa độ.",
+    "note": "Khi nhiệt độ không đổi, p·V của một lượng khí xác định không đổi (định luật Boyle): p = p0·V0/V. Ở đây không khí ban đầu ở áp suất khí quyển chuẩn p0 = 101 325 Pa (giá trị quy ước; áp suất thật của phòng thay đổi theo thời tiết và độ cao) trong thể tích V0, rồi pít-tông được đẩy đều tới V trong 10 s, đủ chậm để không khí luôn ở nhiệt độ phòng. Đây là mô hình dạy học đơn giản hóa: không khí là khí lí tưởng, xilanh kín hoàn toàn, ống nối tới áp kế không thêm thể tích. Áp kế đọc tới 300 kPa (giá trị minh họa); một lần nén vượt quá thang đo bị từ chối. Áp kế và vạch chia trên xilanh đọc theo độ phân giải d của chúng (bội số gần nhất của d, độ bất định d/√12 chỉ do độ phân giải); không có sai số ngẫu nhiên nào được thêm vào. Trong phòng thí nghiệm thật, ống nối có thể tích riêng nên p·V tính theo vạch xilanh tăng dần khi nén, khí hơi nóng lên nếu nén nhanh, và pít-tông có thể rò khí."
+  },
+  "requiredEquipment": ["boyle-syringe"],
+  "model": "gases.boyle",
+  "parameters": [
+    {
+      "id": "endVolume",
+      "label": "Volume pushed to",
+      "vi": {
+        "label": "Thể tích sau khi nén"
+      },
+      "symbol": "V",
+      "unit": "m³",
+      "default": 0.00003,
+      "min": 0.00002,
+      "max": 0.00006,
+      "presets": [
+        {
+          "label": "50 mL",
+          "vi": {
+            "label": "50 mL"
+          },
+          "value": 0.00005
+        },
+        {
+          "label": "40 mL",
+          "vi": {
+            "label": "40 mL"
+          },
+          "value": 0.00004
+        },
+        {
+          "label": "30 mL",
+          "vi": {
+            "label": "30 mL"
+          },
+          "value": 0.00003
+        },
+        {
+          "label": "25 mL",
+          "vi": {
+            "label": "25 mL"
+          },
+          "value": 0.000025
+        },
+        {
+          "label": "20 mL",
+          "vi": {
+            "label": "20 mL"
+          },
+          "value": 0.00002
+        }
+      ]
+    },
+    {
+      "id": "startVolume",
+      "label": "Volume of air at the start",
+      "vi": {
+        "label": "Thể tích không khí ban đầu"
+      },
+      "symbol": "V0",
+      "unit": "m³",
+      "default": 0.00006,
+      "min": 0.00004,
+      "max": 0.00006,
+      "presets": [
+        {
+          "label": "60 mL",
+          "vi": {
+            "label": "60 mL"
+          },
+          "value": 0.00006
+        },
+        {
+          "label": "40 mL",
+          "vi": {
+            "label": "40 mL"
+          },
+          "value": 0.00004
+        }
+      ]
+    },
+    {
+      "id": "gaugeResolution",
+      "label": "Gauge resolution",
+      "vi": {
+        "label": "Độ phân giải của áp kế"
+      },
+      "symbol": "d_p",
+      "unit": "Pa",
+      "default": 1000,
+      "min": 1000,
+      "max": 5000,
+      "presets": [
+        {
+          "label": "1 kPa",
+          "vi": {
+            "label": "1 kPa"
+          },
+          "value": 1000
+        },
+        {
+          "label": "5 kPa",
+          "vi": {
+            "label": "5 kPa"
+          },
+          "value": 5000
+        }
+      ]
+    },
+    {
+      "id": "syringeResolution",
+      "label": "Syringe scale resolution",
+      "vi": {
+        "label": "Độ chia của xilanh"
+      },
+      "symbol": "d_V",
+      "unit": "m³",
+      "default": 0.000001,
+      "min": 0.000001,
+      "max": 0.000002,
+      "presets": [
+        {
+          "label": "1 mL",
+          "vi": {
+            "label": "1 mL"
+          },
+          "value": 0.000001
+        },
+        {
+          "label": "2 mL",
+          "vi": {
+            "label": "2 mL"
+          },
+          "value": 0.000002
+        }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "atmosphericPressure": 101325,
+    "duration": 10
+  },
+  "inputs": {
+    "atmosphericPressure": {
+      "symbol": "p0",
+      "unit": "Pa"
+    },
+    "duration": {
+      "symbol": "t_push",
+      "unit": "s",
+      "desk": false
+    }
+  },
+  "simulation": {
+    "timeStep": 0.02,
+    "maxDuration": 12,
+    "sampleInterval": 0.1
+  },
+  "measurements": [
+    {
+      "id": "volume",
+      "label": "Volume of the air",
+      "vi": {
+        "label": "Thể tích của không khí"
+      },
+      "symbol": "V",
+      "unit": "m³",
+      "variable": "volume"
+    },
+    {
+      "id": "pressure",
+      "label": "Pressure",
+      "vi": {
+        "label": "Áp suất"
+      },
+      "symbol": "p",
+      "unit": "Pa",
+      "variable": "pressure"
+    },
+    {
+      "id": "pressureVolume",
+      "label": "p·V",
+      "vi": {
+        "label": "p·V"
+      },
+      "symbol": "p·V",
+      "unit": "J",
+      "variable": "pressureVolume"
+    },
+    {
+      "id": "clock",
+      "label": "Time",
+      "vi": {
+        "label": "Thời gian"
+      },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "clock"
+    }
+  ],
+  "results": [
+    {
+      "id": "volume",
+      "label": "Volume V on the syringe",
+      "vi": {
+        "label": "Thể tích V trên xilanh"
+      },
+      "symbol": "V",
+      "unit": "m³",
+      "variable": "volume",
+      "reduce": "final",
+      "theory": "volume"
+    },
+    {
+      "id": "pressure",
+      "label": "Pressure p on the gauge",
+      "vi": {
+        "label": "Áp suất p trên áp kế"
+      },
+      "symbol": "p",
+      "unit": "Pa",
+      "variable": "pressure",
+      "reduce": "final",
+      "theory": "pressure"
+    },
+    {
+      "id": "pressureVolume",
+      "label": "p·V",
+      "vi": {
+        "label": "p·V"
+      },
+      "symbol": "p·V",
+      "unit": "J",
+      "variable": "pressureVolume",
+      "reduce": "final",
+      "theory": "pressureVolume"
+    },
+    {
+      "id": "inverseVolume",
+      "label": "1/V",
+      "vi": {
+        "label": "1/V"
+      },
+      "symbol": "1/V",
+      "unit": "1/m³",
+      "variable": "inverseVolume",
+      "reduce": "final",
+      "theory": "inverseVolume"
+    }
+  ],
+  "instruments": [
+    {
+      "result": "pressure",
+      "quantity": "Pressure p",
+      "name": "Pressure gauge",
+      "resolution": "gaugeResolution",
+      "excludes": "the gauge's calibration and zero, and its needle sticking",
+      "vi": {
+        "quantity": "Áp suất p",
+        "name": "Áp kế",
+        "excludes": "sai số hiệu chuẩn và điểm 0 của áp kế, và kim bị kẹt"
+      }
+    },
+    {
+      "result": "volume",
+      "quantity": "Volume V",
+      "name": "Syringe scale",
+      "resolution": "syringeResolution",
+      "excludes": "the air in the tube to the gauge, which the scale does not show, and reading the piston's edge at an angle",
+      "vi": {
+        "quantity": "Thể tích V",
+        "name": "Vạch chia trên xilanh",
+        "excludes": "không khí trong ống nối tới áp kế, không được vạch chia tính vào, và việc đọc mép pít-tông lệch góc"
+      }
+    }
+  ],
+  "graphs": [
+    {
+      "id": "pressure-volume",
+      "title": "Pressure against volume",
+      "vi": {
+        "title": "Áp suất theo thể tích"
+      },
+      "x": "volume",
+      "y": ["pressure"],
+      "yLabel": "p"
+    },
+    {
+      "id": "product-time",
+      "title": "p·V against time",
+      "vi": {
+        "title": "p·V theo thời gian"
+      },
+      "x": "clock",
+      "y": ["pressureVolume"],
+      "yLabel": "p·V"
+    }
+  ],
+  "monitor": "pressure-volume",
+  "compare": [
+    {
+      "graph": "pressure-volume"
+    }
+  ],
+  "analyses": [
+    {
+      "id": "pressure-inverse-volume",
+      "title": "Pressure against 1/V for one starting volume (p = p0·V0·(1/V))",
+      "note": "Each run is one point: the pressure p against 1/V at the end of the push. Runs with the same starting volume are fitted together, pushed to different volumes. p·V = p0·V0: a straight line through the origin whose slope is p0·V0. A larger starting volume of air gives a steeper line.",
+      "vi": {
+        "title": "Áp suất theo 1/V, với cùng một thể tích ban đầu (p = p0·V0·(1/V))",
+        "note": "Mỗi lần chạy là một điểm: áp suất p theo 1/V khi đẩy xong. Các lần chạy cùng thể tích ban đầu được khớp chung, với các thể tích sau khi nén khác nhau. p·V = p0·V0: một đường thẳng đi qua gốc tọa độ có hệ số góc p0·V0. Thể tích không khí ban đầu lớn hơn cho đường dốc hơn."
+      },
+      "x": "inverseVolume",
+      "y": "pressure",
+      "group": ["startVolume"],
+      "columns": [
+        "startVolume",
+        "endVolume",
+        "volume",
+        "pressure",
+        "pressureVolume",
+        "inverseVolume"
+      ],
+      "slope": {
+        "label": "Slope of p against 1/V (p0·V0)",
+        "vi": {
+          "label": "Hệ số góc của p theo 1/V (p0·V0)"
+        },
+        "symbol": "p0·V0",
+        "unit": "J",
+        "theory": "pressureVolume"
+      }
+    }
+  ],
+  "note": "At one temperature p·V of a fixed mass of gas stays the same (Boyle's law): p = p0·V0/V. Here the air starts at the standard atmosphere p0 = 101 325 Pa (a convention; a room's real pressure changes with the weather and the height) in the volume V0, and the piston is pushed steadily to V in 10 s, slowly enough that the air stays at the room's temperature. A simplified teaching model: the air is an ideal gas, the syringe does not leak, the tube to the gauge adds no volume. The gauge reads to 300 kPa (illustrative); a push past its full scale is refused. The gauge and the syringe's scale read to their resolutions d (the nearest multiple of d, with the uncertainty d/√12 from the resolution alone); no random error is added. In a real lab the tube has a volume of its own, so p·V worked from the syringe's scale grows as it is squeezed, the air warms a little if pushed fast, and the piston may leak.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the Boyle's law instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn thí nghiệm định luật Boyle trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "boyle-instructions"
+      }
+    },
+    {
+      "id": "volume",
+      "instruction": "Choose the volume to push the piston to, with its dial on the control desk.",
+      "vi": {
+        "instruction": "Chọn thể tích cần đẩy pít-tông tới bằng núm xoay trên bàn điều khiển."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "endVolume"
+      }
+    },
+    {
+      "id": "start",
+      "instruction": "Choose the volume of air at the start.",
+      "vi": {
+        "instruction": "Chọn thể tích không khí ban đầu."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "startVolume"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the piston goes in slowly; watch the gauge.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: pít-tông được đẩy vào từ từ; quan sát áp kế."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Read V, p and p·V on the results monitor.",
+      "vi": {
+        "instruction": "Đọc V, p và p·V trên màn hình kết quả."
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, choose another volume and run again; then compare p·V.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, chọn thể tích khác rồi chạy lại; sau đó so sánh p·V."
+      },
+      "done": {
+        "kind": "reset"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "squeeze",
+      "question": "Air at {atmosphericPressure|6} Pa fills a syringe to {=startVolume*1e6} mL. The piston is pushed slowly to {=endVolume*1e6} mL, so the temperature stays the same. Find the pressure.",
+      "vi": {
+        "question": "Không khí ở áp suất {atmosphericPressure|6} Pa chiếm {=startVolume*1e6} mL trong xi lanh. Đẩy pít-tông thật chậm tới {=endVolume*1e6} mL để nhiệt độ không đổi. Tìm áp suất khí."
+      },
+      "set": { "startVolume": 0.00006, "endVolume": 0.000025 },
+      "find": [{ "theory": "pressure", "figures": 5 }],
+      "steps": [
+        {
+          "say": "At one temperature, p·V of a fixed mass of gas stays the same: Boyle’s law.",
+          "vi": {
+            "say": "Ở nhiệt độ không đổi, tích p·V của một lượng khí xác định không đổi: định luật Boyle."
+          },
+          "write": "p·V = p₀·V₀"
+        },
+        {
+          "say": "Only the ratio of the volumes matters, so they can stay in millilitres.",
+          "vi": { "say": "Chỉ tỉ số hai thể tích có ý nghĩa, nên có thể giữ đơn vị mL." },
+          "write": "p = p₀·V₀/V = {atmosphericPressure|6}·{=startVolume*1e6}/{=endVolume*1e6} ≈ {@pressure|5} Pa",
+          "check": { "expr": "atmosphericPressure*startVolume/endVolume", "equals": "pressure" }
+        }
+      ]
+    },
+    {
+      "id": "pv-product",
+      "question": "A syringe holds {=startVolume*1e6} mL of air at {atmosphericPressure|6} Pa. Find p·V, and the pressure once it is squeezed slowly to {=endVolume*1e6} mL.",
+      "vi": {
+        "question": "Xi lanh chứa {=startVolume*1e6} mL không khí ở {atmosphericPressure|6} Pa. Tìm tích p·V, và áp suất khi nén chậm khí tới {=endVolume*1e6} mL."
+      },
+      "set": { "startVolume": 0.00004, "endVolume": 0.00002 },
+      "find": [{ "theory": "pressureVolume" }, { "theory": "pressure", "figures": 5 }],
+      "steps": [
+        {
+          "say": "p·V keeps its starting value. Work it in SI units, with the volume in cubic metres: pascals times cubic metres are joules.",
+          "vi": {
+            "say": "Tích p·V giữ nguyên giá trị ban đầu. Tính theo đơn vị SI, thể tích đổi ra m³: pascal nhân mét khối là jun."
+          },
+          "write": "p·V = p₀·V₀ = {atmosphericPressure|6}·{startVolume} ≈ {@pressureVolume} J",
+          "check": { "expr": "atmosphericPressure*startVolume", "equals": "pressureVolume" }
+        },
+        {
+          "say": "The pressure is that product over the new volume: halving the volume doubles the pressure.",
+          "vi": {
+            "say": "Áp suất bằng tích đó chia cho thể tích mới: thể tích giảm một nửa thì áp suất tăng gấp đôi."
+          },
+          "write": "p = p·V / V = {@pressureVolume}/({endVolume}) ≈ {@pressure|5} Pa",
+          "check": { "expr": "@pressureVolume/endVolume", "equals": "pressure" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "Squeezing a trapped gas at one temperature raises its pressure in proportion: halve the volume and the pressure doubles, so p·V stays the same (Boyle’s law).",
+    "vi": {
+      "summary": "Nén một lượng khí ở nhiệt độ không đổi làm áp suất tăng tương ứng: thể tích giảm một nửa thì áp suất tăng gấp đôi, nên p·V không đổi (định luật Bôi-lơ – Ma-ri-ốt)."
+    },
+    "parts": [
+      {
+        "id": "barrel",
+        "name": "Syringe barrel",
+        "role": "Holds a fixed mass of air; its scale reads the volume V.",
+        "vi": {
+          "name": "Xi lanh",
+          "role": "Chứa một lượng khí xác định; vạch chia trên nó đọc thể tích V."
+        },
+        "anchor": {
+          "part": "barrel"
+        }
+      },
+      {
+        "id": "plunger",
+        "name": "Piston",
+        "role": "Pushed in slowly, from V0 to V, so the air stays at the room’s temperature.",
+        "vi": {
+          "name": "Pít-tông",
+          "role": "Được đẩy vào từ từ, từ V0 tới V, nên khí giữ nguyên nhiệt độ phòng."
+        },
+        "anchor": {
+          "part": "plunger"
+        }
+      },
+      {
+        "id": "tube",
+        "name": "Tube",
+        "role": "Joins the syringe’s sealed nozzle to the gauge.",
+        "vi": {
+          "name": "Ống nối",
+          "role": "Nối đầu xi lanh đã bịt kín với áp kế."
+        },
+        "anchor": {
+          "at": [0.02, -0.126, 0.004]
+        }
+      },
+      {
+        "id": "gauge",
+        "name": "Pressure gauge",
+        "role": "Reads the air’s pressure p, up to 300 kPa.",
+        "vi": {
+          "name": "Áp kế",
+          "role": "Đọc áp suất p của khí, tới 300 kPa."
+        },
+        "anchor": {
+          "part": "needle"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "The syringe holds air at the room’s pressure, p0 = 101 325 Pa, in the volume V0. Its nozzle is sealed to the gauge, so no air gets in or out.",
+        "vi": {
+          "text": "Xi lanh chứa khí ở áp suất phòng, p0 = 101 325 Pa, trong thể tích V0. Đầu xi lanh nối kín với áp kế, nên không khí không ra vào được."
+        },
+        "parts": ["barrel", "tube", "gauge"]
+      },
+      {
+        "text": "Push the piston in slowly: the same air is squeezed into a smaller volume, its molecules hit the walls more often, and the gauge rises.",
+        "vi": {
+          "text": "Đẩy pít-tông vào từ từ: cùng một lượng khí bị nén vào thể tích nhỏ hơn, các phân tử va chạm vào thành bình nhiều hơn, và kim áp kế tăng lên."
+        },
+        "parts": ["plunger", "barrel", "gauge"]
+      },
+      {
+        "text": "Boyle’s law: at one temperature p·V of a fixed mass of gas stays the same, so p = p0·V0/V. Halve the volume and the pressure doubles.",
+        "vi": {
+          "text": "Định luật Bôi-lơ – Ma-ri-ốt: ở nhiệt độ không đổi, p·V của một lượng khí xác định không đổi, nên p = p0·V0/V. Thể tích giảm một nửa thì áp suất tăng gấp đôi."
+        },
+        "parts": ["barrel", "gauge"]
+      },
+      {
+        "text": "The piston goes in over 10 s, slowly enough for the air to stay at the room’s temperature; pushed fast, it would warm a little.",
+        "vi": {
+          "text": "Pít-tông đi vào trong 10 s, đủ chậm để khí giữ nhiệt độ phòng; nếu đẩy nhanh, khí sẽ nóng lên một chút."
+        },
+        "parts": ["plunger"]
+      },
+      {
+        "text": "The results give V, p and p·V, read on the syringe’s scale and the gauge in steps of their resolutions. Run to several volumes: p against 1/V is a straight line through the origin.",
+        "vi": {
+          "text": "Phần kết quả cho V, p và p·V, đọc trên vạch chia của xi lanh và trên áp kế theo từng bước bằng độ phân giải của chúng. Chạy với nhiều thể tích: p theo 1/V là đường thẳng đi qua gốc tọa độ."
+        },
+        "parts": ["barrel", "gauge"]
+      },
+      {
+        "text": "The air is treated as an ideal gas, the syringe does not leak, and the tube adds no volume. A real tube has a volume of its own, so p·V from the syringe’s scale grows as the air is squeezed.",
+        "vi": {
+          "text": "Không khí được coi là khí lí tưởng, xi lanh không rò, và ống nối không có thể tích. Ống thật có thể tích riêng, nên p·V tính theo vạch chia xi lanh tăng dần khi nén."
+        },
+        "parts": ["tube", "barrel"]
+      }
+    ]
+  }
+}

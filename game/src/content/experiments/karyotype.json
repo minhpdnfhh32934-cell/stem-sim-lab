@@ -1,0 +1,369 @@
+{
+  "id": "karyotype",
+  "name": "Human karyotypes and chromosome mutations",
+  "category": "biology",
+  "description": "The chromosomes of one human cell, photographed in metaphase, are cut out and arranged in pairs by size: a karyogram. Count them. A normal cell has 46 — 22 pairs of autosomes and the sex chromosomes. An extra or missing chromosome causes a syndrome.",
+  "vi": {
+    "name": "Bộ nhiễm sắc thể người và đột biến số lượng NST",
+    "description": "Các nhiễm sắc thể của một tế bào người, chụp ở kì giữa, được sắp xếp thành từng cặp theo kích thước: bộ nhiễm sắc thể (karyotype). Hãy đếm chúng. Tế bào bình thường có 46 NST — 22 cặp NST thường và cặp NST giới tính. Thừa hoặc thiếu một NST gây ra hội chứng.",
+    "note": "Số lượng NST là chính xác cho mỗi bộ (kí hiệu ISCN): bình thường 46,XX và 46,XY; thể ba nhiễm 21 (hội chứng Đao), 18 (Edwards), 13 (Patau); 45,X (Tớcnơ); 47,XXY (Claiphentơ). Độ dài NST tỉ lệ với độ dài trong bản tham chiếu GRCh38 (NST số 1: 249 triệu cặp bazơ, vẽ dài 6 cm). Không vẽ các băng và vị trí tâm động. Lượt chạy sắp xếp các NST thành cặp trong 6 s."
+  },
+  "requiredEquipment": ["karyogram"],
+  "model": "biology.karyotype",
+  "parameters": [
+    {
+      "id": "karyotype",
+      "label": "Karyotype",
+      "vi": {
+        "label": "Bộ NST"
+      },
+      "unit": "",
+      "default": 0,
+      "min": 0,
+      "max": 6,
+      "presets": [
+        {
+          "label": "46,XX (normal female)",
+          "vi": {
+            "label": "46,XX (nữ bình thường)"
+          },
+          "value": 0
+        },
+        {
+          "label": "46,XY (normal male)",
+          "vi": {
+            "label": "46,XY (nam bình thường)"
+          },
+          "value": 1
+        },
+        {
+          "label": "47,XY,+21 (Down syndrome)",
+          "vi": {
+            "label": "47,XY,+21 (hội chứng Đao)"
+          },
+          "value": 2
+        },
+        {
+          "label": "47,XX,+18 (Edwards syndrome)",
+          "vi": {
+            "label": "47,XX,+18 (hội chứng Edwards)"
+          },
+          "value": 3
+        },
+        {
+          "label": "47,XY,+13 (Patau syndrome)",
+          "vi": {
+            "label": "47,XY,+13 (hội chứng Patau)"
+          },
+          "value": 4
+        },
+        {
+          "label": "45,X (Turner syndrome)",
+          "vi": {
+            "label": "45,X (hội chứng Tớcnơ)"
+          },
+          "value": 5
+        },
+        {
+          "label": "47,XXY (Klinefelter syndrome)",
+          "vi": {
+            "label": "47,XXY (hội chứng Claiphentơ)"
+          },
+          "value": 6
+        }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "sortTime": 6
+  },
+  "inputs": {
+    "sortTime": {
+      "symbol": "Δt",
+      "unit": "s",
+      "desk": false
+    }
+  },
+  "simulation": {
+    "timeStep": 0.02,
+    "maxDuration": 8,
+    "sampleInterval": 0.05
+  },
+  "measurements": [
+    {
+      "id": "time",
+      "label": "Time",
+      "vi": {
+        "label": "Thời gian"
+      },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "time"
+    },
+    {
+      "id": "counted",
+      "label": "Chromosomes counted",
+      "vi": {
+        "label": "Số NST đã đếm"
+      },
+      "unit": "",
+      "variable": "counted"
+    }
+  ],
+  "results": [
+    {
+      "id": "chromosomes",
+      "label": "Chromosomes in the cell",
+      "vi": {
+        "label": "Số NST trong tế bào"
+      },
+      "unit": "",
+      "variable": "counted",
+      "reduce": "final",
+      "format": "integer",
+      "theory": "chromosomes"
+    },
+    {
+      "id": "autosomes",
+      "label": "Autosomes",
+      "vi": {
+        "label": "NST thường"
+      },
+      "unit": "",
+      "variable": "autosomes",
+      "reduce": "final",
+      "format": "integer",
+      "theory": "autosomes"
+    },
+    {
+      "id": "x",
+      "label": "X chromosomes",
+      "vi": {
+        "label": "NST X"
+      },
+      "unit": "",
+      "variable": "x",
+      "reduce": "final",
+      "format": "integer",
+      "theory": "x"
+    },
+    {
+      "id": "y",
+      "label": "Y chromosomes",
+      "vi": {
+        "label": "NST Y"
+      },
+      "unit": "",
+      "variable": "y",
+      "reduce": "final",
+      "format": "integer",
+      "theory": "y",
+      "classes": [
+        {
+          "max": 0,
+          "label": "No Y: develops as female",
+          "vi": {
+            "label": "Không có Y: phát triển thành nữ"
+          }
+        },
+        {
+          "label": "A Y: develops as male",
+          "vi": {
+            "label": "Có Y: phát triển thành nam"
+          }
+        }
+      ]
+    }
+  ],
+  "graphs": [
+    {
+      "id": "count-time",
+      "title": "Chromosomes counted",
+      "vi": {
+        "title": "Số NST đã đếm"
+      },
+      "x": "time",
+      "y": ["counted"]
+    }
+  ],
+  "monitor": "count-time",
+  "compare": [
+    {
+      "graph": "count-time",
+      "series": "counted"
+    }
+  ],
+  "note": "The chromosome counts are exact for each karyotype (ISCN notation): normal 46,XX and 46,XY; trisomies 21 (Down syndrome), 18 (Edwards), 13 (Patau); 45,X (Turner); 47,XXY (Klinefelter). Chromosome lengths are in proportion to the GRCh38 reference (chromosome 1: 249 million base pairs, drawn 6 cm long). Bands and centromere positions are not drawn. The run sorts the chromosomes into pairs in 6 s.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the karyotype instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn về bộ NST trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "karyotype-instructions"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the chromosomes are sorted into pairs and counted.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: các NST được xếp thành cặp và đếm."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "karyotype",
+      "instruction": "Press RESET and choose another karyotype with the dial.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI và chọn bộ NST khác bằng núm xoay."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "karyotype"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Find the extra or missing chromosome.",
+      "vi": {
+        "instruction": "Tìm NST thừa hoặc thiếu."
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET: what decides male or female?",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI: điều gì quyết định nam hay nữ?"
+      },
+      "done": {
+        "kind": "reset"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "down-syndrome",
+      "question": "A karyotype reads 47,XY,+21 (Down syndrome). How many chromosomes are in each body cell, and how many of them are autosomes?",
+      "vi": {
+        "question": "Một bộ NST được ghi là 47,XY,+21 (hội chứng Đao). Mỗi tế bào sinh dưỡng có bao nhiêu NST, và bao nhiêu trong số đó là NST thường?"
+      },
+      "set": { "karyotype": 2 },
+      "find": [
+        { "theory": "chromosomes", "symbol": "2n + 1", "unit": "" },
+        { "theory": "autosomes", "symbol": "A", "unit": "" }
+      ],
+      "steps": [
+        {
+          "say": "A normal human body cell has 2n = 46: 44 autosomes and two sex chromosomes, XX or XY.",
+          "vi": {
+            "say": "Tế bào sinh dưỡng bình thường của người có 2n = 46: 44 NST thường và hai NST giới tính, XX hoặc XY."
+          },
+          "write": "2n = 44A + XY"
+        },
+        {
+          "say": "Down syndrome has a third chromosome 21: a trisomy, 2n + 1.",
+          "vi": { "say": "Hội chứng Đao có ba NST số 21: thể ba, 2n + 1." },
+          "write": "2n + 1 = 46 + 1 = {@chromosomes}",
+          "check": { "expr": "46+1", "equals": "chromosomes" }
+        },
+        {
+          "say": "Chromosome 21 is an autosome, so the extra one adds to the autosomes.",
+          "vi": { "say": "NST số 21 là NST thường, nên NST thừa được cộng vào số NST thường." },
+          "write": "A = 44 + 1 = {@autosomes}",
+          "check": { "expr": "44+1", "equals": "autosomes" }
+        }
+      ]
+    },
+    {
+      "id": "turner-syndrome",
+      "question": "A karyotype reads 45,X (Turner syndrome). How many chromosomes are in each body cell, and how many X chromosomes?",
+      "vi": {
+        "question": "Một bộ NST được ghi là 45,X (hội chứng Tớcnơ). Mỗi tế bào sinh dưỡng có bao nhiêu NST, và bao nhiêu NST X?"
+      },
+      "set": { "karyotype": 5 },
+      "find": [
+        { "theory": "chromosomes", "symbol": "2n − 1", "unit": "" },
+        { "theory": "x", "symbol": "X", "unit": "" }
+      ],
+      "steps": [
+        {
+          "say": "One sex chromosome is missing: a monosomy, 2n − 1.",
+          "vi": { "say": "Thiếu một NST giới tính: thể một, 2n − 1." },
+          "write": "2n − 1 = 46 − 1 = {@chromosomes}",
+          "check": { "expr": "46-1", "equals": "chromosomes" }
+        },
+        {
+          "say": "The 44 autosomes are all there; of the sex chromosomes only one X is left (written XO).",
+          "vi": {
+            "say": "Đủ 44 NST thường; trong cặp NST giới tính chỉ còn một NST X (viết là XO)."
+          },
+          "write": "45 = 44A + X  →  X = {@x}",
+          "check": { "expr": "1", "equals": "x" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "A body cell has 23 pairs of chromosomes: one of each pair from the mother, one from the father. A mistake when eggs or sperm are made can leave a cell with one too many or one too few.",
+    "vi": {
+      "summary": "Tế bào sinh dưỡng có 23 cặp NST: mỗi cặp một chiếc từ mẹ, một chiếc từ bố. Sai sót khi tạo trứng hoặc tinh trùng có thể làm tế bào thừa hoặc thiếu một NST."
+    },
+    "parts": [
+      {
+        "id": "chromosomes",
+        "name": "Chromosomes",
+        "role": "Sorted by size into pairs 1–22, then the sex chromosomes.",
+        "vi": {
+          "name": "Nhiễm sắc thể",
+          "role": "Xếp theo kích thước thành các cặp 1–22, rồi NST giới tính."
+        },
+        "anchor": {
+          "part": "chromosomes"
+        }
+      },
+      {
+        "id": "board",
+        "name": "Karyogram",
+        "role": "Rows of pairs, largest first; X beside pair 12, Y after pair 22.",
+        "vi": {
+          "name": "Bảng karyotype",
+          "role": "Các hàng cặp NST, lớn nhất trước; X cạnh cặp 12, Y sau cặp 22."
+        },
+        "anchor": {
+          "part": "lightbox"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "Count them: 46 in a normal cell — 22 pairs of autosomes plus XX (female) or XY (male).",
+        "vi": {
+          "text": "Đếm: tế bào bình thường có 46 NST — 22 cặp NST thường cộng XX (nữ) hoặc XY (nam)."
+        },
+        "parts": ["chromosomes", "board"]
+      },
+      {
+        "text": "If a pair fails to separate in meiosis, an egg or sperm gets an extra chromosome: three copies of 21 give Down syndrome (47 chromosomes).",
+        "vi": {
+          "text": "Nếu một cặp không phân li trong giảm phân, trứng hoặc tinh trùng nhận thêm một NST: ba chiếc NST số 21 gây hội chứng Đao (47 NST)."
+        },
+        "parts": ["chromosomes"]
+      },
+      {
+        "text": "The Y chromosome decides male: 45,X (Turner) develops as female, 47,XXY (Klinefelter) as male.",
+        "vi": {
+          "text": "NST Y quyết định giới tính nam: 45,X (Tớcnơ) phát triển thành nữ, 47,XXY (Claiphentơ) thành nam."
+        },
+        "parts": ["board"]
+      }
+    ]
+  }
+}

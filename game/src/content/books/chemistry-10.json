@@ -1,0 +1,799 @@
+{
+  "id": "chemistry-10",
+  "subject": "chemistry",
+  "grade": 10,
+  "title": "Hóa học 10",
+  "tagline": "Năm nay em sẽ nhìn vào bên trong nguyên tử, hiểu vì sao các chất liên kết với nhau và vì sao có phản ứng nhanh, phản ứng chậm.",
+  "chapters": [
+    {
+      "title": "Mở đầu",
+      "lessons": [
+        {
+          "id": "chemistry-10-01",
+          "title": "Bài mở đầu. Nhập môn hóa học",
+          "hook": "Bánh mì nở, sắt gỉ, pin điện thoại sạc đầy rồi cạn — tất cả đều là hóa học. Vậy hóa học nghiên cứu cái gì, và học nó thế nào cho hiệu quả?",
+          "sections": [
+            {
+              "heading": "1. Đối tượng nghiên cứu của hóa học",
+              "paragraphs": [
+                "Hóa học là ngành khoa học thuộc lĩnh vực khoa học tự nhiên, nghiên cứu về thành phần, cấu trúc, tính chất và sự biến đổi của các chất, cùng với ứng dụng của chúng.",
+                "Chất được tạo nên từ các nguyên tố hóa học. Khi chất biến đổi thành chất khác, ta có một phản ứng hóa học: các nguyên tử được sắp xếp lại, nhưng tổng số nguyên tử của mỗi nguyên tố được bảo toàn."
+              ]
+            },
+            {
+              "heading": "2. Vai trò của hóa học",
+              "paragraphs": [
+                "Hóa học có mặt trong mọi lĩnh vực của đời sống: sản xuất phân bón và thuốc bảo vệ thực vật cho nông nghiệp, điều chế dược phẩm cho y học, tạo ra vật liệu mới như chất dẻo, hợp kim, chất bán dẫn cho công nghiệp.",
+                "Hóa học cũng giúp bảo vệ môi trường: xử lí nước thải, khí thải, tìm ra nguồn năng lượng sạch hơn. Hiểu hóa học giúp em dùng hóa chất trong gia đình an toàn và đúng cách."
+              ]
+            },
+            {
+              "heading": "3. Phương pháp học tập môn hóa học",
+              "paragraphs": [
+                "Học hóa học là kết hợp lí thuyết với thực nghiệm: quan sát hiện tượng, đặt câu hỏi, nêu giả thuyết, làm thí nghiệm để kiểm tra rồi rút ra kết luận.",
+                "Trong phòng thí nghiệm luôn tuân thủ nội quy: đeo kính bảo hộ, găng tay, không nếm hay ngửi trực tiếp hóa chất, đọc kĩ nhãn trước khi dùng và xử lí chất thải đúng nơi quy định."
+              ],
+              "tip": "Mỗi khi gặp một phản ứng, hãy tự hỏi: chất nào biến đổi, vì sao biến đổi, và ứng dụng của nó là gì?"
+            }
+          ],
+          "remember": [
+            "Hóa học nghiên cứu thành phần, cấu trúc, tính chất, sự biến đổi của các chất và ứng dụng của chúng.",
+            "Trong phản ứng hóa học, nguyên tử được sắp xếp lại, số nguyên tử của mỗi nguyên tố được bảo toàn.",
+            "Hóa học có vai trò trong nông nghiệp, y học, công nghiệp, năng lượng và môi trường.",
+            "Học hóa học hiệu quả là kết hợp lí thuyết với thực nghiệm và luôn tuân thủ an toàn phòng thí nghiệm."
+          ],
+          "check": {
+            "question": "Sắt để ngoài trời bị gỉ là hiện tượng vật lí hay hóa học? Vì sao?",
+            "answer": "Hiện tượng hóa học, vì sắt đã biến đổi thành chất mới (gỉ sắt) có tính chất khác."
+          }
+        }
+      ]
+    },
+    {
+      "title": "Chương 1. Cấu tạo nguyên tử",
+      "lessons": [
+        {
+          "id": "chemistry-10-02",
+          "title": "Bài 1. Thành phần của nguyên tử",
+          "hook": "Mọi vật quanh em đều được tạo từ nguyên tử nhỏ đến mức xếp 10 triệu nguyên tử thẳng hàng mới dài khoảng 1 mm. Vậy bên trong thứ bé xíu đó có gì?",
+          "sections": [
+            {
+              "heading": "1. Các hạt cấu tạo nên nguyên tử",
+              "paragraphs": [
+                "Năm 1897, J. J. Thomson phát hiện electron nhờ thí nghiệm với tia âm cực. Năm 1911, E. Rutherford bắn chùm hạt α vào lá vàng mỏng: hầu hết hạt đi thẳng, chỉ rất ít hạt bị lệch hoặc bật lại. Từ đó ông kết luận nguyên tử có một hạt nhân rất nhỏ, mang điện dương, ở tâm.",
+                "Nguyên tử gồm hạt nhân (chứa proton mang điện dương và neutron không mang điện) và lớp vỏ gồm các electron mang điện âm. Neutron được J. Chadwick tìm ra năm 1932. Nguyên tử trung hòa về điện nên số proton bằng số electron."
+              ],
+              "formulas": ["m_p ≈ m_n ≈ 1 amu", "m_e ≈ 0.00055 amu", "1 amu = 1.661·10^(-27) kg"]
+            },
+            {
+              "heading": "2. Khối lượng và kích thước nguyên tử",
+              "paragraphs": [
+                "Proton và neutron có khối lượng xấp xỉ nhau, khoảng 1 amu, còn electron nhẹ hơn khoảng 1 840 lần. Vì vậy khối lượng nguyên tử tập trung gần như toàn bộ ở hạt nhân.",
+                "Đường kính nguyên tử cỡ 10⁻¹⁰ m, trong khi hạt nhân chỉ cỡ 10⁻¹⁴ m: nguyên tử lớn hơn hạt nhân khoảng 10 000 đến 100 000 lần. Nguyên tử phần lớn là khoảng trống, đó là lí do hầu hết hạt α đi xuyên qua lá vàng."
+              ],
+              "example": {
+                "question": "Một nguyên tử có 13 proton, 14 neutron. Tính số electron và tổng số hạt của nguyên tử.",
+                "steps": [
+                  "Nguyên tử trung hòa điện nên số electron = số proton = 13.",
+                  "Tổng số hạt = p + n + e = 13 + 14 + 13.",
+                  "Tổng số hạt = 40 hạt (đây là nguyên tử aluminium)."
+                ]
+              },
+              "tip": "Điện tích proton và electron bằng nhau về độ lớn (1,602·10⁻¹⁹ C) nhưng trái dấu; ta quy ước gọi là +1 và −1."
+            }
+          ],
+          "remember": [
+            "Nguyên tử gồm hạt nhân (proton, neutron) và vỏ (electron).",
+            "Proton mang điện +1, electron mang điện −1, neutron không mang điện.",
+            "Trong nguyên tử, số proton = số electron.",
+            "Khối lượng nguyên tử tập trung ở hạt nhân; proton và neutron nặng khoảng 1 amu.",
+            "Nguyên tử lớn hơn hạt nhân khoảng 10⁴ – 10⁵ lần."
+          ],
+          "check": {
+            "question": "Vì sao có thể coi khối lượng nguyên tử xấp xỉ bằng khối lượng hạt nhân?",
+            "answer": "Vì electron nhẹ hơn proton, neutron khoảng 1 840 lần, khối lượng các electron gần như không đáng kể."
+          },
+          "lab": "atomic-structure"
+        },
+        {
+          "id": "chemistry-10-03",
+          "title": "Bài 2. Nguyên tố hóa học",
+          "hook": "Nước thường và nước nặng đều là nước, nhưng nước nặng lại nặng hơn. Bí mật nằm ở số neutron trong hạt nhân hydrogen.",
+          "sections": [
+            {
+              "heading": "1. Hạt nhân nguyên tử và nguyên tố hóa học",
+              "paragraphs": [
+                "Số đơn vị điện tích hạt nhân Z bằng số proton và bằng số electron. Số khối A là tổng số proton và neutron.",
+                "Nguyên tố hóa học là tập hợp những nguyên tử có cùng số proton (cùng Z). Z còn gọi là số hiệu nguyên tử, cho biết vị trí của nguyên tố trong bảng tuần hoàn. Kí hiệu nguyên tử ghi số khối A ở góc trên bên trái và số hiệu Z ở góc dưới bên trái kí hiệu nguyên tố."
+              ],
+              "formulas": ["A = Z + N"]
+            },
+            {
+              "heading": "2. Đồng vị",
+              "paragraphs": [
+                "Đồng vị là những nguyên tử của cùng một nguyên tố, có cùng số proton nhưng khác số neutron, nên khác số khối. Ví dụ hydrogen có ba đồng vị: ¹H (protium), ²H (deuterium) và ³H (tritium).",
+                "Các đồng vị của một nguyên tố có tính chất hóa học gần như giống nhau vì có cùng số electron, nhưng một số tính chất vật lí như khối lượng thì khác nhau."
+              ]
+            },
+            {
+              "heading": "3. Nguyên tử khối trung bình",
+              "paragraphs": [
+                "Phần lớn nguyên tố là hỗn hợp nhiều đồng vị theo tỉ lệ gần như không đổi. Nguyên tử khối trung bình là trung bình có trọng số của số khối các đồng vị theo phần trăm số nguyên tử."
+              ],
+              "formulas": ["A_tb = (A_1·x_1 + A_2·x_2)/100"],
+              "example": {
+                "question": "Chlorine có hai đồng vị ³⁵Cl chiếm khoảng 75% và ³⁷Cl chiếm khoảng 25% số nguyên tử. Tính nguyên tử khối trung bình của chlorine.",
+                "steps": [
+                  "A_tb = (35·75 + 37·25)/100.",
+                  "A_tb = (2 625 + 925)/100 = 3 550/100.",
+                  "A_tb ≈ 35,5."
+                ]
+              },
+              "tip": "Nguyên tử khối trung bình không nhất thiết là số nguyên, vì nó là giá trị trung bình của nhiều đồng vị."
+            }
+          ],
+          "remember": [
+            "Z = số proton = số electron; A = Z + N.",
+            "Nguyên tố hóa học là tập hợp nguyên tử có cùng Z.",
+            "Đồng vị: cùng số proton, khác số neutron.",
+            "Nguyên tử khối trung bình tính theo phần trăm số nguyên tử của các đồng vị."
+          ],
+          "check": {
+            "question": "Nguyên tử có 11 proton và 12 neutron có số khối bằng bao nhiêu?",
+            "answer": "A = 11 + 12 = 23 (nguyên tử sodium)."
+          }
+        },
+        {
+          "id": "chemistry-10-04",
+          "title": "Bài 3. Cấu trúc lớp vỏ electron nguyên tử",
+          "hook": "Electron không chạy trên những quỹ đạo tròn như hành tinh quanh Mặt Trời. Vậy chúng ở đâu, và vì sao cách sắp xếp ấy quyết định tính chất của nguyên tố?",
+          "sections": [
+            {
+              "heading": "1. Orbital nguyên tử",
+              "paragraphs": [
+                "Electron chuyển động rất nhanh quanh hạt nhân không theo quỹ đạo xác định. Orbital nguyên tử (AO) là khu vực không gian quanh hạt nhân mà xác suất tìm thấy electron là lớn nhất (khoảng 90%).",
+                "Orbital s có dạng hình cầu; orbital p có dạng hình số tám nổi, gồm ba orbital px, py, pz định hướng theo ba trục. Mỗi orbital chứa tối đa 2 electron có chiều tự quay ngược nhau."
+              ]
+            },
+            {
+              "heading": "2. Lớp và phân lớp electron",
+              "paragraphs": [
+                "Các electron có năng lượng gần bằng nhau thuộc cùng một lớp, đánh số n = 1, 2, 3, 4… (tên K, L, M, N…). Mỗi lớp chia thành các phân lớp s, p, d, f có lần lượt 1, 3, 5, 7 orbital, nên chứa tối đa 2, 6, 10, 14 electron.",
+                "Lớp thứ n có n² orbital và chứa tối đa 2n² electron: lớp K tối đa 2, lớp L tối đa 8, lớp M tối đa 18 electron."
+              ],
+              "formulas": ["N_max = 2n^2"]
+            },
+            {
+              "heading": "3. Cấu hình electron nguyên tử",
+              "paragraphs": [
+                "Electron được điền vào các phân lớp theo thứ tự năng lượng tăng dần: 1s 2s 2p 3s 3p 4s 3d 4p… (nguyên lí vững bền). Mỗi orbital có tối đa 2 electron ngược chiều (nguyên lí Pauli). Trong một phân lớp, electron phân bố sao cho số electron độc thân là tối đa (quy tắc Hund).",
+                "Số electron lớp ngoài cùng quyết định tính chất hóa học: nguyên tử có 1, 2, 3 electron lớp ngoài cùng thường là kim loại (trừ H, He, B); có 5, 6, 7 electron thường là phi kim; có 8 electron (He có 2) là khí hiếm."
+              ],
+              "formulas": ["Cl (Z = 17): 1s^2 2s^2 2p^6 3s^2 3p^5"],
+              "example": {
+                "question": "Viết cấu hình electron của nguyên tử potassium (Z = 19) và cho biết nó là kim loại hay phi kim.",
+                "steps": [
+                  "Điền 19 electron theo thứ tự năng lượng: 1s² 2s² 2p⁶ 3s² 3p⁶ 4s¹.",
+                  "Lớp ngoài cùng (n = 4) có 1 electron.",
+                  "Potassium là kim loại."
+                ]
+              },
+              "tip": "Lỗi hay gặp: điền 3d trước 4s. Phân lớp 4s được điền trước 3d."
+            }
+          ],
+          "remember": [
+            "Orbital là vùng xác suất tìm thấy electron lớn nhất; mỗi orbital tối đa 2 electron.",
+            "Phân lớp s, p, d, f có 1, 3, 5, 7 orbital.",
+            "Lớp n chứa tối đa 2n² electron; thứ tự điền: 1s 2s 2p 3s 3p 4s 3d…",
+            "1–3 electron ngoài cùng: thường là kim loại; 5–7: thường là phi kim; 8: khí hiếm."
+          ],
+          "check": {
+            "question": "Nguyên tử oxygen (Z = 8) có bao nhiêu electron độc thân?",
+            "answer": "Cấu hình 1s² 2s² 2p⁴; theo quy tắc Hund phân lớp 2p có 2 electron độc thân."
+          },
+          "lab": "orbitals"
+        }
+      ]
+    },
+    {
+      "title": "Chương 2. Bảng tuần hoàn các nguyên tố hóa học và định luật tuần hoàn",
+      "lessons": [
+        {
+          "id": "chemistry-10-05",
+          "title": "Bài 5. Cấu tạo của bảng tuần hoàn các nguyên tố hóa học",
+          "hook": "Năm 1869, Mendeleev xếp các nguyên tố thành bảng và còn để trống chỗ cho những nguyên tố chưa ai tìm ra. Bảng tuần hoàn được sắp xếp theo quy luật nào?",
+          "sections": [
+            {
+              "heading": "1. Nguyên tắc sắp xếp",
+              "paragraphs": [
+                "Các nguyên tố được xếp theo chiều tăng dần điện tích hạt nhân. Các nguyên tố có cùng số lớp electron xếp thành một hàng (chu kì). Các nguyên tố có cấu hình electron hóa trị tương tự nhau xếp thành một cột (nhóm).",
+                "Mỗi ô nguyên tố cho biết số hiệu nguyên tử, kí hiệu, tên, nguyên tử khối trung bình và thường cả độ âm điện, cấu hình electron."
+              ]
+            },
+            {
+              "heading": "2. Chu kì",
+              "paragraphs": [
+                "Bảng tuần hoàn có 7 chu kì. Số thứ tự chu kì bằng số lớp electron. Chu kì 1 có 2 nguyên tố; chu kì 2 và 3 mỗi chu kì có 8 nguyên tố (chu kì nhỏ); chu kì 4, 5 có 18 nguyên tố và chu kì 6, 7 có 32 nguyên tố (chu kì lớn).",
+                "Mỗi chu kì (trừ chu kì 1) bắt đầu bằng một kim loại kiềm và kết thúc bằng một khí hiếm."
+              ]
+            },
+            {
+              "heading": "3. Nhóm và khối nguyên tố",
+              "paragraphs": [
+                "Nhóm A gồm các nguyên tố s và p; số thứ tự nhóm A bằng số electron lớp ngoài cùng. Nhóm B gồm các nguyên tố d và f, đều là kim loại.",
+                "Theo phân lớp cuối cùng được điền electron, các nguyên tố chia thành bốn khối s, p, d, f."
+              ],
+              "example": {
+                "question": "Nguyên tố X có Z = 12. Xác định vị trí của X trong bảng tuần hoàn.",
+                "steps": [
+                  "Cấu hình electron: 1s² 2s² 2p⁶ 3s².",
+                  "Có 3 lớp electron nên X thuộc chu kì 3.",
+                  "Có 2 electron lớp ngoài cùng, electron cuối điền vào phân lớp s: X thuộc nhóm IIA, khối s (đó là magnesium)."
+                ]
+              }
+            }
+          ],
+          "remember": [
+            "Xếp theo chiều tăng điện tích hạt nhân.",
+            "Số thứ tự chu kì = số lớp electron; có 7 chu kì.",
+            "Số thứ tự nhóm A = số electron lớp ngoài cùng.",
+            "Nhóm A gồm nguyên tố s, p; nhóm B gồm nguyên tố d, f."
+          ],
+          "check": {
+            "question": "Nguyên tố có cấu hình 1s² 2s² 2p⁵ ở chu kì nào, nhóm nào?",
+            "answer": "Chu kì 2, nhóm VIIA (đó là fluorine)."
+          }
+        },
+        {
+          "id": "chemistry-10-06",
+          "title": "Bài 6. Xu hướng biến đổi một số tính chất của nguyên tử các nguyên tố trong một chu kì và trong một nhóm",
+          "hook": "Vì sao cesium nổ tung khi gặp nước còn sodium chỉ chạy lăng xăng trên mặt nước? Câu trả lời nằm ở bán kính nguyên tử.",
+          "sections": [
+            {
+              "heading": "1. Bán kính nguyên tử",
+              "paragraphs": [
+                "Trong một chu kì, theo chiều tăng điện tích hạt nhân, số lớp electron không đổi nhưng lực hút của hạt nhân với electron tăng, nên bán kính nguyên tử giảm dần.",
+                "Trong một nhóm A, từ trên xuống dưới số lớp electron tăng, nên bán kính nguyên tử tăng dần."
+              ]
+            },
+            {
+              "heading": "2. Độ âm điện",
+              "paragraphs": [
+                "Độ âm điện đặc trưng cho khả năng hút electron liên kết của nguyên tử trong phân tử. Thang đo thường dùng là thang Pauling; fluorine có độ âm điện lớn nhất (3,98).",
+                "Trong một chu kì, độ âm điện tăng dần từ trái sang phải; trong một nhóm A, độ âm điện giảm dần từ trên xuống dưới."
+              ]
+            },
+            {
+              "heading": "3. Tính kim loại và tính phi kim",
+              "paragraphs": [
+                "Tính kim loại là khả năng nguyên tử nhường electron; tính phi kim là khả năng nhận electron. Nguyên tử càng dễ nhường electron thì tính kim loại càng mạnh.",
+                "Trong một chu kì, tính kim loại giảm và tính phi kim tăng từ trái sang phải. Trong một nhóm A, tính kim loại tăng và tính phi kim giảm từ trên xuống dưới. Vì thế cesium là kim loại hoạt động mạnh hơn sodium nhiều."
+              ],
+              "tip": "Nhớ một mũi tên chéo: đi về góc trên bên phải bảng (gần fluorine) thì bán kính nhỏ, độ âm điện lớn, tính phi kim mạnh."
+            }
+          ],
+          "remember": [
+            "Trong chu kì: bán kính giảm, độ âm điện tăng, tính kim loại giảm, tính phi kim tăng.",
+            "Trong nhóm A: bán kính tăng, độ âm điện giảm, tính kim loại tăng, tính phi kim giảm.",
+            "Fluorine có độ âm điện lớn nhất.",
+            "Nguyên nhân gốc: điện tích hạt nhân và số lớp electron."
+          ],
+          "check": {
+            "question": "Sắp xếp Na, Mg, Al theo chiều bán kính nguyên tử giảm dần.",
+            "answer": "Na > Mg > Al (cùng chu kì 3, điện tích hạt nhân tăng dần)."
+          }
+        },
+        {
+          "id": "chemistry-10-07",
+          "title": "Bài 7. Xu hướng biến đổi thành phần và một số tính chất của hợp chất trong một chu kì",
+          "hook": "Sodium oxide tan vào nước tạo dung dịch làm quỳ hóa xanh, còn sulfur trioxide tan vào nước lại tạo acid mạnh. Cùng một chu kì mà sao khác nhau đến thế?",
+          "sections": [
+            {
+              "heading": "1. Thành phần oxide cao nhất và hydroxide",
+              "paragraphs": [
+                "Với các nguyên tố nhóm A, hóa trị cao nhất với oxygen thường bằng số thứ tự nhóm. Ở chu kì 3, các oxide cao nhất lần lượt là Na2O, MgO, Al2O3, SiO2, P2O5, SO3, Cl2O7.",
+                "Hydroxide tương ứng là NaOH, Mg(OH)2, Al(OH)3, H2SiO3, H3PO4, H2SO4, HClO4."
+              ]
+            },
+            {
+              "heading": "2. Tính acid – base của oxide và hydroxide",
+              "paragraphs": [
+                "Trong một chu kì, theo chiều tăng điện tích hạt nhân, tính base của oxide và hydroxide giảm dần, tính acid tăng dần.",
+                "Ở chu kì 3: Na2O, MgO là oxide base; Al2O3 là oxide lưỡng tính; SiO2, P2O5, SO3, Cl2O7 là oxide acid. NaOH là base mạnh, Mg(OH)2 là base yếu, Al(OH)3 lưỡng tính, H2SiO3 là acid yếu, H3PO4 là acid trung bình, H2SO4 là acid mạnh và HClO4 là một trong những acid mạnh nhất."
+              ],
+              "formulas": ["Na2O + H2O → 2NaOH", "SO3 + H2O → H2SO4"],
+              "tip": "Hydroxide lưỡng tính như Al(OH)3 tác dụng được với cả acid và base mạnh."
+            }
+          ],
+          "remember": [
+            "Hóa trị cao nhất với oxygen của nguyên tố nhóm A thường bằng số thứ tự nhóm.",
+            "Trong một chu kì, tính base của oxide, hydroxide giảm; tính acid tăng.",
+            "Al2O3 và Al(OH)3 lưỡng tính.",
+            "HClO4 là acid rất mạnh, NaOH là base mạnh."
+          ],
+          "check": {
+            "question": "Viết công thức oxide cao nhất của phosphorus (nhóm VA) và cho biết nó là oxide acid hay base.",
+            "answer": "P2O5, là oxide acid."
+          }
+        },
+        {
+          "id": "chemistry-10-08",
+          "title": "Bài 8. Định luật tuần hoàn. Ý nghĩa của bảng tuần hoàn các nguyên tố hóa học",
+          "hook": "Chỉ cần biết số hiệu nguyên tử, em có thể đoán được nguyên tố đó là kim loại hay phi kim và oxide của nó tạo acid hay base. Đó là sức mạnh của định luật tuần hoàn.",
+          "sections": [
+            {
+              "heading": "1. Định luật tuần hoàn",
+              "paragraphs": [
+                "Tính chất của các nguyên tố và đơn chất, cũng như thành phần và tính chất của các hợp chất tạo nên từ các nguyên tố đó, biến đổi tuần hoàn theo chiều tăng của điện tích hạt nhân nguyên tử.",
+                "Nguyên nhân là cấu hình electron lớp ngoài cùng được lặp lại một cách tuần hoàn sau mỗi chu kì."
+              ]
+            },
+            {
+              "heading": "2. Ý nghĩa của bảng tuần hoàn",
+              "paragraphs": [
+                "Biết vị trí của nguyên tố (ô, chu kì, nhóm) ta suy ra được cấu tạo nguyên tử: số proton, số lớp electron, số electron lớp ngoài cùng. Ngược lại, biết cấu hình electron ta suy ra được vị trí.",
+                "Từ vị trí, ta dự đoán được tính chất: kim loại hay phi kim, hóa trị cao nhất với oxygen, công thức oxide cao nhất và hydroxide, tính acid – base của chúng, và so sánh với các nguyên tố lân cận."
+              ],
+              "example": {
+                "question": "Nguyên tố S có Z = 16. Dự đoán vị trí và tính chất cơ bản của S.",
+                "steps": [
+                  "Cấu hình: 1s² 2s² 2p⁶ 3s² 3p⁴ → chu kì 3, nhóm VIA.",
+                  "Có 6 electron lớp ngoài cùng nên S là phi kim.",
+                  "Hóa trị cao nhất với oxygen là VI: oxide cao nhất SO3 là oxide acid, hydroxide H2SO4 là acid mạnh."
+                ]
+              }
+            }
+          ],
+          "remember": [
+            "Tính chất nguyên tố và hợp chất biến đổi tuần hoàn theo chiều tăng điện tích hạt nhân.",
+            "Nguyên nhân: cấu hình electron lớp ngoài cùng lặp lại tuần hoàn.",
+            "Vị trí trong bảng ⇄ cấu tạo nguyên tử ⇄ tính chất.",
+            "Có thể so sánh tính chất một nguyên tố với các nguyên tố lân cận."
+          ],
+          "check": {
+            "question": "So sánh tính phi kim của Cl (Z = 17) và S (Z = 16).",
+            "answer": "Cùng chu kì 3, Cl có điện tích hạt nhân lớn hơn nên tính phi kim mạnh hơn S."
+          }
+        }
+      ]
+    },
+    {
+      "title": "Chương 3. Liên kết hóa học",
+      "lessons": [
+        {
+          "id": "chemistry-10-09",
+          "title": "Bài 10. Quy tắc octet",
+          "hook": "Khí hiếm gần như không phản ứng với ai. Các nguyên tử khác dường như đều muốn trở nên giống khí hiếm. Vì sao vậy?",
+          "sections": [
+            {
+              "heading": "1. Liên kết hóa học",
+              "paragraphs": [
+                "Liên kết hóa học là sự kết hợp giữa các nguyên tử tạo thành phân tử hay tinh thể bền vững hơn.",
+                "Các khí hiếm có 8 electron lớp ngoài cùng (riêng helium có 2), cấu hình này rất bền nên khí hiếm hầu như đứng riêng lẻ."
+              ]
+            },
+            {
+              "heading": "2. Quy tắc octet",
+              "paragraphs": [
+                "Trong quá trình hình thành liên kết hóa học, nguyên tử của các nguyên tố nhóm A có xu hướng tạo thành lớp electron ngoài cùng có 8 electron (hoặc 2 electron với nguyên tố gần helium) giống khí hiếm.",
+                "Nguyên tử đạt octet bằng cách nhường electron, nhận electron hoặc góp chung electron. Kim loại thường nhường electron, phi kim thường nhận electron hoặc góp chung."
+              ],
+              "example": {
+                "question": "Nguyên tử sodium (Z = 11) và chlorine (Z = 17) đạt octet bằng cách nào?",
+                "steps": [
+                  "Na: 2, 8, 1 → nhường 1 electron thành Na⁺ có cấu hình giống neon.",
+                  "Cl: 2, 8, 7 → nhận 1 electron thành Cl⁻ có cấu hình giống argon.",
+                  "Hai ion trái dấu hút nhau tạo NaCl."
+                ]
+              },
+              "tip": "Quy tắc octet không đúng với mọi chất (ví dụ PCl5, BF3), nhưng rất hữu ích để giải thích liên kết của các nguyên tố chu kì 2 và 3."
+            }
+          ],
+          "remember": [
+            "Nguyên tử có xu hướng đạt 8 electron lớp ngoài cùng như khí hiếm (H đạt 2).",
+            "Cách đạt octet: nhường, nhận hoặc góp chung electron.",
+            "Kim loại thường nhường, phi kim thường nhận hoặc góp chung electron.",
+            "Quy tắc octet có ngoại lệ."
+          ],
+          "check": {
+            "question": "Nguyên tử magnesium (Z = 12) có xu hướng nhường hay nhận bao nhiêu electron?",
+            "answer": "Nhường 2 electron để thành Mg²⁺ có cấu hình giống neon."
+          }
+        },
+        {
+          "id": "chemistry-10-10",
+          "title": "Bài 11. Liên kết ion",
+          "hook": "Muối ăn cứng, giòn và phải đến 801 °C mới nóng chảy. Điều gì giữ các hạt trong tinh thể muối chặt đến vậy?",
+          "sections": [
+            {
+              "heading": "1. Sự tạo thành ion",
+              "paragraphs": [
+                "Ion là phần tử mang điện. Nguyên tử kim loại nhường electron tạo cation (ion dương); nguyên tử phi kim nhận electron tạo anion (ion âm).",
+                "Ion có thể là đơn nguyên tử như Na⁺, Mg²⁺, Cl⁻, O²⁻ hoặc đa nguyên tử như NH4⁺, SO4²⁻, NO3⁻."
+              ],
+              "formulas": ["Na → Na^+ + e", "Cl + e → Cl^-"]
+            },
+            {
+              "heading": "2. Liên kết ion",
+              "paragraphs": [
+                "Liên kết ion là liên kết được hình thành bởi lực hút tĩnh điện giữa các ion mang điện tích trái dấu. Liên kết ion thường tạo thành giữa kim loại điển hình và phi kim điển hình.",
+                "Ví dụ: 2Na + Cl2 → 2NaCl. Mỗi nguyên tử Na nhường 1 electron cho nguyên tử Cl."
+              ]
+            },
+            {
+              "heading": "3. Tinh thể ion",
+              "paragraphs": [
+                "Trong tinh thể NaCl, các ion Na⁺ và Cl⁻ xếp xen kẽ đều đặn; mỗi ion được bao quanh bởi 6 ion trái dấu gần nhất.",
+                "Hợp chất ion thường là chất rắn, khá cứng nhưng giòn, có nhiệt độ nóng chảy và nhiệt độ sôi cao; khi nóng chảy hoặc hòa tan trong nước thì dẫn điện vì có ion chuyển động tự do."
+              ],
+              "tip": "Muối rắn khan không dẫn điện vì các ion bị giữ cố định trong mạng tinh thể."
+            }
+          ],
+          "remember": [
+            "Cation: ion dương; anion: ion âm.",
+            "Liên kết ion là lực hút tĩnh điện giữa các ion trái dấu.",
+            "Thường hình thành giữa kim loại điển hình và phi kim điển hình.",
+            "Hợp chất ion: rắn, nhiệt độ nóng chảy cao, dẫn điện khi nóng chảy hoặc khi tan trong nước."
+          ],
+          "check": {
+            "question": "Viết quá trình tạo ion từ nguyên tử oxygen (Z = 8).",
+            "answer": "O + 2e → O²⁻."
+          }
+        },
+        {
+          "id": "chemistry-10-11",
+          "title": "Bài 12. Liên kết cộng hóa trị",
+          "hook": "Hai nguyên tử chlorine giống hệt nhau, chẳng ai chịu nhường ai. Vậy làm sao chúng tạo được phân tử Cl2?",
+          "sections": [
+            {
+              "heading": "1. Sự hình thành liên kết cộng hóa trị",
+              "paragraphs": [
+                "Liên kết cộng hóa trị là liên kết được tạo nên giữa hai nguyên tử bằng một hay nhiều cặp electron dùng chung. Một cặp chung tạo liên kết đơn (H–H), hai cặp tạo liên kết đôi (O=O), ba cặp tạo liên kết ba (N≡N).",
+                "Khi cặp electron chung chỉ do một nguyên tử đóng góp, ta có liên kết cho – nhận, ví dụ liên kết giữa N của NH3 và ion H⁺ trong NH4⁺."
+              ]
+            },
+            {
+              "heading": "2. Liên kết phân cực và không phân cực",
+              "paragraphs": [
+                "Dùng hiệu độ âm điện Δχ để dự đoán loại liên kết: 0 ≤ Δχ < 0,4 là liên kết cộng hóa trị không phân cực; 0,4 ≤ Δχ < 1,7 là liên kết cộng hóa trị phân cực; Δχ ≥ 1,7 thường là liên kết ion.",
+                "Trong liên kết phân cực, cặp electron chung lệch về phía nguyên tử có độ âm điện lớn hơn."
+              ],
+              "example": {
+                "question": "Xác định loại liên kết trong HCl, biết độ âm điện của H là 2,20 và của Cl là 3,16.",
+                "steps": [
+                  "Δχ = 3,16 − 2,20 = 0,96.",
+                  "0,4 ≤ 0,96 < 1,7.",
+                  "Liên kết H–Cl là liên kết cộng hóa trị phân cực, cặp electron chung lệch về phía Cl."
+                ]
+              }
+            },
+            {
+              "heading": "3. Liên kết σ, liên kết π và năng lượng liên kết",
+              "paragraphs": [
+                "Liên kết σ tạo thành do sự xen phủ trục của hai orbital; liên kết π tạo thành do sự xen phủ bên. Liên kết đơn gồm 1 liên kết σ; liên kết đôi gồm 1 σ và 1 π; liên kết ba gồm 1 σ và 2 π.",
+                "Năng lượng liên kết (Eb) là năng lượng cần để phá vỡ một mol liên kết ở thể khí. Năng lượng liên kết càng lớn thì liên kết càng bền."
+              ],
+              "tip": "Phân tử C2H4 có 5 liên kết σ (4 C–H và 1 trong C=C) và 1 liên kết π."
+            }
+          ],
+          "remember": [
+            "Liên kết cộng hóa trị: dùng chung cặp electron.",
+            "Liên kết đơn, đôi, ba tương ứng 1, 2, 3 cặp electron chung.",
+            "Δχ < 0,4: không phân cực; 0,4 ≤ Δχ < 1,7: phân cực; Δχ ≥ 1,7: ion.",
+            "Liên kết σ (xen phủ trục) bền hơn liên kết π (xen phủ bên).",
+            "Eb càng lớn, liên kết càng bền."
+          ],
+          "check": {
+            "question": "Phân tử N2 có bao nhiêu liên kết σ và π?",
+            "answer": "Liên kết ba N≡N gồm 1 liên kết σ và 2 liên kết π."
+          },
+          "lab": "molecule-shapes"
+        },
+        {
+          "id": "chemistry-10-12",
+          "title": "Bài 13. Liên kết hydrogen và tương tác van der Waals",
+          "hook": "Phân tử nước nhẹ hơn phân tử hydrogen sulfide, thế mà nước là chất lỏng còn H2S là chất khí ở nhiệt độ phòng. Có một lực hút bí mật giữa các phân tử nước.",
+          "sections": [
+            {
+              "heading": "1. Liên kết hydrogen",
+              "paragraphs": [
+                "Liên kết hydrogen là tương tác giữa nguyên tử H (đã liên kết với một nguyên tử có độ âm điện lớn như F, O, N) với một nguyên tử F, O hoặc N khác còn cặp electron hóa trị riêng.",
+                "Liên kết hydrogen làm tăng nhiệt độ sôi, nhiệt độ nóng chảy và độ tan trong nước của chất. Đó là lí do nước, ammonia, ethanol có nhiệt độ sôi cao hơn các chất có phân tử khối tương tự. Nước đá có cấu trúc rỗng nhờ liên kết hydrogen nên nhẹ hơn nước lỏng và nổi lên trên."
+              ]
+            },
+            {
+              "heading": "2. Tương tác van der Waals",
+              "paragraphs": [
+                "Tương tác van der Waals là lực hút tĩnh điện yếu giữa các phân tử, do các lưỡng cực (vĩnh viễn hoặc tạm thời) trong phân tử gây ra.",
+                "Khi khối lượng và kích thước phân tử tăng, tương tác van der Waals tăng, nên nhiệt độ sôi và nhiệt độ nóng chảy tăng. Ví dụ ở điều kiện thường F2, Cl2 là chất khí, Br2 là chất lỏng còn I2 là chất rắn."
+              ],
+              "tip": "Liên kết hydrogen và tương tác van der Waals là lực giữa các phân tử, yếu hơn nhiều so với liên kết cộng hóa trị bên trong phân tử."
+            }
+          ],
+          "remember": [
+            "Liên kết hydrogen hình thành khi H gắn với F, O, N và hút một nguyên tử F, O, N khác.",
+            "Liên kết hydrogen làm tăng nhiệt độ sôi và độ tan trong nước.",
+            "Tương tác van der Waals tăng khi khối lượng, kích thước phân tử tăng.",
+            "Các lực này yếu hơn nhiều so với liên kết hóa học trong phân tử."
+          ],
+          "check": {
+            "question": "Vì sao ethanol tan vô hạn trong nước?",
+            "answer": "Vì phân tử ethanol tạo được liên kết hydrogen với phân tử nước."
+          }
+        }
+      ]
+    },
+    {
+      "title": "Chương 4. Phản ứng oxi hóa – khử",
+      "lessons": [
+        {
+          "id": "chemistry-10-13",
+          "title": "Bài 15. Phản ứng oxi hóa – khử",
+          "hook": "Than cháy, pin điện thoại phát điện, cơ thể em lấy năng lượng từ thức ăn — tất cả đều là những cuộc trao đổi electron.",
+          "sections": [
+            {
+              "heading": "1. Số oxi hóa",
+              "paragraphs": [
+                "Số oxi hóa là điện tích của nguyên tử nếu giả định cặp electron chung thuộc hẳn về nguyên tử có độ âm điện lớn hơn.",
+                "Quy tắc: số oxi hóa của nguyên tố trong đơn chất bằng 0; tổng số oxi hóa trong phân tử bằng 0, trong ion bằng điện tích ion. Trong hầu hết hợp chất, H có số oxi hóa +1, O có số oxi hóa −2; kim loại kiềm +1, kim loại kiềm thổ +2, Al +3."
+              ]
+            },
+            {
+              "heading": "2. Chất oxi hóa, chất khử",
+              "paragraphs": [
+                "Phản ứng oxi hóa – khử là phản ứng có sự thay đổi số oxi hóa của một số nguyên tố, do có sự chuyển electron giữa các chất.",
+                "Chất khử là chất nhường electron (số oxi hóa tăng); chất oxi hóa là chất nhận electron (số oxi hóa giảm). Quá trình nhường electron gọi là quá trình oxi hóa; quá trình nhận electron gọi là quá trình khử."
+              ],
+              "tip": "Câu dễ nhớ: “Khử cho, O nhận” — chất khử cho electron, chất oxi hóa nhận electron."
+            },
+            {
+              "heading": "3. Lập phương trình phản ứng oxi hóa – khử",
+              "paragraphs": [
+                "Dùng phương pháp thăng bằng electron theo bốn bước: xác định số oxi hóa để tìm chất oxi hóa, chất khử; viết quá trình oxi hóa và quá trình khử; tìm hệ số sao cho tổng electron nhường bằng tổng electron nhận; đặt hệ số vào phương trình và kiểm tra.",
+                "Phản ứng oxi hóa – khử có mặt khắp nơi: đốt cháy nhiên liệu, luyện kim, pin và acquy, hô hấp của tế bào, sự gỉ sắt."
+              ],
+              "formulas": ["Fe2O3 + 3CO → 2Fe + 3CO2"],
+              "example": {
+                "question": "Lập phương trình: Fe2O3 + CO → Fe + CO2.",
+                "steps": [
+                  "Fe từ +3 xuống 0 (Fe2O3 là chất oxi hóa); C từ +2 lên +4 (CO là chất khử).",
+                  "Quá trình khử: Fe⁺³ + 3e → Fe⁰. Quá trình oxi hóa: C⁺² → C⁺⁴ + 2e.",
+                  "Bội chung nhỏ nhất của 3 và 2 là 6: nhân quá trình khử với 2, quá trình oxi hóa với 3.",
+                  "Phương trình: Fe2O3 + 3CO → 2Fe + 3CO2."
+                ]
+              }
+            }
+          ],
+          "remember": [
+            "Số oxi hóa của đơn chất bằng 0; tổng số oxi hóa trong phân tử bằng 0.",
+            "Chất khử nhường electron, số oxi hóa tăng.",
+            "Chất oxi hóa nhận electron, số oxi hóa giảm.",
+            "Tổng electron nhường = tổng electron nhận.",
+            "Lập phương trình bằng phương pháp thăng bằng electron."
+          ],
+          "check": {
+            "question": "Trong phản ứng Zn + CuSO4 → ZnSO4 + Cu, chất nào là chất khử?",
+            "answer": "Zn là chất khử (số oxi hóa tăng từ 0 lên +2)."
+          },
+          "lab": "balancing"
+        }
+      ]
+    },
+    {
+      "title": "Chương 5. Năng lượng hóa học",
+      "lessons": [
+        {
+          "id": "chemistry-10-14",
+          "title": "Bài 17. Biến thiên enthalpy trong các phản ứng hóa học",
+          "hook": "Túi chườm nóng tự ấm lên, túi chườm lạnh tự mát đi khi em bóp nhẹ. Phản ứng hóa học có thể tỏa nhiệt hoặc thu nhiệt — và ta tính được bao nhiêu.",
+          "sections": [
+            {
+              "heading": "1. Phản ứng tỏa nhiệt, thu nhiệt",
+              "paragraphs": [
+                "Phản ứng tỏa nhiệt giải phóng năng lượng dạng nhiệt ra môi trường (đốt than, đốt khí gas). Phản ứng thu nhiệt nhận năng lượng từ môi trường (nhiệt phân đá vôi, nung vôi).",
+                "Biến thiên enthalpy của phản ứng ΔrH là nhiệt lượng tỏa ra hay thu vào của phản ứng ở áp suất không đổi. ΔrH < 0: phản ứng tỏa nhiệt; ΔrH > 0: phản ứng thu nhiệt."
+              ]
+            },
+            {
+              "heading": "2. Điều kiện chuẩn và enthalpy tạo thành",
+              "paragraphs": [
+                "Điều kiện chuẩn: áp suất 1 bar, nồng độ 1 mol/L với chất tan, nhiệt độ thường chọn là 25 °C (298 K). Kí hiệu: ΔrH°298.",
+                "Enthalpy tạo thành chuẩn ΔfH°298 của một chất là biến thiên enthalpy khi tạo thành 1 mol chất đó từ các đơn chất bền nhất ở điều kiện chuẩn. ΔfH°298 của đơn chất bền nhất bằng 0."
+              ]
+            },
+            {
+              "heading": "3. Tính biến thiên enthalpy của phản ứng",
+              "paragraphs": [
+                "Có hai cách tính: theo enthalpy tạo thành của các chất, hoặc theo năng lượng liên kết (áp dụng cho phản ứng mà các chất đều ở thể khí)."
+              ],
+              "formulas": [
+                "Δ_rH°_298 = ΣΔ_fH°_298(sp) − ΣΔ_fH°_298(cđ)",
+                "Δ_rH°_298 = ΣE_b(cđ) − ΣE_b(sp)"
+              ],
+              "example": {
+                "question": "Tính ΔrH°298 của phản ứng H2(g) + Cl2(g) → 2HCl(g), biết Eb(H–H) = 436 kJ/mol, Eb(Cl–Cl) = 243 kJ/mol, Eb(H–Cl) = 432 kJ/mol.",
+                "steps": [
+                  "Năng lượng phá liên kết chất đầu: 436 + 243 = 679 kJ.",
+                  "Năng lượng liên kết sản phẩm: 2 · 432 = 864 kJ.",
+                  "ΔrH°298 = 679 − 864 = −185 kJ.",
+                  "ΔrH < 0 nên phản ứng tỏa nhiệt."
+                ]
+              },
+              "tip": "Hai công thức có thứ tự ngược nhau: theo enthalpy tạo thành là “sản phẩm trừ chất đầu”, theo năng lượng liên kết là “chất đầu trừ sản phẩm”."
+            }
+          ],
+          "remember": [
+            "ΔrH < 0: tỏa nhiệt; ΔrH > 0: thu nhiệt.",
+            "Điều kiện chuẩn: 1 bar, 1 mol/L, thường 25 °C.",
+            "ΔfH°298 của đơn chất bền nhất bằng 0.",
+            "Tính ΔrH theo enthalpy tạo thành: sản phẩm trừ chất đầu.",
+            "Tính ΔrH theo năng lượng liên kết: chất đầu trừ sản phẩm."
+          ],
+          "check": {
+            "question": "Nung đá vôi CaCO3 → CaO + CO2 có ΔrH > 0. Phản ứng này tỏa hay thu nhiệt?",
+            "answer": "Thu nhiệt, vì cần cung cấp nhiệt liên tục để phản ứng xảy ra."
+          }
+        }
+      ]
+    },
+    {
+      "title": "Chương 6. Tốc độ phản ứng",
+      "lessons": [
+        {
+          "id": "chemistry-10-15",
+          "title": "Bài 19. Tốc độ phản ứng",
+          "hook": "Thức ăn để trong tủ lạnh lâu hỏng hơn ngoài trời, than cám cháy nhanh hơn than cục. Ta có thể điều khiển tốc độ phản ứng không?",
+          "sections": [
+            {
+              "heading": "1. Tốc độ phản ứng",
+              "paragraphs": [
+                "Tốc độ phản ứng là đại lượng đặc trưng cho sự biến thiên nồng độ của một chất phản ứng hoặc sản phẩm trong một đơn vị thời gian. Đơn vị thường dùng: mol/(L·s).",
+                "Với phản ứng aA + bB → cC + dD, tốc độ trung bình được tính theo bất kì chất nào, chia cho hệ số của chất đó để cùng một giá trị."
+              ],
+              "formulas": ["v = −(1/a)·ΔC_A/Δt = (1/c)·ΔC_C/Δt"],
+              "example": {
+                "question": "Cho phản ứng Br2 + HCOOH → 2HBr + CO2. Nồng độ Br2 giảm từ 0,012 M xuống 0,010 M sau 50 s. Tính tốc độ trung bình của phản ứng.",
+                "steps": [
+                  "ΔC(Br2) = 0,010 − 0,012 = −0,002 M.",
+                  "v = −(−0,002)/50.",
+                  "v = 4·10⁻⁵ mol/(L·s)."
+                ]
+              }
+            },
+            {
+              "heading": "2. Định luật tác dụng khối lượng",
+              "paragraphs": [
+                "Với phản ứng đơn giản aA + bB → sản phẩm, tốc độ phản ứng tỉ lệ thuận với tích nồng độ các chất phản ứng với số mũ là hệ số tương ứng. k là hằng số tốc độ, chỉ phụ thuộc bản chất phản ứng và nhiệt độ."
+              ],
+              "formulas": ["v = k·C_A^a·C_B^b"]
+            },
+            {
+              "heading": "3. Các yếu tố ảnh hưởng",
+              "paragraphs": [
+                "Tốc độ phản ứng tăng khi tăng nồng độ, tăng áp suất (với chất khí), tăng diện tích bề mặt tiếp xúc (chia nhỏ chất rắn), tăng nhiệt độ hoặc dùng chất xúc tác.",
+                "Theo quy tắc Van't Hoff, khi nhiệt độ tăng 10 °C, tốc độ của nhiều phản ứng tăng từ 2 đến 4 lần (γ là hệ số nhiệt độ). Chất xúc tác làm tăng tốc độ phản ứng nhưng không bị tiêu hao sau phản ứng, ví dụ MnO2 xúc tác cho phản ứng phân hủy H2O2."
+              ],
+              "formulas": ["v_2/v_1 = γ^((T_2 − T_1)/10)", "2H2O2 → 2H2O + O2"],
+              "tip": "Tăng nhiệt độ từ 30 °C lên 60 °C với γ = 2 thì tốc độ tăng 2³ = 8 lần, không phải 2 · 3 = 6 lần."
+            }
+          ],
+          "remember": [
+            "Tốc độ phản ứng là biến thiên nồng độ theo thời gian, đơn vị mol/(L·s).",
+            "v = k·C_A^a·C_B^b cho phản ứng đơn giản.",
+            "Nồng độ, áp suất, diện tích bề mặt, nhiệt độ, chất xúc tác ảnh hưởng tốc độ.",
+            "Quy tắc Van't Hoff: tăng 10 °C, tốc độ tăng γ lần (γ ≈ 2–4).",
+            "Chất xúc tác không bị tiêu hao sau phản ứng."
+          ],
+          "check": {
+            "question": "Vì sao bảo quản thực phẩm trong tủ lạnh giữ được lâu hơn?",
+            "answer": "Nhiệt độ thấp làm giảm tốc độ các phản ứng gây hỏng thực phẩm."
+          },
+          "lab": "reaction-rate"
+        }
+      ]
+    },
+    {
+      "title": "Chương 7. Nguyên tố nhóm VIIA – Halogen",
+      "lessons": [
+        {
+          "id": "chemistry-10-16",
+          "title": "Bài 21. Nhóm halogen",
+          "hook": "Nước bể bơi có mùi hắc đặc trưng — đó là chlorine đang diệt khuẩn. Chlorine thuộc một gia đình phi kim rất “hiếu chiến” mang tên halogen.",
+          "sections": [
+            {
+              "heading": "1. Trạng thái tự nhiên và tính chất vật lí",
+              "paragraphs": [
+                "Nhóm VIIA gồm fluorine (F), chlorine (Cl), bromine (Br), iodine (I), astatine (At) và tennessine (Ts). Trong tự nhiên, halogen chỉ tồn tại ở dạng hợp chất, như NaCl trong nước biển, CaF2 trong khoáng vật fluorite.",
+                "Đơn chất halogen là phân tử hai nguyên tử X2. Ở điều kiện thường F2 là khí màu lục nhạt, Cl2 là khí màu vàng lục, Br2 là chất lỏng màu nâu đỏ, I2 là chất rắn màu đen tím. Nhiệt độ sôi tăng từ F2 đến I2 do tương tác van der Waals tăng."
+              ]
+            },
+            {
+              "heading": "2. Tính chất hóa học",
+              "paragraphs": [
+                "Nguyên tử halogen có 7 electron lớp ngoài cùng (ns²np⁵), dễ nhận thêm 1 electron nên có tính oxi hóa mạnh. Tính oxi hóa giảm dần từ F2 đến I2. Fluorine chỉ có số oxi hóa −1; Cl, Br, I còn có các số oxi hóa +1, +3, +5, +7.",
+                "Halogen tác dụng với kim loại, với hydrogen; halogen mạnh hơn đẩy halogen yếu hơn ra khỏi dung dịch muối. Chlorine tác dụng với nước và với dung dịch kiềm."
+              ],
+              "formulas": [
+                "2Fe + 3Cl2 → 2FeCl3",
+                "H2 + Cl2 → 2HCl",
+                "Cl2 + 2NaBr → 2NaCl + Br2",
+                "Cl2 + H2O ⇌ HCl + HClO",
+                "Cl2 + 2NaOH → NaCl + NaClO + H2O"
+              ]
+            },
+            {
+              "heading": "3. Ứng dụng và điều chế",
+              "paragraphs": [
+                "Chlorine dùng để khử trùng nước, sản xuất nước Javel (dung dịch NaCl và NaClO), chất dẻo PVC. Iodine dùng làm thuốc sát trùng; muối ăn được bổ sung iodine để phòng bệnh bướu cổ.",
+                "Trong công nghiệp, chlorine được sản xuất bằng cách điện phân dung dịch NaCl bão hòa có màng ngăn."
+              ],
+              "formulas": ["2NaCl + 2H2O → 2NaOH + H2 + Cl2"],
+              "tip": "Chlorine là khí độc. Trong thí nghiệm, làm trong tủ hút và không ngửi trực tiếp."
+            }
+          ],
+          "remember": [
+            "Halogen có 7 electron lớp ngoài cùng, tính oxi hóa mạnh.",
+            "Tính oxi hóa: F2 > Cl2 > Br2 > I2.",
+            "Halogen mạnh đẩy halogen yếu khỏi dung dịch muối.",
+            "Cl2 + NaOH tạo nước Javel.",
+            "Trong tự nhiên halogen chỉ tồn tại ở dạng hợp chất."
+          ],
+          "check": {
+            "question": "Nhỏ nước chlorine vào dung dịch NaI có hồ tinh bột, em thấy gì?",
+            "answer": "Dung dịch chuyển màu xanh tím vì Cl2 đẩy I2 ra khỏi muối và I2 làm hồ tinh bột hóa xanh."
+          },
+          "lab": "halogens"
+        },
+        {
+          "id": "chemistry-10-17",
+          "title": "Bài 22. Hydrogen halide. Muối halide",
+          "hook": "Dạ dày em đang chứa một acid mạnh: hydrochloric acid. Còn hydrofluoric acid tuy là acid yếu lại có thể khắc lên thủy tinh!",
+          "sections": [
+            {
+              "heading": "1. Hydrogen halide và hydrohalic acid",
+              "paragraphs": [
+                "Hydrogen halide HX (HF, HCl, HBr, HI) là chất khí ở điều kiện thường, tan tốt trong nước tạo dung dịch hydrohalic acid. HF có nhiệt độ sôi cao bất thường do có liên kết hydrogen giữa các phân tử.",
+                "Tính acid tăng dần: HF < HCl < HBr < HI. HF là acid yếu nhưng ăn mòn thủy tinh nên được dùng để khắc chữ lên thủy tinh. HCl, HBr, HI là các acid mạnh."
+              ],
+              "formulas": ["SiO2 + 4HF → SiF4 + 2H2O", "Fe + 2HCl → FeCl2 + H2"]
+            },
+            {
+              "heading": "2. Tính khử của ion halide",
+              "paragraphs": [
+                "Tính khử của ion halide tăng dần từ F⁻ đến I⁻. Ví dụ HCl đặc khử được MnO2 tạo khí chlorine; HI khử được H2SO4 đặc."
+              ],
+              "formulas": ["MnO2 + 4HCl → MnCl2 + Cl2 + 2H2O", "8HI + H2SO4 → 4I2 + H2S + 4H2O"]
+            },
+            {
+              "heading": "3. Muối halide và cách nhận biết",
+              "paragraphs": [
+                "Phần lớn muối halide tan tốt trong nước. Để nhận biết ion halide, dùng dung dịch AgNO3: AgCl kết tủa trắng, AgBr kết tủa vàng nhạt, AgI kết tủa vàng; AgF tan nên không có kết tủa.",
+                "Ứng dụng: NaCl làm muối ăn, dung dịch NaCl 0,9% là nước muối sinh lí; NaF có trong kem đánh răng giúp chống sâu răng; HCl dùng tẩy gỉ kim loại và sản xuất hóa chất."
+              ],
+              "formulas": ["Ag^+ + Cl^- → AgCl↓"],
+              "example": {
+                "question": "Cho dung dịch AgNO3 dư vào dung dịch chứa 0,585 g NaCl. Tính khối lượng kết tủa.",
+                "steps": [
+                  "n(NaCl) = 0,585/58,5 = 0,01 mol.",
+                  "NaCl + AgNO3 → AgCl + NaNO3, nên n(AgCl) = 0,01 mol.",
+                  "m(AgCl) = 0,01 · 143,5 = 1,435 g."
+                ]
+              }
+            }
+          ],
+          "remember": [
+            "Tính acid: HF < HCl < HBr < HI; HF là acid yếu, ăn mòn thủy tinh.",
+            "Tính khử của ion halide tăng từ F⁻ đến I⁻.",
+            "AgCl trắng, AgBr vàng nhạt, AgI vàng; AgF tan.",
+            "HF có nhiệt độ sôi cao bất thường do liên kết hydrogen."
+          ],
+          "check": {
+            "question": "Làm thế nào phân biệt dung dịch NaCl và NaF?",
+            "answer": "Nhỏ dung dịch AgNO3: NaCl cho kết tủa trắng AgCl, NaF không có kết tủa."
+          },
+          "lab": "precipitation"
+        }
+      ]
+    }
+  ]
+}

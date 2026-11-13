@@ -1,0 +1,2436 @@
+[
+  {
+    "id": "door",
+    "displayName": "Door",
+    "vi": {
+      "displayName": "Cửa"
+    },
+    "category": "structure",
+    "physical": {
+      "massKg": 40
+    },
+    "interactions": ["travel"],
+    "visual": {
+      "shape": "box",
+      "size": [1, 2.1, 0.08],
+      "color": "#c6ccd2",
+      "material": "satin",
+      "prop": "door-leaf"
+    }
+  },
+  {
+    "id": "bed",
+    "displayName": "Bed",
+    "description": "A simple single bed. Sleeping arrives with the time system.",
+    "vi": {
+      "displayName": "Giường",
+      "description": "Một chiếc giường đơn. Việc ngủ sẽ có khi có hệ thống thời gian."
+    },
+    "category": "furniture",
+    "physical": {
+      "massKg": 60
+    },
+    "interactions": ["rest", "inspect"],
+    "visual": {
+      "shape": "box",
+      "size": [1, 0.5, 2],
+      "color": "#5b7db1",
+      "prop": "bed-frame"
+    },
+    "rest": {
+      "kind": "lie",
+      "spots": [
+        {
+          "at": [0, 0.2, 0.7],
+          "yaw": 0
+        }
+      ]
+    }
+  },
+  {
+    "id": "desk",
+    "displayName": "Desk",
+    "description": "A study desk.",
+    "vi": {
+      "displayName": "Bàn",
+      "description": "Một chiếc bàn học."
+    },
+    "category": "furniture",
+    "physical": {
+      "massKg": 25
+    },
+    "interactions": ["inspect"],
+    "visual": {
+      "shape": "box",
+      "size": [1.2, 0.75, 0.6],
+      "color": "#b08a5a",
+      "prop": "desk-drawer"
+    }
+  },
+  {
+    "id": "desk-lamp",
+    "displayName": "Desk lamp",
+    "vi": {
+      "displayName": "Đèn bàn"
+    },
+    "category": "equipment",
+    "tags": ["light", "electric"],
+    "physical": {
+      "massKg": 1.2,
+      "body": "dynamic"
+    },
+    "interactions": ["toggle", "grab"],
+    "visual": {
+      "shape": "cylinder",
+      "size": [0.16, 0.4, 0.16],
+      "color": "#f2d16b"
+    }
+  },
+  {
+    "id": "wardrobe",
+    "displayName": "Wardrobe",
+    "description": "Lab coats, safety goggles and face shields for entering the clean area.",
+    "vi": {
+      "displayName": "Tủ đồ",
+      "description": "Áo blouse, kính bảo hộ và tấm chắn mặt để vào khu vực sạch."
+    },
+    "category": "furniture",
+    "physical": {
+      "massKg": 60
+    },
+    "interactions": ["openable"],
+    "hinged": {
+      "angleDeg": 110,
+      "swingS": 0.5,
+      "leaves": [
+        {
+          "center": [-0.299, 0.0225, 0.263],
+          "size": [0.598, 1.877, 0.018],
+          "hinge": [-0.6, 0.254],
+          "opens": -1
+        },
+        {
+          "center": [0.299, 0.0225, 0.263],
+          "size": [0.598, 1.877, 0.018],
+          "hinge": [0.6, 0.254],
+          "opens": 1
+        }
+      ],
+      "carcass": [
+        {
+          "center": [-0.591, 0.0225, -0.023],
+          "size": [0.018, 1.885, 0.554]
+        },
+        {
+          "center": [0.591, 0.0225, -0.023],
+          "size": [0.018, 1.885, 0.554]
+        },
+        {
+          "center": [0, 0.0225, -0.291],
+          "size": [1.164, 1.885, 0.018]
+        },
+        {
+          "center": [0, 0.9825, -0.014],
+          "size": [1.2, 0.035, 0.572]
+        },
+        {
+          "center": [0, -0.951, -0.023],
+          "size": [1.2, 0.098, 0.554]
+        }
+      ]
+    },
+    "visual": {
+      "shape": "box",
+      "size": [1.2, 2, 0.6],
+      "color": "#c5d0d8",
+      "material": "painted",
+      "prop": "ppe-cabinet",
+      "openBox": {
+        "center": [0, 0, -0.185],
+        "size": [1.2, 2, 0.23]
+      }
+    }
+  },
+  {
+    "id": "chair",
+    "displayName": "Chair",
+    "description": "A desk chair.",
+    "vi": {
+      "displayName": "Ghế",
+      "description": "Một chiếc ghế ngồi làm việc."
+    },
+    "category": "furniture",
+    "physical": {
+      "massKg": 6
+    },
+    "interactions": ["rest", "inspect"],
+    "visual": {
+      "shape": "box",
+      "size": [0.45, 0.9, 0.45],
+      "color": "#6b5a48",
+      "prop": "chair-frame"
+    },
+    "rest": {
+      "kind": "sit",
+      "spots": [
+        {
+          "at": [0, 0.01, 0]
+        }
+      ]
+    }
+  },
+  {
+    "id": "locker",
+    "displayName": "Lockers",
+    "description": "Lockers for street clothes and bags: nothing from outside goes past this point.",
+    "vi": {
+      "displayName": "Tủ cá nhân",
+      "description": "Tủ cá nhân để quần áo mặc ngoài và túi xách: không mang gì từ bên ngoài qua điểm này."
+    },
+    "category": "furniture",
+    "physical": {
+      "massKg": 70
+    },
+    "interactions": ["inspect"],
+    "visual": {
+      "shape": "box",
+      "size": [1.8, 1.9, 0.5],
+      "color": "#7d8f9e",
+      "material": "painted",
+      "prop": "locker-bank"
+    }
+  },
+  {
+    "id": "gowning-bench",
+    "displayName": "Gowning bench",
+    "description": "For changing into cleanroom shoes (shoe covers are not simulated yet).",
+    "vi": {
+      "displayName": "Ghế thay đồ",
+      "description": "Để thay giày phòng sạch (bọc giày chưa được mô phỏng)."
+    },
+    "category": "furniture",
+    "physical": {
+      "massKg": 20
+    },
+    "interactions": ["inspect"],
+    "visual": {
+      "shape": "box",
+      "size": [0.4, 0.45, 1.6],
+      "color": "#9aa7b1",
+      "material": "satin",
+      "prop": "gowning-bench"
+    }
+  },
+  {
+    "id": "wash-basin",
+    "displayName": "Hand-wash basin",
+    "description": "A hand-wash basin. The faucet, soap, paper towels and hand sanitizer are next to it.",
+    "vi": {
+      "displayName": "Bồn rửa tay",
+      "description": "Bồn rửa tay. Vòi nước, xà phòng, khăn giấy và dung dịch sát khuẩn tay ở ngay cạnh."
+    },
+    "category": "structure",
+    "physical": {
+      "massKg": 30
+    },
+    "interactions": ["use", "inspect"],
+    "handAt": [0, 0.55, 0],
+    "visual": {
+      "shape": "box",
+      "size": [0.6, 0.9, 0.5],
+      "color": "#d5dde3",
+      "material": "satin",
+      "prop": "hand-wash-sink"
+    }
+  },
+  {
+    "id": "ppe-shelf",
+    "displayName": "PPE shelf",
+    "description": "Spare lab coats and boxes of gloves for refilling the dispensers.",
+    "vi": {
+      "displayName": "Kệ đồ bảo hộ",
+      "description": "Áo blouse dự phòng và các hộp găng tay để bổ sung cho hộp lấy găng."
+    },
+    "category": "furniture",
+    "physical": {
+      "massKg": 35
+    },
+    "interactions": ["inspect"],
+    "visual": {
+      "shape": "box",
+      "size": [1.2, 1.8, 0.4],
+      "color": "#5f8fa8",
+      "material": "painted",
+      "prop": "ppe-shelf"
+    }
+  },
+  {
+    "id": "notice-board",
+    "displayName": "Cleanroom entry rules",
+    "description": "Before the clean area: 1 lab coat and safety goggles; 2 wash hands (wet, soap, rub palms, backs, between fingers, thumbs and fingertips, rinse), turn off the water, dry; 3 rub in hand sanitizer; 4 gloves. A simplified teaching sequence, not a certified protocol.",
+    "vi": {
+      "displayName": "Quy định vào phòng sạch",
+      "description": "Trước khi vào khu vực sạch: 1 áo blouse và kính bảo hộ; 2 rửa tay (làm ướt, xà phòng, chà lòng bàn tay, mu bàn tay, kẽ ngón, ngón cái và đầu ngón, xả sạch), khóa nước, lau khô; 3 xoa dung dịch sát khuẩn tay; 4 găng tay. Đây là trình tự giảng dạy đơn giản hóa, không phải quy trình được chứng nhận."
+    },
+    "category": "structure",
+    "physical": {
+      "massKg": 2,
+      "body": "none"
+    },
+    "interactions": ["inspect"],
+    "visual": {
+      "shape": "box",
+      "size": [0.9, 0.6, 0.04],
+      "color": "#e8dcb5",
+      "prop": "notice-board"
+    }
+  },
+  {
+    "id": "lab-coat",
+    "displayName": "Lab coat",
+    "description": "A long-sleeved cotton lab coat.",
+    "vi": {
+      "displayName": "Áo blouse",
+      "description": "Áo blouse phòng thí nghiệm bằng cotton, tay dài."
+    },
+    "category": "ppe",
+    "physical": {
+      "massKg": 0.8,
+      "body": "none"
+    },
+    "interactions": ["wear", "inspect"],
+    "wornOn": "body",
+    "visual": {
+      "shape": "box",
+      "size": [0.5, 1, 0.12],
+      "color": "#f4f6f8",
+      "prop": "coat-on-hanger"
+    }
+  },
+  {
+    "id": "safety-goggles",
+    "displayName": "Safety goggles",
+    "description": "Splash-proof safety goggles.",
+    "vi": {
+      "displayName": "Kính bảo hộ",
+      "description": "Kính bảo hộ chống bắn tóe."
+    },
+    "category": "ppe",
+    "physical": {
+      "massKg": 0.1,
+      "body": "none"
+    },
+    "interactions": ["wear", "inspect"],
+    "wornOn": "eyes",
+    "visual": {
+      "shape": "box",
+      "size": [0.18, 0.07, 0.1],
+      "color": "#9fd3e6",
+      "material": "plastic",
+      "prop": "safety-goggles"
+    }
+  },
+  {
+    "id": "face-shield",
+    "displayName": "Face shield",
+    "description": "A full face shield. Not required for entering the clean area; worn for splash-prone work.",
+    "vi": {
+      "displayName": "Tấm chắn mặt",
+      "description": "Tấm chắn toàn mặt. Không bắt buộc khi vào khu vực sạch; dùng cho công việc dễ bị bắn tóe."
+    },
+    "category": "ppe",
+    "physical": {
+      "massKg": 0.2,
+      "body": "none"
+    },
+    "interactions": ["wear", "inspect"],
+    "wornOn": "face",
+    "visual": {
+      "shape": "box",
+      "size": [0.26, 0.3, 0.18],
+      "color": "#cfe8f0",
+      "material": "glass",
+      "prop": "face-shield"
+    }
+  },
+  {
+    "id": "nitrile-gloves",
+    "displayName": "Nitrile gloves",
+    "description": "A dispenser box of disposable nitrile gloves.",
+    "vi": {
+      "displayName": "Găng tay nitrile",
+      "description": "Hộp lấy găng tay nitrile dùng một lần."
+    },
+    "category": "ppe",
+    "physical": {
+      "massKg": 0.3,
+      "body": "none"
+    },
+    "interactions": ["wear", "inspect"],
+    "handAt": [0.08, 0, 0],
+    "wornOn": "hands",
+    "disposable": true,
+    "visual": {
+      "shape": "box",
+      "size": [0.12, 0.14, 0.26],
+      "color": "#5b8fd8",
+      "prop": "glove-dispenser"
+    }
+  },
+  {
+    "id": "faucet",
+    "displayName": "Faucet",
+    "vi": {
+      "displayName": "Vòi nước"
+    },
+    "category": "structure",
+    "physical": {
+      "massKg": 1,
+      "body": "none"
+    },
+    "interactions": ["faucet"],
+    "handAt": [-0.04, 0.08, 0],
+    "visual": {
+      "shape": "box",
+      "size": [0.2, 0.12, 0.08],
+      "color": "#c0c6cc",
+      "material": "metal",
+      "prop": "wall-faucet",
+      "stream": {
+        "length": 0.305,
+        "color": "#8fc8f0",
+        "from": [0, -0.06, 0]
+      }
+    }
+  },
+  {
+    "id": "soap-dispenser",
+    "displayName": "Soap dispenser",
+    "vi": {
+      "displayName": "Bình xà phòng"
+    },
+    "category": "structure",
+    "physical": {
+      "massKg": 0.5,
+      "body": "none"
+    },
+    "interactions": ["use"],
+    "handAt": [0.06, -0.14, 0],
+    "visual": {
+      "shape": "box",
+      "size": [0.08, 0.2, 0.12],
+      "color": "#e6e0c8",
+      "material": "plastic",
+      "prop": "liquid-dispenser"
+    }
+  },
+  {
+    "id": "paper-towels",
+    "displayName": "Paper towels",
+    "vi": {
+      "displayName": "Khăn giấy"
+    },
+    "category": "structure",
+    "physical": {
+      "massKg": 0.5,
+      "body": "none"
+    },
+    "interactions": ["use"],
+    "handAt": [0.07, -0.12, 0],
+    "visual": {
+      "shape": "box",
+      "size": [0.1, 0.3, 0.28],
+      "color": "#f2f2f2",
+      "material": "plastic",
+      "prop": "towel-dispenser"
+    }
+  },
+  {
+    "id": "hand-sanitizer",
+    "displayName": "Hand sanitizer",
+    "description": "Alcohol-based hand rub.",
+    "vi": {
+      "displayName": "Dung dịch sát khuẩn tay",
+      "description": "Dung dịch xoa tay chứa cồn."
+    },
+    "category": "structure",
+    "physical": {
+      "massKg": 0.5,
+      "body": "none"
+    },
+    "interactions": ["use", "inspect"],
+    "handAt": [0.06, -0.14, 0],
+    "visual": {
+      "shape": "box",
+      "size": [0.08, 0.2, 0.12],
+      "color": "#b8e0c8",
+      "material": "plastic",
+      "prop": "liquid-dispenser"
+    }
+  },
+  {
+    "id": "ceiling-light",
+    "displayName": "Ceiling light",
+    "vi": {
+      "displayName": "Đèn trần"
+    },
+    "category": "structure",
+    "physical": {
+      "massKg": 4,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [3, 0.06, 0.6],
+      "color": "#f6f2e6",
+      "material": "light"
+    }
+  },
+  {
+    "id": "teacher-pc",
+    "displayName": "Desktop computer",
+    "description": "The teacher's desktop computer. It cannot be used yet.",
+    "vi": {
+      "displayName": "Máy tính để bàn",
+      "description": "Máy tính để bàn của giáo viên. Hiện chưa sử dụng được."
+    },
+    "category": "equipment",
+    "tags": ["electric"],
+    "physical": {
+      "massKg": 8,
+      "body": "none"
+    },
+    "interactions": ["inspect"],
+    "visual": {
+      "shape": "box",
+      "size": [0.56, 0.36, 0.05],
+      "color": "#20262e",
+      "material": "satin",
+      "label": {
+        "text": "SIMLAB",
+        "vi": {
+          "text": "SIMLAB"
+        },
+        "color": "#9fd3e6",
+        "background": "#16202a"
+      }
+    }
+  },
+  {
+    "id": "teacher-cabinet",
+    "displayName": "Cabinet",
+    "description": "A steel cabinet with two doors and three shelves: open it (E) and set things inside.",
+    "vi": {
+      "displayName": "Tủ hồ sơ",
+      "description": "Tủ thép hai cánh, ba ngăn: mở tủ (E) rồi đặt đồ vào bên trong."
+    },
+    "category": "furniture",
+    "tags": ["storage"],
+    "physical": {
+      "massKg": 50
+    },
+    "interactions": ["openable", "inspect"],
+    "visual": {
+      "shape": "box",
+      "size": [1, 1.8, 0.45],
+      "color": "#7d878c",
+      "material": "painted",
+      "prop": "parts-cabinet",
+      "openBox": {
+        "center": [0, 0, -0.11],
+        "size": [1, 1.8, 0.23]
+      }
+    },
+    "hinged": {
+      "angleDeg": 110,
+      "swingS": 0.5,
+      "leaves": [
+        {
+          "center": [-0.2505, 0.0225, 0.188],
+          "size": [0.495, 1.677, 0.018],
+          "hinge": [-0.5, 0.179],
+          "opens": -1
+        },
+        {
+          "center": [0.2505, 0.0225, 0.188],
+          "size": [0.495, 1.677, 0.018],
+          "hinge": [0.5, 0.179],
+          "opens": 1
+        }
+      ],
+      "carcass": [
+        {
+          "center": [-0.491, 0.0225, -0.023],
+          "size": [0.018, 1.685, 0.404]
+        },
+        {
+          "center": [0.491, 0.0225, -0.023],
+          "size": [0.018, 1.685, 0.404]
+        },
+        {
+          "center": [0, 0.0225, -0.216],
+          "size": [0.964, 1.685, 0.018]
+        },
+        {
+          "center": [0, -0.811, -0.014],
+          "size": [0.964, 0.018, 0.386]
+        },
+        {
+          "center": [0, 0.8825, -0.014],
+          "size": [1, 0.035, 0.422]
+        },
+        {
+          "center": [0, -0.3943, -0.024],
+          "size": [0.964, 0.018, 0.366]
+        },
+        {
+          "center": [0, 0.0225, -0.024],
+          "size": [0.964, 0.018, 0.366]
+        },
+        {
+          "center": [0, 0.4393, -0.024],
+          "size": [0.964, 0.018, 0.366]
+        }
+      ]
+    }
+  },
+  {
+    "id": "teacher-wc",
+    "displayName": "Toilet",
+    "description": "The teacher's toilet. It cannot be used yet.",
+    "vi": {
+      "displayName": "Bồn cầu",
+      "description": "Bồn cầu của phòng giáo viên. Hiện chưa sử dụng được."
+    },
+    "category": "structure",
+    "physical": {
+      "massKg": 25
+    },
+    "interactions": ["inspect"],
+    "visual": {
+      "shape": "box",
+      "size": [0.4, 0.75, 0.65],
+      "color": "#f2f4f5",
+      "material": "satin",
+      "prop": "toilet"
+    }
+  },
+  {
+    "id": "teacher-sink",
+    "displayName": "Sink",
+    "description": "The teacher's hand-wash sink. It cannot be used yet.",
+    "vi": {
+      "displayName": "Bồn rửa",
+      "description": "Bồn rửa tay của giáo viên. Hiện chưa sử dụng được."
+    },
+    "category": "structure",
+    "physical": {
+      "massKg": 15
+    },
+    "interactions": ["faucet", "wash-hands"],
+    "visual": {
+      "shape": "box",
+      "size": [0.5, 1, 0.4],
+      "color": "#e9eef0",
+      "material": "satin",
+      "prop": "wall-basin",
+      "stream": {
+        "length": 0.2,
+        "color": "#cfe9f7",
+        "from": [0, 0.405, 0.035]
+      }
+    },
+    "handAt": [0, 0.33, 0.06]
+  },
+  {
+    "id": "hub-column",
+    "displayName": "Column",
+    "vi": {
+      "displayName": "Cột"
+    },
+    "category": "structure",
+    "tags": ["decor", "architecture"],
+    "physical": {
+      "massKg": 4000
+    },
+    "visual": {
+      "shape": "cylinder",
+      "size": [0.7, 9, 0.7],
+      "color": "#e6e9eb",
+      "material": "satin",
+      "prop": "column"
+    }
+  },
+  {
+    "id": "hub-beam-x",
+    "displayName": "Beam",
+    "vi": {
+      "displayName": "Dầm"
+    },
+    "category": "structure",
+    "tags": ["decor", "architecture"],
+    "physical": {
+      "massKg": 3000,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [26, 0.6, 0.45],
+      "color": "#d9dde0",
+      "material": "painted",
+      "prop": "beam"
+    }
+  },
+  {
+    "id": "hub-beam-z",
+    "displayName": "Beam",
+    "vi": {
+      "displayName": "Dầm"
+    },
+    "category": "structure",
+    "tags": ["decor", "architecture"],
+    "physical": {
+      "massKg": 2000,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [0.4, 0.5, 18],
+      "color": "#d9dde0",
+      "material": "painted",
+      "prop": "beam"
+    }
+  },
+  {
+    "id": "hub-pilaster",
+    "displayName": "Pilaster",
+    "vi": {
+      "displayName": "Trụ áp tường"
+    },
+    "category": "structure",
+    "tags": ["decor", "architecture"],
+    "physical": {
+      "massKg": 1000,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [0.7, 9, 0.2],
+      "color": "#e6e9eb",
+      "material": "satin",
+      "prop": "pilaster"
+    }
+  },
+  {
+    "id": "hub-clerestory-long",
+    "displayName": "Clerestory light band",
+    "vi": {
+      "displayName": "Dải sáng cửa sổ cao"
+    },
+    "category": "structure",
+    "tags": ["decor", "architecture"],
+    "physical": {
+      "massKg": 200,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [17, 1.2, 0.06],
+      "color": "#3a424b",
+      "material": "painted",
+      "prop": "clerestory"
+    }
+  },
+  {
+    "id": "hub-clerestory-short",
+    "displayName": "Clerestory light band",
+    "vi": {
+      "displayName": "Dải sáng cửa sổ cao"
+    },
+    "category": "structure",
+    "tags": ["decor", "architecture"],
+    "physical": {
+      "massKg": 100,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [9, 1.2, 0.06],
+      "color": "#3a424b",
+      "material": "painted",
+      "prop": "clerestory"
+    }
+  },
+  {
+    "id": "hub-oculus",
+    "displayName": "Oculus",
+    "vi": {
+      "displayName": "Giếng trời"
+    },
+    "category": "structure",
+    "tags": ["decor", "architecture"],
+    "physical": {
+      "massKg": 300,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "cylinder",
+      "size": [6.6, 0.25, 6.6],
+      "color": "#f6f2e6",
+      "material": "light",
+      "prop": "oculus"
+    }
+  },
+  {
+    "id": "hub-light-panel",
+    "displayName": "Ceiling light",
+    "vi": {
+      "displayName": "Đèn trần"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 8,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [2.4, 0.08, 0.8],
+      "color": "#f6f2e6",
+      "material": "light",
+      "prop": "light-panel"
+    }
+  },
+  {
+    "id": "hub-floor-emblem",
+    "displayName": "SIMLAB floor emblem",
+    "vi": {
+      "displayName": "Biểu tượng SIMLAB trên sàn"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 50,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [6, 0.01, 6],
+      "color": "#b7c2c9",
+      "material": "satin",
+      "prop": "emblem-floor"
+    }
+  },
+  {
+    "id": "simlab-emblem",
+    "displayName": "SIMLAB emblem",
+    "vi": {
+      "displayName": "Biểu tượng SIMLAB"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 150,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [5.2, 5.6, 5.2],
+      "color": "#4fb3d9",
+      "material": "light",
+      "prop": "emblem"
+    }
+  },
+  {
+    "id": "sign-hub-wordmark",
+    "displayName": "Sign",
+    "vi": {
+      "displayName": "Biển"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 20,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [6, 1.4, 0.04],
+      "color": "#16202a",
+      "label": {
+        "text": "SIMLAB",
+        "vi": {
+          "text": "SIMLAB"
+        },
+        "color": "#cdeefa",
+        "background": "#16202a"
+      }
+    }
+  },
+  {
+    "id": "sign-hub-chemistry",
+    "displayName": "Sign",
+    "vi": {
+      "displayName": "Biển"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 2,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [3.4, 0.6, 0.04],
+      "color": "#1f5a55",
+      "label": {
+        "text": "CHEMISTRY LABORATORY",
+        "vi": {
+          "text": "PHÒNG THÍ NGHIỆM HÓA HỌC"
+        },
+        "color": "#ffffff",
+        "background": "#1f5a55"
+      }
+    }
+  },
+  {
+    "id": "sign-hub-physics",
+    "displayName": "Sign",
+    "vi": {
+      "displayName": "Biển"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 2,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [3.4, 0.6, 0.04],
+      "color": "#1f3b57",
+      "label": {
+        "text": "PHYSICS LABORATORY",
+        "vi": {
+          "text": "PHÒNG THÍ NGHIỆM VẬT LÝ"
+        },
+        "color": "#ffffff",
+        "background": "#1f3b57"
+      }
+    }
+  },
+  {
+    "id": "sign-hub-biology",
+    "displayName": "Sign",
+    "vi": {
+      "displayName": "Biển"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 2,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [3.4, 0.6, 0.04],
+      "color": "#3d6b35",
+      "label": {
+        "text": "BIOLOGY LABORATORY",
+        "vi": {
+          "text": "PHÒNG THÍ NGHIỆM SINH HỌC"
+        },
+        "color": "#ffffff",
+        "background": "#3d6b35"
+      }
+    }
+  },
+  {
+    "id": "sign-hub-preparation",
+    "displayName": "Sign",
+    "vi": {
+      "displayName": "Biển"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 2,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [3.4, 0.6, 0.04],
+      "color": "#3a4652",
+      "label": {
+        "text": "PREPARATION ROOM",
+        "vi": {
+          "text": "PHÒNG CHUẨN BỊ"
+        },
+        "color": "#ffffff",
+        "background": "#3a4652"
+      }
+    }
+  },
+  {
+    "id": "hub-directory",
+    "displayName": "Directory",
+    "vi": {
+      "displayName": "Bảng chỉ dẫn"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 60
+    },
+    "visual": {
+      "shape": "box",
+      "size": [1.4, 2.2, 0.3],
+      "color": "#26323d",
+      "label": {
+        "text": "SIMLAB HUB\n↑  Chemistry Laboratory\n→  Physics Laboratory\n←  Biology Laboratory\n↓  Preparation Room",
+        "vi": {
+          "text": "SẢNH SIMLAB\n↑  Phòng thí nghiệm Hóa học\n→  Phòng thí nghiệm Vật lý\n←  Phòng thí nghiệm Sinh học\n↓  Phòng chuẩn bị"
+        },
+        "color": "#ffffff",
+        "background": "#26323d"
+      }
+    }
+  },
+  {
+    "id": "hub-reception",
+    "displayName": "Reception desk",
+    "description": "The SIMLAB reception desk. Nobody is on duty yet.",
+    "vi": {
+      "displayName": "Quầy lễ tân",
+      "description": "Quầy lễ tân SIMLAB. Hiện chưa có ai trực."
+    },
+    "category": "furniture",
+    "physical": {
+      "massKg": 150
+    },
+    "interactions": ["inspect"],
+    "visual": {
+      "shape": "box",
+      "size": [2.2, 1.1, 0.8],
+      "color": "#1f3b57",
+      "material": "satin",
+      "prop": "reception-desk"
+    }
+  },
+  {
+    "id": "hub-bench",
+    "displayName": "Bench",
+    "vi": {
+      "displayName": "Ghế băng"
+    },
+    "category": "furniture",
+    "physical": {
+      "massKg": 40
+    },
+    "visual": {
+      "shape": "box",
+      "size": [2, 0.45, 0.55],
+      "color": "#b08a5a",
+      "prop": "bench-seat"
+    },
+    "interactions": ["rest"],
+    "rest": {
+      "kind": "sit",
+      "spots": [
+        {
+          "at": [-0.6, 0.225, 0]
+        },
+        {
+          "at": [0, 0.225, 0]
+        },
+        {
+          "at": [0.6, 0.225, 0]
+        }
+      ]
+    }
+  },
+  {
+    "id": "hub-planter",
+    "displayName": "Planter",
+    "vi": {
+      "displayName": "Chậu cây"
+    },
+    "category": "furniture",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 80
+    },
+    "visual": {
+      "shape": "cylinder",
+      "size": [1, 1.4, 1],
+      "color": "#5c6b5e",
+      "prop": "planter"
+    }
+  },
+  {
+    "id": "hub-path-light",
+    "displayName": "Floor light",
+    "vi": {
+      "displayName": "Đèn sàn"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 2,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [0.12, 0.01, 3],
+      "color": "#bfe6f5",
+      "material": "light",
+      "prop": "path-light"
+    }
+  },
+  {
+    "id": "hub-pendant",
+    "displayName": "Pendant light",
+    "vi": {
+      "displayName": "Đèn thả"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 15,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [0.9, 6, 0.9],
+      "color": "#26323d",
+      "material": "satin",
+      "prop": "pendant"
+    }
+  },
+  {
+    "id": "floor-zone-clean",
+    "displayName": "Clean-area floor",
+    "vi": {
+      "displayName": "Sàn khu sạch"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 20,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [3, 0.01, 4],
+      "color": "#cfe3ee",
+      "material": "satin"
+    }
+  },
+  {
+    "id": "floor-line-boundary",
+    "displayName": "Boundary line",
+    "vi": {
+      "displayName": "Vạch ranh giới"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 1,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [3, 0.01, 0.1],
+      "color": "#f2c94c"
+    }
+  },
+  {
+    "id": "sign-clean-area",
+    "displayName": "Sign",
+    "vi": {
+      "displayName": "Biển"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 2,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [1.2, 0.42, 0.03],
+      "color": "#2e6f9e",
+      "prop": "sign-standoff",
+      "label": {
+        "text": "CLEAN AREA\nLab coat · goggles · gloves",
+        "vi": {
+          "text": "KHU VỰC SẠCH\nÁo blouse · kính bảo hộ · găng tay"
+        },
+        "color": "#ffffff",
+        "background": "#2e6f9e"
+      }
+    }
+  },
+  {
+    "id": "teacher-bookshelf",
+    "displayName": "Bookshelf",
+    "vi": {
+      "displayName": "Giá sách"
+    },
+    "category": "furniture",
+    "tags": ["decor", "storage"],
+    "physical": {
+      "massKg": 40
+    },
+    "visual": {
+      "shape": "box",
+      "size": [1, 1.9, 0.35],
+      "color": "#8a6a4a",
+      "prop": "bookshelf"
+    }
+  },
+  {
+    "id": "whiteboard",
+    "displayName": "Whiteboard",
+    "vi": {
+      "displayName": "Bảng trắng"
+    },
+    "category": "structure",
+    "tags": ["decor", "board"],
+    "physical": {
+      "massKg": 8,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [1.6, 0.9, 0.06],
+      "color": "#f4f6f8",
+      "material": "satin",
+      "prop": "whiteboard"
+    }
+  },
+  {
+    "id": "ceiling-light-small",
+    "displayName": "Ceiling light",
+    "vi": {
+      "displayName": "Đèn trần"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 2,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [0.6, 0.06, 0.6],
+      "color": "#f6f2e6",
+      "material": "light"
+    }
+  },
+  {
+    "id": "wall-tiles",
+    "displayName": "Wall tiles",
+    "vi": {
+      "displayName": "Gạch ốp tường"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 20,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [2, 1.1, 0.015],
+      "color": "#e3ebef",
+      "material": "satin",
+      "prop": "tile-wainscot"
+    }
+  },
+  {
+    "id": "sliding-door",
+    "displayName": "Door",
+    "vi": {
+      "displayName": "Cửa"
+    },
+    "category": "structure",
+    "physical": {
+      "massKg": 40,
+      "body": "kinematic"
+    },
+    "interactions": ["travel"],
+    "door": {
+      "travel": 1,
+      "openS": 0.6,
+      "closeS": 0.6
+    },
+    "visual": {
+      "shape": "box",
+      "size": [1, 2.1, 0.08],
+      "color": "#c6ccd2",
+      "material": "satin",
+      "prop": "door-leaf"
+    }
+  },
+  {
+    "id": "hub-floor-field",
+    "displayName": "Floor field",
+    "vi": {
+      "displayName": "Ô lát sàn"
+    },
+    "category": "structure",
+    "tags": ["decor", "architecture"],
+    "physical": {
+      "massKg": 400,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [19.3, 0.01, 11.3],
+      "color": "#b4bbc2",
+      "material": "satin",
+      "prop": "floor-field"
+    }
+  },
+  {
+    "id": "hub-wainscot-long",
+    "displayName": "Wainscot",
+    "vi": {
+      "displayName": "Ốp chân tường"
+    },
+    "category": "structure",
+    "tags": ["decor", "architecture"],
+    "physical": {
+      "massKg": 60,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [10.9, 1.1, 0.04],
+      "color": "#dde2e6",
+      "material": "satin",
+      "prop": "wainscot"
+    }
+  },
+  {
+    "id": "hub-wainscot-short",
+    "displayName": "Wainscot",
+    "vi": {
+      "displayName": "Ốp chân tường"
+    },
+    "category": "structure",
+    "tags": ["decor", "architecture"],
+    "physical": {
+      "massKg": 40,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [5.41, 1.1, 0.04],
+      "color": "#dde2e6",
+      "material": "satin",
+      "prop": "wainscot"
+    }
+  },
+  {
+    "id": "hub-sign-mount-chemistry",
+    "displayName": "Sign mounting",
+    "vi": {
+      "displayName": "Giá biển"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 6,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [3.8, 1, 0.07],
+      "color": "#2fae9b",
+      "material": "satin",
+      "prop": "sign-mount"
+    }
+  },
+  {
+    "id": "hub-sign-mount-physics",
+    "displayName": "Sign mounting",
+    "vi": {
+      "displayName": "Giá biển"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 6,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [3.8, 1, 0.07],
+      "color": "#3f8fd2",
+      "material": "satin",
+      "prop": "sign-mount"
+    }
+  },
+  {
+    "id": "hub-sign-mount-biology",
+    "displayName": "Sign mounting",
+    "vi": {
+      "displayName": "Giá biển"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 6,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [3.8, 1, 0.07],
+      "color": "#6aad4a",
+      "material": "satin",
+      "prop": "sign-mount"
+    }
+  },
+  {
+    "id": "hub-sign-mount-preparation",
+    "displayName": "Sign mounting",
+    "vi": {
+      "displayName": "Giá biển"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 6,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [3.8, 1, 0.07],
+      "color": "#e2a13b",
+      "material": "satin",
+      "prop": "sign-mount"
+    }
+  },
+  {
+    "id": "hub-periodic-table",
+    "displayName": "Periodic table display",
+    "vi": {
+      "displayName": "Bảng tuần hoàn"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 25,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [4.4, 2.6, 0.06],
+      "color": "#1c2630",
+      "material": "satin",
+      "prop": "periodic-table"
+    }
+  },
+  {
+    "id": "hub-progress-board",
+    "displayName": "Learning progress board",
+    "vi": {
+      "displayName": "Bảng tiến độ học tập"
+    },
+    "category": "structure",
+    "tags": ["decor", "progress-board"],
+    "physical": {
+      "massKg": 25,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [4.4, 2.6, 0.06],
+      "color": "#1c2630",
+      "material": "satin",
+      "prop": "progress-board"
+    }
+  },
+  {
+    "id": "hub-atom-display",
+    "displayName": "Atom model display",
+    "vi": {
+      "displayName": "Mô hình nguyên tử"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 25,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [2.6, 2.6, 0.2],
+      "color": "#1c2630",
+      "material": "satin",
+      "prop": "atom-model"
+    }
+  },
+  {
+    "id": "hub-dna-display",
+    "displayName": "DNA double helix display",
+    "vi": {
+      "displayName": "Mô hình chuỗi xoắn kép ADN"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 25,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [1.6, 2.6, 0.2],
+      "color": "#1c2630",
+      "material": "satin",
+      "prop": "dna-helix"
+    }
+  },
+  {
+    "id": "hub-wave-display",
+    "displayName": "Standing wave display",
+    "vi": {
+      "displayName": "Bảng sóng dừng"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 25,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [2.6, 1.6, 0.12],
+      "color": "#1c2630",
+      "material": "satin",
+      "prop": "standing-wave"
+    }
+  },
+  {
+    "id": "hub-low-table",
+    "displayName": "Low table",
+    "vi": {
+      "displayName": "Bàn thấp"
+    },
+    "category": "furniture",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 25
+    },
+    "visual": {
+      "shape": "box",
+      "size": [0.6, 0.42, 1.2],
+      "color": "#3a424b",
+      "material": "satin",
+      "prop": "low-table"
+    }
+  },
+  {
+    "id": "sign-hub-reception",
+    "displayName": "Sign",
+    "vi": {
+      "displayName": "Biển"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 1,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [0.66, 0.22, 0.015],
+      "color": "#16202a",
+      "label": {
+        "text": "SIMLAB",
+        "vi": {
+          "text": "SIMLAB"
+        },
+        "color": "#cdeefa",
+        "background": "#16202a"
+      }
+    }
+  },
+  {
+    "id": "prep-architrave",
+    "displayName": "Door casing",
+    "vi": {
+      "displayName": "Khung viền cửa"
+    },
+    "category": "structure",
+    "tags": ["decor", "architecture"],
+    "physical": {
+      "massKg": 15,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [1.4, 2.3, 0.04],
+      "color": "#b3bbc2",
+      "material": "satin",
+      "prop": "architrave"
+    }
+  },
+  {
+    "id": "sign-corridor-entry",
+    "displayName": "Sign",
+    "vi": {
+      "displayName": "Biển"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 2,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [1.1, 0.3, 0.03],
+      "color": "#1f5fa8",
+      "prop": "sign-standoff",
+      "label": {
+        "text": "CLEANROOM CORRIDOR\nLab coat and goggles on before entering",
+        "vi": {
+          "text": "HÀNH LANG PHÒNG SẠCH\nMặc áo blouse và đeo kính bảo hộ trước khi vào"
+        },
+        "color": "#ffffff",
+        "background": "#1f5fa8"
+      }
+    }
+  },
+  {
+    "id": "sign-ppe",
+    "displayName": "Sign",
+    "vi": {
+      "displayName": "Biển"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 2,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [0.9, 0.26, 0.03],
+      "color": "#1f5fa8",
+      "prop": "sign-standoff",
+      "label": {
+        "text": "PPE\nLab coat · Safety goggles · Face shield",
+        "vi": {
+          "text": "ĐỒ BẢO HỘ\nÁo blouse · Kính bảo hộ · Tấm chắn mặt"
+        },
+        "color": "#ffffff",
+        "background": "#1f5fa8"
+      }
+    }
+  },
+  {
+    "id": "sign-handwash",
+    "displayName": "Sign",
+    "vi": {
+      "displayName": "Biển"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 2,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [0.9, 0.3, 0.03],
+      "color": "#1f5fa8",
+      "prop": "sign-standoff",
+      "label": {
+        "text": "WASH HANDS\nWet · Soap · Rub · Rinse · Water off · Dry",
+        "vi": {
+          "text": "RỬA TAY\nLàm ướt · Xà phòng · Chà · Xả sạch · Khóa nước · Lau khô"
+        },
+        "color": "#ffffff",
+        "background": "#1f5fa8"
+      }
+    }
+  },
+  {
+    "id": "sign-emergency",
+    "displayName": "Sign",
+    "vi": {
+      "displayName": "Biển"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 2,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [0.6, 0.4, 0.03],
+      "color": "#1f7a4d",
+      "prop": "sign-standoff",
+      "label": {
+        "text": "IN AN EMERGENCY\nStop work\nTell the teacher\nLeave calmly",
+        "vi": {
+          "text": "KHI CÓ SỰ CỐ\nDừng công việc\nBáo giáo viên\nBình tĩnh rời đi"
+        },
+        "color": "#ffffff",
+        "background": "#1f7a4d"
+      }
+    }
+  },
+  {
+    "id": "sign-hub-entry",
+    "displayName": "Sign",
+    "vi": {
+      "displayName": "Biển"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 2,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [1, 0.24, 0.03],
+      "color": "#25303a",
+      "prop": "sign-standoff",
+      "label": {
+        "text": "CLEAN AREA · SIMLAB HUB",
+        "vi": {
+          "text": "KHU VỰC SẠCH · SẢNH SIMLAB"
+        },
+        "color": "#ffffff",
+        "background": "#25303a"
+      }
+    }
+  },
+  {
+    "id": "handwash-splashback",
+    "displayName": "Splashback",
+    "vi": {
+      "displayName": "Tấm ốp chống bắn nước"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 8,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [2.4, 0.55, 0.02],
+      "color": "#e9eef1",
+      "material": "satin"
+    }
+  },
+  {
+    "id": "test-paper",
+    "displayName": "Test paper",
+    "description": "A test the hub's teacher wrote for you. Choose it and press E to do it; hand it in to him to have it marked.",
+    "vi": {
+      "displayName": "Bài kiểm tra",
+      "description": "Đề kiểm tra thầy ở sảnh soạn cho em. Chọn nó rồi nhấn E để làm bài; nộp cho thầy để thầy chấm."
+    },
+    "category": "material",
+    "tags": ["paper"],
+    "physical": {
+      "massKg": 0.005,
+      "body": "none"
+    },
+    "inventory": {
+      "stack": 1,
+      "virtual": true,
+      "ruled": true
+    },
+    "visual": {
+      "shape": "box",
+      "size": [0.21, 0.002, 0.297],
+      "color": "#f7f4ea",
+      "material": "matte"
+    }
+  },
+  {
+    "id": "pedal-bin",
+    "displayName": "Pedal bin",
+    "description": "A pedal bin for used disposable PPE: used gloves go in here, never back into the dispenser.",
+    "vi": {
+      "displayName": "Thùng rác đạp chân",
+      "description": "Thùng rác đạp chân cho đồ bảo hộ dùng một lần đã dùng: găng tay đã dùng bỏ vào đây, không bao giờ trả lại hộp găng."
+    },
+    "category": "furniture",
+    "physical": {
+      "massKg": 4
+    },
+    "interactions": ["waste-bin", "inspect"],
+    "handAt": [0, 0.3, 0],
+    "visual": {
+      "shape": "box",
+      "size": [0.3, 0.45, 0.3],
+      "color": "#b9c0c6",
+      "material": "metal",
+      "prop": "pedal-bin"
+    }
+  },
+  {
+    "id": "corridor-wall-rail",
+    "displayName": "Wall protection rail",
+    "vi": {
+      "displayName": "Thanh bảo vệ tường"
+    },
+    "category": "structure",
+    "tags": ["decor", "architecture"],
+    "physical": {
+      "massKg": 3,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [1.6, 0.14, 0.035],
+      "color": "#c9d3da",
+      "material": "plastic",
+      "prop": "wall-rail"
+    }
+  },
+  {
+    "id": "door-header",
+    "displayName": "Door track cover",
+    "vi": {
+      "displayName": "Hộp ray cửa"
+    },
+    "category": "structure",
+    "tags": ["decor", "architecture"],
+    "physical": {
+      "massKg": 8,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [2.12, 0.075, 0.14],
+      "color": "#c6ccd2",
+      "material": "satin",
+      "prop": "door-header"
+    }
+  },
+  {
+    "id": "door-header-lobby",
+    "displayName": "Door track cover",
+    "vi": {
+      "displayName": "Hộp ray cửa"
+    },
+    "category": "structure",
+    "tags": ["decor", "architecture"],
+    "physical": {
+      "massKg": 8,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [2.12, 0.075, 0.14],
+      "color": "#3a424b",
+      "material": "painted",
+      "prop": "door-header"
+    }
+  },
+  {
+    "id": "door-header-clean",
+    "displayName": "Door track cover",
+    "vi": {
+      "displayName": "Hộp ray cửa"
+    },
+    "category": "structure",
+    "tags": ["decor", "architecture"],
+    "physical": {
+      "massKg": 8,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [2.12, 0.075, 0.14],
+      "color": "#eef1f3",
+      "material": "satin",
+      "prop": "door-header"
+    }
+  },
+  {
+    "id": "door-rail",
+    "displayName": "Door track",
+    "vi": {
+      "displayName": "Ray cửa"
+    },
+    "category": "structure",
+    "tags": ["decor", "architecture", "door-trim"],
+    "physical": {
+      "massKg": 4,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [2, 0.09, 0.04],
+      "color": "#3a3f45",
+      "material": "satin",
+      "prop": "door-rail"
+    }
+  },
+  {
+    "id": "door-jamb",
+    "displayName": "Door jamb",
+    "vi": {
+      "displayName": "Khung cửa"
+    },
+    "category": "structure",
+    "tags": ["decor", "architecture", "door-trim"],
+    "physical": {
+      "massKg": 5,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [0.08, 2.2, 0.045],
+      "color": "#c6ccd2",
+      "material": "satin",
+      "prop": "door-jamb"
+    }
+  },
+  {
+    "id": "door-jamb-lobby",
+    "displayName": "Door jamb",
+    "vi": {
+      "displayName": "Khung cửa"
+    },
+    "category": "structure",
+    "tags": ["decor", "architecture", "door-trim"],
+    "physical": {
+      "massKg": 5,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [0.08, 2.2, 0.045],
+      "color": "#3a424b",
+      "material": "painted",
+      "prop": "door-jamb"
+    }
+  },
+  {
+    "id": "door-jamb-clean",
+    "displayName": "Door jamb",
+    "vi": {
+      "displayName": "Khung cửa"
+    },
+    "category": "structure",
+    "tags": ["decor", "architecture", "door-trim"],
+    "physical": {
+      "massKg": 5,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [0.08, 2.2, 0.045],
+      "color": "#eef1f3",
+      "material": "satin",
+      "prop": "door-jamb-sealed"
+    }
+  },
+  {
+    "id": "door-plate-clean",
+    "displayName": "Clean area sign",
+    "vi": {
+      "displayName": "Biển khu vực sạch"
+    },
+    "category": "structure",
+    "tags": ["decor", "door-trim"],
+    "physical": {
+      "massKg": 0.2,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [0.15, 0.15, 0.008],
+      "color": "#f4f6f7",
+      "material": "satin",
+      "prop": "door-plate-clean"
+    }
+  },
+  {
+    "id": "ceiling-trim",
+    "displayName": "Light trim",
+    "vi": {
+      "displayName": "Viền đèn trần"
+    },
+    "category": "structure",
+    "tags": ["decor", "architecture"],
+    "physical": {
+      "massKg": 1,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [3.08, 0.065, 0.68],
+      "color": "#eceff1",
+      "material": "painted",
+      "prop": "fixture-trim"
+    }
+  },
+  {
+    "id": "ceiling-trim-small",
+    "displayName": "Light trim",
+    "vi": {
+      "displayName": "Viền đèn trần"
+    },
+    "category": "structure",
+    "tags": ["decor", "architecture"],
+    "physical": {
+      "massKg": 0.5,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [0.68, 0.065, 0.68],
+      "color": "#eceff1",
+      "material": "painted",
+      "prop": "fixture-trim"
+    }
+  },
+  {
+    "id": "ceiling-diffuser",
+    "displayName": "Air diffuser",
+    "vi": {
+      "displayName": "Miệng gió cấp"
+    },
+    "category": "structure",
+    "tags": ["decor", "architecture"],
+    "physical": {
+      "massKg": 2,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [0.6, 0.04, 0.6],
+      "color": "#eceff1",
+      "material": "painted",
+      "prop": "air-diffuser"
+    }
+  },
+  {
+    "id": "ceiling-return",
+    "displayName": "Return grille",
+    "vi": {
+      "displayName": "Miệng gió hồi"
+    },
+    "category": "structure",
+    "tags": ["decor", "architecture"],
+    "physical": {
+      "massKg": 2,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [1.2, 0.03, 0.3],
+      "color": "#eceff1",
+      "material": "painted",
+      "prop": "ceiling-grille"
+    }
+  },
+  {
+    "id": "vent-grille-small",
+    "displayName": "Extract vent",
+    "vi": {
+      "displayName": "Miệng hút gió"
+    },
+    "category": "structure",
+    "tags": ["decor", "architecture"],
+    "physical": {
+      "massKg": 0.5,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [0.25, 0.03, 0.25],
+      "color": "#eceff1",
+      "material": "painted",
+      "prop": "ceiling-grille"
+    }
+  },
+  {
+    "id": "ceiling-access-panel",
+    "displayName": "Access panel",
+    "vi": {
+      "displayName": "Nắp thăm trần"
+    },
+    "category": "structure",
+    "tags": ["decor", "architecture"],
+    "physical": {
+      "massKg": 2,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [0.6, 0.015, 0.6],
+      "color": "#eef0f2",
+      "material": "painted",
+      "prop": "access-panel"
+    }
+  },
+  {
+    "id": "hub-coffer",
+    "displayName": "Oculus coffer",
+    "vi": {
+      "displayName": "Trần giật cấp quanh giếng trời"
+    },
+    "category": "structure",
+    "tags": ["decor", "architecture"],
+    "physical": {
+      "massKg": 400,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "cylinder",
+      "size": [8.6, 0.5, 8.6],
+      "color": "#e6e9ec",
+      "material": "painted",
+      "prop": "coffer-ring"
+    }
+  },
+  {
+    "id": "hub-rib",
+    "displayName": "Rib",
+    "vi": {
+      "displayName": "Dầm phụ"
+    },
+    "category": "structure",
+    "tags": ["decor", "architecture"],
+    "physical": {
+      "massKg": 300,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [0.3, 0.35, 5.02],
+      "color": "#d9dde0",
+      "material": "painted",
+      "prop": "beam"
+    }
+  },
+  {
+    "id": "wall-tiles-narrow",
+    "displayName": "Wall tiles",
+    "vi": {
+      "displayName": "Gạch ốp tường"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 5,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [0.5, 1.1, 0.015],
+      "color": "#e3ebef",
+      "material": "satin",
+      "prop": "tile-wainscot"
+    }
+  },
+  {
+    "id": "wall-tiles-splash",
+    "displayName": "Splashback tiles",
+    "vi": {
+      "displayName": "Gạch ốp chống bắn nước"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 8,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [0.8, 0.8, 0.015],
+      "color": "#cfdce3",
+      "material": "satin",
+      "prop": "tile-wainscot"
+    }
+  },
+  {
+    "id": "washroom-mirror",
+    "displayName": "Mirror",
+    "vi": {
+      "displayName": "Gương"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 6,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [0.6, 0.75, 0.02],
+      "color": "#c6ccd2",
+      "material": "satin",
+      "prop": "mirror"
+    }
+  },
+  {
+    "id": "full-length-mirror",
+    "displayName": "Full-length mirror",
+    "vi": {
+      "displayName": "Gương soi toàn thân"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 12,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [0.55, 1.6, 0.03],
+      "color": "#c6ccd2",
+      "material": "satin",
+      "prop": "mirror"
+    }
+  },
+  {
+    "id": "mirror-light",
+    "displayName": "Mirror light",
+    "vi": {
+      "displayName": "Đèn gương"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 1,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [0.6, 0.05, 0.07],
+      "color": "#f6f2e6",
+      "material": "light",
+      "prop": "mirror-light"
+    }
+  },
+  {
+    "id": "washroom-soap",
+    "displayName": "Soap dispenser",
+    "vi": {
+      "displayName": "Bình xà phòng"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 0.5,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [0.08, 0.2, 0.12],
+      "color": "#eef1f3",
+      "material": "plastic",
+      "prop": "liquid-dispenser"
+    }
+  },
+  {
+    "id": "washroom-towels",
+    "displayName": "Paper towel dispenser",
+    "vi": {
+      "displayName": "Hộp khăn giấy"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 1,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [0.1, 0.3, 0.28],
+      "color": "#eef1f3",
+      "material": "plastic",
+      "prop": "towel-dispenser"
+    }
+  },
+  {
+    "id": "washroom-bin",
+    "displayName": "Waste bin",
+    "vi": {
+      "displayName": "Thùng rác"
+    },
+    "category": "furniture",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 3
+    },
+    "visual": {
+      "shape": "box",
+      "size": [0.26, 0.4, 0.26],
+      "color": "#b9c0c6",
+      "material": "metal",
+      "prop": "pedal-bin"
+    }
+  },
+  {
+    "id": "toilet-roll-holder",
+    "displayName": "Toilet roll holder",
+    "vi": {
+      "displayName": "Lô giấy vệ sinh"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 0.5,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [0.16, 0.14, 0.12],
+      "color": "#b4bcc4",
+      "material": "metal",
+      "prop": "roll-holder"
+    }
+  },
+  {
+    "id": "sign-washroom",
+    "displayName": "Sign",
+    "vi": {
+      "displayName": "Biển"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 1,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [0.36, 0.2, 0.03],
+      "color": "#1f5fa8",
+      "prop": "sign-standoff",
+      "label": {
+        "text": "WASH YOUR HANDS\nSoap · Rinse · Dry",
+        "vi": {
+          "text": "RỬA TAY\nXà phòng · Xả sạch · Lau khô"
+        },
+        "color": "#ffffff",
+        "background": "#1f5fa8"
+      }
+    }
+  },
+  {
+    "id": "wc-door",
+    "displayName": "Washroom door",
+    "description": "A solid hinged door to the teacher's washroom. It opens out into the Teacher Room.",
+    "vi": {
+      "displayName": "Cửa nhà vệ sinh",
+      "description": "Cửa bản lề đặc dẫn vào nhà vệ sinh của giáo viên. Cửa mở ra phía phòng giáo viên."
+    },
+    "category": "structure",
+    "physical": {
+      "massKg": 25
+    },
+    "interactions": ["openable"],
+    "hinged": {
+      "angleDeg": 90,
+      "swingS": 1,
+      "leaves": [
+        {
+          "center": [0, -0.03, -0.03],
+          "size": [1.08, 2.12, 0.04],
+          "hinge": [0.54, -0.01],
+          "opens": 1
+        }
+      ]
+    },
+    "visual": {
+      "shape": "box",
+      "size": [1.24, 2.2, 0.1],
+      "color": "#e9ecee",
+      "material": "satin",
+      "prop": "wc-door"
+    }
+  },
+  {
+    "id": "sign-wc",
+    "displayName": "Sign",
+    "vi": {
+      "displayName": "Biển"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 0.3,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [0.18, 0.18, 0.03],
+      "color": "#1f5fa8",
+      "prop": "sign-standoff",
+      "label": {
+        "text": "WC\nToilet",
+        "vi": {
+          "text": "WC\nNhà vệ sinh"
+        },
+        "color": "#ffffff",
+        "background": "#1f5fa8"
+      }
+    }
+  },
+  {
+    "id": "phone",
+    "displayName": "Phone",
+    "description": "Your own phone. Choose it and press Q (or P at any time) to take it out; the number keys dial, E calls, F deletes, Q puts it away. In Vietnam: 114 fire and rescue, 113 police, 115 ambulance.",
+    "vi": {
+      "displayName": "Điện thoại",
+      "description": "Điện thoại của em. Chọn nó rồi nhấn Q (hoặc P bất cứ lúc nào) để lấy ra; các phím số để bấm số, E để gọi, F để xóa, Q để cất. Ở Việt Nam: 114 cứu hỏa và cứu nạn, 113 công an, 115 cấp cứu."
+    },
+    "category": "equipment",
+    "tags": ["phone"],
+    "physical": {
+      "massKg": 0.19,
+      "body": "none"
+    },
+    "inventory": {
+      "stack": 1,
+      "virtual": true
+    },
+    "visual": {
+      "shape": "box",
+      "size": [0.072, 0.155, 0.009],
+      "color": "#1d232b",
+      "material": "satin"
+    }
+  },
+  {
+    "id": "hub-laptop",
+    "displayName": "Gaming laptop",
+    "description": "A 16-inch gaming laptop on the reception counter, its light bar glowing. Open it (E): the SimLab knowledge books for Physics, Chemistry and Biology, grades 10 to 12.",
+    "vi": {
+      "displayName": "Laptop gaming",
+      "description": "Laptop gaming 16 inch trên quầy lễ tân, dải đèn RGB phát sáng. Mở máy (E): bộ sách kiến thức SimLab môn Vật lí, Hóa học, Sinh học lớp 10, 11, 12."
+    },
+    "category": "equipment",
+    "tags": ["laptop"],
+    "physical": {
+      "massKg": 2.5
+    },
+    "interactions": ["laptop", "inspect"],
+    "visual": {
+      "shape": "box",
+      "size": [0.36, 0.265, 0.345],
+      "color": "#2c3036",
+      "material": "metal",
+      "prop": "gaming-laptop"
+    }
+  }
+]

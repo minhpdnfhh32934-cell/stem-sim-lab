@@ -1,0 +1,436 @@
+{
+  "id": "force-composition",
+  "name": "Composition of concurrent forces",
+  "category": "physics",
+  "description": "On an upright force board, two spring balances pull a light ring with forces F1 and F2 at an angle α to each other; a third balance pulls the opposite way, turned until the ring rests on the board's centre mark. Then the third balance holds the ring against the other two: it reads the size of their resultant and points opposite to it. Compare its reading with the parallelogram rule, R = √(F1² + F2² + 2·F1·F2·cos α): the resultant is largest when the forces pull together and smallest when they pull apart.",
+  "vi": {
+    "name": "Tổng hợp hai lực đồng quy",
+    "description": "Trên một bảng tổng hợp lực đặt thẳng đứng, hai lực kế lò xo kéo một vòng nhẫn nhẹ bằng các lực F1 và F2 hợp với nhau một góc α; lực kế thứ ba kéo theo hướng ngược lại, được xoay cho đến khi vòng nhẫn nằm yên tại điểm đánh dấu ở tâm bảng. Khi đó lực kế thứ ba giữ vòng nhẫn cân bằng với hai lực kia: số chỉ của nó bằng độ lớn hợp lực của chúng và nó có hướng ngược với hợp lực. So sánh số chỉ này với quy tắc hình bình hành, R = √(F1² + F2² + 2·F1·F2·cos α): hợp lực lớn nhất khi hai lực cùng hướng và nhỏ nhất khi hai lực ngược hướng.",
+    "note": "Ba lực cùng tác dụng vào vòng nhẫn và vòng nhẫn đứng yên, nên tổng của chúng bằng không: lực F3 của lực kế thứ ba cân bằng với hợp lực R của F1 và F2, có cùng độ lớn và ngược hướng. Theo quy tắc hình bình hành, R = √(F1² + F2² + 2·F1·F2·cos α), và R hợp với F1 một góc θ với tan θ = F2·sin α/(F1 + F2·cos α). Chạy với nhiều góc α và cùng F1, F2: đồ thị F3² theo cos α là một đường thẳng có hệ số góc 2·F1·F2 và cắt trục tung tại F1² + F2². Đây là mô hình dạy học đơn giản hóa: dây và vòng nhẫn không có khối lượng, bảng không ma sát khi vòng nhẫn đứng yên, các lực kế là lò xo lý tưởng (độ cứng 50 N/m mỗi cái) có giới hạn đo 10 N. Khi chạy, vòng nhẫn được thả từ vị trí lệch 1 cm về phía lực kế thứ ba và trở về điểm đánh dấu theo kiểu tắt dần tới hạn — một giả định minh họa đơn giản cho cách vòng nhẫn ổn định; số chỉ của các lực kế khi vòng nhẫn đứng yên là chính xác. Lực kế thứ ba đọc lực mô phỏng theo độ phân giải d của nó (bội số gần nhất của d, độ bất định d/√12 chỉ do độ phân giải); không có sai số ngẫu nhiên nào được thêm vào. Trong phòng thí nghiệm thật, lực kế có sai số hiệu chuẩn và ma sát bên trong, dây có thể không song song với mặt bảng, vòng nhẫn và dây có khối lượng, và việc đọc góc trên thước đo góc có sai số, nên số chỉ lệch đôi chút so với các giá trị này."
+  },
+  "requiredEquipment": ["force-board"],
+  "model": "statics.concurrent-forces",
+  "parameters": [
+    {
+      "id": "force1",
+      "label": "Force F1",
+      "vi": { "label": "Lực F1" },
+      "symbol": "F1",
+      "unit": "N",
+      "default": 3,
+      "min": 1,
+      "max": 4,
+      "presets": [
+        { "label": "1 N", "vi": { "label": "1 N" }, "value": 1 },
+        { "label": "2 N", "vi": { "label": "2 N" }, "value": 2 },
+        { "label": "3 N", "vi": { "label": "3 N" }, "value": 3 },
+        { "label": "4 N", "vi": { "label": "4 N" }, "value": 4 }
+      ]
+    },
+    {
+      "id": "force2",
+      "label": "Force F2",
+      "vi": { "label": "Lực F2" },
+      "symbol": "F2",
+      "unit": "N",
+      "default": 4,
+      "min": 1,
+      "max": 4,
+      "presets": [
+        { "label": "1 N", "vi": { "label": "1 N" }, "value": 1 },
+        { "label": "2 N", "vi": { "label": "2 N" }, "value": 2 },
+        { "label": "3 N", "vi": { "label": "3 N" }, "value": 3 },
+        { "label": "4 N", "vi": { "label": "4 N" }, "value": 4 }
+      ]
+    },
+    {
+      "id": "angle",
+      "label": "Angle between F1 and F2",
+      "vi": { "label": "Góc giữa F1 và F2" },
+      "symbol": "α",
+      "unit": "°",
+      "default": 90,
+      "min": 30,
+      "max": 150,
+      "presets": [
+        { "label": "30°", "vi": { "label": "30°" }, "value": 30 },
+        { "label": "60°", "vi": { "label": "60°" }, "value": 60 },
+        { "label": "90°", "vi": { "label": "90°" }, "value": 90 },
+        { "label": "120°", "vi": { "label": "120°" }, "value": 120 },
+        { "label": "150°", "vi": { "label": "150°" }, "value": 150 }
+      ]
+    },
+    {
+      "id": "balanceResolution",
+      "label": "Balance resolution",
+      "vi": { "label": "Độ phân giải của lực kế" },
+      "symbol": "d_F",
+      "unit": "N",
+      "default": 0.1,
+      "min": 0.05,
+      "max": 0.2,
+      "presets": [
+        { "label": "0.05 N", "vi": { "label": "0,05 N" }, "value": 0.05 },
+        { "label": "0.1 N", "vi": { "label": "0,1 N" }, "value": 0.1 },
+        { "label": "0.2 N", "vi": { "label": "0,2 N" }, "value": 0.2 }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "stiffness": 50,
+    "settleFrequency": 20,
+    "startOffset": 0.01,
+    "duration": 3
+  },
+  "inputs": {
+    "stiffness": { "symbol": "k", "unit": "N/m", "desk": false },
+    "settleFrequency": { "symbol": "ω", "unit": "rad/s", "desk": false },
+    "startOffset": { "symbol": "u0", "unit": "m", "desk": false },
+    "duration": { "symbol": "t_end", "unit": "s", "desk": false }
+  },
+  "simulation": { "timeStep": 0.002, "maxDuration": 5, "sampleInterval": 0.02 },
+  "measurements": [
+    {
+      "id": "reading1",
+      "label": "Balance 1 reading",
+      "vi": { "label": "Số chỉ lực kế 1" },
+      "symbol": "F1",
+      "unit": "N",
+      "variable": "reading1"
+    },
+    {
+      "id": "reading2",
+      "label": "Balance 2 reading",
+      "vi": { "label": "Số chỉ lực kế 2" },
+      "symbol": "F2",
+      "unit": "N",
+      "variable": "reading2"
+    },
+    {
+      "id": "reading3",
+      "label": "Balance 3 reading",
+      "vi": { "label": "Số chỉ lực kế 3" },
+      "symbol": "F3",
+      "unit": "N",
+      "variable": "reading3"
+    },
+    {
+      "id": "labTime",
+      "label": "Time",
+      "vi": { "label": "Thời gian" },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "clock"
+    }
+  ],
+  "results": [
+    {
+      "id": "reading3",
+      "label": "Third balance at rest F3",
+      "vi": { "label": "Số chỉ lực kế thứ ba khi cân bằng F3" },
+      "symbol": "F3",
+      "unit": "N",
+      "variable": "reading3",
+      "reduce": "final",
+      "theory": "resultant"
+    },
+    {
+      "id": "resultantAngle",
+      "label": "Angle of the resultant from F1 θ",
+      "vi": { "label": "Góc của hợp lực so với F1, θ" },
+      "symbol": "θ",
+      "unit": "°",
+      "variable": "resultantAngle",
+      "reduce": "final",
+      "theory": "resultantAngle"
+    },
+    {
+      "id": "resultantSquared",
+      "label": "Square of the third balance's reading F3²",
+      "vi": { "label": "Bình phương số chỉ lực kế thứ ba F3²" },
+      "symbol": "F3²",
+      "unit": "N²",
+      "variable": "resultantSquared",
+      "reduce": "final",
+      "theory": "resultantSquared"
+    },
+    {
+      "id": "cosAngle",
+      "label": "Cosine of the angle cos α",
+      "vi": { "label": "Côsin của góc cos α" },
+      "symbol": "cos α",
+      "unit": "",
+      "variable": "cosAngle",
+      "reduce": "final",
+      "theory": "cosAngle"
+    }
+  ],
+  "instruments": [
+    {
+      "result": "reading3",
+      "quantity": "Force F3 on the third balance",
+      "name": "Spring balance (10 N)",
+      "resolution": "balanceResolution",
+      "excludes": "the balance's calibration and the friction inside it, strings not parallel to the board, the ring's and strings' weight, and where the ring is judged to rest on the mark, which change the reading itself",
+      "vi": {
+        "quantity": "Lực F3 trên lực kế thứ ba",
+        "name": "Lực kế lò xo (10 N)",
+        "excludes": "sai số hiệu chuẩn và ma sát bên trong lực kế, dây không song song với mặt bảng, trọng lượng của vòng nhẫn và dây, và việc xác định vòng nhẫn đã nằm đúng điểm đánh dấu hay chưa, những yếu tố làm thay đổi chính số chỉ"
+      }
+    }
+  ],
+  "graphs": [
+    {
+      "id": "readings-time",
+      "title": "The balances' readings against time",
+      "vi": { "title": "Số chỉ của các lực kế theo thời gian" },
+      "x": "labTime",
+      "y": ["reading1", "reading2", "reading3"],
+      "yLabel": "F"
+    }
+  ],
+  "monitor": "readings-time",
+  "compare": [{ "graph": "readings-time", "series": "reading3" }],
+  "analyses": [
+    {
+      "id": "square-cosine",
+      "title": "F3² against cos α for the same F1 and F2 (the parallelogram rule)",
+      "note": "Each run is one point: the square of the third balance's reading against the cosine of the angle between F1 and F2. Runs with the same F1 and F2 are fitted together. By the parallelogram rule F3² = R² = F1² + F2² + 2·F1·F2·cos α: a straight line whose slope is 2·F1·F2 and whose intercept is F1² + F2². Change only the angle between runs.",
+      "vi": {
+        "title": "F3² theo cos α với cùng F1 và F2 (quy tắc hình bình hành)",
+        "note": "Mỗi lần chạy là một điểm: bình phương số chỉ của lực kế thứ ba theo côsin của góc giữa F1 và F2. Các lần chạy có cùng F1 và F2 được khớp chung. Theo quy tắc hình bình hành, F3² = R² = F1² + F2² + 2·F1·F2·cos α: một đường thẳng có hệ số góc 2·F1·F2 và cắt trục tung tại F1² + F2². Giữa các lần chạy chỉ thay đổi góc."
+      },
+      "x": "cosAngle",
+      "y": "resultantSquared",
+      "group": ["force1", "force2"],
+      "columns": ["force1", "force2", "angle", "cosAngle", "reading3", "resultantSquared"],
+      "slope": {
+        "label": "Slope of F3² against cos α",
+        "vi": { "label": "Hệ số góc của F3² theo cos α" },
+        "symbol": "2·F1·F2",
+        "unit": "N²",
+        "theory": "productTwice",
+        "intercept": "squaresSum"
+      }
+    }
+  ],
+  "note": "Three forces act on the ring and it rests, so they add to zero: the third balance's F3 balances the resultant R of F1 and F2, equal in size and opposite in direction. By the parallelogram rule R = √(F1² + F2² + 2·F1·F2·cos α), and R makes an angle θ with F1, tan θ = F2·sin α/(F1 + F2·cos α). Run at several angles with the same F1 and F2: F3² against cos α is a straight line of slope 2·F1·F2 and intercept F1² + F2². A simplified teaching model: weightless strings and ring, a board without friction at rest, ideal spring balances (50 N/m each) reading up to 10 N. During the run the ring is let go 1 cm off the mark towards the third balance and returns critically damped — one stated simplification of how it settles; the balances' readings at rest are exact. The third balance reads the simulated force to its resolution d (the nearest multiple of d, with the uncertainty d/√12 from the resolution alone); no random error is added. In a real lab the balances have calibration errors and friction inside, the strings may not run parallel to the board, the ring and strings have weight, and reading the angle on the protractor has its own error, so the readings differ a little from these.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the composition of forces instructions on the board.",
+      "vi": { "instruction": "Đọc hướng dẫn thí nghiệm tổng hợp lực trên bảng." },
+      "done": { "kind": "inspected", "item": "force-composition-instructions" }
+    },
+    {
+      "id": "forces",
+      "instruction": "Set the forces F1 and F2 with their dials on the control desk.",
+      "vi": { "instruction": "Đặt các lực F1 và F2 bằng các núm xoay trên bàn điều khiển." },
+      "done": { "kind": "adjusted", "parameter": "force1" }
+    },
+    {
+      "id": "angle",
+      "instruction": "Set the angle α between them.",
+      "vi": { "instruction": "Đặt góc α giữa hai lực." },
+      "done": { "kind": "adjusted", "parameter": "angle" }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the ring is let go and settles on the mark; watch the third balance.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: vòng nhẫn được thả ra và trở về điểm đánh dấu; quan sát lực kế thứ ba."
+      },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read F3 and θ on the results monitor beside the parallelogram rule's R and θ.",
+      "vi": {
+        "instruction": "Đọc F3 và θ trên màn hình kết quả, bên cạnh R và θ theo quy tắc hình bình hành."
+      },
+      "done": { "kind": "viewed" }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, change only the angle and run again to add a point to the analysis.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, chỉ thay đổi góc rồi chạy lại để thêm một điểm vào đồ thị phân tích."
+      },
+      "done": { "kind": "reset" }
+    }
+  ],
+  "examples": [
+    {
+      "id": "resultant-at-60",
+      "question": "Two forces F1 = {force1} N and F2 = {force2} N act on the ring at {angle}° to each other. Find the size of their resultant.",
+      "vi": {
+        "question": "Hai lực F1 = {force1} N và F2 = {force2} N cùng tác dụng vào vòng nhẫn, hợp với nhau góc {angle}°. Tìm độ lớn hợp lực của chúng."
+      },
+      "set": { "force1": 3, "force2": 4, "angle": 60 },
+      "find": [{ "theory": "resultant", "symbol": "F" }],
+      "steps": [
+        {
+          "say": "The resultant is the diagonal of the parallelogram the two forces make; its size follows from the law of cosines.",
+          "vi": {
+            "say": "Hợp lực là đường chéo của hình bình hành dựng trên hai lực; độ lớn của nó tính theo định lí côsin."
+          },
+          "write": "F² = F1² + F2² + 2·F1·F2·cos α"
+        },
+        {
+          "say": "Put in the numbers. The third balance reads this force, the one that balances the other two.",
+          "vi": { "say": "Thay số. Lực kế thứ ba chỉ đúng lực này, lực cân bằng với hai lực kia." },
+          "write": "F = √({force1}² + {force2}² + 2·{force1}·{force2}·cos {angle}°) ≈ {@resultant} N",
+          "check": {
+            "expr": "sqrt(force1^2+force2^2+2*force1*force2*cos(rad(angle)))",
+            "equals": "resultant"
+          }
+        }
+      ]
+    },
+    {
+      "id": "resultant-and-direction",
+      "question": "F1 = {force1} N and F2 = {force2} N act on the ring at {angle}° to each other. Find the resultant and the angle it makes with F1.",
+      "vi": {
+        "question": "F1 = {force1} N và F2 = {force2} N tác dụng vào vòng nhẫn, hợp với nhau góc {angle}°. Tìm hợp lực và góc hợp lực tạo với F1."
+      },
+      "set": { "force1": 3, "force2": 2, "angle": 120 },
+      "find": [{ "theory": "resultant", "symbol": "F" }, { "theory": "resultantAngle" }],
+      "steps": [
+        {
+          "say": "The parallelogram rule: an obtuse angle makes cos α negative, so the resultant is smaller than either sum.",
+          "vi": {
+            "say": "Quy tắc hình bình hành: góc tù làm cos α âm, nên hợp lực nhỏ hơn tổng hai lực."
+          },
+          "write": "F = √({force1}² + {force2}² + 2·{force1}·{force2}·cos {angle}°) ≈ {@resultant} N",
+          "check": {
+            "expr": "sqrt(force1^2+force2^2+2*force1*force2*cos(rad(angle)))",
+            "equals": "resultant"
+          }
+        },
+        {
+          "say": "Split F2 along F1 and across it: the resultant’s angle θ with F1 has tan θ = F2·sin α/(F1 + F2·cos α).",
+          "vi": {
+            "say": "Phân tích F2 theo phương F1 và phương vuông góc: góc θ giữa hợp lực và F1 có tan θ = F2·sin α/(F1 + F2·cos α)."
+          },
+          "write": "tan θ = {force2}·sin {angle}°/({force1} + {force2}·cos {angle}°) → θ ≈ {@resultantAngle}°",
+          "check": {
+            "expr": "deg(atan(force2*sin(rad(angle))/(force1+force2*cos(rad(angle)))))",
+            "equals": "resultantAngle"
+          }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "Two forces pulling a ring at an angle add up like the sides of a parallelogram; a third force that holds the ring still is equal and opposite to their resultant.",
+    "vi": {
+      "summary": "Hai lực kéo một vòng nhẫn theo hai phương hợp với nhau một góc được tổng hợp theo quy tắc hình bình hành; lực thứ ba giữ vòng đứng yên thì bằng và ngược chiều với hợp lực của chúng."
+    },
+    "parts": [
+      {
+        "id": "ring",
+        "name": "Ring",
+        "role": "A light ring on the board’s centre mark; three strings pull it.",
+        "vi": {
+          "name": "Vòng nhẫn",
+          "role": "Một vòng nhẹ đặt ở điểm tâm của bảng; ba sợi dây kéo nó."
+        },
+        "anchor": {
+          "part": "ring"
+        }
+      },
+      {
+        "id": "balance-1",
+        "name": "Balance 1: F1",
+        "role": "A spring balance pulling the ring along the board’s x axis with the force F1.",
+        "vi": {
+          "name": "Lực kế 1: F1",
+          "role": "Lực kế lò xo kéo vòng dọc trục x của bảng với lực F1."
+        },
+        "anchor": {
+          "part": "balance-1"
+        }
+      },
+      {
+        "id": "balance-2",
+        "name": "Balance 2: F2",
+        "role": "Pulls with F2, at the angle α from F1.",
+        "vi": {
+          "name": "Lực kế 2: F2",
+          "role": "Kéo với lực F2, hợp với F1 một góc α."
+        },
+        "anchor": {
+          "part": "balance-2"
+        }
+      },
+      {
+        "id": "balance-3",
+        "name": "Balance 3: F3",
+        "role": "Turned until the ring rests on the mark; its reading F3 is what the run measures.",
+        "vi": {
+          "name": "Lực kế 3: F3",
+          "role": "Được xoay cho tới khi vòng nằm yên ở điểm tâm; số chỉ F3 của nó là đại lượng lần chạy đo được."
+        },
+        "anchor": {
+          "part": "balance-3"
+        }
+      },
+      {
+        "id": "protractor",
+        "name": "Protractor",
+        "role": "Printed round the centre mark: reads the angles of the strings.",
+        "vi": {
+          "name": "Thước đo góc",
+          "role": "In quanh điểm tâm: đọc góc của các sợi dây."
+        },
+        "anchor": {
+          "at": [0.142, -0.142, 0.01]
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "Balances 1 and 2 pull the ring with the forces F1 and F2, at the angle α to each other.",
+        "vi": {
+          "text": "Lực kế 1 và 2 kéo vòng với các lực F1 và F2, hợp với nhau góc α."
+        },
+        "parts": ["ring", "balance-1", "balance-2", "protractor"]
+      },
+      {
+        "text": "Balance 3 is turned until the ring rests on the centre mark. Then the three forces add up to zero: F3 is equal and opposite to the resultant R of F1 and F2.",
+        "vi": {
+          "text": "Lực kế 3 được xoay cho tới khi vòng nằm yên ở điểm tâm. Khi đó ba lực có tổng bằng không: F3 bằng và ngược chiều với hợp lực R của F1 và F2."
+        },
+        "parts": ["balance-3", "ring"]
+      },
+      {
+        "text": "Parallelogram rule: draw F1 and F2 as two sides; the diagonal is R = √(F1² + F2² + 2·F1·F2·cos α), at the angle θ from F1 with tan θ = F2·sin α/(F1 + F2·cos α).",
+        "vi": {
+          "text": "Quy tắc hình bình hành: vẽ F1 và F2 là hai cạnh; đường chéo là R = √(F1² + F2² + 2·F1·F2·cos α), hợp với F1 góc θ với tan θ = F2·sin α/(F1 + F2·cos α)."
+        },
+        "parts": ["balance-1", "balance-2", "protractor"]
+      },
+      {
+        "text": "The resultant is largest when the forces pull together (small α) and smallest when they pull apart (large α). Change α and watch F3.",
+        "vi": {
+          "text": "Hợp lực lớn nhất khi hai lực kéo cùng hướng (α nhỏ) và nhỏ nhất khi chúng kéo ngược nhau (α lớn). Đổi α và quan sát F3."
+        },
+        "parts": ["balance-3", "protractor"]
+      },
+      {
+        "text": "The results put F3 and θ beside R and θ from the rule; the balance reads in steps of its resolution d. Over several angles, F3² against cos α is a line of slope 2·F1·F2 and intercept F1² + F2².",
+        "vi": {
+          "text": "Phần kết quả đặt F3 và θ bên cạnh R và θ tính theo quy tắc; lực kế đọc theo từng bước bằng độ phân giải d. Qua nhiều góc, F3² theo cos α là đường thẳng có hệ số góc 2·F1·F2 và tung độ gốc F1² + F2²."
+        },
+        "parts": ["balance-3"]
+      },
+      {
+        "text": "The model is ideal: weightless ring and strings, no friction and perfect spring balances. In a real lab their errors, and reading the angle, make the readings differ a little.",
+        "vi": {
+          "text": "Mô hình là lý tưởng: vòng và dây không trọng lượng, không ma sát và lực kế hoàn hảo. Trong phòng thí nghiệm thật, sai số của chúng và việc đọc góc làm số đo hơi khác."
+        },
+        "parts": ["ring"]
+      }
+    ]
+  }
+}

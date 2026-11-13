@@ -1,0 +1,1033 @@
+{
+  "id": "agar-diffusion",
+  "skills": [
+    {
+      "id": "sa-v",
+      "name": "Surface area to volume (SA:V)",
+      "advice": "Work out S and V for the 1, 2 and 3 cm cubes yourself (6L² and L³) and check that SA:V = 6/L. The trap: a bigger cube has more surface, but less surface for each cm³ inside it.",
+      "vi": {
+        "name": "Tỉ lệ diện tích bề mặt/thể tích (S/V)",
+        "advice": "Tự tính S và V của các khối 1, 2 và 3 cm (6L² và L³) rồi kiểm tra S/V = 6/L. Bẫy thường gặp: khối lớn có diện tích bề mặt lớn hơn nhưng diện tích ứng với mỗi cm³ bên trong lại nhỏ hơn."
+      }
+    },
+    {
+      "id": "diffusion-depth",
+      "name": "Diffusion depth: x grows as √t",
+      "advice": "Re-read the note: the colour edge lies x ≈ 0.954·√(Dt) from each face. At the station run 300 s and 1200 s: four times the time only doubles the depth. Keep D in m²/s and convert m to mm last.",
+      "vi": {
+        "name": "Độ sâu khuếch tán: x tỉ lệ với √t",
+        "advice": "Đọc lại ghi chú: mép đổi màu cách mỗi mặt x ≈ 0,954·√(Dt). Trên trạm, thử ngâm 300 s rồi 1200 s: thời gian gấp bốn thì độ sâu chỉ gấp đôi. Giữ D theo m²/s và chỉ đổi m sang mm ở bước cuối."
+      }
+    },
+    {
+      "id": "share-changed",
+      "name": "Share of a cube reached",
+      "advice": "The unchanged core is a cube of side L − 2x (the acid comes in from both sides), so the share changed is 1 − ((L − 2x)/L)³. Practise it for each cube from one depth, and do not forget the 2 or the cube.",
+      "vi": {
+        "name": "Phần thể tích khối bị khuếch tán tới",
+        "advice": "Lõi chưa đổi màu là một khối lập phương cạnh L − 2x (axit vào từ cả hai phía), nên phần đã đổi màu là 1 − ((L − 2x)/L)³. Luyện tính cho từng khối từ cùng một độ sâu, đừng quên số 2 và lũy thừa bậc ba."
+      }
+    },
+    {
+      "id": "cell-size",
+      "name": "Why cells stay small",
+      "advice": "Link the cubes to cells: a cell takes in substances through its surface but uses them in its whole volume. Re-read the Explain view and list the ways living things raise SA:V (small cells, flat shapes, folds, microvilli).",
+      "vi": {
+        "name": "Vì sao tế bào có kích thước nhỏ",
+        "advice": "Liên hệ các khối thạch với tế bào: tế bào nhận chất qua bề mặt nhưng sử dụng chúng trong toàn bộ thể tích. Đọc lại màn Giải thích và liệt kê các cách sinh vật tăng tỉ lệ S/V (tế bào nhỏ, dạng dẹt, nếp gấp, vi nhung mao)."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "what-colour-shows",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["diffusion-depth"],
+      "stem": "The cubes are pink indicator agar soaked in acid. The part that has lost its pink colour shows…",
+      "explain": "The acid diffuses in from every face; where it arrives the indicator changes colour, so the faded layer is how far the acid has diffused.",
+      "vi": {
+        "stem": "Các khối thạch có chất chỉ thị màu hồng được ngâm trong axit. Phần đã mất màu hồng cho biết…",
+        "explain": "Axit khuếch tán vào từ mọi mặt; tới đâu chất chỉ thị đổi màu tới đó, nên lớp đã mất màu cho biết axit đã khuếch tán sâu tới đâu."
+      },
+      "options": [
+        {
+          "text": "how far the acid has diffused into the agar",
+          "vi": {
+            "text": "axit đã khuếch tán vào thạch sâu tới đâu"
+          },
+          "correct": true
+        },
+        {
+          "text": "how far water has entered the agar by osmosis",
+          "vi": {
+            "text": "nước đã thẩm thấu vào thạch sâu tới đâu"
+          }
+        },
+        {
+          "text": "where the indicator has dissolved out of the agar into the acid",
+          "vi": {
+            "text": "phần chất chỉ thị đã hòa tan ra khỏi thạch vào axit"
+          }
+        },
+        {
+          "text": "where the agar has been dissolved by the acid",
+          "vi": {
+            "text": "phần thạch đã bị axit hòa tan"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ratio-2cm",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["sa-v"],
+      "stem": "What is the surface area to volume ratio (SA:V) of the 2 cm agar cube?",
+      "explain": "S = 6·2² = 24 cm², V = 2³ = 8 cm³, so SA:V = 24/8 = 3 cm⁻¹ (6/L for a cube).",
+      "vi": {
+        "stem": "Tỉ lệ diện tích bề mặt/thể tích (S/V) của khối thạch cạnh 2 cm bằng bao nhiêu?",
+        "explain": "S = 6·2² = 24 cm², V = 2³ = 8 cm³, nên S/V = 24/8 = 3 cm⁻¹ (với khối lập phương S/V = 6/L)."
+      },
+      "options": [
+        {
+          "text": "3 cm⁻¹",
+          "vi": {
+            "text": "3 cm⁻¹"
+          },
+          "correct": true
+        },
+        {
+          "text": "6 cm⁻¹",
+          "vi": {
+            "text": "6 cm⁻¹"
+          }
+        },
+        {
+          "text": "1.5 cm⁻¹",
+          "vi": {
+            "text": "1,5 cm⁻¹"
+          }
+        },
+        {
+          "text": "0.33 cm",
+          "vi": {
+            "text": "0,33 cm"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-cubes",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["sa-v", "diffusion-depth"],
+      "stem": "Agar cubes of side 1, 2 and 3 cm soak in the same acid for the same time. Decide whether each statement is true or false.",
+      "explain": "SA:V = 6/L, so the 1 cm cube has the largest (6 cm⁻¹). The acid goes equally deep from every face of every cube; the big cube has the most surface but the least for its volume, so it changes the smallest share. Doubling L halves SA:V.",
+      "vi": {
+        "stem": "Các khối thạch cạnh 1, 2 và 3 cm được ngâm trong cùng một dung dịch axit, trong cùng thời gian. Mỗi nhận định sau đúng hay sai?",
+        "explain": "S/V = 6/L nên khối 1 cm có tỉ lệ lớn nhất (6 cm⁻¹). Axit đi sâu như nhau từ mọi mặt của mọi khối; khối lớn có diện tích bề mặt lớn nhất nhưng diện tích ứng với thể tích lại nhỏ nhất, nên phần đổi màu nhỏ nhất. Cạnh tăng gấp đôi thì S/V giảm một nửa."
+      },
+      "statements": [
+        {
+          "text": "The 1 cm cube has the largest SA:V of the three.",
+          "vi": {
+            "text": "Khối 1 cm có tỉ lệ S/V lớn nhất trong ba khối."
+          },
+          "true": true
+        },
+        {
+          "text": "The acid reaches the same depth from the faces of every cube.",
+          "vi": {
+            "text": "Axit đi vào cùng một độ sâu tính từ các mặt của mọi khối."
+          },
+          "true": true
+        },
+        {
+          "text": "The 3 cm cube changes colour all the way through first, because it has the largest surface.",
+          "vi": {
+            "text": "Khối 3 cm đổi màu hoàn toàn trước tiên vì nó có diện tích bề mặt lớn nhất."
+          },
+          "true": false
+        },
+        {
+          "text": "Doubling the side of a cube doubles its SA:V.",
+          "vi": {
+            "text": "Tăng cạnh khối lập phương lên gấp đôi thì tỉ lệ S/V của nó tăng gấp đôi."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "four-times-time",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["diffusion-depth"],
+      "stem": "The cubes soak four times as long. The depth the acid reaches from each face…",
+      "explain": "x ≈ 0.954·√(Dt): four times t gives √4 = 2 times x. Diffusion slows down as it goes.",
+      "vi": {
+        "stem": "Thời gian ngâm các khối thạch tăng lên gấp bốn lần. Độ sâu axit đi vào tính từ mỗi mặt…",
+        "explain": "x ≈ 0,954·√(Dt): t tăng 4 lần thì x tăng √4 = 2 lần. Khuếch tán chậm dần khi đi sâu vào."
+      },
+      "options": [
+        {
+          "text": "doubles",
+          "vi": {
+            "text": "tăng gấp đôi"
+          },
+          "correct": true
+        },
+        {
+          "text": "becomes four times as large",
+          "vi": {
+            "text": "tăng gấp bốn lần"
+          }
+        },
+        {
+          "text": "becomes sixteen times as large",
+          "vi": {
+            "text": "tăng gấp mười sáu lần"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "giant-cell",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["cell-size", "sa-v"],
+      "stem": "Why is a large organism not one giant cell?",
+      "explain": "As a cell grows, its volume (L³) grows faster than its surface (L²): SA:V falls, and diffusion through the surface can no longer supply the inside fast enough.",
+      "vi": {
+        "stem": "Vì sao một cơ thể lớn không phải là một tế bào khổng lồ?",
+        "explain": "Khi tế bào lớn lên, thể tích (L³) tăng nhanh hơn diện tích bề mặt (L²): tỉ lệ S/V giảm, khuếch tán qua bề mặt không còn cung cấp kịp cho phần bên trong."
+      },
+      "options": [
+        {
+          "text": "Its volume would grow faster than its surface, so diffusion could not supply its inside fast enough",
+          "vi": {
+            "text": "Thể tích sẽ tăng nhanh hơn diện tích bề mặt, nên khuếch tán không cung cấp kịp cho phần bên trong"
+          },
+          "correct": true
+        },
+        {
+          "text": "Its surface would grow faster than its volume, so it would lose too much water",
+          "vi": {
+            "text": "Diện tích bề mặt sẽ tăng nhanh hơn thể tích, nên tế bào mất quá nhiều nước"
+          }
+        },
+        {
+          "text": "Substances diffuse faster in a large cell, so it would use up its food too quickly",
+          "vi": {
+            "text": "Các chất khuếch tán nhanh hơn trong tế bào lớn, nên nó dùng hết chất dinh dưỡng quá nhanh"
+          }
+        },
+        {
+          "text": "A large cell has more surface for each cm³ of its volume, so it would overheat",
+          "vi": {
+            "text": "Tế bào lớn có diện tích bề mặt ứng với mỗi cm³ thể tích lớn hơn, nên sẽ bị quá nóng"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-shares",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["share-changed", "sa-v", "cell-size"],
+      "set": {
+        "soakTime": 600
+      },
+      "stem": "The three cubes soak for {soakTime} s. Decide whether each statement is true or false.",
+      "explain": "The depth is the same for every cube, so the cube with the largest SA:V (1 cm) has the largest share changed ({@small}% against {@large}% for the 3 cm cube). SA:V halves from 6 to 3 cm⁻¹ between the 1 and 2 cm cubes. Folds and microvilli add surface with little extra volume.",
+      "vi": {
+        "stem": "Ba khối thạch được ngâm trong {soakTime} s. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Độ sâu như nhau ở mọi khối, nên khối có S/V lớn nhất (1 cm) có phần đổi màu lớn nhất ({@small}% so với {@large}% ở khối 3 cm). S/V giảm một nửa, từ 6 xuống 3 cm⁻¹, từ khối 1 cm sang khối 2 cm. Các nếp gấp và vi nhung mao tăng diện tích bề mặt mà thể tích tăng rất ít."
+      },
+      "statements": [
+        {
+          "text": "A larger share of the 1 cm cube has changed colour than of the 3 cm cube.",
+          "vi": {
+            "text": "Phần đã đổi màu của khối 1 cm lớn hơn của khối 3 cm."
+          },
+          "true": true
+        },
+        {
+          "text": "The 2 cm cube has half the SA:V of the 1 cm cube.",
+          "vi": {
+            "text": "Khối 2 cm có tỉ lệ S/V bằng một nửa của khối 1 cm."
+          },
+          "true": true
+        },
+        {
+          "text": "The depth the acid reaches depends on the size of the cube.",
+          "vi": {
+            "text": "Độ sâu axit đi vào phụ thuộc vào kích thước khối."
+          },
+          "true": false
+        },
+        {
+          "text": "Folds and microvilli raise a cell’s SA:V, much as cutting a big cube into small ones does.",
+          "vi": {
+            "text": "Các nếp gấp và vi nhung mao làm tăng tỉ lệ S/V của tế bào, tương tự như chia một khối lớn thành các khối nhỏ."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "depth-600",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["diffusion-depth"],
+      "set": {
+        "soakTime": 600
+      },
+      "stem": "The cubes soak for {soakTime} s. The colour edge lies x ≈ 0.954·√(Dt) from each face, with D = {diffusivity} m²/s (an illustrative value). How deep has the acid gone?",
+      "explain": "x = 0.954·√({diffusivity}·{soakTime}) ≈ {=2*0.4769362762044699*sqrt(diffusivity*soakTime)*1000/1000|3} m ≈ {@depth} mm. Without the root, or with t in minutes, the answer is far off; m to mm is ×1000, not ×10⁶.",
+      "vi": {
+        "stem": "Các khối thạch được ngâm trong {soakTime} s. Mép đổi màu cách mỗi mặt x ≈ 0,954·√(Dt), với D = {diffusivity} m²/s (giá trị minh họa). Axit đã đi vào sâu bao nhiêu?",
+        "explain": "x = 0,954·√({diffusivity}·{soakTime}) ≈ {=2*0.4769362762044699*sqrt(diffusivity*soakTime)*1000/1000|3} m ≈ {@depth} mm. Quên căn bậc hai hoặc dùng t theo phút sẽ sai rất xa; đổi m sang mm là nhân 1000, không phải 10⁶."
+      },
+      "options": [
+        {
+          "text": "{@depth} mm",
+          "vi": {
+            "text": "{@depth} mm"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2*0.4769362762044699*sqrt(diffusivity*soakTime)*1000",
+            "equals": "depth"
+          }
+        },
+        {
+          "text": "{=2*0.4769362762044699*diffusivity*soakTime*1000} mm",
+          "vi": {
+            "text": "{=2*0.4769362762044699*diffusivity*soakTime*1000} mm"
+          },
+          "check": {
+            "expr": "2*0.4769362762044699*diffusivity*soakTime*1000",
+            "equals": "depth"
+          }
+        },
+        {
+          "text": "{=2*0.4769362762044699*sqrt(diffusivity*soakTime)*1e6} mm",
+          "vi": {
+            "text": "{=2*0.4769362762044699*sqrt(diffusivity*soakTime)*1e6} mm"
+          },
+          "check": {
+            "expr": "2*0.4769362762044699*sqrt(diffusivity*soakTime)*1e6",
+            "equals": "depth"
+          }
+        },
+        {
+          "text": "{=2*0.4769362762044699*sqrt(diffusivity*soakTime/60)*1000} mm",
+          "vi": {
+            "text": "{=2*0.4769362762044699*sqrt(diffusivity*soakTime/60)*1000} mm"
+          },
+          "check": {
+            "expr": "2*0.4769362762044699*sqrt(diffusivity*soakTime/60)*1000",
+            "equals": "depth"
+          }
+        }
+      ]
+    },
+    {
+      "id": "small-share",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["share-changed"],
+      "set": {
+        "soakTime": 600
+      },
+      "stem": "After {soakTime} s the acid has reached {@depth} mm from each face. What share of the 1 cm (10 mm) cube has changed colour?",
+      "explain": "The unchanged core is a cube of side 10 − 2·{@depth} = {=10-2*@depth} mm: f = 1 − ({=10-2*@depth}/10)³ ≈ {@small}%. {=100*((10-2*@depth)/10)^3}% is the core itself.",
+      "vi": {
+        "stem": "Sau {soakTime} s, axit đã đi vào {@depth} mm tính từ mỗi mặt. Phần thể tích đã đổi màu của khối 1 cm (10 mm) chiếm bao nhiêu?",
+        "explain": "Lõi chưa đổi màu là khối cạnh 10 − 2·{@depth} = {=10-2*@depth} mm: f = 1 − ({=10-2*@depth}/10)³ ≈ {@small}%. Giá trị {=100*((10-2*@depth)/10)^3}% là phần lõi."
+      },
+      "options": [
+        {
+          "text": "{@small}%",
+          "vi": {
+            "text": "{@small}%"
+          },
+          "correct": true,
+          "check": {
+            "expr": "100*(1-((10-2*@depth)/10)^3)",
+            "equals": "small"
+          }
+        },
+        {
+          "text": "{=100*((10-2*@depth)/10)^3}%",
+          "vi": {
+            "text": "{=100*((10-2*@depth)/10)^3}%"
+          },
+          "check": {
+            "expr": "100*((10-2*@depth)/10)^3",
+            "equals": "small"
+          }
+        },
+        {
+          "text": "{=100*(1-((10-@depth)/10)^3)}%",
+          "vi": {
+            "text": "{=100*(1-((10-@depth)/10)^3)}%"
+          },
+          "check": {
+            "expr": "100*(1-((10-@depth)/10)^3)",
+            "equals": "small"
+          }
+        },
+        {
+          "text": "{=100*2*@depth/10}%",
+          "vi": {
+            "text": "{=100*2*@depth/10}%"
+          },
+          "check": {
+            "expr": "100*2*@depth/10",
+            "equals": "small"
+          }
+        }
+      ]
+    },
+    {
+      "id": "large-share",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["share-changed", "sa-v"],
+      "set": {
+        "soakTime": 1800
+      },
+      "stem": "After {soakTime} s the acid has reached {@depth} mm from each face. What share of the 3 cm (30 mm) cube has changed colour?",
+      "explain": "Core side 30 − 2·{@depth} = {=30-2*@depth} mm: f = 1 − ({=30-2*@depth}/30)³ ≈ {@large}%. A volume needs the cube (³), not the square of an area.",
+      "vi": {
+        "stem": "Sau {soakTime} s, axit đã đi vào {@depth} mm tính từ mỗi mặt. Phần thể tích đã đổi màu của khối 3 cm (30 mm) chiếm bao nhiêu?",
+        "explain": "Cạnh lõi 30 − 2·{@depth} = {=30-2*@depth} mm: f = 1 − ({=30-2*@depth}/30)³ ≈ {@large}%. Tính thể tích phải dùng lũy thừa ba, không phải bình phương như diện tích."
+      },
+      "options": [
+        {
+          "text": "{@large}%",
+          "vi": {
+            "text": "{@large}%"
+          },
+          "correct": true,
+          "check": {
+            "expr": "100*(1-((30-2*@depth)/30)^3)",
+            "equals": "large"
+          }
+        },
+        {
+          "text": "{=100*(1-((30-2*@depth)/30)^2)}%",
+          "vi": {
+            "text": "{=100*(1-((30-2*@depth)/30)^2)}%"
+          },
+          "check": {
+            "expr": "100*(1-((30-2*@depth)/30)^2)",
+            "equals": "large"
+          }
+        },
+        {
+          "text": "{=100*((30-2*@depth)/30)^3}%",
+          "vi": {
+            "text": "{=100*((30-2*@depth)/30)^3}%"
+          },
+          "check": {
+            "expr": "100*((30-2*@depth)/30)^3",
+            "equals": "large"
+          }
+        },
+        {
+          "text": "{=100*(1-((10-2*@depth)/10)^3)}%",
+          "vi": {
+            "text": "{=100*(1-((10-2*@depth)/10)^3)}%"
+          },
+          "check": {
+            "expr": "100*(1-((10-2*@depth)/10)^3)",
+            "equals": "large"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-1200",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["diffusion-depth", "share-changed"],
+      "set": {
+        "soakTime": 1200
+      },
+      "stem": "The cubes soak for {soakTime} s (D = {diffusivity} m²/s, illustrative; x ≈ 0.954·√(Dt)). Decide whether each statement is true or false.",
+      "explain": "x ≈ {@depth} mm; the 2 cm cube: 1 − ({=20-2*@depth}/20)³ ≈ {@medium}%. After 600 s the depth was {=2*0.4769362762044699*sqrt(diffusivity*600)*1000} mm: twice the time gives √2 times the depth, not twice. The 1 cm cube’s core is 10 − 2x = {=10-2*@depth} mm across.",
+      "vi": {
+        "stem": "Các khối thạch được ngâm trong {soakTime} s (D = {diffusivity} m²/s, giá trị minh họa; x ≈ 0,954·√(Dt)). Mỗi nhận định sau đúng hay sai?",
+        "explain": "x ≈ {@depth} mm; khối 2 cm: 1 − ({=20-2*@depth}/20)³ ≈ {@medium}%. Sau 600 s độ sâu là {=2*0.4769362762044699*sqrt(diffusivity*600)*1000} mm: thời gian gấp đôi thì độ sâu tăng √2 lần, không phải gấp đôi. Lõi của khối 1 cm rộng 10 − 2x = {=10-2*@depth} mm."
+      },
+      "statements": [
+        {
+          "text": "The acid has gone about {@depth} mm deep.",
+          "vi": {
+            "text": "Axit đã đi vào sâu khoảng {@depth} mm."
+          },
+          "true": true,
+          "check": {
+            "expr": "2*0.4769362762044699*sqrt(diffusivity*soakTime)*1000",
+            "equals": "depth"
+          }
+        },
+        {
+          "text": "About {@medium}% of the 2 cm cube has changed colour.",
+          "vi": {
+            "text": "Khoảng {@medium}% thể tích khối 2 cm đã đổi màu."
+          },
+          "true": true,
+          "check": {
+            "expr": "100*(1-((20-2*@depth)/20)^3)",
+            "equals": "medium"
+          }
+        },
+        {
+          "text": "The depth is twice what it was after 600 s, that is {=2*2*0.4769362762044699*sqrt(diffusivity*600)*1000} mm.",
+          "vi": {
+            "text": "Độ sâu gấp đôi so với sau 600 s, tức là {=2*2*0.4769362762044699*sqrt(diffusivity*600)*1000} mm."
+          },
+          "true": false,
+          "check": {
+            "expr": "2*2*0.4769362762044699*sqrt(diffusivity*600)*1000",
+            "equals": "depth"
+          }
+        },
+        {
+          "text": "The pink core left in the 1 cm cube is about {=10-2*@depth} mm across.",
+          "vi": {
+            "text": "Lõi màu hồng còn lại trong khối 1 cm rộng khoảng {=10-2*@depth} mm."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "twice-as-deep",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["diffusion-depth"],
+      "set": {
+        "soakTime": 300
+      },
+      "stem": "After {soakTime} s of soaking the acid is {@depth} mm deep. How long must the cubes soak, from the start, for it to reach twice that depth?",
+      "explain": "x ∝ √t, so t ∝ x²: twice the depth needs 2² = 4 times the time, {=4*soakTime} s. Check: 0.954·√({diffusivity}·{=4*soakTime}) ≈ {=2*@depth} mm.",
+      "vi": {
+        "stem": "Sau {soakTime} s ngâm, axit đi vào sâu {@depth} mm. Phải ngâm các khối thạch tổng cộng bao lâu (tính từ đầu) để axit đi sâu gấp đôi?",
+        "explain": "x tỉ lệ với √t nên t tỉ lệ với x²: độ sâu gấp đôi cần thời gian gấp 2² = 4 lần, tức {=4*soakTime} s. Kiểm tra: 0,954·√({diffusivity}·{=4*soakTime}) ≈ {=2*@depth} mm."
+      },
+      "options": [
+        {
+          "text": "{=4*soakTime} s",
+          "vi": {
+            "text": "{=4*soakTime} s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2*0.4769362762044699*sqrt(diffusivity*4*soakTime)*1000/2",
+            "equals": "depth"
+          }
+        },
+        {
+          "text": "{=2*soakTime} s",
+          "vi": {
+            "text": "{=2*soakTime} s"
+          },
+          "check": {
+            "expr": "2*0.4769362762044699*sqrt(diffusivity*2*soakTime)*1000/2",
+            "equals": "depth"
+          }
+        },
+        {
+          "text": "{=sqrt(2)*soakTime} s",
+          "vi": {
+            "text": "{=sqrt(2)*soakTime} s"
+          },
+          "check": {
+            "expr": "2*0.4769362762044699*sqrt(diffusivity*sqrt(2)*soakTime)*1000/2",
+            "equals": "depth"
+          }
+        },
+        {
+          "text": "{=8*soakTime} s",
+          "vi": {
+            "text": "{=8*soakTime} s"
+          },
+          "check": {
+            "expr": "2*0.4769362762044699*sqrt(diffusivity*8*soakTime)*1000/2",
+            "equals": "depth"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-long-soak",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["share-changed", "cell-size", "sa-v"],
+      "set": {
+        "soakTime": 1800
+      },
+      "stem": "The cubes soak for {soakTime} s, the longest the dial allows. Decide whether each statement is true or false.",
+      "explain": "x ≈ {@depth} mm, so the 3 cm cube has changed only {@large}%, still less than half. Any cube of side up to 2x ≈ {=2*@depth} mm is reached right through. Cutting the big cube into 27 small ones raises SA:V from 2 to 6 cm⁻¹, so a larger share is reached. Thin cells, like a cube cut up, are reached quickly.",
+      "vi": {
+        "stem": "Các khối thạch được ngâm trong {soakTime} s, thời gian dài nhất mà núm chỉnh cho phép. Mỗi nhận định sau đúng hay sai?",
+        "explain": "x ≈ {@depth} mm, nên khối 3 cm mới đổi màu {@large}%, vẫn chưa tới một nửa. Mọi khối có cạnh không quá 2x ≈ {=2*@depth} mm đều bị axit đi tới toàn bộ. Chia khối lớn thành 27 khối nhỏ làm S/V tăng từ 2 lên 6 cm⁻¹, nên phần được axit đi tới lớn hơn. Tế bào mỏng, giống như khối đã được chia nhỏ, được cung cấp nhanh."
+      },
+      "statements": [
+        {
+          "text": "Less than half of the 3 cm cube has changed colour: about {@large}%.",
+          "vi": {
+            "text": "Chưa tới một nửa khối 3 cm đổi màu: khoảng {@large}%."
+          },
+          "true": true,
+          "check": {
+            "expr": "100*(1-((30-2*@depth)/30)^3)",
+            "equals": "large"
+          }
+        },
+        {
+          "text": "A cube of side {=2*@depth} mm or less would have changed colour right through.",
+          "vi": {
+            "text": "Một khối có cạnh không quá {=2*@depth} mm sẽ đổi màu hoàn toàn."
+          },
+          "true": true
+        },
+        {
+          "text": "Cutting the 3 cm cube into 27 cubes of 1 cm would not change the share reached, since the total volume is the same.",
+          "vi": {
+            "text": "Chia khối 3 cm thành 27 khối 1 cm không làm thay đổi phần được axit đi tới, vì tổng thể tích vẫn như cũ."
+          },
+          "true": false
+        },
+        {
+          "text": "The larger cube needs more time for the acid to reach its centre, as a large cell would for the substances it takes in.",
+          "vi": {
+            "text": "Khối lớn hơn cần nhiều thời gian hơn để axit tới được tâm, giống như một tế bào lớn với các chất nó hấp thụ."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "what-is-diffusion",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["diffusion-depth"],
+      "stem": "The acid enters the agar by diffusion. Diffusion is the net movement of particles…",
+      "explain": "Diffusion is passive: particles spread from where they are more concentrated to where they are less concentrated, with no energy from ATP.",
+      "vi": {
+        "stem": "Axit đi vào khối thạch bằng khuếch tán. Khuếch tán là sự di chuyển thực của các phân tử…",
+        "explain": "Khuếch tán là vận chuyển thụ động: các phân tử đi từ nơi có nồng độ cao đến nơi có nồng độ thấp, không tiêu tốn năng lượng ATP."
+      },
+      "options": [
+        {
+          "text": "from a higher concentration to a lower one, without using energy",
+          "vi": {
+            "text": "từ nơi có nồng độ cao đến nơi có nồng độ thấp, không tiêu tốn năng lượng"
+          },
+          "correct": true
+        },
+        {
+          "text": "from a lower concentration to a higher one, using energy from ATP",
+          "vi": {
+            "text": "từ nơi có nồng độ thấp đến nơi có nồng độ cao, nhờ năng lượng từ ATP"
+          }
+        },
+        {
+          "text": "of water only, through a partially permeable membrane",
+          "vi": {
+            "text": "chỉ của nước, qua màng bán thấm"
+          }
+        },
+        {
+          "text": "from a lower concentration to a higher one, without using energy",
+          "vi": {
+            "text": "từ nơi có nồng độ thấp đến nơi có nồng độ cao, không tiêu tốn năng lượng"
+          }
+        }
+      ]
+    },
+    {
+      "id": "side-tripled",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["sa-v", "cell-size"],
+      "stem": "The side of a cube goes from 1 cm to 3 cm. How do its surface area and its volume change?",
+      "explain": "Area grows as L² (3² = 9 times: 6 → 54 cm²), volume as L³ (3³ = 27 times: 1 → 27 cm³). Volume grows faster, so SA:V falls from 6 to 2 cm⁻¹.",
+      "vi": {
+        "stem": "Cạnh của một khối lập phương tăng từ 1 cm lên 3 cm. Diện tích bề mặt và thể tích của nó thay đổi thế nào?",
+        "explain": "Diện tích tăng theo L² (3² = 9 lần: 6 → 54 cm²), thể tích tăng theo L³ (3³ = 27 lần: 1 → 27 cm³). Thể tích tăng nhanh hơn, nên tỉ lệ S/V giảm từ 6 xuống 2 cm⁻¹."
+      },
+      "options": [
+        {
+          "text": "Surface area ×9, volume ×27",
+          "vi": {
+            "text": "Diện tích bề mặt tăng 9 lần, thể tích tăng 27 lần"
+          },
+          "correct": true
+        },
+        {
+          "text": "Surface area ×3, volume ×9",
+          "vi": {
+            "text": "Diện tích bề mặt tăng 3 lần, thể tích tăng 9 lần"
+          }
+        },
+        {
+          "text": "Surface area ×27, volume ×9",
+          "vi": {
+            "text": "Diện tích bề mặt tăng 27 lần, thể tích tăng 9 lần"
+          }
+        },
+        {
+          "text": "Both ×3, so SA:V stays the same",
+          "vi": {
+            "text": "Cả hai đều tăng 3 lần, nên tỉ lệ S/V không đổi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-cell-shape",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["cell-size", "sa-v"],
+      "stem": "About cell size and exchange with the surroundings: decide whether each statement is true or false.",
+      "explain": "Folds and microvilli add membrane without adding much volume, and a flat or long thin shape has more surface for its volume than a cube or sphere. Large animals do not rely on diffusion across the body surface alone: they have exchange surfaces and a transport system. D here is HCl’s value in water, used as an illustrative value.",
+      "vi": {
+        "stem": "Về kích thước tế bào và sự trao đổi chất với môi trường, mỗi nhận định sau đúng hay sai?",
+        "explain": "Các nếp gấp và vi nhung mao làm tăng diện tích màng mà hầu như không tăng thể tích, và tế bào dẹt hoặc dài, mảnh có diện tích bề mặt so với thể tích lớn hơn khối lập phương hay khối cầu. Động vật lớn không chỉ dựa vào khuếch tán qua bề mặt cơ thể: chúng có bề mặt trao đổi khí và hệ vận chuyển. D ở đây là giá trị của HCl trong nước, dùng như giá trị minh họa."
+      },
+      "statements": [
+        {
+          "text": "Microvilli on intestinal cells increase their surface area for absorption.",
+          "vi": {
+            "text": "Vi nhung mao ở tế bào ruột làm tăng diện tích bề mặt hấp thụ."
+          },
+          "true": true
+        },
+        {
+          "text": "A flat cell has a larger SA:V than a cube-shaped cell of the same volume.",
+          "vi": {
+            "text": "Tế bào dẹt có tỉ lệ S/V lớn hơn tế bào hình lập phương có cùng thể tích."
+          },
+          "true": true
+        },
+        {
+          "text": "A large animal supplies all its cells by diffusion across its body surface alone.",
+          "vi": {
+            "text": "Một động vật lớn cung cấp chất cho mọi tế bào chỉ nhờ khuếch tán qua bề mặt cơ thể."
+          },
+          "true": false
+        },
+        {
+          "text": "In this simulation, the diffusion coefficient D of the acid in the agar is an illustrative value.",
+          "vi": {
+            "text": "Trong mô phỏng này, hệ số khuếch tán D của axit trong thạch là giá trị minh họa."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "medium-share-900",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["share-changed"],
+      "set": {
+        "soakTime": 900
+      },
+      "stem": "After {soakTime} s the acid has reached {@depth} mm from each face. What share of the 2 cm (20 mm) cube has changed colour?",
+      "explain": "The pink core is a cube of side 20 − 2·{@depth} ≈ {=20-2*@depth} mm, so the share changed is 1 − ({=20-2*@depth}/20)³ ≈ {@medium}%. The acid enters from both opposite faces, and the volume goes as the cube of the side.",
+      "vi": {
+        "stem": "Sau {soakTime} s, axit đã đi vào {@depth} mm tính từ mỗi mặt. Phần thể tích đã đổi màu của khối 2 cm (20 mm) chiếm bao nhiêu?",
+        "explain": "Lõi màu hồng là khối lập phương cạnh 20 − 2·{@depth} ≈ {=20-2*@depth} mm, nên phần đã đổi màu là 1 − ({=20-2*@depth}/20)³ ≈ {@medium}%. Axit đi vào từ cả hai mặt đối diện, và thể tích tỉ lệ với lập phương của cạnh."
+      },
+      "options": [
+        {
+          "text": "{@medium}%",
+          "vi": {
+            "text": "{@medium}%"
+          },
+          "correct": true,
+          "check": {
+            "expr": "100*(1-((20-2*@depth)/20)^3)",
+            "equals": "medium"
+          }
+        },
+        {
+          "text": "{=100*(1-((20-@depth)/20)^3)}%",
+          "vi": {
+            "text": "{=100*(1-((20-@depth)/20)^3)}%"
+          },
+          "check": {
+            "expr": "100*(1-((20-@depth)/20)^3)",
+            "equals": "medium"
+          }
+        },
+        {
+          "text": "{=100*(1-((20-2*@depth)/20)^2)}%",
+          "vi": {
+            "text": "{=100*(1-((20-2*@depth)/20)^2)}%"
+          },
+          "check": {
+            "expr": "100*(1-((20-2*@depth)/20)^2)",
+            "equals": "medium"
+          }
+        },
+        {
+          "text": "{=100*2*@depth/20}%",
+          "vi": {
+            "text": "{=100*2*@depth/20}%"
+          },
+          "check": {
+            "expr": "100*2*@depth/20",
+            "equals": "medium"
+          }
+        }
+      ]
+    },
+    {
+      "id": "core-volume",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["share-changed"],
+      "set": {
+        "soakTime": 600
+      },
+      "stem": "After {soakTime} s, {@large}% of the 3 cm cube (27 cm³) has changed colour. What volume of it is still pink?",
+      "explain": "The pink part is the rest: 27·(1 − {@large}/100) ≈ {=27*(1-@large/100)} cm³. {=27*@large/100} cm³ is the part that has changed.",
+      "vi": {
+        "stem": "Sau {soakTime} s, {@large}% thể tích khối 3 cm (27 cm³) đã đổi màu. Thể tích phần vẫn còn màu hồng là bao nhiêu?",
+        "explain": "Phần màu hồng là phần còn lại: 27·(1 − {@large}/100) ≈ {=27*(1-@large/100)} cm³. {=27*@large/100} cm³ là phần đã đổi màu."
+      },
+      "options": [
+        {
+          "text": "{=27*(1-@large/100)} cm³",
+          "vi": {
+            "text": "{=27*(1-@large/100)} cm³"
+          },
+          "correct": true,
+          "check": {
+            "expr": "100*(1-27*(1-@large/100)/27)",
+            "equals": "large"
+          }
+        },
+        {
+          "text": "{=27*@large/100} cm³",
+          "vi": {
+            "text": "{=27*@large/100} cm³"
+          },
+          "check": {
+            "expr": "100*(1-(27*@large/100)/27)",
+            "equals": "large"
+          }
+        },
+        {
+          "text": "{=(3-@depth/10)^3} cm³",
+          "vi": {
+            "text": "{=(3-@depth/10)^3} cm³"
+          },
+          "check": {
+            "expr": "100*(1-(3-@depth/10)^3/27)",
+            "equals": "large"
+          }
+        },
+        {
+          "text": "{=100-@large} cm³",
+          "vi": {
+            "text": "{=100-@large} cm³"
+          },
+          "check": {
+            "expr": "100*(1-(100-@large)/27)",
+            "equals": "large"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-diffusivity",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["diffusion-depth"],
+      "set": {
+        "soakTime": 900
+      },
+      "stem": "After {soakTime} s of soaking, the colour edge is {@depth|3} mm from each face. Using x ≈ 0.954·√(Dt), what diffusion coefficient D does this give for the acid in the agar?",
+      "explain": "√(Dt) = x/0.954 with x in metres: D = ({@depth|3}·10⁻³/0.954)²/{soakTime} ≈ {=(@depth/1000/(2*0.4769362762044699))^2/soakTime|2} m²/s. Forgetting to change mm into m, or to square, gives a value far off.",
+      "vi": {
+        "stem": "Sau {soakTime} s ngâm, mép đổi màu cách mỗi mặt {@depth|3} mm. Dùng x ≈ 0,954·√(Dt), hệ số khuếch tán D của axit trong thạch tính được là bao nhiêu?",
+        "explain": "√(Dt) = x/0,954 với x tính bằng mét: D = ({@depth|3}·10⁻³/0,954)²/{soakTime} ≈ {=(@depth/1000/(2*0.4769362762044699))^2/soakTime|2} m²/s. Quên đổi mm sang m, hoặc quên bình phương, sẽ cho giá trị sai rất xa."
+      },
+      "options": [
+        {
+          "text": "{=(@depth/1000/(2*0.4769362762044699))^2/soakTime|2} m²/s",
+          "vi": {
+            "text": "{=(@depth/1000/(2*0.4769362762044699))^2/soakTime|2} m²/s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2*0.4769362762044699*sqrt((@depth/1000/(2*0.4769362762044699))^2/soakTime*soakTime)*1000",
+            "equals": "depth"
+          }
+        },
+        {
+          "text": "{=(@depth/(2*0.4769362762044699))^2/soakTime|2} m²/s",
+          "vi": {
+            "text": "{=(@depth/(2*0.4769362762044699))^2/soakTime|2} m²/s"
+          },
+          "check": {
+            "expr": "2*0.4769362762044699*sqrt((@depth/(2*0.4769362762044699))^2/soakTime*soakTime)*1000",
+            "equals": "depth"
+          }
+        },
+        {
+          "text": "{=@depth/1000/(2*0.4769362762044699)/soakTime|2} m²/s",
+          "vi": {
+            "text": "{=@depth/1000/(2*0.4769362762044699)/soakTime|2} m²/s"
+          },
+          "check": {
+            "expr": "2*0.4769362762044699*sqrt(@depth/1000/(2*0.4769362762044699)/soakTime*soakTime)*1000",
+            "equals": "depth"
+          }
+        },
+        {
+          "text": "{=(@depth/1000)^2/soakTime|2} m²/s",
+          "vi": {
+            "text": "{=(@depth/1000)^2/soakTime|2} m²/s"
+          },
+          "check": {
+            "expr": "2*0.4769362762044699*sqrt((@depth/1000)^2/soakTime*soakTime)*1000",
+            "equals": "depth"
+          }
+        }
+      ]
+    },
+    {
+      "id": "share-ratio-trap",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["share-changed", "sa-v"],
+      "set": {
+        "soakTime": 600
+      },
+      "stem": "After {soakTime} s, {@small}% of the 1 cm cube and {@large}% of the 3 cm cube have changed colour. The 1 cm cube’s SA:V is 3 times the 3 cm cube’s. How many times the 3 cm cube’s share is the 1 cm cube’s?",
+      "explain": "{@small}/{@large} ≈ {=@small/@large|3}: less than 3. The shares are not in the ratio of SA:V, because the reached layer is the same depth in both and the share is 1 − ((L − 2x)/L)³, not proportional to 6/L.",
+      "vi": {
+        "stem": "Sau {soakTime} s, {@small}% thể tích khối 1 cm và {@large}% thể tích khối 3 cm đã đổi màu. Tỉ lệ S/V của khối 1 cm gấp 3 lần của khối 3 cm. Phần đổi màu của khối 1 cm gấp bao nhiêu lần của khối 3 cm?",
+        "explain": "{@small}/{@large} ≈ {=@small/@large|3}: nhỏ hơn 3. Phần đổi màu không tỉ lệ với S/V, vì lớp axit đi tới sâu như nhau ở cả hai khối và phần đổi màu bằng 1 − ((L − 2x)/L)³, không tỉ lệ với 6/L."
+      },
+      "options": [
+        {
+          "text": "About {=@small/@large|3} times",
+          "vi": {
+            "text": "Khoảng {=@small/@large|3} lần"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(@small/@large)*@large",
+            "equals": "small"
+          }
+        },
+        {
+          "text": "Exactly 3 times, the ratio of their SA:V",
+          "vi": {
+            "text": "Đúng 3 lần, bằng tỉ số S/V của chúng"
+          },
+          "check": {
+            "expr": "3*@large",
+            "equals": "small"
+          }
+        },
+        {
+          "text": "9 times, the ratio of their surface areas",
+          "vi": {
+            "text": "9 lần, bằng tỉ số diện tích bề mặt của chúng"
+          },
+          "check": {
+            "expr": "9*@large",
+            "equals": "small"
+          }
+        },
+        {
+          "text": "The same share: the acid is equally deep in both",
+          "vi": {
+            "text": "Bằng nhau: axit đi sâu như nhau ở cả hai khối"
+          },
+          "check": {
+            "expr": "1*@large",
+            "equals": "small"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-1500",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["diffusion-depth", "share-changed", "sa-v"],
+      "set": {
+        "soakTime": 1500
+      },
+      "stem": "The cubes soak for {soakTime} s (D = {diffusivity} m²/s, illustrative; x ≈ 0.954·√(Dt)). Decide whether each statement is true or false.",
+      "explain": "x = 0.954·√({diffusivity}·{soakTime}) ≈ {@depth|3} mm. Shares: {@small|3}% (1 cm), {@medium|3}% (2 cm), {@large|3}% (3 cm); the 1 cm cube’s is {=@small/@large|3} times the 3 cm cube’s. For the 3 cm cube to match the 1 cm cube, the acid must go 3 times as deep, which takes 3² = 9 times as long, not 3 times.",
+      "vi": {
+        "stem": "Các khối thạch được ngâm trong {soakTime} s (D = {diffusivity} m²/s, giá trị minh họa; x ≈ 0,954·√(Dt)). Mỗi nhận định sau đúng hay sai?",
+        "explain": "x = 0,954·√({diffusivity}·{soakTime}) ≈ {@depth|3} mm. Phần đổi màu: {@small|3}% (1 cm), {@medium|3}% (2 cm), {@large|3}% (3 cm); của khối 1 cm gấp {=@small/@large|3} lần của khối 3 cm. Để khối 3 cm đạt cùng tỉ lệ với khối 1 cm, axit phải đi sâu gấp 3 lần, tức cần thời gian gấp 3² = 9 lần, không phải 3 lần."
+      },
+      "statements": [
+        {
+          "text": "The acid has gone about {@depth|3} mm deep from each face.",
+          "vi": {
+            "text": "Axit đã đi vào sâu khoảng {@depth|3} mm tính từ mỗi mặt."
+          },
+          "true": true,
+          "check": {
+            "expr": "2*0.4769362762044699*sqrt(diffusivity*soakTime)*1000",
+            "equals": "depth"
+          }
+        },
+        {
+          "text": "The pink core of the 2 cm cube is about {=20-2*@depth|3} mm across, so {@medium|3}% of that cube has changed colour.",
+          "vi": {
+            "text": "Lõi màu hồng của khối 2 cm rộng khoảng {=20-2*@depth|3} mm, nên {@medium|3}% thể tích khối đó đã đổi màu."
+          },
+          "true": true,
+          "check": {
+            "expr": "100*(1-((20-2*@depth)/20)^3)",
+            "equals": "medium"
+          }
+        },
+        {
+          "text": "The 1 cm cube has changed about {=@small/@large|3} times the share of the 3 cm cube.",
+          "vi": {
+            "text": "Phần đổi màu của khối 1 cm gấp khoảng {=@small/@large|3} lần của khối 3 cm."
+          },
+          "true": true,
+          "check": {
+            "expr": "(@small/@large)*@large",
+            "equals": "small"
+          }
+        },
+        {
+          "text": "Soaking the 3 cm cube 3 times as long would give it the share the 1 cm cube has now.",
+          "vi": {
+            "text": "Ngâm khối 3 cm lâu gấp 3 lần thì phần đổi màu của nó sẽ bằng phần đổi màu hiện tại của khối 1 cm."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

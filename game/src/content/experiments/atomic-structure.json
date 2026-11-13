@@ -1,0 +1,598 @@
+{
+  "id": "atomic-structure",
+  "name": "Electrons in atoms: shells, configuration and the periodic table",
+  "category": "chemistry",
+  "description": "Build an atom electron by electron. Each electron goes into the lowest free subshell — 1s, 2s, 2p, 3s, 3p, 4s, 3d, 4p — and the shells K, L, M, N fill in turn. From the finished atom read its electrons per shell, its outer electrons and unpaired electrons, and find its place in the periodic table: the period is its outermost shell, the group comes from its outer electrons.",
+  "vi": {
+    "name": "Electron trong nguyên tử: lớp electron, cấu hình và bảng tuần hoàn",
+    "description": "Xây dựng một nguyên tử từng electron một. Mỗi electron vào phân lớp trống có năng lượng thấp nhất — 1s, 2s, 2p, 3s, 3p, 4s, 3d, 4p — và các lớp K, L, M, N lần lượt được điền. Từ nguyên tử hoàn chỉnh, đọc số electron mỗi lớp, số electron lớp ngoài cùng và số electron độc thân, rồi tìm vị trí của nó trong bảng tuần hoàn: chu kì là lớp ngoài cùng, nhóm suy ra từ các electron lớp ngoài.",
+    "note": "Mô hình dạy học về trạng thái cơ bản của nguyên tử trung hòa có số hiệu Z (1–36). Lượt chạy đặt lần lượt Z electron, mỗi electron sau 0,25 s, theo thứ tự các phân lớp được điền (1s 2s 2p 3s 3p 4s 3d 4p: quy tắc n + l), mỗi phân lớp chứa tối đa 2(2l + 1) electron; crom và đồng kết thúc ở trạng thái cơ bản đo được: [Ar] 3d⁵ 4s¹ và [Ar] 3d¹⁰ 4s¹ (phân lớp d bán bão hòa hoặc bão hòa bền hơn). Đọc ra: số electron mỗi lớp K, L, M, N (theo hình ảnh của Bohr), số electron lớp ngoài cùng, số electron độc thân (quy tắc Hund), chu kì và nhóm (đánh số 1–18 theo IUPAC; nhóm A của sách giáo khoa: nhóm 1, 2 là IA, IIA; nhóm 13–18 là IIIA–VIIIA). Không mô hình hóa: năng lượng, hình dạng orbital (xem bàn orbital), ion. Các electron được vẽ trên các vòng lớp như một hình minh họa: electron không phải là những hành tinh nhỏ."
+  },
+  "requiredEquipment": ["bohr-atom"],
+  "model": "chemistry.atomic-structure",
+  "parameters": [
+    {
+      "id": "atomicNumber",
+      "label": "Element",
+      "vi": {
+        "label": "Nguyên tố"
+      },
+      "symbol": "Z",
+      "unit": "",
+      "default": 11,
+      "min": 1,
+      "max": 36,
+      "presets": [
+        {
+          "label": "H Hydrogen (Z = 1)",
+          "vi": {
+            "label": "H Hiđro (Z = 1)"
+          },
+          "value": 1
+        },
+        {
+          "label": "He Helium (Z = 2)",
+          "vi": {
+            "label": "He Heli (Z = 2)"
+          },
+          "value": 2
+        },
+        {
+          "label": "Li Lithium (Z = 3)",
+          "vi": {
+            "label": "Li Liti (Z = 3)"
+          },
+          "value": 3
+        },
+        {
+          "label": "C Carbon (Z = 6)",
+          "vi": {
+            "label": "C Cacbon (Z = 6)"
+          },
+          "value": 6
+        },
+        {
+          "label": "N Nitrogen (Z = 7)",
+          "vi": {
+            "label": "N Nitơ (Z = 7)"
+          },
+          "value": 7
+        },
+        {
+          "label": "O Oxygen (Z = 8)",
+          "vi": {
+            "label": "O Oxi (Z = 8)"
+          },
+          "value": 8
+        },
+        {
+          "label": "F Fluorine (Z = 9)",
+          "vi": {
+            "label": "F Flo (Z = 9)"
+          },
+          "value": 9
+        },
+        {
+          "label": "Ne Neon (Z = 10)",
+          "vi": {
+            "label": "Ne Neon (Z = 10)"
+          },
+          "value": 10
+        },
+        {
+          "label": "Na Sodium (Z = 11)",
+          "vi": {
+            "label": "Na Natri (Z = 11)"
+          },
+          "value": 11
+        },
+        {
+          "label": "Mg Magnesium (Z = 12)",
+          "vi": {
+            "label": "Mg Magie (Z = 12)"
+          },
+          "value": 12
+        },
+        {
+          "label": "Al Aluminium (Z = 13)",
+          "vi": {
+            "label": "Al Nhôm (Z = 13)"
+          },
+          "value": 13
+        },
+        {
+          "label": "Si Silicon (Z = 14)",
+          "vi": {
+            "label": "Si Silic (Z = 14)"
+          },
+          "value": 14
+        },
+        {
+          "label": "P Phosphorus (Z = 15)",
+          "vi": {
+            "label": "P Photpho (Z = 15)"
+          },
+          "value": 15
+        },
+        {
+          "label": "S Sulfur (Z = 16)",
+          "vi": {
+            "label": "S Lưu huỳnh (Z = 16)"
+          },
+          "value": 16
+        },
+        {
+          "label": "Cl Chlorine (Z = 17)",
+          "vi": {
+            "label": "Cl Clo (Z = 17)"
+          },
+          "value": 17
+        },
+        {
+          "label": "Ar Argon (Z = 18)",
+          "vi": {
+            "label": "Ar Agon (Z = 18)"
+          },
+          "value": 18
+        },
+        {
+          "label": "K Potassium (Z = 19)",
+          "vi": {
+            "label": "K Kali (Z = 19)"
+          },
+          "value": 19
+        },
+        {
+          "label": "Ca Calcium (Z = 20)",
+          "vi": {
+            "label": "Ca Canxi (Z = 20)"
+          },
+          "value": 20
+        },
+        {
+          "label": "Cr Chromium (Z = 24)",
+          "vi": {
+            "label": "Cr Crom (Z = 24)"
+          },
+          "value": 24
+        },
+        {
+          "label": "Fe Iron (Z = 26)",
+          "vi": {
+            "label": "Fe Sắt (Z = 26)"
+          },
+          "value": 26
+        },
+        {
+          "label": "Cu Copper (Z = 29)",
+          "vi": {
+            "label": "Cu Đồng (Z = 29)"
+          },
+          "value": 29
+        },
+        {
+          "label": "Zn Zinc (Z = 30)",
+          "vi": {
+            "label": "Zn Kẽm (Z = 30)"
+          },
+          "value": 30
+        },
+        {
+          "label": "Br Bromine (Z = 35)",
+          "vi": {
+            "label": "Br Brom (Z = 35)"
+          },
+          "value": 35
+        },
+        {
+          "label": "Kr Krypton (Z = 36)",
+          "vi": {
+            "label": "Kr Krypton (Z = 36)"
+          },
+          "value": 36
+        }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "electronTime": 0.25
+  },
+  "inputs": {
+    "electronTime": {
+      "symbol": "t_e",
+      "unit": "s",
+      "desk": false
+    }
+  },
+  "simulation": {
+    "timeStep": 0.05,
+    "maxDuration": 12,
+    "sampleInterval": 0.25
+  },
+  "measurements": [
+    {
+      "id": "time",
+      "label": "Time",
+      "vi": {
+        "label": "Thời gian"
+      },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "time"
+    },
+    {
+      "id": "electrons",
+      "label": "Electrons placed",
+      "vi": {
+        "label": "Số electron đã đặt"
+      },
+      "symbol": "e⁻",
+      "unit": "",
+      "variable": "electrons"
+    },
+    {
+      "id": "unpaired",
+      "label": "Unpaired electrons",
+      "vi": {
+        "label": "Electron độc thân"
+      },
+      "symbol": "n_u",
+      "unit": "",
+      "variable": "unpaired"
+    }
+  ],
+  "results": [
+    {
+      "id": "shellK",
+      "label": "Electrons in shell K (n = 1)",
+      "vi": {
+        "label": "Electron lớp K (n = 1)"
+      },
+      "unit": "",
+      "variable": "shellK",
+      "reduce": "final",
+      "format": "integer",
+      "theory": "shellK"
+    },
+    {
+      "id": "shellL",
+      "label": "Electrons in shell L (n = 2)",
+      "vi": {
+        "label": "Electron lớp L (n = 2)"
+      },
+      "unit": "",
+      "variable": "shellL",
+      "reduce": "final",
+      "format": "integer",
+      "theory": "shellL"
+    },
+    {
+      "id": "shellM",
+      "label": "Electrons in shell M (n = 3)",
+      "vi": {
+        "label": "Electron lớp M (n = 3)"
+      },
+      "unit": "",
+      "variable": "shellM",
+      "reduce": "final",
+      "format": "integer",
+      "theory": "shellM"
+    },
+    {
+      "id": "shellN",
+      "label": "Electrons in shell N (n = 4)",
+      "vi": {
+        "label": "Electron lớp N (n = 4)"
+      },
+      "unit": "",
+      "variable": "shellN",
+      "reduce": "final",
+      "format": "integer",
+      "theory": "shellN"
+    },
+    {
+      "id": "outer",
+      "label": "Electrons in the outer shell",
+      "vi": {
+        "label": "Electron lớp ngoài cùng"
+      },
+      "unit": "",
+      "variable": "outerElectrons",
+      "reduce": "final",
+      "format": "integer",
+      "theory": "outerElectrons"
+    },
+    {
+      "id": "unpaired",
+      "label": "Unpaired electrons",
+      "vi": {
+        "label": "Electron độc thân"
+      },
+      "unit": "",
+      "variable": "unpaired",
+      "reduce": "final",
+      "format": "integer",
+      "theory": "unpaired"
+    },
+    {
+      "id": "period",
+      "label": "Period",
+      "vi": {
+        "label": "Chu kì"
+      },
+      "unit": "",
+      "variable": "period",
+      "reduce": "final",
+      "format": "integer",
+      "theory": "period"
+    },
+    {
+      "id": "group",
+      "label": "Group (IUPAC 1–18)",
+      "vi": {
+        "label": "Nhóm (IUPAC 1–18)"
+      },
+      "unit": "",
+      "variable": "group",
+      "reduce": "final",
+      "format": "integer",
+      "theory": "group"
+    }
+  ],
+  "graphs": [
+    {
+      "id": "filling",
+      "title": "Electrons placed and unpaired against time",
+      "vi": {
+        "title": "Số electron đã đặt và electron độc thân theo thời gian"
+      },
+      "x": "time",
+      "y": ["electrons", "unpaired"],
+      "yLabel": "e⁻"
+    }
+  ],
+  "monitor": "filling",
+  "compare": [
+    {
+      "graph": "filling",
+      "series": "unpaired"
+    }
+  ],
+  "note": "A teaching model of the ground state of a neutral atom of atomic number Z (1–36). The run puts its Z electrons in one by one, one every 0.25 s, in the order the subshells fill (1s 2s 2p 3s 3p 4s 3d 4p: the n + l rule), each subshell holding up to 2(2l + 1); chromium and copper end in their measured ground states, [Ar] 3d⁵ 4s¹ and [Ar] 3d¹⁰ 4s¹ (a half-filled or filled d subshell is more stable). Read off: the electrons in each shell K, L, M, N (Bohr’s picture), the outer shell’s count, unpaired electrons (Hund’s rule), the period and the group (IUPAC numbering 1–18; the textbook’s A groups: groups 1, 2 are IA, IIA; groups 13–18 are IIIA–VIIIA). Not modelled: energies, orbital shapes (see the orbitals table), ions. The electrons are drawn on shell rings as a picture: electrons are not little planets.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the atomic structure instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn về cấu tạo nguyên tử trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "atomic-structure-instructions"
+      }
+    },
+    {
+      "id": "element",
+      "instruction": "Choose an element with the dial.",
+      "vi": {
+        "instruction": "Chọn một nguyên tố bằng núm xoay."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "atomicNumber"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: watch the electrons go in, shell by shell.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: quan sát các electron lần lượt vào từng lớp."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Read the electrons per shell, the period and the group.",
+      "vi": {
+        "instruction": "Đọc số electron mỗi lớp, chu kì và nhóm."
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET and build the next element: what changes, what repeats?",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI và xây dựng nguyên tố tiếp theo: điều gì thay đổi, điều gì lặp lại?"
+      },
+      "done": {
+        "kind": "reset"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "sulfur-shells",
+      "question": "Sulfur has Z = {atomicNumber}. How many electrons are in its M shell, and where does it stand in the periodic table?",
+      "vi": {
+        "question": "Lưu huỳnh có Z = {atomicNumber}. Lớp M của nó có bao nhiêu electron, và nó nằm ở đâu trong bảng tuần hoàn?"
+      },
+      "set": { "atomicNumber": 16 },
+      "find": [{ "theory": "shellM", "symbol": "M", "unit": "" }],
+      "steps": [
+        {
+          "say": "Electrons fill the subshells in order of energy: 1s, 2s, 2p, 3s, 3p.",
+          "vi": {
+            "say": "Các electron điền vào các phân lớp theo thứ tự năng lượng: 1s, 2s, 2p, 3s, 3p."
+          },
+          "write": "S: 1s² 2s² 2p⁶ 3s² 3p⁴"
+        },
+        {
+          "say": "Shell K holds 2 and shell L holds 8; the rest are in shell M.",
+          "vi": { "say": "Lớp K chứa 2 và lớp L chứa 8 electron; số còn lại nằm ở lớp M." },
+          "write": "M = Z − 2 − 8 = {atomicNumber} − 10 = {@shellM}",
+          "check": { "expr": "atomicNumber-2-8", "equals": "shellM" }
+        },
+        {
+          "say": "Three shells: period 3. Six electrons in the outer shell, in s and p: group 16 (VIA) — a non-metal.",
+          "vi": {
+            "say": "Có ba lớp electron: chu kì 3. Lớp ngoài cùng có sáu electron ở phân lớp s và p: nhóm 16 (VIA) — một phi kim."
+          }
+        }
+      ]
+    },
+    {
+      "id": "iron-shells",
+      "question": "Iron has Z = {atomicNumber}. How many electrons are in its M and N shells?",
+      "vi": {
+        "question": "Sắt có Z = {atomicNumber}. Lớp M và lớp N của nó có bao nhiêu electron?"
+      },
+      "set": { "atomicNumber": 26 },
+      "find": [
+        { "theory": "shellM", "symbol": "M", "unit": "" },
+        { "theory": "shellN", "symbol": "N", "unit": "" }
+      ],
+      "steps": [
+        {
+          "say": "After argon’s 18 electrons, 4s fills before 3d because it is lower in energy; the last six go into 3d.",
+          "vi": {
+            "say": "Sau 18 electron của argon, phân lớp 4s được điền trước 3d vì có năng lượng thấp hơn; sáu electron cuối vào phân lớp 3d."
+          },
+          "write": "Fe: [Ar] 3d⁶ 4s²"
+        },
+        {
+          "say": "Shell N holds only the two 4s electrons.",
+          "vi": { "say": "Lớp N chỉ có hai electron 4s." },
+          "write": "N = 4s² → {@shellN}",
+          "check": { "expr": "2", "equals": "shellN" }
+        },
+        {
+          "say": "But 3d belongs to shell M: M holds 3s² 3p⁶ and the 3d electrons.",
+          "vi": { "say": "Nhưng phân lớp 3d thuộc lớp M: lớp M gồm 3s² 3p⁶ và các electron 3d." },
+          "write": "M = 2 + 6 + {=atomicNumber-20} = {@shellM}",
+          "check": { "expr": "8+atomicNumber-20", "equals": "shellM" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "Electrons sit in shells around the nucleus, filling the lowest-energy subshells first; how the outer shell is filled decides an element’s place in the periodic table and its chemistry.",
+    "vi": {
+      "summary": "Electron sắp xếp thành các lớp quanh hạt nhân, điền vào các phân lớp có năng lượng thấp nhất trước; cách lớp ngoài cùng được điền quyết định vị trí của nguyên tố trong bảng tuần hoàn và tính chất hóa học của nó."
+    },
+    "parts": [
+      {
+        "id": "nucleus",
+        "name": "Nucleus",
+        "role": "Z protons (and neutrons): its charge +Z holds Z electrons in a neutral atom.",
+        "vi": {
+          "name": "Hạt nhân",
+          "role": "Z proton (và nơtron): điện tích +Z của nó giữ Z electron trong nguyên tử trung hòa."
+        },
+        "anchor": {
+          "part": "nucleus"
+        }
+      },
+      {
+        "id": "k",
+        "name": "Shell K (n = 1)",
+        "role": "The innermost shell: at most 2 electrons (1s).",
+        "vi": {
+          "name": "Lớp K (n = 1)",
+          "role": "Lớp trong cùng: tối đa 2 electron (1s)."
+        },
+        "anchor": {
+          "part": "shell-K"
+        }
+      },
+      {
+        "id": "l",
+        "name": "Shell L (n = 2)",
+        "role": "At most 8 electrons (2s, 2p).",
+        "vi": {
+          "name": "Lớp L (n = 2)",
+          "role": "Tối đa 8 electron (2s, 2p)."
+        },
+        "anchor": {
+          "part": "shell-L"
+        }
+      },
+      {
+        "id": "m",
+        "name": "Shell M (n = 3)",
+        "role": "Up to 18 (3s, 3p, 3d) — but 3d fills only after 4s.",
+        "vi": {
+          "name": "Lớp M (n = 3)",
+          "role": "Tối đa 18 (3s, 3p, 3d) — nhưng 3d chỉ được điền sau 4s."
+        },
+        "anchor": {
+          "part": "shell-M"
+        }
+      },
+      {
+        "id": "n",
+        "name": "Shell N (n = 4)",
+        "role": "The outer shell of period 4 elements (4s, 4p).",
+        "vi": {
+          "name": "Lớp N (n = 4)",
+          "role": "Lớp ngoài cùng của các nguyên tố chu kì 4 (4s, 4p)."
+        },
+        "anchor": {
+          "part": "shell-N"
+        }
+      },
+      {
+        "id": "electrons",
+        "name": "Electrons",
+        "role": "Each goes into the lowest free subshell; a picture of where they belong, not real orbits.",
+        "vi": {
+          "name": "Các electron",
+          "role": "Mỗi electron vào phân lớp trống thấp nhất; đây là hình minh họa vị trí của chúng, không phải quỹ đạo thật."
+        },
+        "anchor": {
+          "part": "electrons"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "The nucleus has Z protons; a neutral atom has Z electrons around it, in shells n = 1, 2, 3, 4 (K, L, M, N), each further out and higher in energy.",
+        "vi": {
+          "text": "Hạt nhân có Z proton; nguyên tử trung hòa có Z electron xung quanh, xếp thành các lớp n = 1, 2, 3, 4 (K, L, M, N), lớp càng xa càng có năng lượng cao."
+        },
+        "parts": ["nucleus", "k", "l"]
+      },
+      {
+        "text": "Each shell is split into subshells s, p, d holding 2, 6 and 10 electrons. Electrons fill the lowest first: 1s 2s 2p 3s 3p 4s 3d 4p — note 4s before 3d.",
+        "vi": {
+          "text": "Mỗi lớp chia thành các phân lớp s, p, d chứa tối đa 2, 6 và 10 electron. Electron điền vào phân lớp thấp nhất trước: 1s 2s 2p 3s 3p 4s 3d 4p — chú ý 4s trước 3d."
+        },
+        "parts": ["electrons", "m", "n"]
+      },
+      {
+        "text": "Hund’s rule: in a p or d subshell electrons spread out one per orbital before pairing up — so nitrogen has 3 unpaired electrons, oxygen 2.",
+        "vi": {
+          "text": "Quy tắc Hund: trong phân lớp p hoặc d, electron phân bố mỗi orbital một electron trước khi ghép đôi — vì vậy nitơ có 3 electron độc thân, oxi có 2."
+        },
+        "parts": ["electrons"]
+      },
+      {
+        "text": "The period is the number of the outermost shell. For the main groups the outer electrons give the group: sodium 2, 8, 1 is in period 3, group 1 (IA); chlorine 2, 8, 7 in group 17 (VIIA).",
+        "vi": {
+          "text": "Chu kì là số thứ tự của lớp ngoài cùng. Với các nhóm A, số electron lớp ngoài cho biết nhóm: natri 2, 8, 1 thuộc chu kì 3, nhóm 1 (IA); clo 2, 8, 7 thuộc nhóm 17 (VIIA)."
+        },
+        "parts": ["n", "electrons"]
+      },
+      {
+        "text": "Elements in one group have the same outer arrangement, so they react alike: that is why the table repeats. Chromium and copper break the order: a half-full or full 3d is more stable.",
+        "vi": {
+          "text": "Các nguyên tố cùng nhóm có cách sắp xếp electron lớp ngoài giống nhau nên phản ứng tương tự nhau: đó là lí do bảng tuần hoàn lặp lại. Crom và đồng là ngoại lệ: phân lớp 3d bán bão hòa hoặc bão hòa bền hơn."
+        },
+        "parts": ["electrons"]
+      }
+    ]
+  }
+}

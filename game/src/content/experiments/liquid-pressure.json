@@ -1,0 +1,388 @@
+{
+  "id": "liquid-pressure",
+  "name": "Pressure in a liquid against depth",
+  "category": "physics",
+  "description": "A probe — a small funnel closed by a thin membrane — is lowered into a tall tank of liquid; a tube joins it to a U-tube manometer of water. The deeper the probe, the harder the liquid presses on its membrane, and the further apart the manometer's two levels stand. Set the liquid and the depth, run, and read the manometer: the pressure p = p0 + ρ·g·h grows in proportion to the depth, and a denser liquid presses harder at the same depth.",
+  "vi": {
+    "name": "Áp suất chất lỏng theo độ sâu",
+    "description": "Một đầu dò — một phễu nhỏ được bịt bằng màng mỏng — được hạ xuống một bể chất lỏng cao; một ống nối đầu dò với một áp kế chữ U chứa nước. Đầu dò càng xuống sâu, chất lỏng càng ép mạnh lên màng của nó, và hai mực nước trong áp kế càng chênh lệch nhau nhiều. Đặt chất lỏng và độ sâu, nhấn chạy rồi đọc áp kế: áp suất p = p0 + ρ·g·h tăng tỉ lệ thuận với độ sâu, và chất lỏng có khối lượng riêng lớn hơn gây áp suất lớn hơn ở cùng độ sâu.",
+    "note": "Chất lỏng đứng yên gây áp suất lên mọi vật ở trong nó. Tại độ sâu h dưới mặt thoáng, áp suất là p = p0 + ρ·g·h, với p0 là áp suất khí quyển trên mặt thoáng và ρ là khối lượng riêng của chất lỏng: phần ρ·g·h là trọng lượng của cột chất lỏng phía trên trên mỗi đơn vị diện tích. Áp kế chữ U đo phần chênh lệch đó: hai mực nước của nó chênh nhau Δh = ρ·g·h/(ρ_n·g) = (ρ/ρ_n)·h, với ρ_n là khối lượng riêng của nước trong áp kế; với nước trong bể, Δh bằng đúng độ sâu. Chạy với nhiều độ sâu và cùng một chất lỏng: đồ thị ρ·g·h theo h là đường thẳng đi qua gốc tọa độ có hệ số góc ρ·g. Khối lượng riêng ở 20 °C lấy từ Sổ tay Hóa học và Vật lý CRC (xuất bản lần thứ 91): nước 998,2 kg/m³, dung dịch natri clorua 26 % (gần bão hòa) 1197,2 kg/m³, etanol 789,3 kg/m³. Đây là mô hình dạy học đơn giản hóa: chất lỏng đứng yên và không bị nén, màng và không khí trong ống truyền nguyên áp suất, áp kế chỉ ngay khi đầu dò dừng; đầu dò được hạ với tốc độ 5 cm/s. Thước đọc độ chênh mô phỏng theo độ phân giải d của nó (bội số gần nhất của d, độ bất định d/√12 chỉ do độ phân giải); không có sai số ngẫu nhiên nào được thêm vào. Trong phòng thí nghiệm thật, màng có độ cứng riêng nên hấp thụ một phần áp suất, không khí trong ống bị nén một chút, và mặt khum của nước trong ống làm việc đọc mực nước có sai số, nên độ chênh đo được nhỏ hơn đôi chút so với các giá trị này."
+  },
+  "requiredEquipment": ["pressure-tank"],
+  "model": "fluids.liquid-pressure",
+  "parameters": [
+    {
+      "id": "liquid",
+      "label": "Liquid in the tank",
+      "vi": { "label": "Chất lỏng trong bể" },
+      "unit": "",
+      "default": 0,
+      "min": 0,
+      "max": 2,
+      "presets": [
+        { "label": "Water", "vi": { "label": "Nước" }, "value": 0 },
+        {
+          "label": "Salt water (26 % NaCl)",
+          "vi": { "label": "Nước muối (NaCl 26 %)" },
+          "value": 1
+        },
+        { "label": "Ethanol", "vi": { "label": "Etanol" }, "value": 2 }
+      ]
+    },
+    {
+      "id": "depth",
+      "label": "Depth of the probe",
+      "vi": { "label": "Độ sâu của đầu dò" },
+      "symbol": "h",
+      "unit": "m",
+      "default": 0.2,
+      "min": 0.05,
+      "max": 0.25,
+      "presets": [
+        { "label": "5 cm", "vi": { "label": "5 cm" }, "value": 0.05 },
+        { "label": "10 cm", "vi": { "label": "10 cm" }, "value": 0.1 },
+        { "label": "15 cm", "vi": { "label": "15 cm" }, "value": 0.15 },
+        { "label": "20 cm", "vi": { "label": "20 cm" }, "value": 0.2 },
+        { "label": "25 cm", "vi": { "label": "25 cm" }, "value": 0.25 }
+      ]
+    },
+    {
+      "id": "rulerResolution",
+      "label": "Manometer scale resolution",
+      "vi": { "label": "Độ phân giải thước của áp kế" },
+      "symbol": "d",
+      "unit": "m",
+      "default": 0.001,
+      "min": 0.0005,
+      "max": 0.002,
+      "presets": [
+        { "label": "0.5 mm", "vi": { "label": "0,5 mm" }, "value": 0.0005 },
+        { "label": "1 mm", "vi": { "label": "1 mm" }, "value": 0.001 },
+        { "label": "2 mm", "vi": { "label": "2 mm" }, "value": 0.002 }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "gravity": 9.81,
+    "airPressure": 101325,
+    "manometerDensity": 998.2,
+    "lowerSpeed": 0.05,
+    "holdTime": 1
+  },
+  "inputs": {
+    "gravity": { "symbol": "g", "unit": "m/s²", "desk": false },
+    "airPressure": { "symbol": "p0", "unit": "Pa" },
+    "manometerDensity": { "symbol": "ρ_n", "unit": "kg/m³", "desk": false },
+    "lowerSpeed": { "symbol": "v", "unit": "m/s", "desk": false },
+    "holdTime": { "symbol": "t_hold", "unit": "s", "desk": false }
+  },
+  "simulation": { "timeStep": 0.01, "maxDuration": 10, "sampleInterval": 0.05 },
+  "measurements": [
+    {
+      "id": "probeDepth",
+      "label": "Depth of the probe",
+      "vi": { "label": "Độ sâu của đầu dò" },
+      "symbol": "h",
+      "unit": "m",
+      "variable": "probeDepth"
+    },
+    {
+      "id": "gaugePressure",
+      "label": "Pressure above the air's",
+      "vi": { "label": "Áp suất vượt áp suất khí quyển" },
+      "symbol": "ρ·g·h",
+      "unit": "Pa",
+      "variable": "gaugePressure"
+    },
+    {
+      "id": "labTime",
+      "label": "Time",
+      "vi": { "label": "Thời gian" },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "clock"
+    }
+  ],
+  "results": [
+    {
+      "id": "manometerDifference",
+      "label": "Manometer's level difference Δh",
+      "vi": { "label": "Độ chênh mực nước của áp kế Δh" },
+      "symbol": "Δh",
+      "unit": "m",
+      "variable": "manometerDifference",
+      "reduce": "final",
+      "theory": "manometerDifference"
+    },
+    {
+      "id": "gaugePressure",
+      "label": "Pressure above the air's ρ·g·h",
+      "vi": { "label": "Áp suất vượt áp suất khí quyển ρ·g·h" },
+      "symbol": "ρ·g·h",
+      "unit": "Pa",
+      "variable": "gaugePressure",
+      "reduce": "final",
+      "theory": "gaugePressure"
+    },
+    {
+      "id": "pressure",
+      "label": "Pressure at the probe p = p0 + ρ·g·h",
+      "vi": { "label": "Áp suất tại đầu dò p = p0 + ρ·g·h" },
+      "symbol": "p",
+      "unit": "Pa",
+      "variable": "pressure",
+      "reduce": "final",
+      "theory": "pressure"
+    }
+  ],
+  "instruments": [
+    {
+      "result": "manometerDifference",
+      "quantity": "Level difference Δh of the manometer",
+      "name": "Scale beside the U-tube",
+      "resolution": "rulerResolution",
+      "excludes": "reading each level at its meniscus, the membrane's own stiffness and the air in the tube being squeezed, which change the difference itself",
+      "vi": {
+        "quantity": "Độ chênh mực nước Δh của áp kế",
+        "name": "Thước bên ống chữ U",
+        "excludes": "việc đọc từng mực nước tại mặt khum, độ cứng riêng của màng và không khí trong ống bị nén, những yếu tố làm thay đổi chính độ chênh đo được"
+      }
+    }
+  ],
+  "graphs": [
+    {
+      "id": "pressure-time",
+      "title": "Pressure above the air's against time as the probe goes down",
+      "vi": { "title": "Áp suất vượt áp suất khí quyển theo thời gian khi đầu dò đi xuống" },
+      "x": "labTime",
+      "y": ["gaugePressure"],
+      "yLabel": "ρ·g·h"
+    }
+  ],
+  "monitor": "pressure-time",
+  "compare": [{ "graph": "pressure-time" }],
+  "analyses": [
+    {
+      "id": "pressure-depth",
+      "title": "Pressure above the air's against depth, for one liquid (p − p0 = ρ·g·h)",
+      "note": "Each run is one point: the pressure above the air's, ρ·g·h, against the probe's depth h. Runs with the same liquid are fitted together. The line passes through the origin — no depth, no extra pressure — and its slope is ρ·g, the liquid's weight per unit volume: a denser liquid gives a steeper line. Change only the depth between runs.",
+      "vi": {
+        "title": "Áp suất vượt áp suất khí quyển theo độ sâu, với một chất lỏng (p − p0 = ρ·g·h)",
+        "note": "Mỗi lần chạy là một điểm: áp suất vượt áp suất khí quyển ρ·g·h theo độ sâu h của đầu dò. Các lần chạy cùng một chất lỏng được khớp chung. Đường thẳng đi qua gốc tọa độ — không có độ sâu thì không có áp suất thêm — và có hệ số góc ρ·g, trọng lượng riêng của chất lỏng: chất lỏng có khối lượng riêng lớn hơn cho đường dốc hơn. Giữa các lần chạy chỉ thay đổi độ sâu."
+      },
+      "x": "depth",
+      "y": "gaugePressure",
+      "group": ["liquid"],
+      "columns": ["liquid", "depth", "manometerDifference", "gaugePressure", "pressure"],
+      "slope": {
+        "label": "Slope of ρ·g·h against h",
+        "vi": { "label": "Hệ số góc của ρ·g·h theo h" },
+        "symbol": "ρ·g",
+        "unit": "N/m³",
+        "theory": "weightDensity"
+      }
+    }
+  ],
+  "note": "A liquid at rest presses on everything in it. At a depth h below its surface the pressure is p = p0 + ρ·g·h, p0 the air's pressure on the surface and ρ the liquid's density: ρ·g·h is the weight of the column of liquid above, per unit area. The U-tube manometer reads that part: its two levels differ by Δh = ρ·g·h/(ρ_w·g) = (ρ/ρ_w)·h, ρ_w its water's density; with water in the tank, Δh is the depth itself. Run at several depths with one liquid: ρ·g·h against h is a straight line through the origin of slope ρ·g. Densities at 20 °C from the CRC Handbook of Chemistry and Physics (91st ed.): water 998.2 kg/m³, sodium chloride solution 26 % (near saturation) 1197.2 kg/m³, ethanol 789.3 kg/m³. A simplified teaching model: the liquid at rest and incompressible, the membrane and the air in the tube passing the pressure on whole, the manometer reading as soon as the probe stops; the probe goes down at 5 cm/s. The scale reads the simulated difference to its resolution d (the nearest multiple of d, with the uncertainty d/√12 from the resolution alone); no random error is added. In a real lab the membrane's own stiffness takes up some of the pressure, the air in the tube is squeezed a little, and the water's meniscus in the tubes makes reading the levels uncertain, so the measured difference is a little smaller than these.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the liquid pressure instructions on the board.",
+      "vi": { "instruction": "Đọc hướng dẫn thí nghiệm áp suất chất lỏng trên bảng." },
+      "done": { "kind": "inspected", "item": "liquid-pressure-instructions" }
+    },
+    {
+      "id": "liquid",
+      "instruction": "Choose the liquid in the tank with its dial on the control desk.",
+      "vi": { "instruction": "Chọn chất lỏng trong bể bằng núm xoay trên bàn điều khiển." },
+      "done": { "kind": "adjusted", "parameter": "liquid" }
+    },
+    {
+      "id": "depth",
+      "instruction": "Set how deep the probe goes.",
+      "vi": { "instruction": "Đặt độ sâu đầu dò sẽ xuống tới." },
+      "done": { "kind": "adjusted", "parameter": "depth" }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the probe goes down; watch the manometer's levels part.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: đầu dò đi xuống; quan sát hai mực nước của áp kế tách xa nhau."
+      },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read Δh, ρ·g·h and p on the results monitor.",
+      "vi": { "instruction": "Đọc Δh, ρ·g·h và p trên màn hình kết quả." },
+      "done": { "kind": "viewed" }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, change only the depth and run again to add a point to the analysis.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, chỉ thay đổi độ sâu rồi chạy lại để thêm một điểm vào đồ thị phân tích."
+      },
+      "done": { "kind": "reset" }
+    }
+  ],
+  "examples": [
+    {
+      "id": "water-depth",
+      "question": "The probe is {depth} m under the surface of water ({@density|5} kg/m³); the air above presses with {airPressure|6} Pa. Find the pressure due to the water and the total pressure there (g = {gravity} m/s²).",
+      "vi": {
+        "question": "Đầu dò ở độ sâu {depth} m dưới mặt nước ({@density|5} kg/m³); không khí phía trên gây áp suất {airPressure|6} Pa. Tìm áp suất do nước gây ra và áp suất toàn phần tại đó (g = {gravity} m/s²)."
+      },
+      "set": { "liquid": 0, "depth": 0.15 },
+      "find": [{ "theory": "gaugePressure" }, { "theory": "pressure", "figures": 6 }],
+      "steps": [
+        {
+          "say": "The water above presses with its weight per unit area: ρ·g·h.",
+          "vi": {
+            "say": "Cột nước phía trên gây áp suất bằng trọng lượng của nó trên một đơn vị diện tích: ρ·g·h."
+          },
+          "write": "ρ·g·h = {@density|5}·{gravity}·{depth} ≈ {@gaugePressure} Pa",
+          "check": { "expr": "@density*gravity*depth", "equals": "gaugePressure" }
+        },
+        {
+          "say": "Add the air’s pressure on the surface.",
+          "vi": { "say": "Cộng thêm áp suất khí quyển tác dụng lên mặt thoáng." },
+          "write": "p = p₀ + ρ·g·h = {airPressure|6} + {@gaugePressure} ≈ {@pressure|6} Pa",
+          "check": { "expr": "airPressure+@gaugePressure", "equals": "pressure" }
+        }
+      ]
+    },
+    {
+      "id": "salt-water-manometer",
+      "question": "The probe is {depth} m deep in salt water ({@density|5} kg/m³). Find ρ·g·h there, and the difference of the levels in the water manometer ({manometerDensity} kg/m³).",
+      "vi": {
+        "question": "Đầu dò ở độ sâu {depth} m trong nước muối ({@density|5} kg/m³). Tìm ρ·g·h tại đó, và độ chênh lệch mực chất lỏng trong áp kế chữ U chứa nước ({manometerDensity} kg/m³)."
+      },
+      "set": { "liquid": 1, "depth": 0.25 },
+      "find": [{ "theory": "gaugePressure" }, { "theory": "manometerDifference", "figures": 4 }],
+      "steps": [
+        {
+          "say": "The pressure the salt water adds at that depth.",
+          "vi": { "say": "Áp suất do nước muối gây ra ở độ sâu đó." },
+          "write": "ρ·g·h = {@density|5}·{gravity}·{depth} ≈ {@gaugePressure} Pa",
+          "check": { "expr": "@density*gravity*depth", "equals": "gaugePressure" }
+        },
+        {
+          "say": "The manometer’s water balances that pressure: ρ_w·g·Δh = ρ·g·h. Salt water is denser, so Δh is more than the depth.",
+          "vi": {
+            "say": "Nước trong áp kế cân bằng áp suất đó: ρ_n·g·Δh = ρ·g·h. Nước muối đặc hơn nên Δh lớn hơn độ sâu."
+          },
+          "write": "Δh = ({@density|5}/{manometerDensity})·{depth} ≈ {@manometerDifference|4} m",
+          "check": { "expr": "@density/manometerDensity*depth", "equals": "manometerDifference" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "A liquid presses harder the deeper you go: the pressure grows in proportion to the depth, p = p0 + ρ·g·h, and a denser liquid presses harder at the same depth.",
+    "vi": {
+      "summary": "Chất lỏng gây áp suất càng lớn khi càng xuống sâu: áp suất tăng tỉ lệ với độ sâu, p = p0 + ρ·g·h, và chất lỏng có khối lượng riêng lớn hơn gây áp suất lớn hơn ở cùng độ sâu."
+    },
+    "parts": [
+      {
+        "id": "tank",
+        "name": "Tank of liquid",
+        "role": "Water, salt solution or ethanol, as chosen at the desk: its density is ρ.",
+        "vi": {
+          "name": "Bể chất lỏng",
+          "role": "Nước, dung dịch muối hoặc rượu etylic, chọn ở bàn điều khiển: khối lượng riêng của nó là ρ."
+        },
+        "anchor": {
+          "part": "liquid"
+        }
+      },
+      {
+        "id": "probe",
+        "name": "Probe",
+        "role": "A small funnel closed by a thin membrane; the liquid presses on the membrane.",
+        "vi": {
+          "name": "Đầu dò",
+          "role": "Một phễu nhỏ bịt bằng màng mỏng; chất lỏng ép lên màng."
+        },
+        "anchor": {
+          "part": "probe"
+        }
+      },
+      {
+        "id": "scale",
+        "name": "Depth scale",
+        "role": "On the tank’s front, 0 at the surface: reads the probe’s depth h.",
+        "vi": {
+          "name": "Thước đo độ sâu",
+          "role": "Trên mặt trước bể, vạch 0 ở mặt thoáng: đọc độ sâu h của đầu dò."
+        },
+        "anchor": {
+          "at": [-0.075, -0.12, 0.102]
+        }
+      },
+      {
+        "id": "manometer",
+        "name": "U-tube manometer",
+        "role": "A U-tube of water joined to the probe by a tube: the difference Δh between its levels shows the pressure.",
+        "vi": {
+          "name": "Áp kế chữ U",
+          "role": "Ống chữ U chứa nước, nối với đầu dò bằng ống dẫn: độ chênh lệch Δh giữa hai mực nước cho biết áp suất."
+        },
+        "anchor": {
+          "part": "left-column"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "The probe goes down into the liquid. The liquid presses on its membrane, and the pressure passes along the tube to the manometer.",
+        "vi": {
+          "text": "Đầu dò được hạ xuống chất lỏng. Chất lỏng ép lên màng của nó, và áp suất được truyền qua ống dẫn tới áp kế."
+        },
+        "parts": ["probe", "tank", "manometer"]
+      },
+      {
+        "text": "The deeper the probe, the further apart the manometer’s two levels stand.",
+        "vi": {
+          "text": "Đầu dò càng sâu thì hai mực nước trong áp kế càng chênh lệch nhiều."
+        },
+        "parts": ["probe", "scale", "manometer"]
+      },
+      {
+        "text": "At the depth h the liquid above presses with its weight per unit area, ρ·g·h, on top of the air’s pressure p0 on the surface: p = p0 + ρ·g·h.",
+        "vi": {
+          "text": "Ở độ sâu h, cột chất lỏng phía trên ép xuống với trọng lượng trên mỗi đơn vị diện tích là ρ·g·h, cộng thêm áp suất khí quyển p0 trên mặt thoáng: p = p0 + ρ·g·h."
+        },
+        "parts": ["tank", "scale"]
+      },
+      {
+        "text": "The manometer reads the part ρ·g·h: its levels differ by Δh = (ρ/ρ_w)·h, ρ_w the density of its water. With water in the tank, Δh is the depth itself.",
+        "vi": {
+          "text": "Áp kế đo phần ρ·g·h: hai mực nước của nó chênh nhau Δh = (ρ/ρ_w)·h, ρ_w là khối lượng riêng của nước trong áp kế. Khi bể chứa nước, Δh bằng chính độ sâu."
+        },
+        "parts": ["manometer"]
+      },
+      {
+        "text": "A denser liquid (salt solution) presses harder at the same depth, a lighter one (ethanol) less. Change the liquid and compare.",
+        "vi": {
+          "text": "Chất lỏng có khối lượng riêng lớn hơn (dung dịch muối) gây áp suất lớn hơn ở cùng độ sâu, chất lỏng nhẹ hơn (rượu etylic) thì nhỏ hơn. Đổi chất lỏng và so sánh."
+        },
+        "parts": ["tank"]
+      },
+      {
+        "text": "The results give Δh, ρ·g·h and p beside theory; the scale reads in steps of its resolution d. Change only the depth: ρ·g·h against h is a line through the origin of slope ρ·g.",
+        "vi": {
+          "text": "Phần kết quả cho Δh, ρ·g·h và p bên cạnh lý thuyết; thước đọc theo từng bước bằng độ phân giải d. Chỉ đổi độ sâu: ρ·g·h theo h là đường thẳng qua gốc tọa độ có hệ số góc ρ·g."
+        },
+        "parts": ["manometer", "scale"]
+      },
+      {
+        "text": "The membrane and the air in the tube are taken to pass the pressure on whole. A real membrane’s stiffness takes up a little of it, so the measured Δh is a little smaller.",
+        "vi": {
+          "text": "Màng và không khí trong ống được coi là truyền nguyên vẹn áp suất. Độ cứng của màng thật lấy đi một ít, nên Δh đo được hơi nhỏ hơn."
+        },
+        "parts": ["probe"]
+      }
+    ]
+  }
+}

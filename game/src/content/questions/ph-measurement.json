@@ -1,0 +1,1040 @@
+{
+  "id": "ph-measurement",
+  "skills": [
+    {
+      "id": "scale",
+      "name": "The pH scale: pH = −lg[H⁺]",
+      "advice": "Practise both directions with a calculator: pH from [H⁺] and [H⁺] = 10^(−pH). Use lg (base 10), not ln, and remember at 25 °C pH + pOH = 14: below 7 acidic, 7 neutral, above 7 basic.",
+      "vi": {
+        "name": "Thang pH: pH = −lg[H⁺]",
+        "advice": "Luyện cả hai chiều bằng máy tính: tính pH từ [H⁺] và [H⁺] = 10^(−pH). Dùng lg (cơ số 10), không dùng ln, và nhớ ở 25 °C pH + pOH = 14: nhỏ hơn 7 là axit, bằng 7 trung tính, lớn hơn 7 là bazơ."
+      }
+    },
+    {
+      "id": "strong-weak",
+      "name": "Strong and weak acids and bases",
+      "advice": "A strong acid ionises completely ([H⁺] = C); a weak one only partly, so its pH is higher at the same C. Measure HCl and CH₃COOH at the same concentration at the station, then dilute each tenfold: the strong acid’s pH rises by 1, the weak acid’s by about 0.5.",
+      "vi": {
+        "name": "Axit, bazơ mạnh và yếu",
+        "advice": "Axit mạnh phân li hoàn toàn ([H⁺] = C); axit yếu chỉ phân li một phần, nên ở cùng nồng độ pH của nó cao hơn. Đo HCl và CH₃COOH cùng nồng độ trên trạm, rồi pha loãng mỗi dung dịch 10 lần: pH của axit mạnh tăng 1, của axit yếu tăng khoảng 0,5."
+      }
+    },
+    {
+      "id": "buffer",
+      "name": "Buffers: a weak acid with its conjugate base",
+      "advice": "Remember that a 1 : 1 mixture of a weak acid and its conjugate base has pH ≈ pKa and hardly changes on dilution. Measure the acid, the base and the 1 : 1 mixture of one pair at the station.",
+      "vi": {
+        "name": "Dung dịch đệm: axit yếu và bazơ liên hợp",
+        "advice": "Ghi nhớ hỗn hợp 1 : 1 của axit yếu và bazơ liên hợp có pH ≈ pKa và hầu như không đổi khi pha loãng. Đo dạng axit, dạng bazơ và hỗn hợp 1 : 1 của cùng một cặp trên trạm."
+      }
+    },
+    {
+      "id": "meter",
+      "name": "Using a pH meter",
+      "advice": "Re-read how the glass electrode works (E = S·(7 − pH), S ≈ 59.16 mV at 25 °C) and wait for the reading to settle before recording it. Check what the meter’s resolution does to the last digit.",
+      "vi": {
+        "name": "Sử dụng máy đo pH",
+        "advice": "Đọc lại cách điện cực thủy tinh hoạt động (E = S·(7 − pH), S ≈ 59,16 mV ở 25 °C) và chờ số đọc ổn định rồi mới ghi. Kiểm tra độ phân giải của máy ảnh hưởng thế nào đến chữ số cuối."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "definition",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["scale"],
+      "stem": "How is pH defined?",
+      "explain": "pH is minus the base-ten logarithm of the hydrogen-ion concentration (in mol/L): pH = −lg[H⁺].",
+      "vi": {
+        "stem": "pH được định nghĩa bằng biểu thức nào?",
+        "explain": "pH bằng âm logarit cơ số 10 của nồng độ ion H⁺ (tính bằng mol/L): pH = −lg[H⁺]."
+      },
+      "options": [
+        {
+          "text": "pH = −lg[H⁺]",
+          "vi": {
+            "text": "pH = −lg[H⁺]"
+          },
+          "correct": true
+        },
+        {
+          "text": "pH = lg[H⁺]",
+          "vi": {
+            "text": "pH = lg[H⁺]"
+          }
+        },
+        {
+          "text": "pH = −ln[H⁺]",
+          "vi": {
+            "text": "pH = −ln[H⁺]"
+          }
+        },
+        {
+          "text": "pH = −lg[OH⁻]",
+          "vi": {
+            "text": "pH = −lg[OH⁻]"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ph-nine",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["scale"],
+      "stem": "At 25 °C, a solution with pH = 9 is…",
+      "explain": "At 25 °C pH 7 is neutral; above 7 the solution is basic ([OH⁻] > [H⁺]).",
+      "vi": {
+        "stem": "Ở 25 °C, dung dịch có pH = 9 có môi trường",
+        "explain": "Ở 25 °C, pH = 7 là trung tính; lớn hơn 7 thì dung dịch có môi trường bazơ ([OH⁻] > [H⁺])."
+      },
+      "options": [
+        {
+          "text": "basic",
+          "vi": {
+            "text": "bazơ"
+          },
+          "correct": true
+        },
+        {
+          "text": "acidic",
+          "vi": {
+            "text": "axit"
+          }
+        },
+        {
+          "text": "neutral",
+          "vi": {
+            "text": "trung tính"
+          }
+        },
+        {
+          "text": "strongly acidic",
+          "vi": {
+            "text": "axit mạnh"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-scale",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["scale", "strong-weak"],
+      "stem": "Decide whether each statement about pH at 25 °C is true or false.",
+      "explain": "Pure water has [H⁺] = [OH⁻] = 10⁻⁷ mol/L, pH 7. A lower pH is more acidic; a tenfold dilution of a strong acid lowers [H⁺] tenfold, raising the pH by 1. Acetic acid is weak: at the same concentration its pH is higher than HCl’s.",
+      "vi": {
+        "stem": "Mỗi nhận định sau về pH ở 25 °C đúng hay sai?",
+        "explain": "Nước nguyên chất có [H⁺] = [OH⁻] = 10⁻⁷ mol/L, pH = 7. pH càng nhỏ thì tính axit càng mạnh; pha loãng axit mạnh 10 lần làm [H⁺] giảm 10 lần, pH tăng 1. Acetic acid là axit yếu: ở cùng nồng độ, pH của nó cao hơn của HCl."
+      },
+      "statements": [
+        {
+          "text": "Pure water has [H⁺] = 10⁻⁷ mol/L and pH = 7.",
+          "vi": {
+            "text": "Nước nguyên chất có [H⁺] = 10⁻⁷ mol/L và pH = 7."
+          },
+          "true": true
+        },
+        {
+          "text": "The lower the pH, the more acidic the solution.",
+          "vi": {
+            "text": "pH càng nhỏ thì dung dịch có tính axit càng mạnh."
+          },
+          "true": true
+        },
+        {
+          "text": "Diluting an HCl solution tenfold raises its pH by 1.",
+          "vi": {
+            "text": "Pha loãng dung dịch HCl 10 lần thì pH tăng thêm 1."
+          },
+          "true": true
+        },
+        {
+          "text": "A 0.1 mol/L acetic acid solution has the same pH as 0.1 mol/L HCl.",
+          "vi": {
+            "text": "Dung dịch acetic acid 0,1 mol/L có cùng pH với dung dịch HCl 0,1 mol/L."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "why-higher",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["strong-weak"],
+      "stem": "Why is the pH of 0.1 mol/L acetic acid, CH₃COOH, higher than that of 0.1 mol/L HCl?",
+      "explain": "CH₃COOH ⇌ H⁺ + CH₃COO⁻ lies far to the left: only about 1 % ionises, so [H⁺] is much less than 0.1 mol/L. HCl ionises completely.",
+      "vi": {
+        "stem": "Vì sao pH của dung dịch acetic acid, CH₃COOH, 0,1 mol/L cao hơn pH của dung dịch HCl 0,1 mol/L?",
+        "explain": "Cân bằng CH₃COOH ⇌ H⁺ + CH₃COO⁻ lệch nhiều về bên trái: chỉ khoảng 1 % phân li, nên [H⁺] nhỏ hơn nhiều so với 0,1 mol/L. HCl phân li hoàn toàn."
+      },
+      "options": [
+        {
+          "text": "Acetic acid ionises only partly, so it gives fewer H⁺ ions",
+          "vi": {
+            "text": "Acetic acid chỉ phân li một phần nên tạo ra ít ion H⁺ hơn"
+          },
+          "correct": true
+        },
+        {
+          "text": "Acetic acid molecules contain fewer hydrogen atoms",
+          "vi": {
+            "text": "Phân tử acetic acid chứa ít nguyên tử hydrogen hơn"
+          }
+        },
+        {
+          "text": "Acetic acid is a base",
+          "vi": {
+            "text": "Acetic acid là một bazơ"
+          }
+        },
+        {
+          "text": "HCl releases OH⁻ ions in water",
+          "vi": {
+            "text": "HCl giải phóng ion OH⁻ trong nước"
+          }
+        }
+      ]
+    },
+    {
+      "id": "buffer-ph",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["buffer"],
+      "stem": "A solution contains CH₃COOH and CH₃COONa at the same concentration (pKa of acetic acid 4.76). Its pH is…",
+      "explain": "In a 1 : 1 buffer [HA] = [A⁻], so pH ≈ pKa: about 4.76, between the acid alone (lower) and the salt alone (higher).",
+      "vi": {
+        "stem": "Một dung dịch chứa CH₃COOH và CH₃COONa với cùng nồng độ (pKa của acetic acid là 4,76). pH của dung dịch",
+        "explain": "Trong dung dịch đệm 1 : 1, [HA] = [A⁻], nên pH ≈ pKa: khoảng 4,76, nằm giữa pH của riêng axit (thấp hơn) và của riêng muối (cao hơn)."
+      },
+      "options": [
+        {
+          "text": "about equal to the pKa, 4.76",
+          "vi": {
+            "text": "xấp xỉ bằng pKa, 4,76"
+          },
+          "correct": true
+        },
+        {
+          "text": "exactly 7",
+          "vi": {
+            "text": "đúng bằng 7"
+          }
+        },
+        {
+          "text": "the same as that of the acid alone at that concentration",
+          "vi": {
+            "text": "bằng pH của riêng axit ở nồng độ đó"
+          }
+        },
+        {
+          "text": "above 7, as the salt is basic",
+          "vi": {
+            "text": "lớn hơn 7, vì muối có tính bazơ"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-ammonia",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["strong-weak", "buffer"],
+      "stem": "The NH₄⁺/NH₃ pair has pKa = 9.25. Decide whether each statement about its solutions at 25 °C is true or false.",
+      "explain": "NH₃ is a weak base (pH above 7 but well below 0.1 mol/L NaOH’s 13); NH₄⁺ is a weak acid, so NH₄Cl solution is slightly acidic; their 1 : 1 mixture is a buffer at pH ≈ 9.25.",
+      "vi": {
+        "stem": "Cặp NH₄⁺/NH₃ có pKa = 9,25. Mỗi nhận định sau về các dung dịch của cặp này ở 25 °C đúng hay sai?",
+        "explain": "NH₃ là bazơ yếu (pH lớn hơn 7 nhưng thấp hơn nhiều so với pH 13 của NaOH 0,1 mol/L); NH₄⁺ là axit yếu, nên dung dịch NH₄Cl có tính axit yếu; hỗn hợp 1 : 1 của chúng là dung dịch đệm có pH ≈ 9,25."
+      },
+      "statements": [
+        {
+          "text": "An NH₃ solution is basic.",
+          "vi": {
+            "text": "Dung dịch NH₃ có môi trường bazơ."
+          },
+          "true": true
+        },
+        {
+          "text": "An NH₄Cl solution is slightly acidic.",
+          "vi": {
+            "text": "Dung dịch NH₄Cl có tính axit yếu."
+          },
+          "true": true
+        },
+        {
+          "text": "A 1 : 1 mixture of NH₄Cl and NH₃ is a buffer with pH near 9.25.",
+          "vi": {
+            "text": "Hỗn hợp 1 : 1 của NH₄Cl và NH₃ là dung dịch đệm có pH gần 9,25."
+          },
+          "true": true
+        },
+        {
+          "text": "A 0.1 mol/L NH₃ solution has pH 13, like 0.1 mol/L NaOH.",
+          "vi": {
+            "text": "Dung dịch NH₃ 0,1 mol/L có pH = 13, giống dung dịch NaOH 0,1 mol/L."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "strong-acid-ph",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["scale"],
+      "set": {
+        "pKa": -6,
+        "baseFraction": 0,
+        "concentration": 0.001
+      },
+      "stem": "What is the pH of a {concentration} mol/L HCl solution at 25 °C?",
+      "explain": "HCl ionises completely: [H⁺] = {concentration} mol/L, so pH = −lg {concentration} = {@pH}.",
+      "vi": {
+        "stem": "pH của dung dịch HCl {concentration} mol/L ở 25 °C là bao nhiêu?",
+        "explain": "HCl phân li hoàn toàn: [H⁺] = {concentration} mol/L, nên pH = −lg {concentration} = {@pH}."
+      },
+      "options": [
+        {
+          "text": "{=-log(concentration)}",
+          "vi": {
+            "text": "{=-log(concentration)}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "-log(concentration)",
+            "equals": "pH"
+          }
+        },
+        {
+          "text": "{=log(concentration)}",
+          "vi": {
+            "text": "{=log(concentration)}"
+          },
+          "check": {
+            "expr": "log(concentration)",
+            "equals": "pH"
+          }
+        },
+        {
+          "text": "{=-ln(concentration)}",
+          "vi": {
+            "text": "{=-ln(concentration)}"
+          },
+          "check": {
+            "expr": "-ln(concentration)",
+            "equals": "pH"
+          }
+        },
+        {
+          "text": "{=14+log(concentration)}",
+          "vi": {
+            "text": "{=14+log(concentration)}"
+          },
+          "check": {
+            "expr": "14+log(concentration)",
+            "equals": "pH"
+          }
+        }
+      ]
+    },
+    {
+      "id": "strong-base-ph",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["scale"],
+      "set": {
+        "pKa": 20,
+        "baseFraction": 1,
+        "concentration": 0.01
+      },
+      "stem": "What is the pH of a {concentration} mol/L NaOH solution at 25 °C?",
+      "explain": "NaOH dissociates completely: [OH⁻] = {concentration} mol/L, pOH = {=-log(concentration)}, so pH = 14 − {=-log(concentration)} = {@pH}.",
+      "vi": {
+        "stem": "pH của dung dịch NaOH {concentration} mol/L ở 25 °C là bao nhiêu?",
+        "explain": "NaOH phân li hoàn toàn: [OH⁻] = {concentration} mol/L, pOH = {=-log(concentration)}, nên pH = 14 − {=-log(concentration)} = {@pH}."
+      },
+      "options": [
+        {
+          "text": "{=14+log(concentration)}",
+          "vi": {
+            "text": "{=14+log(concentration)}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "14+log(concentration)",
+            "equals": "pH"
+          }
+        },
+        {
+          "text": "{=-log(concentration)}",
+          "vi": {
+            "text": "{=-log(concentration)}"
+          },
+          "check": {
+            "expr": "-log(concentration)",
+            "equals": "pH"
+          }
+        },
+        {
+          "text": "{=14+ln(concentration)|3}",
+          "vi": {
+            "text": "{=14+ln(concentration)|3}"
+          },
+          "check": {
+            "expr": "14+ln(concentration)",
+            "equals": "pH"
+          }
+        },
+        {
+          "text": "{=log(concentration)}",
+          "vi": {
+            "text": "{=log(concentration)}"
+          },
+          "check": {
+            "expr": "log(concentration)",
+            "equals": "pH"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-acetic",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["strong-weak", "scale"],
+      "set": {
+        "pKa": 4.76,
+        "baseFraction": 0,
+        "concentration": 0.1
+      },
+      "stem": "Acetic acid of {concentration} mol/L (pKa = {pKa}, Ka = 10^(−pKa)) is measured at 25 °C. With x = [H⁺], Ka = x²/(C − x). Decide whether each statement is true or false.",
+      "explain": "Solving x² + Ka·x − Ka·C = 0: x ≈ {@hydrogenIon|3} mol/L, pH ≈ {@pH|3}. Only x/C ≈ {@ionization|3}% of the acid has ionised — far less than the {concentration} mol/L a strong acid would give.",
+      "vi": {
+        "stem": "Đo dung dịch acetic acid {concentration} mol/L (pKa = {pKa}, Ka = 10^(−pKa)) ở 25 °C. Đặt x = [H⁺], Ka = x²/(C − x). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Giải x² + Ka·x − Ka·C = 0: x ≈ {@hydrogenIon|3} mol/L, pH ≈ {@pH|3}. Chỉ x/C ≈ {@ionization|3}% axit đã phân li — ít hơn nhiều so với {concentration} mol/L mà một axit mạnh tạo ra."
+      },
+      "statements": [
+        {
+          "text": "[H⁺] is about {@hydrogenIon|3} mol/L.",
+          "vi": {
+            "text": "[H⁺] khoảng {@hydrogenIon|3} mol/L."
+          },
+          "true": true,
+          "check": {
+            "expr": "(-10^(-pKa)+sqrt(10^(-2*pKa)+4*10^(-pKa)*concentration))/2",
+            "equals": "hydrogenIon"
+          }
+        },
+        {
+          "text": "The pH is about {@pH|3}.",
+          "vi": {
+            "text": "pH khoảng {@pH|3}."
+          },
+          "true": true,
+          "check": {
+            "expr": "-log((-10^(-pKa)+sqrt(10^(-2*pKa)+4*10^(-pKa)*concentration))/2)",
+            "equals": "pH"
+          }
+        },
+        {
+          "text": "About {@ionization|3}% of the acid molecules have ionised.",
+          "vi": {
+            "text": "Khoảng {@ionization|3}% số phân tử axit đã phân li."
+          },
+          "true": true,
+          "check": {
+            "expr": "100*@hydrogenIon/concentration",
+            "equals": "ionization"
+          }
+        },
+        {
+          "text": "[H⁺] equals the acid’s concentration, {concentration} mol/L.",
+          "vi": {
+            "text": "[H⁺] bằng nồng độ của axit, {concentration} mol/L."
+          },
+          "true": false,
+          "check": {
+            "expr": "concentration",
+            "equals": "hydrogenIon"
+          }
+        }
+      ]
+    },
+    {
+      "id": "approximate",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["strong-weak", "scale"],
+      "set": {
+        "pKa": 4.76,
+        "baseFraction": 0,
+        "concentration": 0.01
+      },
+      "stem": "Estimate the pH of {concentration} mol/L acetic acid (pKa = {pKa}) with the usual approximation [H⁺] ≈ √(Ka·C).",
+      "explain": "pH = −lg√(Ka·C) = ½(pKa − lg C) = ½({pKa} + {=-log(concentration)}) = {@approximatePH}. (The exact value is {@pH|3}.)",
+      "vi": {
+        "stem": "Ước tính pH của dung dịch acetic acid {concentration} mol/L (pKa = {pKa}) bằng công thức gần đúng [H⁺] ≈ √(Ka·C).",
+        "explain": "pH = −lg√(Ka·C) = ½(pKa − lg C) = ½({pKa} + {=-log(concentration)}) = {@approximatePH}. (Giá trị chính xác là {@pH|3}.)"
+      },
+      "options": [
+        {
+          "text": "{=(pKa-log(concentration))/2}",
+          "vi": {
+            "text": "{=(pKa-log(concentration))/2}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(pKa-log(concentration))/2",
+            "equals": "approximatePH"
+          }
+        },
+        {
+          "text": "{=pKa-log(concentration)}",
+          "vi": {
+            "text": "{=pKa-log(concentration)}"
+          },
+          "check": {
+            "expr": "pKa-log(concentration)",
+            "equals": "approximatePH"
+          }
+        },
+        {
+          "text": "{=-log(concentration)}",
+          "vi": {
+            "text": "{=-log(concentration)}"
+          },
+          "check": {
+            "expr": "-log(concentration)",
+            "equals": "approximatePH"
+          }
+        },
+        {
+          "text": "{=(pKa+log(concentration))/2}",
+          "vi": {
+            "text": "{=(pKa+log(concentration))/2}"
+          },
+          "check": {
+            "expr": "(pKa+log(concentration))/2",
+            "equals": "approximatePH"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dilute-weak",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["strong-weak", "buffer"],
+      "set": {
+        "pKa": 4.76,
+        "baseFraction": 0,
+        "concentration": 0.1
+      },
+      "stem": "A 0.1 mol/L acetic acid solution is diluted tenfold. By about how much does its pH change?",
+      "explain": "[H⁺] ≈ √(Ka·C): C ten times smaller makes [H⁺] √10 times smaller, so pH = ½(pKa − lg C) rises by about 0.5 (the slope of pH against lg C is −½). A strong acid’s pH would rise by 1; a buffer’s hardly changes.",
+      "vi": {
+        "stem": "Pha loãng dung dịch acetic acid 0,1 mol/L 10 lần. pH của dung dịch thay đổi khoảng bao nhiêu?",
+        "explain": "[H⁺] ≈ √(Ka·C): C giảm 10 lần thì [H⁺] giảm √10 lần, nên pH = ½(pKa − lg C) tăng khoảng 0,5 (hệ số góc của pH theo lg C là −½). pH của axit mạnh sẽ tăng 1; pH của dung dịch đệm hầu như không đổi."
+      },
+      "options": [
+        {
+          "text": "It rises by about 0.5",
+          "vi": {
+            "text": "Tăng khoảng 0,5"
+          },
+          "correct": true,
+          "check": {
+            "expr": "-0.5",
+            "equals": "limitSlope"
+          }
+        },
+        {
+          "text": "It rises by 1",
+          "vi": {
+            "text": "Tăng 1"
+          },
+          "check": {
+            "expr": "-1",
+            "equals": "limitSlope"
+          }
+        },
+        {
+          "text": "It falls by about 0.5",
+          "vi": {
+            "text": "Giảm khoảng 0,5"
+          },
+          "check": {
+            "expr": "0.5",
+            "equals": "limitSlope"
+          }
+        },
+        {
+          "text": "It does not change",
+          "vi": {
+            "text": "Không thay đổi"
+          },
+          "check": {
+            "expr": "0",
+            "equals": "limitSlope"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-meter",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["meter", "scale"],
+      "set": {
+        "pKa": 4.76,
+        "baseFraction": 0,
+        "concentration": 0.1,
+        "meterResolution": 0.01
+      },
+      "stem": "A pH meter (glass electrode, E = S·(7 − pH) with S = 59.16 mV at 25 °C; reading to {meterResolution}) is put into {concentration} mol/L acetic acid of pH {@pH|4}. Its reading moves from 7 towards the sample’s pH with a time constant of 3 s. Decide whether each statement is true or false.",
+      "explain": "E = 59.16·(7 − {@pH|4}) ≈ {@potential|4} mV, positive for an acid; a basic sample (pH > 7) gives a negative E. After 30 s the meter shows {=round(@finalReading/meterResolution)*meterResolution}. After only 3 s (one time constant) the reading is still about 37 % of the starting gap away from the sample’s pH, at {=@pH+(7-@pH)*exp(-1)|3}: wait for it to settle.",
+      "vi": {
+        "stem": "Nhúng máy đo pH (điện cực thủy tinh, E = S·(7 − pH) với S = 59,16 mV ở 25 °C; độ phân giải {meterResolution}) vào dung dịch acetic acid {concentration} mol/L có pH = {@pH|4}. Số đọc thay đổi từ 7 về pH của mẫu với hằng số thời gian 3 s. Mỗi nhận định sau đúng hay sai?",
+        "explain": "E = 59,16·(7 − {@pH|4}) ≈ {@potential|4} mV, dương với dung dịch axit; mẫu bazơ (pH > 7) cho E âm. Sau 30 s máy hiển thị {=round(@finalReading/meterResolution)*meterResolution}. Mới sau 3 s (một hằng số thời gian), số đọc vẫn còn lệch khỏi pH của mẫu khoảng 37 % độ chênh ban đầu, ở mức {=@pH+(7-@pH)*exp(-1)|3}: cần chờ số đọc ổn định."
+      },
+      "statements": [
+        {
+          "text": "The electrode potential is about {@potential|4} mV.",
+          "vi": {
+            "text": "Thế điện cực khoảng {@potential|4} mV."
+          },
+          "true": true,
+          "check": {
+            "expr": "@nernstSlope*(7-@pH)",
+            "equals": "potential"
+          }
+        },
+        {
+          "text": "A basic sample would give a negative electrode potential.",
+          "vi": {
+            "text": "Mẫu có môi trường bazơ sẽ cho thế điện cực âm."
+          },
+          "true": true
+        },
+        {
+          "text": "After 30 s the meter shows {=round(@finalReading/meterResolution)*meterResolution}.",
+          "vi": {
+            "text": "Sau 30 s, máy hiển thị {=round(@finalReading/meterResolution)*meterResolution}."
+          },
+          "true": true
+        },
+        {
+          "text": "Read after only 3 s, the meter already shows the sample’s pH to within 0.01.",
+          "vi": {
+            "text": "Đọc ngay sau 3 s, máy đã hiển thị pH của mẫu với sai lệch không quá 0,01."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "strong-acid",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["strong-weak"],
+      "stem": "Which of these is a strong acid, fully ionised in water?",
+      "explain": "Hydrochloric acid ionises completely: HCl → H⁺ + Cl⁻. Acetic acid and the ammonium ion are weak acids, only slightly ionised; ammonia is a weak base.",
+      "vi": {
+        "stem": "Chất nào sau đây là acid mạnh, phân li hoàn toàn trong nước?",
+        "explain": "Hydrochloric acid phân li hoàn toàn: HCl → H⁺ + Cl⁻. Acetic acid và ion ammonium là các acid yếu, chỉ phân li một phần nhỏ; ammonia là một base yếu."
+      },
+      "options": [
+        {
+          "text": "HCl",
+          "vi": {
+            "text": "HCl"
+          },
+          "correct": true
+        },
+        {
+          "text": "CH₃COOH",
+          "vi": {
+            "text": "CH₃COOH"
+          }
+        },
+        {
+          "text": "NH₄⁺",
+          "vi": {
+            "text": "NH₄⁺"
+          }
+        },
+        {
+          "text": "NH₃",
+          "vi": {
+            "text": "NH₃"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dilute-strong",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["scale", "strong-weak"],
+      "stem": "A 0.01 mol/L HCl solution is diluted tenfold with water. Its pH…",
+      "explain": "HCl is fully ionised, so [H⁺] = C falls tenfold, from 10⁻² to 10⁻³ mol/L: pH = −lg[H⁺] rises by exactly 1, from 2 to 3. A weak acid's pH would rise by only about 0.5.",
+      "vi": {
+        "stem": "Pha loãng dung dịch HCl 0,01 mol/L bằng nước 10 lần. pH của dung dịch",
+        "explain": "HCl phân li hoàn toàn nên [H⁺] = C giảm 10 lần, từ 10⁻² xuống 10⁻³ mol/L: pH = −lg[H⁺] tăng đúng 1 đơn vị, từ 2 lên 3. Với acid yếu, pH chỉ tăng khoảng 0,5."
+      },
+      "options": [
+        {
+          "text": "rises by 1",
+          "vi": {
+            "text": "tăng 1 đơn vị"
+          },
+          "correct": true
+        },
+        {
+          "text": "falls by 1",
+          "vi": {
+            "text": "giảm 1 đơn vị"
+          }
+        },
+        {
+          "text": "rises by 10",
+          "vi": {
+            "text": "tăng 10 đơn vị"
+          }
+        },
+        {
+          "text": "rises by 0.5",
+          "vi": {
+            "text": "tăng 0,5 đơn vị"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-buffer",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["buffer", "strong-weak"],
+      "stem": "Decide whether each statement about acetic acid (pKa = 4.76), sodium acetate and their mixtures at 25 °C is true or false.",
+      "explain": "A buffer holds both the weak acid and its conjugate base, so a little added strong acid or base changes its pH only a little. In a 1 : 1 mixture pH = pKa + lg([A⁻]/[HA]) = pKa = 4.76; diluting it keeps the ratio, so the pH barely moves. Acetate is a weak base: sodium acetate solution is basic, not neutral.",
+      "vi": {
+        "stem": "Mỗi nhận định sau về acetic acid (pKa = 4,76), sodium acetate và hỗn hợp của chúng ở 25 °C đúng hay sai?",
+        "explain": "Dung dịch đệm chứa cả acid yếu và base liên hợp của nó, nên khi thêm một lượng nhỏ acid mạnh hay base mạnh thì pH chỉ thay đổi rất ít. Trong hỗn hợp 1 : 1, pH = pKa + lg([A⁻]/[HA]) = pKa = 4,76; pha loãng giữ nguyên tỉ lệ nên pH hầu như không đổi. Ion acetate là base yếu: dung dịch sodium acetate có môi trường base, không trung tính."
+      },
+      "statements": [
+        {
+          "text": "Adding a little strong acid to the 1 : 1 buffer changes its pH only a little.",
+          "vi": {
+            "text": "Thêm một ít acid mạnh vào dung dịch đệm 1 : 1 thì pH chỉ thay đổi rất ít."
+          },
+          "true": true
+        },
+        {
+          "text": "The 1 : 1 mixture of CH₃COOH and CH₃COONa has a pH of about 4.76.",
+          "vi": {
+            "text": "Hỗn hợp 1 : 1 của CH₃COOH và CH₃COONa có pH khoảng 4,76."
+          },
+          "true": true
+        },
+        {
+          "text": "Diluting the 1 : 1 buffer tenfold raises its pH by 1.",
+          "vi": {
+            "text": "Pha loãng dung dịch đệm 1 : 1 mười lần thì pH tăng 1 đơn vị."
+          },
+          "true": false
+        },
+        {
+          "text": "A solution of sodium acetate alone is neutral, pH 7.",
+          "vi": {
+            "text": "Dung dịch chỉ chứa sodium acetate có môi trường trung tính, pH = 7."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "hydroxide-in-acid",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["scale"],
+      "set": {
+        "pKa": -6,
+        "baseFraction": 0,
+        "concentration": 0.01
+      },
+      "stem": "What is the concentration of hydroxide ions, [OH⁻], in {concentration} mol/L HCl at 25 °C (K_w = 1.0·10⁻¹⁴)?",
+      "explain": "[H⁺] = C = {concentration} mol/L, and [H⁺]·[OH⁻] = K_w: [OH⁻] = 10⁻¹⁴/{concentration} = {@hydroxideIon} mol/L. Even an acid solution holds a few OH⁻ ions; it is not 10⁻⁷ mol/L, which is pure water's value.",
+      "vi": {
+        "stem": "Nồng độ ion hydroxide, [OH⁻], trong dung dịch HCl {concentration} mol/L ở 25 °C (K_w = 1,0·10⁻¹⁴) là bao nhiêu?",
+        "explain": "[H⁺] = C = {concentration} mol/L, và [H⁺]·[OH⁻] = K_w: [OH⁻] = 10⁻¹⁴/{concentration} = {@hydroxideIon} mol/L. Ngay cả dung dịch acid cũng có một ít ion OH⁻; giá trị đó không phải 10⁻⁷ mol/L, vốn là của nước nguyên chất."
+      },
+      "options": [
+        {
+          "text": "{=1e-14/concentration} mol/L",
+          "vi": {
+            "text": "{=1e-14/concentration} mol/L"
+          },
+          "correct": true,
+          "check": {
+            "expr": "1e-14/concentration",
+            "equals": "hydroxideIon"
+          }
+        },
+        {
+          "text": "{concentration} mol/L",
+          "vi": {
+            "text": "{concentration} mol/L"
+          },
+          "check": {
+            "expr": "concentration",
+            "equals": "hydroxideIon"
+          }
+        },
+        {
+          "text": "{=1e-14*concentration} mol/L",
+          "vi": {
+            "text": "{=1e-14*concentration} mol/L"
+          },
+          "check": {
+            "expr": "1e-14*concentration",
+            "equals": "hydroxideIon"
+          }
+        },
+        {
+          "text": "{=1e-7} mol/L",
+          "vi": {
+            "text": "{=1e-7} mol/L"
+          },
+          "check": {
+            "expr": "1e-7",
+            "equals": "hydroxideIon"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-dilute-acetic",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["strong-weak", "scale"],
+      "set": {
+        "pKa": 4.76,
+        "baseFraction": 0,
+        "concentration": 0.001
+      },
+      "stem": "Acetic acid of {concentration} mol/L (pKa = {pKa}, Ka = 10^(−pKa)) is measured at 25 °C. With x = [H⁺], Ka = x²/(C − x). Decide whether each statement is true or false.",
+      "explain": "Solving x² + Ka·x − Ka·C = 0: x ≈ {@hydrogenIon|3} mol/L, pH ≈ {@pH|3}, and α = x/C ≈ {@ionization|3}% — far more than at 0.1 mol/L (about {=100*(-10^(-pKa)+sqrt(10^(-2*pKa)+4*10^(-pKa)*0.1))/2/0.1|2}%): dilution raises a weak acid's ionisation. The approximation pH ≈ ½(pKa − lg C) gives {@approximatePH}. [H⁺] = C would hold only for a strong acid.",
+      "vi": {
+        "stem": "Đo dung dịch acetic acid {concentration} mol/L (pKa = {pKa}, Ka = 10^(−pKa)) ở 25 °C. Với x = [H⁺], Ka = x²/(C − x). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Giải x² + Ka·x − Ka·C = 0: x ≈ {@hydrogenIon|3} mol/L, pH ≈ {@pH|3}, và độ điện li α = x/C ≈ {@ionization|3}% — lớn hơn nhiều so với ở 0,1 mol/L (khoảng {=100*(-10^(-pKa)+sqrt(10^(-2*pKa)+4*10^(-pKa)*0.1))/2/0.1|2}%): pha loãng làm tăng độ điện li của acid yếu. Công thức gần đúng pH ≈ ½(pKa − lg C) cho {@approximatePH}. [H⁺] = C chỉ đúng với acid mạnh."
+      },
+      "statements": [
+        {
+          "text": "The pH is about {=-log((-10^(-pKa)+sqrt(10^(-2*pKa)+4*10^(-pKa)*concentration))/2)|3}.",
+          "vi": {
+            "text": "pH khoảng {=-log((-10^(-pKa)+sqrt(10^(-2*pKa)+4*10^(-pKa)*concentration))/2)|3}."
+          },
+          "true": true,
+          "check": {
+            "expr": "-log((-10^(-pKa)+sqrt(10^(-2*pKa)+4*10^(-pKa)*concentration))/2)",
+            "equals": "pH"
+          }
+        },
+        {
+          "text": "About {@ionization|3}% of the acid is ionised, more than in 0.1 mol/L acetic acid.",
+          "vi": {
+            "text": "Khoảng {@ionization|3}% acid đã phân li, nhiều hơn trong dung dịch acetic acid 0,1 mol/L."
+          },
+          "true": true,
+          "check": {
+            "expr": "100*(-10^(-pKa)+sqrt(10^(-2*pKa)+4*10^(-pKa)*concentration))/2/concentration",
+            "equals": "ionization"
+          }
+        },
+        {
+          "text": "The approximation pH ≈ ½(pKa − lg C) gives {=0.5*(pKa-log(concentration))}.",
+          "vi": {
+            "text": "Công thức gần đúng pH ≈ ½(pKa − lg C) cho kết quả {=0.5*(pKa-log(concentration))}."
+          },
+          "true": true,
+          "check": {
+            "expr": "0.5*(pKa-log(concentration))",
+            "equals": "approximatePH"
+          }
+        },
+        {
+          "text": "[H⁺] = {concentration} mol/L, since the acid gives one H⁺ per molecule.",
+          "vi": {
+            "text": "[H⁺] = {concentration} mol/L, vì mỗi phân tử acid cho một H⁺."
+          },
+          "true": false,
+          "check": {
+            "expr": "concentration",
+            "equals": "hydrogenIon"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-pka",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["strong-weak", "scale"],
+      "set": {
+        "pKa": 4.76,
+        "baseFraction": 0,
+        "concentration": 0.1
+      },
+      "stem": "A {concentration} mol/L solution of a weak acid HA has pH {@pH|4} at 25 °C. What is the pKa of HA?",
+      "explain": "[H⁺] = 10^(−{@pH|4}) ≈ {=10^(-@pH)|3} mol/L = [A⁻]; [HA] = C − [H⁺]. Ka = [H⁺]²/(C − [H⁺]) ≈ {=10^(-2*@pH)/(concentration-10^(-@pH))|3}, so pKa ≈ {=-log(10^(-2*@pH)/(concentration-10^(-@pH)))|3}. pKa is not the pH, and dividing [H⁺] by C gives the ionised fraction, not Ka.",
+      "vi": {
+        "stem": "Dung dịch acid yếu HA {concentration} mol/L có pH = {@pH|4} ở 25 °C. pKa của HA là bao nhiêu?",
+        "explain": "[H⁺] = 10^(−{@pH|4}) ≈ {=10^(-@pH)|3} mol/L = [A⁻]; [HA] = C − [H⁺]. Ka = [H⁺]²/(C − [H⁺]) ≈ {=10^(-2*@pH)/(concentration-10^(-@pH))|3}, nên pKa ≈ {=-log(10^(-2*@pH)/(concentration-10^(-@pH)))|3}. pKa không phải là pH, và lấy [H⁺] chia cho C là được độ điện li, không phải Ka."
+      },
+      "options": [
+        {
+          "text": "{pKa}",
+          "vi": {
+            "text": "{pKa}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(-10^(-pKa)+sqrt(10^(-2*pKa)+4*10^(-pKa)*concentration))/2",
+            "equals": "hydrogenIon"
+          }
+        },
+        {
+          "text": "{=@pH|3}",
+          "vi": {
+            "text": "{=@pH|3}"
+          },
+          "check": {
+            "expr": "(-10^(-@pH)+sqrt(10^(-2*@pH)+4*10^(-@pH)*concentration))/2",
+            "equals": "hydrogenIon"
+          }
+        },
+        {
+          "text": "{=2*@pH|3}",
+          "vi": {
+            "text": "{=2*@pH|3}"
+          },
+          "check": {
+            "expr": "(-10^(-2*@pH)+sqrt(10^(-4*@pH)+4*10^(-2*@pH)*concentration))/2",
+            "equals": "hydrogenIon"
+          }
+        },
+        {
+          "text": "{=-log(10^(-@pH)/concentration)|3}",
+          "vi": {
+            "text": "{=-log(10^(-@pH)/concentration)|3}"
+          },
+          "check": {
+            "expr": "(-10^(-(-log(10^(-@pH)/concentration)))+sqrt(10^(-2*(-log(10^(-@pH)/concentration)))+4*10^(-(-log(10^(-@pH)/concentration)))*concentration))/2",
+            "equals": "hydrogenIon"
+          }
+        }
+      ]
+    },
+    {
+      "id": "lowest-ph",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["strong-weak", "scale"],
+      "set": {
+        "pKa": 4.76,
+        "baseFraction": 0,
+        "concentration": 0.1
+      },
+      "stem": "Which of these solutions at 25 °C has the lowest pH? (pKa: CH₃COOH 4.76, NH₄⁺ 9.25)",
+      "explain": "0.1 mol/L CH₃COOH: pH ≈ {@pH|3}. 0.001 mol/L HCl: pH = {=-log(0.001)}. 0.01 mol/L CH₃COOH: pH ≈ {=-log((-10^(-4.76)+sqrt(10^(-9.52)+4*10^(-4.76)*0.01))/2)|3}. 0.1 mol/L NH₄Cl: pH ≈ {=-log((-10^(-9.25)+sqrt(10^(-18.5)+4*10^(-9.25)*0.1))/2)|3}. A strong acid is not always the more acidic: a concentrated enough weak acid can give more H⁺.",
+      "vi": {
+        "stem": "Dung dịch nào sau đây ở 25 °C có pH nhỏ nhất? (pKa: CH₃COOH 4,76, NH₄⁺ 9,25)",
+        "explain": "CH₃COOH 0,1 mol/L: pH ≈ {@pH|3}. HCl 0,001 mol/L: pH = {=-log(0.001)}. CH₃COOH 0,01 mol/L: pH ≈ {=-log((-10^(-4.76)+sqrt(10^(-9.52)+4*10^(-4.76)*0.01))/2)|3}. NH₄Cl 0,1 mol/L: pH ≈ {=-log((-10^(-9.25)+sqrt(10^(-18.5)+4*10^(-9.25)*0.1))/2)|3}. Acid mạnh không phải lúc nào cũng có tính acid mạnh hơn: acid yếu với nồng độ đủ lớn có thể tạo nhiều H⁺ hơn."
+      },
+      "options": [
+        {
+          "text": "0.1 mol/L CH₃COOH",
+          "vi": {
+            "text": "CH₃COOH 0,1 mol/L"
+          },
+          "correct": true
+        },
+        {
+          "text": "0.001 mol/L HCl",
+          "vi": {
+            "text": "HCl 0,001 mol/L"
+          }
+        },
+        {
+          "text": "0.01 mol/L CH₃COOH",
+          "vi": {
+            "text": "CH₃COOH 0,01 mol/L"
+          }
+        },
+        {
+          "text": "0.1 mol/L NH₄Cl",
+          "vi": {
+            "text": "NH₄Cl 0,1 mol/L"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-sodium-acetate",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["strong-weak", "buffer", "scale"],
+      "set": {
+        "pKa": 4.76,
+        "baseFraction": 1,
+        "concentration": 0.1
+      },
+      "stem": "A {concentration} mol/L sodium acetate solution (the base form of CH₃COOH/CH₃COO⁻, pKa = {pKa}) is measured at 25 °C (K_w = 1.0·10⁻¹⁴). Decide whether each statement is true or false.",
+      "explain": "Acetate takes H⁺ from water: CH₃COO⁻ + H₂O ⇌ CH₃COOH + OH⁻, with Kb = K_w/Ka = 10^(−{=14-pKa}). [OH⁻] ≈ {@hydroxideIon|3} mol/L, so pH ≈ {@pH|3}: basic. The approximation pH ≈ 7 + ½(pKa + lg C) gives {@approximatePH}. Using pKa as if it were pKb would give the pH of a weak acid instead.",
+      "vi": {
+        "stem": "Đo dung dịch sodium acetate {concentration} mol/L (dạng base của cặp CH₃COOH/CH₃COO⁻, pKa = {pKa}) ở 25 °C (K_w = 1,0·10⁻¹⁴). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Ion acetate nhận H⁺ của nước: CH₃COO⁻ + H₂O ⇌ CH₃COOH + OH⁻, với Kb = K_w/Ka = 10^(−{=14-pKa}). [OH⁻] ≈ {@hydroxideIon|3} mol/L, nên pH ≈ {@pH|3}: môi trường base. Công thức gần đúng pH ≈ 7 + ½(pKa + lg C) cho {@approximatePH}. Dùng pKa như thể đó là pKb sẽ ra pH của một acid yếu."
+      },
+      "statements": [
+        {
+          "text": "The solution is basic.",
+          "vi": {
+            "text": "Dung dịch có môi trường base."
+          },
+          "true": true
+        },
+        {
+          "text": "Acetate ions react with water to form OH⁻ ions.",
+          "vi": {
+            "text": "Ion acetate phản ứng với nước tạo ra ion OH⁻."
+          },
+          "true": true
+        },
+        {
+          "text": "The approximation pH ≈ 7 + ½(pKa + lg C) gives about {=7+0.5*(pKa+log(concentration))}.",
+          "vi": {
+            "text": "Công thức gần đúng pH ≈ 7 + ½(pKa + lg C) cho kết quả khoảng {=7+0.5*(pKa+log(concentration))}."
+          },
+          "true": true,
+          "check": {
+            "expr": "7+0.5*(pKa+log(concentration))",
+            "equals": "approximatePH"
+          }
+        },
+        {
+          "text": "Its pH is about {=0.5*(pKa-log(concentration))}, the same as that of {concentration} mol/L acetic acid.",
+          "vi": {
+            "text": "pH của nó khoảng {=0.5*(pKa-log(concentration))}, bằng pH của dung dịch acetic acid {concentration} mol/L."
+          },
+          "true": false,
+          "check": {
+            "expr": "0.5*(pKa-log(concentration))",
+            "equals": "approximatePH"
+          }
+        }
+      ]
+    }
+  ]
+}

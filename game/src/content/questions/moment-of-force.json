@@ -1,0 +1,1045 @@
+{
+  "id": "moment-of-force",
+  "skills": [
+    {
+      "id": "moment",
+      "name": "Moment of a force: M = F·d",
+      "advice": "Re-read the definition: M = F·d, d the lever arm — the distance from the axis to the force’s line, not to the end of the bar. Unit N·m. Distances given in cm must be turned into m.",
+      "vi": {
+        "name": "Momen lực: M = F·d",
+        "advice": "Đọc lại định nghĩa: M = F·d, d là cánh tay đòn — khoảng cách từ trục quay đến giá của lực, không phải đến đầu thanh. Đơn vị N·m. Khoảng cách cho bằng cm phải đổi ra m."
+      }
+    },
+    {
+      "id": "principle",
+      "name": "Principle of moments: m1·d1 = m2·d2",
+      "advice": "A bar balances when the clockwise moments equal the anticlockwise ones. Try it at the station: 50 g at 30 cm balances 100 g at 15 cm.",
+      "vi": {
+        "name": "Quy tắc momen: m1·d1 = m2·d2",
+        "advice": "Thanh cân bằng khi tổng momen làm thanh quay theo chiều kim đồng hồ bằng tổng momen làm thanh quay ngược chiều kim đồng hồ. Thử trên trạm: 50 g ở 30 cm cân bằng với 100 g ở 15 cm."
+      }
+    },
+    {
+      "id": "turning",
+      "name": "Which way the bar turns",
+      "advice": "Work out both moments before deciding: the side with the larger moment goes down, whatever the masses. The net moment M2 − M1 says which way.",
+      "vi": {
+        "name": "Thanh quay theo chiều nào",
+        "advice": "Tính cả hai momen rồi mới kết luận: bên có momen lớn hơn sẽ đi xuống, bất kể khối lượng bên nào lớn hơn. Momen tổng hợp M2 − M1 cho biết chiều quay."
+      }
+    },
+    {
+      "id": "graph",
+      "name": "Reading the moment graph",
+      "advice": "Move only the right hanger over several runs: M2 − M1 against d2 is a straight line of slope m2·g that crosses zero at d2 = m1·d1/m2, the balance point.",
+      "vi": {
+        "name": "Đọc đồ thị momen",
+        "advice": "Chỉ dịch móc treo bên phải qua nhiều lần đo: M2 − M1 theo d2 là đường thẳng hệ số góc m2·g, cắt trục hoành tại d2 = m1·d1/m2, là điểm cân bằng."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "unit",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["moment"],
+      "stem": "The SI unit of the moment of a force is…",
+      "explain": "M = F·d: newtons times metres, N·m.",
+      "vi": {
+        "stem": "Đơn vị SI của momen lực là…",
+        "explain": "M = F·d: niutơn nhân mét, N·m."
+      },
+      "options": [
+        {
+          "text": "N·m",
+          "vi": {
+            "text": "N·m"
+          },
+          "correct": true
+        },
+        {
+          "text": "N/m",
+          "vi": {
+            "text": "N/m"
+          }
+        },
+        {
+          "text": "N",
+          "vi": {
+            "text": "N"
+          }
+        },
+        {
+          "text": "kg·m",
+          "vi": {
+            "text": "kg·m"
+          }
+        }
+      ]
+    },
+    {
+      "id": "lever-arm",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["moment"],
+      "stem": "The lever arm of a force about an axis is…",
+      "explain": "The lever arm is the perpendicular distance from the axis to the force’s line of action.",
+      "vi": {
+        "stem": "Cánh tay đòn của một lực đối với trục quay là…",
+        "explain": "Cánh tay đòn là khoảng cách từ trục quay đến giá của lực."
+      },
+      "options": [
+        {
+          "text": "the distance from the axis to the line of the force",
+          "vi": {
+            "text": "khoảng cách từ trục quay đến giá của lực"
+          },
+          "correct": true
+        },
+        {
+          "text": "the distance from the axis to the end of the bar",
+          "vi": {
+            "text": "khoảng cách từ trục quay đến đầu thanh"
+          }
+        },
+        {
+          "text": "the length of the arrow drawn for the force",
+          "vi": {
+            "text": "độ dài mũi tên biểu diễn lực"
+          }
+        },
+        {
+          "text": "the distance between the two hangers",
+          "vi": {
+            "text": "khoảng cách giữa hai móc treo"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-moments",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["moment", "principle"],
+      "stem": "A bar can turn about a fixed axis through its middle. Decide whether each statement is true or false.",
+      "explain": "M = F·d; balance needs equal clockwise and anticlockwise moments; a small force far out can beat a large one close in; a force through the axis has zero lever arm.",
+      "vi": {
+        "stem": "Một thanh có thể quay quanh một trục cố định đi qua trung điểm của nó. Mỗi nhận định sau đúng hay sai?",
+        "explain": "M = F·d; thanh cân bằng khi momen theo hai chiều bằng nhau; lực nhỏ ở xa trục có thể thắng lực lớn ở gần trục; lực có giá đi qua trục quay có cánh tay đòn bằng 0."
+      },
+      "statements": [
+        {
+          "text": "The moment of a force F with lever arm d is M = F·d.",
+          "vi": {
+            "text": "Momen của lực F có cánh tay đòn d là M = F·d."
+          },
+          "true": true
+        },
+        {
+          "text": "The bar balances when the clockwise and anticlockwise moments are equal.",
+          "vi": {
+            "text": "Thanh cân bằng khi tổng momen theo chiều kim đồng hồ bằng tổng momen ngược chiều kim đồng hồ."
+          },
+          "true": true
+        },
+        {
+          "text": "The side with the larger force always goes down.",
+          "vi": {
+            "text": "Bên có lực lớn hơn luôn đi xuống."
+          },
+          "true": false
+        },
+        {
+          "text": "A force whose line passes through the axis has no turning effect.",
+          "vi": {
+            "text": "Lực có giá đi qua trục quay không có tác dụng làm quay."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "twice-as-far",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["moment"],
+      "stem": "A hanger is moved twice as far from the pivot, with the same mass on it. Its moment…",
+      "explain": "M = m·g·d: twice d gives twice M.",
+      "vi": {
+        "stem": "Dịch một móc treo ra xa trục gấp đôi, giữ nguyên khối lượng treo. Momen của nó…",
+        "explain": "M = m·g·d: d gấp đôi thì M gấp đôi."
+      },
+      "options": [
+        {
+          "text": "doubles",
+          "vi": {
+            "text": "tăng gấp đôi"
+          },
+          "correct": true
+        },
+        {
+          "text": "halves",
+          "vi": {
+            "text": "giảm một nửa"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "becomes four times larger",
+          "vi": {
+            "text": "tăng gấp bốn lần"
+          }
+        }
+      ]
+    },
+    {
+      "id": "which-balances",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["principle"],
+      "stem": "100 g hangs 15 cm left of the pivot. Which load on the right balances the bar?",
+      "explain": "Balance needs m1·d1 = m2·d2: 0.1 kg × 0.15 m = 0.05 kg × 0.30 m.",
+      "vi": {
+        "stem": "Một vật 100 g treo cách trục 15 cm về bên trái. Vật treo nào bên phải làm thanh cân bằng?",
+        "explain": "Cân bằng khi m1·d1 = m2·d2: 0,1 kg × 0,15 m = 0,05 kg × 0,30 m."
+      },
+      "options": [
+        {
+          "text": "50 g at 30 cm",
+          "vi": {
+            "text": "50 g ở 30 cm"
+          },
+          "correct": true
+        },
+        {
+          "text": "50 g at 15 cm",
+          "vi": {
+            "text": "50 g ở 15 cm"
+          }
+        },
+        {
+          "text": "150 g at 15 cm",
+          "vi": {
+            "text": "150 g ở 15 cm"
+          }
+        },
+        {
+          "text": "200 g at 10 cm",
+          "vi": {
+            "text": "200 g ở 10 cm"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-unbalanced",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["moment", "turning", "principle"],
+      "set": {
+        "mass1": 0.15,
+        "distance1": 0.2,
+        "mass2": 0.1,
+        "distance2": 0.25
+      },
+      "stem": "{mass1} kg hangs {distance1} m left of the pivot and {mass2} kg hangs {distance2} m right of it (g = {gravity} m/s²). Decide whether each statement is true or false.",
+      "explain": "M1 = m1·g·d1 ≈ {@moment1} N·m > M2 = m2·g·d2 ≈ {@moment2} N·m, so the left end goes down. With d2 = 0.3 m, m2·d2 = m1·d1 = 0.03 kg·m and it would balance.",
+      "vi": {
+        "stem": "{mass1} kg treo cách trục {distance1} m về bên trái và {mass2} kg treo cách trục {distance2} m về bên phải (g = {gravity} m/s²). Mỗi nhận định sau đúng hay sai?",
+        "explain": "M1 = m1·g·d1 ≈ {@moment1} N·m > M2 = m2·g·d2 ≈ {@moment2} N·m, nên đầu trái đi xuống. Với d2 = 0,3 m thì m2·d2 = m1·d1 = 0,03 kg·m và thanh sẽ cân bằng."
+      },
+      "statements": [
+        {
+          "text": "The left weight’s moment is about {@moment1} N·m.",
+          "vi": {
+            "text": "Momen của trọng lực bên trái khoảng {@moment1} N·m."
+          },
+          "true": true,
+          "check": {
+            "expr": "mass1*gravity*distance1",
+            "equals": "moment1"
+          }
+        },
+        {
+          "text": "The right weight’s moment is about {@moment2} N·m.",
+          "vi": {
+            "text": "Momen của trọng lực bên phải khoảng {@moment2} N·m."
+          },
+          "true": true,
+          "check": {
+            "expr": "mass2*gravity*distance2",
+            "equals": "moment2"
+          }
+        },
+        {
+          "text": "The bar turns with its right end going down.",
+          "vi": {
+            "text": "Thanh quay với đầu bên phải đi xuống."
+          },
+          "true": false,
+          "check": {
+            "expr": "1",
+            "equals": "restingSide"
+          }
+        },
+        {
+          "text": "Moving the right hanger out to 0.3 m would balance the bar.",
+          "vi": {
+            "text": "Dịch móc treo bên phải ra 0,3 m thì thanh sẽ cân bằng."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "moment1",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["moment"],
+      "set": {
+        "mass1": 0.2,
+        "distance1": 0.25
+      },
+      "stem": "{mass1} kg hangs {distance1} m from the pivot of a level bar (g = {gravity} m/s²). What is the moment of its weight about the pivot?",
+      "explain": "M = m·g·d = {mass1}·{gravity}·{distance1} ≈ {@moment1} N·m.",
+      "vi": {
+        "stem": "Vật {mass1} kg treo cách trục của thanh nằm ngang {distance1} m (g = {gravity} m/s²). Momen của trọng lực vật đối với trục bằng bao nhiêu?",
+        "explain": "M = m·g·d = {mass1}·{gravity}·{distance1} ≈ {@moment1} N·m."
+      },
+      "options": [
+        {
+          "text": "{@moment1} N·m",
+          "vi": {
+            "text": "{@moment1} N·m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "mass1*gravity*distance1",
+            "equals": "moment1"
+          }
+        },
+        {
+          "text": "{=mass1*distance1} N·m",
+          "vi": {
+            "text": "{=mass1*distance1} N·m"
+          },
+          "check": {
+            "expr": "mass1*distance1",
+            "equals": "moment1"
+          }
+        },
+        {
+          "text": "{=mass1*gravity/distance1} N·m",
+          "vi": {
+            "text": "{=mass1*gravity/distance1} N·m"
+          },
+          "check": {
+            "expr": "mass1*gravity/distance1",
+            "equals": "moment1"
+          }
+        },
+        {
+          "text": "{=mass1*gravity*distance1*100} N·m",
+          "vi": {
+            "text": "{=mass1*gravity*distance1*100} N·m"
+          },
+          "check": {
+            "expr": "mass1*gravity*distance1*100",
+            "equals": "moment1"
+          }
+        }
+      ]
+    },
+    {
+      "id": "balance-distance",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["principle"],
+      "set": {
+        "mass1": 0.15,
+        "distance1": 0.2,
+        "mass2": 0.1
+      },
+      "stem": "{mass1} kg hangs {distance1} m left of the pivot. How far right of the pivot must {mass2} kg hang for the bar to balance?",
+      "explain": "m1·d1 = m2·d2: d2 = m1·d1/m2 = {mass1}·{distance1}/{mass2} = {=mass1*distance1/mass2} m — the lighter mass hangs farther out.",
+      "vi": {
+        "stem": "Vật {mass1} kg treo cách trục {distance1} m về bên trái. Phải treo vật {mass2} kg cách trục bao xa về bên phải để thanh cân bằng?",
+        "explain": "m1·d1 = m2·d2: d2 = m1·d1/m2 = {mass1}·{distance1}/{mass2} = {=mass1*distance1/mass2} m — vật nhẹ hơn phải treo xa trục hơn."
+      },
+      "options": [
+        {
+          "text": "{=mass1*distance1/mass2} m",
+          "vi": {
+            "text": "{=mass1*distance1/mass2} m"
+          },
+          "correct": true
+        },
+        {
+          "text": "{=mass2*distance1/mass1} m",
+          "vi": {
+            "text": "{=mass2*distance1/mass1} m"
+          }
+        },
+        {
+          "text": "{distance1} m",
+          "vi": {
+            "text": "{distance1} m"
+          }
+        },
+        {
+          "text": "{=mass1*mass2/distance1} m",
+          "vi": {
+            "text": "{=mass1*mass2/distance1} m"
+          }
+        }
+      ]
+    },
+    {
+      "id": "net-moment",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["turning", "moment"],
+      "set": {
+        "mass1": 0.2,
+        "distance1": 0.15,
+        "mass2": 0.15,
+        "distance2": 0.3
+      },
+      "stem": "{mass1} kg hangs {distance1} m left of the pivot and {mass2} kg hangs {distance2} m right of it (g = {gravity} m/s²). What is the net moment M2 − M1?",
+      "explain": "M1 ≈ {@moment1} N·m, M2 ≈ {@moment2} N·m; M2 − M1 ≈ {@netMoment} N·m > 0, so the right end goes down even though the right mass is lighter.",
+      "vi": {
+        "stem": "{mass1} kg treo cách trục {distance1} m bên trái và {mass2} kg treo cách trục {distance2} m bên phải (g = {gravity} m/s²). Momen tổng hợp M2 − M1 bằng bao nhiêu?",
+        "explain": "M1 ≈ {@moment1} N·m, M2 ≈ {@moment2} N·m; M2 − M1 ≈ {@netMoment} N·m > 0, nên đầu bên phải đi xuống dù vật bên phải nhẹ hơn."
+      },
+      "options": [
+        {
+          "text": "{@netMoment} N·m",
+          "vi": {
+            "text": "{@netMoment} N·m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "mass2*gravity*distance2-mass1*gravity*distance1",
+            "equals": "netMoment"
+          }
+        },
+        {
+          "text": "{=@moment1+@moment2} N·m",
+          "vi": {
+            "text": "{=@moment1+@moment2} N·m"
+          },
+          "check": {
+            "expr": "@moment1+@moment2",
+            "equals": "netMoment"
+          }
+        },
+        {
+          "text": "{=(mass2-mass1)*gravity*(distance2-distance1)} N·m",
+          "vi": {
+            "text": "{=(mass2-mass1)*gravity*(distance2-distance1)} N·m"
+          },
+          "check": {
+            "expr": "(mass2-mass1)*gravity*(distance2-distance1)",
+            "equals": "netMoment"
+          }
+        },
+        {
+          "text": "{@moment2} N·m",
+          "vi": {
+            "text": "{@moment2} N·m"
+          },
+          "check": {
+            "expr": "@moment2",
+            "equals": "netMoment"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-balanced",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["principle", "turning"],
+      "set": {
+        "mass1": 0.1,
+        "distance1": 0.1,
+        "mass2": 0.05,
+        "distance2": 0.2
+      },
+      "stem": "{mass1} kg hangs {distance1} m left of the pivot and {mass2} kg hangs {distance2} m right of it; the bar is released level (g = {gravity} m/s²). Decide whether each statement is true or false.",
+      "explain": "m1·d1 = m2·d2 = {=mass1*distance1} kg·m, so both moments are {@moment1} N·m and the bar stays level. Doubling both masses doubles both moments: still balanced. Moving the left hanger in shrinks M1, so the right end goes down.",
+      "vi": {
+        "stem": "{mass1} kg treo cách trục {distance1} m bên trái và {mass2} kg treo cách trục {distance2} m bên phải; thanh được thả ở vị trí nằm ngang (g = {gravity} m/s²). Mỗi nhận định sau đúng hay sai?",
+        "explain": "m1·d1 = m2·d2 = {=mass1*distance1} kg·m, nên hai momen đều bằng {@moment1} N·m và thanh đứng yên nằm ngang. Tăng gấp đôi cả hai khối lượng thì hai momen cùng tăng gấp đôi: vẫn cân bằng. Dịch móc trái vào gần trục làm M1 giảm, nên đầu phải đi xuống."
+      },
+      "statements": [
+        {
+          "text": "Both moments are about {@moment1} N·m.",
+          "vi": {
+            "text": "Cả hai momen đều khoảng {@moment1} N·m."
+          },
+          "true": true,
+          "check": {
+            "expr": "mass2*gravity*distance2",
+            "equals": "moment1"
+          }
+        },
+        {
+          "text": "The bar stays level.",
+          "vi": {
+            "text": "Thanh đứng yên ở vị trí nằm ngang."
+          },
+          "true": true,
+          "check": {
+            "expr": "0",
+            "equals": "restingSide"
+          }
+        },
+        {
+          "text": "Doubling both masses would keep the bar level.",
+          "vi": {
+            "text": "Tăng gấp đôi cả hai khối lượng thì thanh vẫn nằm ngang."
+          },
+          "true": true
+        },
+        {
+          "text": "Moving the left hanger closer to the pivot would make the left end go down.",
+          "vi": {
+            "text": "Dịch móc treo bên trái lại gần trục thì đầu bên trái sẽ đi xuống."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "move-left",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["principle", "turning"],
+      "set": {
+        "mass1": 0.2,
+        "distance1": 0.15,
+        "mass2": 0.15,
+        "distance2": 0.3
+      },
+      "stem": "{mass1} kg hangs {distance1} m left of the pivot and {mass2} kg hangs {distance2} m right of it. Only the left hanger may be moved. Where must it hang for the bar to balance?",
+      "explain": "Now M2 ≈ {@moment2} N·m > M1 ≈ {@moment1} N·m, so the left hanger must go farther out: d1 = m2·d2/m1 = {mass2}·{distance2}/{mass1} = {=mass2*distance2/mass1} m.",
+      "vi": {
+        "stem": "{mass1} kg treo cách trục {distance1} m bên trái và {mass2} kg treo cách trục {distance2} m bên phải. Chỉ được dịch móc treo bên trái. Phải treo nó ở đâu để thanh cân bằng?",
+        "explain": "Lúc này M2 ≈ {@moment2} N·m > M1 ≈ {@moment1} N·m, nên phải dịch móc trái ra xa trục: d1 = m2·d2/m1 = {mass2}·{distance2}/{mass1} = {=mass2*distance2/mass1} m."
+      },
+      "options": [
+        {
+          "text": "{=mass2*distance2/mass1} m from the pivot",
+          "vi": {
+            "text": "{=mass2*distance2/mass1} m tính từ trục"
+          },
+          "correct": true
+        },
+        {
+          "text": "{=mass1*distance1/mass2} m from the pivot",
+          "vi": {
+            "text": "{=mass1*distance1/mass2} m tính từ trục"
+          }
+        },
+        {
+          "text": "{=mass1*distance2/mass2} m from the pivot",
+          "vi": {
+            "text": "{=mass1*distance2/mass2} m tính từ trục"
+          }
+        },
+        {
+          "text": "{=mass2*distance1/mass1} m from the pivot",
+          "vi": {
+            "text": "{=mass2*distance1/mass1} m tính từ trục"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-graph",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["graph", "turning"],
+      "set": {
+        "mass1": 0.1,
+        "distance1": 0.15,
+        "mass2": 0.05,
+        "distance2": 0.25
+      },
+      "stem": "m1 = {mass1} kg at d1 = {distance1} m and m2 = {mass2} kg; runs move only the right hanger, and M2 − M1 is plotted against d2 (g = {gravity} m/s²). Decide whether each statement is true or false.",
+      "explain": "M2 − M1 = m2·g·d2 − m1·g·d1: slope m2·g ≈ {@weightRight} N, zero at d2 = m1·d1/m2 = {=mass1*distance1/mass2} m. At d2 = {distance2} m, M2 − M1 ≈ {@netMoment} N·m < 0: the left end goes down.",
+      "vi": {
+        "stem": "m1 = {mass1} kg ở d1 = {distance1} m và m2 = {mass2} kg; các lần đo chỉ dịch móc treo bên phải, và M2 − M1 được vẽ theo d2 (g = {gravity} m/s²). Mỗi nhận định sau đúng hay sai?",
+        "explain": "M2 − M1 = m2·g·d2 − m1·g·d1: hệ số góc m2·g ≈ {@weightRight} N, bằng 0 tại d2 = m1·d1/m2 = {=mass1*distance1/mass2} m. Tại d2 = {distance2} m, M2 − M1 ≈ {@netMoment} N·m < 0: đầu trái đi xuống."
+      },
+      "statements": [
+        {
+          "text": "The line’s slope is m2·g ≈ {@weightRight} N.",
+          "vi": {
+            "text": "Hệ số góc của đường thẳng là m2·g ≈ {@weightRight} N."
+          },
+          "true": true,
+          "check": {
+            "expr": "mass2*gravity",
+            "equals": "weightRight"
+          }
+        },
+        {
+          "text": "The line crosses zero at d2 = {=mass1*distance1/mass2} m, where the bar balances.",
+          "vi": {
+            "text": "Đường thẳng cắt trục hoành tại d2 = {=mass1*distance1/mass2} m, nơi thanh cân bằng."
+          },
+          "true": true
+        },
+        {
+          "text": "At d2 = {distance2} m the net moment is about {@netMoment} N·m.",
+          "vi": {
+            "text": "Tại d2 = {distance2} m, momen tổng hợp khoảng {@netMoment} N·m."
+          },
+          "true": true,
+          "check": {
+            "expr": "@moment2-@moment1",
+            "equals": "netMoment"
+          }
+        },
+        {
+          "text": "At d2 = {distance2} m the bar turns with its right end going down.",
+          "vi": {
+            "text": "Tại d2 = {distance2} m, thanh quay với đầu bên phải đi xuống."
+          },
+          "true": false,
+          "check": {
+            "expr": "1",
+            "equals": "restingSide"
+          }
+        }
+      ]
+    },
+    {
+      "id": "rule",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["principle"],
+      "stem": "A body with a fixed axis is in equilibrium when…",
+      "explain": "The rule of moments: the sum of the moments that turn it clockwise equals the sum of the moments that turn it anticlockwise about the axis.",
+      "vi": {
+        "stem": "Một vật có trục quay cố định ở trạng thái cân bằng khi…",
+        "explain": "Quy tắc mômen lực: tổng các mômen lực có xu hướng làm vật quay theo chiều kim đồng hồ bằng tổng các mômen lực có xu hướng làm vật quay ngược chiều kim đồng hồ đối với trục quay."
+      },
+      "options": [
+        {
+          "text": "the clockwise moments add up to the anticlockwise moments",
+          "vi": {
+            "text": "tổng mômen lực làm vật quay theo chiều kim đồng hồ bằng tổng mômen lực làm vật quay ngược chiều kim đồng hồ"
+          },
+          "correct": true
+        },
+        {
+          "text": "the forces on the two sides are equal",
+          "vi": {
+            "text": "lực tác dụng ở hai bên bằng nhau"
+          }
+        },
+        {
+          "text": "the loads hang at equal distances from the axis",
+          "vi": {
+            "text": "các vật nặng treo cách trục những khoảng bằng nhau"
+          }
+        },
+        {
+          "text": "the heavier load hangs farther from the axis",
+          "vi": {
+            "text": "vật nặng hơn treo xa trục hơn"
+          }
+        }
+      ]
+    },
+    {
+      "id": "through-axis",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["moment"],
+      "stem": "A force acts on the bar along a line that passes through the pivot. Its moment about the pivot is…",
+      "explain": "M = F·d, where d is the perpendicular distance from the axis to the force’s line of action. A line through the axis has d = 0, so the moment is zero, however large the force: it cannot turn the bar.",
+      "vi": {
+        "stem": "Một lực tác dụng lên thanh có giá đi qua trục quay. Mômen của nó đối với trục quay…",
+        "explain": "M = F·d, với d là khoảng cách từ trục quay đến giá của lực. Giá đi qua trục thì d = 0, nên mômen bằng 0 dù lực lớn bao nhiêu: lực đó không làm thanh quay."
+      },
+      "options": [
+        {
+          "text": "is zero",
+          "vi": {
+            "text": "bằng 0"
+          },
+          "correct": true
+        },
+        {
+          "text": "is the largest it can be",
+          "vi": {
+            "text": "lớn nhất"
+          }
+        },
+        {
+          "text": "equals the force itself",
+          "vi": {
+            "text": "bằng chính độ lớn của lực"
+          }
+        },
+        {
+          "text": "depends on how long the bar is",
+          "vi": {
+            "text": "phụ thuộc vào chiều dài của thanh"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-arms",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["moment", "principle"],
+      "stem": "Loads hang from a bar that can turn about a pivot in its middle. Decide whether each statement is true or false.",
+      "explain": "M = F·d with d the lever arm, the perpendicular distance from the axis to the line of the force. The same moment at half the distance needs twice the force. A bar in equilibrium has a net moment of zero. Moving a hanger nearer the pivot shortens its arm, so its moment shrinks.",
+      "vi": {
+        "stem": "Các vật nặng được treo vào một thanh có thể quay quanh trục ở chính giữa. Mỗi nhận định sau đúng hay sai?",
+        "explain": "M = F·d với d là cánh tay đòn, khoảng cách từ trục quay đến giá của lực. Cùng một mômen ở nửa khoảng cách thì cần lực gấp đôi. Thanh cân bằng thì tổng mômen bằng 0. Dịch vật nặng lại gần trục làm cánh tay đòn ngắn đi nên mômen nhỏ đi."
+      },
+      "statements": [
+        {
+          "text": "The lever arm is the perpendicular distance from the axis to the force’s line of action.",
+          "vi": {
+            "text": "Cánh tay đòn là khoảng cách từ trục quay đến giá của lực."
+          },
+          "true": true
+        },
+        {
+          "text": "At half the distance, twice the mass gives the same moment.",
+          "vi": {
+            "text": "Ở nửa khoảng cách, khối lượng gấp đôi cho cùng một mômen."
+          },
+          "true": true
+        },
+        {
+          "text": "A bar can be in equilibrium while the net moment on it is not zero.",
+          "vi": {
+            "text": "Thanh có thể cân bằng trong khi tổng mômen tác dụng lên nó khác 0."
+          },
+          "true": false
+        },
+        {
+          "text": "Moving a hanger nearer the pivot makes its moment larger.",
+          "vi": {
+            "text": "Dịch vật nặng lại gần trục quay thì mômen của nó lớn hơn."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "right-moment",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["moment"],
+      "set": {
+        "mass1": 0.15,
+        "distance1": 0.25,
+        "mass2": 0.2,
+        "distance2": 0.2
+      },
+      "stem": "{mass2} kg hangs {distance2} m right of the pivot of a level bar (g = {gravity} m/s²). What is the moment of its weight about the pivot?",
+      "explain": "M2 = m2·g·d2 = {mass2}·{gravity}·{distance2} ≈ {@moment2} N·m. Leaving out g gives kg·m, not a moment; dividing by d, or squaring it, gives the other values.",
+      "vi": {
+        "stem": "Vật {mass2} kg treo cách trục quay của một thanh nằm ngang {distance2} m về bên phải (g = {gravity} m/s²). Mômen của trọng lực tác dụng lên vật đối với trục quay bằng bao nhiêu?",
+        "explain": "M2 = m2·g·d2 = {mass2}·{gravity}·{distance2} ≈ {@moment2} N·m. Bỏ quên g sẽ ra kg·m, không phải mômen; chia cho d hoặc bình phương d sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{@moment2} N·m",
+          "vi": {
+            "text": "{@moment2} N·m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "mass2*gravity*distance2",
+            "equals": "moment2"
+          }
+        },
+        {
+          "text": "{=mass2*distance2} N·m",
+          "vi": {
+            "text": "{=mass2*distance2} N·m"
+          },
+          "check": {
+            "expr": "mass2*distance2",
+            "equals": "moment2"
+          }
+        },
+        {
+          "text": "{=mass2*gravity/distance2} N·m",
+          "vi": {
+            "text": "{=mass2*gravity/distance2} N·m"
+          },
+          "check": {
+            "expr": "mass2*gravity/distance2",
+            "equals": "moment2"
+          }
+        },
+        {
+          "text": "{=mass2*gravity*distance2^2} N·m",
+          "vi": {
+            "text": "{=mass2*gravity*distance2^2} N·m"
+          },
+          "check": {
+            "expr": "mass2*gravity*distance2^2",
+            "equals": "moment2"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-level",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["principle", "turning"],
+      "set": {
+        "mass1": 0.05,
+        "distance1": 0.2,
+        "mass2": 0.1,
+        "distance2": 0.1
+      },
+      "stem": "{mass1} kg hangs {distance1} m left of the pivot and {mass2} kg hangs {distance2} m right of it (g = {gravity} m/s²). Decide whether each statement is true or false.",
+      "explain": "M1 = m1·g·d1 = {@moment1} N·m and M2 = m2·g·d2 = {@moment2} N·m: equal, so the bar rests level even though the masses differ. Moving the {mass2} kg hanger out to 0.15 m makes M2 larger than M1, and the right side goes down.",
+      "vi": {
+        "stem": "Vật {mass1} kg treo cách trục {distance1} m về bên trái và vật {mass2} kg treo cách trục {distance2} m về bên phải (g = {gravity} m/s²). Mỗi nhận định sau đúng hay sai?",
+        "explain": "M1 = m1·g·d1 = {@moment1} N·m và M2 = m2·g·d2 = {@moment2} N·m: bằng nhau, nên thanh nằm ngang cân bằng dù hai khối lượng khác nhau. Dịch vật {mass2} kg ra 0,15 m làm M2 lớn hơn M1, và bên phải đi xuống."
+      },
+      "statements": [
+        {
+          "text": "The moment of the left load is {@moment1} N·m.",
+          "vi": {
+            "text": "Mômen của vật bên trái bằng {@moment1} N·m."
+          },
+          "true": true,
+          "check": {
+            "expr": "mass1*gravity*distance1",
+            "equals": "moment1"
+          }
+        },
+        {
+          "text": "The two moments are equal, so the bar rests level.",
+          "vi": {
+            "text": "Hai mômen bằng nhau nên thanh nằm ngang cân bằng."
+          },
+          "true": true,
+          "check": {
+            "expr": "@moment1",
+            "equals": "moment2"
+          }
+        },
+        {
+          "text": "The bar tips down on the side of the heavier load.",
+          "vi": {
+            "text": "Thanh nghiêng xuống về phía vật nặng hơn."
+          },
+          "true": false
+        },
+        {
+          "text": "Moving the {mass2} kg hanger out to 0.15 m makes the right side go down.",
+          "vi": {
+            "text": "Dịch vật {mass2} kg ra cách trục 0,15 m thì bên phải đi xuống."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "balancing-mass",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["principle"],
+      "set": {
+        "mass1": 0.2,
+        "distance1": 0.15,
+        "mass2": 0.1,
+        "distance2": 0.3
+      },
+      "stem": "{mass1} kg hangs {distance1} m left of the pivot. What mass must hang {distance2} m right of the pivot to keep the bar level?",
+      "explain": "m1·g·d1 = m2·g·d2, so m2 = m1·d1/d2 = {mass1}·{distance1}/{distance2} = {=mass1*distance1/distance2} kg. Turning the ratio over gives a mass that tips the bar right; m1·d1 alone is not a mass.",
+      "vi": {
+        "stem": "Vật {mass1} kg treo cách trục {distance1} m về bên trái. Phải treo vật có khối lượng bao nhiêu cách trục {distance2} m về bên phải để thanh nằm ngang cân bằng?",
+        "explain": "m1·g·d1 = m2·g·d2, nên m2 = m1·d1/d2 = {mass1}·{distance1}/{distance2} = {=mass1*distance1/distance2} kg. Đảo ngược tỉ số sẽ ra khối lượng làm thanh nghiêng về bên phải; riêng m1·d1 không phải là khối lượng."
+      },
+      "options": [
+        {
+          "text": "{=mass1*distance1/distance2} kg",
+          "vi": {
+            "text": "{=mass1*distance1/distance2} kg"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(mass1*distance1/distance2)*gravity*distance2",
+            "equals": "moment1"
+          }
+        },
+        {
+          "text": "{=mass1*distance2/distance1} kg",
+          "vi": {
+            "text": "{=mass1*distance2/distance1} kg"
+          },
+          "check": {
+            "expr": "(mass1*distance2/distance1)*gravity*distance2",
+            "equals": "moment1"
+          }
+        },
+        {
+          "text": "{=mass1*(distance1/distance2)^2} kg",
+          "vi": {
+            "text": "{=mass1*(distance1/distance2)^2} kg"
+          },
+          "check": {
+            "expr": "(mass1*(distance1/distance2)^2)*gravity*distance2",
+            "equals": "moment1"
+          }
+        },
+        {
+          "text": "{=mass1*distance1} kg",
+          "vi": {
+            "text": "{=mass1*distance1} kg"
+          },
+          "check": {
+            "expr": "(mass1*distance1)*gravity*distance2",
+            "equals": "moment1"
+          }
+        }
+      ]
+    },
+    {
+      "id": "add-mass",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["principle", "turning"],
+      "set": {
+        "mass1": 0.15,
+        "distance1": 0.1,
+        "mass2": 0.05,
+        "distance2": 0.25
+      },
+      "stem": "{mass1} kg hangs {distance1} m left of the pivot and {mass2} kg hangs {distance2} m right of it (g = {gravity} m/s²), so the bar tips left. How much mass must be added to the right hanger, at the same place, to level the bar?",
+      "explain": "M2 − M1 = {@netMoment} N·m. The added mass Δm must give a moment of {=-@netMoment} N·m at {distance2} m: Δm = (M1 − M2)/(g·d2) = {=-@netMoment/(gravity*distance2)} kg. Dividing by g only, using d1, or taking m1 − m2 gives the other values.",
+      "vi": {
+        "stem": "Vật {mass1} kg treo cách trục {distance1} m về bên trái và vật {mass2} kg treo cách trục {distance2} m về bên phải (g = {gravity} m/s²), nên thanh nghiêng về bên trái. Phải treo thêm vào móc bên phải (ở cùng vị trí) bao nhiêu khối lượng để thanh nằm ngang?",
+        "explain": "M2 − M1 = {@netMoment} N·m. Khối lượng thêm vào Δm phải tạo mômen {=-@netMoment} N·m ở khoảng cách {distance2} m: Δm = (M1 − M2)/(g·d2) = {=-@netMoment/(gravity*distance2)} kg. Chỉ chia cho g, dùng d1, hoặc lấy m1 − m2 sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{=-@netMoment/(gravity*distance2)} kg",
+          "vi": {
+            "text": "{=-@netMoment/(gravity*distance2)} kg"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(mass2-@netMoment/(gravity*distance2))*gravity*distance2",
+            "equals": "moment1"
+          }
+        },
+        {
+          "text": "{=-@netMoment/gravity} kg",
+          "vi": {
+            "text": "{=-@netMoment/gravity} kg"
+          },
+          "check": {
+            "expr": "(mass2-@netMoment/gravity)*gravity*distance2",
+            "equals": "moment1"
+          }
+        },
+        {
+          "text": "{=-@netMoment/(gravity*distance1)} kg",
+          "vi": {
+            "text": "{=-@netMoment/(gravity*distance1)} kg"
+          },
+          "check": {
+            "expr": "(mass2-@netMoment/(gravity*distance1))*gravity*distance2",
+            "equals": "moment1"
+          }
+        },
+        {
+          "text": "{=mass1-mass2} kg",
+          "vi": {
+            "text": "{=mass1-mass2} kg"
+          },
+          "check": {
+            "expr": "(mass2+mass1-mass2)*gravity*distance2",
+            "equals": "moment1"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-no-balance",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["graph", "principle", "turning"],
+      "set": {
+        "mass1": 0.2,
+        "distance1": 0.2,
+        "mass2": 0.1,
+        "distance2": 0.3
+      },
+      "stem": "m1 = {mass1} kg hangs at d1 = {distance1} m on the left and m2 = {mass2} kg on the right; runs move only the right hanger, up to 0.3 m, and M2 − M1 is plotted against d2 (g = {gravity} m/s²). Decide whether each statement is true or false.",
+      "explain": "M2 − M1 = m2·g·d2 − m1·g·d1: a straight line of slope m2·g = {@weightRight} N. It crosses zero at d2 = m1·d1/m2 = {=mass1*distance1/mass2} m, beyond the end of the bar, so with this right mass the bar can never be levelled. At d2 = {distance2} m, M2 − M1 = {@netMoment} N·m: negative, the left side still goes down.",
+      "vi": {
+        "stem": "m1 = {mass1} kg treo ở d1 = {distance1} m bên trái và m2 = {mass2} kg ở bên phải; các lần đo chỉ dịch móc bên phải, xa nhất 0,3 m, và vẽ M2 − M1 theo d2 (g = {gravity} m/s²). Mỗi nhận định sau đúng hay sai?",
+        "explain": "M2 − M1 = m2·g·d2 − m1·g·d1: một đường thẳng có hệ số góc m2·g = {@weightRight} N. Nó cắt trục hoành tại d2 = m1·d1/m2 = {=mass1*distance1/mass2} m, vượt quá đầu thanh, nên với khối lượng bên phải này thanh không bao giờ cân bằng được. Tại d2 = {distance2} m, M2 − M1 = {@netMoment} N·m: âm, bên trái vẫn đi xuống."
+      },
+      "statements": [
+        {
+          "text": "The line’s slope is {@weightRight} N.",
+          "vi": {
+            "text": "Hệ số góc của đường thẳng bằng {@weightRight} N."
+          },
+          "true": true,
+          "check": {
+            "expr": "mass2*gravity",
+            "equals": "weightRight"
+          }
+        },
+        {
+          "text": "The line would cross zero at d2 = {=mass1*distance1/mass2} m, beyond the bar, so this right mass cannot level it.",
+          "vi": {
+            "text": "Đường thẳng cắt trục hoành tại d2 = {=mass1*distance1/mass2} m, vượt quá thanh, nên khối lượng bên phải này không thể làm thanh cân bằng."
+          },
+          "true": true,
+          "check": {
+            "expr": "@weightRight*(mass1*distance1/mass2)",
+            "equals": "moment1"
+          }
+        },
+        {
+          "text": "At d2 = {distance2} m, M2 − M1 = {@netMoment} N·m.",
+          "vi": {
+            "text": "Tại d2 = {distance2} m, M2 − M1 = {@netMoment} N·m."
+          },
+          "true": true,
+          "check": {
+            "expr": "mass2*gravity*distance2-mass1*gravity*distance1",
+            "equals": "netMoment"
+          }
+        },
+        {
+          "text": "At d2 = {distance2} m the right side goes down.",
+          "vi": {
+            "text": "Tại d2 = {distance2} m, bên phải đi xuống."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

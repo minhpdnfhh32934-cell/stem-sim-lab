@@ -1,0 +1,381 @@
+{
+  "id": "population-genetics",
+  "name": "Population genetics: Hardy–Weinberg and genetic drift",
+  "category": "biology",
+  "description": "In a population of beetles a gene has two alleles, A and a. Breed generation after generation by random mating and watch the genotypes AA, Aa and aa and the frequency of A in the gene pool. In a large population they hardly change (Hardy–Weinberg); in a small one chance alone can make an allele disappear (genetic drift).",
+  "vi": {
+    "name": "Di truyền quần thể: định luật Hacđi–Vanbec và phiêu bạt di truyền",
+    "description": "Trong một quần thể bọ cánh cứng, một gen có hai alen A và a. Cho giao phối ngẫu nhiên qua nhiều thế hệ và quan sát các kiểu gen AA, Aa, aa cùng tần số alen A trong vốn gen. Ở quần thể lớn chúng hầu như không đổi (Hacđi–Vanbec); ở quần thể nhỏ, chỉ do ngẫu nhiên một alen cũng có thể mất hẳn (phiêu bạt di truyền).",
+    "note": "Mô hình Wright–Fisher: N cá thể lưỡng bội, một gen hai alen; mỗi thế hệ, mỗi cá thể nhận hai alen rút ngẫu nhiên từ vốn gen của thế hệ trước (giao phối ngẫu nhiên, không chọn lọc, không đột biến, không di nhập gen). Các lần rút là giả ngẫu nhiên theo “quần thể số” đã chọn nên một lượt chạy lặp lại đúng như cũ; đổi số để có một quần thể khác. Giá trị lí thuyết là kì vọng (trung bình của rất nhiều quần thể): tần số A không đổi, tỉ lệ dị hợp giảm theo 2p₀q₀(1 − 1/2N)^t. Mỗi thế hệ 0,1 s. Khay hiện tối đa 200 cá thể (một mẫu của quần thể lớn hơn). Màu: AA xanh đậm, Aa xanh nhạt, aa vàng."
+  },
+  "requiredEquipment": ["beetle-tray"],
+  "model": "biology.population-genetics",
+  "parameters": [
+    {
+      "id": "population",
+      "label": "Population size",
+      "vi": {
+        "label": "Kích thước quần thể"
+      },
+      "symbol": "N",
+      "unit": "",
+      "default": 200,
+      "min": 10,
+      "max": 2000,
+      "step": 10,
+      "presets": [
+        {
+          "label": "N = 10",
+          "vi": {
+            "label": "N = 10"
+          },
+          "value": 10
+        },
+        {
+          "label": "N = 50",
+          "vi": {
+            "label": "N = 50"
+          },
+          "value": 50
+        },
+        {
+          "label": "N = 200",
+          "vi": {
+            "label": "N = 200"
+          },
+          "value": 200
+        },
+        {
+          "label": "N = 2000",
+          "vi": {
+            "label": "N = 2000"
+          },
+          "value": 2000
+        }
+      ]
+    },
+    {
+      "id": "startFrequency",
+      "label": "Starting frequency of A",
+      "vi": {
+        "label": "Tần số ban đầu của A"
+      },
+      "symbol": "p₀",
+      "unit": "",
+      "default": 0.5,
+      "min": 0.1,
+      "max": 0.9,
+      "step": 0.05
+    },
+    {
+      "id": "generations",
+      "label": "Generations",
+      "vi": {
+        "label": "Số thế hệ"
+      },
+      "unit": "",
+      "default": 50,
+      "min": 10,
+      "max": 100,
+      "step": 10
+    },
+    {
+      "id": "seed",
+      "label": "Population number",
+      "vi": {
+        "label": "Quần thể số"
+      },
+      "unit": "",
+      "default": 1,
+      "min": 1,
+      "max": 20,
+      "step": 1
+    }
+  ],
+  "initialConditions": {
+    "stepTime": 0.1
+  },
+  "inputs": {
+    "stepTime": {
+      "symbol": "Δt",
+      "unit": "s",
+      "desk": false
+    }
+  },
+  "simulation": {
+    "timeStep": 0.02,
+    "maxDuration": 12,
+    "sampleInterval": 0.1
+  },
+  "measurements": [
+    {
+      "id": "time",
+      "label": "Time",
+      "vi": {
+        "label": "Thời gian"
+      },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "time"
+    },
+    {
+      "id": "generation",
+      "label": "Generation",
+      "vi": {
+        "label": "Thế hệ"
+      },
+      "unit": "",
+      "variable": "generation"
+    },
+    {
+      "id": "p",
+      "label": "Frequency of A",
+      "vi": {
+        "label": "Tần số alen A"
+      },
+      "symbol": "p",
+      "unit": "",
+      "variable": "p"
+    },
+    {
+      "id": "heterozygous",
+      "label": "Share of Aa",
+      "vi": {
+        "label": "Tỉ lệ Aa"
+      },
+      "unit": "",
+      "variable": "heterozygous"
+    }
+  ],
+  "results": [
+    {
+      "id": "p",
+      "label": "Frequency of A at the end",
+      "vi": {
+        "label": "Tần số A ở thế hệ cuối"
+      },
+      "symbol": "p",
+      "unit": "",
+      "variable": "p",
+      "reduce": "final",
+      "theory": "p"
+    },
+    {
+      "id": "heterozygous",
+      "label": "Share of Aa at the end",
+      "vi": {
+        "label": "Tỉ lệ Aa ở thế hệ cuối"
+      },
+      "unit": "",
+      "variable": "heterozygous",
+      "reduce": "final",
+      "theory": "heterozygosity"
+    },
+    {
+      "id": "hardyWeinberg",
+      "label": "Share of Aa expected by Hardy–Weinberg (2pq of the parents)",
+      "vi": {
+        "label": "Tỉ lệ Aa theo Hacđi–Vanbec (2pq của thế hệ bố mẹ)"
+      },
+      "unit": "",
+      "variable": "hardyWeinberg",
+      "reduce": "final"
+    }
+  ],
+  "graphs": [
+    {
+      "id": "p-generation",
+      "title": "Frequency of A, generation by generation",
+      "vi": {
+        "title": "Tần số alen A qua các thế hệ"
+      },
+      "x": "generation",
+      "y": ["p"]
+    },
+    {
+      "id": "aa-generation",
+      "title": "Share of Aa",
+      "vi": {
+        "title": "Tỉ lệ dị hợp Aa"
+      },
+      "x": "generation",
+      "y": ["heterozygous"]
+    }
+  ],
+  "monitor": "p-generation",
+  "compare": [
+    {
+      "graph": "p-generation",
+      "series": "p"
+    }
+  ],
+  "note": "The Wright–Fisher model: N diploid individuals, one gene with two alleles; each generation every individual takes two alleles drawn at random from the gene pool of the one before (random mating, no selection, mutation or migration). The draws are pseudo-random from the chosen population number, so a run repeats exactly; change it for another population. The theory values are expectations (the average of very many populations): the frequency of A does not change, the share of heterozygotes falls as 2p₀q₀(1 − 1/2N)^t. One generation per 0.1 s. The tray shows at most 200 individuals (a sample of a bigger population). Colours: AA dark green, Aa light green, aa yellow.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the population genetics instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn về di truyền quần thể trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "population-genetics-instructions"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN with N = 2000: does p change?",
+      "vi": {
+        "instruction": "Nhấn CHẠY với N = 2000: p có thay đổi không?"
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "population",
+      "instruction": "Press RESET and set N = 10 with the dial.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI và đặt N = 10 bằng núm xoay."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "population"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Run it and read p at the end: was an allele lost?",
+      "vi": {
+        "instruction": "Chạy và đọc p ở thế hệ cuối: có alen nào bị mất không?"
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Change the population number and run again: compare.",
+      "vi": {
+        "instruction": "Đổi số quần thể rồi chạy lại: so sánh."
+      },
+      "done": {
+        "kind": "reset"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "heterozygotes-fall",
+      "question": "A population of N = {population} starts with p₀ = {startFrequency}. What share of heterozygotes Aa do you expect after {generations} generations of random mating?",
+      "vi": {
+        "question": "Một quần thể N = {population} cá thể bắt đầu với p₀ = {startFrequency}. Sau {generations} thế hệ giao phối ngẫu nhiên, tỉ lệ dị hợp Aa dự kiến là bao nhiêu?"
+      },
+      "set": { "population": 50, "startFrequency": 0.5, "generations": 50 },
+      "find": [{ "theory": "heterozygosity", "symbol": "H", "unit": "" }],
+      "steps": [
+        {
+          "say": "At the start, Hardy–Weinberg gives a heterozygote share of 2p₀q₀ = {=2*startFrequency*(1-startFrequency)}.",
+          "vi": {
+            "say": "Lúc đầu, theo Hacđi–Vanbec tỉ lệ dị hợp là 2p₀q₀ = {=2*startFrequency*(1-startFrequency)}."
+          },
+          "write": "H₀ = 2p₀q₀"
+        },
+        {
+          "say": "In a small population, drift loses heterozygosity: each generation keeps the fraction 1 − 1/2N on average.",
+          "vi": {
+            "say": "Trong quần thể nhỏ, phiêu bạt di truyền làm mất dần dị hợp: trung bình mỗi thế hệ chỉ giữ lại phần 1 − 1/2N."
+          },
+          "write": "H = 2p₀q₀·(1 − 1/(2·{population}))^{generations} ≈ {@heterozygosity}",
+          "check": {
+            "expr": "2*startFrequency*(1-startFrequency)*(1-1/(2*population))^generations",
+            "equals": "heterozygosity"
+          }
+        }
+      ]
+    },
+    {
+      "id": "tiny-population",
+      "question": "A tiny population, N = {population}, starts with p₀ = {startFrequency}. After {generations} generations, what are the expected frequency of A and the expected share of Aa?",
+      "vi": {
+        "question": "Một quần thể rất nhỏ, N = {population}, bắt đầu với p₀ = {startFrequency}. Sau {generations} thế hệ, tần số A và tỉ lệ Aa dự kiến là bao nhiêu?"
+      },
+      "set": { "population": 10, "startFrequency": 0.3, "generations": 20 },
+      "find": [{ "theory": "p" }, { "theory": "heterozygosity", "symbol": "H", "unit": "" }],
+      "steps": [
+        {
+          "say": "Drift has no direction: on average over many populations p stays where it began, although each single population wanders.",
+          "vi": {
+            "say": "Phiêu bạt di truyền không có hướng: tính trung bình trên nhiều quần thể, p giữ nguyên giá trị ban đầu, dù từng quần thể riêng lẻ biến đổi ngẫu nhiên."
+          },
+          "write": "E(p) = p₀ = {@p}",
+          "check": { "expr": "startFrequency", "equals": "p" }
+        },
+        {
+          "say": "But heterozygotes are lost fast when N is small.",
+          "vi": { "say": "Nhưng các cá thể dị hợp mất đi rất nhanh khi N nhỏ." },
+          "write": "H = 2·{startFrequency}·{=1-startFrequency}·(1 − 1/{=2*population})^{generations} ≈ {@heterozygosity}",
+          "check": {
+            "expr": "2*startFrequency*(1-startFrequency)*(1-1/(2*population))^generations",
+            "equals": "heterozygosity"
+          }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "With random mating the genotypes follow p², 2pq, q² and the gene pool stays the same — unless the population is small: then chance alone changes p from one generation to the next, and an allele can be lost for good.",
+    "vi": {
+      "summary": "Khi giao phối ngẫu nhiên, các kiểu gen theo tỉ lệ p², 2pq, q² và vốn gen giữ nguyên — trừ khi quần thể nhỏ: khi đó chỉ do ngẫu nhiên mà p thay đổi qua các thế hệ, và một alen có thể mất hẳn."
+    },
+    "parts": [
+      {
+        "id": "population",
+        "name": "Population",
+        "role": "One beetle per individual: AA dark green, Aa light green, aa yellow.",
+        "vi": {
+          "name": "Quần thể",
+          "role": "Mỗi con bọ là một cá thể: AA xanh đậm, Aa xanh nhạt, aa vàng."
+        },
+        "anchor": {
+          "part": "population"
+        }
+      },
+      {
+        "id": "gauge",
+        "name": "Gene pool",
+        "role": "The share of all alleles that are A (dark) and a (yellow): p and q = 1 − p.",
+        "vi": {
+          "name": "Vốn gen",
+          "role": "Tỉ lệ alen A (đậm) và a (vàng) trong tất cả các alen: p và q = 1 − p."
+        },
+        "anchor": {
+          "part": "allele-a"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "Each generation, every individual takes two alleles from the gene pool at random. If A has frequency p, AA comes out p², Aa 2pq and aa q² of the time: Hardy–Weinberg.",
+        "vi": {
+          "text": "Mỗi thế hệ, mỗi cá thể nhận ngẫu nhiên hai alen từ vốn gen. Nếu tần số A là p thì AA chiếm p², Aa 2pq và aa q²: định luật Hacđi–Vanbec."
+        },
+        "parts": ["population", "gauge"]
+      },
+      {
+        "text": "In a large population the draws average out: p stays almost the same for many generations.",
+        "vi": {
+          "text": "Ở quần thể lớn, các lần rút ngẫu nhiên bù trừ nhau: p hầu như giữ nguyên qua nhiều thế hệ."
+        },
+        "parts": ["gauge"]
+      },
+      {
+        "text": "In a small population, chance moves p up or down each generation — genetic drift. It wanders until one allele is lost and the other fixed (p = 0 or 1); then the heterozygotes are gone.",
+        "vi": {
+          "text": "Ở quần thể nhỏ, ngẫu nhiên làm p tăng hoặc giảm mỗi thế hệ — phiêu bạt di truyền. p dao động cho tới khi một alen mất hẳn và alen kia cố định (p = 0 hoặc 1); khi đó không còn cá thể dị hợp."
+        },
+        "parts": ["population", "gauge"]
+      }
+    ]
+  }
+}

@@ -1,0 +1,1068 @@
+{
+  "id": "electric-field",
+  "skills": [
+    {
+      "id": "field",
+      "name": "Electric field of a point charge",
+      "advice": "Re-read: E = k·|Q|/r², k ≈ 8.99 × 10⁹ N·m²/C², unit V/m (= N/C). It points away from a positive charge and towards a negative one. Charges in nC must be turned into C.",
+      "vi": {
+        "name": "Điện trường của điện tích điểm",
+        "advice": "Đọc lại: E = k·|Q|/r², k ≈ 8,99 × 10⁹ N·m²/C², đơn vị V/m (= N/C). Điện trường hướng ra xa điện tích dương và hướng về phía điện tích âm. Điện tích cho bằng nC phải đổi ra C."
+      }
+    },
+    {
+      "id": "inverse-square",
+      "name": "The 1/r² fall-off",
+      "advice": "Watch the probe move out in a run: twice the distance, a quarter of the field. Trap: thinking E falls as 1/r.",
+      "vi": {
+        "name": "Điện trường giảm theo 1/r²",
+        "advice": "Quan sát đầu dò đi ra xa khi chạy mô phỏng: khoảng cách gấp đôi thì điện trường còn một phần tư. Lỗi hay gặp: nghĩ rằng E giảm theo 1/r."
+      }
+    },
+    {
+      "id": "superposition",
+      "name": "Adding fields of two charges",
+      "advice": "Fields add as vectors. On the line through the charges, give each field a sign (positive away from Q1) and add. Use the right distance for Q2: r + d.",
+      "vi": {
+        "name": "Tổng hợp điện trường của hai điện tích",
+        "advice": "Điện trường tổng hợp là tổng vectơ. Trên đường thẳng qua hai điện tích, gán dấu cho từng điện trường (dương khi hướng ra xa Q1) rồi cộng. Dùng đúng khoảng cách đến Q2: r + d."
+      }
+    },
+    {
+      "id": "force",
+      "name": "Force on a charge: F = q·E",
+      "advice": "F = q·E: a positive test charge is pushed along the field, a negative one against it. Keep q in coulombs.",
+      "vi": {
+        "name": "Lực điện tác dụng lên điện tích: F = q·E",
+        "advice": "F = q·E: điện tích thử dương bị đẩy theo chiều điện trường, điện tích âm ngược chiều điện trường. Để q theo đơn vị culông."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "formula",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["field"],
+      "stem": "The electric field strength at a distance r from a point charge Q in air is…",
+      "explain": "E = k·|Q|/r².",
+      "vi": {
+        "stem": "Cường độ điện trường tại điểm cách điện tích điểm Q một khoảng r trong không khí bằng…",
+        "explain": "E = k·|Q|/r²."
+      },
+      "options": [
+        {
+          "text": "E = k·|Q|/r²",
+          "vi": {
+            "text": "E = k·|Q|/r²"
+          },
+          "correct": true
+        },
+        {
+          "text": "E = k·|Q|/r",
+          "vi": {
+            "text": "E = k·|Q|/r"
+          }
+        },
+        {
+          "text": "E = k·|Q|·r²",
+          "vi": {
+            "text": "E = k·|Q|·r²"
+          }
+        },
+        {
+          "text": "E = k·Q²/r²",
+          "vi": {
+            "text": "E = k·Q²/r²"
+          }
+        }
+      ]
+    },
+    {
+      "id": "negative",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["field"],
+      "stem": "The electric field of a negative point charge points…",
+      "explain": "A negative charge’s field points towards it; a positive charge’s away from it.",
+      "vi": {
+        "stem": "Điện trường của một điện tích điểm âm có hướng…",
+        "explain": "Điện trường của điện tích âm hướng về phía nó; của điện tích dương hướng ra xa nó."
+      },
+      "options": [
+        {
+          "text": "towards the charge",
+          "vi": {
+            "text": "hướng về phía điện tích"
+          },
+          "correct": true
+        },
+        {
+          "text": "away from the charge",
+          "vi": {
+            "text": "hướng ra xa điện tích"
+          }
+        },
+        {
+          "text": "around the charge in circles",
+          "vi": {
+            "text": "vòng tròn quanh điện tích"
+          }
+        },
+        {
+          "text": "in no particular direction",
+          "vi": {
+            "text": "không có hướng xác định"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-lines",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["field", "superposition"],
+      "stem": "Field lines are drawn around a charged sphere. Decide whether each statement is true or false.",
+      "explain": "Lines crowd where the field is strong; V/m = N/C; a positive charge’s field points away from it; fields of several charges add as vectors.",
+      "vi": {
+        "stem": "Các đường sức điện được vẽ xung quanh một quả cầu tích điện. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Đường sức dày ở nơi điện trường mạnh; V/m = N/C; điện trường của điện tích dương hướng ra xa nó; điện trường của nhiều điện tích cộng theo quy tắc vectơ."
+      },
+      "statements": [
+        {
+          "text": "The field lines crowd together where the field is strong.",
+          "vi": {
+            "text": "Các đường sức dày hơn ở nơi điện trường mạnh."
+          },
+          "true": true
+        },
+        {
+          "text": "The unit V/m is the same as N/C.",
+          "vi": {
+            "text": "Đơn vị V/m bằng N/C."
+          },
+          "true": true
+        },
+        {
+          "text": "The field of a positive charge points towards it.",
+          "vi": {
+            "text": "Điện trường của điện tích dương hướng về phía nó."
+          },
+          "true": false
+        },
+        {
+          "text": "The field of two charges is the vector sum of their fields.",
+          "vi": {
+            "text": "Điện trường của hai điện tích là tổng vectơ của các điện trường thành phần."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "twice-as-far",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["inverse-square"],
+      "stem": "The probe is moved twice as far from a single point charge. The field strength…",
+      "explain": "E ∝ 1/r²: twice r, a quarter of E.",
+      "vi": {
+        "stem": "Dời đầu dò ra xa điện tích điểm gấp đôi khoảng cách. Cường độ điện trường…",
+        "explain": "E tỉ lệ với 1/r²: r gấp đôi thì E còn một phần tư."
+      },
+      "options": [
+        {
+          "text": "falls to a quarter",
+          "vi": {
+            "text": "giảm còn một phần tư"
+          },
+          "correct": true
+        },
+        {
+          "text": "halves",
+          "vi": {
+            "text": "giảm một nửa"
+          }
+        },
+        {
+          "text": "doubles",
+          "vi": {
+            "text": "tăng gấp đôi"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "double-charge",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["field", "force"],
+      "stem": "The charge Q1 is doubled. At the same point, the force on the test charge…",
+      "explain": "E ∝ Q, and F = q·E, so F doubles.",
+      "vi": {
+        "stem": "Tăng điện tích Q1 lên gấp đôi. Tại cùng một điểm, lực tác dụng lên điện tích thử…",
+        "explain": "E tỉ lệ với Q, và F = q·E, nên F tăng gấp đôi."
+      },
+      "options": [
+        {
+          "text": "doubles",
+          "vi": {
+            "text": "tăng gấp đôi"
+          },
+          "correct": true
+        },
+        {
+          "text": "becomes four times larger",
+          "vi": {
+            "text": "tăng gấp bốn lần"
+          }
+        },
+        {
+          "text": "halves",
+          "vi": {
+            "text": "giảm một nửa"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-one",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["field", "inverse-square", "force"],
+      "set": {
+        "charge": 5e-9,
+        "secondCharge": 0,
+        "probeDistance": 0.1
+      },
+      "stem": "A single charge Q1 = +{=charge*1e9} nC is in air; the probe is {probeDistance} m from it and a test charge of {=testCharge*1e9} nC is placed there. Decide whether each statement is true or false.",
+      "explain": "E = k·Q/r² ≈ {@fieldOne} V/m; at 0.2 m it would be a quarter. F = q·E ≈ {@force} N. k·Q/r gives {=charge/((4*pi*8.8541878128e-12)*probeDistance)} V/m: wrong power of r.",
+      "vi": {
+        "stem": "Một điện tích Q1 = +{=charge*1e9} nC đặt trong không khí; đầu dò cách nó {probeDistance} m và một điện tích thử {=testCharge*1e9} nC được đặt tại đó. Mỗi nhận định sau đúng hay sai?",
+        "explain": "E = k·Q/r² ≈ {@fieldOne} V/m; ở 0,2 m sẽ còn một phần tư. F = q·E ≈ {@force} N. k·Q/r cho {=charge/((4*pi*8.8541878128e-12)*probeDistance)} V/m: sai số mũ của r."
+      },
+      "statements": [
+        {
+          "text": "The field there is about {@fieldOne} V/m.",
+          "vi": {
+            "text": "Điện trường tại đó khoảng {@fieldOne} V/m."
+          },
+          "true": true,
+          "check": {
+            "expr": "charge/((4*pi*8.8541878128e-12)*probeDistance^2)",
+            "equals": "fieldOne"
+          }
+        },
+        {
+          "text": "At 0.2 m the field would be a quarter as strong.",
+          "vi": {
+            "text": "Ở khoảng cách 0,2 m, điện trường chỉ còn một phần tư."
+          },
+          "true": true
+        },
+        {
+          "text": "The test charge feels a force of about {@force} N.",
+          "vi": {
+            "text": "Điện tích thử chịu lực khoảng {@force} N."
+          },
+          "true": true,
+          "check": {
+            "expr": "testCharge*charge/((4*pi*8.8541878128e-12)*probeDistance^2)",
+            "equals": "force"
+          }
+        },
+        {
+          "text": "The field there is about {=charge/((4*pi*8.8541878128e-12)*probeDistance)} V/m.",
+          "vi": {
+            "text": "Điện trường tại đó khoảng {=charge/((4*pi*8.8541878128e-12)*probeDistance)} V/m."
+          },
+          "true": false,
+          "check": {
+            "expr": "charge/((4*pi*8.8541878128e-12)*probeDistance)",
+            "equals": "fieldOne"
+          }
+        }
+      ]
+    },
+    {
+      "id": "field-5cm",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["field"],
+      "set": {
+        "charge": 2e-9,
+        "secondCharge": 0,
+        "probeDistance": 0.05
+      },
+      "stem": "What is the field strength {probeDistance} m from a point charge of +{=charge*1e9} nC in air (k ≈ 8.99 × 10⁹ N·m²/C²)?",
+      "explain": "E = k·Q/r² = 8.99 × 10⁹·{charge}/{probeDistance}² ≈ {@fieldOne} V/m.",
+      "vi": {
+        "stem": "Cường độ điện trường tại điểm cách điện tích điểm +{=charge*1e9} nC một khoảng {probeDistance} m trong không khí bằng bao nhiêu (k ≈ 8,99 × 10⁹ N·m²/C²)?",
+        "explain": "E = k·Q/r² = 8,99 × 10⁹·{charge}/{probeDistance}² ≈ {@fieldOne} V/m."
+      },
+      "options": [
+        {
+          "text": "{@fieldOne} V/m",
+          "vi": {
+            "text": "{@fieldOne} V/m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "charge/((4*pi*8.8541878128e-12)*probeDistance^2)",
+            "equals": "fieldOne"
+          }
+        },
+        {
+          "text": "{=charge/((4*pi*8.8541878128e-12)*probeDistance)} V/m",
+          "vi": {
+            "text": "{=charge/((4*pi*8.8541878128e-12)*probeDistance)} V/m"
+          },
+          "check": {
+            "expr": "charge/((4*pi*8.8541878128e-12)*probeDistance)",
+            "equals": "fieldOne"
+          }
+        },
+        {
+          "text": "{=charge/((4*pi*8.8541878128e-12)*(100*probeDistance)^2)} V/m",
+          "vi": {
+            "text": "{=charge/((4*pi*8.8541878128e-12)*(100*probeDistance)^2)} V/m"
+          },
+          "check": {
+            "expr": "charge/((4*pi*8.8541878128e-12)*(100*probeDistance)^2)",
+            "equals": "fieldOne"
+          }
+        },
+        {
+          "text": "{=1e9*charge/((4*pi*8.8541878128e-12)*probeDistance^2)} V/m",
+          "vi": {
+            "text": "{=1e9*charge/((4*pi*8.8541878128e-12)*probeDistance^2)} V/m"
+          },
+          "check": {
+            "expr": "1e9*charge/((4*pi*8.8541878128e-12)*probeDistance^2)",
+            "equals": "fieldOne"
+          }
+        }
+      ]
+    },
+    {
+      "id": "force",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["force"],
+      "set": {
+        "charge": 5e-9,
+        "secondCharge": 0,
+        "probeDistance": 0.1
+      },
+      "stem": "Where a test charge of {=testCharge*1e9} nC is placed, the field is {@fieldSum} V/m. What force does it feel?",
+      "explain": "F = q·E = {testCharge}·{@fieldSum} ≈ {@force} N, q in coulombs.",
+      "vi": {
+        "stem": "Tại nơi đặt điện tích thử {=testCharge*1e9} nC, điện trường bằng {@fieldSum} V/m. Lực tác dụng lên nó bằng bao nhiêu?",
+        "explain": "F = q·E = {testCharge}·{@fieldSum} ≈ {@force} N, với q tính bằng culông."
+      },
+      "options": [
+        {
+          "text": "{@force} N",
+          "vi": {
+            "text": "{@force} N"
+          },
+          "correct": true,
+          "check": {
+            "expr": "testCharge*@fieldSum",
+            "equals": "force"
+          }
+        },
+        {
+          "text": "{=@fieldSum/testCharge} N",
+          "vi": {
+            "text": "{=@fieldSum/testCharge} N"
+          },
+          "check": {
+            "expr": "@fieldSum/testCharge",
+            "equals": "force"
+          }
+        },
+        {
+          "text": "{@fieldSum} N",
+          "vi": {
+            "text": "{@fieldSum} N"
+          },
+          "check": {
+            "expr": "@fieldSum",
+            "equals": "force"
+          }
+        },
+        {
+          "text": "{=testCharge*@fieldSum*probeDistance} N",
+          "vi": {
+            "text": "{=testCharge*@fieldSum*probeDistance} N"
+          },
+          "check": {
+            "expr": "testCharge*@fieldSum*probeDistance",
+            "equals": "force"
+          }
+        }
+      ]
+    },
+    {
+      "id": "opposite-pair",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["superposition"],
+      "set": {
+        "charge": 5e-9,
+        "secondCharge": -5e-9,
+        "probeDistance": 0.1
+      },
+      "stem": "Q1 = +{=charge*1e9} nC and Q2 = {=secondCharge*1e9} nC are {separation} m apart. At a point on their line {probeDistance} m from Q1, on the side away from Q2, E1 = {@fieldOne} V/m and E2 = {@fieldTwo} V/m (positive away from Q1). What is the total field?",
+      "explain": "Add with the signs: E = E1 + E2 = {@fieldOne} + ({@fieldTwo}) ≈ {@fieldSum} V/m, pointing away from Q1.",
+      "vi": {
+        "stem": "Q1 = +{=charge*1e9} nC và Q2 = {=secondCharge*1e9} nC cách nhau {separation} m. Tại điểm trên đường thẳng nối chúng, cách Q1 {probeDistance} m về phía không có Q2, E1 = {@fieldOne} V/m và E2 = {@fieldTwo} V/m (dương khi hướng ra xa Q1). Điện trường tổng hợp bằng bao nhiêu?",
+        "explain": "Cộng có kể dấu: E = E1 + E2 = {@fieldOne} + ({@fieldTwo}) ≈ {@fieldSum} V/m, hướng ra xa Q1."
+      },
+      "options": [
+        {
+          "text": "{@fieldSum} V/m",
+          "vi": {
+            "text": "{@fieldSum} V/m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@fieldOne+@fieldTwo",
+            "equals": "fieldSum"
+          }
+        },
+        {
+          "text": "{=@fieldOne-@fieldTwo} V/m",
+          "vi": {
+            "text": "{=@fieldOne-@fieldTwo} V/m"
+          },
+          "check": {
+            "expr": "@fieldOne-@fieldTwo",
+            "equals": "fieldSum"
+          }
+        },
+        {
+          "text": "{@fieldOne} V/m",
+          "vi": {
+            "text": "{@fieldOne} V/m"
+          },
+          "check": {
+            "expr": "@fieldOne",
+            "equals": "fieldSum"
+          }
+        },
+        {
+          "text": "{=@fieldOne+charge/((4*pi*8.8541878128e-12)*separation^2)} V/m",
+          "vi": {
+            "text": "{=@fieldOne+charge/((4*pi*8.8541878128e-12)*separation^2)} V/m"
+          },
+          "check": {
+            "expr": "@fieldOne+charge/((4*pi*8.8541878128e-12)*separation^2)",
+            "equals": "fieldSum"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-negative",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["field", "force", "inverse-square"],
+      "set": {
+        "charge": -5e-9,
+        "secondCharge": 0,
+        "probeDistance": 0.2
+      },
+      "stem": "A single charge Q1 = {=charge*1e9} nC is in air; the probe is {probeDistance} m from it (field positive pointing away from Q1). Decide whether each statement is true or false.",
+      "explain": "E = k·Q/r² ≈ {@fieldOne} V/m: negative, pointing towards Q1, of size {=abs(@fieldOne)} V/m. A positive test charge is pulled towards Q1. At half the distance it would be four times stronger, not twice.",
+      "vi": {
+        "stem": "Một điện tích Q1 = {=charge*1e9} nC đặt trong không khí; đầu dò cách nó {probeDistance} m (điện trường dương khi hướng ra xa Q1). Mỗi nhận định sau đúng hay sai?",
+        "explain": "E = k·Q/r² ≈ {@fieldOne} V/m: âm, hướng về Q1, độ lớn {=abs(@fieldOne)} V/m. Điện tích thử dương bị kéo về phía Q1. Ở nửa khoảng cách, điện trường mạnh gấp bốn chứ không phải gấp đôi."
+      },
+      "statements": [
+        {
+          "text": "The field there is about {@fieldOne} V/m: it points towards Q1.",
+          "vi": {
+            "text": "Điện trường tại đó khoảng {@fieldOne} V/m: hướng về phía Q1."
+          },
+          "true": true,
+          "check": {
+            "expr": "charge/((4*pi*8.8541878128e-12)*probeDistance^2)",
+            "equals": "fieldOne"
+          }
+        },
+        {
+          "text": "Its size is about {=abs(@fieldOne)} V/m.",
+          "vi": {
+            "text": "Độ lớn của nó khoảng {=abs(@fieldOne)} V/m."
+          },
+          "true": true
+        },
+        {
+          "text": "A positive test charge there is pulled towards Q1.",
+          "vi": {
+            "text": "Điện tích thử dương đặt tại đó bị kéo về phía Q1."
+          },
+          "true": true,
+          "check": {
+            "expr": "testCharge*charge/((4*pi*8.8541878128e-12)*probeDistance^2)",
+            "equals": "force"
+          }
+        },
+        {
+          "text": "At half the distance the field would be twice as strong.",
+          "vi": {
+            "text": "Ở nửa khoảng cách đó, điện trường sẽ mạnh gấp đôi."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "like-pair",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["superposition", "field"],
+      "set": {
+        "charge": 5e-9,
+        "secondCharge": 5e-9,
+        "probeDistance": 0.05
+      },
+      "stem": "Two charges of +{=charge*1e9} nC each are {separation} m apart. What is the field at a point on their line {probeDistance} m from Q1, on the side away from Q2?",
+      "explain": "E1 = k·Q1/r² ≈ {@fieldOne} V/m; Q2 is r + d = {=probeDistance+separation} m away: E2 = k·Q2/(r + d)² ≈ {@fieldTwo} V/m, also pointing away from Q1. E = E1 + E2 ≈ {@fieldSum} V/m.",
+      "vi": {
+        "stem": "Hai điện tích, mỗi điện tích +{=charge*1e9} nC, đặt cách nhau {separation} m. Điện trường tại điểm trên đường thẳng nối chúng, cách Q1 {probeDistance} m về phía không có Q2, bằng bao nhiêu?",
+        "explain": "E1 = k·Q1/r² ≈ {@fieldOne} V/m; Q2 cách điểm đó r + d = {=probeDistance+separation} m: E2 = k·Q2/(r + d)² ≈ {@fieldTwo} V/m, cũng hướng ra xa Q1. E = E1 + E2 ≈ {@fieldSum} V/m."
+      },
+      "options": [
+        {
+          "text": "{@fieldSum} V/m",
+          "vi": {
+            "text": "{@fieldSum} V/m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "charge/((4*pi*8.8541878128e-12)*probeDistance^2)+secondCharge/((4*pi*8.8541878128e-12)*(probeDistance+separation)^2)",
+            "equals": "fieldSum"
+          }
+        },
+        {
+          "text": "{=@fieldOne-@fieldTwo} V/m",
+          "vi": {
+            "text": "{=@fieldOne-@fieldTwo} V/m"
+          },
+          "check": {
+            "expr": "charge/((4*pi*8.8541878128e-12)*probeDistance^2)-secondCharge/((4*pi*8.8541878128e-12)*(probeDistance+separation)^2)",
+            "equals": "fieldSum"
+          }
+        },
+        {
+          "text": "{=@fieldOne+secondCharge/((4*pi*8.8541878128e-12)*separation^2)} V/m",
+          "vi": {
+            "text": "{=@fieldOne+secondCharge/((4*pi*8.8541878128e-12)*separation^2)} V/m"
+          },
+          "check": {
+            "expr": "charge/((4*pi*8.8541878128e-12)*probeDistance^2)+secondCharge/((4*pi*8.8541878128e-12)*separation^2)",
+            "equals": "fieldSum"
+          }
+        },
+        {
+          "text": "{=(charge+secondCharge)/((4*pi*8.8541878128e-12)*probeDistance^2)} V/m",
+          "vi": {
+            "text": "{=(charge+secondCharge)/((4*pi*8.8541878128e-12)*probeDistance^2)} V/m"
+          },
+          "check": {
+            "expr": "(charge+secondCharge)/((4*pi*8.8541878128e-12)*probeDistance^2)",
+            "equals": "fieldSum"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-dipole",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["superposition", "inverse-square", "force"],
+      "set": {
+        "charge": 5e-9,
+        "secondCharge": -5e-9,
+        "probeDistance": 0.05
+      },
+      "stem": "Q1 = +{=charge*1e9} nC and Q2 = {=secondCharge*1e9} nC are {separation} m apart; the probe is {probeDistance} m from Q1 on the side away from Q2 (positive away from Q1). Decide whether each statement is true or false.",
+      "explain": "E = k·Q/r² − k·Q/(r + d)² ≈ {@fieldSum} V/m. |E2|/E1 = r²/(r + d)² = {=probeDistance^2/(probeDistance+separation)^2}: Q1, always nearer, wins, so on this side the total is never zero. A negative test charge would be pushed against the field, towards Q1.",
+      "vi": {
+        "stem": "Q1 = +{=charge*1e9} nC và Q2 = {=secondCharge*1e9} nC cách nhau {separation} m; đầu dò cách Q1 {probeDistance} m về phía không có Q2 (dương khi hướng ra xa Q1). Mỗi nhận định sau đúng hay sai?",
+        "explain": "E = k·Q/r² − k·Q/(r + d)² ≈ {@fieldSum} V/m. |E2|/E1 = r²/(r + d)² = {=probeDistance^2/(probeDistance+separation)^2}: Q1 luôn ở gần hơn nên trội hơn, vì vậy ở phía này điện trường tổng hợp không bao giờ bằng 0. Điện tích thử âm sẽ bị đẩy ngược chiều điện trường, về phía Q1."
+      },
+      "statements": [
+        {
+          "text": "The total field is about {@fieldSum} V/m.",
+          "vi": {
+            "text": "Điện trường tổng hợp khoảng {@fieldSum} V/m."
+          },
+          "true": true,
+          "check": {
+            "expr": "charge/((4*pi*8.8541878128e-12)*probeDistance^2)+secondCharge/((4*pi*8.8541878128e-12)*(probeDistance+separation)^2)",
+            "equals": "fieldSum"
+          }
+        },
+        {
+          "text": "Q2’s field there is {=probeDistance^2/(probeDistance+separation)^2} times Q1’s in size, opposite in direction.",
+          "vi": {
+            "text": "Điện trường của Q2 tại đó có độ lớn bằng {=probeDistance^2/(probeDistance+separation)^2} lần của Q1, ngược hướng."
+          },
+          "true": true,
+          "check": {
+            "expr": "-@fieldOne*probeDistance^2/(probeDistance+separation)^2",
+            "equals": "fieldTwo"
+          }
+        },
+        {
+          "text": "On this side of Q1 the total field is never zero.",
+          "vi": {
+            "text": "Ở phía này của Q1, điện trường tổng hợp không bao giờ bằng 0."
+          },
+          "true": true
+        },
+        {
+          "text": "A negative test charge placed there would be pushed away from Q1.",
+          "vi": {
+            "text": "Điện tích thử âm đặt tại đó sẽ bị đẩy ra xa Q1."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "field-unit",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["field"],
+      "stem": "The SI unit of electric field strength is…",
+      "explain": "E = F/q is in newtons per coulomb, the same as volts per metre (V/m), the unit the station shows.",
+      "vi": {
+        "stem": "Đơn vị của cường độ điện trường trong hệ SI là…",
+        "explain": "E = F/q có đơn vị niutơn trên culông, cũng chính là vôn trên mét (V/m), đơn vị trạm hiển thị."
+      },
+      "options": [
+        {
+          "text": "V/m (the same as N/C)",
+          "vi": {
+            "text": "V/m (cũng là N/C)"
+          },
+          "correct": true
+        },
+        {
+          "text": "V·m",
+          "vi": {
+            "text": "V·m"
+          }
+        },
+        {
+          "text": "C/N",
+          "vi": {
+            "text": "C/N"
+          }
+        },
+        {
+          "text": "N·C",
+          "vi": {
+            "text": "N·C"
+          }
+        }
+      ]
+    },
+    {
+      "id": "test-charge",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["force", "field"],
+      "stem": "A small test charge q is placed at a point near a fixed charge Q. If q is replaced by a test charge 2q, the field strength at that point…",
+      "explain": "E = k|Q|/r² depends on the charge that makes the field and the distance, not on the test charge. The force F = q·E doubles; E = F/q stays the same.",
+      "vi": {
+        "stem": "Đặt một điện tích thử q tại một điểm gần điện tích cố định Q. Nếu thay q bằng điện tích thử 2q thì cường độ điện trường tại điểm đó…",
+        "explain": "E = k|Q|/r² phụ thuộc vào điện tích gây ra điện trường và khoảng cách, không phụ thuộc điện tích thử. Lực F = q·E tăng gấp đôi; E = F/q không đổi."
+      },
+      "options": [
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          },
+          "correct": true
+        },
+        {
+          "text": "doubles",
+          "vi": {
+            "text": "tăng gấp đôi"
+          }
+        },
+        {
+          "text": "halves",
+          "vi": {
+            "text": "giảm một nửa"
+          }
+        },
+        {
+          "text": "becomes four times larger",
+          "vi": {
+            "text": "tăng gấp bốn lần"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-concepts",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["field", "superposition", "force"],
+      "stem": "Decide whether each statement about electric fields is true or false.",
+      "explain": "Midway between two equal like charges their fields are equal and opposite, so E = 0 there. Field lines never cross: the field has one direction at each point. A negative charge is pushed against the field. In a medium of permittivity ε > 1, E = k|Q|/(ε·r²) is smaller than in air.",
+      "vi": {
+        "stem": "Mỗi nhận định sau về điện trường đúng hay sai?",
+        "explain": "Tại trung điểm của hai điện tích cùng dấu, cùng độ lớn, hai điện trường bằng nhau và ngược chiều nên E = 0. Các đường sức không cắt nhau: tại mỗi điểm điện trường chỉ có một hướng. Điện tích âm chịu lực ngược chiều điện trường. Trong môi trường có hằng số điện môi ε > 1, E = k|Q|/(ε·r²) nhỏ hơn trong không khí."
+      },
+      "statements": [
+        {
+          "text": "Midway between two equal charges of the same sign, the field is zero.",
+          "vi": {
+            "text": "Tại trung điểm của hai điện tích bằng nhau và cùng dấu, điện trường bằng 0."
+          },
+          "true": true
+        },
+        {
+          "text": "Two field lines never cross.",
+          "vi": {
+            "text": "Hai đường sức điện không bao giờ cắt nhau."
+          },
+          "true": true
+        },
+        {
+          "text": "A negative test charge is pushed in the direction of the field.",
+          "vi": {
+            "text": "Điện tích thử âm chịu lực cùng chiều với điện trường."
+          },
+          "true": false
+        },
+        {
+          "text": "The same charge makes a weaker field at the same distance in a medium of permittivity ε > 1 than in air.",
+          "vi": {
+            "text": "Cùng một điện tích, ở cùng khoảng cách, gây ra điện trường yếu hơn trong môi trường có hằng số điện môi ε > 1 so với trong không khí."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "field-20cm",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["field", "inverse-square"],
+      "set": {
+        "charge": 5e-9,
+        "secondCharge": 0,
+        "probeDistance": 0.2
+      },
+      "stem": "What is the field strength {probeDistance} m from a point charge of +{=charge*1e9} nC in air (k ≈ 8.99 × 10⁹ N·m²/C²)?",
+      "explain": "E = k·|Q|/r² = 8.99 × 10⁹ × {charge}/{probeDistance}² ≈ {@fieldSum} V/m. Not squaring r, or leaving out k, gives the other values.",
+      "vi": {
+        "stem": "Cường độ điện trường tại điểm cách điện tích điểm +{=charge*1e9} nC đặt trong không khí {probeDistance} m bằng bao nhiêu (k ≈ 8,99 × 10⁹ N·m²/C²)?",
+        "explain": "E = k·|Q|/r² = 8,99 × 10⁹ × {charge}/{probeDistance}² ≈ {@fieldSum} V/m. Không bình phương r, hoặc bỏ quên k, sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{@fieldSum} V/m",
+          "vi": {
+            "text": "{@fieldSum} V/m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "charge/(4*pi*8.8541878128e-12*probeDistance^2)",
+            "equals": "fieldSum"
+          }
+        },
+        {
+          "text": "{=charge/(4*pi*8.8541878128e-12*probeDistance)} V/m",
+          "vi": {
+            "text": "{=charge/(4*pi*8.8541878128e-12*probeDistance)} V/m"
+          },
+          "check": {
+            "expr": "charge/(4*pi*8.8541878128e-12*probeDistance)",
+            "equals": "fieldSum"
+          }
+        },
+        {
+          "text": "{=charge/probeDistance^2} V/m",
+          "vi": {
+            "text": "{=charge/probeDistance^2} V/m"
+          },
+          "check": {
+            "expr": "charge/probeDistance^2",
+            "equals": "fieldSum"
+          }
+        },
+        {
+          "text": "{=charge*probeDistance^2/(4*pi*8.8541878128e-12)} V/m",
+          "vi": {
+            "text": "{=charge*probeDistance^2/(4*pi*8.8541878128e-12)} V/m"
+          },
+          "check": {
+            "expr": "charge*probeDistance^2/(4*pi*8.8541878128e-12)",
+            "equals": "fieldSum"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-2nc",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["field", "force", "inverse-square"],
+      "set": {
+        "charge": 2e-9,
+        "secondCharge": 0,
+        "probeDistance": 0.1
+      },
+      "stem": "A single charge Q1 = +{=charge*1e9} nC is in air; a test charge of +{=testCharge*1e9} nC is placed {probeDistance} m from it. Decide whether each statement is true or false.",
+      "explain": "E = k·Q1/r² ≈ {@fieldSum} V/m and F = q·E ≈ {@force} N, pushing the test charge away from Q1 (like charges). At twice the distance E falls to a quarter, {=@fieldSum/4} V/m, not to a half.",
+      "vi": {
+        "stem": "Một điện tích Q1 = +{=charge*1e9} nC đặt trong không khí; một điện tích thử +{=testCharge*1e9} nC được đặt cách nó {probeDistance} m. Mỗi nhận định sau đúng hay sai?",
+        "explain": "E = k·Q1/r² ≈ {@fieldSum} V/m và F = q·E ≈ {@force} N, đẩy điện tích thử ra xa Q1 (hai điện tích cùng dấu). Ở khoảng cách gấp đôi, E giảm còn một phần tư, {=@fieldSum/4} V/m, chứ không phải một nửa."
+      },
+      "statements": [
+        {
+          "text": "The field there is about {@fieldSum} V/m.",
+          "vi": {
+            "text": "Cường độ điện trường tại đó khoảng {@fieldSum} V/m."
+          },
+          "true": true,
+          "check": {
+            "expr": "charge/(4*pi*8.8541878128e-12*probeDistance^2)",
+            "equals": "fieldSum"
+          }
+        },
+        {
+          "text": "The test charge feels a force of about {@force} N.",
+          "vi": {
+            "text": "Điện tích thử chịu lực khoảng {@force} N."
+          },
+          "true": true,
+          "check": {
+            "expr": "testCharge*@fieldSum",
+            "equals": "force"
+          }
+        },
+        {
+          "text": "The force pushes the test charge away from Q1.",
+          "vi": {
+            "text": "Lực đẩy điện tích thử ra xa Q1."
+          },
+          "true": true
+        },
+        {
+          "text": "At twice the distance the field would be {=@fieldSum/2} V/m.",
+          "vi": {
+            "text": "Ở khoảng cách gấp đôi, cường độ điện trường sẽ là {=@fieldSum/2} V/m."
+          },
+          "true": false,
+          "check": {
+            "expr": "4*(@fieldSum/2)",
+            "equals": "fieldSum"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-q",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["field", "inverse-square"],
+      "set": {
+        "charge": 5e-9,
+        "secondCharge": 0,
+        "probeDistance": 0.05
+      },
+      "stem": "{probeDistance} m from a single point charge in air, the probe reads E = {@fieldSum|4} V/m, pointing away from it. What is the charge (k ≈ 8.99 × 10⁹ N·m²/C²)?",
+      "explain": "E = k·Q/r² gives Q = E·r²/k = {@fieldSum|4} × {probeDistance}²/(8.99 × 10⁹) ≈ +{=@fieldSum*probeDistance^2*4*pi*8.8541878128e-12*1e9|3} nC, positive because the field points away. Forgetting to square r, or dividing E by k·r², gives the other values.",
+      "vi": {
+        "stem": "Cách một điện tích điểm trong không khí {probeDistance} m, đầu dò đo được E = {@fieldSum|4} V/m, hướng ra xa điện tích. Điện tích đó bằng bao nhiêu (k ≈ 8,99 × 10⁹ N·m²/C²)?",
+        "explain": "E = k·Q/r² cho Q = E·r²/k = {@fieldSum|4} × {probeDistance}²/(8,99 × 10⁹) ≈ +{=@fieldSum*probeDistance^2*4*pi*8.8541878128e-12*1e9|3} nC, dương vì điện trường hướng ra xa. Quên bình phương r, hoặc lấy E chia cho k·r², sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "+{=@fieldSum*probeDistance^2*4*pi*8.8541878128e-12*1e9|3} nC",
+          "vi": {
+            "text": "+{=@fieldSum*probeDistance^2*4*pi*8.8541878128e-12*1e9|3} nC"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(@fieldSum*probeDistance^2*4*pi*8.8541878128e-12)/(4*pi*8.8541878128e-12*probeDistance^2)",
+            "equals": "fieldSum"
+          }
+        },
+        {
+          "text": "+{=@fieldSum*probeDistance*4*pi*8.8541878128e-12*1e9|3} nC",
+          "vi": {
+            "text": "+{=@fieldSum*probeDistance*4*pi*8.8541878128e-12*1e9|3} nC"
+          },
+          "check": {
+            "expr": "(@fieldSum*probeDistance*4*pi*8.8541878128e-12)/(4*pi*8.8541878128e-12*probeDistance^2)",
+            "equals": "fieldSum"
+          }
+        },
+        {
+          "text": "−{=@fieldSum*probeDistance^2*4*pi*8.8541878128e-12*1e9|3} nC",
+          "vi": {
+            "text": "−{=@fieldSum*probeDistance^2*4*pi*8.8541878128e-12*1e9|3} nC"
+          },
+          "check": {
+            "expr": "-(@fieldSum*probeDistance^2*4*pi*8.8541878128e-12)/(4*pi*8.8541878128e-12*probeDistance^2)",
+            "equals": "fieldSum"
+          }
+        },
+        {
+          "text": "+{=@fieldSum*4*pi*8.8541878128e-12/probeDistance^2*1e9|3} nC",
+          "vi": {
+            "text": "+{=@fieldSum*4*pi*8.8541878128e-12/probeDistance^2*1e9|3} nC"
+          },
+          "check": {
+            "expr": "(@fieldSum*4*pi*8.8541878128e-12/probeDistance^2)/(4*pi*8.8541878128e-12*probeDistance^2)",
+            "equals": "fieldSum"
+          }
+        }
+      ]
+    },
+    {
+      "id": "unequal-pair",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["superposition", "inverse-square"],
+      "set": {
+        "charge": 2e-9,
+        "secondCharge": 5e-9,
+        "probeDistance": 0.1
+      },
+      "stem": "Q1 = +{=charge*1e9} nC and Q2 = +{=secondCharge*1e9} nC are {separation} m apart in air. What is the field at a point on their line {probeDistance} m from Q1, on the side away from Q2 (k ≈ 8.99 × 10⁹ N·m²/C²)?",
+      "explain": "The point is {probeDistance} m from Q1 and {=probeDistance+separation} m from Q2. E1 = k·Q1/r² ≈ {@fieldOne} V/m and E2 = k·Q2/(r + d)² ≈ {@fieldTwo} V/m both point away from the charges, the same way, so E = E1 + E2 ≈ {@fieldSum} V/m. Using r for Q2 as well, or subtracting, gives the other values.",
+      "vi": {
+        "stem": "Q1 = +{=charge*1e9} nC và Q2 = +{=secondCharge*1e9} nC đặt cách nhau {separation} m trong không khí. Cường độ điện trường tại điểm trên đường thẳng nối chúng, cách Q1 {probeDistance} m về phía không có Q2, bằng bao nhiêu (k ≈ 8,99 × 10⁹ N·m²/C²)?",
+        "explain": "Điểm đó cách Q1 {probeDistance} m và cách Q2 {=probeDistance+separation} m. E1 = k·Q1/r² ≈ {@fieldOne} V/m và E2 = k·Q2/(r + d)² ≈ {@fieldTwo} V/m đều hướng ra xa các điện tích, cùng chiều nhau, nên E = E1 + E2 ≈ {@fieldSum} V/m. Dùng khoảng cách r cho cả Q2, hoặc lấy hiệu, sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{@fieldSum} V/m",
+          "vi": {
+            "text": "{@fieldSum} V/m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@fieldOne+@fieldTwo",
+            "equals": "fieldSum"
+          }
+        },
+        {
+          "text": "{=@fieldOne-@fieldTwo} V/m",
+          "vi": {
+            "text": "{=@fieldOne-@fieldTwo} V/m"
+          },
+          "check": {
+            "expr": "@fieldOne-@fieldTwo",
+            "equals": "fieldSum"
+          }
+        },
+        {
+          "text": "{=@fieldOne+secondCharge/(4*pi*8.8541878128e-12*probeDistance^2)} V/m",
+          "vi": {
+            "text": "{=@fieldOne+secondCharge/(4*pi*8.8541878128e-12*probeDistance^2)} V/m"
+          },
+          "check": {
+            "expr": "@fieldOne+secondCharge/(4*pi*8.8541878128e-12*probeDistance^2)",
+            "equals": "fieldSum"
+          }
+        },
+        {
+          "text": "{@fieldOne} V/m",
+          "vi": {
+            "text": "{@fieldOne} V/m"
+          },
+          "check": {
+            "expr": "@fieldOne",
+            "equals": "fieldSum"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-negative-pair",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["superposition", "force", "field"],
+      "set": {
+        "charge": -5e-9,
+        "secondCharge": 5e-9,
+        "probeDistance": 0.2
+      },
+      "stem": "Q1 = {=charge*1e9} nC and Q2 = +{=secondCharge*1e9} nC are {separation} m apart; the probe is {probeDistance} m from Q1 on the side away from Q2 (positive away from Q1). Decide whether each statement is true or false.",
+      "explain": "E1 = k·Q1/r² ≈ {@fieldOne} V/m (towards Q1) and E2 = k·Q2/(r + d)² ≈ +{@fieldTwo} V/m (away): they point opposite ways, so E = E1 + E2 ≈ {@fieldSum} V/m, about {=-@fieldSum} V/m towards Q1. A positive test charge is pushed along E, towards Q1. Adding the sizes, {=-@fieldOne+@fieldTwo} V/m, ignores their directions.",
+      "vi": {
+        "stem": "Q1 = {=charge*1e9} nC và Q2 = +{=secondCharge*1e9} nC đặt cách nhau {separation} m; đầu dò cách Q1 {probeDistance} m về phía không có Q2 (chiều dương hướng ra xa Q1). Mỗi nhận định sau đúng hay sai?",
+        "explain": "E1 = k·Q1/r² ≈ {@fieldOne} V/m (hướng về Q1) và E2 = k·Q2/(r + d)² ≈ +{@fieldTwo} V/m (hướng ra xa): chúng ngược chiều nhau, nên E = E1 + E2 ≈ {@fieldSum} V/m, tức khoảng {=-@fieldSum} V/m hướng về Q1. Điện tích thử dương bị đẩy theo chiều E, tức về phía Q1. Cộng độ lớn, {=-@fieldOne+@fieldTwo} V/m, là bỏ qua chiều của chúng."
+      },
+      "statements": [
+        {
+          "text": "Q1 alone makes about {=-@fieldOne} V/m there, pointing towards Q1.",
+          "vi": {
+            "text": "Riêng Q1 gây ra tại đó khoảng {=-@fieldOne} V/m, hướng về Q1."
+          },
+          "true": true,
+          "check": {
+            "expr": "charge/(4*pi*8.8541878128e-12*probeDistance^2)",
+            "equals": "fieldOne"
+          }
+        },
+        {
+          "text": "The total field is about {=-@fieldSum} V/m, pointing towards Q1.",
+          "vi": {
+            "text": "Điện trường tổng hợp khoảng {=-@fieldSum} V/m, hướng về Q1."
+          },
+          "true": true,
+          "check": {
+            "expr": "charge/(4*pi*8.8541878128e-12*probeDistance^2)+secondCharge/(4*pi*8.8541878128e-12*(probeDistance+separation)^2)",
+            "equals": "fieldSum"
+          }
+        },
+        {
+          "text": "A positive test charge there is pushed away from Q1.",
+          "vi": {
+            "text": "Điện tích thử dương đặt tại đó bị đẩy ra xa Q1."
+          },
+          "true": false
+        },
+        {
+          "text": "The total field is {=-@fieldOne+@fieldTwo} V/m, the sum of the two sizes.",
+          "vi": {
+            "text": "Điện trường tổng hợp bằng {=-@fieldOne+@fieldTwo} V/m, tổng độ lớn của hai điện trường."
+          },
+          "true": false,
+          "check": {
+            "expr": "-@fieldOne+@fieldTwo",
+            "equals": "fieldSum"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,370 @@
+{
+  "id": "mark-recapture",
+  "name": "Estimating a population: mark and recapture",
+  "category": "biology",
+  "description": "A jar of beans stands for a closed population whose size N is unknown. Some of the beans have been marked red and mixed back in. Choose how many were marked M and how many to catch C, then draw the catch without looking, one bean at a time, and count the marked ones among them, R. The marked share of the catch estimates the marked share of the population, R/C ≈ M/N, so N ≈ M·C/R (the Lincoln–Petersen estimate). Repeat with other catches and compare the estimates: how sure can you be of N?",
+  "vi": {
+    "name": "Ước tính kích thước quần thể: phương pháp bắt – thả – bắt lại",
+    "description": "Một lọ hạt đậu thay cho một quần thể khép kín có kích thước N chưa biết. Một số hạt đã được đánh dấu màu đỏ và trộn trở lại vào lọ. Chọn số hạt đã đánh dấu M và số hạt sẽ bắt C, rồi lấy mẫu mà không nhìn, từng hạt một, và đếm số hạt có đánh dấu trong mẫu, R. Tỉ lệ hạt đánh dấu trong mẫu ước tính tỉ lệ hạt đánh dấu trong quần thể, R/C ≈ M/N, nên N ≈ M·C/R (ước tính Lincoln–Petersen). Lặp lại với các lần bắt khác và so sánh các ước tính: ta có thể chắc chắn về N đến mức nào?",
+    "note": "Mẫu được lấy không hoàn lại: hạt thứ k có đánh dấu với xác suất (số hạt đánh dấu còn trong lọ)/(số hạt còn trong lọ), quyết định bởi 32 bit ngẫu nhiên công bằng của một bộ sinh số có hạt giống (seed) — không phải Math.random — nên R tuân theo đúng phân bố siêu bội, và cùng một lượt lấy mẫu luôn cho cùng các hạt. Ước tính Lincoln–Petersen N̂ = M·C/R (Petersen 1896; Lincoln 1930) không có giá trị khi R = 0 (hiển thị là 0) và có xu hướng cao hơn N khi mẫu nhỏ; ước tính Chapman N̂_C = (M + 1)(C + 1)/(R + 1) − 1 (Chapman 1951) không chệch khi M + C ≥ N và gần như không chệch trong các trường hợp khác, với sai số chuẩn SE = √[(M + 1)(C + 1)(M − R)(C − R)/((R + 1)²(R + 2))] (Seber 1970); khoảng N̂_C ± 2·SE chứa N trong khoảng 95 % số lần lấy mẫu (một phép gần đúng theo phân bố chuẩn, kém chính xác hơn khi R nhỏ). Giả thiết, như ngoài thực địa: quần thể khép kín (không sinh, chết hay di cư giữa hai lần bắt), dấu không mất, hạt có đánh dấu và không đánh dấu có khả năng bị bắt như nhau, và chúng đã trộn đều — ở đây lọ được lắc kỹ nên các giả thiết này đúng hoàn toàn. Kích thước thật của quần thể được giấu: không có giá trị lý thuyết nào được hiển thị, vì mọi giá trị lý thuyết đều suy ra được N. Thời gian chỉ để nhịp việc lấy mẫu: cả mẫu được lấy trong 10 giây. Số đếm là số nguyên chính xác, không có dụng cụ đo và không có sai số đọc. Ngoài thực địa, con vật đã bị bắt có thể né bẫy hoặc lại tìm đến bẫy, dấu có thể mất, và quần thể thay đổi giữa hai lần bắt, nên ước tính có thể lệch xa hơn."
+  },
+  "requiredEquipment": ["bean-jar"],
+  "model": "biology.mark-recapture",
+  "parameters": [
+    {
+      "id": "marked",
+      "label": "Beans marked",
+      "vi": { "label": "Số hạt đã đánh dấu" },
+      "symbol": "M",
+      "unit": "",
+      "default": 50,
+      "min": 30,
+      "max": 80,
+      "presets": [
+        { "label": "30", "vi": { "label": "30" }, "value": 30 },
+        { "label": "50", "vi": { "label": "50" }, "value": 50 },
+        { "label": "80", "vi": { "label": "80" }, "value": 80 }
+      ]
+    },
+    {
+      "id": "caught",
+      "label": "Beans caught",
+      "vi": { "label": "Số hạt bắt lại" },
+      "symbol": "C",
+      "unit": "",
+      "default": 50,
+      "min": 30,
+      "max": 100,
+      "presets": [
+        { "label": "30", "vi": { "label": "30" }, "value": 30 },
+        { "label": "50", "vi": { "label": "50" }, "value": 50 },
+        { "label": "80", "vi": { "label": "80" }, "value": 80 },
+        { "label": "100", "vi": { "label": "100" }, "value": 100 }
+      ]
+    },
+    {
+      "id": "sample",
+      "label": "Catch (shake the jar again)",
+      "vi": { "label": "Lượt bắt (lắc lại lọ)" },
+      "symbol": "s",
+      "unit": "",
+      "default": 1,
+      "min": 1,
+      "max": 6,
+      "presets": [
+        { "label": "Catch 1", "vi": { "label": "Lượt 1" }, "value": 1 },
+        { "label": "Catch 2", "vi": { "label": "Lượt 2" }, "value": 2 },
+        { "label": "Catch 3", "vi": { "label": "Lượt 3" }, "value": 3 },
+        { "label": "Catch 4", "vi": { "label": "Lượt 4" }, "value": 4 },
+        { "label": "Catch 5", "vi": { "label": "Lượt 5" }, "value": 5 },
+        { "label": "Catch 6", "vi": { "label": "Lượt 6" }, "value": 6 }
+      ]
+    }
+  ],
+  "initialConditions": { "populationSize": 437, "drawTime": 10 },
+  "inputs": {
+    "populationSize": { "symbol": "N", "unit": "", "hidden": true },
+    "drawTime": { "symbol": "t", "unit": "s", "desk": false }
+  },
+  "simulation": { "timeStep": 0.02, "maxDuration": 12, "sampleInterval": 0.1 },
+  "measurements": [
+    {
+      "id": "drawn",
+      "label": "Beans drawn so far",
+      "vi": { "label": "Số hạt đã lấy" },
+      "symbol": "n",
+      "unit": "",
+      "variable": "caught"
+    },
+    {
+      "id": "recaptured",
+      "label": "Marked beans among them",
+      "vi": { "label": "Số hạt có đánh dấu trong đó" },
+      "symbol": "R",
+      "unit": "",
+      "variable": "recaptured"
+    },
+    {
+      "id": "chapman",
+      "label": "Chapman's estimate so far",
+      "vi": { "label": "Ước tính Chapman đến lúc này" },
+      "symbol": "N̂_C",
+      "unit": "",
+      "variable": "chapman"
+    }
+  ],
+  "results": [
+    {
+      "id": "recaptured",
+      "label": "Marked beans in the catch R",
+      "vi": { "label": "Số hạt có đánh dấu trong mẫu bắt R" },
+      "symbol": "R",
+      "unit": "",
+      "variable": "recaptured",
+      "reduce": "final",
+      "format": "integer"
+    },
+    {
+      "id": "markedShare",
+      "label": "Marked share of the catch R/C",
+      "vi": { "label": "Tỉ lệ hạt có đánh dấu trong mẫu R/C" },
+      "symbol": "R/C",
+      "unit": "%",
+      "variable": "markedShare",
+      "reduce": "final"
+    },
+    {
+      "id": "lincolnPetersen",
+      "label": "Lincoln–Petersen estimate M·C/R",
+      "vi": { "label": "Ước tính Lincoln–Petersen M·C/R" },
+      "symbol": "N̂",
+      "unit": "",
+      "variable": "lincolnPetersen",
+      "reduce": "final",
+      "classes": [
+        {
+          "max": 0,
+          "label": "No estimate: no marked bean was caught",
+          "vi": { "label": "Không ước tính được: không bắt được hạt có đánh dấu nào" }
+        }
+      ]
+    },
+    {
+      "id": "chapman",
+      "label": "Chapman's estimate (M + 1)(C + 1)/(R + 1) − 1",
+      "vi": { "label": "Ước tính Chapman (M + 1)(C + 1)/(R + 1) − 1" },
+      "symbol": "N̂_C",
+      "unit": "",
+      "variable": "chapman",
+      "reduce": "final"
+    },
+    {
+      "id": "chapmanError",
+      "label": "Standard error of Chapman's estimate",
+      "vi": { "label": "Sai số chuẩn của ước tính Chapman" },
+      "symbol": "SE",
+      "unit": "",
+      "variable": "chapmanError",
+      "reduce": "final"
+    }
+  ],
+  "graphs": [
+    {
+      "id": "recaptured-drawn",
+      "title": "Marked beans against beans drawn",
+      "vi": { "title": "Số hạt có đánh dấu theo số hạt đã lấy" },
+      "x": "drawn",
+      "y": ["recaptured"]
+    },
+    {
+      "id": "estimate-drawn",
+      "title": "Chapman's estimate against beans drawn",
+      "vi": { "title": "Ước tính Chapman theo số hạt đã lấy" },
+      "x": "drawn",
+      "y": ["chapman"]
+    }
+  ],
+  "monitor": "recaptured-drawn",
+  "compare": [{ "graph": "estimate-drawn" }],
+  "scatters": [
+    {
+      "id": "estimate-catch",
+      "title": "Chapman's estimate against the size of the catch",
+      "vi": { "title": "Ước tính Chapman theo số hạt bắt lại" },
+      "x": "caught",
+      "y": "chapman"
+    }
+  ],
+  "note": "The catch is drawn without replacement: bean k is marked with probability (marked beans left in the jar)/(beans left in the jar), decided by 32 fair bits of a seeded generator — never Math.random — so R follows the hypergeometric distribution exactly, and one catch always gives the same beans. The Lincoln–Petersen estimate N̂ = M·C/R (Petersen 1896; Lincoln 1930) has no value while R = 0 (shown as 0) and tends to run high in small samples; Chapman's estimate N̂_C = (M + 1)(C + 1)/(R + 1) − 1 (Chapman 1951) is unbiased when M + C ≥ N and nearly so otherwise, with the standard error SE = √[(M + 1)(C + 1)(M − R)(C − R)/((R + 1)²(R + 2))] (Seber 1970); N̂_C ± 2·SE holds N in about 95 % of catches (a normal approximation, rougher when R is small). Assumed, as in the field: the population is closed (no birth, death or migration between the two catches), marks are not lost, marked and unmarked are equally likely to be caught, and they have mixed evenly — the jar is shaken well, so here these hold exactly. The population's true size is hidden: no theory is shown, since any theory would give N away. Time only paces the draw: the whole catch is drawn in 10 seconds. The counts are exact whole numbers, with no instrument and no reading error. In the field, animals caught once may avoid traps or seek them out, marks can be lost, and the population changes between the catches, so estimates can be further off.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the mark and recapture instructions on the board.",
+      "vi": { "instruction": "Đọc hướng dẫn thí nghiệm bắt – thả – bắt lại trên bảng." },
+      "done": { "kind": "inspected", "item": "mark-recapture-instructions" }
+    },
+    {
+      "id": "marked",
+      "instruction": "Set how many beans were marked, M, with its dial on the control desk.",
+      "vi": { "instruction": "Đặt số hạt đã đánh dấu M bằng núm xoay trên bàn điều khiển." },
+      "done": { "kind": "adjusted", "parameter": "marked" }
+    },
+    {
+      "id": "caught",
+      "instruction": "Set how many beans to catch, C; and which catch, if you wish.",
+      "vi": { "instruction": "Đặt số hạt sẽ bắt lại C; và chọn lượt bắt nếu muốn." },
+      "done": { "kind": "adjusted", "parameter": "caught" }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN and watch the catch laid out on the tray, the marked beans red.",
+      "vi": {
+        "instruction": "Nhấn CHẠY và quan sát mẫu bắt được xếp lên khay, các hạt có đánh dấu màu đỏ."
+      },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read R and the estimates of N on the results monitor: work out M·C/R yourself.",
+      "vi": {
+        "instruction": "Đọc R và các ước tính N trên màn hình kết quả: tự tính M·C/R."
+      },
+      "done": { "kind": "viewed" }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, take another catch or a larger one and compare the estimates: do they agree within their standard errors?",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, bắt một lượt khác hoặc một mẫu lớn hơn rồi so sánh các ước tính: chúng có phù hợp với nhau trong phạm vi sai số chuẩn không?"
+      },
+      "done": { "kind": "reset" }
+    }
+  ],
+  "examples": [
+    {
+      "id": "expected-recaptures",
+      "question": "Suppose a closed population of N = {populationSize}. {marked} are caught, marked and released; later {caught} are caught. How many marked ones do you expect in the second catch?",
+      "vi": {
+        "question": "Giả sử một quần thể kín có N = {populationSize} cá thể. Bắt {marked} cá thể, đánh dấu rồi thả; sau đó bắt lại {caught} cá thể. Số cá thể có đánh dấu dự kiến trong lần bắt thứ hai là bao nhiêu?"
+      },
+      "set": { "populationSize": 500, "marked": 50, "caught": 50 },
+      "find": [{ "theory": "expectedRecaptured", "symbol": "E(R)", "unit": "" }],
+      "steps": [
+        {
+          "say": "Once mixed, the marked share of the catch matches the marked share of the population.",
+          "vi": {
+            "say": "Khi đã trộn đều, tỉ lệ cá thể đánh dấu trong mẫu bắt lại bằng tỉ lệ đánh dấu trong quần thể."
+          },
+          "write": "R/C = M/N"
+        },
+        {
+          "say": "So the expected recaptures are C times M/N. Turned round, this is the Lincoln–Petersen estimate N̂ = M·C/R: with R = {@expectedRecaptured} it gives back N.",
+          "vi": {
+            "say": "Vậy số cá thể đánh dấu dự kiến bằng C nhân M/N. Đảo lại, đây là ước tính Lincoln–Petersen N̂ = M·C/R: với R = {@expectedRecaptured} ta lại được N."
+          },
+          "write": "E(R) = C·M/N = {caught}·{marked}/{populationSize} = {@expectedRecaptured}",
+          "check": { "expr": "caught*marked/populationSize", "equals": "expectedRecaptured" }
+        }
+      ]
+    },
+    {
+      "id": "scatter-of-recaptures",
+      "question": "Suppose N = {populationSize}, with M = {marked} marked and a catch of C = {caught}. Find the expected recaptures and their variance (the catch is drawn without replacement).",
+      "vi": {
+        "question": "Giả sử N = {populationSize}, có M = {marked} cá thể được đánh dấu và mẫu bắt lại C = {caught}. Tìm số cá thể đánh dấu dự kiến và phương sai của nó (mẫu được bắt không hoàn lại)."
+      },
+      "set": { "populationSize": 1000, "marked": 80, "caught": 100 },
+      "find": [
+        { "theory": "expectedRecaptured", "symbol": "E(R)", "unit": "" },
+        { "theory": "recapturedVariance", "symbol": "Var(R)", "unit": "" }
+      ],
+      "steps": [
+        {
+          "say": "The expected number, from the marked share p = M/N.",
+          "vi": { "say": "Giá trị kì vọng, từ tỉ lệ đánh dấu p = M/N." },
+          "write": "E(R) = C·M/N = {caught}·{marked}/{populationSize} = {@expectedRecaptured}",
+          "check": { "expr": "caught*marked/populationSize", "equals": "expectedRecaptured" }
+        },
+        {
+          "say": "Drawing without replacement gives the hypergeometric variance. Its square root, about {=sqrt(@recapturedVariance)|2}, is how far a real count usually lands from E(R).",
+          "vi": {
+            "say": "Bắt không hoàn lại cho phương sai của phân phối siêu bội. Căn bậc hai của nó, khoảng {=sqrt(@recapturedVariance)|2}, cho biết số đếm thực tế thường lệch khỏi E(R) bao nhiêu."
+          },
+          "write": "Var(R) = C·p(1 − p)·(N − C)/(N − 1) ≈ {@recapturedVariance}",
+          "check": {
+            "expr": "caught*(marked/populationSize)*(1-marked/populationSize)*(populationSize-caught)/(populationSize-1)",
+            "equals": "recapturedVariance"
+          }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "You cannot count every animal, but you can estimate how many there are: mark some, release them, catch a sample, and the share of marked ones in the catch gives the population size.",
+    "vi": {
+      "summary": "Không thể đếm hết mọi cá thể, nhưng có thể ước lượng số lượng: đánh dấu một số, thả lại, bắt một mẫu, và tỉ lệ cá thể đã đánh dấu trong mẫu cho biết kích thước quần thể."
+    },
+    "parts": [
+      {
+        "id": "jar",
+        "name": "Jar of beans",
+        "role": "The population: its size N is unknown. M of the beans have been marked red and mixed back in.",
+        "vi": {
+          "name": "Lọ hạt đậu",
+          "role": "Quần thể: kích thước N chưa biết. M hạt đã được đánh dấu đỏ và trộn lại."
+        },
+        "anchor": {
+          "part": "glass"
+        }
+      },
+      {
+        "id": "tray",
+        "name": "Sorting tray",
+        "role": "The catch of C beans is laid out here as it is drawn.",
+        "vi": {
+          "name": "Khay phân loại",
+          "role": "Mẫu bắt gồm C hạt được bày ra đây khi rút."
+        },
+        "anchor": {
+          "at": [0.16, -0.11, 0.08]
+        }
+      },
+      {
+        "id": "marked",
+        "name": "Marked beans in the catch",
+        "role": "The red ones, R of them, laid out from the front left.",
+        "vi": {
+          "name": "Hạt có đánh dấu trong mẫu",
+          "role": "Các hạt đỏ, gồm R hạt, xếp từ góc trước bên trái."
+        },
+        "anchor": {
+          "at": [0, -0.105, 0.09]
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "M beans have been marked red and mixed back into the jar. The jar is shaken well, so they spread evenly through the population.",
+        "vi": {
+          "text": "M hạt đã được đánh dấu đỏ và trộn lại vào lọ. Lọ được lắc kỹ, nên chúng phân bố đều trong quần thể."
+        },
+        "parts": ["jar"]
+      },
+      {
+        "text": "A catch of C beans is drawn without looking, one at a time, and the marked ones among them are counted: R.",
+        "vi": {
+          "text": "Rút mẫu C hạt mà không nhìn, từng hạt một, rồi đếm số hạt có đánh dấu trong đó: R."
+        },
+        "parts": ["tray", "marked"]
+      },
+      {
+        "text": "If the marked beans are evenly mixed, the marked share of the catch matches the marked share of the population: R/C ≈ M/N.",
+        "vi": {
+          "text": "Nếu các hạt đánh dấu được trộn đều, tỉ lệ hạt đánh dấu trong mẫu bằng tỉ lệ đó trong quần thể: R/C ≈ M/N."
+        },
+        "parts": ["marked", "jar"]
+      },
+      {
+        "text": "So N ≈ M·C/R — the Lincoln–Petersen estimate. Chapman’s estimate, (M + 1)(C + 1)/(R + 1) − 1, runs less high in small catches, and its standard error says how sure you can be.",
+        "vi": {
+          "text": "Vì vậy N ≈ M·C/R — ước lượng Lincoln–Petersen. Ước lượng Chapman, (M + 1)(C + 1)/(R + 1) − 1, ít bị lệch cao hơn khi mẫu nhỏ, và sai số chuẩn của nó cho biết độ tin cậy."
+        },
+        "parts": ["tray"]
+      },
+      {
+        "text": "Each catch gives a different R by chance, so the estimates scatter. Take other or larger catches and compare: do they agree within their standard errors? The true N is never shown.",
+        "vi": {
+          "text": "Mỗi lần bắt cho R khác nhau do ngẫu nhiên, nên các ước lượng dao động. Hãy bắt mẫu khác hoặc mẫu lớn hơn rồi so sánh: chúng có khớp nhau trong phạm vi sai số chuẩn không? Giá trị N thật không bao giờ được hiển thị."
+        },
+        "parts": ["tray", "marked"]
+      },
+      {
+        "text": "The method assumes a closed population, no lost marks, and marked and unmarked equally likely to be caught — true in the jar. In the field these can fail, so estimates can be further off.",
+        "vi": {
+          "text": "Phương pháp giả định quần thể khép kín, dấu không bị mất, và cá thể có đánh dấu hay không đều có cơ hội bị bắt như nhau — điều này đúng với lọ hạt. Ngoài thực địa, các giả định này có thể không đúng, nên ước lượng có thể sai lệch hơn."
+        },
+        "parts": ["jar"]
+      }
+    ]
+  }
+}

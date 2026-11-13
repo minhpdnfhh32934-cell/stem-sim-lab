@@ -1,0 +1,1069 @@
+{
+  "id": "hookes-law",
+  "skills": [
+    {
+      "id": "hooke",
+      "name": "Hooke’s law: F = k·Δl",
+      "advice": "Re-read Hooke’s law: within the elastic limit the spring’s pull is proportional to its extension, F = k·Δl, and points back towards the natural length. k is in N/m.",
+      "vi": {
+        "name": "Định luật Húc: F = k·Δl",
+        "advice": "Đọc lại định luật Húc: trong giới hạn đàn hồi, lực đàn hồi tỉ lệ với độ dãn, F = k·Δl, và hướng về phía làm lò xo trở lại chiều dài tự nhiên. k có đơn vị N/m."
+      }
+    },
+    {
+      "id": "extension",
+      "name": "Extension and length at rest",
+      "advice": "At rest k·Δl = m·g, so Δl = m·g/k. Δl is the extension from L₀, not the whole length: L = L₀ + Δl. Read the ruler at the station, which is zeroed at L₀.",
+      "vi": {
+        "name": "Độ dãn và chiều dài khi cân bằng",
+        "advice": "Khi cân bằng k·Δl = m·g nên Δl = m·g/k. Δl là độ dãn so với L₀, không phải chiều dài cả lò xo: L = L₀ + Δl. Đọc thước trên trạm, thước được đặt số 0 tại L₀."
+      }
+    },
+    {
+      "id": "period",
+      "name": "Oscillation period: T₀ = 2π√(m/k)",
+      "advice": "Learn T₀ = 2π√(m/k): a heavier mass or a softer spring swings more slowly; the amplitude does not matter. Trap: writing √(k/m).",
+      "vi": {
+        "name": "Chu kì dao động: T₀ = 2π√(m/k)",
+        "advice": "Nhớ T₀ = 2π√(m/k): vật nặng hơn hoặc lò xo mềm hơn thì dao động chậm hơn; biên độ không ảnh hưởng. Lỗi hay gặp: viết √(k/m)."
+      }
+    },
+    {
+      "id": "damping",
+      "name": "Damping and measuring k",
+      "advice": "Run ζ = 0.05, 0.5, 1 and 2: below 1 the swings die away with a slightly longer period T_d = T₀/√(1 − ζ²); at 1 or more the mass creeps back without swinging. A ruler shows the nearest multiple of its resolution.",
+      "vi": {
+        "name": "Lực cản và phép đo k",
+        "advice": "Chạy với ζ = 0,05; 0,5; 1 và 2: khi ζ < 1 dao động tắt dần với chu kì dài hơn một chút, T_d = T₀/√(1 − ζ²); khi ζ ≥ 1 vật trở về vị trí cân bằng mà không dao động. Thước hiển thị bội số gần nhất của độ phân giải."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "extension-is",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["hooke"],
+      "stem": "In Hooke’s law F = k·Δl for a spring, Δl is…",
+      "explain": "Δl is the extension: how much longer the spring is than its natural length L₀.",
+      "vi": {
+        "stem": "Trong định luật Húc F = k·Δl của lò xo, Δl là…",
+        "explain": "Δl là độ biến dạng (độ dãn): lò xo dài hơn chiều dài tự nhiên L₀ bao nhiêu."
+      },
+      "options": [
+        {
+          "text": "the change in length from its natural length",
+          "vi": {
+            "text": "độ thay đổi chiều dài so với chiều dài tự nhiên"
+          },
+          "correct": true
+        },
+        {
+          "text": "the spring’s whole length",
+          "vi": {
+            "text": "chiều dài của cả lò xo"
+          }
+        },
+        {
+          "text": "the spring’s natural length",
+          "vi": {
+            "text": "chiều dài tự nhiên của lò xo"
+          }
+        },
+        {
+          "text": "the height of the mass above the floor",
+          "vi": {
+            "text": "độ cao của vật so với sàn"
+          }
+        }
+      ]
+    },
+    {
+      "id": "unit-k",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["hooke"],
+      "stem": "The SI unit of a spring’s stiffness k is…",
+      "explain": "k = F/Δl: newtons per metre, N/m.",
+      "vi": {
+        "stem": "Đơn vị SI của độ cứng k của lò xo là…",
+        "explain": "k = F/Δl: niutơn trên mét, N/m."
+      },
+      "options": [
+        {
+          "text": "N/m",
+          "vi": {
+            "text": "N/m"
+          },
+          "correct": true
+        },
+        {
+          "text": "N·m",
+          "vi": {
+            "text": "N·m"
+          }
+        },
+        {
+          "text": "kg/m",
+          "vi": {
+            "text": "kg/m"
+          }
+        },
+        {
+          "text": "N",
+          "vi": {
+            "text": "N"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-rest",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["hooke", "extension"],
+      "stem": "A mass hangs at rest from an ideal spring, within its elastic limit. Decide whether each statement is true or false.",
+      "explain": "At rest the spring’s pull balances the weight; it points up, back towards L₀; Δl ∝ m; a stiffer spring stretches less under the same weight.",
+      "vi": {
+        "stem": "Một vật treo cân bằng dưới một lò xo lí tưởng, trong giới hạn đàn hồi. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Khi cân bằng, lực đàn hồi cân bằng với trọng lực; lực đàn hồi hướng lên, về phía chiều dài tự nhiên; Δl tỉ lệ với m; lò xo cứng hơn thì dãn ít hơn dưới cùng một trọng lượng."
+      },
+      "statements": [
+        {
+          "text": "The spring’s pull balances the weight of the mass.",
+          "vi": {
+            "text": "Lực đàn hồi của lò xo cân bằng với trọng lực của vật."
+          },
+          "true": true
+        },
+        {
+          "text": "The spring’s pull on the mass points upwards.",
+          "vi": {
+            "text": "Lực đàn hồi tác dụng lên vật hướng lên trên."
+          },
+          "true": true
+        },
+        {
+          "text": "Twice the mass gives twice the extension.",
+          "vi": {
+            "text": "Khối lượng gấp đôi thì độ dãn gấp đôi."
+          },
+          "true": true
+        },
+        {
+          "text": "A stiffer spring stretches more under the same weight.",
+          "vi": {
+            "text": "Lò xo cứng hơn thì dãn nhiều hơn dưới cùng một trọng lượng."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "stiffer",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["extension"],
+      "stem": "The same mass is hung from a spring twice as stiff. At rest the extension…",
+      "explain": "Δl = m·g/k: twice k gives half the extension.",
+      "vi": {
+        "stem": "Treo cùng một vật vào lò xo có độ cứng gấp đôi. Khi cân bằng, độ dãn…",
+        "explain": "Δl = m·g/k: k gấp đôi thì độ dãn giảm một nửa."
+      },
+      "options": [
+        {
+          "text": "halves",
+          "vi": {
+            "text": "giảm một nửa"
+          },
+          "correct": true
+        },
+        {
+          "text": "doubles",
+          "vi": {
+            "text": "tăng gấp đôi"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "becomes four times smaller",
+          "vi": {
+            "text": "giảm bốn lần"
+          }
+        }
+      ]
+    },
+    {
+      "id": "four-times-mass",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["period"],
+      "stem": "The mass on a spring is made four times larger. Its period of oscillation (no damping)…",
+      "explain": "T₀ = 2π√(m/k): four times m gives √4 = 2 times T₀.",
+      "vi": {
+        "stem": "Tăng khối lượng vật treo vào lò xo lên gấp bốn lần. Chu kì dao động (không có lực cản)…",
+        "explain": "T₀ = 2π√(m/k): m tăng 4 lần thì T₀ tăng √4 = 2 lần."
+      },
+      "options": [
+        {
+          "text": "doubles",
+          "vi": {
+            "text": "tăng gấp đôi"
+          },
+          "correct": true
+        },
+        {
+          "text": "becomes four times longer",
+          "vi": {
+            "text": "tăng gấp bốn lần"
+          }
+        },
+        {
+          "text": "halves",
+          "vi": {
+            "text": "giảm một nửa"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-damping",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["period", "damping"],
+      "set": {
+        "mass": 0.5,
+        "stiffness": 20,
+        "damping": 0.2,
+        "offset": 0.1
+      },
+      "stem": "A {mass} kg mass on a spring of stiffness {stiffness} N/m is pulled {offset} m below rest and let go; the damping ratio is ζ = {damping}. Decide whether each statement is true or false.",
+      "explain": "T₀ = 2π√(m/k) ≈ {@period0} s; with damping it swings with T_d = T₀/√(1 − ζ²) ≈ {@periodDamped} s, a little longer. T₀ does not depend on the amplitude. At ζ = 1 it would return without swinging.",
+      "vi": {
+        "stem": "Vật {mass} kg treo vào lò xo độ cứng {stiffness} N/m được kéo xuống {offset} m dưới vị trí cân bằng rồi thả nhẹ; tỉ số cản ζ = {damping}. Mỗi nhận định sau đúng hay sai?",
+        "explain": "T₀ = 2π√(m/k) ≈ {@period0} s; có lực cản thì vật dao động với T_d = T₀/√(1 − ζ²) ≈ {@periodDamped} s, dài hơn một chút. T₀ không phụ thuộc biên độ. Với ζ = 1 vật trở về mà không dao động."
+      },
+      "statements": [
+        {
+          "text": "Without damping its period would be about {@period0} s.",
+          "vi": {
+            "text": "Nếu không có lực cản, chu kì của nó khoảng {@period0} s."
+          },
+          "true": true,
+          "check": {
+            "expr": "2*pi*sqrt(mass/stiffness)",
+            "equals": "period0"
+          }
+        },
+        {
+          "text": "It actually swings with a period of about {@periodDamped} s, a little longer than T₀.",
+          "vi": {
+            "text": "Thực tế nó dao động với chu kì khoảng {@periodDamped} s, dài hơn T₀ một chút."
+          },
+          "true": true,
+          "check": {
+            "expr": "@period0/sqrt(1-damping^2)",
+            "equals": "periodDamped"
+          }
+        },
+        {
+          "text": "Pulled down twice as far, it would swing with a longer period.",
+          "vi": {
+            "text": "Nếu kéo xuống xa gấp đôi, nó sẽ dao động với chu kì dài hơn."
+          },
+          "true": false
+        },
+        {
+          "text": "With ζ = 1 it would swing more slowly but keep swinging.",
+          "vi": {
+            "text": "Với ζ = 1, nó sẽ dao động chậm hơn nhưng vẫn tiếp tục dao động."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "extension",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["extension"],
+      "set": {
+        "mass": 0.2,
+        "stiffness": 50,
+        "offset": 0.02
+      },
+      "stem": "A {mass} kg mass hangs at rest from a spring of stiffness {stiffness} N/m (g = {gravity} m/s²). What is the extension?",
+      "explain": "k·Δl = m·g: Δl = m·g/k = {mass}·{gravity}/{stiffness} ≈ {@extension} m.",
+      "vi": {
+        "stem": "Vật {mass} kg treo cân bằng dưới lò xo có độ cứng {stiffness} N/m (g = {gravity} m/s²). Độ dãn của lò xo bằng bao nhiêu?",
+        "explain": "k·Δl = m·g: Δl = m·g/k = {mass}·{gravity}/{stiffness} ≈ {@extension} m."
+      },
+      "options": [
+        {
+          "text": "{@extension} m",
+          "vi": {
+            "text": "{@extension} m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "mass*gravity/stiffness",
+            "equals": "extension"
+          }
+        },
+        {
+          "text": "{=mass/stiffness} m",
+          "vi": {
+            "text": "{=mass/stiffness} m"
+          },
+          "check": {
+            "expr": "mass/stiffness",
+            "equals": "extension"
+          }
+        },
+        {
+          "text": "{=stiffness/(mass*gravity)} m",
+          "vi": {
+            "text": "{=stiffness/(mass*gravity)} m"
+          },
+          "check": {
+            "expr": "stiffness/(mass*gravity)",
+            "equals": "extension"
+          }
+        },
+        {
+          "text": "{=naturalLength+mass*gravity/stiffness} m",
+          "vi": {
+            "text": "{=naturalLength+mass*gravity/stiffness} m"
+          },
+          "check": {
+            "expr": "naturalLength+mass*gravity/stiffness",
+            "equals": "extension"
+          }
+        }
+      ]
+    },
+    {
+      "id": "length",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["extension"],
+      "set": {
+        "mass": 0.3,
+        "stiffness": 20,
+        "offset": 0.05
+      },
+      "stem": "A spring of natural length {naturalLength} m and stiffness {stiffness} N/m holds a {mass} kg mass at rest (g = {gravity} m/s²). How long is the spring?",
+      "explain": "Δl = m·g/k ≈ {@extension} m; the length is L = L₀ + Δl = {naturalLength} + {@extension} ≈ {@length} m.",
+      "vi": {
+        "stem": "Lò xo có chiều dài tự nhiên {naturalLength} m, độ cứng {stiffness} N/m, treo vật {mass} kg đang cân bằng (g = {gravity} m/s²). Chiều dài của lò xo bằng bao nhiêu?",
+        "explain": "Δl = m·g/k ≈ {@extension} m; chiều dài L = L₀ + Δl = {naturalLength} + {@extension} ≈ {@length} m."
+      },
+      "options": [
+        {
+          "text": "{@length} m",
+          "vi": {
+            "text": "{@length} m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "naturalLength+mass*gravity/stiffness",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "{=mass*gravity/stiffness} m",
+          "vi": {
+            "text": "{=mass*gravity/stiffness} m"
+          },
+          "check": {
+            "expr": "mass*gravity/stiffness",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "{=naturalLength+mass/stiffness} m",
+          "vi": {
+            "text": "{=naturalLength+mass/stiffness} m"
+          },
+          "check": {
+            "expr": "naturalLength+mass/stiffness",
+            "equals": "length"
+          }
+        },
+        {
+          "text": "{=naturalLength-mass*gravity/stiffness} m",
+          "vi": {
+            "text": "{=naturalLength-mass*gravity/stiffness} m"
+          },
+          "check": {
+            "expr": "naturalLength-mass*gravity/stiffness",
+            "equals": "length"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-k",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["hooke", "extension"],
+      "set": {
+        "mass": 0.1,
+        "stiffness": 10,
+        "offset": 0.02
+      },
+      "stem": "A {mass} kg mass stretches a spring by {@extension} m at rest (g = {gravity} m/s²). What is the spring’s stiffness?",
+      "explain": "k = m·g/Δl = {mass}·{gravity}/{@extension} ≈ {@stiffness} N/m. Dividing by the whole length L = {@length} m is a common mistake.",
+      "vi": {
+        "stem": "Vật {mass} kg làm lò xo dãn {@extension} m khi cân bằng (g = {gravity} m/s²). Độ cứng của lò xo bằng bao nhiêu?",
+        "explain": "k = m·g/Δl = {mass}·{gravity}/{@extension} ≈ {@stiffness} N/m. Chia cho cả chiều dài L = {@length} m là lỗi hay gặp."
+      },
+      "options": [
+        {
+          "text": "{=mass*gravity/@extension} N/m",
+          "vi": {
+            "text": "{=mass*gravity/@extension} N/m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "mass*gravity/@extension",
+            "equals": "stiffness"
+          }
+        },
+        {
+          "text": "{=mass/@extension} N/m",
+          "vi": {
+            "text": "{=mass/@extension} N/m"
+          },
+          "check": {
+            "expr": "mass/@extension",
+            "equals": "stiffness"
+          }
+        },
+        {
+          "text": "{=mass*gravity/@length} N/m",
+          "vi": {
+            "text": "{=mass*gravity/@length} N/m"
+          },
+          "check": {
+            "expr": "mass*gravity/@length",
+            "equals": "stiffness"
+          }
+        },
+        {
+          "text": "{=@extension/(mass*gravity)} N/m",
+          "vi": {
+            "text": "{=@extension/(mass*gravity)} N/m"
+          },
+          "check": {
+            "expr": "@extension/(mass*gravity)",
+            "equals": "stiffness"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-period",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["period"],
+      "set": {
+        "mass": 1,
+        "stiffness": 100,
+        "damping": 0.05,
+        "offset": 0.05
+      },
+      "stem": "A {mass} kg mass bounces on a spring of stiffness {stiffness} N/m; damping is very small and left out. Decide whether each statement is true or false.",
+      "explain": "T₀ = 2π√(m/k) = 2π√({mass}/{stiffness}) ≈ {@period0} s, so f = 1/T₀ ≈ {=1/@period0} Hz; forgetting the square root gives {=2*pi*mass/stiffness} s. Four times the mass doubles T₀.",
+      "vi": {
+        "stem": "Vật {mass} kg dao động trên lò xo độ cứng {stiffness} N/m; lực cản rất nhỏ, bỏ qua. Mỗi nhận định sau đúng hay sai?",
+        "explain": "T₀ = 2π√(m/k) = 2π√({mass}/{stiffness}) ≈ {@period0} s, nên f = 1/T₀ ≈ {=1/@period0} Hz; quên dấu căn sẽ ra {=2*pi*mass/stiffness} s. Khối lượng gấp bốn thì T₀ gấp đôi."
+      },
+      "statements": [
+        {
+          "text": "Its period is about {@period0} s.",
+          "vi": {
+            "text": "Chu kì của nó khoảng {@period0} s."
+          },
+          "true": true,
+          "check": {
+            "expr": "2*pi*sqrt(mass/stiffness)",
+            "equals": "period0"
+          }
+        },
+        {
+          "text": "Its period is about {=2*pi*mass/stiffness} s.",
+          "vi": {
+            "text": "Chu kì của nó khoảng {=2*pi*mass/stiffness} s."
+          },
+          "true": false,
+          "check": {
+            "expr": "2*pi*mass/stiffness",
+            "equals": "period0"
+          }
+        },
+        {
+          "text": "It makes about {=1/@period0} oscillations each second.",
+          "vi": {
+            "text": "Nó thực hiện khoảng {=1/@period0} dao động mỗi giây."
+          },
+          "true": true
+        },
+        {
+          "text": "A mass four times larger on the same spring would swing with twice the period.",
+          "vi": {
+            "text": "Vật có khối lượng gấp bốn treo vào cùng lò xo sẽ dao động với chu kì gấp đôi."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "period-from-extension",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["extension", "period"],
+      "set": {
+        "mass": 0.5,
+        "stiffness": 50,
+        "offset": 0.05
+      },
+      "stem": "A mass hung on a spring stretches it by Δl = {@extension} m at rest (g = {gravity} m/s²). With what period does it bounce when pulled down a little and let go (no damping)?",
+      "explain": "At rest k·Δl = m·g, so m/k = Δl/g and T₀ = 2π√(m/k) = 2π√(Δl/g) = 2π√({@extension}/{gravity}) ≈ {@period0} s — no need to know m or k separately.",
+      "vi": {
+        "stem": "Một vật treo vào lò xo làm lò xo dãn Δl = {@extension} m khi cân bằng (g = {gravity} m/s²). Kéo vật xuống một chút rồi thả, vật dao động với chu kì bằng bao nhiêu (bỏ qua lực cản)?",
+        "explain": "Khi cân bằng k·Δl = m·g nên m/k = Δl/g và T₀ = 2π√(m/k) = 2π√(Δl/g) = 2π√({@extension}/{gravity}) ≈ {@period0} s — không cần biết riêng m hay k."
+      },
+      "options": [
+        {
+          "text": "{=2*pi*sqrt(@extension/gravity)} s",
+          "vi": {
+            "text": "{=2*pi*sqrt(@extension/gravity)} s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2*pi*sqrt(@extension/gravity)",
+            "equals": "period0"
+          }
+        },
+        {
+          "text": "{=2*pi*sqrt(gravity/@extension)} s",
+          "vi": {
+            "text": "{=2*pi*sqrt(gravity/@extension)} s"
+          },
+          "check": {
+            "expr": "2*pi*sqrt(gravity/@extension)",
+            "equals": "period0"
+          }
+        },
+        {
+          "text": "{=2*pi*sqrt(@extension)} s",
+          "vi": {
+            "text": "{=2*pi*sqrt(@extension)} s"
+          },
+          "check": {
+            "expr": "2*pi*sqrt(@extension)",
+            "equals": "period0"
+          }
+        },
+        {
+          "text": "{=sqrt(@extension/gravity)} s",
+          "vi": {
+            "text": "{=sqrt(@extension/gravity)} s"
+          },
+          "check": {
+            "expr": "sqrt(@extension/gravity)",
+            "equals": "period0"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-ruler",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["damping", "hooke", "extension"],
+      "set": {
+        "mass": 0.2,
+        "stiffness": 20,
+        "resolution": 0.005,
+        "offset": 0.05
+      },
+      "stem": "A {mass} kg mass hangs at rest from a spring of stiffness {stiffness} N/m (g = {gravity} m/s²); the extension is read on a ruler of resolution {resolution} m. Decide whether each statement is true or false.",
+      "explain": "Δl = m·g/k ≈ {@extension|4} m; the ruler shows {=round(@extension/resolution)*resolution} m, and k from that reading is m·g/{=round(@extension/resolution)*resolution} ≈ {=mass*gravity/(round(@extension/resolution)*resolution)} N/m. Over runs, T₀² against m is a line of slope 4π²/k ≈ {=4*pi^2/stiffness} s²/kg. k uses Δl, never the whole length.",
+      "vi": {
+        "stem": "Vật {mass} kg treo cân bằng dưới lò xo độ cứng {stiffness} N/m (g = {gravity} m/s²); độ dãn được đọc trên thước có độ phân giải {resolution} m. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Δl = m·g/k ≈ {@extension|4} m; thước hiển thị {=round(@extension/resolution)*resolution} m, và k tính từ số đọc đó là m·g/{=round(@extension/resolution)*resolution} ≈ {=mass*gravity/(round(@extension/resolution)*resolution)} N/m. Qua nhiều lần đo, đồ thị T₀² theo m là đường thẳng hệ số góc 4π²/k ≈ {=4*pi^2/stiffness} s²/kg. Tính k phải dùng Δl, không dùng cả chiều dài."
+      },
+      "statements": [
+        {
+          "text": "The ruler shows the extension as {=round(@extension/resolution)*resolution} m.",
+          "vi": {
+            "text": "Thước hiển thị độ dãn là {=round(@extension/resolution)*resolution} m."
+          },
+          "true": true
+        },
+        {
+          "text": "k worked out from that reading is about {=mass*gravity/(round(@extension/resolution)*resolution)} N/m.",
+          "vi": {
+            "text": "k tính từ số đọc đó khoảng {=mass*gravity/(round(@extension/resolution)*resolution)} N/m."
+          },
+          "true": true
+        },
+        {
+          "text": "Over several masses, T₀² against m is a straight line of slope 4π²/k ≈ {=4*pi^2/stiffness} s²/kg.",
+          "vi": {
+            "text": "Với nhiều khối lượng khác nhau, đồ thị T₀² theo m là đường thẳng có hệ số góc 4π²/k ≈ {=4*pi^2/stiffness} s²/kg."
+          },
+          "true": true
+        },
+        {
+          "text": "k = m·g/L, with L the spring’s whole length, gives the same stiffness.",
+          "vi": {
+            "text": "k = m·g/L, với L là chiều dài cả lò xo, cũng cho cùng độ cứng."
+          },
+          "true": false,
+          "check": {
+            "expr": "mass*gravity/@length",
+            "equals": "stiffness"
+          }
+        }
+      ]
+    },
+    {
+      "id": "elastic-limit",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["hooke"],
+      "stem": "Hooke’s law F = k·Δl holds for a spring only…",
+      "explain": "The force is proportional to the extension only within the elastic limit; stretched beyond it, the spring no longer returns to its natural length and F = k·Δl stops holding.",
+      "vi": {
+        "stem": "Định luật Hooke F = k·Δl chỉ đúng với lò xo khi…",
+        "explain": "Lực đàn hồi tỉ lệ với độ biến dạng chỉ trong giới hạn đàn hồi; kéo quá giới hạn đó, lò xo không trở về chiều dài tự nhiên và F = k·Δl không còn đúng."
+      },
+      "options": [
+        {
+          "text": "within its elastic limit",
+          "vi": {
+            "text": "trong giới hạn đàn hồi"
+          },
+          "correct": true
+        },
+        {
+          "text": "when it is stretched beyond its elastic limit",
+          "vi": {
+            "text": "khi bị kéo quá giới hạn đàn hồi"
+          }
+        },
+        {
+          "text": "when the mass hung on it is at least 1 kg",
+          "vi": {
+            "text": "khi khối lượng treo vào ít nhất là 1 kg"
+          }
+        },
+        {
+          "text": "only while it oscillates",
+          "vi": {
+            "text": "chỉ trong lúc nó dao động"
+          }
+        }
+      ]
+    },
+    {
+      "id": "bigger-pull",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["period"],
+      "stem": "A mass on a spring is pulled further down before it is let go (still within the elastic limit, no damping). Its period…",
+      "explain": "T₀ = 2π√(m/k) depends only on the mass and the stiffness, not on how far the mass is pulled: a larger amplitude means a faster swing over a longer path, in the same time.",
+      "vi": {
+        "stem": "Kéo vật treo trên lò xo xuống thấp hơn trước khi thả (vẫn trong giới hạn đàn hồi, bỏ qua ma sát). Chu kì dao động của nó…",
+        "explain": "T₀ = 2π√(m/k) chỉ phụ thuộc khối lượng và độ cứng, không phụ thuộc vật được kéo xa bao nhiêu: biên độ lớn hơn thì vật đi quãng đường dài hơn với tốc độ lớn hơn, trong cùng thời gian."
+      },
+      "options": [
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          },
+          "correct": true
+        },
+        {
+          "text": "becomes longer",
+          "vi": {
+            "text": "dài hơn"
+          }
+        },
+        {
+          "text": "becomes shorter",
+          "vi": {
+            "text": "ngắn hơn"
+          }
+        },
+        {
+          "text": "grows in proportion to the pull",
+          "vi": {
+            "text": "tăng tỉ lệ với khoảng kéo"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-damped",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["damping", "period"],
+      "stem": "A mass bounces on a spring in a liquid that damps it (damping ratio ζ). Decide whether each statement is true or false.",
+      "explain": "More damping makes the swings die away faster; at ζ ≥ 1 the mass creeps back to rest without overshooting. Damping does not move the rest position, where k·Δl = m·g. T₀ = 2π√(m/k) has no g in it: the same spring and mass bounce with the same period on the Moon.",
+      "vi": {
+        "stem": "Một vật dao động trên lò xo trong chất lỏng gây cản (hệ số tắt dần ζ). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Lực cản càng lớn thì dao động tắt càng nhanh; khi ζ ≥ 1 vật trở về vị trí cân bằng mà không vượt qua nó. Lực cản không làm thay đổi vị trí cân bằng, nơi k·Δl = m·g. T₀ = 2π√(m/k) không chứa g: cùng lò xo và vật đó dao động với cùng chu kì trên Mặt Trăng."
+      },
+      "statements": [
+        {
+          "text": "The larger ζ, the faster the swings die away.",
+          "vi": {
+            "text": "ζ càng lớn thì dao động tắt càng nhanh."
+          },
+          "true": true
+        },
+        {
+          "text": "At ζ ≥ 1 the mass returns to rest without swinging past it.",
+          "vi": {
+            "text": "Khi ζ ≥ 1, vật trở về vị trí cân bằng mà không dao động qua lại."
+          },
+          "true": true
+        },
+        {
+          "text": "Damping moves the position where the mass comes to rest.",
+          "vi": {
+            "text": "Lực cản làm thay đổi vị trí cân bằng của vật."
+          },
+          "true": false
+        },
+        {
+          "text": "The undamped period would be the same on the Moon.",
+          "vi": {
+            "text": "Chu kì khi không có lực cản trên Mặt Trăng vẫn như trên Trái Đất."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "period-2kg",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["period"],
+      "set": {
+        "mass": 2,
+        "stiffness": 50,
+        "damping": 0.05,
+        "offset": 0.05
+      },
+      "stem": "A {mass} kg mass bounces on a spring of stiffness {stiffness} N/m; damping is very small and left out. What is its period?",
+      "explain": "T₀ = 2π√(m/k) = 2π√({mass}/{stiffness}) ≈ {@period0} s. √(k/m) turned over, or leaving out 2π or the root, gives the other values.",
+      "vi": {
+        "stem": "Một vật {mass} kg dao động trên lò xo có độ cứng {stiffness} N/m; lực cản rất nhỏ, bỏ qua. Chu kì dao động của nó bằng bao nhiêu?",
+        "explain": "T₀ = 2π√(m/k) = 2π√({mass}/{stiffness}) ≈ {@period0} s. Đảo ngược thành √(k/m), hoặc bỏ quên 2π hay dấu căn, sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{@period0} s",
+          "vi": {
+            "text": "{@period0} s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2*pi*sqrt(mass/stiffness)",
+            "equals": "period0"
+          }
+        },
+        {
+          "text": "{=2*pi*sqrt(stiffness/mass)} s",
+          "vi": {
+            "text": "{=2*pi*sqrt(stiffness/mass)} s"
+          },
+          "check": {
+            "expr": "2*pi*sqrt(stiffness/mass)",
+            "equals": "period0"
+          }
+        },
+        {
+          "text": "{=sqrt(mass/stiffness)} s",
+          "vi": {
+            "text": "{=sqrt(mass/stiffness)} s"
+          },
+          "check": {
+            "expr": "sqrt(mass/stiffness)",
+            "equals": "period0"
+          }
+        },
+        {
+          "text": "{=2*pi*mass/stiffness} s",
+          "vi": {
+            "text": "{=2*pi*mass/stiffness} s"
+          },
+          "check": {
+            "expr": "2*pi*mass/stiffness",
+            "equals": "period0"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-10nm",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["hooke", "extension"],
+      "set": {
+        "mass": 0.3,
+        "stiffness": 10,
+        "offset": 0.1
+      },
+      "stem": "A {mass} kg mass hangs at rest from a spring of natural length {naturalLength} m and stiffness {stiffness} N/m (g = {gravity} m/s²). Decide whether each statement is true or false.",
+      "explain": "The load is m·g = {@load} N; at rest k·Δl = m·g, so Δl = {@extension} m (not m/k) and the spring is {naturalLength} + {@extension} = {@length} m long.",
+      "vi": {
+        "stem": "Một vật {mass} kg treo cân bằng ở đầu lò xo có chiều dài tự nhiên {naturalLength} m, độ cứng {stiffness} N/m (g = {gravity} m/s²). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Trọng lượng của vật là m·g = {@load} N; khi cân bằng k·Δl = m·g, nên Δl = {@extension} m (không phải m/k) và lò xo dài {naturalLength} + {@extension} = {@length} m."
+      },
+      "statements": [
+        {
+          "text": "The load on the spring is {@load} N.",
+          "vi": {
+            "text": "Lực kéo tác dụng lên lò xo bằng {@load} N."
+          },
+          "true": true,
+          "check": {
+            "expr": "mass*gravity",
+            "equals": "load"
+          }
+        },
+        {
+          "text": "The extension at rest is {@extension} m.",
+          "vi": {
+            "text": "Độ dãn của lò xo khi cân bằng bằng {@extension} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "mass*gravity/stiffness",
+            "equals": "extension"
+          }
+        },
+        {
+          "text": "The extension at rest is m/k = {=mass/stiffness} m.",
+          "vi": {
+            "text": "Độ dãn khi cân bằng bằng m/k = {=mass/stiffness} m."
+          },
+          "true": false,
+          "check": {
+            "expr": "mass/stiffness",
+            "equals": "extension"
+          }
+        },
+        {
+          "text": "At rest the spring is {@length} m long.",
+          "vi": {
+            "text": "Khi cân bằng lò xo dài {@length} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "naturalLength+mass*gravity/stiffness",
+            "equals": "length"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-mass",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["period"],
+      "set": {
+        "mass": 0.2,
+        "stiffness": 20,
+        "damping": 0.05
+      },
+      "stem": "A mass on a spring of stiffness {stiffness} N/m bounces with an undamped period of {@period0|4} s. What is the mass?",
+      "explain": "T₀ = 2π√(m/k) gives m = k·T₀²/(4π²) = {stiffness}·{@period0|4}²/(4π²) ≈ {=stiffness*@period0^2/(4*pi^2)} kg. Using 2π for 4π², forgetting to square T₀, or putting k below gives the other values.",
+      "vi": {
+        "stem": "Một vật gắn vào lò xo có độ cứng {stiffness} N/m dao động với chu kì (khi không có lực cản) {@period0|4} s. Khối lượng của vật bằng bao nhiêu?",
+        "explain": "T₀ = 2π√(m/k) cho m = k·T₀²/(4π²) = {stiffness}·{@period0|4}²/(4π²) ≈ {=stiffness*@period0^2/(4*pi^2)} kg. Dùng 2π thay cho 4π², quên bình phương T₀ hoặc đặt k ở mẫu sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{=stiffness*@period0^2/(4*pi^2)} kg",
+          "vi": {
+            "text": "{=stiffness*@period0^2/(4*pi^2)} kg"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2*pi*sqrt((stiffness*@period0^2/(4*pi^2))/stiffness)",
+            "equals": "period0"
+          }
+        },
+        {
+          "text": "{=stiffness*@period0^2/(2*pi)} kg",
+          "vi": {
+            "text": "{=stiffness*@period0^2/(2*pi)} kg"
+          },
+          "check": {
+            "expr": "2*pi*sqrt((stiffness*@period0^2/(2*pi))/stiffness)",
+            "equals": "period0"
+          }
+        },
+        {
+          "text": "{=stiffness*@period0/(4*pi^2)} kg",
+          "vi": {
+            "text": "{=stiffness*@period0/(4*pi^2)} kg"
+          },
+          "check": {
+            "expr": "2*pi*sqrt((stiffness*@period0/(4*pi^2))/stiffness)",
+            "equals": "period0"
+          }
+        },
+        {
+          "text": "{=@period0^2/(4*pi^2*stiffness)} kg",
+          "vi": {
+            "text": "{=@period0^2/(4*pi^2*stiffness)} kg"
+          },
+          "check": {
+            "expr": "2*pi*sqrt((@period0^2/(4*pi^2*stiffness))/stiffness)",
+            "equals": "period0"
+          }
+        }
+      ]
+    },
+    {
+      "id": "k-from-slope",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["period", "damping"],
+      "set": {
+        "mass": 0.5,
+        "stiffness": 50,
+        "damping": 0.05
+      },
+      "stem": "Several masses are hung on the same spring and the undamped period T₀ of each is found. T₀² against m is a straight line through the origin of slope {=4*pi^2/stiffness|3} s²/kg. What is the spring’s stiffness?",
+      "explain": "T₀² = (4π²/k)·m, so the slope is 4π²/k and k = 4π²/slope = 4π²/{=4*pi^2/stiffness|3} ≈ {stiffness} N/m. Taking 1/slope, or slope × 4π², gives the other values.",
+      "vi": {
+        "stem": "Treo lần lượt nhiều vật vào cùng một lò xo và xác định chu kì T₀ (khi không có lực cản) của mỗi vật. Đồ thị T₀² theo m là một đường thẳng đi qua gốc tọa độ có hệ số góc {=4*pi^2/stiffness|3} s²/kg. Độ cứng của lò xo bằng bao nhiêu?",
+        "explain": "T₀² = (4π²/k)·m, nên hệ số góc là 4π²/k và k = 4π²/hệ số góc = 4π²/{=4*pi^2/stiffness|3} ≈ {stiffness} N/m. Lấy 1/hệ số góc, hoặc hệ số góc × 4π², sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{=4*pi^2/(4*pi^2/stiffness)|3} N/m",
+          "vi": {
+            "text": "{=4*pi^2/(4*pi^2/stiffness)|3} N/m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "4*pi^2/(4*pi^2/stiffness)",
+            "equals": "stiffness"
+          }
+        },
+        {
+          "text": "{=stiffness/(4*pi^2)|3} N/m",
+          "vi": {
+            "text": "{=stiffness/(4*pi^2)|3} N/m"
+          },
+          "check": {
+            "expr": "stiffness/(4*pi^2)",
+            "equals": "stiffness"
+          }
+        },
+        {
+          "text": "{=(4*pi^2)^2/stiffness|3} N/m",
+          "vi": {
+            "text": "{=(4*pi^2)^2/stiffness|3} N/m"
+          },
+          "check": {
+            "expr": "(4*pi^2)^2/stiffness",
+            "equals": "stiffness"
+          }
+        },
+        {
+          "text": "{=2*pi/(4*pi^2/stiffness)|3} N/m",
+          "vi": {
+            "text": "{=2*pi/(4*pi^2/stiffness)|3} N/m"
+          },
+          "check": {
+            "expr": "2*pi/(4*pi^2/stiffness)",
+            "equals": "stiffness"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-bounce",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["extension", "period", "damping"],
+      "set": {
+        "mass": 0.5,
+        "stiffness": 100,
+        "offset": 0.05,
+        "damping": 0.05
+      },
+      "stem": "A {mass} kg mass on a spring of stiffness {stiffness} N/m (g = {gravity} m/s²) is pulled {offset} m below its rest position and let go; the damping ratio is {damping}. Decide whether each statement is true or false.",
+      "explain": "At rest Δl = m·g/k = {@extension} m, so at release the extension is {@start} m; without damping it would bounce between {@lowest} m and {@peak} m. Light damping lengthens the period a little: {@periodDamped|4} s against T₀ = {@period0|4} s. The period does not depend on the pull, so a 0.1 m pull leaves it unchanged.",
+      "vi": {
+        "stem": "Một vật {mass} kg gắn vào lò xo có độ cứng {stiffness} N/m (g = {gravity} m/s²) được kéo xuống dưới vị trí cân bằng {offset} m rồi thả; hệ số tắt dần là {damping}. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Khi cân bằng Δl = m·g/k = {@extension} m, nên lúc thả độ dãn là {@start} m; nếu không có lực cản, độ dãn sẽ biến thiên giữa {@lowest} m và {@peak} m. Lực cản nhỏ làm chu kì dài ra một chút: {@periodDamped|4} s so với T₀ = {@period0|4} s. Chu kì không phụ thuộc khoảng kéo, nên kéo 0,1 m cũng không làm nó thay đổi."
+      },
+      "statements": [
+        {
+          "text": "At the moment it is let go, the spring is stretched {@start} m.",
+          "vi": {
+            "text": "Ở thời điểm thả, lò xo dãn {@start} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "mass*gravity/stiffness+offset",
+            "equals": "start"
+          }
+        },
+        {
+          "text": "Without damping, the extension would swing between {@lowest} m and {@peak} m.",
+          "vi": {
+            "text": "Nếu không có lực cản, độ dãn sẽ biến thiên giữa {@lowest} m và {@peak} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "mass*gravity/stiffness-offset",
+            "equals": "lowest"
+          }
+        },
+        {
+          "text": "The damped period, about {@periodDamped|4} s, is a little longer than T₀ = {@period0|4} s.",
+          "vi": {
+            "text": "Chu kì khi có lực cản, khoảng {@periodDamped|4} s, dài hơn T₀ = {@period0|4} s một chút."
+          },
+          "true": true,
+          "check": {
+            "expr": "2*pi/(sqrt(stiffness/mass)*sqrt(1-damping^2))",
+            "equals": "periodDamped"
+          }
+        },
+        {
+          "text": "Pulled 0.1 m below rest instead, it would bounce with twice the period.",
+          "vi": {
+            "text": "Nếu kéo xuống 0,1 m dưới vị trí cân bằng thì nó dao động với chu kì gấp đôi."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

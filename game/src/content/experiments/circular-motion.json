@@ -1,0 +1,612 @@
+{
+  "id": "circular-motion",
+  "name": "Uniform circular motion",
+  "category": "physics",
+  "description": "A rubber bung on a nylon string is whirled in a horizontal circle above a short vertical tube; the string runs down through the tube to a hanger of slotted masses. A marker clip on the string just below the tube fixes the length L from the top of the tube to the bung, and the bung goes round at the speed at which the hanger's weight M·g gives it just the pull it needs. Time 10 turns with the stopwatch to find the period T, then the angular velocity ω = 2π/T, the radius r of the circle, the speed v = ω·r and the centripetal acceleration ω²·r. Over several runs, T² against L and M·g against ω² are straight lines through the origin, as M·g = m·ω²·L.",
+  "vi": {
+    "name": "Chuyển động tròn đều",
+    "description": "Một nút cao su buộc vào sợi dây ni lông được quay tròn trong mặt phẳng nằm ngang phía trên một ống ngắn đặt thẳng đứng; dây luồn xuống trong ống tới một móc treo các quả nặng có rãnh. Một kẹp đánh dấu trên dây, ngay dưới đáy ống, cố định chiều dài L từ miệng ống tới nút, và nút quay với tốc độ mà tại đó trọng lượng M·g của móc treo vừa đủ kéo nút theo quỹ đạo tròn. Bấm giờ 10 vòng quay bằng đồng hồ bấm giây để tìm chu kỳ T, rồi tốc độ góc ω = 2π/T, bán kính quỹ đạo r, tốc độ v = ω·r và gia tốc hướng tâm ω²·r. Qua nhiều lần chạy, đồ thị T² theo L và đồ thị M·g theo ω² là các đường thẳng đi qua gốc tọa độ, vì M·g = m·ω²·L.",
+    "note": "Đây là mô hình dạy học đơn giản hóa của thí nghiệm quay nút cao su, với các khối lượng và chiều dài mang tính minh họa. Nút cao su khối lượng m chuyển động trên một đường tròn nằm ngang có tâm nằm trên trục của ống thẳng đứng; dây vắt qua miệng ống, luồn xuống trong ống tới móc treo khối lượng M đang đứng yên, nên lực căng dây bằng trọng lượng M·g của móc treo. Kẹp đánh dấu trên dây, ngay dưới đáy ống, giữ cố định chiều dài L từ miệng ống tới tâm nút: nút được coi là quay với đúng tốc độ để kẹp đánh dấu đứng yên ở đó. Dây chúc xuống dưới phương ngang một góc β. Theo phương thẳng đứng, M·g·sin β = m·g, nên sin β = m/M: nút càng nặng so với M thì dây càng chúc xuống (từ 4,3° đến 30° với các núm này). Theo phương ngang, thành phần nằm ngang của lực căng là lực hướng tâm, M·g·cos β = m·ω²·r, với bán kính quỹ đạo r = L·cos β, nên M·g = m·ω²·L một cách chính xác: ω = √(M·g/(m·L)) và T = 2π/ω = 2π√(m·L/(M·g)). Vì vậy, dùng L thay cho r trong công thức F = m·ω²·r lại cho kết quả đúng; còn dùng bán kính thật r với toàn bộ lực căng M·g thì lệch một thừa số cos β. Nút chuyển động với tốc độ không đổi v = ω·r = 2π·r/T, và gia tốc ω²·r = v²/r của nó luôn hướng vào tâm. Đồng hồ bấm giây bắt đầu chạy khi nút đi qua vạch xuất phát và dừng khi nút quay đủ N = 10 vòng: T = t_N/N và ω = 2π/T; đo thời gian 10 vòng làm phần sai số do độ phân giải của đồng hồ trong T nhỏ đi 10 lần. Lần chạy bắt đầu khi nút đã quay đều (quá trình tăng tốc không được mô phỏng) và chuyển động hoàn toàn đều, nên kết quả trùng với lý thuyết đến sai số làm tròn của máy tính: không có sai số ngẫu nhiên nào được thêm vào, và đồng hồ bấm giây hiển thị t_N làm tròn theo độ phân giải d của nó. Giả định: dây không khối lượng và không giãn, không có ma sát ở miệng ống, không có lực cản không khí, ống được giữ yên và thẳng đứng, nút được coi là chất điểm đặt tại tâm của nó, và g = 9,81 m/s². Trong phòng thí nghiệm thật, tay người phải lắc nhẹ miệng ống theo một vòng tròn nhỏ để nút tiếp tục quay, bù cho lực cản không khí; ma sát ở miệng ống làm lực kéo lên nút khác M·g; kẹp đánh dấu bị xê dịch; và người bấm giờ có thời gian phản xạ lúc bấm bắt đầu và lúc bấm dừng. Vì thế các chu kỳ đo được sẽ phân tán quanh giá trị lý thuyết này."
+  },
+  "requiredEquipment": ["whirling-apparatus"],
+  "model": "mechanics.circular-motion",
+  "parameters": [
+    {
+      "id": "length",
+      "label": "String length to the bung",
+      "vi": { "label": "Chiều dài dây tới nút cao su" },
+      "symbol": "L",
+      "unit": "m",
+      "default": 0.3,
+      "min": 0.2,
+      "max": 0.4,
+      "step": 0.05,
+      "presets": [
+        { "label": "0.2 m", "vi": { "label": "0,2 m" }, "value": 0.2 },
+        { "label": "0.25 m", "vi": { "label": "0,25 m" }, "value": 0.25 },
+        { "label": "0.3 m", "vi": { "label": "0,3 m" }, "value": 0.3 },
+        { "label": "0.35 m", "vi": { "label": "0,35 m" }, "value": 0.35 },
+        { "label": "0.4 m", "vi": { "label": "0,4 m" }, "value": 0.4 }
+      ]
+    },
+    {
+      "id": "hangingMass",
+      "label": "Hanging mass",
+      "vi": { "label": "Khối lượng treo" },
+      "symbol": "M",
+      "unit": "kg",
+      "default": 0.2,
+      "min": 0.1,
+      "max": 0.4,
+      "step": 0.1,
+      "presets": [
+        { "label": "0.1 kg", "vi": { "label": "0,1 kg" }, "value": 0.1 },
+        { "label": "0.2 kg", "vi": { "label": "0,2 kg" }, "value": 0.2 },
+        { "label": "0.3 kg", "vi": { "label": "0,3 kg" }, "value": 0.3 },
+        { "label": "0.4 kg", "vi": { "label": "0,4 kg" }, "value": 0.4 }
+      ]
+    },
+    {
+      "id": "bungMass",
+      "label": "Bung mass",
+      "vi": { "label": "Khối lượng nút cao su" },
+      "symbol": "m",
+      "unit": "kg",
+      "default": 0.04,
+      "min": 0.03,
+      "max": 0.05,
+      "step": 0.01,
+      "presets": [
+        { "label": "0.03 kg", "vi": { "label": "0,03 kg" }, "value": 0.03 },
+        { "label": "0.04 kg", "vi": { "label": "0,04 kg" }, "value": 0.04 },
+        { "label": "0.05 kg", "vi": { "label": "0,05 kg" }, "value": 0.05 }
+      ]
+    },
+    {
+      "id": "stopwatchResolution",
+      "label": "Stopwatch resolution",
+      "vi": { "label": "Độ phân giải của đồng hồ bấm giây" },
+      "symbol": "d",
+      "unit": "s",
+      "default": 0.01,
+      "min": 0.01,
+      "max": 0.2,
+      "presets": [
+        { "label": "0.01 s (digital)", "vi": { "label": "0,01 s (đồng hồ số)" }, "value": 0.01 },
+        { "label": "0.1 s", "vi": { "label": "0,1 s" }, "value": 0.1 },
+        { "label": "0.2 s (mechanical)", "vi": { "label": "0,2 s (đồng hồ cơ)" }, "value": 0.2 }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "gravity": 9.81,
+    "timedTurns": 10
+  },
+  "inputs": {
+    "gravity": { "symbol": "g", "unit": "m/s²" },
+    "timedTurns": { "symbol": "N", "unit": "" }
+  },
+  "simulation": {
+    "timeStep": 0.001,
+    "maxDuration": 12,
+    "sampleInterval": 0.01
+  },
+  "measurements": [
+    {
+      "id": "turnsCounted",
+      "label": "Turns counted",
+      "vi": { "label": "Số vòng đã đếm" },
+      "symbol": "n",
+      "unit": "",
+      "variable": "turnsCounted"
+    },
+    {
+      "id": "angle",
+      "label": "Angle turned",
+      "vi": { "label": "Góc đã quay" },
+      "symbol": "θ",
+      "unit": "rad",
+      "variable": "angle"
+    },
+    {
+      "id": "x",
+      "label": "Bung position x from the axis",
+      "vi": { "label": "Tọa độ x của nút cao su tính từ trục quay" },
+      "symbol": "x",
+      "unit": "m",
+      "variable": "x"
+    },
+    {
+      "id": "z",
+      "label": "Bung position z from the axis",
+      "vi": { "label": "Tọa độ z của nút cao su tính từ trục quay" },
+      "symbol": "z",
+      "unit": "m",
+      "variable": "z"
+    }
+  ],
+  "results": [
+    {
+      "id": "period",
+      "label": "Period T = t_N/N",
+      "vi": { "label": "Chu kỳ T = t_N/N" },
+      "symbol": "T",
+      "unit": "s",
+      "variable": "period",
+      "reduce": "final",
+      "theory": "period"
+    },
+    {
+      "id": "angularVelocity",
+      "label": "Angular velocity ω = 2π/T",
+      "vi": { "label": "Tốc độ góc ω = 2π/T" },
+      "symbol": "ω",
+      "unit": "rad/s",
+      "variable": "angularVelocity",
+      "reduce": "final",
+      "theory": "angularVelocity"
+    },
+    {
+      "id": "radius",
+      "label": "Radius of the circle r = L·cos β",
+      "vi": { "label": "Bán kính quỹ đạo r = L·cos β" },
+      "symbol": "r",
+      "unit": "m",
+      "variable": "radius",
+      "reduce": "final",
+      "theory": "radius"
+    },
+    {
+      "id": "speed",
+      "label": "Speed v = ω·r",
+      "vi": { "label": "Tốc độ v = ω·r" },
+      "symbol": "v",
+      "unit": "m/s",
+      "variable": "speed",
+      "reduce": "final",
+      "theory": "speed"
+    },
+    {
+      "id": "acceleration",
+      "label": "Centripetal acceleration a = ω²·r",
+      "vi": { "label": "Gia tốc hướng tâm a = ω²·r" },
+      "symbol": "a",
+      "unit": "m/s²",
+      "variable": "acceleration",
+      "reduce": "final",
+      "theory": "acceleration"
+    },
+    {
+      "id": "centripetalForce",
+      "label": "Centripetal force F = m·ω²·r",
+      "vi": { "label": "Lực hướng tâm F = m·ω²·r" },
+      "symbol": "F",
+      "unit": "N",
+      "variable": "centripetalForce",
+      "reduce": "final",
+      "theory": "centripetalForce"
+    },
+    {
+      "id": "droopAngle",
+      "label": "String angle below the horizontal β",
+      "vi": { "label": "Góc chúc của dây dưới phương ngang β" },
+      "symbol": "β",
+      "unit": "°",
+      "variable": "droopAngle",
+      "reduce": "final",
+      "theory": "droopAngle",
+      "classes": [
+        {
+          "max": 8.1096,
+          "label": "Nearly level: r within 1 % of L",
+          "vi": { "label": "Gần nằm ngang: r chênh với L dưới 1 %" }
+        },
+        {
+          "max": 18.1948,
+          "label": "Droops: r 1–5 % below L",
+          "vi": { "label": "Chúc xuống: r nhỏ hơn L từ 1 đến 5 %" }
+        },
+        {
+          "label": "Droops steeply: r more than 5 % below L",
+          "vi": { "label": "Chúc xuống nhiều: r nhỏ hơn L quá 5 %" }
+        }
+      ]
+    },
+    {
+      "id": "timeForTurns",
+      "label": "Time for N turns t_N",
+      "vi": { "label": "Thời gian quay N vòng t_N" },
+      "symbol": "t_N",
+      "unit": "s",
+      "variable": "stopwatch",
+      "reduce": "final",
+      "theory": "timeForTurns"
+    },
+    {
+      "id": "tension",
+      "label": "String tension M·g",
+      "vi": { "label": "Lực căng dây M·g" },
+      "symbol": "M·g",
+      "unit": "N",
+      "variable": "tension",
+      "reduce": "final",
+      "theory": "tension"
+    },
+    {
+      "id": "periodSquared",
+      "label": "Period squared T²",
+      "vi": { "label": "Bình phương chu kỳ T²" },
+      "symbol": "T²",
+      "unit": "s²",
+      "variable": "periodSquared",
+      "reduce": "final",
+      "theory": "periodSquared"
+    },
+    {
+      "id": "omegaSquared",
+      "label": "Angular velocity squared ω²",
+      "vi": { "label": "Bình phương tốc độ góc ω²" },
+      "symbol": "ω²",
+      "unit": "rad²/s²",
+      "variable": "omegaSquared",
+      "reduce": "final",
+      "theory": "omegaSquared"
+    }
+  ],
+  "graphs": [
+    {
+      "id": "angle-time",
+      "title": "Angle turned against time",
+      "vi": { "title": "Góc đã quay theo thời gian" },
+      "x": "time",
+      "y": ["angle"],
+      "mark": "period"
+    },
+    {
+      "id": "position-time",
+      "title": "Bung position against time",
+      "vi": { "title": "Tọa độ của nút cao su theo thời gian" },
+      "x": "time",
+      "y": ["x", "z"],
+      "yLabel": "x, z"
+    }
+  ],
+  "monitor": "angle-time",
+  "compare": [{ "graph": "angle-time" }, { "graph": "position-time", "series": "x" }],
+  "instruments": [
+    {
+      "result": "timeForTurns",
+      "quantity": "Time t_N for N turns",
+      "name": "Stopwatch",
+      "resolution": "stopwatchResolution",
+      "excludes": "the reaction time of whoever presses start and stop, miscounting the turns, the marker drifting from the tube, and the stopwatch's own calibration",
+      "vi": {
+        "quantity": "Thời gian t_N của N vòng quay",
+        "name": "Đồng hồ bấm giây",
+        "excludes": "thời gian phản xạ của người bấm bắt đầu và bấm dừng, việc đếm nhầm số vòng, kẹp đánh dấu bị xê dịch khỏi đáy ống, và sai số hiệu chuẩn của chính đồng hồ"
+      }
+    }
+  ],
+  "analyses": [
+    {
+      "id": "period-length",
+      "title": "Period squared against string length",
+      "note": "Each run is one point: T² from the stopwatch's period against the string length L set at the marker. Runs with the same hanging mass M and bung m are fitted together, at different lengths: T² = 4π²·m·L/(M·g), a straight line through the origin whose slope is 4π²·m/(M·g). At one M and m the string droops at the same angle β whatever L is, so the radius r = L·cos β grows in proportion to L as well. Change only L between runs; the stopwatch resolution does not change a run, only how its time is read.",
+      "vi": {
+        "title": "Bình phương chu kỳ theo chiều dài dây",
+        "note": "Mỗi lần chạy là một điểm: T² tính từ chu kỳ đo bằng đồng hồ bấm giây, theo chiều dài dây L đặt ở kẹp đánh dấu. Các lần chạy cùng khối lượng treo M và cùng nút m được khớp chung, với các chiều dài khác nhau: T² = 4π²·m·L/(M·g), một đường thẳng đi qua gốc tọa độ có hệ số góc 4π²·m/(M·g). Với cùng M và m, dây luôn chúc xuống cùng một góc β dù L bằng bao nhiêu, nên bán kính r = L·cos β cũng tỉ lệ với L. Giữa các lần chạy chỉ thay đổi L; độ phân giải của đồng hồ bấm giây không làm thay đổi lần chạy, chỉ thay đổi cách đọc thời gian của nó."
+      },
+      "x": "length",
+      "y": "periodSquared",
+      "group": ["hangingMass", "bungMass"],
+      "columns": [
+        "length",
+        "hangingMass",
+        "bungMass",
+        "timeForTurns",
+        "period",
+        "periodSquared",
+        "radius"
+      ],
+      "slope": {
+        "label": "Slope of T² against L",
+        "vi": { "label": "Hệ số góc của T² theo L" },
+        "symbol": "T²/L",
+        "unit": "s²/m",
+        "theory": "periodSquaredSlope"
+      }
+    },
+    {
+      "id": "force-omega",
+      "title": "String tension against angular velocity squared",
+      "note": "Each run is one point: the string tension M·g against ω² from the stopwatch's timing. Runs with the same string length L and bung m are fitted together, with different hanging masses: M·g = m·ω²·L, a straight line through the origin whose slope is m·L — the law of the centripetal force with L in place of the radius, exact here (see the note under the results). Its horizontal part, the centripetal force m·ω²·r, is not quite on a straight line against ω² at one L, as r = L·cos β shrinks the lighter M is.",
+      "vi": {
+        "title": "Lực căng dây theo bình phương tốc độ góc",
+        "note": "Mỗi lần chạy là một điểm: lực căng dây M·g theo ω² tính từ thời gian đo bằng đồng hồ bấm giây. Các lần chạy cùng chiều dài dây L và cùng nút m được khớp chung, với các khối lượng treo khác nhau: M·g = m·ω²·L, một đường thẳng đi qua gốc tọa độ có hệ số góc m·L — định luật về lực hướng tâm với L thay cho bán kính, ở đây là chính xác (xem ghi chú dưới phần kết quả). Thành phần nằm ngang của lực căng, tức lực hướng tâm m·ω²·r, không hoàn toàn nằm trên một đường thẳng theo ω² khi giữ nguyên L, vì M càng nhẹ thì r = L·cos β càng nhỏ."
+      },
+      "x": "omegaSquared",
+      "y": "tension",
+      "group": ["length", "bungMass"],
+      "columns": [
+        "hangingMass",
+        "tension",
+        "timeForTurns",
+        "period",
+        "angularVelocity",
+        "omegaSquared"
+      ],
+      "slope": {
+        "label": "Slope of M·g against ω², m·L",
+        "vi": { "label": "Hệ số góc của M·g theo ω², m·L" },
+        "symbol": "m·L",
+        "unit": "kg·m",
+        "theory": "forceSlope"
+      }
+    }
+  ],
+  "note": "A simplified teaching model of the whirling-bung experiment, with illustrative masses and lengths. The bung, of mass m, goes round a horizontal circle centred on the axis of the vertical tube; the string runs over the top of the tube and down through it to the hanger, of mass M, which hangs at rest, so the tension in the string is the hanger's weight M·g. The marker clip just below the tube keeps the length L from the top of the tube to the bung's centre fixed: the bung is taken to go round at just the speed at which the marker stays there. The string slopes down from the tube at an angle β below the horizontal. Vertically, M·g·sin β = m·g, so sin β = m/M: the heavier the bung for its M, the more the string droops (from 4.3° to 30° on these dials). Horizontally, the tension's horizontal part is the centripetal force, M·g·cos β = m·ω²·r, with the circle's radius r = L·cos β, so M·g = m·ω²·L exactly: ω = √(M·g/(m·L)) and T = 2π/ω = 2π√(m·L/(M·g)). Using L where F = m·ω²·r has r is therefore exact here; using the true radius r with the whole tension M·g would be off by a factor cos β. The bung moves at a constant speed v = ω·r = 2π·r/T, and its acceleration ω²·r = v²/r always points to the centre. The stopwatch starts as the bung passes the start mark and stops when it has gone round N = 10 times: T = t_N/N and ω = 2π/T, and timing 10 turns makes the part of T's error that comes from the stopwatch's resolution 10 times smaller. The run starts with the bung already whirling steadily (how it gets up to speed is not modelled) and its motion is exactly uniform, so the results agree with the theory to the computer's rounding: no random error is added, and the stopwatch shows t_N rounded to its resolution d. Assumed: a massless string that does not stretch, no friction where it runs over the top of the tube, no air resistance, the tube held still and upright, and the bung a point at its centre, with g = 9.81 m/s². In a real lab, a hand keeps the bung going by moving the top of the tube in a small circle, against air resistance; friction at the tube makes the pull on the bung differ from M·g; the marker drifts; and whoever times adds a reaction time at the start and at the stop. Measured periods therefore scatter around this theory.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the circular-motion instructions on the board.",
+      "vi": { "instruction": "Đọc hướng dẫn thí nghiệm chuyển động tròn đều trên bảng." },
+      "done": { "kind": "inspected", "item": "circular-motion-instructions" }
+    },
+    {
+      "id": "length",
+      "instruction": "Set the string length L with its dial on the control desk: the marker clip moves to L from the top of the tube.",
+      "vi": {
+        "instruction": "Đặt chiều dài dây L bằng núm xoay trên bàn điều khiển: kẹp đánh dấu dời tới vị trí cách miệng ống một khoảng L."
+      },
+      "done": { "kind": "adjusted", "parameter": "length" }
+    },
+    {
+      "id": "mass",
+      "instruction": "Choose the hanging mass M, and the bung m.",
+      "vi": { "instruction": "Chọn khối lượng treo M và nút cao su m." },
+      "done": { "kind": "adjusted", "parameter": "hangingMass" }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the bung whirls at the speed that holds the marker just below the tube, and the stopwatch times 10 turns.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: nút cao su quay với tốc độ giữ kẹp đánh dấu ở ngay dưới đáy ống, và đồng hồ bấm giây đo thời gian 10 vòng quay."
+      },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read T, ω, r and v on the results monitor and compare them with the theory.",
+      "vi": {
+        "instruction": "Đọc T, ω, r và v trên màn hình kết quả rồi so sánh với lý thuyết."
+      },
+      "done": { "kind": "viewed" }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, change only L (or only M), and run again to add a point to the analysis.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, chỉ thay đổi L (hoặc chỉ thay đổi M), rồi chạy lại để thêm một điểm vào phần phân tích."
+      },
+      "done": { "kind": "reset" }
+    }
+  ],
+  "examples": [
+    {
+      "id": "angular-velocity-period",
+      "question": "A bung of {bungMass} kg whirls at the end of a string L = {length} m long, held taut by a {hangingMass} kg hanger (g = {gravity} m/s²). Find its angular velocity and its period.",
+      "vi": {
+        "question": "Một nút cao su {bungMass} kg quay tròn ở đầu sợi dây dài L = {length} m, dây được giữ căng bởi quả nặng {hangingMass} kg (g = {gravity} m/s²). Tìm tốc độ góc và chu kì quay."
+      },
+      "set": { "length": 0.25, "hangingMass": 0.3, "bungMass": 0.03 },
+      "find": [{ "theory": "angularVelocity" }, { "theory": "period" }],
+      "steps": [
+        {
+          "say": "The string’s pull is the hanger’s weight M·g, and it is the centripetal force on the bung: M·g = m·ω²·L.",
+          "vi": {
+            "say": "Lực căng dây bằng trọng lượng quả nặng M·g, và đó là lực hướng tâm tác dụng lên nút: M·g = m·ω²·L."
+          },
+          "write": "M·g = m·ω²·L"
+        },
+        {
+          "say": "Solve for ω.",
+          "vi": { "say": "Giải ra ω." },
+          "write": "ω = √({hangingMass}·{gravity}/({bungMass}·{length})) ≈ {@angularVelocity} rad/s",
+          "check": {
+            "expr": "sqrt(hangingMass*gravity/(bungMass*length))",
+            "equals": "angularVelocity"
+          }
+        },
+        {
+          "say": "One turn is 2π radians, so the period is 2π over ω.",
+          "vi": { "say": "Một vòng là 2π rad, nên chu kì bằng 2π chia ω." },
+          "write": "T = 2π/ω = 2π/{@angularVelocity} ≈ {@period} s",
+          "check": { "expr": "2*pi/@angularVelocity", "equals": "period" }
+        }
+      ]
+    },
+    {
+      "id": "droop-and-speed",
+      "question": "A {bungMass} kg bung whirls on a string L = {length} m long, held by a {hangingMass} kg hanger. Find the angle the string droops below the horizontal, and the bung’s speed.",
+      "vi": {
+        "question": "Một nút {bungMass} kg quay trên sợi dây dài L = {length} m, giữ bởi quả nặng {hangingMass} kg. Tìm góc nghiêng của dây so với phương ngang, và tốc độ của nút."
+      },
+      "set": { "length": 0.4, "hangingMass": 0.1, "bungMass": 0.05 },
+      "find": [{ "theory": "droopAngle" }, { "theory": "speed" }],
+      "steps": [
+        {
+          "say": "Vertically, the string’s upward part holds the bung up: M·g·sin β = m·g.",
+          "vi": {
+            "say": "Theo phương thẳng đứng, thành phần hướng lên của lực căng giữ nút: M·g·sin β = m·g."
+          },
+          "write": "sin β = m/M = {bungMass}/{hangingMass}  →  β ≈ {@droopAngle}°",
+          "check": { "expr": "deg(asin(bungMass/hangingMass))", "equals": "droopAngle" }
+        },
+        {
+          "say": "The circle’s radius is the horizontal part of the string.",
+          "vi": { "say": "Bán kính quỹ đạo là hình chiếu của dây lên phương ngang." },
+          "write": "r = L·cos β = {length}·cos {@droopAngle}° ≈ {@radius} m",
+          "check": { "expr": "length*cos(rad(@droopAngle))", "equals": "radius" }
+        },
+        {
+          "say": "The angular velocity still comes from M·g = m·ω²·L.",
+          "vi": { "say": "Tốc độ góc vẫn suy ra từ M·g = m·ω²·L." },
+          "write": "ω = √({hangingMass}·{gravity}/({bungMass}·{length})) ≈ {@angularVelocity} rad/s",
+          "check": {
+            "expr": "sqrt(hangingMass*gravity/(bungMass*length))",
+            "equals": "angularVelocity"
+          }
+        },
+        {
+          "say": "The speed is ω times the radius of the circle.",
+          "vi": { "say": "Tốc độ bằng ω nhân bán kính quỹ đạo." },
+          "write": "v = ω·r = {@angularVelocity}·{@radius} ≈ {@speed} m/s",
+          "check": { "expr": "@angularVelocity*@radius", "equals": "speed" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "A bung whirled on a string goes round a circle at a steady speed; the string’s pull towards the centre, the weight of the hanging masses, is what keeps it on the circle.",
+    "vi": {
+      "summary": "Một nút cao su quay tròn trên sợi dây chuyển động trên đường tròn với tốc độ không đổi; lực kéo của dây hướng vào tâm, bằng trọng lượng các quả nặng treo, là lực giữ nó trên đường tròn."
+    },
+    "parts": [
+      {
+        "id": "bung",
+        "name": "Rubber bung, mass m",
+        "role": "Goes round a horizontal circle around the tube’s axis.",
+        "vi": {
+          "name": "Nút cao su, khối lượng m",
+          "role": "Chuyển động trên đường tròn nằm ngang quanh trục của ống."
+        },
+        "anchor": {
+          "part": "bung"
+        }
+      },
+      {
+        "id": "tube",
+        "name": "Glass tube",
+        "role": "Held upright; the string runs over its top and down through it.",
+        "vi": {
+          "name": "Ống thủy tinh",
+          "role": "Được giữ thẳng đứng; sợi dây vắt qua miệng ống và đi xuống bên trong."
+        },
+        "anchor": {
+          "part": "glass"
+        }
+      },
+      {
+        "id": "string",
+        "name": "String, length L",
+        "role": "From the top of the tube to the bung; its tension is the hanger’s weight M·g.",
+        "vi": {
+          "name": "Sợi dây, chiều dài L",
+          "role": "Từ miệng ống tới nút cao su; lực căng của nó bằng trọng lượng M·g của móc treo."
+        },
+        "anchor": {
+          "part": "string"
+        }
+      },
+      {
+        "id": "clip",
+        "name": "Marker clip",
+        "role": "Just below the tube: it fixes the length L of string out to the bung.",
+        "vi": {
+          "name": "Kẹp đánh dấu",
+          "role": "Ngay dưới ống: giữ cố định chiều dài dây L tới nút cao su."
+        },
+        "anchor": {
+          "part": "clip"
+        }
+      },
+      {
+        "id": "hanger",
+        "name": "Hanging mass M",
+        "role": "Slotted masses that hang at rest: their weight pulls the string.",
+        "vi": {
+          "name": "Vật treo M",
+          "role": "Các quả nặng có rãnh treo đứng yên: trọng lượng của chúng kéo sợi dây."
+        },
+        "anchor": {
+          "part": "hanger"
+        }
+      },
+      {
+        "id": "flag",
+        "name": "Start flag",
+        "role": "The stopwatch is started and stopped as the bung passes it.",
+        "vi": {
+          "name": "Cờ xuất phát",
+          "role": "Đồng hồ bấm giây được bấm khi nút cao su đi qua nó."
+        },
+        "anchor": {
+          "at": [0.405, 0.27, 0]
+        }
+      },
+      {
+        "id": "stopwatch",
+        "name": "Stopwatch",
+        "role": "Times N = 10 turns, t_N, to its resolution d; it also counts the turns.",
+        "vi": {
+          "name": "Đồng hồ bấm giây",
+          "role": "Đo thời gian N = 10 vòng, t_N, theo độ phân giải d; nó cũng đếm số vòng."
+        },
+        "anchor": {
+          "part": "stopwatch-digits"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "The bung goes round at a steady speed, but its direction keeps changing, so it is accelerating — towards the centre of the circle. Something must pull it there.",
+        "vi": {
+          "text": "Nút cao su quay với tốc độ không đổi, nhưng hướng chuyển động liên tục thay đổi, nên nó có gia tốc — hướng vào tâm đường tròn. Phải có một lực kéo nó về phía đó."
+        },
+        "parts": ["bung"]
+      },
+      {
+        "text": "That pull is the string’s tension. The hanger hangs at rest, so the tension equals its weight, M·g: the centripetal force comes from the hanging masses.",
+        "vi": {
+          "text": "Lực kéo đó là lực căng của dây. Móc treo đứng yên, nên lực căng bằng trọng lượng của nó, M·g: lực hướng tâm đến từ các quả nặng treo."
+        },
+        "parts": ["string", "hanger", "tube"]
+      },
+      {
+        "text": "The string droops a little at the angle β, with sin β = m/M; the circle’s radius is r = L·cos β. The clip keeps L fixed, so the bung goes round at just the speed that needs this pull.",
+        "vi": {
+          "text": "Sợi dây hơi chúc xuống một góc β, với sin β = m/M; bán kính đường tròn là r = L·cos β. Kẹp giữ L cố định, nên nút cao su quay đúng với tốc độ cần lực kéo này."
+        },
+        "parts": ["string", "clip", "bung"]
+      },
+      {
+        "text": "Horizontally, M·g·cos β = m·ω²·r, which gives exactly M·g = m·ω²·L. So ω = √(M·g/(m·L)) and the period T = 2π/ω.",
+        "vi": {
+          "text": "Theo phương ngang, M·g·cos β = m·ω²·r, suy ra đúng M·g = m·ω²·L. Vì vậy ω = √(M·g/(m·L)) và chu kỳ T = 2π/ω."
+        },
+        "parts": ["hanger", "bung", "string"]
+      },
+      {
+        "text": "Time 10 turns from the start flag: T = t_N/10, then ω = 2π/T, the speed v = ω·r and the centripetal acceleration a = ω²·r, always towards the centre. Timing 10 turns makes the stopwatch’s error in T ten times smaller.",
+        "vi": {
+          "text": "Đo thời gian 10 vòng tính từ cờ xuất phát: T = t_N/10, rồi ω = 2π/T, tốc độ v = ω·r và gia tốc hướng tâm a = ω²·r, luôn hướng vào tâm. Đo 10 vòng làm sai số của đồng hồ trong T nhỏ đi mười lần."
+        },
+        "parts": ["flag", "stopwatch"]
+      },
+      {
+        "text": "More hanging mass, or a shorter string, makes the bung go round faster. Over several runs, T² against L and M·g against ω² are straight lines through the origin.",
+        "vi": {
+          "text": "Treo nặng hơn, hoặc dây ngắn hơn, làm nút cao su quay nhanh hơn. Qua nhiều lần chạy, T² theo L và M·g theo ω² là các đường thẳng đi qua gốc tọa độ."
+        },
+        "parts": ["hanger", "clip"]
+      },
+      {
+        "text": "A simplified model: a massless string, no friction at the tube and no air resistance, and the bung already whirling steadily. In a real lab a hand keeps it going and times it, so periods scatter.",
+        "vi": {
+          "text": "Mô hình đơn giản hóa: dây không khối lượng, không ma sát ở miệng ống, không lực cản không khí, và nút cao su đã quay đều ngay từ đầu. Trong thực tế, tay người giữ cho nó quay và bấm giờ, nên các chu kỳ đo được bị phân tán."
+        },
+        "parts": ["tube", "string"]
+      }
+    ]
+  }
+}

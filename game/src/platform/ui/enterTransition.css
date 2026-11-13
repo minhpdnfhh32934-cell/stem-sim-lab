@@ -1,0 +1,364 @@
+/* Entering a world (EnterTransition.ts): over the menu and the game while the world loads. Motion
+   is transforms and opacity only; the iris that reveals the world is a mask on a registered
+   length, so it animates (for its 0.75 s). */
+@property --enter-iris {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+.enter-transition {
+  /* A room: cool cyan; a solo world: warm. */
+  --enter-rgb: 92 214 255;
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 10px;
+  padding: 16px;
+  overflow: hidden;
+  text-align: center;
+  color: var(--ink-strong);
+  cursor: progress;
+  animation: enter-in 0.25s ease-out both;
+}
+
+.enter-transition.solo {
+  --enter-rgb: 255 180 84;
+}
+
+/* The menu's deep space, lit in the accent behind the portal. */
+.enter-back {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(50% 50% at 50% 45%, rgb(var(--enter-rgb) / 18%), transparent 70%),
+    linear-gradient(160deg, #0b1526, #060a12 55%, #0b0e1b);
+}
+
+/* Light streaks rushing out from the portal, each on its own ray and pace. */
+.enter-streaks {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.enter-streak {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 22vmax;
+  height: 2px;
+  margin-top: -1px;
+  border-radius: 1px;
+  transform-origin: 0 50%;
+  background: linear-gradient(90deg, transparent, rgb(var(--enter-rgb) / 85%) 75%, #fff);
+  opacity: 0;
+  animation: enter-streak var(--t) cubic-bezier(0.5, 0, 1, 1) var(--d) infinite;
+}
+
+/* The portal: the emblem, its glow and two rings spinning up (ease-in, then on at the speed it
+   reached: 1 turn at ease-in's end slope ≈ 1.72 turns per spin-up). */
+.enter-portal {
+  position: relative;
+  width: min(220px, 34vh);
+  aspect-ratio: 1;
+  margin-bottom: 18px;
+  animation: enter-portal-in 0.9s cubic-bezier(0.2, 0.9, 0.3, 1.1) both;
+}
+
+.enter-portal::before {
+  content: '';
+  position: absolute;
+  inset: -35%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(var(--enter-rgb) / 35%), transparent);
+  animation: enter-pulse 1.6s ease-in-out infinite alternate;
+}
+
+.enter-emblem {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.enter-ring {
+  --dir: 1;
+  position: absolute;
+  inset: -8%;
+  border-radius: 50%;
+  background: conic-gradient(
+    rgb(var(--enter-rgb) / 0%),
+    rgb(var(--enter-rgb) / 90%) 18%,
+    rgb(var(--enter-rgb) / 0%) 36%,
+    rgb(var(--enter-rgb) / 0%) 50%,
+    rgb(var(--enter-rgb) / 70%) 68%,
+    rgb(var(--enter-rgb) / 0%) 86%
+  );
+  mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
+  animation:
+    enter-spin-up 1.2s ease-in both,
+    enter-spin 0.7s linear 1.2s infinite;
+}
+
+.enter-ring.outer {
+  --dir: -1;
+  inset: -22%;
+  opacity: 0.55;
+  animation:
+    enter-spin-up 1.5s ease-in both,
+    enter-spin 0.87s linear 1.5s infinite;
+}
+
+/* The emblem's own tick ring spins up too, and its satellite races round. */
+.enter-emblem > circle:nth-child(3) {
+  --dir: -1;
+  transform-box: view-box;
+  transform-origin: 50% 50%;
+  animation:
+    enter-spin-up 1.2s ease-in both,
+    enter-spin 0.7s linear 1.2s infinite;
+}
+
+.enter-emblem .emblem-orbit {
+  animation-duration: 1.4s;
+}
+
+.enter-title {
+  max-width: min(900px, 100%);
+  font-size: clamp(28px, 6vh, 52px);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+  text-shadow: 0 0 28px rgb(var(--enter-rgb) / 50%);
+  animation: enter-rise 0.6s cubic-bezier(0.2, 0.9, 0.3, 1) 0.25s both;
+}
+
+.enter-subtitle {
+  max-width: min(700px, 100%);
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  color: rgb(var(--enter-rgb));
+  overflow-wrap: anywhere;
+  animation: enter-rise 0.6s cubic-bezier(0.2, 0.9, 0.3, 1) 0.35s both;
+}
+
+.enter-status {
+  min-height: 1.4em;
+  margin-top: 22px;
+  font-size: 14px;
+  color: rgb(255 255 255 / 72%);
+  animation: enter-rise 0.6s cubic-bezier(0.2, 0.9, 0.3, 1) 0.45s both;
+}
+
+/* A thin shimmer under the status: a light running along the line. */
+.enter-progress {
+  position: relative;
+  width: min(240px, 60vw);
+  height: 2px;
+  overflow: hidden;
+  border-radius: 1px;
+  background: rgb(255 255 255 / 10%);
+}
+
+.enter-progress::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, rgb(var(--enter-rgb)), transparent);
+  animation: enter-shimmer 1.3s ease-in-out infinite;
+}
+
+/* The world is ready: the portal grows past the screen and the iris opens behind it. */
+.enter-transition.opening {
+  pointer-events: none;
+  mask-image: radial-gradient(
+    circle at 50% 50%,
+    transparent calc(var(--enter-iris) - 3vmax),
+    #000 var(--enter-iris)
+  );
+  animation: enter-iris 0.75s cubic-bezier(0.5, 0, 0.8, 0.6) forwards;
+}
+
+.enter-transition.opening .enter-portal {
+  animation: enter-portal-out 0.75s cubic-bezier(0.5, 0, 0.9, 0.5) forwards;
+}
+
+.enter-transition.opening :is(.enter-title, .enter-subtitle, .enter-status, .enter-progress) {
+  animation: enter-out 0.25s ease-in forwards;
+}
+
+/* Then (Phú 2026-11-12): a white light drawn up over the screen, its top edge soft, while the
+   portal flies out under it; then it clears off the world, the rest gone behind it. */
+.enter-white {
+  position: absolute;
+  inset: -35% 0 0;
+  z-index: 5;
+  background: linear-gradient(to bottom, rgb(255 255 255 / 0%), #fff 26%);
+  transform: translateY(100%);
+  pointer-events: none;
+}
+
+.enter-transition.whiteout {
+  pointer-events: none;
+}
+
+.enter-transition.whiteout .enter-white {
+  transform: translateY(0);
+  transition: transform 0.65s cubic-bezier(0.65, 0, 0.25, 1);
+}
+
+.enter-transition.whiteout .enter-portal {
+  animation: enter-portal-out 0.65s cubic-bezier(0.5, 0, 0.9, 0.5) forwards;
+}
+
+.enter-transition.whiteout :is(.enter-title, .enter-subtitle, .enter-status, .enter-progress) {
+  animation: enter-out 0.25s ease-in forwards;
+}
+
+/* Cleared: only the light is left over the world, and it fades, easing up a little. */
+.enter-transition.clearing > :not(.enter-white) {
+  visibility: hidden;
+}
+
+.enter-transition.clearing .enter-white {
+  opacity: 0;
+  transform: translateY(-6%);
+  transition:
+    opacity 0.9s cubic-bezier(0.33, 0, 0.2, 1),
+    transform 0.9s cubic-bezier(0.33, 0, 0.2, 1);
+}
+
+.enter-transition.failing {
+  pointer-events: none;
+  animation: enter-fade-out 0.26s ease-in forwards;
+}
+
+@keyframes enter-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes enter-streak {
+  from {
+    opacity: 0;
+    transform: rotate(var(--a)) translateX(4vmax) scaleX(0.05);
+  }
+  25% {
+    opacity: 0.9;
+  }
+  to {
+    opacity: 0.9;
+    transform: rotate(var(--a)) translateX(80vmax) scaleX(1);
+  }
+}
+
+@keyframes enter-portal-in {
+  from {
+    opacity: 0;
+    transform: scale(0.4) rotate(-40deg);
+  }
+}
+
+@keyframes enter-pulse {
+  from {
+    opacity: 0.55;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes enter-spin-up {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(calc(var(--dir) * 1turn));
+  }
+}
+
+@keyframes enter-spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(calc(var(--dir) * 1turn));
+  }
+}
+
+@keyframes enter-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+@keyframes enter-shimmer {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(250%);
+  }
+}
+
+@keyframes enter-iris {
+  0%,
+  15% {
+    --enter-iris: 0px;
+  }
+  100% {
+    --enter-iris: 85vmax;
+  }
+}
+
+@keyframes enter-portal-out {
+  20% {
+    opacity: 1;
+    transform: scale(1.25);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(9);
+  }
+}
+
+@keyframes enter-out {
+  to {
+    opacity: 0;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes enter-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+/* Reduced motion: still, no streaks; it fades in and out. */
+@media (prefers-reduced-motion: reduce) {
+  .enter-transition *,
+  .enter-transition *::before,
+  .enter-transition *::after {
+    animation: none !important;
+  }
+
+  .enter-streaks {
+    display: none;
+  }
+
+  .enter-transition.opening {
+    mask-image: none;
+    animation: enter-fade-out 0.3s ease-in forwards;
+  }
+}

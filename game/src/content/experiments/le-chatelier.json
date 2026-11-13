@@ -1,0 +1,368 @@
+{
+  "id": "le-chatelier",
+  "name": "Chemical equilibrium and Le Chatelier's principle: NO₂ and N₂O₄",
+  "category": "chemistry",
+  "description": "A sealed syringe holds brown nitrogen dioxide in equilibrium with colourless dinitrogen tetroxide: N₂O₄ ⇌ 2NO₂. Put it in a hot or an icy bath, or squeeze or pull the plunger, and watch the colour: the mixture shifts to undo the change. Warming makes it browner (the forward reaction takes in heat); squeezing first darkens it, then it pales as the gas shifts to the side with fewer molecules.",
+  "vi": {
+    "name": "Cân bằng hóa học và nguyên lý Lơ Sa-tơ-li-ê: NO₂ và N₂O₄",
+    "description": "Một xi-lanh kín chứa khí nitơ đioxit màu nâu cân bằng với đinitơ tetraoxit không màu: N₂O₄ ⇌ 2NO₂. Đặt xi-lanh vào chậu nước nóng hoặc nước đá, hoặc nén hay kéo pít-tông, rồi quan sát màu: hỗn hợp chuyển dịch để chống lại sự thay đổi. Đun nóng làm màu nâu đậm hơn (chiều thuận thu nhiệt); nén lúc đầu làm màu đậm lên, sau đó nhạt dần vì cân bằng chuyển về phía có ít phân tử khí hơn.",
+    "note": "Mô hình dạy học đơn giản hóa. Xi-lanh kín chứa 1 mmol nitơ đioxit tính theo N₂O₄ (n₀), cân bằng N₂O₄ ⇌ 2NO₂ ở 25 °C và 40 mL. Hằng số cân bằng lấy từ bảng nhiệt động chuẩn (NBS/NIST): ΔrH° = +57,20 kJ/mol (thu nhiệt), ΔrG° = +4,73 kJ/mol, nên Kp(298,15 K) = 0,148 (bar); Kp ở nhiệt độ khác theo phương trình van 't Hoff, coi ΔrH° không đổi; khí lí tưởng. Lúc t = 0, xi-lanh được chuyển sang chậu ở nhiệt độ mới và pít-tông đặt tới thể tích mới cùng lúc (giản lược: khí nhận ngay nhiệt độ của chậu). Lượng các chất tiến về cân bằng mới theo hàm mũ với hằng số thời gian τ = 2 s — một giá trị dạy học (phản ứng thật nhanh hơn nhiều; tốc độ khí nóng lên mới quyết định nhịp thật). Màu nâu cho thấy nồng độ NO₂. Kết quả mô phỏng không có sai số ngẫu nhiên."
+  },
+  "requiredEquipment": ["no2-syringe"],
+  "model": "chemistry.no2-equilibrium",
+  "parameters": [
+    {
+      "id": "endTemperature",
+      "label": "Bath temperature",
+      "vi": { "label": "Nhiệt độ của chậu nước" },
+      "symbol": "T",
+      "unit": "°C",
+      "default": 25,
+      "min": 0,
+      "max": 80,
+      "presets": [
+        { "label": "0 °C (ice)", "vi": { "label": "0 °C (nước đá)" }, "value": 0 },
+        { "label": "25 °C (room)", "vi": { "label": "25 °C (nhiệt độ phòng)" }, "value": 25 },
+        { "label": "50 °C", "vi": { "label": "50 °C" }, "value": 50 },
+        { "label": "80 °C (hot)", "vi": { "label": "80 °C (nước nóng)" }, "value": 80 }
+      ]
+    },
+    {
+      "id": "endVolume",
+      "label": "Volume of the gas",
+      "vi": { "label": "Thể tích khí" },
+      "symbol": "V",
+      "unit": "mL",
+      "default": 40,
+      "min": 20,
+      "max": 80,
+      "presets": [
+        { "label": "20 mL (squeezed)", "vi": { "label": "20 mL (nén)" }, "value": 20 },
+        { "label": "40 mL", "vi": { "label": "40 mL" }, "value": 40 },
+        { "label": "80 mL (pulled out)", "vi": { "label": "80 mL (kéo ra)" }, "value": 80 }
+      ]
+    },
+    {
+      "id": "amount",
+      "label": "Gas in the syringe (as N₂O₄)",
+      "vi": { "label": "Lượng khí trong xi-lanh (tính theo N₂O₄)" },
+      "symbol": "n₀",
+      "unit": "mol",
+      "default": 0.001,
+      "min": 0.0005,
+      "max": 0.002,
+      "presets": [
+        { "label": "0.5 mmol", "vi": { "label": "0,5 mmol" }, "value": 0.0005 },
+        { "label": "1 mmol", "vi": { "label": "1 mmol" }, "value": 0.001 },
+        { "label": "2 mmol", "vi": { "label": "2 mmol" }, "value": 0.002 }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "startTemperature": 25,
+    "startVolume": 40,
+    "timeConstant": 2,
+    "runTime": 15
+  },
+  "inputs": {
+    "startTemperature": { "symbol": "T₀", "unit": "°C" },
+    "startVolume": { "symbol": "V₀", "unit": "mL" },
+    "timeConstant": { "symbol": "τ", "unit": "s", "desk": false },
+    "runTime": { "symbol": "t_run", "unit": "s", "desk": false }
+  },
+  "simulation": { "timeStep": 0.05, "maxDuration": 20, "sampleInterval": 0.1 },
+  "measurements": [
+    {
+      "id": "time",
+      "label": "Time since the change",
+      "vi": { "label": "Thời gian từ lúc thay đổi" },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "time"
+    },
+    {
+      "id": "concentration",
+      "label": "NO₂ concentration (the colour)",
+      "vi": { "label": "Nồng độ NO₂ (màu sắc)" },
+      "symbol": "[NO₂]",
+      "unit": "mol/L",
+      "variable": "no2Concentration"
+    },
+    {
+      "id": "dissociation",
+      "label": "N₂O₄ dissociated",
+      "vi": { "label": "Phần N₂O₄ đã phân li" },
+      "symbol": "α",
+      "unit": "%",
+      "variable": "dissociation"
+    }
+  ],
+  "results": [
+    {
+      "id": "concentration",
+      "label": "NO₂ concentration at the new equilibrium",
+      "vi": { "label": "Nồng độ NO₂ ở cân bằng mới" },
+      "symbol": "[NO₂]",
+      "unit": "mol/L",
+      "variable": "no2Concentration",
+      "reduce": "final",
+      "theory": "no2Concentration"
+    },
+    {
+      "id": "dissociation",
+      "label": "N₂O₄ dissociated at the new equilibrium",
+      "vi": { "label": "Phần N₂O₄ phân li ở cân bằng mới" },
+      "symbol": "α",
+      "unit": "%",
+      "variable": "dissociation",
+      "reduce": "final",
+      "theory": "dissociation"
+    },
+    {
+      "id": "no2",
+      "label": "NO₂",
+      "vi": { "label": "NO₂" },
+      "symbol": "n(NO₂)",
+      "unit": "mmol",
+      "variable": "no2",
+      "reduce": "final",
+      "theory": "no2"
+    },
+    {
+      "id": "n2o4",
+      "label": "N₂O₄",
+      "vi": { "label": "N₂O₄" },
+      "symbol": "n(N₂O₄)",
+      "unit": "mmol",
+      "variable": "n2o4",
+      "reduce": "final",
+      "theory": "n2o4"
+    },
+    {
+      "id": "pressure",
+      "label": "Pressure of the gas",
+      "vi": { "label": "Áp suất của khí" },
+      "symbol": "p",
+      "unit": "kPa",
+      "variable": "pressure",
+      "reduce": "final",
+      "theory": "pressure"
+    },
+    {
+      "id": "peak",
+      "label": "Darkest the gas got",
+      "vi": { "label": "Màu khí đậm nhất" },
+      "symbol": "[NO₂]max",
+      "unit": "mol/L",
+      "variable": "no2Concentration",
+      "reduce": "max"
+    }
+  ],
+  "graphs": [
+    {
+      "id": "colour-time",
+      "title": "NO₂ concentration (the colour) against time",
+      "vi": { "title": "Nồng độ NO₂ (màu sắc) theo thời gian" },
+      "x": "time",
+      "y": ["concentration"]
+    },
+    {
+      "id": "dissociation-time",
+      "title": "N₂O₄ dissociated against time",
+      "vi": { "title": "Phần N₂O₄ phân li theo thời gian" },
+      "x": "time",
+      "y": ["dissociation"]
+    }
+  ],
+  "monitor": "colour-time",
+  "compare": [{ "graph": "colour-time", "series": "concentration" }],
+  "note": "A simplified teaching model. The sealed syringe holds 1 mmol of nitrogen dioxide counted as N₂O₄ (n₀), at equilibrium N₂O₄ ⇌ 2NO₂ at 25 °C and 40 mL. The equilibrium constant comes from the standard tables (NBS/NIST): ΔrH° = +57.20 kJ/mol (endothermic), ΔrG° = +4.73 kJ/mol, so Kp(298.15 K) = 0.148 (bar); at other temperatures by the van 't Hoff equation, ΔrH° taken as constant; ideal gases. At t = 0 the syringe moves to a bath at the new temperature and the plunger to the new volume, both at once (a simplification: the gas takes the bath's temperature at once). The amounts relax towards the new equilibrium exponentially with a time constant τ = 2 s — a teaching value (the real reaction is far faster; the gas's warming sets the real pace). The brown colour shows the NO₂ concentration. The simulated results carry no random error.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the Le Chatelier instructions on the board.",
+      "vi": { "instruction": "Đọc hướng dẫn về nguyên lý Lơ Sa-tơ-li-ê trên bảng." },
+      "done": { "kind": "inspected", "item": "le-chatelier-instructions" }
+    },
+    {
+      "id": "temperature",
+      "instruction": "Choose the bath's temperature with its dial: ice, room, warm or hot.",
+      "vi": {
+        "instruction": "Chọn nhiệt độ của chậu nước bằng núm xoay: nước đá, nhiệt độ phòng, ấm hoặc nóng."
+      },
+      "done": { "kind": "adjusted", "parameter": "endTemperature" }
+    },
+    {
+      "id": "volume",
+      "instruction": "Choose the gas's volume: squeeze it, leave it, or pull the plunger out.",
+      "vi": { "instruction": "Chọn thể tích khí: nén lại, để nguyên hoặc kéo pít-tông ra." },
+      "done": { "kind": "adjusted", "parameter": "endVolume" }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the change is made; watch the colour of the gas over 15 s.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: thay đổi được thực hiện; quan sát màu của khí trong 15 s."
+      },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read the new NO₂ concentration and α: which way did the equilibrium shift?",
+      "vi": { "instruction": "Đọc nồng độ NO₂ và α mới: cân bằng đã chuyển dịch theo chiều nào?" },
+      "done": { "kind": "viewed" }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, change only the temperature (or only the volume) and run again.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, chỉ thay đổi nhiệt độ (hoặc chỉ thay đổi thể tích) rồi chạy lại."
+      },
+      "done": { "kind": "reset" }
+    }
+  ],
+  "examples": [
+    {
+      "id": "kp-and-dissociation",
+      "question": "The syringe holds n₀ = {=amount*1000} mmol counted as N₂O₄, at {endTemperature} °C in {endVolume} mL; at equilibrium n(NO₂) = {@no2|3} mmol. Find Kp from the tables (ΔrG° = +4.73 kJ/mol) and the degree of dissociation.",
+      "vi": {
+        "question": "Xi lanh chứa n₀ = {=amount*1000} mmol tính theo N₂O₄, ở {endTemperature} °C trong {endVolume} mL; khi cân bằng n(NO₂) = {@no2|3} mmol. Tìm Kp từ số liệu bảng (ΔrG° = +4,73 kJ/mol) và độ phân li."
+      },
+      "set": { "endTemperature": 25, "endVolume": 40 },
+      "find": [{ "theory": "kp", "symbol": "Kp", "unit": "" }, { "theory": "dissociation" }],
+      "steps": [
+        {
+          "say": "For N₂O₄ ⇌ 2NO₂ the standard Gibbs energy gives the equilibrium constant: Kp = e^(−ΔrG°/RT), T = 298.15 K.",
+          "vi": {
+            "say": "Với N₂O₄ ⇌ 2NO₂, năng lượng Gibbs chuẩn cho hằng số cân bằng: Kp = e^(−ΔrG°/RT), T = 298,15 K."
+          },
+          "write": "Kp = e^(−4730/(8.314·298.15)) ≈ {@kp}",
+          "check": { "expr": "exp(-4730/(8.314462618*298.15))", "equals": "kp" }
+        },
+        {
+          "say": "Each N₂O₄ that splits gives two NO₂, so half the NO₂ is the part split.",
+          "vi": {
+            "say": "Mỗi phân tử N₂O₄ phân li tạo hai NO₂, nên một nửa số mol NO₂ là phần đã phân li."
+          },
+          "write": "α = (n(NO₂)/2)/n₀ = ({@no2|3}/2)/{=amount*1000} ≈ {@dissociation}%",
+          "check": { "expr": "100*@no2/2/(amount*1000)", "equals": "dissociation" }
+        }
+      ]
+    },
+    {
+      "id": "heated-to-80",
+      "question": "The syringe goes into an {endTemperature} °C bath, still {endVolume} mL. The reaction is endothermic, ΔrH° = +57.2 kJ/mol. Find Kp at {endTemperature} °C, and [NO₂] when n(NO₂) = {@no2|3} mmol.",
+      "vi": {
+        "question": "Xi lanh được đặt vào bể nước {endTemperature} °C, thể tích vẫn {endVolume} mL. Phản ứng thu nhiệt, ΔrH° = +57,2 kJ/mol. Tìm Kp ở {endTemperature} °C, và [NO₂] khi n(NO₂) = {@no2|3} mmol."
+      },
+      "set": { "endTemperature": 80 },
+      "find": [{ "theory": "kp", "symbol": "Kp", "unit": "" }, { "theory": "no2Concentration" }],
+      "steps": [
+        {
+          "say": "The van ’t Hoff equation carries K from 298.15 K to the new temperature: ln(K/K₂₉₈) = −(ΔH°/R)·(1/T − 1/298.15).",
+          "vi": {
+            "say": "Phương trình van ’t Hoff chuyển K từ 298,15 K sang nhiệt độ mới: ln(K/K₂₉₈) = −(ΔH°/R)·(1/T − 1/298,15)."
+          },
+          "write": "Kp = 0.1484·e^(−{=57200/8.314462618|4}·(1/{=endTemperature+273.15|5} − 1/298.15)) ≈ {@kp}",
+          "check": {
+            "expr": "exp(-4730/(8.314462618*298.15)-(57200/8.314462618)*(1/(endTemperature+273.15)-1/298.15))",
+            "equals": "kp"
+          }
+        },
+        {
+          "say": "K grew: heating an endothermic reaction shifts it forward, so the gas turns browner. The NO₂ concentration is its amount over the volume; mmol per mL is mol per L.",
+          "vi": {
+            "say": "K tăng: đun nóng phản ứng thu nhiệt làm cân bằng chuyển dịch theo chiều thuận, khí nâu đậm hơn. Nồng độ NO₂ bằng số mol chia thể tích; mmol chia mL bằng mol/L."
+          },
+          "write": "[NO₂] = n/V = {@no2|3}/{endVolume} ≈ {@no2Concentration} mol/L",
+          "check": { "expr": "@no2/endVolume", "equals": "no2Concentration" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "In a closed system two opposite reactions run at once until they balance; disturb the balance and the mixture shifts to oppose the disturbance — Le Chatelier's principle.",
+    "vi": {
+      "summary": "Trong hệ kín, hai phản ứng ngược chiều xảy ra cùng lúc cho tới khi cân bằng; khi cân bằng bị tác động, hỗn hợp chuyển dịch để chống lại tác động đó — nguyên lý Lơ Sa-tơ-li-ê."
+    },
+    "parts": [
+      {
+        "id": "gas",
+        "name": "NO₂ / N₂O₄ mixture",
+        "role": "Brown NO₂ and colourless N₂O₄ in equilibrium; the browner it looks, the more NO₂.",
+        "vi": {
+          "name": "Hỗn hợp NO₂ / N₂O₄",
+          "role": "NO₂ màu nâu và N₂O₄ không màu ở trạng thái cân bằng; màu càng nâu thì càng nhiều NO₂."
+        },
+        "anchor": { "part": "gas" }
+      },
+      {
+        "id": "syringe",
+        "name": "Sealed gas syringe",
+        "role": "Keeps the gas in: nothing enters or leaves, only the balance between the two gases changes.",
+        "vi": {
+          "name": "Xi-lanh kín",
+          "role": "Giữ khí bên trong: không có gì vào hay ra, chỉ có tỉ lệ giữa hai khí thay đổi."
+        },
+        "anchor": { "part": "syringe" }
+      },
+      {
+        "id": "plunger",
+        "name": "Plunger",
+        "role": "Pushed in, it squeezes the gas (higher pressure); pulled out, it gives it more room.",
+        "vi": {
+          "name": "Pít-tông",
+          "role": "Đẩy vào thì nén khí (áp suất tăng); kéo ra thì cho khí thêm chỗ."
+        },
+        "anchor": { "part": "plunger" }
+      },
+      {
+        "id": "bath",
+        "name": "Water bath",
+        "role": "Sets the gas's temperature: icy water, room temperature or hot water.",
+        "vi": {
+          "name": "Chậu nước",
+          "role": "Quyết định nhiệt độ của khí: nước đá, nhiệt độ phòng hoặc nước nóng."
+        },
+        "anchor": { "part": "water" }
+      }
+    ],
+    "steps": [
+      {
+        "text": "N₂O₄ keeps splitting into two NO₂ while NO₂ molecules keep joining in pairs. When both happen at the same rate, the amounts stop changing: dynamic equilibrium.",
+        "vi": {
+          "text": "N₂O₄ liên tục tách thành hai NO₂ trong khi các phân tử NO₂ liên tục ghép đôi. Khi hai quá trình xảy ra với cùng tốc độ, lượng các chất không đổi nữa: cân bằng động."
+        },
+        "parts": ["gas", "syringe"]
+      },
+      {
+        "text": "Le Chatelier's principle: if a system at equilibrium is disturbed, it shifts in the direction that opposes the disturbance, until a new equilibrium is reached.",
+        "vi": {
+          "text": "Nguyên lý Lơ Sa-tơ-li-ê: khi một hệ đang cân bằng bị tác động, cân bằng chuyển dịch theo chiều chống lại tác động đó cho tới khi đạt cân bằng mới."
+        },
+        "parts": ["gas"]
+      },
+      {
+        "text": "Temperature: splitting N₂O₄ takes in heat (ΔH = +57 kJ/mol). In hot water the mixture shifts to absorb heat — more NO₂, browner. In ice it shifts the other way — paler.",
+        "vi": {
+          "text": "Nhiệt độ: phản ứng tách N₂O₄ thu nhiệt (ΔH = +57 kJ/mol). Trong nước nóng, cân bằng chuyển dịch theo chiều thu nhiệt — nhiều NO₂ hơn, nâu hơn. Trong nước đá thì ngược lại — nhạt hơn."
+        },
+        "parts": ["bath", "gas"]
+      },
+      {
+        "text": "Pressure: squeeze the gas and the same molecules crowd into less room — darker at once. Then it shifts to the side with fewer molecules (one N₂O₄ for two NO₂) to lower the pressure, and pales somewhat.",
+        "vi": {
+          "text": "Áp suất: nén khí thì cùng số phân tử dồn vào thể tích nhỏ hơn — màu đậm lên ngay. Sau đó cân bằng chuyển về phía có ít phân tử hơn (một N₂O₄ thay cho hai NO₂) để giảm áp suất, và màu nhạt bớt."
+        },
+        "parts": ["plunger", "gas"]
+      },
+      {
+        "text": "The equilibrium constant Kp = p(NO₂)²/(p(N₂O₄)·p°) changes only with temperature; squeezing changes the amounts, not Kp. The results show α, the share of N₂O₄ split, before and after.",
+        "vi": {
+          "text": "Hằng số cân bằng Kp = p(NO₂)²/(p(N₂O₄)·p°) chỉ thay đổi theo nhiệt độ; nén khí làm thay đổi lượng các chất chứ không làm thay đổi Kp. Kết quả cho thấy α, phần N₂O₄ bị phân li, trước và sau."
+        },
+        "parts": ["gas", "bath"]
+      }
+    ]
+  }
+}

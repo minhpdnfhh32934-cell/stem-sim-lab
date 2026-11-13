@@ -1,0 +1,1032 @@
+{
+  "id": "acid-base-titration",
+  "skills": [
+    {
+      "id": "equivalence",
+      "name": "Equivalence: c_a·V_a = c_b·V_eq",
+      "advice": "Write HCl + NaOH → NaCl + H₂O and read the 1 : 1 ratio before any number: at equivalence n(NaOH) = n(HCl). mL × mol/L gives mmol, so the mL cancel — do not divide by 1000 on one side only.",
+      "vi": {
+        "name": "Tương đương: c_a·V_a = c_b·V_eq",
+        "advice": "Viết HCl + NaOH → NaCl + H₂O và đọc tỉ lệ 1 : 1 trước khi tính: tại điểm tương đương n(NaOH) = n(HCl). mL × mol/L cho mmol, nên đơn vị mL triệt tiêu — đừng chỉ chia 1000 ở một vế."
+      }
+    },
+    {
+      "id": "indicators",
+      "name": "Indicators and the endpoint",
+      "advice": "Learn each indicator with its colours and range: phenolphthalein colourless → pink (pH 8.2–10), methyl orange red → yellow (pH 3.1–4.4). At the station run the same titration with each and compare where the colour changes with the equivalence volume.",
+      "vi": {
+        "name": "Chất chỉ thị và điểm cuối",
+        "advice": "Học thuộc mỗi chất chỉ thị cùng màu và khoảng pH đổi màu: phenolphtalein không màu → hồng (pH 8,2–10), metyl da cam đỏ → vàng (pH 3,1–4,4). Trên trạm, chạy cùng một phép chuẩn độ với từng chất chỉ thị và so sánh chỗ đổi màu với thể tích tương đương."
+      }
+    },
+    {
+      "id": "technique",
+      "name": "Burette, pipette and good technique",
+      "advice": "Re-read the procedure: what the pipette, the burette, the conical flask and the white tile are for. For each mistake (overshooting, a wet pipette, an air bubble) ask whether the titre comes out too large or too small, then what that does to c_a.",
+      "vi": {
+        "name": "Buret, pipet và thao tác đúng",
+        "advice": "Đọc lại quy trình: pipet, buret, bình tam giác và tấm sứ trắng dùng để làm gì. Với mỗi lỗi (nhỏ quá điểm cuối, pipet còn ướt nước, bọt khí ở đầu buret), tự hỏi thể tích chuẩn độ bị lớn hay nhỏ hơn, rồi c_a bị sai theo chiều nào."
+      }
+    },
+    {
+      "id": "ph-curve",
+      "name": "The pH curve of a strong acid with a strong base",
+      "advice": "Sketch the curve before each run: low and flat, a steep jump around the equivalence point (pH 7 at 25 °C), then high and flat. Then watch the pH graph at the station and mark where each indicator changes on it.",
+      "vi": {
+        "name": "Đường cong chuẩn độ axit mạnh – bazơ mạnh",
+        "advice": "Phác họa đường cong trước mỗi lần chạy: thấp và gần như nằm ngang, bước nhảy pH đột ngột quanh điểm tương đương (pH 7 ở 25 °C), rồi cao và nằm ngang. Sau đó quan sát đồ thị pH trên trạm và đánh dấu chỗ mỗi chất chỉ thị đổi màu."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "burette",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["technique"],
+      "stem": "In the titration of HCl with NaOH, which piece of apparatus delivers the NaOH solution and measures the volume added?",
+      "explain": "The burette holds the titrant (NaOH) and its scale gives the volume run out; the pipette measures the fixed volume of acid.",
+      "vi": {
+        "stem": "Trong phép chuẩn độ HCl bằng NaOH, dụng cụ nào dùng để nhỏ dung dịch NaOH và đo thể tích đã thêm vào?",
+        "explain": "Buret chứa chất chuẩn (NaOH) và vạch chia của nó cho biết thể tích đã chảy ra; pipet dùng để lấy một thể tích axit xác định."
+      },
+      "options": [
+        {
+          "text": "The burette",
+          "vi": {
+            "text": "Buret"
+          },
+          "correct": true
+        },
+        {
+          "text": "The pipette",
+          "vi": {
+            "text": "Pipet"
+          }
+        },
+        {
+          "text": "The volumetric flask",
+          "vi": {
+            "text": "Bình định mức"
+          }
+        },
+        {
+          "text": "The conical flask",
+          "vi": {
+            "text": "Bình tam giác"
+          }
+        }
+      ]
+    },
+    {
+      "id": "phenolphthalein",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["indicators"],
+      "stem": "HCl in the flask is titrated with NaOH using phenolphthalein. At the endpoint the solution in the flask turns…",
+      "explain": "Phenolphthalein is colourless in acid and turns pink once the pH passes about 8.2, just after the equivalence point.",
+      "vi": {
+        "stem": "Chuẩn độ HCl trong bình bằng NaOH, dùng chất chỉ thị phenolphtalein. Tại điểm cuối chuẩn độ, dung dịch trong bình chuyển từ…",
+        "explain": "Phenolphtalein không màu trong môi trường axit và chuyển sang hồng khi pH vượt khoảng 8,2, ngay sau điểm tương đương."
+      },
+      "options": [
+        {
+          "text": "from colourless to pink",
+          "vi": {
+            "text": "không màu sang hồng"
+          },
+          "correct": true
+        },
+        {
+          "text": "from pink to colourless",
+          "vi": {
+            "text": "hồng sang không màu"
+          }
+        },
+        {
+          "text": "from red to yellow",
+          "vi": {
+            "text": "đỏ sang vàng"
+          }
+        },
+        {
+          "text": "from yellow to red",
+          "vi": {
+            "text": "vàng sang đỏ"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-basics",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["equivalence", "technique"],
+      "stem": "A pipetted volume of HCl solution is titrated with NaOH solution of known concentration. Decide whether each statement is true or false.",
+      "explain": "HCl + NaOH → NaCl + H₂O reacts 1 : 1, so at equivalence n(NaOH) = n(HCl), and NaCl leaves the solution neutral. The pipette measures the acid; the burette measures the NaOH.",
+      "vi": {
+        "stem": "Một thể tích dung dịch HCl lấy bằng pipet được chuẩn độ bằng dung dịch NaOH đã biết nồng độ. Mỗi nhận định sau đúng hay sai?",
+        "explain": "HCl + NaOH → NaCl + H₂O phản ứng theo tỉ lệ 1 : 1, nên tại điểm tương đương n(NaOH) = n(HCl), và NaCl không làm thay đổi tính trung tính của dung dịch. Pipet dùng lấy axit; buret dùng đo thể tích NaOH."
+      },
+      "statements": [
+        {
+          "text": "The reaction is HCl + NaOH → NaCl + H₂O.",
+          "vi": {
+            "text": "Phản ứng xảy ra là HCl + NaOH → NaCl + H₂O."
+          },
+          "true": true
+        },
+        {
+          "text": "At the equivalence point the amount of NaOH added equals the amount of HCl in the flask.",
+          "vi": {
+            "text": "Tại điểm tương đương, số mol NaOH đã thêm bằng số mol HCl có trong bình."
+          },
+          "true": true
+        },
+        {
+          "text": "At the equivalence point the solution in the flask is neutral.",
+          "vi": {
+            "text": "Tại điểm tương đương, dung dịch trong bình có môi trường trung tính."
+          },
+          "true": true
+        },
+        {
+          "text": "The volume of NaOH added is measured with the pipette.",
+          "vi": {
+            "text": "Thể tích NaOH đã thêm được đo bằng pipet."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "white-tile",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["technique", "indicators"],
+      "stem": "Why is the conical flask stood on a white tile under the burette?",
+      "explain": "Against white the first lasting colour change is easy to see, so the tap can be closed at the endpoint and not after it.",
+      "vi": {
+        "stem": "Vì sao bình tam giác được đặt trên tấm sứ trắng dưới đầu buret?",
+        "explain": "Trên nền trắng dễ nhận ra sự đổi màu bền đầu tiên, nhờ đó khóa van đúng điểm cuối chứ không nhỏ quá."
+      },
+      "options": [
+        {
+          "text": "To see the colour change of the indicator clearly",
+          "vi": {
+            "text": "Để quan sát rõ sự đổi màu của chất chỉ thị"
+          },
+          "correct": true
+        },
+        {
+          "text": "To keep the solution warm",
+          "vi": {
+            "text": "Để giữ ấm dung dịch"
+          }
+        },
+        {
+          "text": "To make the reaction faster",
+          "vi": {
+            "text": "Để phản ứng xảy ra nhanh hơn"
+          }
+        },
+        {
+          "text": "To weigh the flask during the titration",
+          "vi": {
+            "text": "Để cân bình trong khi chuẩn độ"
+          }
+        }
+      ]
+    },
+    {
+      "id": "methyl-orange-early",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["indicators", "ph-curve"],
+      "stem": "HCl in the flask is titrated with NaOH using methyl orange, which has turned fully yellow at pH 4.4. Compared with the equivalence point, the colour change comes…",
+      "explain": "The pH in the flask rises towards 7 at equivalence; it passes 4.4 while a little acid is still left, so methyl orange changes just before the equivalence point — a very small indicator error, as it lies on the steep jump.",
+      "vi": {
+        "stem": "Chuẩn độ HCl trong bình bằng NaOH, dùng metyl da cam (chuyển hẳn sang vàng ở pH 4,4). So với điểm tương đương, sự đổi màu xảy ra…",
+        "explain": "pH trong bình tăng dần tới 7 tại điểm tương đương; pH vượt 4,4 khi vẫn còn dư một ít axit, nên metyl da cam đổi màu ngay trước điểm tương đương — sai số chỉ thị rất nhỏ vì nằm trên bước nhảy pH."
+      },
+      "options": [
+        {
+          "text": "a little before it",
+          "vi": {
+            "text": "sớm hơn một chút"
+          },
+          "correct": true
+        },
+        {
+          "text": "a little after it",
+          "vi": {
+            "text": "muộn hơn một chút"
+          }
+        },
+        {
+          "text": "exactly at it",
+          "vi": {
+            "text": "đúng tại điểm tương đương"
+          }
+        },
+        {
+          "text": "only after twice the equivalence volume",
+          "vi": {
+            "text": "chỉ sau khi thêm gấp đôi thể tích tương đương"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-curve",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["ph-curve", "indicators"],
+      "stem": "HCl in a conical flask is titrated with NaOH from a burette (a strong acid with a strong base, at 25 °C). Decide whether each statement about the pH in the flask is true or false.",
+      "explain": "The pH rises slowly, jumps steeply around equivalence (pH 7) and levels off high; it never falls while base is added. The jump spans both indicators’ ranges, so either suits a strong acid with a strong base.",
+      "vi": {
+        "stem": "Chuẩn độ HCl trong bình tam giác bằng NaOH từ buret (axit mạnh với bazơ mạnh, ở 25 °C). Mỗi nhận định sau về pH của dung dịch trong bình đúng hay sai?",
+        "explain": "pH tăng chậm, nhảy vọt quanh điểm tương đương (pH 7) rồi đi ngang ở giá trị cao; pH không bao giờ giảm khi đang thêm bazơ. Bước nhảy bao trùm khoảng đổi màu của cả hai chất chỉ thị, nên dùng chất nào cũng được với axit mạnh – bazơ mạnh."
+      },
+      "statements": [
+        {
+          "text": "The pH rises slowly at first, then changes steeply near the equivalence point.",
+          "vi": {
+            "text": "Lúc đầu pH tăng chậm, rồi thay đổi đột ngột gần điểm tương đương."
+          },
+          "true": true
+        },
+        {
+          "text": "Before the equivalence point the solution in the flask is acidic.",
+          "vi": {
+            "text": "Trước điểm tương đương, dung dịch trong bình có môi trường axit."
+          },
+          "true": true
+        },
+        {
+          "text": "Past the equivalence point, adding more NaOH makes the pH fall again.",
+          "vi": {
+            "text": "Sau điểm tương đương, thêm tiếp NaOH làm pH giảm trở lại."
+          },
+          "true": false
+        },
+        {
+          "text": "Both methyl orange and phenolphthalein can be used for this titration.",
+          "vi": {
+            "text": "Có thể dùng metyl da cam hoặc phenolphtalein cho phép chuẩn độ này."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "equivalence-volume",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["equivalence"],
+      "set": {
+        "acidConcentration": 0.12,
+        "acidVolume": 20,
+        "baseConcentration": 0.1
+      },
+      "stem": "Suppose {acidVolume} mL of HCl solution of {acidConcentration} mol/L is titrated with NaOH of {baseConcentration} mol/L. What volume of NaOH reaches the equivalence point?",
+      "explain": "n(NaOH) = n(HCl): c_b·V_eq = c_a·V_a, so V_eq = {acidConcentration}·{acidVolume}/{baseConcentration} = {@equivalenceVolume} mL.",
+      "vi": {
+        "stem": "Giả sử chuẩn độ {acidVolume} mL dung dịch HCl {acidConcentration} mol/L bằng dung dịch NaOH {baseConcentration} mol/L. Thể tích NaOH cần để đạt điểm tương đương là bao nhiêu?",
+        "explain": "n(NaOH) = n(HCl): c_b·V_eq = c_a·V_a, nên V_eq = {acidConcentration}·{acidVolume}/{baseConcentration} = {@equivalenceVolume} mL."
+      },
+      "options": [
+        {
+          "text": "{@equivalenceVolume} mL",
+          "vi": {
+            "text": "{@equivalenceVolume} mL"
+          },
+          "correct": true,
+          "check": {
+            "expr": "acidConcentration*acidVolume/baseConcentration",
+            "equals": "equivalenceVolume"
+          }
+        },
+        {
+          "text": "{=baseConcentration*acidVolume/acidConcentration} mL",
+          "vi": {
+            "text": "{=baseConcentration*acidVolume/acidConcentration} mL"
+          },
+          "check": {
+            "expr": "baseConcentration*acidVolume/acidConcentration",
+            "equals": "equivalenceVolume"
+          }
+        },
+        {
+          "text": "{=acidConcentration*acidVolume/baseConcentration/2} mL",
+          "vi": {
+            "text": "{=acidConcentration*acidVolume/baseConcentration/2} mL"
+          },
+          "check": {
+            "expr": "acidConcentration*acidVolume/baseConcentration/2",
+            "equals": "equivalenceVolume"
+          }
+        },
+        {
+          "text": "{=acidConcentration*acidVolume/baseConcentration/1000} mL",
+          "vi": {
+            "text": "{=acidConcentration*acidVolume/baseConcentration/1000} mL"
+          },
+          "check": {
+            "expr": "acidConcentration*acidVolume/baseConcentration/1000",
+            "equals": "equivalenceVolume"
+          }
+        }
+      ]
+    },
+    {
+      "id": "acid-concentration",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["equivalence"],
+      "set": {
+        "acidConcentration": 0.08,
+        "acidVolume": 25,
+        "baseConcentration": 0.1
+      },
+      "stem": "Suppose a student pipettes {acidVolume} mL of an HCl solution and titrates it with NaOH of {baseConcentration} mol/L; the equivalence point is reached after {@equivalenceVolume|4} mL of NaOH. What is the concentration of the HCl solution?",
+      "explain": "c_a = c_b·V/V_a = {baseConcentration}·{@equivalenceVolume|4}/{acidVolume} = {=baseConcentration*@equivalenceVolume/acidVolume} mol/L.",
+      "vi": {
+        "stem": "Giả sử một học sinh dùng pipet lấy {acidVolume} mL dung dịch HCl rồi chuẩn độ bằng NaOH {baseConcentration} mol/L; đạt điểm tương đương khi đã thêm {@equivalenceVolume|4} mL NaOH. Nồng độ của dung dịch HCl là bao nhiêu?",
+        "explain": "c_a = c_b·V/V_a = {baseConcentration}·{@equivalenceVolume|4}/{acidVolume} = {=baseConcentration*@equivalenceVolume/acidVolume} mol/L."
+      },
+      "options": [
+        {
+          "text": "{=baseConcentration*@equivalenceVolume/acidVolume} mol/L",
+          "vi": {
+            "text": "{=baseConcentration*@equivalenceVolume/acidVolume} mol/L"
+          },
+          "correct": true,
+          "check": {
+            "expr": "baseConcentration*@equivalenceVolume/acidVolume",
+            "equals": "acidConcentration"
+          }
+        },
+        {
+          "text": "{=baseConcentration*acidVolume/@equivalenceVolume} mol/L",
+          "vi": {
+            "text": "{=baseConcentration*acidVolume/@equivalenceVolume} mol/L"
+          },
+          "check": {
+            "expr": "baseConcentration*acidVolume/@equivalenceVolume",
+            "equals": "acidConcentration"
+          }
+        },
+        {
+          "text": "{=2*baseConcentration*@equivalenceVolume/acidVolume} mol/L",
+          "vi": {
+            "text": "{=2*baseConcentration*@equivalenceVolume/acidVolume} mol/L"
+          },
+          "check": {
+            "expr": "2*baseConcentration*@equivalenceVolume/acidVolume",
+            "equals": "acidConcentration"
+          }
+        },
+        {
+          "text": "{=baseConcentration*@equivalenceVolume/acidVolume/1000} mol/L",
+          "vi": {
+            "text": "{=baseConcentration*@equivalenceVolume/acidVolume/1000} mol/L"
+          },
+          "check": {
+            "expr": "baseConcentration*@equivalenceVolume/acidVolume/1000",
+            "equals": "acidConcentration"
+          }
+        }
+      ]
+    },
+    {
+      "id": "base-amount",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["equivalence"],
+      "set": {
+        "acidConcentration": 0.15,
+        "acidVolume": 10,
+        "baseConcentration": 0.1
+      },
+      "stem": "Suppose {acidVolume} mL of HCl solution of {acidConcentration} mol/L is titrated with NaOH of {baseConcentration} mol/L. What amount of NaOH has been added at the equivalence point?",
+      "explain": "n(NaOH) = n(HCl) = c_a·V_a = {acidConcentration}·{acidVolume} = {=acidConcentration*acidVolume} mmol (mol/L × mL = mmol), which is c_b·V_eq = {baseConcentration}·{@equivalenceVolume}.",
+      "vi": {
+        "stem": "Giả sử chuẩn độ {acidVolume} mL dung dịch HCl {acidConcentration} mol/L bằng NaOH {baseConcentration} mol/L. Tại điểm tương đương, số mol NaOH đã thêm vào là bao nhiêu?",
+        "explain": "n(NaOH) = n(HCl) = c_a·V_a = {acidConcentration}·{acidVolume} = {=acidConcentration*acidVolume} mmol (mol/L × mL = mmol), cũng bằng c_b·V_eq = {baseConcentration}·{@equivalenceVolume}."
+      },
+      "options": [
+        {
+          "text": "{=acidConcentration*acidVolume} mmol",
+          "vi": {
+            "text": "{=acidConcentration*acidVolume} mmol"
+          },
+          "correct": true,
+          "check": {
+            "expr": "acidConcentration*acidVolume/baseConcentration",
+            "equals": "equivalenceVolume"
+          }
+        },
+        {
+          "text": "{=acidConcentration*acidVolume} mol",
+          "vi": {
+            "text": "{=acidConcentration*acidVolume} mol"
+          },
+          "check": {
+            "expr": "acidConcentration*acidVolume*1000/baseConcentration",
+            "equals": "equivalenceVolume"
+          }
+        },
+        {
+          "text": "{=acidConcentration*acidVolume*baseConcentration} mmol",
+          "vi": {
+            "text": "{=acidConcentration*acidVolume*baseConcentration} mmol"
+          },
+          "check": {
+            "expr": "acidConcentration*acidVolume*baseConcentration/baseConcentration",
+            "equals": "equivalenceVolume"
+          }
+        },
+        {
+          "text": "{=2*acidConcentration*acidVolume} mmol",
+          "vi": {
+            "text": "{=2*acidConcentration*acidVolume} mmol"
+          },
+          "check": {
+            "expr": "2*acidConcentration*acidVolume/baseConcentration",
+            "equals": "equivalenceVolume"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-titre",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["equivalence", "ph-curve"],
+      "set": {
+        "acidConcentration": 0.12,
+        "acidVolume": 10,
+        "baseConcentration": 0.05
+      },
+      "stem": "Suppose {acidVolume} mL of HCl solution of {acidConcentration} mol/L is titrated with NaOH of {baseConcentration} mol/L at 25 °C. Decide whether each statement is true or false.",
+      "explain": "n(HCl) = {acidConcentration}·{acidVolume} = {=acidConcentration*acidVolume} mmol; V_eq = {=acidConcentration*acidVolume}/{baseConcentration} = {@equivalenceVolume} mL. A base twice as concentrated needs half the volume. At equivalence only NaCl and water remain: pH {@equivalencePH}.",
+      "vi": {
+        "stem": "Giả sử chuẩn độ {acidVolume} mL dung dịch HCl {acidConcentration} mol/L bằng NaOH {baseConcentration} mol/L ở 25 °C. Mỗi nhận định sau đúng hay sai?",
+        "explain": "n(HCl) = {acidConcentration}·{acidVolume} = {=acidConcentration*acidVolume} mmol; V_eq = {=acidConcentration*acidVolume}/{baseConcentration} = {@equivalenceVolume} mL. Bazơ đặc gấp đôi thì cần một nửa thể tích. Tại điểm tương đương chỉ còn NaCl và nước: pH = {@equivalencePH}."
+      },
+      "statements": [
+        {
+          "text": "The flask holds {=acidConcentration*acidVolume} mmol of HCl.",
+          "vi": {
+            "text": "Bình chứa {=acidConcentration*acidVolume} mmol HCl."
+          },
+          "true": true
+        },
+        {
+          "text": "The equivalence point is reached after {@equivalenceVolume} mL of NaOH.",
+          "vi": {
+            "text": "Điểm tương đương đạt được sau khi thêm {@equivalenceVolume} mL NaOH."
+          },
+          "true": true,
+          "check": {
+            "expr": "acidConcentration*acidVolume/baseConcentration",
+            "equals": "equivalenceVolume"
+          }
+        },
+        {
+          "text": "With NaOH twice as concentrated, the equivalence volume would be {=2*acidConcentration*acidVolume/baseConcentration} mL.",
+          "vi": {
+            "text": "Nếu NaOH đặc gấp đôi, thể tích tương đương sẽ là {=2*acidConcentration*acidVolume/baseConcentration} mL."
+          },
+          "true": false,
+          "check": {
+            "expr": "2*acidConcentration*acidVolume/baseConcentration",
+            "equals": "equivalenceVolume"
+          }
+        },
+        {
+          "text": "At the equivalence point the pH of the solution is 7.",
+          "vi": {
+            "text": "Tại điểm tương đương, pH của dung dịch bằng 7."
+          },
+          "true": true,
+          "check": {
+            "expr": "7",
+            "equals": "equivalencePH"
+          }
+        }
+      ]
+    },
+    {
+      "id": "methyl-orange-volume",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["indicators", "equivalence"],
+      "set": {
+        "acidConcentration": 0.1,
+        "acidVolume": 25,
+        "baseConcentration": 0.1,
+        "endpointPH": 4.4
+      },
+      "stem": "Suppose {acidVolume} mL of HCl of {acidConcentration} mol/L is titrated with NaOH of {baseConcentration} mol/L using methyl orange, which has turned fully yellow at pH {endpointPH}. Volumes add. After what volume of NaOH has it turned fully yellow?",
+      "explain": "At pH {endpointPH} acid is left: [H⁺] = 10^−{endpointPH} ≈ {=10^(-endpointPH)} mol/L in the whole volume V_a + V, so c_a·V_a − c_b·V = [H⁺]·(V_a + V) and V = V_a·(c_a − [H⁺])/(c_b + [H⁺]) ≈ {@endpointVolume|4} mL, just before V_eq = {@equivalenceVolume|4} mL.",
+      "vi": {
+        "stem": "Giả sử chuẩn độ {acidVolume} mL HCl {acidConcentration} mol/L bằng NaOH {baseConcentration} mol/L, dùng metyl da cam (chuyển hẳn sang vàng ở pH {endpointPH}). Coi thể tích các dung dịch cộng được. Sau khi thêm bao nhiêu mL NaOH thì dung dịch chuyển hẳn sang vàng?",
+        "explain": "Ở pH {endpointPH} vẫn còn dư axit: [H⁺] = 10^−{endpointPH} ≈ {=10^(-endpointPH)} mol/L trong toàn bộ thể tích V_a + V, nên c_a·V_a − c_b·V = [H⁺]·(V_a + V) và V = V_a·(c_a − [H⁺])/(c_b + [H⁺]) ≈ {@endpointVolume|4} mL, ngay trước V_eq = {@equivalenceVolume|4} mL."
+      },
+      "options": [
+        {
+          "text": "{@endpointVolume|4} mL",
+          "vi": {
+            "text": "{@endpointVolume|4} mL"
+          },
+          "correct": true,
+          "check": {
+            "expr": "acidVolume*(acidConcentration-10^(-endpointPH))/(baseConcentration+10^(-endpointPH))",
+            "equals": "endpointVolume"
+          }
+        },
+        {
+          "text": "{@equivalenceVolume|4} mL",
+          "vi": {
+            "text": "{@equivalenceVolume|4} mL"
+          },
+          "check": {
+            "expr": "acidConcentration*acidVolume/baseConcentration",
+            "equals": "endpointVolume"
+          }
+        },
+        {
+          "text": "{=acidVolume*(acidConcentration-10^(-endpointPH))/baseConcentration|4} mL",
+          "vi": {
+            "text": "{=acidVolume*(acidConcentration-10^(-endpointPH))/baseConcentration|4} mL"
+          },
+          "check": {
+            "expr": "acidVolume*(acidConcentration-10^(-endpointPH))/baseConcentration",
+            "equals": "endpointVolume"
+          }
+        },
+        {
+          "text": "{=acidVolume*(acidConcentration+10^(-endpointPH))/(baseConcentration-10^(-endpointPH))|4} mL",
+          "vi": {
+            "text": "{=acidVolume*(acidConcentration+10^(-endpointPH))/(baseConcentration-10^(-endpointPH))|4} mL"
+          },
+          "check": {
+            "expr": "acidVolume*(acidConcentration+10^(-endpointPH))/(baseConcentration-10^(-endpointPH))",
+            "equals": "endpointVolume"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-errors",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["technique", "equivalence"],
+      "set": {
+        "acidConcentration": 0.09,
+        "acidVolume": 20,
+        "baseConcentration": 0.1
+      },
+      "stem": "Suppose the HCl solution at a station is {acidConcentration} mol/L. A student pipettes {acidVolume} mL of it and titrates with NaOH of {baseConcentration} mol/L using phenolphthalein. Decide whether each statement is true or false.",
+      "explain": "The titre is c_a·V_a/c_b = {@equivalenceVolume} mL, giving c_a = {baseConcentration}·{@equivalenceVolume}/{acidVolume} = {=baseConcentration*@equivalenceVolume/acidVolume} mol/L. Overshooting adds base, so V and c_a come out too high. A pipette wet with water dilutes the sample: less acid, a smaller V, c_a too low. A smaller sample takes a proportionally smaller titre, so c_a = c_b·V/V_a is unchanged.",
+      "vi": {
+        "stem": "Giả sử dung dịch HCl ở trạm có nồng độ {acidConcentration} mol/L. Một học sinh dùng pipet lấy {acidVolume} mL dung dịch đó rồi chuẩn độ bằng NaOH {baseConcentration} mol/L với phenolphtalein. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Thể tích chuẩn độ là c_a·V_a/c_b = {@equivalenceVolume} mL, suy ra c_a = {baseConcentration}·{@equivalenceVolume}/{acidVolume} = {=baseConcentration*@equivalenceVolume/acidVolume} mol/L. Nhỏ quá điểm cuối làm thừa bazơ, nên V và c_a tính ra đều lớn hơn thực tế. Pipet còn ướt nước làm loãng mẫu: ít axit hơn, V nhỏ hơn, c_a tính ra nhỏ hơn thực tế. Lấy mẫu ít hơn thì thể tích chuẩn độ giảm theo cùng tỉ lệ, nên c_a = c_b·V/V_a không đổi."
+      },
+      "statements": [
+        {
+          "text": "The titre is about {@equivalenceVolume} mL, which gives c_a = {=baseConcentration*@equivalenceVolume/acidVolume} mol/L.",
+          "vi": {
+            "text": "Thể tích chuẩn độ khoảng {@equivalenceVolume} mL, từ đó tính được c_a = {=baseConcentration*@equivalenceVolume/acidVolume} mol/L."
+          },
+          "true": true,
+          "check": {
+            "expr": "baseConcentration*@equivalenceVolume/acidVolume",
+            "equals": "acidConcentration"
+          }
+        },
+        {
+          "text": "Closing the tap too late (overshooting the endpoint) makes the calculated c_a too high.",
+          "vi": {
+            "text": "Khóa van quá muộn (nhỏ quá điểm cuối) làm giá trị c_a tính được lớn hơn thực tế."
+          },
+          "true": true
+        },
+        {
+          "text": "Rinsing the pipette with water only, just before taking the sample, makes the calculated c_a too high.",
+          "vi": {
+            "text": "Chỉ tráng pipet bằng nước ngay trước khi lấy mẫu làm giá trị c_a tính được lớn hơn thực tế."
+          },
+          "true": false
+        },
+        {
+          "text": "Taking 10 mL of the acid instead of {acidVolume} mL halves the titre but leaves the calculated c_a the same.",
+          "vi": {
+            "text": "Lấy 10 mL axit thay vì {acidVolume} mL thì thể tích chuẩn độ giảm một nửa nhưng c_a tính được không đổi."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "rinse-burette",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["technique"],
+      "stem": "Before it is filled, the burette is rinsed with…",
+      "explain": "Rinsing with a little of the NaOH solution itself removes water and other liquids that would dilute it, so its concentration stays as stated. Water left in the burette would make the titre too large.",
+      "vi": {
+        "stem": "Trước khi cho dung dịch vào, burette được tráng bằng",
+        "explain": "Tráng bằng một ít chính dung dịch NaOH sẽ loại bỏ nước và các chất lỏng khác có thể làm loãng nó, nên nồng độ giữ đúng như đã biết. Nước còn đọng trong burette sẽ làm thể tích chuẩn độ lớn hơn thực tế."
+      },
+      "options": [
+        {
+          "text": "a little of the NaOH solution it will hold",
+          "vi": {
+            "text": "một ít dung dịch NaOH sẽ chứa trong burette"
+          },
+          "correct": true
+        },
+        {
+          "text": "distilled water only",
+          "vi": {
+            "text": "chỉ nước cất"
+          }
+        },
+        {
+          "text": "the HCl solution to be titrated",
+          "vi": {
+            "text": "dung dịch HCl cần chuẩn độ"
+          }
+        },
+        {
+          "text": "phenolphthalein",
+          "vi": {
+            "text": "phenolphthalein"
+          }
+        }
+      ]
+    },
+    {
+      "id": "why-phenolphthalein",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["indicators", "ph-curve"],
+      "stem": "Phenolphthalein changes colour between pH 8.2 and 10, not at pH 7. Why is it still suitable for titrating HCl with NaOH?",
+      "explain": "Near the equivalence point of a strong acid with a strong base the pH jumps by several units for a fraction of a drop of NaOH. The pink appears within that drop, so the colour change marks the equivalence volume to within the reading error.",
+      "vi": {
+        "stem": "Phenolphthalein đổi màu trong khoảng pH 8,2 đến 10, không phải ở pH 7. Vì sao chất chỉ thị này vẫn phù hợp để chuẩn độ HCl bằng NaOH?",
+        "explain": "Gần điểm tương đương của acid mạnh với base mạnh, pH tăng vọt vài đơn vị chỉ với một phần của một giọt NaOH. Màu hồng xuất hiện ngay trong giọt đó, nên thời điểm đổi màu cho thể tích tương đương với sai số không vượt quá sai số đọc burette."
+      },
+      "options": [
+        {
+          "text": "The pH jumps steeply near equivalence, so it turns pink within a drop of the equivalence point",
+          "vi": {
+            "text": "pH tăng vọt gần điểm tương đương, nên nó chuyển hồng trong vòng một giọt quanh điểm tương đương"
+          },
+          "correct": true
+        },
+        {
+          "text": "The pH at the equivalence point is 8.2",
+          "vi": {
+            "text": "pH tại điểm tương đương là 8,2"
+          }
+        },
+        {
+          "text": "Phenolphthalein reacts with the excess HCl",
+          "vi": {
+            "text": "Phenolphthalein phản ứng với HCl dư"
+          }
+        },
+        {
+          "text": "Any indicator gives the same endpoint volume",
+          "vi": {
+            "text": "Mọi chất chỉ thị đều cho cùng một thể tích tại điểm cuối"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-technique",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["technique"],
+      "stem": "Decide whether each statement about good titration technique is true or false.",
+      "explain": "The burette is read at the bottom of the meniscus, the eye level with it. A drop left hanging on the tip has not reached the flask, so it must be washed in or not counted. Swirling mixes each addition in. Rinsing the conical flask with HCl leaves extra acid in it, so more NaOH is needed and the titre is too large.",
+      "vi": {
+        "stem": "Mỗi nhận định sau về kĩ thuật chuẩn độ đúng hay sai?",
+        "explain": "Đọc burette ở đáy mặt khum, mắt nhìn ngang mặt khum. Giọt còn treo ở đầu burette chưa vào bình, nên phải tráng xuống bình hoặc không được tính. Lắc xoay bình để trộn đều lượng vừa thêm. Tráng bình tam giác bằng HCl sẽ để lại thêm acid trong bình, nên cần nhiều NaOH hơn và thể tích chuẩn độ lớn hơn thực tế."
+      },
+      "statements": [
+        {
+          "text": "The burette is read at the bottom of the meniscus, with the eye level with it.",
+          "vi": {
+            "text": "Đọc burette ở đáy mặt khum, mắt nhìn ngang mặt khum."
+          },
+          "true": true
+        },
+        {
+          "text": "A drop of NaOH still hanging on the burette tip has been added to the flask.",
+          "vi": {
+            "text": "Giọt NaOH còn treo ở đầu burette đã được thêm vào bình."
+          },
+          "true": false
+        },
+        {
+          "text": "The conical flask is swirled while the NaOH is added.",
+          "vi": {
+            "text": "Lắc xoay bình tam giác trong khi thêm NaOH."
+          },
+          "true": true
+        },
+        {
+          "text": "Rinsing the conical flask with the HCl solution before pipetting makes the titre too large.",
+          "vi": {
+            "text": "Tráng bình tam giác bằng dung dịch HCl trước khi lấy acid bằng pipet làm thể tích chuẩn độ lớn hơn thực tế."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "hcl-mass",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["equivalence"],
+      "set": {
+        "acidConcentration": 0.12,
+        "acidVolume": 25,
+        "baseConcentration": 0.1
+      },
+      "stem": "Suppose {acidVolume} mL of an HCl solution needs {@equivalenceVolume|4} mL of NaOH at {baseConcentration} mol/L to reach the equivalence point. What mass of HCl (36.46 g/mol) was in the pipetted solution?",
+      "explain": "HCl + NaOH → NaCl + H₂O, 1 : 1. n(HCl) = n(NaOH) = {baseConcentration}·{@equivalenceVolume|4} = {=baseConcentration*@equivalenceVolume} mmol = {=baseConcentration*@equivalenceVolume/1000} mol, m = {=baseConcentration*@equivalenceVolume/1000}·36.46 ≈ {=baseConcentration*@equivalenceVolume*36.46/1000} g. Using the acid's volume instead of the titre, or M(NaOH), are the traps.",
+      "vi": {
+        "stem": "Giả sử {acidVolume} mL dung dịch HCl cần {@equivalenceVolume|4} mL dung dịch NaOH {baseConcentration} mol/L để đạt điểm tương đương. Khối lượng HCl (36,46 g/mol) trong lượng dung dịch đã lấy bằng pipet là bao nhiêu?",
+        "explain": "HCl + NaOH → NaCl + H₂O, tỉ lệ 1 : 1. n(HCl) = n(NaOH) = {baseConcentration}·{@equivalenceVolume|4} = {=baseConcentration*@equivalenceVolume} mmol = {=baseConcentration*@equivalenceVolume/1000} mol, m = {=baseConcentration*@equivalenceVolume/1000}·36,46 ≈ {=baseConcentration*@equivalenceVolume*36.46/1000} g. Dùng thể tích acid thay cho thể tích NaOH, hoặc dùng M của NaOH, là các bẫy thường gặp."
+      },
+      "options": [
+        {
+          "text": "{=baseConcentration*@equivalenceVolume*36.46/1000} g",
+          "vi": {
+            "text": "{=baseConcentration*@equivalenceVolume*36.46/1000} g"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(baseConcentration*@equivalenceVolume*36.46/1000)/36.46*1000/acidVolume",
+            "equals": "acidConcentration"
+          }
+        },
+        {
+          "text": "{=baseConcentration*@equivalenceVolume*36.46} g",
+          "vi": {
+            "text": "{=baseConcentration*@equivalenceVolume*36.46} g"
+          },
+          "check": {
+            "expr": "(baseConcentration*@equivalenceVolume*36.46)/36.46*1000/acidVolume",
+            "equals": "acidConcentration"
+          }
+        },
+        {
+          "text": "{=baseConcentration*@equivalenceVolume*40/1000} g",
+          "vi": {
+            "text": "{=baseConcentration*@equivalenceVolume*40/1000} g"
+          },
+          "check": {
+            "expr": "(baseConcentration*@equivalenceVolume*40/1000)/36.46*1000/acidVolume",
+            "equals": "acidConcentration"
+          }
+        },
+        {
+          "text": "{=baseConcentration*acidVolume*36.46/1000} g",
+          "vi": {
+            "text": "{=baseConcentration*acidVolume*36.46/1000} g"
+          },
+          "check": {
+            "expr": "(baseConcentration*acidVolume*36.46/1000)/36.46*1000/acidVolume",
+            "equals": "acidConcentration"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-dilute-base",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["equivalence", "ph-curve"],
+      "set": {
+        "acidConcentration": 0.075,
+        "acidVolume": 20,
+        "baseConcentration": 0.05
+      },
+      "stem": "Suppose {acidVolume} mL of HCl solution of {acidConcentration} mol/L is titrated with NaOH of {baseConcentration} mol/L at 25 °C. Decide whether each statement is true or false.",
+      "explain": "V_eq = c_a·V_a/c_b = {acidConcentration}·{acidVolume}/{baseConcentration} = {@equivalenceVolume} mL, and there n(NaOH) = {baseConcentration}·{@equivalenceVolume} = {=baseConcentration*@equivalenceVolume} mmol = n(HCl). NaOH twice as concentrated would halve the titre, not double it. At equivalence the flask holds only NaCl and water: pH {@equivalencePH}, neutral.",
+      "vi": {
+        "stem": "Giả sử chuẩn độ {acidVolume} mL dung dịch HCl {acidConcentration} mol/L bằng dung dịch NaOH {baseConcentration} mol/L ở 25 °C. Mỗi nhận định sau đúng hay sai?",
+        "explain": "V_tđ = c_a·V_a/c_b = {acidConcentration}·{acidVolume}/{baseConcentration} = {@equivalenceVolume} mL, và khi đó n(NaOH) = {baseConcentration}·{@equivalenceVolume} = {=baseConcentration*@equivalenceVolume} mmol = n(HCl). NaOH đặc gấp đôi sẽ làm thể tích chuẩn độ giảm một nửa, không phải tăng gấp đôi. Tại điểm tương đương, bình chỉ chứa NaCl và nước: pH = {@equivalencePH}, trung tính."
+      },
+      "statements": [
+        {
+          "text": "The equivalence point is reached after {=acidConcentration*acidVolume/baseConcentration} mL of NaOH.",
+          "vi": {
+            "text": "Điểm tương đương đạt được sau khi thêm {=acidConcentration*acidVolume/baseConcentration} mL NaOH."
+          },
+          "true": true,
+          "check": {
+            "expr": "acidConcentration*acidVolume/baseConcentration",
+            "equals": "equivalenceVolume"
+          }
+        },
+        {
+          "text": "At the equivalence point {=baseConcentration*@equivalenceVolume} mmol of NaOH has been added, as much as the HCl.",
+          "vi": {
+            "text": "Tại điểm tương đương đã thêm {=baseConcentration*@equivalenceVolume} mmol NaOH, bằng lượng HCl."
+          },
+          "true": true,
+          "check": {
+            "expr": "baseConcentration*@equivalenceVolume/acidVolume",
+            "equals": "acidConcentration"
+          }
+        },
+        {
+          "text": "With NaOH of twice the concentration, the titre would double.",
+          "vi": {
+            "text": "Nếu dùng NaOH có nồng độ gấp đôi, thể tích chuẩn độ sẽ tăng gấp đôi."
+          },
+          "true": false
+        },
+        {
+          "text": "The solution at the equivalence point is basic, pH above 7.",
+          "vi": {
+            "text": "Dung dịch tại điểm tương đương có môi trường base, pH lớn hơn 7."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "concordant",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["equivalence", "technique"],
+      "set": {
+        "acidConcentration": 0.11,
+        "acidVolume": 10,
+        "baseConcentration": 0.05
+      },
+      "stem": "A student titrates {acidVolume} mL portions of an HCl solution with NaOH of {baseConcentration} mol/L: a rough titre of {=@equivalenceVolume+0.3|4} mL, then two careful titres of {=@equivalenceVolume-0.05|4} mL and {=@equivalenceVolume+0.05|4} mL. What concentration of HCl should be reported?",
+      "explain": "The rough titre overshoots and is left out; the two careful titres agree within 0.10 mL, so their mean, {@equivalenceVolume|4} mL, is used: c_a = c_b·V/V_a = {baseConcentration}·{@equivalenceVolume|4}/{acidVolume} = {=baseConcentration*@equivalenceVolume/acidVolume} mol/L. Averaging all three gives {=baseConcentration*(@equivalenceVolume+0.1)/acidVolume|4} mol/L; turning the ratio over gives {=acidVolume*baseConcentration/@equivalenceVolume|3}.",
+      "vi": {
+        "stem": "Một học sinh chuẩn độ các lần {acidVolume} mL dung dịch HCl bằng NaOH {baseConcentration} mol/L: lần thô được {=@equivalenceVolume+0.3|4} mL, sau đó hai lần cẩn thận được {=@equivalenceVolume-0.05|4} mL và {=@equivalenceVolume+0.05|4} mL. Nồng độ HCl cần báo cáo là bao nhiêu?",
+        "explain": "Lần chuẩn độ thô thường bị quá điểm cuối nên bị loại; hai lần cẩn thận lệch nhau không quá 0,10 mL, nên lấy trung bình của chúng, {@equivalenceVolume|4} mL: c_a = c_b·V/V_a = {baseConcentration}·{@equivalenceVolume|4}/{acidVolume} = {=baseConcentration*@equivalenceVolume/acidVolume} mol/L. Lấy trung bình cả ba lần sẽ được {=baseConcentration*(@equivalenceVolume+0.1)/acidVolume|4} mol/L; lật ngược tỉ số sẽ được {=acidVolume*baseConcentration/@equivalenceVolume|3}."
+      },
+      "options": [
+        {
+          "text": "{=baseConcentration*@equivalenceVolume/acidVolume|4} mol/L",
+          "vi": {
+            "text": "{=baseConcentration*@equivalenceVolume/acidVolume|4} mol/L"
+          },
+          "correct": true,
+          "check": {
+            "expr": "baseConcentration*@equivalenceVolume/acidVolume",
+            "equals": "acidConcentration"
+          }
+        },
+        {
+          "text": "{=baseConcentration*(@equivalenceVolume+0.1)/acidVolume|4} mol/L",
+          "vi": {
+            "text": "{=baseConcentration*(@equivalenceVolume+0.1)/acidVolume|4} mol/L"
+          },
+          "check": {
+            "expr": "baseConcentration*(@equivalenceVolume+0.1)/acidVolume",
+            "equals": "acidConcentration"
+          }
+        },
+        {
+          "text": "{=baseConcentration*(@equivalenceVolume+0.3)/acidVolume|4} mol/L",
+          "vi": {
+            "text": "{=baseConcentration*(@equivalenceVolume+0.3)/acidVolume|4} mol/L"
+          },
+          "check": {
+            "expr": "baseConcentration*(@equivalenceVolume+0.3)/acidVolume",
+            "equals": "acidConcentration"
+          }
+        },
+        {
+          "text": "{=acidVolume*baseConcentration/@equivalenceVolume|3} mol/L",
+          "vi": {
+            "text": "{=acidVolume*baseConcentration/@equivalenceVolume|3} mol/L"
+          },
+          "check": {
+            "expr": "acidVolume*baseConcentration/@equivalenceVolume",
+            "equals": "acidConcentration"
+          }
+        }
+      ]
+    },
+    {
+      "id": "larger-titre",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["equivalence", "indicators"],
+      "set": {
+        "acidConcentration": 0.1,
+        "acidVolume": 25,
+        "baseConcentration": 0.1
+      },
+      "stem": "Suppose a titration uses a 20 mL pipette of HCl at {acidConcentration} mol/L, NaOH at {baseConcentration} mol/L and phenolphthalein. Which single change makes the titre larger?",
+      "explain": "The titre is V = c_a·V_a/c_b, the base needed for the acid's moles. A 25 mL pipette holds more acid: {@equivalenceVolume} mL instead of {=acidConcentration*20/baseConcentration} mL. NaOH at 0.2 mol/L halves the titre. Water added to the flask changes no amounts, so the titre stays the same. Methyl orange changes colour slightly before the equivalence point, so its titre is a little smaller.",
+      "vi": {
+        "stem": "Giả sử một phép chuẩn độ dùng pipet 20 mL dung dịch HCl {acidConcentration} mol/L, dung dịch NaOH {baseConcentration} mol/L và chất chỉ thị phenolphthalein. Thay đổi nào sau đây (chỉ một thay đổi) làm thể tích chuẩn độ lớn hơn?",
+        "explain": "Thể tích chuẩn độ V = c_a·V_a/c_b, là lượng base cần cho số mol acid. Pipet 25 mL chứa nhiều acid hơn: {@equivalenceVolume} mL thay vì {=acidConcentration*20/baseConcentration} mL. NaOH 0,2 mol/L làm thể tích chuẩn độ giảm một nửa. Thêm nước vào bình không làm thay đổi số mol, nên thể tích chuẩn độ không đổi. Methyl orange đổi màu hơi sớm trước điểm tương đương, nên thể tích chuẩn độ nhỏ hơn một chút."
+      },
+      "options": [
+        {
+          "text": "Using a 25 mL pipette of the same HCl",
+          "vi": {
+            "text": "Dùng pipet 25 mL lấy cùng dung dịch HCl"
+          },
+          "correct": true,
+          "check": {
+            "expr": "acidConcentration*25/baseConcentration",
+            "equals": "equivalenceVolume"
+          }
+        },
+        {
+          "text": "Using NaOH at 0.2 mol/L",
+          "vi": {
+            "text": "Dùng NaOH 0,2 mol/L"
+          }
+        },
+        {
+          "text": "Adding 20 mL of distilled water to the flask first",
+          "vi": {
+            "text": "Thêm trước 20 mL nước cất vào bình"
+          }
+        },
+        {
+          "text": "Using methyl orange instead of phenolphthalein",
+          "vi": {
+            "text": "Dùng methyl orange thay cho phenolphthalein"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-slips",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["technique", "equivalence"],
+      "set": {
+        "acidConcentration": 0.1,
+        "acidVolume": 10,
+        "baseConcentration": 0.05
+      },
+      "stem": "Suppose the HCl solution at a station is {acidConcentration} mol/L. A student pipettes {acidVolume} mL of it and titrates with NaOH of {baseConcentration} mol/L. Decide whether each statement is true or false.",
+      "explain": "V_eq = {acidConcentration}·{acidVolume}/{baseConcentration} = {@equivalenceVolume} mL. A burette wet with water dilutes the NaOH: more is needed, so the titre and c_a come out too high. An air bubble in the tip that escapes during the run makes the reading larger than the volume delivered: the titre is too large, not too small. Recording 20 mL for the {acidVolume} mL pipette gives c_a = {baseConcentration}·{@equivalenceVolume}/20 = {=baseConcentration*@equivalenceVolume/20} mol/L, half the true value.",
+      "vi": {
+        "stem": "Giả sử dung dịch HCl ở trạm có nồng độ {acidConcentration} mol/L. Một học sinh lấy {acidVolume} mL dung dịch này bằng pipet và chuẩn độ bằng NaOH {baseConcentration} mol/L. Mỗi nhận định sau đúng hay sai?",
+        "explain": "V_tđ = {acidConcentration}·{acidVolume}/{baseConcentration} = {@equivalenceVolume} mL. Burette còn ướt nước làm loãng NaOH: cần nhiều NaOH hơn, nên thể tích chuẩn độ và c_a tính ra đều quá cao. Bọt khí ở đầu burette thoát ra trong khi chuẩn độ làm số đọc lớn hơn thể tích thực sự đã chảy ra: thể tích chuẩn độ quá lớn chứ không phải quá nhỏ. Ghi 20 mL cho pipet {acidVolume} mL sẽ cho c_a = {baseConcentration}·{@equivalenceVolume}/20 = {=baseConcentration*@equivalenceVolume/20} mol/L, chỉ bằng một nửa giá trị thật."
+      },
+      "statements": [
+        {
+          "text": "The equivalence point needs {=acidConcentration*acidVolume/baseConcentration} mL of NaOH.",
+          "vi": {
+            "text": "Cần {=acidConcentration*acidVolume/baseConcentration} mL NaOH để đạt điểm tương đương."
+          },
+          "true": true,
+          "check": {
+            "expr": "acidConcentration*acidVolume/baseConcentration",
+            "equals": "equivalenceVolume"
+          }
+        },
+        {
+          "text": "If the burette was not rinsed with NaOH and is still wet with water, c_a comes out too high.",
+          "vi": {
+            "text": "Nếu burette không được tráng bằng NaOH và còn ướt nước, c_a tính ra sẽ quá cao."
+          },
+          "true": true
+        },
+        {
+          "text": "If an air bubble in the burette tip escapes during the titration, the recorded titre is too small.",
+          "vi": {
+            "text": "Nếu bọt khí ở đầu burette thoát ra trong khi chuẩn độ, thể tích chuẩn độ ghi được sẽ quá nhỏ."
+          },
+          "true": false
+        },
+        {
+          "text": "If the student records the {acidVolume} mL portion as 20 mL, the c_a worked out is {=baseConcentration*@equivalenceVolume/20} mol/L, half the true value.",
+          "vi": {
+            "text": "Nếu học sinh ghi lượng {acidVolume} mL thành 20 mL, c_a tính được là {=baseConcentration*@equivalenceVolume/20} mol/L, bằng một nửa giá trị thật."
+          },
+          "true": true,
+          "check": {
+            "expr": "2*baseConcentration*@equivalenceVolume/20",
+            "equals": "acidConcentration"
+          }
+        }
+      ]
+    }
+  ]
+}

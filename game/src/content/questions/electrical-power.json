@@ -1,0 +1,1057 @@
+{
+  "id": "electrical-power",
+  "skills": [
+    {
+      "id": "power",
+      "name": "Electrical power: P = U·I",
+      "advice": "Power is the rate of taking energy: P = U·I, in watts (1 W = 1 J/s) with U in volts and I in amperes.",
+      "vi": {
+        "name": "Công suất điện: P = U·I",
+        "advice": "Công suất là tốc độ tiêu thụ điện năng: P = U·I, đơn vị oát (1 W = 1 J/s) khi U tính bằng vôn và I tính bằng ampe."
+      }
+    },
+    {
+      "id": "forms",
+      "name": "P = I²·R = U²/R",
+      "advice": "For a resistor combine P = U·I with U = I·R: P = I²·R = U²/R. So doubling U quadruples P. Check it at 3, 6 and 12 V.",
+      "vi": {
+        "name": "P = I²·R = U²/R",
+        "advice": "Với điện trở, kết hợp P = U·I và U = I·R: P = I²·R = U²/R. Vì vậy U gấp đôi thì P gấp bốn. Kiểm tra ở 3, 6 và 12 V."
+      }
+    },
+    {
+      "id": "sharing",
+      "name": "Sharing the power in series and parallel",
+      "advice": "Series: same current, so the larger R takes more (P1/P2 = R1/R2). Parallel: same voltage, so the smaller R takes more (P1/P2 = R2/R1). Always P = P1 + P2.",
+      "vi": {
+        "name": "Phân chia công suất khi mắc nối tiếp và song song",
+        "advice": "Nối tiếp: cùng dòng điện nên điện trở lớn hơn tiêu thụ nhiều hơn (P1/P2 = R1/R2). Song song: cùng hiệu điện thế nên điện trở nhỏ hơn tiêu thụ nhiều hơn (P1/P2 = R2/R1). Luôn có P = P1 + P2."
+      }
+    },
+    {
+      "id": "graphs",
+      "name": "Graphs and the ammeter",
+      "advice": "For one circuit P against U² is a line of slope 1/R_eq; at one voltage P against I is a line of slope U. The ammeter shows the nearest multiple of its resolution, u = d/√12.",
+      "vi": {
+        "name": "Đồ thị và ampe kế",
+        "advice": "Với một mạch, P theo U² là đường thẳng hệ số góc 1/R_tđ; ở một hiệu điện thế, P theo I là đường thẳng hệ số góc U. Ampe kế hiển thị bội số gần nhất của độ phân giải, u = d/√12."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "unit",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["power"],
+      "stem": "The watt, the unit of power, is the same as…",
+      "explain": "Power is energy per time: 1 W = 1 J/s.",
+      "vi": {
+        "stem": "Đơn vị công suất là oát, bằng…",
+        "explain": "Công suất là năng lượng trên thời gian: 1 W = 1 J/s."
+      },
+      "options": [
+        {
+          "text": "J/s",
+          "vi": {
+            "text": "J/s"
+          },
+          "correct": true
+        },
+        {
+          "text": "J",
+          "vi": {
+            "text": "J"
+          }
+        },
+        {
+          "text": "J·s",
+          "vi": {
+            "text": "J·s"
+          }
+        },
+        {
+          "text": "V/A",
+          "vi": {
+            "text": "V/A"
+          }
+        }
+      ]
+    },
+    {
+      "id": "formula",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["power"],
+      "stem": "The power a circuit takes, with voltage U across it and current I through it, is…",
+      "explain": "P = U·I.",
+      "vi": {
+        "stem": "Công suất tiêu thụ của đoạn mạch có hiệu điện thế U và cường độ dòng điện I là…",
+        "explain": "P = U·I."
+      },
+      "options": [
+        {
+          "text": "P = U·I",
+          "vi": {
+            "text": "P = U·I"
+          },
+          "correct": true
+        },
+        {
+          "text": "P = U/I",
+          "vi": {
+            "text": "P = U/I"
+          }
+        },
+        {
+          "text": "P = I/U",
+          "vi": {
+            "text": "P = I/U"
+          }
+        },
+        {
+          "text": "P = U·I²",
+          "vi": {
+            "text": "P = U·I²"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-sharing",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["forms", "sharing"],
+      "stem": "Two resistors, R1 = 10 Ω and R2 = 20 Ω, are connected to a DC supply. Decide whether each statement is true or false.",
+      "explain": "P = I²·R; in series (same I) the larger R takes more; in parallel (same U) the smaller R takes more; always P = P1 + P2.",
+      "vi": {
+        "stem": "Hai điện trở R1 = 10 Ω và R2 = 20 Ω được nối với nguồn một chiều. Mỗi nhận định sau đúng hay sai?",
+        "explain": "P = I²·R; nối tiếp (cùng I) thì điện trở lớn hơn tiêu thụ nhiều hơn; song song (cùng U) thì điện trở nhỏ hơn tiêu thụ nhiều hơn; luôn có P = P1 + P2."
+      },
+      "statements": [
+        {
+          "text": "For each resistor P = I²·R.",
+          "vi": {
+            "text": "Với mỗi điện trở, P = I²·R."
+          },
+          "true": true
+        },
+        {
+          "text": "In series, R2 = 20 Ω takes more power than R1.",
+          "vi": {
+            "text": "Khi mắc nối tiếp, R2 = 20 Ω tiêu thụ công suất lớn hơn R1."
+          },
+          "true": true
+        },
+        {
+          "text": "In parallel, R2 = 20 Ω takes more power than R1.",
+          "vi": {
+            "text": "Khi mắc song song, R2 = 20 Ω tiêu thụ công suất lớn hơn R1."
+          },
+          "true": false
+        },
+        {
+          "text": "The total power is P1 + P2.",
+          "vi": {
+            "text": "Công suất toàn mạch bằng P1 + P2."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "double-voltage",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["forms"],
+      "stem": "The supply voltage across the same resistors is doubled. The power they take…",
+      "explain": "P = U²/R: twice U, four times P (U and I both double).",
+      "vi": {
+        "stem": "Tăng gấp đôi hiệu điện thế đặt vào cùng các điện trở. Công suất tiêu thụ…",
+        "explain": "P = U²/R: U gấp đôi thì P gấp bốn (cả U và I đều gấp đôi)."
+      },
+      "options": [
+        {
+          "text": "becomes four times larger",
+          "vi": {
+            "text": "tăng gấp bốn lần"
+          },
+          "correct": true
+        },
+        {
+          "text": "doubles",
+          "vi": {
+            "text": "tăng gấp đôi"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "halves",
+          "vi": {
+            "text": "giảm một nửa"
+          }
+        }
+      ]
+    },
+    {
+      "id": "series-to-parallel",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["sharing", "forms"],
+      "stem": "At the same voltage, R1 and R2 are changed from series to parallel. The total power…",
+      "explain": "P = U²/R_eq and the parallel R_eq is much smaller, so P increases.",
+      "vi": {
+        "stem": "Ở cùng hiệu điện thế, chuyển R1 và R2 từ mắc nối tiếp sang mắc song song. Công suất toàn mạch…",
+        "explain": "P = U²/R_tđ, mà R_tđ khi song song nhỏ hơn nhiều, nên P tăng."
+      },
+      "options": [
+        {
+          "text": "increases",
+          "vi": {
+            "text": "tăng"
+          },
+          "correct": true
+        },
+        {
+          "text": "decreases",
+          "vi": {
+            "text": "giảm"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "becomes zero",
+          "vi": {
+            "text": "bằng 0"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-series",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["sharing", "forms"],
+      "set": {
+        "voltage": 6,
+        "configuration": 1
+      },
+      "stem": "R1 = {resistance1} Ω and R2 = {resistance2} Ω are in series across {voltage} V. Decide whether each statement is true or false.",
+      "explain": "I = U/(R1 + R2) = {@current} A; P1 = I²·R1 = {@power1} W, P2 = I²·R2 = {@power2} W: R2, the larger, takes more.",
+      "vi": {
+        "stem": "R1 = {resistance1} Ω và R2 = {resistance2} Ω mắc nối tiếp vào hiệu điện thế {voltage} V. Mỗi nhận định sau đúng hay sai?",
+        "explain": "I = U/(R1 + R2) = {@current} A; P1 = I²·R1 = {@power1} W, P2 = I²·R2 = {@power2} W: R2 lớn hơn nên tiêu thụ nhiều hơn."
+      },
+      "statements": [
+        {
+          "text": "The current is {@current} A.",
+          "vi": {
+            "text": "Cường độ dòng điện bằng {@current} A."
+          },
+          "true": true,
+          "check": {
+            "expr": "voltage/(resistance1+resistance2)",
+            "equals": "current"
+          }
+        },
+        {
+          "text": "R1 takes {@power1} W.",
+          "vi": {
+            "text": "R1 tiêu thụ {@power1} W."
+          },
+          "true": true,
+          "check": {
+            "expr": "@current^2*resistance1",
+            "equals": "power1"
+          }
+        },
+        {
+          "text": "R2 takes {@power2} W.",
+          "vi": {
+            "text": "R2 tiêu thụ {@power2} W."
+          },
+          "true": true,
+          "check": {
+            "expr": "@current^2*resistance2",
+            "equals": "power2"
+          }
+        },
+        {
+          "text": "R1 takes more power than R2.",
+          "vi": {
+            "text": "R1 tiêu thụ công suất lớn hơn R2."
+          },
+          "true": false,
+          "check": {
+            "expr": "1",
+            "equals": "largerPower"
+          }
+        }
+      ]
+    },
+    {
+      "id": "series-total",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["forms"],
+      "set": {
+        "voltage": 12,
+        "configuration": 1
+      },
+      "stem": "R1 = {resistance1} Ω and R2 = {resistance2} Ω are in series across {voltage} V. What total power do they take?",
+      "explain": "R = R1 + R2 = {@equivalentResistance} Ω; P = U²/R = {voltage}²/{@equivalentResistance} = {@power} W.",
+      "vi": {
+        "stem": "R1 = {resistance1} Ω và R2 = {resistance2} Ω mắc nối tiếp vào hiệu điện thế {voltage} V. Công suất tiêu thụ toàn mạch bằng bao nhiêu?",
+        "explain": "R = R1 + R2 = {@equivalentResistance} Ω; P = U²/R = {voltage}²/{@equivalentResistance} = {@power} W."
+      },
+      "options": [
+        {
+          "text": "{@power} W",
+          "vi": {
+            "text": "{@power} W"
+          },
+          "correct": true,
+          "check": {
+            "expr": "voltage^2/(resistance1+resistance2)",
+            "equals": "power"
+          }
+        },
+        {
+          "text": "{=voltage^2/resistance1+voltage^2/resistance2} W",
+          "vi": {
+            "text": "{=voltage^2/resistance1+voltage^2/resistance2} W"
+          },
+          "check": {
+            "expr": "voltage^2/resistance1+voltage^2/resistance2",
+            "equals": "power"
+          }
+        },
+        {
+          "text": "{=voltage/(resistance1+resistance2)} W",
+          "vi": {
+            "text": "{=voltage/(resistance1+resistance2)} W"
+          },
+          "check": {
+            "expr": "voltage/(resistance1+resistance2)",
+            "equals": "power"
+          }
+        },
+        {
+          "text": "{=voltage^2*(resistance1+resistance2)} W",
+          "vi": {
+            "text": "{=voltage^2*(resistance1+resistance2)} W"
+          },
+          "check": {
+            "expr": "voltage^2*(resistance1+resistance2)",
+            "equals": "power"
+          }
+        }
+      ]
+    },
+    {
+      "id": "parallel-p1",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["sharing", "forms"],
+      "set": {
+        "voltage": 12,
+        "configuration": 2
+      },
+      "stem": "R1 = {resistance1} Ω and R2 = {resistance2} Ω are in parallel across {voltage} V. What power does R1 take?",
+      "explain": "In parallel R1 has the whole voltage: P1 = U²/R1 = {voltage}²/{resistance1} = {@power1} W.",
+      "vi": {
+        "stem": "R1 = {resistance1} Ω và R2 = {resistance2} Ω mắc song song vào hiệu điện thế {voltage} V. R1 tiêu thụ công suất bao nhiêu?",
+        "explain": "Khi song song, R1 chịu toàn bộ hiệu điện thế: P1 = U²/R1 = {voltage}²/{resistance1} = {@power1} W."
+      },
+      "options": [
+        {
+          "text": "{@power1} W",
+          "vi": {
+            "text": "{@power1} W"
+          },
+          "correct": true,
+          "check": {
+            "expr": "voltage^2/resistance1",
+            "equals": "power1"
+          }
+        },
+        {
+          "text": "{=voltage^2/(resistance1+resistance2)} W",
+          "vi": {
+            "text": "{=voltage^2/(resistance1+resistance2)} W"
+          },
+          "check": {
+            "expr": "voltage^2/(resistance1+resistance2)",
+            "equals": "power1"
+          }
+        },
+        {
+          "text": "{=(voltage/(resistance1+resistance2))^2*resistance1} W",
+          "vi": {
+            "text": "{=(voltage/(resistance1+resistance2))^2*resistance1} W"
+          },
+          "check": {
+            "expr": "(voltage/(resistance1+resistance2))^2*resistance1",
+            "equals": "power1"
+          }
+        },
+        {
+          "text": "{=voltage^2/resistance2} W",
+          "vi": {
+            "text": "{=voltage^2/resistance2} W"
+          },
+          "check": {
+            "expr": "voltage^2/resistance2",
+            "equals": "power1"
+          }
+        }
+      ]
+    },
+    {
+      "id": "from-u-i",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["power"],
+      "set": {
+        "voltage": 9,
+        "configuration": 0
+      },
+      "stem": "R1 alone is across {voltage} V and the ammeter reads I = {@current} A. What power does it take?",
+      "explain": "P = U·I = {voltage}·{@current} = {@power} W.",
+      "vi": {
+        "stem": "Chỉ có R1 mắc vào {voltage} V và ampe kế chỉ I = {@current} A. Công suất tiêu thụ bằng bao nhiêu?",
+        "explain": "P = U·I = {voltage}·{@current} = {@power} W."
+      },
+      "options": [
+        {
+          "text": "{=voltage*@current} W",
+          "vi": {
+            "text": "{=voltage*@current} W"
+          },
+          "correct": true,
+          "check": {
+            "expr": "voltage*@current",
+            "equals": "power"
+          }
+        },
+        {
+          "text": "{=voltage/@current} W",
+          "vi": {
+            "text": "{=voltage/@current} W"
+          },
+          "check": {
+            "expr": "voltage/@current",
+            "equals": "power"
+          }
+        },
+        {
+          "text": "{=voltage*@current^2} W",
+          "vi": {
+            "text": "{=voltage*@current^2} W"
+          },
+          "check": {
+            "expr": "voltage*@current^2",
+            "equals": "power"
+          }
+        },
+        {
+          "text": "{=voltage^2*@current} W",
+          "vi": {
+            "text": "{=voltage^2*@current} W"
+          },
+          "check": {
+            "expr": "voltage^2*@current",
+            "equals": "power"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-parallel",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["sharing"],
+      "set": {
+        "voltage": 12,
+        "configuration": 2
+      },
+      "stem": "R1 = {resistance1} Ω and R2 = {resistance2} Ω are in parallel across {voltage} V. Decide whether each statement is true or false.",
+      "explain": "P1 = U²/R1 = {@power1} W, P2 = U²/R2 = {@power2} W, P = P1 + P2 = {@power} W: in parallel R1, the smaller, takes more.",
+      "vi": {
+        "stem": "R1 = {resistance1} Ω và R2 = {resistance2} Ω mắc song song vào hiệu điện thế {voltage} V. Mỗi nhận định sau đúng hay sai?",
+        "explain": "P1 = U²/R1 = {@power1} W, P2 = U²/R2 = {@power2} W, P = P1 + P2 = {@power} W: khi song song R1 nhỏ hơn nên tiêu thụ nhiều hơn."
+      },
+      "statements": [
+        {
+          "text": "R1 takes {@power1} W.",
+          "vi": {
+            "text": "R1 tiêu thụ {@power1} W."
+          },
+          "true": true,
+          "check": {
+            "expr": "voltage^2/resistance1",
+            "equals": "power1"
+          }
+        },
+        {
+          "text": "R2 takes {@power2} W.",
+          "vi": {
+            "text": "R2 tiêu thụ {@power2} W."
+          },
+          "true": true,
+          "check": {
+            "expr": "voltage^2/resistance2",
+            "equals": "power2"
+          }
+        },
+        {
+          "text": "The circuit takes {@power} W in all.",
+          "vi": {
+            "text": "Toàn mạch tiêu thụ {@power} W."
+          },
+          "true": true,
+          "check": {
+            "expr": "@power1+@power2",
+            "equals": "power"
+          }
+        },
+        {
+          "text": "R2, the larger resistor, takes more power.",
+          "vi": {
+            "text": "R2, điện trở lớn hơn, tiêu thụ công suất lớn hơn."
+          },
+          "true": false,
+          "check": {
+            "expr": "-1",
+            "equals": "largerPower"
+          }
+        }
+      ]
+    },
+    {
+      "id": "slope",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["graphs", "forms"],
+      "set": {
+        "voltage": 6,
+        "configuration": 2
+      },
+      "stem": "R1 = {resistance1} Ω and R2 = {resistance2} Ω are in parallel; runs at several voltages give P against U² as a straight line. What is its slope?",
+      "explain": "P = U²/R_eq, so the slope is 1/R_eq = 1/R1 + 1/R2 = 1/{resistance1} + 1/{resistance2} = {@conductance} Ω⁻¹ (R_eq ≈ {@equivalentResistance} Ω).",
+      "vi": {
+        "stem": "R1 = {resistance1} Ω và R2 = {resistance2} Ω mắc song song; đo ở nhiều hiệu điện thế được đồ thị P theo U² là đường thẳng. Hệ số góc của nó bằng bao nhiêu?",
+        "explain": "P = U²/R_tđ, nên hệ số góc là 1/R_tđ = 1/R1 + 1/R2 = 1/{resistance1} + 1/{resistance2} = {@conductance} Ω⁻¹ (R_tđ ≈ {@equivalentResistance} Ω)."
+      },
+      "options": [
+        {
+          "text": "{@conductance} Ω⁻¹",
+          "vi": {
+            "text": "{@conductance} Ω⁻¹"
+          },
+          "correct": true,
+          "check": {
+            "expr": "1/resistance1+1/resistance2",
+            "equals": "conductance"
+          }
+        },
+        {
+          "text": "{=1/(resistance1+resistance2)} Ω⁻¹",
+          "vi": {
+            "text": "{=1/(resistance1+resistance2)} Ω⁻¹"
+          },
+          "check": {
+            "expr": "1/(resistance1+resistance2)",
+            "equals": "conductance"
+          }
+        },
+        {
+          "text": "{@equivalentResistance} Ω⁻¹",
+          "vi": {
+            "text": "{@equivalentResistance} Ω⁻¹"
+          },
+          "check": {
+            "expr": "resistance1*resistance2/(resistance1+resistance2)",
+            "equals": "conductance"
+          }
+        },
+        {
+          "text": "{=resistance1+resistance2} Ω⁻¹",
+          "vi": {
+            "text": "{=resistance1+resistance2} Ω⁻¹"
+          },
+          "check": {
+            "expr": "resistance1+resistance2",
+            "equals": "conductance"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-ammeter",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["graphs", "power"],
+      "set": {
+        "voltage": 3,
+        "configuration": 0,
+        "ammeterResolution": 0.1
+      },
+      "stem": "R1 = {resistance1} Ω alone is across {voltage} V; the ammeter reads to {ammeterResolution} A. Decide whether each statement is true or false.",
+      "explain": "I = U/R1 = {@current} A, shown as {=round(@current/ammeterResolution)*ammeterResolution} A; u = d/√12 ≈ {=ammeterResolution/sqrt(12)|2} A, about {=100*ammeterResolution/sqrt(12)/@current|2} % of I. P = U·I = {@power} W. A finer 0.001 A ammeter gives a more precise P, not a less precise one.",
+      "vi": {
+        "stem": "Chỉ có R1 = {resistance1} Ω mắc vào {voltage} V; ampe kế có độ phân giải {ammeterResolution} A. Mỗi nhận định sau đúng hay sai?",
+        "explain": "I = U/R1 = {@current} A, hiển thị {=round(@current/ammeterResolution)*ammeterResolution} A; u = d/√12 ≈ {=ammeterResolution/sqrt(12)|2} A, khoảng {=100*ammeterResolution/sqrt(12)/@current|2} % của I. P = U·I = {@power} W. Ampe kế 0,001 A chính xác hơn cho P chính xác hơn, chứ không kém hơn."
+      },
+      "statements": [
+        {
+          "text": "The ammeter shows {=round(@current/ammeterResolution)*ammeterResolution} A.",
+          "vi": {
+            "text": "Ampe kế hiển thị {=round(@current/ammeterResolution)*ammeterResolution} A."
+          },
+          "true": true
+        },
+        {
+          "text": "From the resolution alone, u is about {=100*ammeterResolution/sqrt(12)/@current|2} % of the current.",
+          "vi": {
+            "text": "Chỉ do độ phân giải, u khoảng {=100*ammeterResolution/sqrt(12)/@current|2} % của cường độ dòng điện."
+          },
+          "true": true
+        },
+        {
+          "text": "The power is {@power} W.",
+          "vi": {
+            "text": "Công suất bằng {@power} W."
+          },
+          "true": true,
+          "check": {
+            "expr": "voltage^2/resistance1",
+            "equals": "power"
+          }
+        },
+        {
+          "text": "An ammeter reading to 0.001 A would give a less precise power.",
+          "vi": {
+            "text": "Ampe kế có độ phân giải 0,001 A sẽ cho công suất kém chính xác hơn."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "kwh",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["power"],
+      "stem": "The kilowatt-hour (kWh) on an electricity bill is a unit of…",
+      "explain": "1 kWh is the energy used in one hour at a power of 1 kW: 1000 W × 3600 s = 3.6 × 10⁶ J. It measures energy, not power.",
+      "vi": {
+        "stem": "Kilôoát giờ (kWh) ghi trên hóa đơn tiền điện là đơn vị của…",
+        "explain": "1 kWh là năng lượng tiêu thụ trong một giờ với công suất 1 kW: 1000 W × 3600 s = 3,6 × 10⁶ J. Nó đo điện năng (năng lượng), không phải công suất."
+      },
+      "options": [
+        {
+          "text": "energy",
+          "vi": {
+            "text": "điện năng (năng lượng)"
+          },
+          "correct": true
+        },
+        {
+          "text": "power",
+          "vi": {
+            "text": "công suất"
+          }
+        },
+        {
+          "text": "current",
+          "vi": {
+            "text": "cường độ dòng điện"
+          }
+        },
+        {
+          "text": "voltage",
+          "vi": {
+            "text": "hiệu điện thế"
+          }
+        }
+      ]
+    },
+    {
+      "id": "series-larger",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["sharing", "forms"],
+      "stem": "R1 = 10 Ω and R2 = 20 Ω are in series across a supply. Which takes more power?",
+      "explain": "In series the same current flows through both, so P = I²·R is larger in the larger resistor: R2 takes twice the power of R1, whatever the supply voltage.",
+      "vi": {
+        "stem": "R1 = 10 Ω và R2 = 20 Ω mắc nối tiếp vào một nguồn. Điện trở nào tiêu thụ công suất lớn hơn?",
+        "explain": "Khi mắc nối tiếp, dòng điện qua hai điện trở như nhau, nên P = I²·R lớn hơn ở điện trở lớn hơn: R2 tiêu thụ công suất gấp đôi R1, với bất kì hiệu điện thế nào của nguồn."
+      },
+      "options": [
+        {
+          "text": "R2, twice as much as R1",
+          "vi": {
+            "text": "R2, gấp đôi R1"
+          },
+          "correct": true
+        },
+        {
+          "text": "R1, twice as much as R2",
+          "vi": {
+            "text": "R1, gấp đôi R2"
+          }
+        },
+        {
+          "text": "Both the same, since the current is the same",
+          "vi": {
+            "text": "Như nhau, vì dòng điện như nhau"
+          }
+        },
+        {
+          "text": "It depends on the supply voltage",
+          "vi": {
+            "text": "Còn tùy vào hiệu điện thế của nguồn"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-parallel-rules",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["sharing", "forms"],
+      "stem": "R1 = 10 Ω and R2 = 20 Ω are in parallel across a DC supply. Decide whether each statement is true or false.",
+      "explain": "In parallel both have the supply voltage U across them, so P = U²/R is larger in the smaller resistor: R1 takes twice the power of R2. The total power is the sum of the two. At the same U, parallel takes more power than series, because its total resistance is smaller.",
+      "vi": {
+        "stem": "R1 = 10 Ω và R2 = 20 Ω mắc song song vào một nguồn điện một chiều. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Khi mắc song song, hai điện trở có cùng hiệu điện thế U của nguồn, nên P = U²/R lớn hơn ở điện trở nhỏ hơn: R1 tiêu thụ công suất gấp đôi R2. Công suất toàn mạch bằng tổng hai công suất. Với cùng U, mạch song song tiêu thụ công suất lớn hơn mạch nối tiếp vì điện trở tương đương nhỏ hơn."
+      },
+      "statements": [
+        {
+          "text": "Both resistors have the same voltage across them.",
+          "vi": {
+            "text": "Hiệu điện thế giữa hai đầu hai điện trở bằng nhau."
+          },
+          "true": true
+        },
+        {
+          "text": "R1 takes more power than R2.",
+          "vi": {
+            "text": "R1 tiêu thụ công suất lớn hơn R2."
+          },
+          "true": true
+        },
+        {
+          "text": "The total power is the sum of the powers of R1 and R2.",
+          "vi": {
+            "text": "Công suất toàn mạch bằng tổng công suất của R1 và R2."
+          },
+          "true": true
+        },
+        {
+          "text": "At the same supply voltage they take less power than in series.",
+          "vi": {
+            "text": "Với cùng hiệu điện thế nguồn, chúng tiêu thụ công suất nhỏ hơn khi mắc nối tiếp."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "energy-10min",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["power", "forms"],
+      "set": {
+        "voltage": 6,
+        "configuration": 2
+      },
+      "stem": "R1 = {resistance1} Ω and R2 = {resistance2} Ω are in parallel across {voltage} V. How much electrical energy do they use in 10 minutes?",
+      "explain": "P = U²/R1 + U²/R2 = {@power} W, and A = P·t = {@power} W × 600 s = {=@power*600} J. The time must be in seconds: 10 is minutes; dividing by t gives no energy.",
+      "vi": {
+        "stem": "R1 = {resistance1} Ω và R2 = {resistance2} Ω mắc song song vào hiệu điện thế {voltage} V. Trong 10 phút chúng tiêu thụ bao nhiêu điện năng?",
+        "explain": "P = U²/R1 + U²/R2 = {@power} W, và A = P·t = {@power} W × 600 s = {=@power*600} J. Thời gian phải đổi ra giây: 10 là số phút; chia cho t thì không ra năng lượng."
+      },
+      "options": [
+        {
+          "text": "{=@power*600} J",
+          "vi": {
+            "text": "{=@power*600} J"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(voltage^2/resistance1+voltage^2/resistance2)*600/600",
+            "equals": "power"
+          }
+        },
+        {
+          "text": "{=@power*10} J",
+          "vi": {
+            "text": "{=@power*10} J"
+          },
+          "check": {
+            "expr": "@power*10/600",
+            "equals": "power"
+          }
+        },
+        {
+          "text": "{=@power/600} J",
+          "vi": {
+            "text": "{=@power/600} J"
+          },
+          "check": {
+            "expr": "@power/600/600",
+            "equals": "power"
+          }
+        },
+        {
+          "text": "{=voltage^2/(resistance1+resistance2)*600} J",
+          "vi": {
+            "text": "{=voltage^2/(resistance1+resistance2)*600} J"
+          },
+          "check": {
+            "expr": "voltage^2/(resistance1+resistance2)",
+            "equals": "power"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-9v-series",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["sharing", "forms"],
+      "set": {
+        "voltage": 9,
+        "configuration": 1
+      },
+      "stem": "R1 = {resistance1} Ω and R2 = {resistance2} Ω are in series across {voltage} V. Decide whether each statement is true or false.",
+      "explain": "I = U/(R1 + R2) = {@current} A; P1 = I²R1 = {@power1} W, P2 = I²R2 = {@power2} W, twice P1; U2 = I·R2 = {@voltage2} V. U²/R1 + U²/R2 = {=voltage^2/resistance1+voltage^2/resistance2} W is the parallel power, not this one.",
+      "vi": {
+        "stem": "R1 = {resistance1} Ω và R2 = {resistance2} Ω mắc nối tiếp vào hiệu điện thế {voltage} V. Mỗi nhận định sau đúng hay sai?",
+        "explain": "I = U/(R1 + R2) = {@current} A; P1 = I²R1 = {@power1} W, P2 = I²R2 = {@power2} W, gấp đôi P1; U2 = I·R2 = {@voltage2} V. U²/R1 + U²/R2 = {=voltage^2/resistance1+voltage^2/resistance2} W là công suất khi mắc song song, không phải trường hợp này."
+      },
+      "statements": [
+        {
+          "text": "The current is {@current} A.",
+          "vi": {
+            "text": "Cường độ dòng điện bằng {@current} A."
+          },
+          "true": true,
+          "check": {
+            "expr": "voltage/(resistance1+resistance2)",
+            "equals": "current"
+          }
+        },
+        {
+          "text": "R2 takes {@power2} W, twice what R1 takes.",
+          "vi": {
+            "text": "R2 tiêu thụ {@power2} W, gấp đôi R1."
+          },
+          "true": true,
+          "check": {
+            "expr": "2*@current^2*resistance1",
+            "equals": "power2"
+          }
+        },
+        {
+          "text": "The total power is U²/R1 + U²/R2 = {=voltage^2/resistance1+voltage^2/resistance2} W.",
+          "vi": {
+            "text": "Công suất toàn mạch bằng U²/R1 + U²/R2 = {=voltage^2/resistance1+voltage^2/resistance2} W."
+          },
+          "true": false,
+          "check": {
+            "expr": "voltage^2/resistance1+voltage^2/resistance2",
+            "equals": "power"
+          }
+        },
+        {
+          "text": "The voltage across R2 is {@voltage2} V.",
+          "vi": {
+            "text": "Hiệu điện thế giữa hai đầu R2 bằng {@voltage2} V."
+          },
+          "true": true,
+          "check": {
+            "expr": "@current*resistance2",
+            "equals": "voltage2"
+          }
+        }
+      ]
+    },
+    {
+      "id": "which-configuration",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["sharing", "forms"],
+      "set": {
+        "voltage": 12,
+        "configuration": 0
+      },
+      "stem": "With R1 = {resistance1} Ω and R2 = {resistance2} Ω available and the supply at {voltage} V, the circuit takes {@power} W. How are the resistors connected?",
+      "explain": "Work out each: R1 alone U²/R1 = {=voltage^2/resistance1} W; series U²/(R1 + R2) = {=voltage^2/(resistance1+resistance2)} W; parallel U²/R1 + U²/R2 = {=voltage^2/resistance1+voltage^2/resistance2} W; R2 alone {=voltage^2/resistance2} W. Only R1 alone gives {@power} W.",
+      "vi": {
+        "stem": "Có sẵn R1 = {resistance1} Ω và R2 = {resistance2} Ω, nguồn {voltage} V, mạch tiêu thụ {@power} W. Các điện trở được mắc như thế nào?",
+        "explain": "Tính từng trường hợp: chỉ R1 là U²/R1 = {=voltage^2/resistance1} W; nối tiếp U²/(R1 + R2) = {=voltage^2/(resistance1+resistance2)} W; song song U²/R1 + U²/R2 = {=voltage^2/resistance1+voltage^2/resistance2} W; chỉ R2 là {=voltage^2/resistance2} W. Chỉ có trường hợp chỉ R1 cho {@power} W."
+      },
+      "options": [
+        {
+          "text": "R1 alone",
+          "vi": {
+            "text": "Chỉ có R1"
+          },
+          "correct": true
+        },
+        {
+          "text": "R1 and R2 in series",
+          "vi": {
+            "text": "R1 nối tiếp R2"
+          }
+        },
+        {
+          "text": "R1 and R2 in parallel",
+          "vi": {
+            "text": "R1 song song R2"
+          }
+        },
+        {
+          "text": "R2 alone",
+          "vi": {
+            "text": "Chỉ có R2"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-voltage",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["forms", "sharing"],
+      "set": {
+        "voltage": 9,
+        "configuration": 2
+      },
+      "stem": "R1 = {resistance1} Ω and R2 = {resistance2} Ω are in parallel and together take {@power} W. What is the supply voltage?",
+      "explain": "In parallel R = R1·R2/(R1 + R2) = {@equivalentResistance|3} Ω, and P = U²/R gives U = √(P·R) = √({@power} × {@equivalentResistance|3}) = {=sqrt(@power*@equivalentResistance)} V. Using R1 + R2, or R1 alone, or forgetting the root gives the other values.",
+      "vi": {
+        "stem": "R1 = {resistance1} Ω và R2 = {resistance2} Ω mắc song song, cùng tiêu thụ {@power} W. Hiệu điện thế của nguồn bằng bao nhiêu?",
+        "explain": "Mắc song song: R = R1·R2/(R1 + R2) = {@equivalentResistance|3} Ω, và P = U²/R cho U = √(P·R) = √({@power} × {@equivalentResistance|3}) = {=sqrt(@power*@equivalentResistance)} V. Dùng R1 + R2, hoặc chỉ R1, hoặc quên khai căn sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{=sqrt(@power*@equivalentResistance)} V",
+          "vi": {
+            "text": "{=sqrt(@power*@equivalentResistance)} V"
+          },
+          "correct": true,
+          "check": {
+            "expr": "sqrt(@power*@equivalentResistance)^2*@conductance",
+            "equals": "power"
+          }
+        },
+        {
+          "text": "{=sqrt(@power*(resistance1+resistance2))} V",
+          "vi": {
+            "text": "{=sqrt(@power*(resistance1+resistance2))} V"
+          },
+          "check": {
+            "expr": "sqrt(@power*(resistance1+resistance2))^2*@conductance",
+            "equals": "power"
+          }
+        },
+        {
+          "text": "{=sqrt(@power*resistance1)} V",
+          "vi": {
+            "text": "{=sqrt(@power*resistance1)} V"
+          },
+          "check": {
+            "expr": "sqrt(@power*resistance1)^2*@conductance",
+            "equals": "power"
+          }
+        },
+        {
+          "text": "{=@power*@equivalentResistance} V",
+          "vi": {
+            "text": "{=@power*@equivalentResistance} V"
+          },
+          "check": {
+            "expr": "(@power*@equivalentResistance)^2*@conductance",
+            "equals": "power"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-compare",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["sharing", "power"],
+      "set": {
+        "voltage": 12,
+        "configuration": 2
+      },
+      "stem": "R1 = {resistance1} Ω and R2 = {resistance2} Ω are in parallel across {voltage} V. Decide whether each statement is true or false.",
+      "explain": "P = U²/R1 + U²/R2 = {@power} W and I = P/U = {@current} A. In series at the same U they would take U²/(R1 + R2) = {=voltage^2/(resistance1+resistance2)} W, so parallel takes {=@power/(voltage^2/(resistance1+resistance2))} times as much. In parallel it is R1, the smaller resistor, that takes twice the power of the other.",
+      "vi": {
+        "stem": "R1 = {resistance1} Ω và R2 = {resistance2} Ω mắc song song vào hiệu điện thế {voltage} V. Mỗi nhận định sau đúng hay sai?",
+        "explain": "P = U²/R1 + U²/R2 = {@power} W và I = P/U = {@current} A. Mắc nối tiếp với cùng U, chúng chỉ tiêu thụ U²/(R1 + R2) = {=voltage^2/(resistance1+resistance2)} W, nên mắc song song tiêu thụ gấp {=@power/(voltage^2/(resistance1+resistance2))} lần. Khi mắc song song, chính R1 (điện trở nhỏ hơn) tiêu thụ công suất gấp đôi điện trở kia."
+      },
+      "statements": [
+        {
+          "text": "The circuit takes {@power} W.",
+          "vi": {
+            "text": "Mạch tiêu thụ công suất {@power} W."
+          },
+          "true": true,
+          "check": {
+            "expr": "voltage^2/resistance1+voltage^2/resistance2",
+            "equals": "power"
+          }
+        },
+        {
+          "text": "The supply gives {@current} A.",
+          "vi": {
+            "text": "Nguồn cung cấp dòng điện {@current} A."
+          },
+          "true": true,
+          "check": {
+            "expr": "@power/voltage",
+            "equals": "current"
+          }
+        },
+        {
+          "text": "This is {=@power/(voltage^2/(resistance1+resistance2))} times the power the same resistors take in series across {voltage} V.",
+          "vi": {
+            "text": "Công suất này gấp {=@power/(voltage^2/(resistance1+resistance2))} lần công suất của chính hai điện trở đó khi mắc nối tiếp vào {voltage} V."
+          },
+          "true": true,
+          "check": {
+            "expr": "(@power/(voltage^2/(resistance1+resistance2)))*voltage^2/(resistance1+resistance2)",
+            "equals": "power"
+          }
+        },
+        {
+          "text": "R2 takes {=2*@power1} W, twice what R1 takes.",
+          "vi": {
+            "text": "R2 tiêu thụ {=2*@power1} W, gấp đôi R1."
+          },
+          "true": false,
+          "check": {
+            "expr": "2*@power1",
+            "equals": "power2"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,550 @@
+{
+  "id": "converging-lens",
+  "name": "Converging lens",
+  "category": "physics",
+  "description": "An optical bench: an illuminated object, a converging lens and a white screen on a 1 m scale. The lens stands at the object distance u from the object; RUN slides the screen away from the lens until the image on it is sharp — or to the end of the bench, if no sharp image forms there. The image distance v obeys the lens formula 1/u + 1/v = 1/f, and the magnification is k = −v/u. Over several runs with one lens, 1/v against 1/u is a straight line of slope −1 whose intercept is 1/f, and u·v against u + v is a line through the origin whose slope is the focal length f.",
+  "vi": {
+    "name": "Thấu kính hội tụ",
+    "description": "Một băng quang học gồm một vật được chiếu sáng, một thấu kính hội tụ và một màn ảnh trắng đặt trên thước dài 1 m. Thấu kính đặt cách vật một khoảng u; nhấn CHẠY, màn trượt ra xa thấu kính cho đến khi ảnh trên màn rõ nét — hoặc tới cuối băng nếu không có ảnh rõ nét nào hiện lên ở đó. Khoảng cách từ ảnh đến thấu kính v tuân theo công thức thấu kính 1/u + 1/v = 1/f, và số phóng đại là k = −v/u. Qua nhiều lần chạy với cùng một thấu kính, đồ thị 1/v theo 1/u là một đường thẳng có hệ số góc −1 và cắt trục tung tại 1/f, còn đồ thị u·v theo u + v là một đường thẳng đi qua gốc tọa độ có hệ số góc bằng tiêu cự f.",
+    "note": "Đây là mô hình dạy học đơn giản hóa của quang hình học với một thấu kính mỏng lí tưởng, không phải phép đo chính xác của phòng thí nghiệm. Các khoảng cách đo từ thấu kính, lấy dấu dương cho vật thật và ảnh thật: u là khoảng cách từ vật, v là khoảng cách từ ảnh, v < 0 với ảnh ảo nằm cùng phía với vật (sách giáo khoa Việt Nam kí hiệu là d và d′). Công thức thấu kính 1/u + 1/v = 1/f cho v = u·f/(u − f); số phóng đại k = −v/u, âm khi ảnh ngược chiều với vật; chiều cao của ảnh h′ = k·h. Mỗi lần chạy tính f = u·v/(u + v) từ chính u và v của lần chạy đó, như học sinh vẫn làm. Ảnh thật (u > f) ngược chiều với vật: lớn hơn vật khi f < u < 2f, bằng vật khi u = 2f (xếp loại «bằng vật» khi chênh lệch dưới 0,05 %), nhỏ hơn vật khi u > 2f. Khi u < f, ảnh là ảnh ảo, cùng chiều và lớn hơn vật — đúng như khi nhìn qua kính lúp — và không màn nào hứng được. Màn dừng ở nơi ảnh rõ nét, s = v; trên màn, mỗi điểm của vật cho một vệt nhòe có đường kính A·|1 − s/v| với A là đường kính rìa thấu kính: đó là tiết diện của chùm sáng đi từ điểm ấy qua thấu kính. Nếu ảnh thật nằm xa hơn cuối băng, hoặc ảnh là ảnh ảo, màn dừng ở cuối băng cùng với vệt nhòe tại đó; v, k và h′ vẫn là giá trị tính theo công thức thấu kính. Giả định: thấu kính mỏng lí tưởng (bỏ qua bề dày), tia sáng gần trục chính, không có quang sai (tiêu cự của một thấu kính thủy tinh thật thay đổi khoảng 1,6 % giữa ánh sáng xanh và đỏ), không có nhiễu xạ (vệt nhòe khoảng 10–20 µm ở đây), một bước sóng. Ảnh chỉ được coi là rõ nét khi đúng s = v; bằng mắt, ảnh trông rõ trong một khoảng vài milimét (độ sâu tiêu), điều mà số đọc trên thước không tính đến. Tiêu cự của các thấu kính, vật cao 3 cm, đường kính rìa 40 mm, băng dài 1 m, vị trí xuất phát của màn cách thấu kính 5 cm và tốc độ trượt 0,1 m/s là các giá trị minh họa. Kết quả mô phỏng không có sai số ngẫu nhiên; số đọc trên thước chỉ tính đến độ phân giải của nó."
+  },
+  "requiredEquipment": ["optical-bench"],
+  "model": "optics.thin-lens",
+  "parameters": [
+    {
+      "id": "focalLength",
+      "label": "Lens (focal length)",
+      "vi": { "label": "Thấu kính (tiêu cự)" },
+      "symbol": "f",
+      "unit": "m",
+      "default": 0.1,
+      "min": 0.1,
+      "max": 0.2,
+      "step": 0.05,
+      "presets": [
+        { "label": "f = 0.10 m", "vi": { "label": "f = 0,10 m" }, "value": 0.1 },
+        { "label": "f = 0.15 m", "vi": { "label": "f = 0,15 m" }, "value": 0.15 },
+        { "label": "f = 0.20 m", "vi": { "label": "f = 0,20 m" }, "value": 0.2 }
+      ]
+    },
+    {
+      "id": "objectDistance",
+      "label": "Object distance",
+      "vi": { "label": "Khoảng cách từ vật đến thấu kính" },
+      "symbol": "u",
+      "unit": "m",
+      "default": 0.3,
+      "min": 0.08,
+      "max": 0.6,
+      "step": 0.01,
+      "presets": [
+        { "label": "0.08 m", "vi": { "label": "0,08 m" }, "value": 0.08 },
+        { "label": "0.25 m", "vi": { "label": "0,25 m" }, "value": 0.25 },
+        { "label": "0.30 m", "vi": { "label": "0,30 m" }, "value": 0.3 },
+        { "label": "0.40 m", "vi": { "label": "0,40 m" }, "value": 0.4 },
+        { "label": "0.60 m", "vi": { "label": "0,60 m" }, "value": 0.6 }
+      ]
+    },
+    {
+      "id": "resolution",
+      "label": "Reading resolution",
+      "vi": { "label": "Độ phân giải khi đọc thước" },
+      "symbol": "d",
+      "unit": "m",
+      "default": 0.001,
+      "min": 0.001,
+      "max": 0.01,
+      "step": 0.001,
+      "presets": [
+        { "label": "1 mm", "vi": { "label": "1 mm" }, "value": 0.001 },
+        { "label": "2 mm", "vi": { "label": "2 mm" }, "value": 0.002 },
+        { "label": "5 mm", "vi": { "label": "5 mm" }, "value": 0.005 },
+        { "label": "1 cm", "vi": { "label": "1 cm" }, "value": 0.01 }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "objectHeight": 0.03,
+    "benchLength": 1,
+    "apertureDiameter": 0.04,
+    "screenStart": 0.05,
+    "screenSpeed": 0.1
+  },
+  "inputs": {
+    "objectHeight": { "symbol": "h", "unit": "m" },
+    "benchLength": { "symbol": "L", "unit": "m" },
+    "apertureDiameter": { "symbol": "A", "unit": "m", "desk": false },
+    "screenStart": { "symbol": "s₀", "unit": "m", "desk": false },
+    "screenSpeed": { "symbol": "w", "unit": "m/s", "desk": false }
+  },
+  "simulation": { "timeStep": 0.01, "maxDuration": 12, "sampleInterval": 0.02 },
+  "measurements": [
+    {
+      "id": "screen",
+      "label": "Screen distance from the lens",
+      "vi": { "label": "Khoảng cách từ màn đến thấu kính" },
+      "symbol": "s",
+      "unit": "m",
+      "variable": "screenDistance"
+    },
+    {
+      "id": "blur",
+      "label": "Blur-spot diameter on the screen",
+      "vi": { "label": "Đường kính vệt nhòe trên màn" },
+      "symbol": "b",
+      "unit": "m",
+      "variable": "blur"
+    }
+  ],
+  "results": [
+    {
+      "id": "imageDistance",
+      "label": "Image distance v",
+      "vi": { "label": "Khoảng cách từ ảnh đến thấu kính v" },
+      "symbol": "v",
+      "unit": "m",
+      "variable": "imageDistance",
+      "reduce": "final",
+      "theory": "imageDistance",
+      "classes": [
+        { "max": 0, "label": "Virtual", "vi": { "label": "Ảnh ảo" } },
+        { "label": "Real", "vi": { "label": "Ảnh thật" } }
+      ]
+    },
+    {
+      "id": "focalLength",
+      "label": "Focal length from u and v, f = u·v/(u + v)",
+      "vi": { "label": "Tiêu cự tính từ u và v, f = u·v/(u + v)" },
+      "symbol": "f",
+      "unit": "m",
+      "variable": "focalLength",
+      "reduce": "final",
+      "theory": "focalLength"
+    },
+    {
+      "id": "magnification",
+      "label": "Magnification k = −v/u",
+      "vi": { "label": "Số phóng đại k = −v/u" },
+      "symbol": "k",
+      "unit": "",
+      "variable": "magnification",
+      "reduce": "final",
+      "theory": "magnification",
+      "classes": [
+        {
+          "max": -1.0005,
+          "label": "Inverted, larger",
+          "vi": { "label": "Ngược chiều, lớn hơn vật" }
+        },
+        {
+          "max": -0.9995,
+          "label": "Inverted, same size",
+          "vi": { "label": "Ngược chiều, bằng vật" }
+        },
+        { "max": 0, "label": "Inverted, smaller", "vi": { "label": "Ngược chiều, nhỏ hơn vật" } },
+        { "label": "Upright, larger", "vi": { "label": "Cùng chiều, lớn hơn vật" } }
+      ]
+    },
+    {
+      "id": "imageHeight",
+      "label": "Image height h′",
+      "vi": { "label": "Chiều cao của ảnh h′" },
+      "symbol": "h′",
+      "unit": "m",
+      "variable": "imageHeight",
+      "reduce": "final",
+      "theory": "imageHeight"
+    },
+    {
+      "id": "sharp",
+      "label": "Sharp image on the screen",
+      "vi": { "label": "Ảnh rõ nét trên màn" },
+      "unit": "",
+      "variable": "sharp",
+      "reduce": "final",
+      "theory": "sharp",
+      "classes": [
+        { "max": 0.5, "label": "No", "vi": { "label": "Không" } },
+        { "label": "Yes", "vi": { "label": "Có" } }
+      ]
+    },
+    {
+      "id": "screenDistance",
+      "label": "Screen position s from the lens, where it stopped",
+      "vi": { "label": "Vị trí màn tính từ thấu kính s, nơi màn dừng" },
+      "symbol": "s",
+      "unit": "m",
+      "variable": "screenDistance",
+      "reduce": "final",
+      "theory": "screenDistance"
+    },
+    {
+      "id": "blur",
+      "label": "Blur-spot diameter b where the screen stopped",
+      "vi": { "label": "Đường kính vệt nhòe b tại nơi màn dừng" },
+      "symbol": "b",
+      "unit": "m",
+      "variable": "blur",
+      "reduce": "final",
+      "theory": "blur"
+    },
+    {
+      "id": "inverseObjectDistance",
+      "label": "Reciprocal of the object distance, 1/u",
+      "vi": { "label": "Nghịch đảo khoảng cách từ vật, 1/u" },
+      "symbol": "1/u",
+      "unit": "m⁻¹",
+      "variable": "inverseObjectDistance",
+      "reduce": "final",
+      "theory": "inverseObjectDistance"
+    },
+    {
+      "id": "inverseImageDistance",
+      "label": "Reciprocal of the image distance, 1/v",
+      "vi": { "label": "Nghịch đảo khoảng cách từ ảnh, 1/v" },
+      "symbol": "1/v",
+      "unit": "m⁻¹",
+      "variable": "inverseImageDistance",
+      "reduce": "final",
+      "theory": "inverseImageDistance"
+    },
+    {
+      "id": "distanceSum",
+      "label": "Sum of the distances, u + v",
+      "vi": { "label": "Tổng hai khoảng cách, u + v" },
+      "symbol": "(u + v)",
+      "unit": "m",
+      "variable": "distanceSum",
+      "reduce": "final",
+      "theory": "distanceSum"
+    },
+    {
+      "id": "distanceProduct",
+      "label": "Product of the distances, u·v",
+      "vi": { "label": "Tích hai khoảng cách, u·v" },
+      "symbol": "u·v",
+      "unit": "m²",
+      "variable": "distanceProduct",
+      "reduce": "final",
+      "theory": "distanceProduct"
+    }
+  ],
+  "graphs": [
+    {
+      "id": "blur-screen",
+      "title": "Blur-spot diameter against screen distance",
+      "vi": { "title": "Đường kính vệt nhòe theo khoảng cách từ màn đến thấu kính" },
+      "x": "screen",
+      "y": ["blur"],
+      "mark": "imageDistance"
+    }
+  ],
+  "monitor": "blur-screen",
+  "compare": [{ "graph": "blur-screen" }],
+  "instruments": [
+    {
+      "result": "screenDistance",
+      "quantity": "Screen position s from the lens",
+      "name": "Bench scale",
+      "resolution": "resolution",
+      "excludes": "judging by eye where the image is sharpest (it looks sharp over a few millimetres), the lens's thickness and where its centre sits on the scale, and lining up the riders' index marks",
+      "vi": {
+        "quantity": "Vị trí màn tính từ thấu kính s",
+        "name": "Thước trên băng quang học",
+        "excludes": "việc dùng mắt để xác định chỗ ảnh rõ nét nhất (ảnh trông rõ trong một khoảng vài milimét), bề dày của thấu kính và vị trí tâm của nó trên thước, cùng việc dóng vạch chỉ của các giá đỡ với thước"
+      }
+    }
+  ],
+  "note": "A simplified teaching model of geometrical optics with an ideal thin lens, not a lab-grade measurement. Distances are measured from the lens, real-is-positive: u from the object, v from the image, v < 0 for a virtual image on the object's side (Vietnamese textbooks write d and d′). The lens formula 1/u + 1/v = 1/f gives v = u·f/(u − f); the magnification k = −v/u is negative for an inverted image; the image height h′ = k·h. Each run computes f = u·v/(u + v) from its own u and v, as a student does. A real image (u > f) is inverted: larger than the object for f < u < 2f, the same size at u = 2f (classed \"same size\" within 0.05 %), smaller beyond. For u < f the image is virtual, upright and larger — what a magnifying glass shows — and no screen can catch it. The screen stops where the image is sharp, s = v; on it, each object point makes a blur spot of diameter A·|1 − s/v| for a lens of aperture A: the cross-section of that point's cone of light through the lens. A real image beyond the end of the bench, or a virtual one, leaves the screen at the end of the bench with the blur there; v, k and h′ are still the lens formula's values. Assumed: an ideal thin lens (its thickness neglected), rays close to the axis, no aberrations (a real glass lens's f differs by about 1.6 % between blue and red light), no diffraction (a blur of about 10–20 µm here), one wavelength. The image counts as sharp only at s = v exactly; by eye it looks sharp over a few millimetres (the depth of focus), which a scale reading leaves out. The lenses' focal lengths, the 3 cm object, the 40 mm aperture, the 1 m bench, the screen's start 5 cm behind the lens and its 0.1 m/s speed are illustrative values. The simulated results carry no random error; a scale reading accounts only for its resolution.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the converging lens instructions on the board.",
+      "vi": { "instruction": "Đọc hướng dẫn thí nghiệm thấu kính hội tụ trên bảng." },
+      "done": { "kind": "inspected", "item": "converging-lens-instructions" }
+    },
+    {
+      "id": "lens",
+      "instruction": "Choose a lens with the f dial on the control desk.",
+      "vi": { "instruction": "Chọn thấu kính bằng núm xoay f trên bàn điều khiển." },
+      "done": { "kind": "adjusted", "parameter": "focalLength" }
+    },
+    {
+      "id": "object",
+      "instruction": "Set the object distance u: the lens moves to u from the object.",
+      "vi": {
+        "instruction": "Đặt khoảng cách từ vật đến thấu kính u: thấu kính được dời tới vị trí cách vật một khoảng u."
+      },
+      "done": { "kind": "adjusted", "parameter": "objectDistance" }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the screen slides away from the lens until the image on it is sharp, or to the end of the bench.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: màn trượt ra xa thấu kính cho đến khi ảnh trên màn rõ nét, hoặc tới cuối băng."
+      },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read v, f and k on the results monitor and check that 1/u + 1/v = 1/f.",
+      "vi": {
+        "instruction": "Đọc v, f và k trên màn hình kết quả và kiểm tra rằng 1/u + 1/v = 1/f."
+      },
+      "done": { "kind": "viewed" }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, change u and run again. Put the object inside the focal length (u = 0.08 m): no image forms on the screen.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, thay đổi u rồi chạy lại. Đặt vật trong khoảng tiêu cự (u = 0,08 m): không có ảnh nào hiện trên màn."
+      },
+      "done": { "kind": "reset" }
+    }
+  ],
+  "analyses": [
+    {
+      "id": "reciprocal",
+      "title": "1/v against 1/u (the lens formula)",
+      "note": "The lens formula 1/u + 1/v = 1/f makes 1/v against 1/u a straight line of slope −1 for one lens, crossing both axes at 1/f, the lens's power (in m⁻¹, dioptres): read f as 1 divided by the intercept b. Only runs with the same lens are fitted together. Every completed run is a point, including those whose image the screen could not catch — a virtual image (u < f, 1/v negative) or a real one beyond the end of the bench: their v is the lens formula's, so they lie on the same line. Leave them out of the fit to use only images caught on the screen.",
+      "vi": {
+        "title": "1/v theo 1/u (công thức thấu kính)",
+        "note": "Công thức thấu kính 1/u + 1/v = 1/f cho thấy, với cùng một thấu kính, đồ thị 1/v theo 1/u là một đường thẳng có hệ số góc −1, cắt cả hai trục tại 1/f, tức độ tụ của thấu kính (đơn vị m⁻¹, điốp): tiêu cự f bằng 1 chia cho tung độ gốc b. Chỉ các lần chạy cùng một thấu kính mới được khớp chung. Mỗi lần chạy đã hoàn tất là một điểm, kể cả những lần màn không hứng được ảnh — ảnh ảo (u < f, 1/v âm) hoặc ảnh thật nằm xa hơn cuối băng: v của chúng là giá trị theo công thức thấu kính, nên chúng vẫn nằm trên cùng đường thẳng. Hãy bỏ chúng ra khỏi phép khớp nếu chỉ muốn dùng những ảnh hứng được trên màn."
+      },
+      "x": "inverseObjectDistance",
+      "y": "inverseImageDistance",
+      "group": ["focalLength"],
+      "columns": [
+        "objectDistance",
+        "imageDistance",
+        "screenDistance",
+        "inverseObjectDistance",
+        "inverseImageDistance"
+      ],
+      "slope": {
+        "label": "Slope (the lens formula gives −1)",
+        "vi": { "label": "Hệ số góc (công thức thấu kính cho −1)" },
+        "symbol": "a",
+        "unit": "",
+        "theory": "reciprocalSlope",
+        "intercept": "power"
+      }
+    },
+    {
+      "id": "product",
+      "title": "u·v against u + v (focal length from the slope)",
+      "note": "Multiplying the lens formula by u·v·f gives u·v = f·(u + v): for one lens, u·v against u + v is a straight line through the origin whose slope is the focal length f. Only runs with the same lens are fitted together. As in the other analysis, runs whose image the screen could not catch are points too, at the lens formula's v; leave them out to use only images caught on the screen.",
+      "vi": {
+        "title": "u·v theo u + v (tiêu cự từ hệ số góc)",
+        "note": "Nhân hai vế của công thức thấu kính với u·v·f ta được u·v = f·(u + v): với cùng một thấu kính, đồ thị u·v theo u + v là một đường thẳng đi qua gốc tọa độ có hệ số góc bằng tiêu cự f. Chỉ các lần chạy cùng một thấu kính mới được khớp chung. Cũng như ở phép phân tích kia, các lần chạy mà màn không hứng được ảnh vẫn là một điểm, ứng với v theo công thức thấu kính; hãy bỏ chúng ra nếu chỉ muốn dùng những ảnh hứng được trên màn."
+      },
+      "x": "distanceSum",
+      "y": "distanceProduct",
+      "group": ["focalLength"],
+      "columns": [
+        "objectDistance",
+        "imageDistance",
+        "screenDistance",
+        "distanceSum",
+        "distanceProduct"
+      ],
+      "slope": {
+        "label": "Focal length, the slope",
+        "vi": { "label": "Tiêu cự, bằng hệ số góc" },
+        "symbol": "f",
+        "unit": "m",
+        "theory": "focalLength"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "real-image",
+      "question": "An object stands {objectDistance} m from a converging lens of focal length {focalLength} m. Where is the image, and what is the magnification?",
+      "vi": {
+        "question": "Một vật đặt cách thấu kính hội tụ tiêu cự {focalLength} m một khoảng {objectDistance} m. Ảnh nằm ở đâu, và số phóng đại bằng bao nhiêu?"
+      },
+      "set": { "focalLength": 0.1, "objectDistance": 0.25 },
+      "find": [{ "theory": "imageDistance" }, { "theory": "magnification" }],
+      "steps": [
+        {
+          "say": "The lens formula, with distances from the lens and real distances positive.",
+          "vi": {
+            "say": "Dùng công thức thấu kính, khoảng cách tính từ thấu kính, vật và ảnh thật mang dấu dương."
+          },
+          "write": "1/u + 1/v = 1/f  →  v = u·f/(u − f)"
+        },
+        {
+          "say": "Put in the numbers: v is positive, so the image is real and can be caught on a screen.",
+          "vi": { "say": "Thay số: v dương, nên ảnh là ảnh thật, hứng được trên màn." },
+          "write": "v = {objectDistance}·{focalLength}/({objectDistance} − {focalLength}) ≈ {@imageDistance} m",
+          "check": {
+            "expr": "objectDistance*focalLength/(objectDistance-focalLength)",
+            "equals": "imageDistance"
+          }
+        },
+        {
+          "say": "The magnification is −v/u; negative means the image is inverted.",
+          "vi": { "say": "Số phóng đại k = −v/u; k âm nghĩa là ảnh ngược chiều vật." },
+          "write": "k = −v/u = −{@imageDistance}/{objectDistance} ≈ {@magnification}",
+          "check": { "expr": "-@imageDistance/objectDistance", "equals": "magnification" }
+        }
+      ]
+    },
+    {
+      "id": "magnifying-glass",
+      "question": "An object {objectHeight} m tall stands {objectDistance} m from a converging lens of focal length {focalLength} m, inside the focal length. Find the image distance and the image height.",
+      "vi": {
+        "question": "Một vật cao {objectHeight} m đặt cách thấu kính hội tụ tiêu cự {focalLength} m một khoảng {objectDistance} m, tức là trong khoảng tiêu cự. Tìm khoảng cách ảnh và chiều cao ảnh."
+      },
+      "set": { "focalLength": 0.15, "objectDistance": 0.08 },
+      "find": [{ "theory": "imageDistance" }, { "theory": "imageHeight" }],
+      "steps": [
+        {
+          "say": "Use the lens formula. v comes out negative: the image is virtual, on the object’s side, and no screen can catch it.",
+          "vi": {
+            "say": "Dùng công thức thấu kính. v âm: ảnh là ảnh ảo, nằm cùng phía với vật, không hứng được trên màn."
+          },
+          "write": "v = {objectDistance}·{focalLength}/({objectDistance} − {focalLength}) ≈ {@imageDistance} m",
+          "check": {
+            "expr": "objectDistance*focalLength/(objectDistance-focalLength)",
+            "equals": "imageDistance"
+          }
+        },
+        {
+          "say": "The magnification −v/u is positive and larger than one: upright and enlarged, as in a magnifying glass.",
+          "vi": {
+            "say": "Số phóng đại −v/u dương và lớn hơn 1: ảnh cùng chiều và lớn hơn vật, như qua kính lúp."
+          },
+          "write": "k = −v/u ≈ {@magnification}",
+          "check": { "expr": "-@imageDistance/objectDistance", "equals": "magnification" }
+        },
+        {
+          "say": "The image height is k times the object’s height.",
+          "vi": { "say": "Chiều cao ảnh bằng k nhân chiều cao vật." },
+          "write": "h′ = k·h = {@magnification}·{objectHeight} ≈ {@imageHeight} m",
+          "check": { "expr": "@magnification*objectHeight", "equals": "imageHeight" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "A converging lens brings the light from each point of an object together again behind it, making an image on a screen; where the image forms is set by the lens formula 1/u + 1/v = 1/f.",
+    "vi": {
+      "summary": "Thấu kính hội tụ làm cho ánh sáng từ mỗi điểm của vật hội tụ lại phía sau nó, tạo ảnh trên màn; vị trí của ảnh được xác định bởi công thức thấu kính 1/u + 1/v = 1/f."
+    },
+    "parts": [
+      {
+        "id": "object",
+        "name": "Illuminated object",
+        "role": "A lit arrow 3 cm tall at the scale’s 0 mark.",
+        "vi": {
+          "name": "Vật sáng",
+          "role": "Mũi tên phát sáng cao 3 cm đặt ở vạch 0 của thước."
+        },
+        "anchor": {
+          "part": "object"
+        }
+      },
+      {
+        "id": "lens",
+        "name": "Converging lens, focal length f",
+        "role": "Stands at the object distance u from the object; f is chosen at the desk.",
+        "vi": {
+          "name": "Thấu kính hội tụ, tiêu cự f",
+          "role": "Đặt cách vật một khoảng u; tiêu cự f được chọn ở bàn điều khiển."
+        },
+        "anchor": {
+          "part": "lens-holder"
+        }
+      },
+      {
+        "id": "screen",
+        "name": "Screen",
+        "role": "Slides away from the lens until the image on it is sharp.",
+        "vi": {
+          "name": "Màn ảnh",
+          "role": "Trượt ra xa thấu kính cho tới khi ảnh trên màn rõ nét."
+        },
+        "anchor": {
+          "part": "screen"
+        }
+      },
+      {
+        "id": "image",
+        "name": "Image",
+        "role": "Drawn on the screen at the model’s size and blur.",
+        "vi": {
+          "name": "Ảnh",
+          "role": "Được vẽ trên màn với kích thước và độ nhòe theo mô hình."
+        },
+        "anchor": {
+          "part": "image"
+        }
+      },
+      {
+        "id": "scale",
+        "name": "Scale",
+        "role": "Along the rail: reads u and the image distance v.",
+        "vi": {
+          "name": "Thước",
+          "role": "Dọc theo ray: đọc u và khoảng cách ảnh v."
+        },
+        "anchor": {
+          "part": "scale"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "Light spreads out from every point of the object. The lens bends the rays that pass through it so that they meet again at one point behind it: an image.",
+        "vi": {
+          "text": "Ánh sáng tỏa ra từ mọi điểm của vật. Thấu kính làm lệch các tia đi qua nó để chúng gặp lại nhau tại một điểm phía sau: đó là ảnh."
+        },
+        "parts": ["object", "lens"]
+      },
+      {
+        "text": "The screen slides away from the lens. Only at one distance v do the rays meet on it and the image is sharp; nearer or farther, each point makes a blurred spot.",
+        "vi": {
+          "text": "Màn trượt ra xa thấu kính. Chỉ ở một khoảng cách v thì các tia gặp nhau trên màn và ảnh rõ nét; gần hơn hay xa hơn, mỗi điểm tạo thành một vết nhòe."
+        },
+        "parts": ["screen", "image"]
+      },
+      {
+        "text": "The lens formula: 1/u + 1/v = 1/f, with u and v measured from the lens. So v = u·f/(u − f), and from one run f = u·v/(u + v).",
+        "vi": {
+          "text": "Công thức thấu kính: 1/u + 1/v = 1/f, với u và v đo từ thấu kính (sách giáo khoa viết d và d′). Vì vậy v = u·f/(u − f), và từ một lần chạy f = u·v/(u + v)."
+        },
+        "parts": ["lens", "scale"]
+      },
+      {
+        "text": "The magnification is k = −v/u: negative, because a real image is upside down. Larger than the object for f < u < 2f, the same size at u = 2f, smaller beyond.",
+        "vi": {
+          "text": "Số phóng đại là k = −v/u: mang dấu âm vì ảnh thật bị lộn ngược. Ảnh lớn hơn vật khi f < u < 2f, bằng vật khi u = 2f, nhỏ hơn khi xa hơn."
+        },
+        "parts": ["image", "object"]
+      },
+      {
+        "text": "Put the object inside the focal length (u < f): the image is virtual, upright and larger — what a magnifying glass shows — and no screen can catch it.",
+        "vi": {
+          "text": "Đặt vật trong khoảng tiêu cự (u < f): ảnh là ảnh ảo, cùng chiều và lớn hơn vật — như khi nhìn qua kính lúp — và không màn nào hứng được."
+        },
+        "parts": ["object", "lens", "screen"]
+      },
+      {
+        "text": "The results give v, f, k and the image height, read on the scale to its resolution d. Over several runs with one lens, 1/v against 1/u is a line of slope −1 whose intercept is 1/f.",
+        "vi": {
+          "text": "Phần kết quả cho v, f, k và chiều cao ảnh, đọc trên thước theo độ phân giải d. Qua nhiều lần chạy với cùng một thấu kính, 1/v theo 1/u là đường thẳng có hệ số góc −1 và tung độ gốc 1/f."
+        },
+        "parts": ["scale"]
+      },
+      {
+        "text": "The lens is an ideal thin lens with no aberrations. The model counts the image sharp only at s = v exactly; by eye it looks sharp over a few millimetres.",
+        "vi": {
+          "text": "Thấu kính được coi là thấu kính mỏng lý tưởng, không quang sai. Mô hình chỉ coi ảnh rõ nét đúng tại s = v; bằng mắt, ảnh trông rõ trong khoảng vài milimét."
+        },
+        "parts": ["lens", "screen"]
+      }
+    ]
+  }
+}

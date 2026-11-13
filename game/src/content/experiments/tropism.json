@@ -1,0 +1,343 @@
+{
+  "id": "tropism",
+  "name": "Tropisms: shoots bending to light and gravity",
+  "category": "biology",
+  "description": "Oat seedlings lit from one side bend towards the light. But which part of the shoot sees the light? Repeat Darwin’s experiment: cover the tip, cover the base, cut the tip off. Then lay a pot on its side in the dark and see the shoots turn upwards.",
+  "vi": {
+    "name": "Hướng động: thân cây uốn cong theo ánh sáng và trọng lực",
+    "description": "Cây mầm yến mạch được chiếu sáng một phía sẽ uốn cong về phía ánh sáng. Nhưng phần nào của cây “nhìn thấy” ánh sáng? Làm lại thí nghiệm của Darwin: che đỉnh ngọn, che phần gốc, cắt bỏ đỉnh ngọn. Rồi đặt chậu nằm ngang trong tối và xem thân cây hướng lên trên.",
+    "note": "Kết quả định tính là của các thí nghiệm kinh điển (Darwin 1880; Boysen-Jensen 1913): chỉ đỉnh ngọn cảm nhận ánh sáng; che hoặc cắt đỉnh thì cây không uốn cong, che gốc thì vẫn uốn cong. Auxin tạo ra ở đỉnh ngọn di chuyển sang phía khuất sáng (hoặc phía dưới khi nằm ngang) làm phía đó dài ra nhanh hơn. Góc uốn 45° và hằng số thời gian 2 giờ là minh họa. 8 giờ (28 800 s) chạy trong 10 s. Chấm cam: phía có nhiều auxin."
+  },
+  "requiredEquipment": ["seedling-box"],
+  "model": "biology.tropism",
+  "parameters": [
+    {
+      "id": "condition",
+      "label": "Seedlings",
+      "vi": {
+        "label": "Cây mầm"
+      },
+      "unit": "",
+      "default": 0,
+      "min": 0,
+      "max": 4,
+      "presets": [
+        {
+          "label": "Intact seedlings",
+          "vi": {
+            "label": "Cây mầm nguyên vẹn"
+          },
+          "value": 0
+        },
+        {
+          "label": "Tip covered (opaque cap)",
+          "vi": {
+            "label": "Che đỉnh ngọn (mũ chắn sáng)"
+          },
+          "value": 1
+        },
+        {
+          "label": "Base covered (opaque sleeve)",
+          "vi": {
+            "label": "Che phần gốc (ống chắn sáng)"
+          },
+          "value": 2
+        },
+        {
+          "label": "Tip cut off",
+          "vi": {
+            "label": "Cắt bỏ đỉnh ngọn"
+          },
+          "value": 3
+        },
+        {
+          "label": "Laid on its side, in the dark",
+          "vi": {
+            "label": "Đặt nằm ngang, trong tối"
+          },
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": "light",
+      "label": "Light from",
+      "vi": {
+        "label": "Ánh sáng chiếu từ"
+      },
+      "unit": "",
+      "default": 1,
+      "min": -1,
+      "max": 1,
+      "step": 1,
+      "presets": [
+        {
+          "label": "The left",
+          "vi": {
+            "label": "Bên trái"
+          },
+          "value": -1
+        },
+        {
+          "label": "Above",
+          "vi": {
+            "label": "Phía trên"
+          },
+          "value": 0
+        },
+        {
+          "label": "The right",
+          "vi": {
+            "label": "Bên phải"
+          },
+          "value": 1
+        }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "bendAngle": 45,
+    "bendTime": 7200,
+    "duration": 28800,
+    "speed": 2880
+  },
+  "inputs": {
+    "bendAngle": {
+      "symbol": "θ",
+      "unit": "°",
+      "desk": false
+    },
+    "bendTime": {
+      "symbol": "τ",
+      "unit": "s",
+      "desk": false
+    },
+    "duration": {
+      "symbol": "t",
+      "unit": "s",
+      "desk": false
+    },
+    "speed": {
+      "symbol": "v",
+      "unit": "",
+      "desk": false
+    }
+  },
+  "simulation": {
+    "timeStep": 0.02,
+    "maxDuration": 12,
+    "sampleInterval": 0.05
+  },
+  "measurements": [
+    {
+      "id": "time",
+      "label": "Time",
+      "vi": {
+        "label": "Thời gian"
+      },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "time"
+    },
+    {
+      "id": "elapsed",
+      "label": "Growing time",
+      "vi": {
+        "label": "Thời gian sinh trưởng"
+      },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "elapsed"
+    },
+    {
+      "id": "angle",
+      "label": "Bend from upright",
+      "vi": {
+        "label": "Góc uốn so với phương thẳng đứng"
+      },
+      "symbol": "θ",
+      "unit": "°",
+      "variable": "angle"
+    }
+  ],
+  "results": [
+    {
+      "id": "angle",
+      "label": "Bend at the end",
+      "vi": {
+        "label": "Góc uốn cuối cùng"
+      },
+      "symbol": "θ",
+      "unit": "°",
+      "variable": "angle",
+      "reduce": "final",
+      "theory": "angle"
+    },
+    {
+      "id": "bends",
+      "label": "The shoots",
+      "vi": {
+        "label": "Thân cây"
+      },
+      "unit": "°",
+      "variable": "angle",
+      "reduce": "max",
+      "theory": "angle",
+      "classes": [
+        {
+          "max": 0.5,
+          "label": "Do not bend (or bend left)",
+          "vi": {
+            "label": "Không uốn (hoặc uốn sang trái)"
+          }
+        },
+        {
+          "label": "Bend",
+          "vi": {
+            "label": "Uốn cong"
+          }
+        }
+      ]
+    }
+  ],
+  "graphs": [
+    {
+      "id": "angle-time",
+      "title": "Bend of the shoots over time",
+      "vi": {
+        "title": "Góc uốn của thân theo thời gian"
+      },
+      "x": "elapsed",
+      "y": ["angle"]
+    }
+  ],
+  "monitor": "angle-time",
+  "compare": [
+    {
+      "graph": "angle-time",
+      "series": "angle"
+    }
+  ],
+  "note": "The qualitative results are the classic experiments’ (Darwin 1880; Boysen-Jensen 1913): only the tip senses the light; with the tip covered or cut off the shoot does not bend, with the base covered it still bends. Auxin made in the tip moves to the shaded side (or the lower side when laid flat), which then grows longer faster. The 45° bend and its 2-hour time constant are illustrative. 8 hours (28 800 s) run in 10 s. Orange dots: the side with more auxin.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the tropism instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn về hướng động trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "tropism-instructions"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN with intact seedlings lit from the right.",
+      "vi": {
+        "instruction": "Nhấn CHẠY với cây mầm nguyên vẹn, chiếu sáng từ bên phải."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "condition",
+      "instruction": "Press RESET and cover the tips with the dial.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI và che đỉnh ngọn bằng núm xoay."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "condition"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Run each condition: which ones bend?",
+      "vi": {
+        "instruction": "Chạy từng điều kiện: trường hợp nào cây uốn cong?"
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Lay the pot on its side: which way do the shoots grow?",
+      "vi": {
+        "instruction": "Đặt chậu nằm ngang: thân cây mọc theo hướng nào?"
+      },
+      "done": {
+        "kind": "reset"
+      }
+    }
+  ],
+  "explain": {
+    "summary": "A shoot’s tip senses light and gravity and sends auxin to one side; that side grows faster, so the shoot bends — towards the light, and upwards against gravity.",
+    "vi": {
+      "summary": "Đỉnh ngọn cảm nhận ánh sáng và trọng lực, đưa auxin sang một phía; phía đó sinh trưởng nhanh hơn nên thân uốn cong — về phía ánh sáng, và hướng lên ngược chiều trọng lực."
+    },
+    "parts": [
+      {
+        "id": "tip",
+        "name": "Shoot tip",
+        "role": "Senses the light and makes auxin.",
+        "vi": {
+          "name": "Đỉnh ngọn",
+          "role": "Cảm nhận ánh sáng và tạo ra auxin."
+        },
+        "anchor": {
+          "part": "shoot-tip"
+        }
+      },
+      {
+        "id": "lamp",
+        "name": "Light",
+        "role": "Lit from one side, the shoot has a bright side and a shaded one.",
+        "vi": {
+          "name": "Ánh sáng",
+          "role": "Chiếu từ một phía, thân cây có một phía sáng và một phía khuất."
+        },
+        "anchor": {
+          "part": "lamp"
+        }
+      },
+      {
+        "id": "pot",
+        "name": "Seedlings in the pot",
+        "role": "Each tests the same condition.",
+        "vi": {
+          "name": "Cây mầm trong chậu",
+          "role": "Mọi cây cùng một điều kiện."
+        },
+        "anchor": {
+          "part": "pot"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "Light from one side: the tip senses it and auxin moves to the shaded side (orange dots). The shaded side grows longer, so the shoot bends towards the light.",
+        "vi": {
+          "text": "Ánh sáng chiếu một phía: đỉnh ngọn cảm nhận và auxin chuyển sang phía khuất sáng (chấm cam). Phía khuất dài ra nhanh hơn nên thân uốn về phía ánh sáng."
+        },
+        "parts": ["tip", "lamp"]
+      },
+      {
+        "text": "Cover the tip or cut it off: no bending. Cover the base: it still bends. So the tip is what senses the light (Darwin).",
+        "vi": {
+          "text": "Che hoặc cắt đỉnh ngọn: không uốn cong. Che phần gốc: vẫn uốn cong. Vậy đỉnh ngọn là phần cảm nhận ánh sáng (Darwin)."
+        },
+        "parts": ["tip", "pot"]
+      },
+      {
+        "text": "On its side in the dark, auxin collects on the lower side: it grows faster and the shoot turns upwards — negative gravitropism.",
+        "vi": {
+          "text": "Đặt nằm ngang trong tối, auxin tập trung ở phía dưới: phía dưới mọc nhanh hơn và thân hướng lên trên — hướng trọng lực âm."
+        },
+        "parts": ["pot"]
+      }
+    ]
+  }
+}

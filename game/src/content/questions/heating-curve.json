@@ -1,0 +1,1051 @@
+{
+  "id": "heating-curve",
+  "skills": [
+    {
+      "id": "stages",
+      "name": "The stages of the heating curve",
+      "advice": "Label the five parts of the curve yourself — ice warming, melting at 0 °C, water warming, boiling at 100 °C — and say what the heat does in each: raise the temperature, or change the state at constant temperature.",
+      "vi": {
+        "name": "Các giai đoạn của đường cong đun nóng",
+        "advice": "Tự ghi chú các đoạn của đường cong — nước đá nóng lên, nóng chảy ở 0 °C, nước nóng lên, sôi ở 100 °C — và nói rõ nhiệt lượng làm gì ở mỗi đoạn: làm tăng nhiệt độ, hay làm chuyển thể ở nhiệt độ không đổi."
+      }
+    },
+    {
+      "id": "warming",
+      "name": "Warming: Q = m·c·ΔT, t = Q/P",
+      "advice": "Use kg and J/(kg·K) together, and ΔT as a difference (from −20 °C to 0 °C is 20 K). The slope of each warming line is P/(m·c): compare the ice and water slopes at the station.",
+      "vi": {
+        "name": "Làm nóng: Q = m·c·ΔT, t = Q/P",
+        "advice": "Dùng kg cùng với J/(kg·K), và ΔT là hiệu nhiệt độ (từ −20 °C đến 0 °C là 20 K). Độ dốc của mỗi đoạn làm nóng là P/(m·c): so sánh độ dốc đoạn nước đá và đoạn nước trên trạm."
+      }
+    },
+    {
+      "id": "latent",
+      "name": "Changing state: Q = m·L",
+      "advice": "For a plateau use Q = m·L with no ΔT; the time is m·L/P. Remember L_v (2257 kJ/kg) is far larger than L_f (334 kJ/kg), and only the part that changes state counts (5 % boiled away here).",
+      "vi": {
+        "name": "Chuyển thể: Q = m·L",
+        "advice": "Với đoạn nằm ngang dùng Q = m·L, không có ΔT; thời gian là m·L/P. Nhớ L_v (2257 kJ/kg) lớn hơn L_f (334 kJ/kg) rất nhiều, và chỉ tính phần chất chuyển thể (ở đây 5 % hóa hơi)."
+      }
+    },
+    {
+      "id": "energy",
+      "name": "Heat supplied and measurement",
+      "advice": "Add the stages’ heats for the total, Q = P·t. When judging a measured result, ask where heat really goes (the beaker, the air) and how the stopwatch’s resolution compares with the time measured.",
+      "vi": {
+        "name": "Nhiệt lượng cung cấp và phép đo",
+        "advice": "Cộng nhiệt lượng các giai đoạn để có tổng, Q = P·t. Khi đánh giá kết quả đo, tự hỏi nhiệt thực sự đi đâu (cốc, không khí) và độ chia của đồng hồ bấm giây so với khoảng thời gian cần đo."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "melting-temperature",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["stages"],
+      "stem": "Ice is heated steadily and stirred. While it is melting, the temperature of the ice–water mixture…",
+      "explain": "The heat goes into melting the ice (breaking the solid’s structure), not into raising the temperature: it stays at 0 °C until all the ice has melted.",
+      "vi": {
+        "stem": "Nước đá được đun nóng đều và khuấy liên tục. Trong khi nước đá đang nóng chảy, nhiệt độ của hỗn hợp nước đá – nước",
+        "explain": "Nhiệt lượng được dùng để làm nóng chảy nước đá (phá vỡ cấu trúc chất rắn), không làm tăng nhiệt độ: nhiệt độ giữ ở 0 °C cho đến khi nước đá tan hết."
+      },
+      "options": [
+        {
+          "text": "stays at 0 °C",
+          "vi": {
+            "text": "giữ không đổi ở 0 °C"
+          },
+          "correct": true
+        },
+        {
+          "text": "rises steadily",
+          "vi": {
+            "text": "tăng đều"
+          }
+        },
+        {
+          "text": "falls",
+          "vi": {
+            "text": "giảm dần"
+          }
+        },
+        {
+          "text": "rises faster than before",
+          "vi": {
+            "text": "tăng nhanh hơn trước"
+          }
+        }
+      ]
+    },
+    {
+      "id": "latent-unit",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["latent"],
+      "stem": "In what unit is the specific latent heat of fusion L_f given?",
+      "explain": "L_f is the heat to melt 1 kg at the melting point: joules per kilogram, J/kg. J/(kg·K) is the unit of a specific heat capacity.",
+      "vi": {
+        "stem": "Nhiệt nóng chảy riêng L_f có đơn vị là",
+        "explain": "L_f là nhiệt lượng cần để làm nóng chảy hoàn toàn 1 kg chất ở nhiệt độ nóng chảy: jun trên kilôgam, J/kg. J/(kg·K) là đơn vị của nhiệt dung riêng."
+      },
+      "options": [
+        {
+          "text": "J/kg",
+          "vi": {
+            "text": "J/kg"
+          },
+          "correct": true
+        },
+        {
+          "text": "J/(kg·K)",
+          "vi": {
+            "text": "J/(kg·K)"
+          }
+        },
+        {
+          "text": "J",
+          "vi": {
+            "text": "J"
+          }
+        },
+        {
+          "text": "W",
+          "vi": {
+            "text": "W"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-curve",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["stages", "latent"],
+      "stem": "Ice is heated steadily at 1 atm until some of the water has boiled. Decide whether each statement is true or false.",
+      "explain": "At 1 atm water boils at 100 °C, and during boiling the heat separates the molecules into vapour, at constant temperature. Ice (c = 2100 J/(kg·K)) warms faster than water (4180 J/(kg·K)). L_v ≫ L_f: vaporising 1 kg takes far more heat than melting it.",
+      "vi": {
+        "stem": "Nước đá được đun nóng đều ở áp suất 1 atm cho đến khi một phần nước sôi. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Ở 1 atm nước sôi ở 100 °C, và trong khi sôi nhiệt lượng tách các phân tử thành hơi, ở nhiệt độ không đổi. Nước đá (c = 2100 J/(kg·K)) nóng lên nhanh hơn nước (4180 J/(kg·K)). L_v ≫ L_f: làm hóa hơi 1 kg cần nhiệt lượng lớn hơn nhiều so với làm nóng chảy 1 kg."
+      },
+      "statements": [
+        {
+          "text": "The water boils at 100 °C.",
+          "vi": {
+            "text": "Nước sôi ở 100 °C."
+          },
+          "true": true
+        },
+        {
+          "text": "While the water boils, the heat supplied separates the molecules into vapour without raising the temperature.",
+          "vi": {
+            "text": "Trong khi nước sôi, nhiệt lượng cung cấp làm các phân tử tách ra thành hơi mà không làm tăng nhiệt độ."
+          },
+          "true": true
+        },
+        {
+          "text": "At the same power, the ice warms more slowly than the liquid water.",
+          "vi": {
+            "text": "Với cùng công suất, nước đá nóng lên chậm hơn nước lỏng."
+          },
+          "true": false
+        },
+        {
+          "text": "Turning 1 kg of water at 100 °C into steam takes more heat than melting 1 kg of ice at 0 °C.",
+          "vi": {
+            "text": "Làm hóa hơi 1 kg nước ở 100 °C cần nhiều nhiệt lượng hơn làm nóng chảy 1 kg nước đá ở 0 °C."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "steeper-ice",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["warming"],
+      "stem": "On the heating curve, the line for warming ice is steeper than the line for warming the water. Why?",
+      "explain": "The rate of warming is P/(m·c): the same P and m, but c_ice ≈ 2100 J/(kg·K) is about half of c_water ≈ 4180 J/(kg·K), so the ice warms about twice as fast.",
+      "vi": {
+        "stem": "Trên đường cong đun nóng, đoạn nước đá nóng lên dốc hơn đoạn nước lỏng nóng lên. Vì sao?",
+        "explain": "Tốc độ tăng nhiệt độ là P/(m·c): cùng P và m, nhưng c của nước đá ≈ 2100 J/(kg·K) chỉ khoảng một nửa c của nước ≈ 4180 J/(kg·K), nên nước đá nóng lên nhanh gấp khoảng hai lần."
+      },
+      "options": [
+        {
+          "text": "Ice has a smaller specific heat capacity than water",
+          "vi": {
+            "text": "Nước đá có nhiệt dung riêng nhỏ hơn nước"
+          },
+          "correct": true
+        },
+        {
+          "text": "Ice has a larger specific heat capacity than water",
+          "vi": {
+            "text": "Nước đá có nhiệt dung riêng lớn hơn nước"
+          }
+        },
+        {
+          "text": "The hot plate gives more power at low temperatures",
+          "vi": {
+            "text": "Bếp cung cấp công suất lớn hơn khi nhiệt độ thấp"
+          }
+        },
+        {
+          "text": "The ice has a smaller mass than the water it forms",
+          "vi": {
+            "text": "Nước đá có khối lượng nhỏ hơn lượng nước nó tạo thành"
+          }
+        }
+      ]
+    },
+    {
+      "id": "double-power",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["latent", "energy"],
+      "stem": "The same mass of ice is melted with twice the heating power. The time the temperature stays at 0 °C…",
+      "explain": "Melting needs Q = m·L_f whatever the power; t = m·L_f/P, so twice P halves the time.",
+      "vi": {
+        "stem": "Làm nóng chảy cùng một khối lượng nước đá với công suất gấp đôi. Thời gian nhiệt độ đứng yên ở 0 °C",
+        "explain": "Quá trình nóng chảy cần Q = m·L_f bất kể công suất; t = m·L_f/P, nên công suất gấp đôi thì thời gian giảm một nửa."
+      },
+      "options": [
+        {
+          "text": "halves",
+          "vi": {
+            "text": "giảm một nửa"
+          },
+          "correct": true
+        },
+        {
+          "text": "doubles",
+          "vi": {
+            "text": "tăng gấp đôi"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "falls to a quarter",
+          "vi": {
+            "text": "giảm còn một phần tư"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-rates",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["warming", "stages", "latent"],
+      "set": {
+        "mass": 0.1,
+        "startTemperature": -10,
+        "power": 500
+      },
+      "stem": "{mass} kg of ice at {startTemperature} °C is heated at a steady {power} W (c_ice = 2100, c_water = 4180 J/(kg·K)). Decide whether each statement is true or false.",
+      "explain": "Warming rates are P/(m·c): ice {=power/(mass*2100)|3} K/s, water {=power/(mass*4180)|3} K/s. The melting time m·L_f/P grows with m. While boiling, the temperature stays at 100 °C.",
+      "vi": {
+        "stem": "{mass} kg nước đá ở {startTemperature} °C được đun nóng với công suất không đổi {power} W (c của nước đá = 2100, c của nước = 4180 J/(kg·K)). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Tốc độ tăng nhiệt độ là P/(m·c): nước đá {=power/(mass*2100)|3} K/s, nước {=power/(mass*4180)|3} K/s. Thời gian nóng chảy m·L_f/P tăng theo m. Trong khi sôi, nhiệt độ giữ ở 100 °C."
+      },
+      "statements": [
+        {
+          "text": "The ice warms at about {=power/(mass*2100)|3} K/s.",
+          "vi": {
+            "text": "Nước đá nóng lên với tốc độ khoảng {=power/(mass*2100)|3} K/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "power/(mass*2100)",
+            "equals": "iceHeatingRate"
+          }
+        },
+        {
+          "text": "The liquid water warms at about {=power/(mass*4180)|3} K/s.",
+          "vi": {
+            "text": "Nước lỏng nóng lên với tốc độ khoảng {=power/(mass*4180)|3} K/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "power/(mass*4180)",
+            "equals": "waterHeatingRate"
+          }
+        },
+        {
+          "text": "With twice the mass of ice, melting would take twice as long.",
+          "vi": {
+            "text": "Nếu khối lượng nước đá gấp đôi thì thời gian nóng chảy cũng gấp đôi."
+          },
+          "true": true
+        },
+        {
+          "text": "While the water boils, its temperature keeps rising.",
+          "vi": {
+            "text": "Trong khi nước sôi, nhiệt độ của nước vẫn tiếp tục tăng."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "melting-time",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["latent"],
+      "set": {
+        "mass": 0.1,
+        "startTemperature": 0,
+        "power": 500
+      },
+      "stem": "{mass} kg of ice at 0 °C takes a steady {power} W. How long does it take to melt? (L_f = 334 000 J/kg)",
+      "explain": "Q = m·L_f = {mass}·334000 = {=mass*334000} J, delivered at {power} J each second: t = {=mass*334000}/{power} = {@meltingTime} s.",
+      "vi": {
+        "stem": "{mass} kg nước đá ở 0 °C nhận nhiệt với công suất không đổi {power} W. Thời gian để nước đá tan hết là bao nhiêu? (L_f = 334 000 J/kg)",
+        "explain": "Q = m·L_f = {mass}·334000 = {=mass*334000} J, cung cấp {power} J mỗi giây: t = {=mass*334000}/{power} = {@meltingTime} s."
+      },
+      "options": [
+        {
+          "text": "{@meltingTime} s",
+          "vi": {
+            "text": "{@meltingTime} s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "mass*fusionHeat/power",
+            "equals": "meltingTime"
+          }
+        },
+        {
+          "text": "{=fusionHeat/power} s",
+          "vi": {
+            "text": "{=fusionHeat/power} s"
+          },
+          "check": {
+            "expr": "fusionHeat/power",
+            "equals": "meltingTime"
+          }
+        },
+        {
+          "text": "{=1000*mass*fusionHeat/power} s",
+          "vi": {
+            "text": "{=1000*mass*fusionHeat/power} s"
+          },
+          "check": {
+            "expr": "1000*mass*fusionHeat/power",
+            "equals": "meltingTime"
+          }
+        },
+        {
+          "text": "{=mass*334/power} s",
+          "vi": {
+            "text": "{=mass*334/power} s"
+          },
+          "check": {
+            "expr": "mass*334/power",
+            "equals": "meltingTime"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ice-warming-time",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["warming"],
+      "set": {
+        "mass": 0.1,
+        "startTemperature": -20,
+        "power": 500
+      },
+      "stem": "{mass} kg of ice at {startTemperature} °C takes a steady {power} W. How long does it take to warm to 0 °C? (c_ice = 2100 J/(kg·K))",
+      "explain": "ΔT = 0 − ({startTemperature}) = {=-startTemperature} K: t = m·c·ΔT/P = {mass}·2100·{=-startTemperature}/{power} = {@iceWarmingTime} s.",
+      "vi": {
+        "stem": "{mass} kg nước đá ở {startTemperature} °C nhận nhiệt với công suất không đổi {power} W. Sau bao lâu nước đá nóng lên đến 0 °C? (c của nước đá = 2100 J/(kg·K))",
+        "explain": "ΔT = 0 − ({startTemperature}) = {=-startTemperature} K: t = m·c·ΔT/P = {mass}·2100·{=-startTemperature}/{power} = {@iceWarmingTime} s."
+      },
+      "options": [
+        {
+          "text": "{@iceWarmingTime} s",
+          "vi": {
+            "text": "{@iceWarmingTime} s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "mass*2100*(0-startTemperature)/power",
+            "equals": "iceWarmingTime"
+          }
+        },
+        {
+          "text": "{=mass*4180*(0-startTemperature)/power} s",
+          "vi": {
+            "text": "{=mass*4180*(0-startTemperature)/power} s"
+          },
+          "check": {
+            "expr": "mass*4180*(0-startTemperature)/power",
+            "equals": "iceWarmingTime"
+          }
+        },
+        {
+          "text": "{=1000*mass*2100*(0-startTemperature)/power} s",
+          "vi": {
+            "text": "{=1000*mass*2100*(0-startTemperature)/power} s"
+          },
+          "check": {
+            "expr": "1000*mass*2100*(0-startTemperature)/power",
+            "equals": "iceWarmingTime"
+          }
+        },
+        {
+          "text": "{=mass*2100*(startTemperature+273.15)/power} s",
+          "vi": {
+            "text": "{=mass*2100*(startTemperature+273.15)/power} s"
+          },
+          "check": {
+            "expr": "mass*2100*(startTemperature+273.15)/power",
+            "equals": "iceWarmingTime"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-stages",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["warming", "latent", "energy"],
+      "set": {
+        "mass": 0.05,
+        "startTemperature": -20,
+        "power": 200
+      },
+      "stem": "{mass} kg of ice at {startTemperature} °C is heated at a steady {power} W until 5 % of it has boiled away (c_ice = 2100, c_water = 4180 J/(kg·K); L_f = 334 000, L_v = 2 257 000 J/kg). Decide whether each statement is true or false.",
+      "explain": "Water from 0 to 100 °C: m·c_w·100/P = {@waterWarmingTime|4} s. To reach 100 °C: (m·c_ice·{=-startTemperature} + m·L_f + m·c_w·100)/P = {@boilStartTime|4} s. Boiling off only 5 %: 0.05·m·L_v/P = {@boilingTime} s — boiling it all would take {=mass*2257000/power} s. Total heat: {@totalHeat} J.",
+      "vi": {
+        "stem": "{mass} kg nước đá ở {startTemperature} °C được đun nóng với công suất không đổi {power} W cho đến khi 5 % lượng nước hóa hơi (c của nước đá = 2100, c của nước = 4180 J/(kg·K); L_f = 334 000, L_v = 2 257 000 J/kg). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Nước từ 0 đến 100 °C: m·c_w·100/P = {@waterWarmingTime|4} s. Đến khi đạt 100 °C: (m·c_đá·{=-startTemperature} + m·L_f + m·c_w·100)/P = {@boilStartTime|4} s. Chỉ hóa hơi 5 %: 0,05·m·L_v/P = {@boilingTime} s — hóa hơi toàn bộ sẽ mất {=mass*2257000/power} s. Tổng nhiệt lượng: {@totalHeat} J."
+      },
+      "statements": [
+        {
+          "text": "The liquid water takes {@waterWarmingTime|4} s to warm from 0 to 100 °C.",
+          "vi": {
+            "text": "Nước lỏng mất {@waterWarmingTime|4} s để nóng lên từ 0 đến 100 °C."
+          },
+          "true": true,
+          "check": {
+            "expr": "mass*4180*100/power",
+            "equals": "waterWarmingTime"
+          }
+        },
+        {
+          "text": "The water starts to boil {@boilStartTime|4} s after heating begins.",
+          "vi": {
+            "text": "Nước bắt đầu sôi sau {@boilStartTime|4} s kể từ lúc bắt đầu đun."
+          },
+          "true": true,
+          "check": {
+            "expr": "(mass*2100*(0-startTemperature)+mass*334000+mass*4180*100)/power",
+            "equals": "boilStartTime"
+          }
+        },
+        {
+          "text": "The boiling stage lasts about {=mass*2257000/power} s.",
+          "vi": {
+            "text": "Giai đoạn sôi kéo dài khoảng {=mass*2257000/power} s."
+          },
+          "true": false,
+          "check": {
+            "expr": "mass*2257000/power",
+            "equals": "boilingTime"
+          }
+        },
+        {
+          "text": "The heat supplied in all is about {@totalHeat} J.",
+          "vi": {
+            "text": "Tổng nhiệt lượng đã cung cấp khoảng {@totalHeat} J."
+          },
+          "true": true,
+          "check": {
+            "expr": "mass*(2100*(0-startTemperature)+334000+4180*100+0.05*2257000)",
+            "equals": "totalHeat"
+          }
+        }
+      ]
+    },
+    {
+      "id": "time-to-boil",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["warming", "latent", "stages"],
+      "set": {
+        "mass": 0.07,
+        "startTemperature": 0,
+        "power": 800
+      },
+      "stem": "{mass} kg of ice at 0 °C is heated at a steady {power} W. How long after the start does the water begin to boil? (L_f = 334 000 J/kg, c_water = 4180 J/(kg·K))",
+      "explain": "Two stages: melting, m·L_f/P = {@meltingTime} s, then warming 100 K, m·c·100/P = {@waterWarmingTime} s; together {@boilStartTime} s.",
+      "vi": {
+        "stem": "{mass} kg nước đá ở 0 °C được đun nóng với công suất không đổi {power} W. Sau bao lâu kể từ lúc bắt đầu đun thì nước bắt đầu sôi? (L_f = 334 000 J/kg; c của nước = 4180 J/(kg·K))",
+        "explain": "Hai giai đoạn: nóng chảy, m·L_f/P = {@meltingTime} s, rồi nóng lên 100 K, m·c·100/P = {@waterWarmingTime} s; tổng cộng {@boilStartTime} s."
+      },
+      "options": [
+        {
+          "text": "{@boilStartTime} s",
+          "vi": {
+            "text": "{@boilStartTime} s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(mass*334000+mass*4180*100)/power",
+            "equals": "boilStartTime"
+          }
+        },
+        {
+          "text": "{=mass*4180*100/power} s",
+          "vi": {
+            "text": "{=mass*4180*100/power} s"
+          },
+          "check": {
+            "expr": "mass*4180*100/power",
+            "equals": "boilStartTime"
+          }
+        },
+        {
+          "text": "{=(mass*334000+mass*2100*100)/power} s",
+          "vi": {
+            "text": "{=(mass*334000+mass*2100*100)/power} s"
+          },
+          "check": {
+            "expr": "(mass*334000+mass*2100*100)/power",
+            "equals": "boilStartTime"
+          }
+        },
+        {
+          "text": "{=mass*334000/power} s",
+          "vi": {
+            "text": "{=mass*334000/power} s"
+          },
+          "check": {
+            "expr": "mass*334000/power",
+            "equals": "boilStartTime"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-fusion-heat",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["latent", "energy"],
+      "set": {
+        "mass": 0.05,
+        "power": 200
+      },
+      "stem": "A student heats {mass} kg of ice at a steady net {power} W and times the plateau at 0 °C: {@meltingTime} s. What specific latent heat of fusion does this give?",
+      "explain": "The heat taken while melting is Q = P·t = {power}·{@meltingTime} = {=power*@meltingTime} J for {mass} kg: L_f = P·t/m = {=power*@meltingTime/mass} J/kg.",
+      "vi": {
+        "stem": "Một học sinh đun {mass} kg nước đá với công suất truyền vào không đổi {power} W và đo được thời gian đoạn nằm ngang ở 0 °C là {@meltingTime} s. Nhiệt nóng chảy riêng tính được là bao nhiêu?",
+        "explain": "Nhiệt lượng nhận vào trong khi nóng chảy là Q = P·t = {power}·{@meltingTime} = {=power*@meltingTime} J cho {mass} kg: L_f = P·t/m = {=power*@meltingTime/mass} J/kg."
+      },
+      "options": [
+        {
+          "text": "{=power*@meltingTime/mass} J/kg",
+          "vi": {
+            "text": "{=power*@meltingTime/mass} J/kg"
+          },
+          "correct": true,
+          "check": {
+            "expr": "mass*(power*@meltingTime/mass)/power",
+            "equals": "meltingTime"
+          }
+        },
+        {
+          "text": "{=power*@meltingTime*mass} J/kg",
+          "vi": {
+            "text": "{=power*@meltingTime*mass} J/kg"
+          },
+          "check": {
+            "expr": "mass*(power*@meltingTime*mass)/power",
+            "equals": "meltingTime"
+          }
+        },
+        {
+          "text": "{=power*@meltingTime} J/kg",
+          "vi": {
+            "text": "{=power*@meltingTime} J/kg"
+          },
+          "check": {
+            "expr": "mass*(power*@meltingTime)/power",
+            "equals": "meltingTime"
+          }
+        },
+        {
+          "text": "{=power*@meltingTime/mass/1000} J/kg",
+          "vi": {
+            "text": "{=power*@meltingTime/mass/1000} J/kg"
+          },
+          "check": {
+            "expr": "mass*(power*@meltingTime/mass/1000)/power",
+            "equals": "meltingTime"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-measurement",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["warming", "energy", "latent"],
+      "set": {
+        "mass": 0.1,
+        "startTemperature": -10,
+        "power": 500
+      },
+      "stem": "{mass} kg of ice at {startTemperature} °C is heated at {power} W and the stages are timed with a stopwatch (c_ice = 2100, c_water = 4180 J/(kg·K)). Decide whether each statement is true or false.",
+      "explain": "The warming rates are P/(m·c), so the ice warms c_w/c_ice = 4180/2100 ≈ {=4180/2100|3} times faster than the water. If part of the plate’s power is lost, the ice really takes less heat than P·t, so an L_f worked out with the full P comes out too high. More ice at the same temperature melts for longer at 0 °C. A 1 s stopwatch reads less finely than a 0.01 s one.",
+      "vi": {
+        "stem": "{mass} kg nước đá ở {startTemperature} °C được đun với công suất {power} W và thời gian các giai đoạn được đo bằng đồng hồ bấm giây (c của nước đá = 2100, c của nước = 4180 J/(kg·K)). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Tốc độ tăng nhiệt độ là P/(m·c), nên nước đá nóng lên nhanh hơn nước c_nước/c_đá = 4180/2100 ≈ {=4180/2100|3} lần. Nếu một phần công suất của bếp bị thất thoát, nước đá thực sự nhận ít hơn P·t, nên L_f tính với toàn bộ P sẽ lớn hơn thực tế. Nhiều nước đá hơn ở cùng nhiệt độ thì nóng chảy lâu hơn ở 0 °C. Đồng hồ có độ chia 1 s đọc kém chi tiết hơn đồng hồ có độ chia 0,01 s."
+      },
+      "statements": [
+        {
+          "text": "The ice warms about {=4180/2100|3} times faster than the liquid water.",
+          "vi": {
+            "text": "Nước đá nóng lên nhanh hơn nước lỏng khoảng {=4180/2100|3} lần."
+          },
+          "true": true,
+          "check": {
+            "expr": "(power/(mass*2100))/(4180/2100)",
+            "equals": "waterHeatingRate"
+          }
+        },
+        {
+          "text": "If some of the plate’s power is lost to the air, an L_f worked out from Q = P·t with the full power comes out too high.",
+          "vi": {
+            "text": "Nếu một phần công suất của bếp thất thoát ra không khí, L_f tính từ Q = P·t với toàn bộ công suất sẽ lớn hơn thực tế."
+          },
+          "true": true
+        },
+        {
+          "text": "More ice at the same starting temperature gives a longer plateau at 0 °C.",
+          "vi": {
+            "text": "Nhiều nước đá hơn ở cùng nhiệt độ ban đầu thì đoạn nằm ngang ở 0 °C dài hơn."
+          },
+          "true": true
+        },
+        {
+          "text": "A stopwatch reading to 1 s times the melting stage more finely than one reading to 0.01 s.",
+          "vi": {
+            "text": "Đồng hồ có độ chia 1 s đo thời gian nóng chảy chi tiết hơn đồng hồ có độ chia 0,01 s."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "latent-name",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["latent"],
+      "stem": "The heat needed to melt 1 kg of a solid at its melting point, without changing its temperature, is called its…",
+      "explain": "That is the specific latent heat of fusion, L_f (J/kg); for ice about 334 000 J/kg. The specific heat capacity c is the heat to warm 1 kg by 1 K without a change of state.",
+      "vi": {
+        "stem": "Nhiệt lượng cần để làm nóng chảy hoàn toàn 1 kg chất rắn ở nhiệt độ nóng chảy, không làm thay đổi nhiệt độ, được gọi là",
+        "explain": "Đó là nhiệt nóng chảy riêng L_f (J/kg); với nước đá khoảng 334 000 J/kg. Nhiệt dung riêng c là nhiệt lượng làm 1 kg chất nóng thêm 1 K khi không chuyển thể."
+      },
+      "options": [
+        {
+          "text": "specific latent heat of fusion",
+          "vi": {
+            "text": "nhiệt nóng chảy riêng"
+          },
+          "correct": true
+        },
+        {
+          "text": "specific heat capacity",
+          "vi": {
+            "text": "nhiệt dung riêng"
+          }
+        },
+        {
+          "text": "specific latent heat of vaporisation",
+          "vi": {
+            "text": "nhiệt hóa hơi riêng"
+          }
+        },
+        {
+          "text": "heat of combustion",
+          "vi": {
+            "text": "nhiệt lượng tỏa ra khi đốt cháy"
+          }
+        }
+      ]
+    },
+    {
+      "id": "plateau-energy",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["stages", "latent"],
+      "stem": "While the ice melts at 0 °C, the heater keeps supplying energy. Where does that energy go?",
+      "explain": "On a plateau the temperature, and so the mean kinetic energy of the molecules, stays the same: the energy goes into breaking the hydrogen bonds that hold the molecules in the ice lattice, raising their potential energy.",
+      "vi": {
+        "stem": "Trong khi nước đá nóng chảy ở 0 °C, bếp vẫn liên tục cung cấp năng lượng. Năng lượng đó đi đâu?",
+        "explain": "Trên đoạn nằm ngang, nhiệt độ — tức động năng trung bình của các phân tử — không đổi: năng lượng được dùng để phá vỡ các liên kết hydrogen giữ các phân tử trong mạng tinh thể nước đá, làm tăng thế năng của chúng."
+      },
+      "options": [
+        {
+          "text": "Into breaking the bonds that hold the molecules in the ice lattice",
+          "vi": {
+            "text": "Vào việc phá vỡ các liên kết giữ các phân tử trong mạng tinh thể nước đá"
+          },
+          "correct": true
+        },
+        {
+          "text": "Into making the molecules move faster",
+          "vi": {
+            "text": "Vào việc làm các phân tử chuyển động nhanh hơn"
+          }
+        },
+        {
+          "text": "All of it is lost to the air",
+          "vi": {
+            "text": "Toàn bộ bị thất thoát ra không khí"
+          }
+        },
+        {
+          "text": "Into raising the temperature of the water already melted",
+          "vi": {
+            "text": "Vào việc làm tăng nhiệt độ phần nước đã nóng chảy"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-changes",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["latent", "warming"],
+      "stem": "Ice is heated steadily at 1 atm (c_ice = 2100, c_water = 4180 J/(kg·K); L_f = 334 000, L_v = 2 257 000 J/kg). Decide whether each statement is true or false.",
+      "explain": "Melting needs Q = m·L_f, so twice the mass takes twice as long at the same power. The starting temperature changes only the time to warm the ice to 0 °C, not the melting time. c_water > c_ice: water needs more heat per kg per kelvin. L_v is almost 7 times L_f.",
+      "vi": {
+        "stem": "Nước đá được đun nóng đều ở 1 atm (c_đá = 2100, c_nước = 4180 J/(kg·K); L_f = 334 000, L_v = 2 257 000 J/kg). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Nóng chảy cần Q = m·L_f, nên khối lượng gấp đôi thì với cùng công suất thời gian nóng chảy gấp đôi. Nhiệt độ ban đầu chỉ ảnh hưởng đến thời gian làm nóng đá đến 0 °C, không ảnh hưởng thời gian nóng chảy. c_nước > c_đá: nước cần nhiều nhiệt hơn cho mỗi kg, mỗi kelvin. L_v lớn gần gấp 7 lần L_f."
+      },
+      "statements": [
+        {
+          "text": "At the same power, twice the mass of ice takes twice as long to melt.",
+          "vi": {
+            "text": "Với cùng công suất, khối lượng nước đá gấp đôi thì thời gian nóng chảy gấp đôi."
+          },
+          "true": true
+        },
+        {
+          "text": "Ice starting at −5 °C instead of −10 °C melts in a shorter time once it reaches 0 °C.",
+          "vi": {
+            "text": "Nước đá bắt đầu ở −5 °C thay vì −10 °C sẽ nóng chảy trong thời gian ngắn hơn khi đã đạt 0 °C."
+          },
+          "true": false
+        },
+        {
+          "text": "Per kilogram, liquid water needs more heat than ice to warm by 1 K.",
+          "vi": {
+            "text": "Tính cho mỗi kilogram, nước lỏng cần nhiều nhiệt lượng hơn nước đá để nóng thêm 1 K."
+          },
+          "true": true
+        },
+        {
+          "text": "Vaporising 1 kg of water needs less heat than melting 1 kg of ice.",
+          "vi": {
+            "text": "Làm hóa hơi 1 kg nước cần ít nhiệt lượng hơn làm nóng chảy 1 kg nước đá."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "water-warming-time",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["warming"],
+      "set": {
+        "mass": 0.07,
+        "startTemperature": -10,
+        "power": 500
+      },
+      "stem": "{mass} kg of melted ice at 0 °C takes a steady {power} W. How long does the water take to warm from 0 °C to 100 °C? (c_water = 4180 J/(kg·K))",
+      "explain": "Q₂ = m·c_water·ΔT = {mass}·4180·100 = {=mass*waterHeatCapacity*100} J, and t₂ = Q₂/P = {=mass*waterHeatCapacity*100}/{power} = {@waterWarmingTime} s. c_ice belongs to the solid; m must be in kg.",
+      "vi": {
+        "stem": "{mass} kg nước (từ nước đá vừa tan) ở 0 °C nhận công suất nhiệt không đổi {power} W. Cần bao lâu để nước nóng từ 0 °C lên 100 °C? (c_nước = 4180 J/(kg·K))",
+        "explain": "Q₂ = m·c_nước·ΔT = {mass}·4180·100 = {=mass*waterHeatCapacity*100} J, và t₂ = Q₂/P = {=mass*waterHeatCapacity*100}/{power} = {@waterWarmingTime} s. c_đá là của chất rắn; m phải tính bằng kg."
+      },
+      "options": [
+        {
+          "text": "{=mass*waterHeatCapacity*100/power} s",
+          "vi": {
+            "text": "{=mass*waterHeatCapacity*100/power} s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "mass*waterHeatCapacity*100/power",
+            "equals": "waterWarmingTime"
+          }
+        },
+        {
+          "text": "{=mass*iceHeatCapacity*100/power} s",
+          "vi": {
+            "text": "{=mass*iceHeatCapacity*100/power} s"
+          },
+          "check": {
+            "expr": "mass*iceHeatCapacity*100/power",
+            "equals": "waterWarmingTime"
+          }
+        },
+        {
+          "text": "{=mass*waterHeatCapacity/power} s",
+          "vi": {
+            "text": "{=mass*waterHeatCapacity/power} s"
+          },
+          "check": {
+            "expr": "mass*waterHeatCapacity/power",
+            "equals": "waterWarmingTime"
+          }
+        },
+        {
+          "text": "{=1000*mass*waterHeatCapacity*100/power} s",
+          "vi": {
+            "text": "{=1000*mass*waterHeatCapacity*100/power} s"
+          },
+          "check": {
+            "expr": "1000*mass*waterHeatCapacity*100/power",
+            "equals": "waterWarmingTime"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-heat-budget",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["latent", "energy", "warming"],
+      "set": {
+        "mass": 0.1,
+        "startTemperature": -20,
+        "power": 800
+      },
+      "stem": "{mass} kg of ice at {startTemperature} °C is heated at a steady {power} W until 5 % of it has boiled away (c_ice = 2100, c_water = 4180 J/(kg·K); L_f = 334 000, L_v = 2 257 000 J/kg). Decide whether each statement is true or false.",
+      "explain": "Q₁ = {mass}·2100·{=0-startTemperature} = {=mass*iceHeatCapacity*(0-startTemperature)} J; Q_f = {mass}·334 000 = {=mass*fusionHeat} J (t_f = {@meltingTime} s); Q₂ = {mass}·4180·100 = {=mass*waterHeatCapacity*100} J. Boiling starts at t = (Q₁ + Q_f + Q₂)/P = {@boilStartTime} s. Only 5 % boils: Q_v = 0.05·{mass}·2 257 000 = {=0.05*mass*vaporisationHeat} J ({@boilingTime} s), and the total is {@totalHeat} J.",
+      "vi": {
+        "stem": "{mass} kg nước đá ở {startTemperature} °C được đun với công suất không đổi {power} W cho đến khi 5 % lượng nước đã hóa hơi (c_đá = 2100, c_nước = 4180 J/(kg·K); L_f = 334 000, L_v = 2 257 000 J/kg). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Q₁ = {mass}·2100·{=0-startTemperature} = {=mass*iceHeatCapacity*(0-startTemperature)} J; Q_f = {mass}·334 000 = {=mass*fusionHeat} J (t_f = {@meltingTime} s); Q₂ = {mass}·4180·100 = {=mass*waterHeatCapacity*100} J. Nước bắt đầu sôi ở t = (Q₁ + Q_f + Q₂)/P = {@boilStartTime} s. Chỉ 5 % hóa hơi: Q_v = 0,05·{mass}·2 257 000 = {=0.05*mass*vaporisationHeat} J ({@boilingTime} s), và tổng nhiệt lượng là {@totalHeat} J."
+      },
+      "statements": [
+        {
+          "text": "Melting the ice takes {=mass*fusionHeat} J.",
+          "vi": {
+            "text": "Làm nóng chảy lượng nước đá cần {=mass*fusionHeat} J."
+          },
+          "true": true,
+          "check": {
+            "expr": "mass*fusionHeat/power",
+            "equals": "meltingTime"
+          }
+        },
+        {
+          "text": "The water starts to boil {=(mass*iceHeatCapacity*(0-startTemperature)+mass*fusionHeat+mass*waterHeatCapacity*100)/power} s after the start.",
+          "vi": {
+            "text": "Nước bắt đầu sôi sau {=(mass*iceHeatCapacity*(0-startTemperature)+mass*fusionHeat+mass*waterHeatCapacity*100)/power} s kể từ lúc bắt đầu đun."
+          },
+          "true": true,
+          "check": {
+            "expr": "(mass*iceHeatCapacity*(0-startTemperature)+mass*fusionHeat+mass*waterHeatCapacity*100)/power",
+            "equals": "boilStartTime"
+          }
+        },
+        {
+          "text": "Boiling away the 5 % takes {=mass*vaporisationHeat/power} s.",
+          "vi": {
+            "text": "Làm hóa hơi 5 % lượng nước mất {=mass*vaporisationHeat/power} s."
+          },
+          "true": false,
+          "check": {
+            "expr": "mass*vaporisationHeat/power",
+            "equals": "boilingTime"
+          }
+        },
+        {
+          "text": "The heat supplied in all is {=mass*(iceHeatCapacity*(0-startTemperature)+fusionHeat+waterHeatCapacity*100)} J.",
+          "vi": {
+            "text": "Tổng nhiệt lượng đã cung cấp là {=mass*(iceHeatCapacity*(0-startTemperature)+fusionHeat+waterHeatCapacity*100)} J."
+          },
+          "true": false,
+          "check": {
+            "expr": "mass*(iceHeatCapacity*(0-startTemperature)+fusionHeat+waterHeatCapacity*100)",
+            "equals": "totalHeat"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-power",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["warming", "energy"],
+      "set": {
+        "mass": 0.05,
+        "startTemperature": -10,
+        "power": 200
+      },
+      "stem": "A student heats {mass} kg of ice at a steady rate and finds that, once melted, the water takes {@waterWarmingTime} s to warm from 0 °C to 100 °C. What net heating power does this give? (c_water = 4180 J/(kg·K))",
+      "explain": "Q₂ = m·c_water·ΔT = {mass}·4180·100 = {=mass*waterHeatCapacity*100} J, so P = Q₂/t₂ = {=mass*waterHeatCapacity*100}/{@waterWarmingTime} = {=mass*waterHeatCapacity*100/@waterWarmingTime} W. Using c_ice, ΔT in kelvin as 373, or m in grams are the traps.",
+      "vi": {
+        "stem": "Một học sinh đun {mass} kg nước đá với tốc độ cung cấp nhiệt không đổi và thấy rằng, sau khi tan hết, nước cần {@waterWarmingTime} s để nóng từ 0 °C lên 100 °C. Công suất nhiệt thực tế (truyền vào nước) là bao nhiêu? (c_nước = 4180 J/(kg·K))",
+        "explain": "Q₂ = m·c_nước·ΔT = {mass}·4180·100 = {=mass*waterHeatCapacity*100} J, nên P = Q₂/t₂ = {=mass*waterHeatCapacity*100}/{@waterWarmingTime} = {=mass*waterHeatCapacity*100/@waterWarmingTime} W. Dùng c_đá, lấy ΔT là 373 K, hoặc để m theo gam là các bẫy thường gặp."
+      },
+      "options": [
+        {
+          "text": "{=mass*waterHeatCapacity*100/@waterWarmingTime} W",
+          "vi": {
+            "text": "{=mass*waterHeatCapacity*100/@waterWarmingTime} W"
+          },
+          "correct": true,
+          "check": {
+            "expr": "mass*waterHeatCapacity*100/(mass*waterHeatCapacity*100/@waterWarmingTime)",
+            "equals": "waterWarmingTime"
+          }
+        },
+        {
+          "text": "{=mass*iceHeatCapacity*100/@waterWarmingTime} W",
+          "vi": {
+            "text": "{=mass*iceHeatCapacity*100/@waterWarmingTime} W"
+          },
+          "check": {
+            "expr": "mass*waterHeatCapacity*100/(mass*iceHeatCapacity*100/@waterWarmingTime)",
+            "equals": "waterWarmingTime"
+          }
+        },
+        {
+          "text": "{=mass*waterHeatCapacity*373.15/@waterWarmingTime} W",
+          "vi": {
+            "text": "{=mass*waterHeatCapacity*373.15/@waterWarmingTime} W"
+          },
+          "check": {
+            "expr": "mass*waterHeatCapacity*100/(mass*waterHeatCapacity*373.15/@waterWarmingTime)",
+            "equals": "waterWarmingTime"
+          }
+        },
+        {
+          "text": "{=1000*mass*waterHeatCapacity*100/@waterWarmingTime} W",
+          "vi": {
+            "text": "{=1000*mass*waterHeatCapacity*100/@waterWarmingTime} W"
+          },
+          "check": {
+            "expr": "mass*waterHeatCapacity*100/(1000*mass*waterHeatCapacity*100/@waterWarmingTime)",
+            "equals": "waterWarmingTime"
+          }
+        }
+      ]
+    },
+    {
+      "id": "longest-stage",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["stages", "latent", "warming"],
+      "set": {
+        "mass": 0.1,
+        "startTemperature": -10,
+        "power": 500
+      },
+      "stem": "{mass} kg of ice at {startTemperature} °C is heated at a steady {power} W until 5 % of it has boiled away (c_ice = 2100, c_water = 4180 J/(kg·K); L_f = 334 000, L_v = 2 257 000 J/kg). Which stage takes the longest?",
+      "explain": "At one power, time ∝ heat. Warming the ice: {@iceWarmingTime} s; melting: {@meltingTime} s; warming the water from 0 to 100 °C: {@waterWarmingTime} s; boiling off 5 %: {@boilingTime} s. L_v is the largest constant, but only 5 % of the water boils here; warming water through 100 K takes the most heat.",
+      "vi": {
+        "stem": "{mass} kg nước đá ở {startTemperature} °C được đun với công suất không đổi {power} W cho đến khi 5 % lượng nước đã hóa hơi (c_đá = 2100, c_nước = 4180 J/(kg·K); L_f = 334 000, L_v = 2 257 000 J/kg). Giai đoạn nào kéo dài nhất?",
+        "explain": "Với cùng công suất, thời gian tỉ lệ với nhiệt lượng. Làm nóng đá: {@iceWarmingTime} s; nóng chảy: {@meltingTime} s; làm nóng nước từ 0 lên 100 °C: {@waterWarmingTime} s; hóa hơi 5 %: {@boilingTime} s. L_v là hằng số lớn nhất, nhưng ở đây chỉ 5 % lượng nước hóa hơi; làm nóng nước thêm 100 K cần nhiều nhiệt nhất."
+      },
+      "options": [
+        {
+          "text": "Warming the water from 0 °C to 100 °C",
+          "vi": {
+            "text": "Làm nóng nước từ 0 °C lên 100 °C"
+          },
+          "correct": true
+        },
+        {
+          "text": "Melting the ice at 0 °C",
+          "vi": {
+            "text": "Làm nóng chảy nước đá ở 0 °C"
+          }
+        },
+        {
+          "text": "Boiling off the 5 % at 100 °C",
+          "vi": {
+            "text": "Làm hóa hơi 5 % lượng nước ở 100 °C"
+          }
+        },
+        {
+          "text": "Warming the ice to 0 °C",
+          "vi": {
+            "text": "Làm nóng nước đá đến 0 °C"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-slopes",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["warming", "latent", "energy"],
+      "set": {
+        "mass": 0.1,
+        "startTemperature": -5,
+        "power": 200
+      },
+      "stem": "{mass} kg of ice at {startTemperature} °C is heated at {power} W (c_ice = 2100, c_water = 4180 J/(kg·K); L_f = 334 000 J/kg). Decide whether each statement is true or false.",
+      "explain": "The slopes are P/(m·c): ice {@iceHeatingRate} K/s, water {@waterHeatingRate} K/s — a ratio of c_water/c_ice = {=4180/2100}. The plateau lasts m·L_f/P = {@meltingTime} s whatever the start temperature. If some power is lost to the air, the plateau lasts longer than m·L_f/P, so L_f = P·t/m comes out too large. Halving the power doubles the plateau.",
+      "vi": {
+        "stem": "{mass} kg nước đá ở {startTemperature} °C được đun với công suất {power} W (c_đá = 2100, c_nước = 4180 J/(kg·K); L_f = 334 000 J/kg). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Độ dốc là P/(m·c): nước đá {@iceHeatingRate} K/s, nước {@waterHeatingRate} K/s — tỉ số bằng c_nước/c_đá = {=4180/2100}. Đoạn nằm ngang kéo dài m·L_f/P = {@meltingTime} s, bất kể nhiệt độ ban đầu. Nếu một phần công suất thất thoát ra không khí, đoạn nằm ngang kéo dài hơn m·L_f/P, nên L_f = P·t/m tính ra quá lớn. Giảm một nửa công suất thì đoạn nằm ngang dài gấp đôi."
+      },
+      "statements": [
+        {
+          "text": "The ice warms about {=4180/2100} times as fast (in K/s) as the water later does.",
+          "vi": {
+            "text": "Nước đá nóng lên nhanh gấp khoảng {=4180/2100} lần (tính theo K/s) so với nước sau đó."
+          },
+          "true": true,
+          "check": {
+            "expr": "@waterHeatingRate*waterHeatCapacity/iceHeatCapacity",
+            "equals": "iceHeatingRate"
+          }
+        },
+        {
+          "text": "The temperature stays at 0 °C for {=mass*fusionHeat/power} s.",
+          "vi": {
+            "text": "Nhiệt độ giữ ở 0 °C trong {=mass*fusionHeat/power} s."
+          },
+          "true": true,
+          "check": {
+            "expr": "mass*fusionHeat/power",
+            "equals": "meltingTime"
+          }
+        },
+        {
+          "text": "If part of the heater's power is lost to the air, the L_f worked out as P·t/m comes out too large.",
+          "vi": {
+            "text": "Nếu một phần công suất của bếp thất thoát ra không khí, L_f tính theo P·t/m sẽ lớn hơn giá trị thật."
+          },
+          "true": true
+        },
+        {
+          "text": "Halving the power halves the time the temperature stays at 0 °C.",
+          "vi": {
+            "text": "Giảm một nửa công suất thì thời gian nhiệt độ giữ ở 0 °C giảm một nửa."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

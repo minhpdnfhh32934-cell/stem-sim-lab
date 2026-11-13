@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 885.0 870.0" font-family="Segoe UI, Arial, sans-serif">
+<rect width="100%" height="100%" fill="#f7f8fa"/>
+<rect x="15.0" y="16.5" width="300.0" height="240.0" fill="#ffffff" stroke="#2c3e50" stroke-width="4"/>
+<text x="22.5" y="31.5" font-size="13" font-weight="700" fill="#2c3e50">Khu con lắc &amp; dao động (cao 4,5 m)</text>
+<rect x="15.0" y="264.0" width="540.0" height="342.0" fill="#ffffff" stroke="#2c3e50" stroke-width="4"/>
+<text x="147.0" y="318.0" font-size="13" font-weight="700" fill="#2c3e50">Phòng Vật lí (18 × 11,4 m, cao 4 m)</text>
+<rect x="562.5" y="264.0" width="300.0" height="342.0" fill="#e4e1ee" stroke="#2c3e50" stroke-width="4"/>
+<text x="585.0" y="318.0" font-size="13" font-weight="700" fill="#2c3e50">Phòng Sóng &amp; Quang học (tối)</text>
+<rect x="15.0" y="613.5" width="780.0" height="240.0" fill="#ffffff" stroke="#2c3e50" stroke-width="4"/>
+<text x="22.5" y="628.5" font-size="13" font-weight="700" fill="#2c3e50">Khu bắn vật (chỉ thí nghiệm ném)</text>
+<line x1="15.0" y1="420.0" x2="15.0" y2="450.0" stroke="#f7f8fa" stroke-width="9"/>
+<text x="3.0" y="472.5" font-size="10" fill="#2c3e50" text-anchor="end" transform="rotate(-90 3.0 472.5)">cửa ra sảnh (giữ nguyên)</text>
+<line x1="45.0" y1="260.1" x2="105.0" y2="260.1" stroke="#f7f8fa" stroke-width="9"/>
+<line x1="75.0" y1="609.9" x2="135.0" y2="609.9" stroke="#f7f8fa" stroke-width="9"/>
+<line x1="558.6" y1="405.0" x2="558.6" y2="465.0" stroke="#f7f8fa" stroke-width="9"/>
+<rect x="60.0" y="321.0" width="60.0" height="24.0" rx="3" fill="#9aa7b4" fill-opacity="0.45" stroke="#1f2d3a" stroke-width="1"/>
+<text x="90.0" y="333.0" font-size="9.5" fill="#0d1b26" text-anchor="middle"><tspan x="90.0" dy="3.3">Bàn GV</tspan></text>
+<rect x="15.3" y="282.0" width="2.4" height="48.0" rx="3" fill="#9aa7b4" fill-opacity="0.45" stroke="#1f2d3a" stroke-width="1"/>
+<text x="16.5" y="306.0" font-size="9" fill="#0d1b26" text-anchor="middle" transform="rotate(-90 16.5 306.0)"><tspan x="16.5" dy="3.1">Bảng</tspan></text>
+<rect x="15.0" y="498.0" width="13.5" height="30.0" rx="3" fill="#9aa7b4" fill-opacity="0.45" stroke="#1f2d3a" stroke-width="1"/>
+<text x="21.7" y="513.0" font-size="9" fill="#0d1b26" text-anchor="middle" transform="rotate(-90 21.7 513.0)"><tspan x="21.7" dy="3.1">Tủ</tspan></text>
+<rect x="15.0" y="529.5" width="13.5" height="30.0" rx="3" fill="#9aa7b4" fill-opacity="0.45" stroke="#1f2d3a" stroke-width="1"/>
+<text x="21.7" y="544.5" font-size="9" fill="#0d1b26" text-anchor="middle" transform="rotate(-90 21.7 544.5)"><tspan x="21.7" dy="3.1">Tủ</tspan></text>
+<rect x="15.0" y="573.0" width="12.0" height="15.0" rx="3" fill="#9aa7b4" fill-opacity="0.45" stroke="#1f2d3a" stroke-width="1"/>
+<text x="21.0" y="580.5" font-size="9" fill="#0d1b26" text-anchor="middle" transform="rotate(-90 21.0 580.5)"><tspan x="21.0" dy="3.1">Bồn</tspan></text>
+<rect x="147.0" y="264.0" width="60.0" height="24.0" rx="3" fill="#4f8fd6" fill-opacity="0.85" stroke="#1f2d3a" stroke-width="1"/>
+<text x="177.0" y="276.0" font-size="9.5" fill="#0d1b26" text-anchor="middle"><tspan x="177.0" dy="-1.9">Đo g (rơi</tspan><tspan x="177.0" dy="10.5">tự do)</tspan></text>
+<rect x="225.0" y="264.0" width="60.0" height="24.0" rx="3" fill="#4f8fd6" fill-opacity="0.85" stroke="#1f2d3a" stroke-width="1"/>
+<text x="255.0" y="276.0" font-size="9.5" fill="#0d1b26" text-anchor="middle"><tspan x="255.0" dy="-1.9">Tổng hợp</tspan><tspan x="255.0" dy="10.5">lực</tspan></text>
+<rect x="303.0" y="264.0" width="60.0" height="24.0" rx="3" fill="#4f8fd6" fill-opacity="0.85" stroke="#1f2d3a" stroke-width="1"/>
+<text x="333.0" y="276.0" font-size="9.5" fill="#0d1b26" text-anchor="middle"><tspan x="333.0" dy="3.3">Moment lực</tspan></text>
+<rect x="381.0" y="264.0" width="60.0" height="24.0" rx="3" fill="#4f8fd6" fill-opacity="0.85" stroke="#1f2d3a" stroke-width="1"/>
+<text x="411.0" y="276.0" font-size="9.5" fill="#0d1b26" text-anchor="middle"><tspan x="411.0" dy="-1.9">Định luật</tspan><tspan x="411.0" dy="10.5">Hooke</tspan></text>
+<rect x="459.0" y="264.0" width="60.0" height="24.0" rx="3" fill="#4f8fd6" fill-opacity="0.85" stroke="#1f2d3a" stroke-width="1"/>
+<text x="489.0" y="276.0" font-size="9.5" fill="#0d1b26" text-anchor="middle"><tspan x="489.0" dy="-1.9">Archimedes</tspan><tspan x="489.0" dy="10.5">+ áp suất</tspan></text>
+<rect x="207.0" y="363.0" width="60.0" height="24.0" rx="3" fill="#3fb3a6" fill-opacity="0.85" stroke="#1f2d3a" stroke-width="1"/>
+<text x="237.0" y="375.0" font-size="9.5" fill="#0d1b26" text-anchor="middle"><tspan x="237.0" dy="-7.1">Đo tốc độ</tspan><tspan x="237.0" dy="10.5">(cổng</tspan><tspan x="237.0" dy="10.5">quang)</tspan></text>
+<rect x="327.0" y="363.0" width="60.0" height="24.0" rx="3" fill="#3fb3a6" fill-opacity="0.85" stroke="#1f2d3a" stroke-width="1"/>
+<text x="357.0" y="375.0" font-size="9.5" fill="#0d1b26" text-anchor="middle"><tspan x="357.0" dy="-1.9">Va chạm</tspan><tspan x="357.0" dy="10.5">(đệm khí)</tspan></text>
+<rect x="207.0" y="483.0" width="60.0" height="24.0" rx="3" fill="#3fb3a6" fill-opacity="0.85" stroke="#1f2d3a" stroke-width="1"/>
+<text x="237.0" y="495.0" font-size="9.5" fill="#0d1b26" text-anchor="middle"><tspan x="237.0" dy="-1.9">Bảo toàn</tspan><tspan x="237.0" dy="10.5">cơ năng</tspan></text>
+<rect x="327.0" y="483.0" width="60.0" height="24.0" rx="3" fill="#3fb3a6" fill-opacity="0.85" stroke="#1f2d3a" stroke-width="1"/>
+<text x="357.0" y="495.0" font-size="9.5" fill="#0d1b26" text-anchor="middle"><tspan x="357.0" dy="-1.9">Mặt phẳng</tspan><tspan x="357.0" dy="10.5">nghiêng</tspan></text>
+<rect x="435.0" y="363.0" width="60.0" height="24.0" rx="3" fill="#3fb3a6" fill-opacity="0.85" stroke="#1f2d3a" stroke-width="1"/>
+<text x="465.0" y="375.0" font-size="9.5" fill="#0d1b26" text-anchor="middle"><tspan x="465.0" dy="-1.9">Cảm ứng +</tspan><tspan x="465.0" dy="10.5">máy phát</tspan></text>
+<rect x="531.0" y="267.0" width="24.0" height="60.0" rx="3" fill="#d9645a" fill-opacity="0.85" stroke="#1f2d3a" stroke-width="1"/>
+<text x="543.0" y="297.0" font-size="9" fill="#0d1b26" text-anchor="middle" transform="rotate(-90 543.0 297.0)"><tspan x="543.0" dy="-1.8">Nhiệt dung</tspan><tspan x="543.0" dy="9.9">riêng</tspan></text>
+<rect x="531.0" y="336.0" width="24.0" height="60.0" rx="3" fill="#d9645a" fill-opacity="0.85" stroke="#1f2d3a" stroke-width="1"/>
+<text x="543.0" y="366.0" font-size="9" fill="#0d1b26" text-anchor="middle" transform="rotate(-90 543.0 366.0)"><tspan x="543.0" dy="-6.8">Nhiệt nóng</tspan><tspan x="543.0" dy="9.9">chảy / hoá</tspan><tspan x="543.0" dy="9.9">hơi</tspan></text>
+<rect x="531.0" y="474.0" width="24.0" height="60.0" rx="3" fill="#d9645a" fill-opacity="0.85" stroke="#1f2d3a" stroke-width="1"/>
+<text x="543.0" y="504.0" font-size="9" fill="#0d1b26" text-anchor="middle" transform="rotate(-90 543.0 504.0)"><tspan x="543.0" dy="-1.8">Định luật</tspan><tspan x="543.0" dy="9.9">Boyle</tspan></text>
+<rect x="531.0" y="543.0" width="24.0" height="60.0" rx="3" fill="#d9645a" fill-opacity="0.85" stroke="#1f2d3a" stroke-width="1"/>
+<text x="543.0" y="573.0" font-size="9" fill="#0d1b26" text-anchor="middle" transform="rotate(-90 543.0 573.0)"><tspan x="543.0" dy="-1.8">Định luật</tspan><tspan x="543.0" dy="9.9">Charles</tspan></text>
+<rect x="159.0" y="582.0" width="60.0" height="24.0" rx="3" fill="#e0a33b" fill-opacity="0.85" stroke="#1f2d3a" stroke-width="1"/>
+<text x="189.0" y="594.0" font-size="9.5" fill="#0d1b26" text-anchor="middle"><tspan x="189.0" dy="-1.9">Định luật</tspan><tspan x="189.0" dy="10.5">Ohm</tspan></text>
+<rect x="237.0" y="582.0" width="60.0" height="24.0" rx="3" fill="#e0a33b" fill-opacity="0.85" stroke="#1f2d3a" stroke-width="1"/>
+<text x="267.0" y="594.0" font-size="9.5" fill="#0d1b26" text-anchor="middle"><tspan x="267.0" dy="-1.9">Công suất</tspan><tspan x="267.0" dy="10.5">điện</tspan></text>
+<rect x="315.0" y="582.0" width="60.0" height="24.0" rx="3" fill="#e0a33b" fill-opacity="0.85" stroke="#1f2d3a" stroke-width="1"/>
+<text x="345.0" y="594.0" font-size="9.5" fill="#0d1b26" text-anchor="middle"><tspan x="345.0" dy="-1.9">Suất điện</tspan><tspan x="345.0" dy="10.5">động, r</tspan></text>
+<rect x="393.0" y="582.0" width="60.0" height="24.0" rx="3" fill="#e0a33b" fill-opacity="0.85" stroke="#1f2d3a" stroke-width="1"/>
+<text x="423.0" y="594.0" font-size="9.5" fill="#0d1b26" text-anchor="middle"><tspan x="423.0" dy="-1.9">Tụ điện</tspan><tspan x="423.0" dy="10.5">(RC)</tspan></text>
+<rect x="471.0" y="582.0" width="60.0" height="24.0" rx="3" fill="#e0a33b" fill-opacity="0.85" stroke="#1f2d3a" stroke-width="1"/>
+<text x="501.0" y="594.0" font-size="9.5" fill="#0d1b26" text-anchor="middle"><tspan x="501.0" dy="-1.9">Lực từ</tspan><tspan x="501.0" dy="10.5">(cân dòng)</tspan></text>
+<rect x="585.0" y="264.0" width="60.0" height="24.0" rx="3" fill="#9c7be0" fill-opacity="0.85" stroke="#1f2d3a" stroke-width="1"/>
+<text x="615.0" y="276.0" font-size="9.5" fill="#0d1b26" text-anchor="middle"><tspan x="615.0" dy="-1.9">Khe Young</tspan><tspan x="615.0" dy="10.5">(laser)</tspan></text>
+<rect x="663.0" y="264.0" width="60.0" height="24.0" rx="3" fill="#9c7be0" fill-opacity="0.85" stroke="#1f2d3a" stroke-width="1"/>
+<text x="693.0" y="276.0" font-size="9.5" fill="#0d1b26" text-anchor="middle"><tspan x="693.0" dy="-1.9">Giao thoa</tspan><tspan x="693.0" dy="10.5">sóng nước</tspan></text>
+<rect x="741.0" y="264.0" width="60.0" height="24.0" rx="3" fill="#9c7be0" fill-opacity="0.85" stroke="#1f2d3a" stroke-width="1"/>
+<text x="771.0" y="276.0" font-size="9.5" fill="#0d1b26" text-anchor="middle"><tspan x="771.0" dy="-1.9">Sóng dừng</tspan><tspan x="771.0" dy="10.5">trên dây</tspan></text>
+<rect x="585.0" y="582.0" width="60.0" height="24.0" rx="3" fill="#9c7be0" fill-opacity="0.85" stroke="#1f2d3a" stroke-width="1"/>
+<text x="615.0" y="594.0" font-size="9.5" fill="#0d1b26" text-anchor="middle"><tspan x="615.0" dy="-1.9">Tốc độ</tspan><tspan x="615.0" dy="10.5">truyền âm</tspan></text>
+<rect x="663.0" y="582.0" width="60.0" height="24.0" rx="3" fill="#9c7be0" fill-opacity="0.85" stroke="#1f2d3a" stroke-width="1"/>
+<text x="693.0" y="594.0" font-size="9.5" fill="#0d1b26" text-anchor="middle"><tspan x="693.0" dy="-7.1">Tần số âm</tspan><tspan x="693.0" dy="10.5">(dao động</tspan><tspan x="693.0" dy="10.5">kí)</tspan></text>
+<rect x="741.0" y="582.0" width="60.0" height="24.0" rx="3" fill="#9c7be0" fill-opacity="0.85" stroke="#1f2d3a" stroke-width="1"/>
+<text x="771.0" y="594.0" font-size="9.5" fill="#0d1b26" text-anchor="middle"><tspan x="771.0" dy="-1.9">Thấu kính</tspan><tspan x="771.0" dy="10.5">(ôn tập)</tspan></text>
+<rect x="838.5" y="336.0" width="24.0" height="60.0" rx="3" fill="#9c7be0" fill-opacity="0.85" stroke="#1f2d3a" stroke-width="1"/>
+<text x="850.5" y="366.0" font-size="9" fill="#0d1b26" text-anchor="middle" transform="rotate(-90 850.5 366.0)"><tspan x="850.5" dy="3.1">Khúc xạ</tspan></text>
+<rect x="838.5" y="474.0" width="24.0" height="60.0" rx="3" fill="#9c7be0" fill-opacity="0.85" stroke="#1f2d3a" stroke-width="1"/>
+<text x="850.5" y="504.0" font-size="9" fill="#0d1b26" text-anchor="middle" transform="rotate(-90 850.5 504.0)"><tspan x="850.5" dy="3.1">Phản xạ</tspan></text>
+<rect x="682.5" y="423.0" width="60.0" height="24.0" rx="3" fill="#9c7be0" fill-opacity="0.85" stroke="#1f2d3a" stroke-width="1"/>
+<text x="712.5" y="435.0" font-size="9.5" fill="#0d1b26" text-anchor="middle"><tspan x="712.5" dy="-7.1">Mô phỏng</tspan><tspan x="712.5" dy="10.5">điện</tspan><tspan x="712.5" dy="10.5">trường</tspan></text>
+<rect x="156.0" y="102.0" width="18.0" height="48.0" rx="3" fill="#6ab04c" fill-opacity="0.85" stroke="#1f2d3a" stroke-width="1"/>
+<text x="165.0" y="126.0" font-size="9" fill="#0d1b26" text-anchor="middle" transform="rotate(-90 165.0 126.0)"><tspan x="165.0" dy="-1.8">Con lắc</tspan><tspan x="165.0" dy="9.9">đơn</tspan></text>
+<rect x="93.0" y="16.5" width="60.0" height="24.0" rx="3" fill="#6ab04c" fill-opacity="0.85" stroke="#1f2d3a" stroke-width="1"/>
+<text x="123.0" y="28.5" font-size="9.5" fill="#0d1b26" text-anchor="middle"><tspan x="123.0" dy="3.3">Cộng hưởng</tspan></text>
+<rect x="15.0" y="33.0" width="24.0" height="60.0" rx="3" fill="#6ab04c" fill-opacity="0.85" stroke="#1f2d3a" stroke-width="1"/>
+<text x="27.0" y="63.0" font-size="9" fill="#0d1b26" text-anchor="middle" transform="rotate(-90 27.0 63.0)"><tspan x="27.0" dy="-1.8">Chuyển động</tspan><tspan x="27.0" dy="9.9">tròn</tspan></text>
+<rect x="171.0" y="16.5" width="60.0" height="24.0" rx="3" fill="#6ab04c" fill-opacity="0.85" stroke="#1f2d3a" stroke-width="1"/>
+<text x="201.0" y="28.5" font-size="9.5" fill="#0d1b26" text-anchor="middle"><tspan x="201.0" dy="-1.9">Phóng xạ</tspan><tspan x="201.0" dy="10.5">(mô phỏng)</tspan></text>
+<rect x="126.0" y="724.5" width="18.0" height="18.0" rx="3" fill="#7f8c8d" fill-opacity="0.85" stroke="#1f2d3a" stroke-width="1"/>
+<text x="135.0" y="733.5" font-size="9.5" fill="#0d1b26" text-anchor="middle"><tspan x="135.0" dy="-1.9">Máy</tspan><tspan x="135.0" dy="10.5">bắn</tspan></text>
+<rect x="43.5" y="658.5" width="27.0" height="15.0" rx="3" fill="#7f8c8d" fill-opacity="0.45" stroke="#1f2d3a" stroke-width="1"/>
+<text x="57.0" y="666.0" font-size="9.5" fill="#0d1b26" text-anchor="middle"><tspan x="57.0" dy="-1.9">Xe</tspan><tspan x="57.0" dy="10.5">bi</tspan></text>
+<rect x="345.0" y="27" width="14" height="12" fill="#4f8fd6" fill-opacity="0.85"/><text x="365.0" y="37.0" font-size="11" fill="#2c3e50">Cơ học lớp 10</text>
+<rect x="345.0" y="45" width="14" height="12" fill="#3fb3a6" fill-opacity="0.85"/><text x="365.0" y="55.0" font-size="11" fill="#2c3e50">Máng dài (đảo giữa)</text>
+<rect x="345.0" y="63" width="14" height="12" fill="#e0a33b" fill-opacity="0.85"/><text x="365.0" y="73.0" font-size="11" fill="#2c3e50">Điện – Từ lớp 11–12</text>
+<rect x="345.0" y="81" width="14" height="12" fill="#d9645a" fill-opacity="0.85"/><text x="365.0" y="91.0" font-size="11" fill="#2c3e50">Nhiệt &amp; Khí lớp 12</text>
+<rect x="345.0" y="99" width="14" height="12" fill="#9c7be0" fill-opacity="0.85"/><text x="365.0" y="109.0" font-size="11" fill="#2c3e50">Sóng &amp; Quang</text>
+<rect x="345.0" y="117" width="14" height="12" fill="#6ab04c" fill-opacity="0.85"/><text x="365.0" y="127.0" font-size="11" fill="#2c3e50">Dao động, tròn, phóng xạ</text>
+<rect x="345.0" y="135" width="14" height="12" fill="#9aa7b4" fill-opacity="0.85"/><text x="365.0" y="145.0" font-size="11" fill="#2c3e50">Khu giáo viên, tủ, bồn</text>
+<line x1="345.0" y1="237.0" x2="495.0" y2="237.0" stroke="#2c3e50" stroke-width="2"/><text x="345.0" y="232.5" font-size="11" fill="#2c3e50">5 m</text>
+<text x="585.0" y="33.0" font-size="11" fill="#2c3e50">Bắc ↑ · nhìn từ trên xuống · x sang đông, z sang nam</text>
+</svg>

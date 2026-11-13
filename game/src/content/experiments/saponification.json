@@ -1,0 +1,375 @@
+{
+  "id": "saponification",
+  "name": "Making soap: saponification of a fat",
+  "category": "chemistry",
+  "description": "Boil a fat with sodium hydroxide solution: the fat is split into soap (the sodium salts of its fatty acids) and glycerol. Weigh the soap after salting it out. How much forms is set by the reagent that runs out — one fat molecule needs three of sodium hydroxide — and by how long it is heated.",
+  "vi": {
+    "name": "Điều chế xà phòng: phản ứng xà phòng hóa chất béo",
+    "description": "Đun sôi chất béo với dung dịch natri hiđroxit: chất béo bị thủy phân thành xà phòng (muối natri của các axit béo) và glixerol. Cân xà phòng sau khi tách bằng muối ăn. Lượng xà phòng do chất hết trước quyết định — mỗi phân tử chất béo cần ba phân tử natri hiđroxit — và do thời gian đun.",
+    "note": "Mô hình dạy học đơn giản hóa. m g tristearin (glyxeryl tristearat, M = 891,48 g/mol) được đun sôi với V mL dung dịch NaOH nồng độ c trong t phút: C₃H₅(OOCC₁₇H₃₅)₃ + 3NaOH → 3C₁₇H₃₅COONa + C₃H₅(OH)₃. Hệ số tỉ lượng là chính xác: mức độ phản ứng ξ không vượt quá min(n_chất béo, n_NaOH/3). Tốc độ đạt tới đó là một giả thiết dạy học: tiến dần theo bậc một, ξ = ξmax·(1 − e^(−k·t)) với k = 0,15 mỗi phút cho hỗn hợp đang sôi và được khuấy — không phải tốc độ đo được (tốc độ thật phụ thuộc chất béo, dung môi và việc khuấy). Xà phòng được cân dưới dạng natri stearat khô sau khi tách bằng muối (coi như tách hoàn toàn); M(natri stearat) = 306,46; M(glixerol) = 92,09 g/mol. Mỗi phút hiển thị trong 1 giây. Kết quả mô phỏng không có sai số ngẫu nhiên; số đọc của cân chỉ được làm tròn theo độ phân giải d."
+  },
+  "requiredEquipment": ["soap-pot"],
+  "model": "chemistry.saponification",
+  "parameters": [
+    {
+      "id": "fatMass",
+      "label": "Fat (tristearin)",
+      "vi": { "label": "Chất béo (tristearin)" },
+      "symbol": "m_fat",
+      "unit": "g",
+      "default": 10,
+      "min": 5,
+      "max": 20,
+      "presets": [
+        { "label": "5 g", "vi": { "label": "5 g" }, "value": 5 },
+        { "label": "10 g", "vi": { "label": "10 g" }, "value": 10 },
+        { "label": "20 g", "vi": { "label": "20 g" }, "value": 20 }
+      ]
+    },
+    {
+      "id": "hydroxideVolume",
+      "label": "Sodium hydroxide solution (2 mol/L)",
+      "vi": { "label": "Dung dịch natri hiđroxit (2 mol/L)" },
+      "symbol": "V_NaOH",
+      "unit": "mL",
+      "default": 30,
+      "min": 10,
+      "max": 50,
+      "presets": [
+        { "label": "10 mL", "vi": { "label": "10 mL" }, "value": 10 },
+        { "label": "20 mL", "vi": { "label": "20 mL" }, "value": 20 },
+        { "label": "30 mL", "vi": { "label": "30 mL" }, "value": 30 },
+        { "label": "50 mL", "vi": { "label": "50 mL" }, "value": 50 }
+      ]
+    },
+    {
+      "id": "heatingTime",
+      "label": "Heating time",
+      "vi": { "label": "Thời gian đun" },
+      "symbol": "t",
+      "unit": "min",
+      "default": 20,
+      "min": 5,
+      "max": 40,
+      "presets": [
+        { "label": "5 min", "vi": { "label": "5 phút" }, "value": 5 },
+        { "label": "10 min", "vi": { "label": "10 phút" }, "value": 10 },
+        { "label": "20 min", "vi": { "label": "20 phút" }, "value": 20 },
+        { "label": "40 min", "vi": { "label": "40 phút" }, "value": 40 }
+      ]
+    },
+    {
+      "id": "balanceResolution",
+      "label": "Balance resolution",
+      "vi": { "label": "Độ phân giải của cân" },
+      "symbol": "d",
+      "unit": "g",
+      "default": 0.01,
+      "min": 0.01,
+      "max": 0.1,
+      "presets": [
+        { "label": "0.1 g", "vi": { "label": "0,1 g" }, "value": 0.1 },
+        { "label": "0.01 g", "vi": { "label": "0,01 g" }, "value": 0.01 }
+      ]
+    }
+  ],
+  "initialConditions": { "hydroxideConcentration": 2, "rateConstant": 0.15, "minuteLength": 1 },
+  "inputs": {
+    "hydroxideConcentration": { "symbol": "c", "unit": "mol/L" },
+    "rateConstant": { "symbol": "k", "unit": "1/min", "desk": false },
+    "minuteLength": { "symbol": "s/min", "unit": "s", "desk": false }
+  },
+  "simulation": { "timeStep": 0.05, "maxDuration": 50, "sampleInterval": 0.25 },
+  "measurements": [
+    {
+      "id": "minutes",
+      "label": "Heating time",
+      "vi": { "label": "Thời gian đun" },
+      "symbol": "t",
+      "unit": "min",
+      "variable": "minutes"
+    },
+    {
+      "id": "soap",
+      "label": "Soap formed",
+      "vi": { "label": "Xà phòng tạo thành" },
+      "symbol": "m_soap",
+      "unit": "g",
+      "variable": "soap"
+    },
+    {
+      "id": "fat",
+      "label": "Fat left",
+      "vi": { "label": "Chất béo còn lại" },
+      "symbol": "m_fat",
+      "unit": "g",
+      "variable": "fatLeft"
+    }
+  ],
+  "results": [
+    {
+      "id": "soap",
+      "label": "Soap formed (dry sodium stearate)",
+      "vi": { "label": "Xà phòng tạo thành (natri stearat khô)" },
+      "symbol": "m_soap",
+      "unit": "g",
+      "variable": "soap",
+      "reduce": "final",
+      "theory": "soap"
+    },
+    {
+      "id": "glycerol",
+      "label": "Glycerol formed",
+      "vi": { "label": "Glixerol tạo thành" },
+      "symbol": "m_gly",
+      "unit": "g",
+      "variable": "glycerol",
+      "reduce": "final",
+      "theory": "glycerol"
+    },
+    {
+      "id": "fat",
+      "label": "Fat left",
+      "vi": { "label": "Chất béo còn lại" },
+      "symbol": "m_fat",
+      "unit": "g",
+      "variable": "fatLeft",
+      "reduce": "final",
+      "theory": "fatLeft"
+    },
+    {
+      "id": "hydroxide",
+      "label": "Sodium hydroxide left",
+      "vi": { "label": "Natri hiđroxit còn dư" },
+      "symbol": "n_NaOH",
+      "unit": "mmol",
+      "variable": "hydroxideLeft",
+      "reduce": "final",
+      "theory": "hydroxideLeft"
+    }
+  ],
+  "instruments": [
+    {
+      "result": "soap",
+      "quantity": "Mass of the dried soap",
+      "name": "Top-pan balance",
+      "resolution": "balanceResolution",
+      "excludes": "soap lost in the salting-out and filtering, water left in the soap, and glycerol or salt not washed out",
+      "vi": {
+        "quantity": "Khối lượng xà phòng đã sấy khô",
+        "name": "Cân điện tử",
+        "excludes": "xà phòng mất khi tách bằng muối và lọc, nước còn trong xà phòng, và glixerol hoặc muối chưa rửa hết"
+      }
+    }
+  ],
+  "graphs": [
+    {
+      "id": "masses",
+      "title": "Soap formed and fat left against heating time",
+      "vi": { "title": "Xà phòng tạo thành và chất béo còn lại theo thời gian đun" },
+      "x": "minutes",
+      "y": ["soap", "fat"],
+      "yLabel": "m"
+    }
+  ],
+  "monitor": "masses",
+  "compare": [{ "graph": "masses", "series": "soap" }],
+  "note": "A simplified teaching model. m g of tristearin (glyceryl tristearate, M = 891.48 g/mol) is boiled with V mL of sodium hydroxide solution at concentration c for t minutes: C₃H₅(OOCC₁₇H₃₅)₃ + 3NaOH → 3C₁₇H₃₅COONa + C₃H₅(OH)₃. The stoichiometry is exact: the extent ξ cannot pass min(n_fat, n_NaOH/3). How fast it gets there is a teaching assumption: a first-order approach, ξ = ξmax·(1 − e^(−k·t)) with k = 0.15 per minute for a boiling, stirred mixture — not a measured rate (a real one depends on the fat, the solvent and the stirring). Soap is weighed as dry sodium stearate after salting out (taken as complete); M(sodium stearate) = 306.46, M(glycerol) = 92.09 g/mol. Each minute is shown in 1 s. The simulated results carry no random error; the balance's reading is only rounded to its resolution d.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the soap-making instructions on the board.",
+      "vi": { "instruction": "Đọc hướng dẫn điều chế xà phòng trên bảng." },
+      "done": { "kind": "inspected", "item": "saponification-instructions" }
+    },
+    {
+      "id": "fat",
+      "instruction": "Set the mass of fat and the volume of sodium hydroxide with the dials.",
+      "vi": {
+        "instruction": "Đặt khối lượng chất béo và thể tích natri hiđroxit bằng các núm xoay."
+      },
+      "done": { "kind": "adjusted", "parameter": "hydroxideVolume" }
+    },
+    {
+      "id": "time",
+      "instruction": "Set how long the mixture is boiled.",
+      "vi": { "instruction": "Đặt thời gian đun sôi hỗn hợp." },
+      "done": { "kind": "adjusted", "parameter": "heatingTime" }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: watch the fat layer shrink and the soap form.",
+      "vi": { "instruction": "Nhấn CHẠY: quan sát lớp chất béo mỏng dần và xà phòng hình thành." },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read the soap and glycerol formed, and what is left.",
+      "vi": { "instruction": "Đọc lượng xà phòng và glixerol tạo thành, và lượng còn dư." },
+      "done": { "kind": "viewed" }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, use too little sodium hydroxide (10 mL) and run again: what limits the soap?",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, dùng quá ít natri hiđroxit (10 mL) rồi chạy lại: điều gì giới hạn lượng xà phòng?"
+      },
+      "done": { "kind": "reset" }
+    }
+  ],
+  "examples": [
+    {
+      "id": "fat-limits",
+      "question": "{fatMass} g of tristearin (891.48 g/mol) is boiled for {heatingTime} min with {hydroxideVolume} mL of NaOH at {hydroxideConcentration} mol/L. Find the most soap it can give, and the soap made in that time (k = 0.15 per min, a teaching value).",
+      "vi": {
+        "question": "Đun sôi {fatMass} g tristearin (891,48 g/mol) trong {heatingTime} phút với {hydroxideVolume} mL NaOH {hydroxideConcentration} mol/L. Tìm khối lượng xà phòng tối đa có thể thu được, và khối lượng xà phòng tạo thành trong thời gian đó (k = 0,15 mỗi phút, giá trị minh họa)."
+      },
+      "set": { "fatMass": 10, "hydroxideVolume": 30, "heatingTime": 20 },
+      "find": [{ "theory": "maximumSoap", "symbol": "m_max", "unit": "g" }, { "theory": "soap" }],
+      "steps": [
+        {
+          "say": "Fat + 3NaOH → 3 soap + glycerol. Compare the moles: {=fatMass/891.48*1000|3} mmol of fat needs three times as much NaOH, and there are {=hydroxideVolume*hydroxideConcentration} mmol: the fat runs out first.",
+          "vi": {
+            "say": "Chất béo + 3NaOH → 3 xà phòng + glixerol. So sánh số mol: {=fatMass/891.48*1000|3} mmol chất béo cần lượng NaOH gấp ba, mà có {=hydroxideVolume*hydroxideConcentration} mmol: chất béo hết trước."
+          },
+          "write": "m_max = 3·({fatMass}/891.48)·306.46 ≈ {@maximumSoap} g",
+          "check": { "expr": "3*(fatMass/891.48)*306.46", "equals": "maximumSoap" }
+        },
+        {
+          "say": "In this teaching model the reaction approaches its end as 1 − e^(−k·t).",
+          "vi": {
+            "say": "Trong mô hình dạy học này, phản ứng tiến dần tới hoàn toàn theo 1 − e^(−k·t)."
+          },
+          "write": "m = m_max·(1 − e^(−0.15·{heatingTime})) ≈ {@soap} g",
+          "check": { "expr": "@maximumSoap*(1-exp(-rateConstant*heatingTime))", "equals": "soap" }
+        }
+      ]
+    },
+    {
+      "id": "hydroxide-limits",
+      "question": "{fatMass} g of tristearin is boiled for {heatingTime} min with only {hydroxideVolume} mL of NaOH at {hydroxideConcentration} mol/L. Find the most soap it can give and the glycerol formed in that time (92.09 g/mol).",
+      "vi": {
+        "question": "Đun sôi {fatMass} g tristearin trong {heatingTime} phút với chỉ {hydroxideVolume} mL NaOH {hydroxideConcentration} mol/L. Tìm khối lượng xà phòng tối đa và khối lượng glixerol tạo thành trong thời gian đó (92,09 g/mol)."
+      },
+      "set": { "fatMass": 20, "hydroxideVolume": 10, "heatingTime": 40 },
+      "find": [
+        { "theory": "maximumSoap", "symbol": "m_max", "unit": "g" },
+        { "theory": "glycerol" }
+      ],
+      "steps": [
+        {
+          "say": "Now {=hydroxideVolume*hydroxideConcentration} mmol of NaOH can turn only a third as much fat into soap, less than the {=fatMass/891.48*1000|3} mmol of fat: the hydroxide runs out first. Each NaOH gives one soap.",
+          "vi": {
+            "say": "Giờ {=hydroxideVolume*hydroxideConcentration} mmol NaOH chỉ xà phòng hóa được lượng chất béo bằng một phần ba số đó, ít hơn {=fatMass/891.48*1000|3} mmol chất béo: NaOH hết trước. Mỗi NaOH tạo một phân tử xà phòng."
+          },
+          "write": "m_max = {=hydroxideVolume*hydroxideConcentration}·306.46/1000 ≈ {@maximumSoap} g",
+          "check": {
+            "expr": "hydroxideVolume*hydroxideConcentration*306.46/1000",
+            "equals": "maximumSoap"
+          }
+        },
+        {
+          "say": "One glycerol for every three NaOH, approached as 1 − e^(−k·t).",
+          "vi": { "say": "Cứ ba NaOH tạo một glixerol, tiến dần theo 1 − e^(−k·t)." },
+          "write": "m = ({=hydroxideVolume*hydroxideConcentration}/3)·(1 − e^(−0.15·{heatingTime}))·92.09/1000 ≈ {@glycerol} g",
+          "check": {
+            "expr": "hydroxideVolume*hydroxideConcentration/3*(1-exp(-rateConstant*heatingTime))*92.09/1000",
+            "equals": "glycerol"
+          }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "A fat is an ester of glycerol with three fatty acids; boiled with sodium hydroxide it splits into glycerol and soap, the sodium salts of the acids.",
+    "vi": {
+      "summary": "Chất béo là este của glixerol với ba axit béo; khi đun với natri hiđroxit, nó bị thủy phân thành glixerol và xà phòng, tức muối natri của các axit béo."
+    },
+    "parts": [
+      {
+        "id": "fat",
+        "name": "Fat layer",
+        "role": "Tristearin floats on the solution; it shrinks as it reacts.",
+        "vi": {
+          "name": "Lớp chất béo",
+          "role": "Tristearin nổi trên dung dịch; nó mỏng dần khi phản ứng."
+        },
+        "anchor": { "part": "fat" }
+      },
+      {
+        "id": "hydroxide",
+        "name": "Sodium hydroxide solution",
+        "role": "Brings the OH⁻ that splits the fat: three for each fat molecule.",
+        "vi": {
+          "name": "Dung dịch natri hiđroxit",
+          "role": "Cung cấp OH⁻ để thủy phân chất béo: ba ion cho mỗi phân tử chất béo."
+        },
+        "anchor": { "part": "hydroxide" }
+      },
+      {
+        "id": "soap",
+        "name": "Soap",
+        "role": "The sodium salt of the fatty acid forms as a white curd.",
+        "vi": {
+          "name": "Xà phòng",
+          "role": "Muối natri của axit béo tạo thành dưới dạng khối đông màu trắng."
+        },
+        "anchor": { "part": "soap" }
+      },
+      {
+        "id": "plate",
+        "name": "Hot plate",
+        "role": "Keeps the mixture boiling: the reaction is slow when cold.",
+        "vi": { "name": "Bếp điện", "role": "Giữ hỗn hợp sôi: phản ứng chậm khi nguội." },
+        "anchor": { "part": "hot-plate" }
+      },
+      {
+        "id": "salt",
+        "name": "Salt for salting out",
+        "role": "Added at the end, it makes the soap less soluble so it separates and can be weighed.",
+        "vi": {
+          "name": "Muối ăn để tách xà phòng",
+          "role": "Cho vào cuối cùng, làm xà phòng kém tan để nó tách ra và cân được."
+        },
+        "anchor": { "part": "salt-dish" }
+      }
+    ],
+    "steps": [
+      {
+        "text": "A fat molecule is glycerol joined to three fatty acids by ester links. Sodium hydroxide breaks each link: fat + 3NaOH → 3 soap + glycerol.",
+        "vi": {
+          "text": "Một phân tử chất béo là glixerol liên kết với ba axit béo bằng liên kết este. Natri hiđroxit phá vỡ từng liên kết: chất béo + 3NaOH → 3 xà phòng + glixerol."
+        },
+        "parts": ["fat", "hydroxide"]
+      },
+      {
+        "text": "Press RUN: the mixture boils and is stirred. The fat layer shrinks and a white curd of soap grows.",
+        "vi": {
+          "text": "Nhấn CHẠY: hỗn hợp sôi và được khuấy. Lớp chất béo mỏng dần và khối xà phòng trắng lớn dần."
+        },
+        "parts": ["plate", "fat", "soap"]
+      },
+      {
+        "text": "The reagent that runs out first limits the soap: with too little sodium hydroxide, fat is left; with too much, hydroxide is left (and must be washed out of real soap).",
+        "vi": {
+          "text": "Chất hết trước giới hạn lượng xà phòng: thiếu natri hiđroxit thì còn dư chất béo; thừa thì dư natri hiđroxit (xà phòng thật phải rửa sạch phần này)."
+        },
+        "parts": ["hydroxide", "fat"]
+      },
+      {
+        "text": "Salting out: adding salt makes the soap separate from the water so it can be filtered, dried and weighed; the glycerol stays in the water.",
+        "vi": {
+          "text": "Tách bằng muối: thêm muối ăn làm xà phòng tách khỏi nước để lọc, sấy khô và cân; glixerol ở lại trong nước."
+        },
+        "parts": ["salt", "soap"]
+      },
+      {
+        "text": "Soap works because one end of its long molecule loves water (COO⁻ Na⁺) and the other loves grease: it carries oil away into the water.",
+        "vi": {
+          "text": "Xà phòng tẩy rửa được vì một đầu phân tử dài của nó ưa nước (COO⁻ Na⁺) còn đầu kia ưa dầu mỡ: nó kéo dầu mỡ vào trong nước."
+        },
+        "parts": ["soap"]
+      }
+    ]
+  }
+}

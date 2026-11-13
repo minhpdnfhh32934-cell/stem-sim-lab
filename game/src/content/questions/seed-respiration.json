@@ -1,0 +1,1031 @@
+{
+  "id": "seed-respiration",
+  "skills": [
+    {
+      "id": "respirometer",
+      "name": "How the respirometer works",
+      "advice": "Draw the tube: seeds on gauze, potassium hydroxide below, a coloured drop in the pipette. Explain why the drop moves towards the seeds (O₂ used, CO₂ absorbed) and what the boiled seeds and the glass-bead tube control for.",
+      "vi": {
+        "name": "Nguyên lí hoạt động của hô hấp kế",
+        "advice": "Vẽ sơ đồ ống: hạt trên lưới, dung dịch potassium hydroxide bên dưới, giọt màu trong pipette. Giải thích vì sao giọt màu di chuyển về phía hạt (O₂ bị dùng, CO₂ bị hấp thụ) và vai trò đối chứng của hạt đã luộc và ống chứa hạt thủy tinh."
+      }
+    },
+    {
+      "id": "respiration-equation",
+      "name": "The equation of respiration and RQ",
+      "advice": "Write C₆H₁₂O₆ + 6 O₂ → 6 CO₂ + 6 H₂O and work RQ = CO₂/O₂ = 6/6 = 1 for sugar; learn that fat gives about 0.7. Compare peas (starch) with sunflower seeds (fat).",
+      "vi": {
+        "name": "Phương trình hô hấp và hệ số hô hấp RQ",
+        "advice": "Viết C₆H₁₂O₆ + 6 O₂ → 6 CO₂ + 6 H₂O và tính RQ = CO₂/O₂ = 6/6 = 1 với đường; ghi nhớ chất béo cho khoảng 0,7. So sánh hạt đậu Hà Lan (tinh bột) với hạt hướng dương (chất béo)."
+      }
+    },
+    {
+      "id": "rate",
+      "name": "Rate of respiration and temperature",
+      "advice": "Practise r = m·r₂₀·Q₁₀^((T − 20)/10) with the illustrative r₂₀ = 0.25 mL/(g·h) and Q₁₀ = 2, then V = r·t with t in hours. Run 15, 20 and 30 °C at the station and check the doubling.",
+      "vi": {
+        "name": "Cường độ hô hấp và nhiệt độ",
+        "advice": "Luyện r = m·r₂₀·Q₁₀^((T − 20)/10) với các giá trị minh họa r₂₀ = 0,25 mL/(g·h) và Q₁₀ = 2, rồi V = r·t với t tính theo giờ. Chạy trạm ở 15, 20 và 30 °C để kiểm tra việc tăng gấp đôi."
+      }
+    },
+    {
+      "id": "rq",
+      "name": "RQ from two runs",
+      "advice": "Run the same seeds over potassium hydroxide and then over water, changing nothing else. Over water the drop measures O₂ − CO₂, so RQ = 1 − V_water/V_KOH. The trap: dividing the wrong way round.",
+      "vi": {
+        "name": "Xác định RQ từ hai lần đo",
+        "advice": "Chạy cùng loại hạt trên potassium hydroxide rồi trên nước, không thay đổi gì khác. Trên nước, giọt màu đo O₂ − CO₂, nên RQ = 1 − V_nước/V_KOH. Bẫy thường gặp: chia ngược hai thể tích."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "koh-role",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["respirometer"],
+      "stem": "In the respirometer, the potassium hydroxide solution under the seeds…",
+      "explain": "Potassium hydroxide absorbs the CO₂ the seeds give out, so the gas volume falls by the O₂ they take up.",
+      "vi": {
+        "stem": "Trong hô hấp kế, dung dịch potassium hydroxide đặt dưới các hạt có vai trò…",
+        "explain": "Potassium hydroxide hấp thụ CO₂ do hạt thải ra, nên thể tích khí giảm đúng bằng lượng O₂ hạt hấp thụ."
+      },
+      "options": [
+        {
+          "text": "absorbs the carbon dioxide given out",
+          "vi": {
+            "text": "hấp thụ carbon dioxide do hạt thải ra"
+          },
+          "correct": true
+        },
+        {
+          "text": "absorbs the oxygen in the tube",
+          "vi": {
+            "text": "hấp thụ oxygen trong ống"
+          }
+        },
+        {
+          "text": "gives oxygen to the seeds",
+          "vi": {
+            "text": "cung cấp oxygen cho hạt"
+          }
+        },
+        {
+          "text": "keeps the seeds moist",
+          "vi": {
+            "text": "giữ ẩm cho hạt"
+          }
+        }
+      ]
+    },
+    {
+      "id": "rq-definition",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["respiration-equation"],
+      "stem": "The respiratory quotient RQ is…",
+      "explain": "RQ = volume of CO₂ given out ÷ volume of O₂ taken up, in the same time.",
+      "vi": {
+        "stem": "Hệ số hô hấp RQ là…",
+        "explain": "RQ = thể tích CO₂ thải ra ÷ thể tích O₂ hấp thụ, trong cùng thời gian."
+      },
+      "options": [
+        {
+          "text": "CO₂ given out ÷ O₂ taken up",
+          "vi": {
+            "text": "CO₂ thải ra ÷ O₂ hấp thụ"
+          },
+          "correct": true
+        },
+        {
+          "text": "O₂ taken up ÷ CO₂ given out",
+          "vi": {
+            "text": "O₂ hấp thụ ÷ CO₂ thải ra"
+          }
+        },
+        {
+          "text": "CO₂ given out − O₂ taken up",
+          "vi": {
+            "text": "CO₂ thải ra − O₂ hấp thụ"
+          }
+        },
+        {
+          "text": "glucose used ÷ O₂ taken up",
+          "vi": {
+            "text": "glucose sử dụng ÷ O₂ hấp thụ"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-basic",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["respirometer", "respiration-equation"],
+      "stem": "About measuring the respiration of seeds: decide whether each statement is true or false.",
+      "explain": "Boiled seeds are dead and do not respire: they are the control. Germinating seeds take in O₂ and give out CO₂. Over hydroxide the gas shrinks, so the drop moves towards the seeds. For sugar RQ = 6 CO₂/6 O₂ = 1.",
+      "vi": {
+        "stem": "Về thí nghiệm đo hô hấp của hạt, mỗi nhận định sau đúng hay sai?",
+        "explain": "Hạt đã luộc là hạt chết, không hô hấp: đó là đối chứng. Hạt đang nảy mầm hấp thụ O₂ và thải CO₂. Trên potassium hydroxide thể tích khí giảm, nên giọt màu di chuyển về phía hạt. Với đường, RQ = 6 CO₂/6 O₂ = 1."
+      },
+      "statements": [
+        {
+          "text": "Boiled seeds are the control: dead seeds do not respire.",
+          "vi": {
+            "text": "Hạt đã luộc là đối chứng: hạt chết không hô hấp."
+          },
+          "true": true
+        },
+        {
+          "text": "Germinating seeds take in oxygen and give out carbon dioxide.",
+          "vi": {
+            "text": "Hạt đang nảy mầm hấp thụ oxygen và thải carbon dioxide."
+          },
+          "true": true
+        },
+        {
+          "text": "Over potassium hydroxide the drop moves away from the seeds.",
+          "vi": {
+            "text": "Khi có potassium hydroxide, giọt màu di chuyển ra xa hạt."
+          },
+          "true": false
+        },
+        {
+          "text": "For respiration of sugar, RQ = 1.",
+          "vi": {
+            "text": "Khi hô hấp bằng đường, RQ = 1."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "why-drop-moves",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["respirometer"],
+      "stem": "With potassium hydroxide under the germinating seeds, why does the drop move towards them?",
+      "explain": "The seeds take O₂ out of the air in the tube, and the CO₂ they give out is absorbed: the gas shrinks, and the drop is pushed in by the air outside.",
+      "vi": {
+        "stem": "Khi có potassium hydroxide dưới các hạt đang nảy mầm, vì sao giọt màu di chuyển về phía hạt?",
+        "explain": "Hạt lấy O₂ từ không khí trong ống, còn CO₂ thải ra bị hấp thụ: thể tích khí giảm, và giọt màu bị không khí bên ngoài đẩy vào."
+      },
+      "options": [
+        {
+          "text": "O₂ is taken up while the CO₂ given out is absorbed, so the gas in the tube shrinks",
+          "vi": {
+            "text": "Hạt lấy O₂ còn CO₂ thải ra bị potassium hydroxide hấp thụ, nên thể tích khí trong ống giảm"
+          },
+          "correct": true
+        },
+        {
+          "text": "The seeds give out more gas than they take in",
+          "vi": {
+            "text": "Hạt thải ra nhiều khí hơn lượng khí hấp thụ"
+          }
+        },
+        {
+          "text": "The potassium hydroxide gives off a gas",
+          "vi": {
+            "text": "Potassium hydroxide giải phóng ra một loại khí"
+          }
+        },
+        {
+          "text": "The seeds swell as they take up water",
+          "vi": {
+            "text": "Hạt trương lên do hút nước"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sunflower-water",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["rq", "respiration-equation"],
+      "stem": "Germinating sunflower seeds (rich in fat) are put over water instead of potassium hydroxide. The drop still moves a little towards them. Why?",
+      "explain": "Fat holds little oxygen, so respiring it uses more O₂ than the CO₂ it gives out (RQ ≈ 0.7): the gas still shrinks a little. Peas (RQ = 1) over water hardly move the drop.",
+      "vi": {
+        "stem": "Hạt hướng dương đang nảy mầm (giàu chất béo) được đặt trên nước thay vì potassium hydroxide. Giọt màu vẫn di chuyển một chút về phía hạt. Vì sao?",
+        "explain": "Chất béo chứa ít oxygen, nên khi hô hấp bằng chất béo, lượng O₂ hấp thụ nhiều hơn lượng CO₂ thải ra (RQ ≈ 0,7): thể tích khí vẫn giảm một chút. Hạt đậu (RQ = 1) đặt trên nước hầu như không làm giọt màu di chuyển."
+      },
+      "options": [
+        {
+          "text": "They take up more O₂ than the CO₂ they give out (RQ < 1)",
+          "vi": {
+            "text": "Hạt hấp thụ O₂ nhiều hơn lượng CO₂ thải ra (RQ < 1)"
+          },
+          "correct": true
+        },
+        {
+          "text": "They give out more CO₂ than the O₂ they take up (RQ > 1)",
+          "vi": {
+            "text": "Hạt thải CO₂ nhiều hơn lượng O₂ hấp thụ (RQ > 1)"
+          }
+        },
+        {
+          "text": "Water absorbs all the CO₂, as the hydroxide does",
+          "vi": {
+            "text": "Nước hấp thụ hết CO₂ như potassium hydroxide"
+          }
+        },
+        {
+          "text": "Fat seeds do not respire at all",
+          "vi": {
+            "text": "Hạt chứa chất béo hoàn toàn không hô hấp"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-controls",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["rate", "respirometer", "rq"],
+      "stem": "About the respirometer model and its controls: decide whether each statement is true or false.",
+      "explain": "The model doubles the rate for every 10 °C (Q₁₀ = 2, illustrative). Peas respire starch (RQ = 1): over water the O₂ taken and CO₂ given cancel. The glass-bead tube cancels changes in the room’s pressure. Boiled seeds do not respire at all.",
+      "vi": {
+        "stem": "Về mô hình hô hấp kế và các đối chứng, mỗi nhận định sau đúng hay sai?",
+        "explain": "Mô hình cho tốc độ tăng gấp đôi mỗi khi nhiệt độ tăng 10 °C (Q₁₀ = 2, giá trị minh họa). Hạt đậu hô hấp bằng tinh bột (RQ = 1): trên nước, lượng O₂ hấp thụ và CO₂ thải ra bù trừ nhau. Ống chứa hạt thủy tinh loại bỏ ảnh hưởng của sự thay đổi áp suất trong phòng. Hạt đã luộc hoàn toàn không hô hấp."
+      },
+      "statements": [
+        {
+          "text": "In the model, seeds 10 °C warmer respire twice as fast (Q₁₀ = 2, illustrative).",
+          "vi": {
+            "text": "Trong mô hình, hạt ở nhiệt độ cao hơn 10 °C hô hấp nhanh gấp đôi (Q₁₀ = 2, giá trị minh họa)."
+          },
+          "true": true
+        },
+        {
+          "text": "Germinating peas over water hardly move the drop, since they give out as much CO₂ as the O₂ they take up.",
+          "vi": {
+            "text": "Hạt đậu nảy mầm đặt trên nước hầu như không làm giọt màu di chuyển, vì lượng CO₂ thải ra bằng lượng O₂ hấp thụ."
+          },
+          "true": true
+        },
+        {
+          "text": "The tube of glass beads cancels changes in the room’s pressure.",
+          "vi": {
+            "text": "Ống chứa hạt thủy tinh giúp loại bỏ ảnh hưởng của sự thay đổi áp suất trong phòng."
+          },
+          "true": true
+        },
+        {
+          "text": "In the model, boiled seeds take up O₂ at half the rate of living ones.",
+          "vi": {
+            "text": "Trong mô hình, hạt đã luộc hấp thụ O₂ với tốc độ bằng một nửa hạt sống."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "rate-30",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["rate"],
+      "set": {
+        "seeds": 0,
+        "absorber": 1,
+        "temperature": 30
+      },
+      "stem": "{seedMass} g of germinating peas take up 0.25 mL O₂ per gram per hour at 20 °C, doubling for every 10 °C (illustrative values). What is their O₂ uptake at {temperature} °C?",
+      "explain": "r = m·0.25·2^((T − 20)/10) = {seedMass}·0.25·2^{=(temperature-20)/10} = {@oxygenRate} mL/h.",
+      "vi": {
+        "stem": "{seedMass} g hạt đậu đang nảy mầm hấp thụ 0,25 mL O₂ mỗi gam mỗi giờ ở 20 °C, tăng gấp đôi khi nhiệt độ tăng 10 °C (giá trị minh họa). Lượng O₂ hấp thụ của chúng ở {temperature} °C là bao nhiêu?",
+        "explain": "r = m·0,25·2^((T − 20)/10) = {seedMass}·0,25·2^{=(temperature-20)/10} = {@oxygenRate} mL/h."
+      },
+      "options": [
+        {
+          "text": "{@oxygenRate} mL/h",
+          "vi": {
+            "text": "{@oxygenRate} mL/h"
+          },
+          "correct": true,
+          "check": {
+            "expr": "seedMass*0.25*2^((temperature-20)/10)",
+            "equals": "oxygenRate"
+          }
+        },
+        {
+          "text": "{=seedMass*0.25} mL/h",
+          "vi": {
+            "text": "{=seedMass*0.25} mL/h"
+          },
+          "check": {
+            "expr": "seedMass*0.25",
+            "equals": "oxygenRate"
+          }
+        },
+        {
+          "text": "{=seedMass*0.25*2^(temperature/10)} mL/h",
+          "vi": {
+            "text": "{=seedMass*0.25*2^(temperature/10)} mL/h"
+          },
+          "check": {
+            "expr": "seedMass*0.25*2^(temperature/10)",
+            "equals": "oxygenRate"
+          }
+        },
+        {
+          "text": "{=0.25*2^((temperature-20)/10)} mL/h",
+          "vi": {
+            "text": "{=0.25*2^((temperature-20)/10)} mL/h"
+          },
+          "check": {
+            "expr": "0.25*2^((temperature-20)/10)",
+            "equals": "oxygenRate"
+          }
+        }
+      ]
+    },
+    {
+      "id": "volume-10-min",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["rate", "respirometer"],
+      "set": {
+        "seeds": 0,
+        "absorber": 1,
+        "temperature": 25
+      },
+      "stem": "Over potassium hydroxide at {temperature} °C, {seedMass} g of germinating peas take up O₂ at {@oxygenRate|3} mL/h. How far does the drop move, in mL, in {=duration/60} minutes?",
+      "explain": "{=duration/60} min = {=duration/3600|3} h: V = r·t = {@oxygenRate|3}·{=duration/3600|3} ≈ {@gasTakenUp|3} mL.",
+      "vi": {
+        "stem": "Trên potassium hydroxide ở {temperature} °C, {seedMass} g hạt đậu đang nảy mầm hấp thụ O₂ với tốc độ {@oxygenRate|3} mL/h. Sau {=duration/60} phút, giọt màu di chuyển một thể tích bao nhiêu mL?",
+        "explain": "{=duration/60} phút = {=duration/3600|3} h: V = r·t = {@oxygenRate|3}·{=duration/3600|3} ≈ {@gasTakenUp|3} mL."
+      },
+      "options": [
+        {
+          "text": "{@gasTakenUp|3} mL",
+          "vi": {
+            "text": "{@gasTakenUp|3} mL"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@oxygenRate*duration/3600",
+            "equals": "gasTakenUp"
+          }
+        },
+        {
+          "text": "{=@oxygenRate*duration/60|3} mL",
+          "vi": {
+            "text": "{=@oxygenRate*duration/60|3} mL"
+          },
+          "check": {
+            "expr": "@oxygenRate*duration/60",
+            "equals": "gasTakenUp"
+          }
+        },
+        {
+          "text": "{=@oxygenRate*duration|3} mL",
+          "vi": {
+            "text": "{=@oxygenRate*duration|3} mL"
+          },
+          "check": {
+            "expr": "@oxygenRate*duration",
+            "equals": "gasTakenUp"
+          }
+        },
+        {
+          "text": "{=@oxygenRate*duration/36000|3} mL",
+          "vi": {
+            "text": "{=@oxygenRate*duration/36000|3} mL"
+          },
+          "check": {
+            "expr": "@oxygenRate*duration/36000",
+            "equals": "gasTakenUp"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sunflower-drop",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["rq", "respirometer"],
+      "set": {
+        "seeds": 1,
+        "absorber": 0,
+        "temperature": 20
+      },
+      "stem": "{seedMass} g of germinating sunflower seeds (RQ ≈ 0.7) take up O₂ at {@oxygenRate} mL/h at {temperature} °C (illustrative). With water, not hydroxide, under them, how far does the drop move in {=duration/60} minutes?",
+      "explain": "Over water the CO₂ stays in the gas: the drop measures O₂ − CO₂ = r·(1 − RQ). V = {@oxygenRate}·0.3·{=duration/3600|3} ≈ {@gasTakenUp|3} mL.",
+      "vi": {
+        "stem": "{seedMass} g hạt hướng dương đang nảy mầm (RQ ≈ 0,7) hấp thụ O₂ với tốc độ {@oxygenRate} mL/h ở {temperature} °C (giá trị minh họa). Khi đặt trên nước thay vì potassium hydroxide, giọt màu di chuyển bao nhiêu mL trong {=duration/60} phút?",
+        "explain": "Trên nước, CO₂ vẫn ở trong khí: giọt màu đo O₂ − CO₂ = r·(1 − RQ). V = {@oxygenRate}·0,3·{=duration/3600|3} ≈ {@gasTakenUp|3} mL."
+      },
+      "options": [
+        {
+          "text": "{@gasTakenUp|3} mL",
+          "vi": {
+            "text": "{@gasTakenUp|3} mL"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@oxygenRate*(1-0.7)*duration/3600",
+            "equals": "gasTakenUp"
+          }
+        },
+        {
+          "text": "{=@oxygenRate*0.7*duration/3600|3} mL",
+          "vi": {
+            "text": "{=@oxygenRate*0.7*duration/3600|3} mL"
+          },
+          "check": {
+            "expr": "@oxygenRate*0.7*duration/3600",
+            "equals": "gasTakenUp"
+          }
+        },
+        {
+          "text": "{=@oxygenRate*duration/3600|3} mL",
+          "vi": {
+            "text": "{=@oxygenRate*duration/3600|3} mL"
+          },
+          "check": {
+            "expr": "@oxygenRate*duration/3600",
+            "equals": "gasTakenUp"
+          }
+        },
+        {
+          "text": "{=@oxygenRate*1.7*duration/3600|3} mL",
+          "vi": {
+            "text": "{=@oxygenRate*1.7*duration/3600|3} mL"
+          },
+          "check": {
+            "expr": "@oxygenRate*1.7*duration/3600",
+            "equals": "gasTakenUp"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-sunflower-30",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["rq", "rate"],
+      "set": {
+        "seeds": 1,
+        "absorber": 1,
+        "temperature": 30
+      },
+      "stem": "{seedMass} g of germinating sunflower seeds (RQ ≈ 0.7) lie over potassium hydroxide at {temperature} °C; they take up 0.25 mL O₂ per gram per hour at 20 °C, doubling every 10 °C (illustrative). Decide whether each statement is true or false.",
+      "explain": "r = {seedMass}·0.25·2 = {@oxygenRate} mL/h; CO₂ = 0.7·r = {@carbonDioxideRate} mL/h, all absorbed; the drop measures the O₂: {@gasTakenUp|3} mL in {=duration/60} min. Over water it would move only r·0.3·t, much less.",
+      "vi": {
+        "stem": "{seedMass} g hạt hướng dương đang nảy mầm (RQ ≈ 0,7) đặt trên potassium hydroxide ở {temperature} °C; chúng hấp thụ 0,25 mL O₂ mỗi gam mỗi giờ ở 20 °C, tăng gấp đôi khi nhiệt độ tăng 10 °C (giá trị minh họa). Mỗi nhận định sau đúng hay sai?",
+        "explain": "r = {seedMass}·0,25·2 = {@oxygenRate} mL/h; CO₂ = 0,7·r = {@carbonDioxideRate} mL/h, bị hấp thụ hết; giọt màu đo lượng O₂: {@gasTakenUp|3} mL trong {=duration/60} phút. Trên nước, giọt màu chỉ di chuyển r·0,3·t, ít hơn nhiều."
+      },
+      "statements": [
+        {
+          "text": "They take up {@oxygenRate} mL of O₂ per hour.",
+          "vi": {
+            "text": "Chúng hấp thụ {@oxygenRate} mL O₂ mỗi giờ."
+          },
+          "true": true,
+          "check": {
+            "expr": "seedMass*0.25*2^((temperature-20)/10)",
+            "equals": "oxygenRate"
+          }
+        },
+        {
+          "text": "They give out {@carbonDioxideRate} mL of CO₂ per hour.",
+          "vi": {
+            "text": "Chúng thải ra {@carbonDioxideRate} mL CO₂ mỗi giờ."
+          },
+          "true": true,
+          "check": {
+            "expr": "0.7*@oxygenRate",
+            "equals": "carbonDioxideRate"
+          }
+        },
+        {
+          "text": "The drop moves {@gasTakenUp|3} mL in {=duration/60} minutes.",
+          "vi": {
+            "text": "Giọt màu di chuyển {@gasTakenUp|3} mL trong {=duration/60} phút."
+          },
+          "true": true,
+          "check": {
+            "expr": "@oxygenRate*duration/3600",
+            "equals": "gasTakenUp"
+          }
+        },
+        {
+          "text": "Over water instead, the drop would move just as far.",
+          "vi": {
+            "text": "Nếu đặt trên nước thay vào đó, giọt màu sẽ di chuyển một đoạn như vậy."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "rq-two-runs",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["rq"],
+      "set": {
+        "seeds": 1,
+        "absorber": 1,
+        "temperature": 20
+      },
+      "stem": "Germinating sunflower seeds are timed twice at {temperature} °C for {=duration/60} minutes, changing only what lies under them: over potassium hydroxide the drop moves {@gasTakenUp|3} mL, over water {=@oxygenRate*(1-0.7)*duration/3600|3} mL. What is their respiratory quotient?",
+      "explain": "V_KOH = O₂ taken up; V_water = O₂ − CO₂. So CO₂ = V_KOH − V_water and RQ = CO₂/O₂ = 1 − V_water/V_KOH = 1 − {=@oxygenRate*(1-0.7)*duration/3600|3}/{@gasTakenUp|3} = {=1-(@oxygenRate*(1-0.7)*duration/3600)/@gasTakenUp}.",
+      "vi": {
+        "stem": "Hạt hướng dương đang nảy mầm được đo hai lần ở {temperature} °C, mỗi lần {=duration/60} phút, chỉ thay đổi chất đặt dưới hạt: trên potassium hydroxide giọt màu di chuyển {@gasTakenUp|3} mL, trên nước {=@oxygenRate*(1-0.7)*duration/3600|3} mL. Hệ số hô hấp của chúng là bao nhiêu?",
+        "explain": "V_KOH = O₂ hấp thụ; V_nước = O₂ − CO₂. Vậy CO₂ = V_KOH − V_nước và RQ = CO₂/O₂ = 1 − V_nước/V_KOH = 1 − {=@oxygenRate*(1-0.7)*duration/3600|3}/{@gasTakenUp|3} = {=1-(@oxygenRate*(1-0.7)*duration/3600)/@gasTakenUp}."
+      },
+      "options": [
+        {
+          "text": "{=1-(@oxygenRate*(1-0.7)*duration/3600)/@gasTakenUp}",
+          "vi": {
+            "text": "{=1-(@oxygenRate*(1-0.7)*duration/3600)/@gasTakenUp}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(1-(@oxygenRate*(1-0.7)*duration/3600)/@gasTakenUp)*@oxygenRate",
+            "equals": "carbonDioxideRate"
+          }
+        },
+        {
+          "text": "{=(@oxygenRate*(1-0.7)*duration/3600)/@gasTakenUp}",
+          "vi": {
+            "text": "{=(@oxygenRate*(1-0.7)*duration/3600)/@gasTakenUp}"
+          },
+          "check": {
+            "expr": "((@oxygenRate*(1-0.7)*duration/3600)/@gasTakenUp)*@oxygenRate",
+            "equals": "carbonDioxideRate"
+          }
+        },
+        {
+          "text": "{=@gasTakenUp/(@oxygenRate*(1-0.7)*duration/3600)}",
+          "vi": {
+            "text": "{=@gasTakenUp/(@oxygenRate*(1-0.7)*duration/3600)}"
+          },
+          "check": {
+            "expr": "(@gasTakenUp/(@oxygenRate*(1-0.7)*duration/3600))*@oxygenRate",
+            "equals": "carbonDioxideRate"
+          }
+        },
+        {
+          "text": "{=1+(@oxygenRate*(1-0.7)*duration/3600)/@gasTakenUp}",
+          "vi": {
+            "text": "{=1+(@oxygenRate*(1-0.7)*duration/3600)/@gasTakenUp}"
+          },
+          "check": {
+            "expr": "(1+(@oxygenRate*(1-0.7)*duration/3600)/@gasTakenUp)*@oxygenRate",
+            "equals": "carbonDioxideRate"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-cool-bath",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["rate", "respirometer", "rq"],
+      "set": {
+        "seeds": 0,
+        "absorber": 1,
+        "temperature": 15
+      },
+      "stem": "{seedMass} g of germinating peas lie over potassium hydroxide in a {temperature} °C bath (0.25 mL O₂ per gram per hour at 20 °C, Q₁₀ = 2: illustrative), timed for {=duration/60} minutes with a pipette graduated in {pipetteResolution} mL. Decide whether each statement is true or false.",
+      "explain": "Per gram: 0.25·2^(−0.5) ≈ {@uptakeRate|3} mL/(g·h). V ≈ {@gasTakenUp|3} mL, read to the nearest {pipetteResolution} mL as {=round(@gasTakenUp/pipetteResolution)*pipetteResolution} mL, with u = d/√12 ≈ {=pipetteResolution/sqrt(12)|2} mL from the graduation alone. Peas have RQ = 1, so over water the drop would not move.",
+      "vi": {
+        "stem": "{seedMass} g hạt đậu đang nảy mầm đặt trên potassium hydroxide trong bể {temperature} °C (0,25 mL O₂ mỗi gam mỗi giờ ở 20 °C, Q₁₀ = 2: giá trị minh họa), đo trong {=duration/60} phút bằng pipette có vạch chia {pipetteResolution} mL. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Mỗi gam: 0,25·2^(−0,5) ≈ {@uptakeRate|3} mL/(g·h). V ≈ {@gasTakenUp|3} mL, đọc theo vạch gần nhất {pipetteResolution} mL là {=round(@gasTakenUp/pipetteResolution)*pipetteResolution} mL, với u = d/√12 ≈ {=pipetteResolution/sqrt(12)|2} mL chỉ tính từ độ chia. Hạt đậu có RQ = 1, nên trên nước giọt màu sẽ không di chuyển."
+      },
+      "statements": [
+        {
+          "text": "The uptake per gram is about {@uptakeRate|3} mL/(g·h).",
+          "vi": {
+            "text": "Lượng O₂ hấp thụ mỗi gam khoảng {@uptakeRate|3} mL/(g·h)."
+          },
+          "true": true,
+          "check": {
+            "expr": "0.25*2^((temperature-20)/10)",
+            "equals": "uptakeRate"
+          }
+        },
+        {
+          "text": "The pipette reads {=round(@gasTakenUp/pipetteResolution)*pipetteResolution} mL.",
+          "vi": {
+            "text": "Pipette đọc được {=round(@gasTakenUp/pipetteResolution)*pipetteResolution} mL."
+          },
+          "true": true
+        },
+        {
+          "text": "The uncertainty from the graduation alone is about {=pipetteResolution/sqrt(12)|2} mL.",
+          "vi": {
+            "text": "Độ không đảm bảo đo chỉ do độ chia khoảng {=pipetteResolution/sqrt(12)|2} mL."
+          },
+          "true": true
+        },
+        {
+          "text": "Over water instead of hydroxide, these peas would move the drop just as far.",
+          "vi": {
+            "text": "Nếu đặt trên nước thay vì potassium hydroxide, giọt màu cũng di chuyển một đoạn như vậy."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "aerobic-products",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["respiration-equation"],
+      "stem": "Aerobic respiration of glucose, C₆H₁₂O₆ + 6 O₂ → …, releases energy (ATP) and gives…",
+      "explain": "C₆H₁₂O₆ + 6 O₂ → 6 CO₂ + 6 H₂O, with the energy stored in ATP. Ethanol or lactic acid is made only without oxygen (fermentation).",
+      "vi": {
+        "stem": "Hô hấp hiếu khí glucose, C₆H₁₂O₆ + 6 O₂ → …, giải phóng năng lượng (ATP) và tạo ra…",
+        "explain": "C₆H₁₂O₆ + 6 O₂ → 6 CO₂ + 6 H₂O, năng lượng được tích lũy trong ATP. Ethanol hay lactic acid chỉ được tạo ra khi không có oxi (lên men)."
+      },
+      "options": [
+        {
+          "text": "6 CO₂ + 6 H₂O",
+          "vi": {
+            "text": "6 CO₂ + 6 H₂O"
+          },
+          "correct": true
+        },
+        {
+          "text": "2 C₂H₅OH + 2 CO₂",
+          "vi": {
+            "text": "2 C₂H₅OH + 2 CO₂"
+          }
+        },
+        {
+          "text": "6 O₂ + 6 H₂O",
+          "vi": {
+            "text": "6 O₂ + 6 H₂O"
+          }
+        },
+        {
+          "text": "2 lactic acid",
+          "vi": {
+            "text": "2 lactic acid"
+          }
+        }
+      ]
+    },
+    {
+      "id": "boiled-why",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["respirometer"],
+      "stem": "Why is a tube of boiled peas set up beside the germinating ones?",
+      "explain": "Boiling kills the seeds (their enzymes are denatured), so they cannot respire. If their drop stays still, a moving drop in the other tube is due to respiration of living seeds, not to anything else in the apparatus.",
+      "vi": {
+        "stem": "Vì sao đặt thêm một ống chứa hạt đậu đã luộc chín bên cạnh ống chứa hạt đậu đang nảy mầm?",
+        "explain": "Luộc làm hạt chết (enzyme bị biến tính), nên chúng không hô hấp. Nếu giọt màu ở ống này đứng yên, thì giọt màu di chuyển ở ống kia là do hô hấp của hạt sống, không phải do yếu tố nào khác của dụng cụ."
+      },
+      "options": [
+        {
+          "text": "As a control: dead seeds do not respire, so any movement in the other tube is due to living seeds",
+          "vi": {
+            "text": "Làm đối chứng: hạt chết không hô hấp, nên sự di chuyển ở ống kia là do hạt sống"
+          },
+          "correct": true
+        },
+        {
+          "text": "Boiled peas respire faster, to show the largest movement",
+          "vi": {
+            "text": "Hạt luộc hô hấp nhanh hơn, để cho thấy sự di chuyển lớn nhất"
+          }
+        },
+        {
+          "text": "To absorb the CO₂ given out by the germinating peas",
+          "vi": {
+            "text": "Để hấp thụ CO₂ do hạt nảy mầm thải ra"
+          }
+        },
+        {
+          "text": "To keep the bath at the same temperature",
+          "vi": {
+            "text": "Để giữ nhiệt độ bể không đổi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-seeds",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["respiration-equation", "rate"],
+      "stem": "About respiration in germinating seeds: decide whether each statement is true or false.",
+      "explain": "The Krebs cycle and the electron transport chain of aerobic respiration are in the mitochondria. Germinating seeds respire far faster than dry, dormant ones. Seeds in the dark do not photosynthesise, so they give out no O₂. The uptake 0.25 mL/(g·h) and Q₁₀ = 2 are the simulation’s illustrative values.",
+      "vi": {
+        "stem": "Về hô hấp ở hạt đang nảy mầm, mỗi nhận định sau đúng hay sai?",
+        "explain": "Chu trình Krebs và chuỗi truyền electron của hô hấp hiếu khí diễn ra trong ti thể. Hạt nảy mầm hô hấp mạnh hơn nhiều so với hạt khô đang ngủ. Hạt trong tối không quang hợp nên không thải O₂. Mức hấp thụ 0,25 mL/(g·h) và Q₁₀ = 2 là giá trị minh họa của mô phỏng."
+      },
+      "statements": [
+        {
+          "text": "The Krebs cycle and the electron transport chain take place in the mitochondria.",
+          "vi": {
+            "text": "Chu trình Krebs và chuỗi truyền electron diễn ra trong ti thể."
+          },
+          "true": true
+        },
+        {
+          "text": "Germinating seeds respire much faster than dry seeds.",
+          "vi": {
+            "text": "Hạt đang nảy mầm hô hấp mạnh hơn nhiều so với hạt khô."
+          },
+          "true": true
+        },
+        {
+          "text": "The germinating peas give out O₂ in the tube by photosynthesis.",
+          "vi": {
+            "text": "Hạt đậu nảy mầm thải O₂ vào ống nhờ quang hợp."
+          },
+          "true": false
+        },
+        {
+          "text": "In this simulation, 0.25 mL O₂ per gram per hour at 20 °C and Q₁₀ = 2 are illustrative values.",
+          "vi": {
+            "text": "Trong mô phỏng này, 0,25 mL O₂ trên mỗi gam mỗi giờ ở 20 °C và Q₁₀ = 2 là các giá trị minh họa."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "rate-from-drop",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["rate", "respirometer"],
+      "set": {
+        "seeds": 0,
+        "absorber": 1,
+        "temperature": 25
+      },
+      "stem": "Over potassium hydroxide at {temperature} °C, the drop moves {@gasTakenUp|3} mL in {=duration/60} minutes towards {seedMass} g of germinating peas. What is their rate of O₂ uptake per gram per hour?",
+      "explain": "Rate = V·3600/(m·t) = {@gasTakenUp|3}·3600/({seedMass}·{duration}) ≈ {@uptakeRate|3} mL/(g·h): divide by the mass and turn the {duration} s into hours.",
+      "vi": {
+        "stem": "Với potassium hydroxide ở {temperature} °C, giọt màu di chuyển {@gasTakenUp|3} mL về phía {seedMass} g hạt đậu nảy mầm trong {=duration/60} phút. Tốc độ hấp thụ O₂ của hạt tính trên mỗi gam mỗi giờ là bao nhiêu?",
+        "explain": "Tốc độ = V·3600/(m·t) = {@gasTakenUp|3}·3600/({seedMass}·{duration}) ≈ {@uptakeRate|3} mL/(g·h): chia cho khối lượng hạt và đổi {duration} s ra giờ."
+      },
+      "options": [
+        {
+          "text": "{=@gasTakenUp*3600/(seedMass*duration)|3} mL/(g·h)",
+          "vi": {
+            "text": "{=@gasTakenUp*3600/(seedMass*duration)|3} mL/(g·h)"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@gasTakenUp*3600/(seedMass*duration)",
+            "equals": "uptakeRate"
+          }
+        },
+        {
+          "text": "{=@gasTakenUp/seedMass|3} mL/(g·h)",
+          "vi": {
+            "text": "{=@gasTakenUp/seedMass|3} mL/(g·h)"
+          },
+          "check": {
+            "expr": "@gasTakenUp/seedMass",
+            "equals": "uptakeRate"
+          }
+        },
+        {
+          "text": "{=@gasTakenUp*3600/duration|3} mL/(g·h)",
+          "vi": {
+            "text": "{=@gasTakenUp*3600/duration|3} mL/(g·h)"
+          },
+          "check": {
+            "expr": "@gasTakenUp*3600/duration",
+            "equals": "uptakeRate"
+          }
+        },
+        {
+          "text": "{=@gasTakenUp*60/(seedMass*duration)|3} mL/(g·h)",
+          "vi": {
+            "text": "{=@gasTakenUp*60/(seedMass*duration)|3} mL/(g·h)"
+          },
+          "check": {
+            "expr": "@gasTakenUp*60/(seedMass*duration)",
+            "equals": "uptakeRate"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sunflower-co2",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["rq"],
+      "set": {
+        "seeds": 1,
+        "absorber": 1,
+        "temperature": 20
+      },
+      "stem": "{seedMass} g of germinating sunflower seeds take up O₂ at {@oxygenRate} mL/h; their RQ is about 0.7 (fat). At what rate do they give out CO₂?",
+      "explain": "RQ = CO₂ given out/O₂ taken up, so CO₂ = 0.7 × {@oxygenRate} = {@carbonDioxideRate|3} mL/h. Fat holds less oxygen than carbohydrate, so it needs more O₂ for the CO₂ it gives.",
+      "vi": {
+        "stem": "{seedMass} g hạt hướng dương nảy mầm hấp thụ O₂ với tốc độ {@oxygenRate} mL/h; hệ số hô hấp RQ của chúng khoảng 0,7 (chất béo). Chúng thải CO₂ với tốc độ bao nhiêu?",
+        "explain": "RQ = CO₂ thải ra/O₂ hấp thụ, nên CO₂ = 0,7 × {@oxygenRate} = {@carbonDioxideRate|3} mL/h. Chất béo chứa ít oxi hơn carbohydrate, nên cần nhiều O₂ hơn cho cùng lượng CO₂ thải ra."
+      },
+      "options": [
+        {
+          "text": "{=0.7*@oxygenRate|3} mL/h",
+          "vi": {
+            "text": "{=0.7*@oxygenRate|3} mL/h"
+          },
+          "correct": true,
+          "check": {
+            "expr": "0.7*@oxygenRate",
+            "equals": "carbonDioxideRate"
+          }
+        },
+        {
+          "text": "{=@oxygenRate/0.7|3} mL/h",
+          "vi": {
+            "text": "{=@oxygenRate/0.7|3} mL/h"
+          },
+          "check": {
+            "expr": "@oxygenRate/0.7",
+            "equals": "carbonDioxideRate"
+          }
+        },
+        {
+          "text": "{=(1-0.7)*@oxygenRate|3} mL/h",
+          "vi": {
+            "text": "{=(1-0.7)*@oxygenRate|3} mL/h"
+          },
+          "check": {
+            "expr": "(1-0.7)*@oxygenRate",
+            "equals": "carbonDioxideRate"
+          }
+        },
+        {
+          "text": "{@oxygenRate} mL/h, as for every seed",
+          "vi": {
+            "text": "{@oxygenRate} mL/h, như mọi loại hạt"
+          },
+          "check": {
+            "expr": "@oxygenRate",
+            "equals": "carbonDioxideRate"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-temperature",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["rate"],
+      "set": {
+        "seeds": 0,
+        "absorber": 1,
+        "temperature": 30
+      },
+      "stem": "{seedMass} g of germinating peas take up 0.25 mL O₂ per gram per hour at 20 °C, and the rate doubles for every 10 °C warmer (illustrative values). In one bath they take up {@oxygenRate} mL/h. What is the bath’s temperature?",
+      "explain": "At 20 °C they would take up {seedMass} × 0.25 = {=seedMass*0.25} mL/h. {@oxygenRate}/{=seedMass*0.25} = {=@oxygenRate/(seedMass*0.25)} = 2^((T − 20)/10), so (T − 20)/10 = {=log(@oxygenRate/(seedMass*0.25))/log(2)} and T = {=20+10*log(@oxygenRate/(seedMass*0.25))/log(2)} °C. Doubling the rate does not mean doubling the temperature.",
+      "vi": {
+        "stem": "{seedMass} g hạt đậu nảy mầm hấp thụ 0,25 mL O₂ trên mỗi gam mỗi giờ ở 20 °C, và tốc độ tăng gấp đôi khi nhiệt độ tăng mỗi 10 °C (giá trị minh họa). Trong một bể, chúng hấp thụ {@oxygenRate} mL/h. Nhiệt độ của bể là bao nhiêu?",
+        "explain": "Ở 20 °C chúng hấp thụ {seedMass} × 0,25 = {=seedMass*0.25} mL/h. {@oxygenRate}/{=seedMass*0.25} = {=@oxygenRate/(seedMass*0.25)} = 2^((T − 20)/10), nên (T − 20)/10 = {=log(@oxygenRate/(seedMass*0.25))/log(2)} và T = {=20+10*log(@oxygenRate/(seedMass*0.25))/log(2)} °C. Tốc độ tăng gấp đôi không có nghĩa là nhiệt độ tăng gấp đôi."
+      },
+      "options": [
+        {
+          "text": "{=20+10*log(@oxygenRate/(seedMass*0.25))/log(2)} °C",
+          "vi": {
+            "text": "{=20+10*log(@oxygenRate/(seedMass*0.25))/log(2)} °C"
+          },
+          "correct": true,
+          "check": {
+            "expr": "seedMass*0.25*2^(((20+10*log(@oxygenRate/(seedMass*0.25))/log(2))-20)/10)",
+            "equals": "oxygenRate"
+          }
+        },
+        {
+          "text": "{=20*@oxygenRate/(seedMass*0.25)} °C",
+          "vi": {
+            "text": "{=20*@oxygenRate/(seedMass*0.25)} °C"
+          },
+          "check": {
+            "expr": "seedMass*0.25*2^(((20*@oxygenRate/(seedMass*0.25))-20)/10)",
+            "equals": "oxygenRate"
+          }
+        },
+        {
+          "text": "{=20+@oxygenRate/(seedMass*0.25)} °C",
+          "vi": {
+            "text": "{=20+@oxygenRate/(seedMass*0.25)} °C"
+          },
+          "check": {
+            "expr": "seedMass*0.25*2^(((20+@oxygenRate/(seedMass*0.25))-20)/10)",
+            "equals": "oxygenRate"
+          }
+        },
+        {
+          "text": "{=20+10/(@oxygenRate/(seedMass*0.25))} °C",
+          "vi": {
+            "text": "{=20+10/(@oxygenRate/(seedMass*0.25))} °C"
+          },
+          "check": {
+            "expr": "seedMass*0.25*2^(((20+10/(@oxygenRate/(seedMass*0.25)))-20)/10)",
+            "equals": "oxygenRate"
+          }
+        }
+      ]
+    },
+    {
+      "id": "warm-room-trap",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["respirometer"],
+      "stem": "A respirometer with germinating peas over potassium hydroxide stands on a bench with no water bath and no control tube. The room warms up during the timing. How does this affect the measured O₂ uptake?",
+      "explain": "Warming makes the gas in the tube expand, pushing the drop away from the seeds while respiration pulls it towards them: the drop moves less, and the uptake is underestimated. A water bath and a control tube of glass beads (a thermobarometer) remove this error; in the simulation they are assumed.",
+      "vi": {
+        "stem": "Một ống hô hấp kế chứa hạt đậu nảy mầm đặt trên potassium hydroxide được để trên bàn, không có bể ổn nhiệt và không có ống đối chứng. Phòng ấm dần lên trong thời gian đo. Điều này ảnh hưởng thế nào đến lượng O₂ hấp thụ đo được?",
+        "explain": "Khi ấm lên, khí trong ống giãn nở, đẩy giọt màu ra xa hạt trong khi hô hấp kéo giọt màu về phía hạt: giọt màu di chuyển ít hơn, nên lượng O₂ hấp thụ bị đánh giá thấp. Bể ổn nhiệt và ống đối chứng chứa bi thủy tinh (áp nhiệt kế) loại bỏ sai số này; trong mô phỏng, chúng được giả định là có."
+      },
+      "options": [
+        {
+          "text": "It is underestimated: the warming gas expands and pushes the drop back",
+          "vi": {
+            "text": "Bị đánh giá thấp: khí ấm lên giãn nở và đẩy giọt màu ngược lại"
+          },
+          "correct": true
+        },
+        {
+          "text": "It is overestimated: warm seeds respire faster, so the drop moves further",
+          "vi": {
+            "text": "Bị đánh giá cao: hạt ấm hô hấp nhanh hơn nên giọt màu di chuyển xa hơn"
+          }
+        },
+        {
+          "text": "It is not affected, since the potassium hydroxide absorbs the extra gas",
+          "vi": {
+            "text": "Không bị ảnh hưởng, vì potassium hydroxide hấp thụ lượng khí thừa"
+          }
+        },
+        {
+          "text": "It is overestimated: the warming gas contracts and pulls the drop in",
+          "vi": {
+            "text": "Bị đánh giá cao: khí ấm lên co lại và kéo giọt màu vào"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-sunflower-water",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["rq", "respirometer", "rate"],
+      "set": {
+        "seeds": 1,
+        "absorber": 0,
+        "temperature": 25
+      },
+      "stem": "{seedMass} g of germinating sunflower seeds (RQ ≈ 0.7) lie over water, not hydroxide, in a {temperature} °C bath for {=duration/60} minutes (0.25 mL O₂ per gram per hour at 20 °C, Q₁₀ = 2: illustrative). Decide whether each statement is true or false.",
+      "explain": "O₂: {seedMass}·0.25·2^(({temperature} − 20)/10) ≈ {@oxygenRate|3} mL/h; CO₂: 0.7 × that ≈ {@carbonDioxideRate|3} mL/h. Over water the tube loses only the difference, {=@oxygenRate*(1-0.7)|3} mL/h: {@gasTakenUp|3} mL in {=duration/60} minutes. Peas (RQ = 1) give out as much CO₂ as they take O₂, so over water their drop would not move.",
+      "vi": {
+        "stem": "{seedMass} g hạt hướng dương nảy mầm (RQ ≈ 0,7) được đặt trên nước, không phải hydroxide, trong bể {temperature} °C trong {=duration/60} phút (0,25 mL O₂ trên mỗi gam mỗi giờ ở 20 °C, Q₁₀ = 2: giá trị minh họa). Mỗi nhận định sau đúng hay sai?",
+        "explain": "O₂: {seedMass}·0,25·2^(({temperature} − 20)/10) ≈ {@oxygenRate|3} mL/h; CO₂: 0,7 × lượng đó ≈ {@carbonDioxideRate|3} mL/h. Trên nước, ống chỉ mất phần chênh lệch, {=@oxygenRate*(1-0.7)|3} mL/h: {@gasTakenUp|3} mL trong {=duration/60} phút. Hạt đậu (RQ = 1) thải lượng CO₂ bằng lượng O₂ hấp thụ, nên trên nước giọt màu của chúng không di chuyển."
+      },
+      "statements": [
+        {
+          "text": "The seeds take up about {@oxygenRate|3} mL of O₂ per hour.",
+          "vi": {
+            "text": "Hạt hấp thụ khoảng {@oxygenRate|3} mL O₂ mỗi giờ."
+          },
+          "true": true,
+          "check": {
+            "expr": "seedMass*0.25*2^((temperature-20)/10)",
+            "equals": "oxygenRate"
+          }
+        },
+        {
+          "text": "They give out about {@carbonDioxideRate|3} mL of CO₂ per hour.",
+          "vi": {
+            "text": "Hạt thải ra khoảng {@carbonDioxideRate|3} mL CO₂ mỗi giờ."
+          },
+          "true": true,
+          "check": {
+            "expr": "0.7*@oxygenRate",
+            "equals": "carbonDioxideRate"
+          }
+        },
+        {
+          "text": "The drop moves about {@gasTakenUp|3} mL towards them in {=duration/60} minutes.",
+          "vi": {
+            "text": "Giọt màu di chuyển khoảng {@gasTakenUp|3} mL về phía hạt trong {=duration/60} phút."
+          },
+          "true": true,
+          "check": {
+            "expr": "@oxygenRate*(1-0.7)*duration/3600",
+            "equals": "gasTakenUp"
+          }
+        },
+        {
+          "text": "Germinating peas over water in the same bath would move the drop just as far.",
+          "vi": {
+            "text": "Hạt đậu nảy mầm đặt trên nước trong cùng bể cũng làm giọt màu di chuyển xa như vậy."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

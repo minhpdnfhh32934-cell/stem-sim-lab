@@ -1,0 +1,1099 @@
+{
+  "id": "dilution",
+  "skills": [
+    {
+      "id": "conservation",
+      "name": "Dilution keeps the amount: C₁V₁ = C₂V₂",
+      "advice": "Say it in words first: water adds volume, not solute, so n = C₁·V₁ = C₂·V₂. Use the final volume of the flask (V₂), not the water added (V₂ − V₁), and keep both volumes in the same unit.",
+      "vi": {
+        "name": "Pha loãng giữ nguyên lượng chất: C₁V₁ = C₂V₂",
+        "advice": "Phát biểu bằng lời trước: nước chỉ thêm thể tích, không thêm chất tan, nên n = C₁·V₁ = C₂·V₂. Dùng thể tích cuối của bình định mức (V₂), không dùng lượng nước thêm vào (V₂ − V₁), và để hai thể tích cùng một đơn vị."
+      }
+    },
+    {
+      "id": "glassware",
+      "name": "Volumetric glassware and making up to the mark",
+      "advice": "Re-read the procedure: a volumetric pipette delivers V₁, the volumetric flask is filled until the bottom of the meniscus sits on the mark at eye level, then stoppered and inverted to mix. For each slip, ask whether C₂ comes out higher or lower.",
+      "vi": {
+        "name": "Dụng cụ định mức và pha đến vạch",
+        "advice": "Đọc lại quy trình: pipet bầu lấy chính xác V₁, bình định mức được thêm nước đến khi đáy mặt khum chạm vạch (mắt nhìn ngang vạch), rồi đậy nút và lộn ngược để trộn đều. Với mỗi sai sót, tự hỏi C₂ thực tế cao hơn hay thấp hơn tính toán."
+      }
+    },
+    {
+      "id": "factor",
+      "name": "Dilution factor V₂/V₁",
+      "advice": "Work out V₂/V₁ before anything else: the concentration falls by exactly that factor. Practise backwards too — the pipette needed for a target C₂ is V₁ = C₂·V₂/C₁.",
+      "vi": {
+        "name": "Hệ số pha loãng V₂/V₁",
+        "advice": "Tính V₂/V₁ trước tiên: nồng độ giảm đúng bằng hệ số đó. Luyện cả chiều ngược lại — thể tích dung dịch gốc cần lấy để được C₂ mong muốn là V₁ = C₂·V₂/C₁."
+      }
+    },
+    {
+      "id": "beer-lambert",
+      "name": "Absorbance: A = ε·l·C",
+      "advice": "Keep ε and l in matching units (L/(mol·cm) with l in cm). A is proportional to C, so halving C halves A. At the station dilute the same stock into different flasks and check that A falls as V₁/V₂.",
+      "vi": {
+        "name": "Độ hấp thụ quang: A = ε·l·C",
+        "advice": "Giữ ε và l cùng hệ đơn vị (L/(mol·cm) với l tính bằng cm). A tỉ lệ thuận với C, nên C giảm một nửa thì A giảm một nửa. Trên trạm, pha cùng một dung dịch gốc vào các bình khác nhau và kiểm tra A giảm theo V₁/V₂."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "flask",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["glassware"],
+      "stem": "Which piece of glassware is used to make a solution up to an exact final volume?",
+      "explain": "A volumetric flask has one mark for one exact volume; beakers, conical flasks and measuring cylinders are far less exact.",
+      "vi": {
+        "stem": "Dụng cụ thủy tinh nào được dùng để pha dung dịch đến một thể tích cuối chính xác?",
+        "explain": "Bình định mức có một vạch ứng với một thể tích chính xác; cốc thủy tinh, bình tam giác và ống đong kém chính xác hơn nhiều."
+      },
+      "options": [
+        {
+          "text": "A volumetric flask",
+          "vi": {
+            "text": "Bình định mức"
+          },
+          "correct": true
+        },
+        {
+          "text": "A beaker",
+          "vi": {
+            "text": "Cốc thủy tinh"
+          }
+        },
+        {
+          "text": "A conical flask",
+          "vi": {
+            "text": "Bình tam giác"
+          }
+        },
+        {
+          "text": "A test tube",
+          "vi": {
+            "text": "Ống nghiệm"
+          }
+        }
+      ]
+    },
+    {
+      "id": "what-stays",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["conservation"],
+      "stem": "When a solution is diluted with water, which quantity stays the same?",
+      "explain": "Water adds volume but no solute: the amount n = C·V of dye is unchanged, while C and the absorbance fall.",
+      "vi": {
+        "stem": "Khi pha loãng một dung dịch bằng nước, đại lượng nào không thay đổi?",
+        "explain": "Nước làm tăng thể tích nhưng không thêm chất tan: lượng chất n = C·V của thuốc nhuộm không đổi, còn nồng độ và độ hấp thụ quang giảm."
+      },
+      "options": [
+        {
+          "text": "The amount of solute (in mol)",
+          "vi": {
+            "text": "Số mol chất tan"
+          },
+          "correct": true
+        },
+        {
+          "text": "The concentration",
+          "vi": {
+            "text": "Nồng độ"
+          }
+        },
+        {
+          "text": "The volume of the solution",
+          "vi": {
+            "text": "Thể tích dung dịch"
+          }
+        },
+        {
+          "text": "The absorbance",
+          "vi": {
+            "text": "Độ hấp thụ quang"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-basics",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["glassware", "beer-lambert", "conservation"],
+      "stem": "A stock solution of crystal violet is diluted in a volumetric flask and read in a colorimeter. Decide whether each statement is true or false.",
+      "explain": "A volumetric pipette delivers one exact volume; the flask is filled until the bottom of the meniscus is on the mark. The diluted solution is paler, and A = ε·l·C is proportional to C.",
+      "vi": {
+        "stem": "Dung dịch gốc crystal violet được pha loãng trong bình định mức rồi đo bằng máy so màu. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Pipet bầu lấy một thể tích xác định chính xác; bình định mức được thêm nước đến khi đáy mặt khum chạm vạch. Dung dịch sau pha nhạt màu hơn, và A = ε·l·C tỉ lệ thuận với C."
+      },
+      "statements": [
+        {
+          "text": "A volumetric pipette delivers one fixed, exact volume.",
+          "vi": {
+            "text": "Pipet bầu lấy được một thể tích cố định, chính xác."
+          },
+          "true": true
+        },
+        {
+          "text": "Water is added until the bottom of the meniscus sits on the mark.",
+          "vi": {
+            "text": "Thêm nước đến khi đáy mặt khum chạm vạch định mức."
+          },
+          "true": true
+        },
+        {
+          "text": "The diluted solution is a deeper colour than the stock.",
+          "vi": {
+            "text": "Dung dịch sau khi pha loãng có màu đậm hơn dung dịch gốc."
+          },
+          "true": false
+        },
+        {
+          "text": "At a fixed wavelength and cell, the absorbance is proportional to the concentration.",
+          "vi": {
+            "text": "Với bước sóng và cuvet cố định, độ hấp thụ quang tỉ lệ thuận với nồng độ."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "factor-ten",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["factor"],
+      "set": {
+        "stockVolume": 5,
+        "finalVolume": 50
+      },
+      "stem": "A {stockVolume} mL pipette of a stock solution is made up to {finalVolume} mL with water. The concentration becomes…",
+      "explain": "The dilution factor is V₂/V₁ = {finalVolume}/{stockVolume} = {@dilutionFactor}: the concentration is divided by {@dilutionFactor}. {=finalVolume-stockVolume} mL is the water added, not the factor.",
+      "vi": {
+        "stem": "Lấy {stockVolume} mL dung dịch gốc bằng pipet rồi pha thành {finalVolume} mL bằng nước. Nồng độ dung dịch thu được",
+        "explain": "Hệ số pha loãng là V₂/V₁ = {finalVolume}/{stockVolume} = {@dilutionFactor}: nồng độ giảm {@dilutionFactor} lần. {=finalVolume-stockVolume} mL là lượng nước thêm vào, không phải hệ số pha loãng."
+      },
+      "options": [
+        {
+          "text": "{=finalVolume/stockVolume} times smaller",
+          "vi": {
+            "text": "giảm {=finalVolume/stockVolume} lần"
+          },
+          "correct": true,
+          "check": {
+            "expr": "finalVolume/stockVolume",
+            "equals": "dilutionFactor"
+          }
+        },
+        {
+          "text": "{=finalVolume/stockVolume} times larger",
+          "vi": {
+            "text": "tăng {=finalVolume/stockVolume} lần"
+          },
+          "check": {
+            "expr": "stockConcentration*finalVolume/stockVolume",
+            "equals": "finalConcentration"
+          }
+        },
+        {
+          "text": "{=finalVolume-stockVolume} times smaller",
+          "vi": {
+            "text": "giảm {=finalVolume-stockVolume} lần"
+          },
+          "check": {
+            "expr": "finalVolume-stockVolume",
+            "equals": "dilutionFactor"
+          }
+        },
+        {
+          "text": "{=(finalVolume-stockVolume)/stockVolume} times smaller",
+          "vi": {
+            "text": "giảm {=(finalVolume-stockVolume)/stockVolume} lần"
+          },
+          "check": {
+            "expr": "(finalVolume-stockVolume)/stockVolume",
+            "equals": "dilutionFactor"
+          }
+        }
+      ]
+    },
+    {
+      "id": "bigger-flask",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["beer-lambert", "conservation"],
+      "stem": "The same pipette of stock is made up in a flask of twice the volume. Compared with before, the absorbance of the diluted solution…",
+      "explain": "The same amount in twice the volume: C₂ halves, and A = ε·l·C₂ halves with it.",
+      "vi": {
+        "stem": "Cùng một thể tích dung dịch gốc lấy bằng pipet được pha trong bình định mức có thể tích gấp đôi. So với trước, độ hấp thụ quang của dung dịch thu được",
+        "explain": "Cùng lượng chất trong thể tích gấp đôi: C₂ giảm một nửa, và A = ε·l·C₂ cũng giảm một nửa."
+      },
+      "options": [
+        {
+          "text": "halves",
+          "vi": {
+            "text": "giảm một nửa"
+          },
+          "correct": true
+        },
+        {
+          "text": "doubles",
+          "vi": {
+            "text": "tăng gấp đôi"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "falls to a quarter",
+          "vi": {
+            "text": "giảm còn một phần tư"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-understand",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["conservation", "glassware", "factor"],
+      "stem": "A stock solution is diluted by pipetting V₁ into a flask of volume V₂ and filling to the mark. Decide whether each statement is true or false.",
+      "explain": "The water added is V₂ − V₁. Twice the pipette volume puts twice the dye in the same V₂, so C₂ doubles. Filling past the mark makes the volume larger, so C₂ is lower than calculated. The more dilute solution absorbs less light.",
+      "vi": {
+        "stem": "Pha loãng dung dịch gốc bằng cách lấy V₁ bằng pipet cho vào bình định mức thể tích V₂ rồi thêm nước đến vạch. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Lượng nước thêm vào là V₂ − V₁. Lấy thể tích gốc gấp đôi thì lượng thuốc nhuộm gấp đôi trong cùng V₂, nên C₂ tăng gấp đôi. Thêm nước quá vạch làm thể tích lớn hơn, nên C₂ thấp hơn tính toán. Dung dịch loãng hơn hấp thụ ít ánh sáng hơn."
+      },
+      "statements": [
+        {
+          "text": "The volume of water added is V₂ − V₁.",
+          "vi": {
+            "text": "Thể tích nước đã thêm là V₂ − V₁."
+          },
+          "true": true
+        },
+        {
+          "text": "Using a pipette of twice the volume, with the same flask, doubles C₂.",
+          "vi": {
+            "text": "Dùng pipet có thể tích gấp đôi với cùng bình định mức thì C₂ tăng gấp đôi."
+          },
+          "true": true
+        },
+        {
+          "text": "Filling the flask past the mark makes the real C₂ lower than calculated.",
+          "vi": {
+            "text": "Thêm nước quá vạch làm C₂ thực tế thấp hơn giá trị tính toán."
+          },
+          "true": true
+        },
+        {
+          "text": "The more dilute solution has the larger absorbance.",
+          "vi": {
+            "text": "Dung dịch loãng hơn có độ hấp thụ quang lớn hơn."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "final-concentration",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["conservation"],
+      "set": {
+        "stockConcentration": 0.00004,
+        "stockVolume": 5,
+        "finalVolume": 100
+      },
+      "stem": "A {stockVolume} mL pipette of crystal violet at {stockConcentration} mol/L is made up to {finalVolume} mL with water. What is the new concentration?",
+      "explain": "C₂ = C₁·V₁/V₂ = {stockConcentration}·{stockVolume}/{finalVolume} = {@finalConcentration} mol/L (the mL cancel). Dividing by the water added, {=finalVolume-stockVolume} mL, would be wrong: the flask holds {finalVolume} mL.",
+      "vi": {
+        "stem": "Lấy {stockVolume} mL dung dịch crystal violet {stockConcentration} mol/L bằng pipet rồi pha thành {finalVolume} mL bằng nước. Nồng độ dung dịch mới là bao nhiêu?",
+        "explain": "C₂ = C₁·V₁/V₂ = {stockConcentration}·{stockVolume}/{finalVolume} = {@finalConcentration} mol/L (đơn vị mL triệt tiêu). Chia cho lượng nước thêm vào, {=finalVolume-stockVolume} mL, là sai: bình chứa {finalVolume} mL."
+      },
+      "options": [
+        {
+          "text": "{@finalConcentration} mol/L",
+          "vi": {
+            "text": "{@finalConcentration} mol/L"
+          },
+          "correct": true,
+          "check": {
+            "expr": "stockConcentration*stockVolume/finalVolume",
+            "equals": "finalConcentration"
+          }
+        },
+        {
+          "text": "{=stockConcentration*finalVolume/stockVolume} mol/L",
+          "vi": {
+            "text": "{=stockConcentration*finalVolume/stockVolume} mol/L"
+          },
+          "check": {
+            "expr": "stockConcentration*finalVolume/stockVolume",
+            "equals": "finalConcentration"
+          }
+        },
+        {
+          "text": "{=stockConcentration*stockVolume/(finalVolume-stockVolume)} mol/L",
+          "vi": {
+            "text": "{=stockConcentration*stockVolume/(finalVolume-stockVolume)} mol/L"
+          },
+          "check": {
+            "expr": "stockConcentration*stockVolume/(finalVolume-stockVolume)",
+            "equals": "finalConcentration"
+          }
+        },
+        {
+          "text": "{=stockConcentration*stockVolume/finalVolume/1000} mol/L",
+          "vi": {
+            "text": "{=stockConcentration*stockVolume/finalVolume/1000} mol/L"
+          },
+          "check": {
+            "expr": "stockConcentration*stockVolume/finalVolume/1000",
+            "equals": "finalConcentration"
+          }
+        }
+      ]
+    },
+    {
+      "id": "absorbance",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["beer-lambert", "conservation"],
+      "set": {
+        "stockConcentration": 0.00004,
+        "stockVolume": 10,
+        "finalVolume": 50
+      },
+      "stem": "{stockVolume} mL of crystal violet at {stockConcentration} mol/L is made up to {finalVolume} mL and read in a 1 cm cell at 590 nm, with ε ≈ 1·10⁵ L/(mol·cm) (an approximate teaching value). What absorbance is read?",
+      "explain": "First the dilution: C₂ = {stockConcentration}·{stockVolume}/{finalVolume} = {@finalConcentration} mol/L. Then A = ε·l·C₂ = 1·10⁵·1·{@finalConcentration} = {@absorbance}.",
+      "vi": {
+        "stem": "Pha {stockVolume} mL dung dịch crystal violet {stockConcentration} mol/L thành {finalVolume} mL rồi đo trong cuvet 1 cm ở 590 nm, với ε ≈ 1·10⁵ L/(mol·cm) (giá trị gần đúng dùng trong dạy học). Độ hấp thụ quang đo được là bao nhiêu?",
+        "explain": "Trước hết tính nồng độ sau pha: C₂ = {stockConcentration}·{stockVolume}/{finalVolume} = {@finalConcentration} mol/L. Sau đó A = ε·l·C₂ = 1·10⁵·1·{@finalConcentration} = {@absorbance}."
+      },
+      "options": [
+        {
+          "text": "{@absorbance}",
+          "vi": {
+            "text": "{@absorbance}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "1e5*1*stockConcentration*stockVolume/finalVolume",
+            "equals": "absorbance"
+          }
+        },
+        {
+          "text": "{=1e5*stockConcentration}",
+          "vi": {
+            "text": "{=1e5*stockConcentration}"
+          },
+          "check": {
+            "expr": "1e5*stockConcentration",
+            "equals": "absorbance"
+          }
+        },
+        {
+          "text": "{=1e5*0.01*stockConcentration*stockVolume/finalVolume}",
+          "vi": {
+            "text": "{=1e5*0.01*stockConcentration*stockVolume/finalVolume}"
+          },
+          "check": {
+            "expr": "1e5*0.01*stockConcentration*stockVolume/finalVolume",
+            "equals": "absorbance"
+          }
+        },
+        {
+          "text": "{=1e7*stockConcentration*stockVolume/finalVolume}",
+          "vi": {
+            "text": "{=1e7*stockConcentration*stockVolume/finalVolume}"
+          },
+          "check": {
+            "expr": "1e7*stockConcentration*stockVolume/finalVolume",
+            "equals": "absorbance"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-amounts",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["conservation", "factor"],
+      "set": {
+        "stockConcentration": 0.00002,
+        "stockVolume": 2,
+        "finalVolume": 25
+      },
+      "stem": "A {stockVolume} mL pipette of crystal violet at {stockConcentration} mol/L is made up to {finalVolume} mL with water. Decide whether each statement is true or false.",
+      "explain": "n = C₁·V₁ = {stockConcentration}·{stockVolume}/1000 = {@amount} mol (mL to L). Water added: {finalVolume} − {stockVolume} = {@waterAdded} mL. C₂ = n/V₂ = {@finalConcentration} mol/L, using the whole {finalVolume} mL. Factor V₂/V₁ = {@dilutionFactor}.",
+      "vi": {
+        "stem": "Lấy {stockVolume} mL dung dịch crystal violet {stockConcentration} mol/L bằng pipet rồi pha thành {finalVolume} mL bằng nước. Mỗi nhận định sau đúng hay sai?",
+        "explain": "n = C₁·V₁ = {stockConcentration}·{stockVolume}/1000 = {@amount} mol (đổi mL sang L). Nước thêm vào: {finalVolume} − {stockVolume} = {@waterAdded} mL. C₂ = n/V₂ = {@finalConcentration} mol/L, dùng toàn bộ {finalVolume} mL. Hệ số pha loãng V₂/V₁ = {@dilutionFactor}."
+      },
+      "statements": [
+        {
+          "text": "The flask contains {=stockConcentration*stockVolume/1000} mol of dye.",
+          "vi": {
+            "text": "Bình chứa {=stockConcentration*stockVolume/1000} mol thuốc nhuộm."
+          },
+          "true": true,
+          "check": {
+            "expr": "stockConcentration*stockVolume/1000",
+            "equals": "amount"
+          }
+        },
+        {
+          "text": "{=finalVolume-stockVolume} mL of water is added.",
+          "vi": {
+            "text": "Lượng nước đã thêm là {=finalVolume-stockVolume} mL."
+          },
+          "true": true,
+          "check": {
+            "expr": "finalVolume-stockVolume",
+            "equals": "waterAdded"
+          }
+        },
+        {
+          "text": "The new concentration is {=stockConcentration*stockVolume/(finalVolume-stockVolume)} mol/L.",
+          "vi": {
+            "text": "Nồng độ dung dịch mới là {=stockConcentration*stockVolume/(finalVolume-stockVolume)} mol/L."
+          },
+          "true": false,
+          "check": {
+            "expr": "stockConcentration*stockVolume/(finalVolume-stockVolume)",
+            "equals": "finalConcentration"
+          }
+        },
+        {
+          "text": "The dilution factor is {=finalVolume/stockVolume}.",
+          "vi": {
+            "text": "Hệ số pha loãng là {=finalVolume/stockVolume}."
+          },
+          "true": true,
+          "check": {
+            "expr": "finalVolume/stockVolume",
+            "equals": "dilutionFactor"
+          }
+        }
+      ]
+    },
+    {
+      "id": "which-pipette",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["factor", "conservation"],
+      "set": {
+        "stockConcentration": 0.00002,
+        "stockVolume": 10,
+        "finalVolume": 100
+      },
+      "stem": "You need {finalVolume} mL of crystal violet at {=@finalConcentration*1e6} µmol/L, made from a stock at {=stockConcentration*1e6} µmol/L. Which pipette do you use?",
+      "explain": "V₁ = C₂·V₂/C₁ = {=@finalConcentration*1e6}·{finalVolume}/{=stockConcentration*1e6} = {=@finalConcentration*finalVolume/stockConcentration} mL: a dilution factor of {@dilutionFactor}.",
+      "vi": {
+        "stem": "Cần pha {finalVolume} mL dung dịch crystal violet {=@finalConcentration*1e6} µmol/L từ dung dịch gốc {=stockConcentration*1e6} µmol/L. Phải dùng pipet bao nhiêu mL?",
+        "explain": "V₁ = C₂·V₂/C₁ = {=@finalConcentration*1e6}·{finalVolume}/{=stockConcentration*1e6} = {=@finalConcentration*finalVolume/stockConcentration} mL: hệ số pha loãng {@dilutionFactor}."
+      },
+      "options": [
+        {
+          "text": "10 mL",
+          "vi": {
+            "text": "10 mL"
+          },
+          "correct": true,
+          "check": {
+            "expr": "stockConcentration*10/finalVolume",
+            "equals": "finalConcentration"
+          }
+        },
+        {
+          "text": "1 mL",
+          "vi": {
+            "text": "1 mL"
+          },
+          "check": {
+            "expr": "stockConcentration*1/finalVolume",
+            "equals": "finalConcentration"
+          }
+        },
+        {
+          "text": "1000 mL",
+          "vi": {
+            "text": "1000 mL"
+          },
+          "check": {
+            "expr": "stockConcentration*1000/finalVolume",
+            "equals": "finalConcentration"
+          }
+        },
+        {
+          "text": "50 mL",
+          "vi": {
+            "text": "50 mL"
+          },
+          "check": {
+            "expr": "stockConcentration*50/finalVolume",
+            "equals": "finalConcentration"
+          }
+        }
+      ]
+    },
+    {
+      "id": "best-range",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["beer-lambert", "factor"],
+      "set": {
+        "stockConcentration": 0.00004,
+        "stockVolume": 10,
+        "finalVolume": 250
+      },
+      "stem": "A colorimeter reads absorbance most precisely between about 0.1 and 1. A stock at {=stockConcentration*1e6} µmol/L is diluted in a {finalVolume} mL flask and read in a 1 cm cell (ε ≈ 1·10⁵ L/(mol·cm), an approximate teaching value). Which is the smallest pipette that gives an absorbance in that range?",
+      "explain": "A = ε·l·C₁·V₁/V₂ = 1·10⁵·{stockConcentration}·V₁/{finalVolume} = {=1e5*stockConcentration/finalVolume}·V₁ (V₁ in mL). 5 mL gives {=5e5*stockConcentration/finalVolume}, below 0.1; 10 mL gives {@absorbance}, inside the range.",
+      "vi": {
+        "stem": "Máy so màu đo độ hấp thụ quang chính xác nhất trong khoảng từ 0,1 đến 1. Dung dịch gốc {=stockConcentration*1e6} µmol/L được pha loãng trong bình định mức {finalVolume} mL rồi đo trong cuvet 1 cm (ε ≈ 1·10⁵ L/(mol·cm), giá trị gần đúng dùng trong dạy học). Pipet nhỏ nhất cho độ hấp thụ quang nằm trong khoảng đó là pipet bao nhiêu mL?",
+        "explain": "A = ε·l·C₁·V₁/V₂ = 1·10⁵·{stockConcentration}·V₁/{finalVolume} = {=1e5*stockConcentration/finalVolume}·V₁ (V₁ tính bằng mL). Pipet 5 mL cho A = {=5e5*stockConcentration/finalVolume}, nhỏ hơn 0,1; pipet 10 mL cho A = {@absorbance}, nằm trong khoảng."
+      },
+      "options": [
+        {
+          "text": "10 mL",
+          "vi": {
+            "text": "10 mL"
+          },
+          "correct": true,
+          "check": {
+            "expr": "1e5*stockConcentration*10/finalVolume",
+            "equals": "absorbance"
+          }
+        },
+        {
+          "text": "5 mL",
+          "vi": {
+            "text": "5 mL"
+          },
+          "check": {
+            "expr": "1e5*stockConcentration*5/finalVolume",
+            "equals": "absorbance"
+          }
+        },
+        {
+          "text": "2 mL",
+          "vi": {
+            "text": "2 mL"
+          },
+          "check": {
+            "expr": "1e5*stockConcentration*2/finalVolume",
+            "equals": "absorbance"
+          }
+        },
+        {
+          "text": "1 mL",
+          "vi": {
+            "text": "1 mL"
+          },
+          "check": {
+            "expr": "1e5*stockConcentration*1/finalVolume",
+            "equals": "absorbance"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-errors",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["glassware", "beer-lambert", "conservation"],
+      "set": {
+        "stockConcentration": 0.00001,
+        "stockVolume": 10,
+        "finalVolume": 25
+      },
+      "stem": "A {stockVolume} mL pipette of crystal violet at {=stockConcentration*1e6} µmol/L is made up to {finalVolume} mL and read in a 1 cm cell (ε ≈ 1·10⁵ L/(mol·cm), an approximate teaching value). Decide whether each statement is true or false.",
+      "explain": "C₂ = {@finalConcentration} mol/L, so A = 1·10⁵·{@finalConcentration} = {@absorbance}. A pipette wet with water delivers diluted stock: less dye, C₂ and A too low. An unmixed flask is not uniform, so a sample can read high or low. A reading near 2.5 lies outside the precise range (about 0.1–1) and the linear Beer–Lambert range.",
+      "vi": {
+        "stem": "Lấy {stockVolume} mL dung dịch crystal violet {=stockConcentration*1e6} µmol/L bằng pipet, pha thành {finalVolume} mL rồi đo trong cuvet 1 cm (ε ≈ 1·10⁵ L/(mol·cm), giá trị gần đúng dùng trong dạy học). Mỗi nhận định sau đúng hay sai?",
+        "explain": "C₂ = {@finalConcentration} mol/L, nên A = 1·10⁵·{@finalConcentration} = {@absorbance}. Pipet còn ướt nước lấy phải dung dịch gốc đã bị loãng: ít thuốc nhuộm hơn, C₂ và A thấp hơn. Bình không được trộn đều thì dung dịch không đồng nhất, mẫu lấy ra có thể cho số đo cao hoặc thấp. Số đo gần 2,5 nằm ngoài khoảng đo chính xác (khoảng 0,1–1) và ngoài vùng tuyến tính của định luật Beer–Lambert."
+      },
+      "statements": [
+        {
+          "text": "The expected absorbance is {@absorbance}.",
+          "vi": {
+            "text": "Độ hấp thụ quang dự kiến là {@absorbance}."
+          },
+          "true": true,
+          "check": {
+            "expr": "1e5*stockConcentration*stockVolume/finalVolume",
+            "equals": "absorbance"
+          }
+        },
+        {
+          "text": "If the pipette was still wet with water, the measured absorbance would come out too low.",
+          "vi": {
+            "text": "Nếu pipet còn ướt nước, độ hấp thụ quang đo được sẽ thấp hơn dự kiến."
+          },
+          "true": true
+        },
+        {
+          "text": "If the flask is not inverted to mix after filling to the mark, a sample may read too high or too low.",
+          "vi": {
+            "text": "Nếu không lộn ngược bình để trộn sau khi thêm nước đến vạch, mẫu lấy ra có thể cho số đo quá cao hoặc quá thấp."
+          },
+          "true": true
+        },
+        {
+          "text": "An absorbance of about 2.5 would be read more precisely than one of 0.4.",
+          "vi": {
+            "text": "Độ hấp thụ quang khoảng 2,5 được đo chính xác hơn độ hấp thụ quang 0,4."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "pipette-tool",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["glassware"],
+      "stem": "Which piece of glassware takes one exact volume V₁ of the stock solution for a dilution?",
+      "explain": "A volumetric (bulb) pipette has one mark and delivers one exact volume; a measuring cylinder or a beaker is far less exact, and a volumetric flask makes up the final volume, not the portion of stock.",
+      "vi": {
+        "stem": "Dụng cụ thủy tinh nào dùng để lấy chính xác một thể tích V₁ dung dịch gốc khi pha loãng?",
+        "explain": "Pipet bầu có một vạch và lấy được một thể tích chính xác; ống đong hay cốc thủy tinh kém chính xác hơn nhiều, còn bình định mức dùng để pha đến thể tích cuối chứ không dùng để lấy dung dịch gốc."
+      },
+      "options": [
+        {
+          "text": "A volumetric pipette",
+          "vi": {
+            "text": "Pipet bầu"
+          },
+          "correct": true
+        },
+        {
+          "text": "A measuring cylinder",
+          "vi": {
+            "text": "Ống đong"
+          }
+        },
+        {
+          "text": "A beaker",
+          "vi": {
+            "text": "Cốc thủy tinh"
+          }
+        },
+        {
+          "text": "A conical flask",
+          "vi": {
+            "text": "Bình tam giác"
+          }
+        }
+      ]
+    },
+    {
+      "id": "water-added",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["conservation", "glassware"],
+      "set": {
+        "stockVolume": 10,
+        "finalVolume": 50
+      },
+      "stem": "A {stockVolume} mL pipette of stock is run into a {finalVolume} mL volumetric flask, which is then filled to the mark with water. How much water has been added?",
+      "explain": "The flask ends up holding {finalVolume} mL in all, {stockVolume} mL of which is stock: the water added is V₂ − V₁ = {@waterAdded} mL. The flask is filled to the mark, not given {finalVolume} mL of water on top of the stock.",
+      "vi": {
+        "stem": "Lấy {stockVolume} mL dung dịch gốc bằng pipet cho vào bình định mức {finalVolume} mL rồi thêm nước đến vạch. Lượng nước đã thêm vào là bao nhiêu?",
+        "explain": "Bình chứa tổng cộng {finalVolume} mL, trong đó {stockVolume} mL là dung dịch gốc: lượng nước thêm vào là V₂ − V₁ = {@waterAdded} mL. Bình được thêm nước đến vạch, không phải thêm {finalVolume} mL nước vào dung dịch gốc."
+      },
+      "options": [
+        {
+          "text": "{=finalVolume-stockVolume} mL",
+          "vi": {
+            "text": "{=finalVolume-stockVolume} mL"
+          },
+          "correct": true,
+          "check": {
+            "expr": "finalVolume-stockVolume",
+            "equals": "waterAdded"
+          }
+        },
+        {
+          "text": "{finalVolume} mL",
+          "vi": {
+            "text": "{finalVolume} mL"
+          },
+          "check": {
+            "expr": "finalVolume",
+            "equals": "waterAdded"
+          }
+        },
+        {
+          "text": "{=finalVolume+stockVolume} mL",
+          "vi": {
+            "text": "{=finalVolume+stockVolume} mL"
+          },
+          "check": {
+            "expr": "finalVolume+stockVolume",
+            "equals": "waterAdded"
+          }
+        },
+        {
+          "text": "{=finalVolume/stockVolume} mL",
+          "vi": {
+            "text": "{=finalVolume/stockVolume} mL"
+          },
+          "check": {
+            "expr": "finalVolume/stockVolume",
+            "equals": "waterAdded"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-rinsing",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["glassware", "conservation", "beer-lambert"],
+      "stem": "A student dilutes a crystal violet stock with a volumetric pipette and a volumetric flask, then reads the absorbance. Decide whether each statement is true or false.",
+      "explain": "The pipette is rinsed with the stock so no water dilutes what it takes; the flask is rinsed only with distilled water — stock left in it would add solute and make C₂ too high. Water adds no dye, so n stays the same. A falls in the same ratio as C.",
+      "vi": {
+        "stem": "Một học sinh pha loãng dung dịch gốc crystal violet bằng pipet bầu và bình định mức rồi đo độ hấp thụ quang. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Pipet được tráng bằng chính dung dịch gốc để nước không làm loãng phần dung dịch lấy ra; bình định mức chỉ tráng bằng nước cất — dung dịch gốc còn đọng lại sẽ thêm chất tan và làm C₂ cao hơn. Nước không thêm thuốc nhuộm nên n không đổi. A giảm theo cùng tỉ lệ với C."
+      },
+      "statements": [
+        {
+          "text": "The pipette is rinsed with a little of the stock solution before it is used.",
+          "vi": {
+            "text": "Trước khi dùng, pipet được tráng bằng một ít dung dịch gốc."
+          },
+          "true": true
+        },
+        {
+          "text": "The volumetric flask should also be rinsed with the stock solution before use.",
+          "vi": {
+            "text": "Bình định mức cũng cần được tráng bằng dung dịch gốc trước khi dùng."
+          },
+          "true": false
+        },
+        {
+          "text": "Filling the flask to the mark adds water but no dye, so the amount of dye is unchanged.",
+          "vi": {
+            "text": "Thêm nước đến vạch chỉ thêm nước, không thêm thuốc nhuộm, nên lượng thuốc nhuộm không đổi."
+          },
+          "true": true
+        },
+        {
+          "text": "A solution diluted ten times has ten times the absorbance of the stock.",
+          "vi": {
+            "text": "Dung dịch được pha loãng 10 lần có độ hấp thụ quang gấp 10 lần dung dịch gốc."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "amount-in-flask",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["conservation"],
+      "set": {
+        "stockConcentration": 0.00004,
+        "stockVolume": 5,
+        "finalVolume": 50
+      },
+      "stem": "A {stockVolume} mL pipette of crystal violet at {stockConcentration} mol/L is made up to {finalVolume} mL. What amount of dye is in the flask?",
+      "explain": "Only the pipetted stock brings dye: n = C₁·V₁ = {stockConcentration} mol/L × {stockVolume}/1000 L = {@amount} mol. Forgetting to turn mL into L gives a value 1000 times too large; the flask volume does not enter n.",
+      "vi": {
+        "stem": "Lấy {stockVolume} mL dung dịch crystal violet {stockConcentration} mol/L bằng pipet rồi pha thành {finalVolume} mL. Trong bình có bao nhiêu mol thuốc nhuộm?",
+        "explain": "Chỉ phần dung dịch gốc lấy bằng pipet mang thuốc nhuộm vào: n = C₁·V₁ = {stockConcentration} mol/L × {stockVolume}/1000 L = {@amount} mol. Quên đổi mL sang L sẽ cho giá trị lớn gấp 1000 lần; thể tích bình không ảnh hưởng đến n."
+      },
+      "options": [
+        {
+          "text": "{=stockConcentration*stockVolume/1000} mol",
+          "vi": {
+            "text": "{=stockConcentration*stockVolume/1000} mol"
+          },
+          "correct": true,
+          "check": {
+            "expr": "stockConcentration*stockVolume/1000",
+            "equals": "amount"
+          }
+        },
+        {
+          "text": "{=stockConcentration*stockVolume} mol",
+          "vi": {
+            "text": "{=stockConcentration*stockVolume} mol"
+          },
+          "check": {
+            "expr": "stockConcentration*stockVolume",
+            "equals": "amount"
+          }
+        },
+        {
+          "text": "{=stockConcentration*finalVolume/1000} mol",
+          "vi": {
+            "text": "{=stockConcentration*finalVolume/1000} mol"
+          },
+          "check": {
+            "expr": "stockConcentration*finalVolume/1000",
+            "equals": "amount"
+          }
+        },
+        {
+          "text": "{=stockConcentration*stockVolume/finalVolume} mol",
+          "vi": {
+            "text": "{=stockConcentration*stockVolume/finalVolume} mol"
+          },
+          "check": {
+            "expr": "stockConcentration*stockVolume/finalVolume",
+            "equals": "amount"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-reading",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["conservation", "factor", "beer-lambert"],
+      "set": {
+        "stockConcentration": 0.00002,
+        "stockVolume": 5,
+        "finalVolume": 100
+      },
+      "stem": "A {stockVolume} mL pipette of crystal violet at {stockConcentration} mol/L is made up to {finalVolume} mL and read in a 1 cm cell (ε ≈ 1·10⁵ L/(mol·cm), an approximate teaching value). Decide whether each statement is true or false.",
+      "explain": "C₂ = C₁·V₁/V₂ = {@finalConcentration} mol/L; the dilution factor is V₂/V₁ = {@dilutionFactor}. The water added is {@waterAdded} mL, not {finalVolume} mL. A = ε·l·C₂ = 1·10⁵·1·{@finalConcentration} = {@absorbance}.",
+      "vi": {
+        "stem": "Lấy {stockVolume} mL dung dịch crystal violet {stockConcentration} mol/L bằng pipet, pha thành {finalVolume} mL rồi đo trong cuvet 1 cm (ε ≈ 1·10⁵ L/(mol·cm), giá trị gần đúng dùng trong dạy học). Mỗi nhận định sau đúng hay sai?",
+        "explain": "C₂ = C₁·V₁/V₂ = {@finalConcentration} mol/L; hệ số pha loãng V₂/V₁ = {@dilutionFactor}. Lượng nước thêm vào là {@waterAdded} mL, không phải {finalVolume} mL. A = ε·l·C₂ = 1·10⁵·1·{@finalConcentration} = {@absorbance}."
+      },
+      "statements": [
+        {
+          "text": "The diluted solution is {=stockConcentration*stockVolume/finalVolume} mol/L.",
+          "vi": {
+            "text": "Dung dịch sau pha có nồng độ {=stockConcentration*stockVolume/finalVolume} mol/L."
+          },
+          "true": true,
+          "check": {
+            "expr": "stockConcentration*stockVolume/finalVolume",
+            "equals": "finalConcentration"
+          }
+        },
+        {
+          "text": "The dilution factor is {=finalVolume/stockVolume}.",
+          "vi": {
+            "text": "Hệ số pha loãng là {=finalVolume/stockVolume}."
+          },
+          "true": true,
+          "check": {
+            "expr": "finalVolume/stockVolume",
+            "equals": "dilutionFactor"
+          }
+        },
+        {
+          "text": "{finalVolume} mL of water is added to the stock.",
+          "vi": {
+            "text": "Lượng nước thêm vào dung dịch gốc là {finalVolume} mL."
+          },
+          "true": false,
+          "check": {
+            "expr": "finalVolume",
+            "equals": "waterAdded"
+          }
+        },
+        {
+          "text": "The absorbance read is {=1e5*stockConcentration*stockVolume/finalVolume}.",
+          "vi": {
+            "text": "Độ hấp thụ quang đo được là {=1e5*stockConcentration*stockVolume/finalVolume}."
+          },
+          "true": true,
+          "check": {
+            "expr": "1e5*stockConcentration*stockVolume/finalVolume",
+            "equals": "absorbance"
+          }
+        }
+      ]
+    },
+    {
+      "id": "which-flask",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["beer-lambert", "factor"],
+      "set": {
+        "stockConcentration": 0.00004,
+        "stockVolume": 10,
+        "finalVolume": 100
+      },
+      "stem": "A {stockVolume} mL pipette of crystal violet at {=stockConcentration*1e6} µmol/L was made up in one of the volumetric flasks, and the solution reads A = {@absorbance} in a 1 cm cell (ε ≈ 1·10⁵ L/(mol·cm), an approximate teaching value). Which flask was used?",
+      "explain": "From the reading: C₂ = A/(ε·l) = {@absorbance}/(1·10⁵) = {@finalConcentration} mol/L. Then V₂ = C₁·V₁/C₂ = {stockConcentration}·{stockVolume}/{@finalConcentration} = {=stockConcentration*stockVolume/@finalConcentration} mL.",
+      "vi": {
+        "stem": "Lấy {stockVolume} mL dung dịch crystal violet {=stockConcentration*1e6} µmol/L bằng pipet rồi pha trong một trong các bình định mức; dung dịch thu được có A = {@absorbance} khi đo trong cuvet 1 cm (ε ≈ 1·10⁵ L/(mol·cm), giá trị gần đúng dùng trong dạy học). Đã dùng bình định mức nào?",
+        "explain": "Từ số đo: C₂ = A/(ε·l) = {@absorbance}/(1·10⁵) = {@finalConcentration} mol/L. Suy ra V₂ = C₁·V₁/C₂ = {stockConcentration}·{stockVolume}/{@finalConcentration} = {=stockConcentration*stockVolume/@finalConcentration} mL."
+      },
+      "options": [
+        {
+          "text": "The 100 mL flask",
+          "vi": {
+            "text": "Bình 100 mL"
+          },
+          "correct": true,
+          "check": {
+            "expr": "1e5*stockConcentration*stockVolume/100",
+            "equals": "absorbance"
+          }
+        },
+        {
+          "text": "The 50 mL flask",
+          "vi": {
+            "text": "Bình 50 mL"
+          },
+          "check": {
+            "expr": "1e5*stockConcentration*stockVolume/50",
+            "equals": "absorbance"
+          }
+        },
+        {
+          "text": "The 250 mL flask",
+          "vi": {
+            "text": "Bình 250 mL"
+          },
+          "check": {
+            "expr": "1e5*stockConcentration*stockVolume/250",
+            "equals": "absorbance"
+          }
+        },
+        {
+          "text": "The 25 mL flask",
+          "vi": {
+            "text": "Bình 25 mL"
+          },
+          "check": {
+            "expr": "1e5*stockConcentration*stockVolume/25",
+            "equals": "absorbance"
+          }
+        }
+      ]
+    },
+    {
+      "id": "same-concentration",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["conservation", "factor"],
+      "set": {
+        "stockConcentration": 0.00004,
+        "stockVolume": 5,
+        "finalVolume": 50
+      },
+      "stem": "Student X makes {stockVolume} mL of a {=stockConcentration*1e6} µmol/L stock up to {finalVolume} mL. Student Y has only a 10.0 µmol/L stock and a 25 mL flask. What volume of Y's stock gives the same concentration as X's solution?",
+      "explain": "X's solution: C₂ = {stockConcentration}·{stockVolume}/{finalVolume} = {@finalConcentration} mol/L. Y needs the same C₂ in 25 mL: V₁ = C₂·V₂/C₁ = {@finalConcentration}·25/(1·10⁻⁵) = {=@finalConcentration*25/0.00001} mL. Using X's flask volume, or turning the ratio upside down, are the traps.",
+      "vi": {
+        "stem": "Học sinh X lấy {stockVolume} mL dung dịch gốc {=stockConcentration*1e6} µmol/L pha thành {finalVolume} mL. Học sinh Y chỉ có dung dịch gốc 10,0 µmol/L và bình định mức 25 mL. Y cần lấy bao nhiêu mL dung dịch gốc của mình để được dung dịch cùng nồng độ với X?",
+        "explain": "Dung dịch của X: C₂ = {stockConcentration}·{stockVolume}/{finalVolume} = {@finalConcentration} mol/L. Y cần cùng C₂ trong 25 mL: V₁ = C₂·V₂/C₁ = {@finalConcentration}·25/(1·10⁻⁵) = {=@finalConcentration*25/0.00001} mL. Dùng nhầm thể tích bình của X, hoặc lật ngược tỉ số, là các bẫy thường gặp."
+      },
+      "options": [
+        {
+          "text": "{=@finalConcentration*25/0.00001} mL",
+          "vi": {
+            "text": "{=@finalConcentration*25/0.00001} mL"
+          },
+          "correct": true,
+          "check": {
+            "expr": "0.00001*(@finalConcentration*25/0.00001)/25",
+            "equals": "finalConcentration"
+          }
+        },
+        {
+          "text": "{=@finalConcentration*finalVolume/0.00001} mL",
+          "vi": {
+            "text": "{=@finalConcentration*finalVolume/0.00001} mL"
+          },
+          "check": {
+            "expr": "0.00001*(@finalConcentration*finalVolume/0.00001)/25",
+            "equals": "finalConcentration"
+          }
+        },
+        {
+          "text": "{=0.00001*25/@finalConcentration} mL",
+          "vi": {
+            "text": "{=0.00001*25/@finalConcentration} mL"
+          },
+          "check": {
+            "expr": "0.00001*(0.00001*25/@finalConcentration)/25",
+            "equals": "finalConcentration"
+          }
+        },
+        {
+          "text": "{=stockVolume*0.00001/stockConcentration} mL",
+          "vi": {
+            "text": "{=stockVolume*0.00001/stockConcentration} mL"
+          },
+          "check": {
+            "expr": "0.00001*(stockVolume*0.00001/stockConcentration)/25",
+            "equals": "finalConcentration"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-back",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["beer-lambert", "conservation", "factor"],
+      "set": {
+        "stockConcentration": 0.00004,
+        "stockVolume": 10,
+        "finalVolume": 50
+      },
+      "stem": "A student makes {stockVolume} mL of a crystal violet stock up to {finalVolume} mL and reads A = {@absorbance} in a 1 cm cell (ε ≈ 1·10⁵ L/(mol·cm), an approximate teaching value). Decide whether each statement is true or false.",
+      "explain": "C₂ = A/(ε·l) = {@absorbance}/(1·10⁵) = {@finalConcentration} mol/L — the diluted solution, not the stock: C₁ = C₂·V₂/V₁ = {@stockConcentration} mol/L. n = C₂·V₂ = {@finalConcentration}·{finalVolume}/1000 = {@amount} mol. Doubling both V₁ and V₂ keeps V₁/V₂, so C₂ and A are unchanged.",
+      "vi": {
+        "stem": "Một học sinh lấy {stockVolume} mL dung dịch gốc crystal violet pha thành {finalVolume} mL và đo được A = {@absorbance} trong cuvet 1 cm (ε ≈ 1·10⁵ L/(mol·cm), giá trị gần đúng dùng trong dạy học). Mỗi nhận định sau đúng hay sai?",
+        "explain": "C₂ = A/(ε·l) = {@absorbance}/(1·10⁵) = {@finalConcentration} mol/L — đây là nồng độ dung dịch sau pha, không phải dung dịch gốc: C₁ = C₂·V₂/V₁ = {@stockConcentration} mol/L. n = C₂·V₂ = {@finalConcentration}·{finalVolume}/1000 = {@amount} mol. Tăng gấp đôi cả V₁ và V₂ thì V₁/V₂ không đổi, nên C₂ và A không đổi."
+      },
+      "statements": [
+        {
+          "text": "The solution in the flask is {=@absorbance/1e5} mol/L.",
+          "vi": {
+            "text": "Dung dịch trong bình có nồng độ {=@absorbance/1e5} mol/L."
+          },
+          "true": true,
+          "check": {
+            "expr": "@absorbance/1e5",
+            "equals": "finalConcentration"
+          }
+        },
+        {
+          "text": "The stock solution is {=@absorbance/1e5} mol/L.",
+          "vi": {
+            "text": "Dung dịch gốc có nồng độ {=@absorbance/1e5} mol/L."
+          },
+          "true": false,
+          "check": {
+            "expr": "@absorbance/1e5",
+            "equals": "stockConcentration"
+          }
+        },
+        {
+          "text": "The flask holds {=@absorbance*finalVolume/1e8} mol of dye.",
+          "vi": {
+            "text": "Bình chứa {=@absorbance*finalVolume/1e8} mol thuốc nhuộm."
+          },
+          "true": true,
+          "check": {
+            "expr": "@absorbance*finalVolume/1e8",
+            "equals": "amount"
+          }
+        },
+        {
+          "text": "Using a pipette twice as large and a flask twice as large would double the absorbance.",
+          "vi": {
+            "text": "Dùng pipet có thể tích gấp đôi và bình định mức có thể tích gấp đôi thì độ hấp thụ quang tăng gấp đôi."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

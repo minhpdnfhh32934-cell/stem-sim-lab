@@ -1,0 +1,1035 @@
+{
+  "id": "sound-frequency",
+  "skills": [
+    {
+      "id": "scope",
+      "name": "Reading an oscilloscope",
+      "advice": "The time base is the time for one horizontal division (e.g. 0.5 ms/div). Period = number of divisions for one whole wave × time base. Practise at the station with each time base.",
+      "vi": {
+        "name": "Đọc dao động kí",
+        "advice": "Cơ sở thời gian là thời gian ứng với một ô theo chiều ngang (ví dụ 0,5 ms/ô). Chu kì = số ô của một sóng trọn vẹn × cơ sở thời gian. Luyện tập trên trạm với từng cơ sở thời gian."
+      }
+    },
+    {
+      "id": "period",
+      "name": "Period and frequency: f = 1/T",
+      "advice": "Learn f = 1/T with T in seconds: 2.27 ms is 0.00227 s. Trap: forgetting to turn milliseconds into seconds.",
+      "vi": {
+        "name": "Chu kì và tần số: f = 1/T",
+        "advice": "Nhớ f = 1/T với T tính bằng giây: 2,27 ms là 0,00227 s. Lỗi hay gặp: quên đổi mili giây ra giây."
+      }
+    },
+    {
+      "id": "sound",
+      "name": "Pitch and loudness of a sound",
+      "advice": "Pitch goes with frequency, loudness with amplitude. Watch a fork fade on the screen: the wave shrinks but its period stays the same.",
+      "vi": {
+        "name": "Độ cao và độ to của âm",
+        "advice": "Độ cao của âm gắn với tần số, độ to gắn với biên độ. Quan sát âm thoa tắt dần trên màn hình: sóng nhỏ dần nhưng chu kì không đổi."
+      }
+    },
+    {
+      "id": "reading",
+      "name": "Reading resolution",
+      "advice": "A period read to the resolution d is the nearest multiple of d, with u = d/√12 from the resolution alone. A coarser reading shifts the frequency worked out from it.",
+      "vi": {
+        "name": "Độ phân giải khi đọc",
+        "advice": "Chu kì đọc với độ phân giải d là bội số gần nhất của d, với u = d/√12 chỉ do độ phân giải. Đọc thô hơn sẽ làm lệch tần số tính được từ số đọc đó."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "time-base",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["scope"],
+      "stem": "The time base of an oscilloscope tells…",
+      "explain": "Time runs across the screen: each horizontal division stands for one time base.",
+      "vi": {
+        "stem": "Cơ sở thời gian của dao động kí cho biết…",
+        "explain": "Thời gian chạy theo chiều ngang của màn hình: mỗi ô ngang ứng với một cơ sở thời gian."
+      },
+      "options": [
+        {
+          "text": "the time each horizontal division stands for",
+          "vi": {
+            "text": "thời gian ứng với mỗi ô theo chiều ngang"
+          },
+          "correct": true
+        },
+        {
+          "text": "the voltage each vertical division stands for",
+          "vi": {
+            "text": "điện áp ứng với mỗi ô theo chiều dọc"
+          }
+        },
+        {
+          "text": "the frequency of the sound",
+          "vi": {
+            "text": "tần số của âm"
+          }
+        },
+        {
+          "text": "the number of waves on the screen",
+          "vi": {
+            "text": "số sóng trên màn hình"
+          }
+        }
+      ]
+    },
+    {
+      "id": "relation",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["period"],
+      "stem": "The frequency f and the period T of a sound are related by…",
+      "explain": "f = 1/T: the number of oscillations each second.",
+      "vi": {
+        "stem": "Tần số f và chu kì T của âm liên hệ với nhau bởi…",
+        "explain": "f = 1/T: số dao động thực hiện trong một giây."
+      },
+      "options": [
+        {
+          "text": "f = 1/T",
+          "vi": {
+            "text": "f = 1/T"
+          },
+          "correct": true
+        },
+        {
+          "text": "f = T",
+          "vi": {
+            "text": "f = T"
+          }
+        },
+        {
+          "text": "f = 2π·T",
+          "vi": {
+            "text": "f = 2π·T"
+          }
+        },
+        {
+          "text": "f = T/(2π)",
+          "vi": {
+            "text": "f = T/(2π)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-trace",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["sound", "scope"],
+      "stem": "A tuning fork is struck in front of a microphone joined to an oscilloscope. Decide whether each statement is true or false.",
+      "explain": "The microphone’s voltage oscillates at the sound’s frequency; as the fork fades, the amplitude falls but the period stays; striking harder makes it louder, not higher; Hz = 1/s.",
+      "vi": {
+        "stem": "Một âm thoa được gõ trước micrô nối với dao động kí. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Điện áp của micrô dao động cùng tần số với âm; khi âm thoa tắt dần, biên độ giảm nhưng chu kì không đổi; gõ mạnh hơn làm âm to hơn chứ không cao hơn; Hz = 1/s."
+      },
+      "statements": [
+        {
+          "text": "The microphone gives a voltage oscillating at the sound’s frequency.",
+          "vi": {
+            "text": "Micrô tạo ra điện áp dao động cùng tần số với âm."
+          },
+          "true": true
+        },
+        {
+          "text": "As the fork fades, the wave on the screen gets smaller but its period stays the same.",
+          "vi": {
+            "text": "Khi âm thoa tắt dần, sóng trên màn hình nhỏ dần nhưng chu kì không đổi."
+          },
+          "true": true
+        },
+        {
+          "text": "Striking the fork harder raises its frequency.",
+          "vi": {
+            "text": "Gõ âm thoa mạnh hơn làm tần số của nó tăng lên."
+          },
+          "true": false
+        },
+        {
+          "text": "The unit of frequency, the hertz, is one per second.",
+          "vi": {
+            "text": "Đơn vị của tần số, héc, bằng một trên giây."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "higher-fork",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["sound", "scope"],
+      "stem": "At the same time base, a fork of higher frequency is used. One period on the screen spans…",
+      "explain": "Higher f, shorter T = 1/f, so fewer divisions.",
+      "vi": {
+        "stem": "Với cùng cơ sở thời gian, dùng âm thoa có tần số cao hơn. Một chu kì trên màn hình chiếm…",
+        "explain": "f lớn hơn thì T = 1/f ngắn hơn, nên chiếm ít ô hơn."
+      },
+      "options": [
+        {
+          "text": "fewer divisions",
+          "vi": {
+            "text": "ít ô hơn"
+          },
+          "correct": true
+        },
+        {
+          "text": "more divisions",
+          "vi": {
+            "text": "nhiều ô hơn"
+          }
+        },
+        {
+          "text": "the same number of divisions",
+          "vi": {
+            "text": "cùng số ô"
+          }
+        },
+        {
+          "text": "exactly one division",
+          "vi": {
+            "text": "đúng một ô"
+          }
+        }
+      ]
+    },
+    {
+      "id": "slower-base",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["scope"],
+      "stem": "The time base is changed from 0.5 ms/div to 1 ms/div, with the same fork. One period now spans…",
+      "explain": "n = T/TB: twice the time base, half the divisions; the period itself does not change.",
+      "vi": {
+        "stem": "Đổi cơ sở thời gian từ 0,5 ms/ô sang 1 ms/ô, vẫn dùng âm thoa cũ. Một chu kì bây giờ chiếm…",
+        "explain": "n = T/TB: cơ sở thời gian gấp đôi thì số ô giảm một nửa; bản thân chu kì không đổi."
+      },
+      "options": [
+        {
+          "text": "half as many divisions",
+          "vi": {
+            "text": "số ô bằng một nửa"
+          },
+          "correct": true
+        },
+        {
+          "text": "twice as many divisions",
+          "vi": {
+            "text": "số ô gấp đôi"
+          }
+        },
+        {
+          "text": "the same number of divisions",
+          "vi": {
+            "text": "số ô không đổi"
+          }
+        },
+        {
+          "text": "four times as many divisions",
+          "vi": {
+            "text": "số ô gấp bốn"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-440",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["period", "scope"],
+      "set": {
+        "frequency": 440,
+        "timeBase": 0.0005
+      },
+      "stem": "A {frequency} Hz fork is shown at {=timeBase*1000} ms per division on a screen 10 divisions wide. Decide whether each statement is true or false.",
+      "explain": "T = 1/f ≈ {@period|3} s; one period spans T/TB ≈ {@divisions|3} divisions, so the screen shows about {=10/@divisions|3} periods. At 1 ms/div a period spans half as many divisions.",
+      "vi": {
+        "stem": "Âm thoa {frequency} Hz được hiển thị với {=timeBase*1000} ms mỗi ô trên màn hình rộng 10 ô. Mỗi nhận định sau đúng hay sai?",
+        "explain": "T = 1/f ≈ {@period|3} s; một chu kì chiếm T/TB ≈ {@divisions|3} ô, nên màn hình hiển thị khoảng {=10/@divisions|3} chu kì. Ở 1 ms/ô, một chu kì chiếm số ô bằng một nửa."
+      },
+      "statements": [
+        {
+          "text": "Its period is about {@period|3} s.",
+          "vi": {
+            "text": "Chu kì của nó khoảng {@period|3} s."
+          },
+          "true": true,
+          "check": {
+            "expr": "1/frequency",
+            "equals": "period"
+          }
+        },
+        {
+          "text": "One period spans about {@divisions|3} divisions.",
+          "vi": {
+            "text": "Một chu kì chiếm khoảng {@divisions|3} ô."
+          },
+          "true": true,
+          "check": {
+            "expr": "1/(frequency*timeBase)",
+            "equals": "divisions"
+          }
+        },
+        {
+          "text": "The screen shows about {=10/@divisions|3} whole periods.",
+          "vi": {
+            "text": "Màn hình hiển thị khoảng {=10/@divisions|3} chu kì."
+          },
+          "true": true
+        },
+        {
+          "text": "At 1 ms/div one period would span twice as many divisions.",
+          "vi": {
+            "text": "Ở 1 ms/ô, một chu kì sẽ chiếm số ô gấp đôi."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "period",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["period"],
+      "set": {
+        "frequency": 256,
+        "timeBase": 0.001
+      },
+      "stem": "What is the period of the sound of a {frequency} Hz tuning fork?",
+      "explain": "T = 1/f = 1/{frequency} ≈ {@period|3} s ({=1000*@period|3} ms).",
+      "vi": {
+        "stem": "Chu kì của âm do âm thoa {frequency} Hz phát ra bằng bao nhiêu?",
+        "explain": "T = 1/f = 1/{frequency} ≈ {@period|3} s ({=1000*@period|3} ms)."
+      },
+      "options": [
+        {
+          "text": "{@period|3} s",
+          "vi": {
+            "text": "{@period|3} s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "1/frequency",
+            "equals": "period"
+          }
+        },
+        {
+          "text": "{=1000/frequency|3} s",
+          "vi": {
+            "text": "{=1000/frequency|3} s"
+          },
+          "check": {
+            "expr": "1000/frequency",
+            "equals": "period"
+          }
+        },
+        {
+          "text": "{=2*pi/frequency|3} s",
+          "vi": {
+            "text": "{=2*pi/frequency|3} s"
+          },
+          "check": {
+            "expr": "2*pi/frequency",
+            "equals": "period"
+          }
+        },
+        {
+          "text": "{=1/(2*frequency)|3} s",
+          "vi": {
+            "text": "{=1/(2*frequency)|3} s"
+          },
+          "check": {
+            "expr": "1/(2*frequency)",
+            "equals": "period"
+          }
+        }
+      ]
+    },
+    {
+      "id": "divisions",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["scope"],
+      "set": {
+        "frequency": 384,
+        "timeBase": 0.0005
+      },
+      "stem": "A {frequency} Hz fork is shown at {=timeBase*1000} ms per division. How many divisions does one period span?",
+      "explain": "T = 1/f ≈ {@period|3} s; n = T/TB = {@period|3}/{timeBase} ≈ {@divisions}.",
+      "vi": {
+        "stem": "Âm thoa {frequency} Hz được hiển thị với {=timeBase*1000} ms mỗi ô. Một chu kì chiếm bao nhiêu ô?",
+        "explain": "T = 1/f ≈ {@period|3} s; n = T/TB = {@period|3}/{timeBase} ≈ {@divisions}."
+      },
+      "options": [
+        {
+          "text": "{@divisions}",
+          "vi": {
+            "text": "{@divisions}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "1/(frequency*timeBase)",
+            "equals": "divisions"
+          }
+        },
+        {
+          "text": "{=frequency*timeBase}",
+          "vi": {
+            "text": "{=frequency*timeBase}"
+          },
+          "check": {
+            "expr": "frequency*timeBase",
+            "equals": "divisions"
+          }
+        },
+        {
+          "text": "{=1/(frequency*timeBase*1000)}",
+          "vi": {
+            "text": "{=1/(frequency*timeBase*1000)}"
+          },
+          "check": {
+            "expr": "1/(frequency*timeBase*1000)",
+            "equals": "divisions"
+          }
+        },
+        {
+          "text": "{=2/(frequency*timeBase)}",
+          "vi": {
+            "text": "{=2/(frequency*timeBase)}"
+          },
+          "check": {
+            "expr": "2/(frequency*timeBase)",
+            "equals": "divisions"
+          }
+        }
+      ]
+    },
+    {
+      "id": "frequency",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["period", "scope"],
+      "set": {
+        "frequency": 320,
+        "timeBase": 0.001
+      },
+      "stem": "At {=timeBase*1000} ms per division, one period of a fork’s trace spans {@divisions|4} divisions. What is the fork’s frequency?",
+      "explain": "T = n·TB = {@divisions|4}·{timeBase} ≈ {@period|3} s; f = 1/T ≈ {@frequency} Hz. Leaving T in ms gives a frequency 1000 times too small.",
+      "vi": {
+        "stem": "Với {=timeBase*1000} ms mỗi ô, một chu kì của âm thoa chiếm {@divisions|4} ô. Tần số của âm thoa bằng bao nhiêu?",
+        "explain": "T = n·TB = {@divisions|4}·{timeBase} ≈ {@period|3} s; f = 1/T ≈ {@frequency} Hz. Để T theo ms sẽ ra tần số nhỏ đi 1000 lần."
+      },
+      "options": [
+        {
+          "text": "{=1/(@divisions*timeBase)} Hz",
+          "vi": {
+            "text": "{=1/(@divisions*timeBase)} Hz"
+          },
+          "correct": true,
+          "check": {
+            "expr": "1/(@divisions*timeBase)",
+            "equals": "frequency"
+          }
+        },
+        {
+          "text": "{=1/(@divisions*timeBase*1000)} Hz",
+          "vi": {
+            "text": "{=1/(@divisions*timeBase*1000)} Hz"
+          },
+          "check": {
+            "expr": "1/(@divisions*timeBase*1000)",
+            "equals": "frequency"
+          }
+        },
+        {
+          "text": "{=@divisions/timeBase} Hz",
+          "vi": {
+            "text": "{=@divisions/timeBase} Hz"
+          },
+          "check": {
+            "expr": "@divisions/timeBase",
+            "equals": "frequency"
+          }
+        },
+        {
+          "text": "{=@divisions*timeBase} Hz",
+          "vi": {
+            "text": "{=@divisions*timeBase} Hz"
+          },
+          "check": {
+            "expr": "@divisions*timeBase",
+            "equals": "frequency"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-512",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["period", "scope"],
+      "set": {
+        "frequency": 512,
+        "timeBase": 0.0005
+      },
+      "stem": "A {frequency} Hz fork is shown at {=timeBase*1000} ms per division. Decide whether each statement is true or false.",
+      "explain": "T = 1/f ≈ {@period|3} s and n = T/TB ≈ {@divisions|3} divisions. A 256 Hz fork has twice the period, so twice the divisions.",
+      "vi": {
+        "stem": "Âm thoa {frequency} Hz được hiển thị với {=timeBase*1000} ms mỗi ô. Mỗi nhận định sau đúng hay sai?",
+        "explain": "T = 1/f ≈ {@period|3} s và n = T/TB ≈ {@divisions|3} ô. Âm thoa 256 Hz có chu kì gấp đôi nên chiếm số ô gấp đôi."
+      },
+      "statements": [
+        {
+          "text": "Its period is about {@period|3} s.",
+          "vi": {
+            "text": "Chu kì của nó khoảng {@period|3} s."
+          },
+          "true": true,
+          "check": {
+            "expr": "1/frequency",
+            "equals": "period"
+          }
+        },
+        {
+          "text": "One period spans about {@divisions|3} divisions.",
+          "vi": {
+            "text": "Một chu kì chiếm khoảng {@divisions|3} ô."
+          },
+          "true": true,
+          "check": {
+            "expr": "@period/timeBase",
+            "equals": "divisions"
+          }
+        },
+        {
+          "text": "One period spans about {=2*@divisions|3} divisions.",
+          "vi": {
+            "text": "Một chu kì chiếm khoảng {=2*@divisions|3} ô."
+          },
+          "true": false,
+          "check": {
+            "expr": "2*@divisions",
+            "equals": "divisions"
+          }
+        },
+        {
+          "text": "A 256 Hz fork at the same time base would span twice as many divisions per period.",
+          "vi": {
+            "text": "Âm thoa 256 Hz với cùng cơ sở thời gian sẽ có một chu kì chiếm số ô gấp đôi."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "from-reading",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["reading", "period"],
+      "set": {
+        "frequency": 440,
+        "timeBase": 0.0005,
+        "periodResolution": 0.00005
+      },
+      "stem": "The period of a fork’s trace is read to the nearest {=periodResolution*1000} ms as {=1000*round(@period/periodResolution)*periodResolution} ms. What frequency does this reading give?",
+      "explain": "f = 1/T = 1/{=round(@period/periodResolution)*periodResolution} s ≈ {=1/(round(@period/periodResolution)*periodResolution)} Hz — a little off the fork’s {frequency} Hz, because the reading is rounded to 0.05 ms. Leaving T in ms gives a value 1000 times too small.",
+      "vi": {
+        "stem": "Chu kì trên màn hình được đọc với độ phân giải {=periodResolution*1000} ms là {=1000*round(@period/periodResolution)*periodResolution} ms. Tần số tính từ số đọc này bằng bao nhiêu?",
+        "explain": "f = 1/T = 1/{=round(@period/periodResolution)*periodResolution} s ≈ {=1/(round(@period/periodResolution)*periodResolution)} Hz — lệch một chút so với {frequency} Hz của âm thoa, vì số đọc đã làm tròn đến 0,05 ms. Để T theo ms sẽ ra giá trị nhỏ đi 1000 lần."
+      },
+      "options": [
+        {
+          "text": "{=1/(round(@period/periodResolution)*periodResolution)} Hz",
+          "vi": {
+            "text": "{=1/(round(@period/periodResolution)*periodResolution)} Hz"
+          },
+          "correct": true
+        },
+        {
+          "text": "{=1/(1000*round(@period/periodResolution)*periodResolution)} Hz",
+          "vi": {
+            "text": "{=1/(1000*round(@period/periodResolution)*periodResolution)} Hz"
+          }
+        },
+        {
+          "text": "{=1/(2*round(@period/periodResolution)*periodResolution)} Hz",
+          "vi": {
+            "text": "{=1/(2*round(@period/periodResolution)*periodResolution)} Hz"
+          }
+        },
+        {
+          "text": "{=round(@period/periodResolution)*periodResolution/timeBase} Hz",
+          "vi": {
+            "text": "{=round(@period/periodResolution)*periodResolution/timeBase} Hz"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-reading",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["reading", "scope"],
+      "set": {
+        "frequency": 256,
+        "timeBase": 0.002,
+        "periodResolution": 0.0001
+      },
+      "stem": "A {frequency} Hz fork is shown at {=timeBase*1000} ms per division; the period is read to {=periodResolution*1000} ms. Decide whether each statement is true or false.",
+      "explain": "n = T/TB ≈ {@divisions|3}, so the 10-division screen shows about {=10/@divisions|3} periods. T = {=1000*@period|4} ms reads as {=1000*round(@period/periodResolution)*periodResolution} ms, u = d/√12 ≈ {=1000*periodResolution/sqrt(12)|2} ms. Timing several periods and dividing makes the resolution matter less, not more.",
+      "vi": {
+        "stem": "Âm thoa {frequency} Hz được hiển thị với {=timeBase*1000} ms mỗi ô; chu kì được đọc với độ phân giải {=periodResolution*1000} ms. Mỗi nhận định sau đúng hay sai?",
+        "explain": "n = T/TB ≈ {@divisions|3}, nên màn hình 10 ô hiển thị khoảng {=10/@divisions|3} chu kì. T = {=1000*@period|4} ms được đọc là {=1000*round(@period/periodResolution)*periodResolution} ms, u = d/√12 ≈ {=1000*periodResolution/sqrt(12)|2} ms. Đo nhiều chu kì rồi chia làm ảnh hưởng của độ phân giải giảm đi chứ không tăng lên."
+      },
+      "statements": [
+        {
+          "text": "One period spans about {@divisions|3} divisions.",
+          "vi": {
+            "text": "Một chu kì chiếm khoảng {@divisions|3} ô."
+          },
+          "true": true,
+          "check": {
+            "expr": "1/(frequency*timeBase)",
+            "equals": "divisions"
+          }
+        },
+        {
+          "text": "The period is read as {=1000*round(@period/periodResolution)*periodResolution} ms.",
+          "vi": {
+            "text": "Chu kì được đọc là {=1000*round(@period/periodResolution)*periodResolution} ms."
+          },
+          "true": true
+        },
+        {
+          "text": "The reading’s standard uncertainty from the resolution alone is about {=1000*periodResolution/sqrt(12)|2} ms.",
+          "vi": {
+            "text": "Độ không đảm bảo chuẩn của số đọc chỉ do độ phân giải khoảng {=1000*periodResolution/sqrt(12)|2} ms."
+          },
+          "true": true
+        },
+        {
+          "text": "Reading several periods and dividing by their number makes the resolution matter more.",
+          "vi": {
+            "text": "Đọc nhiều chu kì rồi chia cho số chu kì làm ảnh hưởng của độ phân giải lớn hơn."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "hertz",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["period"],
+      "stem": "The SI unit of frequency, the hertz (Hz), is the same as…",
+      "explain": "Frequency is the number of oscillations per second: 1 Hz = 1 s⁻¹ = 1/s.",
+      "vi": {
+        "stem": "Đơn vị của tần số trong hệ SI, héc (Hz), bằng…",
+        "explain": "Tần số là số dao động trong một giây: 1 Hz = 1 s⁻¹ = 1/s."
+      },
+      "options": [
+        {
+          "text": "1/s",
+          "vi": {
+            "text": "1/s"
+          },
+          "correct": true
+        },
+        {
+          "text": "1 s",
+          "vi": {
+            "text": "1 s"
+          }
+        },
+        {
+          "text": "1 m/s",
+          "vi": {
+            "text": "1 m/s"
+          }
+        },
+        {
+          "text": "1 rad",
+          "vi": {
+            "text": "1 rad"
+          }
+        }
+      ]
+    },
+    {
+      "id": "louder",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["sound", "scope"],
+      "stem": "The same tuning fork is struck harder. On the oscilloscope, at the same settings, the trace…",
+      "explain": "A harder strike makes a louder sound: a larger amplitude, so a taller trace. The fork’s frequency, and so the period on the screen, stays the same.",
+      "vi": {
+        "stem": "Gõ mạnh hơn vào cùng một âm thoa. Trên màn dao động kí, với cùng các nút chỉnh, đồ thị…",
+        "explain": "Gõ mạnh hơn cho âm to hơn: biên độ lớn hơn, nên đồ thị cao hơn. Tần số của âm thoa, và vì vậy chu kì trên màn, không đổi."
+      },
+      "options": [
+        {
+          "text": "gets taller, with the same period",
+          "vi": {
+            "text": "cao hơn, chu kì không đổi"
+          },
+          "correct": true
+        },
+        {
+          "text": "has a shorter period, with the same height",
+          "vi": {
+            "text": "có chu kì ngắn hơn, độ cao không đổi"
+          }
+        },
+        {
+          "text": "gets taller and has a shorter period",
+          "vi": {
+            "text": "cao hơn và có chu kì ngắn hơn"
+          }
+        },
+        {
+          "text": "does not change at all",
+          "vi": {
+            "text": "không thay đổi gì"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-sound",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["sound"],
+      "stem": "Decide whether each statement about sounds and their traces is true or false.",
+      "explain": "Pitch is set by frequency: a higher frequency is a higher note. Loudness grows with the amplitude. People hear roughly from 16 Hz to 20 000 Hz. A taller trace means a larger amplitude, not a higher frequency.",
+      "vi": {
+        "stem": "Mỗi nhận định sau về âm thanh và đồ thị của nó đúng hay sai?",
+        "explain": "Độ cao của âm do tần số quyết định: tần số càng lớn thì âm càng cao. Độ to tăng theo biên độ. Tai người nghe được khoảng từ 16 Hz đến 20 000 Hz. Đồ thị cao hơn nghĩa là biên độ lớn hơn, không phải tần số lớn hơn."
+      },
+      "statements": [
+        {
+          "text": "A higher frequency gives a higher-pitched sound.",
+          "vi": {
+            "text": "Tần số càng lớn thì âm nghe càng cao (càng bổng)."
+          },
+          "true": true
+        },
+        {
+          "text": "A louder sound has a larger amplitude.",
+          "vi": {
+            "text": "Âm càng to thì biên độ càng lớn."
+          },
+          "true": true
+        },
+        {
+          "text": "People hear sounds from roughly 16 Hz to 20 000 Hz.",
+          "vi": {
+            "text": "Tai người nghe được âm có tần số khoảng từ 16 Hz đến 20 000 Hz."
+          },
+          "true": true
+        },
+        {
+          "text": "A taller trace on the screen means a higher frequency.",
+          "vi": {
+            "text": "Đồ thị trên màn càng cao thì tần số càng lớn."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "divisions-512",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["scope", "period"],
+      "set": {
+        "frequency": 512,
+        "timeBase": 0.001
+      },
+      "stem": "A {frequency} Hz fork is shown at {=timeBase*1000} ms per division. How many divisions does one period span?",
+      "explain": "T = 1/f = {=@period*1000|4} ms, and n = T/TB = {=@period*1000|4}/{=timeBase*1000} ≈ {@divisions|3} divisions. f·TB = TB/T turns the ratio over; 10·TB/T counts the periods on the whole screen.",
+      "vi": {
+        "stem": "Âm thoa {frequency} Hz được hiển thị với thang thời gian {=timeBase*1000} ms mỗi ô. Một chu kì chiếm bao nhiêu ô?",
+        "explain": "T = 1/f = {=@period*1000|4} ms, và n = T/TB = {=@period*1000|4}/{=timeBase*1000} ≈ {@divisions|3} ô. f·TB = TB/T là đảo ngược tỉ số; 10·TB/T là số chu kì trên cả màn."
+      },
+      "options": [
+        {
+          "text": "{@divisions|3}",
+          "vi": {
+            "text": "{@divisions|3}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "1/(frequency*timeBase)",
+            "equals": "divisions"
+          }
+        },
+        {
+          "text": "{=frequency*timeBase|3}",
+          "vi": {
+            "text": "{=frequency*timeBase|3}"
+          },
+          "check": {
+            "expr": "frequency*timeBase",
+            "equals": "divisions"
+          }
+        },
+        {
+          "text": "{=10*timeBase/@period|3}",
+          "vi": {
+            "text": "{=10*timeBase/@period|3}"
+          },
+          "check": {
+            "expr": "10*timeBase/@period",
+            "equals": "divisions"
+          }
+        },
+        {
+          "text": "{=@period/(timeBase*10)|3}",
+          "vi": {
+            "text": "{=@period/(timeBase*10)|3}"
+          },
+          "check": {
+            "expr": "@period/(timeBase*10)",
+            "equals": "divisions"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-320",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["period", "scope"],
+      "set": {
+        "frequency": 320,
+        "timeBase": 0.002
+      },
+      "stem": "A {frequency} Hz fork is shown at {=timeBase*1000} ms per division on a screen 10 divisions wide. Decide whether each statement is true or false.",
+      "explain": "T = 1/f = {=@period*1000|4} ms, which spans T/TB ≈ {@divisions|3} divisions; the 10-division screen holds 10·TB/T = {=10*timeBase/@period|3} periods. 1000/f gives the period in milliseconds, not in seconds.",
+      "vi": {
+        "stem": "Âm thoa {frequency} Hz được hiển thị với thang thời gian {=timeBase*1000} ms mỗi ô trên màn rộng 10 ô. Mỗi nhận định sau đúng hay sai?",
+        "explain": "T = 1/f = {=@period*1000|4} ms, chiếm T/TB ≈ {@divisions|3} ô; màn 10 ô chứa 10·TB/T = {=10*timeBase/@period|3} chu kì. 1000/f cho chu kì tính bằng mili giây, không phải giây."
+      },
+      "statements": [
+        {
+          "text": "The period is {=@period*1000|4} ms.",
+          "vi": {
+            "text": "Chu kì bằng {=@period*1000|4} ms."
+          },
+          "true": true,
+          "check": {
+            "expr": "1/frequency",
+            "equals": "period"
+          }
+        },
+        {
+          "text": "One period spans about {@divisions|3} divisions.",
+          "vi": {
+            "text": "Một chu kì chiếm khoảng {@divisions|3} ô."
+          },
+          "true": true,
+          "check": {
+            "expr": "(1/frequency)/timeBase",
+            "equals": "divisions"
+          }
+        },
+        {
+          "text": "The screen shows {=10*timeBase/@period|3} periods.",
+          "vi": {
+            "text": "Màn hiển thị {=10*timeBase/@period|3} chu kì."
+          },
+          "true": true,
+          "check": {
+            "expr": "10*timeBase/(10*timeBase/@period)",
+            "equals": "period"
+          }
+        },
+        {
+          "text": "The period is 1000/f = {=1000/frequency|4} s.",
+          "vi": {
+            "text": "Chu kì bằng 1000/f = {=1000/frequency|4} s."
+          },
+          "true": false,
+          "check": {
+            "expr": "1000/frequency",
+            "equals": "period"
+          }
+        }
+      ]
+    },
+    {
+      "id": "compare-forks",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["scope", "period"],
+      "set": {
+        "frequency": 384,
+        "timeBase": 0.0005
+      },
+      "stem": "At {=timeBase*1000} ms per division, one period of a 512 Hz fork spans {=1/(512*timeBase)|4} divisions. At the same time base, another fork’s period spans {@divisions|4} divisions. What is its frequency?",
+      "explain": "At one time base, f ∝ 1/n: f = 512 × {=1/(512*timeBase)|4}/{@divisions|4} = {=512*(1/(512*timeBase))/@divisions} Hz. Turning the ratio over gives a frequency above 512 Hz for a longer period, which cannot be; 1/(n·TB) with the wrong time base gives another; the frequency is not fixed by the time base.",
+      "vi": {
+        "stem": "Ở thang thời gian {=timeBase*1000} ms mỗi ô, một chu kì của âm thoa 512 Hz chiếm {=1/(512*timeBase)|4} ô. Cùng thang thời gian đó, một chu kì của âm thoa khác chiếm {@divisions|4} ô. Tần số của nó bằng bao nhiêu?",
+        "explain": "Ở cùng thang thời gian, f tỉ lệ nghịch với n: f = 512 × {=1/(512*timeBase)|4}/{@divisions|4} = {=512*(1/(512*timeBase))/@divisions} Hz. Đảo ngược tỉ số sẽ ra tần số lớn hơn 512 Hz cho chu kì dài hơn, điều không thể có; dùng nhầm thang thời gian trong 1/(n·TB) sẽ ra một giá trị khác; tần số không do thang thời gian quyết định."
+      },
+      "options": [
+        {
+          "text": "{=512*(1/(512*timeBase))/@divisions} Hz",
+          "vi": {
+            "text": "{=512*(1/(512*timeBase))/@divisions} Hz"
+          },
+          "correct": true,
+          "check": {
+            "expr": "1/((512*(1/(512*timeBase))/@divisions)*timeBase)",
+            "equals": "divisions"
+          }
+        },
+        {
+          "text": "{=512*@divisions/(1/(512*timeBase))|4} Hz",
+          "vi": {
+            "text": "{=512*@divisions/(1/(512*timeBase))|4} Hz"
+          },
+          "check": {
+            "expr": "1/((512*@divisions/(1/(512*timeBase)))*timeBase)",
+            "equals": "divisions"
+          }
+        },
+        {
+          "text": "{=1/(@divisions*0.001)|4} Hz",
+          "vi": {
+            "text": "{=1/(@divisions*0.001)|4} Hz"
+          },
+          "check": {
+            "expr": "1/((1/(@divisions*0.001))*timeBase)",
+            "equals": "divisions"
+          }
+        },
+        {
+          "text": "512 Hz, the same, since the time base is the same",
+          "vi": {
+            "text": "512 Hz, như cũ, vì thang thời gian không đổi"
+          },
+          "check": {
+            "expr": "1/(512*timeBase)",
+            "equals": "divisions"
+          }
+        }
+      ]
+    },
+    {
+      "id": "two-time-bases",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["scope"],
+      "set": {
+        "frequency": 256,
+        "timeBase": 0.002
+      },
+      "stem": "At 0.5 ms per division, one period of a fork spans {=@period/0.0005|4} divisions. The time base is turned to {=timeBase*1000} ms per division. How many divisions does one period span now?",
+      "explain": "The period itself does not change: T = {=@period/0.0005|4} × 0.5 ms = {=@period*1000|4} ms. At {=timeBase*1000} ms per division it spans T/TB = {@divisions|3} divisions, fewer, because each division now stands for more time.",
+      "vi": {
+        "stem": "Ở thang thời gian 0,5 ms mỗi ô, một chu kì của âm thoa chiếm {=@period/0.0005|4} ô. Chỉnh thang thời gian sang {=timeBase*1000} ms mỗi ô. Lúc này một chu kì chiếm bao nhiêu ô?",
+        "explain": "Bản thân chu kì không đổi: T = {=@period/0.0005|4} × 0,5 ms = {=@period*1000|4} ms. Ở {=timeBase*1000} ms mỗi ô, nó chiếm T/TB = {@divisions|3} ô, ít hơn, vì mỗi ô giờ ứng với nhiều thời gian hơn."
+      },
+      "options": [
+        {
+          "text": "{@divisions|3}",
+          "vi": {
+            "text": "{@divisions|3}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(@period/0.0005)*0.0005/timeBase",
+            "equals": "divisions"
+          }
+        },
+        {
+          "text": "{=@period/0.0005*timeBase/0.0005|3}",
+          "vi": {
+            "text": "{=@period/0.0005*timeBase/0.0005|3}"
+          },
+          "check": {
+            "expr": "@period/0.0005*timeBase/0.0005",
+            "equals": "divisions"
+          }
+        },
+        {
+          "text": "{=@period/0.0005|3}",
+          "vi": {
+            "text": "{=@period/0.0005|3}"
+          },
+          "check": {
+            "expr": "@period/0.0005",
+            "equals": "divisions"
+          }
+        },
+        {
+          "text": "{=@period/0.0005-timeBase*1000|3}",
+          "vi": {
+            "text": "{=@period/0.0005-timeBase*1000|3}"
+          },
+          "check": {
+            "expr": "@period/0.0005-timeBase*1000",
+            "equals": "divisions"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-fine-reading",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["reading", "period"],
+      "set": {
+        "frequency": 440,
+        "timeBase": 0.001,
+        "periodResolution": 0.00002
+      },
+      "stem": "A {frequency} Hz fork is shown at {=timeBase*1000} ms per division, and its period is read to the nearest {=periodResolution*1000} ms. Decide whether each statement is true or false.",
+      "explain": "T = 1/f ≈ {=@period*1000|4} ms, read as {=1000*round(@period/periodResolution)*periodResolution} ms. The resolution alone gives u = d/√12 ≈ {=periodResolution*1000/sqrt(12)|2} ms. Reading five periods together and dividing by five makes the resolution’s share of the uncertainty in T five times smaller, not larger.",
+      "vi": {
+        "stem": "Âm thoa {frequency} Hz được hiển thị với thang thời gian {=timeBase*1000} ms mỗi ô, và chu kì được đọc đến {=periodResolution*1000} ms gần nhất. Mỗi nhận định sau đúng hay sai?",
+        "explain": "T = 1/f ≈ {=@period*1000|4} ms, đọc được là {=1000*round(@period/periodResolution)*periodResolution} ms. Riêng độ phân giải cho u = d/√12 ≈ {=periodResolution*1000/sqrt(12)|2} ms. Đọc thời gian của năm chu kì rồi chia cho năm làm phần độ không đảm bảo của T do độ phân giải nhỏ đi năm lần, không phải lớn lên."
+      },
+      "statements": [
+        {
+          "text": "The period is about {=@period*1000|4} ms.",
+          "vi": {
+            "text": "Chu kì khoảng {=@period*1000|4} ms."
+          },
+          "true": true,
+          "check": {
+            "expr": "1/frequency",
+            "equals": "period"
+          }
+        },
+        {
+          "text": "It is read as {=1000*round(@period/periodResolution)*periodResolution} ms.",
+          "vi": {
+            "text": "Nó được đọc là {=1000*round(@period/periodResolution)*periodResolution} ms."
+          },
+          "true": true
+        },
+        {
+          "text": "The resolution alone gives a standard uncertainty of about {=periodResolution*1000/sqrt(12)|2} ms.",
+          "vi": {
+            "text": "Riêng độ phân giải cho độ không đảm bảo chuẩn khoảng {=periodResolution*1000/sqrt(12)|2} ms."
+          },
+          "true": true
+        },
+        {
+          "text": "Reading five periods together and dividing by five makes the resolution’s share of the uncertainty in T five times larger.",
+          "vi": {
+            "text": "Đọc thời gian của năm chu kì rồi chia cho năm làm phần độ không đảm bảo của T do độ phân giải lớn lên năm lần."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

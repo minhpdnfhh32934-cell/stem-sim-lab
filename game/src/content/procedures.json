@@ -1,0 +1,186 @@
+[
+  {
+    "id": "cleanroom-entry",
+    "name": "Cleanroom entry",
+    "description": "A simplified, illustrative preparation sequence for entering the SIMLAB clean area. It teaches the order of the steps; it is not a certified cleanroom or infection-control protocol, and the timings are illustrative.",
+    "vi": {
+      "name": "Vào phòng sạch",
+      "description": "Trình tự chuẩn bị đơn giản hóa, mang tính minh họa để vào khu vực sạch của SIMLAB. Nó dạy thứ tự các bước; đây không phải quy trình phòng sạch hay kiểm soát nhiễm khuẩn được chứng nhận, và thời gian chỉ mang tính minh họa."
+    },
+    "scene": "preparation-room",
+    "entrance": "cleanroom-corridor/door-hub",
+    "exits": ["preparation-room/door-teacher"],
+    "stages": [
+      { "id": "briefing", "label": "Briefing", "vi": { "label": "Tìm hiểu quy định" } },
+      { "id": "gowning", "label": "Gowning", "vi": { "label": "Mặc đồ bảo hộ" } },
+      { "id": "handwashing", "label": "Hand washing", "vi": { "label": "Rửa tay" } },
+      { "id": "disinfection", "label": "Hand disinfection", "vi": { "label": "Sát khuẩn tay" } },
+      { "id": "gloving", "label": "Gloves", "vi": { "label": "Găng tay" } }
+    ],
+    "requiredEquipment": ["lab-coat", "safety-goggles", "nitrile-gloves"],
+    "steps": [
+      {
+        "id": "read-rules",
+        "stage": "briefing",
+        "kind": "perform",
+        "item": "notice-board",
+        "action": "inspect",
+        "instruction": "Read the cleanroom entry rules on the notice board.",
+        "vi": { "instruction": "Đọc quy định vào phòng sạch trên bảng thông báo." }
+      },
+      {
+        "id": "lab-coat",
+        "stage": "gowning",
+        "kind": "wear",
+        "item": "lab-coat",
+        "instruction": "Open the wardrobe and put on a lab coat.",
+        "vi": { "instruction": "Mở tủ đồ và mặc áo blouse." }
+      },
+      {
+        "id": "goggles",
+        "stage": "gowning",
+        "kind": "wear",
+        "item": "safety-goggles",
+        "instruction": "Put on safety goggles from the wardrobe.",
+        "vi": { "instruction": "Đeo kính bảo hộ lấy từ tủ đồ." }
+      },
+      {
+        "id": "water-on",
+        "stage": "handwashing",
+        "kind": "state",
+        "condition": { "item": "faucet", "key": "running", "value": true },
+        "instruction": "At the hand-wash basin in the corridor, turn on the water.",
+        "vi": { "instruction": "Tại bồn rửa tay ở hành lang, mở nước." }
+      },
+      {
+        "id": "wet-hands",
+        "stage": "handwashing",
+        "kind": "perform",
+        "item": "wash-basin",
+        "action": "wash",
+        "hands": "wet",
+        "requires": [
+          {
+            "item": "faucet",
+            "key": "running",
+            "value": true,
+            "message": "Turn on the water first.",
+            "vi": { "message": "Hãy mở nước trước." }
+          }
+        ],
+        "instruction": "Wet your hands under the running water.",
+        "vi": { "instruction": "Làm ướt tay dưới vòi nước đang chảy." }
+      },
+      {
+        "id": "take-soap",
+        "stage": "handwashing",
+        "kind": "perform",
+        "item": "soap-dispenser",
+        "action": "take-soap",
+        "hands": "soap",
+        "instruction": "Take soap from the dispenser.",
+        "vi": { "instruction": "Lấy xà phòng từ bình." }
+      },
+      {
+        "id": "rub-palms",
+        "stage": "handwashing",
+        "kind": "perform",
+        "item": "wash-basin",
+        "action": "wash",
+        "durationS": 1,
+        "hands": "rub-palms",
+        "instruction": "Rub your palms together.",
+        "vi": { "instruction": "Chà hai lòng bàn tay vào nhau." }
+      },
+      {
+        "id": "rub-backs",
+        "stage": "handwashing",
+        "kind": "perform",
+        "item": "wash-basin",
+        "action": "wash",
+        "durationS": 1,
+        "hands": "rub-backs",
+        "instruction": "Rub the back of each hand with the other palm.",
+        "vi": { "instruction": "Chà mu mỗi bàn tay bằng lòng bàn tay kia." }
+      },
+      {
+        "id": "rub-fingers",
+        "stage": "handwashing",
+        "kind": "perform",
+        "item": "wash-basin",
+        "action": "wash",
+        "durationS": 1,
+        "hands": "rub-fingers",
+        "instruction": "Rub between your fingers with the fingers interlaced.",
+        "vi": { "instruction": "Đan các ngón tay vào nhau và chà kẽ ngón." }
+      },
+      {
+        "id": "rub-thumbs",
+        "stage": "handwashing",
+        "kind": "perform",
+        "item": "wash-basin",
+        "action": "wash",
+        "durationS": 1,
+        "hands": "rub-thumbs",
+        "instruction": "Rub your thumbs and fingertips.",
+        "vi": { "instruction": "Chà ngón cái và các đầu ngón tay." }
+      },
+      {
+        "id": "rinse",
+        "stage": "handwashing",
+        "kind": "perform",
+        "item": "wash-basin",
+        "action": "wash",
+        "hands": "rinse",
+        "requires": [
+          {
+            "item": "faucet",
+            "key": "running",
+            "value": true,
+            "message": "Turn on the water to rinse.",
+            "vi": { "message": "Hãy mở nước để xả sạch." }
+          }
+        ],
+        "instruction": "Rinse the soap off under the running water.",
+        "vi": { "instruction": "Xả sạch xà phòng dưới vòi nước đang chảy." }
+      },
+      {
+        "id": "water-off",
+        "stage": "handwashing",
+        "kind": "state",
+        "condition": { "item": "faucet", "key": "running", "value": false },
+        "instruction": "Turn off the water.",
+        "vi": { "instruction": "Khóa nước." }
+      },
+      {
+        "id": "dry-hands",
+        "stage": "handwashing",
+        "kind": "perform",
+        "item": "paper-towels",
+        "action": "dry-hands",
+        "hands": "dry",
+        "instruction": "Dry your hands with a paper towel.",
+        "vi": { "instruction": "Lau khô tay bằng khăn giấy." }
+      },
+      {
+        "id": "sanitize",
+        "stage": "disinfection",
+        "kind": "perform",
+        "item": "hand-sanitizer",
+        "action": "sanitize",
+        "durationS": 1.5,
+        "hands": "sanitize",
+        "instruction": "Rub hand sanitizer over both hands until they are dry.",
+        "vi": { "instruction": "Xoa dung dịch sát khuẩn lên cả hai tay cho đến khi khô." }
+      },
+      {
+        "id": "gloves",
+        "stage": "gloving",
+        "kind": "wear",
+        "item": "nitrile-gloves",
+        "instruction": "Put on gloves from the glove dispenser.",
+        "vi": { "instruction": "Đeo găng tay lấy từ hộp găng." }
+      }
+    ]
+  }
+]

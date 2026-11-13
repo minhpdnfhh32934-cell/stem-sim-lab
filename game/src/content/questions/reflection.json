@@ -1,0 +1,1058 @@
+{
+  "id": "reflection",
+  "skills": [
+    {
+      "id": "law",
+      "name": "The law of reflection",
+      "advice": "Re-read the law: the reflected ray lies in the plane of the incident ray and the normal, on the other side of the normal, and i′ = i. Always measure angles from the normal, not from the mirror.",
+      "vi": {
+        "name": "Định luật phản xạ ánh sáng",
+        "advice": "Đọc lại định luật: tia phản xạ nằm trong mặt phẳng chứa tia tới và pháp tuyến, ở bên kia pháp tuyến, và i′ = i. Luôn đo góc từ pháp tuyến, không đo từ mặt gương."
+      }
+    },
+    {
+      "id": "between",
+      "name": "The angle between the rays: 2i",
+      "advice": "The incident and reflected rays make i + i′ = 2i with each other. Check it at 15°, 30°, 45°, 60°: at 45° they are at right angles.",
+      "vi": {
+        "name": "Góc giữa tia tới và tia phản xạ: 2i",
+        "advice": "Tia tới và tia phản xạ hợp với nhau góc i + i′ = 2i. Kiểm tra ở 15°, 30°, 45°, 60°: ở 45° hai tia vuông góc với nhau."
+      }
+    },
+    {
+      "id": "lever",
+      "name": "Turning the mirror: the optical lever",
+      "advice": "Turning the mirror by α turns its normal by α, so i = θ + α and the reflected ray moves by 2α: φ = θ + 2α. Try α = 5°, 10°, 15° with the ray box fixed.",
+      "vi": {
+        "name": "Quay gương: đòn bẩy quang học",
+        "advice": "Quay gương một góc α thì pháp tuyến quay α, nên i = θ + α và tia phản xạ quay 2α: φ = θ + 2α. Thử α = 5°, 10°, 15° khi giữ nguyên đèn chiếu."
+      }
+    },
+    {
+      "id": "graphs",
+      "name": "Graphs and protractor readings",
+      "advice": "Over runs, i′ against i is a line of slope 1, φ against α a line of slope 2 starting at θ. A protractor reads to its resolution d, u = d/√12.",
+      "vi": {
+        "name": "Đồ thị và số đọc thước đo góc",
+        "advice": "Qua nhiều lần đo, đồ thị i′ theo i là đường thẳng hệ số góc 1, φ theo α là đường thẳng hệ số góc 2 bắt đầu tại θ. Thước đo góc đọc theo độ phân giải d, u = d/√12."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "law",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["law"],
+      "stem": "For a ray reflected by a plane mirror, the angle of reflection i′ and the angle of incidence i satisfy…",
+      "explain": "The law of reflection: i′ = i.",
+      "vi": {
+        "stem": "Với tia sáng phản xạ trên gương phẳng, góc phản xạ i′ và góc tới i thỏa mãn…",
+        "explain": "Định luật phản xạ: i′ = i."
+      },
+      "options": [
+        {
+          "text": "i′ = i",
+          "vi": {
+            "text": "i′ = i"
+          },
+          "correct": true
+        },
+        {
+          "text": "i′ = 2i",
+          "vi": {
+            "text": "i′ = 2i"
+          }
+        },
+        {
+          "text": "i′ = 90° − i",
+          "vi": {
+            "text": "i′ = 90° − i"
+          }
+        },
+        {
+          "text": "i′ = i/2",
+          "vi": {
+            "text": "i′ = i/2"
+          }
+        }
+      ]
+    },
+    {
+      "id": "measured-from",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["law"],
+      "stem": "The angle of incidence is measured between the incident ray and…",
+      "explain": "Both angles are measured from the normal, the line at right angles to the mirror.",
+      "vi": {
+        "stem": "Góc tới là góc hợp bởi tia tới và…",
+        "explain": "Cả hai góc đều đo từ pháp tuyến, đường vuông góc với mặt gương."
+      },
+      "options": [
+        {
+          "text": "the normal to the mirror",
+          "vi": {
+            "text": "pháp tuyến của gương"
+          },
+          "correct": true
+        },
+        {
+          "text": "the mirror’s surface",
+          "vi": {
+            "text": "mặt gương"
+          }
+        },
+        {
+          "text": "the reflected ray",
+          "vi": {
+            "text": "tia phản xạ"
+          }
+        },
+        {
+          "text": "the edge of the protractor",
+          "vi": {
+            "text": "mép thước đo góc"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-law",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["law", "between"],
+      "stem": "A narrow ray meets a plane mirror at its centre. Decide whether each statement is true or false.",
+      "explain": "The rays and the normal lie in one plane; the reflected ray is on the other side of the normal; the rays make 2i, not i; along the normal (i = 0) the ray goes straight back.",
+      "vi": {
+        "stem": "Một tia sáng hẹp chiếu tới tâm của một gương phẳng. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Tia tới, tia phản xạ và pháp tuyến cùng nằm trong một mặt phẳng; tia phản xạ ở bên kia pháp tuyến; hai tia hợp với nhau góc 2i chứ không phải i; chiếu theo pháp tuyến (i = 0) thì tia sáng bật ngược trở lại."
+      },
+      "statements": [
+        {
+          "text": "The incident ray, the normal and the reflected ray lie in one plane.",
+          "vi": {
+            "text": "Tia tới, pháp tuyến và tia phản xạ cùng nằm trong một mặt phẳng."
+          },
+          "true": true
+        },
+        {
+          "text": "The reflected ray lies on the other side of the normal.",
+          "vi": {
+            "text": "Tia phản xạ nằm ở bên kia pháp tuyến so với tia tới."
+          },
+          "true": true
+        },
+        {
+          "text": "The angle between the incident and reflected rays equals i.",
+          "vi": {
+            "text": "Góc giữa tia tới và tia phản xạ bằng i."
+          },
+          "true": false
+        },
+        {
+          "text": "A ray along the normal is reflected straight back along itself.",
+          "vi": {
+            "text": "Tia sáng chiếu theo pháp tuyến bị phản xạ ngược trở lại theo chính nó."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "ten-more",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["between"],
+      "stem": "The angle of incidence is increased by 10°. The angle between the incident and reflected rays…",
+      "explain": "It is 2i, so it grows by 2·10° = 20°.",
+      "vi": {
+        "stem": "Tăng góc tới thêm 10°. Góc giữa tia tới và tia phản xạ…",
+        "explain": "Góc đó bằng 2i, nên tăng thêm 2·10° = 20°."
+      },
+      "options": [
+        {
+          "text": "increases by 20°",
+          "vi": {
+            "text": "tăng thêm 20°"
+          },
+          "correct": true
+        },
+        {
+          "text": "increases by 10°",
+          "vi": {
+            "text": "tăng thêm 10°"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "decreases by 10°",
+          "vi": {
+            "text": "giảm đi 10°"
+          }
+        }
+      ]
+    },
+    {
+      "id": "turn-mirror",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["lever"],
+      "stem": "With the ray box fixed, the mirror is turned through an angle α. The reflected ray turns through…",
+      "explain": "The normal turns by α, so i grows by α and the reflected ray, i beyond the normal, moves by 2α.",
+      "vi": {
+        "stem": "Giữ nguyên đèn chiếu, quay gương một góc α. Tia phản xạ quay một góc…",
+        "explain": "Pháp tuyến quay α, nên i tăng α và tia phản xạ, nằm cách pháp tuyến góc i, dịch đi 2α."
+      },
+      "options": [
+        {
+          "text": "2α",
+          "vi": {
+            "text": "2α"
+          },
+          "correct": true
+        },
+        {
+          "text": "α",
+          "vi": {
+            "text": "α"
+          }
+        },
+        {
+          "text": "α/2",
+          "vi": {
+            "text": "α/2"
+          }
+        },
+        {
+          "text": "4α",
+          "vi": {
+            "text": "4α"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-45",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["law", "between"],
+      "set": {
+        "rayAngle": 45,
+        "mirrorTurn": 0
+      },
+      "stem": "The mirror is square to the 0° line and the ray box shines at {rayAngle}°. Decide whether each statement is true or false.",
+      "explain": "i = θ = {@incidenceDeg}°, i′ = i = {@reflectionDeg}°, and the rays make 2i = {@betweenDeg}°: at right angles.",
+      "vi": {
+        "stem": "Gương chưa xoay (pháp tuyến trùng vạch 0°) và đèn chiếu đặt ở {rayAngle}°. Mỗi nhận định sau đúng hay sai?",
+        "explain": "i = θ = {@incidenceDeg}°, i′ = i = {@reflectionDeg}°, và hai tia hợp với nhau 2i = {@betweenDeg}°: vuông góc."
+      },
+      "statements": [
+        {
+          "text": "The angle of incidence is {@incidenceDeg}°.",
+          "vi": {
+            "text": "Góc tới bằng {@incidenceDeg}°."
+          },
+          "true": true,
+          "check": {
+            "expr": "rayAngle",
+            "equals": "incidenceDeg"
+          }
+        },
+        {
+          "text": "The angle of reflection is {@reflectionDeg}°.",
+          "vi": {
+            "text": "Góc phản xạ bằng {@reflectionDeg}°."
+          },
+          "true": true,
+          "check": {
+            "expr": "rayAngle",
+            "equals": "reflectionDeg"
+          }
+        },
+        {
+          "text": "The incident and reflected rays are at right angles.",
+          "vi": {
+            "text": "Tia tới và tia phản xạ vuông góc với nhau."
+          },
+          "true": true,
+          "check": {
+            "expr": "90",
+            "equals": "betweenDeg"
+          }
+        },
+        {
+          "text": "The angle between the incident and reflected rays is {rayAngle}°.",
+          "vi": {
+            "text": "Góc giữa tia tới và tia phản xạ bằng {rayAngle}°."
+          },
+          "true": false,
+          "check": {
+            "expr": "rayAngle",
+            "equals": "betweenDeg"
+          }
+        }
+      ]
+    },
+    {
+      "id": "incidence",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["lever"],
+      "set": {
+        "rayAngle": 30,
+        "mirrorTurn": 10
+      },
+      "stem": "The ray box stands at {rayAngle}° and the mirror is turned {mirrorTurn}° away from it. What is the angle of incidence now?",
+      "explain": "The normal turns by α away from the ray: i = θ + α = {rayAngle} + {mirrorTurn} = {@incidenceDeg}°.",
+      "vi": {
+        "stem": "Đèn chiếu đặt ở {rayAngle}° và gương được quay {mirrorTurn}° ra xa đèn. Góc tới lúc này bằng bao nhiêu?",
+        "explain": "Pháp tuyến quay α ra xa tia tới: i = θ + α = {rayAngle} + {mirrorTurn} = {@incidenceDeg}°."
+      },
+      "options": [
+        {
+          "text": "{@incidenceDeg}°",
+          "vi": {
+            "text": "{@incidenceDeg}°"
+          },
+          "correct": true,
+          "check": {
+            "expr": "rayAngle+mirrorTurn",
+            "equals": "incidenceDeg"
+          }
+        },
+        {
+          "text": "{rayAngle}°",
+          "vi": {
+            "text": "{rayAngle}°"
+          },
+          "check": {
+            "expr": "rayAngle",
+            "equals": "incidenceDeg"
+          }
+        },
+        {
+          "text": "{=rayAngle-mirrorTurn}°",
+          "vi": {
+            "text": "{=rayAngle-mirrorTurn}°"
+          },
+          "check": {
+            "expr": "rayAngle-mirrorTurn",
+            "equals": "incidenceDeg"
+          }
+        },
+        {
+          "text": "{=rayAngle+2*mirrorTurn}°",
+          "vi": {
+            "text": "{=rayAngle+2*mirrorTurn}°"
+          },
+          "check": {
+            "expr": "rayAngle+2*mirrorTurn",
+            "equals": "incidenceDeg"
+          }
+        }
+      ]
+    },
+    {
+      "id": "reflected-position",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["lever"],
+      "set": {
+        "rayAngle": 30,
+        "mirrorTurn": 10
+      },
+      "stem": "The ray box stands at {rayAngle}° and the mirror is turned {mirrorTurn}° away from it. At what angle on the disc does the reflected ray now fall?",
+      "explain": "The reflected ray is i = θ + α beyond the turned normal, which is at α: φ = α + θ + α = θ + 2α = {@reflectedDeg}°.",
+      "vi": {
+        "stem": "Đèn chiếu đặt ở {rayAngle}° và gương được quay {mirrorTurn}° ra xa đèn. Tia phản xạ lúc này chỉ vạch bao nhiêu độ trên đĩa?",
+        "explain": "Tia phản xạ cách pháp tuyến mới (ở α) một góc i = θ + α: φ = α + θ + α = θ + 2α = {@reflectedDeg}°."
+      },
+      "options": [
+        {
+          "text": "{@reflectedDeg}°",
+          "vi": {
+            "text": "{@reflectedDeg}°"
+          },
+          "correct": true,
+          "check": {
+            "expr": "rayAngle+2*mirrorTurn",
+            "equals": "reflectedDeg"
+          }
+        },
+        {
+          "text": "{=rayAngle+mirrorTurn}°",
+          "vi": {
+            "text": "{=rayAngle+mirrorTurn}°"
+          },
+          "check": {
+            "expr": "rayAngle+mirrorTurn",
+            "equals": "reflectedDeg"
+          }
+        },
+        {
+          "text": "{rayAngle}°",
+          "vi": {
+            "text": "{rayAngle}°"
+          },
+          "check": {
+            "expr": "rayAngle",
+            "equals": "reflectedDeg"
+          }
+        },
+        {
+          "text": "{=2*(rayAngle+mirrorTurn)}°",
+          "vi": {
+            "text": "{=2*(rayAngle+mirrorTurn)}°"
+          },
+          "check": {
+            "expr": "2*(rayAngle+mirrorTurn)",
+            "equals": "reflectedDeg"
+          }
+        }
+      ]
+    },
+    {
+      "id": "between-15",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["between"],
+      "set": {
+        "rayAngle": 15,
+        "mirrorTurn": 0
+      },
+      "stem": "A ray meets a plane mirror at {rayAngle}° to the normal. What angle do the incident and reflected rays make with each other?",
+      "explain": "i + i′ = 2i = 2·{rayAngle}° = {@betweenDeg}°. 2(90° − i) would measure the angles from the mirror instead of the normal.",
+      "vi": {
+        "stem": "Tia sáng tới gương phẳng với góc tới {rayAngle}°. Tia tới và tia phản xạ hợp với nhau một góc bằng bao nhiêu?",
+        "explain": "i + i′ = 2i = 2·{rayAngle}° = {@betweenDeg}°. 2(90° − i) là đo góc từ mặt gương thay vì từ pháp tuyến."
+      },
+      "options": [
+        {
+          "text": "{@betweenDeg}°",
+          "vi": {
+            "text": "{@betweenDeg}°"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2*rayAngle",
+            "equals": "betweenDeg"
+          }
+        },
+        {
+          "text": "{rayAngle}°",
+          "vi": {
+            "text": "{rayAngle}°"
+          },
+          "check": {
+            "expr": "rayAngle",
+            "equals": "betweenDeg"
+          }
+        },
+        {
+          "text": "{=90-rayAngle}°",
+          "vi": {
+            "text": "{=90-rayAngle}°"
+          },
+          "check": {
+            "expr": "90-rayAngle",
+            "equals": "betweenDeg"
+          }
+        },
+        {
+          "text": "{=2*(90-rayAngle)}°",
+          "vi": {
+            "text": "{=2*(90-rayAngle)}°"
+          },
+          "check": {
+            "expr": "2*(90-rayAngle)",
+            "equals": "betweenDeg"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-turned",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["lever", "law"],
+      "set": {
+        "rayAngle": 15,
+        "mirrorTurn": 15
+      },
+      "stem": "The ray box stands at {rayAngle}° and the mirror is turned {mirrorTurn}° away from it. Decide whether each statement is true or false.",
+      "explain": "i = θ + α = {@incidenceDeg}° = i′; φ = θ + 2α = {@reflectedDeg}°. Turning the mirror back by 15° moves the reflected ray back by 30°.",
+      "vi": {
+        "stem": "Đèn chiếu đặt ở {rayAngle}° và gương được quay {mirrorTurn}° ra xa đèn. Mỗi nhận định sau đúng hay sai?",
+        "explain": "i = θ + α = {@incidenceDeg}° = i′; φ = θ + 2α = {@reflectedDeg}°. Quay gương trở lại 15° thì tia phản xạ dịch về 30°."
+      },
+      "statements": [
+        {
+          "text": "The angle of incidence is {@incidenceDeg}°.",
+          "vi": {
+            "text": "Góc tới bằng {@incidenceDeg}°."
+          },
+          "true": true,
+          "check": {
+            "expr": "rayAngle+mirrorTurn",
+            "equals": "incidenceDeg"
+          }
+        },
+        {
+          "text": "The angle of reflection is {@reflectionDeg}°.",
+          "vi": {
+            "text": "Góc phản xạ bằng {@reflectionDeg}°."
+          },
+          "true": true,
+          "check": {
+            "expr": "rayAngle+mirrorTurn",
+            "equals": "reflectionDeg"
+          }
+        },
+        {
+          "text": "The reflected ray falls at {@reflectedDeg}° on the disc.",
+          "vi": {
+            "text": "Tia phản xạ chỉ vạch {@reflectedDeg}° trên đĩa."
+          },
+          "true": true,
+          "check": {
+            "expr": "rayAngle+2*mirrorTurn",
+            "equals": "reflectedDeg"
+          }
+        },
+        {
+          "text": "Turning the mirror back to square would move the reflected ray by only 15°.",
+          "vi": {
+            "text": "Quay gương trở lại vị trí ban đầu thì tia phản xạ chỉ dịch đi 15°."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "find-turn",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["lever"],
+      "set": {
+        "rayAngle": 30,
+        "mirrorTurn": 10
+      },
+      "stem": "The ray box stays at {rayAngle}°. When the mirror is turned, the reflected ray moves on the disc from {rayAngle}° to {@reflectedDeg}°. Through what angle was the mirror turned?",
+      "explain": "The reflected ray turns twice as far as the mirror: α = ({@reflectedDeg} − {rayAngle})/2 = {=(@reflectedDeg-rayAngle)/2}°.",
+      "vi": {
+        "stem": "Đèn chiếu giữ nguyên ở {rayAngle}°. Khi quay gương, tia phản xạ dịch trên đĩa từ {rayAngle}° đến {@reflectedDeg}°. Gương đã quay một góc bao nhiêu?",
+        "explain": "Tia phản xạ quay gấp đôi góc quay của gương: α = ({@reflectedDeg} − {rayAngle})/2 = {=(@reflectedDeg-rayAngle)/2}°."
+      },
+      "options": [
+        {
+          "text": "{=(@reflectedDeg-rayAngle)/2}°",
+          "vi": {
+            "text": "{=(@reflectedDeg-rayAngle)/2}°"
+          },
+          "correct": true
+        },
+        {
+          "text": "{=@reflectedDeg-rayAngle}°",
+          "vi": {
+            "text": "{=@reflectedDeg-rayAngle}°"
+          }
+        },
+        {
+          "text": "{=(@reflectedDeg-rayAngle)/4}°",
+          "vi": {
+            "text": "{=(@reflectedDeg-rayAngle)/4}°"
+          }
+        },
+        {
+          "text": "{=2*(@reflectedDeg-rayAngle)}°",
+          "vi": {
+            "text": "{=2*(@reflectedDeg-rayAngle)}°"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-graphs",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["graphs", "lever"],
+      "set": {
+        "rayAngle": 45,
+        "mirrorTurn": 5,
+        "resolution": 2
+      },
+      "stem": "Runs are made with the ray box at {rayAngle}° and several mirror turns α (and others at several ray-box angles); a protractor of resolution {resolution}° reads the angles. Decide whether each statement is true or false.",
+      "explain": "i′ = i: slope {@lawSlope}. φ = θ + 2α: slope {@leverSlope}, starting at θ = {@leverIntercept}° when α = 0, not at 0°. u = d/√12 ≈ {=resolution/sqrt(12)|2}°.",
+      "vi": {
+        "stem": "Thực hiện các lần đo với đèn chiếu ở {rayAngle}° và nhiều góc quay α của gương (và các lần đo khác ở nhiều góc của đèn chiếu); thước đo góc có độ phân giải {resolution}°. Mỗi nhận định sau đúng hay sai?",
+        "explain": "i′ = i: hệ số góc {@lawSlope}. φ = θ + 2α: hệ số góc {@leverSlope}, bắt đầu tại θ = {@leverIntercept}° khi α = 0, không phải 0°. u = d/√12 ≈ {=resolution/sqrt(12)|2}°."
+      },
+      "statements": [
+        {
+          "text": "i′ against i over several runs is a straight line of slope 1.",
+          "vi": {
+            "text": "Qua nhiều lần đo, đồ thị i′ theo i là đường thẳng có hệ số góc 1."
+          },
+          "true": true,
+          "check": {
+            "expr": "1",
+            "equals": "lawSlope"
+          }
+        },
+        {
+          "text": "φ against α is a straight line of slope 2.",
+          "vi": {
+            "text": "Đồ thị φ theo α là đường thẳng có hệ số góc 2."
+          },
+          "true": true,
+          "check": {
+            "expr": "2",
+            "equals": "leverSlope"
+          }
+        },
+        {
+          "text": "The line of φ against α starts at 0° when α = 0.",
+          "vi": {
+            "text": "Đường thẳng φ theo α đi qua 0° khi α = 0."
+          },
+          "true": false,
+          "check": {
+            "expr": "0",
+            "equals": "leverIntercept"
+          }
+        },
+        {
+          "text": "A reading to {resolution}° has a standard uncertainty of about {=resolution/sqrt(12)|2}° from the resolution alone.",
+          "vi": {
+            "text": "Số đọc với độ phân giải {resolution}° có độ không đảm bảo chuẩn khoảng {=resolution/sqrt(12)|2}° chỉ do độ phân giải."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "same-plane",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["law"],
+      "stem": "According to the law of reflection, the reflected ray lies…",
+      "explain": "The reflected ray lies in the plane of the incident ray and the normal, on the other side of the normal, with i′ = i.",
+      "vi": {
+        "stem": "Theo định luật phản xạ ánh sáng, tia phản xạ nằm…",
+        "explain": "Tia phản xạ nằm trong mặt phẳng chứa tia tới và pháp tuyến, ở phía bên kia pháp tuyến, với i′ = i."
+      },
+      "options": [
+        {
+          "text": "in the plane of the incident ray and the normal",
+          "vi": {
+            "text": "trong mặt phẳng chứa tia tới và pháp tuyến"
+          },
+          "correct": true
+        },
+        {
+          "text": "along the mirror’s surface",
+          "vi": {
+            "text": "dọc theo mặt gương"
+          }
+        },
+        {
+          "text": "in a plane at right angles to the incident ray",
+          "vi": {
+            "text": "trong mặt phẳng vuông góc với tia tới"
+          }
+        },
+        {
+          "text": "on the same side of the normal as the incident ray",
+          "vi": {
+            "text": "cùng phía với tia tới so với pháp tuyến"
+          }
+        }
+      ]
+    },
+    {
+      "id": "along-normal",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["law", "between"],
+      "stem": "A ray meets a plane mirror along the normal (i = 0). The reflected ray…",
+      "explain": "i′ = i = 0: the reflected ray also runs along the normal, straight back along the incident ray; the angle between them is 2i = 0.",
+      "vi": {
+        "stem": "Một tia sáng chiếu tới gương phẳng theo phương pháp tuyến (i = 0). Tia phản xạ…",
+        "explain": "i′ = i = 0: tia phản xạ cũng đi theo pháp tuyến, ngược trở lại theo đúng đường của tia tới; góc giữa chúng là 2i = 0."
+      },
+      "options": [
+        {
+          "text": "goes straight back along the incident ray",
+          "vi": {
+            "text": "truyền ngược trở lại theo đúng đường của tia tới"
+          },
+          "correct": true
+        },
+        {
+          "text": "runs along the mirror’s surface",
+          "vi": {
+            "text": "đi sát mặt gương"
+          }
+        },
+        {
+          "text": "leaves at 90° to the incident ray",
+          "vi": {
+            "text": "hợp với tia tới góc 90°"
+          }
+        },
+        {
+          "text": "does not exist: the light passes through",
+          "vi": {
+            "text": "không có: ánh sáng đi xuyên qua gương"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-lever",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["between", "lever", "law"],
+      "stem": "A ray from a fixed ray box meets a plane mirror that can be turned. Decide whether each statement is true or false.",
+      "explain": "The angle between the rays is i + i′ = 2i. Turning the mirror through α changes i by α, so the reflected ray turns through 2α. Angles of incidence are measured from the normal, not from the mirror, and the reflected ray is on the other side of the normal.",
+      "vi": {
+        "stem": "Một tia sáng từ đèn chiếu cố định tới một gương phẳng có thể xoay. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Góc giữa tia tới và tia phản xạ là i + i′ = 2i. Xoay gương một góc α thì i thay đổi α, nên tia phản xạ quay một góc 2α. Góc tới được đo từ pháp tuyến chứ không phải từ mặt gương, và tia phản xạ nằm ở phía bên kia pháp tuyến."
+      },
+      "statements": [
+        {
+          "text": "The angle between the incident and reflected rays is 2i.",
+          "vi": {
+            "text": "Góc giữa tia tới và tia phản xạ bằng 2i."
+          },
+          "true": true
+        },
+        {
+          "text": "Turning the mirror through α turns the reflected ray through 2α.",
+          "vi": {
+            "text": "Xoay gương một góc α thì tia phản xạ quay một góc 2α."
+          },
+          "true": true
+        },
+        {
+          "text": "The angle of incidence is measured from the mirror’s surface.",
+          "vi": {
+            "text": "Góc tới được đo từ mặt gương."
+          },
+          "true": false
+        },
+        {
+          "text": "The reflected ray is on the same side of the normal as the incident ray.",
+          "vi": {
+            "text": "Tia phản xạ nằm cùng phía với tia tới so với pháp tuyến."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "between-turned",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["between", "lever"],
+      "set": {
+        "rayAngle": 45,
+        "mirrorTurn": 15
+      },
+      "stem": "The ray box stands at {rayAngle}° and the mirror is turned {mirrorTurn}° away from it. What angle do the incident and reflected rays make with each other?",
+      "explain": "Turned away by α, the mirror’s normal moves α from the ray: i = θ + α = {@incidenceDeg}°, and the rays make 2i = {@betweenDeg}°. 2θ forgets the turn; θ + α is i itself.",
+      "vi": {
+        "stem": "Đèn chiếu đặt ở vạch {rayAngle}° và gương được xoay {mirrorTurn}° ra xa nó. Tia tới và tia phản xạ hợp với nhau góc bao nhiêu?",
+        "explain": "Gương xoay ra xa một góc α thì pháp tuyến lệch thêm α so với tia tới: i = θ + α = {@incidenceDeg}°, và hai tia hợp với nhau góc 2i = {@betweenDeg}°. 2θ là quên góc xoay; θ + α chính là i."
+      },
+      "options": [
+        {
+          "text": "{@betweenDeg}°",
+          "vi": {
+            "text": "{@betweenDeg}°"
+          },
+          "correct": true,
+          "check": {
+            "expr": "2*(rayAngle+mirrorTurn)",
+            "equals": "betweenDeg"
+          }
+        },
+        {
+          "text": "{=2*rayAngle}°",
+          "vi": {
+            "text": "{=2*rayAngle}°"
+          },
+          "check": {
+            "expr": "2*rayAngle",
+            "equals": "betweenDeg"
+          }
+        },
+        {
+          "text": "{=rayAngle+mirrorTurn}°",
+          "vi": {
+            "text": "{=rayAngle+mirrorTurn}°"
+          },
+          "check": {
+            "expr": "rayAngle+mirrorTurn",
+            "equals": "betweenDeg"
+          }
+        },
+        {
+          "text": "{=2*rayAngle+mirrorTurn}°",
+          "vi": {
+            "text": "{=2*rayAngle+mirrorTurn}°"
+          },
+          "check": {
+            "expr": "2*rayAngle+mirrorTurn",
+            "equals": "betweenDeg"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-60-5",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["law", "lever"],
+      "set": {
+        "rayAngle": 60,
+        "mirrorTurn": 5
+      },
+      "stem": "The ray box stands at {rayAngle}° and the mirror is turned {mirrorTurn}° away from it. Decide whether each statement is true or false.",
+      "explain": "i = θ + α = {@incidenceDeg}° = i′, and the rays make {@betweenDeg}°. The reflected ray is at θ + 2α = {@reflectedDeg}° on the disc: it moved 2α = {=2*mirrorTurn}°, not α.",
+      "vi": {
+        "stem": "Đèn chiếu đặt ở vạch {rayAngle}° và gương được xoay {mirrorTurn}° ra xa nó. Mỗi nhận định sau đúng hay sai?",
+        "explain": "i = θ + α = {@incidenceDeg}° = i′, và hai tia hợp với nhau {@betweenDeg}°. Tia phản xạ ở vạch θ + 2α = {@reflectedDeg}° trên đĩa: nó đã dịch 2α = {=2*mirrorTurn}°, không phải α."
+      },
+      "statements": [
+        {
+          "text": "The angle of reflection is {@reflectionDeg}°.",
+          "vi": {
+            "text": "Góc phản xạ bằng {@reflectionDeg}°."
+          },
+          "true": true,
+          "check": {
+            "expr": "rayAngle+mirrorTurn",
+            "equals": "reflectionDeg"
+          }
+        },
+        {
+          "text": "The rays make {@betweenDeg}° with each other.",
+          "vi": {
+            "text": "Hai tia hợp với nhau góc {@betweenDeg}°."
+          },
+          "true": true,
+          "check": {
+            "expr": "2*@incidenceDeg",
+            "equals": "betweenDeg"
+          }
+        },
+        {
+          "text": "The reflected ray is at {@reflectedDeg}° on the disc.",
+          "vi": {
+            "text": "Tia phản xạ ở vạch {@reflectedDeg}° trên đĩa."
+          },
+          "true": true,
+          "check": {
+            "expr": "rayAngle+2*mirrorTurn",
+            "equals": "reflectedDeg"
+          }
+        },
+        {
+          "text": "The reflected ray is at {=rayAngle+mirrorTurn}° on the disc, having moved as far as the mirror turned.",
+          "vi": {
+            "text": "Tia phản xạ ở vạch {=rayAngle+mirrorTurn}° trên đĩa, đã dịch đúng bằng góc xoay của gương."
+          },
+          "true": false,
+          "check": {
+            "expr": "rayAngle+mirrorTurn",
+            "equals": "reflectedDeg"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-ray-box",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["lever"],
+      "set": {
+        "rayAngle": 15,
+        "mirrorTurn": 10
+      },
+      "stem": "The mirror is turned {mirrorTurn}° away from the ray box, and the reflected ray is read at {@reflectedDeg}° on the disc. At what angle does the ray box stand?",
+      "explain": "φ = θ + 2α, so θ = φ − 2α = {@reflectedDeg} − {=2*mirrorTurn} = {rayAngle}°. Taking off α once, halving φ, or adding 2α gives the other values.",
+      "vi": {
+        "stem": "Gương được xoay {mirrorTurn}° ra xa đèn chiếu, và tia phản xạ được đọc ở vạch {@reflectedDeg}° trên đĩa. Đèn chiếu đặt ở vạch bao nhiêu?",
+        "explain": "φ = θ + 2α, nên θ = φ − 2α = {@reflectedDeg} − {=2*mirrorTurn} = {rayAngle}°. Chỉ trừ α một lần, chia đôi φ, hoặc cộng thêm 2α sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{=@reflectedDeg-2*mirrorTurn}°",
+          "vi": {
+            "text": "{=@reflectedDeg-2*mirrorTurn}°"
+          },
+          "correct": true,
+          "check": {
+            "expr": "(@reflectedDeg-2*mirrorTurn)+2*mirrorTurn",
+            "equals": "reflectedDeg"
+          }
+        },
+        {
+          "text": "{=@reflectedDeg-mirrorTurn}°",
+          "vi": {
+            "text": "{=@reflectedDeg-mirrorTurn}°"
+          },
+          "check": {
+            "expr": "(@reflectedDeg-mirrorTurn)+2*mirrorTurn",
+            "equals": "reflectedDeg"
+          }
+        },
+        {
+          "text": "{=@reflectedDeg/2}°",
+          "vi": {
+            "text": "{=@reflectedDeg/2}°"
+          },
+          "check": {
+            "expr": "(@reflectedDeg/2)+2*mirrorTurn",
+            "equals": "reflectedDeg"
+          }
+        },
+        {
+          "text": "{=@reflectedDeg+2*mirrorTurn}°",
+          "vi": {
+            "text": "{=@reflectedDeg+2*mirrorTurn}°"
+          },
+          "check": {
+            "expr": "(@reflectedDeg+2*mirrorTurn)+2*mirrorTurn",
+            "equals": "reflectedDeg"
+          }
+        }
+      ]
+    },
+    {
+      "id": "lever-line",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["graphs", "lever"],
+      "set": {
+        "rayAngle": 30,
+        "mirrorTurn": 10
+      },
+      "stem": "With the ray box at {rayAngle}°, the mirror is turned through several angles α and the reflected ray’s position φ on the disc is plotted against α. Which line do the points lie on?",
+      "explain": "φ = θ + 2α: a straight line of slope 2 that meets the φ axis at θ = {rayAngle}° (α = 0, the mirror square). At α = {mirrorTurn}° it gives {@reflectedDeg}°.",
+      "vi": {
+        "stem": "Với đèn chiếu ở vạch {rayAngle}°, gương được xoay nhiều góc α khác nhau và vị trí φ của tia phản xạ trên đĩa được vẽ theo α. Các điểm nằm trên đường nào?",
+        "explain": "φ = θ + 2α: một đường thẳng có hệ số góc 2, cắt trục φ tại θ = {rayAngle}° (α = 0, gương ở vị trí ban đầu). Tại α = {mirrorTurn}° nó cho {@reflectedDeg}°."
+      },
+      "options": [
+        {
+          "text": "φ = {rayAngle}° + 2α",
+          "vi": {
+            "text": "φ = {rayAngle}° + 2α"
+          },
+          "correct": true,
+          "check": {
+            "expr": "rayAngle+2*mirrorTurn",
+            "equals": "reflectedDeg"
+          }
+        },
+        {
+          "text": "φ = {rayAngle}° + α",
+          "vi": {
+            "text": "φ = {rayAngle}° + α"
+          },
+          "check": {
+            "expr": "rayAngle+mirrorTurn",
+            "equals": "reflectedDeg"
+          }
+        },
+        {
+          "text": "φ = {=2*rayAngle}° + 2α",
+          "vi": {
+            "text": "φ = {=2*rayAngle}° + 2α"
+          },
+          "check": {
+            "expr": "2*rayAngle+2*mirrorTurn",
+            "equals": "reflectedDeg"
+          }
+        },
+        {
+          "text": "φ = 2α",
+          "vi": {
+            "text": "φ = 2α"
+          },
+          "check": {
+            "expr": "2*mirrorTurn",
+            "equals": "reflectedDeg"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-coarse",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["graphs", "between", "lever"],
+      "set": {
+        "rayAngle": 30,
+        "mirrorTurn": 15,
+        "resolution": 5
+      },
+      "stem": "The ray box stands at {rayAngle}° and the mirror is turned {mirrorTurn}° away from it; the protractor reads to {resolution}°. Decide whether each statement is true or false.",
+      "explain": "i = θ + α = {@incidenceDeg}°, so the rays make 2i = {@betweenDeg}°: they are at right angles. The reflected ray is at θ + 2α = {@reflectedDeg}°, not {=rayAngle+mirrorTurn}°. The protractor’s resolution alone gives u = d/√12 ≈ {=resolution/sqrt(12)|2}°.",
+      "vi": {
+        "stem": "Đèn chiếu đặt ở vạch {rayAngle}° và gương được xoay {mirrorTurn}° ra xa nó; thước đo góc đọc được đến {resolution}°. Mỗi nhận định sau đúng hay sai?",
+        "explain": "i = θ + α = {@incidenceDeg}°, nên hai tia hợp với nhau 2i = {@betweenDeg}°: chúng vuông góc với nhau. Tia phản xạ ở vạch θ + 2α = {@reflectedDeg}°, không phải {=rayAngle+mirrorTurn}°. Riêng độ phân giải của thước đo góc cho u = d/√12 ≈ {=resolution/sqrt(12)|2}°."
+      },
+      "statements": [
+        {
+          "text": "The incident and reflected rays are at right angles.",
+          "vi": {
+            "text": "Tia tới và tia phản xạ vuông góc với nhau."
+          },
+          "true": true,
+          "check": {
+            "expr": "90",
+            "equals": "betweenDeg"
+          }
+        },
+        {
+          "text": "The reflected ray is at {=rayAngle+mirrorTurn}° on the disc.",
+          "vi": {
+            "text": "Tia phản xạ ở vạch {=rayAngle+mirrorTurn}° trên đĩa."
+          },
+          "true": false,
+          "check": {
+            "expr": "rayAngle+mirrorTurn",
+            "equals": "reflectedDeg"
+          }
+        },
+        {
+          "text": "The protractor’s resolution alone gives a standard uncertainty of about {=resolution/sqrt(12)|2}°.",
+          "vi": {
+            "text": "Riêng độ phân giải của thước đo góc cho độ không đảm bảo chuẩn khoảng {=resolution/sqrt(12)|2}°."
+          },
+          "true": true
+        },
+        {
+          "text": "The angle of incidence is {@incidenceDeg}°.",
+          "vi": {
+            "text": "Góc tới bằng {@incidenceDeg}°."
+          },
+          "true": true,
+          "check": {
+            "expr": "rayAngle+mirrorTurn",
+            "equals": "incidenceDeg"
+          }
+        }
+      ]
+    }
+  ]
+}

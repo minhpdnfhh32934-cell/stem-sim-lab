@@ -1,0 +1,1045 @@
+{
+  "id": "latent-heat",
+  "skills": [
+    {
+      "id": "latent",
+      "name": "Specific latent heat of fusion",
+      "advice": "Re-read: ice at 0 °C takes heat without warming — the heat melts it. λ is the energy to melt 1 kg at the melting point, in J/kg; for ice about 3.336 × 10⁵ J/kg.",
+      "vi": {
+        "name": "Nhiệt nóng chảy riêng",
+        "advice": "Đọc lại: nước đá ở 0 °C nhận nhiệt mà không nóng lên — nhiệt dùng để làm nó nóng chảy. λ là nhiệt lượng cần để làm nóng chảy hoàn toàn 1 kg ở nhiệt độ nóng chảy, đơn vị J/kg; với nước đá khoảng 3,336 × 10⁵ J/kg."
+      }
+    },
+    {
+      "id": "energy",
+      "name": "Energy and melt: Q = λ·m",
+      "advice": "The heater gives E = P·t and melts m = E/λ. Practise both ways, and keep masses in kg.",
+      "vi": {
+        "name": "Nhiệt lượng và khối lượng tan: Q = λ·m",
+        "advice": "Dây đốt cung cấp E = P·t và làm tan m = E/λ. Luyện cả hai chiều, và để khối lượng theo kg."
+      }
+    },
+    {
+      "id": "control",
+      "name": "Why the control funnel",
+      "advice": "The room melts ice in both funnels. Only m₁ − m₂ was melted by the heater, so λ = E/(m₁ − m₂). Compare the two beakers after a run; E/m₁ alone comes out too low.",
+      "vi": {
+        "name": "Vì sao cần phễu đối chứng",
+        "advice": "Không khí trong phòng làm tan nước đá ở cả hai phễu. Chỉ có m₁ − m₂ là do dây đốt làm tan, nên λ = E/(m₁ − m₂). So sánh hai cốc sau mỗi lần chạy; chỉ dùng E/m₁ sẽ cho kết quả quá nhỏ."
+      }
+    },
+    {
+      "id": "errors",
+      "name": "Readings and sources of error",
+      "advice": "The balance and the joulemeter show the nearest multiple of their resolutions. Think through each real effect: heat escaping to the air means less melt for the same E, so λ comes out high.",
+      "vi": {
+        "name": "Số đọc và nguồn sai số",
+        "advice": "Cân và joulemeter hiển thị bội số gần nhất của độ phân giải. Suy luận từng ảnh hưởng thực tế: nhiệt thoát ra không khí làm tan ít hơn với cùng E, nên λ tính được lớn hơn."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "definition",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["latent"],
+      "stem": "The specific latent heat of fusion of ice is the energy needed to…",
+      "explain": "λ: the energy to melt 1 kg at the melting point, with no change of temperature.",
+      "vi": {
+        "stem": "Nhiệt nóng chảy riêng của nước đá là nhiệt lượng cần để…",
+        "explain": "λ: nhiệt lượng làm nóng chảy hoàn toàn 1 kg ở nhiệt độ nóng chảy, nhiệt độ không đổi."
+      },
+      "options": [
+        {
+          "text": "melt 1 kg of ice at 0 °C",
+          "vi": {
+            "text": "làm nóng chảy hoàn toàn 1 kg nước đá ở 0 °C"
+          },
+          "correct": true
+        },
+        {
+          "text": "warm 1 kg of ice by 1 K",
+          "vi": {
+            "text": "làm 1 kg nước đá tăng thêm 1 K"
+          }
+        },
+        {
+          "text": "melt all the ice in the funnel",
+          "vi": {
+            "text": "làm tan hết nước đá trong phễu"
+          }
+        },
+        {
+          "text": "bring 1 kg of water to 0 °C",
+          "vi": {
+            "text": "đưa 1 kg nước về 0 °C"
+          }
+        }
+      ]
+    },
+    {
+      "id": "unit",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["latent"],
+      "stem": "The SI unit of specific latent heat is…",
+      "explain": "λ = Q/m: J/kg.",
+      "vi": {
+        "stem": "Đơn vị SI của nhiệt nóng chảy riêng là…",
+        "explain": "λ = Q/m: J/kg."
+      },
+      "options": [
+        {
+          "text": "J/kg",
+          "vi": {
+            "text": "J/kg"
+          },
+          "correct": true
+        },
+        {
+          "text": "J/(kg·K)",
+          "vi": {
+            "text": "J/(kg·K)"
+          }
+        },
+        {
+          "text": "J",
+          "vi": {
+            "text": "J"
+          }
+        },
+        {
+          "text": "W/kg",
+          "vi": {
+            "text": "W/kg"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-melting",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["latent", "control"],
+      "stem": "Crushed ice at 0 °C melts in two funnels, one with a heater switched on, one without. Decide whether each statement is true or false.",
+      "explain": "Melting ice stays at 0 °C: the heat melts it rather than warming it. The room melts ice in the control too, so not all of m₁ is the heater’s.",
+      "vi": {
+        "stem": "Nước đá vụn ở 0 °C tan trong hai phễu, một phễu có dây đốt đang bật, một phễu không có. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Nước đá đang tan giữ ở 0 °C: nhiệt dùng để làm tan chứ không làm nóng. Phòng cũng làm tan nước đá ở phễu đối chứng, nên không phải toàn bộ m₁ là do dây đốt."
+      },
+      "statements": [
+        {
+          "text": "While it melts, the ice stays at 0 °C.",
+          "vi": {
+            "text": "Trong khi tan, nước đá giữ ở 0 °C."
+          },
+          "true": true
+        },
+        {
+          "text": "Some ice melts in the funnel without a heater too.",
+          "vi": {
+            "text": "Phễu không có dây đốt cũng có một ít nước đá tan."
+          },
+          "true": true
+        },
+        {
+          "text": "The heater’s energy raises the temperature of the melting ice.",
+          "vi": {
+            "text": "Năng lượng của dây đốt làm tăng nhiệt độ của nước đá đang tan."
+          },
+          "true": false
+        },
+        {
+          "text": "All the meltwater m₁ under the heated funnel was melted by the heater.",
+          "vi": {
+            "text": "Toàn bộ nước tan m₁ dưới phễu có dây đốt là do dây đốt làm tan."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "twice-as-long",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["energy"],
+      "stem": "The heater is left on twice as long, at the same power. The ice it melts, m₁ − m₂…",
+      "explain": "m₁ − m₂ = P·t/λ: twice t, twice the melt.",
+      "vi": {
+        "stem": "Để dây đốt bật lâu gấp đôi với cùng công suất. Lượng nước đá do nó làm tan, m₁ − m₂…",
+        "explain": "m₁ − m₂ = P·t/λ: t gấp đôi thì lượng tan gấp đôi."
+      },
+      "options": [
+        {
+          "text": "doubles",
+          "vi": {
+            "text": "tăng gấp đôi"
+          },
+          "correct": true
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "halves",
+          "vi": {
+            "text": "giảm một nửa"
+          }
+        },
+        {
+          "text": "becomes four times larger",
+          "vi": {
+            "text": "tăng gấp bốn lần"
+          }
+        }
+      ]
+    },
+    {
+      "id": "why-control",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["control"],
+      "stem": "What is the funnel without a heater for?",
+      "explain": "It measures the ice the room melts, which also melts in the heated funnel and must be taken off.",
+      "vi": {
+        "stem": "Phễu không có dây đốt dùng để làm gì?",
+        "explain": "Nó đo lượng nước đá do phòng làm tan; lượng này cũng tan ở phễu có dây đốt và phải trừ đi."
+      },
+      "options": [
+        {
+          "text": "To measure how much ice the room’s heat melts",
+          "vi": {
+            "text": "Để đo lượng nước đá tan do nhiệt từ phòng"
+          },
+          "correct": true
+        },
+        {
+          "text": "To keep the heated funnel cold",
+          "vi": {
+            "text": "Để giữ lạnh phễu có dây đốt"
+          }
+        },
+        {
+          "text": "To check the heater’s power",
+          "vi": {
+            "text": "Để kiểm tra công suất dây đốt"
+          }
+        },
+        {
+          "text": "To catch meltwater that splashes over",
+          "vi": {
+            "text": "Để hứng nước tan bị bắn ra"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-36w",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["control", "energy"],
+      "set": {
+        "power": 36,
+        "heatingTime": 240
+      },
+      "stem": "A {power} W heater runs for {heatingTime} s; the room gives each funnel {roomHeatGain} W (illustrative); λ = 3.336 × 10⁵ J/kg. Decide whether each statement is true or false.",
+      "explain": "E = P·t = {@energy} J; the control melts m₂ = P_room·t/λ ≈ {@meltControl} kg; m₁ − m₂ = E/λ ≈ {@meltByHeater} kg. E/m₁ ≈ {@uncorrected} J/kg is below λ.",
+      "vi": {
+        "stem": "Dây đốt {power} W hoạt động trong {heatingTime} s; phòng cung cấp cho mỗi phễu {roomHeatGain} W (minh họa); λ = 3,336 × 10⁵ J/kg. Mỗi nhận định sau đúng hay sai?",
+        "explain": "E = P·t = {@energy} J; phễu đối chứng tan m₂ = P_room·t/λ ≈ {@meltControl} kg; m₁ − m₂ = E/λ ≈ {@meltByHeater} kg. E/m₁ ≈ {@uncorrected} J/kg nhỏ hơn λ."
+      },
+      "statements": [
+        {
+          "text": "The joulemeter counts {@energy} J.",
+          "vi": {
+            "text": "Joulemeter đếm được {@energy} J."
+          },
+          "true": true,
+          "check": {
+            "expr": "power*heatingTime",
+            "equals": "energy"
+          }
+        },
+        {
+          "text": "The control funnel melts about {@meltControl} kg.",
+          "vi": {
+            "text": "Phễu đối chứng tan khoảng {@meltControl} kg."
+          },
+          "true": true,
+          "check": {
+            "expr": "roomHeatGain*heatingTime/333600",
+            "equals": "meltControl"
+          }
+        },
+        {
+          "text": "The heater alone melts about {@meltByHeater} kg.",
+          "vi": {
+            "text": "Riêng dây đốt làm tan khoảng {@meltByHeater} kg."
+          },
+          "true": true,
+          "check": {
+            "expr": "@energy/333600",
+            "equals": "meltByHeater"
+          }
+        },
+        {
+          "text": "E/m₁ is larger than λ.",
+          "vi": {
+            "text": "E/m₁ lớn hơn λ."
+          },
+          "true": false,
+          "check": {
+            "expr": "@energy/@meltHeated",
+            "equals": "latentHeat"
+          }
+        }
+      ]
+    },
+    {
+      "id": "melt",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["energy"],
+      "set": {
+        "power": 48,
+        "heatingTime": 360
+      },
+      "stem": "A {power} W heater in ice at 0 °C runs for {heatingTime} s. How much ice does it melt? (λ = 3.336 × 10⁵ J/kg)",
+      "explain": "E = P·t = {@energy|5} J; m = E/λ = {@energy|5}/333600 ≈ {@meltByHeater} kg.",
+      "vi": {
+        "stem": "Dây đốt {power} W đặt trong nước đá ở 0 °C hoạt động trong {heatingTime} s. Nó làm tan bao nhiêu nước đá? (λ = 3,336 × 10⁵ J/kg)",
+        "explain": "E = P·t = {@energy|5} J; m = E/λ = {@energy|5}/333600 ≈ {@meltByHeater} kg."
+      },
+      "options": [
+        {
+          "text": "{@meltByHeater} kg",
+          "vi": {
+            "text": "{@meltByHeater} kg"
+          },
+          "correct": true,
+          "check": {
+            "expr": "power*heatingTime/333600",
+            "equals": "meltByHeater"
+          }
+        },
+        {
+          "text": "{=333600/(power*heatingTime)} kg",
+          "vi": {
+            "text": "{=333600/(power*heatingTime)} kg"
+          },
+          "check": {
+            "expr": "333600/(power*heatingTime)",
+            "equals": "meltByHeater"
+          }
+        },
+        {
+          "text": "{=(power+roomHeatGain)*heatingTime/333600} kg",
+          "vi": {
+            "text": "{=(power+roomHeatGain)*heatingTime/333600} kg"
+          },
+          "check": {
+            "expr": "(power+roomHeatGain)*heatingTime/333600",
+            "equals": "meltByHeater"
+          }
+        },
+        {
+          "text": "{=power/333600} kg",
+          "vi": {
+            "text": "{=power/333600} kg"
+          },
+          "check": {
+            "expr": "power/333600",
+            "equals": "meltByHeater"
+          }
+        }
+      ]
+    },
+    {
+      "id": "lambda",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["control"],
+      "set": {
+        "power": 24,
+        "heatingTime": 120
+      },
+      "stem": "The heated funnel’s beaker collects m₁ = {@meltHeated} kg and the control’s m₂ = {@meltControl} kg while the joulemeter counts E = {@energy} J. What value of λ do these give?",
+      "explain": "λ = E/(m₁ − m₂) = {@energy}/({@meltHeated} − {@meltControl}) ≈ {@latentHeat} J/kg. E/m₁ leaves the room’s share in and comes out too low.",
+      "vi": {
+        "stem": "Cốc dưới phễu có dây đốt hứng được m₁ = {@meltHeated} kg, cốc dưới phễu đối chứng m₂ = {@meltControl} kg, joulemeter đếm được E = {@energy} J. Các số liệu này cho λ bằng bao nhiêu?",
+        "explain": "λ = E/(m₁ − m₂) = {@energy}/({@meltHeated} − {@meltControl}) ≈ {@latentHeat} J/kg. E/m₁ chưa trừ phần do phòng làm tan nên cho kết quả quá nhỏ."
+      },
+      "options": [
+        {
+          "text": "{=@energy/(@meltHeated-@meltControl)} J/kg",
+          "vi": {
+            "text": "{=@energy/(@meltHeated-@meltControl)} J/kg"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@energy/(@meltHeated-@meltControl)",
+            "equals": "latentHeat"
+          }
+        },
+        {
+          "text": "{=@energy/@meltHeated} J/kg",
+          "vi": {
+            "text": "{=@energy/@meltHeated} J/kg"
+          },
+          "check": {
+            "expr": "@energy/@meltHeated",
+            "equals": "latentHeat"
+          }
+        },
+        {
+          "text": "{=@energy/(@meltHeated+@meltControl)} J/kg",
+          "vi": {
+            "text": "{=@energy/(@meltHeated+@meltControl)} J/kg"
+          },
+          "check": {
+            "expr": "@energy/(@meltHeated+@meltControl)",
+            "equals": "latentHeat"
+          }
+        },
+        {
+          "text": "{=@energy/@meltControl} J/kg",
+          "vi": {
+            "text": "{=@energy/@meltControl} J/kg"
+          },
+          "check": {
+            "expr": "@energy/@meltControl",
+            "equals": "latentHeat"
+          }
+        }
+      ]
+    },
+    {
+      "id": "control-melt",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["control", "energy"],
+      "set": {
+        "heatingTime": 360
+      },
+      "stem": "The room gives the control funnel {roomHeatGain} W (illustrative). How much ice melts in it in {heatingTime} s? (λ = 3.336 × 10⁵ J/kg)",
+      "explain": "m₂ = P_room·t/λ = {roomHeatGain}·{heatingTime}/333600 ≈ {@meltControl} kg.",
+      "vi": {
+        "stem": "Phòng cung cấp cho phễu đối chứng {roomHeatGain} W (minh họa). Trong {heatingTime} s có bao nhiêu nước đá tan trong phễu đó? (λ = 3,336 × 10⁵ J/kg)",
+        "explain": "m₂ = P_room·t/λ = {roomHeatGain}·{heatingTime}/333600 ≈ {@meltControl} kg."
+      },
+      "options": [
+        {
+          "text": "{@meltControl} kg",
+          "vi": {
+            "text": "{@meltControl} kg"
+          },
+          "correct": true,
+          "check": {
+            "expr": "roomHeatGain*heatingTime/333600",
+            "equals": "meltControl"
+          }
+        },
+        {
+          "text": "{=roomHeatGain/333600} kg",
+          "vi": {
+            "text": "{=roomHeatGain/333600} kg"
+          },
+          "check": {
+            "expr": "roomHeatGain/333600",
+            "equals": "meltControl"
+          }
+        },
+        {
+          "text": "{=(power+roomHeatGain)*heatingTime/333600} kg",
+          "vi": {
+            "text": "{=(power+roomHeatGain)*heatingTime/333600} kg"
+          },
+          "check": {
+            "expr": "(power+roomHeatGain)*heatingTime/333600",
+            "equals": "meltControl"
+          }
+        },
+        {
+          "text": "{=roomHeatGain*heatingTime/4181} kg",
+          "vi": {
+            "text": "{=roomHeatGain*heatingTime/4181} kg"
+          },
+          "check": {
+            "expr": "roomHeatGain*heatingTime/4181",
+            "equals": "meltControl"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-24w",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["control", "energy"],
+      "set": {
+        "power": 24,
+        "heatingTime": 120
+      },
+      "stem": "A {power} W heater runs for {heatingTime} s; each funnel also takes {roomHeatGain} W from the room (illustrative); λ = 3.336 × 10⁵ J/kg. Decide whether each statement is true or false.",
+      "explain": "m₁ = (P + P_room)·t/λ ≈ {@meltHeated} kg; E/m₁ ≈ {@uncorrected} J/kg, below λ because m₁ includes the room’s melt. The control’s melt depends only on the room, not on the heater’s power.",
+      "vi": {
+        "stem": "Dây đốt {power} W hoạt động trong {heatingTime} s; mỗi phễu còn nhận {roomHeatGain} W từ phòng (minh họa); λ = 3,336 × 10⁵ J/kg. Mỗi nhận định sau đúng hay sai?",
+        "explain": "m₁ = (P + P_room)·t/λ ≈ {@meltHeated} kg; E/m₁ ≈ {@uncorrected} J/kg, nhỏ hơn λ vì m₁ gồm cả phần do phòng làm tan. Lượng tan ở phễu đối chứng chỉ phụ thuộc vào phòng, không phụ thuộc công suất dây đốt."
+      },
+      "statements": [
+        {
+          "text": "The heated funnel melts about {@meltHeated} kg.",
+          "vi": {
+            "text": "Phễu có dây đốt tan khoảng {@meltHeated} kg."
+          },
+          "true": true,
+          "check": {
+            "expr": "(power+roomHeatGain)*heatingTime/333600",
+            "equals": "meltHeated"
+          }
+        },
+        {
+          "text": "E/m₁ comes to about {@uncorrected} J/kg.",
+          "vi": {
+            "text": "E/m₁ khoảng {@uncorrected} J/kg."
+          },
+          "true": true,
+          "check": {
+            "expr": "power*heatingTime/@meltHeated",
+            "equals": "uncorrected"
+          }
+        },
+        {
+          "text": "E/m₁ is smaller than the true λ.",
+          "vi": {
+            "text": "E/m₁ nhỏ hơn λ thực."
+          },
+          "true": true
+        },
+        {
+          "text": "Doubling the heater’s power would double the melt in the control funnel.",
+          "vi": {
+            "text": "Tăng gấp đôi công suất dây đốt thì lượng tan ở phễu đối chứng tăng gấp đôi."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "power",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["energy", "control"],
+      "set": {
+        "power": 36,
+        "heatingTime": 240
+      },
+      "stem": "In {heatingTime} s a heater melts m₁ − m₂ = {@meltByHeater} kg of ice more than the control (λ = 3.336 × 10⁵ J/kg). What is the heater’s power?",
+      "explain": "E = λ·(m₁ − m₂) = 333600·{@meltByHeater} ≈ {=333600*@meltByHeater} J; P = E/t ≈ {=333600*@meltByHeater/heatingTime} W. λ·(m₁ − m₂) alone is the energy, not the power.",
+      "vi": {
+        "stem": "Trong {heatingTime} s, dây đốt làm tan nhiều hơn phễu đối chứng m₁ − m₂ = {@meltByHeater} kg nước đá (λ = 3,336 × 10⁵ J/kg). Công suất của dây đốt bằng bao nhiêu?",
+        "explain": "E = λ·(m₁ − m₂) = 333600·{@meltByHeater} ≈ {=333600*@meltByHeater} J; P = E/t ≈ {=333600*@meltByHeater/heatingTime} W. Chỉ λ·(m₁ − m₂) là năng lượng, chưa phải công suất."
+      },
+      "options": [
+        {
+          "text": "{=333600*@meltByHeater/heatingTime} W",
+          "vi": {
+            "text": "{=333600*@meltByHeater/heatingTime} W"
+          },
+          "correct": true
+        },
+        {
+          "text": "{=333600*@meltByHeater} W",
+          "vi": {
+            "text": "{=333600*@meltByHeater} W"
+          }
+        },
+        {
+          "text": "{=333600*@meltHeated/heatingTime} W",
+          "vi": {
+            "text": "{=333600*@meltHeated/heatingTime} W"
+          }
+        },
+        {
+          "text": "{=@meltByHeater*heatingTime/333600} W",
+          "vi": {
+            "text": "{=@meltByHeater*heatingTime/333600} W"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-balance",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["errors", "control"],
+      "set": {
+        "power": 36,
+        "heatingTime": 120,
+        "balanceResolution": 0.001
+      },
+      "stem": "A {power} W heater runs for {heatingTime} s; the meltwater is weighed on a balance of resolution {balanceResolution} kg. Decide whether each statement is true or false.",
+      "explain": "m₁ − m₂ ≈ {@meltByHeater|4} kg; m₁ ≈ {@meltHeated|4} kg shows as {=round(@meltHeated/balanceResolution)*balanceResolution} kg. A finer 0.1 g balance gives a more precise λ. Heat escaping to the air melts less ice for the same E, so λ = E/(m₁ − m₂) comes out too high, not too low.",
+      "vi": {
+        "stem": "Dây đốt {power} W hoạt động trong {heatingTime} s; nước tan được cân bằng cân có độ phân giải {balanceResolution} kg. Mỗi nhận định sau đúng hay sai?",
+        "explain": "m₁ − m₂ ≈ {@meltByHeater|4} kg; m₁ ≈ {@meltHeated|4} kg hiển thị {=round(@meltHeated/balanceResolution)*balanceResolution} kg. Cân 0,1 g chính xác hơn cho λ chính xác hơn. Nhiệt thoát ra không khí làm tan ít nước đá hơn với cùng E, nên λ = E/(m₁ − m₂) lớn hơn thực tế chứ không nhỏ hơn."
+      },
+      "statements": [
+        {
+          "text": "The heater alone melts about {@meltByHeater|4} kg.",
+          "vi": {
+            "text": "Riêng dây đốt làm tan khoảng {@meltByHeater|4} kg."
+          },
+          "true": true,
+          "check": {
+            "expr": "power*heatingTime/333600",
+            "equals": "meltByHeater"
+          }
+        },
+        {
+          "text": "The balance shows m₁ as {=round(@meltHeated/balanceResolution)*balanceResolution} kg.",
+          "vi": {
+            "text": "Cân hiển thị m₁ là {=round(@meltHeated/balanceResolution)*balanceResolution} kg."
+          },
+          "true": true
+        },
+        {
+          "text": "A balance reading to 0.1 g would give a more precise λ.",
+          "vi": {
+            "text": "Cân có độ phân giải 0,1 g sẽ cho λ chính xác hơn."
+          },
+          "true": true
+        },
+        {
+          "text": "If some of the heater’s heat escaped to the air, the λ worked out would come out too low.",
+          "vi": {
+            "text": "Nếu một phần nhiệt của dây đốt thoát ra không khí, λ tính được sẽ nhỏ hơn thực tế."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "constant-temperature",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["latent"],
+      "stem": "While ice at 0 °C is melting, with the ice and water well mixed, the temperature of the mixture…",
+      "explain": "The energy taken in during melting breaks the bonds of the solid instead of raising the temperature, so the mixture stays at 0 °C until all the ice has melted.",
+      "vi": {
+        "stem": "Trong khi nước đá ở 0 °C đang nóng chảy, hỗn hợp nước đá và nước được khuấy đều, nhiệt độ của hỗn hợp…",
+        "explain": "Năng lượng nhận vào khi nóng chảy được dùng để phá vỡ liên kết của chất rắn chứ không làm tăng nhiệt độ, nên hỗn hợp giữ ở 0 °C cho đến khi nước đá tan hết."
+      },
+      "options": [
+        {
+          "text": "stays at 0 °C",
+          "vi": {
+            "text": "giữ không đổi ở 0 °C"
+          },
+          "correct": true
+        },
+        {
+          "text": "rises steadily",
+          "vi": {
+            "text": "tăng đều"
+          }
+        },
+        {
+          "text": "falls below 0 °C",
+          "vi": {
+            "text": "giảm xuống dưới 0 °C"
+          }
+        },
+        {
+          "text": "rises in steps of one degree",
+          "vi": {
+            "text": "tăng theo từng nấc một độ"
+          }
+        }
+      ]
+    },
+    {
+      "id": "why-zero",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["latent", "errors"],
+      "stem": "Why is the ice used crushed and already melting at 0 °C, not taken colder from a freezer?",
+      "explain": "Ice below 0 °C would first use some of the heater’s energy to warm up to 0 °C, so less ice would melt and λ would come out too large. Crushed ice also touches the heater well.",
+      "vi": {
+        "stem": "Vì sao nước đá dùng trong thí nghiệm được đập nhỏ và đang tan ở 0 °C, chứ không lấy loại lạnh hơn từ tủ đá?",
+        "explain": "Nước đá dưới 0 °C sẽ dùng một phần năng lượng của dây đốt để nóng lên đến 0 °C trước, nên lượng nước đá tan ít hơn và λ tính ra sẽ quá lớn. Nước đá đập nhỏ cũng tiếp xúc tốt với dây đốt."
+      },
+      "options": [
+        {
+          "text": "So all the heater’s energy goes into melting, none into warming the ice",
+          "vi": {
+            "text": "Để toàn bộ năng lượng của dây đốt dùng vào việc làm nóng chảy, không phải để làm nóng nước đá"
+          },
+          "correct": true
+        },
+        {
+          "text": "Because colder ice has a smaller latent heat",
+          "vi": {
+            "text": "Vì nước đá lạnh hơn có nhiệt nóng chảy riêng nhỏ hơn"
+          }
+        },
+        {
+          "text": "So the room cannot warm the ice",
+          "vi": {
+            "text": "Để môi trường không làm nóng nước đá"
+          }
+        },
+        {
+          "text": "So the meltwater is heavier",
+          "vi": {
+            "text": "Để nước tan ra nặng hơn"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-energy",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["latent", "control"],
+      "stem": "A heater of power P melts ice at 0 °C in one funnel; a control funnel has no heater. Decide whether each statement is true or false.",
+      "explain": "The heater gives E = P·t. Water at 0 °C has more internal energy than the ice it came from: the latent heat was taken in. The control melts only from the room’s heat. Leaving it out puts the room’s melt into m₁, so λ = E/m₁ comes out too small, not too large.",
+      "vi": {
+        "stem": "Một dây đốt có công suất P làm nóng chảy nước đá ở 0 °C trong một phễu; phễu đối chứng không có dây đốt. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Dây đốt cung cấp E = P·t. Nước ở 0 °C có nội năng lớn hơn nước đá tạo ra nó: nó đã nhận nhiệt nóng chảy. Phễu đối chứng chỉ tan do nhiệt từ môi trường. Bỏ qua phễu đối chứng thì phần tan do môi trường bị tính vào m₁, nên λ = E/m₁ tính ra quá nhỏ chứ không quá lớn."
+      },
+      "statements": [
+        {
+          "text": "The energy the heater gives is P·t.",
+          "vi": {
+            "text": "Năng lượng dây đốt cung cấp bằng P·t."
+          },
+          "true": true
+        },
+        {
+          "text": "Water at 0 °C has more internal energy than the same mass of ice at 0 °C.",
+          "vi": {
+            "text": "Nước ở 0 °C có nội năng lớn hơn cùng khối lượng nước đá ở 0 °C."
+          },
+          "true": true
+        },
+        {
+          "text": "Ice melts in the control funnel only because of heat from the room.",
+          "vi": {
+            "text": "Nước đá trong phễu đối chứng tan chỉ do nhiệt từ môi trường."
+          },
+          "true": true
+        },
+        {
+          "text": "Without the control, the value found for λ would be too large.",
+          "vi": {
+            "text": "Nếu không có phễu đối chứng, giá trị λ tìm được sẽ quá lớn."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "joulemeter",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["energy"],
+      "set": {
+        "power": 24,
+        "heatingTime": 360
+      },
+      "stem": "A {power} W heater runs for {=heatingTime/60} minutes. What should the joulemeter read?",
+      "explain": "E = P·t with t in seconds: {power} W × {heatingTime} s = {@energy} J. Using minutes gives {=power*heatingTime/60} J; P/t is not an energy.",
+      "vi": {
+        "stem": "Một dây đốt {power} W hoạt động trong {=heatingTime/60} phút. Jun kế phải chỉ bao nhiêu?",
+        "explain": "E = P·t với t tính bằng giây: {power} W × {heatingTime} s = {@energy} J. Dùng phút sẽ ra {=power*heatingTime/60} J; P/t không phải năng lượng."
+      },
+      "options": [
+        {
+          "text": "{@energy} J",
+          "vi": {
+            "text": "{@energy} J"
+          },
+          "correct": true,
+          "check": {
+            "expr": "power*heatingTime",
+            "equals": "energy"
+          }
+        },
+        {
+          "text": "{=power*heatingTime/60} J",
+          "vi": {
+            "text": "{=power*heatingTime/60} J"
+          },
+          "check": {
+            "expr": "power*heatingTime/60",
+            "equals": "energy"
+          }
+        },
+        {
+          "text": "{=power/heatingTime} J",
+          "vi": {
+            "text": "{=power/heatingTime} J"
+          },
+          "check": {
+            "expr": "power/heatingTime",
+            "equals": "energy"
+          }
+        },
+        {
+          "text": "{=(power+roomHeatGain)*heatingTime} J",
+          "vi": {
+            "text": "{=(power+roomHeatGain)*heatingTime} J"
+          },
+          "check": {
+            "expr": "(power+roomHeatGain)*heatingTime",
+            "equals": "energy"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-48w",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["energy", "control"],
+      "set": {
+        "power": 48,
+        "heatingTime": 240
+      },
+      "stem": "A {power} W heater runs for {heatingTime} s in ice at 0 °C; each funnel also takes {roomHeatGain} W from the room (illustrative); λ = 3.336 × 10⁵ J/kg. Decide whether each statement is true or false.",
+      "explain": "E = P·t = {@energy} J melts m₁ − m₂ = E/λ ≈ {@meltByHeater} kg. The control melts (room gain)·t/λ ≈ {@meltControl} kg. The heated funnel collects m₁ = (P + gain)·t/λ ≈ {@meltHeated} kg, more than E/λ.",
+      "vi": {
+        "stem": "Một dây đốt {power} W hoạt động {heatingTime} s trong nước đá ở 0 °C; mỗi phễu còn nhận {roomHeatGain} W từ môi trường (giá trị minh họa); λ = 3,336 × 10⁵ J/kg. Mỗi nhận định sau đúng hay sai?",
+        "explain": "E = P·t = {@energy} J làm tan m₁ − m₂ = E/λ ≈ {@meltByHeater} kg. Phễu đối chứng tan (công suất nhận từ môi trường)·t/λ ≈ {@meltControl} kg. Phễu có dây đốt thu được m₁ = (P + công suất môi trường)·t/λ ≈ {@meltHeated} kg, nhiều hơn E/λ."
+      },
+      "statements": [
+        {
+          "text": "The joulemeter reads {@energy} J.",
+          "vi": {
+            "text": "Jun kế chỉ {@energy} J."
+          },
+          "true": true,
+          "check": {
+            "expr": "power*heatingTime",
+            "equals": "energy"
+          }
+        },
+        {
+          "text": "The heater melts {@meltByHeater} kg more ice than the control.",
+          "vi": {
+            "text": "Dây đốt làm tan nhiều hơn phễu đối chứng {@meltByHeater} kg nước đá."
+          },
+          "true": true,
+          "check": {
+            "expr": "power*heatingTime/@latentHeat",
+            "equals": "meltByHeater"
+          }
+        },
+        {
+          "text": "The control funnel collects about {@meltControl} kg.",
+          "vi": {
+            "text": "Phễu đối chứng thu được khoảng {@meltControl} kg."
+          },
+          "true": true,
+          "check": {
+            "expr": "roomHeatGain*heatingTime/@latentHeat",
+            "equals": "meltControl"
+          }
+        },
+        {
+          "text": "The heated funnel collects m₁ = E/λ = {=@energy/@latentHeat} kg.",
+          "vi": {
+            "text": "Phễu có dây đốt thu được m₁ = E/λ = {=@energy/@latentHeat} kg."
+          },
+          "true": false,
+          "check": {
+            "expr": "@energy/@latentHeat",
+            "equals": "meltHeated"
+          }
+        }
+      ]
+    },
+    {
+      "id": "forgot-control",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["control", "errors"],
+      "set": {
+        "power": 24,
+        "heatingTime": 240
+      },
+      "stem": "A {power} W heater runs for {heatingTime} s; the heated funnel collects m₁ = {@meltHeated|4} kg and the control m₂ = {@meltControl|4} kg. A student forgets the control and works out λ from m₁ alone. What value does the student get?",
+      "explain": "λ′ = E/m₁ = {@energy}/{@meltHeated|4} ≈ {@uncorrected|4} J/kg, too small, because m₁ includes the ice the room melted. The right value is E/(m₁ − m₂) ≈ {=@energy/(@meltHeated-@meltControl)|4} J/kg.",
+      "vi": {
+        "stem": "Một dây đốt {power} W hoạt động {heatingTime} s; phễu có dây đốt thu được m₁ = {@meltHeated|4} kg, phễu đối chứng m₂ = {@meltControl|4} kg. Một học sinh quên phễu đối chứng và tính λ chỉ từ m₁. Học sinh đó thu được giá trị nào?",
+        "explain": "λ′ = E/m₁ = {@energy}/{@meltHeated|4} ≈ {@uncorrected|4} J/kg, quá nhỏ, vì m₁ gồm cả phần nước đá do môi trường làm tan. Giá trị đúng là E/(m₁ − m₂) ≈ {=@energy/(@meltHeated-@meltControl)|4} J/kg."
+      },
+      "options": [
+        {
+          "text": "{@uncorrected|4} J/kg",
+          "vi": {
+            "text": "{@uncorrected|4} J/kg"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@energy/@meltHeated",
+            "equals": "uncorrected"
+          }
+        },
+        {
+          "text": "{=@energy/(@meltHeated-@meltControl)|4} J/kg",
+          "vi": {
+            "text": "{=@energy/(@meltHeated-@meltControl)|4} J/kg"
+          },
+          "check": {
+            "expr": "@energy/(@meltHeated-@meltControl)",
+            "equals": "uncorrected"
+          }
+        },
+        {
+          "text": "{=@energy/@meltControl|4} J/kg",
+          "vi": {
+            "text": "{=@energy/@meltControl|4} J/kg"
+          },
+          "check": {
+            "expr": "@energy/@meltControl",
+            "equals": "uncorrected"
+          }
+        },
+        {
+          "text": "{=@energy/(@meltHeated+@meltControl)|4} J/kg",
+          "vi": {
+            "text": "{=@energy/(@meltHeated+@meltControl)|4} J/kg"
+          },
+          "check": {
+            "expr": "@energy/(@meltHeated+@meltControl)",
+            "equals": "uncorrected"
+          }
+        }
+      ]
+    },
+    {
+      "id": "how-long",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["energy"],
+      "set": {
+        "power": 36,
+        "heatingTime": 360
+      },
+      "stem": "How long must a {power} W heater run to melt {@meltByHeater|4} kg more ice than the control (λ = 3.336 × 10⁵ J/kg)?",
+      "explain": "P·t = λ·(m₁ − m₂), so t = λ·(m₁ − m₂)/P = 3.336 × 10⁵ × {@meltByHeater|4}/{power} ≈ {=@latentHeat*@meltByHeater/power} s. Adding the room’s {roomHeatGain} W to the heater counts heat the control already accounts for.",
+      "vi": {
+        "stem": "Một dây đốt {power} W phải hoạt động trong bao lâu để làm tan nhiều hơn phễu đối chứng {@meltByHeater|4} kg nước đá (λ = 3,336 × 10⁵ J/kg)?",
+        "explain": "P·t = λ·(m₁ − m₂), nên t = λ·(m₁ − m₂)/P = 3,336 × 10⁵ × {@meltByHeater|4}/{power} ≈ {=@latentHeat*@meltByHeater/power} s. Cộng thêm {roomHeatGain} W của môi trường vào dây đốt là tính phần nhiệt mà phễu đối chứng đã trừ ra rồi."
+      },
+      "options": [
+        {
+          "text": "{=@latentHeat*@meltByHeater/power} s",
+          "vi": {
+            "text": "{=@latentHeat*@meltByHeater/power} s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "power*(@latentHeat*@meltByHeater/power)/@latentHeat",
+            "equals": "meltByHeater"
+          }
+        },
+        {
+          "text": "{=@latentHeat*@meltByHeater/(power+roomHeatGain)} s",
+          "vi": {
+            "text": "{=@latentHeat*@meltByHeater/(power+roomHeatGain)} s"
+          },
+          "check": {
+            "expr": "power*(@latentHeat*@meltByHeater/(power+roomHeatGain))/@latentHeat",
+            "equals": "meltByHeater"
+          }
+        },
+        {
+          "text": "{=@latentHeat*@meltByHeater/power/60} s",
+          "vi": {
+            "text": "{=@latentHeat*@meltByHeater/power/60} s"
+          },
+          "check": {
+            "expr": "power*(@latentHeat*@meltByHeater/power/60)/@latentHeat",
+            "equals": "meltByHeater"
+          }
+        },
+        {
+          "text": "{=@latentHeat*@meltByHeater/(power-roomHeatGain)} s",
+          "vi": {
+            "text": "{=@latentHeat*@meltByHeater/(power-roomHeatGain)} s"
+          },
+          "check": {
+            "expr": "power*(@latentHeat*@meltByHeater/(power-roomHeatGain))/@latentHeat",
+            "equals": "meltByHeater"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-share",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["control", "errors", "energy"],
+      "set": {
+        "power": 36,
+        "heatingTime": 120,
+        "balanceResolution": 0.0001
+      },
+      "stem": "A {power} W heater runs for {heatingTime} s; each funnel also takes {roomHeatGain} W from the room (illustrative). Decide whether each statement is true or false.",
+      "explain": "m₁ = (P + gain)·t/λ ≈ {@meltHeated} kg. With the control, λ = P·t/(m₁ − m₂) = {@latentHeat|4} J/kg; without it, λ′ = E/m₁ ≈ {@uncorrected|4} J/kg, about {=(1-@uncorrected/@latentHeat)*100|2} % too small. Both melts grow in proportion to t, so running longer leaves the room’s share of m₁, gain/(P + gain), unchanged.",
+      "vi": {
+        "stem": "Một dây đốt {power} W hoạt động {heatingTime} s; mỗi phễu còn nhận {roomHeatGain} W từ môi trường (giá trị minh họa). Mỗi nhận định sau đúng hay sai?",
+        "explain": "m₁ = (P + công suất môi trường)·t/λ ≈ {@meltHeated} kg. Có phễu đối chứng, λ = P·t/(m₁ − m₂) = {@latentHeat|4} J/kg; không có nó, λ′ = E/m₁ ≈ {@uncorrected|4} J/kg, nhỏ hơn khoảng {=(1-@uncorrected/@latentHeat)*100|2} %. Cả hai lượng tan đều tỉ lệ với t, nên chạy lâu hơn thì phần của môi trường trong m₁, công suất môi trường/(P + công suất môi trường), vẫn không đổi."
+      },
+      "statements": [
+        {
+          "text": "The heated funnel collects about {@meltHeated} kg.",
+          "vi": {
+            "text": "Phễu có dây đốt thu được khoảng {@meltHeated} kg."
+          },
+          "true": true,
+          "check": {
+            "expr": "(power+roomHeatGain)*heatingTime/@latentHeat",
+            "equals": "meltHeated"
+          }
+        },
+        {
+          "text": "Using the control, λ = P·t/(m₁ − m₂) ≈ {@latentHeat|4} J/kg.",
+          "vi": {
+            "text": "Dùng phễu đối chứng, λ = P·t/(m₁ − m₂) ≈ {@latentHeat|4} J/kg."
+          },
+          "true": true,
+          "check": {
+            "expr": "power*heatingTime/(@meltHeated-@meltControl)",
+            "equals": "latentHeat"
+          }
+        },
+        {
+          "text": "Leaving out the control makes λ about {=(1-@uncorrected/@latentHeat)*100|2} % too small.",
+          "vi": {
+            "text": "Bỏ qua phễu đối chứng làm λ nhỏ hơn khoảng {=(1-@uncorrected/@latentHeat)*100|2} %."
+          },
+          "true": true,
+          "check": {
+            "expr": "@latentHeat*(1-(1-@uncorrected/@latentHeat))",
+            "equals": "uncorrected"
+          }
+        },
+        {
+          "text": "Running the heater twice as long makes the room’s share of m₁ larger.",
+          "vi": {
+            "text": "Cho dây đốt chạy lâu gấp đôi thì phần của môi trường trong m₁ lớn hơn."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

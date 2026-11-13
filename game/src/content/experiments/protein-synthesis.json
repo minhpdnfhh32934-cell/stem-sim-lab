@@ -1,0 +1,391 @@
+{
+  "id": "protein-synthesis",
+  "name": "From gene to protein: transcription, translation and mutations",
+  "category": "biology",
+  "description": "A gene is a code: its DNA is copied into mRNA (transcription), and a ribosome reads the mRNA three bases at a time, adding one amino acid per codon (translation). Watch the start of the human β-globin gene being made into protein, then change one base — the mutation that causes sickle-cell anaemia — and see what happens to the protein.",
+  "vi": {
+    "name": "Từ gen đến prôtêin: phiên mã, dịch mã và đột biến",
+    "description": "Gen là một mật mã: ADN của gen được sao thành mARN (phiên mã), rồi ribôxôm đọc mARN theo từng bộ ba, mỗi côđon gắn thêm một axit amin (dịch mã). Quan sát đoạn đầu gen β-globin của người được tổng hợp thành prôtêin, rồi thay đổi một nuclêôtit — đột biến gây bệnh hồng cầu hình liềm — và xem prôtêin thay đổi thế nào.",
+    "note": "Trình tự là đoạn đầu mạch mã hóa của gen β-globin người (HBB): 11 côđon, Met rồi Val1 His2 Leu3 Thr4 Pro5 Glu6 Glu7 Lys8 Ser9 Ala10 (đánh số không tính Met, như đột biến Glu6Val của bệnh hồng cầu hình liềm). Bảng mã di truyền chuẩn (bảng 1 của NCBI) là chính xác; đây chỉ là một đoạn gen nên prôtêin thật còn dài hơn. Đột biến im lặng, vô nghĩa và dịch khung ở đây là ví dụ minh họa trên cùng đoạn gen. Thời gian là của hình vẽ: mARN được sao 6 nuclêôtit mỗi 0,4 s, ribôxôm đọc một côđon mỗi 0,4 s. Màu: A xanh lá, T đỏ, U cam, G vàng, X xanh dương; mỗi axit amin một màu."
+  },
+  "requiredEquipment": ["gene-board"],
+  "model": "biology.protein-synthesis",
+  "parameters": [
+    {
+      "id": "mutation",
+      "label": "Mutation",
+      "vi": {
+        "label": "Đột biến"
+      },
+      "unit": "",
+      "default": 0,
+      "min": 0,
+      "max": 4,
+      "presets": [
+        {
+          "label": "No mutation",
+          "vi": {
+            "label": "Không đột biến"
+          },
+          "value": 0
+        },
+        {
+          "label": "Substitution GAG → GTG (sickle cell)",
+          "vi": {
+            "label": "Thay thế GAG → GTG (hồng cầu hình liềm)"
+          },
+          "value": 1
+        },
+        {
+          "label": "Substitution GAG → GAA (silent)",
+          "vi": {
+            "label": "Thay thế GAG → GAA (đột biến im lặng)"
+          },
+          "value": 2
+        },
+        {
+          "label": "Substitution GAG → TAG (nonsense)",
+          "vi": {
+            "label": "Thay thế GAG → TAG (đột biến vô nghĩa)"
+          },
+          "value": 3
+        },
+        {
+          "label": "Insertion of one A (frameshift)",
+          "vi": {
+            "label": "Thêm một nuclêôtit A (dịch khung)"
+          },
+          "value": 4
+        }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "stepTime": 0.4
+  },
+  "inputs": {
+    "stepTime": {
+      "symbol": "Δt",
+      "unit": "s",
+      "desk": false
+    }
+  },
+  "simulation": {
+    "timeStep": 0.02,
+    "maxDuration": 10,
+    "sampleInterval": 0.05
+  },
+  "measurements": [
+    {
+      "id": "time",
+      "label": "Time",
+      "vi": {
+        "label": "Thời gian"
+      },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "time"
+    },
+    {
+      "id": "transcribed",
+      "label": "mRNA bases made",
+      "vi": {
+        "label": "Số nuclêôtit mARN đã tổng hợp"
+      },
+      "unit": "",
+      "variable": "transcribed"
+    },
+    {
+      "id": "translated",
+      "label": "Amino acids joined",
+      "vi": {
+        "label": "Số axit amin đã gắn"
+      },
+      "unit": "",
+      "variable": "translated"
+    }
+  ],
+  "results": [
+    {
+      "id": "length",
+      "label": "Amino acids in the protein made",
+      "vi": {
+        "label": "Số axit amin của prôtêin tạo ra"
+      },
+      "unit": "",
+      "variable": "translated",
+      "reduce": "final",
+      "format": "integer",
+      "theory": "length"
+    },
+    {
+      "id": "changed",
+      "label": "Amino acids changed",
+      "vi": {
+        "label": "Số axit amin bị thay đổi"
+      },
+      "unit": "",
+      "variable": "changed",
+      "reduce": "final",
+      "format": "integer",
+      "theory": "changed"
+    },
+    {
+      "id": "effect",
+      "label": "Effect on the protein",
+      "vi": {
+        "label": "Ảnh hưởng tới prôtêin"
+      },
+      "unit": "",
+      "variable": "effect",
+      "reduce": "final",
+      "theory": "effect",
+      "classes": [
+        {
+          "max": 0,
+          "label": "Same protein",
+          "vi": {
+            "label": "Prôtêin không đổi"
+          }
+        },
+        {
+          "max": 1,
+          "label": "One amino acid changed (missense)",
+          "vi": {
+            "label": "Thay một axit amin (sai nghĩa)"
+          }
+        },
+        {
+          "max": 2,
+          "label": "Cut short by a stop codon (nonsense)",
+          "vi": {
+            "label": "Bị ngắn lại do côđon kết thúc (vô nghĩa)"
+          }
+        },
+        {
+          "label": "Changed from the mutation on (frameshift)",
+          "vi": {
+            "label": "Thay đổi từ chỗ đột biến trở đi (dịch khung)"
+          }
+        }
+      ]
+    }
+  ],
+  "graphs": [
+    {
+      "id": "synthesis-time",
+      "title": "mRNA bases and amino acids over time",
+      "vi": {
+        "title": "Số nuclêôtit mARN và axit amin theo thời gian"
+      },
+      "x": "time",
+      "y": ["transcribed", "translated"]
+    }
+  ],
+  "monitor": "synthesis-time",
+  "compare": [
+    {
+      "graph": "synthesis-time",
+      "series": "translated"
+    }
+  ],
+  "note": "The sequence is the start of the coding strand of the human β-globin gene (HBB): 11 codons, Met then Val1 His2 Leu3 Thr4 Pro5 Glu6 Glu7 Lys8 Ser9 Ala10 (numbered without the Met, as the sickle-cell mutation Glu6Val is). The standard genetic code (NCBI table 1) is exact; this is a fragment, so the real protein goes on. The silent, nonsense and frameshift mutations are illustrative examples on the same fragment. Timing is a picture’s: the mRNA is copied 6 bases per 0.4 s, the ribosome reads one codon per 0.4 s. Colours: A green, T red, U orange, G yellow, C blue; one colour per amino acid.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the gene to protein instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn về từ gen đến prôtêin trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "protein-synthesis-instructions"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN with no mutation: watch the mRNA being copied, then the ribosome.",
+      "vi": {
+        "instruction": "Nhấn CHẠY khi không đột biến: quan sát mARN được sao, rồi ribôxôm."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "mutation",
+      "instruction": "Press RESET and choose the sickle-cell mutation with the dial.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI và chọn đột biến hồng cầu hình liềm bằng núm xoay."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "mutation"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Run it and read how many amino acids changed.",
+      "vi": {
+        "instruction": "Chạy và đọc số axit amin bị thay đổi."
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Try the other mutations: which one changes the protein most?",
+      "vi": {
+        "instruction": "Thử các đột biến còn lại: đột biến nào làm prôtêin thay đổi nhiều nhất?"
+      },
+      "done": {
+        "kind": "reset"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "sickle-cell",
+      "question": "The fragment of the β-globin gene has {@bases} bases on its coding strand. The sickle-cell mutation changes GAG to GTG in the 7th codon. How long is the protein fragment, and how many amino acids change?",
+      "vi": {
+        "question": "Đoạn gen β-globin có {@bases} nuclêôtit trên mạch mã hóa. Đột biến hồng cầu hình liềm thay GAG thành GTG ở bộ ba thứ 7. Đoạn prôtêin dài bao nhiêu axit amin, và có bao nhiêu axit amin bị thay đổi?"
+      },
+      "set": { "mutation": 1 },
+      "find": [
+        { "theory": "length", "symbol": "L", "unit": "" },
+        { "theory": "changed", "symbol": "n", "unit": "" }
+      ],
+      "steps": [
+        {
+          "say": "Three bases make one codon, and each codon one amino acid; there is no stop codon in this fragment.",
+          "vi": {
+            "say": "Ba nuclêôtit tạo một bộ ba, mỗi bộ ba mã hóa một axit amin; đoạn này không có bộ ba kết thúc."
+          },
+          "write": "L = {@bases}/3 = {@length}",
+          "check": { "expr": "@bases/3", "equals": "length" }
+        },
+        {
+          "say": "GAG (mRNA GAG, Glu) becomes GTG (mRNA GUG, Val): one substitution changes one amino acid, Glu6 → Val.",
+          "vi": {
+            "say": "GAG (mARN GAG, Glu) thành GTG (mARN GUG, Val): một thay thế làm đổi một axit amin, Glu6 → Val."
+          },
+          "write": "GAG → GUG: Glu → Val,  n = {@changed}",
+          "check": { "expr": "1", "equals": "changed" }
+        }
+      ]
+    },
+    {
+      "id": "nonsense",
+      "question": "In the same fragment the 7th codon GAG becomes TAG. How many amino acids does the protein now have?",
+      "vi": {
+        "question": "Trong cùng đoạn gen, bộ ba thứ 7 GAG biến thành TAG. Prôtêin lúc này có bao nhiêu axit amin?"
+      },
+      "set": { "mutation": 3 },
+      "find": [{ "theory": "length", "symbol": "L", "unit": "" }],
+      "steps": [
+        {
+          "say": "On the mRNA, TAG is read as UAG — a stop codon.",
+          "vi": { "say": "Trên mARN, TAG được đọc thành UAG — một bộ ba kết thúc." },
+          "write": "TAG → UAG"
+        },
+        {
+          "say": "Translation stops there: only the first six codons are made into amino acids.",
+          "vi": { "say": "Dịch mã dừng tại đó: chỉ sáu bộ ba đầu được dịch thành axit amin." },
+          "write": "L = 7 − 1 = {@length}",
+          "check": { "expr": "7-1", "equals": "length" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "DNA → mRNA → protein: the order of bases in a gene sets the order of amino acids, three bases (a codon) per amino acid. Change one base and the protein may not change, change one amino acid, stop early, or be scrambled.",
+    "vi": {
+      "summary": "ADN → mARN → prôtêin: trình tự nuclêôtit của gen quy định trình tự axit amin, ba nuclêôtit (một bộ ba) cho một axit amin. Thay một nuclêôtit thì prôtêin có thể không đổi, đổi một axit amin, kết thúc sớm hoặc bị đảo lộn."
+    },
+    "view": {
+      "from": [0.1, 0.14, 0.75],
+      "to": [0.1, 0.08, 0]
+    },
+    "parts": [
+      {
+        "id": "dna",
+        "name": "DNA (gene)",
+        "role": "Two strands, bases paired A–T and G–C. The top one is the coding strand.",
+        "vi": {
+          "name": "ADN (gen)",
+          "role": "Hai mạch, các nuclêôtit bắt cặp A–T và G–X. Mạch trên là mạch mã hóa."
+        },
+        "anchor": {
+          "part": "dna"
+        }
+      },
+      {
+        "id": "mrna",
+        "name": "mRNA",
+        "role": "A copy of the gene with U in place of T: the message taken to the ribosome.",
+        "vi": {
+          "name": "mARN",
+          "role": "Bản sao của gen, có U thay cho T: thông tin được mang tới ribôxôm."
+        },
+        "anchor": {
+          "part": "mrna"
+        }
+      },
+      {
+        "id": "ribosome",
+        "name": "Ribosome",
+        "role": "Reads the mRNA one codon (three bases) at a time.",
+        "vi": {
+          "name": "Ribôxôm",
+          "role": "Đọc mARN theo từng côđon (ba nuclêôtit)."
+        },
+        "anchor": {
+          "part": "ribosome"
+        }
+      },
+      {
+        "id": "protein",
+        "name": "Protein chain",
+        "role": "One bead per amino acid, joined in the order of the codons.",
+        "vi": {
+          "name": "Chuỗi prôtêin",
+          "role": "Mỗi hạt là một axit amin, nối theo thứ tự các côđon."
+        },
+        "anchor": {
+          "part": "protein"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "Transcription: the gene’s DNA is copied into mRNA, base by base (A, U, G, C — U in place of T).",
+        "vi": {
+          "text": "Phiên mã: ADN của gen được sao thành mARN, từng nuclêôtit một (A, U, G, X — U thay cho T)."
+        },
+        "parts": ["dna", "mrna"]
+      },
+      {
+        "text": "Translation: the ribosome starts at AUG and reads three bases at a time. Each codon brings one amino acid, joined to the chain, until a stop codon (UAA, UAG, UGA).",
+        "vi": {
+          "text": "Dịch mã: ribôxôm bắt đầu từ AUG và đọc từng bộ ba. Mỗi côđon mang tới một axit amin, gắn vào chuỗi, cho tới côđon kết thúc (UAA, UAG, UGA)."
+        },
+        "parts": ["ribosome", "protein"]
+      },
+      {
+        "text": "Sickle cell: one A becomes T, GAG becomes GTG, and glutamic acid (Glu) becomes valine (Val). One amino acid in 147 changes the haemoglobin.",
+        "vi": {
+          "text": "Hồng cầu hình liềm: một A thành T, GAG thành GTG, và axit glutamic (Glu) thành valin (Val). Chỉ một axit amin trong 147 thay đổi làm hêmôglôbin thay đổi."
+        },
+        "parts": ["dna", "protein"]
+      },
+      {
+        "text": "Other mutations: a silent one gives the same amino acid; a nonsense one makes a stop codon; an added or lost base shifts every codon after it — the worst change.",
+        "vi": {
+          "text": "Các đột biến khác: đột biến im lặng vẫn cho cùng axit amin; đột biến vô nghĩa tạo côđon kết thúc; thêm hoặc mất một nuclêôtit làm lệch mọi bộ ba phía sau — thay đổi nặng nhất."
+        },
+        "parts": ["mrna", "protein"]
+      }
+    ]
+  }
+}

@@ -1,0 +1,1014 @@
+{
+  "id": "molecule-shapes",
+  "skills": [
+    {
+      "id": "domains",
+      "name": "Counting electron domains",
+      "advice": "For each central atom write AXₘEₙ: m bonded atoms (a double bond counts once) and n lone pairs. Check your count with the station’s domains and lone pairs before naming a shape.",
+      "vi": {
+        "name": "Đếm số vùng electron (cặp electron)",
+        "advice": "Với mỗi nguyên tử trung tâm, viết công thức AXₘEₙ: m nguyên tử liên kết (liên kết đôi chỉ tính một) và n cặp electron tự do. So số đếm của em với số vùng electron và số cặp tự do trên trạm trước khi gọi tên hình dạng."
+      }
+    },
+    {
+      "id": "shapes",
+      "name": "Shapes and ideal angles",
+      "advice": "Learn the table: 2 domains linear 180°, 3 trigonal planar 120°, 4 tetrahedral 109.5°, 5 trigonal bipyramidal 90° and 120°, 6 octahedral 90°. Name the shape from the atoms only — lone pairs are invisible in it.",
+      "vi": {
+        "name": "Hình dạng và góc liên kết lí tưởng",
+        "advice": "Học thuộc bảng: 2 vùng — thẳng, 180°; 3 — tam giác phẳng, 120°; 4 — tứ diện, 109,5°; 5 — lưỡng chóp tam giác, 90° và 120°; 6 — bát diện, 90°. Gọi tên hình dạng chỉ theo vị trí các nguyên tử — cặp electron tự do không tính vào hình dạng."
+      }
+    },
+    {
+      "id": "lone-pairs",
+      "name": "Lone pairs squeeze bond angles",
+      "advice": "Compare CH₄ 109.5°, NH₃ 106.7° and H₂O 104.5° at the station: each lone pair repels more strongly than a bonding pair and narrows the angles between the bonds.",
+      "vi": {
+        "name": "Cặp electron tự do làm hẹp góc liên kết",
+        "advice": "So sánh CH₄ 109,5°, NH₃ 106,7° và H₂O 104,5° trên trạm: mỗi cặp electron tự do đẩy mạnh hơn cặp electron liên kết và làm hẹp góc giữa các liên kết."
+      }
+    },
+    {
+      "id": "polarity",
+      "name": "Polarity of molecules",
+      "advice": "Draw the bond dipoles as arrows and add them: in symmetric shapes (CO₂, BF₃, CH₄, SF₆) they cancel and μ = 0; a lone pair on the central atom usually makes the molecule polar. Check against the station’s dipole moment.",
+      "vi": {
+        "name": "Độ phân cực của phân tử",
+        "advice": "Vẽ các mũi tên lưỡng cực của liên kết rồi cộng lại: ở các phân tử đối xứng (CO₂, BF₃, CH₄, SF₆) chúng triệt tiêu, μ = 0; cặp electron tự do trên nguyên tử trung tâm thường làm phân tử phân cực. Đối chiếu với momen lưỡng cực trên trạm."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "co2-shape",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["shapes"],
+      "stem": "What is the shape of a carbon dioxide molecule, CO₂?",
+      "explain": "Carbon has two double bonds and no lone pair: two domains, as far apart as possible — linear, 180°.",
+      "vi": {
+        "stem": "Phân tử carbon dioxide, CO₂, có hình dạng gì?",
+        "explain": "Carbon có hai liên kết đôi và không có cặp electron tự do: hai vùng electron, đẩy nhau xa nhất — phân tử thẳng, 180°."
+      },
+      "options": [
+        {
+          "text": "Linear",
+          "vi": {
+            "text": "Đường thẳng"
+          },
+          "correct": true
+        },
+        {
+          "text": "Bent",
+          "vi": {
+            "text": "Gấp khúc (chữ V)"
+          }
+        },
+        {
+          "text": "Trigonal planar",
+          "vi": {
+            "text": "Tam giác phẳng"
+          }
+        },
+        {
+          "text": "Tetrahedral",
+          "vi": {
+            "text": "Tứ diện"
+          }
+        }
+      ]
+    },
+    {
+      "id": "four-domains",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["shapes"],
+      "stem": "Four electron domains around a central atom point to the corners of a tetrahedron. What is the ideal angle between them?",
+      "explain": "For a regular tetrahedron cos θ = −1/3: θ ≈ 109.5°.",
+      "vi": {
+        "stem": "Bốn vùng electron quanh nguyên tử trung tâm hướng về bốn đỉnh của một tứ diện. Góc lí tưởng giữa chúng là bao nhiêu?",
+        "explain": "Với tứ diện đều, cos θ = −1/3: θ ≈ 109,5°."
+      },
+      "options": [
+        {
+          "text": "109.5°",
+          "vi": {
+            "text": "109,5°"
+          },
+          "correct": true
+        },
+        {
+          "text": "120°",
+          "vi": {
+            "text": "120°"
+          }
+        },
+        {
+          "text": "90°",
+          "vi": {
+            "text": "90°"
+          }
+        },
+        {
+          "text": "180°",
+          "vi": {
+            "text": "180°"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-vsepr",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["domains", "shapes", "lone-pairs"],
+      "stem": "Decide whether each statement about VSEPR theory is true or false.",
+      "explain": "A multiple bond counts as one domain. CH₄ (four bonds) is tetrahedral and SF₆ (six bonds) octahedral with 90° angles. A lone pair spreads out more than a bonding pair and pushes harder.",
+      "vi": {
+        "stem": "Mỗi nhận định sau về thuyết VSEPR (lực đẩy giữa các cặp electron hóa trị) đúng hay sai?",
+        "explain": "Một liên kết bội được tính là một vùng electron. CH₄ (bốn liên kết) có dạng tứ diện và SF₆ (sáu liên kết) có dạng bát diện với góc 90°. Cặp electron tự do chiếm không gian rộng hơn cặp electron liên kết và đẩy mạnh hơn."
+      },
+      "statements": [
+        {
+          "text": "A double bond counts as one electron domain.",
+          "vi": {
+            "text": "Một liên kết đôi được tính là một vùng electron."
+          },
+          "true": true
+        },
+        {
+          "text": "CH₄ is tetrahedral.",
+          "vi": {
+            "text": "CH₄ có dạng tứ diện."
+          },
+          "true": true
+        },
+        {
+          "text": "SF₆ is octahedral, with 90° between neighbouring bonds.",
+          "vi": {
+            "text": "SF₆ có dạng bát diện, góc giữa hai liên kết kề nhau là 90°."
+          },
+          "true": true
+        },
+        {
+          "text": "A lone pair takes up less room than a bonding pair.",
+          "vi": {
+            "text": "Cặp electron tự do chiếm ít không gian hơn cặp electron liên kết."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "water-bent",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["domains", "lone-pairs"],
+      "stem": "Why is a water molecule bent rather than linear?",
+      "explain": "Oxygen has two bonding pairs and two lone pairs: four domains in a tetrahedral arrangement. The two H atoms sit at two corners, so H–O–H is bent (104.5°).",
+      "vi": {
+        "stem": "Vì sao phân tử nước có dạng gấp khúc mà không thẳng?",
+        "explain": "Oxygen có hai cặp electron liên kết và hai cặp electron tự do: bốn vùng electron sắp xếp theo hình tứ diện. Hai nguyên tử H nằm ở hai đỉnh, nên H–O–H gấp khúc (104,5°)."
+      },
+      "options": [
+        {
+          "text": "Oxygen has two lone pairs as well as two bonds: four domains",
+          "vi": {
+            "text": "Oxygen có hai cặp electron tự do ngoài hai liên kết: bốn vùng electron"
+          },
+          "correct": true
+        },
+        {
+          "text": "The two hydrogen atoms attract each other",
+          "vi": {
+            "text": "Hai nguyên tử hydrogen hút nhau"
+          }
+        },
+        {
+          "text": "Oxygen forms a double bond with one hydrogen",
+          "vi": {
+            "text": "Oxygen tạo liên kết đôi với một nguyên tử hydrogen"
+          }
+        },
+        {
+          "text": "Water molecules are bent by hydrogen bonding",
+          "vi": {
+            "text": "Liên kết hydrogen làm phân tử nước bị bẻ cong"
+          }
+        }
+      ]
+    },
+    {
+      "id": "angle-order",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["lone-pairs"],
+      "stem": "CH₄, NH₃ and H₂O each have four electron domains on the central atom. Their bond angles are in the order…",
+      "explain": "No lone pair: 109.5° (CH₄); one: 106.7° (NH₃); two: 104.5° (H₂O). Each lone pair squeezes the bonds closer.",
+      "vi": {
+        "stem": "CH₄, NH₃ và H₂O đều có bốn vùng electron quanh nguyên tử trung tâm. Góc liên kết của chúng được sắp xếp theo thứ tự",
+        "explain": "Không có cặp tự do: 109,5° (CH₄); một cặp: 106,7° (NH₃); hai cặp: 104,5° (H₂O). Mỗi cặp electron tự do ép các liên kết lại gần nhau hơn."
+      },
+      "options": [
+        {
+          "text": "CH₄ > NH₃ > H₂O",
+          "vi": {
+            "text": "CH₄ > NH₃ > H₂O"
+          },
+          "correct": true
+        },
+        {
+          "text": "H₂O > NH₃ > CH₄",
+          "vi": {
+            "text": "H₂O > NH₃ > CH₄"
+          }
+        },
+        {
+          "text": "NH₃ > CH₄ > H₂O",
+          "vi": {
+            "text": "NH₃ > CH₄ > H₂O"
+          }
+        },
+        {
+          "text": "CH₄ = NH₃ = H₂O",
+          "vi": {
+            "text": "CH₄ = NH₃ = H₂O"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-polarity",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["polarity", "shapes"],
+      "stem": "Decide whether each statement about the polarity of molecules is true or false.",
+      "explain": "CO₂ and BF₃ have polar bonds, but their symmetric shapes make the bond dipoles cancel: μ = 0. H₂O is bent and NH₃ trigonal pyramidal, so both are polar.",
+      "vi": {
+        "stem": "Mỗi nhận định sau về độ phân cực của phân tử đúng hay sai?",
+        "explain": "CO₂ và BF₃ có liên kết phân cực, nhưng do cấu trúc đối xứng nên các lưỡng cực liên kết triệt tiêu: μ = 0. H₂O có dạng gấp khúc và NH₃ có dạng chóp tam giác, nên cả hai đều phân cực."
+      },
+      "statements": [
+        {
+          "text": "CO₂ has polar bonds but no overall dipole moment.",
+          "vi": {
+            "text": "CO₂ có liên kết phân cực nhưng phân tử không có momen lưỡng cực."
+          },
+          "true": true
+        },
+        {
+          "text": "H₂O is a polar molecule.",
+          "vi": {
+            "text": "H₂O là phân tử phân cực."
+          },
+          "true": true
+        },
+        {
+          "text": "BF₃ is polar because its B–F bonds are polar.",
+          "vi": {
+            "text": "BF₃ là phân tử phân cực vì các liên kết B–F phân cực."
+          },
+          "true": false
+        },
+        {
+          "text": "NH₃ is trigonal pyramidal.",
+          "vi": {
+            "text": "NH₃ có dạng chóp tam giác."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "ammonia",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["domains", "shapes"],
+      "set": {
+        "molecule": 5
+      },
+      "stem": "Nitrogen in ammonia, NH₃, has five valence electrons, three of them bonded to hydrogen atoms. Which describes the central atom and the shape?",
+      "explain": "Three bonds and one lone pair (the other two electrons): {@domains} domains, {@lonePairs} lone pair, AX₃E — trigonal pyramidal, measured angle {@angle|5}°.",
+      "vi": {
+        "stem": "Nguyên tử nitrogen trong ammonia, NH₃, có năm electron hóa trị, ba electron trong số đó tạo liên kết với các nguyên tử hydrogen. Mô tả nào đúng về nguyên tử trung tâm và hình dạng phân tử?",
+        "explain": "Ba liên kết và một cặp electron tự do (hai electron còn lại): {@domains} vùng electron, {@lonePairs} cặp tự do, AX₃E — chóp tam giác, góc đo được {@angle|5}°."
+      },
+      "options": [
+        {
+          "text": "4 domains, 1 lone pair: trigonal pyramidal",
+          "vi": {
+            "text": "4 vùng electron, 1 cặp tự do: chóp tam giác"
+          },
+          "correct": true,
+          "check": {
+            "expr": "4",
+            "equals": "domains"
+          }
+        },
+        {
+          "text": "3 domains, no lone pair: trigonal planar",
+          "vi": {
+            "text": "3 vùng electron, không có cặp tự do: tam giác phẳng"
+          },
+          "check": {
+            "expr": "3",
+            "equals": "domains"
+          }
+        },
+        {
+          "text": "4 domains, 2 lone pairs: bent",
+          "vi": {
+            "text": "4 vùng electron, 2 cặp tự do: gấp khúc"
+          },
+          "check": {
+            "expr": "2",
+            "equals": "lonePairs"
+          }
+        },
+        {
+          "text": "4 domains, no lone pair: tetrahedral",
+          "vi": {
+            "text": "4 vùng electron, không có cặp tự do: tứ diện"
+          },
+          "check": {
+            "expr": "0",
+            "equals": "lonePairs"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sulfur-dioxide",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["domains", "lone-pairs"],
+      "set": {
+        "molecule": 3
+      },
+      "stem": "Sulfur dioxide, SO₂: sulfur forms a double bond to each oxygen and keeps one lone pair. What are its shape and bond angle?",
+      "explain": "Two double bonds count as two domains, plus one lone pair: three domains (ideal 120°). The lone pair squeezes the O–S–O angle a little: {@angle|5}°, bent.",
+      "vi": {
+        "stem": "Sulfur dioxide, SO₂: sulfur tạo liên kết đôi với mỗi nguyên tử oxygen và còn một cặp electron tự do. Hình dạng và góc liên kết của phân tử là gì?",
+        "explain": "Hai liên kết đôi tính là hai vùng electron, cộng một cặp tự do: ba vùng electron (lí tưởng 120°). Cặp tự do ép góc O–S–O hẹp lại một chút: {@angle|5}°, dạng gấp khúc."
+      },
+      "options": [
+        {
+          "text": "Bent, about 119°",
+          "vi": {
+            "text": "Gấp khúc, khoảng 119°"
+          },
+          "correct": true,
+          "check": {
+            "expr": "119.33",
+            "equals": "angle"
+          }
+        },
+        {
+          "text": "Linear, 180°",
+          "vi": {
+            "text": "Đường thẳng, 180°"
+          },
+          "check": {
+            "expr": "180",
+            "equals": "angle"
+          }
+        },
+        {
+          "text": "Bent, about 104.5°",
+          "vi": {
+            "text": "Gấp khúc, khoảng 104,5°"
+          },
+          "check": {
+            "expr": "104.48",
+            "equals": "angle"
+          }
+        },
+        {
+          "text": "Trigonal planar, exactly 120°",
+          "vi": {
+            "text": "Tam giác phẳng, đúng 120°"
+          },
+          "check": {
+            "expr": "120",
+            "equals": "angle"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-pcl5",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["domains", "shapes", "polarity"],
+      "set": {
+        "molecule": 7
+      },
+      "stem": "Phosphorus pentachloride, PCl₅: phosphorus forms five P–Cl bonds. Decide whether each statement is true or false.",
+      "explain": "Five bonds and no lone pair: {@domains} domains, AX₅, trigonal bipyramidal with 120° in the triangle and 90° to the axis. Symmetric: the bond dipoles cancel, μ = {@dipole} D.",
+      "vi": {
+        "stem": "Phosphorus pentachloride, PCl₅: phosphorus tạo năm liên kết P–Cl. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Năm liên kết, không có cặp tự do: {@domains} vùng electron, AX₅, lưỡng chóp tam giác với góc 120° trong mặt tam giác và 90° với trục. Cấu trúc đối xứng: các lưỡng cực liên kết triệt tiêu, μ = {@dipole} D."
+      },
+      "statements": [
+        {
+          "text": "Phosphorus has 5 electron domains.",
+          "vi": {
+            "text": "Phosphorus có 5 vùng electron."
+          },
+          "true": true,
+          "check": {
+            "expr": "5",
+            "equals": "domains"
+          }
+        },
+        {
+          "text": "Phosphorus has no lone pair.",
+          "vi": {
+            "text": "Phosphorus không có cặp electron tự do."
+          },
+          "true": true,
+          "check": {
+            "expr": "0",
+            "equals": "lonePairs"
+          }
+        },
+        {
+          "text": "The molecule is trigonal bipyramidal, with bond angles of 90° and 120°.",
+          "vi": {
+            "text": "Phân tử có dạng lưỡng chóp tam giác, với các góc liên kết 90° và 120°."
+          },
+          "true": true
+        },
+        {
+          "text": "PCl₅ is a polar molecule.",
+          "vi": {
+            "text": "PCl₅ là phân tử phân cực."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "which-polar",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["polarity", "lone-pairs"],
+      "stem": "Which of these molecules is polar?",
+      "explain": "NH₃ has a lone pair and a pyramidal shape, so its bond dipoles do not cancel (μ ≈ 1.47 D). CO₂ (linear), BF₃ (trigonal planar) and CH₄ (tetrahedral) are symmetric: μ = 0.",
+      "vi": {
+        "stem": "Phân tử nào sau đây phân cực?",
+        "explain": "NH₃ có cặp electron tự do và dạng chóp, nên các lưỡng cực liên kết không triệt tiêu (μ ≈ 1,47 D). CO₂ (thẳng), BF₃ (tam giác phẳng) và CH₄ (tứ diện) đối xứng: μ = 0."
+      },
+      "options": [
+        {
+          "text": "NH₃",
+          "vi": {
+            "text": "NH₃"
+          },
+          "correct": true
+        },
+        {
+          "text": "CO₂",
+          "vi": {
+            "text": "CO₂"
+          }
+        },
+        {
+          "text": "BF₃",
+          "vi": {
+            "text": "BF₃"
+          }
+        },
+        {
+          "text": "CH₄",
+          "vi": {
+            "text": "CH₄"
+          }
+        }
+      ]
+    },
+    {
+      "id": "explain-trend",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["lone-pairs", "domains"],
+      "stem": "The station measures CH₄ 109.47°, NH₃ 106.67° and H₂O 104.48°. All three have four electron domains. What best explains the trend?",
+      "explain": "From CH₄ to NH₃ to H₂O one bonding pair at a time becomes a lone pair; lone pairs repel more strongly than bonding pairs, so the remaining bonds are squeezed closer each time.",
+      "vi": {
+        "stem": "Trạm đo được góc liên kết: CH₄ 109,47°, NH₃ 106,67° và H₂O 104,48°. Cả ba đều có bốn vùng electron. Giải thích nào phù hợp nhất với xu hướng này?",
+        "explain": "Từ CH₄ sang NH₃ rồi H₂O, lần lượt một cặp electron liên kết được thay bằng một cặp tự do; cặp tự do đẩy mạnh hơn cặp liên kết, nên các liên kết còn lại bị ép lại gần nhau hơn."
+      },
+      "options": [
+        {
+          "text": "Each extra lone pair repels the bonding pairs more strongly than a bond does, closing the angle",
+          "vi": {
+            "text": "Mỗi cặp tự do thêm vào đẩy các cặp liên kết mạnh hơn một liên kết, làm góc hẹp lại"
+          },
+          "correct": true
+        },
+        {
+          "text": "Fewer hydrogen atoms attract each other more strongly",
+          "vi": {
+            "text": "Càng ít nguyên tử hydrogen thì chúng hút nhau càng mạnh"
+          }
+        },
+        {
+          "text": "The number of electron domains falls from CH₄ to H₂O",
+          "vi": {
+            "text": "Số vùng electron giảm dần từ CH₄ đến H₂O"
+          }
+        },
+        {
+          "text": "Heavier central atoms make smaller angles",
+          "vi": {
+            "text": "Nguyên tử trung tâm càng nặng thì góc càng nhỏ"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-so2",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["domains", "lone-pairs", "polarity"],
+      "set": {
+        "molecule": 3
+      },
+      "stem": "Sulfur dioxide, SO₂, is compared with carbon dioxide, CO₂: both have two double bonds to oxygen. Decide whether each statement is true or false.",
+      "explain": "Sulfur also has a lone pair: {@domains} domains (two double bonds count once each), so SO₂ is bent at {@angle|5}°, a little under the ideal 120°. Its bond dipoles do not cancel: μ = {@dipole} D, while linear CO₂ has μ = 0.",
+      "vi": {
+        "stem": "So sánh sulfur dioxide, SO₂, với carbon dioxide, CO₂: cả hai đều có hai liên kết đôi với oxygen. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Sulfur còn một cặp electron tự do: {@domains} vùng electron (mỗi liên kết đôi tính một), nên SO₂ gấp khúc với góc {@angle|5}°, nhỏ hơn một chút so với góc lí tưởng 120°. Các lưỡng cực liên kết không triệt tiêu: μ = {@dipole} D, trong khi CO₂ thẳng có μ = 0."
+      },
+      "statements": [
+        {
+          "text": "Sulfur in SO₂ has 3 electron domains.",
+          "vi": {
+            "text": "Nguyên tử sulfur trong SO₂ có 3 vùng electron."
+          },
+          "true": true,
+          "check": {
+            "expr": "3",
+            "equals": "domains"
+          }
+        },
+        {
+          "text": "The measured O–S–O angle, {@angle|5}°, is a little less than 120°.",
+          "vi": {
+            "text": "Góc O–S–O đo được, {@angle|5}°, nhỏ hơn 120° một chút."
+          },
+          "true": true,
+          "check": {
+            "expr": "119.33",
+            "equals": "angle"
+          }
+        },
+        {
+          "text": "Like CO₂, SO₂ has no dipole moment.",
+          "vi": {
+            "text": "Giống CO₂, SO₂ không có momen lưỡng cực."
+          },
+          "true": false,
+          "check": {
+            "expr": "0",
+            "equals": "dipole"
+          }
+        },
+        {
+          "text": "The dipole moment of SO₂ is about {@dipole} D.",
+          "vi": {
+            "text": "Momen lưỡng cực của SO₂ khoảng {@dipole} D."
+          },
+          "true": true,
+          "check": {
+            "expr": "1.6331",
+            "equals": "dipole"
+          }
+        }
+      ]
+    },
+    {
+      "id": "bf3-shape",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["shapes"],
+      "stem": "What is the shape of a boron trifluoride molecule, BF₃?",
+      "explain": "Boron has three bonding domains and no lone pair (AX₃): they point to the corners of an equilateral triangle, a trigonal planar molecule with 120° angles.",
+      "vi": {
+        "stem": "Phân tử boron trifluoride, BF₃, có hình dạng gì?",
+        "explain": "Boron có ba vùng electron liên kết và không có cặp electron riêng (AX₃): chúng hướng về ba đỉnh của một tam giác đều, phân tử có dạng tam giác phẳng với góc liên kết 120°."
+      },
+      "options": [
+        {
+          "text": "Trigonal planar",
+          "vi": {
+            "text": "Tam giác phẳng"
+          },
+          "correct": true
+        },
+        {
+          "text": "Trigonal pyramidal",
+          "vi": {
+            "text": "Chóp tam giác"
+          }
+        },
+        {
+          "text": "Tetrahedral",
+          "vi": {
+            "text": "Tứ diện"
+          }
+        },
+        {
+          "text": "Linear",
+          "vi": {
+            "text": "Đường thẳng"
+          }
+        }
+      ]
+    },
+    {
+      "id": "becl2-angle",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["domains", "shapes"],
+      "set": {
+        "molecule": 0
+      },
+      "stem": "Beryllium in BeCl₂ (as a gas molecule) forms two Be–Cl bonds and has no lone pair. What is the Cl–Be–Cl angle?",
+      "explain": "Two electron domains get as far apart as they can on opposite sides of the beryllium: a linear molecule, {@angle}°.",
+      "vi": {
+        "stem": "Trong phân tử BeCl₂ (ở thể khí), beryllium tạo hai liên kết Be–Cl và không có cặp electron riêng. Góc Cl–Be–Cl bằng bao nhiêu?",
+        "explain": "Hai vùng electron đẩy nhau ra xa nhất về hai phía đối diện của nguyên tử beryllium: phân tử thẳng, góc {@angle}°."
+      },
+      "options": [
+        {
+          "text": "180°",
+          "vi": {
+            "text": "180°"
+          },
+          "correct": true,
+          "check": {
+            "expr": "180",
+            "equals": "angle"
+          }
+        },
+        {
+          "text": "120°",
+          "vi": {
+            "text": "120°"
+          },
+          "check": {
+            "expr": "120",
+            "equals": "angle"
+          }
+        },
+        {
+          "text": "109.5°",
+          "vi": {
+            "text": "109,5°"
+          },
+          "check": {
+            "expr": "109.5",
+            "equals": "angle"
+          }
+        },
+        {
+          "text": "90°",
+          "vi": {
+            "text": "90°"
+          },
+          "check": {
+            "expr": "90",
+            "equals": "angle"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-ammonia",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["domains", "lone-pairs", "polarity"],
+      "set": {
+        "molecule": 5
+      },
+      "stem": "Ammonia, NH₃: nitrogen forms three N–H bonds and keeps one lone pair. Decide whether each statement is true or false.",
+      "explain": "Three bonds and a lone pair make {@domains} domains (AX₃E): a tetrahedral arrangement, but the shape — the atoms only — is trigonal pyramidal. The lone pair squeezes the H–N–H angle to {@angle|5}°, below 109.5°. The N–H dipoles do not cancel in a pyramid: μ ≈ {@dipole} D, a polar molecule.",
+      "vi": {
+        "stem": "Ammonia, NH₃: nitrogen tạo ba liên kết N–H và còn một cặp electron riêng. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Ba liên kết và một cặp electron riêng tạo {@domains} vùng electron (AX₃E): sắp xếp tứ diện, nhưng hình dạng phân tử — chỉ xét các nguyên tử — là chóp tam giác. Cặp electron riêng ép góc H–N–H xuống {@angle|5}°, nhỏ hơn 109,5°. Các momen lưỡng cực N–H không triệt tiêu trong hình chóp: μ ≈ {@dipole} D, phân tử phân cực."
+      },
+      "statements": [
+        {
+          "text": "Nitrogen has 4 electron domains.",
+          "vi": {
+            "text": "Nguyên tử nitrogen có 4 vùng electron."
+          },
+          "true": true,
+          "check": {
+            "expr": "4",
+            "equals": "domains"
+          }
+        },
+        {
+          "text": "NH₃ is trigonal planar because nitrogen is bonded to three hydrogen atoms.",
+          "vi": {
+            "text": "NH₃ có dạng tam giác phẳng vì nitrogen liên kết với ba nguyên tử hydrogen."
+          },
+          "true": false
+        },
+        {
+          "text": "The H–N–H angle, {@angle|5}°, is smaller than the tetrahedral angle.",
+          "vi": {
+            "text": "Góc H–N–H, {@angle|5}°, nhỏ hơn góc tứ diện."
+          },
+          "true": true,
+          "check": {
+            "expr": "106.67",
+            "equals": "angle"
+          }
+        },
+        {
+          "text": "NH₃ has no dipole moment.",
+          "vi": {
+            "text": "NH₃ không có momen lưỡng cực."
+          },
+          "true": false,
+          "check": {
+            "expr": "0",
+            "equals": "dipole"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sf6",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["domains", "shapes"],
+      "set": {
+        "molecule": 8
+      },
+      "stem": "Sulfur hexafluoride, SF₆: sulfur forms six S–F bonds and has no lone pair. What are its shape and bond angle?",
+      "explain": "Six bonding domains point to the corners of an octahedron: every F–S–F angle between neighbours is {@angle}° (and 180° across). Five domains would be trigonal bipyramidal (90° and 120°); four, tetrahedral.",
+      "vi": {
+        "stem": "Sulfur hexafluoride, SF₆: sulfur tạo sáu liên kết S–F và không có cặp electron riêng. Hình dạng và góc liên kết của phân tử là gì?",
+        "explain": "Sáu vùng electron liên kết hướng về sáu đỉnh của một hình bát diện: mọi góc F–S–F giữa hai liên kết kề nhau đều bằng {@angle}° (và 180° giữa hai liên kết đối diện). Năm vùng electron cho dạng lưỡng chóp tam giác (90° và 120°); bốn vùng cho dạng tứ diện."
+      },
+      "options": [
+        {
+          "text": "Octahedral, 90°",
+          "vi": {
+            "text": "Bát diện, 90°"
+          },
+          "correct": true,
+          "check": {
+            "expr": "6",
+            "equals": "domains"
+          }
+        },
+        {
+          "text": "Trigonal bipyramidal, 90° and 120°",
+          "vi": {
+            "text": "Lưỡng chóp tam giác, 90° và 120°"
+          },
+          "check": {
+            "expr": "5",
+            "equals": "domains"
+          }
+        },
+        {
+          "text": "Hexagonal planar, 60°",
+          "vi": {
+            "text": "Lục giác phẳng, 60°"
+          },
+          "check": {
+            "expr": "60",
+            "equals": "angle"
+          }
+        },
+        {
+          "text": "Tetrahedral, 109.5°",
+          "vi": {
+            "text": "Tứ diện, 109,5°"
+          },
+          "check": {
+            "expr": "4",
+            "equals": "domains"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-water",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["domains", "lone-pairs", "polarity"],
+      "set": {
+        "molecule": 6
+      },
+      "stem": "Water, H₂O: oxygen has six valence electrons, two of them bonded to hydrogen atoms. Decide whether each statement is true or false.",
+      "explain": "Oxygen keeps 6 − 2 = 4 electrons as {@lonePairs} lone pairs: AX₂E₂, four domains, ideal angle arccos(−1/3) ≈ {@idealAngle|4}°. The two lone pairs push the bonds closer, to {@angle|5}°, and make the molecule bent, not linear. The two O–H dipoles do not cancel: μ ≈ {@dipole} D.",
+      "vi": {
+        "stem": "Nước, H₂O: oxygen có sáu electron hóa trị, trong đó hai electron liên kết với hai nguyên tử hydrogen. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Oxygen còn 6 − 2 = 4 electron tạo thành {@lonePairs} cặp electron riêng: AX₂E₂, bốn vùng electron, góc lí tưởng arccos(−1/3) ≈ {@idealAngle|4}°. Hai cặp electron riêng đẩy hai liên kết lại gần nhau, góc còn {@angle|5}°, và làm phân tử có dạng góc, không thẳng. Hai momen lưỡng cực O–H không triệt tiêu nhau: μ ≈ {@dipole} D."
+      },
+      "statements": [
+        {
+          "text": "Oxygen has 2 lone pairs.",
+          "vi": {
+            "text": "Nguyên tử oxygen có 2 cặp electron riêng."
+          },
+          "true": true,
+          "check": {
+            "expr": "2",
+            "equals": "lonePairs"
+          }
+        },
+        {
+          "text": "The ideal angle for its four domains is about {=deg(acos(-1/3))|4}°.",
+          "vi": {
+            "text": "Góc lí tưởng ứng với bốn vùng electron của nó khoảng {=deg(acos(-1/3))|4}°."
+          },
+          "true": true,
+          "check": {
+            "expr": "deg(acos(-1/3))",
+            "equals": "idealAngle"
+          }
+        },
+        {
+          "text": "Like CO₂, H₂O is linear, since it has three atoms.",
+          "vi": {
+            "text": "Giống CO₂, H₂O có dạng đường thẳng vì phân tử có ba nguyên tử."
+          },
+          "true": false
+        },
+        {
+          "text": "The two O–H dipoles cancel, so water has no dipole moment.",
+          "vi": {
+            "text": "Hai momen lưỡng cực O–H triệt tiêu nhau, nên nước không có momen lưỡng cực."
+          },
+          "true": false,
+          "check": {
+            "expr": "0",
+            "equals": "dipole"
+          }
+        }
+      ]
+    },
+    {
+      "id": "same-domains-pair",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["domains", "polarity", "lone-pairs"],
+      "stem": "Which pair of molecules has the same number of electron domains on the central atom, but one molecule is polar and the other is not?",
+      "explain": "CH₄ (AX₄) and H₂O (AX₂E₂) both have four domains; CH₄ is symmetric and non-polar, while H₂O is bent and polar. CO₂ and BeCl₂ have two domains each but both are linear and non-polar. CO₂ (two domains) and SO₂ (three, one a lone pair) differ in domains even though both have two double bonds. PCl₅ (five) and SF₆ (six) are both non-polar.",
+      "vi": {
+        "stem": "Cặp phân tử nào có cùng số vùng electron trên nguyên tử trung tâm, nhưng một phân tử phân cực còn phân tử kia không phân cực?",
+        "explain": "CH₄ (AX₄) và H₂O (AX₂E₂) đều có bốn vùng electron; CH₄ đối xứng, không phân cực, còn H₂O có dạng góc và phân cực. CO₂ và BeCl₂ đều có hai vùng electron nhưng cả hai đều thẳng và không phân cực. CO₂ (hai vùng) và SO₂ (ba vùng, một là cặp electron riêng) khác số vùng electron dù đều có hai liên kết đôi. PCl₅ (năm vùng) và SF₆ (sáu vùng) đều không phân cực."
+      },
+      "options": [
+        {
+          "text": "CH₄ and H₂O",
+          "vi": {
+            "text": "CH₄ và H₂O"
+          },
+          "correct": true
+        },
+        {
+          "text": "CO₂ and BeCl₂",
+          "vi": {
+            "text": "CO₂ và BeCl₂"
+          }
+        },
+        {
+          "text": "CO₂ and SO₂",
+          "vi": {
+            "text": "CO₂ và SO₂"
+          }
+        },
+        {
+          "text": "PCl₅ and SF₆",
+          "vi": {
+            "text": "PCl₅ và SF₆"
+          }
+        }
+      ]
+    },
+    {
+      "id": "identify-ax2",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["shapes", "lone-pairs", "polarity"],
+      "set": {
+        "molecule": 3
+      },
+      "stem": "A molecule AX₂ has a measured X–A–X angle of {@angle|5}° and a dipole moment of {@dipole} D. Which molecule is it?",
+      "explain": "An angle just under 120° points to three domains with one lone pair (AX₂E), and a dipole moment means the molecule is bent: SO₂. H₂O is bent too, but with four domains its angle is much smaller, near the tetrahedral one; CO₂ and BeCl₂ are linear, 180°, with no dipole moment.",
+      "vi": {
+        "stem": "Một phân tử AX₂ có góc X–A–X đo được là {@angle|5}° và momen lưỡng cực {@dipole} D. Đó là phân tử nào?",
+        "explain": "Góc nhỏ hơn 120° một chút cho thấy ba vùng electron với một cặp electron riêng (AX₂E), và có momen lưỡng cực nghĩa là phân tử có dạng góc: SO₂. H₂O cũng có dạng góc, nhưng với bốn vùng electron góc của nó nhỏ hơn nhiều, gần góc tứ diện; CO₂ và BeCl₂ có dạng thẳng, 180°, không có momen lưỡng cực."
+      },
+      "options": [
+        {
+          "text": "SO₂",
+          "vi": {
+            "text": "SO₂"
+          },
+          "correct": true,
+          "check": {
+            "expr": "119.33",
+            "equals": "angle"
+          }
+        },
+        {
+          "text": "H₂O",
+          "vi": {
+            "text": "H₂O"
+          },
+          "check": {
+            "expr": "104.48",
+            "equals": "angle"
+          }
+        },
+        {
+          "text": "CO₂",
+          "vi": {
+            "text": "CO₂"
+          },
+          "check": {
+            "expr": "180",
+            "equals": "angle"
+          }
+        },
+        {
+          "text": "BeCl₂",
+          "vi": {
+            "text": "BeCl₂"
+          },
+          "check": {
+            "expr": "0",
+            "equals": "dipole"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-bf3-nh3",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["domains", "shapes", "polarity", "lone-pairs"],
+      "set": {
+        "molecule": 2
+      },
+      "stem": "BF₃ and NH₃ each have three atoms bonded to the central atom. Decide whether each statement is true or false.",
+      "explain": "Boron has three valence electrons, all bonded: {@domains} domains, no lone pair, trigonal planar with {@angle}° angles. The three B–F dipoles cancel, so BF₃ is non-polar (μ = {@dipole} D), even though each bond is polar. Nitrogen in NH₃ also has a lone pair: four domains, a pyramid, and a dipole moment.",
+      "vi": {
+        "stem": "BF₃ và NH₃ đều có ba nguyên tử liên kết với nguyên tử trung tâm. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Boron có ba electron hóa trị, đều tham gia liên kết: {@domains} vùng electron, không có cặp electron riêng, dạng tam giác phẳng với góc {@angle}°. Ba momen lưỡng cực B–F triệt tiêu nhau, nên BF₃ không phân cực (μ = {@dipole} D), dù từng liên kết đều phân cực. Nitrogen trong NH₃ còn một cặp electron riêng: bốn vùng electron, dạng chóp và có momen lưỡng cực."
+      },
+      "statements": [
+        {
+          "text": "Boron in BF₃ has 3 electron domains and no lone pair.",
+          "vi": {
+            "text": "Boron trong BF₃ có 3 vùng electron và không có cặp electron riêng."
+          },
+          "true": true,
+          "check": {
+            "expr": "3",
+            "equals": "domains"
+          }
+        },
+        {
+          "text": "The F–B–F angles are all 120°.",
+          "vi": {
+            "text": "Các góc F–B–F đều bằng 120°."
+          },
+          "true": true,
+          "check": {
+            "expr": "120",
+            "equals": "angle"
+          }
+        },
+        {
+          "text": "Like NH₃, BF₃ is polar, because each of its three bonds is polar.",
+          "vi": {
+            "text": "Giống NH₃, BF₃ là phân tử phân cực vì cả ba liên kết của nó đều phân cực."
+          },
+          "true": false,
+          "check": {
+            "expr": "1.4718",
+            "equals": "dipole"
+          }
+        },
+        {
+          "text": "NH₃ is pyramidal, not planar, because nitrogen also has a lone pair.",
+          "vi": {
+            "text": "NH₃ có dạng chóp chứ không phẳng vì nitrogen còn một cặp electron riêng."
+          },
+          "true": true
+        }
+      ]
+    }
+  ]
+}

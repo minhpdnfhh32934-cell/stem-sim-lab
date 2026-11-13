@@ -1,0 +1,537 @@
+{
+  "id": "buoyancy",
+  "name": "Density and buoyancy",
+  "category": "physics",
+  "description": "A solid cube hangs from a force sensor on a rigid rod, which a slide on a stand lowers slowly into an overflow can filled to its spout. The sensor first reads the cube's weight W in air; as the cube goes in, the liquid pushes it up with the buoyant force F_b and the reading falls to W′ = W − F_b, then stays there once the cube is fully under, however deep. The liquid it pushes out runs into a measuring cylinder: its volume V is the cube's volume, and F_b equals its weight, ρ_f·g·V (Archimedes' principle). From W and V come the cube's mass m = W/g and its density ρ = m/V; a cube less dense than the liquid floats.",
+  "vi": {
+    "name": "Khối lượng riêng và lực đẩy Ác-si-mét",
+    "description": "Một khối lập phương đặc được gắn vào cảm biến lực bằng một thanh cứng; một con trượt trên giá thí nghiệm hạ nó từ từ vào bình tràn chứa đầy chất lỏng tới vòi tràn. Lúc đầu cảm biến chỉ trọng lượng W của khối trong không khí; khi khối đi vào chất lỏng, chất lỏng đẩy nó lên bằng lực đẩy Ác-si-mét F_b nên số chỉ giảm dần tới W′ = W − F_b, rồi giữ nguyên khi khối đã chìm hoàn toàn, dù ở sâu bao nhiêu. Phần chất lỏng bị khối chiếm chỗ tràn ra chảy vào bình chia độ: thể tích V của nó bằng thể tích của khối, và F_b bằng trọng lượng của phần chất lỏng đó, ρ_f·g·V (định luật Ác-si-mét). Từ W và V tính được khối lượng m = W/g và khối lượng riêng ρ = m/V của khối; khối có khối lượng riêng nhỏ hơn chất lỏng thì nổi.",
+    "note": "Đây là mô hình dạy học về định luật Ác-si-mét, chính xác trong phạm vi các giả thiết lí tưởng của nó. Vật là một khối lập phương đặc cạnh a; vật liệu quyết định khối lượng riêng ρ của nó, lấy theo giá trị tiêu biểu trong sổ tay ở 20 °C: nhựa PP (polipropilen) 905, nilon 6,6 1140, nhôm 2700 và đồng 8960 kg/m³ (nhựa thật chênh lệch vài phần trăm tùy loại). Chất lỏng ở 20 °C đổ đầy bình tràn tới vòi: cồn (etanol) 789,3, nước 998,2, nước biển (độ mặn 35 g/kg) 1024,8 và nước muối đặc (26 % NaCl theo khối lượng) 1197,2 kg/m³ (CRC Handbook of Chemistry and Physics; nước biển theo phương trình trạng thái UNESCO). Cảm biến lực giữ khối bằng một thanh cứng, và một con trượt có động cơ hạ nó với tốc độ 0,01 m/s, từ lúc đáy khối cao hơn mặt chất lỏng 0,02 m tới khi mặt trên của khối ở dưới mặt chất lỏng 0,02 m. Chất lỏng bị khối chiếm chỗ chảy từ vòi tràn sang bình chia độ, nên thể tích thu được đúng bằng thể tích V của phần khối ngập trong chất lỏng. Cảm biến chỉ F = W − F_b, với W = m·g là trọng lượng trong không khí (g = 9,81 m/s²) và F_b = ρ_f·g·V là trọng lượng của phần chất lỏng bị chiếm chỗ (định luật Ác-si-mét; SGK kí hiệu F_A = d·V, với d = ρ_f·g là trọng lượng riêng của chất lỏng) — cũng chính là hợp lực do áp suất chất lỏng tác dụng lên các mặt của khối. Khi khối chìm hoàn toàn, F_b = ρ_f·g·a³ ở mọi độ sâu. Khối lượng là m = W/g và khối lượng riêng là ρ = m/V, với V đọc khi khối đã chìm hoàn toàn. Khối nhẹ hơn chất lỏng cho số chỉ âm: thanh phải ấn nó xuống để giữ nó chìm; nếu thả ra, nó sẽ nổi lên và nổi với phần ngập bằng ρ/ρ_f chiều cao của nó — đó là độ sâu tại đó số chỉ đi qua 0 N trên đồ thị lực. Số chỉ của cảm biến lực được làm tròn theo độ phân giải d của nó; các giá trị mô phỏng thì không. Mô hình bỏ qua: lực cản của chất lỏng (khoảng 0,0001 N ở tốc độ này), lực căng mặt ngoài ở chỗ khối đi qua mặt chất lỏng (tới khoảng 0,01 N với khối cạnh 4 cm trong lúc đi vào, bằng 0 khi đã chìm hẳn), thể tích và lực căng mặt ngoài của chính thanh giữ (khoảng 0,002 N lúc cuối với thanh đường kính 3 mm), lực đẩy của không khí lên khối khi cân trong không khí (khoảng 0,1 % của W với nhựa PP), chất lỏng còn đọng ở vòi tràn hoặc bám trên khối, và sự thay đổi khối lượng riêng theo nhiệt độ. Trong phòng thí nghiệm thật, các yếu tố này làm hai cách tính F_b — từ W − W′ và từ ρ_f·g·V — lệch nhau đôi chút."
+  },
+  "requiredEquipment": ["buoyancy-rig"],
+  "model": "mechanics.buoyancy",
+  "parameters": [
+    {
+      "id": "objectDensity",
+      "label": "Block material",
+      "vi": { "label": "Vật liệu của khối" },
+      "unit": "kg/m³",
+      "default": 2700,
+      "min": 905,
+      "max": 8960,
+      "presets": [
+        { "label": "Polypropylene", "vi": { "label": "Nhựa PP" }, "value": 905 },
+        { "label": "Nylon 6,6", "vi": { "label": "Nilon 6,6" }, "value": 1140 },
+        { "label": "Aluminium", "vi": { "label": "Nhôm" }, "value": 2700 },
+        { "label": "Copper", "vi": { "label": "Đồng" }, "value": 8960 }
+      ]
+    },
+    {
+      "id": "fluidDensity",
+      "label": "Liquid in the can",
+      "vi": { "label": "Chất lỏng trong bình tràn" },
+      "unit": "kg/m³",
+      "default": 998.2,
+      "min": 789.3,
+      "max": 1197.2,
+      "presets": [
+        { "label": "Ethanol", "vi": { "label": "Cồn (etanol)" }, "value": 789.3 },
+        { "label": "Water", "vi": { "label": "Nước" }, "value": 998.2 },
+        { "label": "Sea water", "vi": { "label": "Nước biển" }, "value": 1024.8 },
+        {
+          "label": "Salt water (26 % NaCl)",
+          "vi": { "label": "Nước muối đặc (26 % NaCl)" },
+          "value": 1197.2
+        }
+      ]
+    },
+    {
+      "id": "edgeLength",
+      "label": "Cube edge",
+      "vi": { "label": "Cạnh của khối lập phương" },
+      "symbol": "a",
+      "unit": "m",
+      "default": 0.03,
+      "min": 0.02,
+      "max": 0.04,
+      "presets": [
+        { "label": "0.02 m", "vi": { "label": "0,02 m" }, "value": 0.02 },
+        { "label": "0.03 m", "vi": { "label": "0,03 m" }, "value": 0.03 },
+        { "label": "0.04 m", "vi": { "label": "0,04 m" }, "value": 0.04 }
+      ]
+    },
+    {
+      "id": "forceResolution",
+      "label": "Force sensor resolution",
+      "vi": { "label": "Độ phân giải của cảm biến lực" },
+      "symbol": "d",
+      "unit": "N",
+      "default": 0.01,
+      "min": 0.01,
+      "max": 0.1,
+      "presets": [
+        { "label": "0.01 N", "vi": { "label": "0,01 N" }, "value": 0.01 },
+        { "label": "0.05 N", "vi": { "label": "0,05 N" }, "value": 0.05 },
+        { "label": "0.1 N", "vi": { "label": "0,1 N" }, "value": 0.1 }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "gravity": 9.81,
+    "loweringSpeed": 0.01,
+    "clearance": 0.02
+  },
+  "inputs": {
+    "gravity": { "symbol": "g", "unit": "m/s²" },
+    "loweringSpeed": { "symbol": "v", "unit": "m/s", "desk": false },
+    "clearance": { "symbol": "c", "unit": "m", "desk": false }
+  },
+  "simulation": {
+    "timeStep": 0.01,
+    "maxDuration": 10,
+    "sampleInterval": 0.05
+  },
+  "measurements": [
+    {
+      "id": "depth",
+      "label": "Depth of the cube's bottom",
+      "vi": { "label": "Độ sâu của đáy khối" },
+      "symbol": "h",
+      "unit": "m",
+      "variable": "depth"
+    },
+    {
+      "id": "reading",
+      "label": "Force sensor reading",
+      "vi": { "label": "Số chỉ của cảm biến lực" },
+      "symbol": "F",
+      "unit": "N",
+      "variable": "reading"
+    },
+    {
+      "id": "buoyantForce",
+      "label": "Buoyant force",
+      "vi": { "label": "Lực đẩy Ác-si-mét" },
+      "symbol": "F_b",
+      "unit": "N",
+      "variable": "buoyantForce"
+    },
+    {
+      "id": "submergedVolume",
+      "label": "Liquid displaced",
+      "vi": { "label": "Thể tích chất lỏng tràn ra" },
+      "symbol": "V",
+      "unit": "m³",
+      "variable": "submergedVolume"
+    }
+  ],
+  "results": [
+    {
+      "id": "weightInAir",
+      "label": "Weight in air",
+      "vi": { "label": "Trọng lượng trong không khí" },
+      "symbol": "W",
+      "unit": "N",
+      "variable": "reading",
+      "reduce": "max",
+      "theory": "weight"
+    },
+    {
+      "id": "apparentWeight",
+      "label": "Reading fully under (apparent weight)",
+      "vi": { "label": "Số chỉ khi chìm hoàn toàn (trọng lượng biểu kiến)" },
+      "symbol": "W′",
+      "unit": "N",
+      "variable": "reading",
+      "reduce": "final",
+      "theory": "apparentWeight"
+    },
+    {
+      "id": "buoyantForce",
+      "label": "Buoyant force, fully under",
+      "vi": { "label": "Lực đẩy Ác-si-mét khi chìm hoàn toàn" },
+      "symbol": "F_b",
+      "unit": "N",
+      "variable": "buoyantForce",
+      "reduce": "final",
+      "theory": "buoyantForce"
+    },
+    {
+      "id": "displacedVolume",
+      "label": "Liquid displaced, fully under",
+      "vi": { "label": "Thể tích chất lỏng tràn ra khi chìm hoàn toàn" },
+      "symbol": "V",
+      "unit": "m³",
+      "variable": "submergedVolume",
+      "reduce": "final",
+      "theory": "volume"
+    },
+    {
+      "id": "mass",
+      "label": "Mass, m = W/g",
+      "vi": { "label": "Khối lượng, m = W/g" },
+      "symbol": "m",
+      "unit": "kg",
+      "variable": "mass",
+      "reduce": "final",
+      "theory": "mass"
+    },
+    {
+      "id": "density",
+      "label": "Density, ρ = m/V",
+      "vi": { "label": "Khối lượng riêng, ρ = m/V" },
+      "symbol": "ρ",
+      "unit": "kg/m³",
+      "variable": "density",
+      "reduce": "final",
+      "theory": "density"
+    },
+    {
+      "id": "sinkOrFloat",
+      "label": "Let go under the liquid",
+      "vi": { "label": "Khi thả ra trong chất lỏng" },
+      "symbol": "sign W′",
+      "unit": "",
+      "variable": "sinkOrFloat",
+      "reduce": "final",
+      "theory": "sinkOrFloat",
+      "classes": [
+        { "max": -0.5, "label": "Floats up", "vi": { "label": "Nổi lên" } },
+        { "max": 0.5, "label": "Stays put", "vi": { "label": "Lơ lửng" } },
+        { "label": "Sinks", "vi": { "label": "Chìm xuống" } }
+      ]
+    }
+  ],
+  "graphs": [
+    {
+      "id": "force-depth",
+      "title": "Forces against depth",
+      "vi": { "title": "Các lực theo độ sâu" },
+      "x": "depth",
+      "y": ["reading", "buoyantForce"],
+      "yLabel": "F",
+      "mark": "fullDepth"
+    },
+    {
+      "id": "volume-depth",
+      "title": "Liquid displaced against depth",
+      "vi": { "title": "Thể tích chất lỏng tràn ra theo độ sâu" },
+      "x": "depth",
+      "y": ["submergedVolume"]
+    },
+    {
+      "id": "buoyancy-volume",
+      "title": "Buoyant force against liquid displaced",
+      "vi": { "title": "Lực đẩy Ác-si-mét theo thể tích chất lỏng tràn ra" },
+      "x": "submergedVolume",
+      "y": ["buoyantForce"]
+    }
+  ],
+  "monitor": "force-depth",
+  "compare": [{ "graph": "force-depth", "series": "reading" }, { "graph": "buoyancy-volume" }],
+  "instruments": [
+    {
+      "result": "weightInAir",
+      "quantity": "Weight W in air",
+      "name": "Force sensor",
+      "resolution": "forceResolution",
+      "excludes": "the sensor's zero (tare) and calibration, and the air's buoyancy on the cube, about 0.1 % of W for polypropylene",
+      "vi": {
+        "quantity": "Trọng lượng W trong không khí",
+        "name": "Cảm biến lực",
+        "excludes": "điểm 0 (trừ bì) và sai số hiệu chuẩn của cảm biến, cùng lực đẩy của không khí lên khối, khoảng 0,1 % của W với nhựa PP"
+      }
+    },
+    {
+      "result": "apparentWeight",
+      "quantity": "Reading W′ fully under",
+      "name": "Force sensor",
+      "resolution": "forceResolution",
+      "excludes": "the sensor's zero and calibration, the buoyancy and surface tension on the rod where it crosses the surface (about 0.002 N), and liquid still moving in the can",
+      "vi": {
+        "quantity": "Số chỉ W′ khi chìm hoàn toàn",
+        "name": "Cảm biến lực",
+        "excludes": "điểm 0 và sai số hiệu chuẩn của cảm biến, lực đẩy và lực căng mặt ngoài tác dụng lên thanh giữ ở chỗ nó đi qua mặt chất lỏng (khoảng 0,002 N), và chất lỏng trong bình còn đang chuyển động"
+      }
+    }
+  ],
+  "analyses": [
+    {
+      "id": "archimedes",
+      "title": "Buoyant force against liquid displaced",
+      "note": "Each run is one point. In one liquid every cube lies on the same line through the origin, whatever its material: F_b = ρ_f·g·V, the weight of the liquid it displaces (Archimedes' principle). Use cubes of different sizes and materials; another liquid gives another line. The slope is ρ_f·g, the weight of 1 m³ of the liquid; divide it by g = 9.81 m/s² for the liquid's density ρ_f.",
+      "vi": {
+        "title": "Lực đẩy Ác-si-mét theo thể tích chất lỏng tràn ra",
+        "note": "Mỗi lần chạy là một điểm. Trong cùng một chất lỏng, mọi khối đều nằm trên cùng một đường thẳng qua gốc tọa độ, dù làm bằng vật liệu gì: F_b = ρ_f·g·V, trọng lượng của phần chất lỏng bị khối chiếm chỗ (định luật Ác-si-mét). Hãy dùng các khối có kích thước và vật liệu khác nhau; chất lỏng khác cho một đường thẳng khác. Độ dốc là ρ_f·g, trọng lượng của 1 m³ chất lỏng (SGK gọi là trọng lượng riêng d); chia nó cho g = 9,81 m/s² để được khối lượng riêng ρ_f của chất lỏng."
+      },
+      "x": "displacedVolume",
+      "y": "buoyantForce",
+      "group": ["fluidDensity"],
+      "columns": [
+        "objectDensity",
+        "edgeLength",
+        "weightInAir",
+        "apparentWeight",
+        "displacedVolume",
+        "buoyantForce"
+      ],
+      "slope": {
+        "label": "Buoyant force per volume displaced",
+        "vi": { "label": "Lực đẩy trên mỗi đơn vị thể tích bị chiếm chỗ" },
+        "symbol": "ρ_f·g",
+        "unit": "N/m³",
+        "theory": "fluidWeightDensity"
+      }
+    },
+    {
+      "id": "density",
+      "title": "Mass against volume",
+      "note": "Each run is one point. For one material, m against V is a straight line through the origin whose slope is the material's density ρ = m/V, whatever the cube's size and whichever liquid measured its volume. Compare the slopes with handbook values: polypropylene 905, nylon 6,6 1140, aluminium 2700 and copper 8960 kg/m³. A material less dense than the liquid floats in it.",
+      "vi": {
+        "title": "Khối lượng theo thể tích",
+        "note": "Mỗi lần chạy là một điểm. Với cùng một vật liệu, đồ thị m theo V là một đường thẳng qua gốc tọa độ có độ dốc bằng khối lượng riêng ρ = m/V của vật liệu đó, dù khối to hay nhỏ và dù đo thể tích bằng chất lỏng nào. Hãy so sánh độ dốc với giá trị trong sổ tay: nhựa PP 905, nilon 6,6 1140, nhôm 2700 và đồng 8960 kg/m³. Vật liệu có khối lượng riêng nhỏ hơn chất lỏng thì nổi trong chất lỏng đó."
+      },
+      "x": "displacedVolume",
+      "y": "mass",
+      "group": ["objectDensity"],
+      "columns": ["fluidDensity", "edgeLength", "displacedVolume", "mass", "density"],
+      "slope": {
+        "label": "Density, the slope of m against V",
+        "vi": { "label": "Khối lượng riêng, độ dốc của m theo V" },
+        "symbol": "ρ",
+        "unit": "kg/m³",
+        "theory": "density"
+      }
+    }
+  ],
+  "note": "A teaching model of Archimedes' principle, exact for its idealisations. The block is a solid cube of edge a; its material sets its density ρ, from typical handbook values at 20 °C: polypropylene 905, nylon 6,6 1140, aluminium 2700 and copper 8960 kg/m³ (real plastics vary by a few percent with the grade). The liquid at 20 °C fills an overflow can to its spout: ethanol 789.3, water 998.2, sea water (salinity 35 g/kg) 1024.8 and salt water (26 % NaCl by mass) 1197.2 kg/m³ (CRC Handbook of Chemistry and Physics; sea water by the UNESCO equation of state). A force sensor holds the cube on a rigid rod and a motorised slide lowers it at 0.01 m/s, from its bottom 0.02 m above the surface until its top is 0.02 m under it. The liquid the cube pushes out runs from the spout into the measuring cylinder, so the volume collected is the volume V under the surface. The sensor reads F = W − F_b, with W = m·g its weight in air (g = 9.81 m/s²) and F_b = ρ_f·g·V the weight of the liquid displaced (Archimedes' principle) — the net push of the liquid's pressure on the cube's faces. Fully under, F_b = ρ_f·g·a³ at any depth. The mass is m = W/g and the density ρ = m/V, V read once the cube is fully under. A cube less dense than the liquid gives a negative reading: the rod pushes it down to hold it under; let go, it would rise and float with the fraction ρ/ρ_f of its height under the surface — the depth where the reading crosses 0 N on the force graph. The force sensor's readings are rounded to its resolution d; the simulated values are not. Left out: drag (about 0.0001 N at this speed), the surface tension where the cube crosses the surface (up to about 0.01 N on a 4 cm cube while it goes in, none once it is under), the rod's own volume and surface tension (about 0.002 N at the end with a 3 mm rod), the air's buoyancy on the cube weighed in air (about 0.1 % of W for polypropylene), liquid held back at the spout or clinging to the cube, and the densities' change with temperature. In a real lab these make the two ways of finding F_b — from W − W′ and from ρ_f·g·V — differ slightly.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the density and buoyancy instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn thí nghiệm khối lượng riêng và lực đẩy Ác-si-mét trên bảng."
+      },
+      "done": { "kind": "inspected", "item": "buoyancy-instructions" }
+    },
+    {
+      "id": "material",
+      "instruction": "Choose the cube's material with its dial on the control desk.",
+      "vi": { "instruction": "Chọn vật liệu của khối bằng núm xoay trên bàn điều khiển." },
+      "done": { "kind": "adjusted", "parameter": "objectDensity" }
+    },
+    {
+      "id": "liquid",
+      "instruction": "Choose the liquid in the overflow can with its dial.",
+      "vi": { "instruction": "Chọn chất lỏng trong bình tràn bằng núm xoay của nó." },
+      "done": { "kind": "adjusted", "parameter": "fluidDensity" }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the cube is weighed in air, then lowered into the full overflow can, and the liquid it pushes out runs into the measuring cylinder.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: khối được cân trong không khí, rồi được hạ vào bình tràn đầy chất lỏng, và phần chất lỏng bị chiếm chỗ tràn sang bình chia độ."
+      },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read W, W′, the volume displaced and the density on the results monitor.",
+      "vi": {
+        "instruction": "Đọc W, W′, thể tích chất lỏng tràn ra và khối lượng riêng trên màn hình kết quả."
+      },
+      "done": { "kind": "viewed" }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, change the cube's size, its material or the liquid, and run again: compare F_b with the weight of the liquid displaced.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, đổi kích thước, vật liệu của khối hoặc chất lỏng rồi chạy lại: so sánh F_b với trọng lượng của phần chất lỏng bị chiếm chỗ."
+      },
+      "done": { "kind": "reset" }
+    }
+  ],
+  "examples": [
+    {
+      "id": "aluminium-in-water",
+      "question": "An aluminium cube ({objectDensity} kg/m³) of edge {edgeLength} m hangs from a force sensor, fully under water ({fluidDensity} kg/m³). Find the buoyant force and the sensor’s reading (g = {gravity} m/s²).",
+      "vi": {
+        "question": "Một khối lập phương nhôm ({objectDensity} kg/m³) cạnh {edgeLength} m treo vào cảm biến lực, ngập hoàn toàn trong nước ({fluidDensity} kg/m³). Tìm lực đẩy Archimedes và số chỉ của cảm biến (g = {gravity} m/s²)."
+      },
+      "set": { "objectDensity": 2700, "fluidDensity": 998.2, "edgeLength": 0.04 },
+      "find": [{ "theory": "buoyantForce" }, { "theory": "apparentWeight" }],
+      "steps": [
+        {
+          "say": "Fully under, the cube pushes aside its own volume a³ of water; the buoyant force is the weight of that water.",
+          "vi": {
+            "say": "Khi ngập hoàn toàn, khối chiếm chỗ một thể tích nước bằng thể tích của nó, a³; lực đẩy Archimedes bằng trọng lượng phần nước đó."
+          },
+          "write": "F_b = ρ_f·g·a³ = {fluidDensity}·{gravity}·{edgeLength}³ ≈ {@buoyantForce} N",
+          "check": { "expr": "fluidDensity*gravity*edgeLength^3", "equals": "buoyantForce" }
+        },
+        {
+          "say": "Its weight in air is its mass ρ·a³ times g.",
+          "vi": { "say": "Trọng lượng của nó trong không khí bằng khối lượng ρ·a³ nhân g." },
+          "write": "W = ρ·a³·g = {objectDensity}·{edgeLength}³·{gravity} ≈ {@weight} N",
+          "check": { "expr": "objectDensity*edgeLength^3*gravity", "equals": "weight" }
+        },
+        {
+          "say": "The sensor reads the weight less the buoyant force.",
+          "vi": { "say": "Cảm biến chỉ trọng lượng trừ đi lực đẩy Archimedes." },
+          "write": "W′ = W − F_b ≈ {@apparentWeight} N",
+          "check": { "expr": "@weight-@buoyantForce", "equals": "apparentWeight" }
+        }
+      ]
+    },
+    {
+      "id": "plastic-held-under",
+      "question": "A polypropylene cube ({objectDensity} kg/m³) of edge {edgeLength} m is held fully under water ({fluidDensity} kg/m³) by the sensor’s rod. What does the sensor read, and what does its sign mean?",
+      "vi": {
+        "question": "Một khối lập phương polypropylen ({objectDensity} kg/m³) cạnh {edgeLength} m được thanh của cảm biến giữ ngập hoàn toàn trong nước ({fluidDensity} kg/m³). Cảm biến chỉ bao nhiêu, và dấu của số chỉ có ý nghĩa gì?"
+      },
+      "set": { "objectDensity": 905, "fluidDensity": 998.2, "edgeLength": 0.03 },
+      "find": [{ "theory": "apparentWeight" }, { "theory": "buoyantForce" }],
+      "steps": [
+        {
+          "say": "First its weight: mass ρ·a³ times g.",
+          "vi": { "say": "Trước hết là trọng lượng: khối lượng ρ·a³ nhân g." },
+          "write": "W = {objectDensity}·{edgeLength}³·{gravity} ≈ {@weight} N",
+          "check": { "expr": "objectDensity*edgeLength^3*gravity", "equals": "weight" }
+        },
+        {
+          "say": "The buoyant force is the weight of the water it pushes aside.",
+          "vi": { "say": "Lực đẩy Archimedes bằng trọng lượng phần nước bị chiếm chỗ." },
+          "write": "F_b = {fluidDensity}·{gravity}·{edgeLength}³ ≈ {@buoyantForce} N",
+          "check": { "expr": "fluidDensity*gravity*edgeLength^3", "equals": "buoyantForce" }
+        },
+        {
+          "say": "The reading W − F_b comes out negative: the water pushes up harder than gravity pulls down, so the rod must push the cube down. Let go, it would rise and float.",
+          "vi": {
+            "say": "Số chỉ W − F_b âm: nước đẩy lên mạnh hơn trọng lực kéo xuống, nên thanh phải ấn khối xuống. Nếu thả ra, khối sẽ nổi lên."
+          },
+          "write": "W′ = W − F_b ≈ {@apparentWeight} N < 0",
+          "check": { "expr": "@weight-@buoyantForce", "equals": "apparentWeight" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "A cube lowered into a liquid seems to weigh less: the liquid pushes it up with a force equal to the weight of the liquid it pushes aside (Archimedes’ principle).",
+    "vi": {
+      "summary": "Một khối lập phương nhúng vào chất lỏng có vẻ nhẹ đi: chất lỏng đẩy nó lên với một lực bằng trọng lượng phần chất lỏng bị nó chiếm chỗ (định luật Ác-si-mét)."
+    },
+    "parts": [
+      {
+        "id": "sensor",
+        "name": "Force sensor",
+        "role": "Holds the cube on a rigid rod and reads the force F it takes to hold it.",
+        "vi": {
+          "name": "Cảm biến lực",
+          "role": "Giữ khối lập phương bằng một thanh cứng và đọc lực F cần để giữ nó."
+        },
+        "anchor": {
+          "part": "lcd"
+        }
+      },
+      {
+        "id": "cube",
+        "name": "Cube, edge a",
+        "role": "A solid cube of the chosen material; its density ρ is what the run finds.",
+        "vi": {
+          "name": "Khối lập phương, cạnh a",
+          "role": "Khối đặc làm bằng vật liệu đã chọn; khối lượng riêng ρ của nó là điều lần chạy tìm ra."
+        },
+        "anchor": {
+          "part": "cube"
+        }
+      },
+      {
+        "id": "slide",
+        "name": "Motorised slide",
+        "role": "Lowers the sensor and the cube slowly, at 0.01 m/s, into the liquid.",
+        "vi": {
+          "name": "Con trượt có động cơ",
+          "role": "Hạ cảm biến và khối lập phương xuống chất lỏng thật chậm, 0.01 m/s."
+        },
+        "anchor": {
+          "part": "slide"
+        }
+      },
+      {
+        "id": "can",
+        "name": "Overflow can",
+        "role": "Filled with the liquid exactly to its spout: whatever the cube pushes aside runs out.",
+        "vi": {
+          "name": "Bình tràn",
+          "role": "Chứa chất lỏng đầy đúng tới vòi tràn: phần chất lỏng bị khối chiếm chỗ sẽ chảy ra ngoài."
+        },
+        "anchor": {
+          "part": "bath"
+        }
+      },
+      {
+        "id": "cylinder",
+        "name": "Measuring cylinder",
+        "role": "Collects the liquid that overflows; its volume is the volume V under the surface.",
+        "vi": {
+          "name": "Ống đong",
+          "role": "Hứng chất lỏng tràn ra; thể tích của nó bằng thể tích V phần chìm dưới mặt chất lỏng."
+        },
+        "anchor": {
+          "part": "glass"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "First the sensor holds the cube in air and reads its weight W = m·g.",
+        "vi": {
+          "text": "Đầu tiên cảm biến giữ khối lập phương trong không khí và đọc trọng lượng W = m·g của nó."
+        },
+        "parts": ["sensor", "cube"]
+      },
+      {
+        "text": "The slide lowers the cube into the full overflow can. The liquid pushes up on it, so the reading falls: F = W − F_b, the apparent weight.",
+        "vi": {
+          "text": "Con trượt hạ khối vào bình tràn đầy. Chất lỏng đẩy nó lên, nên số chỉ giảm: F = W − F_b, gọi là trọng lượng biểu kiến."
+        },
+        "parts": ["slide", "cube", "can", "sensor"]
+      },
+      {
+        "text": "The cube pushes aside its own volume of liquid, which runs out of the spout into the measuring cylinder: the volume collected is the volume V under the surface.",
+        "vi": {
+          "text": "Khối lập phương chiếm chỗ một thể tích chất lỏng bằng thể tích phần chìm của nó; phần này chảy qua vòi tràn vào ống đong: thể tích hứng được là thể tích V phần chìm."
+        },
+        "parts": ["can", "cylinder"]
+      },
+      {
+        "text": "Archimedes’ principle: the buoyant force equals the weight of the liquid pushed aside, F_b = ρ_f·g·V. It comes from the liquid pressing harder on the cube’s bottom face than on its top.",
+        "vi": {
+          "text": "Định luật Ác-si-mét: lực đẩy bằng trọng lượng phần chất lỏng bị chiếm chỗ, F_b = ρ_f·g·V. Lực này sinh ra vì chất lỏng ép lên mặt đáy của khối mạnh hơn lên mặt trên."
+        },
+        "parts": ["cube", "can", "cylinder"]
+      },
+      {
+        "text": "Once the cube is fully under, V = a³ and the reading stays at W′ however deep it goes. A denser liquid (salt water) pushes harder than ethanol.",
+        "vi": {
+          "text": "Khi khối đã chìm hoàn toàn, V = a³ và số chỉ giữ nguyên ở W′ dù xuống sâu bao nhiêu. Chất lỏng có khối lượng riêng lớn hơn (nước muối) đẩy mạnh hơn rượu etylic."
+        },
+        "parts": ["cube", "sensor"]
+      },
+      {
+        "text": "From the readings: m = W/g and the density ρ = m/V. The results compare W, W′, F_b, V and ρ with theory; the sensor reads in steps of its resolution d.",
+        "vi": {
+          "text": "Từ các số đo: m = W/g và khối lượng riêng ρ = m/V. Phần kết quả so sánh W, W′, F_b, V và ρ với lý thuyết; cảm biến đọc theo từng bước bằng độ phân giải d."
+        },
+        "parts": ["sensor", "cylinder"]
+      },
+      {
+        "text": "A cube less dense than the liquid gives a negative reading: the rod must push it under. Let go, it would float, with the fraction ρ/ρ_f of its height under the surface.",
+        "vi": {
+          "text": "Khối có khối lượng riêng nhỏ hơn chất lỏng cho số chỉ âm: thanh phải đẩy nó chìm xuống. Nếu thả ra, nó sẽ nổi, với phần chìm bằng ρ/ρ_f chiều cao của nó."
+        },
+        "parts": ["cube", "sensor"]
+      }
+    ]
+  }
+}

@@ -1,0 +1,385 @@
+{
+  "id": "ripple-tank",
+  "name": "Interference of water waves in a ripple tank",
+  "category": "physics",
+  "description": "Two dippers touch the water of a shallow tank and vibrate together: two sets of circular waves spread out and overlap. Along some lines the water vibrates strongly, along others it stays still — the waves interfere. Between the two sources the strong points are half a wavelength apart. Count them, measure from the first to the last with the ruler on the tank's floor, and work out the wavelength λ and the speed of the waves, v = λ·f.",
+  "vi": {
+    "name": "Giao thoa sóng nước trong chậu sóng",
+    "description": "Hai mũi nhọn chạm vào mặt nước của một chậu nông và dao động cùng nhau: hai hệ sóng tròn lan ra và chồng lên nhau. Có những đường mặt nước dao động rất mạnh, có những đường mặt nước gần như đứng yên — hai sóng giao thoa với nhau. Trên đoạn nối hai nguồn, các điểm dao động mạnh nhất cách nhau nửa bước sóng. Đếm số điểm đó, đo khoảng cách từ điểm đầu đến điểm cuối bằng thước dưới đáy chậu, rồi tính bước sóng λ và tốc độ truyền sóng v = λ·f.",
+    "note": "Hai mũi nhọn gắn trên cùng một thanh rung nên là hai nguồn kết hợp, cùng pha. Tại một điểm trên đoạn S1S2 cách trung điểm x, hiệu đường đi của hai sóng là 2x: biên độ cực đại khi 2x bằng một số nguyên lần bước sóng, tức x = m·λ/2, và mặt nước đứng yên ở giữa hai cực đại liền kề. Biên độ tại đó là A = 2·A0·|cos(2π·x/λ)|, với A0 là biên độ do một nguồn gây ra. Bước sóng không được chọn sẵn: nó được tính từ hệ thức tán sắc của sóng mặt nước (trọng lực và sức căng mặt ngoài) ω² = (g·k + (σ/ρ)·k³)·tanh(k·h), với nước ở 20 °C (σ = 0,0728 N/m, ρ = 998 kg/m³) sâu h = 5 mm. Vì vậy tốc độ sóng thay đổi một chút theo tần số (khoảng 0,22–0,25 m/s): sóng nước không phải môi trường có tốc độ cố định. Khi chạy, một đầu dò đi dọc S1S2 trong 6 s và đo biên độ tại vị trí của nó. Mặt nước được nhìn dưới đèn chớp lệch tần số một chút, nên các gợn sóng như đang trôi chậm. Đây là mô hình dạy học đơn giản hóa: hai nguồn giống hệt nhau, không tắt dần, không có sóng phản xạ từ thành chậu, sóng biên độ nhỏ. Thước đọc L theo độ phân giải d của nó (bội số gần nhất của d, độ bất định d/√12 chỉ do độ phân giải); không có sai số ngẫu nhiên nào được thêm vào. Trong chậu thật, sóng yếu dần khi ra xa nguồn, thành chậu phản xạ sóng, và vị trí các cực đại khó xác định chính xác."
+  },
+  "requiredEquipment": ["ripple-tank-bench"],
+  "model": "waves.ripple-tank",
+  "parameters": [
+    {
+      "id": "frequency",
+      "label": "Vibrator frequency",
+      "vi": { "label": "Tần số cần rung" },
+      "symbol": "f",
+      "unit": "Hz",
+      "default": 20,
+      "min": 10,
+      "max": 25,
+      "presets": [
+        { "label": "10 Hz", "vi": { "label": "10 Hz" }, "value": 10 },
+        { "label": "15 Hz", "vi": { "label": "15 Hz" }, "value": 15 },
+        { "label": "20 Hz", "vi": { "label": "20 Hz" }, "value": 20 },
+        { "label": "25 Hz", "vi": { "label": "25 Hz" }, "value": 25 }
+      ]
+    },
+    {
+      "id": "sourceSeparation",
+      "label": "Distance between the sources",
+      "vi": { "label": "Khoảng cách giữa hai nguồn" },
+      "symbol": "S1S2",
+      "unit": "m",
+      "default": 0.06,
+      "min": 0.04,
+      "max": 0.08,
+      "presets": [
+        { "label": "4 cm", "vi": { "label": "4 cm" }, "value": 0.04 },
+        { "label": "6 cm", "vi": { "label": "6 cm" }, "value": 0.06 },
+        { "label": "8 cm", "vi": { "label": "8 cm" }, "value": 0.08 }
+      ]
+    },
+    {
+      "id": "rulerResolution",
+      "label": "Ruler resolution",
+      "vi": { "label": "Độ phân giải của thước" },
+      "symbol": "d",
+      "unit": "m",
+      "default": 0.001,
+      "min": 0.0005,
+      "max": 0.001,
+      "presets": [
+        { "label": "0.5 mm", "vi": { "label": "0,5 mm" }, "value": 0.0005 },
+        { "label": "1 mm", "vi": { "label": "1 mm" }, "value": 0.001 }
+      ]
+    }
+  ],
+  "initialConditions": { "depth": 0.005, "scanTime": 6 },
+  "inputs": {
+    "depth": { "symbol": "h", "unit": "m" },
+    "scanTime": { "symbol": "t_scan", "unit": "s", "desk": false }
+  },
+  "simulation": { "timeStep": 0.005, "maxDuration": 7, "sampleInterval": 0.01 },
+  "measurements": [
+    {
+      "id": "amplitude",
+      "label": "Amplitude at the probe",
+      "vi": { "label": "Biên độ tại đầu dò" },
+      "symbol": "A/A0",
+      "unit": "",
+      "variable": "amplitude"
+    },
+    {
+      "id": "probe",
+      "label": "Probe along S1S2",
+      "vi": { "label": "Vị trí đầu dò trên S1S2" },
+      "symbol": "x",
+      "unit": "m",
+      "variable": "probe"
+    }
+  ],
+  "results": [
+    {
+      "id": "maxima",
+      "label": "Maxima between the sources n",
+      "vi": { "label": "Số cực đại giữa hai nguồn n" },
+      "symbol": "n",
+      "unit": "",
+      "variable": "maxima",
+      "reduce": "final",
+      "theory": "maxima"
+    },
+    {
+      "id": "maximaSpan",
+      "label": "First to last maximum L",
+      "vi": { "label": "Khoảng cách từ cực đại đầu đến cực đại cuối L" },
+      "symbol": "L",
+      "unit": "m",
+      "variable": "maximaSpan",
+      "reduce": "final",
+      "theory": "maximaSpan"
+    },
+    {
+      "id": "maximaSpacing",
+      "label": "Between neighbours L/(n − 1) = λ/2",
+      "vi": { "label": "Giữa hai cực đại liền kề L/(n − 1) = λ/2" },
+      "symbol": "λ/2",
+      "unit": "m",
+      "variable": "maximaSpacing",
+      "reduce": "final",
+      "theory": "maximaSpacing"
+    },
+    {
+      "id": "wavelengthFromMaxima",
+      "label": "Wavelength λ",
+      "vi": { "label": "Bước sóng λ" },
+      "symbol": "λ",
+      "unit": "m",
+      "variable": "wavelengthFromMaxima",
+      "reduce": "final",
+      "theory": "wavelengthFromMaxima"
+    },
+    {
+      "id": "waveSpeed",
+      "label": "Wave speed v = λ·f",
+      "vi": { "label": "Tốc độ truyền sóng v = λ·f" },
+      "symbol": "v",
+      "unit": "m/s",
+      "variable": "waveSpeed",
+      "reduce": "final",
+      "theory": "waveSpeed"
+    }
+  ],
+  "instruments": [
+    {
+      "result": "maximaSpan",
+      "quantity": "Distance L from the first maximum to the last",
+      "name": "Ruler on the tank's floor",
+      "resolution": "rulerResolution",
+      "excludes": "judging where each maximum is on moving water, the frequency as set, and the depth not quite even",
+      "vi": {
+        "quantity": "Khoảng cách L từ cực đại đầu đến cực đại cuối",
+        "name": "Thước dưới đáy chậu",
+        "excludes": "việc xác định vị trí từng cực đại trên mặt nước đang dao động, sai số của tần số đặt, và độ sâu nước không hoàn toàn đều"
+      }
+    }
+  ],
+  "graphs": [
+    {
+      "id": "amplitude-probe",
+      "title": "Amplitude along S1S2",
+      "vi": { "title": "Biên độ dọc theo S1S2" },
+      "x": "probe",
+      "y": ["amplitude"],
+      "yLabel": "A/A0"
+    }
+  ],
+  "monitor": "amplitude-probe",
+  "compare": [{ "graph": "amplitude-probe" }],
+  "note": "Both dippers hang from one vibrating bar, so they are two coherent sources in phase. At a point on S1S2 x from its midpoint the two waves' paths differ by 2x: the water vibrates most where 2x is a whole number of wavelengths, x = m·λ/2, and is still half way between. The amplitude there is A = 2·A0·|cos(2π·x/λ)|, A0 that of one source alone. The wavelength is not chosen: it comes from the dispersion of water waves (gravity and surface tension), ω² = (g·k + (σ/ρ)·k³)·tanh(k·h), for water at 20 °C (σ = 0.0728 N/m, ρ = 998 kg/m³) h = 5 mm deep. So the waves' speed changes a little with the frequency (about 0.22–0.25 m/s): water is not a medium of one fixed speed. During the run a probe crosses S1S2 in 6 s, reading the amplitude where it is. The water is seen under a stroboscope slightly off the frequency, so the ripples seem to drift slowly. A simplified teaching model: two identical sources, no damping, no waves reflected from the tank's sides, small waves. The ruler reads L to its resolution d (the nearest multiple of d, with the uncertainty d/√12 from the resolution alone); no random error is added. In a real tank the waves weaken away from the sources, the sides reflect them, and the maxima are hard to place exactly.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the ripple tank instructions on the board.",
+      "vi": { "instruction": "Đọc hướng dẫn thí nghiệm chậu sóng trên bảng." },
+      "done": { "kind": "inspected", "item": "ripple-tank-instructions" }
+    },
+    {
+      "id": "frequency",
+      "instruction": "Set the vibrator's frequency with its dial on the control desk.",
+      "vi": { "instruction": "Đặt tần số cần rung bằng núm xoay trên bàn điều khiển." },
+      "done": { "kind": "adjusted", "parameter": "frequency" }
+    },
+    {
+      "id": "separation",
+      "instruction": "Set the distance S1S2 between the two sources.",
+      "vi": { "instruction": "Đặt khoảng cách S1S2 giữa hai nguồn." },
+      "done": { "kind": "adjusted", "parameter": "sourceSeparation" }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the dippers vibrate and the probe crosses S1S2.",
+      "vi": { "instruction": "Nhấn CHẠY: hai mũi nhọn dao động và đầu dò đi dọc S1S2." },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read n, L, λ and v = λ·f on the results monitor.",
+      "vi": { "instruction": "Đọc n, L, λ và v = λ·f trên màn hình kết quả." },
+      "done": { "kind": "viewed" }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, change the frequency and run again: compare λ and v.",
+      "vi": { "instruction": "Nhấn ĐẶT LẠI, đổi tần số rồi chạy lại: so sánh λ và v." },
+      "done": { "kind": "reset" }
+    }
+  ],
+  "examples": [
+    {
+      "id": "wavelength-and-speed",
+      "question": "Two dippers vibrate in phase at {frequency} Hz. Along the line joining them there are {@maxima} maxima, and the ruler reads L = {@maximaSpan|3} m from the first to the last. Find the wavelength and the waves’ speed.",
+      "vi": {
+        "question": "Hai mũi nhọn dao động cùng pha với tần số {frequency} Hz. Trên đoạn nối hai nguồn có {@maxima} cực đại, thước đo được L = {@maximaSpan|3} m từ cực đại đầu tới cực đại cuối. Tìm bước sóng và tốc độ truyền sóng."
+      },
+      "set": { "frequency": 20 },
+      "find": [{ "theory": "wavelengthFromMaxima" }, { "theory": "waveSpeed" }],
+      "steps": [
+        {
+          "say": "Neighbouring maxima on the line between the sources are half a wavelength apart, and n maxima have n − 1 gaps.",
+          "vi": {
+            "say": "Hai cực đại liên tiếp trên đoạn nối hai nguồn cách nhau nửa bước sóng, và n cực đại có n − 1 khoảng."
+          },
+          "write": "λ/2 = L/(n − 1) = {@maximaSpan|3}/{=@maxima-1} ≈ {@maximaSpacing} m",
+          "check": { "expr": "@maximaSpan/(@maxima-1)", "equals": "maximaSpacing" }
+        },
+        {
+          "say": "So the wavelength is twice that.",
+          "vi": { "say": "Vậy bước sóng gấp đôi khoảng đó." },
+          "write": "λ = 2·{@maximaSpacing} ≈ {@wavelengthFromMaxima} m",
+          "check": { "expr": "2*@maximaSpacing", "equals": "wavelengthFromMaxima" }
+        },
+        {
+          "say": "Speed is wavelength times frequency. The water sets the wavelength; we only set the frequency.",
+          "vi": {
+            "say": "Tốc độ truyền sóng bằng bước sóng nhân tần số. Nước quyết định bước sóng; ta chỉ chọn tần số."
+          },
+          "write": "v = λ·f = {@wavelengthFromMaxima}·{frequency} ≈ {@waveSpeed} m/s",
+          "check": { "expr": "@wavelengthFromMaxima*frequency", "equals": "waveSpeed" }
+        }
+      ]
+    },
+    {
+      "id": "low-frequency",
+      "question": "At {frequency} Hz, with the sources {sourceSeparation} m apart, {@maxima} maxima span L = {@maximaSpan|3} m. How far apart are neighbouring maxima, and how fast do the waves go?",
+      "vi": {
+        "question": "Ở tần số {frequency} Hz, hai nguồn cách nhau {sourceSeparation} m, {@maxima} cực đại trải trên L = {@maximaSpan|3} m. Hai cực đại liên tiếp cách nhau bao xa, và sóng truyền nhanh bao nhiêu?"
+      },
+      "set": { "frequency": 10, "sourceSeparation": 0.08 },
+      "find": [{ "theory": "maximaSpacing" }, { "theory": "waveSpeed" }],
+      "steps": [
+        {
+          "say": "Divide the span by the number of gaps between the maxima.",
+          "vi": { "say": "Chia độ dài L cho số khoảng giữa các cực đại." },
+          "write": "λ/2 = {@maximaSpan|3}/{=@maxima-1} ≈ {@maximaSpacing} m",
+          "check": { "expr": "@maximaSpan/(@maxima-1)", "equals": "maximaSpacing" }
+        },
+        {
+          "say": "Then v = λ·f with λ twice that gap. At a lower frequency the waves are longer and, in water, a little slower.",
+          "vi": {
+            "say": "Rồi v = λ·f với λ gấp đôi khoảng đó. Ở tần số thấp hơn sóng dài hơn và, trong nước, chậm hơn một chút."
+          },
+          "write": "v = 2·{@maximaSpacing}·{frequency} ≈ {@waveSpeed} m/s",
+          "check": { "expr": "2*@maximaSpacing*frequency", "equals": "waveSpeed" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "Two dippers make two sets of circular water waves that overlap: where they meet in step the water vibrates strongly, where they meet out of step it stays still — interference.",
+    "vi": {
+      "summary": "Hai cần rung tạo ra hai hệ sóng nước tròn chồng lên nhau: nơi chúng gặp nhau cùng pha thì nước dao động mạnh, nơi chúng gặp nhau ngược pha thì nước đứng yên — đó là giao thoa."
+    },
+    "parts": [
+      {
+        "id": "s1",
+        "name": "Dipper S1",
+        "role": "Touches the water and vibrates at the frequency f: one source of circular waves.",
+        "vi": {
+          "name": "Cần rung S1",
+          "role": "Chạm mặt nước và dao động với tần số f: một nguồn phát sóng tròn."
+        },
+        "anchor": {
+          "part": "dipper-1"
+        }
+      },
+      {
+        "id": "s2",
+        "name": "Dipper S2",
+        "role": "Hangs from the same bar as S1, so it vibrates in step with it: a coherent source.",
+        "vi": {
+          "name": "Cần rung S2",
+          "role": "Treo cùng thanh với S1, nên dao động cùng pha với nó: một nguồn kết hợp."
+        },
+        "anchor": {
+          "part": "dipper-2"
+        }
+      },
+      {
+        "id": "vibrator",
+        "name": "Vibrator",
+        "role": "Its motor shakes the bar that carries both dippers.",
+        "vi": {
+          "name": "Máy rung",
+          "role": "Động cơ của nó làm rung thanh mang cả hai cần rung."
+        },
+        "anchor": {
+          "at": [0, 0.077, -0.1]
+        }
+      },
+      {
+        "id": "water",
+        "name": "Water, 5 mm deep",
+        "role": "The waves spread across it; seen under the stroboscope, the ripples seem to drift slowly.",
+        "vi": {
+          "name": "Nước, sâu 5 mm",
+          "role": "Sóng lan truyền trên mặt nước; nhìn dưới đèn hoạt nghiệm, các gợn sóng như trôi chậm."
+        },
+        "anchor": {
+          "part": "water"
+        }
+      },
+      {
+        "id": "probe",
+        "name": "Probe",
+        "role": "Crosses S1S2 during the run, reading how strongly the water vibrates where it is.",
+        "vi": {
+          "name": "Đầu dò",
+          "role": "Đi ngang qua S1S2 trong lúc chạy, đo mức dao động của nước tại vị trí của nó."
+        },
+        "anchor": {
+          "part": "probe"
+        }
+      },
+      {
+        "id": "ruler",
+        "name": "Ruler",
+        "role": "On the tank’s floor along S1S2: measures from the first strong point to the last.",
+        "vi": {
+          "name": "Thước",
+          "role": "Đặt ở đáy bể dọc theo S1S2: đo từ điểm dao động mạnh đầu tiên tới điểm cuối cùng."
+        },
+        "anchor": {
+          "at": [0, -0.023, -0.08]
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "Both dippers hang from one vibrating bar, so they send out waves of the same frequency, in step: two coherent sources.",
+        "vi": {
+          "text": "Hai cần rung treo trên cùng một thanh rung, nên chúng phát ra sóng cùng tần số và cùng pha: hai nguồn kết hợp."
+        },
+        "parts": ["s1", "s2", "vibrator"]
+      },
+      {
+        "text": "The two sets of circular waves spread out and overlap. Along some lines the water vibrates strongly; along others it stays almost still.",
+        "vi": {
+          "text": "Hai hệ sóng tròn lan rộng và chồng lên nhau. Dọc theo một số đường, nước dao động mạnh; dọc theo các đường khác, nước gần như đứng yên."
+        },
+        "parts": ["water"]
+      },
+      {
+        "text": "Where the two waves’ paths differ by a whole number of wavelengths, crest meets crest and they add up; half way between, crest meets trough and they cancel.",
+        "vi": {
+          "text": "Nơi hiệu đường đi của hai sóng bằng một số nguyên lần bước sóng, đỉnh gặp đỉnh và chúng tăng cường nhau; ở giữa hai nơi đó, đỉnh gặp hõm và chúng triệt tiêu nhau."
+        },
+        "parts": ["water", "s1", "s2"]
+      },
+      {
+        "text": "Between the sources the strong points are half a wavelength apart, λ/2. The probe finds them; count them, measure the first to the last with the ruler, and divide by the gaps between them.",
+        "vi": {
+          "text": "Giữa hai nguồn, các điểm dao động mạnh cách nhau nửa bước sóng, λ/2. Đầu dò tìm ra chúng; đếm chúng, đo từ điểm đầu tới điểm cuối bằng thước, rồi chia cho số khoảng giữa chúng."
+        },
+        "parts": ["probe", "ruler"]
+      },
+      {
+        "text": "Then the speed of the waves is v = λ·f. A higher frequency gives shorter waves. The wavelength is not chosen: it comes from how water waves travel, so v changes a little with f.",
+        "vi": {
+          "text": "Khi đó tốc độ truyền sóng là v = λ·f. Tần số cao hơn cho bước sóng ngắn hơn. Bước sóng không được chọn trước: nó phụ thuộc cách sóng nước lan truyền, nên v thay đổi một chút theo f."
+        },
+        "parts": ["vibrator", "water"]
+      },
+      {
+        "text": "The results give the number of strong points, their span, λ and v, the ruler reading to its resolution d. The model leaves out damping and the waves reflected from the tank’s sides.",
+        "vi": {
+          "text": "Phần kết quả cho số điểm dao động mạnh, khoảng cách giữa điểm đầu và cuối, λ và v, thước đọc theo độ phân giải d. Mô hình bỏ qua sự tắt dần và sóng phản xạ từ thành bể."
+        },
+        "parts": ["ruler", "probe"]
+      }
+    ]
+  }
+}

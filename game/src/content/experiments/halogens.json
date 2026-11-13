@@ -1,0 +1,343 @@
+{
+  "id": "halogens",
+  "name": "Reactivity of the halogens: displacement reactions",
+  "category": "chemistry",
+  "description": "Add chlorine, bromine or iodine water to solutions of potassium chloride, bromide and iodide. A more reactive halogen pushes a less reactive one out of its salt — chlorine turns bromide into orange bromine — while a less reactive one does nothing. A layer of cyclohexane on top shows the halogen formed clearly: bromine orange-red, iodine violet. The results rank the three halogens.",
+  "vi": {
+    "name": "Tính oxi hóa của các halogen: phản ứng thế",
+    "description": "Cho nước clo, nước brom hoặc nước iot vào dung dịch kali clorua, kali bromua và kali iođua. Halogen hoạt động mạnh hơn đẩy halogen yếu hơn ra khỏi muối của nó — clo biến bromua thành brom màu cam — còn halogen yếu hơn thì không phản ứng. Một lớp xiclohexan phía trên cho thấy rõ halogen tạo thành: brom màu đỏ cam, iot màu tím. Kết quả cho phép xếp hạng ba halogen.",
+    "note": "Mô hình dạy học đơn giản hóa về khả năng phản ứng của các halogen. 2 mL dung dịch kali halogenua được cho nước halogen chảy vào với tốc độ 0,5 mL/s. Halogen có thế khử chuẩn lớn hơn (CRC Handbook: Cl₂/Cl⁻ 1,358; Br₂/Br⁻ 1,087; I₂/I⁻ 0,536 V) đẩy halogen yếu hơn ra khỏi muối của nó, X₂ + 2Y⁻ → 2X⁻ + Y₂, ngay lập tức và hoàn toàn (hằng số cân bằng từ 10⁹ trở lên); halogen yếu hơn thì không phản ứng. Màu trong ống cho biết các halogen tự do; lớp xiclohexan phía trên cho thấy chúng rõ hơn. Bỏ qua: ion I₃⁻ (iot với iođua dư, màu nâu), phản ứng chậm của halogen với nước và sự bay hơi của nó. Kết quả mô phỏng không có sai số ngẫu nhiên."
+  },
+  "requiredEquipment": ["halogen-rack"],
+  "model": "chemistry.halogens",
+  "parameters": [
+    {
+      "id": "halogen",
+      "label": "Halogen water added",
+      "vi": { "label": "Nước halogen cho vào" },
+      "unit": "",
+      "default": 0,
+      "min": 0,
+      "max": 2,
+      "presets": [
+        { "label": "Chlorine water Cl₂", "vi": { "label": "Nước clo Cl₂" }, "value": 0 },
+        { "label": "Bromine water Br₂", "vi": { "label": "Nước brom Br₂" }, "value": 1 },
+        { "label": "Iodine solution I₂", "vi": { "label": "Dung dịch iot I₂" }, "value": 2 }
+      ]
+    },
+    {
+      "id": "halide",
+      "label": "Salt solution in the tube",
+      "vi": { "label": "Dung dịch muối trong ống" },
+      "unit": "",
+      "default": 1,
+      "min": 0,
+      "max": 2,
+      "presets": [
+        { "label": "Potassium chloride KCl", "vi": { "label": "Kali clorua KCl" }, "value": 0 },
+        { "label": "Potassium bromide KBr", "vi": { "label": "Kali bromua KBr" }, "value": 1 },
+        { "label": "Potassium iodide KI", "vi": { "label": "Kali iođua KI" }, "value": 2 }
+      ]
+    },
+    {
+      "id": "reagentVolume",
+      "label": "Halogen water added",
+      "vi": { "label": "Thể tích nước halogen thêm vào" },
+      "symbol": "V",
+      "unit": "mL",
+      "default": 5,
+      "min": 1,
+      "max": 10,
+      "presets": [
+        { "label": "1 mL", "vi": { "label": "1 mL" }, "value": 1 },
+        { "label": "2 mL", "vi": { "label": "2 mL" }, "value": 2 },
+        { "label": "5 mL", "vi": { "label": "5 mL" }, "value": 5 },
+        { "label": "10 mL", "vi": { "label": "10 mL" }, "value": 10 }
+      ]
+    },
+    {
+      "id": "halideConcentration",
+      "label": "Salt solution's concentration",
+      "vi": { "label": "Nồng độ dung dịch muối" },
+      "symbol": "c",
+      "unit": "mol/L",
+      "default": 0.1,
+      "min": 0.05,
+      "max": 0.1,
+      "presets": [
+        { "label": "0.05 mol/L", "vi": { "label": "0,05 mol/L" }, "value": 0.05 },
+        { "label": "0.1 mol/L", "vi": { "label": "0,1 mol/L" }, "value": 0.1 }
+      ]
+    }
+  ],
+  "initialConditions": { "halogenConcentration": 0.02, "sampleVolume": 2, "flowRate": 0.5 },
+  "inputs": {
+    "halogenConcentration": { "symbol": "c_X₂", "unit": "mol/L" },
+    "sampleVolume": { "symbol": "V_s", "unit": "mL" },
+    "flowRate": { "symbol": "q", "unit": "mL/s", "desk": false }
+  },
+  "simulation": { "timeStep": 0.05, "maxDuration": 30, "sampleInterval": 0.25 },
+  "measurements": [
+    {
+      "id": "volume",
+      "label": "Halogen water added",
+      "vi": { "label": "Nước halogen đã thêm" },
+      "symbol": "V",
+      "unit": "mL",
+      "variable": "volumeAdded"
+    },
+    {
+      "id": "formed",
+      "label": "Halogen formed",
+      "vi": { "label": "Halogen tạo thành" },
+      "symbol": "n(Y₂)",
+      "unit": "mmol",
+      "variable": "formed"
+    }
+  ],
+  "results": [
+    {
+      "id": "product",
+      "label": "What happens",
+      "vi": { "label": "Hiện tượng" },
+      "unit": "",
+      "variable": "product",
+      "reduce": "final",
+      "format": "integer",
+      "theory": "product",
+      "classes": [
+        {
+          "max": -1,
+          "label": "No reaction: the added halogen keeps its own colour",
+          "vi": { "label": "Không phản ứng: halogen cho vào giữ nguyên màu" }
+        },
+        { "max": 0, "label": "Chlorine formed", "vi": { "label": "Tạo thành clo" } },
+        {
+          "max": 1,
+          "label": "Bromine formed: orange, orange-red in the top layer",
+          "vi": { "label": "Tạo thành brom: màu cam, lớp trên màu đỏ cam" }
+        },
+        {
+          "label": "Iodine formed: brown, violet in the top layer",
+          "vi": { "label": "Tạo thành iot: màu nâu, lớp trên màu tím" }
+        }
+      ]
+    },
+    {
+      "id": "formed",
+      "label": "Halogen formed",
+      "vi": { "label": "Lượng halogen tạo thành" },
+      "symbol": "n(Y₂)",
+      "unit": "mmol",
+      "variable": "formed",
+      "reduce": "final",
+      "theory": "formed"
+    },
+    {
+      "id": "left",
+      "label": "Added halogen not used",
+      "vi": { "label": "Halogen cho vào còn dư" },
+      "symbol": "n(X₂)",
+      "unit": "mmol",
+      "variable": "halogenLeft",
+      "reduce": "final",
+      "theory": "halogenLeft"
+    }
+  ],
+  "graphs": [
+    {
+      "id": "formed-volume",
+      "title": "Halogen formed against halogen water added",
+      "vi": { "title": "Lượng halogen tạo thành theo thể tích nước halogen thêm vào" },
+      "x": "volume",
+      "y": ["formed"]
+    }
+  ],
+  "monitor": "formed-volume",
+  "compare": [{ "graph": "formed-volume", "series": "formed" }],
+  "note": "A simplified teaching model of the halogens' reactivity. 2 mL of potassium halide solution has a halogen's aqueous solution run in at 0.5 mL/s. A halogen with the higher standard reduction potential (CRC Handbook: Cl₂/Cl⁻ 1.358, Br₂/Br⁻ 1.087, I₂/I⁻ 0.536 V) displaces a less reactive one from its salt, X₂ + 2Y⁻ → 2X⁻ + Y₂, at once and completely (its equilibrium constant is 10⁹ or more); a less reactive one does nothing. The tube's colour shows the free halogens; a cyclohexane layer on top shows them more clearly. Left out: I₃⁻ (iodine with excess iodide, brown), the halogen's slow reaction with water and its escape as a gas. The simulated results carry no random error.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the halogens instructions on the board.",
+      "vi": { "instruction": "Đọc hướng dẫn về các halogen trên bảng." },
+      "done": { "kind": "inspected", "item": "halogens-instructions" }
+    },
+    {
+      "id": "halogen",
+      "instruction": "Choose the halogen water with its dial on the control desk.",
+      "vi": { "instruction": "Chọn nước halogen bằng núm xoay trên bàn điều khiển." },
+      "done": { "kind": "adjusted", "parameter": "halogen" }
+    },
+    {
+      "id": "halide",
+      "instruction": "Choose the salt solution in the tube.",
+      "vi": { "instruction": "Chọn dung dịch muối trong ống." },
+      "done": { "kind": "adjusted", "parameter": "halide" }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the halogen water runs in; watch the colours, and the top layer.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: nước halogen chảy vào; quan sát màu sắc và lớp phía trên."
+      },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read what happened: did the halogen displace another?",
+      "vi": { "instruction": "Đọc hiện tượng: halogen có đẩy được halogen khác ra không?" },
+      "done": { "kind": "viewed" }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET and try every halogen with every salt: rank the three halogens.",
+      "vi": { "instruction": "Nhấn ĐẶT LẠI và thử mọi halogen với mọi muối: xếp hạng ba halogen." },
+      "done": { "kind": "reset" }
+    }
+  ],
+  "examples": [
+    {
+      "id": "chlorine-into-iodide",
+      "question": "{reagentVolume} mL of chlorine water ({halogenConcentration} mol/L Cl₂) is run into {sampleVolume} mL of potassium iodide at {halideConcentration} mol/L. How much iodine forms?",
+      "vi": {
+        "question": "Cho {reagentVolume} mL nước clo (Cl₂ {halogenConcentration} mol/L) vào {sampleVolume} mL dung dịch kali iotua {halideConcentration} mol/L. Có bao nhiêu iot tạo thành?"
+      },
+      "set": { "halogen": 0, "halide": 2, "reagentVolume": 2 },
+      "find": [{ "theory": "formed" }],
+      "steps": [
+        {
+          "say": "Chlorine is more reactive than iodine, so it displaces it: Cl₂ + 2I⁻ → 2Cl⁻ + I₂.",
+          "vi": {
+            "say": "Clo hoạt động mạnh hơn iot nên đẩy iot ra khỏi muối: Cl₂ + 2I⁻ → 2Cl⁻ + I₂."
+          },
+          "write": "Cl₂ + 2I⁻ → 2Cl⁻ + I₂"
+        },
+        {
+          "say": "Millilitres times mol/L give millimoles. There is far more iodide than the chlorine needs, so chlorine runs out first: one I₂ for each Cl₂.",
+          "vi": {
+            "say": "mL nhân mol/L cho mmol. Lượng iotua nhiều hơn hẳn lượng clo cần, nên clo hết trước: mỗi Cl₂ tạo một I₂."
+          },
+          "write": "n(I₂) = n(Cl₂) = {halogenConcentration}·{reagentVolume} = {@formed} mmol",
+          "check": {
+            "expr": "min(halogenConcentration*reagentVolume, halideConcentration*sampleVolume/2)",
+            "equals": "formed"
+          }
+        }
+      ]
+    },
+    {
+      "id": "bromine-in-excess",
+      "question": "{reagentVolume} mL of bromine water ({halogenConcentration} mol/L Br₂) is run into {sampleVolume} mL of potassium iodide at {halideConcentration} mol/L. How much iodine forms, and how much bromine is left over?",
+      "vi": {
+        "question": "Cho {reagentVolume} mL nước brom (Br₂ {halogenConcentration} mol/L) vào {sampleVolume} mL dung dịch kali iotua {halideConcentration} mol/L. Có bao nhiêu iot tạo thành, và còn dư bao nhiêu brom?"
+      },
+      "set": { "halogen": 1, "halide": 2, "reagentVolume": 10, "halideConcentration": 0.05 },
+      "find": [{ "theory": "formed" }, { "theory": "halogenLeft" }],
+      "steps": [
+        {
+          "say": "Bromine displaces iodine: Br₂ + 2I⁻ → 2Br⁻ + I₂. This time the iodide is the smaller share: two I⁻ for each I₂.",
+          "vi": {
+            "say": "Brom đẩy iot: Br₂ + 2I⁻ → 2Br⁻ + I₂. Lần này iotua là chất hết trước: hai I⁻ cho một I₂."
+          },
+          "write": "n(I₂) = n(I⁻)/2 = {halideConcentration}·{sampleVolume}/2 = {@formed} mmol",
+          "check": {
+            "expr": "min(halogenConcentration*reagentVolume, halideConcentration*sampleVolume/2)",
+            "equals": "formed"
+          }
+        },
+        {
+          "say": "The bromine added, less what reacted, stays free in the tube.",
+          "vi": { "say": "Lượng brom cho vào trừ đi lượng đã phản ứng còn lại tự do trong ống." },
+          "write": "n(Br₂) = {halogenConcentration}·{reagentVolume} − {@formed} = {@halogenLeft} mmol",
+          "check": { "expr": "halogenConcentration*reagentVolume-@formed", "equals": "halogenLeft" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "A more reactive halogen takes electrons from the ions of a less reactive one and pushes it out of its salt: chlorine > bromine > iodine.",
+    "vi": {
+      "summary": "Halogen hoạt động mạnh hơn lấy electron từ ion của halogen yếu hơn và đẩy nó ra khỏi muối: clo > brom > iot."
+    },
+    "parts": [
+      {
+        "id": "halides",
+        "name": "Salt solutions",
+        "role": "Potassium chloride, bromide and iodide: colourless solutions of the halide ions Cl⁻, Br⁻, I⁻.",
+        "vi": {
+          "name": "Các dung dịch muối",
+          "role": "Kali clorua, kali bromua và kali iođua: dung dịch không màu chứa ion halogenua Cl⁻, Br⁻, I⁻."
+        },
+        "anchor": { "part": "halides" }
+      },
+      {
+        "id": "halogens",
+        "name": "Halogen waters",
+        "role": "Chlorine (pale yellow-green), bromine (orange) and iodine (brown) dissolved in water.",
+        "vi": {
+          "name": "Các nước halogen",
+          "role": "Clo (vàng lục nhạt), brom (cam) và iot (nâu) hòa tan trong nước."
+        },
+        "anchor": { "at": [0.17, -0.06, 0] }
+      },
+      {
+        "id": "aqueous",
+        "name": "Water layer",
+        "role": "Where the reaction happens; its colour shows the free halogen.",
+        "vi": {
+          "name": "Lớp nước",
+          "role": "Nơi phản ứng xảy ra; màu của nó cho biết halogen tự do."
+        },
+        "anchor": { "part": "aqueous" }
+      },
+      {
+        "id": "organic",
+        "name": "Cyclohexane layer",
+        "role": "Floats on top and dissolves the halogen: bromine shows orange-red, iodine violet.",
+        "vi": {
+          "name": "Lớp xiclohexan",
+          "role": "Nổi phía trên và hòa tan halogen: brom có màu đỏ cam, iot màu tím."
+        },
+        "anchor": { "part": "organic" }
+      }
+    ],
+    "steps": [
+      {
+        "text": "Halogens take electrons to become halide ions: X₂ + 2e⁻ → 2X⁻. The more strongly an atom pulls electrons, the more reactive the halogen. Chlorine is the strongest, then bromine, then iodine.",
+        "vi": {
+          "text": "Halogen nhận electron để trở thành ion halogenua: X₂ + 2e⁻ → 2X⁻. Nguyên tử hút electron càng mạnh thì halogen càng hoạt động. Clo mạnh nhất, rồi đến brom, rồi đến iot."
+        },
+        "parts": ["halogens"]
+      },
+      {
+        "text": "Add chlorine water to potassium bromide: chlorine takes the bromide's electrons. Cl₂ + 2Br⁻ → 2Cl⁻ + Br₂: bromine appears, and the water turns orange.",
+        "vi": {
+          "text": "Cho nước clo vào kali bromua: clo lấy electron của bromua. Cl₂ + 2Br⁻ → 2Cl⁻ + Br₂: brom xuất hiện và nước chuyển sang màu cam."
+        },
+        "parts": ["halogens", "aqueous"]
+      },
+      {
+        "text": "Shake with cyclohexane: halogens dissolve better in it than in water, so it collects them in the top layer — bromine orange-red, iodine violet — easy to tell apart.",
+        "vi": {
+          "text": "Lắc với xiclohexan: halogen tan trong nó tốt hơn trong nước, nên nó gom halogen lên lớp trên — brom màu đỏ cam, iot màu tím — dễ phân biệt."
+        },
+        "parts": ["organic"]
+      },
+      {
+        "text": "Iodine water added to potassium chloride does nothing: iodine cannot take electrons from chloride. A halogen displaces only those below it in the group.",
+        "vi": {
+          "text": "Cho nước iot vào kali clorua thì không có gì xảy ra: iot không thể lấy electron từ clorua. Halogen chỉ đẩy được những halogen đứng dưới nó trong nhóm."
+        },
+        "parts": ["halides", "aqueous"]
+      },
+      {
+        "text": "The standard potentials say the same: Cl₂ 1.36 V, Br₂ 1.09 V, I₂ 0.54 V. A reaction goes when the added halogen's potential is higher.",
+        "vi": {
+          "text": "Thế điện cực chuẩn cũng cho thấy điều đó: Cl₂ 1,36 V; Br₂ 1,09 V; I₂ 0,54 V. Phản ứng xảy ra khi thế của halogen cho vào cao hơn."
+        },
+        "parts": ["halogens"]
+      }
+    ]
+  }
+}

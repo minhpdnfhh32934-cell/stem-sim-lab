@@ -1,0 +1,1041 @@
+{
+  "id": "cell-emf",
+  "skills": [
+    {
+      "id": "emf",
+      "name": "EMF and the open circuit",
+      "advice": "With the switch open no current flows, so an ideal voltmeter across the cell reads its EMF E. Close the switch at the station and watch the reading drop.",
+      "vi": {
+        "name": "Suất điện động và mạch hở",
+        "advice": "Khi khóa K mở, không có dòng điện, nên vôn kế lí tưởng mắc vào hai cực pin chỉ suất điện động E. Đóng khóa K trên trạm và quan sát số chỉ giảm xuống."
+      }
+    },
+    {
+      "id": "whole-circuit",
+      "name": "Ohm’s law for the whole circuit",
+      "advice": "Learn I = E/(R + r) and U = E − I·r = I·R. Trap: I = E/R, which forgets the cell’s own resistance.",
+      "vi": {
+        "name": "Định luật Ôm cho toàn mạch",
+        "advice": "Nhớ I = E/(R + r) và U = E − I·r = I·R. Lỗi hay gặp: I = E/R, quên điện trở trong của pin."
+      }
+    },
+    {
+      "id": "graph",
+      "name": "The U–I line",
+      "advice": "Run one cell at several rheostat settings and plot U against I: a straight line U = E − r·I. Its intercept on the U axis is E, its slope −r. A steeper line means a larger r.",
+      "vi": {
+        "name": "Đường đặc trưng U–I",
+        "advice": "Đo với một pin ở nhiều giá trị biến trở và vẽ U theo I: đường thẳng U = E − r·I. Giao điểm với trục U là E, hệ số góc là −r. Đường càng dốc thì r càng lớn."
+      }
+    },
+    {
+      "id": "power",
+      "name": "Power and readings",
+      "advice": "The rheostat takes P = U·I, less than E·I because part of the energy is used inside the cell. Meters show the nearest multiple of their resolution; measure quickly, as a real cell’s E and r drift.",
+      "vi": {
+        "name": "Công suất và số đọc",
+        "advice": "Biến trở tiêu thụ P = U·I, nhỏ hơn E·I vì một phần năng lượng tiêu hao bên trong pin. Đồng hồ hiển thị bội số gần nhất của độ phân giải; nên đo nhanh vì E và r của pin thật thay đổi."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "open-switch",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["emf"],
+      "stem": "With the switch open, an ideal voltmeter across the cell’s terminals reads…",
+      "explain": "No current flows, so nothing is lost inside the cell: U = E.",
+      "vi": {
+        "stem": "Khi khóa K mở, vôn kế lí tưởng mắc vào hai cực của pin chỉ…",
+        "explain": "Không có dòng điện nên không có độ giảm thế trong pin: U = E."
+      },
+      "options": [
+        {
+          "text": "the EMF E of the cell",
+          "vi": {
+            "text": "suất điện động E của pin"
+          },
+          "correct": true
+        },
+        {
+          "text": "zero",
+          "vi": {
+            "text": "số 0"
+          }
+        },
+        {
+          "text": "E − I·r",
+          "vi": {
+            "text": "E − I·r"
+          }
+        },
+        {
+          "text": "the voltage lost inside the cell",
+          "vi": {
+            "text": "độ giảm thế bên trong pin"
+          }
+        }
+      ]
+    },
+    {
+      "id": "whole-circuit",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["whole-circuit"],
+      "stem": "A cell of EMF E and internal resistance r drives a rheostat R. The current is…",
+      "explain": "Ohm’s law for the whole circuit: I = E/(R + r).",
+      "vi": {
+        "stem": "Một pin có suất điện động E, điện trở trong r nối với biến trở R. Cường độ dòng điện trong mạch là…",
+        "explain": "Định luật Ôm cho toàn mạch: I = E/(R + r)."
+      },
+      "options": [
+        {
+          "text": "I = E/(R + r)",
+          "vi": {
+            "text": "I = E/(R + r)"
+          },
+          "correct": true
+        },
+        {
+          "text": "I = E/R",
+          "vi": {
+            "text": "I = E/R"
+          }
+        },
+        {
+          "text": "I = (E − r)/R",
+          "vi": {
+            "text": "I = (E − r)/R"
+          }
+        },
+        {
+          "text": "I = E·(R + r)",
+          "vi": {
+            "text": "I = E·(R + r)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-drop",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["whole-circuit", "graph"],
+      "stem": "A cell drives a rheostat; a voltmeter reads the voltage across the cell’s terminals. Decide whether each statement is true or false.",
+      "explain": "Closing the switch, U drops below E by I·r; the U–I line meets the U axis at E; more current means a lower U.",
+      "vi": {
+        "stem": "Một pin cấp điện cho biến trở; vôn kế đo hiệu điện thế giữa hai cực của pin. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Khi đóng khóa, U giảm xuống dưới E một lượng I·r; đường U–I cắt trục U tại E; dòng điện càng lớn thì U càng nhỏ."
+      },
+      "statements": [
+        {
+          "text": "Closing the switch makes the voltmeter’s reading drop.",
+          "vi": {
+            "text": "Khi đóng khóa K, số chỉ của vôn kế giảm."
+          },
+          "true": true
+        },
+        {
+          "text": "The voltage lost inside the cell is I·r.",
+          "vi": {
+            "text": "Độ giảm thế bên trong pin bằng I·r."
+          },
+          "true": true
+        },
+        {
+          "text": "The U–I line meets the U axis at the EMF E.",
+          "vi": {
+            "text": "Đường U–I cắt trục U tại suất điện động E."
+          },
+          "true": true
+        },
+        {
+          "text": "The larger the current, the larger the terminal voltage.",
+          "vi": {
+            "text": "Dòng điện càng lớn thì hiệu điện thế giữa hai cực càng lớn."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "smaller-r",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["whole-circuit"],
+      "stem": "The rheostat’s resistance is turned down. The current and the terminal voltage…",
+      "explain": "I = E/(R + r) grows as R falls, and U = E − I·r falls.",
+      "vi": {
+        "stem": "Giảm điện trở của biến trở. Cường độ dòng điện và hiệu điện thế giữa hai cực pin…",
+        "explain": "I = E/(R + r) tăng khi R giảm, còn U = E − I·r giảm."
+      },
+      "options": [
+        {
+          "text": "I increases, U decreases",
+          "vi": {
+            "text": "I tăng, U giảm"
+          },
+          "correct": true
+        },
+        {
+          "text": "I increases, U increases",
+          "vi": {
+            "text": "I tăng, U tăng"
+          }
+        },
+        {
+          "text": "I decreases, U decreases",
+          "vi": {
+            "text": "I giảm, U giảm"
+          }
+        },
+        {
+          "text": "both stay the same",
+          "vi": {
+            "text": "cả hai không đổi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "used-cell",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["whole-circuit", "graph"],
+      "stem": "A used cell has the same EMF as a new one but a larger internal resistance. At the same rheostat setting, its terminal voltage is…",
+      "explain": "U = E·R/(R + r): a larger r gives a smaller U (and a steeper U–I line).",
+      "vi": {
+        "stem": "Pin đã dùng có cùng suất điện động với pin mới nhưng điện trở trong lớn hơn. Với cùng giá trị biến trở, hiệu điện thế giữa hai cực của nó…",
+        "explain": "U = E·R/(R + r): r lớn hơn thì U nhỏ hơn (và đường U–I dốc hơn)."
+      },
+      "options": [
+        {
+          "text": "lower",
+          "vi": {
+            "text": "nhỏ hơn"
+          },
+          "correct": true
+        },
+        {
+          "text": "higher",
+          "vi": {
+            "text": "lớn hơn"
+          }
+        },
+        {
+          "text": "the same",
+          "vi": {
+            "text": "bằng nhau"
+          }
+        },
+        {
+          "text": "zero",
+          "vi": {
+            "text": "bằng 0"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-new",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["whole-circuit", "power"],
+      "set": {
+        "cell": 0,
+        "rheostat": 2
+      },
+      "stem": "A new {@emf} V cell drives the rheostat set to {rheostat} Ω; the voltmeter reads U = {@voltage|4} V. Decide whether each statement is true or false.",
+      "explain": "U < E because part of the EMF is lost inside the cell. I = U/R ≈ {@current} A; the rheostat takes U·I ≈ {@power} W, less than E·I = {=@emf*@current} W.",
+      "vi": {
+        "stem": "Một pin mới {@emf} V cấp điện cho biến trở đặt ở {rheostat} Ω; vôn kế chỉ U = {@voltage|4} V. Mỗi nhận định sau đúng hay sai?",
+        "explain": "U < E vì một phần suất điện động bị giảm bên trong pin. I = U/R ≈ {@current} A; biến trở tiêu thụ U·I ≈ {@power} W, nhỏ hơn E·I = {=@emf*@current} W."
+      },
+      "statements": [
+        {
+          "text": "The terminal voltage is less than the EMF.",
+          "vi": {
+            "text": "Hiệu điện thế giữa hai cực nhỏ hơn suất điện động."
+          },
+          "true": true
+        },
+        {
+          "text": "The current is about {@current} A.",
+          "vi": {
+            "text": "Cường độ dòng điện khoảng {@current} A."
+          },
+          "true": true,
+          "check": {
+            "expr": "@voltage/rheostat",
+            "equals": "current"
+          }
+        },
+        {
+          "text": "The rheostat takes about {@power} W.",
+          "vi": {
+            "text": "Biến trở tiêu thụ khoảng {@power} W."
+          },
+          "true": true,
+          "check": {
+            "expr": "@voltage*@current",
+            "equals": "power"
+          }
+        },
+        {
+          "text": "The rheostat takes E·I ≈ {=@emf*@current} W.",
+          "vi": {
+            "text": "Biến trở tiêu thụ E·I ≈ {=@emf*@current} W."
+          },
+          "true": false,
+          "check": {
+            "expr": "@emf*@current",
+            "equals": "power"
+          }
+        }
+      ]
+    },
+    {
+      "id": "current",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["whole-circuit"],
+      "set": {
+        "cell": 2,
+        "rheostat": 6
+      },
+      "stem": "Two new cells in series ({@emf} V) drive the rheostat at {rheostat} Ω; the voltmeter across them reads {@voltage|4} V. What is the current?",
+      "explain": "The terminal voltage is across the rheostat: I = U/R = {@voltage|4}/{rheostat} ≈ {@current} A. E/R would leave out the cells’ own resistance.",
+      "vi": {
+        "stem": "Bộ hai pin mới mắc nối tiếp ({@emf} V) cấp điện cho biến trở {rheostat} Ω; vôn kế mắc vào hai cực bộ pin chỉ {@voltage|4} V. Cường độ dòng điện bằng bao nhiêu?",
+        "explain": "Hiệu điện thế giữa hai cực đặt vào biến trở: I = U/R = {@voltage|4}/{rheostat} ≈ {@current} A. E/R là bỏ qua điện trở trong của pin."
+      },
+      "options": [
+        {
+          "text": "{@current} A",
+          "vi": {
+            "text": "{@current} A"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@voltage/rheostat",
+            "equals": "current"
+          }
+        },
+        {
+          "text": "{=@emf/rheostat} A",
+          "vi": {
+            "text": "{=@emf/rheostat} A"
+          },
+          "check": {
+            "expr": "@emf/rheostat",
+            "equals": "current"
+          }
+        },
+        {
+          "text": "{=@voltage*rheostat} A",
+          "vi": {
+            "text": "{=@voltage*rheostat} A"
+          },
+          "check": {
+            "expr": "@voltage*rheostat",
+            "equals": "current"
+          }
+        },
+        {
+          "text": "{=rheostat/@voltage} A",
+          "vi": {
+            "text": "{=rheostat/@voltage} A"
+          },
+          "check": {
+            "expr": "rheostat/@voltage",
+            "equals": "current"
+          }
+        }
+      ]
+    },
+    {
+      "id": "power",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["power"],
+      "set": {
+        "cell": 0,
+        "rheostat": 4
+      },
+      "stem": "With the rheostat at {rheostat} Ω the meters read U = {@voltage|4} V and I = {@current|4} A. What power does the rheostat take?",
+      "explain": "P = U·I ≈ {@power} W.",
+      "vi": {
+        "stem": "Với biến trở {rheostat} Ω, các đồng hồ chỉ U = {@voltage|4} V và I = {@current|4} A. Công suất tiêu thụ trên biến trở bằng bao nhiêu?",
+        "explain": "P = U·I ≈ {@power} W."
+      },
+      "options": [
+        {
+          "text": "{@power} W",
+          "vi": {
+            "text": "{@power} W"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@voltage*@current",
+            "equals": "power"
+          }
+        },
+        {
+          "text": "{=@emf*@current} W",
+          "vi": {
+            "text": "{=@emf*@current} W"
+          },
+          "check": {
+            "expr": "@emf*@current",
+            "equals": "power"
+          }
+        },
+        {
+          "text": "{=@voltage^2*rheostat} W",
+          "vi": {
+            "text": "{=@voltage^2*rheostat} W"
+          },
+          "check": {
+            "expr": "@voltage^2*rheostat",
+            "equals": "power"
+          }
+        },
+        {
+          "text": "{=@voltage/@current} W",
+          "vi": {
+            "text": "{=@voltage/@current} W"
+          },
+          "check": {
+            "expr": "@voltage/@current",
+            "equals": "power"
+          }
+        }
+      ]
+    },
+    {
+      "id": "terminal",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["whole-circuit", "emf"],
+      "set": {
+        "cell": 1,
+        "rheostat": 1
+      },
+      "stem": "A used cell ({@emf} V) drives the rheostat at {rheostat} Ω and the ammeter reads I = {@current|4} A. What does the voltmeter across the cell read?",
+      "explain": "U = I·R = {@current|4}·{rheostat} ≈ {@voltage} V — well below E, since much of the EMF is lost inside a used cell.",
+      "vi": {
+        "stem": "Pin đã dùng ({@emf} V) cấp điện cho biến trở {rheostat} Ω và ampe kế chỉ I = {@current|4} A. Vôn kế mắc vào hai cực pin chỉ bao nhiêu?",
+        "explain": "U = I·R = {@current|4}·{rheostat} ≈ {@voltage} V — nhỏ hơn E khá nhiều, vì pin đã dùng làm giảm nhiều suất điện động bên trong."
+      },
+      "options": [
+        {
+          "text": "{@voltage} V",
+          "vi": {
+            "text": "{@voltage} V"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@current*rheostat",
+            "equals": "voltage"
+          }
+        },
+        {
+          "text": "{@emf} V",
+          "vi": {
+            "text": "{@emf} V"
+          },
+          "check": {
+            "expr": "@emf",
+            "equals": "voltage"
+          }
+        },
+        {
+          "text": "{=@emf+@current*rheostat} V",
+          "vi": {
+            "text": "{=@emf+@current*rheostat} V"
+          },
+          "check": {
+            "expr": "@emf+@current*rheostat",
+            "equals": "voltage"
+          }
+        },
+        {
+          "text": "{=@emf-@current*rheostat} V",
+          "vi": {
+            "text": "{=@emf-@current*rheostat} V"
+          },
+          "check": {
+            "expr": "@emf-@current*rheostat",
+            "equals": "voltage"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-pack",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["emf", "whole-circuit"],
+      "set": {
+        "cell": 2,
+        "rheostat": 10
+      },
+      "stem": "Two new cells in series drive the rheostat at {rheostat} Ω. Decide whether each statement is true or false.",
+      "explain": "Open, the voltmeter reads E = {@emf} V. Closed, U = {@voltage|3} V and I = U/R ≈ {@current|3} A: U stays below E even with a large R.",
+      "vi": {
+        "stem": "Bộ hai pin mới mắc nối tiếp cấp điện cho biến trở {rheostat} Ω. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Khi mở khóa, vôn kế chỉ E = {@emf} V. Khi đóng, U = {@voltage|3} V và I = U/R ≈ {@current|3} A: U vẫn nhỏ hơn E dù R lớn."
+      },
+      "statements": [
+        {
+          "text": "With the switch open the voltmeter reads {@emf} V.",
+          "vi": {
+            "text": "Khi khóa K mở, vôn kế chỉ {@emf} V."
+          },
+          "true": true,
+          "check": {
+            "expr": "3",
+            "equals": "emf"
+          }
+        },
+        {
+          "text": "With the switch closed it reads about {@voltage|3} V.",
+          "vi": {
+            "text": "Khi khóa K đóng, vôn kế chỉ khoảng {@voltage|3} V."
+          },
+          "true": true,
+          "check": {
+            "expr": "@current*rheostat",
+            "equals": "voltage"
+          }
+        },
+        {
+          "text": "The current is about {@current|3} A.",
+          "vi": {
+            "text": "Cường độ dòng điện khoảng {@current|3} A."
+          },
+          "true": true,
+          "check": {
+            "expr": "@voltage/rheostat",
+            "equals": "current"
+          }
+        },
+        {
+          "text": "With the switch closed the voltmeter still reads the full {@emf} V.",
+          "vi": {
+            "text": "Khi khóa K đóng, vôn kế vẫn chỉ đủ {@emf} V."
+          },
+          "true": false,
+          "check": {
+            "expr": "@emf",
+            "equals": "voltage"
+          }
+        }
+      ]
+    },
+    {
+      "id": "two-lines",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["graph"],
+      "stem": "Cells A and B are each run at several rheostat settings. Their U–I lines meet the U axis at the same point, but A’s line falls more steeply. Then…",
+      "explain": "U = E − r·I: the same intercept means the same E; the steeper slope −r means A has the larger internal resistance.",
+      "vi": {
+        "stem": "Pin A và pin B được đo ở nhiều giá trị biến trở. Hai đường U–I cắt trục U tại cùng một điểm, nhưng đường của A dốc hơn. Khi đó…",
+        "explain": "U = E − r·I: cùng giao điểm với trục U nghĩa là cùng E; hệ số góc −r dốc hơn nghĩa là A có điện trở trong lớn hơn."
+      },
+      "options": [
+        {
+          "text": "they have the same EMF, and A has the larger internal resistance",
+          "vi": {
+            "text": "hai pin có cùng suất điện động, pin A có điện trở trong lớn hơn"
+          },
+          "correct": true
+        },
+        {
+          "text": "they have the same internal resistance, and A has the larger EMF",
+          "vi": {
+            "text": "hai pin có cùng điện trở trong, pin A có suất điện động lớn hơn"
+          }
+        },
+        {
+          "text": "A has both the larger EMF and the larger internal resistance",
+          "vi": {
+            "text": "pin A có cả suất điện động và điện trở trong lớn hơn"
+          }
+        },
+        {
+          "text": "they have the same EMF and the same internal resistance",
+          "vi": {
+            "text": "hai pin có cùng suất điện động và cùng điện trở trong"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-used",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["power", "whole-circuit"],
+      "set": {
+        "cell": 1,
+        "rheostat": 2,
+        "voltmeterResolution": 0.01
+      },
+      "stem": "A used 1.5 V cell drives the rheostat at {rheostat} Ω; the voltmeter reads to {voltmeterResolution} V. Decide whether each statement is true or false.",
+      "explain": "U = {@voltage|4} V shows as {=round(@voltage/voltmeterResolution)*voltmeterResolution} V. A new cell, with less internal resistance, would keep U higher at the same R — and then the rheostat would take more power, not less. A real cell’s E and r drift as it delivers current, so readings are taken quickly.",
+      "vi": {
+        "stem": "Pin 1,5 V đã dùng cấp điện cho biến trở {rheostat} Ω; vôn kế có độ phân giải {voltmeterResolution} V. Mỗi nhận định sau đúng hay sai?",
+        "explain": "U = {@voltage|4} V hiển thị {=round(@voltage/voltmeterResolution)*voltmeterResolution} V. Pin mới có điện trở trong nhỏ hơn sẽ giữ U cao hơn ở cùng R — khi đó biến trở tiêu thụ công suất lớn hơn chứ không nhỏ hơn. E và r của pin thật thay đổi khi pin phát dòng, nên cần đọc số liệu nhanh."
+      },
+      "statements": [
+        {
+          "text": "The voltmeter shows {=round(@voltage/voltmeterResolution)*voltmeterResolution} V.",
+          "vi": {
+            "text": "Vôn kế hiển thị {=round(@voltage/voltmeterResolution)*voltmeterResolution} V."
+          },
+          "true": true
+        },
+        {
+          "text": "A new cell at the same rheostat setting would give a higher terminal voltage.",
+          "vi": {
+            "text": "Pin mới với cùng giá trị biến trở sẽ cho hiệu điện thế giữa hai cực lớn hơn."
+          },
+          "true": true
+        },
+        {
+          "text": "Readings are taken quickly because a real cell’s E and r change as it delivers current.",
+          "vi": {
+            "text": "Cần đọc số liệu nhanh vì E và r của pin thật thay đổi khi pin phát dòng điện."
+          },
+          "true": true
+        },
+        {
+          "text": "With a new cell at the same setting the rheostat would take less power.",
+          "vi": {
+            "text": "Với pin mới ở cùng giá trị biến trở, biến trở sẽ tiêu thụ công suất nhỏ hơn."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "emf-definition",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["emf"],
+      "stem": "The EMF E of a source is defined from the work A done by the non-electrostatic forces inside it in moving a charge q through it as…",
+      "explain": "E = A/q: the work done per unit charge by the non-electrostatic (chemical) forces in the source. It is measured in volts (1 V = 1 J/C).",
+      "vi": {
+        "stem": "Suất điện động E của nguồn điện được xác định theo công A của lực lạ bên trong nguồn khi dịch chuyển điện tích q qua nguồn bằng…",
+        "explain": "E = A/q: công của lực lạ (lực hóa học) thực hiện khi dịch chuyển một đơn vị điện tích qua nguồn. Đơn vị là vôn (1 V = 1 J/C)."
+      },
+      "options": [
+        {
+          "text": "E = A/q",
+          "vi": {
+            "text": "E = A/q"
+          },
+          "correct": true
+        },
+        {
+          "text": "E = q/A",
+          "vi": {
+            "text": "E = q/A"
+          }
+        },
+        {
+          "text": "E = A·q",
+          "vi": {
+            "text": "E = A·q"
+          }
+        },
+        {
+          "text": "E = A/t",
+          "vi": {
+            "text": "E = A/t"
+          }
+        }
+      ]
+    },
+    {
+      "id": "short-circuit",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["whole-circuit"],
+      "stem": "If the cell’s terminals were joined by a thick wire of almost no resistance (R ≈ 0), the current would be…",
+      "explain": "With R ≈ 0, I = E/(R + r) ≈ E/r: only the internal resistance limits it. This short-circuit current is the largest the cell can give; it heats the cell and runs it down quickly, so it must be avoided (the station never sets R = 0).",
+      "vi": {
+        "stem": "Nếu nối hai cực của pin bằng một dây dẫn to có điện trở gần bằng 0 (R ≈ 0) thì cường độ dòng điện sẽ…",
+        "explain": "Khi R ≈ 0, I = E/(R + r) ≈ E/r: chỉ có điện trở trong hạn chế dòng điện. Đây là dòng đoản mạch, lớn nhất mà pin có thể cho; nó làm pin nóng và nhanh hết, nên phải tránh (trạm không cho đặt R = 0)."
+      },
+      "options": [
+        {
+          "text": "about E/r, the largest the cell can give",
+          "vi": {
+            "text": "xấp xỉ E/r, lớn nhất mà pin có thể cho"
+          },
+          "correct": true
+        },
+        {
+          "text": "zero, because there is no resistor",
+          "vi": {
+            "text": "bằng 0, vì không có điện trở"
+          }
+        },
+        {
+          "text": "infinite, whatever the cell",
+          "vi": {
+            "text": "lớn vô cùng, với bất kì pin nào"
+          }
+        },
+        {
+          "text": "the same as with the rheostat at 4 Ω",
+          "vi": {
+            "text": "như khi biến trở đặt ở 4 Ω"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-line",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["graph"],
+      "stem": "A cell is run at several rheostat settings, and its terminal voltage U is plotted against the current I. Decide whether each statement is true or false.",
+      "explain": "U = E − r·I: a straight line of slope −r that meets the U axis (I = 0, open circuit) at E. A used cell has the same E but a larger r, so its line starts at the same point and falls more steeply. The line meets the I axis where U = 0, at the short-circuit current E/r, not E/R.",
+      "vi": {
+        "stem": "Một pin được đo ở nhiều giá trị biến trở; vẽ đồ thị hiệu điện thế giữa hai cực U theo cường độ dòng điện I. Mỗi nhận định sau đúng hay sai?",
+        "explain": "U = E − r·I: một đường thẳng có hệ số góc −r, cắt trục U (I = 0, mạch hở) tại E. Pin đã dùng có cùng E nhưng r lớn hơn, nên đường của nó xuất phát từ cùng điểm và dốc xuống mạnh hơn. Đường thẳng cắt trục I tại U = 0, ứng với dòng đoản mạch E/r chứ không phải E/R."
+      },
+      "statements": [
+        {
+          "text": "The points lie on a straight line whose slope is −r.",
+          "vi": {
+            "text": "Các điểm nằm trên một đường thẳng có hệ số góc −r."
+          },
+          "true": true
+        },
+        {
+          "text": "The line meets the U axis at the EMF E.",
+          "vi": {
+            "text": "Đường thẳng cắt trục U tại giá trị bằng suất điện động E."
+          },
+          "true": true
+        },
+        {
+          "text": "A used cell’s line meets the U axis lower than a new cell’s.",
+          "vi": {
+            "text": "Đường thẳng của pin đã dùng cắt trục U ở điểm thấp hơn của pin mới."
+          },
+          "true": false
+        },
+        {
+          "text": "The line meets the I axis at E/R.",
+          "vi": {
+            "text": "Đường thẳng cắt trục I tại E/R."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "find-r",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["whole-circuit", "emf"],
+      "set": {
+        "cell": 1,
+        "rheostat": 4
+      },
+      "stem": "A {@emf} V cell drives the rheostat; the meters read U = {@voltage|4} V and I = {@current|4} A. What is the cell’s internal resistance (in this simulation)?",
+      "explain": "U = E − I·r, so r = (E − U)/I = ({@emf} − {@voltage|4})/{@current|4} ≈ {=-@negativeInternalResistance} Ω. U/I is the rheostat’s resistance; E/I is R + r.",
+      "vi": {
+        "stem": "Một pin {@emf} V cấp điện cho biến trở; các đồng hồ chỉ U = {@voltage|4} V và I = {@current|4} A. Điện trở trong của pin (trong mô phỏng này) bằng bao nhiêu?",
+        "explain": "U = E − I·r, nên r = (E − U)/I = ({@emf} − {@voltage|4})/{@current|4} ≈ {=-@negativeInternalResistance} Ω. U/I là điện trở của biến trở; E/I là R + r."
+      },
+      "options": [
+        {
+          "text": "{=(@emf-@voltage)/@current} Ω",
+          "vi": {
+            "text": "{=(@emf-@voltage)/@current} Ω"
+          },
+          "correct": true,
+          "check": {
+            "expr": "-(@emf-@voltage)/@current",
+            "equals": "negativeInternalResistance"
+          }
+        },
+        {
+          "text": "{=@voltage/@current} Ω",
+          "vi": {
+            "text": "{=@voltage/@current} Ω"
+          },
+          "check": {
+            "expr": "-@voltage/@current",
+            "equals": "negativeInternalResistance"
+          }
+        },
+        {
+          "text": "{=@emf/@current} Ω",
+          "vi": {
+            "text": "{=@emf/@current} Ω"
+          },
+          "check": {
+            "expr": "-@emf/@current",
+            "equals": "negativeInternalResistance"
+          }
+        },
+        {
+          "text": "{=(@emf-@voltage)*@current} Ω",
+          "vi": {
+            "text": "{=(@emf-@voltage)*@current} Ω"
+          },
+          "check": {
+            "expr": "-(@emf-@voltage)*@current",
+            "equals": "negativeInternalResistance"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-1ohm",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["whole-circuit", "power"],
+      "set": {
+        "cell": 0,
+        "rheostat": 1
+      },
+      "stem": "A new {@emf} V cell with internal resistance {=-@negativeInternalResistance} Ω (in this simulation) drives the rheostat at {rheostat} Ω. Decide whether each statement is true or false.",
+      "explain": "I = E/(R + r) = {@emf}/({rheostat} + {=-@negativeInternalResistance}) ≈ {@current|4} A; U = E − I·r ≈ {@voltage|4} V; the rheostat takes P = I²R ≈ {@power|4} W. E/R leaves out the internal resistance.",
+      "vi": {
+        "stem": "Một pin mới {@emf} V có điện trở trong {=-@negativeInternalResistance} Ω (trong mô phỏng này) cấp điện cho biến trở đặt ở {rheostat} Ω. Mỗi nhận định sau đúng hay sai?",
+        "explain": "I = E/(R + r) = {@emf}/({rheostat} + {=-@negativeInternalResistance}) ≈ {@current|4} A; U = E − I·r ≈ {@voltage|4} V; công suất tiêu thụ trên biến trở P = I²R ≈ {@power|4} W. E/R là bỏ quên điện trở trong."
+      },
+      "statements": [
+        {
+          "text": "The current is about {@current|4} A.",
+          "vi": {
+            "text": "Cường độ dòng điện khoảng {@current|4} A."
+          },
+          "true": true,
+          "check": {
+            "expr": "@emf/(rheostat-@negativeInternalResistance)",
+            "equals": "current"
+          }
+        },
+        {
+          "text": "The voltmeter across the cell reads about {@voltage|4} V.",
+          "vi": {
+            "text": "Vôn kế mắc vào hai cực pin chỉ khoảng {@voltage|4} V."
+          },
+          "true": true,
+          "check": {
+            "expr": "@emf+@current*@negativeInternalResistance",
+            "equals": "voltage"
+          }
+        },
+        {
+          "text": "The current is E/R = {=@emf/rheostat|4} A.",
+          "vi": {
+            "text": "Cường độ dòng điện bằng E/R = {=@emf/rheostat|4} A."
+          },
+          "true": false,
+          "check": {
+            "expr": "@emf/rheostat",
+            "equals": "current"
+          }
+        },
+        {
+          "text": "The rheostat takes about {@power|4} W.",
+          "vi": {
+            "text": "Công suất tiêu thụ trên biến trở khoảng {@power|4} W."
+          },
+          "true": true,
+          "check": {
+            "expr": "@current^2*rheostat",
+            "equals": "power"
+          }
+        }
+      ]
+    },
+    {
+      "id": "two-readings",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["graph", "emf"],
+      "set": {
+        "cell": 1,
+        "rheostat": 2
+      },
+      "stem": "With the rheostat at {rheostat} Ω the meters read U₁ = {@voltage|4} V, I₁ = {@current|4} A; at 6 Ω they read U₂ = {=6*@emf/(6-@negativeInternalResistance)|4} V, I₂ = {=@emf/(6-@negativeInternalResistance)|4} A. What is the cell’s EMF?",
+      "explain": "Both readings lie on U = E − r·I. r = (U₂ − U₁)/(I₁ − I₂) ≈ {=-@negativeInternalResistance} Ω, then E = U₁ + r·I₁ ≈ {@emf} V. Either reading alone is only a terminal voltage; U₁ + R·I₁ uses the rheostat’s resistance instead of r.",
+      "vi": {
+        "stem": "Với biến trở {rheostat} Ω các đồng hồ chỉ U₁ = {@voltage|4} V, I₁ = {@current|4} A; với 6 Ω chúng chỉ U₂ = {=6*@emf/(6-@negativeInternalResistance)|4} V, I₂ = {=@emf/(6-@negativeInternalResistance)|4} A. Suất điện động của pin bằng bao nhiêu?",
+        "explain": "Cả hai cặp số đo đều thỏa mãn U = E − r·I. r = (U₂ − U₁)/(I₁ − I₂) ≈ {=-@negativeInternalResistance} Ω, rồi E = U₁ + r·I₁ ≈ {@emf} V. Mỗi số chỉ vôn kế riêng lẻ chỉ là hiệu điện thế giữa hai cực; U₁ + R·I₁ là dùng điện trở biến trở thay cho r."
+      },
+      "options": [
+        {
+          "text": "{=@voltage+@current*(6*@emf/(6-@negativeInternalResistance)-@voltage)/(@current-@emf/(6-@negativeInternalResistance))|3} V",
+          "vi": {
+            "text": "{=@voltage+@current*(6*@emf/(6-@negativeInternalResistance)-@voltage)/(@current-@emf/(6-@negativeInternalResistance))|3} V"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@voltage+@current*(6*@emf/(6-@negativeInternalResistance)-@voltage)/(@current-@emf/(6-@negativeInternalResistance))",
+            "equals": "emf"
+          }
+        },
+        {
+          "text": "{@voltage|3} V",
+          "vi": {
+            "text": "{@voltage|3} V"
+          },
+          "check": {
+            "expr": "@voltage",
+            "equals": "emf"
+          }
+        },
+        {
+          "text": "{=6*@emf/(6-@negativeInternalResistance)|3} V",
+          "vi": {
+            "text": "{=6*@emf/(6-@negativeInternalResistance)|3} V"
+          },
+          "check": {
+            "expr": "6*@emf/(6-@negativeInternalResistance)",
+            "equals": "emf"
+          }
+        },
+        {
+          "text": "{=@voltage+@current*rheostat|3} V",
+          "vi": {
+            "text": "{=@voltage+@current*rheostat|3} V"
+          },
+          "check": {
+            "expr": "@voltage+@current*rheostat",
+            "equals": "emf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "which-rheostat",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["whole-circuit"],
+      "set": {
+        "cell": 2,
+        "rheostat": 6
+      },
+      "stem": "Two new cells in series give E = {@emf} V with internal resistance {=-@negativeInternalResistance} Ω (in this simulation). At what rheostat setting is the current {@current|4} A?",
+      "explain": "I = E/(R + r), so R = E/I − r = {@emf}/{@current|4} − {=-@negativeInternalResistance} = {rheostat} Ω. E/I alone forgets r; adding r gets its sign wrong; 1.5/I − r uses one cell’s EMF for the pack.",
+      "vi": {
+        "stem": "Bộ hai pin mới mắc nối tiếp có E = {@emf} V và điện trở trong {=-@negativeInternalResistance} Ω (trong mô phỏng này). Phải đặt biến trở ở giá trị nào để cường độ dòng điện bằng {@current|4} A?",
+        "explain": "I = E/(R + r), nên R = E/I − r = {@emf}/{@current|4} − {=-@negativeInternalResistance} = {rheostat} Ω. Chỉ lấy E/I là quên r; cộng thêm r là sai dấu; 1,5/I − r là dùng suất điện động của một pin cho cả bộ."
+      },
+      "options": [
+        {
+          "text": "{=@emf/@current+@negativeInternalResistance|3} Ω",
+          "vi": {
+            "text": "{=@emf/@current+@negativeInternalResistance|3} Ω"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@emf/((@emf/@current+@negativeInternalResistance)-@negativeInternalResistance)",
+            "equals": "current"
+          }
+        },
+        {
+          "text": "{=@emf/@current|3} Ω",
+          "vi": {
+            "text": "{=@emf/@current|3} Ω"
+          },
+          "check": {
+            "expr": "@emf/(@emf/@current-@negativeInternalResistance)",
+            "equals": "current"
+          }
+        },
+        {
+          "text": "{=@emf/@current-@negativeInternalResistance|3} Ω",
+          "vi": {
+            "text": "{=@emf/@current-@negativeInternalResistance|3} Ω"
+          },
+          "check": {
+            "expr": "@emf/(@emf/@current-2*@negativeInternalResistance)",
+            "equals": "current"
+          }
+        },
+        {
+          "text": "{=1.5/@current+@negativeInternalResistance|3} Ω",
+          "vi": {
+            "text": "{=1.5/@current+@negativeInternalResistance|3} Ω"
+          },
+          "check": {
+            "expr": "@emf/(1.5/@current)",
+            "equals": "current"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-losses",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["power", "whole-circuit"],
+      "set": {
+        "cell": 1,
+        "rheostat": 10
+      },
+      "stem": "A used {@emf} V cell (internal resistance {=-@negativeInternalResistance} Ω in this simulation) drives the rheostat at {rheostat} Ω. Decide whether each statement is true or false.",
+      "explain": "I = {@current|4} A, U = {@voltage|4} V. The cell supplies E·I; of it, I²r ≈ {=-@current^2*@negativeInternalResistance|3} W heats the cell and U·I ≈ {@power|4} W goes to the rheostat, a share U/E ≈ {=@voltage/@emf*100|3} %. A new cell (smaller r) would give a higher terminal voltage at the same R.",
+      "vi": {
+        "stem": "Một pin đã dùng {@emf} V (điện trở trong {=-@negativeInternalResistance} Ω trong mô phỏng này) cấp điện cho biến trở đặt ở {rheostat} Ω. Mỗi nhận định sau đúng hay sai?",
+        "explain": "I = {@current|4} A, U = {@voltage|4} V. Pin cung cấp công suất E·I; trong đó I²r ≈ {=-@current^2*@negativeInternalResistance|3} W tỏa nhiệt trong pin và U·I ≈ {@power|4} W cấp cho biến trở, chiếm U/E ≈ {=@voltage/@emf*100|3} %. Pin mới (r nhỏ hơn) sẽ cho hiệu điện thế giữa hai cực lớn hơn với cùng R."
+      },
+      "statements": [
+        {
+          "text": "The voltmeter across the cell reads about {@voltage|4} V.",
+          "vi": {
+            "text": "Vôn kế mắc vào hai cực pin chỉ khoảng {@voltage|4} V."
+          },
+          "true": true,
+          "check": {
+            "expr": "@emf*rheostat/(rheostat-@negativeInternalResistance)",
+            "equals": "voltage"
+          }
+        },
+        {
+          "text": "About {=-@current^2*@negativeInternalResistance|3} W is turned to heat inside the cell.",
+          "vi": {
+            "text": "Khoảng {=-@current^2*@negativeInternalResistance|3} W bị chuyển thành nhiệt bên trong pin."
+          },
+          "true": true,
+          "check": {
+            "expr": "@emf*@current-(-@current^2*@negativeInternalResistance)",
+            "equals": "power"
+          }
+        },
+        {
+          "text": "About {=@voltage/@emf*100|3} % of the power the cell supplies reaches the rheostat.",
+          "vi": {
+            "text": "Khoảng {=@voltage/@emf*100|3} % công suất của nguồn được cấp cho biến trở."
+          },
+          "true": true,
+          "check": {
+            "expr": "(@voltage/@emf*100)/100*@emf*@current",
+            "equals": "power"
+          }
+        },
+        {
+          "text": "A new cell at the same rheostat setting would give a lower terminal voltage.",
+          "vi": {
+            "text": "Với cùng giá trị biến trở, pin mới sẽ cho hiệu điện thế giữa hai cực nhỏ hơn."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,987 @@
+{
+  "id": "microscope",
+  "name": "Observing cells under the microscope",
+  "category": "biology",
+  "description": "A slide — onion epidermis made on the tile, or a prepared slide of human cheek cells or an Elodea leaf, unstained or stained with iodine solution or methylene blue — is put on the stage of a school compound microscope whose camera shows the eyepiece's whole field of view on a small monitor. Choose the objective (4×, 10× or 40× under the 10× eyepiece: 40×, 100× or 400×) and the stage's offset from the focal plane. RUN switches on the lamp and turns the fine focus, lowering the stage from 100 µm above the focal plane to the set offset; the image on the monitor sharpens as the stage nears the focal plane and blurs past it. The field of view narrows as the magnification rises, FOV = FN/M_obj; the whole cells counted across it give the cell length FOV/n.",
+  "vi": {
+    "name": "Quan sát tế bào dưới kính hiển vi",
+    "description": "Một tiêu bản — biểu bì vảy hành tự làm trên khay, hoặc tiêu bản làm sẵn của tế bào niêm mạc miệng người hay lá rong Elodea, không nhuộm hoặc nhuộm bằng dung dịch iốt hay xanh methylene — được đặt lên bàn kính của một kính hiển vi quang học dùng trong trường học, có camera hiển thị toàn bộ thị trường của thị kính lên một màn hình nhỏ. Chọn vật kính (4×, 10× hoặc 40× với thị kính 10×: 40×, 100× hoặc 400×) và độ lệch của bàn kính so với mặt phẳng tiêu điểm. Nhấn CHẠY để bật đèn và xoay ốc vi cấp, hạ bàn kính từ 100 µm phía trên mặt phẳng tiêu điểm xuống độ lệch đã đặt; hình ảnh trên màn hình rõ dần khi bàn kính đến gần mặt phẳng tiêu điểm và mờ đi khi đi quá. Thị trường thu hẹp khi độ phóng đại tăng, FOV = FN/M_obj; số tế bào nguyên vẹn đếm được theo đường kính thị trường cho chiều dài tế bào FOV/n.",
+    "note": "Đây là một mô hình dạy học đã được đơn giản hóa về hình học của kính hiển vi trường sáng, không mô phỏng sự tạo ảnh. Độ phóng đại tổng M = M_eye × M_obj, với thị kính 10×: 40×, 100×, 400×. Đường kính thị trường FOV = FN/M_obj, tức số trường của thị kính FN = 18 mm chia cho độ phóng đại của vật kính: 4,5; 1,8 và 0,45 mm; màn hình hiển thị toàn bộ thị trường hình tròn đó. Độ sâu trường ảnh d = λ·n/NA², chỉ gồm số hạng quang học sóng (λ = 0,55 µm, trong không khí n = 1; NA 0,10; 0,25 và 0,65 với vật kính 4×, 10× và 40×: 55; 8,8 và 1,3 µm); số hạng do bộ thu ảnh (mắt hoặc điểm ảnh của camera), vốn chiếm ưu thế ở độ phóng đại thấp, bị bỏ qua, nên độ sâu trường ảnh của kính hiển vi thật lớn hơn. Độ nét là một chỉ số, S = 1/(1 + (2Δz/d)²) tại độ lệch Δz của bàn kính so với mặt phẳng tiêu điểm của tiêu bản: bằng 1 khi đúng tiêu điểm, bằng ½ ở rìa độ sâu trường ảnh và nhỏ dần khi ra xa hơn — một đường cong minh họa, không phải ảnh được tính toán; màn hình làm mờ hình ảnh tương ứng với chỉ số này. Độ tương phản (0–1) là giá trị được nêu cho từng tiêu bản và thuốc nhuộm, không phải số đo: tế bào vảy hành và tế bào niêm mạc miệng không màu nên khó thấy dưới trường sáng khi không nhuộm; iốt là thuốc nhuộm thường dùng cho vảy hành (nhân và vách tế bào có màu vàng nâu), xanh methylene cũng làm rõ chúng; xanh methylene là thuốc nhuộm dùng cho tế bào niêm mạc miệng (nhân có màu xanh), iốt chỉ nhuộm chúng yếu; lá rong Elodea không cần nhuộm, lục lạp màu xanh đã tạo độ tương phản, và thuốc nhuộm chỉ làm tăng thêm (iốt làm tinh bột trong lục lạp có màu xanh đen, xanh methylene làm rõ nhân). Mỗi tiêu bản có một chiều dài tế bào điển hình L được nêu, đo theo đường đếm: biểu bì vảy hành 250 µm (tế bào dài 0,2–0,4 mm), tế bào niêm mạc miệng 60 µm (đường kính 40–80 µm), lá rong Elodea 80 µm (dài 50–100 µm). Có FOV/L chiều dài tế bào nằm vừa theo đường kính thị trường; số tế bào nguyên vẹn trong đó được đếm, n = phần nguyên của FOV/L, chỉ khi ảnh không mất nét (S > 0,1) và không quá nhạt (độ tương phản > 0,25) — nếu không thì không đếm được tế bào nào và không có chiều dài (cả hai bằng 0). Chiều dài suy ra từ số đếm, FOV/n, không bao giờ ngắn hơn L và dài hơn tối đa 1/n: hãy đếm ở nơi có nhiều tế bào, tức ở độ phóng đại thấp. Tế bào niêm mạc miệng được thể hiện thành một lớp tế bào dẹt nằm sát nhau, như khi cạo niêm mạc thường lấy được, nên số đếm khớp với hình; tiêu bản thật còn có chỗ trống và nếp gấp. Mỗi lần chạy xoay ốc vi cấp với tốc độ 20 µm/s, hạ bàn kính từ 100 µm phía trên mặt phẳng tiêu điểm xuống độ lệch đã đặt (tối đa 10 s); kết quả được đọc tại đó. Tế bào thật có kích thước khác nhau trên cùng một tiêu bản, và khi đếm thật còn phải ước lượng các tế bào bị mép thị trường cắt ngang."
+  },
+  "requiredEquipment": ["digital-microscope"],
+  "model": "biology.microscope",
+  "presentation": "microscopy",
+  "workspace": {
+    "pieces": [
+      {
+        "id": "specimens",
+        "kind": "specimen",
+        "slot": "library",
+        "label": "Specimen library",
+        "vi": {
+          "label": "Thư viện tiêu bản"
+        },
+        "owns": ["specimen"],
+        "shows": []
+      },
+      {
+        "id": "stains",
+        "kind": "stain-bottle",
+        "slot": "library",
+        "label": "Stains",
+        "vi": {
+          "label": "Thuốc nhuộm"
+        },
+        "owns": ["stain"],
+        "shows": []
+      },
+      {
+        "id": "slide",
+        "kind": "slide",
+        "slot": "prep",
+        "label": "Slide",
+        "vi": {
+          "label": "Lam kính"
+        },
+        "owns": [],
+        "shows": []
+      },
+      {
+        "id": "coverslip",
+        "kind": "coverslip",
+        "slot": "prep",
+        "label": "Coverslip",
+        "vi": {
+          "label": "Lamen"
+        },
+        "owns": [],
+        "shows": []
+      },
+      {
+        "id": "stage",
+        "kind": "microscope-stage",
+        "slot": "instrument",
+        "label": "Microscope stage",
+        "vi": {
+          "label": "Bàn kính"
+        },
+        "owns": [],
+        "shows": []
+      },
+      {
+        "id": "nosepiece",
+        "kind": "nosepiece",
+        "slot": "instrument",
+        "label": "Nosepiece with the 4×, 10× and 40× objectives",
+        "vi": {
+          "label": "Mâm xoay vật kính 4×, 10× và 40×"
+        },
+        "owns": ["objective"],
+        "shows": [
+          {
+            "variable": "magnification"
+          },
+          {
+            "input": "eyepiece"
+          }
+        ]
+      },
+      {
+        "id": "focus",
+        "kind": "focus-knob",
+        "slot": "instrument",
+        "label": "Fine-focus knob",
+        "vi": {
+          "label": "Ốc vi cấp"
+        },
+        "owns": ["focus"],
+        "shows": [
+          {
+            "variable": "offset"
+          },
+          {
+            "input": "focusStart"
+          }
+        ]
+      },
+      {
+        "id": "lamp",
+        "kind": "lamp-indicator",
+        "slot": "instrument",
+        "label": "Lamp",
+        "vi": {
+          "label": "Đèn"
+        },
+        "owns": [],
+        "shows": []
+      },
+      {
+        "id": "eyepiece",
+        "kind": "eyepiece-field",
+        "slot": "field",
+        "label": "Eyepiece field",
+        "vi": {
+          "label": "Thị trường của thị kính"
+        },
+        "owns": [],
+        "shows": [
+          {
+            "variable": "sharpness"
+          },
+          {
+            "variable": "contrast"
+          },
+          {
+            "variable": "fieldOfView"
+          },
+          {
+            "variable": "magnification"
+          },
+          {
+            "result": "cellsCounted"
+          },
+          {
+            "result": "measuredLength"
+          },
+          {
+            "input": "fieldNumber"
+          }
+        ]
+      }
+    ],
+    "materials": [
+      {
+        "id": "onion",
+        "kind": "specimen",
+        "label": "Onion epidermis",
+        "vi": {
+          "label": "Biểu bì vảy hành"
+        },
+        "sets": {
+          "parameter": "specimen",
+          "value": 0
+        }
+      }
+    ],
+    "setup": [
+      {
+        "id": "new-slide",
+        "instruction": "Take a clean slide.",
+        "refusal": "Take a clean slide first.",
+        "vi": {
+          "instruction": "Lấy một lam kính sạch.",
+          "refusal": "Hãy lấy một lam kính sạch trước."
+        },
+        "place": "slide",
+        "onto": "slide",
+        "when": {
+          "parameter": "specimen",
+          "values": [0]
+        }
+      },
+      {
+        "id": "specimen",
+        "instruction": "Put the onion epidermis on the slide.",
+        "refusal": "Put the onion epidermis on the slide first.",
+        "vi": {
+          "instruction": "Đặt biểu bì vảy hành lên lam kính.",
+          "refusal": "Hãy đặt biểu bì vảy hành lên lam kính trước."
+        },
+        "place": "onion",
+        "onto": "slide",
+        "after": ["new-slide"],
+        "locks": ["specimen"],
+        "when": {
+          "parameter": "specimen",
+          "values": [0]
+        }
+      },
+      {
+        "id": "stain",
+        "instruction": "Choose a stain and add it to the slide: iodine solution is the usual stain for onion, methylene blue also shows it.",
+        "refusal": "Choose a stain and add it to the slide first.",
+        "vi": {
+          "instruction": "Chọn thuốc nhuộm rồi nhỏ lên lam kính: iốt là thuốc nhuộm thường dùng cho vảy hành, xanh methylene cũng làm rõ nó.",
+          "refusal": "Hãy chọn thuốc nhuộm và nhỏ lên lam kính trước."
+        },
+        "place": "stains",
+        "onto": "slide",
+        "after": ["specimen"],
+        "locks": ["stain"],
+        "when": {
+          "parameter": "specimen",
+          "values": [0]
+        }
+      },
+      {
+        "id": "coverslip",
+        "instruction": "Lower a coverslip onto the slide.",
+        "refusal": "Lower a coverslip onto the slide first.",
+        "vi": {
+          "instruction": "Đậy lamen lên lam kính.",
+          "refusal": "Hãy đậy lamen lên lam kính trước."
+        },
+        "place": "coverslip",
+        "onto": "slide",
+        "after": ["stain"],
+        "when": {
+          "parameter": "specimen",
+          "values": [0]
+        }
+      },
+      {
+        "id": "stage",
+        "instruction": "Put the slide on the microscope stage.",
+        "refusal": "Put the slide on the microscope stage first.",
+        "vi": {
+          "instruction": "Đặt lam kính lên bàn kính của kính hiển vi.",
+          "refusal": "Hãy đặt lam kính lên bàn kính của kính hiển vi trước."
+        },
+        "place": "slide",
+        "onto": "stage",
+        "after": ["coverslip"],
+        "locks": ["specimen", "stain"]
+      }
+    ],
+    "runLabel": "Observe",
+    "vi": {
+      "runLabel": "Quan sát"
+    }
+  },
+  "parameters": [
+    {
+      "id": "specimen",
+      "label": "Slide",
+      "vi": {
+        "label": "Tiêu bản"
+      },
+      "unit": "",
+      "default": 0,
+      "min": 0,
+      "max": 2,
+      "step": 1,
+      "presets": [
+        {
+          "label": "Onion epidermis",
+          "vi": {
+            "label": "Biểu bì vảy hành"
+          },
+          "value": 0
+        },
+        {
+          "label": "Human cheek cells",
+          "vi": {
+            "label": "Tế bào niêm mạc miệng"
+          },
+          "value": 1
+        },
+        {
+          "label": "Elodea leaf",
+          "vi": {
+            "label": "Lá rong Elodea"
+          },
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": "stain",
+      "label": "Stain",
+      "vi": {
+        "label": "Thuốc nhuộm"
+      },
+      "unit": "",
+      "default": 1,
+      "min": 0,
+      "max": 2,
+      "step": 1,
+      "presets": [
+        {
+          "label": "None",
+          "vi": {
+            "label": "Không nhuộm"
+          },
+          "value": 0
+        },
+        {
+          "label": "Iodine solution",
+          "vi": {
+            "label": "Dung dịch iốt"
+          },
+          "value": 1
+        },
+        {
+          "label": "Methylene blue",
+          "vi": {
+            "label": "Xanh methylene"
+          },
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": "objective",
+      "label": "Objective",
+      "vi": {
+        "label": "Vật kính"
+      },
+      "symbol": "M_obj",
+      "unit": "×",
+      "default": 4,
+      "min": 4,
+      "max": 40,
+      "presets": [
+        {
+          "label": "4× (total 40×)",
+          "vi": {
+            "label": "4× (tổng 40×)"
+          },
+          "value": 4
+        },
+        {
+          "label": "10× (total 100×)",
+          "vi": {
+            "label": "10× (tổng 100×)"
+          },
+          "value": 10
+        },
+        {
+          "label": "40× (total 400×)",
+          "vi": {
+            "label": "40× (tổng 400×)"
+          },
+          "value": 40
+        }
+      ]
+    },
+    {
+      "id": "focus",
+      "label": "Stage offset from focus",
+      "vi": {
+        "label": "Độ lệch bàn kính so với tiêu điểm"
+      },
+      "symbol": "Δz",
+      "unit": "µm",
+      "default": 50,
+      "min": -100,
+      "max": 100,
+      "presets": [
+        {
+          "label": "−100 µm",
+          "vi": {
+            "label": "−100 µm"
+          },
+          "value": -100
+        },
+        {
+          "label": "−50 µm",
+          "vi": {
+            "label": "−50 µm"
+          },
+          "value": -50
+        },
+        {
+          "label": "−20 µm",
+          "vi": {
+            "label": "−20 µm"
+          },
+          "value": -20
+        },
+        {
+          "label": "−10 µm",
+          "vi": {
+            "label": "−10 µm"
+          },
+          "value": -10
+        },
+        {
+          "label": "−5 µm",
+          "vi": {
+            "label": "−5 µm"
+          },
+          "value": -5
+        },
+        {
+          "label": "−2 µm",
+          "vi": {
+            "label": "−2 µm"
+          },
+          "value": -2
+        },
+        {
+          "label": "−1 µm",
+          "vi": {
+            "label": "−1 µm"
+          },
+          "value": -1
+        },
+        {
+          "label": "0 µm",
+          "vi": {
+            "label": "0 µm"
+          },
+          "value": 0
+        },
+        {
+          "label": "1 µm",
+          "vi": {
+            "label": "1 µm"
+          },
+          "value": 1
+        },
+        {
+          "label": "2 µm",
+          "vi": {
+            "label": "2 µm"
+          },
+          "value": 2
+        },
+        {
+          "label": "5 µm",
+          "vi": {
+            "label": "5 µm"
+          },
+          "value": 5
+        },
+        {
+          "label": "10 µm",
+          "vi": {
+            "label": "10 µm"
+          },
+          "value": 10
+        },
+        {
+          "label": "20 µm",
+          "vi": {
+            "label": "20 µm"
+          },
+          "value": 20
+        },
+        {
+          "label": "50 µm",
+          "vi": {
+            "label": "50 µm"
+          },
+          "value": 50
+        },
+        {
+          "label": "100 µm",
+          "vi": {
+            "label": "100 µm"
+          },
+          "value": 100
+        }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "eyepiece": 10,
+    "fieldNumber": 18,
+    "wavelength": 0.55,
+    "focusStart": 100,
+    "focusRate": 20
+  },
+  "inputs": {
+    "eyepiece": {
+      "symbol": "M_eye",
+      "unit": "×"
+    },
+    "fieldNumber": {
+      "symbol": "FN",
+      "unit": "mm"
+    },
+    "wavelength": {
+      "symbol": "λ",
+      "unit": "µm",
+      "desk": false
+    },
+    "focusStart": {
+      "symbol": "Δz₀",
+      "unit": "µm",
+      "desk": false
+    },
+    "focusRate": {
+      "symbol": "v_f",
+      "unit": "µm/s",
+      "desk": false
+    }
+  },
+  "simulation": {
+    "timeStep": 0.01,
+    "maxDuration": 11,
+    "sampleInterval": 0.01
+  },
+  "measurements": [
+    {
+      "id": "offset",
+      "label": "Stage offset from the focal plane",
+      "vi": {
+        "label": "Độ lệch của bàn kính so với mặt phẳng tiêu điểm"
+      },
+      "symbol": "Δz",
+      "unit": "µm",
+      "variable": "offset"
+    },
+    {
+      "id": "sharpness",
+      "label": "Sharpness index",
+      "vi": {
+        "label": "Chỉ số độ nét"
+      },
+      "symbol": "S",
+      "unit": "",
+      "variable": "sharpness"
+    }
+  ],
+  "results": [
+    {
+      "id": "magnification",
+      "label": "Total magnification",
+      "vi": {
+        "label": "Độ phóng đại tổng"
+      },
+      "symbol": "M",
+      "unit": "×",
+      "variable": "magnification",
+      "reduce": "final",
+      "theory": "magnification"
+    },
+    {
+      "id": "fieldOfView",
+      "label": "Field of view (diameter)",
+      "vi": {
+        "label": "Đường kính thị trường"
+      },
+      "symbol": "FOV",
+      "unit": "µm",
+      "variable": "fieldOfView",
+      "reduce": "final",
+      "theory": "fieldOfView"
+    },
+    {
+      "id": "depthOfField",
+      "label": "Depth of field",
+      "vi": {
+        "label": "Độ sâu trường ảnh"
+      },
+      "symbol": "d",
+      "unit": "µm",
+      "variable": "depthOfField",
+      "reduce": "final",
+      "theory": "depthOfField"
+    },
+    {
+      "id": "sharpness",
+      "label": "Sharpness at the set focus",
+      "vi": {
+        "label": "Độ nét tại vị trí lấy nét"
+      },
+      "symbol": "S",
+      "unit": "",
+      "variable": "sharpness",
+      "reduce": "final",
+      "theory": "sharpness",
+      "classes": [
+        {
+          "max": 0.1,
+          "label": "Out of focus",
+          "vi": {
+            "label": "Mất nét"
+          }
+        },
+        {
+          "max": 0.5,
+          "label": "Slightly blurred",
+          "vi": {
+            "label": "Hơi mờ"
+          }
+        },
+        {
+          "label": "Sharp",
+          "vi": {
+            "label": "Rõ nét"
+          }
+        }
+      ]
+    },
+    {
+      "id": "contrast",
+      "label": "Image contrast",
+      "vi": {
+        "label": "Độ tương phản của ảnh"
+      },
+      "symbol": "C",
+      "unit": "",
+      "variable": "contrast",
+      "reduce": "final",
+      "theory": "contrast",
+      "classes": [
+        {
+          "max": 0.25,
+          "label": "Faint: stain it",
+          "vi": {
+            "label": "Nhạt: cần nhuộm"
+          }
+        },
+        {
+          "max": 0.55,
+          "label": "Weak: wrong stain for it",
+          "vi": {
+            "label": "Yếu: thuốc nhuộm không phù hợp"
+          }
+        },
+        {
+          "label": "Clear",
+          "vi": {
+            "label": "Rõ"
+          }
+        }
+      ]
+    },
+    {
+      "id": "cellsCounted",
+      "label": "Whole cells counted across the field",
+      "vi": {
+        "label": "Số tế bào nguyên vẹn đếm được theo đường kính thị trường"
+      },
+      "symbol": "n",
+      "unit": "",
+      "variable": "cellsCounted",
+      "reduce": "final",
+      "theory": "cellsCountable",
+      "classes": [
+        {
+          "max": 0,
+          "label": "None: image unclear",
+          "vi": {
+            "label": "Không có: ảnh không rõ"
+          }
+        },
+        {
+          "max": 9,
+          "label": "Few: a rough length",
+          "vi": {
+            "label": "Ít: chiều dài chỉ ước lượng thô"
+          }
+        },
+        {
+          "label": "Many: a close length",
+          "vi": {
+            "label": "Nhiều: chiều dài sát hơn"
+          }
+        }
+      ]
+    },
+    {
+      "id": "measuredLength",
+      "label": "Cell length from the count, FOV/n",
+      "vi": {
+        "label": "Chiều dài tế bào suy ra từ số đếm, FOV/n"
+      },
+      "symbol": "L",
+      "unit": "µm",
+      "variable": "measuredLength",
+      "reduce": "final",
+      "theory": "countableLength",
+      "classes": [
+        {
+          "max": 0,
+          "label": "None: nothing counted",
+          "vi": {
+            "label": "Không có: không đếm được tế bào nào"
+          }
+        },
+        {
+          "label": "From the count",
+          "vi": {
+            "label": "Suy ra từ số đếm"
+          }
+        }
+      ]
+    }
+  ],
+  "graphs": [
+    {
+      "id": "focus-curve",
+      "title": "Sharpness against stage offset",
+      "vi": {
+        "title": "Độ nét theo độ lệch của bàn kính"
+      },
+      "x": "offset",
+      "y": ["sharpness"]
+    },
+    {
+      "id": "sharpness-time",
+      "title": "Sharpness against time",
+      "vi": {
+        "title": "Độ nét theo thời gian"
+      },
+      "x": "time",
+      "y": ["sharpness"]
+    }
+  ],
+  "monitor": "focus-curve",
+  "compare": [
+    {
+      "graph": "focus-curve"
+    }
+  ],
+  "note": "A simplified teaching model of a bright-field microscope's geometry, not of image formation. Total magnification M = M_eye × M_obj, with a 10× eyepiece: 40×, 100×, 400×. Field of view (diameter) FOV = FN/M_obj, the eyepiece's field number FN = 18 mm over the objective's magnification: 4.5, 1.8 and 0.45 mm; the monitor shows that whole circular field. Depth of field d = λ·n/NA², the wave-optical term only (λ = 0.55 µm, in air n = 1; NA 0.10, 0.25 and 0.65 for the 4×, 10× and 40× objectives: 55, 8.8 and 1.3 µm); the term from the detector (the eye or the camera's pixels), which dominates at low power, is left out, so a real microscope's depth of field is larger. Sharpness is an index, S = 1/(1 + (2Δz/d)²) at the stage's offset Δz from the specimen's focal plane: 1 in focus, ½ at the edge of the depth of field, smaller further out — an illustrative curve, not a computed image; the monitor blurs its picture to match it. Contrast (0–1) is a stated value for each slide and stain, not a measurement: unstained onion and cheek cells are colourless and hardly show in bright field; iodine is the usual stain for onion (nuclei and walls turn yellow-brown) and methylene blue also shows them; methylene blue is the stain for cheek cells (nuclei turn blue), iodine stains them only weakly; Elodea needs no stain, its green chloroplasts giving the contrast, and a stain only adds to it (iodine turns the starch in the chloroplasts blue-black, methylene blue shows the nuclei). Each slide has one stated typical cell length L along the line counted: onion epidermis 250 µm (cells are 0.2–0.4 mm long), cheek cells 60 µm (40–80 µm across), Elodea 80 µm (50–100 µm long). FOV/L cell lengths fit across the field; the whole cells among them are counted, n = the whole part of FOV/L, only in an image that is neither out of focus (S > 0.1) nor faint (contrast > 0.25) — otherwise none is counted and no length is given (both 0). The length from the count, FOV/n, is never shorter than L and at most 1/n too long: count where many cells fit, at low power. Cheek cells are shown as a sheet of flat cells side by side, as a scraping often lifts them, so the count matches the picture; a real smear also has gaps and folds. A run turns the fine focus at 20 µm/s, lowering the stage from 100 µm above the focal plane to the set offset (up to 10 s); the results are read there. Real cells vary in size along a slide, and a real count must also judge the cells cut by the field's edge.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the microscope instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn kính hiển vi trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "microscope-instructions"
+      }
+    },
+    {
+      "id": "work",
+      "instruction": "Go to the microscope and press E to work at the bench.",
+      "vi": {
+        "instruction": "Đến kính hiển vi và nhấn E để làm việc tại bàn thí nghiệm."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "digital-microscope"
+      }
+    },
+    {
+      "id": "stage",
+      "instruction": "Choose a slide in the specimen library (the onion epidermis is made on the tile, the others are prepared slides) and put it on the stage.",
+      "vi": {
+        "instruction": "Chọn một tiêu bản trong thư viện (biểu bì vảy hành được làm trên khay, các tiêu bản còn lại làm sẵn) và đặt lên bàn kính."
+      },
+      "done": {
+        "kind": "setup",
+        "step": "stage"
+      }
+    },
+    {
+      "id": "objective",
+      "instruction": "Change the objective — 4×, 10×, 40× — and see the field of view narrow.",
+      "vi": {
+        "instruction": "Đổi vật kính — 4×, 10×, 40× — và quan sát thị trường thu hẹp lại."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "objective"
+      }
+    },
+    {
+      "id": "focus",
+      "instruction": "Set the stage offset Δz with the fine-focus knob: at 0 µm the specimen is in focus.",
+      "vi": {
+        "instruction": "Đặt độ lệch bàn kính Δz bằng ốc vi cấp: ở 0 µm tiêu bản đúng tiêu điểm."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "focus"
+      }
+    },
+    {
+      "id": "observe",
+      "instruction": "Press OBSERVE: the fine focus lowers the stage and the image forms in the eyepiece field.",
+      "vi": {
+        "instruction": "Nhấn QUAN SÁT: ốc vi cấp hạ bàn kính và hình ảnh hiện ra trong thị trường của thị kính."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Read the field of view, the cells counted and the cell length in the notebook.",
+      "vi": {
+        "instruction": "Đọc đường kính thị trường, số tế bào đếm được và chiều dài tế bào trong sổ ghi chép."
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "high-power",
+      "question": "With the {eyepiece}× eyepiece (field number {fieldNumber} mm) and the {objective}× objective, find the total magnification and the diameter of the field of view in µm.",
+      "vi": {
+        "question": "Với thị kính {eyepiece}× (số trường {fieldNumber} mm) và vật kính {objective}×, tìm độ phóng đại tổng cộng và đường kính thị trường tính bằng µm."
+      },
+      "set": { "objective": 40 },
+      "find": [{ "theory": "magnification" }, { "theory": "fieldOfView" }],
+      "steps": [
+        {
+          "say": "The total magnification is the eyepiece’s times the objective’s.",
+          "vi": {
+            "say": "Độ phóng đại tổng cộng bằng độ phóng đại của thị kính nhân của vật kính."
+          },
+          "write": "M = {eyepiece}·{objective} = {@magnification}×",
+          "check": { "expr": "eyepiece*objective", "equals": "magnification" }
+        },
+        {
+          "say": "The field seen is the eyepiece’s field number divided by the objective’s magnification; 1 mm is 1000 µm. Higher power: a smaller field.",
+          "vi": {
+            "say": "Thị trường bằng số trường của thị kính chia độ phóng đại của vật kính; 1 mm = 1000 µm. Phóng đại càng lớn, thị trường càng nhỏ."
+          },
+          "write": "FOV = FN/M_obj = {fieldNumber}·1000/{objective} = {@fieldOfView} µm",
+          "check": { "expr": "fieldNumber*1000/objective", "equals": "fieldOfView" }
+        }
+      ]
+    },
+    {
+      "id": "count-cheek-cells",
+      "question": "Cheek cells stained with methylene blue are in focus under the {objective}× objective; {@cellsCountable} whole cells lie end to end across the field. Find the field of view and the length of one cell.",
+      "vi": {
+        "question": "Tế bào niêm mạc má nhuộm xanh metylen được lấy nét rõ dưới vật kính {objective}×; có {@cellsCountable} tế bào nguyên vẹn xếp nối nhau ngang qua thị trường. Tìm đường kính thị trường và chiều dài một tế bào."
+      },
+      "set": { "specimen": 1, "stain": 2, "objective": 4, "focus": 0 },
+      "find": [{ "theory": "fieldOfView" }, { "theory": "countableLength" }],
+      "steps": [
+        {
+          "say": "At low power the field is wide, so many cells fit across it.",
+          "vi": {
+            "say": "Ở độ phóng đại thấp thị trường rộng, nên nhiều tế bào nằm vừa ngang qua nó."
+          },
+          "write": "FOV = {fieldNumber}·1000/{objective} = {@fieldOfView} µm",
+          "check": { "expr": "fieldNumber*1000/objective", "equals": "fieldOfView" }
+        },
+        {
+          "say": "Divide the field by the number of cells across it. Counting many cells at low power keeps the error small.",
+          "vi": {
+            "say": "Chia đường kính thị trường cho số tế bào nằm ngang qua nó. Đếm nhiều tế bào ở độ phóng đại thấp giúp sai số nhỏ."
+          },
+          "write": "L = FOV/n = {@fieldOfView}/{@cellsCountable} = {@countableLength} µm",
+          "check": { "expr": "@fieldOfView/@cellsCountable", "equals": "countableLength" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "A compound microscope magnifies cells twice, by the objective and the eyepiece; a stronger objective shows less of the slide, and counting cells across the field of view gives their size.",
+    "vi": {
+      "summary": "Kính hiển vi quang học phóng đại tế bào hai lần, qua vật kính và thị kính; vật kính mạnh hơn cho thấy vùng tiêu bản nhỏ hơn, và đếm số tế bào trên đường kính thị trường cho biết kích thước của chúng."
+    },
+    "parts": [
+      {
+        "id": "specimen",
+        "name": "Slide",
+        "role": "Onion epidermis, cheek cells or an Elodea leaf, unstained or stained, under a coverslip.",
+        "vi": {
+          "name": "Tiêu bản",
+          "role": "Biểu bì vảy hành, tế bào niêm mạc má hoặc lá rong đuôi chó, nhuộm hoặc không nhuộm, dưới lá kính."
+        },
+        "anchor": {
+          "part": "specimen"
+        }
+      },
+      {
+        "id": "stage",
+        "name": "Stage",
+        "role": "Holds the slide over the light; the fine focus moves it up and down.",
+        "vi": {
+          "name": "Bàn kính",
+          "role": "Giữ tiêu bản phía trên nguồn sáng; ốc vi cấp nâng hạ nó."
+        },
+        "anchor": {
+          "at": [-0.125, -0.055, 0.05]
+        }
+      },
+      {
+        "id": "nosepiece",
+        "name": "Nosepiece and objectives",
+        "role": "Turns the 4×, 10× or 40× objective over the slide.",
+        "vi": {
+          "name": "Mâm xoay và vật kính",
+          "role": "Xoay vật kính 4×, 10× hoặc 40× tới phía trên tiêu bản."
+        },
+        "anchor": {
+          "part": "nosepiece"
+        }
+      },
+      {
+        "id": "lamp",
+        "name": "Lamp",
+        "role": "Lights the slide from below (bright field).",
+        "vi": {
+          "name": "Đèn",
+          "role": "Chiếu sáng tiêu bản từ phía dưới (trường sáng)."
+        },
+        "anchor": {
+          "part": "lamp"
+        }
+      },
+      {
+        "id": "fine-focus",
+        "name": "Fine-focus knob",
+        "role": "Sets the stage’s offset Δz from the focal plane.",
+        "vi": {
+          "name": "Ốc vi cấp",
+          "role": "Đặt độ lệch Δz của bàn kính so với mặt phẳng tiêu."
+        },
+        "anchor": {
+          "part": "fine-focus"
+        }
+      },
+      {
+        "id": "monitor",
+        "name": "Monitor",
+        "role": "The eyepiece camera shows the whole field of view here.",
+        "vi": {
+          "name": "Màn hình",
+          "role": "Camera ở thị kính hiển thị toàn bộ thị trường tại đây."
+        },
+        "anchor": {
+          "part": "screen"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "Light from the lamp passes up through the slide. The objective makes an enlarged image, and the 10× eyepiece enlarges it again: M = M_eye × M_obj, so 40×, 100× or 400×.",
+        "vi": {
+          "text": "Ánh sáng từ đèn đi lên xuyên qua tiêu bản. Vật kính tạo ra một ảnh phóng đại, và thị kính 10× phóng đại thêm lần nữa: M = M_thị kính × M_vật kính, nên được 40×, 100× hoặc 400×."
+        },
+        "parts": ["lamp", "specimen", "nosepiece", "monitor"]
+      },
+      {
+        "text": "A stronger objective shows less of the slide: the field of view is FOV = FN/M_obj, with the eyepiece’s field number FN = 18 mm — 4.5, 1.8 or 0.45 mm across.",
+        "vi": {
+          "text": "Vật kính mạnh hơn cho thấy vùng tiêu bản nhỏ hơn: đường kính thị trường là FOV = FN/M_vật kính, với số trường của thị kính FN = 18 mm — được 4.5, 1.8 hoặc 0.45 mm."
+        },
+        "parts": ["nosepiece", "monitor"]
+      },
+      {
+        "text": "The image is sharp only when the specimen lies in the focal plane. The fine focus lowers the stage; the sharp zone, the depth of field, is thinner the stronger the objective.",
+        "vi": {
+          "text": "Ảnh chỉ rõ nét khi mẫu nằm đúng mặt phẳng tiêu. Ốc vi cấp hạ bàn kính xuống; vùng rõ nét, tức độ sâu trường ảnh, càng mỏng khi vật kính càng mạnh."
+        },
+        "parts": ["fine-focus", "stage", "specimen"]
+      },
+      {
+        "text": "Most cells are colourless: a stain gives them contrast. Iodine suits onion cells, methylene blue cheek cells; Elodea’s green chloroplasts show without a stain.",
+        "vi": {
+          "text": "Phần lớn tế bào không màu: thuốc nhuộm giúp chúng hiện rõ. Iốt phù hợp với tế bào vảy hành, xanh metylen với tế bào niêm mạc má; lục lạp màu xanh của rong đuôi chó hiện rõ mà không cần nhuộm."
+        },
+        "parts": ["specimen"]
+      },
+      {
+        "text": "Count the whole cells across the field: one cell’s length is about FOV/n. Count at low power, where many fit; out of focus or too faint, nothing can be counted.",
+        "vi": {
+          "text": "Đếm số tế bào nguyên vẹn nằm trên đường kính thị trường: chiều dài một tế bào khoảng FOV/n. Hãy đếm ở độ phóng đại nhỏ, nơi có nhiều tế bào; ảnh mờ hoặc quá nhạt thì không đếm được."
+        },
+        "parts": ["monitor"]
+      },
+      {
+        "text": "A model of the microscope’s geometry, not of image formation: each slide has one typical cell length, and the sharpness curve is illustrative. Real cells vary in size along a slide.",
+        "vi": {
+          "text": "Đây là mô hình về hình học của kính hiển vi, không mô phỏng sự tạo ảnh: mỗi tiêu bản có một chiều dài tế bào điển hình, và đường cong độ nét chỉ mang tính minh họa. Tế bào thật có kích thước thay đổi dọc theo tiêu bản."
+        },
+        "parts": ["specimen"]
+      }
+    ]
+  }
+}

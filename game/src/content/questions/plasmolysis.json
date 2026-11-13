@@ -1,0 +1,1026 @@
+{
+  "id": "plasmolysis",
+  "skills": [
+    {
+      "id": "plasmolysis-concept",
+      "name": "Plasmolysis and turgor",
+      "advice": "Draw a red onion cell turgid, then plasmolysed: label the wall (fully permeable, rigid), the membrane (lets water through, not sugar) and the purple vacuole. Run 0.8 mol/L and then a weak solution at the station and describe each.",
+      "vi": {
+        "name": "Co nguyên sinh và trạng thái trương nước",
+        "advice": "Vẽ tế bào vảy hành tím ở trạng thái trương nước và khi co nguyên sinh: chú thích thành tế bào (thấm hoàn toàn, cứng), màng sinh chất (cho nước đi qua, không cho đường đi qua) và không bào màu tím. Chạy trạm với dung dịch 0,8 mol/L rồi với dung dịch loãng và mô tả từng trường hợp."
+      }
+    },
+    {
+      "id": "solute-potential",
+      "name": "Solute potential: Ψs = −cRT",
+      "advice": "Practise Ψs = −cRT with c in mol/m³ (× 1000), T in kelvin, then ÷ 10⁶ for MPa. A stronger solution is more negative; check the station’s Ψs for 0.4 and 0.8 mol/L.",
+      "vi": {
+        "name": "Thế thẩm thấu: Ψs = −cRT",
+        "advice": "Luyện Ψs = −cRT với c theo mol/m³ (× 1000), T theo kelvin, rồi chia 10⁶ để ra MPa. Dung dịch càng đặc thì Ψs càng âm; kiểm tra Ψs của trạm với 0,4 và 0,8 mol/L."
+      }
+    },
+    {
+      "id": "settled-volume",
+      "name": "How far the protoplast shrinks",
+      "advice": "Learn the model’s rule: in a solution stronger than the sap, V = b + (1 − b)·c_sap/c; otherwise the wall keeps V at 100 %. Work it for 0.8 and 1.2 mol/L and compare with the runs.",
+      "vi": {
+        "name": "Mức co của khối nguyên sinh chất",
+        "advice": "Nắm quy tắc của mô hình: trong dung dịch đặc hơn dịch bào, V = b + (1 − b)·c_dịch bào/c; nếu không, thành tế bào giữ V ở 100 %. Tính cho 0,8 và 1,2 mol/L rồi so sánh với kết quả chạy."
+      }
+    },
+    {
+      "id": "threshold",
+      "name": "Where plasmolysis starts",
+      "advice": "Plasmolysis starts only in solutions stronger than the cell sap. Try the dial from weak to strong and find the first setting that plasmolyses; then explain it with water potentials, not with “sugar pulling water”.",
+      "vi": {
+        "name": "Ngưỡng bắt đầu co nguyên sinh",
+        "advice": "Co nguyên sinh chỉ xảy ra trong dung dịch đặc hơn dịch bào. Thử vặn núm từ loãng đến đặc và tìm nấc đầu tiên gây co nguyên sinh; sau đó giải thích bằng thế nước, không giải thích là “đường hút nước”."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "what-is",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["plasmolysis-concept"],
+      "stem": "Plasmolysis is…",
+      "explain": "In a solution stronger than the sap, water leaves the vacuole; the protoplast shrinks and pulls away from the rigid cell wall.",
+      "vi": {
+        "stem": "Hiện tượng co nguyên sinh là…",
+        "explain": "Trong dung dịch đặc hơn dịch bào, nước ra khỏi không bào; khối nguyên sinh chất co lại và tách khỏi thành tế bào cứng."
+      },
+      "options": [
+        {
+          "text": "the protoplast shrinking and pulling away from the cell wall as water leaves",
+          "vi": {
+            "text": "khối nguyên sinh chất co lại và tách khỏi thành tế bào do mất nước"
+          },
+          "correct": true
+        },
+        {
+          "text": "the cell bursting as water enters",
+          "vi": {
+            "text": "tế bào bị vỡ do nước đi vào"
+          }
+        },
+        {
+          "text": "the cell wall shrinking together with the protoplast",
+          "vi": {
+            "text": "thành tế bào co lại cùng với khối nguyên sinh chất"
+          }
+        },
+        {
+          "text": "the vacuole filling with sugar from the solution",
+          "vi": {
+            "text": "không bào chứa đầy đường từ dung dịch"
+          }
+        }
+      ]
+    },
+    {
+      "id": "permeable-part",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["plasmolysis-concept"],
+      "stem": "Which part of an onion cell lets both water and sugar pass freely?",
+      "explain": "The cell wall is fully permeable: the solution passes through it and fills the gap left by the shrinking protoplast. The membranes let water through but not sugar.",
+      "vi": {
+        "stem": "Bộ phận nào của tế bào hành cho cả nước và đường đi qua dễ dàng?",
+        "explain": "Thành tế bào thấm hoàn toàn: dung dịch đi qua và lấp đầy khoảng trống do khối nguyên sinh chất co lại. Các màng cho nước đi qua nhưng không cho đường đi qua."
+      },
+      "options": [
+        {
+          "text": "The cell wall",
+          "vi": {
+            "text": "Thành tế bào"
+          },
+          "correct": true
+        },
+        {
+          "text": "The cell membrane",
+          "vi": {
+            "text": "Màng sinh chất"
+          }
+        },
+        {
+          "text": "The membrane around the vacuole",
+          "vi": {
+            "text": "Màng không bào"
+          }
+        },
+        {
+          "text": "The nuclear envelope",
+          "vi": {
+            "text": "Màng nhân"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-basic",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["plasmolysis-concept"],
+      "stem": "About red onion cells in sugar solutions: decide whether each statement is true or false.",
+      "explain": "In a stronger solution water leaves the vacuole by osmosis. A turgid cell presses its protoplast against the wall. The rigid wall keeps its shape; only the protoplast shrinks. The purple pigment is in the vacuole’s sap.",
+      "vi": {
+        "stem": "Về tế bào vảy hành tím trong các dung dịch đường, mỗi nhận định sau đúng hay sai?",
+        "explain": "Trong dung dịch đặc hơn, nước ra khỏi không bào bằng thẩm thấu. Tế bào trương nước có khối nguyên sinh chất ép sát thành tế bào. Thành tế bào cứng giữ nguyên hình dạng; chỉ khối nguyên sinh chất co lại. Sắc tố tím nằm trong dịch không bào."
+      },
+      "statements": [
+        {
+          "text": "In a solution stronger than the cell sap, water leaves the vacuole by osmosis.",
+          "vi": {
+            "text": "Trong dung dịch đặc hơn dịch bào, nước ra khỏi không bào bằng thẩm thấu."
+          },
+          "true": true
+        },
+        {
+          "text": "A turgid cell has its protoplast pressed against the cell wall.",
+          "vi": {
+            "text": "Tế bào trương nước có khối nguyên sinh chất ép sát vào thành tế bào."
+          },
+          "true": true
+        },
+        {
+          "text": "During plasmolysis the cell wall shrinks along with the protoplast.",
+          "vi": {
+            "text": "Khi co nguyên sinh, thành tế bào co lại cùng khối nguyên sinh chất."
+          },
+          "true": false
+        },
+        {
+          "text": "The purple colour of red onion cells is in the sap of the vacuole.",
+          "vi": {
+            "text": "Màu tím của tế bào vảy hành tím nằm trong dịch không bào."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "back-to-water",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["plasmolysis-concept"],
+      "stem": "Plasmolysed onion cells are moved into pure water. What happens?",
+      "explain": "Water now enters the vacuole by osmosis: the protoplast swells back against the wall (deplasmolysis). The rigid wall stops the cell from bursting.",
+      "vi": {
+        "stem": "Chuyển các tế bào hành đang co nguyên sinh vào nước cất. Điều gì xảy ra?",
+        "explain": "Lúc này nước đi vào không bào bằng thẩm thấu: khối nguyên sinh chất trương lên và ép sát thành tế bào trở lại (phản co nguyên sinh). Thành tế bào cứng giúp tế bào không bị vỡ."
+      },
+      "options": [
+        {
+          "text": "Water enters and the protoplast swells back against the wall",
+          "vi": {
+            "text": "Nước đi vào và khối nguyên sinh chất trương lên, ép sát thành tế bào trở lại"
+          },
+          "correct": true
+        },
+        {
+          "text": "Water enters until the cell bursts",
+          "vi": {
+            "text": "Nước đi vào cho đến khi tế bào bị vỡ"
+          }
+        },
+        {
+          "text": "Nothing: a plasmolysed cell cannot take up water again",
+          "vi": {
+            "text": "Không có gì xảy ra: tế bào đã co nguyên sinh không thể hút nước trở lại"
+          }
+        },
+        {
+          "text": "The protoplast shrinks further",
+          "vi": {
+            "text": "Khối nguyên sinh chất tiếp tục co lại"
+          }
+        }
+      ]
+    },
+    {
+      "id": "weak-solution",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["threshold", "plasmolysis-concept"],
+      "stem": "Onion cells whose sap is equivalent to 0.4 mol/L sucrose (an illustrative value) are put in 0.2 mol/L sucrose. The cells…",
+      "explain": "The solution is weaker than the sap, so its water potential is higher: water tends to enter, and the wall holds the cell at full size. It stays turgid.",
+      "vi": {
+        "stem": "Các tế bào hành có dịch bào tương đương dung dịch sucrose 0,4 mol/L (giá trị minh họa) được đặt vào dung dịch sucrose 0,2 mol/L. Các tế bào sẽ…",
+        "explain": "Dung dịch loãng hơn dịch bào nên có thế nước cao hơn: nước có xu hướng đi vào, và thành tế bào giữ tế bào ở kích thước tối đa. Tế bào vẫn trương nước."
+      },
+      "options": [
+        {
+          "text": "stay turgid, the wall holding them at full size",
+          "vi": {
+            "text": "vẫn trương nước, thành tế bào giữ chúng ở kích thước tối đa"
+          },
+          "correct": true
+        },
+        {
+          "text": "plasmolyse, as water leaves the vacuole",
+          "vi": {
+            "text": "bị co nguyên sinh do nước ra khỏi không bào"
+          }
+        },
+        {
+          "text": "burst, as water enters",
+          "vi": {
+            "text": "bị vỡ do nước đi vào"
+          }
+        },
+        {
+          "text": "take up sucrose until they are isotonic",
+          "vi": {
+            "text": "hấp thụ sucrose cho đến khi đẳng trương"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-stronger",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["solute-potential", "settled-volume", "plasmolysis-concept"],
+      "stem": "About onion cells in sucrose solutions of different strengths: decide whether each statement is true or false.",
+      "explain": "Ψs = −cRT: more sucrose, more negative. Above the sap’s strength, the stronger the solution the smaller the protoplast. In water the wall stops the cell swelling much. Sucrose does not cross the membrane: only water moves.",
+      "vi": {
+        "stem": "Về tế bào hành trong các dung dịch sucrose có nồng độ khác nhau, mỗi nhận định sau đúng hay sai?",
+        "explain": "Ψs = −cRT: càng nhiều sucrose thì càng âm. Khi đặc hơn dịch bào, dung dịch càng đặc thì khối nguyên sinh chất càng nhỏ. Trong nước, thành tế bào ngăn tế bào trương to quá mức. Sucrose không qua được màng: chỉ có nước di chuyển."
+      },
+      "statements": [
+        {
+          "text": "A more concentrated sucrose solution has a more negative solute potential.",
+          "vi": {
+            "text": "Dung dịch sucrose đặc hơn có thế thẩm thấu âm hơn."
+          },
+          "true": true
+        },
+        {
+          "text": "Above the sap’s strength, the stronger the solution, the smaller the protoplast becomes.",
+          "vi": {
+            "text": "Khi đặc hơn dịch bào, dung dịch càng đặc thì khối nguyên sinh chất càng co nhỏ."
+          },
+          "true": true
+        },
+        {
+          "text": "In pure water the cell wall stops the cell from swelling much.",
+          "vi": {
+            "text": "Trong nước cất, thành tế bào ngăn không cho tế bào trương to quá mức."
+          },
+          "true": true
+        },
+        {
+          "text": "Sucrose enters the vacuole through the membrane and makes it shrink.",
+          "vi": {
+            "text": "Sucrose đi qua màng vào không bào và làm không bào co lại."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "psi-08",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["solute-potential"],
+      "set": {
+        "concentration": 0.8
+      },
+      "stem": "What is the solute potential of {concentration} mol/L sucrose at {temperature} °C? Use Ψs = −cRT with R = 8.314 J/(mol·K) (sucrose does not ionise).",
+      "explain": "c = {concentration}·1000 mol/m³, T = {=temperature+273.15|5} K: Ψs = −{=concentration*1000}·8.314·{=temperature+273.15|5} Pa ≈ {@psi|3} MPa.",
+      "vi": {
+        "stem": "Thế thẩm thấu của dung dịch sucrose {concentration} mol/L ở {temperature} °C bằng bao nhiêu? Dùng Ψs = −cRT với R = 8,314 J/(mol·K) (sucrose không phân li).",
+        "explain": "c = {concentration}·1000 mol/m³, T = {=temperature+273.15|5} K: Ψs = −{=concentration*1000}·8,314·{=temperature+273.15|5} Pa ≈ {@psi|3} MPa."
+      },
+      "options": [
+        {
+          "text": "{@psi|3} MPa",
+          "vi": {
+            "text": "{@psi|3} MPa"
+          },
+          "correct": true,
+          "check": {
+            "expr": "-concentration*1000*8.314462618*(temperature+273.15)/1e6",
+            "equals": "psi"
+          }
+        },
+        {
+          "text": "{=-concentration*1000*8.314462618*(temperature+273.15)/1e3|3} MPa",
+          "vi": {
+            "text": "{=-concentration*1000*8.314462618*(temperature+273.15)/1e3|3} MPa"
+          },
+          "check": {
+            "expr": "-concentration*1000*8.314462618*(temperature+273.15)/1e3",
+            "equals": "psi"
+          }
+        },
+        {
+          "text": "{=-concentration*1000*8.314462618*temperature/1e6|3} MPa",
+          "vi": {
+            "text": "{=-concentration*1000*8.314462618*temperature/1e6|3} MPa"
+          },
+          "check": {
+            "expr": "-concentration*1000*8.314462618*temperature/1e6",
+            "equals": "psi"
+          }
+        },
+        {
+          "text": "{=concentration*1000*8.314462618*(temperature+273.15)/1e6|3} MPa",
+          "vi": {
+            "text": "{=concentration*1000*8.314462618*(temperature+273.15)/1e6|3} MPa"
+          },
+          "check": {
+            "expr": "concentration*1000*8.314462618*(temperature+273.15)/1e6",
+            "equals": "psi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "settled-1",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["settled-volume"],
+      "set": {
+        "concentration": 1
+      },
+      "stem": "Onion cells (sap equivalent to {cellSap} mol/L, non-water share b = {nonOsmotic}: illustrative values) are put in {concentration} mol/L sucrose. In the model the protoplast settles at V = b + (1 − b)·c_sap/c of its turgid volume. What is V?",
+      "explain": "V = {nonOsmotic} + {=1-nonOsmotic}·{cellSap}/{concentration} = {=@settled/100} = {@settled|3}%.",
+      "vi": {
+        "stem": "Tế bào hành (dịch bào tương đương {cellSap} mol/L, phần không phải nước b = {nonOsmotic}: giá trị minh họa) được đặt vào dung dịch sucrose {concentration} mol/L. Trong mô hình, khối nguyên sinh chất co đến V = b + (1 − b)·c_dịch bào/c thể tích lúc trương nước. V bằng bao nhiêu?",
+        "explain": "V = {nonOsmotic} + {=1-nonOsmotic}·{cellSap}/{concentration} = {=@settled/100} = {@settled|3}%."
+      },
+      "options": [
+        {
+          "text": "{@settled|3}%",
+          "vi": {
+            "text": "{@settled|3}%"
+          },
+          "correct": true,
+          "check": {
+            "expr": "100*(nonOsmotic+(1-nonOsmotic)*cellSap/concentration)",
+            "equals": "settled"
+          }
+        },
+        {
+          "text": "{=100*cellSap/concentration|3}%",
+          "vi": {
+            "text": "{=100*cellSap/concentration|3}%"
+          },
+          "check": {
+            "expr": "100*cellSap/concentration",
+            "equals": "settled"
+          }
+        },
+        {
+          "text": "{=100*(1-nonOsmotic)*cellSap/concentration|3}%",
+          "vi": {
+            "text": "{=100*(1-nonOsmotic)*cellSap/concentration|3}%"
+          },
+          "check": {
+            "expr": "100*(1-nonOsmotic)*cellSap/concentration",
+            "equals": "settled"
+          }
+        },
+        {
+          "text": "{=100*(1-cellSap/concentration)|3}%",
+          "vi": {
+            "text": "{=100*(1-cellSap/concentration)|3}%"
+          },
+          "check": {
+            "expr": "100*(1-cellSap/concentration)",
+            "equals": "settled"
+          }
+        }
+      ]
+    },
+    {
+      "id": "first-to-plasmolyse",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["threshold"],
+      "set": {
+        "cellSap": 0.6,
+        "concentration": 0.7
+      },
+      "stem": "Suppose the cells of another onion have sap equivalent to {cellSap} mol/L sucrose. Which is the weakest solution on the dial (steps of 0.1 mol/L) that plasmolyses them?",
+      "explain": "Plasmolysis needs a solution stronger than the sap, with a lower water potential: {concentration} mol/L is the first step above {cellSap}. At exactly {cellSap} mol/L the solution is isotonic and the protoplast keeps its volume.",
+      "vi": {
+        "stem": "Giả sử tế bào của một củ hành khác có dịch bào tương đương dung dịch sucrose {cellSap} mol/L. Dung dịch loãng nhất trên núm chỉnh (mỗi nấc 0,1 mol/L) làm các tế bào này co nguyên sinh là dung dịch nào?",
+        "explain": "Co nguyên sinh cần dung dịch đặc hơn dịch bào, có thế nước thấp hơn: {concentration} mol/L là nấc đầu tiên lớn hơn {cellSap}. Ở đúng {cellSap} mol/L, dung dịch đẳng trương và khối nguyên sinh chất giữ nguyên thể tích."
+      },
+      "options": [
+        {
+          "text": "{concentration} mol/L",
+          "vi": {
+            "text": "{concentration} mol/L"
+          },
+          "correct": true,
+          "check": {
+            "expr": "100*(nonOsmotic+(1-nonOsmotic)*cellSap/concentration)",
+            "equals": "settled"
+          }
+        },
+        {
+          "text": "{cellSap} mol/L",
+          "vi": {
+            "text": "{cellSap} mol/L"
+          }
+        },
+        {
+          "text": "{=cellSap-0.1} mol/L",
+          "vi": {
+            "text": "{=cellSap-0.1} mol/L"
+          }
+        },
+        {
+          "text": "{=cellSap/2} mol/L",
+          "vi": {
+            "text": "{=cellSap/2} mol/L"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-12",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["solute-potential", "settled-volume"],
+      "set": {
+        "concentration": 1.2
+      },
+      "stem": "Onion cells (sap equivalent to {cellSap} mol/L, b = {nonOsmotic}, half-time {halfTime} s: illustrative values) soak for {soakTime} s in {concentration} mol/L sucrose at {temperature} °C. Decide whether each statement is true or false.",
+      "explain": "Ψs ≈ {@psi|3} MPa. V_end = {nonOsmotic} + {=1-nonOsmotic}·{cellSap}/{concentration} ≈ {@settled|3}%; after {=soakTime/halfTime} half-times the protoplast is at {@volume|3}%, all but settled. In 0.6 mol/L it would settle at {=100*(nonOsmotic+(1-nonOsmotic)*cellSap/0.6)|3}%, a larger volume.",
+      "vi": {
+        "stem": "Tế bào hành (dịch bào tương đương {cellSap} mol/L, b = {nonOsmotic}, thời gian bán co {halfTime} s: giá trị minh họa) được ngâm {soakTime} s trong dung dịch sucrose {concentration} mol/L ở {temperature} °C. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Ψs ≈ {@psi|3} MPa. V_cuối = {nonOsmotic} + {=1-nonOsmotic}·{cellSap}/{concentration} ≈ {@settled|3}%; sau {=soakTime/halfTime} lần thời gian bán co, khối nguyên sinh chất ở mức {@volume|3}%, gần như đã ổn định. Trong dung dịch 0,6 mol/L, nó sẽ ổn định ở {=100*(nonOsmotic+(1-nonOsmotic)*cellSap/0.6)|3}%, thể tích lớn hơn."
+      },
+      "statements": [
+        {
+          "text": "The solute potential of the solution is about {@psi|3} MPa.",
+          "vi": {
+            "text": "Thế thẩm thấu của dung dịch khoảng {@psi|3} MPa."
+          },
+          "true": true,
+          "check": {
+            "expr": "-concentration*1000*8.314462618*(temperature+273.15)/1e6",
+            "equals": "psi"
+          }
+        },
+        {
+          "text": "The protoplast settles at about {@settled|3}% of its turgid volume.",
+          "vi": {
+            "text": "Khối nguyên sinh chất ổn định ở khoảng {@settled|3}% thể tích lúc trương nước."
+          },
+          "true": true,
+          "check": {
+            "expr": "100*(nonOsmotic+(1-nonOsmotic)*cellSap/concentration)",
+            "equals": "settled"
+          }
+        },
+        {
+          "text": "After {soakTime} s it is at about {@volume|3}%, all but settled.",
+          "vi": {
+            "text": "Sau {soakTime} s, nó ở mức khoảng {@volume|3}%, gần như đã ổn định."
+          },
+          "true": true,
+          "check": {
+            "expr": "@settled+(100-@settled)*2^(-soakTime/halfTime)",
+            "equals": "volume"
+          }
+        },
+        {
+          "text": "In 0.6 mol/L sucrose the protoplast would settle at a smaller volume than this.",
+          "vi": {
+            "text": "Trong dung dịch sucrose 0,6 mol/L, khối nguyên sinh chất sẽ ổn định ở thể tích nhỏ hơn thế này."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "sap-from-volume",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["settled-volume", "threshold"],
+      "set": {
+        "cellSap": 0.6,
+        "concentration": 1.2
+      },
+      "stem": "Cells of another onion (non-water share b = {nonOsmotic}) are put in {concentration} mol/L sucrose, and their protoplasts settle at {@settled|3}% of the turgid volume. What concentration is their sap equivalent to? (V = b + (1 − b)·c_sap/c)",
+      "explain": "c_sap = c·(V − b)/(1 − b) = {concentration}·({=@settled/100} − {nonOsmotic})/{=1-nonOsmotic} = {=concentration*(@settled/100-nonOsmotic)/(1-nonOsmotic)} mol/L. Check: {nonOsmotic} + {=1-nonOsmotic}·{=concentration*(@settled/100-nonOsmotic)/(1-nonOsmotic)}/{concentration} = {=@settled/100}.",
+      "vi": {
+        "stem": "Tế bào của một củ hành khác (phần không phải nước b = {nonOsmotic}) được đặt vào dung dịch sucrose {concentration} mol/L, khối nguyên sinh chất ổn định ở {@settled|3}% thể tích lúc trương nước. Dịch bào của chúng tương đương dung dịch bao nhiêu mol/L? (V = b + (1 − b)·c_dịch bào/c)",
+        "explain": "c_dịch bào = c·(V − b)/(1 − b) = {concentration}·({=@settled/100} − {nonOsmotic})/{=1-nonOsmotic} = {=concentration*(@settled/100-nonOsmotic)/(1-nonOsmotic)} mol/L. Kiểm tra: {nonOsmotic} + {=1-nonOsmotic}·{=concentration*(@settled/100-nonOsmotic)/(1-nonOsmotic)}/{concentration} = {=@settled/100}."
+      },
+      "options": [
+        {
+          "text": "{=concentration*(@settled/100-nonOsmotic)/(1-nonOsmotic)} mol/L",
+          "vi": {
+            "text": "{=concentration*(@settled/100-nonOsmotic)/(1-nonOsmotic)} mol/L"
+          },
+          "correct": true,
+          "check": {
+            "expr": "100*(nonOsmotic+(1-nonOsmotic)*(concentration*(@settled/100-nonOsmotic)/(1-nonOsmotic))/concentration)",
+            "equals": "settled"
+          }
+        },
+        {
+          "text": "{=concentration*@settled/100} mol/L",
+          "vi": {
+            "text": "{=concentration*@settled/100} mol/L"
+          },
+          "check": {
+            "expr": "100*(nonOsmotic+(1-nonOsmotic)*(concentration*@settled/100)/concentration)",
+            "equals": "settled"
+          }
+        },
+        {
+          "text": "{=concentration*(@settled/100-nonOsmotic)} mol/L",
+          "vi": {
+            "text": "{=concentration*(@settled/100-nonOsmotic)} mol/L"
+          },
+          "check": {
+            "expr": "100*(nonOsmotic+(1-nonOsmotic)*(concentration*(@settled/100-nonOsmotic))/concentration)",
+            "equals": "settled"
+          }
+        },
+        {
+          "text": "{=(@settled/100)/concentration} mol/L",
+          "vi": {
+            "text": "{=(@settled/100)/concentration} mol/L"
+          },
+          "check": {
+            "expr": "100*(nonOsmotic+(1-nonOsmotic)*((@settled/100)/concentration)/concentration)",
+            "equals": "settled"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-isotonic",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["threshold", "solute-potential", "settled-volume"],
+      "set": {
+        "cellSap": 0.6,
+        "concentration": 0.6
+      },
+      "stem": "Suppose onion cells have sap equivalent to {cellSap} mol/L sucrose (b = {nonOsmotic}), and they are put in {concentration} mol/L sucrose at {temperature} °C. Decide whether each statement is true or false.",
+      "explain": "The solution matches the sap: Ψs ≈ {@psi|3} MPa on both sides, no net water flow, V = {@settled}%. A step stronger, {=concentration+0.2} mol/L, gives V = {nonOsmotic} + {=1-nonOsmotic}·{cellSap}/{=concentration+0.2} ≈ {=100*(nonOsmotic+(1-nonOsmotic)*cellSap/(concentration+0.2))|3}%. Waiting longer changes nothing.",
+      "vi": {
+        "stem": "Giả sử tế bào hành có dịch bào tương đương dung dịch sucrose {cellSap} mol/L (b = {nonOsmotic}), và được đặt vào dung dịch sucrose {concentration} mol/L ở {temperature} °C. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Dung dịch tương đương dịch bào: Ψs ≈ {@psi|3} MPa ở cả hai phía, không có dòng nước thực, V = {@settled}%. Đặc hơn, {=concentration+0.2} mol/L, cho V = {nonOsmotic} + {=1-nonOsmotic}·{cellSap}/{=concentration+0.2} ≈ {=100*(nonOsmotic+(1-nonOsmotic)*cellSap/(concentration+0.2))|3}%. Chờ lâu hơn cũng không thay đổi gì."
+      },
+      "statements": [
+        {
+          "text": "The protoplast keeps its full volume, {@settled}%.",
+          "vi": {
+            "text": "Khối nguyên sinh chất giữ nguyên thể tích, {@settled}%."
+          },
+          "true": true,
+          "check": {
+            "expr": "100",
+            "equals": "settled"
+          }
+        },
+        {
+          "text": "The solution’s solute potential, about {@psi|3} MPa, equals the sap’s, so there is no net flow of water.",
+          "vi": {
+            "text": "Thế thẩm thấu của dung dịch, khoảng {@psi|3} MPa, bằng của dịch bào, nên không có dòng nước thực."
+          },
+          "true": true,
+          "check": {
+            "expr": "-concentration*1000*8.314462618*(temperature+273.15)/1e6",
+            "equals": "psi"
+          }
+        },
+        {
+          "text": "In {=concentration+0.2} mol/L the protoplast would settle at about {=100*(nonOsmotic+(1-nonOsmotic)*cellSap/(concentration+0.2))|3}%.",
+          "vi": {
+            "text": "Trong dung dịch {=concentration+0.2} mol/L, khối nguyên sinh chất sẽ ổn định ở khoảng {=100*(nonOsmotic+(1-nonOsmotic)*cellSap/(concentration+0.2))|3}%."
+          },
+          "true": true
+        },
+        {
+          "text": "Left long enough in this solution, the cells would plasmolyse completely.",
+          "vi": {
+            "text": "Nếu để đủ lâu trong dung dịch này, các tế bào sẽ co nguyên sinh hoàn toàn."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "needs-wall",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["plasmolysis-concept"],
+      "stem": "Plasmolysis can be seen only in cells that have…",
+      "explain": "Plasmolysis is the protoplast pulling away from the cell wall, so only cells with a wall (plant cells, fungi, bacteria) show it. An animal cell in a strong solution simply shrinks.",
+      "vi": {
+        "stem": "Hiện tượng co nguyên sinh chỉ quan sát được ở những tế bào có…",
+        "explain": "Co nguyên sinh là hiện tượng khối nguyên sinh chất tách khỏi thành tế bào, nên chỉ những tế bào có thành (tế bào thực vật, nấm, vi khuẩn) mới có. Tế bào động vật trong dung dịch ưu trương chỉ teo lại."
+      },
+      "options": [
+        {
+          "text": "a cell wall",
+          "vi": {
+            "text": "thành tế bào"
+          },
+          "correct": true
+        },
+        {
+          "text": "a nucleus",
+          "vi": {
+            "text": "nhân"
+          }
+        },
+        {
+          "text": "chloroplasts",
+          "vi": {
+            "text": "lục lạp"
+          }
+        },
+        {
+          "text": "a cell membrane only",
+          "vi": {
+            "text": "chỉ có màng sinh chất"
+          }
+        }
+      ]
+    },
+    {
+      "id": "why-red-onion",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["plasmolysis-concept"],
+      "stem": "Why is the epidermis of a red (purple) onion often used to watch plasmolysis?",
+      "explain": "Its vacuoles hold a coloured sap (anthocyanins), so the shrinking protoplast shows clearly against the colourless space that opens between it and the wall. The colour does not change how the cells take up or lose water.",
+      "vi": {
+        "stem": "Vì sao biểu bì vảy hành tím thường được dùng để quan sát hiện tượng co nguyên sinh?",
+        "explain": "Không bào của tế bào chứa dịch có màu (anthocyanin), nên khối nguyên sinh chất co lại hiện rõ trên nền khoảng trống không màu mở ra giữa nó và thành tế bào. Màu sắc không làm thay đổi cách tế bào hút hay mất nước."
+      },
+      "options": [
+        {
+          "text": "Its coloured vacuole sap makes the shrinking protoplast easy to see",
+          "vi": {
+            "text": "Dịch không bào có màu giúp dễ thấy khối nguyên sinh chất co lại"
+          },
+          "correct": true
+        },
+        {
+          "text": "Its cells have no cell wall",
+          "vi": {
+            "text": "Tế bào của nó không có thành tế bào"
+          }
+        },
+        {
+          "text": "The red pigment pumps water out of the cells",
+          "vi": {
+            "text": "Sắc tố đỏ bơm nước ra khỏi tế bào"
+          }
+        },
+        {
+          "text": "Its cells are dead, so they cannot recover",
+          "vi": {
+            "text": "Tế bào của nó đã chết nên không thể phục hồi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-space",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["plasmolysis-concept"],
+      "stem": "About plasmolysed onion cells: decide whether each statement is true or false.",
+      "explain": "The wall lets the solution through, so the gap between it and the protoplast fills with the outside sucrose solution. A red blood cell has no wall: it shrinks (crenates) rather than plasmolysing. Cells kept too long in a very strong solution can die and then do not recover in water. The sap strength, b and half-time here are the simulation’s illustrative values.",
+      "vi": {
+        "stem": "Về tế bào vảy hành đang co nguyên sinh, mỗi nhận định sau đúng hay sai?",
+        "explain": "Thành tế bào cho dung dịch đi qua, nên khoảng trống giữa thành và khối nguyên sinh chất chứa đầy dung dịch sucrose bên ngoài. Hồng cầu không có thành tế bào: nó teo lại (nhăn nheo) chứ không co nguyên sinh. Tế bào để quá lâu trong dung dịch rất đặc có thể chết, và khi đó không phục hồi trong nước. Nồng độ dịch bào, b và thời gian bán phần ở đây là giá trị minh họa của mô phỏng."
+      },
+      "statements": [
+        {
+          "text": "The space between the wall and the shrunken protoplast fills with the outside sucrose solution.",
+          "vi": {
+            "text": "Khoảng trống giữa thành tế bào và khối nguyên sinh chất đã co chứa đầy dung dịch sucrose bên ngoài."
+          },
+          "true": true
+        },
+        {
+          "text": "A red blood cell in a strong sucrose solution plasmolyses in the same way.",
+          "vi": {
+            "text": "Hồng cầu trong dung dịch sucrose đặc cũng co nguyên sinh theo cách tương tự."
+          },
+          "true": false
+        },
+        {
+          "text": "Cells left too long in a very strong solution may die and then not recover in water.",
+          "vi": {
+            "text": "Tế bào để quá lâu trong dung dịch rất đặc có thể chết và khi đó không phục hồi trong nước."
+          },
+          "true": true
+        },
+        {
+          "text": "In this simulation, the sap’s strength and the half-time are illustrative values.",
+          "vi": {
+            "text": "Trong mô phỏng này, nồng độ dịch bào và thời gian bán phần là các giá trị minh họa."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "settled-05",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["settled-volume"],
+      "set": {
+        "concentration": 0.5
+      },
+      "stem": "Onion cells (sap equivalent to {cellSap} mol/L, non-water share b = {nonOsmotic}: illustrative values) are put in {concentration} mol/L sucrose. In the model the protoplast settles at V = b + (1 − b)·c_sap/c of its turgid volume. At what percentage does it settle?",
+      "explain": "V = {nonOsmotic} + (1 − {nonOsmotic})·{cellSap}/{concentration} = {=nonOsmotic+(1-nonOsmotic)*cellSap/concentration} = {@settled}%. Leaving out b treats the whole protoplast as water.",
+      "vi": {
+        "stem": "Tế bào vảy hành (dịch bào tương đương {cellSap} mol/L, phần không phải nước b = {nonOsmotic}: giá trị minh họa) được đặt vào dung dịch sucrose {concentration} mol/L. Trong mô hình, khối nguyên sinh chất ổn định ở V = b + (1 − b)·c_dịch bào/c so với thể tích lúc trương nước. Nó ổn định ở bao nhiêu phần trăm?",
+        "explain": "V = {nonOsmotic} + (1 − {nonOsmotic})·{cellSap}/{concentration} = {=nonOsmotic+(1-nonOsmotic)*cellSap/concentration} = {@settled}%. Bỏ qua b là coi toàn bộ khối nguyên sinh chất là nước."
+      },
+      "options": [
+        {
+          "text": "{@settled}%",
+          "vi": {
+            "text": "{@settled}%"
+          },
+          "correct": true,
+          "check": {
+            "expr": "100*(nonOsmotic+(1-nonOsmotic)*cellSap/concentration)",
+            "equals": "settled"
+          }
+        },
+        {
+          "text": "{=100*cellSap/concentration}%",
+          "vi": {
+            "text": "{=100*cellSap/concentration}%"
+          },
+          "check": {
+            "expr": "100*cellSap/concentration",
+            "equals": "settled"
+          }
+        },
+        {
+          "text": "{=100*(1-nonOsmotic)*cellSap/concentration}%",
+          "vi": {
+            "text": "{=100*(1-nonOsmotic)*cellSap/concentration}%"
+          },
+          "check": {
+            "expr": "100*(1-nonOsmotic)*cellSap/concentration",
+            "equals": "settled"
+          }
+        },
+        {
+          "text": "{=100*(nonOsmotic+(1-nonOsmotic)*concentration/cellSap)}%",
+          "vi": {
+            "text": "{=100*(nonOsmotic+(1-nonOsmotic)*concentration/cellSap)}%"
+          },
+          "check": {
+            "expr": "100*(nonOsmotic+(1-nonOsmotic)*concentration/cellSap)",
+            "equals": "settled"
+          }
+        }
+      ]
+    },
+    {
+      "id": "after-one-half-time",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["settled-volume"],
+      "set": {
+        "concentration": 1,
+        "soakTime": 60
+      },
+      "stem": "In {concentration} mol/L sucrose the protoplast will settle at {@settled}% of its turgid volume. In the model it shrinks towards that value with a half-time of {halfTime} s (illustrative). What is its volume after {soakTime} s?",
+      "explain": "After one half-time it has gone half the way from 100% to {@settled}%: {@settled} + (100 − {@settled})/2 = {@volume}%.",
+      "vi": {
+        "stem": "Trong dung dịch sucrose {concentration} mol/L, khối nguyên sinh chất sẽ ổn định ở {@settled}% thể tích lúc trương nước. Trong mô hình, nó co dần về giá trị đó với thời gian bán phần {halfTime} s (giá trị minh họa). Sau {soakTime} s, thể tích của nó là bao nhiêu?",
+        "explain": "Sau một thời gian bán phần, nó đi được một nửa quãng từ 100% đến {@settled}%: {@settled} + (100 − {@settled})/2 = {@volume}%."
+      },
+      "options": [
+        {
+          "text": "{@volume}%",
+          "vi": {
+            "text": "{@volume}%"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@settled+(100-@settled)*exp(-ln(2)/halfTime*soakTime)",
+            "equals": "volume"
+          }
+        },
+        {
+          "text": "{=@settled/2}%",
+          "vi": {
+            "text": "{=@settled/2}%"
+          },
+          "check": {
+            "expr": "@settled/2",
+            "equals": "volume"
+          }
+        },
+        {
+          "text": "50%",
+          "vi": {
+            "text": "50%"
+          },
+          "check": {
+            "expr": "50",
+            "equals": "volume"
+          }
+        },
+        {
+          "text": "{@settled}%, as it has already settled",
+          "vi": {
+            "text": "{@settled}%, vì nó đã ổn định"
+          },
+          "check": {
+            "expr": "@settled",
+            "equals": "volume"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-b",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["settled-volume"],
+      "set": {
+        "concentration": 0.8
+      },
+      "stem": "Onion cells whose sap is equivalent to {cellSap} mol/L sucrose (illustrative) are put in {concentration} mol/L sucrose, and their protoplasts settle at {@settled|3}% of the turgid volume. In the model V = b + (1 − b)·c_sap/c. What is the non-water share b of their protoplast?",
+      "explain": "c_sap/c = {cellSap}/{concentration} = {=cellSap/concentration}. V = b + (1 − b)·{=cellSap/concentration} gives b = (V − {=cellSap/concentration})/(1 − {=cellSap/concentration}) = ({=@settled/100} − {=cellSap/concentration})/{=1-cellSap/concentration} = {=(@settled/100-cellSap/concentration)/(1-cellSap/concentration)}.",
+      "vi": {
+        "stem": "Tế bào vảy hành có dịch bào tương đương dung dịch sucrose {cellSap} mol/L (giá trị minh họa) được đặt vào dung dịch sucrose {concentration} mol/L, và khối nguyên sinh chất ổn định ở {@settled|3}% thể tích lúc trương nước. Trong mô hình V = b + (1 − b)·c_dịch bào/c. Phần không phải nước b của khối nguyên sinh chất là bao nhiêu?",
+        "explain": "c_dịch bào/c = {cellSap}/{concentration} = {=cellSap/concentration}. V = b + (1 − b)·{=cellSap/concentration} cho b = (V − {=cellSap/concentration})/(1 − {=cellSap/concentration}) = ({=@settled/100} − {=cellSap/concentration})/{=1-cellSap/concentration} = {=(@settled/100-cellSap/concentration)/(1-cellSap/concentration)}."
+      },
+      "options": [
+        {
+          "text": "{=(@settled/100-cellSap/concentration)/(1-cellSap/concentration)}",
+          "vi": {
+            "text": "{=(@settled/100-cellSap/concentration)/(1-cellSap/concentration)}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "100*((@settled/100-cellSap/concentration)/(1-cellSap/concentration)+(1-(@settled/100-cellSap/concentration)/(1-cellSap/concentration))*cellSap/concentration)",
+            "equals": "settled"
+          }
+        },
+        {
+          "text": "{=@settled/100-cellSap/concentration}",
+          "vi": {
+            "text": "{=@settled/100-cellSap/concentration}"
+          },
+          "check": {
+            "expr": "100*((@settled/100-cellSap/concentration)+(1-(@settled/100-cellSap/concentration))*cellSap/concentration)",
+            "equals": "settled"
+          }
+        },
+        {
+          "text": "{=1-@settled/100}",
+          "vi": {
+            "text": "{=1-@settled/100}"
+          },
+          "check": {
+            "expr": "100*((1-@settled/100)+(1-(1-@settled/100))*cellSap/concentration)",
+            "equals": "settled"
+          }
+        },
+        {
+          "text": "{=@settled/100*concentration/cellSap}",
+          "vi": {
+            "text": "{=@settled/100*concentration/cellSap}"
+          },
+          "check": {
+            "expr": "100*((@settled/100*concentration/cellSap)+(1-(@settled/100*concentration/cellSap))*cellSap/concentration)",
+            "equals": "settled"
+          }
+        }
+      ]
+    },
+    {
+      "id": "which-concentration",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["settled-volume", "threshold"],
+      "set": {
+        "concentration": 0.8
+      },
+      "stem": "Onion cells (sap equivalent to {cellSap} mol/L, b = {nonOsmotic}: illustrative values) are to be plasmolysed so that their protoplasts settle at {@settled}% of the turgid volume. In the model V = b + (1 − b)·c_sap/c. What sucrose concentration is needed?",
+      "explain": "Solve for c: c = (1 − b)·c_sap/(V − b) = {=1-nonOsmotic}·{cellSap}/({=@settled/100} − {nonOsmotic}) = {=(1-nonOsmotic)*cellSap/(@settled/100-nonOsmotic)} mol/L. Dividing c_sap by V alone forgets the non-water share b.",
+      "vi": {
+        "stem": "Cần làm cho tế bào vảy hành (dịch bào tương đương {cellSap} mol/L, b = {nonOsmotic}: giá trị minh họa) co nguyên sinh sao cho khối nguyên sinh chất ổn định ở {@settled}% thể tích lúc trương nước. Trong mô hình V = b + (1 − b)·c_dịch bào/c. Cần dung dịch sucrose có nồng độ bao nhiêu?",
+        "explain": "Giải theo c: c = (1 − b)·c_dịch bào/(V − b) = {=1-nonOsmotic}·{cellSap}/({=@settled/100} − {nonOsmotic}) = {=(1-nonOsmotic)*cellSap/(@settled/100-nonOsmotic)} mol/L. Chỉ lấy c_dịch bào chia cho V là đã quên phần không phải nước b."
+      },
+      "options": [
+        {
+          "text": "{=(1-nonOsmotic)*cellSap/(@settled/100-nonOsmotic)} mol/L",
+          "vi": {
+            "text": "{=(1-nonOsmotic)*cellSap/(@settled/100-nonOsmotic)} mol/L"
+          },
+          "correct": true,
+          "check": {
+            "expr": "100*(nonOsmotic+(1-nonOsmotic)*cellSap/((1-nonOsmotic)*cellSap/(@settled/100-nonOsmotic)))",
+            "equals": "settled"
+          }
+        },
+        {
+          "text": "{=cellSap/(@settled/100)|3} mol/L",
+          "vi": {
+            "text": "{=cellSap/(@settled/100)|3} mol/L"
+          },
+          "check": {
+            "expr": "100*(nonOsmotic+(1-nonOsmotic)*cellSap/(cellSap/(@settled/100)))",
+            "equals": "settled"
+          }
+        },
+        {
+          "text": "{=cellSap*@settled/100} mol/L",
+          "vi": {
+            "text": "{=cellSap*@settled/100} mol/L"
+          },
+          "check": {
+            "expr": "100*(nonOsmotic+(1-nonOsmotic)*cellSap/(cellSap*@settled/100))",
+            "equals": "settled"
+          }
+        },
+        {
+          "text": "{=(1-nonOsmotic)*cellSap/(@settled/100)|3} mol/L",
+          "vi": {
+            "text": "{=(1-nonOsmotic)*cellSap/(@settled/100)|3} mol/L"
+          },
+          "check": {
+            "expr": "100*(nonOsmotic+(1-nonOsmotic)*cellSap/((1-nonOsmotic)*cellSap/(@settled/100)))",
+            "equals": "settled"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-one-molar",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["solute-potential", "settled-volume", "plasmolysis-concept"],
+      "set": {
+        "concentration": 1
+      },
+      "stem": "Onion cells (sap equivalent to {cellSap} mol/L, b = {nonOsmotic}: illustrative values) settle in {concentration} mol/L sucrose at {temperature} °C. Decide whether each statement is true or false.",
+      "explain": "Ψs = −cRT = −{concentration}·1000·8.314·{=temperature+273.15|5}/10⁶ ≈ {@psi|3} MPa. V = {nonOsmotic} + {=1-nonOsmotic}·{cellSap}/{concentration} = {@settled}%: the {=100-@settled}% lost is water, as the non-water share stays. In 2 mol/L, V = {=100*(nonOsmotic+(1-nonOsmotic)*cellSap/2)}%, not half of {@settled}%: the non-water share b does not shrink.",
+      "vi": {
+        "stem": "Tế bào vảy hành (dịch bào tương đương {cellSap} mol/L, b = {nonOsmotic}: giá trị minh họa) ổn định trong dung dịch sucrose {concentration} mol/L ở {temperature} °C. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Ψs = −cRT = −{concentration}·1000·8,314·{=temperature+273.15|5}/10⁶ ≈ {@psi|3} MPa. V = {nonOsmotic} + {=1-nonOsmotic}·{cellSap}/{concentration} = {@settled}%: {=100-@settled}% mất đi là nước, vì phần không phải nước vẫn giữ nguyên. Trong dung dịch 2 mol/L, V = {=100*(nonOsmotic+(1-nonOsmotic)*cellSap/2)}%, không phải một nửa của {@settled}%: phần không phải nước b không co lại."
+      },
+      "statements": [
+        {
+          "text": "The solution’s solute potential is about {@psi|3} MPa.",
+          "vi": {
+            "text": "Thế chất tan của dung dịch khoảng {@psi|3} MPa."
+          },
+          "true": true,
+          "check": {
+            "expr": "-concentration*1000*8.31446261815324*(temperature+273.15)/1e6",
+            "equals": "psi"
+          }
+        },
+        {
+          "text": "The protoplast settles at {@settled}% of its turgid volume.",
+          "vi": {
+            "text": "Khối nguyên sinh chất ổn định ở {@settled}% thể tích lúc trương nước."
+          },
+          "true": true,
+          "check": {
+            "expr": "100*(nonOsmotic+(1-nonOsmotic)*cellSap/concentration)",
+            "equals": "settled"
+          }
+        },
+        {
+          "text": "The {=100-@settled}% of the volume it loses is water.",
+          "vi": {
+            "text": "{=100-@settled}% thể tích mất đi là nước."
+          },
+          "true": true
+        },
+        {
+          "text": "In 2 mol/L sucrose the protoplast would settle at half that volume, {=@settled/2}%.",
+          "vi": {
+            "text": "Trong dung dịch sucrose 2 mol/L, khối nguyên sinh chất sẽ ổn định ở một nửa thể tích đó, {=@settled/2}%."
+          },
+          "true": false,
+          "check": {
+            "expr": "2*100*(nonOsmotic+(1-nonOsmotic)*cellSap/2)",
+            "equals": "settled"
+          }
+        }
+      ]
+    }
+  ]
+}

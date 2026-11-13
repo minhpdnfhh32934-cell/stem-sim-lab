@@ -1,0 +1,574 @@
+{
+  "id": "pendulum",
+  "name": "Simple pendulum",
+  "category": "physics",
+  "description": "A bob on a light rigid rod is released from rest at an angle θ₀ and swings under gravity, without friction or air resistance. Its angle and angular velocity are measured over three full oscillations, and the measured period is compared with the small-angle formula and with the exact theory.",
+  "requiredEquipment": ["pendulum-stand"],
+  "model": "mechanics.pendulum",
+  "parameters": [
+    {
+      "id": "length",
+      "label": "Length",
+      "vi": {
+        "label": "Chiều dài"
+      },
+      "symbol": "L",
+      "unit": "m",
+      "default": 1,
+      "min": 0.25,
+      "max": 3,
+      "step": 0.25
+    },
+    {
+      "id": "angle",
+      "label": "Release angle",
+      "vi": {
+        "label": "Góc thả"
+      },
+      "symbol": "θ₀",
+      "unit": "°",
+      "default": 10,
+      "min": -60,
+      "max": 60,
+      "step": 5
+    },
+    {
+      "id": "gravity",
+      "label": "Gravitational acceleration",
+      "vi": {
+        "label": "Gia tốc trọng trường"
+      },
+      "symbol": "g",
+      "unit": "m/s²",
+      "default": 9.81,
+      "min": 1,
+      "max": 25,
+      "step": 0.1,
+      "presets": [
+        {
+          "label": "Moon",
+          "vi": {
+            "label": "Mặt Trăng"
+          },
+          "value": 1.62
+        },
+        {
+          "label": "Mars",
+          "vi": {
+            "label": "Sao Hỏa"
+          },
+          "value": 3.71
+        },
+        {
+          "label": "Earth",
+          "vi": {
+            "label": "Trái Đất"
+          },
+          "value": 9.81
+        },
+        {
+          "label": "Jupiter",
+          "vi": {
+            "label": "Sao Mộc"
+          },
+          "value": 24.79
+        }
+      ]
+    },
+    {
+      "id": "resolution",
+      "label": "Timer resolution",
+      "vi": {
+        "label": "Độ phân giải đồng hồ"
+      },
+      "symbol": "d",
+      "unit": "s",
+      "default": 0.01,
+      "min": 0.001,
+      "max": 0.1,
+      "presets": [
+        {
+          "label": "0.001 s",
+          "value": 0.001
+        },
+        {
+          "label": "0.01 s",
+          "value": 0.01
+        },
+        {
+          "label": "0.1 s",
+          "value": 0.1
+        }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "mass": 0.5,
+    "omega0": 0
+  },
+  "inputs": {
+    "mass": {
+      "symbol": "m",
+      "unit": "kg"
+    },
+    "omega0": {
+      "symbol": "ω₀",
+      "unit": "rad/s"
+    }
+  },
+  "simulation": {
+    "timeStep": 0.001,
+    "maxDuration": 40,
+    "sampleInterval": 0.01
+  },
+  "measurements": [
+    {
+      "id": "theta",
+      "label": "Angle",
+      "vi": {
+        "label": "Góc"
+      },
+      "symbol": "θ",
+      "unit": "rad",
+      "variable": "theta"
+    },
+    {
+      "id": "omega",
+      "label": "Angular velocity",
+      "vi": {
+        "label": "Vận tốc góc"
+      },
+      "symbol": "ω",
+      "unit": "rad/s",
+      "variable": "omega"
+    },
+    {
+      "id": "alpha",
+      "label": "Angular acceleration",
+      "vi": {
+        "label": "Gia tốc góc"
+      },
+      "symbol": "α",
+      "unit": "rad/s²",
+      "variable": "alpha"
+    },
+    {
+      "id": "x",
+      "label": "Bob offset",
+      "vi": {
+        "label": "Độ lệch ngang của quả nặng"
+      },
+      "symbol": "x",
+      "unit": "m",
+      "variable": "x"
+    },
+    {
+      "id": "y",
+      "label": "Bob height",
+      "vi": {
+        "label": "Độ cao quả nặng"
+      },
+      "symbol": "y",
+      "unit": "m",
+      "variable": "y"
+    },
+    {
+      "id": "kinetic",
+      "label": "Kinetic energy",
+      "vi": {
+        "label": "Động năng"
+      },
+      "symbol": "Eₖ",
+      "unit": "J",
+      "variable": "kinetic"
+    },
+    {
+      "id": "potential",
+      "label": "Potential energy",
+      "vi": {
+        "label": "Thế năng"
+      },
+      "symbol": "Eₚ",
+      "unit": "J",
+      "variable": "potential"
+    },
+    {
+      "id": "energy",
+      "label": "Total energy",
+      "vi": {
+        "label": "Cơ năng"
+      },
+      "symbol": "E",
+      "unit": "J",
+      "variable": "energy"
+    }
+  ],
+  "results": [
+    {
+      "id": "period-small-angle",
+      "label": "Period vs small-angle T₀",
+      "vi": {
+        "label": "Chu kỳ so với T₀ góc nhỏ"
+      },
+      "symbol": "T",
+      "unit": "s",
+      "variable": "period",
+      "reduce": "final",
+      "theory": "smallAnglePeriod"
+    },
+    {
+      "id": "period",
+      "label": "Period vs exact theory",
+      "vi": {
+        "label": "Chu kỳ so với lý thuyết chính xác"
+      },
+      "symbol": "T",
+      "unit": "s",
+      "variable": "period",
+      "reduce": "final",
+      "theory": "period"
+    },
+    {
+      "id": "amplitude",
+      "label": "Amplitude θmax",
+      "vi": {
+        "label": "Biên độ θmax"
+      },
+      "symbol": "θmax",
+      "unit": "rad",
+      "variable": "theta",
+      "reduce": "max",
+      "theory": "amplitude"
+    },
+    {
+      "id": "max-speed",
+      "label": "Maximum bob speed",
+      "vi": {
+        "label": "Tốc độ cực đại của quả nặng"
+      },
+      "symbol": "vmax",
+      "unit": "m/s",
+      "variable": "speed",
+      "reduce": "max",
+      "theory": "maxSpeed"
+    },
+    {
+      "id": "energy",
+      "label": "Energy at the end",
+      "vi": {
+        "label": "Cơ năng lúc kết thúc"
+      },
+      "symbol": "E",
+      "unit": "J",
+      "variable": "energy",
+      "reduce": "final",
+      "theory": "energy"
+    }
+  ],
+  "graphs": [
+    {
+      "id": "angle-time",
+      "title": "Angle against time",
+      "vi": {
+        "title": "Góc theo thời gian"
+      },
+      "x": "time",
+      "y": ["theta"],
+      "mark": "period"
+    },
+    {
+      "id": "angular-velocity-time",
+      "title": "Angular velocity against time",
+      "vi": {
+        "title": "Vận tốc góc theo thời gian"
+      },
+      "x": "time",
+      "y": ["omega"]
+    },
+    {
+      "id": "phase",
+      "title": "Phase space",
+      "vi": {
+        "title": "Không gian pha"
+      },
+      "x": "theta",
+      "y": ["omega"]
+    },
+    {
+      "id": "energy-time",
+      "title": "Energy against time",
+      "vi": {
+        "title": "Năng lượng theo thời gian"
+      },
+      "x": "time",
+      "y": ["kinetic", "potential", "energy"],
+      "yLabel": "E"
+    }
+  ],
+  "monitor": "angle-time",
+  "compare": [
+    {
+      "graph": "angle-time"
+    },
+    {
+      "graph": "angular-velocity-time"
+    },
+    {
+      "graph": "phase"
+    },
+    {
+      "graph": "energy-time",
+      "series": "energy"
+    }
+  ],
+  "instruments": [
+    {
+      "result": "period",
+      "quantity": "Period T",
+      "name": "Timer (period mode)",
+      "resolution": "resolution",
+      "excludes": "the timer's calibration, when its light gate triggers (or a person's reaction time with a stopwatch)",
+      "vi": {
+        "quantity": "Chu kỳ T",
+        "name": "Đồng hồ (chế độ đo chu kỳ)",
+        "excludes": "sai số hiệu chuẩn của đồng hồ, thời điểm cổng quang kích hoạt (hoặc thời gian phản xạ của người bấm đồng hồ bấm giây)"
+      }
+    }
+  ],
+  "note": "Theory: T₀ = 2π√(L/g) is the small-angle period, exact only as θ₀ → 0; larger swings take longer (1.7 % at 30°, 7.3 % at 60°). The exact period of this ideal pendulum is T = 4√(L/g)·K(sin(θmax/2)), K the complete elliptic integral of the first kind. The period is timed between zero crossings over three oscillations. The bob’s mass changes the energies, not the motion.",
+  "vi": {
+    "name": "Con lắc đơn",
+    "description": "Quả nặng gắn trên thanh cứng nhẹ được thả từ trạng thái nghỉ ở góc θ₀ và dao động dưới tác dụng của trọng lực, không có ma sát hay lực cản không khí. Góc và vận tốc góc của nó được đo trong ba dao động toàn phần; chu kỳ đo được được so sánh với công thức góc nhỏ và với lý thuyết chính xác.",
+    "note": "Lý thuyết: T₀ = 2π√(L/g) là chu kỳ khi góc nhỏ, chỉ chính xác khi θ₀ → 0; dao động rộng hơn thì lâu hơn (1.7 % ở 30°, 7.3 % ở 60°). Chu kỳ chính xác của con lắc lý tưởng này là T = 4√(L/g)·K(sin(θmax/2)), với K là tích phân elliptic đầy đủ loại một. Chu kỳ được đo giữa các lần qua vị trí cân bằng trong ba dao động. Khối lượng quả nặng làm thay đổi năng lượng, không làm thay đổi chuyển động."
+  },
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the pendulum instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn con lắc trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "pendulum-instructions"
+      }
+    },
+    {
+      "id": "length",
+      "instruction": "Set the length L with its dial on the control desk.",
+      "vi": {
+        "instruction": "Đặt chiều dài L bằng núm xoay của nó trên bàn điều khiển."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "length"
+      }
+    },
+    {
+      "id": "angle",
+      "instruction": "Set the release angle θ₀ (and g, if you like) with the dials.",
+      "vi": {
+        "instruction": "Đặt góc thả θ₀ (và g nếu muốn) bằng các núm xoay."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "angle"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN and watch three full swings.",
+      "vi": {
+        "instruction": "Nhấn CHẠY và quan sát ba dao động toàn phần."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Read the measured period against theory on the results monitor.",
+      "vi": {
+        "instruction": "Đọc chu kỳ đo được so với lý thuyết trên màn hình kết quả."
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, change one setting and run again to compare.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, đổi một thiết lập rồi chạy lại để so sánh."
+      },
+      "done": {
+        "kind": "reset"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "moon-period",
+      "question": "On the Moon (g = {gravity} m/s²) a pendulum {length} m long swings through a small angle. Find its period.",
+      "vi": {
+        "question": "Trên Mặt Trăng (g = {gravity} m/s²), một con lắc đơn dài {length} m dao động với góc lệch nhỏ. Tìm chu kì dao động của nó."
+      },
+      "set": { "length": 2.5, "gravity": 1.62 },
+      "find": [{ "theory": "smallAnglePeriod", "symbol": "T₀" }],
+      "steps": [
+        {
+          "say": "For small swings the period depends only on the length and on g — not on the bob’s mass.",
+          "vi": {
+            "say": "Với dao động nhỏ, chu kì chỉ phụ thuộc chiều dài dây và g — không phụ thuộc khối lượng quả nặng."
+          },
+          "write": "T₀ = 2π√(L/g)"
+        },
+        {
+          "say": "Put in the numbers: the weak gravity makes the swing slow.",
+          "vi": { "say": "Thay số: trọng trường yếu làm con lắc dao động chậm." },
+          "write": "T₀ = 2π√({length}/{gravity}) ≈ {@smallAnglePeriod} s",
+          "check": { "expr": "2*pi*sqrt(length/gravity)", "equals": "smallAnglePeriod" }
+        }
+      ]
+    },
+    {
+      "id": "energy-and-speed",
+      "question": "A {mass} kg bob on a {length} m string is pulled aside to {angle}° and let go (g = {gravity} m/s²). Find its mechanical energy, taking the lowest point as zero, and its greatest speed.",
+      "vi": {
+        "question": "Quả nặng {mass} kg treo trên dây dài {length} m được kéo lệch {angle}° rồi thả nhẹ (g = {gravity} m/s²). Chọn mốc thế năng tại vị trí thấp nhất, tìm cơ năng và tốc độ lớn nhất của quả nặng."
+      },
+      "set": { "length": 1.5, "angle": 30 },
+      "find": [{ "theory": "energy" }, { "theory": "maxSpeed" }],
+      "steps": [
+        {
+          "say": "Pulled aside by θ₀, the bob is raised L(1 − cos θ₀) above its lowest point; let go at rest, that potential energy is all its energy.",
+          "vi": {
+            "say": "Khi lệch góc θ₀, quả nặng được nâng lên L(1 − cos θ₀) so với vị trí thấp nhất; thả không vận tốc đầu nên cơ năng bằng thế năng đó."
+          },
+          "write": "E = {mass}·{gravity}·{length}·(1 − cos {angle}°) ≈ {@energy} J",
+          "check": { "expr": "mass*gravity*length*(1-cos(rad(angle)))", "equals": "energy" }
+        },
+        {
+          "say": "At the lowest point it is all kinetic: ½m·v² = E, so the mass cancels.",
+          "vi": {
+            "say": "Tại vị trí thấp nhất toàn bộ là động năng: ½m·v² = E, nên khối lượng triệt tiêu."
+          },
+          "write": "v = √(2gL(1 − cos θ₀)) ≈ {@maxSpeed} m/s",
+          "check": { "expr": "sqrt(2*gravity*length*(1-cos(rad(angle))))", "equals": "maxSpeed" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "A weight on a rod swings back and forth; the time of one swing, the period, depends on the rod's length and on gravity — not on the weight.",
+    "vi": {
+      "summary": "Một quả nặng gắn trên thanh treo đung đưa qua lại; thời gian của một lần dao động (chu kỳ) phụ thuộc vào chiều dài thanh và gia tốc trọng trường — không phụ thuộc vào khối lượng quả nặng."
+    },
+    "parts": [
+      {
+        "id": "pivot",
+        "name": "Pivot (axle)",
+        "role": "The fixed point the pendulum turns about; lengths are measured from here.",
+        "vi": {
+          "name": "Trục quay",
+          "role": "Điểm cố định mà con lắc quay quanh; chiều dài được đo từ đây."
+        },
+        "anchor": {
+          "part": "axle"
+        }
+      },
+      {
+        "id": "rod",
+        "name": "Rod, length L",
+        "role": "A light rigid rod: it keeps the bob at the distance L from the pivot.",
+        "vi": {
+          "name": "Thanh treo, dài L",
+          "role": "Thanh cứng, nhẹ: giữ quả nặng cách trục quay một khoảng L."
+        },
+        "anchor": {
+          "part": "rod"
+        }
+      },
+      {
+        "id": "bob",
+        "name": "Bob (0.5 kg)",
+        "role": "The brass weight that swings; gravity pulls it towards the lowest point.",
+        "vi": {
+          "name": "Quả nặng (0.5 kg)",
+          "role": "Quả nặng bằng đồng thau dao động; trọng lực kéo nó về điểm thấp nhất."
+        },
+        "anchor": {
+          "part": "bob"
+        }
+      },
+      {
+        "id": "protractor",
+        "name": "Protractor",
+        "role": "Reads the angle θ of the rod from the vertical, and the release angle θ₀.",
+        "vi": {
+          "name": "Thước đo góc",
+          "role": "Đọc góc lệch θ của thanh so với phương thẳng đứng và góc thả θ₀."
+        },
+        "anchor": {
+          "part": "protractor"
+        }
+      },
+      {
+        "id": "scale",
+        "name": "Length scale",
+        "role": "Reads the length L from the pivot to the centre of the bob.",
+        "vi": {
+          "name": "Thước đo chiều dài",
+          "role": "Đọc chiều dài L từ trục quay tới tâm quả nặng."
+        },
+        "anchor": {
+          "part": "length-scale"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "The bob is pulled aside to the angle θ₀ and let go from rest. Gravity pulls it back towards the lowest point, under the pivot.",
+        "vi": {
+          "text": "Quả nặng được kéo lệch tới góc θ₀ rồi thả không vận tốc đầu. Trọng lực kéo nó trở về điểm thấp nhất, ngay dưới trục quay."
+        },
+        "parts": ["bob", "protractor", "pivot"]
+      },
+      {
+        "text": "It does not stop at the bottom: moving fast there, it swings up the other side until it stops and comes back. This back-and-forth is an oscillation.",
+        "vi": {
+          "text": "Nó không dừng ở điểm thấp nhất: ở đó nó đang chuyển động nhanh nên đi tiếp lên phía bên kia cho tới khi dừng lại rồi quay về. Chuyển động qua lại đó là một dao động."
+        },
+        "parts": ["bob", "rod"]
+      },
+      {
+        "text": "The period T is the time of one full swing, there and back. For small angles T = 2π·√(L/g): only the length L and gravity g matter — not the bob's mass.",
+        "vi": {
+          "text": "Chu kỳ T là thời gian của một dao động toàn phần, đi và về. Với góc nhỏ, T = 2π·√(L/g): chỉ chiều dài L và gia tốc trọng trường g quyết định — không phụ thuộc khối lượng quả nặng."
+        },
+        "parts": ["rod", "scale", "pivot"]
+      },
+      {
+        "text": "A longer rod swings more slowly: four times the length gives twice the period. Set L at the desk and compare runs.",
+        "vi": {
+          "text": "Thanh càng dài thì dao động càng chậm: chiều dài gấp bốn thì chu kỳ gấp đôi. Đặt L ở bàn điều khiển rồi so sánh các lần chạy."
+        },
+        "parts": ["rod", "scale"]
+      },
+      {
+        "text": "At large release angles the period grows a little beyond 2π·√(L/g): the results show the measured period beside both the small-angle formula and the exact theory.",
+        "vi": {
+          "text": "Với góc thả lớn, chu kỳ dài hơn 2π·√(L/g) một chút: phần kết quả cho thấy chu kỳ đo được bên cạnh cả công thức góc nhỏ lẫn lý thuyết chính xác."
+        },
+        "parts": ["protractor", "bob"]
+      },
+      {
+        "text": "Energy changes form as it swings: at the ends it is all potential energy (highest, at rest), at the bottom all kinetic energy (fastest). With no friction modelled the swing never dies down.",
+        "vi": {
+          "text": "Năng lượng chuyển hóa khi dao động: ở hai biên toàn bộ là thế năng (cao nhất, đứng yên), ở điểm thấp nhất toàn bộ là động năng (nhanh nhất). Mô hình không có ma sát nên biên độ không giảm."
+        },
+        "parts": ["bob"]
+      }
+    ]
+  }
+}

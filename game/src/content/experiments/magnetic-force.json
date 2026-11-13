@@ -1,0 +1,543 @@
+{
+  "id": "magnetic-force",
+  "name": "The force on a current in a magnetic field",
+  "category": "physics",
+  "description": "A U-shaped magnet stands on an electronic balance; a straight wire held from a stand runs through the gap between its poles without touching it. When a current flows in the wire, the field pushes the wire and the wire pushes back on the magnet, so the balance's reading changes. The force is F = B·I·L·sin α: it grows in proportion to the current, to the length of wire in the field, and to the sine of the angle between the wire and the field. From F against I, find the field B.",
+  "vi": {
+    "name": "Lực từ tác dụng lên dòng điện",
+    "description": "Một nam châm hình chữ U đặt trên cân điện tử; một đoạn dây dẫn thẳng được giữ trên giá đi qua khe giữa hai cực mà không chạm vào nam châm. Khi có dòng điện chạy trong dây, từ trường tác dụng lực lên dây và dây tác dụng lực ngược lại lên nam châm, nên số chỉ của cân thay đổi. Lực từ F = B·I·L·sin α: tỉ lệ thuận với cường độ dòng điện, với chiều dài đoạn dây trong từ trường và với sin của góc giữa dây và từ trường. Từ đồ thị F theo I, hãy tìm cảm ứng từ B.",
+    "note": "Đoạn dây dài L mang dòng điện I trong từ trường đều B, hợp với từ trường góc α, chịu lực F = B·I·L·sin α. Theo định luật III Newton, dây đẩy nam châm với lực bằng như vậy theo chiều ngược lại, nên số chỉ của cân thay đổi Δm = F/g, với g = 9,81 m/s². Ở đây cảm ứng từ của nam châm là B = 0,06 T, giá trị minh họa cho nam châm chữ U trong trường học, không hiện trên bàn điều khiển: hãy tìm nó từ hệ số góc của F theo I, bằng B·L·sin α, rồi so sánh với giá trị trong bảng kết quả. Đây là mô hình dạy học đơn giản hóa: từ trường đều trên cả đoạn L và bằng 0 bên ngoài, dây dẫn ra vào không chịu lực, cân ổn định ngay khi đóng khóa. Cân đọc số chỉ theo độ phân giải d của nó (bội số gần nhất của d, độ bất định d/√12 chỉ do độ phân giải); không có sai số ngẫu nhiên nào được thêm vào. Trong phòng thí nghiệm thật, từ trường yếu dần ở mép các cực nên chiều dài hiệu dụng khác L, dây nóng lên khi dòng điện lớn, và cân trôi số theo thời gian."
+  },
+  "requiredEquipment": ["current-balance"],
+  "model": "magnetism.current-balance",
+  "parameters": [
+    {
+      "id": "current",
+      "label": "Current",
+      "vi": {
+        "label": "Cường độ dòng điện"
+      },
+      "symbol": "I",
+      "unit": "A",
+      "default": 2,
+      "min": 0.5,
+      "max": 3,
+      "presets": [
+        {
+          "label": "1 A",
+          "vi": {
+            "label": "1 A"
+          },
+          "value": 1
+        },
+        {
+          "label": "2 A",
+          "vi": {
+            "label": "2 A"
+          },
+          "value": 2
+        },
+        {
+          "label": "3 A",
+          "vi": {
+            "label": "3 A"
+          },
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": "wireLength",
+      "label": "Length of wire in the field",
+      "vi": {
+        "label": "Chiều dài dây trong từ trường"
+      },
+      "symbol": "L",
+      "unit": "m",
+      "default": 0.04,
+      "min": 0.02,
+      "max": 0.08,
+      "presets": [
+        {
+          "label": "2 cm",
+          "vi": {
+            "label": "2 cm"
+          },
+          "value": 0.02
+        },
+        {
+          "label": "4 cm",
+          "vi": {
+            "label": "4 cm"
+          },
+          "value": 0.04
+        },
+        {
+          "label": "8 cm",
+          "vi": {
+            "label": "8 cm"
+          },
+          "value": 0.08
+        }
+      ]
+    },
+    {
+      "id": "angle",
+      "label": "Angle between wire and field",
+      "vi": {
+        "label": "Góc giữa dây và từ trường"
+      },
+      "symbol": "α",
+      "unit": "°",
+      "default": 90,
+      "min": 30,
+      "max": 90,
+      "presets": [
+        {
+          "label": "90°",
+          "vi": {
+            "label": "90°"
+          },
+          "value": 90
+        },
+        {
+          "label": "60°",
+          "vi": {
+            "label": "60°"
+          },
+          "value": 60
+        },
+        {
+          "label": "30°",
+          "vi": {
+            "label": "30°"
+          },
+          "value": 30
+        }
+      ]
+    },
+    {
+      "id": "balanceResolution",
+      "label": "Balance resolution",
+      "vi": {
+        "label": "Độ phân giải của cân"
+      },
+      "symbol": "d_m",
+      "unit": "kg",
+      "default": 0.00001,
+      "min": 0.000001,
+      "max": 0.00001,
+      "presets": [
+        {
+          "label": "0.01 g",
+          "vi": {
+            "label": "0,01 g"
+          },
+          "value": 0.00001
+        },
+        {
+          "label": "0.001 g",
+          "vi": {
+            "label": "0,001 g"
+          },
+          "value": 0.000001
+        }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "fieldStrength": 0.06,
+    "gravity": 9.81,
+    "switchTime": 0.5,
+    "duration": 2
+  },
+  "inputs": {
+    "fieldStrength": {
+      "symbol": "B",
+      "unit": "T",
+      "desk": false
+    },
+    "gravity": {
+      "symbol": "g",
+      "unit": "m/s²"
+    },
+    "switchTime": {
+      "symbol": "t_K",
+      "unit": "s",
+      "desk": false
+    },
+    "duration": {
+      "symbol": "t_end",
+      "unit": "s",
+      "desk": false
+    }
+  },
+  "simulation": {
+    "timeStep": 0.01,
+    "maxDuration": 3,
+    "sampleInterval": 0.05
+  },
+  "measurements": [
+    {
+      "id": "balanceReading",
+      "label": "Change in the balance's reading",
+      "vi": {
+        "label": "Độ thay đổi số chỉ của cân"
+      },
+      "symbol": "Δm",
+      "unit": "kg",
+      "variable": "balanceReading"
+    },
+    {
+      "id": "current",
+      "label": "Current",
+      "vi": {
+        "label": "Cường độ dòng điện"
+      },
+      "symbol": "I",
+      "unit": "A",
+      "variable": "current"
+    },
+    {
+      "id": "clock",
+      "label": "Time",
+      "vi": {
+        "label": "Thời gian"
+      },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "clock"
+    }
+  ],
+  "results": [
+    {
+      "id": "balanceReading",
+      "label": "Change Δm in the balance's reading",
+      "vi": {
+        "label": "Độ thay đổi Δm số chỉ của cân"
+      },
+      "symbol": "Δm",
+      "unit": "kg",
+      "variable": "balanceReading",
+      "reduce": "final",
+      "theory": "balanceReading"
+    },
+    {
+      "id": "force",
+      "label": "Force F = Δm·g",
+      "vi": {
+        "label": "Lực từ F = Δm·g"
+      },
+      "symbol": "F",
+      "unit": "N",
+      "variable": "force",
+      "reduce": "final",
+      "theory": "force"
+    },
+    {
+      "id": "current",
+      "label": "Current I",
+      "vi": {
+        "label": "Cường độ dòng điện I"
+      },
+      "symbol": "I",
+      "unit": "A",
+      "variable": "current",
+      "reduce": "final"
+    }
+  ],
+  "instruments": [
+    {
+      "result": "balanceReading",
+      "quantity": "Change in reading Δm",
+      "name": "Electronic balance",
+      "resolution": "balanceResolution",
+      "excludes": "the balance's drift and calibration, draughts on the pan, and the leads tugging on the wire",
+      "vi": {
+        "quantity": "Độ thay đổi số chỉ Δm",
+        "name": "Cân điện tử",
+        "excludes": "sự trôi số và sai số hiệu chuẩn của cân, gió lùa lên đĩa cân, và dây dẫn kéo lên đoạn dây"
+      }
+    }
+  ],
+  "graphs": [
+    {
+      "id": "reading-time",
+      "title": "Change in the balance's reading against time",
+      "vi": {
+        "title": "Độ thay đổi số chỉ của cân theo thời gian"
+      },
+      "x": "clock",
+      "y": ["balanceReading"],
+      "yLabel": "Δm"
+    }
+  ],
+  "monitor": "reading-time",
+  "compare": [
+    {
+      "graph": "reading-time"
+    }
+  ],
+  "analyses": [
+    {
+      "id": "force-current",
+      "title": "Force against current for one wire and angle (F = B·L·sin α·I)",
+      "note": "Each run is one point: the force F against the current I. Runs with the same length of wire and the same angle are fitted together, at different currents. F = B·L·sin α·I: a straight line through the origin whose slope is B·L·sin α. Divide the slope by L·sin α to find the field B; every wire and angle should give the same B.",
+      "vi": {
+        "title": "Lực từ theo cường độ dòng điện, với cùng một đoạn dây và góc (F = B·L·sin α·I)",
+        "note": "Mỗi lần chạy là một điểm: lực từ F theo cường độ dòng điện I. Các lần chạy cùng chiều dài dây và cùng góc được khớp chung, với các cường độ dòng điện khác nhau. F = B·L·sin α·I: một đường thẳng đi qua gốc tọa độ có hệ số góc B·L·sin α. Chia hệ số góc cho L·sin α để tìm cảm ứng từ B; mọi đoạn dây và mọi góc đều phải cho cùng một B."
+      },
+      "x": "current",
+      "y": "force",
+      "group": ["wireLength", "angle"],
+      "columns": ["wireLength", "angle", "current", "balanceReading", "force"],
+      "slope": {
+        "label": "Slope of F against I (B·L·sin α)",
+        "vi": {
+          "label": "Hệ số góc của F theo I (B·L·sin α)"
+        },
+        "symbol": "B·L·sin α",
+        "unit": "N/A",
+        "theory": "forcePerAmpere"
+      }
+    }
+  ],
+  "note": "A length L of wire carrying a current I across a uniform field B, at an angle α to it, feels the force F = B·I·L·sin α. By Newton's third law the wire pushes the magnet as hard the other way, so the balance's reading changes by Δm = F/g, with g = 9.81 m/s². Here the magnet's field is B = 0.06 T, illustrative for a school U-magnet, kept off the desk: find it from the slope of F against I, which is B·L·sin α, then compare it with the value in the results panel. A simplified teaching model: the field is uniform over L and nothing outside it, the leads feel no force, the balance settles as soon as the switch closes. The balance reads to its resolution d (the nearest multiple of d, with the uncertainty d/√12 from the resolution alone); no random error is added. In a real lab the field weakens at the poles' edges, so the effective length differs from L, the wire warms at large currents, and the balance drifts.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the magnetic force instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn thí nghiệm lực từ trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "magnetic-force-instructions"
+      }
+    },
+    {
+      "id": "current",
+      "instruction": "Set the current with its dial on the control desk.",
+      "vi": {
+        "instruction": "Đặt cường độ dòng điện bằng núm xoay trên bàn điều khiển."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "current"
+      }
+    },
+    {
+      "id": "wire",
+      "instruction": "Choose the length of wire in the field.",
+      "vi": {
+        "instruction": "Chọn chiều dài đoạn dây trong từ trường."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "wireLength"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the switch closes after 0.5 s; watch the balance.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: khóa K đóng sau 0,5 s; quan sát số chỉ của cân."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Read Δm and F on the results monitor.",
+      "vi": {
+        "instruction": "Đọc Δm và F trên màn hình kết quả."
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, change the current and run again; then find B from F against I.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, đổi cường độ dòng điện rồi chạy lại; sau đó tìm B từ đồ thị F theo I."
+      },
+      "done": {
+        "kind": "reset"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "force-from-balance",
+      "question": "A wire carries {current} A across a magnet’s field, square to it. The balance under the magnet changes by Δm = {@balanceReading|3} kg. Find the force on the wire, and F/I (g = {gravity} m/s²).",
+      "vi": {
+        "question": "Một dây dẫn có dòng điện {current} A đặt vuông góc với từ trường của nam châm. Số chỉ của cân dưới nam châm thay đổi Δm = {@balanceReading|3} kg. Tìm lực từ tác dụng lên dây và tỉ số F/I (g = {gravity} m/s²)."
+      },
+      "set": { "current": 3, "wireLength": 0.08, "angle": 90 },
+      "find": [
+        { "theory": "force" },
+        { "theory": "forcePerAmpere", "symbol": "F/I", "unit": "N/A" }
+      ],
+      "steps": [
+        {
+          "say": "By Newton’s third law the wire pushes the magnet as hard as the field pushes the wire, so the balance feels the force F = Δm·g.",
+          "vi": {
+            "say": "Theo định luật III Newton, dây đẩy nam châm một lực đúng bằng lực từ tác dụng lên dây, nên cân chịu lực F = Δm·g."
+          },
+          "write": "F = Δm·g = {@balanceReading|3}·{gravity} ≈ {@force} N",
+          "check": { "expr": "@balanceReading*gravity", "equals": "force" }
+        },
+        {
+          "say": "Divide by the current. F/I is the slope of F against I, and it equals B·L·sin α — from it, in the lab, you find the field B.",
+          "vi": {
+            "say": "Chia cho cường độ dòng điện. F/I là hệ số góc của đồ thị F theo I, và bằng B·L·sin α — trong thí nghiệm, từ đó ta tìm được cảm ứng từ B."
+          },
+          "write": "F/I = {@force}/{current} ≈ {@forcePerAmpere} N/A",
+          "check": { "expr": "@force/current", "equals": "forcePerAmpere" }
+        }
+      ]
+    },
+    {
+      "id": "wire-at-an-angle",
+      "question": "Now the wire, {wireLength} m of it in the field, makes {angle}° with the field and carries {current} A. The balance changes by Δm = {@balanceReading|3} kg. Find F and F/I.",
+      "vi": {
+        "question": "Bây giờ dây dẫn, phần nằm trong từ trường dài {wireLength} m, hợp với đường sức góc {angle}° và có dòng điện {current} A. Số chỉ của cân thay đổi Δm = {@balanceReading|3} kg. Tìm F và F/I."
+      },
+      "set": { "current": 2, "wireLength": 0.08, "angle": 30 },
+      "find": [
+        { "theory": "force" },
+        { "theory": "forcePerAmpere", "symbol": "F/I", "unit": "N/A" }
+      ],
+      "steps": [
+        {
+          "say": "The balance again gives the force: F = Δm·g.",
+          "vi": { "say": "Cân lại cho ta lực từ: F = Δm·g." },
+          "write": "F = Δm·g = {@balanceReading|3}·{gravity} ≈ {@force} N",
+          "check": { "expr": "@balanceReading*gravity", "equals": "force" }
+        },
+        {
+          "say": "F = B·I·L·sin α: only the part of the wire across the field counts, so at {angle}° the force is sin {angle}° = {=sin(rad(angle))} of what it would be square to the field.",
+          "vi": {
+            "say": "F = B·I·L·sin α: chỉ thành phần của dây vuông góc với đường sức mới chịu lực, nên ở góc {angle}° lực chỉ bằng sin {angle}° = {=sin(rad(angle))} lần so với khi dây vuông góc với từ trường."
+          },
+          "write": "F/I = {@force}/{current} ≈ {@forcePerAmpere} N/A",
+          "check": { "expr": "@force/current", "equals": "forcePerAmpere" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "A magnetic field pushes on a wire carrying a current, with a force F = B·I·L·sin α; a balance under the magnet measures it, because the wire pushes back on the magnet.",
+    "vi": {
+      "summary": "Từ trường tác dụng lực lên dây dẫn có dòng điện chạy qua, với độ lớn F = B·I·L·sin α; cân đặt dưới nam châm đo được lực này, vì dây dẫn tác dụng ngược lại lên nam châm."
+    },
+    "parts": [
+      {
+        "id": "magnet",
+        "name": "U-shaped magnet",
+        "role": "Its poles make a field B across the gap; it can be turned to set the angle α to the wire.",
+        "vi": {
+          "name": "Nam châm chữ U",
+          "role": "Hai cực của nó tạo ra từ trường B trong khe; có thể xoay nó để đặt góc α so với dây dẫn."
+        },
+        "anchor": {
+          "part": "magnet"
+        }
+      },
+      {
+        "id": "wire",
+        "name": "Straight wire, length L",
+        "role": "Held from a stand across the gap without touching the magnet; L is the length in the field.",
+        "vi": {
+          "name": "Đoạn dây thẳng, dài L",
+          "role": "Được giữ từ giá đỡ, đi qua khe mà không chạm nam châm; L là chiều dài nằm trong từ trường."
+        },
+        "anchor": {
+          "at": [-0.06, -0.033, 0]
+        }
+      },
+      {
+        "id": "balance",
+        "name": "Electronic balance",
+        "role": "The magnet stands on it: its reading changes by Δm when the current flows.",
+        "vi": {
+          "name": "Cân điện tử",
+          "role": "Nam châm đặt trên cân: số chỉ của cân thay đổi một lượng Δm khi có dòng điện."
+        },
+        "anchor": {
+          "at": [-0.06, -0.1, 0.1]
+        }
+      },
+      {
+        "id": "supply",
+        "name": "Power supply",
+        "role": "Drives the current I through the wire once the switch closes.",
+        "vi": {
+          "name": "Nguồn điện",
+          "role": "Cung cấp dòng điện I qua dây dẫn khi khóa đóng."
+        },
+        "anchor": {
+          "at": [0.16, -0.09, 0.02]
+        }
+      },
+      {
+        "id": "ammeter",
+        "name": "Ammeter",
+        "role": "Reads the current I.",
+        "vi": {
+          "name": "Ampe kế",
+          "role": "Đọc cường độ dòng điện I."
+        },
+        "anchor": {
+          "part": "needle"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "The wire runs between the magnet’s poles, where the field B goes across the gap. With no current, nothing happens.",
+        "vi": {
+          "text": "Dây dẫn đi qua giữa hai cực nam châm, nơi từ trường B hướng ngang qua khe. Khi không có dòng điện, không có gì xảy ra."
+        },
+        "parts": ["magnet", "wire"]
+      },
+      {
+        "text": "Close the switch: a current I flows, and the field pushes the wire with the force F = B·I·L·sin α, at right angles to both the wire and the field.",
+        "vi": {
+          "text": "Đóng khóa: dòng điện I chạy qua, và từ trường tác dụng lên dây lực F = B·I·L·sin α, vuông góc với cả dây dẫn và từ trường."
+        },
+        "parts": ["supply", "ammeter", "wire", "magnet"]
+      },
+      {
+        "text": "The wire is held still, so by Newton’s third law it pushes the magnet as hard the other way. The balance’s reading changes by Δm = F/g.",
+        "vi": {
+          "text": "Dây được giữ cố định, nên theo định luật III Niu-tơn nó tác dụng lên nam châm một lực bằng như thế theo chiều ngược lại. Số chỉ của cân thay đổi một lượng Δm = F/g."
+        },
+        "parts": ["wire", "magnet", "balance"]
+      },
+      {
+        "text": "The force grows in proportion to the current I and to the length L in the field. Turning the magnet changes α: the force is largest at 90° and smaller at smaller angles, as sin α.",
+        "vi": {
+          "text": "Lực tăng tỉ lệ với cường độ dòng điện I và với chiều dài L trong từ trường. Xoay nam châm làm thay đổi α: lực lớn nhất khi α = 90° và nhỏ hơn khi góc nhỏ hơn, theo sin α."
+        },
+        "parts": ["ammeter", "wire", "magnet"]
+      },
+      {
+        "text": "The results give Δm and F = Δm·g; the balance reads in steps of its resolution d. Run at several currents: F against I is a straight line of slope B·L·sin α, and from it you find B.",
+        "vi": {
+          "text": "Phần kết quả cho Δm và F = Δm·g; cân đọc theo từng bước bằng độ phân giải d. Chạy với nhiều cường độ dòng điện: F theo I là đường thẳng có hệ số góc B·L·sin α, và từ đó tìm được B."
+        },
+        "parts": ["balance", "ammeter"]
+      },
+      {
+        "text": "A simplified model: the field is uniform over L and nothing outside it. In a real lab it weakens at the poles’ edges, so the effective length differs from L.",
+        "vi": {
+          "text": "Mô hình đơn giản hóa: từ trường đều trên đoạn L và bằng không ở ngoài. Trong thực tế, từ trường yếu dần ở mép các cực, nên chiều dài hiệu dụng khác L."
+        },
+        "parts": ["magnet", "wire"]
+      }
+    ]
+  }
+}

@@ -1,0 +1,672 @@
+{
+  "id": "atwood-machine",
+  "name": "Atwood machine: bodies joined over a pulley",
+  "category": "physics",
+  "description": "Two equal masses M hang on a string over a pulley at the top of a stand; a small extra mass Δm on the right makes that side heavier. An electromagnet holds them level; RUN lets go. The heavier side falls a height h to a pad, which stops the timer, while the lighter side rises as far: the two move together with one acceleration, a = Δm·g/(2M + Δm), much smaller than g. From the fall time t, a = 2h/t², and from a and the masses, g itself. A light gate just above the pad gives the speed there.",
+  "vi": {
+    "name": "Máy Atwood: hai vật nối với nhau qua ròng rọc",
+    "description": "Hai vật cùng khối lượng M treo ở hai đầu một sợi dây vắt qua ròng rọc trên đỉnh giá; một gia trọng nhỏ Δm đặt bên phải làm bên đó nặng hơn. Nam châm điện giữ hai vật ngang nhau; nhấn CHẠY để thả. Bên nặng hơn rơi một đoạn h xuống tấm đệm, làm đồng hồ dừng, trong khi bên nhẹ đi lên một đoạn bằng thế: hai vật cùng chuyển động với một gia tốc, a = Δm·g/(2M + Δm), nhỏ hơn g nhiều. Từ thời gian rơi t, a = 2h/t², và từ a cùng các khối lượng, tính ra chính g. Một cổng quang điện ngay trên tấm đệm cho biết tốc độ ở đó.",
+    "note": "Đây là mô hình dạy học đơn giản hóa: dây nhẹ và không giãn, ròng rọc quay không ma sát và quán tính của nó được bỏ qua (μ = 0), không khí không cản. Viết định luật II Newton cho từng vật: bên phải (M + Δm)·g − T = (M + Δm)·a, bên trái T − M·g = M·a; cộng lại được a = Δm·g/(2M + Δm), và lực căng dây T = M·(g + a), như nhau ở hai bên. Vì Δm nhỏ so với 2M, gia tốc nhỏ và hai vật chuyển động đủ chậm để đo được — đó là ý tưởng của máy Atwood (1784) để đo g. Đồng hồ bắt đầu khi nam châm thả và dừng khi vật chạm tấm đệm: t = √(2h/a), nên a = 2h/t², và g = a·(2M + Δm)/Δm. Cổng quang điện ở 5 cm trên tấm đệm đo thời gian tấm chắn 2 cm trên vật bên phải chắn chùm tia, cho tốc độ L/Δt. Đồng hồ đọc thời gian mô phỏng theo độ phân giải d_t của nó (độ bất định d_t/√12 chỉ do độ phân giải); không có sai số ngẫu nhiên nào được thêm vào. Trong phòng thí nghiệm thật, ròng rọc có quán tính và ma sát nên gia tốc nhỏ hơn một chút và g tính ra thấp hơn; đó là lý do các phép đo g bằng máy Atwood cần ròng rọc rất nhẹ."
+  },
+  "requiredEquipment": ["atwood-machine"],
+  "model": "dynamics.atwood",
+  "parameters": [
+    {
+      "id": "mass",
+      "label": "Mass on each side",
+      "vi": {
+        "label": "Khối lượng mỗi bên"
+      },
+      "symbol": "M",
+      "unit": "kg",
+      "default": 0.2,
+      "min": 0.1,
+      "max": 0.2,
+      "presets": [
+        {
+          "label": "100 g",
+          "vi": {
+            "label": "100 g"
+          },
+          "value": 0.1
+        },
+        {
+          "label": "150 g",
+          "vi": {
+            "label": "150 g"
+          },
+          "value": 0.15
+        },
+        {
+          "label": "200 g",
+          "vi": {
+            "label": "200 g"
+          },
+          "value": 0.2
+        }
+      ]
+    },
+    {
+      "id": "extraMass",
+      "label": "Extra mass on the right",
+      "vi": {
+        "label": "Gia trọng bên phải"
+      },
+      "symbol": "Δm",
+      "unit": "kg",
+      "default": 0.02,
+      "min": 0.005,
+      "max": 0.04,
+      "presets": [
+        {
+          "label": "5 g",
+          "vi": {
+            "label": "5 g"
+          },
+          "value": 0.005
+        },
+        {
+          "label": "10 g",
+          "vi": {
+            "label": "10 g"
+          },
+          "value": 0.01
+        },
+        {
+          "label": "20 g",
+          "vi": {
+            "label": "20 g"
+          },
+          "value": 0.02
+        },
+        {
+          "label": "40 g",
+          "vi": {
+            "label": "40 g"
+          },
+          "value": 0.04
+        }
+      ]
+    },
+    {
+      "id": "dropHeight",
+      "label": "Fall to the pad",
+      "vi": {
+        "label": "Độ cao rơi xuống tấm đệm"
+      },
+      "symbol": "h",
+      "unit": "m",
+      "default": 0.6,
+      "min": 0.4,
+      "max": 0.8,
+      "presets": [
+        {
+          "label": "0.4 m",
+          "vi": {
+            "label": "0,4 m"
+          },
+          "value": 0.4
+        },
+        {
+          "label": "0.6 m",
+          "vi": {
+            "label": "0,6 m"
+          },
+          "value": 0.6
+        },
+        {
+          "label": "0.8 m",
+          "vi": {
+            "label": "0,8 m"
+          },
+          "value": 0.8
+        }
+      ]
+    },
+    {
+      "id": "timerResolution",
+      "label": "Timer resolution",
+      "vi": {
+        "label": "Độ phân giải của đồng hồ"
+      },
+      "symbol": "d_t",
+      "unit": "s",
+      "default": 0.001,
+      "min": 0.0001,
+      "max": 0.01,
+      "presets": [
+        {
+          "label": "0.0001 s",
+          "vi": {
+            "label": "0,0001 s"
+          },
+          "value": 0.0001
+        },
+        {
+          "label": "0.001 s",
+          "vi": {
+            "label": "0,001 s"
+          },
+          "value": 0.001
+        },
+        {
+          "label": "0.01 s",
+          "vi": {
+            "label": "0,01 s"
+          },
+          "value": 0.01
+        }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "pulleyMass": 0,
+    "gravity": 9.81,
+    "cardLength": 0.02,
+    "gateAbovePad": 0.05
+  },
+  "inputs": {
+    "pulleyMass": {
+      "symbol": "μ",
+      "unit": "kg",
+      "desk": false
+    },
+    "gravity": {
+      "symbol": "g",
+      "unit": "m/s²",
+      "desk": false
+    },
+    "cardLength": {
+      "symbol": "L",
+      "unit": "m"
+    },
+    "gateAbovePad": {
+      "symbol": "h_gate",
+      "unit": "m"
+    }
+  },
+  "simulation": {
+    "timeStep": 0.001,
+    "maxDuration": 10,
+    "sampleInterval": 0.01
+  },
+  "measurements": [
+    {
+      "id": "fall",
+      "label": "Fall of the heavier side",
+      "vi": {
+        "label": "Quãng đường rơi của bên nặng"
+      },
+      "symbol": "x",
+      "unit": "m",
+      "variable": "fall"
+    },
+    {
+      "id": "speed",
+      "label": "Speed of the masses",
+      "vi": {
+        "label": "Tốc độ của hai vật"
+      },
+      "symbol": "v",
+      "unit": "m/s",
+      "variable": "speed"
+    },
+    {
+      "id": "labTime",
+      "label": "Time",
+      "vi": {
+        "label": "Thời gian"
+      },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "clock"
+    }
+  ],
+  "results": [
+    {
+      "id": "fallTime",
+      "label": "Fall time to the pad t",
+      "vi": {
+        "label": "Thời gian rơi đến tấm đệm, t"
+      },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "fallTime",
+      "reduce": "final",
+      "theory": "fallTime"
+    },
+    {
+      "id": "measuredAcceleration",
+      "label": "Acceleration from the time, a = 2h/t²",
+      "vi": {
+        "label": "Gia tốc tính từ thời gian, a = 2h/t²"
+      },
+      "symbol": "a",
+      "unit": "m/s²",
+      "variable": "measuredAcceleration",
+      "reduce": "final",
+      "theory": "measuredAcceleration"
+    },
+    {
+      "id": "gravityEstimate",
+      "label": "g from a and the masses, a·(2M + Δm)/Δm",
+      "vi": {
+        "label": "g tính từ a và các khối lượng, a·(2M + Δm)/Δm"
+      },
+      "symbol": "g",
+      "unit": "m/s²",
+      "variable": "gravityEstimate",
+      "reduce": "final",
+      "theory": "gravityEstimate"
+    },
+    {
+      "id": "blocked",
+      "label": "Time the gate was blocked Δt",
+      "vi": {
+        "label": "Thời gian chắn cổng, Δt"
+      },
+      "symbol": "Δt",
+      "unit": "s",
+      "variable": "blocked",
+      "reduce": "final",
+      "theory": "blocked"
+    },
+    {
+      "id": "gateSpeed",
+      "label": "Speed at the gate, L/Δt",
+      "vi": {
+        "label": "Tốc độ tại cổng, L/Δt"
+      },
+      "symbol": "v",
+      "unit": "m/s",
+      "variable": "gateSpeed",
+      "reduce": "final",
+      "theory": "gateSpeed"
+    },
+    {
+      "id": "tensionLeft",
+      "label": "Pull of the string on the left, T = M·(g + a)",
+      "vi": {
+        "label": "Lực căng dây bên trái, T = M·(g + a)"
+      },
+      "symbol": "T",
+      "unit": "N",
+      "variable": "tensionLeft",
+      "reduce": "final",
+      "theory": "tensionLeft"
+    },
+    {
+      "id": "massRatio",
+      "label": "Mass ratio Δm/(2M + Δm)",
+      "vi": {
+        "label": "Tỉ số khối lượng Δm/(2M + Δm)"
+      },
+      "symbol": "Δm/(2M+Δm)",
+      "unit": "",
+      "variable": "massRatio",
+      "reduce": "final",
+      "theory": "massRatio"
+    },
+    {
+      "id": "acceleration",
+      "label": "Acceleration of the masses (model)",
+      "vi": {
+        "label": "Gia tốc của hai vật (mô hình)"
+      },
+      "symbol": "a",
+      "unit": "m/s²",
+      "variable": "acceleration",
+      "reduce": "final",
+      "theory": "acceleration"
+    }
+  ],
+  "instruments": [
+    {
+      "result": "fallTime",
+      "quantity": "Fall time t",
+      "name": "Digital timer",
+      "resolution": "timerResolution",
+      "excludes": "the timer's own accuracy, the magnet's release delay, the fall h as measured, and the pulley's inertia and friction, which change the time itself",
+      "vi": {
+        "quantity": "Thời gian rơi t",
+        "name": "Đồng hồ đo thời gian hiện số",
+        "excludes": "độ chính xác riêng của đồng hồ, độ trễ khi nam châm thả, sai số khi đo độ cao h, và quán tính cùng ma sát của ròng rọc, những yếu tố làm thay đổi chính thời gian đo"
+      }
+    },
+    {
+      "result": "blocked",
+      "quantity": "Time Δt the gate was blocked",
+      "name": "Digital timer",
+      "resolution": "timerResolution",
+      "excludes": "the timer's own accuracy, the beam's width and the card's length as measured",
+      "vi": {
+        "quantity": "Thời gian Δt chùm tia của cổng bị chắn",
+        "name": "Đồng hồ đo thời gian hiện số",
+        "excludes": "độ chính xác riêng của đồng hồ, bề rộng chùm tia và sai số khi đo chiều dài tấm chắn"
+      }
+    }
+  ],
+  "graphs": [
+    {
+      "id": "fall-time",
+      "title": "Fall against time",
+      "vi": {
+        "title": "Quãng đường rơi theo thời gian"
+      },
+      "x": "labTime",
+      "y": ["fall"],
+      "yLabel": "x"
+    },
+    {
+      "id": "speed-time",
+      "title": "Speed against time",
+      "vi": {
+        "title": "Tốc độ theo thời gian"
+      },
+      "x": "labTime",
+      "y": ["speed"],
+      "yLabel": "v"
+    }
+  ],
+  "monitor": "speed-time",
+  "compare": [
+    {
+      "graph": "speed-time"
+    }
+  ],
+  "analyses": [
+    {
+      "id": "acceleration-ratio",
+      "title": "a against Δm/(2M + Δm) (slope g)",
+      "note": "Each run is one point: the acceleration worked out from the fall time against the mass ratio Δm/(2M + Δm). Newton's second law gives a = g·Δm/(2M + Δm): a straight line through the origin whose slope is g. Runs with the same fall are fitted together; change the extra mass or the masses on both sides between them.",
+      "vi": {
+        "title": "a theo Δm/(2M + Δm) (hệ số góc g)",
+        "note": "Mỗi lần chạy là một điểm: gia tốc tính từ thời gian rơi theo tỉ số khối lượng Δm/(2M + Δm). Định luật II Newton cho a = g·Δm/(2M + Δm): một đường thẳng đi qua gốc tọa độ có hệ số góc là g. Các lần chạy cùng độ cao rơi được khớp chung; giữa các lần chạy, đổi gia trọng hoặc khối lượng hai bên."
+      },
+      "x": "massRatio",
+      "y": "measuredAcceleration",
+      "columns": [
+        "mass",
+        "extraMass",
+        "dropHeight",
+        "fallTime",
+        "massRatio",
+        "measuredAcceleration"
+      ],
+      "slope": {
+        "label": "Slope of a against Δm/(2M + Δm)",
+        "vi": {
+          "label": "Hệ số góc của a theo Δm/(2M + Δm)"
+        },
+        "symbol": "g",
+        "unit": "m/s²",
+        "theory": "ratioSlope"
+      },
+      "group": ["dropHeight"]
+    }
+  ],
+  "note": "A simplified teaching model: the string is light and does not stretch, the pulley turns without friction and its inertia is left out (μ = 0), and the air does not drag. Newton's second law for each body: on the right (M + Δm)·g − T = (M + Δm)·a, on the left T − M·g = M·a; adding them, a = Δm·g/(2M + Δm), and the string's pull T = M·(g + a), the same on both sides. Δm is small beside 2M, so the acceleration is small and the masses move slowly enough to time — the idea of George Atwood's machine (1784) for measuring g. The timer starts as the magnet lets go and stops as the mass lands on the pad: t = √(2h/a), so a = 2h/t², and g = a·(2M + Δm)/Δm. The light gate 5 cm above the pad times the 2 cm card on the right mass: its speed there, L/Δt. The timer reads the simulated times to its resolution d_t (with the uncertainty d_t/√12 from the resolution alone); no random error is added. In a real lab the pulley has inertia and friction, so the acceleration is a little smaller and the g worked out comes out low; that is why Atwood measurements of g need a very light pulley.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the Atwood machine instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn thí nghiệm máy Atwood trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "atwood-machine-instructions"
+      }
+    },
+    {
+      "id": "extra",
+      "instruction": "Put an extra mass on the right with its dial on the control desk.",
+      "vi": {
+        "instruction": "Đặt gia trọng bên phải bằng núm xoay trên bàn điều khiển."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "extraMass"
+      }
+    },
+    {
+      "id": "height",
+      "instruction": "Set how far the heavier side falls to the pad, h.",
+      "vi": {
+        "instruction": "Đặt độ cao h mà bên nặng hơn rơi xuống tấm đệm."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "dropHeight"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the magnet lets go; watch the heavier side fall to the pad.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: nam châm thả; quan sát bên nặng hơn rơi xuống tấm đệm."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Read the fall time, a = 2h/t² and the g worked out from it on the results monitor.",
+      "vi": {
+        "instruction": "Đọc thời gian rơi, a = 2h/t² và g tính ra từ đó trên màn hình kết quả."
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, change the extra mass and run again to add a point to the analysis.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, đổi gia trọng rồi chạy lại để thêm một điểm vào đồ thị phân tích."
+      },
+      "done": {
+        "kind": "reset"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "acceleration-tension",
+      "question": "Two masses of {mass} kg hang over a light, frictionless pulley, and a rider of {extraMass} kg is added on the right. Find the acceleration and the tension in the string (g = {gravity} m/s²).",
+      "vi": {
+        "question": "Hai vật cùng khối lượng {mass} kg treo qua một ròng rọc nhẹ, không ma sát; đặt thêm gia trọng {extraMass} kg lên vật bên phải. Tìm gia tốc và lực căng dây (g = {gravity} m/s²)."
+      },
+      "set": { "mass": 0.15, "extraMass": 0.01 },
+      "find": [{ "theory": "acceleration" }, { "theory": "tensionLeft" }],
+      "steps": [
+        {
+          "say": "Newton’s second law for each body: on the right (M + Δm)g − T = (M + Δm)a, on the left T − Mg = Ma. Adding them, the tension cancels.",
+          "vi": {
+            "say": "Định luật II Newton cho từng vật: bên phải (M + Δm)g − T = (M + Δm)a, bên trái T − Mg = Ma. Cộng hai phương trình, lực căng triệt tiêu."
+          },
+          "write": "Δm·g = (2M + Δm)·a"
+        },
+        {
+          "say": "So the acceleration is the extra weight shared by the whole moving mass.",
+          "vi": {
+            "say": "Vậy gia tốc bằng trọng lượng gia trọng chia cho tổng khối lượng chuyển động."
+          },
+          "write": "a = {extraMass}·{gravity}/(2·{mass} + {extraMass}) ≈ {@acceleration} m/s²",
+          "check": { "expr": "extraMass*gravity/(2*mass+extraMass)", "equals": "acceleration" }
+        },
+        {
+          "say": "From the left body, T = M(g + a): the string pulls a little harder than its weight, because it speeds the body up.",
+          "vi": {
+            "say": "Từ vật bên trái, T = M(g + a): dây kéo mạnh hơn trọng lượng của vật một chút, vì nó làm vật tăng tốc đi lên."
+          },
+          "write": "T = {mass}·({gravity} + {@acceleration}) ≈ {@tensionLeft} N",
+          "check": { "expr": "mass*(gravity+@acceleration)", "equals": "tensionLeft" }
+        }
+      ]
+    },
+    {
+      "id": "measure-g",
+      "question": "With M = {mass} kg each side and a rider of {extraMass} kg, the timer reads the fall of {dropHeight} m from rest as t = {@fallTime|4} s. Find the acceleration and the value of g it gives.",
+      "vi": {
+        "question": "Với M = {mass} kg mỗi bên và gia trọng {extraMass} kg, đồng hồ đo được thời gian rơi quãng đường {dropHeight} m từ trạng thái nghỉ là t = {@fallTime|4} s. Tìm gia tốc và giá trị g suy ra từ đó."
+      },
+      "set": { "mass": 0.1, "extraMass": 0.04, "dropHeight": 0.8 },
+      "find": [{ "theory": "measuredAcceleration" }, { "theory": "gravityEstimate" }],
+      "steps": [
+        {
+          "say": "From rest with constant acceleration, h = ½·a·t², so a = 2h/t².",
+          "vi": { "say": "Chuyển động nhanh dần đều từ nghỉ: h = ½·a·t², nên a = 2h/t²." },
+          "write": "a = 2h/t² = 2·{dropHeight}/{@fallTime|4}² ≈ {@measuredAcceleration} m/s²",
+          "check": { "expr": "2*dropHeight/@fallTime^2", "equals": "measuredAcceleration" }
+        },
+        {
+          "say": "Turn a = Δm·g/(2M + Δm) round to find g.",
+          "vi": { "say": "Biến đổi a = Δm·g/(2M + Δm) để tìm g." },
+          "write": "g = a·(2M + Δm)/Δm ≈ {@gravityEstimate} m/s²",
+          "check": {
+            "expr": "@measuredAcceleration*(2*mass+extraMass)/extraMass",
+            "equals": "gravityEstimate"
+          }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "Two equal masses hang over a pulley; a small extra mass on one side makes them move with an acceleration much smaller than g — slow enough to time, and to find g from.",
+    "vi": {
+      "summary": "Hai vật bằng nhau treo qua một ròng rọc; một vật nặng thêm nhỏ ở một bên làm chúng chuyển động với gia tốc nhỏ hơn g nhiều — đủ chậm để đo thời gian, và từ đó tìm ra g."
+    },
+    "parts": [
+      {
+        "id": "pulley",
+        "name": "Pulley",
+        "role": "A light pulley at the top; the string runs over it.",
+        "vi": {
+          "name": "Ròng rọc",
+          "role": "Ròng rọc nhẹ ở đỉnh; sợi dây vắt qua nó."
+        },
+        "anchor": {
+          "part": "pulley"
+        }
+      },
+      {
+        "id": "left",
+        "name": "Left mass M",
+        "role": "Rises as the right side falls.",
+        "vi": {
+          "name": "Vật bên trái M",
+          "role": "Đi lên khi bên phải đi xuống."
+        },
+        "anchor": {
+          "part": "mass-left"
+        }
+      },
+      {
+        "id": "right",
+        "name": "Right mass M",
+        "role": "The same mass as the left, with the extra mass under it.",
+        "vi": {
+          "name": "Vật bên phải M",
+          "role": "Cùng khối lượng với vật bên trái, mang thêm vật nặng phía dưới."
+        },
+        "anchor": {
+          "part": "mass-right"
+        }
+      },
+      {
+        "id": "extra",
+        "name": "Extra mass Δm",
+        "role": "Makes the right side heavier: the whole system is driven by its weight Δm·g.",
+        "vi": {
+          "name": "Vật nặng thêm Δm",
+          "role": "Làm bên phải nặng hơn: cả hệ chuyển động nhờ trọng lượng Δm·g của nó."
+        },
+        "anchor": {
+          "part": "extra-mass"
+        }
+      },
+      {
+        "id": "magnet",
+        "name": "Electromagnet",
+        "role": "Holds the right mass at the height h above the pad, then lets go.",
+        "vi": {
+          "name": "Nam châm điện",
+          "role": "Giữ vật bên phải ở độ cao h so với tấm đệm, rồi thả ra."
+        },
+        "anchor": {
+          "part": "magnet"
+        }
+      },
+      {
+        "id": "pad",
+        "name": "Pad and light gate",
+        "role": "The pad stops the timer; the gate 5 cm above it times the card for the speed there.",
+        "vi": {
+          "name": "Tấm đệm và cổng quang",
+          "role": "Tấm đệm dừng đồng hồ; cổng quang cách nó 5 cm đo thời gian tấm chắn đi qua để tính tốc độ."
+        },
+        "anchor": {
+          "at": [0.06, -0.95, 0.03]
+        }
+      },
+      {
+        "id": "timer",
+        "name": "Timer",
+        "role": "Gives the fall time t and the gate’s time Δt, to its resolution.",
+        "vi": {
+          "name": "Đồng hồ đo thời gian",
+          "role": "Cho thời gian rơi t và thời gian qua cổng Δt, theo độ phân giải của nó."
+        },
+        "anchor": {
+          "at": [-0.12, -0.964, 0.131]
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "Equal masses on both sides balance. The extra mass Δm makes the right side heavier: let go, it falls and the left side rises as far.",
+        "vi": {
+          "text": "Hai vật bằng nhau ở hai bên thì cân bằng. Vật nặng thêm Δm làm bên phải nặng hơn: khi thả ra, bên phải đi xuống và bên trái đi lên một đoạn bằng như vậy."
+        },
+        "parts": ["left", "right", "extra", "magnet"]
+      },
+      {
+        "text": "The string joins them, so both move with one acceleration a. Only the weight Δm·g drives them, but it has to move all the mass, 2M + Δm.",
+        "vi": {
+          "text": "Sợi dây nối chúng, nên cả hai chuyển động với cùng gia tốc a. Chỉ có trọng lượng Δm·g làm hệ chuyển động, nhưng nó phải kéo toàn bộ khối lượng 2M + Δm."
+        },
+        "parts": ["pulley", "extra"]
+      },
+      {
+        "text": "Newton’s second law for each mass gives a = Δm·g/(2M + Δm), much smaller than g, and the string’s pull T = M·(g + a), the same on both sides.",
+        "vi": {
+          "text": "Định luật II Niu-tơn cho từng vật cho a = Δm·g/(2M + Δm), nhỏ hơn g nhiều, và lực căng dây T = M·(g + a), bằng nhau ở hai bên."
+        },
+        "parts": ["left", "right", "pulley"]
+      },
+      {
+        "text": "The timer starts as the magnet lets go and stops at the pad. Starting from rest, h = ½·a·t², so a = 2h/t²; and g = a·(2M + Δm)/Δm.",
+        "vi": {
+          "text": "Đồng hồ bắt đầu chạy khi nam châm thả và dừng khi chạm tấm đệm. Xuất phát từ nghỉ, h = ½·a·t², nên a = 2h/t²; và g = a·(2M + Δm)/Δm."
+        },
+        "parts": ["magnet", "pad", "timer"]
+      },
+      {
+        "text": "A larger extra mass gives a larger acceleration. The results compare t, a, the g worked out and the speed at the gate with theory.",
+        "vi": {
+          "text": "Vật nặng thêm lớn hơn thì gia tốc lớn hơn. Phần kết quả so sánh t, a, giá trị g tính được và tốc độ tại cổng quang với lý thuyết."
+        },
+        "parts": ["extra", "timer"]
+      },
+      {
+        "text": "The model is ideal: a light string, a pulley without friction or inertia, no air drag. A real pulley makes a a little smaller, so the g worked out comes out low.",
+        "vi": {
+          "text": "Mô hình là lý tưởng: dây nhẹ, ròng rọc không ma sát và không quán tính, không có lực cản không khí. Ròng rọc thật làm a nhỏ hơn một chút, nên g tính được bị thấp."
+        },
+        "parts": ["pulley"]
+      }
+    ]
+  }
+}

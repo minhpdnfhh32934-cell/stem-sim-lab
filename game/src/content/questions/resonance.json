@@ -1,0 +1,1037 @@
+{
+  "id": "resonance",
+  "skills": [
+    {
+      "id": "forced",
+      "name": "Forced oscillation",
+      "advice": "Re-read: once the start-up dies away, a driven system oscillates at the driving frequency, not its own, with a steady amplitude. Watch a run at 1 Hz: the mass follows the motor.",
+      "vi": {
+        "name": "Dao động cưỡng bức",
+        "advice": "Đọc lại: sau khi giai đoạn chuyển tiếp tắt, hệ dao động với tần số của lực cưỡng bức, không phải tần số riêng, và biên độ không đổi. Xem một lần chạy ở 1 Hz: vật dao động theo động cơ."
+      }
+    },
+    {
+      "id": "natural",
+      "name": "Natural frequency of a mass on a spring",
+      "advice": "Learn f0 = (1/2π)·√(k/m): a heavier mass or a softer spring has a lower natural frequency. Trap: giving ω0 = √(k/m) in rad/s as if it were f0 in Hz.",
+      "vi": {
+        "name": "Tần số riêng của con lắc lò xo",
+        "advice": "Nhớ f0 = (1/2π)·√(k/m): vật nặng hơn hoặc lò xo mềm hơn thì tần số riêng thấp hơn. Lỗi hay gặp: lấy ω0 = √(k/m) (rad/s) làm f0 (Hz)."
+      }
+    },
+    {
+      "id": "resonance",
+      "name": "Resonance and damping",
+      "advice": "Run at several frequencies and plot A against f: the peak sits near f0, where each push adds to the swing. At f0, A = a/(2ζ): halving the damping doubles the peak. Compare the three vanes.",
+      "vi": {
+        "name": "Cộng hưởng và lực cản",
+        "advice": "Chạy ở nhiều tần số và vẽ A theo f: đỉnh nằm gần f0, nơi mỗi lần đẩy đều làm dao động mạnh thêm. Tại f0, A = a/(2ζ): giảm lực cản một nửa thì đỉnh cao gấp đôi. So sánh ba tấm cản."
+      }
+    },
+    {
+      "id": "amplitude",
+      "name": "The forced amplitude formula",
+      "advice": "With r = f/f0, A/a = 1/√((1 − r²)² + (2ζr)²). Practise it below, at and above resonance, and check against the results monitor.",
+      "vi": {
+        "name": "Công thức biên độ dao động cưỡng bức",
+        "advice": "Với r = f/f0, A/a = 1/√((1 − r²)² + (2ζr)²). Luyện công thức này ở dưới, tại và trên tần số cộng hưởng, rồi so với màn hình kết quả."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "forced-frequency",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["forced"],
+      "stem": "Once its motion has settled, a mass on a spring driven by a motor oscillates at…",
+      "explain": "A forced oscillation settles at the driving frequency; the free oscillation at f0 dies away.",
+      "vi": {
+        "stem": "Sau khi dao động đã ổn định, vật gắn lò xo được động cơ kích thích dao động với tần số…",
+        "explain": "Dao động cưỡng bức ổn định có tần số bằng tần số của lực cưỡng bức; dao động riêng ở f0 tắt dần."
+      },
+      "options": [
+        {
+          "text": "the motor’s frequency",
+          "vi": {
+            "text": "bằng tần số của động cơ"
+          },
+          "correct": true
+        },
+        {
+          "text": "its own natural frequency",
+          "vi": {
+            "text": "bằng tần số riêng của nó"
+          }
+        },
+        {
+          "text": "the average of the two frequencies",
+          "vi": {
+            "text": "bằng trung bình cộng của hai tần số"
+          }
+        },
+        {
+          "text": "a frequency that keeps changing",
+          "vi": {
+            "text": "luôn thay đổi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "condition",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["resonance"],
+      "stem": "Resonance happens when…",
+      "explain": "The swing grows largest when the driving frequency is close to the natural frequency.",
+      "vi": {
+        "stem": "Hiện tượng cộng hưởng xảy ra khi…",
+        "explain": "Biên độ lớn nhất khi tần số lực cưỡng bức gần bằng tần số riêng của hệ."
+      },
+      "options": [
+        {
+          "text": "the driving frequency is close to the natural frequency",
+          "vi": {
+            "text": "tần số lực cưỡng bức gần bằng tần số riêng của hệ"
+          },
+          "correct": true
+        },
+        {
+          "text": "the motor’s amplitude is very large",
+          "vi": {
+            "text": "biên độ của động cơ rất lớn"
+          }
+        },
+        {
+          "text": "the damping is very large",
+          "vi": {
+            "text": "lực cản rất lớn"
+          }
+        },
+        {
+          "text": "the mass is very heavy",
+          "vi": {
+            "text": "vật rất nặng"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-curve",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["forced", "resonance"],
+      "stem": "A motor drives a damped mass on a spring at a frequency that can be changed. Decide whether each statement is true or false.",
+      "explain": "Far from f0 the mass hardly moves; near f0 the swing peaks; more damping lowers and widens the peak; the free oscillation at the start dies away.",
+      "vi": {
+        "stem": "Một động cơ kích thích vật gắn lò xo có lực cản dao động với tần số có thể thay đổi. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Ở xa f0 vật hầu như không dao động; gần f0 biên độ đạt cực đại; lực cản lớn hơn làm đỉnh thấp và rộng hơn; dao động riêng lúc đầu tắt dần."
+      },
+      "statements": [
+        {
+          "text": "Far from the natural frequency the mass hardly moves.",
+          "vi": {
+            "text": "Ở xa tần số riêng, vật hầu như không dao động."
+          },
+          "true": true
+        },
+        {
+          "text": "Near the natural frequency the amplitude is largest.",
+          "vi": {
+            "text": "Gần tần số riêng, biên độ dao động lớn nhất."
+          },
+          "true": true
+        },
+        {
+          "text": "Heavier damping makes the resonance peak higher.",
+          "vi": {
+            "text": "Lực cản lớn hơn làm đỉnh cộng hưởng cao hơn."
+          },
+          "true": false
+        },
+        {
+          "text": "The free oscillation started at release dies away.",
+          "vi": {
+            "text": "Dao động riêng sinh ra lúc thả vật tắt dần theo thời gian."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "half-damping",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["resonance"],
+      "stem": "Driven at its natural frequency, the damping ratio is changed from 0.1 to 0.05. The steady amplitude…",
+      "explain": "At f0, A = a/(2ζ): half ζ, twice A.",
+      "vi": {
+        "stem": "Kích thích đúng tần số riêng, tỉ số cản được đổi từ 0,1 thành 0,05. Biên độ dao động ổn định…",
+        "explain": "Tại f0, A = a/(2ζ): ζ giảm một nửa thì A tăng gấp đôi."
+      },
+      "options": [
+        {
+          "text": "doubles",
+          "vi": {
+            "text": "tăng gấp đôi"
+          },
+          "correct": true
+        },
+        {
+          "text": "halves",
+          "vi": {
+            "text": "giảm một nửa"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "becomes four times larger",
+          "vi": {
+            "text": "tăng gấp bốn lần"
+          }
+        }
+      ]
+    },
+    {
+      "id": "heavier-mass",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["natural"],
+      "stem": "The mass on the spring is made four times larger. Its natural frequency…",
+      "explain": "f0 = (1/2π)·√(k/m): four times m gives half f0.",
+      "vi": {
+        "stem": "Tăng khối lượng vật gắn lò xo lên gấp bốn lần. Tần số riêng của hệ…",
+        "explain": "f0 = (1/2π)·√(k/m): m tăng 4 lần thì f0 giảm một nửa."
+      },
+      "options": [
+        {
+          "text": "halves",
+          "vi": {
+            "text": "giảm một nửa"
+          },
+          "correct": true
+        },
+        {
+          "text": "doubles",
+          "vi": {
+            "text": "tăng gấp đôi"
+          }
+        },
+        {
+          "text": "becomes four times smaller",
+          "vi": {
+            "text": "giảm bốn lần"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-at-f0",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["natural", "resonance"],
+      "set": {
+        "driveFrequency": 2,
+        "dampingRatio": 0.05
+      },
+      "stem": "A {mass} kg mass on a spring of k = {stiffness|4} N/m is driven at {driveFrequency} Hz; the spring’s top moves a = {driveAmplitude} m; ζ = {dampingRatio}. Decide whether each statement is true or false.",
+      "explain": "f0 = (1/2π)√(k/m) ≈ {@naturalFrequency} Hz, so this is resonance: A = a/(2ζ) = {@steadyAmplitude} m, {@amplitudeRatio|3} times a. Driving at 1 Hz, far from f0, gives much less.",
+      "vi": {
+        "stem": "Vật {mass} kg gắn lò xo k = {stiffness|4} N/m được kích thích ở {driveFrequency} Hz; đầu trên lò xo dao động với a = {driveAmplitude} m; ζ = {dampingRatio}. Mỗi nhận định sau đúng hay sai?",
+        "explain": "f0 = (1/2π)√(k/m) ≈ {@naturalFrequency} Hz, nên đây là cộng hưởng: A = a/(2ζ) = {@steadyAmplitude} m, gấp {@amplitudeRatio|3} lần a. Kích thích ở 1 Hz, xa f0, biên độ nhỏ hơn nhiều."
+      },
+      "statements": [
+        {
+          "text": "The natural frequency is about {@naturalFrequency} Hz.",
+          "vi": {
+            "text": "Tần số riêng khoảng {@naturalFrequency} Hz."
+          },
+          "true": true,
+          "check": {
+            "expr": "sqrt(stiffness/mass)/(2*pi)",
+            "equals": "naturalFrequency"
+          }
+        },
+        {
+          "text": "The steady amplitude is about {@steadyAmplitude} m.",
+          "vi": {
+            "text": "Biên độ dao động ổn định khoảng {@steadyAmplitude} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "driveAmplitude/(2*dampingRatio)",
+            "equals": "steadyAmplitude"
+          }
+        },
+        {
+          "text": "The mass swings {=1/(2*dampingRatio)} times as far as the motor moves.",
+          "vi": {
+            "text": "Biên độ của vật gấp {=1/(2*dampingRatio)} lần biên độ của động cơ."
+          },
+          "true": true,
+          "check": {
+            "expr": "1/(2*dampingRatio)",
+            "equals": "amplitudeRatio"
+          }
+        },
+        {
+          "text": "Driving it at 1 Hz instead would give a larger amplitude.",
+          "vi": {
+            "text": "Nếu kích thích ở 1 Hz thì biên độ sẽ lớn hơn."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "natural-frequency",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["natural"],
+      "stem": "A {mass} kg mass hangs on a spring of stiffness {stiffness|4} N/m. What is its natural frequency?",
+      "explain": "f0 = (1/2π)·√(k/m) = (1/2π)·√({stiffness|4}/{mass}) ≈ {@naturalFrequency} Hz. √(k/m) ≈ {=sqrt(stiffness/mass)} rad/s is ω0, not f0.",
+      "vi": {
+        "stem": "Vật {mass} kg treo vào lò xo có độ cứng {stiffness|4} N/m. Tần số riêng của hệ bằng bao nhiêu?",
+        "explain": "f0 = (1/2π)·√(k/m) = (1/2π)·√({stiffness|4}/{mass}) ≈ {@naturalFrequency} Hz. √(k/m) ≈ {=sqrt(stiffness/mass)} rad/s là ω0, không phải f0."
+      },
+      "options": [
+        {
+          "text": "{@naturalFrequency} Hz",
+          "vi": {
+            "text": "{@naturalFrequency} Hz"
+          },
+          "correct": true,
+          "check": {
+            "expr": "sqrt(stiffness/mass)/(2*pi)",
+            "equals": "naturalFrequency"
+          }
+        },
+        {
+          "text": "{=2*pi*sqrt(stiffness/mass)} Hz",
+          "vi": {
+            "text": "{=2*pi*sqrt(stiffness/mass)} Hz"
+          },
+          "check": {
+            "expr": "2*pi*sqrt(stiffness/mass)",
+            "equals": "naturalFrequency"
+          }
+        },
+        {
+          "text": "{=sqrt(mass/stiffness)/(2*pi)} Hz",
+          "vi": {
+            "text": "{=sqrt(mass/stiffness)/(2*pi)} Hz"
+          },
+          "check": {
+            "expr": "sqrt(mass/stiffness)/(2*pi)",
+            "equals": "naturalFrequency"
+          }
+        },
+        {
+          "text": "{=sqrt(stiffness/mass)} Hz",
+          "vi": {
+            "text": "{=sqrt(stiffness/mass)} Hz"
+          },
+          "check": {
+            "expr": "sqrt(stiffness/mass)",
+            "equals": "naturalFrequency"
+          }
+        }
+      ]
+    },
+    {
+      "id": "peak-amplitude",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["resonance"],
+      "set": {
+        "driveFrequency": 2,
+        "dampingRatio": 0.2
+      },
+      "stem": "The spring’s top moves a = {driveAmplitude} m at the natural frequency; the damping ratio is ζ = {dampingRatio}. What is the steady amplitude?",
+      "explain": "At resonance A = a/(2ζ) = {driveAmplitude}/(2·{dampingRatio}) = {@steadyAmplitude} m.",
+      "vi": {
+        "stem": "Đầu trên lò xo dao động với a = {driveAmplitude} m đúng ở tần số riêng; tỉ số cản ζ = {dampingRatio}. Biên độ dao động ổn định bằng bao nhiêu?",
+        "explain": "Khi cộng hưởng A = a/(2ζ) = {driveAmplitude}/(2·{dampingRatio}) = {@steadyAmplitude} m."
+      },
+      "options": [
+        {
+          "text": "{@steadyAmplitude} m",
+          "vi": {
+            "text": "{@steadyAmplitude} m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "driveAmplitude/(2*dampingRatio)",
+            "equals": "steadyAmplitude"
+          }
+        },
+        {
+          "text": "{=driveAmplitude/dampingRatio} m",
+          "vi": {
+            "text": "{=driveAmplitude/dampingRatio} m"
+          },
+          "check": {
+            "expr": "driveAmplitude/dampingRatio",
+            "equals": "steadyAmplitude"
+          }
+        },
+        {
+          "text": "{=2*dampingRatio*driveAmplitude} m",
+          "vi": {
+            "text": "{=2*dampingRatio*driveAmplitude} m"
+          },
+          "check": {
+            "expr": "2*dampingRatio*driveAmplitude",
+            "equals": "steadyAmplitude"
+          }
+        },
+        {
+          "text": "{=dampingRatio*driveAmplitude} m",
+          "vi": {
+            "text": "{=dampingRatio*driveAmplitude} m"
+          },
+          "check": {
+            "expr": "dampingRatio*driveAmplitude",
+            "equals": "steadyAmplitude"
+          }
+        }
+      ]
+    },
+    {
+      "id": "below",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["amplitude"],
+      "set": {
+        "driveFrequency": 1,
+        "dampingRatio": 0.2
+      },
+      "stem": "The system (f0 = {@naturalFrequency} Hz, ζ = {dampingRatio}) is driven at {driveFrequency} Hz. What is A/a?",
+      "explain": "r = f/f0 = {=driveFrequency/@naturalFrequency|2}; A/a = 1/√((1 − r²)² + (2ζr)²) ≈ {@amplitudeRatio}. a/(2ζ) holds only at resonance.",
+      "vi": {
+        "stem": "Hệ (f0 = {@naturalFrequency} Hz, ζ = {dampingRatio}) được kích thích ở {driveFrequency} Hz. Tỉ số A/a bằng bao nhiêu?",
+        "explain": "r = f/f0 = {=driveFrequency/@naturalFrequency|2}; A/a = 1/√((1 − r²)² + (2ζr)²) ≈ {@amplitudeRatio}. A = a/(2ζ) chỉ đúng khi cộng hưởng."
+      },
+      "options": [
+        {
+          "text": "{@amplitudeRatio}",
+          "vi": {
+            "text": "{@amplitudeRatio}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "1/sqrt((1-(driveFrequency/@naturalFrequency)^2)^2+(2*dampingRatio*driveFrequency/@naturalFrequency)^2)",
+            "equals": "amplitudeRatio"
+          }
+        },
+        {
+          "text": "{=1/(2*dampingRatio)}",
+          "vi": {
+            "text": "{=1/(2*dampingRatio)}"
+          },
+          "check": {
+            "expr": "1/(2*dampingRatio)",
+            "equals": "amplitudeRatio"
+          }
+        },
+        {
+          "text": "{=1/(1-(driveFrequency/@naturalFrequency)^2)}",
+          "vi": {
+            "text": "{=1/(1-(driveFrequency/@naturalFrequency)^2)}"
+          },
+          "check": {
+            "expr": "1/(1-(driveFrequency/@naturalFrequency)^2)",
+            "equals": "amplitudeRatio"
+          }
+        },
+        {
+          "text": "{=1/((1-(driveFrequency/@naturalFrequency)^2)^2+(2*dampingRatio*driveFrequency/@naturalFrequency)^2)}",
+          "vi": {
+            "text": "{=1/((1-(driveFrequency/@naturalFrequency)^2)^2+(2*dampingRatio*driveFrequency/@naturalFrequency)^2)}"
+          },
+          "check": {
+            "expr": "1/((1-(driveFrequency/@naturalFrequency)^2)^2+(2*dampingRatio*driveFrequency/@naturalFrequency)^2)",
+            "equals": "amplitudeRatio"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-above",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["amplitude", "forced"],
+      "set": {
+        "driveFrequency": 2.5,
+        "dampingRatio": 0.1
+      },
+      "stem": "The system (f0 = {@naturalFrequency} Hz) is driven at {driveFrequency} Hz, a = {driveAmplitude} m, ζ = {dampingRatio}. Decide whether each statement is true or false.",
+      "explain": "A = ω0²·a/√((ω0² − ω²)² + (2ζω0ω)²) ≈ {@steadyAmplitude} m, A/a ≈ {@amplitudeRatio}. It swings at the motor’s 2.5 Hz; at 2 Hz it would swing more.",
+      "vi": {
+        "stem": "Hệ (f0 = {@naturalFrequency} Hz) được kích thích ở {driveFrequency} Hz, a = {driveAmplitude} m, ζ = {dampingRatio}. Mỗi nhận định sau đúng hay sai?",
+        "explain": "A = ω0²·a/√((ω0² − ω²)² + (2ζω0ω)²) ≈ {@steadyAmplitude} m, A/a ≈ {@amplitudeRatio}. Vật dao động với tần số 2,5 Hz của động cơ; ở 2 Hz biên độ sẽ lớn hơn."
+      },
+      "statements": [
+        {
+          "text": "The steady amplitude is about {@steadyAmplitude} m.",
+          "vi": {
+            "text": "Biên độ dao động ổn định khoảng {@steadyAmplitude} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "sqrt(stiffness/mass)^2*driveAmplitude/sqrt((sqrt(stiffness/mass)^2-(2*pi*driveFrequency)^2)^2+(2*dampingRatio*sqrt(stiffness/mass)*(2*pi*driveFrequency))^2)",
+            "equals": "steadyAmplitude"
+          }
+        },
+        {
+          "text": "A/a is about {@amplitudeRatio}.",
+          "vi": {
+            "text": "A/a khoảng {@amplitudeRatio}."
+          },
+          "true": true,
+          "check": {
+            "expr": "@steadyAmplitude/driveAmplitude",
+            "equals": "amplitudeRatio"
+          }
+        },
+        {
+          "text": "Once settled, the mass swings at 2 Hz, its own frequency.",
+          "vi": {
+            "text": "Khi đã ổn định, vật dao động với tần số 2 Hz, tần số riêng của nó."
+          },
+          "true": false
+        },
+        {
+          "text": "Driven at 2 Hz instead, it would swing with a larger amplitude.",
+          "vi": {
+            "text": "Nếu kích thích ở 2 Hz thì biên độ sẽ lớn hơn."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "find-damping",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["resonance", "amplitude"],
+      "set": {
+        "driveFrequency": 2,
+        "dampingRatio": 0.1
+      },
+      "stem": "Driven at its natural frequency with the spring’s top moving a = {driveAmplitude} m, the mass settles to an amplitude of {@steadyAmplitude} m. What is the damping ratio of the vane?",
+      "explain": "At f0, A = a/(2ζ), so ζ = a/(2A) = {driveAmplitude}/(2·{@steadyAmplitude}) = {=driveAmplitude/(2*@steadyAmplitude)}.",
+      "vi": {
+        "stem": "Được kích thích đúng tần số riêng, đầu trên lò xo dao động với a = {driveAmplitude} m, vật dao động ổn định với biên độ {@steadyAmplitude} m. Tỉ số cản của tấm cản bằng bao nhiêu?",
+        "explain": "Tại f0, A = a/(2ζ), nên ζ = a/(2A) = {driveAmplitude}/(2·{@steadyAmplitude}) = {=driveAmplitude/(2*@steadyAmplitude)}."
+      },
+      "options": [
+        {
+          "text": "{=driveAmplitude/(2*@steadyAmplitude)}",
+          "vi": {
+            "text": "{=driveAmplitude/(2*@steadyAmplitude)}"
+          },
+          "correct": true
+        },
+        {
+          "text": "{=@steadyAmplitude/(2*driveAmplitude)}",
+          "vi": {
+            "text": "{=@steadyAmplitude/(2*driveAmplitude)}"
+          }
+        },
+        {
+          "text": "{=driveAmplitude/@steadyAmplitude}",
+          "vi": {
+            "text": "{=driveAmplitude/@steadyAmplitude}"
+          }
+        },
+        {
+          "text": "{=2*driveAmplitude/@steadyAmplitude}",
+          "vi": {
+            "text": "{=2*driveAmplitude/@steadyAmplitude}"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-scale",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["amplitude", "resonance"],
+      "set": {
+        "driveFrequency": 1.9,
+        "dampingRatio": 0.1,
+        "rulerResolution": 0.002
+      },
+      "stem": "The system (f0 = {@naturalFrequency} Hz, ζ = {dampingRatio}, a = {driveAmplitude} m) is driven at {driveFrequency} Hz; the scale reads to {rulerResolution} m. Decide whether each statement is true or false.",
+      "explain": "A ≈ {@steadyAmplitude|4} m, read as {=round(@steadyAmplitude/rulerResolution)*rulerResolution} m. With damping the peak of A sits a little below f0, at f0·√(1 − 2ζ²) ≈ {@peakFrequency|4} Hz; heavier damping moves it lower, not higher.",
+      "vi": {
+        "stem": "Hệ (f0 = {@naturalFrequency} Hz, ζ = {dampingRatio}, a = {driveAmplitude} m) được kích thích ở {driveFrequency} Hz; thước có độ phân giải {rulerResolution} m. Mỗi nhận định sau đúng hay sai?",
+        "explain": "A ≈ {@steadyAmplitude|4} m, đọc được {=round(@steadyAmplitude/rulerResolution)*rulerResolution} m. Khi có lực cản, đỉnh của A nằm hơi thấp hơn f0, tại f0·√(1 − 2ζ²) ≈ {@peakFrequency|4} Hz; lực cản lớn hơn làm đỉnh dịch xuống thấp hơn chứ không lên cao hơn."
+      },
+      "statements": [
+        {
+          "text": "The model’s steady amplitude is about {@steadyAmplitude|4} m.",
+          "vi": {
+            "text": "Biên độ ổn định theo mô hình khoảng {@steadyAmplitude|4} m."
+          },
+          "true": true,
+          "check": {
+            "expr": "sqrt(stiffness/mass)^2*driveAmplitude/sqrt((sqrt(stiffness/mass)^2-(2*pi*driveFrequency)^2)^2+(2*dampingRatio*sqrt(stiffness/mass)*(2*pi*driveFrequency))^2)",
+            "equals": "steadyAmplitude"
+          }
+        },
+        {
+          "text": "The scale reads {=round(@steadyAmplitude/rulerResolution)*rulerResolution} m.",
+          "vi": {
+            "text": "Thước đọc được {=round(@steadyAmplitude/rulerResolution)*rulerResolution} m."
+          },
+          "true": true
+        },
+        {
+          "text": "The amplitude is largest at about {@peakFrequency|4} Hz, a little below f0.",
+          "vi": {
+            "text": "Biên độ lớn nhất ở khoảng {@peakFrequency|4} Hz, thấp hơn f0 một chút."
+          },
+          "true": true,
+          "check": {
+            "expr": "@naturalFrequency*sqrt(1-2*dampingRatio^2)",
+            "equals": "peakFrequency"
+          }
+        },
+        {
+          "text": "Heavier damping would move the peak to a higher frequency.",
+          "vi": {
+            "text": "Lực cản lớn hơn sẽ làm đỉnh dịch về phía tần số cao hơn."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "damped-free",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["resonance"],
+      "stem": "A mass on a spring is pulled down and let go; nothing drives it, but friction damps it. The amplitude of its oscillation…",
+      "explain": "Damping takes energy away all the time, so the amplitude of a free, damped oscillation falls steadily until the mass comes to rest.",
+      "vi": {
+        "stem": "Một vật gắn vào lò xo được kéo xuống rồi thả; không có ngoại lực cưỡng bức nhưng có lực cản. Biên độ dao động của nó…",
+        "explain": "Lực cản liên tục lấy bớt năng lượng, nên biên độ của dao động tắt dần giảm dần cho đến khi vật dừng lại."
+      },
+      "options": [
+        {
+          "text": "decreases with time",
+          "vi": {
+            "text": "giảm dần theo thời gian"
+          },
+          "correct": true
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "grows with time",
+          "vi": {
+            "text": "tăng dần theo thời gian"
+          }
+        },
+        {
+          "text": "changes at random",
+          "vi": {
+            "text": "thay đổi ngẫu nhiên"
+          }
+        }
+      ]
+    },
+    {
+      "id": "very-slow",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["forced", "amplitude"],
+      "stem": "The spring’s top is moved up and down very slowly, far below the natural frequency. The mass’s amplitude A compared with the drive’s a is…",
+      "explain": "Far below f₀ the spring hardly stretches: the mass simply follows the spring’s top, so A ≈ a (A/a → 1 as f → 0).",
+      "vi": {
+        "stem": "Đầu trên của lò xo được di chuyển lên xuống rất chậm, tần số nhỏ hơn nhiều so với tần số riêng. Biên độ A của vật so với biên độ a của ngoại lực…",
+        "explain": "Ở tần số rất nhỏ so với f₀, lò xo hầu như không dãn thêm: vật chỉ đi theo đầu trên của lò xo, nên A ≈ a (A/a → 1 khi f → 0)."
+      },
+      "options": [
+        {
+          "text": "about the same, A ≈ a",
+          "vi": {
+            "text": "xấp xỉ bằng nhau, A ≈ a"
+          },
+          "correct": true
+        },
+        {
+          "text": "much larger than a",
+          "vi": {
+            "text": "lớn hơn a rất nhiều"
+          }
+        },
+        {
+          "text": "zero",
+          "vi": {
+            "text": "bằng 0"
+          }
+        },
+        {
+          "text": "exactly a/2",
+          "vi": {
+            "text": "đúng bằng a/2"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-forced-facts",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["forced", "resonance"],
+      "stem": "A motor drives a damped mass on a spring. Decide whether each statement is true or false.",
+      "explain": "Once settled, a forced oscillation has the drive’s frequency. More damping gives a lower, broader resonance peak. With any damping the amplitude at resonance stays finite. Far above f₀ the mass cannot follow and its amplitude becomes small.",
+      "vi": {
+        "stem": "Một động cơ tác dụng lực cưỡng bức lên vật nặng gắn vào lò xo có lực cản. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Khi đã ổn định, dao động cưỡng bức có tần số bằng tần số của ngoại lực. Lực cản càng lớn thì đỉnh cộng hưởng càng thấp và càng tù. Khi có lực cản, biên độ lúc cộng hưởng luôn hữu hạn. Ở tần số lớn hơn nhiều so với f₀, vật không theo kịp nên biên độ trở nên nhỏ."
+      },
+      "statements": [
+        {
+          "text": "Once settled, the mass oscillates at the drive’s frequency.",
+          "vi": {
+            "text": "Khi đã ổn định, vật dao động với tần số của ngoại lực."
+          },
+          "true": true
+        },
+        {
+          "text": "More damping makes the resonance peak lower and broader.",
+          "vi": {
+            "text": "Lực cản càng lớn thì đỉnh cộng hưởng càng thấp và càng rộng."
+          },
+          "true": true
+        },
+        {
+          "text": "With damping, the amplitude at resonance becomes infinite.",
+          "vi": {
+            "text": "Khi có lực cản, biên độ lúc cộng hưởng trở nên vô cùng lớn."
+          },
+          "true": false
+        },
+        {
+          "text": "Driven far above f₀, the mass’s amplitude becomes small.",
+          "vi": {
+            "text": "Khi tần số ngoại lực lớn hơn nhiều so với f₀, biên độ của vật trở nên nhỏ."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "amplitude-1-8",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["amplitude"],
+      "set": {
+        "driveFrequency": 1.8,
+        "dampingRatio": 0.05
+      },
+      "stem": "The system (f₀ = {@naturalFrequency|3} Hz, ζ = {dampingRatio}) is driven at {driveFrequency} Hz with the spring’s top moving a = {driveAmplitude} m. What is the mass’s steady amplitude?",
+      "explain": "r = f/f₀ = {=driveFrequency/@naturalFrequency|3}; A = a/√((1 − r²)² + (2ζr)²) ≈ {@steadyAmplitude|3} m. Leaving out damping gives a/(1 − r²); a/(2ζ) holds only at r = 1.",
+      "vi": {
+        "stem": "Hệ (f₀ = {@naturalFrequency|3} Hz, ζ = {dampingRatio}) được kích thích ở tần số {driveFrequency} Hz, đầu trên của lò xo dao động với a = {driveAmplitude} m. Biên độ ổn định của vật bằng bao nhiêu?",
+        "explain": "r = f/f₀ = {=driveFrequency/@naturalFrequency|3}; A = a/√((1 − r²)² + (2ζr)²) ≈ {@steadyAmplitude|3} m. Bỏ qua lực cản sẽ ra a/(1 − r²); a/(2ζ) chỉ đúng khi r = 1."
+      },
+      "options": [
+        {
+          "text": "{@steadyAmplitude|3} m",
+          "vi": {
+            "text": "{@steadyAmplitude|3} m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "driveAmplitude/sqrt((1-(driveFrequency/@naturalFrequency)^2)^2+(2*dampingRatio*driveFrequency/@naturalFrequency)^2)",
+            "equals": "steadyAmplitude"
+          }
+        },
+        {
+          "text": "{=driveAmplitude/(1-(driveFrequency/@naturalFrequency)^2)|3} m",
+          "vi": {
+            "text": "{=driveAmplitude/(1-(driveFrequency/@naturalFrequency)^2)|3} m"
+          },
+          "check": {
+            "expr": "driveAmplitude/(1-(driveFrequency/@naturalFrequency)^2)",
+            "equals": "steadyAmplitude"
+          }
+        },
+        {
+          "text": "{=driveAmplitude/(2*dampingRatio)|3} m",
+          "vi": {
+            "text": "{=driveAmplitude/(2*dampingRatio)|3} m"
+          },
+          "check": {
+            "expr": "driveAmplitude/(2*dampingRatio)",
+            "equals": "steadyAmplitude"
+          }
+        },
+        {
+          "text": "{=driveAmplitude*(1-(driveFrequency/@naturalFrequency)^2)|3} m",
+          "vi": {
+            "text": "{=driveAmplitude*(1-(driveFrequency/@naturalFrequency)^2)|3} m"
+          },
+          "check": {
+            "expr": "driveAmplitude*(1-(driveFrequency/@naturalFrequency)^2)",
+            "equals": "steadyAmplitude"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-2-2",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["natural", "amplitude", "resonance"],
+      "set": {
+        "driveFrequency": 2.2,
+        "dampingRatio": 0.1
+      },
+      "stem": "A {mass} kg mass on a spring of k = {stiffness|4} N/m (ζ = {dampingRatio}) is driven at {driveFrequency} Hz. Decide whether each statement is true or false.",
+      "explain": "f₀ = (1/2π)√(k/m) ≈ {@naturalFrequency|3} Hz. At r = {=driveFrequency/@naturalFrequency|3}, A/a = 1/√((1 − r²)² + (2ζr)²) ≈ {@amplitudeRatio|3}. The mass oscillates at the drive’s {driveFrequency} Hz, not at f₀. With damping the peak of the curve sits a little below f₀, at f₀√(1 − 2ζ²) ≈ {@peakFrequency|3} Hz.",
+      "vi": {
+        "stem": "Vật {mass} kg gắn vào lò xo có k = {stiffness|4} N/m (ζ = {dampingRatio}) được kích thích ở tần số {driveFrequency} Hz. Mỗi nhận định sau đúng hay sai?",
+        "explain": "f₀ = (1/2π)√(k/m) ≈ {@naturalFrequency|3} Hz. Với r = {=driveFrequency/@naturalFrequency|3}, A/a = 1/√((1 − r²)² + (2ζr)²) ≈ {@amplitudeRatio|3}. Vật dao động với tần số của ngoại lực, {driveFrequency} Hz, không phải f₀. Khi có lực cản, đỉnh của đường cong nằm thấp hơn f₀ một chút, tại f₀√(1 − 2ζ²) ≈ {@peakFrequency|3} Hz."
+      },
+      "statements": [
+        {
+          "text": "The natural frequency is about {@naturalFrequency|3} Hz.",
+          "vi": {
+            "text": "Tần số riêng khoảng {@naturalFrequency|3} Hz."
+          },
+          "true": true,
+          "check": {
+            "expr": "sqrt(stiffness/mass)/(2*pi)",
+            "equals": "naturalFrequency"
+          }
+        },
+        {
+          "text": "A/a is about {@amplitudeRatio|3}.",
+          "vi": {
+            "text": "A/a khoảng {@amplitudeRatio|3}."
+          },
+          "true": true,
+          "check": {
+            "expr": "1/sqrt((1-(driveFrequency/@naturalFrequency)^2)^2+(2*dampingRatio*driveFrequency/@naturalFrequency)^2)",
+            "equals": "amplitudeRatio"
+          }
+        },
+        {
+          "text": "Once settled, the mass oscillates at its natural frequency.",
+          "vi": {
+            "text": "Khi đã ổn định, vật dao động với tần số riêng của nó."
+          },
+          "true": false
+        },
+        {
+          "text": "The amplitude curve peaks at about {@peakFrequency|3} Hz.",
+          "vi": {
+            "text": "Đường cong biên độ đạt đỉnh tại khoảng {@peakFrequency|3} Hz."
+          },
+          "true": true,
+          "check": {
+            "expr": "@naturalFrequency*sqrt(1-2*dampingRatio^2)",
+            "equals": "peakFrequency"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-stiffness",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["natural"],
+      "set": {
+        "driveFrequency": 2,
+        "dampingRatio": 0.1
+      },
+      "stem": "A {mass} kg mass is to resonate at {@naturalFrequency|3} Hz. What stiffness must its spring have?",
+      "explain": "f₀ = (1/2π)√(k/m) gives k = 4π²·m·f₀² = 4π²·{mass}·{@naturalFrequency|3}² ≈ {=4*pi^2*mass*@naturalFrequency^2|4} N/m. 2π instead of 4π², or dividing by m, gives the other values.",
+      "vi": {
+        "stem": "Một vật {mass} kg cần cộng hưởng ở tần số {@naturalFrequency|3} Hz. Lò xo của nó phải có độ cứng bao nhiêu?",
+        "explain": "f₀ = (1/2π)√(k/m) cho k = 4π²·m·f₀² = 4π²·{mass}·{@naturalFrequency|3}² ≈ {=4*pi^2*mass*@naturalFrequency^2|4} N/m. Dùng 2π thay cho 4π², hoặc chia cho m, sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{=4*pi^2*mass*@naturalFrequency^2|4} N/m",
+          "vi": {
+            "text": "{=4*pi^2*mass*@naturalFrequency^2|4} N/m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "sqrt((4*pi^2*mass*@naturalFrequency^2)/mass)/(2*pi)",
+            "equals": "naturalFrequency"
+          }
+        },
+        {
+          "text": "{=2*pi*mass*@naturalFrequency^2|4} N/m",
+          "vi": {
+            "text": "{=2*pi*mass*@naturalFrequency^2|4} N/m"
+          },
+          "check": {
+            "expr": "sqrt((2*pi*mass*@naturalFrequency^2)/mass)/(2*pi)",
+            "equals": "naturalFrequency"
+          }
+        },
+        {
+          "text": "{=mass*@naturalFrequency^2|4} N/m",
+          "vi": {
+            "text": "{=mass*@naturalFrequency^2|4} N/m"
+          },
+          "check": {
+            "expr": "sqrt((mass*@naturalFrequency^2)/mass)/(2*pi)",
+            "equals": "naturalFrequency"
+          }
+        },
+        {
+          "text": "{=4*pi^2*@naturalFrequency^2/mass|4} N/m",
+          "vi": {
+            "text": "{=4*pi^2*@naturalFrequency^2/mass|4} N/m"
+          },
+          "check": {
+            "expr": "sqrt((4*pi^2*@naturalFrequency^2/mass)/mass)/(2*pi)",
+            "equals": "naturalFrequency"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ratio-above",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["amplitude"],
+      "set": {
+        "driveFrequency": 3,
+        "dampingRatio": 0.2
+      },
+      "stem": "The system (f₀ = {@naturalFrequency|3} Hz, ζ = {dampingRatio}) is driven at {driveFrequency} Hz. What is A/a?",
+      "explain": "r = {=driveFrequency/@naturalFrequency|3}: (1 − r²)² = {=(1-(driveFrequency/@naturalFrequency)^2)^2|3} and (2ζr)² = {=(2*dampingRatio*driveFrequency/@naturalFrequency)^2|3}, so A/a = 1/√({=(1-(driveFrequency/@naturalFrequency)^2)^2+(2*dampingRatio*driveFrequency/@naturalFrequency)^2|4}) ≈ {@amplitudeRatio|3}: less than 1 above resonance. Dropping the damping term, using 1/(2ζ), or forgetting to square r gives the other values.",
+      "vi": {
+        "stem": "Hệ (f₀ = {@naturalFrequency|3} Hz, ζ = {dampingRatio}) được kích thích ở tần số {driveFrequency} Hz. A/a bằng bao nhiêu?",
+        "explain": "r = {=driveFrequency/@naturalFrequency|3}: (1 − r²)² = {=(1-(driveFrequency/@naturalFrequency)^2)^2|3} và (2ζr)² = {=(2*dampingRatio*driveFrequency/@naturalFrequency)^2|3}, nên A/a = 1/√({=(1-(driveFrequency/@naturalFrequency)^2)^2+(2*dampingRatio*driveFrequency/@naturalFrequency)^2|4}) ≈ {@amplitudeRatio|3}: nhỏ hơn 1 khi vượt qua cộng hưởng. Bỏ số hạng lực cản, dùng 1/(2ζ), hoặc quên bình phương r sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{@amplitudeRatio|3}",
+          "vi": {
+            "text": "{@amplitudeRatio|3}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "1/sqrt((1-(driveFrequency/@naturalFrequency)^2)^2+(2*dampingRatio*driveFrequency/@naturalFrequency)^2)",
+            "equals": "amplitudeRatio"
+          }
+        },
+        {
+          "text": "{=1/abs(1-(driveFrequency/@naturalFrequency)^2)|3}",
+          "vi": {
+            "text": "{=1/abs(1-(driveFrequency/@naturalFrequency)^2)|3}"
+          },
+          "check": {
+            "expr": "1/abs(1-(driveFrequency/@naturalFrequency)^2)",
+            "equals": "amplitudeRatio"
+          }
+        },
+        {
+          "text": "{=1/(2*dampingRatio)|3}",
+          "vi": {
+            "text": "{=1/(2*dampingRatio)|3}"
+          },
+          "check": {
+            "expr": "1/(2*dampingRatio)",
+            "equals": "amplitudeRatio"
+          }
+        },
+        {
+          "text": "{=1/sqrt((1-driveFrequency/@naturalFrequency)^2+(2*dampingRatio*driveFrequency/@naturalFrequency)^2)|3}",
+          "vi": {
+            "text": "{=1/sqrt((1-driveFrequency/@naturalFrequency)^2+(2*dampingRatio*driveFrequency/@naturalFrequency)^2)|3}"
+          },
+          "check": {
+            "expr": "1/sqrt((1-driveFrequency/@naturalFrequency)^2+(2*dampingRatio*driveFrequency/@naturalFrequency)^2)",
+            "equals": "amplitudeRatio"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-damping-compare",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["resonance", "amplitude", "forced"],
+      "set": {
+        "driveFrequency": 2,
+        "dampingRatio": 0.2
+      },
+      "stem": "The system is driven at its natural frequency, {@naturalFrequency|3} Hz, with a = {driveAmplitude} m and ζ = {dampingRatio}. Decide whether each statement is true or false.",
+      "explain": "At r = 1, A/a = 1/(2ζ) = {@amplitudeRatio|3}; with ζ = 0.05 it would be 10, four times as much. There the mass lags the drive by a quarter cycle, {@phaseLag|3}°. A = {@steadyAmplitude|3} m is larger than a, but no energy is created: the motor does work on the system every cycle, and in the steady state that work equals what damping takes away.",
+      "vi": {
+        "stem": "Hệ được kích thích đúng tần số riêng {@naturalFrequency|3} Hz, với a = {driveAmplitude} m và ζ = {dampingRatio}. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Khi r = 1, A/a = 1/(2ζ) = {@amplitudeRatio|3}; với ζ = 0,05 nó sẽ là 10, gấp bốn lần. Khi đó vật trễ pha so với ngoại lực một phần tư chu kì, {@phaseLag|3}°. A = {@steadyAmplitude|3} m lớn hơn a nhưng không có năng lượng nào được tạo ra: động cơ thực hiện công lên hệ trong mỗi chu kì, và ở trạng thái ổn định công đó bằng phần năng lượng lực cản lấy đi."
+      },
+      "statements": [
+        {
+          "text": "A/a = 1/(2ζ) = {@amplitudeRatio|3}.",
+          "vi": {
+            "text": "A/a = 1/(2ζ) = {@amplitudeRatio|3}."
+          },
+          "true": true,
+          "check": {
+            "expr": "1/(2*dampingRatio)",
+            "equals": "amplitudeRatio"
+          }
+        },
+        {
+          "text": "With ζ = 0.05, A/a would be four times as large.",
+          "vi": {
+            "text": "Với ζ = 0,05, A/a sẽ lớn gấp bốn lần."
+          },
+          "true": true,
+          "check": {
+            "expr": "(1/(2*0.05))/4",
+            "equals": "amplitudeRatio"
+          }
+        },
+        {
+          "text": "The mass lags the drive by {@phaseLag|3}°.",
+          "vi": {
+            "text": "Vật trễ pha so với ngoại lực {@phaseLag|3}°."
+          },
+          "true": true,
+          "check": {
+            "expr": "90",
+            "equals": "phaseLag"
+          }
+        },
+        {
+          "text": "Since A is larger than a, the system creates energy.",
+          "vi": {
+            "text": "Vì A lớn hơn a nên hệ đã tự tạo ra năng lượng."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

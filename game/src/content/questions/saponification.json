@@ -1,0 +1,1029 @@
+{
+  "id": "saponification",
+  "skills": [
+    {
+      "id": "reaction",
+      "name": "Saponification: fat + NaOH → soap + glycerol",
+      "advice": "Write the equation for tristearin in full and name each product: (C₁₇H₃₅COO)₃C₃H₅ + 3NaOH → 3C₁₇H₃₅COONa + C₃H₅(OH)₃. Saponification is the hydrolysis of an ester in a base.",
+      "vi": {
+        "name": "Xà phòng hóa: chất béo + NaOH → xà phòng + glycerol",
+        "advice": "Viết đầy đủ phương trình với tristearin và gọi tên từng sản phẩm: (C₁₇H₃₅COO)₃C₃H₅ + 3NaOH → 3C₁₇H₃₅COONa + C₃H₅(OH)₃. Phản ứng xà phòng hóa là phản ứng thủy phân ester trong môi trường kiềm."
+      }
+    },
+    {
+      "id": "stoichiometry",
+      "name": "The 1 : 3 ratio and the reagent that runs out",
+      "advice": "Turn both reagents into mmol (fat: m/891.48; NaOH: c·V), divide the NaOH by 3 and compare: the smaller decides the most soap (3 per fat). Try a small NaOH volume at the station to see the hydroxide run out.",
+      "vi": {
+        "name": "Tỉ lệ 1 : 3 và chất phản ứng hết",
+        "advice": "Đổi cả hai chất ra mmol (chất béo: m/891,48; NaOH: c·V), chia số mmol NaOH cho 3 rồi so sánh: giá trị nhỏ hơn quyết định lượng xà phòng tối đa (3 xà phòng cho mỗi phân tử chất béo). Thử thể tích NaOH nhỏ trên trạm để thấy NaOH hết trước."
+      }
+    },
+    {
+      "id": "progress",
+      "name": "How far the reaction has gone after heating",
+      "advice": "In this teaching model the extent approaches its maximum as 1 − e^(−k·t) with k = 0.15 per minute (an assumption, not a measured rate). Compare 5, 10, 20 and 40 minutes at the station.",
+      "vi": {
+        "name": "Mức độ phản ứng sau thời gian đun",
+        "advice": "Trong mô hình dạy học này, mức độ phản ứng tiến dần tới cực đại theo 1 − e^(−k·t) với k = 0,15 mỗi phút (một giả thiết, không phải tốc độ đo được). So sánh 5, 10, 20 và 40 phút trên trạm."
+      }
+    },
+    {
+      "id": "soap",
+      "name": "What soap is and how it is separated",
+      "advice": "Draw a soap ion: a long hydrocarbon tail (dissolves in grease) and a –COO⁻ head (dissolves in water). Re-read why salt makes the soap separate (salting out) and why it must be dry before weighing.",
+      "vi": {
+        "name": "Bản chất của xà phòng và cách tách xà phòng",
+        "advice": "Vẽ một ion xà phòng: đuôi hydrocarbon dài (tan trong dầu mỡ) và đầu –COO⁻ (tan trong nước). Đọc lại vì sao thêm muối ăn làm xà phòng tách ra và vì sao phải làm khô trước khi cân."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "products",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["reaction"],
+      "stem": "A fat is boiled with sodium hydroxide solution. What are the products?",
+      "explain": "Saponification gives the sodium salts of the fatty acids — soap — and glycerol.",
+      "vi": {
+        "stem": "Đun chất béo với dung dịch sodium hydroxide. Sản phẩm thu được là",
+        "explain": "Phản ứng xà phòng hóa tạo ra muối sodium của các acid béo — xà phòng — và glycerol."
+      },
+      "options": [
+        {
+          "text": "Soap (sodium salts of fatty acids) and glycerol",
+          "vi": {
+            "text": "Xà phòng (muối sodium của acid béo) và glycerol"
+          },
+          "correct": true
+        },
+        {
+          "text": "Fatty acids and ethanol",
+          "vi": {
+            "text": "Acid béo và ethanol"
+          }
+        },
+        {
+          "text": "Glycerol and water only",
+          "vi": {
+            "text": "Chỉ có glycerol và nước"
+          }
+        },
+        {
+          "text": "Soap and carbon dioxide",
+          "vi": {
+            "text": "Xà phòng và carbon dioxide"
+          }
+        }
+      ]
+    },
+    {
+      "id": "salting-out",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["soap"],
+      "stem": "After boiling, a concentrated sodium chloride solution is added. Why?",
+      "explain": "Soap is much less soluble in salt water, so it separates and floats up as a solid layer that can be collected (salting out).",
+      "vi": {
+        "stem": "Sau khi đun, người ta thêm dung dịch sodium chloride đặc vào hỗn hợp. Mục đích là gì?",
+        "explain": "Xà phòng tan rất ít trong nước muối, nên tách ra và nổi lên thành lớp rắn có thể vớt ra (tách xà phòng bằng muối ăn)."
+      },
+      "options": [
+        {
+          "text": "To make the soap separate out of the mixture",
+          "vi": {
+            "text": "Để xà phòng tách ra khỏi hỗn hợp"
+          },
+          "correct": true
+        },
+        {
+          "text": "To neutralise the leftover NaOH",
+          "vi": {
+            "text": "Để trung hòa NaOH còn dư"
+          }
+        },
+        {
+          "text": "To speed up the reaction",
+          "vi": {
+            "text": "Để phản ứng xảy ra nhanh hơn"
+          }
+        },
+        {
+          "text": "To turn the glycerol into soap",
+          "vi": {
+            "text": "Để chuyển glycerol thành xà phòng"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-basics",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["reaction", "soap"],
+      "stem": "Tristearin is saponified with sodium hydroxide. Decide whether each statement is true or false.",
+      "explain": "Saponification is the hydrolysis of an ester in base; one tristearin takes three NaOH. The soap is sodium stearate, with a long hydrocarbon tail that dissolves grease; glycerol is the by-product, not the soap.",
+      "vi": {
+        "stem": "Xà phòng hóa tristearin bằng sodium hydroxide. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Phản ứng xà phòng hóa là phản ứng thủy phân ester trong môi trường kiềm; một phân tử tristearin phản ứng với ba NaOH. Xà phòng là sodium stearate, có đuôi hydrocarbon dài hòa tan dầu mỡ; glycerol là sản phẩm phụ, không phải xà phòng."
+      },
+      "statements": [
+        {
+          "text": "Saponification is the hydrolysis of an ester in a basic solution.",
+          "vi": {
+            "text": "Phản ứng xà phòng hóa là phản ứng thủy phân ester trong môi trường kiềm."
+          },
+          "true": true
+        },
+        {
+          "text": "1 mol of tristearin reacts with 3 mol of NaOH.",
+          "vi": {
+            "text": "1 mol tristearin phản ứng với 3 mol NaOH."
+          },
+          "true": true
+        },
+        {
+          "text": "Glycerol is the soap.",
+          "vi": {
+            "text": "Glycerol chính là xà phòng."
+          },
+          "true": false
+        },
+        {
+          "text": "Sodium stearate has a long hydrocarbon tail that dissolves in grease.",
+          "vi": {
+            "text": "Sodium stearate có đuôi hydrocarbon dài tan được trong dầu mỡ."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "heat-stir",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["progress"],
+      "stem": "Why is the mixture of fat and NaOH solution heated and stirred for a long time?",
+      "explain": "Fat does not mix with water, so the reaction only happens where they meet; heating and stirring make it go faster — it still takes many minutes.",
+      "vi": {
+        "stem": "Vì sao hỗn hợp chất béo và dung dịch NaOH phải được đun nóng và khuấy trong thời gian dài?",
+        "explain": "Chất béo không tan trong nước, nên phản ứng chỉ xảy ra ở chỗ hai lớp tiếp xúc; đun nóng và khuấy làm phản ứng nhanh hơn — nhưng vẫn cần nhiều phút."
+      },
+      "options": [
+        {
+          "text": "Fat and the aqueous NaOH do not mix, and the reaction is slow",
+          "vi": {
+            "text": "Chất béo không trộn lẫn với dung dịch NaOH và phản ứng xảy ra chậm"
+          },
+          "correct": true
+        },
+        {
+          "text": "To boil away the glycerol",
+          "vi": {
+            "text": "Để làm bay hơi glycerol"
+          }
+        },
+        {
+          "text": "To change the fat into fatty acids before it reacts",
+          "vi": {
+            "text": "Để chuyển chất béo thành acid béo trước khi phản ứng"
+          }
+        },
+        {
+          "text": "Because the reaction only starts above 200 °C",
+          "vi": {
+            "text": "Vì phản ứng chỉ bắt đầu ở trên 200 °C"
+          }
+        }
+      ]
+    },
+    {
+      "id": "head",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["soap"],
+      "stem": "In a soap ion, C₁₇H₃₅COO⁻, which part is attracted to water?",
+      "explain": "The charged –COO⁻ head is hydrophilic; the long C₁₇H₃₅– tail is hydrophobic and dissolves in grease.",
+      "vi": {
+        "stem": "Trong ion xà phòng C₁₇H₃₅COO⁻, phần nào ưa nước?",
+        "explain": "Đầu –COO⁻ mang điện tích là phần ưa nước; đuôi dài C₁₇H₃₅– kị nước và tan trong dầu mỡ."
+      },
+      "options": [
+        {
+          "text": "The –COO⁻ head",
+          "vi": {
+            "text": "Đầu –COO⁻"
+          },
+          "correct": true
+        },
+        {
+          "text": "The C₁₇H₃₅– tail",
+          "vi": {
+            "text": "Đuôi C₁₇H₃₅–"
+          }
+        },
+        {
+          "text": "The whole ion equally",
+          "vi": {
+            "text": "Toàn bộ ion như nhau"
+          }
+        },
+        {
+          "text": "The Na⁺ ion only",
+          "vi": {
+            "text": "Chỉ ion Na⁺"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-limits",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["stoichiometry", "progress"],
+      "stem": "Decide whether each statement about the amount of soap formed is true or false.",
+      "explain": "Longer heating brings the reaction closer to its end, but no further than the reagent that runs out allows. Doubling the NaOH helps only if NaOH was the limiting reagent. Salt makes the soap separate as a solid layer.",
+      "vi": {
+        "stem": "Mỗi nhận định sau về lượng xà phòng tạo thành đúng hay sai?",
+        "explain": "Đun lâu hơn làm phản ứng tiến gần đến kết thúc hơn, nhưng không vượt quá giới hạn do chất phản ứng hết quyết định. Tăng gấp đôi NaOH chỉ có tác dụng khi NaOH là chất hết. Muối ăn làm xà phòng tách ra thành lớp rắn."
+      },
+      "statements": [
+        {
+          "text": "Longer heating gives more soap, up to a limit set by the reagent that runs out.",
+          "vi": {
+            "text": "Đun càng lâu thu được càng nhiều xà phòng, đến giới hạn do chất phản ứng hết quyết định."
+          },
+          "true": true
+        },
+        {
+          "text": "The most soap possible is set by whichever reagent runs out first.",
+          "vi": {
+            "text": "Lượng xà phòng tối đa do chất phản ứng hết trước quyết định."
+          },
+          "true": true
+        },
+        {
+          "text": "Doubling the volume of NaOH always doubles the soap formed.",
+          "vi": {
+            "text": "Tăng gấp đôi thể tích NaOH luôn làm lượng xà phòng tăng gấp đôi."
+          },
+          "true": false
+        },
+        {
+          "text": "Adding salt makes the soap separate as a solid layer.",
+          "vi": {
+            "text": "Thêm muối ăn làm xà phòng tách ra thành lớp rắn."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "max-soap-fat",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["stoichiometry"],
+      "set": {
+        "fatMass": 10,
+        "hydroxideVolume": 30
+      },
+      "stem": "{fatMass} g of tristearin (891.48 g/mol) is boiled with {hydroxideVolume} mL of {hydroxideConcentration} mol/L NaOH. What is the most sodium stearate (306.46 g/mol) it can give?",
+      "explain": "n(fat) = {fatMass}/891.48 ≈ {=fatMass/891.48*1000|3} mmol needs {=3*fatMass/891.48*1000|3} mmol NaOH, and {=hydroxideVolume*hydroxideConcentration} mmol is there: the fat runs out. m = 3·{=fatMass/891.48*1000|3}·306.46/1000 ≈ {@maximumSoap} g.",
+      "vi": {
+        "stem": "Đun {fatMass} g tristearin (891,48 g/mol) với {hydroxideVolume} mL dung dịch NaOH {hydroxideConcentration} mol/L. Khối lượng sodium stearate (306,46 g/mol) tối đa thu được là bao nhiêu?",
+        "explain": "n(chất béo) = {fatMass}/891,48 ≈ {=fatMass/891.48*1000|3} mmol cần {=3*fatMass/891.48*1000|3} mmol NaOH, trong khi có {=hydroxideVolume*hydroxideConcentration} mmol: chất béo hết. m = 3·{=fatMass/891.48*1000|3}·306,46/1000 ≈ {@maximumSoap} g."
+      },
+      "options": [
+        {
+          "text": "{@maximumSoap} g",
+          "vi": {
+            "text": "{@maximumSoap} g"
+          },
+          "correct": true,
+          "check": {
+            "expr": "3*(fatMass/891.48)*306.46",
+            "equals": "maximumSoap"
+          }
+        },
+        {
+          "text": "{=(fatMass/891.48)*306.46} g",
+          "vi": {
+            "text": "{=(fatMass/891.48)*306.46} g"
+          },
+          "check": {
+            "expr": "(fatMass/891.48)*306.46",
+            "equals": "maximumSoap"
+          }
+        },
+        {
+          "text": "{=hydroxideVolume*hydroxideConcentration*306.46/1000} g",
+          "vi": {
+            "text": "{=hydroxideVolume*hydroxideConcentration*306.46/1000} g"
+          },
+          "check": {
+            "expr": "hydroxideVolume*hydroxideConcentration*306.46/1000",
+            "equals": "maximumSoap"
+          }
+        },
+        {
+          "text": "{fatMass} g",
+          "vi": {
+            "text": "{fatMass} g"
+          },
+          "check": {
+            "expr": "fatMass",
+            "equals": "maximumSoap"
+          }
+        }
+      ]
+    },
+    {
+      "id": "max-soap-hydroxide",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["stoichiometry"],
+      "set": {
+        "fatMass": 20,
+        "hydroxideVolume": 10
+      },
+      "stem": "{fatMass} g of tristearin (891.48 g/mol) is boiled with only {hydroxideVolume} mL of {hydroxideConcentration} mol/L NaOH. What is the most sodium stearate (306.46 g/mol) it can give?",
+      "explain": "n(NaOH) = {=hydroxideVolume*hydroxideConcentration} mmol can react with only {=hydroxideVolume*hydroxideConcentration/3|3} mmol of fat, less than the {=fatMass/891.48*1000|3} mmol there: the NaOH runs out. Each NaOH gives one soap: m = {=hydroxideVolume*hydroxideConcentration}·306.46/1000 ≈ {@maximumSoap} g.",
+      "vi": {
+        "stem": "Đun {fatMass} g tristearin (891,48 g/mol) với chỉ {hydroxideVolume} mL dung dịch NaOH {hydroxideConcentration} mol/L. Khối lượng sodium stearate (306,46 g/mol) tối đa thu được là bao nhiêu?",
+        "explain": "n(NaOH) = {=hydroxideVolume*hydroxideConcentration} mmol chỉ phản ứng được với {=hydroxideVolume*hydroxideConcentration/3|3} mmol chất béo, ít hơn {=fatMass/891.48*1000|3} mmol hiện có: NaOH hết. Mỗi NaOH tạo một xà phòng: m = {=hydroxideVolume*hydroxideConcentration}·306,46/1000 ≈ {@maximumSoap} g."
+      },
+      "options": [
+        {
+          "text": "{@maximumSoap} g",
+          "vi": {
+            "text": "{@maximumSoap} g"
+          },
+          "correct": true,
+          "check": {
+            "expr": "hydroxideVolume*hydroxideConcentration*306.46/1000",
+            "equals": "maximumSoap"
+          }
+        },
+        {
+          "text": "{=3*(fatMass/891.48)*306.46} g",
+          "vi": {
+            "text": "{=3*(fatMass/891.48)*306.46} g"
+          },
+          "check": {
+            "expr": "3*(fatMass/891.48)*306.46",
+            "equals": "maximumSoap"
+          }
+        },
+        {
+          "text": "{=hydroxideVolume*hydroxideConcentration/3*306.46/1000} g",
+          "vi": {
+            "text": "{=hydroxideVolume*hydroxideConcentration/3*306.46/1000} g"
+          },
+          "check": {
+            "expr": "hydroxideVolume*hydroxideConcentration/3*306.46/1000",
+            "equals": "maximumSoap"
+          }
+        },
+        {
+          "text": "{fatMass} g",
+          "vi": {
+            "text": "{fatMass} g"
+          },
+          "check": {
+            "expr": "fatMass",
+            "equals": "maximumSoap"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-twenty-minutes",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["stoichiometry", "progress"],
+      "set": {
+        "fatMass": 10,
+        "hydroxideVolume": 30,
+        "heatingTime": 20
+      },
+      "stem": "{fatMass} g of tristearin (891.48 g/mol) is boiled for {heatingTime} min with {hydroxideVolume} mL of {hydroxideConcentration} mol/L NaOH. In this teaching model the reaction approaches its end as 1 − e^(−k·t), k = 0.15 per min. Decide whether each statement is true or false.",
+      "explain": "The fat ({=fatMass/891.48*1000|3} mmol) runs out before the NaOH: at most {@maximumSoap|3} g of soap. After {heatingTime} min, 1 − e^(−3) ≈ {@yield|3}% of that: {@soap|3} g. NaOH used: 3·{=fatMass/891.48*1000*(1-exp(-0.15*heatingTime))|3} mmol, leaving {@hydroxideLeft|3} mmol, not all {=hydroxideVolume*hydroxideConcentration} mmol.",
+      "vi": {
+        "stem": "Đun {fatMass} g tristearin (891,48 g/mol) trong {heatingTime} phút với {hydroxideVolume} mL dung dịch NaOH {hydroxideConcentration} mol/L. Trong mô hình dạy học này, phản ứng tiến tới kết thúc theo 1 − e^(−k·t), k = 0,15 mỗi phút. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Chất béo ({=fatMass/891.48*1000|3} mmol) hết trước NaOH: tối đa {@maximumSoap|3} g xà phòng. Sau {heatingTime} phút, đạt 1 − e^(−3) ≈ {@yield|3}% lượng đó: {@soap|3} g. NaOH đã dùng: 3·{=fatMass/891.48*1000*(1-exp(-0.15*heatingTime))|3} mmol, còn dư {@hydroxideLeft|3} mmol, không phải toàn bộ {=hydroxideVolume*hydroxideConcentration} mmol."
+      },
+      "statements": [
+        {
+          "text": "The fat is the reagent that runs out.",
+          "vi": {
+            "text": "Chất béo là chất phản ứng hết."
+          },
+          "true": true
+        },
+        {
+          "text": "At most {@maximumSoap|3} g of soap can form.",
+          "vi": {
+            "text": "Khối lượng xà phòng tối đa có thể tạo thành là {@maximumSoap|3} g."
+          },
+          "true": true,
+          "check": {
+            "expr": "3*(fatMass/891.48)*306.46",
+            "equals": "maximumSoap"
+          }
+        },
+        {
+          "text": "After {heatingTime} min about {@soap|3} g of soap has formed.",
+          "vi": {
+            "text": "Sau {heatingTime} phút đã tạo thành khoảng {@soap|3} g xà phòng."
+          },
+          "true": true,
+          "check": {
+            "expr": "@maximumSoap*(1-exp(-rateConstant*heatingTime))",
+            "equals": "soap"
+          }
+        },
+        {
+          "text": "All {=hydroxideVolume*hydroxideConcentration} mmol of NaOH is still left.",
+          "vi": {
+            "text": "Toàn bộ {=hydroxideVolume*hydroxideConcentration} mmol NaOH vẫn còn nguyên."
+          },
+          "true": false,
+          "check": {
+            "expr": "hydroxideVolume*hydroxideConcentration",
+            "equals": "hydroxideLeft"
+          }
+        }
+      ]
+    },
+    {
+      "id": "yield-ten",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["progress"],
+      "set": {
+        "heatingTime": 10
+      },
+      "stem": "In this teaching model the reaction approaches its end as 1 − e^(−k·t) with k = 0.15 per minute. What percentage of the most soap possible has formed after {heatingTime} min of boiling?",
+      "explain": "1 − e^(−0.15·{heatingTime}) = 1 − e^(−{=0.15*heatingTime}) ≈ {@yield|3}%.",
+      "vi": {
+        "stem": "Trong mô hình dạy học này, phản ứng tiến tới kết thúc theo 1 − e^(−k·t) với k = 0,15 mỗi phút. Sau {heatingTime} phút đun sôi, lượng xà phòng tạo thành bằng bao nhiêu phần trăm lượng tối đa?",
+        "explain": "1 − e^(−0,15·{heatingTime}) = 1 − e^(−{=0.15*heatingTime}) ≈ {@yield|3}%."
+      },
+      "options": [
+        {
+          "text": "{@yield|3}%",
+          "vi": {
+            "text": "{@yield|3}%"
+          },
+          "correct": true,
+          "check": {
+            "expr": "100*(1-exp(-rateConstant*heatingTime))",
+            "equals": "yield"
+          }
+        },
+        {
+          "text": "{=100*exp(-0.15*heatingTime)|3}%",
+          "vi": {
+            "text": "{=100*exp(-0.15*heatingTime)|3}%"
+          },
+          "check": {
+            "expr": "100*exp(-rateConstant*heatingTime)",
+            "equals": "yield"
+          }
+        },
+        {
+          "text": "{=100*0.15*heatingTime|3}%",
+          "vi": {
+            "text": "{=100*0.15*heatingTime|3}%"
+          },
+          "check": {
+            "expr": "100*rateConstant*heatingTime",
+            "equals": "yield"
+          }
+        },
+        {
+          "text": "{=100*(1-exp(-0.15))|3}%",
+          "vi": {
+            "text": "{=100*(1-exp(-0.15))|3}%"
+          },
+          "check": {
+            "expr": "100*(1-exp(-rateConstant))",
+            "equals": "yield"
+          }
+        }
+      ]
+    },
+    {
+      "id": "which-limits",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["stoichiometry"],
+      "set": {
+        "fatMass": 5,
+        "hydroxideVolume": 10
+      },
+      "stem": "{fatMass} g of tristearin (891.48 g/mol) is boiled with {hydroxideVolume} mL of {hydroxideConcentration} mol/L NaOH until the reaction is complete. What mass of sodium stearate (306.46 g/mol) forms?",
+      "explain": "n(fat) = {=fatMass/891.48*1000|3} mmol needs {=3*fatMass/891.48*1000|3} mmol NaOH; {=hydroxideVolume*hydroxideConcentration} mmol is there, a little more: the fat runs out, so m = 3·{=fatMass/891.48*1000|3}·306.46/1000 ≈ {@maximumSoap} g. Using the NaOH instead would give {=hydroxideVolume*hydroxideConcentration*306.46/1000|3} g — more than the fat allows.",
+      "vi": {
+        "stem": "Đun {fatMass} g tristearin (891,48 g/mol) với {hydroxideVolume} mL dung dịch NaOH {hydroxideConcentration} mol/L cho đến khi phản ứng kết thúc. Khối lượng sodium stearate (306,46 g/mol) tạo thành là bao nhiêu?",
+        "explain": "n(chất béo) = {=fatMass/891.48*1000|3} mmol cần {=3*fatMass/891.48*1000|3} mmol NaOH; có {=hydroxideVolume*hydroxideConcentration} mmol, nhiều hơn một chút: chất béo hết, nên m = 3·{=fatMass/891.48*1000|3}·306,46/1000 ≈ {@maximumSoap} g. Nếu tính theo NaOH sẽ ra {=hydroxideVolume*hydroxideConcentration*306.46/1000|3} g — vượt quá lượng chất béo cho phép."
+      },
+      "options": [
+        {
+          "text": "{@maximumSoap} g",
+          "vi": {
+            "text": "{@maximumSoap} g"
+          },
+          "correct": true,
+          "check": {
+            "expr": "3*(fatMass/891.48)*306.46",
+            "equals": "maximumSoap"
+          }
+        },
+        {
+          "text": "{=hydroxideVolume*hydroxideConcentration*306.46/1000} g",
+          "vi": {
+            "text": "{=hydroxideVolume*hydroxideConcentration*306.46/1000} g"
+          },
+          "check": {
+            "expr": "hydroxideVolume*hydroxideConcentration*306.46/1000",
+            "equals": "maximumSoap"
+          }
+        },
+        {
+          "text": "{=(fatMass/891.48)*306.46} g",
+          "vi": {
+            "text": "{=(fatMass/891.48)*306.46} g"
+          },
+          "check": {
+            "expr": "(fatMass/891.48)*306.46",
+            "equals": "maximumSoap"
+          }
+        },
+        {
+          "text": "{fatMass} g",
+          "vi": {
+            "text": "{fatMass} g"
+          },
+          "check": {
+            "expr": "fatMass",
+            "equals": "maximumSoap"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-weighing",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["progress", "soap"],
+      "set": {
+        "fatMass": 10,
+        "hydroxideVolume": 30,
+        "heatingTime": 40
+      },
+      "stem": "{fatMass} g of tristearin is boiled for {heatingTime} min with {hydroxideVolume} mL of {hydroxideConcentration} mol/L NaOH; the soap is salted out, dried and weighed. Decide whether each statement is true or false.",
+      "explain": "The model gives {@soap|3} g, {@yield|3}% of the most possible. Soap weighed wet carries water, so the yield looks too high; soap left in the liquid (incomplete salting out) makes it too low. The rate constant 0.15 per min is a teaching assumption, not a measured property of tristearin.",
+      "vi": {
+        "stem": "Đun {fatMass} g tristearin trong {heatingTime} phút với {hydroxideVolume} mL dung dịch NaOH {hydroxideConcentration} mol/L; xà phòng được tách bằng muối ăn, làm khô rồi cân. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Mô hình cho {@soap|3} g, bằng {@yield|3}% lượng tối đa. Xà phòng cân khi còn ướt mang theo nước nên hiệu suất có vẻ cao hơn thực tế; xà phòng còn lại trong dung dịch (tách bằng muối chưa hết) làm hiệu suất thấp hơn. Hằng số tốc độ 0,15 mỗi phút là giả thiết dạy học, không phải tính chất đo được của tristearin."
+      },
+      "statements": [
+        {
+          "text": "About {@soap|3} g of soap forms, {@yield|3}% of the most possible.",
+          "vi": {
+            "text": "Tạo thành khoảng {@soap|3} g xà phòng, bằng {@yield|3}% lượng tối đa."
+          },
+          "true": true,
+          "check": {
+            "expr": "@maximumSoap*(1-exp(-rateConstant*heatingTime))",
+            "equals": "soap"
+          }
+        },
+        {
+          "text": "Weighing the soap before it is dry makes the yield appear too high.",
+          "vi": {
+            "text": "Cân xà phòng khi chưa khô làm hiệu suất có vẻ cao hơn thực tế."
+          },
+          "true": true
+        },
+        {
+          "text": "If some soap stays dissolved after salting out, the weighed mass is less than the soap formed.",
+          "vi": {
+            "text": "Nếu một phần xà phòng vẫn tan sau khi thêm muối, khối lượng cân được nhỏ hơn lượng xà phòng đã tạo thành."
+          },
+          "true": true
+        },
+        {
+          "text": "The value k = 0.15 per min is a measured property of tristearin.",
+          "vi": {
+            "text": "Giá trị k = 0,15 mỗi phút là một tính chất đo được của tristearin."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "glycerol-formula",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["reaction"],
+      "stem": "Besides soap, the saponification of a fat gives glycerol. What is glycerol?",
+      "explain": "A fat is a triester of glycerol, propane-1,2,3-triol, C₃H₅(OH)₃. Saponification breaks the three ester bonds, giving the alcohol back and three carboxylate (soap) ions.",
+      "vi": {
+        "stem": "Ngoài xà phòng, phản ứng xà phòng hóa chất béo còn tạo ra glycerol. Glycerol là chất nào?",
+        "explain": "Chất béo là triester của glycerol, propane-1,2,3-triol, C₃H₅(OH)₃. Phản ứng xà phòng hóa cắt ba liên kết ester, giải phóng lại alcohol này và ba ion carboxylate (xà phòng)."
+      },
+      "options": [
+        {
+          "text": "C₃H₅(OH)₃, propane-1,2,3-triol",
+          "vi": {
+            "text": "C₃H₅(OH)₃, propane-1,2,3-triol"
+          },
+          "correct": true
+        },
+        {
+          "text": "C₂H₅OH, ethanol",
+          "vi": {
+            "text": "C₂H₅OH, ethanol"
+          }
+        },
+        {
+          "text": "C₂H₄(OH)₂, ethane-1,2-diol",
+          "vi": {
+            "text": "C₂H₄(OH)₂, ethane-1,2-diol"
+          }
+        },
+        {
+          "text": "C₁₇H₃₅COOH, stearic acid",
+          "vi": {
+            "text": "C₁₇H₃₅COOH, stearic acid"
+          }
+        }
+      ]
+    },
+    {
+      "id": "hard-water",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["soap"],
+      "stem": "Why does soap lather poorly and leave a scum in hard water?",
+      "explain": "Hard water contains Ca²⁺ and Mg²⁺ ions. They form insoluble salts with the soap anions, e.g. Ca²⁺ + 2C₁₇H₃₅COO⁻ → (C₁₇H₃₅COO)₂Ca↓, so the soap is used up as scum instead of cleaning.",
+      "vi": {
+        "stem": "Vì sao xà phòng ít tạo bọt và tạo váng trong nước cứng?",
+        "explain": "Nước cứng chứa các ion Ca²⁺ và Mg²⁺. Chúng tạo muối không tan với anion của xà phòng, ví dụ Ca²⁺ + 2C₁₇H₃₅COO⁻ → (C₁₇H₃₅COO)₂Ca↓, nên xà phòng bị tiêu hao thành váng thay vì dùng để tẩy rửa."
+      },
+      "options": [
+        {
+          "text": "Its Ca²⁺ and Mg²⁺ ions form insoluble salts with the soap anions",
+          "vi": {
+            "text": "Các ion Ca²⁺ và Mg²⁺ trong nước tạo muối không tan với anion của xà phòng"
+          },
+          "correct": true
+        },
+        {
+          "text": "Hard water is strongly acidic and destroys the soap",
+          "vi": {
+            "text": "Nước cứng có tính acid mạnh nên phá hủy xà phòng"
+          }
+        },
+        {
+          "text": "The Na⁺ ions of the soap react with the water",
+          "vi": {
+            "text": "Ion Na⁺ của xà phòng phản ứng với nước"
+          }
+        },
+        {
+          "text": "Hard water holds too much dissolved oxygen",
+          "vi": {
+            "text": "Nước cứng chứa quá nhiều oxygen hòa tan"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-ratio",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["stoichiometry", "reaction", "progress"],
+      "stem": "Tristearin is saponified: (C₁₇H₃₅COO)₃C₃H₅ + 3NaOH → 3C₁₇H₃₅COONa + C₃H₅(OH)₃. Decide whether each statement is true or false.",
+      "explain": "The equation gives the ratios: 1 mol of fat takes 3 mol NaOH and gives 3 mol of soap and 1 mol of glycerol. Unlike acid hydrolysis of an ester, saponification goes to completion: the carboxylate ion does not react back with the alcohol. The reaction slows as the fat is used up, so doubling the heating time does not double the soap.",
+      "vi": {
+        "stem": "Xà phòng hóa tristearin: (C₁₇H₃₅COO)₃C₃H₅ + 3NaOH → 3C₁₇H₃₅COONa + C₃H₅(OH)₃. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Phương trình cho tỉ lệ: 1 mol chất béo cần 3 mol NaOH và tạo 3 mol xà phòng cùng 1 mol glycerol. Khác với phản ứng thủy phân ester trong môi trường acid, phản ứng xà phòng hóa xảy ra một chiều: ion carboxylate không phản ứng ngược lại với alcohol. Phản ứng chậm dần khi chất béo bị tiêu hao, nên đun lâu gấp đôi không làm lượng xà phòng tăng gấp đôi."
+      },
+      "statements": [
+        {
+          "text": "1 mol of tristearin reacts with 3 mol of NaOH.",
+          "vi": {
+            "text": "1 mol tristearin phản ứng với 3 mol NaOH."
+          },
+          "true": true
+        },
+        {
+          "text": "1 mol of tristearin gives 3 mol of sodium stearate and 1 mol of glycerol.",
+          "vi": {
+            "text": "1 mol tristearin tạo ra 3 mol sodium stearate và 1 mol glycerol."
+          },
+          "true": true
+        },
+        {
+          "text": "Like the acid hydrolysis of an ester, saponification is reversible.",
+          "vi": {
+            "text": "Giống phản ứng thủy phân ester trong môi trường acid, phản ứng xà phòng hóa là phản ứng thuận nghịch."
+          },
+          "true": false
+        },
+        {
+          "text": "Heating twice as long always gives twice as much soap.",
+          "vi": {
+            "text": "Đun lâu gấp đôi luôn tạo ra lượng xà phòng gấp đôi."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "glycerol-mass",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["stoichiometry", "progress"],
+      "set": {
+        "fatMass": 10,
+        "hydroxideVolume": 30,
+        "heatingTime": 10
+      },
+      "stem": "{fatMass} g of tristearin (891.48 g/mol) is boiled for {heatingTime} min with {hydroxideVolume} mL of {hydroxideConcentration} mol/L NaOH (in excess). In this teaching model the reaction approaches its end as 1 − e^(−k·t), k = 0.15 per min. What mass of glycerol (92.09 g/mol) has formed?",
+      "explain": "n(fat) = {fatMass}/891.48 ≈ {=fatMass/891.48|3} mol; 1 mol of fat gives 1 mol of glycerol. After {heatingTime} min a share 1 − e^(−0.15·{heatingTime}) ≈ {=1-exp(-rateConstant*heatingTime)|3} has reacted: m ≈ {=fatMass/891.48|3}·{=1-exp(-rateConstant*heatingTime)|3}·92.09 ≈ {@glycerol} g. The 3 belongs to NaOH and soap, not glycerol; e^(−kt) is the share left, not reacted.",
+      "vi": {
+        "stem": "Đun sôi {fatMass} g tristearin (891,48 g/mol) trong {heatingTime} phút với {hydroxideVolume} mL dung dịch NaOH {hydroxideConcentration} mol/L (dư). Trong mô hình dạy học này, phản ứng tiến dần đến hoàn toàn theo 1 − e^(−k·t), k = 0,15 mỗi phút. Khối lượng glycerol (92,09 g/mol) đã tạo thành là bao nhiêu?",
+        "explain": "n(chất béo) = {fatMass}/891,48 ≈ {=fatMass/891.48|3} mol; 1 mol chất béo tạo 1 mol glycerol. Sau {heatingTime} phút, phần đã phản ứng là 1 − e^(−0,15·{heatingTime}) ≈ {=1-exp(-rateConstant*heatingTime)|3}: m ≈ {=fatMass/891.48|3}·{=1-exp(-rateConstant*heatingTime)|3}·92,09 ≈ {@glycerol} g. Hệ số 3 là của NaOH và xà phòng, không phải của glycerol; e^(−kt) là phần còn lại, không phải phần đã phản ứng."
+      },
+      "options": [
+        {
+          "text": "{=fatMass/891.48*(1-exp(-rateConstant*heatingTime))*92.09} g",
+          "vi": {
+            "text": "{=fatMass/891.48*(1-exp(-rateConstant*heatingTime))*92.09} g"
+          },
+          "correct": true,
+          "check": {
+            "expr": "fatMass/891.48*(1-exp(-rateConstant*heatingTime))*92.09",
+            "equals": "glycerol"
+          }
+        },
+        {
+          "text": "{=fatMass/891.48*92.09} g",
+          "vi": {
+            "text": "{=fatMass/891.48*92.09} g"
+          },
+          "check": {
+            "expr": "fatMass/891.48*92.09",
+            "equals": "glycerol"
+          }
+        },
+        {
+          "text": "{=3*fatMass/891.48*(1-exp(-rateConstant*heatingTime))*92.09} g",
+          "vi": {
+            "text": "{=3*fatMass/891.48*(1-exp(-rateConstant*heatingTime))*92.09} g"
+          },
+          "check": {
+            "expr": "3*fatMass/891.48*(1-exp(-rateConstant*heatingTime))*92.09",
+            "equals": "glycerol"
+          }
+        },
+        {
+          "text": "{=fatMass/891.48*exp(-rateConstant*heatingTime)*92.09} g",
+          "vi": {
+            "text": "{=fatMass/891.48*exp(-rateConstant*heatingTime)*92.09} g"
+          },
+          "check": {
+            "expr": "fatMass/891.48*exp(-rateConstant*heatingTime)*92.09",
+            "equals": "glycerol"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-excess-hydroxide",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["stoichiometry", "progress"],
+      "set": {
+        "fatMass": 5,
+        "hydroxideVolume": 20,
+        "heatingTime": 40
+      },
+      "stem": "{fatMass} g of tristearin (891.48 g/mol) is boiled for {heatingTime} min with {hydroxideVolume} mL of {hydroxideConcentration} mol/L NaOH. In this teaching model the reaction approaches its end as 1 − e^(−k·t), k = 0.15 per min. Sodium stearate is 306.46 g/mol. Decide whether each statement is true or false.",
+      "explain": "n(fat) = {=fatMass/891.48*1000|3} mmol needs 3·{=fatMass/891.48*1000|3} = {=3*fatMass/891.48*1000|3} mmol NaOH, less than the {=hydroxideVolume*hydroxideConcentration} mmol present: the fat runs out. Most soap: 3·{=fatMass/891.48|3}·306.46 ≈ {@maximumSoap} g. After {heatingTime} min, NaOH left ≈ {=hydroxideVolume*hydroxideConcentration} − {=3*fatMass/891.48*1000|3}·{=1-exp(-rateConstant*heatingTime)|4} ≈ {@hydroxideLeft|3} mmol. Working the soap from the NaOH gives {=hydroxideVolume*hydroxideConcentration*306.46/1000|3} g, which is wrong: NaOH is in excess.",
+      "vi": {
+        "stem": "Đun sôi {fatMass} g tristearin (891,48 g/mol) trong {heatingTime} phút với {hydroxideVolume} mL dung dịch NaOH {hydroxideConcentration} mol/L. Trong mô hình dạy học này, phản ứng tiến dần đến hoàn toàn theo 1 − e^(−k·t), k = 0,15 mỗi phút. Sodium stearate có M = 306,46 g/mol. Mỗi nhận định sau đúng hay sai?",
+        "explain": "n(chất béo) = {=fatMass/891.48*1000|3} mmol cần 3·{=fatMass/891.48*1000|3} = {=3*fatMass/891.48*1000|3} mmol NaOH, ít hơn {=hydroxideVolume*hydroxideConcentration} mmol có sẵn: chất béo hết trước. Lượng xà phòng tối đa: 3·{=fatMass/891.48|3}·306,46 ≈ {@maximumSoap} g. Sau {heatingTime} phút, NaOH còn lại ≈ {=hydroxideVolume*hydroxideConcentration} − {=3*fatMass/891.48*1000|3}·{=1-exp(-rateConstant*heatingTime)|4} ≈ {@hydroxideLeft|3} mmol. Tính xà phòng theo NaOH sẽ được {=hydroxideVolume*hydroxideConcentration*306.46/1000|3} g, là sai vì NaOH dư."
+      },
+      "statements": [
+        {
+          "text": "The NaOH runs out before the fat.",
+          "vi": {
+            "text": "NaOH hết trước chất béo."
+          },
+          "true": false
+        },
+        {
+          "text": "After {heatingTime} min about {=hydroxideVolume*hydroxideConcentration-3*fatMass/891.48*1000*(1-exp(-rateConstant*heatingTime))|3} mmol of NaOH is left.",
+          "vi": {
+            "text": "Sau {heatingTime} phút còn lại khoảng {=hydroxideVolume*hydroxideConcentration-3*fatMass/891.48*1000*(1-exp(-rateConstant*heatingTime))|3} mmol NaOH."
+          },
+          "true": true,
+          "check": {
+            "expr": "hydroxideVolume*hydroxideConcentration-3*fatMass/891.48*1000*(1-exp(-rateConstant*heatingTime))",
+            "equals": "hydroxideLeft"
+          }
+        },
+        {
+          "text": "The most soap these amounts can give is about {=3*fatMass/891.48*306.46} g.",
+          "vi": {
+            "text": "Lượng xà phòng tối đa có thể thu được từ các lượng chất này khoảng {=3*fatMass/891.48*306.46} g."
+          },
+          "true": true,
+          "check": {
+            "expr": "3*fatMass/891.48*306.46",
+            "equals": "maximumSoap"
+          }
+        },
+        {
+          "text": "The most soap these amounts can give is about {=hydroxideVolume*hydroxideConcentration*306.46/1000} g.",
+          "vi": {
+            "text": "Lượng xà phòng tối đa có thể thu được từ các lượng chất này khoảng {=hydroxideVolume*hydroxideConcentration*306.46/1000} g."
+          },
+          "true": false,
+          "check": {
+            "expr": "hydroxideVolume*hydroxideConcentration*306.46/1000",
+            "equals": "maximumSoap"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-fat-mass",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["stoichiometry"],
+      "set": {
+        "fatMass": 20,
+        "hydroxideVolume": 50
+      },
+      "stem": "Some tristearin (891.48 g/mol) is saponified with excess NaOH; the most sodium stearate (306.46 g/mol) it can give is {@maximumSoap} g. What mass of tristearin was used?",
+      "explain": "n(soap) = {@maximumSoap}/306.46 ≈ {=@maximumSoap/306.46|3} mol, and 3 mol of soap come from 1 mol of fat: n(fat) ≈ {=@maximumSoap/306.46/3|3} mol, m = {=@maximumSoap/306.46/3|3}·891.48 ≈ {=@maximumSoap*891.48/(3*306.46)} g. Forgetting the 3 triples it; the soap does not weigh the same as the fat, since NaOH adds mass and glycerol leaves.",
+      "vi": {
+        "stem": "Xà phòng hóa một lượng tristearin (891,48 g/mol) bằng NaOH dư; lượng sodium stearate (306,46 g/mol) tối đa thu được là {@maximumSoap} g. Khối lượng tristearin đã dùng là bao nhiêu?",
+        "explain": "n(xà phòng) = {@maximumSoap}/306,46 ≈ {=@maximumSoap/306.46|3} mol, và 3 mol xà phòng sinh ra từ 1 mol chất béo: n(chất béo) ≈ {=@maximumSoap/306.46/3|3} mol, m = {=@maximumSoap/306.46/3|3}·891,48 ≈ {=@maximumSoap*891.48/(3*306.46)} g. Quên hệ số 3 sẽ được giá trị gấp ba; khối lượng xà phòng không bằng khối lượng chất béo, vì NaOH thêm khối lượng còn glycerol tách ra."
+      },
+      "options": [
+        {
+          "text": "{=@maximumSoap*891.48/(3*306.46)} g",
+          "vi": {
+            "text": "{=@maximumSoap*891.48/(3*306.46)} g"
+          },
+          "correct": true,
+          "check": {
+            "expr": "3*(@maximumSoap*891.48/(3*306.46))/891.48*306.46",
+            "equals": "maximumSoap"
+          }
+        },
+        {
+          "text": "{=@maximumSoap*891.48/306.46} g",
+          "vi": {
+            "text": "{=@maximumSoap*891.48/306.46} g"
+          },
+          "check": {
+            "expr": "3*(@maximumSoap*891.48/306.46)/891.48*306.46",
+            "equals": "maximumSoap"
+          }
+        },
+        {
+          "text": "{@maximumSoap} g",
+          "vi": {
+            "text": "{@maximumSoap} g"
+          },
+          "check": {
+            "expr": "3*@maximumSoap/891.48*306.46",
+            "equals": "maximumSoap"
+          }
+        },
+        {
+          "text": "{=@maximumSoap*306.46/(3*891.48)} g",
+          "vi": {
+            "text": "{=@maximumSoap*306.46/(3*891.48)} g"
+          },
+          "check": {
+            "expr": "3*(@maximumSoap*306.46/(3*891.48))/891.48*306.46",
+            "equals": "maximumSoap"
+          }
+        }
+      ]
+    },
+    {
+      "id": "most-soap-setting",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["stoichiometry", "progress"],
+      "set": {
+        "fatMass": 20,
+        "hydroxideVolume": 50,
+        "heatingTime": 10
+      },
+      "stem": "Tristearin (891.48 g/mol) is boiled with {hydroxideConcentration} mol/L NaOH; in this teaching model the reaction approaches its end as 1 − e^(−k·t), k = 0.15 per min. Which setting gives the most sodium stearate (306.46 g/mol)?",
+      "explain": "Soap = (most possible, from the reagent that runs out)·(1 − e^(−0.15t)). 20 g fat + 50 mL NaOH, 10 min: {@soap} g. 20 g + 10 mL, 40 min: NaOH runs out at 20 mmol, {=min(3*20/891.48,10*2/1000)*306.46*(1-exp(-0.15*40))|3} g. 10 g + 30 mL, 40 min: {=min(3*10/891.48,30*2/1000)*306.46*(1-exp(-0.15*40))|3} g. 5 g + 50 mL, 40 min: {=min(3*5/891.48,50*2/1000)*306.46*(1-exp(-0.15*40))|3} g. Longer heating cannot make up for too little of a reagent.",
+      "vi": {
+        "stem": "Đun sôi tristearin (891,48 g/mol) với dung dịch NaOH {hydroxideConcentration} mol/L; trong mô hình dạy học này, phản ứng tiến dần đến hoàn toàn theo 1 − e^(−k·t), k = 0,15 mỗi phút. Điều kiện nào cho nhiều sodium stearate (306,46 g/mol) nhất?",
+        "explain": "Xà phòng = (lượng tối đa, tính theo chất hết trước)·(1 − e^(−0,15t)). 20 g chất béo + 50 mL NaOH, 10 phút: {@soap} g. 20 g + 10 mL, 40 phút: NaOH hết ở 20 mmol, {=min(3*20/891.48,10*2/1000)*306.46*(1-exp(-0.15*40))|3} g. 10 g + 30 mL, 40 phút: {=min(3*10/891.48,30*2/1000)*306.46*(1-exp(-0.15*40))|3} g. 5 g + 50 mL, 40 phút: {=min(3*5/891.48,50*2/1000)*306.46*(1-exp(-0.15*40))|3} g. Đun lâu hơn không bù được việc thiếu một chất phản ứng."
+      },
+      "options": [
+        {
+          "text": "20 g fat, 50 mL NaOH, 10 min",
+          "vi": {
+            "text": "20 g chất béo, 50 mL NaOH, 10 phút"
+          },
+          "correct": true
+        },
+        {
+          "text": "20 g fat, 10 mL NaOH, 40 min",
+          "vi": {
+            "text": "20 g chất béo, 10 mL NaOH, 40 phút"
+          }
+        },
+        {
+          "text": "10 g fat, 30 mL NaOH, 40 min",
+          "vi": {
+            "text": "10 g chất béo, 30 mL NaOH, 40 phút"
+          }
+        },
+        {
+          "text": "5 g fat, 50 mL NaOH, 40 min",
+          "vi": {
+            "text": "5 g chất béo, 50 mL NaOH, 40 phút"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-short-boil",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["progress", "stoichiometry"],
+      "set": {
+        "fatMass": 20,
+        "hydroxideVolume": 50,
+        "heatingTime": 5
+      },
+      "stem": "{fatMass} g of tristearin (891.48 g/mol) is boiled for only {heatingTime} min with {hydroxideVolume} mL of {hydroxideConcentration} mol/L NaOH (in excess). In this teaching model the reaction approaches its end as 1 − e^(−k·t), k = 0.15 per min. Decide whether each statement is true or false.",
+      "explain": "After {heatingTime} min, 1 − e^(−0.15·{heatingTime}) = {@yield|3}% of the most soap ({@maximumSoap} g) has formed: {@soap} g. The fat left is {fatMass}·e^(−0.15·{heatingTime}) ≈ {@fatLeft} g. Boiling 10 min would give 1 − e^(−1.5) ≈ {=100*(1-exp(-1.5))|3}%, not twice {@yield|3}%. Stopping now, the soap would weigh {@soap} g, not the maximum.",
+      "vi": {
+        "stem": "Đun sôi {fatMass} g tristearin (891,48 g/mol) chỉ trong {heatingTime} phút với {hydroxideVolume} mL dung dịch NaOH {hydroxideConcentration} mol/L (dư). Trong mô hình dạy học này, phản ứng tiến dần đến hoàn toàn theo 1 − e^(−k·t), k = 0,15 mỗi phút. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Sau {heatingTime} phút, đã tạo được 1 − e^(−0,15·{heatingTime}) = {@yield|3}% lượng xà phòng tối đa ({@maximumSoap} g): {@soap} g. Chất béo còn lại là {fatMass}·e^(−0,15·{heatingTime}) ≈ {@fatLeft} g. Đun 10 phút sẽ được 1 − e^(−1,5) ≈ {=100*(1-exp(-1.5))|3}%, không phải gấp đôi {@yield|3}%. Nếu dừng lúc này, xà phòng thu được nặng {@soap} g, không phải lượng tối đa."
+      },
+      "statements": [
+        {
+          "text": "About {=100*(1-exp(-rateConstant*heatingTime))|3}% of the most soap possible has formed.",
+          "vi": {
+            "text": "Đã tạo được khoảng {=100*(1-exp(-rateConstant*heatingTime))|3}% lượng xà phòng tối đa."
+          },
+          "true": true,
+          "check": {
+            "expr": "100*(1-exp(-rateConstant*heatingTime))",
+            "equals": "yield"
+          }
+        },
+        {
+          "text": "About {=fatMass*exp(-rateConstant*heatingTime)} g of fat is still unreacted.",
+          "vi": {
+            "text": "Còn khoảng {=fatMass*exp(-rateConstant*heatingTime)} g chất béo chưa phản ứng."
+          },
+          "true": true,
+          "check": {
+            "expr": "fatMass*exp(-rateConstant*heatingTime)",
+            "equals": "fatLeft"
+          }
+        },
+        {
+          "text": "Boiling for twice as long would give twice as much soap.",
+          "vi": {
+            "text": "Đun lâu gấp đôi sẽ thu được lượng xà phòng gấp đôi."
+          },
+          "true": false
+        },
+        {
+          "text": "Stopped now, the soap would weigh {@maximumSoap} g.",
+          "vi": {
+            "text": "Nếu dừng lúc này, xà phòng thu được nặng {@maximumSoap} g."
+          },
+          "true": false,
+          "check": {
+            "expr": "@maximumSoap",
+            "equals": "soap"
+          }
+        }
+      ]
+    }
+  ]
+}

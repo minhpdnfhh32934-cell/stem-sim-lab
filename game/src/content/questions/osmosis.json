@@ -1,0 +1,1056 @@
+{
+  "id": "osmosis",
+  "skills": [
+    {
+      "id": "water-potential",
+      "name": "Water potential and the direction of osmosis",
+      "advice": "Learn the rule: water moves from the higher (less negative) water potential to the lower. Practise Ψ = −CRT with T in kelvin; a stronger solution has a more negative Ψ. Say for each solution at the station which way the water goes before you run it.",
+      "vi": {
+        "name": "Thế nước và chiều của sự thẩm thấu",
+        "advice": "Ghi nhớ quy tắc: nước di chuyển từ nơi có thế nước cao hơn (ít âm hơn) đến nơi có thế nước thấp hơn. Luyện Ψ = −CRT với T theo kelvin; dung dịch càng đặc thì Ψ càng âm. Với mỗi dung dịch trên trạm, hãy dự đoán chiều di chuyển của nước trước khi chạy."
+      }
+    },
+    {
+      "id": "mass-change",
+      "name": "Percentage change in mass",
+      "advice": "Always divide by the starting mass: Δm/m₀ × 100, positive for a gain, negative for a loss. Practise both ways, from masses to % and from % to the final mass.",
+      "vi": {
+        "name": "Phần trăm thay đổi khối lượng",
+        "advice": "Luôn chia cho khối lượng ban đầu: Δm/m₀ × 100, dương khi tăng, âm khi giảm. Luyện theo cả hai chiều: từ khối lượng tính ra %, và từ % tính ra khối lượng cuối."
+      }
+    },
+    {
+      "id": "isotonic-point",
+      "name": "Finding the isotonic concentration from a graph",
+      "advice": "Run several concentrations, plot % change against C and find where the line crosses 0 %. For a straight line C_iso = −intercept/slope; mind the signs.",
+      "vi": {
+        "name": "Xác định nồng độ đẳng trương từ đồ thị",
+        "advice": "Chạy với nhiều nồng độ, vẽ đồ thị % thay đổi khối lượng theo C và tìm điểm đường thẳng cắt mức 0 %. Với đường thẳng, C_đẳng trương = −tung độ gốc/hệ số góc; chú ý dấu."
+      }
+    },
+    {
+      "id": "model-limits",
+      "name": "The model’s assumptions and measurement",
+      "advice": "Re-read the note: −CRT is the ideal value, E and τ are illustrative, and the mass approaches its new value as 1 − e^(−t/τ). Compare a 30-minute and a 4-hour soak, and read the balance to its resolution.",
+      "vi": {
+        "name": "Giả thiết của mô hình và phép đo",
+        "advice": "Đọc lại ghi chú: −CRT là giá trị lí tưởng, E và τ là giá trị minh họa, và khối lượng tiến tới giá trị mới theo 1 − e^(−t/τ). So sánh lần ngâm 30 phút với lần ngâm 4 giờ, và đọc cân theo đúng độ chia."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "osmosis-rule",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["water-potential"],
+      "stem": "In osmosis, water moves across a partially permeable membrane…",
+      "explain": "Water moves from the higher water potential to the lower — from the more dilute solution into the more concentrated one.",
+      "vi": {
+        "stem": "Trong sự thẩm thấu, nước di chuyển qua màng bán thấm…",
+        "explain": "Nước di chuyển từ nơi có thế nước cao hơn đến nơi có thế nước thấp hơn — từ dung dịch loãng hơn sang dung dịch đặc hơn."
+      },
+      "options": [
+        {
+          "text": "from a higher water potential to a lower one",
+          "vi": {
+            "text": "từ nơi có thế nước cao hơn đến nơi có thế nước thấp hơn"
+          },
+          "correct": true
+        },
+        {
+          "text": "from a lower water potential to a higher one",
+          "vi": {
+            "text": "từ nơi có thế nước thấp hơn đến nơi có thế nước cao hơn"
+          }
+        },
+        {
+          "text": "from the more concentrated solution to the more dilute one",
+          "vi": {
+            "text": "từ dung dịch đặc hơn sang dung dịch loãng hơn"
+          }
+        },
+        {
+          "text": "only when the cell uses ATP to pump it",
+          "vi": {
+            "text": "chỉ khi tế bào dùng ATP để bơm nước"
+          }
+        }
+      ]
+    },
+    {
+      "id": "distilled-water",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["mass-change", "water-potential"],
+      "stem": "A potato cylinder is soaked in distilled water. It…",
+      "explain": "Pure water has the highest water potential, so water enters the cells by osmosis and the cylinder gains mass.",
+      "vi": {
+        "stem": "Một khúc khoai tây được ngâm trong nước cất. Khúc khoai tây sẽ…",
+        "explain": "Nước cất có thế nước cao nhất, nên nước đi vào tế bào bằng thẩm thấu và khúc khoai tây tăng khối lượng."
+      },
+      "options": [
+        {
+          "text": "gains mass, as water enters its cells",
+          "vi": {
+            "text": "tăng khối lượng do nước đi vào tế bào"
+          },
+          "correct": true
+        },
+        {
+          "text": "loses mass, as water leaves its cells",
+          "vi": {
+            "text": "giảm khối lượng do nước đi ra khỏi tế bào"
+          }
+        },
+        {
+          "text": "keeps its mass, as water cannot cross the membranes",
+          "vi": {
+            "text": "giữ nguyên khối lượng vì nước không qua được màng"
+          }
+        },
+        {
+          "text": "loses mass, as its sugar dissolves into the water",
+          "vi": {
+            "text": "giảm khối lượng do đường trong tế bào hòa tan vào nước"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-basic",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["water-potential", "isotonic-point"],
+      "stem": "About osmosis in potato tissue: decide whether each statement is true or false.",
+      "explain": "Pure water has Ψ = 0, the highest at atmospheric pressure; solutes make Ψ negative. In an isotonic solution there is no net flow and no mass change. The membranes let water through but not sucrose.",
+      "vi": {
+        "stem": "Về sự thẩm thấu ở mô khoai tây, mỗi nhận định sau đúng hay sai?",
+        "explain": "Nước nguyên chất có Ψ = 0, cao nhất ở áp suất khí quyển; chất tan làm Ψ âm. Trong dung dịch đẳng trương không có dòng nước thực và khối lượng không đổi. Màng cho nước đi qua nhưng không cho sucrose đi qua."
+      },
+      "statements": [
+        {
+          "text": "Pure water has a water potential of 0, the highest possible at atmospheric pressure.",
+          "vi": {
+            "text": "Nước nguyên chất có thế nước bằng 0, cao nhất có thể ở áp suất khí quyển."
+          },
+          "true": true
+        },
+        {
+          "text": "Dissolving sucrose in water lowers its water potential.",
+          "vi": {
+            "text": "Hòa tan sucrose vào nước làm giảm thế nước."
+          },
+          "true": true
+        },
+        {
+          "text": "In an isotonic solution the cylinder neither gains nor loses mass overall.",
+          "vi": {
+            "text": "Trong dung dịch đẳng trương, khúc khoai tây không tăng cũng không giảm khối lượng."
+          },
+          "true": true
+        },
+        {
+          "text": "The cell membranes let sucrose through as easily as water.",
+          "vi": {
+            "text": "Màng tế bào cho sucrose đi qua dễ dàng như nước."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "which-way",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["water-potential"],
+      "stem": "Potato tissue is isotonic with 0.25 mol/L sucrose (an approximate value). A cylinder is put in 0.5 mol/L sucrose. Which way does the water move?",
+      "explain": "The 0.5 mol/L solution has a lower (more negative) water potential than the tissue, so water leaves the cells and the cylinder loses mass.",
+      "vi": {
+        "stem": "Mô khoai tây đẳng trương với dung dịch sucrose 0,25 mol/L (giá trị gần đúng). Đặt một khúc khoai tây vào dung dịch sucrose 0,5 mol/L. Nước di chuyển theo chiều nào?",
+        "explain": "Dung dịch 0,5 mol/L có thế nước thấp hơn (âm hơn) mô, nên nước đi ra khỏi tế bào và khúc khoai tây giảm khối lượng."
+      },
+      "options": [
+        {
+          "text": "Out of the tissue, because the solution’s water potential is lower",
+          "vi": {
+            "text": "Từ mô ra ngoài, vì thế nước của dung dịch thấp hơn"
+          },
+          "correct": true
+        },
+        {
+          "text": "Into the tissue, because the solution is more concentrated",
+          "vi": {
+            "text": "Từ ngoài vào mô, vì dung dịch đặc hơn"
+          }
+        },
+        {
+          "text": "Into the tissue, because the solution’s water potential is higher",
+          "vi": {
+            "text": "Từ ngoài vào mô, vì thế nước của dung dịch cao hơn"
+          }
+        },
+        {
+          "text": "Neither way, because sucrose cannot cross the membrane",
+          "vi": {
+            "text": "Không theo chiều nào, vì sucrose không qua được màng"
+          }
+        }
+      ]
+    },
+    {
+      "id": "why-percent",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["mass-change"],
+      "stem": "Why are the results compared as percentage changes in mass rather than changes in grams?",
+      "explain": "Cylinders start with different masses; a bigger one gains or loses more grams in the same solution. Dividing by m₀ makes them comparable.",
+      "vi": {
+        "stem": "Vì sao kết quả được so sánh bằng phần trăm thay đổi khối lượng chứ không phải bằng số gam thay đổi?",
+        "explain": "Các khúc khoai tây có khối lượng ban đầu khác nhau; khúc lớn hơn tăng hoặc giảm nhiều gam hơn trong cùng dung dịch. Chia cho m₀ giúp so sánh được với nhau."
+      },
+      "options": [
+        {
+          "text": "The cylinders start with different masses",
+          "vi": {
+            "text": "Vì các khúc khoai tây có khối lượng ban đầu khác nhau"
+          },
+          "correct": true
+        },
+        {
+          "text": "Percentages are always more precise than grams",
+          "vi": {
+            "text": "Vì phần trăm luôn chính xác hơn số gam"
+          }
+        },
+        {
+          "text": "The balance shows its readings in per cent",
+          "vi": {
+            "text": "Vì cân hiển thị kết quả theo phần trăm"
+          }
+        },
+        {
+          "text": "A change in grams cannot be negative",
+          "vi": {
+            "text": "Vì số gam thay đổi không thể mang dấu âm"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-weak",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["water-potential", "mass-change"],
+      "set": {
+        "concentration": 0.1,
+        "initialMass": 5
+      },
+      "stem": "A {initialMass} g potato cylinder (isotonic with {isotonicConcentration} mol/L, an approximate value) soaks in {concentration} mol/L sucrose at {temperature} °C. Decide whether each statement is true or false.",
+      "explain": "Ψ_solution = −{concentration}·8.314·{=temperature+273.15|5} ≈ {@solutionPotential|3} kPa, higher than the tissue’s {@tissuePotential|3} kPa: water enters and the cylinder gains mass, ending at {@finalMass|3} g. A 0.5 mol/L solution is below the tissue’s potential, so there it would lose mass.",
+      "vi": {
+        "stem": "Một khúc khoai tây {initialMass} g (đẳng trương với {isotonicConcentration} mol/L, giá trị gần đúng) được ngâm trong dung dịch sucrose {concentration} mol/L ở {temperature} °C. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Ψ_dung dịch = −{concentration}·8,314·{=temperature+273.15|5} ≈ {@solutionPotential|3} kPa, cao hơn của mô {@tissuePotential|3} kPa: nước đi vào và khúc khoai tây tăng khối lượng, cuối cùng đạt {@finalMass|3} g. Dung dịch 0,5 mol/L có thế nước thấp hơn mô, nên khi đó khúc khoai tây sẽ giảm khối lượng."
+      },
+      "statements": [
+        {
+          "text": "Water enters the tissue.",
+          "vi": {
+            "text": "Nước đi vào mô."
+          },
+          "true": true,
+          "check": {
+            "expr": "1",
+            "equals": "direction"
+          }
+        },
+        {
+          "text": "The solution’s water potential, about {@solutionPotential|3} kPa, is higher than the tissue’s, about {@tissuePotential|3} kPa.",
+          "vi": {
+            "text": "Thế nước của dung dịch, khoảng {@solutionPotential|3} kPa, cao hơn thế nước của mô, khoảng {@tissuePotential|3} kPa."
+          },
+          "true": true,
+          "check": {
+            "expr": "-concentration*8.314462618*(temperature+273.15)",
+            "equals": "solutionPotential"
+          }
+        },
+        {
+          "text": "The cylinder ends lighter than it started.",
+          "vi": {
+            "text": "Cuối cùng khúc khoai tây nhẹ hơn lúc đầu."
+          },
+          "true": false
+        },
+        {
+          "text": "In 0.5 mol/L sucrose the same cylinder would lose mass instead.",
+          "vi": {
+            "text": "Trong dung dịch sucrose 0,5 mol/L, khúc khoai tây đó sẽ giảm khối lượng."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "solution-psi",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["water-potential"],
+      "set": {
+        "concentration": 0.5
+      },
+      "stem": "What is the water potential of {concentration} mol/L sucrose at {temperature} °C? Use Ψ = −CRT (ideal; sucrose does not dissociate), R = 8.314 J/(mol·K); with C in mol/L the answer is in kPa.",
+      "explain": "Ψ = −{concentration}·8.314·{=temperature+273.15|5} ≈ {@solutionPotential|4} kPa: T in kelvin, and the sign is negative.",
+      "vi": {
+        "stem": "Thế nước của dung dịch sucrose {concentration} mol/L ở {temperature} °C bằng bao nhiêu? Dùng Ψ = −CRT (lí tưởng; sucrose không phân li), R = 8,314 J/(mol·K); với C theo mol/L thì kết quả có đơn vị kPa.",
+        "explain": "Ψ = −{concentration}·8,314·{=temperature+273.15|5} ≈ {@solutionPotential|4} kPa: T tính theo kelvin, và kết quả mang dấu âm."
+      },
+      "options": [
+        {
+          "text": "{@solutionPotential|4} kPa",
+          "vi": {
+            "text": "{@solutionPotential|4} kPa"
+          },
+          "correct": true,
+          "check": {
+            "expr": "-concentration*8.314462618*(temperature+273.15)",
+            "equals": "solutionPotential"
+          }
+        },
+        {
+          "text": "{=-concentration*8.314462618*temperature|4} kPa",
+          "vi": {
+            "text": "{=-concentration*8.314462618*temperature|4} kPa"
+          },
+          "check": {
+            "expr": "-concentration*8.314462618*temperature",
+            "equals": "solutionPotential"
+          }
+        },
+        {
+          "text": "{=concentration*8.314462618*(temperature+273.15)|4} kPa",
+          "vi": {
+            "text": "{=concentration*8.314462618*(temperature+273.15)|4} kPa"
+          },
+          "check": {
+            "expr": "concentration*8.314462618*(temperature+273.15)",
+            "equals": "solutionPotential"
+          }
+        },
+        {
+          "text": "{=-concentration*1000*8.314462618*(temperature+273.15)|4} kPa",
+          "vi": {
+            "text": "{=-concentration*1000*8.314462618*(temperature+273.15)|4} kPa"
+          },
+          "check": {
+            "expr": "-concentration*1000*8.314462618*(temperature+273.15)",
+            "equals": "solutionPotential"
+          }
+        }
+      ]
+    },
+    {
+      "id": "final-mass",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["mass-change"],
+      "set": {
+        "concentration": 0.2,
+        "initialMass": 5,
+        "soakTime": 14400
+      },
+      "stem": "A {initialMass} g cylinder soaks for {soakTime} s in {concentration} mol/L sucrose and changes its mass by {@finalPercent|3}%. What is its mass after soaking?",
+      "explain": "m = m₀·(1 + Δm/m₀) = {initialMass}·(1 + {@finalPercent|3}/100) ≈ {@finalMass|4} g.",
+      "vi": {
+        "stem": "Một khúc khoai tây {initialMass} g ngâm {soakTime} s trong dung dịch sucrose {concentration} mol/L thì khối lượng thay đổi {@finalPercent|3}%. Khối lượng của nó sau khi ngâm là bao nhiêu?",
+        "explain": "m = m₀·(1 + Δm/m₀) = {initialMass}·(1 + {@finalPercent|3}/100) ≈ {@finalMass|4} g."
+      },
+      "options": [
+        {
+          "text": "{@finalMass|4} g",
+          "vi": {
+            "text": "{@finalMass|4} g"
+          },
+          "correct": true,
+          "check": {
+            "expr": "initialMass*(1+@finalPercent/100)",
+            "equals": "finalMass"
+          }
+        },
+        {
+          "text": "{=initialMass+@finalPercent|4} g",
+          "vi": {
+            "text": "{=initialMass+@finalPercent|4} g"
+          },
+          "check": {
+            "expr": "initialMass+@finalPercent",
+            "equals": "finalMass"
+          }
+        },
+        {
+          "text": "{=initialMass*(1-@finalPercent/100)|4} g",
+          "vi": {
+            "text": "{=initialMass*(1-@finalPercent/100)|4} g"
+          },
+          "check": {
+            "expr": "initialMass*(1-@finalPercent/100)",
+            "equals": "finalMass"
+          }
+        },
+        {
+          "text": "{=initialMass*@finalPercent/100|4} g",
+          "vi": {
+            "text": "{=initialMass*@finalPercent/100|4} g"
+          },
+          "check": {
+            "expr": "initialMass*@finalPercent/100",
+            "equals": "finalMass"
+          }
+        }
+      ]
+    },
+    {
+      "id": "percent-from-masses",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["mass-change"],
+      "set": {
+        "concentration": 0.5,
+        "initialMass": 3,
+        "soakTime": 14400
+      },
+      "stem": "A cylinder weighs {initialMass} g before and {@finalMass|4} g after soaking in {concentration} mol/L sucrose. What is its percentage change in mass?",
+      "explain": "Δm/m₀ = ({@finalMass|4} − {initialMass})/{initialMass} × 100 ≈ {@finalPercent|3}%: negative, a loss, and divided by the starting mass.",
+      "vi": {
+        "stem": "Một khúc khoai tây cân được {initialMass} g trước và {@finalMass|4} g sau khi ngâm trong dung dịch sucrose {concentration} mol/L. Phần trăm thay đổi khối lượng của nó là bao nhiêu?",
+        "explain": "Δm/m₀ = ({@finalMass|4} − {initialMass})/{initialMass} × 100 ≈ {@finalPercent|3}%: mang dấu âm (giảm khối lượng), và chia cho khối lượng ban đầu."
+      },
+      "options": [
+        {
+          "text": "{=100*(@finalMass-initialMass)/initialMass|3}%",
+          "vi": {
+            "text": "{=100*(@finalMass-initialMass)/initialMass|3}%"
+          },
+          "correct": true,
+          "check": {
+            "expr": "100*(@finalMass-initialMass)/initialMass",
+            "equals": "finalPercent"
+          }
+        },
+        {
+          "text": "{=100*(initialMass-@finalMass)/@finalMass|3}%",
+          "vi": {
+            "text": "{=100*(initialMass-@finalMass)/@finalMass|3}%"
+          },
+          "check": {
+            "expr": "100*(initialMass-@finalMass)/@finalMass",
+            "equals": "finalPercent"
+          }
+        },
+        {
+          "text": "{=100*(@finalMass-initialMass)/@finalMass|3}%",
+          "vi": {
+            "text": "{=100*(@finalMass-initialMass)/@finalMass|3}%"
+          },
+          "check": {
+            "expr": "100*(@finalMass-initialMass)/@finalMass",
+            "equals": "finalPercent"
+          }
+        },
+        {
+          "text": "{=@finalMass-initialMass|3}%",
+          "vi": {
+            "text": "{=@finalMass-initialMass|3}%"
+          },
+          "check": {
+            "expr": "@finalMass-initialMass",
+            "equals": "finalPercent"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-water",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["water-potential", "mass-change", "model-limits"],
+      "set": {
+        "concentration": 0,
+        "initialMass": 2,
+        "soakTime": 14400
+      },
+      "stem": "A {initialMass} g cylinder (isotonic with {isotonicConcentration} mol/L) soaks for {soakTime} s in distilled water at {temperature} °C. In the model the tissue’s potential rises by E·Δm/m₀ with E = {tissueModulus} kPa (illustrative). Decide whether each statement is true or false.",
+      "explain": "Ψ(water) = 0; ΔΨ = ({isotonicConcentration} − 0)·R·T ≈ {@potentialDifference|3} kPa drives water in. At equilibrium Δm/m₀ = ΔΨ/E ≈ {@equilibriumPercent|3}%; after 4 h it has gained {@finalPercent|3}%, so it weighs {@finalMass|3} g, more than {initialMass} g.",
+      "vi": {
+        "stem": "Một khúc khoai tây {initialMass} g (đẳng trương với {isotonicConcentration} mol/L) ngâm {soakTime} s trong nước cất ở {temperature} °C. Trong mô hình, thế nước của mô tăng thêm E·Δm/m₀ với E = {tissueModulus} kPa (giá trị minh họa). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Ψ(nước) = 0; ΔΨ = ({isotonicConcentration} − 0)·R·T ≈ {@potentialDifference|3} kPa làm nước đi vào. Khi cân bằng Δm/m₀ = ΔΨ/E ≈ {@equilibriumPercent|3}%; sau 4 giờ khối lượng tăng {@finalPercent|3}%, nên khúc khoai tây nặng {@finalMass|3} g, lớn hơn {initialMass} g."
+      },
+      "statements": [
+        {
+          "text": "The water potential of the distilled water is {@solutionPotential} kPa.",
+          "vi": {
+            "text": "Thế nước của nước cất là {@solutionPotential} kPa."
+          },
+          "true": true,
+          "check": {
+            "expr": "-concentration*8.314462618*(temperature+273.15)",
+            "equals": "solutionPotential"
+          }
+        },
+        {
+          "text": "A water-potential difference of about {@potentialDifference|3} kPa drives water into the tissue.",
+          "vi": {
+            "text": "Chênh lệch thế nước khoảng {@potentialDifference|3} kPa làm nước đi vào mô."
+          },
+          "true": true,
+          "check": {
+            "expr": "(isotonicConcentration-concentration)*8.314462618*(temperature+273.15)",
+            "equals": "potentialDifference"
+          }
+        },
+        {
+          "text": "At equilibrium the cylinder would have gained ΔΨ/E ≈ {@equilibriumPercent|3}% of its mass.",
+          "vi": {
+            "text": "Khi cân bằng, khối lượng khúc khoai tây sẽ tăng ΔΨ/E ≈ {@equilibriumPercent|3}%."
+          },
+          "true": true,
+          "check": {
+            "expr": "100*@potentialDifference/tissueModulus",
+            "equals": "equilibriumPercent"
+          }
+        },
+        {
+          "text": "After the 4-hour soak it weighs about {=initialMass*(1-@finalPercent/100)|3} g.",
+          "vi": {
+            "text": "Sau 4 giờ ngâm, nó nặng khoảng {=initialMass*(1-@finalPercent/100)|3} g."
+          },
+          "true": false,
+          "check": {
+            "expr": "initialMass*(1-@finalPercent/100)",
+            "equals": "finalMass"
+          }
+        }
+      ]
+    },
+    {
+      "id": "isotonic-from-line",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["isotonic-point"],
+      "set": {
+        "soakTime": 14400,
+        "isotonicConcentration": 0.3
+      },
+      "stem": "Cylinders cut from another potato are soaked for {soakTime} s in several sucrose solutions. Their percentage change in mass against the concentration C is a straight line of slope {@percentSlope|3} % per mol/L, crossing C = 0 at {@percentIntercept|3}%. With what concentration is this tissue isotonic?",
+      "explain": "Isotonic means no change: 0 = intercept + slope·C, so C = −{@percentIntercept|3}/({@percentSlope|3}) ≈ {@isotonicConcentration} mol/L.",
+      "vi": {
+        "stem": "Các khúc khoai tây cắt từ một củ khoai khác được ngâm {soakTime} s trong nhiều dung dịch sucrose. Đồ thị phần trăm thay đổi khối lượng theo nồng độ C là một đường thẳng có hệ số góc {@percentSlope|3} % trên mol/L, cắt trục C = 0 tại {@percentIntercept|3}%. Mô khoai này đẳng trương với dung dịch có nồng độ bao nhiêu?",
+        "explain": "Đẳng trương nghĩa là khối lượng không đổi: 0 = tung độ gốc + hệ số góc·C, nên C = −{@percentIntercept|3}/({@percentSlope|3}) ≈ {@isotonicConcentration} mol/L."
+      },
+      "options": [
+        {
+          "text": "{=-@percentIntercept/@percentSlope} mol/L",
+          "vi": {
+            "text": "{=-@percentIntercept/@percentSlope} mol/L"
+          },
+          "correct": true,
+          "check": {
+            "expr": "-@percentIntercept/@percentSlope",
+            "equals": "isotonicConcentration"
+          }
+        },
+        {
+          "text": "{=@percentIntercept/@percentSlope} mol/L",
+          "vi": {
+            "text": "{=@percentIntercept/@percentSlope} mol/L"
+          },
+          "check": {
+            "expr": "@percentIntercept/@percentSlope",
+            "equals": "isotonicConcentration"
+          }
+        },
+        {
+          "text": "{=-@percentSlope/@percentIntercept} mol/L",
+          "vi": {
+            "text": "{=-@percentSlope/@percentIntercept} mol/L"
+          },
+          "check": {
+            "expr": "-@percentSlope/@percentIntercept",
+            "equals": "isotonicConcentration"
+          }
+        },
+        {
+          "text": "{=@percentIntercept/100} mol/L",
+          "vi": {
+            "text": "{=@percentIntercept/100} mol/L"
+          },
+          "check": {
+            "expr": "@percentIntercept/100",
+            "equals": "isotonicConcentration"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-short-soak",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["model-limits", "mass-change"],
+      "set": {
+        "concentration": 0.6,
+        "initialMass": 3,
+        "soakTime": 3600
+      },
+      "stem": "A {initialMass} g cylinder soaks for only {soakTime} s in {concentration} mol/L sucrose. In the model the mass approaches its equilibrium change as 1 − e^(−t/τ) with τ = {timeConstant} s (illustrative). Decide whether each statement is true or false.",
+      "explain": "1 − e^(−{soakTime}/{timeConstant}) ≈ {=1-exp(-soakTime/timeConstant)|2}: it has gone {=100*(1-exp(-soakTime/timeConstant))|2}% of the way, so its change is {@finalPercent|3}% of an equilibrium {@equilibriumPercent|3}%. It then weighs {@finalMass|4} g, read as {=round(@finalMass*100)/100} g on a 0.01 g balance. A real sucrose solution is more negative than −CRT, not less.",
+      "vi": {
+        "stem": "Một khúc khoai tây {initialMass} g chỉ được ngâm {soakTime} s trong dung dịch sucrose {concentration} mol/L. Trong mô hình, khối lượng tiến tới mức thay đổi cân bằng theo 1 − e^(−t/τ) với τ = {timeConstant} s (giá trị minh họa). Mỗi nhận định sau đúng hay sai?",
+        "explain": "1 − e^(−{soakTime}/{timeConstant}) ≈ {=1-exp(-soakTime/timeConstant)|2}: khúc khoai tây mới đi được {=100*(1-exp(-soakTime/timeConstant))|2}% quãng đường tới cân bằng, nên thay đổi {@finalPercent|3}% so với mức cân bằng {@equilibriumPercent|3}%. Khi đó nó nặng {@finalMass|4} g, đọc được {=round(@finalMass*100)/100} g trên cân có độ chia 0,01 g. Dung dịch sucrose thật có thế nước âm hơn −CRT, không phải ít âm hơn."
+      },
+      "statements": [
+        {
+          "text": "After {soakTime} s it has gone about {=100*(1-exp(-soakTime/timeConstant))|2}% of the way to equilibrium.",
+          "vi": {
+            "text": "Sau {soakTime} s, khúc khoai tây mới đi được khoảng {=100*(1-exp(-soakTime/timeConstant))|2}% quãng đường tới cân bằng."
+          },
+          "true": true
+        },
+        {
+          "text": "Its mass has changed by {@finalPercent|3}%, less in size than the equilibrium change of {@equilibriumPercent|3}%.",
+          "vi": {
+            "text": "Khối lượng của nó thay đổi {@finalPercent|3}%, nhỏ hơn về độ lớn so với mức thay đổi cân bằng {@equilibriumPercent|3}%."
+          },
+          "true": true,
+          "check": {
+            "expr": "@equilibriumPercent*(1-exp(-soakTime/timeConstant))",
+            "equals": "finalPercent"
+          }
+        },
+        {
+          "text": "A balance reading to 0.01 g would show {=round(@finalMass*100)/100} g.",
+          "vi": {
+            "text": "Cân có độ chia 0,01 g sẽ hiển thị {=round(@finalMass*100)/100} g."
+          },
+          "true": true
+        },
+        {
+          "text": "A real {concentration} mol/L sucrose solution has a less negative water potential than the ideal −CRT used here.",
+          "vi": {
+            "text": "Dung dịch sucrose {concentration} mol/L thật có thế nước ít âm hơn giá trị lí tưởng −CRT dùng ở đây."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "membrane-lets",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["water-potential"],
+      "stem": "A partially permeable membrane, such as a cell membrane, lets through…",
+      "explain": "Water molecules are small and cross the membrane (largely through aquaporins); larger solute molecules such as sucrose cannot. That difference is what makes osmosis possible.",
+      "vi": {
+        "stem": "Màng bán thấm, như màng tế bào, cho đi qua…",
+        "explain": "Phân tử nước nhỏ nên đi qua màng (phần lớn qua kênh aquaporin); các phân tử chất tan lớn hơn như sucrose thì không qua được. Chính sự khác biệt đó làm cho sự thẩm thấu xảy ra."
+      },
+      "options": [
+        {
+          "text": "water, but not larger solute molecules such as sucrose",
+          "vi": {
+            "text": "nước, nhưng không cho các phân tử chất tan lớn hơn như sucrose đi qua"
+          },
+          "correct": true
+        },
+        {
+          "text": "sucrose, but not water",
+          "vi": {
+            "text": "sucrose, nhưng không cho nước đi qua"
+          }
+        },
+        {
+          "text": "every molecule equally easily",
+          "vi": {
+            "text": "mọi phân tử một cách dễ dàng như nhau"
+          }
+        },
+        {
+          "text": "nothing, unless the cell uses ATP",
+          "vi": {
+            "text": "không chất nào, trừ khi tế bào dùng ATP"
+          }
+        }
+      ]
+    },
+    {
+      "id": "wall-resists",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["water-potential", "model-limits"],
+      "stem": "In distilled water a red blood cell swells and bursts, but a potato cell only becomes firm (turgid). Why?",
+      "explain": "Both take in water by osmosis, but the plant cell’s wall resists the swelling: its pressure raises the cell’s water potential until water stops entering. An animal cell has no wall to stop it.",
+      "vi": {
+        "stem": "Trong nước cất, hồng cầu trương lên và vỡ, còn tế bào khoai tây chỉ trương căng. Vì sao?",
+        "explain": "Cả hai đều hút nước bằng thẩm thấu, nhưng thành tế bào thực vật chống lại sự trương lên: áp suất của thành làm tăng thế nước của tế bào cho đến khi nước ngừng đi vào. Tế bào động vật không có thành tế bào để ngăn lại."
+      },
+      "options": [
+        {
+          "text": "The potato cell’s wall resists the swelling, so water stops entering",
+          "vi": {
+            "text": "Thành tế bào khoai tây chống lại sự trương lên, nên nước ngừng đi vào"
+          },
+          "correct": true
+        },
+        {
+          "text": "Water cannot enter a potato cell",
+          "vi": {
+            "text": "Nước không thể đi vào tế bào khoai tây"
+          }
+        },
+        {
+          "text": "The red blood cell pumps water in with ATP",
+          "vi": {
+            "text": "Hồng cầu dùng ATP để bơm nước vào"
+          }
+        },
+        {
+          "text": "The potato cell has a higher water potential than distilled water",
+          "vi": {
+            "text": "Tế bào khoai tây có thế nước cao hơn nước cất"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-method",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["mass-change", "model-limits", "water-potential"],
+      "stem": "About carrying out and modelling the potato experiment: decide whether each statement is true or false.",
+      "explain": "Surface solution must be blotted off, or it is weighed as a gain. Cylinders from one potato and of one size keep the test fair. A more concentrated solution has a lower (more negative) water potential. E and τ here are the simulation’s illustrative values.",
+      "vi": {
+        "stem": "Về cách tiến hành và mô hình hóa thí nghiệm với khoai tây, mỗi nhận định sau đúng hay sai?",
+        "explain": "Phải thấm khô dung dịch bám ở bề mặt, nếu không nó sẽ bị cân vào như phần khối lượng tăng. Các khúc khoai cắt từ cùng một củ và cùng kích thước giúp thí nghiệm công bằng. Dung dịch càng đặc thì thế nước càng thấp (càng âm). E và τ ở đây là giá trị minh họa của mô phỏng."
+      },
+      "statements": [
+        {
+          "text": "Each cylinder is blotted dry before it is weighed.",
+          "vi": {
+            "text": "Mỗi khúc khoai tây được thấm khô trước khi cân."
+          },
+          "true": true
+        },
+        {
+          "text": "The cylinders are cut from one potato, to the same size, to keep the test fair.",
+          "vi": {
+            "text": "Các khúc khoai tây được cắt từ cùng một củ, cùng kích thước, để thí nghiệm công bằng."
+          },
+          "true": true
+        },
+        {
+          "text": "A more concentrated sucrose solution has a higher water potential.",
+          "vi": {
+            "text": "Dung dịch sucrose càng đặc thì thế nước càng cao."
+          },
+          "true": false
+        },
+        {
+          "text": "In this simulation, the tissue’s stiffness E and the time constant τ are illustrative values.",
+          "vi": {
+            "text": "Trong mô phỏng này, độ cứng E của mô và hằng số thời gian τ là các giá trị minh họa."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "equilibrium-percent",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["mass-change", "model-limits"],
+      "set": {
+        "concentration": 0.1
+      },
+      "stem": "A cylinder (isotonic with {isotonicConcentration} mol/L) is in {concentration} mol/L sucrose at {temperature} °C, a water-potential difference of {@potentialDifference|3} kPa. In the model the change in mass at equilibrium is Δm/m₀ = ΔΨ/E, with E = {tissueModulus} kPa (illustrative). What is the percentage change at equilibrium?",
+      "explain": "Δm/m₀ = {@potentialDifference|3}/{tissueModulus} ≈ {=@potentialDifference/tissueModulus|3} = {@equilibriumPercent|3}%: positive, a gain, since water enters.",
+      "vi": {
+        "stem": "Một khúc khoai tây (đẳng trương với {isotonicConcentration} mol/L) nằm trong dung dịch sucrose {concentration} mol/L ở {temperature} °C, chênh lệch thế nước là {@potentialDifference|3} kPa. Trong mô hình, khi cân bằng Δm/m₀ = ΔΨ/E, với E = {tissueModulus} kPa (giá trị minh họa). Phần trăm thay đổi khối lượng khi cân bằng là bao nhiêu?",
+        "explain": "Δm/m₀ = {@potentialDifference|3}/{tissueModulus} ≈ {=@potentialDifference/tissueModulus|3} = {@equilibriumPercent|3}%: mang dấu dương (tăng khối lượng), vì nước đi vào."
+      },
+      "options": [
+        {
+          "text": "{@equilibriumPercent|3}%",
+          "vi": {
+            "text": "{@equilibriumPercent|3}%"
+          },
+          "correct": true,
+          "check": {
+            "expr": "100*@potentialDifference/tissueModulus",
+            "equals": "equilibriumPercent"
+          }
+        },
+        {
+          "text": "{=@potentialDifference/tissueModulus|3}%",
+          "vi": {
+            "text": "{=@potentialDifference/tissueModulus|3}%"
+          },
+          "check": {
+            "expr": "@potentialDifference/tissueModulus",
+            "equals": "equilibriumPercent"
+          }
+        },
+        {
+          "text": "{=-100*@potentialDifference/tissueModulus|3}%",
+          "vi": {
+            "text": "{=-100*@potentialDifference/tissueModulus|3}%"
+          },
+          "check": {
+            "expr": "-100*@potentialDifference/tissueModulus",
+            "equals": "equilibriumPercent"
+          }
+        },
+        {
+          "text": "{=100*@solutionPotential/tissueModulus|3}%",
+          "vi": {
+            "text": "{=100*@solutionPotential/tissueModulus|3}%"
+          },
+          "check": {
+            "expr": "100*@solutionPotential/tissueModulus",
+            "equals": "equilibriumPercent"
+          }
+        }
+      ]
+    },
+    {
+      "id": "share-after-tau",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["model-limits"],
+      "set": {
+        "concentration": 0.5,
+        "soakTime": 2700
+      },
+      "stem": "In the model the mass approaches its equilibrium change as 1 − e^(−t/τ), with τ = {timeConstant} s (illustrative). After a soak of {soakTime} s, what share of the equilibrium change has the cylinder reached?",
+      "explain": "t = τ, so 1 − e^(−1) ≈ {=100*(1-exp(-soakTime/timeConstant))|3}%: {@finalPercent|3}% of an equilibrium {@equilibriumPercent|3}%. e^(−1) ≈ 37% is the share still to go.",
+      "vi": {
+        "stem": "Trong mô hình, khối lượng tiến tới mức thay đổi cân bằng theo 1 − e^(−t/τ), với τ = {timeConstant} s (giá trị minh họa). Sau {soakTime} s ngâm, khúc khoai tây đã đạt bao nhiêu phần trăm mức thay đổi cân bằng?",
+        "explain": "t = τ, nên 1 − e^(−1) ≈ {=100*(1-exp(-soakTime/timeConstant))|3}%: {@finalPercent|3}% so với mức cân bằng {@equilibriumPercent|3}%. e^(−1) ≈ 37% là phần còn lại chưa đạt tới."
+      },
+      "options": [
+        {
+          "text": "{=100*(1-exp(-soakTime/timeConstant))|3}%",
+          "vi": {
+            "text": "{=100*(1-exp(-soakTime/timeConstant))|3}%"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@equilibriumPercent*(1-exp(-soakTime/timeConstant))",
+            "equals": "finalPercent"
+          }
+        },
+        {
+          "text": "{=100*exp(-soakTime/timeConstant)|3}%",
+          "vi": {
+            "text": "{=100*exp(-soakTime/timeConstant)|3}%"
+          },
+          "check": {
+            "expr": "@equilibriumPercent*exp(-soakTime/timeConstant)",
+            "equals": "finalPercent"
+          }
+        },
+        {
+          "text": "100%, since t = τ",
+          "vi": {
+            "text": "100%, vì t = τ"
+          },
+          "check": {
+            "expr": "@equilibriumPercent",
+            "equals": "finalPercent"
+          }
+        },
+        {
+          "text": "50%, since t = τ",
+          "vi": {
+            "text": "50%, vì t = τ"
+          },
+          "check": {
+            "expr": "@equilibriumPercent*0.5",
+            "equals": "finalPercent"
+          }
+        }
+      ]
+    },
+    {
+      "id": "initial-from-final",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["mass-change"],
+      "set": {
+        "concentration": 0.5,
+        "initialMass": 4,
+        "soakTime": 14400
+      },
+      "stem": "After soaking in {concentration} mol/L sucrose a cylinder weighs {@finalMass|4} g; its mass has changed by {@finalPercent|3}%. What did it weigh before soaking?",
+      "explain": "m = m₀(1 + Δm/m₀), so m₀ = m/(1 + Δm/m₀) = {@finalMass|4}/(1 + ({@finalPercent|3})/100) ≈ {=@finalMass/(1+@finalPercent/100)|3} g. The percentage is of the starting mass, so m·(1 − Δm/m₀) does not undo it.",
+      "vi": {
+        "stem": "Sau khi ngâm trong dung dịch sucrose {concentration} mol/L, một khúc khoai tây nặng {@finalMass|4} g; khối lượng của nó đã thay đổi {@finalPercent|3}%. Trước khi ngâm nó nặng bao nhiêu?",
+        "explain": "m = m₀(1 + Δm/m₀), nên m₀ = m/(1 + Δm/m₀) = {@finalMass|4}/(1 + ({@finalPercent|3})/100) ≈ {=@finalMass/(1+@finalPercent/100)|3} g. Phần trăm được tính theo khối lượng ban đầu, nên m·(1 − Δm/m₀) không cho lại m₀."
+      },
+      "options": [
+        {
+          "text": "{=@finalMass/(1+@finalPercent/100)|3} g",
+          "vi": {
+            "text": "{=@finalMass/(1+@finalPercent/100)|3} g"
+          },
+          "correct": true,
+          "check": {
+            "expr": "100*(@finalMass-@finalMass/(1+@finalPercent/100))/(@finalMass/(1+@finalPercent/100))",
+            "equals": "finalPercent"
+          }
+        },
+        {
+          "text": "{=@finalMass*(1-@finalPercent/100)|3} g",
+          "vi": {
+            "text": "{=@finalMass*(1-@finalPercent/100)|3} g"
+          },
+          "check": {
+            "expr": "100*(@finalMass-@finalMass*(1-@finalPercent/100))/(@finalMass*(1-@finalPercent/100))",
+            "equals": "finalPercent"
+          }
+        },
+        {
+          "text": "{=@finalMass-@finalPercent|3} g",
+          "vi": {
+            "text": "{=@finalMass-@finalPercent|3} g"
+          },
+          "check": {
+            "expr": "100*(@finalMass-(@finalMass-@finalPercent))/(@finalMass-@finalPercent)",
+            "equals": "finalPercent"
+          }
+        },
+        {
+          "text": "{=@finalMass*(1+@finalPercent/100)|3} g",
+          "vi": {
+            "text": "{=@finalMass*(1+@finalPercent/100)|3} g"
+          },
+          "check": {
+            "expr": "100*(@finalMass-@finalMass*(1+@finalPercent/100))/(@finalMass*(1+@finalPercent/100))",
+            "equals": "finalPercent"
+          }
+        }
+      ]
+    },
+    {
+      "id": "salt-trap",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["water-potential"],
+      "set": {
+        "concentration": 0.4
+      },
+      "stem": "{concentration} mol/L sucrose has an ideal water potential of {@solutionPotential|3} kPa at {temperature} °C. What is the ideal water potential of {concentration} mol/L sodium chloride at the same temperature? (Ψ = −iCRT; NaCl dissociates into Na⁺ and Cl⁻, i = 2)",
+      "explain": "Sucrose does not dissociate (i = 1), but each NaCl gives two particles: Ψ = −2·{concentration}·R·T ≈ {=2*@solutionPotential|3} kPa, twice as negative. Water potential depends on the number of solute particles, not on the molar concentration of the substance.",
+      "vi": {
+        "stem": "Dung dịch sucrose {concentration} mol/L có thế nước lí tưởng {@solutionPotential|3} kPa ở {temperature} °C. Thế nước lí tưởng của dung dịch sodium chloride {concentration} mol/L ở cùng nhiệt độ là bao nhiêu? (Ψ = −iCRT; NaCl phân li thành Na⁺ và Cl⁻, i = 2)",
+        "explain": "Sucrose không phân li (i = 1), còn mỗi phân tử NaCl cho hai tiểu phân: Ψ = −2·{concentration}·R·T ≈ {=2*@solutionPotential|3} kPa, âm gấp đôi. Thế nước phụ thuộc vào số tiểu phân chất tan, không phải vào nồng độ mol của chất."
+      },
+      "options": [
+        {
+          "text": "{=2*@solutionPotential|3} kPa",
+          "vi": {
+            "text": "{=2*@solutionPotential|3} kPa"
+          },
+          "correct": true,
+          "check": {
+            "expr": "-2*concentration*8.314462618*(temperature+273.15)/2",
+            "equals": "solutionPotential"
+          }
+        },
+        {
+          "text": "{@solutionPotential|3} kPa, as the concentration is the same",
+          "vi": {
+            "text": "{@solutionPotential|3} kPa, vì nồng độ như nhau"
+          },
+          "check": {
+            "expr": "-concentration*8.314462618*(temperature+273.15)/2",
+            "equals": "solutionPotential"
+          }
+        },
+        {
+          "text": "{=@solutionPotential/2|3} kPa",
+          "vi": {
+            "text": "{=@solutionPotential/2|3} kPa"
+          },
+          "check": {
+            "expr": "-concentration*8.314462618*(temperature+273.15)/2/2",
+            "equals": "solutionPotential"
+          }
+        },
+        {
+          "text": "{=-2*@solutionPotential|3} kPa",
+          "vi": {
+            "text": "{=-2*@solutionPotential|3} kPa"
+          },
+          "check": {
+            "expr": "2*concentration*8.314462618*(temperature+273.15)/2",
+            "equals": "solutionPotential"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-isotonic",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["isotonic-point", "water-potential", "mass-change"],
+      "set": {
+        "concentration": 0.25,
+        "initialMass": 3,
+        "soakTime": 14400
+      },
+      "stem": "A {initialMass} g cylinder from tissue isotonic with {isotonicConcentration} mol/L soaks for {soakTime} s in {concentration} mol/L sucrose at {temperature} °C. Decide whether each statement is true or false.",
+      "explain": "The solution’s Ψ, {@solutionPotential|3} kPa, equals the tissue’s, so the difference is {@potentialDifference} and there is no net flow: the cylinder stays {@finalMass} g. Water molecules still cross both ways, at equal rates. Soaking longer changes nothing, since there is no difference to drive the water.",
+      "vi": {
+        "stem": "Một khúc khoai tây {initialMass} g, cắt từ mô đẳng trương với {isotonicConcentration} mol/L, được ngâm {soakTime} s trong dung dịch sucrose {concentration} mol/L ở {temperature} °C. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Thế nước của dung dịch, {@solutionPotential|3} kPa, bằng thế nước của mô, nên chênh lệch bằng {@potentialDifference} và không có dòng nước thực: khúc khoai tây vẫn nặng {@finalMass} g. Các phân tử nước vẫn đi qua màng theo cả hai chiều với tốc độ bằng nhau. Ngâm lâu hơn cũng không thay đổi gì, vì không có chênh lệch nào làm nước di chuyển."
+      },
+      "statements": [
+        {
+          "text": "The solution’s water potential, about {@solutionPotential|3} kPa, equals the tissue’s.",
+          "vi": {
+            "text": "Thế nước của dung dịch, khoảng {@solutionPotential|3} kPa, bằng thế nước của mô."
+          },
+          "true": true,
+          "check": {
+            "expr": "-isotonicConcentration*8.314462618*(temperature+273.15)",
+            "equals": "solutionPotential"
+          }
+        },
+        {
+          "text": "Water molecules stop crossing the cell membranes.",
+          "vi": {
+            "text": "Các phân tử nước ngừng đi qua màng tế bào."
+          },
+          "true": false
+        },
+        {
+          "text": "The cylinder still weighs {initialMass} g after the soak.",
+          "vi": {
+            "text": "Sau khi ngâm, khúc khoai tây vẫn nặng {initialMass} g."
+          },
+          "true": true,
+          "check": {
+            "expr": "initialMass",
+            "equals": "finalMass"
+          }
+        },
+        {
+          "text": "Soaking twice as long would make the cylinder gain mass.",
+          "vi": {
+            "text": "Ngâm lâu gấp đôi thì khúc khoai tây sẽ tăng khối lượng."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,923 @@
+{
+  "id": "enzyme-activity",
+  "name": "Enzyme activity",
+  "category": "biology",
+  "description": "Catalase from a tissue extract breaks hydrogen peroxide down into water and oxygen, 2 H₂O₂ → 2 H₂O + O₂, and the oxygen is collected in a gas syringe. Change the peroxide concentration, the temperature of the water bath, the pH of the buffer and the amount of extract, and watch how fast the gas comes off. The initial rate follows the Michaelis–Menten law v₀ = V_max·S₀/(K_m + S₀); each run also lists 1/S₀ and 1/v̄, the inverse of its mean rate over the first 10 s, for a Lineweaver–Burk plot by hand. A simplified teaching model, not laboratory data.",
+  "vi": {
+    "name": "Hoạt tính enzyme",
+    "description": "Enzyme catalase trong dịch chiết mô phân giải hiđro peoxit thành nước và oxi, 2 H₂O₂ → 2 H₂O + O₂, khí oxi được thu vào xi lanh thu khí. Thay đổi nồng độ peoxit, nhiệt độ bể ổn nhiệt, pH của dung dịch đệm và lượng dịch chiết, rồi quan sát khí thoát ra nhanh hay chậm. Tốc độ ban đầu tuân theo định luật Michaelis–Menten v₀ = V_max·S₀/(K_m + S₀); mỗi lần chạy còn cho 1/S₀ và 1/v̄, nghịch đảo của tốc độ trung bình trong 10 s đầu, để tự vẽ đồ thị Lineweaver–Burk. Đây là mô hình dạy học đơn giản hóa, không phải số liệu phòng thí nghiệm.",
+    "note": "Mô hình dạy học, không phải số liệu đo thật. Tốc độ phân giải H₂O₂ là v = V_max·S/(K_m + S) (Michaelis–Menten), với V_max = a·E·f_T·f_pH: hoạt tính riêng a = 0,01 mol/(L·s) cho mỗi mL dịch chiết ở nhiệt độ và pH tối ưu, E là thể tích dịch chiết. f_T = g(T)/g(T_opt), g(T) = Q₁₀^((T − Tm)/10)/(1 + e^((T − Tm)/w)) với Q₁₀ = 2, Tm = 41 °C, w = 3 °C: tốc độ tăng gấp đôi mỗi 10 °C nhân với phần enzyme chưa bị biến tính, nên cực đại tại T_opt ≈ 37 °C rồi giảm mạnh ở nhiệt độ cao. Ở đây sự biến tính xảy ra tức thời và chỉ phụ thuộc T; enzyme thật bị biến tính không thuận nghịch và càng lâu càng nhiều. f_pH = exp(−(pH − 7)²/(2·1,5²)) là một đường cong hình chuông kinh nghiệm. K_m = 0,1 mol/L là giá trị minh họa: catalase thật không tuân theo đúng định luật Michaelis–Menten và các K_m biểu kiến được công bố khác nhau rất nhiều. Định luật được giải chính xác ở dạng tích phân K_m·ln(S₀/S) + S₀ − S = V_max·t, nên bước thời gian không làm thay đổi đường cong. Oxi: 1 mol O₂ cho mỗi 2 mol H₂O₂ trong 5 mL hỗn hợp, thu ngay vào xi lanh với thể tích mol 24,06 L/mol (khí lí tưởng khô ở 20 °C và 101,325 kPa). Bỏ qua oxi hòa tan: 5 mL nước có thể hòa tan khoảng 0,1–0,15 mL O₂ trước khi khí đi vào xi lanh, nên các số đọc dưới khoảng 1 mL (ở các điều kiện chậm nhất) trong phòng thí nghiệm thật sẽ nhỏ hơn, gần bằng 0 với điều kiện chậm nhất. Cũng bỏ qua hơi nước trong xi lanh (khoảng 2 % ở 20 °C). Tốc độ ban đầu v₀ là giá trị của mô hình tại t = 0 (tiếp tuyến của đường cong O₂ lúc bắt đầu), không phải một phép đo; tốc độ trung bình v̄ trong 10 s đầu là số đọc của lần chạy và luôn nhỏ hơn v₀ vì cơ chất bị tiêu thụ dần. Lineweaver–Burk: 1/v₀ = (K_m/V_max)·(1/S₀) + 1/V_max, một đường thẳng có độ dốc K_m/V_max và tung độ gốc 1/V_max (khác 0); độ dốc chia cho tung độ gốc cho K_m. Các điểm 1/v̄ nằm phía trên đường này, lệch nhiều nhất khi S₀ nhỏ (với các giá trị mặc định, ở 0,05 mol/L v̄ thấp hơn v₀ khoảng 13 %). Mỗi lần chạy thu khí trong 60 s."
+  },
+  "requiredEquipment": ["gas-syringe-rig"],
+  "model": "biology.enzyme-kinetics",
+  "presentation": "2d-workspace",
+  "workspace": {
+    "pieces": [
+      {
+        "id": "peroxide",
+        "kind": "solution-bottle",
+        "slot": "library",
+        "label": "Hydrogen peroxide solutions",
+        "vi": {
+          "label": "Dung dịch hiđro peoxit"
+        },
+        "owns": ["substrate"],
+        "shows": []
+      },
+      {
+        "id": "buffer",
+        "kind": "buffer-bottle",
+        "slot": "library",
+        "label": "Buffer solutions",
+        "vi": {
+          "label": "Dung dịch đệm"
+        },
+        "owns": ["pH"],
+        "shows": []
+      },
+      {
+        "id": "extract",
+        "kind": "dispensing-syringe",
+        "slot": "front-left",
+        "label": "Catalase extract syringe",
+        "vi": {
+          "label": "Xi lanh dịch chiết catalase"
+        },
+        "owns": ["enzymeVolume"],
+        "shows": []
+      },
+      {
+        "id": "bath",
+        "kind": "bio-water-bath",
+        "slot": "back-left",
+        "label": "Water bath",
+        "vi": {
+          "label": "Bể ổn nhiệt"
+        },
+        "owns": ["temperature"],
+        "shows": []
+      },
+      {
+        "id": "tube",
+        "kind": "reaction-tube",
+        "slot": "back-centre",
+        "label": "Boiling tube of hydrogen peroxide in buffer",
+        "vi": {
+          "label": "Ống nghiệm chứa hiđro peoxit trong dung dịch đệm"
+        },
+        "owns": [],
+        "shows": [
+          {
+            "variable": "substrate"
+          },
+          {
+            "variable": "conversion"
+          },
+          {
+            "input": "mixtureVolume"
+          }
+        ]
+      },
+      {
+        "id": "gas",
+        "kind": "gas-syringe",
+        "slot": "back-right",
+        "label": "Gas syringe, 100 mL",
+        "vi": {
+          "label": "Xi lanh thu khí 100 mL"
+        },
+        "owns": [],
+        "shows": [
+          {
+            "variable": "oxygen"
+          }
+        ]
+      },
+      {
+        "id": "stopwatch",
+        "kind": "bio-stopwatch",
+        "slot": "front-centre",
+        "label": "Stopwatch",
+        "vi": {
+          "label": "Đồng hồ bấm giờ"
+        },
+        "owns": [],
+        "shows": [
+          {
+            "variable": "clock"
+          },
+          {
+            "input": "collectionTime"
+          }
+        ]
+      }
+    ],
+    "materials": [],
+    "setup": [],
+    "runLabel": "Start",
+    "vi": {
+      "runLabel": "Bắt đầu"
+    }
+  },
+  "parameters": [
+    {
+      "id": "substrate",
+      "label": "Hydrogen peroxide concentration",
+      "vi": {
+        "label": "Nồng độ hiđro peoxit"
+      },
+      "symbol": "S₀",
+      "unit": "mol/L",
+      "default": 0.5,
+      "min": 0.05,
+      "max": 1,
+      "step": 0.05,
+      "presets": [
+        {
+          "label": "0.05 mol/L",
+          "vi": {
+            "label": "0,05 mol/L"
+          },
+          "value": 0.05
+        },
+        {
+          "label": "0.1 mol/L",
+          "vi": {
+            "label": "0,1 mol/L"
+          },
+          "value": 0.1
+        },
+        {
+          "label": "0.5 mol/L",
+          "vi": {
+            "label": "0,5 mol/L"
+          },
+          "value": 0.5
+        },
+        {
+          "label": "1 mol/L",
+          "vi": {
+            "label": "1 mol/L"
+          },
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "temperature",
+      "label": "Water bath temperature",
+      "vi": {
+        "label": "Nhiệt độ bể ổn nhiệt"
+      },
+      "symbol": "T",
+      "unit": "°C",
+      "default": 30,
+      "min": 5,
+      "max": 65,
+      "step": 1,
+      "presets": [
+        {
+          "label": "20 °C",
+          "vi": {
+            "label": "20 °C"
+          },
+          "value": 20
+        },
+        {
+          "label": "30 °C",
+          "vi": {
+            "label": "30 °C"
+          },
+          "value": 30
+        },
+        {
+          "label": "40 °C",
+          "vi": {
+            "label": "40 °C"
+          },
+          "value": 40
+        },
+        {
+          "label": "50 °C",
+          "vi": {
+            "label": "50 °C"
+          },
+          "value": 50
+        }
+      ]
+    },
+    {
+      "id": "pH",
+      "label": "Buffer pH",
+      "vi": {
+        "label": "pH dung dịch đệm"
+      },
+      "symbol": "pH",
+      "unit": "",
+      "default": 6,
+      "min": 4,
+      "max": 10,
+      "step": 0.5,
+      "presets": [
+        {
+          "label": "pH 4",
+          "vi": {
+            "label": "pH 4"
+          },
+          "value": 4
+        },
+        {
+          "label": "pH 6",
+          "vi": {
+            "label": "pH 6"
+          },
+          "value": 6
+        },
+        {
+          "label": "pH 7",
+          "vi": {
+            "label": "pH 7"
+          },
+          "value": 7
+        },
+        {
+          "label": "pH 8",
+          "vi": {
+            "label": "pH 8"
+          },
+          "value": 8
+        },
+        {
+          "label": "pH 10",
+          "vi": {
+            "label": "pH 10"
+          },
+          "value": 10
+        }
+      ]
+    },
+    {
+      "id": "enzymeVolume",
+      "label": "Catalase extract added",
+      "vi": {
+        "label": "Thể tích dịch chiết catalase"
+      },
+      "symbol": "E",
+      "unit": "mL",
+      "default": 1,
+      "min": 0.25,
+      "max": 2,
+      "step": 0.25,
+      "presets": [
+        {
+          "label": "0.5 mL",
+          "vi": {
+            "label": "0,5 mL"
+          },
+          "value": 0.5
+        },
+        {
+          "label": "1 mL",
+          "vi": {
+            "label": "1 mL"
+          },
+          "value": 1
+        },
+        {
+          "label": "1.5 mL",
+          "vi": {
+            "label": "1,5 mL"
+          },
+          "value": 1.5
+        },
+        {
+          "label": "2 mL",
+          "vi": {
+            "label": "2 mL"
+          },
+          "value": 2
+        }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "km": 0.1,
+    "specificActivity": 0.01,
+    "q10": 2,
+    "meltTemperature": 41,
+    "meltWidth": 3,
+    "optimumPH": 7,
+    "pHWidth": 1.5,
+    "mixtureVolume": 5,
+    "molarVolume": 24.06,
+    "window": 10,
+    "collectionTime": 60
+  },
+  "inputs": {
+    "km": {
+      "symbol": "K_m",
+      "unit": "mol/L",
+      "desk": false
+    },
+    "specificActivity": {
+      "symbol": "a",
+      "unit": "mol/(L·s·mL)",
+      "desk": false
+    },
+    "q10": {
+      "symbol": "Q₁₀",
+      "unit": "",
+      "desk": false
+    },
+    "meltTemperature": {
+      "symbol": "Tm",
+      "unit": "°C",
+      "desk": false
+    },
+    "meltWidth": {
+      "symbol": "w",
+      "unit": "°C",
+      "desk": false
+    },
+    "optimumPH": {
+      "symbol": "pH_opt",
+      "unit": "",
+      "desk": false
+    },
+    "pHWidth": {
+      "symbol": "σ",
+      "unit": "",
+      "desk": false
+    },
+    "mixtureVolume": {
+      "symbol": "V_mix",
+      "unit": "mL"
+    },
+    "molarVolume": {
+      "symbol": "V_m",
+      "unit": "L/mol",
+      "desk": false
+    },
+    "window": {
+      "symbol": "t_w",
+      "unit": "s",
+      "desk": false
+    },
+    "collectionTime": {
+      "symbol": "t_end",
+      "unit": "s"
+    }
+  },
+  "simulation": {
+    "timeStep": 0.01,
+    "maxDuration": 65,
+    "sampleInterval": 0.25
+  },
+  "measurements": [
+    {
+      "id": "oxygen",
+      "label": "Oxygen collected",
+      "vi": {
+        "label": "Thể tích oxi thu được"
+      },
+      "symbol": "V_O₂",
+      "unit": "mL",
+      "variable": "oxygen"
+    },
+    {
+      "id": "substrate",
+      "label": "Hydrogen peroxide left",
+      "vi": {
+        "label": "Hiđro peoxit còn lại"
+      },
+      "symbol": "S",
+      "unit": "mol/L",
+      "variable": "substrate"
+    },
+    {
+      "id": "rate",
+      "label": "Rate of breakdown",
+      "vi": {
+        "label": "Tốc độ phân giải"
+      },
+      "symbol": "v",
+      "unit": "mol/(L·s)",
+      "variable": "rate"
+    },
+    {
+      "id": "conversion",
+      "label": "Peroxide broken down",
+      "vi": {
+        "label": "Phần peoxit đã phân giải"
+      },
+      "symbol": "X",
+      "unit": "%",
+      "variable": "conversion"
+    }
+  ],
+  "results": [
+    {
+      "id": "initialRate",
+      "label": "Initial rate v₀ in the model (at t = 0)",
+      "vi": {
+        "label": "Tốc độ ban đầu v₀ theo mô hình (tại t = 0)"
+      },
+      "symbol": "v₀",
+      "unit": "mol/(L·s)",
+      "variable": "rate",
+      "reduce": "max"
+    },
+    {
+      "id": "windowOxygen",
+      "label": "Oxygen in the first 10 s",
+      "vi": {
+        "label": "Thể tích oxi trong 10 s đầu"
+      },
+      "symbol": "V_O₂(10 s)",
+      "unit": "mL",
+      "variable": "windowOxygen",
+      "reduce": "final",
+      "theory": "windowOxygen"
+    },
+    {
+      "id": "windowRate",
+      "label": "Mean rate over the first 10 s",
+      "vi": {
+        "label": "Tốc độ trung bình trong 10 s đầu"
+      },
+      "symbol": "v̄",
+      "unit": "mol/(L·s)",
+      "variable": "windowRate",
+      "reduce": "final",
+      "theory": "windowRate"
+    },
+    {
+      "id": "oxygen",
+      "label": "Oxygen after 60 s",
+      "vi": {
+        "label": "Thể tích oxi sau 60 s"
+      },
+      "symbol": "V_O₂",
+      "unit": "mL",
+      "variable": "oxygen",
+      "reduce": "final",
+      "theory": "finalOxygen"
+    },
+    {
+      "id": "conversion",
+      "label": "Peroxide broken down after 60 s",
+      "vi": {
+        "label": "Phần peoxit đã phân giải sau 60 s"
+      },
+      "symbol": "X",
+      "unit": "%",
+      "variable": "conversion",
+      "reduce": "final",
+      "theory": "finalConversion"
+    },
+    {
+      "id": "activity",
+      "label": "Relative activity f_T·f_pH",
+      "vi": {
+        "label": "Hoạt tính tương đối f_T·f_pH"
+      },
+      "symbol": "f_T·f_pH",
+      "unit": "",
+      "variable": "activity",
+      "reduce": "final",
+      "theory": "activityFactor",
+      "classes": [
+        {
+          "max": 0.1,
+          "label": "Almost inactive",
+          "vi": {
+            "label": "Gần như mất hoạt tính"
+          }
+        },
+        {
+          "max": 0.5,
+          "label": "Low activity",
+          "vi": {
+            "label": "Hoạt tính thấp"
+          }
+        },
+        {
+          "max": 0.9,
+          "label": "Moderate activity",
+          "vi": {
+            "label": "Hoạt tính trung bình"
+          }
+        },
+        {
+          "label": "Near the optimum",
+          "vi": {
+            "label": "Gần tối ưu"
+          }
+        }
+      ]
+    },
+    {
+      "id": "inverseSubstrate",
+      "label": "1/S₀",
+      "vi": {
+        "label": "1/S₀"
+      },
+      "symbol": "1/S₀",
+      "unit": "L/mol",
+      "variable": "inverseSubstrate",
+      "reduce": "final"
+    },
+    {
+      "id": "inverseWindowRate",
+      "label": "1/v̄ (mean rate over the first 10 s)",
+      "vi": {
+        "label": "1/v̄ (tốc độ trung bình trong 10 s đầu)"
+      },
+      "symbol": "1/v̄",
+      "unit": "L·s/mol",
+      "variable": "inverseWindowRate",
+      "reduce": "final",
+      "theory": "inverseWindowRate"
+    }
+  ],
+  "graphs": [
+    {
+      "id": "oxygen-time",
+      "title": "Oxygen collected against time",
+      "vi": {
+        "title": "Thể tích oxi thu được theo thời gian"
+      },
+      "x": "time",
+      "y": ["oxygen"]
+    },
+    {
+      "id": "rate-substrate",
+      "title": "Rate against hydrogen peroxide left",
+      "vi": {
+        "title": "Tốc độ phân giải theo lượng hiđro peoxit còn lại"
+      },
+      "x": "substrate",
+      "y": ["rate"]
+    },
+    {
+      "id": "substrate-time",
+      "title": "Hydrogen peroxide left against time",
+      "vi": {
+        "title": "Hiđro peoxit còn lại theo thời gian"
+      },
+      "x": "time",
+      "y": ["substrate"]
+    }
+  ],
+  "monitor": "oxygen-time",
+  "compare": [
+    {
+      "graph": "oxygen-time"
+    },
+    {
+      "graph": "rate-substrate"
+    }
+  ],
+  "note": "A teaching model, not measured data. The peroxide breaks down at v = V_max·S/(K_m + S) (Michaelis–Menten), with V_max = a·E·f_T·f_pH: the specific activity a = 0.01 mol/(L·s) per mL of extract at the optimum temperature and pH, E the extract added. f_T = g(T)/g(T_opt), g(T) = Q₁₀^((T − Tm)/10)/(1 + e^((T − Tm)/w)) with Q₁₀ = 2, Tm = 41 °C, w = 3 °C: the rate doubles every 10 °C, times the share of enzyme not yet unfolded, so it peaks at T_opt ≈ 37 °C and collapses above it. Here unfolding is instant and depends on T alone; a real enzyme denatures irreversibly, more the longer it is heated. f_pH = exp(−(pH − 7)²/(2·1.5²)) is an empirical bell curve. K_m = 0.1 mol/L is illustrative: real catalase does not follow Michaelis–Menten exactly and published apparent K_m values vary widely. The law is solved exactly in its integrated form K_m·ln(S₀/S) + S₀ − S = V_max·t, so the time step does not change the curve. Oxygen: 1 mol O₂ per 2 mol H₂O₂ in 5 mL of mixture, collected at once at a molar volume of 24.06 L/mol (a dry ideal gas at 20 °C and 101.325 kPa). Oxygen left dissolved is ignored: 5 mL of water can take up roughly 0.1–0.15 mL of O₂ before any gas reaches the syringe, so readings below about 1 mL (the slowest settings) would be lower in a real lab, near 0 for the slowest. Water vapour in the syringe (about 2 % at 20 °C) is ignored too. The initial rate v₀ is the model's value at t = 0 (the tangent to the O₂ curve at the start), not a measurement; the mean rate v̄ over the first 10 s is the run's reading and is always lower, as the substrate is used up. Lineweaver–Burk: 1/v₀ = (K_m/V_max)·(1/S₀) + 1/V_max, a straight line of slope K_m/V_max and intercept 1/V_max (not 0); slope ÷ intercept gives K_m. The 1/v̄ points lie above it, most at low S₀ (at the defaults v̄ is about 13 % below v₀ at 0.05 mol/L). Each run collects gas for 60 s.",
+  "analyses": [
+    {
+      "id": "enzyme-amount",
+      "title": "Mean rate over the first 10 s against the extract added",
+      "note": "V_max is proportional to the amount of enzyme, so at one S₀, temperature and pH the initial rate is v₀ = (v₀/E)·E, a line through the origin: the reference line uses the model's v₀/E. Each point is the mean rate over the first 10 s, which is always below v₀ because the peroxide is used up, and more so the more extract there is; so the points bend below the line and the fitted slope comes out short of v₀/E: at 30 °C and pH 6 by 0.7 % at S₀ 1 mol/L and 2.4 % at 0.5, but by 21 % at 0.1 and 32 % at 0.05, where the peroxide runs low within the 10 s, so use S₀ 0.5 or 1 mol/L. That gap is the method, not a fault in the data.",
+      "vi": {
+        "title": "Tốc độ trung bình trong 10 s đầu theo lượng dịch chiết",
+        "note": "V_max tỉ lệ với lượng enzyme, nên ở cùng S₀, nhiệt độ và pH thì tốc độ ban đầu v₀ = (v₀/E)·E, một đường thẳng đi qua gốc tọa độ: đường tham chiếu dùng v₀/E của mô hình. Mỗi điểm là tốc độ trung bình trong 10 s đầu, luôn nhỏ hơn v₀ vì peoxit bị tiêu thụ dần, và càng nhiều dịch chiết thì càng nhỏ hơn; vì vậy các điểm cong xuống dưới đường thẳng và độ dốc thu được nhỏ hơn v₀/E: ở 30 °C và pH 6, nhỏ hơn 0,7 % khi S₀ = 1 mol/L và 2,4 % khi 0,5, nhưng tới 21 % khi 0,1 và 32 % khi 0,05, vì peoxit cạn dần ngay trong 10 s, nên hãy dùng S₀ 0,5 hoặc 1 mol/L. Chênh lệch đó do cách đo, không phải lỗi của số liệu."
+      },
+      "x": "enzymeVolume",
+      "y": "windowRate",
+      "group": ["substrate", "temperature", "pH"],
+      "columns": ["enzymeVolume", "windowRate", "windowOxygen", "initialRate"],
+      "slope": {
+        "label": "Rate per mL of extract",
+        "vi": {
+          "label": "Tốc độ cho mỗi mL dịch chiết"
+        },
+        "symbol": "v/E",
+        "unit": "mol/(L·s·mL)",
+        "theory": "ratePerEnzyme"
+      }
+    }
+  ],
+  "scatters": [
+    {
+      "id": "activity-temperature",
+      "title": "Relative activity against temperature",
+      "vi": {
+        "title": "Hoạt tính tương đối theo nhiệt độ"
+      },
+      "x": "temperature",
+      "y": "activity"
+    },
+    {
+      "id": "activity-ph",
+      "title": "Relative activity against pH",
+      "vi": {
+        "title": "Hoạt tính tương đối theo pH"
+      },
+      "x": "pH",
+      "y": "activity"
+    }
+  ],
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the enzyme activity instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn thí nghiệm hoạt tính enzyme trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "enzyme-activity-instructions"
+      }
+    },
+    {
+      "id": "work",
+      "instruction": "Go to the gas syringe rig and press E to work at the bench.",
+      "vi": {
+        "instruction": "Đến bộ dụng cụ xi lanh thu khí và nhấn E để làm việc tại bàn thí nghiệm."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "gas-syringe-rig"
+      }
+    },
+    {
+      "id": "substrate",
+      "instruction": "Choose the hydrogen peroxide solution (its concentration S₀) on the bench.",
+      "vi": {
+        "instruction": "Chọn dung dịch hiđro peoxit (nồng độ S₀ của nó) trên bàn thí nghiệm."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "substrate"
+      }
+    },
+    {
+      "id": "temperature",
+      "instruction": "Set the water bath temperature T.",
+      "vi": {
+        "instruction": "Đặt nhiệt độ bể ổn nhiệt T."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "temperature"
+      }
+    },
+    {
+      "id": "ph",
+      "instruction": "Choose the buffer pH.",
+      "vi": {
+        "instruction": "Chọn pH của dung dịch đệm."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "pH"
+      }
+    },
+    {
+      "id": "extract",
+      "instruction": "Choose the volume E of catalase extract in the syringe.",
+      "vi": {
+        "instruction": "Chọn thể tích dịch chiết catalase E trong xi lanh."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "enzymeVolume"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Press START to add the extract: watch the gas syringe fill for 60 s.",
+      "vi": {
+        "instruction": "Nhấn BẮT ĐẦU để cho dịch chiết vào: quan sát xi lanh thu khí đầy dần trong 60 s."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Read the oxygen and the mean rate over the first 10 s, and the oxygen–time graph, in the notebook.",
+      "vi": {
+        "instruction": "Đọc thể tích oxi và tốc độ trung bình trong 10 s đầu, cùng đồ thị thể tích oxi theo thời gian, trong sổ ghi chép."
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, change S₀ (or the temperature or pH), and run again: the activity of your runs against temperature and pH builds up in the results.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, thay đổi S₀ (hoặc nhiệt độ, pH) rồi chạy lại: hoạt tính của các lần chạy theo nhiệt độ và pH được vẽ dần trong kết quả."
+      },
+      "done": {
+        "kind": "reset"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "initial-rate",
+      "question": "Catalase ({enzymeVolume} mL of extract) breaks down {substrate} mol/L hydrogen peroxide at {temperature} °C and pH {pH}; there its relative activity is f = {@activityFactor|3}. Find V_max and the initial rate (a = {specificActivity} mol/(L·s) per mL, K_m = {km} mol/L: illustrative values).",
+      "vi": {
+        "question": "Catalase ({enzymeVolume} mL dịch chiết) phân giải hiđro peoxit {substrate} mol/L ở {temperature} °C, pH {pH}; khi đó hoạt tính tương đối f = {@activityFactor|3}. Tìm V_max và tốc độ ban đầu (a = {specificActivity} mol/(L·s) cho mỗi mL, K_m = {km} mol/L: các giá trị minh họa)."
+      },
+      "set": { "substrate": 0.1, "temperature": 30, "pH": 7, "enzymeVolume": 1 },
+      "find": [
+        { "theory": "vmax", "symbol": "V_max", "unit": "mol/(L·s)" },
+        { "theory": "initialRate", "symbol": "v₀", "unit": "mol/(L·s)" }
+      ],
+      "steps": [
+        {
+          "say": "The most the enzyme can do is its activity per mL, times the extract added, times how active it is at this temperature and pH.",
+          "vi": {
+            "say": "Tốc độ tối đa của enzim bằng hoạt tính trên mỗi mL, nhân thể tích dịch chiết, nhân mức hoạt động của enzim ở nhiệt độ và pH này."
+          },
+          "write": "V_max = a·E·f = {specificActivity}·{enzymeVolume}·{@activityFactor|3} ≈ {@vmax} mol/(L·s)",
+          "check": { "expr": "specificActivity*enzymeVolume*@activityFactor", "equals": "vmax" }
+        },
+        {
+          "say": "Michaelis–Menten: at S = K_m the enzyme works at half its maximum.",
+          "vi": {
+            "say": "Phương trình Michaelis–Menten: khi S = K_m, enzim hoạt động bằng một nửa tốc độ tối đa."
+          },
+          "write": "v₀ = {@vmax}·{substrate}/({km} + {substrate}) ≈ {@initialRate} mol/(L·s)",
+          "check": { "expr": "@vmax*substrate/(km+substrate)", "equals": "initialRate" }
+        }
+      ]
+    },
+    {
+      "id": "oxygen-and-half-time",
+      "question": "{enzymeVolume} mL of extract acts on 5 mL of {substrate} mol/L peroxide at {temperature} °C and pH {pH} (f = {@activityFactor|3}). Find the most oxygen it can give (24.06 L/mol) and the time to break down half the peroxide.",
+      "vi": {
+        "question": "{enzymeVolume} mL dịch chiết tác dụng với 5 mL peoxit {substrate} mol/L ở {temperature} °C, pH {pH} (f = {@activityFactor|3}). Tìm thể tích oxi tối đa thu được (24,06 L/mol) và thời gian để một nửa lượng peoxit bị phân giải."
+      },
+      "set": { "substrate": 1, "enzymeVolume": 2 },
+      "find": [
+        { "theory": "maxOxygen", "symbol": "V_O₂,max", "unit": "mL" },
+        { "theory": "halfTime", "symbol": "t½", "unit": "s" }
+      ],
+      "steps": [
+        {
+          "say": "2H₂O₂ → 2H₂O + O₂: half a mole of oxygen for each mole of peroxide; mL times mol/L gives millimoles.",
+          "vi": {
+            "say": "2H₂O₂ → 2H₂O + O₂: mỗi mol peoxit cho nửa mol oxi; mL nhân mol/L cho mmol."
+          },
+          "write": "V = ({substrate}·{mixtureVolume}/2)·{molarVolume} ≈ {@maxOxygen} mL",
+          "check": { "expr": "substrate*mixtureVolume/2*molarVolume", "equals": "maxOxygen" }
+        },
+        {
+          "say": "The maximum rate with this extract.",
+          "vi": { "say": "Tốc độ tối đa với lượng dịch chiết này." },
+          "write": "V_max = {specificActivity}·{enzymeVolume}·{@activityFactor|3} ≈ {@vmax} mol/(L·s)",
+          "check": { "expr": "specificActivity*enzymeVolume*@activityFactor", "equals": "vmax" }
+        },
+        {
+          "say": "The rate falls as the peroxide is used up; integrating Michaelis–Menten, half is gone when V_max·t = K_m·ln 2 + S₀/2.",
+          "vi": {
+            "say": "Tốc độ giảm dần khi peoxit bị dùng hết; lấy tích phân phương trình Michaelis–Menten, một nửa bị phân giải khi V_max·t = K_m·ln 2 + S₀/2."
+          },
+          "write": "t½ = ({km}·ln 2 + {substrate}/2)/{@vmax} ≈ {@halfTime} s",
+          "check": { "expr": "(km*ln(2)+substrate/2)/@vmax", "equals": "halfTime" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "The enzyme catalase breaks hydrogen peroxide down into water and oxygen; how fast the oxygen comes off shows how the substrate, temperature and pH change the enzyme’s activity.",
+    "vi": {
+      "summary": "Enzim catalaza phân giải hiđro peoxit thành nước và oxi; tốc độ giải phóng oxi cho thấy nồng độ cơ chất, nhiệt độ và pH ảnh hưởng thế nào tới hoạt tính của enzim."
+    },
+    "parts": [
+      {
+        "id": "tube",
+        "name": "Boiling tube",
+        "role": "Holds the hydrogen peroxide S₀ in the buffer, standing in the water bath.",
+        "vi": {
+          "name": "Ống nghiệm lớn",
+          "role": "Chứa hiđro peoxit S₀ trong dung dịch đệm, đặt trong bể ổn nhiệt."
+        },
+        "anchor": {
+          "part": "mixture"
+        }
+      },
+      {
+        "id": "extract",
+        "name": "Extract syringe",
+        "role": "Adds the volume E of catalase extract when the run starts.",
+        "vi": {
+          "name": "Xi lanh dịch chiết",
+          "role": "Bơm thể tích E dịch chiết chứa catalaza vào khi bắt đầu chạy."
+        },
+        "anchor": {
+          "part": "extract"
+        }
+      },
+      {
+        "id": "gas-syringe",
+        "name": "Gas syringe",
+        "role": "Collects the oxygen through the delivery tube; its plunger moves out along the mL scale.",
+        "vi": {
+          "name": "Xi lanh thu khí",
+          "role": "Thu khí oxi qua ống dẫn; pít-tông của nó dịch ra theo vạch chia mL."
+        },
+        "anchor": {
+          "at": [-0.01, 0.07, 0.016]
+        }
+      },
+      {
+        "id": "bath",
+        "name": "Water bath",
+        "role": "Holds the tube at the temperature T.",
+        "vi": {
+          "name": "Bể ổn nhiệt",
+          "role": "Giữ ống nghiệm ở nhiệt độ T."
+        },
+        "anchor": {
+          "part": "water"
+        }
+      },
+      {
+        "id": "thermometer",
+        "name": "Thermometer",
+        "role": "Reads the bath’s temperature.",
+        "vi": {
+          "name": "Nhiệt kế",
+          "role": "Đọc nhiệt độ của bể."
+        },
+        "anchor": {
+          "part": "thermometer"
+        }
+      },
+      {
+        "id": "bottles",
+        "name": "Buffer and peroxide bottles",
+        "role": "The buffer sets the pH; the peroxide bottle the concentration S₀.",
+        "vi": {
+          "name": "Lọ dung dịch đệm và peoxit",
+          "role": "Dung dịch đệm quyết định pH; lọ peoxit quyết định nồng độ S₀."
+        },
+        "anchor": {
+          "at": [0.33, -0.12, 0.03]
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "Catalase speeds up the breakdown of hydrogen peroxide: 2 H₂O₂ → 2 H₂O + O₂. The oxygen bubbles off, and the gas syringe collects it.",
+        "vi": {
+          "text": "Catalaza làm tăng tốc độ phân giải hiđro peoxit: 2 H₂O₂ → 2 H₂O + O₂. Khí oxi sủi lên, và xi lanh thu khí hứng lấy nó."
+        },
+        "parts": ["tube", "extract", "gas-syringe"]
+      },
+      {
+        "text": "The rate is how fast the oxygen comes off. Its initial rate follows Michaelis–Menten: v₀ = V_max·S₀/(K_m + S₀). More substrate gives a faster rate, but it levels off as the enzyme is kept busy.",
+        "vi": {
+          "text": "Tốc độ phản ứng là lượng oxi giải phóng trong một đơn vị thời gian. Tốc độ ban đầu tuân theo phương trình Michaelis–Menten: v₀ = V_max·S₀/(K_m + S₀). Nhiều cơ chất hơn thì nhanh hơn, nhưng sẽ chững lại khi enzim đã hoạt động hết công suất."
+        },
+        "parts": ["tube", "bottles"]
+      },
+      {
+        "text": "More extract means more enzyme: V_max grows in proportion to E.",
+        "vi": {
+          "text": "Nhiều dịch chiết hơn nghĩa là nhiều enzim hơn: V_max tăng tỉ lệ với E."
+        },
+        "parts": ["extract"]
+      },
+      {
+        "text": "Warmth speeds the reaction up — about twice as fast every 10 °C — until the enzyme starts to unfold above its optimum, near 37 °C here, and the activity collapses.",
+        "vi": {
+          "text": "Nhiệt độ cao hơn làm phản ứng nhanh hơn — khoảng gấp đôi mỗi khi tăng 10 °C — cho tới khi enzim bắt đầu biến tính trên nhiệt độ tối ưu, ở đây gần 37 °C, và hoạt tính giảm mạnh."
+        },
+        "parts": ["bath", "thermometer"]
+      },
+      {
+        "text": "The buffer’s pH matters too: the activity is highest at pH 7 and falls away on either side.",
+        "vi": {
+          "text": "pH của dung dịch đệm cũng ảnh hưởng: hoạt tính cao nhất ở pH 7 và giảm dần về hai phía."
+        },
+        "parts": ["bottles"]
+      },
+      {
+        "text": "The results give the oxygen after 10 s and 60 s, the mean rate over the first 10 s, and 1/S₀ and 1/v̄ for a Lineweaver–Burk plot by hand, whose slope ÷ intercept gives K_m.",
+        "vi": {
+          "text": "Phần kết quả cho lượng oxi sau 10 s và 60 s, tốc độ trung bình trong 10 s đầu, cùng 1/S₀ và 1/v̄ để tự vẽ đồ thị Lineweaver–Burk, mà hệ số góc chia tung độ gốc cho K_m."
+        },
+        "parts": ["gas-syringe"]
+      },
+      {
+        "text": "A teaching model with illustrative constants: here unfolding is instant and depends only on the temperature, and oxygen that stays dissolved is ignored. Real catalase does not follow Michaelis–Menten exactly.",
+        "vi": {
+          "text": "Mô hình dạy học với các hằng số minh họa: ở đây sự biến tính xảy ra tức thời và chỉ phụ thuộc vào nhiệt độ, và lượng oxi còn hòa tan bị bỏ qua. Catalaza thật không tuân theo đúng phương trình Michaelis–Menten."
+        },
+        "parts": ["gas-syringe"]
+      }
+    ]
+  }
+}

@@ -1,0 +1,351 @@
+{
+  "id": "dna-extraction",
+  "name": "Extracting DNA from strawberries",
+  "category": "biology",
+  "description": "You can see DNA with your own eyes. Mash strawberries, break their cells open with washing-up liquid and salt, filter, and pour ice-cold ethanol on top: white strands of DNA appear. Leave out a step and see what difference it makes.",
+  "vi": {
+    "name": "Tách chiết ADN từ quả dâu tây",
+    "description": "Em có thể nhìn thấy ADN bằng mắt thường. Nghiền dâu tây, phá vỡ tế bào bằng nước rửa chén và muối, lọc, rồi rót cồn êtanol lạnh lên trên: các sợi ADN màu trắng xuất hiện. Bỏ qua một bước và xem điều gì thay đổi.",
+    "note": "Vai trò của mỗi bước là kiến thức chuẩn: chất tẩy rửa phá màng tế bào và màng nhân; muối trung hòa điện tích âm của ADN để các sợi kết tụ; enzim prôtêaza tách ADN khỏi prôtêin; ADN không tan trong cồn lạnh nên kết tủa ở ranh giới hai lớp — không có cồn thì không thấy ADN. Lượng ADN khi bỏ qua mỗi bước (10 % không có chất tẩy, 40 % không có muối, 75 % không có prôtêaza) là minh họa. Mỗi bước 1,5 s."
+  },
+  "requiredEquipment": ["dna-tube"],
+  "model": "biology.dna-extraction",
+  "parameters": [
+    {
+      "id": "detergent",
+      "label": "Washing-up liquid",
+      "vi": {
+        "label": "Nước rửa chén"
+      },
+      "unit": "",
+      "default": 1,
+      "min": 0,
+      "max": 1,
+      "step": 1,
+      "presets": [
+        {
+          "label": "No detergent",
+          "vi": {
+            "label": "Không chất tẩy"
+          },
+          "value": 0
+        },
+        {
+          "label": "With detergent",
+          "vi": {
+            "label": "Có chất tẩy"
+          },
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "salt",
+      "label": "Salt",
+      "vi": {
+        "label": "Muối"
+      },
+      "unit": "",
+      "default": 1,
+      "min": 0,
+      "max": 1,
+      "step": 1,
+      "presets": [
+        {
+          "label": "No salt",
+          "vi": {
+            "label": "Không muối"
+          },
+          "value": 0
+        },
+        {
+          "label": "With salt",
+          "vi": {
+            "label": "Có muối"
+          },
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "protease",
+      "label": "Protease (pineapple juice)",
+      "vi": {
+        "label": "Prôtêaza (nước dứa)"
+      },
+      "unit": "",
+      "default": 1,
+      "min": 0,
+      "max": 1,
+      "step": 1,
+      "presets": [
+        {
+          "label": "No protease",
+          "vi": {
+            "label": "Không prôtêaza"
+          },
+          "value": 0
+        },
+        {
+          "label": "With protease",
+          "vi": {
+            "label": "Có prôtêaza"
+          },
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "ethanol",
+      "label": "Ice-cold ethanol",
+      "vi": {
+        "label": "Cồn êtanol lạnh"
+      },
+      "unit": "",
+      "default": 1,
+      "min": 0,
+      "max": 1,
+      "step": 1,
+      "presets": [
+        {
+          "label": "No ethanol",
+          "vi": {
+            "label": "Không cồn"
+          },
+          "value": 0
+        },
+        {
+          "label": "With ethanol",
+          "vi": {
+            "label": "Có cồn"
+          },
+          "value": 1
+        }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "stepTime": 1.5
+  },
+  "inputs": {
+    "stepTime": {
+      "symbol": "Δt",
+      "unit": "s",
+      "desk": false
+    }
+  },
+  "simulation": {
+    "timeStep": 0.02,
+    "maxDuration": 12,
+    "sampleInterval": 0.05
+  },
+  "measurements": [
+    {
+      "id": "time",
+      "label": "Time",
+      "vi": {
+        "label": "Thời gian"
+      },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "time"
+    },
+    {
+      "id": "step",
+      "label": "Step",
+      "vi": {
+        "label": "Bước"
+      },
+      "unit": "",
+      "variable": "step"
+    },
+    {
+      "id": "dna",
+      "label": "DNA seen (of the full method)",
+      "vi": {
+        "label": "ADN thấy được (so với đủ các bước)"
+      },
+      "unit": "%",
+      "variable": "dna"
+    }
+  ],
+  "results": [
+    {
+      "id": "dna",
+      "label": "DNA seen (of the full method)",
+      "vi": {
+        "label": "ADN thấy được (so với đủ các bước)"
+      },
+      "unit": "%",
+      "variable": "dna",
+      "reduce": "final",
+      "theory": "dna"
+    },
+    {
+      "id": "seen",
+      "label": "White DNA strands",
+      "vi": {
+        "label": "Sợi ADN màu trắng"
+      },
+      "unit": "%",
+      "variable": "dna",
+      "reduce": "final",
+      "theory": "dna",
+      "classes": [
+        {
+          "max": 0,
+          "label": "None seen",
+          "vi": {
+            "label": "Không thấy"
+          }
+        },
+        {
+          "label": "Seen at the boundary",
+          "vi": {
+            "label": "Thấy ở ranh giới hai lớp"
+          }
+        }
+      ]
+    }
+  ],
+  "graphs": [
+    {
+      "id": "dna-time",
+      "title": "DNA appearing",
+      "vi": {
+        "title": "ADN xuất hiện"
+      },
+      "x": "time",
+      "y": ["dna"]
+    }
+  ],
+  "monitor": "dna-time",
+  "compare": [
+    {
+      "graph": "dna-time",
+      "series": "dna"
+    }
+  ],
+  "note": "The role of each step is standard: detergent breaks the cell and nuclear membranes; salt neutralises the DNA’s negative charges so the strands clump; a protease frees the DNA from its proteins; DNA does not dissolve in cold ethanol, so it precipitates at the boundary — without ethanol no DNA is seen. The amounts when a step is left out (10 % without detergent, 40 % without salt, 75 % without protease) are illustrative. One step per 1.5 s.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the DNA extraction instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn tách chiết ADN trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "dna-extraction-instructions"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN with every step: watch the white strands appear.",
+      "vi": {
+        "instruction": "Nhấn CHẠY với đủ các bước: quan sát các sợi trắng xuất hiện."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "ethanol",
+      "instruction": "Press RESET and leave out the ethanol with its dial.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI và bỏ bước cồn bằng núm xoay."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "ethanol"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Run it: is any DNA seen? Try leaving out the others.",
+      "vi": {
+        "instruction": "Chạy lại: có thấy ADN không? Thử bỏ các bước khác."
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET: which step matters most?",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI: bước nào quan trọng nhất?"
+      },
+      "done": {
+        "kind": "reset"
+      }
+    }
+  ],
+  "explain": {
+    "summary": "DNA is inside the nucleus of every cell. Break the membranes, free the DNA from its proteins, and it comes out of solution in cold ethanol as a white, stringy mass — millions of DNA molecules together.",
+    "vi": {
+      "summary": "ADN nằm trong nhân của mọi tế bào. Phá màng, tách ADN khỏi prôtêin, rồi ADN kết tủa trong cồn lạnh thành khối sợi màu trắng — hàng triệu phân tử ADN gộp lại."
+    },
+    "parts": [
+      {
+        "id": "extract",
+        "name": "Strawberry extract",
+        "role": "The filtered juice: broken cells, the DNA dissolved in it.",
+        "vi": {
+          "name": "Dịch chiết dâu tây",
+          "role": "Dịch đã lọc: tế bào đã vỡ, ADN tan trong đó."
+        },
+        "anchor": {
+          "part": "extract"
+        }
+      },
+      {
+        "id": "ethanol",
+        "name": "Cold ethanol",
+        "role": "Floats on top; DNA does not dissolve in it.",
+        "vi": {
+          "name": "Cồn lạnh",
+          "role": "Nổi ở trên; ADN không tan trong cồn."
+        },
+        "anchor": {
+          "part": "ethanol"
+        }
+      },
+      {
+        "id": "dna",
+        "name": "DNA strands",
+        "role": "White threads at the boundary of the two layers.",
+        "vi": {
+          "name": "Sợi ADN",
+          "role": "Các sợi trắng ở ranh giới hai lớp."
+        },
+        "anchor": {
+          "part": "tube"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "Detergent dissolves the fatty membranes of the cells and nuclei, letting the DNA out; salt helps the DNA strands clump together.",
+        "vi": {
+          "text": "Chất tẩy hòa tan màng lipit của tế bào và nhân, giải phóng ADN; muối giúp các sợi ADN kết lại với nhau."
+        },
+        "parts": ["extract"]
+      },
+      {
+        "text": "Protease cuts up the proteins wrapped around the DNA. Filtering removes the pulp.",
+        "vi": {
+          "text": "Prôtêaza cắt các prôtêin quấn quanh ADN. Lọc để loại bỏ bã."
+        },
+        "parts": ["extract"]
+      },
+      {
+        "text": "Ice-cold ethanol poured on top: DNA does not dissolve in it, so it comes out of solution where the layers meet — the white strands.",
+        "vi": {
+          "text": "Rót cồn lạnh lên trên: ADN không tan trong cồn nên kết tủa ở chỗ hai lớp gặp nhau — các sợi trắng."
+        },
+        "parts": ["ethanol", "dna"]
+      }
+    ]
+  }
+}

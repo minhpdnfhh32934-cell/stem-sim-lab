@@ -1,0 +1,431 @@
+{
+  "id": "moment-of-force",
+  "name": "Moment of a force: the lever balance",
+  "category": "physics",
+  "description": "A bar pivoted at its middle carries slotted masses on two hangers: m1 at a distance d1 left of the pivot, m2 at d2 right of it. Each weight turns the bar about the pivot with its moment M = m·g·d. Release the bar level: if the two moments are equal it stays level; otherwise it turns towards the larger moment until it rests on a stop. Find where the right hanger must hang for the bar to balance: m1·d1 = m2·d2.",
+  "vi": {
+    "name": "Momen lực: đòn bẩy cân bằng",
+    "description": "Một thanh được đặt trên trục quay ở chính giữa, mang các quả nặng có rãnh treo trên hai móc: m1 cách trục d1 về bên trái, m2 cách trục d2 về bên phải. Trọng lực của mỗi quả nặng làm thanh quay quanh trục với momen M = m·g·d. Thả thanh ở vị trí nằm ngang: nếu hai momen bằng nhau, thanh đứng yên nằm ngang; nếu không, thanh quay về phía momen lớn hơn cho đến khi tựa vào điểm chặn. Tìm vị trí treo móc bên phải để thanh cân bằng: m1·d1 = m2·d2.",
+    "note": "Momen của một lực đối với một trục quay là M = F·d, với d là cánh tay đòn — khoảng cách từ trục quay đến giá của lực. Trọng lực của quả nặng treo cách trục d có momen m·g·d khi thanh nằm ngang (cánh tay đòn d·cos θ khi thanh nghiêng góc θ). Quy tắc momen lực: thanh có trục quay cố định cân bằng khi tổng các momen làm nó quay theo chiều kim đồng hồ bằng tổng các momen làm nó quay ngược chiều kim đồng hồ, ở đây M1 = M2. Chạy với nhiều vị trí của móc bên phải, cùng m1, d1 và m2: đồ thị M2 − M1 theo d2 là một đường thẳng có hệ số góc m2·g, cắt trục hoành tại d2 = m1·d1/m2, vị trí cân bằng. Đây là mô hình dạy học đơn giản hóa: trọng lượng của thanh cân bằng trên trục, móc treo không có khối lượng, các quả nặng coi như chất điểm, ma sát nhớt ở trục (giá trị minh họa) làm thanh dừng dần; thanh quay đến điểm chặn ở ±10° thì dừng lại ở đó. Các momen được tính từ khối lượng và khoảng cách đặt tại bàn, không có sai số ngẫu nhiên nào được thêm vào. Trong phòng thí nghiệm thật, trục có ma sát khô nên thanh có thể đứng yên dù hai momen chênh nhau một chút, các lỗ trên thanh có dung sai vị trí, và các quả nặng có sai số khối lượng."
+  },
+  "requiredEquipment": ["lever-balance"],
+  "model": "statics.lever",
+  "parameters": [
+    {
+      "id": "mass1",
+      "label": "Left mass",
+      "vi": { "label": "Khối lượng bên trái" },
+      "symbol": "m1",
+      "unit": "kg",
+      "default": 0.1,
+      "min": 0.05,
+      "max": 0.2,
+      "presets": [
+        { "label": "50 g", "vi": { "label": "50 g" }, "value": 0.05 },
+        { "label": "100 g", "vi": { "label": "100 g" }, "value": 0.1 },
+        { "label": "150 g", "vi": { "label": "150 g" }, "value": 0.15 },
+        { "label": "200 g", "vi": { "label": "200 g" }, "value": 0.2 }
+      ]
+    },
+    {
+      "id": "distance1",
+      "label": "Left distance from the pivot",
+      "vi": { "label": "Khoảng cách bên trái đến trục" },
+      "symbol": "d1",
+      "unit": "m",
+      "default": 0.15,
+      "min": 0.05,
+      "max": 0.25,
+      "presets": [
+        { "label": "5 cm", "vi": { "label": "5 cm" }, "value": 0.05 },
+        { "label": "10 cm", "vi": { "label": "10 cm" }, "value": 0.1 },
+        { "label": "15 cm", "vi": { "label": "15 cm" }, "value": 0.15 },
+        { "label": "20 cm", "vi": { "label": "20 cm" }, "value": 0.2 },
+        { "label": "25 cm", "vi": { "label": "25 cm" }, "value": 0.25 }
+      ]
+    },
+    {
+      "id": "mass2",
+      "label": "Right mass",
+      "vi": { "label": "Khối lượng bên phải" },
+      "symbol": "m2",
+      "unit": "kg",
+      "default": 0.05,
+      "min": 0.05,
+      "max": 0.2,
+      "presets": [
+        { "label": "50 g", "vi": { "label": "50 g" }, "value": 0.05 },
+        { "label": "100 g", "vi": { "label": "100 g" }, "value": 0.1 },
+        { "label": "150 g", "vi": { "label": "150 g" }, "value": 0.15 },
+        { "label": "200 g", "vi": { "label": "200 g" }, "value": 0.2 }
+      ]
+    },
+    {
+      "id": "distance2",
+      "label": "Right distance from the pivot",
+      "vi": { "label": "Khoảng cách bên phải đến trục" },
+      "symbol": "d2",
+      "unit": "m",
+      "default": 0.25,
+      "min": 0.05,
+      "max": 0.3,
+      "presets": [
+        { "label": "5 cm", "vi": { "label": "5 cm" }, "value": 0.05 },
+        { "label": "10 cm", "vi": { "label": "10 cm" }, "value": 0.1 },
+        { "label": "15 cm", "vi": { "label": "15 cm" }, "value": 0.15 },
+        { "label": "20 cm", "vi": { "label": "20 cm" }, "value": 0.2 },
+        { "label": "25 cm", "vi": { "label": "25 cm" }, "value": 0.25 },
+        { "label": "30 cm", "vi": { "label": "30 cm" }, "value": 0.3 }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "gravity": 9.81,
+    "barInertia": 0.01,
+    "damping": 0.02,
+    "stopAngle": 10,
+    "duration": 4
+  },
+  "inputs": {
+    "gravity": { "symbol": "g", "unit": "m/s²", "desk": false },
+    "barInertia": { "symbol": "I", "unit": "kg·m²", "desk": false },
+    "damping": { "symbol": "c", "unit": "N·m·s", "desk": false },
+    "stopAngle": { "symbol": "θ_max", "unit": "°", "desk": false },
+    "duration": { "symbol": "t_end", "unit": "s", "desk": false }
+  },
+  "simulation": { "timeStep": 0.005, "maxDuration": 6, "sampleInterval": 0.02 },
+  "measurements": [
+    {
+      "id": "tilt",
+      "label": "Tilt of the bar",
+      "vi": { "label": "Góc nghiêng của thanh" },
+      "symbol": "θ",
+      "unit": "°",
+      "variable": "tilt"
+    },
+    {
+      "id": "labTime",
+      "label": "Time",
+      "vi": { "label": "Thời gian" },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "clock"
+    }
+  ],
+  "results": [
+    {
+      "id": "moment1",
+      "label": "Moment of the left weight M1 = m1·g·d1",
+      "vi": { "label": "Momen của trọng lực bên trái M1 = m1·g·d1" },
+      "symbol": "M1",
+      "unit": "N·m",
+      "variable": "moment1",
+      "reduce": "final",
+      "theory": "moment1"
+    },
+    {
+      "id": "moment2",
+      "label": "Moment of the right weight M2 = m2·g·d2",
+      "vi": { "label": "Momen của trọng lực bên phải M2 = m2·g·d2" },
+      "symbol": "M2",
+      "unit": "N·m",
+      "variable": "moment2",
+      "reduce": "final",
+      "theory": "moment2"
+    },
+    {
+      "id": "netMoment",
+      "label": "Net moment M2 − M1",
+      "vi": { "label": "Momen tổng hợp M2 − M1" },
+      "symbol": "M2 − M1",
+      "unit": "N·m",
+      "variable": "netMoment",
+      "reduce": "final",
+      "theory": "netMoment"
+    },
+    {
+      "id": "restingSide",
+      "label": "Where the bar rests",
+      "vi": { "label": "Vị trí thanh dừng lại" },
+      "symbol": "side",
+      "unit": "",
+      "variable": "atStop",
+      "reduce": "final",
+      "theory": "restingSide",
+      "classes": [
+        { "max": -0.5, "label": "Left end down", "vi": { "label": "Đầu trái hạ xuống" } },
+        { "max": 0.5, "label": "Level: balanced", "vi": { "label": "Nằm ngang: cân bằng" } },
+        { "label": "Right end down", "vi": { "label": "Đầu phải hạ xuống" } }
+      ]
+    }
+  ],
+  "graphs": [
+    {
+      "id": "tilt-time",
+      "title": "Tilt of the bar against time",
+      "vi": { "title": "Góc nghiêng của thanh theo thời gian" },
+      "x": "labTime",
+      "y": ["tilt"],
+      "yLabel": "θ"
+    }
+  ],
+  "monitor": "tilt-time",
+  "compare": [{ "graph": "tilt-time" }],
+  "analyses": [
+    {
+      "id": "net-distance",
+      "title": "Net moment against the right distance (balance at m1·d1 = m2·d2)",
+      "note": "Each run is one point: the net moment M2 − M1 against the right hanger's distance d2. Runs with the same left mass, left distance and right mass are fitted together. M2 − M1 = m2·g·d2 − m1·g·d1: a straight line of slope m2·g, negative where the bar tips left and positive where it tips right, crossing zero where it balances, at d2 = m1·d1/m2. Change only d2 between runs.",
+      "vi": {
+        "title": "Momen tổng hợp theo khoảng cách bên phải (cân bằng khi m1·d1 = m2·d2)",
+        "note": "Mỗi lần chạy là một điểm: momen tổng hợp M2 − M1 theo khoảng cách d2 của móc bên phải. Các lần chạy có cùng khối lượng và khoảng cách bên trái và cùng khối lượng bên phải được khớp chung. M2 − M1 = m2·g·d2 − m1·g·d1: một đường thẳng có hệ số góc m2·g, âm khi thanh nghiêng sang trái và dương khi thanh nghiêng sang phải, đi qua 0 tại vị trí cân bằng d2 = m1·d1/m2. Giữa các lần chạy chỉ thay đổi d2."
+      },
+      "x": "distance2",
+      "y": "netMoment",
+      "group": ["mass1", "distance1", "mass2"],
+      "columns": ["mass1", "distance1", "mass2", "distance2", "moment1", "moment2", "netMoment"],
+      "slope": {
+        "label": "Slope of M2 − M1 against d2",
+        "vi": { "label": "Hệ số góc của M2 − M1 theo d2" },
+        "symbol": "m2·g",
+        "unit": "N",
+        "theory": "weightRight",
+        "intercept": "momentLeft"
+      }
+    }
+  ],
+  "note": "The moment of a force about an axis is M = F·d, d the lever arm — the distance from the axis to the force's line. A mass hung d from the pivot has the weight's moment m·g·d while the bar is level (lever arm d·cos θ when it tilts θ). The principle of moments: a body on a fixed axis balances when the moments turning it clockwise add up to those turning it anticlockwise, here M1 = M2. Run with the right hanger at several distances, with the same m1, d1 and m2: M2 − M1 against d2 is a straight line of slope m2·g, crossing zero at d2 = m1·d1/m2, where it balances. A simplified teaching model: the bar's own weight balanced on the pivot, weightless hangers, the masses as points, viscous friction at the pivot (an illustrative value) that brings the bar to rest; at ±10° it rests on a stop. The moments come from the masses and distances set at the desk; no random error is added. In a real lab the pivot has dry friction, so the bar can stay level with slightly unequal moments, the holes in the bar have a position tolerance, and the masses their own.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the moment of a force instructions on the board.",
+      "vi": { "instruction": "Đọc hướng dẫn thí nghiệm momen lực trên bảng." },
+      "done": { "kind": "inspected", "item": "moment-of-force-instructions" }
+    },
+    {
+      "id": "left",
+      "instruction": "Set the left mass and its distance with their dials on the control desk.",
+      "vi": {
+        "instruction": "Đặt khối lượng và khoảng cách bên trái bằng các núm xoay trên bàn điều khiển."
+      },
+      "done": { "kind": "adjusted", "parameter": "mass1" }
+    },
+    {
+      "id": "right",
+      "instruction": "Set the right hanger's distance d2.",
+      "vi": { "instruction": "Đặt khoảng cách d2 của móc bên phải." },
+      "done": { "kind": "adjusted", "parameter": "distance2" }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the bar is released level; watch which way it turns.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: thanh được thả ở vị trí nằm ngang; quan sát thanh quay về phía nào."
+      },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read M1, M2 and M2 − M1 on the results monitor: does the bar rest where the larger moment turns it?",
+      "vi": {
+        "instruction": "Đọc M1, M2 và M2 − M1 trên màn hình kết quả: thanh có dừng ở phía momen lớn hơn làm nó quay tới không?"
+      },
+      "done": { "kind": "viewed" }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, move only the right hanger and run again: find where the bar balances.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, chỉ dời móc bên phải rồi chạy lại: tìm vị trí thanh cân bằng."
+      },
+      "done": { "kind": "reset" }
+    }
+  ],
+  "examples": [
+    {
+      "id": "two-moments",
+      "question": "On a lever pivoted at its middle, {mass1} kg hangs {distance1} m left of the pivot and {mass2} kg hangs {distance2} m right of it. Find the moment of each weight (g = {gravity} m/s²).",
+      "vi": {
+        "question": "Trên đòn bẩy có trục quay ở giữa, treo vật {mass1} kg cách trục {distance1} m về bên trái và vật {mass2} kg cách trục {distance2} m về bên phải. Tìm mômen của trọng lực mỗi vật (g = {gravity} m/s²)."
+      },
+      "set": { "mass1": 0.15, "distance1": 0.2, "mass2": 0.1, "distance2": 0.25 },
+      "find": [{ "theory": "moment1" }, { "theory": "moment2" }],
+      "steps": [
+        {
+          "say": "The moment of a force is the force times its lever arm, the distance from the axis to the force’s line.",
+          "vi": {
+            "say": "Mômen lực bằng độ lớn lực nhân cánh tay đòn, là khoảng cách từ trục quay đến giá của lực."
+          },
+          "write": "M1 = m1·g·d1 = {mass1}·{gravity}·{distance1} ≈ {@moment1} N·m",
+          "check": { "expr": "mass1*gravity*distance1", "equals": "moment1" }
+        },
+        {
+          "say": "The same for the right-hand weight.",
+          "vi": { "say": "Tương tự với vật bên phải." },
+          "write": "M2 = m2·g·d2 = {mass2}·{gravity}·{distance2} ≈ {@moment2} N·m",
+          "check": { "expr": "mass2*gravity*distance2", "equals": "moment2" }
+        },
+        {
+          "say": "M1 is larger, so the moments do not balance: the left end goes down.",
+          "vi": { "say": "M1 lớn hơn nên các mômen không cân bằng: đầu bên trái đi xuống." },
+          "write": "M1 > M2"
+        }
+      ]
+    },
+    {
+      "id": "net-moment",
+      "question": "{mass1} kg hangs {distance1} m left of the pivot and {mass2} kg hangs {distance2} m right of it. Find the net moment M2 − M1, and say which way the bar turns.",
+      "vi": {
+        "question": "Vật {mass1} kg treo cách trục {distance1} m về bên trái, vật {mass2} kg treo cách trục {distance2} m về bên phải. Tìm mômen tổng hợp M2 − M1 và cho biết thanh quay theo chiều nào."
+      },
+      "set": { "mass1": 0.2, "distance1": 0.15, "mass2": 0.15, "distance2": 0.3 },
+      "find": [{ "theory": "netMoment" }],
+      "steps": [
+        {
+          "say": "Work out both moments.",
+          "vi": { "say": "Tính hai mômen." },
+          "write": "M1 = {mass1}·{gravity}·{distance1} ≈ {@moment1} N·m",
+          "check": { "expr": "mass1*gravity*distance1", "equals": "moment1" }
+        },
+        {
+          "say": "The lighter mass is twice as far out, so its moment is larger.",
+          "vi": { "say": "Vật nhẹ hơn nhưng ở xa trục gấp đôi, nên mômen của nó lớn hơn." },
+          "write": "M2 = {mass2}·{gravity}·{distance2} ≈ {@moment2} N·m",
+          "check": { "expr": "mass2*gravity*distance2", "equals": "moment2" }
+        },
+        {
+          "say": "The net moment is positive: the bar turns its right end down, until it rests on the stop.",
+          "vi": {
+            "say": "Mômen tổng hợp dương: thanh quay làm đầu bên phải đi xuống, cho tới khi tựa vào chốt chặn."
+          },
+          "write": "M2 − M1 = {@moment2} − {@moment1} ≈ {@netMoment} N·m",
+          "check": { "expr": "@moment2-@moment1", "equals": "netMoment" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "A weight hung on a bar turns it about its pivot with a moment M = m·g·d; the bar balances when the moments on the two sides are equal.",
+    "vi": {
+      "summary": "Một vật treo trên thanh làm thanh quay quanh trục với mômen M = m·g·d; thanh cân bằng khi mômen ở hai bên bằng nhau."
+    },
+    "parts": [
+      {
+        "id": "pivot",
+        "name": "Pivot",
+        "role": "The fixed axis the bar turns about, at its middle.",
+        "vi": {
+          "name": "Trục quay",
+          "role": "Trục cố định ở giữa thanh mà thanh quay quanh nó."
+        },
+        "anchor": {
+          "at": [0, 0.18, 0.01]
+        }
+      },
+      {
+        "id": "bar",
+        "name": "Bar",
+        "role": "A bar with a hole every 5 cm; its own weight is balanced on the pivot.",
+        "vi": {
+          "name": "Thanh",
+          "role": "Thanh có lỗ cách nhau 5 cm; trọng lượng của chính nó cân bằng trên trục."
+        },
+        "anchor": {
+          "part": "bar"
+        }
+      },
+      {
+        "id": "left",
+        "name": "Left hanger: m1 at d1",
+        "role": "Slotted masses m1 hung the distance d1 left of the pivot.",
+        "vi": {
+          "name": "Móc trái: m1 ở d1",
+          "role": "Các quả nặng m1 treo cách trục một khoảng d1 về bên trái."
+        },
+        "anchor": {
+          "part": "hanger-1"
+        }
+      },
+      {
+        "id": "right",
+        "name": "Right hanger: m2 at d2",
+        "role": "Slotted masses m2 hung d2 right of the pivot; move it to find the balance.",
+        "vi": {
+          "name": "Móc phải: m2 ở d2",
+          "role": "Các quả nặng m2 treo cách trục d2 về bên phải; di chuyển nó để tìm vị trí cân bằng."
+        },
+        "anchor": {
+          "part": "hanger-2"
+        }
+      },
+      {
+        "id": "scale",
+        "name": "Pointer and scale",
+        "role": "The pointer under the pivot shows whether the bar is level.",
+        "vi": {
+          "name": "Kim chỉ và thang chia",
+          "role": "Kim chỉ dưới trục cho biết thanh có nằm ngang không."
+        },
+        "anchor": {
+          "at": [0, 0.065, -0.01]
+        }
+      },
+      {
+        "id": "stop",
+        "name": "Stop",
+        "role": "A rubber stop under each end: at ±10° the bar rests on it.",
+        "vi": {
+          "name": "Chặn",
+          "role": "Miếng chặn cao su dưới mỗi đầu: ở ±10° thanh tựa lên nó."
+        },
+        "anchor": {
+          "at": [0.27, 0.105, -0.03]
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "Each hanger’s weight m·g pulls down on the bar at a distance from the pivot, so it turns the bar: the left one anticlockwise, the right one clockwise.",
+        "vi": {
+          "text": "Trọng lượng m·g của mỗi móc kéo thanh xuống ở một khoảng cách nào đó so với trục, nên làm thanh quay: móc trái làm thanh quay ngược chiều kim đồng hồ, móc phải làm quay cùng chiều kim đồng hồ."
+        },
+        "parts": ["left", "right", "pivot"]
+      },
+      {
+        "text": "The turning effect is the moment of the force: M = F·d, with d the lever arm, the distance from the pivot to the force’s line. Here M1 = m1·g·d1 and M2 = m2·g·d2.",
+        "vi": {
+          "text": "Tác dụng làm quay là mômen lực: M = F·d, với d là cánh tay đòn, khoảng cách từ trục quay tới giá của lực. Ở đây M1 = m1·g·d1 và M2 = m2·g·d2."
+        },
+        "parts": ["left", "right", "bar"]
+      },
+      {
+        "text": "Principle of moments: the bar balances when the moments turning it each way are equal, M1 = M2, so m1·d1 = m2·d2. A small mass far out can balance a large mass close in.",
+        "vi": {
+          "text": "Quy tắc mômen: thanh cân bằng khi các mômen làm nó quay theo hai chiều bằng nhau, M1 = M2, nên m1·d1 = m2·d2. Một vật nhẹ ở xa có thể cân bằng một vật nặng ở gần."
+        },
+        "parts": ["left", "right", "pivot"]
+      },
+      {
+        "text": "Released level, the bar stays level if M1 = M2; otherwise it turns towards the larger moment until it rests on a stop. The pointer shows which way.",
+        "vi": {
+          "text": "Thả ở vị trí nằm ngang, thanh giữ nằm ngang nếu M1 = M2; nếu không, nó quay về phía mômen lớn hơn cho tới khi tựa lên miếng chặn. Kim chỉ cho biết chiều quay."
+        },
+        "parts": ["bar", "scale", "stop"]
+      },
+      {
+        "text": "The results give M1, M2 and M2 − M1. Move only the right hanger and run again: M2 − M1 against d2 is a line of slope m2·g that crosses zero where the bar balances.",
+        "vi": {
+          "text": "Phần kết quả cho M1, M2 và M2 − M1. Chỉ di chuyển móc phải rồi chạy lại: M2 − M1 theo d2 là đường thẳng có hệ số góc m2·g, cắt trục hoành tại vị trí thanh cân bằng."
+        },
+        "parts": ["right", "bar"]
+      },
+      {
+        "text": "A simplified model: the masses are points, the hangers weightless, and the pivot’s friction is smooth. A real pivot’s friction can keep the bar level with slightly unequal moments.",
+        "vi": {
+          "text": "Mô hình đơn giản hóa: các vật là chất điểm, móc treo không trọng lượng, và ma sát ở trục là ma sát nhớt. Ma sát ở trục thật có thể giữ thanh nằm ngang dù mômen hai bên hơi khác nhau."
+        },
+        "parts": ["pivot"]
+      }
+    ]
+  }
+}

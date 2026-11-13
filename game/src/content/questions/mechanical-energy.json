@@ -1,0 +1,1066 @@
+{
+  "id": "mechanical-energy",
+  "skills": [
+    {
+      "id": "forms",
+      "name": "Kinetic and potential energy",
+      "advice": "Learn Eₖ = ½m·v² and Eₚ = m·g·h, with h measured from a chosen zero (here the level section). Mechanical energy is their sum.",
+      "vi": {
+        "name": "Động năng và thế năng",
+        "advice": "Nhớ Eₖ = ½m·v² và Eₚ = m·g·h, với h đo từ mốc đã chọn (ở đây là đoạn nằm ngang). Cơ năng là tổng của chúng."
+      }
+    },
+    {
+      "id": "conservation",
+      "name": "Conservation without losses",
+      "advice": "Without losses ½m·v² = m·g·h, so v = √(2gh) whatever the mass, and the cart climbs back to h. Four times h gives twice v, not four times.",
+      "vi": {
+        "name": "Bảo toàn cơ năng khi không có hao hụt",
+        "advice": "Khi không có hao hụt ½m·v² = m·g·h, nên v = √(2gh) không phụ thuộc khối lượng, và xe lên lại được độ cao h. h tăng 4 lần thì v chỉ tăng 2 lần."
+      }
+    },
+    {
+      "id": "losses",
+      "name": "Energy lost to drag and rolling",
+      "advice": "Rolling resistance and air drag turn some energy into heat and sound, so the cart stops at h′ < h; the share kept is h′/h. Run with and without the card sail and compare h′. The model’s loss constants are illustrative.",
+      "vi": {
+        "name": "Năng lượng hao hụt do lực cản",
+        "advice": "Lực cản lăn và lực cản không khí biến một phần năng lượng thành nhiệt và âm, nên xe dừng ở h′ < h; phần cơ năng còn lại là h′/h. Chạy có và không có tấm bìa cản gió rồi so sánh h′. Các hằng số hao hụt của mô hình chỉ mang tính minh họa."
+      }
+    },
+    {
+      "id": "gates",
+      "name": "Measuring speed and energy with gates",
+      "advice": "Speed at a gate is the flag width over the blocking time, v = w/Δt; then Eₖ = ½m·v². At gate B add the potential energy m·g·h_B to get the mechanical energy.",
+      "vi": {
+        "name": "Đo tốc độ và năng lượng bằng cổng quang",
+        "advice": "Tốc độ tại cổng bằng bề rộng tấm chắn chia cho thời gian chắn sáng, v = w/Δt; rồi Eₖ = ½m·v². Tại cổng B phải cộng thêm thế năng m·g·h_B để được cơ năng."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "kinetic-formula",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["forms"],
+      "stem": "The kinetic energy of a body of mass m moving at speed v is…",
+      "explain": "Eₖ = ½m·v², in joules.",
+      "vi": {
+        "stem": "Động năng của vật khối lượng m chuyển động với tốc độ v là…",
+        "explain": "Eₖ = ½m·v², đơn vị jun."
+      },
+      "options": [
+        {
+          "text": "½m·v²",
+          "vi": {
+            "text": "½m·v²"
+          },
+          "correct": true
+        },
+        {
+          "text": "m·v",
+          "vi": {
+            "text": "m·v"
+          }
+        },
+        {
+          "text": "m·v²",
+          "vi": {
+            "text": "m·v²"
+          }
+        },
+        {
+          "text": "½m·v",
+          "vi": {
+            "text": "½m·v"
+          }
+        }
+      ]
+    },
+    {
+      "id": "mechanical",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["forms"],
+      "stem": "The mechanical energy of the cart is…",
+      "explain": "Mechanical energy E = Eₖ + Eₚ.",
+      "vi": {
+        "stem": "Cơ năng của xe là…",
+        "explain": "Cơ năng E = Eₖ + Eₚ."
+      },
+      "options": [
+        {
+          "text": "the sum of its kinetic and potential energy",
+          "vi": {
+            "text": "tổng động năng và thế năng của nó"
+          },
+          "correct": true
+        },
+        {
+          "text": "its kinetic energy only",
+          "vi": {
+            "text": "chỉ là động năng của nó"
+          }
+        },
+        {
+          "text": "its potential energy minus its kinetic energy",
+          "vi": {
+            "text": "thế năng trừ động năng của nó"
+          }
+        },
+        {
+          "text": "the heat made by friction",
+          "vi": {
+            "text": "nhiệt lượng do ma sát tạo ra"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-track",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["forms", "conservation"],
+      "stem": "A cart is let go from rest at a height h on a valley-shaped track; potential energy is measured from the level section at the bottom. Decide whether each statement is true or false.",
+      "explain": "At release E is all potential, m·g·h; at the bottom the cart is fastest; without losses √(2gh) does not depend on the mass.",
+      "vi": {
+        "stem": "Một xe được thả không vận tốc đầu từ độ cao h trên đường ray hình lòng chảo; mốc thế năng ở đoạn nằm ngang dưới đáy. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Lúc thả, cơ năng toàn bộ là thế năng m·g·h; ở đáy xe chạy nhanh nhất; khi không có hao hụt √(2gh) không phụ thuộc khối lượng."
+      },
+      "statements": [
+        {
+          "text": "At the release point all its mechanical energy is potential energy.",
+          "vi": {
+            "text": "Tại điểm thả, toàn bộ cơ năng của xe là thế năng."
+          },
+          "true": true
+        },
+        {
+          "text": "It is fastest on the level section at the bottom.",
+          "vi": {
+            "text": "Xe chạy nhanh nhất ở đoạn nằm ngang dưới đáy."
+          },
+          "true": true
+        },
+        {
+          "text": "Its potential energy at the release point is m·g·h.",
+          "vi": {
+            "text": "Thế năng của xe tại điểm thả là m·g·h."
+          },
+          "true": true
+        },
+        {
+          "text": "Without losses, a heavier cart would reach the bottom faster.",
+          "vi": {
+            "text": "Khi không có hao hụt, xe nặng hơn sẽ xuống đến đáy với tốc độ lớn hơn."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "four-times-height",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["conservation"],
+      "stem": "With no losses, the release height is made four times larger. The speed at the bottom…",
+      "explain": "v = √(2gh): four times h gives √4 = 2 times v.",
+      "vi": {
+        "stem": "Bỏ qua hao hụt, tăng độ cao thả lên gấp bốn lần. Tốc độ ở đáy…",
+        "explain": "v = √(2gh): h tăng 4 lần thì v tăng √4 = 2 lần."
+      },
+      "options": [
+        {
+          "text": "doubles",
+          "vi": {
+            "text": "tăng gấp đôi"
+          },
+          "correct": true
+        },
+        {
+          "text": "becomes four times larger",
+          "vi": {
+            "text": "tăng gấp bốn lần"
+          }
+        },
+        {
+          "text": "becomes sixteen times larger",
+          "vi": {
+            "text": "tăng gấp mười sáu lần"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "far-ramp",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["losses"],
+      "stem": "With rolling resistance and air drag, the cart let go at height h climbs the far ramp to…",
+      "explain": "Part of the energy becomes heat and sound, so it stops a little below h.",
+      "vi": {
+        "stem": "Khi có lực cản lăn và lực cản không khí, xe thả từ độ cao h sẽ lên dốc bên kia đến độ cao…",
+        "explain": "Một phần năng lượng chuyển thành nhiệt và âm, nên xe dừng lại thấp hơn h một chút."
+      },
+      "options": [
+        {
+          "text": "a little less than h",
+          "vi": {
+            "text": "thấp hơn h một chút"
+          },
+          "correct": true
+        },
+        {
+          "text": "exactly h",
+          "vi": {
+            "text": "đúng bằng h"
+          }
+        },
+        {
+          "text": "higher than h",
+          "vi": {
+            "text": "cao hơn h"
+          }
+        },
+        {
+          "text": "the level section only",
+          "vi": {
+            "text": "chỉ đến đoạn nằm ngang"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-sail",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["losses"],
+      "set": {
+        "releaseHeight": 0.2,
+        "mass": 0.5,
+        "sailArea": 0.04
+      },
+      "stem": "A {mass} kg cart with a {sailArea} m² card sail is let go {releaseHeight} m up (the model’s loss constants are illustrative). Decide whether each statement is true or false.",
+      "explain": "It stops at h′ ≈ {@turnHeight|3} m < h, keeping h′/h ≈ {@retained|3}%; m·g·(h − h′) ≈ {@energyLost} J became heat and sound. Without the sail the drag, and the loss, would be smaller.",
+      "vi": {
+        "stem": "Xe {mass} kg gắn tấm bìa cản gió {sailArea} m² được thả từ độ cao {releaseHeight} m (các hằng số hao hụt của mô hình mang tính minh họa). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Xe dừng ở h′ ≈ {@turnHeight|3} m < h, giữ lại h′/h ≈ {@retained|3}% cơ năng; m·g·(h − h′) ≈ {@energyLost} J đã chuyển thành nhiệt và âm. Không có tấm bìa thì lực cản và hao hụt nhỏ hơn."
+      },
+      "statements": [
+        {
+          "text": "It climbs the far ramp to less than {releaseHeight} m.",
+          "vi": {
+            "text": "Xe lên dốc bên kia đến độ cao nhỏ hơn {releaseHeight} m."
+          },
+          "true": true
+        },
+        {
+          "text": "It keeps about {@retained|3}% of its mechanical energy.",
+          "vi": {
+            "text": "Xe giữ lại khoảng {@retained|3}% cơ năng."
+          },
+          "true": true,
+          "check": {
+            "expr": "100*@turnHeight/releaseHeight",
+            "equals": "retained"
+          }
+        },
+        {
+          "text": "About {@energyLost} J becomes heat and sound.",
+          "vi": {
+            "text": "Khoảng {@energyLost} J chuyển thành nhiệt và âm."
+          },
+          "true": true,
+          "check": {
+            "expr": "mass*gravity*(releaseHeight-@turnHeight)",
+            "equals": "energyLost"
+          }
+        },
+        {
+          "text": "Without the sail it would lose more energy.",
+          "vi": {
+            "text": "Nếu không có tấm bìa, xe sẽ hao hụt nhiều năng lượng hơn."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "potential",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["forms"],
+      "set": {
+        "releaseHeight": 0.3,
+        "mass": 0.75
+      },
+      "stem": "A {mass} kg cart is held {releaseHeight} m above the level section (g = {gravity} m/s²). What is its potential energy?",
+      "explain": "Eₚ = m·g·h = {mass}·{gravity}·{releaseHeight} ≈ {@startEnergy} J.",
+      "vi": {
+        "stem": "Xe {mass} kg được giữ ở độ cao {releaseHeight} m so với đoạn nằm ngang (g = {gravity} m/s²). Thế năng của xe bằng bao nhiêu?",
+        "explain": "Eₚ = m·g·h = {mass}·{gravity}·{releaseHeight} ≈ {@startEnergy} J."
+      },
+      "options": [
+        {
+          "text": "{@startEnergy} J",
+          "vi": {
+            "text": "{@startEnergy} J"
+          },
+          "correct": true,
+          "check": {
+            "expr": "mass*gravity*releaseHeight",
+            "equals": "startEnergy"
+          }
+        },
+        {
+          "text": "{=mass*releaseHeight} J",
+          "vi": {
+            "text": "{=mass*releaseHeight} J"
+          },
+          "check": {
+            "expr": "mass*releaseHeight",
+            "equals": "startEnergy"
+          }
+        },
+        {
+          "text": "{=0.5*mass*gravity*releaseHeight} J",
+          "vi": {
+            "text": "{=0.5*mass*gravity*releaseHeight} J"
+          },
+          "check": {
+            "expr": "0.5*mass*gravity*releaseHeight",
+            "equals": "startEnergy"
+          }
+        },
+        {
+          "text": "{=mass*gravity/releaseHeight} J",
+          "vi": {
+            "text": "{=mass*gravity/releaseHeight} J"
+          },
+          "check": {
+            "expr": "mass*gravity/releaseHeight",
+            "equals": "startEnergy"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ideal-speed",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["conservation"],
+      "set": {
+        "releaseHeight": 0.25
+      },
+      "stem": "If no energy were lost, how fast would a cart let go from rest {releaseHeight} m up be moving on the level section (g = {gravity} m/s²)?",
+      "explain": "½m·v² = m·g·h, so v = √(2gh) = √(2·{gravity}·{releaseHeight}) ≈ {@idealSpeedA} m/s, whatever the mass.",
+      "vi": {
+        "stem": "Nếu không có hao hụt năng lượng, xe thả không vận tốc đầu từ độ cao {releaseHeight} m sẽ có tốc độ bao nhiêu ở đoạn nằm ngang (g = {gravity} m/s²)?",
+        "explain": "½m·v² = m·g·h nên v = √(2gh) = √(2·{gravity}·{releaseHeight}) ≈ {@idealSpeedA} m/s, không phụ thuộc khối lượng."
+      },
+      "options": [
+        {
+          "text": "{@idealSpeedA} m/s",
+          "vi": {
+            "text": "{@idealSpeedA} m/s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "sqrt(2*gravity*releaseHeight)",
+            "equals": "idealSpeedA"
+          }
+        },
+        {
+          "text": "{=sqrt(gravity*releaseHeight)} m/s",
+          "vi": {
+            "text": "{=sqrt(gravity*releaseHeight)} m/s"
+          },
+          "check": {
+            "expr": "sqrt(gravity*releaseHeight)",
+            "equals": "idealSpeedA"
+          }
+        },
+        {
+          "text": "{=2*gravity*releaseHeight} m/s",
+          "vi": {
+            "text": "{=2*gravity*releaseHeight} m/s"
+          },
+          "check": {
+            "expr": "2*gravity*releaseHeight",
+            "equals": "idealSpeedA"
+          }
+        },
+        {
+          "text": "{=sqrt(2*releaseHeight/gravity)} m/s",
+          "vi": {
+            "text": "{=sqrt(2*releaseHeight/gravity)} m/s"
+          },
+          "check": {
+            "expr": "sqrt(2*releaseHeight/gravity)",
+            "equals": "idealSpeedA"
+          }
+        }
+      ]
+    },
+    {
+      "id": "kinetic-at-a",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["gates", "forms"],
+      "set": {
+        "releaseHeight": 0.2,
+        "mass": 0.5,
+        "sailArea": 0
+      },
+      "stem": "A {mass} kg cart’s {flagWidth} m flag blocks gate A for Δt = {@gateTimeA|4} s. What is its kinetic energy there?",
+      "explain": "v = w/Δt = {flagWidth}/{@gateTimeA|4} ≈ {@speedA} m/s; Eₖ = ½m·v² ≈ {@kineticA} J.",
+      "vi": {
+        "stem": "Tấm chắn rộng {flagWidth} m của xe {mass} kg chắn cổng A trong Δt = {@gateTimeA|4} s. Động năng của xe tại đó bằng bao nhiêu?",
+        "explain": "v = w/Δt = {flagWidth}/{@gateTimeA|4} ≈ {@speedA} m/s; Eₖ = ½m·v² ≈ {@kineticA} J."
+      },
+      "options": [
+        {
+          "text": "{@kineticA} J",
+          "vi": {
+            "text": "{@kineticA} J"
+          },
+          "correct": true,
+          "check": {
+            "expr": "0.5*mass*(flagWidth/@gateTimeA)^2",
+            "equals": "kineticA"
+          }
+        },
+        {
+          "text": "{=mass*(flagWidth/@gateTimeA)^2} J",
+          "vi": {
+            "text": "{=mass*(flagWidth/@gateTimeA)^2} J"
+          },
+          "check": {
+            "expr": "mass*(flagWidth/@gateTimeA)^2",
+            "equals": "kineticA"
+          }
+        },
+        {
+          "text": "{=0.5*mass*flagWidth/@gateTimeA} J",
+          "vi": {
+            "text": "{=0.5*mass*flagWidth/@gateTimeA} J"
+          },
+          "check": {
+            "expr": "0.5*mass*flagWidth/@gateTimeA",
+            "equals": "kineticA"
+          }
+        },
+        {
+          "text": "{=0.5*mass*(@gateTimeA/flagWidth)^2} J",
+          "vi": {
+            "text": "{=0.5*mass*(@gateTimeA/flagWidth)^2} J"
+          },
+          "check": {
+            "expr": "0.5*mass*(@gateTimeA/flagWidth)^2",
+            "equals": "kineticA"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-heavy",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["forms", "gates", "losses"],
+      "set": {
+        "releaseHeight": 0.3,
+        "mass": 1,
+        "sailArea": 0
+      },
+      "stem": "A {mass} kg cart without a sail is let go {releaseHeight} m up; its {flagWidth} m flag blocks gate A for {@gateTimeA|4} s (g = {gravity} m/s²). Decide whether each statement is true or false.",
+      "explain": "Eₚ₀ = m·g·h ≈ {@startEnergy} J; v_A = w/Δt ≈ {@speedA} m/s, a little below √(2gh) ≈ {@idealSpeedA} m/s; Eₖ = ½m·v_A² ≈ {@kineticA} J, a little less than m·g·h because of the losses.",
+      "vi": {
+        "stem": "Xe {mass} kg không gắn tấm bìa được thả từ độ cao {releaseHeight} m; tấm chắn rộng {flagWidth} m chắn cổng A trong {@gateTimeA|4} s (g = {gravity} m/s²). Mỗi nhận định sau đúng hay sai?",
+        "explain": "Eₚ₀ = m·g·h ≈ {@startEnergy} J; v_A = w/Δt ≈ {@speedA} m/s, nhỏ hơn √(2gh) ≈ {@idealSpeedA} m/s một chút; Eₖ = ½m·v_A² ≈ {@kineticA} J, nhỏ hơn m·g·h một chút do hao hụt."
+      },
+      "statements": [
+        {
+          "text": "Its potential energy at the start is about {@startEnergy} J.",
+          "vi": {
+            "text": "Thế năng ban đầu của xe khoảng {@startEnergy} J."
+          },
+          "true": true,
+          "check": {
+            "expr": "mass*gravity*releaseHeight",
+            "equals": "startEnergy"
+          }
+        },
+        {
+          "text": "Its speed at gate A is about {@speedA} m/s.",
+          "vi": {
+            "text": "Tốc độ của xe tại cổng A khoảng {@speedA} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "flagWidth/@gateTimeA",
+            "equals": "speedA"
+          }
+        },
+        {
+          "text": "Its kinetic energy at gate A is exactly m·g·h.",
+          "vi": {
+            "text": "Động năng của xe tại cổng A đúng bằng m·g·h."
+          },
+          "true": false,
+          "check": {
+            "expr": "@startEnergy",
+            "equals": "kineticA"
+          }
+        },
+        {
+          "text": "Its kinetic energy at gate A is about {@kineticA} J.",
+          "vi": {
+            "text": "Động năng của xe tại cổng A khoảng {@kineticA} J."
+          },
+          "true": true,
+          "check": {
+            "expr": "0.5*mass*@speedA^2",
+            "equals": "kineticA"
+          }
+        }
+      ]
+    },
+    {
+      "id": "energy-at-b",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["gates", "forms"],
+      "set": {
+        "releaseHeight": 0.3,
+        "mass": 0.5,
+        "sailArea": 0
+      },
+      "stem": "Gate B stands h_B = {gateHeight} m above the level section. A {mass} kg cart’s {flagWidth} m flag blocks it for {@gateTimeB|4} s (g = {gravity} m/s²). What is the cart’s mechanical energy at gate B?",
+      "explain": "v_B = w/Δt_B ≈ {@speedB} m/s; E_B = m·g·h_B + ½m·v_B² = {=mass*gravity*gateHeight} + {=0.5*mass*@speedB^2} ≈ {@energyB} J — both kinds of energy count.",
+      "vi": {
+        "stem": "Cổng B đặt ở độ cao h_B = {gateHeight} m so với đoạn nằm ngang. Tấm chắn rộng {flagWidth} m của xe {mass} kg chắn cổng B trong {@gateTimeB|4} s (g = {gravity} m/s²). Cơ năng của xe tại cổng B bằng bao nhiêu?",
+        "explain": "v_B = w/Δt_B ≈ {@speedB} m/s; E_B = m·g·h_B + ½m·v_B² = {=mass*gravity*gateHeight} + {=0.5*mass*@speedB^2} ≈ {@energyB} J — phải tính cả hai dạng năng lượng."
+      },
+      "options": [
+        {
+          "text": "{@energyB} J",
+          "vi": {
+            "text": "{@energyB} J"
+          },
+          "correct": true,
+          "check": {
+            "expr": "mass*(gravity*gateHeight+0.5*(flagWidth/@gateTimeB)^2)",
+            "equals": "energyB"
+          }
+        },
+        {
+          "text": "{=0.5*mass*(flagWidth/@gateTimeB)^2} J",
+          "vi": {
+            "text": "{=0.5*mass*(flagWidth/@gateTimeB)^2} J"
+          },
+          "check": {
+            "expr": "0.5*mass*(flagWidth/@gateTimeB)^2",
+            "equals": "energyB"
+          }
+        },
+        {
+          "text": "{=mass*gravity*gateHeight} J",
+          "vi": {
+            "text": "{=mass*gravity*gateHeight} J"
+          },
+          "check": {
+            "expr": "mass*gravity*gateHeight",
+            "equals": "energyB"
+          }
+        },
+        {
+          "text": "{=mass*(gravity*gateHeight+(flagWidth/@gateTimeB)^2)} J",
+          "vi": {
+            "text": "{=mass*(gravity*gateHeight+(flagWidth/@gateTimeB)^2)} J"
+          },
+          "check": {
+            "expr": "mass*(gravity*gateHeight+(flagWidth/@gateTimeB)^2)",
+            "equals": "energyB"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-analysis",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["losses", "gates", "conservation"],
+      "set": {
+        "releaseHeight": 0.2,
+        "mass": 0.5,
+        "sailArea": 0.04,
+        "timerResolution": 0.001
+      },
+      "stem": "A {mass} kg cart with a {sailArea} m² sail is let go {releaseHeight} m up; gate A’s timer has resolution {timerResolution} s. Decide whether each statement is true or false.",
+      "explain": "Δt_A = {@gateTimeA|4} s is shown as {=round(@gateTimeA/timerResolution)*timerResolution} s. h′/h ≈ {@retained|3}%. Without losses, Eₖ at A against m·g·h would be a line of slope 1. Drag does not grow with the mass, so a heavier cart with the same sail loses a smaller share.",
+      "vi": {
+        "stem": "Xe {mass} kg gắn tấm bìa {sailArea} m² được thả từ độ cao {releaseHeight} m; đồng hồ ở cổng A có độ phân giải {timerResolution} s. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Δt_A = {@gateTimeA|4} s được hiển thị {=round(@gateTimeA/timerResolution)*timerResolution} s. h′/h ≈ {@retained|3}%. Nếu không có hao hụt, đồ thị Eₖ tại A theo m·g·h là đường thẳng hệ số góc 1. Lực cản không khí không tăng theo khối lượng, nên xe nặng hơn với cùng tấm bìa hao hụt một phần nhỏ hơn."
+      },
+      "statements": [
+        {
+          "text": "The timer at gate A shows {=round(@gateTimeA/timerResolution)*timerResolution} s.",
+          "vi": {
+            "text": "Đồng hồ ở cổng A hiển thị {=round(@gateTimeA/timerResolution)*timerResolution} s."
+          },
+          "true": true
+        },
+        {
+          "text": "The share of mechanical energy kept is h′/h ≈ {@retained|3}%.",
+          "vi": {
+            "text": "Phần cơ năng còn lại là h′/h ≈ {@retained|3}%."
+          },
+          "true": true,
+          "check": {
+            "expr": "100*@turnHeight/releaseHeight",
+            "equals": "retained"
+          }
+        },
+        {
+          "text": "Without losses, Eₖ at A plotted against m·g·h would be a straight line of slope 1.",
+          "vi": {
+            "text": "Nếu không có hao hụt, đồ thị Eₖ tại A theo m·g·h sẽ là đường thẳng có hệ số góc 1."
+          },
+          "true": true
+        },
+        {
+          "text": "A heavier cart with the same sail would keep a smaller share of its energy.",
+          "vi": {
+            "text": "Xe nặng hơn với cùng tấm bìa sẽ giữ lại phần cơ năng nhỏ hơn."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "joule",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["forms"],
+      "stem": "The SI unit of energy, kinetic or potential, is the…",
+      "explain": "Energy is measured in joules: 1 J = 1 N·m = 1 kg·m²/s². The watt (J/s) is the unit of power.",
+      "vi": {
+        "stem": "Đơn vị của năng lượng (động năng hay thế năng) trong hệ SI là…",
+        "explain": "Năng lượng có đơn vị jun: 1 J = 1 N·m = 1 kg·m²/s². Oát (J/s) là đơn vị của công suất."
+      },
+      "options": [
+        {
+          "text": "joule (J)",
+          "vi": {
+            "text": "jun (J)"
+          },
+          "correct": true
+        },
+        {
+          "text": "watt (W)",
+          "vi": {
+            "text": "oát (W)"
+          }
+        },
+        {
+          "text": "newton (N)",
+          "vi": {
+            "text": "niutơn (N)"
+          }
+        },
+        {
+          "text": "kilogram-metre (kg·m)",
+          "vi": {
+            "text": "kilôgam-mét (kg·m)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "heavier-cart",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["conservation"],
+      "stem": "With no losses, a heavier cart is let go from the same height. Its speed on the level section is…",
+      "explain": "m·g·h = ½m·v² gives v = √(2gh): the mass cancels, so every cart reaches the same speed. The heavier cart has more energy, in proportion to its mass.",
+      "vi": {
+        "stem": "Bỏ qua mọi mất mát, thả một xe nặng hơn từ cùng độ cao. Tốc độ của nó trên đoạn nằm ngang…",
+        "explain": "m·g·h = ½m·v² cho v = √(2gh): khối lượng bị triệt tiêu, nên mọi xe đạt cùng tốc độ. Xe nặng hơn có năng lượng lớn hơn, tỉ lệ với khối lượng."
+      },
+      "options": [
+        {
+          "text": "the same as the lighter cart’s",
+          "vi": {
+            "text": "bằng tốc độ của xe nhẹ hơn"
+          },
+          "correct": true
+        },
+        {
+          "text": "larger",
+          "vi": {
+            "text": "lớn hơn"
+          }
+        },
+        {
+          "text": "smaller",
+          "vi": {
+            "text": "nhỏ hơn"
+          }
+        },
+        {
+          "text": "larger in proportion to the mass",
+          "vi": {
+            "text": "lớn hơn, tỉ lệ với khối lượng"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-turning",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["losses", "conservation", "forms"],
+      "stem": "A cart is let go from rest on a valley-shaped track, rolls across the level section and up the far ramp, where it stops for an instant and turns back. Decide whether each statement is true or false.",
+      "explain": "At the turning point the cart is at rest: its kinetic energy is zero and all its mechanical energy is potential. With rolling resistance and drag it turns lower than it started. The energy lost is not destroyed: it becomes heat in the wheels, the track and the air. A larger sail meets more drag, so it loses more.",
+      "vi": {
+        "stem": "Một xe được thả không vận tốc đầu trên đường ray hình lòng chảo, chạy qua đoạn nằm ngang rồi lên dốc bên kia, dừng lại trong khoảnh khắc và quay lại. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Ở điểm quay lại, xe đứng yên: động năng bằng 0 và toàn bộ cơ năng là thế năng. Do lực cản lăn và lực cản không khí, xe quay lại ở độ cao thấp hơn lúc thả. Phần năng lượng mất đi không biến mất: nó chuyển thành nhiệt ở bánh xe, đường ray và không khí. Cánh buồm lớn hơn chịu lực cản lớn hơn nên mất nhiều năng lượng hơn."
+      },
+      "statements": [
+        {
+          "text": "At the turning point the cart’s kinetic energy is zero.",
+          "vi": {
+            "text": "Ở điểm quay lại, động năng của xe bằng 0."
+          },
+          "true": true
+        },
+        {
+          "text": "With losses, the cart turns back lower than it was let go.",
+          "vi": {
+            "text": "Khi có mất mát, xe quay lại ở độ cao thấp hơn lúc thả."
+          },
+          "true": true
+        },
+        {
+          "text": "The energy lost to drag simply disappears.",
+          "vi": {
+            "text": "Phần năng lượng mất do lực cản biến mất hoàn toàn."
+          },
+          "true": false
+        },
+        {
+          "text": "A larger card sail makes the cart lose more energy.",
+          "vi": {
+            "text": "Cánh buồm bằng bìa lớn hơn làm xe mất nhiều năng lượng hơn."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "energy-lost",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["losses"],
+      "set": {
+        "releaseHeight": 0.25,
+        "mass": 0.75,
+        "sailArea": 0.01
+      },
+      "stem": "A {mass} kg cart is let go from rest {releaseHeight} m up and turns back on the far ramp {@turnHeight|4} m up (g = {gravity} m/s²). How much mechanical energy has it lost?",
+      "explain": "At both points it is at rest, so ΔE = m·g·(h − h′) = {mass}·{gravity}·({releaseHeight} − {@turnHeight|4}) ≈ {@energyLost} J. m·g·h′ is the energy it still has; halving gives the other value.",
+      "vi": {
+        "stem": "Một xe {mass} kg được thả không vận tốc đầu từ độ cao {releaseHeight} m và quay lại trên dốc bên kia ở độ cao {@turnHeight|4} m (g = {gravity} m/s²). Xe đã mất bao nhiêu cơ năng?",
+        "explain": "Ở cả hai điểm xe đều đứng yên, nên ΔE = m·g·(h − h′) = {mass}·{gravity}·({releaseHeight} − {@turnHeight|4}) ≈ {@energyLost} J. m·g·h′ là phần năng lượng xe còn lại; chia đôi sẽ ra giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{@energyLost} J",
+          "vi": {
+            "text": "{@energyLost} J"
+          },
+          "correct": true,
+          "check": {
+            "expr": "mass*gravity*(releaseHeight-@turnHeight)",
+            "equals": "energyLost"
+          }
+        },
+        {
+          "text": "{=mass*gravity*@turnHeight} J",
+          "vi": {
+            "text": "{=mass*gravity*@turnHeight} J"
+          },
+          "check": {
+            "expr": "mass*gravity*@turnHeight",
+            "equals": "energyLost"
+          }
+        },
+        {
+          "text": "{@startEnergy} J",
+          "vi": {
+            "text": "{@startEnergy} J"
+          },
+          "check": {
+            "expr": "@startEnergy",
+            "equals": "energyLost"
+          }
+        },
+        {
+          "text": "{=0.5*mass*gravity*(releaseHeight-@turnHeight)} J",
+          "vi": {
+            "text": "{=0.5*mass*gravity*(releaseHeight-@turnHeight)} J"
+          },
+          "check": {
+            "expr": "0.5*mass*gravity*(releaseHeight-@turnHeight)",
+            "equals": "energyLost"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-light-cart",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["forms", "gates", "losses"],
+      "set": {
+        "releaseHeight": 0.15,
+        "mass": 0.25,
+        "sailArea": 0
+      },
+      "stem": "A {mass} kg cart without a sail is let go {releaseHeight} m up (g = {gravity} m/s²); its {flagWidth} m flag blocks gate A on the level section for {@gateTimeA|4} s. Decide whether each statement is true or false.",
+      "explain": "E_p0 = m·g·h = {@startEnergy} J. With no losses it would reach √(2gh) ≈ {@idealSpeedA} m/s; the gate gives v = w/Δt ≈ {@speedA} m/s, a little less, so E_k at A ≈ {@kineticA} J is a little less than E_p0 (rolling resistance and drag).",
+      "vi": {
+        "stem": "Một xe {mass} kg không gắn cánh buồm được thả từ độ cao {releaseHeight} m (g = {gravity} m/s²); tấm chắn sáng rộng {flagWidth} m của nó che cổng A trên đoạn nằm ngang trong {@gateTimeA|4} s. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Wt0 = m·g·h = {@startEnergy} J. Nếu không mất mát, xe đạt √(2gh) ≈ {@idealSpeedA} m/s; cổng quang điện cho v = w/Δt ≈ {@speedA} m/s, nhỏ hơn một chút, nên động năng tại A ≈ {@kineticA} J nhỏ hơn Wt0 một chút (do lực cản lăn và lực cản không khí)."
+      },
+      "statements": [
+        {
+          "text": "Its potential energy at the start is {@startEnergy} J.",
+          "vi": {
+            "text": "Thế năng của xe lúc thả bằng {@startEnergy} J."
+          },
+          "true": true,
+          "check": {
+            "expr": "mass*gravity*releaseHeight",
+            "equals": "startEnergy"
+          }
+        },
+        {
+          "text": "With no losses it would reach about {@idealSpeedA} m/s.",
+          "vi": {
+            "text": "Nếu không có mất mát, xe sẽ đạt khoảng {@idealSpeedA} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "sqrt(2*gravity*releaseHeight)",
+            "equals": "idealSpeedA"
+          }
+        },
+        {
+          "text": "Gate A gives a speed of about {@speedA} m/s.",
+          "vi": {
+            "text": "Cổng A cho tốc độ khoảng {@speedA} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "flagWidth/@gateTimeA",
+            "equals": "speedA"
+          }
+        },
+        {
+          "text": "Its kinetic energy at gate A is exactly m·g·h = {@startEnergy} J.",
+          "vi": {
+            "text": "Động năng của xe tại cổng A đúng bằng m·g·h = {@startEnergy} J."
+          },
+          "true": false,
+          "check": {
+            "expr": "@startEnergy",
+            "equals": "kineticA"
+          }
+        }
+      ]
+    },
+    {
+      "id": "retained-share",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["losses"],
+      "set": {
+        "releaseHeight": 0.3,
+        "mass": 1,
+        "sailArea": 0.04
+      },
+      "stem": "A cart let go from rest {releaseHeight} m up turns back on the far ramp {@turnHeight|4} m up. What share of its mechanical energy has it kept?",
+      "explain": "At both points it is at rest, so E′/E₀ = m·g·h′/(m·g·h) = h′/h = {@turnHeight|4}/{releaseHeight} ≈ {@retained|3} %: the mass and g cancel. (h − h′)/h is the share lost.",
+      "vi": {
+        "stem": "Một xe được thả không vận tốc đầu từ độ cao {releaseHeight} m và quay lại trên dốc bên kia ở độ cao {@turnHeight|4} m. Xe còn giữ được bao nhiêu phần trăm cơ năng?",
+        "explain": "Ở cả hai điểm xe đều đứng yên, nên E′/E₀ = m·g·h′/(m·g·h) = h′/h = {@turnHeight|4}/{releaseHeight} ≈ {@retained|3} %: khối lượng và g bị triệt tiêu. (h − h′)/h là phần bị mất."
+      },
+      "options": [
+        {
+          "text": "{@retained|3} %",
+          "vi": {
+            "text": "{@retained|3} %"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@turnHeight/releaseHeight*100",
+            "equals": "retained"
+          }
+        },
+        {
+          "text": "{=(1-@turnHeight/releaseHeight)*100|3} %",
+          "vi": {
+            "text": "{=(1-@turnHeight/releaseHeight)*100|3} %"
+          },
+          "check": {
+            "expr": "(1-@turnHeight/releaseHeight)*100",
+            "equals": "retained"
+          }
+        },
+        {
+          "text": "{=releaseHeight/@turnHeight*100|3} %",
+          "vi": {
+            "text": "{=releaseHeight/@turnHeight*100|3} %"
+          },
+          "check": {
+            "expr": "releaseHeight/@turnHeight*100",
+            "equals": "retained"
+          }
+        },
+        {
+          "text": "{=(@turnHeight/releaseHeight)^2*100|3} %",
+          "vi": {
+            "text": "{=(@turnHeight/releaseHeight)^2*100|3} %"
+          },
+          "check": {
+            "expr": "(@turnHeight/releaseHeight)^2*100",
+            "equals": "retained"
+          }
+        }
+      ]
+    },
+    {
+      "id": "speed-from-energy",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["gates", "forms"],
+      "set": {
+        "releaseHeight": 0.25,
+        "mass": 0.5,
+        "sailArea": 0.0225
+      },
+      "stem": "Gate B stands h_B = {gateHeight} m above the level section. A {mass} kg cart has a mechanical energy of {@energyB|4} J there (g = {gravity} m/s²). How fast is it moving at gate B?",
+      "explain": "E_B = ½m·v² + m·g·h_B, so v = √(2(E_B − m·g·h_B)/m) = √(2({@energyB|4} − {=mass*gravity*gateHeight|3})/{mass}) ≈ {@speedB} m/s. Forgetting the potential energy at B, or adding it, gives the other values.",
+      "vi": {
+        "stem": "Cổng B đặt cao h_B = {gateHeight} m so với đoạn nằm ngang. Một xe {mass} kg có cơ năng {@energyB|4} J tại đó (g = {gravity} m/s²). Tốc độ của xe tại cổng B bằng bao nhiêu?",
+        "explain": "E_B = ½m·v² + m·g·h_B, nên v = √(2(E_B − m·g·h_B)/m) = √(2({@energyB|4} − {=mass*gravity*gateHeight|3})/{mass}) ≈ {@speedB} m/s. Quên thế năng tại B, hoặc cộng thêm nó, sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{=sqrt(2*(@energyB-mass*gravity*gateHeight)/mass)} m/s",
+          "vi": {
+            "text": "{=sqrt(2*(@energyB-mass*gravity*gateHeight)/mass)} m/s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "sqrt(2*(@energyB-mass*gravity*gateHeight)/mass)",
+            "equals": "speedB"
+          }
+        },
+        {
+          "text": "{=sqrt(2*@energyB/mass)} m/s",
+          "vi": {
+            "text": "{=sqrt(2*@energyB/mass)} m/s"
+          },
+          "check": {
+            "expr": "sqrt(2*@energyB/mass)",
+            "equals": "speedB"
+          }
+        },
+        {
+          "text": "{=sqrt(2*(@energyB+mass*gravity*gateHeight)/mass)} m/s",
+          "vi": {
+            "text": "{=sqrt(2*(@energyB+mass*gravity*gateHeight)/mass)} m/s"
+          },
+          "check": {
+            "expr": "sqrt(2*(@energyB+mass*gravity*gateHeight)/mass)",
+            "equals": "speedB"
+          }
+        },
+        {
+          "text": "{=sqrt((@energyB-mass*gravity*gateHeight)/mass)} m/s",
+          "vi": {
+            "text": "{=sqrt((@energyB-mass*gravity*gateHeight)/mass)} m/s"
+          },
+          "check": {
+            "expr": "sqrt((@energyB-mass*gravity*gateHeight)/mass)",
+            "equals": "speedB"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-sail-mass",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["losses", "conservation"],
+      "set": {
+        "releaseHeight": 0.2,
+        "mass": 0.25,
+        "sailArea": 0.04
+      },
+      "stem": "A {mass} kg cart with a {sailArea} m² card sail is let go {releaseHeight} m up and turns back {@turnHeight|4} m up (the model’s loss constants are illustrative; g = {gravity} m/s²). Decide whether each statement is true or false.",
+      "explain": "ΔE = m·g·(h − h′) ≈ {@energyLost} J and E′/E₀ = h′/h ≈ {@retained|3} %. The drag on the sail does not depend on the cart’s mass, so a heavier cart with the same sail loses a smaller share of its (larger) energy and turns back higher. Without the sail it would lose less and turn back higher too.",
+      "vi": {
+        "stem": "Một xe {mass} kg gắn cánh buồm bằng bìa diện tích {sailArea} m² được thả từ độ cao {releaseHeight} m và quay lại ở độ cao {@turnHeight|4} m (các hằng số mất mát của mô hình mang tính minh họa; g = {gravity} m/s²). Mỗi nhận định sau đúng hay sai?",
+        "explain": "ΔE = m·g·(h − h′) ≈ {@energyLost} J và E′/E₀ = h′/h ≈ {@retained|3} %. Lực cản lên cánh buồm không phụ thuộc khối lượng xe, nên xe nặng hơn với cùng cánh buồm mất một tỉ lệ nhỏ hơn trong năng lượng (lớn hơn) của nó và quay lại ở độ cao lớn hơn. Không có cánh buồm, xe cũng mất ít hơn và quay lại cao hơn."
+      },
+      "statements": [
+        {
+          "text": "The cart loses about {@energyLost} J.",
+          "vi": {
+            "text": "Xe mất khoảng {@energyLost} J."
+          },
+          "true": true,
+          "check": {
+            "expr": "mass*gravity*(releaseHeight-@turnHeight)",
+            "equals": "energyLost"
+          }
+        },
+        {
+          "text": "It keeps about {@retained|3} % of its mechanical energy.",
+          "vi": {
+            "text": "Xe giữ lại khoảng {@retained|3} % cơ năng."
+          },
+          "true": true,
+          "check": {
+            "expr": "100*@turnHeight/releaseHeight",
+            "equals": "retained"
+          }
+        },
+        {
+          "text": "A heavier cart with the same sail would keep a smaller share of its energy.",
+          "vi": {
+            "text": "Xe nặng hơn với cùng cánh buồm sẽ giữ lại tỉ lệ cơ năng nhỏ hơn."
+          },
+          "true": false
+        },
+        {
+          "text": "Without the sail, the same cart would turn back higher.",
+          "vi": {
+            "text": "Không có cánh buồm, cùng xe đó sẽ quay lại ở độ cao lớn hơn."
+          },
+          "true": true
+        }
+      ]
+    }
+  ]
+}

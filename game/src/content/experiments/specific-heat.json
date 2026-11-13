@@ -1,0 +1,580 @@
+{
+  "id": "specific-heat",
+  "name": "The specific heat capacity of water",
+  "category": "physics",
+  "description": "An electric heater warms a known mass of water in an insulated calorimeter while a joulemeter counts the energy it is given and a thermometer follows the water's temperature. From the energy E, the rise ΔT, the water's mass m and the calorimeter's own heat capacity C, the specific heat capacity of water is c = (E/ΔT − C)/m. The calorimeter loses a little heat to the room, so this value comes out slightly high.",
+  "vi": {
+    "name": "Đo nhiệt dung riêng của nước",
+    "description": "Một dây đốt nóng làm nóng một khối lượng nước đã biết trong bình nhiệt lượng kế cách nhiệt, trong khi joulemeter đo năng lượng cung cấp cho dây đốt và nhiệt kế theo dõi nhiệt độ của nước. Từ năng lượng E, độ tăng nhiệt độ ΔT, khối lượng nước m và nhiệt dung C của chính bình nhiệt lượng kế, nhiệt dung riêng của nước là c = (E/ΔT − C)/m. Bình nhiệt lượng kế mất một ít nhiệt ra phòng, nên giá trị này thường lớn hơn một chút so với giá trị thật.",
+    "note": "Nhiệt lượng cung cấp cho dây đốt E = P·t (joulemeter đọc trực tiếp E) làm nóng nước và bình: E = (m·c + C)·ΔT nếu không có hao phí. Ở đây bình mất nhiệt ra phòng theo định luật làm nguội Newton, k·(T − T0), với k = 0,1 W/K (giá trị minh họa cho một bình nhiệt lượng kế có nắp cách nhiệt, theo quyết định D9 của hợp đồng Phase T). Khi đó (m·c + C)·dT/dt = P − k·(T − T0), nên T = T0 + (P/k)·(1 − e^(−k·t/(m·c + C))). Tính c theo cách làm của bài thực hành, c = (E/ΔT − C)/m, là bỏ qua phần hao phí này: kết quả lớn hơn giá trị thật vài phần nghìn đến vài phần trăm, lớn hơn khi đun lâu hơn và ít nước hơn. Nhiệt dung riêng của nước ở 25 °C là c = 4181 J/(kg·K) (CRC Handbook of Chemistry and Physics, 4,1813 J/(g·K)). Nhiệt dung của bình C = 45 J/K là giá trị minh họa (khoảng 50 g nhôm). Đây là mô hình dạy học đơn giản hóa: nước luôn được khuấy đều nên có cùng một nhiệt độ, dây đốt và nhiệt kế không hấp thụ nhiệt, nước không bay hơi. Nhiệt kế đọc nhiệt độ cuối và joulemeter đọc năng lượng theo độ phân giải d của chúng (bội số gần nhất của d, độ bất định d/√12 chỉ do độ phân giải); không có sai số ngẫu nhiên nào được thêm vào. Thời gian được tua nhanh: 30 giây trong phòng thí nghiệm trong mỗi giây chạy. Trong phòng thí nghiệm thật còn có nhiệt lượng nước nhận chậm hơn so với dây đốt, nhiệt kế đọc trễ và nhiệt mất qua dây dẫn."
+  },
+  "requiredEquipment": ["joulemeter-calorimeter"],
+  "model": "thermal.specific-heat",
+  "parameters": [
+    {
+      "id": "power",
+      "label": "Heater power",
+      "vi": {
+        "label": "Công suất dây đốt"
+      },
+      "symbol": "P",
+      "unit": "W",
+      "default": 40,
+      "min": 20,
+      "max": 60,
+      "presets": [
+        {
+          "label": "20 W",
+          "vi": {
+            "label": "20 W"
+          },
+          "value": 20
+        },
+        {
+          "label": "40 W",
+          "vi": {
+            "label": "40 W"
+          },
+          "value": 40
+        },
+        {
+          "label": "60 W",
+          "vi": {
+            "label": "60 W"
+          },
+          "value": 60
+        }
+      ]
+    },
+    {
+      "id": "waterMass",
+      "label": "Mass of water",
+      "vi": {
+        "label": "Khối lượng nước"
+      },
+      "symbol": "m",
+      "unit": "kg",
+      "default": 0.2,
+      "min": 0.1,
+      "max": 0.3,
+      "presets": [
+        {
+          "label": "0.1 kg",
+          "vi": {
+            "label": "0,1 kg"
+          },
+          "value": 0.1
+        },
+        {
+          "label": "0.2 kg",
+          "vi": {
+            "label": "0,2 kg"
+          },
+          "value": 0.2
+        },
+        {
+          "label": "0.3 kg",
+          "vi": {
+            "label": "0,3 kg"
+          },
+          "value": 0.3
+        }
+      ]
+    },
+    {
+      "id": "thermometerResolution",
+      "label": "Thermometer resolution",
+      "vi": {
+        "label": "Độ phân giải của nhiệt kế"
+      },
+      "symbol": "d_T",
+      "unit": "°C",
+      "default": 0.1,
+      "min": 0.1,
+      "max": 1,
+      "presets": [
+        {
+          "label": "0.1 °C",
+          "vi": {
+            "label": "0,1 °C"
+          },
+          "value": 0.1
+        },
+        {
+          "label": "1 °C",
+          "vi": {
+            "label": "1 °C"
+          },
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "joulemeterResolution",
+      "label": "Joulemeter resolution",
+      "vi": {
+        "label": "Độ phân giải của joulemeter"
+      },
+      "symbol": "d_E",
+      "unit": "J",
+      "default": 1,
+      "min": 1,
+      "max": 100,
+      "presets": [
+        {
+          "label": "1 J",
+          "vi": {
+            "label": "1 J"
+          },
+          "value": 1
+        },
+        {
+          "label": "100 J",
+          "vi": {
+            "label": "100 J"
+          },
+          "value": 100
+        }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "heatingTime": 300,
+    "roomTemperature": 20,
+    "calorimeterCapacity": 45,
+    "lossCoefficient": 0.1,
+    "timeLapse": 30
+  },
+  "inputs": {
+    "heatingTime": {
+      "symbol": "t",
+      "unit": "s"
+    },
+    "roomTemperature": {
+      "symbol": "T0",
+      "unit": "°C",
+      "desk": false
+    },
+    "calorimeterCapacity": {
+      "symbol": "C",
+      "unit": "J/K"
+    },
+    "lossCoefficient": {
+      "symbol": "k",
+      "unit": "W/K",
+      "desk": false
+    },
+    "timeLapse": {
+      "symbol": "k_t",
+      "unit": "",
+      "desk": false
+    }
+  },
+  "simulation": {
+    "timeStep": 0.02,
+    "maxDuration": 20,
+    "sampleInterval": 0.1
+  },
+  "measurements": [
+    {
+      "id": "temperature",
+      "label": "Water temperature",
+      "vi": {
+        "label": "Nhiệt độ của nước"
+      },
+      "symbol": "T",
+      "unit": "°C",
+      "variable": "temperature"
+    },
+    {
+      "id": "energy",
+      "label": "Energy on the joulemeter",
+      "vi": {
+        "label": "Năng lượng trên joulemeter"
+      },
+      "symbol": "E",
+      "unit": "J",
+      "variable": "energy"
+    },
+    {
+      "id": "labTime",
+      "label": "Time",
+      "vi": {
+        "label": "Thời gian"
+      },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "labTime"
+    }
+  ],
+  "results": [
+    {
+      "id": "finalTemperature",
+      "label": "Final temperature",
+      "vi": {
+        "label": "Nhiệt độ cuối"
+      },
+      "symbol": "T",
+      "unit": "°C",
+      "variable": "temperature",
+      "reduce": "final",
+      "theory": "finalTemperature"
+    },
+    {
+      "id": "temperatureRise",
+      "label": "Temperature rise ΔT",
+      "vi": {
+        "label": "Độ tăng nhiệt độ ΔT"
+      },
+      "symbol": "ΔT",
+      "unit": "K",
+      "variable": "temperatureRise",
+      "reduce": "final",
+      "theory": "temperatureRise"
+    },
+    {
+      "id": "energy",
+      "label": "Energy E given to the heater",
+      "vi": {
+        "label": "Năng lượng E cung cấp cho dây đốt"
+      },
+      "symbol": "E",
+      "unit": "J",
+      "variable": "energy",
+      "reduce": "final",
+      "theory": "energy"
+    },
+    {
+      "id": "specificHeatSeen",
+      "label": "c = (E/ΔT − C)/m",
+      "vi": {
+        "label": "c = (E/ΔT − C)/m"
+      },
+      "symbol": "c",
+      "unit": "J/(kg·K)",
+      "variable": "specificHeatSeen",
+      "reduce": "final",
+      "theory": "specificHeat"
+    }
+  ],
+  "instruments": [
+    {
+      "result": "finalTemperature",
+      "quantity": "Final temperature T",
+      "name": "Thermometer",
+      "resolution": "thermometerResolution",
+      "excludes": "the thermometer lagging behind the water, water not yet mixed, and the reading taken a moment late",
+      "vi": {
+        "quantity": "Nhiệt độ cuối T",
+        "name": "Nhiệt kế",
+        "excludes": "nhiệt kế chỉ chậm hơn nhiệt độ của nước, nước chưa được khuấy đều, và việc đọc số chậm một chút"
+      }
+    },
+    {
+      "result": "energy",
+      "quantity": "Energy E",
+      "name": "Joulemeter",
+      "resolution": "joulemeterResolution",
+      "excludes": "the joulemeter's calibration, and the energy lost in the leads before the heater",
+      "vi": {
+        "quantity": "Năng lượng E",
+        "name": "Joulemeter",
+        "excludes": "sai số hiệu chuẩn của joulemeter, và năng lượng mất trên dây dẫn trước khi tới dây đốt"
+      }
+    }
+  ],
+  "graphs": [
+    {
+      "id": "temperature-time",
+      "title": "Water temperature against time",
+      "vi": {
+        "title": "Nhiệt độ của nước theo thời gian"
+      },
+      "x": "labTime",
+      "y": ["temperature"],
+      "yLabel": "T"
+    }
+  ],
+  "monitor": "temperature-time",
+  "compare": [
+    {
+      "graph": "temperature-time"
+    }
+  ],
+  "analyses": [
+    {
+      "id": "rise-energy",
+      "title": "Temperature rise against energy for one mass of water (ΔT = E/(m·c + C))",
+      "note": "Each run is one point: the rise ΔT against the energy E. Runs with the same mass of water are fitted together, at different powers (the heating time is 5 minutes). Without losses ΔT = E/(m·c + C): a straight line through the origin whose slope is 1/(m·c + C); its inverse is the heat capacity of the water and the calorimeter together, and c = (1/slope − C)/m. The heat lost to the room bends the line slightly downwards at large E.",
+      "vi": {
+        "title": "Độ tăng nhiệt độ theo năng lượng, với một khối lượng nước (ΔT = E/(m·c + C))",
+        "note": "Mỗi lần chạy là một điểm: độ tăng nhiệt độ ΔT theo năng lượng E. Các lần chạy cùng khối lượng nước được khớp chung, với các công suất khác nhau (thời gian đun là 5 phút). Nếu không có hao phí, ΔT = E/(m·c + C): một đường thẳng đi qua gốc tọa độ có hệ số góc 1/(m·c + C); nghịch đảo của nó là nhiệt dung của nước và bình cộng lại, và c = (1/hệ số góc − C)/m. Nhiệt mất ra phòng làm đường hơi cong xuống khi E lớn."
+      },
+      "x": "energy",
+      "y": "temperatureRise",
+      "group": ["waterMass"],
+      "columns": ["waterMass", "power", "energy", "temperatureRise", "specificHeatSeen"],
+      "slope": {
+        "label": "Slope of ΔT against E",
+        "vi": {
+          "label": "Hệ số góc của ΔT theo E"
+        },
+        "symbol": "1/(m·c + C)",
+        "unit": "K/J",
+        "theory": "risePerJoule"
+      },
+      "derived": {
+        "label": "Heat capacity of water and calorimeter, m·c + C = 1/slope",
+        "vi": {
+          "label": "Nhiệt dung của nước và bình, m·c + C = 1/hệ số góc"
+        },
+        "symbol": "m·c + C",
+        "unit": "J/K",
+        "numerator": 1,
+        "theory": "heatCapacity"
+      }
+    }
+  ],
+  "note": "The energy given to the heater, E = P·t (read straight off the joulemeter), warms the water and the calorimeter: E = (m·c + C)·ΔT if nothing is lost. Here the calorimeter loses heat to the room by Newton's cooling, k·(T − T0), with k = 0.1 W/K (illustrative, for a calorimeter with an insulated lid; decision D9 of the Phase T contract). Then (m·c + C)·dT/dt = P − k·(T − T0), so T = T0 + (P/k)·(1 − e^(−k·t/(m·c + C))). Working c as the practical does, c = (E/ΔT − C)/m, leaves this loss out: it comes out a few parts in a thousand to a few per cent high, more for longer heating and less water. The specific heat capacity of water at 25 °C is c = 4181 J/(kg·K) (CRC Handbook of Chemistry and Physics, 4.1813 J/(g·K)). The calorimeter's heat capacity C = 45 J/K is illustrative (about 50 g of aluminium). A simplified teaching model: the water is always stirred to one temperature, the heater and thermometer take no heat, no water evaporates. The thermometer reads the final temperature and the joulemeter the energy to their resolutions d (the nearest multiple of d, with the uncertainty d/√12 from the resolution alone); no random error is added. Time is compressed: 30 lab seconds each run second. In a real lab the water also warms after the heater, the thermometer reads late and heat leaks along the leads.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the specific heat instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn thí nghiệm nhiệt dung riêng trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "specific-heat-instructions"
+      }
+    },
+    {
+      "id": "mass",
+      "instruction": "Choose the mass of water with its dial on the control desk.",
+      "vi": {
+        "instruction": "Chọn khối lượng nước bằng núm xoay trên bàn điều khiển."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "waterMass"
+      }
+    },
+    {
+      "id": "power",
+      "instruction": "Choose the heater's power.",
+      "vi": {
+        "instruction": "Chọn công suất của dây đốt."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "power"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the heater warms the water while the joulemeter counts; watch the thermometer.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: dây đốt làm nóng nước trong khi joulemeter đếm năng lượng; quan sát nhiệt kế."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Read E, ΔT and c on the results monitor, and compare c with 4181 J/(kg·K).",
+      "vi": {
+        "instruction": "Đọc E, ΔT và c trên màn hình kết quả, rồi so sánh c với 4181 J/(kg·K)."
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, change the power or the mass of water and run again.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, đổi công suất hoặc khối lượng nước rồi chạy lại."
+      },
+      "done": {
+        "kind": "reset"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "no-loss-rise",
+      "question": "A {power} W heater warms {waterMass} kg of water in a calorimeter of heat capacity {calorimeterCapacity} J/K (illustrative) for {heatingTime} s. Find the energy given, and the temperature rise if no heat were lost (c = 4181 J/(kg·K)).",
+      "vi": {
+        "question": "Một dây đun {power} W đun {waterMass} kg nước trong nhiệt lượng kế có nhiệt dung {calorimeterCapacity} J/K (giá trị minh họa) trong {heatingTime} s. Tìm năng lượng cung cấp, và độ tăng nhiệt độ nếu không mất nhiệt (c = 4181 J/(kg·K))."
+      },
+      "set": { "power": 60, "waterMass": 0.3 },
+      "find": [{ "theory": "energy" }, { "theory": "lossFreeRise", "symbol": "ΔT₀", "unit": "K" }],
+      "steps": [
+        {
+          "say": "The joulemeter reads the energy: power times time.",
+          "vi": { "say": "Joulemeter chỉ năng lượng: công suất nhân thời gian." },
+          "write": "E = P·t = {power}·{heatingTime} = {@energy} J",
+          "check": { "expr": "power*heatingTime", "equals": "energy" }
+        },
+        {
+          "say": "If nothing were lost, it would warm both the water and the calorimeter: E = (m·c + C)·ΔT. c = 4181 J/(kg·K) is the handbook value for water.",
+          "vi": {
+            "say": "Nếu không mất nhiệt, năng lượng đó làm nóng cả nước và nhiệt lượng kế: E = (m·c + C)·ΔT. c = 4181 J/(kg·K) là giá trị tra theo sổ tay cho nước."
+          },
+          "write": "ΔT₀ = E/(m·c + C) = {@energy}/({waterMass}·4181 + {calorimeterCapacity}) ≈ {@lossFreeRise} K",
+          "check": {
+            "expr": "@energy/(waterMass*4181+calorimeterCapacity)",
+            "equals": "lossFreeRise"
+          }
+        }
+      ]
+    },
+    {
+      "id": "with-heat-loss",
+      "question": "A {power} W heater warms {waterMass} kg of water (calorimeter {calorimeterCapacity} J/K) for {heatingTime} s, starting at the room’s {roomTemperature} °C. The calorimeter loses {lossCoefficient} W per kelvin above the room (illustrative). Find the temperature rise and the final temperature.",
+      "vi": {
+        "question": "Dây đun {power} W đun {waterMass} kg nước (nhiệt lượng kế {calorimeterCapacity} J/K) trong {heatingTime} s, bắt đầu ở nhiệt độ phòng {roomTemperature} °C. Nhiệt lượng kế mất {lossCoefficient} W cho mỗi kelvin cao hơn nhiệt độ phòng (giá trị minh họa). Tìm độ tăng nhiệt độ và nhiệt độ cuối."
+      },
+      "set": { "power": 20, "waterMass": 0.1 },
+      "find": [{ "theory": "temperatureRise" }, { "theory": "finalTemperature" }],
+      "steps": [
+        {
+          "say": "The heat capacity of water and calorimeter together.",
+          "vi": { "say": "Nhiệt dung của nước và nhiệt lượng kế cộng lại." },
+          "write": "m·c + C = {waterMass}·4181 + {calorimeterCapacity} = {@heatCapacity} J/K",
+          "check": { "expr": "waterMass*4181+calorimeterCapacity", "equals": "heatCapacity" }
+        },
+        {
+          "say": "With Newton’s cooling, (m·c + C)·dT/dt = P − k·(T − T₀): the temperature rises towards P/k ever more slowly.",
+          "vi": {
+            "say": "Với định luật làm lạnh Newton, (m·c + C)·dT/dt = P − k·(T − T₀): nhiệt độ tăng dần về P/k và ngày càng chậm."
+          },
+          "write": "ΔT = (P/k)·(1 − e^(−k·t/(m·c + C))) ≈ {@temperatureRise} K",
+          "check": {
+            "expr": "(power/lossCoefficient)*(1-exp(-lossCoefficient*heatingTime/@heatCapacity))",
+            "equals": "temperatureRise"
+          }
+        },
+        {
+          "say": "Add the rise to the starting temperature.",
+          "vi": { "say": "Cộng độ tăng vào nhiệt độ ban đầu." },
+          "write": "T = T₀ + ΔT = {roomTemperature} + {@temperatureRise} ≈ {@finalTemperature} °C",
+          "check": { "expr": "roomTemperature+@temperatureRise", "equals": "finalTemperature" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "A heater warms a known mass of water while a joulemeter counts the energy; how much energy each kilogram needs per degree is the specific heat capacity c of water.",
+    "vi": {
+      "summary": "Một dây đốt nóng làm ấm một khối lượng nước đã biết trong khi jun kế đếm năng lượng cung cấp; năng lượng cần để mỗi kilôgam tăng thêm một độ là nhiệt dung riêng c của nước."
+    },
+    "parts": [
+      {
+        "id": "calorimeter",
+        "name": "Calorimeter",
+        "role": "An insulated can with a lid, holding the water m; it takes heat itself, C = 45 J/K.",
+        "vi": {
+          "name": "Nhiệt lượng kế",
+          "role": "Bình cách nhiệt có nắp, chứa lượng nước m; bản thân nó cũng thu nhiệt, C = 45 J/K."
+        },
+        "anchor": {
+          "at": [-0.08, -0.035, 0.07]
+        }
+      },
+      {
+        "id": "heater",
+        "name": "Heater and its leads",
+        "role": "An electric heater in the water, giving it energy at the power P.",
+        "vi": {
+          "name": "Dây đốt và dây nối",
+          "role": "Dây đốt điện đặt trong nước, cung cấp năng lượng cho nước với công suất P."
+        },
+        "anchor": {
+          "at": [0.03, 0.065, 0.012]
+        }
+      },
+      {
+        "id": "joulemeter",
+        "name": "Joulemeter",
+        "role": "Counts the energy E given to the heater.",
+        "vi": {
+          "name": "Jun kế",
+          "role": "Đếm năng lượng E cung cấp cho dây đốt."
+        },
+        "anchor": {
+          "at": [0.15, -0.06, 0.051]
+        }
+      },
+      {
+        "id": "thermometer",
+        "name": "Thermometer",
+        "role": "Follows the water’s temperature T; ΔT is its rise.",
+        "vi": {
+          "name": "Nhiệt kế",
+          "role": "Theo dõi nhiệt độ T của nước; ΔT là độ tăng nhiệt độ."
+        },
+        "anchor": {
+          "part": "stem"
+        }
+      },
+      {
+        "id": "stirrer",
+        "name": "Stirrer",
+        "role": "Keeps the water at one temperature throughout.",
+        "vi": {
+          "name": "Que khuấy",
+          "role": "Giữ cho cả khối nước có cùng một nhiệt độ."
+        },
+        "anchor": {
+          "at": [-0.115, 0.075, 0.02]
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "The heater turns electrical energy into heat in the water. The joulemeter counts the energy given, E = P·t.",
+        "vi": {
+          "text": "Dây đốt biến điện năng thành nhiệt trong nước. Jun kế đếm năng lượng đã cung cấp, E = P·t."
+        },
+        "parts": ["heater", "joulemeter"]
+      },
+      {
+        "text": "The water, kept stirred, warms up: the thermometer shows its temperature rising by ΔT.",
+        "vi": {
+          "text": "Nước được khuấy đều và ấm lên: nhiệt kế cho thấy nhiệt độ tăng thêm ΔT."
+        },
+        "parts": ["calorimeter", "stirrer", "thermometer"]
+      },
+      {
+        "text": "The energy warms both the water and the can: E = (m·c + C)·ΔT if nothing is lost. So c = (E/ΔT − C)/m — the energy for 1 kg of water to warm by 1 K.",
+        "vi": {
+          "text": "Năng lượng làm ấm cả nước lẫn bình: E = (m·c + C)·ΔT nếu không có hao phí. Vì vậy c = (E/ΔT − C)/m — năng lượng để 1 kg nước tăng thêm 1 K."
+        },
+        "parts": ["calorimeter", "joulemeter", "thermometer"]
+      },
+      {
+        "text": "More power warms the water faster; more water warms more slowly. Change P or m and compare runs.",
+        "vi": {
+          "text": "Công suất lớn hơn thì nước ấm nhanh hơn; nhiều nước hơn thì ấm chậm hơn. Đổi P hoặc m rồi so sánh các lần chạy."
+        },
+        "parts": ["heater", "calorimeter"]
+      },
+      {
+        "text": "The calorimeter loses a little heat to the room, which the formula leaves out, so c comes out slightly high — more for longer heating and less water. Compare it with 4181 J/(kg·K).",
+        "vi": {
+          "text": "Nhiệt lượng kế mất một ít nhiệt ra phòng, điều mà công thức bỏ qua, nên c tính được hơi cao — càng cao khi đun lâu và ít nước. So sánh nó với 4181 J/(kg·K)."
+        },
+        "parts": ["calorimeter"]
+      },
+      {
+        "text": "The results give T, ΔT, E and c; the thermometer and joulemeter read in steps of their resolutions. Time runs 30 times faster than in the lab.",
+        "vi": {
+          "text": "Phần kết quả cho T, ΔT, E và c; nhiệt kế và jun kế đọc theo từng bước bằng độ phân giải của chúng. Thời gian chạy nhanh gấp 30 lần so với trong phòng thí nghiệm."
+        },
+        "parts": ["thermometer", "joulemeter"]
+      }
+    ]
+  }
+}

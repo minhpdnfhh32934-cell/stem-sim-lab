@@ -1,0 +1,371 @@
+{
+  "id": "electric-field",
+  "name": "The electric field of point charges (simulation)",
+  "category": "physics",
+  "description": "A simulation: one or two small charged spheres on a field display, their field lines drawn around them. Each charge Q makes a field E = k·Q/r² that points away from a positive charge and towards a negative one; with two charges the fields add. A probe moves out along the line through the charges and reads E. At the distance you choose, read the field of each charge, their sum, and the force on a test charge of 1 nC, F = q·E.",
+  "vi": {
+    "name": "Điện trường của điện tích điểm (mô phỏng)",
+    "description": "Một mô phỏng: một hoặc hai quả cầu nhỏ tích điện trên màn hiển thị điện trường, các đường sức điện được vẽ quanh chúng. Mỗi điện tích Q gây ra điện trường E = k·Q/r², hướng ra xa điện tích dương và hướng về điện tích âm; khi có hai điện tích, hai điện trường cộng lại với nhau. Một đầu dò đi ra xa dọc theo đường thẳng nối hai điện tích và đo E. Tại khoảng cách bạn chọn, đọc điện trường của từng điện tích, điện trường tổng hợp và lực tác dụng lên điện tích thử 1 nC, F = q·E.",
+    "note": "Một điện tích điểm Q đặt trong chân không (không khí: εr ≈ 1) gây ra tại điểm cách nó r một điện trường có độ lớn E = k·|Q|/r², với k = 1/(4π·ε0) ≈ 8,988 × 10⁹ N·m²/C² (ε0 theo CODATA 2018), hướng ra xa Q nếu Q > 0 và hướng về Q nếu Q < 0. Khi có nhiều điện tích, điện trường tại một điểm là tổng vectơ các điện trường do từng điện tích gây ra (nguyên lí chồng chất). Ở đây Q1 và Q2 cách nhau 0,2 m; các điểm được đo nằm trên đường thẳng qua hai điện tích, phía ngoài Q1 (xa Q2), cách Q1 một khoảng r, nên cả hai điện trường cùng nằm trên đường thẳng đó: E = k·Q1/r² + k·Q2/(r + 0,2 m)², dương khi hướng ra xa Q1. Một điện tích thử q đặt tại đó chịu lực F = q·E (định luật Coulomb). Khi chạy, đầu dò đi từ 3 cm đến 25 cm trong 6 s. Đường sức điện được vẽ từ chính các công thức này. Đây là một mô phỏng: trường học thường chỉ biểu diễn định tính các đường sức (hạt bột trong dầu), không đo được điện trường của các điện tích nhỏ như vậy; các điện tích là điện tích điểm lí tưởng, không có vật nào khác ở gần."
+  },
+  "requiredEquipment": ["electric-field-display"],
+  "model": "electric.point-charges",
+  "parameters": [
+    {
+      "id": "charge",
+      "label": "Charge Q1",
+      "vi": { "label": "Điện tích Q1" },
+      "symbol": "Q1",
+      "unit": "C",
+      "default": 5e-9,
+      "min": -5e-9,
+      "max": 5e-9,
+      "presets": [
+        { "label": "+2 nC", "vi": { "label": "+2 nC" }, "value": 2e-9 },
+        { "label": "+5 nC", "vi": { "label": "+5 nC" }, "value": 5e-9 },
+        { "label": "−5 nC", "vi": { "label": "−5 nC" }, "value": -5e-9 }
+      ]
+    },
+    {
+      "id": "secondCharge",
+      "label": "Charge Q2",
+      "vi": { "label": "Điện tích Q2" },
+      "symbol": "Q2",
+      "unit": "C",
+      "default": 0,
+      "min": -5e-9,
+      "max": 5e-9,
+      "presets": [
+        { "label": "None", "vi": { "label": "Không có" }, "value": 0 },
+        { "label": "+5 nC", "vi": { "label": "+5 nC" }, "value": 5e-9 },
+        { "label": "−5 nC", "vi": { "label": "−5 nC" }, "value": -5e-9 }
+      ]
+    },
+    {
+      "id": "probeDistance",
+      "label": "Distance from Q1",
+      "vi": { "label": "Khoảng cách đến Q1" },
+      "symbol": "r",
+      "unit": "m",
+      "default": 0.1,
+      "min": 0.05,
+      "max": 0.2,
+      "presets": [
+        { "label": "5 cm", "vi": { "label": "5 cm" }, "value": 0.05 },
+        { "label": "10 cm", "vi": { "label": "10 cm" }, "value": 0.1 },
+        { "label": "20 cm", "vi": { "label": "20 cm" }, "value": 0.2 }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "separation": 0.2,
+    "testCharge": 1e-9,
+    "scanFrom": 0.03,
+    "scanTo": 0.25,
+    "scanTime": 6
+  },
+  "inputs": {
+    "separation": { "symbol": "d", "unit": "m" },
+    "testCharge": { "symbol": "q", "unit": "C" },
+    "scanFrom": { "symbol": "r_from", "unit": "m", "desk": false },
+    "scanTo": { "symbol": "r_to", "unit": "m", "desk": false },
+    "scanTime": { "symbol": "t_scan", "unit": "s", "desk": false }
+  },
+  "simulation": { "timeStep": 0.005, "maxDuration": 7, "sampleInterval": 0.01 },
+  "measurements": [
+    {
+      "id": "field",
+      "label": "Field at the probe",
+      "vi": { "label": "Điện trường tại đầu dò" },
+      "symbol": "E",
+      "unit": "V/m",
+      "variable": "field"
+    },
+    {
+      "id": "probe",
+      "label": "Probe's distance from Q1",
+      "vi": { "label": "Khoảng cách từ đầu dò đến Q1" },
+      "symbol": "r",
+      "unit": "m",
+      "variable": "probe"
+    }
+  ],
+  "results": [
+    {
+      "id": "fieldOne",
+      "label": "Field of Q1 at r, k·Q1/r²",
+      "vi": { "label": "Điện trường của Q1 tại r, k·Q1/r²" },
+      "symbol": "E1",
+      "unit": "V/m",
+      "variable": "fieldOne",
+      "reduce": "final",
+      "theory": "fieldOne"
+    },
+    {
+      "id": "fieldTwo",
+      "label": "Field of Q2 there, k·Q2/(r + d)²",
+      "vi": { "label": "Điện trường của Q2 tại đó, k·Q2/(r + d)²" },
+      "symbol": "E2",
+      "unit": "V/m",
+      "variable": "fieldTwo",
+      "reduce": "final",
+      "theory": "fieldTwo"
+    },
+    {
+      "id": "fieldSum",
+      "label": "Total field E = E1 + E2",
+      "vi": { "label": "Điện trường tổng hợp E = E1 + E2" },
+      "symbol": "E",
+      "unit": "V/m",
+      "variable": "fieldSum",
+      "reduce": "final",
+      "theory": "fieldSum"
+    },
+    {
+      "id": "force",
+      "label": "Force on the test charge F = q·E",
+      "vi": { "label": "Lực tác dụng lên điện tích thử F = q·E" },
+      "symbol": "F",
+      "unit": "N",
+      "variable": "force",
+      "reduce": "final",
+      "theory": "force"
+    }
+  ],
+  "graphs": [
+    {
+      "id": "field-distance",
+      "title": "Field along the axis",
+      "vi": { "title": "Điện trường dọc theo trục" },
+      "x": "probe",
+      "y": ["field"],
+      "yLabel": "E (V/m)"
+    }
+  ],
+  "monitor": "field-distance",
+  "compare": [{ "graph": "field-distance" }],
+  "note": "A point charge Q in vacuum (air: εr ≈ 1) makes, at a point r from it, a field of strength E = k·|Q|/r², with k = 1/(4π·ε0) ≈ 8.988 × 10⁹ N·m²/C² (ε0 from CODATA 2018), pointing away from Q if Q > 0 and towards it if Q < 0. With several charges the field at a point is the vector sum of each one's (superposition). Here Q1 and Q2 are 0.2 m apart; the points measured lie on the line through them, outside Q1 (away from Q2), r from Q1, so both fields lie along that line: E = k·Q1/r² + k·Q2/(r + 0.2 m)², positive pointing away from Q1. A test charge q there feels F = q·E (Coulomb's law). During the run the probe goes from 3 cm to 25 cm in 6 s. The field lines are drawn from these same formulas. A simulation: schools show field lines only qualitatively (semolina in oil) and cannot measure the field of charges this small; the charges are ideal point charges with nothing else near them.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the electric field instructions on the board.",
+      "vi": { "instruction": "Đọc hướng dẫn mô phỏng điện trường trên bảng." },
+      "done": { "kind": "inspected", "item": "electric-field-instructions" }
+    },
+    {
+      "id": "charges",
+      "instruction": "Set the charges Q1 and Q2 with their dials on the control desk.",
+      "vi": { "instruction": "Đặt các điện tích Q1 và Q2 bằng núm xoay trên bàn điều khiển." },
+      "done": { "kind": "adjusted", "parameter": "secondCharge" }
+    },
+    {
+      "id": "distance",
+      "instruction": "Set the distance r from Q1 where the field is read.",
+      "vi": { "instruction": "Đặt khoảng cách r đến Q1 tại đó đo điện trường." },
+      "done": { "kind": "adjusted", "parameter": "probeDistance" }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the probe moves out along the axis, reading E.",
+      "vi": { "instruction": "Nhấn CHẠY: đầu dò đi ra xa dọc theo trục và đo E." },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read E1, E2, E and F = q·E on the results monitor.",
+      "vi": { "instruction": "Đọc E1, E2, E và F = q·E trên màn hình kết quả." },
+      "done": { "kind": "viewed" }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, double r and run again: the field of one charge falls to a quarter.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, tăng r gấp đôi rồi chạy lại: điện trường của một điện tích giảm còn một phần tư."
+      },
+      "done": { "kind": "reset" }
+    }
+  ],
+  "examples": [
+    {
+      "id": "one-charge",
+      "question": "A point charge Q1 = +{=charge*1e9} nC is in air. Find the field strength {probeDistance} m from it, and the force on a test charge of {=testCharge*1e9} nC there.",
+      "vi": {
+        "question": "Một điện tích điểm Q1 = +{=charge*1e9} nC đặt trong không khí. Tìm cường độ điện trường tại điểm cách nó {probeDistance} m, và lực tác dụng lên điện tích thử {=testCharge*1e9} nC đặt tại đó."
+      },
+      "set": { "charge": 2e-9, "probeDistance": 0.05 },
+      "find": [{ "theory": "fieldOne" }, { "theory": "force" }],
+      "steps": [
+        {
+          "say": "A point charge’s field: E = k·|Q|/r², with k = 1/(4πε₀) ≈ 8.99 × 10⁹ N·m²/C². Q1 is positive, so the field points away from it.",
+          "vi": {
+            "say": "Điện trường của điện tích điểm: E = k·|Q|/r², với k = 1/(4πε₀) ≈ 8,99 × 10⁹ N·m²/C². Q1 dương nên điện trường hướng ra xa nó."
+          },
+          "write": "E = k·Q/r² = 8.99×10⁹·{charge}/{probeDistance}² ≈ {@fieldOne} V/m",
+          "check": {
+            "expr": "charge/(4*pi*8.8541878128e-12*probeDistance^2)",
+            "equals": "fieldOne"
+          }
+        },
+        {
+          "say": "The force on the test charge is q times the field.",
+          "vi": { "say": "Lực tác dụng lên điện tích thử bằng q nhân cường độ điện trường." },
+          "write": "F = q·E = {testCharge}·{@fieldOne} ≈ {@force} N",
+          "check": { "expr": "testCharge*@fieldOne", "equals": "force" }
+        }
+      ]
+    },
+    {
+      "id": "two-charges",
+      "question": "Q1 = +{=charge*1e9} nC and Q2 = {=secondCharge*1e9} nC are {separation} m apart. Find the field at a point on the line through them, {probeDistance} m from Q1 on the side away from Q2.",
+      "vi": {
+        "question": "Hai điện tích Q1 = +{=charge*1e9} nC và Q2 = {=secondCharge*1e9} nC đặt cách nhau {separation} m. Tìm cường độ điện trường tại một điểm trên đường thẳng nối chúng, cách Q1 {probeDistance} m, ở phía không có Q2."
+      },
+      "set": { "charge": 5e-9, "secondCharge": -5e-9, "probeDistance": 0.1 },
+      "find": [{ "theory": "fieldTwo" }, { "theory": "fieldSum" }],
+      "steps": [
+        {
+          "say": "Take the direction away from Q1 as positive. Q1’s field there points away from Q1.",
+          "vi": {
+            "say": "Chọn chiều dương hướng ra xa Q1. Điện trường của Q1 tại đó hướng ra xa Q1."
+          },
+          "write": "E₁ = k·Q1/r² ≈ {@fieldOne} V/m",
+          "check": {
+            "expr": "charge/(4*pi*8.8541878128e-12*probeDistance^2)",
+            "equals": "fieldOne"
+          }
+        },
+        {
+          "say": "Q2 is r + d away and negative: its field points towards it, back towards Q1, so it counts negative.",
+          "vi": {
+            "say": "Q2 cách điểm đó r + d và mang điện âm: điện trường của nó hướng về Q2, tức là về phía Q1, nên mang dấu âm."
+          },
+          "write": "E₂ = k·Q2/(r + d)² ≈ {@fieldTwo} V/m",
+          "check": {
+            "expr": "secondCharge/(4*pi*8.8541878128e-12*(probeDistance+separation)^2)",
+            "equals": "fieldTwo"
+          }
+        },
+        {
+          "say": "The fields add as vectors: on this line, with their signs.",
+          "vi": {
+            "say": "Các điện trường cộng theo quy tắc vectơ: trên đường thẳng này là cộng đại số kèm dấu."
+          },
+          "write": "E = E₁ + E₂ = {@fieldOne} + ({@fieldTwo}) ≈ {@fieldSum} V/m",
+          "check": { "expr": "@fieldOne+@fieldTwo", "equals": "fieldSum" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "A simulation: a charge makes an electric field around it, strong close by and falling as 1/r² further away; the fields of two charges add up.",
+    "vi": {
+      "summary": "Một mô phỏng: điện tích tạo ra điện trường xung quanh nó, mạnh ở gần và giảm theo 1/r² khi ra xa; điện trường của hai điện tích được cộng lại."
+    },
+    "parts": [
+      {
+        "id": "q1",
+        "name": "Charge Q1",
+        "role": "A small charged sphere: red if positive, blue if negative.",
+        "vi": {
+          "name": "Điện tích Q1",
+          "role": "Một quả cầu nhỏ tích điện: màu đỏ nếu dương, màu xanh nếu âm."
+        },
+        "anchor": {
+          "part": "q1"
+        }
+      },
+      {
+        "id": "q2",
+        "name": "Charge Q2",
+        "role": "0.2 m to the left of Q1; shown only when it is not zero.",
+        "vi": {
+          "name": "Điện tích Q2",
+          "role": "Cách Q1 0.2 m về bên trái; chỉ hiện khi khác không."
+        },
+        "anchor": {
+          "part": "q2"
+        }
+      },
+      {
+        "id": "lines",
+        "name": "Field lines",
+        "role": "Drawn from the same formulas: they show the field’s direction, crowded where it is strong.",
+        "vi": {
+          "name": "Đường sức điện",
+          "role": "Được vẽ từ cùng các công thức: cho biết hướng của điện trường, dày ở nơi điện trường mạnh."
+        },
+        "anchor": {
+          "part": "field-lines"
+        }
+      },
+      {
+        "id": "probe",
+        "name": "Probe",
+        "role": "Moves out along the line through the charges, reading the field E.",
+        "vi": {
+          "name": "Đầu dò",
+          "role": "Di chuyển ra xa dọc theo đường thẳng qua các điện tích, đo cường độ điện trường E."
+        },
+        "anchor": {
+          "part": "probe"
+        }
+      },
+      {
+        "id": "screen",
+        "name": "Field display",
+        "role": "A screen showing the charges at full size; a simulation, as such small charges cannot be measured at school.",
+        "vi": {
+          "name": "Màn hiển thị điện trường",
+          "role": "Màn hiển thị các điện tích đúng kích thước thật; đây là mô phỏng, vì ở trường không đo được điện tích nhỏ như vậy."
+        },
+        "anchor": {
+          "part": "screen"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "A charge Q makes an electric field around it: any other charge placed there feels a force. The field points away from a positive charge and towards a negative one.",
+        "vi": {
+          "text": "Điện tích Q tạo ra điện trường xung quanh nó: điện tích khác đặt ở đó sẽ chịu một lực. Điện trường hướng ra xa điện tích dương và hướng vào điện tích âm."
+        },
+        "parts": ["q1", "lines"]
+      },
+      {
+        "text": "The field lines show its direction, and crowd together where the field is strong — close to the charge.",
+        "vi": {
+          "text": "Các đường sức điện cho biết hướng của điện trường, và dày đặc ở nơi điện trường mạnh — gần điện tích."
+        },
+        "parts": ["lines"]
+      },
+      {
+        "text": "Its strength at a distance r is E = k·|Q|/r², with k ≈ 8.988 × 10⁹ N·m²/C². Double the distance and the field falls to a quarter.",
+        "vi": {
+          "text": "Cường độ điện trường tại khoảng cách r là E = k·|Q|/r², với k ≈ 8.988 × 10⁹ N·m²/C². Khoảng cách tăng gấp đôi thì điện trường giảm còn một phần tư."
+        },
+        "parts": ["q1", "probe"]
+      },
+      {
+        "text": "With two charges the fields add (superposition). On the line through them, outside Q1: E = k·Q1/r² + k·Q2/(r + 0.2 m)², positive pointing away from Q1.",
+        "vi": {
+          "text": "Với hai điện tích, các điện trường cộng lại (nguyên lý chồng chất). Trên đường thẳng qua chúng, ở phía ngoài Q1: E = k·Q1/r² + k·Q2/(r + 0.2 m)², chiều dương hướng ra xa Q1."
+        },
+        "parts": ["q1", "q2", "probe"]
+      },
+      {
+        "text": "A test charge q at the probe feels the force F = q·E. The results give E1, E2, their sum E and F for a 1 nC test charge.",
+        "vi": {
+          "text": "Một điện tích thử q đặt tại đầu dò chịu lực F = q·E. Phần kết quả cho E1, E2, tổng E và F với điện tích thử 1 nC."
+        },
+        "parts": ["probe"]
+      },
+      {
+        "text": "A simulation: the charges are ideal points with nothing else near them. Schools show field lines only qualitatively, with semolina in oil.",
+        "vi": {
+          "text": "Đây là mô phỏng: các điện tích là điện tích điểm lý tưởng, không có gì khác ở gần. Ở trường học, đường sức điện chỉ được minh họa định tính, bằng bột trong dầu."
+        },
+        "parts": ["screen"]
+      }
+    ]
+  }
+}

@@ -1,0 +1,844 @@
+{
+  "id": "corrosion",
+  "skills": [
+    {
+      "id": "conditions",
+      "name": "What iron needs to rust",
+      "advice": "Learn the result as a pair: iron rusts only with both water and oxygen; rust is hydrated iron(III) oxide, Fe₂O₃·nH₂O. At the station compare the tube with water and air with the dry-air tube and the boiled-water-under-oil tube.",
+      "vi": {
+        "name": "Điều kiện để sắt bị gỉ",
+        "advice": "Ghi nhớ kết quả theo cặp: sắt chỉ bị gỉ khi có cả nước và oxygen; gỉ sắt là iron(III) oxide ngậm nước, Fe₂O₃·nH₂O. Trên trạm, so sánh ống có nước và không khí với ống không khí khô và ống nước đun sôi phủ dầu."
+      }
+    },
+    {
+      "id": "design",
+      "name": "A fair test: what each tube controls",
+      "advice": "For each tube say which one condition is removed or added (calcium chloride dries the air, boiling drives out dissolved air, oil keeps air out) and which tube it is compared with. Only two tubes that differ in one thing prove anything.",
+      "vi": {
+        "name": "Thí nghiệm đối chứng: mỗi ống kiểm soát điều gì",
+        "advice": "Với mỗi ống, nói rõ điều kiện nào bị loại bỏ hay được thêm vào (calcium chloride làm khô không khí, đun sôi đuổi không khí hòa tan, lớp dầu ngăn không khí) và nó được so sánh với ống nào. Chỉ hai ống khác nhau đúng một yếu tố mới cho kết luận."
+      }
+    },
+    {
+      "id": "electrochemical",
+      "name": "Electrochemical corrosion: metals in contact",
+      "advice": "When two metals touch in an electrolyte, the more reactive one (lower E°) is the anode and is oxidised. Rank Zn > Fe > Sn > Cu before each question, then check with the copper- and zinc-wrapped nails at the station.",
+      "vi": {
+        "name": "Ăn mòn điện hóa: hai kim loại tiếp xúc",
+        "advice": "Khi hai kim loại tiếp xúc nhau trong dung dịch chất điện li, kim loại hoạt động hơn (E° nhỏ hơn) là anode và bị oxi hóa. Sắp xếp Zn > Fe > Sn > Cu trước khi làm bài, rồi kiểm tra bằng đinh quấn dây đồng và đinh quấn kẽm trên trạm."
+      }
+    },
+    {
+      "id": "protection",
+      "name": "Protecting iron",
+      "advice": "Sort each method into a barrier (paint, oil, grease, plastic, tin) or sacrificial protection (zinc, magnesium), and ask what happens when the coating is scratched.",
+      "vi": {
+        "name": "Bảo vệ sắt thép",
+        "advice": "Xếp mỗi biện pháp vào nhóm che phủ bề mặt (sơn, dầu mỡ, nhựa, thiếc) hay bảo vệ bằng kim loại hi sinh (kẽm, magnesium), và tự hỏi điều gì xảy ra khi lớp phủ bị xước."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "needs",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["conditions"],
+      "stem": "For an iron nail to rust, it needs…",
+      "explain": "Rusting needs both water and oxygen: the nails in dry air and in boiled water under oil stay bright.",
+      "vi": {
+        "stem": "Để một chiếc đinh sắt bị gỉ, cần có",
+        "explain": "Sự gỉ sắt cần cả nước và oxygen: đinh trong không khí khô và đinh trong nước đun sôi phủ dầu vẫn sáng bóng."
+      },
+      "options": [
+        {
+          "text": "both water and oxygen",
+          "vi": {
+            "text": "cả nước và oxygen"
+          },
+          "correct": true
+        },
+        {
+          "text": "water only",
+          "vi": {
+            "text": "chỉ cần nước"
+          }
+        },
+        {
+          "text": "oxygen only",
+          "vi": {
+            "text": "chỉ cần oxygen"
+          }
+        },
+        {
+          "text": "salt and water",
+          "vi": {
+            "text": "muối và nước"
+          }
+        }
+      ]
+    },
+    {
+      "id": "calcium-chloride",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["design"],
+      "stem": "In the tube with dry air, what does the anhydrous calcium chloride do?",
+      "explain": "Anhydrous calcium chloride absorbs water vapour, so the nail has oxygen but no water.",
+      "vi": {
+        "stem": "Trong ống chứa không khí khô, calcium chloride khan có tác dụng gì?",
+        "explain": "Calcium chloride khan hút hơi nước, nên đinh có oxygen nhưng không có nước."
+      },
+      "options": [
+        {
+          "text": "It absorbs water vapour, keeping the air dry",
+          "vi": {
+            "text": "Hút hơi nước, giữ cho không khí khô"
+          },
+          "correct": true
+        },
+        {
+          "text": "It absorbs the oxygen",
+          "vi": {
+            "text": "Hấp thụ oxygen"
+          }
+        },
+        {
+          "text": "It gives off oxygen",
+          "vi": {
+            "text": "Giải phóng oxygen"
+          }
+        },
+        {
+          "text": "It coats the nail with a protective layer",
+          "vi": {
+            "text": "Phủ lên đinh một lớp bảo vệ"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-tubes",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["conditions", "design"],
+      "stem": "Six iron nails are kept for a week in different tubes. Decide whether each statement is true or false.",
+      "explain": "Boiling drives out dissolved air and the oil stops it dissolving again. Rust is mainly hydrated iron(III) oxide. Zinc in contact corrodes instead of the iron, so that nail stays bright.",
+      "vi": {
+        "stem": "Sáu chiếc đinh sắt được để trong các ống nghiệm khác nhau trong một tuần. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Đun sôi đuổi không khí hòa tan ra khỏi nước và lớp dầu ngăn không khí hòa tan trở lại. Gỉ sắt chủ yếu là iron(III) oxide ngậm nước. Kẽm tiếp xúc với sắt bị ăn mòn thay cho sắt, nên chiếc đinh đó vẫn sáng."
+      },
+      "statements": [
+        {
+          "text": "Boiling the water drives out the air dissolved in it.",
+          "vi": {
+            "text": "Đun sôi nước làm không khí hòa tan trong nước thoát ra."
+          },
+          "true": true
+        },
+        {
+          "text": "The layer of oil stops air dissolving back into the boiled water.",
+          "vi": {
+            "text": "Lớp dầu ngăn không khí hòa tan trở lại vào nước đã đun sôi."
+          },
+          "true": true
+        },
+        {
+          "text": "Rust is mainly hydrated iron(III) oxide, Fe₂O₃·nH₂O.",
+          "vi": {
+            "text": "Gỉ sắt chủ yếu là iron(III) oxide ngậm nước, Fe₂O₃·nH₂O."
+          },
+          "true": true
+        },
+        {
+          "text": "The nail wrapped in zinc rusts faster than the nail in water and air alone.",
+          "vi": {
+            "text": "Đinh quấn kẽm bị gỉ nhanh hơn đinh chỉ để trong nước và không khí."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "salt-water",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["conditions", "electrochemical"],
+      "stem": "Why does the nail in salt water rust faster than the nail in tap water?",
+      "explain": "Dissolved ions make the water a much better electrolyte, so the electrochemical cells on the iron’s surface work faster. Salt does not oxidise iron by itself, and salt water holds less dissolved oxygen, not more.",
+      "vi": {
+        "stem": "Vì sao đinh trong nước muối bị gỉ nhanh hơn đinh trong nước máy?",
+        "explain": "Các ion hòa tan làm nước dẫn điện tốt hơn nhiều, nên các pin điện hóa trên bề mặt sắt hoạt động mạnh hơn. Muối không tự oxi hóa sắt, và nước muối hòa tan ít oxygen hơn chứ không nhiều hơn."
+      },
+      "options": [
+        {
+          "text": "The dissolved salt makes the water a better electrolyte, speeding electrochemical corrosion",
+          "vi": {
+            "text": "Muối hòa tan làm nước dẫn điện tốt hơn, thúc đẩy ăn mòn điện hóa"
+          },
+          "correct": true
+        },
+        {
+          "text": "Salt water holds more dissolved oxygen",
+          "vi": {
+            "text": "Nước muối hòa tan được nhiều oxygen hơn"
+          }
+        },
+        {
+          "text": "Sodium chloride oxidises iron directly to Fe₂O₃",
+          "vi": {
+            "text": "Sodium chloride oxi hóa trực tiếp sắt thành Fe₂O₃"
+          }
+        },
+        {
+          "text": "Salt removes the water from the nail",
+          "vi": {
+            "text": "Muối hút hết nước khỏi đinh"
+          }
+        }
+      ]
+    },
+    {
+      "id": "copper-anode",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["electrochemical"],
+      "stem": "An iron nail wrapped in copper wire stands in water open to the air. Which metal is oxidised (the anode)?",
+      "explain": "Iron is more reactive than copper (E°: Fe²⁺/Fe −0.44 V, Cu²⁺/Cu +0.34 V), so iron is the anode: Fe → Fe²⁺ + 2e⁻. The copper only carries the electrons to the oxygen, so the iron corrodes faster.",
+      "vi": {
+        "stem": "Một chiếc đinh sắt quấn dây đồng được để trong nước có tiếp xúc không khí. Kim loại nào bị oxi hóa (đóng vai trò anode)?",
+        "explain": "Sắt hoạt động mạnh hơn đồng (E°: Fe²⁺/Fe −0,44 V, Cu²⁺/Cu +0,34 V), nên sắt là anode: Fe → Fe²⁺ + 2e⁻. Đồng chỉ dẫn electron tới oxygen, nên sắt bị ăn mòn nhanh hơn."
+      },
+      "options": [
+        {
+          "text": "Iron",
+          "vi": {
+            "text": "Sắt"
+          },
+          "correct": true
+        },
+        {
+          "text": "Copper",
+          "vi": {
+            "text": "Đồng"
+          }
+        },
+        {
+          "text": "Both, equally",
+          "vi": {
+            "text": "Cả hai, như nhau"
+          }
+        },
+        {
+          "text": "Neither: the copper protects the iron",
+          "vi": {
+            "text": "Không kim loại nào: đồng bảo vệ sắt"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-zinc",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["electrochemical", "protection"],
+      "stem": "An iron nail wrapped in zinc stands in water open to the air. Decide whether each statement is true or false.",
+      "explain": "Zinc is more reactive than iron, so it is the anode: Zn → Zn²⁺ + 2e⁻, and the electrons flow from the zinc into the iron, where oxygen is reduced. The iron stays protected while zinc remains in contact.",
+      "vi": {
+        "stem": "Một chiếc đinh sắt quấn kẽm được để trong nước có tiếp xúc không khí. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Kẽm hoạt động mạnh hơn sắt nên là anode: Zn → Zn²⁺ + 2e⁻, electron chuyển từ kẽm sang sắt, tại đó oxygen bị khử. Sắt được bảo vệ chừng nào kẽm còn tiếp xúc với nó."
+      },
+      "statements": [
+        {
+          "text": "Zinc is more reactive than iron, so the zinc is oxidised instead.",
+          "vi": {
+            "text": "Kẽm hoạt động mạnh hơn sắt nên kẽm bị oxi hóa thay cho sắt."
+          },
+          "true": true
+        },
+        {
+          "text": "The reaction Zn → Zn²⁺ + 2e⁻ takes place at the zinc.",
+          "vi": {
+            "text": "Quá trình Zn → Zn²⁺ + 2e⁻ xảy ra ở kẽm."
+          },
+          "true": true
+        },
+        {
+          "text": "The nail stays protected only while zinc remains in contact with it.",
+          "vi": {
+            "text": "Đinh chỉ được bảo vệ chừng nào kẽm còn tiếp xúc với nó."
+          },
+          "true": true
+        },
+        {
+          "text": "Electrons flow from the iron to the zinc.",
+          "vi": {
+            "text": "Electron di chuyển từ sắt sang kẽm."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "ship-hull",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["protection", "electrochemical"],
+      "stem": "To protect a ship’s steel hull in sea water, blocks of which metal are fixed to it?",
+      "explain": "A metal more reactive than iron is needed, so that it corrodes instead: zinc. Copper, tin and lead are less reactive than iron and would make the hull corrode faster.",
+      "vi": {
+        "stem": "Để bảo vệ vỏ tàu biển bằng thép, người ta gắn lên vỏ tàu những khối kim loại nào?",
+        "explain": "Cần một kim loại hoạt động mạnh hơn sắt để nó bị ăn mòn thay cho sắt: kẽm. Đồng, thiếc và chì kém hoạt động hơn sắt, sẽ làm vỏ tàu bị ăn mòn nhanh hơn."
+      },
+      "options": [
+        {
+          "text": "Zinc",
+          "vi": {
+            "text": "Kẽm"
+          },
+          "correct": true
+        },
+        {
+          "text": "Copper",
+          "vi": {
+            "text": "Đồng"
+          }
+        },
+        {
+          "text": "Tin",
+          "vi": {
+            "text": "Thiếc"
+          }
+        },
+        {
+          "text": "Lead",
+          "vi": {
+            "text": "Chì"
+          }
+        }
+      ]
+    },
+    {
+      "id": "scratched-tin",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["electrochemical", "protection"],
+      "stem": "A tin-plated iron can is scratched down to the iron and left in damp air. What happens at the scratch?",
+      "explain": "Tin is less reactive than iron. Where both touch the moisture, iron is the anode and corrodes — faster than bare iron would, as in the copper-wrapped nail.",
+      "vi": {
+        "stem": "Một vỏ hộp bằng sắt tây (sắt tráng thiếc) bị xước sâu tới lớp sắt và để trong không khí ẩm. Điều gì xảy ra ở chỗ xước?",
+        "explain": "Thiếc kém hoạt động hơn sắt. Ở chỗ cả hai cùng tiếp xúc với hơi ẩm, sắt là anode và bị ăn mòn — nhanh hơn cả sắt không tráng, giống như đinh quấn dây đồng."
+      },
+      "options": [
+        {
+          "text": "The iron corrodes, faster than unplated iron would",
+          "vi": {
+            "text": "Sắt bị ăn mòn, nhanh hơn sắt không được tráng"
+          },
+          "correct": true
+        },
+        {
+          "text": "The tin corrodes instead and protects the iron",
+          "vi": {
+            "text": "Thiếc bị ăn mòn thay và bảo vệ sắt"
+          }
+        },
+        {
+          "text": "Nothing happens: tin protects iron completely",
+          "vi": {
+            "text": "Không có gì xảy ra: thiếc bảo vệ sắt hoàn toàn"
+          }
+        },
+        {
+          "text": "The tin flows back over the scratch",
+          "vi": {
+            "text": "Thiếc chảy lại phủ kín vết xước"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-galvanised",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["protection", "electrochemical"],
+      "stem": "A galvanised (zinc-coated) iron bucket is scratched down to the iron and left outdoors. Decide whether each statement is true or false.",
+      "explain": "Zinc protects twice: as a coating, and as a sacrificial metal at any scratch, where the zinc around it is oxidised instead of the iron. Once the nearby zinc is used up, the iron rusts.",
+      "vi": {
+        "stem": "Một chiếc xô bằng sắt mạ kẽm bị xước sâu tới lớp sắt và để ngoài trời. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Kẽm bảo vệ theo hai cách: như một lớp phủ, và như kim loại hi sinh ở chỗ xước, nơi kẽm xung quanh bị oxi hóa thay cho sắt. Khi lớp kẽm gần đó bị tiêu hao hết, sắt bắt đầu gỉ."
+      },
+      "statements": [
+        {
+          "text": "The zinc around the scratch still protects the exposed iron.",
+          "vi": {
+            "text": "Lớp kẽm quanh vết xước vẫn bảo vệ phần sắt lộ ra."
+          },
+          "true": true
+        },
+        {
+          "text": "The zinc near the scratch is oxidised.",
+          "vi": {
+            "text": "Kẽm gần vết xước bị oxi hóa."
+          },
+          "true": true
+        },
+        {
+          "text": "The zinc protects only as a barrier, like paint.",
+          "vi": {
+            "text": "Kẽm chỉ bảo vệ như một lớp ngăn cách, giống lớp sơn."
+          },
+          "true": false
+        },
+        {
+          "text": "Once the zinc near the scratch is used up, the iron starts to rust.",
+          "vi": {
+            "text": "Khi kẽm gần vết xước bị tiêu hao hết, sắt bắt đầu bị gỉ."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "barrier-method",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["protection"],
+      "stem": "Which method protects iron only by keeping water and oxygen away from it?",
+      "explain": "Paint is a barrier. A magnesium block and a zinc plate connected to the iron are sacrificial: they corrode instead of the iron.",
+      "vi": {
+        "stem": "Biện pháp nào bảo vệ sắt chỉ bằng cách ngăn nước và oxygen tiếp xúc với sắt?",
+        "explain": "Sơn là lớp ngăn cách. Khối magnesium hay tấm kẽm nối với sắt bảo vệ theo kiểu hi sinh: chúng bị ăn mòn thay cho sắt."
+      },
+      "options": [
+        {
+          "text": "Painting it",
+          "vi": {
+            "text": "Sơn phủ bề mặt"
+          },
+          "correct": true
+        },
+        {
+          "text": "Bolting a block of magnesium to it",
+          "vi": {
+            "text": "Gắn một khối magnesium vào sắt"
+          }
+        },
+        {
+          "text": "Connecting it to a zinc plate buried nearby",
+          "vi": {
+            "text": "Nối sắt với một tấm kẽm chôn gần đó"
+          }
+        },
+        {
+          "text": "Wrapping it in zinc",
+          "vi": {
+            "text": "Quấn kẽm quanh sắt"
+          }
+        }
+      ]
+    },
+    {
+      "id": "oxygen-pair",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["design", "conditions"],
+      "stem": "Which two tubes, compared together, show that iron needs air (oxygen) to rust?",
+      "explain": "Water with air and boiled water under oil differ only in the air: both have water, one has no oxygen. Dry air versus water and air tests water; salt water tests salt; copper and zinc test contact with metals.",
+      "vi": {
+        "stem": "So sánh hai ống nào với nhau cho thấy sắt cần không khí (oxygen) mới bị gỉ?",
+        "explain": "Ống nước có không khí và ống nước đun sôi phủ dầu chỉ khác nhau ở không khí: cả hai đều có nước, một ống không có oxygen. Không khí khô so với nước và không khí kiểm tra vai trò của nước; nước muối kiểm tra muối; đồng và kẽm kiểm tra sự tiếp xúc kim loại."
+      },
+      "options": [
+        {
+          "text": "Water and air; boiled water under oil",
+          "vi": {
+            "text": "Nước và không khí; nước đun sôi phủ dầu"
+          },
+          "correct": true
+        },
+        {
+          "text": "Water and air; dry air",
+          "vi": {
+            "text": "Nước và không khí; không khí khô"
+          }
+        },
+        {
+          "text": "Water and air; salt water and air",
+          "vi": {
+            "text": "Nước và không khí; nước muối và không khí"
+          }
+        },
+        {
+          "text": "Wrapped in copper; wrapped in zinc",
+          "vi": {
+            "text": "Quấn dây đồng; quấn kẽm"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-results",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["design", "electrochemical", "conditions"],
+      "stem": "After a week the six nails are compared. Decide whether each statement about the results is true or false.",
+      "explain": "No water or no oxygen: no rust. Copper in contact makes the iron the anode, so it rusts more than in water alone; zinc in contact corrodes instead, so that nail stays bright. Rust in the dry-air tube points to a fault: wet calcium chloride or a leaky stopper let water vapour in.",
+      "vi": {
+        "stem": "Sau một tuần, sáu chiếc đinh được đem so sánh. Mỗi nhận định sau về kết quả đúng hay sai?",
+        "explain": "Không có nước hoặc không có oxygen: không gỉ. Đồng tiếp xúc làm sắt thành anode nên đinh gỉ nhiều hơn khi chỉ có nước; kẽm tiếp xúc bị ăn mòn thay nên đinh đó vẫn sáng. Gỉ xuất hiện trong ống không khí khô cho thấy thí nghiệm có lỗi: calcium chloride đã hút đủ nước hoặc nút không kín làm hơi nước lọt vào."
+      },
+      "statements": [
+        {
+          "text": "The nails in dry air and in boiled water under oil stay bright.",
+          "vi": {
+            "text": "Đinh trong không khí khô và đinh trong nước đun sôi phủ dầu vẫn sáng bóng."
+          },
+          "true": true
+        },
+        {
+          "text": "The nail wrapped in copper rusts more than the nail in water and air alone.",
+          "vi": {
+            "text": "Đinh quấn dây đồng bị gỉ nhiều hơn đinh chỉ để trong nước và không khí."
+          },
+          "true": true
+        },
+        {
+          "text": "The nail wrapped in zinc rusts as much as the nail in water and air, as zinc is also a metal.",
+          "vi": {
+            "text": "Đinh quấn kẽm bị gỉ như đinh trong nước và không khí, vì kẽm cũng là kim loại."
+          },
+          "true": false
+        },
+        {
+          "text": "If the nail in dry air rusted, a likely cause is spent calcium chloride or a leaky stopper.",
+          "vi": {
+            "text": "Nếu đinh trong không khí khô bị gỉ, nguyên nhân có thể là calcium chloride đã hết tác dụng hoặc nút ống không kín."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "rust-formula",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["conditions"],
+      "stem": "The main component of the rust that forms on iron in damp air is…",
+      "explain": "Iron oxidised in water and air ends up mainly as hydrated iron(III) oxide, Fe₂O₃·nH₂O, the red-brown flaky rust.",
+      "vi": {
+        "stem": "Thành phần chính của gỉ sắt hình thành trên sắt trong không khí ẩm là",
+        "explain": "Sắt bị oxi hóa trong nước và không khí, cuối cùng chủ yếu tạo thành iron(III) oxide ngậm nước, Fe₂O₃·nH₂O — lớp gỉ màu nâu đỏ, xốp, dễ bong."
+      },
+      "options": [
+        {
+          "text": "Fe₂O₃·nH₂O",
+          "vi": {
+            "text": "Fe₂O₃·nH₂O"
+          },
+          "correct": true
+        },
+        {
+          "text": "FeCl₂",
+          "vi": {
+            "text": "FeCl₂"
+          }
+        },
+        {
+          "text": "FeS",
+          "vi": {
+            "text": "FeS"
+          }
+        },
+        {
+          "text": "Fe(NO₃)₃",
+          "vi": {
+            "text": "Fe(NO₃)₃"
+          }
+        }
+      ]
+    },
+    {
+      "id": "anode-reaction",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["electrochemical"],
+      "stem": "In the electrochemical corrosion of iron in damp air, which half-reaction takes place at the anode?",
+      "explain": "The iron is the anode: it is oxidised, Fe → Fe²⁺ + 2e⁻. The electrons reduce dissolved oxygen at the cathode, O₂ + 2H₂O + 4e⁻ → 4OH⁻; Fe²⁺ and OH⁻ then go on to rust.",
+      "vi": {
+        "stem": "Trong quá trình ăn mòn điện hóa sắt trong không khí ẩm, bán phản ứng nào xảy ra ở anode?",
+        "explain": "Sắt là anode: sắt bị oxi hóa, Fe → Fe²⁺ + 2e⁻. Các electron khử oxygen hòa tan ở cathode, O₂ + 2H₂O + 4e⁻ → 4OH⁻; sau đó Fe²⁺ và OH⁻ tiếp tục tạo thành gỉ sắt."
+      },
+      "options": [
+        {
+          "text": "Fe → Fe²⁺ + 2e⁻",
+          "vi": {
+            "text": "Fe → Fe²⁺ + 2e⁻"
+          },
+          "correct": true
+        },
+        {
+          "text": "O₂ + 2H₂O + 4e⁻ → 4OH⁻",
+          "vi": {
+            "text": "O₂ + 2H₂O + 4e⁻ → 4OH⁻"
+          }
+        },
+        {
+          "text": "Fe²⁺ + 2e⁻ → Fe",
+          "vi": {
+            "text": "Fe²⁺ + 2e⁻ → Fe"
+          }
+        },
+        {
+          "text": "2H₂O → O₂ + 4H⁺ + 4e⁻",
+          "vi": {
+            "text": "2H₂O → O₂ + 4H⁺ + 4e⁻"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-oil",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["design", "conditions"],
+      "stem": "One nail stands in water that was boiled and then covered with a layer of oil. Decide whether each statement is true or false.",
+      "explain": "Boiling drives the dissolved air (oxygen) out of the water, and the oil layer stops air dissolving back in. Without oxygen the nail hardly rusts, although it stands in water. Compared with the nail in water open to the air, it shows that water alone is not enough.",
+      "vi": {
+        "stem": "Một chiếc đinh được đặt trong nước đã đun sôi, phía trên phủ một lớp dầu. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Đun sôi đuổi không khí (oxygen) hòa tan ra khỏi nước, và lớp dầu ngăn không khí hòa tan trở lại. Không có oxygen nên đinh hầu như không gỉ dù ngâm trong nước. So với đinh trong nước để hở không khí, ống này cho thấy chỉ có nước thì chưa đủ để sắt bị gỉ."
+      },
+      "statements": [
+        {
+          "text": "Boiling the water drives out the dissolved oxygen.",
+          "vi": {
+            "text": "Đun sôi nước làm oxygen hòa tan thoát ra."
+          },
+          "true": true
+        },
+        {
+          "text": "The oil layer stops air dissolving back into the water.",
+          "vi": {
+            "text": "Lớp dầu ngăn không khí hòa tan trở lại vào nước."
+          },
+          "true": true
+        },
+        {
+          "text": "This nail rusts as fast as the nail in water open to the air, since both are in water.",
+          "vi": {
+            "text": "Đinh này gỉ nhanh như đinh trong nước để hở không khí, vì cả hai đều ngâm trong nước."
+          },
+          "true": false
+        },
+        {
+          "text": "Compared with the nail in water open to the air, this tube shows that water alone is not enough for rusting.",
+          "vi": {
+            "text": "So với đinh trong nước để hở không khí, ống này cho thấy chỉ có nước thì chưa đủ để sắt bị gỉ."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "cathode-reaction",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["electrochemical"],
+      "stem": "An iron nail wrapped in copper wire stands in water open to the air. Which half-reaction takes place on the copper surface?",
+      "explain": "Iron is more active than copper, so the iron is the anode and is oxidised. Its electrons flow into the copper, the cathode, where dissolved oxygen is reduced: O₂ + 2H₂O + 4e⁻ → 4OH⁻. The copper itself is not oxidised, and there are no Cu²⁺ ions to be reduced.",
+      "vi": {
+        "stem": "Một chiếc đinh sắt quấn dây đồng được đặt trong nước để hở không khí. Bán phản ứng nào xảy ra trên bề mặt đồng?",
+        "explain": "Sắt hoạt động hóa học mạnh hơn đồng, nên sắt là anode và bị oxi hóa. Electron của sắt chuyển sang đồng (cathode), tại đó oxygen hòa tan bị khử: O₂ + 2H₂O + 4e⁻ → 4OH⁻. Bản thân đồng không bị oxi hóa, và trong nước không có ion Cu²⁺ để bị khử."
+      },
+      "options": [
+        {
+          "text": "O₂ + 2H₂O + 4e⁻ → 4OH⁻",
+          "vi": {
+            "text": "O₂ + 2H₂O + 4e⁻ → 4OH⁻"
+          },
+          "correct": true
+        },
+        {
+          "text": "Cu → Cu²⁺ + 2e⁻",
+          "vi": {
+            "text": "Cu → Cu²⁺ + 2e⁻"
+          }
+        },
+        {
+          "text": "Fe → Fe²⁺ + 2e⁻",
+          "vi": {
+            "text": "Fe → Fe²⁺ + 2e⁻"
+          }
+        },
+        {
+          "text": "Cu²⁺ + 2e⁻ → Cu",
+          "vi": {
+            "text": "Cu²⁺ + 2e⁻ → Cu"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-everyday",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["protection", "electrochemical"],
+      "stem": "Decide whether each statement about protecting iron and steel is true or false.",
+      "explain": "Paint and oil are barriers: they protect only while they are unbroken. Magnesium is more active than iron, so blocks of it fixed to a buried steel pipe corrode instead of the pipe. Copper is less active than iron: joining it to steel makes the steel the anode, which corrodes faster.",
+      "vi": {
+        "stem": "Mỗi nhận định sau về cách bảo vệ sắt và thép đúng hay sai?",
+        "explain": "Sơn và dầu mỡ là lớp ngăn cách: chúng chỉ bảo vệ khi còn nguyên vẹn. Magnesium hoạt động mạnh hơn sắt, nên các khối magnesium gắn vào ống thép chôn dưới đất bị ăn mòn thay cho ống. Đồng kém hoạt động hơn sắt: nối đồng với thép làm thép trở thành anode và bị ăn mòn nhanh hơn."
+      },
+      "statements": [
+        {
+          "text": "Paint protects an iron gate only while the paint is unbroken.",
+          "vi": {
+            "text": "Sơn chỉ bảo vệ cánh cổng sắt khi lớp sơn còn nguyên vẹn."
+          },
+          "true": true
+        },
+        {
+          "text": "Blocks of magnesium connected to a buried steel pipe protect the pipe.",
+          "vi": {
+            "text": "Các khối magnesium nối với ống thép chôn dưới đất bảo vệ được ống thép."
+          },
+          "true": true
+        },
+        {
+          "text": "Joining a steel pipe to a copper pipe protects the steel from corrosion.",
+          "vi": {
+            "text": "Nối ống thép với ống đồng giúp bảo vệ thép khỏi bị ăn mòn."
+          },
+          "true": false
+        },
+        {
+          "text": "Oiling a bicycle chain protects it by keeping water and air away from the iron.",
+          "vi": {
+            "text": "Tra dầu cho xích xe đạp bảo vệ xích bằng cách ngăn nước và không khí tiếp xúc với sắt."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "rank-nails",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["electrochemical", "conditions"],
+      "stem": "Three nails are left for a week: one wrapped in copper in water open to the air, one bare in water open to the air, one in dry air over calcium chloride. Which order is from most rusted to least rusted?",
+      "explain": "In dry air there is no water, so that nail hardly rusts. The bare nail rusts in water and air. In contact with copper, a less active metal, the iron becomes the anode of a galvanic cell and corrodes faster still.",
+      "vi": {
+        "stem": "Ba chiếc đinh được để trong một tuần: một chiếc quấn dây đồng trong nước để hở không khí, một chiếc để trần trong nước để hở không khí, một chiếc trong không khí khô có calcium chloride. Thứ tự từ gỉ nhiều nhất đến gỉ ít nhất là",
+        "explain": "Trong không khí khô không có nước, nên đinh đó hầu như không gỉ. Đinh để trần bị gỉ trong nước và không khí. Khi tiếp xúc với đồng, kim loại kém hoạt động hơn, sắt trở thành anode của một pin điện hóa và bị ăn mòn còn nhanh hơn."
+      },
+      "options": [
+        {
+          "text": "Copper-wrapped > bare in water > dry air",
+          "vi": {
+            "text": "Quấn đồng > để trần trong nước > không khí khô"
+          },
+          "correct": true
+        },
+        {
+          "text": "Bare in water > copper-wrapped > dry air",
+          "vi": {
+            "text": "Để trần trong nước > quấn đồng > không khí khô"
+          }
+        },
+        {
+          "text": "Dry air > bare in water > copper-wrapped",
+          "vi": {
+            "text": "Không khí khô > để trần trong nước > quấn đồng"
+          }
+        },
+        {
+          "text": "Bare in water > dry air > copper-wrapped",
+          "vi": {
+            "text": "Để trần trong nước > không khí khô > quấn đồng"
+          }
+        }
+      ]
+    },
+    {
+      "id": "zinc-not-barrier",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["protection", "electrochemical"],
+      "stem": "The nail wrapped in zinc stays bright. A student concludes: “the zinc covers the iron and keeps water and air away from it, like paint”. What is wrong with this conclusion?",
+      "explain": "Zinc is more active than iron: in contact, the zinc is the anode and is oxidised (Zn → Zn²⁺ + 2e⁻), and its electrons keep the iron from being oxidised, even where bare iron touches the water. This is sacrificial protection; it lasts while zinc is left, unlike a barrier, which fails as soon as it is broken.",
+      "vi": {
+        "stem": "Chiếc đinh quấn kẽm vẫn sáng bóng. Một học sinh kết luận: “kẽm bao phủ sắt, ngăn nước và không khí tiếp xúc với sắt, giống như sơn”. Kết luận này sai ở đâu?",
+        "explain": "Kẽm hoạt động mạnh hơn sắt: khi tiếp xúc, kẽm là anode và bị oxi hóa (Zn → Zn²⁺ + 2e⁻), electron của kẽm giữ cho sắt không bị oxi hóa, kể cả ở chỗ sắt để trần tiếp xúc với nước. Đây là phương pháp bảo vệ bằng kim loại hi sinh (điện hóa); nó còn tác dụng khi còn kẽm, khác với lớp phủ ngăn cách, vốn mất tác dụng ngay khi bị hỏng."
+      },
+      "options": [
+        {
+          "text": "The zinc corrodes instead of the iron, protecting it even where bare iron touches the water",
+          "vi": {
+            "text": "Kẽm bị ăn mòn thay cho sắt, bảo vệ sắt cả ở chỗ sắt để trần tiếp xúc với nước"
+          },
+          "correct": true
+        },
+        {
+          "text": "Nothing: zinc works only as a barrier, like paint",
+          "vi": {
+            "text": "Không sai: kẽm chỉ có tác dụng ngăn cách, giống như sơn"
+          }
+        },
+        {
+          "text": "The zinc makes the iron the cathode of a cell, so the iron corrodes faster",
+          "vi": {
+            "text": "Kẽm làm sắt trở thành cathode của pin, nên sắt bị ăn mòn nhanh hơn"
+          }
+        },
+        {
+          "text": "The zinc removes the oxygen dissolved in the water, like boiling it",
+          "vi": {
+            "text": "Kẽm loại bỏ oxygen hòa tan trong nước, giống như việc đun sôi nước"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-contact",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["electrochemical", "protection", "conditions"],
+      "stem": "Iron nails stand in water open to the air, one wrapped in copper and one wrapped in zinc. Decide whether each statement is true or false.",
+      "explain": "In contact with a more active metal (zinc), the iron is protected while that metal lasts; once the zinc is used up, the iron rusts as a bare nail would. With copper, electrons flow from the iron to the copper, where oxygen is reduced. Salt speeds rusting because its ions make the water a better conductor; the chloride ions are not oxidised.",
+      "vi": {
+        "stem": "Các đinh sắt được đặt trong nước để hở không khí, một chiếc quấn dây đồng và một chiếc quấn kẽm. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Khi tiếp xúc với kim loại hoạt động mạnh hơn (kẽm), sắt được bảo vệ chừng nào kim loại đó còn; khi kẽm đã hết, sắt bị gỉ như đinh để trần. Với đồng, electron chuyển từ sắt sang đồng, tại đó oxygen bị khử. Muối làm sắt gỉ nhanh hơn vì các ion làm nước dẫn điện tốt hơn; ion chloride không bị oxi hóa."
+      },
+      "statements": [
+        {
+          "text": "Iron in contact with a more active metal is protected while that metal lasts.",
+          "vi": {
+            "text": "Sắt tiếp xúc với kim loại hoạt động mạnh hơn được bảo vệ chừng nào kim loại đó còn."
+          },
+          "true": true
+        },
+        {
+          "text": "Once all the zinc has corroded, the iron stays protected all the same.",
+          "vi": {
+            "text": "Khi kẽm đã bị ăn mòn hết, sắt vẫn tiếp tục được bảo vệ."
+          },
+          "true": false
+        },
+        {
+          "text": "In the copper-wrapped nail, electrons flow from the iron to the copper, where oxygen is reduced.",
+          "vi": {
+            "text": "Ở đinh quấn đồng, electron chuyển từ sắt sang đồng, tại đó oxygen bị khử."
+          },
+          "true": true
+        },
+        {
+          "text": "Salt water speeds rusting because the chloride ions are oxidised at the iron.",
+          "vi": {
+            "text": "Nước muối làm sắt gỉ nhanh hơn vì ion chloride bị oxi hóa trên bề mặt sắt."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

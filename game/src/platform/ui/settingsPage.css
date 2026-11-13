@@ -1,0 +1,585 @@
+/* The settings (settings.ts, shared by the main menu's Settings page and the pause menu; Phú
+   2026-11-12): laid out as a game's settings — the sections on the left, the chosen one on the
+   right as rows (its name, then its control), a choice as ‹ value ›, the description of the row
+   pointed at under the rows. Each section in one colour of its own, at a few strengths over one
+   dark surface; no gradients, no colours mixed, no glows. */
+
+/* Each section its own colour (Phú 2026-11-12), one solid hue per section, never mixed: the
+   section's tab, rows and controls, and the heading and description while it is shown. */
+.settings-shell,
+[data-section='general'],
+.settings-shell[data-active='general'] {
+  --section-rgb: 79 179 217;
+}
+
+[data-section='graphics'],
+.settings-shell[data-active='graphics'] {
+  --section-rgb: 167 139 250;
+}
+
+[data-section='controls'],
+.settings-shell[data-active='controls'] {
+  --section-rgb: 245 180 70;
+}
+
+[data-section='sound'],
+.settings-shell[data-active='sound'] {
+  --section-rgb: 80 205 130;
+}
+
+.settings-shell {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  min-height: 600px; /* the same for every section: no jump on a switch */
+  overflow: hidden;
+  border: 1px solid rgb(var(--section-rgb) / 18%);
+  border-radius: 18px;
+  background: rgb(11 19 30 / 94%);
+  box-shadow: 0 20px 60px -30px rgb(0 0 0 / 80%);
+}
+
+/* ---- The sections, on the left ----------------------------------------------------------- */
+.settings-tabs {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 18px 12px;
+  border-right: 1px solid rgb(var(--section-rgb) / 12%);
+  background: rgb(7 13 21 / 70%);
+}
+
+.settings-tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 46px;
+  padding: 0 14px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--ink-dim);
+  font: inherit;
+  font-size: var(--text-base);
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) ease,
+    color var(--duration-fast) ease;
+}
+
+.settings-tab:hover {
+  background: rgb(var(--section-rgb) / 8%);
+  color: var(--ink-strong);
+}
+
+.settings-tab.active {
+  color: var(--ink-strong);
+}
+
+.settings-tab.active:hover {
+  background: transparent;
+}
+
+/* The highlight under the chosen tab: it slides from tab to tab and takes the new colour. */
+.settings-tab-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--w, 0);
+  height: var(--h, 0);
+  border-radius: 10px;
+  background: rgb(var(--section-rgb) / 15%);
+  transform: translate(var(--x, 0), var(--y, 0));
+  transition:
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    width 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    height 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.5s ease;
+  pointer-events: none;
+}
+
+.settings-tab-indicator::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: 0;
+  width: 3px;
+  border-radius: 2px;
+  background: rgb(var(--section-rgb));
+  transition: background-color 0.5s ease;
+}
+
+.settings-tab-indicator.instant,
+.settings-tab-indicator.instant::before {
+  transition: none;
+}
+
+.settings-tab:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.settings-tab-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: rgb(var(--section-rgb) / 12%);
+  color: rgb(var(--section-rgb));
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.settings-tab.active .settings-tab-icon {
+  background: rgb(var(--section-rgb));
+  color: #08131c;
+  animation: settings-icon-pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ---- The chosen section, as rows ---------------------------------------------------------- */
+.settings-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 22px 28px 20px;
+}
+
+.settings-heading {
+  margin: 0 0 8px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid rgb(var(--section-rgb) / 70%);
+  color: var(--ink-strong);
+  font-size: 22px !important;
+  font-weight: 700;
+}
+
+.settings-panes {
+  flex: 1;
+}
+
+.settings-pane[hidden] {
+  display: none !important;
+}
+
+.settings-pane {
+  display: block;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+/* A section's own title is the heading above (kept for its name, out of sight). */
+.settings-pane > legend,
+.settings-pane > .settings-card-title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* The help lines are read in the description below, not in the rows. */
+.settings-pane .menu-help {
+  display: none;
+}
+
+/* A row: its name on the left, its control on the right, a thin rule under it. */
+.settings-pane > .menu-choice,
+.settings-language,
+.settings-pane .menu-volume-row,
+.settings-pane > .menu-field > label.menu-option,
+.settings-pane > label.menu-option {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 320px);
+  align-items: center;
+  gap: 16px;
+  min-height: 60px;
+  margin: 0;
+  padding: 8px 4px;
+  border: none;
+  border-bottom: 1px solid rgb(var(--section-rgb) / 9%);
+  border-radius: 0;
+  transition: background var(--duration-fast) ease;
+}
+
+.settings-pane > .menu-choice:hover,
+.settings-language:hover,
+.settings-pane .menu-volume-row:hover,
+.settings-pane > .menu-field > label.menu-option:hover,
+.settings-pane > label.menu-option:hover {
+  background: rgb(var(--section-rgb) / 5%);
+}
+
+.settings-pane > .menu-field {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+/* The row's name. In the language section the section is the row: its legend is the name. */
+.settings-pane > .menu-choice > legend,
+.settings-language > legend,
+.settings-pane .menu-field-label,
+.settings-pane .menu-volume-row > span:first-child {
+  float: left;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  color: var(--ink-strong);
+  font-size: var(--text-base);
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.settings-language > legend {
+  position: static;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  clip-path: none;
+}
+
+/* ---- A choice: ‹ value › ----------------------------------------------------------------- */
+.settings-selector {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) 40px;
+  align-items: center;
+  height: 44px;
+  overflow: hidden;
+  border: 1px solid rgb(var(--section-rgb) / 28%);
+  border-radius: 10px;
+  background: rgb(var(--section-rgb) / 6%);
+}
+
+.settings-selector-arrow {
+  height: 100%;
+  border: none;
+  background: transparent;
+  color: rgb(var(--section-rgb));
+  font: inherit;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background var(--duration-fast) ease;
+}
+
+.settings-selector-arrow:hover:not(:disabled) {
+  background: rgb(var(--section-rgb) / 14%);
+}
+
+.settings-selector-arrow:disabled {
+  color: rgb(var(--section-rgb) / 25%);
+  cursor: default;
+}
+
+/* The choices side by side, one in view; the radio covers its label (clicked, focused, read). */
+.settings-selector-track {
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+}
+
+.settings-selector-track > .menu-option {
+  position: relative;
+  flex: 0 0 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-strong);
+  font-size: var(--text-base);
+  font-weight: 600;
+  text-align: center;
+}
+
+.settings-selector-track > .menu-option > input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: default;
+}
+
+.settings-selector:has(input:focus-visible) {
+  border-color: rgb(var(--section-rgb));
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* In the selector the preset shows its name only (its line goes to the description). */
+.settings-selector .settings-tile-hint {
+  display: none;
+}
+
+.settings-fps-name small {
+  margin-left: 3px;
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+/* ---- Switches and sliders ---------------------------------------------------------------- */
+.settings-pane label.menu-option:has(> input[type='checkbox']) {
+  cursor: pointer;
+}
+
+.settings-pane label.menu-option:has(> input[type='checkbox']) > span {
+  grid-column: 1;
+  grid-row: 1;
+  color: var(--ink-strong);
+  font-size: var(--text-base);
+  font-weight: 500;
+}
+
+.settings-pane input[type='checkbox'] {
+  appearance: none;
+  position: relative;
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: end;
+  width: 46px;
+  height: 26px;
+  margin: 0;
+  border: 1px solid rgb(var(--section-rgb) / 35%);
+  border-radius: 999px;
+  background: rgb(var(--section-rgb) / 8%);
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) ease,
+    border-color var(--duration-fast) ease;
+}
+
+.settings-pane input[type='checkbox']::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--ink-dim);
+  transition:
+    transform 0.38s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background 0.25s ease;
+}
+
+.settings-pane input[type='checkbox']:checked {
+  border-color: rgb(var(--section-rgb));
+  background: rgb(var(--section-rgb));
+}
+
+.settings-pane input[type='checkbox']:checked::before {
+  transform: translateX(20px);
+  background: var(--ink-strong);
+}
+
+.settings-pane input[type='checkbox']:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.settings-pane input[type='checkbox']:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+}
+
+/* A slider row: the name, then the slider with its value at the end. */
+.settings-pane .menu-volume-row {
+  grid-template-columns: minmax(0, 1fr) minmax(190px, 268px) 52px;
+}
+
+.settings-pane input[type='range'] {
+  width: 100%;
+  accent-color: rgb(var(--section-rgb));
+  cursor: pointer;
+}
+
+.settings-pane .menu-volume-value {
+  color: rgb(var(--section-rgb));
+  font-size: var(--text-sm);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+/* ---- The description of the row pointed at ---------------------------------------------- */
+.settings-describe {
+  min-height: 4.5em;
+  margin: 18px 0 0;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: rgb(var(--section-rgb) / 7%);
+  color: var(--ink);
+  font-size: var(--text-sm);
+  line-height: 1.55;
+}
+
+.settings-describe:empty {
+  visibility: hidden;
+}
+
+/* In the pause menu: the dialog widens while it shows the settings. */
+.pause-panel:has(> .pause-view:not(.hidden) > .pause-settings) {
+  width: min(900px, 100%);
+}
+
+/* Narrow: the sections across the top, the rows stacked. */
+@media (max-width: 760px) {
+  .settings-shell {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .settings-tabs {
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 10px;
+    border-right: none;
+    border-bottom: 1px solid rgb(var(--section-rgb) / 12%);
+  }
+
+  .settings-tab {
+    min-height: 40px;
+  }
+
+  .settings-main {
+    padding: 16px;
+  }
+
+  .settings-pane > .menu-choice,
+  .settings-language,
+  .settings-pane .menu-volume-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+}
+
+/* ---- Motion (transforms and opacity only; none under reduced motion) --------------------- */
+
+/* The tabs come in one after another when the settings open. */
+.settings-tab {
+  z-index: 1;
+  animation: settings-tab-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--i, 0) * 60ms + 60ms);
+}
+
+@keyframes settings-tab-in {
+  from {
+    opacity: 0;
+    transform: translateX(-14px);
+  }
+}
+
+@keyframes settings-icon-pop {
+  0% {
+    transform: scale(0.7);
+  }
+
+  60% {
+    transform: scale(1.12);
+  }
+}
+
+/* A section's rows rise into place in turn, each time the section is shown. */
+.settings-pane > * {
+  animation: settings-row-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--i, 0) * 50ms);
+}
+
+@keyframes settings-row-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+/* The heading, the description: their new words slide in softly. */
+.settings-heading.swap,
+.settings-describe.swap {
+  animation: settings-swap 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes settings-swap {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+}
+
+/* The heading's line and the shell's edge take the section's colour gradually. */
+.settings-heading {
+  transition: border-color 0.5s ease;
+}
+
+.settings-shell {
+  transition: border-color 0.5s ease;
+}
+
+.settings-describe {
+  transition: background-color 0.5s ease;
+}
+
+/* A new choice: the value slides in (scrolled smoothly) and its box gives a small beat. */
+.settings-selector.bump {
+  animation: settings-bump 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes settings-bump {
+  0% {
+    transform: scale(0.97);
+  }
+}
+
+.settings-selector-arrow:active:not(:disabled) {
+  transform: scale(0.85);
+}
+
+.settings-selector-arrow {
+  transition:
+    background var(--duration-fast) ease,
+    transform 0.12s ease;
+}
+
+/* A row pointed at: its name eases a little to the right. */
+.settings-pane > .menu-choice > legend,
+.settings-language > legend,
+.settings-pane .menu-volume-row > span:first-child,
+.settings-pane label.menu-option:has(> input[type='checkbox']) > span {
+  transition:
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.25s ease;
+}
+
+.settings-pane > .menu-choice:hover > legend,
+.settings-language:hover > legend,
+.settings-pane .menu-volume-row:hover > span:first-child,
+.settings-pane label.menu-option:has(> input[type='checkbox']):hover > span {
+  transform: translateX(4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .settings-tab,
+  .settings-tab.active .settings-tab-icon,
+  .settings-pane > *,
+  .settings-heading.swap,
+  .settings-describe.swap,
+  .settings-selector.bump {
+    animation: none;
+  }
+
+  .settings-tab,
+  .settings-tab-indicator,
+  .settings-tab-indicator::before,
+  .settings-selector-arrow,
+  .settings-pane * {
+    transition: none !important;
+  }
+}

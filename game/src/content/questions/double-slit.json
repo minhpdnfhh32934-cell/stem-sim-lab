@@ -1,0 +1,1045 @@
+{
+  "id": "double-slit",
+  "skills": [
+    {
+      "id": "interference",
+      "name": "Interference of light",
+      "advice": "Re-read: one laser beam lights both slits, so they are coherent sources. Bright where the path difference is kλ, dark where it is (k + ½)λ; the central fringe is bright.",
+      "vi": {
+        "name": "Giao thoa ánh sáng",
+        "advice": "Đọc lại: một chùm laser chiếu sáng cả hai khe nên chúng là hai nguồn kết hợp. Vân sáng khi hiệu đường đi bằng kλ, vân tối khi bằng (k + ½)λ; vân trung tâm là vân sáng."
+      }
+    },
+    {
+      "id": "spacing",
+      "name": "Fringe spacing: i = λ·D/a",
+      "advice": "Learn i = λ·D/a with every length in metres: 650 nm = 6.5 × 10⁻⁷ m, 0.3 mm = 3 × 10⁻⁴ m. Trap: mixing mm and m.",
+      "vi": {
+        "name": "Khoảng vân: i = λ·D/a",
+        "advice": "Nhớ i = λ·D/a với mọi độ dài tính bằng mét: 650 nm = 6,5 × 10⁻⁷ m, 0,3 mm = 3 × 10⁻⁴ m. Lỗi hay gặp: lẫn lộn mm và m."
+      }
+    },
+    {
+      "id": "measure",
+      "name": "Measuring the wavelength",
+      "advice": "Measure the width L of ten fringe spacings: i = L/10, then λ = i·a/D. Ten spacings share out the ruler’s error. Turn λ into nm at the end.",
+      "vi": {
+        "name": "Đo bước sóng",
+        "advice": "Đo bề rộng L của mười khoảng vân: i = L/10, rồi λ = i·a/D. Đo mười khoảng vân giúp chia nhỏ sai số của thước. Cuối cùng mới đổi λ ra nm."
+      }
+    },
+    {
+      "id": "factors",
+      "name": "What changes the fringes",
+      "advice": "At the station change one thing at a time: red to green (shorter λ) brings the fringes closer, a farther screen spreads them, slits farther apart squeeze them. i against D is a line of slope λ/a.",
+      "vi": {
+        "name": "Các yếu tố làm thay đổi hệ vân",
+        "advice": "Trên trạm, mỗi lần chỉ thay đổi một yếu tố: đổi đỏ sang lục (λ ngắn hơn) làm vân sít lại, màn xa hơn làm vân giãn ra, hai khe xa nhau hơn làm vân sít lại. Đồ thị i theo D là đường thẳng hệ số góc λ/a."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "formula",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["spacing"],
+      "stem": "In Young’s double-slit experiment the fringe spacing is…",
+      "explain": "i = λ·D/a, λ the wavelength, D the slits-to-screen distance, a the slit separation.",
+      "vi": {
+        "stem": "Trong thí nghiệm Y-âng về giao thoa ánh sáng, khoảng vân bằng…",
+        "explain": "i = λ·D/a, với λ là bước sóng, D là khoảng cách từ hai khe đến màn, a là khoảng cách giữa hai khe."
+      },
+      "options": [
+        {
+          "text": "i = λ·D/a",
+          "vi": {
+            "text": "i = λ·D/a"
+          },
+          "correct": true
+        },
+        {
+          "text": "i = λ·a/D",
+          "vi": {
+            "text": "i = λ·a/D"
+          }
+        },
+        {
+          "text": "i = a·D/λ",
+          "vi": {
+            "text": "i = a·D/λ"
+          }
+        },
+        {
+          "text": "i = λ/(a·D)",
+          "vi": {
+            "text": "i = λ/(a·D)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "bright",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["interference"],
+      "stem": "A bright fringe appears where the path difference of the two waves equals…",
+      "explain": "Bright: the waves arrive in step, a whole number of wavelengths, kλ.",
+      "vi": {
+        "stem": "Vân sáng xuất hiện tại những điểm có hiệu đường đi của hai sóng bằng…",
+        "explain": "Vân sáng: hai sóng đến cùng pha, hiệu đường đi bằng số nguyên lần bước sóng, kλ."
+      },
+      "options": [
+        {
+          "text": "kλ (k = 0, ±1, ±2 …)",
+          "vi": {
+            "text": "kλ (k = 0, ±1, ±2 …)"
+          },
+          "correct": true
+        },
+        {
+          "text": "(k + ½)λ",
+          "vi": {
+            "text": "(k + ½)λ"
+          }
+        },
+        {
+          "text": "λ/4",
+          "vi": {
+            "text": "λ/4"
+          }
+        },
+        {
+          "text": "kλ/4",
+          "vi": {
+            "text": "kλ/4"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-fringes",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["interference", "measure"],
+      "stem": "Laser light passes two narrow slits and falls on a screen. Decide whether each statement is true or false.",
+      "explain": "One beam makes the slits coherent; dark fringes at path differences (k + ½)λ; the central fringe (zero path difference) is bright; measuring ten spacings gives i more precisely.",
+      "vi": {
+        "stem": "Ánh sáng laser đi qua hai khe hẹp và chiếu lên màn. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Một chùm sáng làm hai khe thành hai nguồn kết hợp; vân tối khi hiệu đường đi (k + ½)λ; vân trung tâm (hiệu đường đi bằng 0) là vân sáng; đo mười khoảng vân cho i chính xác hơn."
+      },
+      "statements": [
+        {
+          "text": "The two slits lit by one laser beam are coherent sources.",
+          "vi": {
+            "text": "Hai khe được chiếu bởi cùng một chùm laser là hai nguồn kết hợp."
+          },
+          "true": true
+        },
+        {
+          "text": "Dark fringes appear where the path difference is (k + ½)λ.",
+          "vi": {
+            "text": "Vân tối xuất hiện tại nơi hiệu đường đi bằng (k + ½)λ."
+          },
+          "true": true
+        },
+        {
+          "text": "The central fringe is dark.",
+          "vi": {
+            "text": "Vân trung tâm là vân tối."
+          },
+          "true": false
+        },
+        {
+          "text": "Measuring ten fringe spacings and dividing by ten gives i more precisely than measuring one.",
+          "vi": {
+            "text": "Đo mười khoảng vân rồi chia cho mười cho i chính xác hơn đo một khoảng vân."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "green",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["factors"],
+      "stem": "The red laser (650 nm) is swapped for a green one (532 nm), nothing else changed. The fringes…",
+      "explain": "i = λ·D/a: a shorter λ gives a smaller i.",
+      "vi": {
+        "stem": "Thay laser đỏ (650 nm) bằng laser lục (532 nm), giữ nguyên các yếu tố khác. Hệ vân…",
+        "explain": "i = λ·D/a: λ ngắn hơn thì i nhỏ hơn."
+      },
+      "options": [
+        {
+          "text": "come closer together",
+          "vi": {
+            "text": "sít lại gần nhau hơn"
+          },
+          "correct": true
+        },
+        {
+          "text": "spread further apart",
+          "vi": {
+            "text": "giãn ra xa nhau hơn"
+          }
+        },
+        {
+          "text": "stay the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "disappear",
+          "vi": {
+            "text": "biến mất"
+          }
+        }
+      ]
+    },
+    {
+      "id": "wider-slits",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["factors"],
+      "stem": "The slits are made farther apart (a larger), nothing else changed. The fringe spacing…",
+      "explain": "i = λ·D/a: a larger a gives a smaller i.",
+      "vi": {
+        "stem": "Tăng khoảng cách giữa hai khe (a lớn hơn), giữ nguyên các yếu tố khác. Khoảng vân…",
+        "explain": "i = λ·D/a: a lớn hơn thì i nhỏ hơn."
+      },
+      "options": [
+        {
+          "text": "decreases",
+          "vi": {
+            "text": "giảm"
+          },
+          "correct": true
+        },
+        {
+          "text": "increases",
+          "vi": {
+            "text": "tăng"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "becomes zero",
+          "vi": {
+            "text": "bằng 0"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-red",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["spacing", "factors"],
+      "set": {
+        "wavelength": 6.5e-7,
+        "slitSeparation": 0.0003,
+        "screenDistance": 1.5
+      },
+      "stem": "Red light of {=wavelength*1e9} nm falls on slits {=slitSeparation*1000} mm apart; the screen is {screenDistance} m away. Decide whether each statement is true or false.",
+      "explain": "i = λ·D/a ≈ {=1000*@fringeSpacing} mm; ten spacings span {=1000*@tenFringes} mm. At D = 0.5 m, i is three times smaller. λ·a/D gives a meaningless {=wavelength*slitSeparation/screenDistance} m.",
+      "vi": {
+        "stem": "Ánh sáng đỏ {=wavelength*1e9} nm chiếu vào hai khe cách nhau {=slitSeparation*1000} mm; màn đặt cách hai khe {screenDistance} m. Mỗi nhận định sau đúng hay sai?",
+        "explain": "i = λ·D/a ≈ {=1000*@fringeSpacing} mm; mười khoảng vân dài {=1000*@tenFringes} mm. Ở D = 0,5 m, i nhỏ đi ba lần. λ·a/D cho giá trị vô nghĩa {=wavelength*slitSeparation/screenDistance} m."
+      },
+      "statements": [
+        {
+          "text": "The fringe spacing is about {=1000*@fringeSpacing} mm.",
+          "vi": {
+            "text": "Khoảng vân khoảng {=1000*@fringeSpacing} mm."
+          },
+          "true": true,
+          "check": {
+            "expr": "wavelength*screenDistance/slitSeparation",
+            "equals": "fringeSpacing"
+          }
+        },
+        {
+          "text": "Ten fringe spacings span about {=1000*@tenFringes} mm.",
+          "vi": {
+            "text": "Mười khoảng vân dài khoảng {=1000*@tenFringes} mm."
+          },
+          "true": true,
+          "check": {
+            "expr": "10*wavelength*screenDistance/slitSeparation",
+            "equals": "tenFringes"
+          }
+        },
+        {
+          "text": "Moving the screen to 0.5 m would make the fringes three times wider.",
+          "vi": {
+            "text": "Dời màn về 0,5 m thì khoảng vân rộng gấp ba."
+          },
+          "true": false
+        },
+        {
+          "text": "The fringe spacing is λ·a/D ≈ {=wavelength*slitSeparation/screenDistance} m.",
+          "vi": {
+            "text": "Khoảng vân bằng λ·a/D ≈ {=wavelength*slitSeparation/screenDistance} m."
+          },
+          "true": false,
+          "check": {
+            "expr": "wavelength*slitSeparation/screenDistance",
+            "equals": "fringeSpacing"
+          }
+        }
+      ]
+    },
+    {
+      "id": "spacing",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["spacing"],
+      "set": {
+        "wavelength": 6.5e-7,
+        "slitSeparation": 0.0005,
+        "screenDistance": 1
+      },
+      "stem": "Red light of {=wavelength*1e9} nm falls on slits {=slitSeparation*1000} mm apart, with the screen {screenDistance} m away. What is the fringe spacing?",
+      "explain": "i = λ·D/a = {wavelength}·{screenDistance}/{slitSeparation} = {@fringeSpacing} m = {=1000*@fringeSpacing} mm. Putting a in mm gives a value 1000 times too small.",
+      "vi": {
+        "stem": "Ánh sáng đỏ {=wavelength*1e9} nm chiếu vào hai khe cách nhau {=slitSeparation*1000} mm, màn cách hai khe {screenDistance} m. Khoảng vân bằng bao nhiêu?",
+        "explain": "i = λ·D/a = {wavelength}·{screenDistance}/{slitSeparation} = {@fringeSpacing} m = {=1000*@fringeSpacing} mm. Để a theo mm sẽ ra giá trị nhỏ đi 1000 lần."
+      },
+      "options": [
+        {
+          "text": "{=1000*@fringeSpacing} mm",
+          "vi": {
+            "text": "{=1000*@fringeSpacing} mm"
+          },
+          "correct": true,
+          "check": {
+            "expr": "wavelength*screenDistance/slitSeparation",
+            "equals": "fringeSpacing"
+          }
+        },
+        {
+          "text": "{=1000*wavelength*slitSeparation/screenDistance} mm",
+          "vi": {
+            "text": "{=1000*wavelength*slitSeparation/screenDistance} mm"
+          },
+          "check": {
+            "expr": "wavelength*slitSeparation/screenDistance",
+            "equals": "fringeSpacing"
+          }
+        },
+        {
+          "text": "{=wavelength*screenDistance/slitSeparation} mm",
+          "vi": {
+            "text": "{=wavelength*screenDistance/slitSeparation} mm"
+          },
+          "check": {
+            "expr": "wavelength*screenDistance/(slitSeparation*1000)",
+            "equals": "fringeSpacing"
+          }
+        },
+        {
+          "text": "{=1000*wavelength*screenDistance/(2*slitSeparation)} mm",
+          "vi": {
+            "text": "{=1000*wavelength*screenDistance/(2*slitSeparation)} mm"
+          },
+          "check": {
+            "expr": "wavelength*screenDistance/(2*slitSeparation)",
+            "equals": "fringeSpacing"
+          }
+        }
+      ]
+    },
+    {
+      "id": "measure-lambda",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["measure"],
+      "set": {
+        "wavelength": 5.32e-7,
+        "slitSeparation": 0.0002,
+        "screenDistance": 0.5
+      },
+      "stem": "With slits {=slitSeparation*1000} mm apart and the screen {screenDistance} m away, ten fringe spacings span L = {=1000*@tenFringes} mm. What is the wavelength of the light?",
+      "explain": "i = L/10 = {=1000*@fringeSpacing} mm; λ = i·a/D = {@fringeSpacing}·{slitSeparation}/{screenDistance} ≈ {=1e9*@wavelengthFromFringes} nm (green).",
+      "vi": {
+        "stem": "Với hai khe cách nhau {=slitSeparation*1000} mm và màn cách {screenDistance} m, mười khoảng vân dài L = {=1000*@tenFringes} mm. Bước sóng của ánh sáng bằng bao nhiêu?",
+        "explain": "i = L/10 = {=1000*@fringeSpacing} mm; λ = i·a/D = {@fringeSpacing}·{slitSeparation}/{screenDistance} ≈ {=1e9*@wavelengthFromFringes} nm (ánh sáng lục)."
+      },
+      "options": [
+        {
+          "text": "{=1e9*@tenFringes*slitSeparation/(10*screenDistance)} nm",
+          "vi": {
+            "text": "{=1e9*@tenFringes*slitSeparation/(10*screenDistance)} nm"
+          },
+          "correct": true,
+          "check": {
+            "expr": "@tenFringes*slitSeparation/(10*screenDistance)",
+            "equals": "wavelengthFromFringes"
+          }
+        },
+        {
+          "text": "{=1e9*@tenFringes*slitSeparation/screenDistance} nm",
+          "vi": {
+            "text": "{=1e9*@tenFringes*slitSeparation/screenDistance} nm"
+          },
+          "check": {
+            "expr": "@tenFringes*slitSeparation/screenDistance",
+            "equals": "wavelengthFromFringes"
+          }
+        },
+        {
+          "text": "{=1e9*@tenFringes*screenDistance/(10*slitSeparation)} nm",
+          "vi": {
+            "text": "{=1e9*@tenFringes*screenDistance/(10*slitSeparation)} nm"
+          },
+          "check": {
+            "expr": "@tenFringes*screenDistance/(10*slitSeparation)",
+            "equals": "wavelengthFromFringes"
+          }
+        },
+        {
+          "text": "{=1e9*@tenFringes*slitSeparation/(9*screenDistance)} nm",
+          "vi": {
+            "text": "{=1e9*@tenFringes*slitSeparation/(9*screenDistance)} nm"
+          },
+          "check": {
+            "expr": "@tenFringes*slitSeparation/(9*screenDistance)",
+            "equals": "wavelengthFromFringes"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ten-fringes",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["spacing", "measure"],
+      "set": {
+        "wavelength": 6.5e-7,
+        "slitSeparation": 0.0003,
+        "screenDistance": 1.5
+      },
+      "stem": "Red light of {=wavelength*1e9} nm, slits {=slitSeparation*1000} mm apart, screen {screenDistance} m away: how wide are ten fringe spacings?",
+      "explain": "i = λ·D/a ≈ {=1000*@fringeSpacing} mm, so L = 10·i ≈ {=1000*@tenFringes} mm.",
+      "vi": {
+        "stem": "Ánh sáng đỏ {=wavelength*1e9} nm, hai khe cách nhau {=slitSeparation*1000} mm, màn cách {screenDistance} m: bề rộng của mười khoảng vân bằng bao nhiêu?",
+        "explain": "i = λ·D/a ≈ {=1000*@fringeSpacing} mm, nên L = 10·i ≈ {=1000*@tenFringes} mm."
+      },
+      "options": [
+        {
+          "text": "{=1000*@tenFringes} mm",
+          "vi": {
+            "text": "{=1000*@tenFringes} mm"
+          },
+          "correct": true,
+          "check": {
+            "expr": "10*wavelength*screenDistance/slitSeparation",
+            "equals": "tenFringes"
+          }
+        },
+        {
+          "text": "{=1000*@fringeSpacing} mm",
+          "vi": {
+            "text": "{=1000*@fringeSpacing} mm"
+          },
+          "check": {
+            "expr": "wavelength*screenDistance/slitSeparation",
+            "equals": "tenFringes"
+          }
+        },
+        {
+          "text": "{=9000*@fringeSpacing} mm",
+          "vi": {
+            "text": "{=9000*@fringeSpacing} mm"
+          },
+          "check": {
+            "expr": "9*wavelength*screenDistance/slitSeparation",
+            "equals": "tenFringes"
+          }
+        },
+        {
+          "text": "{=10000*wavelength*slitSeparation/screenDistance} mm",
+          "vi": {
+            "text": "{=10000*wavelength*slitSeparation/screenDistance} mm"
+          },
+          "check": {
+            "expr": "10*wavelength*slitSeparation/screenDistance",
+            "equals": "tenFringes"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-green",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["spacing", "factors"],
+      "set": {
+        "wavelength": 5.32e-7,
+        "slitSeparation": 0.0005,
+        "screenDistance": 1
+      },
+      "stem": "Green light of {=wavelength*1e9} nm falls on slits {=slitSeparation*1000} mm apart; the screen is {screenDistance} m away. Decide whether each statement is true or false.",
+      "explain": "i = λ·D/a ≈ {=1000*@fringeSpacing} mm; i/D = λ/a ≈ {@spacingSlope}. Red (longer λ) spreads the fringes more. Halving a doubles i.",
+      "vi": {
+        "stem": "Ánh sáng lục {=wavelength*1e9} nm chiếu vào hai khe cách nhau {=slitSeparation*1000} mm; màn cách {screenDistance} m. Mỗi nhận định sau đúng hay sai?",
+        "explain": "i = λ·D/a ≈ {=1000*@fringeSpacing} mm; i/D = λ/a ≈ {@spacingSlope}. Ánh sáng đỏ (λ dài hơn) làm vân giãn rộng hơn. Giảm a một nửa thì i tăng gấp đôi."
+      },
+      "statements": [
+        {
+          "text": "The fringe spacing is about {=1000*@fringeSpacing} mm.",
+          "vi": {
+            "text": "Khoảng vân khoảng {=1000*@fringeSpacing} mm."
+          },
+          "true": true,
+          "check": {
+            "expr": "wavelength*screenDistance/slitSeparation",
+            "equals": "fringeSpacing"
+          }
+        },
+        {
+          "text": "i against D would be a line of slope λ/a ≈ {@spacingSlope}.",
+          "vi": {
+            "text": "Đồ thị i theo D là đường thẳng có hệ số góc λ/a ≈ {@spacingSlope}."
+          },
+          "true": true,
+          "check": {
+            "expr": "wavelength/slitSeparation",
+            "equals": "spacingSlope"
+          }
+        },
+        {
+          "text": "With red light the fringes would be wider apart.",
+          "vi": {
+            "text": "Với ánh sáng đỏ, các vân sẽ cách xa nhau hơn."
+          },
+          "true": true
+        },
+        {
+          "text": "Halving the slit separation would halve the fringe spacing.",
+          "vi": {
+            "text": "Giảm khoảng cách hai khe một nửa thì khoảng vân giảm một nửa."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "find-a",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["measure", "spacing"],
+      "set": {
+        "wavelength": 6.5e-7,
+        "slitSeparation": 0.0002,
+        "screenDistance": 1
+      },
+      "stem": "Red light of {=wavelength*1e9} nm falls on a double slit {screenDistance} m from the screen, and ten fringe spacings span {=1000*@tenFringes|3} mm. How far apart are the slits?",
+      "explain": "i = L/10 = {=1000*@fringeSpacing|3} mm; a = λ·D/i = {wavelength}·{screenDistance}/{=@fringeSpacing|3} ≈ {=1000*wavelength*screenDistance/@fringeSpacing} mm.",
+      "vi": {
+        "stem": "Ánh sáng đỏ {=wavelength*1e9} nm chiếu vào hai khe cách màn {screenDistance} m, mười khoảng vân dài {=1000*@tenFringes|3} mm. Hai khe cách nhau bao xa?",
+        "explain": "i = L/10 = {=1000*@fringeSpacing|3} mm; a = λ·D/i = {wavelength}·{screenDistance}/{=@fringeSpacing|3} ≈ {=1000*wavelength*screenDistance/@fringeSpacing} mm."
+      },
+      "options": [
+        {
+          "text": "{=1000*wavelength*screenDistance/@fringeSpacing} mm",
+          "vi": {
+            "text": "{=1000*wavelength*screenDistance/@fringeSpacing} mm"
+          },
+          "correct": true
+        },
+        {
+          "text": "{=1000*wavelength*screenDistance/@tenFringes} mm",
+          "vi": {
+            "text": "{=1000*wavelength*screenDistance/@tenFringes} mm"
+          }
+        },
+        {
+          "text": "{=1000*@fringeSpacing*screenDistance/wavelength} mm",
+          "vi": {
+            "text": "{=1000*@fringeSpacing*screenDistance/wavelength} mm"
+          }
+        },
+        {
+          "text": "{=wavelength*screenDistance/@fringeSpacing} mm",
+          "vi": {
+            "text": "{=wavelength*screenDistance/@fringeSpacing} mm"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-ruler",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["measure", "interference"],
+      "set": {
+        "wavelength": 6.5e-7,
+        "slitSeparation": 0.0002,
+        "screenDistance": 1.5,
+        "rulerResolution": 0.001
+      },
+      "stem": "Red light ({=wavelength*1e9} nm), slits {=slitSeparation*1000} mm apart, screen {screenDistance} m away; ten spacings are measured with a ruler of resolution {=rulerResolution*1000} mm. Decide whether each statement is true or false.",
+      "explain": "L = {=1000*@tenFringes|4} mm reads as {=1000*round(@tenFringes/rulerResolution)*rulerResolution} mm, giving λ ≈ {=1e9*round(@tenFringes/rulerResolution)*rulerResolution*slitSeparation/(10*screenDistance)|3} nm. Over ten spacings the ruler’s error in i is ten times smaller. Each slit’s own width makes the fringes fade to the sides.",
+      "vi": {
+        "stem": "Ánh sáng đỏ ({=wavelength*1e9} nm), hai khe cách nhau {=slitSeparation*1000} mm, màn cách {screenDistance} m; mười khoảng vân được đo bằng thước có độ phân giải {=rulerResolution*1000} mm. Mỗi nhận định sau đúng hay sai?",
+        "explain": "L = {=1000*@tenFringes|4} mm được đọc là {=1000*round(@tenFringes/rulerResolution)*rulerResolution} mm, cho λ ≈ {=1e9*round(@tenFringes/rulerResolution)*rulerResolution*slitSeparation/(10*screenDistance)|3} nm. Đo qua mười khoảng vân thì sai số của thước trên i nhỏ đi mười lần. Bề rộng của mỗi khe làm các vân mờ dần về hai bên."
+      },
+      "statements": [
+        {
+          "text": "The ruler reads the ten spacings as {=1000*round(@tenFringes/rulerResolution)*rulerResolution} mm.",
+          "vi": {
+            "text": "Thước đọc được mười khoảng vân là {=1000*round(@tenFringes/rulerResolution)*rulerResolution} mm."
+          },
+          "true": true
+        },
+        {
+          "text": "That reading gives λ ≈ {=1e9*round(@tenFringes/rulerResolution)*rulerResolution*slitSeparation/(10*screenDistance)|3} nm.",
+          "vi": {
+            "text": "Số đọc đó cho λ ≈ {=1e9*round(@tenFringes/rulerResolution)*rulerResolution*slitSeparation/(10*screenDistance)|3} nm."
+          },
+          "true": true
+        },
+        {
+          "text": "Measuring over ten spacings makes the ruler’s error in i ten times smaller.",
+          "vi": {
+            "text": "Đo qua mười khoảng vân làm sai số của thước trên i nhỏ đi mười lần."
+          },
+          "true": true
+        },
+        {
+          "text": "The fringes stay equally bright however far they are from the centre.",
+          "vi": {
+            "text": "Các vân sáng như nhau dù ở xa hay gần vân trung tâm."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "wave-nature",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["interference"],
+      "stem": "The fringes of Young’s double-slit experiment show that light…",
+      "explain": "Bright and dark fringes come from the two waves adding or cancelling: interference, which only waves show. The experiment is evidence for the wave nature of light.",
+      "vi": {
+        "stem": "Các vân trong thí nghiệm khe Young chứng tỏ ánh sáng…",
+        "explain": "Vân sáng và vân tối xuất hiện do hai sóng tăng cường hoặc triệt tiêu nhau: hiện tượng giao thoa, chỉ sóng mới có. Thí nghiệm này là bằng chứng cho tính chất sóng của ánh sáng."
+      },
+      "options": [
+        {
+          "text": "has a wave nature",
+          "vi": {
+            "text": "có tính chất sóng"
+          },
+          "correct": true
+        },
+        {
+          "text": "is made only of particles moving in straight lines",
+          "vi": {
+            "text": "chỉ gồm các hạt chuyển động thẳng"
+          }
+        },
+        {
+          "text": "is a longitudinal wave",
+          "vi": {
+            "text": "là sóng dọc"
+          }
+        },
+        {
+          "text": "needs a medium to travel",
+          "vi": {
+            "text": "cần môi trường để truyền"
+          }
+        }
+      ]
+    },
+    {
+      "id": "screen-farther",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["factors", "spacing"],
+      "stem": "The screen is moved from 0.5 m to 1.5 m from the slits; the light and the slits are not changed. The fringe spacing…",
+      "explain": "i = λ·D/a is proportional to D: three times the distance gives three times the spacing.",
+      "vi": {
+        "stem": "Dịch màn từ vị trí cách hai khe 0,5 m ra 1,5 m; ánh sáng và hai khe giữ nguyên. Khoảng vân…",
+        "explain": "i = λ·D/a tỉ lệ thuận với D: khoảng cách tăng ba lần thì khoảng vân tăng ba lần."
+      },
+      "options": [
+        {
+          "text": "becomes three times larger",
+          "vi": {
+            "text": "tăng ba lần"
+          },
+          "correct": true
+        },
+        {
+          "text": "becomes three times smaller",
+          "vi": {
+            "text": "giảm ba lần"
+          }
+        },
+        {
+          "text": "becomes nine times larger",
+          "vi": {
+            "text": "tăng chín lần"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-pattern",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["interference"],
+      "stem": "Monochromatic light passes two narrow slits and makes fringes on a screen. Decide whether each statement is true or false.",
+      "explain": "At the centre the path difference is 0, so the central fringe is bright. Dark fringes are where the path difference is (k + ½)λ. Covering one slit leaves only one wave, so the two-slit fringes vanish. White light gives a white central fringe with coloured fringes on each side, because each colour has its own spacing.",
+      "vi": {
+        "stem": "Ánh sáng đơn sắc đi qua hai khe hẹp và tạo các vân trên màn. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Ở chính giữa hiệu đường đi bằng 0 nên vân trung tâm là vân sáng. Vân tối nằm ở chỗ hiệu đường đi bằng (k + ½)λ. Che một khe thì chỉ còn một sóng nên hệ vân giao thoa của hai khe biến mất. Ánh sáng trắng cho vân trung tâm màu trắng, hai bên là các vân màu, vì mỗi màu có khoảng vân riêng."
+      },
+      "statements": [
+        {
+          "text": "The central fringe is bright.",
+          "vi": {
+            "text": "Vân trung tâm là vân sáng."
+          },
+          "true": true
+        },
+        {
+          "text": "A dark fringe appears where the path difference is (k + ½)λ.",
+          "vi": {
+            "text": "Vân tối xuất hiện ở chỗ hiệu đường đi bằng (k + ½)λ."
+          },
+          "true": true
+        },
+        {
+          "text": "If one slit is covered, the two-slit fringes disappear.",
+          "vi": {
+            "text": "Nếu che một khe thì hệ vân giao thoa của hai khe biến mất."
+          },
+          "true": true
+        },
+        {
+          "text": "With white light, every fringe is white.",
+          "vi": {
+            "text": "Với ánh sáng trắng, mọi vân đều có màu trắng."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "third-bright",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["spacing"],
+      "set": {
+        "wavelength": 5.32e-7,
+        "slitSeparation": 0.0003,
+        "screenDistance": 1.5
+      },
+      "stem": "Green light of {=wavelength*1e9} nm falls on slits {=slitSeparation*1000} mm apart; the screen is {screenDistance} m away. How far from the centre of the central fringe is the third bright fringe?",
+      "explain": "i = λ·D/a ≈ {=@fringeSpacing*1000} mm, and the k-th bright fringe is at x = k·i, so the third is at 3i ≈ {=3*@fringeSpacing*1000} mm. 2.5i is the third dark fringe.",
+      "vi": {
+        "stem": "Ánh sáng lục bước sóng {=wavelength*1e9} nm chiếu vào hai khe cách nhau {=slitSeparation*1000} mm; màn cách hai khe {screenDistance} m. Vân sáng bậc 3 cách tâm vân trung tâm bao nhiêu?",
+        "explain": "i = λ·D/a ≈ {=@fringeSpacing*1000} mm, vân sáng bậc k nằm ở x = k·i, nên vân sáng bậc 3 ở 3i ≈ {=3*@fringeSpacing*1000} mm. 2,5i là vị trí vân tối thứ 3."
+      },
+      "options": [
+        {
+          "text": "{=3*@fringeSpacing*1000} mm",
+          "vi": {
+            "text": "{=3*@fringeSpacing*1000} mm"
+          },
+          "correct": true,
+          "check": {
+            "expr": "3*wavelength*screenDistance/slitSeparation/3",
+            "equals": "fringeSpacing"
+          }
+        },
+        {
+          "text": "{=2.5*@fringeSpacing*1000} mm",
+          "vi": {
+            "text": "{=2.5*@fringeSpacing*1000} mm"
+          },
+          "check": {
+            "expr": "2.5*@fringeSpacing/3",
+            "equals": "fringeSpacing"
+          }
+        },
+        {
+          "text": "{=6*@fringeSpacing*1000} mm",
+          "vi": {
+            "text": "{=6*@fringeSpacing*1000} mm"
+          },
+          "check": {
+            "expr": "6*@fringeSpacing/3",
+            "equals": "fringeSpacing"
+          }
+        },
+        {
+          "text": "{=@fringeSpacing/3*1000} mm",
+          "vi": {
+            "text": "{=@fringeSpacing/3*1000} mm"
+          },
+          "check": {
+            "expr": "@fringeSpacing/3/3",
+            "equals": "fringeSpacing"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-close-screen",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["spacing", "factors"],
+      "set": {
+        "wavelength": 6.5e-7,
+        "slitSeparation": 0.0005,
+        "screenDistance": 0.5
+      },
+      "stem": "Red light of {=wavelength*1e9} nm falls on slits {=slitSeparation*1000} mm apart; the screen is {screenDistance} m away. Decide whether each statement is true or false.",
+      "explain": "i = λ·D/a = {=@fringeSpacing*1000} mm and ten spacings span {=@tenFringes*1000} mm. The first dark fringe is half a spacing from the centre, {=@fringeSpacing/2*1000} mm. Green light has a shorter wavelength, so its fringes are closer together, not farther apart.",
+      "vi": {
+        "stem": "Ánh sáng đỏ bước sóng {=wavelength*1e9} nm chiếu vào hai khe cách nhau {=slitSeparation*1000} mm; màn cách hai khe {screenDistance} m. Mỗi nhận định sau đúng hay sai?",
+        "explain": "i = λ·D/a = {=@fringeSpacing*1000} mm và mười khoảng vân dài {=@tenFringes*1000} mm. Vân tối thứ nhất cách tâm nửa khoảng vân, {=@fringeSpacing/2*1000} mm. Ánh sáng lục có bước sóng ngắn hơn nên các vân sít nhau hơn chứ không thưa hơn."
+      },
+      "statements": [
+        {
+          "text": "The fringe spacing is {=@fringeSpacing*1000} mm.",
+          "vi": {
+            "text": "Khoảng vân bằng {=@fringeSpacing*1000} mm."
+          },
+          "true": true,
+          "check": {
+            "expr": "wavelength*screenDistance/slitSeparation",
+            "equals": "fringeSpacing"
+          }
+        },
+        {
+          "text": "Ten fringe spacings span {=@tenFringes*1000} mm.",
+          "vi": {
+            "text": "Mười khoảng vân dài {=@tenFringes*1000} mm."
+          },
+          "true": true,
+          "check": {
+            "expr": "10*wavelength*screenDistance/slitSeparation",
+            "equals": "tenFringes"
+          }
+        },
+        {
+          "text": "The first dark fringe is {=@fringeSpacing/2*1000} mm from the centre of the pattern.",
+          "vi": {
+            "text": "Vân tối thứ nhất cách tâm hệ vân {=@fringeSpacing/2*1000} mm."
+          },
+          "true": true,
+          "check": {
+            "expr": "2*(@fringeSpacing/2)",
+            "equals": "fringeSpacing"
+          }
+        },
+        {
+          "text": "With green light instead, the fringes would be farther apart.",
+          "vi": {
+            "text": "Nếu dùng ánh sáng lục thì các vân sẽ thưa hơn."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "find-d",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["spacing", "measure"],
+      "set": {
+        "wavelength": 5.32e-7,
+        "slitSeparation": 0.0005,
+        "screenDistance": 1.5
+      },
+      "stem": "Green light of {=wavelength*1e9} nm falls on slits {=slitSeparation*1000} mm apart, and ten fringe spacings on the screen span {=@tenFringes*1000|3} mm. How far is the screen from the slits?",
+      "explain": "i = L/10 = {=@fringeSpacing*1000|3} mm, and i = λ·D/a gives D = a·i/λ = {=slitSeparation*@fringeSpacing/wavelength} m. Forgetting to divide L by 10, or counting nine spacings, gives the other values.",
+      "vi": {
+        "stem": "Ánh sáng lục bước sóng {=wavelength*1e9} nm chiếu vào hai khe cách nhau {=slitSeparation*1000} mm, và mười khoảng vân trên màn dài {=@tenFringes*1000|3} mm. Màn đặt cách hai khe bao xa?",
+        "explain": "i = L/10 = {=@fringeSpacing*1000|3} mm, và i = λ·D/a cho D = a·i/λ = {=slitSeparation*@fringeSpacing/wavelength} m. Quên chia L cho 10, hoặc đếm thành chín khoảng vân, sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{=slitSeparation*@tenFringes/(10*wavelength)} m",
+          "vi": {
+            "text": "{=slitSeparation*@tenFringes/(10*wavelength)} m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "wavelength*(slitSeparation*@tenFringes/(10*wavelength))/slitSeparation",
+            "equals": "fringeSpacing"
+          }
+        },
+        {
+          "text": "{=slitSeparation*@tenFringes/wavelength} m",
+          "vi": {
+            "text": "{=slitSeparation*@tenFringes/wavelength} m"
+          },
+          "check": {
+            "expr": "wavelength*(slitSeparation*@tenFringes/wavelength)/slitSeparation",
+            "equals": "fringeSpacing"
+          }
+        },
+        {
+          "text": "{=slitSeparation*@tenFringes/(9*wavelength)} m",
+          "vi": {
+            "text": "{=slitSeparation*@tenFringes/(9*wavelength)} m"
+          },
+          "check": {
+            "expr": "wavelength*(slitSeparation*@tenFringes/(9*wavelength))/slitSeparation",
+            "equals": "fringeSpacing"
+          }
+        },
+        {
+          "text": "{=wavelength*@tenFringes/(10*slitSeparation)} m",
+          "vi": {
+            "text": "{=wavelength*@tenFringes/(10*slitSeparation)} m"
+          },
+          "check": {
+            "expr": "wavelength*(wavelength*@tenFringes/(10*slitSeparation))/slitSeparation",
+            "equals": "fringeSpacing"
+          }
+        }
+      ]
+    },
+    {
+      "id": "red-to-green",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["factors", "spacing"],
+      "set": {
+        "wavelength": 5.32e-7,
+        "slitSeparation": 0.0002,
+        "screenDistance": 1
+      },
+      "stem": "With red light (650 nm), ten fringe spacings span {=@tenFringes*650e-9/wavelength*1000|3} mm. The laser is changed to green ({=wavelength*1e9} nm), nothing else changed. What do ten spacings span now?",
+      "explain": "i ∝ λ: L_green = L_red·λ_green/λ_red = {=@tenFringes*650e-9/wavelength*1000|3} × {=wavelength*1e9}/650 ≈ {=@tenFringes*1000|3} mm. Multiplying by 650/{=wavelength*1e9} turns the ratio over: green fringes are closer, not farther apart.",
+      "vi": {
+        "stem": "Với ánh sáng đỏ (650 nm), mười khoảng vân dài {=@tenFringes*650e-9/wavelength*1000|3} mm. Thay laser bằng laser lục ({=wavelength*1e9} nm), các yếu tố khác giữ nguyên. Lúc này mười khoảng vân dài bao nhiêu?",
+        "explain": "i tỉ lệ thuận với λ: L_lục = L_đỏ·λ_lục/λ_đỏ = {=@tenFringes*650e-9/wavelength*1000|3} × {=wavelength*1e9}/650 ≈ {=@tenFringes*1000|3} mm. Nhân với 650/{=wavelength*1e9} là đảo ngược tỉ số: vân lục sít nhau hơn chứ không thưa hơn."
+      },
+      "options": [
+        {
+          "text": "{=@tenFringes*1000|3} mm",
+          "vi": {
+            "text": "{=@tenFringes*1000|3} mm"
+          },
+          "correct": true,
+          "check": {
+            "expr": "10*wavelength*screenDistance/slitSeparation",
+            "equals": "tenFringes"
+          }
+        },
+        {
+          "text": "{=@tenFringes*(650e-9/wavelength)^2*1000|3} mm",
+          "vi": {
+            "text": "{=@tenFringes*(650e-9/wavelength)^2*1000|3} mm"
+          },
+          "check": {
+            "expr": "@tenFringes*(650e-9/wavelength)^2",
+            "equals": "tenFringes"
+          }
+        },
+        {
+          "text": "{=@tenFringes*650e-9/wavelength*1000|3} mm",
+          "vi": {
+            "text": "{=@tenFringes*650e-9/wavelength*1000|3} mm"
+          },
+          "check": {
+            "expr": "@tenFringes*650e-9/wavelength",
+            "equals": "tenFringes"
+          }
+        },
+        {
+          "text": "{=@tenFringes*wavelength/650e-9*1000|3} mm",
+          "vi": {
+            "text": "{=@tenFringes*wavelength/650e-9*1000|3} mm"
+          },
+          "check": {
+            "expr": "@tenFringes*wavelength/650e-9",
+            "equals": "tenFringes"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-slope",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["measure", "factors"],
+      "set": {
+        "wavelength": 6.5e-7,
+        "slitSeparation": 0.0003,
+        "screenDistance": 1
+      },
+      "stem": "Red light of {=wavelength*1e9} nm falls on slits {=slitSeparation*1000} mm apart. Runs at several screen distances D give the fringe spacing i against D. Decide whether each statement is true or false.",
+      "explain": "i = (λ/a)·D: a straight line through the origin of slope λ/a ≈ {@spacingSlope|3}, so λ = slope × a = {=@spacingSlope*slitSeparation*1e9} nm. The slope is λ/a, not a/λ. Slits farther apart (larger a) give a smaller slope, a less steep line.",
+      "vi": {
+        "stem": "Ánh sáng đỏ bước sóng {=wavelength*1e9} nm chiếu vào hai khe cách nhau {=slitSeparation*1000} mm. Các lần đo ở nhiều khoảng cách D cho đồ thị khoảng vân i theo D. Mỗi nhận định sau đúng hay sai?",
+        "explain": "i = (λ/a)·D: một đường thẳng đi qua gốc tọa độ có hệ số góc λ/a ≈ {@spacingSlope|3}, nên λ = hệ số góc × a = {=@spacingSlope*slitSeparation*1e9} nm. Hệ số góc là λ/a chứ không phải a/λ. Hai khe xa nhau hơn (a lớn hơn) cho hệ số góc nhỏ hơn, đường thẳng thoải hơn."
+      },
+      "statements": [
+        {
+          "text": "The points lie on a line through the origin of slope about {@spacingSlope|3}.",
+          "vi": {
+            "text": "Các điểm nằm trên một đường thẳng đi qua gốc tọa độ, có hệ số góc khoảng {@spacingSlope|3}."
+          },
+          "true": true,
+          "check": {
+            "expr": "wavelength/slitSeparation",
+            "equals": "spacingSlope"
+          }
+        },
+        {
+          "text": "Multiplying the slope by a gives λ = {=@spacingSlope*slitSeparation*1e9} nm.",
+          "vi": {
+            "text": "Nhân hệ số góc với a cho λ = {=@spacingSlope*slitSeparation*1e9} nm."
+          },
+          "true": true,
+          "check": {
+            "expr": "@spacingSlope*slitSeparation",
+            "equals": "wavelengthFromFringes"
+          }
+        },
+        {
+          "text": "The slope is a/λ ≈ {=slitSeparation/wavelength|3}.",
+          "vi": {
+            "text": "Hệ số góc bằng a/λ ≈ {=slitSeparation/wavelength|3}."
+          },
+          "true": false,
+          "check": {
+            "expr": "slitSeparation/wavelength",
+            "equals": "spacingSlope"
+          }
+        },
+        {
+          "text": "With slits 0.5 mm apart the line would be steeper.",
+          "vi": {
+            "text": "Với hai khe cách nhau 0,5 mm, đường thẳng sẽ dốc hơn."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

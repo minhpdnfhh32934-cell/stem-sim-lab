@@ -1,0 +1,776 @@
+{
+  "id": "newtons-second-law",
+  "name": "Air track: uniform motion and Newton's second law",
+  "category": "physics",
+  "description": "A glider rides on a cushion of air along a level track, so nothing slows it; the launcher gives it a push of 0.3 m/s. A light string from it runs over a pulley at the far end to a hanging mass m. With no mass on the string, the glider coasts: a straight line at constant speed, the same at both light gates. With a mass hanging, the glider and the mass speed up together with a constant acceleration a = m·g/(M + m): Newton's second law, the hanging weight m·g pulling the two masses. Two light gates time the glider's 0.1 m card: the speeds L/Δt, the time between the gates, and from them the acceleration.",
+  "vi": {
+    "name": "Đệm khí: chuyển động thẳng đều và định luật II Newton",
+    "description": "Một xe trượt chạy trên lớp đệm khí dọc theo một máng nằm ngang, nên hầu như không có gì cản nó; bộ phóng đẩy xe với vận tốc 0,3 m/s. Một sợi dây nhẹ nối xe vắt qua ròng rọc ở đầu kia của máng, đầu dây treo một quả nặng m. Khi không treo gì, xe tự chạy: chuyển động thẳng với tốc độ không đổi, như nhau ở cả hai cổng quang điện. Khi có quả nặng, xe và quả nặng cùng chuyển động nhanh dần với gia tốc không đổi a = m·g/(M + m): định luật II Newton, trọng lượng m·g của quả nặng kéo cả hai khối lượng. Hai cổng quang điện đo thời gian tấm chắn 0,1 m trên xe đi qua: tốc độ L/Δt, thời gian đi giữa hai cổng, và từ đó là gia tốc.",
+    "note": "Đồng hồ hiện số đo thời gian tấm chắn dài L = 0,1 m trên xe chắn chùm tia của mỗi cổng, Δt_A và Δt_B, và thời gian t_AB từ lúc tấm chắn bắt đầu chắn cổng A đến lúc nó bắt đầu chắn cổng B. Tốc độ tại một cổng là v = L/Δt (tốc độ trung bình khi tấm chắn đi qua), tốc độ trung bình giữa hai cổng là AB/t_AB, và gia tốc tính từ hai cổng là a = (v_B² − v_A²)/(2·AB). Đây là mô hình dạy học đơn giản hóa: máng nằm ngang, đệm khí không có ma sát và không khí không cản; dây nhẹ, không giãn và luôn căng; ròng rọc lý tưởng (quán tính của nó được bỏ qua, μ = 0). Hai vật cùng chuyển động với một gia tốc, nên định luật II Newton cho cả hệ là m·g = (M + m)·a, tức a = m·g/(M + m); lực dây kéo xe là M·a, nhỏ hơn m·g. Bộ phóng luôn đẩy xe với cùng vận tốc u = 0,3 m/s: khi không treo vật, a = 0 và xe chuyển động thẳng đều với tốc độ đó; khi có quả nặng, xe nhanh dần từ tốc độ đó, và (v_B² − v_A²)/(2·AB) vẫn cho ra a. Vì L/Δt là tốc độ ở giữa lúc tấm chắn đi qua, gia tốc tính từ hai cổng lớn hơn a một chút (dưới 1 % ở đây). Đồng hồ đọc thời gian mô phỏng theo độ phân giải d_t của nó (bội số gần nhất của d_t, độ bất định d_t/√12 chỉ do độ phân giải); không có sai số ngẫu nhiên nào được thêm vào. Trong phòng thí nghiệm thật, máng không bao giờ thật nằm ngang, đệm khí vẫn còn chút cản, ròng rọc có quán tính và ma sát, và dây có khối lượng, nên gia tốc đo được nhỏ hơn giá trị lý thuyết một chút."
+  },
+  "requiredEquipment": ["air-track-pulley"],
+  "model": "dynamics.air-track-cart",
+  "parameters": [
+    {
+      "id": "hangingMass",
+      "label": "Hanging mass",
+      "vi": {
+        "label": "Khối lượng quả nặng treo"
+      },
+      "symbol": "m",
+      "unit": "kg",
+      "default": 0.01,
+      "min": 0,
+      "max": 0.02,
+      "presets": [
+        {
+          "label": "none (coasting)",
+          "vi": {
+            "label": "không treo (xe tự chạy)"
+          },
+          "value": 0
+        },
+        {
+          "label": "5 g",
+          "vi": {
+            "label": "5 g"
+          },
+          "value": 0.005
+        },
+        {
+          "label": "10 g",
+          "vi": {
+            "label": "10 g"
+          },
+          "value": 0.01
+        },
+        {
+          "label": "15 g",
+          "vi": {
+            "label": "15 g"
+          },
+          "value": 0.015
+        },
+        {
+          "label": "20 g",
+          "vi": {
+            "label": "20 g"
+          },
+          "value": 0.02
+        }
+      ]
+    },
+    {
+      "id": "gliderMass",
+      "label": "Glider mass",
+      "vi": {
+        "label": "Khối lượng xe"
+      },
+      "symbol": "M",
+      "unit": "kg",
+      "default": 0.2,
+      "min": 0.2,
+      "max": 0.4,
+      "presets": [
+        {
+          "label": "0.2 kg (glider alone)",
+          "vi": {
+            "label": "0,2 kg (chỉ có xe)"
+          },
+          "value": 0.2
+        },
+        {
+          "label": "0.3 kg (+ 0.1 kg)",
+          "vi": {
+            "label": "0,3 kg (+ 0,1 kg)"
+          },
+          "value": 0.3
+        },
+        {
+          "label": "0.4 kg (+ 0.2 kg)",
+          "vi": {
+            "label": "0,4 kg (+ 0,2 kg)"
+          },
+          "value": 0.4
+        }
+      ]
+    },
+    {
+      "id": "gateB",
+      "label": "Light gate B along the track",
+      "vi": {
+        "label": "Vị trí cổng B trên máng"
+      },
+      "symbol": "x_B",
+      "unit": "m",
+      "default": 0.6,
+      "min": 0.4,
+      "max": 0.7,
+      "presets": [
+        {
+          "label": "0.4 m",
+          "vi": {
+            "label": "0,4 m"
+          },
+          "value": 0.4
+        },
+        {
+          "label": "0.5 m",
+          "vi": {
+            "label": "0,5 m"
+          },
+          "value": 0.5
+        },
+        {
+          "label": "0.6 m",
+          "vi": {
+            "label": "0,6 m"
+          },
+          "value": 0.6
+        },
+        {
+          "label": "0.7 m",
+          "vi": {
+            "label": "0,7 m"
+          },
+          "value": 0.7
+        }
+      ]
+    },
+    {
+      "id": "timerResolution",
+      "label": "Timer resolution",
+      "vi": {
+        "label": "Độ phân giải của đồng hồ"
+      },
+      "symbol": "d_t",
+      "unit": "s",
+      "default": 0.001,
+      "min": 0.0001,
+      "max": 0.01,
+      "presets": [
+        {
+          "label": "0.0001 s",
+          "vi": {
+            "label": "0,0001 s"
+          },
+          "value": 0.0001
+        },
+        {
+          "label": "0.001 s",
+          "vi": {
+            "label": "0,001 s"
+          },
+          "value": 0.001
+        },
+        {
+          "label": "0.01 s",
+          "vi": {
+            "label": "0,01 s"
+          },
+          "value": 0.01
+        }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "launchSpeed": 0.3,
+    "pulleyMass": 0,
+    "gravity": 9.81,
+    "cardLength": 0.1,
+    "gateA": 0.2,
+    "travel": 1.2,
+    "dropHeight": 0.8
+  },
+  "inputs": {
+    "launchSpeed": {
+      "symbol": "u",
+      "unit": "m/s"
+    },
+    "pulleyMass": {
+      "symbol": "μ",
+      "unit": "kg",
+      "desk": false
+    },
+    "gravity": {
+      "symbol": "g",
+      "unit": "m/s²",
+      "desk": false
+    },
+    "cardLength": {
+      "symbol": "L",
+      "unit": "m"
+    },
+    "gateA": {
+      "symbol": "x_A",
+      "unit": "m",
+      "desk": false
+    },
+    "travel": {
+      "symbol": "s_max",
+      "unit": "m",
+      "desk": false
+    },
+    "dropHeight": {
+      "symbol": "H",
+      "unit": "m",
+      "desk": false
+    }
+  },
+  "simulation": {
+    "timeStep": 0.001,
+    "maxDuration": 10,
+    "sampleInterval": 0.01
+  },
+  "measurements": [
+    {
+      "id": "distance",
+      "label": "Distance along the track",
+      "vi": {
+        "label": "Quãng đường trên máng"
+      },
+      "symbol": "s",
+      "unit": "m",
+      "variable": "distance"
+    },
+    {
+      "id": "speed",
+      "label": "Speed of the glider",
+      "vi": {
+        "label": "Tốc độ của xe"
+      },
+      "symbol": "v",
+      "unit": "m/s",
+      "variable": "speed"
+    },
+    {
+      "id": "labTime",
+      "label": "Time",
+      "vi": {
+        "label": "Thời gian"
+      },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "clock"
+    }
+  ],
+  "results": [
+    {
+      "id": "blockedA",
+      "label": "Time gate A was blocked Δt_A",
+      "vi": {
+        "label": "Thời gian chắn cổng A, Δt_A"
+      },
+      "symbol": "Δt_A",
+      "unit": "s",
+      "variable": "blockedA",
+      "reduce": "final",
+      "theory": "blockedA"
+    },
+    {
+      "id": "blockedB",
+      "label": "Time gate B was blocked Δt_B",
+      "vi": {
+        "label": "Thời gian chắn cổng B, Δt_B"
+      },
+      "symbol": "Δt_B",
+      "unit": "s",
+      "variable": "blockedB",
+      "reduce": "final",
+      "theory": "blockedB"
+    },
+    {
+      "id": "timeAB",
+      "label": "Time from A to B t_AB",
+      "vi": {
+        "label": "Thời gian đi từ A đến B, t_AB"
+      },
+      "symbol": "t_AB",
+      "unit": "s",
+      "variable": "timeAB",
+      "reduce": "final",
+      "theory": "timeAB"
+    },
+    {
+      "id": "speedA",
+      "label": "Speed at gate A, v_A = L/Δt_A",
+      "vi": {
+        "label": "Tốc độ tại cổng A, v_A = L/Δt_A"
+      },
+      "symbol": "v_A",
+      "unit": "m/s",
+      "variable": "speedA",
+      "reduce": "final",
+      "theory": "speedA"
+    },
+    {
+      "id": "speedB",
+      "label": "Speed at gate B, v_B = L/Δt_B",
+      "vi": {
+        "label": "Tốc độ tại cổng B, v_B = L/Δt_B"
+      },
+      "symbol": "v_B",
+      "unit": "m/s",
+      "variable": "speedB",
+      "reduce": "final",
+      "theory": "speedB"
+    },
+    {
+      "id": "averageSpeed",
+      "label": "Average speed from A to B, AB/t_AB",
+      "vi": {
+        "label": "Tốc độ trung bình từ A đến B, AB/t_AB"
+      },
+      "symbol": "v_AB",
+      "unit": "m/s",
+      "variable": "averageSpeed",
+      "reduce": "final",
+      "theory": "averageSpeed"
+    },
+    {
+      "id": "measuredAcceleration",
+      "label": "Acceleration from the gates, (v_B² − v_A²)/(2·AB)",
+      "vi": {
+        "label": "Gia tốc tính từ hai cổng, (v_B² − v_A²)/(2·AB)"
+      },
+      "symbol": "a",
+      "unit": "m/s²",
+      "variable": "measuredAcceleration",
+      "reduce": "final",
+      "theory": "measuredAcceleration"
+    },
+    {
+      "id": "force",
+      "label": "Pull of the hanging weight, F = m·g",
+      "vi": {
+        "label": "Lực kéo của quả nặng, F = m·g"
+      },
+      "symbol": "F",
+      "unit": "N",
+      "variable": "force",
+      "reduce": "final",
+      "theory": "force"
+    },
+    {
+      "id": "forcePerMass",
+      "label": "F over the masses moved, F/(M + m)",
+      "vi": {
+        "label": "F chia cho khối lượng được kéo, F/(M + m)"
+      },
+      "symbol": "F/(M+m)",
+      "unit": "m/s²",
+      "variable": "forcePerMass",
+      "reduce": "final",
+      "theory": "forcePerMass"
+    },
+    {
+      "id": "tension",
+      "label": "String's pull on the glider, T = M·a",
+      "vi": {
+        "label": "Lực căng dây kéo xe, T = M·a"
+      },
+      "symbol": "T",
+      "unit": "N",
+      "variable": "tension",
+      "reduce": "final",
+      "theory": "tension"
+    },
+    {
+      "id": "acceleration",
+      "label": "Acceleration of the glider (model)",
+      "vi": {
+        "label": "Gia tốc của xe (mô hình)"
+      },
+      "symbol": "a",
+      "unit": "m/s²",
+      "variable": "acceleration",
+      "reduce": "final",
+      "theory": "acceleration"
+    }
+  ],
+  "instruments": [
+    {
+      "result": "blockedA",
+      "quantity": "Time Δt_A gate A was blocked",
+      "name": "Digital timer",
+      "resolution": "timerResolution",
+      "excludes": "the timer's own accuracy, the beam's width, the card's length as measured, and a track not quite level or air drag, which change the time itself",
+      "vi": {
+        "quantity": "Thời gian Δt_A chùm tia cổng A bị chắn",
+        "name": "Đồng hồ đo thời gian hiện số",
+        "excludes": "độ chính xác riêng của đồng hồ, bề rộng chùm tia, sai số khi đo chiều dài tấm chắn, và máng không thật nằm ngang hay lực cản của không khí, những yếu tố làm thay đổi chính thời gian đo"
+      }
+    },
+    {
+      "result": "blockedB",
+      "quantity": "Time Δt_B gate B was blocked",
+      "name": "Digital timer",
+      "resolution": "timerResolution",
+      "excludes": "the timer's own accuracy, the beam's width, the card's length as measured, and a track not quite level or air drag, which change the time itself",
+      "vi": {
+        "quantity": "Thời gian Δt_B chùm tia cổng B bị chắn",
+        "name": "Đồng hồ đo thời gian hiện số",
+        "excludes": "độ chính xác riêng của đồng hồ, bề rộng chùm tia, sai số khi đo chiều dài tấm chắn, và máng không thật nằm ngang hay lực cản của không khí, những yếu tố làm thay đổi chính thời gian đo"
+      }
+    },
+    {
+      "result": "timeAB",
+      "quantity": "Time t_AB from gate A to gate B",
+      "name": "Digital timer",
+      "resolution": "timerResolution",
+      "excludes": "the timer's own accuracy, where each gate stands as measured, and the pulley's friction and inertia, which change the time itself",
+      "vi": {
+        "quantity": "Thời gian t_AB từ cổng A đến cổng B",
+        "name": "Đồng hồ đo thời gian hiện số",
+        "excludes": "độ chính xác riêng của đồng hồ, sai số khi đo vị trí mỗi cổng, và ma sát cùng quán tính của ròng rọc, những yếu tố làm thay đổi chính thời gian đo"
+      }
+    }
+  ],
+  "graphs": [
+    {
+      "id": "distance-time",
+      "title": "Distance along the track against time",
+      "vi": {
+        "title": "Quãng đường trên máng theo thời gian"
+      },
+      "x": "labTime",
+      "y": ["distance"],
+      "yLabel": "s"
+    },
+    {
+      "id": "speed-time",
+      "title": "Speed against time",
+      "vi": {
+        "title": "Tốc độ theo thời gian"
+      },
+      "x": "labTime",
+      "y": ["speed"],
+      "yLabel": "v"
+    }
+  ],
+  "monitor": "speed-time",
+  "compare": [
+    {
+      "graph": "speed-time"
+    },
+    {
+      "graph": "distance-time"
+    }
+  ],
+  "analyses": [
+    {
+      "id": "acceleration-force",
+      "title": "a against F/(M + m) (Newton's second law)",
+      "note": "Each run with a hanging mass is one point: the acceleration worked out from the gates against the pull m·g over the masses it moves, M + m. Newton's second law, F = (M + m)·a, puts the points on a straight line through the origin of slope 1. Runs with the same glider mass are fitted together; change the hanging mass between them.",
+      "vi": {
+        "title": "a theo F/(M + m) (định luật II Newton)",
+        "note": "Mỗi lần chạy có treo quả nặng là một điểm: gia tốc tính từ hai cổng theo lực kéo m·g chia cho khối lượng nó kéo, M + m. Định luật II Newton, F = (M + m)·a, đặt các điểm trên một đường thẳng đi qua gốc tọa độ có hệ số góc 1. Các lần chạy cùng khối lượng xe được khớp chung; giữa các lần chạy, đổi khối lượng quả nặng."
+      },
+      "x": "forcePerMass",
+      "y": "measuredAcceleration",
+      "columns": ["hangingMass", "gliderMass", "force", "forcePerMass", "measuredAcceleration"],
+      "slope": {
+        "label": "Slope of a against F/(M + m)",
+        "vi": {
+          "label": "Hệ số góc của a theo F/(M + m)"
+        },
+        "symbol": "k",
+        "unit": "",
+        "theory": "unitSlope"
+      },
+      "group": ["gliderMass"]
+    }
+  ],
+  "note": "The digital timer counts how long the glider's card, L = 0.1 m, blocks each gate's beam, Δt_A and Δt_B, and the time t_AB from the card first blocking gate A to its first blocking gate B. The speed at a gate is v = L/Δt (the card's average speed through the beam), the average speed between the gates AB/t_AB, and the acceleration from the gates a = (v_B² − v_A²)/(2·AB). A simplified teaching model: the track is level, the air cushion has no friction and the air no drag; the string is light, does not stretch and stays taut; the pulley is ideal (its inertia is left out, μ = 0). The two bodies move with one acceleration, so Newton's second law for the pair is m·g = (M + m)·a, a = m·g/(M + m); the string pulls the glider with M·a, less than m·g. The launcher always gives the glider the same push, u = 0.3 m/s: with nothing hanging, a = 0 and the glider moves in a straight line at that constant speed; with a mass hanging it speeds up from it, and (v_B² − v_A²)/(2·AB) still gives a. Because L/Δt is the speed at the middle of the card's passage, the acceleration from the gates comes out a little over a (under 1 % here). The timer reads the simulated times to its resolution d_t (the nearest multiple of d_t, with the uncertainty d_t/√12 from the resolution alone); no random error is added. In a real lab the track is never quite level, the air still drags a little, the pulley has inertia and friction and the string has mass, so the measured acceleration is a little below the theory.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the air track instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn thí nghiệm đệm khí trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "newtons-second-law-instructions"
+      }
+    },
+    {
+      "id": "mass",
+      "instruction": "Set the hanging mass with its dial: none for uniform motion, 5–20 g for Newton's second law.",
+      "vi": {
+        "instruction": "Đặt quả nặng treo bằng núm xoay của nó: không treo cho chuyển động thẳng đều, 5–20 g cho định luật II Newton."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "hangingMass"
+      }
+    },
+    {
+      "id": "gate",
+      "instruction": "Set how far along the track light gate B stands.",
+      "vi": {
+        "instruction": "Đặt vị trí của cổng quang điện B trên máng."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "gateB"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: watch the glider pass the two gates and the timer's lamps.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: quan sát xe đi qua hai cổng và các đèn của đồng hồ."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Read v_A, v_B and the acceleration on the results monitor: equal speeds when it coasts, and a against F/(M + m) when pulled.",
+      "vi": {
+        "instruction": "Đọc v_A, v_B và gia tốc trên màn hình kết quả: hai tốc độ bằng nhau khi xe tự chạy, và so sánh a với F/(M + m) khi xe được kéo."
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, change the hanging or glider mass and run again to add a point to the analysis.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, đổi khối lượng quả nặng hoặc khối lượng xe rồi chạy lại để thêm một điểm vào đồ thị phân tích."
+      },
+      "done": {
+        "kind": "reset"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "acceleration-tension",
+      "question": "A {gliderMass} kg glider on a level air track is pulled by a {hangingMass} kg mass hanging over a light pulley. Find the acceleration and the string’s pull on the glider (g = {gravity} m/s²).",
+      "vi": {
+        "question": "Một xe trượt {gliderMass} kg trên đệm không khí nằm ngang được kéo bởi quả nặng {hangingMass} kg treo qua ròng rọc nhẹ. Tìm gia tốc và lực căng dây kéo xe (g = {gravity} m/s²)."
+      },
+      "set": { "hangingMass": 0.02, "gliderMass": 0.3 },
+      "find": [{ "theory": "acceleration" }, { "theory": "tension" }],
+      "steps": [
+        {
+          "say": "The two bodies move together. The only outside force driving them is the hanging weight m·g, and it moves the whole mass M + m.",
+          "vi": {
+            "say": "Hai vật chuyển động cùng nhau. Ngoại lực duy nhất làm chúng chuyển động là trọng lượng m·g của quả nặng, và nó làm cả khối lượng M + m chuyển động."
+          },
+          "write": "m·g = (M + m)·a"
+        },
+        {
+          "say": "So the acceleration is the hanging weight over the whole mass.",
+          "vi": { "say": "Vậy gia tốc bằng trọng lượng quả nặng chia cho tổng khối lượng." },
+          "write": "a = {hangingMass}·{gravity}/({gliderMass} + {hangingMass}) ≈ {@acceleration} m/s²",
+          "check": {
+            "expr": "hangingMass*gravity/(gliderMass+hangingMass)",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "say": "The string gives the glider alone its acceleration: T = M·a, less than m·g.",
+          "vi": { "say": "Lực căng dây truyền cho riêng xe gia tốc đó: T = M·a, nhỏ hơn m·g." },
+          "write": "T = M·a = {gliderMass}·{@acceleration} ≈ {@tension} N",
+          "check": { "expr": "gliderMass*@acceleration", "equals": "tension" }
+        }
+      ]
+    },
+    {
+      "id": "acceleration-from-gates",
+      "question": "The glider ({gliderMass} kg, pulled by {hangingMass} kg) carries a {cardLength} m card. Gate A at {gateA} m reads Δt_A = {@blockedA|4} s, gate B at {gateB} m reads Δt_B = {@blockedB|4} s. Find the acceleration from the gates and compare it with the theory.",
+      "vi": {
+        "question": "Xe trượt ({gliderMass} kg, kéo bởi {hangingMass} kg) gắn tấm chắn dài {cardLength} m. Cổng A ở vị trí {gateA} m đo Δt_A = {@blockedA|4} s, cổng B ở {gateB} m đo Δt_B = {@blockedB|4} s. Tìm gia tốc từ số đo của hai cổng và so sánh với lí thuyết."
+      },
+      "set": { "hangingMass": 0.015, "gliderMass": 0.4, "gateB": 0.7 },
+      "find": [
+        { "theory": "measuredAcceleration", "figures": 4 },
+        { "theory": "acceleration", "symbol": "m·g/(M + m)", "figures": 4 }
+      ],
+      "steps": [
+        {
+          "say": "At each gate the speed is the card’s length over the time it blocks the beam.",
+          "vi": {
+            "say": "Tại mỗi cổng, tốc độ bằng chiều dài tấm chắn chia cho thời gian che chùm tia."
+          },
+          "write": "v_A = L/Δt_A = {cardLength}/{@blockedA|4} ≈ {@speedA|4} m/s",
+          "check": { "expr": "cardLength/@blockedA", "equals": "speedA" }
+        },
+        {
+          "say": "The same at gate B.",
+          "vi": { "say": "Tương tự tại cổng B." },
+          "write": "v_B = L/Δt_B = {cardLength}/{@blockedB|4} ≈ {@speedB|4} m/s",
+          "check": { "expr": "cardLength/@blockedB", "equals": "speedB" }
+        },
+        {
+          "say": "With constant acceleration, v_B² − v_A² = 2·a·AB.",
+          "vi": { "say": "Chuyển động biến đổi đều: v_B² − v_A² = 2·a·AB." },
+          "write": "a = (v_B² − v_A²)/(2·{=gateB-gateA}) ≈ {@measuredAcceleration|4} m/s²",
+          "check": {
+            "expr": "(@speedB^2-@speedA^2)/(2*(gateB-gateA))",
+            "equals": "measuredAcceleration"
+          }
+        },
+        {
+          "say": "Newton’s second law gives m·g/(M + m). The gates’ value is a little higher, because L/Δt is the speed at the middle of the card’s passage.",
+          "vi": {
+            "say": "Định luật II Newton cho a = m·g/(M + m). Giá trị đo từ hai cổng lớn hơn một chút, vì L/Δt là tốc độ ở giữa lúc tấm chắn đi qua."
+          },
+          "write": "a = m·g/(M + m) ≈ {@acceleration|4} m/s²",
+          "check": {
+            "expr": "hangingMass*gravity/(gliderMass+hangingMass)",
+            "equals": "acceleration"
+          }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "With nothing pulling it, a glider on an air track keeps a constant speed; pulled by a hanging weight, it speeds up with a = m·g/(M + m) — Newton’s second law.",
+    "vi": {
+      "summary": "Khi không có gì kéo, xe trượt trên đệm không khí giữ tốc độ không đổi; khi bị một vật treo kéo, nó nhanh dần với a = m·g/(M + m) — định luật II Niu-tơn."
+    },
+    "parts": [
+      {
+        "id": "track",
+        "name": "Air track",
+        "role": "Level, with an air cushion: no friction slows the glider.",
+        "vi": {
+          "name": "Đệm không khí",
+          "role": "Nằm ngang, có lớp đệm khí: không có ma sát làm xe chậm lại."
+        },
+        "anchor": {
+          "at": [0.3, -0.045, 0.04]
+        }
+      },
+      {
+        "id": "launcher",
+        "name": "Launcher",
+        "role": "Gives the glider the same push every time: u = 0.3 m/s.",
+        "vi": {
+          "name": "Bộ phóng",
+          "role": "Lần nào cũng đẩy xe với cùng một tốc độ: u = 0.3 m/s."
+        },
+        "anchor": {
+          "at": [-0.68, -0.02, 0]
+        }
+      },
+      {
+        "id": "glider",
+        "name": "Glider, mass M",
+        "role": "Carries a 0.1 m card that the gates time; slotted masses set M.",
+        "vi": {
+          "name": "Xe trượt, khối lượng M",
+          "role": "Mang tấm chắn dài 0.1 m để các cổng quang đo thời gian; các quả nặng có rãnh quyết định M."
+        },
+        "anchor": {
+          "part": "glider"
+        }
+      },
+      {
+        "id": "gate-a",
+        "name": "Light gate A",
+        "role": "Times the card: v_A = L/Δt_A.",
+        "vi": {
+          "name": "Cổng quang A",
+          "role": "Đo thời gian tấm chắn đi qua: v_A = L/Δt_A."
+        },
+        "anchor": {
+          "part": "gate-a"
+        }
+      },
+      {
+        "id": "gate-b",
+        "name": "Light gate B",
+        "role": "At x_B, set at the desk: v_B = L/Δt_B, and the time t_AB from A.",
+        "vi": {
+          "name": "Cổng quang B",
+          "role": "Ở vị trí x_B đặt tại bàn điều khiển: v_B = L/Δt_B, và thời gian t_AB từ A tới B."
+        },
+        "anchor": {
+          "part": "gate-b"
+        }
+      },
+      {
+        "id": "pulley",
+        "name": "Pulley and string",
+        "role": "A light string from the glider runs over the pulley to the hanger.",
+        "vi": {
+          "name": "Ròng rọc và dây",
+          "role": "Sợi dây nhẹ nối từ xe vắt qua ròng rọc xuống móc treo."
+        },
+        "anchor": {
+          "part": "pulley"
+        }
+      },
+      {
+        "id": "hanger",
+        "name": "Hanging mass m",
+        "role": "Its weight m·g pulls the glider and itself along.",
+        "vi": {
+          "name": "Vật treo m",
+          "role": "Trọng lượng m·g của nó kéo cả xe và chính nó chuyển động."
+        },
+        "anchor": {
+          "part": "hanger"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "With no mass hanging, nothing pulls the glider along and the air cushion leaves no friction: after the launcher’s push it coasts in a straight line at constant speed. Both gates give the same speed.",
+        "vi": {
+          "text": "Khi không treo vật, không có gì kéo xe và đệm khí không có ma sát: sau cú đẩy của bộ phóng, xe chuyển động thẳng đều. Hai cổng cho cùng một tốc độ."
+        },
+        "parts": ["track", "launcher", "glider", "gate-a", "gate-b"]
+      },
+      {
+        "text": "Each gate times how long the 0.1 m card blocks its beam: the speed there is v = L/Δt.",
+        "vi": {
+          "text": "Mỗi cổng đo thời gian tấm chắn dài 0.1 m che chùm sáng: tốc độ tại đó là v = L/Δt."
+        },
+        "parts": ["gate-a", "gate-b", "glider"]
+      },
+      {
+        "text": "Hang a mass m: its weight m·g pulls through the string, and the glider and the mass speed up together with one acceleration.",
+        "vi": {
+          "text": "Treo một vật m: trọng lượng m·g kéo qua sợi dây, và xe cùng vật treo nhanh dần với cùng một gia tốc."
+        },
+        "parts": ["hanger", "pulley", "glider"]
+      },
+      {
+        "text": "Newton’s second law for the pair: m·g = (M + m)·a, so a = m·g/(M + m). The string pulls the glider with M·a, a little less than m·g.",
+        "vi": {
+          "text": "Định luật II Niu-tơn cho cả hệ: m·g = (M + m)·a, nên a = m·g/(M + m). Dây kéo xe với lực M·a, nhỏ hơn m·g một chút."
+        },
+        "parts": ["hanger", "glider"]
+      },
+      {
+        "text": "From the gates: a = (v_B² − v_A²)/(2·AB). A heavier hanging mass gives a larger a; a heavier glider a smaller one.",
+        "vi": {
+          "text": "Từ các cổng: a = (v_B² − v_A²)/(2·AB). Vật treo nặng hơn thì a lớn hơn; xe nặng hơn thì a nhỏ hơn."
+        },
+        "parts": ["gate-a", "gate-b"]
+      },
+      {
+        "text": "The results compare the speeds, the times and a with theory; the timer reads in steps of its resolution. Over several runs, a against F/(M + m) is a straight line of slope 1.",
+        "vi": {
+          "text": "Phần kết quả so sánh các tốc độ, thời gian và a với lý thuyết; đồng hồ đọc theo từng bước bằng độ phân giải. Qua nhiều lần chạy, a theo F/(M + m) là đường thẳng có hệ số góc 1."
+        },
+        "parts": ["gate-b"]
+      },
+      {
+        "text": "The model is ideal: a level track without friction or drag, a light string and a pulley without inertia. On a real track the measured acceleration comes out a little lower.",
+        "vi": {
+          "text": "Mô hình là lý tưởng: đệm nằm ngang không ma sát hay lực cản, dây nhẹ và ròng rọc không có quán tính. Trên đệm thật, gia tốc đo được thấp hơn một chút."
+        },
+        "parts": ["track", "pulley"]
+      }
+    ]
+  }
+}

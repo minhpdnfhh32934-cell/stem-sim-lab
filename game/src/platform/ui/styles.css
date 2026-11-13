@@ -1,0 +1,5088 @@
+/*
+ * UI tokens (P3.2): the one place for the interface's colours, type, spacing, radii, shadows and
+ * focus. The 3D scene has its own materials (render/), never these. A colour with alpha variants
+ * is also given as channels (`--accent-rgb`), used as rgb(var(--accent-rgb) / 28%).
+ */
+:root {
+  /* Colours: surfaces from dark to raised, text from strong to dim, one cool accent; the warm and
+     status colours only where they mean something. */
+  --bg: #0d1116;
+  --surface-top-rgb: 13 24 40;
+  --surface-bottom-rgb: 7 12 22;
+  --surface-raised: rgb(18 30 46 / 92%);
+  --surface-hover: rgb(24 40 60 / 95%);
+  --surface-pressed: rgb(12 22 36 / 95%);
+  --panel: rgb(16 22 30 / 88%); /* HUD plates over the scene */
+  --ink-strong: #f2f8fc;
+  --ink: #e8eef4;
+  --ink-dim: #9fb0c0;
+  --accent-rgb: 79 179 217;
+  --accent: rgb(var(--accent-rgb));
+  --accent-bright: #b3e6f7;
+  --line: rgb(var(--accent-rgb) / 22%);
+  --line-frame: rgb(var(--accent-rgb) / 28%);
+  --line-strong: rgb(var(--accent-rgb) / 55%);
+  --primary-top: #2c86ab;
+  --primary-bottom: #1e6382;
+  --primary-border: #7cc9e6;
+  --caution-rgb: 232 176 110;
+  --caution-ink: #ecd2b4;
+  --warn: #e0a63a;
+  --error: #ff8a80;
+  --success: #4fbf7a;
+
+  /* Type: the system face (Vietnamese diacritics included), a monospace for the developer panel. */
+  --font-sans: system-ui, 'Segoe UI', sans-serif;
+  --font-mono: ui-monospace, Consolas, monospace;
+  --text-xs: 12px; /* short labels, badges */
+  --text-sm: 13px; /* help and secondary text */
+  --text-md: 14px; /* body in panels */
+  --text-base: 15px; /* buttons, prominent body */
+  --text-lg: 16px; /* item names */
+  --text-xl: 22px; /* panel and page titles */
+  --leading: 1.45;
+  --label-tracking: 0.12em; /* letter-spacing of short capitalised labels only */
+
+  /* Spacing: one scale for paddings and gaps. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+
+  /* Shapes and depth. */
+  --radius-frame: 2px; /* the menu's instrument frames */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 10px;
+  --shadow-dialog: 0 24px 64px rgb(0 0 0 / 55%), 0 0 0 1px rgb(0 0 0 / 30%);
+  --glow-frame: 0 0 48px rgb(var(--accent-rgb) / 10%);
+  --control-height: 46px;
+
+  /* Hotbar and inventory slots: 40 px at 1280×720, 64 px at most; nine always fit the width. */
+  --slot: min(clamp(40px, 4.5vmin, 64px), calc((100vw - 92px) / 9));
+  --slot-gap: 6px;
+  --hotbar-top: calc(var(--slot) + 34px); /* 16 px margin, 2 × 8 px padding, 2 × 1 px border */
+
+  /* Keyboard focus: an outline and a halo, visible on any surface. */
+  --focus-ring: 2px solid var(--accent-bright);
+  --focus-offset: 3px;
+  --focus-halo: 0 0 0 5px rgb(var(--accent-rgb) / 25%);
+  --duration-fast: 0.15s;
+
+  color-scheme: dark;
+  font-family: var(--font-sans);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.viewport {
+  position: absolute;
+  inset: 0;
+}
+
+.viewport canvas {
+  display: block;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* HUD */
+.hud {
+  --objective-width: min(clamp(280px, 21vw, 340px), calc(100% - 32px));
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.hud.framed .hud-crosshair {
+  display: none;
+}
+
+.hud-crosshair {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 85%);
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 50%);
+}
+
+.hud-prompt {
+  position: absolute;
+  left: 50%;
+  top: calc(50% + 28px);
+  transform: translateX(-50%);
+  text-align: center;
+  font-size: 15px;
+  text-shadow: 0 1px 2px #000;
+}
+
+.hud-prompt kbd,
+.hotbar-label kbd {
+  display: inline-block;
+  min-width: 1.6em;
+  padding: 1px 6px;
+  border: 1px solid var(--ink-dim);
+  border-radius: 4px;
+  background: var(--panel);
+  font: inherit;
+}
+
+.hud-prompt .hud-second-key {
+  margin-left: 14px;
+}
+
+.hud-prompt small {
+  display: block;
+  color: var(--ink-dim);
+}
+
+.hud-hint {
+  position: absolute;
+  bottom: calc(var(--hotbar-top) + 32px); /* above the hotbar and the selected item's name */
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: var(--panel);
+  color: var(--ink-dim);
+  font-size: 13px;
+  /* One line where it fits; wraps in a narrow window instead of running off both edges. */
+  width: max-content;
+  max-width: calc(100% - 32px);
+  text-align: center;
+}
+
+/*
+ * Notices (Hud.ts): a slim status strip at the top centre, on the objective plate's quiet surface
+ * and clear of its column. One line per notice, the newest on top and the older ones dimmer (the
+ * DOM keeps them oldest first). Each line starts with its status marker — ✓ done, i information,
+ * ↳ the answer to your own action, ! warning, × error — the only colour in it. A line enters and
+ * leaves with a short fade; nothing glows or pulses.
+ */
+.hud-toasts {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column-reverse;
+  width: max-content;
+  max-width: max(240px, min(600px, calc(100% - 2 * var(--objective-width) - 64px)));
+  border: 1px solid rgb(255 255 255 / 7%);
+  border-radius: var(--radius-md);
+  background: rgb(10 15 21 / 82%);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 22%);
+  font-size: var(--text-sm);
+  line-height: 1.4;
+  transition: opacity var(--duration-fast);
+}
+
+.hud-toasts:empty {
+  display: none;
+}
+
+/* Only lines that are going: the strip fades with them. */
+.hud-toasts:not(:has(.hud-toast)) {
+  opacity: 0;
+}
+
+.hud-toasts > * {
+  display: grid;
+  grid-template-columns: 16px 1fr;
+  column-gap: 10px;
+  padding: 6px 14px 6px 10px;
+  color: var(--ink-strong);
+  animation: notice-in 0.18s ease-out;
+}
+
+/* A hairline under each newer line (column-reverse: the next sibling is drawn above). */
+.hud-toasts > * + * {
+  border-bottom: 1px solid rgb(255 255 255 / 6%);
+}
+
+.hud-toast:has(~ .hud-toast),
+.hud-toasts > .hud-toast-leaving {
+  color: var(--ink-dim);
+}
+
+.hud-toasts > .hud-toast-leaving {
+  animation: notice-out 0.14s ease-in forwards;
+}
+
+/* The marker: a small square frame in the status colour; silent for screen readers (the text says it). */
+.hud-toasts > *::before {
+  content: 'i' / '';
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  margin-top: 1px;
+  border: 1px solid currentcolor;
+  border-radius: 3px;
+  color: var(--accent);
+  font: 700 11px / 1 var(--font-sans);
+}
+
+.hud-toasts > [data-marker='success']::before {
+  content: '✓' / '';
+  color: var(--success);
+}
+
+.hud-toasts > [data-marker='feedback']::before {
+  content: '↳' / '';
+  border-color: transparent;
+  color: var(--ink-dim);
+  font-size: 13px;
+}
+
+.hud-toasts > [data-marker='warn']::before {
+  content: '!' / '';
+  color: var(--warn);
+}
+
+.hud-toasts > [data-marker='error']::before {
+  content: '×' / '';
+  color: var(--error);
+  font-size: 13px;
+}
+
+@keyframes notice-in {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes notice-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hud-toasts,
+  .hud-toasts > *,
+  .hud-toasts > .hud-toast-leaving {
+    animation: none;
+    transition: none;
+  }
+}
+
+.hud-prompt .hud-blocked {
+  color: #f0c060;
+}
+
+/*
+ * The objective plate, top left: a procedure as a protocol (its stages as a vertical list, each
+ * with a marker — check, ring and dot, empty ring, padlock — and its state named for screen
+ * readers), or an experiment's guided steps as a segmented rail. Quiet surface, one accent for
+ * "now", green only for "done"; nothing pulses.
+ */
+.hud-objective {
+  --marker-ink: #0b1219;
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  width: var(--objective-width);
+  padding: 14px 16px 12px;
+  border: 1px solid rgb(255 255 255 / 7%);
+  border-radius: var(--radius-md);
+  background: rgb(10 15 21 / 82%);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 22%);
+  font-size: var(--text-md);
+  line-height: 1.4;
+}
+
+/* Open results cover its corner: it steps aside until they close. */
+.hud:has(> .results-panel:not(.hidden)) .hud-objective {
+  display: none;
+}
+
+.protocol-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgb(255 255 255 / 8%);
+}
+
+.protocol-name {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.protocol-count {
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-dim);
+}
+
+.protocol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.protocol-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 16px 1fr auto;
+  column-gap: 10px;
+  align-items: center;
+  padding: 4px 0;
+  color: rgb(232 238 244 / 55%);
+}
+
+/* The line joining one marker to the next: solid behind what is done. */
+.protocol-step:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 7.25px;
+  top: 21px;
+  bottom: -3px;
+  width: 1.5px;
+  background: rgb(255 255 255 / 12%);
+}
+
+.protocol-step[data-state='done']::before {
+  background: rgb(79 191 122 / 55%);
+}
+
+.protocol-marker {
+  display: block;
+  color: rgb(255 255 255 / 30%);
+}
+
+.protocol-step[data-state='done'] {
+  color: var(--ink-dim);
+}
+
+.protocol-step[data-state='done'] .protocol-marker {
+  color: var(--success);
+}
+
+.protocol-step[data-state='current'] {
+  color: var(--ink-strong);
+  font-weight: 600;
+}
+
+.protocol-step[data-state='current'] .protocol-marker {
+  color: var(--accent-bright);
+}
+
+.protocol-step[data-state='locked'] .protocol-marker {
+  color: var(--ink-dim);
+}
+
+.protocol-index {
+  margin-right: 8px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 400;
+  opacity: 0.6;
+}
+
+.protocol-progress {
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  font-weight: 400;
+  color: var(--ink-dim);
+}
+
+/* What to do now, under the row it belongs to. */
+.protocol-detail {
+  grid-column: 2 / -1;
+  margin: 4px 0 6px;
+  font-weight: 400;
+  animation: protocol-in 0.2s ease-out;
+}
+
+.hud-objective-text {
+  margin: 0;
+  color: var(--ink);
+}
+
+.hud-objective-text.caution {
+  color: var(--caution-ink);
+}
+
+/* A stage just done settles in once. */
+.protocol-step.settled .protocol-marker {
+  animation: protocol-settle 0.24s ease-out;
+}
+
+@keyframes protocol-in {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes protocol-settle {
+  from {
+    transform: scale(0.7);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .protocol-detail,
+  .protocol-step.settled .protocol-marker {
+    animation: none;
+  }
+}
+
+/* An experiment's guided steps: one segment each. */
+.protocol-rail {
+  display: flex;
+  gap: 3px;
+  margin: 2px 0 8px;
+}
+
+.protocol-rail span {
+  flex: 1;
+  height: 3px;
+  border-radius: 2px;
+  background: rgb(255 255 255 / 14%);
+}
+
+.protocol-rail span[data-state='done'] {
+  background: var(--success);
+}
+
+.protocol-rail span[data-state='current'] {
+  background: var(--accent-bright);
+}
+
+.protocol-meta {
+  display: block;
+  margin-bottom: 4px;
+  font-size: var(--text-xs);
+  color: var(--ink-dim);
+}
+
+.hud-timer {
+  height: 3px;
+  margin-top: 8px;
+  border-radius: 2px;
+  background: rgb(255 255 255 / 12%);
+  overflow: hidden;
+}
+
+.hud-timer-fill {
+  height: 100%;
+  width: 0;
+  background: var(--accent-bright);
+}
+
+/* A timed step's progress in the middle above the hotbar (and the hint over it): its
+   instruction, and a wide bar filling as the step is done (Hud.showProgress). */
+.hud-progress {
+  position: absolute;
+  bottom: calc(var(--hotbar-top) + 76px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(360px, calc(100% - 32px));
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 14px 12px;
+  border: 1px solid var(--line-frame);
+  border-radius: var(--radius-lg);
+  background: var(--panel);
+  text-align: center;
+}
+
+.hud-progress-label {
+  font-size: var(--text-md);
+  color: var(--ink-strong);
+}
+
+.hud-progress-track {
+  height: 8px;
+  border-radius: 4px;
+  background: rgb(255 255 255 / 14%);
+  overflow: hidden;
+}
+
+.hud-progress-fill {
+  height: 100%;
+  width: 0;
+  border-radius: 4px;
+  background: var(--accent-bright);
+}
+
+/* Read by screen readers, not shown. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/*
+ * Experiment results, read at the results monitor: the run history on the left, the results on
+ * the right. Like the rest of the HUD the panel lets the mouse through to the view, except on its
+ * run list and controls; each column scrolls on its own.
+ */
+.results-panel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  width: min(1160px, calc(100% - 32px));
+  max-height: calc(100% - 120px);
+  border-radius: 10px;
+  background: rgb(10 15 21 / 94%);
+  border: 1px solid #2a3846;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.results-main {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: auto;
+  padding: 14px 18px;
+}
+
+.results-runs {
+  flex: 0 0 360px;
+  overflow: auto;
+  padding: 14px 12px;
+  border-right: 1px solid #2a3846;
+  font-size: 13px;
+  pointer-events: auto;
+}
+
+@media (width <= 760px) {
+  .results-panel {
+    flex-direction: column;
+  }
+
+  .results-runs {
+    flex: 0 1 auto;
+    max-height: 40%;
+    border-right: 0;
+    border-bottom: 1px solid #2a3846;
+  }
+}
+
+.results-panel :focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.results-panel h2 {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+
+.results-panel h3 {
+  margin: 0 0 4px;
+  font-size: 15px;
+}
+
+.results-runs-hint,
+.results-runs-note {
+  margin: 0 0 8px;
+  color: var(--ink-dim);
+  font-size: 12px;
+}
+
+.results-runs-note {
+  margin: 8px 0 0;
+}
+
+.results-run-list {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.results-run {
+  display: grid;
+  grid-template-areas:
+    'box settings badges'
+    '. outcome csv';
+  grid-template-columns: 16px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 3px 8px;
+  padding: 6px 8px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: rgb(255 255 255 / 3%);
+}
+
+.results-run[aria-current='true'] {
+  border-color: #2f4a5e;
+}
+
+.results-run[data-picked] {
+  border-color: var(--accent);
+  background: rgb(var(--accent-rgb) / 14%);
+}
+
+.results-run-box {
+  grid-area: box;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+/* Visibly unavailable: an incomplete run, or a fifth while four are compared. */
+.results-run-box:disabled {
+  cursor: not-allowed;
+  opacity: 0.35;
+}
+
+.results-run-settings,
+.results-run-outcome {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.results-run-settings {
+  grid-area: settings;
+}
+
+.results-run-outcome {
+  grid-area: outcome;
+  color: #7bd88f;
+  font-size: 12px;
+}
+
+.results-run[data-status='running'] .results-run-outcome {
+  color: var(--accent);
+}
+
+.results-run[data-status='stopped'] .results-run-outcome,
+.results-run[data-status='failed'] .results-run-outcome {
+  color: var(--ink-dim);
+}
+
+.results-run-badges {
+  display: flex;
+  grid-area: badges;
+  gap: 4px;
+}
+
+.results-badge {
+  padding: 1px 7px;
+  border-radius: 8px;
+  background: #22313f;
+  color: var(--ink-dim);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.results-badge.warn {
+  background: #3f3322;
+  color: #f0c27a;
+}
+
+.results-panel h2 .results-badge {
+  vertical-align: middle;
+}
+
+.results-csv {
+  grid-area: csv;
+  padding: 2px 9px;
+  border: 1px solid #3a4b5c;
+  border-radius: 5px;
+  background: #16212c;
+  color: var(--ink);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.results-csv:hover {
+  background: #1d2c3a;
+}
+
+.results-swatch {
+  display: inline-block;
+  width: 28px;
+  height: 10px;
+  vertical-align: middle;
+}
+
+.results-swatch line {
+  stroke-width: 2.5;
+}
+
+.results-recorded {
+  margin: 0 0 8px;
+  color: #f0c27a;
+  font-size: 13px;
+}
+
+.results-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+}
+
+.results-legend li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.results-legend-mark {
+  color: var(--ink-dim);
+}
+
+.results-compare td {
+  vertical-align: top;
+}
+
+.results-compare .measured {
+  display: block;
+  color: #7bd88f;
+}
+
+.results-compare .reading {
+  display: block;
+}
+
+.results-compare .theory,
+.results-compare .uncertainty {
+  display: block;
+  color: var(--ink-dim);
+  font-size: 11px;
+}
+
+.results-compare th[data-run] {
+  white-space: nowrap;
+}
+
+.results-params {
+  display: grid;
+  grid-template-columns: repeat(4, auto 1fr);
+  gap: 2px 10px;
+  margin: 0 0 10px;
+}
+
+.results-params dt {
+  color: var(--ink-dim);
+}
+
+.results-params dd {
+  margin: 0;
+}
+
+.results-table {
+  border-collapse: collapse;
+  margin-bottom: 10px;
+}
+
+.results-table th,
+.results-table td {
+  padding: 3px 14px 3px 0;
+  text-align: right;
+}
+
+.results-table tr > th:first-child {
+  text-align: left;
+  color: var(--ink-dim);
+  font-weight: 500;
+}
+
+.results-table td.measured {
+  color: #7bd88f;
+}
+
+/* The data analysis: its controls take the mouse; the run table scrolls sideways when narrow. */
+.results-main select,
+.results-main input,
+.results-main button {
+  pointer-events: auto;
+}
+
+.results-analysis-button {
+  display: block;
+  margin: 10px 0 0;
+}
+
+.analysis-choose select {
+  font: inherit;
+  color: var(--ink);
+  background: #16212c;
+  border: 1px solid #3a4b5c;
+  border-radius: 5px;
+}
+
+.analysis-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  pointer-events: auto;
+}
+
+.analysis-table th,
+.analysis-table td {
+  white-space: nowrap;
+}
+
+.results-graphs svg[data-analysis] {
+  max-width: 560px;
+}
+
+.analysis-table tr.excluded td,
+.analysis-table tr.excluded th {
+  opacity: 0.5;
+}
+
+.analysis-why {
+  display: block;
+  font-weight: 400;
+  color: #f0c27a;
+}
+
+.analysis-message {
+  color: #f0c27a;
+}
+
+.analysis-csv {
+  margin-top: 6px;
+}
+
+.results-graphs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 10px;
+}
+
+.results-graphs svg {
+  width: 100%;
+  height: auto;
+  background: #0d141b;
+  border-radius: 6px;
+}
+
+.results-graphs .grid {
+  stroke: #233140;
+  stroke-width: 1;
+}
+
+.results-graphs .axis {
+  stroke: #6f8396;
+  stroke-width: 1.2;
+}
+
+.results-graphs .series {
+  fill: none;
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.results-graphs .mark {
+  stroke-width: 1.2;
+  stroke-dasharray: 4 3;
+}
+
+.results-graphs text {
+  fill: var(--ink-dim);
+  font-size: 10px;
+}
+
+.results-graphs .graph-title {
+  fill: var(--ink);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.results-graphs .tick.x {
+  text-anchor: middle;
+}
+
+.results-graphs .tick.y {
+  text-anchor: end;
+}
+
+.results-graphs .axis-label.x {
+  text-anchor: end;
+}
+
+.results-graphs .axis-label.y {
+  writing-mode: vertical-rl;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: rotate(180deg);
+  text-anchor: middle;
+}
+
+.results-note {
+  margin: 8px 0 0;
+  color: var(--ink-dim);
+  font-size: 12px;
+}
+
+/* Worn protection: goggles frame the view, a face shield tints it slightly. */
+.hud-visor {
+  position: absolute;
+  inset: 0;
+}
+
+.hud-visor.face-shield {
+  background: linear-gradient(rgb(190 225 255 / 5%), rgb(190 225 255 / 12%));
+}
+
+.hud-visor.goggles::after {
+  content: '';
+  position: absolute;
+  inset: 3% 2%;
+  border-radius: 38% / 30%;
+  box-shadow:
+    0 0 0 100vmax rgb(8 12 16 / 40%),
+    inset 0 0 36px rgb(150 210 255 / 22%);
+}
+
+/*
+ * Hotbar and inventory (InventoryView.ts). The hotbar is small, at the bottom centre: it covers
+ * the inner edge of the first-person hands, never the held object (at the crosshair), and takes no
+ * mouse. The panel is a dialog like the pause menu's, without the dim: the game goes on. The open
+ * results cover the hotbar's place, so it steps aside; the open panel has its own hotbar row and
+ * the mouse, so the results, the hint and the hotbar wait for it to close.
+ */
+.inventory {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+#app:has(.results-panel:not(.hidden)) :is(.hotbar, .hotbar-label),
+#app:has(.inventory-panel:not(.hidden)) :is(.results-panel, .hud-hint, .hotbar, .hotbar-label) {
+  display: none;
+}
+
+.hotbar {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: var(--slot-gap);
+  padding: var(--space-2);
+  border: 1px solid var(--line-frame);
+  border-radius: var(--radius-lg);
+  background: var(--panel);
+}
+
+.hotbar-label {
+  position: absolute;
+  bottom: calc(var(--hotbar-top) + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: calc(100% - 32px);
+  font-size: var(--text-sm);
+  text-align: center;
+  text-shadow: 0 1px 2px #000;
+}
+
+.hotbar-label:empty {
+  display: none;
+}
+
+.hotbar-label kbd {
+  margin-left: var(--space-3);
+}
+
+/* One slot, on the hotbar or in the panel: the item's picture, its count, the hotbar key. */
+.slot {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--slot);
+  height: var(--slot);
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface-pressed);
+  color: var(--ink);
+  font: inherit;
+}
+
+.slot > * {
+  pointer-events: none;
+}
+
+.slot svg {
+  width: 62%;
+  height: 62%;
+}
+
+.slot svg > * {
+  stroke: rgb(255 255 255 / 40%); /* dark items (the microscope) stay visible */
+  stroke-width: 1;
+}
+
+.slot-key,
+.slot-count {
+  position: absolute;
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.slot-key {
+  top: 2px;
+  left: 3px;
+  color: var(--ink-dim);
+}
+
+.slot-count {
+  right: 3px;
+  bottom: 2px;
+  font-weight: 600;
+  text-shadow: 0 1px 2px #000;
+}
+
+/* Decorative: nothing in the lab uses it. */
+.slot[data-decorative] {
+  border-style: dashed;
+  border-color: var(--line-strong);
+}
+
+/* The selected hotbar slot: what Q takes out (a decorative one stays dashed). */
+.slot[aria-current='true'] {
+  border-width: 2px;
+  border-color: var(--accent-bright);
+  background: var(--surface-raised);
+  box-shadow: var(--focus-halo);
+}
+
+/* Picked in the panel, to be put in another slot. */
+.slot[aria-selected='true'] {
+  outline: 2px dashed var(--accent-bright);
+  outline-offset: 2px;
+  background: rgb(var(--accent-rgb) / 30%);
+}
+
+button.slot {
+  cursor: pointer;
+}
+
+button.slot:hover {
+  background: var(--surface-hover);
+}
+
+button.slot:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 1px;
+}
+
+/*
+ * The panel reads in order: what the character wears (left column), the bag and the hotbar, the
+ * focused item's details and its action; one column in a narrow window.
+ */
+.inventory-panel {
+  --equip-column: 256px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  grid-template-columns: var(--equip-column) minmax(0, 1fr);
+  grid-template-areas:
+    'head head'
+    'worn grid'
+    'worn details'
+    'worn action'
+    'worn help';
+  gap: var(--space-3) var(--space-5);
+  align-content: start;
+  width: min(
+    calc(var(--equip-column) + var(--space-5) + 9 * var(--slot) + 8 * var(--slot-gap) + 42px),
+    calc(100% - 32px)
+  );
+  max-height: calc(100% - 32px);
+  overflow-y: auto; /* a short window scrolls the panel, never cuts it */
+  padding: var(--space-5);
+  border: 1px solid rgb(143 214 240 / 20%);
+  border-top: 2px solid rgb(var(--accent-rgb) / 70%);
+  border-radius: var(--radius-xl);
+  background: linear-gradient(
+    180deg,
+    rgb(var(--surface-top-rgb) / 97%),
+    rgb(var(--surface-bottom-rgb) / 97%)
+  );
+  box-shadow: var(--shadow-dialog);
+  font-size: var(--text-md);
+  line-height: var(--leading);
+  pointer-events: auto;
+}
+
+.inventory-head {
+  grid-area: head;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.inventory-head h2 {
+  margin: 0;
+  font-size: var(--text-xl);
+}
+
+.inventory-grid,
+.inventory-row {
+  display: flex;
+  gap: var(--slot-gap);
+}
+
+.inventory-grid {
+  grid-area: grid;
+  flex-direction: column;
+}
+
+.inventory-row.hotbar-row {
+  margin-top: var(--space-2); /* the hotbar row, set apart as on the screen */
+}
+
+/* A fixed height: the panel, centred, would move under the mouse as the focus changes them. */
+.inventory-details {
+  grid-area: details;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  flex-shrink: 0; /* a short window scrolls the panel instead */
+  height: calc(8 * var(--leading) * 1em);
+  overflow-y: auto;
+}
+
+.inventory-details p,
+.inventory-panel h3 {
+  margin: 0;
+}
+
+.inventory-details strong {
+  font-size: var(--text-lg);
+}
+
+/* Take out: the focused item's action, under its details — compact, an icon and a word. */
+.menu-button.inventory-action {
+  grid-area: action;
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 34px;
+  padding: 6px var(--space-3) 6px 10px;
+  border-color: var(--line-strong);
+  border-radius: var(--radius-md);
+  color: var(--accent-bright);
+  font-size: var(--text-md);
+  font-weight: 600;
+}
+
+.inventory-action svg {
+  flex: none;
+  width: 16px;
+  height: 16px;
+}
+
+.inventory-decorative {
+  color: var(--caution-ink);
+}
+
+.inventory-picked {
+  color: var(--accent-bright);
+}
+
+.inventory-panel h3 {
+  color: var(--ink-dim);
+  font-size: var(--text-xs);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+}
+
+/*
+ * What is worn: the character as a flat pictogram with each worn item drawn on it in its own
+ * colour, and beside it the four slots (eyes, face, body, hands), each with its crop of the figure
+ * as the icon and what is worn there or "Not worn". Read-only: nothing here is a control.
+ */
+.inventory-worn {
+  grid-area: worn;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-right: var(--space-5);
+  border-right: 1px solid var(--line);
+}
+
+.equip {
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: start;
+}
+
+.equip-figure,
+.equip-slot svg {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface-pressed);
+  color: rgb(159 176 192 / 24%); /* the bare figure */
+}
+
+.equip-figure {
+  width: 100%;
+  height: auto;
+  padding: var(--space-1);
+}
+
+.equip-slots {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+}
+
+.equip-slot {
+  position: relative;
+  min-height: 28px;
+  padding-left: 34px;
+}
+
+.equip-slot svg {
+  position: absolute;
+  top: 2px;
+  left: 0;
+  width: 26px;
+  height: 26px;
+}
+
+.equip-slot:not(:has(.equip-empty)) svg {
+  border-color: var(--line-strong);
+}
+
+.equip-slot dt {
+  color: var(--ink-dim);
+  font-size: var(--text-xs);
+  letter-spacing: var(--label-tracking);
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.equip-slot dd,
+.equip-slot ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.equip-slot dd {
+  color: var(--ink-strong);
+  line-height: 1.35;
+}
+
+.equip-slot dd.equip-empty {
+  color: var(--ink-dim);
+}
+
+.inventory-note,
+.inventory-help {
+  margin: 0;
+  color: var(--ink-dim);
+  font-size: var(--text-sm);
+}
+
+.inventory-help {
+  grid-area: help;
+}
+
+/* Too narrow for two columns: what is worn above the bag, the panel scrolls if it must. */
+@media (max-width: 800px) {
+  .inventory-panel {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'head' 'worn' 'grid' 'details' 'action' 'help';
+    width: min(calc(9 * var(--slot) + 8 * var(--slot-gap) + 42px), calc(100% - 32px));
+  }
+
+  .inventory-worn {
+    padding: 0 0 var(--space-3);
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --slot-gap: 4px;
+  }
+
+  .inventory-panel {
+    width: min(calc(9 * var(--slot) + 8 * var(--slot-gap) + 26px), calc(100% - 32px));
+    padding: var(--space-3);
+  }
+}
+
+/* Main menu */
+.menu {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  /* With the topics and Settings open, a short window scrolls instead of cutting off the top. */
+  place-items: safe center;
+  overflow-y: auto;
+  padding: 32px 16px;
+  /* Its own stacking context: the sky (z-index −1) lies over this background, under the panel. */
+  isolation: isolate;
+  /* Depth: a cool light behind the name and a warm one from the far corner, over a deep
+     blue-black; the stars are in .menu-sky. */
+  background-color: #060a12;
+  background-image:
+    radial-gradient(60% 60% at 26% 42%, rgb(var(--accent-rgb) / 15%), transparent 70%),
+    radial-gradient(50% 45% at 96% 96%, rgb(255 138 76 / 13%), transparent 70%),
+    linear-gradient(160deg, #0b1526, #060a12 55%, #0b0e1b);
+}
+
+/* Sparse stars on three tiles of different sizes (so no repeat shows), all drifting to the right:
+   the far layer — the faintest, smallest stars — at about 4 px/s, the middle at 7, the near —
+   the brightest — at 11 (depth without strong parallax). Each layer moves by exactly its own tile
+   per cycle, so the loop has no seam. The stars are soft (radius 1.2–1.6 px) so that, between two
+   pixels, they glide instead of flickering. Fixed to the window, so it never scrolls or widens the
+   menu; decorative, it takes no clicks. Hidden with the menu, it stops with it. */
+.menu-sky {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.menu-stars {
+  position: absolute;
+  inset: 0 0 0 calc(-1 * var(--tile));
+  background-size: var(--tile) var(--tile);
+  animation: menu-drift var(--cycle) linear infinite;
+  will-change: transform;
+}
+
+.menu-stars.far {
+  --tile: 211px;
+  --cycle: 53s; /* ≈ 4 px/s */
+  background-image:
+    radial-gradient(1.2px 1.2px at 23px 41px, rgb(255 255 255 / 55%), transparent),
+    radial-gradient(1.2px 1.2px at 151px 167px, rgb(200 232 255 / 45%), transparent);
+}
+
+.menu-stars.mid {
+  --tile: 293px;
+  --cycle: 42s; /* ≈ 7 px/s */
+  background-image:
+    radial-gradient(1.3px 1.3px at 97px 13px, rgb(255 255 255 / 60%), transparent),
+    radial-gradient(1.3px 1.3px at 229px 181px, rgb(255 230 200 / 50%), transparent);
+}
+
+.menu-stars.near {
+  --tile: 389px;
+  --cycle: 35s; /* ≈ 11 px/s */
+  background-image:
+    radial-gradient(1.6px 1.6px at 251px 199px, rgb(255 255 255 / 75%), transparent),
+    radial-gradient(1.4px 1.4px at 97px 331px, rgb(200 232 255 / 60%), transparent);
+}
+
+@keyframes menu-drift {
+  to {
+    transform: translateX(var(--tile));
+  }
+}
+
+/* The emblem above the name (menuArt.ts: a measured flight — dial, floor tape, strobed trajectory),
+   at every width, smaller in a narrow window. It runs like the instrument it draws: every 3.6 s a
+   strobe sweep lights the ball's images one after another from launch to landing (0, 0.25, 0.75,
+   1 s), the ball's glow flares as it passes the top (0.5 s), and rests again; the trajectory's
+   dashes flow the same way; a satellite rounds the outer ring in 18 s (five sweeps). */
+.menu-emblem {
+  display: block;
+  width: clamp(96px, 30vw, 132px);
+  aspect-ratio: 1;
+  margin: 0 auto 16px;
+}
+
+.emblem-orbit {
+  transform-box: view-box;
+  transform-origin: 50% 50%;
+  animation: emblem-orbit 18s linear infinite;
+}
+
+.emblem-flight {
+  animation: emblem-flight 1.8s linear infinite;
+}
+
+.emblem-strobe {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: emblem-strobe 3.6s ease-out var(--at) infinite;
+}
+
+/* At rest between flares at 0.6 (from the start: `backwards`); still, it is drawn as before. */
+.emblem-glow {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: emblem-flare 3.6s ease-out 0.5s infinite backwards;
+}
+
+@keyframes emblem-orbit {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+/* One dash and gap (5 + 6) per cycle: the loop has no seam. */
+@keyframes emblem-flight {
+  to {
+    stroke-dashoffset: -11;
+  }
+}
+
+/* A strobe image lights fully and swells a little, then settles back to its own opacity. */
+@keyframes emblem-strobe {
+  0%,
+  30%,
+  100% {
+    fill-opacity: var(--rest);
+    transform: scale(1);
+  }
+
+  6% {
+    fill-opacity: 1;
+    transform: scale(1.4);
+  }
+}
+
+@keyframes emblem-flare {
+  0%,
+  40%,
+  100% {
+    opacity: 0.6;
+    transform: scale(0.95);
+  }
+
+  8% {
+    opacity: 1;
+    transform: scale(1.3);
+  }
+}
+
+/* Science glyphs (menuArt.ts) crossing the sky far away, now and then: four of them, each on its
+   own long cycle (137, 163, 181, 211 s — no two alike, so the order keeps changing), in view for
+   about a sixth of it and faint; from the first, about 7 s in, rarely two at once. Each starts
+   past one edge of the window and leaves past another, then waits, hidden, to cross again. */
+.menu-meteor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 30px;
+  opacity: 0;
+  filter: drop-shadow(0 0 3px rgb(var(--accent-rgb) / 45%));
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform, opacity;
+}
+
+.menu-meteor svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.menu-meteor.flask {
+  width: 34px;
+  animation-name: meteor-flask;
+  animation-duration: 137s;
+  animation-delay: 7s;
+}
+
+.menu-meteor.helix {
+  animation-name: meteor-helix;
+  animation-duration: 163s;
+  animation-delay: 52s;
+}
+
+.menu-meteor.apple {
+  width: 28px;
+  animation-name: meteor-apple;
+  animation-duration: 181s;
+  animation-delay: 96s;
+}
+
+.menu-meteor.pendulum {
+  width: 32px;
+  animation-name: meteor-pendulum;
+  animation-duration: 211s;
+  animation-delay: 141s;
+}
+
+/* Left to right, drifting down a little. */
+@keyframes meteor-flask {
+  0% {
+    opacity: 0;
+    transform: translate(-8vw, 18vh) rotate(-12deg) scale(0.95);
+  }
+
+  2.5%,
+  14.5% {
+    opacity: 0.32;
+  }
+
+  17%,
+  100% {
+    opacity: 0;
+    transform: translate(108vw, 34vh) rotate(8deg) scale(0.95);
+  }
+}
+
+/* Right to left, rising. */
+@keyframes meteor-helix {
+  0% {
+    opacity: 0;
+    transform: translate(106vw, 72vh) rotate(10deg) scale(0.8);
+  }
+
+  2.5%,
+  16.5% {
+    opacity: 0.28;
+  }
+
+  19%,
+  100% {
+    opacity: 0;
+    transform: translate(-10vw, 48vh) rotate(-14deg) scale(0.8);
+  }
+}
+
+/* From the top, falling steeply. */
+@keyframes meteor-apple {
+  0% {
+    opacity: 0;
+    transform: translate(22vw, -10vh) rotate(-20deg) scale(1.1);
+  }
+
+  2%,
+  13% {
+    opacity: 0.3;
+  }
+
+  15%,
+  100% {
+    opacity: 0;
+    transform: translate(78vw, 108vh) rotate(4deg) scale(1.1);
+  }
+}
+
+/* From the bottom left, up to the right. */
+@keyframes meteor-pendulum {
+  0% {
+    opacity: 0;
+    transform: translate(-6vw, 96vh) rotate(6deg) scale(0.9);
+  }
+
+  2%,
+  12% {
+    opacity: 0.26;
+  }
+
+  14%,
+  100% {
+    opacity: 0;
+    transform: translate(104vw, 6vh) rotate(-10deg) scale(0.9);
+  }
+}
+
+/* The cursor's light trail (cursorTrail.ts): one thin tapering line of light behind the mouse —
+   eleven segments joined end to end, each a 1 px box stretched and turned into place, with a
+   pale core and accent edges — and a soft glow at its head; under the panel like the sky, taking
+   no clicks. Moved by transform from the game loop, faded as a whole by the layer's opacity; the
+   real cursor is left alone. Only for a fine pointer, never under reduced motion. */
+.menu-trail {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  will-change: opacity;
+}
+
+.menu-trail-head,
+.menu-trail-segment {
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform;
+}
+
+.menu-trail-head {
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgb(205 238 250 / 85%),
+    rgb(var(--accent-rgb) / 40%) 35%,
+    transparent 70%
+  );
+  opacity: 0.5;
+}
+
+.menu-trail-segment {
+  width: 1px;
+  transform-origin: 0 50%;
+  background: linear-gradient(
+    transparent,
+    rgb(var(--accent-rgb) / 70%) 30%,
+    rgb(205 238 250) 50%,
+    rgb(var(--accent-rgb) / 70%) 70%,
+    transparent
+  );
+}
+
+@media (prefers-reduced-motion: reduce), (pointer: coarse), (pointer: none) {
+  .menu-trail {
+    display: none;
+  }
+}
+
+/* No motion at all: the stars and the emblem stand still, the glyphs (hidden at rest) stay away.
+   `.menu-sky .menu-meteor` outranks `.menu-meteor.flask` and the others, which name the motion. */
+@media (prefers-reduced-motion: reduce) {
+  .menu-stars,
+  .menu-sky .menu-meteor,
+  .emblem-orbit,
+  .emblem-flight,
+  .emblem-strobe,
+  .emblem-glow {
+    animation: none;
+  }
+}
+
+.menu-panel {
+  width: min(400px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.menu-brand {
+  text-align: center;
+}
+
+.menu-title {
+  margin: 0;
+  /* The spacing after the last letter, put back before the first: the word stays centred. */
+  padding-left: 0.22em;
+  font-size: clamp(44px, 12vw, 64px);
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  color: var(--ink-strong);
+  text-shadow:
+    0 0 28px rgb(var(--accent-rgb) / 45%),
+    0 0 2px rgb(255 255 255 / 35%);
+}
+
+.menu-subtitle {
+  margin: 10px 0 0;
+  color: var(--accent);
+  font-size: 13px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.menu-subtitle::before {
+  content: '';
+  display: block;
+  width: 72px;
+  height: 1px;
+  margin: 0 auto 12px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+
+/* The controls in an instrument frame: a faint outline, brighter marks at its corners. */
+.menu-controls {
+  --mark: rgb(var(--accent-rgb) / 85%);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: 22px var(--space-5) 18px;
+  border: 1px solid var(--line-frame);
+  border-radius: var(--radius-frame);
+  background:
+    linear-gradient(var(--mark), var(--mark)) top left / 16px 2px no-repeat,
+    linear-gradient(var(--mark), var(--mark)) top left / 2px 16px no-repeat,
+    linear-gradient(var(--mark), var(--mark)) top right / 16px 2px no-repeat,
+    linear-gradient(var(--mark), var(--mark)) top right / 2px 16px no-repeat,
+    linear-gradient(var(--mark), var(--mark)) bottom left / 16px 2px no-repeat,
+    linear-gradient(var(--mark), var(--mark)) bottom left / 2px 16px no-repeat,
+    linear-gradient(var(--mark), var(--mark)) bottom right / 16px 2px no-repeat,
+    linear-gradient(var(--mark), var(--mark)) bottom right / 2px 16px no-repeat,
+    linear-gradient(
+      180deg,
+      rgb(var(--surface-top-rgb) / 86%),
+      rgb(var(--surface-bottom-rgb) / 86%)
+    );
+  box-shadow:
+    var(--glow-frame),
+    inset 0 0 32px rgb(var(--accent-rgb) / 5%);
+}
+
+/* A group of choices (character, language): a labelled field. */
+.menu-choice {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 10px 14px 14px;
+}
+
+.menu-choice > legend {
+  padding: 0 6px;
+  color: var(--ink-dim);
+  font-size: var(--text-xs);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+}
+
+.menu-option {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  cursor: pointer;
+}
+
+.menu-option input {
+  accent-color: var(--accent);
+}
+
+/* A group's help line under its choices. */
+.menu-choice > .menu-help {
+  flex-basis: 100%;
+}
+
+/* The sound's volumes: a name, a slider and its value per row, the rows aligned. */
+.menu-volume-row {
+  display: grid;
+  flex-basis: 100%;
+  grid-template-columns: 9.5em 1fr 3.5em;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.menu-volume {
+  width: 100%;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.menu-volume-value {
+  color: var(--ink-dim);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+/* A labelled control with a line of help under it, framed like a group of choices. */
+.menu-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 10px 14px 12px;
+}
+
+.menu-field-label {
+  color: var(--ink-dim);
+  font-size: var(--text-xs);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+}
+
+.menu-help {
+  margin: 0;
+  color: var(--ink-dim);
+  font-size: var(--text-sm);
+  line-height: var(--leading);
+}
+
+/*
+ * Buttons, the same everywhere (main menu, catalog, pause, settings, confirmation): secondary by
+ * default; `primary` for the one main action of a view; `caution` for leaving or losing something
+ * — quieter, with a warm edge, never the loudest. Only colours and shadows change.
+ */
+.menu-button {
+  min-height: var(--control-height);
+  padding: 10px var(--space-4);
+  border: 1px solid rgb(143 214 240 / 22%);
+  border-radius: var(--radius-lg);
+  background: var(--surface-raised);
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--text-base);
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast),
+    border-color var(--duration-fast),
+    box-shadow var(--duration-fast);
+}
+
+.menu-button:hover:not(:disabled) {
+  border-color: var(--line-strong);
+  background: var(--surface-hover);
+}
+
+.menu-button:active:not(:disabled) {
+  background: var(--surface-pressed);
+}
+
+.menu-button.primary {
+  border-color: var(--primary-border);
+  background: linear-gradient(180deg, var(--primary-top), var(--primary-bottom));
+  font-weight: 600;
+  box-shadow: 0 6px 18px rgb(30 99 130 / 35%);
+}
+
+.menu-button.primary:hover:not(:disabled) {
+  border-color: var(--accent-bright);
+  background: linear-gradient(180deg, #3394bb, #226d8f);
+}
+
+.menu-button.primary:active:not(:disabled) {
+  background: var(--primary-bottom);
+  box-shadow: none;
+}
+
+.menu-button.caution {
+  border-color: rgb(var(--caution-rgb) / 30%);
+  background: transparent;
+  color: var(--caution-ink);
+}
+
+.menu-button.caution:hover:not(:disabled) {
+  border-color: rgb(var(--caution-rgb) / 70%);
+  background: rgb(var(--caution-rgb) / 8%);
+}
+
+.menu-button.caution:active:not(:disabled) {
+  background: rgb(var(--caution-rgb) / 14%);
+}
+
+/* Unavailable: plainly dimmed, still legible, no hover. */
+.menu-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Keyboard focus, one look for every control of the menus and the developer panel. */
+.menu-button:focus-visible,
+.menu-option input:focus-visible,
+.menu-volume:focus-visible,
+.menu-more > summary:focus-visible,
+.menu-model > summary:focus-visible,
+.debug button:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+  box-shadow: var(--focus-halo);
+}
+
+.menu-button.caution:focus-visible {
+  outline-color: #f0c79a;
+  box-shadow: 0 0 0 5px rgb(var(--caution-rgb) / 22%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-button {
+    transition: none;
+  }
+}
+
+.menu-message {
+  min-height: 1.2em;
+  margin: 0;
+  color: var(--ink-dim);
+  white-space: pre-wrap;
+}
+
+/* The experiment catalog (ExperimentCatalog.ts): a page of the menu in place of its panel, in the
+   same instrument frame; compact rows to scan, the details of each folded away. */
+.menu-catalog {
+  width: min(760px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 22px var(--space-5) var(--space-5);
+  border: 1px solid var(--line-frame);
+  border-radius: var(--radius-frame);
+  background: linear-gradient(
+    180deg,
+    rgb(var(--surface-top-rgb) / 90%),
+    rgb(var(--surface-bottom-rgb) / 90%)
+  );
+  box-shadow: var(--glow-frame);
+}
+
+.menu-catalog-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+}
+
+/* A compact secondary button in a page's header. */
+.menu-back {
+  min-height: 36px;
+  padding: 6px var(--space-3);
+  font-size: var(--text-md);
+}
+
+/* Page and panel titles: the catalog's, the pause dialog's. */
+.menu-catalog-title,
+.pause-title {
+  margin: 0;
+  font-size: var(--text-xl);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.25;
+  color: var(--ink-strong);
+}
+
+.menu-catalog-title {
+  flex: 1;
+}
+
+.menu-catalog-title:focus {
+  outline: none;
+}
+
+.menu-catalog-progress {
+  flex-basis: 100%;
+  margin: 0;
+  color: var(--ink-dim);
+  font-size: var(--text-md);
+}
+
+/* In place of the list while the experiments load, or why they could not, with Try again. */
+.menu-catalog-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+  color: var(--ink-dim);
+  font-size: var(--text-md);
+}
+
+.menu-catalog-status p {
+  margin: 0;
+}
+
+/* Section titles: a short capitalised label over a rule. */
+.menu-subject h3 {
+  margin: 0 0 var(--space-1);
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--line-frame);
+  color: var(--accent);
+  font-size: var(--text-sm);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.menu-subject h4 {
+  margin: 14px 0 6px;
+  font-size: var(--text-base);
+}
+
+.menu-planned {
+  margin: 6px 0 0;
+  color: var(--ink-dim);
+  font-size: var(--text-md);
+}
+
+.menu-catalog-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.menu-catalog-item {
+  padding: 10px 0 10px var(--space-3);
+  border-left: 2px solid var(--line);
+}
+
+.menu-catalog-item + .menu-catalog-item {
+  margin-top: 6px;
+}
+
+.menu-catalog-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+}
+
+.menu-catalog-line .menu-experiment {
+  font-size: var(--text-lg);
+  font-weight: 600;
+}
+
+.menu-catalog .menu-run {
+  font-size: var(--text-xs);
+  color: var(--ink-dim);
+}
+
+.menu-catalog .menu-run[data-done='true'] {
+  color: var(--accent);
+}
+
+.menu-place,
+.menu-catalog .menu-objective {
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-sm);
+  line-height: var(--leading);
+  color: var(--ink-dim);
+}
+
+.menu-more,
+.menu-model {
+  margin-top: 6px;
+  font-size: var(--text-sm);
+  line-height: var(--leading);
+  color: var(--ink-dim);
+}
+
+.menu-more > summary,
+.menu-model > summary {
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.menu-more h5 {
+  margin: 10px 0 4px;
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.menu-steps {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.menu-more .menu-route,
+.menu-more .menu-saved-route {
+  margin: 4px 0 0;
+  font-size: 13px;
+}
+
+/* A wide window: the name with its emblem (larger) on the left, the controls on the right. */
+@media (min-width: 960px) {
+  .menu-panel {
+    width: min(1040px, 100%);
+    flex-direction: row;
+    align-items: center;
+    gap: clamp(48px, 7vw, 112px);
+  }
+
+  .menu-brand {
+    flex: 1;
+  }
+
+  .menu-emblem {
+    width: clamp(200px, 22vw, 300px);
+    margin-bottom: 28px;
+  }
+
+  .menu-title {
+    font-size: clamp(64px, 6.5vw, 104px);
+  }
+
+  .menu-controls {
+    flex: none;
+    width: 400px;
+  }
+}
+
+/* Pause menu (PauseMenu.ts): a centred dialog over the dimmed scene. The dim takes no clicks,
+   so a click on the scene around the dialog resumes (it recaptures the mouse); the dialog takes its
+   own. Above the HUD and the results, under the developer panel. Its buttons are the shared ones. */
+.pause {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  background: rgb(4 8 14 / 62%);
+  backdrop-filter: blur(2px);
+  pointer-events: none;
+}
+
+.pause-panel {
+  width: min(420px, 100%);
+  max-height: 100%;
+  overflow-y: auto; /* a short window scrolls the dialog, never cuts it */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: var(--space-7) var(--space-7) var(--space-6);
+  border: 1px solid rgb(143 214 240 / 20%);
+  border-top: 2px solid rgb(var(--accent-rgb) / 70%);
+  border-radius: var(--radius-xl);
+  background: linear-gradient(
+    180deg,
+    rgb(var(--surface-top-rgb) / 97%),
+    rgb(var(--surface-bottom-rgb) / 97%)
+  );
+  box-shadow: var(--shadow-dialog);
+  color: var(--ink);
+  pointer-events: auto;
+}
+
+.pause-panel[data-view='menu'] .pause-title {
+  font-size: 20px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.pause-view {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pause-note {
+  margin: 0 0 var(--space-2);
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgb(143 214 240 / 12%);
+  color: var(--ink-dim);
+  font-size: var(--text-md);
+  line-height: 1.5;
+}
+
+/* Leaving ends the session: set a little apart from the other actions. */
+.pause-panel .menu-button.caution {
+  margin-top: 6px;
+}
+
+/* The menu view: its actions on the left, the controls beside them (stacked in a narrow window). */
+.pause-panel[data-view='menu'] {
+  width: min(1060px, 100%);
+}
+
+.pause-menu {
+  display: grid;
+  grid-template-columns: minmax(200px, 280px) minmax(0, 1fr);
+  gap: var(--space-5);
+  align-items: start;
+}
+
+.pause-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pause-keys {
+  min-width: 0;
+  padding-left: var(--space-5);
+  border-left: 1px solid rgb(143 214 240 / 12%);
+}
+
+.pause-keys-title {
+  margin: 0 0 var(--space-3);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.pause-keys .pause-keys-groups {
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: var(--space-4) var(--space-5);
+  padding: 0;
+}
+
+.pause-keys .controls-does {
+  font-size: var(--text-sm);
+}
+
+@media (max-width: 860px) {
+  .pause-menu {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pause-keys {
+    padding: var(--space-4) 0 0;
+    border-left: 0;
+    border-top: 1px solid rgb(143 214 240 / 12%);
+  }
+}
+
+@media (max-width: 480px) {
+  .pause-panel {
+    padding: 22px 18px 18px;
+  }
+
+  .pause-keys .pause-keys-groups {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pause-keys .controls-list {
+    grid-template-columns: minmax(72px, max-content) minmax(0, 1fr);
+  }
+}
+
+/* Debug panel */
+/*
+ * Bottom-left and narrow so it never covers the toasts (top) or the hint (bottom centre). Like
+ * the HUD it lets the mouse through, except on its own controls (e.g. to the run list).
+ */
+.debug {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  max-width: 380px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: var(--panel);
+  font-size: 12px;
+  pointer-events: none;
+}
+
+/* The production build's F3 frame readout: at the right, above the key hints' line. */
+.debug.perf {
+  right: 8px;
+  bottom: calc(var(--hotbar-top) + 76px);
+  left: auto;
+}
+
+.debug select,
+.debug button {
+  pointer-events: auto;
+}
+
+.debug-text {
+  margin: 6px 0;
+  white-space: pre-wrap;
+  font: var(--text-xs) / 1.4 var(--font-mono);
+}
+
+.debug-tools {
+  display: flex;
+  gap: 6px;
+}
+
+/*
+ * Controls (main menu): a modal reference sheet. Plain rows, keys as keycaps on the left, what
+ * they do on the right; four groups side by side where there is room, one column otherwise.
+ */
+.controls-dialog {
+  width: min(720px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+  margin: auto;
+  padding: 0;
+  overflow: auto;
+  border: 1px solid var(--line-frame);
+  border-radius: var(--radius-lg);
+  background: rgb(var(--surface-bottom-rgb) / 97%);
+  color: var(--ink);
+  box-shadow: var(--shadow-dialog);
+}
+
+.controls-dialog::backdrop {
+  background: rgb(4 8 14 / 62%);
+}
+
+.controls-head {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--line);
+  background: rgb(var(--surface-bottom-rgb) / 97%);
+}
+
+.controls-title {
+  margin: 0;
+  font-size: var(--text-xl);
+  font-weight: 600;
+  color: var(--ink-strong);
+}
+
+.controls-close {
+  min-height: 36px;
+  padding: 6px var(--space-4);
+}
+
+.controls-groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-5) var(--space-6);
+  padding: var(--space-5);
+}
+
+.controls-group-title {
+  margin: 0 0 var(--space-2);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--line);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.controls-list {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: var(--space-2) var(--space-4);
+  align-items: baseline;
+  margin: 0;
+}
+
+.controls-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  min-width: 72px;
+}
+
+.controls-keys kbd {
+  min-width: 26px;
+  padding: 2px 7px;
+  border: 1px solid rgb(var(--accent-rgb) / 30%);
+  border-bottom-width: 2px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-raised);
+  color: var(--ink-strong);
+  font: 600 var(--text-sm) / 1.4 var(--font-sans);
+  text-align: center;
+}
+
+.controls-does {
+  margin: 0;
+  font-size: var(--text-md);
+  line-height: var(--leading);
+  color: var(--ink);
+}
+
+/* Fatal error */
+.fatal {
+  max-width: 720px;
+  margin: 10vh auto;
+  padding: 24px;
+}
+
+.fatal pre {
+  white-space: pre-wrap;
+  color: var(--error);
+}
+
+/* Guided tasks (Phase A): on the right, the lab's objective docked under them. */
+.task-panel {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: min(clamp(280px, 21vw, 340px), calc(100% - 32px)); /* the HUD objective's width */
+  display: grid;
+  gap: var(--space-2);
+  padding: 10px 14px;
+  border: 1px solid rgb(255 255 255 / 7%);
+  border-radius: var(--radius-md);
+  background: rgb(10 15 21 / 82%);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 22%);
+  font-size: var(--text-md);
+  line-height: 1.4;
+  pointer-events: auto;
+}
+
+.task-line kbd {
+  margin-right: 2px;
+}
+
+.task-current {
+  display: grid;
+  gap: 2px;
+  padding-top: var(--space-2);
+  border-top: 1px solid rgb(255 255 255 / 9%);
+}
+
+.task-count,
+.task-choice-note,
+.task-help {
+  color: var(--ink-dim);
+  font-size: var(--text-sm);
+}
+
+.task-instruction {
+  margin: 4px 0 0;
+}
+
+.task-list {
+  display: grid;
+  gap: var(--space-2);
+  max-height: min(70vh, 640px);
+  overflow-y: auto;
+}
+
+.task-list-title {
+  margin: var(--space-2) 0 0;
+  font-size: var(--text-md);
+}
+
+.task-choice {
+  display: grid;
+  gap: 2px;
+  text-align: left;
+}
+
+.task-badge {
+  justify-self: start;
+  padding: 0 6px;
+  border-radius: var(--radius-sm);
+  background: rgb(95 227 255 / 18%);
+  color: #bdf3ff;
+  font-size: var(--text-sm);
+}
+
+/* Under the collapsed task line (no task followed: the objective is hidden while one is). */
+.hud-objective.docked {
+  top: 72px;
+  right: 16px;
+  left: auto;
+}
+
+/* A question that must be answered before a setting changes (the Ultra preset's dialog). */
+.menu-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgb(0 0 0 / 62%);
+}
+
+.menu-dialog-backdrop.hidden {
+  display: none;
+}
+
+.menu-dialog {
+  display: grid;
+  gap: 12px;
+  max-width: 520px;
+  padding: 20px 22px;
+  border: 1px solid rgb(var(--accent-rgb) / 40%);
+  border-radius: 10px;
+  background: var(--surface-raised);
+  color: var(--ink);
+  box-shadow: 0 18px 48px rgb(0 0 0 / 55%);
+}
+
+.menu-dialog-title {
+  margin: 0;
+  color: var(--ink-strong);
+  font-size: 1.15rem;
+}
+
+.menu-dialog-notes {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
+  color: var(--ink);
+  line-height: var(--leading);
+}
+
+.menu-dialog-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+/* --- The character page (Phase C): the menu's row, then the page sliding up over the menu. --- */
+.menu-character {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  align-items: center;
+  column-gap: var(--space-3);
+  width: 100%;
+  min-height: 76px;
+  padding: 8px 8px 8px var(--space-4);
+  border: 1px solid rgb(143 214 240 / 22%);
+  border-radius: var(--radius-lg);
+  background: var(--surface-raised);
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast),
+    border-color var(--duration-fast);
+}
+.menu-character:hover,
+.menu-character:focus-visible {
+  border-color: var(--accent);
+  background: rgb(var(--accent-rgb) / 14%);
+}
+.menu-character:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+.menu-character-label {
+  font-size: var(--text-base);
+  letter-spacing: 0.02em;
+}
+.menu-character-name {
+  grid-row: 2;
+  color: var(--accent-bright);
+  font-size: var(--text-sm);
+}
+.menu-character-portrait {
+  grid-row: 1 / span 2;
+  grid-column: 2;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 35%, #dfe9f2, #9db3c4);
+  object-fit: cover;
+}
+.menu-character-portrait:not([src]) {
+  visibility: hidden;
+}
+
+.char-page {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  overflow: hidden;
+  background: #dfe6ea;
+  transform: translateY(100%);
+  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.char-page.open {
+  transform: translateY(0);
+}
+.char-stage,
+.character-stage-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.char-head {
+  position: absolute;
+  top: var(--space-4);
+  left: var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+.char-title {
+  margin: 0;
+  color: #1d2b38;
+  font-size: var(--text-xl);
+  text-shadow: 0 1px 0 rgb(255 255 255 / 70%);
+}
+/* Beside Choose, below the room: never over anyone in it. */
+.char-arrow {
+  position: absolute;
+  bottom: calc(var(--space-4) - 6px);
+  width: 56px;
+  height: 56px;
+  border: 1px solid rgb(143 214 240 / 35%);
+  border-radius: 50%;
+  background: var(--panel);
+  color: var(--ink);
+  font: 400 40px / 1 var(--font-sans);
+  cursor: pointer;
+}
+.char-arrow.prev {
+  left: calc(50% - 100px - 72px);
+}
+.char-arrow.next {
+  left: calc(50% + 100px + 16px);
+}
+.char-arrow:hover,
+.char-arrow:focus-visible {
+  border-color: var(--accent);
+  background: rgb(var(--accent-rgb) / 40%);
+}
+.char-arrow:focus-visible,
+.char-choose:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 3px;
+}
+.char-card {
+  position: absolute;
+  right: var(--space-4);
+  bottom: calc(var(--space-4) + 70px);
+  width: min(320px, calc(100% - 2 * var(--space-4)));
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--line-frame);
+  border-radius: var(--radius-lg);
+  background: var(--panel);
+  color: var(--ink);
+}
+.char-name {
+  margin: 0;
+  font-size: var(--text-xl);
+}
+.char-role {
+  margin: 2px 0 var(--space-2);
+  color: var(--accent-bright);
+  font-size: var(--text-md);
+}
+.char-trait {
+  margin: 0;
+  font-size: var(--text-md);
+  line-height: 1.4;
+}
+.char-count {
+  margin: var(--space-2) 0 0;
+  opacity: 0.7;
+  font-size: var(--text-xs);
+}
+.char-choose {
+  position: absolute;
+  bottom: var(--space-4);
+  left: 50%;
+  min-width: 200px;
+  transform: translateX(-50%);
+}
+.char-edit {
+  position: absolute;
+  right: var(--space-4);
+  bottom: var(--space-4);
+}
+.char-stage {
+  cursor: pointer;
+}
+
+/* --- The customiser (C-9): the character seen whole on the left, the choices on the right. --- */
+.custom-page {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) min(460px, 46vw);
+  background: radial-gradient(circle at 30% 40%, #eef3f7, #c9d6e0);
+}
+.custom-preview {
+  position: relative;
+  cursor: grab;
+}
+.custom-preview-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+.custom-side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-height: 0;
+  padding: var(--space-4);
+  border-left: 1px solid var(--line-frame);
+  background: var(--panel);
+  color: var(--ink);
+}
+.custom-title {
+  margin: 0;
+  font-size: var(--text-xl);
+}
+.custom-name-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-md);
+}
+.custom-name {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid var(--line-frame);
+  border-radius: var(--radius-sm, 6px);
+  background: rgb(0 0 0 / 25%);
+  color: var(--ink);
+  font: inherit;
+}
+.custom-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.custom-tab,
+.custom-option {
+  padding: 5px 12px;
+  border: 1px solid var(--line-frame);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--text-sm, 14px);
+  cursor: pointer;
+}
+.custom-tab.active,
+.custom-option.active {
+  border-color: var(--accent);
+  background: rgb(var(--accent-rgb) / 40%);
+}
+.custom-controls {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.custom-row {
+  display: grid;
+  grid-template-columns: 9em minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-2);
+}
+.custom-row.colour,
+.custom-row.choice {
+  grid-template-columns: 9em minmax(0, 1fr);
+}
+.custom-value {
+  min-width: 4.5em;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.85;
+}
+.custom-swatches,
+.custom-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.custom-swatch {
+  width: 24px;
+  height: 24px;
+  border: 2px solid rgb(255 255 255 / 30%);
+  border-radius: 50%;
+  cursor: pointer;
+}
+.custom-swatch.active {
+  border-color: var(--accent-bright);
+  box-shadow: 0 0 0 2px var(--accent);
+}
+.custom-colour {
+  width: 28px;
+  height: 26px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+.custom-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+.custom-photo {
+  display: grid;
+  grid-template-columns: 9em minmax(0, 1fr);
+  gap: var(--space-2);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--line-frame);
+}
+.custom-photo-status {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: var(--text-sm, 14px);
+  opacity: 0.85;
+}
+.custom-photo-status:empty {
+  display: none;
+}
+.custom-option:disabled {
+  opacity: 0.5;
+  cursor: progress;
+}
+.custom-camera {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: rgb(0 0 0 / 82%);
+}
+.custom-camera-video {
+  max-width: 100%;
+  max-height: calc(100% - 64px);
+  border-radius: var(--radius-md, 10px);
+  /* Shown as in a mirror; the photo taken is not mirrored. */
+  transform: scaleX(-1);
+}
+.custom-tab:focus-visible,
+.custom-option:focus-visible,
+.custom-swatch:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+@media (max-width: 760px) {
+  .custom-page {
+    grid-template-columns: 1fr;
+    grid-template-rows: 40vh minmax(0, 1fr);
+  }
+  .custom-side {
+    border-left: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .char-page {
+    transition: none;
+  }
+}
+
+/* The Explain view (Phase X): the panel on the right, the labels on the apparatus, the hint. */
+.explain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.explain-labels {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.explain-lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.explain-lines line {
+  stroke: rgb(255 255 255 / 70%);
+  stroke-width: 1.5;
+}
+
+.explain-tag {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-width: 240px;
+  padding: 4px 8px;
+  border: 1px solid rgb(255 255 255 / 18%);
+  border-radius: var(--radius-md);
+  background: rgb(10 15 21 / 78%);
+  color: var(--ink);
+  font-size: var(--text-sm);
+  line-height: 1.3;
+}
+
+.explain-tag strong {
+  display: block;
+}
+
+.explain-role {
+  display: none;
+  color: var(--ink-dim);
+}
+
+.explain-tag.lit {
+  border-color: #ffc23a;
+  box-shadow: 0 0 0 1px #ffc23a;
+}
+
+.explain-tag.lit .explain-role {
+  display: block;
+}
+
+.explain-panel {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  bottom: calc(var(--hotbar-top) + 16px);
+  width: min(clamp(300px, 26vw, 400px), calc(100% - 32px));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: 14px 16px;
+  overflow-y: auto;
+  border: 1px solid rgb(255 255 255 / 7%);
+  border-radius: var(--radius-md);
+  background: rgb(10 15 21 / 88%);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 22%);
+  color: var(--ink);
+  font-size: var(--text-md);
+  line-height: 1.45;
+  pointer-events: auto;
+}
+
+/* The teacher lectures: his words in the dialogue box take the panel's place. */
+.explain.lecturing .explain-panel {
+  display: none;
+}
+
+.explain-title {
+  margin: 0;
+  font-size: 17px;
+  color: var(--ink-strong);
+}
+
+.explain-summary {
+  margin: 0;
+  color: var(--ink-dim);
+}
+
+.explain-nav,
+.explain-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.explain-count {
+  flex: 1;
+  text-align: center;
+  color: var(--ink-dim);
+}
+
+.explain-step {
+  margin: 0;
+  flex: 1;
+  font-size: 15px;
+}
+
+.explain-button {
+  padding: 6px 12px;
+  border: 1px solid var(--line-frame);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+}
+
+.explain-button.primary {
+  border-color: var(--primary-border);
+  background: linear-gradient(var(--primary-top), var(--primary-bottom));
+}
+
+.explain-button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.explain-hint {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--hotbar-top) + 76px);
+  transform: translateX(-50%);
+  padding: 4px 10px;
+  border-radius: var(--radius-md);
+  background: rgb(10 15 21 / 70%);
+  color: var(--ink);
+  font-size: var(--text-sm);
+  pointer-events: none;
+}
+
+.explain-tag.hidden,
+.explain-hint.hidden,
+.explain.hidden {
+  display: none;
+}
+
+/* A conversation (Phase Y, the visual novel's look): the line in a box along the bottom, the
+   speaker's name on its edge; the choices in a see-through list right of the person talked to. */
+.dialogue {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 6;
+}
+
+.dialogue.hidden,
+.dialogue-choices.hidden,
+.dialogue-next.hidden {
+  display: none;
+}
+
+.dialogue-box {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--hotbar-top) + 18px);
+  transform: translateX(-50%);
+  width: min(920px, calc(100vw - 32px));
+  min-height: 132px;
+  padding: 30px 28px 20px;
+  border-top: 2px solid rgb(var(--accent-rgb) / 70%);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(
+    180deg,
+    rgb(var(--surface-top-rgb) / 82%),
+    rgb(var(--surface-bottom-rgb) / 90%)
+  );
+  box-shadow: 0 10px 40px rgb(0 0 0 / 40%);
+  color: var(--ink);
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.dialogue-name {
+  position: absolute;
+  top: -18px;
+  left: 22px;
+  padding: 5px 16px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  background: rgb(var(--surface-top-rgb) / 96%);
+  color: var(--accent-bright);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.dialogue-text {
+  margin: 0;
+  padding-right: 150px;
+  font-size: 19px;
+  line-height: 1.55;
+  color: var(--ink-strong);
+  white-space: pre-wrap;
+}
+
+.dialogue-next {
+  position: absolute;
+  right: 22px;
+  bottom: 14px;
+  color: var(--accent);
+  font-size: 13px;
+  opacity: 0;
+}
+
+.dialogue-next.ready {
+  opacity: 1;
+  animation: dialogue-bob 1s ease-in-out infinite;
+}
+
+@keyframes dialogue-bob {
+  50% {
+    transform: translateY(3px);
+  }
+}
+
+.dialogue-controls {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  display: flex;
+  gap: 6px;
+}
+
+.dialogue-button {
+  padding: 4px 12px;
+  border: 1px solid var(--line-frame);
+  border-radius: var(--radius-md);
+  background: rgb(var(--surface-top-rgb) / 60%);
+  color: var(--ink-dim);
+  font: 600 var(--text-sm) / 1.4 var(--font-sans);
+  cursor: pointer;
+}
+
+.dialogue-button:hover:not(:disabled),
+.dialogue-button.on {
+  border-color: var(--line-strong);
+  color: var(--ink-strong);
+  background: var(--surface-hover);
+}
+
+.dialogue-button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* The choices: a list right of the person (the view turns them just left of centre). */
+.dialogue-choices {
+  position: absolute;
+  left: 54%;
+  top: 34%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: min(380px, 40vw);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  pointer-events: auto;
+}
+
+.dialogue-choice-button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 11px 16px;
+  border: 1px solid rgb(255 255 255 / 14%);
+  border-left: 3px solid rgb(var(--accent-rgb) / 70%);
+  border-radius: 999px 10px 10px 999px;
+  background: linear-gradient(90deg, rgb(10 16 24 / 72%), rgb(10 16 24 / 28%));
+  color: var(--ink-strong);
+  font: 600 18px / 1.3 var(--font-sans);
+  text-align: left;
+  cursor: pointer;
+  backdrop-filter: blur(2px);
+}
+
+.dialogue-choice-button:hover:not(:disabled),
+.dialogue-choice-button:focus-visible {
+  outline: none;
+  border-color: rgb(var(--accent-rgb) / 70%);
+  background: linear-gradient(90deg, rgb(24 44 66 / 88%), rgb(24 44 66 / 40%));
+}
+
+.dialogue-choice-button:disabled {
+  color: var(--ink-dim);
+  cursor: default;
+}
+
+.dialogue-choice-icon {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  /* a white speech bubble with three dots */
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath d='M15 4C8 4 3 8.3 3 13.6c0 3 1.6 5.6 4.2 7.4L6 26l5.6-3c1.1.3 2.2.4 3.4.4 7 0 12-4.3 12-9.8S22 4 15 4z' fill='%23f2f8fc'/%3E%3Ccircle cx='9.5' cy='13.6' r='1.9' fill='%23182233'/%3E%3Ccircle cx='15' cy='13.6' r='1.9' fill='%23182233'/%3E%3Ccircle cx='20.5' cy='13.6' r='1.9' fill='%23182233'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+}
+
+.dialogue-choice-button:disabled .dialogue-choice-icon {
+  opacity: 0.45;
+}
+
+.dialogue-choice-label {
+  flex: 1;
+}
+
+.dialogue-choice-key {
+  flex: none;
+  min-width: 22px;
+  padding: 1px 6px;
+  border: 1px solid rgb(255 255 255 / 25%);
+  border-radius: var(--radius-sm);
+  color: var(--ink-dim);
+  font: 600 var(--text-sm) / 1.4 var(--font-sans);
+  text-align: center;
+}
+
+.dialogue-choice-soon {
+  flex: none;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 10%);
+  color: var(--ink-dim);
+  font: 600 var(--text-xs) / 1.6 var(--font-sans);
+}
+
+@media (max-width: 700px) {
+  .dialogue-choices {
+    left: 16px;
+    right: 16px;
+    top: 18%;
+    width: auto;
+  }
+
+  .dialogue-text {
+    padding-right: 0;
+    padding-top: 18px;
+    font-size: 17px;
+  }
+}
+
+/* The teacher's test setup (Phase Y-5): a form over his line, the conversation still under it. */
+.test-setup {
+  position: absolute;
+  top: 4vh;
+  left: 50%;
+  z-index: 7;
+  transform: translateX(-50%);
+  width: min(1000px, calc(100vw - 32px));
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - var(--hotbar-top) - 4vh - 172px);
+  padding: var(--space-5) var(--space-6);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(
+    180deg,
+    rgb(var(--surface-top-rgb) / 94%),
+    rgb(var(--surface-bottom-rgb) / 96%)
+  );
+  box-shadow: var(--shadow-dialog);
+  color: var(--ink);
+  font-size: var(--text-md);
+  pointer-events: auto;
+}
+
+.test-setup.hidden {
+  display: none;
+}
+
+.test-setup-title {
+  margin: 0 0 var(--space-3);
+  color: var(--accent-bright);
+  font-size: var(--text-xl);
+}
+
+/* The simulations scroll; what follows them (count, kinds, levels, the buttons) stays in view. */
+.test-setup-subjects {
+  display: grid;
+  flex: 1 1 auto;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: var(--space-3);
+  min-height: 0;
+  overflow-y: auto;
+  padding: 6px 4px 0 0;
+}
+
+.test-setup-subject,
+.test-setup-field {
+  margin: 0;
+  padding: var(--space-2) var(--space-3) var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+}
+
+.test-setup-subject legend {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0 var(--space-1);
+  color: var(--ink-strong);
+  font-weight: 700;
+}
+
+.test-setup-topic h4 {
+  margin: var(--space-2) 0 var(--space-1);
+  color: var(--ink-dim);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+}
+
+.test-setup-check {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 3px 0;
+  cursor: pointer;
+}
+
+.test-setup-check input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+.test-setup-mini {
+  padding: 1px var(--space-2);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--accent-bright);
+  font-size: var(--text-xs);
+  cursor: pointer;
+}
+
+.test-setup-options {
+  display: grid;
+  flex: none;
+  grid-template-columns: auto 1fr 1.6fr;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
+
+.test-setup-options fieldset {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--space-4);
+}
+
+.test-setup-options legend,
+label.test-setup-field > span {
+  color: var(--ink-dim);
+  font-size: var(--text-sm);
+}
+
+label.test-setup-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.test-setup-count {
+  min-width: 90px;
+  padding: 6px var(--space-2);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface-raised);
+  color: var(--ink-strong);
+  font-size: var(--text-base);
+}
+
+.test-setup-available {
+  margin: var(--space-3) 0;
+  color: var(--success);
+  font-weight: 600;
+}
+
+.test-setup-available.short {
+  color: var(--warn);
+}
+
+.test-setup-actions {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.test-setup-write,
+.test-setup-cancel {
+  min-height: 40px;
+  padding: 8px var(--space-5);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  color: var(--ink-strong);
+  font-size: var(--text-base);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.test-setup-write {
+  border-color: var(--primary-border);
+  background: linear-gradient(180deg, var(--primary-top), var(--primary-bottom));
+}
+
+.test-setup-write:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.test-setup button:focus-visible,
+.test-setup input:focus-visible,
+.test-setup select:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+@media (max-width: 760px) {
+  .test-setup-options {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* A test paper held up (Phase Y-5): the teacher's handwritten test, done in blue ballpoint, marked
+   in red. Printed like a THPT paper (Times New Roman). */
+.paper-overlay {
+  --paper: #f7f4ea;
+  --paper-ink: #1b1b1b;
+  --pen-ink: #1d3fa8;
+  --red-ink: #d0312d;
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  display: flex;
+  justify-content: center;
+  padding: 24px 16px calc(var(--hotbar-top) + 8px);
+  background: rgb(4 8 14 / 55%);
+}
+
+.paper-overlay.hidden {
+  display: none;
+}
+
+.paper-sheet {
+  position: relative;
+  width: min(820px, 100%);
+  overflow-y: auto;
+  padding: 44px 60px 56px;
+  border-radius: 2px;
+  background: var(--paper);
+  box-shadow: 0 18px 48px rgb(0 0 0 / 55%);
+  color: var(--paper-ink);
+  font:
+    17px / 1.5 'Times New Roman',
+    Times,
+    serif;
+}
+
+.paper-close {
+  position: absolute;
+  top: 24px;
+  right: 16px;
+  padding: 8px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  color: var(--ink-strong);
+  font: 600 var(--text-md) var(--font-sans);
+  cursor: pointer;
+}
+
+.paper-header {
+  position: relative;
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #bdb6a2;
+  text-align: center;
+}
+
+.paper-school {
+  font-weight: 700;
+  letter-spacing: 0.2em;
+}
+
+.paper-title {
+  margin: 6px 0 2px;
+  font-size: 22px;
+}
+
+.paper-covers,
+.paper-meta {
+  margin: 2px 0;
+  font-style: italic;
+}
+
+.paper-mark {
+  position: absolute;
+  top: -30px;
+  right: -40px;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  width: 104px;
+  height: 104px;
+  padding-top: 30px;
+  border: 3px solid var(--red-ink);
+  border-radius: 50% 46% 52% 48%;
+  color: var(--red-ink);
+  font:
+    italic 700 28px / 1 'Segoe Print',
+    'Comic Sans MS',
+    cursive;
+  transform: rotate(-8deg);
+}
+
+.paper-mark-of {
+  font-size: 16px;
+}
+
+.paper-part {
+  margin: 20px 0 2px;
+  font-size: 18px;
+}
+
+.paper-instruction {
+  margin: 0 0 10px;
+  font-style: italic;
+}
+
+.paper-question {
+  position: relative;
+  margin: 12px 0;
+}
+
+.paper-stem {
+  margin: 0 0 4px;
+}
+
+.paper-verdict {
+  position: absolute;
+  left: -36px;
+  top: -2px;
+  color: var(--red-ink);
+  font:
+    700 24px 'Segoe Print',
+    'Comic Sans MS',
+    cursive;
+}
+
+.paper-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2px 24px;
+  margin: 0;
+  padding: 0 0 0 18px;
+  list-style: none;
+}
+
+.paper-option-button,
+.paper-cell {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  width: 100%;
+  padding: 4px 6px;
+  border: 0;
+  border-radius: 3px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.paper-option-button:hover:not(:disabled),
+.paper-cell:hover:not(:disabled),
+.paper-option-button:focus-visible,
+.paper-cell:focus-visible {
+  outline: none;
+  background: rgb(29 63 168 / 8%);
+}
+
+.paper-option-button:disabled,
+.paper-cell:disabled {
+  cursor: default;
+}
+
+.paper-letter {
+  position: relative;
+  display: inline-block;
+  min-width: 1.4em;
+  font-weight: 700;
+  text-align: center;
+}
+
+.paper-ink {
+  position: absolute;
+  left: -0.55em;
+  top: -0.35em;
+  width: calc(100% + 1.1em);
+  height: calc(100% + 0.7em);
+  overflow: visible;
+  pointer-events: none;
+}
+
+.paper-ink path {
+  fill: none;
+  stroke: var(--pen-ink);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.paper-ink-red path {
+  stroke: var(--red-ink);
+  stroke-dasharray: 5 3;
+}
+
+.paper-ink-fresh > path {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: paper-draw 0.55s ease-out forwards;
+}
+
+.paper-pen {
+  offset-rotate: 0deg;
+  offset-anchor: 0% 100%;
+  transform-box: fill-box;
+  animation: paper-pen 0.55s ease-out forwards;
+}
+
+.paper-pen path {
+  fill: #2b2b2b;
+  stroke: none;
+}
+
+.paper-pen path.paper-pen-body {
+  fill: #2f6fb5;
+}
+
+@keyframes paper-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes paper-pen {
+  from {
+    offset-distance: 0%;
+    opacity: 1;
+  }
+
+  85% {
+    opacity: 1;
+  }
+
+  to {
+    offset-distance: 100%;
+    opacity: 0;
+  }
+}
+
+.paper-statements {
+  margin: 0;
+  padding: 0 0 0 18px;
+  list-style: none;
+}
+
+.paper-statement {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 3px 0;
+  border-bottom: 1px dotted #cfc8b4;
+}
+
+.paper-statement-text {
+  flex: 1;
+}
+
+.paper-cells {
+  display: flex;
+  flex: none;
+  gap: 6px;
+}
+
+.paper-cell {
+  width: auto;
+  padding: 2px 10px;
+  border: 1px solid #bdb6a2;
+}
+
+.paper-tick {
+  color: var(--red-ink);
+  font:
+    700 18px 'Segoe Print',
+    'Comic Sans MS',
+    cursive;
+}
+
+.paper-feedback {
+  margin-top: 28px;
+  padding: 16px 20px;
+  border: 1px solid #e1b2ad;
+  border-left: 4px solid var(--red-ink);
+  background: #fbf1ec;
+  color: #5a1c18;
+}
+
+.paper-feedback h3 {
+  margin-top: 0;
+  color: var(--red-ink);
+}
+
+.paper-feedback h4 {
+  margin: 14px 0 4px;
+  color: var(--red-ink);
+}
+
+.paper-note,
+.paper-advice {
+  margin: 4px 0;
+}
+
+.paper-list {
+  margin: 4px 0;
+  padding-left: 22px;
+}
+
+.paper-list li {
+  margin: 4px 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .paper-ink-fresh > path,
+  .paper-pen {
+    animation-duration: 0.01s;
+  }
+}
+
+@media (max-width: 760px) {
+  .paper-sheet {
+    padding: 28px 22px 40px 40px;
+  }
+
+  .paper-options {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* The room the player is in, on the main menu's panel. */
+.menu-room {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--ink-dim);
+  text-align: center;
+}
+
+.menu-room:empty {
+  display: none;
+}
+
+/* Formulas as a teacher writes them (formulaHtml.ts): a fraction stacked, its numerator over a
+   bar over its denominator, in line with the text; sub- and superscripts the browser's. */
+.frac {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: middle;
+  margin: 0 0.12em;
+  font-size: 0.86em;
+  line-height: 1.15;
+}
+
+.frac-num {
+  padding: 0 0.15em;
+  border-bottom: 1px solid currentColor;
+}
+
+.frac-den {
+  padding: 0 0.15em;
+}
+
+/* Phase F-1: hit by something thrown — a red flash at the edges, fading. */
+.hud-hurt {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(ellipse at center, transparent 45%, rgb(210 20 20 / 75%) 100%);
+}
+.hud-hurt.flash {
+  animation: hud-hurt 0.6s ease-out;
+}
+@keyframes hud-hurt {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Asleep: the view dimmed, "z z Z" rising, growing and fading, one after another. */
+.hud-sleep {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: rgb(4 8 16 / 55%);
+}
+.hud-sleep span {
+  position: absolute;
+  left: 52%;
+  top: 46%;
+  font:
+    700 28px 'Segoe UI',
+    system-ui,
+    sans-serif;
+  color: #dfe9ff;
+  opacity: 0;
+  animation: hud-z 3s ease-out infinite;
+}
+.hud-sleep span:nth-child(2) {
+  animation-delay: 1s;
+}
+.hud-sleep span:nth-child(3) {
+  animation-delay: 2s;
+}
+@keyframes hud-z {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.6);
+  }
+  20% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(60px, -140px) scale(1.8);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hud-sleep span {
+    animation: none;
+    opacity: 0.8;
+  }
+  .hud-hurt.flash {
+    animation-duration: 0.01s;
+  }
+}
+
+/* Phase F-2: the hub's laptop (LaptopView) — its screen over the game, framed by a thin bezel. */
+.laptop {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgb(2 6 12 / 72%);
+  pointer-events: auto;
+  z-index: 30;
+}
+.laptop.hidden {
+  display: none;
+}
+.laptop-screen {
+  --ink: #e9f1fa;
+  --dim: #9fb3c8;
+  --physics: #4ea8ff;
+  --chemistry: #ff9f43;
+  --biology: #4cd38a;
+  position: relative;
+  width: min(94vw, calc(92vh * 1.6));
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: 14px;
+  border: 10px solid #101317;
+  box-shadow:
+    0 0 0 1px #2c3036,
+    0 30px 90px rgb(0 0 0 / 65%);
+  background: #04070c;
+  color: var(--ink);
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+/* The start-up: a grid running into the distance, light, the emblem drawn, the wordmark. */
+.laptop-boot {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  perspective: 600px;
+  background: radial-gradient(ellipse at 50% 60%, #0b1d33 0%, #03060b 70%);
+  cursor: pointer;
+}
+.laptop-boot-grid {
+  position: absolute;
+  left: -50%;
+  right: -50%;
+  bottom: -30%;
+  height: 90%;
+  transform: rotateX(68deg);
+  transform-origin: 50% 100%;
+  background-image:
+    linear-gradient(rgb(78 168 255 / 35%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(78 168 255 / 35%) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: linear-gradient(to top, black 10%, transparent 85%);
+  opacity: 0;
+  animation:
+    laptop-grid-in 1.2s ease-out 0.2s forwards,
+    laptop-grid-run 2.2s linear infinite;
+}
+@keyframes laptop-grid-in {
+  to {
+    opacity: 1;
+  }
+}
+@keyframes laptop-grid-run {
+  to {
+    background-position: 0 48px;
+  }
+}
+.laptop-boot-glow {
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: #bfe3ff;
+  box-shadow: 0 0 40px 20px rgb(78 168 255 / 55%);
+  animation: laptop-glow 2.4s ease-out forwards;
+}
+@keyframes laptop-glow {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.2);
+  }
+  25% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0.25;
+    transform: translate(-50%, -50%) scale(28);
+  }
+}
+.laptop-boot-emblem {
+  position: absolute;
+  left: 50%;
+  top: 38%;
+  width: 22%;
+  transform: translate(-50%, -50%) scale(0.9);
+  overflow: visible;
+  animation: laptop-emblem 5.6s ease-out forwards;
+}
+@keyframes laptop-emblem {
+  0% {
+    transform: translate(-50%, -50%) scale(0.75);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.04);
+  }
+}
+.laptop-orbit {
+  fill: none;
+  stroke: #6cc2ff;
+  stroke-width: 2.4;
+  stroke-dasharray: 260;
+  stroke-dashoffset: 260;
+  filter: drop-shadow(0 0 6px rgb(108 194 255 / 90%));
+  animation: laptop-draw 1.4s ease-in-out forwards;
+}
+@keyframes laptop-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.laptop-electron {
+  fill: #ffffff;
+  filter: drop-shadow(0 0 5px #9fd8ff);
+}
+.laptop-nucleus {
+  fill: #ffb454;
+  filter: drop-shadow(0 0 10px rgb(255 180 84 / 90%));
+  animation: laptop-nucleus 1.8s ease-in-out infinite alternate;
+}
+@keyframes laptop-nucleus {
+  to {
+    filter: drop-shadow(0 0 18px rgb(255 180 84 / 100%));
+  }
+}
+.laptop-boot-word {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 62%;
+  text-align: center;
+  font-weight: 800;
+  font-size: clamp(28px, 6.5vw, 76px);
+  letter-spacing: 0.32em;
+  text-indent: 0.32em;
+}
+.laptop-boot-word span {
+  display: inline-block;
+  opacity: 0;
+  filter: blur(12px);
+  transform: translateY(18px);
+  background: linear-gradient(180deg, #ffffff, #8fd0ff);
+  background-clip: text;
+  color: transparent;
+  animation: laptop-letter 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+@keyframes laptop-letter {
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+  }
+}
+.laptop-boot-sweep {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 40%, rgb(255 255 255 / 18%) 50%, transparent 60%);
+  transform: translateX(-100%);
+  animation: laptop-sweep 1.4s ease-in-out 2.9s forwards;
+  pointer-events: none;
+}
+@keyframes laptop-sweep {
+  to {
+    transform: translateX(100%);
+  }
+}
+.laptop-boot-tagline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 75%;
+  text-align: center;
+  color: var(--dim);
+  font-size: clamp(12px, 1.5vw, 18px);
+  letter-spacing: 0.08em;
+  opacity: 0;
+  animation: laptop-grid-in 1s ease-out 3.1s forwards;
+}
+.laptop-boot-bar {
+  position: absolute;
+  left: 38%;
+  right: 38%;
+  top: 84%;
+  height: 3px;
+  border-radius: 2px;
+  background: rgb(255 255 255 / 10%);
+  overflow: hidden;
+}
+.laptop-boot-bar-fill {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, #4ea8ff, #b892ff, #ffb454);
+  animation: laptop-bar 5.2s ease-in-out forwards;
+}
+@keyframes laptop-bar {
+  to {
+    width: 100%;
+  }
+}
+.laptop-boot-skip {
+  position: absolute;
+  right: 18px;
+  bottom: 14px;
+  font-size: 12px;
+  color: rgb(159 179 200 / 70%);
+}
+
+/* The desktop. */
+.laptop-desktop {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  background:
+    radial-gradient(circle at 80% 10%, rgb(184 146 255 / 22%), transparent 45%),
+    radial-gradient(circle at 10% 90%, rgb(78 168 255 / 22%), transparent 50%),
+    linear-gradient(160deg, #0b1626, #050a12);
+}
+.laptop-fade-in {
+  animation: laptop-grid-in 0.5s ease-out;
+}
+.laptop-wallpaper-emblem {
+  position: absolute;
+  right: -6%;
+  bottom: -12%;
+  width: 46%;
+  opacity: 0.08;
+  pointer-events: none;
+}
+.laptop-wallpaper-emblem .laptop-orbit,
+.laptop-taskbar-emblem .laptop-orbit {
+  stroke-dashoffset: 0;
+  animation: none;
+}
+.laptop-desktop-head {
+  padding: 3% 4% 1%;
+}
+.laptop-desktop-head h1 {
+  margin: 0;
+  font-size: clamp(18px, 2.4vw, 30px);
+}
+.laptop-desktop-head p {
+  margin: 4px 0 0;
+  color: var(--dim);
+}
+.laptop-columns {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3%;
+  padding: 1% 4%;
+  align-content: start;
+}
+.laptop-column h2 {
+  margin: 0 0 10px;
+  font-size: clamp(14px, 1.6vw, 20px);
+}
+.laptop-column.subject-physics h2 {
+  color: var(--physics);
+}
+.laptop-column.subject-chemistry h2 {
+  color: var(--chemistry);
+}
+.laptop-column.subject-biology h2 {
+  color: var(--biology);
+}
+.laptop-file {
+  --tone: var(--physics);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 12px;
+  align-items: center;
+  width: 100%;
+  margin: 0 0 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgb(255 255 255 / 8%);
+  background: rgb(255 255 255 / 4%);
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform 0.15s,
+    background 0.15s;
+}
+.laptop-file.subject-chemistry {
+  --tone: var(--chemistry);
+}
+.laptop-file.subject-biology {
+  --tone: var(--biology);
+}
+.laptop-file:hover,
+.laptop-file:focus-visible {
+  transform: translateY(-2px);
+  background: rgb(255 255 255 / 9%);
+  border-color: var(--tone);
+}
+.laptop-file-icon {
+  grid-row: span 2;
+  position: relative;
+  width: 46px;
+  height: 56px;
+  border-radius: 4px 12px 4px 4px;
+  background: linear-gradient(160deg, var(--tone), color-mix(in srgb, var(--tone) 45%, #000));
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 20%);
+  color: #fff;
+}
+.laptop-file-glyph {
+  position: absolute;
+  left: 6px;
+  top: 6px;
+  width: 20px;
+  height: 20px;
+}
+.laptop-file-grade {
+  position: absolute;
+  right: 5px;
+  bottom: 2px;
+  font-weight: 800;
+  font-size: 20px;
+}
+.laptop-file-name {
+  font-weight: 600;
+}
+.laptop-file-kind {
+  color: var(--dim);
+  font-size: 12px;
+}
+.laptop-note {
+  position: absolute;
+  left: 50%;
+  bottom: 70px;
+  transform: translateX(-50%);
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: #2a1b14;
+  color: #ffd0a8;
+}
+.laptop-taskbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 14px;
+  background: rgb(10 14 20 / 85%);
+  border-top: 1px solid rgb(255 255 255 / 6%);
+}
+.laptop-taskbar-start {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+}
+.laptop-taskbar-emblem {
+  width: 22px;
+}
+.laptop-clock {
+  margin-left: auto;
+  color: var(--dim);
+  font-variant-numeric: tabular-nums;
+}
+.laptop-off,
+.laptop-back,
+.laptop-reveal,
+.laptop-page-nav button {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid rgb(255 255 255 / 14%);
+  background: rgb(255 255 255 / 6%);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+/* A book: the bar, the contents, the page. */
+.laptop-reader {
+  --tone: var(--physics);
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  background: #f6f4ee;
+  color: #1d2733;
+}
+.laptop-reader.subject-chemistry {
+  --tone: var(--chemistry);
+}
+.laptop-reader.subject-biology {
+  --tone: var(--biology);
+}
+.laptop-reader-bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 14px;
+  background: color-mix(in srgb, var(--tone) 80%, #0b1626);
+  color: #fff;
+}
+.laptop-reader-title {
+  font-weight: 700;
+}
+.laptop-reader-bar .laptop-clock {
+  color: rgb(255 255 255 / 80%);
+}
+.laptop-reader-body {
+  display: grid;
+  grid-template-columns: minmax(180px, 26%) 1fr;
+  min-height: 0;
+}
+.laptop-toc {
+  overflow-y: auto;
+  padding: 12px;
+  background: #ebe7dc;
+  border-right: 1px solid #d8d2c4;
+}
+.laptop-toc-tagline {
+  margin: 0 0 10px;
+  font-style: italic;
+  color: #5b6672;
+  font-size: 13px;
+}
+.laptop-toc-chapter h3 {
+  margin: 12px 0 6px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: color-mix(in srgb, var(--tone) 70%, #1d2733);
+}
+.laptop-toc-lesson {
+  display: block;
+  width: 100%;
+  margin: 2px 0;
+  padding: 6px 8px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: #26313d;
+  text-align: left;
+  font-size: 13px;
+  cursor: pointer;
+}
+.laptop-toc-lesson:hover {
+  background: rgb(0 0 0 / 6%);
+}
+.laptop-toc-lesson.current {
+  background: var(--tone);
+  color: #fff;
+}
+.laptop-page {
+  overflow-y: auto;
+  padding: 22px clamp(18px, 4%, 48px) 30px;
+  line-height: 1.6;
+  font-size: 15px;
+}
+.laptop-page-kicker {
+  color: #7a8794;
+  font-size: 12px;
+}
+.laptop-page h1 {
+  margin: 2px 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 3px solid var(--tone);
+  font-size: clamp(18px, 2.2vw, 26px);
+}
+.laptop-page h2 {
+  margin: 18px 0 6px;
+  font-size: 17px;
+  color: color-mix(in srgb, var(--tone) 70%, #1d2733);
+}
+.laptop-hook,
+.laptop-example,
+.laptop-tip,
+.laptop-remember,
+.laptop-check,
+.laptop-lab {
+  margin: 12px 0;
+  padding: 10px 14px;
+  border-radius: 10px;
+}
+.laptop-hook {
+  background: color-mix(in srgb, var(--tone) 12%, #fff);
+  border-left: 4px solid var(--tone);
+}
+.laptop-hook p,
+.laptop-tip p,
+.laptop-check p {
+  margin: 4px 0 0;
+}
+.laptop-formulas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 10px 0;
+}
+.laptop-formula {
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid #d8d2c4;
+  font-family: 'Cambria Math', 'Times New Roman', serif;
+  font-size: 18px;
+}
+.laptop-example {
+  background: #fff;
+  border: 1px dashed color-mix(in srgb, var(--tone) 60%, #999);
+}
+.laptop-example-question {
+  margin: 4px 0;
+  font-style: italic;
+}
+.laptop-example ol {
+  margin: 4px 0 0;
+  padding-left: 22px;
+}
+.laptop-tip {
+  background: #fff6dc;
+  border-left: 4px solid #f2c230;
+}
+.laptop-remember {
+  background: #e9f6ee;
+  border-left: 4px solid #2f9e5c;
+}
+.laptop-remember ul {
+  margin: 4px 0 0;
+  padding-left: 20px;
+}
+.laptop-check {
+  background: #eef2fb;
+  border-left: 4px solid #5b7fd8;
+}
+.laptop-reveal {
+  margin-top: 6px;
+  background: #5b7fd8;
+  color: #fff;
+}
+.laptop-answer.hidden {
+  display: none;
+}
+.laptop-lab {
+  background: #10283f;
+  color: #cde8ff;
+}
+.laptop-page-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 18px;
+}
+.laptop-page-nav button {
+  background: var(--tone);
+  border: 0;
+  color: #fff;
+}
+.laptop-page-nav button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+@media (prefers-reduced-motion: reduce) {
+  .laptop-boot *,
+  .laptop-fade-in {
+    animation-duration: 0.01s !important;
+    animation-delay: 0s !important;
+  }
+}
+
+/* Phase F-3: a person of the world heard talking to another player of the room. */
+.overheard {
+  position: absolute;
+  left: 50%;
+  bottom: 168px;
+  transform: translateX(-50%);
+  max-width: min(720px, calc(100vw - 32px));
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: rgba(16, 22, 34, 0.62);
+  color: #e9eef5;
+  font-size: 15px;
+  line-height: 1.4;
+  pointer-events: none;
+  text-align: center;
+}
+.overheard[hidden] {
+  display: none;
+}
+.overheard-who {
+  font-size: 12px;
+  color: #9fc4ea;
+  margin-bottom: 2px;
+}
+
+/* Touch controls (phones and tablets, 2026-11-12): a stick on the left, a drag elsewhere looks,
+   buttons on the right and along the top. A computer never has them. */
+.touch-controls {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  touch-action: none;
+  --touch-big: 72px;
+  --touch-small: 52px;
+}
+
+.touch-controls.touch-phone {
+  --touch-big: 60px;
+  --touch-small: 44px;
+}
+
+.touch-controls.hidden {
+  display: none;
+}
+
+.touch-look,
+.touch-stick-zone {
+  position: absolute;
+  pointer-events: auto;
+  touch-action: none;
+}
+
+.touch-look {
+  inset: 0;
+}
+
+.touch-stick-zone {
+  left: 0;
+  bottom: 0;
+  width: 40%;
+  height: 60%;
+}
+
+.touch-stick-base {
+  position: absolute;
+  width: 112px;
+  height: 112px;
+  margin: -56px 0 0 -56px;
+  border-radius: 50%;
+  border: 2px solid rgb(255 255 255 / 35%);
+  background: rgb(16 22 30 / 35%);
+}
+
+.touch-stick-base.hidden {
+  display: none;
+}
+
+.touch-stick-knob {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 52px;
+  height: 52px;
+  margin: -26px 0 0 -26px;
+  border-radius: 50%;
+  background: rgb(var(--accent-rgb) / 70%);
+  box-shadow: 0 0 12px rgb(var(--accent-rgb) / 60%);
+}
+
+.touch-main,
+.touch-side,
+.touch-top,
+.touch-keypad {
+  position: absolute;
+  display: flex;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.touch-main {
+  right: max(16px, env(safe-area-inset-right));
+  bottom: 96px;
+  flex-direction: column-reverse;
+  align-items: flex-end;
+}
+
+.touch-side {
+  right: calc(max(16px, env(safe-area-inset-right)) + var(--touch-big) + 12px);
+  bottom: 96px;
+  flex-direction: column-reverse;
+}
+
+.touch-top {
+  top: max(10px, env(safe-area-inset-top));
+  right: max(16px, env(safe-area-inset-right));
+}
+
+.touch-button,
+.touch-key {
+  pointer-events: auto;
+  touch-action: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: var(--touch-small);
+  height: var(--touch-small);
+  padding: 0;
+  border: 1px solid rgb(255 255 255 / 30%);
+  border-radius: 50%;
+  background: rgb(16 22 30 / 55%);
+  color: var(--ink);
+  font: inherit;
+}
+
+.touch-button.big {
+  width: var(--touch-big);
+  height: var(--touch-big);
+}
+
+.touch-button.down,
+.touch-key.down {
+  background: rgb(var(--accent-rgb) / 70%);
+}
+
+.touch-key-cap {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.touch-label {
+  margin-top: 2px;
+  font-size: 10px;
+  line-height: 1.1;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.touch-label:empty {
+  display: none;
+}
+
+/* Left of the phone in the hand (held low right), clear of its screen. */
+.touch-keypad {
+  left: calc(50% - 210px);
+  bottom: 96px;
+  display: grid;
+  grid-template-columns: repeat(3, var(--touch-small));
+  gap: 8px;
+}
+
+.touch-keypad.hidden {
+  display: none;
+}
+
+.touch-key {
+  border-radius: 12px;
+}
+
+.touch-rotate {
+  display: none;
+}
+
+@media (orientation: portrait) {
+  .touch-controls.touch-phone .touch-rotate {
+    display: block;
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    top: 40%;
+    padding: 14px;
+    border-radius: 12px;
+    background: var(--panel);
+    color: var(--ink);
+    text-align: center;
+    pointer-events: none;
+  }
+}
+
+/* On a touch screen nothing is clicked to capture the mouse: no such hint. */
+html[data-device='phone'] .hud-hint,
+html[data-device='tablet'] .hud-hint {
+  display: none;
+}
+
+/* The phone's keypad out on a phone: the task panel steps aside for it (it comes back with the
+   phone away). */
+#app:has(.touch-phone .touch-keypad:not(.hidden)) .task-panel {
+  display: none;
+}
+
+/* A short, wide screen (a phone held sideways): the name small on the left, the controls on the
+   right, all in view without scrolling. */
+@media (height <= 520px) and (width >= 600px) {
+  .menu {
+    padding: 10px 16px;
+  }
+
+  .menu-panel {
+    width: min(900px, 100%);
+    flex-direction: row;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .menu-brand {
+    flex: 1;
+  }
+
+  .menu-emblem {
+    width: 96px;
+    margin-bottom: 6px;
+  }
+
+  .menu-title {
+    font-size: 40px;
+  }
+
+  .menu-controls {
+    gap: 6px;
+    padding: 12px 16px 10px;
+  }
+
+  .menu-controls .menu-button {
+    min-height: 34px;
+    padding: 6px var(--space-4);
+  }
+}
+
+/* A short screen: the conversation's answers at the top right, smaller, above the line said;
+   the hotbar out of the way while talking (no item is used in a conversation). */
+@media (height <= 520px) {
+  #app:has(.dialogue:not(.hidden)) :is(.hotbar, .hotbar-label) {
+    display: none;
+  }
+
+  .dialogue-box {
+    bottom: 10px;
+    min-height: 0;
+    padding: 22px 18px 12px;
+  }
+
+  .dialogue-choices {
+    left: auto;
+    right: 16px;
+    top: 10px;
+    width: min(360px, 48vw);
+    gap: 5px;
+    max-height: calc(100% - 170px);
+    overflow-y: auto;
+  }
+
+  .dialogue-choice-button {
+    padding: 6px 12px;
+    font-size: 15px;
+  }
+
+  .dialogue-choice-icon {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+/* A short, wide screen: the pause menu keeps its two columns (actions beside the controls guide),
+   tighter, so the guide is in view without scrolling past the buttons. */
+@media (height <= 520px) and (width >= 600px) {
+  .pause-panel {
+    padding: var(--space-4) var(--space-5);
+  }
+
+  .pause-menu {
+    grid-template-columns: minmax(180px, 230px) minmax(0, 1fr);
+  }
+
+  .pause-keys {
+    padding: 0 0 0 var(--space-4);
+    border-top: 0;
+    border-left: 1px solid rgb(143 214 240 / 12%);
+  }
+
+  .pause-actions .menu-button {
+    min-height: 34px;
+    padding: 6px var(--space-4);
+  }
+
+  .pause-note {
+    padding-bottom: 8px;
+    font-size: var(--text-sm);
+  }
+}
+
+/* The app's opening (AppIntro.ts, 2026-11-12): over everything while the game loads. */
+.app-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 28px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+/* The dark, its own layer under the logo: it fades while the logo flies into the menu. */
+.app-intro-back {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(55% 55% at 50% 45%, rgb(var(--accent-rgb) / 16%), transparent 70%),
+    linear-gradient(160deg, #0b1526, #060a12 55%, #0b0e1b);
+}
+
+/* Ending (AppIntro.ts animates it): the menu takes the clicks. */
+.app-intro.leaving {
+  pointer-events: none;
+}
+
+.app-intro-emblem {
+  width: min(260px, 42vh);
+  height: auto;
+  overflow: visible;
+}
+
+/* The rings come spinning in from far and wide, and settle into their orbits. */
+.app-intro-emblem > circle:nth-child(-n + 4),
+.app-intro-emblem > path:nth-child(6),
+.app-intro-emblem > path:nth-child(7) {
+  transform-box: view-box;
+  transform-origin: 50% 50%;
+}
+
+.app-intro-emblem > circle:nth-child(1) {
+  animation: app-intro-grow 1s cubic-bezier(0.2, 0.9, 0.3, 1.2) 0.3s both;
+}
+
+.app-intro-emblem > circle:nth-child(2) {
+  animation: app-intro-spin-in 1.5s cubic-bezier(0.15, 0.85, 0.25, 1) 0.1s both;
+  --from: -300deg;
+  --scale: 2.6;
+}
+
+.app-intro-emblem > circle:nth-child(3) {
+  animation: app-intro-spin-in 1.7s cubic-bezier(0.15, 0.85, 0.25, 1) 0.2s both;
+  --from: 420deg;
+  --scale: 1.9;
+}
+
+.app-intro-emblem > circle:nth-child(4) {
+  animation: app-intro-spin-in 1.4s cubic-bezier(0.15, 0.85, 0.25, 1) 0.35s both;
+  --from: -220deg;
+  --scale: 0.15;
+}
+
+/* The satellite whirls round the dial, slows, then keeps the menu's slow round. */
+.app-intro .emblem-orbit {
+  animation:
+    app-intro-whirl 1.8s cubic-bezier(0.1, 0.7, 0.3, 1) 0.2s both,
+    emblem-orbit 18s linear 2s infinite;
+}
+
+.app-intro-emblem > path:nth-child(6),
+.app-intro-emblem > path:nth-child(7) {
+  animation: app-intro-tape 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 0.8s both;
+}
+
+.app-intro .emblem-flight {
+  animation:
+    app-intro-fade 0.5s ease-out 1.6s both,
+    emblem-flight 1.8s linear infinite;
+}
+
+.app-intro .emblem-strobe {
+  animation:
+    app-intro-fade 0.3s ease-out calc(1.25s + var(--at) * 0.9) both,
+    emblem-strobe 3.6s ease-out calc(var(--at) + 2.6s) infinite;
+}
+
+/* The ball: in on its flight (the comet), then resting on the trajectory's top, glowing. */
+.app-intro-emblem > circle:nth-child(13),
+.app-intro-emblem > circle:nth-child(14) {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: app-intro-land 0.6s cubic-bezier(0.2, 0.9, 0.3, 1.4) 2.15s both;
+}
+
+.app-intro-comet {
+  opacity: 0;
+  animation: app-intro-comet 1.4s linear 1.05s forwards;
+}
+
+.app-intro-trail {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0.8;
+  animation: app-intro-trail 1.6s cubic-bezier(0.35, 0, 0.25, 1) 1.05s forwards;
+}
+
+.app-intro-ripple {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  border: 2px solid rgb(var(--accent-rgb) / 60%);
+  border-radius: 50%;
+  opacity: 0;
+  animation: app-intro-ripple 1.6s ease-out 0.2s;
+}
+
+.app-intro-ripple.late {
+  animation-delay: 2.15s;
+  border-color: rgb(255 180 84 / 60%);
+}
+
+.app-intro-word {
+  position: relative;
+  display: flex;
+  gap: 0.22em;
+  padding-left: 0.22em;
+  font-size: clamp(40px, 9vh, 72px);
+  font-weight: 800;
+  color: var(--ink-strong);
+  text-shadow: 0 0 28px rgb(var(--accent-rgb) / 45%);
+}
+
+.app-intro-word > span:not(.app-intro-sweep) {
+  display: inline-block;
+  animation:
+    app-intro-letter 0.7s cubic-bezier(0.2, 0.9, 0.3, 1.2) calc(2.1s + var(--i) * 0.08s) both,
+    app-intro-flare 0.5s ease-out calc(2.95s + var(--i) * 0.07s);
+}
+
+/* The light running across the name: each letter flares in turn. */
+.app-intro-word > span:not(.app-intro-sweep) {
+  --flare-at: calc(2.95s + var(--i) * 0.07s);
+}
+
+.app-intro-sweep {
+  display: none;
+}
+
+.app-intro-bar {
+  position: absolute;
+  bottom: 12vh;
+  left: 50%;
+  width: min(240px, 50vw);
+  height: 2px;
+  margin-left: max(-120px, -25vw);
+  border-radius: 1px;
+  background: linear-gradient(90deg, transparent, rgb(var(--accent-rgb) / 80%), transparent) -100%
+    0 / 50% 100% no-repeat rgb(255 255 255 / 8%);
+  animation: app-intro-load 1.2s linear infinite;
+}
+
+.app-intro.ready .app-intro-bar {
+  animation: none;
+  background: rgb(var(--accent-rgb) / 70%);
+  transition: background 0.3s;
+}
+
+@keyframes app-intro-spin-in {
+  from {
+    opacity: 0;
+    transform: rotate(var(--from)) scale(var(--scale));
+  }
+  60% {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes app-intro-whirl {
+  from {
+    opacity: 0;
+    transform: rotate(-3turn);
+  }
+  20% {
+    opacity: 1;
+  }
+  to {
+    transform: rotate(0);
+  }
+}
+
+@keyframes app-intro-grow {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+}
+
+@keyframes app-intro-tape {
+  from {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+}
+
+@keyframes app-intro-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes app-intro-land {
+  from {
+    opacity: 0;
+    transform: scale(2.4);
+  }
+}
+
+@keyframes app-intro-comet {
+  0%,
+  78% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes app-intro-trail {
+  70% {
+    stroke-dashoffset: 0;
+    opacity: 0.8;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+
+@keyframes app-intro-ripple {
+  from {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(14);
+  }
+}
+
+@keyframes app-intro-letter {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translateY(0.6em) scale(1.3);
+  }
+}
+
+@keyframes app-intro-flare {
+  40% {
+    color: #ffffff;
+    text-shadow:
+      0 0 18px rgb(255 255 255 / 90%),
+      0 0 42px rgb(var(--accent-rgb) / 80%);
+  }
+}
+
+@keyframes app-intro-load {
+  to {
+    background-position: 200% 0;
+  }
+}
+
+/* Reduced motion: the emblem and the name at once, still; a short fade. */
+@media (prefers-reduced-motion: reduce) {
+  .app-intro *,
+  .app-intro .emblem-orbit,
+  .app-intro .emblem-flight,
+  .app-intro .emblem-strobe {
+    animation: none !important;
+  }
+
+  .app-intro-comet,
+  .app-intro-trail,
+  .app-intro-ripple,
+  .app-intro-sweep {
+    display: none;
+  }
+}
+
+/* The laptop's start-up: each orbit spins in round the nucleus (the view box's origin) and settles. */
+.laptop-orbit-spin {
+  transform-box: view-box;
+  transform-origin: 0 0;
+  animation: laptop-orbit-in 2.1s cubic-bezier(0.2, 0.75, 0.25, 1) both;
+}
+
+@keyframes laptop-orbit-in {
+  from {
+    opacity: 0;
+    transform: rotate(var(--from)) scale(1.8);
+  }
+  50% {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .laptop-orbit-spin {
+    animation: none;
+  }
+}

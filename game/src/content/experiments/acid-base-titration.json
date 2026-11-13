@@ -1,0 +1,904 @@
+{
+  "id": "acid-base-titration",
+  "name": "Acid–base titration",
+  "category": "chemistry",
+  "description": "A pipette puts a sample of HCl solution in a conical flask with a few drops of indicator. Sodium hydroxide of known concentration runs in from a burette until the indicator changes colour: the endpoint. The burette reading V_end gives the acid's concentration, c_a = c_b·V_end/V_a, from HCl + NaOH → NaCl + H₂O. The pH curve rises until the indicator's endpoint; compare runs with each indicator to see where each changes.",
+  "vi": {
+    "name": "Chuẩn độ axit – bazơ",
+    "description": "Dùng pipet lấy một thể tích dung dịch HCl cho vào bình tam giác, thêm vài giọt chất chỉ thị. Dung dịch natri hiđroxit đã biết nồng độ được nhỏ từ buret xuống cho đến khi chất chỉ thị đổi màu: đó là điểm cuối chuẩn độ. Số đọc V_end trên buret cho nồng độ của axit, c_a = c_b·V_end/V_a, theo phản ứng HCl + NaOH → NaCl + H₂O. Đường cong pH tăng dần cho đến điểm cuối của chất chỉ thị; so sánh các lần chạy với từng chất chỉ thị để thấy mỗi chất đổi màu ở đâu.",
+    "note": "Mô hình dạy học đơn giản hóa, không đạt độ chính xác của phòng thí nghiệm. HCl và NaOH điện li hoàn toàn, thể tích cộng được, hoạt độ coi bằng nồng độ; pH tại mỗi thể tích suy ra trực tiếp từ cân bằng điện tích [H⁺] + [Na⁺] = [Cl⁻] + [OH⁻] với K_w = 1,0·10⁻¹⁴ (25 °C). Điểm tương đương V_eq = c_a·V_a/c_b là lúc số mol bazơ bằng số mol axit, pH = pK_w/2 = 7. Điểm cuối là nơi pH đạt ngưỡng đổi màu của chất chỉ thị: metyl da cam chuyển hẳn sang vàng ở pH 4,4, hơi sớm hơn V_eq; phenolphtalein bắt đầu hồng ở pH 8,2, muộn hơn V_eq rất ít. Khoảng chênh đó là sai số chỉ thị. Buret chảy đều 0,25 mL/s khi van mở (tốc độ cố định trong mô hình này: không mở van một phần, không nhỏ từng giọt); em khóa van khi màu đổi rồi ghi số đọc, nên nếu nhỏ quá điểm cuối thì số đọc sẽ cho thấy điều đó. Kích thước giọt và CO₂ trong không khí không được mô hình hóa. Mô hình tất định nên các lần lặp với cùng thiết lập cho cùng kết quả; trong thực tế, các lần chuẩn độ được coi là khớp nhau khi lệch không quá 0,10 mL."
+  },
+  "requiredEquipment": ["titration-stand"],
+  "model": "acid-base.titration",
+  "presentation": "physical-lab",
+  "workspace": {
+    "pieces": [
+      {
+        "id": "stand",
+        "kind": "retort-stand",
+        "slot": "stand",
+        "label": "Retort stand and clamp",
+        "vi": {
+          "label": "Giá thí nghiệm có kẹp"
+        },
+        "owns": [],
+        "shows": []
+      },
+      {
+        "id": "burette",
+        "kind": "burette",
+        "slot": "stand.clamp",
+        "label": "50 mL burette (0.1 mL marks)",
+        "vi": {
+          "label": "Buret 50 mL (vạch chia 0,1 mL)"
+        },
+        "owns": ["baseConcentration", "resolution"],
+        "shows": [
+          {
+            "variable": "volume"
+          },
+          {
+            "input": "flowRate"
+          },
+          {
+            "instrument": "endpoint-volume"
+          }
+        ]
+      },
+      {
+        "id": "flask",
+        "kind": "conical-flask",
+        "slot": "tile",
+        "label": "250 mL conical flask",
+        "vi": {
+          "label": "Bình tam giác 250 mL"
+        },
+        "owns": ["endpointPH"],
+        "shows": [
+          {
+            "variable": "volume"
+          },
+          {
+            "result": "endpoint-pH"
+          }
+        ]
+      },
+      {
+        "id": "tile",
+        "kind": "tile",
+        "slot": "stand.tile",
+        "label": "White tile under the burette tip",
+        "vi": {
+          "label": "Tấm sứ trắng dưới đầu buret"
+        },
+        "owns": [],
+        "shows": []
+      },
+      {
+        "id": "pipette",
+        "kind": "pipette",
+        "slot": "rack",
+        "label": "Volumetric pipette",
+        "vi": {
+          "label": "Pipet bầu"
+        },
+        "owns": ["acidVolume"],
+        "shows": []
+      },
+      {
+        "id": "acid-bottle",
+        "kind": "reagent-bottle",
+        "slot": "shelf",
+        "label": "HCl bottle",
+        "vi": {
+          "label": "Chai HCl"
+        },
+        "owns": [],
+        "shows": []
+      },
+      {
+        "id": "base-bottle",
+        "kind": "reagent-bottle",
+        "slot": "shelf",
+        "label": "NaOH bottle",
+        "vi": {
+          "label": "Chai NaOH"
+        },
+        "owns": [],
+        "shows": []
+      },
+      {
+        "id": "dropper",
+        "kind": "dropper-bottle",
+        "slot": "shelf",
+        "label": "Indicator dropper bottle",
+        "vi": {
+          "label": "Lọ nhỏ giọt chất chỉ thị"
+        },
+        "owns": [],
+        "shows": []
+      }
+    ],
+    "materials": [
+      {
+        "id": "hcl",
+        "kind": "solution",
+        "label": "HCl solution",
+        "vi": {
+          "label": "Dung dịch HCl"
+        },
+        "formula": "HCl"
+      },
+      {
+        "id": "naoh-005",
+        "kind": "solution",
+        "label": "NaOH solution, 0.05 mol/L",
+        "vi": {
+          "label": "Dung dịch NaOH 0,05 mol/L"
+        },
+        "formula": "NaOH",
+        "sets": {
+          "parameter": "baseConcentration",
+          "value": 0.05
+        }
+      },
+      {
+        "id": "naoh-01",
+        "kind": "solution",
+        "label": "NaOH solution, 0.1 mol/L",
+        "vi": {
+          "label": "Dung dịch NaOH 0,1 mol/L"
+        },
+        "formula": "NaOH",
+        "sets": {
+          "parameter": "baseConcentration",
+          "value": 0.1
+        }
+      },
+      {
+        "id": "naoh-02",
+        "kind": "solution",
+        "label": "NaOH solution, 0.2 mol/L",
+        "vi": {
+          "label": "Dung dịch NaOH 0,2 mol/L"
+        },
+        "formula": "NaOH",
+        "sets": {
+          "parameter": "baseConcentration",
+          "value": 0.2
+        }
+      },
+      {
+        "id": "methyl-orange",
+        "kind": "indicator",
+        "label": "Methyl orange",
+        "vi": {
+          "label": "Metyl da cam"
+        },
+        "sets": {
+          "parameter": "endpointPH",
+          "value": 4.4
+        }
+      },
+      {
+        "id": "phenolphthalein",
+        "kind": "indicator",
+        "label": "Phenolphthalein",
+        "vi": {
+          "label": "Phenolphtalein"
+        },
+        "sets": {
+          "parameter": "endpointPH",
+          "value": 8.2
+        }
+      },
+      {
+        "id": "pipette-10",
+        "kind": "pipette",
+        "label": "10 mL volumetric pipette",
+        "vi": {
+          "label": "Pipet bầu 10 mL"
+        },
+        "sets": {
+          "parameter": "acidVolume",
+          "value": 10
+        }
+      },
+      {
+        "id": "pipette-20",
+        "kind": "pipette",
+        "label": "20 mL volumetric pipette",
+        "vi": {
+          "label": "Pipet bầu 20 mL"
+        },
+        "sets": {
+          "parameter": "acidVolume",
+          "value": 20
+        }
+      },
+      {
+        "id": "pipette-25",
+        "kind": "pipette",
+        "label": "25 mL volumetric pipette",
+        "vi": {
+          "label": "Pipet bầu 25 mL"
+        },
+        "sets": {
+          "parameter": "acidVolume",
+          "value": 25
+        }
+      }
+    ],
+    "setup": [
+      {
+        "id": "fill-005",
+        "instruction": "Fill the burette with the NaOH solution (0.05 mol/L).",
+        "refusal": "The burette holds the titrant, NaOH, in this experiment: fill it first.",
+        "vi": {
+          "instruction": "Nạp dung dịch NaOH (0,05 mol/L) vào buret.",
+          "refusal": "Buret đựng chất chuẩn độ, ở đây là NaOH: hãy nạp buret trước."
+        },
+        "place": "naoh-005",
+        "onto": "burette",
+        "when": {
+          "parameter": "baseConcentration",
+          "values": [0.05]
+        }
+      },
+      {
+        "id": "fill-01",
+        "instruction": "Fill the burette with the NaOH solution (0.1 mol/L).",
+        "refusal": "The burette holds the titrant, NaOH, in this experiment: fill it first.",
+        "vi": {
+          "instruction": "Nạp dung dịch NaOH (0,1 mol/L) vào buret.",
+          "refusal": "Buret đựng chất chuẩn độ, ở đây là NaOH: hãy nạp buret trước."
+        },
+        "place": "naoh-01",
+        "onto": "burette",
+        "when": {
+          "parameter": "baseConcentration",
+          "values": [0.1]
+        }
+      },
+      {
+        "id": "fill-02",
+        "instruction": "Fill the burette with the NaOH solution (0.2 mol/L).",
+        "refusal": "The burette holds the titrant, NaOH, in this experiment: fill it first.",
+        "vi": {
+          "instruction": "Nạp dung dịch NaOH (0,2 mol/L) vào buret.",
+          "refusal": "Buret đựng chất chuẩn độ, ở đây là NaOH: hãy nạp buret trước."
+        },
+        "place": "naoh-02",
+        "onto": "burette",
+        "when": {
+          "parameter": "baseConcentration",
+          "values": [0.2]
+        }
+      },
+      {
+        "id": "clamp",
+        "instruction": "Clamp the burette on the stand.",
+        "refusal": "Clamp the burette on the retort stand first.",
+        "vi": {
+          "instruction": "Kẹp buret lên giá.",
+          "refusal": "Hãy kẹp buret lên giá thí nghiệm trước."
+        },
+        "place": "burette",
+        "onto": "stand",
+        "by": "clamp",
+        "after": ["fill-005", "fill-01", "fill-02"]
+      },
+      {
+        "id": "aspirate",
+        "instruction": "Draw the HCl solution into the pipette.",
+        "refusal": "The pipette takes the HCl solution: draw it up first.",
+        "vi": {
+          "instruction": "Hút dung dịch HCl vào pipet.",
+          "refusal": "Pipet lấy dung dịch HCl: hãy hút dung dịch lên trước."
+        },
+        "place": "hcl",
+        "onto": "pipette",
+        "locks": ["acidVolume"]
+      },
+      {
+        "id": "dispense",
+        "instruction": "Run the HCl solution from the pipette into the flask.",
+        "refusal": "Put the HCl solution from the pipette into the flask first.",
+        "vi": {
+          "instruction": "Cho dung dịch HCl từ pipet vào bình tam giác.",
+          "refusal": "Hãy cho dung dịch HCl từ pipet vào bình tam giác trước."
+        },
+        "place": "pipette",
+        "onto": "flask",
+        "after": ["aspirate"],
+        "locks": ["acidVolume"]
+      },
+      {
+        "id": "indicator-pp",
+        "instruction": "Add a few drops of the indicator to the flask.",
+        "refusal": "Add the indicator to the flask with the acid first.",
+        "vi": {
+          "instruction": "Nhỏ vài giọt chất chỉ thị vào bình tam giác.",
+          "refusal": "Hãy nhỏ chất chỉ thị vào bình có axit trước."
+        },
+        "place": "phenolphthalein",
+        "onto": "flask",
+        "after": ["dispense"],
+        "when": {
+          "parameter": "endpointPH",
+          "values": [8.2]
+        }
+      },
+      {
+        "id": "indicator-mo",
+        "instruction": "Add a few drops of the indicator to the flask.",
+        "refusal": "Add the indicator to the flask with the acid first.",
+        "vi": {
+          "instruction": "Nhỏ vài giọt chất chỉ thị vào bình tam giác.",
+          "refusal": "Hãy nhỏ chất chỉ thị vào bình có axit trước."
+        },
+        "place": "methyl-orange",
+        "onto": "flask",
+        "after": ["dispense"],
+        "when": {
+          "parameter": "endpointPH",
+          "values": [4.4]
+        }
+      },
+      {
+        "id": "tile",
+        "instruction": "Stand the flask on the white tile under the burette tip.",
+        "refusal": "Put the flask with the acid and indicator under the burette tip first.",
+        "vi": {
+          "instruction": "Đặt bình lên tấm sứ trắng dưới đầu buret.",
+          "refusal": "Hãy đặt bình có axit và chất chỉ thị dưới đầu buret trước."
+        },
+        "place": "flask",
+        "onto": "tile",
+        "after": [
+          "clamp",
+          "fill-005",
+          "fill-01",
+          "fill-02",
+          "dispense",
+          "indicator-pp",
+          "indicator-mo"
+        ]
+      }
+    ],
+    "runLabel": "Open the tap",
+    "vi": {
+      "runLabel": "Mở khóa buret"
+    },
+    "drive": {
+      "place": "burette",
+      "onto": "flask",
+      "feed": "added",
+      "rate": "flowRate"
+    }
+  },
+  "parameters": [
+    {
+      "id": "acidVolume",
+      "label": "Acid sample (pipette)",
+      "vi": {
+        "label": "Thể tích axit (pipet)"
+      },
+      "symbol": "V_a",
+      "unit": "mL",
+      "default": 25,
+      "min": 10,
+      "max": 25,
+      "presets": [
+        {
+          "label": "10 mL pipette",
+          "vi": {
+            "label": "Pipet 10 mL"
+          },
+          "value": 10
+        },
+        {
+          "label": "20 mL pipette",
+          "vi": {
+            "label": "Pipet 20 mL"
+          },
+          "value": 20
+        },
+        {
+          "label": "25 mL pipette",
+          "vi": {
+            "label": "Pipet 25 mL"
+          },
+          "value": 25
+        }
+      ]
+    },
+    {
+      "id": "baseConcentration",
+      "label": "NaOH concentration",
+      "vi": {
+        "label": "Nồng độ NaOH"
+      },
+      "symbol": "c_b",
+      "unit": "mol/L",
+      "default": 0.1,
+      "min": 0.05,
+      "max": 0.2,
+      "presets": [
+        {
+          "label": "0.05 mol/L",
+          "vi": {
+            "label": "0,05 mol/L"
+          },
+          "value": 0.05
+        },
+        {
+          "label": "0.1 mol/L",
+          "vi": {
+            "label": "0,1 mol/L"
+          },
+          "value": 0.1
+        },
+        {
+          "label": "0.2 mol/L",
+          "vi": {
+            "label": "0,2 mol/L"
+          },
+          "value": 0.2
+        }
+      ]
+    },
+    {
+      "id": "endpointPH",
+      "label": "Indicator (endpoint pH)",
+      "vi": {
+        "label": "Chất chỉ thị (pH điểm cuối)"
+      },
+      "symbol": "pH_end",
+      "unit": "",
+      "default": 8.2,
+      "min": 4.4,
+      "max": 8.2,
+      "presets": [
+        {
+          "label": "Methyl orange: red → yellow, pH 3.1–4.4",
+          "vi": {
+            "label": "Metyl da cam: đỏ → vàng, pH 3,1–4,4"
+          },
+          "value": 4.4
+        },
+        {
+          "label": "Phenolphthalein: colourless → pink, pH 8.2–10",
+          "vi": {
+            "label": "Phenolphtalein: không màu → hồng, pH 8,2–10"
+          },
+          "value": 8.2
+        }
+      ]
+    },
+    {
+      "id": "resolution",
+      "label": "Burette resolution",
+      "vi": {
+        "label": "Độ phân giải buret"
+      },
+      "symbol": "d",
+      "unit": "mL",
+      "default": 0.05,
+      "min": 0.05,
+      "max": 0.1,
+      "presets": [
+        {
+          "label": "0.05 mL (half a mark)",
+          "vi": {
+            "label": "0,05 mL (nửa vạch chia)"
+          },
+          "value": 0.05
+        },
+        {
+          "label": "0.1 mL (one mark)",
+          "vi": {
+            "label": "0,1 mL (một vạch chia)"
+          },
+          "value": 0.1
+        }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "acidConcentration": 0.085,
+    "kw": 1e-14,
+    "flowRate": 0.25
+  },
+  "inputs": {
+    "acidConcentration": {
+      "symbol": "c_a",
+      "unit": "mol/L",
+      "hidden": true
+    },
+    "flowRate": {
+      "symbol": "Q",
+      "unit": "mL/s"
+    },
+    "kw": {
+      "symbol": "K_w",
+      "unit": "",
+      "desk": false
+    }
+  },
+  "simulation": {
+    "timeStep": 0.01,
+    "maxDuration": 240,
+    "sampleInterval": 0.1
+  },
+  "measurements": [
+    {
+      "id": "volume",
+      "label": "NaOH added",
+      "vi": {
+        "label": "Thể tích NaOH đã thêm"
+      },
+      "symbol": "V",
+      "unit": "mL",
+      "variable": "volume"
+    },
+    {
+      "id": "pH",
+      "label": "pH in the flask",
+      "vi": {
+        "label": "pH trong bình"
+      },
+      "symbol": "pH",
+      "unit": "",
+      "variable": "pH"
+    }
+  ],
+  "results": [
+    {
+      "id": "endpoint-volume",
+      "label": "Endpoint volume V_end",
+      "vi": {
+        "label": "Thể tích tại điểm cuối V_end"
+      },
+      "symbol": "V_end",
+      "unit": "mL",
+      "variable": "volume",
+      "reduce": "final",
+      "theory": "endpointVolume"
+    },
+    {
+      "id": "equivalence-volume",
+      "label": "Endpoint volume vs equivalence V_eq = c_a·V_a/c_b",
+      "vi": {
+        "label": "Thể tích điểm cuối so với điểm tương đương V_eq = c_a·V_a/c_b"
+      },
+      "symbol": "V_end",
+      "unit": "mL",
+      "variable": "volume",
+      "reduce": "final",
+      "theory": "equivalenceVolume"
+    },
+    {
+      "id": "endpoint-pH",
+      "label": "pH in the flask at the reading",
+      "vi": {
+        "label": "pH trong bình lúc ghi số đọc"
+      },
+      "symbol": "pH",
+      "unit": "",
+      "variable": "pH",
+      "reduce": "final"
+    },
+    {
+      "id": "acid-concentration",
+      "label": "Acid concentration c_a = c_b·V_end/V_a",
+      "vi": {
+        "label": "Nồng độ axit c_a = c_b·V_end/V_a"
+      },
+      "symbol": "c_a",
+      "unit": "mol/L",
+      "variable": "inferredAcidConcentration",
+      "reduce": "final",
+      "theory": "acidConcentration",
+      "answer": {
+        "proportionalTo": "endpoint-volume"
+      }
+    }
+  ],
+  "graphs": [
+    {
+      "id": "ph-volume",
+      "title": "pH against NaOH added",
+      "vi": {
+        "title": "pH theo thể tích NaOH đã thêm"
+      },
+      "x": "volume",
+      "y": ["pH"],
+      "mark": "equivalenceVolume"
+    }
+  ],
+  "monitor": "ph-volume",
+  "compare": [
+    {
+      "graph": "ph-volume"
+    }
+  ],
+  "instruments": [
+    {
+      "result": "endpoint-volume",
+      "quantity": "Endpoint volume V_end",
+      "name": "50 mL burette (0.1 mL marks)",
+      "resolution": "resolution",
+      "excludes": "reading the meniscus by eye (parallax), the drop left on the tip, judging the colour itself, and the burette's own tolerance (±0.05 mL for a class A 50 mL burette, ISO 385)",
+      "vi": {
+        "quantity": "Thể tích tại điểm cuối V_end",
+        "name": "Buret 50 mL (vạch chia 0,1 mL)",
+        "excludes": "việc đọc mặt khum bằng mắt (thị sai), giọt còn treo ở đầu buret, việc nhận biết màu bằng mắt và dung sai của chính buret (±0,05 mL với buret 50 mL loại A, ISO 385)"
+      }
+    }
+  ],
+  "note": "A simplified teaching model, not a lab-grade one. HCl and NaOH dissociate fully, volumes add and activities are taken as concentrations; the pH at each volume follows directly from the charge balance [H⁺] + [Na⁺] = [Cl⁻] + [OH⁻] with K_w = 1.0·10⁻¹⁴ (25 °C). Equivalence, V_eq = c_a·V_a/c_b, is as many moles of base as of acid, at pH = pK_w/2 = 7. The endpoint is where the pH reaches the indicator's change: methyl orange has turned fully yellow at pH 4.4, a little before V_eq; phenolphthalein first turns pink at pH 8.2, very slightly after it. That gap is the indicator error. The burette runs at a steady 0.25 mL/s while its tap is open (a fixed rate in this model: no part-open tap, no drop by drop); you close the tap at the colour change and record the reading, so going past the endpoint (overshooting) shows in the reading. Drop size and CO₂ from the air are not modelled. The burette reading is the simulated value rounded to its resolution d; your answer for c_a is checked against the simulated volume, allowing for the reading's rounding. The model is deterministic, so repeat runs with the same settings agree exactly; in a real lab, titres are taken as concordant within 0.10 mL.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the titration instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn chuẩn độ trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "titration-instructions"
+      }
+    },
+    {
+      "id": "clamp",
+      "instruction": "Clamp the burette on the stand.",
+      "vi": {
+        "instruction": "Kẹp buret lên giá."
+      },
+      "done": {
+        "kind": "setup",
+        "step": "clamp"
+      }
+    },
+    {
+      "id": "dispense",
+      "instruction": "Fill a pipette with the HCl solution and deliver it into the conical flask.",
+      "vi": {
+        "instruction": "Hút dung dịch HCl vào pipet rồi cho vào bình tam giác."
+      },
+      "done": {
+        "kind": "setup",
+        "step": "dispense"
+      }
+    },
+    {
+      "id": "tile",
+      "instruction": "Fill the burette with NaOH while the clamp is low, raise the clamp, add the indicator to the flask, and stand the flask on the white tile under the tip.",
+      "vi": {
+        "instruction": "Rót NaOH vào buret khi kẹp còn thấp, nâng kẹp lên, nhỏ chất chỉ thị vào bình, rồi đặt bình lên tấm sứ trắng dưới đầu buret."
+      },
+      "done": {
+        "kind": "setup",
+        "step": "tile"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Open the tap, watch the flask, close the tap when the colour changes and record the reading.",
+      "vi": {
+        "instruction": "Mở van, quan sát bình, khóa van khi màu đổi rồi ghi số đọc."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Read the burette at the endpoint, then open the results in the notebook and check your c_a.",
+      "vi": {
+        "instruction": "Đọc thể tích trên buret tại điểm cuối, rồi mở kết quả trong sổ ghi chép và kiểm tra c_a của bạn."
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET and Clear the bench to titrate again: change the indicator or the NaOH and compare the runs.",
+      "vi": {
+        "instruction": "Nhấn RESET và Dọn bàn để chuẩn độ lại: đổi chất chỉ thị hoặc NaOH rồi so sánh các lần chạy."
+      },
+      "done": {
+        "kind": "reset"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "equivalence-volume",
+      "question": "Suppose an HCl solution of {acidConcentration} mol/L: {acidVolume} mL of it is titrated with NaOH of {baseConcentration} mol/L. What volume of NaOH reaches the equivalence point?",
+      "vi": {
+        "question": "Giả sử có dung dịch HCl {acidConcentration} mol/L: chuẩn độ {acidVolume} mL dung dịch này bằng NaOH {baseConcentration} mol/L. Cần bao nhiêu mL NaOH để đạt điểm tương đương?"
+      },
+      "set": { "acidConcentration": 0.12, "acidVolume": 20, "baseConcentration": 0.1 },
+      "find": [{ "theory": "equivalenceVolume", "symbol": "V_eq", "unit": "mL" }],
+      "steps": [
+        {
+          "say": "HCl + NaOH → NaCl + H₂O, one to one. At equivalence the moles of base equal the moles of acid; mL times mol/L gives millimoles.",
+          "vi": {
+            "say": "HCl + NaOH → NaCl + H₂O, tỉ lệ 1 : 1. Tại điểm tương đương, số mol bazơ bằng số mol axit; mL nhân mol/L cho mmol."
+          },
+          "write": "c_b·V_eq = c_a·V_a"
+        },
+        {
+          "say": "Solve for the volume of base.",
+          "vi": { "say": "Giải ra thể tích bazơ." },
+          "write": "V_eq = {acidConcentration}·{acidVolume}/{baseConcentration} = {@equivalenceVolume} mL",
+          "check": {
+            "expr": "acidConcentration*acidVolume/baseConcentration",
+            "equals": "equivalenceVolume"
+          }
+        }
+      ]
+    },
+    {
+      "id": "methyl-orange-endpoint",
+      "question": "Suppose {acidVolume} mL of HCl at {acidConcentration} mol/L is titrated with {baseConcentration} mol/L NaOH, with methyl orange, which has turned fully yellow at pH {endpointPH}. Find the equivalence volume and the volume at the colour change.",
+      "vi": {
+        "question": "Giả sử chuẩn độ {acidVolume} mL HCl {acidConcentration} mol/L bằng NaOH {baseConcentration} mol/L, dùng metyl da cam, chất chỉ thị chuyển hẳn sang vàng ở pH {endpointPH}. Tìm thể tích tại điểm tương đương và thể tích khi đổi màu."
+      },
+      "set": {
+        "acidConcentration": 0.1,
+        "acidVolume": 25,
+        "baseConcentration": 0.1,
+        "endpointPH": 4.4
+      },
+      "find": [
+        { "theory": "equivalenceVolume", "symbol": "V_eq", "unit": "mL" },
+        { "theory": "endpointVolume", "symbol": "V_end", "unit": "mL", "figures": 4 }
+      ],
+      "steps": [
+        {
+          "say": "Equivalence: as many moles of base as of acid.",
+          "vi": { "say": "Điểm tương đương: số mol bazơ bằng số mol axit." },
+          "write": "V_eq = c_a·V_a/c_b = {acidConcentration}·{acidVolume}/{baseConcentration} = {@equivalenceVolume} mL",
+          "check": {
+            "expr": "acidConcentration*acidVolume/baseConcentration",
+            "equals": "equivalenceVolume"
+          }
+        },
+        {
+          "say": "At pH 4.4 a little acid is still left: [H⁺] = 10^(−4.4) in the whole volume, so c_a·V_a − c_b·V = [H⁺]·(V_a + V).",
+          "vi": {
+            "say": "Ở pH 4,4 vẫn còn dư một ít axit: [H⁺] = 10^(−4,4) trong toàn bộ thể tích, nên c_a·V_a − c_b·V = [H⁺]·(V_a + V)."
+          },
+          "write": "V = V_a·(c_a − [H⁺])/(c_b + [H⁺]) ≈ {@endpointVolume|4} mL",
+          "check": {
+            "expr": "acidVolume*(acidConcentration-10^(-endpointPH))/(baseConcentration+10^(-endpointPH))",
+            "equals": "endpointVolume"
+          }
+        },
+        {
+          "say": "The colour changes about {=@equivalenceVolume-@endpointVolume|1} mL before equivalence: the indicator error, smaller than a burette’s half mark.",
+          "vi": {
+            "say": "Chất chỉ thị đổi màu sớm hơn điểm tương đương khoảng {=@equivalenceVolume-@endpointVolume|1} mL: đó là sai số chỉ thị, nhỏ hơn nửa vạch chia của buret."
+          },
+          "write": "V_end < V_eq"
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "Sodium hydroxide of known concentration is run into a measured sample of HCl solution until an indicator changes colour; the volume used tells how concentrated the acid is.",
+    "vi": {
+      "summary": "Dung dịch natri hiđroxit đã biết nồng độ được nhỏ từ từ vào một lượng dung dịch HCl đã đo cho tới khi chất chỉ thị đổi màu; thể tích đã dùng cho biết nồng độ của axit."
+    },
+    "parts": [
+      {
+        "id": "burette",
+        "name": "Burette (NaOH)",
+        "role": "Clamped here: holds the NaOH of known concentration c_b; its scale reads the volume run out.",
+        "vi": {
+          "name": "Buret (NaOH)",
+          "role": "Được kẹp ở đây: chứa NaOH đã biết nồng độ c_b; vạch chia của nó đọc thể tích đã chảy ra."
+        },
+        "anchor": {
+          "at": [0, 0.075, 0.008]
+        }
+      },
+      {
+        "id": "tap",
+        "name": "Tap",
+        "role": "Opened, the NaOH runs out at a steady rate; closed at the colour change.",
+        "vi": {
+          "name": "Khóa buret",
+          "role": "Mở ra thì NaOH chảy đều; khóa lại khi dung dịch đổi màu."
+        },
+        "anchor": {
+          "at": [0, -0.19, 0.01]
+        }
+      },
+      {
+        "id": "flask",
+        "name": "Conical flask",
+        "role": "Stands here: the HCl sample from the pipette, V_a, with a few drops of indicator.",
+        "vi": {
+          "name": "Bình tam giác",
+          "role": "Đặt ở đây: chứa mẫu HCl lấy bằng pipet, V_a, cùng vài giọt chất chỉ thị."
+        },
+        "anchor": {
+          "at": [0, -0.31, 0.04]
+        }
+      },
+      {
+        "id": "tile",
+        "name": "White tile",
+        "role": "Under the flask, so the colour change is easy to see.",
+        "vi": {
+          "name": "Tấm sứ trắng",
+          "role": "Đặt dưới bình, để dễ thấy sự đổi màu."
+        },
+        "anchor": {
+          "at": [0, -0.362, 0.07]
+        }
+      },
+      {
+        "id": "clamp",
+        "name": "Burette clamp",
+        "role": "Low while the burette is filled, raised to titrate.",
+        "vi": {
+          "name": "Kẹp buret",
+          "role": "Hạ thấp khi rót đầy buret, nâng lên khi chuẩn độ."
+        },
+        "anchor": {
+          "part": "clamp"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "A pipette delivers a measured volume V_a of the HCl solution into the flask, with a few drops of indicator. Its concentration c_a is what you find.",
+        "vi": {
+          "text": "Dùng pipet lấy một thể tích V_a dung dịch HCl cho vào bình, thêm vài giọt chất chỉ thị. Nồng độ c_a của nó là điều cần tìm."
+        },
+        "parts": ["flask"]
+      },
+      {
+        "text": "NaOH of known concentration c_b runs in from the burette. Each portion reacts with the acid: HCl + NaOH → NaCl + H₂O, one mole of base for each mole of acid.",
+        "vi": {
+          "text": "NaOH đã biết nồng độ c_b chảy từ buret xuống. Mỗi phần phản ứng với axit: HCl + NaOH → NaCl + H₂O, một mol bazơ cho mỗi mol axit."
+        },
+        "parts": ["burette", "tap", "flask"]
+      },
+      {
+        "text": "While acid is left the solution stays acidic and the pH rises only slowly. Near the point where the moles are equal (equivalence, pH 7) it jumps steeply.",
+        "vi": {
+          "text": "Khi còn axit, dung dịch vẫn có tính axit và pH tăng chậm. Gần điểm mà số mol bằng nhau (điểm tương đương, pH = 7), pH tăng vọt."
+        },
+        "parts": ["flask"]
+      },
+      {
+        "text": "The indicator changes colour on that jump: the endpoint. Close the tap there and read the burette, V_end. Phenolphthalein turns pink at pH 8.2, methyl orange yellow at 4.4.",
+        "vi": {
+          "text": "Chất chỉ thị đổi màu trong bước nhảy đó: điểm cuối chuẩn độ. Khóa buret tại đó và đọc thể tích V_end. Phenolphtalein chuyển hồng ở pH 8.2, metyl da cam chuyển vàng ở pH 4.4."
+        },
+        "parts": ["tap", "burette", "tile", "flask"]
+      },
+      {
+        "text": "At the endpoint the moles of base added equal the moles of acid: c_b·V_end = c_a·V_a, so c_a = c_b·V_end/V_a. Work it out from your reading and check it in the notebook.",
+        "vi": {
+          "text": "Tại điểm cuối, số mol bazơ đã thêm bằng số mol axit: c_b·V_end = c_a·V_a, nên c_a = c_b·V_end/V_a. Tính từ số đọc của bạn rồi kiểm tra trong sổ ghi."
+        },
+        "parts": ["burette", "flask"]
+      },
+      {
+        "text": "The endpoint is a little off equivalence, by the indicator’s error; going past the colour change shows in the reading. The burette reads to its resolution d; drop size and CO₂ from the air are not modelled.",
+        "vi": {
+          "text": "Điểm cuối hơi lệch so với điểm tương đương, do sai số chỉ thị; nhỏ quá điểm đổi màu sẽ làm số đọc lớn hơn. Buret đọc theo độ phân giải d; mô hình không tính kích thước giọt và CO₂ trong không khí."
+        },
+        "parts": ["burette"]
+      }
+    ]
+  }
+}

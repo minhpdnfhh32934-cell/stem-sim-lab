@@ -1,0 +1,283 @@
+/*
+ * The Chemistry pieces: glassware and instruments on a bright bench. The drawing carries its own
+ * light card (a bench top), so the dark ink reads the same inside any panel; controls take the
+ * interface tokens. No filters, no blur: a piece costs the same at every graphics preset.
+ */
+.chem-piece {
+  --chem-bench: #eef2f5;
+  --chem-ink: #1b2430;
+  --chem-glass: rgb(255 255 255 / 0.45);
+  --chem-water: #dcebf2;
+  --chem-steel: #8b97a4;
+  display: grid;
+  gap: var(--space-2, 8px);
+  justify-items: center;
+  font-family: var(--font-sans, system-ui, sans-serif);
+  color: var(--ws-ink, #e8eef4);
+}
+
+.chem-art {
+  width: 100%;
+  max-width: 260px;
+  max-height: 360px;
+  background: var(--chem-bench);
+  border-radius: var(--radius-md, 6px);
+}
+
+.chem-art .chem-glass {
+  fill: var(--chem-glass);
+  stroke: var(--chem-ink);
+  stroke-width: 1.1;
+}
+/* The model's colour is the fill attribute; the clear water only where there is none. */
+.chem-art .chem-liquid:not([fill]) {
+  fill: var(--chem-water);
+}
+.chem-art .chem-liquid {
+  stroke: #8fb9cb; /* the surface and edge of clear water show on the bench */
+  stroke-width: 0.6;
+}
+.chem-art .chem-ice {
+  fill: #f4fbff;
+  stroke: #9ec3d6;
+  stroke-width: 0.6;
+}
+.chem-art .chem-solid,
+.chem-art .chem-residue {
+  fill: #f1ede1;
+  stroke: #8d8878;
+  stroke-width: 0.6;
+}
+.chem-art .chem-paper {
+  fill: #fbfaf5;
+  stroke: #8d8878;
+  stroke-width: 0.6;
+}
+.chem-art .chem-steel {
+  fill: var(--chem-steel);
+  stroke: var(--chem-ink);
+  stroke-width: 0.6;
+}
+.chem-art .chem-body {
+  fill: #c6ced6;
+  stroke: var(--chem-ink);
+  stroke-width: 1;
+}
+.chem-art .chem-handle,
+.chem-art .chem-knob {
+  fill: #2d3a47;
+  stroke: var(--chem-ink);
+}
+.chem-art .chem-pointer {
+  stroke: #f2f8fc;
+  stroke-width: 1.6;
+}
+.chem-art .chem-lcd {
+  fill: #2b3a2c;
+}
+.chem-art .chem-lcd-text {
+  fill: #b9e3a8;
+  font-family: var(--font-mono, ui-monospace, monospace);
+}
+.chem-art .chem-lamp {
+  fill: #5a6672;
+  stroke: var(--chem-ink);
+  stroke-width: 0.6;
+}
+.chem-art .chem-lamp[data-on='1'] {
+  fill: #ffd25a;
+}
+.chem-art .chem-plate {
+  fill: #59626b;
+  stroke: var(--chem-ink);
+}
+.chem-art .chem-plate[data-on='1'] {
+  fill: #d4572e;
+}
+.chem-art .chem-mercury {
+  fill: #c0332b;
+}
+.chem-art .chem-slot {
+  fill: #7f8a95;
+}
+.chem-art .chem-cap {
+  fill: #2d3a47;
+}
+.chem-art .chem-label {
+  fill: #fbfaf5;
+}
+.chem-art .chem-bottle {
+  cursor: pointer;
+}
+.chem-art .chem-bottle [data-chosen='1'] {
+  stroke-width: 2.2;
+}
+.chem-art .chem-tile {
+  fill: #fbfbf8;
+  stroke: var(--chem-ink);
+  stroke-width: 0.8;
+}
+.chem-art .chem-well {
+  fill: #e6e9e6;
+  stroke: #8d9390;
+  stroke-width: 0.6;
+}
+.chem-art .chem-mark,
+.chem-art .chem-meniscus {
+  stroke: var(--chem-ink);
+  stroke-width: 0.8;
+}
+.chem-art .chem-ticks {
+  fill: none;
+  stroke: var(--chem-ink);
+  stroke-width: 0.6;
+}
+.chem-art .chem-scale-text {
+  fill: var(--chem-ink);
+  font-size: 7px;
+}
+.chem-art .chem-lens-bg {
+  fill: #fbfdfe;
+}
+.chem-art .chem-lens-rim {
+  fill: none;
+  stroke: var(--chem-ink);
+  stroke-width: 1.4;
+}
+.chem-art .chem-stream {
+  stroke: #7fb4cc;
+  stroke-width: 2.4;
+}
+.chem-art .chem-drop {
+  fill: #7fb4cc;
+  animation: chem-fall 0.4s linear infinite;
+}
+.chem-art .chem-bubbles circle {
+  fill: rgb(255 255 255 / 0.85);
+  animation: chem-rise 1.2s linear infinite;
+}
+.chem-art .chem-cell rect {
+  fill: #e3e8ec;
+  stroke: #b3bcc4;
+  stroke-width: 0.6;
+}
+.chem-art .chem-cell text {
+  fill: #98a2ac;
+  font-size: 9px;
+}
+.chem-art .chem-cell[data-active='1'] rect {
+  fill: #fff;
+  stroke: var(--chem-ink);
+  stroke-width: 1.2;
+  cursor: pointer;
+}
+.chem-art .chem-cell[data-active='1'] text {
+  fill: var(--chem-ink);
+  font-weight: 700;
+}
+.chem-art .chem-cell:focus-visible rect {
+  stroke: #1677a3;
+  stroke-width: 2.4;
+}
+
+@keyframes chem-fall {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(26px);
+  }
+}
+@keyframes chem-rise {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-40px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chem-art .chem-drop,
+  .chem-art .chem-bubbles circle {
+    animation: none;
+  }
+  .chem-art .chem-drop {
+    display: none;
+  }
+}
+
+.chem-piece[data-kind='periodic-table'] .chem-art {
+  max-width: 560px;
+}
+
+.chem-twin,
+.chem-reason,
+.chem-note {
+  margin: 0;
+  max-width: 260px;
+  font-size: var(--text-sm, 13px);
+  color: color-mix(in srgb, var(--ws-ink, #e8eef4) 75%, transparent);
+  text-align: center;
+}
+.chem-twin:empty,
+.chem-reason:empty {
+  display: none;
+}
+
+.chem-actions {
+  display: grid;
+  gap: var(--space-2, 8px);
+  justify-items: center;
+}
+.chem-action[hidden] {
+  display: none;
+}
+.chem-action {
+  display: grid;
+  gap: var(--space-1, 4px);
+  justify-items: center;
+}
+.chem-button,
+.chem-step {
+  min-height: var(--control-height, 32px);
+  padding: 0 var(--space-3, 12px);
+  font: inherit;
+  font-size: var(--text-md, 14px);
+  color: var(--ink-strong, #f2f8fc);
+  background: var(--surface-raised, #121e2e);
+  border: 1px solid var(--line-strong, #4fb3d9);
+  border-radius: var(--radius-md, 6px);
+  cursor: pointer;
+}
+.chem-button[aria-disabled='true'],
+.chem-step[aria-disabled='true'] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.chem-step[aria-pressed='true'] {
+  border-color: var(--success, #4fbf7a);
+}
+.chem-button:focus-visible,
+.chem-step:focus-visible {
+  outline: 2px solid var(--accent, #4fb3d9);
+  outline-offset: 2px;
+}
+.chem-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2, 8px);
+  justify-content: center;
+}
+
+.chem-card {
+  max-width: 420px;
+  font-size: var(--text-sm, 13px);
+}
+.chem-card h4 {
+  margin: 0 0 var(--space-1, 4px);
+  font-size: var(--text-md, 14px);
+}
+.chem-card p,
+.chem-card ul {
+  margin: var(--space-1, 4px) 0;
+}

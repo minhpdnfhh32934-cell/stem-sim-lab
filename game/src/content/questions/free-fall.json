@@ -1,0 +1,830 @@
+{
+  "id": "free-fall",
+  "skills": [
+    {
+      "id": "motion",
+      "name": "What free fall is",
+      "advice": "Re-read what free fall means: only gravity acts, so the body speeds up evenly from rest with a = g whatever its mass. Watch a run in the Explain view and say each step aloud.",
+      "vi": {
+        "name": "Thế nào là rơi tự do",
+        "advice": "Đọc lại định nghĩa rơi tự do: chỉ có trọng lực tác dụng, nên vật nhanh dần đều từ trạng thái nghỉ với a = g, không phụ thuộc khối lượng. Xem lại một lần chạy trong màn Giải thích và tự nói lại từng bước."
+      }
+    },
+    {
+      "id": "time-height",
+      "name": "Height and time: h = ½gt²",
+      "advice": "Practise h = ½gt² both ways: the time from the height (t = √(2h/g)) and the height from the time. Check with the station: double h, and see the time grow by √2, not 2.",
+      "vi": {
+        "name": "Độ cao và thời gian: h = ½gt²",
+        "advice": "Luyện công thức h = ½gt² theo cả hai chiều: tìm thời gian từ độ cao (t = √(2h/g)) và tìm độ cao từ thời gian. Thử lại trên trạm: tăng h gấp đôi, thời gian chỉ tăng √2 lần chứ không phải 2 lần."
+      }
+    },
+    {
+      "id": "speed",
+      "name": "Speed: v = gt, v² = 2gh",
+      "advice": "Learn the two ways to the landing speed: v = g·t when the time is known, v = √(2gh) when it is not. Mind the sign: with up as positive the velocity is negative.",
+      "vi": {
+        "name": "Vận tốc: v = gt, v² = 2gh",
+        "advice": "Nắm hai cách tìm vận tốc khi chạm đất: v = g·t khi biết thời gian, v = √(2gh) khi không biết. Chú ý dấu: chọn chiều dương hướng lên thì vận tốc mang dấu âm."
+      }
+    },
+    {
+      "id": "gravity",
+      "name": "Gravity on other worlds",
+      "advice": "Compare runs on the Moon, Mars, Earth and Jupiter with the same height: the time goes as 1/√g. Say which g each world has before you calculate.",
+      "vi": {
+        "name": "Trọng trường ở các thiên thể khác",
+        "advice": "So sánh các lần chạy trên Mặt Trăng, Sao Hỏa, Trái Đất và Sao Mộc với cùng một độ cao: thời gian tỉ lệ với 1/√g. Ghi rõ g của từng nơi trước khi tính."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "what-acts",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["motion"],
+      "stem": "Free fall is the motion of a body acted on by…",
+      "vi": {
+        "stem": "Rơi tự do là chuyển động của một vật chỉ chịu tác dụng của…",
+        "explain": "Rơi tự do: vật chỉ chịu tác dụng của trọng lực (bỏ qua sức cản không khí)."
+      },
+      "explain": "Free fall: the only force on the body is gravity (air resistance neglected).",
+      "options": [
+        { "text": "gravity alone", "vi": { "text": "trọng lực" }, "correct": true },
+        {
+          "text": "gravity and air resistance",
+          "vi": { "text": "trọng lực và lực cản của không khí" }
+        },
+        {
+          "text": "a constant push from below",
+          "vi": { "text": "một lực đẩy không đổi từ phía dưới" }
+        },
+        {
+          "text": "its weight and the support's push",
+          "vi": { "text": "trọng lực và phản lực của giá đỡ" }
+        }
+      ]
+    },
+    {
+      "id": "acceleration",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["motion"],
+      "stem": "During a free fall from rest, the body's acceleration…",
+      "explain": "Only gravity acts, so the acceleration is g all the way down, the same for every mass.",
+      "vi": {
+        "stem": "Trong quá trình rơi tự do từ trạng thái nghỉ, gia tốc của vật…",
+        "explain": "Chỉ có trọng lực tác dụng nên gia tốc luôn bằng g trong suốt quá trình rơi, như nhau với mọi khối lượng."
+      },
+      "options": [
+        { "text": "stays equal to g", "vi": { "text": "luôn bằng g" }, "correct": true },
+        { "text": "grows as it falls", "vi": { "text": "tăng dần khi vật rơi" } },
+        { "text": "is zero at the start", "vi": { "text": "bằng 0 lúc bắt đầu rơi" } },
+        { "text": "is larger for a heavier body", "vi": { "text": "lớn hơn với vật nặng hơn" } }
+      ]
+    },
+    {
+      "id": "statements-basic",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["motion", "gravity"],
+      "stem": "A ball is dropped from rest and falls freely. Decide whether each statement is true or false.",
+      "explain": "In free fall v grows by g each second, every mass falls together, the velocity points down, and the distance in each second grows (1 : 3 : 5 …).",
+      "vi": {
+        "stem": "Một quả bóng được thả rơi tự do không vận tốc đầu. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Khi rơi tự do, vận tốc tăng thêm g mỗi giây, mọi vật rơi như nhau, vận tốc hướng xuống, và quãng đường đi được trong từng giây tăng dần (1 : 3 : 5 …)."
+      },
+      "statements": [
+        {
+          "text": "Its speed grows by g every second.",
+          "vi": { "text": "Tốc độ của nó tăng thêm g sau mỗi giây." },
+          "true": true
+        },
+        {
+          "text": "A heavier ball dropped beside it lands first.",
+          "vi": { "text": "Một quả bóng nặng hơn thả cùng lúc bên cạnh sẽ chạm đất trước." },
+          "true": false
+        },
+        {
+          "text": "Its velocity points downwards all the way.",
+          "vi": { "text": "Vận tốc của nó luôn hướng thẳng đứng xuống dưới." },
+          "true": true
+        },
+        {
+          "text": "It falls the same distance in every second.",
+          "vi": { "text": "Quãng đường nó rơi được trong mỗi giây là như nhau." },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "four-times-height",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["time-height"],
+      "stem": "The drop height is made four times larger. The fall time…",
+      "explain": "t = √(2h/g): four times h gives √4 = 2 times t.",
+      "vi": {
+        "stem": "Tăng độ cao thả lên gấp bốn lần. Thời gian rơi…",
+        "explain": "t = √(2h/g): h tăng 4 lần thì t tăng √4 = 2 lần."
+      },
+      "options": [
+        { "text": "doubles", "vi": { "text": "tăng gấp đôi" }, "correct": true },
+        { "text": "becomes four times longer", "vi": { "text": "tăng gấp bốn lần" } },
+        { "text": "halves", "vi": { "text": "giảm một nửa" } },
+        { "text": "stays the same", "vi": { "text": "không đổi" } }
+      ]
+    },
+    {
+      "id": "moon-earth",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["gravity", "time-height"],
+      "stem": "The same ball is dropped from the same height on the Moon (g = 1.62 m/s²) and on Earth (g = 9.81 m/s²). On the Moon it falls for…",
+      "explain": "t is proportional to 1/√g: t_Moon/t_Earth = √(9.81/1.62) ≈ {=sqrt(9.81/1.62)}.",
+      "vi": {
+        "stem": "Cùng một quả bóng được thả từ cùng một độ cao trên Mặt Trăng (g = 1,62 m/s²) và trên Trái Đất (g = 9,81 m/s²). Trên Mặt Trăng nó rơi trong thời gian…",
+        "explain": "t tỉ lệ với 1/√g: t_MT/t_TĐ = √(9,81/1,62) ≈ {=sqrt(9.81/1.62)}."
+      },
+      "options": [
+        {
+          "text": "about {=sqrt(9.81/1.62)} times as long",
+          "vi": { "text": "dài gấp khoảng {=sqrt(9.81/1.62)} lần" },
+          "correct": true
+        },
+        {
+          "text": "about {=9.81/1.62} times as long",
+          "vi": { "text": "dài gấp khoảng {=9.81/1.62} lần" }
+        },
+        { "text": "as long as on Earth", "vi": { "text": "bằng thời gian trên Trái Đất" } },
+        {
+          "text": "about {=sqrt(9.81/1.62)} times shorter",
+          "vi": { "text": "ngắn hơn khoảng {=sqrt(9.81/1.62)} lần" }
+        }
+      ]
+    },
+    {
+      "id": "statements-earth",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["time-height", "speed"],
+      "set": { "height": 1.8, "gravity": 9.81 },
+      "stem": "A ball is dropped from rest from {height} m on Earth (g = {gravity} m/s²); up is positive. Decide whether each statement is true or false.",
+      "explain": "t = √(2h/g) ≈ {@fallTime} s and v = −√(2gh) ≈ {@impactVelocity} m/s. At half the time it has fallen only a quarter of h (h ∝ t²), and the average speed is half the final speed.",
+      "vi": {
+        "stem": "Một quả bóng được thả không vận tốc đầu từ độ cao {height} m trên Trái Đất (g = {gravity} m/s²); chọn chiều dương hướng lên. Mỗi nhận định sau đúng hay sai?",
+        "explain": "t = √(2h/g) ≈ {@fallTime} s và v = −√(2gh) ≈ {@impactVelocity} m/s. Ở nửa thời gian rơi, vật mới rơi được một phần tư độ cao (h tỉ lệ với t²), và tốc độ trung bình bằng nửa tốc độ cuối."
+      },
+      "statements": [
+        {
+          "text": "It reaches the ground after about {@fallTime} s.",
+          "vi": { "text": "Nó chạm đất sau khoảng {@fallTime} s." },
+          "true": true,
+          "check": { "expr": "sqrt(2*height/gravity)", "equals": "fallTime" }
+        },
+        {
+          "text": "Its velocity on landing is about −{=sqrt(2*gravity*height)} m/s.",
+          "vi": { "text": "Vận tốc của nó khi chạm đất khoảng −{=sqrt(2*gravity*height)} m/s." },
+          "true": true,
+          "check": { "expr": "-sqrt(2*gravity*height)", "equals": "impactVelocity" }
+        },
+        {
+          "text": "Halfway through the fall time it has fallen half the height.",
+          "vi": { "text": "Sau một nửa thời gian rơi, nó đã rơi được một nửa độ cao." },
+          "true": false
+        },
+        {
+          "text": "Its average speed over the fall is about {=sqrt(2*gravity*height)} m/s.",
+          "vi": {
+            "text": "Tốc độ trung bình của nó trong cả quá trình rơi khoảng {=sqrt(2*gravity*height)} m/s."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "moon-time",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["time-height", "gravity"],
+      "set": { "height": 2, "gravity": 1.62 },
+      "stem": "On the Moon (g = {gravity} m/s²) a ball is dropped from {height} m. How long does it fall?",
+      "explain": "t = √(2h/g) = √(2·{height}/{gravity}) ≈ {@fallTime} s.",
+      "vi": {
+        "stem": "Trên Mặt Trăng (g = {gravity} m/s²), một quả bóng được thả rơi từ độ cao {height} m. Nó rơi trong bao lâu?",
+        "explain": "t = √(2h/g) = √(2·{height}/{gravity}) ≈ {@fallTime} s."
+      },
+      "options": [
+        {
+          "text": "{@fallTime} s",
+          "vi": { "text": "{@fallTime} s" },
+          "correct": true,
+          "check": { "expr": "sqrt(2*height/gravity)", "equals": "fallTime" }
+        },
+        {
+          "text": "{=height/gravity} s",
+          "vi": { "text": "{=height/gravity} s" },
+          "check": { "expr": "height/gravity", "equals": "fallTime" }
+        },
+        {
+          "text": "{=sqrt(height/gravity)} s",
+          "vi": { "text": "{=sqrt(height/gravity)} s" },
+          "check": { "expr": "sqrt(height/gravity)", "equals": "fallTime" }
+        },
+        {
+          "text": "{=2*height/gravity} s",
+          "vi": { "text": "{=2*height/gravity} s" },
+          "check": { "expr": "2*height/gravity", "equals": "fallTime" }
+        }
+      ]
+    },
+    {
+      "id": "earth-speed",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["speed"],
+      "set": { "height": 3, "gravity": 9.81 },
+      "stem": "A ball falls {height} m on Earth (g = {gravity} m/s²). With what speed does it land?",
+      "explain": "v² = 2gh, so the speed is √(2·{gravity}·{height}) ≈ {=sqrt(2*gravity*height)} m/s (the velocity is negative with up positive).",
+      "vi": {
+        "stem": "Một quả bóng rơi {height} m trên Trái Đất (g = {gravity} m/s²). Nó chạm đất với tốc độ bao nhiêu?",
+        "explain": "v² = 2gh, nên tốc độ bằng √(2·{gravity}·{height}) ≈ {=sqrt(2*gravity*height)} m/s (chọn chiều dương hướng lên thì vận tốc mang dấu âm)."
+      },
+      "options": [
+        {
+          "text": "{=sqrt(2*gravity*height)} m/s",
+          "vi": { "text": "{=sqrt(2*gravity*height)} m/s" },
+          "correct": true,
+          "check": { "expr": "-sqrt(2*gravity*height)", "equals": "impactVelocity" }
+        },
+        {
+          "text": "{=2*gravity*height} m/s",
+          "vi": { "text": "{=2*gravity*height} m/s" },
+          "check": { "expr": "-2*gravity*height", "equals": "impactVelocity" }
+        },
+        {
+          "text": "{=sqrt(gravity*height)} m/s",
+          "vi": { "text": "{=sqrt(gravity*height)} m/s" },
+          "check": { "expr": "-sqrt(gravity*height)", "equals": "impactVelocity" }
+        },
+        {
+          "text": "{=gravity*height} m/s",
+          "vi": { "text": "{=gravity*height} m/s" },
+          "check": { "expr": "-gravity*height", "equals": "impactVelocity" }
+        }
+      ]
+    },
+    {
+      "id": "mars-time",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["gravity", "time-height"],
+      "set": { "height": 1.5, "gravity": 3.71 },
+      "stem": "On Mars (g = {gravity} m/s²) a ball is dropped from {height} m. How long does it fall?",
+      "explain": "Mars' own g: t = √(2·{height}/{gravity}) ≈ {@fallTime} s. Earth's g would give {=sqrt(2*height/9.81)} s.",
+      "vi": {
+        "stem": "Trên Sao Hỏa (g = {gravity} m/s²), một quả bóng được thả rơi từ độ cao {height} m. Nó rơi trong bao lâu?",
+        "explain": "Dùng g của Sao Hỏa: t = √(2·{height}/{gravity}) ≈ {@fallTime} s. Nếu dùng g của Trái Đất sẽ ra {=sqrt(2*height/9.81)} s."
+      },
+      "options": [
+        {
+          "text": "{@fallTime} s",
+          "vi": { "text": "{@fallTime} s" },
+          "correct": true,
+          "check": { "expr": "sqrt(2*height/gravity)", "equals": "fallTime" }
+        },
+        {
+          "text": "{=sqrt(2*height/9.81)} s",
+          "vi": { "text": "{=sqrt(2*height/9.81)} s" },
+          "check": { "expr": "sqrt(2*height/9.81)", "equals": "fallTime" }
+        },
+        {
+          "text": "{=height/gravity} s",
+          "vi": { "text": "{=height/gravity} s" },
+          "check": { "expr": "height/gravity", "equals": "fallTime" }
+        },
+        {
+          "text": "{=2*height/gravity} s",
+          "vi": { "text": "{=2*height/gravity} s" },
+          "check": { "expr": "2*height/gravity", "equals": "fallTime" }
+        }
+      ]
+    },
+    {
+      "id": "statements-jupiter",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["time-height", "speed", "gravity"],
+      "set": { "height": 2.5, "gravity": 24.79 },
+      "stem": "On Jupiter (g = {gravity} m/s²) a ball is dropped from rest from {height} m; up is positive. Decide whether each statement is true or false.",
+      "explain": "t = √(2h/g) ≈ {@fallTime} s, shorter than on Earth because g is larger; v = −g·t ≈ {@impactVelocity} m/s. Twice the height gives √2 times the speed, not twice.",
+      "vi": {
+        "stem": "Trên Sao Mộc (g = {gravity} m/s²), một quả bóng được thả không vận tốc đầu từ độ cao {height} m; chọn chiều dương hướng lên. Mỗi nhận định sau đúng hay sai?",
+        "explain": "t = √(2h/g) ≈ {@fallTime} s, ngắn hơn trên Trái Đất vì g lớn hơn; v = −g·t ≈ {@impactVelocity} m/s. Độ cao gấp đôi thì tốc độ chỉ tăng √2 lần, không phải gấp đôi."
+      },
+      "statements": [
+        {
+          "text": "It falls for about {@fallTime} s.",
+          "vi": { "text": "Nó rơi trong khoảng {@fallTime} s." },
+          "true": true,
+          "check": { "expr": "sqrt(2*height/gravity)", "equals": "fallTime" }
+        },
+        {
+          "text": "From the same height on Earth it would fall for longer.",
+          "vi": { "text": "Từ cùng độ cao đó trên Trái Đất, nó sẽ rơi lâu hơn." },
+          "true": true
+        },
+        {
+          "text": "Its velocity on landing is about {=-gravity*@fallTime} m/s.",
+          "vi": { "text": "Vận tốc của nó khi chạm đất khoảng {=-gravity*@fallTime} m/s." },
+          "true": true,
+          "check": { "expr": "-gravity*@fallTime", "equals": "impactVelocity" }
+        },
+        {
+          "text": "Dropped from twice the height, it would land twice as fast.",
+          "vi": { "text": "Nếu thả từ độ cao gấp đôi, nó sẽ chạm đất với tốc độ gấp đôi." },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "last-half",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["time-height"],
+      "set": { "height": 3, "gravity": 9.81 },
+      "stem": "A ball is dropped from {height} m on Earth (g = {gravity} m/s²). How long does it take to fall the lower half of the height?",
+      "explain": "The whole fall takes √(2h/g) ≈ {@fallTime} s; the upper half takes √(h/g) ≈ {=sqrt(height/gravity)} s. The lower half: {@fallTime} − {=sqrt(height/gravity)} ≈ {=@fallTime-sqrt(height/gravity)} s — the ball is faster there.",
+      "vi": {
+        "stem": "Một quả bóng được thả rơi từ độ cao {height} m trên Trái Đất (g = {gravity} m/s²). Nó rơi hết nửa dưới của độ cao trong bao lâu?",
+        "explain": "Cả quá trình rơi mất √(2h/g) ≈ {@fallTime} s; nửa trên mất √(h/g) ≈ {=sqrt(height/gravity)} s. Nửa dưới: {@fallTime} − {=sqrt(height/gravity)} ≈ {=@fallTime-sqrt(height/gravity)} s — ở đó bóng đi nhanh hơn."
+      },
+      "options": [
+        {
+          "text": "{=@fallTime-sqrt(height/gravity)} s",
+          "vi": { "text": "{=@fallTime-sqrt(height/gravity)} s" },
+          "correct": true
+        },
+        { "text": "{=@fallTime/2} s", "vi": { "text": "{=@fallTime/2} s" } },
+        { "text": "{=sqrt(height/gravity)} s", "vi": { "text": "{=sqrt(height/gravity)} s" } },
+        { "text": "{@fallTime} s", "vi": { "text": "{@fallTime} s" } }
+      ]
+    },
+    {
+      "id": "statements-timer",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["time-height", "gravity"],
+      "set": { "height": 1.2, "gravity": 9.81 },
+      "stem": "A ball is dropped from {height} m on Earth (g = {gravity} m/s²) and timed. Decide whether each statement is true or false.",
+      "explain": "t = √(2h/g) ≈ {@fallTime|4} s; a timer reading to 0.1 s shows the nearest tenth, {=round(@fallTime*10)/10} s. Doubling h multiplies t by √2. On the Moon (g = 1.62 m/s²) t = √(2h/1.62) ≈ {=sqrt(2*height/1.62)} s.",
+      "vi": {
+        "stem": "Một quả bóng được thả rơi từ độ cao {height} m trên Trái Đất (g = {gravity} m/s²) và được đo thời gian rơi. Mỗi nhận định sau đúng hay sai?",
+        "explain": "t = √(2h/g) ≈ {@fallTime|4} s; đồng hồ có độ chia 0,1 s hiển thị giá trị gần nhất theo phần mười, {=round(@fallTime*10)/10} s. Tăng h gấp đôi thì t tăng √2 lần. Trên Mặt Trăng (g = 1,62 m/s²), t = √(2h/1,62) ≈ {=sqrt(2*height/1.62)} s."
+      },
+      "statements": [
+        {
+          "text": "The model's fall time is about {@fallTime|4} s.",
+          "vi": { "text": "Thời gian rơi theo mô hình khoảng {@fallTime|4} s." },
+          "true": true,
+          "check": { "expr": "sqrt(2*height/gravity)", "equals": "fallTime" }
+        },
+        {
+          "text": "A timer that reads to 0.1 s shows {=round(@fallTime*10)/10} s.",
+          "vi": { "text": "Một đồng hồ có độ chia 0,1 s sẽ hiển thị {=round(@fallTime*10)/10} s." },
+          "true": true
+        },
+        {
+          "text": "Dropped from twice the height, it would fall for twice as long.",
+          "vi": { "text": "Nếu thả từ độ cao gấp đôi, nó sẽ rơi trong thời gian gấp đôi." },
+          "true": false
+        },
+        {
+          "text": "On the Moon (g = 1.62 m/s²) the same drop would take about {=sqrt(2*height/1.62)} s.",
+          "vi": {
+            "text": "Trên Mặt Trăng (g = 1,62 m/s²), cùng lần thả đó sẽ mất khoảng {=sqrt(2*height/1.62)} s."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "distance-formula",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["time-height"],
+      "stem": "A body falls freely from rest. The distance it has fallen after a time t is…",
+      "explain": "With constant acceleration g from rest, s = ½g·t². g·t is its speed at that moment.",
+      "vi": {
+        "stem": "Một vật rơi tự do không vận tốc đầu. Quãng đường nó rơi được sau thời gian t là…",
+        "explain": "Với gia tốc không đổi g, xuất phát từ nghỉ: s = ½g·t². Còn g·t là tốc độ của vật tại thời điểm đó."
+      },
+      "options": [
+        {
+          "text": "s = ½g·t²",
+          "vi": {
+            "text": "s = ½g·t²"
+          },
+          "correct": true
+        },
+        {
+          "text": "s = g·t",
+          "vi": {
+            "text": "s = g·t"
+          }
+        },
+        {
+          "text": "s = g·t²",
+          "vi": {
+            "text": "s = g·t²"
+          }
+        },
+        {
+          "text": "s = ½g·t",
+          "vi": {
+            "text": "s = ½g·t"
+          }
+        }
+      ]
+    },
+    {
+      "id": "heavy-light",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["motion"],
+      "stem": "A heavy ball and a light ball are dropped together from the same height, with no air resistance. Which lands first?",
+      "explain": "In free fall every body has the same acceleration g whatever its mass, so from the same height they take the same time: they land together.",
+      "vi": {
+        "stem": "Thả cùng lúc một quả bóng nặng và một quả bóng nhẹ từ cùng một độ cao, bỏ qua sức cản không khí. Quả nào chạm đất trước?",
+        "explain": "Khi rơi tự do, mọi vật có cùng gia tốc g dù khối lượng khác nhau, nên từ cùng một độ cao chúng rơi trong cùng thời gian: chạm đất cùng lúc."
+      },
+      "options": [
+        {
+          "text": "They land together",
+          "vi": {
+            "text": "Hai quả chạm đất cùng lúc"
+          },
+          "correct": true
+        },
+        {
+          "text": "The heavy ball",
+          "vi": {
+            "text": "Quả bóng nặng"
+          }
+        },
+        {
+          "text": "The light ball",
+          "vi": {
+            "text": "Quả bóng nhẹ"
+          }
+        },
+        {
+          "text": "It depends on the height",
+          "vi": {
+            "text": "Còn tùy vào độ cao"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-seconds",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["time-height", "speed"],
+      "stem": "A ball falls freely from rest for several seconds. Decide whether each statement is true or false.",
+      "explain": "v = g·t grows by g every second. s = ½g·t²: after 1, 2, 3 s it has fallen in the ratio 1 : 4 : 9, so the distances in successive seconds are 1 : 3 : 5, each larger than the last. After 2 s it has fallen four times as far as after 1 s, not twice.",
+      "vi": {
+        "stem": "Một quả bóng rơi tự do không vận tốc đầu trong vài giây. Mỗi nhận định sau đúng hay sai?",
+        "explain": "v = g·t tăng thêm g sau mỗi giây. s = ½g·t²: sau 1, 2, 3 s quãng đường rơi theo tỉ lệ 1 : 4 : 9, nên quãng đường rơi trong các giây liên tiếp theo tỉ lệ 1 : 3 : 5, giây sau dài hơn giây trước. Sau 2 s nó rơi được quãng đường gấp bốn lần sau 1 s, không phải gấp đôi."
+      },
+      "statements": [
+        {
+          "text": "Its speed grows by g every second.",
+          "vi": {
+            "text": "Tốc độ của nó tăng thêm g sau mỗi giây."
+          },
+          "true": true
+        },
+        {
+          "text": "In the second second it falls three times as far as in the first.",
+          "vi": {
+            "text": "Trong giây thứ hai nó rơi được quãng đường gấp ba lần trong giây thứ nhất."
+          },
+          "true": true
+        },
+        {
+          "text": "After 2 s it has fallen twice as far as after 1 s.",
+          "vi": {
+            "text": "Sau 2 s nó rơi được quãng đường gấp đôi sau 1 s."
+          },
+          "true": false
+        },
+        {
+          "text": "Each second it falls farther than in the second before.",
+          "vi": {
+            "text": "Mỗi giây sau nó rơi được quãng đường dài hơn giây trước."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "mars-speed",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["speed", "gravity"],
+      "set": {
+        "height": 2.4,
+        "gravity": 3.71
+      },
+      "stem": "On Mars (g = {gravity} m/s²) a ball falls {height} m from rest. With what speed does it land?",
+      "explain": "v² = 2gh, so v = √(2·{gravity}·{height}) ≈ {=-@impactVelocity} m/s. Forgetting the root, the 2, or using Earth’s g gives the other values.",
+      "vi": {
+        "stem": "Trên Sao Hỏa (g = {gravity} m/s²) một quả bóng rơi {height} m không vận tốc đầu. Nó chạm đất với tốc độ bao nhiêu?",
+        "explain": "v² = 2gh, nên v = √(2·{gravity}·{height}) ≈ {=-@impactVelocity} m/s. Quên khai căn, quên số 2, hoặc dùng g của Trái Đất sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{=-@impactVelocity} m/s",
+          "vi": {
+            "text": "{=-@impactVelocity} m/s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "-sqrt(2*gravity*height)",
+            "equals": "impactVelocity"
+          }
+        },
+        {
+          "text": "{=2*gravity*height} m/s",
+          "vi": {
+            "text": "{=2*gravity*height} m/s"
+          },
+          "check": {
+            "expr": "-2*gravity*height",
+            "equals": "impactVelocity"
+          }
+        },
+        {
+          "text": "{=sqrt(gravity*height)} m/s",
+          "vi": {
+            "text": "{=sqrt(gravity*height)} m/s"
+          },
+          "check": {
+            "expr": "-sqrt(gravity*height)",
+            "equals": "impactVelocity"
+          }
+        },
+        {
+          "text": "{=sqrt(2*9.81*height)} m/s",
+          "vi": {
+            "text": "{=sqrt(2*9.81*height)} m/s"
+          },
+          "check": {
+            "expr": "-sqrt(2*9.81*height)",
+            "equals": "impactVelocity"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-80cm",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["time-height", "speed"],
+      "set": {
+        "height": 0.8,
+        "gravity": 9.81
+      },
+      "stem": "A ball is dropped from rest from {height} m on Earth (g = {gravity} m/s²); up is positive. Decide whether each statement is true or false.",
+      "explain": "t = √(2h/g) ≈ {@fallTime} s and v = −g·t ≈ {@impactVelocity} m/s. The average speed h/t ≈ {=height/@fallTime} m/s is half the landing speed, as for any motion from rest at constant acceleration. 2h/g has the unit s², not s.",
+      "vi": {
+        "stem": "Một quả bóng được thả rơi không vận tốc đầu từ độ cao {height} m trên Trái Đất (g = {gravity} m/s²); chiều dương hướng lên. Mỗi nhận định sau đúng hay sai?",
+        "explain": "t = √(2h/g) ≈ {@fallTime} s và v = −g·t ≈ {@impactVelocity} m/s. Tốc độ trung bình h/t ≈ {=height/@fallTime} m/s bằng một nửa tốc độ chạm đất, như mọi chuyển động nhanh dần đều từ nghỉ. 2h/g có đơn vị s², không phải s."
+      },
+      "statements": [
+        {
+          "text": "The fall takes about {@fallTime} s.",
+          "vi": {
+            "text": "Thời gian rơi khoảng {@fallTime} s."
+          },
+          "true": true,
+          "check": {
+            "expr": "sqrt(2*height/gravity)",
+            "equals": "fallTime"
+          }
+        },
+        {
+          "text": "Its velocity on landing is about {@impactVelocity} m/s.",
+          "vi": {
+            "text": "Vận tốc khi chạm đất khoảng {@impactVelocity} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "-gravity*@fallTime",
+            "equals": "impactVelocity"
+          }
+        },
+        {
+          "text": "Its average speed, about {=height/@fallTime} m/s, is half its landing speed.",
+          "vi": {
+            "text": "Tốc độ trung bình của nó, khoảng {=height/@fallTime} m/s, bằng một nửa tốc độ chạm đất."
+          },
+          "true": true,
+          "check": {
+            "expr": "-2*height/@fallTime",
+            "equals": "impactVelocity"
+          }
+        },
+        {
+          "text": "The fall takes 2h/g ≈ {=2*height/gravity} s.",
+          "vi": {
+            "text": "Thời gian rơi bằng 2h/g ≈ {=2*height/gravity} s."
+          },
+          "true": false,
+          "check": {
+            "expr": "2*height/gravity",
+            "equals": "fallTime"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-g",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["time-height", "gravity"],
+      "set": {
+        "height": 2,
+        "gravity": 3.71
+      },
+      "stem": "On an unknown planet a ball dropped from rest falls {height} m in {@fallTime|4} s. What is g there?",
+      "explain": "h = ½g·t² gives g = 2h/t² = 2·{height}/{@fallTime|4}² ≈ {=2*height/@fallTime^2} m/s² (Mars). Leaving out the 2, or not squaring t, gives the other values.",
+      "vi": {
+        "stem": "Trên một hành tinh chưa biết, một quả bóng thả rơi không vận tốc đầu rơi được {height} m trong {@fallTime|4} s. Gia tốc rơi tự do ở đó bằng bao nhiêu?",
+        "explain": "h = ½g·t² cho g = 2h/t² = 2·{height}/{@fallTime|4}² ≈ {=2*height/@fallTime^2} m/s² (Sao Hỏa). Bỏ quên số 2, hoặc không bình phương t, sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{=2*height/@fallTime^2} m/s²",
+          "vi": {
+            "text": "{=2*height/@fallTime^2} m/s²"
+          },
+          "correct": true,
+          "check": {
+            "expr": "sqrt(2*height/(2*height/@fallTime^2))",
+            "equals": "fallTime"
+          }
+        },
+        {
+          "text": "{=height/@fallTime^2} m/s²",
+          "vi": {
+            "text": "{=height/@fallTime^2} m/s²"
+          },
+          "check": {
+            "expr": "sqrt(2*height/(height/@fallTime^2))",
+            "equals": "fallTime"
+          }
+        },
+        {
+          "text": "{=2*height/@fallTime} m/s²",
+          "vi": {
+            "text": "{=2*height/@fallTime} m/s²"
+          },
+          "check": {
+            "expr": "sqrt(2*height/(2*height/@fallTime))",
+            "equals": "fallTime"
+          }
+        },
+        {
+          "text": "{=height/(2*@fallTime^2)} m/s²",
+          "vi": {
+            "text": "{=height/(2*@fallTime^2)} m/s²"
+          },
+          "check": {
+            "expr": "sqrt(2*height/(height/(2*@fallTime^2)))",
+            "equals": "fallTime"
+          }
+        }
+      ]
+    },
+    {
+      "id": "half-speed-height",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["speed", "time-height"],
+      "set": {
+        "height": 2,
+        "gravity": 9.81
+      },
+      "stem": "A ball is dropped from rest from {height} m on Earth (g = {gravity} m/s²) and lands at {=-@impactVelocity} m/s. At what height above the ground is its speed half of that?",
+      "explain": "v² = 2g·s: half the speed means a quarter of v², so it has fallen s = h/4 = {=height/4} m and is {=3*height/4} m above the ground. h/2 assumes v ∝ s; h/4 is the distance fallen, not the height left.",
+      "vi": {
+        "stem": "Một quả bóng được thả rơi không vận tốc đầu từ độ cao {height} m trên Trái Đất (g = {gravity} m/s²) và chạm đất với tốc độ {=-@impactVelocity} m/s. Ở độ cao nào so với mặt đất, tốc độ của nó bằng một nửa giá trị đó?",
+        "explain": "v² = 2g·s: tốc độ bằng một nửa thì v² bằng một phần tư, nên vật đã rơi được s = h/4 = {=height/4} m và còn cách mặt đất {=3*height/4} m. h/2 là cho rằng v tỉ lệ với s; h/4 là quãng đường đã rơi chứ không phải độ cao còn lại."
+      },
+      "options": [
+        {
+          "text": "{=3*height/4} m",
+          "vi": {
+            "text": "{=3*height/4} m"
+          },
+          "correct": true,
+          "check": {
+            "expr": "-2*sqrt(2*gravity*(height-3*height/4))",
+            "equals": "impactVelocity"
+          }
+        },
+        {
+          "text": "{=height/2} m",
+          "vi": {
+            "text": "{=height/2} m"
+          },
+          "check": {
+            "expr": "-2*sqrt(2*gravity*(height-height/2))",
+            "equals": "impactVelocity"
+          }
+        },
+        {
+          "text": "{=height/4} m",
+          "vi": {
+            "text": "{=height/4} m"
+          },
+          "check": {
+            "expr": "-2*sqrt(2*gravity*(height-height/4))",
+            "equals": "impactVelocity"
+          }
+        },
+        {
+          "text": "{=height/sqrt(2)|3} m",
+          "vi": {
+            "text": "{=height/sqrt(2)|3} m"
+          },
+          "check": {
+            "expr": "-2*sqrt(2*gravity*(height-height/sqrt(2)))",
+            "equals": "impactVelocity"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-compare",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["gravity", "time-height", "speed"],
+      "set": {
+        "height": 3,
+        "gravity": 24.79
+      },
+      "stem": "On Jupiter (g = {gravity} m/s²) a ball is dropped from rest from {height} m; up is positive. Decide whether each statement is true or false.",
+      "explain": "t = √(2h/g) ≈ {@fallTime} s and v = −√(2gh) ≈ {@impactVelocity} m/s. Both go as √g: on Earth (9.81 m/s²) the fall takes {=sqrt(2*height/9.81)} s, √(24.79/9.81) ≈ {=sqrt(24.79/9.81)} times as long, and the landing speed is that many times smaller, not 24.79/9.81 times.",
+      "vi": {
+        "stem": "Trên Sao Mộc (g = {gravity} m/s²) một quả bóng được thả rơi không vận tốc đầu từ độ cao {height} m; chiều dương hướng lên. Mỗi nhận định sau đúng hay sai?",
+        "explain": "t = √(2h/g) ≈ {@fallTime} s và v = −√(2gh) ≈ {@impactVelocity} m/s. Cả hai đều phụ thuộc √g: trên Trái Đất (9,81 m/s²) thời gian rơi là {=sqrt(2*height/9.81)} s, dài gấp √(24,79/9,81) ≈ {=sqrt(24.79/9.81)} lần, và tốc độ chạm đất nhỏ hơn đúng chừng ấy lần, không phải 24,79/9,81 lần."
+      },
+      "statements": [
+        {
+          "text": "The fall takes about {@fallTime} s.",
+          "vi": {
+            "text": "Thời gian rơi khoảng {@fallTime} s."
+          },
+          "true": true,
+          "check": {
+            "expr": "sqrt(2*height/gravity)",
+            "equals": "fallTime"
+          }
+        },
+        {
+          "text": "On Earth the same fall would take about {=sqrt(2*height/9.81)} s.",
+          "vi": {
+            "text": "Trên Trái Đất, cùng cú rơi đó mất khoảng {=sqrt(2*height/9.81)} s."
+          },
+          "true": true,
+          "check": {
+            "expr": "sqrt(2*height/9.81)/sqrt(gravity/9.81)",
+            "equals": "fallTime"
+          }
+        },
+        {
+          "text": "It lands at about {=-@impactVelocity} m/s.",
+          "vi": {
+            "text": "Nó chạm đất với tốc độ khoảng {=-@impactVelocity} m/s."
+          },
+          "true": true,
+          "check": {
+            "expr": "-sqrt(2*gravity*height)",
+            "equals": "impactVelocity"
+          }
+        },
+        {
+          "text": "Its landing speed is 24.79/9.81 times what it would be on Earth.",
+          "vi": {
+            "text": "Tốc độ chạm đất của nó gấp 24,79/9,81 lần khi rơi trên Trái Đất."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

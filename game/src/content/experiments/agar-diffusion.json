@@ -1,0 +1,364 @@
+{
+  "id": "agar-diffusion",
+  "name": "Diffusion and cell size: agar cubes",
+  "category": "biology",
+  "description": "Why are cells small? Three cubes of pink indicator agar — 1, 2 and 3 cm — soak in acid. The acid diffuses in from every face and the pink fades from the outside in, equally deep in every cube. But the small cube has the most surface for its volume, so a larger share of it is reached in the same time.",
+  "vi": {
+    "name": "Khuếch tán và kích thước tế bào: khối thạch",
+    "description": "Vì sao tế bào có kích thước nhỏ? Ba khối thạch có chất chỉ thị màu hồng — cạnh 1, 2 và 3 cm — được ngâm trong axit. Axit khuếch tán vào từ mọi mặt và màu hồng nhạt dần từ ngoài vào trong, sâu như nhau ở mọi khối. Nhưng khối nhỏ có diện tích bề mặt lớn nhất so với thể tích, nên trong cùng thời gian phần bị axit tới chiếm tỉ lệ lớn hơn.",
+    "note": "Ranh giới đổi màu là nơi axit đạt một nửa nồng độ bên ngoài; từ mỗi mặt, ranh giới sâu x = 2·erf⁻¹(½)·√(Dt) ≈ 0,954√(Dt) (nghiệm hàm sai số của khuếch tán vào một khối lớn), như nhau cho mọi khối; phần thể tích bị tới là 1 − ((L − 2x)/L)³, bỏ qua phần tới thêm ở các góc. D = 3,3·10⁻⁹ m²/s là hệ số khuếch tán của HCl trong nước ở 25 °C (giá trị trong thạch hơi nhỏ hơn — ở đây dùng như giá trị minh họa). Độ sâu ghi bằng mm cho dễ đọc. 10 phút ngâm (600 s) chạy trong 5 s. Các khối được vẽ lớn gấp 4 lần."
+  },
+  "requiredEquipment": ["agar-cubes"],
+  "model": "biology.agar-diffusion",
+  "parameters": [
+    {
+      "id": "soakTime",
+      "label": "Soaking time",
+      "vi": {
+        "label": "Thời gian ngâm"
+      },
+      "symbol": "t",
+      "unit": "s",
+      "default": 600,
+      "min": 120,
+      "max": 1800,
+      "step": 60
+    }
+  ],
+  "initialConditions": {
+    "diffusivity": 3.3e-9,
+    "speed": 120
+  },
+  "inputs": {
+    "diffusivity": {
+      "symbol": "D",
+      "unit": "m²/s",
+      "desk": false
+    },
+    "speed": {
+      "symbol": "v",
+      "unit": "",
+      "desk": false
+    }
+  },
+  "simulation": {
+    "timeStep": 0.02,
+    "maxDuration": 16,
+    "sampleInterval": 0.05
+  },
+  "measurements": [
+    {
+      "id": "time",
+      "label": "Time",
+      "vi": {
+        "label": "Thời gian"
+      },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "time"
+    },
+    {
+      "id": "soaked",
+      "label": "Time in the acid",
+      "vi": {
+        "label": "Thời gian ngâm trong axit"
+      },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "soaked"
+    },
+    {
+      "id": "depth",
+      "label": "Depth the acid reached",
+      "vi": {
+        "label": "Độ sâu axit đã tới"
+      },
+      "symbol": "x",
+      "unit": "mm",
+      "variable": "depth"
+    },
+    {
+      "id": "small",
+      "label": "Share changed: 1 cm cube",
+      "vi": {
+        "label": "Phần đổi màu: khối 1 cm"
+      },
+      "unit": "%",
+      "variable": "small"
+    },
+    {
+      "id": "medium",
+      "label": "Share changed: 2 cm cube",
+      "vi": {
+        "label": "Phần đổi màu: khối 2 cm"
+      },
+      "unit": "%",
+      "variable": "medium"
+    },
+    {
+      "id": "large",
+      "label": "Share changed: 3 cm cube",
+      "vi": {
+        "label": "Phần đổi màu: khối 3 cm"
+      },
+      "unit": "%",
+      "variable": "large"
+    }
+  ],
+  "results": [
+    {
+      "id": "depth",
+      "label": "Depth the acid reached (all cubes)",
+      "vi": {
+        "label": "Độ sâu axit đã tới (mọi khối)"
+      },
+      "symbol": "x",
+      "unit": "mm",
+      "variable": "depth",
+      "reduce": "final",
+      "theory": "depth"
+    },
+    {
+      "id": "small",
+      "label": "1 cm cube changed (SA:V = 6 cm⁻¹)",
+      "vi": {
+        "label": "Khối 1 cm đổi màu (S/V = 6 cm⁻¹)"
+      },
+      "unit": "%",
+      "variable": "small",
+      "reduce": "final",
+      "theory": "small"
+    },
+    {
+      "id": "medium",
+      "label": "2 cm cube changed (SA:V = 3 cm⁻¹)",
+      "vi": {
+        "label": "Khối 2 cm đổi màu (S/V = 3 cm⁻¹)"
+      },
+      "unit": "%",
+      "variable": "medium",
+      "reduce": "final",
+      "theory": "medium"
+    },
+    {
+      "id": "large",
+      "label": "3 cm cube changed (SA:V = 2 cm⁻¹)",
+      "vi": {
+        "label": "Khối 3 cm đổi màu (S/V = 2 cm⁻¹)"
+      },
+      "unit": "%",
+      "variable": "large",
+      "reduce": "final",
+      "theory": "large"
+    }
+  ],
+  "graphs": [
+    {
+      "id": "share-time",
+      "title": "Share of each cube reached",
+      "vi": {
+        "title": "Phần mỗi khối đã bị axit tới"
+      },
+      "x": "soaked",
+      "y": ["small", "medium", "large"]
+    },
+    {
+      "id": "depth-time",
+      "title": "Depth reached: grows as √t",
+      "vi": {
+        "title": "Độ sâu axit tới: tăng theo √t"
+      },
+      "x": "soaked",
+      "y": ["depth"]
+    }
+  ],
+  "monitor": "share-time",
+  "compare": [
+    {
+      "graph": "share-time",
+      "series": "small"
+    }
+  ],
+  "note": "The colour edge is where the acid has reached half its outside concentration; from each face it lies x = 2·erf⁻¹(½)·√(Dt) ≈ 0.954√(Dt) deep (the error-function solution of diffusion into a large block), the same for every cube; the share of the volume reached is 1 − ((L − 2x)/L)³, the corners’ extra reach neglected. D = 3.3·10⁻⁹ m²/s is HCl’s diffusion coefficient in water at 25 °C (in agar a little lower — used here as an illustrative value). The depth is given in mm to be readable. 10 minutes of soaking (600 s) run in 5 s. The cubes are drawn 4× as large.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the agar cubes instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn về khối thạch trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "agar-diffusion-instructions"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: watch the pink fade from the outside in.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: quan sát màu hồng nhạt dần từ ngoài vào."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Compare the depth and the share changed of each cube.",
+      "vi": {
+        "instruction": "So sánh độ sâu và phần đổi màu của mỗi khối."
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "soak",
+      "instruction": "Press RESET and soak longer with the dial.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI và tăng thời gian ngâm bằng núm xoay."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "soakTime"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Run again: does the 3 cm cube ever catch up?",
+      "vi": {
+        "instruction": "Chạy lại: khối 3 cm có bao giờ theo kịp không?"
+      },
+      "done": {
+        "kind": "reset"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "acid-depth",
+      "question": "Agar cubes are soaked in acid for {soakTime} s. How deep does the colour change reach from each face, and what share of the 1 cm cube has changed? (D = 3.3·10⁻⁹ m²/s)",
+      "vi": {
+        "question": "Các khối thạch được ngâm trong axit {soakTime} s. Màu thay đổi vào sâu bao nhiêu tính từ mỗi mặt, và bao nhiêu phần khối 1 cm đã đổi màu? (D = 3,3·10⁻⁹ m²/s)"
+      },
+      "set": { "soakTime": 600 },
+      "find": [{ "theory": "depth" }, { "theory": "small", "symbol": "f(1 cm)", "unit": "%" }],
+      "steps": [
+        {
+          "say": "Diffusion: the edge where the acid is at half strength moves in as the square root of time, x = 2·erf⁻¹(½)·√(Dt) ≈ 0.954·√(Dt). D is HCl’s value in water, used here as an illustrative value for agar.",
+          "vi": {
+            "say": "Khuếch tán: ranh giới nơi axit đạt một nửa nồng độ bên ngoài tiến vào theo căn bậc hai của thời gian, x = 2·erf⁻¹(½)·√(Dt) ≈ 0,954·√(Dt). D là giá trị của HCl trong nước, dùng ở đây như giá trị minh họa cho thạch."
+          },
+          "write": "x = 0.954·√({diffusivity}·{soakTime}) m ≈ {@depth} mm",
+          "check": {
+            "expr": "2*0.4769362762044699*sqrt(diffusivity*soakTime)*1000",
+            "equals": "depth"
+          }
+        },
+        {
+          "say": "The unchanged core is a cube of side L − 2x; the rest of the volume has changed.",
+          "vi": {
+            "say": "Phần lõi chưa đổi màu là khối lập phương cạnh L − 2x; phần thể tích còn lại đã đổi màu."
+          },
+          "write": "f = 1 − ((10 − 2·{@depth})/10)³ ≈ {@small}%",
+          "check": { "expr": "100*(1-((10-2*@depth)/10)^3)", "equals": "small" }
+        }
+      ]
+    },
+    {
+      "id": "large-cube",
+      "question": "After {soakTime} s of soaking, how deep has the acid gone, and what share of the 3 cm cube has changed colour?",
+      "vi": {
+        "question": "Sau {soakTime} s ngâm, axit đã vào sâu bao nhiêu, và bao nhiêu phần khối 3 cm đã đổi màu?"
+      },
+      "set": { "soakTime": 1800 },
+      "find": [{ "theory": "depth" }, { "theory": "large", "symbol": "f(3 cm)", "unit": "%" }],
+      "steps": [
+        {
+          "say": "Three times as long goes only √3 times as deep.",
+          "vi": { "say": "Thời gian gấp ba thì độ sâu chỉ tăng √3 lần." },
+          "write": "x = 0.954·√({diffusivity}·{soakTime}) m ≈ {@depth} mm",
+          "check": {
+            "expr": "2*0.4769362762044699*sqrt(diffusivity*soakTime)*1000",
+            "equals": "depth"
+          }
+        },
+        {
+          "say": "The big cube has the smallest surface for its volume (S/V = 2 cm⁻¹), so the smallest share is reached: this is why cells stay small.",
+          "vi": {
+            "say": "Khối lớn có diện tích bề mặt nhỏ nhất so với thể tích (S/V = 2 cm⁻¹), nên phần đổi màu nhỏ nhất: đó là lí do tế bào có kích thước nhỏ."
+          },
+          "write": "f = 1 − ((30 − 2·{@depth})/30)³ ≈ {@large}%",
+          "check": { "expr": "100*(1-((30-2*@depth)/30)^3)", "equals": "large" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "Substances enter a cell through its surface, but the cell needs them throughout its volume. As a cell grows its volume grows faster than its surface, so diffusion can no longer supply it: cells stay small.",
+    "vi": {
+      "summary": "Các chất đi vào tế bào qua bề mặt, nhưng tế bào cần chúng ở khắp thể tích. Khi tế bào lớn lên, thể tích tăng nhanh hơn diện tích bề mặt, nên khuếch tán không cung cấp đủ: tế bào luôn có kích thước nhỏ."
+    },
+    "parts": [
+      {
+        "id": "small",
+        "name": "1 cm cube",
+        "role": "Surface 6 cm², volume 1 cm³: SA:V = 6 per cm.",
+        "vi": {
+          "name": "Khối 1 cm",
+          "role": "Diện tích 6 cm², thể tích 1 cm³: S/V = 6 cm⁻¹."
+        },
+        "anchor": {
+          "part": "cube-1"
+        }
+      },
+      {
+        "id": "large",
+        "name": "3 cm cube",
+        "role": "Surface 54 cm², volume 27 cm³: SA:V = 2 per cm.",
+        "vi": {
+          "name": "Khối 3 cm",
+          "role": "Diện tích 54 cm², thể tích 27 cm³: S/V = 2 cm⁻¹."
+        },
+        "anchor": {
+          "part": "cube-3"
+        }
+      },
+      {
+        "id": "core",
+        "name": "Pink core",
+        "role": "The agar the acid has not reached yet.",
+        "vi": {
+          "name": "Lõi màu hồng",
+          "role": "Phần thạch axit chưa tới."
+        },
+        "anchor": {
+          "part": "core-3"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "The acid moves in by diffusion from every face; the pink indicator fades where it arrives. In the same time it gets equally deep into every cube.",
+        "vi": {
+          "text": "Axit đi vào bằng khuếch tán từ mọi mặt; chất chỉ thị hồng mất màu ở nơi axit tới. Trong cùng thời gian, axit vào sâu như nhau ở mọi khối."
+        },
+        "parts": ["small", "large"]
+      },
+      {
+        "text": "Diffusion slows down as it goes: four times the time only doubles the depth (x grows as √t).",
+        "vi": {
+          "text": "Khuếch tán chậm dần: thời gian gấp bốn chỉ làm độ sâu gấp đôi (x tăng theo √t)."
+        },
+        "parts": ["core"]
+      },
+      {
+        "text": "The small cube has more surface for each cm³ inside it: the same depth reaches most of it, while the big cube still has a large pink core. A big cell would starve in the middle — so cells divide and stay small.",
+        "vi": {
+          "text": "Khối nhỏ có nhiều diện tích bề mặt hơn cho mỗi cm³ bên trong: cùng độ sâu đã tới phần lớn khối, trong khi khối lớn vẫn còn lõi hồng lớn. Tế bào lớn sẽ thiếu chất ở giữa — vì vậy tế bào phân chia và giữ kích thước nhỏ."
+        },
+        "parts": ["small", "large", "core"]
+      }
+    ]
+  }
+}

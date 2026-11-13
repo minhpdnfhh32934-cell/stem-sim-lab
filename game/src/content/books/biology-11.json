@@ -1,0 +1,1231 @@
+{
+  "id": "biology-11",
+  "subject": "biology",
+  "grade": 11,
+  "title": "Sinh học 11",
+  "tagline": "Năm nay em sẽ khám phá cơ thể sống vận hành ra sao: cây lấy nước, tim đập, thần kinh truyền tin, sinh vật lớn lên và sinh sản.",
+  "chapters": [
+    {
+      "title": "Chương 1. Trao đổi chất và chuyển hóa năng lượng ở sinh vật",
+      "lessons": [
+        {
+          "id": "biology-11-01",
+          "title": "Bài 1. Khái quát về trao đổi chất và chuyển hóa năng lượng ở sinh vật",
+          "hook": "Một cái cây đứng yên cả đời và một con chim bay hàng nghìn kilomet đều phải làm một việc giống nhau: lấy chất và năng lượng từ môi trường.",
+          "sections": [
+            {
+              "heading": "1. Vai trò và dấu hiệu",
+              "paragraphs": [
+                "Trao đổi chất là quá trình cơ thể lấy các chất từ môi trường, biến đổi chúng thành chất của cơ thể và năng lượng, đồng thời thải chất không cần thiết ra môi trường. Chuyển hóa năng lượng là sự biến đổi năng lượng từ dạng này sang dạng khác, luôn đi kèm trao đổi chất.",
+                "Dấu hiệu đặc trưng gồm: thu nhận chất từ môi trường, vận chuyển các chất, biến đổi các chất kèm chuyển hóa năng lượng, đào thải chất ra môi trường, và điều hòa các quá trình đó. Trao đổi chất ngừng thì sự sống ngừng."
+              ]
+            },
+            {
+              "heading": "2. Các giai đoạn chuyển hóa năng lượng trong sinh giới",
+              "paragraphs": [
+                "Giai đoạn tổng hợp: sinh vật tự dưỡng chuyển quang năng (hoặc hóa năng của chất vô cơ) thành hóa năng tích lũy trong chất hữu cơ.",
+                "Giai đoạn phân giải: chất hữu cơ được phân giải qua hô hấp, năng lượng được giải phóng và tích lũy vào ATP.",
+                "Giai đoạn huy động năng lượng: ATP cung cấp năng lượng cho các hoạt động sống như sinh trưởng, vận động, vận chuyển chất; cuối cùng năng lượng tỏa ra dưới dạng nhiệt."
+              ]
+            },
+            {
+              "heading": "3. Phương thức trao đổi chất",
+              "paragraphs": [
+                "Sinh vật tự dưỡng (thực vật, tảo, một số vi khuẩn) tự tổng hợp chất hữu cơ từ chất vô cơ. Sinh vật dị dưỡng (động vật, nấm, phần lớn vi khuẩn) lấy chất hữu cơ có sẵn từ sinh vật khác.",
+                "Vì vậy sinh vật tự dưỡng là nguồn cung cấp chất hữu cơ và năng lượng ban đầu cho hầu hết sinh giới. Năng lượng đi qua sinh giới theo một chiều, còn vật chất thì được tuần hoàn."
+              ],
+              "tip": "Năng lượng không bị «mất đi» theo nghĩa biến mất: nó chỉ chuyển thành nhiệt và không quay lại được để sinh vật dùng tiếp."
+            }
+          ],
+          "remember": [
+            "Trao đổi chất luôn gắn với chuyển hóa năng lượng.",
+            "Dấu hiệu: thu nhận, vận chuyển, biến đổi, đào thải, điều hòa.",
+            "Ba giai đoạn: tổng hợp → phân giải → huy động năng lượng.",
+            "Tự dưỡng tạo chất hữu cơ từ chất vô cơ; dị dưỡng dùng chất hữu cơ có sẵn."
+          ],
+          "check": {
+            "question": "Vì sao nói thực vật là nguồn năng lượng ban đầu cho hầu hết sinh vật?",
+            "answer": "Vì thực vật chuyển quang năng thành hóa năng trong chất hữu cơ, các sinh vật dị dưỡng sử dụng nguồn chất hữu cơ đó."
+          }
+        },
+        {
+          "id": "biology-11-02",
+          "title": "Bài 2. Trao đổi nước và khoáng ở thực vật",
+          "hook": "Một cây cao vài chục mét vẫn đưa được nước từ rễ lên tận ngọn mà không cần máy bơm. Cây làm điều đó bằng cách nào?",
+          "sections": [
+            {
+              "heading": "1. Hấp thụ nước và khoáng ở rễ",
+              "paragraphs": [
+                "Rễ hấp thụ nước và ion khoáng chủ yếu qua tế bào lông hút. Nước đi vào rễ theo cơ chế thẩm thấu (từ đất có thế nước cao vào tế bào có thế nước thấp hơn); ion khoáng được hấp thụ thụ động (theo gradient nồng độ) hoặc chủ động (ngược gradient, tốn ATP).",
+                "Từ lông hút vào mạch gỗ, nước và khoáng đi theo hai con đường: con đường gian bào (qua thành tế bào và khoảng trống giữa các tế bào) và con đường tế bào chất (đi xuyên qua tế bào chất của các tế bào). Tới nội bì, đai Caspary chặn con đường gian bào, buộc nước và khoáng phải đi qua tế bào chất, nhờ đó cây kiểm soát được chất đi vào."
+              ]
+            },
+            {
+              "heading": "2. Vận chuyển trong cây và thoát hơi nước",
+              "paragraphs": [
+                "Mạch gỗ vận chuyển nước và khoáng từ rễ lên lá theo một chiều. Động lực gồm: lực hút do thoát hơi nước ở lá (động lực chính), áp suất rễ đẩy từ dưới lên, lực liên kết giữa các phân tử nước với nhau và với thành mạch tạo cột nước liên tục. Mạch rây vận chuyển chất hữu cơ (chủ yếu là đường saccharose) từ lá đến nơi sử dụng hoặc dự trữ.",
+                "Thoát hơi nước diễn ra chủ yếu qua khí khổng, một phần qua lớp cutin. Thoát hơi nước tạo động lực hút nước, làm mát lá và giúp khí khổng mở để CO2 đi vào cho quang hợp. Khí khổng đóng mở nhờ sự thay đổi sức trương của tế bào hạt đậu."
+              ],
+              "tip": "Đừng nhầm: mạch gỗ chở nước và khoáng đi lên; mạch rây chở chất hữu cơ đi tới nơi cần."
+            },
+            {
+              "heading": "3. Vai trò của các nguyên tố khoáng",
+              "paragraphs": [
+                "Nguyên tố khoáng thiết yếu gồm đa lượng (N, P, K, S, Ca, Mg…) và vi lượng (Fe, Mn, Zn, Cu, B, Mo…). Chúng tham gia cấu tạo chất sống và điều tiết hoạt động sống. Ví dụ: N là thành phần của protein, nucleic acid, diệp lục; Mg là thành phần của diệp lục; thiếu N lá vàng, cây còi cọc.",
+                "Cây hấp thụ nitrogen ở dạng NH4⁺ và NO3⁻. Một số vi khuẩn (như vi khuẩn nốt sần ở cây họ Đậu) cố định N2 trong không khí thành NH3 nhờ enzyme nitrogenase. Bón phân hợp lí: đúng loại, đúng lúc, đúng liều lượng, đúng cách."
+              ]
+            }
+          ],
+          "remember": [
+            "Rễ hút nước qua lông hút bằng thẩm thấu; khoáng được hút thụ động hoặc chủ động.",
+            "Hai con đường vào rễ: gian bào và tế bào chất; đai Caspary kiểm soát chất đi vào.",
+            "Mạch gỗ: nước, khoáng đi lên; mạch rây: chất hữu cơ.",
+            "Thoát hơi nước là động lực chính kéo nước lên, làm mát lá.",
+            "Cây hấp thụ nitrogen dạng NH4⁺ và NO3⁻."
+          ],
+          "check": {
+            "question": "Vì sao cây trồng trên đất ngập úng lâu ngày bị héo?",
+            "answer": "Rễ thiếu O2, hô hấp yếu, thiếu ATP để hút khoáng, lông hút bị hỏng nên cây không hút được nước."
+          },
+          "lab": "transpiration"
+        },
+        {
+          "id": "biology-11-03",
+          "title": "Bài 3. Thực hành: Thí nghiệm trao đổi nước ở thực vật và trồng cây bằng thủy canh, khí canh",
+          "hook": "Trồng rau không cần đất? Hoàn toàn được, nếu em hiểu cây cần gì ở đất.",
+          "sections": [
+            {
+              "heading": "1. Thí nghiệm thoát hơi nước",
+              "paragraphs": [
+                "Dùng giấy tẩm cobalt chloride đã sấy khô (màu xanh), áp đồng thời lên mặt trên và mặt dưới của lá, kẹp lại bằng lam kính. Giấy chuyển dần sang màu hồng khi hút hơi nước. Mặt lá nào làm giấy đổi màu nhanh hơn thì thoát hơi nước mạnh hơn.",
+                "Ở nhiều loài cây, mặt dưới lá có nhiều khí khổng hơn nên làm giấy đổi màu nhanh hơn. Có thể so sánh thêm lá non với lá già, cây để nơi có gió với nơi lặng gió."
+              ]
+            },
+            {
+              "heading": "2. Thí nghiệm hút nước ở rễ",
+              "paragraphs": [
+                "Cắt ngang thân cây (như cây cà chua) gần gốc, nối phần gốc với ống thủy tinh nhỏ có ít nước. Sau một thời gian thấy mực nước trong ống dâng lên: rễ đã đẩy nước lên nhờ áp suất rễ.",
+                "Hiện tượng ứ giọt ở mép lá vào sáng sớm khi không khí ẩm cũng là biểu hiện của áp suất rễ."
+              ]
+            },
+            {
+              "heading": "3. Trồng cây bằng thủy canh, khí canh",
+              "paragraphs": [
+                "Thủy canh: rễ cây ngập trong dung dịch dinh dưỡng chứa đủ các nguyên tố khoáng thiết yếu; cần sục khí hoặc để một phần rễ trong không khí cho rễ hô hấp. Khí canh: rễ treo trong không khí, dung dịch dinh dưỡng được phun sương lên rễ theo chu kì.",
+                "Ưu điểm: tiết kiệm nước, chủ động dinh dưỡng, ít sâu bệnh từ đất, trồng được ở sân thượng, nhà kính. Theo dõi chiều cao cây, số lá, màu lá theo thời gian và ghi chép trung thực."
+              ],
+              "tip": "Rễ cũng cần thở: nếu dung dịch thủy canh không có khí, rễ sẽ thối."
+            }
+          ],
+          "remember": [
+            "Giấy cobalt chloride khô màu xanh, gặp hơi nước chuyển hồng.",
+            "Mặt dưới lá nhiều loài có nhiều khí khổng, thoát hơi nước mạnh hơn.",
+            "Nước dâng trong ống nối gốc cây chứng tỏ có áp suất rễ.",
+            "Thủy canh, khí canh cung cấp khoáng qua dung dịch, rễ cần O2."
+          ],
+          "check": {
+            "question": "Hiện tượng ứ giọt ở mép lá chứng minh điều gì?",
+            "answer": "Rễ có áp suất rễ đẩy nước lên."
+          },
+          "lab": "transpiration"
+        },
+        {
+          "id": "biology-11-04",
+          "title": "Bài 4. Quang hợp ở thực vật",
+          "hook": "Gần như mọi thứ em ăn đều bắt nguồn từ một chiếc lá xanh đang «nấu» ánh sáng mặt trời thành đường.",
+          "sections": [
+            {
+              "heading": "1. Khái niệm, vai trò và bộ máy quang hợp",
+              "paragraphs": [
+                "Quang hợp ở thực vật là quá trình lá cây hấp thụ năng lượng ánh sáng, chuyển thành năng lượng hóa học để tổng hợp chất hữu cơ từ CO2 và H2O, đồng thời giải phóng O2.",
+                "Quang hợp tạo chất hữu cơ cho sinh giới, tích lũy năng lượng và điều hòa thành phần khí trong khí quyển. Lá là cơ quan quang hợp, lục lạp là bào quan quang hợp. Sắc tố gồm diệp lục (a và b) và carotenoid; diệp lục hấp thụ mạnh ánh sáng đỏ và xanh tím, phản xạ ánh sáng lục nên lá có màu xanh."
+              ],
+              "formulas": ["6CO2 + 12H2O → C6H12O6 + 6O2 + 6H2O (ánh sáng, diệp lục)"]
+            },
+            {
+              "heading": "2. Các pha và các con đường cố định CO2",
+              "paragraphs": [
+                "Pha sáng (màng thylakoid): sắc tố hấp thụ ánh sáng, nước bị quang phân li giải phóng O2, tạo ATP và NADPH. Pha cố định CO2 (chất nền lục lạp) dùng ATP, NADPH để khử CO2 thành chất hữu cơ.",
+                "Thực vật C3 (lúa, đậu…) cố định CO2 theo chu trình Calvin, sản phẩm đầu tiên là hợp chất 3C. Thực vật C4 (ngô, mía…) cố định CO2 sơ bộ ở tế bào mô giậu thành hợp chất 4C rồi đưa sang tế bào bao bó mạch, quang hợp hiệu quả khi nắng nóng. Thực vật CAM (dứa, xương rồng, thanh long…) mở khí khổng và cố định CO2 vào ban đêm để tiết kiệm nước."
+              ]
+            },
+            {
+              "heading": "3. Các nhân tố ảnh hưởng và năng suất cây trồng",
+              "paragraphs": [
+                "Ánh sáng: cường độ ánh sáng tăng thì quang hợp tăng đến điểm bão hòa ánh sáng. Điểm bù ánh sáng là cường độ ánh sáng mà tại đó cường độ quang hợp bằng cường độ hô hấp. Nồng độ CO2, nhiệt độ, nước và khoáng cũng ảnh hưởng mạnh đến quang hợp.",
+                "Quang hợp quyết định phần lớn năng suất cây trồng. Biện pháp tăng năng suất: tăng diện tích lá hợp lí, chọn giống có cường độ quang hợp cao, bón phân, tưới nước hợp lí, trồng đúng mật độ và thời vụ."
+              ],
+              "tip": "O2 do quang hợp thải ra có nguồn gốc từ nước, không phải từ CO2."
+            }
+          ],
+          "remember": [
+            "Quang hợp tạo chất hữu cơ, tích lũy năng lượng, giải phóng O2.",
+            "Diệp lục hấp thụ mạnh ánh sáng đỏ và xanh tím.",
+            "Pha sáng ở thylakoid; cố định CO2 ở chất nền lục lạp.",
+            "Ba nhóm: C3, C4, CAM (CAM mở khí khổng ban đêm).",
+            "Điểm bù ánh sáng: quang hợp bằng hô hấp."
+          ],
+          "check": {
+            "question": "Vì sao thanh long chịu được vùng khô hạn?",
+            "answer": "Thanh long là thực vật CAM: đóng khí khổng ban ngày, mở ban đêm để lấy CO2, giảm mất nước."
+          },
+          "lab": "photosynthesis"
+        },
+        {
+          "id": "biology-11-05",
+          "title": "Bài 5. Thực hành: Quang hợp ở thực vật",
+          "hook": "Một cành rong trong cốc nước, dưới ánh đèn, cứ thế nhả ra từng chuỗi bọt khí li ti. Bọt khí ấy là gì?",
+          "sections": [
+            {
+              "heading": "1. Tách chiết và tách các sắc tố",
+              "paragraphs": [
+                "Nghiền lá tươi với dung môi hữu cơ (như ethanol hoặc acetone), lọc lấy dịch có màu xanh lục: đó là hỗn hợp sắc tố.",
+                "Dùng phương pháp sắc kí giấy: chấm dịch sắc tố lên một đầu dải giấy, nhúng đầu giấy vào dung môi. Dung môi thấm lên kéo các sắc tố đi với tốc độ khác nhau, tạo các vệt màu riêng: màu lục của diệp lục và màu vàng, cam của carotenoid."
+              ]
+            },
+            {
+              "heading": "2. Chứng minh quang hợp tạo tinh bột",
+              "paragraphs": [
+                "Để chậu cây trong tối khoảng hai ngày cho lá hết tinh bột. Dùng giấy đen che một phần lá ở cả hai mặt rồi đưa cây ra sáng vài giờ.",
+                "Ngắt lá, đun cách thủy trong cồn để tẩy hết diệp lục, rửa nước rồi nhỏ dung dịch iodine. Phần lá được chiếu sáng chuyển xanh tím (có tinh bột); phần bị che không chuyển màu. Kết luận: lá chỉ tạo tinh bột khi có ánh sáng."
+              ],
+              "tip": "Không đun cồn trực tiếp trên lửa vì cồn dễ cháy: luôn đun cách thủy."
+            },
+            {
+              "heading": "3. Chứng minh quang hợp thải O2",
+              "paragraphs": [
+                "Đặt cành rong đuôi chó vào cốc nước, úp phễu lên rồi úp ống nghiệm đầy nước lên cuống phễu. Chiếu sáng một thời gian thấy bọt khí nổi lên, đẩy nước trong ống nghiệm xuống.",
+                "Đưa que đóm còn tàn đỏ vào miệng ống nghiệm: que đóm bùng cháy, chứng tỏ khí thu được là O2. Có thể đếm số bọt khí mỗi phút khi đặt đèn ở các khoảng cách khác nhau để thấy ảnh hưởng của cường độ ánh sáng."
+              ]
+            }
+          ],
+          "remember": [
+            "Sắc tố lá tan trong dung môi hữu cơ; sắc kí giấy tách diệp lục và carotenoid.",
+            "Che một phần lá + thử iodine: chỉ phần được chiếu sáng tạo tinh bột.",
+            "Rong đuôi chó dưới ánh sáng thải O2 làm que đóm bùng cháy.",
+            "Đun lá trong cồn phải đun cách thủy."
+          ],
+          "check": {
+            "question": "Vì sao phải để cây trong tối hai ngày trước thí nghiệm tinh bột?",
+            "answer": "Để lá dùng hết tinh bột có sẵn, nhờ đó tinh bột phát hiện được chắc chắn là do quang hợp trong thí nghiệm tạo ra."
+          },
+          "lab": "photosynthesis"
+        },
+        {
+          "id": "biology-11-06",
+          "title": "Bài 6. Hô hấp ở thực vật",
+          "hook": "Một đống thóc ẩm để lâu bị nóng lên và hỏng. Thóc đã «thở» quá mạnh đấy!",
+          "sections": [
+            {
+              "heading": "1. Khái niệm và vai trò",
+              "paragraphs": [
+                "Hô hấp ở thực vật là quá trình phân giải chất hữu cơ (chủ yếu là glucose) thành CO2 và H2O, giải phóng năng lượng; một phần năng lượng tích lũy trong ATP, phần còn lại tỏa ra dưới dạng nhiệt.",
+                "Hô hấp cung cấp ATP cho các hoạt động sống của cây và tạo ra nhiều sản phẩm trung gian làm nguyên liệu cho tổng hợp các chất khác."
+              ],
+              "formulas": ["C6H12O6 + 6O2 → 6CO2 + 6H2O + năng lượng (ATP + nhiệt)"]
+            },
+            {
+              "heading": "2. Các con đường hô hấp",
+              "paragraphs": [
+                "Đường phân diễn ra ở tế bào chất, phân giải glucose thành pyruvate. Khi có đủ O2, pyruvate đi vào ti thể và tiếp tục hô hấp hiếu khí (chu trình Krebs, chuỗi truyền electron), tạo nhiều ATP. Khi thiếu O2 (như rễ cây bị ngập úng), tế bào phân giải kị khí (lên men) tạo ethanol hoặc lactic acid và rất ít ATP, các chất này tích lũy có thể gây độc cho tế bào.",
+                "Hô hấp sáng xảy ra ở thực vật C3 khi cường độ ánh sáng cao, CO2 trong lá thấp và O2 cao; quá trình này tiêu tốn một phần sản phẩm quang hợp mà không tạo ATP."
+              ]
+            },
+            {
+              "heading": "3. Các nhân tố ảnh hưởng và ứng dụng",
+              "paragraphs": [
+                "Nhiệt độ: trong giới hạn, nhiệt độ tăng thì hô hấp tăng. Hàm lượng nước: hạt khô hô hấp rất yếu, hạt ẩm hô hấp mạnh. O2 cần cho hô hấp hiếu khí; nồng độ CO2 cao ức chế hô hấp.",
+                "Bảo quản nông sản là làm giảm hô hấp đến mức tối thiểu (không làm chết mô sống): bảo quản lạnh, phơi sấy khô hạt, bảo quản trong khí quyển có CO2 cao. Trong trồng trọt, cần làm đất tơi xốp, thoát nước tốt để rễ đủ O2.",
+                "Quang hợp và hô hấp liên quan chặt chẽ: sản phẩm của quá trình này là nguyên liệu của quá trình kia."
+              ],
+              "tip": "Hô hấp không chỉ xảy ra ban đêm: cây hô hấp cả ngày lẫn đêm, chỉ là ban ngày quang hợp thường mạnh hơn."
+            }
+          ],
+          "remember": [
+            "Hô hấp phân giải chất hữu cơ, tạo ATP và nhiệt.",
+            "Có O2: hô hấp hiếu khí trong ti thể; thiếu O2: lên men, ít ATP.",
+            "Hô hấp sáng gặp ở thực vật C3, lãng phí sản phẩm quang hợp.",
+            "Bảo quản nông sản: giảm hô hấp bằng lạnh, khô, CO2 cao.",
+            "Cây hô hấp cả ngày lẫn đêm."
+          ],
+          "check": {
+            "question": "Vì sao phải phơi thật khô thóc trước khi cất trữ?",
+            "answer": "Hạt khô hô hấp rất yếu, ít tỏa nhiệt và ít tiêu hao chất hữu cơ, khó bị nấm mốc."
+          }
+        },
+        {
+          "id": "biology-11-07",
+          "title": "Bài 7. Thực hành: Hô hấp ở thực vật",
+          "hook": "Hạt đậu đang nảy mầm trông im lìm, nhưng nếu đo kĩ, em sẽ thấy chúng hút khí, nhả khí và còn tỏa nhiệt nữa.",
+          "sections": [
+            {
+              "heading": "1. Hô hấp thải CO2",
+              "paragraphs": [
+                "Cho hạt đang nảy mầm vào bình kín. Sau vài giờ, dẫn khí trong bình qua ống nghiệm chứa nước vôi trong. Nước vôi bị vẩn đục do CO2 phản ứng với Ca(OH)2 tạo CaCO3 không tan.",
+                "Làm song song một bình chứa hạt đã luộc chín làm đối chứng: nước vôi trong không vẩn đục hoặc vẩn đục rất ít."
+              ],
+              "formulas": ["CO2 + Ca(OH)2 → CaCO3 + H2O"]
+            },
+            {
+              "heading": "2. Hô hấp hút O2 và tỏa nhiệt",
+              "paragraphs": [
+                "Đưa que diêm hoặc nến đang cháy vào bình hạt nảy mầm đã đậy kín một thời gian: ngọn lửa tắt ngay vì O2 trong bình đã bị hạt sử dụng. Ở bình hạt đã luộc chín, ngọn lửa vẫn cháy.",
+                "Đặt nhiệt kế vào bình cách nhiệt chứa hạt nảy mầm và bình chứa hạt đã luộc chín. Sau một thời gian, nhiệt độ ở bình hạt nảy mầm cao hơn: hô hấp giải phóng nhiệt."
+              ],
+              "tip": "Hạt đã luộc chín là đối chứng rất tốt: chúng đã chết nên không hô hấp."
+            },
+            {
+              "heading": "3. Ghi kết quả và kết luận",
+              "paragraphs": [
+                "Lập bảng so sánh hai bình theo ba tiêu chí: nước vôi trong, ngọn lửa, nhiệt độ. Ghi đúng các giá trị nhiệt độ đo được theo thời gian.",
+                "Kết luận: hạt nảy mầm hô hấp mạnh, hút O2, thải CO2 và tỏa nhiệt. Đây là lí do hạt giống cần được bảo quản khô, mát."
+              ]
+            }
+          ],
+          "remember": [
+            "Hạt nảy mầm thải CO2: nước vôi trong vẩn đục.",
+            "Hạt nảy mầm hút O2: ngọn lửa trong bình tắt.",
+            "Hô hấp tỏa nhiệt: nhiệt độ bình hạt nảy mầm tăng.",
+            "Dùng hạt đã luộc chín làm đối chứng."
+          ],
+          "check": {
+            "question": "Vì sao ngọn nến tắt khi đưa vào bình chứa hạt nảy mầm?",
+            "answer": "Vì hạt đã hô hấp, sử dụng gần hết O2 trong bình."
+          },
+          "lab": "seed-respiration"
+        },
+        {
+          "id": "biology-11-08",
+          "title": "Bài 8. Dinh dưỡng và tiêu hóa ở động vật",
+          "hook": "Một con trâu chỉ ăn cỏ mà vẫn to khỏe. Bí mật nằm trong chiếc dạ dày bốn ngăn của nó.",
+          "sections": [
+            {
+              "heading": "1. Các giai đoạn của quá trình dinh dưỡng",
+              "paragraphs": [
+                "Dinh dưỡng ở động vật gồm 4 giai đoạn: lấy thức ăn, tiêu hóa thức ăn (biến đổi chất phức tạp thành chất đơn giản), hấp thụ chất dinh dưỡng vào máu và bạch huyết, đồng hóa (tổng hợp chất của cơ thể và dùng làm năng lượng).",
+                "Tiêu hóa gồm biến đổi cơ học (nhai, co bóp) và biến đổi hóa học (nhờ enzyme tiêu hóa), có thể có thêm biến đổi sinh học nhờ vi sinh vật."
+              ]
+            },
+            {
+              "heading": "2. Các hình thức tiêu hóa",
+              "paragraphs": [
+                "Tiêu hóa nội bào: thức ăn được tiêu hóa trong không bào tiêu hóa của tế bào, gặp ở động vật đơn bào (trùng giày, trùng biến hình).",
+                "Tiêu hóa trong túi tiêu hóa (ruột khoang, giun dẹp): thức ăn được tiêu hóa ngoại bào trong túi nhờ enzyme, sau đó tiếp tục tiêu hóa nội bào trong tế bào thành túi. Túi có một lỗ vừa là miệng vừa là hậu môn.",
+                "Tiêu hóa trong ống tiêu hóa (động vật có xương sống và nhiều động vật không xương sống): thức ăn đi theo một chiều, được tiêu hóa ngoại bào lần lượt qua các bộ phận chuyên hóa, hiệu quả cao."
+              ]
+            },
+            {
+              "heading": "3. Tiêu hóa ở thú ăn thịt, thú ăn thực vật và dinh dưỡng hợp lí ở người",
+              "paragraphs": [
+                "Thú ăn thịt có răng nanh sắc, dạ dày đơn to, ruột ngắn vì thức ăn giàu dinh dưỡng, dễ tiêu hóa. Thú ăn thực vật có răng hàm phát triển để nghiền, ruột dài, có vi sinh vật cộng sinh giúp tiêu hóa cellulose. Trâu, bò có dạ dày 4 ngăn: dạ cỏ, dạ tổ ong, dạ lá sách, dạ múi khế (dạ múi khế tiết enzyme như dạ dày thật).",
+                "Ở người, cần ăn đủ chất, cân đối các nhóm chất, ăn sạch, uống đủ nước và có thói quen ăn uống điều độ để phòng các bệnh tiêu hóa, béo phì, suy dinh dưỡng."
+              ],
+              "tip": "Ruột thú ăn thực vật dài hơn vì thức ăn nghèo dinh dưỡng, khó tiêu, cần nhiều thời gian để tiêu hóa và hấp thụ."
+            }
+          ],
+          "remember": [
+            "4 giai đoạn: lấy thức ăn → tiêu hóa → hấp thụ → đồng hóa.",
+            "Tiêu hóa nội bào → túi tiêu hóa → ống tiêu hóa: ngày càng hiệu quả.",
+            "Trâu bò có dạ dày 4 ngăn, vi sinh vật cộng sinh tiêu hóa cellulose.",
+            "Ăn đủ, cân đối, sạch để phòng bệnh."
+          ],
+          "check": {
+            "question": "Ngăn nào trong dạ dày trâu bò tiết enzyme tiêu hóa như dạ dày người?",
+            "answer": "Dạ múi khế."
+          }
+        },
+        {
+          "id": "biology-11-09",
+          "title": "Bài 9. Hô hấp ở động vật",
+          "hook": "Cá «thở» được trong nước nhưng chết khi lên cạn, dù không khí nhiều O2 hơn hẳn. Vì sao vậy?",
+          "sections": [
+            {
+              "heading": "1. Bề mặt trao đổi khí",
+              "paragraphs": [
+                "Hô hấp ở động vật gồm trao đổi khí giữa cơ thể với môi trường (lấy O2, thải CO2) và hô hấp tế bào. Trao đổi khí diễn ra qua bề mặt trao đổi khí theo cơ chế khuếch tán.",
+                "Bề mặt trao đổi khí hiệu quả cần: diện tích bề mặt lớn, mỏng và ẩm ướt, có nhiều mao mạch, có sự lưu thông khí tạo chênh lệch nồng độ O2 và CO2 giữa hai bên."
+              ]
+            },
+            {
+              "heading": "2. Các hình thức trao đổi khí",
+              "paragraphs": [
+                "Qua bề mặt cơ thể: giun đất, động vật đơn bào; da luôn ẩm và có nhiều mao mạch. Qua hệ thống ống khí: côn trùng; ống khí phân nhánh đưa khí trực tiếp đến tế bào.",
+                "Qua mang: cá, tôm, cua. Ở cá xương, miệng và nắp mang phối hợp tạo dòng nước chảy một chiều qua mang, và dòng máu trong mao mạch chảy song song nhưng ngược chiều với dòng nước, nhờ đó lấy được nhiều O2. Khi lên cạn, các phiến mang dính vào nhau, xẹp lại nên cá chết.",
+                "Qua phổi: bò sát, chim, thú. Chim có hệ thống túi khí, không khí đi qua phổi theo một chiều và giàu O2 cả khi hít vào lẫn thở ra, nên trao đổi khí rất hiệu quả."
+              ],
+              "tip": "Dòng chảy ngược chiều giúp máu luôn gặp nước có nhiều O2 hơn trên suốt chiều dài phiến mang."
+            },
+            {
+              "heading": "3. Bảo vệ hệ hô hấp",
+              "paragraphs": [
+                "Không khí ô nhiễm, bụi mịn và khói thuốc lá gây nhiều bệnh hô hấp: viêm phế quản, hen suyễn, ung thư phổi. Khói thuốc lá chứa nhiều chất độc như nicotine, CO và các chất gây ung thư.",
+                "Bảo vệ: không hút thuốc và tránh khói thuốc, đeo khẩu trang nơi nhiều bụi, trồng cây xanh, luyện tập thể thao để tăng dung tích sống."
+              ]
+            }
+          ],
+          "remember": [
+            "Trao đổi khí qua bề mặt hô hấp theo khuếch tán.",
+            "Bề mặt hiệu quả: rộng, mỏng, ẩm, nhiều mao mạch, có lưu thông khí.",
+            "Côn trùng: ống khí; cá: mang, dòng nước ngược chiều dòng máu.",
+            "Chim: phổi và túi khí, khí qua phổi một chiều.",
+            "Khói thuốc lá gây nhiều bệnh hô hấp."
+          ],
+          "check": {
+            "question": "Vì sao giun đất phải sống ở nơi ẩm?",
+            "answer": "Giun đất hô hấp qua da; da phải ẩm thì O2 và CO2 mới khuếch tán qua được."
+          }
+        },
+        {
+          "id": "biology-11-10",
+          "title": "Bài 10. Tuần hoàn ở động vật",
+          "hook": "Trái tim em đập khoảng 100 nghìn lần mỗi ngày mà không cần em ra lệnh. Ai điều khiển nhịp đập ấy?",
+          "sections": [
+            {
+              "heading": "1. Các dạng hệ tuần hoàn",
+              "paragraphs": [
+                "Hệ tuần hoàn gồm dịch tuần hoàn (máu hoặc hỗn hợp máu – dịch mô), tim và hệ thống mạch máu; nó vận chuyển chất dinh dưỡng, O2, CO2, hormone, chất thải trong cơ thể.",
+                "Hệ tuần hoàn hở (đa số thân mềm, chân khớp): máu chảy vào xoang cơ thể, trộn với dịch mô, chảy chậm, áp lực thấp. Hệ tuần hoàn kín (mực, bạch tuộc, giun đốt, động vật có xương sống): máu chảy trong mạch kín, áp lực cao hoặc trung bình, chảy nhanh.",
+                "Tuần hoàn đơn (cá): một vòng tuần hoàn, tim 2 ngăn. Tuần hoàn kép (lưỡng cư, bò sát, chim, thú): hai vòng tuần hoàn (vòng phổi và vòng cơ thể); chim và thú có tim 4 ngăn, máu giàu O2 không pha trộn với máu nghèo O2."
+              ]
+            },
+            {
+              "heading": "2. Hoạt động của tim",
+              "paragraphs": [
+                "Tim có tính tự động: tự co dãn nhịp nhàng nhờ hệ dẫn truyền tim gồm nút xoang nhĩ (tự phát xung), nút nhĩ thất, bó His và mạng Purkinje.",
+                "Mỗi chu kì tim ở người trưởng thành kéo dài khoảng 0,8 s: tâm nhĩ co 0,1 s, tâm thất co 0,3 s, dãn chung 0,4 s. Nhờ thời gian nghỉ nên tim làm việc suốt đời mà không mỏi. Ở người trưởng thành, nhịp tim lúc nghỉ khoảng 75 lần/phút."
+              ],
+              "formulas": [
+                "Nhịp tim (lần/phút) = 60/T",
+                "Lưu lượng tim = nhịp tim · thể tích tâm thu"
+              ],
+              "example": {
+                "question": "Chu kì tim kéo dài 0,8 s, mỗi lần tâm thất trái tống đi 70 mL máu. Tính nhịp tim và lượng máu tâm thất trái bơm trong 1 phút.",
+                "steps": [
+                  "Nhịp tim = 60/0,8 = 75 lần/phút.",
+                  "Lưu lượng = 75 · 70 mL = 5 250 mL.",
+                  "Khoảng 5,25 lít máu mỗi phút."
+                ]
+              }
+            },
+            {
+              "heading": "3. Mạch máu, huyết áp và điều hòa",
+              "paragraphs": [
+                "Huyết áp là áp lực của máu tác dụng lên thành mạch; huyết áp giảm dần từ động mạch đến mao mạch rồi tĩnh mạch. Vận tốc máu nhanh nhất ở động mạch, chậm nhất ở mao mạch (vì tổng tiết diện mao mạch rất lớn), giúp trao đổi chất với tế bào.",
+                "Hoạt động tim mạch được điều hòa bởi thần kinh (thần kinh giao cảm làm tim đập nhanh, mạnh; thần kinh đối giao cảm làm tim đập chậm) và hormone (như adrenaline làm tim đập nhanh). Ăn ít muối, ít mỡ, vận động đều đặn giúp phòng bệnh tim mạch."
+              ]
+            }
+          ],
+          "remember": [
+            "Hệ tuần hoàn hở và kín; tuần hoàn đơn (cá) và kép.",
+            "Tim có tính tự động nhờ hệ dẫn truyền: nút xoang nhĩ → nút nhĩ thất → bó His → mạng Purkinje.",
+            "Chu kì tim người khoảng 0,8 s: nhĩ co 0,1 s, thất co 0,3 s, dãn chung 0,4 s.",
+            "Vận tốc máu chậm nhất ở mao mạch.",
+            "Giao cảm tăng nhịp tim; đối giao cảm giảm nhịp tim."
+          ],
+          "check": {
+            "question": "Nhịp tim 60 lần/phút thì một chu kì tim kéo dài bao lâu?",
+            "answer": "60/60 = 1 s."
+          },
+          "lab": "heart-rate"
+        },
+        {
+          "id": "biology-11-11",
+          "title": "Bài 11. Thực hành: Một số thí nghiệm về hệ tuần hoàn",
+          "hook": "Đặt hai ngón tay lên cổ tay, em sẽ cảm nhận được nhịp đập của chính mình. Sau khi chạy 1 phút, nhịp ấy thay đổi thế nào?",
+          "sections": [
+            {
+              "heading": "1. Đếm nhịp tim",
+              "paragraphs": [
+                "Đặt ngón trỏ và ngón giữa lên động mạch cổ tay (phía ngón cái) hoặc động mạch cổ, đếm số nhịp đập trong 1 phút (hoặc 15 giây rồi nhân 4).",
+                "Đo lúc nghỉ, ngay sau khi vận động (như chạy tại chỗ 2 phút) và sau khi nghỉ vài phút. Mỗi trạng thái nên đo nhiều lần rồi lấy giá trị trung bình."
+              ],
+              "example": {
+                "question": "Ba lần đếm nhịp tim lúc nghỉ được 72, 76, 74 lần/phút. Tính giá trị trung bình.",
+                "steps": ["Tổng: 72 + 76 + 74 = 222.", "Trung bình: 222/3 = 74 lần/phút."]
+              }
+            },
+            {
+              "heading": "2. Đo huyết áp",
+              "paragraphs": [
+                "Dùng máy đo huyết áp điện tử: ngồi nghỉ vài phút, quấn vòng bít ở cánh tay ngang tim, bấm máy và đọc huyết áp tâm thu, huyết áp tâm trương (đơn vị mmHg) cùng nhịp tim.",
+                "So sánh huyết áp trước và sau vận động. Sau vận động, nhịp tim và huyết áp tâm thu thường tăng, rồi giảm dần khi nghỉ."
+              ],
+              "tip": "Không nói chuyện, không cử động khi máy đang đo để kết quả chính xác hơn."
+            },
+            {
+              "heading": "3. Giải thích kết quả",
+              "paragraphs": [
+                "Khi vận động, cơ cần nhiều O2 và chất dinh dưỡng, thải nhiều CO2; thần kinh giao cảm và adrenaline làm tim đập nhanh, mạnh hơn để tăng lưu lượng máu.",
+                "Người thường xuyên luyện tập thể thao thường có nhịp tim lúc nghỉ thấp hơn và hồi phục nhanh hơn sau vận động. Kết quả đo chỉ để học tập, không thay cho chẩn đoán y khoa."
+              ]
+            }
+          ],
+          "remember": [
+            "Đếm nhịp tim ở động mạch cổ tay hoặc cổ.",
+            "Đo nhiều lần, lấy giá trị trung bình.",
+            "Vận động làm tăng nhịp tim và huyết áp tâm thu.",
+            "Luyện tập đều giúp tim khỏe, hồi phục nhanh."
+          ],
+          "check": {
+            "question": "Đếm được 19 nhịp trong 15 giây. Nhịp tim là bao nhiêu?",
+            "answer": "19 · 4 = 76 lần/phút."
+          },
+          "lab": "heart-rate"
+        },
+        {
+          "id": "biology-11-12",
+          "title": "Bài 12. Miễn dịch ở động vật",
+          "hook": "Mỗi ngày cơ thể em gặp vô số vi khuẩn, virus, nhưng hầu như em không ốm. Một «đội quân» thầm lặng đang canh gác cho em.",
+          "sections": [
+            {
+              "heading": "1. Hệ miễn dịch và kháng nguyên",
+              "paragraphs": [
+                "Miễn dịch là khả năng của cơ thể chống lại các tác nhân gây bệnh. Hệ miễn dịch gồm các cơ quan (tủy xương, tuyến ức, lách, hạch bạch huyết…), các tế bào (bạch cầu, đại thực bào, tế bào lympho B, lympho T) và các phân tử (kháng thể, protein bổ thể…).",
+                "Kháng nguyên là những chất lạ (thường là protein, polysaccharide trên bề mặt vi khuẩn, virus) có khả năng kích thích cơ thể tạo đáp ứng miễn dịch."
+              ]
+            },
+            {
+              "heading": "2. Miễn dịch không đặc hiệu và đặc hiệu",
+              "paragraphs": [
+                "Miễn dịch không đặc hiệu (bẩm sinh) chống lại mọi tác nhân, không cần tiếp xúc trước: hàng rào da và niêm mạc, dịch tiết (nước mắt, dịch vị acid), tế bào thực bào, phản ứng viêm, sốt.",
+                "Miễn dịch đặc hiệu (thu được) chống lại từng kháng nguyên cụ thể. Miễn dịch dịch thể: tế bào lympho B tạo tương bào tiết kháng thể, kháng thể kết hợp đặc hiệu với kháng nguyên để vô hiệu hóa. Miễn dịch tế bào: tế bào lympho T độc nhận diện và phá hủy tế bào bị nhiễm virus hoặc tế bào ung thư. Tế bào lympho T hỗ trợ hoạt hóa cả hai loại đáp ứng.",
+                "Sau lần nhiễm đầu, cơ thể giữ lại tế bào nhớ; lần nhiễm sau đáp ứng nhanh và mạnh hơn. Vaccine dựa trên nguyên lí này."
+              ],
+              "tip": "Vaccine không chữa bệnh đang mắc; vaccine «dạy trước» hệ miễn dịch để phòng bệnh."
+            },
+            {
+              "heading": "3. Bệnh liên quan đến miễn dịch",
+              "paragraphs": [
+                "Dị ứng: phản ứng quá mức với chất vô hại (phấn hoa, bụi, một số thức ăn). Bệnh tự miễn: hệ miễn dịch tấn công chính tế bào của cơ thể. Suy giảm miễn dịch: hệ miễn dịch yếu đi, như ở người nhiễm HIV.",
+                "Tăng cường miễn dịch: tiêm vaccine đầy đủ, ăn uống đủ chất, ngủ đủ, vận động thường xuyên, giữ vệ sinh."
+              ]
+            }
+          ],
+          "remember": [
+            "Hệ miễn dịch gồm cơ quan, tế bào và phân tử miễn dịch.",
+            "Không đặc hiệu: da, niêm mạc, thực bào, viêm, sốt.",
+            "Đặc hiệu: dịch thể (lympho B, kháng thể) và tế bào (lympho T độc).",
+            "Tế bào nhớ là cơ sở của vaccine.",
+            "Dị ứng, tự miễn, suy giảm miễn dịch là rối loạn miễn dịch."
+          ],
+          "check": {
+            "question": "Vì sao người đã tiêm vaccine sởi thường không mắc sởi khi tiếp xúc virus?",
+            "answer": "Cơ thể đã có tế bào nhớ, nên đáp ứng miễn dịch nhanh và mạnh, tiêu diệt virus trước khi gây bệnh."
+          }
+        },
+        {
+          "id": "biology-11-13",
+          "title": "Bài 13. Bài tiết và cân bằng nội môi",
+          "hook": "Trời nóng em ít đi tiểu, uống nhiều nước thì đi tiểu nhiều. Thận đang tự điều chỉnh để giữ «môi trường trong» luôn ổn định.",
+          "sections": [
+            {
+              "heading": "1. Bài tiết và thận",
+              "paragraphs": [
+                "Bài tiết là quá trình loại bỏ các chất thải của chuyển hóa (như urea, CO2) và các chất dư thừa, chất độc ra khỏi cơ thể. Cơ quan bài tiết: phổi (thải CO2), thận (tạo nước tiểu), da (mồ hôi), gan (tham gia chuyển hóa và đào thải một số chất).",
+                "Đơn vị chức năng của thận là nephron. Nước tiểu được tạo thành qua ba bước: lọc ở cầu thận (tạo dịch lọc), tái hấp thu các chất cần thiết (nước, glucose, ion) ở ống thận, và tiết thêm chất thải, ion H⁺ vào ống thận."
+              ]
+            },
+            {
+              "heading": "2. Cân bằng nội môi",
+              "paragraphs": [
+                "Nội môi là môi trường bên trong cơ thể (máu, bạch huyết, dịch mô). Cân bằng nội môi là duy trì sự ổn định của các điều kiện lí hóa của nội môi (nhiệt độ, pH, áp suất thẩm thấu, nồng độ glucose…).",
+                "Cơ chế gồm: bộ phận tiếp nhận kích thích (thụ thể) → bộ phận điều khiển (trung ương thần kinh hoặc tuyến nội tiết) → bộ phận thực hiện (thận, gan, phổi, tim, mạch máu…). Kết quả tác động ngược trở lại bộ phận tiếp nhận (liên hệ ngược)."
+              ],
+              "tip": "Liên hệ ngược giống bộ điều nhiệt của bình nóng lạnh: đủ nóng thì tắt, nguội thì bật."
+            },
+            {
+              "heading": "3. Ví dụ điều hòa",
+              "paragraphs": [
+                "Đường huyết: sau bữa ăn glucose máu tăng, tuyến tụy tiết insulin, gan và cơ nhận glucose, gan chuyển glucose thành glycogen; khi đói, tụy tiết glucagon làm gan phân giải glycogen thành glucose. Nhờ vậy đường huyết ổn định.",
+                "Áp suất thẩm thấu: khi cơ thể mất nước, áp suất thẩm thấu máu tăng, vùng dưới đồi tạo cảm giác khát và tăng tiết hormone ADH (qua tuyến yên), thận tăng tái hấp thu nước, lượng nước tiểu giảm.",
+                "Bệnh liên quan: tiểu đường, sỏi thận, suy thận. Uống đủ nước, ăn ít muối, không nhịn tiểu giúp bảo vệ thận."
+              ]
+            }
+          ],
+          "remember": [
+            "Bài tiết loại bỏ chất thải chuyển hóa: phổi, thận, da.",
+            "Nephron: lọc → tái hấp thu → tiết.",
+            "Cân bằng nội môi: tiếp nhận → điều khiển → thực hiện, có liên hệ ngược.",
+            "Insulin hạ đường huyết; glucagon tăng đường huyết.",
+            "ADH tăng tái hấp thu nước ở thận."
+          ],
+          "check": {
+            "question": "Khi đói lâu, hormone nào giúp đường huyết không giảm quá thấp?",
+            "answer": "Glucagon (tuyến tụy tiết ra, làm gan phân giải glycogen thành glucose)."
+          }
+        }
+      ]
+    },
+    {
+      "title": "Chương 2. Cảm ứng ở sinh vật",
+      "lessons": [
+        {
+          "id": "biology-11-14",
+          "title": "Bài 14. Khái quát về cảm ứng ở sinh vật",
+          "hook": "Chạm vào lá cây trinh nữ, lá cụp lại. Chạm vào bếp nóng, tay em rụt lại. Cả cây và người đều đang «cảm ứng».",
+          "sections": [
+            {
+              "heading": "1. Khái niệm cảm ứng",
+              "paragraphs": [
+                "Cảm ứng là khả năng của sinh vật tiếp nhận và phản ứng lại các kích thích từ môi trường (bên trong và bên ngoài cơ thể), giúp sinh vật tồn tại và phát triển.",
+                "Kích thích có thể là ánh sáng, nhiệt độ, nước, hóa chất, trọng lực, sự tiếp xúc… Cảm ứng là một đặc trưng cơ bản của sự sống."
+              ]
+            },
+            {
+              "heading": "2. Cơ chế chung",
+              "paragraphs": [
+                "Quá trình cảm ứng gồm 4 giai đoạn: tiếp nhận kích thích (thụ thể) → dẫn truyền tín hiệu → xử lí thông tin → trả lời kích thích (bộ phận thực hiện).",
+                "Ở thực vật, tín hiệu được truyền chủ yếu nhờ hormone và tín hiệu điện chậm; phản ứng thường chậm và khó thấy. Ở động vật có hệ thần kinh, tín hiệu truyền nhanh bằng xung thần kinh nên phản ứng nhanh, đa dạng."
+              ],
+              "tip": "Nhớ chuỗi 4 bước: Tiếp nhận – Dẫn truyền – Xử lí – Trả lời."
+            },
+            {
+              "heading": "3. Vai trò và ứng dụng",
+              "paragraphs": [
+                "Cảm ứng giúp sinh vật thích nghi: cây hướng về phía ánh sáng để quang hợp; rễ mọc về nơi có nước; động vật tránh kẻ thù, tìm thức ăn.",
+                "Con người ứng dụng hiểu biết về cảm ứng trong trồng trọt (chiếu sáng, điều khiển ra hoa), chăn nuôi (huấn luyện vật nuôi) và học tập (hình thành thói quen tốt)."
+              ]
+            }
+          ],
+          "remember": [
+            "Cảm ứng: tiếp nhận và phản ứng lại kích thích.",
+            "4 giai đoạn: tiếp nhận → dẫn truyền → xử lí → trả lời.",
+            "Thực vật phản ứng chậm; động vật có thần kinh phản ứng nhanh.",
+            "Cảm ứng giúp sinh vật thích nghi với môi trường."
+          ],
+          "check": {
+            "question": "Khi trời lạnh, em nổi da gà. Đây có phải cảm ứng không? Kích thích là gì?",
+            "answer": "Có; kích thích là nhiệt độ thấp."
+          }
+        },
+        {
+          "id": "biology-11-15",
+          "title": "Bài 15. Cảm ứng ở thực vật",
+          "hook": "Đặt chậu cây cạnh cửa sổ vài ngày, ngọn cây nghiêng hẳn ra phía ánh sáng. Cây không có mắt, vậy nó «biết» ánh sáng ở đâu bằng cách nào?",
+          "sections": [
+            {
+              "heading": "1. Hướng động",
+              "paragraphs": [
+                "Hướng động là hình thức phản ứng của một bộ phận cây trước một tác nhân kích thích theo một hướng xác định. Phản ứng hướng về phía tác nhân là hướng động dương, tránh xa là hướng động âm.",
+                "Các kiểu hướng động: hướng sáng (thân hướng sáng dương), hướng trọng lực (rễ hướng trọng lực dương, thân hướng trọng lực âm), hướng nước, hướng hóa (rễ mọc về nơi có chất dinh dưỡng, tránh chất độc), hướng tiếp xúc (tua cuốn quấn quanh giá thể)."
+              ]
+            },
+            {
+              "heading": "2. Cơ chế hướng sáng",
+              "paragraphs": [
+                "Hướng động là kết quả của sự sinh trưởng không đều ở hai phía của cơ quan. Khi ánh sáng chiếu từ một phía, auxin di chuyển sang phía khuất sáng nhiều hơn.",
+                "Ở thân, phía khuất sáng có nhiều auxin hơn nên tế bào dãn dài nhanh hơn, làm thân uốn cong về phía ánh sáng."
+              ],
+              "tip": "Thân cong về phía sáng không phải vì phía sáng mọc nhanh, mà vì phía tối mọc nhanh hơn."
+            },
+            {
+              "heading": "3. Ứng động và ứng dụng",
+              "paragraphs": [
+                "Ứng động là phản ứng của cây trước tác nhân kích thích không định hướng. Ứng động sinh trưởng do tốc độ sinh trưởng không đều ở hai mặt của cơ quan: hoa nở, đóng theo nhiệt độ hoặc ánh sáng (hoa tulip, hoa bồ công anh), lá cây họ Đậu xòe ra và khép lại theo ngày đêm. Ứng động không sinh trưởng do biến đổi sức trương nước của tế bào: lá cây trinh nữ cụp lại khi bị chạm, lá cây bắt mồi khép lại khi có côn trùng.",
+                "Ứng dụng: trồng cây đúng hướng ánh sáng, làm giàn cho cây leo, tưới nước và bón phân theo rãnh để rễ phát triển rộng."
+              ]
+            }
+          ],
+          "remember": [
+            "Hướng động: phản ứng theo hướng xác định (sáng, trọng lực, nước, hóa, tiếp xúc).",
+            "Thân hướng sáng dương; rễ hướng trọng lực dương.",
+            "Auxin tập trung ở phía khuất sáng làm phía đó dãn dài nhanh hơn.",
+            "Ứng động: phản ứng với kích thích không định hướng (sinh trưởng và không sinh trưởng).",
+            "Cây trinh nữ cụp lá do thay đổi sức trương nước."
+          ],
+          "check": {
+            "question": "Vì sao rễ cây mọc hướng xuống còn thân mọc hướng lên?",
+            "answer": "Rễ hướng trọng lực dương, thân hướng trọng lực âm."
+          }
+        },
+        {
+          "id": "biology-11-16",
+          "title": "Bài 16. Thực hành: Cảm ứng ở thực vật",
+          "hook": "Gieo vài hạt đậu, làm một chiếc hộp có lỗ nhỏ, vài ngày sau em sẽ có bằng chứng tận mắt về hướng động.",
+          "sections": [
+            {
+              "heading": "1. Thí nghiệm hướng sáng",
+              "paragraphs": [
+                "Gieo hạt đậu vào hai cốc. Cốc thứ nhất đặt trong hộp kín có một lỗ nhỏ ở một bên; cốc thứ hai để nơi được chiếu sáng đều từ mọi phía làm đối chứng.",
+                "Sau vài ngày, cây trong hộp mọc cong về phía lỗ sáng; cây đối chứng mọc thẳng."
+              ]
+            },
+            {
+              "heading": "2. Thí nghiệm hướng trọng lực và hướng nước",
+              "paragraphs": [
+                "Hướng trọng lực: cho hạt nảy mầm có rễ mọc thẳng, đặt nằm ngang trên giấy ẩm. Sau một thời gian, rễ uốn cong xuống dưới, thân uốn cong lên trên.",
+                "Hướng nước: gieo hạt vào chậu, chỉ tưới nước ở một phía (hoặc đặt một cốc xốp chứa nước vùi một bên). Khi nhổ cây ra, thấy rễ phát triển nhiều về phía có nước."
+              ],
+              "tip": "Mỗi thí nghiệm cần lô đối chứng và nên làm với nhiều hạt để kết quả đáng tin cậy."
+            },
+            {
+              "heading": "3. Ứng động và báo cáo",
+              "paragraphs": [
+                "Quan sát cây trinh nữ: chạm nhẹ vào lá, lá cụp lại; sau một thời gian, lá xòe ra trở lại. Quan sát hoa mười giờ nở vào buổi sáng khi trời nắng ấm.",
+                "Báo cáo: chụp ảnh hoặc vẽ cây theo từng ngày, đo góc uốn cong hoặc chiều dài rễ, ghi rõ điều kiện thí nghiệm và giải thích bằng cơ chế đã học."
+              ]
+            }
+          ],
+          "remember": [
+            "Thân cây mọc cong về phía nguồn sáng.",
+            "Đặt cây nằm ngang: rễ cong xuống, thân cong lên.",
+            "Rễ phát triển về phía có nước.",
+            "Lá trinh nữ cụp khi chạm và xòe lại sau đó.",
+            "Luôn có lô đối chứng và nhiều mẫu."
+          ],
+          "check": {
+            "question": "Trong thí nghiệm hướng sáng, cây đối chứng được đặt ở đâu?",
+            "answer": "Nơi được chiếu sáng đều từ mọi phía."
+          },
+          "lab": "tropism"
+        },
+        {
+          "id": "biology-11-17",
+          "title": "Bài 17. Cảm ứng ở động vật",
+          "hook": "Từ lúc ngón tay chạm vào vật nóng tới lúc em rụt tay lại chỉ trong nháy mắt. Tín hiệu đã đi một vòng qua hệ thần kinh rồi đấy!",
+          "sections": [
+            {
+              "heading": "1. Các dạng hệ thần kinh",
+              "paragraphs": [
+                "Động vật đơn bào chưa có hệ thần kinh, phản ứng bằng sự chuyển động của cơ thể. Ruột khoang (thủy tức) có hệ thần kinh dạng lưới: kích thích ở một điểm làm toàn thân phản ứng. Giun, côn trùng có hệ thần kinh dạng chuỗi hạch: phản ứng chính xác hơn, tại chỗ.",
+                "Động vật có xương sống có hệ thần kinh dạng ống, gồm thần kinh trung ương (não, tủy sống) và thần kinh ngoại biên. Phản xạ là phản ứng của cơ thể trả lời kích thích thông qua hệ thần kinh, được thực hiện nhờ cung phản xạ: thụ thể → dây thần kinh cảm giác → trung ương thần kinh → dây thần kinh vận động → cơ quan phản ứng."
+              ]
+            },
+            {
+              "heading": "2. Điện thế và sự lan truyền xung thần kinh",
+              "paragraphs": [
+                "Khi nghỉ, mặt trong màng neuron tích điện âm so với mặt ngoài (điện thế nghỉ, khoảng −70 mV), do sự phân bố không đều của các ion, đặc biệt là K⁺ và Na⁺. Khi bị kích thích, kênh Na⁺ mở, Na⁺ tràn vào làm đảo cực, tạo điện thế hoạt động; sau đó K⁺ đi ra làm tái phân cực.",
+                "Trên sợi không có bao myelin, xung lan truyền liên tục và chậm. Trên sợi có bao myelin, xung nhảy cóc từ eo Ranvier này sang eo Ranvier khác nên nhanh hơn nhiều, có thể đạt khoảng 100 m/s.",
+                "Tại synapse hóa học, xung thần kinh làm chùy synapse giải phóng chất trung gian hóa học (như acetylcholine) vào khe synapse; chất này gắn vào thụ thể ở màng sau, gây xung thần kinh ở tế bào tiếp theo. Vì vậy xung chỉ truyền theo một chiều qua synapse."
+              ],
+              "example": {
+                "question": "Xung thần kinh lan truyền với tốc độ 100 m/s trên sợi dài 1 m. Mất bao lâu?",
+                "steps": ["t = s/v = 1 m / (100 m/s).", "t = 0,01 s."]
+              }
+            },
+            {
+              "heading": "3. Thụ thể cảm giác và bảo vệ hệ thần kinh",
+              "paragraphs": [
+                "Các thụ thể cảm giác (ở mắt, tai, da, mũi, lưỡi) tiếp nhận kích thích và chuyển thành xung thần kinh. Ví dụ ở mắt, tế bào que và tế bào nón ở màng lưới tiếp nhận ánh sáng.",
+                "Ma túy, rượu bia và một số chất kích thích làm rối loạn hoạt động của synapse, gây nghiện và tổn hại hệ thần kinh. Ngủ đủ, tránh chất gây nghiện và giữ an toàn khi tham gia giao thông giúp bảo vệ hệ thần kinh."
+              ],
+              "tip": "Xung đi một chiều qua synapse vì chỉ màng sau synapse mới có thụ thể với chất trung gian."
+            }
+          ],
+          "remember": [
+            "Hệ thần kinh: dạng lưới → chuỗi hạch → dạng ống.",
+            "Cung phản xạ: thụ thể → cảm giác → trung ương → vận động → cơ quan phản ứng.",
+            "Điện thế nghỉ khoảng −70 mV; Na⁺ vào tạo điện thế hoạt động.",
+            "Sợi có myelin dẫn truyền nhảy cóc, nhanh hơn.",
+            "Synapse hóa học truyền tin một chiều nhờ chất trung gian."
+          ],
+          "check": {
+            "question": "Vì sao xung thần kinh trên sợi có bao myelin truyền nhanh hơn?",
+            "answer": "Vì xung lan truyền nhảy cóc qua các eo Ranvier."
+          }
+        },
+        {
+          "id": "biology-11-18",
+          "title": "Bài 18. Tập tính ở động vật",
+          "hook": "Nhện mới nở đã biết chăng tơ, nhưng chú chó phải được dạy mới biết ngồi khi nghe lệnh. Hành vi nào là «có sẵn», hành vi nào là «học được»?",
+          "sections": [
+            {
+              "heading": "1. Khái niệm và phân loại tập tính",
+              "paragraphs": [
+                "Tập tính là chuỗi phản ứng của động vật trả lời kích thích từ môi trường, giúp động vật tồn tại và phát triển.",
+                "Tập tính bẩm sinh: sinh ra đã có, đặc trưng cho loài, do gene quy định, ít thay đổi (nhện chăng tơ, ve kêu vào mùa hè). Tập tính học được: hình thành trong đời sống cá thể qua học tập và rút kinh nghiệm, có thể thay đổi. Nhiều tập tính là sự kết hợp của cả hai."
+              ]
+            },
+            {
+              "heading": "2. Các hình thức học tập",
+              "paragraphs": [
+                "In vết: con non đi theo vật chuyển động đầu tiên nó nhìn thấy (gà, vịt con mới nở). Quen nhờn: phớt lờ kích thích lặp lại nhiều lần mà không kèm nguy hiểm.",
+                "Điều kiện hóa đáp ứng: hình thành liên kết giữa hai kích thích (thí nghiệm của Pavlov: chó tiết nước bọt khi nghe tiếng chuông vì chuông nhiều lần đi kèm thức ăn). Điều kiện hóa hành động: liên kết một hành vi với phần thưởng hoặc hình phạt (thí nghiệm của Skinner với chuột nhấn bàn đạp để có thức ăn).",
+                "Học ngầm (học không có ý thức, sau này mới dùng), học khôn (phối hợp kinh nghiệm cũ để giải quyết tình huống mới, như tinh tinh chồng hộp để lấy chuối), học xã hội (bắt chước cá thể khác)."
+              ]
+            },
+            {
+              "heading": "3. Một số dạng tập tính và ứng dụng",
+              "paragraphs": [
+                "Các dạng tập tính phổ biến: kiếm ăn, bảo vệ lãnh thổ, sinh sản (ve vãn, làm tổ, chăm con), di cư, xã hội (tôn ti thứ bậc, vị tha như ở ong, kiến).",
+                "Ứng dụng: huấn luyện chó nghiệp vụ, thú biểu diễn; dùng bẫy đèn bắt côn trùng; dạy con người hình thành thói quen, kĩ năng tốt."
+              ],
+              "tip": "Phân biệt nhanh: tập tính có ở mọi cá thể cùng loài ngay từ khi sinh ra thường là bẩm sinh."
+            }
+          ],
+          "remember": [
+            "Tập tính bẩm sinh do gene quy định, ít thay đổi; tập tính học được hình thành qua kinh nghiệm.",
+            "Hình thức học: in vết, quen nhờn, điều kiện hóa, học ngầm, học khôn, học xã hội.",
+            "Pavlov: điều kiện hóa đáp ứng; Skinner: điều kiện hóa hành động.",
+            "Các dạng: kiếm ăn, lãnh thổ, sinh sản, di cư, xã hội."
+          ],
+          "check": {
+            "question": "Chim sẻ không còn bay đi khi thấy bù nhìn đứng yên lâu ngày là hình thức học tập nào?",
+            "answer": "Quen nhờn."
+          }
+        }
+      ]
+    },
+    {
+      "title": "Chương 3. Sinh trưởng và phát triển ở sinh vật",
+      "lessons": [
+        {
+          "id": "biology-11-19",
+          "title": "Bài 19. Khái quát về sinh trưởng và phát triển ở sinh vật",
+          "hook": "Một hạt đậu thành cây đậu, một quả trứng thành con gà. «Lớn lên» và «trưởng thành» có phải là một?",
+          "sections": [
+            {
+              "heading": "1. Sinh trưởng và phát triển",
+              "paragraphs": [
+                "Sinh trưởng là sự tăng về kích thước và khối lượng của cơ thể do tăng số lượng và kích thước tế bào.",
+                "Phát triển là toàn bộ những biến đổi diễn ra trong đời sống cá thể, gồm ba quá trình liên quan: sinh trưởng, phân hóa tế bào (biệt hóa) và phát sinh hình thái các cơ quan, cơ thể. Sinh trưởng là một phần của phát triển; hai quá trình liên quan mật thiết."
+              ]
+            },
+            {
+              "heading": "2. Vòng đời và tuổi thọ",
+              "paragraphs": [
+                "Vòng đời là khoảng thời gian từ khi cơ thể được sinh ra, lớn lên, trưởng thành, sinh sản rồi chết. Ví dụ vòng đời của cây lúa: hạt → cây mạ → đẻ nhánh → làm đòng → trổ bông → hạt.",
+                "Tuổi thọ là thời gian sống của một cá thể, khác nhau giữa các loài và chịu ảnh hưởng của di truyền, chế độ dinh dưỡng, môi trường và lối sống."
+              ]
+            },
+            {
+              "heading": "3. Các nhân tố ảnh hưởng và ứng dụng",
+              "paragraphs": [
+                "Nhân tố bên trong: đặc điểm di truyền, hormone. Nhân tố bên ngoài: nhiệt độ, ánh sáng, nước, chất dinh dưỡng, O2.",
+                "Hiểu biết về vòng đời giúp con người chọn thời điểm gieo trồng, thu hoạch, chăm sóc và phòng trừ sâu hại vào giai đoạn chúng dễ bị tiêu diệt nhất."
+              ],
+              "tip": "Một cây lớn nhanh nhưng chưa ra hoa: nó đang sinh trưởng mạnh nhưng chưa phát triển tới giai đoạn sinh sản."
+            }
+          ],
+          "remember": [
+            "Sinh trưởng: tăng kích thước, khối lượng.",
+            "Phát triển: sinh trưởng + phân hóa tế bào + phát sinh hình thái.",
+            "Vòng đời: sinh ra → lớn lên → sinh sản → chết.",
+            "Nhân tố bên trong (gene, hormone) và bên ngoài (nhiệt độ, ánh sáng, dinh dưỡng…)."
+          ],
+          "check": {
+            "question": "Phân hóa tế bào thuộc sinh trưởng hay phát triển?",
+            "answer": "Thuộc phát triển."
+          }
+        },
+        {
+          "id": "biology-11-20",
+          "title": "Bài 20. Sinh trưởng và phát triển ở thực vật",
+          "hook": "Cây tre có thể cao lên nhanh chóng, còn cây gỗ lim thì to ra rất chậm qua từng năm. Chúng lớn lên ở những «vùng» khác nhau.",
+          "sections": [
+            {
+              "heading": "1. Mô phân sinh và các kiểu sinh trưởng",
+              "paragraphs": [
+                "Mô phân sinh là nhóm tế bào chưa phân hóa, có khả năng phân chia liên tục. Mô phân sinh đỉnh (ở chồi ngọn, chóp rễ) giúp cây dài ra: sinh trưởng sơ cấp. Mô phân sinh bên (tầng sinh mạch, tầng sinh vỏ) ở cây Hai lá mầm giúp thân, rễ to ra: sinh trưởng thứ cấp. Mô phân sinh lóng ở cây Một lá mầm (như lúa, tre) giúp lóng dài ra.",
+                "Sinh trưởng thứ cấp tạo ra gỗ và vỏ. Ở vùng có mùa rõ rệt, mỗi năm tầng sinh mạch tạo một vòng gỗ, dựa vào đó có thể ước tính tuổi cây."
+              ]
+            },
+            {
+              "heading": "2. Hormone thực vật",
+              "paragraphs": [
+                "Hormone thực vật là chất hữu cơ do cây tiết ra, với lượng rất nhỏ nhưng điều tiết hoạt động sống. Nhóm kích thích: auxin (dãn dài tế bào, ưu thế ngọn, ra rễ), gibberellin (kéo dài thân, nảy mầm hạt), cytokinin (phân chia tế bào, hình thành chồi, làm chậm già hóa). Nhóm ức chế: abscisic acid (đóng khí khổng, ngủ nghỉ của hạt), ethylene (thúc quả chín, rụng lá).",
+                "Trong nuôi cấy mô, tỉ lệ auxin/cytokinin cao kích thích ra rễ, tỉ lệ thấp kích thích ra chồi. Dùng hormone phải đúng nồng độ và đảm bảo an toàn thực phẩm."
+              ]
+            },
+            {
+              "heading": "3. Sự ra hoa",
+              "paragraphs": [
+                "Cây ra hoa khi đạt độ tuổi nhất định và gặp điều kiện thích hợp. Một số cây cần trải qua nhiệt độ thấp mới ra hoa (xuân hóa).",
+                "Quang chu kì là thời gian chiếu sáng xen kẽ bóng tối trong ngày, ảnh hưởng đến sự ra hoa: cây ngày ngắn ra hoa khi đêm đủ dài, cây ngày dài ra hoa khi ngày dài, cây trung tính ra hoa không phụ thuộc quang chu kì. Sắc tố phytochrome giúp cây cảm nhận quang chu kì. Ví dụ ứng dụng: thắp đèn ban đêm cho thanh long để điều khiển thời điểm ra hoa."
+              ],
+              "tip": "Với cây ngày ngắn, điều quan trọng thực ra là độ dài đêm: một chút ánh sáng giữa đêm có thể làm cây không ra hoa."
+            }
+          ],
+          "remember": [
+            "Mô phân sinh đỉnh → sinh trưởng sơ cấp; mô phân sinh bên → sinh trưởng thứ cấp.",
+            "Mỗi năm thường thêm một vòng gỗ ở vùng có mùa rõ rệt.",
+            "Kích thích: auxin, gibberellin, cytokinin; ức chế: abscisic acid, ethylene.",
+            "Ethylene thúc quả chín.",
+            "Ra hoa phụ thuộc tuổi, nhiệt độ thấp (xuân hóa), quang chu kì (phytochrome)."
+          ],
+          "check": {
+            "question": "Muốn chuối xanh chín nhanh, người ta dùng hormone nào?",
+            "answer": "Ethylene (hoặc chất giải phóng ethylene)."
+          }
+        },
+        {
+          "id": "biology-11-21",
+          "title": "Bài 21. Thực hành: Bấm ngọn, tỉa cành, tính tuổi cây",
+          "hook": "Muốn cây rau ngót đâm nhiều nhánh, cây cảnh xum xuê, người làm vườn chỉ cần một chiếc kéo và một chút hiểu biết về auxin.",
+          "sections": [
+            {
+              "heading": "1. Bấm ngọn",
+              "paragraphs": [
+                "Chồi ngọn sản sinh auxin, ức chế sự phát triển của chồi bên (ưu thế ngọn). Khi bấm ngọn, ưu thế ngọn bị loại bỏ, các chồi bên phát triển thành cành.",
+                "Thực hành: chọn hai nhóm cây giống nhau (như cây đậu, rau ngót), bấm ngọn một nhóm, giữ nguyên nhóm kia làm đối chứng. Sau một thời gian, đếm số cành bên ở mỗi nhóm và so sánh."
+              ]
+            },
+            {
+              "heading": "2. Tỉa cành",
+              "paragraphs": [
+                "Tỉa bỏ cành già, cành sâu bệnh, cành mọc chen nhau giúp cây thông thoáng, đủ ánh sáng, giảm sâu bệnh, tập trung chất dinh dưỡng cho cành mang hoa, quả.",
+                "Dùng kéo sạch, cắt gọn, vết cắt hơi nghiêng để nước không đọng lại."
+              ],
+              "tip": "Dùng kéo cẩn thận và đeo găng tay khi tỉa cây có gai."
+            },
+            {
+              "heading": "3. Tính tuổi cây",
+              "paragraphs": [
+                "Trên mặt cắt ngang thân cây gỗ Hai lá mầm ở vùng có mùa rõ rệt, mỗi năm có một vòng gỗ gồm phần gỗ sớm (màu sáng, tạo vào mùa thuận lợi) và phần gỗ muộn (màu sẫm). Đếm số vòng gỗ có thể ước tính tuổi cây.",
+                "Độ rộng vòng gỗ còn cho biết điều kiện sống từng năm: năm thuận lợi vòng rộng, năm khô hạn vòng hẹp."
+              ],
+              "example": {
+                "question": "Trên mặt cắt một gốc cây, em đếm được 28 vòng gỗ (mỗi vòng gồm một dải sáng và một dải sẫm). Tuổi cây ước tính bao nhiêu?",
+                "steps": [
+                  "Mỗi vòng gỗ ứng với khoảng một năm sinh trưởng.",
+                  "Tuổi cây ước tính khoảng 28 năm."
+                ]
+              }
+            }
+          ],
+          "remember": [
+            "Ngọn cây tạo auxin gây ưu thế ngọn; bấm ngọn giúp chồi bên phát triển.",
+            "Tỉa cành giúp cây thông thoáng, ít sâu bệnh, tập trung dinh dưỡng.",
+            "Mỗi vòng gỗ (gỗ sớm + gỗ muộn) thường ứng với một năm.",
+            "Vòng gỗ rộng: năm thuận lợi; hẹp: năm bất lợi."
+          ],
+          "check": {
+            "question": "Vì sao bấm ngọn làm cây ra nhiều nhánh?",
+            "answer": "Bấm ngọn loại bỏ nguồn auxin gây ưu thế ngọn, chồi bên không còn bị ức chế nên phát triển."
+          }
+        },
+        {
+          "id": "biology-11-22",
+          "title": "Bài 22. Sinh trưởng và phát triển ở động vật",
+          "hook": "Con sâu xấu xí rồi một ngày hóa thành con bướm sặc sỡ, còn em thì từ bé đã mang hình dáng người. Có mấy con đường để lớn lên?",
+          "sections": [
+            {
+              "heading": "1. Các hình thức phát triển",
+              "paragraphs": [
+                "Phát triển không qua biến thái: con non có hình thái, cấu tạo tương tự con trưởng thành (người, nhiều loài thú, chim, bò sát).",
+                "Phát triển qua biến thái hoàn toàn: ấu trùng (sâu) khác hẳn con trưởng thành, phải qua giai đoạn nhộng để biến đổi (bướm, ruồi, muỗi, ong). Phát triển qua biến thái không hoàn toàn: ấu trùng gần giống con trưởng thành, lột xác nhiều lần để thành con trưởng thành (châu chấu, gián, cào cào). Ếch cũng phát triển qua biến thái: nòng nọc → ếch."
+              ]
+            },
+            {
+              "heading": "2. Hormone điều hòa",
+              "paragraphs": [
+                "Ở động vật có xương sống: hormone sinh trưởng GH (tuyến yên) kích thích phân chia tế bào, tăng kích thước cơ thể; thyroxine (tuyến giáp, cần iodine) kích thích chuyển hóa, ở ếch gây biến thái nòng nọc thành ếch; testosterone và estrogen gây phát triển các đặc điểm sinh dục thứ cấp ở tuổi dậy thì.",
+                "Ở côn trùng: ecdysone gây lột xác và kích thích biến đổi sâu thành nhộng, bướm; juvenile hormone ức chế sự biến đổi đó, giữ ấu trùng ở dạng sâu."
+              ],
+              "tip": "Thiếu iodine ở trẻ em làm thiếu thyroxine, gây chậm lớn, trí tuệ kém phát triển; vì vậy cần dùng muối iodine."
+            },
+            {
+              "heading": "3. Nhân tố bên ngoài và ứng dụng",
+              "paragraphs": [
+                "Thức ăn là nhân tố quan trọng nhất; nhiệt độ (đặc biệt với động vật biến nhiệt), ánh sáng (giúp chuyển hóa tạo vitamin D, hỗ trợ hấp thụ calcium để xương phát triển).",
+                "Ứng dụng: chăn nuôi theo giai đoạn phát triển, cải thiện dân số qua dinh dưỡng hợp lí, luyện tập thể thao, tránh chất kích thích ở tuổi dậy thì."
+              ]
+            }
+          ],
+          "remember": [
+            "Không qua biến thái; biến thái hoàn toàn (có nhộng); biến thái không hoàn toàn (lột xác).",
+            "GH: tăng trưởng; thyroxine: chuyển hóa, biến thái ở ếch; cần iodine.",
+            "Ecdysone gây lột xác; juvenile hormone ức chế biến thái.",
+            "Thức ăn, nhiệt độ, ánh sáng ảnh hưởng sinh trưởng."
+          ],
+          "check": {
+            "question": "Bướm phát triển theo kiểu nào? Kể các giai đoạn.",
+            "answer": "Biến thái hoàn toàn: trứng → sâu → nhộng → bướm."
+          }
+        },
+        {
+          "id": "biology-11-23",
+          "title": "Bài 23. Thực hành: Quan sát quá trình biến thái ở động vật",
+          "hook": "Nuôi vài con tằm hay quan sát nòng nọc trong chậu nước, em sẽ chứng kiến một màn «biến hình» có thật trong tự nhiên.",
+          "sections": [
+            {
+              "heading": "1. Chuẩn bị và nuôi",
+              "paragraphs": [
+                "Chọn đối tượng dễ nuôi: tằm (ăn lá dâu), sâu bướm trên rau cải, nòng nọc ếch. Chuẩn bị hộp nuôi thoáng khí, thức ăn sạch, giữ nơi thoáng mát, tránh nắng gắt.",
+                "Thay thức ăn, vệ sinh hộp nuôi hằng ngày. Đối xử nhân đạo với động vật, sau khi quan sát xong thả về môi trường phù hợp."
+              ]
+            },
+            {
+              "heading": "2. Quan sát và ghi chép",
+              "paragraphs": [
+                "Ghi nhật kí theo ngày: kích thước (đo chiều dài), hình dạng, màu sắc, hoạt động ăn, số lần lột xác, thời điểm kết kén hoặc mọc chân.",
+                "Ở tằm: trứng → tằm (ấu trùng, lột xác nhiều lần) → nhộng trong kén → bướm. Ở ếch: trứng → nòng nọc có đuôi, thở bằng mang → mọc chân sau, chân trước → đuôi tiêu biến → ếch con thở bằng phổi và da."
+              ],
+              "tip": "Chụp ảnh cùng một góc, có thước bên cạnh, để dễ so sánh kích thước qua từng ngày."
+            },
+            {
+              "heading": "3. Báo cáo",
+              "paragraphs": [
+                "Lập bảng và vẽ đồ thị chiều dài cơ thể theo thời gian. Xác định kiểu phát triển của loài đã nuôi (biến thái hoàn toàn hay không hoàn toàn).",
+                "Thảo luận ứng dụng: biết giai đoạn sâu non phá hại nhiều nhất giúp nông dân phòng trừ đúng lúc."
+              ]
+            }
+          ],
+          "remember": [
+            "Tằm, bướm: biến thái hoàn toàn (có nhộng).",
+            "Ếch: nòng nọc biến thái thành ếch.",
+            "Ghi nhật kí, đo đạc đều đặn và trung thực.",
+            "Đối xử nhân đạo với động vật thí nghiệm."
+          ],
+          "check": {
+            "question": "Ở giai đoạn nào tằm ăn nhiều lá dâu nhất: ấu trùng, nhộng hay bướm?",
+            "answer": "Ấu trùng (con tằm)."
+          }
+        }
+      ]
+    },
+    {
+      "title": "Chương 4. Sinh sản ở sinh vật",
+      "lessons": [
+        {
+          "id": "biology-11-24",
+          "title": "Bài 24. Khái quát về sinh sản ở sinh vật",
+          "hook": "Một mẩu thân sắn cắm xuống đất thành cây sắn mới; một con gà phải có trứng được thụ tinh mới nở ra gà con. Sinh vật có những «chiến lược» sinh sản khác nhau.",
+          "sections": [
+            {
+              "heading": "1. Khái niệm và vai trò",
+              "paragraphs": [
+                "Sinh sản là quá trình tạo ra những cá thể mới, bảo đảm sự phát triển liên tục của loài.",
+                "Nhờ sinh sản, số lượng cá thể của loài được duy trì và tăng lên, đặc điểm di truyền được truyền lại cho thế hệ sau."
+              ]
+            },
+            {
+              "heading": "2. Sinh sản vô tính và hữu tính",
+              "paragraphs": [
+                "Sinh sản vô tính: không có sự hợp nhất giữa giao tử đực và giao tử cái; con sinh ra từ một phần của cơ thể mẹ, dựa trên nguyên phân nên giống nhau và giống mẹ về di truyền. Ưu điểm: nhanh, chỉ cần một cá thể, giữ được đặc điểm tốt. Hạn chế: ít đa dạng di truyền, khó thích nghi khi môi trường thay đổi.",
+                "Sinh sản hữu tính: có sự hợp nhất giao tử đực và giao tử cái (thụ tinh) tạo hợp tử, dựa trên giảm phân và thụ tinh. Con mang đặc điểm của cả bố và mẹ, đa dạng di truyền, thích nghi tốt hơn với môi trường thay đổi; nhưng cần nhiều thời gian, năng lượng hơn."
+              ],
+              "tip": "Câu hỏi nhanh: có giao tử hợp nhất không? Có → hữu tính; không → vô tính."
+            },
+            {
+              "heading": "3. Các giai đoạn và điều hòa",
+              "paragraphs": [
+                "Sinh sản hữu tính gồm các giai đoạn chính: hình thành giao tử → thụ tinh → phát triển phôi hình thành cơ thể mới.",
+                "Sinh sản chịu sự điều hòa của hormone và các nhân tố môi trường (nhiệt độ, ánh sáng, thức ăn). Hiểu điều này giúp con người điều khiển sinh sản cây trồng, vật nuôi."
+              ]
+            }
+          ],
+          "remember": [
+            "Sinh sản duy trì và phát triển nòi giống.",
+            "Vô tính: không có hợp nhất giao tử, con giống mẹ.",
+            "Hữu tính: có thụ tinh, con đa dạng di truyền.",
+            "Hữu tính: tạo giao tử → thụ tinh → phát triển phôi."
+          ],
+          "check": {
+            "question": "Vì sao sinh sản hữu tính giúp loài thích nghi tốt hơn khi môi trường thay đổi?",
+            "answer": "Vì tạo ra con có nhiều biến dị tổ hợp, đa dạng di truyền."
+          }
+        },
+        {
+          "id": "biology-11-25",
+          "title": "Bài 25. Sinh sản ở thực vật",
+          "hook": "Người trồng cam ghép mắt, người trồng lúa gieo hạt. Hai cách nhân giống ấy dựa trên hai hình thức sinh sản rất khác nhau.",
+          "sections": [
+            {
+              "heading": "1. Sinh sản vô tính ở thực vật",
+              "paragraphs": [
+                "Sinh sản bằng bào tử: cơ thể mới phát triển từ bào tử (rêu, dương xỉ). Sinh sản sinh dưỡng: cơ thể mới phát triển từ một phần cơ quan sinh dưỡng như thân (khoai tây, sắn, mía), lá (cây thuốc bỏng), rễ (khoai lang).",
+                "Nhân giống vô tính do con người thực hiện: giâm cành, chiết cành, ghép cành, ghép mắt và nuôi cấy mô. Cây con giữ nguyên đặc tính tốt của cây mẹ, cho thu hoạch sớm."
+              ]
+            },
+            {
+              "heading": "2. Sinh sản hữu tính ở thực vật có hoa",
+              "paragraphs": [
+                "Hoa là cơ quan sinh sản. Trong bao phấn, hạt phấn được hình thành và mang giao tử đực; trong noãn, túi phôi được hình thành và chứa noãn cầu (giao tử cái) cùng nhân lưỡng bội (2n).",
+                "Thụ phấn là sự rơi của hạt phấn lên đầu nhụy (tự thụ phấn hoặc thụ phấn chéo nhờ gió, côn trùng, con người). Hạt phấn nảy mầm tạo ống phấn mang hai giao tử đực đến túi phôi.",
+                "Thụ tinh kép: một giao tử đực (n) kết hợp với noãn cầu (n) tạo hợp tử (2n), phát triển thành phôi; giao tử đực còn lại kết hợp với nhân lưỡng bội (2n) tạo nhân tam bội (3n), phát triển thành nội nhũ nuôi phôi. Sau thụ tinh, noãn phát triển thành hạt, bầu nhụy phát triển thành quả."
+              ],
+              "example": {
+                "question": "Lúa có 2n = 24. Tính số nhiễm sắc thể trong tế bào phôi và tế bào nội nhũ của hạt lúa.",
+                "steps": [
+                  "Phôi phát triển từ hợp tử 2n: 24 nhiễm sắc thể.",
+                  "Nội nhũ là 3n: 3 · 12 = 36 nhiễm sắc thể."
+                ]
+              }
+            },
+            {
+              "heading": "3. Ứng dụng",
+              "paragraphs": [
+                "Thụ phấn bổ sung giúp tăng tỉ lệ đậu quả (như thụ phấn cho bí, ngô, thanh long). Dùng hormone thực vật có thể tạo quả không hạt ở một số cây.",
+                "Kết hợp sinh sản hữu tính (tạo giống mới) và vô tính (nhân nhanh giống tốt) trong sản xuất nông nghiệp."
+              ],
+              "tip": "Phôi 2n, nội nhũ 3n: nhớ «hai tinh tử, hai lần thụ tinh»."
+            }
+          ],
+          "remember": [
+            "Vô tính: bào tử, sinh dưỡng (thân, lá, rễ); nhân giống: giâm, chiết, ghép, nuôi cấy mô.",
+            "Thụ phấn: hạt phấn rơi lên đầu nhụy.",
+            "Thụ tinh kép: hợp tử 2n (phôi) và nhân 3n (nội nhũ).",
+            "Noãn → hạt; bầu nhụy → quả."
+          ],
+          "check": {
+            "question": "Vì sao gọi là thụ tinh kép?",
+            "answer": "Vì cả hai giao tử đực đều tham gia thụ tinh: một với noãn cầu, một với nhân lưỡng bội."
+          }
+        },
+        {
+          "id": "biology-11-26",
+          "title": "Bài 26. Thực hành: Nhân giống vô tính và thụ phấn cho cây",
+          "hook": "Chỉ với một cành hoa hồng và một chút kiên nhẫn, em có thể «nhân bản» cây hồng yêu thích của mình.",
+          "sections": [
+            {
+              "heading": "1. Giâm cành",
+              "paragraphs": [
+                "Chọn cành bánh tẻ (không quá non, không quá già), cắt đoạn có vài mắt, vết cắt vát. Có thể nhúng gốc vào chế phẩm kích thích ra rễ (chứa auxin) theo đúng hướng dẫn, cắm vào giá thể ẩm, để nơi râm mát, tưới giữ ẩm.",
+                "Theo dõi số ngày ra rễ, ra chồi, tỉ lệ cành sống."
+              ]
+            },
+            {
+              "heading": "2. Chiết cành và ghép",
+              "paragraphs": [
+                "Chiết cành: khoanh bỏ một vòng vỏ trên cành, bó bầu đất ẩm quanh chỗ khoanh, bọc ni lông. Chất hữu cơ từ lá vận chuyển xuống bị ứ lại, kích thích ra rễ. Khi rễ đủ nhiều thì cắt cành đem trồng.",
+                "Ghép cành, ghép mắt: gắn cành hoặc mắt của cây giống tốt lên gốc ghép khỏe, sao cho mạch dẫn của hai phần khớp nhau, buộc chặt để giữ ẩm và cố định."
+              ],
+              "tip": "Khi ghép, phải cắt bỏ bớt lá ở cành ghép để giảm thoát hơi nước, giúp cành ghép không bị khô."
+            },
+            {
+              "heading": "3. Thụ phấn nhân tạo",
+              "paragraphs": [
+                "Với cây bí, mướp (hoa đực và hoa cái riêng): hái hoa đực vừa nở, bỏ cánh hoa, quẹt nhẹ nhị lên đầu nhụy của hoa cái vào buổi sáng.",
+                "Đánh dấu hoa đã thụ phấn và hoa không thụ phấn làm đối chứng; theo dõi tỉ lệ đậu quả. Báo cáo kết quả bằng bảng số liệu và hình ảnh."
+              ]
+            }
+          ],
+          "remember": [
+            "Giâm cành: chọn cành bánh tẻ, giữ ẩm, có thể dùng chế phẩm auxin.",
+            "Chiết cành: khoanh vỏ, bó bầu đất, chất hữu cơ ứ lại kích thích ra rễ.",
+            "Ghép: khớp mạch dẫn, buộc chặt, bớt lá cành ghép.",
+            "Thụ phấn nhân tạo tăng tỉ lệ đậu quả."
+          ],
+          "check": {
+            "question": "Vì sao khi chiết cành phải khoanh bỏ một vòng vỏ?",
+            "answer": "Để cắt mạch rây, chất hữu cơ ứ lại ở mép trên chỗ khoanh, kích thích ra rễ."
+          }
+        },
+        {
+          "id": "biology-11-27",
+          "title": "Bài 27. Sinh sản ở động vật",
+          "hook": "Ong đực sinh ra từ trứng không được thụ tinh, sao biển mọc lại cả cơ thể từ một cánh. Thế giới sinh sản của động vật đa dạng đến bất ngờ.",
+          "sections": [
+            {
+              "heading": "1. Sinh sản vô tính ở động vật",
+              "paragraphs": [
+                "Phân đôi (động vật đơn bào, giun dẹp); nảy chồi (thủy tức, bọt biển); phân mảnh (sao biển, giun dẹp: mỗi mảnh phát triển thành cơ thể mới); trinh sinh: trứng không thụ tinh phát triển thành cá thể mới, ví dụ ong đực (n) phát triển từ trứng không thụ tinh.",
+                "Nhân bản vô tính ở động vật có vú (như cừu Dolly) là thành tựu của công nghệ tế bào."
+              ]
+            },
+            {
+              "heading": "2. Sinh sản hữu tính ở động vật",
+              "paragraphs": [
+                "Các giai đoạn: hình thành giao tử (tinh trùng, trứng) → thụ tinh tạo hợp tử → phát triển phôi thành cơ thể mới.",
+                "Thụ tinh ngoài (cá, ếch): giao tử gặp nhau trong nước, hiệu suất thấp nên con cái đẻ rất nhiều trứng. Thụ tinh trong (bò sát, chim, thú): giao tử gặp nhau trong cơ quan sinh dục con cái, hiệu suất cao. Động vật đẻ trứng, đẻ trứng thai, hoặc đẻ con; ở thú, phôi được nuôi qua nhau thai nên tỉ lệ sống cao."
+              ]
+            },
+            {
+              "heading": "3. Điều hòa sinh sản và sức khỏe sinh sản",
+              "paragraphs": [
+                "Vùng dưới đồi tiết GnRH kích thích tuyến yên tiết FSH và LH. Ở nam, FSH và LH kích thích sản sinh tinh trùng và tiết testosterone. Ở nữ, FSH và LH điều hòa sự phát triển nang trứng, rụng trứng và tiết estrogen, progesterone. Nồng độ hormone sinh dục tác động ngược lên vùng dưới đồi và tuyến yên (liên hệ ngược).",
+                "Ứng dụng: thụ tinh nhân tạo, thụ tinh trong ống nghiệm, điều khiển giới tính ở vật nuôi. Sức khỏe sinh sản vị thành niên: hiểu biết về các biện pháp tránh thai, phòng bệnh lây truyền qua đường tình dục, tránh mang thai ngoài ý muốn."
+              ],
+              "tip": "Thụ tinh ngoài cần môi trường nước; vì vậy ếch phải về nơi ẩm ướt để sinh sản."
+            }
+          ],
+          "remember": [
+            "Vô tính: phân đôi, nảy chồi, phân mảnh, trinh sinh.",
+            "Hữu tính: tạo giao tử → thụ tinh → phát triển phôi.",
+            "Thụ tinh trong hiệu quả hơn thụ tinh ngoài.",
+            "GnRH → FSH, LH → hormone sinh dục; có liên hệ ngược.",
+            "Hiểu biết sức khỏe sinh sản giúp bảo vệ bản thân."
+          ],
+          "check": {
+            "question": "Vì sao cá đẻ rất nhiều trứng?",
+            "answer": "Vì thụ tinh ngoài trong nước, hiệu suất thụ tinh và tỉ lệ sống của con non thấp."
+          }
+        }
+      ]
+    },
+    {
+      "title": "Chương 5. Mối quan hệ giữa các quá trình sinh lí trong cơ thể và một số ngành nghề liên quan đến sinh học cơ thể",
+      "lessons": [
+        {
+          "id": "biology-11-28",
+          "title": "Bài 28. Cơ thể sinh vật là một hệ thống mở và tự điều chỉnh",
+          "hook": "Khi em chạy 100 mét, không chỉ đôi chân làm việc: phổi thở gấp, tim đập nhanh, da đổ mồ hôi. Cả cơ thể phối hợp như một dàn nhạc.",
+          "sections": [
+            {
+              "heading": "1. Cơ thể là một hệ thống mở",
+              "paragraphs": [
+                "Cơ thể luôn trao đổi chất và năng lượng với môi trường: lấy O2, nước, chất dinh dưỡng, năng lượng; thải CO2, chất thải, nhiệt. Ngừng trao đổi với môi trường thì cơ thể chết.",
+                "Vì vậy môi trường thay đổi sẽ ảnh hưởng đến cơ thể, và cơ thể cũng tác động trở lại môi trường."
+              ]
+            },
+            {
+              "heading": "2. Các quá trình sinh lí liên quan chặt chẽ",
+              "paragraphs": [
+                "Ở thực vật: rễ hút nước và khoáng cung cấp nguyên liệu cho quang hợp; quang hợp tạo chất hữu cơ cho hô hấp; hô hấp tạo ATP cho hút khoáng, sinh trưởng, sinh sản. Thoát hơi nước tạo động lực vận chuyển nước và giúp CO2 vào lá.",
+                "Ở động vật: tiêu hóa cung cấp chất dinh dưỡng, hô hấp cung cấp O2, tuần hoàn vận chuyển chúng đến tế bào; bài tiết thải chất thải; thần kinh và nội tiết điều khiển, phối hợp mọi hệ cơ quan. Khi vận động, tất cả cùng tăng cường hoạt động."
+              ]
+            },
+            {
+              "heading": "3. Cơ thể là hệ thống tự điều chỉnh",
+              "paragraphs": [
+                "Cơ thể có khả năng tự điều chỉnh để duy trì cân bằng nội môi (nhiệt độ, pH, đường huyết…) và thích nghi với môi trường, nhờ hệ thần kinh và hệ nội tiết (ở thực vật nhờ hormone thực vật).",
+                "Khi khả năng tự điều chỉnh bị rối loạn hoặc vượt quá giới hạn, cơ thể mắc bệnh. Lối sống lành mạnh (ăn uống hợp lí, ngủ đủ, vận động) giúp duy trì khả năng tự điều chỉnh."
+              ],
+              "tip": "Khi trả lời câu hỏi «vì sao», hãy nghĩ tới nhiều hệ cơ quan cùng lúc: cơ thể là một thể thống nhất."
+            }
+          ],
+          "remember": [
+            "Cơ thể là hệ thống mở: luôn trao đổi chất, năng lượng với môi trường.",
+            "Các quá trình sinh lí liên quan, hỗ trợ nhau.",
+            "Thần kinh và nội tiết điều khiển, phối hợp các hệ cơ quan.",
+            "Cơ thể tự điều chỉnh để duy trì cân bằng nội môi."
+          ],
+          "check": {
+            "question": "Khi chạy nhanh, hệ hô hấp và hệ tuần hoàn thay đổi thế nào?",
+            "answer": "Thở nhanh, sâu hơn và tim đập nhanh, mạnh hơn để cung cấp O2 và thải CO2 cho cơ."
+          }
+        },
+        {
+          "id": "biology-11-29",
+          "title": "Bài 29. Một số ngành nghề liên quan đến sinh học cơ thể",
+          "hook": "Bác sĩ, kĩ sư nông nghiệp, huấn luyện viên thể thao… họ đều dùng những kiến thức em vừa học năm nay mỗi ngày.",
+          "sections": [
+            {
+              "heading": "1. Ngành nghề liên quan đến sinh học cơ thể người và động vật",
+              "paragraphs": [
+                "Y học (bác sĩ, điều dưỡng, kĩ thuật viên xét nghiệm), dược học, dinh dưỡng, y học thể thao, vật lí trị liệu: cần hiểu tiêu hóa, hô hấp, tuần hoàn, miễn dịch, thần kinh.",
+                "Chăn nuôi, thú y, thủy sản: chăm sóc, phòng bệnh, nhân giống vật nuôi dựa trên hiểu biết về dinh dưỡng, sinh trưởng, sinh sản của động vật."
+              ]
+            },
+            {
+              "heading": "2. Ngành nghề liên quan đến sinh học cơ thể thực vật",
+              "paragraphs": [
+                "Trồng trọt, bảo vệ thực vật, lâm nghiệp, làm vườn, cảnh quan: dựa trên hiểu biết về trao đổi nước và khoáng, quang hợp, hô hấp, sinh trưởng, ra hoa.",
+                "Công nghệ sinh học thực vật: nuôi cấy mô, chọn tạo giống mới; bảo quản và chế biến nông sản."
+              ]
+            },
+            {
+              "heading": "3. Chọn nghề phù hợp",
+              "paragraphs": [
+                "Để chọn nghề, hãy xem xét sở thích, năng lực của bản thân, nhu cầu xã hội và cơ hội học tập. Tìm hiểu thông tin từ thầy cô, người đang làm nghề và các trường đào tạo.",
+                "Dù chọn nghề nào, kiến thức sinh học cơ thể cũng giúp em chăm sóc sức khỏe của chính mình và gia đình."
+              ],
+              "tip": "Thử phỏng vấn ngắn một người làm nghề em quan tâm: họ học gì, làm gì mỗi ngày, cần kĩ năng gì."
+            }
+          ],
+          "remember": [
+            "Y, dược, dinh dưỡng, thể thao gắn với sinh học cơ thể người.",
+            "Chăn nuôi, thú y, thủy sản gắn với sinh học cơ thể động vật.",
+            "Trồng trọt, bảo vệ thực vật, lâm nghiệp gắn với sinh học cơ thể thực vật.",
+            "Chọn nghề dựa trên sở thích, năng lực và nhu cầu xã hội."
+          ],
+          "check": {
+            "question": "Kĩ sư bảo vệ thực vật cần kiến thức sinh học nào?",
+            "answer": "Ví dụ: sinh trưởng, phát triển của cây, cảm ứng, sinh sản và vòng đời của sâu hại."
+          }
+        }
+      ]
+    }
+  ]
+}

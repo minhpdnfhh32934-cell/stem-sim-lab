@@ -1,0 +1,526 @@
+{
+  "id": "capacitor",
+  "name": "Charging and discharging a capacitor",
+  "category": "physics",
+  "description": "A capacitor is charged from a battery through a resistor, then the switch is turned over and it discharges through the same resistor. Watch the voltmeter across it: it rises fast at first and ever more slowly, reaching 63 % of the battery's voltage after one time constant τ = R·C; on discharge it falls to 37 % in the same time. The ammeter swings one way while it charges and the other way while it discharges. A larger R or C makes it all slower.",
+  "vi": {
+    "name": "Nạp và phóng điện cho tụ điện",
+    "description": "Một tụ điện được nạp điện từ nguồn qua một điện trở, rồi khóa được gạt sang vị trí kia để tụ phóng điện qua chính điện trở đó. Quan sát vôn kế mắc vào hai bản tụ: hiệu điện thế tăng nhanh lúc đầu rồi chậm dần, đạt 63 % hiệu điện thế của nguồn sau một hằng số thời gian τ = R·C; khi phóng điện, nó giảm còn 37 % trong cùng khoảng thời gian đó. Kim ampe kế lệch về một phía khi tụ nạp điện và về phía kia khi tụ phóng điện. R hoặc C lớn hơn làm mọi thứ diễn ra chậm hơn.",
+    "note": "Khi nạp điện qua điện trở R, hiệu điện thế giữa hai bản tụ tăng theo U_C = E·(1 − e^(−t/τ)) với τ = R·C, và cường độ dòng điện (E − U_C)/R giảm dần từ E/R. Sau một hằng số thời gian, U_C = (1 − 1/e)·E ≈ 63 % E; sau 5τ tụ gần như đã nạp đầy (99,3 %). Khi gạt khóa, tụ phóng điện qua R: U_C = U_0·e^(−t/τ), dòng điện đổi chiều và giảm dần; sau mỗi τ còn lại 37 %. Điện tích trên tụ là q = C·U_C. Ở đây tụ được nạp trong 5τ rồi phóng trong 5τ. Chạy với nhiều giá trị R và C: τ tỉ lệ thuận với cả R lẫn C. Đây là mô hình dạy học đơn giản hóa: nguồn lý tưởng, vôn kế và ampe kế lý tưởng, tụ không rò điện và có điện dung không đổi. Đồng hồ bấm giây đọc thời điểm U_C đạt 63 % E theo độ phân giải d của nó (bội số gần nhất của d, độ bất định d/√12 chỉ do độ phân giải); không có sai số ngẫu nhiên nào được thêm vào. Trong phòng thí nghiệm thật, tụ hóa có dung sai điện dung lớn (thường ±20 %) và có dòng rò, vôn kế có điện trở riêng làm tụ phóng điện qua nó, nên hằng số thời gian đo được lệch so với R·C."
+  },
+  "requiredEquipment": ["rc-board"],
+  "model": "electric.rc-circuit",
+  "parameters": [
+    {
+      "id": "resistance",
+      "label": "Resistor",
+      "vi": {
+        "label": "Điện trở"
+      },
+      "symbol": "R",
+      "unit": "Ω",
+      "default": 1000,
+      "min": 1000,
+      "max": 4700,
+      "presets": [
+        {
+          "label": "1 kΩ",
+          "vi": {
+            "label": "1 kΩ"
+          },
+          "value": 1000
+        },
+        {
+          "label": "2.2 kΩ",
+          "vi": {
+            "label": "2,2 kΩ"
+          },
+          "value": 2200
+        },
+        {
+          "label": "4.7 kΩ",
+          "vi": {
+            "label": "4,7 kΩ"
+          },
+          "value": 4700
+        }
+      ]
+    },
+    {
+      "id": "capacitance",
+      "label": "Capacitor",
+      "vi": {
+        "label": "Tụ điện"
+      },
+      "symbol": "C",
+      "unit": "F",
+      "default": 0.001,
+      "min": 0.00047,
+      "max": 0.0022,
+      "presets": [
+        {
+          "label": "470 µF",
+          "vi": {
+            "label": "470 µF"
+          },
+          "value": 0.00047
+        },
+        {
+          "label": "1000 µF",
+          "vi": {
+            "label": "1000 µF"
+          },
+          "value": 0.001
+        },
+        {
+          "label": "2200 µF",
+          "vi": {
+            "label": "2200 µF"
+          },
+          "value": 0.0022
+        }
+      ]
+    },
+    {
+      "id": "supply",
+      "label": "Battery",
+      "vi": {
+        "label": "Nguồn điện"
+      },
+      "symbol": "E",
+      "unit": "V",
+      "default": 6,
+      "min": 3,
+      "max": 9,
+      "presets": [
+        {
+          "label": "3 V",
+          "vi": {
+            "label": "3 V"
+          },
+          "value": 3
+        },
+        {
+          "label": "6 V",
+          "vi": {
+            "label": "6 V"
+          },
+          "value": 6
+        },
+        {
+          "label": "9 V",
+          "vi": {
+            "label": "9 V"
+          },
+          "value": 9
+        }
+      ]
+    },
+    {
+      "id": "timerResolution",
+      "label": "Stopwatch resolution",
+      "vi": {
+        "label": "Độ phân giải của đồng hồ bấm giây"
+      },
+      "symbol": "d_t",
+      "unit": "s",
+      "default": 0.01,
+      "min": 0.01,
+      "max": 0.1,
+      "presets": [
+        {
+          "label": "0.01 s",
+          "vi": {
+            "label": "0,01 s"
+          },
+          "value": 0.01
+        },
+        {
+          "label": "0.1 s",
+          "vi": {
+            "label": "0,1 s"
+          },
+          "value": 0.1
+        }
+      ]
+    }
+  ],
+  "simulation": {
+    "timeStep": 0.01,
+    "maxDuration": 110,
+    "sampleInterval": 0.05
+  },
+  "measurements": [
+    {
+      "id": "voltage",
+      "label": "Voltage across the capacitor",
+      "vi": {
+        "label": "Hiệu điện thế giữa hai bản tụ"
+      },
+      "symbol": "U_C",
+      "unit": "V",
+      "variable": "voltage"
+    },
+    {
+      "id": "current",
+      "label": "Current",
+      "vi": {
+        "label": "Cường độ dòng điện"
+      },
+      "symbol": "I",
+      "unit": "A",
+      "variable": "current"
+    },
+    {
+      "id": "labTime",
+      "label": "Time",
+      "vi": {
+        "label": "Thời gian"
+      },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "clock"
+    }
+  ],
+  "results": [
+    {
+      "id": "timeConstantSeen",
+      "label": "Time to reach 63 % of E (τ)",
+      "vi": {
+        "label": "Thời gian để đạt 63 % E (τ)"
+      },
+      "symbol": "τ",
+      "unit": "s",
+      "variable": "timeConstantSeen",
+      "reduce": "final",
+      "theory": "timeConstant"
+    },
+    {
+      "id": "peakVoltage",
+      "label": "Largest voltage across the capacitor",
+      "vi": {
+        "label": "Hiệu điện thế lớn nhất giữa hai bản tụ"
+      },
+      "symbol": "U_max",
+      "unit": "V",
+      "variable": "voltage",
+      "reduce": "max"
+    },
+    {
+      "id": "peakCurrent",
+      "label": "Largest charging current",
+      "vi": {
+        "label": "Dòng điện nạp lớn nhất"
+      },
+      "symbol": "I_0",
+      "unit": "A",
+      "variable": "current",
+      "reduce": "max"
+    }
+  ],
+  "instruments": [
+    {
+      "result": "timeConstantSeen",
+      "quantity": "Time τ to reach 63 % of E",
+      "name": "Stopwatch",
+      "resolution": "timerResolution",
+      "excludes": "the reaction time in starting and stopping it, reading the voltmeter as it moves, and the capacitor's tolerance and leakage, which change the time itself",
+      "vi": {
+        "quantity": "Thời gian τ để đạt 63 % E",
+        "name": "Đồng hồ bấm giây",
+        "excludes": "thời gian phản xạ khi bấm và dừng đồng hồ, việc đọc vôn kế khi kim đang chuyển động, cùng dung sai và dòng rò của tụ, những yếu tố làm thay đổi chính thời gian đo"
+      }
+    }
+  ],
+  "graphs": [
+    {
+      "id": "voltage-time",
+      "title": "Voltage across the capacitor against time",
+      "vi": {
+        "title": "Hiệu điện thế giữa hai bản tụ theo thời gian"
+      },
+      "x": "labTime",
+      "y": ["voltage"],
+      "yLabel": "U_C"
+    },
+    {
+      "id": "current-time",
+      "title": "Current against time",
+      "vi": {
+        "title": "Cường độ dòng điện theo thời gian"
+      },
+      "x": "labTime",
+      "y": ["current"],
+      "yLabel": "I"
+    }
+  ],
+  "monitor": "voltage-time",
+  "compare": [
+    {
+      "graph": "voltage-time"
+    }
+  ],
+  "scatters": [
+    {
+      "id": "tau-resistance",
+      "title": "Time constant against the resistor",
+      "vi": {
+        "title": "Hằng số thời gian theo điện trở"
+      },
+      "x": "resistance",
+      "y": "timeConstantSeen"
+    }
+  ],
+  "note": "Charging through a resistor R, the capacitor's voltage rises as U_C = E·(1 − e^(−t/τ)), τ = R·C, and the current (E − U_C)/R falls from E/R. After one time constant U_C = (1 − 1/e)·E ≈ 63 % of E; after 5τ it is all but full (99.3 %). With the switch turned over it discharges through R: U_C = U_0·e^(−t/τ), the current reversed and dying away; after each τ, 37 % is left. The charge on it is q = C·U_C. Here it charges for 5τ, then discharges for 5τ. Run with several R and C: τ is proportional to both. A simplified teaching model: an ideal battery, ideal meters, a capacitor that does not leak and whose capacitance stays constant. The stopwatch reads the time U_C reaches 63 % of E to its resolution d (the nearest multiple of d, with the uncertainty d/√12 from the resolution alone); no random error is added. In a real lab electrolytic capacitors have a wide tolerance (often ±20 %) and leak, and the voltmeter's own resistance discharges the capacitor through it, so the measured time constant differs from R·C.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the capacitor instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn thí nghiệm tụ điện trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "capacitor-instructions"
+      }
+    },
+    {
+      "id": "resistor",
+      "instruction": "Choose the resistor with its dial on the control desk.",
+      "vi": {
+        "instruction": "Chọn điện trở bằng núm xoay trên bàn điều khiển."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "resistance"
+      }
+    },
+    {
+      "id": "capacitor",
+      "instruction": "Choose the capacitor.",
+      "vi": {
+        "instruction": "Chọn tụ điện."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "capacitance"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the capacitor charges for 5τ, then discharges; watch both meters.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: tụ nạp điện trong 5τ rồi phóng điện; quan sát cả hai đồng hồ."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Read τ, the largest voltage and current on the results monitor, and compare τ with R·C.",
+      "vi": {
+        "instruction": "Đọc τ, hiệu điện thế và dòng điện lớn nhất trên màn hình kết quả, rồi so sánh τ với R·C."
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, change R or C and run again.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, đổi R hoặc C rồi chạy lại."
+      },
+      "done": {
+        "kind": "reset"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "time-constant",
+      "question": "A {=capacitance*1e6} µF capacitor charges through a {resistance} Ω resistor from a {supply} V battery. Find the time constant and the capacitor’s voltage after one time constant.",
+      "vi": {
+        "question": "Một tụ điện {=capacitance*1e6} µF được nạp qua điện trở {resistance} Ω từ nguồn {supply} V. Tìm hằng số thời gian và hiệu điện thế của tụ sau một hằng số thời gian."
+      },
+      "set": { "resistance": 2200, "capacitance": 0.00047, "supply": 6 },
+      "find": [
+        { "theory": "timeConstant" },
+        { "theory": "oneTauVoltage", "symbol": "U_C", "unit": "V" }
+      ],
+      "steps": [
+        {
+          "say": "The time constant is the resistance times the capacitance, in ohms and farads.",
+          "vi": { "say": "Hằng số thời gian bằng điện trở nhân điện dung, tính bằng ôm và fara." },
+          "write": "τ = R·C = {resistance}·{capacitance} ≈ {@timeConstant} s",
+          "check": { "expr": "resistance*capacitance", "equals": "timeConstant" }
+        },
+        {
+          "say": "Charging, U_C = E(1 − e^(−t/τ)). At t = τ that is (1 − 1/e), about 63 % of E.",
+          "vi": {
+            "say": "Khi nạp, U_C = E(1 − e^(−t/τ)). Tại t = τ, giá trị đó bằng (1 − 1/e), khoảng 63 % của E."
+          },
+          "write": "U_C = E·(1 − e⁻¹) = {supply}·(1 − e⁻¹) ≈ {@oneTauVoltage} V",
+          "check": { "expr": "supply*(1-exp(-1))", "equals": "oneTauVoltage" }
+        }
+      ]
+    },
+    {
+      "id": "start-current-half-time",
+      "question": "An empty {=capacitance*1e6} µF capacitor is connected through {resistance} Ω to a {supply} V battery. Find the current at the start, and the time its voltage takes to reach half of E.",
+      "vi": {
+        "question": "Một tụ {=capacitance*1e6} µF chưa tích điện được nối qua điện trở {resistance} Ω vào nguồn {supply} V. Tìm cường độ dòng điện lúc đầu, và thời gian để hiệu điện thế của tụ đạt một nửa E."
+      },
+      "set": { "resistance": 4700, "capacitance": 0.0022, "supply": 9 },
+      "find": [
+        { "theory": "peakCurrent", "symbol": "I₀", "unit": "A" },
+        { "theory": "halfTime", "symbol": "t", "unit": "s" }
+      ],
+      "steps": [
+        {
+          "say": "At the start the capacitor is empty, U_C = 0, so the whole of E is across the resistor.",
+          "vi": { "say": "Lúc đầu tụ chưa tích điện, U_C = 0, nên toàn bộ E đặt lên điện trở." },
+          "write": "I₀ = E/R = {supply}/{resistance} ≈ {@peakCurrent} A",
+          "check": { "expr": "supply/resistance", "equals": "peakCurrent" }
+        },
+        {
+          "say": "The time constant is R times C.",
+          "vi": { "say": "Hằng số thời gian bằng R nhân C." },
+          "write": "τ = R·C = {resistance}·{capacitance} ≈ {@timeConstant} s",
+          "check": { "expr": "resistance*capacitance", "equals": "timeConstant" }
+        },
+        {
+          "say": "U_C reaches E/2 when e^(−t/τ) = ½, that is t = τ·ln 2.",
+          "vi": { "say": "U_C đạt E/2 khi e^(−t/τ) = ½, tức là t = τ·ln 2." },
+          "write": "t = τ·ln 2 = {@timeConstant}·0.693 ≈ {@halfTime} s",
+          "check": { "expr": "@timeConstant*ln(2)", "equals": "halfTime" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "A capacitor charges through a resistor quickly at first and ever more slowly, then discharges the same way; the time constant τ = R·C sets how fast.",
+    "vi": {
+      "summary": "Tụ điện nạp điện qua một điện trở, lúc đầu nhanh rồi ngày càng chậm, sau đó phóng điện cũng theo cách đó; hằng số thời gian τ = R·C quyết định tốc độ."
+    },
+    "parts": [
+      {
+        "id": "battery",
+        "name": "Battery E",
+        "role": "Charges the capacitor towards its voltage E.",
+        "vi": {
+          "name": "Bộ pin E",
+          "role": "Nạp điện cho tụ tới hiệu điện thế E của nó."
+        },
+        "anchor": {
+          "at": [-0.17, -0.065, 0.08]
+        }
+      },
+      {
+        "id": "resistor",
+        "name": "Resistor R",
+        "role": "Limits the current; the charge flows in and out through it.",
+        "vi": {
+          "name": "Điện trở R",
+          "role": "Hạn chế dòng điện; điện tích nạp vào và phóng ra đều qua nó."
+        },
+        "anchor": {
+          "at": [-0.04, -0.068, 0.08]
+        }
+      },
+      {
+        "id": "capacitor",
+        "name": "Capacitor C",
+        "role": "Stores charge q = C·U_C; its voltage U_C is what changes.",
+        "vi": {
+          "name": "Tụ điện C",
+          "role": "Tích điện tích q = C·U_C; hiệu điện thế U_C của nó là đại lượng thay đổi."
+        },
+        "anchor": {
+          "part": "capacitor"
+        }
+      },
+      {
+        "id": "switch",
+        "name": "Two-way switch",
+        "role": "One way it connects the battery (charging), the other way it connects the capacitor across R alone (discharging).",
+        "vi": {
+          "name": "Khóa hai chiều",
+          "role": "Gạt một phía thì nối với bộ pin (nạp điện), phía kia thì chỉ nối tụ với điện trở R (phóng điện)."
+        },
+        "anchor": {
+          "part": "lever"
+        }
+      },
+      {
+        "id": "voltmeter",
+        "name": "Voltmeter",
+        "role": "Across the capacitor: reads U_C.",
+        "vi": {
+          "name": "Vôn kế",
+          "role": "Mắc vào hai đầu tụ: đọc U_C."
+        },
+        "anchor": {
+          "part": "voltmeter"
+        }
+      },
+      {
+        "id": "ammeter",
+        "name": "Zero-centre ammeter",
+        "role": "Swings one way while the capacitor charges, the other way while it discharges.",
+        "vi": {
+          "name": "Ampe kế có số 0 ở giữa",
+          "role": "Lệch về một phía khi tụ nạp điện, về phía kia khi tụ phóng điện."
+        },
+        "anchor": {
+          "part": "ammeter"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "The switch connects the battery: current flows through R into the capacitor, and the voltage U_C across it rises.",
+        "vi": {
+          "text": "Khóa nối với bộ pin: dòng điện chạy qua R vào tụ, và hiệu điện thế U_C giữa hai bản tụ tăng lên."
+        },
+        "parts": ["switch", "battery", "resistor", "capacitor"]
+      },
+      {
+        "text": "It rises fast at first, then ever more slowly: the fuller the capacitor, the less voltage is left to push current through R. The current (E − U_C)/R falls from E/R.",
+        "vi": {
+          "text": "Lúc đầu nó tăng nhanh, rồi ngày càng chậm: tụ càng đầy thì hiệu điện thế còn lại để đẩy dòng điện qua R càng nhỏ. Dòng điện (E − U_C)/R giảm dần từ E/R."
+        },
+        "parts": ["voltmeter", "ammeter", "resistor"]
+      },
+      {
+        "text": "Charging follows U_C = E·(1 − e^(−t/τ)), with τ = R·C. After one time constant U_C reaches about 63 % of E; after 5τ it is all but full.",
+        "vi": {
+          "text": "Quá trình nạp tuân theo U_C = E·(1 − e^(−t/τ)), với τ = R·C. Sau một hằng số thời gian, U_C đạt khoảng 63 % của E; sau 5τ tụ gần như đầy."
+        },
+        "parts": ["capacitor", "voltmeter"]
+      },
+      {
+        "text": "After 5τ the switch is turned over: the capacitor discharges through R, U_C = U_0·e^(−t/τ), and the current flows the other way. After each τ, 37 % is left.",
+        "vi": {
+          "text": "Sau 5τ khóa được gạt sang phía kia: tụ phóng điện qua R, U_C = U_0·e^(−t/τ), và dòng điện chạy theo chiều ngược lại. Sau mỗi τ, còn lại 37 %."
+        },
+        "parts": ["switch", "capacitor", "ammeter"]
+      },
+      {
+        "text": "A larger R or C makes everything slower: τ is proportional to both. The results give the time to reach 63 % of E, read on a stopwatch, beside R·C.",
+        "vi": {
+          "text": "R hoặc C lớn hơn làm mọi thứ chậm hơn: τ tỉ lệ với cả hai. Phần kết quả cho thời gian để đạt 63 % của E, đọc bằng đồng hồ bấm giây, bên cạnh R·C."
+        },
+        "parts": ["resistor", "capacitor"]
+      },
+      {
+        "text": "The model is ideal: a capacitor that does not leak and ideal meters. Real electrolytic capacitors have a wide tolerance and leak, so a measured τ differs from R·C.",
+        "vi": {
+          "text": "Mô hình là lý tưởng: tụ không rò điện và đồng hồ đo lý tưởng. Tụ hóa thật có sai số chế tạo lớn và bị rò điện, nên τ đo được khác R·C."
+        },
+        "parts": ["capacitor"]
+      }
+    ]
+  }
+}

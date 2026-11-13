@@ -1,0 +1,369 @@
+{
+  "id": "neutralisation",
+  "name": "Enthalpy of neutralisation",
+  "category": "chemistry",
+  "description": "Pour sodium hydroxide into hydrochloric acid in an insulated cup and watch the temperature rise: the reaction H⁺ + OH⁻ → H₂O gives out heat. From the rise, the mixture's mass and the water formed, work out the heat given out per mole of water — the enthalpy of neutralisation, about −57 kJ/mol for any strong acid with any strong base.",
+  "vi": {
+    "name": "Nhiệt trung hòa",
+    "description": "Đổ natri hiđroxit vào axit clohiđric trong cốc cách nhiệt và quan sát nhiệt độ tăng: phản ứng H⁺ + OH⁻ → H₂O tỏa nhiệt. Từ độ tăng nhiệt độ, khối lượng hỗn hợp và lượng nước tạo thành, tính nhiệt tỏa ra trên mỗi mol nước — nhiệt trung hòa, khoảng −57 kJ/mol với mọi axit mạnh và bazơ mạnh.",
+    "note": "Mô hình dạy học đơn giản hóa. V_a mL axit HCl và V_b mL NaOH, cùng nồng độ c và cùng nhiệt độ ban đầu, được trộn lúc t = 0. Lượng nước tạo thành do chất hết trước quyết định: n = c·min(V_a, V_b); nhiệt tỏa ra q = n·57,1 kJ/mol (giá trị sách giáo khoa ở 25 °C; các bảng cho từ −55,8 đến −57,3 kJ/mol tùy nồng độ và phương pháp) làm nóng toàn bộ hỗn hợp, coi như nước (1,00 g/mL; 4,18 J/(g·K)): ΔT = q/(m·c). Cốc được coi là cách nhiệt hoàn hảo và nhiệt dung của nó không đáng kể (cốc thật mất một chút nhiệt nên ΔT thật thấp hơn). Nhiệt kế theo kịp hỗn hợp với hằng số thời gian τ = 3 s (khuấy và bầu nhiệt kế: giá trị dạy học). Kết quả mô phỏng không có sai số ngẫu nhiên; số đọc nhiệt kế chỉ được làm tròn theo độ phân giải d."
+  },
+  "requiredEquipment": ["neutralisation-cup"],
+  "model": "chemistry.neutralisation",
+  "parameters": [
+    {
+      "id": "acidVolume",
+      "label": "Acid (HCl) volume",
+      "vi": { "label": "Thể tích axit (HCl)" },
+      "symbol": "V_a",
+      "unit": "mL",
+      "default": 50,
+      "min": 25,
+      "max": 50,
+      "presets": [
+        { "label": "25 mL", "vi": { "label": "25 mL" }, "value": 25 },
+        { "label": "50 mL", "vi": { "label": "50 mL" }, "value": 50 }
+      ]
+    },
+    {
+      "id": "baseVolume",
+      "label": "Base (NaOH) volume",
+      "vi": { "label": "Thể tích bazơ (NaOH)" },
+      "symbol": "V_b",
+      "unit": "mL",
+      "default": 50,
+      "min": 10,
+      "max": 100,
+      "presets": [
+        { "label": "10 mL", "vi": { "label": "10 mL" }, "value": 10 },
+        { "label": "25 mL", "vi": { "label": "25 mL" }, "value": 25 },
+        { "label": "50 mL", "vi": { "label": "50 mL" }, "value": 50 },
+        { "label": "75 mL", "vi": { "label": "75 mL" }, "value": 75 },
+        { "label": "100 mL", "vi": { "label": "100 mL" }, "value": 100 }
+      ]
+    },
+    {
+      "id": "concentration",
+      "label": "Concentration of both",
+      "vi": { "label": "Nồng độ của cả hai" },
+      "symbol": "c",
+      "unit": "mol/L",
+      "default": 1,
+      "min": 0.5,
+      "max": 2,
+      "presets": [
+        { "label": "0.5 mol/L", "vi": { "label": "0,5 mol/L" }, "value": 0.5 },
+        { "label": "1.0 mol/L", "vi": { "label": "1,0 mol/L" }, "value": 1 },
+        { "label": "2.0 mol/L", "vi": { "label": "2,0 mol/L" }, "value": 2 }
+      ]
+    },
+    {
+      "id": "thermometerResolution",
+      "label": "Thermometer resolution",
+      "vi": { "label": "Độ phân giải của nhiệt kế" },
+      "symbol": "d",
+      "unit": "°C",
+      "default": 0.1,
+      "min": 0.1,
+      "max": 1,
+      "presets": [
+        { "label": "0.1 °C", "vi": { "label": "0,1 °C" }, "value": 0.1 },
+        { "label": "0.5 °C", "vi": { "label": "0,5 °C" }, "value": 0.5 },
+        { "label": "1 °C", "vi": { "label": "1 °C" }, "value": 1 }
+      ]
+    }
+  ],
+  "initialConditions": { "startTemperature": 20, "timeConstant": 3, "readTime": 30 },
+  "inputs": {
+    "startTemperature": { "symbol": "T₀", "unit": "°C" },
+    "timeConstant": { "symbol": "τ", "unit": "s", "desk": false },
+    "readTime": { "symbol": "t_read", "unit": "s" }
+  },
+  "simulation": { "timeStep": 0.05, "maxDuration": 40, "sampleInterval": 0.25 },
+  "measurements": [
+    {
+      "id": "time",
+      "label": "Time since mixing",
+      "vi": { "label": "Thời gian từ lúc trộn" },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "time"
+    },
+    {
+      "id": "temperature",
+      "label": "Temperature of the mixture",
+      "vi": { "label": "Nhiệt độ hỗn hợp" },
+      "symbol": "T",
+      "unit": "°C",
+      "variable": "temperature"
+    }
+  ],
+  "results": [
+    {
+      "id": "final",
+      "label": "Highest temperature read",
+      "vi": { "label": "Nhiệt độ cao nhất đọc được" },
+      "symbol": "T_max",
+      "unit": "°C",
+      "variable": "temperature",
+      "reduce": "max",
+      "theory": "finalTemperature"
+    },
+    {
+      "id": "heat",
+      "label": "Heat given out q = m·c·ΔT",
+      "vi": { "label": "Nhiệt tỏa ra q = m·c·ΔT" },
+      "symbol": "q",
+      "unit": "J",
+      "variable": "heat",
+      "reduce": "final",
+      "theory": "heat"
+    },
+    {
+      "id": "water",
+      "label": "Water formed n",
+      "vi": { "label": "Lượng nước tạo thành n" },
+      "symbol": "n",
+      "unit": "mmol",
+      "variable": "water",
+      "reduce": "final",
+      "theory": "water"
+    }
+  ],
+  "instruments": [
+    {
+      "result": "final",
+      "quantity": "Highest temperature of the mixture",
+      "name": "Thermometer",
+      "resolution": "thermometerResolution",
+      "excludes": "heat lost through the cup and lid, the cup's own heat capacity, the thermometer's calibration and the solutions' slightly different starting temperatures",
+      "vi": {
+        "quantity": "Nhiệt độ cao nhất của hỗn hợp",
+        "name": "Nhiệt kế",
+        "excludes": "nhiệt mất qua thành cốc và nắp, nhiệt dung của cốc, sai số hiệu chuẩn nhiệt kế và nhiệt độ ban đầu hơi khác nhau của hai dung dịch"
+      }
+    }
+  ],
+  "graphs": [
+    {
+      "id": "temperature-time",
+      "title": "Temperature of the mixture against time",
+      "vi": { "title": "Nhiệt độ hỗn hợp theo thời gian" },
+      "x": "time",
+      "y": ["temperature"]
+    }
+  ],
+  "monitor": "temperature-time",
+  "compare": [{ "graph": "temperature-time", "series": "temperature" }],
+  "note": "A simplified teaching model. V_a mL of HCl and V_b mL of NaOH, both at concentration c and at the same starting temperature, are mixed at t = 0. The water formed is set by the reagent that runs out: n = c·min(V_a, V_b); the heat given out, q = n·57.1 kJ/mol (the textbook value at 25 °C; tables give −55.8 to −57.3 kJ/mol by concentration and method), warms the whole mixture, taken as water (1.00 g/mL; 4.18 J/(g·K)): ΔT = q/(m·c). The cup is taken as a perfect insulator of negligible heat capacity (a real cup loses a little heat, so a real ΔT comes out lower). The thermometer follows the mixture with a time constant τ = 3 s (stirring and the bulb: a teaching value). The simulated results carry no random error; the thermometer's reading is only rounded to its resolution d.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the neutralisation instructions on the board.",
+      "vi": { "instruction": "Đọc hướng dẫn đo nhiệt trung hòa trên bảng." },
+      "done": { "kind": "inspected", "item": "neutralisation-instructions" }
+    },
+    {
+      "id": "volumes",
+      "instruction": "Set the volumes of acid and of base with the dials.",
+      "vi": { "instruction": "Đặt thể tích axit và thể tích bazơ bằng các núm xoay." },
+      "done": { "kind": "adjusted", "parameter": "baseVolume" }
+    },
+    {
+      "id": "concentration",
+      "instruction": "Set the concentration of both solutions.",
+      "vi": { "instruction": "Đặt nồng độ của cả hai dung dịch." },
+      "done": { "kind": "adjusted", "parameter": "concentration" }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the base goes into the acid; watch the thermometer rise and level off.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: bazơ được đổ vào axit; quan sát nhiệt kế tăng rồi đứng yên."
+      },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read the highest temperature, the heat and the water formed; work out ΔH = −q/n.",
+      "vi": {
+        "instruction": "Đọc nhiệt độ cao nhất, nhiệt tỏa ra và lượng nước tạo thành; tính ΔH = −q/n."
+      },
+      "done": { "kind": "viewed" }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, change the base volume and run again: when is ΔT largest?",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, thay đổi thể tích bazơ rồi chạy lại: khi nào ΔT lớn nhất?"
+      },
+      "done": { "kind": "reset" }
+    }
+  ],
+  "examples": [
+    {
+      "id": "temperature-rise",
+      "question": "{acidVolume} mL of HCl and {baseVolume} mL of NaOH, both {concentration} mol/L and at {startTemperature} °C, are mixed in a foam cup. How much water forms, and what temperature does the thermometer reach? (ΔH = −57.1 kJ/mol)",
+      "vi": {
+        "question": "Trộn {acidVolume} mL HCl với {baseVolume} mL NaOH, cùng nồng độ {concentration} mol/L và cùng ở {startTemperature} °C, trong cốc xốp. Có bao nhiêu nước tạo thành, và nhiệt kế chỉ tới bao nhiêu độ? (ΔH = −57,1 kJ/mol)"
+      },
+      "set": { "acidVolume": 50, "baseVolume": 50, "concentration": 1 },
+      "find": [{ "theory": "water" }, { "theory": "finalTemperature" }],
+      "steps": [
+        {
+          "say": "H⁺ + OH⁻ → H₂O: the reagent that runs out sets the amount of water.",
+          "vi": { "say": "H⁺ + OH⁻ → H₂O: chất hết trước quyết định lượng nước tạo thành." },
+          "write": "n = c·min(V_a, V_b) = {concentration}·{=min(acidVolume,baseVolume)} = {@water} mmol",
+          "check": { "expr": "concentration*min(acidVolume,baseVolume)", "equals": "water" }
+        },
+        {
+          "say": "The heat, n times 57.1 kJ/mol (the textbook value), warms the whole mixture, taken as water: 1 g per mL and 4.18 J/(g·K). Read after 30 s, the thermometer has caught up to within 0.01 %.",
+          "vi": {
+            "say": "Nhiệt tỏa ra, n nhân 57,1 kJ/mol (giá trị sách giáo khoa), làm nóng cả hỗn hợp, coi như nước: 1 g mỗi mL và 4,18 J/(g·K). Đọc sau 30 s, nhiệt kế đã theo kịp tới 0,01 %."
+          },
+          "write": "ΔT = n·57.1/(m·c) = {@water}·57.1/({=acidVolume+baseVolume}·4.18) ≈ {@temperatureRise} K",
+          "check": {
+            "expr": "@water*57.1/((acidVolume+baseVolume)*4.18)*(1-exp(-readTime/timeConstant))",
+            "equals": "temperatureRise"
+          }
+        },
+        {
+          "say": "Add the rise to the starting temperature.",
+          "vi": { "say": "Cộng độ tăng nhiệt độ vào nhiệt độ ban đầu." },
+          "write": "T = {startTemperature} + {@temperatureRise} ≈ {@finalTemperature} °C",
+          "check": { "expr": "startTemperature+@temperatureRise", "equals": "finalTemperature" }
+        }
+      ]
+    },
+    {
+      "id": "less-liquid-warmer",
+      "question": "{acidVolume} mL of HCl and {baseVolume} mL of NaOH, both {concentration} mol/L, are mixed at {startTemperature} °C. Find the water formed and the temperature rise.",
+      "vi": {
+        "question": "Trộn {acidVolume} mL HCl với {baseVolume} mL NaOH, cùng nồng độ {concentration} mol/L, ở {startTemperature} °C. Tìm lượng nước tạo thành và độ tăng nhiệt độ."
+      },
+      "set": { "acidVolume": 50, "baseVolume": 25, "concentration": 2 },
+      "find": [{ "theory": "water" }, { "theory": "temperatureRise", "symbol": "ΔT", "unit": "K" }],
+      "steps": [
+        {
+          "say": "The base runs out first: its millimoles set the water formed.",
+          "vi": { "say": "Bazơ hết trước: số mmol của nó quyết định lượng nước tạo thành." },
+          "write": "n = c·V_b = {concentration}·{baseVolume} = {@water} mmol",
+          "check": { "expr": "concentration*min(acidVolume,baseVolume)", "equals": "water" }
+        },
+        {
+          "say": "The same heat as 50 mmol always gives, but now only {=acidVolume+baseVolume} g of mixture to warm, so it rises more.",
+          "vi": {
+            "say": "Nhiệt tỏa ra vẫn như với 50 mmol, nhưng bây giờ chỉ có {=acidVolume+baseVolume} g hỗn hợp cần làm nóng, nên nhiệt độ tăng nhiều hơn."
+          },
+          "write": "ΔT = {@water}·57.1/({=acidVolume+baseVolume}·4.18) ≈ {@temperatureRise} K",
+          "check": {
+            "expr": "@water*57.1/((acidVolume+baseVolume)*4.18)*(1-exp(-readTime/timeConstant))",
+            "equals": "temperatureRise"
+          }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "When an acid and a base react, H⁺ and OH⁻ join into water and give out heat; measuring how warm the mixture gets tells how much heat each mole of water releases.",
+    "vi": {
+      "summary": "Khi axit và bazơ phản ứng, H⁺ và OH⁻ kết hợp thành nước và tỏa nhiệt; đo hỗn hợp nóng lên bao nhiêu sẽ biết mỗi mol nước tạo thành tỏa ra bao nhiêu nhiệt."
+    },
+    "parts": [
+      {
+        "id": "acid",
+        "name": "Hydrochloric acid (cylinder)",
+        "role": "V_a mL of HCl at concentration c: it brings the H⁺ ions.",
+        "vi": {
+          "name": "Axit clohiđric (ống đong)",
+          "role": "V_a mL HCl nồng độ c: cung cấp ion H⁺."
+        },
+        "anchor": { "part": "acid-cylinder" }
+      },
+      {
+        "id": "base",
+        "name": "Sodium hydroxide (cylinder)",
+        "role": "V_b mL of NaOH at the same concentration: it brings the OH⁻ ions.",
+        "vi": {
+          "name": "Natri hiđroxit (ống đong)",
+          "role": "V_b mL NaOH cùng nồng độ: cung cấp ion OH⁻."
+        },
+        "anchor": { "part": "base-cylinder" }
+      },
+      {
+        "id": "cup",
+        "name": "Polystyrene cup",
+        "role": "A good insulator: the heat of the reaction stays in the mixture instead of escaping.",
+        "vi": {
+          "name": "Cốc xốp",
+          "role": "Cách nhiệt tốt: nhiệt của phản ứng ở lại trong hỗn hợp thay vì thoát ra ngoài."
+        },
+        "anchor": { "part": "cup" }
+      },
+      {
+        "id": "lid",
+        "name": "Lid and stirrer",
+        "role": "The lid keeps the heat in; stirring mixes the solutions so the reaction is complete at once.",
+        "vi": {
+          "name": "Nắp và que khuấy",
+          "role": "Nắp giữ nhiệt; khuấy giúp hai dung dịch trộn đều để phản ứng xảy ra hoàn toàn ngay."
+        },
+        "anchor": { "part": "lid" }
+      },
+      {
+        "id": "thermometer",
+        "name": "Thermometer",
+        "role": "Reads the mixture's temperature: the rise ΔT is the measure of the heat given out.",
+        "vi": {
+          "name": "Nhiệt kế",
+          "role": "Đọc nhiệt độ hỗn hợp: độ tăng ΔT là thước đo nhiệt tỏa ra."
+        },
+        "anchor": { "part": "thermometer" }
+      }
+    ],
+    "steps": [
+      {
+        "text": "In the acid there are H⁺ ions, in the base OH⁻ ions. Mixed, they join: H⁺ + OH⁻ → H₂O. Forming these bonds gives out energy as heat — the reaction is exothermic.",
+        "vi": {
+          "text": "Trong axit có ion H⁺, trong bazơ có ion OH⁻. Khi trộn, chúng kết hợp: H⁺ + OH⁻ → H₂O. Tạo liên kết này giải phóng năng lượng dưới dạng nhiệt — phản ứng tỏa nhiệt."
+        },
+        "parts": ["acid", "base"]
+      },
+      {
+        "text": "Press RUN: the base goes into the acid in the insulated cup. The heat stays in the mixture, so it warms up; the thermometer climbs and levels off.",
+        "vi": {
+          "text": "Nhấn CHẠY: bazơ được đổ vào axit trong cốc cách nhiệt. Nhiệt ở lại trong hỗn hợp nên nó nóng lên; nhiệt kế tăng rồi đứng yên."
+        },
+        "parts": ["cup", "lid", "thermometer"]
+      },
+      {
+        "text": "The heat given out is q = m·c·ΔT: the mixture's mass (1 g per mL), water's specific heat 4.18 J/(g·K) and the rise ΔT.",
+        "vi": {
+          "text": "Nhiệt tỏa ra là q = m·c·ΔT: khối lượng hỗn hợp (1 g cho mỗi mL), nhiệt dung riêng của nước 4,18 J/(g·K) và độ tăng nhiệt độ ΔT."
+        },
+        "parts": ["thermometer", "cup"]
+      },
+      {
+        "text": "The water formed is set by whichever runs out first: n = c × the smaller volume. The enthalpy of neutralisation is ΔH = −q/n: about −57 kJ for each mole of water.",
+        "vi": {
+          "text": "Lượng nước tạo thành do chất hết trước quyết định: n = c × thể tích nhỏ hơn. Nhiệt trung hòa là ΔH = −q/n: khoảng −57 kJ cho mỗi mol nước."
+        },
+        "parts": ["acid", "base"]
+      },
+      {
+        "text": "Change the base volume: ΔT is largest when the volumes are equal (all of both react). With less base fewer moles react; with more, the extra only adds water to warm.",
+        "vi": {
+          "text": "Thay đổi thể tích bazơ: ΔT lớn nhất khi hai thể tích bằng nhau (cả hai phản ứng hết). Ít bazơ hơn thì ít mol phản ứng; nhiều hơn thì phần dư chỉ thêm nước cần làm nóng."
+        },
+        "parts": ["base", "thermometer"]
+      },
+      {
+        "text": "Doubling the concentration doubles ΔT but not ΔH: twice the water formed in the same mass. A real cup loses a little heat, so a real ΔH comes out a bit smaller.",
+        "vi": {
+          "text": "Tăng nồng độ gấp đôi thì ΔT gấp đôi nhưng ΔH không đổi: lượng nước tạo thành gấp đôi trong cùng một khối lượng. Cốc thật mất một chút nhiệt nên ΔH đo thật hơi nhỏ hơn."
+        },
+        "parts": ["cup"]
+      }
+    ]
+  }
+}

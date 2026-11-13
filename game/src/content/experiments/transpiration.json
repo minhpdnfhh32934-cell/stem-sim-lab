@@ -1,0 +1,506 @@
+{
+  "id": "transpiration",
+  "name": "Transpiration: a bubble potometer",
+  "category": "biology",
+  "description": "A leafy shoot is sealed under water into a potometer: as its leaves lose water vapour, the shoot draws water up from a horizontal capillary, and an air bubble in it moves along a scale. Set the light on the shoot, the humidity of the air round it and the fan's air speed, then time the bubble for 5 minutes: the distance it moves gives the water taken up, and from the leaf area the rate of transpiration. Light opens the stomata, dry air raises the vapour-pressure deficit that drives the water out, and moving air thins the still layer over the leaf.",
+  "vi": {
+    "name": "Thoát hơi nước: bình đo bằng bọt khí (potometer)",
+    "description": "Một cành cây có lá được lắp kín vào bình đo dưới nước: khi lá thoát hơi nước, cành hút nước từ một ống mao dẫn nằm ngang, và một bọt khí trong ống dịch chuyển dọc theo thước đo. Đặt cường độ ánh sáng chiếu vào cành, độ ẩm của không khí quanh cành và tốc độ gió của quạt, rồi theo dõi bọt khí trong 5 phút: quãng đường bọt khí dịch chuyển cho biết lượng nước cành đã hút, và từ diện tích lá suy ra tốc độ thoát hơi nước. Ánh sáng làm khí khổng mở, không khí khô làm tăng độ thiếu hụt áp suất hơi nước đẩy hơi nước ra ngoài, và gió làm mỏng lớp không khí tĩnh trên bề mặt lá.",
+    "note": "Lượng nước cành hút được coi bằng lượng nước lá thoát ra (ở cây thật, khoảng 1 % được giữ lại cho sinh trưởng và quang hợp). Hơi nước khuếch tán từ không khí bão hòa trong lá ra phòng qua hai độ dẫn mắc nối tiếp, của khí khổng g_s và của lớp không khí sát lá g_b: 1/g = 1/g_s + 1/g_b. Khí khổng mở theo ánh sáng, g_s = g_tối + (g_max − g_tối)·I/(I + I_½), với g_max = 0,3 mol/(m²·s), g_tối = 0,01 mol/(m²·s) và I_½ = 5 000 lux — các giá trị minh họa nằm trong khoảng đo được ở cây thân thảo, không phải số đo của một loài cụ thể. Lớp không khí sát lá mỏng đi khi có gió, g_b = 0,147·√(u/d) với d = 0,72 lần bề rộng lá (Campbell & Norman 1998). Lá được coi có cùng nhiệt độ với không khí, nên lực đẩy hơi nước ra là độ thiếu hụt áp suất hơi D = e_s(T)·(1 − RH/100), và tốc độ thoát hơi nước là E = g·D/P. Tốc độ coi như ổn định ngay (khí khổng thật cần 5–30 phút để điều chỉnh, nên trong phòng thí nghiệm phải chờ cành ổn định trước khi đo). Thời gian được nén: 5 phút đo hiển thị trong 5 giây. Thước đọc quãng đường mô phỏng theo độ phân giải d_x của nó (bội số gần nhất của d_x, độ bất định d_x/√12 chỉ do độ phân giải); không có sai số ngẫu nhiên nào được thêm vào, và tốc độ thoát hơi nước được tính từ thể tích mô phỏng, không phải từ số đọc. Trong phòng thí nghiệm thật, cành có thể bị bọt khí làm tắc mạch khi cắt, chỗ nối có thể hở, nhiệt độ lá khác nhiệt độ không khí dưới đèn, và mỗi lá khác nhau, nên tốc độ đo được lệch so với các giá trị này."
+  },
+  "requiredEquipment": ["potometer"],
+  "model": "biology.transpiration",
+  "parameters": [
+    {
+      "id": "illuminance",
+      "label": "Light on the shoot",
+      "vi": { "label": "Ánh sáng chiếu vào cành" },
+      "symbol": "I",
+      "unit": "lux",
+      "default": 10000,
+      "min": 0,
+      "max": 20000,
+      "presets": [
+        { "label": "Dark (0 lux)", "vi": { "label": "Tối (0 lux)" }, "value": 0 },
+        { "label": "5 000 lux", "vi": { "label": "5 000 lux" }, "value": 5000 },
+        { "label": "10 000 lux", "vi": { "label": "10 000 lux" }, "value": 10000 },
+        { "label": "20 000 lux", "vi": { "label": "20 000 lux" }, "value": 20000 }
+      ]
+    },
+    {
+      "id": "humidity",
+      "label": "Relative humidity of the air",
+      "vi": { "label": "Độ ẩm tương đối của không khí" },
+      "symbol": "RH",
+      "unit": "%",
+      "default": 50,
+      "min": 30,
+      "max": 90,
+      "presets": [
+        { "label": "30 %", "vi": { "label": "30 %" }, "value": 30 },
+        { "label": "50 %", "vi": { "label": "50 %" }, "value": 50 },
+        { "label": "70 %", "vi": { "label": "70 %" }, "value": 70 },
+        { "label": "90 %", "vi": { "label": "90 %" }, "value": 90 }
+      ]
+    },
+    {
+      "id": "airSpeed",
+      "label": "Air speed from the fan",
+      "vi": { "label": "Tốc độ gió của quạt" },
+      "symbol": "u",
+      "unit": "m/s",
+      "default": 0.1,
+      "min": 0.1,
+      "max": 3,
+      "presets": [
+        {
+          "label": "Fan off (still air)",
+          "vi": { "label": "Tắt quạt (không khí lặng)" },
+          "value": 0.1
+        },
+        { "label": "1 m/s", "vi": { "label": "1 m/s" }, "value": 1 },
+        { "label": "3 m/s", "vi": { "label": "3 m/s" }, "value": 3 }
+      ]
+    },
+    {
+      "id": "scaleResolution",
+      "label": "Scale resolution",
+      "vi": { "label": "Độ phân giải của thước" },
+      "symbol": "d_x",
+      "unit": "m",
+      "default": 0.001,
+      "min": 0.0005,
+      "max": 0.002,
+      "presets": [
+        { "label": "0.5 mm", "vi": { "label": "0,5 mm" }, "value": 0.0005 },
+        { "label": "1 mm", "vi": { "label": "1 mm" }, "value": 0.001 },
+        { "label": "2 mm", "vi": { "label": "2 mm" }, "value": 0.002 }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "temperature": 20,
+    "leafArea": 0.005,
+    "leafWidth": 0.04,
+    "boreDiameter": 0.001,
+    "scaleLength": 0.3,
+    "duration": 300,
+    "timeLapse": 60
+  },
+  "inputs": {
+    "temperature": { "symbol": "T", "unit": "°C" },
+    "leafArea": { "symbol": "A", "unit": "m²" },
+    "leafWidth": { "symbol": "w", "unit": "m", "desk": false },
+    "boreDiameter": { "symbol": "d_c", "unit": "m", "desk": false },
+    "scaleLength": { "symbol": "L", "unit": "m", "desk": false },
+    "duration": { "symbol": "t", "unit": "s", "desk": false },
+    "timeLapse": { "symbol": "k", "unit": "", "desk": false }
+  },
+  "simulation": { "timeStep": 0.02, "maxDuration": 10, "sampleInterval": 0.1 },
+  "measurements": [
+    {
+      "id": "distance",
+      "label": "Distance the bubble moved",
+      "vi": { "label": "Quãng đường bọt khí dịch chuyển" },
+      "symbol": "x",
+      "unit": "m",
+      "variable": "distance"
+    },
+    {
+      "id": "uptake",
+      "label": "Water taken up",
+      "vi": { "label": "Lượng nước đã hút" },
+      "symbol": "V",
+      "unit": "mL",
+      "variable": "uptake"
+    },
+    {
+      "id": "timing",
+      "label": "Measuring time",
+      "vi": { "label": "Thời gian đo" },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "labTime"
+    }
+  ],
+  "results": [
+    {
+      "id": "distance",
+      "label": "Distance the bubble moved in 5 min x",
+      "vi": { "label": "Quãng đường bọt khí dịch chuyển trong 5 phút x" },
+      "symbol": "x",
+      "unit": "m",
+      "variable": "distance",
+      "reduce": "final",
+      "theory": "distance"
+    },
+    {
+      "id": "uptake",
+      "label": "Water taken up V",
+      "vi": { "label": "Lượng nước đã hút V" },
+      "symbol": "V",
+      "unit": "mL",
+      "variable": "uptake",
+      "reduce": "final",
+      "theory": "uptake"
+    },
+    {
+      "id": "transpirationRate",
+      "label": "Rate of transpiration E",
+      "vi": { "label": "Tốc độ thoát hơi nước E" },
+      "symbol": "E",
+      "unit": "mmol/(m²·s)",
+      "variable": "transpirationRate",
+      "reduce": "final",
+      "theory": "transpirationRate"
+    },
+    {
+      "id": "vapourDeficit",
+      "label": "Vapour-pressure deficit of the air D",
+      "vi": { "label": "Độ thiếu hụt áp suất hơi nước của không khí D" },
+      "symbol": "D",
+      "unit": "kPa",
+      "variable": "vapourDeficit",
+      "reduce": "final",
+      "theory": "vapourDeficit"
+    },
+    {
+      "id": "stomatalConductance",
+      "label": "Stomatal conductance g_s (model)",
+      "vi": { "label": "Độ dẫn của khí khổng g_s (mô hình)" },
+      "symbol": "g_s",
+      "unit": "mol/(m²·s)",
+      "variable": "stomatalConductance",
+      "reduce": "final",
+      "theory": "stomatalConductance"
+    },
+    {
+      "id": "boundaryConductance",
+      "label": "Boundary-layer conductance g_b (model)",
+      "vi": { "label": "Độ dẫn của lớp không khí sát lá g_b (mô hình)" },
+      "symbol": "g_b",
+      "unit": "mol/(m²·s)",
+      "variable": "boundaryConductance",
+      "reduce": "final",
+      "theory": "boundaryConductance"
+    },
+    {
+      "id": "stomatalShare",
+      "label": "Stomata's share of the resistance (model)",
+      "vi": { "label": "Phần trở kháng do khí khổng (mô hình)" },
+      "symbol": "r_s/r",
+      "unit": "%",
+      "variable": "stomatalShare",
+      "reduce": "final",
+      "theory": "stomatalShare"
+    }
+  ],
+  "instruments": [
+    {
+      "result": "distance",
+      "quantity": "Distance x the bubble moved",
+      "name": "Scale beside the capillary",
+      "resolution": "scaleResolution",
+      "excludes": "where the bubble's edge is judged to be, the capillary's bore as measured, the time as kept by hand, and a leaking joint or a shoot not yet settled, which change the distance itself",
+      "vi": {
+        "quantity": "Quãng đường x bọt khí dịch chuyển",
+        "name": "Thước đo bên ống mao dẫn",
+        "excludes": "việc xác định vị trí mép bọt khí, sai số khi đo đường kính trong của ống mao dẫn, thời gian bấm bằng tay, và chỗ nối bị hở hay cành chưa ổn định, những yếu tố làm thay đổi chính quãng đường đo"
+      }
+    }
+  ],
+  "graphs": [
+    {
+      "id": "distance-time",
+      "title": "Distance the bubble moved against measuring time",
+      "vi": { "title": "Quãng đường bọt khí dịch chuyển theo thời gian đo" },
+      "x": "timing",
+      "y": ["distance"],
+      "yLabel": "x"
+    }
+  ],
+  "monitor": "distance-time",
+  "compare": [{ "graph": "distance-time" }],
+  "analyses": [
+    {
+      "id": "rate-deficit",
+      "title": "Rate of transpiration against the vapour-pressure deficit (E = g·D/P)",
+      "note": "Each run is one point: the rate E against the air's vapour-pressure deficit D. Runs with the same light and fan are fitted together, at different humidities. With the leaf's conductance g fixed by light and moving air, E = g·D/P: a straight line through the origin — no deficit, no transpiration — whose slope is g/P. Change only the humidity between runs; brighter light or a stronger fan gives a steeper line.",
+      "vi": {
+        "title": "Tốc độ thoát hơi nước theo độ thiếu hụt áp suất hơi (E = g·D/P)",
+        "note": "Mỗi lần chạy là một điểm: tốc độ E theo độ thiếu hụt áp suất hơi D của không khí. Các lần chạy cùng ánh sáng và cùng tốc độ gió được khớp chung, với các độ ẩm khác nhau. Khi độ dẫn g của lá được cố định bởi ánh sáng và gió, E = g·D/P: một đường thẳng đi qua gốc tọa độ — không có thiếu hụt thì không thoát hơi nước — có hệ số góc g/P. Giữa các lần chạy chỉ thay đổi độ ẩm; ánh sáng mạnh hơn hoặc gió mạnh hơn cho đường dốc hơn."
+      },
+      "x": "vapourDeficit",
+      "y": "transpirationRate",
+      "group": ["illuminance", "airSpeed"],
+      "columns": [
+        "illuminance",
+        "airSpeed",
+        "humidity",
+        "vapourDeficit",
+        "distance",
+        "transpirationRate"
+      ],
+      "slope": {
+        "label": "Slope of E against D (g/P)",
+        "vi": { "label": "Hệ số góc của E theo D (g/P)" },
+        "symbol": "g/P",
+        "unit": "mmol/(m²·s·kPa)",
+        "theory": "rateSlope"
+      }
+    }
+  ],
+  "note": "The water the shoot takes up is taken to equal the water its leaves lose (a real shoot keeps about 1 % for growth and photosynthesis). Water vapour diffuses from the saturated air inside the leaf to the room through two conductances in series, the stomata's g_s and the boundary layer's g_b: 1/g = 1/g_s + 1/g_b. The stomata open with light, g_s = g_dark + (g_max − g_dark)·I/(I + I_½), with g_max = 0.3 mol/(m²·s), g_dark = 0.01 mol/(m²·s) and I_½ = 5 000 lux — illustrative values inside the range measured for soft-leaved plants, not measured for one species. The still layer over the leaf thins as the air moves, g_b = 0.147·√(u/d) with d = 0.72 × the leaf's width (Campbell & Norman 1998). The leaf is taken to be at the air's temperature, so what drives the water out is the vapour-pressure deficit D = e_s(T)·(1 − RH/100), and the rate is E = g·D/P. The rate is steady at once (real stomata take 5–30 min to settle, so in a lab the shoot is left to settle before timing). Time is compressed: 5 minutes of timing are shown in 5 seconds. The scale reads the simulated distance to its resolution d_x (the nearest multiple of d_x, with the uncertainty d_x/√12 from the resolution alone); no random error is added, and the rate is worked out from the simulated volume, not from the reading. In a real lab the cut stem can be blocked by air, a joint can leak, a leaf under a lamp is warmer than the air, and no two leaves are alike, so measured rates differ from these.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the transpiration instructions on the board.",
+      "vi": { "instruction": "Đọc hướng dẫn thí nghiệm thoát hơi nước trên bảng." },
+      "done": { "kind": "inspected", "item": "transpiration-instructions" }
+    },
+    {
+      "id": "light",
+      "instruction": "Set the light on the shoot with its dial on the control desk.",
+      "vi": {
+        "instruction": "Đặt cường độ ánh sáng chiếu vào cành bằng núm xoay trên bàn điều khiển."
+      },
+      "done": { "kind": "adjusted", "parameter": "illuminance" }
+    },
+    {
+      "id": "air",
+      "instruction": "Set the humidity of the air, and the fan if you want moving air.",
+      "vi": { "instruction": "Đặt độ ẩm của không khí, và bật quạt nếu muốn có gió." },
+      "done": { "kind": "adjusted", "parameter": "humidity" }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN and watch the bubble move along the scale for the 5 minutes of timing.",
+      "vi": {
+        "instruction": "Nhấn CHẠY và quan sát bọt khí dịch chuyển dọc theo thước trong 5 phút đo."
+      },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read the distance, the water taken up and the rate E on the results monitor: what made the rate higher?",
+      "vi": {
+        "instruction": "Đọc quãng đường, lượng nước đã hút và tốc độ E trên màn hình kết quả: điều gì làm tốc độ tăng?"
+      },
+      "done": { "kind": "viewed" }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, change only the humidity and run again to add a point to the analysis.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, chỉ thay đổi độ ẩm rồi chạy lại để thêm một điểm vào đồ thị phân tích."
+      },
+      "done": { "kind": "reset" }
+    }
+  ],
+  "examples": [
+    {
+      "id": "conductances",
+      "question": "A leaf {leafWidth} m wide is lit at {illuminance} lux in still air ({airSpeed} m/s). Find its stomatal conductance and its total conductance to water vapour (the model’s stomatal constants are illustrative).",
+      "vi": {
+        "question": "Một lá rộng {leafWidth} m được chiếu sáng {illuminance} lux trong không khí lặng ({airSpeed} m/s). Tìm độ dẫn khí khổng và độ dẫn tổng cộng đối với hơi nước (các hằng số khí khổng của mô hình là giá trị minh họa)."
+      },
+      "set": { "illuminance": 20000, "airSpeed": 0.1 },
+      "find": [
+        { "theory": "stomatalConductance" },
+        { "theory": "conductance", "symbol": "g", "unit": "mol/(m²·s)" }
+      ],
+      "steps": [
+        {
+          "say": "The stomata open with light: g_s = 0.01 + 0.29·I/(I + 5000), in mol/(m²·s).",
+          "vi": {
+            "say": "Khí khổng mở theo ánh sáng: g_s = 0,01 + 0,29·I/(I + 5000), tính bằng mol/(m²·s)."
+          },
+          "write": "g_s = 0.01 + 0.29·{illuminance}/({illuminance} + 5000) = {@stomatalConductance}",
+          "check": {
+            "expr": "0.01+0.29*illuminance/(illuminance+5000)",
+            "equals": "stomatalConductance"
+          }
+        },
+        {
+          "say": "The still air over the leaf: g_b = 0.147·√(u/(0.72w)) (Campbell & Norman).",
+          "vi": {
+            "say": "Lớp không khí tĩnh trên lá: g_b = 0,147·√(u/(0,72w)) (Campbell & Norman)."
+          },
+          "write": "g_b = 0.147·√({airSpeed}/(0.72·{leafWidth})) ≈ {@boundaryConductance}",
+          "check": {
+            "expr": "0.147*sqrt(airSpeed/(0.72*leafWidth))",
+            "equals": "boundaryConductance"
+          }
+        },
+        {
+          "say": "The vapour passes both in series, like resistors: 1/g = 1/g_s + 1/g_b.",
+          "vi": {
+            "say": "Hơi nước đi qua cả hai nối tiếp, như các điện trở: 1/g = 1/g_s + 1/g_b."
+          },
+          "write": "g = g_s·g_b/(g_s + g_b) ≈ {@conductance} mol/(m²·s)",
+          "check": {
+            "expr": "@stomatalConductance*@boundaryConductance/(@stomatalConductance+@boundaryConductance)",
+            "equals": "conductance"
+          }
+        }
+      ]
+    },
+    {
+      "id": "transpiration-rate",
+      "question": "At {temperature} °C and {humidity}% relative humidity, with a fan at {airSpeed} m/s, the leaf’s total conductance is g = {@conductance|3} mol/(m²·s). Find the vapour-pressure deficit and the transpiration rate (air at 101.325 kPa).",
+      "vi": {
+        "question": "Ở {temperature} °C và độ ẩm tương đối {humidity}%, có quạt thổi {airSpeed} m/s, độ dẫn tổng cộng của lá là g = {@conductance|3} mol/(m²·s). Tìm độ thiếu hụt áp suất hơi nước và tốc độ thoát hơi nước (áp suất không khí 101,325 kPa)."
+      },
+      "set": { "humidity": 30, "airSpeed": 1 },
+      "find": [{ "theory": "vapourDeficit" }, { "theory": "transpirationRate" }],
+      "steps": [
+        {
+          "say": "Saturated air at {temperature} °C holds a vapour pressure e_s = 0.61121·e^(17.502T/(T + 240.97)) = {=0.61121*exp(17.502*temperature/(temperature+240.97))|4} kPa; the room has only {humidity}% of it.",
+          "vi": {
+            "say": "Không khí bão hòa ở {temperature} °C có áp suất hơi e_s = 0,61121·e^(17,502T/(T + 240,97)) = {=0.61121*exp(17.502*temperature/(temperature+240.97))|4} kPa; phòng chỉ có {humidity}% giá trị đó."
+          },
+          "write": "D = e_s·(1 − RH) = {=0.61121*exp(17.502*temperature/(temperature+240.97))|4}·{=1-humidity/100} ≈ {@vapourDeficit} kPa",
+          "check": {
+            "expr": "0.61121*exp(17.502*temperature/(temperature+240.97))*(100-humidity)/100",
+            "equals": "vapourDeficit"
+          }
+        },
+        {
+          "say": "The rate is the conductance times the deficit over the air pressure, in mmol per m² per second.",
+          "vi": {
+            "say": "Tốc độ bằng độ dẫn nhân độ thiếu hụt chia áp suất không khí, tính bằng mmol trên m² mỗi giây."
+          },
+          "write": "E = g·D/P = {@conductance|3}·{@vapourDeficit}/101.325·1000 ≈ {@transpirationRate}",
+          "check": {
+            "expr": "1000*@conductance*@vapourDeficit/101.325",
+            "equals": "transpirationRate"
+          }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "A leafy shoot loses water vapour from its leaves and draws water up to replace it; a bubble moving in a capillary measures how fast, and light, dry air and wind all speed it up.",
+    "vi": {
+      "summary": "Một cành lá thoát hơi nước qua lá và hút nước lên để bù lại; một bọt khí di chuyển trong ống mao quản cho biết tốc độ đó, và ánh sáng, không khí khô, gió đều làm nó nhanh hơn."
+    },
+    "parts": [
+      {
+        "id": "shoot",
+        "name": "Leafy shoot",
+        "role": "Sealed under water into the potometer; its leaves lose water vapour.",
+        "vi": {
+          "name": "Cành lá",
+          "role": "Được gắn kín dưới nước vào máy đo thoát hơi nước; lá của nó thoát hơi nước."
+        },
+        "anchor": {
+          "at": [-0.22, -0.08, 0.02]
+        }
+      },
+      {
+        "id": "tube",
+        "name": "Sealed water tube",
+        "role": "Full of water, closed by a bung around the stem: the only way in is through the capillary.",
+        "vi": {
+          "name": "Ống chứa nước kín",
+          "role": "Đầy nước, được bịt bằng nút quanh thân cành: nước chỉ có thể vào qua ống mao quản."
+        },
+        "anchor": {
+          "at": [-0.22, -0.235, 0.018]
+        }
+      },
+      {
+        "id": "capillary",
+        "name": "Capillary and scale",
+        "role": "A horizontal tube of 1 mm bore along a 0.3 m scale.",
+        "vi": {
+          "name": "Ống mao quản và thước",
+          "role": "Ống nằm ngang có đường kính trong 1 mm, đặt dọc theo thước dài 0.3 m."
+        },
+        "anchor": {
+          "part": "capillary"
+        }
+      },
+      {
+        "id": "bubble",
+        "name": "Air bubble",
+        "role": "Moves towards the shoot as it draws water up: the distance x gives the water taken up.",
+        "vi": {
+          "name": "Bọt khí",
+          "role": "Di chuyển về phía cành khi cành hút nước: quãng đường x cho biết lượng nước đã hút."
+        },
+        "anchor": {
+          "part": "bubble"
+        }
+      },
+      {
+        "id": "lamp",
+        "name": "Lamp",
+        "role": "Lights the shoot, with the illuminance I set at the desk.",
+        "vi": {
+          "name": "Đèn",
+          "role": "Chiếu sáng cành lá với độ rọi I đặt ở bàn điều khiển."
+        },
+        "anchor": {
+          "part": "bulb"
+        }
+      },
+      {
+        "id": "fan",
+        "name": "Fan",
+        "role": "Blows air over the leaves at the speed u (off at its lowest).",
+        "vi": {
+          "name": "Quạt",
+          "role": "Thổi không khí qua lá với tốc độ u (tắt ở mức thấp nhất)."
+        },
+        "anchor": {
+          "part": "fan"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "Water vapour escapes from the leaves through their stomata. To replace it, the shoot draws water up its stem from the sealed tube, and water comes in along the capillary.",
+        "vi": {
+          "text": "Hơi nước thoát ra khỏi lá qua khí khổng. Để bù lại, cành hút nước lên thân từ ống kín, và nước đi vào qua ống mao quản."
+        },
+        "parts": ["shoot", "tube", "capillary"]
+      },
+      {
+        "text": "So the air bubble in the capillary moves towards the shoot. The distance it moves in 5 minutes, times the bore’s area, is the water taken up, V.",
+        "vi": {
+          "text": "Vì vậy bọt khí trong ống mao quản di chuyển về phía cành. Quãng đường nó đi trong 5 phút nhân với tiết diện ống là lượng nước đã hút, V."
+        },
+        "parts": ["bubble", "capillary"]
+      },
+      {
+        "text": "Light opens the stomata: more light, faster transpiration (until they are wide open). In the dark they are nearly closed.",
+        "vi": {
+          "text": "Ánh sáng làm khí khổng mở: ánh sáng mạnh hơn thì thoát hơi nước nhanh hơn (cho tới khi khí khổng mở hết). Trong tối chúng gần như đóng."
+        },
+        "parts": ["lamp", "shoot"]
+      },
+      {
+        "text": "Dry air raises the vapour-pressure deficit, D = e_s(T)·(1 − RH/100), which drives the water out. Moving air thins the still layer of air over the leaf, so the vapour escapes more easily.",
+        "vi": {
+          "text": "Không khí khô làm tăng độ thiếu hụt áp suất hơi, D = e_s(T)·(1 − RH/100), là động lực đẩy hơi nước ra. Gió làm mỏng lớp không khí tĩnh trên mặt lá, nên hơi nước thoát ra dễ hơn."
+        },
+        "parts": ["fan", "shoot"]
+      },
+      {
+        "text": "The vapour passes the stomata and the still layer in series: 1/g = 1/g_s + 1/g_b, and the rate is E = g·D/P. Whichever is narrower limits it most.",
+        "vi": {
+          "text": "Hơi nước đi qua khí khổng rồi qua lớp không khí tĩnh nối tiếp nhau: 1/g = 1/g_s + 1/g_b, và tốc độ là E = g·D/P. Lớp nào hẹp hơn sẽ hạn chế nhiều nhất."
+        },
+        "parts": ["shoot"]
+      },
+      {
+        "text": "The results give x, V and the rate per leaf area, the scale reading to its resolution d_x. The water taken up is taken to equal the water lost, the stomata settle at once, and time runs 60 times faster.",
+        "vi": {
+          "text": "Phần kết quả cho x, V và tốc độ trên mỗi đơn vị diện tích lá, thước đọc theo độ phân giải d_x. Lượng nước hút được coi bằng lượng nước mất, khí khổng ổn định ngay lập tức, và thời gian chạy nhanh gấp 60 lần."
+        },
+        "parts": ["capillary", "bubble"]
+      }
+    ]
+  }
+}

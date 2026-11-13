@@ -1,0 +1,613 @@
+{
+  "id": "inclined-plane",
+  "name": "Friction on an inclined plane",
+  "category": "physics",
+  "description": "A block is let go from rest at the top of a ramp whose angle you set with a protractor. If static friction can hold it (tan θ ≤ μs) it stays put; otherwise it slides down with the constant acceleration a = g(sin θ − μk·cos θ). Watch the energy: the potential energy the block loses becomes kinetic energy and heat from friction, so the mechanical energy falls by exactly the work done against friction.",
+  "vi": {
+    "name": "Ma sát trên mặt phẳng nghiêng",
+    "description": "Một khối vật được thả không vận tốc đầu từ đỉnh một mặt phẳng nghiêng có góc nghiêng chỉnh bằng thước đo góc. Nếu ma sát nghỉ đủ giữ vật (tan θ ≤ μs) thì vật đứng yên; nếu không, vật trượt xuống với gia tốc không đổi a = g(sin θ − μk·cos θ). Hãy theo dõi năng lượng: thế năng mà vật mất đi chuyển thành động năng và nhiệt do ma sát, nên cơ năng giảm đúng bằng độ lớn công của lực ma sát.",
+    "note": "Lực tác dụng: trọng lực m·g, phản lực pháp tuyến N = m·g·cos θ và lực ma sát dọc theo mặt phẳng nghiêng. Vật đứng yên khi tan θ ≤ μs: khi đó ma sát nghỉ bằng m·g·sin θ, không vượt quá giới hạn μs·N; góc nghiêng giới hạn là arctan μs. Khi tan θ > μs, vật trượt và ma sát trượt bằng μk·N, nên a = g(sin θ − μk·cos θ), không phụ thuộc khối lượng: s = ½·a·t², v = a·t; vật tới chân mặt phẳng nghiêng sau t = √(2L/a) với tốc độ v = √(2aL). Năng lượng (thế năng tính từ chân mặt phẳng nghiêng): ở đỉnh cơ năng là m·g·L·sin θ; khi vật trượt, động năng tăng thêm đúng bằng thế năng mất đi trừ nhiệt lượng Q = μk·N·s tỏa ra do ma sát, nên cơ năng cộng Q luôn bằng giá trị ban đầu. Lần chạy tính chính xác theo các công thức trên, nên kết quả khớp lý thuyết đến sai số làm tròn; một mặt phẳng nghiêng thật sẽ khác. Đây là mô hình đơn giản hóa dùng cho dạy học: vật coi như chất điểm, không lật, không lăn; hệ số ma sát không đổi và không phụ thuộc tốc độ; bỏ qua sức cản không khí; mặt phẳng nghiêng cứng và cố định; g = 9,81 m/s². Các hệ số ma sát lấy theo bảng 5.1 của Serway & Jewett, Physics for Scientists and Engineers, chỉ là giá trị gần đúng: hệ số thật thay đổi tới vài chục phần trăm tùy độ nhẵn, độ sạch và độ mòn của bề mặt. Bảng ghi gỗ trên gỗ μs = 0,25–0,5; ở đây lấy 0,35. Với Teflon μs = μk, nên chỉ cần nghiêng hơn 2,3° là vật bắt đầu trượt, nhưng rất chậm."
+  },
+  "requiredEquipment": ["incline-ramp"],
+  "model": "mechanics.incline",
+  "parameters": [
+    {
+      "id": "angle",
+      "label": "Incline angle",
+      "vi": { "label": "Góc nghiêng" },
+      "symbol": "θ",
+      "unit": "°",
+      "default": 30,
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "presets": [
+        { "label": "10°", "vi": { "label": "10°" }, "value": 10 },
+        { "label": "20°", "vi": { "label": "20°" }, "value": 20 },
+        { "label": "30°", "vi": { "label": "30°" }, "value": 30 },
+        { "label": "45°", "vi": { "label": "45°" }, "value": 45 }
+      ]
+    },
+    {
+      "id": "surface",
+      "label": "Surfaces in contact",
+      "vi": { "label": "Cặp bề mặt tiếp xúc" },
+      "unit": "",
+      "default": 3,
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "presets": [
+        { "label": "Teflon on Teflon", "vi": { "label": "Teflon trên Teflon" }, "value": 1 },
+        {
+          "label": "Oiled metal on metal",
+          "vi": { "label": "Kim loại trên kim loại, có bôi trơn" },
+          "value": 2
+        },
+        { "label": "Wood on wood", "vi": { "label": "Gỗ trên gỗ" }, "value": 3 },
+        { "label": "Dry steel on steel", "vi": { "label": "Thép trên thép, khô" }, "value": 4 }
+      ]
+    },
+    {
+      "id": "mass",
+      "label": "Block mass",
+      "vi": { "label": "Khối lượng vật" },
+      "symbol": "m",
+      "unit": "kg",
+      "default": 0.5,
+      "min": 0.1,
+      "max": 2,
+      "step": 0.1,
+      "presets": [
+        { "label": "0.1 kg", "vi": { "label": "0.1 kg" }, "value": 0.1 },
+        { "label": "0.5 kg", "vi": { "label": "0.5 kg" }, "value": 0.5 },
+        { "label": "1 kg", "vi": { "label": "1 kg" }, "value": 1 },
+        { "label": "2 kg", "vi": { "label": "2 kg" }, "value": 2 }
+      ]
+    },
+    {
+      "id": "length",
+      "label": "Sliding distance on the ramp",
+      "vi": { "label": "Quãng đường trượt trên mặt phẳng nghiêng" },
+      "symbol": "L",
+      "unit": "m",
+      "default": 1,
+      "min": 0.3,
+      "max": 1.5,
+      "step": 0.1,
+      "presets": [
+        { "label": "0.5 m", "vi": { "label": "0.5 m" }, "value": 0.5 },
+        { "label": "1 m", "vi": { "label": "1 m" }, "value": 1 },
+        { "label": "1.5 m", "vi": { "label": "1.5 m" }, "value": 1.5 }
+      ]
+    }
+  ],
+  "initialConditions": { "gravity": 9.81 },
+  "inputs": { "gravity": { "symbol": "g", "unit": "m/s²" } },
+  "simulation": { "timeStep": 0.001, "maxDuration": 60, "sampleInterval": 0.01 },
+  "measurements": [
+    {
+      "id": "distance",
+      "label": "Distance slid",
+      "vi": { "label": "Quãng đường đã trượt" },
+      "symbol": "s",
+      "unit": "m",
+      "variable": "distance"
+    },
+    {
+      "id": "speed",
+      "label": "Speed",
+      "vi": { "label": "Tốc độ" },
+      "symbol": "v",
+      "unit": "m/s",
+      "variable": "speed"
+    },
+    {
+      "id": "acceleration",
+      "label": "Acceleration",
+      "vi": { "label": "Gia tốc" },
+      "symbol": "a",
+      "unit": "m/s²",
+      "variable": "acceleration"
+    },
+    {
+      "id": "kineticEnergy",
+      "label": "Kinetic energy",
+      "vi": { "label": "Động năng" },
+      "symbol": "Eₖ",
+      "unit": "J",
+      "variable": "kineticEnergy"
+    },
+    {
+      "id": "potentialEnergy",
+      "label": "Potential energy above the foot",
+      "vi": { "label": "Thế năng so với chân mặt phẳng nghiêng" },
+      "symbol": "Eₚ",
+      "unit": "J",
+      "variable": "potentialEnergy"
+    },
+    {
+      "id": "potentialEnergyLost",
+      "label": "Potential energy lost",
+      "vi": { "label": "Thế năng đã mất" },
+      "symbol": "ΔEₚ",
+      "unit": "J",
+      "variable": "potentialEnergyLost"
+    },
+    {
+      "id": "frictionWork",
+      "label": "Heat from friction",
+      "vi": { "label": "Nhiệt lượng do ma sát" },
+      "symbol": "Q",
+      "unit": "J",
+      "variable": "frictionWork"
+    },
+    {
+      "id": "mechanicalEnergy",
+      "label": "Mechanical energy",
+      "vi": { "label": "Cơ năng" },
+      "symbol": "E",
+      "unit": "J",
+      "variable": "mechanicalEnergy"
+    }
+  ],
+  "results": [
+    {
+      "id": "acceleration",
+      "label": "Acceleration down the ramp",
+      "vi": { "label": "Gia tốc dọc mặt phẳng nghiêng" },
+      "symbol": "a",
+      "unit": "m/s²",
+      "variable": "acceleration",
+      "reduce": "final",
+      "theory": "acceleration"
+    },
+    {
+      "id": "travelTime",
+      "label": "Sliding time",
+      "vi": { "label": "Thời gian trượt" },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "time",
+      "reduce": "final",
+      "theory": "travelTime"
+    },
+    {
+      "id": "finalSpeed",
+      "label": "Speed at the end",
+      "vi": { "label": "Tốc độ lúc cuối" },
+      "symbol": "v",
+      "unit": "m/s",
+      "variable": "speed",
+      "reduce": "final",
+      "theory": "finalSpeed"
+    },
+    {
+      "id": "slides",
+      "label": "Does the block slide?",
+      "vi": { "label": "Vật có trượt không?" },
+      "unit": "",
+      "variable": "sliding",
+      "reduce": "final",
+      "theory": "slides",
+      "classes": [
+        { "max": 0.5, "label": "Stays at rest", "vi": { "label": "Đứng yên" } },
+        { "label": "Slides", "vi": { "label": "Trượt xuống" } }
+      ]
+    },
+    {
+      "id": "staticFriction",
+      "label": "Coefficient of static friction",
+      "vi": { "label": "Hệ số ma sát nghỉ" },
+      "symbol": "μs",
+      "unit": "",
+      "variable": "staticFriction",
+      "reduce": "final",
+      "theory": "staticFriction"
+    },
+    {
+      "id": "kineticFriction",
+      "label": "Coefficient of kinetic friction",
+      "vi": { "label": "Hệ số ma sát trượt" },
+      "symbol": "μk",
+      "unit": "",
+      "variable": "kineticFriction",
+      "reduce": "final",
+      "theory": "kineticFriction"
+    },
+    {
+      "id": "netForceRatio",
+      "label": "Net force over weight, F_net/(m·g)",
+      "vi": { "label": "Hợp lực chia trọng lượng, F_net/(m·g)" },
+      "symbol": "F_net/(m·g)",
+      "unit": "",
+      "variable": "netForceRatio",
+      "reduce": "final",
+      "theory": "netForceRatio"
+    },
+    {
+      "id": "frictionForce",
+      "label": "Friction force",
+      "vi": { "label": "Lực ma sát" },
+      "symbol": "f",
+      "unit": "N",
+      "variable": "frictionForce",
+      "reduce": "final",
+      "theory": "frictionForce"
+    },
+    {
+      "id": "distance",
+      "label": "Distance slid",
+      "vi": { "label": "Quãng đường đã trượt" },
+      "symbol": "s",
+      "unit": "m",
+      "variable": "distance",
+      "reduce": "final",
+      "theory": "distance"
+    },
+    {
+      "id": "potentialEnergyLost",
+      "label": "Potential energy lost",
+      "vi": { "label": "Thế năng đã mất" },
+      "symbol": "ΔEₚ",
+      "unit": "J",
+      "variable": "potentialEnergyLost",
+      "reduce": "final",
+      "theory": "potentialEnergyLost"
+    },
+    {
+      "id": "kineticEnergy",
+      "label": "Kinetic energy at the end",
+      "vi": { "label": "Động năng lúc cuối" },
+      "symbol": "Eₖ",
+      "unit": "J",
+      "variable": "kineticEnergy",
+      "reduce": "final",
+      "theory": "kineticEnergy"
+    },
+    {
+      "id": "frictionWork",
+      "label": "Heat from friction (work against friction)",
+      "vi": { "label": "Nhiệt lượng do ma sát (độ lớn công của lực ma sát)" },
+      "symbol": "Q",
+      "unit": "J",
+      "variable": "frictionWork",
+      "reduce": "final",
+      "theory": "frictionWork"
+    },
+    {
+      "id": "mechanicalEnergy",
+      "label": "Mechanical energy at the end",
+      "vi": { "label": "Cơ năng lúc cuối" },
+      "symbol": "E",
+      "unit": "J",
+      "variable": "mechanicalEnergy",
+      "reduce": "final",
+      "theory": "mechanicalEnergy"
+    }
+  ],
+  "graphs": [
+    {
+      "id": "energy-distance",
+      "title": "Energy against distance slid",
+      "vi": { "title": "Năng lượng theo quãng đường trượt" },
+      "x": "distance",
+      "y": ["kineticEnergy", "potentialEnergy", "frictionWork", "mechanicalEnergy"],
+      "yLabel": "E"
+    },
+    {
+      "id": "speed-time",
+      "title": "Speed against time",
+      "vi": { "title": "Tốc độ theo thời gian" },
+      "x": "time",
+      "y": ["speed"],
+      "mark": "travelTime"
+    },
+    {
+      "id": "distance-time",
+      "title": "Distance slid against time",
+      "vi": { "title": "Quãng đường trượt theo thời gian" },
+      "x": "time",
+      "y": ["distance"],
+      "mark": "travelTime"
+    }
+  ],
+  "monitor": "energy-distance",
+  "compare": [
+    { "graph": "speed-time" },
+    { "graph": "energy-distance", "series": "mechanicalEnergy" }
+  ],
+  "analyses": [
+    {
+      "id": "work-energy",
+      "title": "Kinetic energy at the end against sliding distance",
+      "note": "Work–energy theorem: the kinetic energy the block gains equals the work of the net force, Eₖ = F_net·L. At one angle, surface and mass the net force down the ramp, F_net = m·g·sin θ − μk·N, is the same all the way, so Eₖ at the foot grows in proportion to L. Change the sliding distance L between runs; the slope is F_net = m·a. Eₖ is computed from the speed the run reached (½m·v²); a held block gains nothing, so its slope is 0.",
+      "vi": {
+        "title": "Động năng lúc cuối theo quãng đường trượt",
+        "note": "Định lí động năng: độ tăng động năng của vật bằng công của hợp lực, Eₖ = F_net·L. Với cùng góc nghiêng, cặp bề mặt và khối lượng, hợp lực dọc mặt phẳng nghiêng F_net = m·g·sin θ − μk·N không đổi suốt quãng đường, nên động năng tại chân mặt phẳng nghiêng tỉ lệ với L. Hãy thay đổi quãng đường trượt L giữa các lần chạy; độ dốc là F_net = m·a. Eₖ được tính từ tốc độ mà vật đạt được trong lần chạy (½m·v²); vật đứng yên không thu thêm động năng nên độ dốc bằng 0."
+      },
+      "x": "length",
+      "y": "kineticEnergy",
+      "group": ["angle", "surface", "mass"],
+      "columns": ["length", "finalSpeed", "kineticEnergy", "potentialEnergyLost", "frictionWork"],
+      "slope": {
+        "label": "Net force down the ramp m·a",
+        "vi": { "label": "Hợp lực dọc mặt phẳng nghiêng m·a" },
+        "symbol": "F_net",
+        "unit": "N",
+        "theory": "netForce"
+      }
+    },
+    {
+      "id": "heat",
+      "title": "Heat from friction against distance slid",
+      "note": "Q = μk·N·s: at one angle, surface and mass the friction force is the same all the way down, so the heat grows in proportion to the distance slid. Change the sliding distance L between runs; the slope is the kinetic friction force μk·m·g·cos θ.",
+      "vi": {
+        "title": "Nhiệt lượng do ma sát theo quãng đường trượt",
+        "note": "Q = μk·N·s: với cùng góc nghiêng, cặp bề mặt và khối lượng, lực ma sát không đổi suốt quãng đường, nên nhiệt lượng tỉ lệ với quãng đường trượt. Hãy thay đổi quãng đường trượt L giữa các lần chạy; độ dốc là lực ma sát trượt μk·m·g·cos θ."
+      },
+      "x": "distance",
+      "y": "frictionWork",
+      "group": ["angle", "surface", "mass"],
+      "columns": ["length", "distance", "frictionWork", "frictionForce"],
+      "slope": {
+        "label": "Kinetic friction force μk·N",
+        "vi": { "label": "Lực ma sát trượt μk·N" },
+        "symbol": "f",
+        "unit": "N",
+        "theory": "kineticFrictionForce"
+      }
+    }
+  ],
+  "note": "Forces: the weight m·g, the normal force N = m·g·cos θ and friction along the ramp. The block stays put while tan θ ≤ μs: static friction then equals m·g·sin θ, no more than its limit μs·N; the critical angle is arctan μs. Once tan θ > μs it slides and kinetic friction is μk·N, so a = g(sin θ − μk·cos θ), whatever the mass: s = ½·a·t², v = a·t; it reaches the foot after t = √(2L/a) at v = √(2aL). Energy (potential energy measured from the foot of the ramp): at the top the mechanical energy is m·g·L·sin θ; as the block slides, its kinetic energy grows by the potential energy lost minus the heat Q = μk·N·s from friction, so the mechanical energy plus Q stays at its starting value. The run follows these formulas exactly, so its results match the theory to rounding; a real ramp would not. A simplified teaching model: the block is a point that neither tips nor rolls; the friction coefficients are constant and do not depend on speed; no air drag; a rigid, fixed ramp; g = 9.81 m/s². The coefficients are approximate values from Serway & Jewett, Physics for Scientists and Engineers, Table 5.1: real ones vary by tens of percent with the finish, cleanliness and wear of the surfaces. The table gives wood on wood as μs = 0.25–0.5; 0.35 is taken. Teflon has μs = μk, so it starts to slide just above 2.3°, but very slowly.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the inclined-plane instructions on the board.",
+      "vi": { "instruction": "Đọc hướng dẫn thí nghiệm mặt phẳng nghiêng trên bảng." },
+      "done": { "kind": "inspected", "item": "inclined-plane-instructions" }
+    },
+    {
+      "id": "surface",
+      "instruction": "Choose the block and ramp surfaces with the surface dial on the control desk.",
+      "vi": {
+        "instruction": "Chọn cặp bề mặt của vật và mặt phẳng nghiêng bằng núm chọn bề mặt trên bàn điều khiển."
+      },
+      "done": { "kind": "adjusted", "parameter": "surface" }
+    },
+    {
+      "id": "angle",
+      "instruction": "Set the incline angle θ and read it on the protractor.",
+      "vi": { "instruction": "Đặt góc nghiêng θ và đọc giá trị trên thước đo góc." },
+      "done": { "kind": "adjusted", "parameter": "angle" }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN to let the block go: does it stay put or slide?",
+      "vi": { "instruction": "Nhấn CHẠY để thả vật: vật đứng yên hay trượt xuống?" },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read the acceleration and the energy graph on the results monitor: where does the lost potential energy go?",
+      "vi": {
+        "instruction": "Đọc gia tốc và đồ thị năng lượng trên màn hình kết quả: thế năng mất đi đã chuyển thành gì?"
+      },
+      "done": { "kind": "viewed" }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, change the angle, the surfaces or the mass, and run again.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, thay đổi góc nghiêng, cặp bề mặt hoặc khối lượng, rồi chạy lại."
+      },
+      "done": { "kind": "reset" }
+    }
+  ],
+  "examples": [
+    {
+      "id": "slide-down",
+      "question": "A {mass} kg wooden block slides from rest down a wooden ramp {length} m long at {angle}° (μk = {@kineticFriction}). Find its acceleration and its speed at the foot (g = {gravity} m/s²).",
+      "vi": {
+        "question": "Một khối gỗ {mass} kg trượt không vận tốc đầu xuống mặt phẳng nghiêng bằng gỗ dài {length} m, góc nghiêng {angle}° (μk = {@kineticFriction}). Tìm gia tốc và tốc độ của khối ở chân dốc (g = {gravity} m/s²)."
+      },
+      "set": { "angle": 45, "surface": 3, "length": 1.5 },
+      "find": [{ "theory": "acceleration" }, { "theory": "finalSpeed" }],
+      "steps": [
+        {
+          "say": "Along the ramp: the weight’s part m·g·sin θ pulls it down, kinetic friction μk·m·g·cos θ holds it back. The mass cancels.",
+          "vi": {
+            "say": "Theo phương mặt phẳng nghiêng: thành phần m·g·sin θ của trọng lực kéo vật xuống, ma sát trượt μk·m·g·cos θ cản lại. Khối lượng triệt tiêu."
+          },
+          "write": "a = g(sin θ − μk·cos θ)"
+        },
+        {
+          "say": "Put in the numbers.",
+          "vi": { "say": "Thay số." },
+          "write": "a = {gravity}(sin {angle}° − {@kineticFriction}·cos {angle}°) ≈ {@acceleration} m/s²",
+          "check": {
+            "expr": "gravity*(sin(rad(angle))-@kineticFriction*cos(rad(angle)))",
+            "equals": "acceleration"
+          }
+        },
+        {
+          "say": "From rest with constant acceleration, v² = 2·a·L.",
+          "vi": { "say": "Chuyển động nhanh dần đều từ nghỉ: v² = 2·a·L." },
+          "write": "v = √(2aL) = √(2·{@acceleration}·{length}) ≈ {@finalSpeed} m/s",
+          "check": { "expr": "sqrt(2*@acceleration*length)", "equals": "finalSpeed" }
+        }
+      ]
+    },
+    {
+      "id": "stays-put",
+      "question": "A {mass} kg steel block rests on a steel ramp at {angle}° (μs = {@staticFriction}, an approximate handbook value). Find the steepest angle at which it can stay put, and the friction force on it now.",
+      "vi": {
+        "question": "Một khối thép {mass} kg nằm trên mặt phẳng nghiêng bằng thép góc {angle}° (μs = {@staticFriction}, giá trị gần đúng theo sổ tay). Tìm góc nghiêng lớn nhất mà khối vẫn đứng yên, và lực ma sát tác dụng lên khối lúc này."
+      },
+      "set": { "angle": 20, "surface": 4, "mass": 1 },
+      "find": [
+        { "theory": "criticalAngle", "symbol": "θ_c", "unit": "°" },
+        { "theory": "frictionForce" }
+      ],
+      "steps": [
+        {
+          "say": "At the limit, m·g·sin θ = μs·m·g·cos θ, so tan θ_c = μs.",
+          "vi": { "say": "Ở giới hạn trượt, m·g·sin θ = μs·m·g·cos θ, nên tan θ_c = μs." },
+          "write": "tan θ_c = μs = {@staticFriction}  →  θ_c ≈ {@criticalAngle}°",
+          "check": { "expr": "deg(atan(@staticFriction))", "equals": "criticalAngle" }
+        },
+        {
+          "say": "{angle}° is less than θ_c, so it stays put. Static friction is then only as large as it must be: it balances m·g·sin θ, not μs·N.",
+          "vi": {
+            "say": "{angle}° nhỏ hơn θ_c nên khối đứng yên. Khi đó lực ma sát nghỉ chỉ lớn đúng bằng mức cần thiết: nó cân bằng m·g·sin θ, chứ không bằng μs·N."
+          },
+          "write": "f = m·g·sin θ = {mass}·{gravity}·sin {angle}° ≈ {@frictionForce} N",
+          "check": { "expr": "mass*gravity*sin(rad(angle))", "equals": "frictionForce" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "A block on a tilted ramp stays put while static friction can hold it; past a critical angle it slides down with a constant acceleration, and friction turns part of its energy into heat.",
+    "vi": {
+      "summary": "Một khối gỗ trên mặt phẳng nghiêng đứng yên khi lực ma sát nghỉ còn giữ được nó; vượt quá một góc tới hạn, nó trượt xuống với gia tốc không đổi, và ma sát biến một phần năng lượng của nó thành nhiệt."
+    },
+    "parts": [
+      {
+        "id": "block",
+        "name": "Block, mass m",
+        "role": "A wooden carrier with a face pad of the chosen surface and brass plates for its mass.",
+        "vi": {
+          "name": "Khối trượt, khối lượng m",
+          "role": "Một khối gỗ có miếng đệm mặt bằng vật liệu đã chọn và các lá đồng thau tạo khối lượng."
+        },
+        "anchor": {
+          "part": "block"
+        }
+      },
+      {
+        "id": "ramp",
+        "name": "Ramp",
+        "role": "Hinged at its foot; a clamp on the stand holds its raised side at the angle θ.",
+        "vi": {
+          "name": "Mặt phẳng nghiêng",
+          "role": "Gắn bản lề ở chân; kẹp trên giá đỡ giữ đầu nâng lên ở góc θ."
+        },
+        "anchor": {
+          "part": "ramp-board"
+        }
+      },
+      {
+        "id": "surface",
+        "name": "Surface strip",
+        "role": "The ramp’s surface in contact with the block’s pad: the pair sets μs and μk.",
+        "vi": {
+          "name": "Dải bề mặt",
+          "role": "Mặt của dốc tiếp xúc với miếng đệm của khối: cặp vật liệu quyết định μs và μk."
+        },
+        "anchor": {
+          "part": "strip"
+        }
+      },
+      {
+        "id": "protractor",
+        "name": "Protractor",
+        "role": "At the hinge: reads the incline angle θ.",
+        "vi": {
+          "name": "Thước đo góc",
+          "role": "Đặt ở bản lề: đọc góc nghiêng θ."
+        },
+        "anchor": {
+          "part": "protractor"
+        }
+      },
+      {
+        "id": "stop",
+        "name": "Release stop",
+        "role": "Where the block is let go from rest, the distance L up the ramp from the gate.",
+        "vi": {
+          "name": "Chốt thả",
+          "role": "Nơi khối được thả không vận tốc đầu, cách cổng quang một đoạn L dọc theo dốc."
+        },
+        "anchor": {
+          "part": "release-stop"
+        }
+      },
+      {
+        "id": "ruler",
+        "name": "Ruler",
+        "role": "Along the ramp’s edge: reads the sliding distance L.",
+        "vi": {
+          "name": "Thước",
+          "role": "Dọc theo mép dốc: đọc quãng đường trượt L."
+        },
+        "anchor": {
+          "part": "ruler"
+        }
+      },
+      {
+        "id": "gate",
+        "name": "Light gate",
+        "role": "Near the foot of the ramp: where the slide ends.",
+        "vi": {
+          "name": "Cổng quang",
+          "role": "Gần chân dốc: nơi kết thúc quãng trượt."
+        },
+        "anchor": {
+          "part": "light-gate"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "Three forces act on the block: its weight m·g, the ramp’s normal force N = m·g·cos θ, and friction along the ramp. The part of the weight along the ramp, m·g·sin θ, pulls it down.",
+        "vi": {
+          "text": "Ba lực tác dụng lên khối: trọng lực m·g, phản lực N = m·g·cos θ của mặt dốc, và lực ma sát dọc theo dốc. Thành phần của trọng lực dọc theo dốc, m·g·sin θ, kéo nó xuống."
+        },
+        "parts": ["block", "ramp"]
+      },
+      {
+        "text": "Static friction holds the block as long as it can, up to μs·N. So the block stays put while tan θ ≤ μs; the critical angle is arctan μs.",
+        "vi": {
+          "text": "Lực ma sát nghỉ giữ khối khi còn có thể, tối đa bằng μs·N. Vì vậy khối đứng yên khi tan θ ≤ μs; góc tới hạn là arctan μs."
+        },
+        "parts": ["block", "surface", "protractor"]
+      },
+      {
+        "text": "Steeper than that, it slides. Kinetic friction is then μk·N, and the acceleration is a = g(sin θ − μk·cos θ) — the same for any mass.",
+        "vi": {
+          "text": "Dốc hơn góc đó thì khối trượt. Khi đó lực ma sát trượt bằng μk·N, và gia tốc là a = g(sin θ − μk·cos θ) — như nhau với mọi khối lượng."
+        },
+        "parts": ["block", "surface", "ramp"]
+      },
+      {
+        "text": "From rest at the stop, the acceleration is constant: it covers L in t = √(2L/a) and reaches the gate at v = √(2aL).",
+        "vi": {
+          "text": "Xuất phát từ trạng thái nghỉ ở chốt, gia tốc không đổi: nó đi hết L trong t = √(2L/a) và tới cổng quang với v = √(2aL)."
+        },
+        "parts": ["stop", "ruler", "gate"]
+      },
+      {
+        "text": "Energy: the potential energy the block loses becomes kinetic energy and heat Q = μk·N·s from friction. The mechanical energy falls by exactly that heat.",
+        "vi": {
+          "text": "Năng lượng: thế năng khối mất đi chuyển thành động năng và nhiệt lượng Q = μk·N·s do ma sát. Cơ năng giảm đúng bằng nhiệt lượng đó."
+        },
+        "parts": ["block", "surface"]
+      },
+      {
+        "text": "Change θ, the surfaces or the mass and compare runs: the results give a, t, v, the friction coefficients and the energies, beside theory.",
+        "vi": {
+          "text": "Đổi θ, cặp bề mặt hoặc khối lượng rồi so sánh các lần chạy: phần kết quả cho a, t, v, các hệ số ma sát và các năng lượng, bên cạnh lý thuyết."
+        },
+        "parts": ["protractor", "surface", "block"]
+      },
+      {
+        "text": "A simplified model: the block neither tips nor rolls, the coefficients are constant handbook values, and there is no air drag. Real surfaces vary by tens of percent.",
+        "vi": {
+          "text": "Mô hình đơn giản hóa: khối không lật cũng không lăn, các hệ số là hằng số lấy từ sổ tay, và không có lực cản không khí. Bề mặt thật có thể chênh lệch hàng chục phần trăm."
+        },
+        "parts": ["block", "surface"]
+      }
+    ]
+  }
+}

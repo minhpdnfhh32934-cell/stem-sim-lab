@@ -1,0 +1,258 @@
+[
+  {
+    "id": "teacher",
+    "title": "Mr. Quang",
+    "vi": { "title": "Thầy Quang" },
+    "character": {
+      "id": "teacher-quang",
+      "displayName": "Quang",
+      "role": "Teacher",
+      "trait": "An engineer who would rather build it than talk about it — then explains it with a grin.",
+      "vi": {
+        "displayName": "Quang",
+        "role": "Giáo viên",
+        "trait": "Một kĩ sư thích bắt tay vào làm hơn là nói — rồi vừa cười vừa giảng giải."
+      },
+      "gender": "male",
+      "appearance": {
+        "heightM": 1.82,
+        "skinTone": "#e4bd9c",
+        "hairColor": "#5a3b26",
+        "shoulderM": 0.46,
+        "hipM": 0.36,
+        "waistM": 0.35,
+        "build": 1.08,
+        "muscle": 0.25,
+        "watch": true,
+        "hair": "sidePart",
+        "eyeColor": "#4a3426",
+        "beard": true,
+        "clothes": {
+          "top": "#2f6fb5",
+          "bottom": "#39465c",
+          "shoes": "#e9ebee",
+          "accent": "#f2a33a",
+          "neck": "hood",
+          "skirt": false,
+          "logo": true,
+          "footwear": "sneakers"
+        }
+      },
+      "outfit": { "default": "lab-coat" },
+      "profile": { "pose": "presenting", "seat": 0, "coat": false }
+    },
+    "scene": "simlab-hub",
+    "walkSpeed": 1.1,
+    "schedule": [
+      { "kind": "stand", "at": [0, -8.4], "heading": 3.14159, "seconds": 30, "gesture": "idle" },
+      { "kind": "stand", "at": [0, -8.4], "heading": 3.14159, "seconds": 25, "gesture": "read" },
+      {
+        "kind": "stand",
+        "at": [-1.5, -10.6],
+        "heading": -0.7854,
+        "seconds": 10,
+        "gesture": "wait"
+      },
+      { "kind": "stand", "at": [-5.6, -10.7], "heading": 0, "seconds": 14, "gesture": "idle" },
+      { "kind": "stand", "at": [-11.5, -6.6], "heading": 1.5708, "seconds": 10, "gesture": "idle" },
+      { "kind": "stand", "at": [-11.4, -4.5], "heading": 2.3562, "seconds": 10, "gesture": "wait" },
+      {
+        "kind": "sit",
+        "at": [-3.394, 0.394],
+        "heading": -0.7854,
+        "seconds": 30,
+        "gesture": "drink"
+      },
+      { "kind": "stand", "at": [11.5, -6.6], "heading": -1.5708, "seconds": 10, "gesture": "idle" },
+      { "kind": "stand", "at": [11.4, -4.5], "heading": -2.3562, "seconds": 10, "gesture": "wait" },
+      { "kind": "sit", "at": [3.394, -6.394], "heading": 2.3562, "seconds": 30, "gesture": "read" }
+    ],
+    "greetings": [
+      {
+        "text": "Hello! I'm Mr. Quang, the teacher here at SimLab. What can I do for you?",
+        "vi": {
+          "text": "Chào em! Thầy là thầy Quang, giáo viên ở SimLab. Em cần thầy giúp gì nào?"
+        }
+      },
+      {
+        "text": "Good to see you again! What shall we work on today?",
+        "vi": { "text": "Gặp lại em rồi! Hôm nay mình học gì đây?" }
+      },
+      {
+        "text": "Ah, a scientist at work! Need a hand with something?",
+        "vi": { "text": "À, nhà khoa học đây rồi! Em cần thầy giúp gì không?" }
+      }
+    ],
+    "farewells": [
+      {
+        "text": "Good luck in the labs — and keep asking why!",
+        "vi": { "text": "Chúc em làm thí nghiệm vui — và luôn hỏi vì sao nhé!" }
+      },
+      {
+        "text": "See you later. Come back whenever you get stuck!",
+        "vi": { "text": "Hẹn gặp lại. Có gì vướng cứ quay lại tìm thầy nhé!" }
+      }
+    ],
+    "options": [
+      {
+        "id": "explain-simulation",
+        "label": "Explain a simulation",
+        "vi": { "label": "Hỏi giải thích mô phỏng" },
+        "behavior": "explain-simulation"
+      },
+      {
+        "id": "solve-problem",
+        "label": "Help me solve a problem",
+        "vi": { "label": "Giúp giải đề" },
+        "behavior": "solve-problem",
+        "planned": true
+      },
+      {
+        "id": "give-test",
+        "label": "Give me a test",
+        "vi": { "label": "Ra đề kiểm tra kiến thức" },
+        "behavior": "give-test"
+      }
+    ],
+    "lesson": {
+      "ask": {
+        "text": "Of course! Which simulation? Lead the way — I'll follow you. When we're there, press E on it.",
+        "vi": {
+          "text": "Được chứ! Mô phỏng nào nhỉ? Em dẫn đường đi — thầy đi theo. Đến nơi thì em nhấn E vào nó nhé."
+        }
+      },
+      "waiting": {
+        "text": "I'm right behind you. Show me the simulation and press E on it.",
+        "vi": {
+          "text": "Thầy đang đi sau em đây. Em chỉ cho thầy mô phỏng đó rồi nhấn E vào nó nhé."
+        }
+      },
+      "cancel": {
+        "text": "All right. I'll be in the hall if you need me.",
+        "vi": { "text": "Được rồi. Cần gì em cứ ra sảnh tìm thầy nhé." }
+      },
+      "intro": {
+        "text": "Ah — {experiment}! Let me show you how it works, part by part.",
+        "vi": {
+          "text": "À — {experiment}! Để thầy chỉ cho em nó hoạt động thế nào, từng phần một."
+        }
+      },
+      "part": {
+        "text": "{name} — {role}",
+        "vi": { "text": "{name} — {role}" }
+      },
+      "outro": {
+        "text": "That's the principle. Would you like me to work an example on the board?",
+        "vi": {
+          "text": "Nguyên lý là như vậy đó. Em có muốn thầy lấy ví dụ và giảng trên bảng không?"
+        }
+      },
+      "thanks": {
+        "text": "Good. Come and find me whenever you have a question!",
+        "vi": { "text": "Tốt lắm. Có gì thắc mắc cứ tìm thầy nhé!" }
+      },
+      "given": {
+        "text": "First, what we know — and what we want to find.",
+        "vi": { "text": "Trước hết, ta ghi những gì đã biết — và điều cần tìm." }
+      },
+      "answer": {
+        "text": "So the answer: {answer}.",
+        "vi": { "text": "Vậy đáp số: {answer}." }
+      },
+      "more": {
+        "text": "Shall we do another one?",
+        "vi": { "text": "Mình làm thêm một ví dụ nữa nhé?" }
+      },
+      "last": {
+        "text": "That was my last example for this one — well done!",
+        "vi": { "text": "Đó là ví dụ cuối cùng thầy có cho bài này — em làm tốt lắm!" }
+      },
+      "choices": {
+        "keepGoing": { "label": "Follow me", "vi": { "label": "Thầy đi theo em nhé" } },
+        "never": { "label": "Never mind", "vi": { "label": "Thôi ạ" } },
+        "board": { "label": "Yes, on the board", "vi": { "label": "Có, thầy giảng trên bảng ạ" } },
+        "noBoard": { "label": "No, thank you", "vi": { "label": "Không ạ, em cảm ơn thầy" } },
+        "another": {
+          "label": "Another example, please",
+          "vi": { "label": "Thầy cho em ví dụ khác ạ" }
+        },
+        "enough": {
+          "label": "I understand now, thank you",
+          "vi": { "label": "Em hiểu rồi, em cảm ơn thầy" }
+        }
+      }
+    },
+    "test": {
+      "paperItem": "test-paper",
+      "desk": { "forward": 0.6, "height": 1.12 },
+      "setup": {
+        "text": "Of course! Which simulations should it cover — and how many questions, of what kind?",
+        "vi": {
+          "text": "Được chứ! Đề kiểm tra về những mô phỏng nào — bao nhiêu câu, dạng gì, mức độ nào?"
+        }
+      },
+      "none": {
+        "text": "I have no questions for that mix. Shall we choose again?",
+        "vi": { "text": "Thầy không có câu hỏi nào khớp với lựa chọn đó. Mình chọn lại nhé?" }
+      },
+      "wait": {
+        "text": "Right — give me a moment. I'll write it at my desk and call you when it's ready.",
+        "vi": {
+          "text": "Được rồi — em đợi thầy một chút. Thầy ra bàn soạn đề, xong thầy gọi em nhé."
+        }
+      },
+      "busy": {
+        "text": "Still writing your test… nearly done!",
+        "vi": { "text": "Thầy đang soạn đề cho em… sắp xong rồi!" }
+      },
+      "ready": {
+        "text": "Your test is ready — come and get it!",
+        "vi": { "text": "Đề của em xong rồi — ra lấy đi em!" }
+      },
+      "give": {
+        "text": "Here you are. No time limit: do it whenever you like, and bring it back to me when you've finished.",
+        "vi": {
+          "text": "Của em đây. Không giới hạn thời gian: em làm lúc nào cũng được, làm xong thì mang lại nộp cho thầy."
+        }
+      },
+      "full": {
+        "text": "Your bag is full — make some room and come back for it.",
+        "vi": { "text": "Túi của em đầy rồi — em dọn bớt rồi quay lại lấy đề nhé." }
+      },
+      "offering": {
+        "text": "Here — take it from my hand.",
+        "vi": { "text": "Đây — em cầm lấy từ tay thầy nhé." }
+      },
+      "marking": {
+        "text": "Marking your test… nearly done!",
+        "vi": { "text": "Thầy đang chấm bài cho em… sắp xong rồi!" }
+      },
+      "markedReady": {
+        "text": "I've marked your test — come and get it!",
+        "vi": { "text": "Thầy chấm xong rồi — ra lấy bài đi em!" }
+      },
+      "handIn": {
+        "text": "Thank you! Let me mark it…",
+        "vi": { "text": "Cảm ơn em! Để thầy chấm…" }
+      },
+      "result": {
+        "text": "You scored {score} out of 10. I've written on the sheet what went well and what to work on.",
+        "vi": {
+          "text": "Em được {score} trên 10 điểm. Thầy đã ghi vào phiếu những gì em làm tốt và những gì cần ôn thêm."
+        }
+      },
+      "blank": {
+        "text": "You haven't answered anything yet! Have a go first.",
+        "vi": { "text": "Em chưa làm câu nào cả! Em làm thử đã nhé." }
+      },
+      "marked": {
+        "text": "I've already marked this one — read my notes on the sheet.",
+        "vi": { "text": "Bài này thầy chấm rồi — em đọc lời nhận xét trong phiếu nhé." }
+      },
+      "choices": {
+        "write": { "label": "Write the test", "vi": { "label": "Thầy soạn đề đi ạ" } },
+        "cancel": { "label": "Not now", "vi": { "label": "Để sau ạ" } }
+      }
+    }
+  }
+]

@@ -1,0 +1,278 @@
+{
+  "id": "orbitals",
+  "name": "Atomic orbitals: where the electron is likely to be",
+  "category": "chemistry",
+  "description": "An electron in an atom has no fixed path: quantum mechanics gives only the chance of finding it at each place — an orbital. See hydrogen's 1s, 2s, 2p, 3s, 3p and 3d orbitals as clouds, and scan outwards from the nucleus to measure how far the electron most likely is, how far on average, and where the chance falls to zero (the nodes).",
+  "vi": {
+    "name": "Orbital nguyên tử: nơi electron thường có mặt",
+    "description": "Electron trong nguyên tử không có quỹ đạo cố định: cơ học lượng tử chỉ cho biết xác suất tìm thấy nó ở mỗi chỗ — đó là orbital. Xem các orbital 1s, 2s, 2p, 3s, 3p và 3d của hiđro dưới dạng đám mây, và quét từ hạt nhân ra xa để đo khoảng cách mà electron có xác suất có mặt lớn nhất, khoảng cách trung bình, và nơi xác suất bằng không (các nút).",
+    "note": "Mô hình dạy học từ nghiệm chính xác của phương trình Schrödinger cho nguyên tử hiđro. Với orbital đã chọn, lượt chạy quét khoảng cách r từ hạt nhân ra tới 40 a₀ trong 20 s, đọc mật độ xác suất xuyên tâm P(r) = r²·R_nl(r)², xác suất electron ở trong bán kính r (tích phân của P, tính bằng quy tắc hình thang theo các bước quét), đỉnh đã đi qua (bán kính có xác suất lớn nhất), bán kính trung bình (∫r·P) và số nút xuyên tâm đã gặp (nơi R đổi dấu). Lí thuyết: bán kính có xác suất lớn nhất (a₀ với 1s, 4a₀ với 2p, 9a₀ với 3d), ⟨r⟩ = (a₀/2)·(3n² − l(l + 1)), n − l − 1 nút xuyên tâm và l nút góc. Chỉ với hiđro (một electron); a₀ = 52,918 pm. Đám mây điểm vẽ |ψ|² với phần góc s (cầu), p_z (hai thùy) và d_xy (bốn thùy); màu xanh nơi ψ dương, màu cam nơi ψ âm."
+  },
+  "requiredEquipment": ["orbital-cloud"],
+  "model": "chemistry.orbitals",
+  "parameters": [
+    {
+      "id": "orbital",
+      "label": "Orbital",
+      "vi": { "label": "Orbital" },
+      "unit": "",
+      "default": 0,
+      "min": 0,
+      "max": 5,
+      "presets": [
+        { "label": "1s", "vi": { "label": "1s" }, "value": 0 },
+        { "label": "2s", "vi": { "label": "2s" }, "value": 1 },
+        { "label": "2p", "vi": { "label": "2p" }, "value": 2 },
+        { "label": "3s", "vi": { "label": "3s" }, "value": 3 },
+        { "label": "3p", "vi": { "label": "3p" }, "value": 4 },
+        { "label": "3d", "vi": { "label": "3d" }, "value": 5 }
+      ]
+    }
+  ],
+  "initialConditions": { "maxRadius": 40, "scanTime": 20 },
+  "inputs": {
+    "maxRadius": { "symbol": "r_max", "unit": "a₀" },
+    "scanTime": { "symbol": "t_scan", "unit": "s", "desk": false }
+  },
+  "simulation": { "timeStep": 0.01, "maxDuration": 25, "sampleInterval": 0.1 },
+  "measurements": [
+    {
+      "id": "radius",
+      "label": "Distance from the nucleus",
+      "vi": { "label": "Khoảng cách tới hạt nhân" },
+      "symbol": "r",
+      "unit": "pm",
+      "variable": "radius"
+    },
+    {
+      "id": "density",
+      "label": "Radial probability density",
+      "vi": { "label": "Mật độ xác suất xuyên tâm" },
+      "symbol": "P(r)",
+      "unit": "1/a₀",
+      "variable": "density"
+    },
+    {
+      "id": "inside",
+      "label": "Chance the electron is within r",
+      "vi": { "label": "Xác suất electron ở trong bán kính r" },
+      "symbol": "F(r)",
+      "unit": "%",
+      "variable": "inside"
+    }
+  ],
+  "results": [
+    {
+      "id": "peak",
+      "label": "Most probable distance",
+      "vi": { "label": "Khoảng cách có xác suất lớn nhất" },
+      "symbol": "r_p",
+      "unit": "pm",
+      "variable": "peakRadius",
+      "reduce": "final",
+      "theory": "peakRadius"
+    },
+    {
+      "id": "mean",
+      "label": "Mean distance ⟨r⟩",
+      "vi": { "label": "Khoảng cách trung bình ⟨r⟩" },
+      "symbol": "⟨r⟩",
+      "unit": "pm",
+      "variable": "meanRadius",
+      "reduce": "final",
+      "theory": "meanRadius"
+    },
+    {
+      "id": "nodes",
+      "label": "Radial nodes",
+      "vi": { "label": "Số nút xuyên tâm" },
+      "symbol": "n − l − 1",
+      "unit": "",
+      "variable": "radialNodes",
+      "reduce": "final",
+      "format": "integer",
+      "theory": "radialNodes"
+    }
+  ],
+  "graphs": [
+    {
+      "id": "radial",
+      "title": "Radial probability density against distance",
+      "vi": { "title": "Mật độ xác suất xuyên tâm theo khoảng cách" },
+      "x": "radius",
+      "y": ["density"]
+    },
+    {
+      "id": "inside",
+      "title": "Chance the electron is within r",
+      "vi": { "title": "Xác suất electron ở trong bán kính r" },
+      "x": "radius",
+      "y": ["inside"]
+    }
+  ],
+  "monitor": "radial",
+  "compare": [{ "graph": "radial", "series": "density" }],
+  "note": "A teaching model from the exact solutions of the Schrödinger equation for the hydrogen atom. For the chosen orbital the run scans the distance r from the nucleus out to 40 a₀ in 20 s, reading the radial probability density P(r) = r²·R_nl(r)², the chance the electron is within r (the integral of P, by the trapezium rule over the scan's steps), the peak passed (the most probable distance), the mean distance (∫r·P) and the radial nodes crossed (where R changes sign). Theory: the most probable distance (a₀ for 1s, 4a₀ for 2p, 9a₀ for 3d), ⟨r⟩ = (a₀/2)·(3n² − l(l + 1)), n − l − 1 radial and l angular nodes. Hydrogen only (one electron); a₀ = 52.918 pm. The point cloud draws |ψ|² with the angular parts s (a sphere), p_z (two lobes) and d_xy (four); blue where ψ is positive, orange where negative.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the orbitals instructions on the board.",
+      "vi": { "instruction": "Đọc hướng dẫn về orbital trên bảng." },
+      "done": { "kind": "inspected", "item": "orbitals-instructions" }
+    },
+    {
+      "id": "orbital",
+      "instruction": "Choose an orbital with the dial; look at its cloud.",
+      "vi": { "instruction": "Chọn một orbital bằng núm xoay; quan sát đám mây của nó." },
+      "done": { "kind": "adjusted", "parameter": "orbital" }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: a sphere grows from the nucleus as the distance is scanned.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: một mặt cầu lớn dần từ hạt nhân khi khoảng cách được quét."
+      },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read the most probable and mean distances and the nodes.",
+      "vi": {
+        "instruction": "Đọc khoảng cách có xác suất lớn nhất, khoảng cách trung bình và số nút."
+      },
+      "done": { "kind": "viewed" }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET and compare 1s, 2s and 3s: how do size and nodes change?",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI và so sánh 1s, 2s và 3s: kích thước và số nút thay đổi thế nào?"
+      },
+      "done": { "kind": "reset" }
+    }
+  ],
+  "examples": [
+    {
+      "id": "two-p",
+      "question": "For the hydrogen atom’s 2p orbital (n = 2, l = 1), find the electron’s mean distance from the nucleus and the number of radial nodes (a₀ = 52.92 pm).",
+      "vi": {
+        "question": "Với orbital 2p của nguyên tử hiđro (n = 2, l = 1), tìm khoảng cách trung bình từ electron tới hạt nhân và số nút xuyên tâm (a₀ = 52,92 pm)."
+      },
+      "set": { "orbital": 2 },
+      "find": [{ "theory": "meanRadius" }, { "theory": "radialNodes" }],
+      "steps": [
+        {
+          "say": "For hydrogen the mean distance is (a₀/2)·(3n² − l(l + 1)).",
+          "vi": {
+            "say": "Với nguyên tử hiđro, khoảng cách trung bình bằng (a₀/2)·(3n² − l(l + 1))."
+          },
+          "write": "⟨r⟩ = (a₀/2)·(3·2² − 1·2) = 5a₀ ≈ {@meanRadius} pm",
+          "check": { "expr": "52.9177210903/2*(3*2^2-1*2)", "equals": "meanRadius" }
+        },
+        {
+          "say": "Radial nodes: n − l − 1. The 2p orbital has none; its one node is a plane through the nucleus (l = 1 angular node).",
+          "vi": {
+            "say": "Số nút xuyên tâm: n − l − 1. Orbital 2p không có nút nào loại này; nút duy nhất của nó là một mặt phẳng qua hạt nhân (l = 1 nút góc)."
+          },
+          "write": "n − l − 1 = 2 − 1 − 1 = {@radialNodes}",
+          "check": { "expr": "2-1-1", "equals": "radialNodes" }
+        }
+      ]
+    },
+    {
+      "id": "three-s",
+      "question": "For hydrogen’s 3s orbital (n = 3, l = 0), find the mean distance of the electron from the nucleus and the number of radial nodes.",
+      "vi": {
+        "question": "Với orbital 3s của nguyên tử hiđro (n = 3, l = 0), tìm khoảng cách trung bình từ electron tới hạt nhân và số nút xuyên tâm."
+      },
+      "set": { "orbital": 3 },
+      "find": [{ "theory": "meanRadius" }, { "theory": "radialNodes" }],
+      "steps": [
+        {
+          "say": "The same formula, with l = 0: a 3s electron is on average much farther out than a 1s one, at 1.5a₀.",
+          "vi": {
+            "say": "Cùng công thức, với l = 0: electron 3s trung bình ở xa hạt nhân hơn nhiều so với electron 1s, vốn ở 1,5a₀."
+          },
+          "write": "⟨r⟩ = (a₀/2)·3·3² = 13.5a₀ ≈ {@meanRadius} pm",
+          "check": { "expr": "52.9177210903/2*(3*3^2)", "equals": "meanRadius" }
+        },
+        {
+          "say": "Two radial nodes: spheres where the electron is never found.",
+          "vi": {
+            "say": "Hai nút xuyên tâm: những mặt cầu mà tại đó không bao giờ tìm thấy electron."
+          },
+          "write": "n − l − 1 = 3 − 0 − 1 = {@radialNodes}",
+          "check": { "expr": "3-0-1", "equals": "radialNodes" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "An orbital is the region where an electron is likely to be: quantum mechanics gives its shape and size, not a path.",
+    "vi": {
+      "summary": "Orbital là vùng mà electron có khả năng có mặt cao: cơ học lượng tử cho biết hình dạng và kích thước của nó, không phải một quỹ đạo."
+    },
+    "parts": [
+      {
+        "id": "cloud",
+        "name": "Orbital cloud",
+        "role": "Each dot is a place the electron could be found; denser where it is more likely.",
+        "vi": {
+          "name": "Đám mây orbital",
+          "role": "Mỗi chấm là một vị trí có thể tìm thấy electron; dày hơn ở nơi khả năng cao hơn."
+        },
+        "anchor": { "part": "cloud" }
+      },
+      {
+        "id": "nucleus",
+        "name": "Nucleus (one proton)",
+        "role": "Hydrogen's nucleus, at the centre of every orbital.",
+        "vi": {
+          "name": "Hạt nhân (một proton)",
+          "role": "Hạt nhân hiđro, nằm ở tâm của mọi orbital."
+        },
+        "anchor": { "part": "nucleus" }
+      },
+      {
+        "id": "radius",
+        "name": "Scanning sphere",
+        "role": "Grows outward during the run: the distance r being read.",
+        "vi": {
+          "name": "Mặt cầu quét",
+          "role": "Lớn dần trong lượt chạy: khoảng cách r đang được đọc."
+        },
+        "anchor": { "part": "radius" }
+      }
+    ],
+    "steps": [
+      {
+        "text": "Quantum mechanics does not give the electron a path. It gives a wave function ψ; |ψ|² at each point is the chance of finding the electron there.",
+        "vi": {
+          "text": "Cơ học lượng tử không cho electron một quỹ đạo. Nó cho một hàm sóng ψ; |ψ|² tại mỗi điểm là xác suất tìm thấy electron ở đó."
+        },
+        "parts": ["cloud"]
+      },
+      {
+        "text": "s orbitals are round; p orbitals have two lobes; d orbitals four. Blue and orange show ψ's sign: between them is an angular node, where the electron is never found.",
+        "vi": {
+          "text": "Orbital s có dạng cầu; orbital p có hai thùy; orbital d có bốn thùy. Màu xanh và cam cho biết dấu của ψ: giữa chúng là một nút góc, nơi không bao giờ tìm thấy electron."
+        },
+        "parts": ["cloud", "nucleus"]
+      },
+      {
+        "text": "Press RUN: the sphere grows from the nucleus and the graph draws P(r), the chance per distance. Its peak is the most probable distance: 52.9 pm for 1s — Bohr's radius.",
+        "vi": {
+          "text": "Nhấn CHẠY: mặt cầu lớn dần từ hạt nhân và đồ thị vẽ P(r), xác suất theo khoảng cách. Đỉnh của nó là khoảng cách có xác suất lớn nhất: 52,9 pm với 1s — bán kính Bohr."
+        },
+        "parts": ["radius", "cloud"]
+      },
+      {
+        "text": "Higher n, bigger orbital: ⟨r⟩ grows as n². 2s and 3s have radial nodes — spheres where the chance is zero — n − l − 1 of them.",
+        "vi": {
+          "text": "n càng lớn, orbital càng lớn: ⟨r⟩ tăng theo n². Orbital 2s và 3s có các nút xuyên tâm — những mặt cầu nơi xác suất bằng không — số nút là n − l − 1."
+        },
+        "parts": ["cloud", "radius"]
+      }
+    ]
+  }
+}

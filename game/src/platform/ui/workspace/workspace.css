@@ -1,0 +1,918 @@
+/*
+ * Experiment workspaces (platform/ui/workspace). The shell is the dark SimLab chrome around a
+ * stage; a lab's own look comes from its data as three variables on the root: --lab-accent (the
+ * accent), --lab-stage (the surface the stage is drawn on) and --lab-stage-ink (the text colour
+ * that reads on it, computed for at least 4.5:1). Nothing here names a subject or an experiment;
+ * the arrangement follows data-presentation. No blur or backdrop filter: it looks and costs the
+ * same on every graphics preset. Focus keeps the shared ring on the chrome and turns into the
+ * stage ink on the stage, so it reads on a light or a dark surface.
+ */
+.workspace {
+  --ws-accent: var(--lab-accent, var(--accent));
+  --ws-stage: var(--lab-stage, #162231);
+  --ws-ink: var(--lab-stage-ink, var(--ink));
+  --ws-chrome: rgb(13 19 27 / 97%);
+  --ws-line: color-mix(in srgb, var(--ws-accent) 38%, transparent);
+  --ws-gap: 8px;
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  grid-template:
+    'top top top' auto
+    'library stage notebook' minmax(0, 1fr)
+    'bar bar bar' auto / clamp(220px, 18vw, 300px) minmax(0, 1fr) clamp(300px, 24vw, 420px);
+  gap: var(--ws-gap);
+  padding: 12px;
+  background: rgb(0 0 0 / 55%);
+  color: var(--ink);
+  font-size: var(--text-md);
+  line-height: var(--leading);
+  outline: none;
+}
+
+@media (width >= 1600px) {
+  .workspace {
+    padding: 24px;
+  }
+}
+
+.workspace :focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+  box-shadow: var(--focus-halo);
+}
+
+.workspace .ws-stage :focus-visible {
+  outline: 3px solid var(--ws-ink);
+  box-shadow: none;
+}
+
+.workspace :is(.ws-top, .ws-library, .ws-notebook, .ws-bar, .ws-callout, .ws-sheet) {
+  border: 1px solid var(--ws-line);
+  border-radius: var(--radius-lg);
+  background: var(--ws-chrome);
+}
+
+.workspace h2,
+.workspace h3,
+.workspace h4 {
+  margin: 0;
+  font-size: var(--text-md);
+  line-height: var(--leading);
+}
+
+.workspace :is(button, input) {
+  font: inherit;
+}
+
+/* Top bar */
+.ws-top {
+  grid-area: top;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+}
+
+.ws-here {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+.ws-crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--ink-dim);
+}
+
+.ws-crumbs li + li::before {
+  content: '›';
+  margin: 0 var(--space-2);
+}
+
+.ws-crumbs li:last-child {
+  color: var(--ink-strong);
+  font-weight: 600;
+}
+
+.ws-stages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ws-stage-chip {
+  padding: var(--space-1) 0;
+  border-bottom: 2px solid transparent;
+  color: var(--ink-dim);
+  font-size: var(--text-sm);
+}
+
+.ws-stage-chip[data-status='done']::before {
+  content: '✓ ';
+}
+
+.ws-stage-chip[data-status='current'] {
+  border-bottom-color: var(--ws-accent);
+  color: var(--ink-strong);
+  font-weight: 600;
+}
+
+.ws-exit,
+.ws-brief-button,
+.ws-close,
+.ws-results-button {
+  min-height: 36px;
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.ws-exit kbd {
+  margin-left: var(--space-2);
+  padding: 0 var(--space-1);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+}
+
+.ws-exit:hover,
+.ws-brief-button:hover,
+.ws-close:hover,
+.ws-results-button:hover {
+  background: var(--surface-hover);
+}
+
+/* Library */
+.ws-library {
+  grid-area: library;
+  overflow: auto;
+  padding: var(--space-3);
+}
+
+.ws-hint,
+.ws-none {
+  margin: 0 0 var(--space-3);
+  color: var(--ink-dim);
+  font-size: var(--text-sm);
+}
+
+.ws-heading {
+  margin: var(--space-3) 0 var(--space-2);
+  color: var(--ink-dim);
+  font-size: var(--text-xs);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+}
+
+.ws-items {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.ws-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-height: 36px;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+.ws-item[aria-pressed='true'] {
+  border-color: var(--ws-accent);
+  background: var(--surface-hover);
+  color: var(--ink-strong);
+  box-shadow: inset 4px 0 0 var(--ws-accent);
+}
+
+.ws-formula {
+  color: var(--ink-dim);
+  font-size: var(--text-sm);
+}
+
+/* Stage */
+.ws-stage {
+  grid-area: stage;
+  position: relative;
+  overflow: auto;
+  padding: var(--space-4);
+  border: 1px solid var(--ws-line);
+  border-radius: var(--radius-lg);
+  background: var(--ws-stage);
+  color: var(--ws-ink);
+}
+
+.ws-region {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space-4);
+}
+
+.ws-region:empty {
+  display: none;
+}
+
+.ws-piece {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 120px;
+  margin: 0;
+  border-radius: var(--radius-md);
+}
+
+.ws-piece-body {
+  flex: 1 1 auto;
+  min-height: 96px;
+}
+
+.ws-piece-select {
+  margin-top: var(--space-1);
+  min-height: 32px;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid color-mix(in srgb, var(--ws-ink) 55%, transparent);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--ws-ink);
+  cursor: pointer;
+}
+
+.ws-piece-select[aria-pressed='true'] {
+  border-width: 2px;
+  font-weight: 700;
+}
+
+/* A held library item: pieces that take it are outlined (dashed, not by colour alone), the rest dim. */
+.ws-piece[data-accepts='yes'] {
+  outline: 2px dashed var(--ws-ink);
+  outline-offset: 4px;
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--ws-accent) 45%, transparent);
+}
+
+.ws-piece[data-accepts='no'] {
+  opacity: 0.5;
+}
+
+.ws-placeholder {
+  margin: 0;
+  padding: var(--space-3);
+  border: 1px dashed currentcolor;
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+}
+
+.ws-hero-toggle {
+  display: flex;
+  flex: 1 1 100%;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+/* Chips: native radios, invisible but focusable; the checked one is marked in text as well as colour. */
+.ws-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.ws-chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--surface-raised);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.ws-chip input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  margin: 0;
+  cursor: inherit;
+}
+
+.ws-chip span::before {
+  content: '○ ';
+}
+
+.ws-chip:has(input:checked) {
+  border-color: var(--ws-accent);
+  background: var(--surface-hover);
+  color: var(--ink-strong);
+}
+
+.ws-chip:has(input:checked) span::before {
+  content: '● ';
+}
+
+.ws-chip:has(input:focus-visible) {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+}
+
+.ws-chip:has(input:disabled) {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.ws-stage .ws-chip {
+  border-color: color-mix(in srgb, var(--ws-ink) 55%, transparent);
+  background: transparent;
+  color: var(--ws-ink);
+}
+
+.ws-stage .ws-chip:has(input:focus-visible) {
+  outline-color: var(--ws-ink);
+}
+
+/* Callout: beside its piece; docked at the right of the stage below 1280 px */
+.ws-callout {
+  position: absolute;
+  left: var(--cx, 0);
+  top: var(--cy, 0);
+  z-index: 3;
+  width: min(320px, 90%);
+  max-height: calc(100% - 8px);
+  overflow: auto;
+  padding: var(--space-3);
+  color: var(--ink);
+  box-shadow: var(--shadow-dialog);
+}
+
+.ws-callout-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.ws-callout-title {
+  color: var(--ink-strong);
+  font-size: var(--text-lg);
+}
+
+.ws-callout-close {
+  min-height: 32px;
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.ws-param {
+  margin: 0 0 var(--space-3);
+  padding: 0;
+  border: 0;
+}
+
+.ws-param legend {
+  margin-bottom: var(--space-2);
+  padding: 0;
+  color: var(--ink-strong);
+  font-weight: 600;
+}
+
+.ws-param-value {
+  display: block;
+  margin-top: var(--space-2);
+  color: var(--ink-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.ws-stepper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.ws-step {
+  min-width: 36px;
+  min-height: 36px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.ws-step:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.ws-reason,
+.ws-pending {
+  margin: var(--space-1) 0 0;
+  color: var(--warn);
+  font-size: var(--text-sm);
+}
+
+.ws-pending {
+  color: var(--ink-dim);
+}
+
+.ws-reason:empty,
+.ws-pending:empty {
+  display: none;
+}
+
+.ws-fixed,
+.ws-readings {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-1) var(--space-3);
+  margin: var(--space-2) 0 var(--space-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.ws-fixed dt,
+.ws-readings dt {
+  color: var(--ink-dim);
+}
+
+.ws-fixed dd,
+.ws-readings dd {
+  margin: 0;
+  color: var(--ink-strong);
+}
+
+/* Notebook: live graph, runs, results */
+.ws-notebook {
+  grid-area: notebook;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  overflow: auto;
+  padding: var(--space-3);
+}
+
+.ws-runs {
+  margin: 0;
+  padding-left: var(--space-5);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.ws-runs .ws-none {
+  margin: 0 0 0 calc(var(--space-5) * -1);
+  list-style: none;
+}
+
+.ws-results-button {
+  min-height: var(--control-height);
+  margin-top: auto;
+  border-color: var(--ws-accent);
+}
+
+.ws-graph {
+  margin: 0;
+}
+
+.ws-graph-title {
+  margin-bottom: var(--space-1);
+  color: var(--ink-strong);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.ws-graph svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+  background: #0d141b;
+}
+
+.ws-graph .grid {
+  stroke: #233140;
+  stroke-width: 1;
+}
+
+.ws-graph .series {
+  stroke-linejoin: round;
+}
+
+.ws-graph text {
+  fill: var(--ink-dim);
+  font-size: 10px;
+}
+
+.ws-graph .tick.x {
+  text-anchor: middle;
+}
+
+.ws-graph .tick.y {
+  text-anchor: end;
+}
+
+.ws-graph .axis-label.x {
+  text-anchor: end;
+}
+
+.ws-graph .axis-label.y {
+  writing-mode: vertical-rl;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: rotate(180deg);
+  text-anchor: middle;
+}
+
+.ws-graph-empty {
+  margin: 0;
+  color: var(--ink-dim);
+  font-size: var(--text-sm);
+}
+
+.ws-graph-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  margin: var(--space-1) 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-xs);
+}
+
+.ws-graph-legend li::before {
+  content: '';
+  display: inline-block;
+  width: 14px;
+  height: 3px;
+  margin-right: var(--space-1);
+  vertical-align: middle;
+  background: var(--series);
+}
+
+/* Lifecycle bar */
+.ws-bar {
+  grid-area: bar;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.ws-command {
+  min-height: var(--control-height);
+  padding: var(--space-1) var(--space-5);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  background: var(--surface-raised);
+  color: var(--ink-strong);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+.ws-command.ws-run {
+  border-color: var(--ws-accent);
+  box-shadow: inset 4px 0 0 var(--ws-accent);
+}
+
+/* Unavailable now: dimmed, but still pressable, so the station refuses it and says why. */
+.ws-command[aria-disabled='true'] {
+  border-style: dashed;
+  opacity: 0.6;
+}
+
+.ws-line {
+  flex: 1 1 240px;
+  min-width: 0;
+  margin: 0;
+  color: var(--caution-ink);
+}
+
+/* Sheets over the workspace: the brief, and the results drawer holding the results panel. */
+.ws-sheet {
+  position: absolute;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  overflow: auto;
+  box-shadow: var(--shadow-dialog);
+}
+
+.ws-brief {
+  inset: 12% 15%;
+}
+
+.ws-brief .ws-close,
+.ws-results > .ws-close {
+  align-self: flex-end;
+}
+
+.ws-steps {
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ws-steps li.done {
+  color: var(--ink-dim);
+}
+
+.ws-results {
+  top: 12px;
+  right: 12px;
+  bottom: 12px;
+  width: min(62%, 880px);
+}
+
+.ws-results .results-panel {
+  position: static;
+  flex-direction: column;
+  width: 100%;
+  max-height: none;
+  min-height: 0;
+  transform: none;
+  border: 0;
+  background: transparent;
+  pointer-events: auto;
+}
+
+.ws-results .results-runs {
+  flex: 0 1 auto;
+  max-height: 35%;
+  border-right: 0;
+  border-bottom: 1px solid #2a3846;
+}
+
+/* Observation: the organism is the hero, lenses are circular insets, the graph a dock. */
+.workspace[data-presentation='observation'] .ws-stage {
+  display: grid;
+  grid-template:
+    'bl bc br' minmax(0, 1.4fr)
+    'fl fc fr' minmax(0, 1fr) / 1fr 1.4fr 1fr;
+  gap: var(--space-4);
+}
+
+.workspace[data-presentation='observation'] .ws-region {
+  align-items: center;
+  justify-content: center;
+}
+
+.ws-region[data-region='back-left'] {
+  grid-area: bl;
+}
+
+.ws-region[data-region='back-centre'] {
+  grid-area: bc;
+}
+
+.ws-region[data-region='back-right'] {
+  grid-area: br;
+}
+
+.ws-region[data-region='front-left'] {
+  grid-area: fl;
+}
+
+.ws-region[data-region='front-centre'] {
+  grid-area: fc;
+}
+
+.ws-region[data-region='front-right'] {
+  grid-area: fr;
+}
+
+.ws-region[data-region='lens'] {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  z-index: 2;
+  justify-content: center;
+  width: clamp(140px, 18vw, 240px);
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 3px solid var(--ws-ink);
+  border-radius: 50%;
+}
+
+.ws-graph-dock,
+.ws-curve-card {
+  position: absolute;
+  right: var(--space-4);
+  bottom: var(--space-4);
+  z-index: 2;
+  width: min(320px, 42%);
+  padding: var(--space-2);
+  border: 1px solid var(--ws-line);
+  border-radius: var(--radius-lg);
+  background: var(--ws-chrome);
+  color: var(--ink);
+}
+
+.ws-curve-card.folded > :not(.ws-fold, .ws-graph-title) {
+  display: none;
+}
+
+.ws-fold {
+  float: right;
+  min-height: 28px;
+  padding: 0 var(--space-2);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+/* Microscopy: the preparation tile and the eyepiece take turns as the hero. */
+.workspace[data-presentation='microscopy'] .ws-stage {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: var(--space-4);
+}
+
+.workspace[data-hero='prep'] .ws-region[data-region='field'],
+.workspace[data-hero='field'] .ws-region[data-region='prep'] {
+  display: none;
+}
+
+.ws-region[data-region='field'] {
+  justify-content: center;
+  width: min(62vh, 46vw);
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 3px solid var(--ws-ink);
+  border-radius: 50%;
+}
+
+/* bench-embedded: no cover. Panels stand at the apparatus projected position over the live lab. */
+.workspace[data-overlay='anchored'] {
+  display: block;
+  background: transparent;
+}
+
+.workspace[data-overlay='anchored'] .ws-top {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  left: 12px;
+}
+
+.workspace[data-overlay='anchored'] .ws-bar {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  left: 12px;
+}
+
+.workspace[data-overlay='anchored'] .ws-stage.ws-anchored {
+  position: absolute;
+  top: min(var(--ay, 20%), 40%);
+  /* Beside the apparatus, but never under the runs panel (220 px + gutters at the right). */
+  left: min(var(--ax, 60%), calc(100% - min(340px, 40%) - 244px));
+  width: min(340px, 40%);
+  max-height: calc(100% - min(var(--ay, 20%), 40%) - 96px); /* stops above the run bar */
+  padding: var(--space-2);
+  overflow-y: auto;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+}
+
+.ws-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 1px solid var(--ws-line);
+  border-radius: var(--radius-lg);
+  background: var(--ws-chrome);
+}
+
+.ws-anchored .ws-piece-body:empty {
+  display: none;
+}
+
+.ws-anchored .ws-piece-body {
+  min-height: 0;
+}
+
+.ws-anchored .ws-piece-select {
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+
+.ws-anchored .ws-callout,
+.ws-anchored .ws-curve-card {
+  position: static;
+  width: 100%;
+  margin-top: var(--space-2);
+}
+
+.workspace[data-overlay='anchored'] .ws-notebook {
+  position: absolute;
+  right: 12px;
+  bottom: 84px;
+  width: 220px;
+  padding: var(--space-2);
+}
+
+/* Narrower than 1280 px: the library is a row above the stage, the callout docks at its right. */
+@media (width < 1280px) {
+  .workspace {
+    grid-template:
+      'top top' auto
+      'library library' auto
+      'stage notebook' minmax(0, 1fr)
+      'bar bar' auto / minmax(0, 1fr) clamp(240px, 30vw, 320px);
+  }
+
+  .workspace[data-overlay='anchored'] {
+    display: block;
+  }
+
+  .ws-library {
+    max-height: 22vh;
+  }
+
+  .ws-items {
+    grid-auto-flow: column;
+    grid-auto-columns: max-content;
+    overflow-x: auto;
+  }
+
+  .ws-callout {
+    inset: 0 0 0 auto;
+    width: min(320px, 50%);
+    max-height: none;
+    border-radius: 0;
+  }
+
+  .ws-anchored .ws-callout {
+    position: static;
+    width: 100%;
+  }
+
+  .ws-brief {
+    inset: 8% 4%;
+  }
+
+  .ws-results {
+    width: min(96%, 880px);
+  }
+}
+
+/* While a workspace is open the lab prompts and bars stay out of its way. */
+#app:has(.workspace:not(.hidden))
+  :is(.hud-crosshair, .hud-prompt, .hud-hint, .hud-objective, .hotbar, .hotbar-label) {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .workspace * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* A short screen (a phone held sideways): the header on one line, the trail to the station gone
+   (the station's name stays), less padding — the bench gets the height. */
+@media (height <= 520px) {
+  .workspace {
+    --ws-gap: 6px;
+    padding: 6px;
+  }
+
+  .ws-top {
+    padding: 4px var(--space-2);
+  }
+
+  .ws-crumbs li:not(:last-child) {
+    display: none;
+  }
+}

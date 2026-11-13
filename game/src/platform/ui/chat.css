@@ -1,0 +1,106 @@
+/* The room's chat and voice (2026-11-12): bottom left, over the game, as in Minecraft. */
+.chat {
+  position: absolute;
+  left: 16px;
+  bottom: 132px;
+  width: min(480px, calc(100vw - 32px));
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  pointer-events: none;
+  z-index: 6;
+}
+
+.chat-lines {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-height: 40vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.chat.open .chat-lines {
+  overflow-y: auto;
+  pointer-events: auto;
+}
+
+.chat-line {
+  align-self: flex-start;
+  max-width: 100%;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(10, 14, 24, 0.55);
+  color: #eef3fa;
+  font-size: 15px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+  transition: opacity 0.6s ease;
+}
+
+.chat-line.faded {
+  opacity: 0;
+}
+
+.chat.open .chat-line.faded {
+  opacity: 1;
+}
+
+.chat-name {
+  color: #8fd3ff;
+  font-weight: 600;
+}
+
+.chat-line.own .chat-name {
+  color: #ffd27a;
+}
+
+.chat-entry {
+  pointer-events: auto;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  border: 1px solid rgba(143, 211, 255, 0.55);
+  border-radius: 8px;
+  background: rgba(8, 12, 20, 0.82);
+  color: #fff;
+  font: inherit;
+  font-size: 15px;
+}
+
+.chat-entry:focus-visible {
+  outline: 2px solid #8fd3ff;
+  outline-offset: 1px;
+}
+
+.voice {
+  position: absolute;
+  left: 16px;
+  bottom: 96px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  max-width: calc(100vw - 32px);
+  pointer-events: none;
+  font-size: 13px;
+  color: #dfe7f2;
+  z-index: 6;
+}
+
+.voice-self,
+.voice-speakers:not(:empty) {
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(10, 14, 24, 0.5);
+}
+
+.voice.talking .voice-self {
+  background: rgba(34, 160, 96, 0.85);
+  color: #fff;
+}
+
+.voice-speakers:not(:empty) {
+  color: #a6ffcf;
+}

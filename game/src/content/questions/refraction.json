@@ -1,0 +1,1061 @@
+{
+  "id": "refraction",
+  "skills": [
+    {
+      "id": "snell",
+      "name": "Snell’s law: n₁·sin i = n₂·sin r",
+      "advice": "Write n₁·sin i = n₂·sin r with both angles from the normal and air’s index taken as 1. Set the calculator to degrees. Practise air → block and block → air.",
+      "vi": {
+        "name": "Định luật khúc xạ: n₁·sin i = n₂·sin r",
+        "advice": "Viết n₁·sin i = n₂·sin r với cả hai góc đo từ pháp tuyến và chiết suất không khí lấy bằng 1. Để máy tính ở chế độ độ. Luyện cả hai chiều không khí → khối và khối → không khí."
+      }
+    },
+    {
+      "id": "bending",
+      "name": "Which way the ray bends",
+      "advice": "Into a higher index the ray bends towards the normal (r < i); out into air it bends away (r > i). A higher index bends it more. Compare water and flint glass at the station.",
+      "vi": {
+        "name": "Tia sáng lệch về phía nào",
+        "advice": "Đi vào môi trường chiết suất lớn hơn, tia khúc xạ lệch lại gần pháp tuyến (r < i); đi ra không khí, tia lệch xa pháp tuyến (r > i). Chiết suất càng lớn tia càng lệch nhiều. So sánh nước và thủy tinh flint trên trạm."
+      }
+    },
+    {
+      "id": "tir",
+      "name": "Critical angle and total internal reflection",
+      "advice": "Total internal reflection needs light going from the higher index to the lower one, at i > C, sin C = 1/n. A higher index has a smaller C. Sweep the angle block → air and watch the refracted ray vanish.",
+      "vi": {
+        "name": "Góc giới hạn và phản xạ toàn phần",
+        "advice": "Phản xạ toàn phần cần ánh sáng đi từ môi trường chiết suất lớn sang môi trường chiết suất nhỏ, với i > C, sin C = 1/n. Chiết suất càng lớn thì C càng nhỏ. Quét góc theo chiều khối → không khí và quan sát tia khúc xạ biến mất."
+      }
+    },
+    {
+      "id": "measure",
+      "name": "Measuring n and reading angles",
+      "advice": "n = sin(angle in air)/sin(angle in the block); over several runs sin θ_air against sin θ_block is a line of slope n. Some light is always reflected at the face. A protractor reads to its resolution d, u = d/√12.",
+      "vi": {
+        "name": "Đo chiết suất và đọc góc",
+        "advice": "n = sin(góc trong không khí)/sin(góc trong khối); qua nhiều lần đo, sin θ_kk theo sin θ_khối là đường thẳng hệ số góc n. Luôn có một phần ánh sáng bị phản xạ ở mặt phân cách. Thước đo góc đọc theo độ phân giải d, u = d/√12."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "snell",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["snell"],
+      "stem": "A ray goes from a medium of index n₁ into one of index n₂, with angle of incidence i and angle of refraction r. Snell’s law says…",
+      "explain": "n₁·sin i = n₂·sin r, the angles from the normal.",
+      "vi": {
+        "stem": "Tia sáng đi từ môi trường chiết suất n₁ sang môi trường chiết suất n₂, góc tới i, góc khúc xạ r. Định luật khúc xạ ánh sáng cho…",
+        "explain": "n₁·sin i = n₂·sin r, các góc đo từ pháp tuyến."
+      },
+      "options": [
+        {
+          "text": "n₁·sin i = n₂·sin r",
+          "vi": {
+            "text": "n₁·sin i = n₂·sin r"
+          },
+          "correct": true
+        },
+        {
+          "text": "n₁·cos i = n₂·cos r",
+          "vi": {
+            "text": "n₁·cos i = n₂·cos r"
+          }
+        },
+        {
+          "text": "n₁·i = n₂·r",
+          "vi": {
+            "text": "n₁·i = n₂·r"
+          }
+        },
+        {
+          "text": "sin i/sin r = n₁/n₂",
+          "vi": {
+            "text": "sin i/sin r = n₁/n₂"
+          }
+        }
+      ]
+    },
+    {
+      "id": "tir-condition",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["tir"],
+      "stem": "Total internal reflection can happen when light…",
+      "explain": "Only going from the higher index to the lower one, at an angle of incidence greater than the critical angle.",
+      "vi": {
+        "stem": "Hiện tượng phản xạ toàn phần có thể xảy ra khi ánh sáng…",
+        "explain": "Chỉ khi đi từ môi trường chiết suất lớn sang môi trường chiết suất nhỏ hơn, với góc tới lớn hơn góc giới hạn."
+      },
+      "options": [
+        {
+          "text": "goes from the block into air at an angle greater than the critical angle",
+          "vi": {
+            "text": "đi từ khối ra không khí với góc tới lớn hơn góc giới hạn"
+          },
+          "correct": true
+        },
+        {
+          "text": "goes from air into the block at a large angle",
+          "vi": {
+            "text": "đi từ không khí vào khối với góc tới lớn"
+          }
+        },
+        {
+          "text": "goes from the block into air at any angle",
+          "vi": {
+            "text": "đi từ khối ra không khí với góc tới bất kì"
+          }
+        },
+        {
+          "text": "goes from the block into air at an angle smaller than the critical angle",
+          "vi": {
+            "text": "đi từ khối ra không khí với góc tới nhỏ hơn góc giới hạn"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-face",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["bending", "tir", "measure"],
+      "stem": "A narrow ray meets the flat face of a semicircular acrylic block. Decide whether each statement is true or false.",
+      "explain": "Entering, it bends towards the normal; i′ = i for the reflected part; a higher n gives a smaller critical angle (sin C = 1/n); some light is reflected even when most enters.",
+      "vi": {
+        "stem": "Một tia sáng hẹp chiếu tới mặt phẳng của khối acrylic hình bán trụ. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Khi đi vào khối, tia lệch lại gần pháp tuyến; phần phản xạ có i′ = i; n lớn hơn thì góc giới hạn nhỏ hơn (sin C = 1/n); luôn có một phần ánh sáng phản xạ dù phần lớn đi vào khối."
+      },
+      "statements": [
+        {
+          "text": "Entering the block from air, the ray bends towards the normal.",
+          "vi": {
+            "text": "Đi từ không khí vào khối, tia sáng lệch lại gần pháp tuyến."
+          },
+          "true": true
+        },
+        {
+          "text": "The part reflected at the face has i′ = i.",
+          "vi": {
+            "text": "Phần ánh sáng phản xạ ở mặt phân cách có i′ = i."
+          },
+          "true": true
+        },
+        {
+          "text": "A block of higher index has a larger critical angle.",
+          "vi": {
+            "text": "Khối có chiết suất lớn hơn thì góc giới hạn lớn hơn."
+          },
+          "true": false
+        },
+        {
+          "text": "Some light is reflected at the face even when the ray enters the block.",
+          "vi": {
+            "text": "Ngay cả khi tia sáng đi vào khối, vẫn có một phần ánh sáng bị phản xạ ở mặt phân cách."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "higher-index",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["bending"],
+      "stem": "A ray enters a block from air at a fixed angle. The block is swapped for one of higher index. The angle of refraction…",
+      "explain": "sin r = sin i/n: a larger n gives a smaller r — the ray bends more.",
+      "vi": {
+        "stem": "Tia sáng đi từ không khí vào khối với góc tới không đổi. Thay khối bằng khối có chiết suất lớn hơn. Góc khúc xạ…",
+        "explain": "sin r = sin i/n: n lớn hơn thì r nhỏ hơn — tia lệch nhiều hơn."
+      },
+      "options": [
+        {
+          "text": "decreases",
+          "vi": {
+            "text": "giảm"
+          },
+          "correct": true
+        },
+        {
+          "text": "increases",
+          "vi": {
+            "text": "tăng"
+          }
+        },
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          }
+        },
+        {
+          "text": "becomes 90°",
+          "vi": {
+            "text": "bằng 90°"
+          }
+        }
+      ]
+    },
+    {
+      "id": "past-critical",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["tir"],
+      "stem": "A ray inside the block meets the flat face, and its angle of incidence is raised slowly past the critical angle. Beyond it…",
+      "explain": "Past C there is no refracted ray: all the light is reflected back into the block.",
+      "vi": {
+        "stem": "Tia sáng trong khối tới mặt phẳng, góc tới được tăng dần vượt quá góc giới hạn. Khi đó…",
+        "explain": "Vượt quá C thì không còn tia khúc xạ: toàn bộ ánh sáng phản xạ trở lại trong khối."
+      },
+      "options": [
+        {
+          "text": "no light leaves; it is all reflected",
+          "vi": {
+            "text": "không có ánh sáng ló ra; toàn bộ bị phản xạ"
+          },
+          "correct": true
+        },
+        {
+          "text": "the ray leaves bent towards the normal",
+          "vi": {
+            "text": "tia ló ra lệch lại gần pháp tuyến"
+          }
+        },
+        {
+          "text": "the ray leaves without bending",
+          "vi": {
+            "text": "tia ló ra không bị lệch"
+          }
+        },
+        {
+          "text": "all the light is absorbed",
+          "vi": {
+            "text": "toàn bộ ánh sáng bị hấp thụ"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-crown",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["snell", "bending", "measure"],
+      "set": {
+        "index": 1.52,
+        "direction": 0,
+        "angle": 40
+      },
+      "stem": "A ray in air meets crown glass (n = {index}) at {angle}° to the normal. Decide whether each statement is true or false.",
+      "explain": "sin r = sin i/n ≈ {@sinBlock}, r ≈ {@refractionDeg}° < i: bent towards the normal. About {=100*@reflectance|2} % of the light is reflected at the face.",
+      "vi": {
+        "stem": "Tia sáng trong không khí chiếu tới thủy tinh crown (n = {index}) với góc tới {angle}°. Mỗi nhận định sau đúng hay sai?",
+        "explain": "sin r = sin i/n ≈ {@sinBlock}, r ≈ {@refractionDeg}° < i: lệch lại gần pháp tuyến. Khoảng {=100*@reflectance|2} % ánh sáng bị phản xạ ở mặt phân cách."
+      },
+      "statements": [
+        {
+          "text": "sin r is about {@sinBlock}.",
+          "vi": {
+            "text": "sin r khoảng {@sinBlock}."
+          },
+          "true": true,
+          "check": {
+            "expr": "sin(rad(angle))/index",
+            "equals": "sinBlock"
+          }
+        },
+        {
+          "text": "The angle of refraction is about {@refractionDeg}°.",
+          "vi": {
+            "text": "Góc khúc xạ khoảng {@refractionDeg}°."
+          },
+          "true": true,
+          "check": {
+            "expr": "deg(asin(sin(rad(angle))/index))",
+            "equals": "refractionDeg"
+          }
+        },
+        {
+          "text": "The angle of refraction is larger than {angle}°.",
+          "vi": {
+            "text": "Góc khúc xạ lớn hơn {angle}°."
+          },
+          "true": false
+        },
+        {
+          "text": "About {=100*@reflectance|2} % of the light is reflected at the face.",
+          "vi": {
+            "text": "Khoảng {=100*@reflectance|2} % ánh sáng bị phản xạ ở mặt phân cách."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "water",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["snell", "bending"],
+      "set": {
+        "index": 1.33,
+        "direction": 0,
+        "angle": 60
+      },
+      "stem": "A ray in air meets water (n = {index}) at {angle}° to the normal. What is the angle of refraction?",
+      "explain": "sin r = sin {angle}°/{index} ≈ {@sinBlock}, r ≈ {@refractionDeg}°. Dividing the angle itself by n, or measuring from the surface, gives the wrong values.",
+      "vi": {
+        "stem": "Tia sáng trong không khí chiếu tới mặt nước (n = {index}) với góc tới {angle}°. Góc khúc xạ bằng bao nhiêu?",
+        "explain": "sin r = sin {angle}°/{index} ≈ {@sinBlock}, r ≈ {@refractionDeg}°. Chia thẳng góc cho n, hoặc đo góc từ mặt nước, đều cho kết quả sai."
+      },
+      "options": [
+        {
+          "text": "{@refractionDeg}°",
+          "vi": {
+            "text": "{@refractionDeg}°"
+          },
+          "correct": true,
+          "check": {
+            "expr": "deg(asin(sin(rad(angle))/index))",
+            "equals": "refractionDeg"
+          }
+        },
+        {
+          "text": "{=angle/index}°",
+          "vi": {
+            "text": "{=angle/index}°"
+          },
+          "check": {
+            "expr": "angle/index",
+            "equals": "refractionDeg"
+          }
+        },
+        {
+          "text": "{=90-@refractionDeg}°",
+          "vi": {
+            "text": "{=90-@refractionDeg}°"
+          },
+          "check": {
+            "expr": "90-deg(asin(sin(rad(angle))/index))",
+            "equals": "refractionDeg"
+          }
+        },
+        {
+          "text": "{angle}°",
+          "vi": {
+            "text": "{angle}°"
+          },
+          "check": {
+            "expr": "angle",
+            "equals": "refractionDeg"
+          }
+        }
+      ]
+    },
+    {
+      "id": "critical",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["tir"],
+      "set": {
+        "index": 1.62,
+        "direction": 1,
+        "angle": 30
+      },
+      "stem": "What is the critical angle for light leaving flint glass (n = {index}) into air?",
+      "explain": "sin C = 1/n = 1/{index}, so C ≈ {@criticalAngleDeg}°.",
+      "vi": {
+        "stem": "Góc giới hạn của ánh sáng đi từ thủy tinh flint (n = {index}) ra không khí bằng bao nhiêu?",
+        "explain": "sin C = 1/n = 1/{index}, nên C ≈ {@criticalAngleDeg}°."
+      },
+      "options": [
+        {
+          "text": "{@criticalAngleDeg}°",
+          "vi": {
+            "text": "{@criticalAngleDeg}°"
+          },
+          "correct": true,
+          "check": {
+            "expr": "deg(asin(1/index))",
+            "equals": "criticalAngleDeg"
+          }
+        },
+        {
+          "text": "{=deg(acos(1/index))}°",
+          "vi": {
+            "text": "{=deg(acos(1/index))}°"
+          },
+          "check": {
+            "expr": "deg(acos(1/index))",
+            "equals": "criticalAngleDeg"
+          }
+        },
+        {
+          "text": "{=deg(atan(1/index))}°",
+          "vi": {
+            "text": "{=deg(atan(1/index))}°"
+          },
+          "check": {
+            "expr": "deg(atan(1/index))",
+            "equals": "criticalAngleDeg"
+          }
+        },
+        {
+          "text": "{=deg(1/index)}°",
+          "vi": {
+            "text": "{=deg(1/index)}°"
+          },
+          "check": {
+            "expr": "deg(1/index)",
+            "equals": "criticalAngleDeg"
+          }
+        }
+      ]
+    },
+    {
+      "id": "leaving",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["snell", "bending"],
+      "set": {
+        "index": 1.49,
+        "direction": 1,
+        "angle": 30
+      },
+      "stem": "Inside acrylic (n = {index}) a ray meets the flat face at {angle}° and leaves into air. What is the angle of refraction?",
+      "explain": "Leaving: n·sin i = 1·sin r, sin r = {index}·sin {angle}° ≈ {=index*sin(rad(angle))}, r ≈ {@refractionDeg}° — bent away from the normal.",
+      "vi": {
+        "stem": "Trong acrylic (n = {index}), tia sáng tới mặt phẳng với góc tới {angle}° rồi ló ra không khí. Góc khúc xạ bằng bao nhiêu?",
+        "explain": "Khi ló ra: n·sin i = 1·sin r, sin r = {index}·sin {angle}° ≈ {=index*sin(rad(angle))}, r ≈ {@refractionDeg}° — lệch xa pháp tuyến."
+      },
+      "options": [
+        {
+          "text": "{@refractionDeg}°",
+          "vi": {
+            "text": "{@refractionDeg}°"
+          },
+          "correct": true,
+          "check": {
+            "expr": "deg(asin(index*sin(rad(angle))))",
+            "equals": "refractionDeg"
+          }
+        },
+        {
+          "text": "{=deg(asin(sin(rad(angle))/index))}°",
+          "vi": {
+            "text": "{=deg(asin(sin(rad(angle))/index))}°"
+          },
+          "check": {
+            "expr": "deg(asin(sin(rad(angle))/index))",
+            "equals": "refractionDeg"
+          }
+        },
+        {
+          "text": "{=index*angle}°",
+          "vi": {
+            "text": "{=index*angle}°"
+          },
+          "check": {
+            "expr": "index*angle",
+            "equals": "refractionDeg"
+          }
+        },
+        {
+          "text": "{angle}°",
+          "vi": {
+            "text": "{angle}°"
+          },
+          "check": {
+            "expr": "angle",
+            "equals": "refractionDeg"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-water-out",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["tir"],
+      "set": {
+        "index": 1.33,
+        "direction": 1,
+        "angle": 60
+      },
+      "stem": "Inside water (n = {index}) a ray meets the surface at {angle}° on its way to the air. Decide whether each statement is true or false.",
+      "explain": "C = arcsin(1/{index}) ≈ {@criticalAngleDeg}° < {angle}°, so the light is totally reflected: R = 1 and no ray leaves.",
+      "vi": {
+        "stem": "Trong nước (n = {index}), một tia sáng tới mặt nước với góc tới {angle}° theo hướng ra không khí. Mỗi nhận định sau đúng hay sai?",
+        "explain": "C = arcsin(1/{index}) ≈ {@criticalAngleDeg}° < {angle}°, nên ánh sáng bị phản xạ toàn phần: R = 1 và không có tia ló ra."
+      },
+      "statements": [
+        {
+          "text": "The critical angle is about {@criticalAngleDeg}°.",
+          "vi": {
+            "text": "Góc giới hạn khoảng {@criticalAngleDeg}°."
+          },
+          "true": true,
+          "check": {
+            "expr": "deg(asin(1/index))",
+            "equals": "criticalAngleDeg"
+          }
+        },
+        {
+          "text": "The light is totally reflected.",
+          "vi": {
+            "text": "Ánh sáng bị phản xạ toàn phần."
+          },
+          "true": true,
+          "check": {
+            "expr": "1",
+            "equals": "tir"
+          }
+        },
+        {
+          "text": "All the light is reflected back into the water.",
+          "vi": {
+            "text": "Toàn bộ ánh sáng phản xạ trở lại trong nước."
+          },
+          "true": true,
+          "check": {
+            "expr": "1",
+            "equals": "reflectance"
+          }
+        },
+        {
+          "text": "A ray leaves into the air, bent away from the normal.",
+          "vi": {
+            "text": "Có tia ló ra không khí, lệch xa pháp tuyến."
+          },
+          "true": false,
+          "check": {
+            "expr": "0",
+            "equals": "tir"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-n",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["measure", "snell"],
+      "set": {
+        "index": 1.49,
+        "direction": 0,
+        "angle": 50
+      },
+      "stem": "A ray in air meets a block at {angle}° and is refracted at r = {@refractionDeg|3}°. What is the block’s refractive index?",
+      "explain": "n = sin i/sin r = sin {angle}°/sin {@refractionDeg|3}° ≈ {=sin(rad(angle))/sin(rad(@refractionDeg))} (acrylic). The ratio of the angles themselves is not n.",
+      "vi": {
+        "stem": "Tia sáng trong không khí chiếu tới một khối với góc tới {angle}° và khúc xạ với r = {@refractionDeg|3}°. Chiết suất của khối bằng bao nhiêu?",
+        "explain": "n = sin i/sin r = sin {angle}°/sin {@refractionDeg|3}° ≈ {=sin(rad(angle))/sin(rad(@refractionDeg))} (acrylic). Tỉ số của chính các góc không phải là n."
+      },
+      "options": [
+        {
+          "text": "{=sin(rad(angle))/sin(rad(@refractionDeg))}",
+          "vi": {
+            "text": "{=sin(rad(angle))/sin(rad(@refractionDeg))}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "sin(rad(angle))/sin(rad(@refractionDeg))",
+            "equals": "index"
+          }
+        },
+        {
+          "text": "{=angle/@refractionDeg}",
+          "vi": {
+            "text": "{=angle/@refractionDeg}"
+          },
+          "check": {
+            "expr": "angle/@refractionDeg",
+            "equals": "index"
+          }
+        },
+        {
+          "text": "{=sin(rad(@refractionDeg))/sin(rad(angle))}",
+          "vi": {
+            "text": "{=sin(rad(@refractionDeg))/sin(rad(angle))}"
+          },
+          "check": {
+            "expr": "sin(rad(@refractionDeg))/sin(rad(angle))",
+            "equals": "index"
+          }
+        },
+        {
+          "text": "{=tan(rad(angle))/tan(rad(@refractionDeg))}",
+          "vi": {
+            "text": "{=tan(rad(angle))/tan(rad(@refractionDeg))}"
+          },
+          "check": {
+            "expr": "tan(rad(angle))/tan(rad(@refractionDeg))",
+            "equals": "index"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-reading",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["measure", "tir"],
+      "set": {
+        "index": 1.52,
+        "direction": 0,
+        "angle": 40,
+        "resolution": 2
+      },
+      "stem": "A ray in air meets crown glass (n = {index}) at {angle}°; the angles are read on a protractor of resolution {resolution}°. Decide whether each statement is true or false.",
+      "explain": "sin θ_air/sin θ_block = {@sinAir}/{@sinBlock} = n. r = {@refractionDeg|4}° reads as {=round(@refractionDeg/resolution)*resolution}°, u = d/√12 ≈ {=resolution/sqrt(12)|2}°. Leaving the glass at {angle}°, below C ≈ {=deg(asin(1/index))}°, the light would still get out.",
+      "vi": {
+        "stem": "Tia sáng trong không khí chiếu tới thủy tinh crown (n = {index}) với góc tới {angle}°; các góc được đọc trên thước đo góc có độ phân giải {resolution}°. Mỗi nhận định sau đúng hay sai?",
+        "explain": "sin θ_kk/sin θ_khối = {@sinAir}/{@sinBlock} = n. r = {@refractionDeg|4}° được đọc là {=round(@refractionDeg/resolution)*resolution}°, u = d/√12 ≈ {=resolution/sqrt(12)|2}°. Đi từ thủy tinh ra ở góc {angle}°, nhỏ hơn C ≈ {=deg(asin(1/index))}°, ánh sáng vẫn ló ra được."
+      },
+      "statements": [
+        {
+          "text": "sin of the angle in air over sin of the angle in the glass equals n.",
+          "vi": {
+            "text": "sin góc trong không khí chia sin góc trong thủy tinh bằng n."
+          },
+          "true": true,
+          "check": {
+            "expr": "@sinAir/@sinBlock",
+            "equals": "index"
+          }
+        },
+        {
+          "text": "The protractor reads r as {=round(@refractionDeg/resolution)*resolution}°.",
+          "vi": {
+            "text": "Thước đo góc đọc r là {=round(@refractionDeg/resolution)*resolution}°."
+          },
+          "true": true
+        },
+        {
+          "text": "The reading’s standard uncertainty from the resolution alone is about {=resolution/sqrt(12)|2}°.",
+          "vi": {
+            "text": "Độ không đảm bảo chuẩn của số đọc chỉ do độ phân giải khoảng {=resolution/sqrt(12)|2}°."
+          },
+          "true": true
+        },
+        {
+          "text": "Going the other way, glass to air at {angle}°, the light would be totally reflected.",
+          "vi": {
+            "text": "Theo chiều ngược lại, từ thủy tinh ra không khí với góc tới {angle}°, ánh sáng sẽ bị phản xạ toàn phần."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "index-definition",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["snell"],
+      "stem": "The absolute refractive index n of a medium, with c the speed of light in a vacuum and v its speed in the medium, is…",
+      "explain": "n = c/v: light is slower in the medium, so n > 1. Acrylic, n ≈ 1.49, slows light to about c/1.49.",
+      "vi": {
+        "stem": "Chiết suất tuyệt đối n của một môi trường, với c là tốc độ ánh sáng trong chân không và v là tốc độ ánh sáng trong môi trường đó, bằng…",
+        "explain": "n = c/v: ánh sáng truyền chậm hơn trong môi trường nên n > 1. Acrylic có n ≈ 1,49, làm ánh sáng chậm lại còn khoảng c/1,49."
+      },
+      "options": [
+        {
+          "text": "n = c/v",
+          "vi": {
+            "text": "n = c/v"
+          },
+          "correct": true
+        },
+        {
+          "text": "n = v/c",
+          "vi": {
+            "text": "n = v/c"
+          }
+        },
+        {
+          "text": "n = c·v",
+          "vi": {
+            "text": "n = c·v"
+          }
+        },
+        {
+          "text": "n = c − v",
+          "vi": {
+            "text": "n = c − v"
+          }
+        }
+      ]
+    },
+    {
+      "id": "into-glass",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["bending"],
+      "stem": "A ray passes slantwise from air into glass. In the glass it…",
+      "explain": "n_glass > n_air, so sin r = sin i/n is smaller than sin i: the ray slows down and bends towards the normal.",
+      "vi": {
+        "stem": "Một tia sáng truyền xiên từ không khí vào thủy tinh. Trong thủy tinh, tia sáng…",
+        "explain": "n_thủy tinh > n_không khí, nên sin r = sin i/n nhỏ hơn sin i: ánh sáng truyền chậm lại và bị lệch lại gần pháp tuyến."
+      },
+      "options": [
+        {
+          "text": "slows down and bends towards the normal",
+          "vi": {
+            "text": "truyền chậm lại và lệch lại gần pháp tuyến"
+          },
+          "correct": true
+        },
+        {
+          "text": "slows down and bends away from the normal",
+          "vi": {
+            "text": "truyền chậm lại và lệch ra xa pháp tuyến"
+          }
+        },
+        {
+          "text": "speeds up and bends towards the normal",
+          "vi": {
+            "text": "truyền nhanh hơn và lệch lại gần pháp tuyến"
+          }
+        },
+        {
+          "text": "goes straight on without bending",
+          "vi": {
+            "text": "truyền thẳng, không bị lệch"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-rules",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["snell", "tir", "bending"],
+      "stem": "Light crosses the flat boundary between air and a transparent block. Decide whether each statement is true or false.",
+      "explain": "A ray along the normal (i = 0) is not bent. Snell’s law n₁·sin i = n₂·sin r holds for every ray that is refracted. Total internal reflection needs light going from the denser medium into the less dense one (block into air), never from air into the block. sin C = 1/n, so a higher index gives a smaller critical angle.",
+      "vi": {
+        "stem": "Ánh sáng đi qua mặt phân cách phẳng giữa không khí và một khối trong suốt. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Tia sáng đi theo pháp tuyến (i = 0) không bị lệch. Định luật Snell n₁·sin i = n₂·sin r đúng với mọi tia khúc xạ. Phản xạ toàn phần chỉ xảy ra khi ánh sáng đi từ môi trường chiết quang hơn sang môi trường chiết quang kém (từ khối ra không khí), không bao giờ từ không khí vào khối. sin i_gh = 1/n, nên chiết suất càng lớn thì góc giới hạn càng nhỏ."
+      },
+      "statements": [
+        {
+          "text": "A ray along the normal passes into the block without bending.",
+          "vi": {
+            "text": "Tia sáng đi theo pháp tuyến truyền vào khối mà không bị lệch."
+          },
+          "true": true
+        },
+        {
+          "text": "Every refracted ray obeys n₁·sin i = n₂·sin r.",
+          "vi": {
+            "text": "Mọi tia khúc xạ đều tuân theo n₁·sin i = n₂·sin r."
+          },
+          "true": true
+        },
+        {
+          "text": "Total internal reflection can happen as light goes from air into the block.",
+          "vi": {
+            "text": "Phản xạ toàn phần có thể xảy ra khi ánh sáng đi từ không khí vào khối."
+          },
+          "true": false
+        },
+        {
+          "text": "A block of higher index has a smaller critical angle.",
+          "vi": {
+            "text": "Khối có chiết suất lớn hơn thì có góc giới hạn nhỏ hơn."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "flint-in",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["snell"],
+      "set": {
+        "index": 1.62,
+        "direction": 0,
+        "angle": 60
+      },
+      "stem": "A ray in air meets flint glass (n = {index}) at {angle}° to the normal. What is the angle of refraction?",
+      "explain": "sin r = sin i/n = sin {angle}°/{index} ≈ {=sin(rad(angle))/index|3}, so r ≈ {@refractionDeg|3}°. Dividing the angle itself by n, measuring from the surface, or taking the critical angle gives the other values.",
+      "vi": {
+        "stem": "Một tia sáng trong không khí tới thủy tinh flint (n = {index}) với góc tới {angle}°. Góc khúc xạ bằng bao nhiêu?",
+        "explain": "sin r = sin i/n = sin {angle}°/{index} ≈ {=sin(rad(angle))/index|3}, nên r ≈ {@refractionDeg|3}°. Lấy chính góc chia cho n, đo góc từ mặt phân cách, hoặc lấy góc giới hạn sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{@refractionDeg|3}°",
+          "vi": {
+            "text": "{@refractionDeg|3}°"
+          },
+          "correct": true,
+          "check": {
+            "expr": "deg(asin(sin(rad(angle))/index))",
+            "equals": "refractionDeg"
+          }
+        },
+        {
+          "text": "{=angle/index|3}°",
+          "vi": {
+            "text": "{=angle/index|3}°"
+          },
+          "check": {
+            "expr": "angle/index",
+            "equals": "refractionDeg"
+          }
+        },
+        {
+          "text": "{=90-@refractionDeg|3}°",
+          "vi": {
+            "text": "{=90-@refractionDeg|3}°"
+          },
+          "check": {
+            "expr": "90-@refractionDeg",
+            "equals": "refractionDeg"
+          }
+        },
+        {
+          "text": "{=deg(asin(1/index))|3}°",
+          "vi": {
+            "text": "{=deg(asin(1/index))|3}°"
+          },
+          "check": {
+            "expr": "deg(asin(1/index))",
+            "equals": "refractionDeg"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-water-40",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["tir", "bending", "snell"],
+      "set": {
+        "index": 1.33,
+        "direction": 1,
+        "angle": 40
+      },
+      "stem": "Inside water (n = {index}) a ray meets the surface at {angle}° on its way to the air. Decide whether each statement is true or false.",
+      "explain": "sin C = 1/n gives C ≈ {@criticalAngleDeg|3}°. {angle}° is below C, so the ray leaves: sin r = n·sin i, r ≈ {@refractionDeg|3}°, bent away from the normal. (A weak reflected ray is there too, but it is not total reflection.)",
+      "vi": {
+        "stem": "Trong nước (n = {index}) một tia sáng tới mặt nước với góc tới {angle}° trên đường ra không khí. Mỗi nhận định sau đúng hay sai?",
+        "explain": "sin i_gh = 1/n cho i_gh ≈ {@criticalAngleDeg|3}°. {angle}° nhỏ hơn góc giới hạn nên tia sáng ló ra: sin r = n·sin i, r ≈ {@refractionDeg|3}°, lệch ra xa pháp tuyến. (Vẫn có một tia phản xạ yếu, nhưng đó không phải phản xạ toàn phần.)"
+      },
+      "statements": [
+        {
+          "text": "The critical angle is about {@criticalAngleDeg|3}°.",
+          "vi": {
+            "text": "Góc giới hạn khoảng {@criticalAngleDeg|3}°."
+          },
+          "true": true,
+          "check": {
+            "expr": "deg(asin(1/index))",
+            "equals": "criticalAngleDeg"
+          }
+        },
+        {
+          "text": "The ray leaves into the air at about {@refractionDeg|3}° to the normal.",
+          "vi": {
+            "text": "Tia sáng ló ra không khí với góc khúc xạ khoảng {@refractionDeg|3}°."
+          },
+          "true": true,
+          "check": {
+            "expr": "deg(asin(index*sin(rad(angle))))",
+            "equals": "refractionDeg"
+          }
+        },
+        {
+          "text": "The ray is totally reflected.",
+          "vi": {
+            "text": "Tia sáng bị phản xạ toàn phần."
+          },
+          "true": false
+        },
+        {
+          "text": "The ray that leaves is bent away from the normal.",
+          "vi": {
+            "text": "Tia ló bị lệch ra xa pháp tuyến."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "n-from-critical",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["tir", "measure"],
+      "set": {
+        "index": 1.52,
+        "direction": 1,
+        "angle": 30
+      },
+      "stem": "Light inside a block meets its flat face; the critical angle is measured as {@criticalAngleDeg|4}°. What is the block’s refractive index?",
+      "explain": "sin C = 1/n, so n = 1/sin C = 1/sin {@criticalAngleDeg|4}° ≈ {=1/sin(rad(@criticalAngleDeg))|3}. sin C itself is 1/n; 1/cos C and 1/tan C use the wrong function.",
+      "vi": {
+        "stem": "Ánh sáng trong một khối tới mặt phẳng của nó; góc giới hạn đo được là {@criticalAngleDeg|4}°. Chiết suất của khối bằng bao nhiêu?",
+        "explain": "sin i_gh = 1/n, nên n = 1/sin i_gh = 1/sin {@criticalAngleDeg|4}° ≈ {=1/sin(rad(@criticalAngleDeg))|3}. Bản thân sin i_gh là 1/n; 1/cos i_gh và 1/tan i_gh là dùng sai hàm lượng giác."
+      },
+      "options": [
+        {
+          "text": "{=1/sin(rad(@criticalAngleDeg))|3}",
+          "vi": {
+            "text": "{=1/sin(rad(@criticalAngleDeg))|3}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "1/sin(rad(@criticalAngleDeg))",
+            "equals": "index"
+          }
+        },
+        {
+          "text": "{=sin(rad(@criticalAngleDeg))|3}",
+          "vi": {
+            "text": "{=sin(rad(@criticalAngleDeg))|3}"
+          },
+          "check": {
+            "expr": "sin(rad(@criticalAngleDeg))",
+            "equals": "index"
+          }
+        },
+        {
+          "text": "{=1/cos(rad(@criticalAngleDeg))|3}",
+          "vi": {
+            "text": "{=1/cos(rad(@criticalAngleDeg))|3}"
+          },
+          "check": {
+            "expr": "1/cos(rad(@criticalAngleDeg))",
+            "equals": "index"
+          }
+        },
+        {
+          "text": "{=1/tan(rad(@criticalAngleDeg))|3}",
+          "vi": {
+            "text": "{=1/tan(rad(@criticalAngleDeg))|3}"
+          },
+          "check": {
+            "expr": "1/tan(rad(@criticalAngleDeg))",
+            "equals": "index"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-incidence",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["snell", "measure"],
+      "set": {
+        "index": 1.49,
+        "direction": 0,
+        "angle": 60
+      },
+      "stem": "A ray in air enters acrylic (n = {index}) and is refracted at r = {@refractionDeg|3}°. What was the angle of incidence?",
+      "explain": "sin i = n·sin r = {index}·sin {@refractionDeg|3}° ≈ {=index*sin(rad(@refractionDeg))|3}, so i = {angle}°. Multiplying the angle by n, dividing sin r by n, or taking 90° − r gives the other values.",
+      "vi": {
+        "stem": "Một tia sáng trong không khí đi vào acrylic (n = {index}) và khúc xạ với góc r = {@refractionDeg|3}°. Góc tới bằng bao nhiêu?",
+        "explain": "sin i = n·sin r = {index}·sin {@refractionDeg|3}° ≈ {=index*sin(rad(@refractionDeg))|3}, nên i = {angle}°. Nhân chính góc với n, chia sin r cho n, hoặc lấy 90° − r sẽ ra các giá trị còn lại."
+      },
+      "options": [
+        {
+          "text": "{=deg(asin(index*sin(rad(@refractionDeg))))|3}°",
+          "vi": {
+            "text": "{=deg(asin(index*sin(rad(@refractionDeg))))|3}°"
+          },
+          "correct": true,
+          "check": {
+            "expr": "deg(asin(sin(asin(index*sin(rad(@refractionDeg))))/index))",
+            "equals": "refractionDeg"
+          }
+        },
+        {
+          "text": "{=index*@refractionDeg|3}°",
+          "vi": {
+            "text": "{=index*@refractionDeg|3}°"
+          },
+          "check": {
+            "expr": "deg(asin(sin(rad(index*@refractionDeg))/index))",
+            "equals": "refractionDeg"
+          }
+        },
+        {
+          "text": "{=deg(asin(sin(rad(@refractionDeg))/index))|3}°",
+          "vi": {
+            "text": "{=deg(asin(sin(rad(@refractionDeg))/index))|3}°"
+          },
+          "check": {
+            "expr": "deg(asin(sin(asin(sin(rad(@refractionDeg))/index))/index))",
+            "equals": "refractionDeg"
+          }
+        },
+        {
+          "text": "{=90-@refractionDeg|3}°",
+          "vi": {
+            "text": "{=90-@refractionDeg|3}°"
+          },
+          "check": {
+            "expr": "deg(asin(sin(rad(90-@refractionDeg))/index))",
+            "equals": "refractionDeg"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-flint-tir",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["tir", "snell"],
+      "set": {
+        "index": 1.62,
+        "direction": 1,
+        "angle": 40
+      },
+      "stem": "Inside flint glass (n = {index}) a ray meets the flat face at {angle}° on its way to the air. Decide whether each statement is true or false.",
+      "explain": "C = arcsin(1/n) ≈ {@criticalAngleDeg|3}°, and {angle}° is beyond it, so no ray leaves: all the light is reflected back into the glass. In water (n = 1.33, C ≈ 48.8°) the same {angle}° would be below the critical angle, and the ray would leave.",
+      "vi": {
+        "stem": "Trong thủy tinh flint (n = {index}) một tia sáng tới mặt phẳng với góc tới {angle}° trên đường ra không khí. Mỗi nhận định sau đúng hay sai?",
+        "explain": "i_gh = arcsin(1/n) ≈ {@criticalAngleDeg|3}°, và {angle}° lớn hơn góc đó, nên không có tia ló: toàn bộ ánh sáng phản xạ trở lại thủy tinh. Trong nước (n = 1,33, i_gh ≈ 48,8°) cùng góc {angle}° nhỏ hơn góc giới hạn, và tia sáng sẽ ló ra."
+      },
+      "statements": [
+        {
+          "text": "The critical angle is about {@criticalAngleDeg|3}°.",
+          "vi": {
+            "text": "Góc giới hạn khoảng {@criticalAngleDeg|3}°."
+          },
+          "true": true,
+          "check": {
+            "expr": "deg(asin(1/index))",
+            "equals": "criticalAngleDeg"
+          }
+        },
+        {
+          "text": "The ray is totally reflected back into the glass.",
+          "vi": {
+            "text": "Tia sáng bị phản xạ toàn phần trở lại thủy tinh."
+          },
+          "true": true,
+          "check": {
+            "expr": "1",
+            "equals": "tir"
+          }
+        },
+        {
+          "text": "In water at the same angle, the ray would leave into the air.",
+          "vi": {
+            "text": "Trong nước với cùng góc tới, tia sáng sẽ ló ra không khí."
+          },
+          "true": true
+        },
+        {
+          "text": "Part of the light still leaves the glass at this angle.",
+          "vi": {
+            "text": "Ở góc tới này vẫn có một phần ánh sáng ló ra khỏi thủy tinh."
+          },
+          "true": false
+        }
+      ]
+    }
+  ]
+}

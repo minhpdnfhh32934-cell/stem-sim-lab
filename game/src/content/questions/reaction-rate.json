@@ -1,0 +1,1053 @@
+{
+  "id": "reaction-rate",
+  "skills": [
+    {
+      "id": "rate-law",
+      "name": "Pseudo-first order: k′ = k·[OH⁻]₀",
+      "advice": "Re-read why OH⁻ in large excess makes the rate depend on the dye only: −d[CV⁺]/dt = k′·[CV⁺] with k′ = k·[OH⁻]₀. Change [OH⁻]₀ at the station and check that k′ changes in proportion.",
+      "vi": {
+        "name": "Bậc một giả: k′ = k·[OH⁻]₀",
+        "advice": "Đọc lại vì sao OH⁻ rất dư làm tốc độ chỉ phụ thuộc vào thuốc nhuộm: −d[CV⁺]/dt = k′·[CV⁺] với k′ = k·[OH⁻]₀. Thay đổi [OH⁻]₀ trên trạm và kiểm tra k′ thay đổi tỉ lệ thuận."
+      }
+    },
+    {
+      "id": "half-life",
+      "name": "First-order half-life: t½ = ln2/k′",
+      "advice": "Remember t½ = ln2/k′ does not depend on the starting concentration: each half-life halves what is left (A₀ → A₀/2 → A₀/4). Run 2, 5 and 10 µmol/L at the station and compare their half-lives.",
+      "vi": {
+        "name": "Chu kỳ bán phản ứng bậc một: t½ = ln2/k′",
+        "advice": "Nhớ t½ = ln2/k′ không phụ thuộc nồng độ ban đầu: sau mỗi chu kỳ bán phản ứng, lượng còn lại giảm một nửa (A₀ → A₀/2 → A₀/4). Chạy 2, 5 và 10 µmol/L trên trạm và so sánh chu kỳ bán phản ứng."
+      }
+    },
+    {
+      "id": "colorimetry",
+      "name": "Following the reaction by absorbance",
+      "advice": "Link A = ε·l·c with the rate law: ln A falls in a straight line with slope −k′. Read A₀ and A at a time from the station’s graph and work out k′ = ln(A₀/A)/t yourself.",
+      "vi": {
+        "name": "Theo dõi phản ứng bằng độ hấp thụ quang",
+        "advice": "Kết hợp A = ε·l·c với biểu thức tốc độ: ln A giảm tuyến tính theo thời gian với hệ số góc −k′. Đọc A₀ và A ở một thời điểm trên đồ thị của trạm rồi tự tính k′ = ln(A₀/A)/t."
+      }
+    },
+    {
+      "id": "temperature",
+      "name": "Temperature and the Arrhenius equation",
+      "advice": "Convert to kelvin before using k = k₂₅·e^((Eₐ/R)(1/T₂₅ − 1/T)); “double per 10 °C” is only a rule of thumb. Plot ln(k/k₂₅) against 1/T₂₅ − 1/T from several baths: the slope is Eₐ/R.",
+      "vi": {
+        "name": "Nhiệt độ và phương trình Arrhenius",
+        "advice": "Đổi sang kelvin trước khi dùng k = k₂₅·e^((Eₐ/R)(1/T₂₅ − 1/T)); “tăng 10 °C thì tốc độ gấp đôi” chỉ là quy tắc gần đúng. Vẽ ln(k/k₂₅) theo 1/T₂₅ − 1/T từ nhiều nhiệt độ bể: hệ số góc là Eₐ/R."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "what-measured",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["colorimetry"],
+      "stem": "How is the progress of the reaction between crystal violet and NaOH followed?",
+      "explain": "The violet dye absorbs light near 590 nm and the product is colourless, so a colorimeter’s absorbance tracks the dye’s concentration (A = ε·l·c).",
+      "vi": {
+        "stem": "Tiến trình phản ứng giữa tím tinh thể (crystal violet) và NaOH được theo dõi bằng cách nào?",
+        "explain": "Thuốc nhuộm màu tím hấp thụ ánh sáng ở khoảng 590 nm và sản phẩm không màu, nên độ hấp thụ quang đo bằng máy so màu phản ánh nồng độ thuốc nhuộm (A = ε·l·c)."
+      },
+      "options": [
+        {
+          "text": "By measuring the absorbance of the solution with a colorimeter",
+          "vi": {
+            "text": "Đo độ hấp thụ quang của dung dịch bằng máy so màu"
+          },
+          "correct": true
+        },
+        {
+          "text": "By measuring the volume of gas given off",
+          "vi": {
+            "text": "Đo thể tích khí thoát ra"
+          }
+        },
+        {
+          "text": "By weighing the precipitate formed",
+          "vi": {
+            "text": "Cân lượng kết tủa tạo thành"
+          }
+        },
+        {
+          "text": "By titrating the NaOH left with an acid",
+          "vi": {
+            "text": "Chuẩn độ lượng NaOH còn lại bằng axit"
+          }
+        }
+      ]
+    },
+    {
+      "id": "unit",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["rate-law"],
+      "stem": "What is the unit of the pseudo-first-order rate constant k′?",
+      "explain": "For −d[CV⁺]/dt = k′·[CV⁺], k′ is a rate (mol/(L·s)) divided by a concentration (mol/L): s⁻¹.",
+      "vi": {
+        "stem": "Hằng số tốc độ bậc một giả k′ có đơn vị là",
+        "explain": "Từ −d[CV⁺]/dt = k′·[CV⁺], k′ bằng tốc độ (mol/(L·s)) chia cho nồng độ (mol/L): s⁻¹."
+      },
+      "options": [
+        {
+          "text": "s⁻¹",
+          "vi": {
+            "text": "s⁻¹"
+          },
+          "correct": true
+        },
+        {
+          "text": "L/(mol·s)",
+          "vi": {
+            "text": "L/(mol·s)"
+          }
+        },
+        {
+          "text": "mol/(L·s)",
+          "vi": {
+            "text": "mol/(L·s)"
+          }
+        },
+        {
+          "text": "s",
+          "vi": {
+            "text": "s"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-fading",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["colorimetry", "rate-law"],
+      "stem": "Crystal violet (CV⁺) is mixed with a large excess of NaOH and the colour is followed. Decide whether each statement is true or false.",
+      "explain": "CV⁺ + OH⁻ → CVOH, which is taken as colourless: the violet fades. A is proportional to [CV⁺]. OH⁻ is in such excess that its concentration hardly changes.",
+      "vi": {
+        "stem": "Trộn tím tinh thể (CV⁺) với lượng rất dư NaOH và theo dõi màu. Mỗi nhận định sau đúng hay sai?",
+        "explain": "CV⁺ + OH⁻ → CVOH, sản phẩm được coi là không màu: màu tím nhạt dần. A tỉ lệ thuận với [CV⁺]. OH⁻ dư rất nhiều nên nồng độ của nó hầu như không đổi."
+      },
+      "statements": [
+        {
+          "text": "The violet colour fades as CV⁺ reacts with OH⁻.",
+          "vi": {
+            "text": "Màu tím nhạt dần khi CV⁺ phản ứng với OH⁻."
+          },
+          "true": true
+        },
+        {
+          "text": "The absorbance is proportional to the concentration of the dye.",
+          "vi": {
+            "text": "Độ hấp thụ quang tỉ lệ thuận với nồng độ thuốc nhuộm."
+          },
+          "true": true
+        },
+        {
+          "text": "OH⁻ is in such excess that its concentration stays almost constant.",
+          "vi": {
+            "text": "OH⁻ dư nhiều đến mức nồng độ của nó gần như không đổi."
+          },
+          "true": true
+        },
+        {
+          "text": "The product CVOH is deep violet.",
+          "vi": {
+            "text": "Sản phẩm CVOH có màu tím đậm."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "double-dye",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["half-life"],
+      "stem": "The starting dye concentration is doubled; everything else stays the same. The half-life…",
+      "explain": "For a first-order reaction t½ = ln2/k′, which does not depend on the starting concentration.",
+      "vi": {
+        "stem": "Tăng gấp đôi nồng độ thuốc nhuộm ban đầu, giữ nguyên các điều kiện khác. Chu kỳ bán phản ứng",
+        "explain": "Với phản ứng bậc một, t½ = ln2/k′, không phụ thuộc nồng độ ban đầu."
+      },
+      "options": [
+        {
+          "text": "stays the same",
+          "vi": {
+            "text": "không đổi"
+          },
+          "correct": true
+        },
+        {
+          "text": "doubles",
+          "vi": {
+            "text": "tăng gấp đôi"
+          }
+        },
+        {
+          "text": "halves",
+          "vi": {
+            "text": "giảm một nửa"
+          }
+        },
+        {
+          "text": "becomes four times longer",
+          "vi": {
+            "text": "tăng gấp bốn lần"
+          }
+        }
+      ]
+    },
+    {
+      "id": "double-hydroxide",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["rate-law", "half-life"],
+      "stem": "The NaOH concentration is doubled (still in large excess) at the same temperature. What happens?",
+      "explain": "k′ = k·[OH⁻]₀ doubles, so t½ = ln2/k′ halves.",
+      "vi": {
+        "stem": "Tăng gấp đôi nồng độ NaOH (vẫn rất dư) ở cùng nhiệt độ. Điều gì xảy ra?",
+        "explain": "k′ = k·[OH⁻]₀ tăng gấp đôi, nên t½ = ln2/k′ giảm một nửa."
+      },
+      "options": [
+        {
+          "text": "k′ doubles and the half-life halves",
+          "vi": {
+            "text": "k′ tăng gấp đôi và chu kỳ bán phản ứng giảm một nửa"
+          },
+          "correct": true
+        },
+        {
+          "text": "k′ doubles and the half-life doubles",
+          "vi": {
+            "text": "k′ tăng gấp đôi và chu kỳ bán phản ứng tăng gấp đôi"
+          }
+        },
+        {
+          "text": "k′ is unchanged",
+          "vi": {
+            "text": "k′ không đổi"
+          }
+        },
+        {
+          "text": "k′ becomes four times larger",
+          "vi": {
+            "text": "k′ tăng gấp bốn lần"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-first-order",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["colorimetry", "half-life", "temperature"],
+      "stem": "For the pseudo-first-order fading of crystal violet, decide whether each statement is true or false.",
+      "explain": "c = c₀·e^(−k′t), so ln A = ln A₀ − k′t: a straight line of slope −k′. After two half-lives a quarter is left. k grows with temperature. t½ = ln2/k′ does not depend on A₀.",
+      "vi": {
+        "stem": "Với phản ứng mất màu của tím tinh thể theo bậc một giả, mỗi nhận định sau đúng hay sai?",
+        "explain": "c = c₀·e^(−k′t), nên ln A = ln A₀ − k′t: đường thẳng có hệ số góc −k′. Sau hai chu kỳ bán phản ứng còn lại một phần tư. k tăng theo nhiệt độ. t½ = ln2/k′ không phụ thuộc A₀."
+      },
+      "statements": [
+        {
+          "text": "A graph of ln A against time is a straight line of slope −k′.",
+          "vi": {
+            "text": "Đồ thị ln A theo thời gian là đường thẳng có hệ số góc −k′."
+          },
+          "true": true
+        },
+        {
+          "text": "After two half-lives the absorbance has fallen to A₀/4.",
+          "vi": {
+            "text": "Sau hai chu kỳ bán phản ứng, độ hấp thụ quang còn A₀/4."
+          },
+          "true": true
+        },
+        {
+          "text": "A warmer bath increases the rate constant.",
+          "vi": {
+            "text": "Bể ổn nhiệt nóng hơn làm tăng hằng số tốc độ."
+          },
+          "true": true
+        },
+        {
+          "text": "The half-life is longer when the starting absorbance is larger.",
+          "vi": {
+            "text": "Độ hấp thụ quang ban đầu càng lớn thì chu kỳ bán phản ứng càng dài."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "k-prime",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["rate-law"],
+      "set": {
+        "naoh": 0.2,
+        "temperature": 25
+      },
+      "stem": "At 25 °C, k = {referenceRate} L/(mol·s) for CV⁺ + OH⁻ (an approximate value). With [OH⁻]₀ = {naoh} mol/L in large excess, what is the pseudo-first-order rate constant k′?",
+      "explain": "k′ = k·[OH⁻]₀ = {referenceRate}·{naoh} = {@rateConstant} s⁻¹.",
+      "vi": {
+        "stem": "Ở 25 °C, phản ứng CV⁺ + OH⁻ có k = {referenceRate} L/(mol·s) (giá trị gần đúng). Với [OH⁻]₀ = {naoh} mol/L rất dư, hằng số tốc độ bậc một giả k′ là bao nhiêu?",
+        "explain": "k′ = k·[OH⁻]₀ = {referenceRate}·{naoh} = {@rateConstant} s⁻¹."
+      },
+      "options": [
+        {
+          "text": "{@rateConstant} s⁻¹",
+          "vi": {
+            "text": "{@rateConstant} s⁻¹"
+          },
+          "correct": true,
+          "check": {
+            "expr": "referenceRate*naoh",
+            "equals": "rateConstant"
+          }
+        },
+        {
+          "text": "{=referenceRate/naoh} s⁻¹",
+          "vi": {
+            "text": "{=referenceRate/naoh} s⁻¹"
+          },
+          "check": {
+            "expr": "referenceRate/naoh",
+            "equals": "rateConstant"
+          }
+        },
+        {
+          "text": "{referenceRate} s⁻¹",
+          "vi": {
+            "text": "{referenceRate} s⁻¹"
+          },
+          "check": {
+            "expr": "referenceRate",
+            "equals": "rateConstant"
+          }
+        },
+        {
+          "text": "{=referenceRate*naoh^2} s⁻¹",
+          "vi": {
+            "text": "{=referenceRate*naoh^2} s⁻¹"
+          },
+          "check": {
+            "expr": "referenceRate*naoh^2",
+            "equals": "rateConstant"
+          }
+        }
+      ]
+    },
+    {
+      "id": "half-life",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["half-life"],
+      "set": {
+        "naoh": 0.1,
+        "temperature": 25
+      },
+      "stem": "At 25 °C with [OH⁻]₀ = {naoh} mol/L, the fading of crystal violet has k′ = {@rateConstant} s⁻¹. What is its half-life?",
+      "explain": "t½ = ln2/k′ = 0.693/{@rateConstant} ≈ {@halfLife} s.",
+      "vi": {
+        "stem": "Ở 25 °C với [OH⁻]₀ = {naoh} mol/L, phản ứng mất màu của tím tinh thể có k′ = {@rateConstant} s⁻¹. Chu kỳ bán phản ứng là bao nhiêu?",
+        "explain": "t½ = ln2/k′ = 0,693/{@rateConstant} ≈ {@halfLife} s."
+      },
+      "options": [
+        {
+          "text": "{@halfLife} s",
+          "vi": {
+            "text": "{@halfLife} s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "ln(2)/@rateConstant",
+            "equals": "halfLife"
+          }
+        },
+        {
+          "text": "{=1/@rateConstant} s",
+          "vi": {
+            "text": "{=1/@rateConstant} s"
+          },
+          "check": {
+            "expr": "1/@rateConstant",
+            "equals": "halfLife"
+          }
+        },
+        {
+          "text": "{=0.5/@rateConstant} s",
+          "vi": {
+            "text": "{=0.5/@rateConstant} s"
+          },
+          "check": {
+            "expr": "0.5/@rateConstant",
+            "equals": "halfLife"
+          }
+        },
+        {
+          "text": "{=ln(2)*@rateConstant} s",
+          "vi": {
+            "text": "{=ln(2)*@rateConstant} s"
+          },
+          "check": {
+            "expr": "ln(2)*@rateConstant",
+            "equals": "halfLife"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-run",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["colorimetry", "half-life", "rate-law"],
+      "set": {
+        "initialConcentration": 0.000005,
+        "naoh": 0.2,
+        "temperature": 25
+      },
+      "stem": "A {=initialConcentration*1e6} µmol/L crystal violet solution fades in NaOH at {naoh} mol/L at 25 °C (k = {referenceRate} L/(mol·s); ε ≈ 1·10⁵ L/(mol·cm), an approximate value; 1 cm cell). The run ends when a quarter of the dye is left. Decide whether each statement is true or false.",
+      "explain": "A₀ = ε·l·c₀ = 1·10⁵·1·{initialConcentration} = {@initialAbsorbance}. k′ = {referenceRate}·{naoh} = {@rateConstant} s⁻¹, t½ = ln2/k′ ≈ {@halfLife} s. After one half-life A = A₀/2 = {=@initialAbsorbance/2}, not A₀/4; a quarter is left after two half-lives, ≈ {@endTime} s.",
+      "vi": {
+        "stem": "Dung dịch tím tinh thể {=initialConcentration*1e6} µmol/L mất màu trong NaOH {naoh} mol/L ở 25 °C (k = {referenceRate} L/(mol·s); ε ≈ 1·10⁵ L/(mol·cm), giá trị gần đúng; cuvet 1 cm). Lần chạy kết thúc khi còn lại một phần tư lượng thuốc nhuộm. Mỗi nhận định sau đúng hay sai?",
+        "explain": "A₀ = ε·l·c₀ = 1·10⁵·1·{initialConcentration} = {@initialAbsorbance}. k′ = {referenceRate}·{naoh} = {@rateConstant} s⁻¹, t½ = ln2/k′ ≈ {@halfLife} s. Sau một chu kỳ bán phản ứng A = A₀/2 = {=@initialAbsorbance/2}, không phải A₀/4; còn một phần tư sau hai chu kỳ bán phản ứng, ≈ {@endTime} s."
+      },
+      "statements": [
+        {
+          "text": "The starting absorbance is {@initialAbsorbance}.",
+          "vi": {
+            "text": "Độ hấp thụ quang ban đầu là {@initialAbsorbance}."
+          },
+          "true": true,
+          "check": {
+            "expr": "1e5*1*initialConcentration",
+            "equals": "initialAbsorbance"
+          }
+        },
+        {
+          "text": "k′ is {@rateConstant} s⁻¹.",
+          "vi": {
+            "text": "k′ bằng {@rateConstant} s⁻¹."
+          },
+          "true": true,
+          "check": {
+            "expr": "referenceRate*naoh",
+            "equals": "rateConstant"
+          }
+        },
+        {
+          "text": "After {@halfLife} s the absorbance has fallen to {=@initialAbsorbance/4}.",
+          "vi": {
+            "text": "Sau {@halfLife} s, độ hấp thụ quang giảm còn {=@initialAbsorbance/4}."
+          },
+          "true": false
+        },
+        {
+          "text": "The run ends after about {@endTime} s, two half-lives.",
+          "vi": {
+            "text": "Lần chạy kết thúc sau khoảng {@endTime} s, tức hai chu kỳ bán phản ứng."
+          },
+          "true": true,
+          "check": {
+            "expr": "2*ln(2)/@rateConstant",
+            "equals": "endTime"
+          }
+        }
+      ]
+    },
+    {
+      "id": "end-time",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["half-life", "colorimetry"],
+      "set": {
+        "naoh": 0.25,
+        "temperature": 25
+      },
+      "stem": "At 25 °C with [OH⁻]₀ = {naoh} mol/L, k′ = {@rateConstant} s⁻¹. How long does it take for the absorbance to fall to a quarter of A₀?",
+      "explain": "ln(A₀/A) = k′t with A₀/A = 4: t = ln4/k′ = 2·ln2/k′ ≈ {@endTime} s — two half-lives.",
+      "vi": {
+        "stem": "Ở 25 °C với [OH⁻]₀ = {naoh} mol/L, k′ = {@rateConstant} s⁻¹. Sau bao lâu độ hấp thụ quang giảm còn một phần tư A₀?",
+        "explain": "ln(A₀/A) = k′t với A₀/A = 4: t = ln4/k′ = 2·ln2/k′ ≈ {@endTime} s — hai chu kỳ bán phản ứng."
+      },
+      "options": [
+        {
+          "text": "{@endTime} s",
+          "vi": {
+            "text": "{@endTime} s"
+          },
+          "correct": true,
+          "check": {
+            "expr": "ln(4)/@rateConstant",
+            "equals": "endTime"
+          }
+        },
+        {
+          "text": "{=ln(4/3)/@rateConstant} s",
+          "vi": {
+            "text": "{=ln(4/3)/@rateConstant} s"
+          },
+          "check": {
+            "expr": "ln(4/3)/@rateConstant",
+            "equals": "endTime"
+          }
+        },
+        {
+          "text": "{=4*ln(2)/@rateConstant} s",
+          "vi": {
+            "text": "{=4*ln(2)/@rateConstant} s"
+          },
+          "check": {
+            "expr": "4*ln(2)/@rateConstant",
+            "equals": "endTime"
+          }
+        },
+        {
+          "text": "{=0.75/@rateConstant} s",
+          "vi": {
+            "text": "{=0.75/@rateConstant} s"
+          },
+          "check": {
+            "expr": "0.75/@rateConstant",
+            "equals": "endTime"
+          }
+        }
+      ]
+    },
+    {
+      "id": "warm-bath",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["temperature", "rate-law"],
+      "set": {
+        "naoh": 0.2,
+        "temperature": 45
+      },
+      "stem": "At 25 °C, k = {referenceRate} L/(mol·s) and Eₐ ≈ {=activationEnergy/1000} kJ/mol (approximate values). What is k′ at {temperature} °C with [OH⁻]₀ = {naoh} mol/L? (R = 8.314 J/(mol·K))",
+      "explain": "In kelvin: k = 0.1·e^((60000/8.314)·(1/298.15 − 1/{=temperature+273.15|5})) ≈ {@secondOrderRate} L/(mol·s); k′ = k·{naoh} ≈ {@rateConstant} s⁻¹. The “double per 10 °C” rule would give {=referenceRate*naoh*4|3} s⁻¹ — only a rough guide.",
+      "vi": {
+        "stem": "Ở 25 °C, k = {referenceRate} L/(mol·s) và Eₐ ≈ {=activationEnergy/1000} kJ/mol (giá trị gần đúng). k′ ở {temperature} °C với [OH⁻]₀ = {naoh} mol/L là bao nhiêu? (R = 8,314 J/(mol·K))",
+        "explain": "Dùng kelvin: k = 0,1·e^((60000/8,314)·(1/298,15 − 1/{=temperature+273.15|5})) ≈ {@secondOrderRate} L/(mol·s); k′ = k·{naoh} ≈ {@rateConstant} s⁻¹. Quy tắc “tăng 10 °C thì gấp đôi” sẽ cho {=referenceRate*naoh*4|3} s⁻¹ — chỉ là ước lượng thô."
+      },
+      "options": [
+        {
+          "text": "{@rateConstant} s⁻¹",
+          "vi": {
+            "text": "{@rateConstant} s⁻¹"
+          },
+          "correct": true,
+          "check": {
+            "expr": "referenceRate*exp(activationEnergy/8.31446261815324*(1/(referenceTemperature+273.15)-1/(temperature+273.15)))*naoh",
+            "equals": "rateConstant"
+          }
+        },
+        {
+          "text": "{=referenceRate*naoh*4|3} s⁻¹",
+          "vi": {
+            "text": "{=referenceRate*naoh*4|3} s⁻¹"
+          },
+          "check": {
+            "expr": "referenceRate*naoh*4",
+            "equals": "rateConstant"
+          }
+        },
+        {
+          "text": "{=referenceRate*naoh} s⁻¹",
+          "vi": {
+            "text": "{=referenceRate*naoh} s⁻¹"
+          },
+          "check": {
+            "expr": "referenceRate*naoh",
+            "equals": "rateConstant"
+          }
+        },
+        {
+          "text": "{=referenceRate*naoh*exp(-activationEnergy/8.31446261815324*(1/298.15-1/(temperature+273.15)))} s⁻¹",
+          "vi": {
+            "text": "{=referenceRate*naoh*exp(-activationEnergy/8.31446261815324*(1/298.15-1/(temperature+273.15)))} s⁻¹"
+          },
+          "check": {
+            "expr": "referenceRate*naoh*exp(-activationEnergy/8.31446261815324*(1/298.15-1/(temperature+273.15)))",
+            "equals": "rateConstant"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-arrhenius",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["temperature", "half-life"],
+      "set": {
+        "naoh": 0.2,
+        "temperature": 45,
+        "timerResolution": 5
+      },
+      "stem": "The run is repeated at {temperature} °C ([OH⁻]₀ = {naoh} mol/L; k₂₅ = {referenceRate} L/(mol·s), Eₐ ≈ {=activationEnergy/1000} kJ/mol, approximate values), timed with a stopwatch reading to {timerResolution} s. Decide whether each statement is true or false.",
+      "explain": "ln(k/k₂₅) = (Eₐ/R)·(1/T₂₅ − 1/T) with 1/298.15 − 1/{=temperature+273.15|5} ≈ {@inverseTemperatureShift|3} K⁻¹ gives {@lnRateRatio|3}; on a graph of ln(k/k₂₅) against 1/T₂₅ − 1/T the slope is Eₐ/R ≈ {@activationTemperature|4} K. The half-life is only {@halfLife|3} s, so a 5 s stopwatch cannot time it to 1 %.",
+      "vi": {
+        "stem": "Lặp lại thí nghiệm ở {temperature} °C ([OH⁻]₀ = {naoh} mol/L; k₂₅ = {referenceRate} L/(mol·s), Eₐ ≈ {=activationEnergy/1000} kJ/mol, giá trị gần đúng), đo thời gian bằng đồng hồ có độ chia {timerResolution} s. Mỗi nhận định sau đúng hay sai?",
+        "explain": "ln(k/k₂₅) = (Eₐ/R)·(1/T₂₅ − 1/T) với 1/298,15 − 1/{=temperature+273.15|5} ≈ {@inverseTemperatureShift|3} K⁻¹ cho {@lnRateRatio|3}; trên đồ thị ln(k/k₂₅) theo 1/T₂₅ − 1/T, hệ số góc bằng Eₐ/R ≈ {@activationTemperature|4} K. Chu kỳ bán phản ứng chỉ {@halfLife|3} s, nên đồng hồ có độ chia 5 s không thể đo chính xác đến 1 %."
+      },
+      "statements": [
+        {
+          "text": "1/T₂₅ − 1/T is about {@inverseTemperatureShift|3} K⁻¹.",
+          "vi": {
+            "text": "1/T₂₅ − 1/T khoảng {@inverseTemperatureShift|3} K⁻¹."
+          },
+          "true": true,
+          "check": {
+            "expr": "1/298.15-1/(temperature+273.15)",
+            "equals": "inverseTemperatureShift"
+          }
+        },
+        {
+          "text": "ln(k/k₂₅) is about {@lnRateRatio|3}.",
+          "vi": {
+            "text": "ln(k/k₂₅) khoảng {@lnRateRatio|3}."
+          },
+          "true": true,
+          "check": {
+            "expr": "activationEnergy/8.31446261815324*(1/298.15-1/(temperature+273.15))",
+            "equals": "lnRateRatio"
+          }
+        },
+        {
+          "text": "The slope of ln(k/k₂₅) against 1/T₂₅ − 1/T is Eₐ/R, about {@activationTemperature|4} K.",
+          "vi": {
+            "text": "Hệ số góc của đồ thị ln(k/k₂₅) theo 1/T₂₅ − 1/T là Eₐ/R, khoảng {@activationTemperature|4} K."
+          },
+          "true": true,
+          "check": {
+            "expr": "@lnRateRatio/@inverseTemperatureShift",
+            "equals": "activationTemperature"
+          }
+        },
+        {
+          "text": "A stopwatch reading to {timerResolution} s times this run’s half-life to better than 1 %.",
+          "vi": {
+            "text": "Đồng hồ có độ chia {timerResolution} s đo được chu kỳ bán phản ứng của lần chạy này với sai số nhỏ hơn 1 %."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "straight-line",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["half-life", "rate-law"],
+      "stem": "For a first-order reaction, which graph is a straight line?",
+      "explain": "First order: [A] = [A]₀·e^(−k′t), so ln[A] = ln[A]₀ − k′t, a straight line of slope −k′. [A] against t is a curve; 1/[A] against t is straight for a second-order reaction.",
+      "vi": {
+        "stem": "Với phản ứng bậc một, đồ thị nào sau đây là một đường thẳng?",
+        "explain": "Bậc một: [A] = [A]₀·e^(−k′t), nên ln[A] = ln[A]₀ − k′t, một đường thẳng có hệ số góc −k′. Đồ thị [A] theo t là đường cong; 1/[A] theo t là đường thẳng với phản ứng bậc hai."
+      },
+      "options": [
+        {
+          "text": "ln[A] against t",
+          "vi": {
+            "text": "ln[A] theo t"
+          },
+          "correct": true
+        },
+        {
+          "text": "[A] against t",
+          "vi": {
+            "text": "[A] theo t"
+          }
+        },
+        {
+          "text": "1/[A] against t",
+          "vi": {
+            "text": "1/[A] theo t"
+          }
+        },
+        {
+          "text": "[A] against 1/t",
+          "vi": {
+            "text": "[A] theo 1/t"
+          }
+        }
+      ]
+    },
+    {
+      "id": "two-half-lives",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["half-life"],
+      "stem": "In a first-order reaction, what fraction of the crystal violet is left after two half-lives?",
+      "explain": "Each half-life halves what is left, whatever the amount: ½ after one, ½·½ = ¼ after two. It is not all gone after two half-lives.",
+      "vi": {
+        "stem": "Trong phản ứng bậc một, sau hai chu kì bán phản ứng còn lại bao nhiêu phần lượng crystal violet ban đầu?",
+        "explain": "Mỗi chu kì bán phản ứng làm lượng còn lại giảm một nửa, bất kể lượng đó là bao nhiêu: còn ½ sau một chu kì, ½·½ = ¼ sau hai chu kì. Sau hai chu kì, chất chưa hết."
+      },
+      "options": [
+        {
+          "text": "1/4",
+          "vi": {
+            "text": "1/4"
+          },
+          "correct": true
+        },
+        {
+          "text": "0",
+          "vi": {
+            "text": "0"
+          }
+        },
+        {
+          "text": "1/2",
+          "vi": {
+            "text": "1/2"
+          }
+        },
+        {
+          "text": "1/3",
+          "vi": {
+            "text": "1/3"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-what-matters",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["rate-law", "half-life", "colorimetry", "temperature"],
+      "stem": "For the fading of crystal violet in a large excess of NaOH (k′ = k·[OH⁻]₀), decide whether each statement is true or false.",
+      "explain": "k′ = k·[OH⁻]₀ grows with the NaOH concentration, and k grows with temperature. A first-order half-life, ln 2/k′, does not depend on the starting dye concentration. The absorbance falls by the same factor (½) in each half-life, so by smaller and smaller amounts.",
+      "vi": {
+        "stem": "Với phản ứng làm mất màu crystal violet trong NaOH rất dư (k′ = k·[OH⁻]₀), mỗi nhận định sau đúng hay sai?",
+        "explain": "k′ = k·[OH⁻]₀ tăng theo nồng độ NaOH, và k tăng theo nhiệt độ. Chu kì bán phản ứng bậc một, ln 2/k′, không phụ thuộc nồng độ ban đầu của chất màu. Độ hấp thụ quang giảm theo cùng một tỉ lệ (½) sau mỗi chu kì bán phản ứng, nên lượng giảm ngày càng nhỏ."
+      },
+      "statements": [
+        {
+          "text": "k′ is larger in a more concentrated NaOH solution.",
+          "vi": {
+            "text": "k′ lớn hơn trong dung dịch NaOH đặc hơn."
+          },
+          "true": true
+        },
+        {
+          "text": "The half-life is longer when more dye is used at the start.",
+          "vi": {
+            "text": "Chu kì bán phản ứng dài hơn khi dùng nhiều chất màu hơn lúc đầu."
+          },
+          "true": false
+        },
+        {
+          "text": "Raising the temperature raises k′.",
+          "vi": {
+            "text": "Tăng nhiệt độ làm tăng k′."
+          },
+          "true": true
+        },
+        {
+          "text": "The absorbance falls by the same amount in every half-life.",
+          "vi": {
+            "text": "Độ hấp thụ quang giảm cùng một lượng sau mỗi chu kì bán phản ứng."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "initial-absorbance",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["colorimetry"],
+      "set": {
+        "initialConcentration": 0.000002
+      },
+      "stem": "Crystal violet starts at {=initialConcentration*1e6} µmol/L in a 1 cm cell, with ε ≈ 1·10⁵ L/(mol·cm) (an approximate value). What is the starting absorbance A₀?",
+      "explain": "A₀ = ε·l·c₀ = 1·10⁵ L/(mol·cm) · 1 cm · {initialConcentration} mol/L = {@initialAbsorbance}. The units must match: with ε per cm, l in cm and c₀ in mol/L (not µmol/L).",
+      "vi": {
+        "stem": "Crystal violet ban đầu có nồng độ {=initialConcentration*1e6} µmol/L, đo trong cuvet 1 cm, với ε ≈ 1·10⁵ L/(mol·cm) (giá trị gần đúng). Độ hấp thụ quang ban đầu A₀ là bao nhiêu?",
+        "explain": "A₀ = ε·l·c₀ = 1·10⁵ L/(mol·cm) · 1 cm · {initialConcentration} mol/L = {@initialAbsorbance}. Đơn vị phải khớp nhau: ε tính theo cm, l tính bằng cm và c₀ tính bằng mol/L (không phải µmol/L)."
+      },
+      "options": [
+        {
+          "text": "{=1e5*initialConcentration}",
+          "vi": {
+            "text": "{=1e5*initialConcentration}"
+          },
+          "correct": true,
+          "check": {
+            "expr": "1e5*initialConcentration",
+            "equals": "initialAbsorbance"
+          }
+        },
+        {
+          "text": "{=1e5*0.01*initialConcentration}",
+          "vi": {
+            "text": "{=1e5*0.01*initialConcentration}"
+          },
+          "check": {
+            "expr": "1e5*0.01*initialConcentration",
+            "equals": "initialAbsorbance"
+          }
+        },
+        {
+          "text": "{=1e5*initialConcentration*1e6}",
+          "vi": {
+            "text": "{=1e5*initialConcentration*1e6}"
+          },
+          "check": {
+            "expr": "1e5*initialConcentration*1e6",
+            "equals": "initialAbsorbance"
+          }
+        },
+        {
+          "text": "{=1e7*initialConcentration}",
+          "vi": {
+            "text": "{=1e7*initialConcentration}"
+          },
+          "check": {
+            "expr": "1e7*initialConcentration",
+            "equals": "initialAbsorbance"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-warm-run",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["temperature", "half-life", "rate-law"],
+      "set": {
+        "naoh": 0.15,
+        "temperature": 35
+      },
+      "stem": "At {temperature} °C, k = {@secondOrderRate|3} L/(mol·s) for CV⁺ + OH⁻ (from approximate values). The dye fades in NaOH at {naoh} mol/L, in large excess. Decide whether each statement is true or false.",
+      "explain": "k′ = k·[OH⁻]₀ = {@secondOrderRate|3}·{naoh} ≈ {@rateConstant} s⁻¹, so t½ = ln 2/k′ ≈ {@halfLife} s and a quarter is left after two half-lives, ≈ {@endTime} s. Using k at 25 °C ({referenceRate} L/(mol·s)) gives {=ln(2)/(referenceRate*naoh)} s, the half-life at 25 °C, not at {temperature} °C.",
+      "vi": {
+        "stem": "Ở {temperature} °C, k = {@secondOrderRate|3} L/(mol·s) với phản ứng CV⁺ + OH⁻ (tính từ các giá trị gần đúng). Chất màu mất màu trong NaOH {naoh} mol/L, rất dư. Mỗi nhận định sau đúng hay sai?",
+        "explain": "k′ = k·[OH⁻]₀ = {@secondOrderRate|3}·{naoh} ≈ {@rateConstant} s⁻¹, nên t½ = ln 2/k′ ≈ {@halfLife} s và còn một phần tư sau hai chu kì bán phản ứng, ≈ {@endTime} s. Dùng k ở 25 °C ({referenceRate} L/(mol·s)) sẽ được {=ln(2)/(referenceRate*naoh)} s, là chu kì bán phản ứng ở 25 °C chứ không phải ở {temperature} °C."
+      },
+      "statements": [
+        {
+          "text": "k′ is about {=@secondOrderRate*naoh} s⁻¹.",
+          "vi": {
+            "text": "k′ khoảng {=@secondOrderRate*naoh} s⁻¹."
+          },
+          "true": true,
+          "check": {
+            "expr": "@secondOrderRate*naoh",
+            "equals": "rateConstant"
+          }
+        },
+        {
+          "text": "The half-life is about {=ln(2)/@rateConstant} s.",
+          "vi": {
+            "text": "Chu kì bán phản ứng khoảng {=ln(2)/@rateConstant} s."
+          },
+          "true": true,
+          "check": {
+            "expr": "ln(2)/@rateConstant",
+            "equals": "halfLife"
+          }
+        },
+        {
+          "text": "A quarter of the dye is left after about {=2*ln(2)/@rateConstant} s.",
+          "vi": {
+            "text": "Còn một phần tư lượng chất màu sau khoảng {=2*ln(2)/@rateConstant} s."
+          },
+          "true": true,
+          "check": {
+            "expr": "2*ln(2)/@rateConstant",
+            "equals": "endTime"
+          }
+        },
+        {
+          "text": "The half-life is about {=ln(2)/(referenceRate*naoh)} s.",
+          "vi": {
+            "text": "Chu kì bán phản ứng khoảng {=ln(2)/(referenceRate*naoh)} s."
+          },
+          "true": false,
+          "check": {
+            "expr": "ln(2)/(referenceRate*naoh)",
+            "equals": "halfLife"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-hydroxide",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["half-life", "rate-law"],
+      "set": {
+        "naoh": 0.25,
+        "temperature": 25
+      },
+      "stem": "At 25 °C (k = {referenceRate} L/(mol·s), an approximate value) the absorbance of crystal violet halves every {@halfLife|3} s in a large excess of NaOH. What is [OH⁻]₀?",
+      "explain": "k′ = ln 2/t½ = 0.693/{@halfLife|3} ≈ {=ln(2)/@halfLife} s⁻¹, and [OH⁻]₀ = k′/k = {=ln(2)/@halfLife}/{referenceRate} = {=ln(2)/(@halfLife*referenceRate)} mol/L. Forgetting ln 2, using 0.5 for it, or multiplying instead of dividing are the traps.",
+      "vi": {
+        "stem": "Ở 25 °C (k = {referenceRate} L/(mol·s), giá trị gần đúng), độ hấp thụ quang của crystal violet giảm một nửa sau mỗi {@halfLife|3} s trong NaOH rất dư. [OH⁻]₀ bằng bao nhiêu?",
+        "explain": "k′ = ln 2/t½ = 0,693/{@halfLife|3} ≈ {=ln(2)/@halfLife} s⁻¹, và [OH⁻]₀ = k′/k = {=ln(2)/@halfLife}/{referenceRate} = {=ln(2)/(@halfLife*referenceRate)} mol/L. Quên ln 2, thay ln 2 bằng 0,5, hoặc nhân thay vì chia là các bẫy thường gặp."
+      },
+      "options": [
+        {
+          "text": "{=ln(2)/(@halfLife*referenceRate)} mol/L",
+          "vi": {
+            "text": "{=ln(2)/(@halfLife*referenceRate)} mol/L"
+          },
+          "correct": true,
+          "check": {
+            "expr": "ln(2)/(referenceRate*(ln(2)/(@halfLife*referenceRate)))",
+            "equals": "halfLife"
+          }
+        },
+        {
+          "text": "{=1/(@halfLife*referenceRate)} mol/L",
+          "vi": {
+            "text": "{=1/(@halfLife*referenceRate)} mol/L"
+          },
+          "check": {
+            "expr": "ln(2)/(referenceRate*(1/(@halfLife*referenceRate)))",
+            "equals": "halfLife"
+          }
+        },
+        {
+          "text": "{=0.5/(@halfLife*referenceRate)} mol/L",
+          "vi": {
+            "text": "{=0.5/(@halfLife*referenceRate)} mol/L"
+          },
+          "check": {
+            "expr": "ln(2)/(referenceRate*(0.5/(@halfLife*referenceRate)))",
+            "equals": "halfLife"
+          }
+        },
+        {
+          "text": "{=ln(2)/@halfLife*referenceRate} mol/L",
+          "vi": {
+            "text": "{=ln(2)/@halfLife*referenceRate} mol/L"
+          },
+          "check": {
+            "expr": "ln(2)/(referenceRate*(ln(2)/@halfLife*referenceRate))",
+            "equals": "halfLife"
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-activation-energy",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["temperature", "rate-law"],
+      "set": {
+        "naoh": 0.2,
+        "temperature": 35
+      },
+      "stem": "With [OH⁻]₀ = {naoh} mol/L, k′ is {=referenceRate*naoh} s⁻¹ at 25 °C and {@rateConstant} s⁻¹ at {temperature} °C. What activation energy do these give? (R = 8.314 J/(mol·K))",
+      "explain": "ln(k′₂/k′₁) = ln({@rateConstant}/{=referenceRate*naoh}) ≈ {@lnRateRatio|3}, and 1/298.15 − 1/{=temperature+273.15} ≈ {@inverseTemperatureShift|3} K⁻¹. Eₐ = R·ln(k′₂/k′₁)/(1/T₁ − 1/T₂) = 8.314·{@lnRateRatio|3}/{@inverseTemperatureShift|3} ≈ {=8.31446261815324*@lnRateRatio/@inverseTemperatureShift/1000|3} kJ/mol. The temperatures must be in kelvin; lg instead of ln gives {=8.31446261815324*@lnRateRatio/ln(10)/@inverseTemperatureShift/1000|3} kJ/mol.",
+      "vi": {
+        "stem": "Với [OH⁻]₀ = {naoh} mol/L, k′ bằng {=referenceRate*naoh} s⁻¹ ở 25 °C và {@rateConstant} s⁻¹ ở {temperature} °C. Năng lượng hoạt hóa tính được từ các số liệu này là bao nhiêu? (R = 8,314 J/(mol·K))",
+        "explain": "ln(k′₂/k′₁) = ln({@rateConstant}/{=referenceRate*naoh}) ≈ {@lnRateRatio|3}, và 1/298,15 − 1/{=temperature+273.15} ≈ {@inverseTemperatureShift|3} K⁻¹. Eₐ = R·ln(k′₂/k′₁)/(1/T₁ − 1/T₂) = 8,314·{@lnRateRatio|3}/{@inverseTemperatureShift|3} ≈ {=8.31446261815324*@lnRateRatio/@inverseTemperatureShift/1000|3} kJ/mol. Nhiệt độ phải tính bằng kelvin; dùng lg thay cho ln sẽ được {=8.31446261815324*@lnRateRatio/ln(10)/@inverseTemperatureShift/1000|3} kJ/mol."
+      },
+      "options": [
+        {
+          "text": "{=8.31446261815324*@lnRateRatio/@inverseTemperatureShift/1000|3} kJ/mol",
+          "vi": {
+            "text": "{=8.31446261815324*@lnRateRatio/@inverseTemperatureShift/1000|3} kJ/mol"
+          },
+          "correct": true,
+          "check": {
+            "expr": "referenceRate*naoh*exp(activationEnergy/8.31446261815324*(1/(referenceTemperature+273.15)-1/(temperature+273.15)))",
+            "equals": "rateConstant"
+          }
+        },
+        {
+          "text": "{=8.31446261815324*@lnRateRatio/(1/referenceTemperature-1/temperature)/1000|3} kJ/mol",
+          "vi": {
+            "text": "{=8.31446261815324*@lnRateRatio/(1/referenceTemperature-1/temperature)/1000|3} kJ/mol"
+          },
+          "check": {
+            "expr": "referenceRate*naoh*exp(8.31446261815324*@lnRateRatio/(1/referenceTemperature-1/temperature)/8.31446261815324*(1/(referenceTemperature+273.15)-1/(temperature+273.15)))",
+            "equals": "rateConstant"
+          }
+        },
+        {
+          "text": "{=8.31446261815324*@lnRateRatio/ln(10)/@inverseTemperatureShift/1000|3} kJ/mol",
+          "vi": {
+            "text": "{=8.31446261815324*@lnRateRatio/ln(10)/@inverseTemperatureShift/1000|3} kJ/mol"
+          },
+          "check": {
+            "expr": "referenceRate*naoh*exp(@lnRateRatio/ln(10)/@inverseTemperatureShift*(1/(referenceTemperature+273.15)-1/(temperature+273.15)))",
+            "equals": "rateConstant"
+          }
+        },
+        {
+          "text": "{=@lnRateRatio/@inverseTemperatureShift/1000|3} kJ/mol",
+          "vi": {
+            "text": "{=@lnRateRatio/@inverseTemperatureShift/1000|3} kJ/mol"
+          },
+          "check": {
+            "expr": "referenceRate*naoh*exp(@lnRateRatio/@inverseTemperatureShift/8.31446261815324*(1/(referenceTemperature+273.15)-1/(temperature+273.15)))",
+            "equals": "rateConstant"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-cool-strong",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["temperature", "half-life", "colorimetry"],
+      "set": {
+        "naoh": 0.25,
+        "temperature": 20
+      },
+      "stem": "The run is made at {temperature} °C with [OH⁻]₀ = {naoh} mol/L (k₂₅ = {referenceRate} L/(mol·s), Eₐ ≈ {=activationEnergy/1000} kJ/mol, approximate values); it ends when a quarter of the dye is left. At 25 °C with 0.2 mol/L, t½ would be {=ln(2)/(referenceRate*0.2)|3} s. Decide whether each statement is true or false.",
+      "explain": "k = 0.1·e^((Eₐ/R)(1/298.15 − 1/{=temperature+273.15})) ≈ {@secondOrderRate|3} L/(mol·s), so k′ = k·{naoh} ≈ {@rateConstant} s⁻¹ and t½ ≈ {@halfLife|3} s: the cooler bath outweighs the extra NaOH, and the dye fades more slowly than at 25 °C with 0.2 mol/L. The half-life does not depend on c₀. At the end, a quarter of the dye is left: {@finalConcentration} mol/L.",
+      "vi": {
+        "stem": "Thí nghiệm được làm ở {temperature} °C với [OH⁻]₀ = {naoh} mol/L (k₂₅ = {referenceRate} L/(mol·s), Eₐ ≈ {=activationEnergy/1000} kJ/mol, các giá trị gần đúng); thí nghiệm kết thúc khi còn một phần tư lượng chất màu. Ở 25 °C với 0,2 mol/L, t½ sẽ là {=ln(2)/(referenceRate*0.2)|3} s. Mỗi nhận định sau đúng hay sai?",
+        "explain": "k = 0,1·e^((Eₐ/R)(1/298,15 − 1/{=temperature+273.15})) ≈ {@secondOrderRate|3} L/(mol·s), nên k′ = k·{naoh} ≈ {@rateConstant} s⁻¹ và t½ ≈ {@halfLife|3} s: ảnh hưởng của nhiệt độ thấp hơn lấn át lượng NaOH tăng thêm, nên chất màu mất màu chậm hơn so với ở 25 °C với 0,2 mol/L. Chu kì bán phản ứng không phụ thuộc c₀. Khi kết thúc còn một phần tư lượng chất màu: {@finalConcentration} mol/L."
+      },
+      "statements": [
+        {
+          "text": "k′ is about {=referenceRate*exp(activationEnergy/8.31446261815324*(1/(referenceTemperature+273.15)-1/(temperature+273.15)))*naoh} s⁻¹.",
+          "vi": {
+            "text": "k′ khoảng {=referenceRate*exp(activationEnergy/8.31446261815324*(1/(referenceTemperature+273.15)-1/(temperature+273.15)))*naoh} s⁻¹."
+          },
+          "true": true,
+          "check": {
+            "expr": "referenceRate*exp(activationEnergy/8.31446261815324*(1/(referenceTemperature+273.15)-1/(temperature+273.15)))*naoh",
+            "equals": "rateConstant"
+          }
+        },
+        {
+          "text": "Its half-life, about {=ln(2)/@rateConstant|3} s, is longer than at 25 °C with 0.2 mol/L, despite the extra NaOH.",
+          "vi": {
+            "text": "Chu kì bán phản ứng của nó, khoảng {=ln(2)/@rateConstant|3} s, dài hơn so với ở 25 °C với 0,2 mol/L, dù dùng nhiều NaOH hơn."
+          },
+          "true": true,
+          "check": {
+            "expr": "ln(2)/@rateConstant",
+            "equals": "halfLife"
+          }
+        },
+        {
+          "text": "Starting with twice as much dye would double the half-life.",
+          "vi": {
+            "text": "Bắt đầu với lượng chất màu gấp đôi thì chu kì bán phản ứng tăng gấp đôi."
+          },
+          "true": false
+        },
+        {
+          "text": "When the run ends, {=0.75*initialConcentration} mol/L of dye is left.",
+          "vi": {
+            "text": "Khi thí nghiệm kết thúc, còn lại {=0.75*initialConcentration} mol/L chất màu."
+          },
+          "true": false,
+          "check": {
+            "expr": "0.75*initialConcentration",
+            "equals": "finalConcentration"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,557 @@
+{
+  "id": "induction",
+  "name": "Electromagnetic induction: a magnet through a coil",
+  "category": "physics",
+  "description": "A bar magnet rides along a track straight through a coil joined to a centre-zero galvanometer. While it comes in, the flux through the coil rises and the needle kicks one way; as it leaves, the flux falls and the needle kicks the other way: the induced current always opposes the change (Lenz's law). The faster the magnet and the more turns on the coil, the larger the induced emf, e = −N·ΔΦ/Δt. Turn the magnet round and both kicks reverse.",
+  "vi": {
+    "name": "Cảm ứng điện từ: nam châm đi qua cuộn dây",
+    "description": "Một thanh nam châm chạy dọc ray, đi thẳng qua một cuộn dây được nối với điện kế có số 0 ở giữa. Khi nam châm đi vào, từ thông qua cuộn dây tăng và kim lệch về một phía; khi nó đi ra, từ thông giảm và kim lệch về phía kia: dòng điện cảm ứng luôn chống lại sự biến thiên đó (định luật Lenz). Nam châm chạy càng nhanh và cuộn dây càng nhiều vòng thì suất điện động cảm ứng càng lớn, e = −N·ΔΦ/Δt. Quay ngược nam châm thì cả hai lần lệch đều đổi chiều.",
+    "note": "Suất điện động cảm ứng trong cuộn dây N vòng là e = −N·dΦ/dt (định luật Faraday; dấu trừ là định luật Lenz). Nam châm được coi như một lưỡng cực từ có mômen m = 1 A·m² (giá trị minh họa cho một thanh nam châm trong trường học), chạy đều với tốc độ v dọc trục của cuộn dây bán kính a = 2 cm, từ 25 cm trước tâm cuộn tới 25 cm sau tâm. Từ thông của lưỡng cực qua mỗi vòng dây cách nó z dọc trục là Φ = μ0·m·a²/(2·(z² + a²)^(3/2)), với μ0 = 1,25663706212 × 10⁻⁶ T·m/A (CODATA 2018). Khi đó e = 3·N·v·μ0·m·a²·z/(2·(z² + a²)^(5/2)): hai xung trái dấu, mỗi xung đạt cực đại khi nam châm cách tâm a/2, với độ lớn 3·μ0·m·N·v/(4·a²·(5/4)^(5/2)), tỉ lệ thuận với N và v. Dòng điện qua điện kế là e/R, với R = 50 Ω là điện trở của cuộn dây và điện kế. Đây là mô hình dạy học đơn giản hóa: mọi vòng dây nằm ở tâm cuộn, nam châm là một lưỡng cực điểm, bỏ qua độ tự cảm của cuộn dây. Bộ ghi dữ liệu đọc độ lớn đỉnh của suất điện động theo độ phân giải d của nó (bội số gần nhất của d, độ bất định d/√12 chỉ do độ phân giải); không có sai số ngẫu nhiên nào được thêm vào. Thời gian được chiếu chậm 5 lần. Trong phòng thí nghiệm thật, nam châm có kích thước nên gần cuộn dây nó không giống một lưỡng cực điểm, các vòng dây trải dọc cuộn, và kim điện kế có quán tính nên không kịp chỉ đúng đỉnh của một xung nhanh."
+  },
+  "requiredEquipment": ["induction-coil"],
+  "model": "magnetism.induction",
+  "parameters": [
+    {
+      "id": "speed",
+      "label": "Speed of the magnet",
+      "vi": {
+        "label": "Tốc độ của nam châm"
+      },
+      "symbol": "v",
+      "unit": "m/s",
+      "default": 0.5,
+      "min": 0.2,
+      "max": 1,
+      "presets": [
+        {
+          "label": "0.2 m/s",
+          "vi": {
+            "label": "0,2 m/s"
+          },
+          "value": 0.2
+        },
+        {
+          "label": "0.5 m/s",
+          "vi": {
+            "label": "0,5 m/s"
+          },
+          "value": 0.5
+        },
+        {
+          "label": "1 m/s",
+          "vi": {
+            "label": "1 m/s"
+          },
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "turns",
+      "label": "Turns on the coil",
+      "vi": {
+        "label": "Số vòng dây của cuộn"
+      },
+      "symbol": "N",
+      "unit": "",
+      "default": 400,
+      "min": 200,
+      "max": 800,
+      "presets": [
+        {
+          "label": "200 turns",
+          "vi": {
+            "label": "200 vòng"
+          },
+          "value": 200
+        },
+        {
+          "label": "400 turns",
+          "vi": {
+            "label": "400 vòng"
+          },
+          "value": 400
+        },
+        {
+          "label": "800 turns",
+          "vi": {
+            "label": "800 vòng"
+          },
+          "value": 800
+        }
+      ]
+    },
+    {
+      "id": "polarity",
+      "label": "Pole that goes in first",
+      "vi": {
+        "label": "Cực đi vào trước"
+      },
+      "symbol": "pole",
+      "unit": "",
+      "default": 1,
+      "min": -1,
+      "max": 1,
+      "presets": [
+        {
+          "label": "North first",
+          "vi": {
+            "label": "Cực Bắc trước"
+          },
+          "value": 1
+        },
+        {
+          "label": "South first",
+          "vi": {
+            "label": "Cực Nam trước"
+          },
+          "value": -1
+        }
+      ]
+    },
+    {
+      "id": "voltageResolution",
+      "label": "Data logger resolution",
+      "vi": {
+        "label": "Độ phân giải của bộ ghi dữ liệu"
+      },
+      "symbol": "d_e",
+      "unit": "V",
+      "default": 0.001,
+      "min": 0.001,
+      "max": 0.01,
+      "presets": [
+        {
+          "label": "1 mV",
+          "vi": {
+            "label": "1 mV"
+          },
+          "value": 0.001
+        },
+        {
+          "label": "10 mV",
+          "vi": {
+            "label": "10 mV"
+          },
+          "value": 0.01
+        }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "coilRadius": 0.02,
+    "magnetMoment": 1,
+    "startDistance": 0.25,
+    "circuitResistance": 50,
+    "timeLapse": 0.2
+  },
+  "inputs": {
+    "coilRadius": {
+      "symbol": "a",
+      "unit": "m"
+    },
+    "magnetMoment": {
+      "symbol": "m",
+      "unit": "A·m²",
+      "desk": false
+    },
+    "startDistance": {
+      "symbol": "z0",
+      "unit": "m",
+      "desk": false
+    },
+    "circuitResistance": {
+      "symbol": "R",
+      "unit": "Ω",
+      "desk": false
+    },
+    "timeLapse": {
+      "symbol": "k_t",
+      "unit": "",
+      "desk": false
+    }
+  },
+  "simulation": {
+    "timeStep": 0.01,
+    "maxDuration": 14,
+    "sampleInterval": 0.02
+  },
+  "measurements": [
+    {
+      "id": "emf",
+      "label": "Induced emf",
+      "vi": {
+        "label": "Suất điện động cảm ứng"
+      },
+      "symbol": "e",
+      "unit": "V",
+      "variable": "emf"
+    },
+    {
+      "id": "current",
+      "label": "Current through the galvanometer",
+      "vi": {
+        "label": "Dòng điện qua điện kế"
+      },
+      "symbol": "i",
+      "unit": "A",
+      "variable": "current"
+    },
+    {
+      "id": "magnetPosition",
+      "label": "Magnet's distance past the coil's centre",
+      "vi": {
+        "label": "Khoảng cách từ nam châm tới tâm cuộn dây"
+      },
+      "symbol": "z",
+      "unit": "m",
+      "variable": "magnetPosition"
+    },
+    {
+      "id": "labTime",
+      "label": "Time",
+      "vi": {
+        "label": "Thời gian"
+      },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "labTime"
+    }
+  ],
+  "results": [
+    {
+      "id": "firstPeak",
+      "label": "Peak emf as the magnet comes in",
+      "vi": {
+        "label": "Suất điện động đỉnh khi nam châm đi vào"
+      },
+      "symbol": "e₁",
+      "unit": "V",
+      "variable": "firstPeak",
+      "reduce": "final",
+      "theory": "firstPeak"
+    },
+    {
+      "id": "secondPeak",
+      "label": "Peak emf as the magnet leaves",
+      "vi": {
+        "label": "Suất điện động đỉnh khi nam châm đi ra"
+      },
+      "symbol": "e₂",
+      "unit": "V",
+      "variable": "secondPeak",
+      "reduce": "final",
+      "theory": "secondPeak"
+    },
+    {
+      "id": "peakEmf",
+      "label": "Size of the peak emf",
+      "vi": {
+        "label": "Độ lớn suất điện động đỉnh"
+      },
+      "symbol": "|e|max",
+      "unit": "V",
+      "variable": "peakEmf",
+      "reduce": "final",
+      "theory": "peakEmf"
+    }
+  ],
+  "instruments": [
+    {
+      "result": "peakEmf",
+      "quantity": "Peak emf |e|max",
+      "name": "Data logger",
+      "resolution": "voltageResolution",
+      "excludes": "the logger's sampling missing the very top of a fast pulse, and its calibration",
+      "vi": {
+        "quantity": "Suất điện động đỉnh |e|max",
+        "name": "Bộ ghi dữ liệu",
+        "excludes": "việc bộ ghi lấy mẫu bỏ lỡ đúng đỉnh của một xung nhanh, và sai số hiệu chuẩn của nó"
+      }
+    }
+  ],
+  "graphs": [
+    {
+      "id": "emf-time",
+      "title": "Induced emf against time",
+      "vi": {
+        "title": "Suất điện động cảm ứng theo thời gian"
+      },
+      "x": "labTime",
+      "y": ["emf"],
+      "yLabel": "e"
+    },
+    {
+      "id": "emf-position",
+      "title": "Induced emf against the magnet's position",
+      "vi": {
+        "title": "Suất điện động cảm ứng theo vị trí của nam châm"
+      },
+      "x": "magnetPosition",
+      "y": ["emf"],
+      "yLabel": "e"
+    }
+  ],
+  "monitor": "emf-time",
+  "compare": [
+    {
+      "graph": "emf-position"
+    }
+  ],
+  "analyses": [
+    {
+      "id": "peak-speed",
+      "title": "Peak emf against the magnet's speed for one coil (|e|max ∝ v)",
+      "note": "Each run is one point: the size of the peak emf against the magnet's speed v. Runs with the same coil are fitted together, at different speeds. The same change of flux in less time gives a larger emf: |e|max = 3·μ0·m·N·v/(4·a²·(5/4)^(5/2)), a straight line through the origin whose slope is proportional to the number of turns N. Twice the turns, twice the slope.",
+      "vi": {
+        "title": "Suất điện động đỉnh theo tốc độ của nam châm, với cùng một cuộn dây (|e|max ∝ v)",
+        "note": "Mỗi lần chạy là một điểm: độ lớn suất điện động đỉnh theo tốc độ v của nam châm. Các lần chạy cùng cuộn dây được khớp chung, với các tốc độ khác nhau. Cùng một độ biến thiên từ thông trong thời gian ngắn hơn cho suất điện động lớn hơn: |e|max = 3·μ0·m·N·v/(4·a²·(5/4)^(5/2)), một đường thẳng đi qua gốc tọa độ có hệ số góc tỉ lệ thuận với số vòng dây N. Gấp đôi số vòng, gấp đôi hệ số góc."
+      },
+      "x": "speed",
+      "y": "peakEmf",
+      "group": ["turns"],
+      "columns": ["turns", "speed", "polarity", "firstPeak", "secondPeak", "peakEmf"],
+      "slope": {
+        "label": "Slope of |e|max against v",
+        "vi": {
+          "label": "Hệ số góc của |e|max theo v"
+        },
+        "symbol": "|e|max/v",
+        "unit": "V·s/m",
+        "theory": "peakPerSpeed"
+      }
+    }
+  ],
+  "note": "The emf induced in a coil of N turns is e = −N·dΦ/dt (Faraday's law; the minus sign is Lenz's law). The magnet is taken as a magnetic dipole of moment m = 1 A·m² (illustrative for a school bar magnet), moving steadily at v along the axis of a coil of radius a = 2 cm, from 25 cm before the coil's centre to 25 cm past it. The dipole's flux through a turn z from it along the axis is Φ = μ0·m·a²/(2·(z² + a²)^(3/2)), μ0 = 1.25663706212 × 10⁻⁶ T·m/A (CODATA 2018). So e = 3·N·v·μ0·m·a²·z/(2·(z² + a²)^(5/2)): two pulses of opposite sign, each peaking with the magnet a/2 from the centre at the size 3·μ0·m·N·v/(4·a²·(5/4)^(5/2)), proportional to N and to v. The current through the galvanometer is e/R, R = 50 Ω the coil's and the meter's resistance. A simplified teaching model: all the turns are at the coil's centre, the magnet is a point dipole, the coil's self-inductance is neglected. The data logger reads the peak emf's size to its resolution d (the nearest multiple of d, with the uncertainty d/√12 from the resolution alone); no random error is added. Time is shown 5 times slower. In a real lab the magnet has a size, so near the coil it is not a point dipole, the turns spread along the coil, and the galvanometer's needle has inertia and cannot follow the top of a fast pulse.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the induction instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn thí nghiệm cảm ứng điện từ trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "induction-instructions"
+      }
+    },
+    {
+      "id": "speed",
+      "instruction": "Choose the magnet's speed with its dial on the control desk.",
+      "vi": {
+        "instruction": "Chọn tốc độ của nam châm bằng núm xoay trên bàn điều khiển."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "speed"
+      }
+    },
+    {
+      "id": "coil",
+      "instruction": "Choose the coil: its number of turns.",
+      "vi": {
+        "instruction": "Chọn cuộn dây: số vòng dây của nó."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "turns"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN: the magnet passes through the coil; watch the galvanometer kick one way, then the other.",
+      "vi": {
+        "instruction": "Nhấn CHẠY: nam châm đi qua cuộn dây; quan sát kim điện kế lệch về một phía rồi về phía kia."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Read both peaks on the results monitor: their signs and their size.",
+      "vi": {
+        "instruction": "Đọc hai giá trị đỉnh trên màn hình kết quả: dấu và độ lớn của chúng."
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, change the speed, the coil or the pole first, and run again.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, đổi tốc độ, cuộn dây hoặc cực đi vào trước, rồi chạy lại."
+      },
+      "done": {
+        "kind": "reset"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "peak-emf",
+      "question": "A bar magnet (taken as a dipole of moment {magnetMoment} A·m², an illustrative value) passes at {speed} m/s along the axis of a coil of {turns} turns and radius {coilRadius} m. Find the peak emf.",
+      "vi": {
+        "question": "Một nam châm thẳng (coi là lưỡng cực có mômen {magnetMoment} A·m², giá trị minh họa) chuyển động với tốc độ {speed} m/s dọc trục một cuộn dây {turns} vòng, bán kính {coilRadius} m. Tìm suất điện động cảm ứng cực đại."
+      },
+      "set": { "speed": 1, "turns": 800 },
+      "find": [{ "theory": "peakEmf" }],
+      "steps": [
+        {
+          "say": "Faraday’s law: e = −N·dΦ/dt. For a dipole on the axis the emf is greatest with the magnet a/2 from the coil’s centre, which gives this peak, μ₀ = 1.257 × 10⁻⁶ T·m/A.",
+          "vi": {
+            "say": "Định luật Faraday: e = −N·dΦ/dt. Với lưỡng cực chuyển động trên trục, suất điện động lớn nhất khi nam châm cách tâm cuộn dây a/2, cho giá trị cực đại này, với μ₀ = 1,257 × 10⁻⁶ T·m/A."
+          },
+          "write": "|e|max = 3μ₀·m·N·v/(4a²·(5/4)^(5/2))"
+        },
+        {
+          "say": "Put in the numbers: the peak is proportional to N and to v.",
+          "vi": { "say": "Thay số: giá trị cực đại tỉ lệ thuận với N và với v." },
+          "write": "|e|max = 3·μ₀·{magnetMoment}·{turns}·{speed}/(4·{coilRadius}²·1.747) ≈ {@peakEmf} V",
+          "check": {
+            "expr": "3*1.25663706212e-6*magnetMoment*turns*speed/(4*coilRadius^2*(5/4)^(5/2))",
+            "equals": "peakEmf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "south-first",
+      "question": "The magnet passes south pole first at {speed} m/s through a coil of {turns} turns. Find the peak emf, and the sign of the first pulse (north first gives a negative first pulse).",
+      "vi": {
+        "question": "Nam châm đi qua cuộn dây {turns} vòng với tốc độ {speed} m/s, cực nam đi trước. Tìm suất điện động cực đại và dấu của xung thứ nhất (cực bắc đi trước thì xung đầu âm)."
+      },
+      "set": { "speed": 0.2, "turns": 200, "polarity": -1 },
+      "find": [{ "theory": "peakEmf" }, { "theory": "firstPeak" }],
+      "steps": [
+        {
+          "say": "The same formula: a slower magnet and fewer turns give a smaller peak.",
+          "vi": {
+            "say": "Vẫn công thức đó: nam châm chậm hơn và ít vòng hơn cho giá trị cực đại nhỏ hơn."
+          },
+          "write": "|e|max = 3·μ₀·{magnetMoment}·{turns}·{speed}/(4·{coilRadius}²·1.747) ≈ {@peakEmf} V",
+          "check": {
+            "expr": "3*1.25663706212e-6*magnetMoment*turns*speed/(4*coilRadius^2*(5/4)^(5/2))",
+            "equals": "peakEmf"
+          }
+        },
+        {
+          "say": "Lenz’s law: the current opposes the change of flux. Turning the magnet round reverses the flux and every pulse, so the first pulse is now positive.",
+          "vi": {
+            "say": "Định luật Lenz: dòng điện cảm ứng chống lại sự biến thiên của từ thông. Quay ngược nam châm thì từ thông và mọi xung đều đổi chiều, nên xung đầu tiên giờ mang dấu dương."
+          },
+          "write": "e₁ = +|e|max ≈ {@firstPeak} V",
+          "check": { "expr": "-polarity*@peakEmf", "equals": "firstPeak" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "A magnet moving through a coil makes a current flow in it, one way as it comes in and the other way as it leaves; the faster the magnet and the more turns, the larger the emf.",
+    "vi": {
+      "summary": "Nam châm chuyển động qua cuộn dây làm xuất hiện dòng điện trong cuộn dây, theo một chiều khi nó đi vào và chiều ngược lại khi nó đi ra; nam châm càng nhanh và số vòng dây càng nhiều thì suất điện động càng lớn."
+    },
+    "parts": [
+      {
+        "id": "magnet",
+        "name": "Bar magnet",
+        "role": "Rides along the track at the speed v, straight through the coil; either pole can go first.",
+        "vi": {
+          "name": "Nam châm thẳng",
+          "role": "Chạy dọc theo ray với tốc độ v, xuyên thẳng qua cuộn dây; cực nào đi trước cũng được."
+        },
+        "anchor": {
+          "part": "magnet"
+        }
+      },
+      {
+        "id": "coil",
+        "name": "Coil, N turns",
+        "role": "The magnetic flux through its turns changes as the magnet passes: an emf is induced in it.",
+        "vi": {
+          "name": "Cuộn dây, N vòng",
+          "role": "Từ thông qua các vòng dây biến thiên khi nam châm đi qua: trong cuộn dây xuất hiện suất điện động cảm ứng."
+        },
+        "anchor": {
+          "part": "coil"
+        }
+      },
+      {
+        "id": "galvanometer",
+        "name": "Centre-zero galvanometer",
+        "role": "Its needle kicks one way or the other with the direction of the induced current.",
+        "vi": {
+          "name": "Điện kế có số 0 ở giữa",
+          "role": "Kim của nó lệch về phía này hoặc phía kia theo chiều của dòng điện cảm ứng."
+        },
+        "anchor": {
+          "part": "needle"
+        }
+      },
+      {
+        "id": "track",
+        "name": "Track",
+        "role": "Keeps the magnet on the coil’s axis.",
+        "vi": {
+          "name": "Ray dẫn",
+          "role": "Giữ nam châm chuyển động trên trục của cuộn dây."
+        },
+        "anchor": {
+          "at": [-0.2, -0.034, 0.02]
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "The magnet’s field passes through the coil’s turns. The amount of field through them is the magnetic flux Φ; the closer the magnet, the larger it is.",
+        "vi": {
+          "text": "Từ trường của nam châm đi qua các vòng dây. Lượng từ trường xuyên qua chúng là từ thông Φ; nam châm càng gần thì từ thông càng lớn."
+        },
+        "parts": ["magnet", "coil"]
+      },
+      {
+        "text": "While the magnet comes in, the flux rises and an emf is induced: e = −N·ΔΦ/Δt (Faraday’s law). Current flows and the needle kicks.",
+        "vi": {
+          "text": "Khi nam châm đi vào, từ thông tăng và xuất hiện suất điện động cảm ứng: e = −N·ΔΦ/Δt (định luật Fa-ra-đây). Dòng điện chạy và kim điện kế lệch."
+        },
+        "parts": ["magnet", "coil", "galvanometer"]
+      },
+      {
+        "text": "As it leaves, the flux falls and the needle kicks the other way. The induced current always opposes the change that makes it (Lenz’s law): that is the minus sign.",
+        "vi": {
+          "text": "Khi nó đi ra, từ thông giảm và kim lệch theo chiều ngược lại. Dòng điện cảm ứng luôn chống lại sự biến thiên sinh ra nó (định luật Len-xơ): đó là ý nghĩa của dấu trừ."
+        },
+        "parts": ["coil", "galvanometer"]
+      },
+      {
+        "text": "No movement, no change, no current. The faster the magnet, the faster the flux changes, so the larger the emf; more turns add more emf. The peak emf is proportional to v and to N.",
+        "vi": {
+          "text": "Không chuyển động thì không có biến thiên, không có dòng điện. Nam châm càng nhanh thì từ thông biến thiên càng nhanh, nên suất điện động càng lớn; thêm vòng dây thì thêm suất điện động. Suất điện động cực đại tỉ lệ với v và với N."
+        },
+        "parts": ["magnet", "coil", "track"]
+      },
+      {
+        "text": "Turn the magnet round, so the other pole goes in first, and both kicks reverse.",
+        "vi": {
+          "text": "Quay ngược nam châm để cực kia đi vào trước, thì cả hai lần lệch đều đổi chiều."
+        },
+        "parts": ["magnet", "galvanometer"]
+      },
+      {
+        "text": "The results give both peaks with their signs, and their size, against theory; the data logger reads in steps of its resolution d. Time is shown 5 times slower.",
+        "vi": {
+          "text": "Phần kết quả cho hai giá trị cực đại cùng dấu của chúng, và độ lớn, so với lý thuyết; bộ ghi dữ liệu đọc theo từng bước bằng độ phân giải d. Thời gian được chiếu chậm 5 lần."
+        },
+        "parts": ["galvanometer"]
+      },
+      {
+        "text": "A simplified model: the magnet is a point dipole and all the turns are at the coil’s centre. A real needle has inertia and cannot follow the top of a fast pulse.",
+        "vi": {
+          "text": "Mô hình đơn giản hóa: nam châm là một lưỡng cực điểm và mọi vòng dây nằm ở tâm cuộn dây. Kim thật có quán tính nên không theo kịp đỉnh của một xung nhanh."
+        },
+        "parts": ["magnet", "coil"]
+      }
+    ]
+  }
+}

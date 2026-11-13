@@ -1,0 +1,375 @@
+{
+  "id": "projectile-motion",
+  "name": "Projectile motion",
+  "category": "physics",
+  "description": "A ball leaves the launcher at speed v₀ and angle θ above the horizontal and flies without air resistance until it lands on the floor. Its position and velocity are measured throughout the flight and compared with the theory.",
+  "requiredEquipment": ["projectile-launcher", "projectile-ball"],
+  "model": "kinematics.projectile",
+  "parameters": [
+    {
+      "id": "velocity",
+      "label": "Initial velocity",
+      "vi": { "label": "Vận tốc ban đầu" },
+      "symbol": "v₀",
+      "unit": "m/s",
+      "default": 8,
+      "min": 1,
+      "max": 15,
+      "step": 0.5
+    },
+    {
+      "id": "angle",
+      "label": "Launch angle",
+      "vi": { "label": "Góc ném" },
+      "symbol": "θ",
+      "unit": "°",
+      "default": 45,
+      "min": 0,
+      "max": 90,
+      "step": 5
+    },
+    {
+      "id": "gravity",
+      "label": "Gravitational acceleration",
+      "vi": { "label": "Gia tốc trọng trường" },
+      "symbol": "g",
+      "unit": "m/s²",
+      "default": 9.81,
+      "min": 1,
+      "max": 25,
+      "step": 0.1,
+      "presets": [
+        { "label": "Moon", "vi": { "label": "Mặt Trăng" }, "value": 1.62 },
+        { "label": "Mars", "vi": { "label": "Sao Hỏa" }, "value": 3.71 },
+        { "label": "Earth", "vi": { "label": "Trái Đất" }, "value": 9.81 },
+        { "label": "Jupiter", "vi": { "label": "Sao Mộc" }, "value": 24.79 }
+      ]
+    },
+    {
+      "id": "resolution",
+      "label": "Tape resolution",
+      "vi": { "label": "Độ phân giải thước dây" },
+      "symbol": "d",
+      "unit": "m",
+      "default": 0.01,
+      "min": 0.001,
+      "max": 0.1,
+      "presets": [
+        { "label": "0.001 m", "value": 0.001 },
+        { "label": "0.01 m", "value": 0.01 },
+        { "label": "0.1 m", "value": 0.1 }
+      ]
+    }
+  ],
+  "initialConditions": { "height": 0 },
+  "inputs": { "height": { "symbol": "h", "unit": "m" } },
+  "simulation": { "timeStep": 0.001, "maxDuration": 12, "sampleInterval": 0.01 },
+  "measurements": [
+    {
+      "id": "x",
+      "label": "Horizontal distance",
+      "vi": { "label": "Khoảng cách ngang" },
+      "unit": "m",
+      "variable": "x"
+    },
+    { "id": "y", "label": "Height", "vi": { "label": "Độ cao" }, "unit": "m", "variable": "y" },
+    {
+      "id": "vx",
+      "label": "Horizontal velocity",
+      "vi": { "label": "Vận tốc ngang" },
+      "unit": "m/s",
+      "variable": "vx"
+    },
+    {
+      "id": "vy",
+      "label": "Vertical velocity",
+      "vi": { "label": "Vận tốc thẳng đứng" },
+      "unit": "m/s",
+      "variable": "vy"
+    },
+    {
+      "id": "speed",
+      "label": "Speed",
+      "vi": { "label": "Tốc độ" },
+      "unit": "m/s",
+      "variable": "speed"
+    }
+  ],
+  "results": [
+    {
+      "id": "flight-time",
+      "label": "Flight time",
+      "vi": { "label": "Thời gian bay" },
+      "unit": "s",
+      "variable": "time",
+      "reduce": "final",
+      "theory": "flightTime"
+    },
+    {
+      "id": "range",
+      "label": "Range",
+      "vi": { "label": "Tầm xa" },
+      "unit": "m",
+      "variable": "x",
+      "reduce": "final",
+      "theory": "range"
+    },
+    {
+      "id": "max-height",
+      "label": "Max height",
+      "vi": { "label": "Độ cao cực đại" },
+      "unit": "m",
+      "variable": "y",
+      "reduce": "max",
+      "theory": "maxHeight"
+    },
+    {
+      "id": "impact-speed",
+      "label": "Impact speed",
+      "vi": { "label": "Tốc độ chạm sàn" },
+      "unit": "m/s",
+      "variable": "speed",
+      "reduce": "final",
+      "theory": "impactSpeed"
+    }
+  ],
+  "graphs": [
+    {
+      "id": "height-time",
+      "title": "Height against time",
+      "vi": { "title": "Độ cao theo thời gian" },
+      "x": "time",
+      "y": ["y"]
+    },
+    {
+      "id": "trajectory",
+      "title": "Trajectory",
+      "vi": { "title": "Quỹ đạo" },
+      "x": "x",
+      "y": ["y"],
+      "mark": "range"
+    },
+    {
+      "id": "velocity-time",
+      "title": "Velocity against time",
+      "vi": { "title": "Vận tốc theo thời gian" },
+      "x": "time",
+      "y": ["vx", "vy", "speed"],
+      "yLabel": "v"
+    }
+  ],
+  "monitor": "trajectory",
+  "compare": [{ "graph": "trajectory" }, { "graph": "height-time" }],
+  "instruments": [
+    {
+      "result": "range",
+      "quantity": "Range R",
+      "name": "Tape measure",
+      "resolution": "resolution",
+      "excludes": "judging where the ball landed, the tape's calibration and alignment, parallax",
+      "vi": {
+        "quantity": "Tầm xa R",
+        "name": "Thước dây",
+        "excludes": "việc xác định điểm bóng chạm sàn, sai số hiệu chuẩn và căn chỉnh thước dây, thị sai"
+      }
+    }
+  ],
+  "note": "Theory: closed-form solution without air resistance. The maximum height is the highest step, so it can sit a hair below the theory.",
+  "vi": {
+    "name": "Chuyển động ném xiên",
+    "description": "Quả bóng rời bệ phóng với tốc độ v₀ và góc θ so với phương ngang, bay không có lực cản không khí cho đến khi chạm sàn. Vị trí và vận tốc của nó được đo trong suốt quá trình bay và so sánh với lý thuyết.",
+    "note": "Lý thuyết: nghiệm giải tích khi không có lực cản không khí. Độ cao cực đại lấy ở bước tính cao nhất, nên có thể thấp hơn lý thuyết một chút."
+  },
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the experiment instructions on the board.",
+      "vi": { "instruction": "Đọc hướng dẫn thí nghiệm trên bảng." },
+      "done": { "kind": "inspected", "item": "projectile-instructions" }
+    },
+    {
+      "id": "load",
+      "instruction": "Take a projectile ball from the tray and load it into the launcher.",
+      "vi": { "instruction": "Lấy một quả bóng từ khay và nạp vào bệ phóng." },
+      "done": { "kind": "loaded" }
+    },
+    {
+      "id": "configure",
+      "instruction": "Set v₀, θ and g with the dials on the control desk.",
+      "vi": { "instruction": "Đặt v₀, θ và g bằng các núm xoay trên bàn điều khiển." },
+      "done": { "kind": "adjusted" }
+    },
+    {
+      "id": "run",
+      "instruction": "Press RUN and watch the ball until it lands.",
+      "vi": { "instruction": "Nhấn CHẠY và quan sát bóng cho đến khi chạm sàn." },
+      "done": { "kind": "completed" }
+    },
+    {
+      "id": "results",
+      "instruction": "Read the results and graphs on the results monitor.",
+      "vi": { "instruction": "Đọc kết quả và đồ thị trên màn hình kết quả." },
+      "done": { "kind": "viewed" }
+    }
+  ],
+  "examples": [
+    {
+      "id": "flight-and-range",
+      "question": "A ball is thrown from the floor at {velocity} m/s, {angle}° above the horizontal (g = {gravity} m/s², no air resistance). How long is it in the air, and how far does it land?",
+      "vi": {
+        "question": "Một quả bóng được ném từ mặt sàn với vận tốc {velocity} m/s, hợp với phương ngang góc {angle}° (g = {gravity} m/s², bỏ qua lực cản không khí). Bóng bay trong bao lâu, và rơi cách chỗ ném bao xa?"
+      },
+      "set": { "velocity": 3, "angle": 30 },
+      "find": [
+        { "theory": "flightTime", "symbol": "t", "unit": "s" },
+        { "theory": "range", "symbol": "L", "unit": "m" }
+      ],
+      "steps": [
+        {
+          "say": "Split the velocity: horizontally v₀·cos θ stays the same; vertically v₀·sin θ is slowed by g. It lands when its height is back to zero.",
+          "vi": {
+            "say": "Phân tích vận tốc: theo phương ngang v₀·cos θ không đổi; theo phương thẳng đứng v₀·sin θ bị g làm chậm dần. Bóng chạm sàn khi độ cao trở về 0."
+          },
+          "write": "t = 2v₀·sin θ/g = 2·{velocity}·sin {angle}°/{gravity} ≈ {@flightTime} s",
+          "check": { "expr": "2*velocity*sin(rad(angle))/gravity", "equals": "flightTime" }
+        },
+        {
+          "say": "All that time it moves sideways at v₀·cos θ.",
+          "vi": {
+            "say": "Trong suốt thời gian đó bóng chuyển động theo phương ngang với v₀·cos θ."
+          },
+          "write": "L = v₀·cos θ·t = {velocity}·cos {angle}°·{@flightTime} ≈ {@range} m",
+          "check": { "expr": "velocity*cos(rad(angle))*@flightTime", "equals": "range" }
+        }
+      ]
+    },
+    {
+      "id": "mars-throw",
+      "question": "On Mars (g = {gravity} m/s²) a ball is thrown from the ground at {velocity} m/s, {angle}° above the horizontal. Find the greatest height it reaches and its range.",
+      "vi": {
+        "question": "Trên Sao Hỏa (g = {gravity} m/s²), một quả bóng được ném từ mặt đất với vận tốc {velocity} m/s, hợp với phương ngang góc {angle}°. Tìm độ cao cực đại và tầm xa của bóng."
+      },
+      "set": { "velocity": 3, "angle": 60, "gravity": 3.71 },
+      "find": [
+        { "theory": "maxHeight", "symbol": "H", "unit": "m" },
+        { "theory": "range", "symbol": "L", "unit": "m" }
+      ],
+      "steps": [
+        {
+          "say": "At the top the vertical velocity is zero: (v₀·sin θ)² = 2g·H.",
+          "vi": {
+            "say": "Ở điểm cao nhất vận tốc theo phương thẳng đứng bằng 0: (v₀·sin θ)² = 2g·H."
+          },
+          "write": "H = ({velocity}·sin {angle}°)²/(2·{gravity}) ≈ {@maxHeight} m",
+          "check": { "expr": "(velocity*sin(rad(angle)))^2/(2*gravity)", "equals": "maxHeight" }
+        },
+        {
+          "say": "Time in the air times the horizontal velocity gives L = v₀²·sin 2θ/g.",
+          "vi": { "say": "Thời gian bay nhân vận tốc theo phương ngang cho L = v₀²·sin 2θ/g." },
+          "write": "L = v₀²·sin 2θ/g = {velocity}²·sin {=2*angle}°/{gravity} ≈ {@range} m",
+          "check": { "expr": "velocity^2*sin(rad(2*angle))/gravity", "equals": "range" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "A ball launched at an angle moves sideways at a steady speed while gravity pulls it down, so it flies along a curve — a parabola — until it lands.",
+    "vi": {
+      "summary": "Một quả bóng được bắn xiên chuyển động theo phương ngang với tốc độ không đổi trong khi trọng lực kéo nó xuống, nên nó bay theo một đường cong — đường parabol — cho tới khi chạm đất."
+    },
+    "parts": [
+      {
+        "id": "barrel",
+        "name": "Launcher barrel",
+        "role": "A spring launcher: it fires the ball at the speed v₀ along its axis.",
+        "vi": {
+          "name": "Nòng súng bắn",
+          "role": "Bệ phóng bằng lò xo: bắn quả bóng với tốc độ v₀ dọc theo trục nòng."
+        },
+        "anchor": {
+          "part": "barrel"
+        }
+      },
+      {
+        "id": "muzzle",
+        "name": "Launch point",
+        "role": "Where the ball leaves the barrel, at the pivot the barrel turns about.",
+        "vi": {
+          "name": "Điểm bắn",
+          "role": "Nơi quả bóng rời nòng, tại trục mà nòng quay quanh."
+        },
+        "anchor": {
+          "at": [0.1, 0.445, 0]
+        }
+      },
+      {
+        "id": "scale",
+        "name": "Angle scale",
+        "role": "On the near cheek: ticks every 5° from the horizontal.",
+        "vi": {
+          "name": "Thước đo góc",
+          "role": "Trên má gần: vạch chia mỗi 5° tính từ phương ngang."
+        },
+        "anchor": {
+          "part": "ticks"
+        }
+      },
+      {
+        "id": "pointer",
+        "name": "Angle pointer",
+        "role": "Turns with the barrel and reads the launch angle θ.",
+        "vi": {
+          "name": "Kim chỉ góc",
+          "role": "Quay cùng nòng và chỉ góc bắn θ."
+        },
+        "anchor": {
+          "part": "pointer"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "The launcher fires the ball at the speed v₀, at the angle θ above the horizontal, read on the scale.",
+        "vi": {
+          "text": "Bệ phóng bắn quả bóng với tốc độ v₀, theo góc θ so với phương ngang, đọc trên thước đo góc."
+        },
+        "parts": ["barrel", "muzzle", "scale", "pointer"]
+      },
+      {
+        "text": "Split the velocity in two: across, v₀·cos θ; up, v₀·sin θ. With no air resistance nothing pushes the ball sideways, so it moves across at a constant v₀·cos θ.",
+        "vi": {
+          "text": "Phân tích vận tốc thành hai thành phần: theo phương ngang v₀·cos θ; theo phương thẳng đứng v₀·sin θ. Không có lực cản không khí thì không có gì tác dụng theo phương ngang, nên quả bóng chuyển động ngang đều với v₀·cos θ."
+        },
+        "parts": ["muzzle"]
+      },
+      {
+        "text": "Up and down, gravity slows the rise by g every second, stops it at the top, then speeds the fall: like a ball thrown straight up. The highest point is (v₀·sin θ)²/(2g) above the launch point.",
+        "vi": {
+          "text": "Theo phương thẳng đứng, trọng lực làm vận tốc đi lên giảm g mỗi giây, triệt tiêu ở đỉnh, rồi làm nó rơi nhanh dần: giống như quả bóng ném thẳng đứng lên. Điểm cao nhất cao hơn điểm bắn (v₀·sin θ)²/(2g)."
+        },
+        "parts": ["muzzle"]
+      },
+      {
+        "text": "Together: x = v₀·cos θ·t and y = v₀·sin θ·t − ½·g·t² from the launch point — a parabola. The flight time is how long the ball takes to come down to the floor, and the range is v₀·cos θ times that.",
+        "vi": {
+          "text": "Kết hợp lại: x = v₀·cos θ·t và y = v₀·sin θ·t − ½·g·t² tính từ điểm bắn — một đường parabol. Thời gian bay là thời gian quả bóng rơi xuống sàn, và tầm xa bằng v₀·cos θ nhân với thời gian đó."
+        },
+        "parts": ["muzzle"]
+      },
+      {
+        "text": "A faster launch goes higher and farther; a steeper angle goes higher but not always farther. On the Moon (small g) the same shot flies much farther.",
+        "vi": {
+          "text": "Bắn nhanh hơn thì bay cao hơn và xa hơn; góc dốc hơn thì bay cao hơn nhưng không phải lúc nào cũng xa hơn. Trên Mặt Trăng (g nhỏ), cùng phát bắn đó bay xa hơn nhiều."
+        },
+        "parts": ["barrel", "pointer"]
+      },
+      {
+        "text": "The results compare the measured flight time, range, maximum height and impact speed with theory. The model leaves out air resistance, which would shorten a real flight.",
+        "vi": {
+          "text": "Phần kết quả so sánh thời gian bay, tầm xa, độ cao cực đại và tốc độ chạm đất đo được với lý thuyết. Mô hình bỏ qua lực cản không khí, vốn làm đường bay thật ngắn hơn."
+        },
+        "parts": ["barrel"]
+      }
+    ]
+  }
+}

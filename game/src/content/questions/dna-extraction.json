@@ -1,0 +1,992 @@
+{
+  "id": "dna-extraction",
+  "skills": [
+    {
+      "id": "steps",
+      "name": "What each step of the extraction does",
+      "advice": "Make a four-row table: detergent (breaks the membranes), salt (shields the DNA’s negative charges so it clumps), protease (frees DNA from its proteins), ice-cold ethanol (DNA does not dissolve in it, so it comes out). At the station leave out one step at a time and say why the result changes.",
+      "vi": {
+        "name": "Vai trò của từng bước tách chiết",
+        "advice": "Lập bảng bốn dòng: chất tẩy rửa (phá vỡ màng), muối (trung hòa điện tích âm của DNA để các sợi kết tụ), protease (tách DNA khỏi protein), ethanol lạnh (DNA không tan trong ethanol nên kết tủa). Trên trạm, lần lượt bỏ từng bước và giải thích vì sao kết quả thay đổi."
+      }
+    },
+    {
+      "id": "structures",
+      "name": "Where DNA is and what holds it",
+      "advice": "Re-read the cell structure lesson: DNA lies in the nucleus, behind the cell membrane and the nuclear envelope (both phospholipid), wrapped around proteins. Name the barrier each reagent removes.",
+      "vi": {
+        "name": "DNA nằm ở đâu và được bao bọc bởi gì",
+        "advice": "Ôn lại bài cấu trúc tế bào: DNA nằm trong nhân, bên trong màng sinh chất và màng nhân (đều cấu tạo từ phospholipid), quấn quanh protein. Nêu rõ mỗi hóa chất loại bỏ rào cản nào."
+      }
+    },
+    {
+      "id": "controls",
+      "name": "Fair tests and the model’s illustrative shares",
+      "advice": "Compare each run with the full method, changing one step at a time. The model’s amounts (10 %, 40 %, 75 %) are illustrative and multiply; practise one or two missing steps, and remember that without ethanol nothing is seen.",
+      "vi": {
+        "name": "Thí nghiệm đối chứng và tỉ lệ minh họa của mô hình",
+        "advice": "So sánh mỗi lần chạy với quy trình đầy đủ, mỗi lần chỉ thay đổi một bước. Các lượng trong mô hình (10 %, 40 %, 75 %) chỉ là minh họa và được nhân với nhau; luyện tính khi thiếu một hoặc hai bước, và nhớ rằng không có ethanol thì không thấy DNA."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "detergent-role",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["steps", "structures"],
+      "stem": "In the strawberry DNA extraction, washing-up liquid is added to…",
+      "explain": "Detergent dissolves the lipids of the cell membranes and the nuclear envelope, letting the DNA out of the nuclei.",
+      "vi": {
+        "stem": "Trong thí nghiệm tách chiết DNA từ quả dâu tây, nước rửa chén được thêm vào để…",
+        "explain": "Chất tẩy rửa hòa tan lipid của màng tế bào và màng nhân, giải phóng DNA ra khỏi nhân."
+      },
+      "options": [
+        {
+          "text": "break down the cell membranes and the nuclear envelope",
+          "vi": {
+            "text": "phá vỡ màng tế bào và màng nhân"
+          },
+          "correct": true
+        },
+        {
+          "text": "make the DNA come out of solution as white strands",
+          "vi": {
+            "text": "làm DNA kết tủa thành các sợi màu trắng"
+          }
+        },
+        {
+          "text": "cut up the proteins wrapped around the DNA",
+          "vi": {
+            "text": "cắt nhỏ các protein quấn quanh DNA"
+          }
+        },
+        {
+          "text": "dye the DNA so that it can be seen",
+          "vi": {
+            "text": "nhuộm màu DNA để có thể nhìn thấy"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ethanol-role",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["steps"],
+      "stem": "Ice-cold ethanol is poured on top of the filtered extract. White strands of DNA appear at the boundary because…",
+      "explain": "DNA dissolves in the watery extract but not in cold ethanol, so where the layers meet it comes out of solution: millions of molecules together form the white strands.",
+      "vi": {
+        "stem": "Rót ethanol lạnh lên trên dịch lọc. Các sợi DNA màu trắng xuất hiện ở ranh giới giữa hai lớp vì…",
+        "explain": "DNA tan trong dịch chiết (môi trường nước) nhưng không tan trong ethanol lạnh, nên ở ranh giới hai lớp DNA kết tủa: hàng triệu phân tử tụ lại thành các sợi trắng."
+      },
+      "options": [
+        {
+          "text": "DNA does not dissolve in cold ethanol",
+          "vi": {
+            "text": "DNA không tan trong ethanol lạnh"
+          },
+          "correct": true
+        },
+        {
+          "text": "ethanol breaks the nuclear envelope",
+          "vi": {
+            "text": "ethanol phá vỡ màng nhân"
+          }
+        },
+        {
+          "text": "ethanol cuts the DNA into short pieces",
+          "vi": {
+            "text": "ethanol cắt DNA thành các đoạn ngắn"
+          }
+        },
+        {
+          "text": "ethanol turns the DNA white by bleaching it",
+          "vi": {
+            "text": "ethanol tẩy trắng DNA"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-method",
+      "type": "true-false",
+      "level": "recognise",
+      "skills": ["steps", "structures"],
+      "stem": "About the steps of the DNA extraction: decide whether each statement is true or false.",
+      "explain": "Detergent breaks the membranes and ethanol is layered on top. The protease digests proteins, not DNA, and the salt helps the strands clump; it does not colour them.",
+      "vi": {
+        "stem": "Về các bước tách chiết DNA, mỗi nhận định sau đúng hay sai?",
+        "explain": "Chất tẩy rửa phá vỡ màng và ethanol được rót thành lớp phía trên. Protease phân giải protein chứ không phân giải DNA, còn muối giúp các sợi DNA kết tụ chứ không nhuộm màu chúng."
+      },
+      "statements": [
+        {
+          "text": "Detergent breaks down the cell membrane and the nuclear envelope.",
+          "vi": {
+            "text": "Chất tẩy rửa phá vỡ màng tế bào và màng nhân."
+          },
+          "true": true
+        },
+        {
+          "text": "The protease breaks the DNA down into nucleotides.",
+          "vi": {
+            "text": "Protease phân giải DNA thành các nucleotide."
+          },
+          "true": false
+        },
+        {
+          "text": "Ice-cold ethanol is poured gently on top of the filtered extract.",
+          "vi": {
+            "text": "Ethanol lạnh được rót nhẹ lên trên dịch lọc."
+          },
+          "true": true
+        },
+        {
+          "text": "Salt is added to stain the DNA white.",
+          "vi": {
+            "text": "Muối được thêm vào để nhuộm DNA thành màu trắng."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "salt-role",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["steps", "structures"],
+      "stem": "How does salt help the DNA strands come together?",
+      "explain": "DNA’s phosphate groups are negatively charged and repel one another; the positive ions of the salt shield those charges, so the strands can clump.",
+      "vi": {
+        "stem": "Muối giúp các sợi DNA kết tụ lại với nhau bằng cách nào?",
+        "explain": "Các nhóm phosphate của DNA mang điện tích âm nên đẩy nhau; các ion dương của muối trung hòa các điện tích đó, nhờ vậy các sợi DNA kết tụ được."
+      },
+      "options": [
+        {
+          "text": "Its positive ions shield the negative charges of the DNA’s phosphate groups",
+          "vi": {
+            "text": "Các ion dương của muối trung hòa điện tích âm của các nhóm phosphate trên DNA"
+          },
+          "correct": true
+        },
+        {
+          "text": "It breaks the peptide bonds of the proteins around the DNA",
+          "vi": {
+            "text": "Muối cắt các liên kết peptide của protein bao quanh DNA"
+          }
+        },
+        {
+          "text": "It dissolves the lipids of the membranes",
+          "vi": {
+            "text": "Muối hòa tan lipid của các màng"
+          }
+        },
+        {
+          "text": "It makes the DNA heavier, so it sinks to the bottom",
+          "vi": {
+            "text": "Muối làm DNA nặng hơn nên chìm xuống đáy"
+          }
+        }
+      ]
+    },
+    {
+      "id": "protease-role",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["steps", "structures"],
+      "stem": "Why is pineapple juice added to the extract?",
+      "explain": "Pineapple juice holds a protease, an enzyme that digests proteins: it frees the DNA from the proteins it is wrapped around.",
+      "vi": {
+        "stem": "Vì sao thêm nước ép dứa vào dịch chiết?",
+        "explain": "Nước ép dứa chứa protease, một enzyme phân giải protein: nó giải phóng DNA khỏi các protein mà DNA quấn quanh."
+      },
+      "options": [
+        {
+          "text": "It holds a protease that frees the DNA from its proteins",
+          "vi": {
+            "text": "Nó chứa protease giúp tách DNA khỏi protein"
+          },
+          "correct": true
+        },
+        {
+          "text": "It holds an enzyme that breaks the DNA down",
+          "vi": {
+            "text": "Nó chứa enzyme phân giải DNA"
+          }
+        },
+        {
+          "text": "Its acid dissolves the cell walls",
+          "vi": {
+            "text": "Axit trong nước dứa hòa tan thành tế bào"
+          }
+        },
+        {
+          "text": "Its sugar makes the DNA come out of solution",
+          "vi": {
+            "text": "Đường trong nước dứa làm DNA kết tủa"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-why",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["steps", "structures"],
+      "stem": "Decide whether each statement about the DNA extraction is true or false.",
+      "explain": "Ethanol precipitates the DNA, so without it nothing is seen. Membranes are mostly phospholipids, which detergent dissolves. The white strands are millions of DNA molecules clumped together. Filtering removes the pulp and cell debris.",
+      "vi": {
+        "stem": "Mỗi nhận định sau về thí nghiệm tách chiết DNA đúng hay sai?",
+        "explain": "Ethanol làm DNA kết tủa nên không có ethanol thì không thấy gì. Màng chủ yếu cấu tạo từ phospholipid, bị chất tẩy rửa hòa tan. Các sợi trắng là hàng triệu phân tử DNA tụ lại với nhau. Lọc giúp loại bỏ bã quả và mảnh vụn tế bào."
+      },
+      "statements": [
+        {
+          "text": "Without ethanol no DNA strands are seen.",
+          "vi": {
+            "text": "Không có ethanol thì không quan sát được sợi DNA."
+          },
+          "true": true
+        },
+        {
+          "text": "Detergent works because the membranes are made mainly of lipids (phospholipids).",
+          "vi": {
+            "text": "Chất tẩy rửa có tác dụng vì các màng được cấu tạo chủ yếu từ lipid (phospholipid)."
+          },
+          "true": true
+        },
+        {
+          "text": "Each white strand is one single DNA molecule.",
+          "vi": {
+            "text": "Mỗi sợi trắng là một phân tử DNA duy nhất."
+          },
+          "true": false
+        },
+        {
+          "text": "Filtering removes the pulp and the broken cell pieces.",
+          "vi": {
+            "text": "Bước lọc loại bỏ bã quả và các mảnh tế bào bị vỡ."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "no-salt-no-protease",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["controls"],
+      "set": {
+        "salt": 0,
+        "protease": 0
+      },
+      "stem": "A student leaves out both the salt and the protease. In the model, leaving out detergent keeps 10 %, salt 40 % and protease 75 % of the DNA seen (illustrative values), and the shares of the steps left out multiply. What share of the full method’s DNA does the model show?",
+      "explain": "The shares multiply: 100 % × 0.4 × 0.75 = {@dna}%.",
+      "vi": {
+        "stem": "Một học sinh bỏ cả muối và protease. Trong mô hình, bỏ chất tẩy rửa còn 10 %, bỏ muối còn 40 % và bỏ protease còn 75 % lượng DNA quan sát được (giá trị minh họa), và tỉ lệ của các bước bị bỏ được nhân với nhau. Mô hình cho thấy lượng DNA bằng bao nhiêu phần trăm so với quy trình đầy đủ?",
+        "explain": "Các tỉ lệ nhân với nhau: 100 % × 0,4 × 0,75 = {@dna}%."
+      },
+      "options": [
+        {
+          "text": "{@dna}%",
+          "vi": {
+            "text": "{@dna}%"
+          },
+          "correct": true,
+          "check": {
+            "expr": "100*0.4*0.75",
+            "equals": "dna"
+          }
+        },
+        {
+          "text": "{=100-60-25}%",
+          "vi": {
+            "text": "{=100-60-25}%"
+          },
+          "check": {
+            "expr": "100-60-25",
+            "equals": "dna"
+          }
+        },
+        {
+          "text": "{=(40+75)/2}%",
+          "vi": {
+            "text": "{=(40+75)/2}%"
+          },
+          "check": {
+            "expr": "(40+75)/2",
+            "equals": "dna"
+          }
+        },
+        {
+          "text": "{=40}%",
+          "vi": {
+            "text": "{=40}%"
+          },
+          "check": {
+            "expr": "40",
+            "equals": "dna"
+          }
+        }
+      ]
+    },
+    {
+      "id": "no-detergent-no-ethanol",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["controls", "steps"],
+      "set": {
+        "detergent": 0,
+        "ethanol": 0
+      },
+      "stem": "A student leaves out both the detergent and the ethanol, and keeps the salt and protease. In the model, leaving out detergent keeps 10 %, salt 40 % and protease 75 % of the DNA seen (illustrative values), and the shares of the steps left out multiply. What does the model show?",
+      "explain": "Without ethanol the DNA stays dissolved in the extract: no strands at all ({@dna}%), whatever the other steps.",
+      "vi": {
+        "stem": "Một học sinh bỏ cả chất tẩy rửa và ethanol, giữ lại muối và protease. Trong mô hình, bỏ chất tẩy rửa còn 10 %, bỏ muối còn 40 % và bỏ protease còn 75 % lượng DNA quan sát được (giá trị minh họa), và tỉ lệ của các bước bị bỏ được nhân với nhau. Mô hình cho thấy điều gì?",
+        "explain": "Không có ethanol, DNA vẫn tan trong dịch chiết: hoàn toàn không thấy sợi DNA ({@dna}%), dù các bước khác thế nào."
+      },
+      "options": [
+        {
+          "text": "No DNA strands at all",
+          "vi": {
+            "text": "Hoàn toàn không thấy sợi DNA"
+          },
+          "correct": true,
+          "check": {
+            "expr": "0",
+            "equals": "seen"
+          }
+        },
+        {
+          "text": "A few thin strands: {=100*0.1}% of the full method’s DNA",
+          "vi": {
+            "text": "Một ít sợi mảnh: {=100*0.1}% lượng DNA của quy trình đầy đủ"
+          },
+          "check": {
+            "expr": "100*0.1",
+            "equals": "dna"
+          }
+        },
+        {
+          "text": "As much DNA as the full method shows",
+          "vi": {
+            "text": "Lượng DNA bằng quy trình đầy đủ"
+          },
+          "check": {
+            "expr": "100",
+            "equals": "dna"
+          }
+        },
+        {
+          "text": "More DNA than the full method, since no step can lose it",
+          "vi": {
+            "text": "Nhiều DNA hơn quy trình đầy đủ, vì không có bước nào làm mất DNA"
+          },
+          "check": {
+            "expr": "1",
+            "equals": "seen"
+          }
+        }
+      ]
+    },
+    {
+      "id": "no-detergent-no-protease",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["controls"],
+      "set": {
+        "detergent": 0,
+        "protease": 0
+      },
+      "stem": "A student leaves out both the detergent and the protease. In the model, leaving out detergent keeps 10 %, salt 40 % and protease 75 % of the DNA seen (illustrative values), and the shares of the steps left out multiply. What share of the full method’s DNA does the model show?",
+      "explain": "100 % × 0.1 × 0.75 = {@dna}%: with the membranes left whole, little DNA leaves the cells.",
+      "vi": {
+        "stem": "Một học sinh bỏ cả chất tẩy rửa và protease. Trong mô hình, bỏ chất tẩy rửa còn 10 %, bỏ muối còn 40 % và bỏ protease còn 75 % lượng DNA quan sát được (giá trị minh họa), và tỉ lệ của các bước bị bỏ được nhân với nhau. Mô hình cho thấy lượng DNA bằng bao nhiêu phần trăm so với quy trình đầy đủ?",
+        "explain": "100 % × 0,1 × 0,75 = {@dna}%: màng còn nguyên nên rất ít DNA ra khỏi tế bào."
+      },
+      "options": [
+        {
+          "text": "{@dna}%",
+          "vi": {
+            "text": "{@dna}%"
+          },
+          "correct": true,
+          "check": {
+            "expr": "100*0.1*0.75",
+            "equals": "dna"
+          }
+        },
+        {
+          "text": "{=(10+75)/2}%",
+          "vi": {
+            "text": "{=(10+75)/2}%"
+          },
+          "check": {
+            "expr": "(10+75)/2",
+            "equals": "dna"
+          }
+        },
+        {
+          "text": "{=100*0.1}%",
+          "vi": {
+            "text": "{=100*0.1}%"
+          },
+          "check": {
+            "expr": "100*0.1",
+            "equals": "dna"
+          }
+        },
+        {
+          "text": "{=100*0.75}%",
+          "vi": {
+            "text": "{=100*0.75}%"
+          },
+          "check": {
+            "expr": "100*0.75",
+            "equals": "dna"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-no-protease",
+      "type": "true-false",
+      "level": "apply",
+      "skills": ["controls", "steps"],
+      "set": {
+        "protease": 0
+      },
+      "stem": "A student does every step except the protease. In the model, leaving out detergent keeps 10 %, salt 40 % and protease 75 % of the DNA seen (illustrative values), and the shares of the steps left out multiply. Decide whether each statement is true or false.",
+      "explain": "The model shows {@dna}% of the full method’s DNA, so strands are still seen: the DNA is still released and precipitated, only less of it is freed from its proteins. The 75 % is an illustrative value, not a measured yield.",
+      "vi": {
+        "stem": "Một học sinh làm đủ các bước trừ bước thêm protease. Trong mô hình, bỏ chất tẩy rửa còn 10 %, bỏ muối còn 40 % và bỏ protease còn 75 % lượng DNA quan sát được (giá trị minh họa), và tỉ lệ của các bước bị bỏ được nhân với nhau. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Mô hình cho thấy {@dna}% lượng DNA của quy trình đầy đủ, nên vẫn thấy sợi DNA: DNA vẫn được giải phóng và kết tủa, chỉ là ít DNA được tách khỏi protein hơn. Giá trị 75 % là minh họa, không phải hiệu suất đo được."
+      },
+      "statements": [
+        {
+          "text": "The model shows {@dna}% of the full method’s DNA.",
+          "vi": {
+            "text": "Mô hình cho thấy {@dna}% lượng DNA của quy trình đầy đủ."
+          },
+          "true": true,
+          "check": {
+            "expr": "100*0.75",
+            "equals": "dna"
+          }
+        },
+        {
+          "text": "Some white DNA strands are still seen.",
+          "vi": {
+            "text": "Vẫn quan sát được một số sợi DNA màu trắng."
+          },
+          "true": true,
+          "check": {
+            "expr": "1",
+            "equals": "seen"
+          }
+        },
+        {
+          "text": "Without the protease, the DNA cannot leave the nuclei.",
+          "vi": {
+            "text": "Không có protease thì DNA không thể ra khỏi nhân."
+          },
+          "true": false
+        },
+        {
+          "text": "The 75 % is a yield measured for strawberries.",
+          "vi": {
+            "text": "Giá trị 75 % là hiệu suất đo được với quả dâu tây."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "fair-test",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["controls"],
+      "stem": "A student wants to show that the salt step matters. Which pair of runs is a fair comparison?",
+      "explain": "Only the factor tested may differ: the full method against the same method without salt. The other pairs change two steps at once, or leave out the ethanol so nothing is seen in either run.",
+      "vi": {
+        "stem": "Một học sinh muốn chứng minh bước thêm muối là cần thiết. Cặp lần chạy nào là phép so sánh hợp lí (đối chứng đúng)?",
+        "explain": "Chỉ được khác nhau ở yếu tố cần kiểm tra: quy trình đầy đủ so với cùng quy trình đó nhưng không có muối. Các cặp còn lại thay đổi hai bước cùng lúc, hoặc bỏ ethanol khiến cả hai lần chạy đều không thấy gì."
+      },
+      "options": [
+        {
+          "text": "The full method, and the full method without salt",
+          "vi": {
+            "text": "Quy trình đầy đủ, và quy trình đầy đủ nhưng không có muối"
+          },
+          "correct": true
+        },
+        {
+          "text": "The method without salt, and the method without protease",
+          "vi": {
+            "text": "Quy trình không có muối, và quy trình không có protease"
+          }
+        },
+        {
+          "text": "The full method, and the method without salt and without detergent",
+          "vi": {
+            "text": "Quy trình đầy đủ, và quy trình không có muối và không có chất tẩy rửa"
+          }
+        },
+        {
+          "text": "The method without ethanol, and the method without ethanol and without salt",
+          "vi": {
+            "text": "Quy trình không có ethanol, và quy trình không có ethanol và không có muối"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-three-missing",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["controls", "steps"],
+      "set": {
+        "detergent": 0,
+        "salt": 0,
+        "protease": 0
+      },
+      "stem": "A student leaves out the detergent, the salt and the protease, but adds the ethanol. In the model, leaving out detergent keeps 10 %, salt 40 % and protease 75 % of the DNA seen (illustrative values), and the shares of the steps left out multiply. Decide whether each statement is true or false.",
+      "explain": "100 % × 0.1 × 0.4 × 0.75 = {@dna}%: a trace is still seen, since the ethanol is there. Adding back only the detergent gives 100 % × 0.4 × 0.75 = {=100*0.4*0.75}%. Multiplication does not depend on the order.",
+      "vi": {
+        "stem": "Một học sinh bỏ chất tẩy rửa, muối và protease nhưng vẫn thêm ethanol. Trong mô hình, bỏ chất tẩy rửa còn 10 %, bỏ muối còn 40 % và bỏ protease còn 75 % lượng DNA quan sát được (giá trị minh họa), và tỉ lệ của các bước bị bỏ được nhân với nhau. Mỗi nhận định sau đúng hay sai?",
+        "explain": "100 % × 0,1 × 0,4 × 0,75 = {@dna}%: vẫn thấy một lượng rất nhỏ vì có ethanol. Chỉ thêm lại chất tẩy rửa thì được 100 % × 0,4 × 0,75 = {=100*0.4*0.75}%. Phép nhân không phụ thuộc thứ tự các thừa số."
+      },
+      "statements": [
+        {
+          "text": "The model shows {@dna}% of the full method’s DNA.",
+          "vi": {
+            "text": "Mô hình cho thấy {@dna}% lượng DNA của quy trình đầy đủ."
+          },
+          "true": true,
+          "check": {
+            "expr": "100*0.1*0.4*0.75",
+            "equals": "dna"
+          }
+        },
+        {
+          "text": "A little DNA is still seen.",
+          "vi": {
+            "text": "Vẫn quan sát được một ít DNA."
+          },
+          "true": true,
+          "check": {
+            "expr": "1",
+            "equals": "seen"
+          }
+        },
+        {
+          "text": "Adding back only the detergent would raise the DNA seen to {=100*0.4*0.75}% of the full method’s.",
+          "vi": {
+            "text": "Nếu chỉ thêm lại chất tẩy rửa, lượng DNA quan sát được sẽ tăng lên {=100*0.4*0.75}% so với quy trình đầy đủ."
+          },
+          "true": true
+        },
+        {
+          "text": "The order in which the three shares are multiplied changes the result.",
+          "vi": {
+            "text": "Thứ tự nhân ba tỉ lệ với nhau làm thay đổi kết quả."
+          },
+          "true": false
+        }
+      ]
+    },
+    {
+      "id": "where-dna",
+      "type": "choice",
+      "level": "recognise",
+      "skills": ["structures"],
+      "stem": "In a strawberry cell, most of the DNA is found…",
+      "explain": "Most of a eukaryotic cell’s DNA is in the chromosomes of its nucleus; mitochondria and plastids hold a little DNA of their own.",
+      "vi": {
+        "stem": "Trong tế bào quả dâu tây, phần lớn DNA nằm ở…",
+        "explain": "Phần lớn DNA của tế bào nhân thực nằm trong các nhiễm sắc thể ở nhân; ti thể và lạp thể chỉ có một ít DNA riêng."
+      },
+      "options": [
+        {
+          "text": "in the nucleus",
+          "vi": {
+            "text": "trong nhân"
+          },
+          "correct": true
+        },
+        {
+          "text": "in the cell wall",
+          "vi": {
+            "text": "trong thành tế bào"
+          }
+        },
+        {
+          "text": "in the vacuole",
+          "vi": {
+            "text": "trong không bào"
+          }
+        },
+        {
+          "text": "on the ribosomes",
+          "vi": {
+            "text": "trên ribosome"
+          }
+        }
+      ]
+    },
+    {
+      "id": "why-mash",
+      "type": "choice",
+      "level": "understand",
+      "skills": ["steps", "structures"],
+      "stem": "Why is the strawberry mashed before the detergent and salt solution acts on it?",
+      "explain": "Mashing breaks the tissue and the cell walls apart, so the solution reaches far more cells and their membranes. It does not dissolve or precipitate the DNA.",
+      "vi": {
+        "stem": "Vì sao phải nghiền nát quả dâu tây trước khi cho dung dịch chất tẩy rửa và muối tác dụng?",
+        "explain": "Nghiền làm vỡ mô và thành tế bào, nên dung dịch tiếp xúc được với nhiều tế bào và màng của chúng hơn. Việc nghiền không hòa tan cũng không làm kết tủa DNA."
+      },
+      "options": [
+        {
+          "text": "To break up the tissue and cell walls, so the solution reaches more cells",
+          "vi": {
+            "text": "Để phá vỡ mô và thành tế bào, giúp dung dịch tiếp xúc với nhiều tế bào hơn"
+          },
+          "correct": true
+        },
+        {
+          "text": "To break the DNA into short pieces that dissolve",
+          "vi": {
+            "text": "Để cắt DNA thành các đoạn ngắn dễ tan"
+          }
+        },
+        {
+          "text": "To make the DNA come out of solution as strands",
+          "vi": {
+            "text": "Để DNA tách ra khỏi dung dịch thành sợi"
+          }
+        },
+        {
+          "text": "To break down the proteins around the DNA",
+          "vi": {
+            "text": "Để phân giải protein bao quanh DNA"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-product",
+      "type": "true-false",
+      "level": "understand",
+      "skills": ["steps", "structures"],
+      "stem": "About the DNA extracted from strawberries: decide whether each statement is true or false.",
+      "explain": "Ethanol is less dense than the watery extract, so it floats on top and the DNA comes out at the boundary. The strands are many DNA molecules clumped together, with some RNA and protein: a crude extract, not pure DNA. Cultivated strawberries are octoploid (8 sets of chromosomes), which is one reason they give plenty of DNA.",
+      "vi": {
+        "stem": "Về DNA tách chiết từ quả dâu tây, mỗi nhận định sau đúng hay sai?",
+        "explain": "Ethanol nhẹ hơn dịch chiết nên nổi lên trên, và DNA tách ra ở ranh giới hai lớp. Các sợi trắng là rất nhiều phân tử DNA kết tụ lại, lẫn một ít RNA và protein: đó là DNA thô, không tinh khiết. Dâu tây trồng là thể bát bội (8 bộ nhiễm sắc thể), đó là một lí do chúng cho nhiều DNA."
+      },
+      "statements": [
+        {
+          "text": "The ethanol forms a layer on top because it is less dense than the extract.",
+          "vi": {
+            "text": "Ethanol tạo thành lớp phía trên vì nó nhẹ hơn dịch chiết."
+          },
+          "true": true
+        },
+        {
+          "text": "The white strands are pure DNA, free of RNA and protein.",
+          "vi": {
+            "text": "Các sợi trắng là DNA tinh khiết, không lẫn RNA và protein."
+          },
+          "true": false
+        },
+        {
+          "text": "Cultivated strawberries have many sets of chromosomes in each cell, which helps them give plenty of DNA.",
+          "vi": {
+            "text": "Dâu tây trồng có nhiều bộ nhiễm sắc thể trong mỗi tế bào, điều này giúp thu được nhiều DNA."
+          },
+          "true": true
+        },
+        {
+          "text": "The DNA comes out of solution where the ethanol meets the extract.",
+          "vi": {
+            "text": "DNA tách ra khỏi dung dịch ở chỗ ethanol tiếp xúc với dịch chiết."
+          },
+          "true": true
+        }
+      ]
+    },
+    {
+      "id": "no-salt-only",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["controls", "steps"],
+      "set": {
+        "salt": 0
+      },
+      "stem": "The method is run with every step but the salt. In this simulation, leaving out the salt keeps an illustrative 40 % of the DNA seen. What does the run show?",
+      "explain": "Without salt the DNA’s negative charges repel each other and the strands clump poorly: {@dna}% of the full method’s DNA is seen. It is not nothing: the ethanol still precipitates some DNA.",
+      "vi": {
+        "stem": "Quy trình được thực hiện đủ các bước trừ bước thêm muối. Trong mô phỏng này, bỏ muối thì lượng DNA quan sát được còn 40 % (giá trị minh họa). Kết quả của lần chạy là gì?",
+        "explain": "Không có muối, các điện tích âm của DNA đẩy nhau và các sợi khó kết tụ: quan sát được {@dna}% lượng DNA của quy trình đầy đủ. Không phải là không có gì: ethanol vẫn làm kết tủa một phần DNA."
+      },
+      "options": [
+        {
+          "text": "Fewer strands: {@dna}% of the full method’s DNA",
+          "vi": {
+            "text": "Ít sợi hơn: {@dna}% lượng DNA của quy trình đầy đủ"
+          },
+          "correct": true,
+          "check": {
+            "expr": "100*0.4",
+            "equals": "dna"
+          }
+        },
+        {
+          "text": "Fewer strands: {=100-100*0.4}% of the full method’s DNA",
+          "vi": {
+            "text": "Ít sợi hơn: {=100-100*0.4}% lượng DNA của quy trình đầy đủ"
+          },
+          "check": {
+            "expr": "100-100*0.4",
+            "equals": "dna"
+          }
+        },
+        {
+          "text": "No DNA strands at all",
+          "vi": {
+            "text": "Hoàn toàn không thấy sợi DNA"
+          },
+          "check": {
+            "expr": "0",
+            "equals": "dna"
+          }
+        },
+        {
+          "text": "As much DNA as the full method",
+          "vi": {
+            "text": "Lượng DNA bằng quy trình đầy đủ"
+          },
+          "check": {
+            "expr": "100",
+            "equals": "dna"
+          }
+        }
+      ]
+    },
+    {
+      "id": "least-dna-step",
+      "type": "choice",
+      "level": "apply",
+      "skills": ["controls", "steps"],
+      "set": {
+        "detergent": 0
+      },
+      "stem": "Three runs each leave out one step: the detergent, the salt or the protease (the ethanol is always used). In this simulation the shares kept are illustrative. Which step left out shows the least DNA, and how much?",
+      "explain": "Without detergent the membranes stay whole and little DNA leaves the cells: {@dna}%, less than without salt ({=100*0.4}%) or without protease ({=100*0.75}%).",
+      "vi": {
+        "stem": "Ba lần chạy, mỗi lần bỏ một bước: chất tẩy rửa, muối hoặc protease (luôn dùng ethanol). Trong mô phỏng này, các tỉ lệ DNA còn lại là giá trị minh họa. Bỏ bước nào thì lượng DNA quan sát được ít nhất, và bằng bao nhiêu?",
+        "explain": "Không có chất tẩy rửa, các màng vẫn nguyên vẹn nên rất ít DNA ra khỏi tế bào: {@dna}%, ít hơn khi bỏ muối ({=100*0.4}%) hay bỏ protease ({=100*0.75}%)."
+      },
+      "options": [
+        {
+          "text": "The detergent: {=100*0.1}%",
+          "vi": {
+            "text": "Chất tẩy rửa: {=100*0.1}%"
+          },
+          "correct": true,
+          "check": {
+            "expr": "100*0.1",
+            "equals": "dna"
+          }
+        },
+        {
+          "text": "The salt: {=100*0.4}%",
+          "vi": {
+            "text": "Muối: {=100*0.4}%"
+          },
+          "check": {
+            "expr": "100*0.4",
+            "equals": "dna"
+          }
+        },
+        {
+          "text": "The protease: {=100*0.75}%",
+          "vi": {
+            "text": "Protease: {=100*0.75}%"
+          },
+          "check": {
+            "expr": "100*0.75",
+            "equals": "dna"
+          }
+        },
+        {
+          "text": "The protease: 0 %, since the DNA stays wrapped in protein",
+          "vi": {
+            "text": "Protease: 0 %, vì DNA vẫn bị protein bao bọc"
+          },
+          "check": {
+            "expr": "0",
+            "equals": "dna"
+          }
+        }
+      ]
+    },
+    {
+      "id": "which-steps-missing",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["controls"],
+      "set": {
+        "detergent": 0,
+        "salt": 0
+      },
+      "stem": "A run with ethanol shows {@dna}% of the full method’s DNA. In this simulation each step left out keeps an illustrative share: 10 % without detergent, 40 % without salt, 75 % without protease, multiplied together. Which steps were left out?",
+      "explain": "Shares multiply: 0.1 × 0.4 = {=0.1*0.4}, i.e. {=100*0.1*0.4}% — the detergent and the salt. Salt and protease would give {=100*0.4*0.75}%, detergent and protease {=100*0.1*0.75}%.",
+      "vi": {
+        "stem": "Một lần chạy có dùng ethanol cho thấy {@dna}% lượng DNA của quy trình đầy đủ. Trong mô phỏng này, bỏ mỗi bước thì giữ lại một tỉ lệ minh họa: 10 % khi bỏ chất tẩy rửa, 40 % khi bỏ muối, 75 % khi bỏ protease, và các tỉ lệ được nhân với nhau. Những bước nào đã bị bỏ?",
+        "explain": "Các tỉ lệ nhân với nhau: 0,1 × 0,4 = {=0.1*0.4}, tức {=100*0.1*0.4}% — bỏ chất tẩy rửa và muối. Bỏ muối và protease sẽ cho {=100*0.4*0.75}%, bỏ chất tẩy rửa và protease cho {=100*0.1*0.75}%."
+      },
+      "options": [
+        {
+          "text": "The detergent and the salt",
+          "vi": {
+            "text": "Chất tẩy rửa và muối"
+          },
+          "correct": true,
+          "check": {
+            "expr": "100*0.1*0.4",
+            "equals": "dna"
+          }
+        },
+        {
+          "text": "The salt and the protease",
+          "vi": {
+            "text": "Muối và protease"
+          },
+          "check": {
+            "expr": "100*0.4*0.75",
+            "equals": "dna"
+          }
+        },
+        {
+          "text": "The detergent and the protease",
+          "vi": {
+            "text": "Chất tẩy rửa và protease"
+          },
+          "check": {
+            "expr": "100*0.1*0.75",
+            "equals": "dna"
+          }
+        },
+        {
+          "text": "The detergent, the salt and the protease",
+          "vi": {
+            "text": "Chất tẩy rửa, muối và protease"
+          },
+          "check": {
+            "expr": "100*0.1*0.4*0.75",
+            "equals": "dna"
+          }
+        }
+      ]
+    },
+    {
+      "id": "no-ethanol-trap",
+      "type": "choice",
+      "level": "analyse",
+      "skills": ["steps", "controls"],
+      "set": {
+        "ethanol": 0
+      },
+      "stem": "A student runs every step except the ethanol, sees no strands, and concludes: “these strawberries contain no DNA.” What is wrong with the conclusion?",
+      "explain": "The detergent, salt and protease have freed the DNA, but it stays dissolved in the watery extract: only ethanol, in which DNA does not dissolve, brings it out as visible strands. The run shows {@dna}% because nothing precipitated, not because there was no DNA.",
+      "vi": {
+        "stem": "Một học sinh làm đủ các bước trừ bước thêm ethanol, không thấy sợi nào và kết luận: “quả dâu tây này không chứa DNA”. Kết luận đó sai ở đâu?",
+        "explain": "Chất tẩy rửa, muối và protease đã giải phóng DNA, nhưng DNA vẫn tan trong dịch chiết: chỉ có ethanol, chất mà DNA không tan, mới làm DNA tách ra thành sợi nhìn thấy được. Lần chạy cho {@dna}% vì không có gì kết tủa, không phải vì không có DNA."
+      },
+      "options": [
+        {
+          "text": "The DNA was freed but stayed dissolved: without ethanol it does not come out of solution",
+          "vi": {
+            "text": "DNA đã được giải phóng nhưng vẫn tan trong dịch: không có ethanol thì DNA không tách ra khỏi dung dịch"
+          },
+          "correct": true
+        },
+        {
+          "text": "Nothing is wrong: a cell with DNA always shows strands after the detergent",
+          "vi": {
+            "text": "Không sai: tế bào có DNA thì luôn thấy sợi sau khi thêm chất tẩy rửa"
+          }
+        },
+        {
+          "text": "The protease destroyed all the DNA, so the conclusion is about the enzyme, not the fruit",
+          "vi": {
+            "text": "Protease đã phân hủy hết DNA, nên kết luận chỉ đúng với enzyme chứ không phải với quả"
+          }
+        },
+        {
+          "text": "The salt dissolved the DNA; with no salt the strands would have appeared",
+          "vi": {
+            "text": "Muối đã hòa tan DNA; nếu không có muối thì sợi DNA đã xuất hiện"
+          }
+        }
+      ]
+    },
+    {
+      "id": "statements-protease-salt",
+      "type": "true-false",
+      "level": "analyse",
+      "skills": ["controls", "steps", "structures"],
+      "set": {
+        "protease": 0
+      },
+      "stem": "A run leaves out only the protease. In this simulation the shares kept when a step is left out are illustrative (75 % without protease, 40 % without salt) and multiply. Decide whether each statement is true or false.",
+      "explain": "Without protease {@dna}% is seen: much of the DNA stays bound to its proteins (histones). Leaving out the salt as well would keep 0.4 of that: {=0.4*@dna}%. No step can push the DNA seen above the full method’s 100 %. The shares are the simulation’s illustrative values, not yields measured for strawberries.",
+      "vi": {
+        "stem": "Một lần chạy chỉ bỏ protease. Trong mô phỏng này, tỉ lệ DNA còn lại khi bỏ một bước là giá trị minh họa (75 % khi bỏ protease, 40 % khi bỏ muối) và được nhân với nhau. Mỗi nhận định sau đúng hay sai?",
+        "explain": "Không có protease, quan sát được {@dna}%: nhiều DNA vẫn liên kết với protein (histone). Bỏ thêm muối thì chỉ còn 0,4 lượng đó: {=0.4*@dna}%. Không bước nào làm lượng DNA vượt quá 100 % của quy trình đầy đủ. Các tỉ lệ là giá trị minh họa của mô phỏng, không phải hiệu suất đo được với dâu tây."
+      },
+      "statements": [
+        {
+          "text": "The run shows {@dna}% of the full method’s DNA.",
+          "vi": {
+            "text": "Lần chạy cho {@dna}% lượng DNA của quy trình đầy đủ."
+          },
+          "true": true,
+          "check": {
+            "expr": "100*0.75",
+            "equals": "dna"
+          }
+        },
+        {
+          "text": "Without the protease, much of the DNA stays bound to its proteins (histones).",
+          "vi": {
+            "text": "Không có protease, nhiều DNA vẫn liên kết với protein (histone)."
+          },
+          "true": true
+        },
+        {
+          "text": "Leaving out the salt as well would lower the DNA seen to {=0.4*@dna}%.",
+          "vi": {
+            "text": "Nếu bỏ thêm muối, lượng DNA quan sát được sẽ giảm xuống {=0.4*@dna}%."
+          },
+          "true": true,
+          "check": {
+            "expr": "0.4*@dna/0.4",
+            "equals": "dna"
+          }
+        },
+        {
+          "text": "Leaving out the salt as well would lower the DNA seen to {=@dna-40}%, since the salt’s share is subtracted.",
+          "vi": {
+            "text": "Nếu bỏ thêm muối, lượng DNA quan sát được sẽ giảm xuống {=@dna-40}%, vì tỉ lệ của muối bị trừ đi."
+          },
+          "true": false,
+          "check": {
+            "expr": "(@dna-40)/0.4",
+            "equals": "dna"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,810 @@
+{
+  "id": "osmosis",
+  "name": "Osmosis in potato tissue",
+  "category": "biology",
+  "description": "A potato cylinder, cut with a cork borer and weighed, soaks in a sucrose solution. Water moves by osmosis from the higher water potential to the lower: in a weak solution the cylinder takes up water and gains mass, in a strong one it loses water and mass. Over several runs, the percent change in mass against the concentration crosses 0 % at the tissue's isotonic concentration.",
+  "vi": {
+    "name": "Thẩm thấu ở mô khoai tây",
+    "description": "Một thỏi khoai tây được cắt bằng ống khoan nút bấc, cân rồi ngâm trong dung dịch saccarôzơ. Nước di chuyển bằng thẩm thấu từ nơi có thế nước cao đến nơi có thế nước thấp: trong dung dịch loãng, thỏi khoai hút nước và tăng khối lượng; trong dung dịch đặc, nó mất nước và giảm khối lượng. Qua nhiều lần chạy, đồ thị phần trăm thay đổi khối lượng theo nồng độ cắt trục 0 % tại nồng độ đẳng trương của mô.",
+    "note": "Đây là một mô hình dạy học đã được đơn giản hóa, không phải mô hình chính xác của mô thật. Thế nước của dung dịch là thế chất tan theo van 't Hoff cho dung dịch loãng: Ψ_solution = −i·C·R·T, với i = 1 cho saccarôzơ (không phân li), R = 8,314 J/(mol·K) và T tính bằng kelvin; với C tính bằng mol/L, R·T·C có đơn vị kPa. Đây là giá trị lý tưởng được hiển thị làm lý thuyết: thế nước của dung dịch saccarôzơ thật âm hơn, khoảng 15 % ở 0,5 mol/L và 30–40 % ở 1 mol/L (khoảng −3,4 MPa thay vì −2,44 MPa), vì nồng độ molan của nó cao hơn nồng độ mol và dung dịch không lý tưởng. Mô khoai tây ban đầu được coi là cân bằng với dung dịch saccarôzơ ở nồng độ đẳng trương C_iso = 0,25 mol/L — một giá trị gần đúng (thường khoảng 0,2–0,3 mol/L trong các thí nghiệm ở trường, tùy giống và cách bảo quản khoai), nên Ψ_tissue = −i·C_iso·R·T, khoảng −609 kPa ở 20 °C. Khi hút nước, thế nước của mô tăng tuyến tính theo độ thay đổi khối lượng tương đối u = Δm/m₀: Ψ_tissue = Ψ_iso + E·u, với E = 5000 kPa là một hằng số hiệu dụng được chọn để phần trăm thay đổi có độ lớn giống kết quả thí nghiệm ở trường, không phải một tính chất đo được. Nước đi theo hiệu thế nước với tốc độ tỉ lệ với nó, nên u tiến tới u_eq = (Ψ_solution − Ψ_iso)/E theo u_eq·(1 − e^(−t/τ)), với hằng số thời gian τ = 2700 s (45 phút) là một giá trị dạy học. Thời gian được tua nhanh: mỗi giây chạy bằng 240 s ngâm, nên 4 giờ ngâm (14 400 s) được chiếu trong 60 s. Sau 30 phút thỏi khoai đã đi được 49 % quãng đường tới cân bằng, sau 4 giờ là 99,5 %, và lý thuyết được tính đúng tại lúc kết thúc thời gian ngâm đã chọn. Chiều dòng nước được hiển thị là +1 (nước đi vào mô), −1 (nước đi ra khỏi mô) hoặc 0 (không có dòng nước thực). Giả định: saccarôzơ không đi vào mô, dung dịch đủ nhiều để nồng độ không đổi, mọi thỏi khoai có cùng đường kính nên cùng τ, và nhiệt độ được giữ ở 20 °C. Mô thật không tuyến tính: cứng hơn khi trương lên vì vách tế bào, mềm hơn khi đã co nguyên sinh, và lượng mất nước chững lại ở nồng độ cao; tốc độ thật còn tăng theo nhiệt độ, điều mô hình này bỏ qua."
+  },
+  "requiredEquipment": ["osmosis-rack"],
+  "model": "biology.osmosis",
+  "presentation": "2d-workspace",
+  "workspace": {
+    "pieces": [
+      {
+        "id": "sucrose",
+        "kind": "solution-bottle",
+        "slot": "library",
+        "label": "Sucrose solutions",
+        "vi": {
+          "label": "Dung dịch saccarôzơ"
+        },
+        "owns": ["concentration"],
+        "shows": []
+      },
+      {
+        "id": "potato",
+        "kind": "tissue-sample",
+        "slot": "library",
+        "label": "Potato cylinders",
+        "vi": {
+          "label": "Thỏi khoai tây"
+        },
+        "owns": ["initialMass"],
+        "shows": []
+      },
+      {
+        "id": "tube",
+        "kind": "bio-boiling-tube",
+        "slot": "back-centre",
+        "label": "Boiling tube with the sucrose solution",
+        "vi": {
+          "label": "Ống nghiệm chứa dung dịch saccarôzơ"
+        },
+        "owns": [],
+        "shows": [
+          {
+            "parameter": "concentration"
+          },
+          {
+            "variable": "mass"
+          },
+          {
+            "result": "solutionPotential"
+          },
+          {
+            "input": "temperature"
+          }
+        ]
+      },
+      {
+        "id": "membrane",
+        "kind": "membrane-lens",
+        "slot": "lens",
+        "label": "Cell membrane",
+        "vi": {
+          "label": "Màng tế bào"
+        },
+        "owns": [],
+        "shows": [
+          {
+            "variable": "direction"
+          },
+          {
+            "variable": "potentialDifference"
+          },
+          {
+            "variable": "tissuePotential"
+          }
+        ]
+      },
+      {
+        "id": "timer",
+        "kind": "bio-timer",
+        "slot": "front-left",
+        "label": "Timer",
+        "vi": {
+          "label": "Đồng hồ đếm giờ"
+        },
+        "owns": ["soakTime"],
+        "shows": [
+          {
+            "variable": "labTime"
+          },
+          {
+            "input": "timeLapse"
+          }
+        ]
+      },
+      {
+        "id": "balance",
+        "kind": "bio-balance",
+        "slot": "front-right",
+        "label": "Top-pan balance",
+        "vi": {
+          "label": "Cân điện tử"
+        },
+        "owns": ["balanceResolution"],
+        "shows": [
+          {
+            "instrument": "finalMass"
+          }
+        ]
+      }
+    ],
+    "materials": [],
+    "setup": [],
+    "runLabel": "Soak",
+    "vi": {
+      "runLabel": "Ngâm"
+    }
+  },
+  "parameters": [
+    {
+      "id": "concentration",
+      "label": "Sucrose concentration",
+      "vi": {
+        "label": "Nồng độ saccarôzơ"
+      },
+      "symbol": "C",
+      "unit": "mol/L",
+      "default": 0.4,
+      "min": 0,
+      "max": 1,
+      "step": 0.05,
+      "presets": [
+        {
+          "label": "0 mol/L (distilled water)",
+          "vi": {
+            "label": "0 mol/L (nước cất)"
+          },
+          "value": 0
+        },
+        {
+          "label": "0.2 mol/L",
+          "vi": {
+            "label": "0,2 mol/L"
+          },
+          "value": 0.2
+        },
+        {
+          "label": "0.5 mol/L",
+          "vi": {
+            "label": "0,5 mol/L"
+          },
+          "value": 0.5
+        },
+        {
+          "label": "1 mol/L",
+          "vi": {
+            "label": "1 mol/L"
+          },
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "soakTime",
+      "label": "Soaking time",
+      "vi": {
+        "label": "Thời gian ngâm"
+      },
+      "symbol": "t_soak",
+      "unit": "s",
+      "default": 14400,
+      "min": 1800,
+      "max": 14400,
+      "step": 900,
+      "presets": [
+        {
+          "label": "30 min (1800 s)",
+          "vi": {
+            "label": "30 phút (1800 s)"
+          },
+          "value": 1800
+        },
+        {
+          "label": "1 h (3600 s)",
+          "vi": {
+            "label": "1 giờ (3600 s)"
+          },
+          "value": 3600
+        },
+        {
+          "label": "2 h (7200 s)",
+          "vi": {
+            "label": "2 giờ (7200 s)"
+          },
+          "value": 7200
+        },
+        {
+          "label": "4 h (14400 s)",
+          "vi": {
+            "label": "4 giờ (14400 s)"
+          },
+          "value": 14400
+        }
+      ]
+    },
+    {
+      "id": "initialMass",
+      "label": "Cylinder mass at the start",
+      "vi": {
+        "label": "Khối lượng ban đầu của thỏi khoai"
+      },
+      "symbol": "m₀",
+      "unit": "g",
+      "default": 3,
+      "min": 1,
+      "max": 6,
+      "step": 0.1,
+      "presets": [
+        {
+          "label": "2 g",
+          "vi": {
+            "label": "2 g"
+          },
+          "value": 2
+        },
+        {
+          "label": "3 g",
+          "vi": {
+            "label": "3 g"
+          },
+          "value": 3
+        },
+        {
+          "label": "5 g",
+          "vi": {
+            "label": "5 g"
+          },
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": "balanceResolution",
+      "label": "Balance resolution",
+      "vi": {
+        "label": "Độ phân giải của cân"
+      },
+      "symbol": "d",
+      "unit": "g",
+      "default": 0.01,
+      "min": 0.001,
+      "max": 0.1,
+      "step": 0.001,
+      "presets": [
+        {
+          "label": "0.001 g",
+          "vi": {
+            "label": "0,001 g"
+          },
+          "value": 0.001
+        },
+        {
+          "label": "0.01 g",
+          "vi": {
+            "label": "0,01 g"
+          },
+          "value": 0.01
+        },
+        {
+          "label": "0.1 g",
+          "vi": {
+            "label": "0,1 g"
+          },
+          "value": 0.1
+        }
+      ]
+    }
+  ],
+  "initialConditions": {
+    "temperature": 20,
+    "isotonicConcentration": 0.25,
+    "tissueModulus": 5000,
+    "timeConstant": 2700,
+    "timeLapse": 240
+  },
+  "inputs": {
+    "temperature": {
+      "symbol": "θ",
+      "unit": "°C"
+    },
+    "isotonicConcentration": {
+      "symbol": "C_iso",
+      "unit": "mol/L",
+      "desk": false
+    },
+    "tissueModulus": {
+      "symbol": "E",
+      "unit": "kPa",
+      "desk": false
+    },
+    "timeConstant": {
+      "symbol": "τ",
+      "unit": "s",
+      "desk": false
+    },
+    "timeLapse": {
+      "symbol": "×",
+      "unit": ""
+    }
+  },
+  "simulation": {
+    "timeStep": 0.02,
+    "maxDuration": 65,
+    "sampleInterval": 0.1
+  },
+  "measurements": [
+    {
+      "id": "labTime",
+      "label": "Soaking time",
+      "vi": {
+        "label": "Thời gian ngâm"
+      },
+      "symbol": "t",
+      "unit": "s",
+      "variable": "labTime"
+    },
+    {
+      "id": "mass",
+      "label": "Cylinder mass",
+      "vi": {
+        "label": "Khối lượng thỏi khoai"
+      },
+      "symbol": "m",
+      "unit": "g",
+      "variable": "mass"
+    },
+    {
+      "id": "percentChange",
+      "label": "Change in mass",
+      "vi": {
+        "label": "Phần trăm thay đổi khối lượng"
+      },
+      "symbol": "Δm/m₀",
+      "unit": "%",
+      "variable": "percentChange"
+    },
+    {
+      "id": "potentialDifference",
+      "label": "Water-potential difference, solution − tissue",
+      "vi": {
+        "label": "Hiệu thế nước, dung dịch − mô"
+      },
+      "symbol": "ΔΨ",
+      "unit": "kPa",
+      "variable": "potentialDifference"
+    },
+    {
+      "id": "tissuePotential",
+      "label": "Water potential of the tissue",
+      "vi": {
+        "label": "Thế nước của mô"
+      },
+      "symbol": "Ψ_tissue",
+      "unit": "kPa",
+      "variable": "tissuePotential"
+    }
+  ],
+  "results": [
+    {
+      "id": "solutionPotential",
+      "label": "Water potential of the solution",
+      "vi": {
+        "label": "Thế nước của dung dịch"
+      },
+      "symbol": "Ψ_solution",
+      "unit": "kPa",
+      "variable": "solutionPotential",
+      "reduce": "final",
+      "theory": "solutionPotential"
+    },
+    {
+      "id": "finalMass",
+      "label": "Cylinder mass after soaking",
+      "vi": {
+        "label": "Khối lượng thỏi khoai sau khi ngâm"
+      },
+      "symbol": "m",
+      "unit": "g",
+      "variable": "mass",
+      "reduce": "final",
+      "theory": "finalMass"
+    },
+    {
+      "id": "percentChange",
+      "label": "Change in mass after soaking",
+      "vi": {
+        "label": "Phần trăm thay đổi khối lượng sau khi ngâm"
+      },
+      "symbol": "Δm/m₀",
+      "unit": "%",
+      "variable": "percentChange",
+      "reduce": "final",
+      "theory": "finalPercent"
+    },
+    {
+      "id": "direction",
+      "label": "Net water flow",
+      "vi": {
+        "label": "Chiều dòng nước"
+      },
+      "symbol": "sign ΔΨ",
+      "unit": "",
+      "variable": "direction",
+      "reduce": "final",
+      "theory": "direction",
+      "classes": [
+        {
+          "max": -0.5,
+          "label": "Loses water",
+          "vi": {
+            "label": "Mất nước"
+          }
+        },
+        {
+          "max": 0.5,
+          "label": "No net change",
+          "vi": {
+            "label": "Không thay đổi"
+          }
+        },
+        {
+          "label": "Gains water",
+          "vi": {
+            "label": "Hút nước"
+          }
+        }
+      ]
+    }
+  ],
+  "graphs": [
+    {
+      "id": "percent-time",
+      "title": "Change in mass against soaking time",
+      "vi": {
+        "title": "Phần trăm thay đổi khối lượng theo thời gian ngâm"
+      },
+      "x": "labTime",
+      "y": ["percentChange"],
+      "mark": "timeConstant"
+    },
+    {
+      "id": "mass-time",
+      "title": "Cylinder mass against soaking time",
+      "vi": {
+        "title": "Khối lượng thỏi khoai theo thời gian ngâm"
+      },
+      "x": "labTime",
+      "y": ["mass"]
+    },
+    {
+      "id": "potential-time",
+      "title": "Water-potential difference against soaking time",
+      "vi": {
+        "title": "Hiệu thế nước theo thời gian ngâm"
+      },
+      "x": "labTime",
+      "y": ["potentialDifference"]
+    }
+  ],
+  "monitor": "percent-time",
+  "compare": [
+    {
+      "graph": "percent-time"
+    },
+    {
+      "graph": "potential-time"
+    }
+  ],
+  "instruments": [
+    {
+      "result": "finalMass",
+      "quantity": "Mass m after soaking",
+      "name": "Electronic balance",
+      "resolution": "balanceResolution",
+      "excludes": "how dry the cylinder is blotted before weighing, water it loses to the air on the pan, and the balance's zero and calibration",
+      "vi": {
+        "quantity": "Khối lượng m sau khi ngâm",
+        "name": "Cân điện tử",
+        "excludes": "mức thấm khô thỏi khoai trước khi cân, lượng nước bay hơi khi nằm trên đĩa cân, cùng điểm 0 và sai số hiệu chuẩn của cân"
+      }
+    }
+  ],
+  "analyses": [
+    {
+      "id": "isotonic",
+      "title": "Change in mass against sucrose concentration",
+      "note": "Each run is one point. For one soaking time the model gives a straight line, Δm/m₀ = a·C + b, with a negative slope: the stronger the solution, the more water the tissue loses. Where the line crosses 0 % the tissue neither gains nor loses water: that concentration is its isotonic concentration, C_iso = −b/a, from the slope a and intercept b shown with the fit — or read it off the graph where the line meets the 0 % axis. Use runs on both sides of it. Only runs with the same soaking time are fitted together, as a longer soak gives a steeper line (the slope grows as 1 − e^(−t_soak/τ)) that still crosses 0 % at C_iso; the starting mass may differ, since the percent change does not depend on it. The dashed theory line is the model's own line, with its slope a and intercept b, so it crosses 0 % at C_iso.",
+      "vi": {
+        "title": "Phần trăm thay đổi khối lượng theo nồng độ saccarôzơ",
+        "note": "Mỗi lần chạy là một điểm. Với cùng một thời gian ngâm, mô hình cho một đường thẳng Δm/m₀ = a·C + b có độ dốc âm: dung dịch càng đặc, mô càng mất nhiều nước. Tại chỗ đường thẳng cắt mức 0 %, mô không hút cũng không mất nước: nồng độ đó là nồng độ đẳng trương của mô, C_iso = −b/a, tính từ độ dốc a và tung độ gốc b hiển thị cùng đường khớp — hoặc đọc trên đồ thị tại chỗ đường thẳng gặp trục 0 %. Hãy dùng các lần chạy ở cả hai phía của điểm đó. Chỉ các lần chạy cùng thời gian ngâm mới được khớp chung, vì ngâm càng lâu thì đường thẳng càng dốc (độ dốc tăng theo 1 − e^(−t_soak/τ)) nhưng vẫn cắt mức 0 % tại C_iso; khối lượng ban đầu có thể khác nhau, vì phần trăm thay đổi không phụ thuộc vào nó. Đường lý thuyết nét đứt là chính đường của mô hình, với độ dốc a và tung độ gốc b, nên nó cắt mức 0 % tại C_iso."
+      },
+      "x": "concentration",
+      "y": "percentChange",
+      "group": ["soakTime"],
+      "columns": ["concentration", "soakTime", "initialMass", "finalMass", "percentChange"],
+      "slope": {
+        "label": "Slope of the change in mass against C",
+        "vi": {
+          "label": "Độ dốc của phần trăm thay đổi khối lượng theo C"
+        },
+        "symbol": "a",
+        "unit": "%/(mol/L)",
+        "theory": "percentSlope",
+        "intercept": "percentIntercept"
+      }
+    }
+  ],
+  "note": "A simplified teaching model, not a model of real tissue to lab precision. The solution's water potential is its solute potential, by van 't Hoff for an ideal dilute solution: Ψ_solution = −i·C·R·T, with i = 1 for sucrose (it does not dissociate), R = 8.314 J/(mol·K) and T in kelvin; with C in mol/L, R·T·C is in kPa. This is the ideal value shown as theory: a real sucrose solution is more negative, by roughly 15 % at 0.5 mol/L and 30–40 % at 1 mol/L (about −3.4 MPa instead of −2.44 MPa), because its molality is higher than its molarity and it is not ideal. The potato tissue starts in balance with sucrose at its isotonic concentration C_iso = 0.25 mol/L — an approximate value (school experiments usually find 0.2–0.3 mol/L, depending on the variety and how the potatoes were stored), so Ψ_tissue = −i·C_iso·R·T, about −609 kPa at 20 °C. As it takes up water its potential rises linearly with its fractional mass change u = Δm/m₀: Ψ_tissue = Ψ_iso + E·u, with E = 5000 kPa one effective constant chosen so the percent changes are of the size school experiments report, not a measured property. Water flows down the water-potential difference at a rate proportional to it, so u approaches u_eq = (Ψ_solution − Ψ_iso)/E as u_eq·(1 − e^(−t/τ)), with a teaching time constant τ = 2700 s (45 min). Time is compressed: each run second stands for 240 s of soaking, so a 4-hour soak (14,400 s) is shown in 60 s. The cylinder has gone 49 % of the way to equilibrium after 30 min and 99.5 % after 4 hours, and the theory is worked out at the end of the chosen soak. The net water flow is shown as +1 (water enters the tissue), −1 (water leaves it) or 0 (no net flow). Assumed: no sucrose enters the tissue, the solution is large enough that its concentration stays C, every cylinder has the same diameter and so the same τ, and the temperature is held at 20 °C. Real tissue is not linear: stiffer as it swells against its cell walls, softer once plasmolysed, and its loss levels off at high concentrations; real rates also rise with temperature, which this model leaves out.",
+  "procedure": [
+    {
+      "id": "read",
+      "instruction": "Read the osmosis instructions on the board.",
+      "vi": {
+        "instruction": "Đọc hướng dẫn thí nghiệm thẩm thấu trên bảng."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "osmosis-instructions"
+      }
+    },
+    {
+      "id": "work",
+      "instruction": "Go to the rack and balance and press E to work at the bench.",
+      "vi": {
+        "instruction": "Đến giá ống nghiệm và cân rồi nhấn E để làm việc tại bàn thí nghiệm."
+      },
+      "done": {
+        "kind": "inspected",
+        "item": "osmosis-rack"
+      }
+    },
+    {
+      "id": "concentration",
+      "instruction": "Choose the sucrose solution (its concentration C) on the bench.",
+      "vi": {
+        "instruction": "Chọn dung dịch saccarôzơ (nồng độ C của nó) trên bàn thí nghiệm."
+      },
+      "done": {
+        "kind": "adjusted",
+        "parameter": "concentration"
+      }
+    },
+    {
+      "id": "run",
+      "instruction": "Press SOAK to soak the weighed cylinder in its tube: each second of the run shows 4 minutes of soaking.",
+      "vi": {
+        "instruction": "Nhấn NGÂM để ngâm thỏi khoai đã cân vào ống nghiệm: mỗi giây chạy được tua nhanh bằng 4 phút ngâm."
+      },
+      "done": {
+        "kind": "completed"
+      }
+    },
+    {
+      "id": "results",
+      "instruction": "Read the mass after soaking on the balance and the change in mass in the notebook.",
+      "vi": {
+        "instruction": "Đọc khối lượng sau khi ngâm trên cân và phần trăm thay đổi khối lượng trong sổ ghi chép."
+      },
+      "done": {
+        "kind": "viewed"
+      }
+    },
+    {
+      "id": "reset",
+      "instruction": "Press RESET, choose another concentration, and soak again: find where the change in mass is 0 %.",
+      "vi": {
+        "instruction": "Nhấn ĐẶT LẠI, chọn nồng độ khác rồi ngâm lại: tìm nồng độ tại đó khối lượng thay đổi 0 %."
+      },
+      "done": {
+        "kind": "reset"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "which-way-water-flows",
+      "question": "A potato cylinder (isotonic with {isotonicConcentration} mol/L sucrose, an approximate value) is put in {concentration} mol/L sucrose at {temperature} °C. Find the solution’s water potential and the difference that drives the water.",
+      "vi": {
+        "question": "Một khúc khoai tây (đẳng trương với sacarôzơ {isotonicConcentration} mol/L, giá trị gần đúng) được ngâm trong dung dịch sacarôzơ {concentration} mol/L ở {temperature} °C. Tìm thế nước của dung dịch và chênh lệch thế nước làm nước di chuyển."
+      },
+      "set": { "concentration": 0.5 },
+      "find": [
+        { "theory": "solutionPotential", "figures": 4 },
+        { "theory": "potentialDifference", "symbol": "ΔΨ", "unit": "kPa", "figures": 4 }
+      ],
+      "steps": [
+        {
+          "say": "For an ideal dilute solution Ψ = −C·R·T (sucrose does not dissociate, i = 1); with C in mol/L the answer is in kPa.",
+          "vi": {
+            "say": "Với dung dịch loãng lí tưởng, Ψ = −C·R·T (sacarôzơ không phân li, i = 1); với C tính bằng mol/L thì kết quả tính bằng kPa."
+          },
+          "write": "Ψ_sol = −{concentration}·8.314·{=temperature+273.15|5} ≈ {@solutionPotential|4} kPa",
+          "check": {
+            "expr": "-concentration*8.314462618*(temperature+273.15)",
+            "equals": "solutionPotential"
+          }
+        },
+        {
+          "say": "The tissue starts like a {isotonicConcentration} mol/L solution.",
+          "vi": { "say": "Mô ban đầu có thế nước như dung dịch {isotonicConcentration} mol/L." },
+          "write": "Ψ_tissue = −{isotonicConcentration}·8.314·{=temperature+273.15|5} ≈ {@tissuePotential|4} kPa",
+          "check": {
+            "expr": "-isotonicConcentration*8.314462618*(temperature+273.15)",
+            "equals": "tissuePotential"
+          }
+        },
+        {
+          "say": "Water moves from higher to lower water potential. The difference is negative: water leaves the potato, which loses mass.",
+          "vi": {
+            "say": "Nước di chuyển từ nơi có thế nước cao tới nơi có thế nước thấp. Chênh lệch âm: nước đi ra khỏi khoai tây, khối lượng khoai giảm."
+          },
+          "write": "ΔΨ = Ψ_sol − Ψ_tissue ≈ {@potentialDifference|4} kPa",
+          "check": {
+            "expr": "@solutionPotential-@tissuePotential",
+            "equals": "potentialDifference"
+          }
+        }
+      ]
+    },
+    {
+      "id": "mass-change",
+      "question": "A {initialMass} g potato cylinder soaks for {soakTime} s in {concentration} mol/L sucrose. Its stiffness E = {tissueModulus} kPa and time constant {timeConstant} s are illustrative teaching values. Find its percentage change in mass and its final mass.",
+      "vi": {
+        "question": "Một khúc khoai tây {initialMass} g ngâm {soakTime} s trong sacarôzơ {concentration} mol/L. Độ cứng E = {tissueModulus} kPa và hằng số thời gian {timeConstant} s là các giá trị minh họa. Tìm phần trăm thay đổi khối lượng và khối lượng cuối."
+      },
+      "set": { "concentration": 0.2, "initialMass": 5, "soakTime": 14400 },
+      "find": [{ "theory": "finalPercent" }, { "theory": "finalMass" }],
+      "steps": [
+        {
+          "say": "The solution is weaker than the tissue’s {isotonicConcentration} mol/L, so the difference is positive: water goes in.",
+          "vi": {
+            "say": "Dung dịch loãng hơn mức đẳng trương {isotonicConcentration} mol/L của mô, nên chênh lệch dương: nước đi vào."
+          },
+          "write": "ΔΨ = ({isotonicConcentration} − {concentration})·R·T ≈ {@potentialDifference} kPa",
+          "check": {
+            "expr": "(isotonicConcentration-concentration)*8.314462618*(temperature+273.15)",
+            "equals": "potentialDifference"
+          }
+        },
+        {
+          "say": "The tissue swells until its own potential has risen by ΔΨ: at equilibrium Δm/m₀ = ΔΨ/E.",
+          "vi": {
+            "say": "Mô trương lên cho tới khi thế nước của nó tăng thêm ΔΨ: khi cân bằng Δm/m₀ = ΔΨ/E."
+          },
+          "write": "u_eq = ΔΨ/E = {@potentialDifference}/{tissueModulus} ≈ {=@equilibriumPercent|3}%",
+          "check": {
+            "expr": "100*@potentialDifference/tissueModulus",
+            "equals": "equilibriumPercent"
+          }
+        },
+        {
+          "say": "It approaches that as 1 − e^(−t/τ); after {soakTime} s it is nearly there.",
+          "vi": {
+            "say": "Nó tiến dần tới giá trị đó theo 1 − e^(−t/τ); sau {soakTime} s gần như đã đạt tới."
+          },
+          "write": "Δm/m₀ = u_eq·(1 − e^(−{soakTime}/{timeConstant})) ≈ {@finalPercent}%",
+          "check": {
+            "expr": "@equilibriumPercent*(1-exp(-soakTime/timeConstant))",
+            "equals": "finalPercent"
+          }
+        },
+        {
+          "say": "Apply that change to the starting mass.",
+          "vi": { "say": "Áp dụng thay đổi đó cho khối lượng ban đầu." },
+          "write": "m = {initialMass}·(1 + {@finalPercent}/100) ≈ {@finalMass} g",
+          "check": { "expr": "initialMass*(1+@finalPercent/100)", "equals": "finalMass" }
+        }
+      ]
+    }
+  ],
+  "explain": {
+    "summary": "A potato cylinder soaked in sugar solution gains or loses mass as water moves into or out of its cells by osmosis, from the higher water potential to the lower.",
+    "vi": {
+      "summary": "Một khúc khoai tây ngâm trong dung dịch đường tăng hoặc giảm khối lượng khi nước đi vào hoặc đi ra khỏi tế bào của nó do thẩm thấu, từ nơi có thế nước cao tới nơi có thế nước thấp."
+    },
+    "parts": [
+      {
+        "id": "cylinder",
+        "name": "Potato cylinder",
+        "role": "Cut with a cork borer and weighed (m₀) before it soaks.",
+        "vi": {
+          "name": "Khúc khoai tây",
+          "role": "Được cắt bằng dụng cụ khoan nút bấc và cân (m₀) trước khi ngâm."
+        },
+        "anchor": {
+          "part": "cylinder"
+        }
+      },
+      {
+        "id": "solution",
+        "name": "Sucrose solution",
+        "role": "In the boiling tube: the concentration C chosen on the bench.",
+        "vi": {
+          "name": "Dung dịch đường saccarozơ",
+          "role": "Trong ống nghiệm lớn: nồng độ C chọn trên bàn thí nghiệm."
+        },
+        "anchor": {
+          "part": "solution"
+        }
+      },
+      {
+        "id": "label",
+        "name": "Tube label",
+        "role": "Shows the solution’s concentration C, in mol/L.",
+        "vi": {
+          "name": "Nhãn ống nghiệm",
+          "role": "Ghi nồng độ C của dung dịch, đơn vị mol/L."
+        },
+        "anchor": {
+          "part": "label-digits"
+        }
+      },
+      {
+        "id": "balance",
+        "name": "Balance",
+        "role": "Weighs the cylinder before and after soaking, to its resolution d.",
+        "vi": {
+          "name": "Cân",
+          "role": "Cân khúc khoai tây trước và sau khi ngâm, theo độ phân giải d."
+        },
+        "anchor": {
+          "part": "balance-digits"
+        }
+      },
+      {
+        "id": "timer",
+        "name": "Timer",
+        "role": "Shows the soaking time the run stands for.",
+        "vi": {
+          "name": "Đồng hồ",
+          "role": "Hiển thị thời gian ngâm mà lần chạy biểu diễn."
+        },
+        "anchor": {
+          "part": "timer-digits"
+        }
+      },
+      {
+        "id": "borer",
+        "name": "Cork borer and tile",
+        "role": "Cut cylinders of the same diameter, so they all behave alike.",
+        "vi": {
+          "name": "Dụng cụ khoan và tấm sứ",
+          "role": "Cắt các khúc khoai có cùng đường kính, để chúng diễn biến như nhau."
+        },
+        "anchor": {
+          "at": [-0.05, -0.074, 0.07]
+        }
+      }
+    ],
+    "steps": [
+      {
+        "text": "The potato cylinder is weighed, then soaked in a sucrose solution of concentration C.",
+        "vi": {
+          "text": "Khúc khoai tây được cân, rồi ngâm trong dung dịch đường saccarozơ có nồng độ C."
+        },
+        "parts": ["cylinder", "balance", "solution", "label"]
+      },
+      {
+        "text": "Its cell membranes let water through but not sugar. Water moves by osmosis from where its water potential is higher to where it is lower.",
+        "vi": {
+          "text": "Màng tế bào cho nước đi qua nhưng không cho đường đi qua. Nước di chuyển bằng thẩm thấu từ nơi có thế nước cao hơn tới nơi có thế nước thấp hơn."
+        },
+        "parts": ["cylinder"]
+      },
+      {
+        "text": "The more sugar in the solution, the lower its water potential: Ψ_solution = −C·R·T (ideal). In a weak solution water enters the cells and the cylinder gains mass; in a strong one it loses water and mass.",
+        "vi": {
+          "text": "Dung dịch càng nhiều đường thì thế nước càng thấp: Ψ_solution = −C·R·T (lý tưởng). Trong dung dịch loãng, nước đi vào tế bào và khúc khoai tăng khối lượng; trong dung dịch đặc, nó mất nước và giảm khối lượng."
+        },
+        "parts": ["solution", "cylinder"]
+      },
+      {
+        "text": "The flow slows as the tissue’s potential comes level with the solution’s, so the mass approaches a new steady value over the soak.",
+        "vi": {
+          "text": "Dòng nước chậm dần khi thế nước của mô tiến gần thế nước của dung dịch, nên khối lượng dần tiến tới một giá trị ổn định mới trong thời gian ngâm."
+        },
+        "parts": ["cylinder", "timer"]
+      },
+      {
+        "text": "Weigh the cylinder again and work out the percent change in mass, Δm/m₀. Over several concentrations, the line of percent change against C crosses 0 % where the tissue and the solution are isotonic: find that concentration.",
+        "vi": {
+          "text": "Cân lại khúc khoai và tính phần trăm thay đổi khối lượng, Δm/m₀. Qua nhiều nồng độ, đường biểu diễn phần trăm thay đổi theo C cắt mức 0 % tại nồng độ mà mô và dung dịch đẳng trương: hãy tìm nồng độ đó."
+        },
+        "parts": ["balance", "label"]
+      },
+      {
+        "text": "A simplified model with an effective tissue constant: no sugar enters the tissue and the temperature is held at 20 °C. Time runs 240 times faster.",
+        "vi": {
+          "text": "Mô hình đơn giản hóa với một hằng số hiệu dụng của mô: đường không đi vào mô và nhiệt độ giữ ở 20 °C. Thời gian chạy nhanh gấp 240 lần."
+        },
+        "parts": ["cylinder"]
+      }
+    ]
+  }
+}
