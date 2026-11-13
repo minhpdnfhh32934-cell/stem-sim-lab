@@ -2,7 +2,8 @@ import { ArrowLeft, Info } from 'lucide-react';
 import { useContext, useEffect, useId, useRef, useState, type ComponentProps } from 'react';
 import { useLoaded, type Loaded } from '@/app/bench/useLoaded';
 import { BenchContext } from '@/app/bench/shellMode';
-import { useT } from '@/app/i18n';
+import { useT, type MessageKey } from '@/app/i18n';
+import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useAiStatusView } from '@/app/ai/aiStatusView';
 import { effectiveTier, usePerfStore } from '@/perf/perfStore';
 import { useChatStore } from '@/teacher/chat/chatStore';
@@ -16,6 +17,8 @@ import { closeTeacher, useTeacherStore, type TeacherLayout } from '@/teacher/tea
 import { Skeleton } from '@/ui/Skeleton';
 import { useGlide } from './glide';
 import { latestLesson } from './latestLesson';
+import { MemoryView } from './MemoryView';
+import { UsageView } from './UsageView';
 import './teacher.css';
 
 // The board (fonts, KaTeX, layout) loads only when the learner opens the board layout. By hand
@@ -28,10 +31,23 @@ const backToTalk = () => {
 };
 
 const LAYOUTS: TeacherLayout[] = ['talk', 'board'];
+/** Advanced mode adds two pages of plain facts (#234 step 5); numbered by position (01–04). */
+const ADVANCED_PAGES: TeacherLayout[] = ['memory', 'usage'];
+const TAB_NAMES: Record<TeacherLayout, MessageKey> = {
+  talk: 'teacher.layoutTalk',
+  board: 'teacher.layoutBoard',
+  memory: 'teacherViews.memoryTab',
+  usage: 'teacherViews.usageTab',
+};
 
 export default function TeacherScreen() {
   const t = useT();
-  const layout = useTeacherStore((s) => s.layout);
+  const chosen = useTeacherStore((s) => s.layout);
+  const advanced = useSettingsStore((s) => s.uiMode === 'advanced');
+  // The Advanced pages go with Advanced mode: in Basic the conversation shows.
+  const layout = !advanced && ADVANCED_PAGES.includes(chosen) ? 'talk' : chosen;
+  const pages = advanced ? [...LAYOUTS, ...ADVANCED_PAGES] : LAYOUTS;
+  const factsPage = ADVANCED_PAGES.includes(layout);
   const setLayout = useTeacherStore((s) => s.setLayout);
   // Who answers, in the header pill's words (#233: the old pill said "AI trực tuyến" beside
   // "Chưa kết nối AI"). Only when an AI can answer: the header and the empty conversation already
@@ -112,7 +128,7 @@ export default function TeacherScreen() {
           {t('teacher.layoutLabel')}
         </span>
         <div className="tabs__list teacher__tabs" role="radiogroup" aria-labelledby={layoutId}>
-          {LAYOUTS.map((item, i) => (
+          {pages.map((item, i) => (
             <button
               key={item}
               type="button"
@@ -126,7 +142,7 @@ export default function TeacherScreen() {
               <span className="teacher__tab-num" aria-hidden="true">
                 {String(i + 1).padStart(2, '0')}
               </span>
-              {t(item === 'talk' ? 'teacher.layoutTalk' : 'teacher.layoutBoard')}
+              {t(TAB_NAMES[item])}
             </button>
           ))}
         </div>
@@ -191,7 +207,11 @@ export default function TeacherScreen() {
           </div>
         )}
 
-        <main className="teacher__chat-wrap" aria-label={t('chat.label')}>
+        {layout === 'memory' && <MemoryView />}
+        {layout === 'usage' && <UsageView />}
+
+        {/* Hidden, not removed, on a facts page: a question being typed or answered stays. */}
+        <main className="teacher__chat-wrap" aria-label={t('chat.label')} hidden={factsPage}>
           <ChatPanel showScreenContext={false} teacherPage onComposingChange={setTyping} />
         </main>
       </div>

@@ -1,5 +1,5 @@
 /**
- * The orb glides between the two layouts (#234 step 4): talk (large, above the conversation) ↔
+ * The orb glides between the two layouts (#234 step 4): talk (large, beside the conversation) ↔
  * board (small, top-left corner). The page jumps to the new layout at once and the orb's box
  * plays the way back from where it was ("FLIP"): one transform, so the canvas is resized once
  * instead of every frame. Instant under reduced motion.

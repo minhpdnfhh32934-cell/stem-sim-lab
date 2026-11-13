@@ -3,24 +3,33 @@ import { expect, test, type Locator, type Page } from '@playwright/test';
 import { fulfillGemini } from '../fakeAi';
 
 /**
- * AI Teacher's station (#234 step 4) at 1366 × 768: numbered tabs, the connection chip (the
- * header pill's words, only while an AI can answer), the orb beside the conversation (talk) and
- * small in the top-left corner (board), AI Teacher's answers on glass cards, opaque on the Low tier. Light and dark,
- * Cỡ chữ 100 % and 140 %: no horizontal scroll, 40 px tabs, nothing serious for axe.
+ * AI Teacher's station (#234 steps 4–5) at 1366 × 768: numbered tabs (03 Ghi nhớ and 04 Lượt dùng
+ * in Advanced mode only), the connection chip (the header pill's words, only while an AI can
+ * answer), the orb beside the conversation (talk) and small in the top-left corner (board), AI
+ * Teacher's answers on glass cards, opaque on the Low tier. Light and dark, Cỡ chữ 100 % and
+ * 140 %: no horizontal scroll, 40 px tabs, nothing serious for axe.
  */
 
 const overflow = (page: Page) =>
   page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
 
-async function settings(page: Page, theme: 'light' | 'dark', fontScale = 1) {
+async function settings(
+  page: Page,
+  theme: 'light' | 'dark',
+  fontScale = 1,
+  uiMode: 'basic' | 'advanced' = 'basic',
+) {
   await page.addInitScript(
-    ([t, scale]) => {
+    ([t, scale, mode]) => {
       localStorage.setItem(
         'stemsim.settings',
-        JSON.stringify({ state: { locale: 'vi', fontScale: scale, theme: t }, version: 2 }),
+        JSON.stringify({
+          state: { locale: 'vi', fontScale: scale, theme: t, uiMode: mode },
+          version: 2,
+        }),
       );
     },
-    [theme, fontScale] as const,
+    [theme, fontScale, uiMode] as const,
   );
 }
 
@@ -60,10 +69,12 @@ for (const theme of ['light', 'dark'] as const)
       const screen = await openTeacher(page);
 
       // 01 TRÒ CHUYỆN · 02 BẢNG GIẢNG: the layout switch keeps its radios and their names.
-      const tabs = screen.getByRole('radiogroup', { name: 'Xem thử bố cục' });
+      const tabs = screen.getByRole('radiogroup', { name: 'Các trang của AI Teacher' });
       const talk = tabs.getByRole('radio', { name: 'Trò chuyện' });
       const board = tabs.getByRole('radio', { name: 'Bảng giảng' });
       await expect(talk).toHaveAttribute('aria-checked', 'true');
+      // Basic mode: the two layouts only (03 Ghi nhớ and 04 Lượt dùng are Advanced pages).
+      await expect(tabs.getByRole('radio')).toHaveCount(2);
       await expect(tabs).toContainText('01');
       await expect(tabs).toContainText('02');
       for (const tab of [talk, board])
@@ -176,3 +187,72 @@ for (const tier of ['medium', 'low'] as const)
     if (tier === 'low') expect(look.alpha).toBe(1);
     else expect(look.alpha).toBeLessThan(1);
   });
+
+for (const fontScale of [1, 1.4])
+  test(`Advanced, ${String(fontScale * 100)} %: 03 Ghi nhớ and 04 Lượt dùng say real facts; a typed question stays`, async ({
+    page,
+  }) => {
+    await settings(page, 'dark', fontScale, 'advanced');
+    const screen = await openTeacher(page);
+    const tabs = screen.getByRole('radiogroup', { name: 'Các trang của AI Teacher' });
+    await expect(tabs.getByRole('radio')).toHaveCount(4);
+    // Numbered by position: no gap where 03 Buổi học and 05 Nguồn are not built yet.
+    await expect(tabs).toContainText('03');
+    await expect(tabs).toContainText('04');
+    for (const tab of await tabs.getByRole('radio').all())
+      expect((await tab.boundingBox())?.height ?? 0).toBeGreaterThanOrEqual(40);
+
+    const conversation = page.getByRole('region', { name: 'Trò chuyện với AI Teacher' });
+    const question = conversation.getByRole('textbox', { name: 'Nhập câu hỏi' });
+    await question.fill('Vì sao trời xanh?');
+
+    await tabs.getByRole('radio', { name: 'Ghi nhớ' }).click();
+    await expect(screen.getByRole('heading', { name: 'AI Teacher đang nhớ gì' })).toBeVisible();
+    await expect(screen.getByText('Chưa có gì để nhớ: cuộc trò chuyện còn trống.')).toBeVisible();
+    await expect(conversation).toBeHidden();
+    expect(await overflow(page)).toBeLessThanOrEqual(0);
+    expect(await seriousForAxe(page)).toEqual([]);
+
+    await tabs.getByRole('radio', { name: 'Lượt dùng' }).click();
+    await expect(
+      screen.getByRole('heading', { name: 'Lượt dùng AI trực tuyến hôm nay' }),
+    ).toBeVisible();
+    // The day counter is the desktop app's (ai_usage): the browser build says so, with no number.
+    await expect(
+      screen.getByText('Số lượt chỉ đếm được trong ứng dụng SimLab trên máy tính.'),
+    ).toBeVisible();
+    await expect(screen.getByText(/Hôm nay đã dùng/)).toHaveCount(0);
+    await expect(screen).not.toContainText(/token|LLM|JSON/i);
+    expect(await overflow(page)).toBeLessThanOrEqual(0);
+    expect(await seriousForAxe(page)).toEqual([]);
+
+    await tabs.getByRole('radio', { name: 'Trò chuyện' }).click();
+    await expect(question).toHaveValue('Vì sao trời xanh?');
+  });
+
+test('an Advanced page left open: switching to Basic shows the conversation again', async ({
+  page,
+}) => {
+  await settings(page, 'light', 1, 'advanced');
+  const screen = await openTeacher(page);
+  const tabs = screen.getByRole('radiogroup', { name: 'Các trang của AI Teacher' });
+  await tabs.getByRole('radio', { name: 'Lượt dùng' }).click();
+  await expect(
+    screen.getByRole('heading', { name: 'Lượt dùng AI trực tuyến hôm nay' }),
+  ).toBeVisible();
+
+  await page.keyboard.press('Control+k');
+  const palette = page.getByRole('dialog', { name: 'Tìm nhanh' });
+  await palette.getByRole('combobox').fill('cơ bản');
+  await palette.getByRole('option', { name: 'Chuyển sang chế độ Cơ bản' }).click();
+
+  await expect(tabs.getByRole('radio')).toHaveCount(2);
+  await expect(tabs.getByRole('radio', { name: 'Trò chuyện' })).toHaveAttribute(
+    'aria-checked',
+    'true',
+  );
+  await expect(page.getByRole('region', { name: 'Trò chuyện với AI Teacher' })).toBeVisible();
+  await expect(
+    screen.getByRole('heading', { name: 'Lượt dùng AI trực tuyến hôm nay' }),
+  ).toHaveCount(0);
+});
