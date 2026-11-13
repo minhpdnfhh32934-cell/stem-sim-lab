@@ -17,4 +17,4 @@ air of the rooms) have no file: their recipes are in `src/content/sounds.json`.
 
 Licence text (both packs): Creative Commons Zero, CC0 — http://creativecommons.org/publicdomain/zero/1.0/
 — "free to use in personal, educational and commercial projects"; credit is not required (given
-here anyway). Downloaded 2026-11-05 with Phú's permission.
+here anyway). Downloaded 2026-11-05 with the owner's permission.

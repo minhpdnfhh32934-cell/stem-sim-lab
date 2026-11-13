@@ -4,7 +4,7 @@ Used by the Ultra graphics preset only (`src/platform/render/surfaces.ts`, Phase
 by Low, Medium or High.
 
 All from [ambientCG](https://ambientcg.com), licensed **CC0 1.0** (public domain: free for any use,
-no credit required — given here anyway). Downloaded 2026-11-06 as the 2K JPG packs with Phú's
+no credit required — given here anyway). Downloaded 2026-11-06 as the 2K JPG packs with the owner's
 permission; each folder keeps the maps the game uses (`color`, `normal` = the OpenGL normal map,
 `roughness`, and `ao` / `metalness` where the pack has them), renamed from
 `<Asset>_2K-JPG_<Map>.jpg`. The displacement maps and the packs' Blender, MaterialX, USD and Godot
