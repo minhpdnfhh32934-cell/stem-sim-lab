@@ -50,6 +50,8 @@ Version 0.8.1:
 - New Physics lessons: Uniform circular motion, Standing waves, Two-source interference, Electric field, DC circuits, Forced oscillation, Harmonics and Fourier series, Kepler's second law.
 - Chemistry: Acid–base titration, metal and NaCl crystals in 3D, the reaction energy diagram, molecules filtered by functional group.
 - Biology: Prokaryotic and eukaryotic cells (3D and 2D), From cell to DNA.
+- A new AI Teacher: a glowing orb that follows what the teacher is doing and the voice, Conversation · Whiteboard tabs, answers on glass cards; Advanced mode adds Memory and Usage.
+- SimLab 3D game: a first-person 3D laboratory, opened from Virtual Lab → SimLab 3D (single player).
 - The library can show Grade 10, 11 or 12 following the Kết nối tri thức textbooks; the lab is now called Virtual Lab.
 - Easier to read and to press: no text below 12 px, click targets at least 40 px, a clear outline when using the keyboard, long names no longer cut off.
 - Lessons with repeating motion (interference, standing waves, pendulums, predator–prey…) run until you press Pause; the Science Card says when the energy drifts.

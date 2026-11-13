@@ -593,12 +593,22 @@ Fold order at large font or in English: Tìm → icon 40; AI status → icon + d
 
 ### 9.8 AI Teacher room ("Giảng trên bảng")
 
+**#234 "station" (0.8.1, 13/11/2026; details `docs/AI_TUTOR.md`):** the room has its own stage
+(`--teacher-bg` + `--teacher-glow`, both themes) under the bench header. One row under the header:
+"Về trang chủ", "Là một AI", (i), the numbered tabs `01 TRÒ CHUYỆN · 02 BẢNG GIẢNG` (Advanced adds
+`03 GHI NHỚ · 04 LƯỢT DÙNG`; still the layout radios, underline by `slidingIndicator.ts`, 40 px) and,
+at the right, the connection chip (header pill's words, only while an AI can answer). Talk: the orb
+(≤ 176 px, state word under it) beside the conversation, which keeps ≥ 70 % of the width. Board: the
+orb 88 px in the top-left corner, then the board, then the conversation. AI Teacher's answers sit on
+glass cards (opaque on Low). The measurements below predate the station; where they differ, this
+paragraph and `teacher-station.spec.ts` win.
+
 **Header y0–48** (frame)
 
 - "Về trang chủ" ghost 144 at x8.
 - h1 "AI Teacher" 16/22 600 at x168, with the chip "Là một AI".
 - #205 B5 (12/11/2026): that h1 is the room's one title (the bench header's crumb, id `teacher-title`); the page's "Dạy học bằng AI" heading, the chat panel's "AI Teacher" and the face's tag are gone (the region keeps the name "Dạy học bằng AI"). Without an online AI, no bar repeats the header's "Chưa kết nối AI": the empty conversation says how to start, with "Kết nối AI" (Settings → Kết nối AI). "Think" reads "Suy nghĩ kĩ (Think)". The face column is 0.2fr (was 0.3fr), its ring ≤ 176 px.
-- Segmented "Trò chuyện | Giảng trên bảng" 240 at x456.
+- Numbered tabs (#234) instead of the segmented "Trò chuyện | Giảng trên bảng"; "Giảng trên bảng" is now the tab "Bảng giảng".
 - Engine select 280 at x704, grouped: "Trên mạng: Gemini · Claude · Groq" / "Trên máy này: Gemma 270M · 1B · E2B" / "Máy khác (cùng máy tính): Ollama · LM Studio · llama.cpp…".
 - "Giọng đọc" 40 at x1190, micro 40 at x1234 (opt-in), Cài đặt 40 at x1318.
 

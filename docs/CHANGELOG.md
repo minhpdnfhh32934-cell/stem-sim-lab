@@ -31,6 +31,7 @@ Bản 0.8.1 có giao diện mới "Bàn thí nghiệm" và gộp mọi thay đ�
 - Chế độ trưng bày: Ctrl+K → "Chế độ trưng bày (tự chạy các cảnh)" tự chạy 8 cảnh có sẵn ở chế độ trình chiếu; bấm hoặc nhấn một phím bất kì để dừng.
 - Ở chế độ Nâng cao, Tệp → "Thông tin máy" cho xem mức chất lượng hiển thị (kèm lúc đo), FPS và RAM.
 - Trò chơi SimLab 3D: một phòng thí nghiệm 3D nhìn qua mắt người chơi, mở từ Virtual Lab → SimLab 3D. Em chuẩn bị đồ bảo hộ rồi làm các thí nghiệm rơi tự do, ném xiên, con lắc và lò xo. Chỉ chơi một người.
+- AI Teacher có diện mạo mới: một quả cầu hạt sáng đổi theo việc thầy đang làm (chờ, nghe em gõ, suy nghĩ, giảng) và phồng lên theo giọng đọc; sân khấu riêng cho giao diện sáng và tối; tab 01 Trò chuyện · 02 Bảng giảng; câu trả lời nằm trên thẻ kính. Khi sang Bảng giảng, quả cầu thu nhỏ về góc. Ở chế độ Nâng cao có thêm tab Ghi nhớ (thầy đang nhớ gì của cuộc trò chuyện) và Lượt dùng (số lượt AI trực tuyến hôm nay so với giới hạn em đặt).
 
 ### Improved
 
@@ -69,6 +70,7 @@ Bản 0.8.1 có giao diện mới "Bàn thí nghiệm" và gộp mọi thay đ�
 - Science Studio: bước Báo cáo không còn tràn ngang màn hình.
 - Bấm Ctrl+K hoặc mở “Nguồn & Giả định” khi một bài 3D đang chạy liên tục nay luôn mở được; nếu tải không được, app báo và lần sau thử lại.
 - Sau khi bấm Tạm dừng, thời gian đứng đúng chỗ đã bấm.
+- Khi em đã trả lời “chưa đủ 18 tuổi”, không còn lối nào mở trang AI Teacher (Ctrl+K hay nút “Hỏi thầy” trong 3D Nguyên phân, Giảm phân), đúng như thẻ AI Teacher bị khoá ở trang đầu.
 
 ### Security
 
