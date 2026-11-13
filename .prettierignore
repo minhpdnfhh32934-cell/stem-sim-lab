@@ -21,3 +21,5 @@ docs/CURRICULUM_KNTT.md
 tests/teaching/teaching-heldout-2.json
 # The built SimLab 3D game (docs/GAME.md): minified output of its own build, not formatted here.
 public/game
+# The game's source: its own Prettier config and check (game/package.json, docs/GAME.md).
+game

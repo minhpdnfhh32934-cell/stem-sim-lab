@@ -15,6 +15,8 @@ export default tseslint.config(
       'playwright-report',
       // Git-ignored agent scratch files and logs (CLAUDE.md "Two-machine workflow").
       '.agent-logs',
+      // The SimLab 3D game's own source, linted by its own config (game/eslint.config.js).
+      'game',
     ],
   },
   {
