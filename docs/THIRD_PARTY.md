@@ -74,5 +74,5 @@ Bản dựng sẵn của game phòng thí nghiệm 3D (thêm ngày 12/11/2026):
 - **Âm thanh:** Kenney "Impact Sounds" và "RPG Audio", CC0 1.0. Danh sách từng tệp ở `public/game/audio/CREDITS.md`.
 - **Mô hình thành phố dưới sàn sảnh:** Quaternius "Downtown City MegaKit" (bản Standard miễn phí), CC0 1.0 (`public/game/hub-city/README.md`).
 - **Không đóng gói:**
-  - texture Ultra (ambientCG, CC0), vì quá nặng;
+  - texture Ultra (ambientCG, CC0), vì quá nặng; chúng chỉ nằm trong mã nguồn `game/public/ultra` (nguồn từng bộ ở README trong đó);
   - mô hình MediaPipe Face Landmarker / Hair Segmenter (Apache-2.0), vì không chạy mô hình trong app khi chưa hỏi người dùng.

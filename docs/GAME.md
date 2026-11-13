@@ -23,10 +23,8 @@ Có tiếng Việt và tiếng Anh.
 - **Mã nguồn nằm trong `game/`** (đưa vào ngày 13/11/2026, người dùng: "làm ngay trong 0.8.1"). Gồm `src`, `e2e`, `docs` (báo cáo từng giai đoạn của game), `scripts`, cấu hình, `public/audio` và `public/hub-city`.
 - **Không đưa vào kho:**
   - `node_modules`, `.git`, `.claude`, `dist`;
-  - `public/ultra` (107 MB texture CC0);
-  - `public/models` (mô hình MediaPipe).
-
-  Muốn chạy game độc lập ở mức Ultra hoặc dùng "khuôn mặt từ ảnh" thì phải tải lại hai thư mục này. Báo cáo giai đoạn G và F của game ghi nguồn tải.
+  - `public/models` (mô hình MediaPipe; muốn dùng "khuôn mặt từ ảnh" khi chạy game độc lập thì tải lại theo báo cáo giai đoạn F của game).
+- **Texture Ultra** (`game/public/ultra`, 107 MB, ambientCG CC0) có trong kho để mã nguồn đủ và test `surfaces.test.ts` của game đạt (người dùng chọn ngày 13/11/2026). App **không** dùng các texture này: `npm run build:game` bỏ chúng khỏi `public/game/`.
 
 ## Dựng lại bản dùng trong SimLab (`public/game/`)
 
