@@ -2572,10 +2572,8 @@ const vi = {
   game: {
     shelfTitle: 'Trò chơi',
     open: 'SimLab 3D',
-    openHint: 'Phòng thí nghiệm 3D góc nhìn thứ nhất (bản thử nghiệm)',
+    openHint: 'Phòng thí nghiệm 3D góc nhìn thứ nhất',
     title: 'SimLab 3D',
-    preview: 'Bản thử nghiệm',
-    note: 'Trò chơi phòng thí nghiệm 3D. Nội dung khoa học trong trò chơi đang chờ giáo viên duyệt.',
     back: 'Về SimLab',
     frameTitle: 'Trò chơi SimLab 3D',
   },
