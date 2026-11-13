@@ -2,7 +2,7 @@
 // the embedded build (VITE_SIMLAB_EMBED=1: single player, no face from a photo, no Ultra
 // preset) with relative paths, then without the folders the app does not use.
 import { spawnSync } from 'node:child_process';
-import { existsSync, rmSync } from 'node:fs';
+import { rmSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -25,8 +25,9 @@ function run(cmd, args, env = {}) {
   }
 }
 
-// The game has its own dependencies (game/package-lock.json); no install scripts are run.
-if (!existsSync(join(game, 'node_modules'))) run('npm', ['ci', '--ignore-scripts', '--no-audit', '--no-fund']);
+// The game's own dependencies, always exactly as game/package-lock.json says (a changed lockfile is
+// never built with old ones); no install scripts are run.
+run('npm', ['ci', '--ignore-scripts', '--no-audit', '--no-fund']);
 run('npx', ['vite', 'build', '--base', './', '--outDir', out, '--emptyOutDir'], { VITE_SIMLAB_EMBED: '1' });
 // Not shipped in SimLab: the Ultra textures (107 MB) and the MediaPipe models (no in-app model).
 for (const dir of ['ultra', 'models']) rmSync(join(out, dir), { recursive: true, force: true });

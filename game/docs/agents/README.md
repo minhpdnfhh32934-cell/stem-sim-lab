@@ -1,5 +1,10 @@
 # Working with several agents
 
+> **Inside the SimLab repository** (since 13/11/2026, user decision): the root `CLAUDE.md` wins over
+> this file wherever they differ. Claude never merges or pushes to `main` (the user merges every PR),
+> never runs `npm run dev:lan` / `preview:lan` (they open the game to the network), and rebuilds what
+> SimLab ships only with `npm run build:game` at the repository root (`docs/GAME.md`).
+
 How SimLab 3D is worked on by more than one Claude session at a time. `CLAUDE.md` stays the rule
 book every session follows; this file adds who may change what, how work is split, and how it
 comes back to `main`. One document on purpose: split it only when a part outgrows it.

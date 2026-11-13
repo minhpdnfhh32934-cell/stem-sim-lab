@@ -42,6 +42,11 @@ Kết quả khoảng 22 MB: JS, Rapier wasm, mô hình glTF của thành phố d
 
 Game có kiểm tra riêng: trong `game/` chạy `npm run check` (typecheck, ESLint, Prettier, Vitest). Kiểm tra chung của SimLab bỏ qua `game/` (`eslint.config.js`, `.prettierignore`); Vitest và tsconfig của SimLab vốn chỉ đọc `src` và `tests`.
 
+Quy tắc khi làm việc trong `game/`:
+
+- `game/CLAUDE.md` và `game/docs/agents/` là quy tắc riêng của game. Đầu hai tệp đã ghi: trong kho SimLab, `CLAUDE.md` gốc thắng. Claude không gộp, không push `main`.
+- **Không chạy** `npm run dev:lan` / `preview:lan` của game: hai lệnh này mở game ra mạng (`vite --host`).
+
 ## Bản nhúng khác bản gốc ở đâu (cờ `VITE_SIMLAB_EMBED=1`)
 
 Cờ đọc lúc dựng (`import.meta.env.VITE_SIMLAB_EMBED === '1'`). Bản độc lập của game không đổi.

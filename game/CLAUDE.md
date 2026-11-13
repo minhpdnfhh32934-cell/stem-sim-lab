@@ -1,5 +1,10 @@
 # CLAUDE.md — SIMLAB 3D
 
+> **Inside the SimLab repository** (since 13/11/2026, user decision): the root `CLAUDE.md` wins over
+> this file wherever they differ. Claude never merges or pushes to `main` (the user merges every PR),
+> never runs `npm run dev:lan` / `preview:lan` (they open the game to the network), and rebuilds what
+> SimLab ships only with `npm run build:game` at the repository root (`docs/GAME.md`).
+
 Stable rules for AI coding sessions. Status and history: `docs/phase-1-report.md` (one report
 per phase in `docs/`). Architecture: `docs/architecture.md`.
 
