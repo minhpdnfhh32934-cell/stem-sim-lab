@@ -31,7 +31,8 @@ function blockCenter(p: InclineInput, s: number) {
   return { x: s * c - (h / 2) * sn, y: s * sn + (h / 2) * c };
 }
 
-function view(p: Params): WorldBounds {
+/** Exported for the work, power and efficiency scene (same parameters, same picture). */
+export function view(p: Params): WorldBounds {
   const q = inclineInput(p);
   const Lx = q.length * Math.cos(q.theta);
   const Ly = q.length * Math.sin(q.theta);
@@ -64,7 +65,7 @@ const body: BodyDef = {
   ],
 };
 
-function draw({ ctx, cam, state, p, opts }: DrawContext): void {
+export function draw({ ctx, cam, state, p, opts }: DrawContext): void {
   const c = opts.colors;
   const q = inclineInput(p);
   const Lx = q.length * Math.cos(q.theta);
