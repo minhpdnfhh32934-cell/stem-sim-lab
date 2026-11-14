@@ -6,12 +6,19 @@ import { openLab } from '../nav';
  * is an AI, the Settings sheet and the palette take their bench sizes.
  */
 
-test('B7: the AI Teacher room names itself an AI beside its title', async ({ page }) => {
+test('B7: the AI Teacher room says it is an AI: its title and the chat footer', async ({
+  page,
+}) => {
   await page.goto('/');
   await page.locator('.launch-card--teacher').click();
   const title = page.locator('#teacher-title');
   await expect(title).toBeVisible({ timeout: 20_000 });
-  await expect(page.locator('.teacher__header')).toContainText('Là một AI');
+  await expect(title).toHaveText('AI Teacher');
+  await expect(page.locator('.chat-panel__footer')).toContainText(
+    'Câu trả lời AI có thể chưa chính xác',
+  );
+  // No separate "Là một AI" chip (user decision 14/11/2026).
+  await expect(page.getByText('Là một AI', { exact: true })).toHaveCount(0);
 });
 
 test('B7: Settings is a 1200 px sheet with a grouped 256 px navigation', async ({ page }) => {

@@ -270,7 +270,6 @@ const vi = {
       gemma: 'Dùng Gemma trên máy này',
       gemmaDesc: 'Tải {size}, không gửi gì lên mạng.',
     },
-    isAi: 'Là một AI',
   },
   layout: {
     exitPresentation: 'Thoát trình chiếu (Esc)',
@@ -288,7 +287,7 @@ const vi = {
       aiHint:
         'Chọn nhà cung cấp AI trực tuyến, nhập khóa API, đặt giới hạn và dự phòng khi hết lượt.',
       teacher: 'AI Teacher',
-      teacherHint: 'Think (một AI thứ hai rà soát câu trả lời) và dữ liệu nào được gửi đi.',
+      teacherHint: 'Deepthink (một AI thứ hai rà soát câu trả lời) và dữ liệu nào được gửi đi.',
       local: 'Gemma cục bộ',
       localHint:
         'Tải, chọn hoặc xóa mô hình Gemma chạy ngay trên máy: trả lời không cần mạng, không cần khóa.',
@@ -908,9 +907,9 @@ const vi = {
         'Kiểm tra cập nhật: ứng dụng hỏi trang phát hành của dự án trên GitHub xem có bản mới không (không gửi dữ liệu học tập).',
       send3: 'Ứng dụng không có quảng cáo, không có tài khoản, không gửi thống kê sử dụng.',
       send4:
-        'AI trên máy khác (Ollama, LM Studio, llama.cpp — bạn tự cài): câu hỏi chỉ được gửi tới chương trình đó trên chính máy này, không bao giờ tự chuyển sang AI trực tuyến. Chỉ khi bạn bật Think, bản nháp mới được gửi tới AI trực tuyến để xem lại (tra Wikipedia và giọng Gemini cũng chỉ gửi khi bạn bật). Chương trình đó có chính sách riêng; tính năng cloud của nó có thể đưa dữ liệu ra ngoài (ứng dụng từ chối mô hình cloud của Ollama).',
+        'AI trên máy khác (Ollama, LM Studio, llama.cpp — bạn tự cài): câu hỏi chỉ được gửi tới chương trình đó trên chính máy này, không bao giờ tự chuyển sang AI trực tuyến. Chỉ khi bạn bật Deepthink, bản nháp mới được gửi tới AI trực tuyến để xem lại (tra Wikipedia và giọng Gemini cũng chỉ gửi khi bạn bật). Chương trình đó có chính sách riêng; tính năng cloud của nó có thể đưa dữ liệu ra ngoài (ứng dụng từ chối mô hình cloud của Ollama).',
       send5:
-        '"Khoanh để hỏi" trên bảng: chữ và công thức trong vùng khoanh được gửi kèm câu hỏi tới AI đang chọn (và AI rà soát khi bật Think). Ảnh vùng khoanh chỉ được tạo khi vùng đó không có chữ, và chỉ gửi cho AI đọc ảnh chạy trên máy này — không bao giờ lên mạng.',
+        '"Khoanh để hỏi" trên bảng: chữ và công thức trong vùng khoanh được gửi kèm câu hỏi tới AI đang chọn (và AI rà soát khi bật Deepthink). Ảnh vùng khoanh chỉ được tạo khi vùng đó không có chữ, và chỉ gửi cho AI đọc ảnh chạy trên máy này — không bao giờ lên mạng.',
       storeTitle: 'Lưu gì trên máy này?',
       store1: 'Khóa API: trong kho khóa của hệ điều hành; màn hình chỉ hiện 4 ký tự cuối.',
       store2:
@@ -1571,7 +1570,7 @@ const vi = {
     noWebgpuNotice:
       'Máy hoặc trình duyệt này không hỗ trợ WebGPU nên chưa chạy được Gemma. Hãy chọn “AI trực tuyến” và kết nối khóa trong Cài đặt.',
     thinkNoVerifier:
-      'Think cần một AI thứ hai để kiểm tra chéo nhưng chưa có khóa. Chọn nhà cung cấp và nhập khóa trong Cài đặt → AI Teacher.',
+      'Deepthink cần một AI thứ hai để kiểm tra chéo nhưng chưa có khóa. Chọn nhà cung cấp và nhập khóa trong Cài đặt → AI Teacher.',
     reviewTarget: '{name} (rà soát)',
     fallbackTarget: '{name} (dự phòng khi {provider} hết lượt)',
     sentTo: 'Câu hỏi và trích đoạn tài liệu liên quan sẽ được gửi tới: {targets}.',
@@ -1617,7 +1616,7 @@ const vi = {
     inputLabel: 'Nhập câu hỏi',
     placeholder: 'Nhập câu hỏi của em…',
     send: 'Gửi câu hỏi',
-    think: 'Suy nghĩ kĩ (Think)',
+    think: 'Deepthink',
     thinkTitle: 'Dùng một AI thứ hai để rà soát câu trả lời',
     twoApis: '· 2 AI',
     oneApiReview: '· 1 AI rà soát',
@@ -1664,13 +1663,14 @@ const vi = {
       personal:
         'Tin nhắn có vẻ chứa thông tin cá nhân. Hãy xóa tên, địa chỉ, email hoặc số điện thoại rồi thử lại.',
       unsafe: 'Mình chỉ có thể hỗ trợ nội dung học tập phù hợp.',
-      sameProvider: 'Để Think kiểm tra chéo, hãy chọn một nhà cung cấp khác với API trả lời chính.',
+      sameProvider:
+        'Để Deepthink kiểm tra chéo, hãy chọn một nhà cung cấp khác với API trả lời chính.',
       noVerifierKey:
         'Chưa có khóa API thứ hai. Mở Cài đặt → AI Teacher để kết nối nhà cung cấp kiểm tra.',
       filtered:
         'Câu trả lời bị ẩn vì không qua được bộ lọc an toàn. Hãy thử hỏi lại hoặc báo giáo viên.',
       noAnswer:
-        'Mình chưa nhận được phần bài giảng nào để hiện ra: AI chỉ gửi phần nháp hoặc lời nhận xét. Em hỏi lại nhé; nếu lặp lại, thử tắt Think hoặc chọn mô hình khác trong Cài đặt.',
+        'Mình chưa nhận được phần bài giảng nào để hiện ra: AI chỉ gửi phần nháp hoặc lời nhận xét. Em hỏi lại nhé; nếu lặp lại, thử tắt Deepthink hoặc chọn mô hình khác trong Cài đặt.',
       screenPersonal:
         'Ngữ cảnh màn hình có thể chứa thông tin cá nhân nên chưa được gửi. Xóa thông tin đó hoặc tắt nút lấy thông tin màn hình.',
       screenUnsafe: 'Ngữ cảnh màn hình chưa vượt qua kiểm tra an toàn nên không được gửi.',
@@ -1754,15 +1754,15 @@ const vi = {
     gemmaTermsCard: 'Điều khoản Gemma',
     gemmaTermsHint:
       'Gemma là mô hình của Google DeepMind, dùng theo Điều khoản sử dụng Gemma. Hãy đọc trước khi tải.',
-    thinkCard: 'Think · kiểm tra chéo',
+    thinkCard: 'Deepthink · kiểm tra chéo',
     thinkHint:
-      'Khi bật Think trong khung chat, một AI thứ hai (khác nhà cung cấp trả lời) đọc lại bản nháp và sửa lỗi trước khi em thấy câu trả lời.',
+      'Khi bật Deepthink trong khung chat, một AI thứ hai (khác nhà cung cấp trả lời) đọc lại bản nháp và sửa lỗi trước khi em thấy câu trả lời.',
     builtInCard: 'Ghi chú có sẵn',
     webCard: 'Tra cứu trực tuyến',
     flowLocalChatSession: 'Cuộc trò chuyện chỉ giữ đến khi đóng ứng dụng (đã tắt lưu lịch sử).',
     gemmaModel: 'Phiên bản Gemma',
     gemma270m: '270M · nhẹ nhất, chỉ để thử (hay lạc đề, trả lời kém)',
-    gemma1b: '1B · khuyên dùng trên máy; hay sai kiến thức, nên kiểm tra lại hoặc bật Think',
+    gemma1b: '1B · khuyên dùng trên máy; hay sai kiến thức, nên kiểm tra lại hoặc bật Deepthink',
     gemmaE2b: 'E2B · mạnh nhất, đọc được ảnh',
     modelReady: 'Gemma đã sẵn sàng trên máy.',
     modelMissing: 'Chưa tải mô hình này.',
@@ -1791,18 +1791,18 @@ const vi = {
     flowLocalDocs: 'Tài liệu em tự thêm và {count} ghi chú có sẵn.',
     flowLocalModel: 'Mô hình Gemma đã tải; khi dùng Gemma, câu trả lời được tạo ngay trên máy.',
     flowLocalSummary:
-      'Bản tóm tắt phần trò chuyện cũ (do AI đang trả lời viết; gửi kèm câu hỏi tới AI đó, và tới bên rà soát khi bật Think).',
+      'Bản tóm tắt phần trò chuyện cũ (do AI đang trả lời viết; gửi kèm câu hỏi tới AI đó, và tới bên rà soát khi bật Deepthink).',
     flowLocalKeyDesktop: 'Khóa API: trong kho bảo mật của hệ điều hành.',
     flowLocalKeyBrowser: 'Khóa API: chỉ trong phiên trình duyệt này, tải lại trang là mất.',
     flowSentTitle: 'Có thể gửi đi (theo cài đặt hiện tại)',
     flowAnswer:
       'Khi chọn “AI trực tuyến”: câu hỏi, các lượt trò chuyện gần đây, tóm tắt phần trò chuyện cũ (nếu có) và trích đoạn tài liệu liên quan → {name}.',
     flowFallback:
-      'Khi {name} hết lượt và Think đang tắt: những gì gửi cho {name} → {fallback} (dự phòng, chỉ khi đã có khóa).',
+      'Khi {name} hết lượt và Deepthink đang tắt: những gì gửi cho {name} → {fallback} (dự phòng, chỉ khi đã có khóa).',
     flowThink:
-      'Khi bật Think: câu hỏi, bản nháp, trích đoạn tài liệu liên quan, tóm tắt phần trò chuyện cũ (nếu có) và ngữ cảnh màn hình (nếu em bật) → {name} để rà soát. Không gửi tới nhà cung cấp dự phòng.',
+      'Khi bật Deepthink: câu hỏi, bản nháp, trích đoạn tài liệu liên quan, tóm tắt phần trò chuyện cũ (nếu có) và ngữ cảnh màn hình (nếu em bật) → {name} để rà soát. Không gửi tới nhà cung cấp dự phòng.',
     flowThinkOnly:
-      'Khi dùng Gemma: chỉ khi bật Think thì câu hỏi, bản nháp của Gemma, trích đoạn tài liệu liên quan, tóm tắt phần trò chuyện cũ (nếu có) và ngữ cảnh màn hình (nếu em bật) mới được gửi → {name} để rà soát. Không gửi tới nhà cung cấp dự phòng.',
+      'Khi dùng Gemma: chỉ khi bật Deepthink thì câu hỏi, bản nháp của Gemma, trích đoạn tài liệu liên quan, tóm tắt phần trò chuyện cũ (nếu có) và ngữ cảnh màn hình (nếu em bật) mới được gửi → {name} để rà soát. Không gửi tới nhà cung cấp dự phòng.',
     flowWiki: 'Tra Wikipedia đang bật: câu hỏi → Wikipedia.',
     flowVoice: 'Đọc to bằng giọng Gemini đang bật: chữ của câu trả lời → Google.',
     flowPhoto: 'Khi chụp đề bằng camera (trên trình duyệt): ảnh đã thu nhỏ → {name} để đọc chữ.',
@@ -1812,9 +1812,9 @@ const vi = {
     flowLocalRuntimeNone:
       'Khi dùng AI trên máy khác: câu hỏi chỉ đi tới chương trình em chọn trên máy này (chưa chọn).',
     flowNothingOnline:
-      'Không có gì được gửi lên mạng khi em hỏi AI Teacher (Think và tra Wikipedia đang tắt).',
+      'Không có gì được gửi lên mạng khi em hỏi AI Teacher (Deepthink và tra Wikipedia đang tắt).',
     flowThinkLocal:
-      'Think đang bật: câu hỏi, bản nháp của AI trên máy, trích đoạn tài liệu liên quan, tóm tắt phần trò chuyện cũ (nếu có) và ngữ cảnh màn hình (nếu em bật) → {name} để rà soát. Không gửi tới nhà cung cấp dự phòng.',
+      'Deepthink đang bật: câu hỏi, bản nháp của AI trên máy, trích đoạn tài liệu liên quan, tóm tắt phần trò chuyện cũ (nếu có) và ngữ cảnh màn hình (nếu em bật) → {name} để rà soát. Không gửi tới nhà cung cấp dự phòng.',
     flowScreen:
       'Ngữ cảnh màn hình chỉ được gửi khi em bật “Lấy thông tin từ màn hình” ở thẻ Hỏi AI của sổ ghi; đó là dữ liệu của SimLab, không phải ảnh chụp màn hình.',
     download: 'Tải mô hình',
@@ -1841,7 +1841,7 @@ const vi = {
     keySaved: 'Đã lưu khóa trong kho bảo mật của hệ điều hành.',
     keyDeleted: 'Đã xóa khóa API thứ hai.',
     keyPrivacy:
-      'Think gửi câu hỏi và bản nháp đến nhà cung cấp thứ hai để rà soát. Khóa được cất trong kho bảo mật hệ điều hành và dùng chung với cấu hình của chính nhà cung cấp đó.',
+      'Deepthink gửi câu hỏi và bản nháp đến nhà cung cấp thứ hai để rà soát. Khóa được cất trong kho bảo mật hệ điều hành và dùng chung với cấu hình của chính nhà cung cấp đó.',
     browserKeyNote:
       'Trên trình duyệt, khóa API thứ hai chỉ nằm trong phiên này (tải lại trang là mất); Claude chỉ rà soát được trên bản desktop. Bản desktop cất khóa trong kho bảo mật hệ điều hành.',
     keyTest: {
@@ -2533,7 +2533,7 @@ const vi = {
       left: 'Còn {left} lượt đến hết ngày.',
       used: 'Đã hết lượt hôm nay: AI trực tuyến nghỉ đến ngày mai.',
       local: 'Lúc này AI trên máy này đang trả lời: không tính lượt.',
-      what: 'Mỗi lần SimLab gửi một yêu cầu tới AI trực tuyến là một lượt: câu hỏi, lượt rà soát của "Suy nghĩ kĩ", tóm tắt phần trò chuyện cũ, giọng đọc Gemini.',
+      what: 'Mỗi lần SimLab gửi một yêu cầu tới AI trực tuyến là một lượt: câu hỏi, lượt rà soát của Deepthink, tóm tắt phần trò chuyện cũ, giọng đọc Gemini.',
       provider:
         'Gói miễn phí của Gemini hay Groq còn có giới hạn riêng; SimLab không đọc được giới hạn đó.',
       settings: 'Đổi giới hạn mỗi ngày',

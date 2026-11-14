@@ -41,7 +41,7 @@ describe('"Dạy học bằng AI" screen', () => {
     openTeacher();
     render(<TeacherScreen />);
     // Honest that it is an AI, never a person (its one visible title, "AI Teacher", is the bench
-    // header's h1 beside "Là một AI", #205 B5: rooms.spec.ts).
+    // header's h1, and the chat footer, #205 B5: rooms.spec.ts).
     expect(screen.getByRole('region', { name: 'Dạy học bằng AI' })).toBeInTheDocument();
     expect(screen.getByRole('region', { name: 'Trò chuyện với AI Teacher' })).toBeInTheDocument();
     expect(screen.getByRole('textbox', { name: 'Nhập câu hỏi' })).toBeInTheDocument();

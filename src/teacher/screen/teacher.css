@@ -24,7 +24,7 @@
   --text-muted: var(--teacher-text-muted);
 }
 
-/* One row: back · "Là một AI" · (i) · 01 02 tabs · connection chip. */
+/* One row: back · (i) · 01 02 tabs · connection chip. */
 .teacher__header {
   display: flex;
   flex: none;

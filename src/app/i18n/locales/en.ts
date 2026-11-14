@@ -271,7 +271,6 @@ const en: Messages = {
       gemma: 'Use Gemma on this computer',
       gemmaDesc: 'Downloads {size}, sends nothing online.',
     },
-    isAi: 'An AI',
   },
   layout: {
     exitPresentation: 'Exit presentation (Esc)',
@@ -288,7 +287,7 @@ const en: Messages = {
       simulationHint: 'Display quality for this computer and the default gravity.',
       aiHint: 'Choose the online AI provider, enter the API key, set limits and the fallback.',
       teacher: 'AI Teacher',
-      teacherHint: 'Think (a second AI reviews the answer) and what data is sent.',
+      teacherHint: 'Deepthink (a second AI reviews the answer) and what data is sent.',
       local: 'Local Gemma',
       localHint:
         'Download, choose or delete the Gemma models that run on this computer: no network, no key.',
@@ -912,9 +911,9 @@ const en: Messages = {
         'Update check: the app asks the project release page on GitHub whether a new version exists (no learning data is sent).',
       send3: 'No ads, no accounts, no usage statistics.',
       send4:
-        'AI on this computer (Ollama, LM Studio, llama.cpp — installed by you): questions go only to that program on this computer, never automatically to an online AI. Only with Think on is the draft sent to an online AI for review (Wikipedia lookup and the Gemini voice also send only when you switch them on). That program has its own policy; its cloud features can take data off the computer (the app refuses Ollama cloud models).',
+        'AI on this computer (Ollama, LM Studio, llama.cpp — installed by you): questions go only to that program on this computer, never automatically to an online AI. Only with Deepthink on is the draft sent to an online AI for review (Wikipedia lookup and the Gemini voice also send only when you switch them on). That program has its own policy; its cloud features can take data off the computer (the app refuses Ollama cloud models).',
       send5:
-        '"Circle to ask" on the board: the words and formulas inside the circle are sent with your question to the selected AI (and to the reviewer when Think is on). A picture of the circled area is made only when it holds no text, and goes only to a picture-reading AI running on this computer — never online.',
+        '"Circle to ask" on the board: the words and formulas inside the circle are sent with your question to the selected AI (and to the reviewer when Deepthink is on). A picture of the circled area is made only when it holds no text, and goes only to a picture-reading AI running on this computer — never online.',
       storeTitle: 'What is stored on this computer?',
       store1: 'API key: in the operating system keychain; only the last 4 characters are shown.',
       store2:
@@ -1589,7 +1588,7 @@ const en: Messages = {
     noWebgpuNotice:
       'This computer or browser does not support WebGPU, so Gemma cannot run here. Choose “Online AI” and connect a key in Settings.',
     thinkNoVerifier:
-      'Think needs a second AI to cross-check, but it has no key yet. Choose a provider and enter its key in Settings → AI Teacher.',
+      'Deepthink needs a second AI to cross-check, but it has no key yet. Choose a provider and enter its key in Settings → AI Teacher.',
     reviewTarget: '{name} (review)',
     fallbackTarget: '{name} (fallback when {provider} runs out)',
     sentTo: 'Your question and related library excerpts will be sent to: {targets}.',
@@ -1636,7 +1635,7 @@ const en: Messages = {
     inputLabel: 'Enter your question',
     placeholder: 'Type your question…',
     send: 'Send question',
-    think: 'Think',
+    think: 'Deepthink',
     thinkTitle: 'Use a second AI to review the answer',
     twoApis: '· 2 AIs',
     oneApiReview: '· 1 AI reviews',
@@ -1682,13 +1681,13 @@ const en: Messages = {
         'This message may contain personal information. Remove names, addresses, email or phone numbers and try again.',
       unsafe: 'I can only help with appropriate learning content.',
       sameProvider:
-        'Choose a different provider for Think so a second API can cross-check the answer.',
+        'Choose a different provider for Deepthink so a second API can cross-check the answer.',
       noVerifierKey:
         'No second API key is configured. Open Settings → AI Teacher to connect a review provider.',
       filtered:
         'The answer was hidden because it did not pass the safety filter. Try again or ask a teacher.',
       noAnswer:
-        'No lesson came back to show: the AI sent only its working notes or comments. Please ask again; if it repeats, turn Think off or pick another model in Settings.',
+        'No lesson came back to show: the AI sent only its working notes or comments. Please ask again; if it repeats, turn Deepthink off or pick another model in Settings.',
       screenPersonal:
         'The screen context may contain personal information, so it was not sent. Remove it or turn off screen context.',
       screenUnsafe: 'The screen context did not pass the safety check and was not sent.',
@@ -1767,16 +1766,16 @@ const en: Messages = {
     gemmaTermsCard: 'Gemma terms',
     gemmaTermsHint:
       'Gemma is a Google DeepMind model, used under the Gemma Terms of Use. Please read them before downloading.',
-    thinkCard: 'Think · cross-check',
+    thinkCard: 'Deepthink · cross-check',
     thinkHint:
-      'With Think on in the chat, a second AI (not the one that answered) reads the draft and fixes mistakes before you see the answer.',
+      'With Deepthink on in the chat, a second AI (not the one that answered) reads the draft and fixes mistakes before you see the answer.',
     builtInCard: 'Built-in notes',
     webCard: 'Online lookup',
     flowLocalChatSession:
       'The conversation is kept only until the app closes (history saving is off).',
     gemmaModel: 'Gemma version',
     gemma270m: '270M · lightest, for trying only (often off-topic, weak answers)',
-    gemma1b: '1B · recommended on-device; often wrong on facts, double-check or turn on Think',
+    gemma1b: '1B · recommended on-device; often wrong on facts, double-check or turn on Deepthink',
     gemmaE2b: 'E2B · strongest, reads photos',
     modelReady: 'Gemma is ready on this computer.',
     modelMissing: 'This model is not downloaded.',
@@ -1806,18 +1805,18 @@ const en: Messages = {
     flowLocalDocs: 'Files you added and the {count} built-in notes.',
     flowLocalModel: 'Downloaded Gemma models; with Gemma, answers are generated on this computer.',
     flowLocalSummary:
-      'A summary of the older conversation (written by the AI that answers; sent with your questions to that AI, and to the reviewer when Think is on).',
+      'A summary of the older conversation (written by the AI that answers; sent with your questions to that AI, and to the reviewer when Deepthink is on).',
     flowLocalKeyDesktop: 'API keys: in the operating-system keychain.',
     flowLocalKeyBrowser: 'API keys: only in this browser session, gone on reload.',
     flowSentTitle: 'May be sent online (with the current settings)',
     flowAnswer:
       'With “Online AI”: question, the recent conversation, the summary of the older conversation (if any) and related library excerpts → {name}.',
     flowFallback:
-      'When {name} is out of quota and Think is off: what was sent to {name} → {fallback} (the fallback, only if its key is saved).',
+      'When {name} is out of quota and Deepthink is off: what was sent to {name} → {fallback} (the fallback, only if its key is saved).',
     flowThink:
-      'With Think on: question, draft, related library excerpts, the summary of the older conversation (if any) and the screen context (if you turned it on) → {name} for review. Nothing goes to the fallback provider.',
+      'With Deepthink on: question, draft, related library excerpts, the summary of the older conversation (if any) and the screen context (if you turned it on) → {name} for review. Nothing goes to the fallback provider.',
     flowThinkOnly:
-      'With Gemma: only when Think is on, the question, Gemma’s draft, related library excerpts, the summary of the older conversation (if any) and the screen context (if you turned it on) go → {name} for review. Nothing goes to the fallback provider.',
+      'With Gemma: only when Deepthink is on, the question, Gemma’s draft, related library excerpts, the summary of the older conversation (if any) and the screen context (if you turned it on) go → {name} for review. Nothing goes to the fallback provider.',
     flowWiki: 'Wikipedia lookup is on: question → Wikipedia.',
     flowVoice: 'Reading aloud with the Gemini voice is on: answer text → Google.',
     flowPhoto:
@@ -1829,9 +1828,9 @@ const en: Messages = {
     flowLocalRuntimeNone:
       'With AI on this computer: the question goes only to the program you choose on this computer (none chosen yet).',
     flowNothingOnline:
-      'Nothing is sent online when you ask the AI Teacher (Think and the Wikipedia lookup are off).',
+      'Nothing is sent online when you ask the AI Teacher (Deepthink and the Wikipedia lookup are off).',
     flowThinkLocal:
-      'Think is on: the question, the draft of the AI on this computer, related library excerpts, the summary of older turns (if any) and the screen context (if you turned it on) → {name} for review. Nothing goes to a fallback provider.',
+      'Deepthink is on: the question, the draft of the AI on this computer, related library excerpts, the summary of older turns (if any) and the screen context (if you turned it on) → {name} for review. Nothing goes to a fallback provider.',
     flowScreen:
       'Screen context is sent only when you turn on “Use current screen information” in the notebook’s Ask AI tab; it is SimLab data, not a screenshot.',
     download: 'Download model',
@@ -1858,7 +1857,7 @@ const en: Messages = {
     keySaved: 'The key was saved in the operating system credential store.',
     keyDeleted: 'The second API key was deleted.',
     keyPrivacy:
-      'Think sends the question and draft to the second provider for review. The key stays in the operating system credential store and is shared with settings for that provider.',
+      'Deepthink sends the question and draft to the second provider for review. The key stays in the operating system credential store and is shared with settings for that provider.',
     browserKeyNote:
       'In the browser, the second API key lives for this session only (gone on reload); Claude can review only in the desktop app. The desktop app keeps keys in the system keychain.',
     keyTest: {
@@ -2543,7 +2542,7 @@ const en: Messages = {
       left: '{left} left until the end of the day.',
       used: 'No calls left today: the online AI rests until tomorrow.',
       local: 'The AI on this computer is answering now: it uses no calls.',
-      what: 'Each request SimLab sends to an online AI is one call: a question, the review of "Think", a summary of the earlier conversation, the Gemini voice.',
+      what: 'Each request SimLab sends to an online AI is one call: a question, the review of "Deepthink", a summary of the earlier conversation, the Gemini voice.',
       provider: 'The free plans of Gemini and Groq have their own limits; SimLab cannot read them.',
       settings: 'Change the daily limit',
     },

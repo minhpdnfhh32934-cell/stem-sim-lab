@@ -3,7 +3,7 @@ import { expect, test, type Page } from '@playwright/test';
 /**
  * #205 B5, the AI Teacher room at 1366 × 768, 100 % and 140 %: one title (the header's h1 "AI
  * Teacher"; the page and the chat panel no longer repeat it); no bar repeating "Chưa kết nối", the
- * empty conversation offers "Kết nối AI" instead; "Think" reads "Suy nghĩ kĩ (Think)"; the face
+ * empty conversation offers "Kết nối AI" instead; "Think" reads "Deepthink" (user decision 14/11/2026); the face
  * column is narrower, so the conversation is wider.
  */
 async function openTeacherRoom(page: Page, fontScale: number) {
@@ -22,7 +22,7 @@ async function openTeacherRoom(page: Page, fontScale: number) {
 }
 
 for (const fontScale of [1, 1.4] as const) {
-  test(`AI Teacher at ${String(fontScale * 100)} %: one title, "Kết nối AI", "Suy nghĩ kĩ (Think)", a wider chat`, async ({
+  test(`AI Teacher at ${String(fontScale * 100)} %: one title, "Kết nối AI", "Deepthink", a wider chat`, async ({
     page,
   }) => {
     await openTeacherRoom(page, fontScale);
@@ -40,7 +40,7 @@ for (const fontScale of [1, 1.4] as const) {
     await expect(settings.getByRole('tab', { name: 'Kết nối AI', selected: true })).toBeVisible();
     await page.keyboard.press('Escape');
 
-    await expect(room.getByRole('button', { name: /Suy nghĩ kĩ \(Think\)/ })).toBeVisible();
+    await expect(room.getByRole('button', { name: /Deepthink/ })).toBeVisible();
 
     // The conversation takes at least 70 % of the room's width (the face column was 30 %).
     const chat = await room.getByRole('main').boundingBox();

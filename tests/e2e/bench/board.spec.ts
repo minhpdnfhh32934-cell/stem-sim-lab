@@ -346,7 +346,7 @@ test('Think on the board: hidden reasoning and the reviewer’s notes reach neit
   const board = page.getByRole('region', { name: 'Bảng trắng của AI Teacher' });
   await expect(board).toContainText('Hỏi AI Teacher một câu', { timeout: 20_000 });
   const panel = page.getByRole('region', { name: 'Trò chuyện với AI Teacher' });
-  await panel.getByRole('button', { name: /Think/ }).click();
+  await panel.getByRole('button', { name: /Deepthink/ }).click();
   await panel.getByRole('textbox', { name: 'Nhập câu hỏi' }).fill('Giải bài rơi tự do');
   await panel.getByRole('button', { name: 'Gửi câu hỏi' }).click();
 
