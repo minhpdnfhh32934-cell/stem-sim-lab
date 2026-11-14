@@ -47,6 +47,8 @@ export const DIM = {
   linearDensity: D(-1, 1),
   electricField: D(1, 1, -3, -1),
   coulombConstant: D(3, 1, -4, -2),
+  momentOfInertia: D(2, 1),
+  angularAcceleration: D(0, 0, -2),
 } as const;
 
 /**
@@ -54,7 +56,7 @@ export const DIM = {
  * both s⁻¹ with factor 1, yet f = 2 Hz is ω = 4π rad/s. A radian has no dimension, so only
  * this label tells them apart; converting between groups throws.
  */
-export type UnitGroup = 'angular' | 'cycle';
+export type UnitGroup = 'angular' | 'cycle' | 'torque';
 
 export interface UnitDef {
   /** Canonical symbol used in data and SceneSpec. */
@@ -134,6 +136,16 @@ const UNITS: readonly UnitDef[] = [
   { symbol: 'kg*m/s', dim: DIM.momentum, factor: 1, aliases: ['kg.m/s', 'kg·m/s', 'N*s', 'N.s'] },
   // energy / power / pressure
   { symbol: 'J', dim: DIM.energy, factor: 1 },
+  // Moment of a force: the same dimension as energy, never converted to or from joules.
+  { symbol: 'N*m', dim: DIM.energy, factor: 1, group: 'torque', aliases: ['N·m', 'N.m', 'Nm'] },
+  { symbol: 'kg*m^2', dim: DIM.momentOfInertia, factor: 1, aliases: ['kg·m²', 'kg.m^2', 'kg.m²'] },
+  {
+    symbol: 'rad/s^2',
+    dim: DIM.angularAcceleration,
+    factor: 1,
+    group: 'angular',
+    aliases: ['rad/s²'],
+  },
   { symbol: 'kJ', dim: DIM.energy, factor: 1e3 },
   // 1 eV = e × 1 V, e exact (SI 2019).
   { symbol: 'eV', dim: DIM.energy, factor: 1.602176634e-19 },

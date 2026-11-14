@@ -789,6 +789,83 @@ add(
     ],
     {"I": 6 / (6 * 3 / (6 + 3)), "I1": 6 / 6, "I2": 6 / 3},
 )
+# --- Định luật III Newton (VL10 Bài 16) ---------------------------------------
+# mu = 2/3 kg, omega = sqrt(k/mu) = sqrt(300) rad/s; v2' = m1/(m1+m2)*d*omega, v1' = -m2/(m1+m2)*d*omega.
+add(
+    "n3-01",
+    "Hai xe lăn khối lượng 1 kg và 2 kg đứng yên trên mặt phẳng ngang nhẵn, giữa hai xe có một lò xo nhẹ độ cứng 200 N/m bị nén 5 cm. Thả nhẹ cho lò xo bung ra. Tính lực lò xo đẩy mỗi xe lúc vừa thả và vận tốc của mỗi xe sau khi tách khỏi lò xo.",
+    "newtonThirdLaw",
+    [
+        q("m1", 1, "kg", "1 kg"),
+        q("m2", 2, "kg", "2 kg"),
+        q("k", 200, "N/m", "độ cứng 200 N/m"),
+        q("d", 5, "cm", "bị nén 5 cm"),
+    ],
+    {
+        "F0": 200 * 0.05,
+        "v1_after": -2 / 3 * 0.05 * math.sqrt(300),
+        "v2_after": 1 / 3 * 0.05 * math.sqrt(300),
+    },
+)
+# --- Lực cản của chất lưu (VL10 Bài 19) ----------------------------------------
+# Air from the app (ISA, 1.225 kg/m3): v_t = sqrt(2 (m - rho V) g / (rho C_d pi r^2)).
+_m, _r, _g, _rho, _cd = 0.01, 0.02, 9.8, 1.225, 0.47
+_net = (_m - _rho * 4 / 3 * math.pi * _r**3) * _g
+add(
+    "lc-01",
+    "Một quả cầu khối lượng 10 g, bán kính 2 cm được thả rơi không vận tốc đầu trong không khí từ độ cao 50 m. Hệ số cản của quả cầu là C_d = 0,47. Lấy g = 9,8 m/s². Tính tốc độ giới hạn và thời gian quả cầu rơi tới đất.",
+    "fluidFall",
+    [
+        q("fluid", 0, "1", "trong không khí"),
+        q("m", 10, "g", "khối lượng 10 g"),
+        q("r", 2, "cm", "bán kính 2 cm"),
+        q("H", 50, "m", "độ cao 50 m"),
+        q("cd", 0.47, "1", "C_d = 0,47"),
+        q("g", 9.8, "m/s^2", "g = 9,8 m/s²"),
+    ],
+    {"vt": math.sqrt(_net / (0.5 * _rho * _cd * math.pi * _r**2))},
+)
+# --- Tổng hợp và phân tích lực (VL10 Bài 13) ------------------------------------
+add(
+    "th-01",
+    "Hai lực đồng quy có độ lớn 6 N và 8 N, hợp với nhau một góc 90°. Tìm độ lớn của hợp lực.",
+    "forceComposition",
+    [
+        q("count", 2, "1", "Hai lực"),
+        q("F1", 6, "N", "6 N"),
+        q("F2", 8, "N", "8 N"),
+        q("a2", 90, "deg", "hợp với nhau một góc 90°"),
+    ],
+    {"R": 10.0},
+)
+# --- Trọng lực và lực căng (VL10 Bài 17) ------------------------------------------
+add(
+    "lc-02",
+    "Một ngọn đèn khối lượng 2 kg được treo vào trần nhà bằng hai sợi dây, mỗi dây hợp với phương thẳng đứng một góc 30°. Lấy g = 10 m/s². Tính lực căng của mỗi dây.",
+    "stringTension",
+    [
+        q("strings", 2, "1", "hai sợi dây"),
+        q("m", 2, "kg", "khối lượng 2 kg"),
+        q("a1", 30, "deg", "mỗi dây hợp với phương thẳng đứng một góc 30°"),
+        q("a2", 30, "deg", "mỗi dây hợp với phương thẳng đứng một góc 30°"),
+        q("g", 10, "m/s^2", "g = 10 m/s²"),
+    ],
+    {"T1": 20 / (2 * math.cos(math.pi / 6)), "T2": 20 / (2 * math.cos(math.pi / 6))},
+)
+# --- Moment lực, cân bằng vật rắn (VL10 Bài 21) ----------------------------------
+add(
+    "mo-01",
+    "Một thanh cứng quay quanh trục nằm ngang đi qua trung điểm. Đặt vật khối lượng 3 kg cách trục 0,4 m ở bên trái. Phải đặt vật khối lượng 2 kg ở bên phải cách trục bao nhiêu để thanh nằm cân bằng? Lấy g = 10 m/s².",
+    "torqueBalance",
+    [
+        q("m1", 3, "kg", "3 kg"),
+        q("d1", 0.4, "m", "cách trục 0,4 m"),
+        q("m2", 2, "kg", "2 kg"),
+        q("g", 10, "m/s^2", "g = 10 m/s²"),
+    ],
+    {"d2star": 3 * 0.4 / 2},
+    missing=["d2"],
+)
 add(
     "ng-02",
     "Một tia sáng truyền từ không khí vào nước với góc tới 45°. Chiết suất của nước là 1,33. Tính góc khúc xạ.",
