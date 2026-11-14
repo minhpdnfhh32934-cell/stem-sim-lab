@@ -17,6 +17,14 @@ test('B2: the tray summary, the tool switches and the pin in D2', async ({ page 
   await expect(summary.getByText('Ném xiên')).toBeVisible();
   // The whole card is in the notebook, not a second time in the tray.
   await expect(tray.locator('.science-card')).toHaveCount(1);
+  // g can change while running: its hint spans the row (it once wrapped word by word in the − cell).
+  const hint = tray.locator('.param__hint').first();
+  await hint.scrollIntoViewIfNeeded();
+  const [hintBox, rowBox] = await Promise.all([
+    hint.boundingBox(),
+    hint.locator('xpath=..').boundingBox(),
+  ]);
+  expect(hintBox && rowBox && hintBox.width / rowBox.width).toBeGreaterThan(0.9);
   await summary.getByRole('button', { name: 'Xem thẻ' }).click();
   await expect(page.getByRole('tabpanel', { name: 'Thẻ khoa học' })).toBeVisible();
   await page.getByRole('button', { name: 'Đóng sổ' }).click();

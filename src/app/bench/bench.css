@@ -303,6 +303,10 @@ kbd {
 .param:has(> .param__controls) > .param__controls {
   display: contents;
 }
+/* The "can be changed while running" line spans the row (else it falls into the 40 px − cell). */
+.param:has(> .param__controls) > .param__hint {
+  grid-column: 1 / -1;
+}
 .param__step {
   width: var(--param-step);
   height: var(--param-step);
