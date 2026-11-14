@@ -2278,6 +2278,43 @@
       "expectUnsupportedParts": false
     },
     {
+      "id": "as-01",
+      "text": "Một bể chứa nước sâu 2 m. Biết khối lượng riêng của nước là 1000 kg/m³, áp suất khí quyển là 100 kPa, lấy g = 10 m/s². Tính áp suất do nước gây ra và áp suất toàn phần tại đáy bể.",
+      "topic": "liquidPressure",
+      "quantities": [
+        {
+          "key": "h",
+          "value": 2,
+          "unit": "m",
+          "quote": "sâu 2 m"
+        },
+        {
+          "key": "rho",
+          "value": 1000,
+          "unit": "kg/m^3",
+          "quote": "khối lượng riêng của nước là 1000 kg/m³"
+        },
+        {
+          "key": "pa",
+          "value": 100,
+          "unit": "kPa",
+          "quote": "áp suất khí quyển là 100 kPa"
+        },
+        {
+          "key": "g",
+          "value": 10,
+          "unit": "m/s^2",
+          "quote": "g = 10 m/s²"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "pl": 20000.0,
+        "p": 120000.0
+      },
+      "expectUnsupportedParts": false
+    },
+    {
       "id": "ng-02",
       "text": "Một tia sáng truyền từ không khí vào nước với góc tới 45°. Chiết suất của nước là 1,33. Tính góc khúc xạ.",
       "topic": "unsupported",

@@ -21,6 +21,7 @@ const TOPICS: readonly (readonly [string, string])[] = [
   ['Lò xo (định luật Hooke)', 'Lò xo – định luật Hooke'],
   ['Lực cản của chất lưu', 'Lực cản của chất lưu'],
   ['Moment lực và cân bằng vật rắn', 'Moment lực và cân bằng vật rắn'],
+  ['Áp suất chất lỏng', 'Áp suất chất lỏng'],
   ['Công, công suất và hiệu suất', 'Công, công suất và hiệu suất'],
   ['Bảo toàn cơ năng', 'Bảo toàn cơ năng'],
   ['Va chạm đàn hồi và va chạm mềm', 'Va chạm đàn hồi và va chạm mềm'],

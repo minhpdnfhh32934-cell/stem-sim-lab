@@ -43,6 +43,8 @@ export const TOPIC_HINTS: Record<string, string> = {
     'Moment lực, quy tắc moment, đòn bẩy/bập bênh: thanh quay quanh trục ở trung điểm, vật m1 cách trục d1 bên trái, vật m2 cách trục d2 bên phải; moment mỗi lực, vị trí đặt vật để thanh cân bằng. Trục không ở trung điểm, lực xiên, ngẫu lực: ghi vào unsupported_parts.',
   workPower:
     'Công, công suất, hiệu suất: kéo vật (thùng) từ đứng yên trên sàn ngang hoặc lên mặt phẳng nghiêng góc theta bằng lực F hợp với mặt phẳng góc beta, có ma sát mu, quãng đường length; công của từng lực, công suất, hiệu suất. Kéo đều (vận tốc không đổi), máy cơ, động cơ có công suất cho trước: ghi vào unsupported_parts.',
+  liquidPressure:
+    'Khối lượng riêng, áp suất chất lỏng: áp suất tại một điểm ở độ sâu h trong chất lỏng đứng yên đựng trong bình hở (p = pa + ρgh), áp suất do chất lỏng gây ra; rho là khối lượng riêng (đề nói nước mà không cho số: để mặc định; đề nói chất lỏng khác như nước biển, dầu, thủy ngân mà không cho số: ghi vào clarifications, không tự đặt rho), pa là áp suất khí quyển. Độ chênh áp suất giữa hai điểm, bình thông nhau, máy nén thủy lực, lực đẩy Archimedes: ghi vào unsupported_parts.',
   energyConservation:
     'Bảo toàn cơ năng: vật trượt không ma sát trên máng/dốc cong, tốc độ ở độ cao khác.',
   collisions: 'Va chạm hai vật: đàn hồi, mềm (dính nhau), bảo toàn động lượng.',

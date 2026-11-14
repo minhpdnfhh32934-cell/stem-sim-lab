@@ -886,6 +886,19 @@ add(
         "H": 1 - 0.2 * 10 * 10 * math.cos(math.pi / 6) * 5 / 400,
     },
 )
+# --- Khối lượng riêng, áp suất chất lỏng (VL10 Bài 34) ---------------------------
+add(
+    "as-01",
+    "Một bể chứa nước sâu 2 m. Biết khối lượng riêng của nước là 1000 kg/m³, áp suất khí quyển là 100 kPa, lấy g = 10 m/s². Tính áp suất do nước gây ra và áp suất toàn phần tại đáy bể.",
+    "liquidPressure",
+    [
+        q("h", 2, "m", "sâu 2 m"),
+        q("rho", 1000, "kg/m^3", "khối lượng riêng của nước là 1000 kg/m³"),
+        q("pa", 100, "kPa", "áp suất khí quyển là 100 kPa"),
+        q("g", 10, "m/s^2", "g = 10 m/s²"),
+    ],
+    {"pl": 1000 * 10 * 2.0, "p": 100e3 + 1000 * 10 * 2.0},
+)
 add(
     "ng-02",
     "Một tia sáng truyền từ không khí vào nước với góc tới 45°. Chiết suất của nước là 1,33. Tính góc khúc xạ.",

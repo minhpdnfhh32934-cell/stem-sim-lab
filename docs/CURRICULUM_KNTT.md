@@ -31,7 +31,7 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 
 | Sách | Số bài | Lí thuyết | Lí thuyết có chủ đề SimLab |
 | --- | --- | --- | --- |
-| Vật lí 10 | 34 | 26 | 24 |
+| Vật lí 10 | 34 | 26 | 25 |
 | Vật lí 11 | 26 | 20 | 13 |
 | Vật lí 12 | 25 | 21 | 0 |
 | Hoá học 10 | 23 | 16 | 5 |
@@ -40,7 +40,7 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Sinh học 10 | 26 | 17 | 5 |
 | Sinh học 11 | 29 | 20 | 0 |
 | Sinh học 12 | 35 | 28 | 7 |
-| **Cộng** | **253** | **189** | **56** |
+| **Cộng** | **253** | **189** | **57** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -89,7 +89,7 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Vật lí 10 | Chương VI. Chuyển động tròn đều | 31 | Động học của chuyển động tròn đều | 120 | Lí thuyết | Chuyển động tròn đều | Tên Bài 31–32: động học của chuyển động tròn đều; lực hướng tâm và gia tốc hướng tâm. | pending |
 | Vật lí 10 | Chương VI. Chuyển động tròn đều | 32 | Lực hướng tâm và gia tốc hướng tâm | 123 | Lí thuyết | Chuyển động tròn đều | Tên Bài 31–32: động học của chuyển động tròn đều; lực hướng tâm và gia tốc hướng tâm. | pending |
 | Vật lí 10 | Chương VII. Biến dạng của vật rắn. Áp suất chất lỏng | 33 | Biến dạng của vật rắn | 128 | Lí thuyết | chưa có |  | pending |
-| Vật lí 10 | Chương VII. Biến dạng của vật rắn. Áp suất chất lỏng | 34 | Khối lượng riêng. Áp suất chất lỏng | 131 | Lí thuyết | chưa có |  | pending |
+| Vật lí 10 | Chương VII. Biến dạng của vật rắn. Áp suất chất lỏng | 34 | Khối lượng riêng. Áp suất chất lỏng | 131 | Lí thuyết | Áp suất chất lỏng | Tên Bài 34: khối lượng riêng, áp suất chất lỏng (cảnh điểm đo ở độ sâu h trong bể hở: p = pa + ρgh). | pending |
 | Vật lí 11 | Chương I. Dao động | 1 | Dao động điều hoà | 6 | Lí thuyết | Con lắc lò xo, Con lắc đơn | Con lắc lò xo: Tên Bài 1–3, 5: dao động điều hoà, vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng). Con lắc đơn: Tên Bài 1–3, 5: dao động điều hoà (con lắc đơn dao động điều hoà khi góc nhỏ), vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng). | pending |
 | Vật lí 11 | Chương I. Dao động | 2 | Mô tả dao động điều hoà | 10 | Lí thuyết | Con lắc lò xo, Con lắc đơn | Con lắc lò xo: Tên Bài 1–3, 5: dao động điều hoà, vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng). Con lắc đơn: Tên Bài 1–3, 5: dao động điều hoà (con lắc đơn dao động điều hoà khi góc nhỏ), vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng). | pending |
 | Vật lí 11 | Chương I. Dao động | 3 | Vận tốc, gia tốc trong dao động điều hoà | 14 | Lí thuyết | Con lắc lò xo, Con lắc đơn | Con lắc lò xo: Tên Bài 1–3, 5: dao động điều hoà, vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng). Con lắc đơn: Tên Bài 1–3, 5: dao động điều hoà (con lắc đơn dao động điều hoà khi góc nhỏ), vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng). | pending |
