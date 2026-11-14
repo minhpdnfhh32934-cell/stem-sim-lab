@@ -3,6 +3,7 @@ import { DIM } from '@/core/units';
 import type { ScienceCardData } from '@/science-card/types';
 import { L, gravityParam } from '../common/scene-helpers';
 import { SRC } from '../common/sources';
+import { SYM, both, plain, sym } from '../common/symbols';
 import { fmtQty, texNum, texQty } from '../common/tex';
 import { IS } from '../incline/engine';
 import { forces } from '../incline/model';
@@ -42,10 +43,10 @@ const crate: BodyDef = {
         value: s[IS.s] ?? 0,
         unit: 'm',
       },
-      { label: L('Công của lực kéo', 'Work of the pull'), symbol: 'A_F', value: w.WF, unit: 'J' },
+      { label: L('Công của lực kéo', 'Work of the pull'), symbol: SYM.workPull, value: w.WF, unit: 'J' },
       {
         label: L('Công suất của lực kéo', 'Power of the pull'),
-        symbol: '\\mathscr{P}',
+        symbol: SYM.power,
         value: q.F * Math.cos(q.beta) * (s[IS.v] ?? 0),
         unit: 'W',
       },
@@ -60,12 +61,13 @@ function draw(dc: DrawContext): void {
   const w = works(q, state[IS.s] ?? 0);
   const vis = cam.visible();
   const f = (v: number) => fmtQty(opts.locale, v, 'J', 4);
+  const S = sym(opts.locale);
   text(
     ctx,
     cam,
     vis.xMin,
     vis.yMax,
-    `A_F = ${f(w.WF)}   A_P = ${f(w.WP)}   A_ms = ${f(w.Wms)}   ΣA = ${f(w.total)}`,
+    `${plain(S.workPull)} = ${f(w.WF)}   ${plain(S.workWeight)} = ${f(w.WP)}   ${plain(S.workFriction)} = ${f(w.Wms)}   Σ${plain(S.work)} = ${f(w.total)}`,
     opts.colors.muted,
     'left',
     { x: 60, y: 20 },
@@ -127,6 +129,7 @@ function solve(p: Params, locale: Locale): Solution {
   const q = pullInput(p);
   const n = (v: number) => texNum(locale, v);
   const Q = (v: number, u: string) => texQty(locale, v, u);
+  const S = sym(locale);
   if (!climbs(q))
     return {
       answers: [],
@@ -151,35 +154,35 @@ function solve(p: Params, locale: Locale): Solution {
         'Công của mỗi lực khi thùng đi hết quãng đường s (α là góc giữa lực và hướng chuyển động):',
         'Work of each force over the distance s (α is the angle between the force and the motion):',
       ),
-      tex: `A = F\\,s\\cos\\alpha:\\quad A_F = ${n(q.F)}\\cdot ${n(s)}\\cos ${n(deg(q.beta))}^\\circ = ${Q(w.WF, 'J')},\\quad A_P = -mg\\,s\\sin\\theta = ${Q(w.WP, 'J')}`,
+      tex: `${S.work} = F\\,s\\cos\\alpha:\\quad ${S.workPull} = ${n(q.F)}\\cdot ${n(s)}\\cos ${n(deg(q.beta))}^\\circ = ${Q(w.WF, 'J')},\\quad ${S.workWeight} = -mg\\,s\\sin\\theta = ${Q(w.WP, 'J')}`,
     },
     {
       text: L(
         'Lực ma sát ngược chiều chuyển động (α = 180°); phản lực vuông góc với chuyển động nên không sinh công:',
         'Friction opposes the motion (α = 180°); the normal force is perpendicular to it, so it does no work:',
       ),
-      tex: `A_{ms} = -\\mu N s = -${n(q.muK)}\\cdot ${n(N)}\\cdot ${n(s)} = ${Q(w.Wms, 'J')},\\qquad A_N = 0`,
+      tex: `${S.workFriction} = -\\mu N s = -${n(q.muK)}\\cdot ${n(N)}\\cdot ${n(s)} = ${Q(w.Wms, 'J')},\\qquad ${S.workNormal} = 0`,
     },
     {
       text: L(
         'Tổng công bằng độ tăng động năng (thùng bắt đầu đứng yên):',
         'The total work equals the gain in kinetic energy (the crate starts at rest):',
       ),
-      tex: `\\sum A = ${Q(w.total, 'J')} = \\tfrac{1}{2} m v^2 \\Rightarrow v = ${Q(v, 'm/s')},\\quad t = ${Q(t, 's')}`,
+      tex: `\\sum ${S.work} = ${Q(w.total, 'J')} = \\tfrac{1}{2} m v^2 \\Rightarrow v = ${Q(v, 'm/s')},\\quad t = ${Q(t, 's')}`,
     },
     {
       text: L(
         'Công suất trung bình của lực kéo, và công suất lúc cuối quãng đường:',
         'Average power of the pull, and its power at the end of the distance:',
       ),
-      tex: `\\bar{\\mathscr{P}} = \\frac{A_F}{t} = ${Q(w.WF / t, 'W')},\\qquad \\mathscr{P} = F v \\cos\\beta = ${Q(q.F * Math.cos(q.beta) * v, 'W')}`,
+      tex: `\\bar{${S.power}} = \\frac{${S.workPull}}{t} = ${Q(w.WF / t, 'W')},\\qquad ${S.power} = F v \\cos\\beta = ${Q(q.F * Math.cos(q.beta) * v, 'W')}`,
     },
     {
       text: L(
         'Hiệu suất: phần công của lực kéo làm tăng cơ năng của thùng (h = s·sin θ là độ cao thùng được nâng lên); phần còn lại thành nhiệt do ma sát.',
         'Efficiency: the share of the pull’s work that raises the crate’s mechanical energy (h = s·sin θ is the height it gains); the rest becomes heat through friction.',
       ),
-      tex: `H = \\frac{\\tfrac{1}{2} m v^2 + m g h}{A_F} = 1 - \\frac{|A_{ms}|}{A_F} = ${n(H * 100)}\\,\\%`,
+      tex: `${S.efficiency} = \\frac{\\tfrac{1}{2} m v^2 + m g h}{${S.workPull}} = 1 - \\frac{|${S.workFriction}|}{${S.workPull}} = ${n(H * 100)}\\,\\%`,
     },
   ];
   const answers: Answer[] = [
@@ -226,16 +229,22 @@ function card(): ScienceCardData {
     ),
     equations: [
       {
-        tex: 'A = F\\,s\\cos\\alpha',
+        tex: both((s) => `${s.work} = F\\,s\\cos\\alpha`),
         label: L('Công của một lực không đổi', 'Work of a constant force'),
       },
       {
-        tex: '\\sum A = \\tfrac{1}{2} m v^2 - \\tfrac{1}{2} m v_0^2',
+        tex: both((s) => `\\sum ${s.work} = \\tfrac{1}{2} m v^2 - \\tfrac{1}{2} m v_0^2`),
         label: L('Định lí động năng', 'Work–energy theorem'),
       },
-      { tex: '\\mathscr{P} = \\dfrac{A}{t} = F v\\cos\\alpha', label: L('Công suất', 'Power') },
       {
-        tex: 'H = \\dfrac{\\tfrac{1}{2} m v^2 + m g h}{A_F} = 1 - \\dfrac{|A_{ms}|}{A_F}',
+        tex: both((s) => `${s.power} = \\dfrac{${s.work}}{t} = F v\\cos\\alpha`),
+        label: L('Công suất', 'Power'),
+      },
+      {
+        tex: both(
+          (s) =>
+            `${s.efficiency} = \\dfrac{\\tfrac{1}{2} m v^2 + m g h}{${s.workPull}} = 1 - \\dfrac{|${s.workFriction}|}{${s.workPull}}`,
+        ),
         label: L(
           'Hiệu suất: công có ích chia công toàn phần',
           'Efficiency: useful work over total work',
@@ -259,7 +268,7 @@ function card(): ScienceCardData {
     confidence: 'exact',
     confidenceNote: L(
       'Chuyển động nhanh dần đều tính chính xác; tốc độ cuối kiểm lại bằng định lí động năng, thời gian bằng DOPRI5, hiệu suất bằng 1 − |A_ms|/A_F.',
-      'Exact uniformly accelerated motion; the final speed is re-checked by the work–energy theorem, the time by DOPRI5, the efficiency by 1 − |A_ms|/A_F.',
+      'Exact uniformly accelerated motion; the final speed is re-checked by the work–energy theorem, the time by DOPRI5, the efficiency by 1 − |W_f|/W_F.',
     ),
     method: L(
       'Cùng động cơ chính xác với bài Mặt phẳng nghiêng (Δt = 1/240 s).',

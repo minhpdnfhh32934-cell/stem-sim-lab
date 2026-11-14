@@ -4,6 +4,7 @@ import { DIM } from '@/core/units';
 import type { ScienceCardData } from '@/science-card/types';
 import { L } from '../common/scene-helpers';
 import { SRC } from '../common/sources';
+import { SYM, plain, sym } from '../common/symbols';
 import { fmtQty, texNum, texQty } from '../common/tex';
 import { arrow, circle, ground, text, vectorScale } from '../render/draw';
 import type {
@@ -96,7 +97,7 @@ const ball = (k: 0 | 1): BodyDef => ({
       },
       {
         label: L('Động năng', 'Kinetic energy'),
-        symbol: 'W_{\\text{đ}}',
+        symbol: SYM.kinetic,
         value: 0.5 * m * (vx * vx + vy * vy),
         unit: 'J',
       },
@@ -141,7 +142,7 @@ function draw({ ctx, cam, state, p, opts }: DrawContext): void {
     cam,
     vis.xMin,
     vis.yMax,
-    `p = (${fmtQty(opts.locale, P, 'kg*m/s', 4)}; ${fmtQty(opts.locale, Py, 'kg*m/s', 3)})   W_đ = ${fmtQty(opts.locale, K, 'J', 4)}`,
+    `p = (${fmtQty(opts.locale, P, 'kg*m/s', 4)}; ${fmtQty(opts.locale, Py, 'kg*m/s', 3)})   ${plain(sym(opts.locale).kinetic)} = ${fmtQty(opts.locale, K, 'J', 4)}`,
     c.muted,
     'left',
     { x: 60, y: 20 },
@@ -195,6 +196,7 @@ function solve(p: Params, locale: Locale): Solution {
   const q = collisionInput(p);
   const n = (v: number) => texNum(locale, v);
   const Q = (v: number, u: string) => texQty(locale, v, u);
+  const S = sym(locale);
   const o = outcome(q);
   const steps: SolutionStep[] = [];
   const notes: LocalizedText[] = [];
@@ -257,7 +259,7 @@ function solve(p: Params, locale: Locale): Solution {
   }
   steps.push({
     text: L('Động năng trước và sau va chạm:', 'Kinetic energy before and after:'),
-    tex: `W_{\\text{đ}} = ${Q(K0, 'J')} \\;\\to\\; W_{\\text{đ}}' = ${Q(K1, 'J')}\\quad (\\Delta W_{\\text{đ}} = ${Q(dK, 'J')})`,
+    tex: `${S.kinetic} = ${Q(K0, 'J')} \\;\\to\\; ${S.kinetic}' = ${Q(K1, 'J')}\\quad (\\Delta ${S.kinetic} = ${Q(dK, 'J')})`,
   });
   if (q.e < 1 && q.e > 0)
     notes.push(

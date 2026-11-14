@@ -4,6 +4,7 @@ import { DIM } from '@/core/units';
 import type { ScienceCardData } from '@/science-card/types';
 import { L, gravityParam, massParam } from '../common/scene-helpers';
 import { SRC } from '../common/sources';
+import { SYM, both, plain, sym } from '../common/symbols';
 import { fmtQty, texNum, texQty } from '../common/tex';
 import { arrow, circle, line, polygon, polyline, text, vectorScale } from '../render/draw';
 import type {
@@ -199,7 +200,7 @@ function draw({ ctx, cam, state, p, opts }: DrawContext): void {
     );
     text(ctx, cam, x1 + barW / 2, baseY, name, c.text, 'center', { x: 0, y: 16 });
   });
-  text(ctx, cam, baseX, baseY + H, `W = ${fmtQty(opts.locale, E, 'J')}`, c.muted, 'left', {
+  text(ctx, cam, baseX, baseY + H, `${plain(sym(opts.locale).mechanical)} = ${fmtQty(opts.locale, E, 'J')}`, c.muted, 'left', {
     x: 0,
     y: -6,
   });
@@ -288,7 +289,7 @@ function solve(p: Params, locale: Locale): Solution {
         'Chọn mốc thế năng tại mặt đất (y = 0). Không có ma sát nên cơ năng bảo toàn:',
         'Take U = 0 at the ground (y = 0). Without friction, mechanical energy is conserved:',
       ),
-      tex: `W = mgh_0 + \\tfrac{1}{2} m v_0^2 = ${n(m)}\\cdot ${n(g)}\\cdot ${n(y0)} + \\tfrac{1}{2}\\cdot ${n(m)}\\cdot ${n(v0)}^2 = ${Q(E, 'J')}`,
+      tex: `${sym(locale).mechanical} = mgh_0 + \\tfrac{1}{2} m v_0^2 = ${n(m)}\\cdot ${n(g)}\\cdot ${n(y0)} + \\tfrac{1}{2}\\cdot ${n(m)}\\cdot ${n(v0)}^2 = ${Q(E, 'J')}`,
     },
     {
       text: L('Tại điểm thấp nhất của máng:', 'At the lowest point of the track:'),
@@ -370,7 +371,12 @@ function card(): ScienceCardData {
       'Small bead sliding without friction along a fixed rail (never leaves it); only gravity does work.',
     ),
     equations: [
-      { tex: 'W = W_{\\text{đ}} + W_t = \\tfrac{1}{2}mv^2 + mgh = \\text{const}' },
+      {
+        tex: both(
+          (s) =>
+            `${s.mechanical} = ${s.kinetic} + ${s.potential} = \\tfrac{1}{2}mv^2 + mgh = \\text{const}`,
+        ),
+      },
       {
         tex: "\\ddot{x} = -\\frac{f'(x)\\,(g + f''(x)\\,\\dot{x}^2)}{1 + f'(x)^2}",
         label: L('Phương trình chuyển động trên ray y = f(x)', 'Equation of motion on y = f(x)'),
@@ -504,13 +510,13 @@ export const energyConservation: PhysicsScene = {
         { label: L('Tốc độ', 'Speed'), symbol: 'v', value: Math.abs(s[TS.v] ?? 0), unit: 'm/s' },
         {
           label: L('Động năng', 'Kinetic energy'),
-          symbol: 'W_{\\text{đ}}',
+          symbol: SYM.kinetic,
           value: 0.5 * (p.m ?? 1) * (s[TS.v] ?? 0) ** 2,
           unit: 'J',
         },
         {
           label: L('Thế năng', 'Potential energy'),
-          symbol: 'W_t',
+          symbol: SYM.potential,
           value: (p.m ?? 1) * (p.g ?? 9.81) * (s[TS.y] ?? 0),
           unit: 'J',
         },
