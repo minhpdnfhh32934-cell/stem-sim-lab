@@ -866,6 +866,26 @@ add(
     {"d2star": 3 * 0.4 / 2},
     missing=["d2"],
 )
+# --- Công, công suất, hiệu suất (VL10 Bài 23, 24, 27) -------------------------------
+# W_ms = -mu m g cos(theta) s; H = 1 - |W_ms| / (F s).
+add(
+    "cs-01",
+    "Kéo một thùng hàng khối lượng 10 kg lên một mặt phẳng nghiêng góc 30° bằng lực 80 N song song với mặt phẳng nghiêng, kéo được quãng đường 5 m. Hệ số ma sát trượt là 0,2. Lấy g = 10 m/s². Tính công của lực kéo, công của lực ma sát và hiệu suất.",
+    "workPower",
+    [
+        q("m", 10, "kg", "khối lượng 10 kg"),
+        q("theta", 30, "deg", "góc 30°"),
+        q("F", 80, "N", "lực 80 N"),
+        q("length", 5, "m", "quãng đường 5 m"),
+        q("mu", 0.2, "1", "Hệ số ma sát trượt là 0,2"),
+        q("g", 10, "m/s^2", "g = 10 m/s²"),
+    ],
+    {
+        "WF": 400.0,
+        "Wms": -0.2 * 10 * 10 * math.cos(math.pi / 6) * 5,
+        "H": 1 - 0.2 * 10 * 10 * math.cos(math.pi / 6) * 5 / 400,
+    },
+)
 add(
     "ng-02",
     "Một tia sáng truyền từ không khí vào nước với góc tới 45°. Chiết suất của nước là 1,33. Tính góc khúc xạ.",

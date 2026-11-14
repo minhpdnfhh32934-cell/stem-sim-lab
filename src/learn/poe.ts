@@ -254,6 +254,18 @@ export const POES: readonly Poe[] = [
     choices: ratios(0.5, 1, 2),
   },
   {
+    id: 'workPower.F',
+    topic: 'workPower',
+    param: 'F',
+    factor: 2,
+    answer: 'WP',
+    question: L(
+      'Nếu kéo thùng lên hết dốc bằng lực gấp đôi, công của trọng lực tăng, giảm hay không đổi?',
+      'If the crate is pulled up the whole slope with twice the force, does the work of its weight go up, go down or stay the same?',
+    ),
+    choices: DIRS,
+  },
+  {
     id: 'uniformCircularMotion.r',
     topic: 'uniformCircularMotion',
     param: 'r',
