@@ -595,7 +595,7 @@ Fold order at large font or in English: Tìm → icon 40; AI status → icon + d
 
 **#234 "station" (0.8.1, 13/11/2026; details `docs/AI_TUTOR.md`):** the room has its own stage
 (`--teacher-bg` + `--teacher-glow`, both themes) under the bench header. One row under the header:
-"Về trang chủ", "Là một AI", (i), the numbered tabs `01 TRÒ CHUYỆN · 02 BẢNG GIẢNG` (Advanced adds
+"Về trang chủ", (i), the numbered tabs `01 TRÒ CHUYỆN · 02 BẢNG GIẢNG` (Advanced adds
 `03 GHI NHỚ · 04 LƯỢT DÙNG`; still the layout radios, underline by `slidingIndicator.ts`, 40 px) and,
 at the right, the connection chip (header pill's words, only while an AI can answer). Talk: the orb
 (≤ 176 px, state word under it) beside the conversation, which keeps ≥ 70 % of the width. Board: the
@@ -606,8 +606,8 @@ paragraph and `teacher-station.spec.ts` win.
 **Header y0–48** (frame)
 
 - "Về trang chủ" ghost 144 at x8.
-- h1 "AI Teacher" 16/22 600 at x168, with the chip "Là một AI".
-- #205 B5 (12/11/2026): that h1 is the room's one title (the bench header's crumb, id `teacher-title`); the page's "Dạy học bằng AI" heading, the chat panel's "AI Teacher" and the face's tag are gone (the region keeps the name "Dạy học bằng AI"). Without an online AI, no bar repeats the header's "Chưa kết nối AI": the empty conversation says how to start, with "Kết nối AI" (Settings → Kết nối AI). "Think" reads "Suy nghĩ kĩ (Think)". The face column is 0.2fr (was 0.3fr), its ring ≤ 176 px.
+- h1 "AI Teacher" 16/22 600 at x168. User decision 14/11/2026: no "Là một AI" chip beside it; the room still says it is an AI by its title, the chat footer and the "AI hỗ trợ" label on every answer.
+- #205 B5 (12/11/2026): that h1 is the room's one title (the bench header's crumb, id `teacher-title`); the page's "Dạy học bằng AI" heading, the chat panel's "AI Teacher" and the face's tag are gone (the region keeps the name "Dạy học bằng AI"). Without an online AI, no bar repeats the header's "Chưa kết nối AI": the empty conversation says how to start, with "Kết nối AI" (Settings → Kết nối AI). "Think" reads "Deepthink" (user decision 14/11/2026; the code keeps the name Think). The face column is 0.2fr (was 0.3fr), its ring ≤ 176 px.
 - Numbered tabs (#234) instead of the segmented "Trò chuyện | Giảng trên bảng"; "Giảng trên bảng" is now the tab "Bảng giảng".
 - Engine select 280 at x704, grouped: "Trên mạng: Gemini · Claude · Groq" / "Trên máy này: Gemma 270M · 1B · E2B" / "Máy khác (cùng máy tính): Ollama · LM Studio · llama.cpp…".
 - "Giọng đọc" 40 at x1190, micro 40 at x1234 (opt-in), Cài đặt 40 at x1318.
@@ -625,7 +625,7 @@ paragraph and `teacher-station.spec.ts` win.
 - Messages: every answer has an AiContentBar; a "Kết quả do SimLab tính" card for tool numbers; "Số do AI tự đưa ra — chưa kiểm tra" chips; AI links are never clickable.
 - Composer y632–768:
   - textarea "Nhập câu hỏi" 414×56;
-  - row: "Suy nghĩ kĩ (Think)" switch (`/Think/` still matches), "Tra Wikipedia" (opt-in), "Gửi câu hỏi" filled 120×40;
+  - row: "Deepthink" switch (was "Suy nghĩ kĩ (Think)" until 14/11/2026), "Tra Wikipedia" (opt-in), "Gửi câu hỏi" filled 120×40;
   - footer 12/16.
 
 **Main action:** "Gửi câu hỏi". While a selection exists, "Hỏi thầy chỗ này" takes the slot.

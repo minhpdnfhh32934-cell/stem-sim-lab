@@ -1820,18 +1820,6 @@ button.bench-door--lab:hover {
 :root[data-shell='bench'] .command-palette__item {
   min-height: 44px;
 }
-.teacher__is-ai {
-  display: inline-flex;
-  align-items: center;
-  min-height: 24px;
-  padding: 0 var(--space-2);
-  border: 1px solid var(--border-input);
-  border-radius: var(--radius-sm);
-  color: var(--text-muted);
-  font-size: var(--text-caption);
-  line-height: calc(16rem / 14);
-  white-space: nowrap;
-}
 
 /* Compare legend (§9.4 TR): the pinned run's dash, and "đã cũ" once the inputs changed. */
 :root[data-shell='bench'] .stage__compare {

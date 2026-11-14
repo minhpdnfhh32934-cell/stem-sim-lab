@@ -60,7 +60,7 @@ describe('"Dữ liệu của em đi đâu?" with the AI on this computer', () =>
     render(<TeacherSettings />);
     const { kept, sent } = flow();
     expect(sent).toEqual([
-      'Không có gì được gửi lên mạng khi em hỏi AI Teacher (Think và tra Wikipedia đang tắt).',
+      'Không có gì được gửi lên mạng khi em hỏi AI Teacher (Deepthink và tra Wikipedia đang tắt).',
     ]);
     expect(kept).toContain(
       'Khi dùng AI trên máy khác (LM Studio, 127.0.0.1:1234): câu hỏi chỉ đi tới chương trình đó trên máy này.',
@@ -75,7 +75,7 @@ describe('"Dữ liệu của em đi đâu?" with the AI on this computer', () =>
     const { sent } = flow();
     expect(sent).toHaveLength(2);
     expect(sent[0]).toMatch(
-      /^Think đang bật: câu hỏi, bản nháp của AI trên máy, trích đoạn tài liệu liên quan, tóm tắt phần trò chuyện cũ \(nếu có\) và ngữ cảnh màn hình \(nếu em bật\) → Claude để rà soát\. Không gửi tới nhà cung cấp dự phòng\.$/,
+      /^Deepthink đang bật: câu hỏi, bản nháp của AI trên máy, trích đoạn tài liệu liên quan, tóm tắt phần trò chuyện cũ \(nếu có\) và ngữ cảnh màn hình \(nếu em bật\) → Claude để rà soát\. Không gửi tới nhà cung cấp dự phòng\.$/,
     );
     expect(sent[1]).toBe('Tra Wikipedia đang bật: câu hỏi → Wikipedia.');
   });
@@ -115,7 +115,7 @@ describe('"Dữ liệu của em đi đâu?" with an online provider', () => {
       'Khi chọn “AI trực tuyến”: câu hỏi, các lượt trò chuyện gần đây, tóm tắt phần trò chuyện cũ (nếu có) và trích đoạn tài liệu liên quan → Gemini (khuyên dùng).',
     );
     expect(sent[1]).toBe(
-      'Khi Gemini (khuyên dùng) hết lượt và Think đang tắt: những gì gửi cho Gemini (khuyên dùng) → Groq (miễn phí) (dự phòng, chỉ khi đã có khóa).',
+      'Khi Gemini (khuyên dùng) hết lượt và Deepthink đang tắt: những gì gửi cho Gemini (khuyên dùng) → Groq (miễn phí) (dự phòng, chỉ khi đã có khóa).',
     );
   });
 
@@ -131,13 +131,13 @@ describe('"Dữ liệu của em đi đâu?" with an online provider', () => {
 
   it('the Think line lists what the review really carries, and no fallback', () => {
     render(<TeacherSettings />);
-    const think = flow().sent.find((s) => s.startsWith('Khi bật Think'));
+    const think = flow().sent.find((s) => s.startsWith('Khi bật Deepthink'));
     expect(think).toBe(
-      'Khi bật Think: câu hỏi, bản nháp, trích đoạn tài liệu liên quan, tóm tắt phần trò chuyện cũ (nếu có) và ngữ cảnh màn hình (nếu em bật) → Claude để rà soát. Không gửi tới nhà cung cấp dự phòng.',
+      'Khi bật Deepthink: câu hỏi, bản nháp, trích đoạn tài liệu liên quan, tóm tắt phần trò chuyện cũ (nếu có) và ngữ cảnh màn hình (nếu em bật) → Claude để rà soát. Không gửi tới nhà cung cấp dự phòng.',
     );
     // The summary of older turns is said to travel to the reviewer too.
     expect(flow().kept).toContain(
-      'Bản tóm tắt phần trò chuyện cũ (do AI đang trả lời viết; gửi kèm câu hỏi tới AI đó, và tới bên rà soát khi bật Think).',
+      'Bản tóm tắt phần trò chuyện cũ (do AI đang trả lời viết; gửi kèm câu hỏi tới AI đó, và tới bên rà soát khi bật Deepthink).',
     );
   });
 
@@ -147,7 +147,7 @@ describe('"Dữ liệu của em đi đâu?" with an online provider', () => {
     const { sent } = flow();
     expect(sent.join(' ')).not.toMatch(/hết lượt/);
     expect(sent[0]).toMatch(
-      /^Khi dùng Gemma: chỉ khi bật Think thì câu hỏi, bản nháp của Gemma, trích đoạn tài liệu liên quan, tóm tắt phần trò chuyện cũ \(nếu có\) và ngữ cảnh màn hình \(nếu em bật\) mới được gửi → Claude để rà soát\. Không gửi tới nhà cung cấp dự phòng\.$/,
+      /^Khi dùng Gemma: chỉ khi bật Deepthink thì câu hỏi, bản nháp của Gemma, trích đoạn tài liệu liên quan, tóm tắt phần trò chuyện cũ \(nếu có\) và ngữ cảnh màn hình \(nếu em bật\) mới được gửi → Claude để rà soát\. Không gửi tới nhà cung cấp dự phòng\.$/,
     );
   });
 });

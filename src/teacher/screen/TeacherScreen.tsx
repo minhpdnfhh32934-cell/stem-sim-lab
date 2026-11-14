@@ -1,7 +1,6 @@
 import { ArrowLeft, Info } from 'lucide-react';
-import { useContext, useEffect, useId, useRef, useState, type ComponentProps } from 'react';
+import { useEffect, useId, useRef, useState, type ComponentProps } from 'react';
 import { useLoaded, type Loaded } from '@/app/bench/useLoaded';
-import { BenchContext } from '@/app/bench/shellMode';
 import { useT, type MessageKey } from '@/app/i18n';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useAiStatusView } from '@/app/ai/aiStatusView';
@@ -72,8 +71,6 @@ export default function TeacherScreen() {
     t('bench.loadFailed'),
     backToTalk,
   );
-  // The bench names it an AI beside the title (docs/BENCH_DESIGN.md §9.8).
-  const bench = useContext(BenchContext);
   // The board teaches the latest answer that is not about part of the board (latestLesson.ts).
   const lesson = latestLesson(messages);
   // What the page is and what may leave the computer: one tooltip instead of two lines of text.
@@ -112,7 +109,6 @@ export default function TeacherScreen() {
           <ArrowLeft size={16} strokeWidth={1.75} aria-hidden="true" />
           {t('teacher.back')}
         </button>
-        {bench && <span className="teacher__is-ai">{t('bench.isAi')}</span>}
         <span
           className="teacher__about"
           role="note"

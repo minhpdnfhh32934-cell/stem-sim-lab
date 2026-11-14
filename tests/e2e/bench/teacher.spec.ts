@@ -27,9 +27,9 @@ test('the AI teacher page: honest label, no screen toggle, fits 1366×768, Esc g
   await page.locator('.launch-card--teacher').click();
   const screen = page.getByRole('region', { name: 'Dạy học bằng AI' });
   await expect(screen).toBeVisible();
-  // One title, the header's h1, beside "Là một AI" (#205 B5).
+  // One title, the header's h1 (#205 B5); the chat footer says the answers come from an AI.
   await expect(page.getByRole('heading', { level: 1, name: 'AI Teacher' })).toBeVisible();
-  await expect(page.getByText('Là một AI', { exact: true })).toBeVisible();
+  await expect(screen.locator('.chat-panel__footer')).toContainText('Câu trả lời AI');
   // The screen-context switch belongs to the bubble only.
   await expect(page.getByRole('checkbox', { name: 'Lấy thông tin từ màn hình' })).toHaveCount(0);
   // No API key and no local model: the empty conversation says how to connect, never a pretend
@@ -72,7 +72,7 @@ test('chat bubble: screen toggle off by default, Think explains the missing seco
     panel.getByRole('checkbox', { name: 'Lấy thông tin từ màn hình' }),
   ).not.toBeChecked();
 
-  await panel.getByRole('button', { name: /Think/ }).click();
+  await panel.getByRole('button', { name: /Deepthink/ }).click();
   await expect(
     panel
       .getByRole('status')
@@ -183,8 +183,8 @@ test('Think: Gemini drafts, Groq reviews; the answer is labelled; nothing goes t
   await expect(panel.getByText(/sẽ được gửi tới: Gemini/)).toBeVisible();
 
   // Think without a Groq key: explained before anything is sent.
-  await panel.getByRole('button', { name: /Think/ }).click();
-  await expect(panel.getByText(/Think cần một AI thứ hai/)).toBeVisible();
+  await panel.getByRole('button', { name: /Deepthink/ }).click();
+  await expect(panel.getByText(/Deepthink cần một AI thứ hai/)).toBeVisible();
 
   // With a Groq key (as if saved in Settings) Think works end to end.
   await page.addInitScript(() => {
@@ -193,7 +193,7 @@ test('Think: Gemini drafts, Groq reviews; the answer is labelled; nothing goes t
   await page.reload();
   await page.getByRole('button', { name: /Virtual Lab/ }).click();
   await askAi(page);
-  await panel.getByRole('button', { name: /Think/ }).click();
+  await panel.getByRole('button', { name: /Deepthink/ }).click();
   await expect(panel.getByText(/Groq \(miễn phí\) \(rà soát\)/)).toBeVisible();
   await panel.getByRole('textbox', { name: 'Nhập câu hỏi' }).fill('Lực là gì?');
   await panel.getByRole('button', { name: 'Gửi câu hỏi' }).click();
@@ -369,7 +369,7 @@ test('Think: the reviewer out of quota is named, and the draft is never reviewed
     return groqQuota(route);
   });
   const panel = await openTeacher(page);
-  await panel.getByRole('button', { name: /Think/ }).click();
+  await panel.getByRole('button', { name: /Deepthink/ }).click();
   await send(page, 'Lực là gì?');
   const alert = panel.getByRole('alert');
   await expect(alert).toContainText('Bên rà soát (Groq) báo đã hết lượt dùng');

@@ -128,13 +128,13 @@ describe('AI Teacher chat with the AI on this computer', () => {
     useChatStore.setState({ thinkEnabled: true });
     const { unmount } = render(<ChatPanel teacherPage showScreenContext={false} />);
     // Both the answer and the review go online with the API engine.
-    expect(screen.getByRole('button', { name: /Think/ })).toHaveTextContent('· 2 AI');
+    expect(screen.getByRole('button', { name: /Deepthink/ })).toHaveTextContent('· 2 AI');
     unmount();
 
     useLocalAiStore.setState({ selected: selection });
     useChatStore.setState({ engine: 'local' });
     render(<ChatPanel teacherPage showScreenContext={false} />);
-    const think = screen.getByRole('button', { name: /Think/ });
+    const think = screen.getByRole('button', { name: /Deepthink/ });
     expect(think).toHaveTextContent('· 1 AI rà soát');
     expect(think).not.toHaveTextContent('2 AI');
   });
