@@ -68,22 +68,23 @@ describe('"Kệ bài" (docs/BENCH_DESIGN.md §9.3)', () => {
     expect(useProblemSheet.getState().open).toBe(true);
   });
 
-  it('every card has a preview: a physics engine frame, else its subject line art', () => {
+  it('every card has a preview: a physics engine frame, else a picture of its stage', () => {
     render(<BenchLibrary />);
     const cards = document.querySelectorAll('.shelf-card');
     expect(cards.length).toBeGreaterThan(5);
     for (const c of cards) {
-      // A physics lesson without an engine scene (Fourier, a module of its own) gets the line art.
+      // A physics lesson without an engine scene (Fourier, a module of its own) gets a picture.
       const id = c.querySelector('.shelf-card__meta')?.id.replace(/^shelf-card-|-desc$/g, '') ?? '';
-      const preview = hasScene(id) ? '.shelf-card__preview canvas' : '.shelf-card__preview svg';
+      const preview = hasScene(id) ? '.shelf-card__preview canvas' : '.shelf-card__preview img';
       expect(c.querySelector(preview)).not.toBeNull();
     }
     expect(document.querySelectorAll('.shelf-card__preview canvas').length).toBeGreaterThan(5);
     act(() => {
       useWorkspaceStore.getState().setSubject('chemistry');
     });
+    // The subject's line art is only a fallback (TopicPicture.test.tsx).
     for (const c of document.querySelectorAll('.shelf-card'))
-      expect(c.querySelector('.shelf-card__preview svg')).not.toBeNull();
+      expect(c.querySelector('.shelf-card__preview img')).not.toBeNull();
   });
 
   it('Advanced: "Soạn bài" at the bottom of the filters opens Science Studio’s authoring', () => {

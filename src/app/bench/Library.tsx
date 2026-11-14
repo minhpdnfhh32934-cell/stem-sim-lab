@@ -35,10 +35,10 @@ import { useSafetyStore } from '@/safety/safetyStore';
 import { useLessonsForTopic } from '@/studio/lessons';
 import { useStudioStore } from '@/studio/studioStore';
 import { cx } from '@/ui/cx';
-import { hasScene } from '@/physics/registry';
 import { SUBJECT_ICON } from '@/app/subjectIcons';
 import { openProblemSheet } from './problemSheet';
-import { SceneStill } from './SceneStill';
+import { hasTopicPicture } from './shelfPreviews';
+import { TopicPicture } from './TopicPicture';
 
 /**
  * "Kệ bài" (docs/BENCH_DESIGN.md §9.3): a filter column (subject, kind of lesson, search) and
@@ -240,9 +240,9 @@ export function BenchLibrary() {
         <div className="shelf-cards">
           {lastTopic && (
             <section className="shelf-start shelf-start--resume">
-              {/* Thumbnail 160×96 (§9.3): the topic's own engine frame (physics only). */}
-              {hasScene(lastTopic) && (
-                <SceneStill topic={lastTopic} className="shelf-start__thumb" grid={false} />
+              {/* Thumbnail 160×96 (§9.3): the topic's engine frame or its stage picture. */}
+              {hasTopicPicture(lastTopic) && (
+                <TopicPicture topic={lastTopic} className="shelf-start__thumb" />
               )}
               <h2>{t('home.continue')}</h2>
               <p className="shelf-start__topic">
@@ -375,13 +375,13 @@ function ShelfCard({
       className={cx('shelf-card', soon && 'shelf-card--soon')}
       data-steps={status.total > 1 || undefined}
     >
-      {/* Preview 88 (§9.3): a physics topic's own engine frame, else its subject's line art. */}
+      {/* Preview 88 (§9.3): the topic's engine frame or stage picture, else its subject's line art. */}
       <div className="shelf-card__preview" aria-hidden="true">
-        {hasScene(topic.id) ? (
-          <SceneStill topic={topic.id} className="shelf-card__still" grid={false} />
-        ) : (
-          <Icon size={32} strokeWidth={1.25} />
-        )}
+        <TopicPicture
+          topic={topic.id}
+          className="shelf-card__still"
+          fallback={<Icon size={32} strokeWidth={1.25} />}
+        />
       </div>
       <button
         type="button"
