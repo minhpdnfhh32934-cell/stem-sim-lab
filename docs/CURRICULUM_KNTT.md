@@ -31,7 +31,7 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 
 | Sách | Số bài | Lí thuyết | Lí thuyết có chủ đề SimLab |
 | --- | --- | --- | --- |
-| Vật lí 10 | 34 | 26 | 21 |
+| Vật lí 10 | 34 | 26 | 24 |
 | Vật lí 11 | 26 | 20 | 13 |
 | Vật lí 12 | 25 | 21 | 0 |
 | Hoá học 10 | 23 | 16 | 5 |
@@ -40,7 +40,7 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Sinh học 10 | 26 | 17 | 5 |
 | Sinh học 11 | 29 | 20 | 0 |
 | Sinh học 12 | 35 | 28 | 7 |
-| **Cộng** | **253** | **189** | **53** |
+| **Cộng** | **253** | **189** | **56** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -78,11 +78,11 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Vật lí 10 | Chương III. Động lực học | 20 | Một số ví dụ về cách giải các bài toán thuộc phần động lực học | 80 | Bài tập | chưa có |  | pending |
 | Vật lí 10 | Chương III. Động lực học | 21 | Moment lực. Cân bằng của vật rắn | 83 | Lí thuyết | Moment lực và cân bằng vật rắn | Tên Bài 21: moment lực, cân bằng của vật rắn (cảnh thanh quay quanh trục ở trung điểm, quy tắc moment, thanh quay khi chưa cân bằng). | pending |
 | Vật lí 10 | Chương III. Động lực học | 22 | Thực hành: Tổng hợp lực | 86 | Thực hành | chưa có |  | pending |
-| Vật lí 10 | Chương IV. Năng lượng, công, công suất | 23 | Năng lượng. Công cơ học | 91 | Lí thuyết | chưa có |  | pending |
-| Vật lí 10 | Chương IV. Năng lượng, công, công suất | 24 | Công suất | 96 | Lí thuyết | chưa có |  | pending |
+| Vật lí 10 | Chương IV. Năng lượng, công, công suất | 23 | Năng lượng. Công cơ học | 91 | Lí thuyết | Công, công suất và hiệu suất | Tên Bài 23–24, 27: năng lượng, công cơ học, công suất, hiệu suất (cảnh kéo thùng trên sàn hoặc lên dốc có ma sát: công từng lực, công suất, hiệu suất). | pending |
+| Vật lí 10 | Chương IV. Năng lượng, công, công suất | 24 | Công suất | 96 | Lí thuyết | Công, công suất và hiệu suất | Tên Bài 23–24, 27: năng lượng, công cơ học, công suất, hiệu suất (cảnh kéo thùng trên sàn hoặc lên dốc có ma sát: công từng lực, công suất, hiệu suất). | pending |
 | Vật lí 10 | Chương IV. Năng lượng, công, công suất | 25 | Động năng, thế năng | 99 | Lí thuyết | Bảo toàn cơ năng | Tên Bài 25–26: động năng, thế năng, cơ năng và định luật bảo toàn cơ năng. | pending |
 | Vật lí 10 | Chương IV. Năng lượng, công, công suất | 26 | Cơ năng và định luật bảo toàn cơ năng | 102 | Lí thuyết | Bảo toàn cơ năng | Tên Bài 25–26: động năng, thế năng, cơ năng và định luật bảo toàn cơ năng. | pending |
-| Vật lí 10 | Chương IV. Năng lượng, công, công suất | 27 | Hiệu suất | 106 | Lí thuyết | chưa có |  | pending |
+| Vật lí 10 | Chương IV. Năng lượng, công, công suất | 27 | Hiệu suất | 106 | Lí thuyết | Công, công suất và hiệu suất | Tên Bài 23–24, 27: năng lượng, công cơ học, công suất, hiệu suất (cảnh kéo thùng trên sàn hoặc lên dốc có ma sát: công từng lực, công suất, hiệu suất). | pending |
 | Vật lí 10 | Chương V. Động lượng | 28 | Động lượng | 110 | Lí thuyết | Va chạm đàn hồi và va chạm mềm | Tên Bài 28–29: động lượng và định luật bảo toàn động lượng. | pending |
 | Vật lí 10 | Chương V. Động lượng | 29 | Định luật bảo toàn động lượng | 113 | Lí thuyết | Va chạm đàn hồi và va chạm mềm | Tên Bài 28–29: động lượng và định luật bảo toàn động lượng. | pending |
 | Vật lí 10 | Chương V. Động lượng | 30 | Thực hành: Xác định động lượng của vật trước và sau va chạm | 116 | Thực hành | chưa có |  | pending |

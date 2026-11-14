@@ -304,6 +304,21 @@ export const CHALLENGES: readonly Challenge[] = [
     ),
   },
   {
+    id: 'workPower.h80',
+    topic: 'workPower',
+    title: L('Hiệu suất 80 %', 'An efficiency of 80 %'),
+    task: L(
+      'Kéo thùng 10 kg lên dốc 30° bằng lực 80 N song song với mặt dốc. Chỉnh hệ số ma sát để hiệu suất đúng 80 %.',
+      'A 10 kg crate is pulled up a 30° slope by an 80 N force along it. Set the friction coefficient so that the efficiency is exactly 80 %.',
+    ),
+    controls: ['mu'],
+    goal: { answer: 'H', kind: 'target', value: 0.8, tol: 0.01 },
+    hint: L(
+      'Phần công bị mất là công của lực ma sát. Ma sát lớn hơn thì hiệu suất tăng hay giảm?',
+      'The lost work is the work of friction. Does more friction raise or lower the efficiency?',
+    ),
+  },
+  {
     id: 'uniformCircularMotion.a16',
     topic: 'uniformCircularMotion',
     title: L('Gia tốc hướng tâm 16 m/s²', 'Centripetal acceleration of 16 m/s²'),

@@ -95,6 +95,7 @@ const en: Messages = {
     stringTension: 'Weight and string tension',
     fluidFall: 'Drag in a fluid',
     torqueBalance: 'Moments and rigid-body balance',
+    workPower: 'Work, power and efficiency',
     inclinedPlane: 'Inclined plane',
     pulley: 'Pulleys and strings',
     hookeSpring: "Springs (Hooke's law)",

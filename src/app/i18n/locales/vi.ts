@@ -98,6 +98,7 @@ const vi = {
     stringTension: 'Trọng lực và lực căng dây',
     fluidFall: 'Lực cản của chất lưu',
     torqueBalance: 'Moment lực và cân bằng vật rắn',
+    workPower: 'Công, công suất và hiệu suất',
     inclinedPlane: 'Mặt phẳng nghiêng',
     pulley: 'Ròng rọc – dây nối',
     hookeSpring: 'Lò xo (định luật Hooke)',
