@@ -83,7 +83,9 @@ function onSliderStep(s: PhysicsScene, c: Challenge, base: Params): boolean {
   const unit = def.unit ?? '1';
   const min = def.min ?? 0;
   const k0 = Math.round((fromSI(root, unit) - min) / def.step);
+  const kMax = Math.floor(((def.max ?? min) - min) / def.step + 1e-9);
   return [k0 - 1, k0, k0 + 1].some((k) => {
+    if (k < 0 || k > kMax) return false;
     const v = answerValue(s, { ...base, [key]: toSI(min + k * def.step!, unit) }, goal.answer);
     return v !== null && Math.abs(v - goal.value) <= goal.tol;
   });
