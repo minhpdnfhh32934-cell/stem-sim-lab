@@ -474,6 +474,7 @@ PLACEMENTS = [
     ("stringTension", "VL10", [17], "Tên Bài 17: trọng lực và lực căng (cảnh đèn treo bằng một hoặc hai dây, trọng lực và lực căng mỗi dây)."),
     ("fluidFall", "VL10", [19], "Tên Bài 19: lực cản và lực nâng (cảnh có lực cản của chất lưu và lực đẩy Archimedes lên quả cầu rơi hoặc nổi; chưa có lực nâng khí động của cánh)."),
     ("torqueBalance", "VL10", [21], "Tên Bài 21: moment lực, cân bằng của vật rắn (cảnh thanh quay quanh trục ở trung điểm, quy tắc moment, thanh quay khi chưa cân bằng)."),
+    ("workPower", "VL10", [23, 24, 27], "Tên Bài 23–24, 27: năng lượng, công cơ học, công suất, hiệu suất (cảnh kéo thùng trên sàn hoặc lên dốc có ma sát: công từng lực, công suất, hiệu suất)."),
     ("energyConservation", "VL10", [25, 26], "Tên Bài 25–26: động năng, thế năng, cơ năng và định luật bảo toàn cơ năng."),
     ("collisions", "VL10", [28, 29], "Tên Bài 28–29: động lượng và định luật bảo toàn động lượng."),
     ("springPendulum", "VL11", [1, 2, 3, 5, 6], "Tên Bài 1–3, 5: dao động điều hoà, vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng)."),

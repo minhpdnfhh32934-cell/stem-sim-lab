@@ -77,6 +77,10 @@ describe('values stated in words (MASTER_PROMPT §2.1)', () => {
     expect(impliedByWords('v0', 0, 'thả nhẹ', text)).toBe(true);
     expect(impliedByWords('muK', 0, 'mặt bàn nhẵn', text)).toBe(true);
     expect(impliedByWords('e', 1, 'va chạm đàn hồi', text)).toBe(true);
+    const floor = 'Kéo thùng 10 kg trên sàn nằm ngang bằng lực 50 N.';
+    expect(impliedByWords('theta', 0, 'trên sàn nằm ngang', floor)).toBe(true);
+    const slope = 'Mặt phẳng nghiêng góc 30° so với phương nằm ngang.';
+    expect(impliedByWords('theta', 0, 'phương nằm ngang', slope)).toBe(false);
     const full = 'Hai vật va chạm hoàn toàn đàn hồi trong không khí, vật B đứng yên.';
     expect(impliedByWords('e', 1, 'va chạm hoàn toàn đàn hồi', full)).toBe(true);
     // "không khí" (air) is a noun, not a negation.

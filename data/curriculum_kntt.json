@@ -2189,6 +2189,20 @@
    "review_status": "pending"
   },
   {
+   "topic": "workPower",
+   "subject": "physics",
+   "grade": 10,
+   "book": "VL10",
+   "chapter": "Chương IV. Năng lượng, công, công suất",
+   "lessons": [
+    23,
+    24,
+    27
+   ],
+   "reason": "Tên Bài 23–24, 27: năng lượng, công cơ học, công suất, hiệu suất (cảnh kéo thùng trên sàn hoặc lên dốc có ma sát: công từng lực, công suất, hiệu suất).",
+   "review_status": "pending"
+  },
+  {
    "topic": "energyConservation",
    "subject": "physics",
    "grade": 10,
