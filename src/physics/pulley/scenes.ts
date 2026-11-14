@@ -7,6 +7,7 @@ import type { ScienceCardData } from '@/science-card/types';
 import { accel1D } from '../common/coulomb1d';
 import { L, gravityParam, pairFriction } from '../common/scene-helpers';
 import { SRC } from '../common/sources';
+import { SYM, both, plain, sym } from '../common/symbols';
 import { texNum, texQty } from '../common/tex';
 import { arrow, block, circle, ground, line, polygon, vectorScale } from '../render/draw';
 import type {
@@ -113,6 +114,7 @@ const bodies: BodyDef[] = [
 
 function draw({ ctx, cam, state, p, opts }: DrawContext): void {
   const c = opts.colors;
+  const S = sym(opts.locale);
   const q = pulleyInput(p);
   const s = state[PU.s] ?? 0;
   const g = geometry(q, s);
@@ -196,10 +198,28 @@ function draw({ ctx, cam, state, p, opts }: DrawContext): void {
   if (opts.vectors) {
     const T = state[PU.T] ?? 0;
     const k = vectorScale(Math.max(q.m1, q.m2) * q.g, 1, 0.5);
-    arrow(ctx, cam, g.m2.x, g.m2.y, 0, -q.m2 * q.g * k, c.force, 'P₂');
+    arrow(
+      ctx,
+      cam,
+      g.m2.x,
+      g.m2.y,
+      0,
+      -q.m2 * q.g * k,
+      c.force,
+      opts.locale === 'vi' ? 'P₂' : 'F_g2',
+    );
     arrow(ctx, cam, g.m2.x, g.m2.y, 0, T * k, c.velocity, 'T');
     if (q.config === 0) {
-      arrow(ctx, cam, g.m1.x, g.m1.y, 0, -q.m1 * q.g * k, c.force, 'P₁');
+      arrow(
+        ctx,
+        cam,
+        g.m1.x,
+        g.m1.y,
+        0,
+        -q.m1 * q.g * k,
+        c.force,
+        opts.locale === 'vi' ? 'P₁' : 'F_g1',
+      );
       arrow(ctx, cam, g.m1.x, g.m1.y, 0, T * k, c.velocity, 'T');
     } else {
       const ct = Math.cos(g.m1.angle);
@@ -207,7 +227,16 @@ function draw({ ctx, cam, state, p, opts }: DrawContext): void {
       arrow(ctx, cam, g.m1.x, g.m1.y, ct * T * k, st * T * k, c.velocity, 'T');
       const fr = state[PU.friction] ?? 0;
       if (Math.abs(fr) > 1e-9)
-        arrow(ctx, cam, g.m1.x, g.m1.y - B / 3, ct * fr * k, st * fr * k, c.acceleration, 'F_ms');
+        arrow(
+          ctx,
+          cam,
+          g.m1.x,
+          g.m1.y - B / 3,
+          ct * fr * k,
+          st * fr * k,
+          c.acceleration,
+          plain(S.friction),
+        );
     }
   }
 }
@@ -231,7 +260,7 @@ const graphs: GraphDef[] = [
     yLabel: L('Lực (N)', 'Force (N)'),
     series: [
       { id: 'T', label: L('T', 'T'), value: (s) => s[PU.T] ?? 0 },
-      { id: 'Fms', label: L('F_ms', 'F_fr'), value: (s) => s[PU.friction] ?? 0 },
+      { id: 'Fms', label: L('F_ms', 'f'), value: (s) => s[PU.friction] ?? 0 },
     ],
   },
 ];
@@ -262,6 +291,7 @@ function solve(p: Params, locale: Locale): Solution {
   const q = pulleyInput(p);
   const n = (v: number) => texNum(locale, v);
   const Q = (v: number, u: string) => texQty(locale, v, u);
+  const S = sym(locale);
   const red = reduce(q);
   const r0 = accel1D(red, 0);
   const steps: SolutionStep[] = [
@@ -312,8 +342,8 @@ function solve(p: Params, locale: Locale): Solution {
       ),
       tex:
         q.config === 1
-          ? `N = m_1 g = ${Q(red.N, 'N')},\\qquad F_{\\text{kéo}} = m_2 g = ${Q(red.D, 'N')}`
-          : `N = m_1 g\\cos\\theta = ${Q(red.N, 'N')},\\qquad F_{\\text{kéo}} = m_2 g - m_1 g\\sin\\theta = ${Q(red.D, 'N')}`,
+          ? `N = m_1 g = ${Q(red.N, 'N')},\\qquad ${S.drive} = m_2 g = ${Q(red.D, 'N')}`
+          : `N = m_1 g\\cos\\theta = ${Q(red.N, 'N')},\\qquad ${S.drive} = m_2 g - m_1 g\\sin\\theta = ${Q(red.D, 'N')}`,
     });
     if (r0.regime === 'static') {
       steps.push({
@@ -321,7 +351,7 @@ function solve(p: Params, locale: Locale): Solution {
           'Lực kéo không thắng được ma sát nghỉ cực đại: hệ đứng yên.',
           'The driving force does not overcome maximum static friction: the system stays at rest.',
         ),
-        tex: `|${n(red.D)}| \\le \\mu_n N = ${Q(red.Fs, 'N')}`,
+        tex: `|${n(red.D)}| \\le ${S.muStatic} N = ${Q(red.Fs, 'N')}`,
       });
       return {
         answers: [
@@ -342,7 +372,7 @@ function solve(p: Params, locale: Locale): Solution {
         'Định luật II Newton cho cả hệ (ma sát trượt ngược chiều chuyển động):',
         "Newton's 2nd law for the whole system (kinetic friction opposes motion):",
       ),
-      tex: `a = \\frac{F_{\\text{kéo}} ${r0.a > 0 ? '-' : '+'} \\mu_t N}{m_1 + m_2} = \\frac{${n(red.D)} ${r0.a > 0 ? '-' : '+'} ${n(red.Fk)}}{${n(red.M)}} = ${Q(r0.a, 'm/s^2')}`,
+      tex: `a = \\frac{${S.drive} ${r0.a > 0 ? '-' : '+'} ${S.muKinetic} N}{m_1 + m_2} = \\frac{${n(red.D)} ${r0.a > 0 ? '-' : '+'} ${n(red.Fk)}}{${n(red.M)}} = ${Q(r0.a, 'm/s^2')}`,
     });
   }
   const T = tension(q, r0.a);
@@ -403,7 +433,10 @@ function card(): ScienceCardData {
       'Hai vật nối bằng dây nhẹ, không dãn qua ròng rọc cố định nhẹ, không ma sát; ma sát Coulomb trên m₁.',
       'Two blocks joined by a light inextensible string over an ideal fixed pulley; Coulomb friction on m₁.',
     ),
-    equations: [{ tex: '(m_1 + m_2)\\,a = F_{\\text{kéo}} - F_{ms}' }, { tex: 'T = m_2 (g - a)' }],
+    equations: [
+      { tex: both((s) => `(m_1 + m_2)\\,a = ${s.drive} - ${s.friction}`) },
+      { tex: 'T = m_2 (g - a)' },
+    ],
     assumptions: [
       L(
         'Khối lượng dây và ròng rọc không đáng kể; dây luôn căng.',
@@ -492,7 +525,7 @@ export const pulley: PhysicsScene = {
     {
       key: 'muS',
       label: L('Hệ số ma sát nghỉ', 'Static friction coefficient'),
-      symbol: '\\mu_n',
+      symbol: SYM.muStatic,
       kind: 'number',
       min: 0,
       max: 1.5,
@@ -502,7 +535,7 @@ export const pulley: PhysicsScene = {
     {
       key: 'muK',
       label: L('Hệ số ma sát trượt', 'Kinetic friction coefficient'),
-      symbol: '\\mu_t',
+      symbol: SYM.muKinetic,
       kind: 'number',
       min: 0,
       max: 1.5,

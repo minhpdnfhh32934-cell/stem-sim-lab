@@ -1,10 +1,11 @@
 import type { Locale } from '@/app/i18n/types';
 import { dopri5 } from '@/core/ode/dopri5';
 import { DIM } from '@/core/units';
-import type { LocalizedText } from '@/core/data/dataset';
+import type { LocalizedTex, LocalizedText } from '@/core/data/dataset';
 import type { ScienceCardData } from '@/science-card/types';
 import { L, gravityParam, massParam, pairFriction } from '../common/scene-helpers';
 import { SRC } from '../common/sources';
+import { SYM, both, plain, sym } from '../common/symbols';
 import { fmtQty, texNum, texQty } from '../common/tex';
 import { arrow, block, ground, polygon, polyline, text, vectorScale } from '../render/draw';
 import type {
@@ -57,7 +58,7 @@ const body: BodyDef = {
     { label: L('Gia tốc', 'Acceleration'), symbol: 'a', value: s[IS.a] ?? 0, unit: 'm/s^2' },
     {
       label: L('Lực ma sát', 'Friction force'),
-      symbol: 'F_{ms}',
+      symbol: SYM.friction,
       value: s[IS.friction] ?? 0,
       unit: 'N',
     },
@@ -67,6 +68,7 @@ const body: BodyDef = {
 
 export function draw({ ctx, cam, state, p, opts }: DrawContext): void {
   const c = opts.colors;
+  const S = sym(opts.locale);
   const q = inclineInput(p);
   const Lx = q.length * Math.cos(q.theta);
   const Ly = q.length * Math.sin(q.theta);
@@ -116,11 +118,20 @@ export function draw({ ctx, cam, state, p, opts }: DrawContext): void {
     const k = vectorScale(ref, q.length, 0.25);
     const ct = Math.cos(q.theta);
     const st = Math.sin(q.theta);
-    arrow(ctx, cam, pos.x, pos.y, 0, -q.m * q.g * k, c.force, 'P');
+    arrow(ctx, cam, pos.x, pos.y, 0, -q.m * q.g * k, c.force, plain(S.weight));
     if (f.N > 0) arrow(ctx, cam, pos.x, pos.y, -st * f.N * k, ct * f.N * k, c.force, 'N');
     const fr = state[IS.friction] ?? 0;
     if (Math.abs(fr) > 1e-9)
-      arrow(ctx, cam, pos.x, pos.y - 0.3 * h, ct * fr * k, st * fr * k, c.acceleration, 'F_ms');
+      arrow(
+        ctx,
+        cam,
+        pos.x,
+        pos.y - 0.3 * h,
+        ct * fr * k,
+        st * fr * k,
+        c.acceleration,
+        plain(S.friction),
+      );
     if (q.F > 0) {
       const ang = q.theta + q.beta;
       arrow(
@@ -155,7 +166,7 @@ const graphs: GraphDef[] = [
     title: L('Lực ma sát và gia tốc', 'Friction and acceleration'),
     yLabel: L('Giá trị (N; m/s²)', 'Value (N; m/s²)'),
     series: [
-      { id: 'Fms', label: L('F_ms (N)', 'F_fr (N)'), value: (st) => st[IS.friction] ?? 0 },
+      { id: 'Fms', label: L('F_ms (N)', 'f (N)'), value: (st) => st[IS.friction] ?? 0 },
       { id: 'a', label: L('a (m/s²)', 'a (m/s²)'), value: (st) => st[IS.a] ?? 0 },
     ],
   },
@@ -239,6 +250,7 @@ function solve(horizontal: boolean) {
     const n = (v: number) => texNum(locale, v);
     const Q = (v: number, u: string) => texQty(locale, v, u);
     const f = forces(q);
+    const S = sym(locale);
     const deg = texNum(locale, (q.theta * 180) / Math.PI);
     const bdeg = texNum(locale, (q.beta * 180) / Math.PI);
     const steps: SolutionStep[] = [
@@ -278,7 +290,7 @@ function solve(horizontal: boolean) {
           'So sánh với lực ma sát nghỉ cực đại: vật đứng yên, lực ma sát nghỉ cân bằng lực kéo.',
           'Compare with maximum static friction: the block stays at rest.',
         ),
-        tex: `|${n(f.drive)}| \\le \\mu_n N = ${n(q.muS)}\\cdot ${n(f.N)} = ${Q(f.staticMax, 'N')}`,
+        tex: `|${n(f.drive)}| \\le ${S.muStatic} N = ${n(q.muS)}\\cdot ${n(f.N)} = ${Q(f.staticMax, 'N')}`,
       });
       answers.push(
         { id: 'acceleration', label: L('Gia tốc', 'Acceleration'), value: 0, unit: 'm/s^2' },
@@ -297,7 +309,7 @@ function solve(horizontal: boolean) {
           'Lực kéo vượt ma sát nghỉ cực đại nên vật bắt đầu trượt:',
           'Driving force exceeds maximum static friction, so the block slides:',
         ),
-        tex: `|${n(f.drive)}| > \\mu_n N = ${Q(f.staticMax, 'N')}`,
+        tex: `|${n(f.drive)}| > ${S.muStatic} N = ${Q(f.staticMax, 'N')}`,
       });
     }
     steps.push({
@@ -305,7 +317,7 @@ function solve(horizontal: boolean) {
         'Định luật II Newton (ma sát trượt ngược chiều chuyển động):',
         "Newton's second law (kinetic friction opposes motion):",
       ),
-      tex: `a = \\frac{${n(f.drive)} ${start.regime === 'up' ? '-' : '+'} \\mu_t N}{m} = \\frac{${n(f.drive)} ${start.regime === 'up' ? '-' : '+'} ${n(q.muK)}\\cdot ${n(f.N)}}{${n(q.m)}} = ${Q(start.a, 'm/s^2')}`,
+      tex: `a = \\frac{${n(f.drive)} ${start.regime === 'up' ? '-' : '+'} ${S.muKinetic} N}{m} = \\frac{${n(f.drive)} ${start.regime === 'up' ? '-' : '+'} ${n(q.muK)}\\cdot ${n(f.N)}}{${n(q.m)}} = ${Q(start.a, 'm/s^2')}`,
     });
     answers.push(
       { id: 'acceleration', label: L('Gia tốc', 'Acceleration'), value: start.a, unit: 'm/s^2' },
@@ -392,13 +404,15 @@ function card(horizontal: boolean) {
       ),
       // A level road (θ = 0) names the force's angle α, as its slider and solution do.
       equations: [
-        { tex: '\\vec{F}_{hl} = m\\vec{a}' },
+        { tex: both((s) => `${s.netForceVec} = m\\vec{a}`) },
         { tex: horizontal ? 'N = mg - F\\sin\\alpha' : 'N = mg\\cos\\theta - F\\sin\\beta' },
         {
           // One coefficient on the road (μ, static = kinetic), two on the incline.
-          tex: horizontal
-            ? 'F_{ms,t} = \\mu N,\\qquad F_{ms,n} \\le \\mu N'
-            : 'F_{ms,t} = \\mu_t N,\\qquad F_{ms,n} \\le \\mu_n N',
+          tex: both((s) =>
+            horizontal
+              ? `${s.kineticFriction} = \\mu N,\\qquad ${s.staticFriction} \\le \\mu N`
+              : `${s.kineticFriction} = ${s.muKinetic} N,\\qquad ${s.staticFriction} \\le ${s.muStatic} N`,
+          ),
         },
       ],
       assumptions: [
@@ -431,23 +445,23 @@ function card(horizontal: boolean) {
 const angleParam = (
   key: string,
   label: LocalizedText,
-  sym: string,
+  symbol: LocalizedTex,
   min: number,
   max: number,
 ): ParamDef => ({
   key,
   label,
-  symbol: sym,
+  symbol,
   kind: 'number',
   unit: 'deg',
   min,
   max,
   step: 1,
 });
-const muParam = (key: string, label: LocalizedText, sym: string): ParamDef => ({
+const muParam = (key: string, label: LocalizedText, symbol: LocalizedTex): ParamDef => ({
   key,
   label,
-  symbol: sym,
+  symbol,
   kind: 'number',
   min: 0,
   max: 1.5,
@@ -542,8 +556,8 @@ export const inclinedPlane: PhysicsScene = {
   params: [
     angleParam('theta', L('Góc nghiêng', 'Incline angle'), '\\theta', 0, 80),
     massParam('m', 100),
-    muParam('muS', L('Hệ số ma sát nghỉ', 'Static friction coefficient'), '\\mu_n'),
-    muParam('muK', L('Hệ số ma sát trượt', 'Kinetic friction coefficient'), '\\mu_t'),
+    muParam('muS', L('Hệ số ma sát nghỉ', 'Static friction coefficient'), SYM.muStatic),
+    muParam('muK', L('Hệ số ma sát trượt', 'Kinetic friction coefficient'), SYM.muKinetic),
     lengthParam(L('Chiều dài mặt phẳng nghiêng', 'Length of the incline')),
     {
       key: 's0',
