@@ -77,4 +77,29 @@ export const SRC = {
     citation:
       'D. Halliday, R. Resnick, J. Walker — Fundamentals of Physics, Wiley — ch. 26 (dòng điện, điện trở), ch. 27 (mạch điện, suất điện động, điện trở trong)',
   },
+  hallidayDrag: {
+    id: 'halliday-drag',
+    citation:
+      'D. Halliday, R. Resnick, J. Walker — Fundamentals of Physics, Wiley — ch. 6 (lực cản, tốc độ giới hạn), ch. 14 (lực đẩy Archimedes)',
+  },
+  lamb: {
+    id: 'lamb-hydrodynamics',
+    citation:
+      'H. Lamb — Hydrodynamics, 6th ed. (1932), ch. VI: quả cầu chuyển động trong chất lỏng lí tưởng có khối lượng kèm theo bằng nửa khối lượng chất lỏng bị chiếm chỗ',
+  },
+  isa: {
+    id: 'iso-2533',
+    citation:
+      'ISO 2533:1975 Standard Atmosphere — không khí ở mực nước biển, 15 °C: ρ = 1,225 kg/m³, μ = 1,7894·10⁻⁵ Pa·s',
+  },
+  iapwsWater: {
+    id: 'iapws-water',
+    citation:
+      'IAPWS-95 (khối lượng riêng) và IAPWS 2008 (độ nhớt) — nước ở 20 °C, 101 325 Pa: ρ = 998,21 kg/m³, μ = 1,0016 mPa·s',
+  },
+  hoerner: {
+    id: 'hoerner-drag',
+    citation:
+      'S. F. Hoerner — Fluid-Dynamic Drag (1965): hệ số cản của quả cầu nhẵn gần như không đổi (≈ 0,47) khi 10³ < Re < 2·10⁵',
+  },
 } satisfies Record<string, Source>;
