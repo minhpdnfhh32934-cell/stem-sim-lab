@@ -41,6 +41,9 @@ Quyết định của người dùng (13/10/2026):
   Teacher" dưới đây. Ảnh của 0.7.1 vẫn còn trong lịch sử git.
 - Chữ "Có gì mới" cho bản nộp 4: mục "Có gì mới (What's new) — bản 0.8.1" trong
   `store/listing/listing.vi.md` và `listing.en.md`.
+- Bản nộp 5 (gói `SimLab_0.8.2.0_x64.msix`): **chưa nộp**. Người dùng yêu cầu phát hành 0.8.2 ngay
+  (14/11/2026). Chữ "Có gì mới": mục "— bản 0.8.2" trong hai tệp listing. Ảnh chụp giữ 7 ảnh của
+  bản nộp 4.
 - Tự nộp từ GitHub Actions: **không dùng** (quyết định 13/10/2026, xem bước 7).
 
 ### Chụp lại ảnh AI Teacher (ảnh 2) trước bản nộp 4

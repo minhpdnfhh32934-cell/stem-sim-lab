@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "product": "SimLab",
   "repository": "https://github.com/minhpdnfhh32934-cell/stem-sim-lab",
-  "evidenceCheckedAt": "2026-11-13",
+  "evidenceCheckedAt": "2026-11-14",
   "overview": [
     "SimLab (tên cũ: STEM Sim Lab) là ứng dụng desktop mô phỏng Vật lý, Hóa học và Sinh học cho người học, chạy ngay trên máy (Tauri 2 + React). Mọi con số do chương trình tính bằng mô hình ghi trong Thẻ Khoa học; AI chỉ đọc đề và giải thích bằng lời.",
     "Dự án bắt đầu ngày 28/09/2026: Phase 0–7 (khung app, lõi tính toán, Vật lý, AI đọc đề, Hóa học, Sinh học, dự án và bộ cài Windows) xong trong hai ngày đầu. Tiếp theo là giai đoạn 3b (học bằng khám phá, an toàn khi dùng AI, hai bộ cài), bản fork 'Thầy AI' (09–12/10/2026) mà nay là AI Teacher, rồi đổi tên thành SimLab ở 0.5.0 và đợt rà soát toàn diện G0–G5 cho 0.6.0. Bản 0.7.0 và 0.7.1 đưa cả 11 bài Sinh học lên hình 3D. Bản 0.8.0 (không phát hành riêng) và 0.8.1 (chưa phát hành) bám sách Kết nối tri thức, thêm nhiều bài mới và thay toàn bộ giao diện bằng Bàn thí nghiệm.",
@@ -180,6 +180,140 @@
     "Tổng số unit/E2E/Rust test của 0.1.0 và 0.3.0 không có trong tài liệu."
   ],
   "versions": [
+    {
+      "version": "0.8.2",
+      "status": "in-review",
+      "statusNote": "PR phiên bản mở ngày 14/11/2026; chưa phát hành. Người dùng yêu cầu phát hành ngay (14/11/2026). Phần web và phần lõi cùng lên 0.8.2 vì lõi Rust đổi thư viện kể từ 0.8.1 (PR #251), nên ứng dụng 0.8.1 cài từ GitHub sẽ được báo cài bộ cài mới. Bản Store: gói 0.8.2.0, người dùng nộp tay trong Partner Center. notesReady đặt true khi mở PR; người dùng duyệt ghi chú khi gộp PR.",
+      "channel": "github",
+      "dates": {
+        "devStart": "2026-11-13T14:23:52Z",
+        "firstCommit": "2026-11-13T21:52:52+07:00",
+        "lastCommit": "2026-11-14T08:13:09+07:00",
+        "merged": null,
+        "built": null,
+        "released": null,
+        "tagged": null
+      },
+      "evidence": [
+        "devStart: GitHub Release v0.8.1 published_at 2026-11-13T14:23:52Z (các thay đổi sau đó thuộc 0.8.2)",
+        "firstCommit: dbe1c317 2026-11-13T21:52:52+07:00 'docs(release-notes): 0.8.1 released on GitHub'; lastCommit: a691c963 2026-11-14T08:13:09+07:00 'fix(science-card): …' (git log a171a0f..HEAD)",
+        "PR #250 (ghi chú 0.8.1 đã phát hành, bản nộp Store 4) gộp c35ee397 2026-11-14T07:26:04+07:00",
+        "PR #251 (quinn-proto 0.11.19, quinn-udp 0.5.16; RUSTSEC-2026-0523, -0524, -0538; cargo audit đỏ trên main tối 13/11) gộp f781f3a8 2026-11-14T06:43:07+07:00",
+        "PR #252 (ảnh bìa cho thẻ bài Hóa học, Sinh học và Fourier; 56 ảnh trong public/shelf) gộp 249be0b8 2026-11-14T07:39:59+07:00",
+        "PR #253 (bỏ nhãn \"Là một AI\"; \"Suy nghĩ kĩ (Think)\" thành \"Deepthink\"; quyết định của người dùng 14/11/2026) gộp 89217ab3 2026-11-14T07:44:39+07:00",
+        "Thẻ Khoa học: người dùng báo lỗi 14/11/2026; trong ứng dụng 0.8.1 bài Ném ngang hiện phương trình của Ném xiên và \"sai lệch tương đối 0.0e+0\"; quét 48 thẻ thêm thẻ Các định luật Newton (công thức mặt phẳng nghiêng); sửa ở commit a691c963 cùng dung lượng mô hình (\"3,80 GB\") và khối lượng mol (\"46,07 g/mol\")"
+      ],
+      "tests": [
+        "CI 8/8 xanh trên main 89217ab3 sau khi gộp #250, #252, #253 (gh run view, 14/11/2026)",
+        "Trên máy, main 89217ab3: npm run check 5169/5173 đạt; 1 test quá thời gian 15 s khi máy bận (src/ai/numbers.test.ts), chạy riêng 15/15 đạt"
+      ],
+      "refs": {
+        "tag": null,
+        "tagSha": null,
+        "releaseUrl": null,
+        "prs": [250, 251, 252, 253],
+        "commits": ["dbe1c31", "a691c96"],
+        "branches": ["main", "fix/science-card-projectile"]
+      },
+      "publicNotes": {
+        "summary": {
+          "vi": "Bản 0.8.2 sửa Thẻ Khoa học của các bài ném và bài Các định luật Newton, thêm ảnh bìa cho mọi thẻ bài Hóa học và Sinh học, và đổi tên \"Suy nghĩ kĩ (Think)\" thành \"Deepthink\".",
+          "en": "Version 0.8.2 fixes the Science Cards of the throw lessons and of Newton's laws, adds cover pictures to every chemistry and biology lesson card, and renames \"Think\" to \"Deepthink\"."
+        },
+        "added": [
+          {
+            "vi": "Ảnh bìa cho mọi thẻ bài Hóa học, Sinh học và bài Hoạ âm và chuỗi Fourier: chụp từ chính mô phỏng của bài, theo giao diện sáng hoặc tối. Thẻ \"Tiếp tục\" cũng có ảnh.",
+            "en": "Cover pictures on every chemistry and biology lesson card and on Harmonics and Fourier series: taken from the lesson's own simulation, in the light or dark look. The \"Continue\" card shows one too.",
+            "area": "ui"
+          }
+        ],
+        "improved": [],
+        "fixed": [
+          {
+            "vi": "Thẻ Khoa học của Ném ngang và Rơi tự do hiện đúng phương trình của bài (trước đây hiện phương trình của Ném xiên, có góc α).",
+            "en": "The Science Cards of Horizontal projectile and Free fall show their own equations (they used to show the oblique throw's, with the angle α)."
+          },
+          {
+            "vi": "Thẻ Khoa học của Các định luật Newton hiện công thức của mặt đường ngang (N = mg − F sin α), không còn công thức mặt phẳng nghiêng.",
+            "en": "The Science Card of Newton's laws shows the level-road formulas (N = mg − F sin α) instead of the incline's."
+          },
+          {
+            "vi": "Sai lệch kiểm chứng trên Thẻ Khoa học ghi theo cách viết số thông thường (ví dụ 5·10⁻¹⁶), không còn dạng \"0.0e+0\".",
+            "en": "The cross-check deviation on the Science Card is written the usual way (for example 5·10⁻¹⁶), no longer \"0.0e+0\"."
+          },
+          {
+            "vi": "Dung lượng mô hình AI và khối lượng mol dùng dấu phẩy thập phân (3,80 GB; 46,07 g/mol).",
+            "en": "AI model sizes and molar masses use the language's decimal mark."
+          }
+        ],
+        "security": [
+          {
+            "vi": "Cập nhật hai thư viện mạng có lỗ hổng đã biết.",
+            "en": "Updated two networking libraries with known vulnerabilities.",
+            "area": "security"
+          }
+        ],
+        "performance": [],
+        "changed": [
+          {
+            "vi": "Nút \"Suy nghĩ kĩ (Think)\" của AI Teacher nay tên là \"Deepthink\" (một AI thứ hai rà soát câu trả lời, như trước).",
+            "en": "AI Teacher's \"Think\" button is now called \"Deepthink\" (a second AI reviews the answer, as before).",
+            "area": "teacher"
+          },
+          {
+            "vi": "Đầu trang AI Teacher không còn nhãn \"Là một AI\"; tên AI Teacher, dòng chú thích dưới khung chat và nhãn \"AI hỗ trợ\" trên mỗi câu trả lời vẫn cho biết đây là AI.",
+            "en": "The AI Teacher header no longer shows the \"An AI\" chip; the name AI Teacher, the note under the chat and the \"AI-assisted\" label on every answer still say it is an AI.",
+            "area": "teacher"
+          }
+        ],
+        "deprecated": [],
+        "knownIssues": [
+          {
+            "vi": "Bài Phiêu bạt di truyền ở dạng 3D: ba đường chỉ tên bên trái vẫn cắt qua hình một hòn đảo khi có nhiều đảo.",
+            "en": "Genetic drift in 3D: with many islands, three name leader lines on the left still cross one island."
+          },
+          {
+            "vi": "Vị trí các bài trong từng lớp (Lớp 10 · 11 · 12) lấy từ mục lục sách Kết nối tri thức và đang chờ giáo viên duyệt.",
+            "en": "Where each lesson sits in Grade 10 · 11 · 12 comes from the Kết nối tri thức tables of contents and is waiting for a teacher’s review."
+          },
+          {
+            "vi": "Câu chữ và dữ liệu có nguồn của các bài mới đang chờ giáo viên duyệt; số liệu trên màn hình vẫn do mô hình của bài tính.",
+            "en": "The wording and the sourced data of the new lessons are waiting for a teacher’s review; the numbers on screen are still computed by each lesson’s model."
+          },
+          {
+            "vi": "Bài Định luật II Kepler dùng đơn vị tương đối (bán trục lớn bằng 1), chưa có số liệu hành tinh thật; bài Tinh thể chưa ghi độ dài cạnh ô mạng.",
+            "en": "Kepler’s second law uses relative units (semi-major axis 1) and has no real planet data yet; the Crystals lesson does not show the unit cell’s edge length yet."
+          },
+          {
+            "vi": "Bài Chuẩn độ chỉ có acid mạnh với base mạnh; acid yếu và dung dịch đệm chưa có.",
+            "en": "The Titration lesson covers a strong acid with a strong base only; weak acids and buffers are not there yet."
+          },
+          {
+            "area": "ui",
+            "vi": "SimLab 3D trong app không có mức đồ hoạ Ultra, chơi nhiều người, trò chuyện bằng giọng và khuôn mặt từ ảnh.",
+            "en": "Inside the app SimLab 3D has no Ultra graphics, multiplayer, voice chat or face from a photo."
+          }
+        ]
+      },
+      "notesReady": true,
+      "learnerHighlights": [
+        {
+          "area": "ui",
+          "vi": "Mọi thẻ bài Hóa học và Sinh học có ảnh bìa chụp từ chính mô phỏng.",
+          "en": "Every chemistry and biology lesson card has a cover picture taken from its simulation."
+        },
+        {
+          "area": "ui",
+          "vi": "Thẻ Khoa học của các bài ném và Các định luật Newton hiện đúng phương trình.",
+          "en": "The Science Cards of the throw lessons and Newton's laws show the right equations."
+        },
+        {
+          "area": "teacher",
+          "vi": "\"Suy nghĩ kĩ (Think)\" nay tên là \"Deepthink\".",
+          "en": "\"Think\" is now called \"Deepthink\"."
+        }
+      ]
+    },
     {
       "version": "0.8.1",
       "status": "released",

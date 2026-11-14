@@ -42,20 +42,15 @@ on a whiteboard.
 
 physics, chemistry, biology, simulation, learning
 
-## What's new — 0.8.1
+## What's new — 0.8.2
 
-Version 0.8.1:
+Version 0.8.2:
 
-- A new "Lab bench" interface: pick a lesson on the shelf, set values in the tray, press Run on the bench edge.
-- New Physics lessons: Uniform circular motion, Standing waves, Two-source interference, Electric field, DC circuits, Forced oscillation, Harmonics and Fourier series, Kepler's second law.
-- Chemistry: Acid–base titration, metal and NaCl crystals in 3D, the reaction energy diagram, molecules filtered by functional group.
-- Biology: Prokaryotic and eukaryotic cells (3D and 2D), From cell to DNA.
-- A new AI Teacher: a glowing orb that follows what the teacher is doing and the voice, Conversation · Whiteboard tabs, answers on glass cards; Advanced mode adds Memory and Usage.
-- SimLab 3D game: a first-person 3D laboratory, opened from Virtual Lab → SimLab 3D (single player).
-- The library can show Grade 10, 11 or 12 following the Kết nối tri thức textbooks; the lab is now called Virtual Lab.
-- Easier to read and to press: no text below 12 px, click targets at least 40 px, a clear outline when using the keyboard, long names no longer cut off.
-- Lessons with repeating motion (interference, standing waves, pendulums, predator–prey…) run until you press Pause; the Science Card says when the energy drifts.
-- Many bug fixes, and libraries with known vulnerabilities updated.
+- Cover pictures on every chemistry and biology lesson card and on Harmonics and Fourier series, taken from the lesson's own simulation.
+- The Science Cards of Horizontal projectile, Free fall and Newton's laws show their own equations; the cross-check deviation is written the usual way.
+- AI Teacher: "Think" is now called "Deepthink"; the "An AI" chip is gone from the header (every answer still carries the "AI-assisted" label).
+- AI model sizes and molar masses use the language's decimal mark.
+- Updated two networking libraries with known vulnerabilities.
 
 ## System requirements (suggested)
 

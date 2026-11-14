@@ -42,20 +42,15 @@ trên bảng trắng.
 
 vật lý, hóa học, sinh học, mô phỏng, học tập
 
-## Có gì mới (What's new) — bản 0.8.1
+## Có gì mới (What's new) — bản 0.8.2
 
-Bản 0.8.1:
+Bản 0.8.2:
 
-- Giao diện mới "Bàn thí nghiệm": chọn bài trên kệ, chỉnh thông số ở khay, bấm Chạy ở mép bàn.
-- Bài Vật lí mới: Chuyển động tròn đều, Sóng dừng, Giao thoa sóng, Điện trường, Mạch điện một chiều, Dao động cưỡng bức, Hoạ âm và chuỗi Fourier, Định luật II Kepler.
-- Hoá học: Chuẩn độ acid – base, Tinh thể kim loại và NaCl 3D, giản đồ năng lượng phản ứng, lọc phân tử theo nhóm chức.
-- Sinh học: Tế bào nhân sơ và nhân thực (3D và 2D), Từ tế bào đến DNA.
-- AI Teacher mới: quả cầu hạt sáng theo việc thầy đang làm và theo giọng đọc, tab Trò chuyện · Bảng giảng, câu trả lời trên thẻ kính; chế độ Nâng cao có thêm Ghi nhớ và Lượt dùng.
-- Trò chơi SimLab 3D: phòng thí nghiệm 3D nhìn qua mắt người chơi, mở từ Virtual Lab → SimLab 3D (chơi một người).
-- Thư viện chọn được Lớp 10, 11, 12 theo sách Kết nối tri thức; Phòng thí nghiệm nay tên là Virtual Lab.
-- Dễ đọc và dễ bấm hơn: chữ nhỏ nhất 12 px, vùng bấm ít nhất 40 px, viền rõ khi dùng bàn phím, tên dài không bị cắt.
-- Các bài có chuyển động lặp lại (giao thoa, sóng dừng, con lắc, con mồi – vật ăn thịt…) chạy liên tục tới khi bấm Tạm dừng; Thẻ Khoa học báo khi năng lượng trôi.
-- Sửa nhiều lỗi và cập nhật các thư viện có lỗ hổng đã biết.
+- Ảnh bìa cho mọi thẻ bài Hóa học, Sinh học và bài Hoạ âm và chuỗi Fourier, chụp từ chính mô phỏng của bài.
+- Thẻ Khoa học của Ném ngang, Rơi tự do và Các định luật Newton hiện đúng phương trình của bài; sai lệch kiểm chứng ghi theo cách viết số thông thường.
+- AI Teacher: "Suy nghĩ kĩ (Think)" nay tên là "Deepthink"; bỏ nhãn "Là một AI" ở đầu trang (mỗi câu trả lời vẫn có nhãn "AI hỗ trợ").
+- Dung lượng mô hình AI và khối lượng mol dùng dấu phẩy thập phân.
+- Cập nhật hai thư viện mạng có lỗ hổng đã biết.
 
 ## Yêu cầu hệ thống (gợi ý)
 

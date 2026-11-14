@@ -2,6 +2,41 @@
 
 Mọi thay đổi đáng chú ý của SimLab (tên cũ: STEM Sim Lab), bản mới nhất ở trên. Định dạng theo [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), số phiên bản dạng `x.y.z`. Tệp này được tạo từ `release-notes/versions.json` bằng `npm run release-notes`. Đừng sửa tay. Lịch sử đầy đủ kèm bằng chứng: [VERSION\_HISTORY.md](VERSION_HISTORY.md).
 
+## [Unreleased] - 0.8.2 (Đang xét duyệt)
+
+_PR phiên bản mở ngày 14/11/2026; chưa phát hành. Người dùng yêu cầu phát hành ngay (14/11/2026). Phần web và phần lõi cùng lên 0.8.2 vì lõi Rust đổi thư viện kể từ 0.8.1 (PR #251), nên ứng dụng 0.8.1 cài từ GitHub sẽ được báo cài bộ cài mới. Bản Store: gói 0.8.2.0, người dùng nộp tay trong Partner Center. notesReady đặt true khi mở PR; người dùng duyệt ghi chú khi gộp PR._
+
+Bản 0.8.2 sửa Thẻ Khoa học của các bài ném và bài Các định luật Newton, thêm ảnh bìa cho mọi thẻ bài Hóa học và Sinh học, và đổi tên "Suy nghĩ kĩ (Think)" thành "Deepthink".
+
+### Added
+
+- Ảnh bìa cho mọi thẻ bài Hóa học, Sinh học và bài Hoạ âm và chuỗi Fourier: chụp từ chính mô phỏng của bài, theo giao diện sáng hoặc tối. Thẻ "Tiếp tục" cũng có ảnh.
+
+### Fixed
+
+- Thẻ Khoa học của Ném ngang và Rơi tự do hiện đúng phương trình của bài (trước đây hiện phương trình của Ném xiên, có góc α).
+- Thẻ Khoa học của Các định luật Newton hiện công thức của mặt đường ngang (N = mg − F sin α), không còn công thức mặt phẳng nghiêng.
+- Sai lệch kiểm chứng trên Thẻ Khoa học ghi theo cách viết số thông thường (ví dụ 5·10⁻¹⁶), không còn dạng "0.0e+0".
+- Dung lượng mô hình AI và khối lượng mol dùng dấu phẩy thập phân (3,80 GB; 46,07 g/mol).
+
+### Security
+
+- Cập nhật hai thư viện mạng có lỗ hổng đã biết.
+
+### Changed
+
+- Nút "Suy nghĩ kĩ (Think)" của AI Teacher nay tên là "Deepthink" (một AI thứ hai rà soát câu trả lời, như trước).
+- Đầu trang AI Teacher không còn nhãn "Là một AI"; tên AI Teacher, dòng chú thích dưới khung chat và nhãn "AI hỗ trợ" trên mỗi câu trả lời vẫn cho biết đây là AI.
+
+### Known Issues
+
+- Bài Phiêu bạt di truyền ở dạng 3D: ba đường chỉ tên bên trái vẫn cắt qua hình một hòn đảo khi có nhiều đảo.
+- Vị trí các bài trong từng lớp (Lớp 10 · 11 · 12) lấy từ mục lục sách Kết nối tri thức và đang chờ giáo viên duyệt.
+- Câu chữ và dữ liệu có nguồn của các bài mới đang chờ giáo viên duyệt; số liệu trên màn hình vẫn do mô hình của bài tính.
+- Bài Định luật II Kepler dùng đơn vị tương đối (bán trục lớn bằng 1), chưa có số liệu hành tinh thật; bài Tinh thể chưa ghi độ dài cạnh ô mạng.
+- Bài Chuẩn độ chỉ có acid mạnh với base mạnh; acid yếu và dung dịch đệm chưa có.
+- SimLab 3D trong app không có mức đồ hoạ Ultra, chơi nhiều người, trò chuyện bằng giọng và khuôn mặt từ ảnh.
+
 ## [0.8.1] - 2026-11-13
 
 _Phát hành 13/11/2026 từ main @ a171a0f (lượt Release 43438967262). Gộp mọi thay đổi của 0.8.0 (bản đó không phát hành riêng). Phần web và phần lõi cùng số 0.8.1 vì lõi Rust đã đổi kể từ 0.7.1 (thư viện Cargo, PR #125 và #199), nên ứng dụng 0.7.1 cài từ GitHub được báo cài bộ cài mới thay vì cập nhật trong app. Không bắt buộc cập nhật (minRequired để trống). Bản Store: gói 0.8.1.0, người dùng nộp tay trong Partner Center. notesReady đặt true ngày 12/11/2026 theo lời đồng ý của người dùng, sau khi rà ghi chú._
@@ -636,6 +671,7 @@ Bản đầu tiên của STEM Sim Lab (tên cũ của SimLab): mô phỏng Vật
 
 - Bản này không có bộ cài phát hành công khai; chỉ có bản dựng thử trên GitHub Actions.
 
+[Unreleased]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/250
 [0.8.1]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.8.1
 [0.7.1]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.7.1
 [0.7.0]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.7.0
