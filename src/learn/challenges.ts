@@ -226,6 +226,84 @@ export const CHALLENGES: readonly Challenge[] = [
     ),
   },
   {
+    id: 'newtonThirdLaw.ratio3',
+    topic: 'newtonThirdLaw',
+    title: L('Xe 1 nhanh gấp 3 lần', 'Cart 1 three times as fast'),
+    task: L(
+      'Chỉnh khối lượng xe 2 để sau khi lò xo bung, xe 1 chạy nhanh gấp 3 lần xe 2.',
+      'Set the mass of cart 2 so that, after the spring pushes them apart, cart 1 moves three times as fast as cart 2.',
+    ),
+    controls: ['m2'],
+    goal: { answer: 'speedRatio', kind: 'target', value: 3, tol: 0.03 },
+    hint: L(
+      'Hai xe nhận hai lực bằng nhau trong cùng một khoảng thời gian: xe nào nặng hơn thì chạy chậm hơn bao nhiêu lần?',
+      'Both carts get equal forces for the same time: how many times slower is the heavier one?',
+    ),
+  },
+  {
+    id: 'fluidFall.vt10',
+    topic: 'fluidFall',
+    title: L('Tốc độ giới hạn 10 m/s', 'A terminal speed of 10 m/s'),
+    task: L(
+      'Giữ nguyên kích thước quả cầu, chỉnh khối lượng để tốc độ giới hạn trong không khí đúng 10 m/s.',
+      'Keeping the size of the sphere, set its mass so that its terminal speed in air is exactly 10 m/s.',
+    ),
+    controls: ['m'],
+    start: { fluid: 0 },
+    goal: { answer: 'vt', kind: 'target', value: 10, tol: 0.1 },
+    hint: L(
+      'Ở tốc độ giới hạn, lực cản bằng trọng lực trừ lực đẩy. Lực cản tăng theo bình phương tốc độ.',
+      'At the terminal speed the drag equals weight minus upthrust, and drag grows with the square of the speed.',
+    ),
+  },
+  {
+    id: 'forceComposition.balance',
+    topic: 'forceComposition',
+    title: L('Giữ vòng đứng yên', 'Keep the ring at rest'),
+    task: L(
+      'Hướng của lực thứ ba đã được chọn sẵn. Chỉnh độ lớn của nó để ba lực cân bằng và vòng đứng yên.',
+      'The third force already points the right way. Set its size so that the three forces balance and the ring stays at rest.',
+    ),
+    controls: ['F3', 'a3'],
+    start: { count: 3, a3: (-127 * Math.PI) / 180 },
+    goal: { answer: 'R', kind: 'target', value: 0, tol: 0.05 },
+    hint: L(
+      'Hợp lực của hai lực 3 N và 4 N vuông góc có độ lớn bao nhiêu? Lực thứ ba phải bằng đúng hợp lực đó.',
+      'How large is the resultant of 3 N and 4 N at right angles? The third force must be exactly that large.',
+    ),
+  },
+  {
+    id: 'stringTension.equal',
+    topic: 'stringTension',
+    title: L('Hai dây căng như nhau', 'Equal tensions'),
+    task: L(
+      'Dây trái nghiêng 30° so với phương thẳng đứng. Chỉnh góc của dây phải để hai dây có lực căng bằng nhau.',
+      'The left string is 30° from the vertical. Set the angle of the right string so that both strings pull equally hard.',
+    ),
+    controls: ['a2'],
+    start: { strings: 2, a1: Math.PI / 6 },
+    goal: { answer: 'ratio', kind: 'target', value: 1, tol: 0.02 },
+    hint: L(
+      'Theo phương ngang, hai thành phần T₁ sin α₁ và T₂ sin α₂ phải bằng nhau.',
+      'Horizontally, T₁ sin α₁ and T₂ sin α₂ must be equal.',
+    ),
+  },
+  {
+    id: 'torqueBalance.level',
+    topic: 'torqueBalance',
+    title: L('Thanh nằm ngang', 'A level beam'),
+    task: L(
+      'Vật bên trái nặng 1,5 kg cách trục 0,4 m. Dời vật bên phải (1 kg) để thanh đứng yên nằm ngang.',
+      'The left weight of 1.5 kg sits 0.4 m from the axle. Move the right weight (1 kg) so that the beam stays level.',
+    ),
+    controls: ['d2'],
+    goal: { answer: 'Mnet', kind: 'target', value: 0, tol: 0.05 },
+    hint: L(
+      'Thanh cân bằng khi m₁d₁ = m₂d₂: vật nhẹ hơn phải ở xa trục hơn bao nhiêu lần?',
+      'The beam balances when m₁d₁ = m₂d₂: how many times farther from the axle must the lighter weight be?',
+    ),
+  },
+  {
     id: 'uniformCircularMotion.a16',
     topic: 'uniformCircularMotion',
     title: L('Gia tốc hướng tâm 16 m/s²', 'Centripetal acceleration of 16 m/s²'),

@@ -25,12 +25,22 @@ export const TOPIC_HINTS: Record<string, string> = {
   horizontalProjectile: 'Ném ngang từ độ cao h với vận tốc ban đầu nằm ngang.',
   obliqueProjectile:
     'Ném xiên: vận tốc ban đầu hợp với phương ngang một góc; tầm xa, độ cao cực đại.',
+  forceComposition:
+    'Tổng hợp và phân tích lực, cân bằng lực: 2 hoặc 3 lực đồng quy nằm ngang tác dụng lên một vật (độ lớn và hướng, góc đo từ trục Ox), tìm hợp lực, thành phần theo hai trục, lực cần thêm để cân bằng. Đề chỉ cho góc giữa hai lực: không ghi a1 (lực thứ nhất dọc Ox), ghi a2 = góc giữa hai lực. Vật treo bằng dây (trọng lực, lực căng): chọn stringTension nếu có.',
   newtonLaws:
     'Vật trên mặt phẳng ngang bị kéo bởi lực F (có thể xiên góc), có ma sát; tìm gia tốc theo định luật II Newton.',
+  stringTension:
+    'Vật (đèn) đứng yên treo bằng một dây thẳng đứng hoặc hai dây buộc vào trần; góc của mỗi dây so với phương THẲNG ĐỨNG (a1 dây trái, a2 dây phải); trọng lực, lực căng mỗi dây. Đề cho góc so với phương ngang hoặc với trần: ghi vào clarifications, không tự đổi.',
+  newtonThirdLaw:
+    'Định luật III Newton: hai xe (vật) đứng yên, giữa có lò xo nhẹ bị nén, thả cho lò xo đẩy hai xe ra; lực mỗi xe nhận, gia tốc, vận tốc mỗi xe sau khi tách. Hai vật đang chuyển động va vào nhau: chọn collisions.',
   inclinedPlane:
     'Vật trên mặt phẳng nghiêng góc θ, có/không ma sát, trượt xuống hoặc được đẩy lên.',
   pulley: 'Hai vật nối dây qua ròng rọc: máy Atwood, một vật trên bàn/trên dốc và một vật treo.',
   hookeSpring: 'Lò xo: định luật Hooke, độ dãn khi treo vật, lực đàn hồi, chiều dài lò xo.',
+  fluidFall:
+    'Vật (quả cầu) rơi hoặc nổi trong chất lưu (không khí, nước) có lực cản F = ½ρC_dAv² và lực đẩy Archimedes: tốc độ giới hạn, thời gian rơi hết độ cao. Đề cho khối lượng riêng chất lưu khác 1,225 kg/m³ (không khí) hoặc 998 kg/m³ (nước) thì ghi fluid = 2 và rhoF. Lực cản tỉ lệ bậc nhất với v (F = kv): ghi vào unsupported_parts.',
+  torqueBalance:
+    'Moment lực, quy tắc moment, đòn bẩy/bập bênh: thanh quay quanh trục ở trung điểm, vật m1 cách trục d1 bên trái, vật m2 cách trục d2 bên phải; moment mỗi lực, vị trí đặt vật để thanh cân bằng. Trục không ở trung điểm, lực xiên, ngẫu lực: ghi vào unsupported_parts.',
   energyConservation:
     'Bảo toàn cơ năng: vật trượt không ma sát trên máng/dốc cong, tốc độ ở độ cao khác.',
   collisions: 'Va chạm hai vật: đàn hồi, mềm (dính nhau), bảo toàn động lượng.',

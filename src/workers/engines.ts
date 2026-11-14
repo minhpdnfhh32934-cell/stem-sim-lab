@@ -44,6 +44,31 @@ registerEngine('phys.track', async () => {
   return () => new TrackEngine();
 });
 
+registerEngine('phys.thirdLaw', async () => {
+  const { ThirdLawEngine } = await import('@/physics/thirdlaw/engine');
+  return () => new ThirdLawEngine();
+});
+
+registerEngine('phys.fluidFall', async () => {
+  const { FluidFallEngine } = await import('@/physics/fluid/engine');
+  return () => new FluidFallEngine();
+});
+
+registerEngine('phys.forces', async () => {
+  const { ForcesEngine } = await import('@/physics/forces/engine');
+  return () => new ForcesEngine();
+});
+
+registerEngine('phys.tension', async () => {
+  const { TensionEngine } = await import('@/physics/tension/engine');
+  return () => new TensionEngine();
+});
+
+registerEngine('phys.torque', async () => {
+  const { TorqueEngine } = await import('@/physics/torque/engine');
+  return () => new TorqueEngine();
+});
+
 registerEngine('phys.collision', async () => {
   const { CollisionEngine } = await import('@/physics/collision/engine');
   return () => new CollisionEngine();
