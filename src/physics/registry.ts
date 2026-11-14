@@ -16,6 +16,7 @@ const SCENES: Record<string, () => Promise<PhysicsScene>> = {
   hookeSpring: () => import('./spring/scenes').then((m) => m.hookeSpring),
   torqueBalance: () => import('./torque/scenes').then((m) => m.torqueBalance),
   fluidFall: () => import('./fluid/scenes').then((m) => m.fluidFall),
+  liquidPressure: () => import('./pressure/scenes').then((m) => m.liquidPressure),
   springPendulum: () => import('./spring/scenes').then((m) => m.springPendulum),
   simplePendulum: () => import('./pendulum/scenes').then((m) => m.simplePendulum),
   workPower: () => import('./work/scenes').then((m) => m.workPower),

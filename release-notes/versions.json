@@ -182,16 +182,16 @@
   "versions": [
     {
       "version": "0.8.2",
-      "status": "in-review",
-      "statusNote": "PR phiên bản mở ngày 14/11/2026; chưa phát hành. Người dùng yêu cầu phát hành ngay (14/11/2026). Phần web và phần lõi cùng lên 0.8.2 vì lõi Rust đổi thư viện kể từ 0.8.1 (PR #251), nên ứng dụng 0.8.1 cài từ GitHub sẽ được báo cài bộ cài mới. Bản Store: gói 0.8.2.0, người dùng nộp tay trong Partner Center. notesReady đặt true khi mở PR; người dùng duyệt ghi chú khi gộp PR.",
+      "status": "released",
+      "statusNote": "Phát hành 14/11/2026 từ main @ e89c7e06 (lượt Release 43601965239). Phần web và phần lõi cùng lên 0.8.2 vì lõi Rust đổi thư viện kể từ 0.8.1 (PR #251), nên ứng dụng 0.8.1 cài từ GitHub được báo cài bộ cài mới. Không bắt buộc cập nhật (minRequired để trống). Bản Store: gói 0.8.2.0, người dùng nộp tay trong Partner Center. notesReady đặt true khi mở PR #254; người dùng gộp PR ngày 14/11/2026.",
       "channel": "github",
       "dates": {
         "devStart": "2026-11-13T14:23:52Z",
         "firstCommit": "2026-11-13T21:52:52+07:00",
         "lastCommit": "2026-11-14T08:13:09+07:00",
-        "merged": null,
-        "built": null,
-        "released": null,
+        "merged": "2026-11-14T11:00:41Z",
+        "built": "2026-11-14T14:07:55Z",
+        "released": "2026-11-14T14:08:13Z",
         "tagged": null
       },
       "evidence": [
@@ -202,17 +202,21 @@
         "PR #252 (ảnh bìa cho thẻ bài Hóa học, Sinh học và Fourier; 56 ảnh trong public/shelf) gộp 249be0b8 2026-11-14T07:39:59+07:00",
         "PR #253 (bỏ nhãn \"Là một AI\"; \"Suy nghĩ kĩ (Think)\" thành \"Deepthink\"; quyết định của người dùng 14/11/2026) gộp 89217ab3 2026-11-14T07:44:39+07:00",
         "Thẻ Khoa học: người dùng báo lỗi 14/11/2026; trong ứng dụng 0.8.1 bài Ném ngang hiện phương trình của Ném xiên và \"sai lệch tương đối 0.0e+0\"; quét 48 thẻ thêm thẻ Các định luật Newton (công thức mặt phẳng nghiêng); sửa ở commit a691c963 cùng dung lượng mô hình (\"3,80 GB\") và khối lượng mol (\"46,07 g/mol\")",
-        "Rà soát toàn bộ ứng dụng 14/11/2026 (người dùng yêu cầu: \"Tổng kiểm tra lại toàn bộ mã nguồn của phần mềm, tìm kiếm và fix toàn bộ bug\"): quét 48 bài (mở, chạy, kéo mọi thanh trượt tới hai đầu) ở tiếng Việt/tiếng Anh, Nâng cao/Cơ bản, sáng/tối, cùng 13 trang Cài đặt, AI Teacher, Science Studio và trò chơi; sửa ở các commit fbbe7cc…a3ad26d trên nhánh fix/audit-sweep"
+        "Rà soát toàn bộ ứng dụng 14/11/2026 (người dùng yêu cầu: \"Tổng kiểm tra lại toàn bộ mã nguồn của phần mềm, tìm kiếm và fix toàn bộ bug\"): quét 48 bài (mở, chạy, kéo mọi thanh trượt tới hai đầu) ở tiếng Việt/tiếng Anh, Nâng cao/Cơ bản, sáng/tối, cùng 13 trang Cài đặt, AI Teacher, Science Studio và trò chơi; sửa ở các commit fbbe7cc…a3ad26d trên nhánh fix/audit-sweep",
+        "PR #254 (Thẻ Khoa học, rà soát toàn bộ ứng dụng, phiên bản 0.8.2) gộp e89c7e06 2026-11-14T11:00:41Z (gh pr view 254)",
+        "built: lượt Release 43601965239 (workflow_dispatch, main, e89c7e06), job 'Build Windows installers' xong 2026-11-14T14:07:55Z; REQUIRED: false, MIN_REQUIRED trống (log job 'Signed in-app update')",
+        "released: GitHub Release v0.8.2 'SimLab 0.8.2', published_at 2026-11-14T14:08:13Z, target e89c7e06; tệp: SimLab_0.8.2_x64-setup.exe, SimLab_0.8.2_x64_en-US.msi, web-bundle.zip, web-update.json, SHA256SUMS.txt"
       ],
       "tests": [
         "CI 8/8 xanh trên main 89217ab3 sau khi gộp #250, #252, #253 (gh run view, 14/11/2026)",
-        "Trên máy, main 89217ab3: npm run check 5169/5173 đạt; 1 test quá thời gian 15 s khi máy bận (src/ai/numbers.test.ts), chạy riêng 15/15 đạt"
+        "Trên máy, main 89217ab3: npm run check 5169/5173 đạt; 1 test quá thời gian 15 s khi máy bận (src/ai/numbers.test.ts), chạy riêng 15/15 đạt",
+        "Lượt Release 43601965239: job 'Tests before packaging' đạt (2026-11-14T14:02:10Z); CI 8/8 xanh trên PR #254 trước khi gộp"
       ],
       "refs": {
-        "tag": null,
-        "tagSha": null,
-        "releaseUrl": null,
-        "prs": [250, 251, 252, 253],
+        "tag": "v0.8.2",
+        "tagSha": "e89c7e06df943e411ddfb03cb1a036166bf724e4",
+        "releaseUrl": "https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.8.2",
+        "prs": [250, 251, 252, 253, 254],
         "commits": ["dbe1c31", "a691c96"],
         "branches": ["main", "fix/science-card-projectile", "fix/audit-sweep"]
       },
