@@ -1,7 +1,4 @@
-/* Metal crystals and NaCl (#54 item 8). */
-.crystal {
-  position: relative;
-}
+/* Metal crystals and NaCl (#54 item 8). The stage is a flush .chem-view (fills the stage). */
 .crystal-viewer {
   position: absolute;
   inset: 0;

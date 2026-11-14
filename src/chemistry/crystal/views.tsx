@@ -40,7 +40,7 @@ export function CrystalStage() {
   const [failed, setFailed] = useState(false);
   const counts = KINDS[id].map((k) => `${countLine(id, k)} ${Lz(KIND_NAME[k])}`).join('; ');
   return (
-    <div className="chem-view crystal">
+    <div className="chem-view chem-view--flush">
       {failed ? (
         <p className="chem-note crystal__fallback" role="note">
           {Lz(
