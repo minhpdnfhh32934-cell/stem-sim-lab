@@ -43,7 +43,12 @@ const crate: BodyDef = {
         value: s[IS.s] ?? 0,
         unit: 'm',
       },
-      { label: L('Công của lực kéo', 'Work of the pull'), symbol: SYM.workPull, value: w.WF, unit: 'J' },
+      {
+        label: L('Công của lực kéo', 'Work of the pull'),
+        symbol: SYM.workPull,
+        value: w.WF,
+        unit: 'J',
+      },
       {
         label: L('Công suất của lực kéo', 'Power of the pull'),
         symbol: SYM.power,

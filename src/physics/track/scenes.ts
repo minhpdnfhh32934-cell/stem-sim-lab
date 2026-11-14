@@ -200,10 +200,19 @@ function draw({ ctx, cam, state, p, opts }: DrawContext): void {
     );
     text(ctx, cam, x1 + barW / 2, baseY, name, c.text, 'center', { x: 0, y: 16 });
   });
-  text(ctx, cam, baseX, baseY + H, `${plain(sym(opts.locale).mechanical)} = ${fmtQty(opts.locale, E, 'J')}`, c.muted, 'left', {
-    x: 0,
-    y: -6,
-  });
+  text(
+    ctx,
+    cam,
+    baseX,
+    baseY + H,
+    `${plain(sym(opts.locale).mechanical)} = ${fmtQty(opts.locale, E, 'J')}`,
+    c.muted,
+    'left',
+    {
+      x: 0,
+      y: -6,
+    },
+  );
 }
 
 const graphs: GraphDef[] = [

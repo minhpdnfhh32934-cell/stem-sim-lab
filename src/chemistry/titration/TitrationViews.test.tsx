@@ -111,7 +111,9 @@ describe('titration module', () => {
     expect(container.textContent).toContain('Vtđ = 10,00 mL');
     // A subscript straight inside the flex chip loses its baseline (it floated up).
     expect(container.querySelector('.chem-chip > sub')).toBeNull();
-    expect(titrationCard('vi').equations.some((e) => pickTex(e.tex, 'vi').includes('tđ'))).toBe(true);
+    expect(titrationCard('vi').equations.some((e) => pickTex(e.tex, 'vi').includes('tđ'))).toBe(
+      true,
+    );
     unmount();
     act(() => {
       useSettingsStore.setState({ locale: 'en' });
