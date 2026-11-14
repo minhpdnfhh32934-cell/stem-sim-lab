@@ -168,13 +168,16 @@ function solve(p: Params, locale: Locale): Solution {
       tex: `\\sum A = ${Q(w.total, 'J')} = \\tfrac{1}{2} m v^2 \\Rightarrow v = ${Q(v, 'm/s')},\\quad t = ${Q(t, 's')}`,
     },
     {
-      text: L('Công suất của lực kéo:', 'Power of the pull:'),
-      tex: `\\bar{\\mathscr{P}} = \\frac{A_F}{t} =${Q(w.WF / t, 'W')},\\qquad \\mathscr{P} = F v \\cos\\beta = ${Q(q.F * Math.cos(q.beta) * v, 'W')}`,
+      text: L(
+        'Công suất trung bình của lực kéo, và công suất lúc cuối quãng đường:',
+        'Average power of the pull, and its power at the end of the distance:',
+      ),
+      tex: `\\bar{\\mathscr{P}} = \\frac{A_F}{t} = ${Q(w.WF / t, 'W')},\\qquad \\mathscr{P} = F v \\cos\\beta = ${Q(q.F * Math.cos(q.beta) * v, 'W')}`,
     },
     {
       text: L(
-        'Hiệu suất: phần công của lực kéo làm tăng cơ năng của thùng; phần còn lại thành nhiệt do ma sát.',
-        'Efficiency: the share of the pull’s work that raises the crate’s mechanical energy; the rest becomes heat through friction.',
+        'Hiệu suất: phần công của lực kéo làm tăng cơ năng của thùng (h = s·sin θ là độ cao thùng được nâng lên); phần còn lại thành nhiệt do ma sát.',
+        'Efficiency: the share of the pull’s work that raises the crate’s mechanical energy (h = s·sin θ is the height it gains); the rest becomes heat through friction.',
       ),
       tex: `H = \\frac{\\tfrac{1}{2} m v^2 + m g h}{A_F} = 1 - \\frac{|A_{ms}|}{A_F} = ${n(H * 100)}\\,\\%`,
     },
@@ -269,7 +272,7 @@ function card(): ScienceCardData {
 
 export const workPower: PhysicsScene = {
   id: 'workPower',
-  required: ['m', 'F', 'length'],
+  required: ['m', 'theta', 'F', 'length'],
   engineId: 'phys.incline',
   title: L('Công, công suất và hiệu suất', 'Work, power and efficiency'),
   usesGravity: true,

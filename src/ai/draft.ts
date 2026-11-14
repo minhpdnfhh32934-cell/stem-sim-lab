@@ -115,6 +115,13 @@ const IMPLIED: {
   { keys: /^e$/, value: 0, phrases: ['va chạm mềm', 'dính vào nhau', 'dính nhau', 'dính liền'] },
   { keys: /^angle$/, value: 0, phrases: ['ném ngang', 'phương ngang', 'nằm ngang'] },
   { keys: /^beta$/, value: 0, phrases: ['phương ngang', 'nằm ngang', 'song song', 'dọc theo'] },
+  // A floor or table that is level (work on the floor, the pulley's table). Not "phương nằm
+  // ngang" or "mặt phẳng nằm ngang": an incline's angle is measured from those.
+  {
+    keys: /^theta$/,
+    value: 0,
+    phrases: ['sàn nằm ngang', 'mặt bàn nằm ngang', 'đường nằm ngang'],
+  },
   {
     keys: /^rInt$/,
     value: 0,
