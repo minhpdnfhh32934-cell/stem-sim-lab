@@ -2215,6 +2215,18 @@
    "review_status": "pending"
   },
   {
+   "topic": "hookeSpring",
+   "subject": "physics",
+   "grade": 10,
+   "book": "VL10",
+   "chapter": "Chương VII. Biến dạng của vật rắn. Áp suất chất lỏng",
+   "lessons": [
+    33
+   ],
+   "reason": "Tên Bài 33: biến dạng của vật rắn (cảnh vẽ lực đàn hồi theo độ biến dạng). Tên bài không nêu định luật Hooke; xếp theo quyết định của người dùng ngày 15/11/2026, chờ giáo viên duyệt.",
+   "review_status": "pending"
+  },
+  {
    "topic": "energyConservation",
    "subject": "physics",
    "grade": 10,
@@ -2569,12 +2581,6 @@
    "topic": "pulley",
    "subject": "physics",
    "reason": "Không bài nào có tên về ròng rọc; tên Bài 17 có nêu lực căng (cảnh tính lực căng dây) nhưng không nêu hệ ròng rọc. Bài có thể liên quan: VL10 Bài 17.",
-   "review_status": "pending"
-  },
-  {
-   "topic": "hookeSpring",
-   "subject": "physics",
-   "reason": "Tên Bài 33 là biến dạng của vật rắn (cảnh vẽ lực đàn hồi theo độ biến dạng), không nêu định luật Hooke. Bài có thể liên quan: VL10 Bài 33.",
    "review_status": "pending"
   },
   {

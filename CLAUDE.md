@@ -290,6 +290,11 @@ CI (`.github/workflows/ci.yml`) runs all of the above on every push. A failed E2
 - Code comments in **English**; every user-visible string goes through i18n (`src/app/i18n`),
   Vietnamese (`vi.ts`) is the source of truth, and `en.ts` must have identical keys (type-checked).
 - Numbers shown to users use `formatNumber(locale, …)` (Vietnamese decimal comma: `9,81`).
+- **Physics symbols (user decision 14/11/2026, #258; text approved 15/11/2026):** the English UI
+  writes Halliday's symbols, the Vietnamese UI keeps the SGK ones. A symbol that differs goes in
+  `src/physics/common/symbols.ts` (`sym(locale)` in `solve`, `SYM.x` for parameters and Inspector
+  properties, `both()` for card formulas, `plain()` for canvas labels); `registry.test.ts` fails on a
+  Vietnamese abbreviation in English.
 - Internal units are **SI**; coordinate system is **y up**, metres.
 - Styling: CSS variables in `src/app/theme/tokens.css`. Never hard-code colors in components.
   Icons: Lucide outline icons only, no colored emoji in the UI.
@@ -532,7 +537,8 @@ Progress log: `docs/PROGRESS.md`.
   placed in grades/lessons only from the official KNTT tables of contents, by the script
   `scripts/data/gen_curriculum_kntt.py` (→ `data/curriculum_kntt.json` + `docs/CURRICULUM_KNTT.md`,
   never edited by hand; titles verbatim, no book content), only when a lesson title clearly names the
-  topic (else unplaced with a reason), always `review_status: "pending"` and labelled "chờ giáo viên
+  topic (else unplaced with a reason; one exception, user decision 2026-11-15: `hookeSpring` is placed
+  under VL10 Bài 33 "Biến dạng của vật rắn" although the title does not name Hooke's law), always `review_status: "pending"` and labelled "chờ giáo viên
   duyệt" in the UI (DATA_REVIEW #12, `KNTT-*`). Read it through `src/app/curriculum.ts`
   (`gradeView`, `lessonRange`); a test fails when a catalog topic is neither placed nor unplaced.
 - Tokens: `--subject-*` colors, `--text-content` (≥ 15px learning text), `--target` (≥ 40px; `.btn`
