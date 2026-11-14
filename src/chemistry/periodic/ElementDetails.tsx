@@ -42,7 +42,9 @@ export function ElementDetails() {
         <div>
           <p className="el-card__name">
             {e.name}
-            {e.aliases_vi.length > 0 && <span className="muted"> ({e.aliases_vi.join(', ')})</span>}
+            {locale === 'vi' && e.aliases_vi.length > 0 && (
+              <span className="muted"> ({e.aliases_vi.join(', ')})</span>
+            )}
           </p>
           <ReviewBadge status={e.review_status} />
         </div>
