@@ -450,7 +450,7 @@ function ReviewRow({
           {createElement(quantityIcon(def), { size: 16, strokeWidth: 1.75 })}
         </span>
         <span className="problem-table__name qty-card__name" id={nameId}>
-          {L(def.label)} {def.symbol && <Equation tex={def.symbol} display={false} />}
+          {L(def.label)} {def.symbol && <Equation tex={L(def.symbol)} display={false} />}
         </span>
       </div>
       <div className="qty-card__value">

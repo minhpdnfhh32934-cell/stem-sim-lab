@@ -2,9 +2,9 @@
  * Science Card types (MASTER_PROMPT §2.3). Every simulation publishes one of these;
  * the card is shown in the Inspector and in presentation mode.
  */
-import type { LocalizedText, Source } from '@/core/data/dataset';
+import type { LocalizedTex, LocalizedText, Source } from '@/core/data/dataset';
 
-export type { LocalizedText, Source } from '@/core/data/dataset';
+export type { LocalizedTex, LocalizedText, Source } from '@/core/data/dataset';
 
 /**
  * - `exact`: matches the analytic solution within a stated tolerance (green).
@@ -19,8 +19,8 @@ export const CONFIDENCE_LEVELS: readonly ConfidenceLevel[] = ['exact', 'approx',
 export type ReviewStatus = 'pending' | 'verified';
 
 export interface EquationSpec {
-  /** KaTeX source. */
-  tex: string;
+  /** KaTeX source; `{ vi, en }` when its symbols differ by language (#258). */
+  tex: LocalizedTex;
   label?: LocalizedText;
 }
 

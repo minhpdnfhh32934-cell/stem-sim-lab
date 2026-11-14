@@ -109,7 +109,7 @@ function ParamRow({
           </label>
         ) : (
           <label htmlFor={id} className="param__label" id={`${id}-label`}>
-            {L(def.label)} {def.symbol && <Equation tex={def.symbol} display={false} />}
+            {L(def.label)} {def.symbol && <Equation tex={L(def.symbol)} display={false} />}
           </label>
         )}
         {showSource && (
