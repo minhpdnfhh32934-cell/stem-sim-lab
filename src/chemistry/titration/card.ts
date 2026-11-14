@@ -29,7 +29,7 @@ export function titrationCard(locale: 'vi' | 'en'): ScienceCardData {
       },
       { tex: '\\mathrm{pH} = -\\lg [\\mathrm{H^+}]' },
       {
-        tex: 'V_{\\text{tđ}} = \\dfrac{C_a V_a}{C_b}',
+        tex: `V_{\\text{${locale === 'vi' ? 'tđ' : 'eq'}}} = \\dfrac{C_a V_a}{C_b}`,
         label: L('Điểm tương đương', 'Equivalence point'),
       },
     ],

@@ -105,6 +105,24 @@ describe('titration module', () => {
     expect(titrationCard('en').assumptions[0]?.en).toContain('pKw = 13.9969');
   });
 
+  it('names the equivalence volume in the learner’s language (V_tđ / V_eq)', () => {
+    const { container, unmount } = render(<TitrationStage />);
+    expect(container.textContent).toContain('Vtđ = 10,00 mL');
+    expect(titrationCard('vi').equations.some((e) => e.tex.includes('tđ'))).toBe(true);
+    unmount();
+    act(() => {
+      useSettingsStore.setState({ locale: 'en' });
+    });
+    const en = render(<TitrationStage />);
+    expect(en.container.textContent).toContain('Veq = 10.00 mL');
+    expect(en.container.textContent).not.toContain('tđ');
+    expect(
+      titrationCard('en')
+        .equations.map((e) => e.tex)
+        .join(' '),
+    ).not.toContain('tđ');
+  });
+
   it('Science Card formulas render in KaTeX without a warning', async () => {
     const katex = (await import('katex')).default;
     for (const locale of ['vi', 'en'] as const) {

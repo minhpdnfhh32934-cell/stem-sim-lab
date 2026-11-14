@@ -152,7 +152,7 @@ export function TitrationStage() {
           HCl {sig(st.ca)} M · {sig(st.va)} mL · NaOH {sig(st.cb)} M
         </span>
         <span className="chem-chip">
-          V<sub>tđ</sub> = {vol(veq)} mL
+          V<sub>{Lz(L('tđ', 'eq'))}</sub> = {vol(veq)} mL
         </span>
         <span className="chem-chip chem-chip--qual">
           {Lz(
