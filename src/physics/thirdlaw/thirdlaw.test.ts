@@ -121,11 +121,13 @@ describe("Newton's third law: two carts pushed apart by a spring", () => {
     }
   });
 
-  it('refuses a compression of 0 or one as long as the spring', () => {
+  it('refuses only a compression of 0; the drawn spring is always longer than d', () => {
     const v = (d: number) => newtonThirdLaw.validate?.({ ...newtonThirdLaw.defaults, d }) ?? [];
     expect(v(0.05)).toEqual([]);
+    expect(v(0.15)).toEqual([]);
     expect(v(0)).toHaveLength(1);
-    expect(v(0.15)).toHaveLength(1);
+    const q = thirdLawInput({ ...newtonThirdLaw.defaults, d: 0.15 });
+    expect(q.l0).toBeGreaterThan(q.d);
   });
 
   it('Science Card: exact, with the third law first and its sources', () => {

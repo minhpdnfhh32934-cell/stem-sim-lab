@@ -358,8 +358,8 @@ function card(): ScienceCardData {
       ),
     ],
     validity: L(
-      'Độ nén nhỏ hơn chiều dài tự nhiên của lò xo (15 cm).',
-      'Compression smaller than the spring’s natural length (15 cm).',
+      'Độ nén nằm trong giới hạn đàn hồi của lò xo (định luật Hooke còn đúng).',
+      'Compression within the spring’s elastic limit (Hooke’s law holds).',
     ),
     confidence: 'exact',
     confidenceNote: L(
@@ -419,17 +419,12 @@ export const newtonThirdLaw: PhysicsScene = {
       step: 0.5,
     },
   ],
-  defaults: { m1: 1, m2: 2, k: 20, d: 0.1, l0: 0.15 },
+  defaults: { m1: 1, m2: 2, k: 20, d: 0.1 },
   validate: (p) => {
     const q = thirdLawInput(p);
-    return q.d > 0 && q.d < q.l0
+    return q.d > 0
       ? []
-      : [
-          L(
-            'Độ nén phải lớn hơn 0 và nhỏ hơn chiều dài tự nhiên của lò xo (15 cm).',
-            'The compression must be above 0 and below the spring’s natural length (15 cm).',
-          ),
-        ];
+      : [L('Độ nén của lò xo phải lớn hơn 0.', 'The spring’s compression must be above 0.')];
   },
   scienceCard: card,
   solve,

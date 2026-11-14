@@ -25,6 +25,9 @@ export const FLUIDS: readonly Fluid[] = [AIR, WATER];
 /** Range of Reynolds numbers where a smooth sphere's C_d stays close to constant (FLD-2). */
 export const RE_CONSTANT_CD: readonly [number, number] = [1e3, 2e5];
 
+/** Density (kg/m³) above which the fluid counts as a liquid (gases at ordinary pressure are far below it). */
+export const LIQUID_RHO = 100;
+
 export interface FallInput {
   m: number;
   r: number;

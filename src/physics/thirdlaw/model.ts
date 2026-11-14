@@ -10,9 +10,9 @@ export interface ThirdLawInput {
   m1: number;
   m2: number;
   k: number;
-  /** Compression at release (m), 0 < d < l0. */
+  /** Compression at release (m), d > 0. */
   d: number;
-  /** Natural length of the spring (m). */
+  /** Natural length of the spring (m): drawing only, no result depends on it. */
   l0: number;
 }
 
@@ -22,7 +22,8 @@ export function thirdLawInput(p: Params): ThirdLawInput {
     m2: p.m2 ?? 2,
     k: p.k ?? 20,
     d: p.d ?? 0.1,
-    l0: p.l0 ?? 0.15,
+    // Always longer than the compression, so a stated compression is never refused for a hidden length.
+    l0: Math.max(p.l0 ?? 0.15, (p.d ?? 0.1) + 0.05),
   };
 }
 

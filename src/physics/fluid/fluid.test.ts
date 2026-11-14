@@ -148,8 +148,13 @@ describe('falling and rising through a fluid (VL10 Bài 19)', () => {
     expect(reInRange(fallInput(slow))).toBe(false);
     expect(fluidFall.scienceCard(slow).confidence).toBe('approx');
     expect(fluidFall.solve(slow, 'vi').notes?.[0]?.vi).toMatch(/^Re = [\d.,]+ nằm ngoài/);
+    // In water Re is in range, but the speeding-up phase ignores the history force: approx.
+    const ball = { ...base, fluid: 1, m: 0.05, r: 0.01 };
+    expect(reInRange(fallInput(ball))).toBe(true);
+    expect(fluidFall.scienceCard(ball).confidence).toBe('approx');
     const custom = { ...base, fluid: 2, rhoF: 1.29 };
     expect(reInRange(fallInput(custom))).toBeNull();
+    expect(fluidFall.scienceCard(custom).confidence).toBe('exact');
     expect(fluidFall.solve(custom, 'vi').answers.some((a) => a.id === 'Re')).toBe(false);
   });
 
@@ -157,5 +162,20 @@ describe('falling and rising through a fluid (VL10 Bài 19)', () => {
     const c = fluidFall.scienceCard(base);
     const ids = c.sources.map((s) => s.id);
     expect(ids).toEqual(expect.arrayContaining(['iso-2533', 'iapws-water', 'hoerner-drag']));
+  });
+
+  it('no Vietnamese abbreviation in the symbols (v_gh, F_c read as other quantities in English)', () => {
+    const c = fluidFall.scienceCard(base);
+    const texts = [
+      ...c.equations.map((e) => e.tex),
+      ...(['vi', 'en'] as const).flatMap((loc) =>
+        fluidFall.solve(base, loc).steps.map((s) => s.tex ?? ''),
+      ),
+      ...fluidFall.bodies.flatMap((b) =>
+        (b.properties?.(new Float64Array(8), base) ?? []).map((x) => x.symbol),
+      ),
+    ].join(' ');
+    expect(texts).not.toMatch(/_{?gh|F_{?c(?![a-z])/);
+    expect(texts).toMatch(/v_t/);
   });
 });

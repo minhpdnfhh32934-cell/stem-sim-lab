@@ -1,8 +1,8 @@
 import type { Params } from '../types';
 
 /**
- * A uniform rigid beam of length L pivoted at its middle, a weight m₁ hung d₁ to the left and
- * m₂ hung d₂ to the right (VL10 Bài 21: moment lực, cân bằng của vật rắn). Released level and at
+ * A uniform rigid beam of length L pivoted at its middle, a weight m₁ fixed d₁ to the left and
+ * m₂ fixed d₂ to the right (VL10 Bài 21: moment lực, cân bằng của vật rắn). Released level and at
  * rest: it stays level when the moments balance, otherwise it turns until its low end touches
  * the ground. θ is the beam's angle, counter-clockwise (left end down) positive.
  */

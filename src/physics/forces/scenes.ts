@@ -210,8 +210,8 @@ function card(p: Params): ScienceCardData {
   return {
     title: L('Tổng hợp và phân tích lực', 'Adding and resolving forces'),
     model: L(
-      'Một vòng nhẹ trên mặt bàn nằm ngang nhẵn, bị kéo bởi các lực nằm ngang có độ lớn và hướng không đổi, cùng đặt vào tâm vòng (lực đồng quy). Nhìn từ trên xuống.',
-      'A light ring on a smooth horizontal table, pulled by horizontal forces of fixed size and direction, all acting at its centre (concurrent forces). Seen from above.',
+      'Một vòng nhỏ trên mặt bàn nằm ngang nhẵn, bị kéo bởi các lực nằm ngang có độ lớn và hướng không đổi, cùng đặt vào tâm vòng (lực đồng quy). Nhìn từ trên xuống.',
+      'A small ring on a smooth horizontal table, pulled by horizontal forces of fixed size and direction, all acting at its centre (concurrent forces). Seen from above.',
     ),
     equations: [
       {
@@ -298,7 +298,7 @@ const forceP = (i: 0 | 1 | 2): ParamDef[] => {
 export const forceComposition: PhysicsScene = {
   id: 'forceComposition',
   // F₁ along Ox is a convention (default), not a number of the problem: only the angle between counts.
-  required: ['F1', 'F2', 'a2'],
+  required: ['F1', 'F2', 'a2', 'F3', 'a3'],
   engineId: 'phys.forces',
   title: L('Tổng hợp và phân tích lực', 'Adding and resolving forces'),
   usesGravity: false,
