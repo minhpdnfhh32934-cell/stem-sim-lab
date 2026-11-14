@@ -2,9 +2,9 @@
 
 Mọi thay đổi đáng chú ý của SimLab (tên cũ: STEM Sim Lab), bản mới nhất ở trên. Định dạng theo [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), số phiên bản dạng `x.y.z`. Tệp này được tạo từ `release-notes/versions.json` bằng `npm run release-notes`. Đừng sửa tay. Lịch sử đầy đủ kèm bằng chứng: [VERSION\_HISTORY.md](VERSION_HISTORY.md).
 
-## [Unreleased] - 0.8.1 (Đang xét duyệt)
+## [0.8.1] - 2026-11-13
 
-_PR phiên bản của issue #194 mở ngày 12/11/2026; chưa phát hành. Gộp mọi thay đổi của 0.8.0 (bản đó không phát hành riêng). Phần web và phần lõi cùng lên 0.8.1 vì lõi Rust đã đổi kể từ 0.7.1 (thư viện Cargo, PR #125 và #199), nên ứng dụng 0.7.1 cài từ GitHub sẽ được báo cài bộ cài mới thay vì cập nhật trong app. Bản Store: gói 0.8.1.0, người dùng nộp tay trong Partner Center. notesReady đặt true ngày 12/11/2026 theo lời đồng ý của người dùng, sau khi rà ghi chú._
+_Phát hành 13/11/2026 từ main @ a171a0f (lượt Release 43438967262). Gộp mọi thay đổi của 0.8.0 (bản đó không phát hành riêng). Phần web và phần lõi cùng số 0.8.1 vì lõi Rust đã đổi kể từ 0.7.1 (thư viện Cargo, PR #125 và #199), nên ứng dụng 0.7.1 cài từ GitHub được báo cài bộ cài mới thay vì cập nhật trong app. Không bắt buộc cập nhật (minRequired để trống). Bản Store: gói 0.8.1.0, người dùng nộp tay trong Partner Center. notesReady đặt true ngày 12/11/2026 theo lời đồng ý của người dùng, sau khi rà ghi chú._
 
 Bản 0.8.1 có giao diện mới "Bàn thí nghiệm" và gộp mọi thay đổi của bản 0.8.0 (bản đó không phát hành riêng). Có nhiều bài mới bám sách Kết nối tri thức, như Chuyển động tròn đều, Giao thoa sóng, Mạch điện một chiều, Chuẩn độ acid – base và Từ tế bào đến DNA, cùng thanh chọn Lớp 10 · 11 · 12; Phòng thí nghiệm nay tên là Virtual Lab. Giao diện cũng dễ đọc và dễ bấm hơn, và các bài có chuyển động lặp lại nay chạy liên tục tới khi em bấm Tạm dừng.
 
@@ -636,7 +636,7 @@ Bản đầu tiên của STEM Sim Lab (tên cũ của SimLab): mô phỏng Vật
 
 - Bản này không có bộ cài phát hành công khai; chỉ có bản dựng thử trên GitHub Actions.
 
-[Unreleased]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/104
+[0.8.1]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.8.1
 [0.7.1]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.7.1
 [0.7.0]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.7.0
 [0.6.0]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.6.0
