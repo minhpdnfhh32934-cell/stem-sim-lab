@@ -32,10 +32,13 @@ Quyết định của người dùng (13/10/2026):
   13/11/2026, vì ảnh đó chụp lúc chưa kết nối AI và trước giao diện AI Teacher mới); bản nộp sau thêm
   ảnh AI Teacher mới theo mục "Chụp lại ảnh AI Teacher". Lý do `runFullTrust` dán lại như bước 5.
   Ngày 12/11/2026 máy bàn đã dựng thử gói bằng `node scripts/store/make-msix.mjs` (13,6 MB).
-- Bản nộp 5 (gói `SimLab_0.8.2.0_x64.msix`): **chưa nộp**. Gói lấy từ artifact **simlab-store** của
-  lượt Release 43601965239 (14/11/2026, main e89c7e06; artifact nén 20,7 MB, giữ tới 12/02/2027).
-  Chữ "Có gì mới" của 0.8.2 có sẵn trong `store/listing/listing.vi.md` và `listing.en.md`; ảnh giữ
-  như bản nộp 4. Người dùng nộp tay trong Partner Center rồi bấm **Publish now** sau khi duyệt xong.
+- Bản nộp 5 (gói `SimLab_0.8.2.0_x64.msix`): **gửi duyệt ngày 15/11/2026**, chọn **giữ lại** (người
+  dùng bấm **Publish now** sau khi duyệt xong). Gói lấy từ artifact **simlab-store** của lượt Release
+  43601965239 (14/11/2026, main e89c7e06; tệp .msix 20,7 MB, danh tính `FPTTECH.SimLab`,
+  `Version="0.8.2.0"`, Partner Center báo "Validated"). Theo yêu cầu "nộp giùm tôi" của người dùng,
+  Claude điền bản nộp trong Chrome của người dùng: chữ "Có gì mới" 0.8.2 (vi, en) lấy từ hai tệp
+  listing, lý do `runFullTrust` giữ từ lần trước; người dùng tự kéo tệp gói vào (tiện ích Chrome chỉ
+  gửi được tệp dưới 10 MB). Ảnh giữ như bản nộp 4.
 - Ảnh chụp 0.8.1 (8 ảnh PNG 1366×768, giao diện Bàn thí nghiệm, thứ tự = tên tệp): 1 sinh thái 3D
   (Con mồi – vật ăn thịt), 2 AI Teacher, 3 giao thoa sóng hai nguồn, 4 ADN → mARN → Protein 3D,
   5 chuẩn độ acid – base, 6 nguyên phân 3D, 7 Science Studio, 8 trang mở đầu. Chụp bằng
@@ -45,9 +48,9 @@ Quyết định của người dùng (13/10/2026):
   Teacher" dưới đây. Ảnh của 0.7.1 vẫn còn trong lịch sử git.
 - Chữ "Có gì mới" cho bản nộp 4: mục "Có gì mới (What's new) — bản 0.8.1" trong
   `store/listing/listing.vi.md` và `listing.en.md`.
-- Bản nộp 5 (gói `SimLab_0.8.2.0_x64.msix`): **chưa nộp**. Người dùng yêu cầu phát hành 0.8.2 ngay
-  (14/11/2026). Chữ "Có gì mới": mục "— bản 0.8.2" trong hai tệp listing. Ảnh chụp giữ 7 ảnh của
-  bản nộp 4.
+- Bản nộp 5 (gói `SimLab_0.8.2.0_x64.msix`): **gửi duyệt ngày 15/11/2026** (chi tiết ở mục bản
+  nộp 5 phía trên). Chữ "Có gì mới": mục "— bản 0.8.2" trong hai tệp listing. Ảnh chụp giữ 7 ảnh
+  của bản nộp 4.
 - Tự nộp từ GitHub Actions: **không dùng** (quyết định 13/10/2026, xem bước 7).
 
 ### Chụp lại ảnh AI Teacher (ảnh 2) trước bản nộp 4
