@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { loadScene, sceneIds } from '@/physics/registry';
 import type { Params, PhysicsScene } from '@/physics/types';
-import { toSI } from '@/core/units';
+import { fromSI, toSI } from '@/core/units';
 import { formatNumber, tFor } from '@/app/i18n';
 import {
   answerValue,
@@ -17,9 +17,12 @@ async function scene(id: string): Promise<PhysicsScene> {
   return loadScene(id);
 }
 
-/** Scan one control, then bisect a sign change: is the target hit within half the tolerance? */
-function reachable(s: PhysicsScene, c: Challenge, base: Params): boolean {
-  if (c.goal.kind !== 'target') return true;
+/**
+ * Scan one control, then bisect a sign change: where is the target hit within half the
+ * tolerance? `null` when it is not (or the goal is not a target).
+ */
+function rootOf(s: PhysicsScene, c: Challenge, base: Params): number | null {
+  if (c.goal.kind !== 'target') return null;
   const goal = c.goal;
   const key = c.controls[0] ?? '';
   const def = s.params.find((d) => d.key === key);
@@ -41,7 +44,7 @@ function reachable(s: PhysicsScene, c: Challenge, base: Params): boolean {
       pf = null;
       continue;
     }
-    if (Math.abs(fx) <= goal.tol / 2) return true;
+    if (Math.abs(fx) <= goal.tol / 2) return x;
     if (px !== null && pf !== null && Math.sign(fx) !== Math.sign(pf)) {
       let a = px;
       let b = x;
@@ -50,7 +53,7 @@ function reachable(s: PhysicsScene, c: Challenge, base: Params): boolean {
         const m = (a + b) / 2;
         const fm = f(m);
         if (fm === null) break;
-        if (Math.abs(fm) <= goal.tol / 2) return true;
+        if (Math.abs(fm) <= goal.tol / 2) return m;
         if (Math.sign(fm) === Math.sign(fa)) {
           a = m;
           fa = fm;
@@ -60,7 +63,30 @@ function reachable(s: PhysicsScene, c: Challenge, base: Params): boolean {
     px = x;
     pf = fx;
   }
-  return false;
+  return null;
+}
+
+const reachable = (s: PhysicsScene, c: Challenge, base: Params) =>
+  c.goal.kind !== 'target' || rootOf(s, c, base) !== null;
+
+/**
+ * The learner moves a slider: some slider position next to the root must already be within the
+ * tolerance (a tolerance finer than one step needs a typed-in value nobody would guess).
+ */
+function onSliderStep(s: PhysicsScene, c: Challenge, base: Params): boolean {
+  if (c.goal.kind !== 'target') return true;
+  const goal = c.goal;
+  const root = rootOf(s, c, base);
+  const key = c.controls[0] ?? '';
+  const def = s.params.find((d) => d.key === key);
+  if (root === null || !def || def.step === undefined) return root !== null;
+  const unit = def.unit ?? '1';
+  const min = def.min ?? 0;
+  const k0 = Math.round((fromSI(root, unit) - min) / def.step);
+  return [k0 - 1, k0, k0 + 1].some((k) => {
+    const v = answerValue(s, { ...base, [key]: toSI(min + k * def.step!, unit) }, goal.answer);
+    return v !== null && Math.abs(v - goal.value) <= goal.tol;
+  });
 }
 
 describe('challenges (answers checked by the engine)', () => {
@@ -117,6 +143,7 @@ describe('challenges (answers checked by the engine)', () => {
         const status = evaluate(s, c, start, {});
         expect(status.state, c.id).toBe('trying');
         expect(reachable(s, c, start), `${c.id} reachable`).toBe(true);
+        expect(onSliderStep(s, c, start), `${c.id} reachable on a slider step`).toBe(true);
       }
     }, 120_000);
   }

@@ -327,7 +327,8 @@ export const CHALLENGES: readonly Challenge[] = [
       'In water, under air at 1 atm. Set the depth of the point so that the total pressure there is exactly 2 atm (202.65 kPa).',
     ),
     controls: ['h'],
-    goal: { answer: 'p', kind: 'target', value: 202650, tol: 0.01 },
+    // One 0,1 m step of h moves p by ρg·0,1 ≈ 980 Pa: the nearest step is within about 500 Pa.
+    goal: { answer: 'p', kind: 'target', value: 202650, tol: 1000 },
     hint: L(
       'Phần áp suất do nước gây ra phải bằng đúng 1 atm. Xuống sâu bao nhiêu thì ρgh = 101,325 kPa?',
       'The part caused by the water must be exactly 1 atm. How deep is ρgh = 101.325 kPa?',
