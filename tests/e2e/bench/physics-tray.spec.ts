@@ -17,6 +17,14 @@ test('B2: the tray summary, the tool switches and the pin in D2', async ({ page 
   await expect(summary.getByText('Ném xiên')).toBeVisible();
   // The whole card is in the notebook, not a second time in the tray.
   await expect(tray.locator('.science-card')).toHaveCount(1);
+  // g can change while running: its hint spans the row (it once wrapped word by word in the − cell).
+  const hint = tray.locator('.param__hint').first();
+  await hint.scrollIntoViewIfNeeded();
+  const [hintBox, rowBox] = await Promise.all([
+    hint.boundingBox(),
+    hint.locator('xpath=..').boundingBox(),
+  ]);
+  expect(hintBox && rowBox && hintBox.width / rowBox.width).toBeGreaterThan(0.9);
   await summary.getByRole('button', { name: 'Xem thẻ' }).click();
   await expect(page.getByRole('tabpanel', { name: 'Thẻ khoa học' })).toBeVisible();
   await page.getByRole('button', { name: 'Đóng sổ' }).click();
@@ -57,4 +65,24 @@ test('B2: "Chốt dự đoán" turns the main action into "Chạy để kiểm t
   // The run happened: the verdict is in the card and the main action is "Tạm dừng" or "Chạy" again.
   await expect(panel.locator('.learn-result')).toBeVisible();
   await expect(check).toHaveCount(0);
+});
+
+test('every number box shows its whole value (k = 8987550000 once showed "89875")', async ({
+  page,
+}) => {
+  await openTopic(page, 'Vật lý', 'Điện trường của điện tích điểm');
+  await expect(page.locator('.stage__hud-title')).toHaveText('Điện trường của điện tích điểm', {
+    timeout: 20_000,
+  });
+  await page.getByRole('radio', { name: 'Nâng cao' }).first().click();
+  const tray = page.getByRole('complementary', { name: 'Bảng thuộc tính' });
+  await expect(tray.getByRole('slider', { name: 'Hằng số Coulomb' })).toBeAttached();
+  const clipped = await tray
+    .locator('.param__num input')
+    .evaluateAll((inputs) =>
+      (inputs as HTMLInputElement[])
+        .filter((i) => i.scrollWidth > i.clientWidth + 1)
+        .map((i) => i.value),
+    );
+  expect(clipped).toEqual([]);
 });

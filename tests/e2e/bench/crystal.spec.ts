@@ -13,6 +13,11 @@ test('metal crystals and NaCl: counts from the cell, coordination 6 : 6, not to 
   const cell = page.getByRole('img', { name: /^Lập phương tâm khối: 8 × 1\/8 \+ 1 = 2/ });
   await expect(cell).toBeVisible({ timeout: 20_000 });
   await expect(cell.locator('canvas')).toBeVisible();
+  // The 3D cell fills the stage (it once shrank to the 28 px chip row: the picture was a speck).
+  const stage = await page.locator('main.bench__stage').boundingBox();
+  const view = await cell.boundingBox();
+  expect(view && stage && view.height / stage.height).toBeGreaterThan(0.8);
+  expect(view && stage && view.width / stage.width).toBeGreaterThan(0.8);
   await expect(page.getByText('Hình minh họa — không theo tỉ lệ')).toBeVisible();
   await page.getByRole('radio', { name: 'NaCl' }).click();
   await expect(page.getByRole('img', { name: /^Tinh thể NaCl:/ })).toBeVisible();

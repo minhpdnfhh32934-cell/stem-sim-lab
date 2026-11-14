@@ -96,8 +96,9 @@ export function creatureGeometry(): THREE.BufferGeometry {
     parts.push([stalk, 0.16, [mid.x, mid.y, mid.z], [1, 1, 1], [e.x, e.y, e.z]]);
   }
   const flat = parts.map(([g, shade, at, scale, rot]) => {
-    const f = g.toNonIndexed();
-    g.dispose();
+    // Icosahedra are already non-indexed (no copy, no three.js warning).
+    const f = g.index ? g.toNonIndexed() : g;
+    if (f !== g) g.dispose();
     f.deleteAttribute('uv');
     f.applyMatrix4(
       new THREE.Matrix4().compose(

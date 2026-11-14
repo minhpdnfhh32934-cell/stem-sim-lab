@@ -332,7 +332,7 @@ const STARTER: Note[] = [
     id: 'physics-photoelectric',
     subject: 'physics',
     vi: 'Thuyết photon: ánh sáng gồm các hạt năng lượng ε = hf. Hiện tượng quang điện xảy ra khi hf ≥ A (công thoát); động năng ban đầu cực đại Wđmax = hf − A. Giới hạn quang điện λ₀ = hc/A.',
-    en: 'Photon theory: light comes in packets of energy ε = hf. The photoelectric effect needs hf ≥ A (work function); maximum initial kinetic energy Wđmax = hf − A. Threshold wavelength λ₀ = hc/A.',
+    en: 'Photon theory: light comes in packets of energy ε = hf. The photoelectric effect needs hf ≥ A (work function); maximum initial kinetic energy K_max = hf − A. Threshold wavelength λ₀ = hc/A.',
     source: 'Thư viện chủ đề Vật lý · Lượng tử ánh sáng',
     reviewStatus: 'pending',
   },

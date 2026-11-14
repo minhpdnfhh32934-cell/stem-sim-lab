@@ -94,7 +94,7 @@ export function PeriodicStage() {
               role="gridcell"
               aria-selected={selected === e.z}
               aria-label={`${e.z} ${e.symbol} ${e.name}`}
-              data-tip={`${e.name}${e.aliases_vi[0] ? ` (${e.aliases_vi[0]})` : ''} · Z = ${e.z}${
+              data-tip={`${e.name}${locale === 'vi' && e.aliases_vi[0] ? ` (${e.aliases_vi[0]})` : ''} · Z = ${e.z}${
                 numeric
                   ? ` · ${Lz(numeric.label)}: ${v === null ? '—' : formatNumber(locale, v)}${numeric.unit && v !== null ? ` ${numeric.unit}` : ''}`
                   : ''

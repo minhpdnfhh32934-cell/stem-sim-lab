@@ -389,10 +389,16 @@ function card(horizontal: boolean) {
         'Vật rắn trượt tịnh tiến như chất điểm trên mặt phẳng; ma sát Coulomb (nghỉ μₙ, trượt μₜ).',
         'Rigid block sliding (treated as a point mass); Coulomb friction (static μs, kinetic μk).',
       ),
+      // A level road (θ = 0) names the force's angle α, as its slider and solution do.
       equations: [
         { tex: '\\vec{F}_{hl} = m\\vec{a}' },
-        { tex: 'N = mg\\cos\\theta - F\\sin\\beta' },
-        { tex: 'F_{ms,t} = \\mu_t N,\\qquad F_{ms,n} \\le \\mu_n N' },
+        { tex: horizontal ? 'N = mg - F\\sin\\alpha' : 'N = mg\\cos\\theta - F\\sin\\beta' },
+        {
+          // One coefficient on the road (μ, static = kinetic), two on the incline.
+          tex: horizontal
+            ? 'F_{ms,t} = \\mu N,\\qquad F_{ms,n} \\le \\mu N'
+            : 'F_{ms,t} = \\mu_t N,\\qquad F_{ms,n} \\le \\mu_n N',
+        },
       ],
       assumptions: [
         L(

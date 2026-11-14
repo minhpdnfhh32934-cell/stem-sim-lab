@@ -153,7 +153,8 @@ describe('never laxer than main (#89)', () => {
     }
     // Only a superscript exponent main could not read may give a new (right) reading.
     expect(laxer.filter((x) => !superscript.test(x))).toEqual([]);
-  });
+    // About 4 s alone (thousands of readings); a busy machine running the whole suite needs more.
+  }, 60_000);
 
   it('accepts every value of the golden set that main accepts', () => {
     const missed: string[] = [];

@@ -134,4 +134,20 @@ describe('a launch from the ground with no upward velocity', () => {
     }
     expect(obliqueProjectile.scienceCard(obliqueProjectile.defaults).confidence).toBe('exact');
   });
+
+  it('each card shows its own equations and writes the deviation the way a learner does', () => {
+    const tex = (s: typeof freeFall) => s.scienceCard(s.defaults).equations.map((e) => e.tex);
+    // A horizontal or vertical throw has no launch angle to show (α = 0 or ±90°).
+    for (const s of [horizontalProjectile, freeFall]) expect(tex(s).join(' ')).not.toMatch(/alpha/);
+    expect(tex(obliqueProjectile).join(' ')).toMatch(/alpha/);
+    expect(tex(horizontalProjectile)).toContain('x = v_0\\, t');
+    expect(tex(freeFall).join(' ')).not.toMatch(/(^|[^_])x =/);
+    for (const s of [freeFall, horizontalProjectile, obliqueProjectile]) {
+      const note = s.scienceCard(s.defaults).confidenceNote;
+      // "5·10⁻¹⁶" or "0", never the machine's "4.6e-16" / "0.0e+0".
+      expect(note?.vi).not.toMatch(/\de[+-]\d/);
+      expect(note?.en).not.toMatch(/\de[+-]\d/);
+      expect(note?.vi).toMatch(/sai lệch tương đối (0|\d·10[⁻⁰¹²³⁴⁵⁶⁷⁸⁹]+)\)/);
+    }
+  });
 });

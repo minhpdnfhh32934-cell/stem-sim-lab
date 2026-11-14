@@ -408,6 +408,7 @@ function GeminiVoice() {
 
 function LocalVoice() {
   const t = useT();
+  const locale = useSettingsStore((s) => s.locale);
   const [status, setStatus] = useState<LocalVoiceStatus | 'checking'>('checking');
   const [progress, setProgress] = useState<{
     loaded: number;
@@ -473,7 +474,7 @@ function LocalVoice() {
       ? t('voice.localPreparing')
       : [
           `${String(percent)}%`,
-          `${formatBytes(progress.loaded)} / ${formatBytes(progress.total ?? LOCAL_VOICE.bytes)}`,
+          `${formatBytes(progress.loaded, locale)} / ${formatBytes(progress.total ?? LOCAL_VOICE.bytes, locale)}`,
           eta,
         ]
           .filter(Boolean)

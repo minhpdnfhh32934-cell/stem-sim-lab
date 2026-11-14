@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { ROLES } from '../../view3d/palette';
 import { apportion, drawScale } from '../../view3d/sampling';
 import { matingRun, randomMating, testHardyWeinberg } from '../population';
@@ -200,7 +200,10 @@ describe('Hardy–Weinberg 3D: places (illustration)', () => {
   it('figures never pass through each other and mostly face the camera’s side', () => {
     // A figure (nose to tail, antenna beads included) stands inside a circle of diameter
     // FIGURE_CLEARANCE whichever way it faces…
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const geo = creatureGeometry();
+    expect(warn).not.toHaveBeenCalled(); // no "already non-indexed" from three.js
+    warn.mockRestore();
     const pos = geo.getAttribute('position');
     let reach = 0;
     for (let i = 0; i < pos.count; i++)

@@ -12,6 +12,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { deleteWebGemma, downloadWebGemma, webGPUStatus, webGemmaStatus } from '@/ai/webGemma';
 import { WEB_GEMMA_MODELS } from '@/ai/webGemmaModels';
 import { useT, type MessageKey } from '@/app/i18n';
+import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useChatStore } from '../chatStore';
 import { downloadErrorKey } from '../downloadErrors';
 import { createEtaTracker, formatEta } from '@/ui/eta';
@@ -44,6 +45,7 @@ function GemmaProgress({
   progress: WebDownloadProgress;
   t: ReturnType<typeof useT>;
 }) {
+  const locale = useSettingsStore((s) => s.locale);
   // All files are in, the model is being compiled for the GPU: no percent exists for that.
   const compiling =
     !progress.finished &&
@@ -77,7 +79,7 @@ function GemmaProgress({
           : [
               t('chatSettings.progressDownloading'),
               `${String(percent)}%`,
-              `${formatBytes(progress.loaded)} / ${progress.total ? formatBytes(progress.total) : '?'}`,
+              `${formatBytes(progress.loaded, locale)} / ${progress.total ? formatBytes(progress.total, locale) : '?'}`,
               eta,
             ]
               .filter(Boolean)

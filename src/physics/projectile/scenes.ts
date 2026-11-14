@@ -18,6 +18,7 @@ import type {
   WorldBounds,
 } from '../types';
 import { projectile, projectileAt, type ProjectileInput } from './analytic';
+import { formatDeviation } from '@/app/sim/numbers';
 import { PS } from './engine';
 
 /** Converts scene params (any of the three projectile topics) to launch conditions. */
@@ -205,7 +206,28 @@ function draw({ ctx, cam, state, p, opts }: DrawContext): void {
   circle(ctx, cam, x, y, 0.02 * s, opts.selected === 'ball' ? c.accent : c.body, c.text, 6);
 }
 
-function card(p: Params, title: ScienceCardData['title']): ScienceCardData {
+type ProjectileKind = 'free' | 'horizontal' | 'oblique';
+
+/** The card's equations in the form the lesson teaches (α = 0 for a horizontal throw, ±90° for a vertical one). */
+const EQUATIONS: Record<ProjectileKind, ScienceCardData['equations']> = {
+  free: [
+    { tex: 'y = h_0 + v_0\\, t - \\tfrac{1}{2} g t^2' },
+    { tex: 'v = v_0 - g t' },
+    { tex: 'v^2 - v_0^2 = -2 g\\,(y - h_0)' },
+  ],
+  horizontal: [
+    { tex: 'x = v_0\\, t' },
+    { tex: 'y = h_0 - \\tfrac{1}{2} g t^2' },
+    { tex: 'v_x = v_0,\\quad v_y = -g t' },
+  ],
+  oblique: [
+    { tex: 'x = v_0\\cos\\alpha\\; t' },
+    { tex: 'y = h_0 + v_0\\sin\\alpha\\; t - \\tfrac{1}{2} g t^2' },
+    { tex: 'v_x = v_0\\cos\\alpha,\\quad v_y = v_0\\sin\\alpha - g t' },
+  ],
+};
+
+function card(p: Params, title: ScienceCardData['title'], kind: ProjectileKind): ScienceCardData {
   const r = projectile(launch(p));
   const check = numericCheck(launch(p));
   const dev = Math.max(
@@ -220,11 +242,7 @@ function card(p: Params, title: ScienceCardData['title']): ScienceCardData {
       'Chất điểm chuyển động trong trọng trường đều; bỏ qua lực cản không khí.',
       'Point mass in a uniform gravitational field; air resistance neglected.',
     ),
-    equations: [
-      { tex: 'x = v_0\\cos\\alpha\\; t' },
-      { tex: 'y = h_0 + v_0\\sin\\alpha\\; t - \\tfrac{1}{2} g t^2' },
-      { tex: 'v_x = v_0\\cos\\alpha,\\quad v_y = v_0\\sin\\alpha - g t' },
-    ],
+    equations: EQUATIONS[kind],
     assumptions: [
       L('Vật là chất điểm; g không đổi theo độ cao.', 'Point mass; g does not vary with height.'),
       L('Mặt đất phẳng, nằm ngang tại y = 0.', 'Flat horizontal ground at y = 0.'),
@@ -240,8 +258,8 @@ function card(p: Params, title: ScienceCardData['title']): ScienceCardData {
     confidence: agrees ? 'exact' : 'approx',
     confidenceNote: agrees
       ? L(
-          `Đáp số giải tích khớp với tích phân số Dormand–Prince (sai lệch tương đối ${dev.toExponential(1)}).`,
-          `Closed-form answers agree with Dormand–Prince integration (relative deviation ${dev.toExponential(1)}).`,
+          `Đáp số giải tích khớp với tích phân số Dormand–Prince (sai lệch tương đối ${formatDeviation('vi', dev)}).`,
+          `Closed-form answers agree with Dormand–Prince integration (relative deviation ${formatDeviation('en', dev)}).`,
         )
       : L(
           'Không kiểm chứng được đáp số giải tích bằng tích phân số Dormand–Prince cho bộ tham số này.',
@@ -256,11 +274,7 @@ function card(p: Params, title: ScienceCardData['title']): ScienceCardData {
   };
 }
 
-function solveGeneral(
-  p: Params,
-  locale: Locale,
-  kind: 'free' | 'horizontal' | 'oblique',
-): Solution {
+function solveGeneral(p: Params, locale: Locale, kind: ProjectileKind): Solution {
   const inp = launch(p);
   const r = projectile(inp);
   const chk = numericCheck(inp);
@@ -419,7 +433,7 @@ export const obliqueProjectile: PhysicsScene = {
   ],
   defaults: { v0: 15, angle: Math.PI / 4, h0: 0, m: 0.5, g: 9.81 },
   validate: (p) => groundStart(launch(p)),
-  scienceCard: (p) => card(p, L('Ném xiên', 'Oblique projectile')),
+  scienceCard: (p) => card(p, L('Ném xiên', 'Oblique projectile'), 'oblique'),
   solve: (p, locale) => solveGeneral(p, locale, 'oblique'),
 };
 
@@ -435,7 +449,8 @@ export const horizontalProjectile: PhysicsScene = {
     (p.h0 ?? 0) > 0
       ? []
       : [L('Ném ngang cần độ cao ban đầu h₀ > 0.', 'A horizontal throw needs h₀ > 0.')],
-  scienceCard: (p) => card({ ...p, angle: 0 }, L('Ném ngang', 'Horizontal projectile')),
+  scienceCard: (p) =>
+    card({ ...p, angle: 0 }, L('Ném ngang', 'Horizontal projectile'), 'horizontal'),
   solve: (p, locale) => solveGeneral({ ...p, angle: 0 }, locale, 'horizontal'),
 };
 
@@ -475,7 +490,11 @@ export const freeFall: PhysicsScene = {
     return { ...b, xMin: -0.6 * s, xMax: 0.6 * s };
   },
   scienceCard: (p) =>
-    card(freeFallLaunch(p), L('Rơi tự do và ném thẳng đứng', 'Free fall and vertical throw')),
+    card(
+      freeFallLaunch(p),
+      L('Rơi tự do và ném thẳng đứng', 'Free fall and vertical throw'),
+      'free',
+    ),
   solve: (p, locale) => solveGeneral(freeFallLaunch(p), locale, 'free'),
   draw: (dc) => {
     draw({ ...dc, p: freeFallLaunch(dc.p) });

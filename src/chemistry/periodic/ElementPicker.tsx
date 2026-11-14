@@ -1,4 +1,5 @@
 import { useLocalized } from '@/app/i18n/localized';
+import { useSettingsStore } from '@/app/settings/settingsStore';
 import { ELEMENTS } from '../data/elements';
 import { L } from '../common';
 import { selectElement, usePeriodicStore } from './store';
@@ -7,6 +8,7 @@ import { selectElement, usePeriodicStore } from './store';
 export function ElementPicker({ max = 118 }: { max?: number }) {
   const Lz = useLocalized();
   const z = usePeriodicStore((s) => s.selected);
+  const locale = useSettingsStore((s) => s.locale);
   return (
     <label className="el-picker">
       <span>{Lz(L('Nguyên tố', 'Element'))}</span>
@@ -19,7 +21,7 @@ export function ElementPicker({ max = 118 }: { max?: number }) {
         {ELEMENTS.filter((e) => e.z <= max).map((e) => (
           <option key={e.z} value={e.z}>
             {e.z} · {e.symbol} — {e.name}
-            {e.aliases_vi[0] ? ` (${e.aliases_vi[0]})` : ''}
+            {locale === 'vi' && e.aliases_vi[0] ? ` (${e.aliases_vi[0]})` : ''}
           </option>
         ))}
       </select>
