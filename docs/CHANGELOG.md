@@ -2,9 +2,9 @@
 
 Mọi thay đổi đáng chú ý của SimLab (tên cũ: STEM Sim Lab), bản mới nhất ở trên. Định dạng theo [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), số phiên bản dạng `x.y.z`. Tệp này được tạo từ `release-notes/versions.json` bằng `npm run release-notes`. Đừng sửa tay. Lịch sử đầy đủ kèm bằng chứng: [VERSION\_HISTORY.md](VERSION_HISTORY.md).
 
-## [Unreleased] - 0.8.2 (Đang xét duyệt)
+## [0.8.2] - 2026-11-14
 
-_PR phiên bản mở ngày 14/11/2026; chưa phát hành. Người dùng yêu cầu phát hành ngay (14/11/2026). Phần web và phần lõi cùng lên 0.8.2 vì lõi Rust đổi thư viện kể từ 0.8.1 (PR #251), nên ứng dụng 0.8.1 cài từ GitHub sẽ được báo cài bộ cài mới. Bản Store: gói 0.8.2.0, người dùng nộp tay trong Partner Center. notesReady đặt true khi mở PR; người dùng duyệt ghi chú khi gộp PR._
+_Phát hành 14/11/2026 từ main @ e89c7e06 (lượt Release 43601965239). Phần web và phần lõi cùng lên 0.8.2 vì lõi Rust đổi thư viện kể từ 0.8.1 (PR #251), nên ứng dụng 0.8.1 cài từ GitHub được báo cài bộ cài mới. Không bắt buộc cập nhật (minRequired để trống). Bản Store: gói 0.8.2.0, người dùng nộp tay trong Partner Center. notesReady đặt true khi mở PR #254; người dùng gộp PR ngày 14/11/2026._
 
 Bản 0.8.2 sửa Thẻ Khoa học của các bài ném và bài Các định luật Newton, thêm ảnh bìa cho mọi thẻ bài Hóa học và Sinh học, và đổi tên "Suy nghĩ kĩ (Think)" thành "Deepthink".
 
@@ -676,7 +676,7 @@ Bản đầu tiên của STEM Sim Lab (tên cũ của SimLab): mô phỏng Vật
 
 - Bản này không có bộ cài phát hành công khai; chỉ có bản dựng thử trên GitHub Actions.
 
-[Unreleased]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/250
+[0.8.2]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.8.2
 [0.8.1]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.8.1
 [0.7.1]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.7.1
 [0.7.0]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.7.0

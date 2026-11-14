@@ -32,6 +32,10 @@ Quyết định của người dùng (13/10/2026):
   13/11/2026, vì ảnh đó chụp lúc chưa kết nối AI và trước giao diện AI Teacher mới); bản nộp sau thêm
   ảnh AI Teacher mới theo mục "Chụp lại ảnh AI Teacher". Lý do `runFullTrust` dán lại như bước 5.
   Ngày 12/11/2026 máy bàn đã dựng thử gói bằng `node scripts/store/make-msix.mjs` (13,6 MB).
+- Bản nộp 5 (gói `SimLab_0.8.2.0_x64.msix`): **chưa nộp**. Gói lấy từ artifact **simlab-store** của
+  lượt Release 43601965239 (14/11/2026, main e89c7e06; artifact nén 20,7 MB, giữ tới 12/02/2027).
+  Chữ "Có gì mới" của 0.8.2 có sẵn trong `store/listing/listing.vi.md` và `listing.en.md`; ảnh giữ
+  như bản nộp 4. Người dùng nộp tay trong Partner Center rồi bấm **Publish now** sau khi duyệt xong.
 - Ảnh chụp 0.8.1 (8 ảnh PNG 1366×768, giao diện Bàn thí nghiệm, thứ tự = tên tệp): 1 sinh thái 3D
   (Con mồi – vật ăn thịt), 2 AI Teacher, 3 giao thoa sóng hai nguồn, 4 ADN → mARN → Protein 3D,
   5 chuẩn độ acid – base, 6 nguyên phân 3D, 7 Science Studio, 8 trang mở đầu. Chụp bằng
