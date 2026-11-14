@@ -3,6 +3,8 @@ import { pickTex } from '@/core/data/dataset';
 import { registeredEngines } from '@/core/sim/engine';
 import '@/workers/engines';
 import { loadScene, sceneIds } from './registry';
+import { Camera } from './render/camera';
+import type { DrawOptions, ThemeColors } from './types';
 
 describe('physics registry', () => {
   it('every scene has its engine registered in src/workers/engines.ts', async () => {
@@ -99,5 +101,77 @@ describe('physics registry', () => {
         expect(d.label.en, `${id}/${d.key}`).not.toContain(plain);
       }
     }
+  });
+
+  it('English pages use English textbook symbols; Vietnamese pages keep the SGK ones (#258)', async () => {
+    // Vietnamese abbreviations: W_đ, F_đh, α_bđ, α_gđ, F_ms, a_ht, v_gh, F_hl, R_nt, R_ss, P_ng,
+    // F_kéo, W_t, 𝒫. Canvas labels come as runs: "F_ms" is drawn as "F" then "ms".
+    const VI = /đ|_\{?(ms|ht|gh|hl|nt|ss|ng)(?![a-z])|kéo|W_t(?![a-z])|\\mathscr\{P\}/;
+    const VI_RUN = /^(ms|ht|gh|hl|nt|ss|ng|t)$|đ/;
+    let viSide = 0;
+    for (const id of sceneIds()) {
+      const s = await loadScene(id);
+      const base = s.usesGravity ? { ...s.defaults, g: 9.81 } : s.defaults;
+      const choices = s.params.filter((d) => d.kind === 'choice');
+      const variants = [
+        base,
+        ...choices.flatMap((d) => (d.choices ?? []).map((c) => ({ ...base, [d.key]: c.value }))),
+      ];
+      for (const p of variants) {
+        const texts = (loc: 'vi' | 'en') => [
+          ...s.params.map((d) => pickTex(d.symbol, loc)),
+          ...s.scienceCard(p).equations.map((e) => pickTex(e.tex, loc)),
+          ...s.solve(p, loc).steps.map((st) => st.tex ?? ''),
+          ...s.bodies.flatMap((b) =>
+            (b.properties?.(new Float64Array(64), p) ?? []).map((pr) => pickTex(pr.symbol, loc)),
+          ),
+          // Graph legends are also the data table's and the CSV's column headers.
+          ...s.graphs.flatMap((g) => [g.yLabel[loc], ...g.series.map((x) => x.label[loc])]),
+        ];
+        for (const t of texts('en')) expect.soft(t, id).not.toMatch(VI);
+        viSide += texts('vi').filter((t) => VI.test(t)).length;
+        const runs: string[] = [];
+        const ctx = new Proxy(
+          {},
+          {
+            get: (_t, k) =>
+              k === 'fillText'
+                ? (t: string) => runs.push(t)
+                : k === 'font'
+                  ? '12px sans-serif'
+                  : k === 'measureText'
+                    ? (t: string) => ({ width: 7 * t.length })
+                    : k === 'createLinearGradient' || k === 'createRadialGradient'
+                      ? () => ({ addColorStop: () => undefined })
+                      : k === 'getImageData' || k === 'createImageData'
+                        ? (w = 1, h = 1) => ({
+                            data: new Uint8ClampedArray(4 * w * h),
+                            width: w,
+                            height: h,
+                          })
+                        : () => undefined,
+            set: () => true,
+          },
+        ) as CanvasRenderingContext2D;
+        const cam = new Camera();
+        cam.fit(s.view(p));
+        const opts: DrawOptions = {
+          vectors: true,
+          intervened: false,
+          trail: false,
+          selected: null,
+          locale: 'en',
+          colors: new Proxy({}, { get: () => '#000' }) as ThemeColors,
+          time: 0,
+        };
+        s.draw({ ctx, cam, state: new Float64Array(64).fill(0.5), p, opts });
+        // "v_t" (terminal speed) is English: its "t" run is allowed only right after a "v" run.
+        const bad = runs.filter(
+          (t, i) => VI_RUN.test(t) && !(t === 't' && (runs[i - 1] ?? '').endsWith('v')),
+        );
+        expect.soft(bad, `${id} canvas`).toEqual([]);
+      }
+    }
+    expect(viSide).toBeGreaterThan(20);
   });
 });
