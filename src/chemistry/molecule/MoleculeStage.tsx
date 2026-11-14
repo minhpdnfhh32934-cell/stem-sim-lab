@@ -1,7 +1,9 @@
 import { Eye, LoaderCircle, Tag, TriangleAlert } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
+import { formatNumber } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
+import { useSettingsStore } from '@/app/settings/settingsStore';
 import type { LocalizedText } from '@/core/data/dataset';
 import type { ScienceCardData } from '@/science-card/types';
 import { IconButton } from '@/ui/IconButton';
@@ -295,6 +297,7 @@ export function MoleculeStage({ topic }: { topic: MoleculeTopic }) {
 
 function SmilesView({ state }: { state: SmilesLookup }) {
   const Lz = useLocalized();
+  const locale = useSettingsStore((s) => s.locale);
   return (
     <div className="mol-2d">
       <div>
@@ -336,7 +339,8 @@ function SmilesView({ state }: { state: SmilesLookup }) {
             />
             <p className="mono">
               {prettyFormula(state.info.formula)} · {state.info.canonical}
-              {state.info.molarMass !== null && ` · M = ${state.info.molarMass.toFixed(2)} g/mol`}
+              {state.info.molarMass !== null &&
+                ` · M = ${formatNumber(locale, state.info.molarMass, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} g/mol`}
             </p>
           </>
         )}

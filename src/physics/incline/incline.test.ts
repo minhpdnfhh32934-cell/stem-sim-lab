@@ -475,4 +475,15 @@ describe('a block that starts on an edge and moves outward', () => {
     expect(inclinedPlane.validate?.(plane)).toEqual([]);
     expect(newtonLaws.validate?.(newtonLaws.defaults)).toEqual([]);
   });
+
+  it('each card writes the normal force of its own surface (level road: no θ, angle α)', () => {
+    const tex = (s: typeof newtonLaws) =>
+      s
+        .scienceCard(s.defaults)
+        .equations.map((e) => e.tex)
+        .join(' ');
+    expect(tex(newtonLaws)).toContain('N = mg - F\\sin\\alpha');
+    expect(tex(newtonLaws)).not.toMatch(/theta|beta|mu_t|mu_n/);
+    expect(tex(inclinedPlane)).toContain('N = mg\\cos\\theta - F\\sin\\beta');
+  });
 });
