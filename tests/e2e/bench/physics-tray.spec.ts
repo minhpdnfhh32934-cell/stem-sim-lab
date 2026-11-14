@@ -66,3 +66,23 @@ test('B2: "Chốt dự đoán" turns the main action into "Chạy để kiểm t
   await expect(panel.locator('.learn-result')).toBeVisible();
   await expect(check).toHaveCount(0);
 });
+
+test('every number box shows its whole value (k = 8987550000 once showed "89875")', async ({
+  page,
+}) => {
+  await openTopic(page, 'Vật lý', 'Điện trường của điện tích điểm');
+  await expect(page.locator('.stage__hud-title')).toHaveText('Điện trường của điện tích điểm', {
+    timeout: 20_000,
+  });
+  await page.getByRole('radio', { name: 'Nâng cao' }).first().click();
+  const tray = page.getByRole('complementary', { name: 'Bảng thuộc tính' });
+  await expect(tray.getByRole('slider', { name: 'Hằng số Coulomb' })).toBeAttached();
+  const clipped = await tray
+    .locator('.param__num input')
+    .evaluateAll((inputs) =>
+      (inputs as HTMLInputElement[])
+        .filter((i) => i.scrollWidth > i.clientWidth + 1)
+        .map((i) => i.value),
+    );
+  expect(clipped).toEqual([]);
+});

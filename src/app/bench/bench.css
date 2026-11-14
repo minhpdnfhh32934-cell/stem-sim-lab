@@ -285,8 +285,10 @@ kbd {
 .param:has(> .param__controls) {
   --param-step: var(--target);
   display: grid;
+  /* The number box is 112 px, wider only for a value that would not fit (k = 8987550000 showed
+     its first five digits). */
   grid-template-columns:
-    var(--param-step) minmax(0, 1fr) calc(112px - var(--param-step))
+    var(--param-step) minmax(0, 1fr) minmax(calc(112px - var(--param-step)), max-content)
     var(--param-step);
   grid-template-areas:
     'head head num num'
@@ -368,6 +370,8 @@ kbd {
   min-width: 0;
 }
 .param__num .param__number {
+  field-sizing: content;
+  min-width: 4ch;
   height: 100%;
   padding: 0 var(--space-1) 0 var(--space-2);
   border: 0;
