@@ -7,6 +7,7 @@ import type { PhysicsScene } from './types';
 const SCENES: Record<string, () => Promise<PhysicsScene>> = {
   uniformMotion: () => import('./linear/scenes').then((m) => m.uniformMotion),
   uniformAcceleration: () => import('./linear/scenes').then((m) => m.uniformAcceleration),
+  forceComposition: () => import('./forces/scenes').then((m) => m.forceComposition),
   newtonLaws: () => import('./incline/scenes').then((m) => m.newtonLaws),
   newtonThirdLaw: () => import('./thirdlaw/scenes').then((m) => m.newtonThirdLaw),
   inclinedPlane: () => import('./incline/scenes').then((m) => m.inclinedPlane),

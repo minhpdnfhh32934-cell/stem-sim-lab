@@ -257,6 +257,22 @@ export const CHALLENGES: readonly Challenge[] = [
     ),
   },
   {
+    id: 'forceComposition.balance',
+    topic: 'forceComposition',
+    title: L('Giữ vòng đứng yên', 'Keep the ring at rest'),
+    task: L(
+      'Hướng của lực thứ ba đã được chọn sẵn. Chỉnh độ lớn của nó để ba lực cân bằng và vòng đứng yên.',
+      'The third force already points the right way. Set its size so that the three forces balance and the ring stays at rest.',
+    ),
+    controls: ['F3', 'a3'],
+    start: { count: 3, a3: (-127 * Math.PI) / 180 },
+    goal: { answer: 'R', kind: 'target', value: 0, tol: 0.05 },
+    hint: L(
+      'Hợp lực của hai lực 3 N và 4 N vuông góc có độ lớn bao nhiêu? Lực thứ ba phải bằng đúng hợp lực đó.',
+      'How large is the resultant of 3 N and 4 N at right angles? The third force must be exactly that large.',
+    ),
+  },
+  {
     id: 'uniformCircularMotion.a16',
     topic: 'uniformCircularMotion',
     title: L('Gia tốc hướng tâm 16 m/s²', 'Centripetal acceleration of 16 m/s²'),

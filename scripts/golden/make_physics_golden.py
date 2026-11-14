@@ -825,6 +825,19 @@ add(
     ],
     {"vt": math.sqrt(_net / (0.5 * _rho * _cd * math.pi * _r**2))},
 )
+# --- Tổng hợp và phân tích lực (VL10 Bài 13) ------------------------------------
+add(
+    "th-01",
+    "Hai lực đồng quy có độ lớn 6 N và 8 N, hợp với nhau một góc 90°. Tìm độ lớn của hợp lực.",
+    "forceComposition",
+    [
+        q("count", 2, "1", "Hai lực"),
+        q("F1", 6, "N", "6 N"),
+        q("F2", 8, "N", "8 N"),
+        q("a2", 90, "deg", "hợp với nhau một góc 90°"),
+    ],
+    {"R": 10.0},
+)
 add(
     "ng-02",
     "Một tia sáng truyền từ không khí vào nước với góc tới 45°. Chiết suất của nước là 1,33. Tính góc khúc xạ.",

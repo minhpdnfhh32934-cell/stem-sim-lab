@@ -89,6 +89,7 @@ const en: Messages = {
     freeFall: 'Free fall',
     horizontalProjectile: 'Horizontal projectile',
     obliqueProjectile: 'Oblique projectile',
+    forceComposition: 'Adding and resolving forces',
     newtonLaws: "Newton's laws",
     newtonThirdLaw: "Newton's third law",
     fluidFall: 'Drag in a fluid',

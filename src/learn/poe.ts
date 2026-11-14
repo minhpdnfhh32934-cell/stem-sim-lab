@@ -216,6 +216,19 @@ export const POES: readonly Poe[] = [
     start: { fluid: 0 },
   },
   {
+    id: 'forceComposition.angle',
+    topic: 'forceComposition',
+    param: 'a2',
+    factor: 2,
+    answer: 'R',
+    question: L(
+      'Hai lực 3 N và 4 N. Nếu góc giữa chúng tăng từ 60° lên 120° thì hợp lực tăng, giảm hay không đổi?',
+      'Two forces of 3 N and 4 N. If the angle between them grows from 60° to 120°, does the resultant go up, go down or stay the same?',
+    ),
+    choices: DIRS,
+    start: { count: 2, a1: 0, a2: Math.PI / 3 },
+  },
+  {
     id: 'uniformCircularMotion.r',
     topic: 'uniformCircularMotion',
     param: 'r',

@@ -12,6 +12,7 @@ const TOPICS: readonly (readonly [string, string])[] = [
   ['Rơi tự do', 'Rơi tự do và ném thẳng đứng'],
   ['Ném ngang', 'Ném ngang'],
   ['Ném xiên', 'Ném xiên'],
+  ['Tổng hợp và phân tích lực', 'Tổng hợp và phân tích lực'],
   ['Các định luật Newton', 'Các định luật Newton'],
   ['Định luật III Newton', 'Định luật III Newton'],
   ['Mặt phẳng nghiêng', 'Mặt phẳng nghiêng'],

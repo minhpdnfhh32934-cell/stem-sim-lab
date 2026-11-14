@@ -2111,6 +2111,42 @@
       "expectUnsupportedParts": false
     },
     {
+      "id": "th-01",
+      "text": "Hai lực đồng quy có độ lớn 6 N và 8 N, hợp với nhau một góc 90°. Tìm độ lớn của hợp lực.",
+      "topic": "forceComposition",
+      "quantities": [
+        {
+          "key": "count",
+          "value": 2,
+          "unit": "1",
+          "quote": "Hai lực"
+        },
+        {
+          "key": "F1",
+          "value": 6,
+          "unit": "N",
+          "quote": "6 N"
+        },
+        {
+          "key": "F2",
+          "value": 8,
+          "unit": "N",
+          "quote": "8 N"
+        },
+        {
+          "key": "a2",
+          "value": 90,
+          "unit": "deg",
+          "quote": "hợp với nhau một góc 90°"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "R": 10.0
+      },
+      "expectUnsupportedParts": false
+    },
+    {
       "id": "ng-02",
       "text": "Một tia sáng truyền từ không khí vào nước với góc tới 45°. Chiết suất của nước là 1,33. Tính góc khúc xạ.",
       "topic": "unsupported",

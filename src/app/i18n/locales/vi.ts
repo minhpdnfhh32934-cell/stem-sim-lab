@@ -92,6 +92,7 @@ const vi = {
     freeFall: 'Rơi tự do',
     horizontalProjectile: 'Ném ngang',
     obliqueProjectile: 'Ném xiên',
+    forceComposition: 'Tổng hợp và phân tích lực',
     newtonLaws: 'Các định luật Newton',
     newtonThirdLaw: 'Định luật III Newton',
     fluidFall: 'Lực cản của chất lưu',

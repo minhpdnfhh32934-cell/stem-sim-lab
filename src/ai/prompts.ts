@@ -25,6 +25,8 @@ export const TOPIC_HINTS: Record<string, string> = {
   horizontalProjectile: 'Ném ngang từ độ cao h với vận tốc ban đầu nằm ngang.',
   obliqueProjectile:
     'Ném xiên: vận tốc ban đầu hợp với phương ngang một góc; tầm xa, độ cao cực đại.',
+  forceComposition:
+    'Tổng hợp và phân tích lực, cân bằng lực: 2 hoặc 3 lực đồng quy nằm ngang tác dụng lên một vật (độ lớn và hướng, góc đo từ trục Ox), tìm hợp lực, thành phần theo hai trục, lực cần thêm để cân bằng. Đề chỉ cho góc giữa hai lực: không ghi a1 (lực thứ nhất dọc Ox), ghi a2 = góc giữa hai lực. Vật treo bằng dây (trọng lực, lực căng): chọn stringTension nếu có.',
   newtonLaws:
     'Vật trên mặt phẳng ngang bị kéo bởi lực F (có thể xiên góc), có ma sát; tìm gia tốc theo định luật II Newton.',
   newtonThirdLaw:

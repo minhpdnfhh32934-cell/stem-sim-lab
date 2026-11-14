@@ -468,6 +468,7 @@ PLACEMENTS = [
     ("freeFall", "VL10", [10], "Tên Bài 10: sự rơi tự do."),
     ("horizontalProjectile", "VL10", [12], "Tên Bài 12: chuyển động ném."),
     ("obliqueProjectile", "VL10", [12], "Tên Bài 12: chuyển động ném."),
+    ("forceComposition", "VL10", [13], "Tên Bài 13: tổng hợp và phân tích lực, cân bằng lực (cảnh có 2–3 lực đồng quy, hợp lực, hai thành phần theo trục, vòng đứng yên khi hợp lực bằng 0)."),
     ("newtonLaws", "VL10", [14, 15, 18], "Tên Bài 14–15: định luật 1, 2 Newton; Tên Bài 18: lực ma sát (cảnh có hệ số ma sát). Cảnh chỉ có một vật nên không xếp Bài 16 (định luật 3)."),
     ("newtonThirdLaw", "VL10", [16], "Tên Bài 16: định luật 3 Newton (cảnh hai xe đẩy nhau bằng lò xo, lực tương tác cùng độ lớn, ngược chiều)."),
     ("fluidFall", "VL10", [19], "Tên Bài 19: lực cản và lực nâng (cảnh có lực cản của chất lưu và lực đẩy Archimedes lên quả cầu rơi hoặc nổi; chưa có lực nâng khí động của cánh)."),

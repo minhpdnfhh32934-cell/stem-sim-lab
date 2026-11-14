@@ -2115,6 +2115,18 @@
    "review_status": "pending"
   },
   {
+   "topic": "forceComposition",
+   "subject": "physics",
+   "grade": 10,
+   "book": "VL10",
+   "chapter": "Chương III. Động lực học",
+   "lessons": [
+    13
+   ],
+   "reason": "Tên Bài 13: tổng hợp và phân tích lực, cân bằng lực (cảnh có 2–3 lực đồng quy, hợp lực, hai thành phần theo trục, vòng đứng yên khi hợp lực bằng 0).",
+   "review_status": "pending"
+  },
+  {
    "topic": "newtonLaws",
    "subject": "physics",
    "grade": 10,

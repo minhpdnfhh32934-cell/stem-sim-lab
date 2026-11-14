@@ -44,6 +44,7 @@ export const CATALOG: Record<Subject, ChapterEntry[]> = {
       'obliqueProjectile',
     ]),
     chapter('dynamics', [
+      'forceComposition',
       'newtonLaws',
       'newtonThirdLaw',
       'inclinedPlane',
