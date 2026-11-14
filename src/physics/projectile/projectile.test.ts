@@ -1,3 +1,4 @@
+import { pickTex } from '@/core/data/dataset';
 import { describe, expect, it } from 'vitest';
 import { EngineRunner, isRunnerError } from '@/core/sim/runner';
 import { projectile } from './analytic';
@@ -136,7 +137,8 @@ describe('a launch from the ground with no upward velocity', () => {
   });
 
   it('each card shows its own equations and writes the deviation the way a learner does', () => {
-    const tex = (s: typeof freeFall) => s.scienceCard(s.defaults).equations.map((e) => e.tex);
+    const tex = (s: typeof freeFall) =>
+      s.scienceCard(s.defaults).equations.map((e) => pickTex(e.tex, 'vi'));
     // A horizontal or vertical throw has no launch angle to show (α = 0 or ±90°).
     for (const s of [horizontalProjectile, freeFall]) expect(tex(s).join(' ')).not.toMatch(/alpha/);
     expect(tex(obliqueProjectile).join(' ')).toMatch(/alpha/);

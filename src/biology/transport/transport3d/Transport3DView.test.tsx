@@ -1,3 +1,4 @@
+import { pickTex } from '@/core/data/dataset';
 import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import type * as THREE from 'three';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -296,7 +297,7 @@ describe('3D Science Cards', () => {
     for (const note of [DIFFUSION_ILLUSTRATION, SCALE_NOTE, VOLUME_NOTE, PORES_NOTE, MOTION])
       expect(text).toContain(note.vi);
     expect(text).not.toContain('không được dùng để đọc kết quả');
-    expect(card.equations.map((e) => e.tex).join(' ')).toContain('N_1(t)');
+    expect(card.equations.map((e) => pickTex(e.tex, 'vi')).join(' ')).toContain('N_1(t)');
     expect(card.confidence).toBe('exact');
     expect(card.reviewStatus).toBe('pending');
     expect(card.sources.map((x) => x.id)).toEqual(expect.arrayContaining(['sgk-sh10', 'atkins']));
