@@ -241,6 +241,22 @@ export const CHALLENGES: readonly Challenge[] = [
     ),
   },
   {
+    id: 'fluidFall.vt10',
+    topic: 'fluidFall',
+    title: L('Tốc độ giới hạn 10 m/s', 'A terminal speed of 10 m/s'),
+    task: L(
+      'Giữ nguyên kích thước quả cầu, chỉnh khối lượng để tốc độ giới hạn trong không khí đúng 10 m/s.',
+      'Keeping the size of the sphere, set its mass so that its terminal speed in air is exactly 10 m/s.',
+    ),
+    controls: ['m'],
+    start: { fluid: 0 },
+    goal: { answer: 'vt', kind: 'target', value: 10, tol: 0.1 },
+    hint: L(
+      'Ở tốc độ giới hạn, lực cản bằng trọng lực trừ lực đẩy. Lực cản tăng theo bình phương tốc độ.',
+      'At the terminal speed the drag equals weight minus upthrust, and drag grows with the square of the speed.',
+    ),
+  },
+  {
     id: 'uniformCircularMotion.a16',
     topic: 'uniformCircularMotion',
     title: L('Gia tốc hướng tâm 16 m/s²', 'Centripetal acceleration of 16 m/s²'),

@@ -2141,6 +2141,18 @@
    "review_status": "pending"
   },
   {
+   "topic": "fluidFall",
+   "subject": "physics",
+   "grade": 10,
+   "book": "VL10",
+   "chapter": "Chương III. Động lực học",
+   "lessons": [
+    19
+   ],
+   "reason": "Tên Bài 19: lực cản và lực nâng (cảnh có lực cản của chất lưu và lực đẩy Archimedes lên quả cầu rơi hoặc nổi; chưa có lực nâng khí động của cánh).",
+   "review_status": "pending"
+  },
+  {
    "topic": "energyConservation",
    "subject": "physics",
    "grade": 10,

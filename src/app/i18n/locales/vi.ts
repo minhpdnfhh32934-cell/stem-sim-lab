@@ -94,6 +94,7 @@ const vi = {
     obliqueProjectile: 'Ném xiên',
     newtonLaws: 'Các định luật Newton',
     newtonThirdLaw: 'Định luật III Newton',
+    fluidFall: 'Lực cản của chất lưu',
     inclinedPlane: 'Mặt phẳng nghiêng',
     pulley: 'Ròng rọc – dây nối',
     hookeSpring: 'Lò xo (định luật Hooke)',

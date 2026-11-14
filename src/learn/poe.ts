@@ -203,6 +203,19 @@ export const POES: readonly Poe[] = [
     choices: DIRS,
   },
   {
+    id: 'fluidFall.m',
+    topic: 'fluidFall',
+    param: 'm',
+    factor: 4,
+    answer: 'vt',
+    question: L(
+      'Quả cầu cùng kích thước nhưng nặng gấp 4 lần rơi trong không khí. Tốc độ giới hạn gấp mấy lần?',
+      'A sphere of the same size but four times as heavy falls through air. How many times larger is its terminal speed?',
+    ),
+    choices: ratios(1, 2, 4),
+    start: { fluid: 0 },
+  },
+  {
     id: 'uniformCircularMotion.r',
     topic: 'uniformCircularMotion',
     param: 'r',

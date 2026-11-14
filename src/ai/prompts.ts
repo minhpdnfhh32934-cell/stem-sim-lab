@@ -33,6 +33,8 @@ export const TOPIC_HINTS: Record<string, string> = {
     'Vật trên mặt phẳng nghiêng góc θ, có/không ma sát, trượt xuống hoặc được đẩy lên.',
   pulley: 'Hai vật nối dây qua ròng rọc: máy Atwood, một vật trên bàn/trên dốc và một vật treo.',
   hookeSpring: 'Lò xo: định luật Hooke, độ dãn khi treo vật, lực đàn hồi, chiều dài lò xo.',
+  fluidFall:
+    'Vật (quả cầu) rơi hoặc nổi trong chất lưu (không khí, nước) có lực cản F = ½ρC_dAv² và lực đẩy Archimedes: tốc độ giới hạn, thời gian rơi hết độ cao. Đề cho khối lượng riêng chất lưu khác 1,225 kg/m³ (không khí) hoặc 998 kg/m³ (nước) thì ghi fluid = 2 và rhoF. Lực cản tỉ lệ bậc nhất với v (F = kv): ghi vào unsupported_parts.',
   energyConservation:
     'Bảo toàn cơ năng: vật trượt không ma sát trên máng/dốc cong, tốc độ ở độ cao khác.',
   collisions: 'Va chạm hai vật: đàn hồi, mềm (dính nhau), bảo toàn động lượng.',

@@ -91,6 +91,7 @@ const en: Messages = {
     obliqueProjectile: 'Oblique projectile',
     newtonLaws: "Newton's laws",
     newtonThirdLaw: "Newton's third law",
+    fluidFall: 'Drag in a fluid',
     inclinedPlane: 'Inclined plane',
     pulley: 'Pulleys and strings',
     hookeSpring: "Springs (Hooke's law)",

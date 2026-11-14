@@ -807,6 +807,24 @@ add(
         "v2_after": 1 / 3 * 0.05 * math.sqrt(300),
     },
 )
+# --- Lực cản của chất lưu (VL10 Bài 19) ----------------------------------------
+# Air from the app (ISA, 1.225 kg/m3): v_t = sqrt(2 (m - rho V) g / (rho C_d pi r^2)).
+_m, _r, _g, _rho, _cd = 0.01, 0.02, 9.8, 1.225, 0.47
+_net = (_m - _rho * 4 / 3 * math.pi * _r**3) * _g
+add(
+    "lc-01",
+    "Một quả cầu khối lượng 10 g, bán kính 2 cm được thả rơi không vận tốc đầu trong không khí từ độ cao 50 m. Hệ số cản của quả cầu là C_d = 0,47. Lấy g = 9,8 m/s². Tính tốc độ giới hạn và thời gian quả cầu rơi tới đất.",
+    "fluidFall",
+    [
+        q("fluid", 0, "1", "trong không khí"),
+        q("m", 10, "g", "khối lượng 10 g"),
+        q("r", 2, "cm", "bán kính 2 cm"),
+        q("H", 50, "m", "độ cao 50 m"),
+        q("cd", 0.47, "1", "C_d = 0,47"),
+        q("g", 9.8, "m/s^2", "g = 9,8 m/s²"),
+    ],
+    {"vt": math.sqrt(_net / (0.5 * _rho * _cd * math.pi * _r**2))},
+)
 add(
     "ng-02",
     "Một tia sáng truyền từ không khí vào nước với góc tới 45°. Chiết suất của nước là 1,33. Tính góc khúc xạ.",

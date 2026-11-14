@@ -2063,6 +2063,54 @@
       "expectUnsupportedParts": false
     },
     {
+      "id": "lc-01",
+      "text": "Một quả cầu khối lượng 10 g, bán kính 2 cm được thả rơi không vận tốc đầu trong không khí từ độ cao 50 m. Hệ số cản của quả cầu là C_d = 0,47. Lấy g = 9,8 m/s². Tính tốc độ giới hạn và thời gian quả cầu rơi tới đất.",
+      "topic": "fluidFall",
+      "quantities": [
+        {
+          "key": "fluid",
+          "value": 0,
+          "unit": "1",
+          "quote": "trong không khí"
+        },
+        {
+          "key": "m",
+          "value": 10,
+          "unit": "g",
+          "quote": "khối lượng 10 g"
+        },
+        {
+          "key": "r",
+          "value": 2,
+          "unit": "cm",
+          "quote": "bán kính 2 cm"
+        },
+        {
+          "key": "H",
+          "value": 50,
+          "unit": "m",
+          "quote": "độ cao 50 m"
+        },
+        {
+          "key": "cd",
+          "value": 0.47,
+          "unit": "1",
+          "quote": "C_d = 0,47"
+        },
+        {
+          "key": "g",
+          "value": 9.8,
+          "unit": "m/s^2",
+          "quote": "g = 9,8 m/s²"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "vt": 16.42528459592487
+      },
+      "expectUnsupportedParts": false
+    },
+    {
       "id": "ng-02",
       "text": "Một tia sáng truyền từ không khí vào nước với góc tới 45°. Chiết suất của nước là 1,33. Tính góc khúc xạ.",
       "topic": "unsupported",

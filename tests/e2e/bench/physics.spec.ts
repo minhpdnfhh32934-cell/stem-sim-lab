@@ -17,6 +17,7 @@ const TOPICS: readonly (readonly [string, string])[] = [
   ['Mặt phẳng nghiêng', 'Mặt phẳng nghiêng'],
   ['Ròng rọc – dây nối', 'Ròng rọc – dây nối'],
   ['Lò xo (định luật Hooke)', 'Lò xo – định luật Hooke'],
+  ['Lực cản của chất lưu', 'Lực cản của chất lưu'],
   ['Bảo toàn cơ năng', 'Bảo toàn cơ năng'],
   ['Va chạm đàn hồi và va chạm mềm', 'Va chạm đàn hồi và va chạm mềm'],
   ['Con lắc lò xo', 'Con lắc lò xo'],
