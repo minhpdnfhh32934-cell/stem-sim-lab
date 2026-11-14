@@ -890,8 +890,9 @@ export function organismGeometry(kit: SceneKit, kind: OrganismKind): THREE.Buffe
     const k = big ? 1.3 : 1;
     const parts: THREE.BufferGeometry[] = [];
     const add = (g: THREE.BufferGeometry, shade: number, at: Vec3, scale: Vec3, tilt = 0) => {
-      const flat = g.toNonIndexed();
-      g.dispose();
+      // Icosahedra are already non-indexed (no copy, no three.js warning).
+      const flat = g.index ? g.toNonIndexed() : g;
+      if (flat !== g) g.dispose();
       flat.deleteAttribute('uv');
       flat.applyMatrix4(
         new THREE.Matrix4().compose(

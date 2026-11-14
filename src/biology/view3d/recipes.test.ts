@@ -311,7 +311,11 @@ describe('shapes', () => {
 
   it('organisms: white body, dark eyes, neutral feet (the instance tint multiplies)', () => {
     const kit = kitFor('medium');
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const g = organismGeometry(kit, 'predator');
+    organismGeometry(kit, 'prey');
+    expect(warn).not.toHaveBeenCalled(); // no "already non-indexed" from three.js
+    warn.mockRestore();
     const col = Array.from((g.attributes.color as THREE.BufferAttribute).array, (v) =>
       Number(v.toFixed(3)),
     );
