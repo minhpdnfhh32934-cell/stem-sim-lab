@@ -19,6 +19,13 @@ describe('built-in knowledge notes (scientific content, docs/DATA_REVIEW.md #14)
     expect(new Set(vi.map((n) => n.id)).size).toBe(66);
   });
 
+  it('English notes are written in English (the library’s source names aside)', () => {
+    const vietnamese = /[ăâđêôơưạảấầẩẫậắằẳẵặẹẻẽếềểễệỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷỹ]/iu;
+    for (const note of builtinKnowledge('en')) {
+      expect(note.text.split('\n')[0], note.id).not.toMatch(vietnamese);
+    }
+  });
+
   it('every note waits for a teacher and says so wherever it is used', () => {
     // Nothing may be shown as checked before a teacher has reviewed it.
     expect(builtinPendingCount()).toBe(66);
