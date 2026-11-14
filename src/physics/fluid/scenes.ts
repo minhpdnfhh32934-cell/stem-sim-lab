@@ -22,6 +22,7 @@ import type {
 import { FL, runLength } from './engine';
 import {
   CUSTOM_FLUID,
+  LIQUID_RHO,
   RE_CONSTANT_CD,
   direction,
   dragB,
@@ -79,7 +80,7 @@ const ball: BodyDef = {
     return [
       { label: L('Vận tốc', 'Velocity'), symbol: 'v', value: s[FL.v] ?? 0, unit: 'm/s' },
       { label: L('Gia tốc', 'Acceleration'), symbol: 'a', value: s[FL.a] ?? 0, unit: 'm/s^2' },
-      { label: L('Lực cản', 'Drag'), symbol: 'F_c', value: s[FL.Fd] ?? 0, unit: 'N' },
+      { label: L('Lực cản', 'Drag'), symbol: 'F_D', value: s[FL.Fd] ?? 0, unit: 'N' },
       { label: L('Trọng lực', 'Weight'), symbol: 'P', value: q.m * q.g, unit: 'N' },
       {
         label: L('Lực đẩy Archimedes', 'Upthrust'),
@@ -147,7 +148,7 @@ function draw({ ctx, cam, state, p, opts }: DrawContext): void {
     const k = vectorScale(Math.max(W, FA), vis.yMax - vis.yMin, 0.16);
     arrow(ctx, cam, x, y, 0, -W * k, c.force, 'P');
     if (FA > 1e-3 * W) arrow(ctx, cam, x - 0.6 * R, y, 0, FA * k, c.force, 'F_A');
-    if (Math.abs(Fd) > 1e-3 * W) arrow(ctx, cam, x + 0.6 * R, y, 0, Fd * k, c.acceleration, 'F_c');
+    if (Math.abs(Fd) > 1e-3 * W) arrow(ctx, cam, x + 0.6 * R, y, 0, Fd * k, c.acceleration, 'F_D');
   }
   const v = Math.abs(state[FL.v] ?? 0);
   const vt = terminalSpeed(q);
@@ -156,7 +157,7 @@ function draw({ ctx, cam, state, p, opts }: DrawContext): void {
     cam,
     vis.xMin,
     vis.yMax,
-    `v = ${fmtQty(opts.locale, v, 'm/s', 4)}   v_gh = ${Number.isFinite(vt) ? fmtQty(opts.locale, vt, 'm/s', 4) : '—'}`,
+    `v = ${fmtQty(opts.locale, v, 'm/s', 4)}   v_t = ${Number.isFinite(vt) ? fmtQty(opts.locale, vt, 'm/s', 4) : '—'}`,
     c.muted,
     'left',
     { x: 60, y: 20 },
@@ -275,14 +276,14 @@ function solve(p: Params, locale: Locale): Solution {
               'Lực đẩy Archimedes lớn hơn trọng lực: quả cầu nổi lên. Lực cản tăng theo bình phương tốc độ cho tới khi bằng hiệu của hai lực đó:',
               'The upthrust is larger than the weight: the sphere rises. The drag grows with the square of the speed until it equals the difference of those two forces:',
             ),
-      tex: `v_{gh} = \\sqrt{\\frac{2\\,|P - F_A|}{\\rho_{f} C_d A}} = \\sqrt{\\frac{2\\cdot ${n(Math.abs(P - FA))}}{${n(q.fluid.rho)}\\cdot ${n(q.cd)}\\cdot ${n(Math.PI * q.r ** 2)}}} = ${Q(vt, 'm/s')}`,
+      tex: `v_t = \\sqrt{\\frac{2\\,|P - F_A|}{\\rho_{f} C_d A}} = \\sqrt{\\frac{2\\cdot ${n(Math.abs(P - FA))}}{${n(q.fluid.rho)}\\cdot ${n(q.cd)}\\cdot ${n(Math.PI * q.r ** 2)}}} = ${Q(vt, 'm/s')}`,
     },
     {
       text: L(
         'Tốc độ tiến dần tới tốc độ giới hạn nhưng không vượt qua; thời gian đi hết cột chất lưu:',
         'The speed approaches the terminal speed but never exceeds it; time to cross the column:',
       ),
-      tex: `a_0 = \\frac{|P - F_A|}{m + \\tfrac{1}{2}\\rho_{f} V} = ${Q(a0, 'm/s^2')},\\quad t = \\frac{v_{gh}}{a_0}\\,\\mathrm{arcosh}\\!\\left(e^{a_0 H / v_{gh}^2}\\right) = ${Q(tEnd, 's')},\\quad v = ${Q(vEnd, 'm/s')}`,
+      tex: `a_0 = \\frac{|P - F_A|}{m + \\tfrac{1}{2}\\rho_{f} V} = ${Q(a0, 'm/s^2')},\\quad t = \\frac{v_t}{a_0}\\,\\mathrm{arcosh}\\!\\left(e^{a_0 H / v_t^2}\\right) = ${Q(tEnd, 's')},\\quad v = ${Q(vEnd, 'm/s')}`,
     },
   );
   answers.push(
@@ -345,7 +346,7 @@ function solve(p: Params, locale: Locale): Solution {
         'Số Reynolds ở tốc độ giới hạn (kiểm tra giả thiết hệ số cản không đổi):',
         'Reynolds number at the terminal speed (checks the constant drag coefficient):',
       ),
-      tex: `Re = \\frac{\\rho_{f}\\, v_{gh}\\, 2r}{\\mu} = ${n(re)}`,
+      tex: `Re = \\frac{\\rho_{f}\\, v_t\\, 2r}{\\mu} = ${n(re)}`,
     });
     answers.push({ id: 'Re', label: L('Số Reynolds', 'Reynolds number'), value: re, unit: '1' });
     if (re < RE_CONSTANT_CD[0] || re > RE_CONSTANT_CD[1]) {
@@ -373,6 +374,8 @@ function card(p: Params): ScienceCardData {
   const q = fallInput(p);
   const inRange = reInRange(q);
   const custom = Math.round(p.fluid ?? 0) === CUSTOM_FLUID;
+  // In a liquid the ignored history force is not small next to the added mass: the speeding-up phase is approximate.
+  const liquid = q.fluid.rho >= LIQUID_RHO;
   return {
     title: L('Lực cản và lực đẩy của chất lưu', 'Drag and upthrust in a fluid'),
     model: L(
@@ -382,18 +385,18 @@ function card(p: Params): ScienceCardData {
     equations: [
       { tex: 'F_A = \\rho_{f}\\, V g', label: L('Lực đẩy Archimedes', 'Upthrust (Archimedes)') },
       {
-        tex: 'F_c = \\tfrac{1}{2}\\rho_{f}\\, C_d A v^2',
+        tex: 'F_D = \\tfrac{1}{2}\\rho_{f}\\, C_d A v^2',
         label: L('Lực cản của chất lưu', 'Fluid drag'),
       },
       {
-        tex: '\\left(m + \\tfrac{1}{2}\\rho_{f} V\\right)\\frac{dv}{dt} = |P - F_A| - F_c',
+        tex: '\\left(m + \\tfrac{1}{2}\\rho_{f} V\\right)\\frac{dv}{dt} = |P - F_A| - F_D',
         label: L(
           'Định luật II Newton theo chiều chuyển động',
           "Newton's second law along the motion",
         ),
       },
       {
-        tex: 'v = v_{gh}\\tanh\\frac{a_0 t}{v_{gh}},\\quad v_{gh} = \\sqrt{\\frac{2\\,|P - F_A|}{\\rho_{f} C_d A}}',
+        tex: 'v = v_t\\tanh\\frac{a_0 t}{v_t},\\quad v_t = \\sqrt{\\frac{2\\,|P - F_A|}{\\rho_{f} C_d A}}',
         label: L('Nghiệm khi thả không vận tốc đầu', 'Solution from rest'),
       },
     ],
@@ -426,11 +429,16 @@ function card(p: Params): ScienceCardData {
               'Quả cầu nhẵn với 10³ < Re < 2·10⁵ (hệ số cản gần như không đổi).',
               'Smooth sphere with 10³ < Re < 2·10⁵ (drag coefficient nearly constant).',
             ),
-    confidence: inRange === false ? 'approx' : 'exact',
-    confidenceNote: L(
-      'Nghiệm đóng của mô hình (tanh, arcosh); thời gian, tốc độ cuối và tốc độ giới hạn được kiểm chứng bằng tích phân số DOPRI5 độc lập.',
-      'Closed form of the model (tanh, arcosh); time, final speed and terminal speed are cross-checked by an independent DOPRI5 integration.',
-    ),
+    confidence: inRange === false || liquid ? 'approx' : 'exact',
+    confidenceNote: liquid
+      ? L(
+          'Nghiệm đóng của mô hình (tanh, arcosh), kiểm chứng bằng DOPRI5. Trong chất lỏng, mô hình bỏ qua lực phụ thuộc lịch sử chuyển động nên giai đoạn tăng tốc (thời gian, tốc độ cuối) chỉ gần đúng; tốc độ giới hạn không phụ thuộc giả thiết này.',
+          'Closed form of the model (tanh, arcosh), cross-checked by DOPRI5. In a liquid the model ignores history-dependent forces, so the speeding-up phase (time, final speed) is approximate; the terminal speed does not depend on this.',
+        )
+      : L(
+          'Nghiệm đóng của mô hình (tanh, arcosh); thời gian, tốc độ cuối và tốc độ giới hạn được kiểm chứng bằng tích phân số DOPRI5 độc lập.',
+          'Closed form of the model (tanh, arcosh); time, final speed and terminal speed are cross-checked by an independent DOPRI5 integration.',
+        ),
     method: L(
       'Mỗi bước tính trạng thái từ nghiệm đóng tại t = n·Δt (Δt = 1/240 s): sai số không tích lũy.',
       'Each step evaluates the closed form at t = n·Δt (Δt = 1/240 s): no error builds up.',

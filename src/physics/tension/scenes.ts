@@ -297,7 +297,7 @@ const angleP = (key: string, sym: string, name: { vi: string; en: string }) => (
 
 export const stringTension: PhysicsScene = {
   id: 'stringTension',
-  required: ['m'],
+  required: ['m', 'a1', 'a2'],
   engineId: 'phys.tension',
   title: L('Trọng lực và lực căng dây', 'Weight and string tension'),
   usesGravity: true,

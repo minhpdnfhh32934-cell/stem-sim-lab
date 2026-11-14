@@ -236,7 +236,7 @@ function solve(p: Params, locale: Locale): Solution {
         'M₁ = M₂: thanh đứng yên nằm ngang. Hai điều kiện cân bằng của vật rắn đều thỏa: tổng moment bằng 0, và trục đỡ đẩy lên một lực bằng tổng trọng lượng.',
         'M₁ = M₂: the beam stays level. Both conditions for a rigid body hold: the moments add to 0, and the pivot pushes up with the total weight.',
       ),
-      tex: `N = (m_1 + m_2 + M)\\,g = ${Q((q.m1 + q.m2 + q.M) * q.g, 'N')}`,
+      tex: `N = (m_1 + m_2 + m_0)\\,g = ${Q((q.m1 + q.m2 + q.M) * q.g, 'N')}`,
     });
     answers.push({
       id: 'N',
@@ -259,7 +259,7 @@ function solve(p: Params, locale: Locale): Solution {
                 'M₂ > M₁: thanh quay, bên phải hạ xuống. Lúc thả:',
                 'M₂ > M₁: the beam turns, right side down. At release:',
               ),
-        tex: `I = m_1 d_1^2 + m_2 d_2^2 + \\tfrac{1}{12} M L^2 = ${Q(inertia(q), 'kg*m^2')},\\quad \\gamma_0 = \\frac{|M_1 - M_2|}{I} = ${n(Math.abs(net) / inertia(q))}\\,\\text{rad/s}^{2}`,
+        tex: `I = m_1 d_1^2 + m_2 d_2^2 + \\tfrac{1}{12} m_0 L^2 = ${Q(inertia(q), 'kg*m^2')},\\quad \\gamma_0 = \\frac{|M_1 - M_2|}{I} = ${n(Math.abs(net) / inertia(q))}\\,\\text{rad/s}^{2}`,
       },
       {
         text: L(
@@ -312,7 +312,7 @@ function card(): ScienceCardData {
         ),
       },
       {
-        tex: 'I\\,\\ddot{\\theta} = (m_1 d_1 - m_2 d_2)\\,g\\cos\\theta,\\quad I = m_1 d_1^2 + m_2 d_2^2 + \\tfrac{1}{12} M L^2',
+        tex: 'I\\,\\ddot{\\theta} = (m_1 d_1 - m_2 d_2)\\,g\\cos\\theta,\\quad I = m_1 d_1^2 + m_2 d_2^2 + \\tfrac{1}{12} m_0 L^2',
         label: L('Khi chưa cân bằng: thanh quay', 'When unbalanced: the beam turns'),
       },
     ],
@@ -322,8 +322,8 @@ function card(): ScienceCardData {
         'Rigid uniform beam; its weight acts at the axle, so it has no moment.',
       ),
       L(
-        'Trục quay không ma sát. Hai vật coi như chất điểm nằm trên trục của thanh.',
-        'Frictionless axle. The weights are points on the beam’s axis.',
+        'Trục quay không ma sát. Hai vật coi như chất điểm nằm trên trục của thanh, gắn chặt vào thanh (không trượt khi thanh quay).',
+        'Frictionless axle. The weights are points on the beam’s axis, fixed to it (they do not slide as it turns).',
       ),
       L(
         'Đầu thanh chạm đất thì dừng lại (không nảy).',
@@ -391,7 +391,7 @@ export const torqueBalance: PhysicsScene = {
     {
       key: 'M',
       label: L('Khối lượng thanh', 'Mass of the beam'),
-      symbol: 'M',
+      symbol: 'm_0',
       kind: 'number',
       dim: DIM.mass,
       unit: 'kg',
