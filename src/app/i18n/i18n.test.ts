@@ -25,6 +25,15 @@ describe('i18n dictionaries', () => {
     }
   });
 
+  it.each(LOCALES)('locale "%s" uses the same {placeholders} as Vietnamese', (locale) => {
+    const at = (dict: object, key: string) =>
+      key.split('.').reduce<unknown>((n, p) => (n as Record<string, unknown>)[p], dict) as string;
+    const holes = (s: string) => [...new Set(s.match(/\{\w+\}/g) ?? [])].sort();
+    const vi = getDictionary('vi');
+    const other = getDictionary(locale);
+    for (const key of viKeys) expect(holes(at(other, key)), key).toEqual(holes(at(vi, key)));
+  });
+
   it('Vietnamese strings are NFC-normalised (diacritics render consistently)', () => {
     const dict = getDictionary('vi');
     for (const key of keysOf(dict)) {
