@@ -92,6 +92,7 @@ const en: Messages = {
     forceComposition: 'Adding and resolving forces',
     newtonLaws: "Newton's laws",
     newtonThirdLaw: "Newton's third law",
+    stringTension: 'Weight and string tension',
     fluidFall: 'Drag in a fluid',
     inclinedPlane: 'Inclined plane',
     pulley: 'Pulleys and strings',

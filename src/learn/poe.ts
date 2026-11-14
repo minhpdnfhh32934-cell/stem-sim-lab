@@ -229,6 +229,19 @@ export const POES: readonly Poe[] = [
     start: { count: 2, a1: 0, a2: Math.PI / 3 },
   },
   {
+    id: 'stringTension.a1',
+    topic: 'stringTension',
+    param: 'a1',
+    factor: 2,
+    answer: 'T2',
+    question: L(
+      'Đèn treo bằng hai dây cùng nghiêng 30°. Nếu dây trái nghiêng nhiều hơn (30° lên 60°), lực căng của dây phải tăng, giảm hay không đổi?',
+      'A lamp hangs from two strings, both 30° from the vertical. If the left string slants more (30° to 60°), does the tension in the right string go up, go down or stay the same?',
+    ),
+    choices: DIRS,
+    start: { strings: 2, a1: Math.PI / 6, a2: Math.PI / 6 },
+  },
+  {
     id: 'uniformCircularMotion.r',
     topic: 'uniformCircularMotion',
     param: 'r',

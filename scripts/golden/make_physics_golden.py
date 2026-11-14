@@ -838,6 +838,20 @@ add(
     ],
     {"R": 10.0},
 )
+# --- Trọng lực và lực căng (VL10 Bài 17) ------------------------------------------
+add(
+    "lc-02",
+    "Một ngọn đèn khối lượng 2 kg được treo vào trần nhà bằng hai sợi dây, mỗi dây hợp với phương thẳng đứng một góc 30°. Lấy g = 10 m/s². Tính lực căng của mỗi dây.",
+    "stringTension",
+    [
+        q("strings", 2, "1", "hai sợi dây"),
+        q("m", 2, "kg", "khối lượng 2 kg"),
+        q("a1", 30, "deg", "mỗi dây hợp với phương thẳng đứng một góc 30°"),
+        q("a2", 30, "deg", "mỗi dây hợp với phương thẳng đứng một góc 30°"),
+        q("g", 10, "m/s^2", "g = 10 m/s²"),
+    ],
+    {"T1": 20 / (2 * math.cos(math.pi / 6)), "T2": 20 / (2 * math.cos(math.pi / 6))},
+)
 add(
     "ng-02",
     "Một tia sáng truyền từ không khí vào nước với góc tới 45°. Chiết suất của nước là 1,33. Tính góc khúc xạ.",

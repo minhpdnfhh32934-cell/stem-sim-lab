@@ -29,6 +29,8 @@ export const TOPIC_HINTS: Record<string, string> = {
     'Tổng hợp và phân tích lực, cân bằng lực: 2 hoặc 3 lực đồng quy nằm ngang tác dụng lên một vật (độ lớn và hướng, góc đo từ trục Ox), tìm hợp lực, thành phần theo hai trục, lực cần thêm để cân bằng. Đề chỉ cho góc giữa hai lực: không ghi a1 (lực thứ nhất dọc Ox), ghi a2 = góc giữa hai lực. Vật treo bằng dây (trọng lực, lực căng): chọn stringTension nếu có.',
   newtonLaws:
     'Vật trên mặt phẳng ngang bị kéo bởi lực F (có thể xiên góc), có ma sát; tìm gia tốc theo định luật II Newton.',
+  stringTension:
+    'Vật (đèn) đứng yên treo bằng một dây thẳng đứng hoặc hai dây buộc vào trần; góc của mỗi dây so với phương THẲNG ĐỨNG (a1 dây trái, a2 dây phải); trọng lực, lực căng mỗi dây. Đề cho góc so với phương ngang hoặc với trần: ghi vào clarifications, không tự đổi.',
   newtonThirdLaw:
     'Định luật III Newton: hai xe (vật) đứng yên, giữa có lò xo nhẹ bị nén, thả cho lò xo đẩy hai xe ra; lực mỗi xe nhận, gia tốc, vận tốc mỗi xe sau khi tách. Hai vật đang chuyển động va vào nhau: chọn collisions.',
   inclinedPlane:

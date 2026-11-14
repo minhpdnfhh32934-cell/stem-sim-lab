@@ -273,6 +273,22 @@ export const CHALLENGES: readonly Challenge[] = [
     ),
   },
   {
+    id: 'stringTension.equal',
+    topic: 'stringTension',
+    title: L('Hai dây căng như nhau', 'Equal tensions'),
+    task: L(
+      'Dây trái nghiêng 30° so với phương thẳng đứng. Chỉnh góc của dây phải để hai dây có lực căng bằng nhau.',
+      'The left string is 30° from the vertical. Set the angle of the right string so that both strings pull equally hard.',
+    ),
+    controls: ['a2'],
+    start: { strings: 2, a1: Math.PI / 6 },
+    goal: { answer: 'ratio', kind: 'target', value: 1, tol: 0.02 },
+    hint: L(
+      'Theo phương ngang, hai thành phần T₁ sin α₁ và T₂ sin α₂ phải bằng nhau.',
+      'Horizontally, T₁ sin α₁ and T₂ sin α₂ must be equal.',
+    ),
+  },
+  {
     id: 'uniformCircularMotion.a16',
     topic: 'uniformCircularMotion',
     title: L('Gia tốc hướng tâm 16 m/s²', 'Centripetal acceleration of 16 m/s²'),

@@ -47,6 +47,7 @@ export const CATALOG: Record<Subject, ChapterEntry[]> = {
       'forceComposition',
       'newtonLaws',
       'newtonThirdLaw',
+      'stringTension',
       'inclinedPlane',
       'pulley',
       'hookeSpring',

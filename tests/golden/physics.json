@@ -2147,6 +2147,49 @@
       "expectUnsupportedParts": false
     },
     {
+      "id": "lc-02",
+      "text": "Một ngọn đèn khối lượng 2 kg được treo vào trần nhà bằng hai sợi dây, mỗi dây hợp với phương thẳng đứng một góc 30°. Lấy g = 10 m/s². Tính lực căng của mỗi dây.",
+      "topic": "stringTension",
+      "quantities": [
+        {
+          "key": "strings",
+          "value": 2,
+          "unit": "1",
+          "quote": "hai sợi dây"
+        },
+        {
+          "key": "m",
+          "value": 2,
+          "unit": "kg",
+          "quote": "khối lượng 2 kg"
+        },
+        {
+          "key": "a1",
+          "value": 30,
+          "unit": "deg",
+          "quote": "mỗi dây hợp với phương thẳng đứng một góc 30°"
+        },
+        {
+          "key": "a2",
+          "value": 30,
+          "unit": "deg",
+          "quote": "mỗi dây hợp với phương thẳng đứng một góc 30°"
+        },
+        {
+          "key": "g",
+          "value": 10,
+          "unit": "m/s^2",
+          "quote": "g = 10 m/s²"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "T1": 11.547005383792515,
+        "T2": 11.547005383792515
+      },
+      "expectUnsupportedParts": false
+    },
+    {
       "id": "ng-02",
       "text": "Một tia sáng truyền từ không khí vào nước với góc tới 45°. Chiết suất của nước là 1,33. Tính góc khúc xạ.",
       "topic": "unsupported",

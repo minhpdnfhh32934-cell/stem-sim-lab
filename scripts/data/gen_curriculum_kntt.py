@@ -471,6 +471,7 @@ PLACEMENTS = [
     ("forceComposition", "VL10", [13], "Tên Bài 13: tổng hợp và phân tích lực, cân bằng lực (cảnh có 2–3 lực đồng quy, hợp lực, hai thành phần theo trục, vòng đứng yên khi hợp lực bằng 0)."),
     ("newtonLaws", "VL10", [14, 15, 18], "Tên Bài 14–15: định luật 1, 2 Newton; Tên Bài 18: lực ma sát (cảnh có hệ số ma sát). Cảnh chỉ có một vật nên không xếp Bài 16 (định luật 3)."),
     ("newtonThirdLaw", "VL10", [16], "Tên Bài 16: định luật 3 Newton (cảnh hai xe đẩy nhau bằng lò xo, lực tương tác cùng độ lớn, ngược chiều)."),
+    ("stringTension", "VL10", [17], "Tên Bài 17: trọng lực và lực căng (cảnh đèn treo bằng một hoặc hai dây, trọng lực và lực căng mỗi dây)."),
     ("fluidFall", "VL10", [19], "Tên Bài 19: lực cản và lực nâng (cảnh có lực cản của chất lưu và lực đẩy Archimedes lên quả cầu rơi hoặc nổi; chưa có lực nâng khí động của cánh)."),
     ("energyConservation", "VL10", [25, 26], "Tên Bài 25–26: động năng, thế năng, cơ năng và định luật bảo toàn cơ năng."),
     ("collisions", "VL10", [28, 29], "Tên Bài 28–29: động lượng và định luật bảo toàn động lượng."),

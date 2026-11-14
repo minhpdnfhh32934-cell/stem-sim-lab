@@ -15,6 +15,7 @@ const TOPICS: readonly (readonly [string, string])[] = [
   ['Tổng hợp và phân tích lực', 'Tổng hợp và phân tích lực'],
   ['Các định luật Newton', 'Các định luật Newton'],
   ['Định luật III Newton', 'Định luật III Newton'],
+  ['Trọng lực và lực căng dây', 'Trọng lực và lực căng dây'],
   ['Mặt phẳng nghiêng', 'Mặt phẳng nghiêng'],
   ['Ròng rọc – dây nối', 'Ròng rọc – dây nối'],
   ['Lò xo (định luật Hooke)', 'Lò xo – định luật Hooke'],

@@ -95,6 +95,7 @@ const vi = {
     forceComposition: 'Tổng hợp và phân tích lực',
     newtonLaws: 'Các định luật Newton',
     newtonThirdLaw: 'Định luật III Newton',
+    stringTension: 'Trọng lực và lực căng dây',
     fluidFall: 'Lực cản của chất lưu',
     inclinedPlane: 'Mặt phẳng nghiêng',
     pulley: 'Ròng rọc – dây nối',

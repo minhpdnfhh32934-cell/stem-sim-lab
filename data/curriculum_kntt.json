@@ -2153,6 +2153,18 @@
    "review_status": "pending"
   },
   {
+   "topic": "stringTension",
+   "subject": "physics",
+   "grade": 10,
+   "book": "VL10",
+   "chapter": "Chương III. Động lực học",
+   "lessons": [
+    17
+   ],
+   "reason": "Tên Bài 17: trọng lực và lực căng (cảnh đèn treo bằng một hoặc hai dây, trọng lực và lực căng mỗi dây).",
+   "review_status": "pending"
+  },
+  {
    "topic": "fluidFall",
    "subject": "physics",
    "grade": 10,
