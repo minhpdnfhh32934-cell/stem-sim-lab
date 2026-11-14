@@ -421,7 +421,12 @@ Under 18: door 2 becomes a non-interactive card the same size, with a Lock icon 
   - Card grid `repeat(auto-fill, minmax(232px, 1fr))`, gap 16: 4 columns of about 242×152.
   - Each card:
     - 3 px subject top rule;
-    - preview 88 (line art or a static engine frame, never invented numbers);
+    - preview 88 (line art or a static engine frame, never invented numbers). Physics draws its
+      engine frame (`SceneStill`); chemistry and biology show a picture of their own stage at the
+      default values, light and dark (`public/shelf/<topic>.<light|dark>.webp`, made by
+      `node scripts/bench/shelf-previews.mjs`, listed in `src/app/bench/shelfPreviews.ts`; run the
+      script again when a lesson's stage changes look). The "Tiếp tục" thumbnail uses the same
+      picture. A picture that cannot load falls back to the subject's line art;
     - title 16/22 600 on up to 2 lines, never cut;
     - dashed pending chip "Lớp 10 · Bài 8 · chờ giáo viên duyệt";
     - `.shelf-card__mark[data-state=opened|complete]` (Lucide Check "Đã xong" or Dot "Đã mở");

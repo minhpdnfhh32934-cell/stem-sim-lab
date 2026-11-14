@@ -1887,6 +1887,11 @@ button.bench-door--lab:hover {
   width: 100%;
   height: 100%;
 }
+/* A chemistry or biology stage picture fills its box like the engine frame (cropped, never stretched). */
+img.shelf-card__still,
+img.shelf-start__thumb {
+  object-fit: cover;
+}
 
 /* "Tiếp tục" (§9.3): the topic's thumbnail 160×96 left, its name and "Mở lại" beside it. */
 .shelf-start--resume:has(.shelf-start__thumb) {
