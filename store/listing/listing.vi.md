@@ -50,6 +50,7 @@ Bản 0.8.2:
 - Thẻ Khoa học của Ném ngang, Rơi tự do và Các định luật Newton hiện đúng phương trình của bài; sai lệch kiểm chứng ghi theo cách viết số thông thường.
 - AI Teacher: "Suy nghĩ kĩ (Think)" nay tên là "Deepthink"; bỏ nhãn "Là một AI" ở đầu trang (mỗi câu trả lời vẫn có nhãn "AI hỗ trợ").
 - Dung lượng mô hình AI và khối lượng mol dùng dấu phẩy thập phân.
+- Bài Tinh thể kim loại và NaCl hiện lại hình 3D đầy khung; ô nhập số hiện đủ giá trị (hằng số Coulomb); giao diện tiếng Anh không còn chữ tiếng Việt.
 - Cập nhật hai thư viện mạng có lỗ hổng đã biết.
 
 ## Yêu cầu hệ thống (gợi ý)

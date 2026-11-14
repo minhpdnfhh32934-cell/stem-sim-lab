@@ -50,6 +50,7 @@ Version 0.8.2:
 - The Science Cards of Horizontal projectile, Free fall and Newton's laws show their own equations; the cross-check deviation is written the usual way.
 - AI Teacher: "Think" is now called "Deepthink"; the "An AI" chip is gone from the header (every answer still carries the "AI-assisted" label).
 - AI model sizes and molar masses use the language's decimal mark.
+- Metal crystals and NaCl shows its full 3D picture again; number boxes show the whole value (the Coulomb constant); no Vietnamese left in the English interface.
 - Updated two networking libraries with known vulnerabilities.
 
 ## System requirements (suggested)

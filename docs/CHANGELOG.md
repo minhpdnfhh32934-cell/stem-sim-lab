@@ -18,6 +18,11 @@ Bản 0.8.2 sửa Thẻ Khoa học của các bài ném và bài Các định lu
 - Thẻ Khoa học của Các định luật Newton hiện công thức của mặt đường ngang (N = mg − F sin α), không còn công thức mặt phẳng nghiêng.
 - Sai lệch kiểm chứng trên Thẻ Khoa học ghi theo cách viết số thông thường (ví dụ 5·10⁻¹⁶), không còn dạng "0.0e+0".
 - Dung lượng mô hình AI và khối lượng mol dùng dấu phẩy thập phân (3,80 GB; 46,07 g/mol).
+- Bài Tinh thể kim loại và NaCl: hình 3D của ô mạng lại lấp đầy khung mô phỏng (trước đây co lại thành một dải mỏng ở trên cùng, gần như không thấy tinh thể).
+- Ô nhập số hiện đủ giá trị: hằng số Coulomb k = 8987550000 N·m²/C² trước đây chỉ thấy "89875".
+- Dòng "Có thể chỉnh khi đang chạy (tính là can thiệp)" dưới thanh trượt g nằm gọn trên một hàng (trước đây bị dồn mỗi dòng một chữ).
+- Giao diện tiếng Anh không còn chữ tiếng Việt: bài chuẩn độ ghi V\_eq, danh sách nguyên tố, thẻ nguyên tố và chú thích bảng tuần hoàn không kèm tên tiếng Việt, ghi chú quang điện dùng K\_max.
+- Bài chuẩn độ: chỉ số dưới của V\_tđ nằm đúng dòng (trước đây bị đẩy lên như số mũ).
 
 ### Security
 
