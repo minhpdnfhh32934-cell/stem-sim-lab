@@ -4,6 +4,7 @@ import type { LocalizedText } from '@/core/data/dataset';
 import type { ScienceCardData } from '@/science-card/types';
 import { L, massParam } from '../common/scene-helpers';
 import { SRC } from '../common/sources';
+import { SYM, both, sym } from '../common/symbols';
 import { fmtQty, texQty } from '../common/tex';
 import { arrow, circle, line, polyline, text, vectorScale } from '../render/draw';
 import type {
@@ -68,11 +69,16 @@ const body: BodyDef = {
       { label: L('Tốc độ', 'Speed'), symbol: 'v', value: c.v, unit: 'm/s' },
       {
         label: L('Gia tốc hướng tâm', 'Centripetal acceleration'),
-        symbol: 'a_{ht}',
+        symbol: SYM.centripetalAccel,
         value: c.aC,
         unit: 'm/s^2',
       },
-      { label: L('Lực hướng tâm', 'Centripetal force'), symbol: 'F_{ht}', value: c.F, unit: 'N' },
+      {
+        label: L('Lực hướng tâm', 'Centripetal force'),
+        symbol: SYM.centripetalForce,
+        value: c.F,
+        unit: 'N',
+      },
     ];
   },
 };
@@ -152,6 +158,7 @@ const graphs: GraphDef[] = [
 function solve(p: Params, locale: Locale): Solution {
   const c = circular(p);
   const Q = (v: number, u: string) => texQty(locale, v, u);
+  const S = sym(locale);
   const mode = p.mode ?? MODE.v;
   const r = Q(c.r, 'm');
   const first: SolutionStep =
@@ -188,14 +195,14 @@ function solve(p: Params, locale: Locale): Solution {
         'Gia tốc hướng tâm (luôn hướng vào tâm quỹ đạo):',
         'Centripetal acceleration (always towards the centre):',
       ),
-      tex: `a_{ht} = \\frac{v^2}{r} = \\omega^2 r = ${Q(c.aC, 'm/s^2')}`,
+      tex: `${S.centripetalAccel} = \\frac{v^2}{r} = \\omega^2 r = ${Q(c.aC, 'm/s^2')}`,
     },
     {
       text: L(
         'Lực hướng tâm (hợp lực tác dụng lên vật):',
         'Centripetal force (the net force on the body):',
       ),
-      tex: `F_{ht} = m\\,a_{ht} = \\frac{m v^2}{r} = ${Q(c.m, 'kg')} \\cdot ${Q(c.aC, 'm/s^2')} = ${Q(c.F, 'N')}`,
+      tex: `${S.centripetalForce} = m\\,${S.centripetalAccel} = \\frac{m v^2}{r} = ${Q(c.m, 'kg')} \\cdot ${Q(c.aC, 'm/s^2')} = ${Q(c.F, 'N')}`,
     },
   ];
   const chk = numericPeriod(c);
@@ -235,7 +242,10 @@ function card(p: Params): ScienceCardData {
         label: L('Tốc độ góc, chu kì, tần số', 'Angular speed, period, frequency'),
       },
       {
-        tex: 'a_{ht} = \\frac{v^2}{r} = \\omega^2 r,\\quad F_{ht} = m\\,a_{ht} = \\frac{m v^2}{r}',
+        tex: both(
+          (s) =>
+            `${s.centripetalAccel} = \\frac{v^2}{r} = \\omega^2 r,\\quad ${s.centripetalForce} = m\\,${s.centripetalAccel} = \\frac{m v^2}{r}`,
+        ),
         label: L('Gia tốc và lực hướng tâm', 'Centripetal acceleration and force'),
       },
       {
