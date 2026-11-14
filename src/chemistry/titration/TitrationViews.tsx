@@ -152,7 +152,10 @@ export function TitrationStage() {
           HCl {sig(st.ca)} M · {sig(st.va)} mL · NaOH {sig(st.cb)} M
         </span>
         <span className="chem-chip">
-          V<sub>{Lz(L('tđ', 'eq'))}</sub> = {vol(veq)} mL
+          {/* One text run: as separate flex items the subscript floated up, gaps around it. */}
+          <span>
+            V<sub>{Lz(L('tđ', 'eq'))}</sub> = {vol(veq)} mL
+          </span>
         </span>
         <span className="chem-chip chem-chip--qual">
           {Lz(

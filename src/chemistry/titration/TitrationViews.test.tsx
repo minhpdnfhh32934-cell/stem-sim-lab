@@ -108,6 +108,8 @@ describe('titration module', () => {
   it('names the equivalence volume in the learner’s language (V_tđ / V_eq)', () => {
     const { container, unmount } = render(<TitrationStage />);
     expect(container.textContent).toContain('Vtđ = 10,00 mL');
+    // A subscript straight inside the flex chip loses its baseline (it floated up).
+    expect(container.querySelector('.chem-chip > sub')).toBeNull();
     expect(titrationCard('vi').equations.some((e) => e.tex.includes('tđ'))).toBe(true);
     unmount();
     act(() => {
