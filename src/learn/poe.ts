@@ -266,6 +266,18 @@ export const POES: readonly Poe[] = [
     choices: DIRS,
   },
   {
+    id: 'liquidPressure.h',
+    topic: 'liquidPressure',
+    param: 'h',
+    factor: 2,
+    answer: 'pl',
+    question: L(
+      'Nếu đưa điểm đo xuống sâu gấp đôi, áp suất do nước gây ra tại điểm đó thay đổi thế nào?',
+      'If the point goes twice as deep, how does the pressure caused by the water there change?',
+    ),
+    choices: ratios(0.5, 1, 2),
+  },
+  {
     id: 'uniformCircularMotion.r',
     topic: 'uniformCircularMotion',
     param: 'r',

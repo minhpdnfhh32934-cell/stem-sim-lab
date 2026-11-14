@@ -2203,6 +2203,18 @@
    "review_status": "pending"
   },
   {
+   "topic": "liquidPressure",
+   "subject": "physics",
+   "grade": 10,
+   "book": "VL10",
+   "chapter": "Chương VII. Biến dạng của vật rắn. Áp suất chất lỏng",
+   "lessons": [
+    34
+   ],
+   "reason": "Tên Bài 34: khối lượng riêng, áp suất chất lỏng (cảnh điểm đo ở độ sâu h trong bể hở: p = pa + ρgh).",
+   "review_status": "pending"
+  },
+  {
    "topic": "energyConservation",
    "subject": "physics",
    "grade": 10,

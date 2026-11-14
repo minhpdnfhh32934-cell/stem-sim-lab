@@ -319,6 +319,21 @@ export const CHALLENGES: readonly Challenge[] = [
     ),
   },
   {
+    id: 'liquidPressure.atm2',
+    topic: 'liquidPressure',
+    title: L('Áp suất 2 atm', 'A pressure of 2 atm'),
+    task: L(
+      'Trong nước, dưới không khí ở áp suất 1 atm. Chỉnh độ sâu của điểm để áp suất toàn phần tại đó đúng 2 atm (202,65 kPa).',
+      'In water, under air at 1 atm. Set the depth of the point so that the total pressure there is exactly 2 atm (202.65 kPa).',
+    ),
+    controls: ['h'],
+    goal: { answer: 'p', kind: 'target', value: 202650, tol: 0.01 },
+    hint: L(
+      'Phần áp suất do nước gây ra phải bằng đúng 1 atm. Xuống sâu bao nhiêu thì ρgh = 101,325 kPa?',
+      'The part caused by the water must be exactly 1 atm. How deep is ρgh = 101.325 kPa?',
+    ),
+  },
+  {
     id: 'uniformCircularMotion.a16',
     topic: 'uniformCircularMotion',
     title: L('Gia tốc hướng tâm 16 m/s²', 'Centripetal acceleration of 16 m/s²'),

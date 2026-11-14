@@ -54,6 +54,7 @@ export const CATALOG: Record<Subject, ChapterEntry[]> = {
       'fluidFall',
       'torqueBalance',
     ]),
+    chapter('fluids', ['liquidPressure']),
     chapter('energyMomentum', ['workPower', 'energyConservation', 'collisions']),
     chapter('oscillations', ['springPendulum', 'simplePendulum', 'forcedOscillation']),
     chapter('circularMotion', ['uniformCircularMotion']),
