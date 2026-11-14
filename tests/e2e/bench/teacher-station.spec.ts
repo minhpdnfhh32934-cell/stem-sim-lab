@@ -124,19 +124,35 @@ for (const theme of ['light', 'dark'] as const)
     });
 
 test('the orb glides to the corner, and jumps there under reduced motion', async ({ page }) => {
+  // Counts the glides started on the orb's slot. Counting the animations still playing raced the
+  // 500 ms glide on a slow runner (the board's first compile can outlast it, PR #254).
+  await page.addInitScript(() => {
+    const w = window as unknown as { __orbGlides: number };
+    w.__orbGlides = 0;
+    // eslint-disable-next-line @typescript-eslint/unbound-method -- re-applied to the same element below
+    const animate = Element.prototype.animate;
+    Element.prototype.animate = function (...args) {
+      if (this.classList.contains('teacher__orb-slot')) w.__orbGlides += 1;
+      return animate.apply(this, args);
+    };
+  });
   await settings(page, 'dark');
   const screen = await openTeacher(page);
   const slot = screen.locator('.teacher__orb-slot');
-  const playing = () => slot.evaluate((el) => el.getAnimations().length);
+  const glides = () =>
+    page.evaluate(() => (window as unknown as { __orbGlides: number }).__orbGlides);
   await settledBox(slot);
+  expect(await glides()).toBe(0);
   await screen.getByRole('radio', { name: 'Bảng giảng' }).click();
-  expect(await playing()).toBe(1);
+  await expect(screen).toHaveAttribute('data-layout', 'board');
+  expect(await glides()).toBe(1);
 
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await settledBox(slot);
   await screen.getByRole('radio', { name: 'Trò chuyện' }).click();
   await expect(screen).toHaveAttribute('data-layout', 'talk');
-  expect(await playing()).toBe(0);
+  // The layout effect runs with the switch's commit: no second glide under reduced motion.
+  expect(await glides()).toBe(1);
 });
 
 for (const tier of ['medium', 'low'] as const)
