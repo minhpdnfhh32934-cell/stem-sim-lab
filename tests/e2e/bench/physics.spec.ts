@@ -13,6 +13,7 @@ const TOPICS: readonly (readonly [string, string])[] = [
   ['Ném ngang', 'Ném ngang'],
   ['Ném xiên', 'Ném xiên'],
   ['Các định luật Newton', 'Các định luật Newton'],
+  ['Định luật III Newton', 'Định luật III Newton'],
   ['Mặt phẳng nghiêng', 'Mặt phẳng nghiêng'],
   ['Ròng rọc – dây nối', 'Ròng rọc – dây nối'],
   ['Lò xo (định luật Hooke)', 'Lò xo – định luật Hooke'],

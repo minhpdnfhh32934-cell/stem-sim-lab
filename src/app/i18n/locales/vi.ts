@@ -93,6 +93,7 @@ const vi = {
     horizontalProjectile: 'Ném ngang',
     obliqueProjectile: 'Ném xiên',
     newtonLaws: 'Các định luật Newton',
+    newtonThirdLaw: 'Định luật III Newton',
     inclinedPlane: 'Mặt phẳng nghiêng',
     pulley: 'Ròng rọc – dây nối',
     hookeSpring: 'Lò xo (định luật Hooke)',

@@ -789,6 +789,24 @@ add(
     ],
     {"I": 6 / (6 * 3 / (6 + 3)), "I1": 6 / 6, "I2": 6 / 3},
 )
+# --- Định luật III Newton (VL10 Bài 16) ---------------------------------------
+# mu = 2/3 kg, omega = sqrt(k/mu) = sqrt(300) rad/s; v2' = m1/(m1+m2)*d*omega, v1' = -m2/(m1+m2)*d*omega.
+add(
+    "n3-01",
+    "Hai xe lăn khối lượng 1 kg và 2 kg đứng yên trên mặt phẳng ngang nhẵn, giữa hai xe có một lò xo nhẹ độ cứng 200 N/m bị nén 5 cm. Thả nhẹ cho lò xo bung ra. Tính lực lò xo đẩy mỗi xe lúc vừa thả và vận tốc của mỗi xe sau khi tách khỏi lò xo.",
+    "newtonThirdLaw",
+    [
+        q("m1", 1, "kg", "1 kg"),
+        q("m2", 2, "kg", "2 kg"),
+        q("k", 200, "N/m", "độ cứng 200 N/m"),
+        q("d", 5, "cm", "bị nén 5 cm"),
+    ],
+    {
+        "F0": 200 * 0.05,
+        "v1_after": -2 / 3 * 0.05 * math.sqrt(300),
+        "v2_after": 1 / 3 * 0.05 * math.sqrt(300),
+    },
+)
 add(
     "ng-02",
     "Một tia sáng truyền từ không khí vào nước với góc tới 45°. Chiết suất của nước là 1,33. Tính góc khúc xạ.",

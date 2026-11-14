@@ -27,6 +27,8 @@ export const TOPIC_HINTS: Record<string, string> = {
     'Ném xiên: vận tốc ban đầu hợp với phương ngang một góc; tầm xa, độ cao cực đại.',
   newtonLaws:
     'Vật trên mặt phẳng ngang bị kéo bởi lực F (có thể xiên góc), có ma sát; tìm gia tốc theo định luật II Newton.',
+  newtonThirdLaw:
+    'Định luật III Newton: hai xe (vật) đứng yên, giữa có lò xo nhẹ bị nén, thả cho lò xo đẩy hai xe ra; lực mỗi xe nhận, gia tốc, vận tốc mỗi xe sau khi tách. Hai vật đang chuyển động va vào nhau: chọn collisions.',
   inclinedPlane:
     'Vật trên mặt phẳng nghiêng góc θ, có/không ma sát, trượt xuống hoặc được đẩy lên.',
   pulley: 'Hai vật nối dây qua ròng rọc: máy Atwood, một vật trên bàn/trên dốc và một vật treo.',

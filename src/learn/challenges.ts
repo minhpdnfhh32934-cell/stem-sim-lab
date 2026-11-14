@@ -226,6 +226,21 @@ export const CHALLENGES: readonly Challenge[] = [
     ),
   },
   {
+    id: 'newtonThirdLaw.ratio3',
+    topic: 'newtonThirdLaw',
+    title: L('Xe 1 nhanh gấp 3 lần', 'Cart 1 three times as fast'),
+    task: L(
+      'Chỉnh khối lượng xe 2 để sau khi lò xo bung, xe 1 chạy nhanh gấp 3 lần xe 2.',
+      'Set the mass of cart 2 so that, after the spring pushes them apart, cart 1 moves three times as fast as cart 2.',
+    ),
+    controls: ['m2'],
+    goal: { answer: 'speedRatio', kind: 'target', value: 3, tol: 0.03 },
+    hint: L(
+      'Hai xe nhận hai lực bằng nhau trong cùng một khoảng thời gian: xe nào nặng hơn thì chạy chậm hơn bao nhiêu lần?',
+      'Both carts get equal forces for the same time: how many times slower is the heavier one?',
+    ),
+  },
+  {
     id: 'uniformCircularMotion.a16',
     topic: 'uniformCircularMotion',
     title: L('Gia tốc hướng tâm 16 m/s²', 'Centripetal acceleration of 16 m/s²'),

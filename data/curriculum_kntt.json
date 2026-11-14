@@ -2129,6 +2129,18 @@
    "review_status": "pending"
   },
   {
+   "topic": "newtonThirdLaw",
+   "subject": "physics",
+   "grade": 10,
+   "book": "VL10",
+   "chapter": "Chương III. Động lực học",
+   "lessons": [
+    16
+   ],
+   "reason": "Tên Bài 16: định luật 3 Newton (cảnh hai xe đẩy nhau bằng lò xo, lực tương tác cùng độ lớn, ngược chiều).",
+   "review_status": "pending"
+  },
+  {
    "topic": "energyConservation",
    "subject": "physics",
    "grade": 10,

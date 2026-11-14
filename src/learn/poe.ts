@@ -191,6 +191,18 @@ export const POES: readonly Poe[] = [
     choices: DIRS,
   },
   {
+    id: 'newtonThirdLaw.m2',
+    topic: 'newtonThirdLaw',
+    param: 'm2',
+    factor: 2,
+    answer: 'F0',
+    question: L(
+      'Nếu xe 2 nặng gấp đôi, lực lò xo đẩy mỗi xe lúc vừa thả tăng, giảm hay không đổi?',
+      'If cart 2 is twice as heavy, does the force the spring puts on each cart at release go up, go down or stay the same?',
+    ),
+    choices: DIRS,
+  },
+  {
     id: 'uniformCircularMotion.r',
     topic: 'uniformCircularMotion',
     param: 'r',

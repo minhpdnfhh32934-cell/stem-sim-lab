@@ -2025,6 +2025,44 @@
       "expectUnsupportedParts": false
     },
     {
+      "id": "n3-01",
+      "text": "Hai xe lăn khối lượng 1 kg và 2 kg đứng yên trên mặt phẳng ngang nhẵn, giữa hai xe có một lò xo nhẹ độ cứng 200 N/m bị nén 5 cm. Thả nhẹ cho lò xo bung ra. Tính lực lò xo đẩy mỗi xe lúc vừa thả và vận tốc của mỗi xe sau khi tách khỏi lò xo.",
+      "topic": "newtonThirdLaw",
+      "quantities": [
+        {
+          "key": "m1",
+          "value": 1,
+          "unit": "kg",
+          "quote": "1 kg"
+        },
+        {
+          "key": "m2",
+          "value": 2,
+          "unit": "kg",
+          "quote": "2 kg"
+        },
+        {
+          "key": "k",
+          "value": 200,
+          "unit": "N/m",
+          "quote": "độ cứng 200 N/m"
+        },
+        {
+          "key": "d",
+          "value": 5,
+          "unit": "cm",
+          "quote": "bị nén 5 cm"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "F0": 10.0,
+        "v1_after": -0.5773502691896258,
+        "v2_after": 0.2886751345948129
+      },
+      "expectUnsupportedParts": false
+    },
+    {
       "id": "ng-02",
       "text": "Một tia sáng truyền từ không khí vào nước với góc tới 45°. Chiết suất của nước là 1,33. Tính góc khúc xạ.",
       "topic": "unsupported",

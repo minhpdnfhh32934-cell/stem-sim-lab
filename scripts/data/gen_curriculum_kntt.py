@@ -469,6 +469,7 @@ PLACEMENTS = [
     ("horizontalProjectile", "VL10", [12], "Tên Bài 12: chuyển động ném."),
     ("obliqueProjectile", "VL10", [12], "Tên Bài 12: chuyển động ném."),
     ("newtonLaws", "VL10", [14, 15, 18], "Tên Bài 14–15: định luật 1, 2 Newton; Tên Bài 18: lực ma sát (cảnh có hệ số ma sát). Cảnh chỉ có một vật nên không xếp Bài 16 (định luật 3)."),
+    ("newtonThirdLaw", "VL10", [16], "Tên Bài 16: định luật 3 Newton (cảnh hai xe đẩy nhau bằng lò xo, lực tương tác cùng độ lớn, ngược chiều)."),
     ("energyConservation", "VL10", [25, 26], "Tên Bài 25–26: động năng, thế năng, cơ năng và định luật bảo toàn cơ năng."),
     ("collisions", "VL10", [28, 29], "Tên Bài 28–29: động lượng và định luật bảo toàn động lượng."),
     ("springPendulum", "VL11", [1, 2, 3, 5, 6], "Tên Bài 1–3, 5: dao động điều hoà, vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng)."),

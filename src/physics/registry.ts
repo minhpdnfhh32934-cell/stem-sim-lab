@@ -8,6 +8,7 @@ const SCENES: Record<string, () => Promise<PhysicsScene>> = {
   uniformMotion: () => import('./linear/scenes').then((m) => m.uniformMotion),
   uniformAcceleration: () => import('./linear/scenes').then((m) => m.uniformAcceleration),
   newtonLaws: () => import('./incline/scenes').then((m) => m.newtonLaws),
+  newtonThirdLaw: () => import('./thirdlaw/scenes').then((m) => m.newtonThirdLaw),
   inclinedPlane: () => import('./incline/scenes').then((m) => m.inclinedPlane),
   pulley: () => import('./pulley/scenes').then((m) => m.pulley),
   hookeSpring: () => import('./spring/scenes').then((m) => m.hookeSpring),

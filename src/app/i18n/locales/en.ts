@@ -90,6 +90,7 @@ const en: Messages = {
     horizontalProjectile: 'Horizontal projectile',
     obliqueProjectile: 'Oblique projectile',
     newtonLaws: "Newton's laws",
+    newtonThirdLaw: "Newton's third law",
     inclinedPlane: 'Inclined plane',
     pulley: 'Pulleys and strings',
     hookeSpring: "Springs (Hooke's law)",

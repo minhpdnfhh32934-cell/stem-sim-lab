@@ -31,7 +31,7 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 
 | Sách | Số bài | Lí thuyết | Lí thuyết có chủ đề SimLab |
 | --- | --- | --- | --- |
-| Vật lí 10 | 34 | 26 | 16 |
+| Vật lí 10 | 34 | 26 | 17 |
 | Vật lí 11 | 26 | 20 | 13 |
 | Vật lí 12 | 25 | 21 | 0 |
 | Hoá học 10 | 23 | 16 | 5 |
@@ -40,7 +40,7 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Sinh học 10 | 26 | 17 | 5 |
 | Sinh học 11 | 29 | 20 | 0 |
 | Sinh học 12 | 35 | 28 | 7 |
-| **Cộng** | **253** | **189** | **48** |
+| **Cộng** | **253** | **189** | **49** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -71,7 +71,7 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Vật lí 10 | Chương III. Động lực học | 13 | Tổng hợp và phân tích lực. Cân bằng lực | 56 | Lí thuyết | chưa có |  | pending |
 | Vật lí 10 | Chương III. Động lực học | 14 | Định luật 1 Newton | 60 | Lí thuyết | Các định luật Newton | Tên Bài 14–15: định luật 1, 2 Newton; Tên Bài 18: lực ma sát (cảnh có hệ số ma sát). Cảnh chỉ có một vật nên không xếp Bài 16 (định luật 3). | pending |
 | Vật lí 10 | Chương III. Động lực học | 15 | Định luật 2 Newton | 63 | Lí thuyết | Các định luật Newton | Tên Bài 14–15: định luật 1, 2 Newton; Tên Bài 18: lực ma sát (cảnh có hệ số ma sát). Cảnh chỉ có một vật nên không xếp Bài 16 (định luật 3). | pending |
-| Vật lí 10 | Chương III. Động lực học | 16 | Định luật 3 Newton | 67 | Lí thuyết | chưa có |  | pending |
+| Vật lí 10 | Chương III. Động lực học | 16 | Định luật 3 Newton | 67 | Lí thuyết | Định luật III Newton | Tên Bài 16: định luật 3 Newton (cảnh hai xe đẩy nhau bằng lò xo, lực tương tác cùng độ lớn, ngược chiều). | pending |
 | Vật lí 10 | Chương III. Động lực học | 17 | Trọng lực và lực căng | 69 | Lí thuyết | chưa có |  | pending |
 | Vật lí 10 | Chương III. Động lực học | 18 | Lực ma sát | 72 | Lí thuyết | Các định luật Newton | Tên Bài 14–15: định luật 1, 2 Newton; Tên Bài 18: lực ma sát (cảnh có hệ số ma sát). Cảnh chỉ có một vật nên không xếp Bài 16 (định luật 3). | pending |
 | Vật lí 10 | Chương III. Động lực học | 19 | Lực cản và lực nâng | 77 | Lí thuyết | chưa có |  | pending |
