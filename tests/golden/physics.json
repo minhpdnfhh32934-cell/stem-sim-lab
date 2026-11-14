@@ -2190,6 +2190,44 @@
       "expectUnsupportedParts": false
     },
     {
+      "id": "mo-01",
+      "text": "Một thanh cứng quay quanh trục nằm ngang đi qua trung điểm. Đặt vật khối lượng 3 kg cách trục 0,4 m ở bên trái. Phải đặt vật khối lượng 2 kg ở bên phải cách trục bao nhiêu để thanh nằm cân bằng? Lấy g = 10 m/s².",
+      "topic": "torqueBalance",
+      "quantities": [
+        {
+          "key": "m1",
+          "value": 3,
+          "unit": "kg",
+          "quote": "3 kg"
+        },
+        {
+          "key": "d1",
+          "value": 0.4,
+          "unit": "m",
+          "quote": "cách trục 0,4 m"
+        },
+        {
+          "key": "m2",
+          "value": 2,
+          "unit": "kg",
+          "quote": "2 kg"
+        },
+        {
+          "key": "g",
+          "value": 10,
+          "unit": "m/s^2",
+          "quote": "g = 10 m/s²"
+        }
+      ],
+      "missing": [
+        "d2"
+      ],
+      "answers": {
+        "d2star": 0.6000000000000001
+      },
+      "expectUnsupportedParts": false
+    },
+    {
       "id": "ng-02",
       "text": "Một tia sáng truyền từ không khí vào nước với góc tới 45°. Chiết suất của nước là 1,33. Tính góc khúc xạ.",
       "topic": "unsupported",

@@ -242,6 +242,18 @@ export const POES: readonly Poe[] = [
     start: { strings: 2, a1: Math.PI / 6, a2: Math.PI / 6 },
   },
   {
+    id: 'torqueBalance.m2',
+    topic: 'torqueBalance',
+    param: 'm2',
+    factor: 2,
+    answer: 'd2star',
+    question: L(
+      'Nếu vật bên phải nặng gấp đôi, nó phải đặt cách trục bao xa (so với trước) để thanh vẫn cân bằng?',
+      'If the right weight is twice as heavy, how far from the axle (compared with before) must it sit for the beam to balance?',
+    ),
+    choices: ratios(0.5, 1, 2),
+  },
+  {
     id: 'uniformCircularMotion.r',
     topic: 'uniformCircularMotion',
     param: 'r',

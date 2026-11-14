@@ -94,6 +94,7 @@ const en: Messages = {
     newtonThirdLaw: "Newton's third law",
     stringTension: 'Weight and string tension',
     fluidFall: 'Drag in a fluid',
+    torqueBalance: 'Moments and rigid-body balance',
     inclinedPlane: 'Inclined plane',
     pulley: 'Pulleys and strings',
     hookeSpring: "Springs (Hooke's law)",

@@ -289,6 +289,21 @@ export const CHALLENGES: readonly Challenge[] = [
     ),
   },
   {
+    id: 'torqueBalance.level',
+    topic: 'torqueBalance',
+    title: L('Thanh nằm ngang', 'A level beam'),
+    task: L(
+      'Vật bên trái nặng 1,5 kg cách trục 0,4 m. Dời vật bên phải (1 kg) để thanh đứng yên nằm ngang.',
+      'The left weight of 1.5 kg sits 0.4 m from the axle. Move the right weight (1 kg) so that the beam stays level.',
+    ),
+    controls: ['d2'],
+    goal: { answer: 'Mnet', kind: 'target', value: 0, tol: 0.05 },
+    hint: L(
+      'Thanh cân bằng khi m₁d₁ = m₂d₂: vật nhẹ hơn phải ở xa trục hơn bao nhiêu lần?',
+      'The beam balances when m₁d₁ = m₂d₂: how many times farther from the axle must the lighter weight be?',
+    ),
+  },
+  {
     id: 'uniformCircularMotion.a16',
     topic: 'uniformCircularMotion',
     title: L('Gia tốc hướng tâm 16 m/s²', 'Centripetal acceleration of 16 m/s²'),

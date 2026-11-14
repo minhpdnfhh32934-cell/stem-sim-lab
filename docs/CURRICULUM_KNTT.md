@@ -31,7 +31,7 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 
 | Sách | Số bài | Lí thuyết | Lí thuyết có chủ đề SimLab |
 | --- | --- | --- | --- |
-| Vật lí 10 | 34 | 26 | 20 |
+| Vật lí 10 | 34 | 26 | 21 |
 | Vật lí 11 | 26 | 20 | 13 |
 | Vật lí 12 | 25 | 21 | 0 |
 | Hoá học 10 | 23 | 16 | 5 |
@@ -40,7 +40,7 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Sinh học 10 | 26 | 17 | 5 |
 | Sinh học 11 | 29 | 20 | 0 |
 | Sinh học 12 | 35 | 28 | 7 |
-| **Cộng** | **253** | **189** | **52** |
+| **Cộng** | **253** | **189** | **53** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -76,7 +76,7 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Vật lí 10 | Chương III. Động lực học | 18 | Lực ma sát | 72 | Lí thuyết | Các định luật Newton | Tên Bài 14–15: định luật 1, 2 Newton; Tên Bài 18: lực ma sát (cảnh có hệ số ma sát). Cảnh chỉ có một vật nên không xếp Bài 16 (định luật 3). | pending |
 | Vật lí 10 | Chương III. Động lực học | 19 | Lực cản và lực nâng | 77 | Lí thuyết | Lực cản của chất lưu | Tên Bài 19: lực cản và lực nâng (cảnh có lực cản của chất lưu và lực đẩy Archimedes lên quả cầu rơi hoặc nổi; chưa có lực nâng khí động của cánh). | pending |
 | Vật lí 10 | Chương III. Động lực học | 20 | Một số ví dụ về cách giải các bài toán thuộc phần động lực học | 80 | Bài tập | chưa có |  | pending |
-| Vật lí 10 | Chương III. Động lực học | 21 | Moment lực. Cân bằng của vật rắn | 83 | Lí thuyết | chưa có |  | pending |
+| Vật lí 10 | Chương III. Động lực học | 21 | Moment lực. Cân bằng của vật rắn | 83 | Lí thuyết | Moment lực và cân bằng vật rắn | Tên Bài 21: moment lực, cân bằng của vật rắn (cảnh thanh quay quanh trục ở trung điểm, quy tắc moment, thanh quay khi chưa cân bằng). | pending |
 | Vật lí 10 | Chương III. Động lực học | 22 | Thực hành: Tổng hợp lực | 86 | Thực hành | chưa có |  | pending |
 | Vật lí 10 | Chương IV. Năng lượng, công, công suất | 23 | Năng lượng. Công cơ học | 91 | Lí thuyết | chưa có |  | pending |
 | Vật lí 10 | Chương IV. Năng lượng, công, công suất | 24 | Công suất | 96 | Lí thuyết | chưa có |  | pending |

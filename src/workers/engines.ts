@@ -64,6 +64,11 @@ registerEngine('phys.tension', async () => {
   return () => new TensionEngine();
 });
 
+registerEngine('phys.torque', async () => {
+  const { TorqueEngine } = await import('@/physics/torque/engine');
+  return () => new TorqueEngine();
+});
+
 registerEngine('phys.collision', async () => {
   const { CollisionEngine } = await import('@/physics/collision/engine');
   return () => new CollisionEngine();

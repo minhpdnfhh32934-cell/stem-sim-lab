@@ -39,6 +39,8 @@ export const TOPIC_HINTS: Record<string, string> = {
   hookeSpring: 'Lò xo: định luật Hooke, độ dãn khi treo vật, lực đàn hồi, chiều dài lò xo.',
   fluidFall:
     'Vật (quả cầu) rơi hoặc nổi trong chất lưu (không khí, nước) có lực cản F = ½ρC_dAv² và lực đẩy Archimedes: tốc độ giới hạn, thời gian rơi hết độ cao. Đề cho khối lượng riêng chất lưu khác 1,225 kg/m³ (không khí) hoặc 998 kg/m³ (nước) thì ghi fluid = 2 và rhoF. Lực cản tỉ lệ bậc nhất với v (F = kv): ghi vào unsupported_parts.',
+  torqueBalance:
+    'Moment lực, quy tắc moment, đòn bẩy/bập bênh: thanh quay quanh trục ở trung điểm, vật m1 cách trục d1 bên trái, vật m2 cách trục d2 bên phải; moment mỗi lực, vị trí đặt vật để thanh cân bằng. Trục không ở trung điểm, lực xiên, ngẫu lực: ghi vào unsupported_parts.',
   energyConservation:
     'Bảo toàn cơ năng: vật trượt không ma sát trên máng/dốc cong, tốc độ ở độ cao khác.',
   collisions: 'Va chạm hai vật: đàn hồi, mềm (dính nhau), bảo toàn động lượng.',

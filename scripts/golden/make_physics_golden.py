@@ -852,6 +852,20 @@ add(
     ],
     {"T1": 20 / (2 * math.cos(math.pi / 6)), "T2": 20 / (2 * math.cos(math.pi / 6))},
 )
+# --- Moment lực, cân bằng vật rắn (VL10 Bài 21) ----------------------------------
+add(
+    "mo-01",
+    "Một thanh cứng quay quanh trục nằm ngang đi qua trung điểm. Đặt vật khối lượng 3 kg cách trục 0,4 m ở bên trái. Phải đặt vật khối lượng 2 kg ở bên phải cách trục bao nhiêu để thanh nằm cân bằng? Lấy g = 10 m/s².",
+    "torqueBalance",
+    [
+        q("m1", 3, "kg", "3 kg"),
+        q("d1", 0.4, "m", "cách trục 0,4 m"),
+        q("m2", 2, "kg", "2 kg"),
+        q("g", 10, "m/s^2", "g = 10 m/s²"),
+    ],
+    {"d2star": 3 * 0.4 / 2},
+    missing=["d2"],
+)
 add(
     "ng-02",
     "Một tia sáng truyền từ không khí vào nước với góc tới 45°. Chiết suất của nước là 1,33. Tính góc khúc xạ.",

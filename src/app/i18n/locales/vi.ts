@@ -97,6 +97,7 @@ const vi = {
     newtonThirdLaw: 'Định luật III Newton',
     stringTension: 'Trọng lực và lực căng dây',
     fluidFall: 'Lực cản của chất lưu',
+    torqueBalance: 'Moment lực và cân bằng vật rắn',
     inclinedPlane: 'Mặt phẳng nghiêng',
     pulley: 'Ròng rọc – dây nối',
     hookeSpring: 'Lò xo (định luật Hooke)',
