@@ -14,6 +14,7 @@ import { LeftSidebar } from './LeftSidebar';
 import { Splitter } from './Splitter';
 import { useShellServices } from './useShellServices';
 import { ShellOverlays } from '@/app/bench/ShellOverlays';
+import { PerfNotes } from './PerfNotes';
 import { Stage } from './Stage';
 import { StatusBar } from './StatusBar';
 import { Timeline } from './Timeline';
@@ -168,6 +169,7 @@ export function AppShell() {
         )}
       </div>
 
+      {presentation && <PerfNotes className="stage__notes shell__perf-notes" />}
       {presentation ? (
         <IconButton
           className="shell__exit-presentation"

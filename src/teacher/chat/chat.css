@@ -131,6 +131,12 @@
   min-height: 0;
   margin: auto;
 }
+/* The AI Teacher page's one heading, drawn like the bubble's title. */
+.chat-panel__page-title {
+  margin: 0;
+  font: inherit;
+  font-weight: 700;
+}
 .chat-panel__header {
   display: flex;
   align-items: center;

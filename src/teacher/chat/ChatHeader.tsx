@@ -47,7 +47,11 @@ export function ChatHeader({
             />
           </span>
         )}
-        <strong>{t('chat.title')}</strong>
+        {teacherPage ? (
+          <h1 className="chat-panel__page-title">{t('chat.title')}</h1>
+        ) : (
+          <strong>{t('chat.title')}</strong>
+        )}
       </div>
       <div className="chat-panel__header-actions">
         <label className="chat-engine" data-tip={t('chat.engineLabel')} data-tip-side="bottom">

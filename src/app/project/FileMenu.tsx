@@ -108,7 +108,7 @@ export function FileMenu({ history = false }: { history?: boolean } = {}) {
     { icon: Save, label: t('project.save'), run: () => void saveProject() },
     { icon: ImageDown, label: t('project.exportPng'), run: () => void exportPng() },
     // Classic shell: "Lịch sử" is a tab of the library and the top bar has the presentation button;
-    // the bench header (unused since #263) passes `bench` to get both here.
+    // inside the bench (BenchContext, not shown since #263) both are here.
     ...(bench
       ? [
           {

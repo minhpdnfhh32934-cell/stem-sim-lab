@@ -1,4 +1,6 @@
+import { Lock, X } from 'lucide-react';
 import { useState } from 'react';
+import { EmptyState } from '@/ui/EmptyState';
 import { openTeacher, useTeacherStore } from '@/teacher/teacherStore';
 import { TeacherFace } from '@/teacher/face/TeacherFace';
 import { ScreenScan } from './ScreenScan';
@@ -12,7 +14,7 @@ export function ChatBubble() {
   const t = useT();
   const setIncludeScreen = useChatStore((s) => s.setIncludeScreen);
   const [open, setOpen] = useState(false);
-  // Under 18 the AI Teacher page stays closed: no "open the page" button that does nothing.
+  // Under 18 AI Teacher stays closed (#246): the bubble says so instead of opening the chat.
   const locked = useSafetyStore(teacherLocked);
   // A question another screen wrote (askInBubble) opens the bubble; the panel takes the text.
   const asked = useTeacherStore((s) => s.bubbleDraft !== null);
@@ -29,7 +31,27 @@ export function ChatBubble() {
   return (
     <div className="chat-bubble-root">
       <ScreenScan />
-      {open && (
+      {open && locked && (
+        <section className="chat-panel chat-panel--compact" aria-label={t('chat.label')}>
+          <header className="chat-panel__header">
+            <strong>{t('chat.title')}</strong>
+            <button
+              type="button"
+              className="chat-panel__icon-button"
+              onClick={() => {
+                setOpen(false);
+              }}
+              aria-label={t('chat.close')}
+            >
+              <X size={18} />
+            </button>
+          </header>
+          <EmptyState icon={Lock} title={t('bench.teacherLocked')} compact>
+            <p>{t('safety.gate.minorNote')}</p>
+          </EmptyState>
+        </section>
+      )}
+      {open && !locked && (
         <ChatPanel
           compact
           onClose={() => {
@@ -37,7 +59,7 @@ export function ChatBubble() {
             setIncludeScreen(false);
             setOpen(false);
           }}
-          {...(locked ? {} : { onExpand: expand })}
+          onExpand={expand}
         />
       )}
       {/* While the chat is open its own header has the close button. */}
