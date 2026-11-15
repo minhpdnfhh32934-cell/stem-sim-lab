@@ -476,6 +476,7 @@ PLACEMENTS = [
     ("torqueBalance", "VL10", [21], "Tên Bài 21: moment lực, cân bằng của vật rắn (cảnh thanh quay quanh trục ở trung điểm, quy tắc moment, thanh quay khi chưa cân bằng)."),
     ("workPower", "VL10", [23, 24, 27], "Tên Bài 23–24, 27: năng lượng, công cơ học, công suất, hiệu suất (cảnh kéo thùng trên sàn hoặc lên dốc có ma sát: công từng lực, công suất, hiệu suất)."),
     ("liquidPressure", "VL10", [34], "Tên Bài 34: khối lượng riêng, áp suất chất lỏng (cảnh điểm đo ở độ sâu h trong bể hở: p = pa + ρgh)."),
+    ("hookeSpring", "VL10", [33], "Tên Bài 33: biến dạng của vật rắn (cảnh vẽ lực đàn hồi theo độ biến dạng). Tên bài không nêu định luật Hooke; xếp theo quyết định của người dùng ngày 15/11/2026, chờ giáo viên duyệt."),
     ("energyConservation", "VL10", [25, 26], "Tên Bài 25–26: động năng, thế năng, cơ năng và định luật bảo toàn cơ năng."),
     ("collisions", "VL10", [28, 29], "Tên Bài 28–29: động lượng và định luật bảo toàn động lượng."),
     ("springPendulum", "VL11", [1, 2, 3, 5, 6], "Tên Bài 1–3, 5: dao động điều hoà, vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng)."),
@@ -509,7 +510,6 @@ PLACEMENTS = [
 UNPLACED = [
     ("inclinedPlane", "physics", "VL10 Bài 13, 15, 18", "Không bài nào có tên về mặt phẳng nghiêng; cảnh dùng cùng mô hình với \"Các định luật Newton\" (định luật 2 Newton, lực ma sát)."),
     ("pulley", "physics", "VL10 Bài 17", "Không bài nào có tên về ròng rọc; tên Bài 17 có nêu lực căng (cảnh tính lực căng dây) nhưng không nêu hệ ròng rọc."),
-    ("hookeSpring", "physics", "VL10 Bài 33", "Tên Bài 33 là biến dạng của vật rắn (cảnh vẽ lực đàn hồi theo độ biến dạng), không nêu định luật Hooke."),
     ("bohrModel", "chemistry", "HH10 Bài 1 hoặc 3", "Không bài nào có tên về mô hình Bohr; chưa rõ thuộc Bài 1 hay Bài 3."),
     ("molecule3d", "chemistry", "—", "Không bài nào trong ba cuốn Hoá học có tên về hình học phân tử 3D."),
     ("vsepr", "chemistry", "—", "Không bài nào trong ba cuốn Hoá học có tên về mô hình VSEPR."),
