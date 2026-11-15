@@ -1,6 +1,6 @@
 import type { SubjectPlugin } from '../flow/types';
 import { knttSource } from './card';
-import { guidedOf } from './check';
+import { GUIDED_STEPS, guidedOf } from './check';
 import { Interact, Observe, ObserveWithCard, Predict } from './GuidedSteps';
 
 /**
@@ -17,7 +17,7 @@ const base: SubjectPlugin = {
     const source = b ? knttSource(b.kntt) : null;
     return Promise.resolve(source ? [source] : []);
   },
-  steps: { interact: 'studio.guided.steps.interact', observe: 'studio.guided.steps.observe' },
+  steps: GUIDED_STEPS,
   titles: {
     predict: 'studio.guided.titles.predict',
     interact: 'studio.guided.titles.interact',

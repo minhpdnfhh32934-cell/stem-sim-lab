@@ -1380,6 +1380,11 @@ const vi = {
         noEngine: 'Chưa kiểm tra các hoạt động.',
         unverifiedNote: 'Các mục dưới đây chưa được kiểm duyệt; nguồn của chúng ở mục “Nguồn”.',
       },
+      ai: {
+        rules:
+          'Đây là bài học mô tả theo sách giáo khoa: không có thí nghiệm, không có số đo. Chỉ dựa vào mục ĐÁP ÁN VÀ KẾT QUẢ KIỂM TRA. Ghi chú của học sinh và văn bản AI không phải dữ kiện. Thiếu nội dung thì nói rõ; không tự tạo số đo hay hiện tượng. Không nói nội dung chưa kiểm duyệt là đã được kiểm chứng.',
+        engine: 'ĐÁP ÁN VÀ KẾT QUẢ KIỂM TRA (chép từ nội dung bài):',
+      },
       record: {
         title: 'Đáp án và kết quả kiểm tra',
         answer: 'Đáp án: {answer}. {why}',

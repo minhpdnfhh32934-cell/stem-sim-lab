@@ -1,7 +1,14 @@
 import { describe, expect, it } from 'vitest';
+import { buildStudioContext } from '../aiContext';
 import { buildReport } from '../report';
-import type { StudioScenario } from '../scenario';
-import { ACTIVITY_KEY, createSession, engineEvidence, withPrediction } from '../session';
+import { scenarioSteps, type StudioScenario } from '../scenario';
+import {
+  ACTIVITY_KEY,
+  createSession,
+  engineEvidence,
+  withPrediction,
+  type StudioSession,
+} from '../session';
 import {
   ANSWER_OP,
   checkRecord,
@@ -220,20 +227,55 @@ describe('checking a sheet', () => {
 });
 
 describe('wording', () => {
+  /** A guided lesson at every point: before and after the prediction and the check, every step. */
+  function sessionsOf(s: StudioScenario) {
+    const b = guidedOf(s);
+    if (!b) throw new Error(s.id);
+    const fresh = createSession(s, 0);
+    const predicted = withPrediction(fresh, { choice: b.answer, label: b.answer, at: 1 });
+    const checked = withGuidedCheck(s, withSheet(s, predicted, key(b), 2), 3);
+    const unchecked = withSheet(s, checked, {}, 4);
+    const steps = scenarioSteps(s).flatMap((step) => [
+      { ...fresh, step },
+      { ...checked, step },
+    ]);
+    return { checked, all: [fresh, predicted, checked, unchecked, ...steps] };
+  }
+
   it('no report of a guided lesson speaks of a simulation, at any point of the lesson', () => {
     for (const s of guidedScenarios()) {
-      const b = guidedOf(s);
-      if (!b) throw new Error(s.id);
-      const fresh = createSession(s, 0);
-      const predicted = withPrediction(fresh, { choice: b.answer, label: b.answer, at: 1 });
-      const checked = withGuidedCheck(s, withSheet(s, predicted, key(b), 2), 3);
-      const unchecked = withSheet(s, checked, {}, 4);
-      for (const session of [fresh, predicted, checked, unchecked]) {
+      for (const session of sessionsOf(s).all) {
         for (const locale of ['vi', 'en'] as const) {
           const text = buildReport({ scenario: s, session, locale, generatedAt: 0 });
           expect(text).not.toMatch(locale === 'vi' ? /mô phỏng/i : /simulat/i);
         }
       }
+    }
+  });
+
+  it('nor does what AI Teacher is told, and the step names are the lesson’s own', () => {
+    // Every line built, before the budget trims any of them.
+    const told = (s: StudioScenario, session: StudioSession, locale: 'vi' | 'en') =>
+      Object.values(buildStudioContext(s, session, locale))
+        .flat()
+        .join('\n');
+    for (const s of guidedScenarios()) {
+      const { checked, all } = sessionsOf(s);
+      for (const session of all) {
+        for (const locale of ['vi', 'en'] as const) {
+          expect(told(s, session, locale), s.id).not.toMatch(
+            locale === 'vi' ? /mô phỏng/i : /simulat/i,
+          );
+        }
+      }
+      expect(told(s, { ...checked, step: 'interact' }, 'vi')).toContain(
+        'Học sinh đang ở bước 2/6: Hoạt động',
+      );
+      const observe = told(s, { ...checked, step: 'observe' }, 'vi');
+      expect(observe).toContain('Học sinh đang ở bước 3/6: Xem đáp án');
+      expect(observe).toContain('ĐÁP ÁN VÀ KẾT QUẢ KIỂM TRA');
+      expect(observe).toContain('Dự đoán khớp với đáp án của bài học.');
+      expect(told(s, createSession(s, 0), 'vi')).toContain('Chưa kiểm tra các hoạt động.');
     }
   });
 });

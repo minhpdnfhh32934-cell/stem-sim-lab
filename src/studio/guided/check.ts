@@ -1,6 +1,6 @@
 import { translate, type Locale, type MessageKey, type MessageParams } from '@/app/i18n';
 import type { LocalizedText } from '@/core/data/dataset';
-import type { StudioScenario } from '../scenario';
+import type { FlowStep, StudioScenario } from '../scenario';
 import {
   ACTIVITY_KEY,
   withActions,
@@ -21,6 +21,12 @@ import type { GuidedActivity, GuidedBinding } from './schema';
  */
 export const GUIDED_MODEL = 'guided';
 export const ANSWER_OP = 'answer';
+
+/** A guided lesson's own step names (no experiment, no measurement); other steps keep the flow's. */
+export const GUIDED_STEPS = {
+  interact: 'studio.guided.steps.interact',
+  observe: 'studio.guided.steps.observe',
+} as const satisfies Partial<Record<FlowStep, MessageKey>>;
 
 export function guidedOf(s: StudioScenario): GuidedBinding | null {
   return s.binding.kind === 'guided' ? s.binding : null;

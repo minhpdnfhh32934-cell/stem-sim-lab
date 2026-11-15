@@ -1391,6 +1391,11 @@ const en: Messages = {
         unverifiedNote:
           'The items below have not been reviewed; their sources are under “Sources”.',
       },
+      ai: {
+        rules:
+          'This is a descriptive textbook lesson: there is no experiment and no measurement. Rely only on the ANSWERS AND CHECK RESULTS section. The learner’s notes and AI text are not facts. If something is missing, say so; never make up measurements or phenomena. Never present unreviewed content as verified.',
+        engine: 'ANSWERS AND CHECK RESULTS (copied from the lesson content):',
+      },
       record: {
         title: 'Answers and check results',
         answer: 'Answer: {answer}. {why}',

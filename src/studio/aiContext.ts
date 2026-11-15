@@ -1,5 +1,6 @@
 import { translate, type Locale, type MessageKey, type MessageParams } from '@/app/i18n';
 import { fmtQty } from '@/physics/common/tex';
+import { GUIDED_STEPS } from './guided/check';
 import { scenarioSteps, type StudioScenario } from './scenario';
 import {
   computedLabel,
@@ -52,6 +53,12 @@ export function buildStudioContext(
   const L = (t: { vi: string; en: string }) => t[locale];
   const cut = tr('studio.ai.cut');
   const steps = scenarioSteps(scenario);
+  // A descriptive lesson (`guided`) has no simulation: as in the report, its wording never says so.
+  const guided = scenario.binding.kind === 'guided';
+  const g = (key: MessageKey, own: MessageKey) => (guided ? own : key);
+  const guidedStep = guided
+    ? (GUIDED_STEPS as Partial<Record<string, MessageKey>>)[session.step]
+    : undefined;
 
   const head = [
     tr('studio.ai.header'),
@@ -63,9 +70,9 @@ export function buildStudioContext(
     tr('studio.ai.step', {
       n: steps.indexOf(session.step) + 1,
       total: steps.length,
-      step: tr(`studio.flow.steps.${session.step}`),
+      step: tr(guidedStep ?? `studio.flow.steps.${session.step}`),
     }),
-    tr('studio.ai.rules'),
+    tr(g('studio.ai.rules', 'studio.guided.ai.rules')),
   ];
 
   const pending = unverifiedItems(scenario, session);
@@ -79,8 +86,8 @@ export function buildStudioContext(
 
   // Latest run first: it is the one the learner is most likely asking about.
   const runs = [...engineEvidence(session)].sort((a, b) => b.at - a.at);
-  const engine = [tr('studio.ai.engine')];
-  if (runs.length === 0) engine.push(tr('studio.ai.noEngine'));
+  const engine = [tr(g('studio.ai.engine', 'studio.guided.ai.engine'))];
+  if (runs.length === 0) engine.push(tr(g('studio.ai.noEngine', 'studio.guided.report.noEngine')));
   for (const run of runs) {
     engine.push(tr('studio.ai.record', { title: L(run.title), model: run.model }));
     for (const c of run.conditions) {
@@ -107,13 +114,17 @@ export function buildStudioContext(
   const v = session.verdict;
   if (v) {
     const computed = computedLabel(v, locale);
-    if (computed) engine.push(tr('studio.report.computed', { label: computed }));
+    if (computed) {
+      engine.push(
+        tr(g('studio.report.computed', 'studio.guided.report.computed'), { label: computed }),
+      );
+    }
     engine.push(
       v.match === null
-        ? tr('studio.report.verdictNone')
+        ? tr(g('studio.report.verdictNone', 'studio.guided.report.verdictNone'))
         : v.match
-          ? tr('studio.report.verdictMatch')
-          : tr('studio.report.verdictMiss'),
+          ? tr(g('studio.report.verdictMatch', 'studio.guided.report.verdictMatch'))
+          : tr(g('studio.report.verdictMiss', 'studio.guided.report.verdictMiss')),
     );
   }
 
