@@ -4,8 +4,8 @@ import { LocalizedTextSchema } from '@/core/data/dataset';
 /**
  * A descriptive textbook lesson as a guided Science Studio lesson (user decision 14/11/2026,
  * #255): no simulation, only a prediction and one to three checked activities (put in order,
- * match, sort). Every text is SimLab's own wording of the lesson; the answer key is the lesson
- * data itself, so the check never invents anything.
+ * match, sort). Every text is SimLab's wording of the lesson (terms and some short phrases follow
+ * the book); the answer key is the lesson data itself, so the check never invents anything.
  *
  * Ids are short so that one saved answer ("activity:row=value") fits an action's 80 characters.
  */
