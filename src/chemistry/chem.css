@@ -1161,3 +1161,9 @@
 .mol-groups__list {
   flex-wrap: wrap;
 }
+
+/* HH10 lessons (#255 round 1f): the heading of a lesson's stage. */
+.hh10-title {
+  margin: 0 0 var(--space-1);
+  font-size: var(--text-lg);
+}
