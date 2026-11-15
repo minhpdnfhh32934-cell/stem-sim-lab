@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { REACTIONS, reactionById, type Reaction } from '../data/reactions';
+import { balancedCoefficients, REACTIONS, reactionById, type Reaction } from '../data/reactions';
 import { analyzeRedox, type RedoxAnalysis } from './redox';
 
 const lib = (id: string): Reaction => {
@@ -116,5 +116,22 @@ describe('the book’s electron-balance steps (SGK tr. 74)', () => {
     expect(steps('kmno4-hcl')).toEqual(['Cl -1→0 unit 2 ×5', 'Mn 7→2 unit 1 ×2']);
     expect(steps('zn-hcl')).toEqual(['Zn 0→2 unit 1 ×1', 'H 1→0 unit 2 ×1']);
     expect(steps('fe2o3-co')).toEqual(['C 2→4 unit 1 ×3', 'Fe 3→0 unit 1 ×2']);
+  });
+  it('Bước 3 takes the smallest factors: thermite 1 × and 1 ×, 6 e in the equation', () => {
+    expect(steps('thermite')).toEqual(['Al 0→3 unit 1 ×1', 'Fe 3→0 unit 1 ×1']);
+    expect(redox('thermite').electrons).toBe(6);
+  });
+});
+
+describe('balancedCoefficients', () => {
+  it('equals the library’s coefficients for every reaction the balancer can solve', () => {
+    let solved = 0;
+    for (const r of REACTIONS) {
+      const b = balancedCoefficients(r);
+      if (b.by !== 'balancer') continue;
+      solved++;
+      expect(b.coefficients, r.id).toEqual([...r.reactants, ...r.products].map((t) => t.coef));
+    }
+    expect(solved).toBeGreaterThanOrEqual(REACTIONS.length - 1);
   });
 });

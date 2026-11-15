@@ -19,7 +19,8 @@
 .ox-atom__n {
   min-height: 1.1em;
   color: var(--accent);
-  font-size: 0.62em;
+  /* Small above the symbol, never below the 12px type floor (#205 A1). */
+  font-size: max(var(--text-caption), 0.62em);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }

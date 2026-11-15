@@ -1,3 +1,5 @@
+import { useLocalized } from '@/app/i18n/localized';
+import { L } from '../common';
 import { formatFormula } from '../formula';
 import { signed } from './oxidation';
 
@@ -17,17 +19,24 @@ export function OxFormula({
   values: ReadonlyMap<string, number> | undefined;
   coef?: number;
 }) {
+  const Lz = useLocalized();
   const body = formula.replace(/\^.*$/, '');
   const charge = formatFormula(formula).slice(formatFormula(body).length);
   const tokens = [...body.matchAll(/([A-Z][a-z]?)|(\d+)|([^A-Za-z\d])/g)];
   // Elements in the order the formula writes them ("Fe₂O₃: Fe +3, O −2").
   const order = [...new Set(tokens.flatMap((m) => (m[1] ? [m[1]] : [])))];
+  // Read as one item: "2KMnO₄: K +1, Mn +7, O −2", or "… chưa xác định" when the rules stop.
+  const name = `${coef !== undefined && coef > 1 ? String(coef) : ''}${formatFormula(formula)}`;
   const label = values
-    ? `${formatFormula(formula)}: ${order.map((el) => `${el} ${signed(values.get(el) ?? 0)}`).join(', ')}`
-    : formatFormula(formula);
+    ? `${name}: ${order.map((el) => `${el} ${signed(values.get(el) ?? 0)}`).join(', ')}`
+    : `${name}: ${Lz(L('chưa xác định số oxi hoá', 'oxidation numbers undecided'))}`;
   return (
     <span className="ox-formula" role="group" aria-label={label}>
-      {coef !== undefined && coef > 1 && <span className="rx-eq__coef">{coef}</span>}
+      {coef !== undefined && coef > 1 && (
+        <span className="rx-eq__coef" aria-hidden="true">
+          {coef}
+        </span>
+      )}
       {tokens.map((m, i) => {
         const [text, el, digits] = m;
         if (el) {

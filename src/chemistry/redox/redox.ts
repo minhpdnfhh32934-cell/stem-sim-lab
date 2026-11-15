@@ -28,7 +28,8 @@ export interface Change {
   toSpecies: string[];
   /**
    * The book's Bước 2–3 (SGK tr. 74): one process is written for `unit` atoms (2 for O₂ → 2O,
-   * 2Cl → Cl₂, else 1) and multiplied by `multiplier` so the electrons given equal those taken.
+   * 2Cl → Cl₂, else 1) and multiplied by `multiplier`, the smallest whole numbers that make the
+   * electrons given equal those taken (thermite: 1 × and 1 ×; the equation's 2 comes in Bước 4).
    */
   unit: number;
   multiplier: number;
@@ -84,6 +85,8 @@ export function moleculeAtoms(species: string[]): number {
   const [n] = [...counts.values()];
   return counts.size === 1 && charge === 0 && n !== undefined ? n : 1;
 }
+
+const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
 
 function finish(c: Draft): Change {
   const unit =
@@ -154,8 +157,11 @@ export function analyzeRedox(r: Pick<Reaction, 'reactants' | 'products'>): Redox
     } else ambiguous.push(el);
   }
   if (ambiguous.length) return { ...base, kind: 'ambiguous', elements: ambiguous };
-  const changes = drafts.map(finish);
-  if (!changes.length) return { ...base, kind: 'notRedox' };
+  const all = drafts.map(finish);
+  if (!all.length) return { ...base, kind: 'notRedox' };
+  // Bước 3 takes the smallest factors: divide the equation's counts by their common factor.
+  const g = all.reduce((acc, c) => gcd(acc, c.multiplier), 0) || 1;
+  const changes = all.map((c) => ({ ...c, multiplier: c.multiplier / g }));
   const oxidised = changes.filter((c) => c.to > c.from);
   const reduced = changes.filter((c) => c.to < c.from);
   return {

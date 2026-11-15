@@ -172,8 +172,8 @@ function Verdict({ analysis }: { analysis: RedoxAnalysis }) {
       <dd>
         {Lz(
           L(
-            `Tổng số electron chất khử nhường = tổng số electron chất oxi hoá nhận = ${String(analysis.electrons)}`,
-            `Electrons given by the reducing agent = electrons taken by the oxidising agent = ${String(analysis.electrons)}`,
+            `Trong phương trình đã cân bằng: tổng số electron chất khử nhường = tổng số electron chất oxi hoá nhận = ${String(analysis.electrons)}`,
+            `In the balanced equation: electrons given by the reducing agent = electrons taken by the oxidising agent = ${String(analysis.electrons)}`,
           ),
         )}
       </dd>
@@ -200,14 +200,15 @@ export function RedoxStage() {
   return (
     <div className="chem-view">
       <h3 className="hh10-title">{Lz(sel.name)}</h3>
-      <p
+      <div
         className="rx-eq rx-eq--big redox-eq"
+        role="group"
         aria-label={Lz(L('Phương trình và số oxi hoá', 'Equation and oxidation numbers'))}
       >
         {side('reactant')}
         <span className="rx-eq__arrow">→</span>
         {side('product')}
-      </p>
+      </div>
       {sel.analysis.coefficientsBy === 'library' && (
         <p className="small muted">
           {Lz(
@@ -244,7 +245,9 @@ export function RedoxPanel() {
         eq.reactants.map((s) => s.text),
         eq.products.map((s) => s.text),
       );
-      return m?.exact && !m.reverse ? { found: m.reaction.id } : { found: null };
+      // The exact reverse of a reversible library reaction is in the library too (as the
+      // balancer says); the analysis shown is the forward direction's.
+      return m?.exact ? { found: m.reaction, reverse: m.reverse } : { found: null };
     } catch (e) {
       return { error: e instanceof EquationError ? e.message : String(e) };
     }
@@ -300,12 +303,22 @@ export function RedoxPanel() {
               <span>{Lz(NOT_IN_LIBRARY)}</span>
             </p>
           )}
-          {lookup && 'found' in lookup && lookup.found && lookup.found !== id && (
+          {lookup && 'found' in lookup && lookup.found && lookup.reverse && (
+            <p className="chem-note" role="note">
+              {Lz(
+                L(
+                  `Có trong thư viện: chiều nghịch của phản ứng thuận nghịch “${lookup.found.name.vi}”. Số oxi hoá được phân tích cho chiều thuận.`,
+                  `In the library: the reverse of the reversible reaction “${lookup.found.name.en}”. The oxidation numbers are analysed for the forward direction.`,
+                ),
+              )}
+            </p>
+          )}
+          {lookup && 'found' in lookup && lookup.found && lookup.found.id !== id && (
             <button
               type="button"
               className="btn"
               onClick={() => {
-                selectRedoxReaction(lookup.found);
+                if (lookup.found) selectRedoxReaction(lookup.found.id);
               }}
             >
               {Lz(L('Mở phản ứng này', 'Open this reaction'))}

@@ -18,7 +18,7 @@ describe('Phản ứng oxi hoá – khử (HH10 Bài 15)', () => {
   it('Fe2O3 + 3CO: oxidation numbers above the symbols, agents and 6 electrons', () => {
     render(<RedoxStage />);
     expect(screen.getByRole('group', { name: 'Fe₂O₃: Fe +3, O −2' })).toBeInTheDocument();
-    expect(screen.getByRole('group', { name: 'CO: C +2, O −2' })).toBeInTheDocument();
+    expect(screen.getByRole('group', { name: '3CO: C +2, O −2' })).toBeInTheDocument();
     const facts = screen.getByText('Chất khử (chất nhường electron)').parentElement;
     expect(facts).toHaveTextContent('Chất khử (chất nhường electron)CO');
     expect(facts).toHaveTextContent('Chất oxi hoá (chất nhận electron)Fe₂O₃');
@@ -35,6 +35,10 @@ describe('Phản ứng oxi hoá – khử (HH10 Bài 15)', () => {
     render(<RedoxStage />);
     expect(screen.getByText(/Quy tắc xác định số oxi hoá chưa đủ cho/)).toBeInTheDocument();
     expect(screen.getByText(/CuSO₄: còn hai nguyên tố chưa biết \(Cu, S\)/)).toBeInTheDocument();
+    // The "?" marks are hidden from screen readers; the label says the numbers are undecided.
+    expect(
+      screen.getByRole('group', { name: 'CuSO₄: chưa xác định số oxi hoá' }),
+    ).toBeInTheDocument();
   });
 
   it('a reaction that is not redox', () => {
@@ -53,6 +57,12 @@ describe('Phản ứng oxi hoá – khử (HH10 Bài 15)', () => {
     const box = screen.getByRole('textbox', { name: 'Tìm phương trình' });
     fireEvent.change(box, { target: { value: 'Fe + Cl2 -> FeCl3' } });
     expect(screen.getByText(/chưa có trong cơ sở dữ liệu đã kiểm chứng/)).toBeInTheDocument();
+    // The exact reverse of a reversible library reaction is in the library, not missing.
+    fireEvent.change(box, { target: { value: '2NH3 -> N2 + 3H2' } });
+    expect(screen.queryByText(/chưa có trong cơ sở dữ liệu đã kiểm chứng/)).toBeNull();
+    expect(screen.getByText(/chiều nghịch của phản ứng thuận nghịch/)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Mở phản ứng này' }));
+    expect(useRedoxStore.getState().id).toBe('haber');
     fireEvent.change(box, { target: { value: 'Zn + HCl -> ZnCl2 + H2' } });
     fireEvent.click(screen.getByRole('button', { name: 'Mở phản ứng này' }));
     expect(useRedoxStore.getState().id).toBe('zn-hcl');

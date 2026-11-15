@@ -40,7 +40,7 @@ test('Bài 15: oxidation numbers, agents and electrons for library reactions', a
   });
   await expect(stage.getByText(/= 6$/)).toBeVisible();
   await page.getByRole('combobox', { name: 'Phản ứng' }).selectOption('kmno4-hcl');
-  await expect(stage.getByRole('group', { name: 'KMnO₄: K +1, Mn +7, O −2' })).toBeVisible();
+  await expect(stage.getByRole('group', { name: '2KMnO₄: K +1, Mn +7, O −2' })).toBeVisible();
   await expect(stage.getByText(/= 10$/)).toBeVisible();
   await page.getByRole('combobox', { name: 'Phản ứng' }).selectOption('fe-cuso4');
   await expect(page.getByText(/CuSO₄: còn hai nguyên tố chưa biết \(Cu, S\)/)).toBeVisible();
