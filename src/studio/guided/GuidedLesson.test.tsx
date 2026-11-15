@@ -103,6 +103,9 @@ describe('guided textbook lessons in the lab library', () => {
     await user.click(check);
     expect(screen.getByText(/^Em đúng 20\/20 ý\./)).toBeInTheDocument();
     expect(screen.getAllByText('Đúng').length).toBe(20);
+    // Each checked control points at its own outcome.
+    const pair = b.activities.find((x) => x.kind === 'match')?.pairs[0];
+    expect(screen.getByLabelText(pair?.left.vi ?? '')).toHaveAccessibleDescription(/^Đúng/);
     // Changing an answer drops the check; putting it back and checking again restores it.
     const first = b.activities[0];
     if (first?.kind !== 'order') throw new Error('order first');
@@ -147,6 +150,55 @@ describe('guided textbook lessons in the lab library', () => {
     expect(container.querySelector('.studio-flow')).toHaveTextContent(
       'Em đã hoàn thành bài học này.',
     );
+  });
+
+  it('the order activity can be finished with Tab, Enter and Space alone; the focus follows the item', async () => {
+    const user = userEvent.setup();
+    const s = lesson('levelsOfLife');
+    const order = guidedOf(s)?.activities[0];
+    if (order?.kind !== 'order') throw new Error('order first');
+    const view = await loadModule('levelsOfLife');
+    render(<view.Stage />);
+    await user.click(screen.getByRole('radio', { name: 'Tế bào' }));
+    await user.click(next());
+
+    const box = screen.getByRole('region', { name: new RegExp(order.prompt.vi.slice(0, 30)) });
+    const rows = () =>
+      [...box.querySelectorAll('li[data-row]')].map((li) => li.getAttribute('data-row'));
+    const arrow = (dir: 'lên' | 'xuống', text: string) =>
+      within(box).getByRole('button', { name: `Đưa ${dir}: ${text}` });
+    const textOf = (id: string | null | undefined) =>
+      order.items.find((i) => i.id === id)?.text.vi ?? '';
+    const tabTo = async (el: HTMLElement) => {
+      for (let n = 0; n < 100 && document.activeElement !== el; n++) await user.tab();
+      expect(el).toHaveFocus();
+    };
+    const total = order.items.length;
+
+    // Down from the top: the moved item keeps the focus.
+    const top = textOf(rows()[0]);
+    await tabTo(arrow('xuống', top));
+    await user.keyboard('{Enter}');
+    expect(arrow('xuống', top)).toHaveFocus();
+    expect(within(box).getByText(`${top}: vị trí 2/${String(total)}`)).toBeInTheDocument();
+
+    let press = '{Enter}';
+    for (const [i, item] of order.items.entries()) {
+      if (rows().indexOf(item.id) === i) continue;
+      await tabTo(arrow('lên', item.text.vi));
+      while (rows().indexOf(item.id) > i) {
+        const at = rows().indexOf(item.id);
+        await user.keyboard(press);
+        press = press === '{Enter}' ? '[Space]' : '{Enter}';
+        expect(rows().indexOf(item.id)).toBe(at - 1);
+        // Its "Đưa lên" keeps the focus; at the top (disabled) the focus goes to "Đưa xuống".
+        expect(arrow(at - 1 === 0 ? 'xuống' : 'lên', item.text.vi)).toHaveFocus();
+        expect(
+          within(box).getByText(`${item.text.vi}: vị trí ${String(at)}/${String(total)}`),
+        ).toBeInTheDocument();
+      }
+    }
+    expect(rows()).toEqual(order.items.map((i) => i.id));
   });
 
   it('files, history and undo carry the answers, read back through the same checks', async () => {

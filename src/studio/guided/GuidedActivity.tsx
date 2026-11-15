@@ -1,5 +1,5 @@
 import { ArrowDown, ArrowUp, CircleCheck, CircleX } from 'lucide-react';
-import { useId, useMemo } from 'react';
+import { useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useT } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { Segmented } from '@/biology/ui';
@@ -19,12 +19,21 @@ import {
 import type { GuidedActivity as Activity } from './schema';
 
 /** One checked row: right or wrong as an icon and a word (never colour alone), then the reason. */
-export function RowOutcome({ activity, result }: { activity: Activity; result: RowResult }) {
+export function RowOutcome({
+  activity,
+  result,
+  id,
+}: {
+  activity: Activity;
+  result: RowResult;
+  /** Lets the row's control point at its outcome (`aria-describedby`). */
+  id?: string;
+}) {
   const t = useT();
   const L = useLocalized();
   const why = rowWhy(activity, result.id);
   return (
-    <div className={cx('guided-outcome', result.correct ? 'is-right' : 'is-wrong')}>
+    <div id={id} className={cx('guided-outcome', result.correct ? 'is-right' : 'is-wrong')}>
       <strong className="guided-outcome__mark">
         {result.correct ? (
           <CircleCheck size={16} aria-hidden="true" />
@@ -61,10 +70,29 @@ export function GuidedActivity({ scenarioId, n, activity: a, answers, checked, o
     () => (a.kind === 'match' ? optionOrder(scenarioId, a) : []),
     [a, scenarioId],
   );
+  const listRef = useRef<HTMLOListElement>(null);
+  /** The item just moved and the arrow used: its button gets the focus back after the move. */
+  const moved = useRef<{ id: string; dir: 'up' | 'down' } | null>(null);
+  /** What the polite live region says after a move (the position number is aria-hidden). */
+  const [said, setSaid] = useState('');
 
+  // React moves the focused row's <li> with insertBefore, which blurs its button, and an arrow
+  // disabled at the first or last place loses the focus too: put it back on the moved item.
+  useLayoutEffect(() => {
+    const m = moved.current;
+    if (!m) return;
+    moved.current = null;
+    const row = listRef.current?.querySelector(`[data-row="${m.id}"]`);
+    const arrow = (dir: string) => row?.querySelector<HTMLButtonElement>(`[data-move="${dir}"]`);
+    const same = arrow(m.dir);
+    (same && !same.disabled ? same : arrow(m.dir === 'up' ? 'down' : 'up'))?.focus();
+  });
+
+  const outcomeId = (id: string) => `${titleId}-${id}-outcome`;
+  const describedBy = (id: string) => (checked && result(id) ? outcomeId(id) : undefined);
   const outcome = (id: string) => {
     const r = result(id);
-    return checked && r ? <RowOutcome activity={a} result={r} /> : null;
+    return checked && r ? <RowOutcome activity={a} result={r} id={outcomeId(id)} /> : null;
   };
   const rowClass = (id: string) =>
     cx('guided-row', checked && (result(id)?.correct ? 'is-right' : 'is-wrong'));
@@ -77,45 +105,58 @@ export function GuidedActivity({ scenarioId, n, activity: a, answers, checked, o
       const [item] = next.splice(from, 1);
       if (item === undefined) return;
       next.splice(to, 0, item);
+      moved.current = { id: item, dir: to < from ? 'up' : 'down' };
+      setSaid(
+        t('studio.guided.moved', { item: L(rowLabel(a, item)), n: to + 1, total: next.length }),
+      );
       onChange(orderAnswers(next));
     };
     rows = (
-      <ol className="guided-rows">
-        {order.map((id, i) => {
-          const text = L(rowLabel(a, id));
-          return (
-            <li key={id} className={rowClass(id)} data-row={id}>
-              <div className="guided-row__main">
-                <span className="guided-row__n" aria-hidden="true">
-                  {i + 1}
-                </span>
-                <span className="guided-row__text">{text}</span>
-                <span className="guided-row__tools">
-                  <IconButton
-                    icon={ArrowUp}
-                    label={t('studio.guided.up', { item: text })}
-                    size="lg"
-                    disabled={i === 0}
-                    onClick={() => {
-                      move(i, i - 1);
-                    }}
-                  />
-                  <IconButton
-                    icon={ArrowDown}
-                    label={t('studio.guided.down', { item: text })}
-                    size="lg"
-                    disabled={i === order.length - 1}
-                    onClick={() => {
-                      move(i, i + 1);
-                    }}
-                  />
-                </span>
-              </div>
-              {outcome(id)}
-            </li>
-          );
-        })}
-      </ol>
+      <>
+        <ol className="guided-rows" ref={listRef}>
+          {order.map((id, i) => {
+            const text = L(rowLabel(a, id));
+            return (
+              <li key={id} className={rowClass(id)} data-row={id}>
+                <div className="guided-row__main">
+                  <span className="guided-row__n" aria-hidden="true">
+                    {i + 1}
+                  </span>
+                  <span className="guided-row__text">{text}</span>
+                  <span className="guided-row__tools">
+                    <IconButton
+                      icon={ArrowUp}
+                      label={t('studio.guided.up', { item: text })}
+                      size="lg"
+                      data-move="up"
+                      aria-describedby={describedBy(id)}
+                      disabled={i === 0}
+                      onClick={() => {
+                        move(i, i - 1);
+                      }}
+                    />
+                    <IconButton
+                      icon={ArrowDown}
+                      label={t('studio.guided.down', { item: text })}
+                      size="lg"
+                      data-move="down"
+                      aria-describedby={describedBy(id)}
+                      disabled={i === order.length - 1}
+                      onClick={() => {
+                        move(i, i + 1);
+                      }}
+                    />
+                  </span>
+                </div>
+                {outcome(id)}
+              </li>
+            );
+          })}
+        </ol>
+        <p className="sr-only" aria-live="polite">
+          {said}
+        </p>
+      </>
     );
   } else if (a.kind === 'match') {
     rows = (
@@ -130,6 +171,7 @@ export function GuidedActivity({ scenarioId, n, activity: a, answers, checked, o
               <select
                 id={selectId}
                 className="guided-select"
+                aria-describedby={describedBy(p.id)}
                 value={answers[p.id] ?? ''}
                 onChange={(e) => {
                   onChange({ ...answers, [p.id]: e.target.value });
@@ -159,6 +201,7 @@ export function GuidedActivity({ scenarioId, n, activity: a, answers, checked, o
             <span className="guided-row__text">{L(item.text)}</span>
             <Segmented
               label={item.text}
+              describedBy={describedBy(item.id)}
               value={answers[item.id] ?? ''}
               options={groups}
               onChange={(group) => {

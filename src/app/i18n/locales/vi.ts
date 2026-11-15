@@ -1341,6 +1341,7 @@ const vi = {
       },
       up: 'Đưa lên: {item}',
       down: 'Đưa xuống: {item}',
+      moved: '{item}: vị trí {n}/{total}',
       choose: 'Chọn…',
       position: 'vị trí {n}',
       check: 'Kiểm tra',

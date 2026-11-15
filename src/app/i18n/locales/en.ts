@@ -1351,6 +1351,7 @@ const en: Messages = {
       },
       up: 'Move up: {item}',
       down: 'Move down: {item}',
+      moved: '{item}: position {n} of {total}',
       choose: 'Choose…',
       position: 'place {n}',
       check: 'Check',

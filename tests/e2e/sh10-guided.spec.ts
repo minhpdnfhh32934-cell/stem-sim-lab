@@ -35,26 +35,39 @@ test('Bài 3: predict, move one level, check, read the reasons; card in the Insp
   await next(page).click();
   await noSideScroll(page);
 
-  const order = page.getByRole('region', { name: /Xếp các cấp độ tổ chức sống/ });
+  const order = page.getByRole('region', { name: /Xếp các cấp tổ chức của thế giới sống/ });
   const rows = order.locator('li[data-row]');
   await expect(rows).toHaveCount(8);
   const before = await rows.evaluateAll((els) => els.map((el) => el.getAttribute('data-row')));
-  await order
-    .getByRole('button', { name: /^Đưa xuống:/ })
-    .first()
-    .click();
+  // With the keyboard: the focus follows the moved item, and the move is announced.
+  const first = (await rows.first().locator('.guided-row__text').textContent()) ?? '';
+  await order.getByRole('button', { name: `Đưa xuống: ${first}` }).focus();
+  await page.keyboard.press('Enter');
   const after = await rows.evaluateAll((els) => els.map((el) => el.getAttribute('data-row')));
   expect(after).toEqual([before[1], before[0], ...before.slice(2)]);
+  await expect(order.getByRole('button', { name: `Đưa xuống: ${first}` })).toBeFocused();
+  await expect(order.getByText(`${first}: vị trí 2/8`)).toBeAttached();
+  // Back to the top: "Đưa lên" is then disabled, so the focus goes to the item's other arrow.
+  await page.keyboard.press('Shift+Tab');
+  await page.keyboard.press('Space');
+  await expect(order.getByRole('button', { name: `Đưa xuống: ${first}` })).toBeFocused();
+  expect(await rows.evaluateAll((els) => els.map((el) => el.getAttribute('data-row')))).toEqual(
+    before,
+  );
 
-  // The match activity must be answered before "Kiểm tra" works.
+  // The match and sort activities must be answered before "Kiểm tra" works.
   const check = page.getByRole('button', { name: 'Kiểm tra' });
   await expect(check).toBeDisabled();
   const match = page.getByRole('region', { name: /Ghép mỗi đặc điểm chung/ });
   for (const select of await match.getByRole('combobox').all()) {
     await select.selectOption({ index: 1 });
   }
+  const sort = page.getByRole('region', { name: /cấp tổ chức cơ bản hay/ });
+  for (const group of await sort.getByRole('radiogroup').all()) {
+    await group.getByRole('radio').first().click();
+  }
   await check.click();
-  await expect(page.getByText(/^Em đúng \d+\/12 ý\./)).toBeVisible();
+  await expect(page.getByText(/^Em đúng \d+\/20 ý\./)).toBeVisible();
   await expect(order.getByText(/^Đúng \d\/8$/)).toBeVisible();
   // Each row says right or wrong in words, with the lesson's reason.
   await expect(
