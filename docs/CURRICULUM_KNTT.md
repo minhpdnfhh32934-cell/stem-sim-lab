@@ -31,7 +31,7 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 
 | Sách | Số bài | Lí thuyết | Lí thuyết có chủ đề SimLab |
 | --- | --- | --- | --- |
-| Vật lí 10 | 34 | 26 | 25 |
+| Vật lí 10 | 34 | 26 | 26 |
 | Vật lí 11 | 26 | 20 | 13 |
 | Vật lí 12 | 25 | 21 | 0 |
 | Hoá học 10 | 23 | 16 | 5 |
@@ -40,7 +40,7 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Sinh học 10 | 26 | 17 | 5 |
 | Sinh học 11 | 29 | 20 | 0 |
 | Sinh học 12 | 35 | 28 | 7 |
-| **Cộng** | **253** | **189** | **57** |
+| **Cộng** | **253** | **189** | **58** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -88,7 +88,7 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Vật lí 10 | Chương V. Động lượng | 30 | Thực hành: Xác định động lượng của vật trước và sau va chạm | 116 | Thực hành | chưa có |  | pending |
 | Vật lí 10 | Chương VI. Chuyển động tròn đều | 31 | Động học của chuyển động tròn đều | 120 | Lí thuyết | Chuyển động tròn đều | Tên Bài 31–32: động học của chuyển động tròn đều; lực hướng tâm và gia tốc hướng tâm. | pending |
 | Vật lí 10 | Chương VI. Chuyển động tròn đều | 32 | Lực hướng tâm và gia tốc hướng tâm | 123 | Lí thuyết | Chuyển động tròn đều | Tên Bài 31–32: động học của chuyển động tròn đều; lực hướng tâm và gia tốc hướng tâm. | pending |
-| Vật lí 10 | Chương VII. Biến dạng của vật rắn. Áp suất chất lỏng | 33 | Biến dạng của vật rắn | 128 | Lí thuyết | chưa có |  | pending |
+| Vật lí 10 | Chương VII. Biến dạng của vật rắn. Áp suất chất lỏng | 33 | Biến dạng của vật rắn | 128 | Lí thuyết | Lò xo (định luật Hooke) | Tên Bài 33: biến dạng của vật rắn (cảnh vẽ lực đàn hồi theo độ biến dạng). Tên bài không nêu định luật Hooke; xếp theo quyết định của người dùng ngày 15/11/2026, chờ giáo viên duyệt. | pending |
 | Vật lí 10 | Chương VII. Biến dạng của vật rắn. Áp suất chất lỏng | 34 | Khối lượng riêng. Áp suất chất lỏng | 131 | Lí thuyết | Áp suất chất lỏng | Tên Bài 34: khối lượng riêng, áp suất chất lỏng (cảnh điểm đo ở độ sâu h trong bể hở: p = pa + ρgh). | pending |
 | Vật lí 11 | Chương I. Dao động | 1 | Dao động điều hoà | 6 | Lí thuyết | Con lắc lò xo, Con lắc đơn | Con lắc lò xo: Tên Bài 1–3, 5: dao động điều hoà, vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng). Con lắc đơn: Tên Bài 1–3, 5: dao động điều hoà (con lắc đơn dao động điều hoà khi góc nhỏ), vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng). | pending |
 | Vật lí 11 | Chương I. Dao động | 2 | Mô tả dao động điều hoà | 10 | Lí thuyết | Con lắc lò xo, Con lắc đơn | Con lắc lò xo: Tên Bài 1–3, 5: dao động điều hoà, vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng). Con lắc đơn: Tên Bài 1–3, 5: dao động điều hoà (con lắc đơn dao động điều hoà khi góc nhỏ), vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng). | pending |
@@ -319,7 +319,6 @@ Tên bài SGK chưa nói rõ chủ đề, hoặc không có bài nào: để "Ch
 | --- | --- | --- | --- |
 | Vật lí | Mặt phẳng nghiêng | Không bài nào có tên về mặt phẳng nghiêng; cảnh dùng cùng mô hình với "Các định luật Newton" (định luật 2 Newton, lực ma sát). Bài có thể liên quan: VL10 Bài 13, 15, 18. | pending |
 | Vật lí | Ròng rọc – dây nối | Không bài nào có tên về ròng rọc; tên Bài 17 có nêu lực căng (cảnh tính lực căng dây) nhưng không nêu hệ ròng rọc. Bài có thể liên quan: VL10 Bài 17. | pending |
-| Vật lí | Lò xo (định luật Hooke) | Tên Bài 33 là biến dạng của vật rắn (cảnh vẽ lực đàn hồi theo độ biến dạng), không nêu định luật Hooke. Bài có thể liên quan: VL10 Bài 33. | pending |
 | Hoá học | Mô hình Bohr | Không bài nào có tên về mô hình Bohr; chưa rõ thuộc Bài 1 hay Bài 3. Bài có thể liên quan: HH10 Bài 1 hoặc 3. | pending |
 | Hoá học | Phân tử 3D | Không bài nào trong ba cuốn Hoá học có tên về hình học phân tử 3D. Bài có thể liên quan: —. | pending |
 | Hoá học | Hình học phân tử (VSEPR) | Không bài nào trong ba cuốn Hoá học có tên về mô hình VSEPR. Bài có thể liên quan: —. | pending |
