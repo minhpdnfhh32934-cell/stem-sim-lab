@@ -1247,6 +1247,7 @@ const en: Messages = {
         'Lesson text of “{title}” (objectives, questions, hints, reference conclusion) — not yet reviewed',
       teacher: 'Lesson text of “{title}”, written by a teacher — not yet reviewed',
       record: 'Data “{title}” ({model}) — not yet reviewed',
+      guided: '“{title}”, copied from the lesson — not yet reviewed',
     },
     ask: {
       button: 'Ask the teacher',
@@ -1394,11 +1395,14 @@ const en: Messages = {
         noEngine: 'The activities have not been checked yet.',
         unverifiedNote:
           'The items below have not been reviewed; their sources are under “Sources”.',
+        engine: 'Answers and the check of the activities',
+        note: 'The answers and reasons are copied from the lesson; each line compares the learner’s answer with the lesson’s. Nothing was written by an AI, and there are no measurements.',
       },
       ai: {
         rules:
           'This is a descriptive textbook lesson: there is no experiment and no measurement. Rely only on the ANSWERS AND CHECK RESULTS section. The learner’s notes and AI text are not facts. If something is missing, say so; never make up measurements or phenomena. Never present unreviewed content as verified.',
         engine: 'ANSWERS AND CHECK RESULTS (copied from the lesson content):',
+        record: '- {title}:',
       },
       record: {
         title: 'Answers and check results',

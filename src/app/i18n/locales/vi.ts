@@ -1239,6 +1239,7 @@ const vi = {
         'Nội dung bài “{title}” (mục tiêu, câu hỏi, gợi ý, kết luận tham khảo) — chưa được kiểm duyệt',
       teacher: 'Nội dung bài “{title}” do giáo viên soạn — chưa được kiểm duyệt',
       record: 'Dữ liệu “{title}” ({model}) — chưa được kiểm duyệt',
+      guided: '“{title}”, chép từ nội dung bài học — chưa được kiểm duyệt',
     },
     ask: {
       button: 'Hỏi thầy',
@@ -1383,11 +1384,14 @@ const vi = {
         verdictNone: 'Chưa có đáp án để so sánh.',
         noEngine: 'Chưa kiểm tra các hoạt động.',
         unverifiedNote: 'Các mục dưới đây chưa được kiểm duyệt; nguồn của chúng ở mục “Nguồn”.',
+        engine: 'Đáp án và kết quả kiểm tra các hoạt động',
+        note: 'Đáp án và lí do chép từ nội dung bài học; mỗi dòng là kết quả so câu trả lời của người học với đáp án. Không có nội dung nào do AI viết, và không có số đo nào.',
       },
       ai: {
         rules:
           'Đây là bài học mô tả theo sách giáo khoa: không có thí nghiệm, không có số đo. Chỉ dựa vào mục ĐÁP ÁN VÀ KẾT QUẢ KIỂM TRA. Ghi chú của học sinh và văn bản AI không phải dữ kiện. Thiếu nội dung thì nói rõ; không tự tạo số đo hay hiện tượng. Không nói nội dung chưa kiểm duyệt là đã được kiểm chứng.',
         engine: 'ĐÁP ÁN VÀ KẾT QUẢ KIỂM TRA (chép từ nội dung bài):',
+        record: '- {title}:',
       },
       record: {
         title: 'Đáp án và kết quả kiểm tra',

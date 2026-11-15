@@ -189,7 +189,7 @@ describe('guided textbook lessons in the lab library', () => {
     await user.click(next());
 
     const report = screen.getByLabelText('Bản xem trước báo cáo').textContent;
-    expect(report).toContain('Kết quả từ thư viện dữ liệu của ứng dụng');
+    expect(report).toContain('Đáp án và kết quả kiểm tra các hoạt động');
     expect(report).toContain('Đáp án của bài học: Tế bào');
     expect(report).toContain('Đúng 8/8');
     expect(report).toContain('Bài 3. Các cấp độ tổ chức của thế giới sống, tr. 18–22');

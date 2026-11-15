@@ -255,14 +255,29 @@ describe('wording', () => {
     return { checked, all: [fresh, predicted, checked, unchecked, ...steps] };
   }
 
+  /** Never a simulation, never the data library, never the internal model id 'guided'. */
+  const WRONG = {
+    vi: /mô phỏng|thư viện dữ liệu|guided/i,
+    en: /simulat|data library|\(guided\)|model guided/i,
+  } as const;
+
   it('no report of a guided lesson speaks of a simulation, at any point of the lesson', () => {
     for (const s of guidedScenarios()) {
       for (const session of sessionsOf(s).all) {
         for (const locale of ['vi', 'en'] as const) {
           const text = buildReport({ scenario: s, session, locale, generatedAt: 0 });
-          expect(text).not.toMatch(locale === 'vi' ? /mô phỏng/i : /simulat/i);
+          expect(text, `${s.id} ${locale}`).not.toMatch(WRONG[locale]);
         }
       }
+      const checked = buildReport({
+        scenario: s,
+        session: sessionsOf(s).checked,
+        locale: 'vi',
+        generatedAt: 0,
+      });
+      expect(checked).toContain('## Đáp án và kết quả kiểm tra các hoạt động');
+      expect(checked).toContain('Đáp án và lí do chép từ nội dung bài học');
+      expect(checked).toContain('“Đáp án và kết quả kiểm tra”, chép từ nội dung bài học');
     }
   });
 
@@ -276,9 +291,7 @@ describe('wording', () => {
       const { checked, all } = sessionsOf(s);
       for (const session of all) {
         for (const locale of ['vi', 'en'] as const) {
-          expect(told(s, session, locale), s.id).not.toMatch(
-            locale === 'vi' ? /mô phỏng/i : /simulat/i,
-          );
+          expect(told(s, session, locale), s.id).not.toMatch(WRONG[locale]);
         }
       }
       expect(told(s, { ...checked, step: 'interact' }, 'vi')).toContain(

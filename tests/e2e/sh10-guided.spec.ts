@@ -137,7 +137,7 @@ test('Bài 20: sort and match from the lesson file, then every step to a report'
   await next(page).click();
 
   const report = page.getByLabel('Bản xem trước báo cáo');
-  await expect(report).toContainText('Kết quả từ thư viện dữ liệu của ứng dụng');
+  await expect(report).toContainText('Đáp án và kết quả kiểm tra các hoạt động');
   await expect(report).toContainText('Bài 20. Sự đa dạng và phương pháp nghiên cứu vi sinh vật');
   await expect(report).not.toContainText(/mô phỏng/i);
   await noSideScroll(page);

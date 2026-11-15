@@ -90,7 +90,13 @@ export function reportBlocks(input: ReportInput): ReportBlock[] {
   const numeric = !guided && (runs.length === 0 || runs.some((r) => r.quantities.length > 0));
   blocks.push({
     kind: 'h2',
-    text: tr(numeric ? 'studio.report.engine' : 'studio.report.engineFacts'),
+    text: tr(
+      guided
+        ? 'studio.guided.report.engine'
+        : numeric
+          ? 'studio.report.engine'
+          : 'studio.report.engineFacts',
+    ),
   });
   const noEngine = g('studio.report.noEngine', 'studio.guided.report.noEngine');
   if (runs.length === 0) blocks.push({ kind: 'p', text: tr(noEngine) });
@@ -101,7 +107,7 @@ export function reportBlocks(input: ReportInput): ReportBlock[] {
       text:
         run.quantities.length > 0
           ? tr('studio.report.engineNote', params)
-          : tr('studio.report.libraryNote', params),
+          : tr(g('studio.report.libraryNote', 'studio.guided.report.note'), params),
     });
     if (run.conditions.length > 0) {
       blocks.push({

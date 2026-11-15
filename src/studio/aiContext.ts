@@ -89,7 +89,12 @@ export function buildStudioContext(
   const engine = [tr(g('studio.ai.engine', 'studio.guided.ai.engine'))];
   if (runs.length === 0) engine.push(tr(g('studio.ai.noEngine', 'studio.guided.report.noEngine')));
   for (const run of runs) {
-    engine.push(tr('studio.ai.record', { title: L(run.title), model: run.model }));
+    engine.push(
+      tr(g('studio.ai.record', 'studio.guided.ai.record'), {
+        title: L(run.title),
+        model: run.model,
+      }),
+    );
     for (const c of run.conditions) {
       engine.push(
         tr('studio.report.condition', {
