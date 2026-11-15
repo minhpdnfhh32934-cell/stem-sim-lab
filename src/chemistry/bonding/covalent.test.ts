@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
+import { elementBySymbol } from '../data/elements';
+import { IONS } from '../data/ions';
 import { moleculeById, type Molecule } from '../data/molecules';
 import { COVALENT_MOLECULES, covalentBonds, sigmaPiTotals } from './covalent';
+import { OCTET_MOLECULES } from './octet';
 
 const mol = (id: string): Molecule => {
   const m = moleculeById(id);
@@ -45,5 +48,24 @@ describe('covalent bond (Bài 12): σ/π counts and bond type from Δχ', () => 
       covalentBonds(mol(id)).some((r) => r.thresholdException),
     );
     expect(flagged).toEqual(['hf']);
+  });
+
+  it('every Pauling value the four lessons use is the one of SGK Bảng 6.2 (tr. 37)', () => {
+    // SGK Hoá học 10 KNTT, Bài 6, Bảng 6.2 (read on the NXBGD reader, 16/11/2026).
+    const BOOK: Record<string, number> = {
+      ...{ H: 2.2, Li: 0.98, Be: 1.57, B: 2.04, C: 2.55, N: 3.04, O: 3.44, F: 3.98 },
+      ...{ Na: 0.93, Mg: 1.31, Al: 1.61, P: 2.19, S: 2.58, Cl: 3.16 },
+      ...{ K: 0.82, Ca: 1.0, Se: 2.55, Br: 2.96, Rb: 0.82, Sr: 0.95, I: 2.66, Cs: 0.79, Ba: 0.89 },
+    };
+    const used = new Set([
+      ...[...OCTET_MOLECULES, ...COVALENT_MOLECULES].flatMap((id) =>
+        mol(id).atoms.map((a) => a.el),
+      ),
+      ...IONS.map((i) => i.element),
+    ]);
+    for (const el of used) {
+      expect(BOOK[el], `${el} is in Bảng 6.2`).toBeDefined();
+      expect(elementBySymbol(el)?.en_pauling, el).toBe(BOOK[el]);
+    }
   });
 });

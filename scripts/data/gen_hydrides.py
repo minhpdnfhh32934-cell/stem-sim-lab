@@ -2,16 +2,25 @@
 "Liên kết hydrogen và tương tác van der Waals" (Hoá học 10 KNTT Bài 13, #255).
 
 Every value is copied as the page gives it (number, unit, the reference the page cites); nothing
-is remembered or estimated:
+is remembered or estimated. The user's rule (16/11/2026, "bám sát chương trình của sách"): the
+textbook's value wherever the book gives one, the other sources only where it does not.
 
+0. SGK Hoá học 10 "Kết nối tri thức với cuộc sống" (NXB Giáo dục Việt Nam), read as page images
+   in NXBGD's reader https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983 on
+   15–16/11/2026: Bài 13, Bảng 13.1 (printed page 65: H2O, H2S, CH4) and Bài 22, Bảng 22.2
+   (printed page 113: HF, HCl, HBr, HI). The NIST or PubChem value of those hydrides is kept as a
+   second source (`second`). The book itself gives H2S two values: −60,75 °C in Bảng 13.1 and
+   −60,28 °C in the question that opens Bài 13 (printed page 64); the table's is used, the other
+   is written in the note.
 1. NIST Chemistry WebBook, SRD 69 (https://webbook.nist.gov/chemistry/): the compound's "Phase
    change data" page (`cbook.cgi?ID=C<CAS>&Mask=4`), row T_boil. NIST gives one for CH4, H2O, H2S
-   and HF only (CH4 and H2O: NIST's average "AVG" of several values, reference "N/A").
+   and HF only (CH4 and H2O: NIST's average "AVG" of several values, reference "N/A"); all four
+   are in the book, so NIST is their second source.
 2. Where that page has no T_boil: PubChem, "Chemical and Physical Properties > Experimental
    Properties > Boiling Point" of the compound (PUG-View JSON `.../pug_view/data/compound/<CID>/
    JSON?heading=Boiling+Point`), the entry contributed by the Hazardous Substances Data Bank
    (HSDB), which cites a printed handbook (CRC Handbook or Merck Index).
-3. Neither has one (SnH4, H2Te): no value; the chart leaves a gap and says so.
+3. None of the three has one (SnH4, H2Te): no value; the chart leaves a gap and says so.
 
 Pages read on 2026-11-15. The values are not fetched at build time: re-read the pages and edit the
 tables below to update. Group and period come from data/elements.json in the app. Everything is
@@ -27,6 +36,22 @@ ACCESSED = "2026-11-15"
 NIST_PAGE = "https://webbook.nist.gov/cgi/cbook.cgi?ID=C{cas}&Mask=4"
 PUBCHEM_PAGE = "https://pubchem.ncbi.nlm.nih.gov/compound/{cid}#section=Boiling-Point"
 PUBCHEM_JSON = "https://pubchem.ncbi.nlm.nih.gov/rest/pug_view/data/compound/{cid}/JSON?heading=Boiling+Point"
+SGK_READER = "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983"
+SGK = 'SGK Hoá học 10 "Kết nối tri thức với cuộc sống", NXB Giáo dục Việt Nam'
+
+# The textbook's boiling points t_s (°C) as printed (comma decimal): (value, text, lesson/table, page).
+BOOK = {
+    "h2o": (100.0, "100", "Bài 13, Bảng 13.1", 65),
+    "h2s": (-60.75, "−60,75", "Bài 13, Bảng 13.1", 65),
+    "ch4": (-161.58, "−161,58", "Bài 13, Bảng 13.1", 65),
+    "hf": (19.5, "+19,5", "Bài 22, Bảng 22.2", 113),
+    "hcl": (-84.9, "−84,9", "Bài 22, Bảng 22.2", 113),
+    "hbr": (-66.7, "−66,7", "Bài 22, Bảng 22.2", 113),
+    "hi": (-35.8, "−35,8", "Bài 22, Bảng 22.2", 113),
+}
+BOOK_NOTE = {
+    "h2s": "SGK ghi hai giá trị cho H2S: −60,75 °C ở Bảng 13.1 (tr. 65) và −60,28 °C ở câu hỏi mở đầu Bài 13 (tr. 64); dùng số của bảng.",
+}
 
 # id, formula, central element, CAS number (the NIST page is looked up by it), PubChem CID.
 HYDRIDES = [
@@ -127,7 +152,27 @@ MISSING = (
 )
 
 
+def book_value(hid: str):
+    value, text, where, page = BOOK[hid]
+    return {
+        "value": value,
+        "unit": "°C",
+        "as_given": f"{text} °C",
+        "source": "sgk",
+        "url": SGK_READER,
+        "reference": f"{SGK}, {where}, tr. {page}",
+        "note": BOOK_NOTE.get(hid, f"{where}: nhiệt độ sôi t_s (°C) như sách in."),
+    }
+
+
 def boiling_point(hid: str, cas: str, cid: int):
+    """The value shown: the textbook's where it gives one, else NIST, else PubChem."""
+    if hid in BOOK:
+        return book_value(hid)
+    return other_source(hid, cas, cid)
+
+
+def other_source(hid: str, cas: str, cid: int):
     if hid in NIST:
         n = NIST[hid]
         return {
@@ -162,6 +207,7 @@ def main() -> None:
     items = []
     for hid, formula, el, cas, cid in HYDRIDES:
         bp = boiling_point(hid, cas, cid)
+        second = other_source(hid, cas, cid) if hid in BOOK else None
         items.append({
             "id": hid,
             "formula": formula,
@@ -169,6 +215,7 @@ def main() -> None:
             "cas": cas,
             "pubchem_cid": cid,
             "boiling_point": bp,
+            **({"second": second} if second else {}),
             **({} if bp else {"missing": MISSING}),
             "review_status": "pending",
         })
@@ -177,14 +224,15 @@ def main() -> None:
         "version": 1,
         "accessed": ACCESSED,
         "source": {
-            "id": "nist-webbook",
+            "id": "sgk-hh10-hydride-bp",
             "citation": (
-                "Nhiệt độ sôi thường: NIST Chemistry WebBook, SRD 69 (P. J. Linstrom, W. G. Mallard, "
-                "eds., NIST), mục dữ liệu chuyển pha T_boil; chất NIST không ghi T_boil: PubChem "
-                "(NCBI), mục Boiling Point do Hazardous Substances Data Bank cung cấp, kèm tài liệu "
-                "gốc từng giá trị. Đọc ngày 15/11/2026."
+                "Nhiệt độ sôi thường: SGK Hoá học 10 Kết nối tri thức (Bảng 13.1 tr. 65; Bảng 22.2 "
+                "tr. 113) cho các chất sách ghi; chất sách không ghi: NIST Chemistry WebBook, SRD 69 "
+                "(P. J. Linstrom, W. G. Mallard, eds.), hoặc PubChem (NCBI), mục Boiling Point do "
+                "Hazardous Substances Data Bank cung cấp, kèm tài liệu gốc từng giá trị. NIST/PubChem "
+                "còn được ghi làm nguồn thứ hai cho các chất có trong sách. Đọc ngày 15–16/11/2026."
             ),
-            "url": "https://webbook.nist.gov/chemistry/",
+            "url": SGK_READER,
         },
         "generated_by": "scripts/data/gen_hydrides.py",
         "items": items,

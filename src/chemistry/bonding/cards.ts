@@ -20,7 +20,14 @@ export const KNTT = {
     'b12',
     'Bài 12 Liên kết cộng hoá trị, tr. 55–63 (Bảng 12.1 tr. 59; liên kết σ, π tr. 60–61)',
   ),
-  b13: kntt('b13', 'Bài 13 Liên kết hydrogen và tương tác van der Waals, tr. 64–67'),
+  b13: kntt(
+    'b13',
+    'Bài 13 Liên kết hydrogen và tương tác van der Waals, tr. 64–67 (Bảng 13.1 tr. 65: nhiệt độ sôi H₂O, H₂S, CH₄)',
+  ),
+  b22: kntt(
+    'b22',
+    'Bài 22 Hydrogen halide. Muối halide, Bảng 22.2 tr. 113: nhiệt độ sôi HF, HCl, HBr, HI',
+  ),
 } satisfies Record<string, Source>;
 
 const PICTURE = L(
@@ -173,8 +180,8 @@ export const FORCES_CARD: ScienceCardData = {
     'Hydrogen bonds and van der Waals forces',
   ),
   model: L(
-    'Nhiệt độ sôi thường đo được của các hydride nhóm IVA–VIIA theo chu kì, lấy từ bảng dữ liệu có nguồn (NIST WebBook; PubChem khi NIST không ghi). App không mô phỏng lực giữa các phân tử: phần giải thích là định tính.',
-    'Measured normal boiling points of the group IVA–VIIA hydrides by period, from a sourced data table (NIST WebBook; PubChem where NIST lists none). The app does not simulate the forces between molecules: the explanation is qualitative.',
+    'Nhiệt độ sôi thường của các hydride nhóm IVA–VIIA theo chu kì. Chất nào SGK ghi thì lấy số của SGK (Bảng 13.1: H₂O, H₂S, CH₄; Bảng 22.2: HF, HCl, HBr, HI); chất SGK không ghi thì lấy NIST WebBook hoặc PubChem. App không mô phỏng lực giữa các phân tử: phần giải thích là định tính.',
+    'Normal boiling points of the group IVA–VIIA hydrides by period. Where the textbook gives a value it is used (Table 13.1: H₂O, H₂S, CH₄; Table 22.2: HF, HCl, HBr, HI); the others come from the NIST WebBook or PubChem. The app does not simulate the forces between molecules: the explanation is qualitative.',
   ),
   equations: [
     {
@@ -192,17 +199,21 @@ export const FORCES_CARD: ScienceCardData = {
       'NH₃, H₂O and HF boil unusually high against that trend: there are hydrogen bonds between their molecules, because H is bonded to a very electronegative atom (N, O, F) that still has a non-bonding pair. CH₄ has no hydrogen bonds, so it shows no anomaly.',
     ),
     L(
-      'SnH₄ và H₂Te: NIST WebBook và PubChem không ghi nhiệt độ sôi (đọc ngày 15/11/2026), biểu đồ để trống, không ước lượng.',
-      'SnH₄ and H₂Te: NIST WebBook and PubChem give no boiling point (read 15/11/2026); the chart leaves a gap, nothing is estimated.',
+      'SnH₄ và H₂Te: SGK, NIST WebBook và PubChem đều không ghi nhiệt độ sôi (đọc ngày 15–16/11/2026), biểu đồ để trống, không ước lượng.',
+      'SnH₄ and H₂Te: the textbook, the NIST WebBook and PubChem give no boiling point (read 15–16/11/2026); the chart leaves a gap, nothing is estimated.',
+    ),
+    L(
+      'Với các chất có trong SGK, số của NIST WebBook (CH₄, H₂O, H₂S, HF) hoặc PubChem (HCl, HBr, HI) được ghi là nguồn thứ hai ở bảng số liệu; vài số lệch nhau đôi chút (ví dụ H₂S, CH₄). SGK ghi H₂S −60,75 °C ở Bảng 13.1 nhưng −60,28 °C ở câu hỏi mở đầu Bài 13 (tr. 64): app theo số của bảng.',
+      'For the hydrides in the textbook, the NIST WebBook value (CH₄, H₂O, H₂S, HF) or the PubChem one (HCl, HBr, HI) is written as a second source in the data table; a few differ slightly (e.g. H₂S, CH₄). The textbook gives H₂S −60.75 °C in Table 13.1 but −60.28 °C in the question opening Lesson 13 (p. 64): the app follows the table.',
     ),
   ],
   validity: L('Áp suất 1 atm (nhiệt độ sôi thường).', 'At 1 atm (normal boiling point).'),
   confidence: 'exact',
   confidenceNote: L(
-    'Số đo hiện đúng như nguồn ghi; nhận xét “bất thường” do code so số liệu; lời giải thích là định tính.',
-    'The measured values are shown as the sources give them; the “anomaly” is found by comparing the data; the explanation is qualitative.',
+    'Số liệu hiện đúng như nguồn ghi (SGK trước); nhận xét “bất thường” do code so số liệu; lời giải thích là định tính.',
+    'The values are shown as the sources give them (textbook first); the “anomaly” is found by comparing the data; the explanation is qualitative.',
   ),
   userIntervened: false,
-  sources: [KNTT.b13, HYDRIDES_SOURCE],
+  sources: [KNTT.b13, KNTT.b22, HYDRIDES_SOURCE],
   reviewStatus: 'pending',
 };

@@ -1,6 +1,6 @@
 import { toSI } from '@/core/units';
 import { elementBySymbol } from '../data/elements';
-import { HYDRIDES, type Hydride } from '../data/hydrides';
+import { HYDRIDES, type BoilingPoint, type Hydride } from '../data/hydrides';
 
 export const HYDRIDE_GROUPS = [14, 15, 16, 17] as const;
 export type HydrideGroup = (typeof HYDRIDE_GROUPS)[number];
@@ -12,17 +12,28 @@ export function boilingPointK(h: Hydride): number | null {
   return bp ? toSI(bp.value, bp.unit) : null;
 }
 
-/** Decimals the source printed ("111." → 0, "-33.35 °C" → 2): a converted value keeps them. */
-export function sourceDecimals(h: Hydride): number {
-  return /^-?\d+\.?(\d*)/.exec(h.boiling_point?.as_given ?? '')?.[1]?.length ?? 0;
+/**
+ * Decimals the source printed ("111." → 0, "-33.35 °C" → 2, the book's "−161,58" → 2): a
+ * converted value keeps them.
+ */
+export function decimalsOf(bp: BoilingPoint): number {
+  return /^[-−+]?\d+[.,]?(\d*)/.exec(bp.as_given)?.[1]?.length ?? 0;
 }
 
-/** Boiling point in K or °C, rounded to the decimals the source printed; null when missing. */
-export function boilingPointIn(h: Hydride, unit: 'K' | 'C'): number | null {
-  const k = boilingPointK(h);
-  if (k === null) return null;
-  const f = 10 ** sourceDecimals(h);
+export function sourceDecimals(h: Hydride): number {
+  return h.boiling_point ? decimalsOf(h.boiling_point) : 0;
+}
+
+/** A value in K or °C, rounded to the decimals its source printed. */
+export function valueIn(bp: BoilingPoint, unit: 'K' | 'C'): number {
+  const k = toSI(bp.value, bp.unit);
+  const f = 10 ** decimalsOf(bp);
   return Math.round((unit === 'K' ? k : k - 273.15) * f) / f;
+}
+
+/** The shown boiling point in K or °C (see `valueIn`); null when missing. */
+export function boilingPointIn(h: Hydride, unit: 'K' | 'C'): number | null {
+  return h.boiling_point ? valueIn(h.boiling_point, unit) : null;
 }
 
 export interface HydridePoint {

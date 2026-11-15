@@ -4,7 +4,7 @@ import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { XYChart } from '@/ui/charts/XYChart';
 import { L, usePublishCard } from '../common';
-import { HYDRIDES } from '../data/hydrides';
+import { HYDRIDES, type BoilingPoint } from '../data/hydrides';
 import { prettyFormula } from '../data/molecules';
 import { FORCES_CARD } from './cards';
 import {
@@ -14,8 +14,18 @@ import {
   period2Anomaly,
   PERIODS,
   type HydrideGroup,
+  valueIn,
 } from './hydrides';
 import { useBondingStore, type TempUnit } from './store';
+
+const SOURCE_NAME: Record<BoilingPoint['source'], string> = {
+  sgk: 'SGK',
+  nist: 'NIST WebBook',
+  pubchem: 'PubChem (HSDB)',
+};
+/** "NIST WebBook: <reference>" (NIST's own note when it cites no reference). */
+const sourceText = (bp: BoilingPoint) =>
+  `${SOURCE_NAME[bp.source]}: ${bp.reference === 'N/A' ? bp.note : bp.reference}`;
 import '../chem.css';
 import './bonding.css';
 
@@ -145,6 +155,7 @@ export function ForcesBottom() {
         <tbody>
           {rows.map(({ g, p }) => {
             const bp = p.hydride.boiling_point;
+            const second = p.hydride.second;
             const v = boilingPointIn(p.hydride, unit);
             return (
               <tr key={p.hydride.id}>
@@ -157,13 +168,22 @@ export function ForcesBottom() {
                 <td className="num">{bp ? bp.as_given : '—'}</td>
                 <td className="small">
                   {bp
-                    ? `${bp.source === 'nist' ? 'NIST WebBook' : 'PubChem (HSDB)'}: ${bp.reference === 'N/A' ? bp.note : bp.reference}`
+                    ? sourceText(bp)
                     : Lz(
                         L(
-                          'Chưa có số liệu có nguồn (NIST, PubChem)',
-                          'No sourced value (NIST, PubChem)',
+                          'Chưa có số liệu có nguồn (SGK, NIST, PubChem)',
+                          'No sourced value (textbook, NIST, PubChem)',
                         ),
                       )}
+                  {second && (
+                    <>
+                      <br />
+                      {Lz(L('Nguồn thứ hai: ', 'Second source: '))}
+                      {second.as_given} (
+                      {formatNumber(locale, valueIn(second, unit), { maximumFractionDigits: 2 })}{' '}
+                      {unitText(unit)}) — {sourceText(second)}
+                    </>
+                  )}
                 </td>
               </tr>
             );

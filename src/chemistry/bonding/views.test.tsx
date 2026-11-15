@@ -130,6 +130,13 @@ describe('panels', () => {
       'Chưa có số liệu có nguồn',
     );
     expect(container).toHaveTextContent('Average of 13 values');
+    // The textbook's value is shown; NIST's is named as the second source.
+    const h2s = screen.getByRole('row', { name: /^H₂S\s/ });
+    expect(h2s).toHaveTextContent('−60,75 °C');
+    expect(h2s).toHaveTextContent('SGK: SGK Hoá học 10');
+    expect(h2s).toHaveTextContent('Bảng 13.1, tr. 65');
+    expect(h2s).toHaveTextContent('Nguồn thứ hai: 212.87 K (-60,28 °C) — NIST WebBook');
+    expect(screen.getByRole('row', { name: /^HF/ })).toHaveTextContent('Bảng 22.2, tr. 113');
     fireEvent.click(screen.getByRole('radio', { name: 'K' }));
     expect(screen.getByRole('row', { name: /^NH₃/ })).toHaveTextContent('239,8');
   });

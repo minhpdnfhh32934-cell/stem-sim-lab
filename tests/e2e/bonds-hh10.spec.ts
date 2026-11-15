@@ -78,6 +78,11 @@ test('Bài 13 hydrogen bonds: hydride boiling points, the period-2 anomaly from 
   await expect(page.locator('.chart canvas').first()).toBeVisible();
   const nh3 = page.getByRole('row', { name: /^NH₃/ });
   await expect(nh3).toContainText('-33,35');
+  // The textbook's value where SGK gives one (Bảng 13.1), NIST named as the second source.
+  const h2s = page.getByRole('row', { name: /^H₂S\s/ });
+  await expect(h2s).toContainText('−60,75 °C');
+  await expect(h2s).toContainText('Bảng 13.1, tr. 65');
+  await expect(h2s).toContainText('Nguồn thứ hai: 212.87 K');
   await page.getByRole('radio', { name: 'K', exact: true }).click();
   await expect(nh3).toContainText('239,8');
   await noHorizontalScroll(page);
