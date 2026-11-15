@@ -7,6 +7,11 @@ Sources (as bundled in mendeleev, see https://mendeleev.readthedocs.io/en/stable
 - ground-state electron configurations: NIST Atomic Spectra Database (includes the
   exceptions Cr, Cu, Nb, Mo, Ru, Rh, Pd, Ag, Pt, Au, La, Ce, Gd, Ac, Th, Pa, U, Np, Cm, ...);
 - first ionisation energy: NIST;
+- melting and boiling points at 101.325 kPa (K): W. M. Haynes, CRC Handbook of Chemistry and
+  Physics, 97th ed., CRC Press 2016 (mendeleev's `PhaseTransition` table, citation key [24]). Only an
+  element with a single, plain transition record gets them: several allotropes (P, S, Se, Sn), a
+  sublimation or a transition point (As, C) need a teacher to say which value is meant, so they
+  stay null;
 - CPK and Jmol colours.
 
 Every item is written with review_status "pending": a teacher checks it before switching to
@@ -50,6 +55,15 @@ SERIES = {
     "Actinides": "actinide",
 }
 
+def phase_points(e):
+    """(melting, boiling) in K, rounded to 0.01 K as the CRC table prints them, or (None, None)."""
+    pts = e.phase_transitions
+    if len(pts) != 1 or pts[0].is_transition or pts[0].is_sublimation_point:
+        return None, None
+    r = lambda t: round(t, 2) if t is not None else None
+    return r(pts[0].melting_point), r(pts[0].boiling_point)
+
+
 # IUPAC gives no standard atomic weight for these: show the mass number of the longest-lived
 # isotope in brackets instead (Th, Pa, U do have standard atomic weights).
 def no_standard_weight(z: int) -> bool:
@@ -62,6 +76,7 @@ def main() -> None:
         e = element(z)
         conf = [[n, l, int(k)] for (n, l), k in e.ec.conf.items()]
         core = e.ec.get_largest_core()
+        melting, boiling = phase_points(e)
         items.append(
             {
                 "z": z,
@@ -79,6 +94,8 @@ def main() -> None:
                 if e.covalent_radius_cordero is not None
                 else None,
                 "ionization_energy_ev": round(e.ionenergies[1], 4) if e.ionenergies.get(1) else None,
+                "melting_point_k": melting,
+                "boiling_point_k": boiling,
                 "configuration": conf,
                 "noble_core": core[0] if core else None,
                 "cpk_color": e.cpk_color,
@@ -94,7 +111,9 @@ def main() -> None:
             "citation": (
                 f"mendeleev {mendeleev.__version__} (L. M. Mentel): IUPAC/CIAAW atomic weights, "
                 "Pauling electronegativity, Cordero et al. 2008 covalent radii, "
-                "NIST ASD ground-state configurations and ionisation energies, CPK/Jmol colours"
+                "NIST ASD ground-state configurations and ionisation energies, melting and boiling "
+                "points from the CRC Handbook of Chemistry and Physics 97th ed. (Haynes 2016), "
+                "CPK/Jmol colours"
             ),
             "url": "https://mendeleev.readthedocs.io/en/stable/data.html",
         },

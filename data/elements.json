@@ -3,7 +3,7 @@
  "version": 1,
  "source": {
   "id": "mendeleev",
-  "citation": "mendeleev 1.3.0 (L. M. Mentel): IUPAC/CIAAW atomic weights, Pauling electronegativity, Cordero et al. 2008 covalent radii, NIST ASD ground-state configurations and ionisation energies, CPK/Jmol colours",
+  "citation": "mendeleev 1.3.0 (L. M. Mentel): IUPAC/CIAAW atomic weights, Pauling electronegativity, Cordero et al. 2008 covalent radii, NIST ASD ground-state configurations and ionisation energies, melting and boiling points from the CRC Handbook of Chemistry and Physics 97th ed. (Haynes 2016), CPK/Jmol colours",
   "url": "https://mendeleev.readthedocs.io/en/stable/data.html"
  },
  "generated_by": "scripts/data/gen_elements.py",
@@ -25,6 +25,8 @@
    "en_pauling": 2.2,
    "covalent_radius_pm": 31.0,
    "ionization_energy_ev": 13.5984,
+   "melting_point_k": 13.99,
+   "boiling_point_k": 20.27,
    "configuration": [
     [
      1,
@@ -53,6 +55,8 @@
    "en_pauling": null,
    "covalent_radius_pm": 28.0,
    "ionization_energy_ev": 24.5874,
+   "melting_point_k": null,
+   "boiling_point_k": 4.22,
    "configuration": [
     [
      1,
@@ -81,6 +85,8 @@
    "en_pauling": 0.98,
    "covalent_radius_pm": 128.0,
    "ionization_energy_ev": 5.3917,
+   "melting_point_k": 453.65,
+   "boiling_point_k": 1615.15,
    "configuration": [
     [
      1,
@@ -114,6 +120,8 @@
    "en_pauling": 1.57,
    "covalent_radius_pm": 96.0,
    "ionization_energy_ev": 9.3227,
+   "melting_point_k": 1560.15,
+   "boiling_point_k": 2741.15,
    "configuration": [
     [
      1,
@@ -147,6 +155,8 @@
    "en_pauling": 2.04,
    "covalent_radius_pm": 84.0,
    "ionization_energy_ev": 8.298,
+   "melting_point_k": 2350.15,
+   "boiling_point_k": 4273.15,
    "configuration": [
     [
      1,
@@ -185,6 +195,8 @@
    "en_pauling": 2.55,
    "covalent_radius_pm": 73.0,
    "ionization_energy_ev": 11.2603,
+   "melting_point_k": null,
+   "boiling_point_k": null,
    "configuration": [
     [
      1,
@@ -223,6 +235,8 @@
    "en_pauling": 3.04,
    "covalent_radius_pm": 71.0,
    "ionization_energy_ev": 14.5341,
+   "melting_point_k": 63.15,
+   "boiling_point_k": 77.35,
    "configuration": [
     [
      1,
@@ -261,6 +275,8 @@
    "en_pauling": 3.44,
    "covalent_radius_pm": 66.0,
    "ionization_energy_ev": 13.6181,
+   "melting_point_k": 54.36,
+   "boiling_point_k": 90.19,
    "configuration": [
     [
      1,
@@ -299,6 +315,8 @@
    "en_pauling": 3.98,
    "covalent_radius_pm": 57.0,
    "ionization_energy_ev": 17.4228,
+   "melting_point_k": 53.48,
+   "boiling_point_k": 85.04,
    "configuration": [
     [
      1,
@@ -337,6 +355,8 @@
    "en_pauling": null,
    "covalent_radius_pm": 58.0,
    "ionization_energy_ev": 21.5645,
+   "melting_point_k": 24.56,
+   "boiling_point_k": 27.1,
    "configuration": [
     [
      1,
@@ -375,6 +395,8 @@
    "en_pauling": 0.93,
    "covalent_radius_pm": 166.0,
    "ionization_energy_ev": 5.1391,
+   "melting_point_k": 370.94,
+   "boiling_point_k": 1156.09,
    "configuration": [
     [
      1,
@@ -418,6 +440,8 @@
    "en_pauling": 1.31,
    "covalent_radius_pm": 141.0,
    "ionization_energy_ev": 7.6462,
+   "melting_point_k": 923.15,
+   "boiling_point_k": 1363.15,
    "configuration": [
     [
      1,
@@ -461,6 +485,8 @@
    "en_pauling": 1.61,
    "covalent_radius_pm": 121.0,
    "ionization_energy_ev": 5.9858,
+   "melting_point_k": 933.47,
+   "boiling_point_k": 2792.15,
    "configuration": [
     [
      1,
@@ -509,6 +535,8 @@
    "en_pauling": 1.9,
    "covalent_radius_pm": 111.0,
    "ionization_energy_ev": 8.1517,
+   "melting_point_k": 1687.15,
+   "boiling_point_k": 3538.15,
    "configuration": [
     [
      1,
@@ -557,6 +585,8 @@
    "en_pauling": 2.19,
    "covalent_radius_pm": 107.0,
    "ionization_energy_ev": 10.4867,
+   "melting_point_k": null,
+   "boiling_point_k": null,
    "configuration": [
     [
      1,
@@ -605,6 +635,8 @@
    "en_pauling": 2.58,
    "covalent_radius_pm": 105.0,
    "ionization_energy_ev": 10.36,
+   "melting_point_k": null,
+   "boiling_point_k": null,
    "configuration": [
     [
      1,
@@ -653,6 +685,8 @@
    "en_pauling": 3.16,
    "covalent_radius_pm": 102.0,
    "ionization_energy_ev": 12.9676,
+   "melting_point_k": 171.65,
+   "boiling_point_k": 239.11,
    "configuration": [
     [
      1,
@@ -701,6 +735,8 @@
    "en_pauling": null,
    "covalent_radius_pm": 106.0,
    "ionization_energy_ev": 15.7596,
+   "melting_point_k": 83.81,
+   "boiling_point_k": 87.3,
    "configuration": [
     [
      1,
@@ -749,6 +785,8 @@
    "en_pauling": 0.82,
    "covalent_radius_pm": 203.0,
    "ionization_energy_ev": 4.3407,
+   "melting_point_k": 336.65,
+   "boiling_point_k": 1032.15,
    "configuration": [
     [
      1,
@@ -802,6 +840,8 @@
    "en_pauling": 1.0,
    "covalent_radius_pm": 176.0,
    "ionization_energy_ev": 6.1132,
+   "melting_point_k": 1115.15,
+   "boiling_point_k": 1757.15,
    "configuration": [
     [
      1,
@@ -853,6 +893,8 @@
    "en_pauling": 1.36,
    "covalent_radius_pm": 170.0,
    "ionization_energy_ev": 6.5615,
+   "melting_point_k": 1814.15,
+   "boiling_point_k": 3109.15,
    "configuration": [
     [
      1,
@@ -911,6 +953,8 @@
    "en_pauling": 1.54,
    "covalent_radius_pm": 160.0,
    "ionization_energy_ev": 6.8281,
+   "melting_point_k": 1943.15,
+   "boiling_point_k": 3560.15,
    "configuration": [
     [
      1,
@@ -969,6 +1013,8 @@
    "en_pauling": 1.63,
    "covalent_radius_pm": 153.0,
    "ionization_energy_ev": 6.7462,
+   "melting_point_k": 2183.15,
+   "boiling_point_k": 3680.15,
    "configuration": [
     [
      1,
@@ -1027,6 +1073,8 @@
    "en_pauling": 1.66,
    "covalent_radius_pm": 139.0,
    "ionization_energy_ev": 6.7665,
+   "melting_point_k": 2180.15,
+   "boiling_point_k": 2944.15,
    "configuration": [
     [
      1,
@@ -1085,6 +1133,8 @@
    "en_pauling": 1.55,
    "covalent_radius_pm": 150.0,
    "ionization_energy_ev": 7.434,
+   "melting_point_k": 1519.15,
+   "boiling_point_k": 2334.15,
    "configuration": [
     [
      1,
@@ -1143,6 +1193,8 @@
    "en_pauling": 1.83,
    "covalent_radius_pm": 142.0,
    "ionization_energy_ev": 7.9025,
+   "melting_point_k": 1811.15,
+   "boiling_point_k": 3134.15,
    "configuration": [
     [
      1,
@@ -1201,6 +1253,8 @@
    "en_pauling": 1.88,
    "covalent_radius_pm": 138.0,
    "ionization_energy_ev": 7.881,
+   "melting_point_k": 1768.15,
+   "boiling_point_k": 3200.15,
    "configuration": [
     [
      1,
@@ -1259,6 +1313,8 @@
    "en_pauling": 1.91,
    "covalent_radius_pm": 124.0,
    "ionization_energy_ev": 7.6399,
+   "melting_point_k": 1728.15,
+   "boiling_point_k": 3186.15,
    "configuration": [
     [
      1,
@@ -1317,6 +1373,8 @@
    "en_pauling": 1.9,
    "covalent_radius_pm": 132.0,
    "ionization_energy_ev": 7.7264,
+   "melting_point_k": 1357.77,
+   "boiling_point_k": 2833.15,
    "configuration": [
     [
      1,
@@ -1375,6 +1433,8 @@
    "en_pauling": 1.65,
    "covalent_radius_pm": 122.0,
    "ionization_energy_ev": 9.3942,
+   "melting_point_k": 692.68,
+   "boiling_point_k": 1180.15,
    "configuration": [
     [
      1,
@@ -1431,6 +1491,8 @@
    "en_pauling": 1.81,
    "covalent_radius_pm": 122.0,
    "ionization_energy_ev": 5.9993,
+   "melting_point_k": 302.91,
+   "boiling_point_k": 2502.15,
    "configuration": [
     [
      1,
@@ -1492,6 +1554,8 @@
    "en_pauling": 2.01,
    "covalent_radius_pm": 120.0,
    "ionization_energy_ev": 7.8994,
+   "melting_point_k": 1211.4,
+   "boiling_point_k": 3106.15,
    "configuration": [
     [
      1,
@@ -1555,6 +1619,8 @@
    "en_pauling": 2.18,
    "covalent_radius_pm": 119.0,
    "ionization_energy_ev": 9.7886,
+   "melting_point_k": null,
+   "boiling_point_k": null,
    "configuration": [
     [
      1,
@@ -1618,6 +1684,8 @@
    "en_pauling": 2.55,
    "covalent_radius_pm": 120.0,
    "ionization_energy_ev": 9.7524,
+   "melting_point_k": null,
+   "boiling_point_k": null,
    "configuration": [
     [
      1,
@@ -1681,6 +1749,8 @@
    "en_pauling": 2.96,
    "covalent_radius_pm": 120.0,
    "ionization_energy_ev": 11.8138,
+   "melting_point_k": 265.95,
+   "boiling_point_k": 331.95,
    "configuration": [
     [
      1,
@@ -1744,6 +1814,8 @@
    "en_pauling": null,
    "covalent_radius_pm": 116.0,
    "ionization_energy_ev": 13.9996,
+   "melting_point_k": 115.78,
+   "boiling_point_k": 119.73,
    "configuration": [
     [
      1,
@@ -1807,6 +1879,8 @@
    "en_pauling": 0.82,
    "covalent_radius_pm": 220.0,
    "ionization_energy_ev": 4.1771,
+   "melting_point_k": 312.45,
+   "boiling_point_k": 961.15,
    "configuration": [
     [
      1,
@@ -1875,6 +1949,8 @@
    "en_pauling": 0.95,
    "covalent_radius_pm": 195.0,
    "ionization_energy_ev": 5.6949,
+   "melting_point_k": 1050.15,
+   "boiling_point_k": 1650.15,
    "configuration": [
     [
      1,
@@ -1941,6 +2017,8 @@
    "en_pauling": 1.22,
    "covalent_radius_pm": 190.0,
    "ionization_energy_ev": 6.2173,
+   "melting_point_k": 1795.15,
+   "boiling_point_k": 3618.15,
    "configuration": [
     [
      1,
@@ -2012,6 +2090,8 @@
    "en_pauling": 1.33,
    "covalent_radius_pm": 175.0,
    "ionization_energy_ev": 6.6341,
+   "melting_point_k": 2127.15,
+   "boiling_point_k": 4679.15,
    "configuration": [
     [
      1,
@@ -2083,6 +2163,8 @@
    "en_pauling": 1.6,
    "covalent_radius_pm": 164.0,
    "ionization_energy_ev": 6.7588,
+   "melting_point_k": 2750.15,
+   "boiling_point_k": 5014.15,
    "configuration": [
     [
      1,
@@ -2154,6 +2236,8 @@
    "en_pauling": 2.16,
    "covalent_radius_pm": 154.0,
    "ionization_energy_ev": 7.0924,
+   "melting_point_k": 2895.15,
+   "boiling_point_k": 4912.15,
    "configuration": [
     [
      1,
@@ -2225,6 +2309,8 @@
    "en_pauling": 2.1,
    "covalent_radius_pm": 147.0,
    "ionization_energy_ev": 7.1194,
+   "melting_point_k": 2430.15,
+   "boiling_point_k": 4535.15,
    "configuration": [
     [
      1,
@@ -2296,6 +2382,8 @@
    "en_pauling": 2.2,
    "covalent_radius_pm": 146.0,
    "ionization_energy_ev": 7.3605,
+   "melting_point_k": 2606.15,
+   "boiling_point_k": 4420.15,
    "configuration": [
     [
      1,
@@ -2367,6 +2455,8 @@
    "en_pauling": 2.28,
    "covalent_radius_pm": 142.0,
    "ionization_energy_ev": 7.4589,
+   "melting_point_k": 2236.15,
+   "boiling_point_k": 3968.15,
    "configuration": [
     [
      1,
@@ -2438,6 +2528,8 @@
    "en_pauling": 2.2,
    "covalent_radius_pm": 139.0,
    "ionization_energy_ev": 8.3368,
+   "melting_point_k": 1827.95,
+   "boiling_point_k": 3236.15,
    "configuration": [
     [
      1,
@@ -2506,6 +2598,8 @@
    "en_pauling": 1.93,
    "covalent_radius_pm": 145.0,
    "ionization_energy_ev": 7.5762,
+   "melting_point_k": 1234.93,
+   "boiling_point_k": 2435.15,
    "configuration": [
     [
      1,
@@ -2577,6 +2671,8 @@
    "en_pauling": 1.69,
    "covalent_radius_pm": 144.0,
    "ionization_energy_ev": 8.9938,
+   "melting_point_k": 594.22,
+   "boiling_point_k": 1040.15,
    "configuration": [
     [
      1,
@@ -2648,6 +2744,8 @@
    "en_pauling": 1.78,
    "covalent_radius_pm": 142.0,
    "ionization_energy_ev": 5.7864,
+   "melting_point_k": 429.75,
+   "boiling_point_k": 2300.15,
    "configuration": [
     [
      1,
@@ -2726,6 +2824,8 @@
    "en_pauling": 1.96,
    "covalent_radius_pm": 139.0,
    "ionization_energy_ev": 7.3439,
+   "melting_point_k": null,
+   "boiling_point_k": null,
    "configuration": [
     [
      1,
@@ -2804,6 +2904,8 @@
    "en_pauling": 2.05,
    "covalent_radius_pm": 139.0,
    "ionization_energy_ev": 8.6084,
+   "melting_point_k": 903.78,
+   "boiling_point_k": 1860.15,
    "configuration": [
     [
      1,
@@ -2880,6 +2982,8 @@
    "en_pauling": 2.1,
    "covalent_radius_pm": 138.0,
    "ionization_energy_ev": 9.0098,
+   "melting_point_k": 722.66,
+   "boiling_point_k": 1261.15,
    "configuration": [
     [
      1,
@@ -2958,6 +3062,8 @@
    "en_pauling": 2.66,
    "covalent_radius_pm": 139.0,
    "ionization_energy_ev": 10.4512,
+   "melting_point_k": 386.85,
+   "boiling_point_k": 457.55,
    "configuration": [
     [
      1,
@@ -3036,6 +3142,8 @@
    "en_pauling": 2.6,
    "covalent_radius_pm": 140.0,
    "ionization_energy_ev": 12.1298,
+   "melting_point_k": 161.4,
+   "boiling_point_k": 165.05,
    "configuration": [
     [
      1,
@@ -3114,6 +3222,8 @@
    "en_pauling": 0.79,
    "covalent_radius_pm": 244.0,
    "ionization_energy_ev": 3.8939,
+   "melting_point_k": 301.65,
+   "boiling_point_k": 944.15,
    "configuration": [
     [
      1,
@@ -3197,6 +3307,8 @@
    "en_pauling": 0.89,
    "covalent_radius_pm": 215.0,
    "ionization_energy_ev": 5.2117,
+   "melting_point_k": 1000.15,
+   "boiling_point_k": 2118.15,
    "configuration": [
     [
      1,
@@ -3278,6 +3390,8 @@
    "en_pauling": 1.1,
    "covalent_radius_pm": 207.0,
    "ionization_energy_ev": 5.5769,
+   "melting_point_k": 1193.15,
+   "boiling_point_k": 3737.15,
    "configuration": [
     [
      1,
@@ -3364,6 +3478,8 @@
    "en_pauling": 1.12,
    "covalent_radius_pm": 204.0,
    "ionization_energy_ev": 5.5386,
+   "melting_point_k": 1072.15,
+   "boiling_point_k": 3716.15,
    "configuration": [
     [
      1,
@@ -3455,6 +3571,8 @@
    "en_pauling": 1.13,
    "covalent_radius_pm": 203.0,
    "ionization_energy_ev": 5.4702,
+   "melting_point_k": 1204.15,
+   "boiling_point_k": 3793.15,
    "configuration": [
     [
      1,
@@ -3541,6 +3659,8 @@
    "en_pauling": 1.14,
    "covalent_radius_pm": 201.0,
    "ionization_energy_ev": 5.525,
+   "melting_point_k": 1289.15,
+   "boiling_point_k": 3347.15,
    "configuration": [
     [
      1,
@@ -3627,6 +3747,8 @@
    "en_pauling": null,
    "covalent_radius_pm": 199.0,
    "ionization_energy_ev": 5.5819,
+   "melting_point_k": 1315.15,
+   "boiling_point_k": null,
    "configuration": [
     [
      1,
@@ -3713,6 +3835,8 @@
    "en_pauling": 1.17,
    "covalent_radius_pm": 198.0,
    "ionization_energy_ev": 5.6437,
+   "melting_point_k": 1345.15,
+   "boiling_point_k": 2067.15,
    "configuration": [
     [
      1,
@@ -3799,6 +3923,8 @@
    "en_pauling": null,
    "covalent_radius_pm": 198.0,
    "ionization_energy_ev": 5.6704,
+   "melting_point_k": 1095.15,
+   "boiling_point_k": 1802.15,
    "configuration": [
     [
      1,
@@ -3885,6 +4011,8 @@
    "en_pauling": 1.2,
    "covalent_radius_pm": 196.0,
    "ionization_energy_ev": 6.1498,
+   "melting_point_k": 1586.15,
+   "boiling_point_k": 3546.15,
    "configuration": [
     [
      1,
@@ -3976,6 +4104,8 @@
    "en_pauling": null,
    "covalent_radius_pm": 194.0,
    "ionization_energy_ev": 5.8638,
+   "melting_point_k": 1632.15,
+   "boiling_point_k": 3503.15,
    "configuration": [
     [
      1,
@@ -4062,6 +4192,8 @@
    "en_pauling": 1.22,
    "covalent_radius_pm": 192.0,
    "ionization_energy_ev": 5.9391,
+   "melting_point_k": 1685.15,
+   "boiling_point_k": 2840.15,
    "configuration": [
     [
      1,
@@ -4148,6 +4280,8 @@
    "en_pauling": 1.23,
    "covalent_radius_pm": 192.0,
    "ionization_energy_ev": 6.0215,
+   "melting_point_k": 1745.15,
+   "boiling_point_k": 2973.15,
    "configuration": [
     [
      1,
@@ -4234,6 +4368,8 @@
    "en_pauling": 1.24,
    "covalent_radius_pm": 189.0,
    "ionization_energy_ev": 6.1077,
+   "melting_point_k": 1802.15,
+   "boiling_point_k": 3141.15,
    "configuration": [
     [
      1,
@@ -4320,6 +4456,8 @@
    "en_pauling": 1.25,
    "covalent_radius_pm": 190.0,
    "ionization_energy_ev": 6.1844,
+   "melting_point_k": 1818.15,
+   "boiling_point_k": 2223.15,
    "configuration": [
     [
      1,
@@ -4406,6 +4544,8 @@
    "en_pauling": null,
    "covalent_radius_pm": 187.0,
    "ionization_energy_ev": 6.2542,
+   "melting_point_k": 1097.15,
+   "boiling_point_k": 1469.15,
    "configuration": [
     [
      1,
@@ -4492,6 +4632,8 @@
    "en_pauling": 1.0,
    "covalent_radius_pm": 187.0,
    "ionization_energy_ev": 5.4259,
+   "melting_point_k": 1936.15,
+   "boiling_point_k": 3675.15,
    "configuration": [
     [
      1,
@@ -4583,6 +4725,8 @@
    "en_pauling": 1.3,
    "covalent_radius_pm": 175.0,
    "ionization_energy_ev": 6.8251,
+   "melting_point_k": 2506.15,
+   "boiling_point_k": 4873.15,
    "configuration": [
     [
      1,
@@ -4674,6 +4818,8 @@
    "en_pauling": 1.5,
    "covalent_radius_pm": 170.0,
    "ionization_energy_ev": 7.5496,
+   "melting_point_k": 3290.15,
+   "boiling_point_k": 5728.15,
    "configuration": [
     [
      1,
@@ -4767,6 +4913,8 @@
    "en_pauling": 1.7,
    "covalent_radius_pm": 162.0,
    "ionization_energy_ev": 7.864,
+   "melting_point_k": 3687.15,
+   "boiling_point_k": 5828.15,
    "configuration": [
     [
      1,
@@ -4858,6 +5006,8 @@
    "en_pauling": 1.9,
    "covalent_radius_pm": 151.0,
    "ionization_energy_ev": 7.8335,
+   "melting_point_k": 3458.15,
+   "boiling_point_k": 5863.15,
    "configuration": [
     [
      1,
@@ -4949,6 +5099,8 @@
    "en_pauling": 2.2,
    "covalent_radius_pm": 144.0,
    "ionization_energy_ev": 8.4382,
+   "melting_point_k": 3306.15,
+   "boiling_point_k": 5281.15,
    "configuration": [
     [
      1,
@@ -5040,6 +5192,8 @@
    "en_pauling": 2.2,
    "covalent_radius_pm": 141.0,
    "ionization_energy_ev": 8.967,
+   "melting_point_k": 2719.15,
+   "boiling_point_k": 4701.15,
    "configuration": [
     [
      1,
@@ -5134,6 +5288,8 @@
    "en_pauling": 2.2,
    "covalent_radius_pm": 136.0,
    "ionization_energy_ev": 8.9588,
+   "melting_point_k": 2041.35,
+   "boiling_point_k": 4098.15,
    "configuration": [
     [
      1,
@@ -5227,6 +5383,8 @@
    "en_pauling": 2.4,
    "covalent_radius_pm": 136.0,
    "ionization_energy_ev": 9.2256,
+   "melting_point_k": 1337.33,
+   "boiling_point_k": 3109.15,
    "configuration": [
     [
      1,
@@ -5320,6 +5478,8 @@
    "en_pauling": 1.9,
    "covalent_radius_pm": 132.0,
    "ionization_energy_ev": 10.4375,
+   "melting_point_k": 234.32,
+   "boiling_point_k": 629.77,
    "configuration": [
     [
      1,
@@ -5411,6 +5571,8 @@
    "en_pauling": 1.8,
    "covalent_radius_pm": 145.0,
    "ionization_energy_ev": 6.1083,
+   "melting_point_k": 577.15,
+   "boiling_point_k": 1746.15,
    "configuration": [
     [
      1,
@@ -5509,6 +5671,8 @@
    "en_pauling": 1.8,
    "covalent_radius_pm": 146.0,
    "ionization_energy_ev": 7.4167,
+   "melting_point_k": 600.61,
+   "boiling_point_k": 2022.15,
    "configuration": [
     [
      1,
@@ -5607,6 +5771,8 @@
    "en_pauling": 1.9,
    "covalent_radius_pm": 148.0,
    "ionization_energy_ev": 7.2855,
+   "melting_point_k": 544.55,
+   "boiling_point_k": 1837.15,
    "configuration": [
     [
      1,
@@ -5703,6 +5869,8 @@
    "en_pauling": 2.0,
    "covalent_radius_pm": 140.0,
    "ionization_energy_ev": 8.4181,
+   "melting_point_k": 527.15,
+   "boiling_point_k": 1235.15,
    "configuration": [
     [
      1,
@@ -5799,6 +5967,8 @@
    "en_pauling": 2.2,
    "covalent_radius_pm": 150.0,
    "ionization_energy_ev": 9.3175,
+   "melting_point_k": 575.15,
+   "boiling_point_k": null,
    "configuration": [
     [
      1,
@@ -5897,6 +6067,8 @@
    "en_pauling": null,
    "covalent_radius_pm": 150.0,
    "ionization_energy_ev": 10.7485,
+   "melting_point_k": 202.15,
+   "boiling_point_k": 211.45,
    "configuration": [
     [
      1,
@@ -5993,6 +6165,8 @@
    "en_pauling": 0.7,
    "covalent_radius_pm": 260.0,
    "ionization_energy_ev": 4.0727,
+   "melting_point_k": 294.15,
+   "boiling_point_k": null,
    "configuration": [
     [
      1,
@@ -6094,6 +6268,8 @@
    "en_pauling": 0.9,
    "covalent_radius_pm": 221.0,
    "ionization_energy_ev": 5.2784,
+   "melting_point_k": 969.15,
+   "boiling_point_k": null,
    "configuration": [
     [
      1,
@@ -6195,6 +6371,8 @@
    "en_pauling": 1.1,
    "covalent_radius_pm": 215.0,
    "ionization_energy_ev": 5.3802,
+   "melting_point_k": 1323.15,
+   "boiling_point_k": 3473.15,
    "configuration": [
     [
      1,
@@ -6301,6 +6479,8 @@
    "en_pauling": 1.3,
    "covalent_radius_pm": 206.0,
    "ionization_energy_ev": 6.3067,
+   "melting_point_k": 2023.15,
+   "boiling_point_k": 5058.15,
    "configuration": [
     [
      1,
@@ -6407,6 +6587,8 @@
    "en_pauling": 1.5,
    "covalent_radius_pm": 200.0,
    "ionization_energy_ev": 5.89,
+   "melting_point_k": 1845.15,
+   "boiling_point_k": null,
    "configuration": [
     [
      1,
@@ -6520,6 +6702,8 @@
    "en_pauling": 1.7,
    "covalent_radius_pm": 196.0,
    "ionization_energy_ev": 6.194,
+   "melting_point_k": 1408.15,
+   "boiling_point_k": 4404.15,
    "configuration": [
     [
      1,
@@ -6631,6 +6815,8 @@
    "en_pauling": 1.3,
    "covalent_radius_pm": 190.0,
    "ionization_energy_ev": 6.2655,
+   "melting_point_k": 917.15,
+   "boiling_point_k": null,
    "configuration": [
     [
      1,
@@ -6742,6 +6928,8 @@
    "en_pauling": 1.3,
    "covalent_radius_pm": 187.0,
    "ionization_energy_ev": 6.0258,
+   "melting_point_k": 913.15,
+   "boiling_point_k": 3501.15,
    "configuration": [
     [
      1,
@@ -6848,6 +7036,8 @@
    "en_pauling": null,
    "covalent_radius_pm": 180.0,
    "ionization_energy_ev": 5.9738,
+   "melting_point_k": 1449.15,
+   "boiling_point_k": null,
    "configuration": [
     [
      1,
@@ -6954,6 +7144,8 @@
    "en_pauling": null,
    "covalent_radius_pm": 169.0,
    "ionization_energy_ev": 5.9922,
+   "melting_point_k": 1618.15,
+   "boiling_point_k": null,
    "configuration": [
     [
      1,
@@ -7065,6 +7257,8 @@
    "en_pauling": null,
    "covalent_radius_pm": null,
    "ionization_energy_ev": 6.1978,
+   "melting_point_k": 1259.15,
+   "boiling_point_k": null,
    "configuration": [
     [
      1,
@@ -7171,6 +7365,8 @@
    "en_pauling": null,
    "covalent_radius_pm": null,
    "ionization_energy_ev": 6.2819,
+   "melting_point_k": 1173.15,
+   "boiling_point_k": null,
    "configuration": [
     [
      1,
@@ -7277,6 +7473,8 @@
    "en_pauling": null,
    "covalent_radius_pm": null,
    "ionization_energy_ev": 6.3684,
+   "melting_point_k": 1133.15,
+   "boiling_point_k": null,
    "configuration": [
     [
      1,
@@ -7383,6 +7581,8 @@
    "en_pauling": null,
    "covalent_radius_pm": null,
    "ionization_energy_ev": 6.5,
+   "melting_point_k": 1800.15,
+   "boiling_point_k": null,
    "configuration": [
     [
      1,
@@ -7489,6 +7689,8 @@
    "en_pauling": null,
    "covalent_radius_pm": null,
    "ionization_energy_ev": 6.58,
+   "melting_point_k": 1100.15,
+   "boiling_point_k": null,
    "configuration": [
     [
      1,
@@ -7595,6 +7797,8 @@
    "en_pauling": null,
    "covalent_radius_pm": null,
    "ionization_energy_ev": 6.6262,
+   "melting_point_k": 1100.15,
+   "boiling_point_k": null,
    "configuration": [
     [
      1,
@@ -7701,6 +7905,8 @@
    "en_pauling": null,
    "covalent_radius_pm": null,
    "ionization_energy_ev": 4.96,
+   "melting_point_k": 1900.15,
+   "boiling_point_k": null,
    "configuration": [
     [
      1,
@@ -7812,6 +8018,8 @@
    "en_pauling": null,
    "covalent_radius_pm": null,
    "ionization_energy_ev": 6.02,
+   "melting_point_k": null,
+   "boiling_point_k": null,
    "configuration": [
     [
      1,
@@ -7923,6 +8131,8 @@
    "en_pauling": null,
    "covalent_radius_pm": null,
    "ionization_energy_ev": 6.8,
+   "melting_point_k": null,
+   "boiling_point_k": null,
    "configuration": [
     [
      1,
@@ -8034,6 +8244,8 @@
    "en_pauling": null,
    "covalent_radius_pm": null,
    "ionization_energy_ev": 7.8,
+   "melting_point_k": null,
+   "boiling_point_k": null,
    "configuration": [
     [
      1,
@@ -8145,6 +8357,8 @@
    "en_pauling": null,
    "covalent_radius_pm": null,
    "ionization_energy_ev": 7.7,
+   "melting_point_k": null,
+   "boiling_point_k": null,
    "configuration": [
     [
      1,
@@ -8256,6 +8470,8 @@
    "en_pauling": null,
    "covalent_radius_pm": null,
    "ionization_energy_ev": 7.6,
+   "melting_point_k": null,
+   "boiling_point_k": null,
    "configuration": [
     [
      1,
@@ -8367,6 +8583,8 @@
    "en_pauling": null,
    "covalent_radius_pm": null,
    "ionization_energy_ev": null,
+   "melting_point_k": null,
+   "boiling_point_k": null,
    "configuration": [
     [
      1,
@@ -8478,6 +8696,8 @@
    "en_pauling": null,
    "covalent_radius_pm": null,
    "ionization_energy_ev": null,
+   "melting_point_k": null,
+   "boiling_point_k": null,
    "configuration": [
     [
      1,
@@ -8589,6 +8809,8 @@
    "en_pauling": null,
    "covalent_radius_pm": null,
    "ionization_energy_ev": null,
+   "melting_point_k": null,
+   "boiling_point_k": null,
    "configuration": [
     [
      1,
@@ -8700,6 +8922,8 @@
    "en_pauling": null,
    "covalent_radius_pm": null,
    "ionization_energy_ev": null,
+   "melting_point_k": null,
+   "boiling_point_k": null,
    "configuration": [
     [
      1,
@@ -8811,6 +9035,8 @@
    "en_pauling": null,
    "covalent_radius_pm": null,
    "ionization_energy_ev": null,
+   "melting_point_k": null,
+   "boiling_point_k": null,
    "configuration": [
     [
      1,
@@ -8927,6 +9153,8 @@
    "en_pauling": null,
    "covalent_radius_pm": null,
    "ionization_energy_ev": null,
+   "melting_point_k": null,
+   "boiling_point_k": null,
    "configuration": [
     [
      1,
@@ -9043,6 +9271,8 @@
    "en_pauling": null,
    "covalent_radius_pm": null,
    "ionization_energy_ev": null,
+   "melting_point_k": null,
+   "boiling_point_k": null,
    "configuration": [
     [
      1,
@@ -9159,6 +9389,8 @@
    "en_pauling": null,
    "covalent_radius_pm": null,
    "ionization_energy_ev": null,
+   "melting_point_k": null,
+   "boiling_point_k": null,
    "configuration": [
     [
      1,
@@ -9275,6 +9507,8 @@
    "en_pauling": null,
    "covalent_radius_pm": null,
    "ionization_energy_ev": null,
+   "melting_point_k": null,
+   "boiling_point_k": null,
    "configuration": [
     [
      1,
@@ -9391,6 +9625,8 @@
    "en_pauling": null,
    "covalent_radius_pm": null,
    "ionization_energy_ev": null,
+   "melting_point_k": null,
+   "boiling_point_k": null,
    "configuration": [
     [
      1,
