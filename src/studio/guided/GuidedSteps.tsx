@@ -1,5 +1,5 @@
 import { CircleCheck, ListChecks } from 'lucide-react';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useT } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
@@ -79,8 +79,16 @@ export function Interact({ scenario, session, update }: StepProps) {
     () => (b ? readSheet(scenario.id, b, session.actions) : {}),
     [b, scenario.id, session.actions],
   );
-  if (!b) return <BindingError />;
   const checked = engineEvidence(session).some((e) => e.key === ACTIVITY_KEY);
+  // "Kiểm tra" disables itself once pressed: its focus moves to the result instead of <body>.
+  const result = useRef<HTMLParagraphElement>(null);
+  const pressed = useRef(false);
+  useEffect(() => {
+    if (!checked || !pressed.current) return;
+    pressed.current = false;
+    result.current?.focus();
+  }, [checked]);
+  if (!b) return <BindingError />;
   const complete = sheetComplete(b, sheet);
   const scores = b.activities.map((a) => scoreActivity(a, sheet[a.id] ?? {}));
   const correct = scores.reduce((n, s) => n + s.correct, 0);
@@ -109,13 +117,14 @@ export function Interact({ scenario, session, update }: StepProps) {
           className="btn btn--accent"
           disabled={!complete || checked}
           onClick={() => {
+            pressed.current = true;
             update((s) => withGuidedCheck(scenario, s, Date.now()));
           }}
         >
           <ListChecks size={16} aria-hidden="true" />
           {t('studio.guided.check')}
         </button>
-        <p className="muted" role="status">
+        <p ref={result} className="muted" role="status" tabIndex={-1}>
           {checked
             ? t('studio.guided.checked', { correct, total })
             : complete

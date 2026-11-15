@@ -66,8 +66,11 @@ test('Bài 3: predict, move one level, check, read the reasons; card in the Insp
   for (const group of await sort.getByRole('radiogroup').all()) {
     await group.getByRole('radio').first().click();
   }
-  await check.click();
+  // By keyboard: "Kiểm tra" disables itself, and its focus moves to the result (not to <body>).
+  await check.focus();
+  await page.keyboard.press('Enter');
   await expect(page.getByText(/^Em đúng \d+\/20 ý\./)).toBeVisible();
+  await expect(page.getByText(/^Em đúng \d+\/20 ý\./)).toBeFocused();
   await expect(order.getByText(/^Đúng \d\/8$/)).toBeVisible();
   // Each row says right or wrong in words, with the lesson's reason.
   await expect(

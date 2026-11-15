@@ -106,8 +106,11 @@ describe('guided textbook lessons in the lab library', () => {
     expect(check).toBeDisabled();
     for (const a of b.activities) await solve(user, a);
     expect(check).toBeEnabled();
-    await user.click(check);
-    expect(screen.getByText(/^Em đúng 20\/20 ý\./)).toBeInTheDocument();
+    // With the keyboard: the pressed button disables itself, so the focus moves to the result.
+    for (let n = 0; n < 20 && document.activeElement !== check; n++) await user.tab();
+    expect(check).toHaveFocus();
+    await user.keyboard('{Enter}');
+    expect(screen.getByText(/^Em đúng 20\/20 ý\./)).toHaveFocus();
     expect(screen.getAllByText('Đúng').length).toBe(20);
     // Each checked control points at its own outcome.
     const pair = b.activities.find((x) => x.kind === 'match')?.pairs[0];
