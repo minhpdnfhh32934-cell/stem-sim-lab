@@ -43,7 +43,7 @@ export const FORMATION_ENTHALPIES: readonly FormationEnthalpy[] = dataset.items;
 export const ENTHALPY_SOURCE: Source = dataset.source;
 export const ENTHALPY_REFERENCES = z
   .record(ReferenceSchema, SourceSchema)
-  .parse(raw.references) as Record<EnthalpyReference, Source>;
+  .parse(raw.references);
 
 /** Library reactions the enthalpy topic computes, with each species' phase at 298 K. */
 export const ENTHALPY_REACTIONS = z
