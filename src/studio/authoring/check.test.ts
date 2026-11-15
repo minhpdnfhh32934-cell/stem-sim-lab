@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { freeFall } from '@/physics/projectile/scenes';
+import { sh10b03Levels } from '../guided/lessons/sh10b03Levels';
 import type { StudioScenario } from '../scenario';
 import { biologyMitosisMetaphase } from '../scenarios/biologyMitosisMetaphase';
 import { chemistryChlorideTest } from '../scenarios/chemistryChlorideTest';
@@ -67,6 +68,12 @@ describe('engine check of authored scenarios', () => {
     expect(
       codes({ ...biologyMitosisMetaphase, binding: { ...b, parts: ['membrane', 'ribosome'] } }),
     ).toEqual(['bioUnknownPart']);
+  });
+
+  it('a guided textbook lesson is built in only: authoring refuses it', async () => {
+    expect(codes(sh10b03Levels)).toEqual(['binding']);
+    const r = await verifyScenario(sh10b03Levels);
+    expect(r.ok).toBe(false);
   });
 
   it('verifyScenario runs the schema first, then loads the scene', async () => {

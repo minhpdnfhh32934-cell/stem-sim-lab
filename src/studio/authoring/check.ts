@@ -129,6 +129,8 @@ export function checkScenario(s: StudioScenario, scene: PhysicsScene | null): Au
   const b = s.binding;
   if (b.kind === 'physics') return physicsIssues(s, scene);
   if (b.kind === 'chemistry') return chemistryIssues(b);
+  // A descriptive textbook lesson (src/studio/guided/) is built in only: teachers cannot author one.
+  if (b.kind === 'guided') return [{ code: 'binding', params: { detail: 'guided' } }];
   return bindingProblems(b).map((p) => ({ code: BIO_CODES[p] }));
 }
 
