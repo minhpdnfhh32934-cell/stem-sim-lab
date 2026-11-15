@@ -63,6 +63,7 @@ export function ExplainStep(props: StepProps) {
   const [shown, setShown] = useState(0);
   const min = scenario.completion.explanationMinChars;
   const count = learnerText(session, 'explanation').trim().length;
+  const guided = scenario.binding.kind === 'guided';
   return (
     <div className="studio-stack">
       {scenario.questions.length + scenario.hints.length > 0 && <TeacherNote scenario={scenario} />}
@@ -80,7 +81,7 @@ export function ExplainStep(props: StepProps) {
         {...props}
         role="explanation"
         label={t('studio.explain.label')}
-        placeholder={t('studio.explain.placeholder')}
+        placeholder={t(guided ? 'studio.guided.explainPlaceholder' : 'studio.explain.placeholder')}
       />
       {min > 0 && <p className="muted small">{t('studio.explain.count', { n: count, min })}</p>}
       {scenario.hints.slice(0, shown).map((h, i) => (
@@ -115,12 +116,11 @@ export function ConcludeStep({ plugin, ...props }: WithPlugin) {
   const { scenario, session } = props;
   const v = session.verdict;
   const computed = v ? computedLabel(v, locale) : null;
+  // A descriptive lesson compares the prediction with the lesson's answer, not a simulation.
+  const guided = scenario.binding.kind === 'guided';
+  const k = guided ? 'studio.guided.conclude' : 'studio.conclude';
   const result =
-    !v || v.match === null
-      ? t('studio.conclude.none')
-      : v.match
-        ? t('studio.conclude.match')
-        : t('studio.conclude.miss');
+    !v || v.match === null ? t(`${k}.none`) : v.match ? t(`${k}.match`) : t(`${k}.miss`);
   const wrote = learnerText(session, 'conclusion').trim().length > 0;
   const Facts = plugin.Facts;
   return (
@@ -131,7 +131,7 @@ export function ConcludeStep({ plugin, ...props }: WithPlugin) {
             label: session.prediction ? predictionLabel(session.prediction, locale) : '—',
           })}
         </p>
-        {computed && <p>{t('studio.conclude.computed', { label: computed })}</p>}
+        {computed && <p>{t(`${k}.computed`, { label: computed })}</p>}
         <p className="studio-verdict__result">
           <Sparkles size={16} aria-hidden="true" />
           {result}
@@ -142,14 +142,14 @@ export function ConcludeStep({ plugin, ...props }: WithPlugin) {
         {...props}
         role="conclusion"
         label={t('studio.conclude.label')}
-        placeholder={t('studio.conclude.placeholder')}
+        placeholder={t(`${k}.placeholder`)}
       />
       {wrote && (
         <aside className="studio-expected">
           <h4>{t('studio.conclude.expected')}</h4>
           <p>{L(scenario.expectedConclusion)}</p>
           <TeacherNote scenario={scenario} />
-          <ReviewNote status={scenario.review_status} />
+          <ReviewNote status={scenario.review_status} guided={guided} />
         </aside>
       )}
     </div>

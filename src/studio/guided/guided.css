@@ -1,0 +1,152 @@
+/* Guided textbook lessons (src/studio/guided/): activities that wrap at any width. */
+.guided-stage {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  padding: var(--space-4);
+}
+.guided-panel p {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-start;
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-content);
+}
+.guided-panel svg {
+  flex: none;
+  margin-top: 3px;
+  color: var(--text-muted);
+}
+.studio-picker__label {
+  align-self: center;
+  width: 100%;
+}
+.guided-activity {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+.guided-activity h4 {
+  margin: 0;
+  font-size: var(--text-content);
+}
+.guided-activity p {
+  margin: 0;
+}
+.guided-activity__n {
+  color: var(--accent);
+}
+.guided-rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.guided-row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel-2);
+}
+.guided-row.is-right {
+  border-color: var(--conf-exact);
+}
+.guided-row.is-wrong {
+  border-color: var(--danger);
+}
+.guided-row__main {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  min-width: 0;
+}
+.guided-row__n {
+  display: inline-grid;
+  flex: none;
+  width: 26px;
+  height: 26px;
+  place-items: center;
+  border-radius: var(--radius-full);
+  background: var(--bg-sunken);
+  font-size: var(--text-sm);
+  font-weight: 650;
+}
+.guided-row__text {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.guided-row__tools {
+  display: flex;
+  flex: none;
+  gap: var(--space-1);
+}
+.guided-row__tools .icon-btn {
+  width: var(--target);
+  height: var(--target);
+}
+.guided-select {
+  width: 100%;
+  max-width: 100%;
+  min-height: var(--target);
+  font: inherit;
+}
+.guided-row .segmented {
+  display: flex;
+  flex-wrap: wrap;
+  align-self: flex-start;
+  max-width: 100%;
+}
+.guided-row .segmented__item {
+  min-height: var(--target);
+  white-space: normal;
+  text-align: left;
+}
+.guided-outcome {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  font-size: var(--text-sm);
+}
+.guided-outcome__mark {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+.guided-outcome.is-right .guided-outcome__mark {
+  color: var(--conf-exact);
+}
+.guided-outcome.is-wrong .guided-outcome__mark {
+  color: var(--danger);
+}
+.guided-score {
+  font-weight: 650;
+}
+.guided-check {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+}
+.guided-check p {
+  flex: 1;
+  min-width: 12rem;
+  margin: 0;
+}
+.guided-answer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.guided-answer h4,
+.guided-answer p {
+  margin: 0;
+}

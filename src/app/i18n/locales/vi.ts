@@ -91,6 +91,7 @@ const vi = {
     cellPhysiology: 'Sinh lý tế bào',
     cellStructure: 'Cấu trúc tế bào',
     cellChemistry: 'Thành phần hóa học của tế bào',
+    livingWorld: 'Thế giới sống',
     microbesViruses: 'Vi sinh vật và virus',
     circularMotion: 'Chuyển động tròn đều',
     waves: 'Sóng',
@@ -153,6 +154,14 @@ const vi = {
     biomolecules: 'Các phân tử sinh học',
     microbeGrowth: 'Sinh trưởng của quần thể vi khuẩn',
     virusStructure: 'Khái quát về virus',
+    levelsOfLife: 'Các cấp độ tổ chức của thế giới sống',
+    cellSignalling: 'Truyền tin tế bào',
+    metabolismEnergy: 'Chuyển hoá vật chất và năng lượng',
+    breakdownSynthesis: 'Phân giải và tổng hợp các chất trong tế bào',
+    cellTechnology: 'Công nghệ tế bào',
+    microbeDiversity: 'Đa dạng và phương pháp nghiên cứu vi sinh vật',
+    microbeApplications: 'Vai trò và ứng dụng của vi sinh vật',
+    virusDiseases: 'Bệnh do virus và ứng dụng virus',
     uniformCircularMotion: 'Chuyển động tròn đều',
     interference: 'Giao thoa sóng hai nguồn',
     standingWave: 'Sóng dừng trên dây',
@@ -1294,6 +1303,106 @@ const vi = {
       openInLab: 'Chạy {id} trong Virtual Lab',
       fact: '{q} (mô phỏng {model}): {value}',
       ratioOf: 'Tỉ số B/A — {q}',
+    },
+    guided: {
+      group: 'Bài học mô tả theo SGK',
+      predictLabel: 'Dự đoán của em',
+      locked:
+        'Dự đoán đã được ghi lại khi em bắt đầu làm hoạt động. Muốn đoán lại, hãy chọn "Học lại từ đầu" ở bước Báo cáo.',
+      binding: 'Bài học này chưa đọc được. Nhờ giáo viên kiểm tra nội dung bài.',
+      steps: {
+        interact: 'Hoạt động',
+        observe: 'Xem đáp án',
+      },
+      titles: {
+        predict: 'Em nghĩ thế nào?',
+        interact: 'Làm các hoạt động',
+        observe: 'Xem đáp án và lí do',
+        explain: 'Giải thích bằng lời của em',
+      },
+      leads: {
+        predict: 'Chọn một câu trả lời trước khi làm các hoạt động. Không sao nếu chưa đúng.',
+        interact:
+          'Làm từng hoạt động rồi bấm "Kiểm tra". Ứng dụng so câu trả lời của em với nội dung bài học.',
+        observe:
+          'Đáp án và lí do dưới đây lấy từ nội dung bài học, không do AI viết và không có số đo.',
+        explain: 'Dựa vào đáp án và lí do vừa xem, giải thích bằng lời của em.',
+        conclude: 'So sánh dự đoán của em với đáp án của bài học.',
+      },
+      blockers: {
+        activity: 'Làm xong các hoạt động rồi bấm "Kiểm tra" để đi tiếp.',
+      },
+      activity: 'Hoạt động {n}.',
+      help: {
+        order:
+          'Bấm mũi tên để đưa một mục lên hoặc xuống. Khi kiểm tra, mỗi mục phải đứng đúng vị trí của nó.',
+        match: 'Ở mỗi dòng, chọn ý đi cùng trong danh sách.',
+        sort: 'Ở mỗi mục, chọn nhóm của nó.',
+      },
+      up: 'Đưa lên: {item}',
+      down: 'Đưa xuống: {item}',
+      choose: 'Chọn…',
+      position: 'vị trí {n}',
+      check: 'Kiểm tra',
+      incomplete: 'Trả lời đủ mọi dòng của các hoạt động rồi mới kiểm tra được.',
+      ready: 'Đã trả lời đủ. Bấm "Kiểm tra" khi em sẵn sàng.',
+      checked:
+        'Em đúng {correct}/{total} ý. Đọc lí do dưới mỗi ý. Muốn thử lại, đổi câu trả lời rồi bấm "Kiểm tra" lần nữa.',
+      score: 'Đúng {correct}/{total}',
+      right: 'Đúng',
+      wrong: 'Chưa đúng. Đáp án: {expected}',
+      observe: {
+        prediction: 'Câu hỏi dự đoán',
+        answer: 'Đáp án: {answer}',
+        yours: 'Em đã chọn: {label}',
+      },
+      panel:
+        'Bài học mô tả: không có thí nghiệm hay số đo. Em học theo các bước ở giữa màn hình: dự đoán, làm hoạt động, xem đáp án, giải thích và kết luận.',
+      panelSource:
+        'Nội dung bám theo SGK {book}, Bài {n} “{title}” (Kết nối tri thức với cuộc sống).',
+      review: {
+        pending: 'Nội dung bài này chưa được giáo viên kiểm duyệt.',
+        verified: 'Nội dung bài này đã được giáo viên kiểm duyệt.',
+      },
+      explainPlaceholder: 'Ví dụ: Theo bài học… nên…',
+      conclude: {
+        computed: 'Đáp án của bài học: {label}',
+        match: 'Dự đoán của em khớp với đáp án của bài học.',
+        miss: 'Dự đoán chưa khớp. Đây là lúc học được nhiều nhất: xem lại lí do ở bước Xem đáp án nhé.',
+        none: 'Chưa có đáp án để so sánh.',
+        placeholder: 'Em rút ra được điều gì từ bài học?',
+      },
+      report: {
+        computed: 'Đáp án của bài học: {label}',
+        verdictMatch: 'Dự đoán khớp với đáp án của bài học.',
+        verdictMiss: 'Dự đoán chưa khớp với đáp án của bài học.',
+        verdictNone: 'Chưa có đáp án để so sánh.',
+        noEngine: 'Chưa kiểm tra các hoạt động.',
+        unverifiedNote: 'Các mục dưới đây chưa được kiểm duyệt; nguồn của chúng ở mục “Nguồn”.',
+      },
+      record: {
+        title: 'Đáp án và kết quả kiểm tra',
+        answer: 'Đáp án: {answer}. {why}',
+        score: 'Đúng {correct}/{total}',
+        right: 'Đúng. {why}',
+        wrong: 'Chưa đúng: em chọn “{chosen}”, đáp án là “{expected}”. {why}',
+      },
+      askHint:
+        'AI Teacher chỉ thấy câu trả lời và ghi chú của bài khi em bật “{toggle}” trong khung chat.',
+      ask: {
+        predict:
+          'Thầy ơi, em đang làm bài “{title}”, bước Dự đoán. Thầy gợi ý cách suy nghĩ giúp em, nhưng đừng nói trước đáp án nhé.',
+        interact:
+          'Thầy ơi, em đang làm bài “{title}”, phần hoạt động. Thầy gợi ý cách suy nghĩ giúp em, nhưng đừng nói trước đáp án nhé.',
+        observe:
+          'Thầy ơi, em đang làm bài “{title}”, bước Xem đáp án. Thầy giải thích thêm giúp em vì sao đáp án lại như vậy nhé.',
+        explain:
+          'Thầy ơi, em đang làm bài “{title}”, bước Giải thích. Em nên dựa vào ý nào của bài để giải thích?',
+        conclude:
+          'Thầy ơi, em đang làm bài “{title}”, bước Kết luận. Thầy giúp em so sánh dự đoán của em với đáp án của bài học nhé.',
+        report:
+          'Thầy ơi, em đang làm bài “{title}”, bước Báo cáo. Báo cáo của em còn thiếu ý gì quan trọng?',
+      },
     },
     chem: {
       choices: {

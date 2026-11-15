@@ -1,0 +1,219 @@
+import { act, render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { useSettingsStore } from '@/app/settings/settingsStore';
+import { useWorkspaceStore } from '@/app/workspaceStore';
+import { loadModule } from '@/modules/registry';
+import type { StudioScenario } from '../scenario';
+import StudioScreen from '../StudioScreen';
+import { useStudioStore } from '../studioStore';
+import { knttLesson } from './card';
+import { guidedOf, orderAnswers, readSheet, withSheet, type Sheet } from './check';
+import { guidedForTopic } from './lessons';
+import type { GuidedActivity } from './schema';
+import { GUIDED_TOPICS } from './topics';
+
+beforeEach(() => {
+  useSettingsStore.setState({ locale: 'vi', uiMode: 'basic' });
+  useStudioStore.setState({ tab: 'biology', sessions: {}, picked: {} });
+  useWorkspaceStore.setState({ scienceCard: null });
+});
+
+function lesson(topic: string): StudioScenario {
+  const s = guidedForTopic(topic);
+  if (!s) throw new Error(topic);
+  return s;
+}
+
+const next = () => screen.getByRole('button', { name: /^Tiếp:/ });
+
+type User = ReturnType<typeof userEvent.setup>;
+
+/** Answers one activity the way a learner does, with the lesson's own key. */
+async function solve(user: User, a: GuidedActivity) {
+  const box = screen.getByRole('region', { name: new RegExp(a.prompt.vi.slice(0, 30)) });
+  if (a.kind === 'order') {
+    for (const [i, item] of a.items.entries()) {
+      const rows = () =>
+        [...box.querySelectorAll('li[data-row]')].map((li) => li.getAttribute('data-row'));
+      while (rows().indexOf(item.id) > i) {
+        await user.click(within(box).getByRole('button', { name: `Đưa lên: ${item.text.vi}` }));
+      }
+    }
+  } else if (a.kind === 'match') {
+    for (const p of a.pairs) {
+      await user.selectOptions(within(box).getByLabelText(p.left.vi), p.right.vi);
+    }
+  } else {
+    for (const item of a.items) {
+      const group = a.groups.find((g) => g.id === item.group);
+      const radios = within(box).getByRole('radiogroup', { name: item.text.vi });
+      await user.click(within(radios).getByRole('radio', { name: group?.label.vi ?? '' }));
+    }
+  }
+}
+
+describe('guided textbook lessons in the lab library', () => {
+  it.each(GUIDED_TOPICS)(
+    '%s: title, choices, an honest panel and a qualitative card',
+    async (topic) => {
+      const s = lesson(topic);
+      const b = guidedOf(s);
+      if (!b) throw new Error('guided');
+      const view = await loadModule(topic);
+      expect(view.title).toEqual(s.title);
+      const stage = render(<view.Stage />);
+      expect(screen.getByRole('heading', { name: s.title.vi })).toBeVisible();
+      expect(screen.getAllByRole('radio')).toHaveLength(b.choices.length);
+      for (const c of b.choices)
+        expect(screen.getByRole('radio', { name: c.text.vi })).toBeEnabled();
+      const card = useWorkspaceStore.getState().scienceCard;
+      expect(card?.confidence).toBe('qualitative');
+      expect(card?.equations).toEqual([]);
+      expect(card?.assumptions[0]?.vi).toBe('Nội dung mô tả, không có mô phỏng định lượng.');
+      const l = knttLesson(b.kntt);
+      expect(card?.sources[0]?.citation).toContain(
+        `Bài ${String(l?.number)}. ${l?.title ?? ''}, tr. `,
+      );
+      stage.unmount();
+      if (!view.Panel) throw new Error('panel');
+      const panel = render(<view.Panel />);
+      expect(panel.container).toHaveTextContent('Bài học mô tả: không có thí nghiệm hay số đo.');
+      expect(panel.container).toHaveTextContent(`Bài ${String(b.kntt.lesson)} “${l?.title ?? ''}”`);
+    },
+  );
+
+  it('a whole lesson by hand: predict, every activity, check, answers, explain, conclude, report', async () => {
+    const user = userEvent.setup();
+    const s = lesson('levelsOfLife');
+    const b = guidedOf(s);
+    if (!b) throw new Error('guided');
+    const view = await loadModule('levelsOfLife');
+    const { container } = render(<view.Stage />);
+
+    expect(next()).toBeDisabled();
+    await user.click(screen.getByRole('radio', { name: 'Mô' }));
+    await user.click(next());
+
+    // Activities: "Kiểm tra" waits for a complete sheet.
+    const check = screen.getByRole('button', { name: 'Kiểm tra' });
+    expect(check).toBeDisabled();
+    for (const a of b.activities) await solve(user, a);
+    expect(check).toBeEnabled();
+    await user.click(check);
+    expect(screen.getByText(/^Em đúng 12\/12 ý\./)).toBeInTheDocument();
+    expect(screen.getAllByText('Đúng').length).toBe(12);
+    // Changing an answer drops the check; putting it back and checking again restores it.
+    const first = b.activities[0];
+    if (first?.kind !== 'order') throw new Error('order first');
+    const second = first.items[1];
+    if (!second) throw new Error('items');
+    await user.click(screen.getByRole('button', { name: `Đưa lên: ${second.text.vi}` }));
+    expect(next()).toBeDisabled();
+    await user.click(screen.getByRole('button', { name: 'Kiểm tra' }));
+    expect(screen.getByText(/^Em đúng 10\/12 ý\./)).toBeInTheDocument();
+    expect(screen.getAllByText(/^Chưa đúng\. Đáp án: vị trí/)).toHaveLength(2);
+    await user.click(
+      screen.getByRole('button', { name: `Đưa lên: ${first.items[0]?.text.vi ?? ''}` }),
+    );
+    await user.click(screen.getByRole('button', { name: 'Kiểm tra' }));
+    await user.click(next());
+
+    // Answers: the prediction's answer and each row's reason; the lab's Inspector has the card.
+    expect(screen.getByText('Đáp án: Tế bào')).toBeInTheDocument();
+    expect(screen.getByText(/^Em đã chọn: Mô/)).toBeInTheDocument();
+    expect(container.querySelector('.science-card')).toBeNull();
+    await user.click(next());
+
+    await user.type(
+      screen.getByLabelText('Giải thích của em'),
+      'Tế bào tự sống được, bào quan thì không.',
+    );
+    await user.click(next());
+
+    const conclude = container.querySelector('.studio-flow__body');
+    expect(conclude).toHaveTextContent('Đáp án của bài học: Tế bào');
+    expect(conclude).toHaveTextContent('Dự đoán chưa khớp.');
+    await user.type(screen.getByLabelText('Kết luận của em'), 'Tế bào là cấp tổ chức sống cơ bản.');
+    expect(container.querySelector('.studio-flow__body')?.textContent).not.toMatch(/mô phỏng/i);
+    await user.click(next());
+
+    const report = screen.getByLabelText('Bản xem trước báo cáo').textContent;
+    expect(report).toContain('Kết quả từ thư viện dữ liệu của ứng dụng');
+    expect(report).toContain('Đáp án của bài học: Tế bào');
+    expect(report).toContain('Đúng 8/8');
+    expect(report).toContain('Bài 3. Các cấp độ tổ chức của thế giới sống, tr. 18–22');
+    expect(report).not.toMatch(/mô phỏng/i);
+    expect(container.querySelector('.studio-flow')).toHaveTextContent(
+      'Em đã hoàn thành bài học này.',
+    );
+  });
+
+  it('files, history and undo carry the answers, read back through the same checks', async () => {
+    const s = lesson('levelsOfLife');
+    const b = guidedOf(s);
+    if (!b) throw new Error('guided');
+    const view = await loadModule('levelsOfLife');
+    const state = view.state;
+    if (!state) throw new Error('state');
+    const [order, match] = b.activities;
+    if (order?.kind !== 'order' || match?.kind !== 'match') throw new Error('activities');
+    const answers: Sheet = {
+      [order.id]: orderAnswers(order.items.map((i) => i.id)),
+      [match.id]: Object.fromEntries(match.pairs.map((p) => [p.id, p.id])),
+    };
+    let changes = 0;
+    const off = state.subscribe(() => {
+      changes += 1;
+    });
+    act(() => {
+      useStudioStore.getState().update(s, (x) => withSheet(s, x, answers, 1));
+    });
+    expect(changes).toBe(1);
+    const saved = state.get();
+    expect(saved).toEqual({ answers });
+
+    act(() => {
+      useStudioStore.setState({ sessions: {} });
+    });
+    state.set(JSON.parse(JSON.stringify(saved)) as Record<string, unknown>);
+    const restored = useStudioStore.getState().sessions[s.id];
+    expect(readSheet(s.id, b, restored?.actions ?? [])).toEqual(answers);
+    // Restored before any prediction: the prediction stays open.
+    expect(restored?.predictionLocked).toBe(false);
+
+    // A damaged file: unknown activities, rows and values are dropped.
+    state.set({
+      answers: { nope: { a: 'b' }, [match.id]: { [match.pairs[0]?.id ?? '']: 'nope', x: 1 } },
+    });
+    expect(state.get()).toEqual({ answers: readSheet(s.id, b, []) });
+    off();
+  });
+});
+
+describe('guided textbook lessons in Science Studio', () => {
+  it('have their own group, and open with the guided steps and the card inline', async () => {
+    const user = userEvent.setup();
+    const s = lesson('microbeApplications');
+    const b = guidedOf(s);
+    if (!b) throw new Error('guided');
+    render(<StudioScreen />);
+    // The subject's own lessons keep their picker; the textbook lessons are a second group.
+    expect(screen.getByRole('group', { name: 'Chọn bài học' })).toBeInTheDocument();
+    const group = screen.getByRole('group', { name: 'Bài học mô tả theo SGK' });
+    expect(within(group).getAllByRole('button')).toHaveLength(GUIDED_TOPICS.length);
+    await user.click(within(group).getByRole('button', { name: s.title.vi }));
+    expect(screen.getByRole('heading', { name: s.title.vi })).toBeVisible();
+    expect(screen.getByRole('button', { name: 'Hoạt động' })).toBeDisabled();
+
+    const answer = b.choices.find((c) => c.id === b.answer);
+    await user.click(screen.getByRole('radio', { name: answer?.text.vi ?? '' }));
+    await user.click(next());
+    for (const a of b.activities) await solve(user, a);
+    await user.click(screen.getByRole('button', { name: 'Kiểm tra' }));
+    await user.click(next());
+    expect(screen.getByRole('heading', { name: 'Xem đáp án và lí do' })).toBeVisible();
+    expect(document.querySelector('.science-card')).not.toBeNull();
+    expect(useStudioStore.getState().picked.biology).toBe(s.id);
+  });
+});
