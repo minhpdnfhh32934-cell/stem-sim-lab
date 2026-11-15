@@ -263,8 +263,9 @@ export function paulingDelta(a: string, b: string): number | null {
 }
 
 /**
- * Qualitative partial charge sign per atom: the sum of its signed electronegativity differences,
- * read to 2 decimals like `paulingDelta` (N–O is 0,40 and gives O a δ−, as its bond is polar).
+ * Qualitative partial charge sign per atom: the sum of the signed electronegativity differences of
+ * its polar bonds only (|Δχ| ≥ 0,4, SGK Bảng 12.1; a non-polar C–H, 0,35, adds nothing), each read
+ * to 2 decimals like `paulingDelta` (N–O is 0,40, polar, and gives O a δ−).
  */
 export function partialSigns(m: Molecule): ('+' | '−' | '')[] {
   const acc = m.atoms.map(() => 0);
@@ -272,6 +273,11 @@ export function partialSigns(m: Molecule): ('+' | '−' | '')[] {
     const xa = elementBySymbol(m.atoms[b.a]?.el ?? '')?.en_pauling ?? null;
     const xb = elementBySymbol(m.atoms[b.b]?.el ?? '')?.en_pauling ?? null;
     if (xa === null || xb === null) continue;
+    if (
+      bondPolarity(paulingDelta(m.atoms[b.a]?.el ?? '', m.atoms[b.b]?.el ?? '') ?? 0) === 'nonpolar'
+    ) {
+      continue;
+    }
     acc[b.a] = (acc[b.a] ?? 0) + (xa - xb);
     acc[b.b] = (acc[b.b] ?? 0) + (xb - xa);
   }

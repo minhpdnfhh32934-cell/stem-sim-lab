@@ -172,8 +172,30 @@ describe('molecule library', () => {
     });
     const no = mol('no');
     expect(no.atoms.map((a, i) => `${a.el}${partialSigns(no)[i] ?? ''}`)).toEqual(['N+', 'O−']);
-    // One C–H bond (0,35) alone signs nothing: HCN's H stays unsigned.
-    expect(partialSigns(mol('hcn'))[mol('hcn').atoms.findIndex((a) => a.el === 'H')]).toBe('');
+    // HCN: C–H (0,35) is non-polar and adds nothing; C≡N (0,49) is polar: C δ+, N δ−, H unsigned.
+    const hcn = mol('hcn');
+    expect(hcn.atoms.map((a, i) => `${a.el}${partialSigns(hcn)[i] ?? ''}`)).toEqual([
+      'C+',
+      'N−',
+      'H',
+    ]);
+  });
+
+  it('partial signs skip non-polar bonds (Bảng 12.1): CH₄ unsigned, C₂H₅OH signs only C–O–H', () => {
+    expect(new Set(partialSigns(mol('ch4')))).toEqual(new Set(['']));
+    const e = mol('c2h5oh');
+    const s = partialSigns(e);
+    const o = e.atoms.findIndex((a) => a.el === 'O');
+    const nb = neighbors(e, o);
+    const cO = nb.find((i) => e.atoms[i]?.el === 'C') ?? -1;
+    const hO = nb.find((i) => e.atoms[i]?.el === 'H') ?? -1;
+    expect(s[o]).toBe('−');
+    expect(s[cO]).toBe('+');
+    expect(s[hO]).toBe('+');
+    // Every other atom (the CH₃ carbon and the C–H hydrogens) is unsigned.
+    e.atoms.forEach((a, i) => {
+      if (![o, cO, hO].includes(i)) expect(s[i], `${a.el}${String(i)}`).toBe('');
+    });
   });
 
   it('molecular polarity (qualitative) matches textbook expectations', () => {
