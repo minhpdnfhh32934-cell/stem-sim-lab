@@ -1,6 +1,7 @@
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
 import { BenchLibrary } from '@/app/bench/Library';
+import { BenchContext } from '@/app/bench/shellMode';
 import { useLayoutStore } from '@/app/layout/layoutStore';
 import { useNavigationStore } from '@/app/navigationStore';
 import { useSettingsStore } from '@/app/settings/settingsStore';
@@ -16,14 +17,29 @@ afterEach(() => {
   });
 });
 
-function openMenu() {
-  render(<FileMenu />);
+/** The classic window's menu; `bench` gives the bench header's (unmounted since #263). */
+function openMenu(bench = false) {
+  render(
+    <BenchContext.Provider value={bench}>
+      <FileMenu />
+    </BenchContext.Provider>,
+  );
   fireEvent.click(screen.getByRole('button', { name: 'Tệp' }));
 }
 
+describe('Tệp menu in the classic window (#263)', () => {
+  it('has no "Lịch sử", presentation or theme item: the library tab and the top bar have them', () => {
+    openMenu();
+    expect(screen.getByRole('menuitem', { name: 'Xuất ảnh PNG' })).toBeInTheDocument();
+    expect(screen.queryByRole('menuitem', { name: 'Lịch sử' })).toBeNull();
+    expect(screen.queryByRole('menuitem', { name: 'Chế độ trình chiếu (F5)' })).toBeNull();
+    expect(screen.queryByRole('menuitemcheckbox')).toBeNull();
+  });
+});
+
 describe('Tệp menu on the bench (docs/BENCH_DESIGN.md: Lịch sử, Chế độ trình chiếu)', () => {
   it('"Chế độ trình chiếu (F5)" turns presentation on (the bench has no other button for it)', () => {
-    openMenu();
+    openMenu(true);
     fireEvent.click(screen.getByRole('menuitem', { name: 'Chế độ trình chiếu (F5)' }));
     expect(useLayoutStore.getState().presentation).toBe(true);
   });
@@ -33,7 +49,7 @@ describe('Tệp menu on the bench (docs/BENCH_DESIGN.md: Lịch sử, Chế đ�
       useSettingsStore.getState().setUiMode('basic');
       useNavigationStore.getState().setScreen('home');
     });
-    openMenu();
+    openMenu(true);
     fireEvent.click(screen.getByRole('menuitem', { name: 'Lịch sử' }));
     expect(useNavigationStore.getState().screen).toBe('lab');
     expect(useProjectUi.getState().historyOpen).toBe(true);
@@ -114,7 +130,7 @@ describe('light / dark in Tệp (#205 B2: there when the header is short of room
     act(() => {
       useSettingsStore.getState().setTheme('light');
     });
-    openMenu();
+    openMenu(true);
     const item = screen.getByRole('menuitemcheckbox', { name: 'Giao diện tối' });
     expect(item).toHaveAttribute('aria-checked', 'false');
     // Up from the first item wraps to the last one: the theme item.

@@ -19,6 +19,9 @@ const RING_ELSEWHERE: Record<string, string> = {
     'src/app/layout/layout.css .problem-input:focus-within',
   'src/app/layout/layout.css .problem-input__field:focus-visible':
     'src/app/layout/layout.css .problem-input:focus-within',
+  // The classic library's search box (back with #263).
+  'src/app/layout/layout.css .sidebar__search input':
+    'src/app/layout/layout.css .sidebar__search:focus-within',
   'src/app/sim/sim.css .stage__canvas': 'src/app/sim/sim.css .stage__canvas:focus-visible',
   'src/chemistry/chem.css .pt__search input': 'src/chemistry/chem.css .pt__search:focus-within',
   'src/teacher/chat/chat.css .chat-panel__composer textarea':

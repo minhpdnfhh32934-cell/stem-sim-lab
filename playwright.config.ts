@@ -29,17 +29,14 @@ const chromium = {
  * "element not found" failures in the studio, chemistry, AI and board specs).
  */
 const HEAVY_3D =
-  /(mitosis3d|meiosis3d|dogma3d|mutation3d|mendel3d|hw3d|drift3d|logistic3d|lv3d|enzyme3d|transport3d|studio-biology|bio3d|biology|project)\.spec\.ts$/;
+  /(mitosis3d|meiosis3d|dogma3d|drift3d|mutation3d|mendel3d|hw3d|logistic3d|lv3d|enzyme3d|transport3d|studio-biology|bio3d|biology|project)\.spec\.ts$/;
 /** The 3D performance budget test (tag @perf): its own project, after the other 3D tests. */
 const PERF = /@perf/;
 /** Software WebGL (SwiftShader): the perf numbers are never measured on a GPU. */
 const SWIFTSHADER = ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'];
 
 export default defineConfig({
-  // The bench ("Bàn thí nghiệm") is the only shell since 0.8.1 B8 (#193): its specs are the suite.
-  // HEAVY_3D has no anchor before the name, so a prefixed 3D spec (e.g. cell-bio3d.spec.ts) also
-  // runs in the 3D projects, never beside the light ones (PR #165).
-  testDir: 'tests/e2e/bench',
+  testDir: 'tests/e2e',
   timeout: 60_000,
   fullyParallel: false,
   retries: 0,
@@ -49,7 +46,7 @@ export default defineConfig({
     locale: 'vi-VN',
     viewport: { width: 1366, height: 768 },
     trace: 'retain-on-failure',
-    // The first-run tour is tested separately (tests/e2e/bench/project.spec.ts).
+    // The first-run tour is tested separately (tests/e2e/project.spec.ts).
     storageState: 'tests/e2e/storage-state.json',
     ...(executablePath ? { launchOptions: { executablePath } } : {}),
   },

@@ -240,8 +240,9 @@
    sunken track colour vanished on the dark stage). */
 .m3d .segmented,
 .bio3d .segmented {
-  border: 1px solid var(--border);
-  background: var(--bg-panel);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
 }
 /*
  * Controls over the picture on one grid: top bar and side column at the top, the picked part's
@@ -308,10 +309,11 @@
   overflow-y: auto;
   pointer-events: auto;
   padding: var(--space-2) var(--space-3) var(--space-3);
-  border: 1px solid var(--border);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
-  background: var(--bg-panel);
+  background: var(--glass-bg);
   box-shadow: var(--shadow-md);
+  backdrop-filter: var(--glass-blur);
   font-size: var(--text-content);
 }
 .m3d__info p {
@@ -339,7 +341,8 @@
   position: sticky;
   top: calc(-1 * var(--space-2));
   z-index: 1;
-  background: var(--bg-panel);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
 }
 .m3d__info-head > strong {
   flex: 1 1 7rem;
@@ -584,9 +587,10 @@
   align-items: center;
   gap: var(--space-2);
   padding: 0 var(--space-2) 0 0;
-  border: 1px solid var(--border);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-md);
-  background: var(--bg-panel);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
 }
 .dogma3d__timeline .m3d__stages {
   flex: none;
@@ -637,9 +641,10 @@
   display: grid;
   gap: 2px;
   padding: 6px 12px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-md);
-  background: var(--bg-panel);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
 }
 .mut3d__protein {
   display: flex;
@@ -667,9 +672,10 @@
   align-items: center;
   gap: var(--space-2);
   padding: 4px 8px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-md);
-  background: var(--bg-panel);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
   font-size: var(--text-sm);
 }
 .bio3d__player input[type='range'] {
@@ -836,7 +842,7 @@
   display: block;
   height: 2.25rem;
   margin: -2.25rem calc(-1 * var(--space-3)) calc(-1 * var(--space-3));
-  background: linear-gradient(to bottom, transparent, var(--bg-panel) 80%);
+  background: linear-gradient(to bottom, transparent, var(--glass-bg) 80%);
   opacity: 0;
   pointer-events: none;
 }

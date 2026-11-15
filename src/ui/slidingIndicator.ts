@@ -8,7 +8,7 @@
  * without them (no script, jsdom) the controls keep their plain checked style.
  */
 
-const CONTAINERS = '.segmented, .tabs__list';
+const CONTAINERS = '.segmented, .subject-switch, .tabs__list';
 const ACTIVE = '[aria-checked="true"], [aria-selected="true"]';
 
 /** Position of the active item inside its container, in CSS pixels (pure; tested). */

@@ -1,7 +1,6 @@
-import { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import type uPlotType from 'uplot';
-import { BenchContext } from '@/app/bench/shellMode';
 import { useT } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
@@ -26,11 +25,8 @@ export function GraphPanel() {
   const scene = useSimStore((s) => s.scene);
   const [graphId, setGraphId] = useState<string | null>(null);
   const params = useSimStore((s) => s.params);
-  // The bench draws a pinned run's curves too, dashed (docs/BENCH_DESIGN.md §2, §9.4).
-  const bench = useContext(BenchContext);
-  const ghost = useCompareStore((s) =>
-    bench && s.ghost && s.ghost.sceneId === scene?.id ? s.ghost : null,
-  );
+  // A pinned run's curves are drawn too, dashed (docs/BENCH_DESIGN.md §2, §9.4; kept by #263).
+  const ghost = useCompareStore((s) => (s.ghost && s.ghost.sceneId === scene?.id ? s.ghost : null));
   // A graph whose every curve the parameters hide (the phase circle once there is damping) leaves
   // the picker.
   const offered = (g: GraphDef) => visibleSeries(g, params).length > 0;

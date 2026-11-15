@@ -2,6 +2,10 @@ import type { Messages } from '../types';
 
 /** English UI strings. Must have exactly the same keys as `vi.ts` (checked by the type). */
 const en: Messages = {
+  app: {
+    tagline: 'Physics · Chemistry · Biology simulations',
+    name: 'SimLab',
+  },
   subjects: {
     label: 'Subject',
     physics: 'Physics',
@@ -9,6 +13,8 @@ const en: Messages = {
     biology: 'Biology',
   },
   topbar: {
+    presentation: 'Presentation mode (F5)',
+    toggleTheme: 'Toggle light / dark theme',
     problemLabel: 'Problem',
     problemPlaceholder: 'Type or paste a problem… (Ctrl+Enter to analyze)',
     analyze: 'Analyze',
@@ -52,6 +58,10 @@ const en: Messages = {
       'You chose local Gemma but its model is not downloaded, so nothing is sent. Click to download it in Settings.',
   },
   sidebar: {
+    studioHint: 'Guided lessons',
+    studio: 'Science Studio',
+    comingSoonHint: 'This topic will be built in a later phase.',
+    library: 'Library',
     regionLabel: 'Topic library',
     history: 'History',
     search: 'Search topics…',
@@ -180,6 +190,8 @@ const en: Messages = {
     },
   },
   inspector: {
+    regionLabel: 'Inspector',
+    title: 'Properties',
     objectSection: 'Object',
     noSelection: 'Nothing selected.',
     paramsSection: 'Parameters',
@@ -189,6 +201,9 @@ const en: Messages = {
       'Every simulation has a Science Card stating its model, equations, assumptions, data sources and confidence level:',
   },
   confidence: {
+    qualitativeDesc: 'Illustrates a concept only; do not read numbers from it.',
+    approxDesc: 'Numerical integration, with an estimated error.',
+    exactDesc: 'Matches the analytic solution within the stated tolerance.',
     exact: 'Exact quantitative',
     approx: 'Approximate quantitative',
     qualitative: 'Qualitative / illustrative',
@@ -198,6 +213,7 @@ const en: Messages = {
     verified: 'Reviewed',
   },
   bottom: {
+    moduleEmpty: 'This topic has no extra panel.',
     regionLabel: 'Graphs and solution panel',
     graphs: 'Graphs',
     solution: 'Solution',
@@ -210,6 +226,7 @@ const en: Messages = {
     dataEmpty: 'The data table (exportable to CSV) appears here.',
   },
   timeline: {
+    time: 'Simulation time',
     regionLabel: 'Time controls',
     play: 'Play (Space)',
     pause: 'Pause (Space)',
@@ -281,6 +298,9 @@ const en: Messages = {
     },
   },
   layout: {
+    resizeBottom: 'Drag to resize the Graphs panel',
+    resizeRight: 'Drag to resize the Properties panel',
+    resizeLeft: 'Drag to resize the Library',
     exitPresentation: 'Exit presentation (Esc)',
   },
   settings: {
@@ -424,6 +444,7 @@ const en: Messages = {
     qualityHint: 'Affects visuals only (sharpness, shadows, particles drawn), never the numbers.',
   },
   command: {
+    openButton: 'Quick search (Ctrl+K)',
     title: 'Quick search',
     placeholder: 'Type a topic, a Settings page or something to do…',
     empty: 'No results. Try fewer letters.',
@@ -725,6 +746,9 @@ const en: Messages = {
     fromProblem: 'From a problem',
   },
   status: {
+    browserMode: 'browser mode',
+    version: 'Version',
+    ready: 'Ready',
     quality: 'Render quality',
     qualityNotMeasured: 'not measured',
     fps: 'FPS',
@@ -955,6 +979,17 @@ const en: Messages = {
     },
   },
   home: {
+    teacherTitle: 'AI Teacher',
+    teacherBody:
+      'Ask questions, get step-by-step hints and check your understanding. Simulation numbers still come from the app.',
+    suggestedTitle: 'Suggested for you',
+    subtitle: 'Pick a subject, open a topic, or paste a problem to turn it into a simulation.',
+    subjectsTitle: 'Subjects',
+    problemPlaceholder:
+      'Example: A ball is thrown at 20 m/s at 45°. Find the range.\n(Multi-line problems are fine. Ctrl+Enter to analyze.)',
+    problemLabel: 'Type a problem or a question…',
+    noSuggestions: 'This grade has no topics yet. Choose "All" in the Library to see every topic.',
+    noAiNote: 'No AI or no internet? You can still learn: open a topic or build a scene.',
     regionLabel: 'Home',
     goHome: 'Back to home',
     title: 'What shall we learn today?',
@@ -1003,6 +1038,9 @@ const en: Messages = {
       'You chose the AI on this computer but no program and model yet, so the photo was not sent anywhere. Choose them in Settings → AI on this computer.',
   },
   landing: {
+    teacherBody:
+      'Ask questions, get hints and check your understanding with an AI study assistant.',
+    eyebrow: 'Explore science by doing',
     title: 'Welcome to SimLab',
     subtitle:
       'Choose how you want to learn today. Simulations, data and learning support share one workspace.',
@@ -1840,7 +1878,7 @@ const en: Messages = {
     flowThinkLocal:
       'Deepthink is on: the question, the draft of the AI on this computer, related library excerpts, the summary of older turns (if any) and the screen context (if you turned it on) → {name} for review. Nothing goes to a fallback provider.',
     flowScreen:
-      'Screen context is sent only when you turn on “Use current screen information” in the notebook’s Ask AI tab; it is SimLab data, not a screenshot.',
+      'Screen context is sent only when you turn on “Use current screen information” in the chat bubble; it is SimLab data, not a screenshot.',
     download: 'Download model',
     downloaded: 'Downloaded',
     deleteModel: 'Delete Gemma',
@@ -2357,6 +2395,10 @@ const en: Messages = {
     },
   },
   levels: {
+    topicCount: '{count} grade {grade} topics',
+    topicCountOne: '1 grade {grade} topic',
+    suggested: 'Suggested for grade {grade}',
+    source: 'Following the Kết nối tri thức textbooks · Waiting for a teacher’s review',
     label: 'Grade',
     foundation: 'Foundation',
     general: 'University',
@@ -2401,6 +2443,10 @@ const en: Messages = {
     fewerParams: 'Fewer parameters',
   },
   learn: {
+    topicDone: 'Topic completed',
+    topicLearnedLeft: 'Studied — {done}/{total} steps done, still to do: {left}',
+    topicLearned: 'Studied',
+    chapterLearned: '{done}/{total} topics studied',
     leftPredict: 'Predict first',
     leftChallenges: '{count} challenge(s)',
     empty: 'Open a Physics topic for a prediction question and challenges.',

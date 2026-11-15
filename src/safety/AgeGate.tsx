@@ -1,5 +1,6 @@
 import { ShieldCheck } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
+import { BenchContext } from '@/app/bench/shellMode';
 import { useT } from '@/app/i18n';
 import { useProfileStore } from '@/app/learner/profileStore';
 import { readTourDone } from '@/app/project/uiStore';
@@ -38,7 +39,8 @@ export function AgeGate({ hold = false }: { hold?: boolean }) {
   // an AI was already set up, and the lab tour done).
   const gateStep = useSafetyStore((s) => !s.gateRequested || s.gateFirstRun);
   const firstRunDone = useProfileStore((s) => s.connectSeen) || readTourDone();
-  const firstRunStep = gateStep && !firstRunDone;
+  // Only the bench first run numbers the gate "2/3"; the classic steps count 5 (Onboarding).
+  const firstRunStep = useContext(BenchContext) && gateStep && !firstRunDone;
 
   useEffect(() => {
     void loadSafety().catch(() => undefined);

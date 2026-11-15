@@ -1,33 +1,38 @@
 import { act, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
-import { useModuleStore } from '@/modules/moduleStore';
 import { usePerfStore } from '@/perf/perfStore';
-import { Stage } from './Stage';
+import { PerfNotes } from './PerfNotes';
+import { StatusBar } from './StatusBar';
 
 afterEach(() => {
   act(() => {
     usePerfStore.setState({ timeScale: 1, degraded: false });
-    useModuleStore.setState({ active: null, loading: false, error: null });
   });
 });
 
-describe('the overload ladder is never silent on the bench (B8)', () => {
-  it('slow motion and a lower display quality are said on the stage', () => {
+describe('the overload ladder is never silent', () => {
+  it('the classic status bar says slow motion and a lower display quality (#263)', () => {
+    render(<StatusBar />);
+    expect(screen.queryByRole('status')).toBeNull();
     act(() => {
-      useModuleStore.setState({
-        active: { id: 'test', view: { title: { vi: 'T', en: 'T' }, Stage: () => <p>stage</p> } },
-        loading: false,
-        error: null,
-      });
+      usePerfStore.setState({ timeScale: 0.5, degraded: true });
     });
-    const { rerender } = render(<Stage />);
+    expect(screen.getAllByRole('status').map((note) => note.textContent)).toEqual([
+      'Chuyển động chậm ×0,5 để giữ độ chính xác',
+      'Đã hạ chất lượng hiển thị để giữ độ mượt (số liệu không đổi)',
+    ]);
+  });
+
+  // The bench's notices (B8): no screen mounts them since #263, the component is still there.
+  it('PerfNotes: chips with the factor, and a live line without it', () => {
+    const { rerender } = render(<PerfNotes className="stage__notes" />);
     // The live line is there before any notice, so the first one is read out.
     expect(screen.getByRole('status')).toBeEmptyDOMElement();
     expect(document.querySelector('.stage__notes')).toBeNull();
     act(() => {
       usePerfStore.setState({ timeScale: 0.5, degraded: true });
     });
-    rerender(<Stage />);
+    rerender(<PerfNotes className="stage__notes" />);
     const live = screen.getByRole('status');
     expect(live).toHaveTextContent(
       'Chuyển động chậm hơn thời gian thực để giữ độ chính xác. Đã hạ chất lượng hiển thị để giữ độ mượt (số liệu không đổi)',
@@ -38,7 +43,7 @@ describe('the overload ladder is never silent on the bench (B8)', () => {
     act(() => {
       usePerfStore.setState({ timeScale: 0.43 });
     });
-    rerender(<Stage />);
+    rerender(<PerfNotes className="stage__notes" />);
     expect(screen.getByText('Chuyển động chậm ×0,43 để giữ độ chính xác')).toBeInTheDocument();
     expect(screen.getByRole('status').textContent).toBe(said);
   });

@@ -17,6 +17,15 @@
   --text-md: 1rem;
   --text-lg: 1.143rem;
   --text-xl: 1.429rem;
+  /* Type scale (#205 A1), in rem so it follows Cỡ chữ; exact pixels at 100 % (1rem = 14px).
+     Shared rules use these names, so the classic window defines them too (#263). */
+  --text-caption: calc(12rem / 14);
+  --text-note: calc(13rem / 14);
+  --text-title: calc(18rem / 14);
+  --text-heading: calc(22rem / 14);
+  --text-display: calc(32rem / 14);
+  /* Toasts and floating captions (#205 A2): the classic window uses its medium shadow. */
+  --shadow-l2: var(--shadow-md);
 
   /* Spacing (4px grid at 100% font scale) */
   --space-1: 0.286rem;
@@ -37,7 +46,19 @@
   --radius-full: 999px;
 
   /* Layout sizes */
+  --topbar-h: 3.715rem;
+  --timeline-h: 3.143rem;
+  --statusbar-h: 1.715rem;
   --splitter: 6px;
+
+  /* Launch page: the four background glows, the same in both themes. */
+  --launch-blob-1: rgb(56 130 246 / 42%);
+  --launch-blob-2: rgb(168 85 247 / 38%);
+  --launch-blob-3: rgb(34 211 238 / 32%);
+  --launch-blob-4: rgb(52 211 153 / 26%);
+  /* "Hỏi thầy" floating button: its size and its gap to the panel edges. */
+  --chat-bubble: 52px;
+  --chat-bubble-gap: 14px;
 
   /* Motion — subtle; disabled entirely under prefers-reduced-motion. */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
@@ -122,6 +143,16 @@
   --teacher-warm: #e0793a;
   --teacher-cool: #2f8fd8;
   --teacher-ring-bg: #ffffff;
+  /* AI Teacher station (#234): its own page colours, the same as under the bench look. */
+  --teacher-bg: #eef3f3;
+  --teacher-glow: #d3ebe7;
+  --teacher-accent: #085752;
+  --teacher-warn: #6e4a00;
+  --teacher-line: #578783;
+  --teacher-text: #1d2124;
+  --teacher-text-muted: #4b5559;
+  --teacher-glass-solid: #fbfdfd;
+  --teacher-glass: color-mix(in srgb, var(--teacher-glass-solid) 78%, transparent);
   --board-bg: #fdfdfb;
   --board-ink: #1d2a44;
   --board-mark: #c93a3a;
@@ -211,6 +242,12 @@
 
   --shadow-sm: 0 1px 2px rgba(20, 30, 50, 0.06), 0 1px 1px rgba(20, 30, 50, 0.04);
   --shadow-md: 0 6px 20px rgba(20, 30, 50, 0.1), 0 2px 6px rgba(20, 30, 50, 0.06);
+
+  /* Floating glass over the stage/board (pattern 001): mostly opaque so text stays readable. */
+  --glass-bg: rgba(255, 255, 255, 0.78);
+  --glass-border: rgba(20, 30, 50, 0.12);
+  --glass-highlight: rgba(255, 255, 255, 0.7);
+  --glass-blur: blur(14px) saturate(1.4);
 }
 
 :root[data-theme='dark'] {
@@ -251,6 +288,15 @@
   --teacher-warm: #f0a060;
   --teacher-cool: #6cb6f0;
   --teacher-ring-bg: #1b2330;
+  --teacher-bg: #070d12;
+  --teacher-glow: #10343a;
+  --teacher-accent: #5fe0d2;
+  --teacher-warn: #f5c84c;
+  --teacher-line: #468f92;
+  --teacher-text: #e8f1f2;
+  --teacher-text-muted: #9fb3b8;
+  --teacher-glass-solid: #0d1a20;
+  --teacher-glass: color-mix(in srgb, var(--teacher-glass-solid) 78%, transparent);
   --board-bg: #1f2a24;
   --board-ink: #eef2ea;
   --board-mark: #ff8a7a;
@@ -322,6 +368,11 @@
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
   --shadow-md: 0 8px 28px rgba(0, 0, 0, 0.45), 0 2px 6px rgba(0, 0, 0, 0.3);
+
+  --glass-bg: rgba(21, 27, 36, 0.76);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-highlight: rgba(255, 255, 255, 0.06);
+  --glass-blur: blur(14px) saturate(1.2);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -333,11 +384,10 @@
 
 /*
  * "Bàn thí nghiệm" (bench) shell, 0.8.1 (#113; design `docs/BENCH_DESIGN.md` §4). Applies
- * while <html> carries data-shell="bench": `public/theme-boot.js` sets it before the first frame
- * (the bench is the only shell since B8) and `BenchShell` keeps it. Names that mean the same
- * thing are overridden, so every module picks the bench look up unchanged; new names only where
- * nothing matches today. The bench fonts (Be Vietnam Pro, JetBrains Mono) are loaded by
- * `benchFonts.ts`. Contrast table: tokens.test.ts.
+ * only while <html> carries data-shell="bench" (the dev switch, B1); the classic shell never sets
+ * it, so nothing below changes it. Names that mean the same thing are overridden, so every module
+ * picks the bench look up unchanged; new names only where nothing matches today. The bench fonts
+ * (Be Vietnam Pro, JetBrains Mono) are loaded by `benchFonts.ts`. Contrast table: tokens.test.ts.
  */
 :root[data-shell='bench'] {
   --font-sans:
@@ -345,7 +395,11 @@
     'Helvetica Neue', Arial, sans-serif;
   --font-mono:
     'JetBrains Mono', 'Cascadia Mono', 'Cascadia Code', Consolas, ui-monospace, 'SF Mono', monospace;
-  /* No blur anywhere (integrated GPUs). */
+  /* No blur anywhere (integrated GPUs): glass becomes the solid panel. */
+  --glass-bg: var(--bg-panel);
+  --glass-border: var(--border);
+  --glass-highlight: transparent;
+  --glass-blur: none;
   --scrim-blur: none;
   /* Type floor 12/16 (§5) and radii 8 for controls, 12 for cards and sheets (§6). */
   --text-xs: 0.8572rem;

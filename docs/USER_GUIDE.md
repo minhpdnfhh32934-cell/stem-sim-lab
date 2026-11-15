@@ -70,7 +70,7 @@ chép qua USB và cài trước.
    Hướng dẫn nhanh mở lại được bằng menu ☰ → Hướng dẫn nhanh. App cũng đo nhanh sức mạnh máy
    (khoảng 1 giây) để chọn chất lượng hiển thị.
 
-   **Tìm nhanh (Ctrl+K)** hoặc nút **Tìm…** ở đầu bàn: gõ vài chữ (không cần dấu, ví
+   **Tìm nhanh (Ctrl+K)** hoặc nút kính lúp trên thanh trên cùng: gõ vài chữ (không cần dấu, ví
    dụ "nem xien") để mở một chủ đề, một trang Cài đặt, AI Teacher, hoặc làm nhanh một việc (đổi
    sáng/tối, Cơ bản/Nâng cao, ngôn ngữ, trình chiếu, lưu/mở tệp). Mũi tên ↑ ↓ để chọn, Enter để mở,
    Esc để đóng.
@@ -82,29 +82,31 @@ chép qua USB và cài trước.
 
    Bấm logo **SimLab** ở góc trái để quay về trang chủ.
 
-3. Trong **Virtual Lab**, **Kệ bài** ("Hôm nay học gì?") hiện khi chưa mở chủ đề nào:
-   - ô **Tiếp tục** với nút **Mở lại** (mở lại chủ đề lần trước);
-   - ô **Có đề bài?**: bấm vào dòng nhập để mở tờ **Đề bài** (dán được đề nhiều dòng, Ctrl+Enter để
-     phân tích), hoặc **Tự dựng cảnh** (không cần AI);
-   - cột lọc bên trái: chọn môn **Vật lý · Hóa học · Sinh học**, loại bài, tìm chủ đề;
-   - các kệ thẻ chủ đề theo chương, lọc theo lớp.
-4. Bấm một thẻ chủ đề, chỉnh thông số ở khay **Điều chỉnh** bên phải, bấm **Chạy** ở mép bàn (hoặc
-   Space).
-5. Chip mức tin cậy ở mép bàn mở **Thẻ Khoa học** (mô hình và mức độ tin cậy của kết quả); bản tóm
-   tắt luôn ở đầu khay.
+3. Trong **Virtual Lab**, trang "Hôm nay học gì?" hiện khi chưa mở chủ đề nào:
+   - nút **Tiếp tục bài đang học** (mở lại chủ đề lần trước);
+   - ô **Nhập đề bài hoặc câu hỏi…** (dán được đề nhiều dòng, Ctrl+Enter để phân tích) và nút
+     **Tự dựng cảnh** (không cần AI);
+   - 3 thẻ môn **Vật lý · Hóa học · Sinh học** (bấm để xem các chủ đề của môn trong Thư viện);
+   - **chủ đề gợi ý** theo lớp đang chọn, môn bạn quan tâm được gợi ý trước;
+   - **huy hiệu** bạn đã đạt;
+   - nút **Mở AI Teacher** để hỏi bài trong trang chat riêng.
+4. Chọn một chủ đề (trang "Hôm nay học gì?" hoặc **Thư viện** bên trái), chỉnh thông số ở cột phải,
+   bấm ▶ (hoặc Space) để chạy.
+5. Đọc **Thẻ Khoa học** ở cột phải để biết mô hình và mức độ tin cậy của kết quả.
 
 ### Trò chuyện với AI Teacher
 
-Trong Virtual Lab, mở thẻ **Hỏi AI** ở sổ bên trái để hỏi nhanh bên cạnh bài; ở trang chủ, bấm thẻ
-**AI Teacher** (hoặc nút AI Teacher trên thanh trên) để mở cuộc trò chuyện toàn màn hình. Bấm chữ **SimLab**
+Trong Virtual Lab, bấm nút tròn có mặt **AI Teacher** ở góc dưới bên phải màn hình để hỏi nhanh
+(khung chat mở ngay cạnh bài, gọi là bong bóng chat); ở trang chủ, bấm thẻ **AI Teacher** để mở cuộc
+trò chuyện toàn màn hình. Bấm chữ **SimLab**
 ở góc trên để về trang chủ. Chọn AI trực tuyến hoặc Gemma cục bộ ở ô chọn trên đầu khung chat; nút
 ⓘ cạnh tiêu đề trang AI Teacher nhắc trang này làm gì và dữ liệu nào có thể được gửi đi. Nếu chưa kết nối API hoặc
 Gemma chưa sẵn sàng, khung chat hiện thông báo và nút **Cài đặt** mở thẳng đúng mục cần chỉnh. Dòng
 nhỏ dưới thanh chọn cho biết câu hỏi tiếp theo sẽ được gửi tới đâu (hoặc chỉ xử lý trên máy).
 
 - Bật **Lấy thông tin từ màn hình** để gửi chủ đề, thông số, đề bài đã mở, trạng thái mô phỏng và
-  Thẻ Khoa học của SimLab cùng câu hỏi. Mặc định tắt; nút tự tắt lại mỗi lần đóng thẻ Hỏi AI.
-  Công tắc này chỉ có ở thẻ Hỏi AI trong sổ, không có ở trang AI Teacher toàn màn hình.
+  Thẻ Khoa học của SimLab cùng câu hỏi. Mặc định tắt; nút tự tắt lại mỗi lần mở bong bóng.
+  Công tắc này chỉ có trong bong bóng chat, không có ở trang AI Teacher toàn màn hình.
   Ứng dụng dùng trạng thái có cấu trúc, không chụp màn hình hay đọc cửa sổ khác.
 - Bật **Suy nghĩ kĩ (Think)** để API trả lời thứ nhất tạo bản nháp và một nhà cung cấp API khác kiểm tra, chỉnh lại
   câu trả lời. Think dùng thêm lượt API; cấu hình nhà cung cấp thứ hai trong Cài đặt → AI Teacher. Thiếu
@@ -239,34 +241,35 @@ lớp nào?"; bạn đổi lại bất cứ lúc nào bằng thanh **Lớp 10 ·
 viện.
 
 - **Một lớp:** chủ đề nằm dưới tên chương của sách giáo khoa _Kết nối tri thức với cuộc sống_ lớp đó,
-  theo thứ tự trong sách; thẻ chủ đề ghi số bài kèm nhãn, ví dụ "Bài 4–5, 7 · chờ giáo viên duyệt".
-  Dòng dưới thanh Lớp nhắc rằng cách xếp này do SimLab đề xuất từ mục lục chính thức
+  theo thứ tự trong sách, kèm số bài (ví dụ "Bài 4–5, 7"). Dòng **"Theo SGK Kết nối tri thức · Đang
+  chờ giáo viên duyệt"** nhắc rằng cách xếp này do SimLab đề xuất từ mục lục chính thức
   (`docs/CURRICULUM_KNTT.md`) và chưa được giáo viên duyệt (`docs/DATA_REVIEW.md`, mục 12).
 - **Tất cả:** mọi chủ đề như trước, kể cả các chủ đề chưa xếp được vào lớp nào.
 - Môn nào chưa có chủ đề ở lớp đang chọn (ví dụ Sinh học lớp 11) hiện câu "Chưa có chủ đề …" và nút
   **Xem tất cả**. Ô tìm kiếm chỉ tìm trong lớp đang xem; nút "Có … chủ đề ở môn khác" vẫn như cũ.
-- Lớp chỉ dùng để xếp danh sách trên Kệ bài, không gửi cho AI.
+- Trang "Hôm nay học gì?" gợi ý chủ đề của lớp đang chọn. Lớp chỉ dùng để xếp danh sách, không gửi
+  cho AI.
 
 ### Chế độ Cơ bản và Nâng cao
 
-Đổi ở nút **Cơ bản / Nâng cao** trên thanh trên hoặc Cài đặt → Giao diện → **Chế độ hiển thị**.
+Đổi ở đầu cột **Thuộc tính** hoặc Cài đặt → Giao diện → **Chế độ hiển thị**.
 
 - **Cơ bản** (mặc định): 3–5 thông số quan trọng nhất (nút **Thêm thông số** để xem phần còn lại;
-  giá trị lấy từ đề bài hoặc bạn đã chỉnh thì luôn hiện), thẻ sổ **Đồ thị · Lời giải**, thanh
-  công cụ chỉ có chọn, kéo, thước đo, vectơ và căn khung nhìn. Khi mọi thông số đều là giá trị mặc
+  giá trị lấy từ đề bài hoặc bạn đã chỉnh thì luôn hiện), bảng dưới có các thẻ **Đồ thị · Lời giải ·
+  Thử thách**, thanh công cụ chỉ có chọn, kéo, thước đo, vectơ và căn khung nhìn. Khi mọi thông số đều là giá trị mặc
   định, một dòng ghi điều đó thay cho nhãn "mặc định" ở từng dòng; có giá trị từ đề hoặc do bạn chỉnh
   thì mọi dòng ghi rõ nguồn. **Thẻ Khoa học** hiện tên, mức tin cậy, cảnh báo can thiệp và mô hình;
-  phương trình, giả định và nguồn gấp lại dưới một dòng, bấm để mở. Cảnh báo chuyển động chậm và
-  hạ chất lượng luôn hiện trên khung mô phỏng ở cả hai chế độ.
+  phương trình, giả định và nguồn gấp lại dưới một dòng, bấm để mở. Thanh trạng thái chỉ hiện các
+  cảnh báo (chuyển động chậm, hạ chất lượng), không hiện FPS/RAM.
 - **Nâng cao:** thêm mục Đối tượng, mọi thông số, thước đo góc, đồng hồ bấm giờ, vết quỹ đạo, thẻ
-  **Số liệu** và **Xuất CSV**; Thẻ Khoa học mở đầy đủ. Mức chất lượng hiển thị xem và đổi ở Cài
-  đặt → **Chất lượng hiển thị**.
+  **Số liệu** và **Xuất CSV**; Thẻ Khoa học mở đầy đủ; thanh trạng thái có chất lượng hiển thị, FPS,
+  RAM (ba số này cũng có ở menu ☰ → **Thông tin máy**).
 
 Người đã dùng bản cũ được giữ ở chế độ Nâng cao như trước.
 
 ### Học bằng khám phá: Dự đoán trước, Thử thách, Gợi ý từng bước
 
-Với mỗi chủ đề Vật lý, mở thẻ **Thử thách** ở sổ bên trái:
+Với mỗi chủ đề Vật lý, mở thẻ **Thử thách** ở bảng dưới:
 
 - **Dự đoán trước** (Dự đoán → Quan sát → Giải thích): chọn điều bạn nghĩ sẽ xảy ra (ví dụ "thả
   từ độ cao gấp đôi thì thời gian rơi thay đổi thế nào?"), bấm **Chạy để kiểm tra** để xem mô
@@ -278,11 +281,11 @@ Với mỗi chủ đề Vật lý, mở thẻ **Thử thách** ở sổ bên tr�
   máy đặt "giảm chuyển động").
 - **Gợi ý từng bước**: khi bạn nhập đề bài, thẻ **Lời giải** ẩn đáp số để bạn tự giải trước: bấm
   **Gợi ý 1**, **Gợi ý 2**… đến **Lời giải đầy đủ**, hoặc **Xem lời giải ngay** để đối chiếu.
-- **Tiến độ và huy hiệu**: mở một chủ đề (môn nào cũng vậy) là thẻ của nó trên Kệ bài có dấu ✓
-  **Đã mở**. Chủ đề Vật lí còn việc thì dấu ghi thêm số bước, như "Đã mở · 1/3 bước", và thẻ có dòng
-  "Còn: Dự đoán trước, 1 thử thách"; làm xong hết (đã mở, đã dự đoán, đã làm mọi thử thách) thì dấu
-  đổi thành biểu tượng **Đã xong**. Mỗi chương có số "đã mở/tổng". Huy hiệu hiện trên Kệ bài. Không
-  có chuỗi ngày hay bảng xếp hạng. Tiến độ chỉ lưu trên máy này.
+- **Tiến độ và huy hiệu**: mở một chủ đề (môn nào cũng vậy) là có dấu ✓ **Đã học** trong Thư viện.
+  Chủ đề Vật lí còn việc thì có thêm số nhỏ như "1/3" (di chuột vào để xem còn Dự đoán trước hay
+  thử thách nào); làm xong hết (đã mở, đã dự đoán, đã làm mọi thử thách) thì dấu ✓ đổi thành biểu
+  tượng **Hoàn thành**. Mỗi chương có số "đã học/tổng". Huy hiệu hiện ở trang "Hôm nay học gì?".
+  Không có chuỗi ngày hay bảng xếp hạng. Tiến độ chỉ lưu trên máy này.
 - **Nhắc nghỉ mắt**: sau khoảng 45 phút dùng liên tục, app hiện một lời nhắc nhỏ (không chặn màn
   hình). Nghỉ từ 5 phút trở lên thì đếm lại từ đầu.
 
@@ -291,15 +294,15 @@ Với mỗi chủ đề Vật lý, mở thẻ **Thử thách** ở sổ bên tr�
 **Mở:** Science Studio nằm trong **Virtual Lab** (trang chủ SimLab không còn thẻ riêng). Có ba
 cách mở:
 
-- ở Kệ bài, chọn loại bài **Có hướng dẫn** trong cột lọc để xem mọi bài, kể cả bài giáo viên đã
-  soạn và thẻ **Soạn bài** (chế độ Nâng cao có thêm nút **Soạn bài** ở cuối cột lọc);
+- bấm nút **Science Studio** ở đầu thư viện chủ đề (bên trái) để xem mọi bài, kể cả bài giáo viên đã
+  soạn và thẻ **Soạn bài**;
 - khi đang mở một chủ đề có bài hướng dẫn (hiện có: Rơi tự do, Thư viện phản ứng đã kiểm chứng,
-  Nguyên phân), bấm **Học theo bài: …** ở mục **Science Studio** trong khay Điều chỉnh;
+  Nguyên phân), bấm **Học theo bài: …** ở thẻ **Science Studio** trong bảng bên phải;
 - ở chủ đề Rơi tự do, phần **Dự đoán trước** (thẻ **Thử thách**) dẫn sang bài Science Studio của chủ
   đề, nên em chỉ dự đoán một lần, trong bài đó. Các thử thách nhỏ vẫn ở trong Virtual Lab.
 
-Trong Studio, chọn môn ở các thẻ **Hóa học · Sinh học · Vật lí · Soạn bài**, rồi chọn bài ở **Chọn
-bài học**. Bấm **Về Virtual Lab** để quay lại; bài đang làm
+Trong Studio, chọn môn ở các thẻ **Hóa học · Sinh học · Vật lí · Soạn bài** (thư viện bên trái đổi
+theo môn đó), rồi chọn bài ở **Chọn bài học**. Bấm **Về Virtual Lab** để quay lại; bài đang làm
 dở được giữ nguyên. Bấm logo **SimLab** để về trang chủ.
 
 **Cách học:** lần đầu vào Studio, một hướng dẫn ngắn tự hiện và chỉ vào từng phần của màn hình (chọn
@@ -343,33 +346,33 @@ chưa có giáo viên duyệt.
   được trước khi gửi). Thầy chỉ thấy số đo và ghi chú của bài khi em bật **Lấy thông tin từ màn
   hình** trong khung chat.
 
-## Bố cục màn hình: Bàn thí nghiệm
+## Bố cục màn hình
 
-Từ bản 0.8.1, SimLab chỉ có một giao diện là **Bàn thí nghiệm**. Giao diện cũ (thanh trên, thanh
-trạng thái, bảng dưới, bong bóng chat) đã bỏ. Dữ liệu đã lưu từ bản cũ (cài đặt, tiến độ, lựa chọn
-3D/2D) vẫn được giữ.
+SimLab dùng cửa sổ quen thuộc: thanh trên, cột trái, khung mô phỏng ở giữa, bảng dưới, cột phải và
+thanh trạng thái. Giao diện **Bàn thí nghiệm** (kệ bài, sổ, khay, mép bàn) của bản 0.8.1 không còn
+hiện. Cài đặt, tiến độ và lựa chọn 3D/2D đã lưu vẫn được giữ.
 
-- **Thanh trên:** về trang chủ, đường dẫn (Virtual Lab › môn › bài), nút **Đề bài**, trạng thái AI,
-  **Tìm…** (Ctrl+K), Cơ bản/Nâng cao, nút sáng/tối (mặt trăng khi đang sáng, mặt trời khi đang
-  tối), AI Teacher, hoàn tác/làm lại, Tệp, Cài đặt. Khi chữ to (Cài đặt → Cỡ chữ) hoặc cửa sổ hẹp,
-  ô Tìm và trạng thái AI chỉ còn biểu tượng để tên bài có chỗ.
-- **Kệ bài** (khi chưa mở bài): cột lọc bên trái (môn học, loại bài **Tự do** / **Có hướng dẫn**,
-  ô tìm chủ đề, Lịch sử ở chế độ Nâng cao). Ở giữa là "Hôm nay học gì?" với nút chọn lớp, ô
-  **Tiếp tục** và **Có đề bài?**, rồi các kệ thẻ chủ đề theo chương. Tìm không thấy thì app gợi ý
-  môn khác có chủ đề đó, hoặc **Xem tất cả** các lớp.
-- **Khi mở một bài:**
-  - Giữa là khung mô phỏng với thanh công cụ nổi.
-  - Dưới khung là **mép bàn**: nút **Chạy**, bước, đặt lại, thời gian, thanh tua, tốc độ, và chip
-    mức tin cậy (luôn hiện; bấm để mở Thẻ Khoa học).
-  - Bên trái là **sổ**: các thẻ Thử thách, Đồ thị, Lời giải, Số liệu (chế độ Nâng cao), Thẻ khoa
-    học, Hỏi AI. Bấm một thẻ để mở, bấm lại hoặc Esc để đóng (nút **Đóng sổ**).
-  - Bên phải là **khay Điều chỉnh**: tóm tắt Thẻ Khoa học, thông số và công cụ. **Thu gọn khay** để khay thành
-    một gáy hẹp có nhãn; không bảng nào biến mất hẳn.
+- **Thanh trên:** logo SimLab (về trang chủ), chọn môn, ô nhập đề bài, trạng thái AI, tìm nhanh (nút
+  kính lúp, Ctrl+K), hoàn tác/làm lại, sáng/tối, trình chiếu, menu Tệp (☰), cài đặt.
+- **Cột trái:** hai thẻ **Thư viện** và **Lịch sử**; nút **Science Studio** và nút **SimLab 3D**;
+  thanh chọn lớp, ô tìm chủ đề và danh sách chủ đề theo chương. Tìm không thấy thì app gợi ý môn
+  khác có chủ đề đó, hoặc **Xem tất cả** các lớp.
+- **Giữa:** khi chưa mở chủ đề là trang "Hôm nay học gì?". Khi mở một chủ đề là khung mô phỏng và
+  thanh công cụ nổi; bên dưới là thanh thời gian (chạy, dừng, từng bước, đặt lại, tua, tốc độ). Chủ
+  đề Hóa học, Sinh học (và bài Hoạ âm của Vật lý) có nút điều khiển riêng ngay trên khung mô phỏng.
+- **Dưới:** Đồ thị, Lời giải, Thử thách, Số liệu (chế độ Nâng cao). Chủ đề Hóa học, Sinh học hiện
+  bảng hoặc đồ thị riêng của chủ đề ở đây.
+- **Cột phải (Thuộc tính):** nút Cơ bản/Nâng cao, bài Science Studio của chủ đề (nếu có), vật đang
+  chọn (chế độ Nâng cao), thông số và Thẻ Khoa học.
+- **Thanh trạng thái** (dưới cùng): cảnh báo khi máy chậm, lời nhắc có bản cập nhật, số phiên bản;
+  chế độ Nâng cao có thêm chất lượng hiển thị, FPS và RAM.
+- **Nút tròn AI Teacher** ở góc dưới bên phải mở bong bóng chat (chỉ có trong Virtual Lab).
 
-Kéo đường viền để đổi độ rộng sổ và khay, nhấp đúp để trả về mặc định. **Khôi phục bố cục mặc định**
-có trong Tìm nhanh (Ctrl+K) và Cài đặt. App tự nhớ bố cục cho lần mở sau.
+Các cột và bảng đều kéo giãn được bằng cách kéo đường viền. Nhấp đúp vào đường viền để trả về kích
+thước mặc định. **Khôi phục bố cục mặc định** có trong Cài đặt → Giao diện. App tự nhớ bố cục cho
+lần mở sau.
 
-Khi máy chậm, khung mô phỏng ghi rõ **Chuyển động chậm ×… để giữ độ chính xác** hoặc **Đã hạ chất
+Khi máy chậm, thanh trạng thái ghi rõ **Chuyển động chậm ×… để giữ độ chính xác** hoặc **Đã hạ chất
 lượng hiển thị để giữ độ mượt (số liệu không đổi)**: app chỉ hy sinh độ mượt, không bao giờ âm thầm
 giảm độ chính xác.
 
@@ -390,7 +393,7 @@ Newton, mặt phẳng nghiêng, ròng rọc – dây nối, lò xo (Hooke), bả
 xo, con lắc đơn, dao động cưỡng bức và cộng hưởng, chuyển động tròn đều, giao thoa sóng hai nguồn,
 sóng dừng trên dây, hoạ âm và chuỗi Fourier, điện trường, mạch điện một chiều, định luật II Kepler.
 
-- **Thông số** (khay Điều chỉnh, bên phải): kéo thanh trượt hoặc gõ số. Nhãn **đề bài / mặc định / đã chỉnh** cho biết
+- **Thông số** (cột phải): kéo thanh trượt hoặc gõ số. Nhãn **đề bài / mặc định / đã chỉnh** cho biết
   giá trị đến từ đâu. Ví dụ g = 9,81 m/s² là mặc định khi đề không cho (đổi trong Cài đặt → Vật lý).
 - **Thanh công cụ nổi** trên khung mô phỏng: Chọn (V), Kéo/ném vật (H), Thước đo (M), Thước đo góc
   (A), Đồng hồ bấm giờ (T), hiện vectơ, vết quỹ đạo, căn vừa khung nhìn (F). Lăn chuột để phóng to,
@@ -399,8 +402,8 @@ sóng dừng trên dây, hoạ âm và chuỗi Fourier, điện trường, mạc
   này để so sánh**, đổi thông số rồi chạy lại. Quỹ đạo đã ghim hiện bằng nét đứt màu xám; ô chú thích
   ở góc dưới ghi giá trị lúc ghim của các thông số đã đổi. Nét đứt là bản sao quỹ đạo đã tính, không
   tính thêm gì. Bấm lại nút ghim hoặc dấu × để bỏ; mở chủ đề khác thì tự bỏ.
-- **Mép bàn:** chạy/dừng, bước từng khung, đặt lại, kéo để tua lại, chọn tốc độ (Cơ bản: 0,5× · 1× · 2×
-  và tốc độ riêng của bài; Nâng cao: ×0,1 đến ×4, và tua nhanh cho bài toán tính bằng giờ).
+- **Thanh thời gian:** chạy/dừng, bước từng khung, đặt lại, kéo để tua lại, chọn tốc độ ×0,1 đến ×4
+  (và tua nhanh cho bài toán tính bằng giờ).
 - **Bài chạy liên tục:** chuyển động tròn đều, Kepler, dao động cưỡng bức, giao thoa, sóng dừng, lò
   xo, con lắc lò xo, con lắc đơn và vật trên đường ray chạy mãi tới khi bạn bấm **Tạm dừng** (vật
   trên đường ray dừng khi chạy ra khỏi ray). Đồ thị, bảng Số liệu và thanh tua giữ đoạn gần nhất
@@ -413,7 +416,7 @@ sóng dừng trên dây, hoạ âm và chuỗi Fourier, điện trường, mạc
   phần Trợ năng), mọi bài mở ở trạng thái dừng, kể cả các bài hạt của Hóa học (Maxwell–Boltzmann, thuyết va chạm, cân bằng hóa
   học) vốn tự chạy khi mở; chỉ chạy khi bạn bấm **Chạy** ở chỗ cũ. Đổi thông số lúc đang dừng thì
   bài vẫn dừng.
-- **Sổ bên trái:** **Đồ thị** (x–t, v–t, a–t, năng lượng; rê chuột lên đồ thị
+- **Bảng dưới:** **Đồ thị** (x–t, v–t, a–t, năng lượng; chú giải ở cột bên phải, rê chuột lên đồ thị
   để đọc giá trị tại thời điểm đó), **Lời giải** (công thức và các bước, đáp số đề hỏi được đánh dấu),
   **Số liệu** (bảng giá trị, nút Xuất CSV).
 - **Chuyển động tròn đều** (chương cùng tên, như SGK): ô đầu tiên chọn đề cho biết **tốc độ v**,
@@ -451,7 +454,7 @@ sóng dừng trên dây, hoạ âm và chuỗi Fourier, điện trường, mạc
   phẳng: nhập U và d, app tính E = U/d. Hằng số k mặc định là 1/(4πε₀) ≈ 8,988·10⁹ N·m²/C²; đề ghi
   "lấy k = 9.10⁹" thì app dùng số của đề. Nếu AI đọc sai dấu điện tích (hoặc đề chỉ cho "độ lớn"),
   bảng "Tôi hiểu đề như sau" nhắc bạn kiểm tra dấu. Không kéo được gì trên hình.
-- **Không gian pha** (thẻ Đồ thị ở sổ): ở Lò xo và Con lắc lò xo, đồ thị v theo x là một elip khi
+- **Không gian pha** (thẻ Đồ thị ở bảng dưới): ở Lò xo và Con lắc lò xo, đồ thị v theo x là một elip khi
   không có lực cản và một đường xoắn ốc vào gốc khi có cản. Con lắc lò xo không có lực cản (b = 0)
   có thêm **Vòng tròn pha**: vectơ quay dài A, hình chiếu đầu vectơ lên trục x là li độ; có lực cản
   thì đồ thị này tự ẩn. Ở Con lắc đơn, đồ thị ω theo α có một **đường phân cách** nét đứt
@@ -470,7 +473,7 @@ sóng dừng trên dây, hoạ âm và chuỗi Fourier, điện trường, mạc
   điện trở → P, P_nguồn, H. Mọi đáp số đều được kiểm chéo bằng phương pháp điện thế nút.
 - **Hoạ âm và chuỗi Fourier** (chương **Sóng**): chọn sóng vuông hoặc răng cưa, số hoạ âm N (1–50)
   và tần số cơ bản f₁ (55–880 Hz). Hình vẽ sóng lí tưởng (nét đứt) và tổng N hoạ âm đầu; **Hiện
-  từng hoạ âm** vẽ thêm từng thành phần. Sổ có bảng hoạ âm (bậc, nf₁, bₙ, so với bậc 1). Nút
+  từng hoạ âm** vẽ thêm từng thành phần. Bảng dưới có bảng hoạ âm (bậc, nf₁, bₙ, so với bậc 1). Nút
   **Nghe** phát đúng âm đang vẽ, nhỏ, chỉ khi bạn bấm, và tự tắt khi rời bài. Bài này không có nút
   Chạy, vì không có diễn biến theo thời gian.
 - **Định luật II Kepler** (chương **Hấp dẫn (mở rộng)**, ngoài 9 cuốn SGK Kết nối tri thức): quỹ
@@ -482,8 +485,8 @@ sóng dừng trên dây, hoạ âm và chuỗi Fourier, điện trường, mạc
 
 ## Đọc đề bằng AI
 
-1. Bấm **Đề bài** trên thanh trên (hoặc ô **Có đề bài?** ở Kệ bài), dán đề, bấm **Phân tích đề**
-   (hoặc Ctrl+Enter).
+1. Dán đề vào ô **Đề bài** ở thanh trên (hoặc ô **Nhập đề bài hoặc câu hỏi…** ở trang "Hôm nay học
+   gì?"), bấm **Phân tích đề** (hoặc Ctrl+Enter).
 2. App mở bảng **"Tôi hiểu đề như sau"**. Mỗi dòng có:
    - giá trị (sửa được), đơn vị;
    - nhãn nguồn: **đề bài** (có trích dẫn nguyên văn), **mặc định** (đề không cho, app tự điền),
@@ -590,15 +593,15 @@ Khi dùng AI:
 ## Hóa học
 
 - **Bảng tuần hoàn:** nhấp một ô để xem dữ liệu; tô màu theo nhóm, khối, độ âm điện, bán kính,
-  năng lượng ion hóa. Thẻ xu hướng ở sổ bên trái vẽ xu hướng theo Z.
+  năng lượng ion hóa. Bảng dưới vẽ xu hướng theo Z.
 - **Cấu hình electron / Mô hình Bohr / Orbital:** chọn nguyên tố (hoặc n, l cho orbital hydro).
   Các ngoại lệ như Cr, Cu được ghi chú rõ.
 - **Phân tử 3D, VSEPR, độ phân cực:** tìm theo tên (Việt/Anh), công thức hoặc SMILES. Kéo chuột
   để xoay, lăn để phóng to. Nhấp nguyên tử/liên kết để xem chi tiết; Shift+nhấp 2 hoặc 3 nguyên tử
-  để đo khoảng cách hoặc góc. Ô **Lọc theo nhóm chức** ở khay liệt kê các phân tử hữu cơ có một nhóm
+  để đo khoảng cách hoặc góc. Ô **Lọc theo nhóm chức** ở cột phải liệt kê các phân tử hữu cơ có một nhóm
   chức (alcohol, aldehyde, carboxylic acid, ester, amine…); bấm một phân tử để mở hình 3D. Nhóm chức
   được tìm sẵn từ cấu trúc phân tử và đang chờ giáo viên duyệt.
-- **Thư viện phản ứng:** chọn phản ứng ở khay Điều chỉnh (bên phải). Phản ứng có cơ chế có thanh phát: tua từng bước,
+- **Thư viện phản ứng:** chọn phản ứng ở cột phải. Phản ứng có cơ chế có thanh phát: tua từng bước,
   xoay 3D; liên kết đứt màu cam, liên kết tạo màu xanh lá.
 - **Cân bằng phương trình:** gõ ví dụ `Fe + O2 -> Fe2O3`. Điện tích: `Fe^3+`, `SO4^2-`.
 - **Chuẩn độ acid – base** (chương Phản ứng hóa học): HCl trong cốc, NaOH từ buret, 25 °C. Kéo thanh
@@ -620,7 +623,7 @@ Khi dùng AI:
 ## Sinh học
 
 - **Nguyên phân / Giảm phân:** nhấn ▶ hoặc mũi tên để đi qua từng kì. Chọn bộ NST 2n; ở giảm phân
-  bật/tắt trao đổi chéo và bấm "Sắp xếp ngẫu nhiên lại" để thấy phân li độc lập. Một thẻ ở sổ bên trái liệt kê
+  bật/tắt trao đổi chéo và bấm "Sắp xếp ngẫu nhiên lại" để thấy phân li độc lập. Bảng dưới liệt kê
   số NST, cromatit, tâm động, ADN ở mọi kì.
 - **Nguyên phân 3D:** chủ đề Nguyên phân mở hình 3D (nút **3D / 2D** để đổi). Chọn tế bào **Động
   vật** hoặc **Thực vật**, bấm Phát hoặc **Bước trước / Bước tiếp theo**, chọn tốc độ; kéo chuột để
@@ -711,7 +714,7 @@ Từng bài:
     thị dị hợp tử bên dưới đánh dấu cùng thế hệ. Góc nhìn **Cận cảnh một đảo**.
   - **Tăng trưởng logistic 3D:** đàn con vật trong hàng rào trên đồng cỏ ba lá, số con theo N(t) của
     công thức; cột thủy tinh có vạch K và K/2 và mũi tên dN/dt (thẻ ghi mũi tên dài nhất ứng với
-    bao nhiêu). Thanh thời gian ở mép bàn vẽ sẵn đường N(t); **Tới t\*** nhảy tới điểm uốn. Góc nhìn **Cận
+    bao nhiêu). Thanh thời gian vẽ sẵn đường N(t); **Tới t\*** nhảy tới điểm uốn. Góc nhìn **Cận
     cảnh đàn**.
   - **Con mồi – vật ăn thịt 3D:** con mồi và vật ăn thịt trên đồng cỏ, số con theo điểm đã tính gần
     nhất của quỹ đạo (không nội suy); hai ống thủy tinh cho x và y có vạch x\*, y\*, mũi tên dx/dt,
@@ -724,8 +727,8 @@ Từng bài:
 
 ## Trò chơi SimLab 3D
 
-Trong Virtual Lab, thanh bên trái có mục **Trò chơi** với nút **SimLab 3D**. Nút này mở một phòng
-thí nghiệm 3D, em nhìn qua mắt người chơi:
+Trong Virtual Lab, cột trái có nút **SimLab 3D** (ngay dưới nút Science Studio). Nút này mở một
+phòng thí nghiệm 3D, em nhìn qua mắt người chơi:
 
 - Em vào phòng chuẩn bị, đọc nội quy, mặc đồ bảo hộ và rửa tay, rồi mới vào phòng Vật lý.
 - Trong phòng Vật lý, em làm các thí nghiệm rơi tự do, ném xiên, con lắc và lò xo. Sau mỗi lần chạy, em xem số đo đặt cạnh kết quả lý thuyết.
@@ -740,9 +743,9 @@ Giới hạn hiện tại:
 
 ## Lưu, mở, xuất và lịch sử
 
-- **Menu Tệp** (nút ☰ ở đầu bàn): Mở tệp `.stemsim`, Lưu mô phỏng, Xuất ảnh PNG, Lịch sử,
-  Chế độ trình chiếu (F5), Nguồn & Giả định, Kiểm tra cập nhật, Quyền riêng tư & dùng AI an toàn,
-  Hướng dẫn nhanh (và "Có gì mới" khi có bản mới chưa xem). Ở chế độ **Nâng cao** có thêm **Thông
+- **Menu Tệp** (nút ☰ ở thanh trên): Mở tệp `.stemsim`, Lưu mô phỏng, Xuất ảnh PNG, Nguồn & Giả
+  định, Kiểm tra cập nhật, Quyền riêng tư & dùng AI an toàn, Hướng dẫn nhanh (và "Có gì mới" khi có
+  bản mới chưa xem). Ở chế độ **Nâng cao** có thêm **Thông
   tin máy**: mức chất lượng hiển thị (kèm lúc đo), FPS và RAM; Esc để đóng.
 - **Lưu (Ctrl+S) / Mở (Ctrl+O):** tệp `.stemsim` lưu chủ đề và các thông số bạn đã chỉnh (không lưu
   kết quả — app tính lại khi mở, nên kết quả luôn đúng với phiên bản app).
@@ -751,13 +754,13 @@ Giới hạn hiện tại:
 - **Xuất PNG:** chụp khung mô phỏng (hình 2D, 3D hoặc đồ thị). Chủ đề hiển thị bằng bảng thì dùng Xuất
   CSV. Ở chế độ **Nâng cao**, rê chuột lên một đồ thị để thấy nút **Xuất CSV** ở góc phải (trên màn
   hình cảm ứng nút luôn hiện).
-- **Lịch sử** (menu ☰ → **Lịch sử**; ở chế độ Nâng cao còn có nút **Lịch sử** ở cột lọc của Kệ bài):
-  mọi mô phỏng đã mở, kèm thông số cuối cùng. Bấm để mở lại; bấm thùng rác để xóa.
+- **Lịch sử** (thẻ ở cột trái): mọi mô phỏng đã mở, kèm thông số cuối cùng. Bấm để mở lại; bấm
+  thùng rác để xóa.
 - **Nguồn & Giả định:** một trang tổng hợp nguyên tắc khoa học, nguồn của mọi bộ dữ liệu (kèm số mục
   chờ giáo viên duyệt), tài liệu tham khảo và giả định của chủ đề đang mở — dùng khi trình bày với
   giám khảo.
-- **Chế độ trình chiếu (F5):** toàn màn hình, chữ to hơn, ẩn thanh trên, sổ và khay. Esc (hoặc nút
-  **Thoát trình chiếu**) để thoát.
+- **Chế độ trình chiếu (F5, hoặc nút trình chiếu ở thanh trên):** toàn màn hình, chữ to hơn, ẩn
+  thanh trên và các bảng phụ. Esc (hoặc nút **Thoát trình chiếu**) để thoát.
 - **Chế độ trưng bày:** Ctrl+K → **Chế độ trưng bày (tự chạy các cảnh)** bật chế độ trình chiếu và tự
   chạy 8 cảnh có sẵn (ném xiên, con lắc lò xo, sóng dừng, chuyển động tròn đều, điện trường, phân tử
   3D, nguyên phân, tăng trưởng logistic), mỗi cảnh 35–50 giây với một câu chú thích. Bấm bất kì đâu
@@ -767,9 +770,8 @@ Giới hạn hiện tại:
 ## Cập nhật phần mềm
 
 - Khi mở app (có mạng), app tự kiểm tra bản mới. Nếu có, **hộp thoại cập nhật tự hiện** với hai nút
-  **Cập nhật ngay** / **Để sau**. Chọn "Để sau" thì đầu bàn có nút nhắc (biểu tượng đám mây có chấm,
-  tên "Có bản cập nhật {phiên bản}"; cả khi bản mới cần bộ cài mới), bấm vào là mở lại hộp thoại; lần
-  mở app sau sẽ hỏi lại. Muốn kiểm tra lúc khác thì vào menu ☰ → **Kiểm tra cập nhật**.
+  **Cập nhật ngay** / **Để sau**. Chọn "Để sau" thì thanh trạng thái vẫn nhắc **"Có bản cập nhật
+  …"** (cả khi bản mới cần bộ cài mới), bấm vào đó là mở lại hộp thoại; lần mở app sau sẽ hỏi lại. Muốn kiểm tra lúc khác thì vào menu ☰ → **Kiểm tra cập nhật**.
 - Một số bản là **bắt buộc** (ví dụ sửa lỗi quan trọng): hộp thoại không có nút "Để sau", cần cập
   nhật mới dùng tiếp. Không có mạng thì app vẫn dùng bình thường.
 - Bấm **Cập nhật ngay** → app tải gói cập nhật (vài MB), kiểm tra chữ ký số và mã SHA-256, rồi
@@ -780,9 +782,9 @@ Giới hạn hiện tại:
 
 ## Khi máy yếu
 
-App ưu tiên đúng hơn mượt. Nếu máy không kịp vẽ, khung mô phỏng ghi "Đã hạ chất lượng hiển thị"
-(số liệu không đổi). Nếu không kịp tính, mô phỏng chạy chậm hơn thời gian thực và khung ghi rõ tỉ lệ
-(ví dụ ×0,5). Khi bộ nhớ cao, app giải phóng bộ nhớ đệm và nhắc bạn đóng bớt chủ đề 3D.
+App ưu tiên đúng hơn mượt. Nếu máy không kịp vẽ, thanh trạng thái báo "Đã hạ chất lượng hiển thị"
+(số liệu không đổi). Nếu không kịp tính, mô phỏng chạy chậm hơn thời gian thực và ghi rõ tỉ lệ (ví dụ
+×0,5). Khi bộ nhớ cao, app giải phóng bộ nhớ đệm và nhắc bạn đóng bớt chủ đề 3D.
 
 ## Cài đặt (nút bánh răng)
 
@@ -839,7 +841,7 @@ Giọng nói ghi lý do. Có thể chọn kiểu giọng (Vui vẻ, Trầm ấm,
 - **"Không kết nối được máy chủ AI":** kiểm tra mạng Internet. Không có mạng vẫn dùng được **Tự dựng
   cảnh** và thư viện bài mẫu.
 - **"Hết lượt dùng AI miễn phí":** đợi khoảng 1 phút, hoặc thử lại vào ngày mai.
-- **Mô phỏng chạy chậm, khung mô phỏng ghi "Chuyển động chậm ×…":** máy không kịp tính theo thời
+- **Mô phỏng chạy chậm, thanh trạng thái hiện "Chuyển động chậm ×…":** máy không kịp tính theo thời
   gian thực; kết quả vẫn đúng. Có thể giảm tốc độ phát hoặc đóng bớt chương trình khác.
 - **Không mở được tệp .stemsim:** tệp hỏng hoặc từ phiên bản mới hơn; app báo lỗi và không thay đổi
   mô phỏng đang mở.

@@ -72,7 +72,7 @@ describe('bench first run (docs/BENCH_DESIGN.md §9.2)', () => {
     render(bench(<Onboarding />));
     await user.click(screen.getByRole('button', { name: 'Quay lại' }));
     expect(useSafetyStore.getState()).toMatchObject({ gateRequested: true, gateFirstRun: true });
-    render(<AgeGate />);
+    render(bench(<AgeGate />));
     await screen.findByRole('button', { name: 'Tôi chưa đủ 18 tuổi' });
     expect(screen.getByText('Bước 2/3')).toBeInTheDocument();
     // Nothing was saved or skipped: step 3 is still to come.
@@ -81,15 +81,20 @@ describe('bench first run (docs/BENCH_DESIGN.md §9.2)', () => {
 
   it('the gate is step 2/3 on the bench’s first run only', async () => {
     setSafetyBackendForTests(new BrowserSafety());
-    const { unmount } = render(<AgeGate />);
+    const { unmount } = render(bench(<AgeGate />));
     await screen.findByRole('button', { name: 'Tôi chưa đủ 18 tuổi' });
     expect(screen.getByText('Bước 2/3')).toBeInTheDocument();
     unmount();
+    // The classic window (#263) counts its own steps in Onboarding: its gate has no "2/3".
+    const { unmount: closeClassic } = render(<AgeGate />);
+    await screen.findByRole('button', { name: 'Tôi chưa đủ 18 tuổi' });
+    expect(screen.queryByText(/Bước/)).toBeNull();
+    closeClassic();
     // Reopened from Settings (not the first run): no step number.
     act(() => {
       useSafetyStore.setState({ gateRequested: true, gateFirstRun: false });
     });
-    const { unmount: close } = render(<AgeGate />);
+    const { unmount: close } = render(bench(<AgeGate />));
     await screen.findByRole('button', { name: 'Tôi chưa đủ 18 tuổi' });
     expect(screen.queryByText(/Bước/)).toBeNull();
     close();
@@ -98,7 +103,7 @@ describe('bench first run (docs/BENCH_DESIGN.md §9.2)', () => {
       useSafetyStore.setState({ gateRequested: false, gateFirstRun: false });
       useProfileStore.setState({ onboarded: true, connectSeen: true });
     });
-    const { unmount: closeAgain } = render(<AgeGate />);
+    const { unmount: closeAgain } = render(bench(<AgeGate />));
     await screen.findByRole('button', { name: 'Tôi chưa đủ 18 tuổi' });
     expect(screen.queryByText(/Bước/)).toBeNull();
     closeAgain();
@@ -107,7 +112,7 @@ describe('bench first run (docs/BENCH_DESIGN.md §9.2)', () => {
       useProfileStore.setState({ connectSeen: false });
     });
     localStorage.setItem('stemsim.tourDone', '1');
-    render(<AgeGate />);
+    render(bench(<AgeGate />));
     await screen.findByRole('button', { name: 'Tôi chưa đủ 18 tuổi' });
     expect(screen.queryByText(/Bước/)).toBeNull();
     localStorage.removeItem('stemsim.tourDone');
