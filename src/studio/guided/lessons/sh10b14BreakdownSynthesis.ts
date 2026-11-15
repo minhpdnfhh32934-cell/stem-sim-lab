@@ -1,4 +1,3 @@
-import { BSRC } from '@/biology/common';
 import type { StudioScenario } from '../../scenario';
 import { GUIDED_BASE, L } from './base';
 
@@ -7,8 +6,10 @@ import { GUIDED_BASE, L } from './base';
  * SimLab's own words. Checked on 16/11/2026: glycolysis in the cytoplasm without O₂, the Krebs
  * cycle inside the mitochondrion (H 14.1), the electron transport chain on the inner membrane,
  * light reactions on the thylakoid membrane, "pha tối" = Calvin cycle in the chloroplast stroma;
- * fermentation = glycolysis + fermentation, no electron transport chain, little ATP. The word
- * "chất nền" for the Krebs cycle's place is Campbell's. SH10-GL-4.
+ * fermentation = glycolysis + fermentation, no electron transport chain, little ATP. "Chất nền" of
+ * the mitochondrion and of the chloroplast is the book's own word (Bài 8 "Tế bào nhân thực",
+ * pp. 52–53, H 8.8 and H 8.9: the mitochondrion's inner space is the chất nền holding the enzymes of
+ * cell respiration). SH10-GL-4.
  */
 export const sh10b14BreakdownSynthesis: StudioScenario = {
   ...GUIDED_BASE,
@@ -49,7 +50,14 @@ export const sh10b14BreakdownSynthesis: StudioScenario = {
     'Phân giải hiếu khí glucose gồm đường phân (tế bào chất), chu trình Krebs (chất nền ti thể) và chuỗi truyền electron (màng trong ti thể). Khi thiếu O₂, tế bào chỉ đường phân rồi lên men, tạo được ít ATP. Quang hợp là quá trình tổng hợp: pha sáng ở màng thylakoid, pha tối (chu trình Calvin) ở chất nền lục lạp.',
     'Aerobic breakdown of glucose is glycolysis (cytoplasm), the Krebs cycle (mitochondrial matrix) and the electron transport chain (inner mitochondrial membrane). Without O₂ the cell only runs glycolysis and then fermentation, making little ATP. Photosynthesis builds substances up: the light reactions on the thylakoid membrane, the dark phase (Calvin cycle) in the chloroplast stroma.',
   ),
-  sources: [BSRC.campbell],
+  sources: [
+    {
+      id: 'kntt-sh10-8-chat-nen',
+      citation:
+        'SGK Sinh học 10 “Kết nối tri thức với cuộc sống”, NXB Giáo dục Việt Nam — Bài 8. Tế bào nhân thực, tr. 52–53 (ti thể: khoang trong là chất nền chứa enzyme hô hấp tế bào, H 8.8; lục lạp: chất nền (stroma), H 8.9)',
+      url: 'https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-sinh-hoc-10.4700819489',
+    },
+  ],
   assumptions: [
     L(
       'Các vị trí trong bài là của tế bào nhân thực, có ti thể và lục lạp.',
@@ -62,8 +70,8 @@ export const sh10b14BreakdownSynthesis: StudioScenario = {
       'The lesson does not count the ATP molecules of each stage.',
     ),
     L(
-      'Từ “chất nền của ti thể” lấy theo sách Campbell Biology; sách giáo khoa vẽ chu trình Krebs nằm bên trong ti thể.',
-      'The term “mitochondrial matrix” follows Campbell Biology; the textbook draws the Krebs cycle inside the mitochondrion.',
+      'Tên “chất nền” của ti thể và của lục lạp lấy từ bài Tế bào nhân thực của sách giáo khoa (xem mục Nguồn); bài này vẽ chu trình Krebs bên trong ti thể.',
+      'The names “mitochondrial matrix” and “chloroplast stroma” come from the textbook’s lesson on the eukaryotic cell (see Sources); this lesson draws the Krebs cycle inside the mitochondrion.',
     ),
   ],
   binding: {
