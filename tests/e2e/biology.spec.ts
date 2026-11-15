@@ -31,6 +31,15 @@ const TOPICS = [
   'Các phân tử sinh học',
   'Sinh trưởng của quần thể vi khuẩn',
   'Khái quát về virus',
+  // SH10 descriptive lessons (#255 round 1h): guided lessons, no 3D view.
+  'Các cấp độ tổ chức của thế giới sống',
+  'Truyền tin tế bào',
+  'Chuyển hoá vật chất và năng lượng',
+  'Phân giải và tổng hợp các chất trong tế bào',
+  'Công nghệ tế bào',
+  'Đa dạng và phương pháp nghiên cứu vi sinh vật',
+  'Vai trò và ứng dụng của vi sinh vật',
+  'Bệnh do virus và ứng dụng virus',
 ];
 
 async function openBiology(page: Page) {
@@ -39,7 +48,7 @@ async function openBiology(page: Page) {
 }
 
 test('every biology topic opens without errors and publishes a Science Card', async ({ page }) => {
-  // Seventeen topics, fourteen of them opening a 3D view in software: ~15 s on a fast CI runner, but a slow
+  // Twenty-five topics (fourteen open a 3D view in software, eight are guided lessons): ~15 s on a fast CI runner, but a slow
   // one took 6-8 s per topic and ran out of the 60 s default after eight (2026-10-23, eastus).
   test.setTimeout(180_000);
   const errors: string[] = [];
