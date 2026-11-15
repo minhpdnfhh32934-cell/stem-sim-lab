@@ -104,7 +104,7 @@ describe('GraphPanel: phase portraits (#54 item 3)', () => {
   });
 });
 
-describe('GraphPanel: a pinned run is drawn dashed beside the current one (bench only)', () => {
+describe('GraphPanel: a pinned run is drawn dashed beside the current one', () => {
   const pin = () => {
     // A run is pinned on the open scene: opening another one clears the pin (compare.ts).
     useSimStore.setState({ scene: freeFall, params: { ...freeFall.defaults, g: 9.81 } });
@@ -115,7 +115,8 @@ describe('GraphPanel: a pinned run is drawn dashed beside the current one (bench
       run: { times: [0, 0.1], states: [Float64Array.of(0, 0, 0, 0), Float64Array.of(0, 0, 0, 0)] },
     });
   };
-  it('adds each shown curve again, dashed, named "đã ghim"; the classic chart does not', async () => {
+  // Kept in the classic window by #263 (it was bench-only from #181 until then).
+  it('adds each shown curve again, dashed, named "đã ghim", in either shell', async () => {
     pin();
     const first = freeFall.graphs[0]?.series ?? [];
     const labels = await chartFor(freeFall, { ...freeFall.defaults, g: 9.81 }, true);
@@ -129,6 +130,7 @@ describe('GraphPanel: a pinned run is drawn dashed beside the current one (bench
     expect(await chartFor(freeFall, { ...freeFall.defaults, g: 9.81 })).toEqual([
       't',
       ...first.map((s) => s.label.vi),
+      ...first.map((s) => `${s.label.vi} · đã ghim`),
     ]);
     useCompareStore.getState().clear();
   });

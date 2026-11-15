@@ -80,7 +80,7 @@ test('a whole session: lesson on the board with voice, check question, feedback,
 
   await page.goto('/');
   await page.locator('.launch-card--teacher').click();
-  await page.getByRole('radio', { name: 'Giảng trên bảng' }).click();
+  await page.getByRole('radio', { name: 'Bảng giảng' }).click();
   const board = page.getByRole('region', { name: 'Bảng trắng của AI Teacher' });
   const panel = page.getByRole('region', { name: 'Trò chuyện với AI Teacher' });
   await panel

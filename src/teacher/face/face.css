@@ -33,16 +33,16 @@
   height: 26px;
 }
 
-/* The collapsed bubble sits on the accent background: draw the face in white. */
+/* The collapsed bubble sits on the accent background: draw the face in the ink for accent. */
 .chat-bubble .teacher-face__head {
   fill: transparent;
-  stroke: white;
+  stroke: var(--text-on-accent);
 }
 .chat-bubble .teacher-face__brow,
 .chat-bubble .teacher-face__mouth {
-  stroke: white;
+  stroke: var(--text-on-accent);
 }
 .chat-bubble .teacher-face__eye,
 .chat-bubble .teacher-face__mouth-open {
-  fill: white;
+  fill: var(--text-on-accent);
 }

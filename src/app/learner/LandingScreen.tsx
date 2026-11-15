@@ -1,6 +1,7 @@
 import { ArrowRight, GraduationCap, PencilRuler, ShieldCheck, Sparkles } from 'lucide-react';
 import { openLab } from '@/app/topics';
 import { useT } from '@/app/i18n';
+import { teacherLocked, useSafetyStore } from '@/safety/safetyStore';
 import { openTeacher } from '@/teacher/teacherStore';
 import './learner.css';
 
@@ -10,6 +11,8 @@ import './learner.css';
  */
 export function LandingScreen() {
   const t = useT();
+  // Said "under 18": openTeacher refuses, so the card is off and says why (#246).
+  const locked = useSafetyStore(teacherLocked);
   return (
     <section className="launch" aria-labelledby="launch-title">
       <div className="launch__glow" aria-hidden="true">
@@ -39,13 +42,18 @@ export function LandingScreen() {
             </span>
             <ArrowRight className="launch-card__arrow" size={20} aria-hidden="true" />
           </button>
-          <button type="button" className="launch-card launch-card--teacher" onClick={openTeacher}>
+          <button
+            type="button"
+            className="launch-card launch-card--teacher"
+            disabled={locked}
+            onClick={openTeacher}
+          >
             <span className="launch-card__icon">
               <GraduationCap size={27} strokeWidth={1.8} />
             </span>
             <span className="launch-card__copy">
               <strong>{t('landing.teacherTitle')}</strong>
-              <span>{t('landing.teacherBody')}</span>
+              <span>{t(locked ? 'bench.teacherLocked' : 'landing.teacherBody')}</span>
             </span>
             <ArrowRight className="launch-card__arrow" size={20} aria-hidden="true" />
           </button>

@@ -208,6 +208,10 @@
 .param__num {
   display: contents;
 }
+/* SliderField (biology, gas panel): − and + around the slider · number · unit row. */
+.slider-field .param__controls {
+  grid-template-columns: auto minmax(0, 1fr) 5.2rem auto auto;
+}
 .param__controls input[type='range'] {
   width: 100%;
   accent-color: var(--accent);

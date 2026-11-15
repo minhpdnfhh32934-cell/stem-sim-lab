@@ -61,7 +61,7 @@ Ngoài ra không sửa gì khác trong game.
 
 ## Cách mở trong SimLab
 
-- Virtual Lab → thanh bên trái, mục "Trò chơi" → nút **SimLab 3D**.
+- Virtual Lab → cột Thư viện bên trái → nút **SimLab 3D** (ngay dưới nút Science Studio).
 - Game mở trong một `<dialog>` toàn màn hình (`src/app/game/GameDialog.tsx`). Đầu hộp chỉ có nút "Về SimLab" và tiêu đề "SimLab 3D". Game chạy trong một `<iframe>` cùng nguồn.
 - Đóng hộp thì gỡ iframe, nên ngữ cảnh WebGL của game được giải phóng.
 - Lần mở đầu, game theo ngôn ngữ của app: ghi `simlab.settings.language`, khoá riêng của game. Nếu người học đã đổi ngôn ngữ trong game thì lựa chọn đó được giữ.
@@ -89,4 +89,4 @@ Xem `docs/THIRD_PARTY.md`.
 ## Kiểm thử
 
 - `src/app/game/GameDialog.test.tsx`: mở và đóng, gỡ iframe, ngôn ngữ lần đầu.
-- `tests/e2e/bench/game.spec.ts` (WebGL phần mềm): mở từ Virtual Lab, menu game tiếng Việt, chỉ có "Chơi đơn", "Về SimLab" đóng lại, không lỗi trang.
+- `tests/e2e/post198-game.spec.ts` (WebGL phần mềm): mở từ Virtual Lab, menu game tiếng Việt, chỉ có "Chơi đơn", "Về SimLab" đóng lại, không lỗi trang.

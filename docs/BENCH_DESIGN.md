@@ -1,5 +1,12 @@
 # Bàn thí nghiệm ("The Bench"): buildable design for SimLab 0.8.1
 
+> **Status (user decision 15/11/2026, #263): not shown, kept as a record.** The classic window
+> (`AppShell`) is the app's only shell again; the bench is not mounted and `bench.css` is not
+> loaded. This document describes the design that was the only shell from B8 (#193, PR #198) until
+> #263, not the app's current interface. The bench source (`src/app/bench/`) stays in the repo
+> until a cleanup PR the user must confirm. Current rules: `CLAUDE.md` → "Giao diện: the classic
+> window". The note below still names the section by its old title.
+
 > Committed copy of the design the owner chose on 2026-11-02 (plan #54, issues #113 onward). Owner
 > decisions and what changed since are in `CLAUDE.md` → "Giao diện Bàn thí nghiệm (0.8.1)". Token
 > values here follow `src/app/theme/tokens.css`; where they differ, the stylesheet and its tests

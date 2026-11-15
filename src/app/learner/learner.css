@@ -39,26 +39,26 @@
 .launch__blob--1 {
   top: -14vmax;
   left: -10vmax;
-  background: radial-gradient(circle, rgb(56 130 246 / 42%), transparent 68%);
+  background: radial-gradient(circle, var(--launch-blob-1), transparent 68%);
 }
 .launch__blob--2 {
   top: 8vh;
   right: -12vmax;
-  background: radial-gradient(circle, rgb(168 85 247 / 38%), transparent 68%);
+  background: radial-gradient(circle, var(--launch-blob-2), transparent 68%);
   animation-duration: 32s;
   animation-delay: -8s;
 }
 .launch__blob--3 {
   bottom: -16vmax;
   left: 22vw;
-  background: radial-gradient(circle, rgb(34 211 238 / 32%), transparent 68%);
+  background: radial-gradient(circle, var(--launch-blob-3), transparent 68%);
   animation-duration: 29s;
   animation-delay: -15s;
 }
 .launch__blob--4 {
   top: 30vh;
   left: -14vmax;
-  background: radial-gradient(circle, rgb(52 211 153 / 26%), transparent 68%);
+  background: radial-gradient(circle, var(--launch-blob-4), transparent 68%);
   animation-duration: 36s;
   animation-delay: -4s;
 }

@@ -4,6 +4,7 @@ import { TeacherFace } from '@/teacher/face/TeacherFace';
 import { ScreenScan } from './ScreenScan';
 import { useChatStore } from './chatStore';
 import { useT } from '@/app/i18n';
+import { teacherLocked, useSafetyStore } from '@/safety/safetyStore';
 import { ChatPanel } from './ChatPanel';
 import './chat.css';
 
@@ -11,6 +12,8 @@ export function ChatBubble() {
   const t = useT();
   const setIncludeScreen = useChatStore((s) => s.setIncludeScreen);
   const [open, setOpen] = useState(false);
+  // Under 18 the AI Teacher page stays closed: no "open the page" button that does nothing.
+  const locked = useSafetyStore(teacherLocked);
   // A question another screen wrote (askInBubble) opens the bubble; the panel takes the text.
   const asked = useTeacherStore((s) => s.bubbleDraft !== null);
   const [wasAsked, setWasAsked] = useState(false);
@@ -34,7 +37,7 @@ export function ChatBubble() {
             setIncludeScreen(false);
             setOpen(false);
           }}
-          onExpand={expand}
+          {...(locked ? {} : { onExpand: expand })}
         />
       )}
       {/* While the chat is open its own header has the close button. */}

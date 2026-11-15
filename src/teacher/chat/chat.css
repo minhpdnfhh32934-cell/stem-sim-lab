@@ -39,10 +39,10 @@
   height: var(--chat-bubble);
   padding: 0;
   place-items: center;
-  border: 1px solid color-mix(in srgb, var(--accent) 60%, white);
+  border: 1px solid color-mix(in srgb, var(--accent) 60%, var(--text-on-accent));
   border-radius: 999px;
   background: var(--accent);
-  color: white;
+  color: var(--text-on-accent);
   box-shadow: 0 9px 28px color-mix(in srgb, var(--accent) 34%, transparent);
   font: inherit;
   font-weight: 650;

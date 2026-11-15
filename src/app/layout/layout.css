@@ -353,6 +353,7 @@ body[data-resizing] .splitter {
 }
 .sidebar__search:focus-within {
   border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--focus-ring);
 }
 .sidebar__search input {
   flex: 1;
@@ -444,7 +445,7 @@ body[data-resizing] .splitter {
   border-radius: var(--radius-full);
   background: var(--bg-sunken);
   color: var(--text-faint);
-  font-size: 0.7rem;
+  font-size: var(--text-caption);
   font-weight: 600;
 }
 

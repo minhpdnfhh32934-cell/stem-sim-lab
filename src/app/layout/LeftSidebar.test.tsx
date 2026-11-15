@@ -1,5 +1,6 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it } from 'vitest';
+import { closeGame, useGameStore } from '@/app/game/gameStore';
 import { useProfileStore } from '@/app/learner/profileStore';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useWorkspaceStore } from '@/app/workspaceStore';
@@ -66,5 +67,19 @@ describe('library marks: learned, steps left, complete', () => {
     expect(freeFall).toHaveAccessibleDescription('Đã hoàn thành chủ đề');
     expect(freeFall.querySelector('.tree__steps')).toBeNull();
     expect(freeFall.querySelector('.tree__mark')).toHaveAttribute('data-state', 'complete');
+  });
+});
+
+describe('SimLab 3D entry (#263: the bench shelf had it, the classic library keeps it)', () => {
+  it('"SimLab 3D" sits under "Science Studio" and opens the game', () => {
+    render(<LeftSidebar />);
+    const studio = screen.getByRole('button', { name: /^Science Studio/ });
+    const game = screen.getByRole('button', { name: /^SimLab 3D/ });
+    expect(studio.compareDocumentPosition(game) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    fireEvent.click(game);
+    expect(useGameStore.getState().open).toBe(true);
+    act(() => {
+      closeGame();
+    });
   });
 });

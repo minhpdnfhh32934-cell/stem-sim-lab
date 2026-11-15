@@ -17,6 +17,15 @@
   --text-md: 1rem;
   --text-lg: 1.143rem;
   --text-xl: 1.429rem;
+  /* Type scale (#205 A1), in rem so it follows Cỡ chữ; exact pixels at 100 % (1rem = 14px).
+     Shared rules use these names, so the classic window defines them too (#263). */
+  --text-caption: calc(12rem / 14);
+  --text-note: calc(13rem / 14);
+  --text-title: calc(18rem / 14);
+  --text-heading: calc(22rem / 14);
+  --text-display: calc(32rem / 14);
+  /* Toasts and floating captions (#205 A2): the classic window uses its medium shadow. */
+  --shadow-l2: var(--shadow-md);
 
   /* Spacing (4px grid at 100% font scale) */
   --space-1: 0.286rem;
@@ -41,6 +50,12 @@
   --timeline-h: 3.143rem;
   --statusbar-h: 1.715rem;
   --splitter: 6px;
+
+  /* Launch page: the four background glows, the same in both themes. */
+  --launch-blob-1: rgb(56 130 246 / 42%);
+  --launch-blob-2: rgb(168 85 247 / 38%);
+  --launch-blob-3: rgb(34 211 238 / 32%);
+  --launch-blob-4: rgb(52 211 153 / 26%);
   /* "Hỏi thầy" floating button: its size and its gap to the panel edges. */
   --chat-bubble: 52px;
   --chat-bubble-gap: 14px;
@@ -128,6 +143,16 @@
   --teacher-warm: #e0793a;
   --teacher-cool: #2f8fd8;
   --teacher-ring-bg: #ffffff;
+  /* AI Teacher station (#234): its own page colours, the same as under the bench look. */
+  --teacher-bg: #eef3f3;
+  --teacher-glow: #d3ebe7;
+  --teacher-accent: #085752;
+  --teacher-warn: #6e4a00;
+  --teacher-line: #578783;
+  --teacher-text: #1d2124;
+  --teacher-text-muted: #4b5559;
+  --teacher-glass-solid: #fbfdfd;
+  --teacher-glass: color-mix(in srgb, var(--teacher-glass-solid) 78%, transparent);
   --board-bg: #fdfdfb;
   --board-ink: #1d2a44;
   --board-mark: #c93a3a;
@@ -263,6 +288,15 @@
   --teacher-warm: #f0a060;
   --teacher-cool: #6cb6f0;
   --teacher-ring-bg: #1b2330;
+  --teacher-bg: #070d12;
+  --teacher-glow: #10343a;
+  --teacher-accent: #5fe0d2;
+  --teacher-warn: #f5c84c;
+  --teacher-line: #468f92;
+  --teacher-text: #e8f1f2;
+  --teacher-text-muted: #9fb3b8;
+  --teacher-glass-solid: #0d1a20;
+  --teacher-glass: color-mix(in srgb, var(--teacher-glass-solid) 78%, transparent);
   --board-bg: #1f2a24;
   --board-ink: #eef2ea;
   --board-mark: #ff8a7a;

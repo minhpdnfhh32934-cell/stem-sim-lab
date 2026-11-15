@@ -23,6 +23,7 @@ import { SUBJECTS, useWorkspaceStore, type Subject } from '@/app/workspaceStore'
 import { useAiStore } from '@/ai/aiStore';
 import { cx } from '@/ui/cx';
 import { openTeacher } from '@/teacher/teacherStore';
+import { teacherLocked, useSafetyStore } from '@/safety/safetyStore';
 import { useAnalysisEngine } from '@/app/ai/engineChoice';
 import { useProfileStore, type GradeChoice } from './profileStore';
 import './learner.css';
@@ -34,6 +35,7 @@ import './learner.css';
  */
 export function HomeScreen() {
   const t = useT();
+  const teacherOff = useSafetyStore(teacherLocked);
   const profile = useProfileStore(
     useShallow((s) => ({ grade: s.grade, interests: s.interests, lastTopic: s.lastTopic })),
   );
@@ -122,9 +124,16 @@ export function HomeScreen() {
           <GraduationCap size={22} strokeWidth={1.5} aria-hidden="true" />
           <div>
             <p className="home__teacher-title">{t('home.teacherTitle')}</p>
-            <p className="home__note">{t('home.teacherBody')}</p>
+            <p className="home__note">
+              {t(teacherOff ? 'bench.teacherLocked' : 'home.teacherBody')}
+            </p>
           </div>
-          <button type="button" className="btn home__teacher-open" onClick={openTeacher}>
+          <button
+            type="button"
+            className="btn home__teacher-open"
+            disabled={teacherOff}
+            onClick={openTeacher}
+          >
             {t('home.teacherOpen')}
           </button>
         </div>

@@ -2,7 +2,7 @@ import { expect, test, type Page } from '@playwright/test';
 import { fulfillGemini } from './fakeAi';
 
 /**
- * "Giảng trên bảng" with a fake Gemini server (no real model): a plain markdown answer is laid
+ * "Bảng giảng" with a fake Gemini server (no real model): a plain markdown answer is laid
  * out on the whiteboard, a cut answer is continued on the same board ("Viết tiếp"), the board
  * carries the AI label, and the page fits 1366×768.
  */
@@ -43,6 +43,21 @@ async function fakeGemini(page: Page, answers: { text: string; finishReason: str
 const overflow = (page: Page) =>
   page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
 
+/**
+ * When `node_modules` is a link to another checkout, Vite's dev server refuses the board's font
+ * files outside the project root: the board is then laid out in a fallback font, whose lines are
+ * much wider (other breaks, other boxes). A normal install and the packaged app serve them. Only
+ * these requests are answered here, from the same files on disk: the board in its own fonts.
+ */
+const LINKED_BOARD_FONT = /\/@fs\/.*\/node_modules\/(@fontsource\/[^?]+\.woff2?)$/;
+
+test.beforeEach(async ({ page }) => {
+  await page.route(LINKED_BOARD_FONT, (route) => {
+    const file = LINKED_BOARD_FONT.exec(decodeURIComponent(route.request().url()))?.[1];
+    return file ? route.fulfill({ path: `node_modules/${file}` }) : route.fallback();
+  });
+});
+
 test('a markdown answer is laid out on the board, and a cut answer is continued on it', async ({
   page,
 }) => {
@@ -52,7 +67,7 @@ test('a markdown answer is laid out on the board, and a cut answer is continued 
   ]);
   await page.goto('/');
   await page.locator('.launch-card--teacher').click();
-  await page.getByRole('radio', { name: 'Giảng trên bảng' }).click();
+  await page.getByRole('radio', { name: 'Bảng giảng' }).click();
   const board = page.getByRole('region', { name: 'Bảng trắng của AI Teacher' });
   // The board is lazy-loaded ("Đang chuẩn bị bảng…"): the first load can be slow in a full run.
   await expect(board).toContainText('Hỏi AI Teacher một câu', { timeout: 20_000 });
@@ -104,7 +119,7 @@ test('"Viết tiếp" keeps the steps in order when "<step>" opens on the first 
   ]);
   await page.goto('/');
   await page.locator('.launch-card--teacher').click();
-  await page.getByRole('radio', { name: 'Giảng trên bảng' }).click();
+  await page.getByRole('radio', { name: 'Bảng giảng' }).click();
   const board = page.getByRole('region', { name: 'Bảng trắng của AI Teacher' });
   await expect(board).toContainText('Hỏi AI Teacher một câu', { timeout: 20_000 });
   await page.getByRole('textbox', { name: 'Nhập câu hỏi' }).fill('Tính gia tốc');
@@ -145,7 +160,7 @@ test('"Viết tiếp" of an answer that ran onto a second face keeps every line 
   ]);
   await page.goto('/');
   await page.locator('.launch-card--teacher').click();
-  await page.getByRole('radio', { name: 'Giảng trên bảng' }).click();
+  await page.getByRole('radio', { name: 'Bảng giảng' }).click();
   const board = page.getByRole('region', { name: 'Bảng trắng của AI Teacher' });
   await expect(board).toContainText('Hỏi AI Teacher một câu', { timeout: 20_000 });
   await page.getByRole('textbox', { name: 'Nhập câu hỏi' }).fill('Tính quãng đường');
@@ -296,7 +311,7 @@ test('the board shows learning content only: no greeting, reasoning, echo, rule 
   ]);
   await page.goto('/');
   await page.locator('.launch-card--teacher').click();
-  await page.getByRole('radio', { name: 'Giảng trên bảng' }).click();
+  await page.getByRole('radio', { name: 'Bảng giảng' }).click();
   const board = page.getByRole('region', { name: 'Bảng trắng của AI Teacher' });
   await expect(board).toContainText('Hỏi AI Teacher một câu', { timeout: 20_000 });
   await page.getByRole('textbox', { name: 'Nhập câu hỏi' }).fill('Giải bài rơi tự do');
@@ -342,11 +357,11 @@ test('Think on the board: hidden reasoning and the reviewer’s notes reach neit
   });
   await page.goto('/');
   await page.locator('.launch-card--teacher').click();
-  await page.getByRole('radio', { name: 'Giảng trên bảng' }).click();
+  await page.getByRole('radio', { name: 'Bảng giảng' }).click();
   const board = page.getByRole('region', { name: 'Bảng trắng của AI Teacher' });
   await expect(board).toContainText('Hỏi AI Teacher một câu', { timeout: 20_000 });
   const panel = page.getByRole('region', { name: 'Trò chuyện với AI Teacher' });
-  await panel.getByRole('button', { name: /Think/ }).click();
+  await panel.getByRole('button', { name: /Deepthink/ }).click();
   await panel.getByRole('textbox', { name: 'Nhập câu hỏi' }).fill('Giải bài rơi tự do');
   await panel.getByRole('button', { name: 'Gửi câu hỏi' }).click();
 
@@ -358,7 +373,7 @@ test('Think on the board: hidden reasoning and the reviewer’s notes reach neit
   await board.getByRole('button', { name: 'Viết nhanh' }).click();
   await expect(board.locator('[data-id="h1"]')).toContainText('Rơi tự do');
   await expect(board.locator('.board__el.is-body')).toHaveCount(4);
-  // ("Think" itself is the name of the toggle in the chat, so only the tag is looked for.)
+  // ("Deepthink" is the name of the toggle in the chat, so only the tag is looked for.)
   const internal = /bản nháp|bản đã sửa|GHI CHÚ|kiểm tra lần cuối|nháp nội bộ|<\/?think/iu;
   await expect(board).not.toContainText(internal);
   await expect(panel).not.toContainText(internal);
@@ -418,7 +433,7 @@ test('switching faces while the teacher writes pauses the pen and keeps the boar
   page.on('pageerror', (e) => errors.push(String(e)));
   await page.goto('/');
   await page.locator('.launch-card--teacher').click();
-  await page.getByRole('radio', { name: 'Giảng trên bảng' }).click();
+  await page.getByRole('radio', { name: 'Bảng giảng' }).click();
   const board = page.getByRole('region', { name: 'Bảng trắng của AI Teacher' });
   await expect(board).toContainText('Hỏi AI Teacher một câu', { timeout: 20_000 });
   await page.getByRole('textbox', { name: 'Nhập câu hỏi' }).fill('Giải thích rơi tự do');
@@ -472,7 +487,7 @@ test('switching faces while the teacher writes pauses the pen and keeps the boar
   await expect(board.getByRole('button', { name: 'Tạm dừng' })).toBeVisible();
   await page.getByRole('radio', { name: 'Trò chuyện' }).click();
   await expect(board).toHaveCount(0);
-  await page.getByRole('radio', { name: 'Giảng trên bảng' }).click();
+  await page.getByRole('radio', { name: 'Bảng giảng' }).click();
   await expect(board.getByRole('button', { name: 'Tiếp tục' })).toBeVisible({ timeout: 10_000 });
   await expect(shown('a1').first()).toBeAttached();
   await board.getByRole('button', { name: 'Tiếp tục' }).click();
@@ -582,7 +597,7 @@ async function askOnBoard(page: Page, text: string) {
   await fakeGemini(page, [{ text, finishReason: 'STOP' }]);
   await page.goto('/');
   await page.locator('.launch-card--teacher').click();
-  await page.getByRole('radio', { name: 'Giảng trên bảng' }).click();
+  await page.getByRole('radio', { name: 'Bảng giảng' }).click();
   const board = page.getByRole('region', { name: 'Bảng trắng của AI Teacher' });
   await expect(board).toContainText('Hỏi AI Teacher một câu', { timeout: 20_000 });
   await page.getByRole('textbox', { name: 'Nhập câu hỏi' }).fill('Giải giúp em bài này');
@@ -708,7 +723,7 @@ test('item 3: zoomed in, the camera follows the pen down and across the board wh
   await fakeGemini(page, [{ text: LONG_LESSON, finishReason: 'STOP' }]);
   await page.goto('/');
   await page.locator('.launch-card--teacher').click();
-  await page.getByRole('radio', { name: 'Giảng trên bảng' }).click();
+  await page.getByRole('radio', { name: 'Bảng giảng' }).click();
   const board = page.getByRole('region', { name: 'Bảng trắng của AI Teacher' });
   await expect(board).toContainText('Hỏi AI Teacher một câu', { timeout: 20_000 });
   // Zoom 2 (three steps) before the lesson: it is kept for the whole session.
@@ -1168,7 +1183,7 @@ test('item 2: at 1366×768 "Khoanh để hỏi" and "Viết nhanh" keep their na
 async function openBoard(page: Page) {
   await page.goto('/');
   await page.locator('.launch-card--teacher').click();
-  await page.getByRole('radio', { name: 'Giảng trên bảng' }).click();
+  await page.getByRole('radio', { name: 'Bảng giảng' }).click();
   const board = page.getByRole('region', { name: 'Bảng trắng của AI Teacher' });
   await expect(board).toContainText('Hỏi AI Teacher một câu', { timeout: 20_000 });
   return board;

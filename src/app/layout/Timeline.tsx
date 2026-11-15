@@ -21,8 +21,9 @@ export const Timeline = memo(function Timeline() {
       hasSimulation: s.hasSimulation,
     })),
   );
-  const { duration, scrubTime, invalid } = useSimStore(
+  const { start, duration, scrubTime, invalid } = useSimStore(
     useShallow((s) => ({
+      start: s.start,
       duration: s.duration,
       scrubTime: s.scrubTime,
       invalid: s.validation.length > 0,
@@ -78,10 +79,10 @@ export const Timeline = memo(function Timeline() {
         className="timeline__scrubber"
         aria-label={t('timeline.scrubber')}
         aria-valuetext={`${timeText} s`}
-        min={0}
-        max={Math.max(duration, 1e-6)}
+        min={start}
+        max={Math.max(duration, start + 1e-6)}
         step="any"
-        value={Math.min(shown, Math.max(duration, 1e-6))}
+        value={Math.min(Math.max(shown, start), Math.max(duration, start + 1e-6))}
         disabled={!hasSimulation || duration <= 0}
         onChange={(e) => {
           sim.scrub(Number(e.target.value));
