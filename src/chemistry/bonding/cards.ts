@@ -121,8 +121,8 @@ export const IONIC_CARD: ScienceCardData = {
   ),
   confidence: 'exact',
   confidenceNote: L(
-    'Điện tích và cấu hình tra từ bảng dữ liệu; công thức tính đúng từ cân bằng điện tích.',
-    'Charges and configurations are looked up from data tables; the formula is computed exactly from the charge balance.',
+    'Điện tích và cấu hình tra từ bảng dữ liệu; công thức tính đúng từ cân bằng điện tích. Loại liên kết là dự đoán theo ngưỡng của SGK (Bảng 12.1), có ngoại lệ.',
+    'Charges and configurations are looked up from data tables; the formula is computed exactly from the charge balance. The bond type is a prediction from the textbook’s thresholds (Table 12.1), with exceptions.',
   ),
   userIntervened: false,
   sources: [KNTT.b11, IONS_SOURCE, ELEMENTS_SOURCE],
