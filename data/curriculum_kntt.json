@@ -2592,6 +2592,54 @@
    ],
    "reason": "Tên Bài 6: dao động tắt dần, dao động cưỡng bức, hiện tượng cộng hưởng (cảnh lò xo nằm ngang có cản và ngoại lực điều hoà).",
    "review_status": "pending"
+  },
+  {
+   "topic": "cellElements",
+   "subject": "biology",
+   "grade": 10,
+   "book": "SH10",
+   "chapter": "Chương 1. Thành phần hoá học của tế bào",
+   "lessons": [
+    4
+   ],
+   "reason": "Tên Bài 4: các nguyên tố hoá học và nước (cảnh: tỉ lệ khối lượng các nguyên tố trong cơ thể người theo H 4.1, vai trò nguyên tố đa lượng, vi lượng, carbon; nhiệt dung riêng và nhiệt bay hơi của nước).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "biomolecules",
+   "subject": "biology",
+   "grade": 10,
+   "book": "SH10",
+   "chapter": "Chương 1. Thành phần hoá học của tế bào",
+   "lessons": [
+    5
+   ],
+   "reason": "Tên Bài 5: các phân tử sinh học (bốn nhóm carbohydrate, lipid, protein, nucleic acid; đơn phân; mỗi nhóm một phân tử 3D lấy từ PubChem).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "microbeGrowth",
+   "subject": "biology",
+   "grade": 10,
+   "book": "SH10",
+   "chapter": "Chương 6. Sinh học vi sinh vật",
+   "lessons": [
+    21
+   ],
+   "reason": "Tên Bài 21: trao đổi chất, sinh trưởng và sinh sản ở vi sinh vật. Chỉ phần II sinh trưởng của quần thể vi khuẩn (Nₜ = N₀ × 2ⁿ, bốn pha nuôi cấy không liên tục); chưa có phần trao đổi chất và sinh sản.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "virusStructure",
+   "subject": "biology",
+   "grade": 10,
+   "book": "SH10",
+   "chapter": "Chương 7. Virus",
+   "lessons": [
+    24
+   ],
+   "reason": "Tên Bài 24: khái quát về virus (cấu tạo: lõi nucleic acid, vỏ capsid, vỏ ngoài; năm giai đoạn nhân lên).",
+   "review_status": "pending"
   }
  ],
  "unplaced": [

@@ -506,6 +506,10 @@ PLACEMENTS = [
     ("cellToDna", "SH12", [7], "Tên Bài 7: cấu trúc và chức năng của nhiễm sắc thể (cấp NST kép, sợi nhiễm sắc, nucleosome, DNA)."),
     ("crystalStructure", "HH12", [18], "Tên Bài 18: cấu tạo và liên kết trong tinh thể kim loại (cảnh có thêm tinh thể NaCl; Bài 11 Hoá học 10 tên là liên kết ion, không nêu tinh thể nên không xếp)."),
     ("forcedOscillation", "VL11", [6], "Tên Bài 6: dao động tắt dần, dao động cưỡng bức, hiện tượng cộng hưởng (cảnh lò xo nằm ngang có cản và ngoại lực điều hoà)."),
+    ("cellElements", "SH10", [4], "Tên Bài 4: các nguyên tố hoá học và nước (cảnh: tỉ lệ khối lượng các nguyên tố trong cơ thể người theo H 4.1, vai trò nguyên tố đa lượng, vi lượng, carbon; nhiệt dung riêng và nhiệt bay hơi của nước)."),
+    ("biomolecules", "SH10", [5], "Tên Bài 5: các phân tử sinh học (bốn nhóm carbohydrate, lipid, protein, nucleic acid; đơn phân; mỗi nhóm một phân tử 3D lấy từ PubChem)."),
+    ("microbeGrowth", "SH10", [21], "Tên Bài 21: trao đổi chất, sinh trưởng và sinh sản ở vi sinh vật. Chỉ phần II sinh trưởng của quần thể vi khuẩn (Nₜ = N₀ × 2ⁿ, bốn pha nuôi cấy không liên tục); chưa có phần trao đổi chất và sinh sản."),
+    ("virusStructure", "SH10", [24], "Tên Bài 24: khái quát về virus (cấu tạo: lõi nucleic acid, vỏ capsid, vỏ ngoài; năm giai đoạn nhân lên)."),
 ]
 
 # Not placed (title not clear, or no lesson): (topic, subject, candidates, reason).
