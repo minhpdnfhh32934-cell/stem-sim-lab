@@ -8,7 +8,10 @@ import { GUIDED_BASE, L } from './base';
  * viruses spread horizontally (insects such as the brown planthopper with rice stripe virus, tools,
  * rubbing leaves) and vertically (sexual or asexual reproduction, p. 151), and the uses of part III
  * (vaccines, virus insecticides, vectors, gene therapy, phages against bacteria). Only diseases the
- * lesson names. Textbook level, not medical advice. SH10-GL-8.
+ * lesson names. Textbook level, not medical advice. The book names the brown planthopper (rầy nâu)
+ * as the rice stripe virus's vector; plant-virology papers name the small brown planthopper,
+ * Laodelphax striatellus (He et al., Sci. Rep. 6, 21376, 2016): the lesson keeps the book's word and
+ * a limit names the other source, as the "follow the textbook" rule asks. SH10-GL-8.
  */
 export const sh10b25VirusDiseases: StudioScenario = {
   ...GUIDED_BASE,
@@ -60,7 +63,14 @@ export const sh10b25VirusDiseases: StudioScenario = {
     'Mỗi bệnh do virus lây theo những con đường riêng: HIV qua máu, quan hệ tình dục và từ mẹ sang con; virus cúm qua giọt dịch khi hắt hơi và dịch tiết; virus thực vật truyền ngang từ cây này sang cây khác (côn trùng, dụng cụ, vết thương) hoặc truyền dọc từ cây mẹ sang cây con. Biết con đường lây thì biết cách phòng. Con người còn dùng virus để làm vaccine, thuốc trừ sâu, vector chuyển gene và liệu pháp gene.',
     'Each virus disease spreads by its own routes: HIV through blood, sex and from mother to child; the flu virus through droplets from sneezes and body fluids; plant viruses horizontally from plant to plant (insects, tools, wounds) or vertically from parent plant to young plant. Knowing the route tells us how to prevent it. People also use viruses to make vaccines, insecticides, gene vectors and gene therapy.',
   ),
-  sources: [],
+  sources: [
+    {
+      id: 'he-2016-rsv-sbph',
+      citation:
+        'D.-C. He, J. Zhan, Z.-B. Cheng, L.-H. Xie — Viruliferous rate of small brown planthopper is a good indicator of rice stripe disease epidemics, Scientific Reports 6 (2016) 21376 (vector của virus sọc lá lúa: rầy nâu nhỏ Laodelphax striatellus)',
+      url: 'https://doi.org/10.1038/srep21376',
+    },
+  ],
   assumptions: [
     L(
       'Chỉ dùng các bệnh và ví dụ mà bài học trong sách nêu.',
@@ -71,6 +81,10 @@ export const sh10b25VirusDiseases: StudioScenario = {
     L(
       'Nội dung ở mức sách giáo khoa, không phải lời khuyên y tế. Khi lo lắng về sức khoẻ, hãy hỏi bác sĩ hoặc nhân viên y tế.',
       'Textbook-level content, not medical advice. If you are worried about your health, ask a doctor or a health worker.',
+    ),
+    L(
+      'Bài ghi rầy nâu truyền virus sọc lá lúa, đúng như sách giáo khoa. Tài liệu chuyên ngành về bệnh cây ghi loài truyền virus này là rầy nâu nhỏ (Laodelphax striatellus), một loài khác với rầy nâu; nguồn ở mục Nguồn.',
+      'The lesson says brown planthoppers spread rice stripe virus, as the textbook does. Plant-disease research names the small brown planthopper (Laodelphax striatellus), a different species, as this virus’s carrier; see Sources.',
     ),
   ],
   binding: {
@@ -209,8 +223,8 @@ export const sh10b25VirusDiseases: StudioScenario = {
           {
             id: 'an-la',
             text: L(
-              'Sâu ăn lá cây bệnh rồi ăn lá cây lành',
-              'A caterpillar eats leaves of a sick plant, then of a healthy one',
+              'Côn trùng ăn lá cây bệnh rồi ăn lá cây lành',
+              'An insect eats leaves of a sick plant, then of a healthy one',
             ),
             group: 'ngang',
             why: L(
@@ -256,8 +270,8 @@ export const sh10b25VirusDiseases: StudioScenario = {
             id: 'vaccine',
             left: L('Vaccine', 'Vaccines'),
             right: L(
-              'Dùng chủng virus đã được biến đổi để cơ thể tạo kháng thể',
-              'A changed strain of the virus makes the body produce antibodies',
+              'Một cách làm vaccine: biến đổi chủng virus gây bệnh rồi tiêm để cơ thể tạo kháng thể',
+              'One way to make a vaccine: change a disease-causing strain of the virus, then inject it so the body makes antibodies',
             ),
             why: L(
               'Khi gặp virus thật, cơ thể đã có kháng thể nên chống lại nhanh hơn.',
