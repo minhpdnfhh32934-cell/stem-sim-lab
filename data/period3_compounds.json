@@ -1,0 +1,81 @@
+{
+ "dataset": "period3_compounds",
+ "version": 1,
+ "source": {
+  "id": "sgk-hh10-kntt-b7",
+  "citation": "SGK Hoá học 10, Kết nối tri thức với cuộc sống (NXB Giáo dục Việt Nam), Bài 7: Bảng 7.1 (tr. 40) và Bảng 7.2 (tr. 41)",
+  "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983"
+ },
+ "cross_check": {
+  "id": "libretexts-period3-oxides",
+  "citation": "J. Clark, \"Acid-base Behavior of the Oxides\", Chemistry LibreTexts, Inorganic Chemistry › Period 3 Elements (CC BY-NC 4.0)",
+  "url": "https://chem.libretexts.org/Bookshelves/Inorganic_Chemistry/Supplemental_Modules_and_Websites_(Inorganic_Chemistry)/Descriptive_Chemistry/Elements_Organized_by_Period/Period_3_Elements/Acid-base_Behavior_of_the_Oxides"
+ },
+ "accessed": "2026-11-15",
+ "generated_by": "scripts/data/gen_period3.py",
+ "items": [
+  {
+   "z": 11,
+   "symbol": "Na",
+   "oxide_textbook": "Na2O",
+   "hydroxide_textbook": "NaOH",
+   "oxide_character": "basic",
+   "hydroxide_character": "strongBase",
+   "review_status": "pending"
+  },
+  {
+   "z": 12,
+   "symbol": "Mg",
+   "oxide_textbook": "MgO",
+   "hydroxide_textbook": "Mg(OH)2",
+   "oxide_character": "basic",
+   "hydroxide_character": "weakBase",
+   "review_status": "pending"
+  },
+  {
+   "z": 13,
+   "symbol": "Al",
+   "oxide_textbook": "Al2O3",
+   "hydroxide_textbook": "Al(OH)3",
+   "oxide_character": "amphoteric",
+   "hydroxide_character": "amphoteric",
+   "review_status": "pending"
+  },
+  {
+   "z": 14,
+   "symbol": "Si",
+   "oxide_textbook": "SiO2",
+   "hydroxide_textbook": "H2SiO3",
+   "oxide_character": "acidic",
+   "hydroxide_character": "weakAcid",
+   "review_status": "pending"
+  },
+  {
+   "z": 15,
+   "symbol": "P",
+   "oxide_textbook": "P2O5",
+   "hydroxide_textbook": "H3PO4",
+   "oxide_character": "acidic",
+   "hydroxide_character": "mediumAcid",
+   "review_status": "pending"
+  },
+  {
+   "z": 16,
+   "symbol": "S",
+   "oxide_textbook": "SO3",
+   "hydroxide_textbook": "H2SO4",
+   "oxide_character": "acidic",
+   "hydroxide_character": "strongAcid",
+   "review_status": "pending"
+  },
+  {
+   "z": 17,
+   "symbol": "Cl",
+   "oxide_textbook": "Cl2O7",
+   "hydroxide_textbook": "HClO4",
+   "oxide_character": "acidic",
+   "hydroxide_character": "veryStrongAcid",
+   "review_status": "pending"
+  }
+ ]
+}
