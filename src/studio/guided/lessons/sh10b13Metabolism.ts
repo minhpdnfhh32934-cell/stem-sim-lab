@@ -173,15 +173,8 @@ export const sh10b13Metabolism: StudioScenario = {
           'Xếp các bước enzyme xúc tác một phản ứng theo đúng thứ tự.',
           'Put the steps of an enzyme catalysing a reaction in the right order.',
         ),
+        // The three stages of H 13.2 (p. 81), nothing added.
         items: [
-          {
-            id: 'gap',
-            text: L('Enzyme và cơ chất gặp nhau', 'The enzyme and its substrate meet'),
-            why: L(
-              'Phản ứng chỉ xảy ra khi cơ chất đến được chỗ enzyme.',
-              'The reaction can only happen once the substrate reaches the enzyme.',
-            ),
-          },
           {
             id: 'ket-hop',
             text: L(
