@@ -178,6 +178,9 @@ const vi = {
   },
   stage: {
     regionLabel: 'Khung mô phỏng',
+    lessonRegion: 'Khung bài học',
+    lessonLoading: 'Đang tải bài học…',
+    lessonError: 'Không mở được bài học',
     emptyTitle: 'Chưa có mô phỏng',
     emptyBody: 'Nhập đề bài ở thanh phía trên, hoặc chọn một chủ đề trong Thư viện.',
     toolbarLabel: 'Công cụ mô phỏng',

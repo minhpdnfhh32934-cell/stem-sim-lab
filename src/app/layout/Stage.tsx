@@ -28,6 +28,7 @@ import { useSimStore } from '@/app/sim/simStore';
 import { SUBJECT_ICON } from '@/app/subjectIcons';
 import { useWorkspaceStore, type StageTool } from '@/app/workspaceStore';
 import { useModuleStore } from '@/modules/moduleStore';
+import { GUIDED_TOPICS } from '@/studio/guided/topics';
 import { fmtQty } from '@/physics/common/tex';
 import { EmptyState } from '@/ui/EmptyState';
 import { Skeleton } from '@/ui/Skeleton';
@@ -85,7 +86,12 @@ export const Stage = memo(function Stage() {
     })),
   );
   const mod = useModuleStore(
-    useShallow((s) => ({ active: s.active, loading: s.loading, error: s.error })),
+    useShallow((s) => ({
+      active: s.active,
+      requested: s.requested,
+      loading: s.loading,
+      error: s.error,
+    })),
   );
   const ghost = useCompareStore((s) =>
     s.ghost && s.ghost.sceneId === sim.scene?.id ? s.ghost : null,
@@ -98,14 +104,24 @@ export const Stage = memo(function Stage() {
 
   if (mod.active || mod.loading || mod.error) {
     const View = mod.active?.view.Stage;
+    // A descriptive textbook lesson is no simulation: its frame never says it is one.
+    const lesson = (GUIDED_TOPICS as readonly (string | null)[]).includes(mod.requested);
     return (
-      <section className="stage stage--module" aria-label={t('stage.regionLabel')}>
+      <section
+        className="stage stage--module"
+        aria-label={t(lesson ? 'stage.lessonRegion' : 'stage.regionLabel')}
+      >
         {View && <View />}
-        {mod.loading && <Skeleton label={t('stage.loading')} className="stage__skeleton" />}
+        {mod.loading && (
+          <Skeleton
+            label={t(lesson ? 'stage.lessonLoading' : 'stage.loading')}
+            className="stage__skeleton"
+          />
+        )}
         {mod.error && (
           <div className="stage__message" role="alert">
             <AlertTriangle size={16} strokeWidth={1.75} aria-hidden="true" />
-            <p>{`${t('stage.engineError')}: ${mod.error}`}</p>
+            <p>{`${t(lesson ? 'stage.lessonError' : 'stage.engineError')}: ${mod.error}`}</p>
           </div>
         )}
       </section>

@@ -27,6 +27,9 @@ test('Bài 3: predict, move one level, check, read the reasons; card in the Insp
       name: 'Cấp độ tổ chức sống: từ tế bào đến hệ sinh thái',
     }),
   ).toBeVisible({ timeout: 20_000 });
+  // The lab's frame names a lesson, not a simulation.
+  await expect(page.getByRole('region', { name: 'Khung bài học' })).toBeVisible();
+  await expect(page.getByRole('region', { name: 'Khung mô phỏng' })).toHaveCount(0);
   await expect(page.getByText('Bài học mô tả: không có thí nghiệm hay số đo.')).toBeVisible();
   await expect(page.locator('.science-card')).toBeVisible();
   await expect(page.locator('.science-card')).toContainText('Định tính');

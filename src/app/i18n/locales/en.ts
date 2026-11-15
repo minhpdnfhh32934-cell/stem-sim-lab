@@ -175,6 +175,9 @@ const en: Messages = {
   },
   stage: {
     regionLabel: 'Simulation stage',
+    lessonRegion: 'Lesson area',
+    lessonLoading: 'Loading the lesson…',
+    lessonError: 'Could not open the lesson',
     emptyTitle: 'No simulation yet',
     emptyBody: 'Type a problem in the bar above, or pick a topic from the Library.',
     toolbarLabel: 'Simulation tools',
