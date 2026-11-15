@@ -6,6 +6,7 @@ import {
   ACTIVITY_KEY,
   createSession,
   engineEvidence,
+  goTo,
   withPrediction,
   type StudioSession,
 } from '../session';
@@ -223,6 +224,18 @@ describe('checking a sheet', () => {
     expect(withPrediction(restored, { choice: 'mo', label: 'Mô', at: 3 }).prediction?.choice).toBe(
       'mo',
     );
+  });
+
+  it('leaving Predict with a choice locks it: the activities cannot be read, then the choice changed', () => {
+    const opened = goTo(levels, predicted('mo'), 'interact');
+    expect(opened).toMatchObject({ step: 'interact', predictionLocked: true });
+    const back = goTo(levels, opened, 'predict');
+    expect(back.step).toBe('predict');
+    expect(withPrediction(back, { choice: 'te-bao', label: 'Tế bào', at: 9 })).toBe(back);
+    // Staying on Predict, or being stopped there with no choice, locks nothing.
+    expect(goTo(levels, predicted('mo'), 'predict').predictionLocked).toBe(false);
+    const fresh = createSession(levels, 0);
+    expect(goTo(levels, fresh, 'interact')).toBe(fresh);
   });
 });
 

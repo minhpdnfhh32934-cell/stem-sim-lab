@@ -94,6 +94,12 @@ describe('guided textbook lessons in the lab library', () => {
     expect(next()).toBeDisabled();
     await user.click(screen.getByRole('radio', { name: 'Mô' }));
     await user.click(next());
+    // The activities give the answer away: back at Predict, the choice can no longer change.
+    await user.click(screen.getByRole('button', { name: 'Quay lại' }));
+    expect(screen.getByRole('radio', { name: 'Tế bào' })).toBeDisabled();
+    expect(screen.getByRole('radio', { name: 'Mô' })).toHaveAttribute('aria-checked', 'true');
+    expect(screen.getByText(/^Dự đoán đã được ghi lại/)).toBeInTheDocument();
+    await user.click(next());
 
     // Activities: "Kiểm tra" waits for a complete sheet.
     const check = screen.getByRole('button', { name: 'Kiểm tra' });

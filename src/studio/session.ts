@@ -213,7 +213,10 @@ export function firstBlocked(scenario: StudioScenario, s: StudioSession): FlowSt
   return null;
 }
 
-/** Moves to `step` only when every earlier step is satisfied. */
+/**
+ * Moves to `step` only when every earlier step is satisfied. A guided lesson's activities give
+ * its answers away, so leaving Predict with a choice made locks the prediction (POE order).
+ */
 export function goTo(scenario: StudioScenario, s: StudioSession, step: FlowStep): StudioSession {
   const steps = scenarioSteps(scenario);
   const target = steps.indexOf(step);
@@ -221,7 +224,8 @@ export function goTo(scenario: StudioScenario, s: StudioSession, step: FlowStep)
   for (const earlier of steps.slice(0, target)) {
     if (blockerAt(scenario, s, earlier)) return s;
   }
-  return { ...s, step };
+  const lock = scenario.binding.kind === 'guided' && step !== 'predict' && s.prediction !== null;
+  return { ...s, step, predictionLocked: s.predictionLocked || lock };
 }
 
 export function neighbour(
