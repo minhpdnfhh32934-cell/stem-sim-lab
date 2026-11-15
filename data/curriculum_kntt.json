@@ -2285,6 +2285,30 @@
    "review_status": "pending"
   },
   {
+   "topic": "atomComposition",
+   "subject": "chemistry",
+   "grade": 10,
+   "book": "HH10",
+   "chapter": "Chương 1. Cấu tạo nguyên tử",
+   "lessons": [
+    1
+   ],
+   "reason": "Tên Bài 1: thành phần của nguyên tử (cảnh chọn số proton, neutron, electron: nguyên tố, số khối, điện tích, khối lượng các hạt, kích thước hạt nhân so với nguyên tử).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "isotopes",
+   "subject": "chemistry",
+   "grade": 10,
+   "book": "HH10",
+   "chapter": "Chương 1. Cấu tạo nguyên tử",
+   "lessons": [
+    2
+   ],
+   "reason": "Tên Bài 2: nguyên tố hoá học (cảnh chọn một nguyên tố: các đồng vị tự nhiên, nguyên tử khối trung bình, bài toán ngược tìm phần trăm hai đồng vị).",
+   "review_status": "pending"
+  },
+  {
    "topic": "periodicTable",
    "subject": "chemistry",
    "grade": 10,

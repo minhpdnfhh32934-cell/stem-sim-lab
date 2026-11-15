@@ -116,6 +116,8 @@ const en: Messages = {
     springPendulum: 'Spring–mass oscillator',
     simplePendulum: 'Simple pendulum',
     periodicTable: 'Periodic table',
+    atomComposition: 'Composition of the atom',
+    isotopes: 'Chemical elements and isotopes',
     electronConfiguration: 'Electron configuration',
     bohrModel: 'Bohr model',
     orbitals: 'Orbital shapes',

@@ -4,6 +4,8 @@ import type { ModuleView } from './types';
 const MODULES: Record<string, () => Promise<ModuleView>> = {
   // Chemistry (Phase 4)
   periodicTable: () => import('@/chemistry/periodic/module').then((m) => m.default),
+  atomComposition: () => import('@/chemistry/nuclide/modules').then((m) => m.atomComposition),
+  isotopes: () => import('@/chemistry/nuclide/modules').then((m) => m.isotopes),
   electronConfiguration: () =>
     import('@/chemistry/atom/modules').then((m) => m.electronConfiguration),
   bohrModel: () => import('@/chemistry/atom/modules').then((m) => m.bohrModel),

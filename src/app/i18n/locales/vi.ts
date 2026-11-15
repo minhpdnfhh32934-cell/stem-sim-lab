@@ -119,6 +119,8 @@ const vi = {
     springPendulum: 'Con lắc lò xo',
     simplePendulum: 'Con lắc đơn',
     periodicTable: 'Bảng tuần hoàn',
+    atomComposition: 'Thành phần của nguyên tử',
+    isotopes: 'Nguyên tố hóa học và đồng vị',
     electronConfiguration: 'Cấu hình electron',
     bohrModel: 'Mô hình Bohr',
     orbitals: 'Hình dạng orbital',
