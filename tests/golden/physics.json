@@ -2111,6 +2111,54 @@
       "expectUnsupportedParts": false
     },
     {
+      "id": "lc-03",
+      "text": "Thả một quả cầu khối lượng 20 g, bán kính 1 cm vào nước có khối lượng riêng 999 kg/m³, từ mặt nước xuống đáy bể sâu 2 m. Hệ số cản của quả cầu là 0,47. Lấy g = 9,8 m/s². Tính tốc độ giới hạn của quả cầu.",
+      "topic": "fluidFall",
+      "quantities": [
+        {
+          "key": "fluid",
+          "value": 1,
+          "unit": "1",
+          "quote": "vào nước"
+        },
+        {
+          "key": "m",
+          "value": 20,
+          "unit": "g",
+          "quote": "khối lượng 20 g"
+        },
+        {
+          "key": "r",
+          "value": 1,
+          "unit": "cm",
+          "quote": "bán kính 1 cm"
+        },
+        {
+          "key": "H",
+          "value": 2,
+          "unit": "m",
+          "quote": "sâu 2 m"
+        },
+        {
+          "key": "cd",
+          "value": 0.47,
+          "unit": "1",
+          "quote": "Hệ số cản của quả cầu là 0,47"
+        },
+        {
+          "key": "g",
+          "value": 9.8,
+          "unit": "m/s^2",
+          "quote": "g = 9,8 m/s²"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "vt": 1.4496444496472483
+      },
+      "expectUnsupportedParts": false
+    },
+    {
       "id": "th-01",
       "text": "Hai lực đồng quy có độ lớn 6 N và 8 N, hợp với nhau một góc 90°. Tìm độ lớn của hợp lực.",
       "topic": "forceComposition",

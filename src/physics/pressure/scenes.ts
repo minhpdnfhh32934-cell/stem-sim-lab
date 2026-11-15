@@ -4,7 +4,7 @@ import { dopri5 } from '@/core/ode/dopri5';
 import { DIM } from '@/core/units';
 import type { ScienceCardData } from '@/science-card/types';
 import { DASH, L, gravityParam } from '../common/scene-helpers';
-import { SRC } from '../common/sources';
+import { SRC, sgk10 } from '../common/sources';
 import { fmtQty, texNum, texQty } from '../common/tex';
 import { arrow, circle, ground, line, polygon, text } from '../render/draw';
 import type {
@@ -207,7 +207,11 @@ function card(): ScienceCardData {
     ),
     equations: [
       { tex: '\\rho = \\frac{m}{V}', label: L('Khối lượng riêng', 'Density') },
-      { tex: 'p = \\frac{F}{S}', label: L('Áp suất', 'Pressure') },
+      // SGK Vật lí 10 KNTT (34.2), tr. 132: the pressing force F_N over the area S.
+      {
+        tex: { vi: 'p = \\frac{F_N}{S}', en: 'p = \\frac{F}{A}' },
+        label: L('Áp suất', 'Pressure'),
+      },
       { tex: 'p = p_a + \\rho g h', label: L('Áp suất ở độ sâu h', 'Pressure at depth h') },
       {
         tex: '\\Delta p = \\rho g\\,\\Delta h',
@@ -246,7 +250,7 @@ function card(): ScienceCardData {
       'The pressure is evaluated exactly at the probe’s depth at every step (Δt = 1/60 s).',
     ),
     userIntervened: false,
-    sources: [SRC.sgk10kntt, SRC.halliday, SRC.iapwsWater, SRC.codata],
+    sources: [sgk10(34), SRC.halliday, SRC.iapwsWater, SRC.codata],
   };
 }
 

@@ -3,7 +3,7 @@ import type { LocalizedText } from '@/core/data/dataset';
 import { DIM } from '@/core/units';
 import type { ScienceCardData } from '@/science-card/types';
 import { L } from '../common/scene-helpers';
-import { SRC } from '../common/sources';
+import { SRC, sgk10 } from '../common/sources';
 import { SYM, plain, sym } from '../common/symbols';
 import { fmtQty, texNum, texQty } from '../common/tex';
 import { arrow, circle, ground, text, vectorScale } from '../render/draw';
@@ -369,7 +369,7 @@ function card(p: Params): ScienceCardData {
       'Exact straight-line motion between collisions, Δt = 1/240 s.',
     ),
     userIntervened: false,
-    sources: [SRC.sgk10, SRC.halliday],
+    sources: [sgk10(28), sgk10(29), SRC.halliday],
   };
 }
 
