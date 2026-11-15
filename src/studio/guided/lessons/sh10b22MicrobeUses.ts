@@ -6,7 +6,10 @@ import { GUIDED_BASE, L } from './base';
  * words. Checked against the pages on 16/11/2026: the roles of H 22.1 (for nature, for people) and
  * the harm the lesson names, and the four fields of part II.2 (nông nghiệp, chế biến thực phẩm,
  * y dược, xử lí chất thải) with only the lesson's own examples. Yoghurt as the lactic example is
- * the lesson's (p. 133). SH10-GL-7.
+ * the lesson's (p. 133). H 22.1's "autotrophs make O₂" is narrowed to photosynthetic microbes such as
+ * vi khuẩn lam and tảo (Bài 20, Bảng 20): the book itself says quang khử bacteria give off no O₂
+ * (Bài 14, p. 91), and chemoautotrophs (Bài 20) make none either. Biogas is waste treatment, as on
+ * p. 134. SH10-GL-7.
  */
 export const sh10b22MicrobeUses: StudioScenario = {
   ...GUIDED_BASE,
@@ -30,8 +33,8 @@ export const sh10b22MicrobeUses: StudioScenario = {
       'Think about which microbe turns the sugar in milk into a sour substance.',
     ),
     L(
-      'Ứng dụng nào giúp cây trồng thì thuộc nông nghiệp; ứng dụng nào làm ra thuốc thì thuộc y dược.',
-      'A use that helps crops belongs to farming; a use that makes medicines belongs to medicine.',
+      'Ứng dụng nào giúp cây trồng thì thuộc nông nghiệp; ứng dụng nào làm ra thuốc thì thuộc y dược; ứng dụng nào phân giải chất thải thì thuộc xử lí chất thải.',
+      'A use that helps crops belongs to farming; a use that makes medicines belongs to medicine; a use that breaks down waste belongs to waste treatment.',
     ),
   ],
   questions: [
@@ -45,8 +48,8 @@ export const sh10b22MicrobeUses: StudioScenario = {
     ),
   ],
   expectedConclusion: L(
-    'Vi sinh vật có vai trò rất lớn: chúng phân giải xác sinh vật và chất thải để vật chất quay vòng trong tự nhiên, làm giàu đất, tạo O₂ và chất dinh dưỡng, giúp con người tiêu hoá. Con người dùng vi sinh vật trong nông nghiệp, chế biến thực phẩm, y dược và xử lí chất thải. Bên cạnh đó, một số vi sinh vật gây bệnh và làm hỏng thực phẩm.',
-    'Microbes matter a great deal: they break down dead bodies and waste so matter keeps cycling in nature, enrich the soil, make O₂ and food, and help people digest. People use microbes in farming, food processing, medicine and waste treatment. Some microbes, however, cause disease and spoil food.',
+    'Vi sinh vật có vai trò rất lớn: chúng phân giải xác sinh vật và chất thải để vật chất quay vòng trong tự nhiên và làm giàu đất; vi sinh vật quang hợp như vi khuẩn lam, tảo tạo O₂ và chất dinh dưỡng; vi sinh vật cộng sinh giúp con người tiêu hoá. Con người dùng vi sinh vật trong nông nghiệp, chế biến thực phẩm, y dược và xử lí chất thải. Bên cạnh đó, một số vi sinh vật gây bệnh và làm hỏng thực phẩm.',
+    'Microbes matter a great deal: they break down dead bodies and waste so matter keeps cycling in nature and the soil gets richer; photosynthetic microbes such as cyanobacteria and algae make O₂ and food; microbes living in partnership help people digest. People use microbes in farming, food processing, medicine and waste treatment. Some microbes, however, cause disease and spoil food.',
   ),
   sources: [],
   assumptions: [
@@ -122,14 +125,17 @@ export const sh10b22MicrobeUses: StudioScenario = {
           },
           {
             id: 'tu-duong',
-            left: L('Vi sinh vật tự dưỡng', 'Autotrophic microbes'),
+            left: L(
+              'Vi sinh vật tự dưỡng quang hợp như vi khuẩn lam, tảo',
+              'Photosynthetic autotrophic microbes such as cyanobacteria and algae',
+            ),
             right: L(
               'Tạo ra O₂ và chất dinh dưỡng cho các sinh vật dị dưỡng',
               'Make O₂ and food for heterotrophic living things',
             ),
             why: L(
-              'Chúng tự tạo chất hữu cơ, nên là nguồn thức ăn và O₂ cho nhiều sinh vật khác.',
-              'They make their own organic matter, so they feed many other living things and give them O₂.',
+              'Chúng tự tạo chất hữu cơ nhờ quang hợp và thải O₂, nên là nguồn thức ăn và O₂ cho nhiều sinh vật khác. Không phải vi sinh vật tự dưỡng nào cũng thải O₂: vi khuẩn quang khử và vi khuẩn hoá tự dưỡng tạo chất hữu cơ mà không thải O₂.',
+              'They make their own organic matter by photosynthesis and give off O₂, so they feed many other living things and give them O₂. Not every autotrophic microbe gives off O₂: bacteria whose photosynthesis releases no O₂, and chemoautotrophic bacteria, make organic matter without giving off O₂.',
             ),
           },
           {
@@ -249,8 +255,8 @@ export const sh10b22MicrobeUses: StudioScenario = {
             ),
             group: 'chat-thai',
             why: L(
-              'Vi sinh vật phân giải chất thải trong bể kín, tạo khí đốt và phân bón, đỡ ô nhiễm môi trường.',
-              'Microbes break down the waste in a closed tank, giving fuel gas and fertiliser and less pollution.',
+              'Vi sinh vật phân giải chất thải trong bể kín, tạo khí đốt và làm môi trường bớt ô nhiễm.',
+              'Microbes break down the waste in a closed tank, giving fuel gas and less pollution.',
             ),
           },
         ],
