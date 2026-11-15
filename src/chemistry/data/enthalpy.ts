@@ -11,6 +11,8 @@ export type EnthalpyReference = z.infer<typeof ReferenceSchema>;
 
 const NistSchema = z.object({
   dfh_kj_mol: z.number(),
+  /** Decimals as the WebBook prints the value ("−314.55" → 2). */
+  decimals: z.number().int().min(0),
   uncertainty_kj_mol: z.number().positive().nullable(),
   source: z.enum(['codata', 'janaf']),
   /** The WebBook page the value was read from. */
@@ -24,6 +26,8 @@ const SpeciesSchema = z.object({
   phase: PhaseSchema,
   /** ΔfH° at 298 K, 1 bar, kJ/mol: the book's Bảng 17.1 first, else the NIST WebBook. */
   dfh_kj_mol: z.number(),
+  /** Decimals as the source prints the value (the book's "−441,0" → 1; JSON drops the ",0"). */
+  decimals: z.number().int().min(0),
   uncertainty_kj_mol: z.number().positive().nullable(),
   source: ReferenceSchema,
   /** Printed page of the book (the table, or the definition of the zero). */

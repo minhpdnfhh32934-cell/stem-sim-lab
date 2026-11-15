@@ -27,18 +27,20 @@ export type ReactionEnthalpy = {
 } & (
   | {
       ok: true;
+      /** Exact sums (each shown to the decimals of its own side's values). */
       products: number;
       reactants: number;
+      productsDecimals: number;
+      reactantsDecimals: number;
+      /** Exact ΔrH, and ΔrH rounded to `decimals`. */
+      dHExact: number;
       dH: number;
-      /** Decimals of the least precise value used: the result is shown to that many. */
+      /** Decimals of the least precise value used (an element's defined 0 does not count). */
       decimals: number;
       kind: 'exothermic' | 'endothermic' | 'none';
     }
   | { ok: false; missing: EnthalpyTerm[] }
 );
-
-/** Decimals as the value is written in the data ("−285.8" → 1, "−314.55" → 2, "0" → 0). */
-export const decimalsOf = (x: number) => (String(x).split('.')[1] ?? '').length;
 
 export function reactionEnthalpy(id: string): ReactionEnthalpy | undefined {
   const reaction = reactionById(id);
@@ -56,20 +58,29 @@ export function reactionEnthalpy(id: string): ReactionEnthalpy | undefined {
   const base = { reaction, terms, coefficientsBy: by };
   const missing = terms.filter((t) => !t.data || phases[t.formula] === undefined);
   if (missing.length) return { ...base, ok: false, missing };
-  const sum = (side: EnthalpyTerm['side']) =>
-    terms
-      .filter((t) => t.side === side)
-      .reduce((s, t) => s + t.coef * (t.data?.dfh_kj_mol ?? 0), 0);
-  const decimals = Math.max(...terms.map((t) => decimalsOf(t.data?.dfh_kj_mol ?? 0)));
-  const round = (x: number) => Number(x.toFixed(decimals)) + 0;
-  const products = round(sum('product'));
-  const reactants = round(sum('reactant'));
-  const dH = round(products - reactants);
+  const dec = (t: EnthalpyTerm) => t.data?.decimals ?? 0;
+  // Integer arithmetic in units of the finest printed decimal: no binary rounding error.
+  const finest = Math.max(...terms.map(dec));
+  const scale = 10 ** finest;
+  const sideOf = (side: EnthalpyTerm['side']) => terms.filter((t) => t.side === side);
+  const sumInt = (side: EnthalpyTerm['side']) =>
+    sideOf(side).reduce((s, t) => s + t.coef * Math.round((t.data?.dfh_kj_mol ?? 0) * scale), 0);
+  const productsInt = sumInt('product');
+  const reactantsInt = sumInt('reactant');
+  const dInt = productsInt - reactantsInt;
+  const measured = terms.filter((t) => t.data?.source !== 'definition');
+  const decimals = measured.length ? Math.min(...measured.map(dec)) : 0;
+  // Half away from zero, on exact integers.
+  const step = 10 ** (finest - decimals);
+  const dH = (Math.sign(dInt) * Math.round(Math.abs(dInt) / step)) / 10 ** decimals + 0;
   return {
     ...base,
     ok: true,
-    products,
-    reactants,
+    products: productsInt / scale + 0,
+    reactants: reactantsInt / scale + 0,
+    productsDecimals: Math.max(...sideOf('product').map(dec)),
+    reactantsDecimals: Math.max(...sideOf('reactant').map(dec)),
+    dHExact: dInt / scale + 0,
     dH,
     decimals,
     kind: dH < 0 ? 'exothermic' : dH > 0 ? 'endothermic' : 'none',

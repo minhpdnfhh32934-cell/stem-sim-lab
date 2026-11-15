@@ -63,40 +63,42 @@ REFERENCES = {
 ROW_AUTHOR = {"codata": "Cox, Wagman, et al., 1984", "janaf": "Chase, 1998"}
 PHASE_WORD = {"g": "gas", "l": "liquid", "s": "solid"}
 
-# SGK Bảng 17.1 (tr. 85), as printed: (formula, phase, ΔfH° kJ/mol).
+# SGK Bảng 17.1 (tr. 85), as printed: (formula, phase, ΔfH° kJ/mol). Values are strings so the
+# printed decimals (the book's ",0" included) reach the JSON as `decimals`.
 TEXTBOOK = [
-    ("AgCl", "s", -127.0), ("BaCl2", "s", -806.1), ("BaSO4", "s", -1465.0), ("CaCl2", "s", -795.0),
-    ("CaCO3", "s", -1206.9), ("CaO", "s", -635.1), ("CH4", "g", -74.9), ("C2H6", "g", -84.7),
-    ("C2H2", "g", 227.0), ("CO", "g", -110.5), ("CO2", "g", -393.5), ("Ca(OH)2", "s", -986.1),
-    ("HBr", "g", -36.3), ("HCl", "g", -92.3), ("HI", "g", 25.9), ("H2O", "l", -285.8),
-    ("H2O", "g", -241.8), ("KCl", "s", -436.7), ("KOH", "s", -424.8), ("Fe2O3", "s", -825.5),
-    ("NaCl", "s", -411.1), ("NaOH", "s", -425.6), ("NH3", "g", -45.9), ("O3", "g", 143.0),
-    ("SO2", "g", -296.8), ("SO3", "l", -441.0),
+    ("AgCl", "s", "-127.0"), ("BaCl2", "s", "-806.1"), ("BaSO4", "s", "-1465.0"), ("CaCl2", "s", "-795.0"),
+    ("CaCO3", "s", "-1206.9"), ("CaO", "s", "-635.1"), ("CH4", "g", "-74.9"), ("C2H6", "g", "-84.7"),
+    ("C2H2", "g", "227.0"), ("CO", "g", "-110.5"), ("CO2", "g", "-393.5"), ("Ca(OH)2", "s", "-986.1"),
+    ("HBr", "g", "-36.3"), ("HCl", "g", "-92.3"), ("HI", "g", "25.9"), ("H2O", "l", "-285.8"),
+    ("H2O", "g", "-241.8"), ("KCl", "s", "-436.7"), ("KOH", "s", "-424.8"), ("Fe2O3", "s", "-825.5"),
+    ("NaCl", "s", "-411.1"), ("NaOH", "s", "-425.6"), ("NH3", "g", "-45.9"), ("O3", "g", "143.0"),
+    ("SO2", "g", "-296.8"), ("SO3", "l", "-441.0"),
 ]
 
-# NIST WebBook: (formula, phase, ΔfH° kJ/mol, ± kJ/mol or None, reference, WebBook ID, Mask, note)
+# NIST WebBook: (formula, phase, ΔfH° kJ/mol as printed, ± kJ/mol or None, reference, WebBook ID,
+# Mask, note)
 SPECIES = [
-    ("H2O", "l", -285.830, 0.040, "codata", "C7732185", 2, None),
-    ("CO2", "g", -393.51, 0.13, "codata", "C124389", 1, None),
-    ("CH4", "g", -74.87, None, "janaf", "C74828", 1, None),
-    ("CaO", "s", -634.92, 0.90, "codata", "C1305788", 2, None),
-    ("NH4Cl", "s", -314.55, None, "janaf", "C12125029", 2, None),
-    ("NH3", "g", -45.94, 0.35, "codata", "C7664417", 1, None),
-    ("HCl", "g", -92.31, 0.10, "codata", "C7647010", 1, None),
-    ("SO2", "g", -296.81, 0.20, "codata", "C7446095", 1, None),
-    ("Fe2O3", "s", -825.50, None, "janaf", "C1317608", 2, "hematite"),
-    ("CO", "g", -110.53, 0.17, "codata", "C630080", 1, None),
-    ("Al2O3", "s", -1675.7, 1.3, "codata", "C1344281", 2, "corundum"),
+    ("H2O", "l", "-285.830", 0.040, "codata", "C7732185", 2, None),
+    ("CO2", "g", "-393.51", 0.13, "codata", "C124389", 1, None),
+    ("CH4", "g", "-74.87", None, "janaf", "C74828", 1, None),
+    ("CaO", "s", "-634.92", 0.90, "codata", "C1305788", 2, None),
+    ("NH4Cl", "s", "-314.55", None, "janaf", "C12125029", 2, None),
+    ("NH3", "g", "-45.94", 0.35, "codata", "C7664417", 1, None),
+    ("HCl", "g", "-92.31", 0.10, "codata", "C7647010", 1, None),
+    ("SO2", "g", "-296.81", 0.20, "codata", "C7446095", 1, None),
+    ("Fe2O3", "s", "-825.50", None, "janaf", "C1317608", 2, "hematite"),
+    ("CO", "g", "-110.53", 0.17, "codata", "C630080", 1, None),
+    ("Al2O3", "s", "-1675.7", 1.3, "codata", "C1344281", 2, "corundum"),
     # Atoms and hydrogen halides: D(H–X) = ΔfH°(H) + ΔfH°(X) − ΔfH°(HX), the cross-check of the
     # book's Bảng 22.1 bond energies.
-    ("H", "g", 217.998, 0.006, "codata", "C12385136", 1, None),
-    ("F", "g", 79.38, 0.30, "codata", "C14762948", 1, None),
-    ("Cl", "g", 121.301, 0.008, "codata", "C22537151", 1, None),
-    ("Br", "g", 111.87, 0.12, "codata", "C10097322", 1, None),
-    ("I", "g", 106.76, 0.04, "codata", "C14362448", 1, None),
-    ("HF", "g", -273.30, 0.70, "codata", "C7664393", 1, None),
-    ("HBr", "g", -36.29, 0.16, "codata", "C10035106", 1, None),
-    ("HI", "g", 26.50, 0.10, "codata", "C10034852", 1, None),
+    ("H", "g", "217.998", 0.006, "codata", "C12385136", 1, None),
+    ("F", "g", "79.38", 0.30, "codata", "C14762948", 1, None),
+    ("Cl", "g", "121.301", 0.008, "codata", "C22537151", 1, None),
+    ("Br", "g", "111.87", 0.12, "codata", "C10097322", 1, None),
+    ("I", "g", "106.76", 0.04, "codata", "C14362448", 1, None),
+    ("HF", "g", "-273.30", 0.70, "codata", "C7664393", 1, None),
+    ("HBr", "g", "-36.29", 0.16, "codata", "C10035106", 1, None),
+    ("HI", "g", "26.50", 0.10, "codata", "C10034852", 1, None),
 ]
 # Elements in their most stable form at 298 K, 1 bar.
 REFERENCE_STATES = [("H2", "g"), ("O2", "g"), ("N2", "g"), ("Fe", "s"), ("Al", "s")]
@@ -113,6 +115,11 @@ REACTIONS = [
     ("fe2o3-co", {"Fe2O3": "s", "CO": "g", "Fe": "s", "CO2": "g"}),
     ("thermite", {"Al": "s", "Fe2O3": "s", "Al2O3": "s", "Fe": "s"}),
 ]
+
+
+def decimals(printed: str) -> int:
+    """Decimals as printed: "-441.0" -> 1, "-314.55" -> 2."""
+    return len(printed.split(".")[1]) if "." in printed else 0
 
 
 def webbook_rows(url: str) -> list[str]:
@@ -134,7 +141,7 @@ def check() -> None:
         found = False
         for row in webbook_rows(url):
             m = re.match(rf"Δ\s*f\s*H°\s*{word}\s+(-?\d+\.?\d*)", row)
-            if m and author in row and abs(float(m.group(1)) - value) < 1e-9:
+            if m and author in row and abs(float(m.group(1)) - float(value)) < 1e-9:
                 found = True
         if not found:
             raise SystemExit(f"{formula}({phase}): {value} ({author}) not found at {url}")
@@ -145,7 +152,7 @@ def check() -> None:
 def main() -> None:
     nist = {
         (f, p): {
-            "dfh_kj_mol": v, "uncertainty_kj_mol": unc, "source": ref,
+            "dfh_kj_mol": float(v), "decimals": decimals(v), "uncertainty_kj_mol": unc, "source": ref,
             "url": WEBBOOK.format(id=cas, mask=mask), **({"form": form} if form else {}),
         }
         for f, p, v, unc, ref, cas, mask, form in SPECIES
@@ -154,16 +161,16 @@ def main() -> None:
     for formula, phase, value in TEXTBOOK:
         other = nist.pop((formula, phase), None)
         items.append({
-            "formula": formula, "phase": phase, "dfh_kj_mol": value, "uncertainty_kj_mol": None,
-            "source": "sgk", "page": 85, **({"other": other} if other else {}),
+            "formula": formula, "phase": phase, "dfh_kj_mol": float(value),
+            "decimals": decimals(value), "uncertainty_kj_mol": None, "source": "sgk", "page": 85, **({"other": other} if other else {}),
             "review_status": "pending",
         })
     for (formula, phase), item in nist.items():
         items.append({"formula": formula, "phase": phase, **item, "review_status": "pending"})
     for formula, phase in REFERENCE_STATES:
         items.append({
-            "formula": formula, "phase": phase, "dfh_kj_mol": 0, "uncertainty_kj_mol": None,
-            "source": "definition", "page": 84, "review_status": "pending",
+            "formula": formula, "phase": phase, "dfh_kj_mol": 0, "decimals": 0,
+            "uncertainty_kj_mol": None, "source": "definition", "page": 84, "review_status": "pending",
         })
     known = {(i["formula"], i["phase"]) for i in items}
     assert len(known) == len(items), "duplicate species"

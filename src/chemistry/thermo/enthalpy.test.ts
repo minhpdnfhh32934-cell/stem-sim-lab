@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { REACTIONS } from '../data/reactions';
-import { decimalsOf, ENTHALPY_REACTION_IDS, reactionEnthalpy } from './enthalpy';
+import { formationEnthalpy } from '../data/enthalpy';
+import { ENTHALPY_REACTION_IDS, reactionEnthalpy } from './enthalpy';
 
 const dH = (id: string) => {
   const r = reactionEnthalpy(id);
@@ -22,8 +23,17 @@ describe('reaction enthalpy from formation enthalpies (HH10 Bài 17)', () => {
 
   it('endothermic decompositions: CaCO3 (book values) and NH4Cl (book + NIST)', () => {
     expect(dH('caco3-decomp')).toMatchObject({ dH: 178.3, kind: 'endothermic' });
-    // NH4Cl(s) is not in Bảng 17.1: NIST-JANAF −314,55; NH3, HCl from the book.
-    expect(dH('nh4cl-decomp')).toMatchObject({ dH: 176.35, decimals: 2 });
+    // NH4Cl(s) is not in Bảng 17.1: NIST-JANAF −314,55; NH3, HCl from the book (one decimal), so
+    // the exact 176,35 is given to the least precise value's decimal: 176,4.
+    expect(dH('nh4cl-decomp')).toMatchObject({
+      products: -138.2,
+      reactants: -314.55,
+      productsDecimals: 1,
+      reactantsDecimals: 2,
+      dHExact: 176.35,
+      dH: 176.4,
+      decimals: 1,
+    });
   });
 
   it('coefficients come from the balancer, each term has its phase and value', () => {
@@ -56,9 +66,14 @@ describe('reaction enthalpy from formation enthalpies (HH10 Bài 17)', () => {
     expect(reactionEnthalpy('zn-hcl')).toBeUndefined();
   });
 
-  it('counts decimals as written', () => {
-    expect([decimalsOf(-285.8), decimalsOf(-314.55), decimalsOf(0), decimalsOf(-1206.9)]).toEqual([
-      1, 2, 0, 1,
-    ]);
+  it('keeps the decimals each source prints, the book’s ",0" included', () => {
+    expect(formationEnthalpy('SO3', 'l')).toMatchObject({ dfh_kj_mol: -441, decimals: 1 });
+    expect(formationEnthalpy('NH4Cl', 's')).toMatchObject({ dfh_kj_mol: -314.55, decimals: 2 });
+    expect(formationEnthalpy('CH4', 'g')?.other).toMatchObject({ dfh_kj_mol: -74.87, decimals: 2 });
+    expect(formationEnthalpy('O2', 'g')).toMatchObject({ decimals: 0, source: 'definition' });
+  });
+
+  it('no offered reaction has ΔrH = 0 (the view draws that case without an arrow)', () => {
+    for (const id of ENTHALPY_REACTION_IDS) expect(dH(id).kind, id).not.toBe('none');
   });
 });

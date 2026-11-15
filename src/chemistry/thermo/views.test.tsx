@@ -19,7 +19,8 @@ describe('Biến thiên enthalpy của phản ứng (HH10 Bài 17)', () => {
     const { container } = render(<EnthalpyStage />);
     expect(container).toHaveTextContent('CH₄(g) + 2O₂(g) → CO₂(g) + 2H₂O(l)ΔrH°298 = −890,2 kJ');
     expect(container).toHaveTextContent('ΣΔfH°298(sp) = 1 · (−393,5) + 2 · (−285,8) = −965,1 kJ');
-    expect(container).toHaveTextContent('ΣΔfH°298(cđ) = 1 · (−74,9) + 2 · (0,0) = −74,9 kJ');
+    // An element's defined 0 is written "0", the book's values with their own decimal.
+    expect(container).toHaveTextContent('ΣΔfH°298(cđ) = 1 · (−74,9) + 2 · (0) = −74,9 kJ');
     expect(screen.getByText('ΔrH < 0: phản ứng toả nhiệt.')).toBeInTheDocument();
     expect(
       screen.getByRole('img', {
@@ -49,6 +50,27 @@ describe('Biến thiên enthalpy của phản ứng (HH10 Bài 17)', () => {
     rerender(<EnthalpyBottom />);
     expect(container).toHaveTextContent('NIST (đối chiếu)');
     expect(container).toHaveTextContent('SGK Bảng 17.1−74,87');
+  });
+
+  it('NH4Cl: each value as its source prints it; the result to the least precise decimal', () => {
+    act(() => {
+      useEnthalpyStore.setState({ id: 'nh4cl-decomp' });
+    });
+    const { container } = render(<EnthalpyStage />);
+    expect(container).toHaveTextContent('ΣΔfH°298(sp) = 1 · (−45,9) + 1 · (−92,3) = −138,2 kJ');
+    expect(container).toHaveTextContent('ΣΔfH°298(cđ) = 1 · (−314,55) = −314,55 kJ');
+    expect(container).toHaveTextContent('ΔrH°298 = −138,2 − (−314,55) = 176,35 ≈ 176,4 kJ');
+    expect(screen.getByText('ΔrH > 0: phản ứng thu nhiệt.')).toHaveClass('chem-note');
+    expect(screen.getByText('ΔrH > 0: phản ứng thu nhiệt.')).not.toHaveClass('chem-note--warn');
+  });
+
+  it('English: the sums say products and reactants', () => {
+    act(() => {
+      useSettingsStore.setState({ locale: 'en' });
+    });
+    const { container } = render(<EnthalpyStage />);
+    expect(container).toHaveTextContent('ΣΔfH°298(products) = 1 · (−393.5) + 2 · (−285.8)');
+    expect(container).toHaveTextContent('ΣΔfH°298(reactants) = 1 · (−74.9)');
   });
 
   it('a value the book lacks comes from NIST and says so', () => {

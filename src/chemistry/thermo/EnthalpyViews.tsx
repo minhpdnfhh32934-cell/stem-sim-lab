@@ -21,11 +21,20 @@ const kj = (locale: Locale, v: number, decimals: number) =>
   }).replace(/^-/, '−');
 
 const SOURCE: Record<EnthalpyReference, LocalizedText> = {
-  sgk: L('SGK Bảng 17.1', 'SGK Bảng 17.1'),
+  sgk: L('SGK Bảng 17.1', 'SGK Table 17.1'),
   codata: L('NIST (CODATA)', 'NIST (CODATA)'),
   janaf: L('NIST (JANAF)', 'NIST (JANAF)'),
   definition: L('đơn chất bền: 0', 'stable element: 0'),
 };
+
+/** Δ_rH°_298 or Δ_fH°_298 with the book's subscripts (text content stays "ΔrH°298"). */
+function DH({ sub }: { sub: 'r' | 'f' }) {
+  return (
+    <>
+      Δ<sub>{sub}</sub>H°<sub>298</sub>
+    </>
+  );
+}
 
 const species = (t: EnthalpyTerm) =>
   `${t.coef > 1 ? String(t.coef) : ''}${formatFormula(t.formula)}(${t.phase})`;
@@ -77,7 +86,7 @@ function LevelDiagram({ exo, label }: { exo: boolean; label: string }) {
           }
         />
         <text className="dh-text" x="152" y={(yr + yp) / 2 + 4} textAnchor="end">
-          ΔrH {exo ? '< 0' : '> 0'}
+          Δ<tspan baselineShift="sub">r</tspan>H {exo ? '< 0' : '> 0'}
         </text>
       </svg>
     </figure>
@@ -110,56 +119,81 @@ export function EnthalpyStage() {
       </div>
     );
   const d = res.decimals;
+  // Each value as its source prints it; an element's defined 0 as "0".
   const terms = (list: EnthalpyTerm[]) =>
-    list.map((t) => `${String(t.coef)} · (${kj(locale, t.data?.dfh_kj_mol ?? 0, d)})`).join(' + ');
+    list
+      .map(
+        (t) =>
+          `${String(t.coef)} · (${kj(locale, t.data?.dfh_kj_mol ?? 0, t.data?.decimals ?? 0)})`,
+      )
+      .join(' + ');
   const dH = `${kj(locale, res.dH, d)} kJ`;
-  const exo = res.kind === 'exothermic';
+  const rounded = res.dHExact !== res.dH;
+  const kind = res.kind;
+  const products_ = kj(locale, res.products, res.productsDecimals);
+  const reactants_ = kj(locale, res.reactants, res.reactantsDecimals);
   return (
     <div className="chem-view">
       <h3 className="hh10-title">{Lz(res.reaction.name)}</h3>
       <p className="rx-eq rx-eq--big">
         {equation}
-        <span className="dh-result">ΔrH°298 = {dH}</span>
+        <span className="dh-result">
+          <DH sub="r" /> = {dH}
+        </span>
       </p>
       <dl className="dh-sum">
         <dt>{Lz(L('Tổng nhiệt tạo thành các chất sản phẩm', 'Total for the products'))}</dt>
         <dd className="mono">
-          ΣΔfH°298(sp) = {terms(products)} = {kj(locale, res.products, d)} kJ
+          Σ<DH sub="f" />({Lz(L('sp', 'products'))}) = {terms(products)} = {products_} kJ
         </dd>
         <dt>{Lz(L('Tổng nhiệt tạo thành các chất đầu', 'Total for the reactants'))}</dt>
         <dd className="mono">
-          ΣΔfH°298(cđ) = {terms(reactants)} = {kj(locale, res.reactants, d)} kJ
+          Σ<DH sub="f" />({Lz(L('cđ', 'reactants'))}) = {terms(reactants)} = {reactants_} kJ
         </dd>
         <dt>{Lz(L('Biến thiên enthalpy của phản ứng', 'Enthalpy change of the reaction'))}</dt>
         <dd className="mono">
-          ΔrH°298 = {kj(locale, res.products, d)} − ({kj(locale, res.reactants, d)}) ={' '}
+          <DH sub="r" /> = {products_} − ({reactants_}) ={' '}
+          {rounded &&
+            `${kj(locale, res.dHExact, Math.max(res.productsDecimals, res.reactantsDecimals))} ≈ `}
           <strong>{dH}</strong>
         </dd>
       </dl>
-      <p className={`chem-note${exo ? '' : ' chem-note--warn'}`} role="note">
-        {exo
-          ? Lz(
-              L(
-                'ΔrH < 0: phản ứng toả nhiệt.',
-                'ΔrH < 0: the reaction releases heat (exothermic).',
-              ),
-            )
-          : Lz(
-              L(
-                'ΔrH > 0: phản ứng thu nhiệt.',
-                'ΔrH > 0: the reaction absorbs heat (endothermic).',
-              ),
-            )}
-      </p>
-      <LevelDiagram
-        exo={exo}
-        label={Lz(
-          L(
-            `Sơ đồ: sản phẩm ${exo ? 'thấp' : 'cao'} hơn chất đầu, ΔrH°298 = ${dH}`,
-            `Diagram: products ${exo ? 'below' : 'above'} the reactants, ΔrH°298 = ${dH}`,
-          ),
+      {rounded && (
+        <p className="small muted">
+          {Lz(
+            L(
+              `Kết quả ghi đến ${String(d)} chữ số thập phân, bằng giá trị kém chính xác nhất đã dùng.`,
+              `The result is given to ${String(d)} decimal place(s), like the least precise value used.`,
+            ),
+          )}
+        </p>
+      )}
+      <p className="chem-note" role="note">
+        {Lz(
+          kind === 'exothermic'
+            ? L('ΔrH < 0: phản ứng toả nhiệt.', 'ΔrH < 0: the reaction releases heat (exothermic).')
+            : kind === 'endothermic'
+              ? L(
+                  'ΔrH > 0: phản ứng thu nhiệt.',
+                  'ΔrH > 0: the reaction absorbs heat (endothermic).',
+                )
+              : L(
+                  'ΔrH = 0: phản ứng không toả nhiệt, không thu nhiệt.',
+                  'ΔrH = 0: the reaction neither releases nor absorbs heat.',
+                ),
         )}
-      />
+      </p>
+      {kind !== 'none' && (
+        <LevelDiagram
+          exo={kind === 'exothermic'}
+          label={Lz(
+            L(
+              `Sơ đồ: sản phẩm ${kind === 'exothermic' ? 'thấp' : 'cao'} hơn chất đầu, ΔrH°298 = ${dH}`,
+              `Diagram: products ${kind === 'exothermic' ? 'below' : 'above'} the reactants, ΔrH°298 = ${dH}`,
+            ),
+          )}
+        />
+      )}
     </div>
   );
 }
@@ -213,7 +247,7 @@ export function EnthalpyBottom() {
   const advanced = useSettingsStore((s) => s.uiMode === 'advanced');
   const res = useResult();
   if (!res) return null;
-  const n = (v: number) => kj(locale, v, 2).replace(/[.,]?0+$/, '');
+
   return (
     <table className="chem-table">
       <thead>
@@ -221,8 +255,12 @@ export function EnthalpyBottom() {
           <th scope="col">{Lz(L('Chất', 'Species'))}</th>
           <th scope="col">{Lz(L('Trạng thái', 'State'))}</th>
           <th scope="col">{Lz(L('Hệ số ν', 'Coefficient ν'))}</th>
-          <th scope="col">ΔfH°298 (kJ/mol)</th>
-          <th scope="col">ν · ΔfH°298 (kJ)</th>
+          <th scope="col">
+            <DH sub="f" /> (kJ/mol)
+          </th>
+          <th scope="col">
+            ν · <DH sub="f" /> (kJ)
+          </th>
           <th scope="col">{Lz(L('Nguồn', 'Source'))}</th>
           {advanced && <th scope="col">{Lz(L('NIST (đối chiếu)', 'NIST (cross-check)'))}</th>}
         </tr>
@@ -233,15 +271,17 @@ export function EnthalpyBottom() {
             <th scope="row">{formatFormula(t.formula)}</th>
             <td>{Lz(PHASE[t.phase])}</td>
             <td className="num">{t.coef}</td>
-            <td className="num">{t.data ? n(t.data.dfh_kj_mol) : '—'}</td>
-            <td className="num">{t.data ? n(t.coef * t.data.dfh_kj_mol) : '—'}</td>
+            <td className="num">{t.data ? kj(locale, t.data.dfh_kj_mol, t.data.decimals) : '—'}</td>
+            <td className="num">
+              {t.data ? kj(locale, t.coef * t.data.dfh_kj_mol, t.data.decimals) : '—'}
+            </td>
             <td>{t.data ? Lz(SOURCE[t.data.source]) : '—'}</td>
             {advanced && (
               <td className="num">
                 {t.data?.other
-                  ? n(t.data.other.dfh_kj_mol)
+                  ? kj(locale, t.data.other.dfh_kj_mol, t.data.other.decimals)
                   : t.data?.source === 'codata' || t.data?.source === 'janaf'
-                    ? n(t.data.dfh_kj_mol)
+                    ? kj(locale, t.data.dfh_kj_mol, t.data.decimals)
                     : '—'}
               </td>
             )}
