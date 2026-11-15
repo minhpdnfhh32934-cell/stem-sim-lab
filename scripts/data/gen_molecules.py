@@ -228,7 +228,9 @@ EXPERIMENTAL = {
     "bf3": {"r": 1.307, "angle": 120.0},
     # NO (#255): r_e of the X 2Pi ground state of 14N16O, NIST Chemistry WebBook "Constants of
     # diatomic molecules" (data compiled by K. P. Huber and G. H. Herzberg),
-    # https://webbook.nist.gov/cgi/cbook.cgi?ID=C10102439&Mask=1000, read 2026-11-15.
+    # https://webbook.nist.gov/cgi/cbook.cgi?ID=C10102439&Mask=1000, read 2026-11-15. NIST CCCBDB's
+    # experimental geometry (https://cccbdb.nist.gov/exp2x.asp?casno=10102439) places the atoms
+    # 1.1508 Å apart (its internal-coordinate row lists r0 = 1.154 Å).
     "no": {"r": 1.15077},
 }
 
