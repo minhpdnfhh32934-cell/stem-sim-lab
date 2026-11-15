@@ -78,12 +78,14 @@ export const CATALOG: Record<Subject, ChapterEntry[]> = {
     chapter('crystals', ['crystalStructure']),
   ],
   biology: [
+    chapter('cellChemistry', ['cellElements', 'biomolecules']),
     chapter('cell', ['mitosis', 'meiosis']),
     chapter('molecular', ['centralDogma', 'pointMutation']),
     chapter('genetics', ['mendel', 'hardyWeinberg', 'geneticDrift']),
     chapter('ecology', ['logisticGrowth', 'lotkaVolterra']),
     chapter('cellPhysiology', ['michaelisMenten', 'diffusionOsmosis']),
     chapter('cellStructure', ['cellStructure', 'cellToDna']),
+    chapter('microbesViruses', ['microbeGrowth', 'virusStructure']),
   ],
 };
 

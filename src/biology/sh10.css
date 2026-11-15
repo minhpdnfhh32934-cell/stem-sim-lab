@@ -1,0 +1,163 @@
+/* SH10 lessons of #255 round 1g: Bài 4 (cellElements), Bài 5 (biomolecules), Bài 21
+   (microbeGrowth), Bài 24 (virusStructure). Theme tokens only. */
+
+/* Bài 21: the four-phase illustration leaves room for its controls above and its text below. */
+.bio-view > .mg-phases__canvas {
+  top: 3.6rem;
+  bottom: 11rem;
+  height: auto;
+}
+.mg-phases {
+  position: absolute;
+  right: var(--space-4);
+  bottom: var(--space-3);
+  left: var(--space-4);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--bg-panel) 92%, transparent);
+  font-size: var(--text-content);
+}
+.mg-phases p {
+  margin: var(--space-1) 0 0;
+}
+
+/* Bài 4: element shares as labelled bars (the textbook's own numbers, no axis to read off). */
+.el-chart {
+  position: absolute;
+  top: 3.6rem;
+  right: var(--space-4);
+  bottom: 3.4rem;
+  left: var(--space-4);
+  overflow: auto;
+}
+.el-chart__list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.el-bar {
+  display: grid;
+  grid-template-columns: minmax(7rem, 13rem) minmax(0, 1fr) 4.5rem;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  min-height: var(--target);
+  padding: 2px var(--space-2);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  background: none;
+  color: var(--text);
+  font-size: var(--text-content);
+  text-align: left;
+}
+.el-bar:hover {
+  background: var(--bg-hover);
+}
+.el-bar.is-active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.el-bar__track {
+  height: 18px;
+  border-radius: var(--radius-full);
+  background: var(--bg-panel-2);
+  overflow: hidden;
+}
+.el-bar__fill {
+  display: block;
+  height: 100%;
+  min-width: 3px;
+  border-radius: var(--radius-full);
+}
+.el-bar__fill--macro {
+  background: var(--chart-1);
+}
+.el-bar__fill--trace {
+  background: var(--chart-3);
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent 0 4px,
+    color-mix(in srgb, var(--bg-panel) 45%, transparent) 4px 7px
+  );
+}
+.el-bar__value {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.el-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin: var(--space-2) 0 0;
+  font-size: var(--text-sm);
+}
+.el-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.el-legend i {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+}
+
+/* Bài 4: water's numbers. */
+.water-facts {
+  position: absolute;
+  top: 3.6rem;
+  right: var(--space-4);
+  bottom: var(--space-3);
+  left: var(--space-4);
+  overflow: auto;
+  font-size: var(--text-content);
+}
+.water-facts__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+.water-facts__item {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel);
+}
+.water-facts__item strong {
+  display: block;
+  font-size: var(--text-lg);
+  font-variant-numeric: tabular-nums;
+}
+.water-facts ul {
+  margin: var(--space-1) 0 0;
+  padding-left: 1.2rem;
+}
+
+/* Bài 5: the four groups as a 2 × 2 choice (long names never squeeze). */
+.bm-panel > .segmented {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+/* Bài 24: the five stages of virus multiplication (bottom panel). */
+.virus-steps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-content);
+}
+.virus-steps__nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+}
+.virus-steps p {
+  margin: 0;
+}

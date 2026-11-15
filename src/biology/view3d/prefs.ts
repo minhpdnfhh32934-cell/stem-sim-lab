@@ -13,7 +13,14 @@ import { createJSONStorage, persist } from 'zustand/middleware';
  * enzyme" and "Khuếch tán & thẩm thấu" in their own stores (`view3d`).
  */
 export type Bio3DLesson =
-  'hardyWeinberg' | 'drift' | 'logistic' | 'lotkaVolterra' | 'cellToDna' | 'cellStructure';
+  | 'hardyWeinberg'
+  | 'drift'
+  | 'logistic'
+  | 'lotkaVolterra'
+  | 'cellToDna'
+  | 'cellStructure'
+  | 'biomolecules'
+  | 'virusStructure';
 
 export const BIO3D_LESSONS: readonly Bio3DLesson[] = [
   'hardyWeinberg',
@@ -22,6 +29,8 @@ export const BIO3D_LESSONS: readonly Bio3DLesson[] = [
   'lotkaVolterra',
   'cellToDna',
   'cellStructure',
+  'biomolecules',
+  'virusStructure',
 ];
 
 interface Bio3DPrefs {

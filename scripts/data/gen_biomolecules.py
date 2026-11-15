@@ -35,7 +35,7 @@ PUG = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/{}/property/Title,
 MOLECULES = [
     ("glucose", "carbohydrate", "Glucose (β-D-glucose, dạng vòng)", "β-D-Glucose (ring form)", 64689,
      "Beta-D-Glucose", "C([C@@H]1[C@H]([C@@H]([C@H]([C@@H](O1)O)O)O)O)O", "C6H12O6"),
-    ("palmitic", "lipid", "Acid palmitic (acid béo no, 16 C)", "Palmitic acid (saturated fatty acid, 16 C)", 985,
+    ("palmitic", "lipid", "Acid palmitic: acid béo bão hoà (acid béo no)", "Palmitic acid: a saturated fatty acid", 985,
      "Palmitic Acid", "CCCCCCCCCCCCCCCC(=O)O", "C16H32O2"),
     ("glycerol", "lipid", "Glycerol", "Glycerol", 753,
      "Glycerol", "C(C(CO)O)O", "C3H8O3"),
