@@ -64,19 +64,28 @@ export const CATALOG: Record<Subject, ChapterEntry[]> = {
     chapter('gravitation', ['keplerOrbit']),
   ],
   chemistry: [
-    chapter('atoms', ['periodicTable', 'electronConfiguration', 'bohrModel', 'orbitals']),
+    chapter('atoms', [
+      'atomComposition',
+      'isotopes',
+      'periodicTable',
+      'electronConfiguration',
+      'bohrModel',
+      'orbitals',
+    ]),
     chapter('molecules', ['molecule3d', 'vsepr', 'bondPolarity']),
     chapter('reactions', ['reactionLibrary', 'equationBalancing', 'acidBaseTitration']),
     chapter('particles', ['collisionTheory', 'maxwellBoltzmann', 'chemicalEquilibrium']),
     chapter('crystals', ['crystalStructure']),
   ],
   biology: [
+    chapter('cellChemistry', ['cellElements', 'biomolecules']),
     chapter('cell', ['mitosis', 'meiosis']),
     chapter('molecular', ['centralDogma', 'pointMutation']),
     chapter('genetics', ['mendel', 'hardyWeinberg', 'geneticDrift']),
     chapter('ecology', ['logisticGrowth', 'lotkaVolterra']),
     chapter('cellPhysiology', ['michaelisMenten', 'diffusionOsmosis']),
     chapter('cellStructure', ['cellStructure', 'cellToDna']),
+    chapter('microbesViruses', ['microbeGrowth', 'virusStructure']),
   ],
 };
 

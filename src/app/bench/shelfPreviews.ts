@@ -9,6 +9,8 @@ import { hasScene } from '@/physics/registry';
  */
 export const SHELF_PREVIEWS: ReadonlySet<string> = new Set([
   'fourierSeries',
+  'atomComposition',
+  'isotopes',
   'periodicTable',
   'electronConfiguration',
   'bohrModel',
@@ -36,6 +38,10 @@ export const SHELF_PREVIEWS: ReadonlySet<string> = new Set([
   'diffusionOsmosis',
   'cellStructure',
   'cellToDna',
+  'cellElements',
+  'biomolecules',
+  'microbeGrowth',
+  'virusStructure',
 ]);
 
 /** The picture of `topic` in `theme`, or null when it has none. */

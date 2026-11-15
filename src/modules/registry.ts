@@ -4,6 +4,8 @@ import type { ModuleView } from './types';
 const MODULES: Record<string, () => Promise<ModuleView>> = {
   // Chemistry (Phase 4)
   periodicTable: () => import('@/chemistry/periodic/module').then((m) => m.default),
+  atomComposition: () => import('@/chemistry/nuclide/modules').then((m) => m.atomComposition),
+  isotopes: () => import('@/chemistry/nuclide/modules').then((m) => m.isotopes),
   electronConfiguration: () =>
     import('@/chemistry/atom/modules').then((m) => m.electronConfiguration),
   bohrModel: () => import('@/chemistry/atom/modules').then((m) => m.bohrModel),
@@ -32,6 +34,11 @@ const MODULES: Record<string, () => Promise<ModuleView>> = {
   diffusionOsmosis: () => import('@/biology/modules').then((m) => m.diffusionOsmosis),
   cellStructure: () => import('@/biology/modules').then((m) => m.cellStructure),
   cellToDna: () => import('@/biology/modules').then((m) => m.cellToDna),
+  // SH10 KNTT Bài 4, 5, 21, 24 (#255): their own chunk.
+  cellElements: () => import('@/biology/sh10Modules').then((m) => m.cellElements),
+  biomolecules: () => import('@/biology/sh10Modules').then((m) => m.biomolecules),
+  microbeGrowth: () => import('@/biology/sh10Modules').then((m) => m.microbeGrowth),
+  virusStructure: () => import('@/biology/sh10Modules').then((m) => m.virusStructure),
   crystalStructure: () => import('@/chemistry/crystal/modules').then((m) => m.crystalStructure),
   // Physics lesson with its own view (no time stepping): harmonics and Fourier series.
   fourierSeries: () => import('@/physics/fourier/modules').then((m) => m.fourierSeries),

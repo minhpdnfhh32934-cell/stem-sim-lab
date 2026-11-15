@@ -481,6 +481,8 @@ PLACEMENTS = [
     ("collisions", "VL10", [28, 29], "Tên Bài 28–29: động lượng và định luật bảo toàn động lượng."),
     ("springPendulum", "VL11", [1, 2, 3, 5, 6], "Tên Bài 1–3, 5: dao động điều hoà, vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng)."),
     ("simplePendulum", "VL11", [1, 2, 3, 5, 6], "Tên Bài 1–3, 5: dao động điều hoà (con lắc đơn dao động điều hoà khi góc nhỏ), vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng)."),
+    ("atomComposition", "HH10", [1], "Tên Bài 1: thành phần của nguyên tử (cảnh chọn số proton, neutron, electron: nguyên tố, số khối, điện tích, khối lượng các hạt, kích thước hạt nhân so với nguyên tử)."),
+    ("isotopes", "HH10", [2], "Tên Bài 2: nguyên tố hoá học (cảnh chọn một nguyên tố: các đồng vị tự nhiên, nguyên tử khối trung bình, bài toán ngược tìm phần trăm hai đồng vị)."),
     ("periodicTable", "HH10", [5, 6, 8], "Tên Bài 5, 6, 8: cấu tạo bảng tuần hoàn, xu hướng biến đổi tính chất, định luật tuần hoàn."),
     ("electronConfiguration", "HH10", [3], "Tên Bài 3: cấu trúc lớp vỏ electron nguyên tử."),
     ("orbitals", "HH10", [3], "Tên Bài 3: cấu trúc lớp vỏ electron nguyên tử."),
@@ -504,6 +506,10 @@ PLACEMENTS = [
     ("cellToDna", "SH12", [7], "Tên Bài 7: cấu trúc và chức năng của nhiễm sắc thể (cấp NST kép, sợi nhiễm sắc, nucleosome, DNA)."),
     ("crystalStructure", "HH12", [18], "Tên Bài 18: cấu tạo và liên kết trong tinh thể kim loại (cảnh có thêm tinh thể NaCl; Bài 11 Hoá học 10 tên là liên kết ion, không nêu tinh thể nên không xếp)."),
     ("forcedOscillation", "VL11", [6], "Tên Bài 6: dao động tắt dần, dao động cưỡng bức, hiện tượng cộng hưởng (cảnh lò xo nằm ngang có cản và ngoại lực điều hoà)."),
+    ("cellElements", "SH10", [4], "Tên Bài 4: các nguyên tố hoá học và nước (cảnh: tỉ lệ khối lượng các nguyên tố trong cơ thể người theo H 4.1, vai trò nguyên tố đa lượng, vi lượng, carbon; nhiệt dung riêng và nhiệt bay hơi của nước)."),
+    ("biomolecules", "SH10", [5], "Tên Bài 5: các phân tử sinh học (bốn nhóm carbohydrate, lipid, protein, nucleic acid; đơn phân; mỗi nhóm một phân tử 3D lấy từ PubChem)."),
+    ("microbeGrowth", "SH10", [21], "Tên Bài 21: trao đổi chất, sinh trưởng và sinh sản ở vi sinh vật. Chỉ phần II sinh trưởng của quần thể vi khuẩn (Nₜ = N₀ × 2ⁿ, bốn pha nuôi cấy không liên tục); chưa có phần trao đổi chất và sinh sản."),
+    ("virusStructure", "SH10", [24], "Tên Bài 24: khái quát về virus (cấu tạo: lõi nucleic acid, vỏ capsid, vỏ ngoài; năm giai đoạn nhân lên)."),
 ]
 
 # Not placed (title not clear, or no lesson): (topic, subject, candidates, reason).

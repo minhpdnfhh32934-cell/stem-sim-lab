@@ -2,6 +2,8 @@ import { expect, test, type Page } from '@playwright/test';
 import { openLab } from './nav';
 
 const TOPICS = [
+  'Thành phần của nguyên tử',
+  'Nguyên tố hóa học và đồng vị',
   'Bảng tuần hoàn',
   'Cấu hình electron',
   'Mô hình Bohr',

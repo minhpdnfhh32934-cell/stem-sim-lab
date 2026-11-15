@@ -28,6 +28,8 @@ const only = arg('--only')?.split(',') ?? null;
 /** Every topic without a physics engine frame; src/app/bench/TopicPicture.test.tsx checks it. */
 const TOPICS = [
   'fourierSeries',
+  'atomComposition',
+  'isotopes',
   'periodicTable',
   'electronConfiguration',
   'bohrModel',
@@ -55,6 +57,10 @@ const TOPICS = [
   'diffusionOsmosis',
   'cellStructure',
   'cellToDna',
+  'cellElements',
+  'biomolecules',
+  'microbeGrowth',
+  'virusStructure',
 ];
 const THEMES = ['light', 'dark'];
 /** 480 px wide: twice a card's 242 px preview, sharp on a 2× screen, about 10–20 KB each. */
@@ -99,24 +105,30 @@ function stopServer(child) {
   else child.kill('SIGTERM');
 }
 
-/** Opens `topic` from the shelf and waits until its stage has drawn (3D views settle too). */
+/**
+ * Where the lab draws a topic: the bench's stage, or the classic window's module stage (the app's
+ * only shell again since #263, which no longer shows the bench).
+ */
+const STAGE = 'main.bench__stage, section.stage--module';
+
+/** Opens `topic` in the lab and waits until its stage has drawn (3D views settle too). */
 async function openTopic(page, topic) {
   await page.goto('/');
   await page.getByRole('button', { name: /Virtual Lab/ }).click();
-  await page.locator('.shelf-card').first().waitFor({ timeout: 30_000 });
+  await page.locator('.shelf-card, .shell__body').first().waitFor({ timeout: 30_000 });
   await page.evaluate(async (id) => {
     const { openTopic: open } = await import(/* @vite-ignore */ '/src/app/topics.ts');
     await open(id);
   }, topic);
-  const stage = page.locator('main.bench__stage');
+  const stage = page.locator(STAGE);
   await stage.waitFor({ timeout: 30_000 });
   // A lazy module compiles on its first visit to the dev server (up to 20 s).
   await page.waitForFunction(
-    () => {
-      const s = document.querySelector('main.bench__stage');
+    (selector) => {
+      const s = document.querySelector(selector);
       return !!s && !s.querySelector('.stage__skeleton') && s.childElementCount > 0;
     },
-    null,
+    STAGE,
     { timeout: 30_000 },
   );
   // The pointer left over from the shelf would show a hover tooltip on the stage.

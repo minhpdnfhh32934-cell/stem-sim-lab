@@ -34,13 +34,13 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Vật lí 10 | 34 | 26 | 26 |
 | Vật lí 11 | 26 | 20 | 13 |
 | Vật lí 12 | 25 | 21 | 0 |
-| Hoá học 10 | 23 | 16 | 5 |
+| Hoá học 10 | 23 | 16 | 7 |
 | Hoá học 11 | 25 | 19 | 1 |
 | Hoá học 12 | 30 | 22 | 1 |
-| Sinh học 10 | 26 | 17 | 5 |
+| Sinh học 10 | 26 | 17 | 9 |
 | Sinh học 11 | 29 | 20 | 0 |
 | Sinh học 12 | 35 | 28 | 7 |
-| **Cộng** | **253** | **189** | **58** |
+| **Cộng** | **253** | **189** | **64** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -142,8 +142,8 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Vật lí 12 | Chương IV. Vật lí hạt nhân | 24 | Công nghiệp hạt nhân | 114 | Lí thuyết | chưa có |  | pending |
 | Vật lí 12 | Chương IV. Vật lí hạt nhân | 25 | Bài tập về vật lí hạt nhân | 119 | Bài tập | chưa có |  | pending |
 | Hoá học 10 | Mở đầu |  | Mở đầu | 6 | Mở đầu môn học | chưa có |  | pending |
-| Hoá học 10 | Chương 1. Cấu tạo nguyên tử | 1 | Thành phần của nguyên tử | 13 | Lí thuyết | chưa có |  | pending |
-| Hoá học 10 | Chương 1. Cấu tạo nguyên tử | 2 | Nguyên tố hoá học | 17 | Lí thuyết | chưa có |  | pending |
+| Hoá học 10 | Chương 1. Cấu tạo nguyên tử | 1 | Thành phần của nguyên tử | 13 | Lí thuyết | Thành phần của nguyên tử | Tên Bài 1: thành phần của nguyên tử (cảnh chọn số proton, neutron, electron: nguyên tố, số khối, điện tích, khối lượng các hạt, kích thước hạt nhân so với nguyên tử). | pending |
+| Hoá học 10 | Chương 1. Cấu tạo nguyên tử | 2 | Nguyên tố hoá học | 17 | Lí thuyết | Nguyên tố hóa học và đồng vị | Tên Bài 2: nguyên tố hoá học (cảnh chọn một nguyên tố: các đồng vị tự nhiên, nguyên tử khối trung bình, bài toán ngược tìm phần trăm hai đồng vị). | pending |
 | Hoá học 10 | Chương 1. Cấu tạo nguyên tử | 3 | Cấu trúc lớp vỏ electron nguyên tử | 21 | Lí thuyết | Cấu hình electron, Hình dạng orbital | Tên Bài 3: cấu trúc lớp vỏ electron nguyên tử. | pending |
 | Hoá học 10 | Chương 1. Cấu tạo nguyên tử | 4 | Ôn tập chương 1 | 26 | Ôn tập | chưa có |  | pending |
 | Hoá học 10 | Chương 2. Bảng tuần hoàn các nguyên tố hoá học và định luật tuần hoàn | 5 | Cấu tạo của bảng tuần hoàn các nguyên tố hoá học | 30 | Lí thuyết | Bảng tuần hoàn | Tên Bài 5, 6, 8: cấu tạo bảng tuần hoàn, xu hướng biến đổi tính chất, định luật tuần hoàn. | pending |
@@ -223,8 +223,8 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Sinh học 10 | Phần mở đầu | 1 | Giới thiệu khái quát môn Sinh học | 5 | Mở đầu môn học | chưa có |  | pending |
 | Sinh học 10 | Phần mở đầu | 2 | Phương pháp nghiên cứu và học tập môn Sinh học | 12 | Mở đầu môn học | chưa có |  | pending |
 | Sinh học 10 | Phần mở đầu | 3 | Các cấp độ tổ chức của thế giới sống | 18 | Lí thuyết | chưa có |  | pending |
-| Sinh học 10 | Chương 1. Thành phần hoá học của tế bào | 4 | Các nguyên tố hoá học và nước | 23 | Lí thuyết | chưa có |  | pending |
-| Sinh học 10 | Chương 1. Thành phần hoá học của tế bào | 5 | Các phân tử sinh học | 28 | Lí thuyết | chưa có |  | pending |
+| Sinh học 10 | Chương 1. Thành phần hoá học của tế bào | 4 | Các nguyên tố hoá học và nước | 23 | Lí thuyết | Các nguyên tố hóa học và nước | Tên Bài 4: các nguyên tố hoá học và nước (cảnh: tỉ lệ khối lượng các nguyên tố trong cơ thể người theo H 4.1, vai trò nguyên tố đa lượng, vi lượng, carbon; nhiệt dung riêng và nhiệt bay hơi của nước). | pending |
+| Sinh học 10 | Chương 1. Thành phần hoá học của tế bào | 5 | Các phân tử sinh học | 28 | Lí thuyết | Các phân tử sinh học | Tên Bài 5: các phân tử sinh học (bốn nhóm carbohydrate, lipid, protein, nucleic acid; đơn phân; mỗi nhóm một phân tử 3D lấy từ PubChem). | pending |
 | Sinh học 10 | Chương 1. Thành phần hoá học của tế bào | 6 | Thực hành: Nhận biết một số phân tử sinh học | 41 | Thực hành | chưa có |  | pending |
 | Sinh học 10 | Chương 2. Cấu trúc tế bào | 7 | Tế bào nhân sơ | 44 | Lí thuyết | Tế bào nhân sơ và nhân thực | Tên Bài 7–8: tế bào nhân sơ và tế bào nhân thực. | pending |
 | Sinh học 10 | Chương 2. Cấu trúc tế bào | 8 | Tế bào nhân thực | 48 | Lí thuyết | Tế bào nhân sơ và nhân thực, Từ tế bào đến DNA | Tế bào nhân sơ và nhân thực: Tên Bài 7–8: tế bào nhân sơ và tế bào nhân thực. Từ tế bào đến DNA: Tên Bài 8: tế bào nhân thực (cấp tế bào và nhân của bài phóng to). Không xếp Bài 7 (tế bào nhân sơ): bài chỉ có tế bào nhân thực, dù thang kích thước H 7.1 của Bài 7 là một nguồn số liệu. | pending |
@@ -240,10 +240,10 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Sinh học 10 | Chương 5. Chu kì tế bào và phân bào | 18 | Thực hành: Làm và quan sát tiêu bản quá trình nguyên phân và giảm phân | 108 | Thực hành | chưa có |  | pending |
 | Sinh học 10 | Chương 5. Chu kì tế bào và phân bào | 19 | Công nghệ tế bào | 110 | Lí thuyết | chưa có |  | pending |
 | Sinh học 10 | Chương 6. Sinh học vi sinh vật | 20 | Sự đa dạng và phương pháp nghiên cứu vi sinh vật | 116 | Lí thuyết | chưa có |  | pending |
-| Sinh học 10 | Chương 6. Sinh học vi sinh vật | 21 | Trao đổi chất, sinh trưởng và sinh sản ở vi sinh vật | 122 | Lí thuyết | chưa có |  | pending |
+| Sinh học 10 | Chương 6. Sinh học vi sinh vật | 21 | Trao đổi chất, sinh trưởng và sinh sản ở vi sinh vật | 122 | Lí thuyết | Sinh trưởng của quần thể vi khuẩn | Tên Bài 21: trao đổi chất, sinh trưởng và sinh sản ở vi sinh vật. Chỉ phần II sinh trưởng của quần thể vi khuẩn (Nₜ = N₀ × 2ⁿ, bốn pha nuôi cấy không liên tục); chưa có phần trao đổi chất và sinh sản. | pending |
 | Sinh học 10 | Chương 6. Sinh học vi sinh vật | 22 | Vai trò và ứng dụng của vi sinh vật | 131 | Lí thuyết | chưa có |  | pending |
 | Sinh học 10 | Chương 6. Sinh học vi sinh vật | 23 | Thực hành: Một số phương pháp nghiên cứu vi sinh vật thông dụng, tìm hiểu về các sản phẩm công nghệ vi sinh vật và làm một số sản phẩm lên men từ vi sinh vật | 138 | Thực hành | chưa có |  | pending |
-| Sinh học 10 | Chương 7. Virus | 24 | Khái quát về virus | 141 | Lí thuyết | chưa có |  | pending |
+| Sinh học 10 | Chương 7. Virus | 24 | Khái quát về virus | 141 | Lí thuyết | Khái quát về virus | Tên Bài 24: khái quát về virus (cấu tạo: lõi nucleic acid, vỏ capsid, vỏ ngoài; năm giai đoạn nhân lên). | pending |
 | Sinh học 10 | Chương 7. Virus | 25 | Một số bệnh do virus và các thành tựu nghiên cứu ứng dụng virus | 145 | Lí thuyết | chưa có |  | pending |
 | Sinh học 10 | Chương 7. Virus | 26 | Thực hành: Điều tra một số bệnh do virus và tuyên truyền phòng chống bệnh | 155 | Thực hành | chưa có |  | pending |
 | Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 1 | Khái quát về trao đổi chất và chuyển hoá năng lượng | 5 | Lí thuyết | chưa có |  | pending |

@@ -1,0 +1,2052 @@
+{
+ "dataset": "isotopes",
+ "version": 1,
+ "source": {
+  "id": "mendeleev-isotopes",
+  "citation": "mendeleev 1.3.0 (L. M. Mentel), Isotope table: masses from IUPAC-CIAAW Atomic masses (2021), natural abundances from NUBASE2020 (Kondev et al., Chinese Physics C 45, 030001, 2021)",
+  "url": "https://mendeleev.readthedocs.io/en/stable/data.html"
+ },
+ "references": [
+  {
+   "id": "ciaaw-atomic-masses",
+   "citation": "IUPAC-CIAAW, Atomic masses (data file last updated 17 March 2021; accessed by mendeleev on 25 September 2022): isotope masses",
+   "url": "https://ciaaw.org/atomic-masses.htm"
+  },
+  {
+   "id": "nubase2020",
+   "citation": "F.G. Kondev, M. Wang, W.J. Huang, S. Naimi, G. Audi, The NUBASE2020 evaluation of nuclear physics properties, Chinese Physics C 45(3), 030001 (2021): natural abundances",
+   "url": "https://doi.org/10.1088/1674-1137/abddae"
+  }
+ ],
+ "generated_by": "scripts/data/gen_isotopes.py",
+ "items": [
+  {
+   "z": 1,
+   "symbol": "H",
+   "isotopes": [
+    {
+     "a": 1,
+     "mass_u": 1.007825031898,
+     "abundance_pct": 99.9855
+    },
+    {
+     "a": 2,
+     "mass_u": 2.014101777844,
+     "abundance_pct": 0.0145
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 2,
+   "symbol": "He",
+   "isotopes": [
+    {
+     "a": 3,
+     "mass_u": 3.01602932197,
+     "abundance_pct": 0.0002
+    },
+    {
+     "a": 4,
+     "mass_u": 4.00260325413,
+     "abundance_pct": 99.9998
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 3,
+   "symbol": "Li",
+   "isotopes": [
+    {
+     "a": 6,
+     "mass_u": 6.01512288742,
+     "abundance_pct": 4.85
+    },
+    {
+     "a": 7,
+     "mass_u": 7.01600343426,
+     "abundance_pct": 95.15
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 4,
+   "symbol": "Be",
+   "isotopes": [
+    {
+     "a": 9,
+     "mass_u": 9.012183062,
+     "abundance_pct": 100.0
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 5,
+   "symbol": "B",
+   "isotopes": [
+    {
+     "a": 10,
+     "mass_u": 10.012936862,
+     "abundance_pct": 19.65
+    },
+    {
+     "a": 11,
+     "mass_u": 11.009305166,
+     "abundance_pct": 80.35
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 6,
+   "symbol": "C",
+   "isotopes": [
+    {
+     "a": 12,
+     "mass_u": 12.0,
+     "abundance_pct": 98.94
+    },
+    {
+     "a": 13,
+     "mass_u": 13.00335483534,
+     "abundance_pct": 1.06
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 7,
+   "symbol": "N",
+   "isotopes": [
+    {
+     "a": 14,
+     "mass_u": 14.00307400425,
+     "abundance_pct": 99.6205
+    },
+    {
+     "a": 15,
+     "mass_u": 15.00010889827,
+     "abundance_pct": 0.3795
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 8,
+   "symbol": "O",
+   "isotopes": [
+    {
+     "a": 16,
+     "mass_u": 15.99491461926,
+     "abundance_pct": 99.757
+    },
+    {
+     "a": 17,
+     "mass_u": 16.99913175595,
+     "abundance_pct": 0.03835
+    },
+    {
+     "a": 18,
+     "mass_u": 17.99915961214,
+     "abundance_pct": 0.2045
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 9,
+   "symbol": "F",
+   "isotopes": [
+    {
+     "a": 19,
+     "mass_u": 18.99840316207,
+     "abundance_pct": 100.0
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 10,
+   "symbol": "Ne",
+   "isotopes": [
+    {
+     "a": 20,
+     "mass_u": 19.99244017525,
+     "abundance_pct": 90.48
+    },
+    {
+     "a": 21,
+     "mass_u": 20.993846685,
+     "abundance_pct": 0.27
+    },
+    {
+     "a": 22,
+     "mass_u": 21.991385113,
+     "abundance_pct": 9.25
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 11,
+   "symbol": "Na",
+   "isotopes": [
+    {
+     "a": 23,
+     "mass_u": 22.98976928195,
+     "abundance_pct": 100.0
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 12,
+   "symbol": "Mg",
+   "isotopes": [
+    {
+     "a": 24,
+     "mass_u": 23.985041689,
+     "abundance_pct": 78.965
+    },
+    {
+     "a": 25,
+     "mass_u": 24.985836966,
+     "abundance_pct": 10.011
+    },
+    {
+     "a": 26,
+     "mass_u": 25.982592972,
+     "abundance_pct": 11.025
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 13,
+   "symbol": "Al",
+   "isotopes": [
+    {
+     "a": 27,
+     "mass_u": 26.981538408,
+     "abundance_pct": 100.0
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 14,
+   "symbol": "Si",
+   "isotopes": [
+    {
+     "a": 28,
+     "mass_u": 27.97692653442,
+     "abundance_pct": 92.2545
+    },
+    {
+     "a": 29,
+     "mass_u": 28.97649466434,
+     "abundance_pct": 4.672
+    },
+    {
+     "a": 30,
+     "mass_u": 29.973770137,
+     "abundance_pct": 3.0735
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 15,
+   "symbol": "P",
+   "isotopes": [
+    {
+     "a": 31,
+     "mass_u": 30.97376199768,
+     "abundance_pct": 100.0
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 16,
+   "symbol": "S",
+   "isotopes": [
+    {
+     "a": 32,
+     "mass_u": 31.97207117354,
+     "abundance_pct": 94.85
+    },
+    {
+     "a": 33,
+     "mass_u": 32.97145890862,
+     "abundance_pct": 0.763
+    },
+    {
+     "a": 34,
+     "mass_u": 33.967867011,
+     "abundance_pct": 4.365
+    },
+    {
+     "a": 36,
+     "mass_u": 35.967080692,
+     "abundance_pct": 0.0158
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 17,
+   "symbol": "Cl",
+   "isotopes": [
+    {
+     "a": 35,
+     "mass_u": 34.968852694,
+     "abundance_pct": 75.8
+    },
+    {
+     "a": 37,
+     "mass_u": 36.965902573,
+     "abundance_pct": 24.2
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 18,
+   "symbol": "Ar",
+   "isotopes": [
+    {
+     "a": 36,
+     "mass_u": 35.967545106,
+     "abundance_pct": 0.3336
+    },
+    {
+     "a": 38,
+     "mass_u": 37.962732102,
+     "abundance_pct": 0.0629
+    },
+    {
+     "a": 40,
+     "mass_u": 39.96238312204,
+     "abundance_pct": 99.6035
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 19,
+   "symbol": "K",
+   "isotopes": [
+    {
+     "a": 39,
+     "mass_u": 38.96370648482,
+     "abundance_pct": 93.2581
+    },
+    {
+     "a": 40,
+     "mass_u": 39.963998165,
+     "abundance_pct": 0.0117
+    },
+    {
+     "a": 41,
+     "mass_u": 40.96182525611,
+     "abundance_pct": 6.7302
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 20,
+   "symbol": "Ca",
+   "isotopes": [
+    {
+     "a": 40,
+     "mass_u": 39.96259085,
+     "abundance_pct": 96.941
+    },
+    {
+     "a": 42,
+     "mass_u": 41.95861778,
+     "abundance_pct": 0.647
+    },
+    {
+     "a": 43,
+     "mass_u": 42.958766381,
+     "abundance_pct": 0.135
+    },
+    {
+     "a": 44,
+     "mass_u": 43.955481489,
+     "abundance_pct": 2.086
+    },
+    {
+     "a": 46,
+     "mass_u": 45.953687726,
+     "abundance_pct": 0.004
+    },
+    {
+     "a": 48,
+     "mass_u": 47.952522654,
+     "abundance_pct": 0.187
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 21,
+   "symbol": "Sc",
+   "isotopes": [
+    {
+     "a": 45,
+     "mass_u": 44.955907051,
+     "abundance_pct": 100.0
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 22,
+   "symbol": "Ti",
+   "isotopes": [
+    {
+     "a": 46,
+     "mass_u": 45.952626356,
+     "abundance_pct": 8.25
+    },
+    {
+     "a": 47,
+     "mass_u": 46.951757491,
+     "abundance_pct": 7.44
+    },
+    {
+     "a": 48,
+     "mass_u": 47.947940677,
+     "abundance_pct": 73.72
+    },
+    {
+     "a": 49,
+     "mass_u": 48.947864391,
+     "abundance_pct": 5.41
+    },
+    {
+     "a": 50,
+     "mass_u": 49.944785622,
+     "abundance_pct": 5.18
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 23,
+   "symbol": "V",
+   "isotopes": [
+    {
+     "a": 50,
+     "mass_u": 49.947156681,
+     "abundance_pct": 0.25
+    },
+    {
+     "a": 51,
+     "mass_u": 50.943957664,
+     "abundance_pct": 99.75
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 24,
+   "symbol": "Cr",
+   "isotopes": [
+    {
+     "a": 50,
+     "mass_u": 49.946042209,
+     "abundance_pct": 4.345
+    },
+    {
+     "a": 52,
+     "mass_u": 51.940504714,
+     "abundance_pct": 83.789
+    },
+    {
+     "a": 53,
+     "mass_u": 52.940646304,
+     "abundance_pct": 9.501
+    },
+    {
+     "a": 54,
+     "mass_u": 53.938877359,
+     "abundance_pct": 2.365
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 25,
+   "symbol": "Mn",
+   "isotopes": [
+    {
+     "a": 55,
+     "mass_u": 54.93804304,
+     "abundance_pct": 100.0
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 26,
+   "symbol": "Fe",
+   "isotopes": [
+    {
+     "a": 54,
+     "mass_u": 53.939608189,
+     "abundance_pct": 5.845
+    },
+    {
+     "a": 56,
+     "mass_u": 55.934935537,
+     "abundance_pct": 91.754
+    },
+    {
+     "a": 57,
+     "mass_u": 56.93539195,
+     "abundance_pct": 2.119
+    },
+    {
+     "a": 58,
+     "mass_u": 57.933273575,
+     "abundance_pct": 0.282
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 27,
+   "symbol": "Co",
+   "isotopes": [
+    {
+     "a": 59,
+     "mass_u": 58.933193524,
+     "abundance_pct": 100.0
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 28,
+   "symbol": "Ni",
+   "isotopes": [
+    {
+     "a": 58,
+     "mass_u": 57.93534165,
+     "abundance_pct": 68.0769
+    },
+    {
+     "a": 60,
+     "mass_u": 59.930785129,
+     "abundance_pct": 26.2231
+    },
+    {
+     "a": 61,
+     "mass_u": 60.931054819,
+     "abundance_pct": 1.1399
+    },
+    {
+     "a": 62,
+     "mass_u": 61.928344753,
+     "abundance_pct": 3.6345
+    },
+    {
+     "a": 64,
+     "mass_u": 63.927966228,
+     "abundance_pct": 0.9256
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 29,
+   "symbol": "Cu",
+   "isotopes": [
+    {
+     "a": 63,
+     "mass_u": 62.929597119,
+     "abundance_pct": 69.15
+    },
+    {
+     "a": 65,
+     "mass_u": 64.927789476,
+     "abundance_pct": 30.85
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 30,
+   "symbol": "Zn",
+   "isotopes": [
+    {
+     "a": 64,
+     "mass_u": 63.929141776,
+     "abundance_pct": 49.17
+    },
+    {
+     "a": 66,
+     "mass_u": 65.926033639,
+     "abundance_pct": 27.73
+    },
+    {
+     "a": 67,
+     "mass_u": 66.927127422,
+     "abundance_pct": 4.04
+    },
+    {
+     "a": 68,
+     "mass_u": 67.924844232,
+     "abundance_pct": 18.45
+    },
+    {
+     "a": 70,
+     "mass_u": 69.925319175,
+     "abundance_pct": 0.61
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 31,
+   "symbol": "Ga",
+   "isotopes": [
+    {
+     "a": 69,
+     "mass_u": 68.925573528,
+     "abundance_pct": 60.108
+    },
+    {
+     "a": 71,
+     "mass_u": 70.924702554,
+     "abundance_pct": 39.892
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 32,
+   "symbol": "Ge",
+   "isotopes": [
+    {
+     "a": 70,
+     "mass_u": 69.924248542,
+     "abundance_pct": 20.52
+    },
+    {
+     "a": 72,
+     "mass_u": 71.922075824,
+     "abundance_pct": 27.45
+    },
+    {
+     "a": 73,
+     "mass_u": 72.923458954,
+     "abundance_pct": 7.76
+    },
+    {
+     "a": 74,
+     "mass_u": 73.92117776,
+     "abundance_pct": 36.52
+    },
+    {
+     "a": 76,
+     "mass_u": 75.921402725,
+     "abundance_pct": 7.75
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 33,
+   "symbol": "As",
+   "isotopes": [
+    {
+     "a": 75,
+     "mass_u": 74.921594562,
+     "abundance_pct": 100.0
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 34,
+   "symbol": "Se",
+   "isotopes": [
+    {
+     "a": 74,
+     "mass_u": 73.922475933,
+     "abundance_pct": 0.86
+    },
+    {
+     "a": 76,
+     "mass_u": 75.919213702,
+     "abundance_pct": 9.23
+    },
+    {
+     "a": 77,
+     "mass_u": 76.91991415,
+     "abundance_pct": 7.6
+    },
+    {
+     "a": 78,
+     "mass_u": 77.917309244,
+     "abundance_pct": 23.69
+    },
+    {
+     "a": 80,
+     "mass_u": 79.916521761,
+     "abundance_pct": 49.8
+    },
+    {
+     "a": 82,
+     "mass_u": 81.916699531,
+     "abundance_pct": 8.82
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 35,
+   "symbol": "Br",
+   "isotopes": [
+    {
+     "a": 79,
+     "mass_u": 78.918337574,
+     "abundance_pct": 50.65
+    },
+    {
+     "a": 81,
+     "mass_u": 80.916288197,
+     "abundance_pct": 49.35
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 36,
+   "symbol": "Kr",
+   "isotopes": [
+    {
+     "a": 78,
+     "mass_u": 77.920366341,
+     "abundance_pct": 0.355
+    },
+    {
+     "a": 80,
+     "mass_u": 79.91637794,
+     "abundance_pct": 2.286
+    },
+    {
+     "a": 82,
+     "mass_u": 81.91348115368,
+     "abundance_pct": 11.593
+    },
+    {
+     "a": 83,
+     "mass_u": 82.914126516,
+     "abundance_pct": 11.5
+    },
+    {
+     "a": 84,
+     "mass_u": 83.91149772708,
+     "abundance_pct": 56.987
+    },
+    {
+     "a": 86,
+     "mass_u": 85.91061062468,
+     "abundance_pct": 17.279
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 37,
+   "symbol": "Rb",
+   "isotopes": [
+    {
+     "a": 85,
+     "mass_u": 84.91178973604,
+     "abundance_pct": 72.17
+    },
+    {
+     "a": 87,
+     "mass_u": 86.909180529,
+     "abundance_pct": 27.83
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 38,
+   "symbol": "Sr",
+   "isotopes": [
+    {
+     "a": 84,
+     "mass_u": 83.913419118,
+     "abundance_pct": 0.56
+    },
+    {
+     "a": 86,
+     "mass_u": 85.90926072473,
+     "abundance_pct": 9.86
+    },
+    {
+     "a": 87,
+     "mass_u": 86.90887749454,
+     "abundance_pct": 7.0
+    },
+    {
+     "a": 88,
+     "mass_u": 87.905612253,
+     "abundance_pct": 82.58
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 39,
+   "symbol": "Y",
+   "isotopes": [
+    {
+     "a": 89,
+     "mass_u": 88.905838156,
+     "abundance_pct": 100.0
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 40,
+   "symbol": "Zr",
+   "isotopes": [
+    {
+     "a": 90,
+     "mass_u": 89.904698755,
+     "abundance_pct": 51.45
+    },
+    {
+     "a": 91,
+     "mass_u": 90.905640205,
+     "abundance_pct": 11.22
+    },
+    {
+     "a": 92,
+     "mass_u": 91.905035336,
+     "abundance_pct": 17.15
+    },
+    {
+     "a": 94,
+     "mass_u": 93.906312523,
+     "abundance_pct": 17.38
+    },
+    {
+     "a": 96,
+     "mass_u": 95.908277615,
+     "abundance_pct": 2.8
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 41,
+   "symbol": "Nb",
+   "isotopes": [
+    {
+     "a": 93,
+     "mass_u": 92.90637317,
+     "abundance_pct": 100.0
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 42,
+   "symbol": "Mo",
+   "isotopes": [
+    {
+     "a": 92,
+     "mass_u": 91.906807153,
+     "abundance_pct": 14.649
+    },
+    {
+     "a": 94,
+     "mass_u": 93.905083586,
+     "abundance_pct": 9.187
+    },
+    {
+     "a": 95,
+     "mass_u": 94.905837436,
+     "abundance_pct": 15.873
+    },
+    {
+     "a": 96,
+     "mass_u": 95.90467477,
+     "abundance_pct": 16.673
+    },
+    {
+     "a": 97,
+     "mass_u": 96.906016903,
+     "abundance_pct": 9.582
+    },
+    {
+     "a": 98,
+     "mass_u": 97.905403609,
+     "abundance_pct": 24.292
+    },
+    {
+     "a": 100,
+     "mass_u": 99.907467982,
+     "abundance_pct": 9.744
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 44,
+   "symbol": "Ru",
+   "isotopes": [
+    {
+     "a": 96,
+     "mass_u": 95.90758891,
+     "abundance_pct": 5.54
+    },
+    {
+     "a": 98,
+     "mass_u": 97.905286709,
+     "abundance_pct": 1.87
+    },
+    {
+     "a": 99,
+     "mass_u": 98.905930284,
+     "abundance_pct": 12.76
+    },
+    {
+     "a": 100,
+     "mass_u": 99.90421046,
+     "abundance_pct": 12.6
+    },
+    {
+     "a": 101,
+     "mass_u": 100.905573086,
+     "abundance_pct": 17.06
+    },
+    {
+     "a": 102,
+     "mass_u": 101.904340312,
+     "abundance_pct": 31.55
+    },
+    {
+     "a": 104,
+     "mass_u": 103.905425312,
+     "abundance_pct": 18.62
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 45,
+   "symbol": "Rh",
+   "isotopes": [
+    {
+     "a": 103,
+     "mass_u": 102.905494081,
+     "abundance_pct": 100.0
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 46,
+   "symbol": "Pd",
+   "isotopes": [
+    {
+     "a": 102,
+     "mass_u": 101.905632292,
+     "abundance_pct": 1.02
+    },
+    {
+     "a": 104,
+     "mass_u": 103.904030393,
+     "abundance_pct": 11.14
+    },
+    {
+     "a": 105,
+     "mass_u": 104.905079479,
+     "abundance_pct": 22.33
+    },
+    {
+     "a": 106,
+     "mass_u": 105.903480287,
+     "abundance_pct": 27.33
+    },
+    {
+     "a": 108,
+     "mass_u": 107.903891806,
+     "abundance_pct": 26.46
+    },
+    {
+     "a": 110,
+     "mass_u": 109.905172878,
+     "abundance_pct": 11.72
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 47,
+   "symbol": "Ag",
+   "isotopes": [
+    {
+     "a": 107,
+     "mass_u": 106.905091509,
+     "abundance_pct": 51.839
+    },
+    {
+     "a": 109,
+     "mass_u": 108.904755778,
+     "abundance_pct": 48.161
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 48,
+   "symbol": "Cd",
+   "isotopes": [
+    {
+     "a": 106,
+     "mass_u": 105.906459791,
+     "abundance_pct": 1.245
+    },
+    {
+     "a": 108,
+     "mass_u": 107.904183588,
+     "abundance_pct": 0.888
+    },
+    {
+     "a": 110,
+     "mass_u": 109.90300747,
+     "abundance_pct": 12.47
+    },
+    {
+     "a": 111,
+     "mass_u": 110.904183776,
+     "abundance_pct": 12.795
+    },
+    {
+     "a": 112,
+     "mass_u": 111.902763896,
+     "abundance_pct": 24.109
+    },
+    {
+     "a": 113,
+     "mass_u": 112.904408105,
+     "abundance_pct": 12.227
+    },
+    {
+     "a": 114,
+     "mass_u": 113.903364998,
+     "abundance_pct": 28.754
+    },
+    {
+     "a": 116,
+     "mass_u": 115.90476323,
+     "abundance_pct": 7.512
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 49,
+   "symbol": "In",
+   "isotopes": [
+    {
+     "a": 113,
+     "mass_u": 112.904060451,
+     "abundance_pct": 4.281
+    },
+    {
+     "a": 115,
+     "mass_u": 114.903878772,
+     "abundance_pct": 95.719
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 50,
+   "symbol": "Sn",
+   "isotopes": [
+    {
+     "a": 112,
+     "mass_u": 111.904824894,
+     "abundance_pct": 0.97
+    },
+    {
+     "a": 114,
+     "mass_u": 113.90278013,
+     "abundance_pct": 0.66
+    },
+    {
+     "a": 115,
+     "mass_u": 114.903344695,
+     "abundance_pct": 0.34
+    },
+    {
+     "a": 116,
+     "mass_u": 115.901742825,
+     "abundance_pct": 14.54
+    },
+    {
+     "a": 117,
+     "mass_u": 116.902954036,
+     "abundance_pct": 7.68
+    },
+    {
+     "a": 118,
+     "mass_u": 117.90160663,
+     "abundance_pct": 24.22
+    },
+    {
+     "a": 119,
+     "mass_u": 118.903311266,
+     "abundance_pct": 8.59
+    },
+    {
+     "a": 120,
+     "mass_u": 119.902202557,
+     "abundance_pct": 32.58
+    },
+    {
+     "a": 122,
+     "mass_u": 121.903445494,
+     "abundance_pct": 4.63
+    },
+    {
+     "a": 124,
+     "mass_u": 123.905279619,
+     "abundance_pct": 5.79
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 51,
+   "symbol": "Sb",
+   "isotopes": [
+    {
+     "a": 121,
+     "mass_u": 120.903811353,
+     "abundance_pct": 57.21
+    },
+    {
+     "a": 123,
+     "mass_u": 122.904215292,
+     "abundance_pct": 42.79
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 52,
+   "symbol": "Te",
+   "isotopes": [
+    {
+     "a": 120,
+     "mass_u": 119.904065779,
+     "abundance_pct": 0.09
+    },
+    {
+     "a": 122,
+     "mass_u": 121.903044708,
+     "abundance_pct": 2.55
+    },
+    {
+     "a": 123,
+     "mass_u": 122.904271022,
+     "abundance_pct": 0.89
+    },
+    {
+     "a": 124,
+     "mass_u": 123.902818341,
+     "abundance_pct": 4.74
+    },
+    {
+     "a": 125,
+     "mass_u": 124.904431178,
+     "abundance_pct": 7.07
+    },
+    {
+     "a": 126,
+     "mass_u": 125.903312144,
+     "abundance_pct": 18.84
+    },
+    {
+     "a": 128,
+     "mass_u": 127.904461237,
+     "abundance_pct": 31.74
+    },
+    {
+     "a": 130,
+     "mass_u": 129.906222745,
+     "abundance_pct": 34.08
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 53,
+   "symbol": "I",
+   "isotopes": [
+    {
+     "a": 127,
+     "mass_u": 126.904472592,
+     "abundance_pct": 100.0
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 54,
+   "symbol": "Xe",
+   "isotopes": [
+    {
+     "a": 124,
+     "mass_u": 123.905885174,
+     "abundance_pct": 0.095
+    },
+    {
+     "a": 126,
+     "mass_u": 125.904297422,
+     "abundance_pct": 0.089
+    },
+    {
+     "a": 128,
+     "mass_u": 127.90353075341,
+     "abundance_pct": 1.91
+    },
+    {
+     "a": 129,
+     "mass_u": 128.90478085742,
+     "abundance_pct": 26.401
+    },
+    {
+     "a": 130,
+     "mass_u": 129.903509346,
+     "abundance_pct": 4.071
+    },
+    {
+     "a": 131,
+     "mass_u": 130.90508412808,
+     "abundance_pct": 21.232
+    },
+    {
+     "a": 132,
+     "mass_u": 131.90415508346,
+     "abundance_pct": 26.909
+    },
+    {
+     "a": 134,
+     "mass_u": 133.90539303,
+     "abundance_pct": 10.436
+    },
+    {
+     "a": 136,
+     "mass_u": 135.907214474,
+     "abundance_pct": 8.857
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 55,
+   "symbol": "Cs",
+   "isotopes": [
+    {
+     "a": 133,
+     "mass_u": 132.905451958,
+     "abundance_pct": 100.0
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 56,
+   "symbol": "Ba",
+   "isotopes": [
+    {
+     "a": 130,
+     "mass_u": 129.906326002,
+     "abundance_pct": 0.11
+    },
+    {
+     "a": 132,
+     "mass_u": 131.905061231,
+     "abundance_pct": 0.1
+    },
+    {
+     "a": 134,
+     "mass_u": 133.904508249,
+     "abundance_pct": 2.42
+    },
+    {
+     "a": 135,
+     "mass_u": 134.905688447,
+     "abundance_pct": 6.59
+    },
+    {
+     "a": 136,
+     "mass_u": 135.9045758,
+     "abundance_pct": 7.85
+    },
+    {
+     "a": 137,
+     "mass_u": 136.905827207,
+     "abundance_pct": 11.23
+    },
+    {
+     "a": 138,
+     "mass_u": 137.905247059,
+     "abundance_pct": 71.7
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 57,
+   "symbol": "La",
+   "isotopes": [
+    {
+     "a": 138,
+     "mass_u": 137.907124041,
+     "abundance_pct": 0.08881
+    },
+    {
+     "a": 139,
+     "mass_u": 138.906362927,
+     "abundance_pct": 99.91119
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 58,
+   "symbol": "Ce",
+   "isotopes": [
+    {
+     "a": 136,
+     "mass_u": 135.907129256,
+     "abundance_pct": 0.186
+    },
+    {
+     "a": 138,
+     "mass_u": 137.90599418,
+     "abundance_pct": 0.251
+    },
+    {
+     "a": 140,
+     "mass_u": 139.905448433,
+     "abundance_pct": 88.449
+    },
+    {
+     "a": 142,
+     "mass_u": 141.909250208,
+     "abundance_pct": 11.114
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 59,
+   "symbol": "Pr",
+   "isotopes": [
+    {
+     "a": 141,
+     "mass_u": 140.907659604,
+     "abundance_pct": 100.0
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 60,
+   "symbol": "Nd",
+   "isotopes": [
+    {
+     "a": 142,
+     "mass_u": 141.907728824,
+     "abundance_pct": 27.153
+    },
+    {
+     "a": 143,
+     "mass_u": 142.909819815,
+     "abundance_pct": 12.173
+    },
+    {
+     "a": 144,
+     "mass_u": 143.910092798,
+     "abundance_pct": 23.798
+    },
+    {
+     "a": 145,
+     "mass_u": 144.912579151,
+     "abundance_pct": 8.293
+    },
+    {
+     "a": 146,
+     "mass_u": 145.913122459,
+     "abundance_pct": 17.189
+    },
+    {
+     "a": 148,
+     "mass_u": 147.916899027,
+     "abundance_pct": 5.756
+    },
+    {
+     "a": 150,
+     "mass_u": 149.920901322,
+     "abundance_pct": 5.638
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 62,
+   "symbol": "Sm",
+   "isotopes": [
+    {
+     "a": 144,
+     "mass_u": 143.912006285,
+     "abundance_pct": 3.08
+    },
+    {
+     "a": 147,
+     "mass_u": 146.914904401,
+     "abundance_pct": 15.0
+    },
+    {
+     "a": 148,
+     "mass_u": 147.914829233,
+     "abundance_pct": 11.25
+    },
+    {
+     "a": 149,
+     "mass_u": 148.917191211,
+     "abundance_pct": 13.82
+    },
+    {
+     "a": 150,
+     "mass_u": 149.917281993,
+     "abundance_pct": 7.37
+    },
+    {
+     "a": 152,
+     "mass_u": 151.919738646,
+     "abundance_pct": 26.74
+    },
+    {
+     "a": 154,
+     "mass_u": 153.922215756,
+     "abundance_pct": 22.74
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 63,
+   "symbol": "Eu",
+   "isotopes": [
+    {
+     "a": 151,
+     "mass_u": 150.919856606,
+     "abundance_pct": 47.81
+    },
+    {
+     "a": 153,
+     "mass_u": 152.921236789,
+     "abundance_pct": 52.19
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 64,
+   "symbol": "Gd",
+   "isotopes": [
+    {
+     "a": 152,
+     "mass_u": 151.919798414,
+     "abundance_pct": 0.2
+    },
+    {
+     "a": 154,
+     "mass_u": 153.920872974,
+     "abundance_pct": 2.18
+    },
+    {
+     "a": 155,
+     "mass_u": 154.922629356,
+     "abundance_pct": 14.8
+    },
+    {
+     "a": 156,
+     "mass_u": 155.92213012,
+     "abundance_pct": 20.47
+    },
+    {
+     "a": 157,
+     "mass_u": 156.923967424,
+     "abundance_pct": 15.65
+    },
+    {
+     "a": 158,
+     "mass_u": 157.9241112,
+     "abundance_pct": 24.84
+    },
+    {
+     "a": 160,
+     "mass_u": 159.927061202,
+     "abundance_pct": 21.86
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 65,
+   "symbol": "Tb",
+   "isotopes": [
+    {
+     "a": 159,
+     "mass_u": 158.925353707,
+     "abundance_pct": 100.0
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 66,
+   "symbol": "Dy",
+   "isotopes": [
+    {
+     "a": 156,
+     "mass_u": 155.924283593,
+     "abundance_pct": 0.056
+    },
+    {
+     "a": 158,
+     "mass_u": 157.924414817,
+     "abundance_pct": 0.095
+    },
+    {
+     "a": 160,
+     "mass_u": 159.925203578,
+     "abundance_pct": 2.329
+    },
+    {
+     "a": 161,
+     "mass_u": 160.926939425,
+     "abundance_pct": 18.889
+    },
+    {
+     "a": 162,
+     "mass_u": 161.926804507,
+     "abundance_pct": 25.475
+    },
+    {
+     "a": 163,
+     "mass_u": 162.928737221,
+     "abundance_pct": 24.896
+    },
+    {
+     "a": 164,
+     "mass_u": 163.929180819,
+     "abundance_pct": 28.26
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 67,
+   "symbol": "Ho",
+   "isotopes": [
+    {
+     "a": 165,
+     "mass_u": 164.930329116,
+     "abundance_pct": 100.0
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 68,
+   "symbol": "Er",
+   "isotopes": [
+    {
+     "a": 162,
+     "mass_u": 161.928787299,
+     "abundance_pct": 0.139
+    },
+    {
+     "a": 164,
+     "mass_u": 163.929207739,
+     "abundance_pct": 1.601
+    },
+    {
+     "a": 166,
+     "mass_u": 165.930301067,
+     "abundance_pct": 33.503
+    },
+    {
+     "a": 167,
+     "mass_u": 166.932056192,
+     "abundance_pct": 22.869
+    },
+    {
+     "a": 168,
+     "mass_u": 167.932378282,
+     "abundance_pct": 26.978
+    },
+    {
+     "a": 170,
+     "mass_u": 169.935471933,
+     "abundance_pct": 14.91
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 69,
+   "symbol": "Tm",
+   "isotopes": [
+    {
+     "a": 169,
+     "mass_u": 168.934218956,
+     "abundance_pct": 100.0
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 70,
+   "symbol": "Yb",
+   "isotopes": [
+    {
+     "a": 168,
+     "mass_u": 167.933891297,
+     "abundance_pct": 0.123
+    },
+    {
+     "a": 170,
+     "mass_u": 169.934767242,
+     "abundance_pct": 2.982
+    },
+    {
+     "a": 171,
+     "mass_u": 170.936331515,
+     "abundance_pct": 14.086
+    },
+    {
+     "a": 172,
+     "mass_u": 171.936386654,
+     "abundance_pct": 21.686
+    },
+    {
+     "a": 173,
+     "mass_u": 172.938216211,
+     "abundance_pct": 16.103
+    },
+    {
+     "a": 174,
+     "mass_u": 173.938867545,
+     "abundance_pct": 32.025
+    },
+    {
+     "a": 176,
+     "mass_u": 175.942574706,
+     "abundance_pct": 12.995
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 71,
+   "symbol": "Lu",
+   "isotopes": [
+    {
+     "a": 175,
+     "mass_u": 174.940777211,
+     "abundance_pct": 97.401
+    },
+    {
+     "a": 176,
+     "mass_u": 175.942691711,
+     "abundance_pct": 2.599
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 72,
+   "symbol": "Hf",
+   "isotopes": [
+    {
+     "a": 174,
+     "mass_u": 173.940048377,
+     "abundance_pct": 0.16
+    },
+    {
+     "a": 176,
+     "mass_u": 175.941409797,
+     "abundance_pct": 5.26
+    },
+    {
+     "a": 177,
+     "mass_u": 176.943230187,
+     "abundance_pct": 18.6
+    },
+    {
+     "a": 178,
+     "mass_u": 177.943708322,
+     "abundance_pct": 27.28
+    },
+    {
+     "a": 179,
+     "mass_u": 178.945825705,
+     "abundance_pct": 13.62
+    },
+    {
+     "a": 180,
+     "mass_u": 179.946559537,
+     "abundance_pct": 35.08
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 73,
+   "symbol": "Ta",
+   "isotopes": [
+    {
+     "a": 181,
+     "mass_u": 180.947998528,
+     "abundance_pct": 99.98799
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 74,
+   "symbol": "W",
+   "isotopes": [
+    {
+     "a": 180,
+     "mass_u": 179.946713304,
+     "abundance_pct": 0.12
+    },
+    {
+     "a": 182,
+     "mass_u": 181.948205636,
+     "abundance_pct": 26.5
+    },
+    {
+     "a": 183,
+     "mass_u": 182.950224416,
+     "abundance_pct": 14.31
+    },
+    {
+     "a": 184,
+     "mass_u": 183.95093318,
+     "abundance_pct": 30.64
+    },
+    {
+     "a": 186,
+     "mass_u": 185.95436514,
+     "abundance_pct": 28.43
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 75,
+   "symbol": "Re",
+   "isotopes": [
+    {
+     "a": 185,
+     "mass_u": 184.95295832,
+     "abundance_pct": 37.4
+    },
+    {
+     "a": 187,
+     "mass_u": 186.955752217,
+     "abundance_pct": 62.6
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 76,
+   "symbol": "Os",
+   "isotopes": [
+    {
+     "a": 184,
+     "mass_u": 183.952492919,
+     "abundance_pct": 0.02
+    },
+    {
+     "a": 186,
+     "mass_u": 185.953837569,
+     "abundance_pct": 1.59
+    },
+    {
+     "a": 187,
+     "mass_u": 186.955749569,
+     "abundance_pct": 1.96
+    },
+    {
+     "a": 188,
+     "mass_u": 187.955837292,
+     "abundance_pct": 13.24
+    },
+    {
+     "a": 189,
+     "mass_u": 188.958145949,
+     "abundance_pct": 16.15
+    },
+    {
+     "a": 190,
+     "mass_u": 189.958445442,
+     "abundance_pct": 26.26
+    },
+    {
+     "a": 192,
+     "mass_u": 191.961478765,
+     "abundance_pct": 40.78
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 77,
+   "symbol": "Ir",
+   "isotopes": [
+    {
+     "a": 191,
+     "mass_u": 190.960591455,
+     "abundance_pct": 37.3
+    },
+    {
+     "a": 193,
+     "mass_u": 192.962923753,
+     "abundance_pct": 62.7
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 78,
+   "symbol": "Pt",
+   "isotopes": [
+    {
+     "a": 190,
+     "mass_u": 189.959949823,
+     "abundance_pct": 0.012
+    },
+    {
+     "a": 192,
+     "mass_u": 191.961042667,
+     "abundance_pct": 0.782
+    },
+    {
+     "a": 194,
+     "mass_u": 193.962683498,
+     "abundance_pct": 32.864
+    },
+    {
+     "a": 195,
+     "mass_u": 194.964794325,
+     "abundance_pct": 33.775
+    },
+    {
+     "a": 196,
+     "mass_u": 195.964954648,
+     "abundance_pct": 25.211
+    },
+    {
+     "a": 198,
+     "mass_u": 197.967896718,
+     "abundance_pct": 7.356
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 79,
+   "symbol": "Au",
+   "isotopes": [
+    {
+     "a": 197,
+     "mass_u": 196.966570103,
+     "abundance_pct": 100.0
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 80,
+   "symbol": "Hg",
+   "isotopes": [
+    {
+     "a": 196,
+     "mass_u": 195.965833445,
+     "abundance_pct": 0.15
+    },
+    {
+     "a": 198,
+     "mass_u": 197.966769177,
+     "abundance_pct": 10.04
+    },
+    {
+     "a": 199,
+     "mass_u": 198.968280994,
+     "abundance_pct": 16.94
+    },
+    {
+     "a": 200,
+     "mass_u": 199.968326941,
+     "abundance_pct": 23.14
+    },
+    {
+     "a": 201,
+     "mass_u": 200.970303054,
+     "abundance_pct": 13.17
+    },
+    {
+     "a": 202,
+     "mass_u": 201.970643604,
+     "abundance_pct": 29.74
+    },
+    {
+     "a": 204,
+     "mass_u": 203.973494037,
+     "abundance_pct": 6.82
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 81,
+   "symbol": "Tl",
+   "isotopes": [
+    {
+     "a": 203,
+     "mass_u": 202.972344098,
+     "abundance_pct": 29.515
+    },
+    {
+     "a": 205,
+     "mass_u": 204.974427318,
+     "abundance_pct": 70.485
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 82,
+   "symbol": "Pb",
+   "isotopes": [
+    {
+     "a": 204,
+     "mass_u": 203.973043506,
+     "abundance_pct": 1.4
+    },
+    {
+     "a": 206,
+     "mass_u": 205.97446521,
+     "abundance_pct": 24.1
+    },
+    {
+     "a": 207,
+     "mass_u": 206.975896821,
+     "abundance_pct": 22.1
+    },
+    {
+     "a": 208,
+     "mass_u": 207.976652005,
+     "abundance_pct": 52.4
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 83,
+   "symbol": "Bi",
+   "isotopes": [
+    {
+     "a": 209,
+     "mass_u": 208.980398599,
+     "abundance_pct": 100.0
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 90,
+   "symbol": "Th",
+   "isotopes": [
+    {
+     "a": 230,
+     "mass_u": 230.033132267,
+     "abundance_pct": 0.02
+    },
+    {
+     "a": 232,
+     "mass_u": 232.038053606,
+     "abundance_pct": 99.98
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 91,
+   "symbol": "Pa",
+   "isotopes": [
+    {
+     "a": 231,
+     "mass_u": 231.0358825,
+     "abundance_pct": 100.0
+    }
+   ],
+   "review_status": "pending"
+  },
+  {
+   "z": 92,
+   "symbol": "U",
+   "isotopes": [
+    {
+     "a": 234,
+     "mass_u": 234.040950296,
+     "abundance_pct": 0.0054
+    },
+    {
+     "a": 235,
+     "mass_u": 235.043928117,
+     "abundance_pct": 0.7204
+    },
+    {
+     "a": 238,
+     "mass_u": 238.050786936,
+     "abundance_pct": 99.2742
+    }
+   ],
+   "review_status": "pending"
+  }
+ ]
+}
