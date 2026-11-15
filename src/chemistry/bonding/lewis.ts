@@ -15,6 +15,8 @@ export interface LewisLayout {
   height: number;
   /** Electron groups of each atom (from `octetCounts`). */
   dots: DotGroup[][];
+  /** Direction of the formal-charge sign, clear of bonds and dots (null: no charge). */
+  chargeAngle: (number | null)[];
 }
 
 const BOND_PX = 72;
@@ -67,7 +69,8 @@ export function lewisLayout(m: Molecule): LewisLayout {
   const y0 = Math.min(...ys) - MARGIN;
   const points = xs.map((x, i) => ({ x: x - x0, y: (ys[i] ?? 0) - y0 }));
   const counts = octetCounts(m);
-  const dots = m.atoms.map((_, i) => {
+  const chargeAngle: (number | null)[] = [];
+  const dots = m.atoms.map((a, i) => {
     const here = points[i] ?? { x: 0, y: 0 };
     const bondAngles = m.bonds
       .filter((b) => b.a === i || b.b === i)
@@ -78,6 +81,7 @@ export function lewisLayout(m: Molecule): LewisLayout {
     const c = counts[i];
     if (!c) return [];
     const angles = placeGroups(bondAngles, c.lonePairs + c.unpaired);
+    chargeAngle[i] = a.charge ? (placeGroups([...bondAngles, ...angles], 1)[0] ?? 0) : null;
     return angles.map((angle, k): DotGroup => ({ angle, electrons: k < c.lonePairs ? 2 : 1 }));
   });
   return {
@@ -85,5 +89,6 @@ export function lewisLayout(m: Molecule): LewisLayout {
     width: Math.max(...xs) - x0 + MARGIN,
     height: Math.max(...ys) - y0 + MARGIN,
     dots,
+    chargeAngle,
   };
 }
