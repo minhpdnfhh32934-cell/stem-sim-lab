@@ -32,6 +32,9 @@ const ElementSchema = z.object({
   en_pauling: z.number().positive().nullable(),
   covalent_radius_pm: z.number().positive().nullable(),
   ionization_energy_ev: z.number().positive().nullable(),
+  /** At 101.325 kPa (CRC Handbook); null for several allotropes or a sublimation point. */
+  melting_point_k: z.number().positive().nullable(),
+  boiling_point_k: z.number().positive().nullable(),
   configuration: z.array(
     z.tuple([z.number().int().min(1), z.enum(['s', 'p', 'd', 'f']), z.number().int().min(1)]),
   ),

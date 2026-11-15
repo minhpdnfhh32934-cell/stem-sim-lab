@@ -34,13 +34,13 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Vật lí 10 | 34 | 26 | 26 |
 | Vật lí 11 | 26 | 20 | 13 |
 | Vật lí 12 | 25 | 21 | 0 |
-| Hoá học 10 | 23 | 16 | 11 |
+| Hoá học 10 | 23 | 16 | 16 |
 | Hoá học 11 | 25 | 19 | 1 |
 | Hoá học 12 | 30 | 22 | 1 |
 | Sinh học 10 | 26 | 17 | 9 |
 | Sinh học 11 | 29 | 20 | 0 |
 | Sinh học 12 | 35 | 28 | 7 |
-| **Cộng** | **253** | **189** | **68** |
+| **Cộng** | **253** | **189** | **73** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -148,7 +148,7 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Hoá học 10 | Chương 1. Cấu tạo nguyên tử | 4 | Ôn tập chương 1 | 26 | Ôn tập | chưa có |  | pending |
 | Hoá học 10 | Chương 2. Bảng tuần hoàn các nguyên tố hoá học và định luật tuần hoàn | 5 | Cấu tạo của bảng tuần hoàn các nguyên tố hoá học | 30 | Lí thuyết | Bảng tuần hoàn | Tên Bài 5, 6, 8: cấu tạo bảng tuần hoàn, xu hướng biến đổi tính chất, định luật tuần hoàn. | pending |
 | Hoá học 10 | Chương 2. Bảng tuần hoàn các nguyên tố hoá học và định luật tuần hoàn | 6 | Xu hướng biến đổi một số tính chất của nguyên tử các nguyên tố trong một chu kì và trong một nhóm | 34 | Lí thuyết | Bảng tuần hoàn | Tên Bài 5, 6, 8: cấu tạo bảng tuần hoàn, xu hướng biến đổi tính chất, định luật tuần hoàn. | pending |
-| Hoá học 10 | Chương 2. Bảng tuần hoàn các nguyên tố hoá học và định luật tuần hoàn | 7 | Xu hướng biến đổi thành phần và một số tính chất của hợp chất trong một chu kì | 40 | Lí thuyết | chưa có |  | pending |
+| Hoá học 10 | Chương 2. Bảng tuần hoàn các nguyên tố hoá học và định luật tuần hoàn | 7 | Xu hướng biến đổi thành phần và một số tính chất của hợp chất trong một chu kì | 40 | Lí thuyết | Oxide và hydroxide trong chu kì 3 | Tên Bài 7: xu hướng biến đổi thành phần và một số tính chất của hợp chất trong một chu kì (cảnh có oxide, hydroxide ứng với hoá trị cao nhất của chu kì 3 và tính acid – base theo Bảng 7.2). | pending |
 | Hoá học 10 | Chương 2. Bảng tuần hoàn các nguyên tố hoá học và định luật tuần hoàn | 8 | Định luật tuần hoàn. Ý nghĩa của bảng tuần hoàn các nguyên tố hoá học | 43 | Lí thuyết | Bảng tuần hoàn | Tên Bài 5, 6, 8: cấu tạo bảng tuần hoàn, xu hướng biến đổi tính chất, định luật tuần hoàn. | pending |
 | Hoá học 10 | Chương 2. Bảng tuần hoàn các nguyên tố hoá học và định luật tuần hoàn | 9 | Ôn tập chương 2 | 45 | Ôn tập | chưa có |  | pending |
 | Hoá học 10 | Chương 3. Liên kết hoá học | 10 | Quy tắc octet | 49 | Lí thuyết | Quy tắc octet | Tên Bài 10: quy tắc octet (cảnh đếm electron quanh mỗi nguyên tử của các phân tử, ion mẫu và tự tìm ngoại lệ). | pending |
@@ -156,14 +156,14 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Hoá học 10 | Chương 3. Liên kết hoá học | 12 | Liên kết cộng hoá trị | 55 | Lí thuyết | Liên kết cộng hóa trị | Tên Bài 12: liên kết cộng hoá trị (cảnh hiệu độ âm điện → loại liên kết theo Bảng 12.1, số liên kết σ và π). | pending |
 | Hoá học 10 | Chương 3. Liên kết hoá học | 13 | Liên kết hydrogen và tương tác van der Waals | 64 | Lí thuyết | Liên kết hydrogen và tương tác van der Waals | Tên Bài 13: liên kết hydrogen và tương tác van der Waals (cảnh nhiệt độ sôi các hydride nhóm IVA–VIIA theo chu kì). | pending |
 | Hoá học 10 | Chương 3. Liên kết hoá học | 14 | Ôn tập chương 3 | 68 | Ôn tập | chưa có |  | pending |
-| Hoá học 10 | Chương 4. Phản ứng oxi hoá – khử | 15 | Phản ứng oxi hoá – khử | 71 | Lí thuyết | chưa có |  | pending |
+| Hoá học 10 | Chương 4. Phản ứng oxi hoá – khử | 15 | Phản ứng oxi hoá – khử | 71 | Lí thuyết | Phản ứng oxi hoá – khử | Tên Bài 15: phản ứng oxi hoá – khử (cảnh có số oxi hoá theo quy tắc của bài, chất oxi hoá, chất khử, quá trình oxi hoá, quá trình khử, số electron trao đổi cho các phản ứng của thư viện). | pending |
 | Hoá học 10 | Chương 4. Phản ứng oxi hoá – khử | 16 | Ôn tập chương 4 | 78 | Ôn tập | chưa có |  | pending |
-| Hoá học 10 | Chương 5. Năng lượng hoá học | 17 | Biến thiên enthalpy trong các phản ứng hoá học | 81 | Lí thuyết | chưa có |  | pending |
+| Hoá học 10 | Chương 5. Năng lượng hoá học | 17 | Biến thiên enthalpy trong các phản ứng hoá học | 81 | Lí thuyết | Biến thiên enthalpy của phản ứng | Tên Bài 17: biến thiên enthalpy trong các phản ứng hoá học (cảnh tính ΔrH°298 theo nhiệt tạo thành, Bảng 17.1; chưa có phần tính theo năng lượng liên kết). | pending |
 | Hoá học 10 | Chương 5. Năng lượng hoá học | 18 | Ôn tập chương 5 | 89 | Ôn tập | chưa có |  | pending |
 | Hoá học 10 | Chương 6. Tốc độ phản ứng | 19 | Tốc độ phản ứng | 92 | Lí thuyết | Thuyết va chạm | Tên Bài 19: tốc độ phản ứng. | pending |
 | Hoá học 10 | Chương 6. Tốc độ phản ứng | 20 | Ôn tập chương 6 | 101 | Ôn tập | chưa có |  | pending |
-| Hoá học 10 | Chương 7. Nguyên tố nhóm halogen | 21 | Nhóm halogen | 104 | Lí thuyết | chưa có |  | pending |
-| Hoá học 10 | Chương 7. Nguyên tố nhóm halogen | 22 | Hydrogen halide · Muối halide | 112 | Lí thuyết | chưa có |  | pending |
+| Hoá học 10 | Chương 7. Nguyên tố nhóm halogen | 21 | Nhóm halogen | 104 | Lí thuyết | Nhóm halogen | Tên Bài 21: nhóm halogen (cảnh có cấu hình lớp ngoài cùng, bán kính, độ âm điện, năng lượng ion hoá, trạng thái, màu, nhiệt độ nóng chảy và sôi từ F đến I). | pending |
+| Hoá học 10 | Chương 7. Nguyên tố nhóm halogen | 22 | Hydrogen halide · Muối halide | 112 | Lí thuyết | Hydrogen halide · Muối halide | Tên Bài 22: hydrogen halide, muối halide (cảnh có độ dài, năng lượng liên kết H–X, nhiệt độ sôi, xu hướng tính acid; nhận biết ion halide chỉ có phản ứng tạo AgCl của thư viện). | pending |
 | Hoá học 10 | Chương 7. Nguyên tố nhóm halogen | 23 | Ôn tập chương 7 | 117 | Ôn tập | chưa có |  | pending |
 | Hoá học 11 | Chương 1. Cân bằng hoá học | 1 | Khái niệm về cân bằng hoá học | 6 | Lí thuyết | Cân bằng hóa học & Le Chatelier | Tên Bài 1: khái niệm về cân bằng hoá học. | pending |
 | Hoá học 11 | Chương 1. Cân bằng hoá học | 2 | Cân bằng trong dung dịch nước | 16 | Lí thuyết | chưa có |  | pending |
