@@ -22,7 +22,7 @@ import { guidedScenarios } from './lessons';
 import { sh10b03Levels } from './lessons/sh10b03Levels';
 import { sh10b20MicrobeDiversity } from './lessons/sh10b20MicrobeDiversity';
 
-/** Bài 3: an order activity, then a match activity. */
+/** Bài 3: an order activity, a match activity, then a sort activity. */
 const levels: StudioScenario = sh10b03Levels;
 const lb = guidedOf(levels);
 /** Bài 20: a sort activity, then a match activity. */
@@ -158,7 +158,11 @@ describe('checking a sheet', () => {
       review_status: 'pending',
     });
     // The prediction, one score per activity, one line per row.
-    expect(rec?.facts).toHaveLength(1 + 2 + order.items.length + match.pairs.length);
+    const rows = lb.activities.reduce(
+      (n, a) => n + (a.kind === 'match' ? a.pairs.length : a.items.length),
+      0,
+    );
+    expect(rec?.facts).toHaveLength(1 + lb.activities.length + rows);
     expect(rec?.facts?.find((f) => f.id === order.id)?.text.vi).toBe('Đúng 8/8');
     expect(rec?.facts?.find((f) => f.id === 'prediction')?.text.vi).toMatch(/^Đáp án: Tế bào\./);
     expect(checked.verdict).toMatchObject({ correct: 'te-bao', match: false });

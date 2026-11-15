@@ -101,8 +101,8 @@ describe('guided textbook lessons in the lab library', () => {
     for (const a of b.activities) await solve(user, a);
     expect(check).toBeEnabled();
     await user.click(check);
-    expect(screen.getByText(/^Em đúng 12\/12 ý\./)).toBeInTheDocument();
-    expect(screen.getAllByText('Đúng').length).toBe(12);
+    expect(screen.getByText(/^Em đúng 20\/20 ý\./)).toBeInTheDocument();
+    expect(screen.getAllByText('Đúng').length).toBe(20);
     // Changing an answer drops the check; putting it back and checking again restores it.
     const first = b.activities[0];
     if (first?.kind !== 'order') throw new Error('order first');
@@ -111,7 +111,7 @@ describe('guided textbook lessons in the lab library', () => {
     await user.click(screen.getByRole('button', { name: `Đưa lên: ${second.text.vi}` }));
     expect(next()).toBeDisabled();
     await user.click(screen.getByRole('button', { name: 'Kiểm tra' }));
-    expect(screen.getByText(/^Em đúng 10\/12 ý\./)).toBeInTheDocument();
+    expect(screen.getByText(/^Em đúng 18\/20 ý\./)).toBeInTheDocument();
     expect(screen.getAllByText(/^Chưa đúng\. Đáp án: vị trí/)).toHaveLength(2);
     await user.click(
       screen.getByRole('button', { name: `Đưa lên: ${first.items[0]?.text.vi ?? ''}` }),
@@ -156,11 +156,14 @@ describe('guided textbook lessons in the lab library', () => {
     const view = await loadModule('levelsOfLife');
     const state = view.state;
     if (!state) throw new Error('state');
-    const [order, match] = b.activities;
-    if (order?.kind !== 'order' || match?.kind !== 'match') throw new Error('activities');
+    const [order, match, sort] = b.activities;
+    if (order?.kind !== 'order' || match?.kind !== 'match' || sort?.kind !== 'sort') {
+      throw new Error('activities');
+    }
     const answers: Sheet = {
       [order.id]: orderAnswers(order.items.map((i) => i.id)),
       [match.id]: Object.fromEntries(match.pairs.map((p) => [p.id, p.id])),
+      [sort.id]: Object.fromEntries(sort.items.map((i) => [i.id, i.group])),
     };
     let changes = 0;
     const off = state.subscribe(() => {
