@@ -4,8 +4,9 @@ import { GUIDED_BASE, L } from './base';
 /**
  * SH10 KNTT Bài 12 "Truyền tin tế bào" (printed pages 73–77), in SimLab's own words. Checked
  * against the pages on 16/11/2026: four ways between cells (trực tiếp, cận tiết, nội tiết, qua
- * synapse) and three stages inside the cell (tiếp nhận, truyền tín hiệu, đáp ứng). Insulin as the
- * example hormone is basic biology the lesson does not state (said in `limits`). SH10-GL-2.
+ * synapse) and three stages inside the cell (tiếp nhận, truyền tín hiệu, đáp ứng). The prediction
+ * uses the book's own example of endocrine signalling (H 12.1c, p. 73: a hormone released into
+ * the blood reaches distant target cells); no example from outside the lesson. SH10-GL-2.
  */
 export const sh10b12Signalling: StudioScenario = {
   ...GUIDED_BASE,
@@ -17,8 +18,8 @@ export const sh10b12Signalling: StudioScenario = {
   ),
   objectives: [
     L(
-      'Dự đoán hormone insulin truyền tin theo cách nào.',
-      'Predict how the hormone insulin carries its signal.',
+      'Dự đoán một hormone theo máu tới tế bào ở xa là cách truyền tin nào.',
+      'Predict which kind of signalling a hormone carried by the blood to distant cells is.',
     ),
     L(
       'Xếp đúng thứ tự các bước truyền tin vào trong một tế bào.',
@@ -46,8 +47,8 @@ export const sh10b12Signalling: StudioScenario = {
     ),
   ],
   expectedConclusion: L(
-    'Các tế bào truyền tin cho nhau bằng nhiều cách: trực tiếp, cận tiết, nội tiết và qua synapse. Insulin theo máu đến những tế bào ở xa nên đó là truyền tin nội tiết. Trong tế bào nhận, tín hiệu đi qua ba giai đoạn: tiếp nhận (thụ thể gắn với tín hiệu), truyền tín hiệu (các phân tử lần lượt được hoạt hoá) và đáp ứng.',
-    'Cells signal to each other in several ways: direct contact, paracrine, endocrine and through a synapse. Insulin travels in the blood to distant cells, so it is endocrine signalling. In the receiving cell the signal goes through three stages: reception (a receptor binds the signal), transduction (molecules are switched on one after another) and response.',
+    'Các tế bào truyền tin cho nhau bằng nhiều cách: trực tiếp, cận tiết, nội tiết và qua synapse. Hormone được tiết vào máu và theo máu đến những tế bào đích ở xa nên đó là truyền tin nội tiết. Trong tế bào nhận, tín hiệu đi qua ba giai đoạn: tiếp nhận (thụ thể gắn với tín hiệu), truyền tín hiệu (các phân tử lần lượt được hoạt hoá) và đáp ứng.',
+    'Cells signal to each other in several ways: direct contact, paracrine, endocrine and through a synapse. A hormone released into the blood travels to distant target cells, so it is endocrine signalling. In the receiving cell the signal goes through three stages: reception (a receptor binds the signal), transduction (molecules are switched on one after another) and response.',
   ),
   sources: [],
   assumptions: [
@@ -58,16 +59,16 @@ export const sh10b12Signalling: StudioScenario = {
   ],
   limits: [
     L(
-      'Insulin do tuyến tuỵ tiết ra là kiến thức sinh học cơ sở dùng làm ví dụ; bài học trong sách không nêu điều này.',
-      'Insulin being released by the pancreas is basic biology used as an example; the textbook lesson does not state it.',
+      'Bài chỉ nêu bốn cách truyền tin chủ yếu giữa các tế bào trong cơ thể đa bào, như sách giáo khoa.',
+      'The lesson names only the four main ways cells of a multicellular body signal to each other, as the textbook does.',
     ),
   ],
   binding: {
     kind: 'guided',
     kntt: { book: 'SH10', lesson: 12 },
     question: L(
-      'Insulin là một hormone do tuyến tuỵ tiết vào máu, rồi theo máu đến tế bào gan, tế bào cơ ở xa. Theo em, đây là cách truyền tin nào?',
-      'Insulin is a hormone the pancreas releases into the blood; the blood carries it to liver and muscle cells far away. Which kind of signalling do you think this is?',
+      'Một tế bào tiết hormone vào máu, rồi máu đưa hormone tới những tế bào đích ở xa nơi tiết ra. Theo em, đây là cách truyền tin nào?',
+      'A cell releases a hormone into the blood, and the blood carries it to target cells far from where it was released. Which kind of signalling do you think this is?',
     ),
     choices: [
       { id: 'truc-tiep', text: L('Truyền tin trực tiếp', 'Direct signalling') },
