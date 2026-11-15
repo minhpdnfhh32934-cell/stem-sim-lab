@@ -187,7 +187,7 @@ export const sh10b19CellTechnology: StudioScenario = {
               'A hybrid plant with traits of two different species',
             ),
             why: L(
-              'Hai tế bào của hai loài được bỏ thành cellulose rồi hợp lại thành một tế bào lai, nuôi thành cây lai; cách lai thông thường không làm được như vậy.',
+              'Người ta loại bỏ lớp thành cellulose bao ngoài tế bào sinh dưỡng của hai loài, cho hai tế bào hợp lại thành một tế bào lai rồi nuôi thành cây lai; cách tạo giống thông thường không làm được như vậy.',
               'Cells of two species lose their cellulose walls and fuse into one hybrid cell that grows into a hybrid plant; ordinary crossing cannot do this.',
             ),
           },

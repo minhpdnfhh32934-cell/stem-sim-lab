@@ -87,8 +87,8 @@ export const sh10b22MicrobeUses: StudioScenario = {
     ],
     answer: 'lactic',
     answerWhy: L(
-      'Sữa chua là sản phẩm lên men của vi khuẩn lactic: chúng biến đường glucose thành lactic acid, chất làm sữa có vị chua. Đường trong sữa có vị ngọt, không chua. Nấm men tạo ethanol là cách làm bánh mì, bia, rượu.',
-      'Yoghurt is a product of lactic bacteria: they turn glucose into lactic acid, which makes the milk sour. The sugar in milk tastes sweet, not sour. Yeast making ethanol is how bread, beer and wine are made.',
+      'Sữa chua là sản phẩm lên men của vi khuẩn lactic: chúng lên men đường trong sữa thành lactic acid, chất làm sữa có vị chua. Đường trong sữa có vị ngọt, không chua. Nấm men lên men đường thành ethanol và CO₂, dùng làm bánh mì, bia, rượu.',
+      'Yoghurt is a product of lactic bacteria: they ferment the sugar in milk into lactic acid, which makes the milk sour. The sugar in milk tastes sweet, not sour. Yeast ferments sugar into ethanol and CO₂, used for bread, beer and wine.',
     ),
     activities: [
       {

@@ -98,8 +98,8 @@ export const sh10b03Levels: StudioScenario = {
             id: 'te-bao',
             text: L('Tế bào', 'Cell'),
             why: L(
-              'Cấp nhỏ nhất có đủ đặc điểm của sự sống; mọi cấp lớn hơn đều được tạo nên từ tế bào.',
-              'The smallest level with all the features of life; every larger level is made of cells.',
+              'Cấp nhỏ nhất có đủ đặc điểm của sự sống; mọi cấp lớn hơn đều có tế bào làm nền.',
+              'The smallest level with all the features of life; every larger level is built on cells.',
             ),
           },
           {
