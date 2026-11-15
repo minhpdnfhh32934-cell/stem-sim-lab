@@ -41,9 +41,7 @@ const dataset = loadDataset('formation_enthalpy', SpeciesSchema, raw);
 /** ΔfH° values (data/formation_enthalpy.json, scripts/data/gen_enthalpy.py). */
 export const FORMATION_ENTHALPIES: readonly FormationEnthalpy[] = dataset.items;
 export const ENTHALPY_SOURCE: Source = dataset.source;
-export const ENTHALPY_REFERENCES = z
-  .record(ReferenceSchema, SourceSchema)
-  .parse(raw.references);
+export const ENTHALPY_REFERENCES = z.record(ReferenceSchema, SourceSchema).parse(raw.references);
 
 /** Library reactions the enthalpy topic computes, with each species' phase at 298 K. */
 export const ENTHALPY_REACTIONS = z
