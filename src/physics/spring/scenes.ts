@@ -3,7 +3,7 @@ import { dopri5 } from '@/core/ode/dopri5';
 import { DIM } from '@/core/units';
 import type { ScienceCardData } from '@/science-card/types';
 import { L, gravityParam, massParam } from '../common/scene-helpers';
-import { SRC } from '../common/sources';
+import { SRC, sgk10 } from '../common/sources';
 import { SYM, both, plain, sym } from '../common/symbols';
 import { fmtQty, texNum, texQty } from '../common/tex';
 import {
@@ -515,7 +515,7 @@ function card(hooke: boolean) {
         'Exact state-transition map, Δt = 1/240 s.',
       ),
       userIntervened: false,
-      sources: [SRC.sgk10, SRC.sgk11, SRC.halliday],
+      sources: [hooke ? sgk10(33) : SRC.sgk11, SRC.halliday],
     };
   };
 }

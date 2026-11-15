@@ -2,7 +2,7 @@ import type { Locale } from '@/app/i18n/types';
 import { DIM } from '@/core/units';
 import type { ScienceCardData } from '@/science-card/types';
 import { L, gravityParam } from '../common/scene-helpers';
-import { SRC } from '../common/sources';
+import { SRC, sgk10 } from '../common/sources';
 import { SYM, both, plain, sym } from '../common/symbols';
 import { fmtQty, texNum, texQty } from '../common/tex';
 import { IS } from '../incline/engine';
@@ -280,7 +280,7 @@ function card(): ScienceCardData {
       'The same exact engine as the inclined-plane lesson (Δt = 1/240 s).',
     ),
     userIntervened: false,
-    sources: [SRC.sgk10kntt, SRC.halliday],
+    sources: [sgk10(23), sgk10(24), sgk10(27), SRC.halliday],
   };
 }
 

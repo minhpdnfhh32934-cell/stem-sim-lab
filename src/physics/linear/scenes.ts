@@ -3,7 +3,7 @@ import { dopri5 } from '@/core/ode/dopri5';
 import { DIM } from '@/core/units';
 import type { ScienceCardData } from '@/science-card/types';
 import { L } from '../common/scene-helpers';
-import { SRC } from '../common/sources';
+import { SRC, sgk10 } from '../common/sources';
 import { fmtQty, texNum, texQty } from '../common/tex';
 import { arrow, block, ground, line, text, vectorScale } from '../render/draw';
 import type {
@@ -351,7 +351,7 @@ function card(accel: boolean) {
         )
       : L('Cập nhật chính xác, Δt = 1/240 s.', 'Exact update, Δt = 1/240 s.'),
     userIntervened: false,
-    sources: [SRC.sgk10, SRC.halliday],
+    sources: [...(accel ? [sgk10(8), sgk10(9)] : [sgk10(4), sgk10(5), sgk10(7)]), SRC.halliday],
   });
 }
 

@@ -3,7 +3,7 @@ import type { LocalizedText } from '@/core/data/dataset';
 import { DIM } from '@/core/units';
 import type { ScienceCardData } from '@/science-card/types';
 import { DASH, L } from '../common/scene-helpers';
-import { SRC } from '../common/sources';
+import { SRC, sgk10 } from '../common/sources';
 import { fmtQty, texNum, texQty } from '../common/tex';
 import { arrow, circle, line, text } from '../render/draw';
 import type {
@@ -261,7 +261,7 @@ function card(p: Params): ScienceCardData {
       'Constant-acceleration motion, evaluated exactly at t = n·Δt (Δt = 1/240 s).',
     ),
     userIntervened: false,
-    sources: [SRC.sgk10kntt, SRC.halliday],
+    sources: [sgk10(13), SRC.halliday],
   };
 }
 

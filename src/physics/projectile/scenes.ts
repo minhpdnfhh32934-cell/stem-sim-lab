@@ -5,7 +5,7 @@ import type { LocalizedText } from '@/core/data/dataset';
 import type { ScienceCardData } from '@/science-card/types';
 import { arrow, circle, ground, line, polygon, polyline, text, vectorScale } from '../render/draw';
 import { L, liveGravityParam, massParam, pointMassGraphs } from '../common/scene-helpers';
-import { SRC } from '../common/sources';
+import { SRC, sgk10 } from '../common/sources';
 import { fmtQty, texNum, texQty } from '../common/tex';
 import type {
   Answer,
@@ -270,7 +270,7 @@ function card(p: Params, title: ScienceCardData['title'], kind: ProjectileKind):
       'Exact constant-acceleration update, Δt = 1/240 s; landing time solved exactly inside the step.',
     ),
     userIntervened: false,
-    sources: [SRC.sgk10, SRC.halliday, SRC.hairer],
+    sources: [kind === 'free' ? sgk10(10) : sgk10(12), SRC.halliday, SRC.hairer],
   };
 }
 

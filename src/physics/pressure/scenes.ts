@@ -4,7 +4,7 @@ import { dopri5 } from '@/core/ode/dopri5';
 import { DIM } from '@/core/units';
 import type { ScienceCardData } from '@/science-card/types';
 import { DASH, L, gravityParam } from '../common/scene-helpers';
-import { SRC } from '../common/sources';
+import { SRC, sgk10 } from '../common/sources';
 import { fmtQty, texNum, texQty } from '../common/tex';
 import { arrow, circle, ground, line, polygon, text } from '../render/draw';
 import type {
@@ -246,7 +246,7 @@ function card(): ScienceCardData {
       'The pressure is evaluated exactly at the probe’s depth at every step (Δt = 1/60 s).',
     ),
     userIntervened: false,
-    sources: [SRC.sgk10kntt, SRC.halliday, SRC.iapwsWater, SRC.codata],
+    sources: [sgk10(34), SRC.halliday, SRC.iapwsWater, SRC.codata],
   };
 }
 

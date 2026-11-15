@@ -4,7 +4,7 @@ import { dopri5 } from '@/core/ode/dopri5';
 import { DIM } from '@/core/units';
 import type { ScienceCardData } from '@/science-card/types';
 import { L, gravityParam } from '../common/scene-helpers';
-import { SRC } from '../common/sources';
+import { SRC, sgk10 } from '../common/sources';
 import { fmtQty, texNum, texQty } from '../common/tex';
 import { arrow, block, ground, line, polygon, text } from '../render/draw';
 import type {
@@ -344,7 +344,7 @@ function card(): ScienceCardData {
       'RK4, Δt = 1/2400 s; mechanical energy watched while it turns.',
     ),
     userIntervened: false,
-    sources: [SRC.sgk10kntt, SRC.halliday],
+    sources: [sgk10(21), SRC.halliday],
   };
 }
 

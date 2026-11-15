@@ -3,7 +3,7 @@ import { dopri5 } from '@/core/ode/dopri5';
 import { DIM } from '@/core/units';
 import type { ScienceCardData } from '@/science-card/types';
 import { L, gravityParam, massParam } from '../common/scene-helpers';
-import { SRC } from '../common/sources';
+import { SRC, sgk10 } from '../common/sources';
 import { SYM, both, plain, sym } from '../common/symbols';
 import { fmtQty, texNum, texQty } from '../common/tex';
 import { arrow, circle, line, polygon, polyline, text, vectorScale } from '../render/draw';
@@ -415,7 +415,7 @@ function card(): ScienceCardData {
       'RK4 with 8 substeps per Δt = 1/240 s; energy drift is monitored continuously.',
     ),
     userIntervened: false,
-    sources: [SRC.sgk10, SRC.halliday, SRC.hairer],
+    sources: [sgk10(25), sgk10(26), SRC.halliday, SRC.hairer],
   };
 }
 
