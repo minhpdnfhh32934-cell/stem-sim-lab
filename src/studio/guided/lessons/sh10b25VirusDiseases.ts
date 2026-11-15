@@ -4,8 +4,9 @@ import { GUIDED_BASE, L } from './base';
 /**
  * SH10 KNTT Bài 25 "Một số bệnh do virus và các thành tựu nghiên cứu ứng dụng virus" (printed
  * pages 145–154), in SimLab's own words. Checked against the pages on 16/11/2026: HIV's three
- * routes (blood, sex, mother to child, p. 148), flu by droplets and secretions (p. 150), plant
- * viruses spread horizontally (insects such as the brown planthopper with rice stripe virus, tools,
+ * routes (blood, sex, mother to child, p. 148: the book names the placenta and breast milk; the
+ * WHO fact sheet adds delivery, cited as a second source), flu by droplets and secretions
+ * (p. 150), plant viruses spread horizontally (insects such as the brown planthopper with rice stripe virus, tools,
  * rubbing leaves) and vertically (sexual or asexual reproduction, p. 151), and the uses of part III
  * (vaccines, virus insecticides, vectors, gene therapy, phages against bacteria). Only diseases the
  * lesson names. Textbook level, not medical advice. The book names the brown planthopper (rầy nâu)
@@ -64,6 +65,12 @@ export const sh10b25VirusDiseases: StudioScenario = {
     'Each virus disease spreads by its own routes: HIV through blood, sex and from mother to child; the flu virus through droplets from sneezes and body fluids; plant viruses horizontally from plant to plant (insects, tools, wounds) or vertically from parent plant to young plant. Knowing the route tells us how to prevent it. People also use viruses to make vaccines, insecticides, gene vectors and gene therapy.',
   ),
   sources: [
+    {
+      id: 'who-hiv-aids',
+      citation:
+        'World Health Organization — HIV and AIDS, fact sheet, 27 July 2026: “HIV can also be transmitted to a child during pregnancy and delivery.” (mẹ truyền HIV cho con cả khi sinh)',
+      url: 'https://www.who.int/news-room/fact-sheets/detail/hiv-aids',
+    },
     {
       id: 'he-2016-rsv-sbph',
       citation:
@@ -130,8 +137,8 @@ export const sh10b25VirusDiseases: StudioScenario = {
               'Through blood, sex and from mother to child',
             ),
             why: L(
-              'HIV lây khi máu hay dịch của người nhiễm vào cơ thể, kể cả khi dùng chung kim tiêm; mẹ nhiễm HIV có thể truyền cho con qua nhau thai và sữa mẹ.',
-              'HIV spreads when blood or body fluids of an infected person enter the body, including shared needles; an infected mother can pass it to her baby through the placenta and breast milk.',
+              'HIV lây khi máu hay dịch tiết của người nhiễm vào cơ thể, kể cả khi dùng chung kim tiêm. Mẹ nhiễm HIV có thể truyền cho con qua nhau thai và qua sữa mẹ, như sách viết; Tổ chức Y tế Thế giới ghi thêm: cả khi sinh.',
+              'HIV spreads when blood or body fluids of an infected person enter the body, including shared needles. An infected mother can pass it to her baby through the placenta and breast milk, as the book says; the World Health Organization adds: also during delivery.',
             ),
           },
           {
@@ -154,8 +161,8 @@ export const sh10b25VirusDiseases: StudioScenario = {
               'Brown planthoppers suck sap from a sick plant, then pass the virus to healthy rice',
             ),
             why: L(
-              'Côn trùng chích hút làm tổn thương thành tế bào cây, mở đường cho virus vào cây lành.',
-              'Sucking insects damage the plant cell wall, opening a way for the virus into the healthy plant.',
+              'Côn trùng chích hút làm tổn thương thành tế bào cây, mở đường cho virus vào cây lành. Tài liệu chuyên ngành ghi loài truyền virus này là rầy nâu nhỏ, một loài khác với rầy nâu; xem Thẻ Khoa học.',
+              'Sucking insects damage the plant cell wall, opening a way for the virus into the healthy plant. Plant-disease research names a different species, the small brown planthopper, as this virus’s carrier; see the Science Card.',
             ),
           },
         ],
@@ -298,8 +305,8 @@ export const sh10b25VirusDiseases: StudioScenario = {
               'Remove the virus’s harmful genes, add a useful gene and put it into cells to make new varieties',
             ),
             why: L(
-              'Virus có thể cài hệ gene của nó vào tế bào chủ, nên mang được gene có lợi vào tế bào.',
-              'A virus can insert its genome into the host cell, so it can carry a useful gene into the cell.',
+              'Một số virus có thể cài hệ gene của chúng vào hệ gene của tế bào chủ, nên được dùng làm vector mang gene có lợi vào tế bào.',
+              'Some viruses can insert their genome into the host cell’s genome, so they are used as vectors that carry a useful gene into the cell.',
             ),
           },
           {
