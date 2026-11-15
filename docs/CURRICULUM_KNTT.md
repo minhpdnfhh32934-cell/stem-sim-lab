@@ -37,10 +37,10 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Hoá học 10 | 23 | 16 | 11 |
 | Hoá học 11 | 25 | 19 | 1 |
 | Hoá học 12 | 30 | 22 | 1 |
-| Sinh học 10 | 26 | 17 | 9 |
+| Sinh học 10 | 26 | 17 | 17 |
 | Sinh học 11 | 29 | 20 | 0 |
 | Sinh học 12 | 35 | 28 | 7 |
-| **Cộng** | **253** | **189** | **68** |
+| **Cộng** | **253** | **189** | **76** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -222,7 +222,7 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Hoá học 12 | Chương 8. Sơ lược về dãy kim loại chuyển tiếp thứ nhất và phức chất | 30 | Ôn tập chương 8 | 142 | Ôn tập | chưa có |  | pending |
 | Sinh học 10 | Phần mở đầu | 1 | Giới thiệu khái quát môn Sinh học | 5 | Mở đầu môn học | chưa có |  | pending |
 | Sinh học 10 | Phần mở đầu | 2 | Phương pháp nghiên cứu và học tập môn Sinh học | 12 | Mở đầu môn học | chưa có |  | pending |
-| Sinh học 10 | Phần mở đầu | 3 | Các cấp độ tổ chức của thế giới sống | 18 | Lí thuyết | chưa có |  | pending |
+| Sinh học 10 | Phần mở đầu | 3 | Các cấp độ tổ chức của thế giới sống | 18 | Lí thuyết | Các cấp độ tổ chức của thế giới sống | Tên Bài 3: các cấp độ tổ chức của thế giới sống (bài học có hướng dẫn: dự đoán, xếp thứ tự, ghép đôi; không có mô phỏng). | pending |
 | Sinh học 10 | Chương 1. Thành phần hoá học của tế bào | 4 | Các nguyên tố hoá học và nước | 23 | Lí thuyết | Các nguyên tố hóa học và nước | Tên Bài 4: các nguyên tố hoá học và nước (cảnh: tỉ lệ khối lượng các nguyên tố trong cơ thể người theo H 4.1, vai trò nguyên tố đa lượng, vi lượng, carbon; nhiệt dung riêng và nhiệt bay hơi của nước). | pending |
 | Sinh học 10 | Chương 1. Thành phần hoá học của tế bào | 5 | Các phân tử sinh học | 28 | Lí thuyết | Các phân tử sinh học | Tên Bài 5: các phân tử sinh học (bốn nhóm carbohydrate, lipid, protein, nucleic acid; đơn phân; mỗi nhóm một phân tử 3D lấy từ PubChem). | pending |
 | Sinh học 10 | Chương 1. Thành phần hoá học của tế bào | 6 | Thực hành: Nhận biết một số phân tử sinh học | 41 | Thực hành | chưa có |  | pending |
@@ -231,20 +231,20 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Sinh học 10 | Chương 2. Cấu trúc tế bào | 9 | Thực hành: Quan sát tế bào | 61 | Thực hành | chưa có |  | pending |
 | Sinh học 10 | Chương 3. Trao đổi chất qua màng và truyền tin tế bào | 10 | Trao đổi chất qua màng tế bào | 64 | Lí thuyết | Khuếch tán & thẩm thấu | Tên Bài 10: trao đổi chất qua màng tế bào. Chỉ phần vận chuyển thụ động (khuếch tán, thẩm thấu), trên mô hình hai ngăn và ống chữ U, không phải màng tế bào thật. | pending |
 | Sinh học 10 | Chương 3. Trao đổi chất qua màng và truyền tin tế bào | 11 | Thực hành: Thí nghiệm co và phản co nguyên sinh | 71 | Thực hành | chưa có |  | pending |
-| Sinh học 10 | Chương 3. Trao đổi chất qua màng và truyền tin tế bào | 12 | Truyền tin tế bào | 73 | Lí thuyết | chưa có |  | pending |
-| Sinh học 10 | Chương 4. Chuyển hoá năng lượng trong tế bào | 13 | Khái quát về chuyển hoá vật chất và năng lượng | 78 | Lí thuyết | chưa có |  | pending |
-| Sinh học 10 | Chương 4. Chuyển hoá năng lượng trong tế bào | 14 | Phân giải và tổng hợp các chất trong tế bào | 85 | Lí thuyết | chưa có |  | pending |
+| Sinh học 10 | Chương 3. Trao đổi chất qua màng và truyền tin tế bào | 12 | Truyền tin tế bào | 73 | Lí thuyết | Truyền tin tế bào | Tên Bài 12: truyền tin tế bào (bài học có hướng dẫn: dự đoán, xếp thứ tự, ghép đôi; không có mô phỏng). | pending |
+| Sinh học 10 | Chương 4. Chuyển hoá năng lượng trong tế bào | 13 | Khái quát về chuyển hoá vật chất và năng lượng | 78 | Lí thuyết | Chuyển hoá vật chất và năng lượng | Tên Bài 13: khái quát về chuyển hoá vật chất và năng lượng (bài học có hướng dẫn: dự đoán, phân loại, xếp thứ tự; không có mô phỏng). | pending |
+| Sinh học 10 | Chương 4. Chuyển hoá năng lượng trong tế bào | 14 | Phân giải và tổng hợp các chất trong tế bào | 85 | Lí thuyết | Phân giải và tổng hợp các chất trong tế bào | Tên Bài 14: phân giải và tổng hợp các chất trong tế bào (bài học có hướng dẫn: dự đoán, ghép đôi, phân loại; không có mô phỏng). | pending |
 | Sinh học 10 | Chương 4. Chuyển hoá năng lượng trong tế bào | 15 | Thực hành: Thí nghiệm phân tích ảnh hưởng của một số yếu tố đến hoạt tính của enzyme và kiểm tra hoạt tính của enzyme amylase | 94 | Thực hành | chưa có |  | pending |
 | Sinh học 10 | Chương 5. Chu kì tế bào và phân bào | 16 | Chu kì tế bào và nguyên phân | 97 | Lí thuyết | Nguyên phân | Tên Bài 16: chu kì tế bào và nguyên phân. | pending |
 | Sinh học 10 | Chương 5. Chu kì tế bào và phân bào | 17 | Giảm phân | 104 | Lí thuyết | Giảm phân | Tên Bài 17: giảm phân. | pending |
 | Sinh học 10 | Chương 5. Chu kì tế bào và phân bào | 18 | Thực hành: Làm và quan sát tiêu bản quá trình nguyên phân và giảm phân | 108 | Thực hành | chưa có |  | pending |
-| Sinh học 10 | Chương 5. Chu kì tế bào và phân bào | 19 | Công nghệ tế bào | 110 | Lí thuyết | chưa có |  | pending |
-| Sinh học 10 | Chương 6. Sinh học vi sinh vật | 20 | Sự đa dạng và phương pháp nghiên cứu vi sinh vật | 116 | Lí thuyết | chưa có |  | pending |
+| Sinh học 10 | Chương 5. Chu kì tế bào và phân bào | 19 | Công nghệ tế bào | 110 | Lí thuyết | Công nghệ tế bào | Tên Bài 19: công nghệ tế bào (bài học có hướng dẫn: dự đoán, xếp thứ tự, ghép đôi; không có mô phỏng). | pending |
+| Sinh học 10 | Chương 6. Sinh học vi sinh vật | 20 | Sự đa dạng và phương pháp nghiên cứu vi sinh vật | 116 | Lí thuyết | Đa dạng và phương pháp nghiên cứu vi sinh vật | Tên Bài 20: sự đa dạng và phương pháp nghiên cứu vi sinh vật (bài học có hướng dẫn: dự đoán, phân loại, ghép đôi; không có mô phỏng). | pending |
 | Sinh học 10 | Chương 6. Sinh học vi sinh vật | 21 | Trao đổi chất, sinh trưởng và sinh sản ở vi sinh vật | 122 | Lí thuyết | Sinh trưởng của quần thể vi khuẩn | Tên Bài 21: trao đổi chất, sinh trưởng và sinh sản ở vi sinh vật. Chỉ phần II sinh trưởng của quần thể vi khuẩn (Nₜ = N₀ × 2ⁿ, bốn pha nuôi cấy không liên tục); chưa có phần trao đổi chất và sinh sản. | pending |
-| Sinh học 10 | Chương 6. Sinh học vi sinh vật | 22 | Vai trò và ứng dụng của vi sinh vật | 131 | Lí thuyết | chưa có |  | pending |
+| Sinh học 10 | Chương 6. Sinh học vi sinh vật | 22 | Vai trò và ứng dụng của vi sinh vật | 131 | Lí thuyết | Vai trò và ứng dụng của vi sinh vật | Tên Bài 22: vai trò và ứng dụng của vi sinh vật (bài học có hướng dẫn: dự đoán, ghép đôi, phân loại; không có mô phỏng). | pending |
 | Sinh học 10 | Chương 6. Sinh học vi sinh vật | 23 | Thực hành: Một số phương pháp nghiên cứu vi sinh vật thông dụng, tìm hiểu về các sản phẩm công nghệ vi sinh vật và làm một số sản phẩm lên men từ vi sinh vật | 138 | Thực hành | chưa có |  | pending |
 | Sinh học 10 | Chương 7. Virus | 24 | Khái quát về virus | 141 | Lí thuyết | Khái quát về virus | Tên Bài 24: khái quát về virus (cấu tạo: lõi nucleic acid, vỏ capsid, vỏ ngoài; năm giai đoạn nhân lên). | pending |
-| Sinh học 10 | Chương 7. Virus | 25 | Một số bệnh do virus và các thành tựu nghiên cứu ứng dụng virus | 145 | Lí thuyết | chưa có |  | pending |
+| Sinh học 10 | Chương 7. Virus | 25 | Một số bệnh do virus và các thành tựu nghiên cứu ứng dụng virus | 145 | Lí thuyết | Bệnh do virus và ứng dụng virus | Tên Bài 25: một số bệnh do virus và các thành tựu nghiên cứu ứng dụng virus (bài học có hướng dẫn: dự đoán, ghép đôi, phân loại; không có mô phỏng). | pending |
 | Sinh học 10 | Chương 7. Virus | 26 | Thực hành: Điều tra một số bệnh do virus và tuyên truyền phòng chống bệnh | 155 | Thực hành | chưa có |  | pending |
 | Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 1 | Khái quát về trao đổi chất và chuyển hoá năng lượng | 5 | Lí thuyết | chưa có |  | pending |
 | Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 2 | Trao đổi nước và khoáng ở thực vật | 9 | Lí thuyết | chưa có |  | pending |

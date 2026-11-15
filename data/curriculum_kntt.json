@@ -2688,6 +2688,102 @@
    ],
    "reason": "Tên Bài 24: khái quát về virus (cấu tạo: lõi nucleic acid, vỏ capsid, vỏ ngoài; năm giai đoạn nhân lên).",
    "review_status": "pending"
+  },
+  {
+   "topic": "levelsOfLife",
+   "subject": "biology",
+   "grade": 10,
+   "book": "SH10",
+   "chapter": "Phần mở đầu",
+   "lessons": [
+    3
+   ],
+   "reason": "Tên Bài 3: các cấp độ tổ chức của thế giới sống (bài học có hướng dẫn: dự đoán, xếp thứ tự, ghép đôi; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "cellSignalling",
+   "subject": "biology",
+   "grade": 10,
+   "book": "SH10",
+   "chapter": "Chương 3. Trao đổi chất qua màng và truyền tin tế bào",
+   "lessons": [
+    12
+   ],
+   "reason": "Tên Bài 12: truyền tin tế bào (bài học có hướng dẫn: dự đoán, xếp thứ tự, ghép đôi; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "metabolismEnergy",
+   "subject": "biology",
+   "grade": 10,
+   "book": "SH10",
+   "chapter": "Chương 4. Chuyển hoá năng lượng trong tế bào",
+   "lessons": [
+    13
+   ],
+   "reason": "Tên Bài 13: khái quát về chuyển hoá vật chất và năng lượng (bài học có hướng dẫn: dự đoán, phân loại, xếp thứ tự; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "breakdownSynthesis",
+   "subject": "biology",
+   "grade": 10,
+   "book": "SH10",
+   "chapter": "Chương 4. Chuyển hoá năng lượng trong tế bào",
+   "lessons": [
+    14
+   ],
+   "reason": "Tên Bài 14: phân giải và tổng hợp các chất trong tế bào (bài học có hướng dẫn: dự đoán, ghép đôi, phân loại; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "cellTechnology",
+   "subject": "biology",
+   "grade": 10,
+   "book": "SH10",
+   "chapter": "Chương 5. Chu kì tế bào và phân bào",
+   "lessons": [
+    19
+   ],
+   "reason": "Tên Bài 19: công nghệ tế bào (bài học có hướng dẫn: dự đoán, xếp thứ tự, ghép đôi; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "microbeDiversity",
+   "subject": "biology",
+   "grade": 10,
+   "book": "SH10",
+   "chapter": "Chương 6. Sinh học vi sinh vật",
+   "lessons": [
+    20
+   ],
+   "reason": "Tên Bài 20: sự đa dạng và phương pháp nghiên cứu vi sinh vật (bài học có hướng dẫn: dự đoán, phân loại, ghép đôi; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "microbeApplications",
+   "subject": "biology",
+   "grade": 10,
+   "book": "SH10",
+   "chapter": "Chương 6. Sinh học vi sinh vật",
+   "lessons": [
+    22
+   ],
+   "reason": "Tên Bài 22: vai trò và ứng dụng của vi sinh vật (bài học có hướng dẫn: dự đoán, ghép đôi, phân loại; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "virusDiseases",
+   "subject": "biology",
+   "grade": 10,
+   "book": "SH10",
+   "chapter": "Chương 7. Virus",
+   "lessons": [
+    25
+   ],
+   "reason": "Tên Bài 25: một số bệnh do virus và các thành tựu nghiên cứu ứng dụng virus (bài học có hướng dẫn: dự đoán, ghép đôi, phân loại; không có mô phỏng).",
+   "review_status": "pending"
   }
  ],
  "unplaced": [
