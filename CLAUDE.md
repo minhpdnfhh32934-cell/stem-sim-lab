@@ -600,6 +600,12 @@ Progress log: `docs/PROGRESS.md`.
 - One `SubjectPlugin` per subject (`flow/types.ts`); shared steps in `flow/`; evidence keeps its
   origin (engine / learner / AI, `session.ts`); the report is Markdown (`report.ts`); "Hỏi thầy"
   gets the screen context from `aiContext.ts`. State: `studioStore.ts` (`stemsim.studio`).
+- **Descriptive textbook lessons (user decision 14/11/2026, #255):** a lesson with no honest
+  simulation is a guided lesson, never a fake one: binding kind `'guided'` (`src/studio/guided/`:
+  prediction + order/match/sort activities whose key is the lesson data, `check.ts` pure, facts-only
+  record, card `qualitative` citing the KNTT lesson from `CURRICULUM`), a library topic per lesson
+  (`guidedModule`, `GUIDED_TOPICS`) running the same session, and its own Studio group. Its wording
+  never says "mô phỏng" (`studio.guided.*`); data in `guided/lessons/` only (SH10-GL-*), no digits.
 - "Cách học" guide (`StudioGuide.tsx`, plan #37 §9c): the lab tour's `TourOverlay` (`Tour.tsx`)
   with studio steps; opens by itself once (`guideSeen` in `stemsim.studio`, store version 2), then
   only from the button. Unit tests start with it seen (`tests/setup.ts`), E2E via `storage-state.json`.

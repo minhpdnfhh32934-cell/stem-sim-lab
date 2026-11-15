@@ -197,6 +197,21 @@ becomes a link to that lesson instead of a second prediction (`ChallengePanel.ts
 | Built-in lessons | `scenarios/*.ts`, `scenarios/index.ts`                                                                                                                                     | Three scenarios, each validated at load; an invalid one is left out.                                                                                                 |
 | Authoring        | `authoring/service.ts`, `check.ts`, `choices.ts`, `draft.ts`, `bindingDraft.ts`, `collection.ts`, `fileFormat.ts`, `limits.ts`, `issueText.ts`, `authoringStore.ts`, views | "Soạn bài": every choice comes from an engine or data table; schema + size + engine checks before saving; local only (`teacher.` ids); JSON import/export.           |
 
+**Descriptive textbook lessons (`guided/`, #255, user decision 14/11/2026):** a textbook lesson
+with no honest quantitative model becomes a guided lesson with binding kind `'guided'` (any
+subject): a prediction and one to three activities (put in order, match, sort) whose key is the
+lesson file itself (`guided/lessons/*.ts`, SH10-GL-*, no digits in the text). `guided/check.ts` is
+pure: fixed shuffles that are never the answer, the answer sheet in `session.actions` (validated on
+every read: storage and files are untrusted), scoring, and one facts-only engine record (model
+`guided`) so the report takes its data-library path. `guided/plugin.ts` + `GuidedSteps.tsx` +
+`GuidedActivity.tsx` plug into `PoeFlow`; the plugin renames the steps and every line that would say
+"mô phỏng" (`studio.guided.*`, also `ReviewNote`, `ConcludeStep`, `report.ts`, `AskTeacher`).
+`guided/card.ts` builds a `qualitative` card whose source (book, lesson, printed pages) comes from
+`CURRICULUM`. Each lesson is also a library topic (`guided/topics.ts` → lazy `guidedModule(id)` in
+`src/modules/registry.ts`): `ScenarioHeader` + `PoeFlow` on the stage, an honest Inspector line, and
+`bindStore` over the studio store so files, history and undo carry the answers. Kept out of
+`builtInScenarios()`; Science Studio lists them as their own group. Authoring refuses them.
+
 Teaching text is `review_status: "pending"` (`docs/DATA_REVIEW.md` items 20–23) and is shown with
 its label. Tests: unit tests next to each file (`src/studio/**/*.test.ts(x)`), E2E
 `tests/e2e/studio.spec.ts` and `tests/e2e/studio-biology.spec.ts`. Step records: `docs/work-log/`.
