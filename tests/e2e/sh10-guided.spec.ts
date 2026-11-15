@@ -8,11 +8,20 @@ import { openTopic } from './nav';
  */
 const next = (page: Page) => page.getByRole('button', { name: /^Tiếp:/ });
 
+/**
+ * No side scroll at 1366×768: neither the page nor the boxes the lesson really scrolls in (the
+ * stage clips, so an overflowing lesson would only show an inner scrollbar).
+ */
 async function noSideScroll(page: Page) {
-  const overflow = await page.evaluate(
-    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+  const overflow = await page.evaluate(() =>
+    Object.fromEntries(
+      ['html', '.guided-stage', '.studio-pane'].map((sel) => {
+        const el = document.querySelector(sel);
+        return [sel, el ? el.scrollWidth - el.clientWidth : null];
+      }),
+    ),
   );
-  expect(overflow).toBeLessThanOrEqual(0);
+  expect(overflow).toEqual({ html: 0, '.guided-stage': 0, '.studio-pane': 0 });
 }
 
 test('Bài 3: predict, move one level, check, read the reasons; card in the Inspector', async ({
