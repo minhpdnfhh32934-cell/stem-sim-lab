@@ -318,7 +318,7 @@ export function RedoxPanel() {
               type="button"
               className="btn"
               onClick={() => {
-                if (lookup.found) selectRedoxReaction(lookup.found.id);
+                selectRedoxReaction(lookup.found.id);
               }}
             >
               {Lz(L('Mở phản ứng này', 'Open this reaction'))}
