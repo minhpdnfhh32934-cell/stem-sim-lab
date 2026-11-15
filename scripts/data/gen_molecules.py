@@ -311,7 +311,11 @@ def flat_from_3d(coords):
     if off.max() < 0.01:
         return [(ti, 0.0) for ti in t]
     if len(pts) == 3:
-        return list(zip(t, (pts - c) @ vt[1]))
+        u = (pts - c) @ vt[1]
+        mid = int(np.argsort(t)[1])  # the central atom lies between the two ends along the axis
+        if u[mid] < 0:
+            u = -u  # central atom on top, as textbooks draw a bent molecule
+        return list(zip(t, u))
     return None
 
 
