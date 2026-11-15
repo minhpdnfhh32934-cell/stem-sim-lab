@@ -11,6 +11,7 @@ import { chemistryReagents, chemistryTargets, editableParams, presetFor } from '
 
 /** A problem shown to the teacher; `code` is a key under `studio.authoring.errors`. */
 export type IssueCode =
+  | 'guidedBuiltIn'
   | 'titleRequired'
   | 'objectiveRequired'
   | 'conclusionRequired'
@@ -130,7 +131,7 @@ export function checkScenario(s: StudioScenario, scene: PhysicsScene | null): Au
   if (b.kind === 'physics') return physicsIssues(s, scene);
   if (b.kind === 'chemistry') return chemistryIssues(b);
   // A descriptive textbook lesson (src/studio/guided/) is built in only: teachers cannot author one.
-  if (b.kind === 'guided') return [{ code: 'binding', params: { detail: 'guided' } }];
+  if (b.kind === 'guided') return [{ code: 'guidedBuiltIn' }];
   return bindingProblems(b).map((p) => ({ code: BIO_CODES[p] }));
 }
 

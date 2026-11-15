@@ -1687,6 +1687,8 @@ const en: Messages = {
           'This scene and measurement set are not in the Physics Studio, so the scenario cannot run.',
         sceneMissing: 'The simulation scene of the scenario could not be loaded.',
         binding: 'The simulation scene does not match the scenario: {detail}',
+        guidedBuiltIn:
+          'Descriptive textbook lessons are built into the app and cannot be authored yet.',
         inventorySize: 'The rack needs 2 to 8 solutions.',
         reagentNotAllowed: '"{formula}" is not a library solution for the bench.',
         targetInInventory: 'The question must use two different solutions from the rack.',

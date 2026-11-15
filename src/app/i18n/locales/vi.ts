@@ -1669,6 +1669,8 @@ const vi = {
         notPreset: 'Cảnh và cách đo này chưa có trong Studio Vật lý, nên bài không chạy được.',
         sceneMissing: 'Không tải được cảnh mô phỏng của bài.',
         binding: 'Cảnh mô phỏng không khớp với bài: {detail}',
+        guidedBuiltIn:
+          'Bài học mô tả theo SGK chỉ có sẵn trong ứng dụng, chưa soạn được ở Soạn bài.',
         inventorySize: 'Giá cần từ 2 đến 8 dung dịch.',
         reagentNotAllowed: '"{formula}" không phải dung dịch của thư viện cho bàn thí nghiệm.',
         targetInInventory: 'Câu hỏi phải dùng hai dung dịch khác nhau có trên giá.',

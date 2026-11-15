@@ -71,7 +71,7 @@ describe('engine check of authored scenarios', () => {
   });
 
   it('a guided textbook lesson is built in only: authoring refuses it', async () => {
-    expect(codes(sh10b03Levels)).toEqual(['binding']);
+    expect(codes(sh10b03Levels)).toEqual(['guidedBuiltIn']);
     const r = await verifyScenario(sh10b03Levels);
     expect(r.ok).toBe(false);
   });
