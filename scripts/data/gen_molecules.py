@@ -298,6 +298,23 @@ def experimental_structure(mol: Chem.Mol, geo: dict):
     return [coords[i] for i in range(n)]
 
 
+def flat_from_3d(coords):
+    """2D coordinates taken from the 3D structure: on its axis when it is linear (3+ atoms), in its
+    plane when it has 3 atoms; None otherwise (the CoordGen depiction is kept)."""
+    pts = np.array(coords, dtype=float)
+    if len(pts) < 3:
+        return None
+    c = pts.mean(axis=0)
+    _, _, vt = np.linalg.svd(pts - c)
+    t = (pts - c) @ vt[0]
+    off = np.linalg.norm((pts - c) - np.outer(t, vt[0]), axis=1)
+    if off.max() < 0.01:
+        return [(ti, 0.0) for ti in t]
+    if len(pts) == 3:
+        return list(zip(t, (pts - c) @ vt[1]))
+    return None
+
+
 def build(mid: str, smiles: str):
     hypervalent = mid in IDEAL_GEOMETRY
     # RDKit refuses some hypervalent valences (ClF3, XeF4): parse those without sanitizing.
@@ -340,6 +357,13 @@ def build(mid: str, smiles: str):
         rdDepictor.SetPreferCoordGen(False)
         rdDepictor.Compute2DCoords(flat)
     flat_conf = flat.GetConformer()
+    xy = [(flat_conf.GetAtomPosition(i).x, flat_conf.GetAtomPosition(i).y) for i in range(mol.GetNumAtoms())]
+    # CoordGen ignores lone pairs: it bends BeCl2 to 120 degrees and straightens SO2. A species
+    # that is linear in 3D (BeCl2, CO2, HCN, C2H2, XeF2...) is drawn on its 3D axis, and a
+    # three-atom one (always planar: H2O, SO2...) in its own plane, so the drawing keeps its shape.
+    own = flat_from_3d(coords)
+    if own is not None:
+        xy = own
     kek = Chem.Mol(mol)
     if not hypervalent:
         Chem.Kekulize(kek, clearAromaticFlags=True)
@@ -358,8 +382,7 @@ def build(mid: str, smiles: str):
             "el": a.GetSymbol(),
             "sym": int(sym[a.GetIdx()]),
             "xyz": [round(float(v), 4) for v in coords[a.GetIdx()]],
-            "xy": [round(float(flat_conf.GetAtomPosition(a.GetIdx()).x), 3),
-                   round(float(flat_conf.GetAtomPosition(a.GetIdx()).y), 3)],
+            "xy": [round(float(xy[a.GetIdx()][0]), 3) + 0.0, round(float(xy[a.GetIdx()][1]), 3) + 0.0],
             "charge": a.GetFormalCharge(),
         }
         for a in mol.GetAtoms()
