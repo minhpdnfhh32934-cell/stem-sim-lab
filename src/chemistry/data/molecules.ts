@@ -109,14 +109,24 @@ export function valenceElectrons(symbol: string): number | null {
   return null;
 }
 
-/** Lone pairs on atom i from its valence electrons, formal charge and bond orders (Lewis). */
-export function lonePairs(m: Molecule, i: number): number {
+/** Non-bonding electrons on atom i: valence − formal charge − Σ bond orders (Lewis), ≥ 0. */
+function nonbonding(m: Molecule, i: number): number {
   const a = m.atoms[i];
   if (!a || a.el === 'H') return 0;
   const v = valenceElectrons(a.el);
   if (v === null) return 0;
   const bonded = m.bonds.filter((b) => b.a === i || b.b === i).reduce((s, b) => s + b.order, 0);
-  return Math.max(0, Math.floor((v - a.charge - bonded) / 2));
+  return Math.max(0, v - a.charge - bonded);
+}
+
+/** Lone pairs on atom i from its valence electrons, formal charge and bond orders (Lewis). */
+export function lonePairs(m: Molecule, i: number): number {
+  return Math.floor(nonbonding(m, i) / 2);
+}
+
+/** 1 when atom i keeps an odd number of electrons (an unpaired electron, e.g. N in NO), else 0. */
+export function unpairedOn(m: Molecule, i: number): number {
+  return nonbonding(m, i) % 2;
 }
 
 export type GeometryId =
