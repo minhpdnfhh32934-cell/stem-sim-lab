@@ -6,7 +6,10 @@ import { GUIDED_BASE, L } from './base';
  * SimLab's own words. Checked on 16/11/2026: glycolysis in the cytoplasm without O₂, the Krebs
  * cycle inside the mitochondrion (H 14.1), the electron transport chain on the inner membrane,
  * light reactions on the thylakoid membrane, "pha tối" = Calvin cycle in the chloroplast stroma;
- * fermentation = glycolysis + fermentation, no electron transport chain, little ATP. "Chất nền" of
+ * fermentation = glycolysis + fermentation, no O₂ and no electron transport chain, little ATP
+ * (p. 87); human and animal cells usually use lactate fermentation (p. 88). The prediction asks
+ * about a cell with no O₂ at all, the book's fermentation case: a cell only short of O₂ still
+ * runs some aerobic respiration, so that case would have no single answer. "Chất nền" of
  * the mitochondrion and of the chloroplast is the book's own word (Bài 8 "Tế bào nhân thực",
  * pp. 52–53, H 8.8 and H 8.9: the mitochondrion's inner space is the chất nền holding the enzymes of
  * cell respiration). SH10-GL-4.
@@ -21,8 +24,8 @@ export const sh10b14BreakdownSynthesis: StudioScenario = {
   ),
   objectives: [
     L(
-      'Dự đoán giai đoạn nào vẫn diễn ra khi tế bào thiếu O₂.',
-      'Predict which stage still runs when a cell lacks O₂.',
+      'Dự đoán giai đoạn nào vẫn diễn ra được khi tế bào không có O₂.',
+      'Predict which stage can still run when a cell has no O₂ at all.',
     ),
     L(
       'Ghép mỗi giai đoạn với nơi nó diễn ra trong tế bào nhân thực.',
@@ -47,8 +50,8 @@ export const sh10b14BreakdownSynthesis: StudioScenario = {
     ),
   ],
   expectedConclusion: L(
-    'Phân giải hiếu khí glucose gồm đường phân (tế bào chất), chu trình Krebs (chất nền ti thể) và chuỗi truyền electron (màng trong ti thể). Khi thiếu O₂, tế bào chỉ đường phân rồi lên men, tạo được ít ATP. Quang hợp là quá trình tổng hợp: pha sáng ở màng thylakoid, pha tối (chu trình Calvin) ở chất nền lục lạp.',
-    'Aerobic breakdown of glucose is glycolysis (cytoplasm), the Krebs cycle (mitochondrial matrix) and the electron transport chain (inner mitochondrial membrane). Without O₂ the cell only runs glycolysis and then fermentation, making little ATP. Photosynthesis builds substances up: the light reactions on the thylakoid membrane, the dark phase (Calvin cycle) in the chloroplast stroma.',
+    'Phân giải hiếu khí glucose gồm đường phân (tế bào chất), chu trình Krebs (chất nền ti thể) và chuỗi truyền electron (màng trong ti thể). Khi không có O₂, tế bào lên men: đường phân rồi giai đoạn lên men, tạo được ít ATP. Quang hợp là quá trình tổng hợp: pha sáng ở màng thylakoid, pha tối (chu trình Calvin) ở chất nền lục lạp.',
+    'Aerobic breakdown of glucose is glycolysis (cytoplasm), the Krebs cycle (mitochondrial matrix) and the electron transport chain (inner mitochondrial membrane). With no O₂ the cell ferments: glycolysis, then the fermentation step, making little ATP. Photosynthesis builds substances up: the light reactions on the thylakoid membrane, the dark phase (Calvin cycle) in the chloroplast stroma.',
   ),
   sources: [
     {
@@ -78,8 +81,8 @@ export const sh10b14BreakdownSynthesis: StudioScenario = {
     kind: 'guided',
     kntt: { book: 'SH10', lesson: 14 },
     question: L(
-      'Khi tế bào cơ của người thiếu O₂, theo em giai đoạn nào của quá trình phân giải glucose vẫn diễn ra?',
-      'When a human muscle cell runs short of O₂, which stage of glucose breakdown do you think still runs?',
+      'Khi tế bào không có O₂, theo em giai đoạn nào của quá trình phân giải glucose vẫn diễn ra được?',
+      'When a cell has no O₂ at all, which stage of glucose breakdown do you think can still run?',
     ),
     choices: [
       { id: 'duong-phan', text: L('Đường phân', 'Glycolysis') },
@@ -88,8 +91,8 @@ export const sh10b14BreakdownSynthesis: StudioScenario = {
     ],
     answer: 'duong-phan',
     answerWhy: L(
-      'Đường phân diễn ra trong tế bào chất và không cần O₂. Khi thiếu O₂, tế bào cơ đi tiếp bằng lên men lactate: lên men gồm đường phân rồi giai đoạn lên men, không qua chu trình Krebs và chuỗi truyền electron.',
-      'Glycolysis happens in the cytoplasm and needs no O₂. Without O₂ a muscle cell carries on with lactate fermentation: glycolysis followed by the fermentation step, with no Krebs cycle and no electron transport chain.',
+      'Đường phân diễn ra trong tế bào chất và không có sự tham gia của O₂. Khi không có O₂, tế bào lên men: lên men gồm hai giai đoạn, đường phân và lên men, không có sự tham gia của O₂ và chuỗi truyền electron, nên tạo được ít ATP. Tế bào người và động vật thường lên men lactate.',
+      'Glycolysis happens in the cytoplasm and does not involve O₂. With no O₂ the cell ferments: fermentation has two stages, glycolysis and the fermentation step, with no O₂ and no electron transport chain, so it makes little ATP. Human and animal cells usually use lactate fermentation.',
     ),
     activities: [
       {
