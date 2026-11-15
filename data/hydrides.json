@@ -1,0 +1,336 @@
+{
+ "dataset": "hydrides",
+ "version": 1,
+ "accessed": "2026-11-15",
+ "source": {
+  "id": "sgk-hh10-hydride-bp",
+  "citation": "Nhiệt độ sôi thường: SGK Hóa học 10 Kết nối tri thức (Bảng 13.1 tr. 65; Bảng 22.2 tr. 113) cho các chất sách ghi; chất sách không ghi: NIST Chemistry WebBook, SRD 69 (P. J. Linstrom, W. G. Mallard, eds.), hoặc PubChem (NCBI), mục Boiling Point do Hazardous Substances Data Bank cung cấp, kèm tài liệu gốc từng giá trị. NIST/PubChem còn được ghi làm nguồn thứ hai cho các chất có trong sách. Đọc ngày 15–16/11/2026.",
+  "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983"
+ },
+ "generated_by": "scripts/data/gen_hydrides.py",
+ "items": [
+  {
+   "id": "ch4",
+   "formula": "CH4",
+   "element": "C",
+   "cas": "74-82-8",
+   "pubchem_cid": 297,
+   "boiling_point": {
+    "value": -161.58,
+    "unit": "°C",
+    "as_given": "−161,58 °C",
+    "source": "sgk",
+    "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983",
+    "reference": "SGK Hóa học 10 \"Kết nối tri thức với cuộc sống\", NXB Giáo dục Việt Nam, Bài 13, Bảng 13.1, tr. 65",
+    "note": "Bài 13, Bảng 13.1: nhiệt độ sôi t_s (°C) như sách in."
+   },
+   "second": {
+    "value": 111.0,
+    "uncertainty": 2.0,
+    "unit": "K",
+    "as_given": "111. ± 2. K",
+    "source": "nist",
+    "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C74828&Mask=4",
+    "reference": "N/A",
+    "note": "NIST: method AVG; Average of 13 values"
+   },
+   "review_status": "pending"
+  },
+  {
+   "id": "sih4",
+   "formula": "SiH4",
+   "element": "Si",
+   "cas": "7803-62-5",
+   "pubchem_cid": 23953,
+   "boiling_point": {
+    "value": -112.0,
+    "unit": "°C",
+    "as_given": "-112 °C",
+    "source": "pubchem",
+    "url": "https://pubchem.ncbi.nlm.nih.gov/compound/23953#section=Boiling-Point",
+    "reference": "O'Neil, M.J. (ed.). The Merck Index - An Encyclopedia of Chemicals, Drugs, and Biologicals. 13th Edition, Whitehouse Station, NJ: Merck and Co., Inc., 2001., p. 1523",
+    "note": "PubChem, Experimental Properties > Boiling Point, entry from the Hazardous Substances Data Bank (https://pubchem.ncbi.nlm.nih.gov/source/hsdb/6351); read via https://pubchem.ncbi.nlm.nih.gov/rest/pug_view/data/compound/23953/JSON?heading=Boiling+Point. NIST WebBook https://webbook.nist.gov/cgi/cbook.cgi?ID=C7803625&Mask=4 lists no T_boil."
+   },
+   "review_status": "pending"
+  },
+  {
+   "id": "geh4",
+   "formula": "GeH4",
+   "element": "Ge",
+   "cas": "7782-65-2",
+   "pubchem_cid": 23984,
+   "boiling_point": {
+    "value": -88.1,
+    "unit": "°C",
+    "as_given": "-88.1 °C",
+    "source": "pubchem",
+    "url": "https://pubchem.ncbi.nlm.nih.gov/compound/23984#section=Boiling-Point",
+    "reference": "Lide, D.R. CRC Handbook of Chemistry and Physics 88TH Edition 2007-2008. CRC Press, Taylor & Francis, Boca Raton, FL 2007, p. 4-65",
+    "note": "PubChem, Experimental Properties > Boiling Point, entry from the Hazardous Substances Data Bank (https://pubchem.ncbi.nlm.nih.gov/source/hsdb/7911); read via https://pubchem.ncbi.nlm.nih.gov/rest/pug_view/data/compound/23984/JSON?heading=Boiling+Point. NIST WebBook https://webbook.nist.gov/cgi/cbook.cgi?ID=C7782652&Mask=4 lists no T_boil."
+   },
+   "review_status": "pending"
+  },
+  {
+   "id": "snh4",
+   "formula": "SnH4",
+   "element": "Sn",
+   "cas": "2406-52-2",
+   "pubchem_cid": 123161,
+   "boiling_point": null,
+   "missing": "Trang NIST WebBook (dữ liệu chuyển pha) không có nhiệt độ sôi T_boil và PubChem không có mục Boiling Point cho chất này (đọc ngày 15/11/2026): chưa có số liệu có nguồn, biểu đồ để trống.",
+   "review_status": "pending"
+  },
+  {
+   "id": "nh3",
+   "formula": "NH3",
+   "element": "N",
+   "cas": "7664-41-7",
+   "pubchem_cid": 222,
+   "boiling_point": {
+    "value": -33.35,
+    "unit": "°C",
+    "as_given": "-33.35 °C at 760 mm Hg",
+    "source": "pubchem",
+    "url": "https://pubchem.ncbi.nlm.nih.gov/compound/222#section=Boiling-Point",
+    "reference": "O'Neil, M.J. (ed.). The Merck Index - An Encyclopedia of Chemicals, Drugs, and Biologicals. Cambridge, UK: Royal Society of Chemistry, 2013., p. 88",
+    "note": "PubChem, Experimental Properties > Boiling Point, entry from the Hazardous Substances Data Bank (https://pubchem.ncbi.nlm.nih.gov/source/hsdb/162); read via https://pubchem.ncbi.nlm.nih.gov/rest/pug_view/data/compound/222/JSON?heading=Boiling+Point. NIST WebBook https://webbook.nist.gov/cgi/cbook.cgi?ID=C7664417&Mask=4 lists no T_boil."
+   },
+   "review_status": "pending"
+  },
+  {
+   "id": "ph3",
+   "formula": "PH3",
+   "element": "P",
+   "cas": "7803-51-2",
+   "pubchem_cid": 24404,
+   "boiling_point": {
+    "value": -87.75,
+    "unit": "°C",
+    "as_given": "-87.75 °C",
+    "source": "pubchem",
+    "url": "https://pubchem.ncbi.nlm.nih.gov/compound/24404#section=Boiling-Point",
+    "reference": "Haynes, W.M. (ed.). CRC Handbook of Chemistry and Physics. 95th Edition. CRC Press LLC, Boca Raton: FL 2014-2015, p. 4-80",
+    "note": "PubChem, Experimental Properties > Boiling Point, entry from the Hazardous Substances Data Bank (https://pubchem.ncbi.nlm.nih.gov/source/hsdb/1233); read via https://pubchem.ncbi.nlm.nih.gov/rest/pug_view/data/compound/24404/JSON?heading=Boiling+Point. NIST WebBook https://webbook.nist.gov/cgi/cbook.cgi?ID=C7803512&Mask=4 lists no T_boil."
+   },
+   "review_status": "pending"
+  },
+  {
+   "id": "ash3",
+   "formula": "AsH3",
+   "element": "As",
+   "cas": "7784-42-1",
+   "pubchem_cid": 23969,
+   "boiling_point": {
+    "value": -62.5,
+    "unit": "°C",
+    "as_given": "-62.5 °C",
+    "source": "pubchem",
+    "url": "https://pubchem.ncbi.nlm.nih.gov/compound/23969#section=Boiling-Point",
+    "reference": "Haynes, W.M. (ed.) CRC Handbook of Chemistry and Physics. 91st ed. Boca Raton, FL: CRC Press Inc., 2010-2011, p. 4-49",
+    "note": "PubChem, Experimental Properties > Boiling Point, entry from the Hazardous Substances Data Bank (https://pubchem.ncbi.nlm.nih.gov/source/hsdb/510); read via https://pubchem.ncbi.nlm.nih.gov/rest/pug_view/data/compound/23969/JSON?heading=Boiling+Point. NIST WebBook https://webbook.nist.gov/cgi/cbook.cgi?ID=C7784421&Mask=4 lists no T_boil."
+   },
+   "review_status": "pending"
+  },
+  {
+   "id": "sbh3",
+   "formula": "SbH3",
+   "element": "Sb",
+   "cas": "7803-52-3",
+   "pubchem_cid": 9359,
+   "boiling_point": {
+    "value": -17.0,
+    "unit": "°C",
+    "as_given": "-17 °C",
+    "source": "pubchem",
+    "url": "https://pubchem.ncbi.nlm.nih.gov/compound/9359#section=Boiling-Point",
+    "reference": "Haynes, W.M. (ed.). CRC Handbook of Chemistry and Physics. 95th Edition. CRC Press LLC, Boca Raton: FL 2014-2015, p. 4-48",
+    "note": "PubChem, Experimental Properties > Boiling Point, entry from the Hazardous Substances Data Bank (https://pubchem.ncbi.nlm.nih.gov/source/hsdb/785); read via https://pubchem.ncbi.nlm.nih.gov/rest/pug_view/data/compound/9359/JSON?heading=Boiling+Point. NIST WebBook https://webbook.nist.gov/cgi/cbook.cgi?ID=C7803523&Mask=4 lists no T_boil."
+   },
+   "review_status": "pending"
+  },
+  {
+   "id": "h2o",
+   "formula": "H2O",
+   "element": "O",
+   "cas": "7732-18-5",
+   "pubchem_cid": 962,
+   "boiling_point": {
+    "value": 100.0,
+    "unit": "°C",
+    "as_given": "100 °C",
+    "source": "sgk",
+    "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983",
+    "reference": "SGK Hóa học 10 \"Kết nối tri thức với cuộc sống\", NXB Giáo dục Việt Nam, Bài 13, Bảng 13.1, tr. 65",
+    "note": "Bài 13, Bảng 13.1: nhiệt độ sôi t_s (°C) như sách in."
+   },
+   "second": {
+    "value": 373.17,
+    "uncertainty": 0.04,
+    "unit": "K",
+    "as_given": "373.17 ± 0.04 K",
+    "source": "nist",
+    "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7732185&Mask=4",
+    "reference": "N/A",
+    "note": "NIST: method AVG; Average of 7 values"
+   },
+   "review_status": "pending"
+  },
+  {
+   "id": "h2s",
+   "formula": "H2S",
+   "element": "S",
+   "cas": "7783-06-4",
+   "pubchem_cid": 402,
+   "boiling_point": {
+    "value": -60.75,
+    "unit": "°C",
+    "as_given": "−60,75 °C",
+    "source": "sgk",
+    "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983",
+    "reference": "SGK Hóa học 10 \"Kết nối tri thức với cuộc sống\", NXB Giáo dục Việt Nam, Bài 13, Bảng 13.1, tr. 65",
+    "note": "SGK ghi hai giá trị cho H2S: −60,75 °C ở Bảng 13.1 (tr. 65) và −60,28 °C ở câu hỏi mở đầu Bài 13 (tr. 64); dùng số của bảng."
+   },
+   "second": {
+    "value": 212.87,
+    "unit": "K",
+    "as_given": "212.87 K",
+    "source": "nist",
+    "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7783064&Mask=4",
+    "reference": "Goodwin, R.D., Hydrogen sulfide provisional thermophysical properties from 188 to 700K at pressures to 75 MPa, Report, NBSIR-83-1694; NTIS No. PB84-122704, 177 pp., 1983.",
+    "note": "NIST: method N/A; Uncertainty assigned by TRC = 0.07 K; TRC"
+   },
+   "review_status": "pending"
+  },
+  {
+   "id": "h2se",
+   "formula": "H2Se",
+   "element": "Se",
+   "cas": "7783-07-5",
+   "pubchem_cid": 533,
+   "boiling_point": {
+    "value": -41.3,
+    "unit": "°C",
+    "as_given": "-41.3 °C",
+    "source": "pubchem",
+    "url": "https://pubchem.ncbi.nlm.nih.gov/compound/533#section=Boiling-Point",
+    "reference": "O'Neil, M.J. (ed.). The Merck Index - An Encyclopedia of Chemicals, Drugs, and Biologicals. Whitehouse Station, NJ: Merck and Co., Inc., 2006., p. 831",
+    "note": "PubChem, Experimental Properties > Boiling Point, entry from the Hazardous Substances Data Bank (https://pubchem.ncbi.nlm.nih.gov/source/hsdb/548); read via https://pubchem.ncbi.nlm.nih.gov/rest/pug_view/data/compound/533/JSON?heading=Boiling+Point. NIST WebBook https://webbook.nist.gov/cgi/cbook.cgi?ID=C7783075&Mask=4 lists no T_boil."
+   },
+   "review_status": "pending"
+  },
+  {
+   "id": "h2te",
+   "formula": "H2Te",
+   "element": "Te",
+   "cas": "7783-09-7",
+   "pubchem_cid": 21765,
+   "boiling_point": null,
+   "missing": "Trang NIST WebBook (dữ liệu chuyển pha) không có nhiệt độ sôi T_boil và PubChem không có mục Boiling Point cho chất này (đọc ngày 15/11/2026): chưa có số liệu có nguồn, biểu đồ để trống.",
+   "review_status": "pending"
+  },
+  {
+   "id": "hf",
+   "formula": "HF",
+   "element": "F",
+   "cas": "7664-39-3",
+   "pubchem_cid": 14917,
+   "boiling_point": {
+    "value": 19.5,
+    "unit": "°C",
+    "as_given": "+19,5 °C",
+    "source": "sgk",
+    "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983",
+    "reference": "SGK Hóa học 10 \"Kết nối tri thức với cuộc sống\", NXB Giáo dục Việt Nam, Bài 22, Bảng 22.2, tr. 113",
+    "note": "Bài 22, Bảng 22.2: nhiệt độ sôi t_s (°C) như sách in."
+   },
+   "second": {
+    "value": 292.7,
+    "unit": "K",
+    "as_given": "292.7 K",
+    "source": "nist",
+    "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7664393&Mask=4",
+    "reference": "Streng, A.G., Miscibility and Compatibility of Some Liquid and Solidified Gases at Low Temperature, J. Chem. Eng. Data, 1971, 16, 357.",
+    "note": "NIST: method N/A; Uncertainty assigned by TRC = 0.25 K; TRC"
+   },
+   "review_status": "pending"
+  },
+  {
+   "id": "hcl",
+   "formula": "HCl",
+   "element": "Cl",
+   "cas": "7647-01-0",
+   "pubchem_cid": 313,
+   "boiling_point": {
+    "value": -84.9,
+    "unit": "°C",
+    "as_given": "−84,9 °C",
+    "source": "sgk",
+    "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983",
+    "reference": "SGK Hóa học 10 \"Kết nối tri thức với cuộc sống\", NXB Giáo dục Việt Nam, Bài 22, Bảng 22.2, tr. 113",
+    "note": "Bài 22, Bảng 22.2: nhiệt độ sôi t_s (°C) như sách in."
+   },
+   "second": {
+    "value": -85.05,
+    "unit": "°C",
+    "as_given": "-85.05 °C at 760 mm Hg",
+    "source": "pubchem",
+    "url": "https://pubchem.ncbi.nlm.nih.gov/compound/313#section=Boiling-Point",
+    "reference": "O'Neil, M.J. (ed.). The Merck Index - An Encyclopedia of Chemicals, Drugs, and Biologicals. Cambridge, UK: Royal Society of Chemistry, 2013., p. 888",
+    "note": "PubChem, Experimental Properties > Boiling Point, entry from the Hazardous Substances Data Bank (https://pubchem.ncbi.nlm.nih.gov/source/hsdb/545); read via https://pubchem.ncbi.nlm.nih.gov/rest/pug_view/data/compound/313/JSON?heading=Boiling+Point. NIST WebBook https://webbook.nist.gov/cgi/cbook.cgi?ID=C7647010&Mask=4 lists no T_boil."
+   },
+   "review_status": "pending"
+  },
+  {
+   "id": "hbr",
+   "formula": "HBr",
+   "element": "Br",
+   "cas": "10035-10-6",
+   "pubchem_cid": 260,
+   "boiling_point": {
+    "value": -66.7,
+    "unit": "°C",
+    "as_given": "−66,7 °C",
+    "source": "sgk",
+    "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983",
+    "reference": "SGK Hóa học 10 \"Kết nối tri thức với cuộc sống\", NXB Giáo dục Việt Nam, Bài 22, Bảng 22.2, tr. 113",
+    "note": "Bài 22, Bảng 22.2: nhiệt độ sôi t_s (°C) như sách in."
+   },
+   "second": {
+    "value": -66.38,
+    "unit": "°C",
+    "as_given": "-66.38 °C",
+    "source": "pubchem",
+    "url": "https://pubchem.ncbi.nlm.nih.gov/compound/260#section=Boiling-Point",
+    "reference": "Rumble J. (ed.). CRC Handbook of Chemistry and Physics. 99th ed. Cleveland: CRC Press Inc., 2018., p. 4-44",
+    "note": "PubChem, Experimental Properties > Boiling Point, entry from the Hazardous Substances Data Bank (https://pubchem.ncbi.nlm.nih.gov/source/hsdb/570); read via https://pubchem.ncbi.nlm.nih.gov/rest/pug_view/data/compound/260/JSON?heading=Boiling+Point. NIST WebBook https://webbook.nist.gov/cgi/cbook.cgi?ID=C10035106&Mask=4 lists no T_boil."
+   },
+   "review_status": "pending"
+  },
+  {
+   "id": "hi",
+   "formula": "HI",
+   "element": "I",
+   "cas": "10034-85-2",
+   "pubchem_cid": 24841,
+   "boiling_point": {
+    "value": -35.8,
+    "unit": "°C",
+    "as_given": "−35,8 °C",
+    "source": "sgk",
+    "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983",
+    "reference": "SGK Hóa học 10 \"Kết nối tri thức với cuộc sống\", NXB Giáo dục Việt Nam, Bài 22, Bảng 22.2, tr. 113",
+    "note": "Bài 22, Bảng 22.2: nhiệt độ sôi t_s (°C) như sách in."
+   },
+   "second": {
+    "value": -35.1,
+    "unit": "°C",
+    "as_given": "-35.1 °C at 760 mm Hg",
+    "source": "pubchem",
+    "url": "https://pubchem.ncbi.nlm.nih.gov/compound/24841#section=Boiling-Point",
+    "reference": "O'Neil, M.J. (ed.). The Merck Index - An Encyclopedia of Chemicals, Drugs, and Biologicals. 13th Edition, Whitehouse Station, NJ: Merck and Co., Inc., 2001., p. 858",
+    "note": "PubChem, Experimental Properties > Boiling Point, entry from the Hazardous Substances Data Bank (https://pubchem.ncbi.nlm.nih.gov/source/hsdb/2155); read via https://pubchem.ncbi.nlm.nih.gov/rest/pug_view/data/compound/24841/JSON?heading=Boiling+Point. NIST WebBook https://webbook.nist.gov/cgi/cbook.cgi?ID=C10034852&Mask=4 lists no T_boil."
+   },
+   "review_status": "pending"
+  }
+ ]
+}

@@ -1,0 +1,138 @@
+/* "Liên kết hóa học" topics (Bài 10–13). Colours from theme tokens only. */
+
+.bond-view {
+  display: flex;
+  flex-direction: column;
+}
+/* The drawing takes the room under the chip row (the overlay is absolute). */
+.bond-view__figure {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  padding-top: 48px;
+}
+/* Drawn 1.6× its own size (atom symbols about 35 px), only shrunk to fit the stage. */
+.lewis {
+  max-width: 100%;
+  max-height: 100%;
+}
+.lewis__bond {
+  stroke: var(--text);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+.lewis__atom {
+  fill: var(--text);
+  font-size: var(--text-heading);
+  font-weight: 600;
+}
+.lewis__charge {
+  fill: var(--text);
+  font-size: var(--text-md);
+  font-weight: 700;
+}
+.lewis__dot {
+  fill: var(--accent);
+}
+.lewis__ring {
+  fill: var(--conf-approx-soft);
+  stroke: var(--conf-approx);
+  stroke-width: 2;
+}
+.lewis__bond-label {
+  fill: var(--text-muted);
+  font-size: var(--text-caption);
+  font-style: italic;
+}
+
+/* Ionic bond: atom → ion, metal and non-metal side by side. */
+.ionic {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-top: 48px;
+}
+.ionic__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  justify-content: center;
+}
+.ionic__col {
+  flex: 1 1 260px;
+  max-width: 420px;
+  min-width: 0;
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel);
+}
+.ionic__col p {
+  margin: 4px 0;
+}
+/* UI font with tabular figures (as chem.css UI-35): monospace draws superscripts as dots. */
+.ionic__step,
+.ionic__conf,
+.ionic__balance {
+  font-variant-numeric: tabular-nums;
+}
+.ionic__step {
+  font-size: var(--text-content);
+  font-weight: 600;
+}
+.ionic__pair {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  color: var(--text-muted);
+}
+.ionic__conf {
+  font-size: var(--text-sm);
+  overflow-wrap: anywhere;
+}
+.ionic__balance {
+  margin: 0;
+  text-align: center;
+  font-size: var(--text-content);
+}
+.shells {
+  width: 132px;
+  height: 132px;
+  flex: none;
+}
+.shells__core {
+  fill: var(--text-muted);
+}
+.shells__ring {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 1.5;
+}
+.shells__e {
+  fill: var(--accent);
+}
+.shells__e--moving {
+  fill: var(--bg-panel);
+  stroke: var(--conf-approx);
+  stroke-width: 2;
+}
+
+/* Hydride chart: chips above, the chart fills the rest of the stage. */
+.bond-view--chart {
+  gap: var(--space-2);
+}
+.bond-view__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.chem-table tr.is-exception {
+  background: var(--conf-approx-soft);
+}
+.bond-sources td.small {
+  font-size: var(--text-xs);
+  overflow-wrap: anywhere;
+}
