@@ -77,6 +77,11 @@ function duplicates(ids: readonly string[]): boolean {
   return new Set(ids).size !== ids.length;
 }
 
+/** Two equal texts (in either language) would give two controls the same accessible name. */
+function sameText(texts: readonly { vi: string; en: string }[]): boolean {
+  return duplicates(texts.map((t) => t.vi)) || duplicates(texts.map((t) => t.en));
+}
+
 /** What makes a guided binding unusable even though every field has the right shape. */
 export function guidedProblems(b: GuidedBinding): string[] {
   const out: string[] = [];
@@ -87,18 +92,17 @@ export function guidedProblems(b: GuidedBinding): string[] {
     const at = `activities.${a.id}`;
     if (a.kind === 'order') {
       if (duplicates(a.items.map((i) => i.id))) out.push(`${at}: duplicate item id`);
+      if (sameText(a.items.map((i) => i.text))) out.push(`${at}: two identical item texts`);
     } else if (a.kind === 'match') {
       if (duplicates(a.pairs.map((p) => p.id))) out.push(`${at}: duplicate pair id`);
+      if (sameText(a.pairs.map((p) => p.left))) out.push(`${at}: two identical left-hand texts`);
       // Two equal right-hand texts would make a right answer look wrong.
-      if (
-        duplicates(a.pairs.map((p) => p.right.vi)) ||
-        duplicates(a.pairs.map((p) => p.right.en))
-      ) {
-        out.push(`${at}: two identical right-hand texts`);
-      }
+      if (sameText(a.pairs.map((p) => p.right))) out.push(`${at}: two identical right-hand texts`);
     } else {
       if (duplicates(a.groups.map((g) => g.id))) out.push(`${at}: duplicate group id`);
+      if (sameText(a.groups.map((g) => g.label))) out.push(`${at}: two identical group labels`);
       if (duplicates(a.items.map((i) => i.id))) out.push(`${at}: duplicate item id`);
+      if (sameText(a.items.map((i) => i.text))) out.push(`${at}: two identical item texts`);
       const groups = new Set(a.groups.map((g) => g.id));
       if (a.items.some((i) => !groups.has(i.group))) out.push(`${at}: unknown group`);
       if (a.groups.some((g) => !a.items.some((i) => i.group === g.id))) {

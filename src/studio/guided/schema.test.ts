@@ -143,6 +143,43 @@ describe('guided textbook lessons (SH10, #255)', () => {
         activities: [{ ...match, pairs: [p, { ...q, right: p.right }, ...others] }],
       }),
     ).toContain(`${at(match.id)}: two identical right-hand texts`);
-    expect(guidedProblems({ ...b, activities: [sort, match] })).toEqual([]);
+    // Equal texts would give two controls the same accessible name (one language is enough).
+    expect(
+      guidedProblems({
+        ...b,
+        activities: [{ ...match, pairs: [p, { ...q, left: { ...q.left, en: p.left.en } }] }],
+      }),
+    ).toContain(`${at(match.id)}: two identical left-hand texts`);
+    const [i2] = rest;
+    if (!i2) throw new Error('no second item');
+    expect(
+      guidedProblems({
+        ...b,
+        activities: [{ ...sort, items: [item, { ...i2, text: item.text }] }],
+      }),
+    ).toContain(`${at(sort.id)}: two identical item texts`);
+    const [g0, g1, ...groups] = sort.groups;
+    if (!g0 || !g1) throw new Error('no groups');
+    expect(
+      guidedProblems({
+        ...b,
+        activities: [
+          { ...sort, groups: [g0, { ...g1, label: { ...g1.label, vi: g0.label.vi } }, ...groups] },
+        ],
+      }),
+    ).toContain(`${at(sort.id)}: two identical group labels`);
+    const order = all.find((a) => a.kind === 'order');
+    if (order?.kind !== 'order') throw new Error('no order');
+    const [o0, o1, ...os] = order.items;
+    if (!o0 || !o1) throw new Error('no order items');
+    expect(
+      guidedProblems({
+        ...b,
+        activities: [{ ...order, items: [o0, { ...o1, text: o0.text }, ...os] }],
+      }),
+    ).toContain(`${at(order.id)}: two identical item texts`);
+    expect(guidedProblems({ ...b, activities: [sort, match, order] })).toEqual([]);
+    // Every lesson passes the same checks.
+    for (const s of lessons) expect(guidedProblems(bindingOf(s)), s.id).toEqual([]);
   });
 });
