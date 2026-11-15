@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useWorkspaceStore } from '@/app/workspaceStore';
 import { loadModule } from '@/modules/registry';
+import { ScienceCard } from '@/science-card/ScienceCard';
 import type { StudioScenario } from '../scenario';
 import StudioScreen from '../StudioScreen';
 import { useStudioStore } from '../studioStore';
@@ -26,6 +27,14 @@ function lesson(topic: string): StudioScenario {
 }
 
 const next = () => screen.getByRole('button', { name: /^Tiếp:/ });
+
+/** What a reader sees or hears: the text and every accessible name given by an attribute. */
+function spoken(root: HTMLElement): string {
+  const names = [...root.querySelectorAll('[aria-label], [title], [alt]')].map((el) =>
+    ['aria-label', 'title', 'alt'].map((a) => el.getAttribute(a) ?? '').join(' '),
+  );
+  return [root.textContent, ...names].join(' ');
+}
 
 type User = ReturnType<typeof userEvent.setup>;
 
@@ -68,18 +77,47 @@ describe('guided textbook lessons in the lab library', () => {
       for (const c of b.choices)
         expect(screen.getByRole('radio', { name: c.text.vi })).toBeEnabled();
       const card = useWorkspaceStore.getState().scienceCard;
-      expect(card?.confidence).toBe('qualitative');
-      expect(card?.equations).toEqual([]);
-      expect(card?.assumptions[0]?.vi).toBe('Nội dung mô tả, không có mô phỏng định lượng.');
+      if (!card) throw new Error('card');
+      expect(card.confidence).toBe('qualitative');
+      expect(card.equations).toEqual([]);
+      expect(card.assumptions[0]?.vi).toBe(
+        'Bài học mô tả theo sách giáo khoa, bằng lời văn của SimLab: không có thí nghiệm, phép đo hay phép tính.',
+      );
+      // The model line names only the kinds of activity this lesson has.
+      const kinds = new Set(b.activities.map((a) => a.kind));
+      for (const [kind, word] of [
+        ['order', 'sắp xếp'],
+        ['match', 'ghép đôi'],
+        ['sort', 'phân loại'],
+      ] as const) {
+        expect(card.model.vi.includes(word), `${topic} ${kind}`).toBe(kinds.has(kind));
+      }
       const l = knttLesson(b.kntt);
-      expect(card?.sources[0]?.citation).toContain(
+      expect(card.sources[0]?.citation).toContain(
         `Bài ${String(l?.number)}. ${l?.title ?? ''}, tr. `,
       );
+      expect(stage.container.textContent).not.toMatch(/mô phỏng/i);
       stage.unmount();
       if (!view.Panel) throw new Error('panel');
       const panel = render(<view.Panel />);
       expect(panel.container).toHaveTextContent('Bài học mô tả: không có thí nghiệm hay số đo.');
       expect(panel.container).toHaveTextContent(`Bài ${String(b.kntt.lesson)} “${l?.title ?? ''}”`);
+      panel.unmount();
+      // The card as the Inspector and Science Studio show it, in both languages.
+      for (const [locale, word] of [
+        ['vi', /mô phỏng/i],
+        ['en', /simulat/i],
+      ] as const) {
+        act(() => {
+          useSettingsStore.setState({ locale });
+        });
+        const shown = render(<ScienceCard card={card} />);
+        expect(spoken(shown.container), `${topic} ${locale}`).not.toMatch(word);
+        expect(
+          shown.getByRole('article', { name: locale === 'vi' ? 'Thẻ Khoa học' : 'Science Card' }),
+        ).toBeInTheDocument();
+        shown.unmount();
+      }
     },
   );
 

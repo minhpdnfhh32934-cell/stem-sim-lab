@@ -44,15 +44,28 @@ export function knttSource(kntt: { book: string; lesson: number }): Source | nul
   const pages = l.to === null ? `tr. ${l.from}` : `tr. ${l.from}–${l.to}`;
   return {
     id: `kntt-${kntt.book.toLowerCase()}-${l.number}`,
-    citation: `SGK ${l.bookTitle} “Kết nối tri thức với cuộc sống”, NXB Giáo dục Việt Nam — Bài ${l.number}. ${l.title}, ${pages} (lời văn SimLab, bám theo nội dung bài)`,
+    citation: `SGK ${l.bookTitle} “Kết nối tri thức với cuộc sống”, NXB Giáo dục Việt Nam — Bài ${l.number}. ${l.title}, ${pages}`,
     url: l.url,
   };
 }
 
 const DESCRIPTIVE = L(
-  'Nội dung mô tả, không có mô phỏng định lượng.',
-  'Descriptive content, with no quantitative simulation.',
+  'Bài học mô tả theo sách giáo khoa, bằng lời văn của SimLab: không có thí nghiệm, phép đo hay phép tính.',
+  'A descriptive lesson that follows the textbook, in SimLab’s own words: no experiment, measurement or calculation.',
 );
+
+/** How each kind of activity is named in the card's model line. */
+const KIND = {
+  order: L('sắp xếp', 'order'),
+  match: L('ghép đôi', 'match'),
+  sort: L('phân loại', 'sort'),
+} as const;
+
+/** "a, b và c" / "a, b and c". */
+function list(words: string[], and: string): string {
+  const last = words.at(-1) ?? '';
+  return words.length > 1 ? `${words.slice(0, -1).join(', ')} ${and} ${last}` : last;
+}
 
 /**
  * Science Card of a guided lesson: qualitative, no equation, the lesson's own assumptions and
@@ -61,11 +74,19 @@ const DESCRIPTIVE = L(
 export function guidedCard(scenario: StudioScenario): ScienceCardData {
   const b = guidedOf(scenario);
   const source = b ? knttSource(b.kntt) : null;
+  // Only the kinds this lesson has, in the order it first uses them.
+  const kinds = [...new Set(b?.activities.map((a) => a.kind) ?? [])].map((k) => KIND[k]);
   return {
     title: scenario.title,
     model: L(
-      'Bài học có hướng dẫn theo sách giáo khoa: một câu dự đoán và các hoạt động sắp xếp, ghép đôi, phân loại. Đáp án là chính nội dung bài, ứng dụng chỉ so câu trả lời với đáp án.',
-      'A guided lesson that follows the textbook: one prediction and activities that order, match and sort. The answers are the lesson’s own content; the app only compares each answer with them.',
+      `Bài học có hướng dẫn theo sách giáo khoa: một câu dự đoán và các hoạt động ${list(
+        kinds.map((k) => k.vi),
+        'và',
+      )}. Đáp án là chính nội dung bài, ứng dụng chỉ so câu trả lời với đáp án.`,
+      `A guided lesson that follows the textbook: one prediction and activities that ${list(
+        kinds.map((k) => k.en),
+        'and',
+      )}. The answers are the lesson’s own content; the app only compares each answer with them.`,
     ),
     equations: [],
     assumptions: [DESCRIPTIVE, ...scenario.assumptions, ...scenario.limits],

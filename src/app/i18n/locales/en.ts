@@ -511,7 +511,7 @@ const en: Messages = {
     commandPalette: 'Quick search: topics, Settings, actions',
   },
   science: {
-    cardLabel: 'Science Card of the simulation',
+    cardLabel: 'Science Card',
     model: 'Model',
     equations: 'Equations',
     assumptions: 'Assumptions',

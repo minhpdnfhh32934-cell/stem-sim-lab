@@ -511,7 +511,7 @@ const vi = {
     commandPalette: 'Tìm nhanh: chủ đề, cài đặt, thao tác',
   },
   science: {
-    cardLabel: 'Thẻ Khoa học của mô phỏng',
+    cardLabel: 'Thẻ Khoa học',
     model: 'Mô hình',
     equations: 'Phương trình',
     assumptions: 'Giả định',
