@@ -96,6 +96,12 @@ describe('hand-typed facts on the cards are tied to the data (#255 review)', () 
     const unstable = left.filter((e) => !e.reason.includes('á kim')).map((e) => e.element);
     expect(text(IONIC_CARD)).toContain(`á kim (${metalloids.join(', ')})`);
     expect(text(IONIC_CARD)).toContain(`đồng vị bền (${unstable.join(', ')})`);
+    const of = (src: string) =>
+      IONS.filter((i) => i.source === src)
+        .map((i) => i.element)
+        .join(', ');
+    expect(text(IONIC_CARD)).toContain(`SGK in sẵn ion của ${of('sgk')};`);
+    expect(text(IONIC_CARD)).toContain(`ion của ${of('openstax')} lấy theo OpenStax`);
   });
 
   it('forces: the book tables, the gaps, the second sources and the two H₂S values', () => {
@@ -153,6 +159,9 @@ describe('panels', () => {
     expect(container).toHaveTextContent('O²⁻ (giống khí hiếm Ne)');
     fireEvent.change(screen.getByLabelText('Phi kim'), { target: { value: 'I' } });
     expect(screen.getByRole('note')).toHaveTextContent('nghiêng về cộng hóa trị phân cực');
+    // Where each charge comes from: the page of the textbook, or the second source.
+    expect(container).toHaveTextContent('Al³⁺: SGK Bài 11 tr. 51: Al → Al³⁺ + 3e');
+    expect(container).toHaveTextContent('I⁻: SGK không in ion này');
   });
 
   it('covalent: σ/π totals and the HF exception in the bond table', () => {

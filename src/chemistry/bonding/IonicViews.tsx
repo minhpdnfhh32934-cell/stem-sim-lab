@@ -232,6 +232,24 @@ export function IonicPanel() {
           </tr>
         </tbody>
       </table>
+      <p className="small muted">
+        {[CATIONS.find((i) => i.element === metal), ANIONS.find((i) => i.element === nonmetal)]
+          .map((i) =>
+            !i
+              ? ''
+              : `${ionLabel(i.element, i.charge)}: ${
+                  i.book
+                    ? Lz(L(`SGK ${i.book}`, `textbook ${i.book}`))
+                    : Lz(
+                        L(
+                          'SGK không in ion này; theo quy tắc của sách và OpenStax Hình 2.29',
+                          'not printed in the textbook; by the book’s rule and OpenStax Fig. 2.29',
+                        ),
+                      )
+                }`,
+          )
+          .join(' · ')}
+      </p>
       {k.bondType && k.bondType !== 'ionic' && (
         <p className="chem-note chem-note--warn" role="note">
           <TriangleAlert size={15} strokeWidth={1.75} aria-hidden="true" />

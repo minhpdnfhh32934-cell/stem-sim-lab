@@ -3,7 +3,7 @@ import type { ScienceCardData } from '@/science-card/types';
 import { L } from '../common';
 import { ELEMENTS_SOURCE } from '../data/elements';
 import { HYDRIDES_SOURCE } from '../data/hydrides';
-import { IONS_SOURCE } from '../data/ions';
+import { IONS_SECOND_SOURCE, IONS_SOURCE } from '../data/ions';
 import { MOLECULES_SOURCE } from '../data/molecules';
 
 const READER = 'https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983';
@@ -85,8 +85,8 @@ export const OCTET_CARD: ScienceCardData = {
 export const IONIC_CARD: ScienceCardData = {
   title: L('Liên kết ion', 'Ionic bond'),
   model: L(
-    'Nguyên tử kim loại nhường electron thành ion dương, nguyên tử phi kim nhận electron thành ion âm; điện tích ion lấy từ bảng ion thường gặp. Cấu hình electron của ion suy từ cấu hình nguyên tử trong bảng dữ liệu (bớt electron ở lớp ngoài cùng, hoặc thêm vào phân lớp p ngoài cùng) rồi so với cấu hình khí hiếm trong bảng. Công thức hợp chất: tổng điện tích bằng 0.',
-    'The metal atom gives electrons and becomes a positive ion, the non-metal atom takes electrons and becomes a negative ion; the ion charges come from the table of common ions. The ion’s configuration is derived from the atom’s configuration in the data table (electrons removed from the outermost shell, or added to the outermost p subshell) and compared with the noble gas configuration in the table. Compound formula: total charge zero.',
+    'Nguyên tử kim loại nhường electron thành ion dương, nguyên tử phi kim nhận electron thành ion âm. Điện tích ion theo SGK (Bài 11 tr. 51): bằng số electron nhường hoặc nhận, để ion có cấu hình của khí hiếm gần nhất; ion nào sách in sẵn (tr. 51–52) thì lấy từ sách, các ion khác theo danh sách OpenStax Hình 2.29, khớp quy tắc của sách. Cấu hình electron của ion suy từ cấu hình nguyên tử trong bảng dữ liệu (bớt electron ở lớp ngoài cùng, hoặc thêm vào phân lớp p ngoài cùng) rồi so với cấu hình khí hiếm trong bảng. Công thức hợp chất: tổng điện tích bằng 0.',
+    'The metal atom gives electrons and becomes a positive ion, the non-metal atom takes electrons and becomes a negative ion. Ion charges follow the textbook (Lesson 11, p. 51): the number of electrons given or taken, so that the ion has the configuration of the nearest noble gas; the ions the book prints (pp. 51–52) come from the book, the others from the OpenStax Figure 2.29 list, which agrees with the book’s rule. The ion’s configuration is derived from the atom’s configuration in the data table (electrons removed from the outermost shell, or added to the outermost p subshell) and compared with the noble gas configuration in the table. Compound formula: total charge zero.',
   ),
   equations: [
     {
@@ -111,8 +111,8 @@ export const IONIC_CARD: ScienceCardData = {
       'The Pauling electronegativity difference is compared with the thresholds of SGK Table 12.1: below 1.7 the bond leans to polar covalent.',
     ),
     L(
-      'Bảng ion giữ các nhóm 1, 2, 13, 15–17; bỏ các nguyên tố á kim (As, Te) và không có đồng vị bền (Fr, Ra, At).',
-      'The ion table keeps groups 1, 2, 13, 15–17; metalloids (As, Te) and elements without a stable isotope (Fr, Ra, At) are left out.',
+      'Bảng ion giữ các nhóm 1, 2, 13, 15–17; bỏ các nguyên tố á kim (As, Te) và không có đồng vị bền (Fr, Ra, At). SGK in sẵn ion của Li, Na, K, Be, Mg, Ca, Al, O, S, F, Cl, Br; ion của Rb, Cs, Sr, Ba, N, P, Se, I lấy theo OpenStax.',
+      'The ion table keeps groups 1, 2, 13, 15–17; metalloids (As, Te) and elements without a stable isotope (Fr, Ra, At) are left out. The textbook prints the ions of Li, Na, K, Be, Mg, Ca, Al, O, S, F, Cl, Br; those of Rb, Cs, Sr, Ba, N, P, Se, I follow OpenStax.',
     ),
   ],
   validity: L(
@@ -125,7 +125,7 @@ export const IONIC_CARD: ScienceCardData = {
     'Charges and configurations are looked up from data tables; the formula is computed exactly from the charge balance. The bond type is a prediction from the textbook’s thresholds (Table 12.1), with exceptions.',
   ),
   userIntervened: false,
-  sources: [KNTT.b11, IONS_SOURCE, ELEMENTS_SOURCE],
+  sources: [KNTT.b11, IONS_SOURCE, IONS_SECOND_SOURCE, ELEMENTS_SOURCE],
   reviewStatus: 'pending',
 };
 

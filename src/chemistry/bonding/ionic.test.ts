@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { configString, elementBySymbol } from '../data/elements';
-import { IONS } from '../data/ions';
+import { IONS, IONS_SECOND_SOURCE, IONS_SOURCE } from '../data/ions';
+import { valenceElectrons } from '../data/molecules';
 import {
   ANIONS,
   CATIONS,
@@ -28,6 +29,28 @@ describe('ionic bond (Bài 11): ion table, configurations and charge balance', (
     }
     expect(IONS.map((i) => i.element)).not.toContain('As');
     expect(IONS.map((i) => i.element)).not.toContain('Fr');
+  });
+
+  it('the textbook first (Bài 11): the ions it prints, the rest by its rule (OpenStax list)', () => {
+    const book = IONS.filter((i) => i.source === 'sgk');
+    expect(book.map((i) => i.element).sort()).toEqual(
+      ['Al', 'Be', 'Br', 'Ca', 'Cl', 'F', 'K', 'Li', 'Mg', 'Na', 'O', 'S'].sort(),
+    );
+    for (const i of book) expect(i.book, i.element).toMatch(/^Bài 11 tr. 5[12]/);
+    expect(IONS.find((i) => i.element === 'Al')?.book).toBe('Bài 11 tr. 51: Al → Al³⁺ + 3e');
+    expect(
+      IONS.filter((i) => i.source === 'openstax')
+        .map((i) => i.element)
+        .sort(),
+    ).toEqual(['Ba', 'Cs', 'I', 'N', 'P', 'Rb', 'Se', 'Sr'].sort());
+    // The book's rule (Bài 11 tr. 51, Bảng 10.1): a metal of group nA gives n electrons, a
+    // non-metal of group nA takes 8 − n. Every ion of the table follows it.
+    for (const i of IONS) {
+      const v = valenceElectrons(i.element) ?? NaN;
+      expect(i.charge, i.element).toBe(v <= 3 ? v : v - 8);
+    }
+    expect(IONS_SOURCE.citation).toContain('Bài 11 tr. 51');
+    expect(IONS_SECOND_SOURCE.citation).toContain('OpenStax');
   });
 
   it('configurations before and after, as SGK writes them for Na⁺ and Cl⁻', () => {
