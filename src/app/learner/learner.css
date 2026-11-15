@@ -568,6 +568,11 @@
 /* ---------- Basic / Advanced switch ---------- */
 .mode-switch .segmented__item {
   min-height: 1.9rem;
+  /* One line at every font size: "Cơ bản" wrapped in the narrow Inspector header at 140 %. */
+  white-space: nowrap;
+}
+.mode-switch--compact {
+  flex: none;
 }
 /* Touch: the full target (this rule is more specific than layout.css's `.segmented__item`). */
 @media (any-pointer: coarse) {
