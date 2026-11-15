@@ -62,8 +62,14 @@
   margin: 0 0 var(--space-3);
   font-size: var(--text-sm);
 }
-.p3-arrow__bar {
+.p3-arrow__line {
+  display: flex;
+  align-items: center;
   width: 100%;
+  color: var(--chart-4);
+}
+.p3-arrow__bar {
+  flex: 1;
   height: 8px;
   border-radius: var(--radius-full);
   background: linear-gradient(to right, var(--chart-1), var(--chart-4));

@@ -45,7 +45,7 @@ export const REDOX_CARD: ScienceCardData = {
   assumptions: [
     L(
       'Quy tắc của sách (Bảng 15.1): đơn chất 0; trong hợp chất H là +1, O là −2, kim loại nhóm IA +1, nhóm IIA +2, Al +3; tổng bằng điện tích; ion đơn nguyên tử có số oxi hoá bằng điện tích ion.',
-      'The book’s rules (Bảng 15.1): free elements 0; in compounds H is +1, O is −2, group IA metals +1, group IIA +2, Al +3; the sum equals the charge; a monatomic ion has its charge.',
+      'The book’s rules (SGK Table 15.1): free elements 0; in compounds H is +1, O is −2, group IA metals +1, group IIA +2, Al +3; the sum equals the charge; a monatomic ion has its charge.',
     ),
     L(
       'Ngoại lệ thường gặp (OpenStax §4.2; SGK tr. 106 cho fluorine): F luôn −1; O là −1 trong peroxide và dương khi liên kết với F; H là −1 khi liên kết với kim loại; Cl, Br, I là −1 trong hợp chất hai nguyên tố với kim loại.',

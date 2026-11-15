@@ -11,7 +11,7 @@ export const ENTHALPY_CARD: ScienceCardData = {
   ),
   model: L(
     'Biến thiên enthalpy của phản ứng được xác định bằng hiệu số giữa tổng nhiệt tạo thành các chất sản phẩm và tổng nhiệt tạo thành của các chất đầu, có nhân hệ số trong phương trình (SGK Bài 17, tr. 85). Hệ số lấy từ bộ cân bằng chính xác; nhiệt tạo thành chuẩn lấy từ SGK Bảng 17.1, chất nào bảng không có thì lấy từ NIST Chemistry WebBook. Dấu của ΔrH cho biết phản ứng toả nhiệt (ΔrH < 0) hay thu nhiệt (ΔrH > 0).',
-    'The reaction’s enthalpy change is the total enthalpy of formation of the products minus that of the reactants, each multiplied by its coefficient (SGK Lesson 17, p. 85). The coefficients come from the exact balancer; standard enthalpies of formation come from SGK Bảng 17.1, and from the NIST Chemistry WebBook for species the table lacks. The sign of ΔrH tells whether the reaction releases heat (ΔrH < 0) or absorbs it (ΔrH > 0).',
+    'The reaction’s enthalpy change is the total enthalpy of formation of the products minus that of the reactants, each multiplied by its coefficient (SGK Lesson 17, p. 85). The coefficients come from the exact balancer; standard enthalpies of formation come from SGK Table 17.1, and from the NIST Chemistry WebBook for species the table lacks. The sign of ΔrH tells whether the reaction releases heat (ΔrH < 0) or absorbs it (ΔrH > 0).',
   ),
   equations: [
     {

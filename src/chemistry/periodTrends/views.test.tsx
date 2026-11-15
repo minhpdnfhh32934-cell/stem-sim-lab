@@ -24,7 +24,9 @@ describe('Oxide và hydroxide trong chu kì 3 (HH10 Bài 7)', () => {
       'AlIIIA · +3Al₂O₃oxide lưỡng tínhAl(OH)₃hydroxide lưỡng tính',
     );
     expect(cards[6]).toHaveTextContent('ClVIIA · +7Cl₂O₇acidic oxideHClO₄acid rất mạnh');
-    expect(screen.getByText('Chiều giảm tính base và tăng tính acid')).toBeInTheDocument();
+    expect(
+      screen.getByText('Chiều giảm tính base và tăng tính acid (Na → Cl)'),
+    ).toBeInTheDocument();
   });
 
   it('clicking a card shows how its formulas follow from the group', () => {

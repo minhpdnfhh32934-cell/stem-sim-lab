@@ -1,4 +1,4 @@
-import { CircleCheck } from 'lucide-react';
+import { ArrowRight, CircleCheck } from 'lucide-react';
 import { useLocalized } from '@/app/i18n/localized';
 import type { LocalizedText } from '@/core/data/dataset';
 import { L, usePublishCard } from '../common';
@@ -78,12 +78,15 @@ export function PeriodTrendStage() {
         ))}
       </ol>
       <p className="p3-arrow">
-        <span className="p3-arrow__bar" aria-hidden="true" />
+        <span className="p3-arrow__line" aria-hidden="true">
+          <span className="p3-arrow__bar" />
+          <ArrowRight size={20} strokeWidth={1.75} />
+        </span>
         <span>
           {Lz(
             L(
-              'Chiều giảm tính base và tăng tính acid',
-              'Basic character falls, acidic character rises',
+              'Chiều giảm tính base và tăng tính acid (Na → Cl)',
+              'Basic character falls, acidic character rises (Na → Cl)',
             ),
           )}
         </span>
@@ -155,7 +158,7 @@ export function PeriodTrendPanel() {
           {formatFormula(r.hydroxide)} —{' '}
           {r.hydroxideFrom === 'rule'
             ? Lz(L('kim loại: E(OH)ₙ', 'metal: E(OH)ₙ'))
-            : Lz(L('công thức acid theo SGK Bảng 7.1', 'acid formula from SGK Bảng 7.1'))}
+            : Lz(L('công thức acid theo SGK Bảng 7.1', 'acid formula from SGK Table 7.1'))}
         </dd>
         {r.checked && (
           <dd className="p3-check">

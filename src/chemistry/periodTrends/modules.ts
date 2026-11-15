@@ -10,7 +10,7 @@ export const periodTrends: ModuleView = {
   Stage: PeriodTrendStage,
   Panel: PeriodTrendPanel,
   Bottom: PeriodTrendBottom,
-  bottomTitle: L('Tính acid – base (SGK Bảng 7.2)', 'Acid–base character (SGK Bảng 7.2)'),
+  bottomTitle: L('Tính acid – base (SGK Bảng 7.2)', 'Acid–base character (SGK Table 7.2)'),
   state: bindStore(usePeriodTrendStore, ['z'], (p) => {
     selectPeriod3Element(p.z);
   }),
