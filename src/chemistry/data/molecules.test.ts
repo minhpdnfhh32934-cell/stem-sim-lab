@@ -5,6 +5,7 @@ import {
   angle,
   bondPolarity,
   centralAtom,
+  deltaEn,
   hasSeveralCentres,
   distance,
   findMolecules,
@@ -12,6 +13,8 @@ import {
   lonePairs,
   moleculeById,
   neighbors,
+  partialSigns,
+  paulingDelta,
   polarity,
   prettyFormula,
   vsepr,
@@ -149,6 +152,50 @@ describe('molecule library', () => {
     expect(bondPolarity(0.4)).toBe('polar');
     expect(bondPolarity(1.69)).toBe('polar');
     expect(bondPolarity(1.7)).toBe('ionic');
+  });
+
+  it('Δχ is read to the 2 decimals of the Pauling values, so a 0,40 difference is polar', () => {
+    // 3.44 − 3.04 is 0.3999… in floating point (#255).
+    expect(paulingDelta('O', 'N')).toBe(0.4);
+    expect(bondPolarity(paulingDelta('O', 'N') ?? NaN)).toBe('polar');
+    const no3 = mol('no3');
+    for (const b of no3.bonds) expect(bondPolarity(deltaEn(no3, b) ?? NaN)).toBe('polar');
+    expect(paulingDelta('Cl', 'H')).toBe(0.96);
+    expect(paulingDelta('Xx', 'H')).toBeNull();
+  });
+
+  it('partial signs read Δχ like paulingDelta: O of NO₃⁻ and NO gets δ−, N δ+', () => {
+    const no3 = mol('no3');
+    const signs = partialSigns(no3);
+    no3.atoms.forEach((a, i) => {
+      expect(signs[i], `${a.el}${String(i)}`).toBe(a.el === 'O' ? '−' : '+');
+    });
+    const no = mol('no');
+    expect(no.atoms.map((a, i) => `${a.el}${partialSigns(no)[i] ?? ''}`)).toEqual(['N+', 'O−']);
+    // HCN: C–H (0,35) is non-polar and adds nothing; C≡N (0,49) is polar: C δ+, N δ−, H unsigned.
+    const hcn = mol('hcn');
+    expect(hcn.atoms.map((a, i) => `${a.el}${partialSigns(hcn)[i] ?? ''}`)).toEqual([
+      'C+',
+      'N−',
+      'H',
+    ]);
+  });
+
+  it('partial signs skip non-polar bonds (Bảng 12.1): CH₄ unsigned, C₂H₅OH signs only C–O–H', () => {
+    expect(new Set(partialSigns(mol('ch4')))).toEqual(new Set(['']));
+    const e = mol('c2h5oh');
+    const s = partialSigns(e);
+    const o = e.atoms.findIndex((a) => a.el === 'O');
+    const nb = neighbors(e, o);
+    const cO = nb.find((i) => e.atoms[i]?.el === 'C') ?? -1;
+    const hO = nb.find((i) => e.atoms[i]?.el === 'H') ?? -1;
+    expect(s[o]).toBe('−');
+    expect(s[cO]).toBe('+');
+    expect(s[hO]).toBe('+');
+    // Every other atom (the CH₃ carbon and the C–H hydrogens) is unsigned.
+    e.atoms.forEach((a, i) => {
+      if (![o, cO, hO].includes(i)) expect(s[i], `${a.el}${String(i)}`).toBe('');
+    });
   });
 
   it('molecular polarity (qualitative) matches textbook expectations', () => {

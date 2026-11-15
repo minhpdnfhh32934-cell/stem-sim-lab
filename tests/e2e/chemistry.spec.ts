@@ -18,6 +18,10 @@ const TOPICS = [
   'Cân bằng hóa học & Le Chatelier',
   'Chuẩn độ acid – base',
   'Tinh thể kim loại và NaCl',
+  'Quy tắc octet',
+  'Liên kết ion',
+  'Liên kết cộng hóa trị',
+  'Liên kết hydrogen và tương tác van der Waals',
 ];
 
 async function openChemistry(page: Page) {

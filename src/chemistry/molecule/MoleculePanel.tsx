@@ -17,6 +17,7 @@ import {
   polarity,
   prettyFormula,
   textbookFormula,
+  unpairedOn,
   vsepr,
   type Molecule,
 } from '../data/molecules';
@@ -112,8 +113,8 @@ export function MoleculePanel({ topic }: { topic: MoleculeTopic }) {
         <p className="muted small">
           {Lz(
             L(
-              `E = (e hóa trị − điện tích − tổng bậc liên kết)/2 = ${lonePairs(m, c)} cặp electron tự do trên ${m.atoms[c].el}.`,
-              `E = (valence e − charge − Σ bond orders)/2 = ${lonePairs(m, c)} lone pair(s) on ${m.atoms[c].el}.`,
+              `E = (e hóa trị − điện tích − tổng bậc liên kết)/2 = ${lonePairs(m, c)} cặp electron tự do${unpairedOn(m, c) ? ' + 1 electron độc thân' : ''} trên ${m.atoms[c].el}.`,
+              `E = (valence e − charge − Σ bond orders)/2 = ${lonePairs(m, c)} lone pair(s)${unpairedOn(m, c) ? ' + 1 unpaired electron' : ''} on ${m.atoms[c].el}.`,
             ),
           )}
         </p>
@@ -191,6 +192,7 @@ function Selection({ m, atoms, bond }: { m: Molecule; atoms: number[]; bond: num
             <th scope="row">{name(a)}</th>
             <td className="num">
               {Lz(L(`${lonePairs(m, a)} cặp e tự do`, `${lonePairs(m, a)} lone pair(s)`))}
+              {unpairedOn(m, a) ? Lz(L(' + 1 electron độc thân', ' + 1 unpaired electron')) : ''}
               {m.atoms[a]?.charge
                 ? `, ${Lz(L('điện tích hình thức', 'formal charge'))} ${m.atoms[a].charge > 0 ? '+' : ''}${m.atoms[a].charge}`
                 : ''}

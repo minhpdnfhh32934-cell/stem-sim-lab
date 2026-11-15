@@ -40,6 +40,11 @@ const MODULES: Record<string, () => Promise<ModuleView>> = {
   microbeGrowth: () => import('@/biology/sh10Modules').then((m) => m.microbeGrowth),
   virusStructure: () => import('@/biology/sh10Modules').then((m) => m.virusStructure),
   crystalStructure: () => import('@/chemistry/crystal/modules').then((m) => m.crystalStructure),
+  octetRule: () => import('@/chemistry/bonding/modules').then((m) => m.octetRule),
+  ionicBond: () => import('@/chemistry/bonding/modules').then((m) => m.ionicBond),
+  covalentBond: () => import('@/chemistry/bonding/modules').then((m) => m.covalentBond),
+  intermolecularForces: () =>
+    import('@/chemistry/bonding/modules').then((m) => m.intermolecularForces),
   // Physics lesson with its own view (no time stepping): harmonics and Fourier series.
   fourierSeries: () => import('@/physics/fourier/modules').then((m) => m.fourierSeries),
 };

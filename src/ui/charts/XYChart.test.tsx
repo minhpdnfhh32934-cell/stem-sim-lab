@@ -99,4 +99,21 @@ describe('XYChart axes', () => {
     expect(at(77)).toBeLessThan(30);
     expect(at(400)).toBe(30);
   });
+
+  it('whole-number x ticks and a line with markers when asked (hydrides by period, #255)', async () => {
+    const opts = await optionsOf(
+      <XYChart
+        x={[2, 3, 4, 5]}
+        series={[{ label: 'IVA', y: [1, 2, null, 4], markers: true }]}
+        xLabel="Chu kì"
+        yLabel="t"
+        xIntegers
+      />,
+    );
+    type SplitsFn = (u: unknown, i: number, lo: number, hi: number) => number[];
+    expect((opts.axes?.[0]?.splits as SplitsFn)(null, 0, 1.8, 5.2)).toEqual([2, 3, 4, 5]);
+    expect(opts.series[1]).toMatchObject({ width: 2, points: { show: true } });
+    const plain = await optionsOf(chart);
+    expect(plain.axes?.[0]?.splits).toBeUndefined();
+  });
 });
