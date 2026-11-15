@@ -203,14 +203,18 @@ subject): a prediction and one to three activities (put in order, match, sort) w
 lesson file itself (`guided/lessons/*.ts`, SH10-GL-*, no digits in the text). `guided/check.ts` is
 pure: fixed shuffles that are never the answer, the answer sheet in `session.actions` (validated on
 every read: storage and files are untrusted), scoring, and one facts-only engine record (model
-`guided`) so the report takes its data-library path. `guided/plugin.ts` + `GuidedSteps.tsx` +
+`guided`, never shown: the report, its unverified list and the AI context name the lesson's
+answers instead). Leaving Predict locks the prediction (`session.goTo`): the activities give the
+answers away. `guided/plugin.ts` + `GuidedSteps.tsx` +
 `GuidedActivity.tsx` plug into `PoeFlow`; the plugin renames the steps and every line that would say
 "mô phỏng" (`studio.guided.*`, also `ReviewNote`, `ConcludeStep`, `report.ts`, `AskTeacher`).
 `guided/card.ts` builds a `qualitative` card whose source (book, lesson, printed pages) comes from
-`CURRICULUM`. Each lesson is also a library topic (`guided/topics.ts` → lazy `guidedModule(id)` in
+`CURRICULUM` and whose model line names only the lesson's activity kinds. In the lab the stage
+frame says "Khung bài học" for these topics (`stage.lesson*`, `moduleStore.requested`). Each lesson is also a library topic (`guided/topics.ts` → lazy `guidedModule(id)` in
 `src/modules/registry.ts`): `ScenarioHeader` + `PoeFlow` on the stage, an honest Inspector line, and
 `bindStore` over the studio store so files, history and undo carry the answers. Kept out of
-`builtInScenarios()`; Science Studio lists them as their own group. Authoring refuses them.
+`builtInScenarios()`; Science Studio lists them as their own group. Authoring refuses them
+(`guidedBuiltIn`), and stored teacher lessons drop them.
 
 Teaching text is `review_status: "pending"` (`docs/DATA_REVIEW.md` items 20–23) and is shown with
 its label. Tests: unit tests next to each file (`src/studio/**/*.test.ts(x)`), E2E

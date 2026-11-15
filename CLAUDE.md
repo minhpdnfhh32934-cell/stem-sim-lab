@@ -605,8 +605,9 @@ Progress log: `docs/PROGRESS.md`.
   prediction + order/match/sort activities whose key is the lesson data, `check.ts` pure, facts-only
   record, card `qualitative` citing the KNTT lesson from `CURRICULUM`), a library topic per lesson
   (`guidedModule`, `GUIDED_TOPICS`) running the same session, and its own Studio group. Its wording
-  never says "mô phỏng" (`studio.guided.*`: UI, report and the AI Teacher context, tested); data in
-  `guided/lessons/` only (SH10-GL-*), no digits. Manual mode leaves guided topics out (`isManualTopic`).
+  never says "mô phỏng" (`studio.guided.*`: UI, Science Card, the lab's stage frame `stage.lesson*`,
+  report and the AI Teacher context, tested); data in `guided/lessons/` only (SH10-GL-*), no digits.
+  Leaving Predict locks the prediction (`goTo`). Manual mode leaves guided topics out (`isManualTopic`).
 - "Cách học" guide (`StudioGuide.tsx`, plan #37 §9c): the lab tour's `TourOverlay` (`Tour.tsx`)
   with studio steps; opens by itself once (`guideSeen` in `stemsim.studio`, store version 2), then
   only from the button. Unit tests start with it seen (`tests/setup.ts`), E2E via `storage-state.json`.
