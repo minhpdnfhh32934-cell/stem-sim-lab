@@ -86,7 +86,7 @@ export const SRC = {
   iapwsWater: {
     id: 'iapws-water',
     citation:
-      'IAPWS-95 (khối lượng riêng) và IAPWS 2008 (độ nhớt) — nước ở 20 °C, 101 325 Pa: ρ = 998,21 kg/m³, μ = 1,0016 mPa·s',
+      'IAPWS 2008 (độ nhớt) và IAPWS-95 (khối lượng riêng, nguồn thứ hai sau SGK) — nước ở 20 °C, 101 325 Pa: μ = 1,0016 mPa·s, ρ = 998,21 kg/m³ (SGK Vật lí 10 Bảng 34.2 ghi 999 kg/m³, giá trị app dùng)',
   },
   hoerner: {
     id: 'hoerner-drag',

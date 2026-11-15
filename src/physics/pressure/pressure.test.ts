@@ -14,7 +14,7 @@ describe('liquid pressure (VL10 Bài 34)', () => {
   });
 
   it('defaults: water at 20 °C and one standard atmosphere', () => {
-    expect(WATER_RHO).toBe(998.21);
+    expect(WATER_RHO).toBe(999);
     expect(ATM).toBe(101325);
     const q = column({});
     expect(q.rho).toBe(WATER_RHO);
@@ -73,7 +73,7 @@ describe('liquid pressure (VL10 Bài 34)', () => {
     const c = liquidPressure.scienceCard(base);
     expect(c.confidence).toBe('exact');
     expect(c.sources.map((s) => s.id)).toEqual(expect.arrayContaining(['iapws-water', 'codata']));
-    expect(c.assumptions.map((a) => a.vi).join(' ')).toContain('998,21 kg/m³');
+    expect(c.assumptions.map((a) => a.vi).join(' ')).toContain('999 kg/m³');
     expect(c.assumptions.map((a) => a.vi).join(' ')).toContain('101,325 kPa');
   });
 });
