@@ -95,9 +95,21 @@ describe('the answer sheet in the action log', () => {
       { op: ANSWER_OP, arg: `${match.id}:nope=${match.pairs[0]?.id ?? ''}`, at: 1 },
       { op: ANSWER_OP, arg: `${match.id}:${match.pairs[0]?.id ?? ''}=nope`, at: 1 },
       { op: ANSWER_OP, arg: `${order.id}:${order.items[0]?.id ?? ''}=99`, at: 1 },
+      // Non-canonical positions would score as wrong although the order looks right.
+      { op: ANSWER_OP, arg: `${order.id}:${order.items[0]?.id ?? ''}=00`, at: 1 },
+      { op: ANSWER_OP, arg: `${order.id}:${order.items[2]?.id ?? ''}=02`, at: 1 },
       { op: ANSWER_OP, arg: 'not even close', at: 1 },
     ];
     expect(readSheet(levels.id, lb, [...good, ...junk])).toEqual(key(lb));
+    // A whole order spelled with "02" is not a whole order: the start order is used.
+    const spelled = good.map((a) =>
+      a.arg === `${order.id}:${order.items[2]?.id ?? ''}=2`
+        ? { ...a, arg: `${order.id}:${order.items[2]?.id ?? ''}=02` }
+        : a,
+    );
+    expect(orderOf(readSheet(levels.id, lb, spelled)[order.id] ?? {})).toEqual(
+      startOrder(levels.id, order),
+    );
     // An order with one item missing is not a whole order: the start order is used.
     const half = good.filter((a) => a.arg !== `${order.id}:${order.items[0]?.id ?? ''}=0`);
     expect(orderOf(readSheet(levels.id, lb, half)[order.id] ?? {})).toEqual(

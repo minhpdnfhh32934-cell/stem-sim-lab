@@ -101,7 +101,8 @@ function rowIds(a: GuidedActivity): string[] {
 
 /** Whether `value` may answer a row of `a` (any row: every row offers the same values). */
 function allowed(a: GuidedActivity, value: string): boolean {
-  if (a.kind === 'order') return /^\d+$/.test(value) && Number(value) < a.items.length;
+  // Only canonical positions ("2", never "02"): scoring compares the stored strings.
+  if (a.kind === 'order') return /^(0|[1-9]\d*)$/.test(value) && Number(value) < a.items.length;
   if (a.kind === 'match') return a.pairs.some((p) => p.id === value);
   return a.groups.some((g) => g.id === value);
 }
