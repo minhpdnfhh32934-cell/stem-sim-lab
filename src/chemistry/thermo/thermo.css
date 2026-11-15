@@ -1,0 +1,59 @@
+/* HH10 Bài 17: reaction enthalpy from enthalpies of formation. */
+.dh-result {
+  display: inline-block;
+  margin-left: var(--space-3);
+  font-weight: 700;
+}
+.dh-sum {
+  display: grid;
+  gap: var(--space-1);
+  margin: var(--space-2) 0;
+  font-size: var(--text-content);
+}
+.dh-sum dt {
+  margin-top: var(--space-2);
+  font-weight: 600;
+}
+.dh-sum dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.dh-figure {
+  max-width: 420px;
+  margin: var(--space-3) 0 0;
+}
+.dh-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.dh-axis,
+.dh-guide {
+  fill: none;
+  stroke: var(--text-muted);
+  stroke-width: 1;
+}
+.dh-guide {
+  stroke-dasharray: 3 3;
+}
+.dh-level {
+  fill: none;
+  stroke: var(--text);
+  stroke-width: 3;
+}
+.dh-arrow,
+.dh-head {
+  fill: none;
+  stroke-width: 2;
+}
+.dh-arrow--exo {
+  stroke: var(--chart-4);
+}
+.dh-arrow--endo {
+  stroke: var(--chart-1);
+}
+.dh-text {
+  fill: var(--text);
+  /* Text inside a drawing (SVG units, #205 A1): it scales with the picture. */
+  font-size: 12px;
+}
