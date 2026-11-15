@@ -15,6 +15,8 @@ export interface XYSeries {
   y: (number | null)[];
   /** Draw as points only (e.g. Monte Carlo samples) instead of a line. */
   points?: boolean;
+  /** A line with a marker on every value (a few measured values joined, e.g. one per period). */
+  markers?: boolean;
   /** Dashed line (e.g. theory curve next to simulation data). */
   dash?: boolean;
   /** Index into the categorical palette (defaults to the series index). */
@@ -39,6 +41,8 @@ export interface XYChartProps {
   height?: number;
   /** Bumps when data changes without a new array identity. */
   version?: number;
+  /** Ticks on whole x values only (x is a count, e.g. the period). */
+  xIntegers?: boolean;
   /** Base of the exported CSV file name (default: the y label). */
   csvName?: string;
 }
@@ -48,8 +52,21 @@ export interface XYChartProps {
  * dual axis), fixed-order palette, crosshair with a live legend.
  */
 export function XYChart(props: XYChartProps) {
-  const { x, series, xLabel, yLabel, marker, xUnit, yUnit, yMin, yMax, height, version, csvName } =
-    props;
+  const {
+    x,
+    series,
+    xLabel,
+    yLabel,
+    marker,
+    xUnit,
+    yUnit,
+    yMin,
+    yMax,
+    height,
+    version,
+    csvName,
+    xIntegers,
+  } = props;
   const t = useT();
   const locale = useSettingsStore((s) => s.locale);
   const advanced = useSettingsStore((s) => s.uiMode === 'advanced');
@@ -59,7 +76,10 @@ export function XYChart(props: XYChartProps) {
   const markerRef = useRef<number | null | undefined>(marker);
 
   const shape = series
-    .map((s) => `${s.label}|${s.points ? 1 : 0}|${s.dash ? 1 : 0}|${s.bars ? 1 : 0}`)
+    .map(
+      (s) =>
+        `${s.label}|${s.points ? 1 : 0}|${s.markers ? 1 : 0}|${s.dash ? 1 : 0}|${s.bars ? 1 : 0}`,
+    )
     .join(';');
 
   useEffect(() => {
@@ -105,6 +125,15 @@ export function XYChart(props: XYChartProps) {
             // Compact: uPlot's 50 + 30 px left a short chart one or two y values.
             ...X_AXIS_SIZE,
             label: axisLabel(xLabel, xUnit),
+            ...(xIntegers
+              ? {
+                  splits: (_u: uPlotType, _i: number, lo: number, hi: number) =>
+                    Array.from(
+                      { length: Math.max(0, Math.floor(hi) - Math.ceil(lo) + 1) },
+                      (_, k) => Math.ceil(lo) + k,
+                    ),
+                }
+              : {}),
             values: (_u, vals) => vals.map((v) => nf.format(v)),
           },
           {
@@ -131,7 +160,10 @@ export function XYChart(props: XYChartProps) {
               ...(s.dash ? { dash: [6, 4] } : {}),
               ...(s.spanGaps ? { spanGaps: true } : {}),
               ...(bars ? { fill: `${stroke}59`, paths: bars } : {}),
-              points: s.points ? { show: true, size: 5, fill: stroke } : { show: false },
+              points:
+                s.points || s.markers
+                  ? { show: true, size: s.markers ? 7 : 5, fill: stroke }
+                  : { show: false },
               value: (_u: uPlotType, v: number | null) => fmt(v, yUnit),
             };
           }),
@@ -181,7 +213,7 @@ export function XYChart(props: XYChartProps) {
     };
     // Recreate only when the chart's shape changes; data updates go through setData.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [shape, xLabel, yLabel, xUnit, yUnit, yMin, yMax, height, theme, locale]);
+  }, [shape, xLabel, yLabel, xUnit, yUnit, yMin, yMax, height, theme, locale, xIntegers]);
 
   useEffect(() => {
     markerRef.current = marker;

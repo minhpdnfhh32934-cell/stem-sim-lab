@@ -23,6 +23,10 @@ const TOPICS = [
   'Nhóm halogen',
   'Hydrogen halide · Muối halide',
   'Tinh thể kim loại và NaCl',
+  'Quy tắc octet',
+  'Liên kết ion',
+  'Liên kết cộng hóa trị',
+  'Liên kết hydrogen và tương tác van der Waals',
 ];
 
 async function openChemistry(page: Page) {

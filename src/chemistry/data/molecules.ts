@@ -15,6 +15,8 @@ const AtomSchema = z.object({
   el: z.string(),
   sym: z.number().int(),
   xyz: z.tuple([z.number(), z.number(), z.number()]),
+  /** 2D depiction coordinates (RDKit CoordGen) for Lewis-style drawings; not a geometry. */
+  xy: z.tuple([z.number(), z.number()]),
   charge: z.number().int(),
 });
 const BondSchema = z.object({
@@ -107,14 +109,24 @@ export function valenceElectrons(symbol: string): number | null {
   return null;
 }
 
-/** Lone pairs on atom i from its valence electrons, formal charge and bond orders (Lewis). */
-export function lonePairs(m: Molecule, i: number): number {
+/** Non-bonding electrons on atom i: valence − formal charge − Σ bond orders (Lewis), ≥ 0. */
+function nonbonding(m: Molecule, i: number): number {
   const a = m.atoms[i];
   if (!a || a.el === 'H') return 0;
   const v = valenceElectrons(a.el);
   if (v === null) return 0;
   const bonded = m.bonds.filter((b) => b.a === i || b.b === i).reduce((s, b) => s + b.order, 0);
-  return Math.max(0, Math.floor((v - a.charge - bonded) / 2));
+  return Math.max(0, v - a.charge - bonded);
+}
+
+/** Lone pairs on atom i from its valence electrons, formal charge and bond orders (Lewis). */
+export function lonePairs(m: Molecule, i: number): number {
+  return Math.floor(nonbonding(m, i) / 2);
+}
+
+/** 1 when atom i keeps an odd number of electrons (an unpaired electron, e.g. N in NO), else 0. */
+export function unpairedOn(m: Molecule, i: number): number {
+  return nonbonding(m, i) % 2;
 }
 
 export type GeometryId =
@@ -229,9 +241,10 @@ export function hasSeveralCentres(m: Molecule): boolean {
 export type BondPolarity = 'nonpolar' | 'polar' | 'ionic';
 
 /**
- * Bond type from the Pauling electronegativity difference, with the thresholds used in
- * Vietnamese textbooks (Hóa học 10): Δχ < 0.4 non-polar covalent, 0.4 ≤ Δχ < 1.7 polar
- * covalent, Δχ ≥ 1.7 ionic.
+ * Bond type from the Pauling electronegativity difference, with the thresholds of SGK Hoá học 10
+ * KNTT, Bài 12, Bảng 12.1 (printed p. 59, read 15/11/2026): 0 ≤ |Δχ| < 0,4 non-polar covalent,
+ * 0,4 ≤ |Δχ| < 1,7 polar covalent, |Δχ| ≥ 1,7 ionic (the book's footnote: "trừ một số trường hợp
+ * ngoại lệ như: HF, MnI₂,…").
  */
 export function bondPolarity(deltaEn: number): BondPolarity {
   if (deltaEn < 0.4) return 'nonpolar';
@@ -239,10 +252,43 @@ export function bondPolarity(deltaEn: number): BondPolarity {
   return 'ionic';
 }
 
+/**
+ * |Δχ| of two elements, rounded to the 2 decimals the Pauling values have: 3.44 − 3.04 is
+ * 0.3999… in floating point, and N–O must read 0,40 (polar), not fall under the 0,4 threshold.
+ */
+export function paulingDelta(a: string, b: string): number | null {
+  const x = elementBySymbol(a)?.en_pauling ?? null;
+  const y = elementBySymbol(b)?.en_pauling ?? null;
+  return x === null || y === null ? null : Math.round(Math.abs(x - y) * 100) / 100;
+}
+
+/**
+ * Qualitative partial charge sign per atom: the sum of the signed electronegativity differences of
+ * its polar bonds only (|Δχ| ≥ 0,4, SGK Bảng 12.1; a non-polar C–H, 0,35, adds nothing), each read
+ * to 2 decimals like `paulingDelta` (N–O is 0,40, polar, and gives O a δ−).
+ */
+export function partialSigns(m: Molecule): ('+' | '−' | '')[] {
+  const acc = m.atoms.map(() => 0);
+  for (const b of m.bonds) {
+    const xa = elementBySymbol(m.atoms[b.a]?.el ?? '')?.en_pauling ?? null;
+    const xb = elementBySymbol(m.atoms[b.b]?.el ?? '')?.en_pauling ?? null;
+    if (xa === null || xb === null) continue;
+    if (
+      bondPolarity(paulingDelta(m.atoms[b.a]?.el ?? '', m.atoms[b.b]?.el ?? '') ?? 0) === 'nonpolar'
+    ) {
+      continue;
+    }
+    acc[b.a] = (acc[b.a] ?? 0) + (xa - xb);
+    acc[b.b] = (acc[b.b] ?? 0) + (xb - xa);
+  }
+  return acc.map((sum) => {
+    const d = Math.round(sum * 100) / 100;
+    return d >= 0.4 ? '−' : d <= -0.4 ? '+' : '';
+  });
+}
+
 export function deltaEn(m: Molecule, b: Bond): number | null {
-  const x = elementBySymbol(m.atoms[b.a]?.el ?? '')?.en_pauling ?? null;
-  const y = elementBySymbol(m.atoms[b.b]?.el ?? '')?.en_pauling ?? null;
-  return x === null || y === null ? null : Math.abs(x - y);
+  return paulingDelta(m.atoms[b.a]?.el ?? '', m.atoms[b.b]?.el ?? '');
 }
 
 export type MolecularPolarity = 'nonpolar' | 'weak' | 'polar' | 'ion' | 'unknown';

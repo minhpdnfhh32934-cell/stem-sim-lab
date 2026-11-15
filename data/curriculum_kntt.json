@@ -2419,6 +2419,54 @@
    "review_status": "pending"
   },
   {
+   "topic": "octetRule",
+   "subject": "chemistry",
+   "grade": 10,
+   "book": "HH10",
+   "chapter": "Chương 3. Liên kết hoá học",
+   "lessons": [
+    10
+   ],
+   "reason": "Tên Bài 10: quy tắc octet (cảnh đếm electron quanh mỗi nguyên tử của các phân tử, ion mẫu và tự tìm ngoại lệ).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "ionicBond",
+   "subject": "chemistry",
+   "grade": 10,
+   "book": "HH10",
+   "chapter": "Chương 3. Liên kết hoá học",
+   "lessons": [
+    11
+   ],
+   "reason": "Tên Bài 11: liên kết ion (cảnh nhường – nhận electron, cấu hình ion, công thức từ cân bằng điện tích; phần tinh thể NaCl ở chủ đề Tinh thể).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "covalentBond",
+   "subject": "chemistry",
+   "grade": 10,
+   "book": "HH10",
+   "chapter": "Chương 3. Liên kết hoá học",
+   "lessons": [
+    12
+   ],
+   "reason": "Tên Bài 12: liên kết cộng hoá trị (cảnh hiệu độ âm điện → loại liên kết theo Bảng 12.1, số liên kết σ và π).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "intermolecularForces",
+   "subject": "chemistry",
+   "grade": 10,
+   "book": "HH10",
+   "chapter": "Chương 3. Liên kết hoá học",
+   "lessons": [
+    13
+   ],
+   "reason": "Tên Bài 13: liên kết hydrogen và tương tác van der Waals (cảnh nhiệt độ sôi các hydride nhóm IVA–VIIA theo chu kì).",
+   "review_status": "pending"
+  },
+  {
    "topic": "chemicalEquilibrium",
    "subject": "chemistry",
    "grade": 11,

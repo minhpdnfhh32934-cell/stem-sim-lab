@@ -73,6 +73,7 @@ export const CATALOG: Record<Subject, ChapterEntry[]> = {
       'bohrModel',
       'orbitals',
     ]),
+    chapter('bonds', ['octetRule', 'ionicBond', 'covalentBond', 'intermolecularForces']),
     chapter('molecules', ['molecule3d', 'vsepr', 'bondPolarity']),
     chapter('reactions', [
       'reactionLibrary',
