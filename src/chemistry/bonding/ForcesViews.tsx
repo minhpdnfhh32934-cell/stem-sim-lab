@@ -9,6 +9,7 @@ import { prettyFormula } from '../data/molecules';
 import { FORCES_CARD } from './cards';
 import {
   boilingPointIn,
+  decimalsOf,
   HYDRIDE_GROUPS,
   hydrideSeries,
   period2Anomaly,
@@ -134,6 +135,11 @@ export function ForcesBottom() {
   const Lz = useLocalized();
   const locale = useSettingsStore((s) => s.locale);
   const unit = useBondingStore((s) => s.unit);
+  // Each value with exactly the decimals its source printed ("185,0", not "185").
+  const shown = (v: number, bp: BoilingPoint) => {
+    const d = decimalsOf(bp);
+    return formatNumber(locale, v, { minimumFractionDigits: d, maximumFractionDigits: d });
+  };
   const rows = HYDRIDE_GROUPS.flatMap((g) => hydrideSeries(g).map((p) => ({ g, p })));
   return (
     <div className="chem-block">
@@ -162,9 +168,7 @@ export function ForcesBottom() {
                 <th scope="row">{prettyFormula(p.hydride.formula)}</th>
                 <td>{GROUP_NAME[g]}</td>
                 <td className="num">{p.period}</td>
-                <td className="num">
-                  {v === null ? '—' : formatNumber(locale, v, { maximumFractionDigits: 2 })}
-                </td>
+                <td className="num">{v === null || !bp ? '—' : shown(v, bp)}</td>
                 <td className="num">{bp ? bp.as_given : '—'}</td>
                 <td className="small">
                   {bp
@@ -179,9 +183,8 @@ export function ForcesBottom() {
                     <>
                       <br />
                       {Lz(L('Nguồn thứ hai: ', 'Second source: '))}
-                      {second.as_given} (
-                      {formatNumber(locale, valueIn(second, unit), { maximumFractionDigits: 2 })}{' '}
-                      {unitText(unit)}) — {sourceText(second)}
+                      {second.as_given} ({shown(valueIn(second, unit), second)} {unitText(unit)}) —{' '}
+                      {sourceText(second)}
                     </>
                   )}
                 </td>

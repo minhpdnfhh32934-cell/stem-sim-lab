@@ -139,5 +139,13 @@ describe('panels', () => {
     expect(screen.getByRole('row', { name: /^HF/ })).toHaveTextContent('Bảng 22.2, tr. 113');
     fireEvent.click(screen.getByRole('radio', { name: 'K' }));
     expect(screen.getByRole('row', { name: /^NH₃/ })).toHaveTextContent('239,8');
+    // Each value keeps exactly the decimals its source printed (#255 review).
+    const cell = (name: RegExp) => screen.getByRole('row', { name }).querySelectorAll('td')[2];
+    expect(cell(/^GeH₄/)).toHaveTextContent(/^185,0$/);
+    expect(cell(/^SbH₃/)).toHaveTextContent(/^256$/);
+    expect(cell(/^H₂O/)).toHaveTextContent(/^373$/);
+    fireEvent.click(screen.getByRole('radio', { name: '°C' }));
+    expect(cell(/^CH₄/)).toHaveTextContent(/^-161,58$/);
+    expect(cell(/^HF/)).toHaveTextContent(/^19,5$/);
   });
 });
