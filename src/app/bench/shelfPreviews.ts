@@ -9,6 +9,8 @@ import { hasScene } from '@/physics/registry';
  */
 export const SHELF_PREVIEWS: ReadonlySet<string> = new Set([
   'fourierSeries',
+  'atomComposition',
+  'isotopes',
   'periodicTable',
   'electronConfiguration',
   'bohrModel',

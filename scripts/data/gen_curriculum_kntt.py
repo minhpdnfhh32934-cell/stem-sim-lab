@@ -481,6 +481,8 @@ PLACEMENTS = [
     ("collisions", "VL10", [28, 29], "Tên Bài 28–29: động lượng và định luật bảo toàn động lượng."),
     ("springPendulum", "VL11", [1, 2, 3, 5, 6], "Tên Bài 1–3, 5: dao động điều hoà, vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng)."),
     ("simplePendulum", "VL11", [1, 2, 3, 5, 6], "Tên Bài 1–3, 5: dao động điều hoà (con lắc đơn dao động điều hoà khi góc nhỏ), vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng)."),
+    ("atomComposition", "HH10", [1], "Tên Bài 1: thành phần của nguyên tử (cảnh chọn số proton, neutron, electron: nguyên tố, số khối, điện tích, khối lượng các hạt, kích thước hạt nhân so với nguyên tử)."),
+    ("isotopes", "HH10", [2], "Tên Bài 2: nguyên tố hoá học (cảnh chọn một nguyên tố: các đồng vị tự nhiên, nguyên tử khối trung bình, bài toán ngược tìm phần trăm hai đồng vị)."),
     ("periodicTable", "HH10", [5, 6, 8], "Tên Bài 5, 6, 8: cấu tạo bảng tuần hoàn, xu hướng biến đổi tính chất, định luật tuần hoàn."),
     ("electronConfiguration", "HH10", [3], "Tên Bài 3: cấu trúc lớp vỏ electron nguyên tử."),
     ("orbitals", "HH10", [3], "Tên Bài 3: cấu trúc lớp vỏ electron nguyên tử."),

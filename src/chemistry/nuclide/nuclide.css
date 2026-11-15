@@ -1,0 +1,119 @@
+/* HH10 Bài 1 (atom composition) and Bài 2 (isotopes). */
+
+/* The illustration fills the stage below the chip row; the viewBox keeps it square. */
+.atom-pic {
+  position: absolute;
+  inset: 56px var(--space-4) var(--space-4);
+  width: calc(100% - 2 * var(--space-4));
+  height: calc(100% - 56px - var(--space-4));
+}
+.atom-pic__proton {
+  fill: var(--chart-4);
+}
+.atom-pic__neutron {
+  fill: var(--chart-3);
+}
+.atom-pic__electron {
+  fill: var(--chart-1);
+}
+.atom-pic__plus {
+  stroke: var(--text-on-data);
+  stroke-width: 1.2;
+}
+.atom-pic circle {
+  stroke: var(--bg-stage);
+  stroke-width: 0.6;
+}
+.atom-legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.atom-legend + .atom-legend {
+  margin-left: var(--space-2);
+}
+.atom-legend__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-full);
+}
+.atom-legend__dot--proton {
+  background: var(--chart-4);
+}
+.atom-legend__dot--neutron {
+  background: var(--chart-3);
+}
+.atom-legend__dot--electron {
+  background: var(--chart-1);
+}
+
+.atom-facts,
+.iso-avg {
+  display: grid;
+  gap: var(--space-1);
+  margin: var(--space-2) 0;
+}
+.atom-facts dt,
+.iso-avg dt {
+  margin-top: var(--space-2);
+  font-weight: 600;
+}
+.atom-facts dd,
+.iso-avg dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.atom-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  overflow-x: auto;
+}
+.atom-defect {
+  margin: 0;
+  padding: 0 8px;
+  font-size: var(--text-sm);
+}
+
+.iso-view__title {
+  margin: 0 0 var(--space-1);
+  font-size: var(--text-lg);
+}
+.iso-bars {
+  display: grid;
+  gap: var(--space-2);
+  max-width: 640px;
+  margin: var(--space-3) 0;
+  padding: 0;
+  list-style: none;
+}
+.iso-bars li {
+  display: grid;
+  grid-template-columns: 4.5rem 1fr 6.5rem;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-content);
+}
+.iso-bars__track {
+  height: 16px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-sunken);
+  overflow: hidden;
+}
+.iso-bars__fill {
+  display: block;
+  height: 100%;
+  min-width: 2px;
+  background: var(--chart-1);
+}
+.iso-bars__value {
+  text-align: right;
+}
+.iso-avg {
+  max-width: 640px;
+  font-size: var(--text-content);
+}
+.iso-panel__head {
+  margin: var(--space-3) 0 0;
+  font-size: var(--text-sm);
+}

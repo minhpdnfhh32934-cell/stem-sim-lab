@@ -34,13 +34,13 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Vật lí 10 | 34 | 26 | 26 |
 | Vật lí 11 | 26 | 20 | 13 |
 | Vật lí 12 | 25 | 21 | 0 |
-| Hoá học 10 | 23 | 16 | 5 |
+| Hoá học 10 | 23 | 16 | 7 |
 | Hoá học 11 | 25 | 19 | 1 |
 | Hoá học 12 | 30 | 22 | 1 |
 | Sinh học 10 | 26 | 17 | 5 |
 | Sinh học 11 | 29 | 20 | 0 |
 | Sinh học 12 | 35 | 28 | 7 |
-| **Cộng** | **253** | **189** | **58** |
+| **Cộng** | **253** | **189** | **60** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -142,8 +142,8 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Vật lí 12 | Chương IV. Vật lí hạt nhân | 24 | Công nghiệp hạt nhân | 114 | Lí thuyết | chưa có |  | pending |
 | Vật lí 12 | Chương IV. Vật lí hạt nhân | 25 | Bài tập về vật lí hạt nhân | 119 | Bài tập | chưa có |  | pending |
 | Hoá học 10 | Mở đầu |  | Mở đầu | 6 | Mở đầu môn học | chưa có |  | pending |
-| Hoá học 10 | Chương 1. Cấu tạo nguyên tử | 1 | Thành phần của nguyên tử | 13 | Lí thuyết | chưa có |  | pending |
-| Hoá học 10 | Chương 1. Cấu tạo nguyên tử | 2 | Nguyên tố hoá học | 17 | Lí thuyết | chưa có |  | pending |
+| Hoá học 10 | Chương 1. Cấu tạo nguyên tử | 1 | Thành phần của nguyên tử | 13 | Lí thuyết | Thành phần của nguyên tử | Tên Bài 1: thành phần của nguyên tử (cảnh chọn số proton, neutron, electron: nguyên tố, số khối, điện tích, khối lượng các hạt, kích thước hạt nhân so với nguyên tử). | pending |
+| Hoá học 10 | Chương 1. Cấu tạo nguyên tử | 2 | Nguyên tố hoá học | 17 | Lí thuyết | Nguyên tố hóa học và đồng vị | Tên Bài 2: nguyên tố hoá học (cảnh chọn một nguyên tố: các đồng vị tự nhiên, nguyên tử khối trung bình, bài toán ngược tìm phần trăm hai đồng vị). | pending |
 | Hoá học 10 | Chương 1. Cấu tạo nguyên tử | 3 | Cấu trúc lớp vỏ electron nguyên tử | 21 | Lí thuyết | Cấu hình electron, Hình dạng orbital | Tên Bài 3: cấu trúc lớp vỏ electron nguyên tử. | pending |
 | Hoá học 10 | Chương 1. Cấu tạo nguyên tử | 4 | Ôn tập chương 1 | 26 | Ôn tập | chưa có |  | pending |
 | Hoá học 10 | Chương 2. Bảng tuần hoàn các nguyên tố hoá học và định luật tuần hoàn | 5 | Cấu tạo của bảng tuần hoàn các nguyên tố hoá học | 30 | Lí thuyết | Bảng tuần hoàn | Tên Bài 5, 6, 8: cấu tạo bảng tuần hoàn, xu hướng biến đổi tính chất, định luật tuần hoàn. | pending |
