@@ -5,6 +5,7 @@ const TOPICS = [
   'Thành phần của nguyên tử',
   'Nguyên tố hóa học và đồng vị',
   'Bảng tuần hoàn',
+  'Oxide và hydroxide trong chu kì 3',
   'Cấu hình electron',
   'Mô hình Bohr',
   'Hình dạng orbital',
@@ -13,10 +14,14 @@ const TOPICS = [
   'Độ phân cực liên kết',
   'Thư viện phản ứng đã kiểm chứng',
   'Cân bằng phương trình',
+  'Phản ứng oxi hoá – khử',
+  'Biến thiên enthalpy của phản ứng',
   'Thuyết va chạm',
   'Phân bố Maxwell–Boltzmann',
   'Cân bằng hóa học & Le Chatelier',
   'Chuẩn độ acid – base',
+  'Nhóm halogen',
+  'Hydrogen halide · Muối halide',
   'Tinh thể kim loại và NaCl',
 ];
 
