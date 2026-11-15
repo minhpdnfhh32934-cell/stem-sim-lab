@@ -15,6 +15,8 @@ const AtomSchema = z.object({
   el: z.string(),
   sym: z.number().int(),
   xyz: z.tuple([z.number(), z.number(), z.number()]),
+  /** 2D depiction coordinates (RDKit CoordGen) for Lewis-style drawings; not a geometry. */
+  xy: z.tuple([z.number(), z.number()]),
   charge: z.number().int(),
 });
 const BondSchema = z.object({

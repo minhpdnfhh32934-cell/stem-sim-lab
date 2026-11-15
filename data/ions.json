@@ -1,0 +1,140 @@
+{
+ "dataset": "ions",
+ "version": 1,
+ "accessed": "2026-11-15",
+ "source": {
+  "id": "openstax-chem2e-fig2-29",
+  "citation": "OpenStax Chemistry 2e (Flowers, Theopold, Langley, Robinson, 2019), §2.6, Hình 2.29: các ion có điện tích theo quy luật",
+  "url": "https://openstax.org/books/chemistry-2e/pages/2-6-ionic-and-molecular-compounds"
+ },
+ "generated_by": "scripts/data/gen_ions.py",
+ "items": [
+  {
+   "element": "Li",
+   "charge": 1,
+   "review_status": "pending"
+  },
+  {
+   "element": "Na",
+   "charge": 1,
+   "review_status": "pending"
+  },
+  {
+   "element": "K",
+   "charge": 1,
+   "review_status": "pending"
+  },
+  {
+   "element": "Rb",
+   "charge": 1,
+   "review_status": "pending"
+  },
+  {
+   "element": "Cs",
+   "charge": 1,
+   "review_status": "pending"
+  },
+  {
+   "element": "Be",
+   "charge": 2,
+   "review_status": "pending"
+  },
+  {
+   "element": "Mg",
+   "charge": 2,
+   "review_status": "pending"
+  },
+  {
+   "element": "Ca",
+   "charge": 2,
+   "review_status": "pending"
+  },
+  {
+   "element": "Sr",
+   "charge": 2,
+   "review_status": "pending"
+  },
+  {
+   "element": "Ba",
+   "charge": 2,
+   "review_status": "pending"
+  },
+  {
+   "element": "Al",
+   "charge": 3,
+   "review_status": "pending"
+  },
+  {
+   "element": "N",
+   "charge": -3,
+   "review_status": "pending"
+  },
+  {
+   "element": "P",
+   "charge": -3,
+   "review_status": "pending"
+  },
+  {
+   "element": "O",
+   "charge": -2,
+   "review_status": "pending"
+  },
+  {
+   "element": "S",
+   "charge": -2,
+   "review_status": "pending"
+  },
+  {
+   "element": "Se",
+   "charge": -2,
+   "review_status": "pending"
+  },
+  {
+   "element": "F",
+   "charge": -1,
+   "review_status": "pending"
+  },
+  {
+   "element": "Cl",
+   "charge": -1,
+   "review_status": "pending"
+  },
+  {
+   "element": "Br",
+   "charge": -1,
+   "review_status": "pending"
+  },
+  {
+   "element": "I",
+   "charge": -1,
+   "review_status": "pending"
+  }
+ ],
+ "excluded": [
+  {
+   "element": "Fr",
+   "charge": 1,
+   "reason": "Không có đồng vị bền (elements.json: chỉ có số khối)."
+  },
+  {
+   "element": "Ra",
+   "charge": 2,
+   "reason": "Không có đồng vị bền (elements.json: chỉ có số khối)."
+  },
+  {
+   "element": "As",
+   "charge": -3,
+   "reason": "elements.json xếp là á kim: không phải kim loại hay phi kim rõ ràng."
+  },
+  {
+   "element": "Te",
+   "charge": -2,
+   "reason": "elements.json xếp là á kim: không phải kim loại hay phi kim rõ ràng."
+  },
+  {
+   "element": "At",
+   "charge": -1,
+   "reason": "Không có đồng vị bền (elements.json: chỉ có số khối)."
+  }
+ ]
+}

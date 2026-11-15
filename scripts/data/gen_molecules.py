@@ -6,6 +6,9 @@ Hypervalent species whose lone pairs a force field cannot represent (SF4, ClF3, 
 get an *ideal VSEPR geometry* with bond lengths = sum of Cordero covalent radii. The method
 is recorded per molecule and shown in the app. Everything is review_status "pending".
 
+Each atom also gets 2D depiction coordinates ("xy", RDKit CoordGen) for the Lewis-style drawings
+of "Quy tắc octet" and "Liên kết cộng hoá trị" (#255): an illustration of the bonds, not a geometry.
+
 Reference experimental geometries (for the automated accuracy test) are listed in
 REFERENCE below with their source; they are also pending teacher review.
 
@@ -19,7 +22,7 @@ import numpy as np
 import rdkit
 from mendeleev import element
 from rdkit import Chem
-from rdkit.Chem import AllChem, Descriptors, rdMolDescriptors
+from rdkit.Chem import AllChem, Descriptors, rdDepictor, rdMolDescriptors
 
 OUT = pathlib.Path(__file__).resolve().parents[2] / "data" / "molecules.json"
 
@@ -88,6 +91,8 @@ MOLECULES = [
     ("no3", "Ion nitrate", "Nitrate ion", "[O-][N+](=O)[O-]", "ion", []),
     ("co3", "Ion carbonate", "Carbonate ion", "[O-]C([O-])=O", "ion", ["cacbonat"]),
     ("so4", "Ion sulfate", "Sulfate ion", "[O-]S(=O)(=O)[O-]", "ion", ["sunfat"]),
+    # #255 (Quy tắc octet): an odd-electron molecule; RDKit keeps one radical electron on N.
+    ("no", "Nitrogen monoxide", "Nitrogen monoxide (nitric oxide)", "[N]=O", "inorganic", ["nitơ monoxit", "nitric oxide"]),
 ]
 
 # Formulas as written in Vietnamese textbooks (the Hill formula from RDKit is kept too;
@@ -104,7 +109,7 @@ DISPLAY_FORMULA = {
     "ipbr": "CH3CHBrCH3", "hcho": "HCHO", "ch3cho": "CH3CHO", "acetone": "CH3COCH3",
     "hcooh": "HCOOH", "ch3cooh": "CH3COOH", "etac": "CH3COOC2H5", "glycine": "H2NCH2COOH",
     "urea": "(NH2)2CO", "glucose": "C6H12O6", "nh4": "NH4+", "h3o": "H3O+", "oh": "OH-",
-    "no3": "NO3-", "co3": "CO3-2", "so4": "SO4-2",
+    "no3": "NO3-", "co3": "CO3-2", "so4": "SO4-2", "no": "NO",
 }
 
 # 0.8.1 (#54 item 11): more organic molecules for the functional-group filter of "Phân tử 3D"
@@ -221,6 +226,10 @@ EXPERIMENTAL = {
     "o3": {"r": 1.278, "angle": 116.8},
     "so3": {"r": 1.418, "angle": 120.0},
     "bf3": {"r": 1.307, "angle": 120.0},
+    # NO (#255): r_e of the X 2Pi ground state of 14N16O, NIST Chemistry WebBook "Constants of
+    # diatomic molecules" (data compiled by K. P. Huber and G. H. Herzberg),
+    # https://webbook.nist.gov/cgi/cbook.cgi?ID=C10102439&Mask=1000, read 2026-11-15.
+    "no": {"r": 1.15077},
 }
 
 # Experimental reference geometries used to TEST the force-field structures above
@@ -320,6 +329,15 @@ def build(mid: str, smiles: str):
     # Centre on the centroid.
     c = np.mean(coords, axis=0)
     coords = [p - c for p in coords]
+    # 2D depiction (CoordGen) on a copy, so the 3D conformer above is untouched.
+    flat = Chem.Mol(mol)
+    rdDepictor.SetPreferCoordGen(True)
+    rdDepictor.Compute2DCoords(flat)
+    if any(math.isnan(flat.GetConformer().GetAtomPosition(i).x) for i in range(flat.GetNumAtoms())):
+        # CoordGen returns NaN for H2 (no heavy atom): RDKit's own depictor then.
+        rdDepictor.SetPreferCoordGen(False)
+        rdDepictor.Compute2DCoords(flat)
+    flat_conf = flat.GetConformer()
     kek = Chem.Mol(mol)
     if not hypervalent:
         Chem.Kekulize(kek, clearAromaticFlags=True)
@@ -338,6 +356,8 @@ def build(mid: str, smiles: str):
             "el": a.GetSymbol(),
             "sym": int(sym[a.GetIdx()]),
             "xyz": [round(float(v), 4) for v in coords[a.GetIdx()]],
+            "xy": [round(float(flat_conf.GetAtomPosition(a.GetIdx()).x), 3),
+                   round(float(flat_conf.GetAtomPosition(a.GetIdx()).y), 3)],
             "charge": a.GetFormalCharge(),
         }
         for a in mol.GetAtoms()
