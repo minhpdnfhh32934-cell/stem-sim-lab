@@ -1,6 +1,11 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
+import ionsRaw from '@data/ions.json';
 import { CONFIDENCE_LEVELS } from '@/science-card/types';
+import { elementBySymbol } from '../data/elements';
+import { HYDRIDES } from '../data/hydrides';
+import { IONS } from '../data/ions';
+import { paulingDelta, prettyFormula } from '../data/molecules';
 import { COVALENT_CARD, FORCES_CARD, IONIC_CARD, OCTET_CARD } from './cards';
 import { CovalentBottom, CovalentPanel } from './CovalentViews';
 import { ForcesBottom, ForcesPanel } from './ForcesViews';
@@ -67,6 +72,53 @@ describe('Science Cards of Bài 10–13', () => {
       applyBonding({ octet: 'benzene', unit: 'K' });
     });
     expect(useBondingStore.getState()).toMatchObject({ octet: 'h2o', unit: 'K' });
+  });
+});
+
+describe('hand-typed facts on the cards are tied to the data (#255 review)', () => {
+  const text = (c: { assumptions: { vi: string }[]; model: { vi: string } }) =>
+    [c.model.vi, ...c.assumptions.map((a) => a.vi)].join(' ');
+
+  it('covalent: HF |Δχ| = 1,78 is the data’s value', () => {
+    const d = paulingDelta('H', 'F');
+    expect(d).toBe(1.78);
+    expect(text(COVALENT_CARD)).toContain(`|Δχ| = ${String(d).replace('.', ',')}`);
+  });
+
+  it('ionic: the groups kept and the elements left out are those of ions.json', () => {
+    const groups = [...new Set(IONS.map((i) => elementBySymbol(i.element)?.group))].sort(
+      (a, b) => (a ?? 0) - (b ?? 0),
+    );
+    expect(groups).toEqual([1, 2, 13, 15, 16, 17]);
+    expect(text(IONIC_CARD)).toContain('nhóm 1, 2, 13, 15–17');
+    const left = ionsRaw.excluded;
+    const metalloids = left.filter((e) => e.reason.includes('á kim')).map((e) => e.element);
+    const unstable = left.filter((e) => !e.reason.includes('á kim')).map((e) => e.element);
+    expect(text(IONIC_CARD)).toContain(`á kim (${metalloids.join(', ')})`);
+    expect(text(IONIC_CARD)).toContain(`đồng vị bền (${unstable.join(', ')})`);
+  });
+
+  it('forces: the book tables, the gaps, the second sources and the two H₂S values', () => {
+    const names = (pred: (h: (typeof HYDRIDES)[number]) => boolean) =>
+      HYDRIDES.filter(pred).map((h) => prettyFormula(h.formula));
+    const t = text(FORCES_CARD);
+    // The card lists Bảng 13.1 in the book's column order.
+    expect(t).toContain('Bảng 13.1: H₂O, H₂S, CH₄');
+    expect(names((h) => !!h.boiling_point?.reference.includes('Bảng 13.1')).sort()).toEqual(
+      ['H₂O', 'H₂S', 'CH₄'].sort(),
+    );
+    expect(t).toContain(
+      `Bảng 22.2: ${names((h) => !!h.boiling_point?.reference.includes('Bảng 22.2')).join(', ')}`,
+    );
+    expect(t).toContain(
+      `${names((h) => !h.boiling_point).join(' và ')}: SGK, NIST WebBook và PubChem đều không ghi`,
+    );
+    expect(t).toContain(`NIST WebBook (${names((h) => h.second?.source === 'nist').join(', ')})`);
+    expect(t).toContain(`PubChem (${names((h) => h.second?.source === 'pubchem').join(', ')})`);
+    const h2s = HYDRIDES.find((h) => h.id === 'h2s');
+    expect(t).toContain(`H₂S ${h2s?.boiling_point?.as_given ?? '?'}`);
+    expect(h2s?.boiling_point?.note).toContain('−60,28 °C');
+    expect(t).toContain('−60,28 °C ở câu hỏi mở đầu Bài 13');
   });
 });
 
