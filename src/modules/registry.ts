@@ -34,6 +34,11 @@ const MODULES: Record<string, () => Promise<ModuleView>> = {
   diffusionOsmosis: () => import('@/biology/modules').then((m) => m.diffusionOsmosis),
   cellStructure: () => import('@/biology/modules').then((m) => m.cellStructure),
   cellToDna: () => import('@/biology/modules').then((m) => m.cellToDna),
+  // SH10 KNTT Bài 4, 5, 21, 24 (#255): their own chunk.
+  cellElements: () => import('@/biology/sh10Modules').then((m) => m.cellElements),
+  biomolecules: () => import('@/biology/sh10Modules').then((m) => m.biomolecules),
+  microbeGrowth: () => import('@/biology/sh10Modules').then((m) => m.microbeGrowth),
+  virusStructure: () => import('@/biology/sh10Modules').then((m) => m.virusStructure),
   crystalStructure: () => import('@/chemistry/crystal/modules').then((m) => m.crystalStructure),
   octetRule: () => import('@/chemistry/bonding/modules').then((m) => m.octetRule),
   ionicBond: () => import('@/chemistry/bonding/modules').then((m) => m.ionicBond),

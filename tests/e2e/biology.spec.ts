@@ -27,6 +27,10 @@ const TOPICS = [
   'Khuếch tán & thẩm thấu',
   'Tế bào nhân sơ và nhân thực',
   'Từ tế bào đến DNA',
+  'Các nguyên tố hóa học và nước',
+  'Các phân tử sinh học',
+  'Sinh trưởng của quần thể vi khuẩn',
+  'Khái quát về virus',
 ];
 
 async function openBiology(page: Page) {
@@ -35,7 +39,7 @@ async function openBiology(page: Page) {
 }
 
 test('every biology topic opens without errors and publishes a Science Card', async ({ page }) => {
-  // Thirteen topics, twelve of them opening a 3D view in software: ~15 s on a fast CI runner, but a slow
+  // Seventeen topics, fourteen of them opening a 3D view in software: ~15 s on a fast CI runner, but a slow
   // one took 6-8 s per topic and ran out of the 60 s default after eight (2026-10-23, eastus).
   test.setTimeout(180_000);
   const errors: string[] = [];
