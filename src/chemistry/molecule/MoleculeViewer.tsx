@@ -11,25 +11,13 @@ import {
   lonePairDirections,
   lonePairs,
   neighbors,
+  partialSigns,
   polarity,
   type Molecule,
   type Vec3,
 } from '../data/molecules';
 import { visibleLabels } from './labelOverlap';
 import { useMoleculeStore } from './store';
-
-/** Qualitative partial charge sign per atom from the electronegativity differences. */
-function partialSigns(m: Molecule): ('+' | '−' | '')[] {
-  const acc = m.atoms.map(() => 0);
-  for (const b of m.bonds) {
-    const xa = elementBySymbol(m.atoms[b.a]?.el ?? '')?.en_pauling ?? null;
-    const xb = elementBySymbol(m.atoms[b.b]?.el ?? '')?.en_pauling ?? null;
-    if (xa === null || xb === null) continue;
-    acc[b.a] = (acc[b.a] ?? 0) + (xa - xb);
-    acc[b.b] = (acc[b.b] ?? 0) + (xb - xa);
-  }
-  return acc.map((d) => (d >= 0.4 ? '−' : d <= -0.4 ? '+' : ''));
-}
 
 export interface ViewerOptions {
   lonePairs: boolean;

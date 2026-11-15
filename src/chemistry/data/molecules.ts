@@ -262,6 +262,25 @@ export function paulingDelta(a: string, b: string): number | null {
   return x === null || y === null ? null : Math.round(Math.abs(x - y) * 100) / 100;
 }
 
+/**
+ * Qualitative partial charge sign per atom: the sum of its signed electronegativity differences,
+ * read to 2 decimals like `paulingDelta` (N–O is 0,40 and gives O a δ−, as its bond is polar).
+ */
+export function partialSigns(m: Molecule): ('+' | '−' | '')[] {
+  const acc = m.atoms.map(() => 0);
+  for (const b of m.bonds) {
+    const xa = elementBySymbol(m.atoms[b.a]?.el ?? '')?.en_pauling ?? null;
+    const xb = elementBySymbol(m.atoms[b.b]?.el ?? '')?.en_pauling ?? null;
+    if (xa === null || xb === null) continue;
+    acc[b.a] = (acc[b.a] ?? 0) + (xa - xb);
+    acc[b.b] = (acc[b.b] ?? 0) + (xb - xa);
+  }
+  return acc.map((sum) => {
+    const d = Math.round(sum * 100) / 100;
+    return d >= 0.4 ? '−' : d <= -0.4 ? '+' : '';
+  });
+}
+
 export function deltaEn(m: Molecule, b: Bond): number | null {
   return paulingDelta(m.atoms[b.a]?.el ?? '', m.atoms[b.b]?.el ?? '');
 }

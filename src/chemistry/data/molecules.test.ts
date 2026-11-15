@@ -13,6 +13,7 @@ import {
   lonePairs,
   moleculeById,
   neighbors,
+  partialSigns,
   paulingDelta,
   polarity,
   prettyFormula,
@@ -161,6 +162,18 @@ describe('molecule library', () => {
     for (const b of no3.bonds) expect(bondPolarity(deltaEn(no3, b) ?? NaN)).toBe('polar');
     expect(paulingDelta('Cl', 'H')).toBe(0.96);
     expect(paulingDelta('Xx', 'H')).toBeNull();
+  });
+
+  it('partial signs read Δχ like paulingDelta: O of NO₃⁻ and NO gets δ−, N δ+', () => {
+    const no3 = mol('no3');
+    const signs = partialSigns(no3);
+    no3.atoms.forEach((a, i) => {
+      expect(signs[i], `${a.el}${String(i)}`).toBe(a.el === 'O' ? '−' : '+');
+    });
+    const no = mol('no');
+    expect(no.atoms.map((a, i) => `${a.el}${partialSigns(no)[i] ?? ''}`)).toEqual(['N+', 'O−']);
+    // One C–H bond (0,35) alone signs nothing: HCN's H stays unsigned.
+    expect(partialSigns(mol('hcn'))[mol('hcn').atoms.findIndex((a) => a.el === 'H')]).toBe('');
   });
 
   it('molecular polarity (qualitative) matches textbook expectations', () => {
