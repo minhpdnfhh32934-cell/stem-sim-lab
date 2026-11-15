@@ -1,7 +1,11 @@
 import { pickTex } from '@/core/data/dataset';
 import { unitLabel } from '@/core/units';
+import { FLUIDS } from '@/physics/fluid/model';
 import type { PhysicsScene } from '@/physics/types';
 import { allowedUnits } from './spec';
+
+/** A number as the Vietnamese hints write it (decimal comma). */
+const vn = (x: number | undefined) => String(x).replace('.', ',');
 
 /** Safety line added to every system prompt (PROMPT_PHAN_2 A3). */
 export const SAFETY_RULES = `
@@ -39,7 +43,9 @@ export const TOPIC_HINTS: Record<string, string> = {
   pulley: 'Hai vật nối dây qua ròng rọc: máy Atwood, một vật trên bàn/trên dốc và một vật treo.',
   hookeSpring: 'Lò xo: định luật Hooke, độ dãn khi treo vật, lực đàn hồi, chiều dài lò xo.',
   fluidFall:
-    'Vật (quả cầu) rơi hoặc nổi trong chất lưu (không khí, nước) có lực cản F = ½ρC_dAv² và lực đẩy Archimedes: tốc độ giới hạn, thời gian rơi hết độ cao. Đề cho khối lượng riêng chất lưu khác 1,225 kg/m³ (không khí) hoặc 998 kg/m³ (nước) thì ghi fluid = 2 và rhoF. Lực cản tỉ lệ bậc nhất với v (F = kv): ghi vào unsupported_parts.',
+    'Vật (quả cầu) rơi hoặc nổi trong chất lưu (không khí, nước) có lực cản F = ½ρC_dAv² và lực đẩy Archimedes: tốc độ giới hạn, thời gian rơi hết độ cao. Đề cho khối lượng riêng chất lưu khác ' +
+    `${vn(FLUIDS[0]?.rho)} kg/m³ (không khí) hoặc ${vn(FLUIDS[1]?.rho)} kg/m³ (nước) thì ghi fluid = 2 và rhoF.` +
+    ' Lực cản tỉ lệ bậc nhất với v (F = kv): ghi vào unsupported_parts.',
   torqueBalance:
     'Moment lực, quy tắc moment, đòn bẩy/bập bênh: thanh quay quanh trục ở trung điểm, vật m1 cách trục d1 bên trái, vật m2 cách trục d2 bên phải; moment mỗi lực, vị trí đặt vật để thanh cân bằng. Trục không ở trung điểm, lực xiên, ngẫu lực: ghi vào unsupported_parts.',
   workPower:

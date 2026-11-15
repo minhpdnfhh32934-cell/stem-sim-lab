@@ -163,7 +163,7 @@ function solve(p: Params, locale: Locale): Solution {
           'Hợp lực khác 0: vòng chuyển động nhanh dần đều theo hướng của hợp lực (định luật II Newton):',
           'The resultant is not 0: the ring speeds up uniformly along it (Newton’s second law):',
         ),
-        tex: `a = \\frac{R}{m} = \\frac{${n(R.size)}}{${n(q.m)}} = ${Q(R.size / q.m, 'm/s^2')}`,
+        tex: `a = \\frac{${S.resultant}}{m} = \\frac{${n(R.size)}}{${n(q.m)}} = ${Q(R.size / q.m, 'm/s^2')}`,
       },
       {
         text: L(

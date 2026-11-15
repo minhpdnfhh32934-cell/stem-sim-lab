@@ -6,6 +6,12 @@ import type { Source } from '@/core/data/dataset';
  * (docs/DATA_REVIEW.md).
  */
 export const SRC = {
+  // The book as a whole, for the Sources page; each card cites its own lessons and pages (sgk10).
+  sgk10kntt: {
+    id: 'sgk-vl10-kntt',
+    citation:
+      'Sách giáo khoa Vật lí 10, bộ Kết nối tri thức với cuộc sống, NXB Giáo dục Việt Nam (bài và trang ghi trên Thẻ Khoa học của từng bài)',
+  },
   sgk11: {
     id: 'sgk-vl11',
     citation: 'Sách giáo khoa Vật lí 11 (Chương trình GDPT 2018), NXB Giáo dục Việt Nam — Dao động',

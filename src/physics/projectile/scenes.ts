@@ -218,9 +218,13 @@ const EQUATIONS: Record<ProjectileKind, ScienceCardData['equations']> = {
       // SGK Vật lí 10 KNTT Bài 10, tr. 46.
       tex: {
         vi: 'v_0 = 0:\\quad d = s = \\tfrac{1}{2} g t^2,\\quad v_t = g t,\\quad v_t^2 = 2 g s',
-        en: 'v_0 = 0:\\quad h = \\tfrac{1}{2} g t^2,\\quad v = g t,\\quad v^2 = 2 g h',
+        en: 'v_0 = 0:\\quad h = \\tfrac{1}{2} g t^2,\\quad |v| = g t,\\quad v^2 = 2 g h',
       },
-      label: L('Rơi tự do từ trạng thái nghỉ', 'Free fall from rest'),
+      // The book takes downward as positive here; the lines above take y upward.
+      label: L(
+        'Rơi tự do từ trạng thái nghỉ, chọn chiều dương hướng xuống',
+        'Free fall from rest, downward taken as positive',
+      ),
     },
   ],
   horizontal: [

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import raw from '@data/curriculum_kntt.json';
 import { loadScene } from '../registry';
-import { VL10_LESSONS, sgk10 } from './sources';
+import { SRC, VL10_LESSONS, sgk10 } from './sources';
 
 interface Lesson {
   number: number;
@@ -51,5 +51,9 @@ describe('Vật lí 10 KNTT lessons cited by the Science Cards (user rule 15/11/
       'Sách giáo khoa Vật lí 10, bộ Kết nối tri thức với cuộc sống, NXB Giáo dục Việt Nam — Bài 34 “Khối lượng riêng. Áp suất chất lỏng”, tr. 131–135',
     );
     expect(() => sgk10(6)).toThrow();
+  });
+
+  it('the Sources page (Object.values(SRC)) still lists the Vật lí 10 book', () => {
+    expect(Object.values(SRC).map((s) => s.id)).toContain('sgk-vl10-kntt');
   });
 });
