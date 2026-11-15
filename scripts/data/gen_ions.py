@@ -1,7 +1,7 @@
 """Generate data/ions.json: the common monatomic ion of the main-group elements used by "Liên kết
 ion" (Hóa học 10 KNTT Bài 11, #255).
 
-User decision 16/11/2026 ("bám sát chương trình của sách"): the textbook first.
+User decision 15/11/2026 ("bám sát chương trình của sách"): the textbook first.
 
 1. Primary source: SGK Hóa học 10 "Kết nối tri thức với cuộc sống" (NXB Giáo dục Việt Nam), page
    images in NXBGD's reader https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983,
