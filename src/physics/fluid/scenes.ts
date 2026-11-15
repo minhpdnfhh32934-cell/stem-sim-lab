@@ -6,6 +6,7 @@ import { DIM } from '@/core/units';
 import type { ScienceCardData } from '@/science-card/types';
 import { L, gravityParam } from '../common/scene-helpers';
 import { SRC } from '../common/sources';
+import { SYM, both, plain, sym } from '../common/symbols';
 import { fmtQty, texNum, texQty } from '../common/tex';
 import { arrow, circle, ground, line, polygon, text, vectorScale } from '../render/draw';
 import type {
@@ -81,7 +82,7 @@ const ball: BodyDef = {
       { label: L('Vận tốc', 'Velocity'), symbol: 'v', value: s[FL.v] ?? 0, unit: 'm/s' },
       { label: L('Gia tốc', 'Acceleration'), symbol: 'a', value: s[FL.a] ?? 0, unit: 'm/s^2' },
       { label: L('Lực cản', 'Drag'), symbol: 'F_D', value: s[FL.Fd] ?? 0, unit: 'N' },
-      { label: L('Trọng lực', 'Weight'), symbol: 'P', value: q.m * q.g, unit: 'N' },
+      { label: L('Trọng lực', 'Weight'), symbol: SYM.weight, value: q.m * q.g, unit: 'N' },
       {
         label: L('Lực đẩy Archimedes', 'Upthrust'),
         symbol: 'F_A',
@@ -146,7 +147,7 @@ function draw({ ctx, cam, state, p, opts }: DrawContext): void {
     const FA = q.fluid.rho * volume(q) * q.g;
     const Fd = state[FL.Fd] ?? 0;
     const k = vectorScale(Math.max(W, FA), vis.yMax - vis.yMin, 0.16);
-    arrow(ctx, cam, x, y, 0, -W * k, c.force, 'P');
+    arrow(ctx, cam, x, y, 0, -W * k, c.force, plain(sym(opts.locale).weight));
     if (FA > 1e-3 * W) arrow(ctx, cam, x - 0.6 * R, y, 0, FA * k, c.force, 'F_A');
     if (Math.abs(Fd) > 1e-3 * W) arrow(ctx, cam, x + 0.6 * R, y, 0, Fd * k, c.acceleration, 'F_D');
   }
@@ -201,7 +202,7 @@ const graphs: GraphDef[] = [
     series: [
       {
         id: 'P',
-        label: L('Trọng lực P', 'Weight P'),
+        label: L('Trọng lực P', 'Weight F_g'),
         value: (_s, p) => fallInput(p).m * fallInput(p).g,
       },
       {
@@ -236,13 +237,14 @@ function solve(p: Params, locale: Locale): Solution {
   const q = fallInput(p);
   const n = (v: number) => texNum(locale, v);
   const Q = (v: number, u: string) => texQty(locale, v, u);
+  const S = sym(locale);
   const P = q.m * q.g;
   const FA = q.fluid.rho * volume(q) * q.g;
   const dir = direction(q);
   const steps: SolutionStep[] = [
     {
       text: L('Trọng lực và lực đẩy Archimedes của chất lưu:', 'Weight and the fluid’s upthrust:'),
-      tex: `P = mg = ${Q(P, 'N')},\\qquad F_A = \\rho_{f} V g = ${n(q.fluid.rho)}\\cdot ${n(volume(q))}\\cdot ${n(q.g)} = ${Q(FA, 'N')}`,
+      tex: `${S.weight} = mg = ${Q(P, 'N')},\\qquad F_A = \\rho_{f} V g = ${n(q.fluid.rho)}\\cdot ${n(volume(q))}\\cdot ${n(q.g)} = ${Q(FA, 'N')}`,
     },
   ];
   const answers: Answer[] = [
@@ -276,14 +278,14 @@ function solve(p: Params, locale: Locale): Solution {
               'Lực đẩy Archimedes lớn hơn trọng lực: quả cầu nổi lên. Lực cản tăng theo bình phương tốc độ cho tới khi bằng hiệu của hai lực đó:',
               'The upthrust is larger than the weight: the sphere rises. The drag grows with the square of the speed until it equals the difference of those two forces:',
             ),
-      tex: `v_t = \\sqrt{\\frac{2\\,|P - F_A|}{\\rho_{f} C_d A}} = \\sqrt{\\frac{2\\cdot ${n(Math.abs(P - FA))}}{${n(q.fluid.rho)}\\cdot ${n(q.cd)}\\cdot ${n(Math.PI * q.r ** 2)}}} = ${Q(vt, 'm/s')}`,
+      tex: `v_t = \\sqrt{\\frac{2\\,|${S.weight} - F_A|}{\\rho_{f} C_d A}} = \\sqrt{\\frac{2\\cdot ${n(Math.abs(P - FA))}}{${n(q.fluid.rho)}\\cdot ${n(q.cd)}\\cdot ${n(Math.PI * q.r ** 2)}}} = ${Q(vt, 'm/s')}`,
     },
     {
       text: L(
         'Tốc độ tiến dần tới tốc độ giới hạn nhưng không vượt qua; thời gian đi hết cột chất lưu:',
         'The speed approaches the terminal speed but never exceeds it; time to cross the column:',
       ),
-      tex: `a_0 = \\frac{|P - F_A|}{m + \\tfrac{1}{2}\\rho_{f} V} = ${Q(a0, 'm/s^2')},\\quad t = \\frac{v_t}{a_0}\\,\\mathrm{arcosh}\\!\\left(e^{a_0 H / v_t^2}\\right) = ${Q(tEnd, 's')},\\quad v = ${Q(vEnd, 'm/s')}`,
+      tex: `a_0 = \\frac{|${S.weight} - F_A|}{m + \\tfrac{1}{2}\\rho_{f} V} = ${Q(a0, 'm/s^2')},\\quad t = \\frac{v_t}{a_0}\\,\\mathrm{arcosh}\\!\\left(e^{a_0 H / v_t^2}\\right) = ${Q(tEnd, 's')},\\quad v = ${Q(vEnd, 'm/s')}`,
     },
   );
   answers.push(
@@ -389,14 +391,20 @@ function card(p: Params): ScienceCardData {
         label: L('Lực cản của chất lưu', 'Fluid drag'),
       },
       {
-        tex: '\\left(m + \\tfrac{1}{2}\\rho_{f} V\\right)\\frac{dv}{dt} = |P - F_A| - F_D',
+        tex: both(
+          (s) =>
+            `\\left(m + \\tfrac{1}{2}\\rho_{f} V\\right)\\frac{dv}{dt} = |${s.weight} - F_A| - F_D`,
+        ),
         label: L(
           'Định luật II Newton theo chiều chuyển động',
           "Newton's second law along the motion",
         ),
       },
       {
-        tex: 'v = v_t\\tanh\\frac{a_0 t}{v_t},\\quad v_t = \\sqrt{\\frac{2\\,|P - F_A|}{\\rho_{f} C_d A}}',
+        tex: both(
+          (s) =>
+            `v = v_t\\tanh\\frac{a_0 t}{v_t},\\quad v_t = \\sqrt{\\frac{2\\,|${s.weight} - F_A|}{\\rho_{f} C_d A}}`,
+        ),
         label: L('Nghiệm khi thả không vận tốc đầu', 'Solution from rest'),
       },
     ],

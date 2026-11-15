@@ -1,3 +1,4 @@
+import { pickTex } from '@/core/data/dataset';
 import { describe, expect, it } from 'vitest';
 import { EngineRunner } from '@/core/sim/runner';
 import { IS, InclineEngine, inclineInput, subInterval } from './engine';
@@ -480,7 +481,7 @@ describe('a block that starts on an edge and moves outward', () => {
     const tex = (s: typeof newtonLaws) =>
       s
         .scienceCard(s.defaults)
-        .equations.map((e) => e.tex)
+        .equations.flatMap((e) => [pickTex(e.tex, 'vi'), pickTex(e.tex, 'en')])
         .join(' ');
     expect(tex(newtonLaws)).toContain('N = mg - F\\sin\\alpha');
     expect(tex(newtonLaws)).not.toMatch(/theta|beta|mu_t|mu_n/);

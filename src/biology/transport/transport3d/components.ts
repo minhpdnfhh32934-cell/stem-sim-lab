@@ -4,7 +4,7 @@
  * truth; every new text is listed in docs/DATA_REVIEW.md (TRA3D-*, review_status: pending) —
  * sources: SGK Sinh học 10; Campbell Biology; Atkins' Physical Chemistry.
  */
-import type { LocalizedText } from '@/core/data/dataset';
+import { pickTex, type LocalizedText } from '@/core/data/dataset';
 import type { ScienceCardData } from '@/science-card/types';
 import { L } from '../../common';
 import { MOTION } from '../../view3d/texts';
@@ -120,7 +120,7 @@ export function diffusionCard3d(): ScienceCardData {
       "Two compartments separated by a porous membrane. Fick's law for two compartments (exact solution): the concentration difference decays exponentially until both sides are equal. In the 3D picture the particles on each side come from this solution at every moment (rounded); each particle's path is illustration.",
     ),
     equations: [
-      ...base.equations.filter((e) => !e.tex.includes('r^2')),
+      ...base.equations.filter((e) => !pickTex(e.tex, 'vi').includes('r^2')),
       {
         tex: 'N_1(t) = N\\,\\dfrac{C_1(t)\\,V_1}{C_1^0V_1 + C_2^0V_2},\\quad N_1 + N_2 = N',
         label: L('Số hạt ngăn 1 trên hình (làm tròn)', 'Particles drawn on side 1 (rounded)'),

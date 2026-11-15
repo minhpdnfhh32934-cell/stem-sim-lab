@@ -10,6 +10,12 @@ export const ReviewStatusSchema = z.enum(['pending', 'verified']);
 export const LocalizedTextSchema = z.object({ vi: z.string().min(1), en: z.string().min(1) });
 export type LocalizedText = z.infer<typeof LocalizedTextSchema>;
 
+/** A KaTeX symbol or formula that may differ by language (#258); a string is the same in both. */
+export type LocalizedTex = string | LocalizedText;
+
+export const pickTex = (tex: LocalizedTex, locale: keyof LocalizedText): string =>
+  typeof tex === 'string' ? tex : tex[locale];
+
 export const SourceSchema = z.object({
   id: z.string().min(1),
   citation: z.string().min(1),

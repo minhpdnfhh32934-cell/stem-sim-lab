@@ -4,6 +4,7 @@ import { DIM } from '@/core/units';
 import type { ScienceCardData } from '@/science-card/types';
 import { L, gravityParam, massParam } from '../common/scene-helpers';
 import { SRC } from '../common/sources';
+import { SYM, both, plain, sym } from '../common/symbols';
 import { fmtQty, texNum, texQty } from '../common/tex';
 import {
   arrow,
@@ -74,7 +75,7 @@ const body: BodyDef = {
     },
     {
       label: L('Lực đàn hồi', 'Spring force'),
-      symbol: 'F_{\\text{đh}}',
+      symbol: SYM.springForce,
       value: s[SP.F] ?? 0,
       unit: 'N',
     },
@@ -83,6 +84,7 @@ const body: BodyDef = {
 
 function draw({ ctx, cam, state, p, opts }: DrawContext): void {
   const c = opts.colors;
+  const S = sym(opts.locale);
   const q = springInput(p);
   const { bs, len, A } = bounds(q);
   const x = state[SP.x] ?? 0;
@@ -105,8 +107,8 @@ function draw({ ctx, cam, state, p, opts }: DrawContext): void {
     block(ctx, cam, 0, x, bs, bs, 0, opts.selected === 'mass' ? c.accent : c.body, c.text, 'm');
     if (opts.vectors) {
       const k = vectorScale(Math.max(q.m * q.g, q.k * (staticExtension(q) + A)), len, 0.3);
-      arrow(ctx, cam, bs * 0.25, x, 0, -q.m * q.g * k, c.force, 'P');
-      arrow(ctx, cam, -bs * 0.25, x, 0, (state[SP.F] ?? 0) * k, c.velocity, 'F_đh');
+      arrow(ctx, cam, bs * 0.25, x, 0, -q.m * q.g * k, c.force, plain(S.weight));
+      arrow(ctx, cam, -bs * 0.25, x, 0, (state[SP.F] ?? 0) * k, c.velocity, plain(S.springForce));
     }
   } else {
     const wall = -len - bs / 2;
@@ -136,7 +138,7 @@ function draw({ ctx, cam, state, p, opts }: DrawContext): void {
       const kv = vectorScale(Math.max(w * A, 1e-6), len, 0.2);
       arrow(ctx, cam, x, bs * 1.15, (state[SP.v] ?? 0) * kv, 0, c.velocity, 'v');
       const kf = vectorScale(Math.max(q.k * A, 1e-6), len, 0.2);
-      arrow(ctx, cam, x, bs * 0.5, (state[SP.F] ?? 0) * kf, 0, c.force, 'F_đh');
+      arrow(ctx, cam, x, bs * 0.5, (state[SP.F] ?? 0) * kf, 0, c.force, plain(S.springForce));
     }
   }
   text(
@@ -390,7 +392,7 @@ function solve(hooke: boolean) {
       });
       steps.push({
         text: L('Cơ năng (bảo toàn):', 'Mechanical energy (conserved):'),
-        tex: `W = \\tfrac{1}{2} k A^2 = ${Q(0.5 * q.k * A * A, 'J')}`,
+        tex: `${sym(locale).mechanical} = \\tfrac{1}{2} k A^2 = ${Q(0.5 * q.k * A * A, 'J')}`,
       });
       answers.push(
         { id: 'amplitude', label: L('Biên độ', 'Amplitude'), value: A, unit: 'cm' },
@@ -459,7 +461,7 @@ function card(hooke: boolean) {
           : 'Ideal massless Hookean spring; no friction.',
       ),
       equations: [
-        { tex: 'F_{\\text{đh}} = -k\\,\\Delta l' },
+        { tex: both((s) => `${s.springForce} = -k\\,\\Delta l`) },
         {
           tex:
             q.b > 0
@@ -477,7 +479,7 @@ function card(hooke: boolean) {
               },
             ]
           : []),
-        { tex: 'W = \\tfrac{1}{2} m v^2 + \\tfrac{1}{2} k x^2' },
+        { tex: both((s) => `${s.mechanical} = \\tfrac{1}{2} m v^2 + \\tfrac{1}{2} k x^2`) },
       ],
       assumptions: [
         L(

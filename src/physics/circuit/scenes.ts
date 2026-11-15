@@ -4,6 +4,7 @@ import { DIM } from '@/core/units';
 import type { ScienceCardData } from '@/science-card/types';
 import { L } from '../common/scene-helpers';
 import { SRC } from '../common/sources';
+import { both, sym } from '../common/symbols';
 import { texNum, texQty } from '../common/tex';
 import type {
   Answer,
@@ -98,6 +99,7 @@ function solve(p: Params, locale: Locale): Solution {
   const r = solveCircuit(c);
   const check = nodalSolve(c);
   const Q = (v: number, u: string) => texQty(locale, v, u);
+  const S = sym(locale);
   const steps: SolutionStep[] = [
     rnStep(c, locale),
     {
@@ -126,7 +128,7 @@ function solve(p: Params, locale: Locale): Solution {
         'Công suất mạch ngoài, công suất của nguồn và hiệu suất của nguồn:',
         'Power of the external circuit, power of the source and its efficiency:',
       ),
-      tex: `P = U I = ${Q(r.Pout, 'W')},\\quad P_{ng} = E I = ${Q(r.Psource, 'W')},\\quad H = \\frac{U}{E} = ${texNum(locale, r.H * 100)}\\,\\%`,
+      tex: `P = U I = ${Q(r.Pout, 'W')},\\quad ${S.sourcePower} = E I = ${Q(r.Psource, 'W')},\\quad ${S.efficiency} = \\frac{U}{E} = ${texNum(locale, r.H * 100)}\\,\\%`,
     },
   ];
   const answers: Answer[] = [
@@ -183,7 +185,7 @@ function solve(p: Params, locale: Locale): Solution {
     },
     {
       id: 'H',
-      label: L('Hiệu suất của nguồn H', 'Efficiency of the source H'),
+      label: L('Hiệu suất của nguồn H', 'Efficiency of the source η'),
       value: r.H,
       unit: '%',
       check: check.H,
@@ -201,7 +203,10 @@ function card(): ScienceCardData {
     ),
     equations: [
       {
-        tex: 'R_{nt} = R_1 + R_2 + \\dots,\\quad \\frac{1}{R_{ss}} = \\frac{1}{R_1} + \\frac{1}{R_2} + \\dots',
+        tex: both(
+          (s) =>
+            `${s.seriesR} = R_1 + R_2 + \\dots,\\quad \\frac{1}{${s.parallelR}} = \\frac{1}{R_1} + \\frac{1}{R_2} + \\dots`,
+        ),
         label: L(
           'Điện trở tương đương: nối tiếp, song song',
           'Equivalent resistance: series, parallel',
@@ -212,7 +217,9 @@ function card(): ScienceCardData {
         label: L('Định luật Ohm cho toàn mạch', "Ohm's law for the whole circuit"),
       },
       {
-        tex: 'P = U I,\\quad P_{ng} = E I,\\quad H = \\frac{U}{E}',
+        tex: both(
+          (s) => `P = U I,\\quad ${s.sourcePower} = E I,\\quad ${s.efficiency} = \\frac{U}{E}`,
+        ),
         label: L(
           'Công suất mạch ngoài, công suất của nguồn, hiệu suất',
           'Power of the external circuit, power of the source, efficiency',

@@ -27,9 +27,9 @@ export function ObjectPanel() {
       <p className="object-panel__name">{L(body.label)}</p>
       <dl className="object-panel__list">
         {props.map((pr) => (
-          <div key={pr.symbol} className="object-panel__row">
+          <div key={L(pr.symbol)} className="object-panel__row">
             <dt>
-              {L(pr.label)} <Equation tex={pr.symbol} display={false} />
+              {L(pr.label)} <Equation tex={L(pr.symbol)} display={false} />
             </dt>
             <dd className="mono">{fmtQty(locale, pr.value, pr.unit, 4)}</dd>
           </div>

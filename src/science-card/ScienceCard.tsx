@@ -42,9 +42,9 @@ export function ScienceCard({
           </dt>
           <dd className="science-card__equations">
             {card.equations.map((eq) => (
-              <div key={eq.tex} className="science-card__equation">
+              <div key={L(eq.tex)} className="science-card__equation">
                 {eq.label && <span className="science-card__eq-label">{L(eq.label)}</span>}
-                <Equation tex={eq.tex} />
+                <Equation tex={L(eq.tex)} />
               </div>
             ))}
           </dd>

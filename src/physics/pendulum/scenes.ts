@@ -6,6 +6,7 @@ import type { LocalizedText } from '@/core/data/dataset';
 import type { ScienceCardData } from '@/science-card/types';
 import { L, gravityParam, massParam } from '../common/scene-helpers';
 import { SRC } from '../common/sources';
+import { SYM, plain, sym } from '../common/symbols';
 import { fmtQty, texNum, texQty } from '../common/tex';
 import { arrow, circle, line, polyline, text, vectorScale } from '../render/draw';
 import type {
@@ -90,7 +91,7 @@ const body: BodyDef = {
       { label: L('Lực căng dây', 'String tension'), symbol: 'T', value: s[PE.T] ?? 0, unit: 'N' },
       {
         label: L('Góc theo mô hình góc nhỏ', 'Small-angle model angle'),
-        symbol: '\\alpha_{\\text{gđ}}',
+        symbol: SYM.angleApprox,
         value: s[PE.thS] ?? 0,
         unit: 'deg',
       },
@@ -152,7 +153,7 @@ function draw({ ctx, cam, state, p, opts }: DrawContext): void {
       'v',
     );
     const kf = vectorScale(q.m * q.g * 3, q.L, 0.35);
-    arrow(ctx, cam, b.x, b.y, 0, -q.m * q.g * kf, c.force, 'P');
+    arrow(ctx, cam, b.x, b.y, 0, -q.m * q.g * kf, c.force, plain(sym(opts.locale).weight));
     const T = state[PE.T] ?? 0;
     arrow(ctx, cam, b.x, b.y, -Math.sin(th) * T * kf, Math.cos(th) * T * kf, c.acceleration, 'T');
   }
@@ -266,6 +267,7 @@ function solve(p: Params, locale: Locale): Solution {
   const q = pendulumInput(p);
   const n = (v: number) => texNum(locale, v);
   const Q = (v: number, u: string) => texQty(locale, v, u);
+  const S = sym(locale);
   const T0 = pendulumPeriodSmallAngle(q.L, q.g);
   const tm = maxAngle(q);
   const steps: SolutionStep[] = [
@@ -295,7 +297,7 @@ function solve(p: Params, locale: Locale): Solution {
   const chk = numericPeriodPendulum(q);
   steps.push({
     text: L('Biên độ góc (từ bảo toàn cơ năng):', 'Angular amplitude (from energy conservation):'),
-    tex: `\\cos\\alpha_0 = \\cos\\alpha_{\\text{bđ}} - \\frac{l\\,\\omega_{\\text{bđ}}^2}{2g} \\Rightarrow \\alpha_0 = ${Q(tm, 'deg')}`,
+    tex: `\\cos\\alpha_0 = \\cos${S.angle0} - \\frac{l\\,${S.omega0}^2}{2g} \\Rightarrow \\alpha_0 = ${Q(tm, 'deg')}`,
   });
   steps.push({
     text: L(
@@ -423,7 +425,7 @@ export const simplePendulum: PhysicsScene = {
     {
       key: 'theta0',
       label: L('Li độ góc ban đầu', 'Initial angle'),
-      symbol: '\\alpha_{\\text{bđ}}',
+      symbol: SYM.angle0,
       kind: 'number',
       unit: 'deg',
       min: -179,
@@ -433,7 +435,7 @@ export const simplePendulum: PhysicsScene = {
     {
       key: 'omega0',
       label: L('Tốc độ góc ban đầu', 'Initial angular velocity'),
-      symbol: '\\omega_{\\text{bđ}}',
+      symbol: SYM.omega0,
       kind: 'number',
       dim: DIM.frequency,
       unit: 'rad/s',

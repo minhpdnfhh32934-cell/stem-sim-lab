@@ -1,3 +1,4 @@
+import { pickTex } from '@/core/data/dataset';
 import { unitLabel } from '@/core/units';
 import type { PhysicsScene } from '@/physics/types';
 import { allowedUnits } from './spec';
@@ -90,7 +91,7 @@ export function extractionSystem(
           : d.kind === 'toggle'
             ? ' Giá trị 1 = có, 0 = không.'
             : '';
-      return `- ${d.key}: ${d.label.vi}${d.symbol ? ` (ký hiệu ${d.symbol})` : ''}. Đơn vị hợp lệ: ${units.join(', ')}.${choices}`;
+      return `- ${d.key}: ${d.label.vi}${d.symbol ? ` (ký hiệu ${pickTex(d.symbol, 'vi')})` : ''}. Đơn vị hợp lệ: ${units.join(', ')}.${choices}`;
     })
     .join('\n');
   const qs = questions.map((q) => `- ${q.id}: ${q.label}`).join('\n');

@@ -1,5 +1,6 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it } from 'vitest';
+import { pickTex } from '@/core/data/dataset';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { acidBaseTitration } from './modules';
 import { addedVolume, setTitration, useTitrationStore } from './store';
@@ -110,7 +111,9 @@ describe('titration module', () => {
     expect(container.textContent).toContain('Vtđ = 10,00 mL');
     // A subscript straight inside the flex chip loses its baseline (it floated up).
     expect(container.querySelector('.chem-chip > sub')).toBeNull();
-    expect(titrationCard('vi').equations.some((e) => e.tex.includes('tđ'))).toBe(true);
+    expect(titrationCard('vi').equations.some((e) => pickTex(e.tex, 'vi').includes('tđ'))).toBe(
+      true,
+    );
     unmount();
     act(() => {
       useSettingsStore.setState({ locale: 'en' });
@@ -120,7 +123,7 @@ describe('titration module', () => {
     expect(en.container.textContent).not.toContain('tđ');
     expect(
       titrationCard('en')
-        .equations.map((e) => e.tex)
+        .equations.map((e) => pickTex(e.tex, 'en'))
         .join(' '),
     ).not.toContain('tđ');
   });
@@ -130,14 +133,14 @@ describe('titration module', () => {
     for (const locale of ['vi', 'en'] as const) {
       for (const e of titrationCard(locale).equations) {
         const warned: string[] = [];
-        katex.renderToString(e.tex, {
+        katex.renderToString(pickTex(e.tex, locale), {
           throwOnError: true,
           strict: (code: string) => {
             warned.push(code);
             return 'ignore';
           },
         });
-        expect(warned, e.tex).toEqual([]);
+        expect(warned, pickTex(e.tex, locale)).toEqual([]);
       }
     }
   });
