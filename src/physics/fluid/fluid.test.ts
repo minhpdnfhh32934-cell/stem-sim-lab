@@ -1,3 +1,4 @@
+import { pickTex } from '@/core/data/dataset';
 import { describe, expect, it } from 'vitest';
 import { dopri5 } from '@/core/ode/dopri5';
 import { checkMisses, sliderEnds, sliderSweep } from '../testing';
@@ -167,13 +168,13 @@ describe('falling and rising through a fluid (VL10 Bài 19)', () => {
   it('no Vietnamese abbreviation in the symbols (v_gh, F_c read as other quantities in English)', () => {
     const c = fluidFall.scienceCard(base);
     const texts = [
-      ...c.equations.map((e) => e.tex),
-      ...(['vi', 'en'] as const).flatMap((loc) =>
-        fluidFall.solve(base, loc).steps.map((s) => s.tex ?? ''),
-      ),
-      ...fluidFall.bodies.flatMap((b) =>
-        (b.properties?.(new Float64Array(8), base) ?? []).map((x) => x.symbol),
-      ),
+      ...(['vi', 'en'] as const).flatMap((loc) => [
+        ...c.equations.map((e) => pickTex(e.tex, loc)),
+        ...fluidFall.solve(base, loc).steps.map((s) => s.tex ?? ''),
+        ...fluidFall.bodies.flatMap((b) =>
+          (b.properties?.(new Float64Array(8), base) ?? []).map((x) => pickTex(x.symbol, loc)),
+        ),
+      ]),
     ].join(' ');
     expect(texts).not.toMatch(/_{?gh|F_{?c(?![a-z])/);
     expect(texts).toMatch(/v_t/);

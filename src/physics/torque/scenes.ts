@@ -139,7 +139,7 @@ function draw({ ctx, cam, state, p, opts }: DrawContext): void {
         0,
         -w.m * q.g * k,
         c.force,
-        `P_${w.label}`,
+        opts.locale === 'vi' ? `P_${w.label}` : `F_g${w.label}`,
       );
     }
   }

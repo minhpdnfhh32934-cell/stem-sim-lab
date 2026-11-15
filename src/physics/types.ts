@@ -1,4 +1,4 @@
-import type { LocalizedText } from '@/core/data/dataset';
+import type { LocalizedTex, LocalizedText } from '@/core/data/dataset';
 import type { Dimension } from '@/core/units';
 import type { Locale } from '@/app/i18n/types';
 import type { ScienceCardData } from '@/science-card/types';
@@ -18,8 +18,8 @@ export interface ChoiceOption {
 export interface ParamDef {
   key: string;
   label: LocalizedText;
-  /** KaTeX symbol, e.g. "v_0". */
-  symbol: string;
+  /** KaTeX symbol, e.g. "v_0"; `{ vi, en }` when the textbooks write it differently (#258). */
+  symbol: LocalizedTex;
   kind: 'number' | 'choice' | 'toggle';
   /** Physical dimension (for unit conversion); omit for dimensionless. */
   dim?: Dimension;
@@ -116,7 +116,7 @@ export interface BodyDef {
   properties?: (
     state: Float64Array,
     p: Params,
-  ) => { label: LocalizedText; symbol: string; value: number; unit: string }[];
+  ) => { label: LocalizedText; symbol: LocalizedTex; value: number; unit: string }[];
 }
 
 export interface DrawOptions {

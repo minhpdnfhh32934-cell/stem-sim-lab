@@ -1,3 +1,4 @@
+import { pickTex } from '@/core/data/dataset';
 import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import type * as THREE from 'three';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -242,7 +243,7 @@ describe('3D Science Card', () => {
     for (const note of [ENZYME_ILLUSTRATION, ENZYME_SCALE_NOTE, LOCK_KEY_NOTE, SAMPLE_NOTE])
       expect(text).toContain(note.vi);
     expect(text).toContain('S + P luôn bằng số hạt lúc đầu');
-    expect(card.equations.map((e) => e.tex).join(' ')).toContain('k_{cat}[ES]');
+    expect(card.equations.map((e) => pickTex(e.tex, 'vi')).join(' ')).toContain('k_{cat}[ES]');
     expect(card.confidence).toBe('exact');
     expect(card.reviewStatus).toBe('pending');
     expect(card.sources.map((x) => x.id)).toEqual(

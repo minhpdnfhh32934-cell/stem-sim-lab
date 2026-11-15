@@ -4,6 +4,7 @@ import { DIM } from '@/core/units';
 import type { ScienceCardData } from '@/science-card/types';
 import { DASH, L, gravityParam } from '../common/scene-helpers';
 import { SRC } from '../common/sources';
+import { SYM, both, plain, sym } from '../common/symbols';
 import { fmtQty, texNum, texQty } from '../common/tex';
 import { arrow, block, circle, line, text } from '../render/draw';
 import type {
@@ -48,12 +49,13 @@ const lamp: BodyDef = {
   draggable: false,
   properties: (s, p) => [
     { label: L('Khối lượng', 'Mass'), symbol: 'm', value: hanging(p).m, unit: 'kg' },
-    { label: L('Trọng lực', 'Weight'), symbol: 'P', value: s[TS.P] ?? 0, unit: 'N' },
+    { label: L('Trọng lực', 'Weight'), symbol: SYM.weight, value: s[TS.P] ?? 0, unit: 'N' },
   ],
 };
 
 function draw({ ctx, cam, state, p, opts }: DrawContext): void {
   const c = opts.colors;
+  const S = sym(opts.locale);
   const h = hanging(p);
   const vis = cam.visible();
   const { A, B } = anchors(p);
@@ -85,7 +87,7 @@ function draw({ ctx, cam, state, p, opts }: DrawContext): void {
     const k = 0.7 / Math.max(P, T1, T2);
     const u1 = h.two ? { x: -Math.sin(h.a1), y: Math.cos(h.a1) } : { x: 0, y: 1 };
     const u2 = { x: Math.sin(h.a2), y: Math.cos(h.a2) };
-    arrow(ctx, cam, O.x, O.y, 0, -P * k, c.force, 'P');
+    arrow(ctx, cam, O.x, O.y, 0, -P * k, c.force, plain(S.weight));
     arrow(ctx, cam, O.x, O.y, u1.x * T1 * k, u1.y * T1 * k, c.acceleration, h.two ? 'T_1' : 'T');
     if (h.two) {
       arrow(ctx, cam, O.x, O.y, u2.x * T2 * k, u2.y * T2 * k, c.acceleration, 'T_2');
@@ -119,8 +121,8 @@ function draw({ ctx, cam, state, p, opts }: DrawContext): void {
   const head = indeterminate(h)
     ? ''
     : h.two
-      ? `P = ${fmtQty(opts.locale, P, 'N', 4)}   T₁ = ${fmtQty(opts.locale, T1, 'N', 4)}   T₂ = ${fmtQty(opts.locale, T2, 'N', 4)}`
-      : `P = T = ${fmtQty(opts.locale, P, 'N', 4)}`;
+      ? `${plain(S.weight)} = ${fmtQty(opts.locale, P, 'N', 4)}   T₁ = ${fmtQty(opts.locale, T1, 'N', 4)}   T₂ = ${fmtQty(opts.locale, T2, 'N', 4)}`
+      : `${plain(S.weight)} = T = ${fmtQty(opts.locale, P, 'N', 4)}`;
   text(ctx, cam, vis.xMin, vis.yMax, head, c.muted, 'left', { x: 60, y: 20 });
 }
 
@@ -146,11 +148,12 @@ function solve(p: Params, locale: Locale): Solution {
   const h = hanging(p);
   const n = (v: number) => texNum(locale, v);
   const Q = (v: number, u: string) => texQty(locale, v, u);
+  const S = sym(locale);
   const P = weight(h);
   const steps: SolutionStep[] = [
     {
       text: L('Trọng lực của đèn:', 'Weight of the lamp:'),
-      tex: `P = mg = ${n(h.m)}\\cdot ${n(h.g)} = ${Q(P, 'N')}`,
+      tex: `${S.weight} = mg = ${n(h.m)}\\cdot ${n(h.g)} = ${Q(P, 'N')}`,
     },
   ];
   const answers: Answer[] = [{ id: 'P', label: L('Trọng lực', 'Weight'), value: P, unit: 'N' }];
@@ -160,7 +163,7 @@ function solve(p: Params, locale: Locale): Solution {
         'Một dây thẳng đứng: nút đứng yên nên lực căng cân bằng trọng lực.',
         'One vertical string: the knot is at rest, so the tension balances the weight.',
       ),
-      tex: `T = P = ${Q(P, 'N')}`,
+      tex: `T = ${S.weight} = ${Q(P, 'N')}`,
     });
     answers.push({ id: 'T', label: L('Lực căng dây', 'Tension'), value: P, unit: 'N' });
     return { answers, steps };
@@ -169,7 +172,7 @@ function solve(p: Params, locale: Locale): Solution {
     steps.push({
       text: L(
         'Hai dây cùng thẳng đứng: điều kiện cân bằng chỉ cho T₁ + T₂ = P, không cho biết mỗi dây chịu bao nhiêu (còn phụ thuộc độ dãn của dây).',
-        'Two vertical strings: balance only gives T₁ + T₂ = P, not how much each one carries (that depends on how the strings stretch).',
+        'Two vertical strings: balance only gives T₁ + T₂ = F_g, not how much each one carries (that depends on how the strings stretch).',
       ),
     });
     return { answers, steps };
@@ -182,11 +185,11 @@ function solve(p: Params, locale: Locale): Solution {
         'Nút đứng yên: tổng các lực tác dụng lên nút bằng 0. Chiếu lên phương ngang và phương thẳng đứng:',
         'The knot is at rest: the forces on it add to 0. Along the horizontal and the vertical:',
       ),
-      tex: `T_1\\sin\\alpha_1 = T_2\\sin\\alpha_2,\\qquad T_1\\cos\\alpha_1 + T_2\\cos\\alpha_2 = P`,
+      tex: `T_1\\sin\\alpha_1 = T_2\\sin\\alpha_2,\\qquad T_1\\cos\\alpha_1 + T_2\\cos\\alpha_2 = ${S.weight}`,
     },
     {
       text: L('Giải hệ hai phương trình:', 'Solving the two equations:'),
-      tex: `T_1 = \\frac{P\\sin\\alpha_2}{\\sin(\\alpha_1 + \\alpha_2)} = \\frac{${n(P)}\\sin ${n(deg(h.a2))}^\\circ}{\\sin ${n(deg(h.a1 + h.a2))}^\\circ} = ${Q(T1, 'N')},\\quad T_2 = \\frac{P\\sin\\alpha_1}{\\sin(\\alpha_1 + \\alpha_2)} = ${Q(T2, 'N')}`,
+      tex: `T_1 = \\frac{${S.weight}\\sin\\alpha_2}{\\sin(\\alpha_1 + \\alpha_2)} = \\frac{${n(P)}\\sin ${n(deg(h.a2))}^\\circ}{\\sin ${n(deg(h.a1 + h.a2))}^\\circ} = ${Q(T1, 'N')},\\quad T_2 = \\frac{${S.weight}\\sin\\alpha_1}{\\sin(\\alpha_1 + \\alpha_2)} = ${Q(T2, 'N')}`,
     },
   );
   answers.push(
@@ -240,17 +243,22 @@ function card(p: Params): ScienceCardData {
       'A lamp hangs at rest from a knot, held by one vertical string or by two strings tied to the ceiling, each at an angle to the vertical.',
     ),
     equations: [
-      { tex: 'P = mg', label: L('Trọng lực', 'Weight') },
+      { tex: both((s) => `${s.weight} = mg`), label: L('Trọng lực', 'Weight') },
       {
-        tex: h.two
-          ? '\\vec{T}_1 + \\vec{T}_2 + \\vec{P} = \\vec{0}'
-          : '\\vec{T} + \\vec{P} = \\vec{0}',
+        tex: both((s) =>
+          h.two
+            ? `\\vec{T}_1 + \\vec{T}_2 + ${s.weightVec} = \\vec{0}`
+            : `\\vec{T} + ${s.weightVec} = \\vec{0}`,
+        ),
         label: L('Nút cân bằng', 'The knot balances'),
       },
       ...(h.two
         ? [
             {
-              tex: 'T_1 = \\dfrac{P\\sin\\alpha_2}{\\sin(\\alpha_1 + \\alpha_2)},\\quad T_2 = \\dfrac{P\\sin\\alpha_1}{\\sin(\\alpha_1 + \\alpha_2)}',
+              tex: both(
+                (s) =>
+                  `T_1 = \\dfrac{${s.weight}\\sin\\alpha_2}{\\sin(\\alpha_1 + \\alpha_2)},\\quad T_2 = \\dfrac{${s.weight}\\sin\\alpha_1}{\\sin(\\alpha_1 + \\alpha_2)}`,
+              ),
             },
           ]
         : []),

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { LocalizedText } from '@/core/data/dataset';
+import { pickTex, type LocalizedText } from '@/core/data/dataset';
 import {
   CELL_TYPE_NAME,
   COMPONENTS,
@@ -148,7 +148,7 @@ function cellTexts(type: CellType): { where: string; text: LocalizedText }[] {
     { where: 'card title', text: card.title },
     { where: 'card model', text: card.model },
     ...card.equations.flatMap((e) =>
-      e.label ? [{ where: `equation ${e.tex}`, text: e.label }] : [],
+      e.label ? [{ where: `equation ${pickTex(e.tex, 'vi')}`, text: e.label }] : [],
     ),
     ...card.assumptions.map((text, i) => ({ where: `assumption ${String(i)}`, text })),
     ...(card.confidenceNote ? [{ where: 'confidence note', text: card.confidenceNote }] : []),
