@@ -35,7 +35,7 @@ export const HALOGENS_CARD: ScienceCardData = {
   title: L('Nhóm halogen', 'The halogens'),
   model: L(
     'Số liệu theo sách: bán kính nguyên tử (Hình 6.2), độ âm điện (Bảng 6.2), trạng thái, màu sắc, nhiệt độ nóng chảy và nhiệt độ sôi của đơn chất (Bảng 21.2). Sách không cho năng lượng ion hoá thứ nhất của F, Cl, Br, I: chương trình lấy giá trị NIST trong bảng nguyên tố và đổi sang kJ/mol. Từ F đến I, số lớp electron tăng nên bán kính tăng; lực hút giữa hạt nhân và electron lớp ngoài cùng giảm nên độ âm điện và năng lượng ion hoá giảm, tính oxi hoá giảm. Nhiệt độ nóng chảy, nhiệt độ sôi tăng do tương tác van der Waals giữa các phân tử và khối lượng phân tử tăng.',
-    'Values as the book gives them: atomic radius (Hình 6.2), electronegativity (Bảng 6.2), state, colour, melting and boiling points of the elements (Bảng 21.2). The book gives no first ionisation energy for F, Cl, Br, I: the program takes the NIST value of the element table and converts it to kJ/mol. From F to I the number of electron shells grows, so the radius grows; the nucleus holds the outer electrons less, so electronegativity, ionisation energy and oxidising power fall. Melting and boiling points rise because the van der Waals interactions between molecules and the molecular mass increase.',
+    'Values as the book gives them: atomic radius (SGK Figure 6.2), electronegativity (SGK Table 6.2), state, colour, melting and boiling points of the elements (SGK Table 21.2). The book gives no first ionisation energy for F, Cl, Br, I: the program takes the NIST value of the element table and converts it to kJ/mol. From F to I the number of electron shells grows, so the radius grows; the nucleus holds the outer electrons less, so electronegativity, ionisation energy and oxidising power fall. Melting and boiling points rise because the van der Waals interactions between molecules and the molecular mass increase.',
   ),
   equations: [
     {
@@ -53,7 +53,7 @@ export const HALOGENS_CARD: ScienceCardData = {
     ),
     L(
       'Nhiệt độ nóng chảy, sôi theo Bảng 21.2 (sách dẫn chem.libretexts.org); CRC Handbook (qua mendeleev) chỉ để đối chiếu.',
-      'Melting and boiling points from Bảng 21.2 (the book cites chem.libretexts.org); the CRC Handbook (via mendeleev) is only a cross-check.',
+      'Melting and boiling points from SGK Table 21.2 (the book cites chem.libretexts.org); the CRC Handbook (via mendeleev) is only a cross-check.',
     ),
     L(
       'Astatine và tennessine là nguyên tố phóng xạ, sách chỉ xét F, Cl, Br, I.',
@@ -83,7 +83,7 @@ export const HYDROGEN_HALIDES_CARD: ScienceCardData = {
   title: L('Hydrogen halide · Muối halide', 'Hydrogen halides · Halide salts'),
   model: L(
     'Độ dài và năng lượng liên kết H–X theo SGK Bảng 22.1, nhiệt độ sôi theo Bảng 22.2. Trong dãy hydrohalic acid, tính acid tăng từ hydrofluoric acid (yếu) đến hydroiodic acid (rất mạnh) (SGK tr. 113): năng lượng liên kết H–X giảm từ HF đến HI, liên kết càng kém bền thì phân tử càng dễ phân li ra H⁺ trong nước. Phản ứng nhận biết ion halide chỉ lấy từ thư viện phản ứng đã kiểm chứng.',
-    'H–X bond length and bond energy from SGK Bảng 22.1, boiling points from Bảng 22.2. Along the hydrohalic acids, acid strength rises from hydrofluoric acid (weak) to hydroiodic acid (very strong) (SGK p. 113): the H–X bond energy falls from HF to HI, and the weaker the bond, the more easily the molecule gives H⁺ in water. Tests for halide ions come only from the verified reaction library.',
+    'H–X bond length and bond energy from SGK Table 22.1, boiling points from SGK Table 22.2. Along the hydrohalic acids, acid strength rises from hydrofluoric acid (weak) to hydroiodic acid (very strong) (SGK p. 113): the H–X bond energy falls from HF to HI, and the weaker the bond, the more easily the molecule gives H⁺ in water. Tests for halide ions come only from the verified reaction library.',
   ),
   equations: [
     {
@@ -112,7 +112,8 @@ export const HYDROGEN_HALIDES_CARD: ScienceCardData = {
     'HF, HCl, HBr, HI ở điều kiện thường; dung dịch loãng trong nước cho tính acid.',
     'HF, HCl, HBr, HI at room conditions; dilute aqueous solutions for acid strength.',
   ),
-  confidence: 'qualitative',
+  // Copied, cited tables, as the halogens card: the explanation's qualitative side is in the note.
+  confidence: 'exact',
   confidenceNote: L(
     'Số liệu lấy nguyên từ sách; mối liên hệ năng lượng liên kết – tính acid là giải thích định tính. Đang chờ giáo viên duyệt.',
     'Values copied from the book; the link between bond energy and acid strength is a qualitative explanation. Awaiting a teacher’s review.',

@@ -28,7 +28,10 @@ export const hydrogenHalides: ModuleView = {
   Stage: HydrogenHalideStage,
   Panel: HydrogenHalidePanel,
   Bottom: HydrogenHalideBottom,
-  bottomTitle: L('Hydrogen halide (SGK Bảng 22.1, 22.2)', 'Hydrogen halides (SGK Bảng 22.1, 22.2)'),
+  bottomTitle: L(
+    'Hydrogen halide (SGK Bảng 22.1, 22.2)',
+    'Hydrogen halides (SGK Table 22.1, 22.2)',
+  ),
   state: bindStore(useHalogenStore, ['z'], (p) => {
     selectHalogen(p.z);
   }),

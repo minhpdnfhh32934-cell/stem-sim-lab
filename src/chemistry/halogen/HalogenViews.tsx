@@ -18,18 +18,27 @@ import {
 import '../chem.css';
 import './halogen.css';
 
+/** The book's t_nc, t_s; English readers get m.p., b.p. */
+const T_NC = L('tnc', 'm.p.');
+const T_S = L('ts', 'b.p.');
+
 const PROPERTY: Record<
   HalogenProperty,
-  { label: LocalizedText; short: string; unit: string; value: (r: HalogenRow) => number | null }
+  {
+    label: LocalizedText;
+    short: LocalizedText | string;
+    unit: string;
+    value: (r: HalogenRow) => number | null;
+  }
 > = {
   radius: {
-    label: L('Bán kính nguyên tử (SGK Hình 6.2)', 'Atomic radius (SGK Hình 6.2)'),
+    label: L('Bán kính nguyên tử (SGK Hình 6.2)', 'Atomic radius (SGK Figure 6.2)'),
     short: 'r',
     unit: 'pm',
     value: (r) => r.radius_pm,
   },
   en: {
-    label: L('Độ âm điện Pauling (SGK Bảng 6.2)', 'Pauling electronegativity (SGK Bảng 6.2)'),
+    label: L('Độ âm điện Pauling (SGK Bảng 6.2)', 'Pauling electronegativity (SGK Table 6.2)'),
     short: 'χ',
     unit: '',
     value: (r) => r.en_pauling,
@@ -41,14 +50,14 @@ const PROPERTY: Record<
     value: (r) => r.ie_kj_mol,
   },
   melting: {
-    label: L('Nhiệt độ nóng chảy (SGK Bảng 21.2)', 'Melting point (SGK Bảng 21.2)'),
-    short: 'tnc',
+    label: L('Nhiệt độ nóng chảy (SGK Bảng 21.2)', 'Melting point (SGK Table 21.2)'),
+    short: T_NC,
     unit: '°C',
     value: (r) => r.melting_c,
   },
   boiling: {
-    label: L('Nhiệt độ sôi (SGK Bảng 21.2)', 'Boiling point (SGK Bảng 21.2)'),
-    short: 'ts',
+    label: L('Nhiệt độ sôi (SGK Bảng 21.2)', 'Boiling point (SGK Table 21.2)'),
+    short: T_S,
     unit: '°C',
     value: (r) => r.boiling_c,
   },
@@ -65,10 +74,10 @@ export function HalogenStage() {
       <h3 className="hh10-title">{Lz(L('Nhóm VIIA: F, Cl, Br, I', 'Group VIIA: F, Cl, Br, I'))}</h3>
       <ol className="hal-row">
         {HALOGEN_ROWS.map((r) => (
-          <li key={r.z}>
+          <li key={r.z} className={`hal-card${r.z === z ? ' is-active' : ''}`}>
             <button
               type="button"
-              className={`hal-card${r.z === z ? ' is-active' : ''}`}
+              className="hal-card__pick"
               aria-pressed={r.z === z}
               onClick={() => {
                 selectHalogen(r.z);
@@ -79,19 +88,19 @@ export function HalogenStage() {
               <span className="hal-card__sub">
                 {formatFormula(`${r.symbol}2`)} · {Lz(STATE[r.state])} · {Lz(r.colour)}
               </span>
-              <dl className="hal-card__facts">
-                <dt>r</dt>
-                <dd>{num(locale, r.radius_pm)} pm</dd>
-                <dt>χ</dt>
-                <dd>{num(locale, r.en_pauling)}</dd>
-                <dt>I₁</dt>
-                <dd>{r.ie_kj_mol === null ? '—' : `${num(locale, r.ie_kj_mol)} kJ/mol`}</dd>
-                <dt>tnc</dt>
-                <dd>{deg(locale, r.melting_c)} °C</dd>
-                <dt>ts</dt>
-                <dd>{deg(locale, r.boiling_c)} °C</dd>
-              </dl>
             </button>
+            <dl className="hal-card__facts">
+              <dt>r</dt>
+              <dd>{num(locale, r.radius_pm)} pm</dd>
+              <dt>χ</dt>
+              <dd>{num(locale, r.en_pauling)}</dd>
+              <dt>I₁</dt>
+              <dd>{r.ie_kj_mol === null ? '—' : `${num(locale, r.ie_kj_mol)} kJ/mol`}</dd>
+              <dt>{Lz(T_NC)}</dt>
+              <dd>{deg(locale, r.melting_c)} °C</dd>
+              <dt>{Lz(T_S)}</dt>
+              <dd>{deg(locale, r.boiling_c)} °C</dd>
+            </dl>
           </li>
         ))}
       </ol>
@@ -196,14 +205,14 @@ export function HalogenPanel() {
               </td>
             </tr>
             <tr>
-              <th scope="row">tnc (°C)</th>
+              <th scope="row">{Lz(T_NC)} (°C)</th>
               <td className="num">{deg(locale, r.melting_c)}</td>
               <td className="num">
                 {r.other.melting_c === null ? '—' : num(locale, r.other.melting_c, 5)}
               </td>
             </tr>
             <tr>
-              <th scope="row">ts (°C)</th>
+              <th scope="row">{Lz(T_S)} (°C)</th>
               <td className="num">{deg(locale, r.boiling_c)}</td>
               <td className="num">
                 {r.other.boiling_c === null ? '—' : num(locale, r.other.boiling_c, 5)}
@@ -239,7 +248,7 @@ export function HalogenBottom() {
       x={x}
       series={series}
       xLabel="Z"
-      yLabel={p.short}
+      yLabel={typeof p.short === 'string' ? p.short : Lz(p.short)}
       yUnit={p.unit}
       marker={z}
       csvName={property}

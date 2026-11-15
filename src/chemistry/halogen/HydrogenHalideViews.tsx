@@ -27,7 +27,7 @@ export function HydrogenHalideStage() {
   return (
     <div className="chem-view">
       <h3 className="hh10-title">
-        {Lz(L('Năng lượng liên kết H–X (SGK Bảng 22.1)', 'H–X bond energy (SGK Bảng 22.1)'))}
+        {Lz(L('Năng lượng liên kết H–X (SGK Bảng 22.1)', 'H–X bond energy (SGK Table 22.1)'))}
       </h3>
       <ul className="hal-bars" aria-label={Lz(L('Năng lượng liên kết H–X', 'H–X bond energy'))}>
         {HALOGEN_ROWS.map((r) => (
@@ -74,7 +74,7 @@ export function HydrogenHalideStage() {
                   {lesson && (
                     <button
                       type="button"
-                      className="link-button"
+                      className="link-button hal-link"
                       onClick={() => {
                         openLesson(lesson);
                       }}

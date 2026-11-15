@@ -34,6 +34,19 @@ describe('Nhóm halogen (HH10 Bài 21)', () => {
     expect(screen.getByText(/Tính oxi hoá giảm dần từ fluorine đến iodine/)).toBeInTheDocument();
   });
 
+  it('English: m.p. and b.p.; the pick button holds only the header, the facts sit beside it', () => {
+    act(() => {
+      useSettingsStore.setState({ locale: 'en' });
+    });
+    const { container } = render(<HalogenStage />);
+    expect(container.querySelector('.hal-card')).toHaveTextContent('m.p.−219.6 °Cb.p.−188.1 °C');
+    expect(container).not.toHaveTextContent('tnc');
+    expect(container.querySelector('button dl')).toBeNull();
+    expect(
+      screen.getByRole('button', { name: /^F ?2s² 2p⁵ ?F₂ · Gas · Pale green$/ }),
+    ).toBeInTheDocument();
+  });
+
   it('outer shell from the element table', () => {
     expect([9, 17, 35, 53].map(outerShell)).toEqual(['2s² 2p⁵', '3s² 3p⁵', '4s² 4p⁵', '5s² 5p⁵']);
   });
