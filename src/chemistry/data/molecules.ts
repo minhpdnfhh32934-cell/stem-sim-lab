@@ -231,9 +231,10 @@ export function hasSeveralCentres(m: Molecule): boolean {
 export type BondPolarity = 'nonpolar' | 'polar' | 'ionic';
 
 /**
- * Bond type from the Pauling electronegativity difference, with the thresholds used in
- * Vietnamese textbooks (Hóa học 10): Δχ < 0.4 non-polar covalent, 0.4 ≤ Δχ < 1.7 polar
- * covalent, Δχ ≥ 1.7 ionic.
+ * Bond type from the Pauling electronegativity difference, with the thresholds of SGK Hoá học 10
+ * KNTT, Bài 12, Bảng 12.1 (printed p. 59, read 15/11/2026): 0 ≤ |Δχ| < 0,4 non-polar covalent,
+ * 0,4 ≤ |Δχ| < 1,7 polar covalent, |Δχ| ≥ 1,7 ionic (the book's footnote: "trừ một số trường hợp
+ * ngoại lệ như: HF, MnI₂,…").
  */
 export function bondPolarity(deltaEn: number): BondPolarity {
   if (deltaEn < 0.4) return 'nonpolar';
@@ -241,10 +242,18 @@ export function bondPolarity(deltaEn: number): BondPolarity {
   return 'ionic';
 }
 
+/**
+ * |Δχ| of two elements, rounded to the 2 decimals the Pauling values have: 3.44 − 3.04 is
+ * 0.3999… in floating point, and N–O must read 0,40 (polar), not fall under the 0,4 threshold.
+ */
+export function paulingDelta(a: string, b: string): number | null {
+  const x = elementBySymbol(a)?.en_pauling ?? null;
+  const y = elementBySymbol(b)?.en_pauling ?? null;
+  return x === null || y === null ? null : Math.round(Math.abs(x - y) * 100) / 100;
+}
+
 export function deltaEn(m: Molecule, b: Bond): number | null {
-  const x = elementBySymbol(m.atoms[b.a]?.el ?? '')?.en_pauling ?? null;
-  const y = elementBySymbol(m.atoms[b.b]?.el ?? '')?.en_pauling ?? null;
-  return x === null || y === null ? null : Math.abs(x - y);
+  return paulingDelta(m.atoms[b.a]?.el ?? '', m.atoms[b.b]?.el ?? '');
 }
 
 export type MolecularPolarity = 'nonpolar' | 'weak' | 'polar' | 'ion' | 'unknown';

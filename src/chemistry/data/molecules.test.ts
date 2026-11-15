@@ -5,6 +5,7 @@ import {
   angle,
   bondPolarity,
   centralAtom,
+  deltaEn,
   hasSeveralCentres,
   distance,
   findMolecules,
@@ -12,6 +13,7 @@ import {
   lonePairs,
   moleculeById,
   neighbors,
+  paulingDelta,
   polarity,
   prettyFormula,
   vsepr,
@@ -149,6 +151,16 @@ describe('molecule library', () => {
     expect(bondPolarity(0.4)).toBe('polar');
     expect(bondPolarity(1.69)).toBe('polar');
     expect(bondPolarity(1.7)).toBe('ionic');
+  });
+
+  it('Δχ is read to the 2 decimals of the Pauling values, so a 0,40 difference is polar', () => {
+    // 3.44 − 3.04 is 0.3999… in floating point (#255).
+    expect(paulingDelta('O', 'N')).toBe(0.4);
+    expect(bondPolarity(paulingDelta('O', 'N') ?? NaN)).toBe('polar');
+    const no3 = mol('no3');
+    for (const b of no3.bonds) expect(bondPolarity(deltaEn(no3, b) ?? NaN)).toBe('polar');
+    expect(paulingDelta('Cl', 'H')).toBe(0.96);
+    expect(paulingDelta('Xx', 'H')).toBeNull();
   });
 
   it('molecular polarity (qualitative) matches textbook expectations', () => {
