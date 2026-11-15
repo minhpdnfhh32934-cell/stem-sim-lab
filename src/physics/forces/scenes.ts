@@ -3,7 +3,8 @@ import type { LocalizedText } from '@/core/data/dataset';
 import { DIM } from '@/core/units';
 import type { ScienceCardData } from '@/science-card/types';
 import { DASH, L } from '../common/scene-helpers';
-import { SRC } from '../common/sources';
+import { SRC, sgk10 } from '../common/sources';
+import { SYM, both, plain, sym } from '../common/symbols';
 import { fmtQty, texNum, texQty } from '../common/tex';
 import { arrow, circle, line, text } from '../render/draw';
 import type {
@@ -42,7 +43,7 @@ const ring: BodyDef = {
     const q = forceSet(p);
     const R = resultant(q);
     return [
-      { label: L('Hợp lực', 'Resultant'), symbol: 'R', value: R.size, unit: 'N' },
+      { label: L('Hợp lực', 'Resultant'), symbol: SYM.resultant, value: R.size, unit: 'N' },
       { label: L('Gia tốc', 'Acceleration'), symbol: 'a', value: R.size / q.m, unit: 'm/s^2' },
       {
         label: L('Tốc độ', 'Speed'),
@@ -79,14 +80,14 @@ function draw({ ctx, cam, state, p, opts }: DrawContext): void {
     // Components of the resultant on the axes (phân tích lực).
     line(ctx, cam, x + R.x * k, y, x + R.x * k, y + R.y * k, c.faint, 1, DASH);
     line(ctx, cam, x, y + R.y * k, x + R.x * k, y + R.y * k, c.faint, 1, DASH);
-    arrow(ctx, cam, x, y, R.x * k, 0, c.muted, 'R_x');
-    arrow(ctx, cam, x, y, 0, R.y * k, c.muted, 'R_y');
-    arrow(ctx, cam, x, y, R.x * k, R.y * k, c.accent, 'R');
+    arrow(ctx, cam, x, y, R.x * k, 0, c.muted, 'F_x');
+    arrow(ctx, cam, x, y, 0, R.y * k, c.muted, 'F_y');
+    arrow(ctx, cam, x, y, R.x * k, R.y * k, c.accent, plain(sym(opts.locale).resultant));
   }
   circle(ctx, cam, x, y, 0.06, opts.selected === 'ring' ? c.accent : c.body, c.text, 6);
   const head =
     R.size > BALANCED
-      ? `R = ${fmtQty(opts.locale, R.size, 'N', 4)}   a = ${fmtQty(opts.locale, R.size / q.m, 'm/s^2', 4)}`
+      ? `${plain(sym(opts.locale).resultant)} = ${fmtQty(opts.locale, R.size, 'N', 4)}   a = ${fmtQty(opts.locale, R.size / q.m, 'm/s^2', 4)}`
       : opts.locale === 'vi'
         ? 'Hợp lực bằng 0: vòng đứng yên (cân bằng lực)'
         : 'Resultant 0: the ring stays at rest (forces balance)';
@@ -118,6 +119,7 @@ function solve(p: Params, locale: Locale): Solution {
   const R = resultant(q);
   const n = (v: number) => texNum(locale, v);
   const Q = (v: number, u: string) => texQty(locale, v, u);
+  const S = sym(locale);
   // "3\cos(0^\circ) + 4\cos(90^\circ) + …": each force's size and direction as given.
   const terms = (fn: 'cos' | 'sin') =>
     q.F.map((F, i) => `${n(F)}\\${fn}(${n(deg(q.a[i] ?? 0))}^\\circ)`).join(' + ');
@@ -127,11 +129,11 @@ function solve(p: Params, locale: Locale): Solution {
         'Phân tích mỗi lực thành hai thành phần theo Ox và Oy rồi cộng lại:',
         'Resolve each force along Ox and Oy, then add:',
       ),
-      tex: `R_x = ${terms('cos')} = ${Q(R.x, 'N')},\\quad R_y = ${terms('sin')} = ${Q(R.y, 'N')}`,
+      tex: `${S.resultantX} = ${terms('cos')} = ${Q(R.x, 'N')},\\quad ${S.resultantY} = ${terms('sin')} = ${Q(R.y, 'N')}`,
     },
     {
       text: L('Độ lớn và hướng của hợp lực:', 'Size and direction of the resultant:'),
-      tex: `R = \\sqrt{R_x^2 + R_y^2} = ${Q(R.size, 'N')}${R.size > BALANCED ? `,\\quad \\theta = ${Q(R.angle, 'deg')}` : ''}`,
+      tex: `${S.resultant} = \\sqrt{${S.resultantX}^2 + ${S.resultantY}^2} = ${Q(R.size, 'N')}${R.size > BALANCED ? `,\\quad \\theta = ${Q(R.angle, 'deg')}` : ''}`,
     },
   ];
   if (q.F.length === 2) {
@@ -143,7 +145,7 @@ function solve(p: Params, locale: Locale): Solution {
         'Kiểm lại bằng quy tắc hình bình hành (α là góc giữa hai lực):',
         'Check with the parallelogram rule (α is the angle between the forces):',
       ),
-      tex: `R = \\sqrt{F_1^2 + F_2^2 + 2F_1F_2\\cos\\alpha} = \\sqrt{${n(q.F[0] ?? 0)}^2 + ${n(q.F[1] ?? 0)}^2 + 2\\cdot ${n(q.F[0] ?? 0)}\\cdot ${n(q.F[1] ?? 0)}\\cos ${n(deg(alpha))}^\\circ} = ${Q(resultantByAngles(q), 'N')}`,
+      tex: `${S.resultant} = \\sqrt{F_1^2 + F_2^2 + 2F_1F_2\\cos\\alpha} = \\sqrt{${n(q.F[0] ?? 0)}^2 + ${n(q.F[1] ?? 0)}^2 + 2\\cdot ${n(q.F[0] ?? 0)}\\cdot ${n(q.F[1] ?? 0)}\\cos ${n(deg(alpha))}^\\circ} = ${Q(resultantByAngles(q), 'N')}`,
     });
   }
   const notes: LocalizedText[] = [];
@@ -161,7 +163,7 @@ function solve(p: Params, locale: Locale): Solution {
           'Hợp lực khác 0: vòng chuyển động nhanh dần đều theo hướng của hợp lực (định luật II Newton):',
           'The resultant is not 0: the ring speeds up uniformly along it (Newton’s second law):',
         ),
-        tex: `a = \\frac{R}{m} = \\frac{${n(R.size)}}{${n(q.m)}} = ${Q(R.size / q.m, 'm/s^2')}`,
+        tex: `a = \\frac{${S.resultant}}{m} = \\frac{${n(R.size)}}{${n(q.m)}} = ${Q(R.size / q.m, 'm/s^2')}`,
       },
       {
         text: L(
@@ -215,21 +217,27 @@ function card(p: Params): ScienceCardData {
     ),
     equations: [
       {
-        tex: three
-          ? '\\vec{R} = \\vec{F}_1 + \\vec{F}_2 + \\vec{F}_3'
-          : '\\vec{R} = \\vec{F}_1 + \\vec{F}_2',
+        tex: both(
+          (s) => `${s.resultantVec} = \\vec{F}_1 + \\vec{F}_2${three ? ' + \\vec{F}_3' : ''}`,
+        ),
         label: L('Hợp lực', 'Resultant'),
       },
       {
-        tex: 'R_x = \\sum F_i\\cos\\alpha_i,\\qquad R_y = \\sum F_i\\sin\\alpha_i',
+        tex: both(
+          (s) =>
+            `${s.resultantX} = \\sum F_i\\cos\\alpha_i,\\qquad ${s.resultantY} = \\sum F_i\\sin\\alpha_i`,
+        ),
         label: L('Phân tích theo hai trục', 'Resolving along two axes'),
       },
       {
-        tex: 'R^2 = F_1^2 + F_2^2 + 2F_1F_2\\cos\\alpha',
+        tex: both((s) => `${s.resultant}^2 = F_1^2 + F_2^2 + 2F_1F_2\\cos\\alpha`),
         label: L('Quy tắc hình bình hành (hai lực)', 'Parallelogram rule (two forces)'),
       },
       {
-        tex: '\\vec{a} = \\dfrac{\\vec{R}}{m},\\qquad \\vec{R} = \\vec{0}\\ \\Rightarrow\\ \\vec{a} = \\vec{0}',
+        tex: both(
+          (s) =>
+            `\\vec{a} = \\dfrac{${s.resultantVec}}{m},\\qquad ${s.resultantVec} = \\vec{0}\\ \\Rightarrow\\ \\vec{a} = \\vec{0}`,
+        ),
         label: L('Cân bằng lực khi hợp lực bằng 0', 'Forces balance when the resultant is 0'),
       },
     ],
@@ -261,7 +269,7 @@ function card(p: Params): ScienceCardData {
       'Constant-acceleration motion, evaluated exactly at t = n·Δt (Δt = 1/240 s).',
     ),
     userIntervened: false,
-    sources: [SRC.sgk10kntt, SRC.halliday],
+    sources: [sgk10(13), SRC.halliday],
   };
 }
 

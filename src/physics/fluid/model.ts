@@ -17,8 +17,11 @@ export interface Fluid {
 
 /** Air, ISA sea level (ISO 2533:1975): 15 °C, 101 325 Pa. */
 const AIR: Fluid = { rho: 1.225, mu: 1.7894e-5 };
-/** Water at 20 °C, 101 325 Pa (IAPWS-95 density; IAPWS 2008 viscosity). */
-const WATER: Fluid = { rho: 998.21, mu: 1.0016e-3 };
+/**
+ * Water at 20 °C. Density from the textbook first (user rule 15/11/2026: SGK Vật lí 10 KNTT, Bài 34,
+ * Bảng 34.2, tr. 131: 999 kg/m³; IAPWS-95 gives 998,21); viscosity from IAPWS 2008 (the book has none).
+ */
+const WATER: Fluid = { rho: 999, mu: 1.0016e-3 };
 
 export const FLUIDS: readonly Fluid[] = [AIR, WATER];
 

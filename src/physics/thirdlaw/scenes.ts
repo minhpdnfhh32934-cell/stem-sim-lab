@@ -4,7 +4,7 @@ import { dopri5 } from '@/core/ode/dopri5';
 import { DIM } from '@/core/units';
 import type { ScienceCardData } from '@/science-card/types';
 import { L } from '../common/scene-helpers';
-import { SRC } from '../common/sources';
+import { SRC, sgk10 } from '../common/sources';
 import { fmtQty, texNum, texQty } from '../common/tex';
 import { arrow, block, circle, ground, spring, text, vectorScale } from '../render/draw';
 import type {
@@ -371,7 +371,7 @@ function card(): ScienceCardData {
       'Each step evaluates the closed form at t = n·Δt (Δt = 1/240 s): no error builds up.',
     ),
     userIntervened: false,
-    sources: [SRC.sgk10kntt, SRC.halliday],
+    sources: [sgk10(16), SRC.halliday],
   };
 }
 

@@ -106,8 +106,10 @@ describe('physics registry', () => {
   it('English pages use English textbook symbols; Vietnamese pages keep the SGK ones (#258)', async () => {
     // Vietnamese abbreviations: W_đ, F_đh, α_bđ, α_gđ, F_ms, a_ht, v_gh, F_hl, R_nt, R_ss, P_ng,
     // F_kéo, W_t, 𝒫. Canvas labels come as runs: "F_ms" is drawn as "F" then "ms".
-    const VI = /đ|_\{?(ms|ht|gh|hl|nt|ss|ng)(?![a-z])|kéo|W_t(?![a-z])|\\mathscr\{P\}/;
-    const VI_RUN = /^(ms|ht|gh|hl|nt|ss|ng|t)$|đ/;
+    // Also the SGK forms of #268: F_mst, F_msn, W_ci, W_tp, W_c.
+    const VI =
+      /đ|_\{?(ms|mst|msn|ht|gh|hl|nt|ss|ng|ci|tp)(?![a-z])|kéo|W_[tc](?![a-z])|\\mathscr\{P\}/;
+    const VI_RUN = /^(ms|mst|msn|ht|gh|hl|nt|ss|ng|ci|tp|t|c)$|đ/;
     let viSide = 0;
     for (const id of sceneIds()) {
       const s = await loadScene(id);
@@ -165,10 +167,14 @@ describe('physics registry', () => {
           time: 0,
         };
         s.draw({ ctx, cam, state: new Float64Array(64).fill(0.5), p, opts });
-        // "v_t" (terminal speed) is English: its "t" run is allowed only right after a "v" run.
-        const bad = runs.filter(
-          (t, i) => VI_RUN.test(t) && !(t === 't' && (runs[i - 1] ?? '').endsWith('v')),
-        );
+        // "v_t" (terminal speed) and "a_c, F_c" (centripetal) are English: a "t" run is Vietnamese
+        // only when it does not follow "v", a "c" run only after "W" (W_c).
+        const bad = runs.filter((t, i) => {
+          const before = runs[i - 1] ?? '';
+          if (t === 't') return !before.endsWith('v');
+          if (t === 'c') return before.endsWith('W');
+          return VI_RUN.test(t);
+        });
         expect.soft(bad, `${id} canvas`).toEqual([]);
       }
     }
