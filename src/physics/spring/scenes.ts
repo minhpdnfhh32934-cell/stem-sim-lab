@@ -392,7 +392,7 @@ function solve(hooke: boolean) {
       });
       steps.push({
         text: L('Cơ năng (bảo toàn):', 'Mechanical energy (conserved):'),
-        tex: `${sym(locale).mechanical} = \\tfrac{1}{2} k A^2 = ${Q(0.5 * q.k * A * A, 'J')}`,
+        tex: `${sym(locale).oscillationEnergy} = \\tfrac{1}{2} k A^2 = ${Q(0.5 * q.k * A * A, 'J')}`,
       });
       answers.push(
         { id: 'amplitude', label: L('Biên độ', 'Amplitude'), value: A, unit: 'cm' },
@@ -461,7 +461,12 @@ function card(hooke: boolean) {
           : 'Ideal massless Hookean spring; no friction.',
       ),
       equations: [
-        { tex: both((s) => `${s.springForce} = -k\\,\\Delta l`) },
+        // Bài 33 of SGK Vật lí 10 KNTT writes the size, F_đh = k|Δl| (33.1), tr. 129; the oscillator the signed law.
+        {
+          tex: hooke
+            ? { vi: 'F_{\\text{đh}} = k\\left|\\Delta l\\right|', en: 'F_s = -k\\,\\Delta l' }
+            : both((s) => `${s.springForce} = -k\\,\\Delta l`),
+        },
         {
           tex:
             q.b > 0
@@ -479,7 +484,7 @@ function card(hooke: boolean) {
               },
             ]
           : []),
-        { tex: both((s) => `${s.mechanical} = \\tfrac{1}{2} m v^2 + \\tfrac{1}{2} k x^2`) },
+        { tex: both((s) => `${s.oscillationEnergy} = \\tfrac{1}{2} m v^2 + \\tfrac{1}{2} k x^2`) },
       ],
       assumptions: [
         L(

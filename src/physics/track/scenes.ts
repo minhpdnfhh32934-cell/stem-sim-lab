@@ -171,7 +171,7 @@ function draw({ ctx, cam, state, p, opts }: DrawContext): void {
       'v',
     );
   }
-  // Energy bars (Wđ, Wt, W) — the key idea of this topic.
+  // Energy bars (Wđ, Wt, Wc) — the key idea of this topic.
   const E = m * g * Eh;
   const K = 0.5 * m * (state[TS.v] ?? 0) ** 2;
   const U = m * g * y;
@@ -182,7 +182,7 @@ function draw({ ctx, cam, state, p, opts }: DrawContext): void {
   const bars: [string, number, string][] = [
     [opts.locale === 'vi' ? 'W_đ' : 'K', K, c.velocity],
     [opts.locale === 'vi' ? 'W_t' : 'U', U, c.acceleration],
-    [opts.locale === 'vi' ? 'W' : 'E', K + U, c.force],
+    [opts.locale === 'vi' ? 'W_c' : 'E', K + U, c.force],
   ];
   bars.forEach(([name, val, col], i) => {
     const x1 = baseX + i * barW * 1.6;
@@ -229,7 +229,7 @@ const graphs: GraphDef[] = [
       },
       {
         id: 'E',
-        label: L('W', 'E'),
+        label: L('Wc', 'E'),
         value: (s, p) =>
           0.5 * (p.m ?? 1) * (s[TS.v] ?? 0) ** 2 + (p.m ?? 1) * (p.g ?? 9.81) * (s[TS.y] ?? 0),
       },

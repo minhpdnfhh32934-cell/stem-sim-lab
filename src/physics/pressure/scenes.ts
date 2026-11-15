@@ -207,7 +207,11 @@ function card(): ScienceCardData {
     ),
     equations: [
       { tex: '\\rho = \\frac{m}{V}', label: L('Khối lượng riêng', 'Density') },
-      { tex: 'p = \\frac{F}{S}', label: L('Áp suất', 'Pressure') },
+      // SGK Vật lí 10 KNTT (34.2), tr. 132: the pressing force F_N over the area S.
+      {
+        tex: { vi: 'p = \\frac{F_N}{S}', en: 'p = \\frac{F}{A}' },
+        label: L('Áp suất', 'Pressure'),
+      },
       { tex: 'p = p_a + \\rho g h', label: L('Áp suất ở độ sâu h', 'Pressure at depth h') },
       {
         tex: '\\Delta p = \\rho g\\,\\Delta h',

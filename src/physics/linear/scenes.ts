@@ -313,13 +313,29 @@ function card(accel: boolean) {
           'Chất điểm chuyển động trên đường thẳng với vận tốc không đổi (gia tốc bằng 0).',
           'Point mass on a straight line with constant velocity (zero acceleration).',
         ),
+    // The book's forms first (SGK Vật lí 10 KNTT: d = v·t, tr. 35; (9.2), (9.4), (9.5), tr. 40–42), with
+    // its displacement d = x − x₀; the stage and the graphs use the position x.
     equations: accel
       ? [
-          { tex: 'x = x_0 + v_0 t + \\tfrac{1}{2} a t^2' },
-          { tex: 'v = v_0 + a t' },
-          { tex: 'v^2 - v_0^2 = 2 a (x - x_0)' },
+          { tex: { vi: 'v_t = v_0 + a t', en: 'v = v_0 + a t' } },
+          {
+            tex: {
+              vi: 'd = v_0 t + \\tfrac{1}{2} a t^2',
+              en: '\\Delta x = v_0 t + \\tfrac{1}{2} a t^2',
+            },
+            label: L('Độ dịch chuyển d = x − x₀', 'Displacement Δx = x − x₀'),
+          },
+          { tex: { vi: 'v_t^2 - v_0^2 = 2 a d', en: 'v^2 - v_0^2 = 2 a\\,\\Delta x' } },
+          { tex: 'x = x_0 + v_0 t + \\tfrac{1}{2} a t^2', label: L('Toạ độ', 'Position') },
         ]
-      : [{ tex: 'x = x_0 + v t' }, { tex: 's = |v|\\, t' }],
+      : [
+          {
+            tex: { vi: 'd = v\\, t', en: '\\Delta x = v\\, t' },
+            label: L('Độ dịch chuyển d = x − x₀', 'Displacement Δx = x − x₀'),
+          },
+          { tex: 'x = x_0 + v t', label: L('Toạ độ', 'Position') },
+          { tex: 's = |v|\\, t', label: L('Quãng đường đi được', 'Distance travelled') },
+        ],
     assumptions: [
       L('Vật được coi là chất điểm.', 'Bodies are point masses.'),
       accel

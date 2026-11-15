@@ -214,16 +214,37 @@ const EQUATIONS: Record<ProjectileKind, ScienceCardData['equations']> = {
     { tex: 'y = h_0 + v_0\\, t - \\tfrac{1}{2} g t^2' },
     { tex: 'v = v_0 - g t' },
     { tex: 'v^2 - v_0^2 = -2 g\\,(y - h_0)' },
+    {
+      // SGK Vật lí 10 KNTT Bài 10, tr. 46.
+      tex: {
+        vi: 'v_0 = 0:\\quad d = s = \\tfrac{1}{2} g t^2,\\quad v_t = g t,\\quad v_t^2 = 2 g s',
+        en: 'v_0 = 0:\\quad h = \\tfrac{1}{2} g t^2,\\quad v = g t,\\quad v^2 = 2 g h',
+      },
+      label: L('Rơi tự do từ trạng thái nghỉ', 'Free fall from rest'),
+    },
   ],
   horizontal: [
     { tex: 'x = v_0\\, t' },
     { tex: 'y = h_0 - \\tfrac{1}{2} g t^2' },
     { tex: 'v_x = v_0,\\quad v_y = -g t' },
+    {
+      // SGK Vật lí 10 KNTT (12.1), (12.2), tr. 50, with the app's h_0 for the book's H.
+      tex: 't = \\sqrt{\\frac{2 h_0}{g}},\\quad L = v_0\\sqrt{\\frac{2 h_0}{g}}',
+      label: L('Thời gian rơi và tầm xa', 'Time of flight and range'),
+    },
   ],
   oblique: [
     { tex: 'x = v_0\\cos\\alpha\\; t' },
     { tex: 'y = h_0 + v_0\\sin\\alpha\\; t - \\tfrac{1}{2} g t^2' },
     { tex: 'v_x = v_0\\cos\\alpha,\\quad v_y = v_0\\sin\\alpha - g t' },
+    {
+      // SGK Vật lí 10 KNTT Bài 12, tr. 52–53: thrown from the ground (h_0 = 0).
+      tex: 'H = \\frac{v_0^2\\sin^2\\alpha}{2g},\\quad L = \\frac{v_0^2\\sin 2\\alpha}{g}',
+      label: L(
+        'Tầm cao và tầm xa khi ném từ mặt đất (h₀ = 0)',
+        'Maximum height and range from the ground (h₀ = 0)',
+      ),
+    },
   ],
 };
 
