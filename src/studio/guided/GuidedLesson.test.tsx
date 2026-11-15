@@ -300,6 +300,8 @@ describe('guided textbook lessons in Science Studio', () => {
     const b = guidedOf(s);
     if (!b) throw new Error('guided');
     render(<StudioScreen />);
+    // The header is true for both kinds of lesson: only experiments have simulated numbers.
+    expect(screen.getByText(/Bài mô tả theo SGK: đáp án lấy từ nội dung bài\./)).toBeVisible();
     // The subject's own lessons keep their picker; the textbook lessons are a second group.
     expect(screen.getByRole('group', { name: 'Chọn bài học' })).toBeInTheDocument();
     const group = screen.getByRole('group', { name: 'Bài học mô tả theo SGK' });

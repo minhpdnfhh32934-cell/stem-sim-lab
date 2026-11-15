@@ -1086,7 +1086,7 @@ const vi = {
     authoringNav: 'Các phần của bài',
     title: 'Science Studio',
     subtitle:
-      'Bài học có hướng dẫn: dự đoán, làm thí nghiệm, quan sát số đo, giải thích và kết luận. Mọi số liệu đều do mô phỏng tính.',
+      'Bài học có hướng dẫn: dự đoán trước, rồi làm thí nghiệm hoặc hoạt động, giải thích và kết luận. Bài có thí nghiệm: mọi số liệu do mô phỏng tính. Bài mô tả theo SGK: đáp án lấy từ nội dung bài.',
     tabsLabel: 'Chọn môn trong Studio',
     tabs: {
       chemistry: 'Hóa học',
@@ -1694,22 +1694,22 @@ const vi = {
       openHint: 'Xem lại cách học trong Science Studio',
       welcomeTitle: 'Học trong Science Studio',
       welcomeBody:
-        'Mỗi bài đi qua sáu bước: em dự đoán trước, làm thí nghiệm, rồi mới giải thích và kết luận. Mọi con số do mô phỏng tính. Bấm Tiếp để xem từng phần của màn hình.',
+        'Mỗi bài đi qua sáu bước: em dự đoán trước, làm thí nghiệm (bài mô tả theo SGK thì làm hoạt động), rồi mới giải thích và kết luận. Bài có thí nghiệm: mọi con số do mô phỏng tính. Bài mô tả: đáp án lấy từ nội dung bài. Bấm Tiếp để xem từng phần của màn hình.',
       subjectTitle: 'Chọn môn và bài',
       subjectBody:
         'Chọn môn ở thanh này. Môn có nhiều bài thì chọn bài ở hàng nút ngay bên dưới. Thẻ Soạn bài ở cuối thanh dành cho thầy cô.',
       lessonTitle: 'Mục tiêu và nhãn kiểm duyệt',
       lessonBody:
-        'Đầu bài ghi mục tiêu. Nhãn "chưa được kiểm duyệt" nghĩa là lời văn của bài chưa được giáo viên duyệt; số liệu vẫn do mô phỏng tính.',
+        'Đầu bài ghi mục tiêu. Nhãn "chưa được kiểm duyệt" nghĩa là lời văn của bài chưa được giáo viên duyệt. Bài có thí nghiệm thì số liệu vẫn do mô phỏng tính.',
       stepsTitle: 'Sáu bước',
       stepsBody:
-        'Dự đoán → Thí nghiệm → Quan sát → Giải thích → Kết luận → Báo cáo. Bước đang làm được tô đậm, bước đã xong hiện dấu ✓ thay cho số.',
+        'Dự đoán → Thí nghiệm → Quan sát → Giải thích → Kết luận → Báo cáo. Bài mô tả theo SGK gọi bước Thí nghiệm là Hoạt động, bước Quan sát là Xem đáp án. Bước đang làm được tô đậm, bước đã xong hiện dấu ✓ thay cho số.',
       nextTitle: 'Đi tiếp',
       nextBody:
         'Làm xong một bước thì bấm nút Tiếp ở đây. Khi chưa đi tiếp được, dòng chữ cạnh nút cho biết em còn thiếu gì.',
       askTitle: 'Hỏi thầy',
       askBody:
-        'Bí ở bước nào thì bấm Hỏi thầy: AI Teacher mở ra với câu hỏi về bước đó. AI Teacher chỉ giải thích, không thay số đo của mô phỏng.',
+        'Bí ở bước nào thì bấm Hỏi thầy: AI Teacher mở ra với câu hỏi về bước đó. AI Teacher chỉ giải thích, không thay số đo của mô phỏng hay đáp án của bài.',
       reportTitle: 'Lưu báo cáo',
       reportBody:
         'Ở bước cuối, báo cáo được tạo từ chính phiên học của em. Bấm "Lưu báo cáo (.md)" để lưu thành tệp, hoặc sao chép.',

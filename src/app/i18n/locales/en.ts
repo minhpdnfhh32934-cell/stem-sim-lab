@@ -1092,7 +1092,7 @@ const en: Messages = {
     authoringNav: 'Parts of the lesson',
     title: 'Science Studio',
     subtitle:
-      'Guided lessons: predict, experiment, observe measurements, explain and conclude. Every number is computed by the simulation.',
+      'Guided lessons: predict first, then run the experiment or do the activities, explain and conclude. In an experiment every number is computed by the simulation. In a descriptive textbook lesson the answers come from the lesson itself.',
     tabsLabel: 'Choose a Studio subject',
     tabs: {
       chemistry: 'Chemistry',
@@ -1713,22 +1713,22 @@ const en: Messages = {
       openHint: 'Show how to learn in Science Studio again',
       welcomeTitle: 'Learning in Science Studio',
       welcomeBody:
-        'Each lesson has six steps: you predict first, run the experiment, then explain and conclude. Every number is computed by the simulation. Press Next to see each part of the screen.',
+        'Each lesson has six steps: you predict first, run the experiment (in a descriptive textbook lesson, do the activities), then explain and conclude. In an experiment every number is computed by the simulation. In a descriptive lesson the answers come from the lesson itself. Press Next to see each part of the screen.',
       subjectTitle: 'Pick a subject and a lesson',
       subjectBody:
         'Pick the subject on this bar. A subject with several lessons shows them as buttons just below. The Authoring tab at the end is for teachers.',
       lessonTitle: 'Goals and the review label',
       lessonBody:
-        'The top of the lesson lists its goals. The "not reviewed" label means a teacher has not checked the lesson text yet; the numbers are still computed by the simulation.',
+        'The top of the lesson lists its goals. The "not reviewed" label means a teacher has not checked the lesson text yet. In an experiment the numbers are still computed by the simulation.',
       stepsTitle: 'Six steps',
       stepsBody:
-        'Predict → Experiment → Observe → Explain → Conclude → Report. The current step is highlighted, a finished step shows ✓ instead of its number.',
+        'Predict → Experiment → Observe → Explain → Conclude → Report. A descriptive textbook lesson calls Experiment "Activities" and Observe "Answers". The current step is highlighted, a finished step shows ✓ instead of its number.',
       nextTitle: 'Moving on',
       nextBody:
         'When a step is done, press Next here. When you cannot move on yet, the line next to the button says what is missing.',
       askTitle: 'Ask the teacher',
       askBody:
-        'Stuck on a step? Press Ask the teacher: AI Teacher opens with a question about that step. The AI only explains; it never replaces the simulation’s numbers.',
+        'Stuck on a step? Press Ask the teacher: AI Teacher opens with a question about that step. The AI only explains; it never replaces the simulation’s numbers or the lesson’s answers.',
       reportTitle: 'Save the report',
       reportBody:
         'In the last step the report is built from your own session. Press "Save report (.md)" to save it as a file, or copy it.',
