@@ -103,16 +103,16 @@ export const ISOTOPE_CARD: ScienceCardData = {
       'As in the textbook, Aᵢ is each isotope’s mass number; the app also redoes it with each isotope’s real mass (IUPAC-CIAAW).',
     ),
     L(
-      'Phần trăm đồng vị là giá trị đại diện (NUBASE2020). Thành phần thật thay đổi chút ít theo nguồn mẫu, nên giá trị tính được có thể lệch nguyên tử khối chuẩn IUPAC (ví dụ Li, Pb).',
-      'Isotope percentages are representative values (NUBASE2020). Real compositions vary a little with the sample’s origin, so the computed value can differ from the IUPAC standard atomic weight (e.g. Li, Pb).',
+      'Phần trăm đồng vị là giá trị của NUBASE2020; với nguyên tố có thành phần thay đổi theo nguồn mẫu (H, Li, B, C, N, O, Mg, S, Cl, Br, Tl), đó là điểm giữa khoảng biến thiên. Vì vậy giá trị tính được có thể lệch nguyên tử khối chuẩn IUPAC (ví dụ Li, Pb).',
+      'Isotope percentages are NUBASE2020 values; for elements whose composition varies with the sample (H, Li, B, C, N, O, Mg, S, Cl, Br, Tl), that is the middle of the range. So the computed value can differ from the IUPAC standard atomic weight (e.g. Li, Pb).',
     ),
     L(
       'Khi các phần trăm trong bảng không cộng lại đúng 100 % (số đã làm tròn, hoặc thiếu đồng vị không có trong bảng), Ā chia cho tổng của chúng và màn hình ghi tổng đó.',
       'When the table’s percentages do not add up to exactly 100 % (rounded values, or an isotope missing from the table), Ā is divided by their sum and the screen shows that sum.',
     ),
     L(
-      'Bài toán ngược dùng số khối, như sách giáo khoa; Ā phải nằm giữa hai số khối.',
-      'The reverse problem uses mass numbers, as the textbook does; Ā must lie between the two mass numbers.',
+      'Bài toán ngược được giải hai cách: với số khối, như sách giáo khoa (gần đúng; với La, V, In lệch xa bảng), và với khối lượng thực của đồng vị (khớp bảng). Ā phải nằm giữa hai số khối, hoặc giữa hai khối lượng.',
+      'The reverse problem is solved two ways: with mass numbers, as the textbook does (an approximation; far from the table for La, V, In), and with the isotopes’ real masses (matches the table). Ā must lie between the two mass numbers, or the two masses.',
     ),
   ],
   validity: L(
@@ -121,8 +121,8 @@ export const ISOTOPE_CARD: ScienceCardData = {
   ),
   confidence: 'exact',
   confidenceNote: L(
-    'Phép tính đúng trên số liệu của bảng; số liệu đang chờ giáo viên duyệt.',
-    'Exact arithmetic on the table’s values; the values await a teacher’s review.',
+    'Phép tính đúng trên số liệu của bảng (cột "theo số khối" của bài toán ngược là phép gần đúng của sách giáo khoa); số liệu đang chờ giáo viên duyệt.',
+    'Exact arithmetic on the table’s values (the reverse problem’s "mass numbers" column is the textbook’s approximation); the values await a teacher’s review.',
   ),
   userIntervened: false,
   sources: [ISOTOPES_SOURCE, ...ISOTOPE_REFERENCES, ELEMENTS_SOURCE, CSRC.sgk10],

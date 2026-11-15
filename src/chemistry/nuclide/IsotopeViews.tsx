@@ -115,7 +115,10 @@ export function IsotopePanel() {
   const { element: e, isotopes } = sel;
   const [i1, i2] = isotopes;
   const two = isotopes.length === 2 && i1 && i2 ? ([i1, i2] as const) : null;
+  // The textbook solves with mass numbers; the real masses give the table's own percentages
+  // (La-138: 9,45 % with mass numbers, 0,089 % with masses), so both are shown.
   const answer = two ? twoIsotopeAbundances(two[0].a, two[1].a, average) : null;
+  const real = two ? twoIsotopeAbundances(two[0].mass_u, two[1].mass_u, average) : null;
   const label = Lz(L('Nguyên tử khối trung bình Ā', 'Average atomic mass Ā'));
   return (
     <div className="chem-form iso-panel">
@@ -164,29 +167,60 @@ export function IsotopePanel() {
               }}
             />
           </label>
-          {answer?.ok ? (
-            <table className="chem-table">
-              <tbody>
-                <tr>
-                  <th scope="row">{isotopeName(e, two[0])}</th>
-                  <td className="num">{f.pct(answer.x1)} %</td>
+          <table className="chem-table">
+            <thead>
+              <tr>
+                <th scope="col" />
+                <th scope="col" className="num">
+                  {Lz(L('Theo số khối (như SGK)', 'With mass numbers (textbook)'))}
+                </th>
+                <th scope="col" className="num">
+                  {Lz(L('Theo khối lượng thực', 'With real masses'))}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {([0, 1] as const).map((i) => (
+                <tr key={i}>
+                  <th scope="row">{isotopeName(e, two[i])}</th>
+                  <td className="num">
+                    {answer?.ok ? `${f.pct(i === 0 ? answer.x1 : answer.x2)} %` : '—'}
+                  </td>
+                  <td className="num">
+                    {real?.ok ? `${f.pct(i === 0 ? real.x1 : real.x2)} %` : '—'}
+                  </td>
                 </tr>
-                <tr>
-                  <th scope="row">{isotopeName(e, two[1])}</th>
-                  <td className="num">{f.pct(answer.x2)} %</td>
-                </tr>
-              </tbody>
-            </table>
-          ) : (
+              ))}
+            </tbody>
+          </table>
+          {!answer?.ok && (
             <p className="chem-note chem-note--warn" role="note">
               {Lz(
                 L(
-                  `Không giải được: Ā phải nằm giữa ${two[0].a} và ${two[1].a} (số khối của hai đồng vị).`,
-                  `No answer: Ā must lie between ${two[0].a} and ${two[1].a} (the two mass numbers).`,
+                  `Theo số khối thì không giải được: Ā phải nằm giữa ${two[0].a} và ${two[1].a} (số khối của hai đồng vị).`,
+                  `No answer with mass numbers: Ā must lie between ${two[0].a} and ${two[1].a} (the two mass numbers).`,
                 ),
               )}
             </p>
           )}
+          {!real?.ok && (
+            <p className="chem-note chem-note--warn" role="note">
+              {Lz(
+                L(
+                  'Theo khối lượng thực thì không giải được: Ā phải nằm giữa khối lượng của hai đồng vị.',
+                  'No answer with real masses: Ā must lie between the two isotope masses.',
+                ),
+              )}
+            </p>
+          )}
+          <p className="small muted">
+            {Lz(
+              L(
+                'Hai cột khác nhau vì sách giáo khoa dùng số khối thay cho khối lượng thực của đồng vị; cột "khối lượng thực" khớp bảng đồng vị bên dưới khi Ā là nguyên tử khối chuẩn.',
+                'The two columns differ because the textbook uses mass numbers instead of the isotopes’ real masses; the "real masses" column matches the isotope table below when Ā is the standard atomic weight.',
+              ),
+            )}
+          </p>
           <p className="small muted">
             {Lz(
               L(

@@ -227,7 +227,7 @@ export function CompositionBottom() {
             );
           })}
           <tr className="is-active">
-            <th scope="row">{Lz(L('Cả nguyên tử', 'Whole atom'))}</th>
+            <th scope="row">{Lz(L('Tổng các hạt', 'All particles'))}</th>
             <td className="num">{c.z + c.n + c.electrons}</td>
             {advanced && <td />}
             {advanced && <td />}
@@ -240,8 +240,8 @@ export function CompositionBottom() {
         <p className="atom-defect">
           {Lz(
             L(
-              `Khối lượng thực của nguyên tử ${neutral} (trung hòa, bảng đồng vị): ${u(c.nuclide.mass_u, 10)}. Tổng khối lượng các hạt của nguyên tử trung hòa lớn hơn ${fmt(c.massDefectU, 4)} u (độ hụt khối, do năng lượng liên kết hạt nhân). Sách giáo khoa bỏ qua phần chênh lệch nhỏ này.`,
-              `Real mass of the ${neutral} atom (neutral, isotope table): ${u(c.nuclide.mass_u, 10)}. The particles of the neutral atom add up to ${fmt(c.massDefectU, 4)} u more (the mass defect, from the nuclear binding energy). The textbook ignores this small difference.`,
+              `Khối lượng thực của nguyên tử ${neutral} (trung hòa, bảng đồng vị): ${u(c.nuclide.mass_u, 10)}. Tổng khối lượng các hạt của nguyên tử trung hòa lớn hơn ${fmt(c.massDefectU, 4)} u, chỉ bằng ${fmt((100 * c.massDefectU) / c.nuclide.mass_u, 2)} % khối lượng nguyên tử. ${c.a === 1 ? '¹H không có liên kết hạt nhân (một nucleon): phần chênh lệch này là năng lượng liên kết của electron (khoảng 13,6 eV).' : 'Đó là độ hụt khối, do năng lượng liên kết hạt nhân.'}`,
+              `Real mass of the ${neutral} atom (neutral, isotope table): ${u(c.nuclide.mass_u, 10)}. The particles of the neutral atom add up to ${fmt(c.massDefectU, 4)} u more, only ${fmt((100 * c.massDefectU) / c.nuclide.mass_u, 2)} % of the atom’s mass. ${c.a === 1 ? '¹H has no nuclear binding (one nucleon): this difference is the electron’s binding energy (about 13.6 eV).' : 'That is the mass defect, from the nuclear binding energy.'}`,
             ),
           )}
         </p>

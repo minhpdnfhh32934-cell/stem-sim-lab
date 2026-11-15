@@ -61,12 +61,21 @@ describe('Thành phần của nguyên tử (HH10 Bài 1)', () => {
     expect(container).toHaveTextContent('1,007276467 u');
     expect(container).toHaveTextContent('Khối lượng thực của nguyên tử ¹²₆C');
     expect(container).toHaveTextContent('lớn hơn 0,09894 u');
-    expect(container).toHaveTextContent('Sách giáo khoa bỏ qua');
+    expect(container).toHaveTextContent('Đó là độ hụt khối, do năng lượng liên kết hạt nhân');
     act(() => {
       useCompositionStore.setState({ n: 9 });
     });
     rerender(<CompositionBottom />);
     expect(container).toHaveTextContent('¹⁵₆C không có trong bảng đồng vị tự nhiên');
+  });
+
+  it('¹H: the difference is the electron binding, not a nuclear one', () => {
+    act(() => {
+      useCompositionStore.setState({ z: 1, n: 0, electrons: 1 });
+    });
+    const { container } = render(<CompositionBottom />);
+    expect(container).toHaveTextContent('¹H không có liên kết hạt nhân');
+    expect(container).not.toHaveTextContent('độ hụt khối');
   });
 
   it('a saved file is clamped to the sliders', () => {
@@ -90,10 +99,26 @@ describe('Nguyên tố hóa học và đồng vị (HH10 Bài 2)', () => {
     fireEvent.focus(box);
     fireEvent.change(box, { target: { value: '35,5' } });
     expect(useIsotopeStore.getState().average).toBe(35.5);
-    expect(screen.getByRole('row', { name: '³⁵Cl 75 %' })).toBeInTheDocument();
-    expect(screen.getByRole('row', { name: '³⁷Cl 25 %' })).toBeInTheDocument();
+    expect(screen.getByRole('row', { name: /^³⁵Cl 75 % / })).toBeInTheDocument();
+    expect(screen.getByRole('row', { name: /^³⁷Cl 25 % / })).toBeInTheDocument();
     fireEvent.change(box, { target: { value: '38' } });
-    expect(screen.getByRole('note')).toHaveTextContent('Ā phải nằm giữa 35 và 37');
+    expect(screen.getAllByRole('note')[0]).toHaveTextContent('Ā phải nằm giữa 35 và 37');
+  });
+
+  it('reverse problem with real masses: Cu at its IUPAC weight gives the table 69,1 %; He solves too', () => {
+    act(() => {
+      useIsotopeStore.setState({ z: 29, average: 63.546 });
+    });
+    const { rerender } = render(<IsotopePanel />);
+    const cu = screen.getByRole('row', { name: /^⁶³Cu / });
+    expect(cu).toHaveTextContent(/72,7 %/);
+    expect(cu).toHaveTextContent(/69,152 %/);
+    act(() => {
+      useIsotopeStore.setState({ z: 2, average: 4.002602 });
+    });
+    rerender(<IsotopePanel />);
+    expect(screen.getByRole('note')).toHaveTextContent('Theo số khối thì không giải được');
+    expect(screen.getByRole('row', { name: /^⁴He / })).toHaveTextContent(/99,99[0-9]* %/);
   });
 
   it('a three-isotope element: no reverse problem; the named examples have two isotopes', () => {
