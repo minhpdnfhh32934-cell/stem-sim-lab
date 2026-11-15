@@ -679,11 +679,13 @@ input[type='range'] {
 /* Sliding indicator (src/ui/slidingIndicator.ts, gallery pattern 039): the checked pill glides
    between items. Without the script the checked item keeps its own background (above). */
 .segmented,
+.subject-switch,
 .tabs__list {
   position: relative;
   isolation: isolate;
 }
-.segmented.has-indicator::before {
+.segmented.has-indicator::before,
+.subject-switch.has-indicator::before {
   content: '';
   position: absolute;
   top: 0;
@@ -700,7 +702,8 @@ input[type='range'] {
     width var(--dur-med) var(--ease-out),
     height var(--dur-med) var(--ease-out);
 }
-.segmented.has-indicator > [aria-checked='true'] {
+.segmented.has-indicator > [aria-checked='true'],
+.subject-switch.has-indicator > [aria-checked='true'] {
   background: transparent;
   box-shadow: none;
 }
@@ -730,6 +733,7 @@ input[type='range'] {
 }
 @media (prefers-reduced-motion: reduce) {
   .segmented.has-indicator::before,
+  .subject-switch.has-indicator::before,
   .tabs__list.has-indicator::before {
     transition: none;
   }
@@ -1074,6 +1078,13 @@ kbd {
   }
 }
 
+/* Without backdrop blur the glass would let busy content show through: fall back to a solid panel. */
+@supports not (backdrop-filter: blur(1px)) {
+  :root {
+    --glass-bg: var(--bg-panel);
+  }
+}
+
 /* Name labels over a 3D picture (src/ui/three/labelLayer.ts): page-drawn, sharp, never caught
    by the pointer (the canvas below stays draggable), leader lines from the part to the name. */
 .three-labels,
@@ -1096,9 +1107,9 @@ kbd {
   top: 0;
   left: 0;
   padding: 2px 8px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--glass-border);
   border-radius: 6px;
-  background: var(--bg-panel);
+  background: var(--glass-bg);
   color: var(--text);
   font-size: max(12px, var(--text-sm));
   font-weight: 500;
@@ -1106,6 +1117,7 @@ kbd {
   line-height: 1.35;
   white-space: nowrap;
   box-shadow: var(--shadow-sm);
+  backdrop-filter: var(--glass-blur);
   will-change: transform;
 }
 /* A heading over a group of parts (e.g. the gene pool's jar). */

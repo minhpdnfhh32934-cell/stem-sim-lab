@@ -16,8 +16,9 @@ import {
   Undo2,
   type LucideIcon,
 } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { MachineInfoDialog } from '@/app/bench/MachineInfo';
+import { BenchContext } from '@/app/bench/shellMode';
 import { toLibrary } from '@/app/bench/toLibrary';
 import { useT } from '@/app/i18n';
 import { useLayoutStore } from '@/app/layout/layoutStore';
@@ -61,6 +62,8 @@ export function FileMenu({ history = false }: { history?: boolean } = {}) {
   const setTheme = useSettingsStore((s) => s.setTheme);
   const dark = useResolvedTheme() === 'dark';
   const root = useRef<HTMLDivElement>(null);
+  // The classic top bar has its own light / dark button, always on screen.
+  const bench = useContext(BenchContext);
 
   useEffect(() => {
     if (!open) return;
@@ -104,22 +107,27 @@ export function FileMenu({ history = false }: { history?: boolean } = {}) {
     { icon: FolderOpen, label: t('project.open'), run: () => void openProject() },
     { icon: Save, label: t('project.save'), run: () => void saveProject() },
     { icon: ImageDown, label: t('project.exportPng'), run: () => void exportPng() },
-    {
-      icon: History,
-      label: t('sidebar.history'),
-      // The shelf's list (docs/BENCH_DESIGN.md §9.8): Basic has no other way to it.
-      run: () => {
-        toLibrary();
-        useProjectUi.setState({ historyOpen: true, historyFocus: true });
-      },
-    },
-    {
-      icon: Maximize2,
-      label: t('project.presentation'),
-      run: () => {
-        useLayoutStore.getState().setPresentation(true);
-      },
-    },
+    // Classic shell: "Lịch sử" is a tab of the library and the top bar has the presentation button;
+    // the bench header (unused since #263) passes `bench` to get both here.
+    ...(bench
+      ? [
+          {
+            icon: History,
+            label: t('sidebar.history'),
+            run: () => {
+              toLibrary();
+              useProjectUi.setState({ historyOpen: true, historyFocus: true });
+            },
+          },
+          {
+            icon: Maximize2,
+            label: t('project.presentation'),
+            run: () => {
+              useLayoutStore.getState().setPresentation(true);
+            },
+          },
+        ]
+      : []),
     {
       icon: BookMarked,
       label: t('project.sources'),
@@ -204,26 +212,28 @@ export function FileMenu({ history = false }: { history?: boolean } = {}) {
               <span>{label}</span>
             </button>
           ))}
-          <button
-            type="button"
-            role="menuitemcheckbox"
-            aria-checked={dark}
-            className="file-menu__item file-menu__theme"
-            onClick={() => {
-              setOpen(false);
-              setTheme(dark ? 'light' : 'dark');
-            }}
-            onKeyDown={(e) => {
-              if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
-              e.preventDefault();
-              const all = menuItems(root.current);
-              const i = all.indexOf(e.currentTarget);
-              all[(i + (e.key === 'ArrowDown' ? 1 : all.length - 1)) % all.length]?.focus();
-            }}
-          >
-            <Moon size={16} strokeWidth={1.75} aria-hidden="true" />
-            <span>{t('bench.darkTheme')}</span>
-          </button>
+          {bench && (
+            <button
+              type="button"
+              role="menuitemcheckbox"
+              aria-checked={dark}
+              className="file-menu__item file-menu__theme"
+              onClick={() => {
+                setOpen(false);
+                setTheme(dark ? 'light' : 'dark');
+              }}
+              onKeyDown={(e) => {
+                if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+                e.preventDefault();
+                const all = menuItems(root.current);
+                const i = all.indexOf(e.currentTarget);
+                all[(i + (e.key === 'ArrowDown' ? 1 : all.length - 1)) % all.length]?.focus();
+              }}
+            >
+              <Moon size={16} strokeWidth={1.75} aria-hidden="true" />
+              <span>{t('bench.darkTheme')}</span>
+            </button>
+          )}
         </div>
       )}
       {infoOpen && (
