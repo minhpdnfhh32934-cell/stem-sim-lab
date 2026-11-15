@@ -1,11 +1,11 @@
 """Generate data/hydrides.json: normal boiling points of the hydrides of groups 14–17 for
-"Liên kết hydrogen và tương tác van der Waals" (Hoá học 10 KNTT Bài 13, #255).
+"Liên kết hydrogen và tương tác van der Waals" (Hóa học 10 KNTT Bài 13, #255).
 
 Every value is copied as the page gives it (number, unit, the reference the page cites); nothing
 is remembered or estimated. The user's rule (16/11/2026, "bám sát chương trình của sách"): the
 textbook's value wherever the book gives one, the other sources only where it does not.
 
-0. SGK Hoá học 10 "Kết nối tri thức với cuộc sống" (NXB Giáo dục Việt Nam), read as page images
+0. SGK Hóa học 10 "Kết nối tri thức với cuộc sống" (NXB Giáo dục Việt Nam), read as page images
    in NXBGD's reader https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983 on
    15–16/11/2026: Bài 13, Bảng 13.1 (printed page 65: H2O, H2S, CH4) and Bài 22, Bảng 22.2
    (printed page 113: HF, HCl, HBr, HI). The NIST or PubChem value of those hydrides is kept as a
@@ -37,7 +37,7 @@ NIST_PAGE = "https://webbook.nist.gov/cgi/cbook.cgi?ID=C{cas}&Mask=4"
 PUBCHEM_PAGE = "https://pubchem.ncbi.nlm.nih.gov/compound/{cid}#section=Boiling-Point"
 PUBCHEM_JSON = "https://pubchem.ncbi.nlm.nih.gov/rest/pug_view/data/compound/{cid}/JSON?heading=Boiling+Point"
 SGK_READER = "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983"
-SGK = 'SGK Hoá học 10 "Kết nối tri thức với cuộc sống", NXB Giáo dục Việt Nam'
+SGK = 'SGK Hóa học 10 "Kết nối tri thức với cuộc sống", NXB Giáo dục Việt Nam'
 
 # The textbook's boiling points t_s (°C) as printed (comma decimal): (value, text, lesson/table, page).
 BOOK = {
@@ -226,7 +226,7 @@ def main() -> None:
         "source": {
             "id": "sgk-hh10-hydride-bp",
             "citation": (
-                "Nhiệt độ sôi thường: SGK Hoá học 10 Kết nối tri thức (Bảng 13.1 tr. 65; Bảng 22.2 "
+                "Nhiệt độ sôi thường: SGK Hóa học 10 Kết nối tri thức (Bảng 13.1 tr. 65; Bảng 22.2 "
                 "tr. 113) cho các chất sách ghi; chất sách không ghi: NIST Chemistry WebBook, SRD 69 "
                 "(P. J. Linstrom, W. G. Mallard, eds.), hoặc PubChem (NCBI), mục Boiling Point do "
                 "Hazardous Substances Data Bank cung cấp, kèm tài liệu gốc từng giá trị. NIST/PubChem "

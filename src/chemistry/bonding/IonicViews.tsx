@@ -238,7 +238,7 @@ export function IonicPanel() {
           <span>
             {Lz(
               L(
-                'Hiệu độ âm điện nhỏ hơn 1,7: theo Bảng 12.1, liên kết này nghiêng về cộng hoá trị phân cực. Công thức ở đây chỉ là cân bằng điện tích của mô hình ion.',
+                'Hiệu độ âm điện nhỏ hơn 1,7: theo Bảng 12.1, liên kết này nghiêng về cộng hóa trị phân cực. Công thức ở đây chỉ là cân bằng điện tích của mô hình ion.',
                 'The electronegativity difference is below 1.7: by Table 12.1 this bond leans to polar covalent. The formula here is only the charge balance of the ionic model.',
               ),
             )}

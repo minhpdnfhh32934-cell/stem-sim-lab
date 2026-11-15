@@ -5,7 +5,7 @@ import { OCTET_MOLECULES } from './octet';
 
 export type TempUnit = 'C' | 'K';
 
-/** Inputs of the four "Liên kết hoá học" topics (Bài 10–13). */
+/** Inputs of the four "Liên kết hóa học" topics (Bài 10–13). */
 export interface BondingState {
   octet: string;
   covalent: string;

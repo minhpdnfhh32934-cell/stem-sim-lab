@@ -114,7 +114,7 @@ export function OctetPanel() {
         <ReviewBadge status={m.review_status} />
       </div>
       <p>
-        {Lz(L('Tổng số electron hoá trị: ', 'Total valence electrons: '))}
+        {Lz(L('Tổng số electron hóa trị: ', 'Total valence electrons: '))}
         <strong className="mono">{valenceTotal(counts)}</strong>
       </p>
       <table className="chem-table bond-table">
@@ -122,7 +122,7 @@ export function OctetPanel() {
           <tr>
             <th scope="col">{Lz(L('Nguyên tử', 'Atom'))}</th>
             <th scope="col" className="num">
-              {Lz(L('e hoá trị', 'Valence e'))}
+              {Lz(L('e hóa trị', 'Valence e'))}
             </th>
             <th scope="col" className="num">
               {Lz(L('Dùng chung', 'Shared'))}
@@ -155,7 +155,7 @@ export function OctetPanel() {
       <p className="small muted">
         {Lz(
           L(
-            'Dùng chung: 2 electron cho mỗi gạch liên kết, tính cho cả hai nguyên tử. Riêng = hoá trị − điện tích hình thức − số gạch. Octet: 8 electron quanh nguyên tử (H: 2, như He).',
+            'Dùng chung: 2 electron cho mỗi gạch liên kết, tính cho cả hai nguyên tử. Riêng = hóa trị − điện tích hình thức − số gạch. Octet: 8 electron quanh nguyên tử (H: 2, như He).',
             'Shared: 2 electrons per bond line, counted for both atoms. Own = valence − formal charge − bond lines. Octet: 8 electrons around the atom (H: 2, like He).',
           ),
         )}

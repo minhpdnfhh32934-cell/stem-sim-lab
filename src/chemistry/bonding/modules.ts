@@ -7,7 +7,7 @@ import { IonicPanel, IonicStage } from './IonicViews';
 import { OctetPanel, OctetStage } from './OctetViews';
 import { applyBonding, useBondingStore } from './store';
 
-/** Hoá học 10 KNTT, chương 3 "Liên kết hoá học": Bài 10–13 (#255). */
+/** Hóa học 10 KNTT, chương 3 "Liên kết hóa học": Bài 10–13 (#255). */
 export const octetRule: ModuleView = {
   title: L('Quy tắc octet', 'The octet rule'),
   Stage: OctetStage,
@@ -23,7 +23,7 @@ export const ionicBond: ModuleView = {
 };
 
 export const covalentBond: ModuleView = {
-  title: L('Liên kết cộng hoá trị', 'Covalent bond'),
+  title: L('Liên kết cộng hóa trị', 'Covalent bond'),
   Stage: CovalentStage,
   Panel: CovalentPanel,
   Bottom: CovalentBottom,

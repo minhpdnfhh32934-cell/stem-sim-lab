@@ -153,7 +153,7 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Hoá học 10 | Chương 2. Bảng tuần hoàn các nguyên tố hoá học và định luật tuần hoàn | 9 | Ôn tập chương 2 | 45 | Ôn tập | chưa có |  | pending |
 | Hoá học 10 | Chương 3. Liên kết hoá học | 10 | Quy tắc octet | 49 | Lí thuyết | Quy tắc octet | Tên Bài 10: quy tắc octet (cảnh đếm electron quanh mỗi nguyên tử của các phân tử, ion mẫu và tự tìm ngoại lệ). | pending |
 | Hoá học 10 | Chương 3. Liên kết hoá học | 11 | Liên kết ion | 51 | Lí thuyết | Liên kết ion | Tên Bài 11: liên kết ion (cảnh nhường – nhận electron, cấu hình ion, công thức từ cân bằng điện tích; phần tinh thể NaCl ở chủ đề Tinh thể). | pending |
-| Hoá học 10 | Chương 3. Liên kết hoá học | 12 | Liên kết cộng hoá trị | 55 | Lí thuyết | Liên kết cộng hoá trị | Tên Bài 12: liên kết cộng hoá trị (cảnh hiệu độ âm điện → loại liên kết theo Bảng 12.1, số liên kết σ và π). | pending |
+| Hoá học 10 | Chương 3. Liên kết hoá học | 12 | Liên kết cộng hoá trị | 55 | Lí thuyết | Liên kết cộng hóa trị | Tên Bài 12: liên kết cộng hoá trị (cảnh hiệu độ âm điện → loại liên kết theo Bảng 12.1, số liên kết σ và π). | pending |
 | Hoá học 10 | Chương 3. Liên kết hoá học | 13 | Liên kết hydrogen và tương tác van der Waals | 64 | Lí thuyết | Liên kết hydrogen và tương tác van der Waals | Tên Bài 13: liên kết hydrogen và tương tác van der Waals (cảnh nhiệt độ sôi các hydride nhóm IVA–VIIA theo chu kì). | pending |
 | Hoá học 10 | Chương 3. Liên kết hoá học | 14 | Ôn tập chương 3 | 68 | Ôn tập | chưa có |  | pending |
 | Hoá học 10 | Chương 4. Phản ứng oxi hoá – khử | 15 | Phản ứng oxi hoá – khử | 71 | Lí thuyết | chưa có |  | pending |

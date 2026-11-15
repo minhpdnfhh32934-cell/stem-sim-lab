@@ -131,7 +131,7 @@ describe('panels', () => {
       </>,
     );
     expect(container).toHaveTextContent('Mọi nguyên tử đạt octet (H: 2 electron)');
-    expect(container).toHaveTextContent('Tổng số electron hoá trị: 8');
+    expect(container).toHaveTextContent('Tổng số electron hóa trị: 8');
     expect(screen.getByRole('row', { name: /^H ×2/ })).toHaveTextContent('2 (đạt)');
     fireEvent.click(screen.getByRole('button', { name: 'BF₃' }));
     expect(container).toHaveTextContent('Ngoại lệ — B: 6 electron (ít hơn 8)');
@@ -152,7 +152,7 @@ describe('panels', () => {
     expect(container).toHaveTextContent('Al³⁺ (giống khí hiếm Ne)');
     expect(container).toHaveTextContent('O²⁻ (giống khí hiếm Ne)');
     fireEvent.change(screen.getByLabelText('Phi kim'), { target: { value: 'I' } });
-    expect(screen.getByRole('note')).toHaveTextContent('nghiêng về cộng hoá trị phân cực');
+    expect(screen.getByRole('note')).toHaveTextContent('nghiêng về cộng hóa trị phân cực');
   });
 
   it('covalent: σ/π totals and the HF exception in the bond table', () => {
@@ -185,7 +185,7 @@ describe('panels', () => {
     // The textbook's value is shown; NIST's is named as the second source.
     const h2s = screen.getByRole('row', { name: /^H₂S\s/ });
     expect(h2s).toHaveTextContent('−60,75 °C');
-    expect(h2s).toHaveTextContent('SGK: SGK Hoá học 10');
+    expect(h2s).toHaveTextContent('SGK: SGK Hóa học 10');
     expect(h2s).toHaveTextContent('Bảng 13.1, tr. 65');
     expect(h2s).toHaveTextContent('Nguồn thứ hai: 212.87 K (-60,28 °C) — NIST WebBook');
     expect(screen.getByRole('row', { name: /^HF/ })).toHaveTextContent('Bảng 22.2, tr. 113');

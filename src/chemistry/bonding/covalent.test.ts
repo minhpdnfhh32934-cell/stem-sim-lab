@@ -51,7 +51,7 @@ describe('covalent bond (Bài 12): σ/π counts and bond type from Δχ', () => 
   });
 
   it('every Pauling value the four lessons use is the one of SGK Bảng 6.2 (tr. 37)', () => {
-    // SGK Hoá học 10 KNTT, Bài 6, Bảng 6.2 (read on the NXBGD reader, 16/11/2026).
+    // SGK Hóa học 10 KNTT, Bài 6, Bảng 6.2 (read on the NXBGD reader, 16/11/2026).
     const BOOK: Record<string, number> = {
       ...{ H: 2.2, Li: 0.98, Be: 1.57, B: 2.04, C: 2.55, N: 3.04, O: 3.44, F: 3.98 },
       ...{ Na: 0.93, Mg: 1.31, Al: 1.61, P: 2.19, S: 2.58, Cl: 3.16 },

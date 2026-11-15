@@ -1,6 +1,6 @@
 import { bondPolarity, deltaEn, type BondPolarity, type Molecule } from '../data/molecules';
 
-/** Sample molecules of "Liên kết cộng hoá trị" (Bài 12), structures from data/molecules.json. */
+/** Sample molecules of "Liên kết cộng hóa trị" (Bài 12), structures from data/molecules.json. */
 export const COVALENT_MOLECULES = [
   'h2',
   'cl2',

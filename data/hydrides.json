@@ -4,7 +4,7 @@
  "accessed": "2026-11-15",
  "source": {
   "id": "sgk-hh10-hydride-bp",
-  "citation": "Nhiệt độ sôi thường: SGK Hoá học 10 Kết nối tri thức (Bảng 13.1 tr. 65; Bảng 22.2 tr. 113) cho các chất sách ghi; chất sách không ghi: NIST Chemistry WebBook, SRD 69 (P. J. Linstrom, W. G. Mallard, eds.), hoặc PubChem (NCBI), mục Boiling Point do Hazardous Substances Data Bank cung cấp, kèm tài liệu gốc từng giá trị. NIST/PubChem còn được ghi làm nguồn thứ hai cho các chất có trong sách. Đọc ngày 15–16/11/2026.",
+  "citation": "Nhiệt độ sôi thường: SGK Hóa học 10 Kết nối tri thức (Bảng 13.1 tr. 65; Bảng 22.2 tr. 113) cho các chất sách ghi; chất sách không ghi: NIST Chemistry WebBook, SRD 69 (P. J. Linstrom, W. G. Mallard, eds.), hoặc PubChem (NCBI), mục Boiling Point do Hazardous Substances Data Bank cung cấp, kèm tài liệu gốc từng giá trị. NIST/PubChem còn được ghi làm nguồn thứ hai cho các chất có trong sách. Đọc ngày 15–16/11/2026.",
   "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983"
  },
  "generated_by": "scripts/data/gen_hydrides.py",
@@ -21,7 +21,7 @@
     "as_given": "−161,58 °C",
     "source": "sgk",
     "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983",
-    "reference": "SGK Hoá học 10 \"Kết nối tri thức với cuộc sống\", NXB Giáo dục Việt Nam, Bài 13, Bảng 13.1, tr. 65",
+    "reference": "SGK Hóa học 10 \"Kết nối tri thức với cuộc sống\", NXB Giáo dục Việt Nam, Bài 13, Bảng 13.1, tr. 65",
     "note": "Bài 13, Bảng 13.1: nhiệt độ sôi t_s (°C) như sách in."
    },
    "second": {
@@ -160,7 +160,7 @@
     "as_given": "100 °C",
     "source": "sgk",
     "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983",
-    "reference": "SGK Hoá học 10 \"Kết nối tri thức với cuộc sống\", NXB Giáo dục Việt Nam, Bài 13, Bảng 13.1, tr. 65",
+    "reference": "SGK Hóa học 10 \"Kết nối tri thức với cuộc sống\", NXB Giáo dục Việt Nam, Bài 13, Bảng 13.1, tr. 65",
     "note": "Bài 13, Bảng 13.1: nhiệt độ sôi t_s (°C) như sách in."
    },
    "second": {
@@ -187,7 +187,7 @@
     "as_given": "−60,75 °C",
     "source": "sgk",
     "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983",
-    "reference": "SGK Hoá học 10 \"Kết nối tri thức với cuộc sống\", NXB Giáo dục Việt Nam, Bài 13, Bảng 13.1, tr. 65",
+    "reference": "SGK Hóa học 10 \"Kết nối tri thức với cuộc sống\", NXB Giáo dục Việt Nam, Bài 13, Bảng 13.1, tr. 65",
     "note": "SGK ghi hai giá trị cho H2S: −60,75 °C ở Bảng 13.1 (tr. 65) và −60,28 °C ở câu hỏi mở đầu Bài 13 (tr. 64); dùng số của bảng."
    },
    "second": {
@@ -240,7 +240,7 @@
     "as_given": "+19,5 °C",
     "source": "sgk",
     "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983",
-    "reference": "SGK Hoá học 10 \"Kết nối tri thức với cuộc sống\", NXB Giáo dục Việt Nam, Bài 22, Bảng 22.2, tr. 113",
+    "reference": "SGK Hóa học 10 \"Kết nối tri thức với cuộc sống\", NXB Giáo dục Việt Nam, Bài 22, Bảng 22.2, tr. 113",
     "note": "Bài 22, Bảng 22.2: nhiệt độ sôi t_s (°C) như sách in."
    },
    "second": {
@@ -266,7 +266,7 @@
     "as_given": "−84,9 °C",
     "source": "sgk",
     "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983",
-    "reference": "SGK Hoá học 10 \"Kết nối tri thức với cuộc sống\", NXB Giáo dục Việt Nam, Bài 22, Bảng 22.2, tr. 113",
+    "reference": "SGK Hóa học 10 \"Kết nối tri thức với cuộc sống\", NXB Giáo dục Việt Nam, Bài 22, Bảng 22.2, tr. 113",
     "note": "Bài 22, Bảng 22.2: nhiệt độ sôi t_s (°C) như sách in."
    },
    "second": {
@@ -292,7 +292,7 @@
     "as_given": "−66,7 °C",
     "source": "sgk",
     "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983",
-    "reference": "SGK Hoá học 10 \"Kết nối tri thức với cuộc sống\", NXB Giáo dục Việt Nam, Bài 22, Bảng 22.2, tr. 113",
+    "reference": "SGK Hóa học 10 \"Kết nối tri thức với cuộc sống\", NXB Giáo dục Việt Nam, Bài 22, Bảng 22.2, tr. 113",
     "note": "Bài 22, Bảng 22.2: nhiệt độ sôi t_s (°C) như sách in."
    },
    "second": {
@@ -318,7 +318,7 @@
     "as_given": "−35,8 °C",
     "source": "sgk",
     "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983",
-    "reference": "SGK Hoá học 10 \"Kết nối tri thức với cuộc sống\", NXB Giáo dục Việt Nam, Bài 22, Bảng 22.2, tr. 113",
+    "reference": "SGK Hóa học 10 \"Kết nối tri thức với cuộc sống\", NXB Giáo dục Việt Nam, Bài 22, Bảng 22.2, tr. 113",
     "note": "Bài 22, Bảng 22.2: nhiệt độ sôi t_s (°C) như sách in."
    },
    "second": {

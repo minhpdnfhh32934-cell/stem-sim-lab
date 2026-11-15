@@ -9,16 +9,16 @@ import { MOLECULES_SOURCE } from '../data/molecules';
 const READER = 'https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983';
 const kntt = (id: string, lesson: string): Source => ({
   id: `kntt-hh10-${id}`,
-  citation: `SGK Hoá học 10 “Kết nối tri thức với cuộc sống”, NXB Giáo dục Việt Nam — ${lesson} (bản đọc trên trang tập huấn NXBGD, đọc ngày 15/11/2026)`,
+  citation: `SGK Hóa học 10 “Kết nối tri thức với cuộc sống”, NXB Giáo dục Việt Nam — ${lesson} (bản đọc trên trang tập huấn NXBGD, đọc ngày 15/11/2026)`,
   url: READER,
 });
-/** Lesson pages as printed in the book (chapter 3, "Liên kết hoá học"). */
+/** Lesson pages as printed in the book (chapter 3, "Liên kết hóa học"). */
 export const KNTT = {
   b10: kntt('b10', 'Bài 10 Quy tắc octet, tr. 49–50 (Bảng 10.1; “Em có biết”: PCl₅)'),
   b11: kntt('b11', 'Bài 11 Liên kết ion, tr. 51–54'),
   b12: kntt(
     'b12',
-    'Bài 12 Liên kết cộng hoá trị, tr. 55–63 (Bảng 12.1 tr. 59; liên kết σ, π tr. 60–61)',
+    'Bài 12 Liên kết cộng hóa trị, tr. 55–63 (Bảng 12.1 tr. 59; liên kết σ, π tr. 60–61)',
   ),
   b13: kntt(
     'b13',
@@ -45,7 +45,7 @@ export const OCTET_CARD: ScienceCardData = {
     {
       tex: 'E = V - q - \\textstyle\\sum b',
       label: L(
-        'E: electron riêng của nguyên tử (V: electron hoá trị, q: điện tích hình thức, Σb: tổng bậc liên kết)',
+        'E: electron riêng của nguyên tử (V: electron hóa trị, q: điện tích hình thức, Σb: tổng bậc liên kết)',
         'E: non-bonding electrons of the atom (V: valence electrons, q: formal charge, Σb: sum of bond orders)',
       ),
     },
@@ -59,7 +59,7 @@ export const OCTET_CARD: ScienceCardData = {
   ],
   assumptions: [
     L(
-      'Số electron hoá trị của nguyên tố nhóm A bằng số thứ tự nhóm (SGK Bảng 10.1), nhóm lấy từ bảng tuần hoàn của app.',
+      'Số electron hóa trị của nguyên tố nhóm A bằng số thứ tự nhóm (SGK Bảng 10.1), nhóm lấy từ bảng tuần hoàn của app.',
       'A group A element has as many valence electrons as its group number (SGK Table 10.1); the group comes from the app’s periodic table.',
     ),
     L(
@@ -107,7 +107,7 @@ export const IONIC_CARD: ScienceCardData = {
       'The formula is only the charge balance; the model does not tell whether the compound is stable or can be made.',
     ),
     L(
-      'Hiệu độ âm điện Pauling được so với ngưỡng của SGK Bảng 12.1: dưới 1,7 thì liên kết nghiêng về cộng hoá trị phân cực.',
+      'Hiệu độ âm điện Pauling được so với ngưỡng của SGK Bảng 12.1: dưới 1,7 thì liên kết nghiêng về cộng hóa trị phân cực.',
       'The Pauling electronegativity difference is compared with the thresholds of SGK Table 12.1: below 1.7 the bond leans to polar covalent.',
     ),
     L(
@@ -130,7 +130,7 @@ export const IONIC_CARD: ScienceCardData = {
 };
 
 export const COVALENT_CARD: ScienceCardData = {
-  title: L('Liên kết cộng hoá trị', 'Covalent bond'),
+  title: L('Liên kết cộng hóa trị', 'Covalent bond'),
   model: L(
     'Loại liên kết dự đoán từ hiệu độ âm điện Pauling theo Bảng 12.1 của SGK. Số liên kết σ và π đếm từ bậc liên kết trong dữ liệu cấu trúc: liên kết đơn là một liên kết σ; liên kết đôi gồm một σ và một π; liên kết ba gồm một σ và hai π.',
     'The bond type is predicted from the Pauling electronegativity difference with the textbook’s Table 12.1. The σ and π bonds are counted from the bond orders of the structure data: a single bond is one σ bond; a double bond is one σ and one π; a triple bond is one σ and two π.',
@@ -142,11 +142,11 @@ export const COVALENT_CARD: ScienceCardData = {
     },
     {
       tex: { vi: '0 \\le |\\Delta\\chi| < 0{,}4', en: '0 \\le |\\Delta\\chi| < 0.4' },
-      label: L('Cộng hoá trị không phân cực', 'Non-polar covalent'),
+      label: L('Cộng hóa trị không phân cực', 'Non-polar covalent'),
     },
     {
       tex: { vi: '0{,}4 \\le |\\Delta\\chi| < 1{,}7', en: '0.4 \\le |\\Delta\\chi| < 1.7' },
-      label: L('Cộng hoá trị phân cực', 'Polar covalent'),
+      label: L('Cộng hóa trị phân cực', 'Polar covalent'),
     },
     {
       tex: { vi: '|\\Delta\\chi| \\ge 1{,}7', en: '|\\Delta\\chi| \\ge 1.7' },
@@ -155,7 +155,7 @@ export const COVALENT_CARD: ScienceCardData = {
   ],
   assumptions: [
     L(
-      'Ngưỡng của Bảng 12.1 có ngoại lệ, SGK nêu ví dụ HF và MnI₂: HF có |Δχ| = 1,78 nhưng là phân tử cộng hoá trị; app đánh dấu những trường hợp như vậy.',
+      'Ngưỡng của Bảng 12.1 có ngoại lệ, SGK nêu ví dụ HF và MnI₂: HF có |Δχ| = 1,78 nhưng là phân tử cộng hóa trị; app đánh dấu những trường hợp như vậy.',
       'Table 12.1’s thresholds have exceptions; the textbook names HF and MnI₂: HF has |Δχ| = 1.78 but is a covalent molecule; the app marks such cases.',
     ),
     L(
@@ -195,7 +195,7 @@ export const FORCES_CARD: ScienceCardData = {
       'From period 3 on, within each group the larger the molecule (the more electrons), the stronger the van der Waals forces and the higher the boiling point.',
     ),
     L(
-      'NH₃, H₂O, HF sôi cao bất thường so với xu hướng đó: giữa các phân tử có liên kết hydrogen, vì nguyên tử H liên kết với nguyên tử có độ âm điện lớn (N, O, F) còn cặp electron hoá trị chưa liên kết. CH₄ không có liên kết hydrogen nên không có điểm bất thường.',
+      'NH₃, H₂O, HF sôi cao bất thường so với xu hướng đó: giữa các phân tử có liên kết hydrogen, vì nguyên tử H liên kết với nguyên tử có độ âm điện lớn (N, O, F) còn cặp electron hóa trị chưa liên kết. CH₄ không có liên kết hydrogen nên không có điểm bất thường.',
       'NH₃, H₂O and HF boil unusually high against that trend: there are hydrogen bonds between their molecules, because H is bonded to a very electronegative atom (N, O, F) that still has a non-bonding pair. CH₄ has no hydrogen bonds, so it shows no anomaly.',
     ),
     L(

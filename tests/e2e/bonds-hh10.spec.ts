@@ -1,7 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 import { openTopic } from './nav';
 
-/** Hoá học 10 chương 3 "Liên kết hoá học", Bài 10–13 (#255): opened from the classic library. */
+/** Hóa học 10 chương 3 "Liên kết hóa học", Bài 10–13 (#255): opened from the classic library. */
 
 async function noHorizontalScroll(page: Page) {
   const overflow = await page.evaluate(
@@ -51,7 +51,7 @@ test('Bài 12 covalent bond: σ/π of C₂H₄ and N₂, HF marked as the textbo
 }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(String(e)));
-  await openTopic(page, 'Hóa học', 'Liên kết cộng hoá trị');
+  await openTopic(page, 'Hóa học', 'Liên kết cộng hóa trị');
   await expect(page.getByText('Liên kết σ: 5 · liên kết π: 1')).toBeVisible({ timeout: 20_000 });
   await page.getByRole('button', { name: 'N₂', exact: true }).click();
   await expect(page.getByText('Liên kết σ: 1 · liên kết π: 2')).toBeVisible();

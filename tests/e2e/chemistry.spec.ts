@@ -20,7 +20,7 @@ const TOPICS = [
   'Tinh thể kim loại và NaCl',
   'Quy tắc octet',
   'Liên kết ion',
-  'Liên kết cộng hoá trị',
+  'Liên kết cộng hóa trị',
   'Liên kết hydrogen và tương tác van der Waals',
 ];
 
