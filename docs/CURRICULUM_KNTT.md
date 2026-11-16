@@ -35,12 +35,12 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Vật lí 11 | 26 | 20 | 20 |
 | Vật lí 12 | 25 | 21 | 0 |
 | Hoá học 10 | 23 | 16 | 16 |
-| Hoá học 11 | 25 | 19 | 2 |
+| Hoá học 11 | 25 | 19 | 7 |
 | Hoá học 12 | 30 | 22 | 1 |
 | Sinh học 10 | 26 | 17 | 17 |
 | Sinh học 11 | 29 | 20 | 0 |
 | Sinh học 12 | 35 | 28 | 7 |
-| **Cộng** | **253** | **189** | **89** |
+| **Cộng** | **253** | **189** | **94** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -168,11 +168,11 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Hoá học 11 | Chương 1. Cân bằng hoá học | 1 | Khái niệm về cân bằng hoá học | 6 | Lí thuyết | Cân bằng hóa học & Le Chatelier | Tên Bài 1: khái niệm về cân bằng hoá học. | pending |
 | Hoá học 11 | Chương 1. Cân bằng hoá học | 2 | Cân bằng trong dung dịch nước | 16 | Lí thuyết | Cân bằng trong dung dịch nước | Tên Bài 2: cân bằng trong dung dịch nước (pH, tích số ion của nước, chất chỉ thị theo Bảng 2.1). | pending |
 | Hoá học 11 | Chương 1. Cân bằng hoá học | 3 | Ôn tập chương 1 | 27 | Ôn tập | chưa có |  | pending |
-| Hoá học 11 | Chương 2. Nitrogen – sulfur | 4 | Nitrogen | 29 | Lí thuyết | chưa có |  | pending |
-| Hoá học 11 | Chương 2. Nitrogen – sulfur | 5 | Ammonia • Muối ammonium | 33 | Lí thuyết | chưa có |  | pending |
-| Hoá học 11 | Chương 2. Nitrogen – sulfur | 6 | Một số hợp chất của nitrogen với oxygen | 38 | Lí thuyết | chưa có |  | pending |
-| Hoá học 11 | Chương 2. Nitrogen – sulfur | 7 | Sulfur và sulfur dioxide | 42 | Lí thuyết | chưa có |  | pending |
-| Hoá học 11 | Chương 2. Nitrogen – sulfur | 8 | Sulfuric acid và muối sulfate | 48 | Lí thuyết | chưa có |  | pending |
+| Hoá học 11 | Chương 2. Nitrogen – sulfur | 4 | Nitrogen | 29 | Lí thuyết | Nitrogen và sulfur | Tên Bài 4–8 nêu các chất mà bài có thẻ chất và đặt lên trục số oxi hóa: nitrogen (Bài 4), ammonia và muối ammonium (Bài 5), hợp chất của nitrogen với oxygen (Bài 6), sulfur và sulfur dioxide (Bài 7), sulfuric acid và muối sulfate (Bài 8). | pending |
+| Hoá học 11 | Chương 2. Nitrogen – sulfur | 5 | Ammonia • Muối ammonium | 33 | Lí thuyết | Nitrogen và sulfur | Tên Bài 4–8 nêu các chất mà bài có thẻ chất và đặt lên trục số oxi hóa: nitrogen (Bài 4), ammonia và muối ammonium (Bài 5), hợp chất của nitrogen với oxygen (Bài 6), sulfur và sulfur dioxide (Bài 7), sulfuric acid và muối sulfate (Bài 8). | pending |
+| Hoá học 11 | Chương 2. Nitrogen – sulfur | 6 | Một số hợp chất của nitrogen với oxygen | 38 | Lí thuyết | Nitrogen và sulfur | Tên Bài 4–8 nêu các chất mà bài có thẻ chất và đặt lên trục số oxi hóa: nitrogen (Bài 4), ammonia và muối ammonium (Bài 5), hợp chất của nitrogen với oxygen (Bài 6), sulfur và sulfur dioxide (Bài 7), sulfuric acid và muối sulfate (Bài 8). | pending |
+| Hoá học 11 | Chương 2. Nitrogen – sulfur | 7 | Sulfur và sulfur dioxide | 42 | Lí thuyết | Nitrogen và sulfur | Tên Bài 4–8 nêu các chất mà bài có thẻ chất và đặt lên trục số oxi hóa: nitrogen (Bài 4), ammonia và muối ammonium (Bài 5), hợp chất của nitrogen với oxygen (Bài 6), sulfur và sulfur dioxide (Bài 7), sulfuric acid và muối sulfate (Bài 8). | pending |
+| Hoá học 11 | Chương 2. Nitrogen – sulfur | 8 | Sulfuric acid và muối sulfate | 48 | Lí thuyết | Nitrogen và sulfur | Tên Bài 4–8 nêu các chất mà bài có thẻ chất và đặt lên trục số oxi hóa: nitrogen (Bài 4), ammonia và muối ammonium (Bài 5), hợp chất của nitrogen với oxygen (Bài 6), sulfur và sulfur dioxide (Bài 7), sulfuric acid và muối sulfate (Bài 8). | pending |
 | Hoá học 11 | Chương 2. Nitrogen – sulfur | 9 | Ôn tập chương 2 | 55 | Ôn tập | chưa có |  | pending |
 | Hoá học 11 | Chương 3. Đại cương về hoá học hữu cơ | 10 | Hợp chất hữu cơ và hoá học hữu cơ | 57 | Lí thuyết | chưa có |  | pending |
 | Hoá học 11 | Chương 3. Đại cương về hoá học hữu cơ | 11 | Phương pháp tách biệt và tinh chế hợp chất hữu cơ | 63 | Lí thuyết | chưa có |  | pending |

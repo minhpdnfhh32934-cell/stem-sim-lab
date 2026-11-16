@@ -30,6 +30,7 @@ const TOPICS = [
   'fourierSeries',
   'emWave',
   'aqueousEquilibrium',
+  'nitrogenSulfur',
   'atomComposition',
   'isotopes',
   'periodicTable',

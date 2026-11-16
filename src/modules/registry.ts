@@ -23,6 +23,7 @@ const MODULES: Record<string, () => Promise<ModuleView>> = {
   equationBalancing: () => import('@/chemistry/reaction/modules').then((m) => m.equationBalancing),
   acidBaseTitration: () => import('@/chemistry/titration/modules').then((m) => m.acidBaseTitration),
   aqueousEquilibrium: () => import('@/chemistry/aqueous/modules').then((m) => m.aqueousEquilibrium),
+  nitrogenSulfur: () => import('@/chemistry/nitrogenSulfur/modules').then((m) => m.nitrogenSulfur),
   maxwellBoltzmann: () => import('@/chemistry/particles/modules').then((m) => m.maxwellBoltzmann),
   collisionTheory: () => import('@/chemistry/particles/modules').then((m) => m.collisionTheory),
   chemicalEquilibrium: () =>

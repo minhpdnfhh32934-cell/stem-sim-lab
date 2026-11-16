@@ -21,6 +21,7 @@ const TOPICS = [
   'Cân bằng hóa học & Le Chatelier',
   'Cân bằng trong dung dịch nước',
   'Chuẩn độ acid – base',
+  'Nitrogen và sulfur',
   'Nhóm halogen',
   'Hydrogen halide · Muối halide',
   'Tinh thể kim loại và NaCl',
