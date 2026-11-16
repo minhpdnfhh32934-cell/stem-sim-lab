@@ -8,6 +8,7 @@ import {
   type Source,
 } from '@/core/data/dataset';
 import { normalizeForSearch } from '@/app/catalog';
+import { balance, parseEquation } from '../balance';
 import { canonicalFormulaText, parseFormula } from '../formula';
 
 const TermSchema = z.object({ coef: z.number().int().positive(), formula: z.string() });
@@ -94,6 +95,21 @@ export function isBalanced(r: Pick<Reaction, 'reactants' | 'products'>): boolean
   if (a.charge !== b.charge) return false;
   const els = new Set([...a.counts.keys(), ...b.counts.keys()]);
   return [...els].every((el) => (a.counts.get(el) ?? 0) === (b.counts.get(el) ?? 0));
+}
+
+/**
+ * Coefficients of a library equation found by the exact balancer (`balance.ts`), or the library's
+ * own when the balancer finds several independent balancings (the silver mirror); the library's
+ * are checked for conservation by tests.
+ */
+export function balancedCoefficients(r: Pick<Reaction, 'reactants' | 'products'>): {
+  coefficients: number[];
+  by: 'balancer' | 'library';
+} {
+  const side = (terms: Reaction['reactants']) => terms.map((t) => t.formula).join(' + ');
+  const result = balance(parseEquation(`${side(r.reactants)} -> ${side(r.products)}`));
+  if (result.kind === 'balanced') return { coefficients: result.coefficients, by: 'balancer' };
+  return { coefficients: [...r.reactants, ...r.products].map((t) => t.coef), by: 'library' };
 }
 
 const key = (a: number, b: number) => (a < b ? `${a}-${b}` : `${b}-${a}`);

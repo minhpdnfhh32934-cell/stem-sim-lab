@@ -17,8 +17,8 @@ export interface Column {
   g: number;
 }
 
-/** Water at 20 °C (IAPWS-95, the drag scene's table) and one standard atmosphere (CODATA). */
-export const WATER_RHO = FLUIDS[1]?.rho ?? 998.21;
+/** Water at 20 °C (SGK Vật lí 10 KNTT, Bảng 34.2, tr. 131; the drag scene's table) and one standard atmosphere (CODATA). */
+export const WATER_RHO = FLUIDS[1]?.rho ?? 999;
 export const ATM = constant('atm').value;
 
 export function column(p: Params): Column {

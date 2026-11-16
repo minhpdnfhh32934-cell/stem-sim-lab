@@ -2323,6 +2323,66 @@
    "review_status": "pending"
   },
   {
+   "topic": "periodTrends",
+   "subject": "chemistry",
+   "grade": 10,
+   "book": "HH10",
+   "chapter": "Chương 2. Bảng tuần hoàn các nguyên tố hoá học và định luật tuần hoàn",
+   "lessons": [
+    7
+   ],
+   "reason": "Tên Bài 7: xu hướng biến đổi thành phần và một số tính chất của hợp chất trong một chu kì (cảnh có oxide, hydroxide ứng với hoá trị cao nhất của chu kì 3 và tính acid – base theo Bảng 7.2).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "redox",
+   "subject": "chemistry",
+   "grade": 10,
+   "book": "HH10",
+   "chapter": "Chương 4. Phản ứng oxi hoá – khử",
+   "lessons": [
+    15
+   ],
+   "reason": "Tên Bài 15: phản ứng oxi hoá – khử (cảnh có số oxi hoá theo quy tắc của bài, chất oxi hoá, chất khử, quá trình oxi hoá, quá trình khử, số electron trao đổi cho các phản ứng của thư viện).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "reactionEnthalpy",
+   "subject": "chemistry",
+   "grade": 10,
+   "book": "HH10",
+   "chapter": "Chương 5. Năng lượng hoá học",
+   "lessons": [
+    17
+   ],
+   "reason": "Tên Bài 17: biến thiên enthalpy trong các phản ứng hoá học (cảnh tính ΔrH°298 theo nhiệt tạo thành, Bảng 17.1; chưa có phần tính theo năng lượng liên kết).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "halogens",
+   "subject": "chemistry",
+   "grade": 10,
+   "book": "HH10",
+   "chapter": "Chương 7. Nguyên tố nhóm halogen",
+   "lessons": [
+    21
+   ],
+   "reason": "Tên Bài 21: nhóm halogen (cảnh có cấu hình lớp ngoài cùng, bán kính, độ âm điện, năng lượng ion hoá, trạng thái, màu, nhiệt độ nóng chảy và sôi từ F đến I).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "hydrogenHalides",
+   "subject": "chemistry",
+   "grade": 10,
+   "book": "HH10",
+   "chapter": "Chương 7. Nguyên tố nhóm halogen",
+   "lessons": [
+    22
+   ],
+   "reason": "Tên Bài 22: hydrogen halide, muối halide (cảnh có độ dài, năng lượng liên kết H–X, nhiệt độ sôi, xu hướng tính acid; nhận biết ion halide chỉ có phản ứng tạo AgCl của thư viện).",
+   "review_status": "pending"
+  },
+  {
    "topic": "electronConfiguration",
    "subject": "chemistry",
    "grade": 10,

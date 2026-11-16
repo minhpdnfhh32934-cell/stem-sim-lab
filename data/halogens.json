@@ -1,0 +1,124 @@
+{
+ "dataset": "halogens",
+ "version": 1,
+ "source": {
+  "id": "sgk-hh10-kntt",
+  "citation": "SGK Hoá học 10, Kết nối tri thức với cuộc sống (NXB Giáo dục Việt Nam): Bài 6, 21, 22 (đọc ngày 2026-11-15)",
+  "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983"
+ },
+ "generated_by": "scripts/data/gen_halogens.py",
+ "accessed": "2026-11-15",
+ "sources": {
+  "radius": {
+   "id": "sgk-hh10-hinh-6-2",
+   "citation": "SGK Hoá học 10, Kết nối tri thức với cuộc sống (NXB Giáo dục Việt Nam), Bài 6, Hình 6.2 (tr. 35); sách dẫn nguồn M. S. Silberberg, Principles of General Chemistry, McGraw-Hill 2007",
+   "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983"
+  },
+  "en": {
+   "id": "sgk-hh10-bang-6-2",
+   "citation": "SGK Hoá học 10, Kết nối tri thức với cuộc sống (NXB Giáo dục Việt Nam), Bài 6, Bảng 6.2 (tr. 37): độ âm điện theo L. C. Pauling",
+   "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983"
+  },
+  "physical": {
+   "id": "sgk-hh10-bang-21-2",
+   "citation": "SGK Hoá học 10, Kết nối tri thức với cuộc sống (NXB Giáo dục Việt Nam), Bài 21, Bảng 21.2 (tr. 107); sách dẫn nguồn chem.libretexts.org",
+   "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983"
+  },
+  "bond": {
+   "id": "sgk-hh10-bang-22-1",
+   "citation": "SGK Hoá học 10, Kết nối tri thức với cuộc sống (NXB Giáo dục Việt Nam), Bài 22, Bảng 22.1 (tr. 112)",
+   "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983"
+  },
+  "hxBoiling": {
+   "id": "sgk-hh10-bang-22-2",
+   "citation": "SGK Hoá học 10, Kết nối tri thức với cuộc sống (NXB Giáo dục Việt Nam), Bài 22, Bảng 22.2 (tr. 113)",
+   "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983"
+  }
+ },
+ "items": [
+  {
+   "z": 9,
+   "symbol": "F",
+   "radius_pm": 72,
+   "en_pauling": 3.98,
+   "state": "gas",
+   "colour": {
+    "vi": "Lục nhạt",
+    "en": "Pale green"
+   },
+   "melting_c": -219.6,
+   "boiling_c": -188.1,
+   "solubility_mol_l": null,
+   "hx": {
+    "formula": "HF",
+    "bond_length_pm": 92,
+    "bond_energy_kj_mol": 569,
+    "boiling_c": 19.5
+   },
+   "review_status": "pending"
+  },
+  {
+   "z": 17,
+   "symbol": "Cl",
+   "radius_pm": 100,
+   "en_pauling": 3.16,
+   "state": "gas",
+   "colour": {
+    "vi": "Vàng lục",
+    "en": "Yellow-green"
+   },
+   "melting_c": -101.0,
+   "boiling_c": -34.1,
+   "solubility_mol_l": 0.091,
+   "hx": {
+    "formula": "HCl",
+    "bond_length_pm": 127,
+    "bond_energy_kj_mol": 432,
+    "boiling_c": -84.9
+   },
+   "review_status": "pending"
+  },
+  {
+   "z": 35,
+   "symbol": "Br",
+   "radius_pm": 114,
+   "en_pauling": 2.96,
+   "state": "liquid",
+   "colour": {
+    "vi": "Nâu đỏ",
+    "en": "Red-brown"
+   },
+   "melting_c": -7.3,
+   "boiling_c": 59.2,
+   "solubility_mol_l": 0.21,
+   "hx": {
+    "formula": "HBr",
+    "bond_length_pm": 141,
+    "bond_energy_kj_mol": 366,
+    "boiling_c": -66.7
+   },
+   "review_status": "pending"
+  },
+  {
+   "z": 53,
+   "symbol": "I",
+   "radius_pm": 133,
+   "en_pauling": 2.66,
+   "state": "solid",
+   "colour": {
+    "vi": "Tím đen",
+    "en": "Violet-black"
+   },
+   "melting_c": 113.6,
+   "boiling_c": 185.5,
+   "solubility_mol_l": 0.0013,
+   "hx": {
+    "formula": "HI",
+    "bond_length_pm": 160,
+    "bond_energy_kj_mol": 299,
+    "boiling_c": -35.8
+   },
+   "review_status": "pending"
+  }
+ ]
+}

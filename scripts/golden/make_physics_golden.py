@@ -825,6 +825,24 @@ add(
     ],
     {"vt": math.sqrt(_net / (0.5 * _rho * _cd * math.pi * _r**2))},
 )
+# Water at the textbook's 999 kg/m3 (SGK Vật lí 10 KNTT, Bảng 34.2, tr. 131) is the app's "Nước"
+# (fluid 1), not a typed-in fluid: the problem's 999 is the default, so nothing is changed silently.
+_m, _r, _g, _rho, _cd = 0.02, 0.01, 9.8, 999.0, 0.47
+_net = (_m - _rho * 4 / 3 * math.pi * _r**3) * _g
+add(
+    "lc-03",
+    "Thả một quả cầu khối lượng 20 g, bán kính 1 cm vào nước có khối lượng riêng 999 kg/m³, từ mặt nước xuống đáy bể sâu 2 m. Hệ số cản của quả cầu là 0,47. Lấy g = 9,8 m/s². Tính tốc độ giới hạn của quả cầu.",
+    "fluidFall",
+    [
+        q("fluid", 1, "1", "vào nước"),
+        q("m", 20, "g", "khối lượng 20 g"),
+        q("r", 1, "cm", "bán kính 1 cm"),
+        q("H", 2, "m", "sâu 2 m"),
+        q("cd", 0.47, "1", "Hệ số cản của quả cầu là 0,47"),
+        q("g", 9.8, "m/s^2", "g = 9,8 m/s²"),
+    ],
+    {"vt": math.sqrt(_net / (0.5 * _rho * _cd * math.pi * _r**2))},
+)
 # --- Tổng hợp và phân tích lực (VL10 Bài 13) ------------------------------------
 add(
     "th-01",

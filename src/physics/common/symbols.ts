@@ -9,7 +9,10 @@ import type { LocalizedText } from '@/core/data/dataset';
 const TABLE = {
   kinetic: ['W_{\\text{đ}}', 'K'],
   potential: ['W_t', 'U'],
-  mechanical: ['W', 'E'],
+  // SGK Vật lí 10 KNTT (26.1), tr. 102 writes the mechanical energy W_c.
+  mechanical: ['W_c', 'E'],
+  // The energy of an oscillator, W in SGK Vật lí 11 (the spring lessons).
+  oscillationEnergy: ['W', 'E'],
   work: ['A', 'W'],
   workPull: ['A_F', 'W_F'],
   workWeight: ['A_P', 'W_g'],
@@ -18,12 +21,25 @@ const TABLE = {
   weight: ['P', 'F_g'],
   weightVec: ['\\vec{P}', '\\vec{F}_g'],
   power: ['\\mathscr{P}', 'P'],
+  // SGK Vật lí 10 KNTT (24.1)–(24.3), tr. 96–97: average power 𝒫 = A/t, power at an instant 𝒫_t = F·v_t.
+  powerAvg: ['\\mathscr{P}', '\\bar{P}'],
+  powerNow: ['\\mathscr{P}_t', 'P'],
+  speedNow: ['v_t', 'v'],
   efficiency: ['H', '\\eta'],
+  // SGK Vật lí 10 KNTT (27.1), tr. 106: H = W_ci / W_tp.
+  usefulEnergy: ['W_{ci}', 'E_{useful}'],
+  totalEnergy: ['W_{tp}', 'E_{in}'],
   friction: ['F_{ms}', 'f'],
-  kineticFriction: ['F_{ms,t}', 'f_k'],
-  staticFriction: ['F_{ms,n}', 'f_s'],
+  // SGK Vật lí 10 KNTT Bài 18, tr. 75: F_mst = μN (the book names no static coefficient).
+  kineticFriction: ['F_{mst}', 'f_k'],
+  staticFriction: ['F_{msn}', 'f_s'],
   muKinetic: ['\\mu_t', '\\mu_k'],
   muStatic: ['\\mu_n', '\\mu_s'],
+  // SGK Vật lí 10 KNTT Bài 13, tr. 57–59: the resultant is F (F⃗ = F⃗₁ + F⃗₂), its components F_x, F_y.
+  resultant: ['F', 'F_{net}'],
+  resultantVec: ['\\vec{F}', '\\vec{F}_{net}'],
+  resultantX: ['F_x', 'F_{net,x}'],
+  resultantY: ['F_y', 'F_{net,y}'],
   netForceVec: ['\\vec{F}_{hl}', '\\vec{F}_{net}'],
   drive: ['F_{\\text{kéo}}', 'F_{drive}'],
   springForce: ['F_{\\text{đh}}', 'F_s'],

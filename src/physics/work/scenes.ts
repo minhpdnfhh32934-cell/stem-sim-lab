@@ -2,7 +2,7 @@ import type { Locale } from '@/app/i18n/types';
 import { DIM } from '@/core/units';
 import type { ScienceCardData } from '@/science-card/types';
 import { L, gravityParam } from '../common/scene-helpers';
-import { SRC } from '../common/sources';
+import { SRC, sgk10 } from '../common/sources';
 import { SYM, both, plain, sym } from '../common/symbols';
 import { fmtQty, texNum, texQty } from '../common/tex';
 import { IS } from '../incline/engine';
@@ -51,7 +51,7 @@ const crate: BodyDef = {
       },
       {
         label: L('Công suất của lực kéo', 'Power of the pull'),
-        symbol: SYM.power,
+        symbol: SYM.powerNow,
         value: q.F * Math.cos(q.beta) * (s[IS.v] ?? 0),
         unit: 'W',
       },
@@ -180,14 +180,14 @@ function solve(p: Params, locale: Locale): Solution {
         'Công suất trung bình của lực kéo, và công suất lúc cuối quãng đường:',
         'Average power of the pull, and its power at the end of the distance:',
       ),
-      tex: `\\bar{${S.power}} = \\frac{${S.workPull}}{t} = ${Q(w.WF / t, 'W')},\\qquad ${S.power} = F v \\cos\\beta = ${Q(q.F * Math.cos(q.beta) * v, 'W')}`,
+      tex: `${S.powerAvg} = \\frac{${S.workPull}}{t} = ${Q(w.WF / t, 'W')},\\qquad ${S.powerNow} = F ${S.speedNow} \\cos\\beta = ${Q(q.F * Math.cos(q.beta) * v, 'W')}`,
     },
     {
       text: L(
         'Hiệu suất: phần công của lực kéo làm tăng cơ năng của thùng (h = s·sin θ là độ cao thùng được nâng lên); phần còn lại thành nhiệt do ma sát.',
         'Efficiency: the share of the pull’s work that raises the crate’s mechanical energy (h = s·sin θ is the height it gains); the rest becomes heat through friction.',
       ),
-      tex: `${S.efficiency} = \\frac{\\tfrac{1}{2} m v^2 + m g h}{${S.workPull}} = 1 - \\frac{|${S.workFriction}|}{${S.workPull}} = ${n(H * 100)}\\,\\%`,
+      tex: `${S.efficiency} = \\frac{${S.usefulEnergy}}{${S.totalEnergy}} = \\frac{\\tfrac{1}{2} m v^2 + m g h}{${S.workPull}} = 1 - \\frac{|${S.workFriction}|}{${S.workPull}} = ${n(H * 100)}\\,\\%`,
     },
   ];
   const answers: Answer[] = [
@@ -248,7 +248,7 @@ function card(): ScienceCardData {
       {
         tex: both(
           (s) =>
-            `${s.efficiency} = \\dfrac{\\tfrac{1}{2} m v^2 + m g h}{${s.workPull}} = 1 - \\dfrac{|${s.workFriction}|}{${s.workPull}}`,
+            `${s.efficiency} = \\dfrac{${s.usefulEnergy}}{${s.totalEnergy}} = \\dfrac{\\tfrac{1}{2} m v^2 + m g h}{${s.workPull}} = 1 - \\dfrac{|${s.workFriction}|}{${s.workPull}}`,
         ),
         label: L(
           'Hiệu suất: công có ích chia công toàn phần',
@@ -280,7 +280,7 @@ function card(): ScienceCardData {
       'The same exact engine as the inclined-plane lesson (Δt = 1/240 s).',
     ),
     userIntervened: false,
-    sources: [SRC.sgk10kntt, SRC.halliday],
+    sources: [sgk10(23), sgk10(24), sgk10(27), SRC.halliday],
   };
 }
 

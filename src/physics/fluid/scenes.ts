@@ -5,7 +5,7 @@ import { dopri5 } from '@/core/ode/dopri5';
 import { DIM } from '@/core/units';
 import type { ScienceCardData } from '@/science-card/types';
 import { L, gravityParam } from '../common/scene-helpers';
-import { SRC } from '../common/sources';
+import { SRC, sgk10 } from '../common/sources';
 import { SYM, both, plain, sym } from '../common/symbols';
 import { fmtQty, texNum, texQty } from '../common/tex';
 import { arrow, circle, ground, line, polygon, text, vectorScale } from '../render/draw';
@@ -452,7 +452,15 @@ function card(p: Params): ScienceCardData {
       'Each step evaluates the closed form at t = n·Δt (Δt = 1/240 s): no error builds up.',
     ),
     userIntervened: false,
-    sources: [SRC.sgk10kntt, SRC.hallidayDrag, SRC.hoerner, SRC.lamb, SRC.isa, SRC.iapwsWater],
+    sources: [
+      sgk10(19),
+      sgk10(34),
+      SRC.hallidayDrag,
+      SRC.hoerner,
+      SRC.lamb,
+      SRC.isa,
+      SRC.iapwsWater,
+    ],
   };
 }
 

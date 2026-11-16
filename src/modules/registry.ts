@@ -7,6 +7,11 @@ const MODULES: Record<string, () => Promise<ModuleView>> = {
   periodicTable: () => import('@/chemistry/periodic/module').then((m) => m.default),
   atomComposition: () => import('@/chemistry/nuclide/modules').then((m) => m.atomComposition),
   isotopes: () => import('@/chemistry/nuclide/modules').then((m) => m.isotopes),
+  periodTrends: () => import('@/chemistry/periodTrends/modules').then((m) => m.periodTrends),
+  redox: () => import('@/chemistry/redox/modules').then((m) => m.redox),
+  reactionEnthalpy: () => import('@/chemistry/thermo/modules').then((m) => m.reactionEnthalpy),
+  halogens: () => import('@/chemistry/halogen/modules').then((m) => m.halogens),
+  hydrogenHalides: () => import('@/chemistry/halogen/modules').then((m) => m.hydrogenHalides),
   electronConfiguration: () =>
     import('@/chemistry/atom/modules').then((m) => m.electronConfiguration),
   bohrModel: () => import('@/chemistry/atom/modules').then((m) => m.bohrModel),

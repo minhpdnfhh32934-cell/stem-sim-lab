@@ -1,0 +1,96 @@
+/* HH10 Bài 7: period 3 oxides and hydroxides. */
+.p3-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+  gap: var(--space-2);
+  margin: var(--space-3) 0;
+  padding: 0;
+  list-style: none;
+}
+.p3-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  min-height: var(--target);
+  padding: var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel);
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+.p3-card.is-active {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+.p3-card__el {
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+.p3-card__group {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+.p3-card__formula {
+  font-size: var(--text-content);
+  font-weight: 600;
+}
+.p3-chip {
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  text-align: center;
+  border: 1px solid currentColor;
+}
+.p3-chip--base {
+  color: var(--chart-1);
+}
+.p3-chip--amph {
+  color: var(--chart-3);
+}
+.p3-chip--acid {
+  color: var(--chart-4);
+}
+.p3-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin: 0 0 var(--space-3);
+  font-size: var(--text-sm);
+}
+.p3-arrow__line {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  color: var(--chart-4);
+}
+.p3-arrow__bar {
+  flex: 1;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(to right, var(--chart-1), var(--chart-4));
+}
+.p3-facts {
+  display: grid;
+  gap: var(--space-1);
+  margin: var(--space-2) 0;
+  font-size: var(--text-content);
+}
+.p3-facts dt {
+  margin-top: var(--space-2);
+  font-weight: 600;
+}
+.p3-facts dd {
+  margin: 0;
+}
+.p3-check {
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}

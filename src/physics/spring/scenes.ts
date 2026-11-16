@@ -3,7 +3,7 @@ import { dopri5 } from '@/core/ode/dopri5';
 import { DIM } from '@/core/units';
 import type { ScienceCardData } from '@/science-card/types';
 import { L, gravityParam, massParam } from '../common/scene-helpers';
-import { SRC } from '../common/sources';
+import { SRC, sgk10 } from '../common/sources';
 import { SYM, both, plain, sym } from '../common/symbols';
 import { fmtQty, texNum, texQty } from '../common/tex';
 import {
@@ -392,7 +392,8 @@ function solve(hooke: boolean) {
       });
       steps.push({
         text: L('Cơ năng (bảo toàn):', 'Mechanical energy (conserved):'),
-        tex: `${sym(locale).mechanical} = \\tfrac{1}{2} k A^2 = ${Q(0.5 * q.k * A * A, 'J')}`,
+        // Vật lí 10's Hooke lesson writes the mechanical energy W_c, Vật lí 11's oscillator W.
+        tex: `${hooke ? sym(locale).mechanical : sym(locale).oscillationEnergy} = \\tfrac{1}{2} k A^2 = ${Q(0.5 * q.k * A * A, 'J')}`,
       });
       answers.push(
         { id: 'amplitude', label: L('Biên độ', 'Amplitude'), value: A, unit: 'cm' },
@@ -461,7 +462,12 @@ function card(hooke: boolean) {
           : 'Ideal massless Hookean spring; no friction.',
       ),
       equations: [
-        { tex: both((s) => `${s.springForce} = -k\\,\\Delta l`) },
+        // Bài 33 of SGK Vật lí 10 KNTT writes the size, F_đh = k|Δl| (33.1), tr. 129; the oscillator the signed law.
+        {
+          tex: hooke
+            ? { vi: 'F_{\\text{đh}} = k\\left|\\Delta l\\right|', en: 'F_s = -k\\,\\Delta l' }
+            : both((s) => `${s.springForce} = -k\\,\\Delta l`),
+        },
         {
           tex:
             q.b > 0
@@ -479,7 +485,12 @@ function card(hooke: boolean) {
               },
             ]
           : []),
-        { tex: both((s) => `${s.mechanical} = \\tfrac{1}{2} m v^2 + \\tfrac{1}{2} k x^2`) },
+        {
+          tex: both(
+            (s) =>
+              `${hooke ? s.mechanical : s.oscillationEnergy} = \\tfrac{1}{2} m v^2 + \\tfrac{1}{2} k x^2`,
+          ),
+        },
       ],
       assumptions: [
         L(
@@ -515,7 +526,8 @@ function card(hooke: boolean) {
         'Exact state-transition map, Δt = 1/240 s.',
       ),
       userIntervened: false,
-      sources: [SRC.sgk10, SRC.sgk11, SRC.halliday],
+      // The Hooke lesson also shows the oscillation (Vật lí 11) formulas: it cites both books.
+      sources: [...(hooke ? [sgk10(33)] : []), SRC.sgk11, SRC.halliday],
     };
   };
 }

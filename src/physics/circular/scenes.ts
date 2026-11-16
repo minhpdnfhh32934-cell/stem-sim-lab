@@ -3,7 +3,7 @@ import { DIM } from '@/core/units';
 import type { LocalizedText } from '@/core/data/dataset';
 import type { ScienceCardData } from '@/science-card/types';
 import { L, massParam } from '../common/scene-helpers';
-import { SRC } from '../common/sources';
+import { SRC, sgk10 } from '../common/sources';
 import { SYM, both, sym } from '../common/symbols';
 import { fmtQty, texQty } from '../common/tex';
 import { arrow, circle, line, polyline, text, vectorScale } from '../render/draw';
@@ -288,7 +288,7 @@ function card(p: Params): ScienceCardData {
       'Closed form φ = φ₀ ± ωt; the step Δt = 1/240 s is only for drawing.',
     ),
     userIntervened: false,
-    sources: [SRC.sgk10kntt, SRC.hallidayCircular, SRC.hairer],
+    sources: [sgk10(31), sgk10(32), SRC.hallidayCircular, SRC.hairer],
   };
 }
 
