@@ -513,6 +513,8 @@ PLACEMENTS = [
     ("dcCircuit", "VL11", [23, 24, 25], "Tên Bài 23–25: điện trở, định luật Ohm, nguồn điện, năng lượng và công suất điện (cảnh có nguồn E, r và 1–3 điện trở)."),
     ("standingWave", "VL11", [13], "Tên Bài 13: sóng dừng (cảnh chỉ có dây hai đầu cố định)."),
     ("electricField", "VL11", [16, 17, 18], "Tên Bài 16–18: lực tương tác giữa các điện tích, khái niệm điện trường, điện trường đều."),
+    ("halideAlcoholPhenol", "HH11", [19, 20, 21], "Tên Chương 5 và các Bài 19 (dẫn xuất halogen), 20 (alcohol), 21 (phenol): bảng nhiệt độ sôi, độ tan, so sánh với hydrocarbon, ether; năng lượng liên kết C–X; phản ứng tách theo quy tắc Zaitsev; phản ứng trong sách."),
+    ("carbonylAcid", "HH11", [23, 24], "Tên Bài 23: hợp chất carbonyl; tên Bài 24: carboxylic acid (Bảng 23.1, 24.2, 24.3; so sánh nhiệt độ sôi alkane, aldehyde, alcohol, acid; độ phân li tính từ Ka; phản ứng trong sách)."),
     ("hydrocarbons", "HH11", [15, 16, 17], "Tên Bài 15: alkane; tên Bài 16: hydrocarbon không no (alkene, alkyne); tên Bài 17: arene (công thức chung, bảng tính chất vật lí, phương trình đốt cháy, phản ứng trong sách)."),
     ("organicBasics", "HH11", [10, 12, 13], "Tên Bài 10: hợp chất hữu cơ và hóa học hữu cơ (nhóm chức, phổ hồng ngoại); tên Bài 12: công thức phân tử hợp chất hữu cơ; tên Bài 13: cấu tạo hóa học hợp chất hữu cơ (công thức cấu tạo, đồng phân)."),
     ("organicSeparation", "HH11", [11], "Tên Bài 11: phương pháp tách biệt và tinh chế hợp chất hữu cơ (bài học có hướng dẫn: dự đoán, ghép đôi, xếp thứ tự; không có mô phỏng)."),
