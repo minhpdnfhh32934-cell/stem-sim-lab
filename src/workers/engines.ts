@@ -84,6 +84,21 @@ registerEngine('phys.circular', async () => {
   return () => new CircularEngine();
 });
 
+registerEngine('phys.electricPotential', async () => {
+  const { PotentialEngine } = await import('@/physics/potential/engine');
+  return () => new PotentialEngine();
+});
+
+registerEngine('phys.capacitor', async () => {
+  const { CapacitorEngine } = await import('@/physics/capacitor/engine');
+  return () => new CapacitorEngine();
+});
+
+registerEngine('phys.electricCurrent', async () => {
+  const { CurrentEngine } = await import('@/physics/current/engine');
+  return () => new CurrentEngine();
+});
+
 registerEngine('phys.travellingWave', async () => {
   const { TravelEngine } = await import('@/physics/travel/engine');
   return () => new TravelEngine();

@@ -382,6 +382,52 @@ export const CHALLENGES: readonly Challenge[] = [
     ),
   },
   {
+    id: 'electricPotential.v9',
+    topic: 'electricPotential',
+    title: L('Điện thế 9 V', 'A potential of 9 V'),
+    task: L(
+      'Giữ hai bản cách nhau 4 cm, hiệu điện thế 36 V. Đặt điểm M (chỉnh khoảng cách tới bản âm hoặc kéo M trên hình) sao cho điện thế tại M đúng 9 V.',
+      'Keeping the plates 4 cm apart at 36 V, place point M (set its distance to the negative plate or drag it on the picture) so that the potential at M is exactly 9 V.',
+    ),
+    controls: ['hM'],
+    goal: { answer: 'VM', kind: 'target', value: 9, tol: 0.05 },
+    hint: L(
+      'Điện thế tăng đều từ 0 ở bản âm tới 36 V ở bản dương: V = Eh với E = U/d.',
+      'The potential rises steadily from 0 at the negative plate to 36 V at the positive one: V = Eh with E = U/d.',
+    ),
+  },
+  {
+    id: 'capacitor.c2uF',
+    topic: 'capacitor',
+    title: L('Bộ tụ 2 µF', 'A 2 µF bank'),
+    task: L(
+      'Hai tụ ghép nối tiếp, tụ 1 có điện dung 3 µF. Chỉnh điện dung tụ 2 để bộ tụ có điện dung đúng 2 µF.',
+      'Two capacitors in series, capacitor 1 of 3 µF. Set capacitor 2 so that the bank is exactly 2 µF.',
+    ),
+    controls: ['C2'],
+    start: { mode: 1, count: 2, C1: 3e-6 },
+    goal: { answer: 'C', kind: 'target', value: 2e-6, tol: 0.02e-6 },
+    hint: L(
+      'Nối tiếp: 1/C = 1/C₁ + 1/C₂. Bộ tụ luôn nhỏ hơn tụ nhỏ nhất.',
+      'In series: 1/C = 1/C₁ + 1/C₂. The bank is always smaller than the smallest capacitor.',
+    ),
+  },
+  {
+    id: 'electricCurrent.v02',
+    topic: 'electricCurrent',
+    title: L('Tốc độ trôi 0,2 mm/s', 'A drift speed of 0.2 mm/s'),
+    task: L(
+      'Giữ dây đồng đường kính 2 mm. Chỉnh cường độ dòng điện để các electron tự do trôi với tốc độ 0,2 mm/s.',
+      'Keeping the 2 mm copper wire, set the current so that the free electrons drift at 0.2 mm/s.',
+    ),
+    controls: ['I'],
+    goal: { answer: 'v', kind: 'target', value: 2e-4, tol: 2e-6 },
+    hint: L(
+      'Từ I = Snve: tốc độ trôi tỉ lệ thuận với I. Với 5 A thì v ≈ 0,12 mm/s.',
+      'From I = Snve the drift speed is proportional to I. At 5 A, v ≈ 0.12 mm/s.',
+    ),
+  },
+  {
     id: 'standingWave.f50',
     topic: 'standingWave',
     title: L('Tần số 50 Hz', 'A frequency of 50 Hz'),

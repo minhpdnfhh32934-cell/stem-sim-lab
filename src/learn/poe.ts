@@ -304,6 +304,42 @@ export const POES: readonly Poe[] = [
     choices: ratios(0.5, 1, 2),
   },
   {
+    id: 'electricPotential.d',
+    topic: 'electricPotential',
+    param: 'd',
+    factor: 2,
+    answer: 'E',
+    question: L(
+      'Giữ nguyên hiệu điện thế giữa hai bản, nếu khoảng cách giữa hai bản tăng gấp đôi thì cường độ điện trường giữa hai bản thay đổi thế nào?',
+      'Keeping the voltage, if the plates are twice as far apart, how does the field between them change?',
+    ),
+    choices: ratios(0.5, 1, 2),
+  },
+  {
+    id: 'capacitor.U',
+    topic: 'capacitor',
+    param: 'U',
+    factor: 2,
+    answer: 'W',
+    question: L(
+      'Nếu hiệu điện thế đặt vào bộ tụ tăng gấp đôi thì năng lượng của bộ tụ thay đổi thế nào?',
+      'If the voltage across the bank doubles, how does its energy change?',
+    ),
+    choices: ratios(1, 2, 4),
+  },
+  {
+    id: 'electricCurrent.d',
+    topic: 'electricCurrent',
+    param: 'd',
+    factor: 2,
+    answer: 'v',
+    question: L(
+      'Cùng cường độ dòng điện, nếu dùng dây cùng chất có đường kính gấp đôi thì tốc độ trôi của electron thay đổi thế nào?',
+      'For the same current, with a wire of the same metal and twice the diameter, how does the electrons’ drift speed change?',
+    ),
+    choices: ratios(0.25, 0.5, 1),
+  },
+  {
     id: 'standingWave.tension',
     topic: 'standingWave',
     param: 'tension',

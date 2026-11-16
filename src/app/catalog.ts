@@ -59,8 +59,8 @@ export const CATALOG: Record<Subject, ChapterEntry[]> = {
     chapter('oscillations', ['springPendulum', 'simplePendulum', 'forcedOscillation']),
     chapter('circularMotion', ['uniformCircularMotion']),
     chapter('waves', ['travellingWave', 'emWave', 'interference', 'standingWave', 'fourierSeries']),
-    chapter('electricField', ['electricField']),
-    chapter('dcCircuit', ['dcCircuit']),
+    chapter('electricField', ['electricField', 'electricPotential', 'capacitor']),
+    chapter('dcCircuit', ['electricCurrent', 'dcCircuit']),
     chapter('gravitation', ['keplerOrbit']),
   ],
   chemistry: [

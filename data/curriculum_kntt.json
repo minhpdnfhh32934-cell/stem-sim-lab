@@ -2679,6 +2679,43 @@
    "review_status": "pending"
   },
   {
+   "topic": "electricPotential",
+   "subject": "physics",
+   "grade": 11,
+   "book": "VL11",
+   "chapter": "Chương III. Điện trường",
+   "lessons": [
+    19,
+    20
+   ],
+   "reason": "Tên Bài 19: thế năng điện; tên Bài 20: điện thế (cảnh điện tích dời từ M đến N giữa hai bản phẳng: V = Eh, U_MN, A = qU_MN).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "capacitor",
+   "subject": "physics",
+   "grade": 11,
+   "book": "VL11",
+   "chapter": "Chương III. Điện trường",
+   "lessons": [
+    21
+   ],
+   "reason": "Tên Bài 21: tụ điện (một tụ, bộ tụ ghép nối tiếp hoặc song song, năng lượng của tụ).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "electricCurrent",
+   "subject": "physics",
+   "grade": 11,
+   "book": "VL11",
+   "chapter": "Chương IV. Dòng điện. Mạch điện",
+   "lessons": [
+    22
+   ],
+   "reason": "Tên Bài 22: cường độ dòng điện (I = Δq/Δt, I = Snve trong dây kim loại).",
+   "review_status": "pending"
+  },
+  {
    "topic": "cellToDna",
    "subject": "biology",
    "grade": 10,
