@@ -22,4 +22,8 @@ export const GUIDED_TOPICS = [
   'animalCirculation',
   'immunity',
   'excretionHomeostasis',
+  'responseOverview',
+  'plantResponse',
+  'animalResponse',
+  'animalBehaviour',
 ] as const;
