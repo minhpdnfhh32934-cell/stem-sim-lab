@@ -3087,6 +3087,42 @@
    "review_status": "pending"
   },
   {
+   "topic": "growthOverview",
+   "subject": "biology",
+   "grade": 11,
+   "book": "SH11",
+   "chapter": "Chương 3. Sinh trưởng và phát triển ở sinh vật",
+   "lessons": [
+    19
+   ],
+   "reason": "Tên Bài 19: khái quát về sinh trưởng và phát triển ở sinh vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "plantGrowth",
+   "subject": "biology",
+   "grade": 11,
+   "book": "SH11",
+   "chapter": "Chương 3. Sinh trưởng và phát triển ở sinh vật",
+   "lessons": [
+    20
+   ],
+   "reason": "Tên Bài 20: sinh trưởng và phát triển ở thực vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "animalGrowth",
+   "subject": "biology",
+   "grade": 11,
+   "book": "SH11",
+   "chapter": "Chương 3. Sinh trưởng và phát triển ở sinh vật",
+   "lessons": [
+    22
+   ],
+   "reason": "Tên Bài 22: sinh trưởng và phát triển ở động vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
    "topic": "metabolismEnergy",
    "subject": "biology",
    "grade": 10,

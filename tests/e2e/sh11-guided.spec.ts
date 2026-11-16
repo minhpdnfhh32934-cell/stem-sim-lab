@@ -12,6 +12,9 @@ import { sh11b14Response } from '../../src/studio/guided/lessons/sh11b14Response
 import { sh11b15PlantResponse } from '../../src/studio/guided/lessons/sh11b15PlantResponse';
 import { sh11b17AnimalResponse } from '../../src/studio/guided/lessons/sh11b17AnimalResponse';
 import { sh11b18Behaviour } from '../../src/studio/guided/lessons/sh11b18Behaviour';
+import { sh11b19Growth } from '../../src/studio/guided/lessons/sh11b19Growth';
+import { sh11b20PlantGrowth } from '../../src/studio/guided/lessons/sh11b20PlantGrowth';
+import { sh11b22AnimalGrowth } from '../../src/studio/guided/lessons/sh11b22AnimalGrowth';
 import { openTopic } from './nav';
 
 /** SH11 as guided lessons (#255 rounds 2h–2j). */
@@ -88,6 +91,9 @@ for (const [topic, lesson] of [
   ['Cảm ứng ở thực vật', sh11b15PlantResponse],
   ['Cảm ứng ở động vật', sh11b17AnimalResponse],
   ['Tập tính ở động vật', sh11b18Behaviour],
+  ['Khái quát về sinh trưởng và phát triển', sh11b19Growth],
+  ['Sinh trưởng và phát triển ở thực vật', sh11b20PlantGrowth],
+  ['Sinh trưởng và phát triển ở động vật', sh11b22AnimalGrowth],
 ] as const) {
   test(`${topic}: opens on the prediction and its activities fit 1366×768`, async ({ page }) => {
     const errors: string[] = [];
