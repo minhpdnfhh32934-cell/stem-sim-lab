@@ -36,3 +36,5 @@ public/ort/
 
 # MSIX packages built by scripts/store/make-msix.mjs
 store/out/
+# Local knowledge graph (graphify), rebuilt per machine
+graphify-out/

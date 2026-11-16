@@ -1,0 +1,15 @@
+# Knowledge-graph scope (graphify): source and docs only.
+# Built or vendored files would crowd out the project's own code in `graphify query`.
+public/game/
+public/ort/
+public/shelf/
+game/dist/
+dist/
+src-tauri/target/
+src-tauri/gen/
+test-results/
+playwright-report/
+tests/teaching/results/
+release-notes/google-docs.html
+*.min.js
+*.map

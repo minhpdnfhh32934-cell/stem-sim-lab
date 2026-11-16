@@ -312,6 +312,21 @@ CI (`.github/workflows/ci.yml`) runs all of the above on every push. A failed E2
 - The user is a beginner (knows some Python, learning Java). Explain reports simply, in Vietnamese.
 - End each phase with: all tests passing, docs updated, a short report — then continue (see Autonomy note).
 
+## Knowledge graph first (graphify, user decision 2026-11-16)
+
+To save tokens, find code through the graph before reading files. The graph lives in the main
+checkout `D:Projectsstem-sim-lab` (kept on `main`), `graphify-out/` (git-ignored, local).
+
+- **Before reading:** `graphify explain "<file or symbol>"` (who imports or calls it, with
+  file:line), `graphify path "A" "B"`, `graphify query "<question>" --budget 800`. Read only the
+  files and lines it points to. Plain `grep` stays the tool for strings the graph does not hold
+  (i18n texts, data values, DATA_REVIEW codes).
+- **Keep it current:** whenever `main` moves (a PR merged), in that checkout run
+  `git pull --ff-only` then `graphify update .` (code only: no LLM, no tokens; add `--force`
+  after files were deleted). Doc/image re-extraction (`/graphify --update`) needs subagents, so
+  only when the user asks (main-agent-only rule).
+- **Scope:** `.graphifyignore` leaves out built bundles, vendored runtimes and test output.
+
 ## Project map
 
 ```
