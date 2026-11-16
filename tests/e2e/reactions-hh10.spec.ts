@@ -42,8 +42,12 @@ test('Bài 15: oxidation numbers, agents and electrons for library reactions', a
   await page.getByRole('combobox', { name: 'Phản ứng' }).selectOption('kmno4-hcl');
   await expect(stage.getByRole('group', { name: '2KMnO₄: K +1, Mn +7, O −2' })).toBeVisible();
   await expect(stage.getByText(/= 10$/)).toBeVisible();
+  // CuSO₄ is read with the polyatomic ion table: Fe 0 → +2, Cu +2 → 0, 2 e.
   await page.getByRole('combobox', { name: 'Phản ứng' }).selectOption('fe-cuso4');
-  await expect(page.getByText(/CuSO₄: còn hai nguyên tố chưa biết \(Cu, S\)/)).toBeVisible();
+  await expect(stage.getByRole('group', { name: 'CuSO₄: Cu +2, S +6, O −2' })).toBeVisible();
+  await expect(stage.getByText(/= 2$/)).toBeVisible();
+  await page.getByRole('combobox', { name: 'Phản ứng' }).selectOption('c2h5oh-combustion');
+  await expect(page.getByText(/C₂H₅OH: hợp chất hữu cơ nhiều nguyên tử C/)).toBeVisible();
   await noOverflow(page);
   expect(errors).toEqual([]);
 });

@@ -1,0 +1,59 @@
+{
+ "dataset": "polyatomic_ions",
+ "version": 1,
+ "accessed": "2026-11-16",
+ "source": {
+  "id": "sgk-hh10-b15-rule4",
+  "citation": "SGK Hóa học 10 Kết nối tri thức, NXB Giáo dục Việt Nam: Bài 15 tr. 72, Quy tắc 4 (trong ion đa nguyên tử, tổng số oxi hóa của các nguyên tử bằng điện tích ion; ví dụ NH₄⁺)",
+  "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983"
+ },
+ "second_source": {
+  "id": "openstax-chem2e-table2-5",
+  "citation": "OpenStax Chemistry 2e (Flowers, Theopold, Langley, Robinson, 2019), §2.6, Bảng 2.5 Common Polyatomic Ions",
+  "url": "https://openstax.org/books/chemistry-2e/pages/2-6-ionic-and-molecular-compounds"
+ },
+ "generated_by": "scripts/data/gen_polyatomic_ions.py",
+ "items": [
+  {
+   "id": "ammonium",
+   "formula": "NH4^+",
+   "body": "NH4",
+   "charge": 1,
+   "source": "sgk",
+   "book": "Bài 15 tr. 72, Quy tắc 4: ví dụ [NH₄]⁺, tổng số oxi hóa (−3) + (+1)·4 = +1",
+   "review_status": "pending"
+  },
+  {
+   "id": "carbonate",
+   "formula": "CO3^2-",
+   "body": "CO3",
+   "charge": -2,
+   "source": "openstax",
+   "review_status": "pending"
+  },
+  {
+   "id": "nitrate",
+   "formula": "NO3^-",
+   "body": "NO3",
+   "charge": -1,
+   "source": "openstax",
+   "review_status": "pending"
+  },
+  {
+   "id": "sulfate",
+   "formula": "SO4^2-",
+   "body": "SO4",
+   "charge": -2,
+   "source": "openstax",
+   "review_status": "pending"
+  },
+  {
+   "id": "phosphate",
+   "formula": "PO4^3-",
+   "body": "PO4",
+   "charge": -3,
+   "source": "openstax",
+   "review_status": "pending"
+  }
+ ]
+}

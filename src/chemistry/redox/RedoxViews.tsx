@@ -60,6 +60,13 @@ const NOTE: Record<OxNote, LocalizedText> = {
   ),
 };
 
+/** Rule 4 read with the polyatomic ion table (CuSO₄: SO₄²⁻). */
+const ionsNote = (ions: string) =>
+  L(
+    `${ions}: ion nhiều nguyên tử, tổng số oxi hóa bằng điện tích ion (bảng ion)`,
+    `${ions}: polyatomic ion, the oxidation numbers add up to its charge (ion table)`,
+  );
+
 /** Why a species is refused, in words. */
 const refusalText = (ox: OxResult): LocalizedText | null =>
   ox.ok ? null : REFUSAL[ox.reason](ox.elements.join(', '));
@@ -364,7 +371,14 @@ export function RedoxBottom() {
                 <OxFormula formula={s.formula} values={s.ox.ok ? s.ox.values : undefined} />
               </td>
               <td>
-                {s.ox.ok ? s.ox.notes.map((n) => Lz(NOTE[n])).join('; ') : why ? Lz(why) : ''}
+                {s.ox.ok
+                  ? [
+                      ...s.ox.notes.map((n) => Lz(NOTE[n])),
+                      ...(s.ox.ions ? [Lz(ionsNote(s.ox.ions.map(formatFormula).join(', ')))] : []),
+                    ].join('; ')
+                  : why
+                    ? Lz(why)
+                    : ''}
               </td>
             </tr>
           );

@@ -1,6 +1,7 @@
 import type { Source } from '@/core/data/dataset';
 import type { ScienceCardData } from '@/science-card/types';
 import { L } from '../common';
+import { POLYATOMIC_IONS_SECOND_SOURCE, POLYATOMIC_IONS_SOURCE } from '../data/polyatomicIons';
 import { REACTIONS_SOURCE } from '../data/reactions';
 
 const READER = 'https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983';
@@ -19,7 +20,7 @@ export const OPENSTAX_OX: Source = {
   url: 'https://openstax.org/books/chemistry-2e/pages/4-2-classifying-chemical-reactions',
 };
 
-/** Science Card of "Phản ứng oxi hóa – khử" (HH10 Bài 15; DATA_REVIEW HH10-RX-2, -3). */
+/** Science Card of "Phản ứng oxi hóa – khử" (HH10 Bài 15; DATA_REVIEW HH10-RX-2, -3, -9). */
 export const REDOX_CARD: ScienceCardData = {
   title: L('Phản ứng oxi hóa – khử', 'Redox reactions'),
   model: L(
@@ -52,8 +53,12 @@ export const REDOX_CARD: ScienceCardData = {
       'Usual exceptions (OpenStax §4.2; SGK p. 106 for fluorine): F is always −1; O is −1 in peroxides and positive with F; H is −1 with metals; Cl, Br, I are −1 in binary compounds with a metal.',
     ),
     L(
-      'Khi quy tắc không đủ (hai nguyên tố chưa biết như Cu và S trong CuSO₄, hợp chất hữu cơ nhiều nguyên tử C, một nguyên tố viết ở hai nhóm như N trong NH₄NO₃), chương trình nói rõ là không xác định được, không đoán.',
-      'When the rules are not enough (two unknown elements such as Cu and S in CuSO₄, organic compounds with several C atoms, an element written in two groups such as N in NH₄NO₃), the program says it cannot decide; it never guesses.',
+      'Muối có ion nhiều nguyên tử (CuSO₄, AgNO₃, NH₄Cl): áp dụng quy tắc 4 (SGK tr. 72) cho ion, điện tích ion lấy từ bảng ion nhiều nguyên tử (NH₄⁺ theo SGK; SO₄²⁻, NO₃⁻, CO₃²⁻, PO₄³⁻ theo OpenStax Bảng 2.5); phần còn lại mang điện tích còn lại.',
+      'Salts with a polyatomic ion (CuSO₄, AgNO₃, NH₄Cl): rule 4 (SGK p. 72) is applied to the ion, its charge taken from the polyatomic ion table (NH₄⁺ from the book; SO₄²⁻, NO₃⁻, CO₃²⁻, PO₄³⁻ from OpenStax Table 2.5); the rest carries the charge left.',
+    ),
+    L(
+      'Khi quy tắc không đủ (hai nguyên tố chưa biết như Cu và S trong CuS, hợp chất hữu cơ nhiều nguyên tử C, một nguyên tố viết ở hai nhóm như N trong NH₄NO₃), chương trình nói rõ là không xác định được, không đoán.',
+      'When the rules are not enough (two unknown elements such as Cu and S in CuS, organic compounds with several C atoms, an element written in two groups such as N in NH₄NO₃), the program says it cannot decide; it never guesses.',
     ),
     L(
       'Số oxi hóa là điện tích quy ước, không phải điện tích thật của nguyên tử.',
@@ -70,6 +75,12 @@ export const REDOX_CARD: ScienceCardData = {
     'The rules are applied step by step and the coefficients use exact rational arithmetic; the content awaits a teacher’s review.',
   ),
   userIntervened: false,
-  sources: [SGK_B15, OPENSTAX_OX, REACTIONS_SOURCE],
+  sources: [
+    SGK_B15,
+    OPENSTAX_OX,
+    POLYATOMIC_IONS_SOURCE,
+    POLYATOMIC_IONS_SECOND_SOURCE,
+    REACTIONS_SOURCE,
+  ],
   reviewStatus: 'pending',
 };

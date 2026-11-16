@@ -30,14 +30,14 @@ describe('Phản ứng oxi hóa – khử (HH10 Bài 15)', () => {
 
   it('a library reaction the rules cannot decide says so and names the species', () => {
     act(() => {
-      useRedoxStore.setState({ id: 'fe-cuso4' });
+      useRedoxStore.setState({ id: 'c2h5oh-combustion' });
     });
     render(<RedoxStage />);
     expect(screen.getByText(/Quy tắc xác định số oxi hóa chưa đủ cho/)).toBeInTheDocument();
-    expect(screen.getByText(/CuSO₄: còn hai nguyên tố chưa biết \(Cu, S\)/)).toBeInTheDocument();
+    expect(screen.getByText(/C₂H₅OH: hợp chất hữu cơ nhiều nguyên tử C/)).toBeInTheDocument();
     // The "?" marks are hidden from screen readers; the label says the numbers are undecided.
     expect(
-      screen.getByRole('group', { name: 'CuSO₄: chưa xác định số oxi hóa' }),
+      screen.getByRole('group', { name: 'C₂H₅OH: chưa xác định số oxi hóa' }),
     ).toBeInTheDocument();
   });
 
@@ -86,6 +86,14 @@ describe('Phản ứng oxi hóa – khử (HH10 Bài 15)', () => {
     const { container } = render(<RedoxBottom />);
     expect(container).toHaveTextContent('O là −1 (peroxide)');
     expect(container.querySelectorAll('tbody tr')).toHaveLength(3);
+  });
+
+  it('bottom: a salt read through the polyatomic ion table says so', () => {
+    act(() => {
+      useRedoxStore.setState({ id: 'fe-cuso4' });
+    });
+    const { container } = render(<RedoxBottom />);
+    expect(container).toHaveTextContent('SO₄²⁻: ion nhiều nguyên tử');
   });
 
   it('saves the reaction and the typed equation; ignores unknown ids', () => {

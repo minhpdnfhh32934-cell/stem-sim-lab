@@ -1,5 +1,6 @@
 import { elementBySymbol } from '../data/elements';
-import { parseFormula } from '../formula';
+import { POLYATOMIC_IONS } from '../data/polyatomicIons';
+import { canonicalFormulaText, parseFormula } from '../formula';
 
 /**
  * Oxidation numbers from a formula alone, by the textbook's rules (SGK Hóa học 10 KNTT, Bài 15,
@@ -11,9 +12,12 @@ import { parseFormula } from '../formula';
  * atom): F is always −1; O is −1 in a peroxide (O–O bond) and positive with F (OF₂); H is −1 in a
  * metal hydride; Cl, Br, I are −1 in a binary compound with a metal (metal halides).
  *
- * When the rules leave more than one unknown, or can only give an average that differs from atom
- * to atom (organic molecules, the same element written in two groups), the answer is a refusal
- * with its reason: the code never guesses.
+ * When the rules leave two unknowns in a salt that contains a polyatomic ion of the table
+ * (CuSO4, AgNO3, NH4Cl), rule 4 is applied to the ion: its charge comes from
+ * data/polyatomic_ions.json and the rest of the formula carries what is left.
+ * When the rules still leave more than one unknown, or can only give an average that differs from
+ * atom to atom (organic molecules, the same element written in two groups), the answer is a
+ * refusal with its reason: the code never guesses.
  */
 
 export type OxNote = 'peroxide' | 'hydride' | 'oxygenFluoride' | 'halide';
@@ -21,7 +25,13 @@ export type OxRefusal =
   'twoUnknown' | 'organic' | 'mixed' | 'fractional' | 'outOfRange' | 'inconsistent';
 
 export type OxResult =
-  | { ok: true; values: ReadonlyMap<string, number>; notes: OxNote[] }
+  | {
+      ok: true;
+      values: ReadonlyMap<string, number>;
+      notes: OxNote[];
+      /** Polyatomic ions read with their table charge ("SO4^2-"). */
+      ions?: string[];
+    }
   | { ok: false; reason: OxRefusal; elements: string[] };
 
 const METALS = new Set([
@@ -64,6 +74,55 @@ function inRange(el: string, v: number): boolean {
 }
 
 export function oxidationNumbers(formula: string): OxResult {
+  const byRules = rulesOnly(formula);
+  if (byRules.ok || byRules.reason !== 'twoUnknown') return byRules;
+  return withIons(formula) ?? byRules;
+}
+
+/**
+ * Rule 4 for the polyatomic ions of the table: "Cu(NO3)2" → NO3⁻ twice, solved inside the ion,
+ * and "Cu" carrying the +2 left. Null when no ion is written or a part cannot be solved.
+ */
+function withIons(formula: string): OxResult | null {
+  const { charge } = parseFormula(formula);
+  let rest = canonicalFormulaText(formula).replace(/\^\d*[+-]$/, '');
+  const found: { formula: string; charge: number; times: number }[] = [];
+  for (const ion of POLYATOMIC_IONS) {
+    // "(SO4)3" or a bare "SO4" not followed by another digit; symbols start upper case, so
+    // "SO4" never matches inside another symbol.
+    const re = new RegExp(`\\(${ion.body}\\)(\\d*)|${ion.body}(?!\\d)`, 'g');
+    rest = rest.replace(re, (_m, n?: string) => {
+      found.push({ formula: ion.formula, charge: ion.charge, times: Number(n || '1') });
+      return '';
+    });
+  }
+  if (!found.length) return null;
+  const left = charge - found.reduce((s, f) => s + f.times * f.charge, 0);
+  const parts = found.map((f) => rulesOnly(f.formula));
+  if (rest) {
+    try {
+      parts.push(
+        rulesOnly(left === 0 ? rest : `${rest}^${String(Math.abs(left))}${left < 0 ? '-' : '+'}`),
+      );
+    } catch {
+      return null;
+    }
+  } else if (left !== 0) return null;
+  const values = new Map<string, number>();
+  const notes: OxNote[] = [];
+  for (const part of parts) {
+    if (!part.ok) return null;
+    for (const [el, v] of part.values) {
+      const old = values.get(el);
+      if (old !== undefined && old !== v) return { ok: false, reason: 'mixed', elements: [el] };
+      values.set(el, v);
+    }
+    for (const n of part.notes) if (!notes.includes(n)) notes.push(n);
+  }
+  return { ok: true, values, notes, ions: [...new Set(found.map((f) => f.formula))] };
+}
+
+function rulesOnly(formula: string): OxResult {
   const { counts, charge } = parseFormula(formula);
   const els = [...counts.keys()];
   const count = (el: string) => counts.get(el) ?? 0;
