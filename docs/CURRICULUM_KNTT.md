@@ -38,9 +38,9 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Hoá học 11 | 25 | 19 | 19 |
 | Hoá học 12 | 30 | 22 | 1 |
 | Sinh học 10 | 26 | 17 | 17 |
-| Sinh học 11 | 29 | 20 | 9 |
+| Sinh học 11 | 29 | 20 | 13 |
 | Sinh học 12 | 35 | 28 | 7 |
-| **Cộng** | **253** | **189** | **115** |
+| **Cộng** | **253** | **189** | **119** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -259,11 +259,11 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 11 | Thực hành: Một số thí nghiệm về hệ tuần hoàn | 69 | Thực hành | chưa có |  | pending |
 | Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 12 | Miễn dịch ở người và động vật | 72 | Lí thuyết | Miễn dịch ở người và động vật | Tên Bài 12: miễn dịch ở người và động vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
 | Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 13 | Bài tiết và cân bằng nội môi | 80 | Lí thuyết | Bài tiết và cân bằng nội môi | Tên Bài 13: bài tiết và cân bằng nội môi (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
-| Sinh học 11 | Chương 2. Cảm ứng ở sinh vật | 14 | Khái quát về cảm ứng ở sinh vật | 88 | Lí thuyết | chưa có |  | pending |
-| Sinh học 11 | Chương 2. Cảm ứng ở sinh vật | 15 | Cảm ứng ở thực vật | 90 | Lí thuyết | chưa có |  | pending |
+| Sinh học 11 | Chương 2. Cảm ứng ở sinh vật | 14 | Khái quát về cảm ứng ở sinh vật | 88 | Lí thuyết | Khái quát về cảm ứng | Tên Bài 14: khái quát về cảm ứng ở sinh vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
+| Sinh học 11 | Chương 2. Cảm ứng ở sinh vật | 15 | Cảm ứng ở thực vật | 90 | Lí thuyết | Cảm ứng ở thực vật | Tên Bài 15: cảm ứng ở thực vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
 | Sinh học 11 | Chương 2. Cảm ứng ở sinh vật | 16 | Thực hành: Cảm ứng ở thực vật | 97 | Thực hành | chưa có |  | pending |
-| Sinh học 11 | Chương 2. Cảm ứng ở sinh vật | 17 | Cảm ứng ở động vật | 100 | Lí thuyết | chưa có |  | pending |
-| Sinh học 11 | Chương 2. Cảm ứng ở sinh vật | 18 | Tập tính ở động vật | 115 | Lí thuyết | chưa có |  | pending |
+| Sinh học 11 | Chương 2. Cảm ứng ở sinh vật | 17 | Cảm ứng ở động vật | 100 | Lí thuyết | Cảm ứng ở động vật | Tên Bài 17: cảm ứng ở động vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
+| Sinh học 11 | Chương 2. Cảm ứng ở sinh vật | 18 | Tập tính ở động vật | 115 | Lí thuyết | Tập tính ở động vật | Tên Bài 18: tập tính ở động vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
 | Sinh học 11 | Chương 3. Sinh trưởng và phát triển ở sinh vật | 19 | Khái quát về sinh trưởng và phát triển ở sinh vật | 125 | Lí thuyết | chưa có |  | pending |
 | Sinh học 11 | Chương 3. Sinh trưởng và phát triển ở sinh vật | 20 | Sinh trưởng và phát triển ở thực vật | 129 | Lí thuyết | chưa có |  | pending |
 | Sinh học 11 | Chương 3. Sinh trưởng và phát triển ở sinh vật | 21 | Thực hành: Bấm ngọn, tỉa cành; xử lí kích thích tố và tính tuổi cây | 141 | Thực hành | chưa có |  | pending |

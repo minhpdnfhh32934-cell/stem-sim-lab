@@ -8,9 +8,13 @@ import { sh11b09AnimalRespiration } from '../../src/studio/guided/lessons/sh11b0
 import { sh11b10Circulation } from '../../src/studio/guided/lessons/sh11b10Circulation';
 import { sh11b12Immunity } from '../../src/studio/guided/lessons/sh11b12Immunity';
 import { sh11b13Excretion } from '../../src/studio/guided/lessons/sh11b13Excretion';
+import { sh11b14Response } from '../../src/studio/guided/lessons/sh11b14Response';
+import { sh11b15PlantResponse } from '../../src/studio/guided/lessons/sh11b15PlantResponse';
+import { sh11b17AnimalResponse } from '../../src/studio/guided/lessons/sh11b17AnimalResponse';
+import { sh11b18Behaviour } from '../../src/studio/guided/lessons/sh11b18Behaviour';
 import { openTopic } from './nav';
 
-/** SH11 Chương 1 as guided lessons (#255 rounds 2h, 2i). */
+/** SH11 as guided lessons (#255 rounds 2h–2j). */
 test.use({ viewport: { width: 1366, height: 768 } });
 
 const next = (page: Page) => page.getByRole('button', { name: /^Tiếp:/ });
@@ -80,6 +84,10 @@ for (const [topic, lesson] of [
   ['Tuần hoàn ở động vật', sh11b10Circulation],
   ['Miễn dịch ở người và động vật', sh11b12Immunity],
   ['Bài tiết và cân bằng nội môi', sh11b13Excretion],
+  ['Khái quát về cảm ứng', sh11b14Response],
+  ['Cảm ứng ở thực vật', sh11b15PlantResponse],
+  ['Cảm ứng ở động vật', sh11b17AnimalResponse],
+  ['Tập tính ở động vật', sh11b18Behaviour],
 ] as const) {
   test(`${topic}: opens on the prediction and its activities fit 1366×768`, async ({ page }) => {
     const errors: string[] = [];

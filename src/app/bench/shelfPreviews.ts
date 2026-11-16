@@ -76,6 +76,10 @@ export const SHELF_PREVIEWS: ReadonlySet<string> = new Set([
   'animalCirculation',
   'immunity',
   'excretionHomeostasis',
+  'responseOverview',
+  'plantResponse',
+  'animalResponse',
+  'animalBehaviour',
 ]);
 
 /** The picture of `topic` in `theme`, or null when it has none. */
