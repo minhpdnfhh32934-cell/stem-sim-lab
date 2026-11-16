@@ -13,4 +13,8 @@ export const GUIDED_TOPICS = [
   'microbeApplications',
   'virusDiseases',
   'organicSeparation',
+  'organismMetabolism',
+  'plantWaterMinerals',
+  'plantPhotosynthesis',
+  'plantRespiration',
 ] as const;

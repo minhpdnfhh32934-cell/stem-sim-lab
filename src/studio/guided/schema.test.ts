@@ -25,16 +25,16 @@ function texts(value: unknown, out: string[] = []): string[] {
   return out;
 }
 
-describe('guided textbook lessons (SH10, HH11; #255)', () => {
-  it('all nine are valid guided lessons, pending a teacher, one per guided topic', () => {
-    expect(GUIDED_LESSONS).toHaveLength(9);
-    expect(lessons).toHaveLength(9);
+describe('guided textbook lessons (SH10, HH11, SH11; #255)', () => {
+  it('all thirteen are valid guided lessons, pending a teacher, one per guided topic', () => {
+    expect(GUIDED_LESSONS).toHaveLength(13);
+    expect(lessons).toHaveLength(13);
     for (const s of lessons) {
       expect(s.binding.kind).toBe('guided');
       expect(s.review_status).toBe('pending');
     }
     expect(lessons.map((s) => s.topic).sort()).toEqual([...GUIDED_TOPICS].sort());
-    expect(new Set(lessons.map((s) => s.id)).size).toBe(9);
+    expect(new Set(lessons.map((s) => s.id)).size).toBe(13);
   });
 
   it('each follows a theory lesson of the book, and its topic is placed on that lesson', () => {
@@ -62,7 +62,7 @@ describe('guided textbook lessons (SH10, HH11; #255)', () => {
       expect(hasModule(s.topic), s.topic).toBe(true);
       expect(topics.find((t) => t.id === s.topic)?.status, s.topic).toBe('available');
     }
-    expect(lessons.filter((s) => s.subject === 'biology')).toHaveLength(8);
+    expect(lessons.filter((s) => s.subject === 'biology')).toHaveLength(12);
     expect(lessons.filter((s) => s.subject === 'chemistry').map((s) => s.topic)).toEqual([
       'organicSeparation',
     ]);
