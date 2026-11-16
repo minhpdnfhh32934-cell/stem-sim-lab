@@ -29,7 +29,7 @@ describe('units', () => {
   });
 
   it('lists units by dimension and pretty-prints labels', () => {
-    expect(unitsFor(DIM.velocity)).toEqual(['m/s', 'km/h', 'cm/s']);
+    expect(unitsFor(DIM.velocity)).toEqual(['m/s', 'km/h', 'cm/s', 'mm/s']);
     expect(unitLabel('m/s^2')).toBe('m/s²');
     expect(unitLabel('degC')).toBe('°C');
   });
@@ -78,7 +78,17 @@ describe('units', () => {
     expect(unitLabel('N*m^2/C^2')).toBe('N·m²/C²');
     expect(unitLabel('uN')).toBe('µN');
     expect(unitsFor(DIM.electricField)).toEqual(['V/m', 'kV/m']);
-    expect(unitsFor(DIM.charge)).toEqual(['C', 'uC', 'nC']);
+    expect(unitsFor(DIM.charge)).toEqual(['C', 'uC', 'nC', 'mAh']);
+    // VL11 Bài 21–22 (#255 round 2b): capacitance, a battery's mA·h, a wire's cross-section.
+    expect(unitsFor(DIM.capacitance)).toEqual(['F', 'uF', 'nF', 'pF']);
+    expect(toSI(2, 'µF')).toBeCloseTo(2e-6, 18);
+    expect(toSI(10000, 'mA.h')).toBeCloseTo(36000, 9);
+    expect(toSI(3.14, 'mm²')).toBeCloseTo(3.14e-6, 18);
+    expect(unitLabel('uF')).toBe('µF');
+    expect(unitLabel('mAh')).toBe('mA·h');
+    expect(unitLabel('1/m^3')).toBe('1/m³');
+    // The free-electron density of copper, as the textbook writes it (tr. 93): 8,45·10²⁸ /m³.
+    expect(toSI(8.45, '1e28/m^3')).toBeCloseTo(8.45e28, -14);
     // V/m and N/C are one unit: k·q/r² (N·m²/C² · C / m²) is N/C.
     expect(() => convert(1, 'V/m', 'N')).toThrow(UnitError);
   });

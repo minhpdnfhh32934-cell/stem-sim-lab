@@ -14,7 +14,7 @@ import json
 import math
 import pathlib
 
-from scipy.constants import epsilon_0
+from scipy.constants import elementary_charge, epsilon_0
 from scipy.special import ellipk
 
 OUT = pathlib.Path(__file__).resolve().parents[2] / "tests" / "golden" / "physics.json"
@@ -485,6 +485,68 @@ add(
         q("f", 5, "Hz", "tần số 5 Hz"),
     ],
     {"T": 0.2, "lambda": 1.5 / 5},
+)
+
+# --- Thế năng điện, điện thế (VL11 Bài 19–20) --------------------------------------------
+# Bản âm là mốc: E = U/d, V = E·h, A_MN = q(V_M − V_N).
+add(
+    "dt-01",
+    "Hai bản kim loại phẳng song song cách nhau 4 cm được nối với nguồn có hiệu điện thế 36 V. Điểm M cách bản âm 1 cm; chọn bản âm làm mốc điện thế. Tính cường độ điện trường giữa hai bản, điện thế tại M và công của lực điện khi điện tích q = 2 nC đi từ M tới bản âm.",
+    "electricPotential",
+    [
+        q("d", 4, "cm", "cách nhau 4 cm"),
+        q("U", 36, "V", "hiệu điện thế 36 V"),
+        q("hM", 1, "cm", "cách bản âm 1 cm"),
+        q("q", 2, "nC", "q = 2 nC"),
+    ],
+    {"E": 36 / 0.04, "VM": 36 / 0.04 * 0.01, "A": 2e-9 * 36 / 0.04 * 0.01},
+)
+
+# --- Tụ điện (VL11 Bài 21) -----------------------------------------------------------------
+# Nối tiếp 1/C = Σ 1/Ci, song song C = Σ Ci, Q = CU, W = CU²/2. mode: 0 một tụ, 1 nối tiếp, 2 song song.
+add(
+    "tu-01",
+    "Có ba tụ điện có điện dung 2 µF, 3 µF và 4 µF ghép nối tiếp rồi mắc vào nguồn có hiệu điện thế 26 V. Tính điện dung, điện tích và năng lượng của bộ tụ.",
+    "capacitor",
+    [
+        q("mode", 1, "1", "ghép nối tiếp"),
+        q("count", 3, "1", "ba tụ điện"),
+        q("C1", 2, "uF", "2 µF"),
+        q("C2", 3, "uF", "3 µF"),
+        q("C3", 4, "uF", "4 µF"),
+        q("U", 26, "V", "hiệu điện thế 26 V"),
+    ],
+    {
+        "C": 1 / (1 / 2e-6 + 1 / 3e-6 + 1 / 4e-6),
+        "Q": 26 / (1 / 2e-6 + 1 / 3e-6 + 1 / 4e-6),
+        "W": 0.5 * 26**2 / (1 / 2e-6 + 1 / 3e-6 + 1 / 4e-6),
+    },
+)
+add(
+    "tu-02",
+    "Trên vỏ một tụ điện có ghi 5 µF – 100 V. Mắc tụ vào hiệu điện thế 40 V. Tính điện tích và năng lượng của tụ.",
+    "capacitor",
+    [
+        q("mode", 0, "1", "một tụ điện"),
+        q("C1", 5, "uF", "5 µF"),
+        q("Umax", 100, "V", "100 V"),
+        q("U", 40, "V", "hiệu điện thế 40 V"),
+    ],
+    {"Q": 5e-6 * 40, "W": 0.5 * 5e-6 * 40**2},
+)
+
+# --- Cường độ dòng điện (VL11 Bài 22) ------------------------------------------------------
+# I = Δq/Δt, I = Snve, S = πd²/4; dây đồng n = 8,45·10²⁸ electron/m³ (mặc định, SGK tr. 93).
+add(
+    "cd-01",
+    "Một dây đồng tiết diện tròn đường kính 1 mm có dòng điện 2 A chạy qua. Tính điện lượng chuyển qua tiết diện dây trong 10 s và tốc độ dịch chuyển có hướng của các electron tự do.",
+    "electricCurrent",
+    [
+        q("d", 1, "mm", "đường kính 1 mm"),
+        q("I", 2, "A", "dòng điện 2 A"),
+        q("dt", 10, "s", "trong 10 s"),
+    ],
+    {"dq": 2 * 10, "v": 2 / (8.45e28 * math.pi * 1e-3**2 / 4 * elementary_charge)},
 )
 
 # --- Sóng dừng trên dây ------------------------------------------------------------

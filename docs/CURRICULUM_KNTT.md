@@ -32,7 +32,7 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Sách | Số bài | Lí thuyết | Lí thuyết có chủ đề SimLab |
 | --- | --- | --- | --- |
 | Vật lí 10 | 34 | 26 | 26 |
-| Vật lí 11 | 26 | 20 | 16 |
+| Vật lí 11 | 26 | 20 | 20 |
 | Vật lí 12 | 25 | 21 | 0 |
 | Hoá học 10 | 23 | 16 | 16 |
 | Hoá học 11 | 25 | 19 | 1 |
@@ -40,7 +40,7 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Sinh học 10 | 26 | 17 | 17 |
 | Sinh học 11 | 29 | 20 | 0 |
 | Sinh học 12 | 35 | 28 | 7 |
-| **Cộng** | **253** | **189** | **84** |
+| **Cộng** | **253** | **189** | **88** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -108,10 +108,10 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Vật lí 11 | Chương III. Điện trường | 16 | Lực tương tác giữa các điện tích | 61 | Lí thuyết | Điện trường của điện tích điểm | Tên Bài 16–18: lực tương tác giữa các điện tích, khái niệm điện trường, điện trường đều. | pending |
 | Vật lí 11 | Chương III. Điện trường | 17 | Khái niệm điện trường | 65 | Lí thuyết | Điện trường của điện tích điểm | Tên Bài 16–18: lực tương tác giữa các điện tích, khái niệm điện trường, điện trường đều. | pending |
 | Vật lí 11 | Chương III. Điện trường | 18 | Điện trường đều | 71 | Lí thuyết | Điện trường của điện tích điểm | Tên Bài 16–18: lực tương tác giữa các điện tích, khái niệm điện trường, điện trường đều. | pending |
-| Vật lí 11 | Chương III. Điện trường | 19 | Thế năng điện | 76 | Lí thuyết | chưa có |  | pending |
-| Vật lí 11 | Chương III. Điện trường | 20 | Điện thế | 79 | Lí thuyết | chưa có |  | pending |
-| Vật lí 11 | Chương III. Điện trường | 21 | Tụ điện | 83 | Lí thuyết | chưa có |  | pending |
-| Vật lí 11 | Chương IV. Dòng điện. Mạch điện | 22 | Cường độ dòng điện | 91 | Lí thuyết | chưa có |  | pending |
+| Vật lí 11 | Chương III. Điện trường | 19 | Thế năng điện | 76 | Lí thuyết | Thế năng điện. Điện thế | Tên Bài 19: thế năng điện; tên Bài 20: điện thế (cảnh điện tích dời từ M đến N giữa hai bản phẳng: V = Eh, U_MN, A = qU_MN). | pending |
+| Vật lí 11 | Chương III. Điện trường | 20 | Điện thế | 79 | Lí thuyết | Thế năng điện. Điện thế | Tên Bài 19: thế năng điện; tên Bài 20: điện thế (cảnh điện tích dời từ M đến N giữa hai bản phẳng: V = Eh, U_MN, A = qU_MN). | pending |
+| Vật lí 11 | Chương III. Điện trường | 21 | Tụ điện | 83 | Lí thuyết | Tụ điện | Tên Bài 21: tụ điện (một tụ, bộ tụ ghép nối tiếp hoặc song song, năng lượng của tụ). | pending |
+| Vật lí 11 | Chương IV. Dòng điện. Mạch điện | 22 | Cường độ dòng điện | 91 | Lí thuyết | Cường độ dòng điện | Tên Bài 22: cường độ dòng điện (I = Δq/Δt, I = Snve trong dây kim loại). | pending |
 | Vật lí 11 | Chương IV. Dòng điện. Mạch điện | 23 | Điện trở. Định luật Ohm | 95 | Lí thuyết | Mạch điện một chiều | Tên Bài 23–25: điện trở, định luật Ohm, nguồn điện, năng lượng và công suất điện (cảnh có nguồn E, r và 1–3 điện trở). | pending |
 | Vật lí 11 | Chương IV. Dòng điện. Mạch điện | 24 | Nguồn điện | 102 | Lí thuyết | Mạch điện một chiều | Tên Bài 23–25: điện trở, định luật Ohm, nguồn điện, năng lượng và công suất điện (cảnh có nguồn E, r và 1–3 điện trở). | pending |
 | Vật lí 11 | Chương IV. Dòng điện. Mạch điện | 25 | Năng lượng và công suất điện | 106 | Lí thuyết | Mạch điện một chiều | Tên Bài 23–25: điện trở, định luật Ohm, nguồn điện, năng lượng và công suất điện (cảnh có nguồn E, r và 1–3 điện trở). | pending |

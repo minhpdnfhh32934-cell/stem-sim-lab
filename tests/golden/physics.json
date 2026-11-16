@@ -1330,6 +1330,162 @@
       "expectUnsupportedParts": false
     },
     {
+      "id": "dt-01",
+      "text": "Hai bản kim loại phẳng song song cách nhau 4 cm được nối với nguồn có hiệu điện thế 36 V. Điểm M cách bản âm 1 cm; chọn bản âm làm mốc điện thế. Tính cường độ điện trường giữa hai bản, điện thế tại M và công của lực điện khi điện tích q = 2 nC đi từ M tới bản âm.",
+      "topic": "electricPotential",
+      "quantities": [
+        {
+          "key": "d",
+          "value": 4,
+          "unit": "cm",
+          "quote": "cách nhau 4 cm"
+        },
+        {
+          "key": "U",
+          "value": 36,
+          "unit": "V",
+          "quote": "hiệu điện thế 36 V"
+        },
+        {
+          "key": "hM",
+          "value": 1,
+          "unit": "cm",
+          "quote": "cách bản âm 1 cm"
+        },
+        {
+          "key": "q",
+          "value": 2,
+          "unit": "nC",
+          "quote": "q = 2 nC"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "E": 900.0,
+        "VM": 9.0,
+        "A": 1.8000000000000002e-08
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "tu-01",
+      "text": "Có ba tụ điện có điện dung 2 µF, 3 µF và 4 µF ghép nối tiếp rồi mắc vào nguồn có hiệu điện thế 26 V. Tính điện dung, điện tích và năng lượng của bộ tụ.",
+      "topic": "capacitor",
+      "quantities": [
+        {
+          "key": "mode",
+          "value": 1,
+          "unit": "1",
+          "quote": "ghép nối tiếp"
+        },
+        {
+          "key": "count",
+          "value": 3,
+          "unit": "1",
+          "quote": "ba tụ điện"
+        },
+        {
+          "key": "C1",
+          "value": 2,
+          "unit": "uF",
+          "quote": "2 µF"
+        },
+        {
+          "key": "C2",
+          "value": 3,
+          "unit": "uF",
+          "quote": "3 µF"
+        },
+        {
+          "key": "C3",
+          "value": 4,
+          "unit": "uF",
+          "quote": "4 µF"
+        },
+        {
+          "key": "U",
+          "value": 26,
+          "unit": "V",
+          "quote": "hiệu điện thế 26 V"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "C": 9.230769230769231e-07,
+        "Q": 2.4e-05,
+        "W": 0.00031200000000000005
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "tu-02",
+      "text": "Trên vỏ một tụ điện có ghi 5 µF – 100 V. Mắc tụ vào hiệu điện thế 40 V. Tính điện tích và năng lượng của tụ.",
+      "topic": "capacitor",
+      "quantities": [
+        {
+          "key": "mode",
+          "value": 0,
+          "unit": "1",
+          "quote": "một tụ điện"
+        },
+        {
+          "key": "C1",
+          "value": 5,
+          "unit": "uF",
+          "quote": "5 µF"
+        },
+        {
+          "key": "Umax",
+          "value": 100,
+          "unit": "V",
+          "quote": "100 V"
+        },
+        {
+          "key": "U",
+          "value": 40,
+          "unit": "V",
+          "quote": "hiệu điện thế 40 V"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "Q": 0.0002,
+        "W": 0.004
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "cd-01",
+      "text": "Một dây đồng tiết diện tròn đường kính 1 mm có dòng điện 2 A chạy qua. Tính điện lượng chuyển qua tiết diện dây trong 10 s và tốc độ dịch chuyển có hướng của các electron tự do.",
+      "topic": "electricCurrent",
+      "quantities": [
+        {
+          "key": "d",
+          "value": 1,
+          "unit": "mm",
+          "quote": "đường kính 1 mm"
+        },
+        {
+          "key": "I",
+          "value": 2,
+          "unit": "A",
+          "quote": "dòng điện 2 A"
+        },
+        {
+          "key": "dt",
+          "value": 10,
+          "unit": "s",
+          "quote": "trong 10 s"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "dq": 20,
+        "v": 0.00018809316384442153
+      },
+      "expectUnsupportedParts": false
+    },
+    {
       "id": "swv-01",
       "text": "Một sợi dây đàn hồi dài 1,5 m có hai đầu cố định. Sóng truyền trên dây với tốc độ 30 m/s. Khi trên dây có sóng dừng với 5 bụng sóng thì tần số dao động của dây là bao nhiêu? Tính bước sóng.",
       "topic": "standingWave",
