@@ -46,6 +46,8 @@ export const DIM = {
   damping: D(0, 1, -1),
   linearDensity: D(-1, 1),
   electricField: D(1, 1, -3, -1),
+  capacitance: D(-2, -1, 4, 2),
+  numberDensity: D(-3),
   coulombConstant: D(3, 1, -4, -2),
   momentOfInertia: D(2, 1),
   angularAcceleration: D(0, 0, -2),
@@ -101,6 +103,7 @@ const UNITS: readonly UnitDef[] = [
   // area / volume
   { symbol: 'm^2', dim: DIM.area, factor: 1, aliases: ['m²'] },
   { symbol: 'cm^2', dim: DIM.area, factor: 1e-4, aliases: ['cm²'] },
+  { symbol: 'mm^2', dim: DIM.area, factor: 1e-6, aliases: ['mm²'] },
   { symbol: 'm^3', dim: DIM.volume, factor: 1, aliases: ['m³'] },
   { symbol: 'dm^3', dim: DIM.volume, factor: 1e-3, aliases: ['dm³'] },
   { symbol: 'cm^3', dim: DIM.volume, factor: 1e-6, aliases: ['cm³'] },
@@ -197,6 +200,17 @@ const UNITS: readonly UnitDef[] = [
     aliases: ['N·m²/C²', 'N.m^2/C^2', 'N.m²/C²', 'Nm^2/C^2', 'Nm²/C²'],
   },
   { symbol: 'kohm', dim: DIM.resistance, factor: 1e3, aliases: ['kΩ'] },
+  // capacitors, current in a wire (VL11 Bài 21, 22; #255 round 2b)
+  { symbol: 'F', dim: DIM.capacitance, factor: 1 },
+  { symbol: 'uF', dim: DIM.capacitance, factor: 1e-6, aliases: ['µF', 'μF'] },
+  { symbol: 'nF', dim: DIM.capacitance, factor: 1e-9 },
+  { symbol: 'pF', dim: DIM.capacitance, factor: 1e-12 },
+  { symbol: 'mJ', dim: DIM.energy, factor: 1e-3 },
+  { symbol: 'nJ', dim: DIM.energy, factor: 1e-9 },
+  { symbol: 'mAh', dim: DIM.charge, factor: 3.6, aliases: ['mA.h', 'mA*h', 'mA·h'] },
+  { symbol: 'mm/s', dim: DIM.velocity, factor: 1e-3 },
+  { symbol: '1/m^3', dim: DIM.numberDensity, factor: 1, aliases: ['m^-3', '1/m³'] },
+  { symbol: '1e28/m^3', dim: DIM.numberDensity, factor: 1e28 },
 ];
 
 const REGISTRY = new Map<string, UnitDef>();
@@ -275,6 +289,9 @@ export function unitLabel(symbol: string, locale?: 'vi' | 'en'): string {
     um: 'µm',
     uC: 'µC',
     uN: 'µN',
+    uF: 'µF',
+    mAh: 'mA·h',
+    '1e28/m^3': '·10²⁸/m³',
     angstrom: 'Å',
     ohm: 'Ω',
     kohm: 'kΩ',
