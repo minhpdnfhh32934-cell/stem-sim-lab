@@ -2679,6 +2679,18 @@
    "review_status": "pending"
   },
   {
+   "topic": "aqueousEquilibrium",
+   "subject": "chemistry",
+   "grade": 11,
+   "book": "HH11",
+   "chapter": "Chương 1. Cân bằng hoá học",
+   "lessons": [
+    2
+   ],
+   "reason": "Tên Bài 2: cân bằng trong dung dịch nước (pH, tích số ion của nước, chất chỉ thị theo Bảng 2.1).",
+   "review_status": "pending"
+  },
+  {
    "topic": "electricPotential",
    "subject": "physics",
    "grade": 11,

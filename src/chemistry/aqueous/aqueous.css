@@ -1,0 +1,81 @@
+/* Equilibria in aqueous solution (HH11 Bài 2, #255 round 2c): the module lessons' stage
+   vocabulary (chem-view, chips). */
+@import '../chem.css';
+
+.aqueous__indicators {
+  position: absolute;
+  right: var(--space-3);
+  bottom: var(--space-3);
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--glass-bg, var(--bg-panel));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md, 8px);
+}
+.aqueous__swatch-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.aqueous__swatch {
+  display: inline-block;
+  width: 28px;
+  height: 18px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+}
+.aqueous__swatch--flask {
+  border-radius: 0 0 10px 10px;
+}
+.aqueous-panel {
+  display: grid;
+  gap: var(--space-3);
+}
+.aqueous-panel label {
+  display: grid;
+  gap: var(--space-1);
+}
+.aqueous-panel input[type='range'] {
+  width: 100%;
+  min-height: var(--target);
+}
+.aqueous-panel .btn {
+  height: auto;
+  white-space: normal;
+  text-align: left;
+}
+.aqueous-panel__results {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-1) var(--space-3);
+  margin: 0;
+}
+.aqueous-panel__results dt {
+  color: var(--text-muted);
+}
+.aqueous-panel__results dd {
+  margin: 0;
+}
+.aqueous-tables {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+.aqueous-table {
+  border-collapse: collapse;
+}
+.aqueous-table caption {
+  text-align: left;
+  font-weight: 600;
+  padding-bottom: var(--space-1);
+}
+.aqueous-table th,
+.aqueous-table td {
+  padding: 4px var(--space-3);
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.aqueous-table tr[aria-current] {
+  background: var(--accent-soft);
+}

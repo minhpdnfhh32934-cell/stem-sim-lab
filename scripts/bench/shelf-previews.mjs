@@ -29,6 +29,7 @@ const only = arg('--only')?.split(',') ?? null;
 const TOPICS = [
   'fourierSeries',
   'emWave',
+  'aqueousEquilibrium',
   'atomComposition',
   'isotopes',
   'periodicTable',

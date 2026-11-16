@@ -1,0 +1,291 @@
+{
+  "dataset": "acid_base_kntt",
+  "version": 1,
+  "accessed": "2026-11-16",
+  "review_status": "pending",
+  "source": {
+    "id": "sgk-hh11-b2",
+    "citation": "SGK Hóa học 11 Kết nối tri thức, NXB Giáo dục Việt Nam: Bài 2 “Cân bằng trong dung dịch nước”, tr. 16–26 (Kw tr. 20; pH tr. 21; Bảng 2.1 tr. 23; Hình 2.1 tr. 16; Hình 2.4 tr. 22; chuẩn độ tr. 25)",
+    "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-11.4701111834"
+  },
+  "kw": {
+    "value": 1e-14,
+    "temperature_C": 25,
+    "book": "tr. 20, Em có biết",
+    "review_status": "pending"
+  },
+  "indicators": {
+    "litmus": {
+      "red_max": 6,
+      "violet": 7,
+      "blue_min": 8,
+      "colours": {
+        "red": "#e0444a",
+        "violet": "#8a6fc9",
+        "blue": "#3f7fc4"
+      },
+      "book": "Bảng 2.1, tr. 23",
+      "review_status": "pending"
+    },
+    "phenolphthalein": {
+      "colourless_below": 8,
+      "pink_above": 8,
+      "colours": {
+        "colourless": "transparent",
+        "pink": "#ec5aa6"
+      },
+      "book": "Bảng 2.1, tr. 23",
+      "review_status": "pending"
+    },
+    "ph_paper": {
+      "colours": [
+        "#a3233f",
+        "#e04b56",
+        "#ef7a3f",
+        "#f5a23d",
+        "#f7c043",
+        "#f2dd4a",
+        "#c7cf48",
+        "#93b85a",
+        "#5f9a5c",
+        "#3f7d6a",
+        "#3b6478",
+        "#2c5c8f",
+        "#2a3f8a",
+        "#2a2f7a"
+      ],
+      "book": "Bảng 2.1, tr. 23 (màu minh họa)",
+      "review_status": "pending"
+    }
+  },
+  "titration": {
+    "acid_volume_mL": 10,
+    "acid_concentration_M": 0.1,
+    "base_concentration_M": 0.1,
+    "burette_mL": 25,
+    "book": "tr. 25 (dung dịch NaOH nồng độ khoảng 0,1 M)",
+    "review_status": "pending"
+  },
+  "items": [
+    {
+      "id": "lemon",
+      "name": {
+        "vi": "Nước chanh ép",
+        "en": "Lemon juice"
+      },
+      "pH": 2,
+      "book": "Hình 2.1, tr. 16",
+      "review_status": "pending"
+    },
+    {
+      "id": "wine",
+      "name": {
+        "vi": "Rượu vang",
+        "en": "Wine"
+      },
+      "pH": 3,
+      "book": "Hình 2.1, tr. 16",
+      "review_status": "pending"
+    },
+    {
+      "id": "banana",
+      "name": {
+        "vi": "Nước chuối ép",
+        "en": "Banana juice"
+      },
+      "pH": 4,
+      "book": "Hình 2.1, tr. 16",
+      "review_status": "pending"
+    },
+    {
+      "id": "coffee",
+      "name": {
+        "vi": "Cà phê đen",
+        "en": "Black coffee"
+      },
+      "pH": 5,
+      "book": "Hình 2.1, tr. 16",
+      "review_status": "pending"
+    },
+    {
+      "id": "milk",
+      "name": {
+        "vi": "Sữa",
+        "en": "Milk"
+      },
+      "pH": 6,
+      "book": "Hình 2.1, tr. 16",
+      "review_status": "pending"
+    },
+    {
+      "id": "water",
+      "name": {
+        "vi": "Nước",
+        "en": "Water"
+      },
+      "pH": 7,
+      "book": "Hình 2.1, tr. 16",
+      "review_status": "pending"
+    },
+    {
+      "id": "seawater",
+      "name": {
+        "vi": "Nước biển",
+        "en": "Seawater"
+      },
+      "pH": 8,
+      "book": "Hình 2.1, tr. 16",
+      "review_status": "pending"
+    },
+    {
+      "id": "eggwhite",
+      "name": {
+        "vi": "Lòng trắng trứng",
+        "en": "Egg white"
+      },
+      "pH": 9,
+      "book": "Hình 2.1, tr. 16",
+      "review_status": "pending"
+    },
+    {
+      "id": "cleaner",
+      "name": {
+        "vi": "Chất tẩy rửa đa năng",
+        "en": "All-purpose cleaner"
+      },
+      "pH": 10,
+      "book": "Hình 2.1, tr. 16",
+      "review_status": "pending"
+    },
+    {
+      "id": "ammonia",
+      "name": {
+        "vi": "Nước ammonia",
+        "en": "Ammonia solution"
+      },
+      "pH": 11,
+      "book": "Hình 2.1, tr. 16",
+      "review_status": "pending"
+    },
+    {
+      "id": "soap",
+      "name": {
+        "vi": "Xà phòng",
+        "en": "Soap"
+      },
+      "pH": 12,
+      "book": "Hình 2.1, tr. 16",
+      "review_status": "pending"
+    },
+    {
+      "id": "oven",
+      "name": {
+        "vi": "Nước làm sạch lò nướng",
+        "en": "Oven cleaner"
+      },
+      "pH": 13,
+      "book": "Hình 2.1, tr. 16",
+      "review_status": "pending"
+    },
+    {
+      "id": "drain",
+      "name": {
+        "vi": "Chất thông cống",
+        "en": "Drain cleaner"
+      },
+      "pH": 14,
+      "book": "Hình 2.1, tr. 16",
+      "review_status": "pending"
+    }
+  ],
+  "ranges": [
+    {
+      "id": "saliva",
+      "name": {
+        "vi": "Nước bọt",
+        "en": "Saliva"
+      },
+      "low": 6.0,
+      "high": 7.4,
+      "book": "Hình 2.4, tr. 22",
+      "review_status": "pending"
+    },
+    {
+      "id": "blood",
+      "name": {
+        "vi": "Máu",
+        "en": "Blood"
+      },
+      "low": 7.3,
+      "high": 7.4,
+      "book": "Hình 2.4, tr. 22",
+      "review_status": "pending"
+    },
+    {
+      "id": "stomach",
+      "name": {
+        "vi": "Dịch dạ dày",
+        "en": "Stomach fluid"
+      },
+      "low": 1.5,
+      "high": 3.5,
+      "book": "Hình 2.4, tr. 22",
+      "review_status": "pending"
+    },
+    {
+      "id": "urine",
+      "name": {
+        "vi": "Nước tiểu",
+        "en": "Urine"
+      },
+      "low": 4.8,
+      "high": 7.0,
+      "book": "Hình 2.4, tr. 22",
+      "review_status": "pending"
+    },
+    {
+      "id": "shrimpFish",
+      "name": {
+        "vi": "Nước nuôi tôm, cá",
+        "en": "Water for shrimp and fish"
+      },
+      "low": 7.5,
+      "high": 8.5,
+      "book": "tr. 22",
+      "review_status": "pending"
+    },
+    {
+      "id": "tea",
+      "name": {
+        "vi": "Đất trồng chè",
+        "en": "Soil for tea"
+      },
+      "low": 4.5,
+      "high": 5.5,
+      "book": "tr. 22",
+      "review_status": "pending"
+    },
+    {
+      "id": "rice",
+      "name": {
+        "vi": "Đất trồng lúa",
+        "en": "Soil for rice"
+      },
+      "low": 5.5,
+      "high": 6.5,
+      "book": "tr. 22",
+      "review_status": "pending"
+    },
+    {
+      "id": "tomato",
+      "name": {
+        "vi": "Đất trồng cà chua",
+        "en": "Soil for tomatoes"
+      },
+      "low": 6.0,
+      "high": 7.0,
+      "book": "tr. 22",
+      "review_status": "pending"
+    }
+  ]
+}
