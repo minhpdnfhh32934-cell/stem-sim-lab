@@ -1,8 +1,9 @@
 /**
  * "Khái quát về virus" (SH10 KNTT Bài 24, #255): the parts of a virus particle and the five stages
  * of its multiplication, in short, simple words that keep the textbook's meaning (tr. 141–144,
- * read on taphuan.nxbgd.vn 15/11/2026). "Capsomere" is not a word of the textbook: its text and
- * source are OpenStax Biology 2e §21.1. Teaching texts, review_status pending (DATA_REVIEW
+ * read on taphuan.nxbgd.vn 15/11/2026). Only the book's parts: it says the coat is protein ("vỏ
+ * capsid", tr. 141, H 24.1b) and names no subunit, so there is no separate "capsomere" part (user
+ * decision 16/11/2026, "bám sát kiến thức từ SGK"). Teaching texts, review_status pending (DATA_REVIEW
  * SH10-VIRUS-*). No numbers in these texts.
  */
 import type { LocalizedText, Source } from '@/core/data/dataset';
@@ -15,21 +16,8 @@ export const SGK_SH10_BAI24: Source = {
   url: 'https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-sinh-hoc-10.4700819489',
 };
 
-export const OPENSTAX_BIO_21_1: Source = {
-  id: 'openstax-biology-2e-21-1',
-  citation:
-    'M. A. Clark, M. Douglas, J. Choi — Biology 2e, OpenStax (2018), §21.1 “Viral Evolution, Morphology, and Classification”, mục Morphology (CC BY 4.0; đọc ngày 15/11/2026)',
-  url: 'https://openstax.org/books/biology-2e/pages/21-1-viral-evolution-morphology-and-classification',
-};
-
-export type VirusPart = 'core' | 'capsid' | 'capsomere' | 'envelope' | 'spikes';
-export const VIRUS_PARTS: readonly VirusPart[] = [
-  'core',
-  'capsid',
-  'capsomere',
-  'envelope',
-  'spikes',
-];
+export type VirusPart = 'core' | 'capsid' | 'envelope' | 'spikes';
+export const VIRUS_PARTS: readonly VirusPart[] = ['core', 'capsid', 'envelope', 'spikes'];
 /** Parts only an enveloped virus has. */
 export const ENVELOPE_PARTS: ReadonlySet<VirusPart> = new Set(['envelope', 'spikes']);
 
@@ -61,15 +49,6 @@ export const PART_TEXT: Record<
       'The protein coat around the nucleic acid core. The core and the capsid are the two main parts every virus has.',
     ),
     source: SGK_SH10_BAI24,
-  },
-  capsomere: {
-    name: L('Capsomere (đơn vị protein của vỏ)', 'Capsomere (protein unit of the coat)'),
-    short: L('Capsomere', 'Capsomere'),
-    text: L(
-      'Vỏ capsid ghép từ nhiều đơn vị protein gọi là capsomere; các protein này do gene của chính virus mã hoá. Ở virus hình đa diện, các capsomere xếp thành khối nhiều mặt gần giống hình cầu.',
-      'The capsid is assembled from many protein units called capsomeres, encoded by the virus’s own genes. In a polyhedral virus they form a many-faced, nearly round shell.',
-    ),
-    source: OPENSTAX_BIO_21_1,
   },
   envelope: {
     name: L('Vỏ ngoài', 'Envelope'),

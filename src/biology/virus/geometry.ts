@@ -134,18 +134,7 @@ export function anchors(enveloped: boolean): Record<VirusPart, V3> {
   return {
     core: [0, 0, 0],
     capsid: [S.capsid + S.capsomere, 0, 0],
-    capsomere: [-S.capsid * 0.45, -S.capsid * 0.8, S.capsid * 0.4],
     envelope: [-S.envelope * 0.71, S.envelope * 0.71, 0],
     spikes: enveloped ? [tip * 0.62, tip * 0.62, tip * 0.47] : [0, 0, 0],
   };
-}
-
-/** The capsomere marked when the part "capsomere" is picked: the one nearest `at` (its name). */
-export function nearestCapsomere(centres: readonly V3[], at: V3): number {
-  const dist = (c: V3) => Math.hypot(c[0] - at[0], c[1] - at[1], c[2] - at[2]);
-  let best = 0;
-  centres.forEach((c, i) => {
-    if (dist(c) < dist(centres[best] ?? c)) best = i;
-  });
-  return best;
 }

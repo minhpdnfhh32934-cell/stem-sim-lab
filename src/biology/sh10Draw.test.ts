@@ -48,7 +48,7 @@ describe('2D pictures (when the 3D view cannot be shown)', () => {
     for (const enveloped of [true, false]) {
       const names = Object.fromEntries(partsShown(enveloped).map((p) => [p, `#${p}`]));
       const f = fakeContext();
-      drawVirus(f.d, enveloped, names, 'capsomere');
+      drawVirus(f.d, enveloped, names, 'capsid');
       expect(f.texts.sort()).toEqual(
         partsShown(enveloped)
           .map((p) => `#${p}`)
