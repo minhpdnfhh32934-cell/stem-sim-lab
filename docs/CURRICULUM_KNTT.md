@@ -38,9 +38,9 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Hoá học 11 | 25 | 19 | 19 |
 | Hoá học 12 | 30 | 22 | 1 |
 | Sinh học 10 | 26 | 17 | 17 |
-| Sinh học 11 | 29 | 20 | 13 |
+| Sinh học 11 | 29 | 20 | 16 |
 | Sinh học 12 | 35 | 28 | 7 |
-| **Cộng** | **253** | **189** | **119** |
+| **Cộng** | **253** | **189** | **122** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -264,10 +264,10 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Sinh học 11 | Chương 2. Cảm ứng ở sinh vật | 16 | Thực hành: Cảm ứng ở thực vật | 97 | Thực hành | chưa có |  | pending |
 | Sinh học 11 | Chương 2. Cảm ứng ở sinh vật | 17 | Cảm ứng ở động vật | 100 | Lí thuyết | Cảm ứng ở động vật | Tên Bài 17: cảm ứng ở động vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
 | Sinh học 11 | Chương 2. Cảm ứng ở sinh vật | 18 | Tập tính ở động vật | 115 | Lí thuyết | Tập tính ở động vật | Tên Bài 18: tập tính ở động vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
-| Sinh học 11 | Chương 3. Sinh trưởng và phát triển ở sinh vật | 19 | Khái quát về sinh trưởng và phát triển ở sinh vật | 125 | Lí thuyết | chưa có |  | pending |
-| Sinh học 11 | Chương 3. Sinh trưởng và phát triển ở sinh vật | 20 | Sinh trưởng và phát triển ở thực vật | 129 | Lí thuyết | chưa có |  | pending |
+| Sinh học 11 | Chương 3. Sinh trưởng và phát triển ở sinh vật | 19 | Khái quát về sinh trưởng và phát triển ở sinh vật | 125 | Lí thuyết | Khái quát về sinh trưởng và phát triển | Tên Bài 19: khái quát về sinh trưởng và phát triển ở sinh vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
+| Sinh học 11 | Chương 3. Sinh trưởng và phát triển ở sinh vật | 20 | Sinh trưởng và phát triển ở thực vật | 129 | Lí thuyết | Sinh trưởng và phát triển ở thực vật | Tên Bài 20: sinh trưởng và phát triển ở thực vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
 | Sinh học 11 | Chương 3. Sinh trưởng và phát triển ở sinh vật | 21 | Thực hành: Bấm ngọn, tỉa cành; xử lí kích thích tố và tính tuổi cây | 141 | Thực hành | chưa có |  | pending |
-| Sinh học 11 | Chương 3. Sinh trưởng và phát triển ở sinh vật | 22 | Sinh trưởng và phát triển ở động vật | 145 | Lí thuyết | chưa có |  | pending |
+| Sinh học 11 | Chương 3. Sinh trưởng và phát triển ở sinh vật | 22 | Sinh trưởng và phát triển ở động vật | 145 | Lí thuyết | Sinh trưởng và phát triển ở động vật | Tên Bài 22: sinh trưởng và phát triển ở động vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
 | Sinh học 11 | Chương 3. Sinh trưởng và phát triển ở sinh vật | 23 | Thực hành: Quan sát quá trình biến thái ở động vật | 153 | Thực hành | chưa có |  | pending |
 | Sinh học 11 | Chương 4. Sinh sản ở sinh vật | 24 | Khái quát về sinh sản ở sinh vật | 156 | Lí thuyết | chưa có |  | pending |
 | Sinh học 11 | Chương 4. Sinh sản ở sinh vật | 25 | Sinh sản ở thực vật | 159 | Lí thuyết | chưa có |  | pending |
