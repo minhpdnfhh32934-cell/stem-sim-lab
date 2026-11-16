@@ -25,16 +25,16 @@ function texts(value: unknown, out: string[] = []): string[] {
   return out;
 }
 
-describe('guided textbook lessons (SH10, #255)', () => {
-  it('all eight are valid guided lessons, pending a teacher, one per guided topic', () => {
-    expect(GUIDED_LESSONS).toHaveLength(8);
-    expect(lessons).toHaveLength(8);
+describe('guided textbook lessons (SH10, HH11; #255)', () => {
+  it('all nine are valid guided lessons, pending a teacher, one per guided topic', () => {
+    expect(GUIDED_LESSONS).toHaveLength(9);
+    expect(lessons).toHaveLength(9);
     for (const s of lessons) {
       expect(s.binding.kind).toBe('guided');
       expect(s.review_status).toBe('pending');
     }
     expect(lessons.map((s) => s.topic).sort()).toEqual([...GUIDED_TOPICS].sort());
-    expect(new Set(lessons.map((s) => s.id)).size).toBe(8);
+    expect(new Set(lessons.map((s) => s.id)).size).toBe(9);
   });
 
   it('each follows a theory lesson of the book, and its topic is placed on that lesson', () => {
@@ -56,12 +56,16 @@ describe('guided textbook lessons (SH10, #255)', () => {
     }
   });
 
-  it('every topic is an available biology topic with its own module', () => {
-    const biology = CATALOG.biology.flatMap((c) => c.topics);
-    for (const id of GUIDED_TOPICS) {
-      expect(hasModule(id), id).toBe(true);
-      expect(biology.find((t) => t.id === id)?.status, id).toBe('available');
+  it('every topic is an available topic of its lesson’s subject, with its own module', () => {
+    for (const s of lessons) {
+      const topics = CATALOG[s.subject].flatMap((c) => c.topics);
+      expect(hasModule(s.topic), s.topic).toBe(true);
+      expect(topics.find((t) => t.id === s.topic)?.status, s.topic).toBe('available');
     }
+    expect(lessons.filter((s) => s.subject === 'biology')).toHaveLength(8);
+    expect(lessons.filter((s) => s.subject === 'chemistry').map((s) => s.topic)).toEqual([
+      'organicSeparation',
+    ]);
   });
 
   it('stays out of the built-in scenarios (their lists and counts do not change)', () => {
