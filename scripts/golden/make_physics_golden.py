@@ -459,6 +459,34 @@ add(
     {"a_c": 6**2 * 0.5, "force": 0.2 * 6**2 * 0.5},
 )
 
+# --- Sóng cơ: sóng ngang, sóng dọc (VL11 Bài 8–9) -------------------------------------
+# Một nguồn O, sóng hình sin truyền theo Ox: T = 1/f, λ = v/f, t_M = OM/v, Δφ = 2π·OM/λ.
+# kind: 0 = sóng ngang (mặt nước, sợi dây), 1 = sóng dọc (lò xo, âm).
+add(
+    "sg-01",
+    "Một sóng ngang truyền trên một sợi dây đàn hồi rất dài với tốc độ 4 m/s. Nguồn sóng O dao động với tần số 2 Hz và biên độ 3 cm. Điểm M trên dây cách O một đoạn 5 m. Tính bước sóng, thời gian sóng truyền từ O tới M và độ lệch pha của M so với O.",
+    "travellingWave",
+    [
+        q("kind", 0, "1", "sóng ngang"),
+        q("v", 4, "m/s", "tốc độ 4 m/s"),
+        q("f", 2, "Hz", "tần số 2 Hz"),
+        q("A", 3, "cm", "biên độ 3 cm"),
+        q("xM", 5, "m", "cách O một đoạn 5 m"),
+    ],
+    {"T": 0.5, "lambda": 4 / 2, "tM": 5 / 4, "lag": 2 * math.pi * 5 / 2},
+)
+add(
+    "sg-02",
+    "Một sóng dọc truyền dọc theo một lò xo dài với tốc độ 1,5 m/s, nguồn dao động với tần số 5 Hz. Tính chu kì và bước sóng của sóng trên lò xo.",
+    "travellingWave",
+    [
+        q("kind", 1, "1", "sóng dọc"),
+        q("v", 1.5, "m/s", "tốc độ 1,5 m/s"),
+        q("f", 5, "Hz", "tần số 5 Hz"),
+    ],
+    {"T": 0.2, "lambda": 1.5 / 5},
+)
+
 # --- Sóng dừng trên dây ------------------------------------------------------------
 # Hai đầu cố định: L = n·λ/2, f_n = n·v/(2L), λ = v/f, v = √(F/μ).
 # mode: 0 = tìm f (biết L, v, n), 1 = tìm v (biết L, f, n), 2 = tìm n (biết L, f, v); vFrom 1 = v từ F, μ.

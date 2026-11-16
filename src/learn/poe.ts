@@ -292,6 +292,18 @@ export const POES: readonly Poe[] = [
     start: { mode: 0 },
   },
   {
+    id: 'travellingWave.f',
+    topic: 'travellingWave',
+    param: 'f',
+    factor: 2,
+    answer: 'lambda',
+    question: L(
+      'Trong cùng một môi trường, nếu tần số của nguồn tăng gấp đôi thì bước sóng thay đổi thế nào?',
+      'In the same medium, if the frequency of the source doubles, how does the wavelength change?',
+    ),
+    choices: ratios(0.5, 1, 2),
+  },
+  {
     id: 'standingWave.tension',
     topic: 'standingWave',
     param: 'tension',
