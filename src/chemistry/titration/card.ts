@@ -1,14 +1,17 @@
 import { formatNumber } from '@/app/i18n';
 import type { ScienceCardData } from '@/science-card/types';
 import { CSRC, L } from '../common';
-import { PKW, PKW_UNCERTAINTY, TITRATION_SOURCES } from './titration';
+import { PKW, PKW_IAPWS, PKW_UNCERTAINTY, TITRATION_SOURCES } from './titration';
 
 export function titrationCard(locale: 'vi' | 'en'): ScienceCardData {
   // Four decimals: rounded to two it would read "14", the textbook value it differs from.
-  const pkw = formatNumber(locale, PKW, { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+  const iapws = formatNumber(locale, PKW_IAPWS, {
+    minimumFractionDigits: 4,
+    maximumFractionDigits: 4,
+  });
   const err = formatNumber(locale, PKW_UNCERTAINTY);
-  // The textbook writes Kw = 1,0·10⁻¹⁴, i.e. pKw = 14 (DATA_REVIEW TIT-4).
-  const gap = formatNumber(locale, Math.abs(14 - PKW), { maximumSignificantDigits: 1 });
+  // The app uses the textbook's pKw = 14 (DATA_REVIEW TIT-4, HH11-AB-2); IAPWS is quoted.
+  const gap = formatNumber(locale, Math.abs(PKW - PKW_IAPWS), { maximumSignificantDigits: 1 });
   return {
     title: L('Chuẩn độ acid mạnh bằng base mạnh', 'Strong acid – strong base titration'),
     model: L(
@@ -35,8 +38,8 @@ export function titrationCard(locale: 'vi' | 'en'): ScienceCardData {
     ],
     assumptions: [
       L(
-        `25 °C: pKw = ${pkw} (IAPWS, sai số ±${err}; giá trị IAPWS theo mol/kg được đổi sang mol/L bằng khối lượng riêng của nước). SGK làm tròn Kw = 1,0·10⁻¹⁴, nên pH ở đây có thể lệch SGK khoảng ${gap}.`,
-        `25 °C: pKw = ${pkw} (IAPWS, uncertainty ±${err}; the IAPWS value in mol/kg is converted to mol/L with the density of water). Textbooks round Kw to 1.0·10⁻¹⁴, so pH here may differ from the textbook by about ${gap}.`,
+        `25 °C: Kw = 10⁻¹⁴ (pKw = 14) theo SGK Hóa học 11, Bài 2 tr. 20. Nguồn thứ hai IAPWS cho pKw = ${iapws} (sai số ±${err}, đã đổi từ mol/kg sang mol/L), chênh SGK khoảng ${gap} đơn vị pH.`,
+        `25 °C: Kw = 10⁻¹⁴ (pKw = 14) as the textbook gives it (Hóa học 11, lesson 2, p. 20). The second source, IAPWS, gives pKw = ${iapws} (uncertainty ±${err}, converted from mol/kg to mol/L), about ${gap} pH units from the textbook.`,
       ),
       L(
         'Nhiệt độ giữ ở 25 °C: bỏ qua nhiệt tỏa ra khi trung hòa. Bỏ qua tính acid – base của chính chất chỉ thị.',
