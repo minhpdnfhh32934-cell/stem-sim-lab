@@ -15,6 +15,10 @@ import { sh11b18Behaviour } from '../../src/studio/guided/lessons/sh11b18Behavio
 import { sh11b19Growth } from '../../src/studio/guided/lessons/sh11b19Growth';
 import { sh11b20PlantGrowth } from '../../src/studio/guided/lessons/sh11b20PlantGrowth';
 import { sh11b22AnimalGrowth } from '../../src/studio/guided/lessons/sh11b22AnimalGrowth';
+import { sh11b24Reproduction } from '../../src/studio/guided/lessons/sh11b24Reproduction';
+import { sh11b25PlantReproduction } from '../../src/studio/guided/lessons/sh11b25PlantReproduction';
+import { sh11b27AnimalReproduction } from '../../src/studio/guided/lessons/sh11b27AnimalReproduction';
+import { sh11b28Integration } from '../../src/studio/guided/lessons/sh11b28Integration';
 import { openTopic } from './nav';
 
 /** SH11 as guided lessons (#255 rounds 2h–2j). */
@@ -94,6 +98,10 @@ for (const [topic, lesson] of [
   ['Khái quát về sinh trưởng và phát triển', sh11b19Growth],
   ['Sinh trưởng và phát triển ở thực vật', sh11b20PlantGrowth],
   ['Sinh trưởng và phát triển ở động vật', sh11b22AnimalGrowth],
+  ['Khái quát về sinh sản', sh11b24Reproduction],
+  ['Sinh sản ở thực vật', sh11b25PlantReproduction],
+  ['Sinh sản ở động vật', sh11b27AnimalReproduction],
+  ['Mối quan hệ giữa các quá trình sinh lí', sh11b28Integration],
 ] as const) {
   test(`${topic}: opens on the prediction and its activities fit 1366×768`, async ({ page }) => {
     const errors: string[] = [];

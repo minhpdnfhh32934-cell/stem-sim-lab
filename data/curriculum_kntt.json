@@ -3123,6 +3123,54 @@
    "review_status": "pending"
   },
   {
+   "topic": "reproductionOverview",
+   "subject": "biology",
+   "grade": 11,
+   "book": "SH11",
+   "chapter": "Chương 4. Sinh sản ở sinh vật",
+   "lessons": [
+    24
+   ],
+   "reason": "Tên Bài 24: khái quát về sinh sản ở sinh vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "plantReproduction",
+   "subject": "biology",
+   "grade": 11,
+   "book": "SH11",
+   "chapter": "Chương 4. Sinh sản ở sinh vật",
+   "lessons": [
+    25
+   ],
+   "reason": "Tên Bài 25: sinh sản ở thực vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "animalReproduction",
+   "subject": "biology",
+   "grade": 11,
+   "book": "SH11",
+   "chapter": "Chương 4. Sinh sản ở sinh vật",
+   "lessons": [
+    27
+   ],
+   "reason": "Tên Bài 27: sinh sản ở động vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "bodyIntegration",
+   "subject": "biology",
+   "grade": 11,
+   "book": "SH11",
+   "chapter": "Chương 5. Mối quan hệ giữa các quá trình sinh lí trong cơ thể sinh vật và một số ngành nghề liên quan đến sinh học cơ thể",
+   "lessons": [
+    28
+   ],
+   "reason": "Tên Bài 28: mối quan hệ giữa các quá trình sinh lí trong cơ thể sinh vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
    "topic": "metabolismEnergy",
    "subject": "biology",
    "grade": 10,

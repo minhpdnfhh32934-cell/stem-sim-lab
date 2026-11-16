@@ -2,6 +2,27 @@
 
 Mọi thay đổi đáng chú ý của SimLab (tên cũ: STEM Sim Lab), bản mới nhất ở trên. Định dạng theo [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), số phiên bản dạng `x.y.z`. Tệp này được tạo từ `release-notes/versions.json` bằng `npm run release-notes`. Đừng sửa tay. Lịch sử đầy đủ kèm bằng chứng: [VERSION\_HISTORY.md](VERSION_HISTORY.md).
 
+## [Unreleased] - 0.10.0 (Đang xét duyệt)
+
+_Gói lớp 11 (#255, kế hoạch đăng ở #255 ngày 16/11/2026): mọi bài lí thuyết của Vật lí 11 (20/20), Hóa học 11 (19/19) và Sinh học 11 (20/20) có chủ đề, qua 12 đợt 2a–2l, mỗi đợt một PR vào main theo thứ tự (2a #277, 2b #278, 2c #279, 2d #283, 2e #284, 2f #285, 2g #286, 2h #287, 2i #288, 2j #289, 2k #290 đã gộp vào main ngày 17/11/2026, mỗi PR CI 8/8 xanh; đợt 2l là PR chuẩn bị phát hành này). Chỉ phần web lên 0.10.0 (không có thay đổi Rust kể từ v0.8.2, lõi vẫn 0.8.2), nên ứng dụng cài từ GitHub nhận qua cập nhật trong app. notesReady đặt true khi mở PR chuẩn bị phát hành; phát hành do người dùng chạy lượt Release sau khi PR cuối đã gộp._
+
+Bản 0.10.0 hoàn thành chương trình lớp 11 theo sách Kết nối tri thức: mọi bài lí thuyết của Vật lí 11, Hóa học 11 và Sinh học 11 đều có bài học trong SimLab, số liệu lấy từ sách giáo khoa và có ghi trang.
+
+### Added
+
+- Vật lí 11: sóng ngang và sóng dọc, sóng điện từ và thang sóng điện từ, điện thế và công của lực điện, tụ điện ghép nối tiếp và song song, cường độ dòng điện và tốc độ trôi của electron.
+- Hóa học 11: pH và chất chỉ thị, nitrogen và sulfur trên trục số oxi hóa, nhóm chức và lập công thức phân tử, đồng phân, hydrocarbon, dẫn xuất halogen, alcohol, phenol, hợp chất carbonyl và carboxylic acid; thêm bài học có hướng dẫn về tách biệt và tinh chế.
+- Sinh học 11: hai mươi bài học có hướng dẫn, từ trao đổi chất, cảm ứng, sinh trưởng và phát triển đến sinh sản, mỗi bài có câu dự đoán và các hoạt động xếp thứ tự, phân loại, ghép.
+
+### Improved
+
+- Thư viện xếp các bài lớp 11 theo đúng chương và bài của sách; mỗi thẻ khoa học ghi tên bài và trang sách.
+- Bài chuẩn độ acid – base dùng hằng số Kw của sách giáo khoa.
+
+### Known Issues
+
+- Nội dung lớp 11 đang chờ giáo viên duyệt; ba chỗ sách in chưa khớp (một nhiệt độ sôi, một phần trăm phân li, một phương trình) được ghi rõ trong bài.
+
 ## [0.9.1] - 2026-11-16
 
 _Phát hành 16/11/2026 từ main @ 59303d21 (lượt Release 43849341900, người dùng chạy). Hai việc còn lại của gói lớp 10 (#255): viết “hóa” và bảng ion nhiều nguyên tử (người dùng trả lời 16/11/2026). Chỉ phần web lên 0.9.1; phần lõi vẫn 0.8.2 (không có thay đổi Rust), nên web-update.json ghi minNative 0.8.2 và ứng dụng 0.8.2 cài từ GitHub nhận qua cập nhật trong app; bộ cài trong bản phát hành vẫn mang số 0.8.2. Không bắt buộc cập nhật (minRequired để trống). Bản Store nhận ở lần nộp có lõi mới._
@@ -726,6 +747,7 @@ Bản đầu tiên của STEM Sim Lab (tên cũ của SimLab): mô phỏng Vật
 
 - Bản này không có bộ cài phát hành công khai; chỉ có bản dựng thử trên GitHub Actions.
 
+[Unreleased]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/277
 [0.9.1]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.9.1
 [0.9.0]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.9.0
 [0.8.2]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.8.2

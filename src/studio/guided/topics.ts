@@ -29,4 +29,8 @@ export const GUIDED_TOPICS = [
   'growthOverview',
   'plantGrowth',
   'animalGrowth',
+  'reproductionOverview',
+  'plantReproduction',
+  'animalReproduction',
+  'bodyIntegration',
 ] as const;

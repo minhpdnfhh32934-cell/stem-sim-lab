@@ -38,9 +38,9 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Hoá học 11 | 25 | 19 | 19 |
 | Hoá học 12 | 30 | 22 | 1 |
 | Sinh học 10 | 26 | 17 | 17 |
-| Sinh học 11 | 29 | 20 | 16 |
+| Sinh học 11 | 29 | 20 | 20 |
 | Sinh học 12 | 35 | 28 | 7 |
-| **Cộng** | **253** | **189** | **122** |
+| **Cộng** | **253** | **189** | **126** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -269,11 +269,11 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Sinh học 11 | Chương 3. Sinh trưởng và phát triển ở sinh vật | 21 | Thực hành: Bấm ngọn, tỉa cành; xử lí kích thích tố và tính tuổi cây | 141 | Thực hành | chưa có |  | pending |
 | Sinh học 11 | Chương 3. Sinh trưởng và phát triển ở sinh vật | 22 | Sinh trưởng và phát triển ở động vật | 145 | Lí thuyết | Sinh trưởng và phát triển ở động vật | Tên Bài 22: sinh trưởng và phát triển ở động vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
 | Sinh học 11 | Chương 3. Sinh trưởng và phát triển ở sinh vật | 23 | Thực hành: Quan sát quá trình biến thái ở động vật | 153 | Thực hành | chưa có |  | pending |
-| Sinh học 11 | Chương 4. Sinh sản ở sinh vật | 24 | Khái quát về sinh sản ở sinh vật | 156 | Lí thuyết | chưa có |  | pending |
-| Sinh học 11 | Chương 4. Sinh sản ở sinh vật | 25 | Sinh sản ở thực vật | 159 | Lí thuyết | chưa có |  | pending |
+| Sinh học 11 | Chương 4. Sinh sản ở sinh vật | 24 | Khái quát về sinh sản ở sinh vật | 156 | Lí thuyết | Khái quát về sinh sản | Tên Bài 24: khái quát về sinh sản ở sinh vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
+| Sinh học 11 | Chương 4. Sinh sản ở sinh vật | 25 | Sinh sản ở thực vật | 159 | Lí thuyết | Sinh sản ở thực vật | Tên Bài 25: sinh sản ở thực vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
 | Sinh học 11 | Chương 4. Sinh sản ở sinh vật | 26 | Thực hành: Nhân giống vô tính và thụ phấn cho cây | 167 | Thực hành | chưa có |  | pending |
-| Sinh học 11 | Chương 4. Sinh sản ở sinh vật | 27 | Sinh sản ở động vật | 170 | Lí thuyết | chưa có |  | pending |
-| Sinh học 11 | Chương 5. Mối quan hệ giữa các quá trình sinh lí trong cơ thể sinh vật và một số ngành nghề liên quan đến sinh học cơ thể | 28 | Mối quan hệ giữa các quá trình sinh lí trong cơ thể sinh vật | 183 | Lí thuyết | chưa có |  | pending |
+| Sinh học 11 | Chương 4. Sinh sản ở sinh vật | 27 | Sinh sản ở động vật | 170 | Lí thuyết | Sinh sản ở động vật | Tên Bài 27: sinh sản ở động vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
+| Sinh học 11 | Chương 5. Mối quan hệ giữa các quá trình sinh lí trong cơ thể sinh vật và một số ngành nghề liên quan đến sinh học cơ thể | 28 | Mối quan hệ giữa các quá trình sinh lí trong cơ thể sinh vật | 183 | Lí thuyết | Mối quan hệ giữa các quá trình sinh lí | Tên Bài 28: mối quan hệ giữa các quá trình sinh lí trong cơ thể sinh vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
 | Sinh học 11 | Chương 5. Mối quan hệ giữa các quá trình sinh lí trong cơ thể sinh vật và một số ngành nghề liên quan đến sinh học cơ thể | 29 | Một số ngành nghề liên quan đến sinh học cơ thể | 185 | Ngành nghề | chưa có |  | pending |
 | Sinh học 12 | Chương 1. Di truyền phân tử | 1 | DNA và cơ chế tái bản DNA | 5 | Lí thuyết | chưa có |  | pending |
 | Sinh học 12 | Chương 1. Di truyền phân tử | 2 | Gene, hệ gene và quá trình truyền đạt thông tin di truyền | 9 | Lí thuyết | ADN → mARN → Protein | Tên Bài 2: quá trình truyền đạt thông tin di truyền (Bài 1 về DNA và tái bản: giáo viên quyết định). | pending |

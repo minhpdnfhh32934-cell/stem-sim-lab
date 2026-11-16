@@ -126,6 +126,12 @@ export const CATALOG: Record<Subject, ChapterEntry[]> = {
       'animalBehaviour',
     ]),
     chapter('growthGroup', ['growthOverview', 'plantGrowth', 'animalGrowth']),
+    chapter('reproductionGroup', [
+      'reproductionOverview',
+      'plantReproduction',
+      'animalReproduction',
+    ]),
+    chapter('integrationGroup', ['bodyIntegration']),
   ],
 };
 

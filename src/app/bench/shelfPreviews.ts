@@ -83,6 +83,10 @@ export const SHELF_PREVIEWS: ReadonlySet<string> = new Set([
   'growthOverview',
   'plantGrowth',
   'animalGrowth',
+  'reproductionOverview',
+  'plantReproduction',
+  'animalReproduction',
+  'bodyIntegration',
 ]);
 
 /** The picture of `topic` in `theme`, or null when it has none. */
