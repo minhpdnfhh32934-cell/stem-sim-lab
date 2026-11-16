@@ -181,6 +181,86 @@
   ],
   "versions": [
     {
+      "version": "0.9.1",
+      "status": "in-review",
+      "statusNote": "Hai việc còn lại của gói lớp 10 (#255), người dùng trả lời 16/11/2026: viết “hóa” (1) và thêm bảng ion nhiều nguyên tử (2). Chỉ phần web lên 0.9.1 (không có thay đổi Rust kể từ v0.8.2, lõi vẫn 0.8.2), nên ứng dụng cài từ GitHub nhận qua cập nhật trong app; bản Store nhận ở lần nộp có lõi mới. notesReady đặt true khi mở PR chuẩn bị phát hành.",
+      "channel": "github",
+      "dates": {
+        "devStart": "2026-11-16T02:31:46Z",
+        "firstCommit": "2026-11-16T14:02:47+07:00",
+        "lastCommit": null,
+        "merged": null,
+        "built": null,
+        "released": null,
+        "tagged": null
+      },
+      "evidence": [
+        "devStart: GitHub Release v0.9.0 published_at 2026-11-16T02:31:46Z (các thay đổi sau đó thuộc 0.9.1)",
+        "firstCommit: 19a5f370 2026-11-16T14:02:47+07:00 'fix(i18n): write \"hóa\" across the app (#255)' — commit đầu tiên sau khi v0.9.0 phát hành",
+        "Bảng ion nhiều nguyên tử: SGK Hóa học 10 KNTT Bài 15 tr. 72 (Quy tắc 4, ví dụ NH₄⁺); OpenStax Chemistry 2e §2.6 Bảng 2.5 (DATA_REVIEW HH10-RX-9)",
+        "Chính tả “hóa”: src/app/spelling.test.ts kiểm mọi tệp nguồn (trừ các tệp đọc chữ người học hoặc AI gõ vào, nhận cả hai cách viết)"
+      ],
+      "tests": ["Mỗi PR: CI 8/8 xanh trước khi gộp (gh pr checks)"],
+      "refs": {
+        "tag": null,
+        "tagSha": null,
+        "releaseUrl": null,
+        "prs": [],
+        "commits": ["19a5f370"],
+        "branches": ["fix/255-hoa-polyatomic"]
+      },
+      "publicNotes": {
+        "summary": {
+          "vi": "Bản 0.9.1 làm nốt hai việc của gói lớp 10: app tính được số oxi hóa trong các muối như CuSO₄, AgNO₃, NH₄Cl nhờ bảng ion nhiều nguyên tử, và chữ “hóa” được viết thống nhất trong toàn app.",
+          "en": "Version 0.9.1 finishes two leftovers of the Grade 10 package: the app now finds oxidation numbers in salts such as CuSO₄, AgNO₃ and NH₄Cl with a table of polyatomic ions, and “hóa” is spelt one way across the app."
+        },
+        "added": [
+          {
+            "vi": "Bảng ion nhiều nguyên tử cho bài Phản ứng oxi hóa – khử: NH₄⁺ theo sách giáo khoa (Quy tắc 4); SO₄²⁻, NO₃⁻, CO₃²⁻, PO₄³⁻ theo OpenStax.",
+            "en": "A table of polyatomic ions for Redox reactions: NH₄⁺ from the textbook (rule 4); SO₄²⁻, NO₃⁻, CO₃²⁻, PO₄³⁻ from OpenStax.",
+            "area": "ui"
+          }
+        ],
+        "improved": [
+          {
+            "vi": "Fe + CuSO₄, Cu + HNO₃ đặc và loãng nay có số oxi hóa, chất khử, chất oxi hóa và số electron trao đổi; AgNO₃ + NaCl và NH₄Cl → NH₃ + HCl được xếp đúng là không phải phản ứng oxi hóa – khử.",
+            "en": "Fe + CuSO₄ and Cu + concentrated or dilute HNO₃ now show oxidation numbers, reducing and oxidising agents and the electrons transferred; AgNO₃ + NaCl and NH₄Cl → NH₃ + HCl are correctly shown as not redox.",
+            "area": "ui"
+          }
+        ],
+        "fixed": [],
+        "security": [],
+        "performance": [],
+        "changed": [
+          {
+            "vi": "Toàn app viết “hóa”, “họa”, “hòa”, “khóa”, “tỏa”, “thủy” (dấu trên chữ cái đầu của vần). Tên bài trong mục lục sách vẫn chép đúng như sách in.",
+            "en": "The app writes “hóa”, “họa”, “hòa”, “khóa”, “tỏa”, “thủy” throughout (tone mark on the first vowel). Lesson titles from the textbook's table of contents stay exactly as printed.",
+            "area": "ui"
+          }
+        ],
+        "deprecated": [],
+        "knownIssues": [
+          {
+            "vi": "Bảng ion nhiều nguyên tử và cách đọc muối đang chờ giáo viên duyệt.",
+            "en": "The polyatomic ion table and how salts are read are waiting for a teacher's review."
+          }
+        ]
+      },
+      "notesReady": true,
+      "learnerHighlights": [
+        {
+          "area": "ui",
+          "vi": "Tính được số oxi hóa trong CuSO₄, AgNO₃, NH₄Cl nhờ bảng ion nhiều nguyên tử.",
+          "en": "Oxidation numbers in CuSO₄, AgNO₃ and NH₄Cl, using a table of polyatomic ions."
+        },
+        {
+          "area": "ui",
+          "vi": "Chữ “hóa” viết thống nhất trong toàn app.",
+          "en": "“hóa” is spelt one way across the app."
+        }
+      ]
+    },
+    {
       "version": "0.9.0",
       "status": "released",
       "statusNote": "Phát hành 16/11/2026 từ main @ cc285f00 (lượt Release 43790944755). Gói lớp 10 (#255): đủ 59/59 bài lý thuyết lớp 10. Chỉ phần web lên 0.9.0; phần lõi vẫn 0.8.2 (không có thay đổi Rust), nên web-update.json ghi minNative 0.8.2 và ứng dụng 0.8.2 cài từ GitHub nhận qua cập nhật trong app; bộ cài trong bản phát hành vẫn mang số 0.8.2. Không bắt buộc cập nhật (minRequired để trống). Bản Store nhận ở lần nộp có lõi mới. Người dùng yêu cầu phát hành khi hoàn thiện (16/11/2026).",
