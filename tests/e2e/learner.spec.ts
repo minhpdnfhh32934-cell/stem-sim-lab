@@ -208,12 +208,13 @@ test('learn by exploring: predict → observe, a challenge solved, progress and 
   await expect(predict.getByRole('radio', { name: 'Không đổi' })).toHaveClass(/is-correct/);
   await expect(predict.getByRole('textbox', { name: 'Bạn giải thích thế nào?' })).toBeVisible();
 
-  // Challenge: land 40 m away from h₀ = 45 m (scene default, g = 9,81 m/s²) → v₀ = 40 / t.
+  // Challenge: land 40 m away from h₀ = 45 m (scene default; app default g = 9,8 m/s² as in the
+  // textbook, DEFAULT_GRAVITY) → v₀ = 40 / t.
   const challenge = page.getByRole('region', { name: /Thử thách: Ném trúng đích 40 m/ });
   await challenge.getByRole('button', { name: 'Bắt đầu thử thách' }).click();
   await expect(challenge).toContainText('Hiện tại');
   const v0 = page.getByRole('textbox', { name: /Vận tốc ban đầu/ });
-  await v0.fill((40 / Math.sqrt((2 * 45) / 9.81)).toFixed(2));
+  await v0.fill((40 / Math.sqrt((2 * 45) / 9.8)).toFixed(2));
   await v0.press('Enter');
   await expect(challenge.getByRole('status').last()).toContainText('Chính xác!');
   await expect(challenge).toContainText('Đã hoàn thành');

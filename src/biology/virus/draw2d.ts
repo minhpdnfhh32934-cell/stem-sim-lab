@@ -4,14 +4,7 @@
  * like the textbook's H 24.1b) so the core shows. The picked part is drawn in the accent colour.
  */
 import type { DrawContext } from '@/ui/canvas/useCanvas';
-import {
-  VIRUS_SIZE,
-  anchors,
-  capsomereCentres,
-  coreCoil,
-  nearestCapsomere,
-  sphereDirections,
-} from './geometry';
+import { VIRUS_SIZE, anchors, capsomereCentres, coreCoil, sphereDirections } from './geometry';
 import type { VirusPart } from './parts';
 
 export function drawVirus(
@@ -91,14 +84,6 @@ export function drawVirus(
   ctx.stroke();
 
   for (const [x, y, z] of centres) if (z >= 0 && x < 0) capsomere(x, y, 'capsid', 1);
-  if (selected === 'capsomere') {
-    const [x, y] = centres[nearestCapsomere(centres, anchors(enveloped).capsomere)] ?? [0, 0];
-    ctx.beginPath();
-    ctx.arc(X(x), Y(y), S.capsomere * u * 1.4, 0, Math.PI * 2);
-    ctx.lineWidth = 4;
-    ctx.strokeStyle = accent;
-    ctx.stroke();
-  }
 
   if (names) {
     const k = Number(css('--font-scale')) || 1;

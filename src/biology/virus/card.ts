@@ -1,18 +1,18 @@
 /** Science Card of "Khái quát về virus": a qualitative illustration, no equations. */
 import type { ScienceCardData } from '@/science-card/types';
 import { L } from '../common';
-import { OPENSTAX_BIO_21_1, SGK_SH10_BAI24 } from './parts';
+import { SGK_SH10_BAI24 } from './parts';
 
 export const VIRUS_ILLUSTRATION = L(
-  'Minh họa — không theo tỉ lệ; số capsomere và số gai vẽ ra chỉ để minh họa.',
-  'Illustration — not to scale; the numbers of capsomeres and spikes drawn are only illustrative.',
+  'Minh họa — không theo tỉ lệ; số khối nhỏ trên vỏ capsid và số gai vẽ ra chỉ để minh họa.',
+  'Illustration — not to scale; the numbers of small bumps on the capsid and of spikes drawn are only illustrative.',
 );
 
 export const VIRUS_CARD: ScienceCardData = {
   title: L('Cấu tạo của virus', 'The structure of a virus'),
   model: L(
-    'Sơ đồ định tính một hạt virus (virion) hình đa diện: lõi nucleic acid và vỏ capsid ghép từ các capsomere; một số virus động vật có thêm vỏ ngoài là màng kép phospholipid với các gai glycoprotein. Năm giai đoạn nhân lên chỉ trình bày bằng chữ.',
-    'A qualitative diagram of one polyhedral virus particle (virion): a nucleic acid core and a capsid built of capsomeres; some animal viruses also have an envelope, a phospholipid bilayer with glycoprotein spikes. The five stages of multiplication are given in words only.',
+    'Sơ đồ định tính một hạt virus (virion) hình đa diện: lõi nucleic acid và vỏ protein (vỏ capsid); một số virus động vật có thêm vỏ ngoài là màng kép phospholipid với các gai glycoprotein. Năm giai đoạn nhân lên chỉ trình bày bằng chữ.',
+    'A qualitative diagram of one polyhedral virus particle (virion): a nucleic acid core and a protein coat (the capsid); some animal viruses also have an envelope, a phospholipid bilayer with glycoprotein spikes. The five stages of multiplication are given in words only.',
   ),
   equations: [],
   assumptions: [
@@ -32,6 +32,6 @@ export const VIRUS_CARD: ScienceCardData = {
     'Qualitative picture: do not read sizes or counts from it.',
   ),
   userIntervened: false,
-  sources: [SGK_SH10_BAI24, OPENSTAX_BIO_21_1],
+  sources: [SGK_SH10_BAI24],
   reviewStatus: 'pending',
 };
