@@ -181,6 +181,112 @@
   ],
   "versions": [
     {
+      "version": "0.10.0",
+      "status": "in-review",
+      "statusNote": "Gói lớp 11 (#255, kế hoạch đăng ở #255 ngày 16/11/2026): mọi bài lí thuyết của Vật lí 11 (20/20), Hóa học 11 (19/19) và Sinh học 11 (20/20) có chủ đề, qua 12 đợt 2a–2l, mỗi đợt một PR vào main theo thứ tự (2a #277, 2b #278, 2c #279 đã gộp; 2d #283 và các đợt sau lần lượt mở khi đợt trước đã gộp). Chỉ phần web lên 0.10.0 (không có thay đổi Rust kể từ v0.8.2, lõi vẫn 0.8.2), nên ứng dụng cài từ GitHub nhận qua cập nhật trong app. notesReady đặt true khi mở PR chuẩn bị phát hành; phát hành do người dùng chạy lượt Release sau khi PR cuối đã gộp.",
+      "channel": "github",
+      "dates": {
+        "devStart": "2026-11-16T10:43:58Z",
+        "firstCommit": "2026-11-16T22:56:47+07:00",
+        "lastCommit": null,
+        "merged": null,
+        "built": null,
+        "released": null,
+        "tagged": null
+      },
+      "evidence": [
+        "devStart: GitHub Release v0.9.1 published_at 2026-11-16T10:43:58Z (các thay đổi sau đó thuộc 0.10.0)",
+        "firstCommit: bf73b7ac 2026-11-16T22:56:47+07:00 'feat(physics): cite the Vật lí 11 KNTT lesson and pages on every VL11 card (#255)'",
+        "Phạm vi: data/curriculum_kntt.json (scripts/data/gen_curriculum_kntt.py) — mọi bài lí thuyết của VL11, HH11, SH11 đều được xếp chủ đề (đếm 17/11/2026 trên nhánh feat/255-sh11-reproduction)",
+        "Nhật ký từng đợt: docs/work-log/2026-11-16-255-vl11-waves.md và các tệp 2026-11-17-255-*.md (vl11-electric, hh11-aqueous, hh11-nitrogen-sulfur, hh11-organic-basics, hh11-hydrocarbons, hh11-derivatives, sh11-metabolism, sh11-animals, sh11-response, sh11-growth, sh11-reproduction)",
+        "Dữ liệu và lời văn mới chờ giáo viên duyệt: docs/DATA_REVIEW.md VL11-*, HH11-AB-*, HH11-NS-*, HH11-ORG-*, HH11-GL-1, HH11-HC-*, HH11-DER-*, SH11-GL-1 … SH11-GL-20"
+      ],
+      "tests": [
+        "Mỗi PR: CI 8/8 xanh trước khi gộp (gh pr checks)",
+        "Nhánh cuối feat/255-sh11-reproduction: vitest 5611 đạt (3 bỏ qua có sẵn), typecheck và lint đạt; E2E sh11-guided 20/20 trong thư mục tạm (test \"touch screens\" và bài RDKit chỉ hỏng ở thư mục tạm)"
+      ],
+      "refs": {
+        "tag": null,
+        "tagSha": null,
+        "releaseUrl": null,
+        "prs": [277, 278, 279, 283],
+        "commits": ["bf73b7ac"],
+        "branches": [
+          "feat/255-vl11-waves",
+          "feat/255-vl11-electric",
+          "feat/255-hh11-acid-base",
+          "feat/255-hh11-nitrogen-sulfur",
+          "feat/255-hh11-organic-basics",
+          "feat/255-hh11-hydrocarbons",
+          "feat/255-hh11-derivatives",
+          "feat/255-sh11-metabolism",
+          "feat/255-sh11-animals",
+          "feat/255-sh11-response",
+          "feat/255-sh11-growth",
+          "feat/255-sh11-reproduction"
+        ]
+      },
+      "publicNotes": {
+        "summary": {
+          "vi": "Bản 0.10.0 hoàn thành chương trình lớp 11 theo sách Kết nối tri thức: mọi bài lí thuyết của Vật lí 11, Hóa học 11 và Sinh học 11 đều có bài học trong SimLab, số liệu lấy từ sách giáo khoa và có ghi trang.",
+          "en": "Version 0.10.0 completes Grade 11 of the Kết nối tri thức textbooks: every theory lesson of Physics 11, Chemistry 11 and Biology 11 now has a lesson in SimLab, with values taken from the textbook and page references."
+        },
+        "added": [
+          {
+            "vi": "Vật lí 11: sóng ngang và sóng dọc, sóng điện từ và thang sóng điện từ, điện thế và công của lực điện, tụ điện ghép nối tiếp và song song, cường độ dòng điện và tốc độ trôi của electron.",
+            "en": "Physics 11: transverse and longitudinal waves, electromagnetic waves and the spectrum, electric potential and the work of the electric force, capacitors in series and in parallel, current and electron drift speed.",
+            "area": "ui"
+          },
+          {
+            "vi": "Hóa học 11: pH và chất chỉ thị, nitrogen và sulfur trên trục số oxi hóa, nhóm chức và lập công thức phân tử, đồng phân, hydrocarbon, dẫn xuất halogen, alcohol, phenol, hợp chất carbonyl và carboxylic acid; thêm bài học có hướng dẫn về tách biệt và tinh chế.",
+            "en": "Chemistry 11: pH and indicators, nitrogen and sulfur on oxidation-number axes, functional groups and molecular formulas, isomers, hydrocarbons, halogen derivatives, alcohols, phenol, carbonyl compounds and carboxylic acids; plus a guided lesson on separating and purifying.",
+            "area": "ui"
+          },
+          {
+            "vi": "Sinh học 11: hai mươi bài học có hướng dẫn, từ trao đổi chất, cảm ứng, sinh trưởng và phát triển đến sinh sản, mỗi bài có câu dự đoán và các hoạt động xếp thứ tự, phân loại, ghép.",
+            "en": "Biology 11: twenty guided lessons, from metabolism, responses and growth and development to reproduction, each with a prediction and ordering, sorting and matching activities.",
+            "area": "ui"
+          }
+        ],
+        "improved": [
+          {
+            "vi": "Thư viện xếp các bài lớp 11 theo đúng chương và bài của sách; mỗi thẻ khoa học ghi tên bài và trang sách.",
+            "en": "The library places the Grade 11 lessons under the textbook’s chapters and lessons; each science card names the lesson and pages.",
+            "area": "ui"
+          },
+          {
+            "vi": "Bài chuẩn độ acid – base dùng hằng số Kw của sách giáo khoa.",
+            "en": "The acid–base titration lesson uses the textbook’s value of Kw.",
+            "area": "ui"
+          }
+        ],
+        "fixed": [],
+        "security": [],
+        "performance": [],
+        "changed": [],
+        "deprecated": [],
+        "knownIssues": [
+          {
+            "vi": "Nội dung lớp 11 đang chờ giáo viên duyệt; ba chỗ sách in chưa khớp (một nhiệt độ sôi, một phần trăm phân li, một phương trình) được ghi rõ trong bài.",
+            "en": "The Grade 11 content is waiting for a teacher’s review; three places where the printed book disagrees with itself or with arithmetic (a boiling point, a percentage dissociated, an equation) are pointed out in the lessons."
+          }
+        ]
+      },
+      "notesReady": true,
+      "learnerHighlights": [
+        {
+          "area": "ui",
+          "vi": "Đủ mọi bài lí thuyết lớp 11: Vật lí, Hóa học, Sinh học.",
+          "en": "Every Grade 11 theory lesson: Physics, Chemistry, Biology."
+        },
+        {
+          "area": "ui",
+          "vi": "Hai mươi bài Sinh học 11 có hướng dẫn: dự đoán trước, rồi làm hoạt động.",
+          "en": "Twenty guided Biology 11 lessons: predict first, then do the activities."
+        }
+      ]
+    },
+    {
       "version": "0.9.1",
       "status": "released",
       "statusNote": "Phát hành 16/11/2026 từ main @ 59303d21 (lượt Release 43849341900, người dùng chạy). Hai việc còn lại của gói lớp 10 (#255): viết “hóa” và bảng ion nhiều nguyên tử (người dùng trả lời 16/11/2026). Chỉ phần web lên 0.9.1; phần lõi vẫn 0.8.2 (không có thay đổi Rust), nên web-update.json ghi minNative 0.8.2 và ứng dụng 0.8.2 cài từ GitHub nhận qua cập nhật trong app; bộ cài trong bản phát hành vẫn mang số 0.8.2. Không bắt buộc cập nhật (minRequired để trống). Bản Store nhận ở lần nộp có lõi mới.",
