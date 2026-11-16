@@ -20,7 +20,7 @@ export const GROUPS = [
 ] as const;
 export type FunctionalGroup = (typeof GROUPS)[number];
 
-/** Names as in SGK Hoá học 11–12 (2018); DATA_REVIEW ORG-2. */
+/** Names as in SGK Hóa học 11–12 (2018); DATA_REVIEW ORG-2. */
 export const GROUP_NAME: Record<FunctionalGroup, LocalizedText> = {
   alkane: L('Alkane', 'Alkanes'),
   alkene: L('Alkene (có liên kết đôi C=C)', 'Alkenes (C=C)'),

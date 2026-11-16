@@ -41,7 +41,7 @@ export function cellCard(kind: CellKind): ScienceCardData {
       ),
     ],
     validity: L(
-      'Tế bào điển hình theo sách giáo khoa. Tế bào thật rất đa dạng: không phải vi khuẩn nào cũng có lông, roi, màng ngoài hay plasmid, và tế bào nhân thực khác nhau tuỳ loại mô.',
+      'Tế bào điển hình theo sách giáo khoa. Tế bào thật rất đa dạng: không phải vi khuẩn nào cũng có lông, roi, màng ngoài hay plasmid, và tế bào nhân thực khác nhau tùy loại mô.',
       'A typical cell as in the textbook. Real cells vary: not every bacterium has pili, flagella, an outer membrane or plasmids, and eukaryotic cells differ from tissue to tissue.',
     ),
     confidence: 'qualitative',

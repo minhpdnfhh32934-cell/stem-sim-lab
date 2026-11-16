@@ -2,8 +2,8 @@ import { elementBySymbol } from '../data/elements';
 import { parseFormula } from '../formula';
 
 /**
- * Oxidation numbers from a formula alone, by the textbook's rules (SGK Hoá học 10 KNTT, Bài 15,
- * "Quy tắc xác định số oxi hoá" and Bảng 15.1):
+ * Oxidation numbers from a formula alone, by the textbook's rules (SGK Hóa học 10 KNTT, Bài 15,
+ * "Quy tắc xác định số oxi hóa" and Bảng 15.1):
  *  1. an element on its own (a free element, or a single-element ion) has the charge per atom;
  *  2. in compounds H is +1, O is −2, group 1 metals +1, group 2 metals +2, Al +3;
  *  3–4. the oxidation numbers add up to the species' charge.

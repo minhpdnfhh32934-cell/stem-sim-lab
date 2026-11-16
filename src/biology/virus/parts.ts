@@ -78,7 +78,7 @@ export const STAGE_TEXT: Record<Stage, { name: LocalizedText; text: LocalizedTex
   attachment: {
     name: L('Hấp phụ', 'Attachment'),
     text: L(
-      'Virus bám vào tế bào chủ: gai glycoprotein (hoặc protein bề mặt, ở virus không có vỏ ngoài) khớp đặc hiệu với thụ thể trên bề mặt tế bào chủ, như chìa khoá với ổ khoá.',
+      'Virus bám vào tế bào chủ: gai glycoprotein (hoặc protein bề mặt, ở virus không có vỏ ngoài) khớp đặc hiệu với thụ thể trên bề mặt tế bào chủ, như chìa khóa với ổ khóa.',
       'The virus attaches to the host cell: its glycoprotein spikes (or surface proteins, in a virus without an envelope) fit specific receptors on the host’s surface, like a key in a lock.',
     ),
   },

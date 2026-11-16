@@ -127,7 +127,7 @@ const vi = {
     atomComposition: 'Thành phần của nguyên tử',
     isotopes: 'Nguyên tố hóa học và đồng vị',
     periodTrends: 'Oxide và hydroxide trong chu kì 3',
-    redox: 'Phản ứng oxi hoá – khử',
+    redox: 'Phản ứng oxi hóa – khử',
     reactionEnthalpy: 'Biến thiên enthalpy của phản ứng',
     halogens: 'Nhóm halogen',
     hydrogenHalides: 'Hydrogen halide · Muối halide',
@@ -162,7 +162,7 @@ const vi = {
     virusStructure: 'Khái quát về virus',
     levelsOfLife: 'Các cấp độ tổ chức của thế giới sống',
     cellSignalling: 'Truyền tin tế bào',
-    metabolismEnergy: 'Chuyển hoá vật chất và năng lượng',
+    metabolismEnergy: 'Chuyển hóa vật chất và năng lượng',
     breakdownSynthesis: 'Phân giải và tổng hợp các chất trong tế bào',
     cellTechnology: 'Công nghệ tế bào',
     microbeDiversity: 'Đa dạng và phương pháp nghiên cứu vi sinh vật',
@@ -180,7 +180,7 @@ const vi = {
     forcedOscillation: 'Dao động cưỡng bức và cộng hưởng',
     dcCircuit: 'Mạch điện một chiều',
     keplerOrbit: 'Định luật II Kepler',
-    fourierSeries: 'Hoạ âm và chuỗi Fourier',
+    fourierSeries: 'Họa âm và chuỗi Fourier',
   },
   stage: {
     regionLabel: 'Khung mô phỏng',
@@ -1545,7 +1545,7 @@ const vi = {
         answered: 'Đã có quan sát trả lời câu hỏi dự đoán. Em có thể ghi thêm kì khác để so sánh.',
         notAnswer: 'Kì này chưa trả lời câu hỏi dự đoán — kết quả vẫn được ghi lại để em so sánh.',
         lockedCell:
-          'Bài học giữ mô hình ở {cell}, 2n = {diploid}: nút "Loại tế bào" bị khoá trong bài. Khi em rời bước này, mô hình trở lại cài đặt của em.',
+          'Bài học giữ mô hình ở {cell}, 2n = {diploid}: nút "Loại tế bào" bị khóa trong bài. Khi em rời bước này, mô hình trở lại cài đặt của em.',
         otherCell: 'Mô hình đang hiện một tế bào khác với bài học, nên chưa ghi được kì này.',
       },
       match: {

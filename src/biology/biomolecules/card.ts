@@ -30,7 +30,7 @@ export function biomoleculeCard(m: Biomolecule): ScienceCardData {
     equations: [],
     assumptions: [
       L(
-        'Một cấu dạng của phân tử tự do (pha khí), dạng trung hoà như PubChem ghi; trong tế bào phân tử dao động, quay quanh liên kết và có thể mang điện (ví dụ amino acid ở dạng ion lưỡng cực).',
+        'Một cấu dạng của phân tử tự do (pha khí), dạng trung hòa như PubChem ghi; trong tế bào phân tử dao động, quay quanh liên kết và có thể mang điện (ví dụ amino acid ở dạng ion lưỡng cực).',
         'One conformer of the free molecule (gas phase), in the neutral form PubChem lists; in the cell the molecule vibrates, rotates about its bonds and may carry charges (an amino acid as a zwitterion, for example).',
       ),
       MOLECULE_CAPTION,

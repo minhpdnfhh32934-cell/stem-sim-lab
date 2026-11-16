@@ -56,7 +56,7 @@ export const sh10b03Levels: StudioScenario = {
     ),
   ],
   expectedConclusion: L(
-    'Cấp độ tổ chức sống là cấp tổ chức có đủ các đặc điểm của sự sống. Các cấp độ tổ chức sống cơ bản là tế bào, cơ thể, quần thể, quần xã và hệ sinh thái; tế bào là cấp nhỏ nhất trong số đó. Nguyên tử, phân tử, bào quan, mô, cơ quan và hệ cơ quan là các cấp tổ chức trung gian. Cấp dưới làm nền cho cấp trên, và cấp trên có thêm đặc tính mới; các cấp độ tổ chức sống đều là hệ mở, tự điều chỉnh và liên tục tiến hoá.',
+    'Cấp độ tổ chức sống là cấp tổ chức có đủ các đặc điểm của sự sống. Các cấp độ tổ chức sống cơ bản là tế bào, cơ thể, quần thể, quần xã và hệ sinh thái; tế bào là cấp nhỏ nhất trong số đó. Nguyên tử, phân tử, bào quan, mô, cơ quan và hệ cơ quan là các cấp tổ chức trung gian. Cấp dưới làm nền cho cấp trên, và cấp trên có thêm đặc tính mới; các cấp độ tổ chức sống đều là hệ mở, tự điều chỉnh và liên tục tiến hóa.',
     'A level of living organisation is a level that has all the features of life. The basic levels are the cell, the organism, the population, the community and the ecosystem; the cell is the smallest of them. Atoms, molecules, organelles, tissues, organs and organ systems are intermediate levels. Each lower level is the base of a higher one, and the higher level gains new properties; every level of living organisation is an open, self-regulating system that keeps evolving.',
   ),
   sources: [],
@@ -206,7 +206,7 @@ export const sh10b03Levels: StudioScenario = {
           },
           {
             id: 'tien-hoa',
-            left: L('Liên tục tiến hoá', 'Keeps evolving'),
+            left: L('Liên tục tiến hóa', 'Keeps evolving'),
             right: L(
               'Thông tin di truyền qua các thế hệ có đột biến và được chọn lọc, nên sinh giới rất đa dạng',
               'Genetic information passed down the generations changes by mutation and is selected, so life is very diverse',

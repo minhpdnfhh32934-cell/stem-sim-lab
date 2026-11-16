@@ -56,7 +56,7 @@ function LevelDiagram({ exo, label }: { exo: boolean; label: string }) {
           {Lz(L('Sơ đồ biến thiên enthalpy', 'Enthalpy diagram'))}
         </span>
         <span className="chem-chip chem-chip--qual">
-          {Lz(L('Minh hoạ, không theo tỉ lệ', 'Illustration, not to scale'))}
+          {Lz(L('Minh họa, không theo tỉ lệ', 'Illustration, not to scale'))}
         </span>
       </figcaption>
       <svg className="dh-svg" viewBox="0 0 320 180" role="img" aria-label={label}>
@@ -171,14 +171,14 @@ export function EnthalpyStage() {
       <p className="chem-note" role="note">
         {Lz(
           kind === 'exothermic'
-            ? L('ΔrH < 0: phản ứng toả nhiệt.', 'ΔrH < 0: the reaction releases heat (exothermic).')
+            ? L('ΔrH < 0: phản ứng tỏa nhiệt.', 'ΔrH < 0: the reaction releases heat (exothermic).')
             : kind === 'endothermic'
               ? L(
                   'ΔrH > 0: phản ứng thu nhiệt.',
                   'ΔrH > 0: the reaction absorbs heat (endothermic).',
                 )
               : L(
-                  'ΔrH = 0: phản ứng không toả nhiệt, không thu nhiệt.',
+                  'ΔrH = 0: phản ứng không tỏa nhiệt, không thu nhiệt.',
                   'ΔrH = 0: the reaction neither releases nor absorbs heat.',
                 ),
         )}

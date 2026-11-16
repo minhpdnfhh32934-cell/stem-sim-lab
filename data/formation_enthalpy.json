@@ -3,7 +3,7 @@
  "version": 1,
  "source": {
   "id": "sgk-hh10-kntt-b17",
-  "citation": "SGK Hoá học 10, Kết nối tri thức với cuộc sống (NXB Giáo dục Việt Nam), Bài 17, Bảng 17.1 (tr. 85); sách dẫn nguồn Silberberg, Chemistry: the molecular nature of matter and change, McGraw-Hill 2018",
+  "citation": "SGK Hóa học 10, Kết nối tri thức với cuộc sống (NXB Giáo dục Việt Nam), Bài 17, Bảng 17.1 (tr. 85); sách dẫn nguồn Silberberg, Chemistry: the molecular nature of matter and change, McGraw-Hill 2018",
   "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983"
  },
  "generated_by": "scripts/data/gen_enthalpy.py",
@@ -11,7 +11,7 @@
  "references": {
   "sgk": {
    "id": "sgk-hh10-kntt-b17",
-   "citation": "SGK Hoá học 10, Kết nối tri thức với cuộc sống (NXB Giáo dục Việt Nam), Bài 17, Bảng 17.1 (tr. 85); sách dẫn nguồn Silberberg, Chemistry: the molecular nature of matter and change, McGraw-Hill 2018",
+   "citation": "SGK Hóa học 10, Kết nối tri thức với cuộc sống (NXB Giáo dục Việt Nam), Bài 17, Bảng 17.1 (tr. 85); sách dẫn nguồn Silberberg, Chemistry: the molecular nature of matter and change, McGraw-Hill 2018",
    "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983"
   },
   "codata": {
@@ -26,7 +26,7 @@
   },
   "definition": {
    "id": "dfh-definition",
-   "citation": "Nhiệt tạo thành chuẩn của các đơn chất ở dạng bền vững nhất bằng không (SGK Hoá học 10 KNTT, Bài 17, tr. 84)",
+   "citation": "Nhiệt tạo thành chuẩn của các đơn chất ở dạng bền vững nhất bằng không (SGK Hóa học 10 KNTT, Bài 17, tr. 84)",
    "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983"
   }
  },

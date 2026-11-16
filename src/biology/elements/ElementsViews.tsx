@@ -46,7 +46,7 @@ function ViewSwitch() {
   );
 }
 
-/** "Các nguyên tố hoá học và nước": the element shares, or water's numbers. */
+/** "Các nguyên tố hóa học và nước": the element shares, or water's numbers. */
 export function ElementsStage() {
   const view = useElements((s) => s.view);
   usePublishCard(view === 'elements' ? ELEMENTS_CARD : WATER_CARD);
@@ -196,7 +196,7 @@ function WaterView() {
           <li>
             {Lz(
               L(
-                'là dung môi hoà tan nhiều chất cần cho hoạt động sống của tế bào (nhờ tính phân cực);',
+                'là dung môi hòa tan nhiều chất cần cho hoạt động sống của tế bào (nhờ tính phân cực);',
                 'a solvent for many substances the cell needs (thanks to its polarity);',
               ),
             )}
@@ -204,7 +204,7 @@ function WaterView() {
           <li>
             {Lz(
               L(
-                'là nguyên liệu và môi trường của nhiều phản ứng sinh hoá trong tế bào;',
+                'là nguyên liệu và môi trường của nhiều phản ứng sinh hóa trong tế bào;',
                 'a raw material and the medium of many biochemical reactions in the cell;',
               ),
             )}
@@ -212,7 +212,7 @@ function WaterView() {
           <li>
             {Lz(
               L(
-                'góp phần tạo hình dạng không gian của nhiều phân tử hữu cơ và điều hoà nhiệt độ tế bào, cơ thể.',
+                'góp phần tạo hình dạng không gian của nhiều phân tử hữu cơ và điều hòa nhiệt độ tế bào, cơ thể.',
                 'helps shape many organic molecules in space and regulates the temperature of the cell and the body.',
               ),
             )}

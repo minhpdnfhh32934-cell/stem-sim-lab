@@ -3,14 +3,14 @@ import { L } from '../common';
 import { ENTHALPY_REFERENCES } from '../data/enthalpy';
 import { REACTIONS_SOURCE } from '../data/reactions';
 
-/** Science Card of "Biến thiên enthalpy trong các phản ứng hoá học" (HH10 Bài 17; HH10-RX-4, -5). */
+/** Science Card of "Biến thiên enthalpy trong các phản ứng hóa học" (HH10 Bài 17; HH10-RX-4, -5). */
 export const ENTHALPY_CARD: ScienceCardData = {
   title: L(
-    'Biến thiên enthalpy trong các phản ứng hoá học',
+    'Biến thiên enthalpy trong các phản ứng hóa học',
     'Enthalpy changes in chemical reactions',
   ),
   model: L(
-    'Biến thiên enthalpy của phản ứng được xác định bằng hiệu số giữa tổng nhiệt tạo thành các chất sản phẩm và tổng nhiệt tạo thành của các chất đầu, có nhân hệ số trong phương trình (SGK Bài 17, tr. 85). Hệ số lấy từ bộ cân bằng chính xác; nhiệt tạo thành chuẩn lấy từ SGK Bảng 17.1, chất nào bảng không có thì lấy từ NIST Chemistry WebBook. Dấu của ΔrH cho biết phản ứng toả nhiệt (ΔrH < 0) hay thu nhiệt (ΔrH > 0).',
+    'Biến thiên enthalpy của phản ứng được xác định bằng hiệu số giữa tổng nhiệt tạo thành các chất sản phẩm và tổng nhiệt tạo thành của các chất đầu, có nhân hệ số trong phương trình (SGK Bài 17, tr. 85). Hệ số lấy từ bộ cân bằng chính xác; nhiệt tạo thành chuẩn lấy từ SGK Bảng 17.1, chất nào bảng không có thì lấy từ NIST Chemistry WebBook. Dấu của ΔrH cho biết phản ứng tỏa nhiệt (ΔrH < 0) hay thu nhiệt (ΔrH > 0).',
     'The reaction’s enthalpy change is the total enthalpy of formation of the products minus that of the reactants, each multiplied by its coefficient (SGK Lesson 17, p. 85). The coefficients come from the exact balancer; standard enthalpies of formation come from SGK Table 17.1, and from the NIST Chemistry WebBook for species the table lacks. The sign of ΔrH tells whether the reaction releases heat (ΔrH < 0) or absorbs it (ΔrH > 0).',
   ),
   equations: [
@@ -40,7 +40,7 @@ export const ENTHALPY_CARD: ScienceCardData = {
       'The result is given to the decimals of the least precise value used.',
     ),
     L(
-      'Sơ đồ năng lượng chỉ minh hoạ chiều của ΔrH, không theo tỉ lệ.',
+      'Sơ đồ năng lượng chỉ minh họa chiều của ΔrH, không theo tỉ lệ.',
       'The energy diagram only shows the direction of ΔrH; it is not to scale.',
     ),
   ],

@@ -132,7 +132,7 @@ export function CrystalPanel() {
       <p className="small muted">
         {Lz(
           L(
-            'Đếm từ toạ độ của ô: đỉnh, mặt, cạnh và tâm góp phần khác nhau vào một ô.',
+            'Đếm từ tọa độ của ô: đỉnh, mặt, cạnh và tâm góp phần khác nhau vào một ô.',
             'Counted from the cell’s coordinates: corners, faces, edges and the centre count differently.',
           ),
         )}

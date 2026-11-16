@@ -14,7 +14,7 @@ const TOPICS = [
   'Độ phân cực liên kết',
   'Thư viện phản ứng đã kiểm chứng',
   'Cân bằng phương trình',
-  'Phản ứng oxi hoá – khử',
+  'Phản ứng oxi hóa – khử',
   'Biến thiên enthalpy của phản ứng',
   'Thuyết va chạm',
   'Phân bố Maxwell–Boltzmann',

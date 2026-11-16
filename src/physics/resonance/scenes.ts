@@ -219,7 +219,7 @@ function card(): ScienceCardData {
   return {
     title: L('Dao động cưỡng bức và cộng hưởng', 'Forced oscillation and resonance'),
     model: L(
-      'Vật gắn lò xo nằm ngang, chịu lực cản nhớt và ngoại lực điều hoà F = F₀cos(Ωt). Lúc đầu là tổng của dao động riêng tắt dần và dao động cưỡng bức; dao động riêng tắt dần đi, còn lại dao động ổn định với tần số góc của ngoại lực.',
+      'Vật gắn lò xo nằm ngang, chịu lực cản nhớt và ngoại lực điều hòa F = F₀cos(Ωt). Lúc đầu là tổng của dao động riêng tắt dần và dao động cưỡng bức; dao động riêng tắt dần đi, còn lại dao động ổn định với tần số góc của ngoại lực.',
       'A body on a horizontal spring with viscous damping and a driving force F = F₀cos(Ωt). At first the motion is the damped free oscillation plus the forced one; the free part dies out and the steady motion at the driving frequency remains.',
     ),
     equations: [

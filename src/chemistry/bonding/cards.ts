@@ -31,7 +31,7 @@ export const KNTT = {
 } satisfies Record<string, Source>;
 
 const PICTURE = L(
-  'Hình vẽ kiểu Lewis là minh họa: vị trí nguyên tử lấy từ toạ độ 2D của dữ liệu cấu trúc (RDKit), không phải hình học thật của phân tử.',
+  'Hình vẽ kiểu Lewis là minh họa: vị trí nguyên tử lấy từ tọa độ 2D của dữ liệu cấu trúc (RDKit), không phải hình học thật của phân tử.',
   'The Lewis-style drawing is an illustration: atom positions are the structure data’s 2D depiction (RDKit), not the real molecular geometry.',
 );
 

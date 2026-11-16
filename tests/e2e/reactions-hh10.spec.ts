@@ -24,7 +24,7 @@ test('Bài 7: period 3 oxides and hydroxides from the group number', async ({ pa
   const panel = page.getByRole('complementary', { name: 'Bảng thuộc tính' });
   await expect(panel.getByText('Nhóm VIIA → +7')).toBeVisible();
   await expect(
-    panel.getByText('Kiểm tra: với H +1, O −2 thì Cl có số oxi hoá +7 trong HClO₄.'),
+    panel.getByText('Kiểm tra: với H +1, O −2 thì Cl có số oxi hóa +7 trong HClO₄.'),
   ).toBeVisible();
   await noOverflow(page);
   expect(errors).toEqual([]);
@@ -33,7 +33,7 @@ test('Bài 7: period 3 oxides and hydroxides from the group number', async ({ pa
 test('Bài 15: oxidation numbers, agents and electrons for library reactions', async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(String(e)));
-  await openTopic(page, 'Hóa học', 'Phản ứng oxi hoá – khử');
+  await openTopic(page, 'Hóa học', 'Phản ứng oxi hóa – khử');
   const stage = page.getByRole('region', { name: 'Khung mô phỏng' });
   await expect(stage.getByRole('group', { name: 'Fe₂O₃: Fe +3, O −2' })).toBeVisible({
     timeout: 20_000,
@@ -54,7 +54,7 @@ test('Bài 17: ΔrH°298 from the book’s enthalpies of formation', async ({ pa
   await openTopic(page, 'Hóa học', 'Biến thiên enthalpy của phản ứng');
   // SGK tr. 83: CH4 + 2O2 → CO2 + 2H2O(l), about −890 kJ; Bảng 17.1 gives −890,2.
   await expect(page.getByText('ΔrH°298 = −890,2 kJ').first()).toBeVisible({ timeout: 20_000 });
-  await expect(page.getByText('ΔrH < 0: phản ứng toả nhiệt.')).toBeVisible();
+  await expect(page.getByText('ΔrH < 0: phản ứng tỏa nhiệt.')).toBeVisible();
   await page.getByRole('combobox', { name: 'Phản ứng' }).selectOption('h2-o2');
   // SGK tr. 82, Ví dụ 1: −571,6 kJ.
   await expect(page.getByText('ΔrH°298 = −571,6 kJ').first()).toBeVisible();

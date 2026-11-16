@@ -44,7 +44,7 @@ describe('Các nguyên tố hóa học và nước (SH10 Bài 4)', () => {
     expect(container).toHaveTextContent('Oxygen (O)65%');
     expect(card()?.confidence).toBe('approx');
     // Carbon is open at first, with why it matters.
-    expect(container).toHaveTextContent('4 electron hoá trị');
+    expect(container).toHaveTextContent('4 electron hóa trị');
     fireEvent.click(screen.getByRole('button', { name: /Các nguyên tố vi lượng/ }));
     expect(container).toHaveTextContent('bướu cổ');
   });

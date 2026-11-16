@@ -177,7 +177,7 @@ function card(): ScienceCardData {
       },
       {
         tex: 'x = a(\\cos E - e),\\quad y = b\\sin E,\\quad b = a\\sqrt{1 - e^2}',
-        label: L('Vị trí (Mặt Trời ở gốc toạ độ)', 'Position (Sun at the origin)'),
+        label: L('Vị trí (Mặt Trời ở gốc tọa độ)', 'Position (Sun at the origin)'),
       },
       {
         tex: '\\frac{dA}{dt} = \\frac{\\pi a b}{T} = \\text{const}',

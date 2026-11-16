@@ -33,7 +33,7 @@ export const sh10b19CellTechnology: StudioScenario = {
   ],
   hints: [
     L(
-      'Ở thực vật, tế bào đã chuyên hoá có quay lại phân chia được không, nếu được nuôi trong điều kiện thích hợp?',
+      'Ở thực vật, tế bào đã chuyên hóa có quay lại phân chia được không, nếu được nuôi trong điều kiện thích hợp?',
       'In plants, can a specialised cell start dividing again if it is kept in the right conditions?',
     ),
     L(
@@ -48,7 +48,7 @@ export const sh10b19CellTechnology: StudioScenario = {
     ),
   ],
   expectedConclusion: L(
-    'Công nghệ tế bào nuôi cấy tế bào, mô trong môi trường nhân tạo. Ở thực vật, nhờ chất dinh dưỡng và hormone thích hợp, tế bào đã chuyên hoá quay về trạng thái chưa phân hoá (mô sẹo) rồi tái sinh thành những cây con giống nhau. Các thành tựu gồm nhân nhanh giống cây, cây lai khác loài, cây đồng hợp tử, nhân bản vô tính vật nuôi, liệu pháp tế bào gốc và liệu pháp gene.',
+    'Công nghệ tế bào nuôi cấy tế bào, mô trong môi trường nhân tạo. Ở thực vật, nhờ chất dinh dưỡng và hormone thích hợp, tế bào đã chuyên hóa quay về trạng thái chưa phân hóa (mô sẹo) rồi tái sinh thành những cây con giống nhau. Các thành tựu gồm nhân nhanh giống cây, cây lai khác loài, cây đồng hợp tử, nhân bản vô tính vật nuôi, liệu pháp tế bào gốc và liệu pháp gene.',
     'Cell technology grows cells and tissues in an artificial medium. In plants, the right nutrients and hormones let specialised cells return to an undifferentiated state (callus) and then regrow into identical young plants. Its achievements include fast propagation of plants, hybrids of two species, fully homozygous plants, cloned farm animals, stem cell therapy and gene therapy.',
   ),
   sources: [],
@@ -75,7 +75,7 @@ export const sh10b19CellTechnology: StudioScenario = {
       {
         id: 'tai-sinh',
         text: L(
-          'Tế bào thực vật có thể quay về trạng thái chưa phân hoá rồi tái sinh thành cây',
+          'Tế bào thực vật có thể quay về trạng thái chưa phân hóa rồi tái sinh thành cây',
           'Plant cells can go back to an undifferentiated state and regrow into a plant',
         ),
       },
@@ -96,7 +96,7 @@ export const sh10b19CellTechnology: StudioScenario = {
     ],
     answer: 'tai-sinh',
     answerWhy: L(
-      'Trong ống nghiệm có chất dinh dưỡng và hormone thực vật với tỉ lệ thích hợp. Nhờ đó, tế bào lá đã chuyên hoá quay về trạng thái chưa phân hoá, phân chia nhiều lần rồi tạo thành rễ, thân, lá. Mảnh lá không có hạt, cũng không đủ chất để tự nuôi cả cây.',
+      'Trong ống nghiệm có chất dinh dưỡng và hormone thực vật với tỉ lệ thích hợp. Nhờ đó, tế bào lá đã chuyên hóa quay về trạng thái chưa phân hóa, phân chia nhiều lần rồi tạo thành rễ, thân, lá. Mảnh lá không có hạt, cũng không đủ chất để tự nuôi cả cây.',
       'The test tube holds nutrients and plant hormones in the right ratio. Thanks to them, specialised leaf cells return to an undifferentiated state, divide many times and form roots, a stem and leaves. The leaf piece has no seeds and not enough food to feed a whole plant.',
     ),
     activities: [
@@ -112,7 +112,7 @@ export const sh10b19CellTechnology: StudioScenario = {
             id: 'tach',
             text: L('Tách một mảnh mô khỏi cây', 'Take a piece of tissue from the plant'),
             why: L(
-              'Bước đầu tiên: lấy mô gồm những tế bào đã chuyên hoá từ cây cần nhân giống.',
+              'Bước đầu tiên: lấy mô gồm những tế bào đã chuyên hóa từ cây cần nhân giống.',
               'First step: take tissue made of specialised cells from the plant to be propagated.',
             ),
           },
@@ -130,11 +130,11 @@ export const sh10b19CellTechnology: StudioScenario = {
           {
             id: 'mo-seo',
             text: L(
-              'Tế bào quay về trạng thái chưa phân hoá, tạo mô sẹo',
+              'Tế bào quay về trạng thái chưa phân hóa, tạo mô sẹo',
               'The cells return to an undifferentiated state and form a callus',
             ),
             why: L(
-              'Khối tế bào chưa phân hoá này gọi là mô sẹo (mô callus).',
+              'Khối tế bào chưa phân hóa này gọi là mô sẹo (mô callus).',
               'This lump of undifferentiated cells is called a callus.',
             ),
           },
@@ -145,7 +145,7 @@ export const sh10b19CellTechnology: StudioScenario = {
               'Callus cells divide and form roots, a stem and leaves',
             ),
             why: L(
-              'Các tế bào mô sẹo phân chia rồi chuyên hoá dần thành các bộ phận của cây.',
+              'Các tế bào mô sẹo phân chia rồi chuyên hóa dần thành các bộ phận của cây.',
               'The callus cells divide and gradually specialise into the parts of a plant.',
             ),
           },
@@ -199,7 +199,7 @@ export const sh10b19CellTechnology: StudioScenario = {
             ),
             right: L('Cây đồng hợp tử về tất cả các gene', 'A plant homozygous for every gene'),
             why: L(
-              'Cây đơn bội tạo ra được lưỡng bội hoá, nên mọi gene đều ở trạng thái đồng hợp; điều này có ích khi tạo giống.',
+              'Cây đơn bội tạo ra được lưỡng bội hóa, nên mọi gene đều ở trạng thái đồng hợp; điều này có ích khi tạo giống.',
               'The haploid plant obtained is doubled, so every gene is homozygous; this helps plant breeding.',
             ),
           },
@@ -223,7 +223,7 @@ export const sh10b19CellTechnology: StudioScenario = {
               'Replacing diseased or damaged cells with cultured stem cells',
             ),
             why: L(
-              'Tế bào gốc có thể phân chia và biệt hoá thành nhiều loại tế bào, nên được nuôi cấy rồi đưa vào người bệnh.',
+              'Tế bào gốc có thể phân chia và biệt hóa thành nhiều loại tế bào, nên được nuôi cấy rồi đưa vào người bệnh.',
               'Stem cells can divide and turn into many kinds of cells, so they are grown and then given to the patient.',
             ),
           },

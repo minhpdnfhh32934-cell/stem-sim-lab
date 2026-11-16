@@ -48,7 +48,7 @@ export const sh10b22MicrobeUses: StudioScenario = {
     ),
   ],
   expectedConclusion: L(
-    'Vi sinh vật có vai trò rất lớn: chúng phân giải xác sinh vật và chất thải để vật chất quay vòng trong tự nhiên và làm giàu đất; vi sinh vật quang hợp như vi khuẩn lam, tảo tạo O₂ và chất dinh dưỡng; vi sinh vật cộng sinh giúp con người tiêu hoá. Con người dùng vi sinh vật trong nông nghiệp, chế biến thực phẩm, y dược và xử lí chất thải. Bên cạnh đó, một số vi sinh vật gây bệnh và làm hỏng thực phẩm.',
+    'Vi sinh vật có vai trò rất lớn: chúng phân giải xác sinh vật và chất thải để vật chất quay vòng trong tự nhiên và làm giàu đất; vi sinh vật quang hợp như vi khuẩn lam, tảo tạo O₂ và chất dinh dưỡng; vi sinh vật cộng sinh giúp con người tiêu hóa. Con người dùng vi sinh vật trong nông nghiệp, chế biến thực phẩm, y dược và xử lí chất thải. Bên cạnh đó, một số vi sinh vật gây bệnh và làm hỏng thực phẩm.',
     'Microbes matter a great deal: they break down dead bodies and waste so matter keeps cycling in nature and the soil gets richer; photosynthetic microbes such as cyanobacteria and algae make O₂ and food; microbes living in partnership help people digest. People use microbes in farming, food processing, medicine and waste treatment. Some microbes, however, cause disease and spoil food.',
   ),
   sources: [],
@@ -134,7 +134,7 @@ export const sh10b22MicrobeUses: StudioScenario = {
               'Make O₂ and food for heterotrophic living things',
             ),
             why: L(
-              'Chúng tự tạo chất hữu cơ nhờ quang hợp và thải O₂, nên là nguồn thức ăn và O₂ cho nhiều sinh vật khác. Không phải vi sinh vật tự dưỡng nào cũng thải O₂: vi khuẩn quang khử và vi khuẩn hoá tự dưỡng tạo chất hữu cơ mà không thải O₂.',
+              'Chúng tự tạo chất hữu cơ nhờ quang hợp và thải O₂, nên là nguồn thức ăn và O₂ cho nhiều sinh vật khác. Không phải vi sinh vật tự dưỡng nào cũng thải O₂: vi khuẩn quang khử và vi khuẩn hóa tự dưỡng tạo chất hữu cơ mà không thải O₂.',
               'They make their own organic matter by photosynthesis and give off O₂, so they feed many other living things and give them O₂. Not every autotrophic microbe gives off O₂: bacteria whose photosynthesis releases no O₂, and chemoautotrophic bacteria, make organic matter without giving off O₂.',
             ),
           },
@@ -145,11 +145,11 @@ export const sh10b22MicrobeUses: StudioScenario = {
               'Microbes living in partnership inside the human body',
             ),
             right: L(
-              'Giúp tiêu hoá, tăng miễn dịch và tạo một số vitamin',
+              'Giúp tiêu hóa, tăng miễn dịch và tạo một số vitamin',
               'Help digestion, strengthen immunity and make some vitamins',
             ),
             why: L(
-              'Cả hai bên cùng có lợi: vi sinh vật có chỗ sống, con người được giúp tiêu hoá và chống bệnh.',
+              'Cả hai bên cùng có lợi: vi sinh vật có chỗ sống, con người được giúp tiêu hóa và chống bệnh.',
               'Both sides gain: the microbes get a place to live, and people get help with digestion and fighting disease.',
             ),
           },
@@ -186,7 +186,7 @@ export const sh10b22MicrobeUses: StudioScenario = {
             text: L('Phân bón vi sinh', 'Microbial fertiliser'),
             group: 'nong-nghiep',
             why: L(
-              'Vi sinh vật trong phân bón làm giàu đất và giúp cây hút chất dễ hơn, ít gây ô nhiễm hơn phân hoá học.',
+              'Vi sinh vật trong phân bón làm giàu đất và giúp cây hút chất dễ hơn, ít gây ô nhiễm hơn phân hóa học.',
               'The microbes in it enrich the soil and help plants take up nutrients, with less pollution than chemical fertiliser.',
             ),
           },
@@ -195,7 +195,7 @@ export const sh10b22MicrobeUses: StudioScenario = {
             text: L('Thuốc trừ sâu vi sinh', 'Microbial insecticide'),
             group: 'nong-nghiep',
             why: L(
-              'Dùng vi sinh vật kìm hãm sâu, bệnh hại cây trồng thay cho thuốc hoá học.',
+              'Dùng vi sinh vật kìm hãm sâu, bệnh hại cây trồng thay cho thuốc hóa học.',
               'Microbes that hold back crop pests and diseases are used instead of chemicals.',
             ),
           },

@@ -7,7 +7,7 @@ get an *ideal VSEPR geometry* with bond lengths = sum of Cordero covalent radii.
 is recorded per molecule and shown in the app. Everything is review_status "pending".
 
 Each atom also gets 2D depiction coordinates ("xy", RDKit CoordGen) for the Lewis-style drawings
-of "Quy tắc octet" and "Liên kết cộng hoá trị" (#255): an illustration of the bonds, not a geometry.
+of "Quy tắc octet" and "Liên kết cộng hóa trị" (#255): an illustration of the bonds, not a geometry.
 
 Reference experimental geometries (for the automated accuracy test) are listed in
 REFERENCE below with their source; they are also pending teacher review.
@@ -113,7 +113,7 @@ DISPLAY_FORMULA = {
 }
 
 # 0.8.1 (#54 item 11): more organic molecules for the functional-group filter of "Phân tử 3D"
-# (names as in SGK Hoá học 11–12 2018: IUPAC names; pending teacher review, DATA_REVIEW ORG-1).
+# (names as in SGK Hóa học 11–12 2018: IUPAC names; pending teacher review, DATA_REVIEW ORG-1).
 MOLECULES += [
     ("propyne", "Propyne", "Propyne", "CC#C", "organic", ["propin"]),
     ("but1ene", "But-1-ene", "But-1-ene", "C=CCC", "organic", ["butene", "buten"]),

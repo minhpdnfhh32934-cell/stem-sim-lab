@@ -21,13 +21,13 @@ describe('Biến thiên enthalpy của phản ứng (HH10 Bài 17)', () => {
     expect(container).toHaveTextContent('ΣΔfH°298(sp) = 1 · (−393,5) + 2 · (−285,8) = −965,1 kJ');
     // An element's defined 0 is written "0", the book's values with their own decimal.
     expect(container).toHaveTextContent('ΣΔfH°298(cđ) = 1 · (−74,9) + 2 · (0) = −74,9 kJ');
-    expect(screen.getByText('ΔrH < 0: phản ứng toả nhiệt.')).toBeInTheDocument();
+    expect(screen.getByText('ΔrH < 0: phản ứng tỏa nhiệt.')).toBeInTheDocument();
     expect(
       screen.getByRole('img', {
         name: 'Sơ đồ: sản phẩm thấp hơn chất đầu, ΔrH°298 = −890,2 kJ',
       }),
     ).toBeInTheDocument();
-    expect(screen.getByText('Minh hoạ, không theo tỉ lệ')).toBeInTheDocument();
+    expect(screen.getByText('Minh họa, không theo tỉ lệ')).toBeInTheDocument();
   });
 
   it('CaCO3 decomposition is endothermic with the book’s values', () => {

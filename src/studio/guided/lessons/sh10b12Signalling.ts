@@ -47,13 +47,13 @@ export const sh10b12Signalling: StudioScenario = {
     ),
   ],
   expectedConclusion: L(
-    'Các tế bào truyền tin cho nhau bằng nhiều cách: trực tiếp, cận tiết, nội tiết và qua synapse. Hormone được tiết vào máu và theo máu đến những tế bào đích ở xa nên đó là truyền tin nội tiết. Trong tế bào nhận, tín hiệu đi qua ba giai đoạn: tiếp nhận (thụ thể gắn với tín hiệu), truyền tín hiệu (các phân tử lần lượt được hoạt hoá) và đáp ứng.',
+    'Các tế bào truyền tin cho nhau bằng nhiều cách: trực tiếp, cận tiết, nội tiết và qua synapse. Hormone được tiết vào máu và theo máu đến những tế bào đích ở xa nên đó là truyền tin nội tiết. Trong tế bào nhận, tín hiệu đi qua ba giai đoạn: tiếp nhận (thụ thể gắn với tín hiệu), truyền tín hiệu (các phân tử lần lượt được hoạt hóa) và đáp ứng.',
     'Cells signal to each other in several ways: direct contact, paracrine, endocrine and through a synapse. A hormone released into the blood travels to distant target cells, so it is endocrine signalling. In the receiving cell the signal goes through three stages: reception (a receptor binds the signal), transduction (molecules are switched on one after another) and response.',
   ),
   sources: [],
   assumptions: [
     L(
-      'Bài chỉ nói về tín hiệu hoá học, loại tín hiệu chủ yếu mà các tế bào truyền cho nhau.',
+      'Bài chỉ nói về tín hiệu hóa học, loại tín hiệu chủ yếu mà các tế bào truyền cho nhau.',
       'The lesson covers only chemical signals, the main kind of signal cells send each other.',
     ),
   ],
@@ -108,14 +108,14 @@ export const sh10b12Signalling: StudioScenario = {
               'The signal molecule binds a receptor protein of the receiving cell',
             ),
             why: L(
-              'Đây là giai đoạn tiếp nhận: mỗi thụ thể chỉ khớp với tín hiệu phù hợp, như chìa khoá với ổ khoá, và thụ thể đổi hình dạng.',
+              'Đây là giai đoạn tiếp nhận: mỗi thụ thể chỉ khớp với tín hiệu phù hợp, như chìa khóa với ổ khóa, và thụ thể đổi hình dạng.',
               'This is reception: each receptor fits only its own signal, like a key in a lock, and the receptor changes shape.',
             ),
           },
           {
             id: 'truyen',
             text: L(
-              'Thụ thể đã hoạt động lần lượt hoạt hoá các phân tử tiếp theo trong tế bào',
+              'Thụ thể đã hoạt động lần lượt hoạt hóa các phân tử tiếp theo trong tế bào',
               'The active receptor switches on the next molecules in the cell, one after another',
             ),
             why: L(

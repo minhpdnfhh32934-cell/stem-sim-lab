@@ -3,7 +3,7 @@ elements Na…Cl and their acid–base character (HH10 Bài 7 "Xu hướng biế
 tính chất của hợp chất trong một chu kì").
 
 Sources, read on ACCESSED:
-- SGK Hoá học 10 "Kết nối tri thức với cuộc sống" (NXB Giáo dục Việt Nam), Bảng 7.1 (printed
+- SGK Hóa học 10 "Kết nối tri thức với cuộc sống" (NXB Giáo dục Việt Nam), Bảng 7.1 (printed
   page 40: formulas of the oxides and hydroxides for the highest valence) and Bảng 7.2 (printed
   page 41: acid–base character), NXBGD training reader, page images 41–42;
 - cross-check of the oxides' character: J. Clark, "Acid-base Behavior of the Oxides", Chemistry
@@ -27,7 +27,7 @@ ACCESSED = "2026-11-15"
 
 SGK = {
     "id": "sgk-hh10-kntt-b7",
-    "citation": "SGK Hoá học 10, Kết nối tri thức với cuộc sống (NXB Giáo dục Việt Nam), Bài 7: Bảng 7.1 (tr. 40) và Bảng 7.2 (tr. 41)",
+    "citation": "SGK Hóa học 10, Kết nối tri thức với cuộc sống (NXB Giáo dục Việt Nam), Bài 7: Bảng 7.1 (tr. 40) và Bảng 7.2 (tr. 41)",
     "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983",
 }
 LIBRETEXTS = {

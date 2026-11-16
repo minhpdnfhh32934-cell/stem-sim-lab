@@ -44,7 +44,7 @@ const PROPERTY: Record<
     value: (r) => r.en_pauling,
   },
   ie: {
-    label: L('Năng lượng ion hoá thứ nhất (NIST)', 'First ionisation energy (NIST)'),
+    label: L('Năng lượng ion hóa thứ nhất (NIST)', 'First ionisation energy (NIST)'),
     short: 'I₁',
     unit: 'kJ/mol',
     value: (r) => r.ie_kj_mol,
@@ -108,7 +108,7 @@ export function HalogenStage() {
         <li>
           {Lz(
             L(
-              'Từ F đến I: bán kính nguyên tử tăng; độ âm điện và năng lượng ion hoá thứ nhất giảm.',
+              'Từ F đến I: bán kính nguyên tử tăng; độ âm điện và năng lượng ion hóa thứ nhất giảm.',
               'From F to I: the atomic radius grows; electronegativity and first ionisation energy fall.',
             ),
           )}
@@ -116,7 +116,7 @@ export function HalogenStage() {
         <li>
           {Lz(
             L(
-              'Tính oxi hoá giảm dần từ fluorine đến iodine (SGK tr. 107).',
+              'Tính oxi hóa giảm dần từ fluorine đến iodine (SGK tr. 107).',
               'Oxidising power falls from fluorine to iodine (SGK p. 107).',
             ),
           )}
@@ -178,7 +178,7 @@ export function HalogenPanel() {
         <p className="small">
           {Lz(
             L(
-              `${r.symbol}: lớp ngoài cùng ${outerShell(r.z)}, 7 electron, dễ nhận thêm 1 electron; số oxi hoá đặc trưng trong hợp chất là −1${r.symbol === 'F' ? ', fluorine luôn có số oxi hoá −1 trong mọi hợp chất' : ', có thể dương (+1, +3, +5, +7) khi liên kết với nguyên tố có độ âm điện lớn hơn'} (SGK tr. 106).`,
+              `${r.symbol}: lớp ngoài cùng ${outerShell(r.z)}, 7 electron, dễ nhận thêm 1 electron; số oxi hóa đặc trưng trong hợp chất là −1${r.symbol === 'F' ? ', fluorine luôn có số oxi hóa −1 trong mọi hợp chất' : ', có thể dương (+1, +3, +5, +7) khi liên kết với nguyên tố có độ âm điện lớn hơn'} (SGK tr. 106).`,
               `${r.symbol}: outer shell ${outerShell(r.z)}, 7 electrons, gains 1 electron easily; its usual oxidation number in compounds is −1${r.symbol === 'F' ? ', and fluorine is −1 in every compound' : ', positive (+1, +3, +5, +7) with more electronegative elements'} (SGK p. 106).`,
             ),
           )}
@@ -225,7 +225,7 @@ export function HalogenPanel() {
         <p className="small muted">
           {Lz(
             L(
-              'Nguồn khác: bán kính cộng hoá trị (Cordero 2008), nhiệt độ nóng chảy và sôi theo CRC Handbook, qua thư viện mendeleev.',
+              'Nguồn khác: bán kính cộng hóa trị (Cordero 2008), nhiệt độ nóng chảy và sôi theo CRC Handbook, qua thư viện mendeleev.',
               'Other: covalent radius (Cordero 2008), melting and boiling points from the CRC Handbook, via the mendeleev library.',
             ),
           )}

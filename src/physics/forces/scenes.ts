@@ -105,7 +105,7 @@ const graphs: GraphDef[] = [
   },
   {
     id: 'position',
-    title: L('Toạ độ theo thời gian', 'Position over time'),
+    title: L('Tọa độ theo thời gian', 'Position over time'),
     yLabel: L('x, y (m)', 'x, y (m)'),
     series: [
       { id: 'x', label: L('x', 'x'), value: (s) => s[FC.x] ?? 0 },

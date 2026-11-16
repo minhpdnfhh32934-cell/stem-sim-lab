@@ -1,4 +1,4 @@
-"""Generate data/halogens.json: what SGK Hoá học 10 "Kết nối tri thức với cuộc sống" (NXB Giáo dục
+"""Generate data/halogens.json: what SGK Hóa học 10 "Kết nối tri thức với cuộc sống" (NXB Giáo dục
 Việt Nam) gives about F, Cl, Br, I and their hydrogen halides, copied as printed (user decision
 15/11/2026: the book's values first; other sources only fill what the book does not give).
 
@@ -22,7 +22,7 @@ import pathlib
 OUT = pathlib.Path(__file__).resolve().parents[2] / "data" / "halogens.json"
 ACCESSED = "2026-11-15"
 READER = "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983"
-BOOK = "SGK Hoá học 10, Kết nối tri thức với cuộc sống (NXB Giáo dục Việt Nam)"
+BOOK = "SGK Hóa học 10, Kết nối tri thức với cuộc sống (NXB Giáo dục Việt Nam)"
 
 SOURCES = {
     "radius": {"id": "sgk-hh10-hinh-6-2", "citation": f"{BOOK}, Bài 6, Hình 6.2 (tr. 35); sách dẫn nguồn M. S. Silberberg, Principles of General Chemistry, McGraw-Hill 2007", "url": READER},

@@ -10,6 +10,6 @@ export const fourierSeries: ModuleView = {
   Stage: FourierStage,
   Panel: FourierPanel,
   Bottom: FourierBottom,
-  bottomTitle: L('Các hoạ âm', 'Harmonics'),
+  bottomTitle: L('Các họa âm', 'Harmonics'),
   state: bindStore(useFourierStore, ['wave', 'N', 'f1', 'showHarmonics'], setFourier),
 };

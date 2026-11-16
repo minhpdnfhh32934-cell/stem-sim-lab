@@ -31,8 +31,8 @@ test('Fourier: the sum follows N, the harmonics table, "Nghe" starts and stops o
   page.on('pageerror', (e) => errors.push(String(e)));
   await openLab(page);
   await page.getByRole('radio', { name: 'Vật lý' }).click();
-  await page.getByRole('button', { name: 'Hoạ âm và chuỗi Fourier', exact: true }).click();
-  await expect(page.getByRole('img', { name: 'Sóng vuông: tổng 5 hoạ âm' })).toBeVisible({
+  await page.getByRole('button', { name: 'Họa âm và chuỗi Fourier', exact: true }).click();
+  await expect(page.getByRole('img', { name: 'Sóng vuông: tổng 5 họa âm' })).toBeVisible({
     timeout: 20_000,
   });
   // Nothing plays before the learner asks.
@@ -41,11 +41,11 @@ test('Fourier: the sum follows N, the harmonics table, "Nghe" starts and stops o
   // Square wave: odd harmonics only, 1, 3, 5 for N = 5 (the bottom panel's table).
   const rows = page.locator('.fourier-table tbody tr');
   await expect(rows).toHaveCount(3);
-  await readableAt1366(page, 'Sóng vuông: tổng 5 hoạ âm');
+  await readableAt1366(page, 'Sóng vuông: tổng 5 họa âm');
   await page.getByRole('radio', { name: 'Sóng răng cưa' }).click();
   await expect(rows).toHaveCount(5);
-  await expect(page.getByRole('img', { name: 'Sóng răng cưa: tổng 5 hoạ âm' })).toBeVisible();
-  await readableAt1366(page, 'Sóng răng cưa: tổng 5 hoạ âm');
+  await expect(page.getByRole('img', { name: 'Sóng răng cưa: tổng 5 họa âm' })).toBeVisible();
+  await readableAt1366(page, 'Sóng răng cưa: tổng 5 họa âm');
   await listen.click();
   await expect(page.getByRole('button', { name: 'Dừng nghe' })).toHaveAttribute(
     'aria-pressed',
@@ -54,7 +54,7 @@ test('Fourier: the sum follows N, the harmonics table, "Nghe" starts and stops o
   await page.getByRole('button', { name: 'Dừng nghe' }).click();
   await expect(listen).toHaveAttribute('aria-pressed', 'false');
   // The link to the standing-wave lesson.
-  await page.getByRole('button', { name: 'Hoạ âm của dây đàn: mở bài Sóng dừng trên dây' }).click();
+  await page.getByRole('button', { name: 'Họa âm của dây đàn: mở bài Sóng dừng trên dây' }).click();
   await expect(page.locator('.stage__hud-title')).toHaveText('Sóng dừng trên dây', {
     timeout: 20_000,
   });

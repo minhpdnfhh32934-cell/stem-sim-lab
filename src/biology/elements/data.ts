@@ -1,5 +1,5 @@
 /**
- * "Các nguyên tố hoá học và nước" (SH10 KNTT Bài 4, #255): the shares of the human body by mass
+ * "Các nguyên tố hóa học và nước" (SH10 KNTT Bài 4, #255): the shares of the human body by mass
  * from the textbook's figure 4.1 and water's constants, both in data/cell_elements.json
  * (scripts/data/gen_cell_elements.py; DATA_REVIEW SH10-ELEM-*). Pure functions, no state.
  */
@@ -85,7 +85,7 @@ export const GROUP_NAME: Record<ElementGroup, LocalizedText> = {
 /** What each group does (SGK tr. 24, 27), paraphrased; teaching text, DATA_REVIEW SH10-ELEM-3. */
 export const GROUP_ROLE: Record<ElementGroup, LocalizedText> = {
   macro: L(
-    'Hầu hết các loại tế bào đều cần với một lượng lớn. Chúng là thành phần chủ chốt cấu tạo nên mọi phân tử sinh học và mọi thành phần hoá học của tế bào.',
+    'Hầu hết các loại tế bào đều cần với một lượng lớn. Chúng là thành phần chủ chốt cấu tạo nên mọi phân tử sinh học và mọi thành phần hóa học của tế bào.',
     'Nearly every kind of cell needs them in large amounts. They are the key building blocks of every biological molecule and every chemical component of the cell.',
   ),
   trace: L(
@@ -96,7 +96,7 @@ export const GROUP_ROLE: Record<ElementGroup, LocalizedText> = {
 
 /** Why carbon matters (SGK tr. 24–25), paraphrased. */
 export const CARBON_ROLE: LocalizedText = L(
-  'Nguyên tử carbon có 4 electron hoá trị ở vòng ngoài nên tạo được bốn liên kết cộng hoá trị. Các nguyên tử carbon liên kết với nhau thành bộ khung mạch thẳng, mạch vòng, phân nhánh hoặc không phân nhánh; bộ khung gắn với các nhóm chức khác nhau tạo nên carbohydrate, lipid, protein và nucleic acid.',
+  'Nguyên tử carbon có 4 electron hóa trị ở vòng ngoài nên tạo được bốn liên kết cộng hóa trị. Các nguyên tử carbon liên kết với nhau thành bộ khung mạch thẳng, mạch vòng, phân nhánh hoặc không phân nhánh; bộ khung gắn với các nhóm chức khác nhau tạo nên carbohydrate, lipid, protein và nucleic acid.',
   'A carbon atom has 4 valence electrons in its outer shell, so it forms four covalent bonds. Carbon atoms join into chains, rings, branched or unbranched skeletons; with different functional groups attached, these skeletons make carbohydrates, lipids, proteins and nucleic acids.',
 );
 
