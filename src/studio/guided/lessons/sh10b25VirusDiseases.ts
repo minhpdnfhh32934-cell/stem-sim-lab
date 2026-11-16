@@ -56,7 +56,7 @@ export const sh10b25VirusDiseases: StudioScenario = {
       'Why does knowing how a disease spreads help us prevent it?',
     ),
     L(
-      'Vì sao thuốc trừ sâu từ virus được xem là tốt hơn thuốc hoá học ở một số mặt?',
+      'Vì sao thuốc trừ sâu từ virus được xem là tốt hơn thuốc hóa học ở một số mặt?',
       'Why are virus insecticides seen as better than chemical ones in some ways?',
     ),
   ],
@@ -86,7 +86,7 @@ export const sh10b25VirusDiseases: StudioScenario = {
   ],
   limits: [
     L(
-      'Nội dung ở mức sách giáo khoa, không phải lời khuyên y tế. Khi lo lắng về sức khoẻ, hãy hỏi bác sĩ hoặc nhân viên y tế.',
+      'Nội dung ở mức sách giáo khoa, không phải lời khuyên y tế. Khi lo lắng về sức khỏe, hãy hỏi bác sĩ hoặc nhân viên y tế.',
       'Textbook-level content, not medical advice. If you are worried about your health, ask a doctor or a health worker.',
     ),
     L(
@@ -293,7 +293,7 @@ export const sh10b25VirusDiseases: StudioScenario = {
               'A virus kills the pest insect but not useful insects',
             ),
             why: L(
-              'Virus chỉ tấn công đúng loài sâu hại, nên ưu việt hơn hoá chất diệt côn trùng.',
+              'Virus chỉ tấn công đúng loài sâu hại, nên ưu việt hơn hóa chất diệt côn trùng.',
               'The virus attacks only that pest, so it is better than chemical insect killers.',
             ),
           },

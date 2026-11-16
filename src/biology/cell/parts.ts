@@ -150,7 +150,7 @@ export const PARTS: Record<PartId, CellPart> = {
   prokCytoplasm: part(
     L('Tế bào chất', 'Cytoplasm'),
     L(
-      'Khối dạng keo, chủ yếu là nước, nằm bên trong màng tế bào; chứa ribosome và các hạt dự trữ, là nơi diễn ra các phản ứng hoá sinh của tế bào.',
+      'Khối dạng keo, chủ yếu là nước, nằm bên trong màng tế bào; chứa ribosome và các hạt dự trữ, là nơi diễn ra các phản ứng hóa sinh của tế bào.',
       'A gel, mostly water, inside the cell membrane; it holds ribosomes and storage granules and is where the cell’s biochemical reactions happen.',
     ),
     ['bacterium'],
@@ -230,7 +230,7 @@ export const PARTS: Record<PartId, CellPart> = {
   lysosome: part(
     L('Lysosome', 'Lysosome'),
     L(
-      'Túi có màng đơn chứa enzyme thuỷ phân; phân giải bào quan già, hỏng để tái sử dụng và giúp tế bào tiêu hoá thức ăn.',
+      'Túi có màng đơn chứa enzyme thủy phân; phân giải bào quan già, hỏng để tái sử dụng và giúp tế bào tiêu hóa thức ăn.',
       'A sac with a single membrane full of digestive (hydrolytic) enzymes; it breaks down worn-out organelles for reuse and helps the cell digest food.',
     ),
     ['animal'],
@@ -240,7 +240,7 @@ export const PARTS: Record<PartId, CellPart> = {
   peroxysome: part(
     L('Peroxysome', 'Peroxisome'),
     L(
-      'Bào quan hình cầu có màng đơn, chứa enzyme phân giải peroxide (chất có thể gây hại cho tế bào); tham gia khử độc và chuyển hoá lipid.',
+      'Bào quan hình cầu có màng đơn, chứa enzyme phân giải peroxide (chất có thể gây hại cho tế bào); tham gia khử độc và chuyển hóa lipid.',
       'A round organelle with a single membrane and enzymes that break down peroxide (which can harm the cell); it helps detoxify and process lipids.',
     ),
     EUK,
@@ -250,7 +250,7 @@ export const PARTS: Record<PartId, CellPart> = {
   vacuole: part(
     L('Không bào trung tâm', 'Central vacuole'),
     L(
-      'Không bào lớn có màng đơn, nằm giữa tế bào thực vật; giúp điều hoà áp suất thẩm thấu. Không bào còn có thể chứa sắc tố, chất dự trữ hay chất thải.',
+      'Không bào lớn có màng đơn, nằm giữa tế bào thực vật; giúp điều hòa áp suất thẩm thấu. Không bào còn có thể chứa sắc tố, chất dự trữ hay chất thải.',
       'The large vacuole with a single membrane in the middle of a plant cell; it helps regulate osmotic pressure. Vacuoles can also hold pigments, stored substances or wastes.',
     ),
     ['plant'],

@@ -29,7 +29,7 @@ export function OxFormula({
   const name = `${coef !== undefined && coef > 1 ? String(coef) : ''}${formatFormula(formula)}`;
   const label = values
     ? `${name}: ${order.map((el) => `${el} ${signed(values.get(el) ?? 0)}`).join(', ')}`
-    : `${name}: ${Lz(L('chưa xác định số oxi hoá', 'oxidation numbers undecided'))}`;
+    : `${name}: ${Lz(L('chưa xác định số oxi hóa', 'oxidation numbers undecided'))}`;
   return (
     <span className="ox-formula" role="group" aria-label={label}>
       {coef !== undefined && coef > 1 && (

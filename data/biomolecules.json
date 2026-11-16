@@ -3,7 +3,7 @@
  "version": 1,
  "source": {
   "id": "pubchem-rdkit",
-  "citation": "Cấu trúc hoá học: PubChem (NCBI), mỗi phân tử ghi số CID, SMILES lấy ngày 15/11/2026; cấu trúc 3D sinh bằng RDKit 2026.03.6 (ETKDG v3 + MMFF94), một cấu dạng ở pha khí",
+  "citation": "Cấu trúc hóa học: PubChem (NCBI), mỗi phân tử ghi số CID, SMILES lấy ngày 15/11/2026; cấu trúc 3D sinh bằng RDKit 2026.03.6 (ETKDG v3 + MMFF94), một cấu dạng ở pha khí",
   "url": "https://pubchem.ncbi.nlm.nih.gov"
  },
  "generated_by": "scripts/data/gen_biomolecules.py",
@@ -417,7 +417,7 @@
    "id": "palmitic",
    "group": "lipid",
    "name": {
-    "vi": "Acid palmitic: acid béo bão hoà (acid béo no)",
+    "vi": "Acid palmitic: acid béo bão hòa (acid béo no)",
     "en": "Palmitic acid: a saturated fatty acid"
    },
    "cid": 985,

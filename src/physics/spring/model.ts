@@ -2,7 +2,7 @@
  * Linear (optionally damped) spring–mass oscillator  m x″ + b x′ + k x = 0,
  * x measured from equilibrium. The exact state-transition map is used for stepping,
  * so the simulation carries no truncation error (only round-off).
- * Sources: SGK Vật lí 11 (dao động điều hoà); Halliday–Resnick–Walker ch. 15.
+ * Sources: SGK Vật lí 11 (dao động điều hòa); Halliday–Resnick–Walker ch. 15.
  */
 export interface Oscillator {
   m: number;

@@ -44,7 +44,7 @@ describe('Oxide và hydroxide trong chu kì 3 (HH10 Bài 7)', () => {
     ).toBeInTheDocument();
     expect(screen.getByText(/công thức acid theo SGK Bảng 7.1/)).toBeInTheDocument();
     expect(
-      screen.getByText('Kiểm tra: với H +1, O −2 thì S có số oxi hoá +6 trong H₂SO₄.'),
+      screen.getByText('Kiểm tra: với H +1, O −2 thì S có số oxi hóa +6 trong H₂SO₄.'),
     ).toBeInTheDocument();
   });
 

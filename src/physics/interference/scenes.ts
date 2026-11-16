@@ -295,14 +295,14 @@ function solve(p: Params, locale: Locale): Solution {
   const nMin = minimaBetween(q.d, lam);
   steps.push({
     text: L(
-      'Trên đoạn S₁S₂ (không kể hai nguồn) thì −S₁S₂ < d₂ − d₁ < S₁S₂, nên số cực đại là số giá trị nguyên của k thoả:',
+      'Trên đoạn S₁S₂ (không kể hai nguồn) thì −S₁S₂ < d₂ − d₁ < S₁S₂, nên số cực đại là số giá trị nguyên của k thỏa:',
       'On S₁S₂ (sources excluded) −S₁S₂ < d₂ − d₁ < S₁S₂, so the number of maxima is the number of whole k with:',
     ),
     tex: `-\\frac{S_1S_2}{\\lambda} < k < \\frac{S_1S_2}{\\lambda},\\quad \\frac{S_1S_2}{\\lambda} = \\frac{${Q(q.d, 'cm')}}{${Q(lam, 'cm')}} = ${R(ratio)} \\;\\Rightarrow\\; N_{\\max} = ${String(nMax)}`,
   });
   steps.push({
     text: L(
-      'Số cực tiểu là số giá trị nguyên của k thoả:',
+      'Số cực tiểu là số giá trị nguyên của k thỏa:',
       'The number of minima is the number of whole k with:',
     ),
     tex: `-\\frac{S_1S_2}{\\lambda} - \\frac{1}{2} < k < \\frac{S_1S_2}{\\lambda} - \\frac{1}{2} \\;\\Rightarrow\\; N_{\\min} = ${String(nMin)}`,
@@ -327,7 +327,7 @@ function solve(p: Params, locale: Locale): Solution {
   const AM = amplitudeAt(q.a, dr, lam);
   steps.push({
     text: L(
-      `${whereM(order).vi} (M lấy theo d₁, d₂ trong ô thông số; đề không cho M thì SimLab tự đặt M để minh hoạ.)`,
+      `${whereM(order).vi} (M lấy theo d₁, d₂ trong ô thông số; đề không cho M thì SimLab tự đặt M để minh họa.)`,
       `${whereM(order).en} (M is taken from d₁, d₂ in the parameters; when the problem gives no M, SimLab places one for illustration.)`,
     ),
     tex: `d_2 - d_1 = ${Q(q.d2, 'cm')} - ${Q(q.d1, 'cm')} = ${Q(dr, 'cm')},\\quad \\frac{d_2 - d_1}{\\lambda} = ${R(order)},\\quad A_M = 2a\\left|\\cos\\frac{\\pi(d_2-d_1)}{\\lambda}\\right| = ${Q(AM, 'mm')}`,
@@ -392,7 +392,7 @@ function card(p: Params): ScienceCardData {
   return {
     title: L('Giao thoa sóng hai nguồn', 'Two-source interference'),
     model: L(
-      'Hai nguồn điểm S₁, S₂ trên mặt nước dao động điều hoà cùng biên độ a và cùng pha lúc t = 0. Sóng từ mỗi nguồn lan ra mọi phía với tốc độ v; li độ tại mỗi điểm là tổng li độ của hai sóng (nguyên lí chồng chất). Cùng tần số (hai nguồn kết hợp, luôn cùng pha): hệ vân ổn định, vị trí các vân cực đại, cực tiểu không đổi. Khác tần số: biên độ tại mỗi điểm lên xuống theo thời gian (phách — phần mở rộng, ngoài SGK).',
+      'Hai nguồn điểm S₁, S₂ trên mặt nước dao động điều hòa cùng biên độ a và cùng pha lúc t = 0. Sóng từ mỗi nguồn lan ra mọi phía với tốc độ v; li độ tại mỗi điểm là tổng li độ của hai sóng (nguyên lí chồng chất). Cùng tần số (hai nguồn kết hợp, luôn cùng pha): hệ vân ổn định, vị trí các vân cực đại, cực tiểu không đổi. Khác tần số: biên độ tại mỗi điểm lên xuống theo thời gian (phách — phần mở rộng, ngoài SGK).',
       'Two point sources S₁, S₂ on water oscillate with the same amplitude a, in phase at t = 0. Each wave spreads in every direction at speed v; the displacement at each point is the sum of the two waves (superposition). Same frequency (coherent sources, always in phase): a steady pattern, the maxima and minima keep their places. Different frequencies: the amplitude at each point rises and falls in time (beats — an extension beyond the textbook).',
     ),
     equations: [

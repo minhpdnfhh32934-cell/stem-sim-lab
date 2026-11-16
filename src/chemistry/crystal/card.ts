@@ -15,7 +15,7 @@ export function crystalCard(id: CrystalId): ScienceCardData {
   return {
     title: CRYSTAL_NAME[id],
     model: L(
-      'Ô mạng cơ sở dựng từ toạ độ hình học (đơn vị: cạnh ô a). Số hạt trong một ô, số phối trí và độ đặc khít do chương trình đếm và tính trên chính các toạ độ đó.',
+      'Ô mạng cơ sở dựng từ tọa độ hình học (đơn vị: cạnh ô a). Số hạt trong một ô, số phối trí và độ đặc khít do chương trình đếm và tính trên chính các tọa độ đó.',
       'The unit cell is built from geometric coordinates (unit: the cell edge a). The particles per cell, the coordination number and the packing fraction are counted and computed by the program from those coordinates.',
     ),
     equations: [

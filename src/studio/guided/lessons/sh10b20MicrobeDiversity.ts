@@ -31,7 +31,7 @@ export const sh10b20MicrobeDiversity: StudioScenario = {
   ],
   hints: [
     L(
-      'Hỏi hai câu: nó lấy năng lượng từ đâu (ánh sáng hay chất hoá học)? Nó lấy carbon từ đâu (CO₂ hay chất hữu cơ)?',
+      'Hỏi hai câu: nó lấy năng lượng từ đâu (ánh sáng hay chất hóa học)? Nó lấy carbon từ đâu (CO₂ hay chất hữu cơ)?',
       'Ask two questions: where does it get energy (light or chemicals)? Where does it get carbon (CO₂ or organic matter)?',
     ),
     L(
@@ -46,7 +46,7 @@ export const sh10b20MicrobeDiversity: StudioScenario = {
     ),
   ],
   expectedConclusion: L(
-    'Vi sinh vật có bốn kiểu dinh dưỡng, phân theo nguồn năng lượng (ánh sáng hay chất hoá học) và nguồn carbon (CO₂ hay chất hữu cơ): quang tự dưỡng, hoá tự dưỡng, quang dị dưỡng và hoá dị dưỡng. Nấm men là hoá dị dưỡng. Để nghiên cứu vi sinh vật, người ta quan sát dưới kính hiển vi (soi tươi, nhuộm), phân lập và nuôi cấy, phân tích hoá sinh và di truyền.',
+    'Vi sinh vật có bốn kiểu dinh dưỡng, phân theo nguồn năng lượng (ánh sáng hay chất hóa học) và nguồn carbon (CO₂ hay chất hữu cơ): quang tự dưỡng, hóa tự dưỡng, quang dị dưỡng và hóa dị dưỡng. Nấm men là hóa dị dưỡng. Để nghiên cứu vi sinh vật, người ta quan sát dưới kính hiển vi (soi tươi, nhuộm), phân lập và nuôi cấy, phân tích hóa sinh và di truyền.',
     'Microbes feed in four ways, set by their energy source (light or chemicals) and carbon source (CO₂ or organic matter): photoautotrophs, chemoautotrophs, photoheterotrophs and chemoheterotrophs. Yeast is a chemoheterotroph. Microbes are studied by looking under a microscope (wet mounts, staining), by isolating and culturing them, and by biochemical and genetic analysis.',
   ),
   sources: [],
@@ -77,7 +77,7 @@ export const sh10b20MicrobeDiversity: StudioScenario = {
     ],
     answer: 'huu-co',
     answerWhy: L(
-      'Nấm men không quang hợp được; nó lấy cả năng lượng lẫn carbon từ chất hữu cơ như đường trong bột. Đó là kiểu hoá dị dưỡng, giống nhiều vi khuẩn, nấm và động vật nguyên sinh.',
+      'Nấm men không quang hợp được; nó lấy cả năng lượng lẫn carbon từ chất hữu cơ như đường trong bột. Đó là kiểu hóa dị dưỡng, giống nhiều vi khuẩn, nấm và động vật nguyên sinh.',
       'Yeast cannot photosynthesise; it takes both energy and carbon from organic matter such as the sugar in dough. That is chemoheterotrophy, like many bacteria, fungi and protozoa.',
     ),
     activities: [
@@ -95,13 +95,13 @@ export const sh10b20MicrobeDiversity: StudioScenario = {
           },
           {
             id: 'hoa-tu',
-            label: L('Hoá tự dưỡng: chất vô cơ, CO₂', 'Chemoautotroph: inorganic, CO₂'),
+            label: L('Hóa tự dưỡng: chất vô cơ, CO₂', 'Chemoautotroph: inorganic, CO₂'),
           },
           {
             id: 'quang-di',
             label: L('Quang dị dưỡng: ánh sáng, chất hữu cơ', 'Photoheterotroph: light, organic'),
           },
-          { id: 'hoa-di', label: L('Hoá dị dưỡng: chất hữu cơ', 'Chemoheterotroph: organic') },
+          { id: 'hoa-di', label: L('Hóa dị dưỡng: chất hữu cơ', 'Chemoheterotroph: organic') },
         ],
         items: [
           {
@@ -124,19 +124,19 @@ export const sh10b20MicrobeDiversity: StudioScenario = {
           },
           {
             id: 'nitrat',
-            text: L('Vi khuẩn nitrate hoá', 'Nitrifying bacteria'),
+            text: L('Vi khuẩn nitrate hóa', 'Nitrifying bacteria'),
             group: 'hoa-tu',
             why: L(
-              'Lấy năng lượng từ phản ứng oxy hoá chất vô cơ chứa nitrogen; carbon lấy từ CO₂.',
+              'Lấy năng lượng từ phản ứng oxy hóa chất vô cơ chứa nitrogen; carbon lấy từ CO₂.',
               'They get energy by oxidising inorganic nitrogen compounds; carbon comes from CO₂.',
             ),
           },
           {
             id: 'hydro',
-            text: L('Vi khuẩn oxy hoá hydrogen', 'Hydrogen-oxidising bacteria'),
+            text: L('Vi khuẩn oxy hóa hydrogen', 'Hydrogen-oxidising bacteria'),
             group: 'hoa-tu',
             why: L(
-              'Lấy năng lượng từ việc oxy hoá hydrogen, một chất vô cơ; carbon lấy từ CO₂.',
+              'Lấy năng lượng từ việc oxy hóa hydrogen, một chất vô cơ; carbon lấy từ CO₂.',
               'They get energy by oxidising hydrogen, an inorganic substance; carbon comes from CO₂.',
             ),
           },
@@ -239,13 +239,13 @@ export const sh10b20MicrobeDiversity: StudioScenario = {
           },
           {
             id: 'phan-tich',
-            left: L('Phân tích hoá sinh, phân tích DNA và RNA', 'Biochemical and DNA–RNA analysis'),
+            left: L('Phân tích hóa sinh, phân tích DNA và RNA', 'Biochemical and DNA–RNA analysis'),
             right: L(
               'Định loại chính xác loài và quan hệ họ hàng giữa chúng',
               'Name the species exactly and find how they are related',
             ),
             why: L(
-              'Hình dạng nhìn qua kính hiển vi chưa đủ để phân biệt loài; cần phân tích thành phần hoá học và vật chất di truyền.',
+              'Hình dạng nhìn qua kính hiển vi chưa đủ để phân biệt loài; cần phân tích thành phần hóa học và vật chất di truyền.',
               'Shape under the microscope is not enough to tell species apart; their chemistry and genetic material must be analysed.',
             ),
           },

@@ -3,7 +3,7 @@
  "version": 1,
  "source": {
   "id": "sgk-hh10-kntt",
-  "citation": "SGK Hoá học 10, Kết nối tri thức với cuộc sống (NXB Giáo dục Việt Nam): Bài 6, 21, 22 (đọc ngày 2026-11-15)",
+  "citation": "SGK Hóa học 10, Kết nối tri thức với cuộc sống (NXB Giáo dục Việt Nam): Bài 6, 21, 22 (đọc ngày 2026-11-15)",
   "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983"
  },
  "generated_by": "scripts/data/gen_halogens.py",
@@ -11,27 +11,27 @@
  "sources": {
   "radius": {
    "id": "sgk-hh10-hinh-6-2",
-   "citation": "SGK Hoá học 10, Kết nối tri thức với cuộc sống (NXB Giáo dục Việt Nam), Bài 6, Hình 6.2 (tr. 35); sách dẫn nguồn M. S. Silberberg, Principles of General Chemistry, McGraw-Hill 2007",
+   "citation": "SGK Hóa học 10, Kết nối tri thức với cuộc sống (NXB Giáo dục Việt Nam), Bài 6, Hình 6.2 (tr. 35); sách dẫn nguồn M. S. Silberberg, Principles of General Chemistry, McGraw-Hill 2007",
    "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983"
   },
   "en": {
    "id": "sgk-hh10-bang-6-2",
-   "citation": "SGK Hoá học 10, Kết nối tri thức với cuộc sống (NXB Giáo dục Việt Nam), Bài 6, Bảng 6.2 (tr. 37): độ âm điện theo L. C. Pauling",
+   "citation": "SGK Hóa học 10, Kết nối tri thức với cuộc sống (NXB Giáo dục Việt Nam), Bài 6, Bảng 6.2 (tr. 37): độ âm điện theo L. C. Pauling",
    "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983"
   },
   "physical": {
    "id": "sgk-hh10-bang-21-2",
-   "citation": "SGK Hoá học 10, Kết nối tri thức với cuộc sống (NXB Giáo dục Việt Nam), Bài 21, Bảng 21.2 (tr. 107); sách dẫn nguồn chem.libretexts.org",
+   "citation": "SGK Hóa học 10, Kết nối tri thức với cuộc sống (NXB Giáo dục Việt Nam), Bài 21, Bảng 21.2 (tr. 107); sách dẫn nguồn chem.libretexts.org",
    "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983"
   },
   "bond": {
    "id": "sgk-hh10-bang-22-1",
-   "citation": "SGK Hoá học 10, Kết nối tri thức với cuộc sống (NXB Giáo dục Việt Nam), Bài 22, Bảng 22.1 (tr. 112)",
+   "citation": "SGK Hóa học 10, Kết nối tri thức với cuộc sống (NXB Giáo dục Việt Nam), Bài 22, Bảng 22.1 (tr. 112)",
    "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983"
   },
   "hxBoiling": {
    "id": "sgk-hh10-bang-22-2",
-   "citation": "SGK Hoá học 10, Kết nối tri thức với cuộc sống (NXB Giáo dục Việt Nam), Bài 22, Bảng 22.2 (tr. 113)",
+   "citation": "SGK Hóa học 10, Kết nối tri thức với cuộc sống (NXB Giáo dục Việt Nam), Bài 22, Bảng 22.2 (tr. 113)",
    "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983"
   }
  },

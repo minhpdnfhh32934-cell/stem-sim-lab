@@ -45,7 +45,7 @@ export function PeriodTrendStage() {
       <h3 className="hh10-title">
         {Lz(
           L(
-            'Oxide và hydroxide ứng với hoá trị cao nhất, chu kì 3',
+            'Oxide và hydroxide ứng với hóa trị cao nhất, chu kì 3',
             'Oxides and hydroxides for the highest valence, period 3',
           ),
         )}
@@ -94,7 +94,7 @@ export function PeriodTrendStage() {
       <p className="small muted">
         {Lz(
           L(
-            'Nói chung, hydroxide của các nguyên tố nhóm IA thể hiện tính base mạnh, hydroxide ứng với hoá trị cao nhất của các nguyên tố nhóm VIIA (trừ fluorine) thể hiện tính acid mạnh (SGK tr. 41).',
+            'Nói chung, hydroxide của các nguyên tố nhóm IA thể hiện tính base mạnh, hydroxide ứng với hóa trị cao nhất của các nguyên tố nhóm VIIA (trừ fluorine) thể hiện tính acid mạnh (SGK tr. 41).',
             'In general, group IA hydroxides are strong bases and the hydroxides for the highest valence of group VIIA elements (except fluorine) are strong acids (SGK p. 41).',
           ),
         )}
@@ -129,7 +129,7 @@ export function PeriodTrendPanel() {
         </select>
       </label>
       <dl className="p3-facts">
-        <dt>{Lz(L('Nhóm và số oxi hoá cao nhất', 'Group and highest oxidation number'))}</dt>
+        <dt>{Lz(L('Nhóm và số oxi hóa cao nhất', 'Group and highest oxidation number'))}</dt>
         <dd>
           {Lz(
             L(
@@ -165,7 +165,7 @@ export function PeriodTrendPanel() {
             <CircleCheck size={15} strokeWidth={1.75} aria-hidden="true" />
             {Lz(
               L(
-                `Kiểm tra: với H +1, O −2 thì ${r.symbol} có số oxi hoá ${signed(r.n)} trong ${formatFormula(r.hydroxide)}.`,
+                `Kiểm tra: với H +1, O −2 thì ${r.symbol} có số oxi hóa ${signed(r.n)} trong ${formatFormula(r.hydroxide)}.`,
                 `Check: with H +1, O −2, ${r.symbol} is ${signed(r.n)} in ${formatFormula(r.hydroxide)}.`,
               ),
             )}

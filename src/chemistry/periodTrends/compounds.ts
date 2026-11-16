@@ -4,7 +4,7 @@ import { isMetal, oxidationNumbers } from '../redox/oxidation';
 
 /**
  * HH10 Bài 7: the highest oxide and hydroxide of each period 3 element. The highest oxidation
- * number (the book's "hoá trị cao nhất") is the A-group number; the oxide and a metal's hydroxide
+ * number (the book's "hóa trị cao nhất") is the A-group number; the oxide and a metal's hydroxide
  * follow from it by code. An acid's formula (how many H and O) is not fixed by the group, so it is
  * the book's (Bảng 7.1) and the code checks it: H +1, O −2 must leave the element at the group
  * number. The acid–base character is the book's Bảng 7.2.

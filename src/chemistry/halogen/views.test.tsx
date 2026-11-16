@@ -31,7 +31,7 @@ describe('Nhóm halogen (HH10 Bài 21)', () => {
     expect(cards[2]).toHaveTextContent('Br₂ · Lỏng · Nâu đỏ');
     // Cl: 12,9676 eV × 96,4853 kJ/mol per eV ≈ 1 251 kJ/mol (4 significant digits).
     expect(cards[1]).toHaveTextContent('I₁1.251 kJ/mol');
-    expect(screen.getByText(/Tính oxi hoá giảm dần từ fluorine đến iodine/)).toBeInTheDocument();
+    expect(screen.getByText(/Tính oxi hóa giảm dần từ fluorine đến iodine/)).toBeInTheDocument();
   });
 
   it('English: m.p. and b.p.; the pick button holds only the header, the facts sit beside it', () => {
@@ -53,7 +53,7 @@ describe('Nhóm halogen (HH10 Bài 21)', () => {
 
   it('panel: the oxidation numbers the book states; Advanced compares other sources', () => {
     const { container, rerender } = render(<HalogenPanel />);
-    expect(container).toHaveTextContent('số oxi hoá đặc trưng trong hợp chất là −1');
+    expect(container).toHaveTextContent('số oxi hóa đặc trưng trong hợp chất là −1');
     expect(container).not.toHaveTextContent('Đối chiếu nguồn khác');
     act(() => {
       useSettingsStore.setState({ uiMode: 'advanced' });

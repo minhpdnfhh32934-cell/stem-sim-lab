@@ -79,10 +79,26 @@ describe('redox analysis of library reactions', () => {
   });
 
   it('undecided when a species is refused, naming it', () => {
-    const a = analyzeRedox(lib('fe-cuso4'));
+    const a = analyzeRedox(lib('silver-mirror'));
     expect(a.kind).toBe('undecided');
-    expect(a.kind === 'undecided' && a.refused.map((s) => s.formula)).toEqual(['CuSO4', 'FeSO4']);
+    expect(a.kind === 'undecided' && a.refused.map((s) => s.formula)).toEqual([
+      'CH3CHO',
+      'CH3COONH4',
+      'NH4NO3',
+    ]);
     expect(analyzeRedox(lib('c2h5oh-combustion')).kind).toBe('undecided');
+  });
+
+  it('salts read through the polyatomic ion table (rule 4)', () => {
+    expect(brief(redox('fe-cuso4'))).toMatchObject({
+      oxidised: ['Fe 0→2 ×1'],
+      reduced: ['Cu 2→0 ×1'],
+      electrons: 2,
+    });
+    expect(brief(redox('cu-hno3-conc'))).toMatchObject({ reduced: ['N 5→4 ×2'], electrons: 2 });
+    expect(brief(redox('cu-hno3-dil'))).toMatchObject({ reduced: ['N 5→2 ×2'], electrons: 6 });
+    for (const id of ['agcl', 'nh4cl-decomp'])
+      expect(analyzeRedox(lib(id)).kind, id).toBe('notRedox');
   });
 
   it('every decided library reaction gives and takes the same number of electrons', () => {

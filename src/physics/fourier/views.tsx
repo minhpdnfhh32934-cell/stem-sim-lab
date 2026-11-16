@@ -116,7 +116,7 @@ export function FourierStage() {
         ref={ref}
         className="chem-canvas"
         role="img"
-        aria-label={`${Lz(WAVE_NAME[wave])}: ${Lz(L(`tổng ${String(N)} hoạ âm`, `sum of ${String(N)} harmonics`))}`}
+        aria-label={`${Lz(WAVE_NAME[wave])}: ${Lz(L(`tổng ${String(N)} họa âm`, `sum of ${String(N)} harmonics`))}`}
       />
       <div className="chem-overlay">
         <span className="chem-chip">
@@ -179,7 +179,7 @@ export function FourierPanel() {
       </div>
       <label>
         <span>
-          {Lz(L('Số hoạ âm N', 'Harmonics N'))}: <strong className="mono">{N}</strong>
+          {Lz(L('Số họa âm N', 'Harmonics N'))}: <strong className="mono">{N}</strong>
         </span>
         <input
           type="range"
@@ -216,7 +216,7 @@ export function FourierPanel() {
             setFourier({ showHarmonics: e.target.checked });
           }}
         />
-        <span>{Lz(L('Hiện từng hoạ âm', 'Show each harmonic'))}</span>
+        <span>{Lz(L('Hiện từng họa âm', 'Show each harmonic'))}</span>
       </label>
       <button
         type="button"
@@ -227,7 +227,7 @@ export function FourierPanel() {
       >
         {Lz(
           L(
-            'Hoạ âm của dây đàn: mở bài Sóng dừng trên dây',
+            'Họa âm của dây đàn: mở bài Sóng dừng trên dây',
             'Harmonics of a string: open Standing waves',
           ),
         )}
@@ -244,7 +244,7 @@ export function FourierBottom() {
   const first = Math.abs(rows[0]?.b ?? 1);
   return (
     <table className="fourier-table">
-      <caption className="sr-only">{Lz(L('Các hoạ âm của tổng', 'Harmonics of the sum'))}</caption>
+      <caption className="sr-only">{Lz(L('Các họa âm của tổng', 'Harmonics of the sum'))}</caption>
       <thead>
         <tr>
           <th scope="col">{Lz(L('Bậc n', 'Order n'))}</th>

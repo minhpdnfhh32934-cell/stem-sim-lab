@@ -12,14 +12,14 @@ const READER = 'https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.470085
 const SGK_B21: Source = {
   id: 'sgk-hh10-kntt-b21',
   citation:
-    'SGK Hoá học 10, Kết nối tri thức với cuộc sống (NXB Giáo dục Việt Nam), Bài 21: cấu hình ns²np⁵ và số oxi hoá (tr. 106), tính chất vật lí và giải thích (tr. 107), tính oxi hoá giảm từ fluorine đến iodine (tr. 107); Bài 6: xu hướng bán kính, năng lượng ion hoá, độ âm điện trong nhóm A (tr. 35–37)',
+    'SGK Hóa học 10, Kết nối tri thức với cuộc sống (NXB Giáo dục Việt Nam), Bài 21: cấu hình ns²np⁵ và số oxi hóa (tr. 106), tính chất vật lí và giải thích (tr. 107), tính oxi hóa giảm từ fluorine đến iodine (tr. 107); Bài 6: xu hướng bán kính, năng lượng ion hóa, độ âm điện trong nhóm A (tr. 35–37)',
   url: READER,
 };
 
 const SGK_B22: Source = {
   id: 'sgk-hh10-kntt-b22',
   citation:
-    'SGK Hoá học 10, Kết nối tri thức với cuộc sống (NXB Giáo dục Việt Nam), Bài 22: Bảng 22.1 (tr. 112), Bảng 22.2 và tính acid của dãy hydrohalic acid (tr. 113), nhận biết ion halide bằng AgNO₃ (tr. 115)',
+    'SGK Hóa học 10, Kết nối tri thức với cuộc sống (NXB Giáo dục Việt Nam), Bài 22: Bảng 22.1 (tr. 112), Bảng 22.2 và tính acid của dãy hydrohalic acid (tr. 113), nhận biết ion halide bằng AgNO₃ (tr. 115)',
   url: READER,
 };
 
@@ -34,21 +34,21 @@ const OPENSTAX_ACID: Source = {
 export const HALOGENS_CARD: ScienceCardData = {
   title: L('Nhóm halogen', 'The halogens'),
   model: L(
-    'Số liệu theo sách: bán kính nguyên tử (Hình 6.2), độ âm điện (Bảng 6.2), trạng thái, màu sắc, nhiệt độ nóng chảy và nhiệt độ sôi của đơn chất (Bảng 21.2). Sách không cho năng lượng ion hoá thứ nhất của F, Cl, Br, I: chương trình lấy giá trị NIST trong bảng nguyên tố và đổi sang kJ/mol. Từ F đến I, số lớp electron tăng nên bán kính tăng; lực hút giữa hạt nhân và electron lớp ngoài cùng giảm nên độ âm điện và năng lượng ion hoá giảm, tính oxi hoá giảm. Nhiệt độ nóng chảy, nhiệt độ sôi tăng do tương tác van der Waals giữa các phân tử và khối lượng phân tử tăng.',
+    'Số liệu theo sách: bán kính nguyên tử (Hình 6.2), độ âm điện (Bảng 6.2), trạng thái, màu sắc, nhiệt độ nóng chảy và nhiệt độ sôi của đơn chất (Bảng 21.2). Sách không cho năng lượng ion hóa thứ nhất của F, Cl, Br, I: chương trình lấy giá trị NIST trong bảng nguyên tố và đổi sang kJ/mol. Từ F đến I, số lớp electron tăng nên bán kính tăng; lực hút giữa hạt nhân và electron lớp ngoài cùng giảm nên độ âm điện và năng lượng ion hóa giảm, tính oxi hóa giảm. Nhiệt độ nóng chảy, nhiệt độ sôi tăng do tương tác van der Waals giữa các phân tử và khối lượng phân tử tăng.',
     'Values as the book gives them: atomic radius (SGK Figure 6.2), electronegativity (SGK Table 6.2), state, colour, melting and boiling points of the elements (SGK Table 21.2). The book gives no first ionisation energy for F, Cl, Br, I: the program takes the NIST value of the element table and converts it to kJ/mol. From F to I the number of electron shells grows, so the radius grows; the nucleus holds the outer electrons less, so electronegativity, ionisation energy and oxidising power fall. Melting and boiling points rise because the van der Waals interactions between molecules and the molecular mass increase.',
   ),
   equations: [
     {
       tex: 'I_1\\,[\\mathrm{kJ/mol}] = I_1\\,[\\mathrm{eV}]\\cdot e\\,N_A / 1000',
       label: L(
-        'Đổi năng lượng ion hoá từ eV (một nguyên tử) sang kJ/mol',
+        'Đổi năng lượng ion hóa từ eV (một nguyên tử) sang kJ/mol',
         'Ionisation energy from eV (one atom) to kJ/mol',
       ),
     },
   ],
   assumptions: [
     L(
-      'Bán kính nguyên tử theo sách là một nửa khoảng cách trung bình giữa hai hạt nhân gần nhau nhất (SGK tr. 35); bảng nguyên tố của app dùng bán kính cộng hoá trị (Cordero 2008), chỉ để đối chiếu.',
+      'Bán kính nguyên tử theo sách là một nửa khoảng cách trung bình giữa hai hạt nhân gần nhau nhất (SGK tr. 35); bảng nguyên tố của app dùng bán kính cộng hóa trị (Cordero 2008), chỉ để đối chiếu.',
       'The book’s atomic radius is half the mean distance between two nearest nuclei (SGK p. 35); the app’s element table uses covalent radii (Cordero 2008), shown only as a cross-check.',
     ),
     L(
@@ -63,7 +63,7 @@ export const HALOGENS_CARD: ScienceCardData = {
   validity: L('Bốn halogen F, Cl, Br, I.', 'The four halogens F, Cl, Br, I.'),
   confidence: 'exact',
   confidenceNote: L(
-    'Số liệu lấy nguyên từ sách (và NIST cho năng lượng ion hoá); phần giải thích xu hướng là định tính. Đang chờ giáo viên duyệt.',
+    'Số liệu lấy nguyên từ sách (và NIST cho năng lượng ion hóa); phần giải thích xu hướng là định tính. Đang chờ giáo viên duyệt.',
     'Values copied from the book (and NIST for the ionisation energy); the explanation of the trends is qualitative. Awaiting a teacher’s review.',
   ),
   userIntervened: false,

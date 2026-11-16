@@ -70,7 +70,7 @@ describe('Biology Studio on the 3D mitosis model', () => {
     // The lesson holds that cell: the view's cell type control is locked, with a note.
     expect(useMitosis3D.getState().cellLocked).toBe(true);
     expect(
-      screen.getByText(/Bài học giữ mô hình ở tế bào động vật, 2n = 4: nút "Loại tế bào" bị khoá/),
+      screen.getByText(/Bài học giữ mô hình ở tế bào động vật, 2n = 4: nút "Loại tế bào" bị khóa/),
     ).toBeInTheDocument();
 
     // A stage that does not answer the question: kept, no verdict.

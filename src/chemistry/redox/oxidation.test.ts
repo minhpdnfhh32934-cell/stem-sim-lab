@@ -1,4 +1,6 @@
 import { describe, expect, it } from 'vitest';
+import { POLYATOMIC_IONS } from '../data/polyatomicIons';
+import { canonicalFormulaText, parseFormula } from '../formula';
 import { oxidationNumbers, signed, type OxResult } from './oxidation';
 
 const values = (r: OxResult) => (r.ok ? Object.fromEntries(r.values) : r);
@@ -58,14 +60,43 @@ describe('oxidation numbers by the textbook rules (HH10 Bài 15)', () => {
     expect(values(oxidationNumbers('HF'))).toEqual({ H: 1, F: -1 });
   });
 
-  it('refuses two unknown elements instead of guessing', () => {
-    for (const f of ['CuSO4', 'FeSO4', 'Cu(NO3)2', 'AgNO3', 'NH4Cl', 'CH3Cl']) {
-      const r = oxidationNumbers(f);
-      expect(r.ok, f).toBe(false);
-      expect(!r.ok && r.reason, f).toBe('twoUnknown');
+  it('rule 4 with the polyatomic ion table reads salts with two unknowns', () => {
+    expect(values(oxidationNumbers('CuSO4'))).toEqual({ Cu: 2, S: 6, O: -2 });
+    expect(values(oxidationNumbers('FeSO4'))).toEqual({ Fe: 2, S: 6, O: -2 });
+    expect(values(oxidationNumbers('Fe2(SO4)3'))).toEqual({ Fe: 3, S: 6, O: -2 });
+    expect(values(oxidationNumbers('Cu(NO3)2'))).toEqual({ Cu: 2, N: 5, O: -2 });
+    expect(values(oxidationNumbers('AgNO3'))).toEqual({ Ag: 1, N: 5, O: -2 });
+    expect(values(oxidationNumbers('NH4Cl'))).toEqual({ N: -3, H: 1, Cl: -1 });
+    expect(values(oxidationNumbers('(NH4)2SO4'))).toEqual({ N: -3, H: 1, S: 6, O: -2 });
+    expect(values(oxidationNumbers('CuSO4·5H2O'))).toEqual({ S: 6, O: -2, Cu: 2, H: 1 });
+    expect(values(oxidationNumbers('Ag3PO4'))).toEqual({ P: 5, O: -2, Ag: 1 });
+    expect(values(oxidationNumbers('CuCO3'))).toEqual({ C: 4, O: -2, Cu: 2 });
+    const r = oxidationNumbers('Cu(NO3)2');
+    expect(r.ok && r.ions).toEqual(['NO3^-']);
+    // Without an ion of the table the rules still refuse, never guess.
+    for (const f of ['CH3Cl', 'CuS', 'FeS2']) {
+      const x = oxidationNumbers(f);
+      expect(!x.ok && x.reason, f).toBe('twoUnknown');
     }
-    const r = oxidationNumbers('CuSO4');
-    expect(!r.ok && r.elements.sort()).toEqual(['Cu', 'S']);
+    // A formula the rules alone decide is not read through the table.
+    const h2so4 = oxidationNumbers('H2SO4');
+    expect(h2so4.ok && h2so4.ions).toBeUndefined();
+  });
+
+  it('every ion of the table solves by the rules; NH4+ as the book (tr. 72)', () => {
+    expect(POLYATOMIC_IONS.map((i) => i.formula)).toEqual([
+      'NH4^+',
+      'CO3^2-',
+      'NO3^-',
+      'SO4^2-',
+      'PO4^3-',
+    ]);
+    for (const ion of POLYATOMIC_IONS) {
+      expect(oxidationNumbers(ion.formula).ok, ion.id).toBe(true);
+      expect(parseFormula(ion.formula).charge, ion.id).toBe(ion.charge);
+      expect(canonicalFormulaText(ion.formula).startsWith(ion.body), ion.id).toBe(true);
+    }
+    expect(values(oxidationNumbers('NH4^+'))).toEqual({ N: -3, H: 1 });
   });
 
   it('refuses organic molecules: the rules give only the mean of different C atoms', () => {

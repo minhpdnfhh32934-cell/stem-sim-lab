@@ -20,7 +20,7 @@ export const atomComposition: ModuleView = {
   state: bindStore(useCompositionStore, ['z', 'n', 'electrons'], setComposition),
 };
 
-/** HH10 Bài 2 "Nguyên tố hoá học": isotopes and the average atomic mass. */
+/** HH10 Bài 2 "Nguyên tố hóa học": isotopes and the average atomic mass. */
 export const isotopes: ModuleView = {
   title: L('Nguyên tố hóa học và đồng vị', 'Chemical elements and isotopes'),
   Stage: IsotopeStage,

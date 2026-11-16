@@ -16,7 +16,7 @@ import '../chem.css';
 import './redox.css';
 
 const NOT_IN_LIBRARY = L(
-  'Phản ứng này chưa có trong cơ sở dữ liệu đã kiểm chứng — không phân tích số oxi hoá.',
+  'Phản ứng này chưa có trong cơ sở dữ liệu đã kiểm chứng — không phân tích số oxi hóa.',
   'This reaction is not in the verified database — no oxidation-number analysis.',
 );
 
@@ -28,7 +28,7 @@ const REFUSAL: Record<OxRefusal, (els: string) => LocalizedText> = {
     ),
   organic: () =>
     L(
-      'hợp chất hữu cơ nhiều nguyên tử C: mỗi nguyên tử C có số oxi hoá riêng, quy tắc chỉ cho giá trị trung bình',
+      'hợp chất hữu cơ nhiều nguyên tử C: mỗi nguyên tử C có số oxi hóa riêng, quy tắc chỉ cho giá trị trung bình',
       'organic compound with several C atoms: each C has its own oxidation number, the rules give only the mean',
     ),
   mixed: (els) =>
@@ -38,12 +38,12 @@ const REFUSAL: Record<OxRefusal, (els: string) => LocalizedText> = {
     ),
   fractional: (els) =>
     L(
-      `số oxi hoá của ${els} tính ra không nguyên: chỉ là giá trị trung bình`,
+      `số oxi hóa của ${els} tính ra không nguyên: chỉ là giá trị trung bình`,
       `the oxidation number of ${els} is not a whole number: only a mean`,
     ),
   outOfRange: (els) =>
     L(
-      `${els} sẽ vượt số oxi hoá cao nhất của nhóm: công thức có liên kết đặc biệt`,
+      `${els} sẽ vượt số oxi hóa cao nhất của nhóm: công thức có liên kết đặc biệt`,
       `${els} would exceed its group’s highest oxidation number: the formula hides an unusual bond`,
     ),
   inconsistent: () =>
@@ -59,6 +59,13 @@ const NOTE: Record<OxNote, LocalizedText> = {
     'Cl, Br, I are −1 in compounds with a metal',
   ),
 };
+
+/** Rule 4 read with the polyatomic ion table (CuSO₄: SO₄²⁻). */
+const ionsNote = (ions: string) =>
+  L(
+    `${ions}: ion nhiều nguyên tử, tổng số oxi hóa bằng điện tích ion (bảng ion)`,
+    `${ions}: polyatomic ion, the oxidation numbers add up to its charge (ion table)`,
+  );
 
 /** Why a species is refused, in words. */
 const refusalText = (ox: OxResult): LocalizedText | null =>
@@ -107,7 +114,7 @@ function Verdict({ analysis }: { analysis: RedoxAnalysis }) {
       <p className="chem-note" role="note">
         {Lz(
           L(
-            'Không có nguyên tố nào thay đổi số oxi hoá: đây không phải phản ứng oxi hoá – khử.',
+            'Không có nguyên tố nào thay đổi số oxi hóa: đây không phải phản ứng oxi hóa – khử.',
             'No element changes its oxidation number: this is not a redox reaction.',
           ),
         )}
@@ -121,7 +128,7 @@ function Verdict({ analysis }: { analysis: RedoxAnalysis }) {
           <p>
             {Lz(
               L(
-                'Quy tắc xác định số oxi hoá chưa đủ cho:',
+                'Quy tắc xác định số oxi hóa chưa đủ cho:',
                 'The oxidation-number rules are not enough for:',
               ),
             )}
@@ -144,7 +151,7 @@ function Verdict({ analysis }: { analysis: RedoxAnalysis }) {
       <p className="chem-note chem-note--warn" role="note">
         {Lz(
           L(
-            `${analysis.elements.join(', ')} có nhiều số oxi hoá ở cả hai vế: không ghép được nguyên tử nào thay đổi.`,
+            `${analysis.elements.join(', ')} có nhiều số oxi hóa ở cả hai vế: không ghép được nguyên tử nào thay đổi.`,
             `${analysis.elements.join(', ')} has several oxidation numbers on both sides: the changing atoms cannot be paired.`,
           ),
         )}
@@ -154,9 +161,9 @@ function Verdict({ analysis }: { analysis: RedoxAnalysis }) {
     <dl className="redox-facts">
       <dt>{Lz(L('Chất khử (chất nhường electron)', 'Reducing agent (gives electrons)'))}</dt>
       <dd>{formulas(analysis.reducingAgents)}</dd>
-      <dt>{Lz(L('Chất oxi hoá (chất nhận electron)', 'Oxidising agent (takes electrons)'))}</dt>
+      <dt>{Lz(L('Chất oxi hóa (chất nhận electron)', 'Oxidising agent (takes electrons)'))}</dt>
       <dd>{formulas(analysis.oxidisingAgents)}</dd>
-      <dt>{Lz(L('Quá trình oxi hoá', 'Oxidation'))}</dt>
+      <dt>{Lz(L('Quá trình oxi hóa', 'Oxidation'))}</dt>
       <dd>
         {analysis.oxidised.map((c) => (
           <HalfEquation key={`${c.el}${String(c.from)}`} c={c} />
@@ -172,7 +179,7 @@ function Verdict({ analysis }: { analysis: RedoxAnalysis }) {
       <dd>
         {Lz(
           L(
-            `Trong phương trình đã cân bằng: tổng số electron chất khử nhường = tổng số electron chất oxi hoá nhận = ${String(analysis.electrons)}`,
+            `Trong phương trình đã cân bằng: tổng số electron chất khử nhường = tổng số electron chất oxi hóa nhận = ${String(analysis.electrons)}`,
             `In the balanced equation: electrons given by the reducing agent = electrons taken by the oxidising agent = ${String(analysis.electrons)}`,
           ),
         )}
@@ -203,7 +210,7 @@ export function RedoxStage() {
       <div
         className="rx-eq rx-eq--big redox-eq"
         role="group"
-        aria-label={Lz(L('Phương trình và số oxi hoá', 'Equation and oxidation numbers'))}
+        aria-label={Lz(L('Phương trình và số oxi hóa', 'Equation and oxidation numbers'))}
       >
         {side('reactant')}
         <span className="rx-eq__arrow">→</span>
@@ -225,8 +232,8 @@ export function RedoxStage() {
 }
 
 const GROUP: Record<RedoxAnalysis['kind'], LocalizedText> = {
-  redox: L('Phản ứng oxi hoá – khử', 'Redox reactions'),
-  notRedox: L('Không phải oxi hoá – khử', 'Not redox'),
+  redox: L('Phản ứng oxi hóa – khử', 'Redox reactions'),
+  notRedox: L('Không phải oxi hóa – khử', 'Not redox'),
   undecided: L('Quy tắc chưa đủ để xác định', 'Rules not enough to decide'),
   ambiguous: L('Không ghép được nguyên tử', 'Atoms cannot be paired'),
 };
@@ -307,7 +314,7 @@ export function RedoxPanel() {
             <p className="chem-note" role="note">
               {Lz(
                 L(
-                  `Có trong thư viện: chiều nghịch của phản ứng thuận nghịch “${lookup.found.name.vi}”. Số oxi hoá được phân tích cho chiều thuận.`,
+                  `Có trong thư viện: chiều nghịch của phản ứng thuận nghịch “${lookup.found.name.vi}”. Số oxi hóa được phân tích cho chiều thuận.`,
                   `In the library: the reverse of the reversible reaction “${lookup.found.name.en}”. The oxidation numbers are analysed for the forward direction.`,
                 ),
               )}
@@ -329,7 +336,7 @@ export function RedoxPanel() {
       <p className="small muted">
         {Lz(
           L(
-            'Dấu hiệu nhận biết phản ứng oxi hoá – khử: có sự thay đổi số oxi hoá của các nguyên tử (SGK tr. 74).',
+            'Dấu hiệu nhận biết phản ứng oxi hóa – khử: có sự thay đổi số oxi hóa của các nguyên tử (SGK tr. 74).',
             'A redox reaction is recognised by a change in the atoms’ oxidation numbers (SGK p. 74).',
           ),
         )}
@@ -349,7 +356,7 @@ export function RedoxBottom() {
         <tr>
           <th scope="col">{Lz(L('Chất', 'Species'))}</th>
           <th scope="col">{Lz(L('Hệ số', 'Coefficient'))}</th>
-          <th scope="col">{Lz(L('Số oxi hoá', 'Oxidation numbers'))}</th>
+          <th scope="col">{Lz(L('Số oxi hóa', 'Oxidation numbers'))}</th>
           <th scope="col">{Lz(L('Ghi chú', 'Note'))}</th>
         </tr>
       </thead>
@@ -364,7 +371,14 @@ export function RedoxBottom() {
                 <OxFormula formula={s.formula} values={s.ox.ok ? s.ox.values : undefined} />
               </td>
               <td>
-                {s.ox.ok ? s.ox.notes.map((n) => Lz(NOTE[n])).join('; ') : why ? Lz(why) : ''}
+                {s.ox.ok
+                  ? [
+                      ...s.ox.notes.map((n) => Lz(NOTE[n])),
+                      ...(s.ox.ions ? [Lz(ionsNote(s.ox.ions.map(formatFormula).join(', ')))] : []),
+                    ].join('; ')
+                  : why
+                    ? Lz(why)
+                    : ''}
               </td>
             </tr>
           );

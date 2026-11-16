@@ -295,6 +295,9 @@ CI (`.github/workflows/ci.yml`) runs all of the above on every push. A failed E2
 - Code comments in **English**; every user-visible string goes through i18n (`src/app/i18n`),
   Vietnamese (`vi.ts`) is the source of truth, and `en.ts` must have identical keys (type-checked).
 - Numbers shown to users use `formatNumber(locale, …)` (Vietnamese decimal comma: `9,81`).
+- Spelling (user decision 2026-11-16): the app writes "hóa", "họa", "hòa", "khóa", "tỏa", "thủy"
+  (tone on the first vowel of an open oa/oe/uy syllable), never "hoá" (`src/app/spelling.test.ts`).
+  Exempt: code reading learner or AI text (accepts both spellings) and the verbatim KNTT lesson titles.
 - **Physics symbols (user decision 14/11/2026, #258; text approved 15/11/2026):** the English UI
   writes Halliday's symbols, the Vietnamese UI keeps the SGK ones. A symbol that differs goes in
   `src/physics/common/symbols.ts` (`sym(locale)` in `solve`, `SYM.x` for parameters and Inspector

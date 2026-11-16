@@ -34,7 +34,7 @@ const TOPICS = [
   // SH10 descriptive lessons (#255 round 1h): guided lessons, no 3D view.
   'Các cấp độ tổ chức của thế giới sống',
   'Truyền tin tế bào',
-  'Chuyển hoá vật chất và năng lượng',
+  'Chuyển hóa vật chất và năng lượng',
   'Phân giải và tổng hợp các chất trong tế bào',
   'Công nghệ tế bào',
   'Đa dạng và phương pháp nghiên cứu vi sinh vật',

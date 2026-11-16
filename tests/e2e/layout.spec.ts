@@ -14,7 +14,7 @@ const MIN_PLOT_HEIGHT = 80;
  * graph tab and no Run (waiting for the tab ran into the 5 min timeout). fourier.spec.ts checks
  * the lesson's figure at 1366 × 768 instead.
  */
-const OWN_VIEW = ['Hoạ âm và chuỗi Fourier'];
+const OWN_VIEW = ['Họa âm và chuỗi Fourier'];
 
 interface Rect {
   top: number;

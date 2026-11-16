@@ -34,7 +34,7 @@ export type Halogen = z.infer<typeof HalogenSchema>;
 
 const dataset = loadDataset('halogens', HalogenSchema, raw);
 
-/** F, Cl, Br, I as SGK Hoá học 10 KNTT gives them (data/halogens.json). */
+/** F, Cl, Br, I as SGK Hóa học 10 KNTT gives them (data/halogens.json). */
 export const HALOGENS: readonly Halogen[] = dataset.items;
 export const HALOGENS_SOURCE: Source = dataset.source;
 /** The book's table or figure behind each group of values. */

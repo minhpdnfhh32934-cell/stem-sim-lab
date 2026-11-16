@@ -1,8 +1,8 @@
-"""Generate data/cell_elements.json for "Các nguyên tố hoá học và nước" (SH10 KNTT Bài 4, #255).
+"""Generate data/cell_elements.json for "Các nguyên tố hóa học và nước" (SH10 KNTT Bài 4, #255).
 
 Sources (every value is copied as printed, never estimated):
 - The share of each element in the human body by mass: SGK Sinh học 10, bộ Kết nối tri thức với
-  cuộc sống (NXB Giáo dục Việt Nam), Bài 4, Hình 4.1 "Tỉ lệ các nguyên tố hoá học trong cơ thể
+  cuộc sống (NXB Giáo dục Việt Nam), Bài 4, Hình 4.1 "Tỉ lệ các nguyên tố hóa học trong cơ thể
   người", printed page 24, read on the NXBGD training site taphuan.nxbgd.vn on 15/11/2026. The
   figure gives point values (no ranges) and one combined slice for K, S, Na, Mg, Cl (0,8 %): the
   app shows that slice as one bar and never splits it. The text on the same page names the
@@ -33,7 +33,7 @@ SGK = {
     "id": "sgk-sh10-kntt-bai4",
     "citation": (
         "SGK Sinh học 10, bộ Kết nối tri thức với cuộc sống (NXB Giáo dục Việt Nam), Bài 4 "
-        "“Các nguyên tố hoá học và nước”: Hình 4.1 (tr. 24), nước trong cơ thể người (tr. 25); "
+        "“Các nguyên tố hóa học và nước”: Hình 4.1 (tr. 24), nước trong cơ thể người (tr. 25); "
         "đọc trên taphuan.nxbgd.vn ngày 15/11/2026"
     ),
     "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-sinh-hoc-10.4700819489",

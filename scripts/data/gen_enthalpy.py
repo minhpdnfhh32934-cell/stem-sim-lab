@@ -1,9 +1,9 @@
 """Generate data/formation_enthalpy.json: standard enthalpies of formation at 298 K, 1 bar
-(HH10 Bài 17 "Biến thiên enthalpy trong các phản ứng hoá học"; Bài 22 uses the NIST values of H, X
+(HH10 Bài 17 "Biến thiên enthalpy trong các phản ứng hóa học"; Bài 22 uses the NIST values of H, X
 and HX for a cross-check of the book's H–X bond energies).
 
 Sources, book first (user decision 15/11/2026, "bám sát chương trình của sách"):
-1. SGK Hoá học 10 "Kết nối tri thức với cuộc sống" (NXB Giáo dục Việt Nam), Bài 17, Bảng 17.1
+1. SGK Hóa học 10 "Kết nối tri thức với cuộc sống" (NXB Giáo dục Việt Nam), Bài 17, Bảng 17.1
    "Nhiệt tạo thành chuẩn của một số chất thường gặp" (printed page 85; the book cites Silberberg,
    Chemistry: the molecular nature of matter and change, 2018), read in NXBGD's training reader.
    The book's value is the one the app uses whenever the table has the species.
@@ -40,7 +40,7 @@ READER = "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983"
 REFERENCES = {
     "sgk": {
         "id": "sgk-hh10-kntt-b17",
-        "citation": "SGK Hoá học 10, Kết nối tri thức với cuộc sống (NXB Giáo dục Việt Nam), Bài 17, Bảng 17.1 (tr. 85); sách dẫn nguồn Silberberg, Chemistry: the molecular nature of matter and change, McGraw-Hill 2018",
+        "citation": "SGK Hóa học 10, Kết nối tri thức với cuộc sống (NXB Giáo dục Việt Nam), Bài 17, Bảng 17.1 (tr. 85); sách dẫn nguồn Silberberg, Chemistry: the molecular nature of matter and change, McGraw-Hill 2018",
         "url": READER,
     },
     "codata": {
@@ -55,7 +55,7 @@ REFERENCES = {
     },
     "definition": {
         "id": "dfh-definition",
-        "citation": "Nhiệt tạo thành chuẩn của các đơn chất ở dạng bền vững nhất bằng không (SGK Hoá học 10 KNTT, Bài 17, tr. 84)",
+        "citation": "Nhiệt tạo thành chuẩn của các đơn chất ở dạng bền vững nhất bằng không (SGK Hóa học 10 KNTT, Bài 17, tr. 84)",
         "url": READER,
     },
 }

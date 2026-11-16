@@ -2,8 +2,8 @@ import type { StudioScenario } from '../../scenario';
 import { GUIDED_BASE, L } from './base';
 
 /**
- * SH10 KNTT Bài 13 "Khái quát về chuyển hoá vật chất và năng lượng" (printed pages 78–84), in
- * SimLab's own words. Checked on 16/11/2026: đồng hoá = tổng hợp (uses energy), dị hoá = phân
+ * SH10 KNTT Bài 13 "Khái quát về chuyển hóa vật chất và năng lượng" (printed pages 78–84), in
+ * SimLab's own words. Checked on 16/11/2026: đồng hóa = tổng hợp (uses energy), dị hóa = phân
  * giải (releases energy); the enzyme acts in three stages (binds the substrate at the active site,
  * catalyses, the product leaves). The sorted examples follow Bài 13–14. SH10-GL-3.
  */
@@ -12,7 +12,7 @@ export const sh10b13Metabolism: StudioScenario = {
   id: 'guided.sh10-metabolism',
   topic: 'metabolismEnergy',
   title: L(
-    'Chuyển hoá vật chất và năng lượng: đồng hoá, dị hoá và enzyme',
+    'Chuyển hóa vật chất và năng lượng: đồng hóa, dị hóa và enzyme',
     'Matter and energy in the cell: anabolism, catabolism and enzymes',
   ),
   objectives: [
@@ -21,7 +21,7 @@ export const sh10b13Metabolism: StudioScenario = {
       'Predict where the energy goes when a cell breaks down glucose.',
     ),
     L(
-      'Phân loại các quá trình thành đồng hoá hoặc dị hoá.',
+      'Phân loại các quá trình thành đồng hóa hoặc dị hóa.',
       'Sort processes into anabolism or catabolism.',
     ),
     L(
@@ -41,12 +41,12 @@ export const sh10b13Metabolism: StudioScenario = {
   ],
   questions: [
     L(
-      'Vì sao nói chuyển hoá vật chất luôn đi kèm với chuyển hoá năng lượng?',
+      'Vì sao nói chuyển hóa vật chất luôn đi kèm với chuyển hóa năng lượng?',
       'Why do we say that changing matter always goes with changing energy?',
     ),
   ],
   expectedConclusion: L(
-    'Đồng hoá là tổng hợp chất phức tạp từ chất đơn giản và cần năng lượng; dị hoá là phân giải chất và giải phóng năng lượng. Khi phân giải glucose, năng lượng được giải phóng: một phần được giữ trong ATP, phần còn lại toả ra dạng nhiệt. Enzyme gắn cơ chất ở trung tâm hoạt động, xúc tác phản ứng rồi trở lại như cũ để dùng tiếp.',
+    'Đồng hóa là tổng hợp chất phức tạp từ chất đơn giản và cần năng lượng; dị hóa là phân giải chất và giải phóng năng lượng. Khi phân giải glucose, năng lượng được giải phóng: một phần được giữ trong ATP, phần còn lại tỏa ra dạng nhiệt. Enzyme gắn cơ chất ở trung tâm hoạt động, xúc tác phản ứng rồi trở lại như cũ để dùng tiếp.',
     'Anabolism builds complex substances from simple ones and needs energy; catabolism breaks substances down and releases energy. When glucose is broken down its energy is released: part is kept in ATP and the rest is given off as heat. An enzyme binds its substrate at the active site, catalyses the reaction and comes back unchanged to be used again.',
   ),
   sources: [],
@@ -88,7 +88,7 @@ export const sh10b13Metabolism: StudioScenario = {
     ],
     answer: 'giai-phong',
     answerWhy: L(
-      'Phân giải glucose là dị hoá: liên kết hoá học bị phá vỡ và năng lượng được giải phóng. Một phần năng lượng ấy được giữ trong ATP để tế bào dùng, phần còn lại toả ra dưới dạng nhiệt. Năng lượng không tự mất đi, chỉ chuyển từ dạng này sang dạng khác.',
+      'Phân giải glucose là dị hóa: liên kết hóa học bị phá vỡ và năng lượng được giải phóng. Một phần năng lượng ấy được giữ trong ATP để tế bào dùng, phần còn lại tỏa ra dưới dạng nhiệt. Năng lượng không tự mất đi, chỉ chuyển từ dạng này sang dạng khác.',
       'Breaking down glucose is catabolism: chemical bonds break and energy is released. Part of it is kept in ATP for the cell to use and the rest is given off as heat. Energy does not vanish; it only changes from one form to another.',
     ),
     activities: [
@@ -96,12 +96,12 @@ export const sh10b13Metabolism: StudioScenario = {
         kind: 'sort',
         id: 'dong-di',
         prompt: L(
-          'Đồng hoá là tổng hợp chất, dị hoá là phân giải chất. Xếp mỗi quá trình vào đúng nhóm.',
+          'Đồng hóa là tổng hợp chất, dị hóa là phân giải chất. Xếp mỗi quá trình vào đúng nhóm.',
           'Anabolism builds substances up, catabolism breaks them down. Put each process in the right group.',
         ),
         groups: [
-          { id: 'dong-hoa', label: L('Đồng hoá', 'Anabolism') },
-          { id: 'di-hoa', label: L('Dị hoá', 'Catabolism') },
+          { id: 'dong-hoa', label: L('Đồng hóa', 'Anabolism') },
+          { id: 'di-hoa', label: L('Dị hóa', 'Catabolism') },
         ],
         items: [
           {
@@ -121,7 +121,7 @@ export const sh10b13Metabolism: StudioScenario = {
             ),
             group: 'dong-hoa',
             why: L(
-              'Từ chất vô cơ đơn giản tạo ra chất hữu cơ; năng lượng ánh sáng được tích vào liên kết hoá học.',
+              'Từ chất vô cơ đơn giản tạo ra chất hữu cơ; năng lượng ánh sáng được tích vào liên kết hóa học.',
               'Organic matter is made from simple inorganic substances; light energy is stored in chemical bonds.',
             ),
           },
@@ -193,7 +193,7 @@ export const sh10b13Metabolism: StudioScenario = {
               'The enzyme catalyses and the substrate turns into product',
             ),
             why: L(
-              'Nhờ enzyme, phản ứng cần ít năng lượng hoạt hoá hơn nên xảy ra nhanh hơn rất nhiều.',
+              'Nhờ enzyme, phản ứng cần ít năng lượng hoạt hóa hơn nên xảy ra nhanh hơn rất nhiều.',
               'The enzyme lowers the activation energy, so the reaction runs much faster.',
             ),
           },

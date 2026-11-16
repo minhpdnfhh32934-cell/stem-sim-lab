@@ -1,5 +1,5 @@
 /**
- * Science Cards of "Các nguyên tố hoá học và nước": the textbook's shares (approximate, rounded
+ * Science Cards of "Các nguyên tố hóa học và nước": the textbook's shares (approximate, rounded
  * values for a typical body) and water's heat numbers (constants taken at 25 °C).
  */
 import type { ScienceCardData } from '@/science-card/types';
@@ -7,7 +7,7 @@ import { L } from '../common';
 import { CHON, ELEMENTS_SOURCE, WATER, shareOf } from './data';
 
 export const ELEMENTS_CARD: ScienceCardData = {
-  title: L('Các nguyên tố hoá học trong cơ thể người', 'Chemical elements of the human body'),
+  title: L('Các nguyên tố hóa học trong cơ thể người', 'Chemical elements of the human body'),
   model: L(
     'Tỉ lệ khối lượng các nguyên tố trong cơ thể người, đúng như Hình 4.1 của sách giáo khoa in. Sách gộp K, S, Na, Mg, Cl làm một phần, và các nguyên tố vi lượng làm một phần, nên app không tách chúng ra.',
     'The share of each element in the mass of the human body, exactly as the textbook’s figure 4.1 prints it. The book gives K, S, Na, Mg, Cl as one slice and the trace elements as another, so the app does not split them.',

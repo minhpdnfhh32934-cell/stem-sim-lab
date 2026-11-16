@@ -326,14 +326,14 @@ function card(accel: boolean) {
             label: L('Độ dịch chuyển d = x − x₀', 'Displacement Δx = x − x₀'),
           },
           { tex: { vi: 'v_t^2 - v_0^2 = 2 a d', en: 'v^2 - v_0^2 = 2 a\\,\\Delta x' } },
-          { tex: 'x = x_0 + v_0 t + \\tfrac{1}{2} a t^2', label: L('Toạ độ', 'Position') },
+          { tex: 'x = x_0 + v_0 t + \\tfrac{1}{2} a t^2', label: L('Tọa độ', 'Position') },
         ]
       : [
           {
             tex: { vi: 'd = v\\, t', en: '\\Delta x = v\\, t' },
             label: L('Độ dịch chuyển d = x − x₀', 'Displacement Δx = x − x₀'),
           },
-          { tex: 'x = x_0 + v t', label: L('Toạ độ', 'Position') },
+          { tex: 'x = x_0 + v t', label: L('Tọa độ', 'Position') },
           { tex: 's = |v|\\, t', label: L('Quãng đường đi được', 'Distance travelled') },
         ],
     assumptions: [

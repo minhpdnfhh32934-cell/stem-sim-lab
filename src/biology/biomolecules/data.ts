@@ -151,7 +151,7 @@ export const GROUP_INFO: Record<GroupId, GroupInfo> = {
     monomer: L('Amino acid', 'Amino acids'),
     polymer: true,
     text: L(
-      'Mỗi amino acid gồm một carbon trung tâm gắn với nhóm amino (–NH₂), nhóm carboxyl (–COOH), một nguyên tử H và nhóm R. Hai amino acid nối nhau bằng liên kết peptide, loại đi một phân tử nước. Protein tham gia cấu trúc tế bào, xúc tác (enzyme), bảo vệ (kháng thể), vận động, tiếp nhận thông tin và điều hoà.',
+      'Mỗi amino acid gồm một carbon trung tâm gắn với nhóm amino (–NH₂), nhóm carboxyl (–COOH), một nguyên tử H và nhóm R. Hai amino acid nối nhau bằng liên kết peptide, loại đi một phân tử nước. Protein tham gia cấu trúc tế bào, xúc tác (enzyme), bảo vệ (kháng thể), vận động, tiếp nhận thông tin và điều hòa.',
       'Each amino acid has a central carbon bonded to an amino group (–NH₂), a carboxyl group (–COOH), one H atom and an R group. Two amino acids join by a peptide bond, losing one water molecule. Proteins build cell structures, catalyse (enzymes), defend (antibodies), move, receive signals and regulate.',
     ),
     pages: '34–36',

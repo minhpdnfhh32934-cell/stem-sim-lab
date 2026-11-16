@@ -241,7 +241,7 @@ export function hasSeveralCentres(m: Molecule): boolean {
 export type BondPolarity = 'nonpolar' | 'polar' | 'ionic';
 
 /**
- * Bond type from the Pauling electronegativity difference, with the thresholds of SGK Hoá học 10
+ * Bond type from the Pauling electronegativity difference, with the thresholds of SGK Hóa học 10
  * KNTT, Bài 12, Bảng 12.1 (printed p. 59, read 15/11/2026): 0 ≤ |Δχ| < 0,4 non-polar covalent,
  * 0,4 ≤ |Δχ| < 1,7 polar covalent, |Δχ| ≥ 1,7 ionic (the book's footnote: "trừ một số trường hợp
  * ngoại lệ như: HF, MnI₂,…").

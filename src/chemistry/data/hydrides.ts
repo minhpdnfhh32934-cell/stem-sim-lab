@@ -8,7 +8,7 @@ const BoilingPointSchema = z.object({
   uncertainty: z.number().positive().optional(),
   unit: z.enum(['K', '°C']),
   as_given: z.string().min(1),
-  /** sgk: SGK Hoá học 10 KNTT (Bảng 13.1, 22.2), used wherever the book gives a value. */
+  /** sgk: SGK Hóa học 10 KNTT (Bảng 13.1, 22.2), used wherever the book gives a value. */
   source: z.enum(['sgk', 'nist', 'pubchem']),
   url: z.url(),
   reference: z.string().min(1),
