@@ -513,6 +513,8 @@ PLACEMENTS = [
     ("dcCircuit", "VL11", [23, 24, 25], "Tên Bài 23–25: điện trở, định luật Ohm, nguồn điện, năng lượng và công suất điện (cảnh có nguồn E, r và 1–3 điện trở)."),
     ("standingWave", "VL11", [13], "Tên Bài 13: sóng dừng (cảnh chỉ có dây hai đầu cố định)."),
     ("electricField", "VL11", [16, 17, 18], "Tên Bài 16–18: lực tương tác giữa các điện tích, khái niệm điện trường, điện trường đều."),
+    ("organicBasics", "HH11", [10, 12, 13], "Tên Bài 10: hợp chất hữu cơ và hóa học hữu cơ (nhóm chức, phổ hồng ngoại); tên Bài 12: công thức phân tử hợp chất hữu cơ; tên Bài 13: cấu tạo hóa học hợp chất hữu cơ (công thức cấu tạo, đồng phân)."),
+    ("organicSeparation", "HH11", [11], "Tên Bài 11: phương pháp tách biệt và tinh chế hợp chất hữu cơ (bài học có hướng dẫn: dự đoán, ghép đôi, xếp thứ tự; không có mô phỏng)."),
     ("nitrogenSulfur", "HH11", [4, 5, 6, 7, 8], "Tên Bài 4–8 nêu các chất mà bài có thẻ chất và đặt lên trục số oxi hóa: nitrogen (Bài 4), ammonia và muối ammonium (Bài 5), hợp chất của nitrogen với oxygen (Bài 6), sulfur và sulfur dioxide (Bài 7), sulfuric acid và muối sulfate (Bài 8)."),
     ("aqueousEquilibrium", "HH11", [2], "Tên Bài 2: cân bằng trong dung dịch nước (pH, tích số ion của nước, chất chỉ thị theo Bảng 2.1)."),
     ("electricPotential", "VL11", [19, 20], "Tên Bài 19: thế năng điện; tên Bài 20: điện thế (cảnh điện tích dời từ M đến N giữa hai bản phẳng: V = Eh, U_MN, A = qU_MN)."),

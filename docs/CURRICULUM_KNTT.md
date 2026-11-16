@@ -35,12 +35,12 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Vật lí 11 | 26 | 20 | 20 |
 | Vật lí 12 | 25 | 21 | 0 |
 | Hoá học 10 | 23 | 16 | 16 |
-| Hoá học 11 | 25 | 19 | 7 |
+| Hoá học 11 | 25 | 19 | 11 |
 | Hoá học 12 | 30 | 22 | 1 |
 | Sinh học 10 | 26 | 17 | 17 |
 | Sinh học 11 | 29 | 20 | 0 |
 | Sinh học 12 | 35 | 28 | 7 |
-| **Cộng** | **253** | **189** | **94** |
+| **Cộng** | **253** | **189** | **98** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -174,10 +174,10 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Hoá học 11 | Chương 2. Nitrogen – sulfur | 7 | Sulfur và sulfur dioxide | 42 | Lí thuyết | Nitrogen và sulfur | Tên Bài 4–8 nêu các chất mà bài có thẻ chất và đặt lên trục số oxi hóa: nitrogen (Bài 4), ammonia và muối ammonium (Bài 5), hợp chất của nitrogen với oxygen (Bài 6), sulfur và sulfur dioxide (Bài 7), sulfuric acid và muối sulfate (Bài 8). | pending |
 | Hoá học 11 | Chương 2. Nitrogen – sulfur | 8 | Sulfuric acid và muối sulfate | 48 | Lí thuyết | Nitrogen và sulfur | Tên Bài 4–8 nêu các chất mà bài có thẻ chất và đặt lên trục số oxi hóa: nitrogen (Bài 4), ammonia và muối ammonium (Bài 5), hợp chất của nitrogen với oxygen (Bài 6), sulfur và sulfur dioxide (Bài 7), sulfuric acid và muối sulfate (Bài 8). | pending |
 | Hoá học 11 | Chương 2. Nitrogen – sulfur | 9 | Ôn tập chương 2 | 55 | Ôn tập | chưa có |  | pending |
-| Hoá học 11 | Chương 3. Đại cương về hoá học hữu cơ | 10 | Hợp chất hữu cơ và hoá học hữu cơ | 57 | Lí thuyết | chưa có |  | pending |
-| Hoá học 11 | Chương 3. Đại cương về hoá học hữu cơ | 11 | Phương pháp tách biệt và tinh chế hợp chất hữu cơ | 63 | Lí thuyết | chưa có |  | pending |
-| Hoá học 11 | Chương 3. Đại cương về hoá học hữu cơ | 12 | Công thức phân tử hợp chất hữu cơ | 70 | Lí thuyết | chưa có |  | pending |
-| Hoá học 11 | Chương 3. Đại cương về hoá học hữu cơ | 13 | Cấu tạo hoá học hợp chất hữu cơ | 74 | Lí thuyết | chưa có |  | pending |
+| Hoá học 11 | Chương 3. Đại cương về hoá học hữu cơ | 10 | Hợp chất hữu cơ và hoá học hữu cơ | 57 | Lí thuyết | Nhóm chức, công thức phân tử, đồng phân | Tên Bài 10: hợp chất hữu cơ và hóa học hữu cơ (nhóm chức, phổ hồng ngoại); tên Bài 12: công thức phân tử hợp chất hữu cơ; tên Bài 13: cấu tạo hóa học hợp chất hữu cơ (công thức cấu tạo, đồng phân). | pending |
+| Hoá học 11 | Chương 3. Đại cương về hoá học hữu cơ | 11 | Phương pháp tách biệt và tinh chế hợp chất hữu cơ | 63 | Lí thuyết | Tách biệt và tinh chế hợp chất hữu cơ | Tên Bài 11: phương pháp tách biệt và tinh chế hợp chất hữu cơ (bài học có hướng dẫn: dự đoán, ghép đôi, xếp thứ tự; không có mô phỏng). | pending |
+| Hoá học 11 | Chương 3. Đại cương về hoá học hữu cơ | 12 | Công thức phân tử hợp chất hữu cơ | 70 | Lí thuyết | Nhóm chức, công thức phân tử, đồng phân | Tên Bài 10: hợp chất hữu cơ và hóa học hữu cơ (nhóm chức, phổ hồng ngoại); tên Bài 12: công thức phân tử hợp chất hữu cơ; tên Bài 13: cấu tạo hóa học hợp chất hữu cơ (công thức cấu tạo, đồng phân). | pending |
+| Hoá học 11 | Chương 3. Đại cương về hoá học hữu cơ | 13 | Cấu tạo hoá học hợp chất hữu cơ | 74 | Lí thuyết | Nhóm chức, công thức phân tử, đồng phân | Tên Bài 10: hợp chất hữu cơ và hóa học hữu cơ (nhóm chức, phổ hồng ngoại); tên Bài 12: công thức phân tử hợp chất hữu cơ; tên Bài 13: cấu tạo hóa học hợp chất hữu cơ (công thức cấu tạo, đồng phân). | pending |
 | Hoá học 11 | Chương 3. Đại cương về hoá học hữu cơ | 14 | Ôn tập chương 3 | 80 | Ôn tập | chưa có |  | pending |
 | Hoá học 11 | Chương 4. Hydrocarbon | 15 | Alkane | 82 | Lí thuyết | chưa có |  | pending |
 | Hoá học 11 | Chương 4. Hydrocarbon | 16 | Hydrocarbon không no | 92 | Lí thuyết | chưa có |  | pending |

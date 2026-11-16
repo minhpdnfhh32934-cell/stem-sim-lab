@@ -79,6 +79,7 @@ export const CATALOG: Record<Subject, ChapterEntry[]> = {
     chapter('particles', ['collisionTheory', 'maxwellBoltzmann', 'chemicalEquilibrium']),
     chapter('aqueousSolutions', ['aqueousEquilibrium', 'acidBaseTitration']),
     chapter('nitrogenSulfurGroup', ['nitrogenSulfur']),
+    chapter('organicBasicsGroup', ['organicBasics', 'organicSeparation']),
     chapter('halogenGroup', ['halogens', 'hydrogenHalides']),
     chapter('crystals', ['crystalStructure']),
   ],

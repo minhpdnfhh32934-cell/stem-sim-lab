@@ -2679,6 +2679,32 @@
    "review_status": "pending"
   },
   {
+   "topic": "organicBasics",
+   "subject": "chemistry",
+   "grade": 11,
+   "book": "HH11",
+   "chapter": "Chương 3. Đại cương về hoá học hữu cơ",
+   "lessons": [
+    10,
+    12,
+    13
+   ],
+   "reason": "Tên Bài 10: hợp chất hữu cơ và hóa học hữu cơ (nhóm chức, phổ hồng ngoại); tên Bài 12: công thức phân tử hợp chất hữu cơ; tên Bài 13: cấu tạo hóa học hợp chất hữu cơ (công thức cấu tạo, đồng phân).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "organicSeparation",
+   "subject": "chemistry",
+   "grade": 11,
+   "book": "HH11",
+   "chapter": "Chương 3. Đại cương về hoá học hữu cơ",
+   "lessons": [
+    11
+   ],
+   "reason": "Tên Bài 11: phương pháp tách biệt và tinh chế hợp chất hữu cơ (bài học có hướng dẫn: dự đoán, ghép đôi, xếp thứ tự; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
    "topic": "nitrogenSulfur",
    "subject": "chemistry",
    "grade": 11,

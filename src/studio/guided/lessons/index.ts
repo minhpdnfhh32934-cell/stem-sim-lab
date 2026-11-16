@@ -1,4 +1,5 @@
 import { validateScenario, type StudioScenario, type StudioSubject } from '../../scenario';
+import { hh11b11Separation } from './hh11b11Separation';
 import { sh10b03Levels } from './sh10b03Levels';
 import { sh10b12Signalling } from './sh10b12Signalling';
 import { sh10b13Metabolism } from './sh10b13Metabolism';
@@ -22,6 +23,7 @@ export const GUIDED_LESSONS: readonly unknown[] = [
   sh10b20MicrobeDiversity,
   sh10b22MicrobeUses,
   sh10b25VirusDiseases,
+  hh11b11Separation,
 ];
 
 let cache: StudioScenario[] | null = null;

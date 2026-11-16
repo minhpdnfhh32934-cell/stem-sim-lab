@@ -22,6 +22,8 @@ const TOPICS = [
   'Cân bằng trong dung dịch nước',
   'Chuẩn độ acid – base',
   'Nitrogen và sulfur',
+  'Nhóm chức, công thức phân tử, đồng phân',
+  'Tách biệt và tinh chế hợp chất hữu cơ',
   'Nhóm halogen',
   'Hydrogen halide · Muối halide',
   'Tinh thể kim loại và NaCl',
