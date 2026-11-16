@@ -47,8 +47,9 @@ export const C = {
  * Gravity values a user can choose as the *default* g (used only when the problem does
  * not state g). Vietnamese textbooks commonly use 9.8 or 10 m/s²; the MASTER_PROMPT
  * example uses 9.81. The standard value g_n = 9.80665 m/s² is exact by definition.
- * Which one is the app default is a teacher decision (docs/DATA_REVIEW.md).
+ * The default follows the textbook (user decision 16/11/2026, "bám sát kiến thức từ SGK"): SGK
+ * Vật lí 10 KNTT takes g = 9,8 m/s² (tr. 46, 69). DATA_REVIEW item 1, SGK10-5.
  */
 export const GRAVITY_PRESETS = [9.80665, 9.81, 9.8, 10] as const;
 export type GravityPreset = (typeof GRAVITY_PRESETS)[number];
-export const DEFAULT_GRAVITY: GravityPreset = 9.81;
+export const DEFAULT_GRAVITY: GravityPreset = 9.8;

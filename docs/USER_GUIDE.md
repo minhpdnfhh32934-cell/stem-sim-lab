@@ -394,7 +394,7 @@ xo, con lắc đơn, dao động cưỡng bức và cộng hưởng, chuyển đ
 sóng dừng trên dây, hoạ âm và chuỗi Fourier, điện trường, mạch điện một chiều, định luật II Kepler.
 
 - **Thông số** (cột phải): kéo thanh trượt hoặc gõ số. Nhãn **đề bài / mặc định / đã chỉnh** cho biết
-  giá trị đến từ đâu. Ví dụ g = 9,81 m/s² là mặc định khi đề không cho (đổi trong Cài đặt → Vật lý).
+  giá trị đến từ đâu. Ví dụ g = 9,8 m/s² (như sách giáo khoa) là mặc định khi đề không cho (đổi trong Cài đặt → Vật lý).
 - **Thanh công cụ nổi** trên khung mô phỏng: Chọn (V), Kéo/ném vật (H), Thước đo (M), Thước đo góc
   (A), Đồng hồ bấm giờ (T), hiện vectơ, vết quỹ đạo, căn vừa khung nhìn (F). Lăn chuột để phóng to,
   kéo nền để di chuyển.

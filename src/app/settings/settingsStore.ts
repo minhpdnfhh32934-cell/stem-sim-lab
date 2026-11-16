@@ -75,12 +75,16 @@ export const useSettingsStore = create<SettingsState>()(
     }),
     {
       name: 'stemsim.settings',
-      version: 2,
+      version: 3,
       storage: createJSONStorage(() => localStorage),
       // v1 had no uiMode: people who used the app before keep the full (advanced) layout they know.
+      // v3: the default g follows the textbook, 9,8 m/s² (user decision 16/11/2026); a g still at
+      // the old default 9,81 moves with it, any other choice stays.
       migrate: (persisted, version) => {
-        const p = (persisted ?? {}) as Partial<SettingsState>;
-        return version < 2 ? { ...p, uiMode: 'advanced' } : p;
+        let p = (persisted ?? {}) as Partial<SettingsState>;
+        if (version < 2) p = { ...p, uiMode: 'advanced' };
+        if (version < 3 && p.defaultGravity === 9.81) p = { ...p, defaultGravity: DEFAULT_GRAVITY };
+        return p;
       },
       partialize: ({ theme, locale, fontScale, defaultGravity, uiMode }) => ({
         theme,

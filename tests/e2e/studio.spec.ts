@@ -347,7 +347,7 @@ test('physics: a non-default height gives the closed-form times; the lab agrees'
   page,
 }) => {
   const w = await watch(page);
-  const g = 9.81;
+  const g = 9.8; // the app default g (DEFAULT_GRAVITY), as the textbook takes it
   const h = 20;
   await page.goto('/');
   await openStudio(page, 'Vật lý');
