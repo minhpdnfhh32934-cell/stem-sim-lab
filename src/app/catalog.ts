@@ -113,6 +113,11 @@ export const CATALOG: Record<Subject, ChapterEntry[]> = {
       'plantWaterMinerals',
       'plantPhotosynthesis',
       'plantRespiration',
+      'animalNutrition',
+      'animalRespiration',
+      'animalCirculation',
+      'immunity',
+      'excretionHomeostasis',
     ]),
   ],
 };
