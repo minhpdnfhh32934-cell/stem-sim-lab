@@ -24,6 +24,7 @@ const TOPICS = [
   'Nitrogen và sulfur',
   'Nhóm chức, công thức phân tử, đồng phân',
   'Tách biệt và tinh chế hợp chất hữu cơ',
+  'Alkane, alkene, alkyne, arene',
   'Nhóm halogen',
   'Hydrogen halide · Muối halide',
   'Tinh thể kim loại và NaCl',
