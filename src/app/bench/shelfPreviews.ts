@@ -13,6 +13,7 @@ export const SHELF_PREVIEWS: ReadonlySet<string> = new Set([
   'aqueousEquilibrium',
   'nitrogenSulfur',
   'organicBasics',
+  'hydrocarbons',
   'atomComposition',
   'isotopes',
   'periodicTable',

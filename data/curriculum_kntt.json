@@ -2679,6 +2679,20 @@
    "review_status": "pending"
   },
   {
+   "topic": "hydrocarbons",
+   "subject": "chemistry",
+   "grade": 11,
+   "book": "HH11",
+   "chapter": "Chương 4. Hydrocarbon",
+   "lessons": [
+    15,
+    16,
+    17
+   ],
+   "reason": "Tên Bài 15: alkane; tên Bài 16: hydrocarbon không no (alkene, alkyne); tên Bài 17: arene (công thức chung, bảng tính chất vật lí, phương trình đốt cháy, phản ứng trong sách).",
+   "review_status": "pending"
+  },
+  {
    "topic": "organicBasics",
    "subject": "chemistry",
    "grade": 11,

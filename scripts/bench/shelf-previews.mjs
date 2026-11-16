@@ -32,6 +32,7 @@ const TOPICS = [
   'aqueousEquilibrium',
   'nitrogenSulfur',
   'organicBasics',
+  'hydrocarbons',
   'atomComposition',
   'isotopes',
   'periodicTable',

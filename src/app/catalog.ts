@@ -80,6 +80,7 @@ export const CATALOG: Record<Subject, ChapterEntry[]> = {
     chapter('aqueousSolutions', ['aqueousEquilibrium', 'acidBaseTitration']),
     chapter('nitrogenSulfurGroup', ['nitrogenSulfur']),
     chapter('organicBasicsGroup', ['organicBasics', 'organicSeparation']),
+    chapter('hydrocarbonGroup', ['hydrocarbons']),
     chapter('halogenGroup', ['halogens', 'hydrogenHalides']),
     chapter('crystals', ['crystalStructure']),
   ],
