@@ -38,9 +38,9 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Hoá học 11 | 25 | 19 | 19 |
 | Hoá học 12 | 30 | 22 | 1 |
 | Sinh học 10 | 26 | 17 | 17 |
-| Sinh học 11 | 29 | 20 | 4 |
+| Sinh học 11 | 29 | 20 | 9 |
 | Sinh học 12 | 35 | 28 | 7 |
-| **Cộng** | **253** | **189** | **110** |
+| **Cộng** | **253** | **189** | **115** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -253,12 +253,12 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 5 | Thực hành: Quang hợp ở thực vật | 35 | Thực hành | chưa có |  | pending |
 | Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 6 | Hô hấp ở thực vật | 38 | Lí thuyết | Hô hấp ở thực vật | Tên Bài 6: hô hấp ở thực vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
 | Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 7 | Thực hành: Hô hấp ở thực vật | 44 | Thực hành | chưa có |  | pending |
-| Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 8 | Dinh dưỡng và tiêu hoá ở động vật | 46 | Lí thuyết | chưa có |  | pending |
-| Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 9 | Hô hấp ở động vật | 54 | Lí thuyết | chưa có |  | pending |
-| Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 10 | Tuần hoàn ở động vật | 61 | Lí thuyết | chưa có |  | pending |
+| Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 8 | Dinh dưỡng và tiêu hoá ở động vật | 46 | Lí thuyết | Dinh dưỡng và tiêu hóa ở động vật | Tên Bài 8: dinh dưỡng và tiêu hóa ở động vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
+| Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 9 | Hô hấp ở động vật | 54 | Lí thuyết | Hô hấp ở động vật | Tên Bài 9: hô hấp ở động vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
+| Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 10 | Tuần hoàn ở động vật | 61 | Lí thuyết | Tuần hoàn ở động vật | Tên Bài 10: tuần hoàn ở động vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
 | Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 11 | Thực hành: Một số thí nghiệm về hệ tuần hoàn | 69 | Thực hành | chưa có |  | pending |
-| Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 12 | Miễn dịch ở người và động vật | 72 | Lí thuyết | chưa có |  | pending |
-| Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 13 | Bài tiết và cân bằng nội môi | 80 | Lí thuyết | chưa có |  | pending |
+| Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 12 | Miễn dịch ở người và động vật | 72 | Lí thuyết | Miễn dịch ở người và động vật | Tên Bài 12: miễn dịch ở người và động vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
+| Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 13 | Bài tiết và cân bằng nội môi | 80 | Lí thuyết | Bài tiết và cân bằng nội môi | Tên Bài 13: bài tiết và cân bằng nội môi (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
 | Sinh học 11 | Chương 2. Cảm ứng ở sinh vật | 14 | Khái quát về cảm ứng ở sinh vật | 88 | Lí thuyết | chưa có |  | pending |
 | Sinh học 11 | Chương 2. Cảm ứng ở sinh vật | 15 | Cảm ứng ở thực vật | 90 | Lí thuyết | chưa có |  | pending |
 | Sinh học 11 | Chương 2. Cảm ứng ở sinh vật | 16 | Thực hành: Cảm ứng ở thực vật | 97 | Thực hành | chưa có |  | pending |

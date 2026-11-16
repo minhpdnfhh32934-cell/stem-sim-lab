@@ -3,9 +3,14 @@ import { sh11b01Metabolism } from '../../src/studio/guided/lessons/sh11b01Metabo
 import { sh11b02WaterMinerals } from '../../src/studio/guided/lessons/sh11b02WaterMinerals';
 import { sh11b04Photosynthesis } from '../../src/studio/guided/lessons/sh11b04Photosynthesis';
 import { sh11b06Respiration } from '../../src/studio/guided/lessons/sh11b06Respiration';
+import { sh11b08Digestion } from '../../src/studio/guided/lessons/sh11b08Digestion';
+import { sh11b09AnimalRespiration } from '../../src/studio/guided/lessons/sh11b09AnimalRespiration';
+import { sh11b10Circulation } from '../../src/studio/guided/lessons/sh11b10Circulation';
+import { sh11b12Immunity } from '../../src/studio/guided/lessons/sh11b12Immunity';
+import { sh11b13Excretion } from '../../src/studio/guided/lessons/sh11b13Excretion';
 import { openTopic } from './nav';
 
-/** SH11 Chương 1 (plants) as guided lessons (#255 round 2h). */
+/** SH11 Chương 1 as guided lessons (#255 rounds 2h, 2i). */
 test.use({ viewport: { width: 1366, height: 768 } });
 
 const next = (page: Page) => page.getByRole('button', { name: /^Tiếp:/ });
@@ -70,6 +75,11 @@ for (const [topic, lesson] of [
   ['Trao đổi chất ở sinh vật', sh11b01Metabolism],
   ['Trao đổi nước và khoáng ở thực vật', sh11b02WaterMinerals],
   ['Hô hấp ở thực vật', sh11b06Respiration],
+  ['Dinh dưỡng và tiêu hóa ở động vật', sh11b08Digestion],
+  ['Hô hấp ở động vật', sh11b09AnimalRespiration],
+  ['Tuần hoàn ở động vật', sh11b10Circulation],
+  ['Miễn dịch ở người và động vật', sh11b12Immunity],
+  ['Bài tiết và cân bằng nội môi', sh11b13Excretion],
 ] as const) {
   test(`${topic}: opens on the prediction and its activities fit 1366×768`, async ({ page }) => {
     const errors: string[] = [];

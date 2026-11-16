@@ -2979,6 +2979,66 @@
    "review_status": "pending"
   },
   {
+   "topic": "animalNutrition",
+   "subject": "biology",
+   "grade": 11,
+   "book": "SH11",
+   "chapter": "Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật",
+   "lessons": [
+    8
+   ],
+   "reason": "Tên Bài 8: dinh dưỡng và tiêu hóa ở động vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "animalRespiration",
+   "subject": "biology",
+   "grade": 11,
+   "book": "SH11",
+   "chapter": "Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật",
+   "lessons": [
+    9
+   ],
+   "reason": "Tên Bài 9: hô hấp ở động vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "animalCirculation",
+   "subject": "biology",
+   "grade": 11,
+   "book": "SH11",
+   "chapter": "Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật",
+   "lessons": [
+    10
+   ],
+   "reason": "Tên Bài 10: tuần hoàn ở động vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "immunity",
+   "subject": "biology",
+   "grade": 11,
+   "book": "SH11",
+   "chapter": "Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật",
+   "lessons": [
+    12
+   ],
+   "reason": "Tên Bài 12: miễn dịch ở người và động vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "excretionHomeostasis",
+   "subject": "biology",
+   "grade": 11,
+   "book": "SH11",
+   "chapter": "Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật",
+   "lessons": [
+    13
+   ],
+   "reason": "Tên Bài 13: bài tiết và cân bằng nội môi (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
    "topic": "metabolismEnergy",
    "subject": "biology",
    "grade": 10,
