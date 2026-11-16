@@ -168,6 +168,8 @@ const en: Messages = {
     uniformCircularMotion: 'Uniform circular motion',
     interference: 'Two-source interference',
     standingWave: 'Standing waves on a string',
+    travellingWave: 'Mechanical waves: transverse, longitudinal',
+    emWave: 'Electromagnetic waves',
     electricField: 'Electric field of point charges',
     crystalStructure: 'Metal crystals and NaCl',
     octetRule: 'The octet rule',

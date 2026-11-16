@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import raw from '@data/curriculum_kntt.json';
-import { loadScene } from '../registry';
+import { loadScene, sceneIds } from '../registry';
 import { SRC, VL10_LESSONS, VL11_LESSONS, sgk10, sgkVl11 } from './sources';
 
 interface Lesson {
@@ -77,7 +77,9 @@ describe('Vật lí 11 KNTT lessons cited by the Science Cards (user rule 15/11/
   });
 
   it('every VL11 placement cites each of its lessons, with pages', async () => {
-    for (const item of raw.items.filter((i) => i.book === 'VL11')) {
+    // Module lessons (emWave) publish their card from the view; emwave.test.ts checks it.
+    const scenes = new Set(sceneIds());
+    for (const item of raw.items.filter((i) => i.book === 'VL11' && scenes.has(i.topic))) {
       const scene = await loadScene(item.topic);
       const p = scene.usesGravity ? { ...scene.defaults, g: 9.81 } : scene.defaults;
       const ids = scene.scienceCard(p).sources.map((s) => s.id);

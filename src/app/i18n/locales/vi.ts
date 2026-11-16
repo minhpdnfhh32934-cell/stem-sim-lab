@@ -171,6 +171,8 @@ const vi = {
     uniformCircularMotion: 'Chuyển động tròn đều',
     interference: 'Giao thoa sóng hai nguồn',
     standingWave: 'Sóng dừng trên dây',
+    travellingWave: 'Sóng cơ: sóng ngang, sóng dọc',
+    emWave: 'Sóng điện từ',
     electricField: 'Điện trường của điện tích điểm',
     crystalStructure: 'Tinh thể kim loại và NaCl',
     octetRule: 'Quy tắc octet',
