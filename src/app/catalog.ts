@@ -75,12 +75,7 @@ export const CATALOG: Record<Subject, ChapterEntry[]> = {
     ]),
     chapter('bonds', ['octetRule', 'ionicBond', 'covalentBond', 'intermolecularForces']),
     chapter('molecules', ['molecule3d', 'vsepr', 'bondPolarity']),
-    chapter('reactions', [
-      'reactionLibrary',
-      'equationBalancing',
-      'redox',
-      'reactionEnthalpy',
-    ]),
+    chapter('reactions', ['reactionLibrary', 'equationBalancing', 'redox', 'reactionEnthalpy']),
     chapter('particles', ['collisionTheory', 'maxwellBoltzmann', 'chemicalEquilibrium']),
     chapter('aqueousSolutions', ['aqueousEquilibrium', 'acidBaseTitration']),
     chapter('halogenGroup', ['halogens', 'hydrogenHalides']),
