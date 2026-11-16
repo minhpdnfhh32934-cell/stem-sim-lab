@@ -513,6 +513,7 @@ PLACEMENTS = [
     ("dcCircuit", "VL11", [23, 24, 25], "Tên Bài 23–25: điện trở, định luật Ohm, nguồn điện, năng lượng và công suất điện (cảnh có nguồn E, r và 1–3 điện trở)."),
     ("standingWave", "VL11", [13], "Tên Bài 13: sóng dừng (cảnh chỉ có dây hai đầu cố định)."),
     ("electricField", "VL11", [16, 17, 18], "Tên Bài 16–18: lực tương tác giữa các điện tích, khái niệm điện trường, điện trường đều."),
+    ("aqueousEquilibrium", "HH11", [2], "Tên Bài 2: cân bằng trong dung dịch nước (pH, tích số ion của nước, chất chỉ thị theo Bảng 2.1)."),
     ("electricPotential", "VL11", [19, 20], "Tên Bài 19: thế năng điện; tên Bài 20: điện thế (cảnh điện tích dời từ M đến N giữa hai bản phẳng: V = Eh, U_MN, A = qU_MN)."),
     ("capacitor", "VL11", [21], "Tên Bài 21: tụ điện (một tụ, bộ tụ ghép nối tiếp hoặc song song, năng lượng của tụ)."),
     ("electricCurrent", "VL11", [22], "Tên Bài 22: cường độ dòng điện (I = Δq/Δt, I = Snve trong dây kim loại)."),

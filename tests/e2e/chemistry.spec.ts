@@ -19,6 +19,7 @@ const TOPICS = [
   'Thuyết va chạm',
   'Phân bố Maxwell–Boltzmann',
   'Cân bằng hóa học & Le Chatelier',
+  'Cân bằng trong dung dịch nước',
   'Chuẩn độ acid – base',
   'Nhóm halogen',
   'Hydrogen halide · Muối halide',

@@ -35,12 +35,12 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Vật lí 11 | 26 | 20 | 20 |
 | Vật lí 12 | 25 | 21 | 0 |
 | Hoá học 10 | 23 | 16 | 16 |
-| Hoá học 11 | 25 | 19 | 1 |
+| Hoá học 11 | 25 | 19 | 2 |
 | Hoá học 12 | 30 | 22 | 1 |
 | Sinh học 10 | 26 | 17 | 17 |
 | Sinh học 11 | 29 | 20 | 0 |
 | Sinh học 12 | 35 | 28 | 7 |
-| **Cộng** | **253** | **189** | **88** |
+| **Cộng** | **253** | **189** | **89** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -166,7 +166,7 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Hoá học 10 | Chương 7. Nguyên tố nhóm halogen | 22 | Hydrogen halide · Muối halide | 112 | Lí thuyết | Hydrogen halide · Muối halide | Tên Bài 22: hydrogen halide, muối halide (cảnh có độ dài, năng lượng liên kết H–X, nhiệt độ sôi, xu hướng tính acid; nhận biết ion halide chỉ có phản ứng tạo AgCl của thư viện). | pending |
 | Hoá học 10 | Chương 7. Nguyên tố nhóm halogen | 23 | Ôn tập chương 7 | 117 | Ôn tập | chưa có |  | pending |
 | Hoá học 11 | Chương 1. Cân bằng hoá học | 1 | Khái niệm về cân bằng hoá học | 6 | Lí thuyết | Cân bằng hóa học & Le Chatelier | Tên Bài 1: khái niệm về cân bằng hoá học. | pending |
-| Hoá học 11 | Chương 1. Cân bằng hoá học | 2 | Cân bằng trong dung dịch nước | 16 | Lí thuyết | chưa có |  | pending |
+| Hoá học 11 | Chương 1. Cân bằng hoá học | 2 | Cân bằng trong dung dịch nước | 16 | Lí thuyết | Cân bằng trong dung dịch nước | Tên Bài 2: cân bằng trong dung dịch nước (pH, tích số ion của nước, chất chỉ thị theo Bảng 2.1). | pending |
 | Hoá học 11 | Chương 1. Cân bằng hoá học | 3 | Ôn tập chương 1 | 27 | Ôn tập | chưa có |  | pending |
 | Hoá học 11 | Chương 2. Nitrogen – sulfur | 4 | Nitrogen | 29 | Lí thuyết | chưa có |  | pending |
 | Hoá học 11 | Chương 2. Nitrogen – sulfur | 5 | Ammonia • Muối ammonium | 33 | Lí thuyết | chưa có |  | pending |
