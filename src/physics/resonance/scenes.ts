@@ -3,7 +3,7 @@ import type { LocalizedText } from '@/core/data/dataset';
 import { DIM } from '@/core/units';
 import type { ScienceCardData } from '@/science-card/types';
 import { L, massParam } from '../common/scene-helpers';
-import { SRC } from '../common/sources';
+import { SRC, sgkVl11 } from '../common/sources';
 import { fmtQty, texNum, texQty } from '../common/tex';
 import {
   arrow,
@@ -270,7 +270,7 @@ function card(): ScienceCardData {
       'Closed form: the steady part plus the damped free part (exact transition map); the step Δt = 1/240 s is only for drawing.',
     ),
     userIntervened: false,
-    sources: [SRC.sgk11kntt, SRC.halliday, SRC.hairer],
+    sources: [sgkVl11(6), SRC.halliday, SRC.hairer],
   };
 }
 

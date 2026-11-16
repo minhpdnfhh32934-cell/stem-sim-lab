@@ -3,7 +3,7 @@ import type { LocalizedText } from '@/core/data/dataset';
 import { DIM } from '@/core/units';
 import type { ScienceCardData } from '@/science-card/types';
 import { DOT, L } from '../common/scene-helpers';
-import { SRC } from '../common/sources';
+import { SRC, sgkVl11 } from '../common/sources';
 import { fmtQty, texNum, texQty } from '../common/tex';
 import type {
   Answer,
@@ -389,7 +389,7 @@ function card(p: Params): ScienceCardData {
       `Closed form at t = i·Δt, Δt = ${fmtQty('en', stepOf(q), 's', 3)} (≤ T/200).`,
     ),
     userIntervened: false,
-    sources: [SRC.sgk11knttWaves, SRC.hallidayWaves, SRC.hairer],
+    sources: [sgkVl11(13), SRC.hallidayWaves, SRC.hairer],
   };
 }
 

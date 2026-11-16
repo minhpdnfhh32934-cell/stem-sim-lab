@@ -3,7 +3,7 @@ import { dopri5 } from '@/core/ode/dopri5';
 import { DIM } from '@/core/units';
 import type { ScienceCardData } from '@/science-card/types';
 import { L, gravityParam, massParam } from '../common/scene-helpers';
-import { SRC, sgk10 } from '../common/sources';
+import { SRC, VL11_OSCILLATION, sgk10, sgkVl11 } from '../common/sources';
 import { SYM, both, plain, sym } from '../common/symbols';
 import { fmtQty, texNum, texQty } from '../common/tex';
 import {
@@ -527,7 +527,7 @@ function card(hooke: boolean) {
       ),
       userIntervened: false,
       // The Hooke lesson also shows the oscillation (Vật lí 11) formulas: it cites both books.
-      sources: [...(hooke ? [sgk10(33)] : []), SRC.sgk11, SRC.halliday],
+      sources: [...(hooke ? [sgk10(33)] : VL11_OSCILLATION.map(sgkVl11)), SRC.halliday],
     };
   };
 }
