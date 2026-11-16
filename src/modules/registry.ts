@@ -53,6 +53,7 @@ const MODULES: Record<string, () => Promise<ModuleView>> = {
     import('@/chemistry/bonding/modules').then((m) => m.intermolecularForces),
   // Physics lesson with its own view (no time stepping): harmonics and Fourier series.
   fourierSeries: () => import('@/physics/fourier/modules').then((m) => m.fourierSeries),
+  emWave: () => import('@/physics/emwave/modules').then((m) => m.emWave),
   // Descriptive textbook lessons (#255): each runs its guided Science Studio lesson.
   ...Object.fromEntries(
     GUIDED_TOPICS.map((id) => [

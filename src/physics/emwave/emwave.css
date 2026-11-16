@@ -1,0 +1,48 @@
+/* Electromagnetic waves (#255 round 2a): the stage vocabulary (chem-view, chips) of the module
+   lessons. */
+@import '../../chemistry/chem.css';
+
+.emwave-panel {
+  display: grid;
+  gap: var(--space-3);
+}
+.emwave-panel label {
+  display: grid;
+  gap: var(--space-1);
+}
+.emwave-panel input[type='range'] {
+  width: 100%;
+  min-height: var(--target);
+}
+.emwave-panel__value {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+.emwave-panel__value select {
+  min-height: var(--target);
+}
+.emwave-panel__results {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-1) var(--space-3);
+  margin: 0;
+}
+.emwave-panel__results dt {
+  color: var(--text-muted);
+}
+.emwave-panel__results dd {
+  margin: 0;
+}
+.emwave-table {
+  border-collapse: collapse;
+}
+.emwave-table th,
+.emwave-table td {
+  padding: 4px var(--space-3);
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.emwave-table tr[aria-current] {
+  background: var(--accent-soft);
+}

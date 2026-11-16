@@ -28,6 +28,7 @@ const only = arg('--only')?.split(',') ?? null;
 /** Every topic without a physics engine frame; src/app/bench/TopicPicture.test.tsx checks it. */
 const TOPICS = [
   'fourierSeries',
+  'emWave',
   'atomComposition',
   'isotopes',
   'periodicTable',
