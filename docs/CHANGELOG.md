@@ -2,9 +2,9 @@
 
 Mọi thay đổi đáng chú ý của SimLab (tên cũ: STEM Sim Lab), bản mới nhất ở trên. Định dạng theo [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), số phiên bản dạng `x.y.z`. Tệp này được tạo từ `release-notes/versions.json` bằng `npm run release-notes`. Đừng sửa tay. Lịch sử đầy đủ kèm bằng chứng: [VERSION\_HISTORY.md](VERSION_HISTORY.md).
 
-## [Unreleased] - 0.9.0 (Đang xét duyệt)
+## [0.9.0] - 2026-11-16
 
-_Gói lớp 10 (#255): đủ 59/59 bài lý thuyết lớp 10 theo mục lục KNTT. Chỉ phần web lên 0.9.0 (không có thay đổi Rust kể từ v0.8.2, lõi vẫn 0.8.2), nên ứng dụng cài từ GitHub nhận qua cập nhật trong app, không cần bộ cài mới; bản Store nhận ở lần nộp có lõi mới. Người dùng yêu cầu phát hành khi hoàn thiện (16/11/2026). notesReady đặt true khi mở PR chuẩn bị phát hành._
+_Phát hành 16/11/2026 từ main @ cc285f00 (lượt Release 43790944755). Gói lớp 10 (#255): đủ 59/59 bài lý thuyết lớp 10. Chỉ phần web lên 0.9.0; phần lõi vẫn 0.8.2 (không có thay đổi Rust), nên web-update.json ghi minNative 0.8.2 và ứng dụng 0.8.2 cài từ GitHub nhận qua cập nhật trong app; bộ cài trong bản phát hành vẫn mang số 0.8.2. Không bắt buộc cập nhật (minRequired để trống). Bản Store nhận ở lần nộp có lõi mới. Người dùng yêu cầu phát hành khi hoàn thiện (16/11/2026)._
 
 Bản 0.9.0 có đủ các bài lý thuyết lớp 10 theo sách Kết nối tri thức: thêm 30 chủ đề Vật lí, Hóa học và Sinh học (8 trong số đó là bài học có hướng dẫn), lấy số liệu theo sách giáo khoa, và quay về giao diện cửa sổ quen thuộc.
 
@@ -704,7 +704,7 @@ Bản đầu tiên của STEM Sim Lab (tên cũ của SimLab): mô phỏng Vật
 
 - Bản này không có bộ cài phát hành công khai; chỉ có bản dựng thử trên GitHub Actions.
 
-[Unreleased]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/256
+[0.9.0]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.9.0
 [0.8.2]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.8.2
 [0.8.1]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.8.1
 [0.7.1]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.7.1

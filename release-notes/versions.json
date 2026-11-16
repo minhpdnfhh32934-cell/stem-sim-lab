@@ -182,16 +182,16 @@
   "versions": [
     {
       "version": "0.9.0",
-      "status": "in-review",
-      "statusNote": "Gói lớp 10 (#255): đủ 59/59 bài lý thuyết lớp 10 theo mục lục KNTT. Chỉ phần web lên 0.9.0 (không có thay đổi Rust kể từ v0.8.2, lõi vẫn 0.8.2), nên ứng dụng cài từ GitHub nhận qua cập nhật trong app, không cần bộ cài mới; bản Store nhận ở lần nộp có lõi mới. Người dùng yêu cầu phát hành khi hoàn thiện (16/11/2026). notesReady đặt true khi mở PR chuẩn bị phát hành.",
+      "status": "released",
+      "statusNote": "Phát hành 16/11/2026 từ main @ cc285f00 (lượt Release 43790944755). Gói lớp 10 (#255): đủ 59/59 bài lý thuyết lớp 10. Chỉ phần web lên 0.9.0; phần lõi vẫn 0.8.2 (không có thay đổi Rust), nên web-update.json ghi minNative 0.8.2 và ứng dụng 0.8.2 cài từ GitHub nhận qua cập nhật trong app; bộ cài trong bản phát hành vẫn mang số 0.8.2. Không bắt buộc cập nhật (minRequired để trống). Bản Store nhận ở lần nộp có lõi mới. Người dùng yêu cầu phát hành khi hoàn thiện (16/11/2026).",
       "channel": "github",
       "dates": {
         "devStart": "2026-11-14T14:08:13Z",
         "firstCommit": "2026-11-14T21:16:52+07:00",
-        "lastCommit": null,
-        "merged": null,
-        "built": null,
-        "released": null,
+        "lastCommit": "2026-11-16T01:44:05Z",
+        "merged": "2026-11-16T02:12:12Z",
+        "built": "2026-11-16T02:31:21Z",
+        "released": "2026-11-16T02:31:46Z",
         "tagged": null
       },
       "evidence": [
@@ -201,18 +201,25 @@
         "Hóa học 10: PR #265 (1d), #267 (1e), #269 (1f); Sinh học 10: PR #266 (1g), #270 (1h, bài học có hướng dẫn)",
         "Giao diện cửa sổ cũ: PR #264 (#263, quyết định của người dùng 15/11/2026)",
         "Bám sát SGK (quyết định 15/11 và 16/11/2026): PR #267, #268, #269, #272 (g mặc định 9,8; bỏ phần capsomere)",
-        "Mục lục: data/curriculum_kntt.json — VL10 26/26, HH10 16/16, SH10 17/17 bài lý thuyết có chủ đề"
+        "Mục lục: data/curriculum_kntt.json — VL10 26/26, HH10 16/16, SH10 17/17 bài lý thuyết có chủ đề",
+        "lastCommit: 6e2011a1 2026-11-16T01:44:05Z (commit cuối của PR #273 trước khi gộp)",
+        "PR #273 (ghi chú phát hành 0.9.0, PROGRESS, luật graphify) gộp cc285f00 2026-11-16T02:12:12Z (gh pr view 273)",
+        "built: lượt Release 43790944755 (workflow_dispatch, main, cc285f00), job 'Build Windows installers' xong 2026-11-16T02:31:21Z",
+        "released: GitHub Release v0.9.0 'SimLab 0.9.0', published_at 2026-11-16T02:31:46Z, target cc285f00; tệp: SimLab_0.8.2_x64-setup.exe, SimLab_0.8.2_x64_en-US.msi, web-bundle.zip, web-update.json, SHA256SUMS.txt",
+        "web-update.json: webVersion 0.9.0, minNative 0.8.2, minRequired trống, edition main (gh api releases/assets)"
       ],
       "tests": [
         "Mỗi PR: CI 8/8 xanh trước khi gộp (gh pr checks)",
-        "npm run test:slow: 2 passed (16/11/2026, trên nhánh fix/255-sgk-follow)"
+        "npm run test:slow: 2 passed (16/11/2026, trên nhánh fix/255-sgk-follow)",
+        "Lượt Release 43790944755: job 'Tests before packaging' đạt (2026-11-16T02:24:21Z); 5/5 job đạt",
+        "CI 8/8 xanh trên PR #273 trước khi gộp"
       ],
       "refs": {
-        "tag": null,
-        "tagSha": null,
-        "releaseUrl": null,
-        "prs": [256, 257, 260, 261, 262, 264, 265, 266, 267, 268, 269, 270, 271, 272],
-        "commits": ["82297dc0"],
+        "tag": "v0.9.0",
+        "tagSha": "cc285f00a13ae733a666ca75fc88c6a992342547",
+        "releaseUrl": "https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.9.0",
+        "prs": [256, 257, 260, 261, 262, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273],
+        "commits": ["82297dc0", "6e2011a1"],
         "branches": [
           "feat/old-shell",
           "feat/255-hh10-atoms",
