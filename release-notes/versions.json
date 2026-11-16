@@ -181,6 +181,147 @@
   ],
   "versions": [
     {
+      "version": "0.9.0",
+      "status": "in-review",
+      "statusNote": "Gói lớp 10 (#255): đủ 59/59 bài lý thuyết lớp 10 theo mục lục KNTT. Chỉ phần web lên 0.9.0 (không có thay đổi Rust kể từ v0.8.2, lõi vẫn 0.8.2), nên ứng dụng cài từ GitHub nhận qua cập nhật trong app, không cần bộ cài mới; bản Store nhận ở lần nộp có lõi mới. Người dùng yêu cầu phát hành khi hoàn thiện (16/11/2026). notesReady đặt true khi mở PR chuẩn bị phát hành.",
+      "channel": "github",
+      "dates": {
+        "devStart": "2026-11-14T14:08:13Z",
+        "firstCommit": "2026-11-14T21:16:52+07:00",
+        "lastCommit": null,
+        "merged": null,
+        "built": null,
+        "released": null,
+        "tagged": null
+      },
+      "evidence": [
+        "devStart: GitHub Release v0.8.2 published_at 2026-11-14T14:08:13Z (các thay đổi sau đó thuộc 0.9.0)",
+        "firstCommit: 82297dc0 2026-11-14T21:16:52+07:00 'fix(physics): review fixes for round 1a of #255' — commit đầu tiên sau khi v0.8.2 phát hành (git log v0.8.2..origin/main; các commit đợt 1a viết trước đó nhưng gộp sau)",
+        "Vật lí 10: PR #256 (đợt 1a), #257 (1b), #260 (1c), #261 (kí hiệu tiếng Anh), #262 (Bài 33), #268 (rà soát theo SGK)",
+        "Hóa học 10: PR #265 (1d), #267 (1e), #269 (1f); Sinh học 10: PR #266 (1g), #270 (1h, bài học có hướng dẫn)",
+        "Giao diện cửa sổ cũ: PR #264 (#263, quyết định của người dùng 15/11/2026)",
+        "Bám sát SGK (quyết định 15/11 và 16/11/2026): PR #267, #268, #269, #272 (g mặc định 9,8; bỏ phần capsomere)",
+        "Mục lục: data/curriculum_kntt.json — VL10 26/26, HH10 16/16, SH10 17/17 bài lý thuyết có chủ đề"
+      ],
+      "tests": [
+        "Mỗi PR: CI 8/8 xanh trước khi gộp (gh pr checks)",
+        "npm run test:slow: 2 passed (16/11/2026, trên nhánh fix/255-sgk-follow)"
+      ],
+      "refs": {
+        "tag": null,
+        "tagSha": null,
+        "releaseUrl": null,
+        "prs": [256, 257, 260, 261, 262, 264, 265, 266, 267, 268, 269, 270, 271, 272],
+        "commits": ["82297dc0"],
+        "branches": [
+          "feat/old-shell",
+          "feat/255-hh10-atoms",
+          "feat/255-sh10-models",
+          "feat/255-hh10-bonds",
+          "fix/255-vl10-sgk-audit",
+          "feat/255-hh10-reactions",
+          "feat/255-sh10-guided",
+          "fix/biology-spec-cell-wait",
+          "fix/255-sgk-follow",
+          "docs/255-grade10-progress"
+        ]
+      },
+      "publicNotes": {
+        "summary": {
+          "vi": "Bản 0.9.0 có đủ các bài lý thuyết lớp 10 theo sách Kết nối tri thức: thêm 30 chủ đề Vật lí, Hóa học và Sinh học (8 trong số đó là bài học có hướng dẫn), lấy số liệu theo sách giáo khoa, và quay về giao diện cửa sổ quen thuộc.",
+          "en": "Version 0.9.0 covers every Grade 10 theory lesson of the Kết nối tri thức textbooks: 30 new physics, chemistry and biology topics (8 of them guided lessons), values taken from the textbooks, and the familiar window layout back."
+        },
+        "added": [
+          {
+            "vi": "Vật lí 10: Tổng hợp và phân tích lực; Định luật III Newton; Trọng lực và lực căng dây; Lực cản của chất lưu; Moment lực và cân bằng vật rắn; Công, công suất và hiệu suất; Áp suất chất lỏng.",
+            "en": "Physics 10: Adding and resolving forces; Newton's third law; Weight and string tension; Drag in a fluid; Moments and rigid-body balance; Work, power and efficiency; Liquid pressure.",
+            "area": "ui"
+          },
+          {
+            "vi": "Hóa học 10: Thành phần của nguyên tử; Nguyên tố hóa học và đồng vị; Oxide và hydroxide trong chu kì 3; Quy tắc octet; Liên kết ion; Liên kết cộng hóa trị; Liên kết hydrogen và tương tác van der Waals; Phản ứng oxi hoá – khử; Biến thiên enthalpy của phản ứng; Nhóm halogen; Hydrogen halide · Muối halide.",
+            "en": "Chemistry 10: Composition of the atom; Chemical elements and isotopes; Oxides and hydroxides across period 3; The octet rule; Ionic bond; Covalent bond; Hydrogen bonds and van der Waals forces; Redox reactions; Enthalpy change of a reaction; The halogens; Hydrogen halides · Halide salts.",
+            "area": "ui"
+          },
+          {
+            "vi": "Sinh học 10: Các nguyên tố hóa học và nước; Các phân tử sinh học (phân tử 3D); Sinh trưởng của quần thể vi khuẩn; Khái quát về virus (hình 3D).",
+            "en": "Biology 10: Chemical elements and water; Biological molecules (3D molecules); Growth of a bacterial population; Viruses: an overview (3D).",
+            "area": "bio3d"
+          },
+          {
+            "vi": "Tám bài Sinh học 10 chỉ mô tả (Bài 3, 12, 13, 14, 19, 20, 22, 25) thành bài học có hướng dẫn: dự đoán trước, rồi xếp thứ tự, ghép cặp, phân nhóm theo nội dung sách, kiểm tra và xem lí do. Các bài này không phải mô phỏng.",
+            "en": "Eight descriptive Biology 10 lessons (3, 12, 13, 14, 19, 20, 22, 25) become guided lessons: predict first, then order, match and sort what the textbook teaches, check and read why. They are not simulations.",
+            "area": "ui"
+          }
+        ],
+        "improved": [
+          {
+            "vi": "Mọi bài lý thuyết lớp 10 (59 bài) đều có chủ đề trong mục Lớp 10, xếp theo mục lục sách Kết nối tri thức.",
+            "en": "Every Grade 10 theory lesson (59) has a topic under Grade 10, placed by the Kết nối tri thức tables of contents.",
+            "area": "ui"
+          },
+          {
+            "vi": "Thẻ Khoa học các bài Vật lí 10 ghi bài và trang sách giáo khoa; kí hiệu viết như sách (giao diện tiếng Anh dùng kí hiệu tiếng Anh).",
+            "en": "Physics 10 Science Cards cite the textbook lesson and page; symbols follow the textbook (the English interface uses English symbols).",
+            "area": "ui"
+          }
+        ],
+        "fixed": [],
+        "security": [],
+        "performance": [],
+        "changed": [
+          {
+            "vi": "Giao diện quay về cửa sổ quen thuộc: thanh trên, cột Thư viện, khung giữa, bảng dưới và cột Thuộc tính. Bàn thí nghiệm và khung chọn môn học không còn hiện; nút SimLab 3D, Thông tin máy và chế độ sáng/tối vẫn còn.",
+            "en": "The familiar window layout is back: top bar, Library column, centre stage, bottom panel and Properties column. The lab bench and the subject picker are gone; SimLab 3D, Device info and light/dark mode stay.",
+            "area": "ui"
+          },
+          {
+            "vi": "Số liệu theo sách giáo khoa trước: g mặc định là 9,8 m/s² như SGK (máy đang để 9,81 tự chuyển sang 9,8; giá trị khác bạn tự chọn được giữ), nước ở 20 °C là 999 kg/m³ (SGK Bảng 34.2). Đề bài cho số nào thì vẫn dùng số của đề.",
+            "en": "Textbook values first: the default g is 9.8 m/s² as in the textbook (a saved 9.81 moves to 9.8; any other choice you made stays), water at 20 °C is 999 kg/m³ (textbook Table 34.2). A value given in a problem is still used as given.",
+            "area": "ui"
+          }
+        ],
+        "deprecated": [],
+        "knownIssues": [
+          {
+            "vi": "Câu chữ, số liệu và vị trí bài trong lớp của các bài mới đang chờ giáo viên duyệt.",
+            "en": "The wording, data and grade placement of the new lessons are waiting for a teacher's review."
+          },
+          {
+            "vi": "Ở vài chỗ sách giáo khoa ghi hai số khác nhau (nhiệt độ sôi của H₂S, biến thiên enthalpy khi phân hủy CaCO₃ và của phản ứng nhiệt nhôm): app dùng số trong bảng của sách và ghi chú số còn lại.",
+            "en": "In a few places the textbook gives two different numbers (the boiling point of H₂S, the enthalpy change of CaCO₃ decomposition and of the thermite reaction): the app uses the table's number and notes the other."
+          }
+        ]
+      },
+      "notesReady": true,
+      "learnerHighlights": [
+        {
+          "area": "ui",
+          "vi": "Đủ 59 bài lý thuyết lớp 10 (Vật lí, Hóa học, Sinh học) theo sách Kết nối tri thức.",
+          "en": "All 59 Grade 10 theory lessons (physics, chemistry, biology) of the Kết nối tri thức textbooks."
+        },
+        {
+          "area": "ui",
+          "vi": "Tám bài Sinh học 10 thành bài học có hướng dẫn: dự đoán, xếp thứ tự, ghép cặp, phân nhóm.",
+          "en": "Eight Biology 10 lessons become guided lessons: predict, order, match and sort."
+        },
+        {
+          "area": "bio3d",
+          "vi": "Các phân tử sinh học và Khái quát về virus có hình 3D.",
+          "en": "Biological molecules and Viruses: an overview come in 3D."
+        },
+        {
+          "area": "ui",
+          "vi": "Quay về giao diện cửa sổ quen thuộc.",
+          "en": "The familiar window layout is back."
+        },
+        {
+          "area": "ui",
+          "vi": "Số liệu theo sách giáo khoa; g mặc định 9,8 m/s².",
+          "en": "Textbook values; default g is 9.8 m/s²."
+        }
+      ]
+    },
+    {
       "version": "0.8.2",
       "status": "released",
       "statusNote": "Phát hành 14/11/2026 từ main @ e89c7e06 (lượt Release 43601965239). Phần web và phần lõi cùng lên 0.8.2 vì lõi Rust đổi thư viện kể từ 0.8.1 (PR #251), nên ứng dụng 0.8.1 cài từ GitHub được báo cài bộ cài mới. Không bắt buộc cập nhật (minRequired để trống). Bản Store: gói 0.8.2.0, người dùng nộp tay trong Partner Center. notesReady đặt true khi mở PR #254; người dùng gộp PR ngày 14/11/2026.",
