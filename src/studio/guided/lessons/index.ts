@@ -8,6 +8,10 @@ import { sh10b19CellTechnology } from './sh10b19CellTechnology';
 import { sh10b20MicrobeDiversity } from './sh10b20MicrobeDiversity';
 import { sh10b22MicrobeUses } from './sh10b22MicrobeUses';
 import { sh10b25VirusDiseases } from './sh10b25VirusDiseases';
+import { sh11b01Metabolism } from './sh11b01Metabolism';
+import { sh11b02WaterMinerals } from './sh11b02WaterMinerals';
+import { sh11b04Photosynthesis } from './sh11b04Photosynthesis';
+import { sh11b06Respiration } from './sh11b06Respiration';
 
 /**
  * The descriptive textbook lessons (user decision 14/11/2026, #255). Kept out of
@@ -24,6 +28,10 @@ export const GUIDED_LESSONS: readonly unknown[] = [
   sh10b22MicrobeUses,
   sh10b25VirusDiseases,
   hh11b11Separation,
+  sh11b01Metabolism,
+  sh11b02WaterMinerals,
+  sh11b04Photosynthesis,
+  sh11b06Respiration,
 ];
 
 let cache: StudioScenario[] | null = null;

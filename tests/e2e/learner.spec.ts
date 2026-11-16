@@ -72,13 +72,14 @@ test('subject cards and the grade switch (Grade → Subject → Topic)', async (
   ).toBeVisible();
   await expectNoHorizontalScroll(page);
 
-  // Biology has no grade 11 topic yet: no dead end, "Xem tất cả" goes back to every topic.
-  await page.getByRole('radio', { name: 'Sinh học' }).click();
-  await grades.getByRole('radio', { name: 'Lớp 11' }).click();
-  await expect(library).toContainText('Chưa có chủ đề Sinh học nào được xếp vào lớp 11.');
+  // Physics has no grade 12 topic yet: no dead end, "Xem tất cả" goes back to every topic.
+  await grades.getByRole('radio', { name: 'Lớp 12' }).click();
+  await expect(library).toContainText('Chưa có chủ đề Vật lý nào được xếp vào lớp 12.');
   await library.getByRole('button', { name: 'Xem tất cả' }).click();
   await expect(grades.getByRole('radio', { name: 'Tất cả' })).toBeChecked();
-  await expect(library.getByRole('button', { name: 'Nguyên phân', exact: true })).toBeVisible();
+  await expect(
+    library.getByRole('button', { name: 'Chuyển động thẳng đều', exact: true }),
+  ).toBeVisible();
 });
 
 test('the grade switch fits the narrowest library at the largest font, in English too', async ({

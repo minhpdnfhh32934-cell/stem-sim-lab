@@ -30,8 +30,9 @@ describe('library views (Grade → Subject → Topic)', () => {
     const ids = chaptersFor(10, 'physics').flatMap((c) => c.topics.map((x) => x.id));
     // Unplaced (no textbook lesson clearly names it): only under "Tất cả".
     expect(ids).not.toContain('inclinedPlane');
-    expect(chaptersFor(11, 'biology')).toEqual([]);
-    expect(availableCount(11, 'biology')).toBe(0);
+    // Grade 12 physics has no placed topic yet (#255 places grade 12 last).
+    expect(chaptersFor(12, 'physics')).toEqual([]);
+    expect(availableCount(12, 'physics')).toBe(0);
     expect(availableCount('all', 'biology')).toBe(
       CATALOG.biology.flatMap((c) => c.topics).filter((x) => x.status === 'available').length,
     );
@@ -49,10 +50,11 @@ describe('library views (Grade → Subject → Topic)', () => {
     const s = suggestions('all', ['biology']);
     expect(s[0]?.subject).toBe('biology');
     expect(s.every((x) => x.topic.status === 'available')).toBe(true);
-    // Grade 11 has no biology topic: its suggestions are physics and chemistry ones.
-    const g11 = suggestions(11, ['biology']);
-    expect(g11.map((x) => x.subject)).not.toContain('biology');
-    expect(g11[0]?.topic.id).toBe('springPendulum');
+    // Grade 12 has no physics topic yet: its suggestions are chemistry and biology ones.
+    const g12 = suggestions(12, ['physics']);
+    expect(g12.length).toBeGreaterThan(0);
+    expect(g12.map((x) => x.subject)).not.toContain('physics');
+    expect(g12.every((x) => x.topic.status === 'available')).toBe(true);
   });
 });
 
@@ -194,15 +196,13 @@ describe('library grade switch', () => {
 
   it('a grade without topics in the subject is no dead end: "Xem tất cả"', async () => {
     const user = userEvent.setup();
-    useProfileStore.setState({ grade: 11 });
-    useWorkspaceStore.setState({ subject: 'biology' });
+    useProfileStore.setState({ grade: 12 });
+    useWorkspaceStore.setState({ subject: 'physics' });
     render(<LeftSidebar />);
-    expect(
-      screen.getByText('Chưa có chủ đề Sinh học nào được xếp vào lớp 11.'),
-    ).toBeInTheDocument();
+    expect(screen.getByText('Chưa có chủ đề Vật lý nào được xếp vào lớp 12.')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Xóa tìm kiếm' })).toBeNull();
     await user.click(screen.getByRole('button', { name: 'Xem tất cả' }));
-    expect(screen.getByRole('button', { name: 'Nguyên phân' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Mặt phẳng nghiêng' })).toBeInTheDocument();
   });
 
   it('home suggests the grade’s topics, with the pending label and per-grade counts', () => {

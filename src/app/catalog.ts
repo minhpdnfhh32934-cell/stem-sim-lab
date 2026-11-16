@@ -108,6 +108,12 @@ export const CATALOG: Record<Subject, ChapterEntry[]> = {
       'virusStructure',
       'virusDiseases',
     ]),
+    chapter('organismMetabolismGroup', [
+      'organismMetabolism',
+      'plantWaterMinerals',
+      'plantPhotosynthesis',
+      'plantRespiration',
+    ]),
   ],
 };
 

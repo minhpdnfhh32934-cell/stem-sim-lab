@@ -67,6 +67,10 @@ export const SHELF_PREVIEWS: ReadonlySet<string> = new Set([
   'microbeApplications',
   'virusDiseases',
   'organicSeparation',
+  'organismMetabolism',
+  'plantWaterMinerals',
+  'plantPhotosynthesis',
+  'plantRespiration',
 ]);
 
 /** The picture of `topic` in `theme`, or null when it has none. */
