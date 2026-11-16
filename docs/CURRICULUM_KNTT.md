@@ -32,7 +32,7 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Sách | Số bài | Lí thuyết | Lí thuyết có chủ đề SimLab |
 | --- | --- | --- | --- |
 | Vật lí 10 | 34 | 26 | 26 |
-| Vật lí 11 | 26 | 20 | 13 |
+| Vật lí 11 | 26 | 20 | 16 |
 | Vật lí 12 | 25 | 21 | 0 |
 | Hoá học 10 | 23 | 16 | 16 |
 | Hoá học 11 | 25 | 19 | 1 |
@@ -40,7 +40,7 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Sinh học 10 | 26 | 17 | 17 |
 | Sinh học 11 | 29 | 20 | 0 |
 | Sinh học 12 | 35 | 28 | 7 |
-| **Cộng** | **253** | **189** | **81** |
+| **Cộng** | **253** | **189** | **84** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -97,10 +97,10 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Vật lí 11 | Chương I. Dao động | 5 | Động năng. Thế năng. Sự chuyển hoá năng lượng trong dao động điều hoà | 20 | Lí thuyết | Con lắc lò xo, Con lắc đơn | Con lắc lò xo: Tên Bài 1–3, 5: dao động điều hoà, vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng). Con lắc đơn: Tên Bài 1–3, 5: dao động điều hoà (con lắc đơn dao động điều hoà khi góc nhỏ), vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng). | pending |
 | Vật lí 11 | Chương I. Dao động | 6 | Dao động tắt dần. Dao động cưỡng bức. Hiện tượng cộng hưởng | 24 | Lí thuyết | Con lắc lò xo, Con lắc đơn, Dao động cưỡng bức và cộng hưởng | Con lắc lò xo: Tên Bài 1–3, 5: dao động điều hoà, vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng). Con lắc đơn: Tên Bài 1–3, 5: dao động điều hoà (con lắc đơn dao động điều hoà khi góc nhỏ), vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng). Dao động cưỡng bức và cộng hưởng: Tên Bài 6: dao động tắt dần, dao động cưỡng bức, hiện tượng cộng hưởng (cảnh lò xo nằm ngang có cản và ngoại lực điều hoà). | pending |
 | Vật lí 11 | Chương I. Dao động | 7 | Bài tập về sự chuyển hoá năng lượng trong dao động điều hoà | 28 | Bài tập | chưa có |  | pending |
-| Vật lí 11 | Chương II. Sóng | 8 | Mô tả sóng | 32 | Lí thuyết | chưa có |  | pending |
-| Vật lí 11 | Chương II. Sóng | 9 | Sóng ngang. Sóng dọc. Sự truyền năng lượng của sóng cơ | 37 | Lí thuyết | chưa có |  | pending |
+| Vật lí 11 | Chương II. Sóng | 8 | Mô tả sóng | 32 | Lí thuyết | Sóng cơ: sóng ngang, sóng dọc | Tên Bài 8: mô tả sóng (biên độ, chu kì, tần số, tốc độ, bước sóng); tên Bài 9: sóng ngang, sóng dọc, sự truyền năng lượng của sóng cơ (cảnh một nguồn O, chọn sóng ngang hoặc sóng dọc). | pending |
+| Vật lí 11 | Chương II. Sóng | 9 | Sóng ngang. Sóng dọc. Sự truyền năng lượng của sóng cơ | 37 | Lí thuyết | Sóng cơ: sóng ngang, sóng dọc | Tên Bài 8: mô tả sóng (biên độ, chu kì, tần số, tốc độ, bước sóng); tên Bài 9: sóng ngang, sóng dọc, sự truyền năng lượng của sóng cơ (cảnh một nguồn O, chọn sóng ngang hoặc sóng dọc). | pending |
 | Vật lí 11 | Chương II. Sóng | 10 | Thực hành: Đo tần số của sóng âm | 41 | Thực hành | chưa có |  | pending |
-| Vật lí 11 | Chương II. Sóng | 11 | Sóng điện từ | 44 | Lí thuyết | chưa có |  | pending |
+| Vật lí 11 | Chương II. Sóng | 11 | Sóng điện từ | 44 | Lí thuyết | Sóng điện từ | Tên Bài 11: sóng điện từ (vectơ E, B vuông góc với phương truyền; λ = c/f; thang sóng điện từ theo Bảng 11.1). | pending |
 | Vật lí 11 | Chương II. Sóng | 12 | Giao thoa sóng | 48 | Lí thuyết | Giao thoa sóng hai nguồn | Tên Bài 12: giao thoa sóng (cảnh có hai nguồn cùng pha trên mặt nước; phần phách là mở rộng). | pending |
 | Vật lí 11 | Chương II. Sóng | 13 | Sóng dừng | 52 | Lí thuyết | Sóng dừng trên dây | Tên Bài 13: sóng dừng (cảnh chỉ có dây hai đầu cố định). | pending |
 | Vật lí 11 | Chương II. Sóng | 14 | Bài tập về sóng | 55 | Bài tập | chưa có |  | pending |
@@ -156,7 +156,7 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Hoá học 10 | Chương 3. Liên kết hoá học | 12 | Liên kết cộng hoá trị | 55 | Lí thuyết | Liên kết cộng hóa trị | Tên Bài 12: liên kết cộng hoá trị (cảnh hiệu độ âm điện → loại liên kết theo Bảng 12.1, số liên kết σ và π). | pending |
 | Hoá học 10 | Chương 3. Liên kết hoá học | 13 | Liên kết hydrogen và tương tác van der Waals | 64 | Lí thuyết | Liên kết hydrogen và tương tác van der Waals | Tên Bài 13: liên kết hydrogen và tương tác van der Waals (cảnh nhiệt độ sôi các hydride nhóm IVA–VIIA theo chu kì). | pending |
 | Hoá học 10 | Chương 3. Liên kết hoá học | 14 | Ôn tập chương 3 | 68 | Ôn tập | chưa có |  | pending |
-| Hoá học 10 | Chương 4. Phản ứng oxi hoá – khử | 15 | Phản ứng oxi hoá – khử | 71 | Lí thuyết | Phản ứng oxi hoá – khử | Tên Bài 15: phản ứng oxi hoá – khử (cảnh có số oxi hoá theo quy tắc của bài, chất oxi hoá, chất khử, quá trình oxi hoá, quá trình khử, số electron trao đổi cho các phản ứng của thư viện). | pending |
+| Hoá học 10 | Chương 4. Phản ứng oxi hoá – khử | 15 | Phản ứng oxi hoá – khử | 71 | Lí thuyết | Phản ứng oxi hóa – khử | Tên Bài 15: phản ứng oxi hoá – khử (cảnh có số oxi hoá theo quy tắc của bài, chất oxi hoá, chất khử, quá trình oxi hoá, quá trình khử, số electron trao đổi cho các phản ứng của thư viện). | pending |
 | Hoá học 10 | Chương 4. Phản ứng oxi hoá – khử | 16 | Ôn tập chương 4 | 78 | Ôn tập | chưa có |  | pending |
 | Hoá học 10 | Chương 5. Năng lượng hoá học | 17 | Biến thiên enthalpy trong các phản ứng hoá học | 81 | Lí thuyết | Biến thiên enthalpy của phản ứng | Tên Bài 17: biến thiên enthalpy trong các phản ứng hoá học (cảnh tính ΔrH°298 theo nhiệt tạo thành, Bảng 17.1; chưa có phần tính theo năng lượng liên kết). | pending |
 | Hoá học 10 | Chương 5. Năng lượng hoá học | 18 | Ôn tập chương 5 | 89 | Ôn tập | chưa có |  | pending |
@@ -232,7 +232,7 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Sinh học 10 | Chương 3. Trao đổi chất qua màng và truyền tin tế bào | 10 | Trao đổi chất qua màng tế bào | 64 | Lí thuyết | Khuếch tán & thẩm thấu | Tên Bài 10: trao đổi chất qua màng tế bào. Chỉ phần vận chuyển thụ động (khuếch tán, thẩm thấu), trên mô hình hai ngăn và ống chữ U, không phải màng tế bào thật. | pending |
 | Sinh học 10 | Chương 3. Trao đổi chất qua màng và truyền tin tế bào | 11 | Thực hành: Thí nghiệm co và phản co nguyên sinh | 71 | Thực hành | chưa có |  | pending |
 | Sinh học 10 | Chương 3. Trao đổi chất qua màng và truyền tin tế bào | 12 | Truyền tin tế bào | 73 | Lí thuyết | Truyền tin tế bào | Tên Bài 12: truyền tin tế bào (bài học có hướng dẫn: dự đoán, xếp thứ tự, ghép đôi; không có mô phỏng). | pending |
-| Sinh học 10 | Chương 4. Chuyển hoá năng lượng trong tế bào | 13 | Khái quát về chuyển hoá vật chất và năng lượng | 78 | Lí thuyết | Chuyển hoá vật chất và năng lượng | Tên Bài 13: khái quát về chuyển hoá vật chất và năng lượng (bài học có hướng dẫn: dự đoán, phân loại, xếp thứ tự; không có mô phỏng). | pending |
+| Sinh học 10 | Chương 4. Chuyển hoá năng lượng trong tế bào | 13 | Khái quát về chuyển hoá vật chất và năng lượng | 78 | Lí thuyết | Chuyển hóa vật chất và năng lượng | Tên Bài 13: khái quát về chuyển hoá vật chất và năng lượng (bài học có hướng dẫn: dự đoán, phân loại, xếp thứ tự; không có mô phỏng). | pending |
 | Sinh học 10 | Chương 4. Chuyển hoá năng lượng trong tế bào | 14 | Phân giải và tổng hợp các chất trong tế bào | 85 | Lí thuyết | Phân giải và tổng hợp các chất trong tế bào | Tên Bài 14: phân giải và tổng hợp các chất trong tế bào (bài học có hướng dẫn: dự đoán, ghép đôi, phân loại; không có mô phỏng). | pending |
 | Sinh học 10 | Chương 4. Chuyển hoá năng lượng trong tế bào | 15 | Thực hành: Thí nghiệm phân tích ảnh hưởng của một số yếu tố đến hoạt tính của enzyme và kiểm tra hoạt tính của enzyme amylase | 94 | Thực hành | chưa có |  | pending |
 | Sinh học 10 | Chương 5. Chu kì tế bào và phân bào | 16 | Chu kì tế bào và nguyên phân | 97 | Lí thuyết | Nguyên phân | Tên Bài 16: chu kì tế bào và nguyên phân. | pending |
@@ -331,4 +331,4 @@ Tên bài SGK chưa nói rõ chủ đề, hoặc không có bài nào: để "Ch
 | Hoá học | Chuẩn độ acid – base | Tên Bài 2 là cân bằng trong dung dịch nước, không nêu chuẩn độ acid – base. Bài có thể liên quan: HH11 Bài 2. | pending |
 | Sinh học | Phiêu bạt di truyền | Tên Bài 18, 21 là di truyền học quần thể và học thuyết tiến hoá tổng hợp hiện đại, không nêu phiêu bạt di truyền. Bài có thể liên quan: SH12 Bài 18, 21. | pending |
 | Vật lí | Định luật II Kepler | Không bài nào trong ba cuốn Vật lí có tên về định luật Kepler; chuyên đề học tập không thuộc 9 cuốn nên giáo viên kiểm. Bài có thể liên quan: — (ngoài 9 cuốn; có thể thuộc chuyên đề Vật lí 11 “Trường hấp dẫn”). | pending |
-| Vật lí | Hoạ âm và chuỗi Fourier | Không bài nào có tên về hoạ âm hay chuỗi Fourier; hoạ âm của dây chỉ là một phần của Bài 13 (sóng dừng). Bài có thể liên quan: VL11 Bài 13 (mở rộng). | pending |
+| Vật lí | Họa âm và chuỗi Fourier | Không bài nào có tên về hoạ âm hay chuỗi Fourier; hoạ âm của dây chỉ là một phần của Bài 13 (sóng dừng). Bài có thể liên quan: VL11 Bài 13 (mở rộng). | pending |

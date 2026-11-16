@@ -5,7 +5,7 @@ import { DIM } from '@/core/units';
 import type { LocalizedText } from '@/core/data/dataset';
 import type { ScienceCardData } from '@/science-card/types';
 import { L, gravityParam, massParam } from '../common/scene-helpers';
-import { SRC } from '../common/sources';
+import { SRC, VL11_OSCILLATION, sgkVl11 } from '../common/sources';
 import { SYM, plain, sym } from '../common/symbols';
 import { fmtQty, texNum, texQty } from '../common/tex';
 import { arrow, circle, line, polyline, text, vectorScale } from '../render/draw';
@@ -399,7 +399,7 @@ function card(p: Params): ScienceCardData {
       'RK4 with 8 substeps per Δt = 1/240 s (h ≈ 0.52 ms); the small-angle model uses its exact solution.',
     ),
     userIntervened: false,
-    sources: [SRC.sgk11, SRC.landau, SRC.halliday, SRC.hairer],
+    sources: [...VL11_OSCILLATION.map(sgkVl11), SRC.landau, SRC.halliday, SRC.hairer],
   };
 }
 

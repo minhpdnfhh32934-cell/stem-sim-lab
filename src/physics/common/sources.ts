@@ -69,6 +69,11 @@ export const SRC = {
     citation:
       'D. Halliday, R. Resnick, J. Walker — Fundamentals of Physics, Wiley — ch. 21 (định luật Coulomb), ch. 22 (điện trường), ch. 24 (điện thế), ch. 25 (tụ điện)',
   },
+  hallidayEm: {
+    id: 'halliday-em',
+    citation:
+      'D. Halliday, R. Resnick, J. Walker — Fundamentals of Physics, Wiley — ch. 33 (sóng điện từ, thang sóng điện từ)',
+  },
   hallidayCircuits: {
     id: 'halliday-circuits',
     citation:
@@ -146,3 +151,45 @@ export function sgk10(n: number): Source {
     citation: `Sách giáo khoa Vật lí 10, bộ Kết nối tri thức với cuộc sống, NXB Giáo dục Việt Nam — Bài ${String(n)} “${title}”, tr. ${String(from)}–${String(to)}`,
   };
 }
+
+/**
+ * Vật lí 11 (Kết nối tri thức với cuộc sống) theory lessons: [title, first page, last page], from
+ * the table of contents (data/curriculum_kntt.json; the last page is the page before the next
+ * lesson), read in the publisher's e-book (taphuan.nxbgd.vn, 16/11/2026). `sgkVl11` cites them.
+ */
+export const VL11_LESSONS: Readonly<Record<number, readonly [string, number, number]>> = {
+  1: ['Dao động điều hoà', 6, 9],
+  2: ['Mô tả dao động điều hoà', 10, 13],
+  3: ['Vận tốc, gia tốc trong dao động điều hoà', 14, 16],
+  5: ['Động năng. Thế năng. Sự chuyển hoá năng lượng trong dao động điều hoà', 20, 23],
+  6: ['Dao động tắt dần. Dao động cưỡng bức. Hiện tượng cộng hưởng', 24, 27],
+  8: ['Mô tả sóng', 32, 36],
+  9: ['Sóng ngang. Sóng dọc. Sự truyền năng lượng của sóng cơ', 37, 40],
+  11: ['Sóng điện từ', 44, 47],
+  12: ['Giao thoa sóng', 48, 51],
+  13: ['Sóng dừng', 52, 54],
+  16: ['Lực tương tác giữa các điện tích', 61, 64],
+  17: ['Khái niệm điện trường', 65, 70],
+  18: ['Điện trường đều', 71, 75],
+  19: ['Thế năng điện', 76, 78],
+  20: ['Điện thế', 79, 82],
+  21: ['Tụ điện', 83, 90],
+  22: ['Cường độ dòng điện', 91, 94],
+  23: ['Điện trở. Định luật Ohm', 95, 101],
+  24: ['Nguồn điện', 102, 105],
+  25: ['Năng lượng và công suất điện', 106, 110],
+};
+
+/** The source of Vật lí 11 KNTT lesson `n`, with its pages. */
+export function sgkVl11(n: number): Source {
+  const lesson = VL11_LESSONS[n];
+  if (!lesson) throw new Error(`Vật lí 11 lesson ${String(n)} is not in VL11_LESSONS`);
+  const [title, from, to] = lesson;
+  return {
+    id: `sgk-vl11-kntt-b${String(n)}`,
+    citation: `Sách giáo khoa Vật lí 11, bộ Kết nối tri thức với cuộc sống, NXB Giáo dục Việt Nam — Bài ${String(n)} “${title}”, tr. ${String(from)}–${String(to)}`,
+  };
+}
+
+/** The oscillation lessons a pendulum card cites (Vật lí 11 Bài 1, 2, 3, 5, 6). */
+export const VL11_OSCILLATION = [1, 2, 3, 5, 6] as const;

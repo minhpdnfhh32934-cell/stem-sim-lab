@@ -507,6 +507,8 @@ PLACEMENTS = [
     ("logisticGrowth", "SH12", [24], "Tên Bài 24: sinh thái học quần thể."),
     ("cellStructure", "SH10", [7, 8], "Tên Bài 7–8: tế bào nhân sơ và tế bào nhân thực."),
     ("uniformCircularMotion", "VL10", [31, 32], "Tên Bài 31–32: động học của chuyển động tròn đều; lực hướng tâm và gia tốc hướng tâm."),
+    ("travellingWave", "VL11", [8, 9], "Tên Bài 8: mô tả sóng (biên độ, chu kì, tần số, tốc độ, bước sóng); tên Bài 9: sóng ngang, sóng dọc, sự truyền năng lượng của sóng cơ (cảnh một nguồn O, chọn sóng ngang hoặc sóng dọc)."),
+    ("emWave", "VL11", [11], "Tên Bài 11: sóng điện từ (vectơ E, B vuông góc với phương truyền; λ = c/f; thang sóng điện từ theo Bảng 11.1)."),
     ("interference", "VL11", [12], "Tên Bài 12: giao thoa sóng (cảnh có hai nguồn cùng pha trên mặt nước; phần phách là mở rộng)."),
     ("dcCircuit", "VL11", [23, 24, 25], "Tên Bài 23–25: điện trở, định luật Ohm, nguồn điện, năng lượng và công suất điện (cảnh có nguồn E, r và 1–3 điện trở)."),
     ("standingWave", "VL11", [13], "Tên Bài 13: sóng dừng (cảnh chỉ có dây hai đầu cố định)."),

@@ -5,7 +5,7 @@ import type { LocalizedText } from '@/core/data/dataset';
 import { DIM } from '@/core/units';
 import type { ScienceCardData } from '@/science-card/types';
 import { DASH, L } from '../common/scene-helpers';
-import { SRC } from '../common/sources';
+import { SRC, sgkVl11 } from '../common/sources';
 import { fmtQty, texNum, texQty } from '../common/tex';
 import type {
   Answer,
@@ -352,7 +352,7 @@ function card(p: Params): ScienceCardData {
           'Formula E = U/d; field lines between the plates are drawn straight and evenly spaced.',
         ),
     userIntervened: false,
-    sources: [SRC.sgk11kntt, SRC.hallidayElectric, SRC.codata, SRC.hairer],
+    sources: [sgkVl11(16), sgkVl11(17), sgkVl11(18), SRC.hallidayElectric, SRC.codata, SRC.hairer],
   };
 }
 

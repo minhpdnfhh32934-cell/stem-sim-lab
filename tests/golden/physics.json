@@ -1254,6 +1254,82 @@
       "expectUnsupportedParts": false
     },
     {
+      "id": "sg-01",
+      "text": "Một sóng ngang truyền trên một sợi dây đàn hồi rất dài với tốc độ 4 m/s. Nguồn sóng O dao động với tần số 2 Hz và biên độ 3 cm. Điểm M trên dây cách O một đoạn 5 m. Tính bước sóng, thời gian sóng truyền từ O tới M và độ lệch pha của M so với O.",
+      "topic": "travellingWave",
+      "quantities": [
+        {
+          "key": "kind",
+          "value": 0,
+          "unit": "1",
+          "quote": "sóng ngang"
+        },
+        {
+          "key": "v",
+          "value": 4,
+          "unit": "m/s",
+          "quote": "tốc độ 4 m/s"
+        },
+        {
+          "key": "f",
+          "value": 2,
+          "unit": "Hz",
+          "quote": "tần số 2 Hz"
+        },
+        {
+          "key": "A",
+          "value": 3,
+          "unit": "cm",
+          "quote": "biên độ 3 cm"
+        },
+        {
+          "key": "xM",
+          "value": 5,
+          "unit": "m",
+          "quote": "cách O một đoạn 5 m"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "T": 0.5,
+        "lambda": 2.0,
+        "tM": 1.25,
+        "lag": 15.707963267948966
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "sg-02",
+      "text": "Một sóng dọc truyền dọc theo một lò xo dài với tốc độ 1,5 m/s, nguồn dao động với tần số 5 Hz. Tính chu kì và bước sóng của sóng trên lò xo.",
+      "topic": "travellingWave",
+      "quantities": [
+        {
+          "key": "kind",
+          "value": 1,
+          "unit": "1",
+          "quote": "sóng dọc"
+        },
+        {
+          "key": "v",
+          "value": 1.5,
+          "unit": "m/s",
+          "quote": "tốc độ 1,5 m/s"
+        },
+        {
+          "key": "f",
+          "value": 5,
+          "unit": "Hz",
+          "quote": "tần số 5 Hz"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "T": 0.2,
+        "lambda": 0.3
+      },
+      "expectUnsupportedParts": false
+    },
+    {
       "id": "swv-01",
       "text": "Một sợi dây đàn hồi dài 1,5 m có hai đầu cố định. Sóng truyền trên dây với tốc độ 30 m/s. Khi trên dây có sóng dừng với 5 bụng sóng thì tần số dao động của dây là bao nhiêu? Tính bước sóng.",
       "topic": "standingWave",

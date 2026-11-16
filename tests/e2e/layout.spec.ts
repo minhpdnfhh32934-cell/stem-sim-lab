@@ -11,10 +11,10 @@ test.use({ viewport: { width: 1366, height: 768 } });
 const MIN_PLOT_HEIGHT = 80;
 /**
  * Physics lessons with a view of their own: the bottom panel shows the module's table, with no
- * graph tab and no Run (waiting for the tab ran into the 5 min timeout). fourier.spec.ts checks
- * the lesson's figure at 1366 × 768 instead.
+ * graph tab and no Run (waiting for the tab ran into the 5 min timeout). fourier.spec.ts and
+ * waves-vl11.spec.ts check those lessons at 1366 × 768 instead.
  */
-const OWN_VIEW = ['Họa âm và chuỗi Fourier'];
+const OWN_VIEW = ['Sóng điện từ', 'Họa âm và chuỗi Fourier'];
 
 interface Rect {
   top: number;

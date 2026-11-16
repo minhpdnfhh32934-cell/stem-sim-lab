@@ -352,6 +352,36 @@ export const CHALLENGES: readonly Challenge[] = [
     ),
   },
   {
+    id: 'travellingWave.lambda1',
+    topic: 'travellingWave',
+    title: L('Bước sóng 1 m', 'A wavelength of 1 m'),
+    task: L(
+      'Sóng truyền với tốc độ 2 m/s. Chỉnh tần số của nguồn để bước sóng đúng 1 m.',
+      'The wave travels at 2 m/s. Set the frequency of the source so that the wavelength is exactly 1 m.',
+    ),
+    controls: ['f'],
+    goal: { answer: 'lambda', kind: 'target', value: 1, tol: 0.01 },
+    hint: L(
+      'Bước sóng là quãng đường sóng đi được trong một chu kì: λ = v/f. Cần f bằng bao nhiêu?',
+      'The wavelength is how far the wave goes in one period: λ = v/f. What f do you need?',
+    ),
+  },
+  {
+    id: 'travellingWave.reach2s',
+    topic: 'travellingWave',
+    title: L('Sóng tới M sau 2 s', 'The wave reaches M after 2 s'),
+    task: L(
+      'Giữ tốc độ truyền sóng 2 m/s. Đặt phần tử M (chỉnh khoảng cách hoặc kéo M trên hình) sao cho sóng truyền từ O tới M mất đúng 2 s.',
+      'Keeping the wave speed at 2 m/s, place part M (set the distance or drag M on the picture) so that the wave takes exactly 2 s to go from O to M.',
+    ),
+    controls: ['xM'],
+    goal: { answer: 'tM', kind: 'target', value: 2, tol: 0.01 },
+    hint: L(
+      'Sóng đi đều với tốc độ v: trong 2 s nó đi được bao xa?',
+      'The wave moves steadily at speed v: how far does it go in 2 s?',
+    ),
+  },
+  {
     id: 'standingWave.f50',
     topic: 'standingWave',
     title: L('Tần số 50 Hz', 'A frequency of 50 Hz'),

@@ -28,6 +28,7 @@ const SCENES: Record<string, () => Promise<PhysicsScene>> = {
   uniformCircularMotion: () => import('./circular/scenes').then((m) => m.uniformCircularMotion),
   interference: () => import('./interference/scenes').then((m) => m.interference),
   standingWave: () => import('./wave/scenes').then((m) => m.standingWave),
+  travellingWave: () => import('./travel/scenes').then((m) => m.travellingWave),
   electricField: () => import('./field/scenes').then((m) => m.electricField),
   forcedOscillation: () => import('./resonance/scenes').then((m) => m.forcedOscillation),
   dcCircuit: () => import('./circuit/scenes').then((m) => m.dcCircuit),

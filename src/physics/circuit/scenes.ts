@@ -3,7 +3,7 @@ import type { LocalizedText } from '@/core/data/dataset';
 import { DIM } from '@/core/units';
 import type { ScienceCardData } from '@/science-card/types';
 import { L } from '../common/scene-helpers';
-import { SRC } from '../common/sources';
+import { SRC, sgkVl11 } from '../common/sources';
 import { both, sym } from '../common/symbols';
 import { texNum, texQty } from '../common/tex';
 import type {
@@ -254,7 +254,7 @@ function card(): ScienceCardData {
       'A static circuit: computed once per parameter change; the clock runs so the graphs show the constant values.',
     ),
     userIntervened: false,
-    sources: [SRC.sgk11kntt, SRC.hallidayCircuits],
+    sources: [sgkVl11(23), sgkVl11(24), sgkVl11(25), SRC.hallidayCircuits],
   };
 }
 

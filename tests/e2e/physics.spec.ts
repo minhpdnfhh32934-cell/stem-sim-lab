@@ -29,6 +29,8 @@ const TOPICS: readonly (readonly [string, string])[] = [
   ['Con lắc đơn', 'Con lắc đơn'],
   ['Dao động cưỡng bức và cộng hưởng', 'Dao động cưỡng bức và cộng hưởng'],
   ['Chuyển động tròn đều', 'Chuyển động tròn đều'],
+  ['Sóng cơ: sóng ngang, sóng dọc', 'Sóng cơ: sóng ngang, sóng dọc'],
+  ['Sóng điện từ', 'Sóng điện từ'],
   ['Giao thoa sóng hai nguồn', 'Giao thoa sóng hai nguồn'],
   ['Sóng dừng trên dây', 'Sóng dừng trên dây'],
   ['Họa âm và chuỗi Fourier', 'Họa âm và chuỗi Fourier'],
