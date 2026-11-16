@@ -33,6 +33,8 @@ const TOPICS = [
   'nitrogenSulfur',
   'organicBasics',
   'hydrocarbons',
+  'halideAlcoholPhenol',
+  'carbonylAcid',
   'atomComposition',
   'isotopes',
   'periodicTable',

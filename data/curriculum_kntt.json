@@ -2679,6 +2679,33 @@
    "review_status": "pending"
   },
   {
+   "topic": "halideAlcoholPhenol",
+   "subject": "chemistry",
+   "grade": 11,
+   "book": "HH11",
+   "chapter": "Chương 5. Dẫn xuất halogen – alcohol – phenol",
+   "lessons": [
+    19,
+    20,
+    21
+   ],
+   "reason": "Tên Chương 5 và các Bài 19 (dẫn xuất halogen), 20 (alcohol), 21 (phenol): bảng nhiệt độ sôi, độ tan, so sánh với hydrocarbon, ether; năng lượng liên kết C–X; phản ứng tách theo quy tắc Zaitsev; phản ứng trong sách.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "carbonylAcid",
+   "subject": "chemistry",
+   "grade": 11,
+   "book": "HH11",
+   "chapter": "Chương 6. Hợp chất carbonyl – carboxylic acid",
+   "lessons": [
+    23,
+    24
+   ],
+   "reason": "Tên Bài 23: hợp chất carbonyl; tên Bài 24: carboxylic acid (Bảng 23.1, 24.2, 24.3; so sánh nhiệt độ sôi alkane, aldehyde, alcohol, acid; độ phân li tính từ Ka; phản ứng trong sách).",
+   "review_status": "pending"
+  },
+  {
    "topic": "hydrocarbons",
    "subject": "chemistry",
    "grade": 11,

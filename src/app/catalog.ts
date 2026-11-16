@@ -81,6 +81,8 @@ export const CATALOG: Record<Subject, ChapterEntry[]> = {
     chapter('nitrogenSulfurGroup', ['nitrogenSulfur']),
     chapter('organicBasicsGroup', ['organicBasics', 'organicSeparation']),
     chapter('hydrocarbonGroup', ['hydrocarbons']),
+    chapter('halideAlcoholPhenolGroup', ['halideAlcoholPhenol']),
+    chapter('carbonylAcidGroup', ['carbonylAcid']),
     chapter('halogenGroup', ['halogens', 'hydrogenHalides']),
     chapter('crystals', ['crystalStructure']),
   ],

@@ -26,6 +26,9 @@ const MODULES: Record<string, () => Promise<ModuleView>> = {
   nitrogenSulfur: () => import('@/chemistry/nitrogenSulfur/modules').then((m) => m.nitrogenSulfur),
   organicBasics: () => import('@/chemistry/organic/modules').then((m) => m.organicBasics),
   hydrocarbons: () => import('@/chemistry/hydrocarbons/modules').then((m) => m.hydrocarbons),
+  halideAlcoholPhenol: () =>
+    import('@/chemistry/derivatives/modules').then((m) => m.halideAlcoholPhenol),
+  carbonylAcid: () => import('@/chemistry/derivatives/modules').then((m) => m.carbonylAcid),
   maxwellBoltzmann: () => import('@/chemistry/particles/modules').then((m) => m.maxwellBoltzmann),
   collisionTheory: () => import('@/chemistry/particles/modules').then((m) => m.collisionTheory),
   chemicalEquilibrium: () =>

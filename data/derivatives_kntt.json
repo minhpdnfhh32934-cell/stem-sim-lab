@@ -1,0 +1,1928 @@
+{
+  "dataset": "derivatives_kntt",
+  "version": 1,
+  "accessed": "2026-11-17",
+  "review_status": "pending",
+  "source": {
+    "id": "sgk-hh11-c5-c6",
+    "citation": "SGK Hóa học 11 Kết nối tri thức, NXB Giáo dục Việt Nam: Chương 5 “Dẫn xuất halogen – alcohol – phenol” (Bài 19–21, tr. 112–133) và Chương 6 “Hợp chất carbonyl – carboxylic acid” (Bài 23–24, tr. 136–152); Bảng 20.3, 23.1, 24.2, 24.3 sách ghi nguồn Solomons (2016), Brown (2018), Hart (2011), Stoker (2013)",
+    "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-11.4701111834"
+  },
+  "items": [
+    {
+      "id": "methanol",
+      "class": "alcohol",
+      "name": "methanol",
+      "formula": "CH3OH",
+      "carbons": 1,
+      "mp_C": null,
+      "bp_C": 64.7,
+      "solubility": {
+        "kind": "miscible",
+        "g": null
+      },
+      "solubility_T_C": 20,
+      "table": "Bảng 20.3",
+      "page": 123,
+      "series": true,
+      "review_status": "pending"
+    },
+    {
+      "id": "ethanol",
+      "class": "alcohol",
+      "name": "ethanol",
+      "formula": "CH3CH2OH",
+      "carbons": 2,
+      "mp_C": null,
+      "bp_C": 78.3,
+      "solubility": {
+        "kind": "miscible",
+        "g": null
+      },
+      "solubility_T_C": 20,
+      "table": "Bảng 20.3",
+      "page": 123,
+      "series": true,
+      "review_status": "pending"
+    },
+    {
+      "id": "propan-1-ol",
+      "class": "alcohol",
+      "name": "propan-1-ol",
+      "formula": "CH3CH2CH2OH",
+      "carbons": 3,
+      "mp_C": null,
+      "bp_C": 97.2,
+      "solubility": {
+        "kind": "miscible",
+        "g": null
+      },
+      "solubility_T_C": 20,
+      "table": "Bảng 20.3",
+      "page": 123,
+      "series": true,
+      "review_status": "pending"
+    },
+    {
+      "id": "butan-1-ol",
+      "class": "alcohol",
+      "name": "butan-1-ol",
+      "formula": "CH3CH2CH2CH2OH",
+      "carbons": 4,
+      "mp_C": null,
+      "bp_C": 117.7,
+      "solubility": {
+        "kind": "value",
+        "g": 8.3
+      },
+      "solubility_T_C": 20,
+      "table": "Bảng 20.3",
+      "page": 123,
+      "series": true,
+      "review_status": "pending"
+    },
+    {
+      "id": "pentan-1-ol",
+      "class": "alcohol",
+      "name": "pentan-1-ol",
+      "formula": "CH3CH2CH2CH2CH2OH",
+      "carbons": 5,
+      "mp_C": null,
+      "bp_C": 138,
+      "solubility": {
+        "kind": "value",
+        "g": 2.2
+      },
+      "solubility_T_C": 20,
+      "table": "Bảng 20.3",
+      "page": 123,
+      "series": true,
+      "review_status": "pending"
+    },
+    {
+      "id": "ethylene-glycol",
+      "class": "alcohol",
+      "name": "ethylene glycol",
+      "formula": "HOCH2CH2OH",
+      "carbons": 2,
+      "mp_C": null,
+      "bp_C": 197,
+      "solubility": {
+        "kind": "miscible",
+        "g": null
+      },
+      "solubility_T_C": 20,
+      "table": "Bảng 20.3",
+      "page": 123,
+      "series": false,
+      "review_status": "pending"
+    },
+    {
+      "id": "glycerol",
+      "class": "alcohol",
+      "name": "glycerol",
+      "formula": "HOCH2CH(OH)CH2OH",
+      "carbons": 3,
+      "mp_C": null,
+      "bp_C": 290,
+      "solubility": {
+        "kind": "miscible",
+        "g": null
+      },
+      "solubility_T_C": 20,
+      "table": "Bảng 20.3",
+      "page": 123,
+      "series": false,
+      "review_status": "pending"
+    },
+    {
+      "id": "phenol",
+      "class": "phenol",
+      "name": "phenol",
+      "formula": "C6H5OH",
+      "carbons": 6,
+      "mp_C": 43,
+      "bp_C": 181.8,
+      "solubility": {
+        "kind": "value",
+        "g": 8.42
+      },
+      "solubility_T_C": 25,
+      "table": "tr. 130",
+      "page": 130,
+      "series": false,
+      "review_status": "pending"
+    },
+    {
+      "id": "methanal",
+      "class": "aldehyde",
+      "name": "methanal",
+      "formula": "HCHO",
+      "carbons": 1,
+      "mp_C": null,
+      "bp_C": -21,
+      "solubility": {
+        "kind": "miscible",
+        "g": null
+      },
+      "solubility_T_C": 20,
+      "table": "Bảng 23.1",
+      "page": 139,
+      "series": true,
+      "review_status": "pending"
+    },
+    {
+      "id": "ethanal",
+      "class": "aldehyde",
+      "name": "ethanal",
+      "formula": "CH3CHO",
+      "carbons": 2,
+      "mp_C": null,
+      "bp_C": 20,
+      "solubility": {
+        "kind": "miscible",
+        "g": null
+      },
+      "solubility_T_C": 20,
+      "table": "Bảng 23.1",
+      "page": 139,
+      "series": true,
+      "review_status": "pending"
+    },
+    {
+      "id": "propanal",
+      "class": "aldehyde",
+      "name": "propanal",
+      "formula": "CH3CH2CHO",
+      "carbons": 3,
+      "mp_C": null,
+      "bp_C": 49,
+      "solubility": {
+        "kind": "value",
+        "g": 20
+      },
+      "solubility_T_C": 20,
+      "table": "Bảng 23.1",
+      "page": 139,
+      "series": true,
+      "review_status": "pending"
+    },
+    {
+      "id": "butanal",
+      "class": "aldehyde",
+      "name": "butanal",
+      "formula": "CH3CH2CH2CHO",
+      "carbons": 4,
+      "mp_C": null,
+      "bp_C": 76,
+      "solubility": {
+        "kind": "value",
+        "g": 7
+      },
+      "solubility_T_C": 20,
+      "table": "Bảng 23.1",
+      "page": 139,
+      "series": true,
+      "review_status": "pending"
+    },
+    {
+      "id": "propanone",
+      "class": "ketone",
+      "name": "propanone",
+      "formula": "CH3COCH3",
+      "carbons": 3,
+      "mp_C": null,
+      "bp_C": 56,
+      "solubility": {
+        "kind": "miscible",
+        "g": null
+      },
+      "solubility_T_C": 20,
+      "table": "Bảng 23.1",
+      "page": 139,
+      "series": true,
+      "review_status": "pending"
+    },
+    {
+      "id": "butanone",
+      "class": "ketone",
+      "name": "butanone",
+      "formula": "CH3COCH2CH3",
+      "carbons": 4,
+      "mp_C": null,
+      "bp_C": 80,
+      "solubility": {
+        "kind": "value",
+        "g": 26
+      },
+      "solubility_T_C": 20,
+      "table": "Bảng 23.1",
+      "page": 139,
+      "series": true,
+      "review_status": "pending"
+    },
+    {
+      "id": "pentan-3-one",
+      "class": "ketone",
+      "name": "pentan-3-one",
+      "formula": "CH3CH2COCH2CH3",
+      "carbons": 5,
+      "mp_C": null,
+      "bp_C": 101,
+      "solubility": {
+        "kind": "value",
+        "g": 5
+      },
+      "solubility_T_C": 20,
+      "table": "Bảng 23.1",
+      "page": 139,
+      "series": true,
+      "review_status": "pending"
+    },
+    {
+      "id": "methanoic-acid",
+      "class": "acid",
+      "name": "methanoic acid",
+      "formula": "HCOOH",
+      "carbons": 1,
+      "mp_C": 8,
+      "bp_C": 101,
+      "solubility": {
+        "kind": "miscible",
+        "g": null
+      },
+      "solubility_T_C": 25,
+      "table": "Bảng 24.2",
+      "page": 148,
+      "series": true,
+      "review_status": "pending"
+    },
+    {
+      "id": "ethanoic-acid",
+      "class": "acid",
+      "name": "ethanoic acid",
+      "formula": "CH3COOH",
+      "carbons": 2,
+      "mp_C": 17,
+      "bp_C": 118,
+      "solubility": {
+        "kind": "miscible",
+        "g": null
+      },
+      "solubility_T_C": 25,
+      "table": "Bảng 24.2",
+      "page": 148,
+      "series": true,
+      "review_status": "pending"
+    },
+    {
+      "id": "propanoic-acid",
+      "class": "acid",
+      "name": "propanoic acid",
+      "formula": "CH3CH2COOH",
+      "carbons": 3,
+      "mp_C": -22,
+      "bp_C": 141,
+      "solubility": {
+        "kind": "miscible",
+        "g": null
+      },
+      "solubility_T_C": 25,
+      "table": "Bảng 24.2",
+      "page": 148,
+      "series": true,
+      "review_status": "pending"
+    },
+    {
+      "id": "butanoic-acid",
+      "class": "acid",
+      "name": "butanoic acid",
+      "formula": "CH3[CH2]2COOH",
+      "carbons": 4,
+      "mp_C": -8,
+      "bp_C": 164,
+      "solubility": {
+        "kind": "miscible",
+        "g": null
+      },
+      "solubility_T_C": 25,
+      "table": "Bảng 24.2",
+      "page": 148,
+      "series": true,
+      "review_status": "pending"
+    },
+    {
+      "id": "pentanoic-acid",
+      "class": "acid",
+      "name": "pentanoic acid",
+      "formula": "CH3[CH2]3COOH",
+      "carbons": 5,
+      "mp_C": -34,
+      "bp_C": 186,
+      "solubility": {
+        "kind": "value",
+        "g": 4.97
+      },
+      "solubility_T_C": 25,
+      "table": "Bảng 24.2",
+      "page": 148,
+      "series": true,
+      "review_status": "pending"
+    },
+    {
+      "id": "hexanoic-acid",
+      "class": "acid",
+      "name": "hexanoic acid",
+      "formula": "CH3[CH2]4COOH",
+      "carbons": 6,
+      "mp_C": -1.5,
+      "bp_C": 205,
+      "solubility": {
+        "kind": "value",
+        "g": 1.0
+      },
+      "solubility_T_C": 25,
+      "table": "Bảng 24.2",
+      "page": 148,
+      "series": true,
+      "review_status": "pending"
+    },
+    {
+      "id": "decanoic-acid",
+      "class": "acid",
+      "name": "decanoic acid",
+      "formula": "CH3[CH2]8COOH",
+      "carbons": 10,
+      "mp_C": 31,
+      "bp_C": 270,
+      "solubility": {
+        "kind": "value",
+        "g": 0.01
+      },
+      "solubility_T_C": 25,
+      "table": "Bảng 24.2",
+      "page": 148,
+      "series": true,
+      "review_status": "pending"
+    }
+  ],
+  "comparisons": [
+    {
+      "id": "c20",
+      "chapter": 5,
+      "page": 122,
+      "note": null,
+      "rows": [
+        {
+          "class": "alkane",
+          "name": "propane",
+          "formula": "CH3CH2CH3",
+          "M": 44,
+          "bp_C": -42.1,
+          "solubility": {
+            "kind": "insoluble",
+            "g": null
+          }
+        },
+        {
+          "class": "ether",
+          "name": "dimethyl ether",
+          "formula": "CH3OCH3",
+          "M": 46,
+          "bp_C": -24.9,
+          "solubility": {
+            "kind": "value",
+            "g": 7.4
+          }
+        },
+        {
+          "class": "alcohol",
+          "name": "ethanol",
+          "formula": "CH3CH2OH",
+          "M": 46,
+          "bp_C": 78.3,
+          "solubility": {
+            "kind": "miscible",
+            "g": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "c24",
+      "chapter": 6,
+      "page": 147,
+      "note": "Hart, Hadad, Craine 2011",
+      "rows": [
+        {
+          "class": "alkane",
+          "name": "butane",
+          "formula": "CH3CH2CH2CH3",
+          "M": 58,
+          "bp_C": -0.5,
+          "solubility": null
+        },
+        {
+          "class": "aldehyde",
+          "name": "propanal",
+          "formula": "CH3CH2CHO",
+          "M": 58,
+          "bp_C": 49,
+          "solubility": null
+        },
+        {
+          "class": "alcohol",
+          "name": "propan-1-ol",
+          "formula": "CH3CH2CH2OH",
+          "M": 60,
+          "bp_C": 97.2,
+          "solubility": null
+        },
+        {
+          "class": "acid",
+          "name": "acetic acid",
+          "formula": "CH3COOH",
+          "M": 60,
+          "bp_C": 118,
+          "solubility": null
+        }
+      ]
+    }
+  ],
+  "bonds": [
+    {
+      "bond": "C–F",
+      "energy_kJ": 486,
+      "page": 114
+    },
+    {
+      "bond": "C–Cl",
+      "energy_kJ": 327,
+      "page": 114
+    },
+    {
+      "bond": "C–Br",
+      "energy_kJ": 285,
+      "page": 114
+    },
+    {
+      "bond": "C–I",
+      "energy_kJ": 214,
+      "page": 114
+    }
+  ],
+  "acids": [
+    {
+      "formula": "HCOOH",
+      "name": "methanoic acid",
+      "Ka": 0.00018,
+      "percent_01M": 4.2,
+      "page": 148
+    },
+    {
+      "formula": "CH3COOH",
+      "name": "ethanoic acid",
+      "Ka": 1.8e-05,
+      "percent_01M": 1.3,
+      "page": 148
+    },
+    {
+      "formula": "CH3CH2COOH",
+      "name": "propanoic acid",
+      "Ka": 1.3e-05,
+      "percent_01M": 1.2,
+      "page": 148
+    },
+    {
+      "formula": "CH3CH2CH2COOH",
+      "name": "butanoic acid",
+      "Ka": 1.5e-05,
+      "percent_01M": 1.2,
+      "page": 148
+    }
+  ],
+  "eliminations": [
+    {
+      "id": "bromoethane",
+      "kind": "HX",
+      "name": "bromoethane",
+      "formula": "CH3CH2Br",
+      "molecular": "C2H5Br",
+      "conditions": {
+        "vi": "NaOH/C2H5OH, t°",
+        "en": "NaOH in ethanol, heat"
+      },
+      "page": 115,
+      "book_main": "ethene",
+      "x_carbon": 1,
+      "group": "Br",
+      "options": [
+        {
+          "carbon": 2,
+          "degree": 1,
+          "formula": "CH2=CH2",
+          "name": "ethene",
+          "molecular": "C2H4"
+        }
+      ]
+    },
+    {
+      "id": "2-bromobutane",
+      "kind": "HX",
+      "name": "2-bromobutane",
+      "formula": "CH3CHBrCH2CH3",
+      "molecular": "C4H9Br",
+      "conditions": {
+        "vi": "NaOH/C2H5OH, t°",
+        "en": "NaOH in ethanol, heat"
+      },
+      "page": 116,
+      "book_main": "but-2-ene",
+      "x_carbon": 2,
+      "group": "Br",
+      "options": [
+        {
+          "carbon": 1,
+          "degree": 1,
+          "formula": "CH2=CHCH2CH3",
+          "name": "but-1-ene",
+          "molecular": "C4H8"
+        },
+        {
+          "carbon": 3,
+          "degree": 2,
+          "formula": "CH3CH=CHCH3",
+          "name": "but-2-ene",
+          "molecular": "C4H8"
+        }
+      ]
+    },
+    {
+      "id": "2-chloropropane",
+      "kind": "HX",
+      "name": "2-chloropropane",
+      "formula": "CH3CHClCH3",
+      "molecular": "C3H7Cl",
+      "conditions": {
+        "vi": "NaOH/C2H5OH, t°",
+        "en": "NaOH in ethanol, heat"
+      },
+      "page": 116,
+      "book_main": null,
+      "x_carbon": 2,
+      "group": "Cl",
+      "options": [
+        {
+          "carbon": 1,
+          "degree": 1,
+          "formula": "CH2=CHCH3",
+          "name": "propene",
+          "molecular": "C3H6"
+        },
+        {
+          "carbon": 3,
+          "degree": 1,
+          "formula": "CH2=CHCH3",
+          "name": "propene",
+          "molecular": "C3H6"
+        }
+      ]
+    },
+    {
+      "id": "2-bromo-2-methylbutane",
+      "kind": "HX",
+      "name": "2-bromo-2-methylbutane",
+      "formula": "CH3CBr(CH3)CH2CH3",
+      "molecular": "C5H11Br",
+      "conditions": {
+        "vi": "NaOH/C2H5OH, t°",
+        "en": "NaOH in ethanol, heat"
+      },
+      "page": 116,
+      "book_main": null,
+      "x_carbon": 2,
+      "group": "Br",
+      "options": [
+        {
+          "carbon": 1,
+          "degree": 1,
+          "formula": "CH2=C(CH3)CH2CH3",
+          "name": "2-methylbut-1-ene",
+          "molecular": "C5H10"
+        },
+        {
+          "carbon": 3,
+          "degree": 2,
+          "formula": "CH3C(CH3)=CHCH3",
+          "name": "2-methylbut-2-ene",
+          "molecular": "C5H10"
+        },
+        {
+          "carbon": 5,
+          "degree": 1,
+          "formula": "CH2=C(CH3)CH2CH3",
+          "name": "2-methylbut-1-ene",
+          "molecular": "C5H10"
+        }
+      ]
+    },
+    {
+      "id": "ethanol",
+      "kind": "H2O",
+      "name": "ethanol",
+      "formula": "C2H5OH",
+      "molecular": "C2H6O",
+      "conditions": {
+        "vi": "H2SO4 đặc, 180 °C",
+        "en": "concentrated H2SO4, 180 °C"
+      },
+      "page": 123,
+      "book_main": "ethene",
+      "x_carbon": 1,
+      "group": "OH",
+      "options": [
+        {
+          "carbon": 2,
+          "degree": 1,
+          "formula": "CH2=CH2",
+          "name": "ethene",
+          "molecular": "C2H4"
+        }
+      ]
+    },
+    {
+      "id": "butan-2-ol",
+      "kind": "H2O",
+      "name": "butan-2-ol",
+      "formula": "CH3CH(OH)CH2CH3",
+      "molecular": "C4H10O",
+      "conditions": {
+        "vi": "H2SO4 đặc, t°",
+        "en": "concentrated H2SO4, heat"
+      },
+      "page": 124,
+      "book_main": null,
+      "x_carbon": 2,
+      "group": "OH",
+      "options": [
+        {
+          "carbon": 1,
+          "degree": 1,
+          "formula": "CH2=CHCH2CH3",
+          "name": "but-1-ene",
+          "molecular": "C4H8"
+        },
+        {
+          "carbon": 3,
+          "degree": 2,
+          "formula": "CH3CH=CHCH3",
+          "name": "but-2-ene",
+          "molecular": "C4H8"
+        }
+      ]
+    },
+    {
+      "id": "pentan-2-ol",
+      "kind": "H2O",
+      "name": "pentan-2-ol",
+      "formula": "CH3CH2CH2CH(OH)CH3",
+      "molecular": "C5H12O",
+      "conditions": {
+        "vi": "H2SO4 đặc, t°",
+        "en": "concentrated H2SO4, heat"
+      },
+      "page": 124,
+      "book_main": "pent-2-ene",
+      "x_carbon": 2,
+      "group": "OH",
+      "options": [
+        {
+          "carbon": 1,
+          "degree": 1,
+          "formula": "CH2=CHCH2CH2CH3",
+          "name": "pent-1-ene",
+          "molecular": "C5H10"
+        },
+        {
+          "carbon": 3,
+          "degree": 2,
+          "formula": "CH3CH=CHCH2CH3",
+          "name": "pent-2-ene",
+          "molecular": "C5H10"
+        }
+      ]
+    }
+  ],
+  "reactions": [
+    {
+      "chapter": 5,
+      "class": "halide",
+      "kind": {
+        "vi": "Thế nguyên tử halogen",
+        "en": "Halogen substitution"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "CH3CH2CH2Cl"
+        },
+        {
+          "coef": 1,
+          "formula": "NaOH"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "CH3CH2CH2OH"
+        },
+        {
+          "coef": 1,
+          "formula": "NaCl"
+        }
+      ],
+      "conditions": {
+        "vi": "t°",
+        "en": "heat"
+      },
+      "dH_kJ": null,
+      "page": 115,
+      "reversible": false,
+      "general": false,
+      "note": null
+    },
+    {
+      "chapter": 5,
+      "class": "halide",
+      "kind": {
+        "vi": "Tách hydrogen halide",
+        "en": "Hydrogen halide elimination"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "CH3CH2Br"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "CH2=CH2"
+        },
+        {
+          "coef": 1,
+          "formula": "HBr"
+        }
+      ],
+      "conditions": {
+        "vi": "NaOH/C2H5OH, t°",
+        "en": "NaOH in ethanol, heat"
+      },
+      "dH_kJ": null,
+      "page": 115,
+      "reversible": false,
+      "general": false,
+      "note": null
+    },
+    {
+      "chapter": 5,
+      "class": "alcohol",
+      "kind": {
+        "vi": "Thế H của nhóm –OH",
+        "en": "Replacing the H of –OH"
+      },
+      "reactants": [
+        {
+          "coef": 2,
+          "formula": "ROH"
+        },
+        {
+          "coef": 2,
+          "formula": "Na"
+        }
+      ],
+      "products": [
+        {
+          "coef": 2,
+          "formula": "RONa"
+        },
+        {
+          "coef": 1,
+          "formula": "H2"
+        }
+      ],
+      "conditions": {
+        "vi": "—",
+        "en": "—"
+      },
+      "dH_kJ": null,
+      "page": 123,
+      "reversible": false,
+      "general": true,
+      "note": null
+    },
+    {
+      "chapter": 5,
+      "class": "alcohol",
+      "kind": {
+        "vi": "Tạo ether",
+        "en": "Ether formation"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "C2H5OH"
+        },
+        {
+          "coef": 1,
+          "formula": "HOC2H5"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "C2H5–O–C2H5"
+        },
+        {
+          "coef": 1,
+          "formula": "H2O"
+        }
+      ],
+      "conditions": {
+        "vi": "H2SO4 đặc, 140 °C",
+        "en": "concentrated H2SO4, 140 °C"
+      },
+      "dH_kJ": null,
+      "page": 123,
+      "reversible": false,
+      "general": false,
+      "note": null
+    },
+    {
+      "chapter": 5,
+      "class": "alcohol",
+      "kind": {
+        "vi": "Tạo alkene",
+        "en": "Alkene formation"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "C2H5OH"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "CH2=CH2"
+        },
+        {
+          "coef": 1,
+          "formula": "H2O"
+        }
+      ],
+      "conditions": {
+        "vi": "H2SO4 đặc, 180 °C",
+        "en": "concentrated H2SO4, 180 °C"
+      },
+      "dH_kJ": null,
+      "page": 123,
+      "reversible": false,
+      "general": false,
+      "note": null
+    },
+    {
+      "chapter": 5,
+      "class": "alcohol",
+      "kind": {
+        "vi": "Oxi hóa bằng CuO (bậc I)",
+        "en": "Oxidation by CuO (primary)"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "CH3CH2OH"
+        },
+        {
+          "coef": 1,
+          "formula": "CuO"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "CH3CH=O"
+        },
+        {
+          "coef": 1,
+          "formula": "Cu"
+        },
+        {
+          "coef": 1,
+          "formula": "H2O"
+        }
+      ],
+      "conditions": {
+        "vi": "t°",
+        "en": "heat"
+      },
+      "dH_kJ": null,
+      "page": 124,
+      "reversible": false,
+      "general": false,
+      "note": null
+    },
+    {
+      "chapter": 5,
+      "class": "alcohol",
+      "kind": {
+        "vi": "Oxi hóa bằng CuO (bậc II)",
+        "en": "Oxidation by CuO (secondary)"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "CH3CH(OH)CH3"
+        },
+        {
+          "coef": 1,
+          "formula": "CuO"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "CH3COCH3"
+        },
+        {
+          "coef": 1,
+          "formula": "Cu"
+        },
+        {
+          "coef": 1,
+          "formula": "H2O"
+        }
+      ],
+      "conditions": {
+        "vi": "t°",
+        "en": "heat"
+      },
+      "dH_kJ": null,
+      "page": 124,
+      "reversible": false,
+      "general": false,
+      "note": null
+    },
+    {
+      "chapter": 5,
+      "class": "alcohol",
+      "kind": {
+        "vi": "Đốt cháy",
+        "en": "Combustion"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "C2H5OH"
+        },
+        {
+          "coef": 3,
+          "formula": "O2"
+        }
+      ],
+      "products": [
+        {
+          "coef": 2,
+          "formula": "CO2"
+        },
+        {
+          "coef": 3,
+          "formula": "H2O"
+        }
+      ],
+      "conditions": {
+        "vi": "t°",
+        "en": "heat"
+      },
+      "dH_kJ": -1367,
+      "page": 125,
+      "reversible": false,
+      "general": false,
+      "note": null
+    },
+    {
+      "chapter": 5,
+      "class": "alcohol",
+      "kind": {
+        "vi": "Polyalcohol với Cu(OH)2",
+        "en": "Polyalcohol with Cu(OH)2"
+      },
+      "reactants": [
+        {
+          "coef": 2,
+          "formula": "HOCH2CH2OH"
+        },
+        {
+          "coef": 1,
+          "formula": "Cu(OH)2"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "(HOCH2CH2O)2Cu"
+        },
+        {
+          "coef": 2,
+          "formula": "H2O"
+        }
+      ],
+      "conditions": {
+        "vi": "dung dịch xanh lam đậm",
+        "en": "deep blue solution"
+      },
+      "dH_kJ": null,
+      "page": 125,
+      "reversible": false,
+      "general": false,
+      "note": null
+    },
+    {
+      "chapter": 5,
+      "class": "alcohol",
+      "kind": {
+        "vi": "Hydrate hóa ethylene",
+        "en": "Hydration of ethylene"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "CH2=CH2"
+        },
+        {
+          "coef": 1,
+          "formula": "H2O"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "C2H5OH"
+        }
+      ],
+      "conditions": {
+        "vi": "H3PO4, t°",
+        "en": "H3PO4, heat"
+      },
+      "dH_kJ": null,
+      "page": 127,
+      "reversible": false,
+      "general": false,
+      "note": null
+    },
+    {
+      "chapter": 5,
+      "class": "alcohol",
+      "kind": {
+        "vi": "Lên men glucose",
+        "en": "Fermentation of glucose"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "C6H12O6"
+        }
+      ],
+      "products": [
+        {
+          "coef": 2,
+          "formula": "C2H5OH"
+        },
+        {
+          "coef": 2,
+          "formula": "CO2"
+        }
+      ],
+      "conditions": {
+        "vi": "enzyme",
+        "en": "enzyme"
+      },
+      "dH_kJ": null,
+      "page": 127,
+      "reversible": false,
+      "general": false,
+      "note": null
+    },
+    {
+      "chapter": 5,
+      "class": "phenol",
+      "kind": {
+        "vi": "Với dung dịch NaOH",
+        "en": "With NaOH solution"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "C6H5OH"
+        },
+        {
+          "coef": 1,
+          "formula": "NaOH"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "C6H5ONa"
+        },
+        {
+          "coef": 1,
+          "formula": "H2O"
+        }
+      ],
+      "conditions": {
+        "vi": "—",
+        "en": "—"
+      },
+      "dH_kJ": null,
+      "page": 130,
+      "reversible": false,
+      "general": false,
+      "note": null
+    },
+    {
+      "chapter": 5,
+      "class": "phenol",
+      "kind": {
+        "vi": "Với dung dịch Na2CO3",
+        "en": "With Na2CO3 solution"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "C6H5OH"
+        },
+        {
+          "coef": 1,
+          "formula": "Na2CO3"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "C6H5ONa"
+        },
+        {
+          "coef": 1,
+          "formula": "NaHCO3"
+        }
+      ],
+      "conditions": {
+        "vi": "—",
+        "en": "—"
+      },
+      "dH_kJ": null,
+      "page": 130,
+      "reversible": true,
+      "general": false,
+      "note": null
+    },
+    {
+      "chapter": 5,
+      "class": "phenol",
+      "kind": {
+        "vi": "Với nước bromine",
+        "en": "With bromine water"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "C6H5OH"
+        },
+        {
+          "coef": 3,
+          "formula": "Br2"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "C6H2Br3OH"
+        },
+        {
+          "coef": 3,
+          "formula": "HBr"
+        }
+      ],
+      "conditions": {
+        "vi": "kết tủa trắng 2,4,6-tribromophenol",
+        "en": "white precipitate of 2,4,6-tribromophenol"
+      },
+      "dH_kJ": null,
+      "page": 131,
+      "reversible": false,
+      "general": false,
+      "note": null
+    },
+    {
+      "chapter": 6,
+      "class": "carbonyl",
+      "kind": {
+        "vi": "Khử aldehyde",
+        "en": "Reducing an aldehyde"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "CH3CH=O"
+        },
+        {
+          "coef": 2,
+          "formula": "[H]"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "CH3CH2OH"
+        }
+      ],
+      "conditions": {
+        "vi": "NaBH4",
+        "en": "NaBH4"
+      },
+      "dH_kJ": null,
+      "page": 139,
+      "reversible": false,
+      "general": false,
+      "note": null
+    },
+    {
+      "chapter": 6,
+      "class": "carbonyl",
+      "kind": {
+        "vi": "Khử ketone",
+        "en": "Reducing a ketone"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "CH3COCH3"
+        },
+        {
+          "coef": 2,
+          "formula": "[H]"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "CH3CH(OH)CH3"
+        }
+      ],
+      "conditions": {
+        "vi": "NaBH4",
+        "en": "NaBH4"
+      },
+      "dH_kJ": null,
+      "page": 139,
+      "reversible": false,
+      "general": false,
+      "note": null
+    },
+    {
+      "chapter": 6,
+      "class": "carbonyl",
+      "kind": {
+        "vi": "Oxi hóa bằng nước bromine",
+        "en": "Oxidation by bromine water"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "CH3CHO"
+        },
+        {
+          "coef": 1,
+          "formula": "Br2"
+        },
+        {
+          "coef": 1,
+          "formula": "H2O"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "CH3COOH"
+        },
+        {
+          "coef": 2,
+          "formula": "HBr"
+        }
+      ],
+      "conditions": {
+        "vi": "—",
+        "en": "—"
+      },
+      "dH_kJ": null,
+      "page": 140,
+      "reversible": false,
+      "general": false,
+      "note": null
+    },
+    {
+      "chapter": 6,
+      "class": "carbonyl",
+      "kind": {
+        "vi": "Tráng bạc (thuốc thử Tollens)",
+        "en": "Silver mirror (Tollens’ reagent)"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "CH3CHO"
+        },
+        {
+          "coef": 2,
+          "formula": "[Ag(NH3)2]OH"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "CH3COONH4"
+        },
+        {
+          "coef": 2,
+          "formula": "Ag"
+        },
+        {
+          "coef": 3,
+          "formula": "NH3"
+        },
+        {
+          "coef": 1,
+          "formula": "H2O"
+        }
+      ],
+      "conditions": {
+        "vi": "t°",
+        "en": "heat"
+      },
+      "dH_kJ": null,
+      "page": 140,
+      "reversible": false,
+      "general": false,
+      "note": null
+    },
+    {
+      "chapter": 6,
+      "class": "carbonyl",
+      "kind": {
+        "vi": "Oxi hóa bằng Cu(OH)2",
+        "en": "Oxidation by Cu(OH)2"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "RCHO"
+        },
+        {
+          "coef": 2,
+          "formula": "Cu(OH)2"
+        },
+        {
+          "coef": 1,
+          "formula": "NaOH"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "RCOONa"
+        },
+        {
+          "coef": 1,
+          "formula": "Cu2O"
+        },
+        {
+          "coef": 3,
+          "formula": "H2O"
+        }
+      ],
+      "conditions": {
+        "vi": "t°, kết tủa đỏ gạch Cu2O",
+        "en": "heat, brick-red Cu2O precipitate"
+      },
+      "dH_kJ": null,
+      "page": 141,
+      "reversible": false,
+      "general": true,
+      "note": null
+    },
+    {
+      "chapter": 6,
+      "class": "carbonyl",
+      "kind": {
+        "vi": "Cộng HCN",
+        "en": "Adding HCN"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "CH3CHO"
+        },
+        {
+          "coef": 1,
+          "formula": "HCN"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "CH3CH(OH)CN"
+        }
+      ],
+      "conditions": {
+        "vi": "—",
+        "en": "—"
+      },
+      "dH_kJ": null,
+      "page": 142,
+      "reversible": false,
+      "general": false,
+      "note": null
+    },
+    {
+      "chapter": 6,
+      "class": "carbonyl",
+      "kind": {
+        "vi": "Cộng HCN",
+        "en": "Adding HCN"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "CH3COCH3"
+        },
+        {
+          "coef": 1,
+          "formula": "HCN"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "(CH3)2C(OH)CN"
+        }
+      ],
+      "conditions": {
+        "vi": "—",
+        "en": "—"
+      },
+      "dH_kJ": null,
+      "page": 142,
+      "reversible": false,
+      "general": false,
+      "note": null
+    },
+    {
+      "chapter": 6,
+      "class": "carbonyl",
+      "kind": {
+        "vi": "Tạo iodoform",
+        "en": "Iodoform reaction"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "C2H5COCH3"
+        },
+        {
+          "coef": 3,
+          "formula": "I2"
+        },
+        {
+          "coef": 4,
+          "formula": "NaOH"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "C2H5COONa"
+        },
+        {
+          "coef": 1,
+          "formula": "CHI3"
+        },
+        {
+          "coef": 3,
+          "formula": "NaI"
+        },
+        {
+          "coef": 3,
+          "formula": "H2O"
+        }
+      ],
+      "conditions": {
+        "vi": "kết tủa vàng CHI3",
+        "en": "yellow CHI3 precipitate"
+      },
+      "dH_kJ": null,
+      "page": 142,
+      "reversible": false,
+      "general": false,
+      "note": null
+    },
+    {
+      "chapter": 6,
+      "class": "carbonyl",
+      "kind": {
+        "vi": "Tạo iodoform",
+        "en": "Iodoform reaction"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "CH3CHO"
+        },
+        {
+          "coef": 3,
+          "formula": "I2"
+        },
+        {
+          "coef": 4,
+          "formula": "NaOH"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "HCOONa"
+        },
+        {
+          "coef": 1,
+          "formula": "CHI3"
+        },
+        {
+          "coef": 3,
+          "formula": "NaI"
+        },
+        {
+          "coef": 3,
+          "formula": "H2O"
+        }
+      ],
+      "conditions": {
+        "vi": "kết tủa vàng CHI3",
+        "en": "yellow CHI3 precipitate"
+      },
+      "dH_kJ": null,
+      "page": 142,
+      "reversible": false,
+      "general": false,
+      "note": {
+        "vi": "Sách in “+ H2O”; cân bằng số nguyên tử H và O cần 3H2O.",
+        "en": "The book prints “+ H2O”; balancing H and O needs 3H2O."
+      }
+    },
+    {
+      "chapter": 6,
+      "class": "carbonyl",
+      "kind": {
+        "vi": "Oxi hóa ethylene",
+        "en": "Oxidising ethylene"
+      },
+      "reactants": [
+        {
+          "coef": 2,
+          "formula": "CH2=CH2"
+        },
+        {
+          "coef": 1,
+          "formula": "O2"
+        }
+      ],
+      "products": [
+        {
+          "coef": 2,
+          "formula": "CH3CHO"
+        }
+      ],
+      "conditions": {
+        "vi": "PdCl2/CuCl2",
+        "en": "PdCl2/CuCl2"
+      },
+      "dH_kJ": null,
+      "page": 143,
+      "reversible": false,
+      "general": false,
+      "note": null
+    },
+    {
+      "chapter": 6,
+      "class": "acid",
+      "kind": {
+        "vi": "Với kim loại",
+        "en": "With a metal"
+      },
+      "reactants": [
+        {
+          "coef": 2,
+          "formula": "CH3COOH"
+        },
+        {
+          "coef": 1,
+          "formula": "Zn"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "(CH3COO)2Zn"
+        },
+        {
+          "coef": 1,
+          "formula": "H2"
+        }
+      ],
+      "conditions": {
+        "vi": "—",
+        "en": "—"
+      },
+      "dH_kJ": null,
+      "page": 149,
+      "reversible": false,
+      "general": false,
+      "note": null
+    },
+    {
+      "chapter": 6,
+      "class": "acid",
+      "kind": {
+        "vi": "Với muối carbonate",
+        "en": "With a carbonate"
+      },
+      "reactants": [
+        {
+          "coef": 2,
+          "formula": "CH3COOH"
+        },
+        {
+          "coef": 1,
+          "formula": "CaCO3"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "(CH3COO)2Ca"
+        },
+        {
+          "coef": 1,
+          "formula": "H2O"
+        },
+        {
+          "coef": 1,
+          "formula": "CO2"
+        }
+      ],
+      "conditions": {
+        "vi": "—",
+        "en": "—"
+      },
+      "dH_kJ": null,
+      "page": 149,
+      "reversible": false,
+      "general": false,
+      "note": null
+    },
+    {
+      "chapter": 6,
+      "class": "acid",
+      "kind": {
+        "vi": "Với base",
+        "en": "With a base"
+      },
+      "reactants": [
+        {
+          "coef": 2,
+          "formula": "CH3COOH"
+        },
+        {
+          "coef": 1,
+          "formula": "Ca(OH)2"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "(CH3COO)2Ca"
+        },
+        {
+          "coef": 2,
+          "formula": "H2O"
+        }
+      ],
+      "conditions": {
+        "vi": "—",
+        "en": "—"
+      },
+      "dH_kJ": null,
+      "page": 149,
+      "reversible": false,
+      "general": false,
+      "note": null
+    },
+    {
+      "chapter": 6,
+      "class": "acid",
+      "kind": {
+        "vi": "Với oxide base",
+        "en": "With a basic oxide"
+      },
+      "reactants": [
+        {
+          "coef": 2,
+          "formula": "CH3COOH"
+        },
+        {
+          "coef": 1,
+          "formula": "CuO"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "(CH3COO)2Cu"
+        },
+        {
+          "coef": 1,
+          "formula": "H2O"
+        }
+      ],
+      "conditions": {
+        "vi": "—",
+        "en": "—"
+      },
+      "dH_kJ": null,
+      "page": 149,
+      "reversible": false,
+      "general": false,
+      "note": null
+    },
+    {
+      "chapter": 6,
+      "class": "acid",
+      "kind": {
+        "vi": "Ester hóa",
+        "en": "Esterification"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "CH3COOH"
+        },
+        {
+          "coef": 1,
+          "formula": "CH3OH"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "CH3COOCH3"
+        },
+        {
+          "coef": 1,
+          "formula": "H2O"
+        }
+      ],
+      "conditions": {
+        "vi": "H2SO4 đặc, t°",
+        "en": "concentrated H2SO4, heat"
+      },
+      "dH_kJ": null,
+      "page": 150,
+      "reversible": true,
+      "general": false,
+      "note": null
+    },
+    {
+      "chapter": 6,
+      "class": "acid",
+      "kind": {
+        "vi": "Lên men giấm",
+        "en": "Vinegar fermentation"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "C2H5OH"
+        },
+        {
+          "coef": 1,
+          "formula": "O2"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "CH3COOH"
+        },
+        {
+          "coef": 1,
+          "formula": "H2O"
+        }
+      ],
+      "conditions": {
+        "vi": "men giấm",
+        "en": "acetic bacteria"
+      },
+      "dH_kJ": null,
+      "page": 151,
+      "reversible": false,
+      "general": false,
+      "note": null
+    },
+    {
+      "chapter": 6,
+      "class": "acid",
+      "kind": {
+        "vi": "Oxi hóa alkane",
+        "en": "Oxidising an alkane"
+      },
+      "reactants": [
+        {
+          "coef": 2,
+          "formula": "CH3CH2CH2CH3"
+        },
+        {
+          "coef": 5,
+          "formula": "O2"
+        }
+      ],
+      "products": [
+        {
+          "coef": 4,
+          "formula": "CH3COOH"
+        },
+        {
+          "coef": 2,
+          "formula": "H2O"
+        }
+      ],
+      "conditions": {
+        "vi": "xúc tác, t°, áp suất",
+        "en": "catalyst, heat, pressure"
+      },
+      "dH_kJ": null,
+      "page": 151,
+      "reversible": false,
+      "general": false,
+      "note": null
+    }
+  ]
+}
