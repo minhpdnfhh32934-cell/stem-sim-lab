@@ -2931,6 +2931,54 @@
    "review_status": "pending"
   },
   {
+   "topic": "organismMetabolism",
+   "subject": "biology",
+   "grade": 11,
+   "book": "SH11",
+   "chapter": "Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật",
+   "lessons": [
+    1
+   ],
+   "reason": "Tên Bài 1: khái quát về trao đổi chất và chuyển hóa năng lượng (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "plantWaterMinerals",
+   "subject": "biology",
+   "grade": 11,
+   "book": "SH11",
+   "chapter": "Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật",
+   "lessons": [
+    2
+   ],
+   "reason": "Tên Bài 2: trao đổi nước và khoáng ở thực vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "plantPhotosynthesis",
+   "subject": "biology",
+   "grade": 11,
+   "book": "SH11",
+   "chapter": "Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật",
+   "lessons": [
+    4
+   ],
+   "reason": "Tên Bài 4: quang hợp ở thực vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "plantRespiration",
+   "subject": "biology",
+   "grade": 11,
+   "book": "SH11",
+   "chapter": "Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật",
+   "lessons": [
+    6
+   ],
+   "reason": "Tên Bài 6: hô hấp ở thực vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
    "topic": "metabolismEnergy",
    "subject": "biology",
    "grade": 10,

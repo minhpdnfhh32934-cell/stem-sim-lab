@@ -38,9 +38,9 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Hoá học 11 | 25 | 19 | 19 |
 | Hoá học 12 | 30 | 22 | 1 |
 | Sinh học 10 | 26 | 17 | 17 |
-| Sinh học 11 | 29 | 20 | 0 |
+| Sinh học 11 | 29 | 20 | 4 |
 | Sinh học 12 | 35 | 28 | 7 |
-| **Cộng** | **253** | **189** | **106** |
+| **Cộng** | **253** | **189** | **110** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -246,12 +246,12 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Sinh học 10 | Chương 7. Virus | 24 | Khái quát về virus | 141 | Lí thuyết | Khái quát về virus | Tên Bài 24: khái quát về virus (cấu tạo: lõi nucleic acid, vỏ capsid, vỏ ngoài; năm giai đoạn nhân lên). | pending |
 | Sinh học 10 | Chương 7. Virus | 25 | Một số bệnh do virus và các thành tựu nghiên cứu ứng dụng virus | 145 | Lí thuyết | Bệnh do virus và ứng dụng virus | Tên Bài 25: một số bệnh do virus và các thành tựu nghiên cứu ứng dụng virus (bài học có hướng dẫn: dự đoán, ghép đôi, phân loại; không có mô phỏng). | pending |
 | Sinh học 10 | Chương 7. Virus | 26 | Thực hành: Điều tra một số bệnh do virus và tuyên truyền phòng chống bệnh | 155 | Thực hành | chưa có |  | pending |
-| Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 1 | Khái quát về trao đổi chất và chuyển hoá năng lượng | 5 | Lí thuyết | chưa có |  | pending |
-| Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 2 | Trao đổi nước và khoáng ở thực vật | 9 | Lí thuyết | chưa có |  | pending |
+| Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 1 | Khái quát về trao đổi chất và chuyển hoá năng lượng | 5 | Lí thuyết | Trao đổi chất ở sinh vật | Tên Bài 1: khái quát về trao đổi chất và chuyển hóa năng lượng (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
+| Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 2 | Trao đổi nước và khoáng ở thực vật | 9 | Lí thuyết | Trao đổi nước và khoáng ở thực vật | Tên Bài 2: trao đổi nước và khoáng ở thực vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
 | Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 3 | Thực hành: Trao đổi nước và khoáng ở thực vật | 22 | Thực hành | chưa có |  | pending |
-| Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 4 | Quang hợp ở thực vật | 26 | Lí thuyết | chưa có |  | pending |
+| Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 4 | Quang hợp ở thực vật | 26 | Lí thuyết | Quang hợp ở thực vật | Tên Bài 4: quang hợp ở thực vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
 | Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 5 | Thực hành: Quang hợp ở thực vật | 35 | Thực hành | chưa có |  | pending |
-| Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 6 | Hô hấp ở thực vật | 38 | Lí thuyết | chưa có |  | pending |
+| Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 6 | Hô hấp ở thực vật | 38 | Lí thuyết | Hô hấp ở thực vật | Tên Bài 6: hô hấp ở thực vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
 | Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 7 | Thực hành: Hô hấp ở thực vật | 44 | Thực hành | chưa có |  | pending |
 | Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 8 | Dinh dưỡng và tiêu hoá ở động vật | 46 | Lí thuyết | chưa có |  | pending |
 | Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 9 | Hô hấp ở động vật | 54 | Lí thuyết | chưa có |  | pending |
