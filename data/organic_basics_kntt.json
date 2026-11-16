@@ -1,0 +1,327 @@
+{
+  "dataset": "organic_basics_kntt",
+  "version": 1,
+  "accessed": "2026-11-17",
+  "review_status": "pending",
+  "source": {
+    "id": "sgk-hh11-c3",
+    "citation": "SGK Hóa học 11 Kết nối tri thức, NXB Giáo dục Việt Nam: Chương 3 “Đại cương về hóa học hữu cơ”, Bài 10 (Bảng 10.1, 10.2, tr. 59–61), Bài 12 (tr. 70–73), Bài 13 (tr. 75–77)",
+    "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-11.4701111834"
+  },
+  "items": [
+    {
+      "id": "halide",
+      "name": {
+        "vi": "Dẫn xuất halogen",
+        "en": "Halogen derivative"
+      },
+      "group": "–X (F, Cl, Br, I)",
+      "example": "CH3Cl",
+      "ir": [],
+      "book": "Bảng 10.1, tr. 60; Bảng 10.2, tr. 61",
+      "review_status": "pending"
+    },
+    {
+      "id": "alcohol",
+      "name": {
+        "vi": "Alcohol",
+        "en": "Alcohol"
+      },
+      "group": "–OH",
+      "example": "CH3OH",
+      "ir": [
+        {
+          "bond": "O–H",
+          "low": 3200,
+          "high": 3500
+        }
+      ],
+      "book": "Bảng 10.1, tr. 60; Bảng 10.2, tr. 61",
+      "review_status": "pending"
+    },
+    {
+      "id": "aldehyde",
+      "name": {
+        "vi": "Aldehyde",
+        "en": "Aldehyde"
+      },
+      "group": "–CHO",
+      "example": "CH3CHO",
+      "ir": [
+        {
+          "bond": "C–H",
+          "low": 2695,
+          "high": 2830
+        },
+        {
+          "bond": "C=O",
+          "low": 1685,
+          "high": 1740
+        }
+      ],
+      "book": "Bảng 10.1, tr. 60; Bảng 10.2, tr. 61",
+      "review_status": "pending"
+    },
+    {
+      "id": "ketone",
+      "name": {
+        "vi": "Ketone",
+        "en": "Ketone"
+      },
+      "group": ">C=O",
+      "example": "CH3COCH3",
+      "ir": [
+        {
+          "bond": "C=O",
+          "low": 1666,
+          "high": 1715
+        }
+      ],
+      "book": "Bảng 10.1, tr. 60; Bảng 10.2, tr. 61",
+      "review_status": "pending"
+    },
+    {
+      "id": "carboxylic",
+      "name": {
+        "vi": "Carboxylic acid",
+        "en": "Carboxylic acid"
+      },
+      "group": "–COOH",
+      "example": "CH3COOH",
+      "ir": [
+        {
+          "bond": "O–H",
+          "low": 2500,
+          "high": 3300
+        },
+        {
+          "bond": "C=O",
+          "low": 1690,
+          "high": 1760
+        }
+      ],
+      "book": "Bảng 10.1, tr. 60; Bảng 10.2, tr. 61",
+      "review_status": "pending"
+    },
+    {
+      "id": "ester",
+      "name": {
+        "vi": "Ester",
+        "en": "Ester"
+      },
+      "group": "–COO–",
+      "example": "CH3COOCH3",
+      "ir": [
+        {
+          "bond": "C=O",
+          "low": 1715,
+          "high": 1750
+        }
+      ],
+      "book": "Bảng 10.1, tr. 60; Bảng 10.2, tr. 61",
+      "review_status": "pending"
+    },
+    {
+      "id": "amine",
+      "name": {
+        "vi": "Amine",
+        "en": "Amine"
+      },
+      "group": "–NH2",
+      "example": "CH3NH2",
+      "ir": [
+        {
+          "bond": "N–H",
+          "low": 3000,
+          "high": 3300
+        }
+      ],
+      "book": "Bảng 10.1, tr. 60; Bảng 10.2, tr. 61",
+      "review_status": "pending"
+    },
+    {
+      "id": "ether",
+      "name": {
+        "vi": "Ether",
+        "en": "Ether"
+      },
+      "group": "–O–",
+      "example": "CH3OCH3",
+      "ir": [],
+      "book": "Bảng 10.1, tr. 60; Bảng 10.2, tr. 61",
+      "review_status": "pending"
+    }
+  ],
+  "atomic_mass": {
+    "values": {
+      "C": 12.0,
+      "H": 1.0,
+      "O": 16.0
+    },
+    "book": "tr. 72"
+  },
+  "problems": [
+    {
+      "id": "camphor",
+      "name": {
+        "vi": "Camphor",
+        "en": "Camphor"
+      },
+      "percent": {
+        "C": 78.94,
+        "H": 10.53,
+        "O": 10.53
+      },
+      "M": 152,
+      "book": "tr. 73, Hoạt động"
+    },
+    {
+      "id": "eugenol",
+      "name": {
+        "vi": "Eugenol",
+        "en": "Eugenol"
+      },
+      "percent": {
+        "C": 73.17,
+        "H": 7.31,
+        "O": null
+      },
+      "M": 164,
+      "book": "tr. 73, câu hỏi 3"
+    }
+  ],
+  "ethanol_ms": {
+    "molecular_ion": 46,
+    "book": "Hình 12.1, tr. 71"
+  },
+  "boiling": [
+    {
+      "formula": "CH4",
+      "bp_C": -161.5,
+      "note": {
+        "vi": "Khác loại nguyên tử",
+        "en": "Different kinds of atoms"
+      },
+      "book": "tr. 75"
+    },
+    {
+      "formula": "CH3OH",
+      "bp_C": 64.7,
+      "note": {
+        "vi": "Khác loại nguyên tử",
+        "en": "Different kinds of atoms"
+      },
+      "book": "tr. 75"
+    },
+    {
+      "formula": "C3H8",
+      "bp_C": -42.1,
+      "note": {
+        "vi": "Khác số lượng nguyên tử",
+        "en": "Different numbers of atoms"
+      },
+      "book": "tr. 75"
+    },
+    {
+      "formula": "C20H42",
+      "bp_C": 343,
+      "note": {
+        "vi": "Khác số lượng nguyên tử",
+        "en": "Different numbers of atoms"
+      },
+      "book": "tr. 75"
+    },
+    {
+      "formula": "CH3-CH=CH2",
+      "bp_C": -47.8,
+      "note": {
+        "vi": "Cùng công thức phân tử, khác cấu tạo",
+        "en": "Same molecular formula, different structure"
+      },
+      "book": "tr. 75"
+    },
+    {
+      "formula": "cyclopropane",
+      "bp_C": -32.8,
+      "note": {
+        "vi": "Cùng công thức phân tử, khác cấu tạo",
+        "en": "Same molecular formula, different structure"
+      },
+      "book": "tr. 75"
+    },
+    {
+      "formula": "phenol",
+      "bp_C": 181.7,
+      "note": {
+        "vi": "Ảnh hưởng qua lại của các nhóm nguyên tử",
+        "en": "Groups of atoms affect each other"
+      },
+      "book": "tr. 75"
+    },
+    {
+      "formula": "cyclohexanol",
+      "bp_C": 161.8,
+      "note": {
+        "vi": "Ảnh hưởng qua lại của các nhóm nguyên tử",
+        "en": "Groups of atoms affect each other"
+      },
+      "book": "tr. 75"
+    }
+  ],
+  "isomers": [
+    {
+      "formula": "C3H6O",
+      "structures": [
+        {
+          "name": "propanal",
+          "smiles": "CCC=O"
+        },
+        {
+          "name": "acetone",
+          "smiles": "CC(C)=O"
+        },
+        {
+          "name": "allyl alcohol",
+          "smiles": "C=CCO"
+        },
+        {
+          "name": "methyl vinyl ether",
+          "smiles": "C=COC"
+        }
+      ],
+      "book": "tr. 76"
+    },
+    {
+      "formula": "C5H12",
+      "structures": [
+        {
+          "name": "pentane",
+          "smiles": "CCCCC"
+        },
+        {
+          "name": "2-methylbutane",
+          "smiles": "CCC(C)C"
+        }
+      ],
+      "book": "tr. 77, đồng phân mạch carbon"
+    },
+    {
+      "formula": "C3H8O",
+      "structures": [
+        {
+          "name": "propan-1-ol",
+          "smiles": "CCCO"
+        },
+        {
+          "name": "ethyl methyl ether",
+          "smiles": "CCOC"
+        },
+        {
+          "name": "propan-2-ol",
+          "smiles": "CC(C)O"
+        }
+      ],
+      "book": "tr. 77, đồng phân loại và vị trí nhóm chức"
+    }
+  ]
+}
