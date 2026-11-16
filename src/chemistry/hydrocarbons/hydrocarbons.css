@@ -1,0 +1,46 @@
+/* Hydrocarbons (HH11 Bài 15–17, #255 round 2f). */
+@import '../chem.css';
+
+.hc-panel {
+  display: grid;
+  gap: var(--space-3);
+}
+.hc-panel label {
+  display: grid;
+  gap: var(--space-1);
+}
+.hc-panel input[type='range'] {
+  width: 100%;
+  min-height: var(--target);
+}
+.hc-panel__facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-1) var(--space-3);
+  margin: 0;
+}
+.hc-panel__facts dt {
+  color: var(--text-muted);
+}
+.hc-panel__facts dd {
+  margin: 0;
+}
+.hc-tables {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+.hc-table {
+  border-collapse: collapse;
+}
+.hc-table caption {
+  text-align: left;
+  font-weight: 600;
+  padding-bottom: var(--space-1);
+}
+.hc-table th,
+.hc-table td {
+  padding: 4px var(--space-3);
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
