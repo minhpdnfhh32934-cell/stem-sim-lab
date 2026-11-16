@@ -9,14 +9,7 @@ import { pickFirst } from '@/ui/three/pick';
 import { NEUTRAL, type Bio3DScene, type SceneKit } from '../view3d/kit';
 import { muted, structureColor } from '../view3d/palette';
 import { highlight, membrane } from '../view3d/recipes';
-import {
-  VIRUS_SIZE,
-  anchors,
-  capsomereCentres,
-  coreCoil,
-  nearestCapsomere,
-  sphereDirections,
-} from './geometry';
+import { VIRUS_SIZE, anchors, capsomereCentres, coreCoil, sphereDirections } from './geometry';
 import { partsShown, type VirusPart } from './parts';
 
 export interface VirusSceneOptions {
@@ -48,7 +41,7 @@ export function buildVirusScene(kit: SceneKit, o: VirusSceneOptions): Bio3DScene
   const core = kit.mesh(kit.geometry(new THREE.TubeGeometry(coil, 400, 0.07, 8, false)), coreMat);
   own('core', core, [coreMat]);
 
-  // Capsid: capsomeres on an icosahedron; instance colours mark the "capsomere" pick.
+  // Capsid: protein bumps on an icosahedron (the book's H 24.1b look), one instanced draw.
   const centres = capsomereCentres(S.capsid, S.facets);
   const capColor = new THREE.Color(structureColor(tok, 'protein'));
   const capMat = kit.solid(NEUTRAL, { sheen: 0.3 });
@@ -59,7 +52,6 @@ export function buildVirusScene(kit: SceneKit, o: VirusSceneOptions): Bio3DScene
   });
   caps.instanceMatrix.needsUpdate = true;
   own('capsid', caps, [capMat]);
-  const front = nearestCapsomere(centres, anchors(o.enveloped).capsomere);
 
   // Envelope and spikes.
   let spikeCount = 0;
@@ -102,7 +94,6 @@ export function buildVirusScene(kit: SceneKit, o: VirusSceneOptions): Bio3DScene
       named.push(part);
     }
 
-  const hiColor = new THREE.Color(tok('--m3d-highlight'));
   let selected: VirusPart | null = null;
   const select = (id: string | null) => {
     selected = partsShown(o.enveloped).find((x) => x === id) ?? null;
@@ -114,8 +105,6 @@ export function buildVirusScene(kit: SceneKit, o: VirusSceneOptions): Bio3DScene
           mat.emissiveIntensity = 0;
         }
       }
-    caps.setColorAt(front, selected === 'capsomere' ? hiColor : capColor);
-    if (caps.instanceColor) caps.instanceColor.needsUpdate = true;
   };
 
   return {

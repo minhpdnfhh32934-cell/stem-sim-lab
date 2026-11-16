@@ -29,6 +29,10 @@ export interface SubjectPlugin {
   Facts?: ComponentType<StepProps>;
   /** Sources of the model behind the numbers, listed in the report. */
   modelSources?: (scenario: StudioScenario, session: StudioSession) => Promise<Source[]>;
+  /** Subject wording for a step's name (default `studio.flow.steps.<step>`). */
+  steps?: Partial<Record<FlowStep, MessageKey>>;
+  /** Subject wording for a step's heading (default `studio.flow.titles.<step>`). */
+  titles?: Partial<Record<FlowStep, MessageKey>>;
   /** Subject wording for a step's lead line (default `studio.flow.leads.<step>`). */
   leads?: Partial<Record<FlowStep, MessageKey>>;
   /** Subject wording for why a step is blocked (default `studio.flow.blockers.<blocker>`). */

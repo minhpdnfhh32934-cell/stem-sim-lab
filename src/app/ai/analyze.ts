@@ -26,6 +26,7 @@ import { currentSafety, logIncident } from '@/safety/safetyStore';
 import type { IncidentKind } from '@/safety/safety';
 import { hasModule } from '@/modules/registry';
 import { hasScene, loadScene } from '@/physics/registry';
+import { GUIDED_TOPICS } from '@/studio/guided/topics';
 import type { ParamSource, Params, PhysicsScene } from '@/physics/types';
 
 export type AnalyzePhase = 'idle' | 'running' | 'review' | 'unsupported' | 'error';
@@ -341,12 +342,20 @@ export function cancelAnalyze(): void {
 }
 
 /** "Tự dựng cảnh": opens the confirmation dialog with defaults only, no AI involved. */
-/** First available topic of the current subject (manual mode with nothing open). */
+/**
+ * A topic manual mode can build: a physics scene or a module with inputs. Guided textbook lessons
+ * have nothing to set up, so they are left out of the picker and of the default.
+ */
+export function isManualTopic(id: string): boolean {
+  return (hasScene(id) || hasModule(id)) && !(GUIDED_TOPICS as readonly string[]).includes(id);
+}
+
+/** First manual topic of the current subject (manual mode with nothing open). */
 function defaultTopic(): string {
   const subject = useWorkspaceStore.getState().subject;
   for (const chapter of CATALOG[subject]) {
     for (const topic of chapter.topics) {
-      if (hasScene(topic.id) || hasModule(topic.id)) return topic.id;
+      if (isManualTopic(topic.id)) return topic.id;
     }
   }
   return 'uniformAcceleration';
@@ -358,7 +367,8 @@ function defaultTopic(): string {
  */
 export async function openManual(topicId?: string): Promise<void> {
   cancelAnalyze();
-  const id = topicId ?? useModuleStore.getState().active?.id ?? sim.scene?.id ?? defaultTopic();
+  const open = useModuleStore.getState().active?.id ?? sim.scene?.id;
+  const id = topicId ?? (open !== undefined && isManualTopic(open) ? open : defaultTopic());
   const base = {
     phase: 'review',
     mode: 'manual',

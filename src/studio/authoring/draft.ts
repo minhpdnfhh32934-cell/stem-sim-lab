@@ -211,7 +211,7 @@ export function draftIssues(d: AuthorDraft): AuthorIssue[] {
     if (b.target[0] === b.target[1] || b.target.some((f) => !b.inventory.includes(f))) {
       out.push({ code: 'targetInInventory' });
     }
-  } else if (b.parts.length < 2 || b.parts.length > 8) {
+  } else if (b.kind === 'biology' && (b.parts.length < 2 || b.parts.length > 8)) {
     out.push({ code: 'partsSize' });
   }
   return out;

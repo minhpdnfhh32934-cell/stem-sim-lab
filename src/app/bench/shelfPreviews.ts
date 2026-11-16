@@ -51,6 +51,14 @@ export const SHELF_PREVIEWS: ReadonlySet<string> = new Set([
   'biomolecules',
   'microbeGrowth',
   'virusStructure',
+  'levelsOfLife',
+  'cellSignalling',
+  'metabolismEnergy',
+  'breakdownSynthesis',
+  'cellTechnology',
+  'microbeDiversity',
+  'microbeApplications',
+  'virusDiseases',
 ]);
 
 /** The picture of `topic` in `theme`, or null when it has none. */

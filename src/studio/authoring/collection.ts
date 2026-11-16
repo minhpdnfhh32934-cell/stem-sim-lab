@@ -59,6 +59,8 @@ export function migrateAuthored(persisted: unknown): PersistedAuthored {
   for (const item of Array.isArray(list) ? (list as unknown[]) : []) {
     const r = validateScenario(item);
     if (!r.ok || ids.has(r.scenario.id) || !r.scenario.id.startsWith(TEACHER_ID_PREFIX)) continue;
+    // A descriptive textbook lesson is built in only (see checkScenario): never teacher content.
+    if (r.scenario.binding.kind === 'guided') continue;
     ids.add(r.scenario.id);
     scenarios.push(asTeacherContent(r.scenario));
   }

@@ -6,11 +6,9 @@ import { VIRUS_CARD } from './card';
 import {
   ICOSAHEDRON_FACES,
   VIRUS_SIZE,
-  anchors,
   capsomereCentres,
   coreCoil,
   icosahedronVertices,
-  nearestCapsomere,
   sphereDirections,
 } from './geometry';
 import { PART_TEXT, STAGES, STAGE_TEXT, VIRUS_PARTS, partsShown } from './parts';
@@ -70,8 +68,6 @@ describe('icosahedral capsid (illustration)', () => {
       for (const b of pts.slice(i + 1)) closest = Math.min(closest, dist(a, b));
     });
     expect(closest).toBeGreaterThan(2 * VIRUS_SIZE.capsomere);
-    const k = nearestCapsomere(pts, anchors(true).capsomere);
-    expect(dist(pts[k] ?? [], anchors(true).capsomere)).toBeLessThan(0.5);
   });
 
   it('spikes point everywhere (unit vectors, mean ≈ 0); the core stays inside the capsid', () => {
@@ -86,9 +82,11 @@ describe('icosahedral capsid (illustration)', () => {
 
 describe('parts and stages (SGK Sinh học 10 KNTT, Bài 24)', () => {
   it('every virus has a core and a capsid; envelope and spikes only when enveloped', () => {
-    expect(partsShown(false)).toEqual(['core', 'capsid', 'capsomere']);
+    expect(partsShown(false)).toEqual(['core', 'capsid']);
     expect(partsShown(true)).toEqual(VIRUS_PARTS);
-    expect(PART_TEXT.capsomere.source.id).toBe('openstax-biology-2e-21-1');
+    // The book names no subunit of the coat: no "capsomere" part (decision 16/11/2026).
+    expect(VIRUS_PARTS).not.toContain('capsomere');
+    for (const p of VIRUS_PARTS) expect(PART_TEXT[p].source.id).toBe('sgk-sh10-kntt-bai24');
     expect(PART_TEXT.core.source.id).toBe('sgk-sh10-kntt-bai24');
   });
 
@@ -104,13 +102,10 @@ describe('parts and stages (SGK Sinh học 10 KNTT, Bài 24)', () => {
       expect(t.name.vi + ('text' in t ? t.text.vi : '')).not.toMatch(/\d/);
   });
 
-  it('the card is qualitative with the textbook and OpenStax as sources', () => {
+  it('the card is qualitative with the textbook as its only source', () => {
     expect(VIRUS_CARD.confidence).toBe('qualitative');
     expect(VIRUS_CARD.equations).toEqual([]);
-    expect(VIRUS_CARD.sources.map((s) => s.id)).toEqual([
-      'sgk-sh10-kntt-bai24',
-      'openstax-biology-2e-21-1',
-    ]);
+    expect(VIRUS_CARD.sources.map((s) => s.id)).toEqual(['sgk-sh10-kntt-bai24']);
   });
 });
 
@@ -172,8 +167,10 @@ describe('3D virus', () => {
     // Through a gap between capsomeres: the core inside, never the envelope in front.
     expect(['core', 'capsid']).toContain(sc.pick?.(ray(0, 0)));
     expect(sc.pick?.(ray(30, 30))).toBeNull();
+    sc.select?.('capsid');
+    expect(sc.state?.()).toMatchObject({ selected: 'capsid' });
     sc.select?.('capsomere');
-    expect(sc.state?.()).toMatchObject({ selected: 'capsomere' });
+    expect(sc.state?.()).toMatchObject({ selected: null });
     kit.dispose();
     const naked = testKit('medium');
     const sc2 = buildVirusScene(naked.kit, { enveloped: false, names: null });

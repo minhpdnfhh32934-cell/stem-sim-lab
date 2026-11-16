@@ -6,12 +6,15 @@ import type { ModuleView } from './types';
 
 export interface ModuleState {
   active: { id: string; view: ModuleView } | null;
+  /** The topic last asked for: the one loading, failed or open (null once closed). */
+  requested: string | null;
   loading: boolean;
   error: string | null;
 }
 
 export const useModuleStore = create<ModuleState>()(() => ({
   active: null,
+  requested: null,
   loading: false,
   error: null,
 }));
@@ -20,7 +23,7 @@ let seq = 0;
 
 export async function openModule(id: string): Promise<void> {
   const mine = ++seq;
-  useModuleStore.setState({ loading: true, error: null });
+  useModuleStore.setState({ loading: true, error: null, requested: id });
   usePerfStore.setState({ degraded: false });
   try {
     const view = await loadModule(id);
@@ -36,7 +39,7 @@ export async function openModule(id: string): Promise<void> {
 export function closeModule(): void {
   seq++;
   if (useModuleStore.getState().active || useModuleStore.getState().loading) {
-    useModuleStore.setState({ active: null, loading: false, error: null });
+    useModuleStore.setState({ active: null, requested: null, loading: false, error: null });
     useWorkspaceStore.setState({ scienceCard: null });
   }
 }

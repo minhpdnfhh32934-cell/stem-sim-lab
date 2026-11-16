@@ -22,13 +22,21 @@ export function AskTeacher({ scenario, step }: { scenario: StudioScenario; step:
         type="button"
         className="btn btn--ghost"
         onClick={() => {
-          askInBubble(t(`studio.ask.questions.${step}`, { title: L(scenario.title) }));
+          const key =
+            scenario.binding.kind === 'guided'
+              ? (`studio.guided.ask.${step}` as const)
+              : (`studio.ask.questions.${step}` as const);
+          askInBubble(t(key, { title: L(scenario.title) }));
         }}
       >
         <GraduationCap size={16} aria-hidden="true" />
         {t('studio.ask.button')}
       </button>
-      <p className="muted small">{t('studio.ask.hint', { toggle: t('chat.contextToggle') })}</p>
+      <p className="muted small">
+        {t(scenario.binding.kind === 'guided' ? 'studio.guided.askHint' : 'studio.ask.hint', {
+          toggle: t('chat.contextToggle'),
+        })}
+      </p>
     </div>
   );
 }
