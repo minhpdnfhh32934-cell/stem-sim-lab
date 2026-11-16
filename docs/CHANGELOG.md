@@ -2,9 +2,9 @@
 
 Mọi thay đổi đáng chú ý của SimLab (tên cũ: STEM Sim Lab), bản mới nhất ở trên. Định dạng theo [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), số phiên bản dạng `x.y.z`. Tệp này được tạo từ `release-notes/versions.json` bằng `npm run release-notes`. Đừng sửa tay. Lịch sử đầy đủ kèm bằng chứng: [VERSION\_HISTORY.md](VERSION_HISTORY.md).
 
-## [Unreleased] - 0.9.1 (Đang xét duyệt)
+## [0.9.1] - 2026-11-16
 
-_Hai việc còn lại của gói lớp 10 (#255), người dùng trả lời 16/11/2026: viết “hóa” (1) và thêm bảng ion nhiều nguyên tử (2). Chỉ phần web lên 0.9.1 (không có thay đổi Rust kể từ v0.8.2, lõi vẫn 0.8.2), nên ứng dụng cài từ GitHub nhận qua cập nhật trong app; bản Store nhận ở lần nộp có lõi mới. notesReady đặt true khi mở PR chuẩn bị phát hành._
+_Phát hành 16/11/2026 từ main @ 59303d21 (lượt Release 43849341900, người dùng chạy). Hai việc còn lại của gói lớp 10 (#255): viết “hóa” và bảng ion nhiều nguyên tử (người dùng trả lời 16/11/2026). Chỉ phần web lên 0.9.1; phần lõi vẫn 0.8.2 (không có thay đổi Rust), nên web-update.json ghi minNative 0.8.2 và ứng dụng 0.8.2 cài từ GitHub nhận qua cập nhật trong app; bộ cài trong bản phát hành vẫn mang số 0.8.2. Không bắt buộc cập nhật (minRequired để trống). Bản Store nhận ở lần nộp có lõi mới._
 
 Bản 0.9.1 làm nốt hai việc của gói lớp 10: app tính được số oxi hóa trong các muối như CuSO₄, AgNO₃, NH₄Cl nhờ bảng ion nhiều nguyên tử, và chữ “hóa” được viết thống nhất trong toàn app.
 
@@ -726,6 +726,7 @@ Bản đầu tiên của STEM Sim Lab (tên cũ của SimLab): mô phỏng Vật
 
 - Bản này không có bộ cài phát hành công khai; chỉ có bản dựng thử trên GitHub Actions.
 
+[0.9.1]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.9.1
 [0.9.0]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.9.0
 [0.8.2]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.8.2
 [0.8.1]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.8.1
