@@ -1,0 +1,122 @@
+/* Nitrogen and sulfur (HH11 Bài 4–8, #255 round 2d): the oxidation-number axis. */
+@import '../chem.css';
+
+.ns-axis {
+  position: absolute;
+  left: 48px;
+  right: 48px;
+  top: 64px;
+  bottom: 96px;
+}
+.ns-axis__line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 48px;
+  height: 2px;
+  background: var(--text-muted);
+}
+.ns-axis__tick {
+  position: absolute;
+  top: 8px;
+  transform: translateX(-50%);
+  font-family: var(--font-mono, ui-monospace, monospace);
+  color: var(--text-muted);
+}
+.ns-axis__tick::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -12px;
+  width: 2px;
+  height: 8px;
+  background: var(--text-muted);
+}
+.ns-axis__ends {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-muted);
+}
+.ns-chip {
+  position: absolute;
+  transform: translateX(-50%);
+  min-height: 32px;
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md, 8px);
+  background: var(--bg-panel);
+  font-family: var(--font-mono, ui-monospace, monospace);
+  white-space: nowrap;
+}
+.ns-chip--reducing {
+  border-color: var(--chart-1);
+}
+.ns-chip--oxidising {
+  border-color: var(--chart-4);
+}
+.ns-chip--own {
+  border-style: dashed;
+}
+.ns-refused {
+  position: absolute;
+  left: var(--space-3);
+  bottom: var(--space-2);
+  margin: 0;
+  padding-left: var(--space-4);
+  color: var(--text-muted);
+}
+.ns-panel {
+  display: grid;
+  gap: var(--space-3);
+}
+.ns-panel__add {
+  display: grid;
+  gap: var(--space-2);
+}
+.ns-panel__add label {
+  display: grid;
+  gap: var(--space-1);
+}
+.ns-panel__own {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ns-panel__own li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+.ns-panel__substances {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+.ns-panel__substances [aria-checked='true'] {
+  background: var(--accent-soft);
+}
+.ns-card h3 {
+  margin: 0 0 var(--space-1);
+  font-size: var(--text-content);
+}
+.ns-card ul {
+  margin: 0;
+  padding-left: var(--space-4);
+}
+.ns-table {
+  border-collapse: collapse;
+}
+.ns-table th,
+.ns-table td {
+  padding: 4px var(--space-3);
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}

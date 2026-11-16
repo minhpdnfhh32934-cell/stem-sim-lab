@@ -11,6 +11,7 @@ export const SHELF_PREVIEWS: ReadonlySet<string> = new Set([
   'fourierSeries',
   'emWave',
   'aqueousEquilibrium',
+  'nitrogenSulfur',
   'atomComposition',
   'isotopes',
   'periodicTable',
