@@ -17,4 +17,9 @@ export const GUIDED_TOPICS = [
   'plantWaterMinerals',
   'plantPhotosynthesis',
   'plantRespiration',
+  'animalNutrition',
+  'animalRespiration',
+  'animalCirculation',
+  'immunity',
+  'excretionHomeostasis',
 ] as const;
