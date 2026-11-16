@@ -12,6 +12,7 @@ export const SHELF_PREVIEWS: ReadonlySet<string> = new Set([
   'emWave',
   'aqueousEquilibrium',
   'nitrogenSulfur',
+  'organicBasics',
   'atomComposition',
   'isotopes',
   'periodicTable',
@@ -62,6 +63,7 @@ export const SHELF_PREVIEWS: ReadonlySet<string> = new Set([
   'microbeDiversity',
   'microbeApplications',
   'virusDiseases',
+  'organicSeparation',
 ]);
 
 /** The picture of `topic` in `theme`, or null when it has none. */
