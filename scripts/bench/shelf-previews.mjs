@@ -95,6 +95,10 @@ const TOPICS = [
   'animalCirculation',
   'immunity',
   'excretionHomeostasis',
+  'responseOverview',
+  'plantResponse',
+  'animalResponse',
+  'animalBehaviour',
 ];
 const THEMES = ['light', 'dark'];
 /** 480 px wide: twice a card's 242 px preview, sharp on a 2× screen, about 10–20 KB each. */

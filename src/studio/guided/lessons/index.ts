@@ -17,6 +17,10 @@ import { sh11b09AnimalRespiration } from './sh11b09AnimalRespiration';
 import { sh11b10Circulation } from './sh11b10Circulation';
 import { sh11b12Immunity } from './sh11b12Immunity';
 import { sh11b13Excretion } from './sh11b13Excretion';
+import { sh11b14Response } from './sh11b14Response';
+import { sh11b15PlantResponse } from './sh11b15PlantResponse';
+import { sh11b17AnimalResponse } from './sh11b17AnimalResponse';
+import { sh11b18Behaviour } from './sh11b18Behaviour';
 
 /**
  * The descriptive textbook lessons (user decision 14/11/2026, #255). Kept out of
@@ -42,6 +46,10 @@ export const GUIDED_LESSONS: readonly unknown[] = [
   sh11b10Circulation,
   sh11b12Immunity,
   sh11b13Excretion,
+  sh11b14Response,
+  sh11b15PlantResponse,
+  sh11b17AnimalResponse,
+  sh11b18Behaviour,
 ];
 
 let cache: StudioScenario[] | null = null;
