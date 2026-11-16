@@ -1,5 +1,6 @@
 import { translate, type Locale } from '@/app/i18n';
 import type { LocalizedText } from '@/core/data/dataset';
+import { GUIDED_MODEL } from './guided/check';
 import type { StudioScenario } from './scenario';
 import { engineEvidence, type StudioSession } from './session';
 
@@ -33,7 +34,10 @@ export function unverifiedItems(
 export function unverifiedLabel(item: UnverifiedItem, locale: Locale): string {
   const title = item.title[locale];
   if (item.kind === 'record') {
-    return translate(locale, 'studio.unverified.record', { title, model: item.model });
+    // A guided lesson's check is the lesson's own content: its internal model id means nothing.
+    const key =
+      item.model === GUIDED_MODEL ? 'studio.unverified.guided' : 'studio.unverified.record';
+    return translate(locale, key, { title, model: item.model });
   }
   return translate(
     locale,

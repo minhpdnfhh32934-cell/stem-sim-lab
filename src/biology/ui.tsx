@@ -52,6 +52,8 @@ export function Segmented<T extends string>(props: {
   onChange: (v: T) => void;
   /** Shown but not changeable (e.g. a lesson holds the value). */
   disabled?: boolean;
+  /** Id of a text that describes the choice (e.g. a checked answer's outcome). */
+  describedBy?: string | undefined;
 }) {
   const Lz = useLocalized();
   const { options, value } = props;
@@ -71,7 +73,12 @@ export function Segmented<T extends string>(props: {
     if (option.id !== value) props.onChange(option.id);
   };
   return (
-    <div className="segmented" role="radiogroup" aria-label={Lz(props.label)}>
+    <div
+      className="segmented"
+      role="radiogroup"
+      aria-label={Lz(props.label)}
+      aria-describedby={props.describedBy}
+    >
       {options.map((o, i) => (
         <button
           key={o.id}

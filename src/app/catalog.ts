@@ -87,14 +87,27 @@ export const CATALOG: Record<Subject, ChapterEntry[]> = {
     chapter('crystals', ['crystalStructure']),
   ],
   biology: [
+    chapter('livingWorld', ['levelsOfLife']),
     chapter('cellChemistry', ['cellElements', 'biomolecules']),
-    chapter('cell', ['mitosis', 'meiosis']),
+    chapter('cell', ['mitosis', 'meiosis', 'cellTechnology']),
     chapter('molecular', ['centralDogma', 'pointMutation']),
     chapter('genetics', ['mendel', 'hardyWeinberg', 'geneticDrift']),
     chapter('ecology', ['logisticGrowth', 'lotkaVolterra']),
-    chapter('cellPhysiology', ['michaelisMenten', 'diffusionOsmosis']),
+    chapter('cellPhysiology', [
+      'michaelisMenten',
+      'diffusionOsmosis',
+      'cellSignalling',
+      'metabolismEnergy',
+      'breakdownSynthesis',
+    ]),
     chapter('cellStructure', ['cellStructure', 'cellToDna']),
-    chapter('microbesViruses', ['microbeGrowth', 'virusStructure']),
+    chapter('microbesViruses', [
+      'microbeDiversity',
+      'microbeGrowth',
+      'microbeApplications',
+      'virusStructure',
+      'virusDiseases',
+    ]),
   ],
 };
 

@@ -83,13 +83,23 @@ export function reportBlocks(input: ReportInput): ReportBlock[] {
       : tr('studio.report.noPrediction'),
   });
 
+  // A descriptive lesson (`guided`) has no simulation: its wording never says there is one.
+  const guided = scenario.binding.kind === 'guided';
+  const g = (key: MessageKey, own: MessageKey) => (guided ? own : key);
   const runs = engineEvidence(session);
-  const numeric = runs.length === 0 || runs.some((r) => r.quantities.length > 0);
+  const numeric = !guided && (runs.length === 0 || runs.some((r) => r.quantities.length > 0));
   blocks.push({
     kind: 'h2',
-    text: tr(numeric ? 'studio.report.engine' : 'studio.report.engineFacts'),
+    text: tr(
+      guided
+        ? 'studio.guided.report.engine'
+        : numeric
+          ? 'studio.report.engine'
+          : 'studio.report.engineFacts',
+    ),
   });
-  if (runs.length === 0) blocks.push({ kind: 'p', text: tr('studio.report.noEngine') });
+  const noEngine = g('studio.report.noEngine', 'studio.guided.report.noEngine');
+  if (runs.length === 0) blocks.push({ kind: 'p', text: tr(noEngine) });
   for (const run of runs) {
     const params = { model: run.model, title: L(run.title) };
     blocks.push({
@@ -97,7 +107,7 @@ export function reportBlocks(input: ReportInput): ReportBlock[] {
       text:
         run.quantities.length > 0
           ? tr('studio.report.engineNote', params)
-          : tr('studio.report.libraryNote', params),
+          : tr(g('studio.report.libraryNote', 'studio.guided.report.note'), params),
     });
     if (run.conditions.length > 0) {
       blocks.push({
@@ -155,17 +165,21 @@ export function reportBlocks(input: ReportInput): ReportBlock[] {
   if (v) {
     const items: string[] = [];
     const computed = computedLabel(v, locale);
-    if (computed) items.push(tr('studio.report.computed', { label: computed }));
+    if (computed) {
+      items.push(
+        tr(g('studio.report.computed', 'studio.guided.report.computed'), { label: computed }),
+      );
+    }
     items.push(
       v.match === null
-        ? tr('studio.report.verdictNone')
+        ? tr(g('studio.report.verdictNone', 'studio.guided.report.verdictNone'))
         : v.match
-          ? tr('studio.report.verdictMatch')
-          : tr('studio.report.verdictMiss'),
+          ? tr(g('studio.report.verdictMatch', 'studio.guided.report.verdictMatch'))
+          : tr(g('studio.report.verdictMiss', 'studio.guided.report.verdictMiss')),
     );
     blocks.push({ kind: 'list', items });
   } else {
-    blocks.push({ kind: 'p', text: tr('studio.report.noEngine') });
+    blocks.push({ kind: 'p', text: tr(noEngine) });
   }
   const conclusion = learnerText(session, 'conclusion').trim();
   blocks.push({ kind: 'p', text: tr('studio.report.yourConclusion') });
@@ -188,7 +202,10 @@ export function reportBlocks(input: ReportInput): ReportBlock[] {
   const pending = unverifiedItems(scenario, session);
   if (pending.length > 0) {
     blocks.push({ kind: 'h2', text: tr('studio.report.unverified') });
-    blocks.push({ kind: 'note', text: tr('studio.report.unverifiedNote') });
+    blocks.push({
+      kind: 'note',
+      text: tr(g('studio.report.unverifiedNote', 'studio.guided.report.unverifiedNote')),
+    });
     blocks.push({ kind: 'list', items: pending.map((item) => unverifiedLabel(item, locale)) });
   }
 

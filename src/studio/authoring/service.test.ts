@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { sh10b03Levels } from '../guided/lessons/sh10b03Levels';
 import type { StudioScenario } from '../scenario';
 import { physicsFreeFall } from '../scenarios/physicsFreeFall';
 import { createSession } from '../session';
@@ -52,6 +53,9 @@ describe('scenario ids and stored records', () => {
       migrateAuthored({ scenarios: [good, good, { ...good, id: 'x' }, physicsFreeFall, 42] }),
     ).toEqual({ scenarios: [good] });
     expect(migrateAuthored(null)).toEqual({ scenarios: [] });
+    // A built-in-only descriptive lesson under a teacher id (hand-edited storage) is dropped too.
+    const guided = { ...sh10b03Levels, id: 'teacher.biology.cap-do' };
+    expect(migrateAuthored({ scenarios: [guided, good] })).toEqual({ scenarios: [good] });
   });
 });
 

@@ -8,9 +8,11 @@ import { setTransportForTests, type LlmTransport } from '@/ai/transport';
 import { AiError } from '@/ai/types';
 import { BrowserSafety, setSafetyBackendForTests, type Incident } from '@/safety/safety';
 import { useChatStore } from '@/teacher/chat/chatStore';
+import { GUIDED_TOPICS } from '@/studio/guided/topics';
 import {
   analyze,
   cancelAnalyze,
+  isManualTopic,
   openManual,
   resolveAi,
   resolveAiForAnalysis,
@@ -163,6 +165,13 @@ describe('AI controller', () => {
     expect(s.mode).toBe('manual');
     expect(s.draft?.missing).toEqual([]);
     expect(Object.values(s.draft?.sources ?? {}).every((v) => v === 'default')).toBe(true);
+  });
+
+  it('manual mode never offers a guided textbook lesson: it has nothing to set up', () => {
+    for (const id of GUIDED_TOPICS) expect(isManualTopic(id), id).toBe(false);
+    expect(isManualTopic('mitosis')).toBe(true);
+    expect(isManualTopic('freeFall')).toBe(true);
+    expect(isManualTopic('nope')).toBe(false);
   });
 
   it('refuses when AI is off', async () => {
