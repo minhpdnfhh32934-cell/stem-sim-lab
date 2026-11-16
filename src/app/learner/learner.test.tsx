@@ -172,9 +172,10 @@ describe('library grade switch', () => {
         name: 'Chuyển động thẳng đều Bài 4–5, 7',
       }),
     ).toBeInTheDocument();
-    // "Có n chủ đề ở …" stays, counting that grade only: the periodic table is grade 10 chemistry.
+    // "Có n chủ đề ở …" stays, counting that grade only: the periodic table and the period 3
+    // oxides (Bài 7) are grade 10 chemistry, in the chapter "Bảng tuần hoàn …".
     fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'tuần hoàn' } });
-    await user.click(screen.getByRole('button', { name: 'Có 1 chủ đề ở Hóa học' }));
+    await user.click(screen.getByRole('button', { name: 'Có 2 chủ đề ở Hóa học' }));
     expect(useWorkspaceStore.getState().subject).toBe('chemistry');
     expect(screen.getByRole('button', { name: /^Bảng tuần hoàn Bài 5–6, 8/ })).toBeInTheDocument();
     act(() => {

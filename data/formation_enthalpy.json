@@ -1,0 +1,573 @@
+{
+ "dataset": "formation_enthalpy",
+ "version": 1,
+ "source": {
+  "id": "sgk-hh10-kntt-b17",
+  "citation": "SGK Hoá học 10, Kết nối tri thức với cuộc sống (NXB Giáo dục Việt Nam), Bài 17, Bảng 17.1 (tr. 85); sách dẫn nguồn Silberberg, Chemistry: the molecular nature of matter and change, McGraw-Hill 2018",
+  "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983"
+ },
+ "generated_by": "scripts/data/gen_enthalpy.py",
+ "accessed": "2026-11-15",
+ "references": {
+  "sgk": {
+   "id": "sgk-hh10-kntt-b17",
+   "citation": "SGK Hoá học 10, Kết nối tri thức với cuộc sống (NXB Giáo dục Việt Nam), Bài 17, Bảng 17.1 (tr. 85); sách dẫn nguồn Silberberg, Chemistry: the molecular nature of matter and change, McGraw-Hill 2018",
+   "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983"
+  },
+  "codata": {
+   "id": "codata-key-values",
+   "citation": "J. D. Cox, D. D. Wagman, V. A. Medvedev, CODATA Key Values for Thermodynamics, Hemisphere, New York 1984 (as listed in the NIST Chemistry WebBook, \"CODATA Review value\")",
+   "url": "https://webbook.nist.gov/chemistry/"
+  },
+  "janaf": {
+   "id": "nist-janaf",
+   "citation": "M. W. Chase Jr., NIST-JANAF Thermochemical Tables, 4th ed., J. Phys. Chem. Ref. Data, Monograph 9 (1998) (as listed in the NIST Chemistry WebBook)",
+   "url": "https://webbook.nist.gov/chemistry/"
+  },
+  "definition": {
+   "id": "dfh-definition",
+   "citation": "Nhiệt tạo thành chuẩn của các đơn chất ở dạng bền vững nhất bằng không (SGK Hoá học 10 KNTT, Bài 17, tr. 84)",
+   "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983"
+  }
+ },
+ "items": [
+  {
+   "formula": "AgCl",
+   "phase": "s",
+   "dfh_kj_mol": -127.0,
+   "decimals": 1,
+   "uncertainty_kj_mol": null,
+   "source": "sgk",
+   "page": 85,
+   "review_status": "pending"
+  },
+  {
+   "formula": "BaCl2",
+   "phase": "s",
+   "dfh_kj_mol": -806.1,
+   "decimals": 1,
+   "uncertainty_kj_mol": null,
+   "source": "sgk",
+   "page": 85,
+   "review_status": "pending"
+  },
+  {
+   "formula": "BaSO4",
+   "phase": "s",
+   "dfh_kj_mol": -1465.0,
+   "decimals": 1,
+   "uncertainty_kj_mol": null,
+   "source": "sgk",
+   "page": 85,
+   "review_status": "pending"
+  },
+  {
+   "formula": "CaCl2",
+   "phase": "s",
+   "dfh_kj_mol": -795.0,
+   "decimals": 1,
+   "uncertainty_kj_mol": null,
+   "source": "sgk",
+   "page": 85,
+   "review_status": "pending"
+  },
+  {
+   "formula": "CaCO3",
+   "phase": "s",
+   "dfh_kj_mol": -1206.9,
+   "decimals": 1,
+   "uncertainty_kj_mol": null,
+   "source": "sgk",
+   "page": 85,
+   "review_status": "pending"
+  },
+  {
+   "formula": "CaO",
+   "phase": "s",
+   "dfh_kj_mol": -635.1,
+   "decimals": 1,
+   "uncertainty_kj_mol": null,
+   "source": "sgk",
+   "page": 85,
+   "other": {
+    "dfh_kj_mol": -634.92,
+    "decimals": 2,
+    "uncertainty_kj_mol": 0.9,
+    "source": "codata",
+    "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C1305788&Mask=2"
+   },
+   "review_status": "pending"
+  },
+  {
+   "formula": "CH4",
+   "phase": "g",
+   "dfh_kj_mol": -74.9,
+   "decimals": 1,
+   "uncertainty_kj_mol": null,
+   "source": "sgk",
+   "page": 85,
+   "other": {
+    "dfh_kj_mol": -74.87,
+    "decimals": 2,
+    "uncertainty_kj_mol": null,
+    "source": "janaf",
+    "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C74828&Mask=1"
+   },
+   "review_status": "pending"
+  },
+  {
+   "formula": "C2H6",
+   "phase": "g",
+   "dfh_kj_mol": -84.7,
+   "decimals": 1,
+   "uncertainty_kj_mol": null,
+   "source": "sgk",
+   "page": 85,
+   "review_status": "pending"
+  },
+  {
+   "formula": "C2H2",
+   "phase": "g",
+   "dfh_kj_mol": 227.0,
+   "decimals": 1,
+   "uncertainty_kj_mol": null,
+   "source": "sgk",
+   "page": 85,
+   "review_status": "pending"
+  },
+  {
+   "formula": "CO",
+   "phase": "g",
+   "dfh_kj_mol": -110.5,
+   "decimals": 1,
+   "uncertainty_kj_mol": null,
+   "source": "sgk",
+   "page": 85,
+   "other": {
+    "dfh_kj_mol": -110.53,
+    "decimals": 2,
+    "uncertainty_kj_mol": 0.17,
+    "source": "codata",
+    "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C630080&Mask=1"
+   },
+   "review_status": "pending"
+  },
+  {
+   "formula": "CO2",
+   "phase": "g",
+   "dfh_kj_mol": -393.5,
+   "decimals": 1,
+   "uncertainty_kj_mol": null,
+   "source": "sgk",
+   "page": 85,
+   "other": {
+    "dfh_kj_mol": -393.51,
+    "decimals": 2,
+    "uncertainty_kj_mol": 0.13,
+    "source": "codata",
+    "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C124389&Mask=1"
+   },
+   "review_status": "pending"
+  },
+  {
+   "formula": "Ca(OH)2",
+   "phase": "s",
+   "dfh_kj_mol": -986.1,
+   "decimals": 1,
+   "uncertainty_kj_mol": null,
+   "source": "sgk",
+   "page": 85,
+   "review_status": "pending"
+  },
+  {
+   "formula": "HBr",
+   "phase": "g",
+   "dfh_kj_mol": -36.3,
+   "decimals": 1,
+   "uncertainty_kj_mol": null,
+   "source": "sgk",
+   "page": 85,
+   "other": {
+    "dfh_kj_mol": -36.29,
+    "decimals": 2,
+    "uncertainty_kj_mol": 0.16,
+    "source": "codata",
+    "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C10035106&Mask=1"
+   },
+   "review_status": "pending"
+  },
+  {
+   "formula": "HCl",
+   "phase": "g",
+   "dfh_kj_mol": -92.3,
+   "decimals": 1,
+   "uncertainty_kj_mol": null,
+   "source": "sgk",
+   "page": 85,
+   "other": {
+    "dfh_kj_mol": -92.31,
+    "decimals": 2,
+    "uncertainty_kj_mol": 0.1,
+    "source": "codata",
+    "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7647010&Mask=1"
+   },
+   "review_status": "pending"
+  },
+  {
+   "formula": "HI",
+   "phase": "g",
+   "dfh_kj_mol": 25.9,
+   "decimals": 1,
+   "uncertainty_kj_mol": null,
+   "source": "sgk",
+   "page": 85,
+   "other": {
+    "dfh_kj_mol": 26.5,
+    "decimals": 2,
+    "uncertainty_kj_mol": 0.1,
+    "source": "codata",
+    "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C10034852&Mask=1"
+   },
+   "review_status": "pending"
+  },
+  {
+   "formula": "H2O",
+   "phase": "l",
+   "dfh_kj_mol": -285.8,
+   "decimals": 1,
+   "uncertainty_kj_mol": null,
+   "source": "sgk",
+   "page": 85,
+   "other": {
+    "dfh_kj_mol": -285.83,
+    "decimals": 3,
+    "uncertainty_kj_mol": 0.04,
+    "source": "codata",
+    "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7732185&Mask=2"
+   },
+   "review_status": "pending"
+  },
+  {
+   "formula": "H2O",
+   "phase": "g",
+   "dfh_kj_mol": -241.8,
+   "decimals": 1,
+   "uncertainty_kj_mol": null,
+   "source": "sgk",
+   "page": 85,
+   "review_status": "pending"
+  },
+  {
+   "formula": "KCl",
+   "phase": "s",
+   "dfh_kj_mol": -436.7,
+   "decimals": 1,
+   "uncertainty_kj_mol": null,
+   "source": "sgk",
+   "page": 85,
+   "review_status": "pending"
+  },
+  {
+   "formula": "KOH",
+   "phase": "s",
+   "dfh_kj_mol": -424.8,
+   "decimals": 1,
+   "uncertainty_kj_mol": null,
+   "source": "sgk",
+   "page": 85,
+   "review_status": "pending"
+  },
+  {
+   "formula": "Fe2O3",
+   "phase": "s",
+   "dfh_kj_mol": -825.5,
+   "decimals": 1,
+   "uncertainty_kj_mol": null,
+   "source": "sgk",
+   "page": 85,
+   "other": {
+    "dfh_kj_mol": -825.5,
+    "decimals": 2,
+    "uncertainty_kj_mol": null,
+    "source": "janaf",
+    "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C1317608&Mask=2",
+    "form": "hematite"
+   },
+   "review_status": "pending"
+  },
+  {
+   "formula": "NaCl",
+   "phase": "s",
+   "dfh_kj_mol": -411.1,
+   "decimals": 1,
+   "uncertainty_kj_mol": null,
+   "source": "sgk",
+   "page": 85,
+   "review_status": "pending"
+  },
+  {
+   "formula": "NaOH",
+   "phase": "s",
+   "dfh_kj_mol": -425.6,
+   "decimals": 1,
+   "uncertainty_kj_mol": null,
+   "source": "sgk",
+   "page": 85,
+   "review_status": "pending"
+  },
+  {
+   "formula": "NH3",
+   "phase": "g",
+   "dfh_kj_mol": -45.9,
+   "decimals": 1,
+   "uncertainty_kj_mol": null,
+   "source": "sgk",
+   "page": 85,
+   "other": {
+    "dfh_kj_mol": -45.94,
+    "decimals": 2,
+    "uncertainty_kj_mol": 0.35,
+    "source": "codata",
+    "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7664417&Mask=1"
+   },
+   "review_status": "pending"
+  },
+  {
+   "formula": "O3",
+   "phase": "g",
+   "dfh_kj_mol": 143.0,
+   "decimals": 1,
+   "uncertainty_kj_mol": null,
+   "source": "sgk",
+   "page": 85,
+   "review_status": "pending"
+  },
+  {
+   "formula": "SO2",
+   "phase": "g",
+   "dfh_kj_mol": -296.8,
+   "decimals": 1,
+   "uncertainty_kj_mol": null,
+   "source": "sgk",
+   "page": 85,
+   "other": {
+    "dfh_kj_mol": -296.81,
+    "decimals": 2,
+    "uncertainty_kj_mol": 0.2,
+    "source": "codata",
+    "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7446095&Mask=1"
+   },
+   "review_status": "pending"
+  },
+  {
+   "formula": "SO3",
+   "phase": "l",
+   "dfh_kj_mol": -441.0,
+   "decimals": 1,
+   "uncertainty_kj_mol": null,
+   "source": "sgk",
+   "page": 85,
+   "review_status": "pending"
+  },
+  {
+   "formula": "NH4Cl",
+   "phase": "s",
+   "dfh_kj_mol": -314.55,
+   "decimals": 2,
+   "uncertainty_kj_mol": null,
+   "source": "janaf",
+   "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C12125029&Mask=2",
+   "review_status": "pending"
+  },
+  {
+   "formula": "Al2O3",
+   "phase": "s",
+   "dfh_kj_mol": -1675.7,
+   "decimals": 1,
+   "uncertainty_kj_mol": 1.3,
+   "source": "codata",
+   "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C1344281&Mask=2",
+   "form": "corundum",
+   "review_status": "pending"
+  },
+  {
+   "formula": "H",
+   "phase": "g",
+   "dfh_kj_mol": 217.998,
+   "decimals": 3,
+   "uncertainty_kj_mol": 0.006,
+   "source": "codata",
+   "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C12385136&Mask=1",
+   "review_status": "pending"
+  },
+  {
+   "formula": "F",
+   "phase": "g",
+   "dfh_kj_mol": 79.38,
+   "decimals": 2,
+   "uncertainty_kj_mol": 0.3,
+   "source": "codata",
+   "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C14762948&Mask=1",
+   "review_status": "pending"
+  },
+  {
+   "formula": "Cl",
+   "phase": "g",
+   "dfh_kj_mol": 121.301,
+   "decimals": 3,
+   "uncertainty_kj_mol": 0.008,
+   "source": "codata",
+   "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C22537151&Mask=1",
+   "review_status": "pending"
+  },
+  {
+   "formula": "Br",
+   "phase": "g",
+   "dfh_kj_mol": 111.87,
+   "decimals": 2,
+   "uncertainty_kj_mol": 0.12,
+   "source": "codata",
+   "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C10097322&Mask=1",
+   "review_status": "pending"
+  },
+  {
+   "formula": "I",
+   "phase": "g",
+   "dfh_kj_mol": 106.76,
+   "decimals": 2,
+   "uncertainty_kj_mol": 0.04,
+   "source": "codata",
+   "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C14362448&Mask=1",
+   "review_status": "pending"
+  },
+  {
+   "formula": "HF",
+   "phase": "g",
+   "dfh_kj_mol": -273.3,
+   "decimals": 2,
+   "uncertainty_kj_mol": 0.7,
+   "source": "codata",
+   "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7664393&Mask=1",
+   "review_status": "pending"
+  },
+  {
+   "formula": "H2",
+   "phase": "g",
+   "dfh_kj_mol": 0,
+   "decimals": 0,
+   "uncertainty_kj_mol": null,
+   "source": "definition",
+   "page": 84,
+   "review_status": "pending"
+  },
+  {
+   "formula": "O2",
+   "phase": "g",
+   "dfh_kj_mol": 0,
+   "decimals": 0,
+   "uncertainty_kj_mol": null,
+   "source": "definition",
+   "page": 84,
+   "review_status": "pending"
+  },
+  {
+   "formula": "N2",
+   "phase": "g",
+   "dfh_kj_mol": 0,
+   "decimals": 0,
+   "uncertainty_kj_mol": null,
+   "source": "definition",
+   "page": 84,
+   "review_status": "pending"
+  },
+  {
+   "formula": "Fe",
+   "phase": "s",
+   "dfh_kj_mol": 0,
+   "decimals": 0,
+   "uncertainty_kj_mol": null,
+   "source": "definition",
+   "page": 84,
+   "review_status": "pending"
+  },
+  {
+   "formula": "Al",
+   "phase": "s",
+   "dfh_kj_mol": 0,
+   "decimals": 0,
+   "uncertainty_kj_mol": null,
+   "source": "definition",
+   "page": 84,
+   "review_status": "pending"
+  }
+ ],
+ "reactions": [
+  {
+   "id": "h2-o2",
+   "phases": {
+    "H2": "g",
+    "O2": "g",
+    "H2O": "l"
+   }
+  },
+  {
+   "id": "ch4-combustion",
+   "phases": {
+    "CH4": "g",
+    "O2": "g",
+    "CO2": "g",
+    "H2O": "l"
+   }
+  },
+  {
+   "id": "caco3-decomp",
+   "phases": {
+    "CaCO3": "s",
+    "CaO": "s",
+    "CO2": "g"
+   }
+  },
+  {
+   "id": "nh4cl-decomp",
+   "phases": {
+    "NH4Cl": "s",
+    "NH3": "g",
+    "HCl": "g"
+   }
+  },
+  {
+   "id": "haber",
+   "phases": {
+    "N2": "g",
+    "H2": "g",
+    "NH3": "g"
+   }
+  },
+  {
+   "id": "contact",
+   "phases": {
+    "SO2": "g",
+    "O2": "g",
+    "SO3": "l"
+   }
+  },
+  {
+   "id": "fe2o3-co",
+   "phases": {
+    "Fe2O3": "s",
+    "CO": "g",
+    "Fe": "s",
+    "CO2": "g"
+   }
+  },
+  {
+   "id": "thermite",
+   "phases": {
+    "Al": "s",
+    "Fe2O3": "s",
+    "Al2O3": "s",
+    "Fe": "s"
+   }
+  }
+ ]
+}

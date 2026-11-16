@@ -194,10 +194,11 @@ describe('"Kệ bài": marks, grade views and searches without a dead end (B8)',
     expect(card('Chuyển động thẳng đều')).toHaveAccessibleDescription(
       /Bài 4–5, 7 · chờ giáo viên duyệt/,
     );
-    // Found only in another subject: a way there (the periodic table is grade 10 chemistry).
+    // Found only in another subject: a way there (the periodic table and the period 3 oxides of
+    // Bài 7 are grade 10 chemistry, in the chapter "Bảng tuần hoàn …").
     const search = screen.getByRole('searchbox', { name: 'Tìm chủ đề…' });
     fireEvent.change(search, { target: { value: 'tuần hoàn' } });
-    fireEvent.click(screen.getByRole('button', { name: 'Có 1 chủ đề ở Hóa học' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Có 2 chủ đề ở Hóa học' }));
     expect(useWorkspaceStore.getState().subject).toBe('chemistry');
     expect(card('Bảng tuần hoàn')).toHaveAccessibleDescription(/Bài 5–6, 8/);
     // Unplaced topics are only under "Tất cả"; the search looks in the view shown.

@@ -21,6 +21,8 @@ const PX_OK: Record<string, string> = {
     'SVG units, 14px on screen (svg-text.spec.ts)',
   'src/chemistry/chem.css .eq-energy__text': 'SVG units, 13.1px on screen (svg-text.spec.ts)',
   'src/chemistry/chem.css .tit-label': 'SVG units, 12.7px on screen (svg-text.spec.ts)',
+  'src/chemistry/thermo/thermo.css .dh-text':
+    'SVG units (viewBox 320 wide, drawn up to 420px): about 15.8px on screen',
   'src/app/ai/ai.css .guide-art__text':
     'SVG units, ≥ 12px on screen down to 0.8 scale (svg-text.spec.ts)',
 };
