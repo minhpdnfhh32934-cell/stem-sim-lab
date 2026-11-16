@@ -24,8 +24,6 @@ import { applyAutoDefaults } from '@/physics/autoDefaults';
 import { CATALOG } from '@/app/catalog';
 import { SUBJECTS } from '@/app/workspaceStore';
 import { useModuleStore, closeModule } from '@/modules/moduleStore';
-import { hasModule } from '@/modules/registry';
-import { hasScene } from '@/physics/registry';
 import type { ParamDef, ParamSource, Params, PhysicsScene } from '@/physics/types';
 import { Equation } from '@/science-card/Equation';
 import { IconButton } from '@/ui/IconButton';
@@ -37,6 +35,7 @@ import {
   analyze,
   closeAnalyze,
   confirmDraft,
+  isManualTopic,
   openManual,
   useAnalyzeStore,
   type AnalyzeErrorCode,
@@ -120,7 +119,7 @@ function TopicSelect({ value }: { value: string }) {
           <optgroup key={subject} label={t(`subjects.${subject}`)}>
             {CATALOG[subject].flatMap((chapter) =>
               chapter.topics
-                .filter((topic) => hasScene(topic.id) || hasModule(topic.id))
+                .filter((topic) => isManualTopic(topic.id))
                 .map((topic) => (
                   <option key={topic.id} value={topic.id}>
                     {t(topic.titleKey)}

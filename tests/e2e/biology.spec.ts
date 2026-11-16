@@ -31,6 +31,15 @@ const TOPICS = [
   'Các phân tử sinh học',
   'Sinh trưởng của quần thể vi khuẩn',
   'Khái quát về virus',
+  // SH10 descriptive lessons (#255 round 1h): guided lessons, no 3D view.
+  'Các cấp độ tổ chức của thế giới sống',
+  'Truyền tin tế bào',
+  'Chuyển hoá vật chất và năng lượng',
+  'Phân giải và tổng hợp các chất trong tế bào',
+  'Công nghệ tế bào',
+  'Đa dạng và phương pháp nghiên cứu vi sinh vật',
+  'Vai trò và ứng dụng của vi sinh vật',
+  'Bệnh do virus và ứng dụng virus',
 ];
 
 async function openBiology(page: Page) {
@@ -39,7 +48,7 @@ async function openBiology(page: Page) {
 }
 
 test('every biology topic opens without errors and publishes a Science Card', async ({ page }) => {
-  // Seventeen topics, fourteen of them opening a 3D view in software: ~15 s on a fast CI runner, but a slow
+  // Twenty-five topics (fourteen open a 3D view in software, eight are guided lessons): ~15 s on a fast CI runner, but a slow
   // one took 6-8 s per topic and ran out of the 60 s default after eight (2026-10-23, eastus).
   test.setTimeout(180_000);
   const errors: string[] = [];
@@ -191,13 +200,14 @@ test('cell structure: a part opens its card; targets >= 40 px, no horizontal scr
   await expect(card).toContainText('quang hợp');
   // The plant has the longest list; the cell switch and "Hiện tên" (in the 3D view's corner
   // since the cell has a 3D view, over the 2D picture otherwise) are targets too.
-  const sizes = await page
-    .locator(
-      '.cell-parts .segmented__item, .cell-parts .m3d-parts__item, button[aria-label="Hiện tên các bộ phận"]',
-    )
-    .evaluateAll((els) =>
-      els.map((e) => Math.min(e.getBoundingClientRect().width, e.getBoundingClientRect().height)),
-    );
+  // The 3D view adds its 'Hiện tên' button once it has loaded: wait for every target first.
+  const targets = page.locator(
+    '.cell-parts .segmented__item, .cell-parts .m3d-parts__item, button[aria-label="Hiện tên các bộ phận"]',
+  );
+  await expect(targets).toHaveCount(3 + 12 + 1, { timeout: 20_000 });
+  const sizes = await targets.evaluateAll((els) =>
+    els.map((e) => Math.min(e.getBoundingClientRect().width, e.getBoundingClientRect().height)),
+  );
   expect(sizes.length).toBe(3 + 12 + 1);
   expect(sizes.filter((s) => s < 40)).toEqual([]);
   // The bacterium has no chloroplast: its card closes and its list shows the nucleoid.

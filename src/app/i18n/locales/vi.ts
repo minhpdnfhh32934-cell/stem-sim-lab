@@ -92,6 +92,7 @@ const vi = {
     cellPhysiology: 'Sinh lý tế bào',
     cellStructure: 'Cấu trúc tế bào',
     cellChemistry: 'Thành phần hóa học của tế bào',
+    livingWorld: 'Thế giới sống',
     microbesViruses: 'Vi sinh vật và virus',
     circularMotion: 'Chuyển động tròn đều',
     waves: 'Sóng',
@@ -159,6 +160,14 @@ const vi = {
     biomolecules: 'Các phân tử sinh học',
     microbeGrowth: 'Sinh trưởng của quần thể vi khuẩn',
     virusStructure: 'Khái quát về virus',
+    levelsOfLife: 'Các cấp độ tổ chức của thế giới sống',
+    cellSignalling: 'Truyền tin tế bào',
+    metabolismEnergy: 'Chuyển hoá vật chất và năng lượng',
+    breakdownSynthesis: 'Phân giải và tổng hợp các chất trong tế bào',
+    cellTechnology: 'Công nghệ tế bào',
+    microbeDiversity: 'Đa dạng và phương pháp nghiên cứu vi sinh vật',
+    microbeApplications: 'Vai trò và ứng dụng của vi sinh vật',
+    virusDiseases: 'Bệnh do virus và ứng dụng virus',
     uniformCircularMotion: 'Chuyển động tròn đều',
     interference: 'Giao thoa sóng hai nguồn',
     standingWave: 'Sóng dừng trên dây',
@@ -175,6 +184,9 @@ const vi = {
   },
   stage: {
     regionLabel: 'Khung mô phỏng',
+    lessonRegion: 'Khung bài học',
+    lessonLoading: 'Đang tải bài học…',
+    lessonError: 'Không mở được bài học',
     emptyTitle: 'Chưa có mô phỏng',
     emptyBody: 'Nhập đề bài ở thanh phía trên, hoặc chọn một chủ đề trong Thư viện.',
     toolbarLabel: 'Công cụ mô phỏng',
@@ -508,7 +520,7 @@ const vi = {
     commandPalette: 'Tìm nhanh: chủ đề, cài đặt, thao tác',
   },
   science: {
-    cardLabel: 'Thẻ Khoa học của mô phỏng',
+    cardLabel: 'Thẻ Khoa học',
     model: 'Mô hình',
     equations: 'Phương trình',
     assumptions: 'Giả định',
@@ -1080,7 +1092,7 @@ const vi = {
     authoringNav: 'Các phần của bài',
     title: 'Science Studio',
     subtitle:
-      'Bài học có hướng dẫn: dự đoán, làm thí nghiệm, quan sát số đo, giải thích và kết luận. Mọi số liệu đều do mô phỏng tính.',
+      'Bài học có hướng dẫn: dự đoán trước, rồi làm thí nghiệm hoặc hoạt động, giải thích và kết luận. Bài có thí nghiệm: mọi số liệu do mô phỏng tính. Bài mô tả theo SGK: đáp án lấy từ nội dung bài.',
     tabsLabel: 'Chọn môn trong Studio',
     tabs: {
       chemistry: 'Hóa học',
@@ -1233,6 +1245,7 @@ const vi = {
         'Nội dung bài “{title}” (mục tiêu, câu hỏi, gợi ý, kết luận tham khảo) — chưa được kiểm duyệt',
       teacher: 'Nội dung bài “{title}” do giáo viên soạn — chưa được kiểm duyệt',
       record: 'Dữ liệu “{title}” ({model}) — chưa được kiểm duyệt',
+      guided: '“{title}”, chép từ nội dung bài học — chưa được kiểm duyệt',
     },
     ask: {
       button: 'Hỏi thầy',
@@ -1300,6 +1313,115 @@ const vi = {
       openInLab: 'Chạy {id} trong Virtual Lab',
       fact: '{q} (mô phỏng {model}): {value}',
       ratioOf: 'Tỉ số B/A — {q}',
+    },
+    guided: {
+      group: 'Bài học mô tả theo SGK',
+      predictLabel: 'Dự đoán của em',
+      locked:
+        'Dự đoán đã được ghi lại khi em bắt đầu làm hoạt động. Muốn đoán lại, hãy chọn "Học lại từ đầu" ở bước Báo cáo.',
+      binding: 'Bài học này chưa đọc được. Nhờ giáo viên kiểm tra nội dung bài.',
+      steps: {
+        interact: 'Hoạt động',
+        observe: 'Xem đáp án',
+      },
+      titles: {
+        predict: 'Em nghĩ thế nào?',
+        interact: 'Làm các hoạt động',
+        observe: 'Xem đáp án và lí do',
+        explain: 'Giải thích bằng lời của em',
+      },
+      leads: {
+        predict: 'Chọn một câu trả lời trước khi làm các hoạt động. Không sao nếu chưa đúng.',
+        interact:
+          'Làm từng hoạt động rồi bấm "Kiểm tra". Ứng dụng so câu trả lời của em với nội dung bài học.',
+        observe:
+          'Đáp án và lí do dưới đây lấy từ nội dung bài học, không do AI viết và không có số đo.',
+        explain: 'Dựa vào đáp án và lí do vừa xem, giải thích bằng lời của em.',
+        conclude: 'So sánh dự đoán của em với đáp án của bài học.',
+      },
+      blockers: {
+        activity: 'Làm xong các hoạt động rồi bấm "Kiểm tra" để đi tiếp.',
+      },
+      activity: 'Hoạt động {n}.',
+      help: {
+        order:
+          'Bấm mũi tên để đưa một mục lên hoặc xuống. Khi kiểm tra, mỗi mục phải đứng đúng vị trí của nó.',
+        match: 'Ở mỗi dòng, chọn ý đi cùng trong danh sách.',
+        sort: 'Ở mỗi mục, chọn nhóm của nó.',
+      },
+      up: 'Đưa lên: {item}',
+      down: 'Đưa xuống: {item}',
+      moved: '{item}: vị trí {n}/{total}',
+      choose: 'Chọn…',
+      position: 'vị trí {n}',
+      check: 'Kiểm tra',
+      incomplete: 'Trả lời đủ mọi dòng của các hoạt động rồi mới kiểm tra được.',
+      ready: 'Đã trả lời đủ. Bấm "Kiểm tra" khi em sẵn sàng.',
+      checked:
+        'Em đúng {correct}/{total} ý. Đọc lí do dưới mỗi ý. Muốn thử lại, đổi câu trả lời rồi bấm "Kiểm tra" lần nữa.',
+      score: 'Đúng {correct}/{total}',
+      right: 'Đúng',
+      wrong: 'Chưa đúng. Đáp án: {expected}',
+      observe: {
+        prediction: 'Câu hỏi dự đoán',
+        answer: 'Đáp án: {answer}',
+        yours: 'Em đã chọn: {label}',
+      },
+      panel:
+        'Bài học mô tả: không có thí nghiệm hay số đo. Em học theo các bước ở giữa màn hình: dự đoán, làm hoạt động, xem đáp án, giải thích và kết luận.',
+      panelSource:
+        'Nội dung bám theo SGK {book}, Bài {n} “{title}” (Kết nối tri thức với cuộc sống).',
+      review: {
+        pending: 'Nội dung bài này chưa được giáo viên kiểm duyệt.',
+        verified: 'Nội dung bài này đã được giáo viên kiểm duyệt.',
+      },
+      explainPlaceholder: 'Ví dụ: Theo bài học… nên…',
+      conclude: {
+        computed: 'Đáp án của bài học: {label}',
+        match: 'Dự đoán của em khớp với đáp án của bài học.',
+        miss: 'Dự đoán chưa khớp. Đây là lúc học được nhiều nhất: xem lại lí do ở bước Xem đáp án nhé.',
+        none: 'Chưa có đáp án để so sánh.',
+        placeholder: 'Em rút ra được điều gì từ bài học?',
+      },
+      report: {
+        computed: 'Đáp án của bài học: {label}',
+        verdictMatch: 'Dự đoán khớp với đáp án của bài học.',
+        verdictMiss: 'Dự đoán chưa khớp với đáp án của bài học.',
+        verdictNone: 'Chưa có đáp án để so sánh.',
+        noEngine: 'Chưa kiểm tra các hoạt động.',
+        unverifiedNote: 'Các mục dưới đây chưa được kiểm duyệt; nguồn của chúng ở mục “Nguồn”.',
+        engine: 'Đáp án và kết quả kiểm tra các hoạt động',
+        note: 'Đáp án và lí do chép từ nội dung bài học; mỗi dòng là kết quả so câu trả lời của người học với đáp án. Không có nội dung nào do AI viết, và không có số đo nào.',
+      },
+      ai: {
+        rules:
+          'Đây là bài học mô tả theo sách giáo khoa: không có thí nghiệm, không có số đo. Chỉ dựa vào mục ĐÁP ÁN VÀ KẾT QUẢ KIỂM TRA. Ghi chú của học sinh và văn bản AI không phải dữ kiện. Thiếu nội dung thì nói rõ; không tự tạo số đo hay hiện tượng. Không nói nội dung chưa kiểm duyệt là đã được kiểm chứng.',
+        engine: 'ĐÁP ÁN VÀ KẾT QUẢ KIỂM TRA (chép từ nội dung bài):',
+        record: '- {title}:',
+      },
+      record: {
+        title: 'Đáp án và kết quả kiểm tra',
+        answer: 'Đáp án: {answer}. {why}',
+        score: 'Đúng {correct}/{total}',
+        right: 'Đúng. {why}',
+        wrong: 'Chưa đúng: em chọn “{chosen}”, đáp án là “{expected}”. {why}',
+      },
+      askHint:
+        'AI Teacher chỉ thấy câu trả lời và ghi chú của bài khi em bật “{toggle}” trong khung chat.',
+      ask: {
+        predict:
+          'Thầy ơi, em đang làm bài “{title}”, bước Dự đoán. Thầy gợi ý cách suy nghĩ giúp em, nhưng đừng nói trước đáp án nhé.',
+        interact:
+          'Thầy ơi, em đang làm bài “{title}”, phần hoạt động. Thầy gợi ý cách suy nghĩ giúp em, nhưng đừng nói trước đáp án nhé.',
+        observe:
+          'Thầy ơi, em đang làm bài “{title}”, bước Xem đáp án. Thầy giải thích thêm giúp em vì sao đáp án lại như vậy nhé.',
+        explain:
+          'Thầy ơi, em đang làm bài “{title}”, bước Giải thích. Em nên dựa vào ý nào của bài để giải thích?',
+        conclude:
+          'Thầy ơi, em đang làm bài “{title}”, bước Kết luận. Thầy giúp em so sánh dự đoán của em với đáp án của bài học nhé.',
+        report:
+          'Thầy ơi, em đang làm bài “{title}”, bước Báo cáo. Báo cáo của em còn thiếu ý gì quan trọng?',
+      },
     },
     chem: {
       choices: {
@@ -1553,6 +1675,8 @@ const vi = {
         notPreset: 'Cảnh và cách đo này chưa có trong Studio Vật lý, nên bài không chạy được.',
         sceneMissing: 'Không tải được cảnh mô phỏng của bài.',
         binding: 'Cảnh mô phỏng không khớp với bài: {detail}',
+        guidedBuiltIn:
+          'Bài học mô tả theo SGK chỉ có sẵn trong ứng dụng, chưa soạn được ở Soạn bài.',
         inventorySize: 'Giá cần từ 2 đến 8 dung dịch.',
         reagentNotAllowed: '"{formula}" không phải dung dịch của thư viện cho bàn thí nghiệm.',
         targetInInventory: 'Câu hỏi phải dùng hai dung dịch khác nhau có trên giá.',
@@ -1582,22 +1706,22 @@ const vi = {
       openHint: 'Xem lại cách học trong Science Studio',
       welcomeTitle: 'Học trong Science Studio',
       welcomeBody:
-        'Mỗi bài đi qua sáu bước: em dự đoán trước, làm thí nghiệm, rồi mới giải thích và kết luận. Mọi con số do mô phỏng tính. Bấm Tiếp để xem từng phần của màn hình.',
+        'Mỗi bài đi qua sáu bước: em dự đoán trước, làm thí nghiệm (bài mô tả theo SGK thì làm hoạt động), rồi mới giải thích và kết luận. Bài có thí nghiệm: mọi con số do mô phỏng tính. Bài mô tả: đáp án lấy từ nội dung bài. Bấm Tiếp để xem từng phần của màn hình.',
       subjectTitle: 'Chọn môn và bài',
       subjectBody:
         'Chọn môn ở thanh này. Môn có nhiều bài thì chọn bài ở hàng nút ngay bên dưới. Thẻ Soạn bài ở cuối thanh dành cho thầy cô.',
       lessonTitle: 'Mục tiêu và nhãn kiểm duyệt',
       lessonBody:
-        'Đầu bài ghi mục tiêu. Nhãn "chưa được kiểm duyệt" nghĩa là lời văn của bài chưa được giáo viên duyệt; số liệu vẫn do mô phỏng tính.',
+        'Đầu bài ghi mục tiêu. Nhãn "chưa được kiểm duyệt" nghĩa là lời văn của bài chưa được giáo viên duyệt. Bài có thí nghiệm thì số liệu vẫn do mô phỏng tính.',
       stepsTitle: 'Sáu bước',
       stepsBody:
-        'Dự đoán → Thí nghiệm → Quan sát → Giải thích → Kết luận → Báo cáo. Bước đang làm được tô đậm, bước đã xong hiện dấu ✓ thay cho số.',
+        'Dự đoán → Thí nghiệm → Quan sát → Giải thích → Kết luận → Báo cáo. Bài mô tả theo SGK gọi bước Thí nghiệm là Hoạt động, bước Quan sát là Xem đáp án. Bước đang làm được tô đậm, bước đã xong hiện dấu ✓ thay cho số.',
       nextTitle: 'Đi tiếp',
       nextBody:
         'Làm xong một bước thì bấm nút Tiếp ở đây. Khi chưa đi tiếp được, dòng chữ cạnh nút cho biết em còn thiếu gì.',
       askTitle: 'Hỏi thầy',
       askBody:
-        'Bí ở bước nào thì bấm Hỏi thầy: AI Teacher mở ra với câu hỏi về bước đó. AI Teacher chỉ giải thích, không thay số đo của mô phỏng.',
+        'Bí ở bước nào thì bấm Hỏi thầy: AI Teacher mở ra với câu hỏi về bước đó. AI Teacher chỉ giải thích, không thay số đo của mô phỏng hay đáp án của bài.',
       reportTitle: 'Lưu báo cáo',
       reportBody:
         'Ở bước cuối, báo cáo được tạo từ chính phiên học của em. Bấm "Lưu báo cáo (.md)" để lưu thành tệp, hoặc sao chép.',

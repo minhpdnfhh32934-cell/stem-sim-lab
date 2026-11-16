@@ -519,6 +519,14 @@ PLACEMENTS = [
     ("biomolecules", "SH10", [5], "Tên Bài 5: các phân tử sinh học (bốn nhóm carbohydrate, lipid, protein, nucleic acid; đơn phân; mỗi nhóm một phân tử 3D lấy từ PubChem)."),
     ("microbeGrowth", "SH10", [21], "Tên Bài 21: trao đổi chất, sinh trưởng và sinh sản ở vi sinh vật. Chỉ phần II sinh trưởng của quần thể vi khuẩn (Nₜ = N₀ × 2ⁿ, bốn pha nuôi cấy không liên tục); chưa có phần trao đổi chất và sinh sản."),
     ("virusStructure", "SH10", [24], "Tên Bài 24: khái quát về virus (cấu tạo: lõi nucleic acid, vỏ capsid, vỏ ngoài; năm giai đoạn nhân lên)."),
+    ("levelsOfLife", "SH10", [3], "Tên Bài 3: các cấp độ tổ chức của thế giới sống (bài học có hướng dẫn: dự đoán, xếp thứ tự, ghép đôi; không có mô phỏng)."),
+    ("cellSignalling", "SH10", [12], "Tên Bài 12: truyền tin tế bào (bài học có hướng dẫn: dự đoán, xếp thứ tự, ghép đôi; không có mô phỏng)."),
+    ("metabolismEnergy", "SH10", [13], "Tên Bài 13: khái quát về chuyển hoá vật chất và năng lượng (bài học có hướng dẫn: dự đoán, phân loại, xếp thứ tự; không có mô phỏng)."),
+    ("breakdownSynthesis", "SH10", [14], "Tên Bài 14: phân giải và tổng hợp các chất trong tế bào (bài học có hướng dẫn: dự đoán, ghép đôi, phân loại; không có mô phỏng)."),
+    ("cellTechnology", "SH10", [19], "Tên Bài 19: công nghệ tế bào (bài học có hướng dẫn: dự đoán, xếp thứ tự, ghép đôi; không có mô phỏng)."),
+    ("microbeDiversity", "SH10", [20], "Tên Bài 20: sự đa dạng và phương pháp nghiên cứu vi sinh vật (bài học có hướng dẫn: dự đoán, phân loại, ghép đôi; không có mô phỏng)."),
+    ("microbeApplications", "SH10", [22], "Tên Bài 22: vai trò và ứng dụng của vi sinh vật (bài học có hướng dẫn: dự đoán, ghép đôi, phân loại; không có mô phỏng)."),
+    ("virusDiseases", "SH10", [25], "Tên Bài 25: một số bệnh do virus và các thành tựu nghiên cứu ứng dụng virus (bài học có hướng dẫn: dự đoán, ghép đôi, phân loại; không có mô phỏng)."),
 ]
 
 # Not placed (title not clear, or no lesson): (topic, subject, candidates, reason).

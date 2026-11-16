@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { LocalizedTextSchema, ReviewStatusSchema, SourceSchema } from '@/core/data/dataset';
+import { GuidedBindingSchema, guidedProblems } from './guided/schema';
 
 /**
  * Science Studio scenario: one guided lesson shared by every subject. The subject-specific part
@@ -97,10 +98,14 @@ const BiologyBindingSchema = z.object({
 });
 export type BiologyBinding = z.infer<typeof BiologyBindingSchema>;
 
+export type { GuidedBinding } from './guided/schema';
+
 export const ScenarioBindingSchema = z.discriminatedUnion('kind', [
   PhysicsBindingSchema,
   ChemistryBindingSchema,
   BiologyBindingSchema,
+  /** A descriptive textbook lesson (`src/studio/guided/`): any subject, no engine. */
+  GuidedBindingSchema,
 ]);
 export type ScenarioBinding = z.infer<typeof ScenarioBindingSchema>;
 
@@ -147,7 +152,7 @@ export const ScenarioSchema = z
     binding: ScenarioBindingSchema,
   })
   .superRefine((s, ctx) => {
-    if (s.binding.kind !== s.subject) {
+    if (s.binding.kind !== s.subject && s.binding.kind !== 'guided') {
       ctx.addIssue({ code: 'custom', path: ['binding', 'kind'], message: 'binding ≠ subject' });
     }
     // Steps keep the POE order (a scenario may skip steps but never reorder them).
@@ -182,7 +187,7 @@ export const ScenarioSchema = z
       if (new Set(b.parts).size !== b.parts.length) {
         ctx.addIssue({ code: 'custom', path: ['binding', 'parts'], message: 'duplicate' });
       }
-    } else {
+    } else if (b.kind === 'chemistry') {
       if (new Set(b.inventory).size !== b.inventory.length) {
         ctx.addIssue({ code: 'custom', path: ['binding', 'inventory'], message: 'duplicate' });
       }
@@ -192,6 +197,10 @@ export const ScenarioSchema = z
           path: ['binding', 'target'],
           message: 'target must be two different inventory solutions',
         });
+      }
+    } else {
+      for (const message of guidedProblems(b)) {
+        ctx.addIssue({ code: 'custom', path: ['binding'], message });
       }
     }
   });

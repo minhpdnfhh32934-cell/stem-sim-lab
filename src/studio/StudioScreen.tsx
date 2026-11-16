@@ -22,13 +22,14 @@ import { chemistryPlugin } from './chemistry/plugin';
 import { PoeFlow } from './flow/PoeFlow';
 import type { SubjectPlugin } from './flow/types';
 import { physicsPlugin } from './physics/plugin';
-import { ReviewNote } from './ReviewNote';
-import type { StudioScenario, StudioSubject } from './scenario';
+import { guidedFor } from './guided/lessons';
+import { guidedPlugin } from './guided/plugin';
+import { ScenarioHeader } from './ScenarioHeader';
+import type { StudioSubject } from './scenario';
 import { scenariosFor } from './scenarios';
 import { STUDIO_TABS, type StudioTab } from './session';
 import { StudioGuide } from './StudioGuide';
 import { useStudioStore } from './studioStore';
-import { TeacherNote } from './TeacherNote';
 import './studio.css';
 
 /** Subjects with a working studio slice; the others say so instead of showing placeholders. */
@@ -57,42 +58,43 @@ function Preparing({ tab }: { tab: StudioSubject }) {
   );
 }
 
-function ScenarioHeader({ scenario }: { scenario: StudioScenario }) {
-  const t = useT();
-  const L = useLocalized();
-  return (
-    <header className="studio-scenario">
-      <h2>{L(scenario.title)}</h2>
-      <p className="muted small">
-        {t(`levels.${scenario.level}`)} · {t(`studio.difficulty.${scenario.difficulty}`)}
-      </p>
-      <ul className="studio-objectives">
-        {scenario.objectives.map((o) => (
-          <li key={o.vi}>{L(o)}</li>
-        ))}
-      </ul>
-      <TeacherNote scenario={scenario} />
-      <ReviewNote status={scenario.review_status} />
-    </header>
-  );
-}
-
 function SubjectPane({ subject }: { subject: StudioSubject }) {
   const t = useT();
   const L = useLocalized();
   const authored = useAuthoredFor(subject);
   const scenarios = useMemo(() => [...scenariosFor(subject), ...authored], [subject, authored]);
-  const plugin = PLUGINS[subject];
+  // Descriptive textbook lessons (src/studio/guided/): their own group, their own plugin.
+  const guided = useMemo(() => guidedFor(subject), [subject]);
   const picked = useStudioStore((s) => s.picked[subject]);
   const openScenario = useStudioStore((s) => s.openScenario);
-  if (!plugin || scenarios.length === 0) return <Preparing tab={subject} />;
-  const scenario = scenarios.find((s) => s.id === picked) ?? scenarios[0];
+  const own = PLUGINS[subject];
+  if (!own || scenarios.length === 0) return <Preparing tab={subject} />;
+  const scenario = [...scenarios, ...guided].find((s) => s.id === picked) ?? scenarios[0];
   if (!scenario) return <Preparing tab={subject} />;
+  const plugin = scenario.binding.kind === 'guided' ? guidedPlugin : own;
   return (
     <div className="studio-pane">
-      {scenarios.length > 1 && (
+      {(scenarios.length > 1 || guided.length > 0) && (
         <div className="studio-picker" role="group" aria-label={t('studio.pick')}>
           {scenarios.map((s) => (
+            <button
+              key={s.id}
+              type="button"
+              className="btn btn--ghost"
+              aria-pressed={s.id === scenario.id}
+              onClick={() => {
+                openScenario(subject, s.id);
+              }}
+            >
+              {L(s.title)}
+            </button>
+          ))}
+        </div>
+      )}
+      {guided.length > 0 && (
+        <div className="studio-picker" role="group" aria-label={t('studio.guided.group')}>
+          <span className="studio-picker__label muted small">{t('studio.guided.group')}</span>
+          {guided.map((s) => (
             <button
               key={s.id}
               type="button"

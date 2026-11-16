@@ -89,6 +89,7 @@ const en: Messages = {
     cellPhysiology: 'Cell physiology',
     cellStructure: 'Cell structure',
     cellChemistry: 'Chemical composition of the cell',
+    livingWorld: 'The living world',
     microbesViruses: 'Microorganisms and viruses',
     circularMotion: 'Uniform circular motion',
     waves: 'Waves',
@@ -156,6 +157,14 @@ const en: Messages = {
     biomolecules: 'Biological molecules',
     microbeGrowth: 'Growth of a bacterial population',
     virusStructure: 'Viruses: an overview',
+    levelsOfLife: 'Levels of organisation of the living world',
+    cellSignalling: 'Cell signalling',
+    metabolismEnergy: 'Metabolism of matter and energy',
+    breakdownSynthesis: 'Breakdown and synthesis in the cell',
+    cellTechnology: 'Cell technology',
+    microbeDiversity: 'Microbial diversity and research methods',
+    microbeApplications: 'Roles and uses of microorganisms',
+    virusDiseases: 'Virus diseases and uses of viruses',
     uniformCircularMotion: 'Uniform circular motion',
     interference: 'Two-source interference',
     standingWave: 'Standing waves on a string',
@@ -172,6 +181,9 @@ const en: Messages = {
   },
   stage: {
     regionLabel: 'Simulation stage',
+    lessonRegion: 'Lesson area',
+    lessonLoading: 'Loading the lesson…',
+    lessonError: 'Could not open the lesson',
     emptyTitle: 'No simulation yet',
     emptyBody: 'Type a problem in the bar above, or pick a topic from the Library.',
     toolbarLabel: 'Simulation tools',
@@ -508,7 +520,7 @@ const en: Messages = {
     commandPalette: 'Quick search: topics, Settings, actions',
   },
   science: {
-    cardLabel: 'Science Card of the simulation',
+    cardLabel: 'Science Card',
     model: 'Model',
     equations: 'Equations',
     assumptions: 'Assumptions',
@@ -1086,7 +1098,7 @@ const en: Messages = {
     authoringNav: 'Parts of the lesson',
     title: 'Science Studio',
     subtitle:
-      'Guided lessons: predict, experiment, observe measurements, explain and conclude. Every number is computed by the simulation.',
+      'Guided lessons: predict first, then run the experiment or do the activities, explain and conclude. In an experiment every number is computed by the simulation. In a descriptive textbook lesson the answers come from the lesson itself.',
     tabsLabel: 'Choose a Studio subject',
     tabs: {
       chemistry: 'Chemistry',
@@ -1241,6 +1253,7 @@ const en: Messages = {
         'Lesson text of “{title}” (objectives, questions, hints, reference conclusion) — not yet reviewed',
       teacher: 'Lesson text of “{title}”, written by a teacher — not yet reviewed',
       record: 'Data “{title}” ({model}) — not yet reviewed',
+      guided: '“{title}”, copied from the lesson — not yet reviewed',
     },
     ask: {
       button: 'Ask the teacher',
@@ -1310,6 +1323,116 @@ const en: Messages = {
       openInLab: 'Run {id} in Virtual Lab',
       fact: '{q} (simulation {model}): {value}',
       ratioOf: 'B/A ratio — {q}',
+    },
+    guided: {
+      group: 'Descriptive lessons from the textbook',
+      predictLabel: 'Your prediction',
+      locked:
+        'Your prediction was saved when you started the activities. To predict again, choose "Start over" in the Report step.',
+      binding: 'This lesson could not be read. Ask your teacher to check its content.',
+      steps: {
+        interact: 'Activities',
+        observe: 'Answers',
+      },
+      titles: {
+        predict: 'What do you think?',
+        interact: 'Do the activities',
+        observe: 'Answers and reasons',
+        explain: 'Explain in your own words',
+      },
+      leads: {
+        predict: 'Choose an answer before the activities. It is fine if it is not right yet.',
+        interact:
+          'Do each activity, then press "Check". The app compares your answers with the lesson.',
+        observe:
+          'The answers and reasons below come from the lesson itself; no AI wrote them and there are no measurements.',
+        explain: 'Use the answers and reasons you just read to explain in your own words.',
+        conclude: 'Compare your prediction with the lesson’s answer.',
+      },
+      blockers: {
+        activity: 'Finish the activities and press "Check" to go on.',
+      },
+      activity: 'Activity {n}.',
+      help: {
+        order:
+          'Press the arrows to move an item up or down. When checked, each item must be in its own place.',
+        match: 'On each row, choose the matching statement from the list.',
+        sort: 'For each item, choose its group.',
+      },
+      up: 'Move up: {item}',
+      down: 'Move down: {item}',
+      moved: '{item}: position {n} of {total}',
+      choose: 'Choose…',
+      position: 'place {n}',
+      check: 'Check',
+      incomplete: 'Answer every row of the activities before checking.',
+      ready: 'All rows answered. Press "Check" when you are ready.',
+      checked:
+        'You got {correct} of {total} right. Read the reason under each one. To try again, change an answer and press "Check" once more.',
+      score: '{correct} of {total} right',
+      right: 'Right',
+      wrong: 'Not right. Answer: {expected}',
+      observe: {
+        prediction: 'The prediction question',
+        answer: 'Answer: {answer}',
+        yours: 'You chose: {label}',
+      },
+      panel:
+        'A descriptive lesson: no experiment and no measurements. Follow the steps in the middle of the screen: predict, do the activities, read the answers, explain and conclude.',
+      panelSource:
+        'Follows the textbook {book}, lesson {n} “{title}” (Kết nối tri thức với cuộc sống).',
+      review: {
+        pending: 'A teacher has not reviewed this lesson yet.',
+        verified: 'A teacher has reviewed this lesson.',
+      },
+      explainPlaceholder: 'For example: The lesson says… so…',
+      conclude: {
+        computed: 'The lesson’s answer: {label}',
+        match: 'Your prediction matches the lesson’s answer.',
+        miss: 'Your prediction did not match. This is when you learn the most: look at the reasons in the Answers step again.',
+        none: 'There is no answer to compare with yet.',
+        placeholder: 'What did you learn from this lesson?',
+      },
+      report: {
+        computed: 'The lesson’s answer: {label}',
+        verdictMatch: 'The prediction matches the lesson’s answer.',
+        verdictMiss: 'The prediction does not match the lesson’s answer.',
+        verdictNone: 'There is no answer to compare with yet.',
+        noEngine: 'The activities have not been checked yet.',
+        unverifiedNote:
+          'The items below have not been reviewed; their sources are under “Sources”.',
+        engine: 'Answers and the check of the activities',
+        note: 'The answers and reasons are copied from the lesson; each line compares the learner’s answer with the lesson’s. Nothing was written by an AI, and there are no measurements.',
+      },
+      ai: {
+        rules:
+          'This is a descriptive textbook lesson: there is no experiment and no measurement. Rely only on the ANSWERS AND CHECK RESULTS section. The learner’s notes and AI text are not facts. If something is missing, say so; never make up measurements or phenomena. Never present unreviewed content as verified.',
+        engine: 'ANSWERS AND CHECK RESULTS (copied from the lesson content):',
+        record: '- {title}:',
+      },
+      record: {
+        title: 'Answers and check results',
+        answer: 'Answer: {answer}. {why}',
+        score: '{correct} of {total} right',
+        right: 'Right. {why}',
+        wrong: 'Not right: you chose “{chosen}”, the answer is “{expected}”. {why}',
+      },
+      askHint:
+        'AI Teacher sees the lesson’s answers and notes only when you turn on “{toggle}” in the chat.',
+      ask: {
+        predict:
+          'I am doing the lesson “{title}”, Predict step. Could you hint at how to think about it, without telling me the answer?',
+        interact:
+          'I am doing the lesson “{title}”, the activities. Could you hint at how to think about them, without telling me the answers?',
+        observe:
+          'I am doing the lesson “{title}”, Answers step. Could you explain a bit more why the answers are what they are?',
+        explain:
+          'I am doing the lesson “{title}”, Explain step. Which ideas of the lesson should I use to explain?',
+        conclude:
+          'I am doing the lesson “{title}”, Conclude step. Could you help me compare my prediction with the lesson’s answer?',
+        report:
+          'I am doing the lesson “{title}”, Report step. Is my report missing anything important?',
+      },
     },
     chem: {
       choices: {
@@ -1570,6 +1693,8 @@ const en: Messages = {
           'This scene and measurement set are not in the Physics Studio, so the scenario cannot run.',
         sceneMissing: 'The simulation scene of the scenario could not be loaded.',
         binding: 'The simulation scene does not match the scenario: {detail}',
+        guidedBuiltIn:
+          'Descriptive textbook lessons are built into the app and cannot be authored yet.',
         inventorySize: 'The rack needs 2 to 8 solutions.',
         reagentNotAllowed: '"{formula}" is not a library solution for the bench.',
         targetInInventory: 'The question must use two different solutions from the rack.',
@@ -1600,22 +1725,22 @@ const en: Messages = {
       openHint: 'Show how to learn in Science Studio again',
       welcomeTitle: 'Learning in Science Studio',
       welcomeBody:
-        'Each lesson has six steps: you predict first, run the experiment, then explain and conclude. Every number is computed by the simulation. Press Next to see each part of the screen.',
+        'Each lesson has six steps: you predict first, run the experiment (in a descriptive textbook lesson, do the activities), then explain and conclude. In an experiment every number is computed by the simulation. In a descriptive lesson the answers come from the lesson itself. Press Next to see each part of the screen.',
       subjectTitle: 'Pick a subject and a lesson',
       subjectBody:
         'Pick the subject on this bar. A subject with several lessons shows them as buttons just below. The Authoring tab at the end is for teachers.',
       lessonTitle: 'Goals and the review label',
       lessonBody:
-        'The top of the lesson lists its goals. The "not reviewed" label means a teacher has not checked the lesson text yet; the numbers are still computed by the simulation.',
+        'The top of the lesson lists its goals. The "not reviewed" label means a teacher has not checked the lesson text yet. In an experiment the numbers are still computed by the simulation.',
       stepsTitle: 'Six steps',
       stepsBody:
-        'Predict → Experiment → Observe → Explain → Conclude → Report. The current step is highlighted, a finished step shows ✓ instead of its number.',
+        'Predict → Experiment → Observe → Explain → Conclude → Report. A descriptive textbook lesson calls Experiment "Activities" and Observe "Answers". The current step is highlighted, a finished step shows ✓ instead of its number.',
       nextTitle: 'Moving on',
       nextBody:
         'When a step is done, press Next here. When you cannot move on yet, the line next to the button says what is missing.',
       askTitle: 'Ask the teacher',
       askBody:
-        'Stuck on a step? Press Ask the teacher: AI Teacher opens with a question about that step. The AI only explains; it never replaces the simulation’s numbers.',
+        'Stuck on a step? Press Ask the teacher: AI Teacher opens with a question about that step. The AI only explains; it never replaces the simulation’s numbers or the lesson’s answers.',
       reportTitle: 'Save the report',
       reportBody:
         'In the last step the report is built from your own session. Press "Save report (.md)" to save it as a file, or copy it.',

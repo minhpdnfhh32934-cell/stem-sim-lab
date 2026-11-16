@@ -40,6 +40,7 @@ export function PoeFlow({ scenario, plugin }: { scenario: StudioScenario; plugin
   const next = neighbour(scenario, step, 1);
   const prev = neighbour(scenario, step, -1);
   const reachable = (target: FlowStep) => goTo(scenario, session, target).step === target;
+  const stepName = (s: FlowStep) => t(plugin.steps?.[s] ?? `studio.flow.steps.${s}`);
 
   const go = (target: FlowStep) => {
     update((s) => {
@@ -86,7 +87,7 @@ export function PoeFlow({ scenario, plugin }: { scenario: StudioScenario; plugin
                 <span className="studio-steps__num" aria-hidden="true">
                   {done ? <Check size={14} strokeWidth={2.4} /> : i + 1}
                 </span>
-                <span>{t(`studio.flow.steps.${s}`)}</span>
+                <span>{stepName(s)}</span>
               </button>
             </li>
           );
@@ -95,7 +96,7 @@ export function PoeFlow({ scenario, plugin }: { scenario: StudioScenario; plugin
 
       <section className="studio-flow__body" aria-labelledby={titleId}>
         <h3 id={titleId} className="studio-flow__title">
-          {t(`studio.flow.titles.${step}`)}
+          {t(plugin.titles?.[step] ?? `studio.flow.titles.${step}`)}
         </h3>
         <p className="studio-flow__lead muted">
           {t(plugin.leads?.[step] ?? `studio.flow.leads.${step}`)}
@@ -135,7 +136,7 @@ export function PoeFlow({ scenario, plugin }: { scenario: StudioScenario; plugin
               go(next);
             }}
           >
-            {t('studio.flow.next', { step: t(`studio.flow.steps.${next}`) })}
+            {t('studio.flow.next', { step: stepName(next) })}
             <ArrowRight size={16} aria-hidden="true" />
           </button>
         )}

@@ -1,3 +1,4 @@
+import { GUIDED_TOPICS } from '@/studio/guided/topics';
 import type { ModuleView } from './types';
 
 /** Topic id → lazily loaded module (code and data load only when the topic opens). */
@@ -52,6 +53,13 @@ const MODULES: Record<string, () => Promise<ModuleView>> = {
     import('@/chemistry/bonding/modules').then((m) => m.intermolecularForces),
   // Physics lesson with its own view (no time stepping): harmonics and Fourier series.
   fourierSeries: () => import('@/physics/fourier/modules').then((m) => m.fourierSeries),
+  // Descriptive textbook lessons (#255): each runs its guided Science Studio lesson.
+  ...Object.fromEntries(
+    GUIDED_TOPICS.map((id) => [
+      id,
+      () => import('@/studio/guided/modules').then((m) => m.guidedModule(id)),
+    ]),
+  ),
 };
 
 export function hasModule(id: string): boolean {
