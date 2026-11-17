@@ -45,6 +45,8 @@ import { hh12b16Electrolysis } from './hh12b16Electrolysis';
 import { hh12b20Extraction } from './hh12b20Extraction';
 import { hh12b21Alloys } from './hh12b21Alloys';
 import { hh12b22Corrosion } from './hh12b22Corrosion';
+import { sh12b01Dna } from './sh12b01Dna';
+import { sh12b05GeneTech } from './sh12b05GeneTech';
 
 /**
  * The descriptive textbook lessons (user decision 14/11/2026, #255). Kept out of
@@ -98,6 +100,8 @@ export const GUIDED_LESSONS: readonly unknown[] = [
   hh12b20Extraction,
   hh12b21Alloys,
   hh12b22Corrosion,
+  sh12b01Dna,
+  sh12b05GeneTech,
 ];
 
 let cache: StudioScenario[] | null = null;
