@@ -98,8 +98,9 @@ export function buildDecayScene(
     ]);
   }
   const order = decayOrder(o.seed);
-  const live = kit.instanced(kit.sphere(), kit.solid(kit.color('--chart-4')), SAMPLE);
-  const gone = kit.instanced(kit.sphere(), kit.solid(kit.color('--text-faint')), SAMPLE);
+  // Small dots: half the sphere detail (they animate; the nucleus above keeps full detail).
+  const live = kit.instanced(kit.sphere(0.5), kit.solid(kit.color('--chart-4')), SAMPLE);
+  const gone = kit.instanced(kit.sphere(0.5), kit.solid(kit.color('--text-faint')), SAMPLE);
   live.name = 'decay-left';
   gone.name = 'decay-gone';
   const m4 = new THREE.Matrix4();
