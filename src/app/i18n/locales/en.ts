@@ -108,6 +108,7 @@ const en: Messages = {
     crystals: 'Crystals',
     bonds: 'Chemical bonds',
     dcCircuit: 'Current and circuits',
+    thermalPhysics: 'Thermal physics',
     gravitation: 'Gravitation (extension)',
   },
   topics: {
@@ -220,6 +221,8 @@ const en: Messages = {
     forcedOscillation: 'Forced oscillation and resonance',
     dcCircuit: 'Direct-current circuit',
     keplerOrbit: 'Kepler’s second law',
+    matterStructure: 'Structure of matter and changes of state',
+    heatAndPhase: 'Internal energy, temperature and heat',
     fourierSeries: 'Harmonics and Fourier series',
   },
   stage: {

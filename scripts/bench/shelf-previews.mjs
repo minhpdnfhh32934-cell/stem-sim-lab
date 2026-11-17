@@ -29,6 +29,7 @@ const only = arg('--only')?.split(',') ?? null;
 const TOPICS = [
   'fourierSeries',
   'emWave',
+  'heatAndPhase',
   'aqueousEquilibrium',
   'nitrogenSulfur',
   'organicBasics',
@@ -106,6 +107,7 @@ const TOPICS = [
   'plantReproduction',
   'animalReproduction',
   'bodyIntegration',
+  'matterStructure',
 ];
 const THEMES = ['light', 'dark'];
 /** 480 px wide: twice a card's 242 px preview, sharp on a 2× screen, about 10–20 KB each. */

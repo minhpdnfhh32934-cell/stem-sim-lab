@@ -111,6 +111,7 @@ const vi = {
     crystals: 'Tinh thể',
     bonds: 'Liên kết hóa học',
     dcCircuit: 'Dòng điện, mạch điện',
+    thermalPhysics: 'Vật lí nhiệt',
     gravitation: 'Hấp dẫn (mở rộng)',
   },
   topics: {
@@ -223,6 +224,8 @@ const vi = {
     forcedOscillation: 'Dao động cưỡng bức và cộng hưởng',
     dcCircuit: 'Mạch điện một chiều',
     keplerOrbit: 'Định luật II Kepler',
+    matterStructure: 'Cấu trúc của chất và sự chuyển thể',
+    heatAndPhase: 'Nội năng, nhiệt độ và nhiệt lượng',
     fourierSeries: 'Họa âm và chuỗi Fourier',
   },
   stage: {
