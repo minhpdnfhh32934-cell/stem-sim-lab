@@ -124,3 +124,31 @@ test('Điện thế in 3D: equipotential planes through M and N, the charge move
     .toBeCloseTo(0, 9);
   expect(errors).toEqual([]);
 });
+
+test('Cường độ dòng điện in 3D: ions, electrons drifting by the engine’s distance', async ({
+  page,
+}, testInfo) => {
+  test.setTimeout(120_000);
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(String(e)));
+  await openTopic(page, 'Vật lý', 'Cường độ dòng điện');
+  await expect(page.locator('.stage__hud-title')).toHaveText('Cường độ dòng điện', {
+    timeout: 20_000,
+  });
+  await page.locator('.stage__view-switch').getByRole('radio', { name: '3D' }).click();
+  const view = page.locator('.bio3d[data-lesson="electricCurrent"]');
+  await expect(view.locator('canvas')).toBeVisible({ timeout: 30_000 });
+  // The copper wire of p. 93: v = I/(nSe) = 0,1176 mm/s, shown to 3 digits as on the 2D canvas.
+  await expect(view.locator('.chem-chip', { hasText: 'v = 0,118 mm/s' })).toBeVisible();
+  const drift = () =>
+    page.evaluate(() => {
+      const h = (window as unknown as { __simlab3d?: Record<string, Hook | undefined> }).__simlab3d
+        ?.electricCurrent;
+      return (h?.state() as { s: number; electrons: number } | null) ?? null;
+    });
+  await expect.poll(async () => (await drift())?.electrons).toBe(60);
+  await page.getByRole('button', { name: 'Chạy (Space)' }).first().click();
+  await expect.poll(async () => (await drift())?.s ?? 0, { timeout: 20_000 }).toBeGreaterThan(0);
+  await page.screenshot({ path: testInfo.outputPath('current-3d.png') });
+  expect(errors).toEqual([]);
+});
