@@ -47,6 +47,12 @@ const TOPICS = [
   'Di truyền giới tính và liên kết với giới tính',
   'Liên kết gene và hoán vị gene',
   'Đột biến nhiễm sắc thể',
+  'Di truyền học người và di truyền y học',
+  'Di truyền gene ngoài nhân',
+  'Tương tác giữa kiểu gene với môi trường và thành tựu chọn giống',
+  'Bằng chứng tiến hóa và lịch sử sự sống',
+  'Quan niệm của Darwin về chọn lọc tự nhiên và hình thành loài',
+  'Học thuyết tiến hóa tổng hợp hiện đại',
 ];
 
 async function openBiology(page: Page) {

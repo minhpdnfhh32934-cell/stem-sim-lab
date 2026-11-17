@@ -83,3 +83,24 @@ test('heredity: X-linked cross, linkage, chromosome mutations', async ({ page },
   expect(overflow).toBeLessThanOrEqual(0);
   expect(errors).toEqual([]);
 });
+
+/** SH12 Bài 19, 22 (#255 round 5c): Bảng 19.1 and the Cretaceous of Bảng 22.1. */
+test('evolution: cytochrome C and the geological timescale', async ({ page }, testInfo) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(String(e)));
+  await openTopic(page, 'Sinh học', 'Bằng chứng tiến hóa và lịch sử sự sống');
+  await expect(page.locator('.bar-list__row')).toHaveCount(8, { timeout: 20_000 });
+  await page.screenshot({ path: testInfo.outputPath('cytochrome.png') });
+  await page.getByRole('radio', { name: 'Các đại địa chất' }).click();
+  await expect(page.locator('.evo-detail__name')).toHaveText('Cretaceous (Phấn trắng)');
+  await page.getByRole('button', { name: 'Cambrian' }).click();
+  await expect(page.locator('.evo-detail__name')).toHaveText('Cambrian');
+  await expect(page.locator('.evo-detail__event')).toContainText('dây sống');
+  await page.screenshot({ path: testInfo.outputPath('timescale.png') });
+
+  const overflow = await page.evaluate(
+    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+  );
+  expect(overflow).toBeLessThanOrEqual(0);
+  expect(errors).toEqual([]);
+});
