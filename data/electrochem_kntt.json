@@ -5,7 +5,7 @@
   "review_status": "pending",
   "source": {
     "id": "sgk-hh12-b15",
-    "citation": "SGK Hóa học 12 Kết nối tri thức, NXB Giáo dục Việt Nam: Bài 15 “Thế điện cực và nguồn điện hóa học”, Bảng 15.1 (tr. 70, sách dẫn Dean, Lange's Handbook of Chemistry, 1999), pin Zn – Cu (tr. 73–74), pin Cu – Ag (tr. 75); Bài 24 tr. 110, Bài 25 Bảng 25.3 tr. 119",
+    "citation": "SGK Hóa học 12 Kết nối tri thức, NXB Giáo dục Việt Nam: Bài 15 “Thế điện cực và nguồn điện hóa học”, Bảng 15.1 (tr. 70, sách dẫn Dean, Lange's Handbook of Chemistry, 1999), pin Zn – Cu (tr. 73–74), pin Cu – Ag (tr. 75); Bài 19 tr. 89–93; Bài 24 tr. 110, Bài 25 Bảng 25.3 tr. 119",
     "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-12.4701708102"
   },
   "items": [
@@ -637,5 +637,82 @@
       "E_V": 0.459,
       "page": 75
     }
-  ]
+  ],
+  "metal_facts": [
+    {
+      "id": "lightest",
+      "metal": "Li",
+      "name": {
+        "vi": "lithium",
+        "en": "lithium"
+      },
+      "value": 0.534,
+      "unit": "g/cm3",
+      "page": 91
+    },
+    {
+      "id": "heaviest",
+      "metal": "Os",
+      "name": {
+        "vi": "osmium",
+        "en": "osmium"
+      },
+      "value": 22.6,
+      "unit": "g/cm3",
+      "page": 91
+    },
+    {
+      "id": "highest_mp",
+      "metal": "W",
+      "name": {
+        "vi": "tungsten (vonfram)",
+        "en": "tungsten"
+      },
+      "value": 3410,
+      "unit": "°C",
+      "page": 91
+    },
+    {
+      "id": "lowest_mp",
+      "metal": "Hg",
+      "name": {
+        "vi": "thủy ngân",
+        "en": "mercury"
+      },
+      "value": -39,
+      "unit": "°C",
+      "page": 91
+    },
+    {
+      "id": "hardest",
+      "metal": "Cr",
+      "name": {
+        "vi": "chromium",
+        "en": "chromium"
+      },
+      "value": null,
+      "unit": "",
+      "page": 91
+    },
+    {
+      "id": "best_conductor",
+      "metal": "Ag",
+      "name": {
+        "vi": "bạc",
+        "en": "silver"
+      },
+      "value": null,
+      "unit": "",
+      "page": 90
+    }
+  ],
+  "light_metal_max_density": 5,
+  "conductors": [
+    "Ag",
+    "Cu",
+    "Au",
+    "Al"
+  ],
+  "water_threshold_V": -0.414,
+  "acid_threshold_V": 0.0
 }

@@ -10,6 +10,8 @@ NXBGD's reader https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-12.4701708
     Handbook of Chemistry, 1999); footnote (2): the 2H2O/H2 value is at pH = 7;
   - tr. 73–74: the Zn–Cu cell, E°pin = E°cathode − E°anode = 1,102 V; tr. 75: the Cu–Ag cell of
     Hình 15.10 (the voltmeter shows 0,459);
+  - Bài 19 tr. 89–93: the physical facts (lightest, heaviest, highest and lowest melting point,
+    hardest metal, best conductors) and the rules E° < −0,414 V (water) and E° < 0 (dilute acid);
   - Bài 24 tr. 110: the alkali metals react with water at ordinary conditions; Bài 25 tr. 119
     (Bảng 25.3): Ca, Sr, Ba react strongly with water at room temperature, Mg slowly. These metals
     are flagged so the cell builder does not dip them in a solution.
@@ -69,6 +71,25 @@ AT_PH7 = {"H2O"}
 # Metals that react with water at room temperature (Bài 24 tr. 110; Bài 25 Bảng 25.3 tr. 119).
 REACTS_WITH_WATER = {"Li": 24, "K": 24, "Na": 24, "Ca": 25, "Ba": 25}
 
+# Bài 19 "Tính chất vật lí và tính chất hóa học của kim loại" (tr. 89–93): the physical facts the
+# lesson states, (id, metal, name as the book writes it (vi, en), value or None, unit, page).
+# Light metals have D < 5 g/cm3 (tr. 91).
+METAL_FACTS = [
+    ("lightest", "Li", "lithium", "lithium", 0.534, "g/cm3", 91),
+    ("heaviest", "Os", "osmium", "osmium", 22.6, "g/cm3", 91),
+    ("highest_mp", "W", "tungsten (vonfram)", "tungsten", 3410, "°C", 91),
+    ("lowest_mp", "Hg", "thủy ngân", "mercury", -39, "°C", 91),
+    ("hardest", "Cr", "chromium", "chromium", None, "", 91),
+    ("best_conductor", "Ag", "bạc", "silver", None, "", 90),
+]
+LIGHT_METAL_MAX_DENSITY = 5  # g/cm3 (tr. 91)
+# tr. 90: after silver, the best conductors are copper, gold and aluminium, in this order.
+CONDUCTORS = ["Ag", "Cu", "Au", "Al"]
+# tr. 92: a metal with E° < −0,414 V can push hydrogen out of water; tr. 93: with E° < 0 it can
+# react with dilute HCl, H2SO4 giving H2.
+WATER_THRESHOLD_V = -0.414
+ACID_THRESHOLD_V = 0.0
+
 # Cells the book works out: (anode, cathode, E°pin in V, page).
 BOOK_CELLS = [("Zn", "Cu", 1.102, 74), ("Cu", "Ag", 0.459, 75)]
 
@@ -88,6 +109,12 @@ def main() -> None:
         # Charge balance of each half-reaction: ox + n e = red.
         assert sum(c * charge(s) for c, s in ox) - n == sum(c * charge(s) for c, s in red), rid
     by_id = {row[0]: row for row in TABLE}
+
+    def by_id_e(rid: str) -> float:
+        return by_id[rid][5]
+
+    # The thresholds of Bài 19 are the potentials of the 2H2O/H2 and 2H+/H2 rows.
+    assert by_id_e("H2O") == WATER_THRESHOLD_V and by_id_e("H") == ACID_THRESHOLD_V
     for a, c, e, _p in BOOK_CELLS:
         assert round(by_id[c][5] - by_id[a][5], 3) == e, (a, c)
     items = []
@@ -121,12 +148,20 @@ def main() -> None:
             "citation": (
                 "SGK Hóa học 12 Kết nối tri thức, NXB Giáo dục Việt Nam: Bài 15 “Thế điện cực và nguồn điện "
                 "hóa học”, Bảng 15.1 (tr. 70, sách dẫn Dean, Lange's Handbook of Chemistry, 1999), pin Zn – Cu "
-                "(tr. 73–74), pin Cu – Ag (tr. 75); Bài 24 tr. 110, Bài 25 Bảng 25.3 tr. 119"
+                "(tr. 73–74), pin Cu – Ag (tr. 75); Bài 19 tr. 89–93; Bài 24 tr. 110, Bài 25 Bảng 25.3 tr. 119"
             ),
             "url": READER,
         },
         "items": items,
         "book_cells": [{"anode": a, "cathode": c, "E_V": e, "page": p} for a, c, e, p in BOOK_CELLS],
+        "metal_facts": [
+            {"id": i, "metal": m, "name": {"vi": nv, "en": ne}, "value": v, "unit": u, "page": pg}
+            for i, m, nv, ne, v, u, pg in METAL_FACTS
+        ],
+        "light_metal_max_density": LIGHT_METAL_MAX_DENSITY,
+        "conductors": CONDUCTORS,
+        "water_threshold_V": WATER_THRESHOLD_V,
+        "acid_threshold_V": ACID_THRESHOLD_V,
     }
     OUT.write_text(json.dumps(out, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
     print(f"wrote {OUT.relative_to(ROOT)}: {len(items)} couples")
