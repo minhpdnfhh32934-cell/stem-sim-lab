@@ -857,6 +857,10 @@ Progress log: `docs/PROGRESS.md`.
     `heatAndPhase` heat tab; 6e: `nucleus` structure tab, `radioactivity` law and random tabs): the Stage shows the 3D view in place of its canvas, reading the
     module's store; tabs that are charts or tables stay 2D. The chemistry particle lessons stay 2D
     (their model is a 2D hard-disk gas).
+  - Chemistry (6f: `orbitals` — a |ψ|² point cloud of the lesson's exact orbital, `atom/orbital3d.ts`;
+    `atomComposition` — exactly Z protons, N neutrons and the electrons, `nuclide/atom3d.ts`): the
+    Stage wrapper picks the lazy 3D view or the 2D picture (`useShow3d`, `Bio3DToolbar` in the 2D
+    overlay). The Bohr model stays 2D (a planar model).
   - `PhysicsScene`s (6b: `electricField`, `electricPotential`, `capacitor`, `electricCurrent`;
     6c: `interference`, `travellingWave`, `standingWave`):
     `view3d` is a `lazy()` component made once in the scene's file. `src/app/sim/SceneStage.tsx`
@@ -865,7 +869,8 @@ Progress log: `docs/PROGRESS.md`.
     `useSimStore` params and `sim.renderState` (moving parts through `setTime` / `tick`, never
     rebuilt; nothing allocated per frame).
   - E2E `tests/e2e/em-phys3d.spec.ts`, `electric-phys3d.spec.ts`, `waves-phys3d.spec.ts`,
-    `thermo-phys3d.spec.ts`, `nuclear-phys3d.spec.ts` (`phys3d` in `HEAVY_3D`).
+    `thermo-phys3d.spec.ts`, `nuclear-phys3d.spec.ts`, `orbital-phys3d.spec.ts` (`phys3d` in
+    `HEAVY_3D`).
     Wording: DATA_REVIEW PHY3D-*.
 - Projects (Phase 6): `src/app/project/` — `snapshot.ts` (.stemsim schema; inputs only), `undo.ts`,
   `history.ts` (Rust SQLite `src-tauri/src/history.rs`), `actions.ts` (save/open/PNG/CSV via Rust
