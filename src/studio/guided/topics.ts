@@ -34,4 +34,5 @@ export const GUIDED_TOPICS = [
   'animalReproduction',
   'bodyIntegration',
   'matterStructure',
+  'gasKinetic',
 ] as const;
