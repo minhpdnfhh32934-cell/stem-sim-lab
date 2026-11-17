@@ -7,7 +7,7 @@ import { usePublishCard } from '@/modules/usePublishCard';
 import { useCanvas } from '@/ui/canvas/useCanvas';
 import { sci } from '@/ui/sciNumber';
 import { axes, dot, twoFrames } from '../../common/chart2d';
-import { ChoiceGroup, LabeledNumber } from '../../common/ModuleControls';
+import { ChoiceGroup, LabeledNumber } from '@/ui/ModuleControls';
 import { BOOK_MASSES, FUSION_DD_MEV, PARTICLES, TABLE_21_1 } from '../data';
 import {
   AMU_MEV,

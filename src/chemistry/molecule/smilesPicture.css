@@ -1,0 +1,26 @@
+/* A structural formula drawn by RDKit (SmilesPicture.tsx). */
+.smiles-picture {
+  margin: 0;
+  text-align: center;
+}
+.smiles-picture__svg {
+  width: 180px;
+  height: 130px;
+  display: grid;
+  place-items: center;
+  background: var(--bg-sunken);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+/* RDKit draws black lines: its picture keeps a white sheet in both looks. */
+img.smiles-picture__svg {
+  background: var(--bg-drawing);
+}
+/* Without RDKit a long SMILES (a triglyceride) wraps inside its frame. */
+div.smiles-picture__svg {
+  padding: var(--space-2);
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  font-size: var(--text-xs);
+}

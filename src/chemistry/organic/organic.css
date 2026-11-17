@@ -24,24 +24,6 @@
   flex-wrap: wrap;
   gap: var(--space-3);
 }
-.organic-isomer {
-  margin: 0;
-  text-align: center;
-}
-.organic-isomer__svg {
-  width: 180px;
-  height: 130px;
-  display: grid;
-  place-items: center;
-  background: var(--bg-sunken);
-  color: var(--text);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-}
-/* RDKit draws black lines: its picture keeps a white sheet in both looks. */
-img.organic-isomer__svg {
-  background: var(--bg-drawing);
-}
 .organic-panel {
   display: grid;
   gap: var(--space-3);

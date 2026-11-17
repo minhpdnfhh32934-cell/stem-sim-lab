@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { formatNumber } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
@@ -8,7 +8,7 @@ import { useCanvas } from '@/ui/canvas/useCanvas';
 import { NumberField } from '@/ui/NumberField';
 import { L } from '../common';
 import { formatFormula } from '../formula';
-import { inspectSmiles } from '../molecule/rdkit';
+import { SmilesPicture } from '../molecule/SmilesPicture';
 import { organicCard, TITLE } from './card';
 import {
   BOILING,
@@ -149,41 +149,6 @@ function FormulaSteps() {
   );
 }
 
-function IsomerCard({ name, smiles }: { name: string; smiles: string }) {
-  const [svg, setSvg] = useState<string | null>(null);
-  useEffect(() => {
-    let live = true;
-    // Without RDKit (it failed to load) the SMILES text stays as the picture.
-    inspectSmiles(smiles)
-      .then((info) => {
-        if (live) setSvg(info?.svg ?? null);
-      })
-      .catch(() => {
-        if (live) setSvg(null);
-      });
-    return () => {
-      live = false;
-    };
-  }, [smiles]);
-  return (
-    <figure className="organic-isomer">
-      {svg ? (
-        // As an image, like the molecule lesson: scripts inside an SVG image never run.
-        <img
-          className="organic-isomer__svg"
-          alt=""
-          src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`}
-        />
-      ) : (
-        <div className="organic-isomer__svg mono" aria-hidden="true">
-          {smiles}
-        </div>
-      )}
-      <figcaption>{name}</figcaption>
-    </figure>
-  );
-}
-
 export function OrganicStage() {
   const Lz = useLocalized();
   const { tab, group, isomerSet } = useOrganicStore();
@@ -217,7 +182,7 @@ export function OrganicStage() {
           <div className="organic-isomers" role="list">
             {set.structures.map((s) => (
               <div role="listitem" key={s.smiles}>
-                <IsomerCard name={s.name} smiles={s.smiles} />
+                <SmilesPicture caption={s.name} smiles={s.smiles} className="organic-isomer" />
               </div>
             ))}
           </div>

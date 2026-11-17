@@ -7,7 +7,7 @@ import { usePublishCard } from '@/modules/usePublishCard';
 import { useCanvas } from '@/ui/canvas/useCanvas';
 import { sci } from '@/ui/sciNumber';
 import { axes, twoFrames, type Css, type Frame } from '../common/chart2d';
-import { ChoiceGroup, LabeledNumber } from '../common/ModuleControls';
+import { ChoiceGroup, LabeledNumber } from '@/ui/ModuleControls';
 import { L, TITLE, inductionCard } from './card';
 import {
   averageEmf,
