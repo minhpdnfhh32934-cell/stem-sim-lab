@@ -2908,6 +2908,54 @@
    "review_status": "pending"
   },
   {
+   "topic": "metalProperties",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 6. Đại cương về kim loại",
+   "lessons": [
+    19
+   ],
+   "reason": "Tên Bài 19: tính chất vật lí và tính chất hóa học của kim loại: kim loại với nước (E° < −0,414 V), dung dịch acid loãng (E° < 0), dung dịch muối theo Bảng 15.1; các số liệu vật lí sách nêu.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "metalExtraction",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 6. Đại cương về kim loại",
+   "lessons": [
+    20
+   ],
+   "reason": "Tên Bài 20: kim loại trong tự nhiên và phương pháp tách kim loại (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "alloys",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 6. Đại cương về kim loại",
+   "lessons": [
+    21
+   ],
+   "reason": "Tên Bài 21: hợp kim (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "corrosion",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 6. Đại cương về kim loại",
+   "lessons": [
+    22
+   ],
+   "reason": "Tên Bài 22: sự ăn mòn kim loại (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
    "topic": "heatAndPhase",
    "subject": "physics",
    "grade": 12,

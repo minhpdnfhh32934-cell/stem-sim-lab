@@ -36,11 +36,11 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Vật lí 12 | 25 | 21 | 21 |
 | Hoá học 10 | 23 | 16 | 16 |
 | Hoá học 11 | 25 | 19 | 19 |
-| Hoá học 12 | 30 | 22 | 13 |
+| Hoá học 12 | 30 | 22 | 17 |
 | Sinh học 10 | 26 | 17 | 17 |
 | Sinh học 11 | 29 | 20 | 20 |
 | Sinh học 12 | 35 | 28 | 7 |
-| **Cộng** | **253** | **189** | **159** |
+| **Cộng** | **253** | **189** | **163** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -208,10 +208,10 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Hoá học 12 | Chương 5. Pin điện và điện phân | 16 | Điện phân | 78 | Lí thuyết | Điện phân | Tên Bài 16: điện phân (bài học có hướng dẫn). | pending |
 | Hoá học 12 | Chương 5. Pin điện và điện phân | 17 | Ôn tập chương 5 | 85 | Ôn tập | chưa có |  | pending |
 | Hoá học 12 | Chương 6. Đại cương về kim loại | 18 | Cấu tạo và liên kết trong tinh thể kim loại | 87 | Lí thuyết | Tinh thể kim loại và NaCl | Tên Bài 18: cấu tạo và liên kết trong tinh thể kim loại (cảnh có thêm tinh thể NaCl; Bài 11 Hoá học 10 tên là liên kết ion, không nêu tinh thể nên không xếp). | pending |
-| Hoá học 12 | Chương 6. Đại cương về kim loại | 19 | Tính chất vật lí và tính chất hoá học của kim loại | 89 | Lí thuyết | chưa có |  | pending |
-| Hoá học 12 | Chương 6. Đại cương về kim loại | 20 | Kim loại trong tự nhiên và phương pháp tách kim loại | 94 | Lí thuyết | chưa có |  | pending |
-| Hoá học 12 | Chương 6. Đại cương về kim loại | 21 | Hợp kim | 99 | Lí thuyết | chưa có |  | pending |
-| Hoá học 12 | Chương 6. Đại cương về kim loại | 22 | Sự ăn mòn kim loại | 102 | Lí thuyết | chưa có |  | pending |
+| Hoá học 12 | Chương 6. Đại cương về kim loại | 19 | Tính chất vật lí và tính chất hoá học của kim loại | 89 | Lí thuyết | Tính chất vật lí và tính chất hóa học của kim loại | Tên Bài 19: tính chất vật lí và tính chất hóa học của kim loại: kim loại với nước (E° < −0,414 V), dung dịch acid loãng (E° < 0), dung dịch muối theo Bảng 15.1; các số liệu vật lí sách nêu. | pending |
+| Hoá học 12 | Chương 6. Đại cương về kim loại | 20 | Kim loại trong tự nhiên và phương pháp tách kim loại | 94 | Lí thuyết | Kim loại trong tự nhiên và phương pháp tách kim loại | Tên Bài 20: kim loại trong tự nhiên và phương pháp tách kim loại (bài học có hướng dẫn). | pending |
+| Hoá học 12 | Chương 6. Đại cương về kim loại | 21 | Hợp kim | 99 | Lí thuyết | Hợp kim | Tên Bài 21: hợp kim (bài học có hướng dẫn). | pending |
+| Hoá học 12 | Chương 6. Đại cương về kim loại | 22 | Sự ăn mòn kim loại | 102 | Lí thuyết | Sự ăn mòn kim loại | Tên Bài 22: sự ăn mòn kim loại (bài học có hướng dẫn). | pending |
 | Hoá học 12 | Chương 6. Đại cương về kim loại | 23 | Ôn tập chương 6 | 106 | Ôn tập | chưa có |  | pending |
 | Hoá học 12 | Chương 7. Nguyên tố nhóm IA và nhóm IIA | 24 | Nguyên tố nhóm IA | 108 | Lí thuyết | chưa có |  | pending |
 | Hoá học 12 | Chương 7. Nguyên tố nhóm IA và nhóm IIA | 25 | Nguyên tố nhóm IIA | 116 | Lí thuyết | chưa có |  | pending |
