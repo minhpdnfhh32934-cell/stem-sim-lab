@@ -39,8 +39,8 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Hoá học 12 | 30 | 22 | 22 |
 | Sinh học 10 | 26 | 17 | 17 |
 | Sinh học 11 | 29 | 20 | 20 |
-| Sinh học 12 | 35 | 28 | 7 |
-| **Cộng** | **253** | **189** | **168** |
+| Sinh học 12 | 35 | 28 | 10 |
+| **Cộng** | **253** | **189** | **171** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -275,11 +275,11 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Sinh học 11 | Chương 4. Sinh sản ở sinh vật | 27 | Sinh sản ở động vật | 170 | Lí thuyết | Sinh sản ở động vật | Tên Bài 27: sinh sản ở động vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
 | Sinh học 11 | Chương 5. Mối quan hệ giữa các quá trình sinh lí trong cơ thể sinh vật và một số ngành nghề liên quan đến sinh học cơ thể | 28 | Mối quan hệ giữa các quá trình sinh lí trong cơ thể sinh vật | 183 | Lí thuyết | Mối quan hệ giữa các quá trình sinh lí | Tên Bài 28: mối quan hệ giữa các quá trình sinh lí trong cơ thể sinh vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
 | Sinh học 11 | Chương 5. Mối quan hệ giữa các quá trình sinh lí trong cơ thể sinh vật và một số ngành nghề liên quan đến sinh học cơ thể | 29 | Một số ngành nghề liên quan đến sinh học cơ thể | 185 | Ngành nghề | chưa có |  | pending |
-| Sinh học 12 | Chương 1. Di truyền phân tử | 1 | DNA và cơ chế tái bản DNA | 5 | Lí thuyết | chưa có |  | pending |
+| Sinh học 12 | Chương 1. Di truyền phân tử | 1 | DNA và cơ chế tái bản DNA | 5 | Lí thuyết | DNA và cơ chế tái bản DNA | Tên Bài 1: DNA và cơ chế tái bản DNA (bài học có hướng dẫn). | pending |
 | Sinh học 12 | Chương 1. Di truyền phân tử | 2 | Gene, hệ gene và quá trình truyền đạt thông tin di truyền | 9 | Lí thuyết | ADN → mARN → Protein | Tên Bài 2: quá trình truyền đạt thông tin di truyền (Bài 1 về DNA và tái bản: giáo viên quyết định). | pending |
-| Sinh học 12 | Chương 1. Di truyền phân tử | 3 | Điều hoà biểu hiện gene | 18 | Lí thuyết | chưa có |  | pending |
+| Sinh học 12 | Chương 1. Di truyền phân tử | 3 | Điều hoà biểu hiện gene | 18 | Lí thuyết | Điều hòa biểu hiện gene: operon lac | Tên Bài 3: điều hoà biểu hiện gene: operon lac, thí nghiệm của Monod và Jacob, câu 2 tr. 21. | pending |
 | Sinh học 12 | Chương 1. Di truyền phân tử | 4 | Đột biến gene | 23 | Lí thuyết | Đột biến điểm | Tên Bài 4: đột biến gene. | pending |
-| Sinh học 12 | Chương 1. Di truyền phân tử | 5 | Công nghệ gene | 27 | Lí thuyết | chưa có |  | pending |
+| Sinh học 12 | Chương 1. Di truyền phân tử | 5 | Công nghệ gene | 27 | Lí thuyết | Công nghệ gene | Tên Bài 5: công nghệ gene (bài học có hướng dẫn). | pending |
 | Sinh học 12 | Chương 1. Di truyền phân tử | 6 | Thực hành: Tách chiết DNA | 32 | Thực hành | chưa có |  | pending |
 | Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 7 | Cấu trúc và chức năng của nhiễm sắc thể | 36 | Lí thuyết | Từ tế bào đến DNA | Tên Bài 7: cấu trúc và chức năng của nhiễm sắc thể (cấp NST kép, sợi nhiễm sắc, nucleosome, DNA). | pending |
 | Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 8 | Học thuyết di truyền Mendel | 40 | Lí thuyết | Di truyền Mendel | Tên Bài 8–9: học thuyết di truyền Mendel và mở rộng học thuyết Mendel (cảnh chỉ mở rộng tới trội không hoàn toàn). | pending |
