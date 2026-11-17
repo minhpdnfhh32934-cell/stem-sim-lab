@@ -1,3 +1,4 @@
+import { lazy } from 'react';
 import { formatNumber } from '@/app/i18n';
 import type { Locale } from '@/app/i18n/types';
 import { DIM, type Dimension } from '@/core/units';
@@ -304,6 +305,7 @@ const numberParam = (
 export const travellingWave: PhysicsScene = {
   id: 'travellingWave',
   engineId: 'phys.travellingWave',
+  view3d: lazy(() => import('./Travel3DView')),
   endless: true,
   title: L('Sóng cơ: sóng ngang, sóng dọc', 'Mechanical waves: transverse, longitudinal'),
   required: ['f', 'v'],

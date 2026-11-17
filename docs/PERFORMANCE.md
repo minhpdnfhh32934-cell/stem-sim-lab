@@ -190,6 +190,13 @@ và đứng yên khi người dùng bật giảm chuyển động. Mức Thấp 
 khi có). Khi chạy, cảnh chỉ di chuyển vật (không dựng lại, không cấp phát mỗi khung hình). Mức Thấp
 hiện hình 2D.
 
+**Vật lí 3D, đợt 6c (2026-11-17, #302).** Giao thoa, sóng cơ, sóng dừng; SwiftShader 1366×768, phát
+6 s (tổng khung trong 6 s): giao thoa Trung bình 5 lệnh vẽ, 5 148 tam giác, 211 khung (Cao 5 644 tam
+giác, 200 khung); sóng cơ (sóng ngang) 6 lệnh vẽ, 31 458 tam giác, 198 khung (Cao 75 410, 126 khung);
+sóng dừng lần đầu 51 914 tam giác, 84 khung, vì vùng mờ dùng 965 điểm biên dạng — giảm còn 24 điểm
+mỗi bó và 12 mặt quanh trục: 22 794 tam giác, 172 khung (Cao 52 106 tam giác, 67 → 118 khung). Mặt
+nước, phần tử và dây cập nhật trong cùng bộ đệm mỗi khung, không cấp phát. Mức Thấp hiện hình 2D.
+
 **Watchdog bộ nhớ** (`src/perf/memory.ts`): 10 giây đọc heap JS một lần (WebView2/Chromium). Khi vượt
 80 % ngân sách 300 MB (hoặc 80 % giới hạn heap), app giải phóng bộ nhớ đệm đã đăng ký (ví dụ: bản
 ghi đồ thị vật lý giữ lại một nửa số mẫu — chỉ giảm độ phân giải đồ thị, không ảnh hưởng mô phỏng)

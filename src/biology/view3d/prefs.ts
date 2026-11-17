@@ -28,7 +28,10 @@ export type Bio3DLesson =
   | 'electricField'
   | 'electricPotential'
   | 'electricCurrent'
-  | 'capacitor';
+  | 'capacitor'
+  | 'interference'
+  | 'travellingWave'
+  | 'standingWave';
 
 /** Lessons that open in 2D until the learner picks 3D (physics: the 2D picture has the chart). */
 export const OPT_IN_3D: readonly Bio3DLesson[] = [
@@ -39,6 +42,9 @@ export const OPT_IN_3D: readonly Bio3DLesson[] = [
   'electricPotential',
   'electricCurrent',
   'capacitor',
+  'interference',
+  'travellingWave',
+  'standingWave',
 ];
 
 export const BIO3D_LESSONS: readonly Bio3DLesson[] = [

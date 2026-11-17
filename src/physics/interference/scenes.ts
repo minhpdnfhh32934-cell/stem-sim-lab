@@ -1,3 +1,4 @@
+import { lazy } from 'react';
 import type { Locale } from '@/app/i18n/types';
 import type { LocalizedText } from '@/core/data/dataset';
 import { DIM } from '@/core/units';
@@ -589,6 +590,7 @@ const lambdaTyped = (p: Params) => (p.waveFrom ?? 0) > 0.5;
 export const interference: PhysicsScene = {
   id: 'interference',
   engineId: 'phys.interference',
+  view3d: lazy(() => import('./Interference3DView')),
   endless: true,
   title: L('Giao thoa sóng hai nguồn', 'Two-source interference'),
   // Filtered by `when`: f₂ only for beats, v or λ as chosen.
