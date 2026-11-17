@@ -24,6 +24,8 @@ export const SHELF_PREVIEWS: ReadonlySet<string> = new Set([
   'groupIA',
   'groupIIA',
   'transitionMetals',
+  'complexStructure',
+  'complexReactions',
   'aqueousEquilibrium',
   'nitrogenSulfur',
   'organicBasics',

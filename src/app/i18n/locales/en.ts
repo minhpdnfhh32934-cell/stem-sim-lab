@@ -263,6 +263,8 @@ const en: Messages = {
     groupIA: 'Group IA elements',
     groupIIA: 'Group IIA elements',
     transitionMetals: 'First-row transition metals',
+    complexStructure: 'Complexes',
+    complexReactions: 'Properties and uses of complexes',
     fourierSeries: 'Harmonics and Fourier series',
   },
   stage: {

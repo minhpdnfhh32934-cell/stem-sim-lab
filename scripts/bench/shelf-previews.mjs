@@ -43,6 +43,8 @@ const TOPICS = [
   'groupIA',
   'groupIIA',
   'transitionMetals',
+  'complexStructure',
+  'complexReactions',
   'aqueousEquilibrium',
   'nitrogenSulfur',
   'organicBasics',
