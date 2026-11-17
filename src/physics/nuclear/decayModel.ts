@@ -26,7 +26,7 @@ export const timeToLeft = (left: number, T: number) => T * Math.log2(1 / left);
 export const halfLifeFrom = (left: number, t: number) => (t * Math.LN2) / Math.log(1 / left);
 
 /** Small deterministic generator (mulberry32): the illustration is the same on every run. */
-function seeded(seed: number) {
+export function seeded(seed: number) {
   let a = seed >>> 0;
   return () => {
     a = (a + 0x6d2b79f5) >>> 0;

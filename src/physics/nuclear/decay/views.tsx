@@ -1,9 +1,11 @@
-import { useMemo } from 'react';
+import { lazy, Suspense, useMemo } from 'react';
 import { formatNumber } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import type { LocalizedText } from '@/core/data/dataset';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { usePublishCard } from '@/modules/usePublishCard';
+import { Bio3DToolbar } from '@/biology/view3d/switch';
+import { useShow3d } from '@/biology/view3d/support';
 import { useCanvas } from '@/ui/canvas/useCanvas';
 import { sci } from '@/ui/sciNumber';
 import { axes, twoFrames } from '../../common/chart2d';
@@ -23,6 +25,8 @@ import {
 import { L, TITLE, decayCard } from './card';
 import { SOURCES, TABS, UNITS, setDecay, useDecayStore, type Tab } from './store';
 import '../nuclear.css';
+
+const Decay3DView = lazy(() => import('./Decay3DView').then((m) => ({ default: m.Decay3DView })));
 
 const TAB_NAME: Record<Tab, LocalizedText> = {
   law: L('Định luật phóng xạ', 'Decay law'),
@@ -248,17 +252,32 @@ export function DecayStage() {
   const tab = useDecayStore((s) => s.tab);
   const card = useMemo(() => decayCard(), []);
   usePublishCard(card);
+  const { show3d } = useShow3d('radioactivity');
+  const chips = (
+    <>
+      <span className="chem-chip">
+        <strong className="stage__hud-title">{Lz(TITLE)}</strong>
+      </span>
+      <span className="chem-chip">{Lz(TAB_NAME[tab])}</span>
+    </>
+  );
+  // A sample of nuclei in space (3D on request); safety stays 2D.
+  if (tab !== 'safety' && show3d)
+    return (
+      <Suspense fallback={<div className="chem-view nuclear" />}>
+        <Decay3DView top={chips} tab={tab} />
+      </Suspense>
+    );
   return (
     <div className="chem-view nuclear">
-      <div className="chem-overlay">
-        <span className="chem-chip">
-          <strong className="stage__hud-title">{Lz(TITLE)}</strong>
-        </span>
-        <span className="chem-chip">{Lz(TAB_NAME[tab])}</span>
-      </div>
       {tab === 'law' && <LawView />}
       {tab === 'random' && <RandomView />}
       {tab === 'safety' && <SafetyView />}
+      {/* After the canvas, so the 3D / 2D switch is above it and can be clicked. */}
+      <div className="chem-overlay">
+        {chips}
+        {tab !== 'safety' && <Bio3DToolbar lesson="radioactivity" />}
+      </div>
     </div>
   );
 }
