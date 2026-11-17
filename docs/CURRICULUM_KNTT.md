@@ -36,11 +36,11 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Vật lí 12 | 25 | 21 | 21 |
 | Hoá học 10 | 23 | 16 | 16 |
 | Hoá học 11 | 25 | 19 | 19 |
-| Hoá học 12 | 30 | 22 | 6 |
+| Hoá học 12 | 30 | 22 | 11 |
 | Sinh học 10 | 26 | 17 | 17 |
 | Sinh học 11 | 29 | 20 | 20 |
 | Sinh học 12 | 35 | 28 | 7 |
-| **Cộng** | **253** | **189** | **152** |
+| **Cộng** | **253** | **189** | **157** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -197,12 +197,12 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Hoá học 12 | Chương 2. Carbohydrate | 5 | Saccharose và maltose | 25 | Lí thuyết | Saccharose và maltose | Tên Bài 5: saccharose và maltose (bài học có hướng dẫn). | pending |
 | Hoá học 12 | Chương 2. Carbohydrate | 6 | Tinh bột và cellulose | 28 | Lí thuyết | Tinh bột và cellulose | Tên Bài 6: tinh bột và cellulose (bài học có hướng dẫn). | pending |
 | Hoá học 12 | Chương 2. Carbohydrate | 7 | Ôn tập chương 2 | 33 | Ôn tập | chưa có |  | pending |
-| Hoá học 12 | Chương 3. Hợp chất chứa nitrogen | 8 | Amine | 35 | Lí thuyết | chưa có |  | pending |
-| Hoá học 12 | Chương 3. Hợp chất chứa nitrogen | 9 | Amino acid và peptide | 41 | Lí thuyết | chưa có |  | pending |
-| Hoá học 12 | Chương 3. Hợp chất chứa nitrogen | 10 | Protein và enzyme | 46 | Lí thuyết | chưa có |  | pending |
+| Hoá học 12 | Chương 3. Hợp chất chứa nitrogen | 8 | Amine | 35 | Lí thuyết | Amine | Tên Bài 8: amine: bậc amine, tên gốc – chức và tên thay thế, đồng phân, Bảng 8.1, tính base, phản ứng với nitrous acid, nước bromine. | pending |
+| Hoá học 12 | Chương 3. Hợp chất chứa nitrogen | 9 | Amino acid và peptide | 41 | Lí thuyết | Amino acid và peptide | Tên Bài 9: amino acid và peptide: Bảng 9.1, dạng ion lưỡng cực, điện di, liên kết peptide, phản ứng màu biuret. | pending |
+| Hoá học 12 | Chương 3. Hợp chất chứa nitrogen | 10 | Protein và enzyme | 46 | Lí thuyết | Protein và enzyme | Tên Bài 10: protein và enzyme (bài học có hướng dẫn). | pending |
 | Hoá học 12 | Chương 3. Hợp chất chứa nitrogen | 11 | Ôn tập chương 3 | 49 | Ôn tập | chưa có |  | pending |
-| Hoá học 12 | Chương 4. Polymer | 12 | Đại cương về polymer | 51 | Lí thuyết | chưa có |  | pending |
-| Hoá học 12 | Chương 4. Polymer | 13 | Vật liệu polymer | 56 | Lí thuyết | chưa có |  | pending |
+| Hoá học 12 | Chương 4. Polymer | 12 | Đại cương về polymer | 51 | Lí thuyết | Đại cương về polymer | Tên Bài 12: đại cương về polymer (bài học có hướng dẫn). | pending |
+| Hoá học 12 | Chương 4. Polymer | 13 | Vật liệu polymer | 56 | Lí thuyết | Vật liệu polymer | Tên Bài 13: vật liệu polymer (bài học có hướng dẫn). | pending |
 | Hoá học 12 | Chương 4. Polymer | 14 | Ôn tập chương 4 | 65 | Ôn tập | chưa có |  | pending |
 | Hoá học 12 | Chương 5. Pin điện và điện phân | 15 | Thế điện cực và nguồn điện hoá học | 67 | Lí thuyết | chưa có |  | pending |
 | Hoá học 12 | Chương 5. Pin điện và điện phân | 16 | Điện phân | 78 | Lí thuyết | chưa có |  | pending |
