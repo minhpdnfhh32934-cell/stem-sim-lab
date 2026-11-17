@@ -1,3 +1,4 @@
+import { lazy } from 'react';
 import type { Locale } from '@/app/i18n/types';
 import { pendulumPeriodExact, pendulumPeriodSmallAngle } from '@/core/math/special';
 import { dopri5 } from '@/core/ode/dopri5';
@@ -404,6 +405,7 @@ function card(p: Params): ScienceCardData {
 }
 
 export const simplePendulum: PhysicsScene = {
+  view3d: lazy(() => import('./Pendulum3DView')),
   id: 'simplePendulum',
   required: ['L', 'theta0'],
   engineId: 'phys.pendulum',

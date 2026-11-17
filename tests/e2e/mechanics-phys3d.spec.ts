@@ -160,3 +160,30 @@ test('Định luật II Kepler in 3D: the orbit, equal slices, the swept one fol
   await page.screenshot({ path: testInfo.outputPath('kepler-3d.png') });
   expect(errors).toEqual([]);
 });
+
+test('Con lắc đơn in 3D: the bob swings on its string, ℓ from the pivot, within ±α₀', async ({
+  page,
+}, testInfo) => {
+  test.setTimeout(120_000);
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(String(e)));
+  await openTopic(page, 'Vật lý', 'Con lắc đơn');
+  await page.locator('.stage__view-switch').getByRole('radio', { name: '3D' }).click();
+  const view = page.locator('.bio3d[data-lesson="simplePendulum"]');
+  await expect(view.locator('canvas')).toBeVisible({ timeout: 30_000 });
+  await page.getByRole('button', { name: /^Chạy/ }).first().click();
+  await page.waitForTimeout(1200);
+  const s = await page.evaluate(() => {
+    const h = (
+      window as unknown as {
+        __simlab3d?: Record<string, { state(): { th: number; bob: number[] } | null } | undefined>;
+      }
+    ).__simlab3d?.simplePendulum;
+    return h?.state() ?? null;
+  });
+  // ℓ = 1 m and α₀ = 60° by default.
+  expect(Math.hypot(...(s?.bob ?? []))).toBeCloseTo(1, 5);
+  expect(Math.abs(s?.th ?? 9)).toBeLessThanOrEqual(Math.PI / 3 + 1e-5);
+  await page.screenshot({ path: testInfo.outputPath('pendulum-3d.png') });
+  expect(errors).toEqual([]);
+});
