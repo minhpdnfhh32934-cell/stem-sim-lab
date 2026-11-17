@@ -110,6 +110,7 @@ const en: Messages = {
     carbohydrateGroup: 'Carbohydrates',
     nitrogenOrganicGroup: 'Nitrogen compounds',
     polymerGroup: 'Polymers',
+    cellsElectrolysisGroup: 'Cells and electrolysis',
     bonds: 'Chemical bonds',
     dcCircuit: 'Current and circuits',
     thermalPhysics: 'Thermal physics',
@@ -250,6 +251,8 @@ const en: Messages = {
     proteinEnzyme: 'Proteins and enzymes',
     polymerBasics: 'Polymers: the basics',
     polymerMaterials: 'Polymer materials',
+    electrodePotential: 'Electrode potentials and cells',
+    electrolysis: 'Electrolysis',
     fourierSeries: 'Harmonics and Fourier series',
   },
   stage: {

@@ -19,6 +19,7 @@ export const SHELF_PREVIEWS: ReadonlySet<string> = new Set([
   'esterLipid',
   'amine',
   'aminoAcidPeptide',
+  'electrodePotential',
   'aqueousEquilibrium',
   'nitrogenSulfur',
   'organicBasics',
@@ -109,6 +110,7 @@ export const SHELF_PREVIEWS: ReadonlySet<string> = new Set([
   'proteinEnzyme',
   'polymerBasics',
   'polymerMaterials',
+  'electrolysis',
 ]);
 
 /** The picture of `topic` in `theme`, or null when it has none. */
