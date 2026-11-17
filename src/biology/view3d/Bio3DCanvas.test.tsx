@@ -188,6 +188,20 @@ describe('3D / 2D choice', () => {
     expect(useBio3DPrefs.getState().off).toEqual([]);
   });
 
+  it('physics lessons open in 2D and remember a switch to 3D', async () => {
+    const user = userEvent.setup();
+    useBio3DPrefs.setState({ on: [] });
+    render(<Bio3DSwitch lesson="magneticForce" />);
+    expect(screen.getByRole('radio', { name: '2D' })).toHaveAttribute('aria-checked', 'true');
+    await user.click(screen.getByRole('radio', { name: '3D' }));
+    expect(useBio3DPrefs.getState().on).toEqual(['magneticForce']);
+    expect(useBio3DPrefs.getState().off).toEqual([]);
+    act(() => {
+      set3d('magneticForce', false);
+    });
+    expect(useBio3DPrefs.getState().on).toEqual([]);
+  });
+
   it('without WebGL a lesson shows its 2D picture and says why', () => {
     // jsdom has no WebGL 2.
     render(<LogisticStage />);

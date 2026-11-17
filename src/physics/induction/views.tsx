@@ -1,9 +1,11 @@
-import { useMemo } from 'react';
+import { lazy, Suspense, useMemo } from 'react';
 import { formatNumber } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import type { LocalizedText } from '@/core/data/dataset';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { usePublishCard } from '@/modules/usePublishCard';
+import { Bio3DToolbar } from '@/biology/view3d/switch';
+import { useShow3d } from '@/biology/view3d/support';
 import { useCanvas } from '@/ui/canvas/useCanvas';
 import { sci } from '@/ui/sciNumber';
 import { axes, twoFrames, type Css, type Frame } from '../common/chart2d';
@@ -23,6 +25,10 @@ import {
 } from './model';
 import { TABS, generatorOf, setInduction, useInductionStore, type Tab } from './store';
 import './induction.css';
+
+const Induction3DView = lazy(() =>
+  import('./Induction3DView').then((m) => ({ default: m.Induction3DView })),
+);
 
 const TAB_NAME: Record<Tab, LocalizedText> = {
   flux: L('Từ thông và suất điện động', 'Flux and induced e.m.f.'),
@@ -246,15 +252,29 @@ export function InductionStage() {
   const tab = useInductionStore((s) => s.tab);
   const card = useMemo(() => inductionCard(), []);
   usePublishCard(card);
+  const { show3d } = useShow3d('induction');
+  const chips = (
+    <>
+      <span className="chem-chip">
+        <strong className="stage__hud-title">{Lz(TITLE)}</strong>
+      </span>
+      <span className="chem-chip">{Lz(TAB_NAME[tab])}</span>
+    </>
+  );
+  if (show3d)
+    return (
+      <Suspense fallback={<div className="chem-view induction" />}>
+        <Induction3DView top={chips} />
+      </Suspense>
+    );
   return (
     <div className="chem-view induction">
-      <div className="chem-overlay">
-        <span className="chem-chip">
-          <strong className="stage__hud-title">{Lz(TITLE)}</strong>
-        </span>
-        <span className="chem-chip">{Lz(TAB_NAME[tab])}</span>
-      </div>
       {tab === 'flux' ? <FluxView /> : <GeneratorView />}
+      {/* After the canvas, so the 3D / 2D switch is above it and can be clicked. */}
+      <div className="chem-overlay">
+        {chips}
+        <Bio3DToolbar lesson="induction" />
+      </div>
     </div>
   );
 }
