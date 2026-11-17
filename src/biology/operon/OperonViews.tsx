@@ -1,4 +1,7 @@
+import { lazy, Suspense } from 'react';
 import { useLocalized } from '@/app/i18n/localized';
+import { Bio3DToolbar } from '@/biology/view3d/switch';
+import { useShow3d } from '@/biology/view3d/support';
 import type { LocalizedText } from '@/core/data/dataset';
 import { cx } from '@/ui/cx';
 import { L, usePublishCard } from '../common';
@@ -8,6 +11,10 @@ import { STRUCTURAL_GENES, operon, type OperonReason, type PartState } from './m
 import { restoreOperon, useOperon } from './store';
 import '../bio.css';
 import './operon.css';
+
+const Operon3DView = lazy(() =>
+  import('./operon3d/Operon3DView').then((m) => ({ default: m.Operon3DView })),
+);
 
 const REASON: Record<OperonReason, LocalizedText> = {
   repressed: L(
@@ -39,12 +46,47 @@ export function OperonStage() {
   const input = useOperon();
   const r = operon(input);
   usePublishCard(OPERON_CARD);
+  const { show3d } = useShow3d('lacOperon');
+  const title = (
+    <span className="chem-chip">
+      <strong className="stage__hud-title">{Lz(OPERON_TITLE)}</strong>
+    </span>
+  );
+  if (show3d)
+    return (
+      <Suspense fallback={<div className="bio-view" />}>
+        <Operon3DView
+          label={Lz(REASON[r.reason])}
+          top={
+            <>
+              {title}
+              <span className="chem-chip">
+                {Lz(
+                  input.lactose
+                    ? L('Môi trường có lactose', 'Lactose present')
+                    : L('Môi trường không có lactose', 'No lactose'),
+                )}
+              </span>
+              <span className={cx('chem-chip', !r.transcribed && 'chem-chip--approx')}>
+                {Lz(
+                  r.transcribed
+                    ? L('Các gene cấu trúc được phiên mã', 'The structural genes are transcribed')
+                    : L(
+                        'Các gene cấu trúc không được phiên mã',
+                        'The structural genes are not transcribed',
+                      ),
+                )}
+              </span>
+            </>
+          }
+        />
+      </Suspense>
+    );
   return (
     <div className="bio-view">
       <div className="chem-overlay">
-        <span className="chem-chip">
-          <strong className="stage__hud-title">{Lz(OPERON_TITLE)}</strong>
-        </span>
+        {title}
+        <Bio3DToolbar lesson="lacOperon" />
       </div>
       <div className="bio-scroll operon">
         <p className="operon__env">

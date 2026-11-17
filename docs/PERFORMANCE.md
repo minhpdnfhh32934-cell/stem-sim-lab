@@ -223,6 +223,11 @@ SwiftShader, chưa rõ nguyên nhân; diện tích mỗi phần nay chỉ tính 
 giác, 272 / 275 khung. Mũi tên, dây, lò xo cập nhật trong bộ đệm có sẵn mỗi khung, không cấp phát.
 Mức Thấp hiện hình 2D.
 
+**Sinh học 3D, đợt 6h (2026-11-18, #302).** Bốn hình Sinh học 12, tĩnh (chỉ vẽ khi đổi),
+SwiftShader 1366×768 (Trung bình / Cao): operon lac 11 lệnh vẽ, 9 986 / 26 466 tam giác; di truyền
+liên kết giới tính 36 lệnh vẽ, 9 218 / 14 402 tam giác; liên kết gene 29 lệnh vẽ, 5 422 / 8 014 tam
+giác; đột biến cấu trúc NST 13 lệnh vẽ, 4 578 / 6 866 tam giác. Mức Thấp hiện hình 2D.
+
 **Watchdog bộ nhớ** (`src/perf/memory.ts`): 10 giây đọc heap JS một lần (WebView2/Chromium). Khi vượt
 80 % ngân sách 300 MB (hoặc 80 % giới hạn heap), app giải phóng bộ nhớ đệm đã đăng ký (ví dụ: bản
 ghi đồ thị vật lý giữ lại một nửa số mẫu — chỉ giảm độ phân giải đồ thị, không ảnh hưởng mô phỏng)

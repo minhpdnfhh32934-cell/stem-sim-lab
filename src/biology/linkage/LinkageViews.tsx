@@ -1,7 +1,10 @@
+import { lazy, Suspense } from 'react';
 import { formatNumber } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import type { LocalizedText } from '@/core/data/dataset';
+import { Bio3DToolbar } from '@/biology/view3d/switch';
+import { useShow3d } from '@/biology/view3d/support';
 import { BarList, type Bar } from '@/ui/charts/BarList';
 import { LabeledNumber } from '@/ui/ModuleControls';
 import { L, usePublishCard } from '../common';
@@ -19,6 +22,10 @@ import {
 import { LINKAGE_TABS, restoreLinkage, useLinkage, type LinkageTab } from './store';
 import '../bio.css';
 import '../heredity.css';
+
+const Linkage3DView = lazy(() =>
+  import('./linkage3d/Linkage3DView').then((m) => ({ default: m.Linkage3DView })),
+);
 
 const TAB_NAME: Record<LinkageTab, LocalizedText> = {
   testcross: L('Lai phân tích', 'Testcross'),
@@ -123,14 +130,37 @@ function CountsView() {
 export function LinkageStage() {
   const Lz = useLocalized();
   const tab = useLinkage((s) => s.tab);
+  const parent = useLinkage((s) => s.parent);
   usePublishCard(LINKAGE_CARD);
+  const { show3d } = useShow3d('geneLinkage');
+  const chips = (
+    <>
+      <span className="chem-chip">
+        <strong className="stage__hud-title">{Lz(LINKAGE_TITLE)}</strong>
+      </span>
+      <span className="chem-chip">{Lz(TAB_NAME[tab])}</span>
+    </>
+  );
+  // Only the testcross has a 3D picture; the counts tab is a table of numbers (stays 2D).
+  if (show3d && tab === 'testcross')
+    return (
+      <Suspense fallback={<div className="bio-view" />}>
+        <Linkage3DView
+          label={`Fa: ${parent === 'male' ? '♂' : '♀'} BV/bv × ${parent === 'male' ? '♀' : '♂'} bv/bv`}
+          top={
+            <>
+              {chips}
+              <span className="chem-chip mono">{`Fa: ${parent === 'male' ? '♂' : '♀'} BV/bv × ${parent === 'male' ? '♀' : '♂'} bv/bv`}</span>
+            </>
+          }
+        />
+      </Suspense>
+    );
   return (
     <div className="bio-view">
       <div className="chem-overlay">
-        <span className="chem-chip">
-          <strong className="stage__hud-title">{Lz(LINKAGE_TITLE)}</strong>
-        </span>
-        <span className="chem-chip">{Lz(TAB_NAME[tab])}</span>
+        {chips}
+        {tab === 'testcross' && <Bio3DToolbar lesson="geneLinkage" />}
       </div>
       {tab === 'testcross' ? <TestcrossView /> : <CountsView />}
     </div>
