@@ -26,15 +26,15 @@ function texts(value: unknown, out: string[] = []): string[] {
 }
 
 describe('guided textbook lessons (SH10, HH11, SH11; #255)', () => {
-  it('all twenty-nine are valid guided lessons, pending a teacher, one per guided topic', () => {
-    expect(GUIDED_LESSONS).toHaveLength(29);
-    expect(lessons).toHaveLength(29);
+  it('all thirty are valid guided lessons, pending a teacher, one per guided topic', () => {
+    expect(GUIDED_LESSONS).toHaveLength(30);
+    expect(lessons).toHaveLength(30);
     for (const s of lessons) {
       expect(s.binding.kind).toBe('guided');
       expect(s.review_status).toBe('pending');
     }
     expect(lessons.map((s) => s.topic).sort()).toEqual([...GUIDED_TOPICS].sort());
-    expect(new Set(lessons.map((s) => s.id)).size).toBe(29);
+    expect(new Set(lessons.map((s) => s.id)).size).toBe(30);
   });
 
   it('each follows a theory lesson of the book, and its topic is placed on that lesson', () => {

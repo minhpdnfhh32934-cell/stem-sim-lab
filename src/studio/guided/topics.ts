@@ -33,4 +33,5 @@ export const GUIDED_TOPICS = [
   'plantReproduction',
   'animalReproduction',
   'bodyIntegration',
+  'matterStructure',
 ] as const;

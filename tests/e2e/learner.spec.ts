@@ -72,9 +72,14 @@ test('subject cards and the grade switch (Grade → Subject → Topic)', async (
   ).toBeVisible();
   await expectNoHorizontalScroll(page);
 
-  // Physics has no grade 12 topic yet: no dead end, "Xem tất cả" goes back to every topic.
+  // Grade 12 physics starts with thermal physics; a search that finds nothing in the grade is no
+  // dead end: "Xem tất cả" goes back to every topic.
   await grades.getByRole('radio', { name: 'Lớp 12' }).click();
-  await expect(library).toContainText('Chưa có chủ đề Vật lý nào được xếp vào lớp 12.');
+  await expect(
+    library.getByRole('button', { name: /^Nội năng, nhiệt độ và nhiệt lượng Bài 2–6/ }),
+  ).toBeVisible();
+  await library.getByRole('searchbox').fill('Chuyển động thẳng đều');
+  await expect(library).toContainText('Không tìm thấy chủ đề phù hợp.');
   await library.getByRole('button', { name: 'Xem tất cả' }).click();
   await expect(grades.getByRole('radio', { name: 'Tất cả' })).toBeChecked();
   await expect(

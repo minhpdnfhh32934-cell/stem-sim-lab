@@ -1,0 +1,341 @@
+{
+  "dataset": "thermal_kntt",
+  "version": 1,
+  "accessed": "2026-11-17",
+  "review_status": "pending",
+  "source": {
+    "id": "sgk-vl12-c1",
+    "citation": "SGK Vật lí 12 Kết nối tri thức, NXB Giáo dục Việt Nam: Chương I “Vật lí nhiệt”, Bài 2 (tr. 10–14), Bài 3 (Hình 3.2, 3.3, tr. 15–19), Bài 4 (Bảng 4.1, tr. 20–23), Bài 5 (Bảng 5.1, tr. 24–26), Bài 6 (Bảng 6.1, tr. 27–29)",
+    "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/shs-vat-li-12.4701697631"
+  },
+  "items": [
+    {
+      "id": "water",
+      "name": {
+        "vi": "Nước",
+        "en": "Water"
+      },
+      "c_solid": 2100,
+      "c_liquid": 4200,
+      "c_gas": null,
+      "melt_C": 0,
+      "lambda": 334000.0,
+      "boil_C": 100,
+      "L": 2260000.0,
+      "review_status": "pending"
+    },
+    {
+      "id": "iron",
+      "name": {
+        "vi": "Sắt",
+        "en": "Iron"
+      },
+      "c_solid": 440,
+      "c_liquid": null,
+      "c_gas": null,
+      "melt_C": 1535,
+      "lambda": 277000.0,
+      "boil_C": null,
+      "L": null,
+      "review_status": "pending"
+    },
+    {
+      "id": "copper",
+      "name": {
+        "vi": "Đồng",
+        "en": "Copper"
+      },
+      "c_solid": 380,
+      "c_liquid": null,
+      "c_gas": null,
+      "melt_C": 1084,
+      "lambda": 180000.0,
+      "boil_C": null,
+      "L": null,
+      "review_status": "pending"
+    },
+    {
+      "id": "lead",
+      "name": {
+        "vi": "Chì",
+        "en": "Lead"
+      },
+      "c_solid": 130,
+      "c_liquid": null,
+      "c_gas": null,
+      "melt_C": 327,
+      "lambda": 25000.0,
+      "boil_C": null,
+      "L": null,
+      "review_status": "pending"
+    },
+    {
+      "id": "mercury",
+      "name": {
+        "vi": "Thủy ngân",
+        "en": "Mercury"
+      },
+      "c_solid": null,
+      "c_liquid": 140,
+      "c_gas": null,
+      "melt_C": null,
+      "lambda": null,
+      "boil_C": 357,
+      "L": 285000.0,
+      "review_status": "pending"
+    },
+    {
+      "id": "ethanol",
+      "name": {
+        "vi": "Rượu",
+        "en": "Alcohol (ethanol)"
+      },
+      "c_solid": null,
+      "c_liquid": null,
+      "c_gas": null,
+      "melt_C": null,
+      "lambda": null,
+      "boil_C": 78,
+      "L": 857000.0,
+      "review_status": "pending"
+    },
+    {
+      "id": "ether",
+      "name": {
+        "vi": "Ether",
+        "en": "Ether"
+      },
+      "c_solid": null,
+      "c_liquid": null,
+      "c_gas": null,
+      "melt_C": null,
+      "lambda": null,
+      "boil_C": 34.5,
+      "L": 400000.0,
+      "review_status": "pending"
+    },
+    {
+      "id": "air",
+      "name": {
+        "vi": "Không khí",
+        "en": "Air"
+      },
+      "c_solid": null,
+      "c_liquid": null,
+      "c_gas": 1000,
+      "melt_C": null,
+      "lambda": null,
+      "boil_C": null,
+      "L": null,
+      "review_status": "pending"
+    },
+    {
+      "id": "glass",
+      "name": {
+        "vi": "Thủy tinh",
+        "en": "Glass"
+      },
+      "c_solid": 840,
+      "c_liquid": null,
+      "c_gas": null,
+      "melt_C": null,
+      "lambda": null,
+      "boil_C": null,
+      "L": null,
+      "review_status": "pending"
+    },
+    {
+      "id": "soil",
+      "name": {
+        "vi": "Đất",
+        "en": "Soil"
+      },
+      "c_solid": 800,
+      "c_liquid": null,
+      "c_gas": null,
+      "melt_C": null,
+      "lambda": null,
+      "boil_C": null,
+      "L": null,
+      "review_status": "pending"
+    }
+  ],
+  "reference": [
+    {
+      "kelvin": 5772,
+      "celsius": null,
+      "label": {
+        "vi": "Bề mặt của Mặt Trời",
+        "en": "Surface of the Sun"
+      }
+    },
+    {
+      "kelvin": 4000,
+      "celsius": null,
+      "label": {
+        "vi": "Lõi của Trái Đất",
+        "en": "Earth's core"
+      }
+    },
+    {
+      "kelvin": 1500,
+      "celsius": null,
+      "label": {
+        "vi": "Nóng sáng",
+        "en": "Red-hot glow"
+      }
+    },
+    {
+      "kelvin": 1340,
+      "celsius": null,
+      "label": {
+        "vi": "Điểm nóng chảy của vàng",
+        "en": "Melting point of gold"
+      }
+    },
+    {
+      "kelvin": 630,
+      "celsius": null,
+      "label": {
+        "vi": "Điểm sôi của thủy ngân",
+        "en": "Boiling point of mercury"
+      }
+    },
+    {
+      "kelvin": 505,
+      "celsius": null,
+      "label": {
+        "vi": "Điểm nóng chảy của thiếc",
+        "en": "Melting point of tin"
+      }
+    },
+    {
+      "kelvin": 373,
+      "celsius": 100,
+      "label": {
+        "vi": "Điểm hóa hơi của nước",
+        "en": "Boiling point of water"
+      }
+    },
+    {
+      "kelvin": 352,
+      "celsius": 79,
+      "label": {
+        "vi": "Điểm sôi của rượu etylic",
+        "en": "Boiling point of ethanol"
+      }
+    },
+    {
+      "kelvin": null,
+      "celsius": 60,
+      "label": {
+        "vi": "Nước có thể làm bỏng tay khi nhúng vào",
+        "en": "Water hot enough to scald a hand"
+      }
+    },
+    {
+      "kelvin": null,
+      "celsius": 37,
+      "label": {
+        "vi": "Cơ thể người khỏe mạnh",
+        "en": "A healthy human body"
+      }
+    },
+    {
+      "kelvin": null,
+      "celsius": 25,
+      "label": {
+        "vi": "Không khí ngày mát mẻ",
+        "en": "Air on a mild day"
+      }
+    },
+    {
+      "kelvin": 273,
+      "celsius": 0,
+      "label": {
+        "vi": "Điểm đông đặc của nước",
+        "en": "Freezing point of water"
+      }
+    },
+    {
+      "kelvin": 90,
+      "celsius": null,
+      "label": {
+        "vi": "Điểm sôi của oxygen",
+        "en": "Boiling point of oxygen"
+      }
+    },
+    {
+      "kelvin": 20,
+      "celsius": null,
+      "label": {
+        "vi": "Điểm sôi của hydrogen",
+        "en": "Boiling point of hydrogen"
+      }
+    },
+    {
+      "kelvin": 0,
+      "celsius": -273.15,
+      "label": {
+        "vi": "Độ không tuyệt đối",
+        "en": "Absolute zero"
+      }
+    }
+  ],
+  "thermometers": [
+    {
+      "id": "mercury",
+      "name": {
+        "vi": "Nhiệt kế thủy ngân",
+        "en": "Mercury thermometer"
+      },
+      "min_K": 234,
+      "max_K": 630
+    },
+    {
+      "id": "alcohol",
+      "name": {
+        "vi": "Nhiệt kế rượu",
+        "en": "Alcohol thermometer"
+      },
+      "min_K": 156,
+      "max_K": 352
+    }
+  ],
+  "examples": [
+    {
+      "id": "copper-melt",
+      "lesson": 5,
+      "page": 24,
+      "substance": "copper",
+      "mass": 2,
+      "t0": 30,
+      "power": 20000,
+      "efficiency": 0.5,
+      "to": "melted"
+    },
+    {
+      "id": "water-heat",
+      "lesson": 4,
+      "page": 21,
+      "substance": "water",
+      "mass": 20,
+      "t0": 20,
+      "t1": 70,
+      "power": 2500,
+      "efficiency": 0.8
+    },
+    {
+      "id": "incline",
+      "lesson": 2,
+      "page": 14,
+      "mass": 1,
+      "length": 21,
+      "angle_deg": 30,
+      "speed": 4.1,
+      "g": 9.8
+    }
+  ],
+  "kelvin_offset": 273.15,
+  "kelvin_offset_rounded": 273
+}

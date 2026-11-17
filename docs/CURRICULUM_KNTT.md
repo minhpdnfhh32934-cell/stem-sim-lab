@@ -33,14 +33,14 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | --- | --- | --- | --- |
 | Vật lí 10 | 34 | 26 | 26 |
 | Vật lí 11 | 26 | 20 | 20 |
-| Vật lí 12 | 25 | 21 | 0 |
+| Vật lí 12 | 25 | 21 | 6 |
 | Hoá học 10 | 23 | 16 | 16 |
 | Hoá học 11 | 25 | 19 | 19 |
 | Hoá học 12 | 30 | 22 | 1 |
 | Sinh học 10 | 26 | 17 | 17 |
 | Sinh học 11 | 29 | 20 | 20 |
 | Sinh học 12 | 35 | 28 | 7 |
-| **Cộng** | **253** | **189** | **126** |
+| **Cộng** | **253** | **189** | **132** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -116,12 +116,12 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Vật lí 11 | Chương IV. Dòng điện. Mạch điện | 24 | Nguồn điện | 102 | Lí thuyết | Mạch điện một chiều | Tên Bài 23–25: điện trở, định luật Ohm, nguồn điện, năng lượng và công suất điện (cảnh có nguồn E, r và 1–3 điện trở). | pending |
 | Vật lí 11 | Chương IV. Dòng điện. Mạch điện | 25 | Năng lượng và công suất điện | 106 | Lí thuyết | Mạch điện một chiều | Tên Bài 23–25: điện trở, định luật Ohm, nguồn điện, năng lượng và công suất điện (cảnh có nguồn E, r và 1–3 điện trở). | pending |
 | Vật lí 11 | Chương IV. Dòng điện. Mạch điện | 26 | Thực hành: Đo suất điện động và điện trở trong của pin điện hoá | 111 | Thực hành | chưa có |  | pending |
-| Vật lí 12 | Chương I. Vật lí nhiệt | 1 | Cấu trúc của chất. Sự chuyển thể | 6 | Lí thuyết | chưa có |  | pending |
-| Vật lí 12 | Chương I. Vật lí nhiệt | 2 | Nội năng. Định luật I của nhiệt động lực học | 10 | Lí thuyết | chưa có |  | pending |
-| Vật lí 12 | Chương I. Vật lí nhiệt | 3 | Nhiệt độ. Thang nhiệt độ – nhiệt kế | 15 | Lí thuyết | chưa có |  | pending |
-| Vật lí 12 | Chương I. Vật lí nhiệt | 4 | Nhiệt dung riêng | 20 | Lí thuyết | chưa có |  | pending |
-| Vật lí 12 | Chương I. Vật lí nhiệt | 5 | Nhiệt nóng chảy riêng | 24 | Lí thuyết | chưa có |  | pending |
-| Vật lí 12 | Chương I. Vật lí nhiệt | 6 | Nhiệt hoá hơi riêng | 27 | Lí thuyết | chưa có |  | pending |
+| Vật lí 12 | Chương I. Vật lí nhiệt | 1 | Cấu trúc của chất. Sự chuyển thể | 6 | Lí thuyết | Cấu trúc của chất và sự chuyển thể | Tên Bài 1: cấu trúc của chất, sự chuyển thể (bài học có hướng dẫn: dự đoán và các hoạt động phân loại, ghép; không có mô phỏng). | pending |
+| Vật lí 12 | Chương I. Vật lí nhiệt | 2 | Nội năng. Định luật I của nhiệt động lực học | 10 | Lí thuyết | Nội năng, nhiệt độ và nhiệt lượng | Tên Bài 2: nội năng, định luật I (ΔU = A + Q); Bài 3: nhiệt độ, thang nhiệt độ; Bài 4: nhiệt dung riêng (Q = mcΔT); Bài 5: nhiệt nóng chảy riêng (Q = λm); Bài 6: nhiệt hóa hơi riêng (Q = Lm), số liệu Bảng 4.1, 5.1, 6.1. | pending |
+| Vật lí 12 | Chương I. Vật lí nhiệt | 3 | Nhiệt độ. Thang nhiệt độ – nhiệt kế | 15 | Lí thuyết | Nội năng, nhiệt độ và nhiệt lượng | Tên Bài 2: nội năng, định luật I (ΔU = A + Q); Bài 3: nhiệt độ, thang nhiệt độ; Bài 4: nhiệt dung riêng (Q = mcΔT); Bài 5: nhiệt nóng chảy riêng (Q = λm); Bài 6: nhiệt hóa hơi riêng (Q = Lm), số liệu Bảng 4.1, 5.1, 6.1. | pending |
+| Vật lí 12 | Chương I. Vật lí nhiệt | 4 | Nhiệt dung riêng | 20 | Lí thuyết | Nội năng, nhiệt độ và nhiệt lượng | Tên Bài 2: nội năng, định luật I (ΔU = A + Q); Bài 3: nhiệt độ, thang nhiệt độ; Bài 4: nhiệt dung riêng (Q = mcΔT); Bài 5: nhiệt nóng chảy riêng (Q = λm); Bài 6: nhiệt hóa hơi riêng (Q = Lm), số liệu Bảng 4.1, 5.1, 6.1. | pending |
+| Vật lí 12 | Chương I. Vật lí nhiệt | 5 | Nhiệt nóng chảy riêng | 24 | Lí thuyết | Nội năng, nhiệt độ và nhiệt lượng | Tên Bài 2: nội năng, định luật I (ΔU = A + Q); Bài 3: nhiệt độ, thang nhiệt độ; Bài 4: nhiệt dung riêng (Q = mcΔT); Bài 5: nhiệt nóng chảy riêng (Q = λm); Bài 6: nhiệt hóa hơi riêng (Q = Lm), số liệu Bảng 4.1, 5.1, 6.1. | pending |
+| Vật lí 12 | Chương I. Vật lí nhiệt | 6 | Nhiệt hoá hơi riêng | 27 | Lí thuyết | Nội năng, nhiệt độ và nhiệt lượng | Tên Bài 2: nội năng, định luật I (ΔU = A + Q); Bài 3: nhiệt độ, thang nhiệt độ; Bài 4: nhiệt dung riêng (Q = mcΔT); Bài 5: nhiệt nóng chảy riêng (Q = λm); Bài 6: nhiệt hóa hơi riêng (Q = Lm), số liệu Bảng 4.1, 5.1, 6.1. | pending |
 | Vật lí 12 | Chương I. Vật lí nhiệt | 7 | Bài tập về vật lí nhiệt | 30 | Bài tập | chưa có |  | pending |
 | Vật lí 12 | Chương II. Khí lí tưởng | 8 | Mô hình động học phân tử chất khí | 34 | Lí thuyết | chưa có |  | pending |
 | Vật lí 12 | Chương II. Khí lí tưởng | 9 | Định luật Boyle | 37 | Lí thuyết | chưa có |  | pending |

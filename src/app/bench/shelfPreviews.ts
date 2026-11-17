@@ -10,6 +10,7 @@ import { hasScene } from '@/physics/registry';
 export const SHELF_PREVIEWS: ReadonlySet<string> = new Set([
   'fourierSeries',
   'emWave',
+  'heatAndPhase',
   'aqueousEquilibrium',
   'nitrogenSulfur',
   'organicBasics',
@@ -87,6 +88,7 @@ export const SHELF_PREVIEWS: ReadonlySet<string> = new Set([
   'plantReproduction',
   'animalReproduction',
   'bodyIntegration',
+  'matterStructure',
 ]);
 
 /** The picture of `topic` in `theme`, or null when it has none. */

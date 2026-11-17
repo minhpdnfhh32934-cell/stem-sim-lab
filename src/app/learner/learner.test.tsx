@@ -1,6 +1,6 @@
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { CATALOG } from '@/app/catalog';
 import { CURRICULUM } from '@/app/curriculum';
 import { LeftSidebar } from '@/app/layout/LeftSidebar';
@@ -13,6 +13,20 @@ import { useAiStore } from '@/ai/aiStore';
 import { loadSafety } from '@/safety/safetyStore';
 import { Onboarding } from './Onboarding';
 import { useProfileStore } from './profileStore';
+
+// Every grade now has topics in every subject: the empty state is faked to keep it tested.
+const emptyGrade = vi.hoisted(() => ({ on: false }));
+vi.mock('@/app/curriculum', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/app/curriculum')>();
+  return {
+    ...actual,
+    gradeView: (...args: Parameters<typeof actual.gradeView>) =>
+      emptyGrade.on ? [] : actual.gradeView(...args),
+  };
+});
+afterEach(() => {
+  emptyGrade.on = false;
+});
 
 describe('library views (Grade → Subject → Topic)', () => {
   it('"Tất cả" is the whole catalog, unplaced topics included, without lessons', () => {
@@ -30,9 +44,13 @@ describe('library views (Grade → Subject → Topic)', () => {
     const ids = chaptersFor(10, 'physics').flatMap((c) => c.topics.map((x) => x.id));
     // Unplaced (no textbook lesson clearly names it): only under "Tất cả".
     expect(ids).not.toContain('inclinedPlane');
-    // Grade 12 physics has no placed topic yet (#255 places grade 12 last).
-    expect(chaptersFor(12, 'physics')).toEqual([]);
-    expect(availableCount(12, 'physics')).toBe(0);
+    // Grade 12 physics opens with the textbook's Chương I (#255, grade 12).
+    const [g12] = chaptersFor(12, 'physics');
+    expect(g12?.title).toEqual({ text: 'Chương I. Vật lí nhiệt' });
+    expect(g12?.topics.map((x) => [x.id, x.lessons])).toEqual([
+      ['matterStructure', [1]],
+      ['heatAndPhase', [2, 3, 4, 5, 6]],
+    ]);
     expect(availableCount('all', 'biology')).toBe(
       CATALOG.biology.flatMap((c) => c.topics).filter((x) => x.status === 'available').length,
     );
@@ -50,10 +68,9 @@ describe('library views (Grade → Subject → Topic)', () => {
     const s = suggestions('all', ['biology']);
     expect(s[0]?.subject).toBe('biology');
     expect(s.every((x) => x.topic.status === 'available')).toBe(true);
-    // Grade 12 has no physics topic yet: its suggestions are chemistry and biology ones.
+    // A grade's suggestions follow the book order, the chosen subject first.
     const g12 = suggestions(12, ['physics']);
-    expect(g12.length).toBeGreaterThan(0);
-    expect(g12.map((x) => x.subject)).not.toContain('physics');
+    expect(g12.slice(0, 2).map((x) => x.topic.id)).toEqual(['matterStructure', 'heatAndPhase']);
     expect(g12.every((x) => x.topic.status === 'available')).toBe(true);
   });
 });
@@ -196,6 +213,7 @@ describe('library grade switch', () => {
 
   it('a grade without topics in the subject is no dead end: "Xem tất cả"', async () => {
     const user = userEvent.setup();
+    emptyGrade.on = true;
     useProfileStore.setState({ grade: 12 });
     useWorkspaceStore.setState({ subject: 'physics' });
     render(<LeftSidebar />);
