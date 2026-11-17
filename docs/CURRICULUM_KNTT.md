@@ -36,11 +36,11 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Vật lí 12 | 25 | 21 | 21 |
 | Hoá học 10 | 23 | 16 | 16 |
 | Hoá học 11 | 25 | 19 | 19 |
-| Hoá học 12 | 30 | 22 | 17 |
+| Hoá học 12 | 30 | 22 | 20 |
 | Sinh học 10 | 26 | 17 | 17 |
 | Sinh học 11 | 29 | 20 | 20 |
 | Sinh học 12 | 35 | 28 | 7 |
-| **Cộng** | **253** | **189** | **163** |
+| **Cộng** | **253** | **189** | **166** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -213,10 +213,10 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Hoá học 12 | Chương 6. Đại cương về kim loại | 21 | Hợp kim | 99 | Lí thuyết | Hợp kim | Tên Bài 21: hợp kim (bài học có hướng dẫn). | pending |
 | Hoá học 12 | Chương 6. Đại cương về kim loại | 22 | Sự ăn mòn kim loại | 102 | Lí thuyết | Sự ăn mòn kim loại | Tên Bài 22: sự ăn mòn kim loại (bài học có hướng dẫn). | pending |
 | Hoá học 12 | Chương 6. Đại cương về kim loại | 23 | Ôn tập chương 6 | 106 | Ôn tập | chưa có |  | pending |
-| Hoá học 12 | Chương 7. Nguyên tố nhóm IA và nhóm IIA | 24 | Nguyên tố nhóm IA | 108 | Lí thuyết | chưa có |  | pending |
-| Hoá học 12 | Chương 7. Nguyên tố nhóm IA và nhóm IIA | 25 | Nguyên tố nhóm IIA | 116 | Lí thuyết | chưa có |  | pending |
+| Hoá học 12 | Chương 7. Nguyên tố nhóm IA và nhóm IIA | 24 | Nguyên tố nhóm IA | 108 | Lí thuyết | Nguyên tố nhóm IA | Tên Bài 24: nguyên tố nhóm IA: Bảng 24.1–24.3, xu hướng bán kính, nhiệt độ nóng chảy, nhiệt độ sôi, khối lượng riêng, độ cứng, phản ứng với nước, màu ngọn lửa. | pending |
+| Hoá học 12 | Chương 7. Nguyên tố nhóm IA và nhóm IIA | 25 | Nguyên tố nhóm IIA | 116 | Lí thuyết | Nguyên tố nhóm IIA | Tên Bài 25: nguyên tố nhóm IIA: Bảng 25.1–25.4, độ tan của hydroxide và muối, độ bền nhiệt của muối carbonate, nitrate. | pending |
 | Hoá học 12 | Chương 7. Nguyên tố nhóm IA và nhóm IIA | 26 | Ôn tập chương 7 | 126 | Ôn tập | chưa có |  | pending |
-| Hoá học 12 | Chương 8. Sơ lược về dãy kim loại chuyển tiếp thứ nhất và phức chất | 27 | Đại cương về kim loại chuyển tiếp dãy thứ nhất | 128 | Lí thuyết | chưa có |  | pending |
+| Hoá học 12 | Chương 8. Sơ lược về dãy kim loại chuyển tiếp thứ nhất và phức chất | 27 | Đại cương về kim loại chuyển tiếp dãy thứ nhất | 128 | Lí thuyết | Đại cương về kim loại chuyển tiếp dãy thứ nhất | Tên Bài 27: đại cương về kim loại chuyển tiếp dãy thứ nhất: Bảng 27.1, 27.2, 27.4, cấu hình electron của ion, chuẩn độ FeSO₄ bằng KMnO₄. | pending |
 | Hoá học 12 | Chương 8. Sơ lược về dãy kim loại chuyển tiếp thứ nhất và phức chất | 28 | Sơ lược về phức chất | 134 | Lí thuyết | chưa có |  | pending |
 | Hoá học 12 | Chương 8. Sơ lược về dãy kim loại chuyển tiếp thứ nhất và phức chất | 29 | Một số tính chất và ứng dụng của phức chất | 138 | Lí thuyết | chưa có |  | pending |
 | Hoá học 12 | Chương 8. Sơ lược về dãy kim loại chuyển tiếp thứ nhất và phức chất | 30 | Ôn tập chương 8 | 142 | Ôn tập | chưa có |  | pending |
