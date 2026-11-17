@@ -2992,6 +2992,30 @@
    "review_status": "pending"
   },
   {
+   "topic": "complexStructure",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 8. Sơ lược về dãy kim loại chuyển tiếp thứ nhất và phức chất",
+   "lessons": [
+    28
+   ],
+   "reason": "Tên Bài 28: sơ lược về phức chất: nguyên tử trung tâm, phối tử, điện tích, Bảng 28.1 (mô hình 3D khi sách nêu dạng hình học).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "complexReactions",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 8. Sơ lược về dãy kim loại chuyển tiếp thứ nhất và phức chất",
+   "lessons": [
+    29
+   ],
+   "reason": "Tên Bài 29: một số tính chất và ứng dụng của phức chất: dấu hiệu tạo phức, màu sắc, phản ứng thế phối tử.",
+   "review_status": "pending"
+  },
+  {
    "topic": "heatAndPhase",
    "subject": "physics",
    "grade": 12,

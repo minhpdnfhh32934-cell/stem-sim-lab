@@ -539,6 +539,8 @@ PLACEMENTS = [
     ("groupIA", "HH12", [24], "Tên Bài 24: nguyên tố nhóm IA: Bảng 24.1–24.3, xu hướng bán kính, nhiệt độ nóng chảy, nhiệt độ sôi, khối lượng riêng, độ cứng, phản ứng với nước, màu ngọn lửa."),
     ("groupIIA", "HH12", [25], "Tên Bài 25: nguyên tố nhóm IIA: Bảng 25.1–25.4, độ tan của hydroxide và muối, độ bền nhiệt của muối carbonate, nitrate."),
     ("transitionMetals", "HH12", [27], "Tên Bài 27: đại cương về kim loại chuyển tiếp dãy thứ nhất: Bảng 27.1, 27.2, 27.4, cấu hình electron của ion, chuẩn độ FeSO₄ bằng KMnO₄."),
+    ("complexStructure", "HH12", [28], "Tên Bài 28: sơ lược về phức chất: nguyên tử trung tâm, phối tử, điện tích, Bảng 28.1 (mô hình 3D khi sách nêu dạng hình học)."),
+    ("complexReactions", "HH12", [29], "Tên Bài 29: một số tính chất và ứng dụng của phức chất: dấu hiệu tạo phức, màu sắc, phản ứng thế phối tử."),
     ("heatAndPhase", "VL12", [2, 3, 4, 5, 6], "Tên Bài 2: nội năng, định luật I (ΔU = A + Q); Bài 3: nhiệt độ, thang nhiệt độ; Bài 4: nhiệt dung riêng (Q = mcΔT); Bài 5: nhiệt nóng chảy riêng (Q = λm); Bài 6: nhiệt hóa hơi riêng (Q = Lm), số liệu Bảng 4.1, 5.1, 6.1."),
     ("emWave", "VL11", [11], "Tên Bài 11: sóng điện từ (vectơ E, B vuông góc với phương truyền; λ = c/f; thang sóng điện từ theo Bảng 11.1)."),
     ("interference", "VL11", [12], "Tên Bài 12: giao thoa sóng (cảnh có hai nguồn cùng pha trên mặt nước; phần phách là mở rộng)."),
