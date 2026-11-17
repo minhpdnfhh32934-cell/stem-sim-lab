@@ -191,5 +191,49 @@ export function sgkVl11(n: number): Source {
   };
 }
 
+/**
+ * Vật lí 12 (Kết nối tri thức với cuộc sống) theory lessons: [title, first page, last page], from
+ * the table of contents (data/curriculum_kntt.json; the last page is the page before the next
+ * lesson), read in the publisher's e-book (taphuan.nxbgd.vn, 17/11/2026). `sgkVl12` cites them.
+ */
+export const VL12_LESSONS: Readonly<Record<number, readonly [string, number, number]>> = {
+  1: ['Cấu trúc của chất. Sự chuyển thể', 6, 9],
+  2: ['Nội năng. Định luật I của nhiệt động lực học', 10, 14],
+  3: ['Nhiệt độ. Thang nhiệt độ – nhiệt kế', 15, 19],
+  4: ['Nhiệt dung riêng', 20, 23],
+  5: ['Nhiệt nóng chảy riêng', 24, 26],
+  6: ['Nhiệt hoá hơi riêng', 27, 29],
+  8: ['Mô hình động học phân tử chất khí', 34, 36],
+  9: ['Định luật Boyle', 37, 40],
+  10: ['Định luật Charles', 41, 44],
+  11: ['Phương trình trạng thái của khí lí tưởng', 45, 47],
+  12: [
+    'Áp suất khí theo mô hình động học phân tử. Quan hệ giữa động năng phân tử và nhiệt độ',
+    48,
+    51,
+  ],
+  14: ['Từ trường', 56, 60],
+  15: ['Lực từ tác dụng lên dây dẫn mang dòng điện. Cảm ứng từ', 61, 65],
+  16: ['Từ thông. Hiện tượng cảm ứng điện từ', 66, 71],
+  17: ['Máy phát điện xoay chiều', 72, 77],
+  18: ['Ứng dụng hiện tượng cảm ứng điện từ', 78, 81],
+  19: ['Điện từ trường. Mô hình sóng điện từ', 82, 85],
+  21: ['Cấu trúc hạt nhân', 91, 95],
+  22: ['Phản ứng hạt nhân và năng lượng liên kết', 96, 103],
+  23: ['Hiện tượng phóng xạ', 104, 113],
+  24: ['Công nghiệp hạt nhân', 114, 118],
+};
+
+/** The source of Vật lí 12 KNTT lesson `n`, with its pages. */
+export function sgkVl12(n: number): Source {
+  const lesson = VL12_LESSONS[n];
+  if (!lesson) throw new Error(`Vật lí 12 lesson ${String(n)} is not in VL12_LESSONS`);
+  const [title, from, to] = lesson;
+  return {
+    id: `sgk-vl12-kntt-b${String(n)}`,
+    citation: `Sách giáo khoa Vật lí 12, bộ Kết nối tri thức với cuộc sống, NXB Giáo dục Việt Nam — Bài ${String(n)} “${title}”, tr. ${String(from)}–${String(to)}`,
+  };
+}
+
 /** The oscillation lessons a pendulum card cites (Vật lí 11 Bài 1, 2, 3, 5, 6). */
 export const VL11_OSCILLATION = [1, 2, 3, 5, 6] as const;

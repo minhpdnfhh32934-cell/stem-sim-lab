@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import raw from '@data/curriculum_kntt.json';
 import { loadScene, sceneIds } from '../registry';
-import { SRC, VL10_LESSONS, VL11_LESSONS, sgk10, sgkVl11 } from './sources';
+import { SRC, VL10_LESSONS, VL11_LESSONS, VL12_LESSONS, sgk10, sgkVl11, sgkVl12 } from './sources';
 
 interface Lesson {
   number: number;
@@ -93,5 +93,31 @@ describe('Vật lí 11 KNTT lessons cited by the Science Cards (user rule 15/11/
       'Sách giáo khoa Vật lí 11, bộ Kết nối tri thức với cuộc sống, NXB Giáo dục Việt Nam — Bài 11 “Sóng điện từ”, tr. 44–47',
     );
     expect(() => sgkVl11(4)).toThrow();
+  });
+});
+
+describe('Vật lí 12 KNTT lessons cited by the Science Cards (#255 grade 12)', () => {
+  const vl12 = raw.books.find((b) => b.id === 'VL12');
+  const toc12: (Lesson & { kind: string })[] = (vl12?.chapters ?? []).flatMap(
+    (c) => c.lessons as (Lesson & { kind: string })[],
+  );
+
+  it('every theory lesson is in the table, with the title and pages of the table of contents', () => {
+    const theory = toc12.filter((l) => l.kind === 'theory').map((l) => l.number);
+    expect(Object.keys(VL12_LESSONS).map(Number)).toEqual(theory);
+    for (const [key, [title, from, to]] of Object.entries(VL12_LESSONS)) {
+      const n = Number(key);
+      const i = toc12.findIndex((l) => l.number === n);
+      expect(title, `Bài ${key}`).toBe(toc12[i]?.title);
+      expect(from, `Bài ${key}`).toBe(toc12[i]?.page);
+      expect(to, `Bài ${key}`).toBe((toc12[i + 1]?.page ?? 0) - 1);
+    }
+  });
+
+  it('a citation names the book, the lesson and its pages', () => {
+    expect(sgkVl12(4).citation).toBe(
+      'Sách giáo khoa Vật lí 12, bộ Kết nối tri thức với cuộc sống, NXB Giáo dục Việt Nam — Bài 4 “Nhiệt dung riêng”, tr. 20–23',
+    );
+    expect(() => sgkVl12(7)).toThrow();
   });
 });
