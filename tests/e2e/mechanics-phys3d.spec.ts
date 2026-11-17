@@ -95,3 +95,40 @@ test('Rơi tự do in 3D: dropped from h₀ = 45 m it lands right below, with no
   await expect(view.locator('.three-label', { hasText: 'L =' })).toHaveCount(0);
   expect(errors).toEqual([]);
 });
+
+test('Chuyển động tròn đều in 3D: the body stays on the circle, v ⊥ r, a towards the centre', async ({
+  page,
+}, testInfo) => {
+  test.setTimeout(120_000);
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(String(e)));
+  await openTopic(page, 'Vật lý', 'Chuyển động tròn đều');
+  await page.locator('.stage__view-switch').getByRole('radio', { name: '3D' }).click();
+  const view = page.locator('.bio3d[data-lesson="uniformCircularMotion"]');
+  await expect(view.locator('canvas')).toBeVisible({ timeout: 30_000 });
+  const read = () =>
+    page.evaluate(() => {
+      const h = (
+        window as unknown as {
+          __simlab3d?: Record<
+            string,
+            { state(): { at: number[]; v: number[]; a: number[] } | null } | undefined
+          >;
+        }
+      ).__simlab3d?.uniformCircularMotion;
+      return h?.state() ?? null;
+    });
+  await page.getByRole('button', { name: /^Chạy/ }).first().click();
+  await page.waitForTimeout(1500);
+  const s = await read();
+  const [x = 0, , z = 0] = s?.at ?? [];
+  const [vx = 0, , vz = 0] = s?.v ?? [];
+  const [ax = 0, , az = 0] = s?.a ?? [];
+  // r = 1 m by default: the body is on the circle, v is tangent, a points to the centre (the
+  // engine's state reaches the page in single precision: 5 digits).
+  expect(Math.hypot(x, z)).toBeCloseTo(1, 5);
+  expect(vx * x + vz * z).toBeCloseTo(0, 5);
+  expect((ax * x + az * z) / (Math.hypot(ax, az) * Math.hypot(x, z))).toBeCloseTo(-1, 5);
+  await page.screenshot({ path: testInfo.outputPath('circular-3d.png') });
+  expect(errors).toEqual([]);
+});
