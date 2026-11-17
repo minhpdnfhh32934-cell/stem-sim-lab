@@ -865,7 +865,10 @@ Progress log: `docs/PROGRESS.md`.
   - Chemistry (6f: `orbitals` — a |ψ|² point cloud of the lesson's exact orbital, `atom/orbital3d.ts`;
     `atomComposition` — exactly Z protons, N neutrons and the electrons, `nuclide/atom3d.ts`): the
     Stage wrapper picks the lazy 3D view or the 2D picture (`useShow3d`, `Bio3DToolbar` in the 2D
-    overlay). The Bohr model stays 2D (a planar model).
+    overlay). The Bohr model stays 2D (a planar model). 6i: `hydrocarbons` shows the chosen
+    straight-chain member in the molecule viewer only when `data/molecules.json` has that compound
+    (`hydrocarbons/molecule3d.ts`: by name, checked by formula), else a note; the other organic
+    lessons and the hydrogen-bond lesson are tables/charts (2D). E2E `organic-bio3d.spec.ts`.
   - `PhysicsScene`s (6b: `electricField`, `electricPotential`, `capacitor`, `electricCurrent`;
     6c: `interference`, `travellingWave`, `standingWave`; 6g: `freeFall`, `horizontalProjectile`,
     `obliqueProjectile` (one `Throw3DView`), `uniformCircularMotion`, `keplerOrbit`,
