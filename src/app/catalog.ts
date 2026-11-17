@@ -101,6 +101,8 @@ export const CATALOG: Record<Subject, ChapterEntry[]> = {
     chapter('polymerGroup', ['polymerBasics', 'polymerMaterials']),
     chapter('cellsElectrolysisGroup', ['electrodePotential', 'electrolysis']),
     chapter('metalsGroup', ['metalProperties', 'metalExtraction', 'alloys', 'corrosion']),
+    chapter('sBlockGroup', ['groupIA', 'groupIIA']),
+    chapter('transitionGroup', ['transitionMetals']),
   ],
   biology: [
     chapter('livingWorld', ['levelsOfLife']),

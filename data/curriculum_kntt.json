@@ -2956,6 +2956,42 @@
    "review_status": "pending"
   },
   {
+   "topic": "groupIA",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 7. Nguyên tố nhóm IA và nhóm IIA",
+   "lessons": [
+    24
+   ],
+   "reason": "Tên Bài 24: nguyên tố nhóm IA: Bảng 24.1–24.3, xu hướng bán kính, nhiệt độ nóng chảy, nhiệt độ sôi, khối lượng riêng, độ cứng, phản ứng với nước, màu ngọn lửa.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "groupIIA",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 7. Nguyên tố nhóm IA và nhóm IIA",
+   "lessons": [
+    25
+   ],
+   "reason": "Tên Bài 25: nguyên tố nhóm IIA: Bảng 25.1–25.4, độ tan của hydroxide và muối, độ bền nhiệt của muối carbonate, nitrate.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "transitionMetals",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 8. Sơ lược về dãy kim loại chuyển tiếp thứ nhất và phức chất",
+   "lessons": [
+    27
+   ],
+   "reason": "Tên Bài 27: đại cương về kim loại chuyển tiếp dãy thứ nhất: Bảng 27.1, 27.2, 27.4, cấu hình electron của ion, chuẩn độ FeSO₄ bằng KMnO₄.",
+   "review_status": "pending"
+  },
+  {
    "topic": "heatAndPhase",
    "subject": "physics",
    "grade": 12,

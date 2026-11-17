@@ -112,6 +112,8 @@ const en: Messages = {
     polymerGroup: 'Polymers',
     cellsElectrolysisGroup: 'Cells and electrolysis',
     metalsGroup: 'Metals',
+    sBlockGroup: 'Groups IA and IIA',
+    transitionGroup: 'First-row transition metals and complexes',
     bonds: 'Chemical bonds',
     dcCircuit: 'Current and circuits',
     thermalPhysics: 'Thermal physics',
@@ -258,6 +260,9 @@ const en: Messages = {
     metalExtraction: 'Metals in nature and their extraction',
     alloys: 'Alloys',
     corrosion: 'Corrosion of metals',
+    groupIA: 'Group IA elements',
+    groupIIA: 'Group IIA elements',
+    transitionMetals: 'First-row transition metals',
     fourierSeries: 'Harmonics and Fourier series',
   },
   stage: {
