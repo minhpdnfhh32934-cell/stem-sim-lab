@@ -72,6 +72,9 @@ const MODULES: Record<string, () => Promise<ModuleView>> = {
   electrodePotential: () =>
     import('@/chemistry/electrochem/modules').then((m) => m.electrodePotential),
   metalProperties: () => import('@/chemistry/electrochem/modules').then((m) => m.metalProperties),
+  groupIA: () => import('@/chemistry/groups/modules').then((m) => m.groupIA),
+  groupIIA: () => import('@/chemistry/groups/modules').then((m) => m.groupIIA),
+  transitionMetals: () => import('@/chemistry/groups/modules').then((m) => m.transitionMetals),
   radioactivity: () => import('@/physics/nuclear/modules').then((m) => m.radioactivity),
   // Descriptive textbook lessons (#255): each runs its guided Science Studio lesson.
   ...Object.fromEntries(

@@ -115,6 +115,8 @@ const vi = {
     polymerGroup: 'Polymer',
     cellsElectrolysisGroup: 'Pin điện và điện phân',
     metalsGroup: 'Đại cương về kim loại',
+    sBlockGroup: 'Nguyên tố nhóm IA và nhóm IIA',
+    transitionGroup: 'Kim loại chuyển tiếp dãy thứ nhất và phức chất',
     bonds: 'Liên kết hóa học',
     dcCircuit: 'Dòng điện, mạch điện',
     thermalPhysics: 'Vật lí nhiệt',
@@ -261,6 +263,9 @@ const vi = {
     metalExtraction: 'Kim loại trong tự nhiên và phương pháp tách kim loại',
     alloys: 'Hợp kim',
     corrosion: 'Sự ăn mòn kim loại',
+    groupIA: 'Nguyên tố nhóm IA',
+    groupIIA: 'Nguyên tố nhóm IIA',
+    transitionMetals: 'Đại cương về kim loại chuyển tiếp dãy thứ nhất',
     fourierSeries: 'Họa âm và chuỗi Fourier',
   },
   stage: {
