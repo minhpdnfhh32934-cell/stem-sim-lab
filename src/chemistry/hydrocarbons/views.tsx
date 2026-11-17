@@ -1,4 +1,6 @@
-import { useMemo } from 'react';
+import { lazy, Suspense, useMemo } from 'react';
+import { Bio3DToolbar } from '@/biology/view3d/switch';
+import { useShow3d } from '@/biology/view3d/support';
 import { formatNumber } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
@@ -21,6 +23,8 @@ import {
 } from './model';
 import { N_MAX, setHc, useHcStore } from './store';
 import './hydrocarbons.css';
+
+const Hc3DView = lazy(() => import('./Hc3DView').then((m) => ({ default: m.Hc3DView })));
 
 const side = (terms: HcReaction['reactants']) =>
   terms.map((t) => `${t.coef > 1 ? String(t.coef) : ''}${formatFormula(t.formula)}`).join(' + ');
@@ -120,19 +124,31 @@ export function HcStage() {
   const card = useMemo(() => hcCard(), []);
   usePublishCard(card);
   const c = classOf(cls);
+  const { show3d } = useShow3d('hydrocarbons');
+  const chips = (
+    <>
+      <span className="chem-chip">
+        <strong className="stage__hud-title">{Lz(TITLE)}</strong>
+      </span>
+      <span className="chem-chip mono">
+        {Lz(c.name)}: C<sub>n</sub>H
+        <sub>{`2n${c.b > 0 ? `+${String(c.b)}` : c.b < 0 ? `−${String(-c.b)}` : ''}`}</sub> (n ≥{' '}
+        {c.n_min})
+      </span>
+      <Bio3DToolbar lesson="hydrocarbons" />
+    </>
+  );
+  if (show3d)
+    return (
+      <Suspense fallback={<div className="chem-view" />}>
+        <Hc3DView top={chips} />
+      </Suspense>
+    );
   return (
     <div className="chem-view hydrocarbons">
-      <div className="chem-overlay">
-        <span className="chem-chip">
-          <strong className="stage__hud-title">{Lz(TITLE)}</strong>
-        </span>
-        <span className="chem-chip mono">
-          {Lz(c.name)}: C<sub>n</sub>H
-          <sub>{`2n${c.b > 0 ? `+${String(c.b)}` : c.b < 0 ? `−${String(-c.b)}` : ''}`}</sub> (n ≥{' '}
-          {c.n_min})
-        </span>
-      </div>
       <TableChart />
+      {/* After the chart: the canvas would otherwise take the clicks meant for the switch. */}
+      <div className="chem-overlay">{chips}</div>
     </div>
   );
 }
