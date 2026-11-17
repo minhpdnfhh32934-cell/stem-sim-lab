@@ -1,0 +1,82 @@
+/* Ideal gas (VL12 Bài 8–12, #255 round 3b). */
+@import '../../chemistry/chem.css';
+
+.gas-panel {
+  display: grid;
+  gap: var(--space-3);
+}
+.gas-panel__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+.gas-panel__list [aria-checked='true'] {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.gas-panel__field {
+  display: grid;
+  gap: var(--space-1);
+}
+.gas-panel__field > span {
+  color: var(--text-muted);
+}
+.gas-panel__head {
+  margin: 0;
+}
+.gas-panel__held {
+  margin: 0;
+  color: var(--text-muted);
+}
+.gas-panel__facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-1) var(--space-3);
+  margin: 0;
+}
+.gas-panel__facts dt {
+  color: var(--text-muted);
+}
+.gas-panel__facts dd {
+  margin: 0;
+}
+.gas-note {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border-left: 3px solid var(--border);
+  background: var(--bg-panel-2);
+}
+.gas-empty {
+  position: absolute;
+  inset: 90px var(--space-4) auto;
+  margin: 0;
+  font-size: var(--text-content);
+}
+.gas-illustration {
+  position: absolute;
+  left: var(--space-4);
+  right: var(--space-4);
+  bottom: var(--space-2);
+  margin: 0;
+  color: var(--text-muted);
+}
+.gas-tables {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+.gas-table {
+  border-collapse: collapse;
+}
+.gas-table caption {
+  text-align: left;
+  font-weight: 600;
+  padding-bottom: var(--space-1);
+}
+.gas-table th,
+.gas-table td {
+  padding: 4px var(--space-3);
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}

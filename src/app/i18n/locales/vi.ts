@@ -112,6 +112,7 @@ const vi = {
     bonds: 'Liên kết hóa học',
     dcCircuit: 'Dòng điện, mạch điện',
     thermalPhysics: 'Vật lí nhiệt',
+    idealGasChapter: 'Khí lí tưởng',
     gravitation: 'Hấp dẫn (mở rộng)',
   },
   topics: {
@@ -226,6 +227,8 @@ const vi = {
     keplerOrbit: 'Định luật II Kepler',
     matterStructure: 'Cấu trúc của chất và sự chuyển thể',
     heatAndPhase: 'Nội năng, nhiệt độ và nhiệt lượng',
+    gasKinetic: 'Mô hình động học phân tử chất khí',
+    idealGas: 'Các định luật của khí lí tưởng',
     fourierSeries: 'Họa âm và chuỗi Fourier',
   },
   stage: {

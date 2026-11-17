@@ -509,6 +509,8 @@ PLACEMENTS = [
     ("uniformCircularMotion", "VL10", [31, 32], "Tên Bài 31–32: động học của chuyển động tròn đều; lực hướng tâm và gia tốc hướng tâm."),
     ("travellingWave", "VL11", [8, 9], "Tên Bài 8: mô tả sóng (biên độ, chu kì, tần số, tốc độ, bước sóng); tên Bài 9: sóng ngang, sóng dọc, sự truyền năng lượng của sóng cơ (cảnh một nguồn O, chọn sóng ngang hoặc sóng dọc)."),
     ("matterStructure", "VL12", [1], "Tên Bài 1: cấu trúc của chất, sự chuyển thể (bài học có hướng dẫn: dự đoán và các hoạt động phân loại, ghép; không có mô phỏng)."),
+    ("gasKinetic", "VL12", [8], "Tên Bài 8: mô hình động học phân tử chất khí, chuyển động Brown, khí lí tưởng (bài học có hướng dẫn: dự đoán và các hoạt động ghép, phân loại)."),
+    ("idealGas", "VL12", [9, 10, 11, 12], "Tên Bài 9: định luật Boyle (pV = hằng số, Bảng 9.1); Bài 10: định luật Charles (V/T = hằng số, Bảng 10.1); Bài 11: phương trình trạng thái, pV = nRT; Bài 12: áp suất khí theo mô hình động học phân tử, Ēđ = 3/2 kT."),
     ("heatAndPhase", "VL12", [2, 3, 4, 5, 6], "Tên Bài 2: nội năng, định luật I (ΔU = A + Q); Bài 3: nhiệt độ, thang nhiệt độ; Bài 4: nhiệt dung riêng (Q = mcΔT); Bài 5: nhiệt nóng chảy riêng (Q = λm); Bài 6: nhiệt hóa hơi riêng (Q = Lm), số liệu Bảng 4.1, 5.1, 6.1."),
     ("emWave", "VL11", [11], "Tên Bài 11: sóng điện từ (vectơ E, B vuông góc với phương truyền; λ = c/f; thang sóng điện từ theo Bảng 11.1)."),
     ("interference", "VL11", [12], "Tên Bài 12: giao thoa sóng (cảnh có hai nguồn cùng pha trên mặt nước; phần phách là mở rộng)."),

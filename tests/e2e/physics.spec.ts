@@ -41,11 +41,13 @@ const TOPICS: readonly (readonly [string, string])[] = [
   ['Mạch điện một chiều', 'Mạch điện một chiều'],
   ['Cấu trúc của chất và sự chuyển thể', 'Cấu trúc của chất và sự chuyển thể'],
   ['Nội năng, nhiệt độ và nhiệt lượng', 'Nội năng, nhiệt độ và nhiệt lượng'],
+  ['Mô hình động học phân tử chất khí', 'Mô hình động học phân tử chất khí'],
+  ['Các định luật của khí lí tưởng', 'Các định luật của khí lí tưởng'],
   ['Định luật II Kepler', 'Định luật II Kepler'],
 ];
 
 /** Descriptive lessons run as guided lessons (#255): a lesson frame, no simulation. */
-const GUIDED = new Set(['Cấu trúc của chất và sự chuyển thể']);
+const GUIDED = new Set(['Cấu trúc của chất và sự chuyển thể', 'Mô hình động học phân tử chất khí']);
 
 async function openPhysicsLibrary(page: Page) {
   await openLab(page);
