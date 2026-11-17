@@ -1,3 +1,4 @@
+import { lazy } from 'react';
 import type { Locale } from '@/app/i18n/types';
 import type { LocalizedText } from '@/core/data/dataset';
 import { DIM } from '@/core/units';
@@ -478,6 +479,7 @@ const vTension = (p: Params) => notMode(MODE.speed)(p) && (p.vFrom ?? 0) > 0.5;
 export const standingWave: PhysicsScene = {
   id: 'standingWave',
   engineId: 'phys.standingWave',
+  view3d: lazy(() => import('./Standing3DView')),
   endless: true,
   title: L('Sóng dừng trên dây', 'Standing waves on a string'),
   // Filtered by `when`: each mode asks only for what it uses (draft.ts).

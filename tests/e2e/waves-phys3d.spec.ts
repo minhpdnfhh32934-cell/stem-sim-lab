@@ -59,3 +59,47 @@ test('Giao thoa in 3D: the water surface at the engine’s time', async ({ page 
   await page.screenshot({ path: testInfo.outputPath('interference-3d.png') });
   expect(errors).toEqual([]);
 });
+
+test('Sóng cơ in 3D: a block of parts; transverse up and down, longitudinal along Ox', async ({
+  page,
+}, testInfo) => {
+  test.setTimeout(120_000);
+  const errors: string[] = [];
+  const view = await open3d(page, errors, 'Sóng cơ: sóng ngang, sóng dọc', 'travellingWave');
+  // Question 1 p. 35: f = 0,6 Hz, v = 2 m/s, so λ = v/f ≈ 3,333 m.
+  await expect(
+    view.locator('.chem-chip', { hasText: /^λ = 3,333 m, T = .+, v = 2 m\/s$/ }),
+  ).toBeVisible();
+  type S = { t: number; parts: number; mY: number; mX: number };
+  await page.getByRole('button', { name: 'Chạy (Space)' }).first().click();
+  await expect
+    .poll(async () => (await state<S>(page, 'travellingWave'))?.t ?? 0)
+    .toBeGreaterThan(1);
+  await page.screenshot({ path: testInfo.outputPath('transverse-3d.png') });
+  await page.getByRole('radio', { name: 'Sóng dọc' }).click();
+  await expect(view.locator('canvas')).toBeVisible({ timeout: 30_000 });
+  await expect
+    .poll(async () => (await state<S>(page, 'travellingWave'))?.parts ?? 0)
+    .toBeGreaterThan(1000);
+  await page.getByRole('button', { name: 'Chạy (Space)' }).first().click();
+  await expect
+    .poll(async () => (await state<S>(page, 'travellingWave'))?.t ?? 0)
+    .toBeGreaterThan(1);
+  await page.screenshot({ path: testInfo.outputPath('longitudinal-3d.png') });
+  expect(errors).toEqual([]);
+});
+
+test('Sóng dừng in 3D: the string, its loops, nodes; P is the engine’s y', async ({
+  page,
+}, testInfo) => {
+  test.setTimeout(120_000);
+  const errors: string[] = [];
+  const view = await open3d(page, errors, 'Sóng dừng trên dây', 'standingWave');
+  await expect(view.locator('.chem-chip', { hasText: /n = 3$/ })).toBeVisible();
+  await expect(view.locator('.three-label', { hasText: /^N$/ })).toHaveCount(4);
+  type S = { t: number; yP: number; beads: number };
+  await page.getByRole('button', { name: 'Chạy (Space)' }).first().click();
+  await expect.poll(async () => (await state<S>(page, 'standingWave'))?.t ?? 0).toBeGreaterThan(0);
+  await page.screenshot({ path: testInfo.outputPath('standing-3d.png') });
+  expect(errors).toEqual([]);
+});
