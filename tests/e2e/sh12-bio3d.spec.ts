@@ -58,3 +58,24 @@ test('Operon lac in 3D: repressed without lactose, transcribed with it', async (
   await expect(page.locator('.operon__dna')).toBeVisible();
   expect(errors).toEqual([]);
 });
+
+test('Di truyền giới tính in 3D: Morgan’s cross, four cells, sons get the mother’s X', async ({
+  page,
+}, testInfo) => {
+  test.setTimeout(120_000);
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(String(e)));
+  await openTopic(page, 'Sinh học', 'Di truyền giới tính và liên kết với giới tính');
+  await page.getByRole('radio', { name: '3D' }).first().click();
+  const view = page.locator('.bio3d[data-lesson="sexLinkage"]');
+  await expect(view.locator('canvas')).toBeVisible({ timeout: 30_000 });
+  type S = { cells: { alleles: string; sex: string; dominant: boolean }[] };
+  // Opens on Morgan's forward cross XᴬXᴬ × XᵃY: daughters XᴬXᵃ, sons XᴬY, all red-eyed.
+  await expect.poll(async () => (await state<S>(page, 'sexLinkage'))?.cells.length).toBe(4);
+  const s = await state<S>(page, 'sexLinkage');
+  expect(s?.cells.every((c) => c.dominant)).toBe(true);
+  expect(s?.cells.filter((c) => c.sex === 'male').map((c) => c.alleles)).toEqual(['A', 'A']);
+  await expect(view.getByText('XᴬXᵃ · mắt đỏ · 1/4').first()).toBeVisible();
+  await page.screenshot({ path: testInfo.outputPath('sexlinked-3d.png') });
+  expect(errors).toEqual([]);
+});
