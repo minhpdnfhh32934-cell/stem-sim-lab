@@ -75,6 +75,8 @@ const MODULES: Record<string, () => Promise<ModuleView>> = {
   groupIA: () => import('@/chemistry/groups/modules').then((m) => m.groupIA),
   groupIIA: () => import('@/chemistry/groups/modules').then((m) => m.groupIIA),
   transitionMetals: () => import('@/chemistry/groups/modules').then((m) => m.transitionMetals),
+  complexStructure: () => import('@/chemistry/complexes/modules').then((m) => m.complexStructure),
+  complexReactions: () => import('@/chemistry/complexes/modules').then((m) => m.complexReactions),
   radioactivity: () => import('@/physics/nuclear/modules').then((m) => m.radioactivity),
   // Descriptive textbook lessons (#255): each runs its guided Science Studio lesson.
   ...Object.fromEntries(

@@ -266,6 +266,8 @@ const vi = {
     groupIA: 'Nguyên tố nhóm IA',
     groupIIA: 'Nguyên tố nhóm IIA',
     transitionMetals: 'Đại cương về kim loại chuyển tiếp dãy thứ nhất',
+    complexStructure: 'Sơ lược về phức chất',
+    complexReactions: 'Một số tính chất và ứng dụng của phức chất',
     fourierSeries: 'Họa âm và chuỗi Fourier',
   },
   stage: {

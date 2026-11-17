@@ -36,11 +36,11 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Vật lí 12 | 25 | 21 | 21 |
 | Hoá học 10 | 23 | 16 | 16 |
 | Hoá học 11 | 25 | 19 | 19 |
-| Hoá học 12 | 30 | 22 | 20 |
+| Hoá học 12 | 30 | 22 | 22 |
 | Sinh học 10 | 26 | 17 | 17 |
 | Sinh học 11 | 29 | 20 | 20 |
 | Sinh học 12 | 35 | 28 | 7 |
-| **Cộng** | **253** | **189** | **166** |
+| **Cộng** | **253** | **189** | **168** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -217,8 +217,8 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Hoá học 12 | Chương 7. Nguyên tố nhóm IA và nhóm IIA | 25 | Nguyên tố nhóm IIA | 116 | Lí thuyết | Nguyên tố nhóm IIA | Tên Bài 25: nguyên tố nhóm IIA: Bảng 25.1–25.4, độ tan của hydroxide và muối, độ bền nhiệt của muối carbonate, nitrate. | pending |
 | Hoá học 12 | Chương 7. Nguyên tố nhóm IA và nhóm IIA | 26 | Ôn tập chương 7 | 126 | Ôn tập | chưa có |  | pending |
 | Hoá học 12 | Chương 8. Sơ lược về dãy kim loại chuyển tiếp thứ nhất và phức chất | 27 | Đại cương về kim loại chuyển tiếp dãy thứ nhất | 128 | Lí thuyết | Đại cương về kim loại chuyển tiếp dãy thứ nhất | Tên Bài 27: đại cương về kim loại chuyển tiếp dãy thứ nhất: Bảng 27.1, 27.2, 27.4, cấu hình electron của ion, chuẩn độ FeSO₄ bằng KMnO₄. | pending |
-| Hoá học 12 | Chương 8. Sơ lược về dãy kim loại chuyển tiếp thứ nhất và phức chất | 28 | Sơ lược về phức chất | 134 | Lí thuyết | chưa có |  | pending |
-| Hoá học 12 | Chương 8. Sơ lược về dãy kim loại chuyển tiếp thứ nhất và phức chất | 29 | Một số tính chất và ứng dụng của phức chất | 138 | Lí thuyết | chưa có |  | pending |
+| Hoá học 12 | Chương 8. Sơ lược về dãy kim loại chuyển tiếp thứ nhất và phức chất | 28 | Sơ lược về phức chất | 134 | Lí thuyết | Sơ lược về phức chất | Tên Bài 28: sơ lược về phức chất: nguyên tử trung tâm, phối tử, điện tích, Bảng 28.1 (mô hình 3D khi sách nêu dạng hình học). | pending |
+| Hoá học 12 | Chương 8. Sơ lược về dãy kim loại chuyển tiếp thứ nhất và phức chất | 29 | Một số tính chất và ứng dụng của phức chất | 138 | Lí thuyết | Một số tính chất và ứng dụng của phức chất | Tên Bài 29: một số tính chất và ứng dụng của phức chất: dấu hiệu tạo phức, màu sắc, phản ứng thế phối tử. | pending |
 | Hoá học 12 | Chương 8. Sơ lược về dãy kim loại chuyển tiếp thứ nhất và phức chất | 30 | Ôn tập chương 8 | 142 | Ôn tập | chưa có |  | pending |
 | Sinh học 10 | Phần mở đầu | 1 | Giới thiệu khái quát môn Sinh học | 5 | Mở đầu môn học | chưa có |  | pending |
 | Sinh học 10 | Phần mở đầu | 2 | Phương pháp nghiên cứu và học tập môn Sinh học | 12 | Mở đầu môn học | chưa có |  | pending |
