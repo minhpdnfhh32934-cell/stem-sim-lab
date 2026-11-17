@@ -39,4 +39,8 @@ export const GUIDED_TOPICS = [
   'inductionApplications',
   'electromagneticField',
   'nuclearIndustry',
+  'soapDetergent',
+  'monosaccharides',
+  'disaccharides',
+  'polysaccharides',
 ] as const;
