@@ -1,0 +1,408 @@
+{
+  "dataset": "metal_groups_kntt",
+  "version": 1,
+  "accessed": "2026-11-17",
+  "review_status": "pending",
+  "source": {
+    "id": "sgk-hh12-c7-b27",
+    "citation": "SGK Hóa học 12 Kết nối tri thức, NXB Giáo dục Việt Nam: Bài 24 (Bảng 24.1–24.3, tr. 108–115), Bài 25 (Bảng 25.1–25.4, tr. 116–125), Bài 27 (Bảng 27.1–27.4, tr. 128–133); sách dẫn Silberberg 2007 (bán kính), Dean 1999 (thế điện cực, số liệu vật lí, độ tan, enthalpy), webelements.com (độ cứng), PubChem (SrCO3)",
+    "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-12.4701708102"
+  },
+  "items": [
+    {
+      "id": "Li",
+      "group": "IA",
+      "Z": 3,
+      "name": "lithium",
+      "configuration": "[He]2s1",
+      "radius_pm": 152,
+      "E_V": -3.04,
+      "mp_C": 180.5,
+      "bp_C": 1341,
+      "density": 0.534,
+      "hardness": 0.6,
+      "water": {
+        "vi": "Mẫu kim loại chuyển động chậm trên mặt nước.",
+        "en": "The metal moves slowly on the water."
+      },
+      "flame": {
+        "vi": "đỏ tía",
+        "en": "crimson"
+      },
+      "review_status": "pending"
+    },
+    {
+      "id": "Na",
+      "group": "IA",
+      "Z": 11,
+      "name": "sodium",
+      "configuration": "[Ne]3s1",
+      "radius_pm": 186,
+      "E_V": -2.713,
+      "mp_C": 97.8,
+      "bp_C": 881,
+      "density": 0.968,
+      "hardness": 0.5,
+      "water": {
+        "vi": "Mẫu kim loại trở thành khối cầu, chạy nhanh trên mặt nước.",
+        "en": "The metal becomes a ball and runs fast on the water."
+      },
+      "flame": {
+        "vi": "vàng",
+        "en": "yellow"
+      },
+      "review_status": "pending"
+    },
+    {
+      "id": "K",
+      "group": "IA",
+      "Z": 19,
+      "name": "potassium",
+      "configuration": "[Ar]4s1",
+      "radius_pm": 227,
+      "E_V": -2.924,
+      "mp_C": 63.4,
+      "bp_C": 759,
+      "density": 0.89,
+      "hardness": 0.4,
+      "water": {
+        "vi": "Mẫu kim loại cháy, kèm tiếng nổ nhẹ.",
+        "en": "The metal burns with a small pop."
+      },
+      "flame": {
+        "vi": "tím nhạt",
+        "en": "lilac"
+      },
+      "review_status": "pending"
+    },
+    {
+      "id": "Rb",
+      "group": "IA",
+      "Z": 37,
+      "name": "rubidium",
+      "configuration": "[Kr]5s1",
+      "radius_pm": 248,
+      "E_V": -2.924,
+      "mp_C": 39.3,
+      "bp_C": 691,
+      "density": 1.532,
+      "hardness": 0.3,
+      "water": null,
+      "flame": null,
+      "review_status": "pending"
+    },
+    {
+      "id": "Cs",
+      "group": "IA",
+      "Z": 55,
+      "name": "caesium",
+      "configuration": "[Xe]6s1",
+      "radius_pm": 265,
+      "E_V": -2.923,
+      "mp_C": 28.4,
+      "bp_C": 668,
+      "density": 1.878,
+      "hardness": 0.2,
+      "water": null,
+      "flame": null,
+      "review_status": "pending"
+    },
+    {
+      "id": "Be",
+      "group": "IIA",
+      "Z": 4,
+      "name": "beryllium",
+      "configuration": "[He]2s2",
+      "radius_pm": 112,
+      "E_V": -1.99,
+      "mp_C": 1287,
+      "bp_C": 2467,
+      "density": 1.85,
+      "hardness": null,
+      "water": {
+        "vi": "Không tác dụng với nước.",
+        "en": "Does not react with water."
+      },
+      "flame": null,
+      "review_status": "pending"
+    },
+    {
+      "id": "Mg",
+      "group": "IIA",
+      "Z": 12,
+      "name": "magnesium",
+      "configuration": "[Ne]3s2",
+      "radius_pm": 160,
+      "E_V": -2.356,
+      "mp_C": 651,
+      "bp_C": 1100,
+      "density": 1.74,
+      "hardness": null,
+      "water": {
+        "vi": "Phản ứng chậm với nước ở nhiệt độ thường, nhanh hơn khi đun nóng.",
+        "en": "Reacts slowly with water at room temperature, faster when heated."
+      },
+      "flame": null,
+      "review_status": "pending"
+    },
+    {
+      "id": "Ca",
+      "group": "IIA",
+      "Z": 20,
+      "name": "calcium",
+      "configuration": "[Ar]4s2",
+      "radius_pm": 197,
+      "E_V": -2.84,
+      "mp_C": 842,
+      "bp_C": 1484,
+      "density": 1.55,
+      "hardness": null,
+      "water": {
+        "vi": "Tác dụng mạnh với nước ở ngay nhiệt độ thường.",
+        "en": "Reacts strongly with water at room temperature."
+      },
+      "flame": {
+        "vi": "đỏ cam",
+        "en": "orange-red"
+      },
+      "review_status": "pending"
+    },
+    {
+      "id": "Sr",
+      "group": "IIA",
+      "Z": 38,
+      "name": "strontium",
+      "configuration": "[Kr]5s2",
+      "radius_pm": 215,
+      "E_V": -2.89,
+      "mp_C": 757,
+      "bp_C": 1366,
+      "density": 2.64,
+      "hardness": null,
+      "water": {
+        "vi": "Tác dụng mạnh với nước ở ngay nhiệt độ thường.",
+        "en": "Reacts strongly with water at room temperature."
+      },
+      "flame": {
+        "vi": "đỏ son",
+        "en": "scarlet"
+      },
+      "review_status": "pending"
+    },
+    {
+      "id": "Ba",
+      "group": "IIA",
+      "Z": 56,
+      "name": "barium",
+      "configuration": "[Xe]6s2",
+      "radius_pm": 222,
+      "E_V": -2.92,
+      "mp_C": 727,
+      "bp_C": 1845,
+      "density": 3.51,
+      "hardness": null,
+      "water": {
+        "vi": "Tác dụng mạnh với nước ở ngay nhiệt độ thường.",
+        "en": "Reacts strongly with water at room temperature."
+      },
+      "flame": {
+        "vi": "lục",
+        "en": "green"
+      },
+      "review_status": "pending"
+    }
+  ],
+  "hydroxide_solubility": {
+    "Mg": 0.00125,
+    "Ca": 0.173,
+    "Sr": 1.77,
+    "Ba": 3.89
+  },
+  "salt_solubility": {
+    "CO3": {
+      "Mg": 0.01,
+      "Ca": 0.0013,
+      "Sr": 0.0011,
+      "Ba": 0.0024
+    },
+    "SO4": {
+      "Mg": 33.7,
+      "Ca": 0.2,
+      "Sr": 0.0132,
+      "Ba": 0.0028
+    },
+    "NO3": {
+      "Mg": 69.5,
+      "Ca": 152,
+      "Sr": 69.5,
+      "Ba": 9.02
+    }
+  },
+  "solubility_at_30C": [
+    [
+      "NO3",
+      "Ca"
+    ]
+  ],
+  "insoluble_max": 0.01,
+  "slightly_soluble_max": 1,
+  "table_25_4": {
+    "CO3": "KKKK",
+    "SO4": "TIIK",
+    "NO3": "TTTT",
+    "OH": "KITT"
+  },
+  "carbonate_dH_kJ": {
+    "Mg": 100.7,
+    "Ca": 179.2,
+    "Sr": 234.6,
+    "Ba": 271.5
+  },
+  "nitrate_dH_kJ": {
+    "Mg": 255.2,
+    "Ca": 369.5,
+    "Sr": 452.4,
+    "Ba": 506.2
+  },
+  "transition": [
+    {
+      "id": "Sc",
+      "Z": 21,
+      "configuration": "[Ar]3d14s2",
+      "mp_C": 1541,
+      "density": 2.98,
+      "conductivity": 1.7,
+      "thermal": 1.9,
+      "hardness": null,
+      "oxidation_states": [],
+      "review_status": "pending"
+    },
+    {
+      "id": "Ti",
+      "Z": 22,
+      "configuration": "[Ar]3d24s2",
+      "mp_C": 1668,
+      "density": 4.5,
+      "conductivity": 2.3,
+      "thermal": 2.6,
+      "hardness": 6,
+      "oxidation_states": [],
+      "review_status": "pending"
+    },
+    {
+      "id": "V",
+      "Z": 23,
+      "configuration": "[Ar]3d34s2",
+      "mp_C": 1917,
+      "density": 6.11,
+      "conductivity": 4.9,
+      "thermal": 3.7,
+      "hardness": 7,
+      "oxidation_states": [],
+      "review_status": "pending"
+    },
+    {
+      "id": "Cr",
+      "Z": 24,
+      "configuration": "[Ar]3d54s1",
+      "mp_C": 1907,
+      "density": 7.15,
+      "conductivity": 7.7,
+      "thermal": 11.3,
+      "hardness": 8.5,
+      "oxidation_states": [
+        3,
+        6
+      ],
+      "review_status": "pending"
+    },
+    {
+      "id": "Mn",
+      "Z": 25,
+      "configuration": "[Ar]3d54s2",
+      "mp_C": 1244,
+      "density": 7.21,
+      "conductivity": 0.7,
+      "thermal": 0.9,
+      "hardness": 6,
+      "oxidation_states": [
+        2,
+        4,
+        7
+      ],
+      "review_status": "pending"
+    },
+    {
+      "id": "Fe",
+      "Z": 26,
+      "configuration": "[Ar]3d64s2",
+      "mp_C": 1535,
+      "density": 7.86,
+      "conductivity": 10,
+      "thermal": 9.7,
+      "hardness": 4,
+      "oxidation_states": [
+        2,
+        3
+      ],
+      "review_status": "pending"
+    },
+    {
+      "id": "Co",
+      "Z": 27,
+      "configuration": "[Ar]3d74s2",
+      "mp_C": 1494,
+      "density": 8.9,
+      "conductivity": 15.4,
+      "thermal": 12.0,
+      "hardness": 5,
+      "oxidation_states": [],
+      "review_status": "pending"
+    },
+    {
+      "id": "Ni",
+      "Z": 28,
+      "configuration": "[Ar]3d84s2",
+      "mp_C": 1453,
+      "density": 8.91,
+      "conductivity": 13.8,
+      "thermal": 11.0,
+      "hardness": 4,
+      "oxidation_states": [],
+      "review_status": "pending"
+    },
+    {
+      "id": "Cu",
+      "Z": 29,
+      "configuration": "[Ar]3d104s1",
+      "mp_C": 1084,
+      "density": 8.96,
+      "conductivity": 57.1,
+      "thermal": 48.3,
+      "hardness": 3,
+      "oxidation_states": [
+        2
+      ],
+      "review_status": "pending"
+    }
+  ],
+  "s_block_compare": {
+    "K": {
+      "conductivity": 13.3,
+      "hardness": 0.4
+    },
+    "Ca": {
+      "conductivity": 28.5,
+      "hardness": 1.75
+    }
+  },
+  "be_melting_point_C": 1287,
+  "heavy_metal_min_density": 5,
+  "titration": {
+    "kmno4_M": 0.02,
+    "feso4_mL": 5.0,
+    "feso4_approx_M": 0.1,
+    "ratio_fe_per_mno4": 5,
+    "equation": "10FeSO4 + 2KMnO4 + 8H2SO4 -> 5Fe2(SO4)3 + K2SO4 + 2MnSO4 + 8H2O"
+  }
+}
