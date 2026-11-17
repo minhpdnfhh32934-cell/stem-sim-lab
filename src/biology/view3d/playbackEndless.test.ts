@@ -20,6 +20,9 @@ function frames(n: number) {
 beforeEach(() => {
   queue = new Map();
   now = performance.now();
+  // The loop reads its first time from performance.now(): on the test's own clock too, so the
+  // first frame lasts 50 ms however busy the machine is (it was the real gap before, a flake).
+  vi.spyOn(performance, 'now').mockImplementation(() => now);
   vi.spyOn(window, 'requestAnimationFrame').mockImplementation((cb) => {
     id += 1;
     queue.set(id, cb);
@@ -52,8 +55,7 @@ describe('usePlayback endless (#205 C5)', () => {
     frames(50);
     expect(result.current.playing).toBe(true);
     expect(result.current.page).toBe(2);
-    // The first frame is a little shorter (it starts when the effect ran).
-    expect(result.current.t).toBeCloseTo(5, 1);
+    expect(result.current.t).toBeCloseTo(5, 6);
     runKey = 'b';
     rerender();
     expect(result.current.page).toBe(0);

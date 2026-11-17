@@ -27,6 +27,17 @@ const state = (page: Page) =>
     return h ? { frames: h.frames(), state: h.state() } : null;
   });
 
+// Every test starts at Medium quality: on a slow runner the start-up benchmark picks Low, which
+// shows the 2D picture (only the first test set it before, so the others failed on CI, PR #312).
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      'stemsim.perf',
+      JSON.stringify({ state: { preference: 'medium', benchmark: null }, version: 1 }),
+    );
+  });
+});
+
 test('Điện trường in 3D: field lines in space, E at M, the capacitor, back to 2D', async ({
   page,
 }, testInfo) => {
@@ -35,12 +46,6 @@ test('Điện trường in 3D: field lines in space, E at M, the capacitor, back
   page.on('pageerror', (e) => errors.push(String(e)));
   page.on('console', (m) => {
     if (m.type() === 'error') errors.push(m.text());
-  });
-  await page.addInitScript(() => {
-    localStorage.setItem(
-      'stemsim.perf',
-      JSON.stringify({ state: { preference: 'medium', benchmark: null }, version: 1 }),
-    );
   });
   await openTopic(page, 'Vật lý', 'Điện trường của điện tích điểm');
   await expect(page.locator('.stage__hud-title')).toHaveText('Điện trường của điện tích điểm', {

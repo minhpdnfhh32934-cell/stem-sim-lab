@@ -1,0 +1,117 @@
+{
+  "dataset": "heredity_kntt",
+  "version": 1,
+  "accessed": "2026-11-17",
+  "review_status": "pending",
+  "source": {
+    "id": "sgk-sh12-b11-12",
+    "citation": "SGK Sinh học 12 Kết nối tri thức, NXB Giáo dục Việt Nam: Bài 11 “Liên kết gene và hoán vị gene” (Hình 11.2, 11.3, câu 2 tr. 59), Bài 12 “Đột biến nhiễm sắc thể” (Hình 12.1, 12.3, tr. 65, Em có biết tr. 67 dẫn Penrose và Smith 1966 qua Griffiths 2015)",
+    "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-sinh-hoc-12.4701665546"
+  },
+  "items": [
+    {
+      "id": "grey_red",
+      "label": {
+        "vi": "thân xám, mắt đỏ",
+        "en": "grey body, red eyes"
+      },
+      "count": 721,
+      "review_status": "pending"
+    },
+    {
+      "id": "black_purple",
+      "label": {
+        "vi": "thân đen, mắt tím",
+        "en": "black body, purple eyes"
+      },
+      "count": 751,
+      "review_status": "pending"
+    },
+    {
+      "id": "grey_purple",
+      "label": {
+        "vi": "thân xám, mắt tím",
+        "en": "grey body, purple eyes"
+      },
+      "count": 49,
+      "review_status": "pending"
+    },
+    {
+      "id": "black_red",
+      "label": {
+        "vi": "thân đen, mắt đỏ",
+        "en": "black body, red eyes"
+      },
+      "count": 45,
+      "review_status": "pending"
+    }
+  ],
+  "cells_with_crossover": 0.34,
+  "testcross_percent": [
+    41.5,
+    41.5,
+    8.5,
+    8.5
+  ],
+  "structure": {
+    "original": [
+      "abcdefg"
+    ],
+    "deletion": [
+      "abcg"
+    ],
+    "duplication": [
+      "abcdefdefg"
+    ],
+    "inversion": [
+      "abcfedg"
+    ],
+    "translocation": [
+      "123defg",
+      "abc456"
+    ]
+  },
+  "allopolyploid": {
+    "a_2n": 4,
+    "b_2n": 6
+  },
+  "human_2n": 46,
+  "chimp_2n": 48,
+  "down_by_age": [
+    {
+      "from": null,
+      "to": 20,
+      "births_per_case": 2300
+    },
+    {
+      "from": 20,
+      "to": 25,
+      "births_per_case": 1600
+    },
+    {
+      "from": 25,
+      "to": 30,
+      "births_per_case": 1200
+    },
+    {
+      "from": 30,
+      "to": 35,
+      "births_per_case": 880
+    },
+    {
+      "from": 35,
+      "to": 40,
+      "births_per_case": 290
+    },
+    {
+      "from": 40,
+      "to": 45,
+      "births_per_case": 100
+    },
+    {
+      "from": 45,
+      "to": null,
+      "births_per_case": 46
+    }
+  ]
+}

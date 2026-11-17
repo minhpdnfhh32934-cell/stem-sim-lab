@@ -23,7 +23,7 @@ const state = <T>(page: Page, lesson: string) =>
     const h = (window as unknown as { __simlab3d?: Record<string, Hook | undefined> }).__simlab3d?.[
       l
     ];
-    return (h?.state() ?? null) as unknown;
+    return h?.state() ?? null;
   }, lesson) as Promise<T | null>;
 
 async function open3d(page: Page, errors: string[], topic: string, lesson: string) {

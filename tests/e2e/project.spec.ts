@@ -184,9 +184,9 @@ test('manual mode offers chemistry and biology topics too', async ({ page }) => 
   const dialog = page.getByRole('dialog', { name: 'Tự dựng cảnh' });
   const select = dialog.getByRole('combobox', { name: 'Chủ đề' });
   await expect(select.locator('optgroup')).toHaveCount(3);
-  await expect(select.locator('optgroup[label="Hóa học"] option')).toHaveCount(39);
+  await expect(select.locator('optgroup[label="Hóa học"] option')).toHaveCount(41);
   // Guided textbook lessons have nothing to set up: not offered here.
-  await expect(select.locator('optgroup[label="Sinh học"] option')).toHaveCount(17);
+  await expect(select.locator('optgroup[label="Sinh học"] option')).toHaveCount(24);
   await select.selectOption('logisticGrowth');
   await expect(dialog.locator('.problem-review__module input[type="range"]').first()).toBeVisible();
   await dialog

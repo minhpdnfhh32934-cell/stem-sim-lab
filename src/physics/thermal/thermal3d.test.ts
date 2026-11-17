@@ -43,7 +43,7 @@ describe('heat and phase 3D binding', () => {
 describe('heat and phase 3D scene', () => {
   it('setTime recounts the states from the model; frees all', () => {
     const { kit, track, start } = testKit();
-    const scene = buildThermalScene(kit, { stages: ice, texts: { t: (p) => `${String(p.t)}` } });
+    const scene = buildThermalScene(kit, { stages: ice, texts: { t: (p) => String(p.t) } });
     const boil = ice.find((s) => s.kind === 'boil');
     if (!boil) throw new Error('no boiling');
     scene.setTime?.(boil.start + 0.5 * boil.dt);
