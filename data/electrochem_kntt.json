@@ -1,0 +1,641 @@
+{
+  "dataset": "electrochem_kntt",
+  "version": 1,
+  "accessed": "2026-11-17",
+  "review_status": "pending",
+  "source": {
+    "id": "sgk-hh12-b15",
+    "citation": "SGK Hóa học 12 Kết nối tri thức, NXB Giáo dục Việt Nam: Bài 15 “Thế điện cực và nguồn điện hóa học”, Bảng 15.1 (tr. 70, sách dẫn Dean, Lange's Handbook of Chemistry, 1999), pin Zn – Cu (tr. 73–74), pin Cu – Ag (tr. 75); Bài 24 tr. 110, Bài 25 Bảng 25.3 tr. 119",
+    "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-12.4701708102"
+  },
+  "items": [
+    {
+      "id": "Li",
+      "element": "Li",
+      "ox": [
+        [
+          1,
+          "Li^+"
+        ]
+      ],
+      "red": [
+        [
+          1,
+          "Li"
+        ]
+      ],
+      "n": 1,
+      "E_V": -3.04,
+      "decimals": 3,
+      "label": [
+        "Li^+",
+        "Li"
+      ],
+      "metal": true,
+      "review_status": "pending",
+      "reacts_with_water_lesson": 24
+    },
+    {
+      "id": "K",
+      "element": "K",
+      "ox": [
+        [
+          1,
+          "K^+"
+        ]
+      ],
+      "red": [
+        [
+          1,
+          "K"
+        ]
+      ],
+      "n": 1,
+      "E_V": -2.924,
+      "decimals": 3,
+      "label": [
+        "K^+",
+        "K"
+      ],
+      "metal": true,
+      "review_status": "pending",
+      "reacts_with_water_lesson": 24
+    },
+    {
+      "id": "Ba",
+      "element": "Ba",
+      "ox": [
+        [
+          1,
+          "Ba^2+"
+        ]
+      ],
+      "red": [
+        [
+          1,
+          "Ba"
+        ]
+      ],
+      "n": 2,
+      "E_V": -2.92,
+      "decimals": 2,
+      "label": [
+        "Ba^2+",
+        "Ba"
+      ],
+      "metal": true,
+      "review_status": "pending",
+      "reacts_with_water_lesson": 25
+    },
+    {
+      "id": "Ca",
+      "element": "Ca",
+      "ox": [
+        [
+          1,
+          "Ca^2+"
+        ]
+      ],
+      "red": [
+        [
+          1,
+          "Ca"
+        ]
+      ],
+      "n": 2,
+      "E_V": -2.84,
+      "decimals": 2,
+      "label": [
+        "Ca^2+",
+        "Ca"
+      ],
+      "metal": true,
+      "review_status": "pending",
+      "reacts_with_water_lesson": 25
+    },
+    {
+      "id": "Na",
+      "element": "Na",
+      "ox": [
+        [
+          1,
+          "Na^+"
+        ]
+      ],
+      "red": [
+        [
+          1,
+          "Na"
+        ]
+      ],
+      "n": 1,
+      "E_V": -2.713,
+      "decimals": 3,
+      "label": [
+        "Na^+",
+        "Na"
+      ],
+      "metal": true,
+      "review_status": "pending",
+      "reacts_with_water_lesson": 24
+    },
+    {
+      "id": "Mg",
+      "element": "Mg",
+      "ox": [
+        [
+          1,
+          "Mg^2+"
+        ]
+      ],
+      "red": [
+        [
+          1,
+          "Mg"
+        ]
+      ],
+      "n": 2,
+      "E_V": -2.356,
+      "decimals": 3,
+      "label": [
+        "Mg^2+",
+        "Mg"
+      ],
+      "metal": true,
+      "review_status": "pending"
+    },
+    {
+      "id": "Al",
+      "element": "Al",
+      "ox": [
+        [
+          1,
+          "Al^3+"
+        ]
+      ],
+      "red": [
+        [
+          1,
+          "Al"
+        ]
+      ],
+      "n": 3,
+      "E_V": -1.676,
+      "decimals": 3,
+      "label": [
+        "Al^3+",
+        "Al"
+      ],
+      "metal": true,
+      "review_status": "pending"
+    },
+    {
+      "id": "Zn",
+      "element": "Zn",
+      "ox": [
+        [
+          1,
+          "Zn^2+"
+        ]
+      ],
+      "red": [
+        [
+          1,
+          "Zn"
+        ]
+      ],
+      "n": 2,
+      "E_V": -0.762,
+      "decimals": 3,
+      "label": [
+        "Zn^2+",
+        "Zn"
+      ],
+      "metal": true,
+      "review_status": "pending"
+    },
+    {
+      "id": "Cr",
+      "element": "Cr",
+      "ox": [
+        [
+          1,
+          "Cr^3+"
+        ]
+      ],
+      "red": [
+        [
+          1,
+          "Cr"
+        ]
+      ],
+      "n": 3,
+      "E_V": -0.74,
+      "decimals": 2,
+      "label": [
+        "Cr^3+",
+        "Cr"
+      ],
+      "metal": true,
+      "review_status": "pending"
+    },
+    {
+      "id": "Fe",
+      "element": "Fe",
+      "ox": [
+        [
+          1,
+          "Fe^2+"
+        ]
+      ],
+      "red": [
+        [
+          1,
+          "Fe"
+        ]
+      ],
+      "n": 2,
+      "E_V": -0.44,
+      "decimals": 2,
+      "label": [
+        "Fe^2+",
+        "Fe"
+      ],
+      "metal": true,
+      "review_status": "pending"
+    },
+    {
+      "id": "H2O",
+      "element": "H2",
+      "ox": [
+        [
+          2,
+          "H2O"
+        ]
+      ],
+      "red": [
+        [
+          1,
+          "H2"
+        ],
+        [
+          2,
+          "OH^-"
+        ]
+      ],
+      "n": 2,
+      "E_V": -0.414,
+      "decimals": 3,
+      "label": [
+        "2H2O",
+        "H2"
+      ],
+      "metal": false,
+      "review_status": "pending",
+      "at_pH7": true
+    },
+    {
+      "id": "Cd",
+      "element": "Cd",
+      "ox": [
+        [
+          1,
+          "Cd^2+"
+        ]
+      ],
+      "red": [
+        [
+          1,
+          "Cd"
+        ]
+      ],
+      "n": 2,
+      "E_V": -0.403,
+      "decimals": 3,
+      "label": [
+        "Cd^2+",
+        "Cd"
+      ],
+      "metal": true,
+      "review_status": "pending"
+    },
+    {
+      "id": "Ni",
+      "element": "Ni",
+      "ox": [
+        [
+          1,
+          "Ni^2+"
+        ]
+      ],
+      "red": [
+        [
+          1,
+          "Ni"
+        ]
+      ],
+      "n": 2,
+      "E_V": -0.257,
+      "decimals": 3,
+      "label": [
+        "Ni^2+",
+        "Ni"
+      ],
+      "metal": true,
+      "review_status": "pending"
+    },
+    {
+      "id": "Sn",
+      "element": "Sn",
+      "ox": [
+        [
+          1,
+          "Sn^2+"
+        ]
+      ],
+      "red": [
+        [
+          1,
+          "Sn"
+        ]
+      ],
+      "n": 2,
+      "E_V": -0.137,
+      "decimals": 3,
+      "label": [
+        "Sn^2+",
+        "Sn"
+      ],
+      "metal": true,
+      "review_status": "pending"
+    },
+    {
+      "id": "Pb",
+      "element": "Pb",
+      "ox": [
+        [
+          1,
+          "Pb^2+"
+        ]
+      ],
+      "red": [
+        [
+          1,
+          "Pb"
+        ]
+      ],
+      "n": 2,
+      "E_V": -0.126,
+      "decimals": 3,
+      "label": [
+        "Pb^2+",
+        "Pb"
+      ],
+      "metal": true,
+      "review_status": "pending"
+    },
+    {
+      "id": "H",
+      "element": "H2",
+      "ox": [
+        [
+          2,
+          "H^+"
+        ]
+      ],
+      "red": [
+        [
+          1,
+          "H2"
+        ]
+      ],
+      "n": 2,
+      "E_V": 0.0,
+      "decimals": 3,
+      "label": [
+        "2H^+",
+        "H2"
+      ],
+      "metal": false,
+      "review_status": "pending"
+    },
+    {
+      "id": "Cu",
+      "element": "Cu",
+      "ox": [
+        [
+          1,
+          "Cu^2+"
+        ]
+      ],
+      "red": [
+        [
+          1,
+          "Cu"
+        ]
+      ],
+      "n": 2,
+      "E_V": 0.34,
+      "decimals": 3,
+      "label": [
+        "Cu^2+",
+        "Cu"
+      ],
+      "metal": true,
+      "review_status": "pending"
+    },
+    {
+      "id": "Fe3",
+      "element": "Fe",
+      "ox": [
+        [
+          1,
+          "Fe^3+"
+        ]
+      ],
+      "red": [
+        [
+          1,
+          "Fe^2+"
+        ]
+      ],
+      "n": 1,
+      "E_V": 0.771,
+      "decimals": 3,
+      "label": [
+        "Fe^3+",
+        "Fe^2+"
+      ],
+      "metal": false,
+      "review_status": "pending"
+    },
+    {
+      "id": "Ag",
+      "element": "Ag",
+      "ox": [
+        [
+          1,
+          "Ag^+"
+        ]
+      ],
+      "red": [
+        [
+          1,
+          "Ag"
+        ]
+      ],
+      "n": 1,
+      "E_V": 0.799,
+      "decimals": 3,
+      "label": [
+        "Ag^+",
+        "Ag"
+      ],
+      "metal": true,
+      "review_status": "pending"
+    },
+    {
+      "id": "Hg",
+      "element": "Hg",
+      "ox": [
+        [
+          1,
+          "Hg^2+"
+        ]
+      ],
+      "red": [
+        [
+          1,
+          "Hg"
+        ]
+      ],
+      "n": 2,
+      "E_V": 0.853,
+      "decimals": 3,
+      "label": [
+        "Hg^2+",
+        "Hg"
+      ],
+      "metal": true,
+      "review_status": "pending"
+    },
+    {
+      "id": "Br",
+      "element": "Br",
+      "ox": [
+        [
+          1,
+          "Br2(aq)"
+        ]
+      ],
+      "red": [
+        [
+          2,
+          "Br^-"
+        ]
+      ],
+      "n": 2,
+      "E_V": 1.087,
+      "decimals": 3,
+      "label": [
+        "Br2",
+        "2Br^-"
+      ],
+      "metal": false,
+      "review_status": "pending"
+    },
+    {
+      "id": "O",
+      "element": "O",
+      "ox": [
+        [
+          1,
+          "O2"
+        ],
+        [
+          4,
+          "H^+"
+        ]
+      ],
+      "red": [
+        [
+          2,
+          "H2O"
+        ]
+      ],
+      "n": 4,
+      "E_V": 1.229,
+      "decimals": 3,
+      "label": [
+        "O2",
+        "H2O"
+      ],
+      "metal": false,
+      "review_status": "pending"
+    },
+    {
+      "id": "Cl",
+      "element": "Cl",
+      "ox": [
+        [
+          1,
+          "Cl2(aq)"
+        ]
+      ],
+      "red": [
+        [
+          2,
+          "Cl^-"
+        ]
+      ],
+      "n": 2,
+      "E_V": 1.358,
+      "decimals": 3,
+      "label": [
+        "Cl2",
+        "2Cl^-"
+      ],
+      "metal": false,
+      "review_status": "pending"
+    },
+    {
+      "id": "Au",
+      "element": "Au",
+      "ox": [
+        [
+          1,
+          "Au^3+"
+        ]
+      ],
+      "red": [
+        [
+          1,
+          "Au"
+        ]
+      ],
+      "n": 3,
+      "E_V": 1.52,
+      "decimals": 2,
+      "label": [
+        "Au^3+",
+        "Au"
+      ],
+      "metal": true,
+      "review_status": "pending"
+    }
+  ],
+  "book_cells": [
+    {
+      "anode": "Zn",
+      "cathode": "Cu",
+      "E_V": 1.102,
+      "page": 74
+    },
+    {
+      "anode": "Cu",
+      "cathode": "Ag",
+      "E_V": 0.459,
+      "page": 75
+    }
+  ]
+}
