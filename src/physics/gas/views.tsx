@@ -5,8 +5,9 @@ import type { LocalizedText } from '@/core/data/dataset';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { usePublishCard } from '@/modules/usePublishCard';
 import { useCanvas } from '@/ui/canvas/useCanvas';
-import { NumberField } from '@/ui/NumberField';
 import { sci } from '@/ui/sciNumber';
+import { axes, dot, twoFrames } from '../common/chart2d';
+import { ActionRow, ChoiceGroup, LabeledNumber } from '../common/ModuleControls';
 import { L, TITLE, gasCard } from './card';
 import {
   BOYLE_ROWS,
@@ -100,108 +101,6 @@ function useStates() {
   }, [s]);
 }
 
-/* ───────── Charts ───────── */
-
-interface Frame {
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-}
-type Css = (token: string) => string;
-
-/** 1, 2, 5 × 10ⁿ just above x. */
-function niceStep(x: number): number {
-  if (!(x > 0)) return 1;
-  const p = 10 ** Math.floor(Math.log10(x));
-  const f = x / p;
-  return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * p;
-}
-
-/**
- * Axes, grid and labels of one chart; values are SI, `xs`/`ys` turn them into the shown unit.
- * Returns the maps from values to pixels.
- */
-function axes(
-  ctx: CanvasRenderingContext2D,
-  css: Css,
-  locale: Locale,
-  f: Frame,
-  xr: readonly [number, number],
-  yr: readonly [number, number],
-  labels: { x: string; y: string },
-  xs = 1,
-  ys = 1,
-) {
-  const X = (v: number) => f.x + ((v - xr[0]) / (xr[1] - xr[0])) * f.w;
-  const Y = (v: number) => f.y + f.h - ((v - yr[0]) / (yr[1] - yr[0])) * f.h;
-  ctx.font = '12px system-ui, sans-serif';
-  ctx.lineWidth = 1;
-  ctx.setLineDash([]);
-  ctx.strokeStyle = css('--border');
-  ctx.fillStyle = css('--text-muted');
-  const yStep = niceStep(((yr[1] - yr[0]) * ys) / 5);
-  ctx.textAlign = 'right';
-  for (let v = Math.ceil((yr[0] * ys) / yStep) * yStep; v <= yr[1] * ys + 1e-9; v += yStep) {
-    const y = Y(v / ys);
-    ctx.beginPath();
-    ctx.moveTo(f.x, y);
-    ctx.lineTo(f.x + f.w, y);
-    ctx.stroke();
-    ctx.fillText(formatNumber(locale, Number(v.toPrecision(6))), f.x - 6, y + 4);
-  }
-  const xStep = niceStep(((xr[1] - xr[0]) * xs) / 5);
-  ctx.textAlign = 'center';
-  for (let v = Math.ceil((xr[0] * xs) / xStep) * xStep; v <= xr[1] * xs + 1e-9; v += xStep)
-    ctx.fillText(formatNumber(locale, Number(v.toPrecision(6))), X(v / xs), f.y + f.h + 16);
-  ctx.fillText(labels.x, f.x + f.w / 2, f.y + f.h + 34);
-  ctx.save();
-  ctx.translate(f.x - 46, f.y + f.h / 2);
-  ctx.rotate(-Math.PI / 2);
-  ctx.fillText(labels.y, 0, 0);
-  ctx.restore();
-  ctx.strokeStyle = css('--text-muted');
-  ctx.beginPath();
-  ctx.moveTo(f.x, f.y);
-  ctx.lineTo(f.x, f.y + f.h);
-  ctx.lineTo(f.x + f.w, f.y + f.h);
-  ctx.stroke();
-  return { X, Y };
-}
-
-function dot(
-  ctx: CanvasRenderingContext2D,
-  x: number,
-  y: number,
-  color: string,
-  label?: string,
-  left = false,
-) {
-  ctx.fillStyle = color;
-  ctx.beginPath();
-  ctx.arc(x, y, 5, 0, Math.PI * 2);
-  ctx.fill();
-  if (label) {
-    ctx.font = 'bold 13px system-ui, sans-serif';
-    ctx.textAlign = left ? 'right' : 'left';
-    ctx.fillText(label, left ? x - 8 : x + 8, y - 8);
-  }
-}
-
-/** Two charts side by side under the overlay chips. */
-function frames(width: number, height: number): [Frame, Frame] {
-  const top = 70;
-  const bottom = 48;
-  const gap = 84;
-  const left = 64;
-  const w = width - left - 24 - gap;
-  const wa = Math.round(w * 0.58);
-  return [
-    { x: left, y: top, w: wa, h: height - top - bottom },
-    { x: left + wa + gap, y: top, w: w - wa, h: height - top - bottom },
-  ];
-}
-
 function ProcessView() {
   const Lz = useLocalized();
   const { locale } = useFmt();
@@ -210,7 +109,7 @@ function ProcessView() {
   const ref = useCanvas(
     ({ ctx, width, height, css }) => {
       if (!s2 || !path) return;
-      const [fa, fb] = frames(width, height);
+      const [fa, fb] = twoFrames(width, height);
       const all = [s1, s2, ...(path.mid ? [path.mid] : [])];
       const vMax = Math.max(...all.map((s) => s.V)) * 1.25;
       const pMax = Math.max(...all.map((s) => s.p)) * 1.25;
@@ -337,7 +236,7 @@ function DataView() {
   const charles = spread(CHARLES_ROWS.map((r) => r.VT));
   const ref = useCanvas(
     ({ ctx, width, height, css }) => {
-      const [fa, fb] = frames(width, height);
+      const [fa, fb] = twoFrames(width, height);
       const pt = css('--chart-1');
       ctx.lineWidth = 2;
       if (dataSet === 'boyle') {
@@ -558,55 +457,6 @@ export function GasStage() {
 
 /* ───────── Panel ───────── */
 
-/** A number box with its name shown above it. */
-function Field(props: Parameters<typeof NumberField>[0]) {
-  return (
-    <label className="gas-panel__field">
-      <span>{props.label}</span>
-      <NumberField {...props} />
-    </label>
-  );
-}
-
-function Radios<T extends string>({
-  label,
-  items,
-  value,
-  name,
-  onPick,
-  segmented = false,
-}: {
-  label: string;
-  items: readonly T[];
-  value: T;
-  name: (t: T) => string;
-  onPick: (t: T) => void;
-  segmented?: boolean;
-}) {
-  return (
-    <div
-      className={segmented ? 'segmented' : 'gas-panel__list'}
-      role="radiogroup"
-      aria-label={label}
-    >
-      {items.map((t) => (
-        <button
-          key={t}
-          type="button"
-          role="radio"
-          aria-checked={value === t}
-          className={segmented ? 'segmented__item' : 'btn btn--ghost'}
-          onClick={() => {
-            onPick(t);
-          }}
-        >
-          {name(t)}
-        </button>
-      ))}
-    </div>
-  );
-}
-
 function ProcessPanel() {
   const Lz = useLocalized();
   const { locale, n } = useFmt();
@@ -624,7 +474,7 @@ function ProcessPanel() {
         : `${n(s.T, 2)} K (${n(s.T - off, 2)} °C)`;
   return (
     <>
-      <Radios
+      <ChoiceGroup
         label={Lz(L('Quá trình', 'Process'))}
         items={PROCESSES}
         value={st.process}
@@ -633,7 +483,7 @@ function ProcessPanel() {
           setGas({ process: p });
         }}
       />
-      <Radios
+      <ChoiceGroup
         label={Lz(L('Đại lượng cần tìm', 'Quantity to find'))}
         items={UNKNOWNS[st.process]}
         value={st.unknown}
@@ -644,21 +494,21 @@ function ProcessPanel() {
         segmented
       />
       <h4 className="gas-panel__head">{Lz(L('Trạng thái 1', 'State 1'))}</h4>
-      <Field
+      <LabeledNumber
         label={Lz(L('Áp suất p₁ (10⁵ Pa)', 'Pressure p₁ (10⁵ Pa)'))}
         value={st.p1 / 1e5}
         onChange={(v) => {
           setGas({ p1: v * 1e5 });
         }}
       />
-      <Field
+      <LabeledNumber
         label={Lz(L('Thể tích V₁ (L)', 'Volume V₁ (L)'))}
         value={st.V1 * 1e3}
         onChange={(v) => {
           setGas({ V1: v / 1e3 });
         }}
       />
-      <Field
+      <LabeledNumber
         label={Lz(L('Nhiệt độ t₁ (°C)', 'Temperature t₁ (°C)'))}
         value={st.t1}
         onChange={(v) => {
@@ -667,7 +517,7 @@ function ProcessPanel() {
       />
       <h4 className="gas-panel__head">{Lz(L('Trạng thái 2', 'State 2'))}</h4>
       {show('p') && (
-        <Field
+        <LabeledNumber
           label={Lz(L('Áp suất p₂ (10⁵ Pa)', 'Pressure p₂ (10⁵ Pa)'))}
           value={st.p2 / 1e5}
           onChange={(v) => {
@@ -676,7 +526,7 @@ function ProcessPanel() {
         />
       )}
       {show('V') && (
-        <Field
+        <LabeledNumber
           label={Lz(L('Thể tích V₂ (L)', 'Volume V₂ (L)'))}
           value={st.V2 * 1e3}
           onChange={(v) => {
@@ -685,7 +535,7 @@ function ProcessPanel() {
         />
       )}
       {show('T') && (
-        <Field
+        <LabeledNumber
           label={Lz(L('Nhiệt độ t₂ (°C)', 'Temperature t₂ (°C)'))}
           value={st.t2}
           onChange={(v) => {
@@ -711,7 +561,7 @@ function ProcessPanel() {
         <dt>{Lz(L('Lượng khí n', 'Amount n'))}</dt>
         <dd className="mono">{`${sci(locale, moles(s1))} mol`}</dd>
       </dl>
-      <Radios
+      <ChoiceGroup
         label={Lz(L('Đổi °C sang K', '°C to K'))}
         items={OFFSETS}
         value={st.offset}
@@ -731,24 +581,12 @@ function ProcessPanel() {
           )}
         </p>
       )}
-      <div
-        className="gas-panel__list"
-        role="group"
-        aria-label={Lz(L('Bài tập trong sách', 'Questions in the book'))}
-      >
-        {LOADABLE.map((e) => (
-          <button
-            key={e}
-            type="button"
-            className="btn btn--ghost"
-            onClick={() => {
-              loadExample(e);
-            }}
-          >
-            {Lz(EXAMPLE_NAME[e])}
-          </button>
-        ))}
-      </div>
+      <ActionRow
+        label={Lz(L('Bài tập trong sách', 'Questions in the book'))}
+        items={LOADABLE}
+        name={(e) => Lz(EXAMPLE_NAME[e])}
+        onPick={loadExample}
+      />
     </>
   );
 }
@@ -761,7 +599,7 @@ function DataPanel() {
   const charles = spread(CHARLES_ROWS.map((r) => r.VT));
   return (
     <>
-      <Radios
+      <ChoiceGroup
         label={Lz(L('Bảng số liệu', 'Data table'))}
         items={DATA_SETS}
         value={dataSet}
@@ -814,7 +652,7 @@ function MoleculesPanel() {
   const mu = numberDensity(p, T);
   return (
     <>
-      <Radios
+      <ChoiceGroup
         label={Lz(L('Chất khí', 'Gas'))}
         items={GASES.map((x) => x.id)}
         value={gasId}
@@ -823,7 +661,7 @@ function MoleculesPanel() {
           setGas({ gasId: id });
         }}
       />
-      <Field
+      <LabeledNumber
         label={Lz(L('Nhiệt độ T (K)', 'Temperature T (K)'))}
         value={T}
         min={1}
@@ -831,7 +669,7 @@ function MoleculesPanel() {
           setGas({ T: x });
         }}
       />
-      <Field
+      <LabeledNumber
         label={Lz(L('Áp suất p (10⁵ Pa)', 'Pressure p (10⁵ Pa)'))}
         value={p / 1e5}
         onChange={(x) => {
@@ -867,7 +705,7 @@ export function GasPanel() {
   const tab = useGasStore((s) => s.tab);
   return (
     <div className="chem-form gas-panel">
-      <Radios
+      <ChoiceGroup
         label={Lz(L('Phần bài học', 'Part'))}
         items={TABS}
         value={tab}

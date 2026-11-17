@@ -35,4 +35,7 @@ export const GUIDED_TOPICS = [
   'bodyIntegration',
   'matterStructure',
   'gasKinetic',
+  'magneticField',
+  'inductionApplications',
+  'electromagneticField',
 ] as const;

@@ -33,14 +33,14 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | --- | --- | --- | --- |
 | Vật lí 10 | 34 | 26 | 26 |
 | Vật lí 11 | 26 | 20 | 20 |
-| Vật lí 12 | 25 | 21 | 11 |
+| Vật lí 12 | 25 | 21 | 17 |
 | Hoá học 10 | 23 | 16 | 16 |
 | Hoá học 11 | 25 | 19 | 19 |
 | Hoá học 12 | 30 | 22 | 1 |
 | Sinh học 10 | 26 | 17 | 17 |
 | Sinh học 11 | 29 | 20 | 20 |
 | Sinh học 12 | 35 | 28 | 7 |
-| **Cộng** | **253** | **189** | **137** |
+| **Cộng** | **253** | **189** | **143** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -129,12 +129,12 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Vật lí 12 | Chương II. Khí lí tưởng | 11 | Phương trình trạng thái của khí lí tưởng | 45 | Lí thuyết | Các định luật của khí lí tưởng | Tên Bài 9: định luật Boyle (pV = hằng số, Bảng 9.1); Bài 10: định luật Charles (V/T = hằng số, Bảng 10.1); Bài 11: phương trình trạng thái, pV = nRT; Bài 12: áp suất khí theo mô hình động học phân tử, Ēđ = 3/2 kT. | pending |
 | Vật lí 12 | Chương II. Khí lí tưởng | 12 | Áp suất khí theo mô hình động học phân tử. Quan hệ giữa động năng phân tử và nhiệt độ | 48 | Lí thuyết | Các định luật của khí lí tưởng | Tên Bài 9: định luật Boyle (pV = hằng số, Bảng 9.1); Bài 10: định luật Charles (V/T = hằng số, Bảng 10.1); Bài 11: phương trình trạng thái, pV = nRT; Bài 12: áp suất khí theo mô hình động học phân tử, Ēđ = 3/2 kT. | pending |
 | Vật lí 12 | Chương II. Khí lí tưởng | 13 | Bài tập về khí lí tưởng | 52 | Bài tập | chưa có |  | pending |
-| Vật lí 12 | Chương III. Từ trường | 14 | Từ trường | 56 | Lí thuyết | chưa có |  | pending |
-| Vật lí 12 | Chương III. Từ trường | 15 | Lực từ tác dụng lên dây dẫn mang dòng điện. Cảm ứng từ | 61 | Lí thuyết | chưa có |  | pending |
-| Vật lí 12 | Chương III. Từ trường | 16 | Từ thông. Hiện tượng cảm ứng điện từ | 66 | Lí thuyết | chưa có |  | pending |
-| Vật lí 12 | Chương III. Từ trường | 17 | Máy phát điện xoay chiều | 72 | Lí thuyết | chưa có |  | pending |
-| Vật lí 12 | Chương III. Từ trường | 18 | Ứng dụng hiện tượng cảm ứng điện từ | 78 | Lí thuyết | chưa có |  | pending |
-| Vật lí 12 | Chương III. Từ trường | 19 | Điện từ trường. Mô hình sóng điện từ | 82 | Lí thuyết | chưa có |  | pending |
+| Vật lí 12 | Chương III. Từ trường | 14 | Từ trường | 56 | Lí thuyết | Từ trường và đường sức từ | Tên Bài 14: từ trường, đường sức từ, quy tắc nắm bàn tay phải (bài học có hướng dẫn: dự đoán và các hoạt động ghép, phân loại). | pending |
+| Vật lí 12 | Chương III. Từ trường | 15 | Lực từ tác dụng lên dây dẫn mang dòng điện. Cảm ứng từ | 61 | Lí thuyết | Lực từ và cảm ứng từ | Tên Bài 15: lực từ tác dụng lên dây dẫn mang dòng điện, F = BIL sinα, cảm ứng từ, số liệu Bảng 15.1. | pending |
+| Vật lí 12 | Chương III. Từ trường | 16 | Từ thông. Hiện tượng cảm ứng điện từ | 66 | Lí thuyết | Cảm ứng điện từ và máy phát điện xoay chiều | Tên Bài 16: từ thông Φ = BS cosα, định luật Faraday và Lenz; Bài 17: máy phát điện xoay chiều, E₀ = NBSω, giá trị hiệu dụng. | pending |
+| Vật lí 12 | Chương III. Từ trường | 17 | Máy phát điện xoay chiều | 72 | Lí thuyết | Cảm ứng điện từ và máy phát điện xoay chiều | Tên Bài 16: từ thông Φ = BS cosα, định luật Faraday và Lenz; Bài 17: máy phát điện xoay chiều, E₀ = NBSω, giá trị hiệu dụng. | pending |
+| Vật lí 12 | Chương III. Từ trường | 18 | Ứng dụng hiện tượng cảm ứng điện từ | 78 | Lí thuyết | Ứng dụng hiện tượng cảm ứng điện từ | Tên Bài 18: ứng dụng hiện tượng cảm ứng điện từ: máy biến áp, sạc không dây, đàn ghi ta điện, dòng điện Foucault (bài học có hướng dẫn). | pending |
+| Vật lí 12 | Chương III. Từ trường | 19 | Điện từ trường. Mô hình sóng điện từ | 82 | Lí thuyết | Điện từ trường và mô hình sóng điện từ, Sóng điện từ | Điện từ trường và mô hình sóng điện từ: Tên Bài 19: điện từ trường, mô hình sóng điện từ (bài học có hướng dẫn). Sóng điện từ: Tên Bài 19 nêu sóng điện từ: λ = cT = c/f, sóng ngang với E, B vuông góc phương truyền (cùng chủ đề đã xếp VL11 Bài 11). | pending |
 | Vật lí 12 | Chương III. Từ trường | 20 | Bài tập về từ trường | 86 | Bài tập | chưa có |  | pending |
 | Vật lí 12 | Chương IV. Vật lí hạt nhân | 21 | Cấu trúc hạt nhân | 91 | Lí thuyết | chưa có |  | pending |
 | Vật lí 12 | Chương IV. Vật lí hạt nhân | 22 | Phản ứng hạt nhân và năng lượng liên kết | 96 | Lí thuyết | chưa có |  | pending |

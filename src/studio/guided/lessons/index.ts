@@ -30,6 +30,9 @@ import { sh11b27AnimalReproduction } from './sh11b27AnimalReproduction';
 import { sh11b28Integration } from './sh11b28Integration';
 import { vl12b01Matter } from './vl12b01Matter';
 import { vl12b08Gas } from './vl12b08Gas';
+import { vl12b14Field } from './vl12b14Field';
+import { vl12b18Applications } from './vl12b18Applications';
+import { vl12b19EmField } from './vl12b19EmField';
 
 /**
  * The descriptive textbook lessons (user decision 14/11/2026, #255). Kept out of
@@ -68,6 +71,9 @@ export const GUIDED_LESSONS: readonly unknown[] = [
   sh11b28Integration,
   vl12b01Matter,
   vl12b08Gas,
+  vl12b14Field,
+  vl12b18Applications,
+  vl12b19EmField,
 ];
 
 let cache: StudioScenario[] | null = null;

@@ -12,6 +12,8 @@ export const SHELF_PREVIEWS: ReadonlySet<string> = new Set([
   'emWave',
   'heatAndPhase',
   'idealGas',
+  'magneticForce',
+  'induction',
   'aqueousEquilibrium',
   'nitrogenSulfur',
   'organicBasics',
@@ -91,6 +93,9 @@ export const SHELF_PREVIEWS: ReadonlySet<string> = new Set([
   'bodyIntegration',
   'matterStructure',
   'gasKinetic',
+  'magneticField',
+  'inductionApplications',
+  'electromagneticField',
 ]);
 
 /** The picture of `topic` in `theme`, or null when it has none. */

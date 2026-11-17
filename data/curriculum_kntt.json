@@ -2654,6 +2654,79 @@
    "review_status": "pending"
   },
   {
+   "topic": "magneticField",
+   "subject": "physics",
+   "grade": 12,
+   "book": "VL12",
+   "chapter": "Chương III. Từ trường",
+   "lessons": [
+    14
+   ],
+   "reason": "Tên Bài 14: từ trường, đường sức từ, quy tắc nắm bàn tay phải (bài học có hướng dẫn: dự đoán và các hoạt động ghép, phân loại).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "magneticForce",
+   "subject": "physics",
+   "grade": 12,
+   "book": "VL12",
+   "chapter": "Chương III. Từ trường",
+   "lessons": [
+    15
+   ],
+   "reason": "Tên Bài 15: lực từ tác dụng lên dây dẫn mang dòng điện, F = BIL sinα, cảm ứng từ, số liệu Bảng 15.1.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "induction",
+   "subject": "physics",
+   "grade": 12,
+   "book": "VL12",
+   "chapter": "Chương III. Từ trường",
+   "lessons": [
+    16,
+    17
+   ],
+   "reason": "Tên Bài 16: từ thông Φ = BS cosα, định luật Faraday và Lenz; Bài 17: máy phát điện xoay chiều, E₀ = NBSω, giá trị hiệu dụng.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "inductionApplications",
+   "subject": "physics",
+   "grade": 12,
+   "book": "VL12",
+   "chapter": "Chương III. Từ trường",
+   "lessons": [
+    18
+   ],
+   "reason": "Tên Bài 18: ứng dụng hiện tượng cảm ứng điện từ: máy biến áp, sạc không dây, đàn ghi ta điện, dòng điện Foucault (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "electromagneticField",
+   "subject": "physics",
+   "grade": 12,
+   "book": "VL12",
+   "chapter": "Chương III. Từ trường",
+   "lessons": [
+    19
+   ],
+   "reason": "Tên Bài 19: điện từ trường, mô hình sóng điện từ (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "emWave",
+   "subject": "physics",
+   "grade": 12,
+   "book": "VL12",
+   "chapter": "Chương III. Từ trường",
+   "lessons": [
+    19
+   ],
+   "reason": "Tên Bài 19 nêu sóng điện từ: λ = cT = c/f, sóng ngang với E, B vuông góc phương truyền (cùng chủ đề đã xếp VL11 Bài 11).",
+   "review_status": "pending"
+  },
+  {
    "topic": "heatAndPhase",
    "subject": "physics",
    "grade": 12,

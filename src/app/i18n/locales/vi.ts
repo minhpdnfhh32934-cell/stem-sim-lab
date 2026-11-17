@@ -113,6 +113,7 @@ const vi = {
     dcCircuit: 'Dòng điện, mạch điện',
     thermalPhysics: 'Vật lí nhiệt',
     idealGasChapter: 'Khí lí tưởng',
+    magnetismChapter: 'Từ trường',
     gravitation: 'Hấp dẫn (mở rộng)',
   },
   topics: {
@@ -229,6 +230,11 @@ const vi = {
     heatAndPhase: 'Nội năng, nhiệt độ và nhiệt lượng',
     gasKinetic: 'Mô hình động học phân tử chất khí',
     idealGas: 'Các định luật của khí lí tưởng',
+    magneticField: 'Từ trường và đường sức từ',
+    magneticForce: 'Lực từ và cảm ứng từ',
+    induction: 'Cảm ứng điện từ và máy phát điện xoay chiều',
+    inductionApplications: 'Ứng dụng hiện tượng cảm ứng điện từ',
+    electromagneticField: 'Điện từ trường và mô hình sóng điện từ',
     fourierSeries: 'Họa âm và chuỗi Fourier',
   },
   stage: {

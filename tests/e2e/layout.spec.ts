@@ -22,6 +22,11 @@ const OWN_VIEW = [
   'Nội năng, nhiệt độ và nhiệt lượng',
   'Mô hình động học phân tử chất khí',
   'Các định luật của khí lí tưởng',
+  'Từ trường và đường sức từ',
+  'Lực từ và cảm ứng từ',
+  'Cảm ứng điện từ và máy phát điện xoay chiều',
+  'Ứng dụng hiện tượng cảm ứng điện từ',
+  'Điện từ trường và mô hình sóng điện từ',
 ];
 
 interface Rect {

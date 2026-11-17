@@ -5,8 +5,9 @@ import type { LocalizedText } from '@/core/data/dataset';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { usePublishCard } from '@/modules/usePublishCard';
 import { useCanvas } from '@/ui/canvas/useCanvas';
-import { NumberField } from '@/ui/NumberField';
 import { sci } from '@/ui/sciNumber';
+import { niceStep } from '../common/chart2d';
+import { LabeledNumber } from '../common/ModuleControls';
 import { L, TITLE, thermalCard } from './card';
 import {
   PRESETS,
@@ -200,14 +201,6 @@ function HeatCurve() {
   );
 }
 
-/** 1, 2, 5 × 10ⁿ just above x. */
-function niceStep(x: number): number {
-  if (!(x > 0)) return 1;
-  const p = 10 ** Math.floor(Math.log10(x));
-  const f = x / p;
-  return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * p;
-}
-
 function ScaleView() {
   const Lz = useLocalized();
   const { locale, n } = useFmt();
@@ -361,16 +354,6 @@ export function ThermalStage() {
   );
 }
 
-/** A number box with its name shown above it. */
-function Field(props: Parameters<typeof NumberField>[0]) {
-  return (
-    <label className="thermal-panel__field">
-      <span>{props.label}</span>
-      <NumberField {...props} />
-    </label>
-  );
-}
-
 function HeatPanel() {
   const Lz = useLocalized();
   const { n } = useFmt();
@@ -412,7 +395,7 @@ function HeatPanel() {
           </button>
         ))}
       </div>
-      <Field
+      <LabeledNumber
         label={Lz(L('Khối lượng m (kg)', 'Mass m (kg)'))}
         value={m}
         min={0.001}
@@ -420,7 +403,7 @@ function HeatPanel() {
           setThermal({ m: v });
         }}
       />
-      <Field
+      <LabeledNumber
         label={Lz(
           L(
             `Nhiệt độ ban đầu t₀ (°C), từ ${n(lo)} đến ${n(hi)}`,
@@ -434,7 +417,7 @@ function HeatPanel() {
           setThermal({ t0: v });
         }}
       />
-      <Field
+      <LabeledNumber
         label={Lz(L('Công suất nguồn 𝒫 (W)', 'Heater power 𝒫 (W)'))}
         value={P}
         min={1}
@@ -442,7 +425,7 @@ function HeatPanel() {
           setThermal({ P: v });
         }}
       />
-      <Field
+      <LabeledNumber
         label={Lz(L('Hiệu suất H (%)', 'Efficiency H (%)'))}
         value={Math.round(eff * 1000) / 10}
         min={1}
@@ -472,7 +455,7 @@ function HeatPanel() {
         ))}
       </div>
       {target === 'temp' && (
-        <Field
+        <LabeledNumber
           label={Lz(L('Nhiệt độ t₁ (°C)', 'Temperature t₁ (°C)'))}
           value={t1}
           onChange={(v) => {
@@ -527,7 +510,7 @@ function ScalePanel() {
   return (
     <>
       <div className="thermal-panel__value">
-        <Field
+        <LabeledNumber
           label={Lz(L('Nhiệt độ', 'Temperature'))}
           value={value}
           onChange={(x) => {
@@ -577,14 +560,14 @@ function FirstLawPanel() {
   const ex = inclineExample(1, 21, 30, 4.1, 9.8);
   return (
     <>
-      <Field
+      <LabeledNumber
         label={Lz(L('Công A (J)', 'Work A (J)'))}
         value={A}
         onChange={(v) => {
           setThermal({ A: v });
         }}
       />
-      <Field
+      <LabeledNumber
         label={Lz(L('Nhiệt lượng Q (J)', 'Heat Q (J)'))}
         value={Q}
         onChange={(v) => {
