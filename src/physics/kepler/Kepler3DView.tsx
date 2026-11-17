@@ -2,6 +2,7 @@
  * The 3D view of "Định luật II Kepler" (three.js side, loaded when the learner picks 3D): the
  * lesson's own orbit (`useSimStore`), the planet where the engine is (`sim.renderState`).
  */
+import { useMemo } from 'react';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { sim } from '@/app/sim/runtime';
@@ -26,8 +27,9 @@ export default function Kepler3DView() {
   const scrub = useSimStore((s) => s.scrubTime);
   const simTime = useWorkspaceStore((s) => s.simTime);
   const playing = useWorkspaceStore((s) => s.playing);
-  const o = orbit(params);
-  const dA = sectorArea(o, 0, o.T / o.N, 400);
+  // The view re-renders every frame while the orbit runs: the slice area only when it changes.
+  const o = useMemo(() => orbit(params), [params]);
+  const dA = useMemo(() => sectorArea(o, 0, o.T / o.N, 400), [o]);
   const header = `e = ${fmtQty(locale, o.e, '1')}, T = ${fmtQty(locale, o.T, 's')}, ${Lz(L('mỗi phần quét', 'each slice sweeps'))} ${fmtQty(locale, dA, '1')} a²`;
   return (
     <Bio3DView

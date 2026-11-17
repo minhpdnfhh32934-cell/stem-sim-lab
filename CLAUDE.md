@@ -862,16 +862,18 @@ Progress log: `docs/PROGRESS.md`.
     Stage wrapper picks the lazy 3D view or the 2D picture (`useShow3d`, `Bio3DToolbar` in the 2D
     overlay). The Bohr model stays 2D (a planar model).
   - `PhysicsScene`s (6b: `electricField`, `electricPotential`, `capacitor`, `electricCurrent`;
-    6c: `interference`, `travellingWave`, `standingWave`):
+    6c: `interference`, `travellingWave`, `standingWave`; 6g: `freeFall`, `horizontalProjectile`,
+    `obliqueProjectile` (one `Throw3DView`), `uniformCircularMotion`, `keplerOrbit`,
+    `simplePendulum`, `springPendulum`; moving arrows: `addMovingArrow` in `view3d/arrow.ts`):
     `view3d` is a `lazy()` component made once in the scene's file. `src/app/sim/SceneStage.tsx`
     shows it instead of `StageCanvas`, keeps the engine running (`sim.tick` every frame) and puts
     the 3D / 2D switch under the HUD; the canvas tool column is hidden in 3D. The view reads
     `useSimStore` params and `sim.renderState` (moving parts through `setTime` / `tick`, never
     rebuilt; nothing allocated per frame).
   - E2E `tests/e2e/em-phys3d.spec.ts`, `electric-phys3d.spec.ts`, `waves-phys3d.spec.ts`,
-    `thermo-phys3d.spec.ts`, `nuclear-phys3d.spec.ts`, `orbital-phys3d.spec.ts` (`phys3d` in
-    `HEAVY_3D`).
-    Wording: DATA_REVIEW PHY3D-*.
+    `thermo-phys3d.spec.ts`, `nuclear-phys3d.spec.ts`, `orbital-phys3d.spec.ts`,
+    `mechanics-phys3d.spec.ts` (`phys3d` in `HEAVY_3D`); every test sets `stemsim.perf` itself (a
+    slow runner's benchmark picks Low: 2D). Wording: DATA_REVIEW PHY3D-*.
 - Projects (Phase 6): `src/app/project/` — `snapshot.ts` (.stemsim schema; inputs only), `undo.ts`,
   `history.ts` (Rust SQLite `src-tauri/src/history.rs`), `actions.ts` (save/open/PNG/CSV via Rust
   dialogs in `files.rs`), `FileMenu`, `SourcesDialog` (lazy), `Tour` (first run, `stemsim.tourDone`).
