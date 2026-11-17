@@ -214,6 +214,15 @@ lệnh vẽ dạng điểm): Trung bình 4 000 điểm, 6 lệnh vẽ, 354 tam g
 Thành phần nguyên tử: C-12 4 lệnh vẽ, 6 338 tam giác (Cao 14 690); lớn nhất Kr-86 (36 proton, 50
 neutron, 36 electron) 42 946 tam giác (Cao 99 554). SwiftShader 1366×768. Mức Thấp hiện hình 2D.
 
+**Vật lí 3D, đợt 6g (2026-11-17, #302).** Năm hình cơ học, SwiftShader 1366×768, khung vẽ trong 6 s
+khi chạy (Trung bình / Cao): Ném xiên 20 lệnh vẽ, 7 134 / 16 814 tam giác, 67 / 70 khung (vật bay
+2,2 s rồi dừng); Chuyển động tròn đều 11 lệnh vẽ, 1 026 / 2 018 tam giác, 265 / 261 khung; Định
+luật II Kepler 17 lệnh vẽ, 994 / 1 922 tam giác, 91 / 90 khung (chậm hơn các hình khác trên
+SwiftShader, chưa rõ nguyên nhân; diện tích mỗi phần nay chỉ tính lại khi thông số đổi); Con lắc
+đơn 14 lệnh vẽ, 910 / 1 934 tam giác, 294 / 290 khung; Con lắc lò xo 10 lệnh vẽ, 166 / 230 tam
+giác, 272 / 275 khung. Mũi tên, dây, lò xo cập nhật trong bộ đệm có sẵn mỗi khung, không cấp phát.
+Mức Thấp hiện hình 2D.
+
 **Watchdog bộ nhớ** (`src/perf/memory.ts`): 10 giây đọc heap JS một lần (WebView2/Chromium). Khi vượt
 80 % ngân sách 300 MB (hoặc 80 % giới hạn heap), app giải phóng bộ nhớ đệm đã đăng ký (ví dụ: bản
 ghi đồ thị vật lý giữ lại một nửa số mẫu — chỉ giảm độ phân giải đồ thị, không ảnh hưởng mô phỏng)
