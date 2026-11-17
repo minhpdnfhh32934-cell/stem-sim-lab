@@ -183,7 +183,7 @@
     {
       "version": "0.11.0",
       "status": "in-review",
-      "statusNote": "Gói lớp 12 (#255): mọi bài lí thuyết của Vật lí 12 (21/21), Hóa học 12 (22/22) và Sinh học 12 (28/28) có chủ đề, qua 14 đợt: 3a–3d Vật lí 12 (#293–#296), 4a–4f Hóa học 12 (#297–#301 và đợt 4f), 5a–5d Sinh học 12; mỗi đợt một PR vào main theo thứ tự, CI 8/8 xanh trước khi gộp; đợt 5d là PR chuẩn bị phát hành này. Chỉ phần web lên 0.11.0 (không có thay đổi Rust kể từ v0.8.2, lõi vẫn 0.8.2), nên ứng dụng cài từ GitHub nhận qua cập nhật trong app. notesReady đặt true khi mở PR chuẩn bị phát hành; phát hành do người dùng chạy lượt Release sau khi PR cuối đã gộp.",
+      "statusNote": "Gói lớp 12 (#255): mọi bài lí thuyết của Vật lí 12 (21/21), Hóa học 12 (22/22) và Sinh học 12 (28/28) có chủ đề, qua 14 đợt: 3a–3d Vật lí 12 (#293–#296), 4a–4f Hóa học 12 (#297–#301, #303), 5a–5d Sinh học 12 (#304–#306 và PR này); mỗi đợt một PR vào main theo thứ tự, CI 8/8 xanh trước khi gộp; đợt 5d là PR chuẩn bị phát hành này. Chỉ phần web lên 0.11.0 (không có thay đổi Rust kể từ v0.8.2, lõi vẫn 0.8.2), nên ứng dụng cài từ GitHub nhận qua cập nhật trong app. notesReady đặt true khi mở PR chuẩn bị phát hành; phát hành do người dùng chạy lượt Release sau khi PR cuối đã gộp.",
       "channel": "github",
       "dates": {
         "devStart": "2026-11-17T00:43:39Z",
@@ -209,7 +209,7 @@
         "tag": null,
         "tagSha": null,
         "releaseUrl": null,
-        "prs": [293, 294, 295, 296, 297, 298, 299, 300, 301],
+        "prs": [293, 294, 295, 296, 297, 298, 299, 300, 301, 303, 304, 305, 306],
         "commits": ["765aaf3c"],
         "branches": [
           "feat/255-vl12-thermal",
