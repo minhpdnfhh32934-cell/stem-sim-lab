@@ -152,3 +152,37 @@ test('Cường độ dòng điện in 3D: ions, electrons drifting by the engine
   await page.screenshot({ path: testInfo.outputPath('current-3d.png') });
   expect(errors).toEqual([]);
 });
+
+test('Tụ điện in 3D: the charge on each plate while the bank charges', async ({
+  page,
+}, testInfo) => {
+  test.setTimeout(120_000);
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(String(e)));
+  await openTopic(page, 'Vật lý', 'Tụ điện');
+  await expect(page.locator('.stage__hud-title')).toHaveText('Tụ điện', { timeout: 20_000 });
+  await page.locator('.stage__view-switch').getByRole('radio', { name: '3D' }).click();
+  const view = page.locator('.bio3d[data-lesson="capacitor"]');
+  await expect(view.locator('canvas')).toBeVisible({ timeout: 30_000 });
+  // 2, 3, 4 µF in series (p. 86): C = 12/13 µF; the same charge, so the same dots, on each.
+  await expect(
+    view.locator('.chem-chip', { hasText: 'Ghép nối tiếp, C = 0,9231 µF' }),
+  ).toBeVisible();
+  const dots = () =>
+    page.evaluate(() => {
+      const h = (window as unknown as { __simlab3d?: Record<string, Hook | undefined> }).__simlab3d
+        ?.capacitor;
+      return (h?.state() as { dots: number[] } | null)?.dots ?? null;
+    });
+  await expect.poll(dots).toEqual([0, 0, 0]);
+  await page.getByRole('button', { name: 'Chạy (Space)' }).first().click();
+  await expect.poll(dots, { timeout: 30_000 }).toEqual([36, 36, 36]);
+  await page.screenshot({ path: testInfo.outputPath('capacitor-series-3d.png') });
+  // In parallel: q = CU, so the dots go 2 : 3 : 4.
+  await page.getByRole('radio', { name: 'Song song' }).click();
+  await expect(view.locator('.chem-chip', { hasText: 'Ghép song song, C = 9 µF' })).toBeVisible();
+  await page.getByRole('button', { name: 'Chạy (Space)' }).first().click();
+  await expect.poll(dots, { timeout: 30_000 }).toEqual([18, 27, 36]);
+  await page.screenshot({ path: testInfo.outputPath('capacitor-parallel-3d.png') });
+  expect(errors).toEqual([]);
+});
