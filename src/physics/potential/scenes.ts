@@ -1,3 +1,4 @@
+import { lazy } from 'react';
 import type { Locale } from '@/app/i18n/types';
 import type { LocalizedText } from '@/core/data/dataset';
 import { DIM, fromSI } from '@/core/units';
@@ -32,12 +33,11 @@ import {
   potential,
   work,
   type Plates,
+  rightEdge,
 } from './model';
 
 /** Furthest N can be from M along the plates (m). */
 const DX_MAX = 0.2;
-
-const rightEdge = (q: Plates) => Math.max(q.M.x, q.N.x, q.P.x) + 0.35 * q.d;
 
 function view(p: Params): WorldBounds {
   const q = platesInput(p);
@@ -480,6 +480,7 @@ const num = (
 export const electricPotential: PhysicsScene = {
   id: 'electricPotential',
   engineId: 'phys.electricPotential',
+  view3d: lazy(() => import('./Potential3DView')),
   title: L('Thế năng điện. Điện thế', 'Electric potential energy. Potential'),
   required: ['U', 'd'],
   params: [
