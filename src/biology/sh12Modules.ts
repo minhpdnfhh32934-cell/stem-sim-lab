@@ -6,6 +6,9 @@ import { bindStore } from '@/modules/binding';
 import type { ModuleView } from '@/modules/types';
 import { ChromosomePanel, ChromosomeStage } from './chromosome/ChromosomeViews';
 import { restoreChromosome, useChromosome } from './chromosome/store';
+import { EVOLUTION_TITLE } from './evolution/card';
+import { EvolutionPanel, EvolutionStage } from './evolution/EvolutionViews';
+import { restoreEvolution, useEvolution } from './evolution/store';
 import { CHROMOSOME_TITLE, LINKAGE_TITLE, SEXLINKED_TITLE } from './heredityCards';
 import { LinkagePanel, LinkageStage } from './linkage/LinkageViews';
 import { restoreLinkage, useLinkage } from './linkage/store';
@@ -49,4 +52,12 @@ export const chromosomeMutation: ModuleView = {
     ['tab', 'structure', 'twoN', 'numberType', 'aTwoN', 'bTwoN'],
     restoreChromosome,
   ),
+};
+
+/** Bài 19 and 22: cytochrome C (Bảng 19.1) and the geological timescale (Bảng 22.1). */
+export const evolutionEvidence: ModuleView = {
+  title: EVOLUTION_TITLE,
+  Stage: EvolutionStage,
+  Panel: EvolutionPanel,
+  state: bindStore(useEvolution, ['tab', 'period'], restoreEvolution),
 };

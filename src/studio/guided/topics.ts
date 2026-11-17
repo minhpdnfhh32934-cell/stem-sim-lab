@@ -52,4 +52,9 @@ export const GUIDED_TOPICS = [
   'corrosion',
   'dnaReplication',
   'geneTechnology',
+  'humanGenetics',
+  'extranuclearInheritance',
+  'genotypeEnvironment',
+  'darwinSelection',
+  'modernSynthesis',
 ] as const;

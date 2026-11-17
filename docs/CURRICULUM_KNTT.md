@@ -39,8 +39,8 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Hoá học 12 | 30 | 22 | 22 |
 | Sinh học 10 | 26 | 17 | 17 |
 | Sinh học 11 | 29 | 20 | 20 |
-| Sinh học 12 | 35 | 28 | 13 |
-| **Cộng** | **253** | **189** | **174** |
+| Sinh học 12 | 35 | 28 | 20 |
+| **Cộng** | **253** | **189** | **181** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -287,16 +287,16 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 10 | Di truyền giới tính và di truyền liên kết với giới tính | 50 | Lí thuyết | Di truyền giới tính và liên kết với giới tính | Tên Bài 10: di truyền giới tính và di truyền liên kết với giới tính: XX – XY, phép lai thuận nghịch của Morgan (Hình 10.2). | pending |
 | Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 11 | Liên kết gene và hoán vị gene | 54 | Lí thuyết | Liên kết gene và hoán vị gene | Tên Bài 11: liên kết gene và hoán vị gene: lai phân tích của Morgan, tần số hoán vị gene, câu 2 tr. 59. | pending |
 | Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 12 | Đột biến nhiễm sắc thể | 60 | Lí thuyết | Đột biến nhiễm sắc thể | Tên Bài 12: đột biến nhiễm sắc thể: cấu trúc (Hình 12.1), lệch bội, đa bội, hội chứng Down theo tuổi mẹ. | pending |
-| Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 13 | Di truyền học người và di truyền y học | 68 | Lí thuyết | chưa có |  | pending |
+| Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 13 | Di truyền học người và di truyền y học | 68 | Lí thuyết | Di truyền học người và di truyền y học | Tên Bài 13: di truyền học người và di truyền y học (bài học có hướng dẫn). | pending |
 | Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 14 | Thực hành: Quan sát một số dạng đột biến nhiễm sắc thể | 75 | Thực hành | chưa có |  | pending |
-| Sinh học 12 | Chương 3. Mở rộng học thuyết di truyền nhiễm sắc thể | 15 | Di truyền gene ngoài nhân | 78 | Lí thuyết | chưa có |  | pending |
-| Sinh học 12 | Chương 3. Mở rộng học thuyết di truyền nhiễm sắc thể | 16 | Tương tác giữa kiểu gene với môi trường và thành tựu chọn giống | 83 | Lí thuyết | chưa có |  | pending |
+| Sinh học 12 | Chương 3. Mở rộng học thuyết di truyền nhiễm sắc thể | 15 | Di truyền gene ngoài nhân | 78 | Lí thuyết | Di truyền gene ngoài nhân | Tên Bài 15: di truyền gene ngoài nhân (bài học có hướng dẫn). | pending |
+| Sinh học 12 | Chương 3. Mở rộng học thuyết di truyền nhiễm sắc thể | 16 | Tương tác giữa kiểu gene với môi trường và thành tựu chọn giống | 83 | Lí thuyết | Tương tác giữa kiểu gene với môi trường và thành tựu chọn giống | Tên Bài 16: tương tác giữa kiểu gene với môi trường và thành tựu chọn giống (bài học có hướng dẫn). | pending |
 | Sinh học 12 | Chương 3. Mở rộng học thuyết di truyền nhiễm sắc thể | 17 | Thực hành: Thí nghiệm về thường biến ở cây trồng | 88 | Thực hành | chưa có |  | pending |
 | Sinh học 12 | Chương 4. Di truyền quần thể | 18 | Di truyền học quần thể | 91 | Lí thuyết | Định luật Hardy–Weinberg | Tên Bài 18: di truyền học quần thể. | pending |
-| Sinh học 12 | Chương 5. Bằng chứng và các học thuyết tiến hoá | 19 | Các bằng chứng tiến hoá | 97 | Lí thuyết | chưa có |  | pending |
-| Sinh học 12 | Chương 5. Bằng chứng và các học thuyết tiến hoá | 20 | Quan niệm của Darwin về chọn lọc tự nhiên và hình thành loài | 101 | Lí thuyết | chưa có |  | pending |
-| Sinh học 12 | Chương 5. Bằng chứng và các học thuyết tiến hoá | 21 | Học thuyết tiến hoá tổng hợp hiện đại | 106 | Lí thuyết | chưa có |  | pending |
-| Sinh học 12 | Chương 5. Bằng chứng và các học thuyết tiến hoá | 22 | Tiến hoá lớn và quá trình phát sinh chủng loại | 113 | Lí thuyết | chưa có |  | pending |
+| Sinh học 12 | Chương 5. Bằng chứng và các học thuyết tiến hoá | 19 | Các bằng chứng tiến hoá | 97 | Lí thuyết | Bằng chứng tiến hóa và lịch sử sự sống | Tên Bài 19: các bằng chứng tiến hoá (Bảng 19.1, cytochrome C); Bài 22: tiến hoá lớn và quá trình phát sinh chủng loại (Bảng 22.1, các đại địa chất). | pending |
+| Sinh học 12 | Chương 5. Bằng chứng và các học thuyết tiến hoá | 20 | Quan niệm của Darwin về chọn lọc tự nhiên và hình thành loài | 101 | Lí thuyết | Quan niệm của Darwin về chọn lọc tự nhiên và hình thành loài | Tên Bài 20: quan niệm của Darwin về chọn lọc tự nhiên và hình thành loài (bài học có hướng dẫn). | pending |
+| Sinh học 12 | Chương 5. Bằng chứng và các học thuyết tiến hoá | 21 | Học thuyết tiến hoá tổng hợp hiện đại | 106 | Lí thuyết | Học thuyết tiến hóa tổng hợp hiện đại | Tên Bài 21: học thuyết tiến hoá tổng hợp hiện đại (bài học có hướng dẫn). | pending |
+| Sinh học 12 | Chương 5. Bằng chứng và các học thuyết tiến hoá | 22 | Tiến hoá lớn và quá trình phát sinh chủng loại | 113 | Lí thuyết | Bằng chứng tiến hóa và lịch sử sự sống | Tên Bài 19: các bằng chứng tiến hoá (Bảng 19.1, cytochrome C); Bài 22: tiến hoá lớn và quá trình phát sinh chủng loại (Bảng 22.1, các đại địa chất). | pending |
 | Sinh học 12 | Chương 6. Môi trường và sinh thái học quần thể | 23 | Môi trường và các nhân tố sinh thái | 122 | Lí thuyết | chưa có |  | pending |
 | Sinh học 12 | Chương 6. Môi trường và sinh thái học quần thể | 24 | Sinh thái học quần thể | 128 | Lí thuyết | Tăng trưởng logistic | Tên Bài 24: sinh thái học quần thể. | pending |
 | Sinh học 12 | Chương 6. Môi trường và sinh thái học quần thể | 25 | Thực hành: Xác định một số đặc trưng của quần thể | 138 | Thực hành | chưa có |  | pending |

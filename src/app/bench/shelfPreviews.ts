@@ -30,6 +30,7 @@ export const SHELF_PREVIEWS: ReadonlySet<string> = new Set([
   'sexLinkage',
   'geneLinkage',
   'chromosomeMutation',
+  'evolutionEvidence',
   'aqueousEquilibrium',
   'nitrogenSulfur',
   'organicBasics',
@@ -126,6 +127,11 @@ export const SHELF_PREVIEWS: ReadonlySet<string> = new Set([
   'corrosion',
   'dnaReplication',
   'geneTechnology',
+  'humanGenetics',
+  'extranuclearInheritance',
+  'genotypeEnvironment',
+  'darwinSelection',
+  'modernSynthesis',
 ]);
 
 /** The picture of `topic` in `theme`, or null when it has none. */

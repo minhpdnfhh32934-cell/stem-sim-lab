@@ -47,6 +47,11 @@ import { hh12b21Alloys } from './hh12b21Alloys';
 import { hh12b22Corrosion } from './hh12b22Corrosion';
 import { sh12b01Dna } from './sh12b01Dna';
 import { sh12b05GeneTech } from './sh12b05GeneTech';
+import { sh12b13HumanGenetics } from './sh12b13HumanGenetics';
+import { sh12b15Extranuclear } from './sh12b15Extranuclear';
+import { sh12b16GenotypeEnvironment } from './sh12b16GenotypeEnvironment';
+import { sh12b20Darwin } from './sh12b20Darwin';
+import { sh12b21ModernSynthesis } from './sh12b21ModernSynthesis';
 
 /**
  * The descriptive textbook lessons (user decision 14/11/2026, #255). Kept out of
@@ -102,6 +107,11 @@ export const GUIDED_LESSONS: readonly unknown[] = [
   hh12b22Corrosion,
   sh12b01Dna,
   sh12b05GeneTech,
+  sh12b13HumanGenetics,
+  sh12b15Extranuclear,
+  sh12b16GenotypeEnvironment,
+  sh12b20Darwin,
+  sh12b21ModernSynthesis,
 ];
 
 let cache: StudioScenario[] | null = null;
