@@ -39,8 +39,8 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Hoá học 12 | 30 | 22 | 22 |
 | Sinh học 10 | 26 | 17 | 17 |
 | Sinh học 11 | 29 | 20 | 20 |
-| Sinh học 12 | 35 | 28 | 20 |
-| **Cộng** | **253** | **189** | **181** |
+| Sinh học 12 | 35 | 28 | 28 |
+| **Cộng** | **253** | **189** | **189** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -297,18 +297,18 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Sinh học 12 | Chương 5. Bằng chứng và các học thuyết tiến hoá | 20 | Quan niệm của Darwin về chọn lọc tự nhiên và hình thành loài | 101 | Lí thuyết | Quan niệm của Darwin về chọn lọc tự nhiên và hình thành loài | Tên Bài 20: quan niệm của Darwin về chọn lọc tự nhiên và hình thành loài (bài học có hướng dẫn). | pending |
 | Sinh học 12 | Chương 5. Bằng chứng và các học thuyết tiến hoá | 21 | Học thuyết tiến hoá tổng hợp hiện đại | 106 | Lí thuyết | Học thuyết tiến hóa tổng hợp hiện đại | Tên Bài 21: học thuyết tiến hoá tổng hợp hiện đại (bài học có hướng dẫn). | pending |
 | Sinh học 12 | Chương 5. Bằng chứng và các học thuyết tiến hoá | 22 | Tiến hoá lớn và quá trình phát sinh chủng loại | 113 | Lí thuyết | Bằng chứng tiến hóa và lịch sử sự sống | Tên Bài 19: các bằng chứng tiến hoá (Bảng 19.1, cytochrome C); Bài 22: tiến hoá lớn và quá trình phát sinh chủng loại (Bảng 22.1, các đại địa chất). | pending |
-| Sinh học 12 | Chương 6. Môi trường và sinh thái học quần thể | 23 | Môi trường và các nhân tố sinh thái | 122 | Lí thuyết | chưa có |  | pending |
+| Sinh học 12 | Chương 6. Môi trường và sinh thái học quần thể | 23 | Môi trường và các nhân tố sinh thái | 122 | Lí thuyết | Môi trường và các nhân tố sinh thái | Tên Bài 23: môi trường và các nhân tố sinh thái: quy luật giới hạn sinh thái với ví dụ nhiệt độ của sách. | pending |
 | Sinh học 12 | Chương 6. Môi trường và sinh thái học quần thể | 24 | Sinh thái học quần thể | 128 | Lí thuyết | Tăng trưởng logistic | Tên Bài 24: sinh thái học quần thể. | pending |
 | Sinh học 12 | Chương 6. Môi trường và sinh thái học quần thể | 25 | Thực hành: Xác định một số đặc trưng của quần thể | 138 | Thực hành | chưa có |  | pending |
-| Sinh học 12 | Chương 7. Sinh thái học quần xã | 26 | Quần xã sinh vật | 141 | Lí thuyết | chưa có |  | pending |
+| Sinh học 12 | Chương 7. Sinh thái học quần xã | 26 | Quần xã sinh vật | 141 | Lí thuyết | Quần xã sinh vật | Tên Bài 26: quần xã sinh vật (bài học có hướng dẫn). | pending |
 | Sinh học 12 | Chương 7. Sinh thái học quần xã | 27 | Thực hành: Tìm hiểu cấu trúc dinh dưỡng của quần xã trong tự nhiên | 150 | Thực hành | chưa có |  | pending |
-| Sinh học 12 | Chương 7. Sinh thái học quần xã | 28 | Hệ sinh thái | 152 | Lí thuyết | chưa có |  | pending |
-| Sinh học 12 | Chương 7. Sinh thái học quần xã | 29 | Trao đổi vật chất và chuyển hoá năng lượng trong hệ sinh thái | 155 | Lí thuyết | chưa có |  | pending |
-| Sinh học 12 | Chương 7. Sinh thái học quần xã | 30 | Diễn thế sinh thái | 161 | Lí thuyết | chưa có |  | pending |
-| Sinh học 12 | Chương 7. Sinh thái học quần xã | 31 | Sinh quyển, khu sinh học và chu trình sinh - địa - hoá | 165 | Lí thuyết | chưa có |  | pending |
+| Sinh học 12 | Chương 7. Sinh thái học quần xã | 28 | Hệ sinh thái | 152 | Lí thuyết | Hệ sinh thái | Tên Bài 28: hệ sinh thái (bài học có hướng dẫn). | pending |
+| Sinh học 12 | Chương 7. Sinh thái học quần xã | 29 | Trao đổi vật chất và chuyển hoá năng lượng trong hệ sinh thái | 155 | Lí thuyết | Trao đổi vật chất và chuyển hóa năng lượng trong hệ sinh thái | Tên Bài 29: trao đổi vật chất và chuyển hoá năng lượng trong hệ sinh thái: tháp sinh thái Hình 29.6, hiệu suất sinh thái. | pending |
+| Sinh học 12 | Chương 7. Sinh thái học quần xã | 30 | Diễn thế sinh thái | 161 | Lí thuyết | Diễn thế sinh thái | Tên Bài 30: diễn thế sinh thái (bài học có hướng dẫn). | pending |
+| Sinh học 12 | Chương 7. Sinh thái học quần xã | 31 | Sinh quyển, khu sinh học và chu trình sinh - địa - hoá | 165 | Lí thuyết | Sinh quyển, khu sinh học và chu trình sinh – địa – hóa | Tên Bài 31: sinh quyển, khu sinh học và chu trình sinh – địa – hoá (bài học có hướng dẫn). | pending |
 | Sinh học 12 | Chương 7. Sinh thái học quần xã | 32 | Thực hành: Thiết kế một hệ sinh thái nhân tạo | 172 | Thực hành | chưa có |  | pending |
-| Sinh học 12 | Chương 8. Sinh thái học phục hồi, bảo tồn và phát triển bền vững | 33 | Sinh thái học phục hồi và bảo tồn đa dạng sinh vật | 175 | Lí thuyết | chưa có |  | pending |
-| Sinh học 12 | Chương 8. Sinh thái học phục hồi, bảo tồn và phát triển bền vững | 34 | Phát triển bền vững | 180 | Lí thuyết | chưa có |  | pending |
+| Sinh học 12 | Chương 8. Sinh thái học phục hồi, bảo tồn và phát triển bền vững | 33 | Sinh thái học phục hồi và bảo tồn đa dạng sinh vật | 175 | Lí thuyết | Sinh thái học phục hồi và bảo tồn đa dạng sinh vật | Tên Bài 33: sinh thái học phục hồi và bảo tồn đa dạng sinh vật (bài học có hướng dẫn). | pending |
+| Sinh học 12 | Chương 8. Sinh thái học phục hồi, bảo tồn và phát triển bền vững | 34 | Phát triển bền vững | 180 | Lí thuyết | Phát triển bền vững | Tên Bài 34: phát triển bền vững (bài học có hướng dẫn). | pending |
 | Sinh học 12 | Chương 8. Sinh thái học phục hồi, bảo tồn và phát triển bền vững | 35 | Dự án: Tìm hiểu thực trạng bảo tồn hệ sinh thái tại địa phương và đề xuất giải pháp bảo tồn | 188 | Dự án | chưa có |  | pending |
 
 ## Chủ đề chưa xếp lớp
