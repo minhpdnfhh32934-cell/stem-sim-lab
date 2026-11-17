@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import './barList.css';
 
 export interface Bar {
   id: string;

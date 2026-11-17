@@ -1,0 +1,97 @@
+/* SH12 heredity modules (Bài 10–12, #255 round 5b). */
+.heredity {
+  padding-top: 72px;
+  display: grid;
+  align-content: start;
+  gap: var(--space-3);
+}
+.heredity__cross,
+.heredity__verdict {
+  margin: 0;
+  font-size: var(--text-content);
+  font-weight: 600;
+}
+.heredity__note {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--text-content);
+}
+.heredity__punnett {
+  border-collapse: collapse;
+  font-size: var(--text-content);
+}
+.heredity__punnett caption {
+  text-align: left;
+  color: var(--text-muted);
+  padding-bottom: var(--space-1);
+}
+.heredity__punnett th,
+.heredity__punnett td {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  text-align: center;
+}
+.heredity__cell {
+  display: table-cell;
+}
+.heredity__cell > span {
+  display: block;
+}
+.heredity__cell--rec {
+  background: var(--accent-soft);
+}
+.heredity__trait {
+  color: var(--text-muted);
+}
+.heredity__result {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding-left: var(--space-4);
+  font-size: var(--text-content);
+}
+.heredity__strong {
+  font-weight: 600;
+}
+.heredity-field {
+  display: grid;
+  gap: var(--space-1);
+}
+.heredity-field__label {
+  font-weight: 600;
+}
+.heredity__rows {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: var(--space-3);
+}
+.heredity__row-label {
+  color: var(--text-muted);
+}
+.heredity__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+.heredity__chromosome {
+  display: inline-flex;
+  gap: 2px;
+  padding: var(--space-1);
+  border-radius: var(--radius-md);
+  background: var(--accent-soft);
+}
+.heredity__gene {
+  display: grid;
+  place-items: center;
+  min-width: 28px;
+  min-height: 28px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-panel);
+  font-family: var(--font-mono, monospace);
+}
+.heredity__gene--new {
+  background: var(--chart-2);
+  color: var(--bg-panel);
+  font-weight: 600;
+}
