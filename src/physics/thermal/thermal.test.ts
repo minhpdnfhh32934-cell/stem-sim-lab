@@ -108,6 +108,18 @@ describe('heat and changes of state (VL12 Bài 2–6)', () => {
     expect(useThermalStore.getState().t0).toBe(0);
     setThermal({ unit: 'K', value: -5 });
     expect(useThermalStore.getState().value).not.toBe(-5);
+    // Changing the unit alone keeps the temperature.
+    setThermal({ unit: 'C', value: -40 });
+    setThermal({ unit: 'K' });
+    expect(useThermalStore.getState()).toMatchObject({ unit: 'K', value: 233.15 });
+    setThermal({ unit: 'F' });
+    expect(useThermalStore.getState().value).toBeCloseTo(-40, 9);
+    // Water never melts and copper never boils in the book's data: the target follows.
+    setThermal({ preset: 'copper', target: 'melted' });
+    setThermal({ preset: 'water' });
+    expect(useThermalStore.getState().target).toBe('boiled');
+    setThermal({ preset: 'copper' });
+    expect(useThermalStore.getState().target).toBe('melted');
     setThermal({ preset: 'copper', t0: 30, unit: 'C', value: 270 });
     expect(thermalCard().sources.map((s) => s.id)).toEqual(
       expect.arrayContaining([2, 3, 4, 5, 6].map((n) => sgkVl12(n).id)),

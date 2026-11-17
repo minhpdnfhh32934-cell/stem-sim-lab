@@ -1,5 +1,13 @@
 import { create } from 'zustand';
-import { PRESETS, physical, presetDef, type Preset, type TempUnit } from './model';
+import {
+  PRESETS,
+  convert,
+  heatingPlan,
+  physical,
+  presetDef,
+  type Preset,
+  type TempUnit,
+} from './model';
 
 export const TABS = ['heat', 'scale', 'firstLaw'] as const;
 export type Tab = (typeof TABS)[number];
@@ -51,13 +59,25 @@ export const useThermalStore = create<ThermalState>()(() => ({
 const num = (v: unknown, lo: number, hi: number, old: number) =>
   typeof v === 'number' && Number.isFinite(v) ? Math.min(hi, Math.max(lo, v)) : old;
 
+/** The target if the preset's curve has that stage (water never melts), else one it has. */
+function reachable(preset: Preset, target: TargetKind): TargetKind {
+  const kinds = heatingPlan({ preset, m: 1, t0: presetDef(preset).t0[0], P: 1, eff: 1 }).map(
+    (st) => st.kind,
+  );
+  const has = (t: TargetKind) => t === 'temp' || kinds.includes(t === 'melted' ? 'melt' : 'boil');
+  if (has(target)) return target;
+  return has('melted') ? 'melted' : has('boiled') ? 'boiled' : 'temp';
+}
+
 /** Applies saved or chosen values; each stays inside the range its preset allows. */
 export function setThermal(patch: Partial<Record<keyof ThermalState, unknown>>): void {
   const s = useThermalStore.getState();
   const preset = PRESETS.includes(patch.preset as Preset) ? (patch.preset as Preset) : s.preset;
   const [lo, hi] = presetDef(preset).t0;
   const unit = UNITS.includes(patch.unit as TempUnit) ? (patch.unit as TempUnit) : s.unit;
-  const rawValue = num(patch.value, -1e6, 1e6, s.value);
+  // A new unit alone keeps the temperature: −40 °C becomes 233,15 K, never "−40 K".
+  const kept = unit === s.unit ? s.value : Math.round(convert(s.value, s.unit)[unit] * 1e9) / 1e9;
+  const rawValue = num(patch.value, -1e6, 1e6, kept);
   useThermalStore.setState({
     tab: TABS.includes(patch.tab as Tab) ? (patch.tab as Tab) : s.tab,
     preset,
@@ -65,11 +85,14 @@ export function setThermal(patch: Partial<Record<keyof ThermalState, unknown>>):
     t0: num(patch.t0, lo, hi, Math.min(hi, Math.max(lo, s.t0))),
     P: num(patch.P, 1, 1e6, s.P),
     eff: num(patch.eff, 0.01, 1, s.eff),
-    target: TARGETS.includes(patch.target as TargetKind) ? (patch.target as TargetKind) : s.target,
+    target: reachable(
+      preset,
+      TARGETS.includes(patch.target as TargetKind) ? (patch.target as TargetKind) : s.target,
+    ),
     t1: num(patch.t1, -273, 5000, s.t1),
     tau: num(patch.tau, 0, 1e9, s.tau),
     // A temperature below absolute zero is refused, not clipped silently into another value.
-    value: physical(rawValue, unit) ? rawValue : s.value,
+    value: physical(rawValue, unit) ? rawValue : kept,
     unit,
     A: num(patch.A, -1e6, 1e6, s.A),
     Q: num(patch.Q, -1e6, 1e6, s.Q),
