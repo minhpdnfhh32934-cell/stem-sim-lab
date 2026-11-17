@@ -70,6 +70,7 @@ export const CATALOG: Record<Subject, ChapterEntry[]> = {
       'inductionApplications',
       'electromagneticField',
     ]),
+    chapter('nuclearChapter', ['nucleus', 'radioactivity', 'nuclearIndustry']),
     chapter('gravitation', ['keplerOrbit']),
   ],
   chemistry: [
