@@ -2992,6 +2992,271 @@
    "review_status": "pending"
   },
   {
+   "topic": "complexStructure",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 8. Sơ lược về dãy kim loại chuyển tiếp thứ nhất và phức chất",
+   "lessons": [
+    28
+   ],
+   "reason": "Tên Bài 28: sơ lược về phức chất: nguyên tử trung tâm, phối tử, điện tích, Bảng 28.1 (mô hình 3D khi sách nêu dạng hình học).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "complexReactions",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 8. Sơ lược về dãy kim loại chuyển tiếp thứ nhất và phức chất",
+   "lessons": [
+    29
+   ],
+   "reason": "Tên Bài 29: một số tính chất và ứng dụng của phức chất: dấu hiệu tạo phức, màu sắc, phản ứng thế phối tử.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "dnaReplication",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 1. Di truyền phân tử",
+   "lessons": [
+    1
+   ],
+   "reason": "Tên Bài 1: DNA và cơ chế tái bản DNA (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "lacOperon",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 1. Di truyền phân tử",
+   "lessons": [
+    3
+   ],
+   "reason": "Tên Bài 3: điều hoà biểu hiện gene: operon lac, thí nghiệm của Monod và Jacob, câu 2 tr. 21.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "geneTechnology",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 1. Di truyền phân tử",
+   "lessons": [
+    5
+   ],
+   "reason": "Tên Bài 5: công nghệ gene (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "sexLinkage",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 2. Di truyền nhiễm sắc thể",
+   "lessons": [
+    10
+   ],
+   "reason": "Tên Bài 10: di truyền giới tính và di truyền liên kết với giới tính: XX – XY, phép lai thuận nghịch của Morgan (Hình 10.2).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "geneLinkage",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 2. Di truyền nhiễm sắc thể",
+   "lessons": [
+    11
+   ],
+   "reason": "Tên Bài 11: liên kết gene và hoán vị gene: lai phân tích của Morgan, tần số hoán vị gene, câu 2 tr. 59.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "chromosomeMutation",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 2. Di truyền nhiễm sắc thể",
+   "lessons": [
+    12
+   ],
+   "reason": "Tên Bài 12: đột biến nhiễm sắc thể: cấu trúc (Hình 12.1), lệch bội, đa bội, hội chứng Down theo tuổi mẹ.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "humanGenetics",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 2. Di truyền nhiễm sắc thể",
+   "lessons": [
+    13
+   ],
+   "reason": "Tên Bài 13: di truyền học người và di truyền y học (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "extranuclearInheritance",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 3. Mở rộng học thuyết di truyền nhiễm sắc thể",
+   "lessons": [
+    15
+   ],
+   "reason": "Tên Bài 15: di truyền gene ngoài nhân (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "genotypeEnvironment",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 3. Mở rộng học thuyết di truyền nhiễm sắc thể",
+   "lessons": [
+    16
+   ],
+   "reason": "Tên Bài 16: tương tác giữa kiểu gene với môi trường và thành tựu chọn giống (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "evolutionEvidence",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 5. Bằng chứng và các học thuyết tiến hoá",
+   "lessons": [
+    19,
+    22
+   ],
+   "reason": "Tên Bài 19: các bằng chứng tiến hoá (Bảng 19.1, cytochrome C); Bài 22: tiến hoá lớn và quá trình phát sinh chủng loại (Bảng 22.1, các đại địa chất).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "darwinSelection",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 5. Bằng chứng và các học thuyết tiến hoá",
+   "lessons": [
+    20
+   ],
+   "reason": "Tên Bài 20: quan niệm của Darwin về chọn lọc tự nhiên và hình thành loài (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "modernSynthesis",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 5. Bằng chứng và các học thuyết tiến hoá",
+   "lessons": [
+    21
+   ],
+   "reason": "Tên Bài 21: học thuyết tiến hoá tổng hợp hiện đại (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "ecologicalFactors",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 6. Môi trường và sinh thái học quần thể",
+   "lessons": [
+    23
+   ],
+   "reason": "Tên Bài 23: môi trường và các nhân tố sinh thái: quy luật giới hạn sinh thái với ví dụ nhiệt độ của sách.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "community",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 7. Sinh thái học quần xã",
+   "lessons": [
+    26
+   ],
+   "reason": "Tên Bài 26: quần xã sinh vật (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "ecosystem",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 7. Sinh thái học quần xã",
+   "lessons": [
+    28
+   ],
+   "reason": "Tên Bài 28: hệ sinh thái (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "ecosystemEnergy",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 7. Sinh thái học quần xã",
+   "lessons": [
+    29
+   ],
+   "reason": "Tên Bài 29: trao đổi vật chất và chuyển hoá năng lượng trong hệ sinh thái: tháp sinh thái Hình 29.6, hiệu suất sinh thái.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "succession",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 7. Sinh thái học quần xã",
+   "lessons": [
+    30
+   ],
+   "reason": "Tên Bài 30: diễn thế sinh thái (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "biosphere",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 7. Sinh thái học quần xã",
+   "lessons": [
+    31
+   ],
+   "reason": "Tên Bài 31: sinh quyển, khu sinh học và chu trình sinh – địa – hoá (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "conservation",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 8. Sinh thái học phục hồi, bảo tồn và phát triển bền vững",
+   "lessons": [
+    33
+   ],
+   "reason": "Tên Bài 33: sinh thái học phục hồi và bảo tồn đa dạng sinh vật (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "sustainability",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 8. Sinh thái học phục hồi, bảo tồn và phát triển bền vững",
+   "lessons": [
+    34
+   ],
+   "reason": "Tên Bài 34: phát triển bền vững (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
    "topic": "heatAndPhase",
    "subject": "physics",
    "grade": 12,

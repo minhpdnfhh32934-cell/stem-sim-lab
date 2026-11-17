@@ -1,0 +1,51 @@
+/* Evidence of evolution and geological time (SH12 Bài 19, 22; #255 round 5c). */
+.evo-strip {
+  display: flex;
+  gap: 2px;
+  min-height: 64px;
+}
+.evo-strip__band {
+  flex: 0 0 auto;
+  min-width: var(--target);
+  min-height: var(--target);
+  padding: var(--space-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--accent-soft);
+  color: var(--text);
+  font: inherit;
+  font-size: var(--text-xs);
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  cursor: pointer;
+}
+.evo-strip__band--phanerozoic {
+  flex-basis: 0;
+}
+.evo-strip__band--archean,
+.evo-strip__band--proterozoic {
+  flex-basis: 64px;
+  background: var(--bg-sunken);
+}
+.evo-strip__band--on {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--bg-panel);
+  font-weight: 600;
+}
+.evo-detail {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-1) var(--space-3);
+  margin: 0;
+  font-size: var(--text-content);
+}
+.evo-detail dt {
+  color: var(--text-muted);
+}
+.evo-detail dd {
+  margin: 0;
+}
+.evo-detail__name {
+  font-weight: 600;
+}
