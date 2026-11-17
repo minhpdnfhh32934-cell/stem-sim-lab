@@ -64,9 +64,3 @@ export function integratedCharge(w: Wire): number {
 
 /** The drawn piece of wire is four diameters long, to scale (2D and 3D pictures). */
 export const lengthOf = (d: number) => 4 * d;
-
-/** A fixed pseudo-random number in [0, 1) for particle k (the same picture every time). */
-export const jitter = (k: number, salt: number) => {
-  const x = Math.sin(k * 12.9898 + salt * 78.233) * 43758.5453;
-  return x - Math.floor(x);
-};

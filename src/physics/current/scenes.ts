@@ -1,3 +1,4 @@
+import { jitter } from '../common/jitter';
 import { lazy } from 'react';
 import type { Locale } from '@/app/i18n/types';
 import type { LocalizedText } from '@/core/data/dataset';
@@ -28,7 +29,6 @@ import {
   electronsIn,
   integratedCharge,
   isValid,
-  jitter,
   lengthOf,
   wireInput,
 } from './model';

@@ -5,7 +5,8 @@
  * — the same rule as the 2D picture, wrapped round the piece. Each dot stands for very many
  * electrons; where they sit across the section is illustration.
  */
-import { jitter, lengthOf } from './model';
+import { jitter } from '../common/jitter';
+import { lengthOf } from './model';
 
 export const ELECTRONS = 60;
 /** Ions: COLS slices along the wire, each a 3 × 3 grid across it. */
