@@ -31,7 +31,9 @@ export type Bio3DLesson =
   | 'capacitor'
   | 'interference'
   | 'travellingWave'
-  | 'standingWave';
+  | 'standingWave'
+  | 'idealGas'
+  | 'heatAndPhase';
 
 /** Lessons that open in 2D until the learner picks 3D (physics: the 2D picture has the chart). */
 export const OPT_IN_3D: readonly Bio3DLesson[] = [
@@ -45,6 +47,8 @@ export const OPT_IN_3D: readonly Bio3DLesson[] = [
   'interference',
   'travellingWave',
   'standingWave',
+  'idealGas',
+  'heatAndPhase',
 ];
 
 export const BIO3D_LESSONS: readonly Bio3DLesson[] = [
