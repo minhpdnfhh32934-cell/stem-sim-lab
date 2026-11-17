@@ -59,12 +59,14 @@ export function buildStandingScene(
   if (w) {
     // The loops: the envelope turned about the string (a lathe about y, laid along x).
     const n = q.n ?? 0;
+    // 24 profile points per loop (smooth at any n), 12 around: a light see-through shape.
+    const steps = Math.max(48, 24 * n);
     const profile: THREE.Vector2[] = [];
-    for (let i = 0; i <= 4 * STRING_POINTS; i++) {
-      const x = (i * L) / (4 * STRING_POINTS);
+    for (let i = 0; i <= steps; i++) {
+      const x = (i * L) / steps;
       profile.push(new THREE.Vector2(H * Math.abs(Math.sin(w.k * x)) + 1e-6 * L, x));
     }
-    const lathe = kit.geometry(new THREE.LatheGeometry(profile, Math.max(12, kit.seg)));
+    const lathe = kit.geometry(new THREE.LatheGeometry(profile, 12));
     lathe.rotateZ(-Math.PI / 2);
     const loops = kit.mesh(
       lathe,
