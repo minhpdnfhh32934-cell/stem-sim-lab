@@ -1,0 +1,76 @@
+/* The nucleus and radioactivity (VL12 Bài 21–23, #255 round 3d). */
+@import '../../chemistry/chem.css';
+
+.nuclear-panel {
+  display: grid;
+  gap: var(--space-3);
+}
+.nuclear-panel__head {
+  margin: 0;
+}
+.nuclear-panel__facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-1) var(--space-3);
+  margin: 0;
+}
+.nuclear-panel__facts dt {
+  color: var(--text-muted);
+}
+.nuclear-panel__facts dd {
+  margin: 0;
+}
+.nuclear-reaction {
+  position: absolute;
+  inset: 80px var(--space-4) var(--space-4);
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: var(--space-4);
+}
+.nuclear-reaction__line {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+}
+.nuclear-reaction__eq {
+  margin: 0;
+  font-size: 2rem;
+}
+.nuclear-reaction__sum {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--text-content);
+}
+.nuclear-legend {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.nuclear-legend li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.nuclear-legend__swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  flex: none;
+}
+.nuclear-table {
+  border-collapse: collapse;
+}
+.nuclear-table caption {
+  text-align: left;
+  font-weight: 600;
+  padding-bottom: var(--space-1);
+}
+.nuclear-table th,
+.nuclear-table td {
+  padding: 4px var(--space-3);
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}

@@ -114,6 +114,7 @@ const vi = {
     thermalPhysics: 'Vật lí nhiệt',
     idealGasChapter: 'Khí lí tưởng',
     magnetismChapter: 'Từ trường',
+    nuclearChapter: 'Vật lí hạt nhân',
     gravitation: 'Hấp dẫn (mở rộng)',
   },
   topics: {
@@ -235,6 +236,9 @@ const vi = {
     induction: 'Cảm ứng điện từ và máy phát điện xoay chiều',
     inductionApplications: 'Ứng dụng hiện tượng cảm ứng điện từ',
     electromagneticField: 'Điện từ trường và mô hình sóng điện từ',
+    nucleus: 'Hạt nhân và năng lượng liên kết',
+    radioactivity: 'Hiện tượng phóng xạ',
+    nuclearIndustry: 'Công nghiệp hạt nhân',
     fourierSeries: 'Họa âm và chuỗi Fourier',
   },
   stage: {

@@ -14,6 +14,8 @@ export const SHELF_PREVIEWS: ReadonlySet<string> = new Set([
   'idealGas',
   'magneticForce',
   'induction',
+  'nucleus',
+  'radioactivity',
   'aqueousEquilibrium',
   'nitrogenSulfur',
   'organicBasics',
@@ -96,6 +98,7 @@ export const SHELF_PREVIEWS: ReadonlySet<string> = new Set([
   'magneticField',
   'inductionApplications',
   'electromagneticField',
+  'nuclearIndustry',
 ]);
 
 /** The picture of `topic` in `theme`, or null when it has none. */

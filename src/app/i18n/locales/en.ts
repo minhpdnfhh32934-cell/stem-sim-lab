@@ -111,6 +111,7 @@ const en: Messages = {
     thermalPhysics: 'Thermal physics',
     idealGasChapter: 'Ideal gas',
     magnetismChapter: 'Magnetic field',
+    nuclearChapter: 'Nuclear physics',
     gravitation: 'Gravitation (extension)',
   },
   topics: {
@@ -232,6 +233,9 @@ const en: Messages = {
     induction: 'Electromagnetic induction and the AC generator',
     inductionApplications: 'Uses of electromagnetic induction',
     electromagneticField: 'The electromagnetic field and wave model',
+    nucleus: 'The nucleus and binding energy',
+    radioactivity: 'Radioactivity',
+    nuclearIndustry: 'Nuclear industry',
     fourierSeries: 'Harmonics and Fourier series',
   },
   stage: {

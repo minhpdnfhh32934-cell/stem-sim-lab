@@ -27,6 +27,9 @@ const OWN_VIEW = [
   'Cảm ứng điện từ và máy phát điện xoay chiều',
   'Ứng dụng hiện tượng cảm ứng điện từ',
   'Điện từ trường và mô hình sóng điện từ',
+  'Hạt nhân và năng lượng liên kết',
+  'Hiện tượng phóng xạ',
+  'Công nghiệp hạt nhân',
 ];
 
 interface Rect {

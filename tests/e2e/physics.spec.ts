@@ -48,6 +48,9 @@ const TOPICS: readonly (readonly [string, string])[] = [
   ['Cảm ứng điện từ và máy phát điện xoay chiều', 'Cảm ứng điện từ và máy phát điện xoay chiều'],
   ['Ứng dụng hiện tượng cảm ứng điện từ', 'Ứng dụng hiện tượng cảm ứng điện từ'],
   ['Điện từ trường và mô hình sóng điện từ', 'Điện từ trường và mô hình sóng điện từ'],
+  ['Hạt nhân và năng lượng liên kết', 'Hạt nhân và năng lượng liên kết'],
+  ['Hiện tượng phóng xạ', 'Hiện tượng phóng xạ'],
+  ['Công nghiệp hạt nhân', 'Công nghiệp hạt nhân'],
   ['Định luật II Kepler', 'Định luật II Kepler'],
 ];
 
@@ -58,6 +61,7 @@ const GUIDED = new Set([
   'Từ trường và đường sức từ',
   'Ứng dụng hiện tượng cảm ứng điện từ',
   'Điện từ trường và mô hình sóng điện từ',
+  'Công nghiệp hạt nhân',
 ]);
 
 async function openPhysicsLibrary(page: Page) {

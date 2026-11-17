@@ -33,6 +33,7 @@ import { vl12b08Gas } from './vl12b08Gas';
 import { vl12b14Field } from './vl12b14Field';
 import { vl12b18Applications } from './vl12b18Applications';
 import { vl12b19EmField } from './vl12b19EmField';
+import { vl12b24Industry } from './vl12b24Industry';
 
 /**
  * The descriptive textbook lessons (user decision 14/11/2026, #255). Kept out of
@@ -74,6 +75,7 @@ export const GUIDED_LESSONS: readonly unknown[] = [
   vl12b14Field,
   vl12b18Applications,
   vl12b19EmField,
+  vl12b24Industry,
 ];
 
 let cache: StudioScenario[] | null = null;
