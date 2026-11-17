@@ -1,5 +1,5 @@
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { useProfileStore } from '@/app/learner/profileStore';
 import { useNavigationStore } from '@/app/navigationStore';
 import { useSettingsStore } from '@/app/settings/settingsStore';
@@ -9,6 +9,20 @@ import { hasScene } from '@/physics/registry';
 import { useStudioStore } from '@/studio/studioStore';
 import { BenchLibrary } from './Library';
 import { useProblemSheet } from './problemSheet';
+
+// Every grade now has topics in every subject: the empty state is faked to keep it tested.
+const emptyGrade = vi.hoisted(() => ({ on: false }));
+vi.mock('@/app/curriculum', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/app/curriculum')>();
+  return {
+    ...actual,
+    gradeView: (...args: Parameters<typeof actual.gradeView>) =>
+      emptyGrade.on ? [] : actual.gradeView(...args),
+  };
+});
+afterEach(() => {
+  emptyGrade.on = false;
+});
 
 afterEach(() => {
   act(() => {
@@ -215,6 +229,7 @@ describe('"Kệ bài": marks, grade views and searches without a dead end (B8)',
   });
 
   it('a grade without topics in the subject is no dead end: "Xem tất cả"', () => {
+    emptyGrade.on = true;
     act(() => {
       useProfileStore.getState().setGrade(12);
       useWorkspaceStore.getState().setSubject('physics');

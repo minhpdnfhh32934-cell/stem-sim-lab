@@ -508,6 +508,8 @@ PLACEMENTS = [
     ("cellStructure", "SH10", [7, 8], "Tên Bài 7–8: tế bào nhân sơ và tế bào nhân thực."),
     ("uniformCircularMotion", "VL10", [31, 32], "Tên Bài 31–32: động học của chuyển động tròn đều; lực hướng tâm và gia tốc hướng tâm."),
     ("travellingWave", "VL11", [8, 9], "Tên Bài 8: mô tả sóng (biên độ, chu kì, tần số, tốc độ, bước sóng); tên Bài 9: sóng ngang, sóng dọc, sự truyền năng lượng của sóng cơ (cảnh một nguồn O, chọn sóng ngang hoặc sóng dọc)."),
+    ("matterStructure", "VL12", [1], "Tên Bài 1: cấu trúc của chất, sự chuyển thể (bài học có hướng dẫn: dự đoán và các hoạt động phân loại, ghép; không có mô phỏng)."),
+    ("heatAndPhase", "VL12", [2, 3, 4, 5, 6], "Tên Bài 2: nội năng, định luật I (ΔU = A + Q); Bài 3: nhiệt độ, thang nhiệt độ; Bài 4: nhiệt dung riêng (Q = mcΔT); Bài 5: nhiệt nóng chảy riêng (Q = λm); Bài 6: nhiệt hóa hơi riêng (Q = Lm), số liệu Bảng 4.1, 5.1, 6.1."),
     ("emWave", "VL11", [11], "Tên Bài 11: sóng điện từ (vectơ E, B vuông góc với phương truyền; λ = c/f; thang sóng điện từ theo Bảng 11.1)."),
     ("interference", "VL11", [12], "Tên Bài 12: giao thoa sóng (cảnh có hai nguồn cùng pha trên mặt nước; phần phách là mở rộng)."),
     ("dcCircuit", "VL11", [23, 24, 25], "Tên Bài 23–25: điện trở, định luật Ohm, nguồn điện, năng lượng và công suất điện (cảnh có nguồn E, r và 1–3 điện trở)."),
