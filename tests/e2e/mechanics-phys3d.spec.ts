@@ -187,3 +187,43 @@ test('Con lắc đơn in 3D: the bob swings on its string, ℓ from the pivot, w
   await page.screenshot({ path: testInfo.outputPath('pendulum-3d.png') });
   expect(errors).toEqual([]);
 });
+
+test('Con lắc lò xo in 3D: the block oscillates within ±A, horizontal then vertical', async ({
+  page,
+}, testInfo) => {
+  test.setTimeout(150_000);
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(String(e)));
+  await openTopic(page, 'Vật lý', 'Con lắc lò xo');
+  await page.locator('.stage__view-switch').getByRole('radio', { name: '3D' }).click();
+  const view = page.locator('.bio3d[data-lesson="springPendulum"]');
+  await expect(view.locator('canvas')).toBeVisible({ timeout: 30_000 });
+  const read = () =>
+    page.evaluate(() => {
+      const h = (
+        window as unknown as {
+          __simlab3d?: Record<
+            string,
+            { state(): { x: number; block: number[] } | null } | undefined
+          >;
+        }
+      ).__simlab3d?.springPendulum;
+      return h?.state() ?? null;
+    });
+  await page.getByRole('button', { name: /^Chạy/ }).first().click();
+  await page.waitForTimeout(800);
+  // x₀ = 5 cm, v₀ = 0, no damping: the block stays within ±5 cm, on the ground line.
+  const h = await read();
+  expect(Math.abs(h?.x ?? 9)).toBeLessThanOrEqual(0.05 + 1e-6);
+  expect(h?.block[0]).toBeCloseTo(h?.x ?? NaN, 6);
+  await page.screenshot({ path: testInfo.outputPath('spring-h-3d.png') });
+  await page.getByRole('radio', { name: 'Thẳng đứng' }).click();
+  await expect(view.getByText('VTCB', { exact: true })).toBeVisible({ timeout: 15_000 });
+  await page.getByRole('button', { name: /^Chạy/ }).first().click();
+  await page.waitForTimeout(800);
+  const v = await read();
+  expect(v?.block[0]).toBe(0);
+  expect(v?.block[1]).toBeCloseTo(v?.x ?? NaN, 6);
+  await page.screenshot({ path: testInfo.outputPath('spring-v-3d.png') });
+  expect(errors).toEqual([]);
+});

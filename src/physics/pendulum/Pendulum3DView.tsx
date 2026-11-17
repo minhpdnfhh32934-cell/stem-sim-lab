@@ -42,7 +42,7 @@ export default function Pendulum3DView() {
             showSmall,
             texts: {
               v: 'v',
-              P: plain(sym(locale).weight),
+              P: plain(sym(locale).weight).replace('_', ''),
               T: 'T',
               small: Lz(L('góc nhỏ', 'small-angle')),
             },
