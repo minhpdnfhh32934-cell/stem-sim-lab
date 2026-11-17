@@ -3088,6 +3088,79 @@
    "review_status": "pending"
   },
   {
+   "topic": "humanGenetics",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 2. Di truyền nhiễm sắc thể",
+   "lessons": [
+    13
+   ],
+   "reason": "Tên Bài 13: di truyền học người và di truyền y học (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "extranuclearInheritance",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 3. Mở rộng học thuyết di truyền nhiễm sắc thể",
+   "lessons": [
+    15
+   ],
+   "reason": "Tên Bài 15: di truyền gene ngoài nhân (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "genotypeEnvironment",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 3. Mở rộng học thuyết di truyền nhiễm sắc thể",
+   "lessons": [
+    16
+   ],
+   "reason": "Tên Bài 16: tương tác giữa kiểu gene với môi trường và thành tựu chọn giống (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "evolutionEvidence",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 5. Bằng chứng và các học thuyết tiến hoá",
+   "lessons": [
+    19,
+    22
+   ],
+   "reason": "Tên Bài 19: các bằng chứng tiến hoá (Bảng 19.1, cytochrome C); Bài 22: tiến hoá lớn và quá trình phát sinh chủng loại (Bảng 22.1, các đại địa chất).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "darwinSelection",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 5. Bằng chứng và các học thuyết tiến hoá",
+   "lessons": [
+    20
+   ],
+   "reason": "Tên Bài 20: quan niệm của Darwin về chọn lọc tự nhiên và hình thành loài (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "modernSynthesis",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 5. Bằng chứng và các học thuyết tiến hoá",
+   "lessons": [
+    21
+   ],
+   "reason": "Tên Bài 21: học thuyết tiến hoá tổng hợp hiện đại (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
    "topic": "heatAndPhase",
    "subject": "physics",
    "grade": 12,
