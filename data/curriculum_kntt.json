@@ -2764,6 +2764,66 @@
    "review_status": "pending"
   },
   {
+   "topic": "esterLipid",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 1. Ester – Lipid",
+   "lessons": [
+    1
+   ],
+   "reason": "Tên Bài 1: ester – lipid: tên gọi, đồng phân, thủy phân, ester hóa, chất béo (Hình 1.2), xà phòng hóa, hydrogen hóa.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "soapDetergent",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 1. Ester – Lipid",
+   "lessons": [
+    2
+   ],
+   "reason": "Tên Bài 2: xà phòng và chất giặt rửa (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "monosaccharides",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 2. Carbohydrate",
+   "lessons": [
+    4
+   ],
+   "reason": "Tên Bài 4: carbohydrate, glucose và fructose (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "disaccharides",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 2. Carbohydrate",
+   "lessons": [
+    5
+   ],
+   "reason": "Tên Bài 5: saccharose và maltose (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "polysaccharides",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 2. Carbohydrate",
+   "lessons": [
+    6
+   ],
+   "reason": "Tên Bài 6: tinh bột và cellulose (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
    "topic": "heatAndPhase",
    "subject": "physics",
    "grade": 12,
