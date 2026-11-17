@@ -104,3 +104,35 @@ test('evolution: cytochrome C and the geological timescale', async ({ page }, te
   expect(overflow).toBeLessThanOrEqual(0);
   expect(errors).toEqual([]);
 });
+
+/** SH12 Bài 23, 29 (#255 round 5d): the tolerance example and the pyramids of Hình 29.6. */
+test('ecology: tolerance limits and ecological pyramids', async ({ page }, testInfo) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(String(e)));
+  await openTopic(page, 'Sinh học', 'Môi trường và các nhân tố sinh thái');
+  await expect(page.locator('.eco-zone')).toContainText('Khoảng thuận lợi', { timeout: 20_000 });
+  const t = page.getByRole('textbox', { name: /Nhiệt độ môi trường/ });
+  await t.fill('45');
+  await t.press('Enter');
+  await expect(page.locator('.eco-zone')).toContainText('ngừng quang hợp');
+  await page.screenshot({ path: testInfo.outputPath('tolerance.png') });
+
+  await openTopic(
+    page,
+    'Sinh học',
+    'Trao đổi vật chất và chuyển hóa năng lượng trong hệ sinh thái',
+  );
+  await expect(page.locator('.eco-pyramid__row')).toHaveCount(4, { timeout: 20_000 });
+  await expect(page.locator('.eco-efficiency li')).toHaveCount(3);
+  await page.screenshot({ path: testInfo.outputPath('pyramid.png') });
+  await page
+    .getByRole('combobox', { name: 'Tháp sinh thái (Hình 29.6)' })
+    .selectOption({ label: 'Tháp số lượng: Rừng ôn đới (mùa hè)' });
+  await expect(page.locator('.eco-shape')).toContainText('dạng ngược');
+
+  const overflow = await page.evaluate(
+    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+  );
+  expect(overflow).toBeLessThanOrEqual(0);
+  expect(errors).toEqual([]);
+});

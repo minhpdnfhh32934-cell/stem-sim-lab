@@ -6,6 +6,14 @@ import { bindStore } from '@/modules/binding';
 import type { ModuleView } from '@/modules/types';
 import { ChromosomePanel, ChromosomeStage } from './chromosome/ChromosomeViews';
 import { restoreChromosome, useChromosome } from './chromosome/store';
+import { PYRAMID_TITLE, TOLERANCE_TITLE } from './ecology12/card';
+import {
+  PyramidPanel,
+  PyramidStage,
+  TolerancePanel,
+  ToleranceStage,
+} from './ecology12/Ecology12Views';
+import { restorePyramid, restoreTolerance, usePyramid, useTolerance } from './ecology12/store';
 import { EVOLUTION_TITLE } from './evolution/card';
 import { EvolutionPanel, EvolutionStage } from './evolution/EvolutionViews';
 import { restoreEvolution, useEvolution } from './evolution/store';
@@ -60,4 +68,20 @@ export const evolutionEvidence: ModuleView = {
   Stage: EvolutionStage,
   Panel: EvolutionPanel,
   state: bindStore(useEvolution, ['tab', 'period'], restoreEvolution),
+};
+
+/** Bài 23: the law of tolerance with the book's temperature example. */
+export const ecologicalFactors: ModuleView = {
+  title: TOLERANCE_TITLE,
+  Stage: ToleranceStage,
+  Panel: TolerancePanel,
+  state: bindStore(useTolerance, ['t'], restoreTolerance),
+};
+
+/** Bài 29: the ecological pyramids of Hình 29.6 and the efficiency between levels. */
+export const ecosystemEnergy: ModuleView = {
+  title: PYRAMID_TITLE,
+  Stage: PyramidStage,
+  Panel: PyramidPanel,
+  state: bindStore(usePyramid, ['pyramid'], restorePyramid),
 };
