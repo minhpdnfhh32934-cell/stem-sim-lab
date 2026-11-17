@@ -87,3 +87,40 @@ test('Điện trường in 3D: field lines in space, E at M, the capacitor, back
   expect(overflow).toBeLessThanOrEqual(0);
   expect(errors).toEqual([]);
 });
+
+const potentialState = (page: Page) =>
+  page.evaluate(() => {
+    const h = (window as unknown as { __simlab3d?: Record<string, Hook | undefined> }).__simlab3d
+      ?.electricPotential;
+    return h ? (h.state() as { charge: number[]; planes: number } | null) : null;
+  });
+
+test('Điện thế in 3D: equipotential planes through M and N, the charge moved by the engine', async ({
+  page,
+}, testInfo) => {
+  test.setTimeout(120_000);
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(String(e)));
+  await openTopic(page, 'Vật lý', 'Thế năng điện. Điện thế');
+  await expect(page.locator('.stage__hud-title')).toHaveText('Thế năng điện. Điện thế', {
+    timeout: 20_000,
+  });
+  await page.locator('.stage__view-switch').getByRole('radio', { name: '3D' }).click();
+  const view = page.locator('.bio3d[data-lesson="electricPotential"]');
+  await expect(view.locator('canvas')).toBeVisible({ timeout: 30_000 });
+  // The example of p. 81: U = 36 V, M in the middle (18 V), N on the − plate (0 V).
+  await expect(view.locator('.three-label', { hasText: 'Vₘ = 18 V' })).toBeVisible();
+  await expect.poll(async () => (await potentialState(page))?.planes).toBe(2);
+  const before = (await potentialState(page))?.charge ?? [];
+  expect(before[1]).toBeCloseTo(0.02, 12);
+  // Run: the engine carries the charge from M down to N in 4 s; the 3D picture follows it.
+  await page.getByRole('button', { name: 'Chạy (Space)' }).first().click();
+  await expect
+    .poll(async () => (await potentialState(page))?.charge[1] ?? 1, { timeout: 20_000 })
+    .toBeLessThan(0.019);
+  await page.screenshot({ path: testInfo.outputPath('potential-3d.png') });
+  await expect
+    .poll(async () => (await potentialState(page))?.charge[1] ?? 1, { timeout: 20_000 })
+    .toBeCloseTo(0, 9);
+  expect(errors).toEqual([]);
+});
