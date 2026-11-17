@@ -203,6 +203,12 @@ vẽ, 14 722 tam giác, 298 khung (Cao 35 042 tam giác, 205 khung); nhiệt lư
 giác, 228 khung (Cao 41 486 tam giác, 167 khung). Hạt cập nhật trong cùng bộ đệm mỗi khung, không
 cấp phát; đứng yên khi người dùng bật giảm chuyển động. Mức Thấp hiện hình 2D.
 
+**Vật lí 3D, đợt 6e (2026-11-17, #302).** Hạt nhân (vàng, 197 nucleon, chỉ vẽ khi đổi) Trung bình
+4 lệnh vẽ, 69 698 tam giác (Cao 161 570). Phóng xạ (200 hạt nhân, lần thử ngẫu nhiên chạy lặp lại):
+bản đầu dùng quả cầu đủ chi tiết, 70 402 tam giác, 189 khung trong 6 s (Cao 163 202 tam giác, 84
+khung); đổi sang quả cầu nửa chi tiết cho các chấm nhỏ: 16 002 tam giác, 362 khung (Cao 38 402 tam
+giác, 230 khung). SwiftShader 1366×768. Mức Thấp hiện hình 2D.
+
 **Watchdog bộ nhớ** (`src/perf/memory.ts`): 10 giây đọc heap JS một lần (WebView2/Chromium). Khi vượt
 80 % ngân sách 300 MB (hoặc 80 % giới hạn heap), app giải phóng bộ nhớ đệm đã đăng ký (ví dụ: bản
 ghi đồ thị vật lý giữ lại một nửa số mẫu — chỉ giảm độ phân giải đồ thị, không ảnh hưởng mô phỏng)

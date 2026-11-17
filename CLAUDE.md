@@ -854,7 +854,7 @@ Progress log: `docs/PROGRESS.md`.
   `src/physics/view3d/arrow.ts` (arrows, uniform field, lines); each lesson has a pure `xxx3d.ts`
   (tested against its model), `scene3d.ts` and a lazy `Xxx3DView.tsx`.
   - Modules (6a: `magneticForce`, `induction`, `emWave`; 6d: `idealGas` process tab,
-    `heatAndPhase` heat tab): the Stage shows the 3D view in place of its canvas, reading the
+    `heatAndPhase` heat tab; 6e: `nucleus` structure tab, `radioactivity` law and random tabs): the Stage shows the 3D view in place of its canvas, reading the
     module's store; tabs that are charts or tables stay 2D. The chemistry particle lessons stay 2D
     (their model is a 2D hard-disk gas).
   - `PhysicsScene`s (6b: `electricField`, `electricPotential`, `capacitor`, `electricCurrent`;
@@ -865,7 +865,7 @@ Progress log: `docs/PROGRESS.md`.
     `useSimStore` params and `sim.renderState` (moving parts through `setTime` / `tick`, never
     rebuilt; nothing allocated per frame).
   - E2E `tests/e2e/em-phys3d.spec.ts`, `electric-phys3d.spec.ts`, `waves-phys3d.spec.ts`,
-    `thermo-phys3d.spec.ts` (`phys3d` in `HEAVY_3D`).
+    `thermo-phys3d.spec.ts`, `nuclear-phys3d.spec.ts` (`phys3d` in `HEAVY_3D`).
     Wording: DATA_REVIEW PHY3D-*.
 - Projects (Phase 6): `src/app/project/` — `snapshot.ts` (.stemsim schema; inputs only), `undo.ts`,
   `history.ts` (Rust SQLite `src-tauri/src/history.rs`), `actions.ts` (save/open/PNG/CSV via Rust
