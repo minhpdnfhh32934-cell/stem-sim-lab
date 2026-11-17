@@ -16,6 +16,7 @@ export const SHELF_PREVIEWS: ReadonlySet<string> = new Set([
   'induction',
   'nucleus',
   'radioactivity',
+  'esterLipid',
   'aqueousEquilibrium',
   'nitrogenSulfur',
   'organicBasics',
@@ -99,6 +100,10 @@ export const SHELF_PREVIEWS: ReadonlySet<string> = new Set([
   'inductionApplications',
   'electromagneticField',
   'nuclearIndustry',
+  'soapDetergent',
+  'monosaccharides',
+  'disaccharides',
+  'polysaccharides',
 ]);
 
 /** The picture of `topic` in `theme`, or null when it has none. */
