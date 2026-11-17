@@ -36,11 +36,11 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Vật lí 12 | 25 | 21 | 21 |
 | Hoá học 10 | 23 | 16 | 16 |
 | Hoá học 11 | 25 | 19 | 19 |
-| Hoá học 12 | 30 | 22 | 11 |
+| Hoá học 12 | 30 | 22 | 13 |
 | Sinh học 10 | 26 | 17 | 17 |
 | Sinh học 11 | 29 | 20 | 20 |
 | Sinh học 12 | 35 | 28 | 7 |
-| **Cộng** | **253** | **189** | **157** |
+| **Cộng** | **253** | **189** | **159** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -204,8 +204,8 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Hoá học 12 | Chương 4. Polymer | 12 | Đại cương về polymer | 51 | Lí thuyết | Đại cương về polymer | Tên Bài 12: đại cương về polymer (bài học có hướng dẫn). | pending |
 | Hoá học 12 | Chương 4. Polymer | 13 | Vật liệu polymer | 56 | Lí thuyết | Vật liệu polymer | Tên Bài 13: vật liệu polymer (bài học có hướng dẫn). | pending |
 | Hoá học 12 | Chương 4. Polymer | 14 | Ôn tập chương 4 | 65 | Ôn tập | chưa có |  | pending |
-| Hoá học 12 | Chương 5. Pin điện và điện phân | 15 | Thế điện cực và nguồn điện hoá học | 67 | Lí thuyết | chưa có |  | pending |
-| Hoá học 12 | Chương 5. Pin điện và điện phân | 16 | Điện phân | 78 | Lí thuyết | chưa có |  | pending |
+| Hoá học 12 | Chương 5. Pin điện và điện phân | 15 | Thế điện cực và nguồn điện hoá học | 67 | Lí thuyết | Thế điện cực và nguồn điện hóa học | Tên Bài 15: thế điện cực và nguồn điện hóa học: Bảng 15.1, quy tắc α, pin Galvani, E°pin = E°cathode − E°anode. | pending |
+| Hoá học 12 | Chương 5. Pin điện và điện phân | 16 | Điện phân | 78 | Lí thuyết | Điện phân | Tên Bài 16: điện phân (bài học có hướng dẫn). | pending |
 | Hoá học 12 | Chương 5. Pin điện và điện phân | 17 | Ôn tập chương 5 | 85 | Ôn tập | chưa có |  | pending |
 | Hoá học 12 | Chương 6. Đại cương về kim loại | 18 | Cấu tạo và liên kết trong tinh thể kim loại | 87 | Lí thuyết | Tinh thể kim loại và NaCl | Tên Bài 18: cấu tạo và liên kết trong tinh thể kim loại (cảnh có thêm tinh thể NaCl; Bài 11 Hoá học 10 tên là liên kết ion, không nêu tinh thể nên không xếp). | pending |
 | Hoá học 12 | Chương 6. Đại cương về kim loại | 19 | Tính chất vật lí và tính chất hoá học của kim loại | 89 | Lí thuyết | chưa có |  | pending |
