@@ -265,6 +265,9 @@ const en: Messages = {
     transitionMetals: 'First-row transition metals',
     complexStructure: 'Complexes',
     complexReactions: 'Properties and uses of complexes',
+    dnaReplication: 'DNA and its replication',
+    lacOperon: 'Gene regulation: the lac operon',
+    geneTechnology: 'Gene technology',
     fourierSeries: 'Harmonics and Fourier series',
   },
   stage: {

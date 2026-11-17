@@ -26,6 +26,7 @@ export const SHELF_PREVIEWS: ReadonlySet<string> = new Set([
   'transitionMetals',
   'complexStructure',
   'complexReactions',
+  'lacOperon',
   'aqueousEquilibrium',
   'nitrogenSulfur',
   'organicBasics',
@@ -120,6 +121,8 @@ export const SHELF_PREVIEWS: ReadonlySet<string> = new Set([
   'metalExtraction',
   'alloys',
   'corrosion',
+  'dnaReplication',
+  'geneTechnology',
 ]);
 
 /** The picture of `topic` in `theme`, or null when it has none. */
