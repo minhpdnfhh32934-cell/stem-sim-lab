@@ -28,6 +28,7 @@ import { sh11b24Reproduction } from './sh11b24Reproduction';
 import { sh11b25PlantReproduction } from './sh11b25PlantReproduction';
 import { sh11b27AnimalReproduction } from './sh11b27AnimalReproduction';
 import { sh11b28Integration } from './sh11b28Integration';
+import { vl12b01Matter } from './vl12b01Matter';
 
 /**
  * The descriptive textbook lessons (user decision 14/11/2026, #255). Kept out of
@@ -64,6 +65,7 @@ export const GUIDED_LESSONS: readonly unknown[] = [
   sh11b25PlantReproduction,
   sh11b27AnimalReproduction,
   sh11b28Integration,
+  vl12b01Matter,
 ];
 
 let cache: StudioScenario[] | null = null;

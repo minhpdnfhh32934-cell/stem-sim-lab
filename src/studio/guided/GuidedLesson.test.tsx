@@ -10,7 +10,7 @@ import StudioScreen from '../StudioScreen';
 import { useStudioStore } from '../studioStore';
 import { knttLesson } from './card';
 import { guidedOf, orderAnswers, readSheet, withSheet, type Sheet } from './check';
-import { guidedForTopic } from './lessons';
+import { guidedFor, guidedForTopic } from './lessons';
 import type { GuidedActivity } from './schema';
 import { GUIDED_TOPICS } from './topics';
 
@@ -305,8 +305,8 @@ describe('guided textbook lessons in Science Studio', () => {
     // The subject's own lessons keep their picker; the textbook lessons are a second group.
     expect(screen.getByRole('group', { name: 'Chọn bài học' })).toBeInTheDocument();
     const group = screen.getByRole('group', { name: 'Bài học mô tả theo SGK' });
-    // The biology tab lists the biology lessons only (the chemistry one has its own tab).
-    expect(within(group).getAllByRole('button')).toHaveLength(GUIDED_TOPICS.length - 1);
+    // The biology tab lists the biology lessons only (chemistry and physics have their own tabs).
+    expect(within(group).getAllByRole('button')).toHaveLength(guidedFor('biology').length);
     await user.click(within(group).getByRole('button', { name: s.title.vi }));
     expect(screen.getByRole('heading', { name: s.title.vi })).toBeVisible();
     expect(screen.getByRole('button', { name: 'Hoạt động' })).toBeDisabled();
