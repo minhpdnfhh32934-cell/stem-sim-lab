@@ -16,6 +16,9 @@
 .ec-canvas--cell {
   height: 380px;
 }
+.ec-canvas--line {
+  height: 110px;
+}
 .ec-note {
   margin: 0;
   color: var(--text-muted);
@@ -61,4 +64,34 @@
   padding: 4px var(--space-3);
   text-align: left;
   border-bottom: 1px solid var(--border);
+}
+.metal-view__head {
+  margin: 0;
+  font-size: var(--text-content);
+}
+.metal-verdict {
+  font-weight: 600;
+}
+.metal-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.metal-fact {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+.metal-fact__what,
+.metal-fact__page {
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+}
+.metal-fact__metal {
+  font-size: var(--text-content);
 }

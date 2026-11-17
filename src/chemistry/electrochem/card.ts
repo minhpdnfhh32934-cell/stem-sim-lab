@@ -51,3 +51,64 @@ export function electrochemCard(): ScienceCardData {
     reviewStatus: 'pending',
   };
 }
+
+export const METAL_TITLE = L(
+  'Tính chất vật lí và tính chất hóa học của kim loại',
+  'Physical and chemical properties of metals',
+);
+
+export function metalCard(): ScienceCardData {
+  return {
+    title: METAL_TITLE,
+    model: L(
+      'Trong tinh thể kim loại, các electron tự do chuyển động giữa các ion dương kim loại; chúng gây ra tính dẻo, tính dẫn điện, dẫn nhiệt và ánh kim. Nguyên tử kim loại dễ nhường electron hóa trị nên tính chất hóa học chung của kim loại là tính khử. Thế điện cực chuẩn cho biết kim loại nào có thể đẩy hydrogen ra khỏi nước hay khỏi dung dịch acid loãng, và kim loại nào có thể đẩy kim loại khác ra khỏi dung dịch muối.',
+      'In a metal crystal, free electrons move among the metal cations; they make metals malleable, conductive of electricity and heat, and shiny. Metal atoms give up their valence electrons easily, so metals are reductants. Standard electrode potentials tell which metals can push hydrogen out of water or a dilute acid, and which can push another metal out of its salt solution.',
+    ),
+    equations: [
+      {
+        tex: '\\mathrm{M \\rightarrow M^{n+} + ne}',
+        label: L('Tính khử của kim loại (tr. 91)', 'Metals as reductants (p. 91)'),
+      },
+      {
+        tex: 'E^\\circ_{M^{n+}/M} < -0{,}414\\ \\mathrm{V}',
+        label: L(
+          'Có thể đẩy hydrogen ra khỏi nước (tr. 92)',
+          'Can push hydrogen out of water (p. 92)',
+        ),
+      },
+      {
+        tex: 'E^\\circ_{M^{n+}/M} < 0',
+        label: L(
+          'Có thể tác dụng với dung dịch HCl, H₂SO₄ loãng (tr. 93)',
+          'Can react with dilute HCl, H₂SO₄ (p. 93)',
+        ),
+      },
+    ],
+    assumptions: [
+      L(
+        'Các quy tắc chỉ dựa vào thế điện cực chuẩn của Bảng 15.1: chúng cho biết phản ứng có thể xảy ra, không cho biết phản ứng nhanh hay chậm.',
+        'The rules rest only on Table 15.1’s standard potentials: they tell whether a reaction can happen, not how fast.',
+      ),
+      L(
+        'Không có chromium trong phần phản ứng vì Bảng 15.1 chỉ có cặp Cr³⁺/Cr, còn sách không nêu sản phẩm của chromium với acid.',
+        'Chromium is left out of the reactions because Table 15.1 has only Cr³⁺/Cr and the book does not say what chromium gives with an acid.',
+      ),
+      L(
+        'Các kim loại tác dụng với nước (Bài 24, 25) không được xét với dung dịch muối.',
+        'Metals that react with water (Lessons 24, 25) are not tried with salt solutions.',
+      ),
+    ],
+    validity: L(
+      'Điều kiện chuẩn; số liệu vật lí là các ví dụ sách nêu ở tr. 89–91.',
+      'Standard conditions; the physical data are the examples the book gives on pp. 89–91.',
+    ),
+    confidence: 'exact',
+    confidenceNote: L(
+      'Kết luận và phương trình suy đúng từ Bảng 15.1; số liệu lấy từ sách, chờ giáo viên duyệt.',
+      'Verdicts and equations follow exactly from Table 15.1; the data come from the book, awaiting teacher review.',
+    ),
+    userIntervened: false,
+    sources: [ELECTROCHEM_SOURCE],
+    reviewStatus: 'pending',
+  };
+}

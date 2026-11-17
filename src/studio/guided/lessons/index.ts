@@ -42,6 +42,9 @@ import { hh12b10Protein } from './hh12b10Protein';
 import { hh12b12Polymer } from './hh12b12Polymer';
 import { hh12b13Materials } from './hh12b13Materials';
 import { hh12b16Electrolysis } from './hh12b16Electrolysis';
+import { hh12b20Extraction } from './hh12b20Extraction';
+import { hh12b21Alloys } from './hh12b21Alloys';
+import { hh12b22Corrosion } from './hh12b22Corrosion';
 
 /**
  * The descriptive textbook lessons (user decision 14/11/2026, #255). Kept out of
@@ -92,6 +95,9 @@ export const GUIDED_LESSONS: readonly unknown[] = [
   hh12b12Polymer,
   hh12b13Materials,
   hh12b16Electrolysis,
+  hh12b20Extraction,
+  hh12b21Alloys,
+  hh12b22Corrosion,
 ];
 
 let cache: StudioScenario[] | null = null;

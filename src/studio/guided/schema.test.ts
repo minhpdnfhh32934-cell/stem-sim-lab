@@ -27,14 +27,14 @@ function texts(value: unknown, out: string[] = []): string[] {
 
 describe('guided textbook lessons (SH10, HH11, SH11; #255)', () => {
   it('all thirty are valid guided lessons, pending a teacher, one per guided topic', () => {
-    expect(GUIDED_LESSONS).toHaveLength(43);
-    expect(lessons).toHaveLength(43);
+    expect(GUIDED_LESSONS).toHaveLength(46);
+    expect(lessons).toHaveLength(46);
     for (const s of lessons) {
       expect(s.binding.kind).toBe('guided');
       expect(s.review_status).toBe('pending');
     }
     expect(lessons.map((s) => s.topic).sort()).toEqual([...GUIDED_TOPICS].sort());
-    expect(new Set(lessons.map((s) => s.id)).size).toBe(43);
+    expect(new Set(lessons.map((s) => s.id)).size).toBe(46);
   });
 
   it('each follows a theory lesson of the book, and its topic is placed on that lesson', () => {
@@ -73,6 +73,9 @@ describe('guided textbook lessons (SH10, HH11, SH11; #255)', () => {
       'polymerBasics',
       'polymerMaterials',
       'electrolysis',
+      'metalExtraction',
+      'alloys',
+      'corrosion',
     ]);
   });
 
