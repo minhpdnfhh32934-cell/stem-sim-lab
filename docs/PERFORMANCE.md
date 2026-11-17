@@ -176,6 +176,12 @@ không đổi; máy GPU tích hợp không bị nâng mức.
 
 **Luật hạ chất lượng trong bài đo (2026-10-23).** Luật này hạ chất lượng sau 45 khung 3D liên tiếp dài quá 40 ms (1/30 s + 20 %). Máy nhanh (bài mẫu 34–44 ms, khung Nguyên phân 33 ms) vẫn giữ High. Máy CI (bài mẫu 164 ms, khung khoảng 117 ms) thì hạ chất lượng giữa lúc phát là đúng (PR #45, vùng westus2: `degraded: true`, tier medium, trong khi p95 vẫn đạt ngân sách). Vì vậy bài đo chỉ để luật chạy trên máy đủ nhanh cho ngân sách cố định 150 ms (bài mẫu ≤ 88 ms). Trên máy chậm hơn, nó tắt luật trước khi phát: mọi khung được đo đều ở High, và kiểm tra cuối vẫn xác nhận không có gì khác hạ chất lượng.
 
+**Vật lí 3D, đợt 6a (2026-11-17, #302).** Lực từ, cảm ứng điện từ, sóng điện từ dùng bộ 3D của
+Sinh học. Đo bằng SwiftShader 1366×768 (`info()` của móc kiểm thử, sau 4 s): mức Trung bình 25 /
+34 / 8 lệnh vẽ, 708 / 3 938 / 2 114 tam giác; mức Cao 25 / 34 / 8 lệnh vẽ, 1 060 / 8 210 / 3 170
+tam giác. Lực từ và cảm ứng chỉ vẽ khi có thay đổi (2 khung sau khi mở); sóng điện từ chạy minh họa
+và đứng yên khi người dùng bật giảm chuyển động. Mức Thấp hiện hình 2D cho cả ba bài.
+
 **Watchdog bộ nhớ** (`src/perf/memory.ts`): 10 giây đọc heap JS một lần (WebView2/Chromium). Khi vượt
 80 % ngân sách 300 MB (hoặc 80 % giới hạn heap), app giải phóng bộ nhớ đệm đã đăng ký (ví dụ: bản
 ghi đồ thị vật lý giữ lại một nửa số mẫu — chỉ giảm độ phân giải đồ thị, không ảnh hưởng mô phỏng)
