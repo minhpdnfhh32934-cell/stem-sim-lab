@@ -209,6 +209,11 @@ bản đầu dùng quả cầu đủ chi tiết, 70 402 tam giác, 189 khung tro
 khung); đổi sang quả cầu nửa chi tiết cho các chấm nhỏ: 16 002 tam giác, 362 khung (Cao 38 402 tam
 giác, 230 khung). SwiftShader 1366×768. Mức Thấp hiện hình 2D.
 
+**Hóa học 3D, đợt 6f (2026-11-17, #302).** Cả hai hình tĩnh, chỉ vẽ khi đổi. Orbital (đám mây một
+lệnh vẽ dạng điểm): Trung bình 4 000 điểm, 6 lệnh vẽ, 354 tam giác (Cao 8 000 điểm, 818 tam giác).
+Thành phần nguyên tử: C-12 4 lệnh vẽ, 6 338 tam giác (Cao 14 690); lớn nhất Kr-86 (36 proton, 50
+neutron, 36 electron) 42 946 tam giác (Cao 99 554). SwiftShader 1366×768. Mức Thấp hiện hình 2D.
+
 **Watchdog bộ nhớ** (`src/perf/memory.ts`): 10 giây đọc heap JS một lần (WebView2/Chromium). Khi vượt
 80 % ngân sách 300 MB (hoặc 80 % giới hạn heap), app giải phóng bộ nhớ đệm đã đăng ký (ví dụ: bản
 ghi đồ thị vật lý giữ lại một nửa số mẫu — chỉ giảm độ phân giải đồ thị, không ảnh hưởng mô phỏng)

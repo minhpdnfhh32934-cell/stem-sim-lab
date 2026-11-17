@@ -1,10 +1,12 @@
-import { useMemo } from 'react';
+import { lazy, Suspense, useMemo, type ReactNode } from 'react';
 import { formatNumber } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useFmt } from '@/biology/fmt';
 import type { LocalizedText } from '@/core/data/dataset';
 import { SliderField } from '@/ui/SliderField';
+import { Bio3DToolbar } from '@/biology/view3d/switch';
+import { useShow3d } from '@/biology/view3d/support';
 import { L, usePublishCard } from '../common';
 import { superscript } from '../data/elements';
 import { COMPOSITION_CARD } from './cards';
@@ -25,6 +27,10 @@ import { electronDots, ELECTRON_R, NUCLEON_R, nucleons } from './picture';
 import { setComposition, useCompositionStore } from './store';
 import '../chem.css';
 import './nuclide.css';
+
+const Composition3DView = lazy(() =>
+  import('./Composition3DView').then((m) => ({ default: m.Composition3DView })),
+);
 
 const NOT_TO_SCALE = L('Hình minh họa, không theo tỉ lệ', 'Illustration, not to scale');
 
@@ -52,20 +58,56 @@ function useElementName(c: Composition): string {
   return `${c.element.symbol} — ${c.element.name}${alias ? ` (${alias})` : ''}`;
 }
 
-/** The atom drawn as an illustration: nucleons in a disc, electrons as dots around it. */
+/** The atom as an illustration: in 3D on request, else the 2D picture. */
 export function CompositionStage() {
   usePublishCard(COMPOSITION_CARD);
   const Lz = useLocalized();
   const c = useComposition();
   const name = useElementName(c);
-  const { protons, neutrons } = useMemo(() => nucleons(c.z, c.n), [c.z, c.n]);
-  const dots = useMemo(() => electronDots(c.electrons, c.a), [c.electrons, c.a]);
+  const { show3d } = useShow3d('atomComposition');
   const label = Lz(
     L(
       `Hình minh họa: ${c.z} proton, ${c.n} neutron, ${c.electrons} electron`,
       `Illustration: ${c.z} protons, ${c.n} neutrons, ${c.electrons} electrons`,
     ),
   );
+  const chips = (
+    <>
+      <span className="chem-chip">
+        <strong>{notation(c)}</strong> {name}
+      </span>
+      <span className="chem-chip">
+        {PARTICLES.map((k) => (
+          <span key={k} className="atom-legend">
+            <span className={`atom-legend__dot atom-legend__dot--${k}`} aria-hidden="true" />
+            {Lz(PARTICLE_NAME[k])}
+          </span>
+        ))}
+      </span>
+      <span className="chem-chip chem-chip--approx">{Lz(NOT_TO_SCALE)}</span>
+    </>
+  );
+  if (show3d)
+    return (
+      <Suspense fallback={<div className="chem-view chem-view--flush" />}>
+        <Composition3DView top={chips} label={label} />
+      </Suspense>
+    );
+  return <CompositionPicture c={c} label={label} chips={chips} />;
+}
+
+/** The atom drawn as an illustration: nucleons in a disc, electrons as dots around it. */
+function CompositionPicture({
+  c,
+  label,
+  chips,
+}: {
+  c: Composition;
+  label: string;
+  chips: ReactNode;
+}) {
+  const { protons, neutrons } = useMemo(() => nucleons(c.z, c.n), [c.z, c.n]);
+  const dots = useMemo(() => electronDots(c.electrons, c.a), [c.electrons, c.a]);
   return (
     <div className="chem-view chem-view--flush">
       <svg className="atom-pic" viewBox="-100 -100 200 200" role="img" aria-label={label}>
@@ -83,18 +125,8 @@ export function CompositionStage() {
         ))}
       </svg>
       <div className="chem-overlay">
-        <span className="chem-chip">
-          <strong>{notation(c)}</strong> {name}
-        </span>
-        <span className="chem-chip">
-          {PARTICLES.map((k) => (
-            <span key={k} className="atom-legend">
-              <span className={`atom-legend__dot atom-legend__dot--${k}`} aria-hidden="true" />
-              {Lz(PARTICLE_NAME[k])}
-            </span>
-          ))}
-        </span>
-        <span className="chem-chip chem-chip--approx">{Lz(NOT_TO_SCALE)}</span>
+        {chips}
+        <Bio3DToolbar lesson="atomComposition" />
       </div>
     </div>
   );
