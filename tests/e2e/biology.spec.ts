@@ -44,6 +44,9 @@ const TOPICS = [
   'DNA và cơ chế tái bản DNA',
   'Điều hòa biểu hiện gene: operon lac',
   'Công nghệ gene',
+  'Di truyền giới tính và liên kết với giới tính',
+  'Liên kết gene và hoán vị gene',
+  'Đột biến nhiễm sắc thể',
 ];
 
 async function openBiology(page: Page) {

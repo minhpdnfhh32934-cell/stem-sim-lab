@@ -271,6 +271,9 @@ const vi = {
     dnaReplication: 'DNA và cơ chế tái bản DNA',
     lacOperon: 'Điều hòa biểu hiện gene: operon lac',
     geneTechnology: 'Công nghệ gene',
+    sexLinkage: 'Di truyền giới tính và liên kết với giới tính',
+    geneLinkage: 'Liên kết gene và hoán vị gene',
+    chromosomeMutation: 'Đột biến nhiễm sắc thể',
     fourierSeries: 'Họa âm và chuỗi Fourier',
   },
   stage: {

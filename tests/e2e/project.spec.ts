@@ -186,7 +186,7 @@ test('manual mode offers chemistry and biology topics too', async ({ page }) => 
   await expect(select.locator('optgroup')).toHaveCount(3);
   await expect(select.locator('optgroup[label="Hóa học"] option')).toHaveCount(41);
   // Guided textbook lessons have nothing to set up: not offered here.
-  await expect(select.locator('optgroup[label="Sinh học"] option')).toHaveCount(18);
+  await expect(select.locator('optgroup[label="Sinh học"] option')).toHaveCount(21);
   await select.selectOption('logisticGrowth');
   await expect(dialog.locator('.problem-review__module input[type="range"]').first()).toBeVisible();
   await dialog

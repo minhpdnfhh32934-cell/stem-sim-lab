@@ -115,7 +115,14 @@ export const CATALOG: Record<Subject, ChapterEntry[]> = {
       'pointMutation',
       'geneTechnology',
     ]),
-    chapter('genetics', ['mendel', 'hardyWeinberg', 'geneticDrift']),
+    chapter('genetics', [
+      'mendel',
+      'sexLinkage',
+      'geneLinkage',
+      'chromosomeMutation',
+      'hardyWeinberg',
+      'geneticDrift',
+    ]),
     chapter('ecology', ['logisticGrowth', 'lotkaVolterra']),
     chapter('cellPhysiology', [
       'michaelisMenten',
