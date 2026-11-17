@@ -51,3 +51,39 @@ test('Orbital in 3D: a |ψ|² cloud of 4 000 points (medium), back to the slice'
   await expect(page.locator('canvas[aria-label="Lát cắt orbital"]')).toBeVisible();
   expect(errors).toEqual([]);
 });
+
+test('Atom composition in 3D: exactly Z protons, N neutrons and the electrons (C-12)', async ({
+  page,
+}, testInfo) => {
+  test.setTimeout(120_000);
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(String(e)));
+  await openTopic(page, 'Hóa học', 'Thành phần của nguyên tử');
+  await expect(page.getByRole('radio', { name: '2D' })).toHaveAttribute('aria-checked', 'true', {
+    timeout: 20_000,
+  });
+  await page.getByRole('radio', { name: '3D' }).click();
+  const view = page.locator('.bio3d[data-lesson="atomComposition"]');
+  await expect(view.locator('canvas')).toBeVisible({ timeout: 30_000 });
+  await expect
+    .poll(() =>
+      page.evaluate(() => {
+        const h = (
+          window as unknown as {
+            __simlab3d?: Record<
+              string,
+              | { state(): { protons: number; neutrons: number; electrons: number } | null }
+              | undefined
+            >;
+          }
+        ).__simlab3d?.atomComposition;
+        return h?.state() ?? null;
+      }),
+    )
+    .toEqual({ protons: 6, neutrons: 6, electrons: 6 });
+  await expect(view.getByText('chỉ số hạt là đúng', { exact: false })).toBeVisible();
+  await page.screenshot({ path: testInfo.outputPath('atom-3d.png') });
+  await view.getByRole('radio', { name: '2D' }).click();
+  await expect(page.locator('svg.atom-pic')).toBeVisible();
+  expect(errors).toEqual([]);
+});
