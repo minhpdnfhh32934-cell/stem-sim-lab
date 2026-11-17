@@ -181,6 +181,114 @@
   ],
   "versions": [
     {
+      "version": "0.11.0",
+      "status": "in-review",
+      "statusNote": "Gói lớp 12 (#255): mọi bài lí thuyết của Vật lí 12 (21/21), Hóa học 12 (22/22) và Sinh học 12 (28/28) có chủ đề, qua 14 đợt: 3a–3d Vật lí 12 (#293–#296), 4a–4f Hóa học 12 (#297–#301 và đợt 4f), 5a–5d Sinh học 12; mỗi đợt một PR vào main theo thứ tự, CI 8/8 xanh trước khi gộp; đợt 5d là PR chuẩn bị phát hành này. Chỉ phần web lên 0.11.0 (không có thay đổi Rust kể từ v0.8.2, lõi vẫn 0.8.2), nên ứng dụng cài từ GitHub nhận qua cập nhật trong app. notesReady đặt true khi mở PR chuẩn bị phát hành; phát hành do người dùng chạy lượt Release sau khi PR cuối đã gộp.",
+      "channel": "github",
+      "dates": {
+        "devStart": "2026-11-17T00:43:39Z",
+        "firstCommit": "2026-11-17T09:30:49+07:00",
+        "lastCommit": null,
+        "merged": null,
+        "built": null,
+        "released": null,
+        "tagged": null
+      },
+      "evidence": [
+        "devStart: GitHub Release v0.10.0 published_at 2026-11-17T00:43:39Z (các thay đổi sau đó thuộc 0.11.0)",
+        "firstCommit: 765aaf3c 2026-11-17T09:30:49+07:00 'feat(data): VL12 thermal tables from the textbook, sgkVl12 sources (#255)'",
+        "Phạm vi: data/curriculum_kntt.json (scripts/data/gen_curriculum_kntt.py) — mọi bài lí thuyết của VL12, HH12, SH12 đều được xếp chủ đề (đếm 17/11/2026 trên nhánh feat/255-sh12-ecology)",
+        "Nhật ký từng đợt: docs/work-log/2026-11-17-255-vl12-*.md, 2026-11-17-255-hh12-*.md, 2026-11-17-255-sh12-*.md",
+        "Dữ liệu và lời văn mới chờ giáo viên duyệt: docs/DATA_REVIEW.md VL12-*, HH12-*, SH12-*"
+      ],
+      "tests": [
+        "Mỗi PR: CI 8/8 xanh trước khi gộp (gh pr checks)",
+        "Nhánh cuối feat/255-sh12-ecology: vitest 5747 đạt và spelling.test sau khi sửa (3 bỏ qua có sẵn); typecheck và lint đạt; E2E chromium và chromium-3d đạt trong thư mục tạm (test \"touch screens\" chỉ hỏng ở thư mục tạm)"
+      ],
+      "refs": {
+        "tag": null,
+        "tagSha": null,
+        "releaseUrl": null,
+        "prs": [293, 294, 295, 296, 297, 298, 299, 300, 301],
+        "commits": ["765aaf3c"],
+        "branches": [
+          "feat/255-vl12-thermal",
+          "feat/255-vl12-ideal-gas",
+          "feat/255-vl12-magnetism",
+          "feat/255-vl12-nuclear",
+          "feat/255-hh12-ester-carbohydrate",
+          "feat/255-hh12-nitrogen-polymer",
+          "feat/255-hh12-electrochemistry",
+          "feat/255-hh12-metals",
+          "feat/255-hh12-groups",
+          "feat/255-hh12-complexes",
+          "feat/255-sh12-molecular",
+          "feat/255-sh12-heredity",
+          "feat/255-sh12-evolution",
+          "feat/255-sh12-ecology"
+        ]
+      },
+      "publicNotes": {
+        "summary": {
+          "vi": "Bản 0.11.0 hoàn thành chương trình lớp 12 theo sách Kết nối tri thức: mọi bài lí thuyết của Vật lí 12, Hóa học 12 và Sinh học 12 đều có bài học trong SimLab, số liệu lấy từ sách giáo khoa và có ghi trang.",
+          "en": "Version 0.11.0 completes Grade 12 of the Kết nối tri thức textbooks: every theory lesson of Physics 12, Chemistry 12 and Biology 12 now has a lesson in SimLab, with values taken from the textbook and page references."
+        },
+        "added": [
+          {
+            "vi": "Vật lí 12: nội năng, nhiệt độ, nhiệt dung riêng, nhiệt nóng chảy và nhiệt hóa hơi riêng; khí lí tưởng và các định luật chất khí; lực từ, cảm ứng từ, cảm ứng điện từ và máy phát điện xoay chiều; cấu trúc hạt nhân, năng lượng liên kết và hiện tượng phóng xạ.",
+            "en": "Physics 12: internal energy, temperature, specific heat, latent heats; the ideal gas and the gas laws; magnetic force, magnetic field, electromagnetic induction and the AC generator; nuclear structure, binding energy and radioactivity.",
+            "area": "ui"
+          },
+          {
+            "vi": "Hóa học 12: ester và chất béo, amine, amino acid và peptide, thế điện cực và pin Galvani, tính chất của kim loại, nguyên tố nhóm IA và IIA, kim loại chuyển tiếp, phức chất (có mô hình 3D khi sách nêu dạng hình học).",
+            "en": "Chemistry 12: esters and fats, amines, amino acids and peptides, electrode potentials and Galvanic cells, properties of metals, groups IA and IIA, transition metals, complexes (with a 3D model where the book gives the shape).",
+            "area": "ui"
+          },
+          {
+            "vi": "Sinh học 12: operon lac, di truyền liên kết với giới tính, liên kết và hoán vị gene, đột biến nhiễm sắc thể, bằng chứng tiến hóa và các đại địa chất, giới hạn sinh thái, tháp sinh thái và hiệu suất sinh thái.",
+            "en": "Biology 12: the lac operon, sex linkage, linkage and crossing over, chromosome mutations, evidence of evolution and geological time, tolerance limits, ecological pyramids and efficiency.",
+            "area": "ui"
+          },
+          {
+            "vi": "Thêm các bài học có hướng dẫn cho những bài chủ yếu mô tả: dự đoán trước, rồi làm các hoạt động xếp thứ tự, phân loại, ghép.",
+            "en": "Guided lessons for the mainly descriptive lessons: predict first, then order, sort and match.",
+            "area": "ui"
+          }
+        ],
+        "improved": [
+          {
+            "vi": "Thư viện xếp các bài lớp 12 theo đúng chương và bài của sách; mỗi thẻ khoa học ghi tên bài và trang sách.",
+            "en": "The library places the Grade 12 lessons under the textbook’s chapters and lessons; each science card names the lesson and pages.",
+            "area": "ui"
+          }
+        ],
+        "fixed": [],
+        "security": [],
+        "performance": [],
+        "changed": [],
+        "deprecated": [],
+        "knownIssues": [
+          {
+            "vi": "Nội dung lớp 12 đang chờ giáo viên duyệt; những chỗ sách in chưa khớp nhau được ghi rõ trong bài.",
+            "en": "The Grade 12 content is waiting for a teacher’s review; places where the printed book disagrees with itself are pointed out in the lessons."
+          }
+        ]
+      },
+      "notesReady": true,
+      "learnerHighlights": [
+        {
+          "area": "ui",
+          "vi": "Đủ mọi bài lí thuyết lớp 12: Vật lí, Hóa học, Sinh học.",
+          "en": "Every Grade 12 theory lesson: Physics, Chemistry, Biology."
+        },
+        {
+          "area": "ui",
+          "vi": "Tính bằng số liệu của sách: pin điện, phóng xạ, tháp sinh thái, hoán vị gene.",
+          "en": "Worked with the book’s data: cells, radioactivity, pyramids, crossing over."
+        }
+      ]
+    },
+    {
       "version": "0.10.0",
       "status": "released",
       "statusNote": "Phát hành 17/11/2026 từ main @ d21a55f9 (lượt Release 43987526826, người dùng chạy). Gói lớp 11 (#255): mọi bài lý thuyết của Vật lí 11 (20/20), Hóa học 11 (19/19) và Sinh học 11 (20/20) có chủ đề, qua 12 đợt 2a–2l (PR #277, #278, #279, #283–#291, mỗi PR CI 8/8 xanh). Chỉ phần web lên 0.10.0; phần lõi vẫn 0.8.2 (không có thay đổi Rust), nên web-update.json ghi minNative 0.8.2 và ứng dụng 0.8.2 cài từ GitHub nhận qua cập nhật trong app; bộ cài trong bản phát hành vẫn mang số 0.8.2. Không bắt buộc cập nhật (minRequired để trống). Bản Store nhận ở lần nộp có lõi mới.",
