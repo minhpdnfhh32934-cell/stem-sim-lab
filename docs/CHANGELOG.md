@@ -2,9 +2,9 @@
 
 Mọi thay đổi đáng chú ý của SimLab (tên cũ: STEM Sim Lab), bản mới nhất ở trên. Định dạng theo [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), số phiên bản dạng `x.y.z`. Tệp này được tạo từ `release-notes/versions.json` bằng `npm run release-notes`. Đừng sửa tay. Lịch sử đầy đủ kèm bằng chứng: [VERSION\_HISTORY.md](VERSION_HISTORY.md).
 
-## [Unreleased] - 0.10.0 (Đang xét duyệt)
+## [0.10.0] - 2026-11-17
 
-_Gói lớp 11 (#255, kế hoạch đăng ở #255 ngày 16/11/2026): mọi bài lí thuyết của Vật lí 11 (20/20), Hóa học 11 (19/19) và Sinh học 11 (20/20) có chủ đề, qua 12 đợt 2a–2l, mỗi đợt một PR vào main theo thứ tự (2a #277, 2b #278, 2c #279, 2d #283, 2e #284, 2f #285, 2g #286, 2h #287, 2i #288, 2j #289, 2k #290 đã gộp vào main ngày 17/11/2026, mỗi PR CI 8/8 xanh; đợt 2l là PR chuẩn bị phát hành này). Chỉ phần web lên 0.10.0 (không có thay đổi Rust kể từ v0.8.2, lõi vẫn 0.8.2), nên ứng dụng cài từ GitHub nhận qua cập nhật trong app. notesReady đặt true khi mở PR chuẩn bị phát hành; phát hành do người dùng chạy lượt Release sau khi PR cuối đã gộp._
+_Phát hành 17/11/2026 từ main @ d21a55f9 (lượt Release 43987526826, người dùng chạy). Gói lớp 11 (#255): mọi bài lý thuyết của Vật lí 11 (20/20), Hóa học 11 (19/19) và Sinh học 11 (20/20) có chủ đề, qua 12 đợt 2a–2l (PR #277, #278, #279, #283–#291, mỗi PR CI 8/8 xanh). Chỉ phần web lên 0.10.0; phần lõi vẫn 0.8.2 (không có thay đổi Rust), nên web-update.json ghi minNative 0.8.2 và ứng dụng 0.8.2 cài từ GitHub nhận qua cập nhật trong app; bộ cài trong bản phát hành vẫn mang số 0.8.2. Không bắt buộc cập nhật (minRequired để trống). Bản Store nhận ở lần nộp có lõi mới._
 
 Bản 0.10.0 hoàn thành chương trình lớp 11 theo sách Kết nối tri thức: mọi bài lí thuyết của Vật lí 11, Hóa học 11 và Sinh học 11 đều có bài học trong SimLab, số liệu lấy từ sách giáo khoa và có ghi trang.
 
@@ -747,7 +747,7 @@ Bản đầu tiên của STEM Sim Lab (tên cũ của SimLab): mô phỏng Vật
 
 - Bản này không có bộ cài phát hành công khai; chỉ có bản dựng thử trên GitHub Actions.
 
-[Unreleased]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/277
+[0.10.0]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.10.0
 [0.9.1]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.9.1
 [0.9.0]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.9.0
 [0.8.2]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.8.2
