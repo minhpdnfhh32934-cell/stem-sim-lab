@@ -14,18 +14,22 @@ test.use({
   },
 });
 
-test('Orbital in 3D: a |ψ|² cloud of 4 000 points (medium), back to the slice', async ({
-  page,
-}, testInfo) => {
-  test.setTimeout(120_000);
-  const errors: string[] = [];
-  page.on('pageerror', (e) => errors.push(String(e)));
+// Every test starts at Medium quality (on a slow runner the start-up benchmark picks Low: 2D).
+test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => {
     localStorage.setItem(
       'stemsim.perf',
       JSON.stringify({ state: { preference: 'medium', benchmark: null }, version: 1 }),
     );
   });
+});
+
+test('Orbital in 3D: a |ψ|² cloud of 4 000 points (medium), back to the slice', async ({
+  page,
+}, testInfo) => {
+  test.setTimeout(120_000);
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(String(e)));
   await openTopic(page, 'Hóa học', 'Hình dạng orbital');
   await expect(page.getByRole('radio', { name: '2D' })).toHaveAttribute('aria-checked', 'true', {
     timeout: 20_000,

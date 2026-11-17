@@ -1,0 +1,221 @@
+{
+  "dataset": "ecology12_kntt",
+  "version": 1,
+  "accessed": "2026-11-17",
+  "review_status": "pending",
+  "source": {
+    "id": "sgk-sh12-b23-29",
+    "citation": "SGK Sinh học 12 Kết nối tri thức, NXB Giáo dục Việt Nam: Bài 23 (Hình 23.5 và ví dụ tr. 125, sách dẫn Mai Sỹ Tuấn và cộng sự 2022), Bài 29 (tr. 158–159; Hình 29.6, sách dẫn Odum 1959)",
+    "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-sinh-hoc-12.4701665546"
+  },
+  "items": [
+    {
+      "id": "grassland",
+      "kind": "number",
+      "place": {
+        "vi": "Đồng cỏ (mùa hè)",
+        "en": "Grassland (summer)"
+      },
+      "unit": "cá thể/0,1 ha",
+      "levels": [
+        {
+          "level": 1,
+          "name": {
+            "vi": "Cỏ",
+            "en": "Grass"
+          },
+          "value": 1500000
+        },
+        {
+          "level": 2,
+          "name": {
+            "vi": "Côn trùng ăn cỏ",
+            "en": "Herbivorous insects"
+          },
+          "value": 200000
+        },
+        {
+          "level": 3,
+          "name": {
+            "vi": "Côn trùng săn mồi",
+            "en": "Predatory insects"
+          },
+          "value": 90000
+        },
+        {
+          "level": 4,
+          "name": {
+            "vi": "Chim",
+            "en": "Birds"
+          },
+          "value": 1
+        }
+      ],
+      "review_status": "pending"
+    },
+    {
+      "id": "forest",
+      "kind": "number",
+      "place": {
+        "vi": "Rừng ôn đới (mùa hè)",
+        "en": "Temperate forest (summer)"
+      },
+      "unit": "cá thể/0,1 ha",
+      "levels": [
+        {
+          "level": 1,
+          "name": {
+            "vi": "Cây thân gỗ",
+            "en": "Trees"
+          },
+          "value": 200
+        },
+        {
+          "level": 2,
+          "name": {
+            "vi": "Côn trùng ăn thực vật",
+            "en": "Plant-eating insects"
+          },
+          "value": 150000
+        },
+        {
+          "level": 3,
+          "name": {
+            "vi": "Côn trùng săn mồi",
+            "en": "Predatory insects"
+          },
+          "value": 120000
+        },
+        {
+          "level": 4,
+          "name": {
+            "vi": "Chim",
+            "en": "Birds"
+          },
+          "value": 5
+        }
+      ],
+      "review_status": "pending"
+    },
+    {
+      "id": "reef",
+      "kind": "biomass",
+      "place": {
+        "vi": "Rạn san hô Eniwetok, Marshall",
+        "en": "Eniwetok coral reef, Marshall Islands"
+      },
+      "unit": "g/m²",
+      "levels": [
+        {
+          "level": 1,
+          "name": {
+            "vi": "Tảo, cỏ biển",
+            "en": "Algae, seagrass"
+          },
+          "value": 703
+        },
+        {
+          "level": 2,
+          "name": {
+            "vi": "Nhím biển, cá nhỏ",
+            "en": "Sea urchins, small fish"
+          },
+          "value": 132
+        },
+        {
+          "level": 3,
+          "name": {
+            "vi": "Cá lớn",
+            "en": "Large fish"
+          },
+          "value": 11
+        }
+      ],
+      "review_status": "pending"
+    },
+    {
+      "id": "channel",
+      "kind": "biomass",
+      "place": {
+        "vi": "Eo biển Anh – Pháp",
+        "en": "English Channel"
+      },
+      "unit": "g/m²",
+      "levels": [
+        {
+          "level": 1,
+          "name": {
+            "vi": "Thực vật phù du",
+            "en": "Phytoplankton"
+          },
+          "value": 4
+        },
+        {
+          "level": 2,
+          "name": {
+            "vi": "Động vật phù du",
+            "en": "Zooplankton"
+          },
+          "value": 21
+        }
+      ],
+      "review_status": "pending"
+    },
+    {
+      "id": "springs",
+      "kind": "energy",
+      "place": {
+        "vi": "Đầm lầy Silver Spring ở Florida, Mỹ",
+        "en": "Silver Springs, Florida, USA"
+      },
+      "unit": "kcal/m²/năm",
+      "levels": [
+        {
+          "level": 1,
+          "name": {
+            "vi": "Tảo và thực vật",
+            "en": "Algae and plants"
+          },
+          "value": 20810
+        },
+        {
+          "level": 2,
+          "name": {
+            "vi": "Côn trùng",
+            "en": "Insects"
+          },
+          "value": 3368
+        },
+        {
+          "level": 3,
+          "name": {
+            "vi": "Cá nhỏ",
+            "en": "Small fish"
+          },
+          "value": 383
+        },
+        {
+          "level": 4,
+          "name": {
+            "vi": "Cá lớn",
+            "en": "Large fish"
+          },
+          "value": 21
+        }
+      ],
+      "review_status": "pending"
+    }
+  ],
+  "tolerance_celsius": {
+    "lower_limit": 0,
+    "optimum_from": 20,
+    "optimum_to": 30,
+    "upper_limit": 40
+  },
+  "efficiency_average": 0.1,
+  "efficiency_range": [
+    0.05,
+    0.2
+  ],
+  "sunlight_to_photosynthesis": 0.01
+}

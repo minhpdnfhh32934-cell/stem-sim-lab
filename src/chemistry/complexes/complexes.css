@@ -1,0 +1,98 @@
+/* Complexes (HH12 Bài 28–29, #255 round 4f). */
+@import '../chem.css';
+
+.cx-view {
+  position: absolute;
+  inset: 72px var(--space-4) var(--space-4);
+  overflow: auto;
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) minmax(280px, 1fr);
+  align-content: start;
+  gap: var(--space-4);
+}
+.cx-view--column {
+  grid-template-columns: 1fr;
+}
+.cx-formula {
+  margin: 0 0 var(--space-3);
+  font-size: var(--text-xl, var(--text-lg));
+  font-weight: 600;
+}
+.cx-facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-1) var(--space-3);
+  margin: 0;
+  font-size: var(--text-content);
+}
+.cx-facts dt {
+  color: var(--text-muted);
+}
+.cx-facts dd {
+  margin: 0;
+}
+.cx-3d {
+  position: relative;
+  min-height: 320px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.cx-3d__note {
+  position: absolute;
+  left: var(--space-2);
+  bottom: var(--space-2);
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+}
+.cx-note,
+.cx-head {
+  margin: 0;
+  font-size: var(--text-content);
+}
+.cx-note {
+  color: var(--text-muted);
+}
+.cx-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+.cx-step {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+.cx-step__how,
+.cx-step__colour {
+  color: var(--text-muted);
+}
+.cx-step__formula,
+.cx-eq {
+  font-size: var(--text-lg);
+}
+.cx-eq {
+  margin: 0;
+  font-weight: 600;
+}
+.cx-table {
+  border-collapse: collapse;
+}
+.cx-table caption {
+  text-align: left;
+  font-weight: 600;
+  padding-bottom: var(--space-1);
+}
+.cx-table th,
+.cx-table td {
+  padding: 4px var(--space-3);
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
