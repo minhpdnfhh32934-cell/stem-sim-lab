@@ -33,14 +33,14 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | --- | --- | --- | --- |
 | Vật lí 10 | 34 | 26 | 26 |
 | Vật lí 11 | 26 | 20 | 20 |
-| Vật lí 12 | 25 | 21 | 17 |
+| Vật lí 12 | 25 | 21 | 21 |
 | Hoá học 10 | 23 | 16 | 16 |
 | Hoá học 11 | 25 | 19 | 19 |
 | Hoá học 12 | 30 | 22 | 1 |
 | Sinh học 10 | 26 | 17 | 17 |
 | Sinh học 11 | 29 | 20 | 20 |
 | Sinh học 12 | 35 | 28 | 7 |
-| **Cộng** | **253** | **189** | **143** |
+| **Cộng** | **253** | **189** | **147** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -136,10 +136,10 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Vật lí 12 | Chương III. Từ trường | 18 | Ứng dụng hiện tượng cảm ứng điện từ | 78 | Lí thuyết | Ứng dụng hiện tượng cảm ứng điện từ | Tên Bài 18: ứng dụng hiện tượng cảm ứng điện từ: máy biến áp, sạc không dây, đàn ghi ta điện, dòng điện Foucault (bài học có hướng dẫn). | pending |
 | Vật lí 12 | Chương III. Từ trường | 19 | Điện từ trường. Mô hình sóng điện từ | 82 | Lí thuyết | Điện từ trường và mô hình sóng điện từ, Sóng điện từ | Điện từ trường và mô hình sóng điện từ: Tên Bài 19: điện từ trường, mô hình sóng điện từ (bài học có hướng dẫn). Sóng điện từ: Tên Bài 19 nêu sóng điện từ: λ = cT = c/f, sóng ngang với E, B vuông góc phương truyền (cùng chủ đề đã xếp VL11 Bài 11). | pending |
 | Vật lí 12 | Chương III. Từ trường | 20 | Bài tập về từ trường | 86 | Bài tập | chưa có |  | pending |
-| Vật lí 12 | Chương IV. Vật lí hạt nhân | 21 | Cấu trúc hạt nhân | 91 | Lí thuyết | chưa có |  | pending |
-| Vật lí 12 | Chương IV. Vật lí hạt nhân | 22 | Phản ứng hạt nhân và năng lượng liên kết | 96 | Lí thuyết | chưa có |  | pending |
-| Vật lí 12 | Chương IV. Vật lí hạt nhân | 23 | Hiện tượng phóng xạ | 104 | Lí thuyết | chưa có |  | pending |
-| Vật lí 12 | Chương IV. Vật lí hạt nhân | 24 | Công nghiệp hạt nhân | 114 | Lí thuyết | chưa có |  | pending |
+| Vật lí 12 | Chương IV. Vật lí hạt nhân | 21 | Cấu trúc hạt nhân | 91 | Lí thuyết | Hạt nhân và năng lượng liên kết | Tên Bài 21: cấu trúc hạt nhân, bán kính R = 1,2·10⁻¹⁵·A^(1/3) m, Bảng 21.1; Bài 22: phản ứng hạt nhân, độ hụt khối, năng lượng liên kết, phân hạch, tổng hợp. | pending |
+| Vật lí 12 | Chương IV. Vật lí hạt nhân | 22 | Phản ứng hạt nhân và năng lượng liên kết | 96 | Lí thuyết | Hạt nhân và năng lượng liên kết | Tên Bài 21: cấu trúc hạt nhân, bán kính R = 1,2·10⁻¹⁵·A^(1/3) m, Bảng 21.1; Bài 22: phản ứng hạt nhân, độ hụt khối, năng lượng liên kết, phân hạch, tổng hợp. | pending |
+| Vật lí 12 | Chương IV. Vật lí hạt nhân | 23 | Hiện tượng phóng xạ | 104 | Lí thuyết | Hiện tượng phóng xạ | Tên Bài 23: hiện tượng phóng xạ, định luật phóng xạ, độ phóng xạ, Bảng 23.1, 23.2, an toàn phóng xạ. | pending |
+| Vật lí 12 | Chương IV. Vật lí hạt nhân | 24 | Công nghiệp hạt nhân | 114 | Lí thuyết | Công nghiệp hạt nhân | Tên Bài 24: công nghiệp hạt nhân: nhà máy điện hạt nhân, y học hạt nhân, ứng dụng phóng xạ (bài học có hướng dẫn). | pending |
 | Vật lí 12 | Chương IV. Vật lí hạt nhân | 25 | Bài tập về vật lí hạt nhân | 119 | Bài tập | chưa có |  | pending |
 | Hoá học 10 | Mở đầu |  | Mở đầu | 6 | Mở đầu môn học | chưa có |  | pending |
 | Hoá học 10 | Chương 1. Cấu tạo nguyên tử | 1 | Thành phần của nguyên tử | 13 | Lí thuyết | Thành phần của nguyên tử | Tên Bài 1: thành phần của nguyên tử (cảnh chọn số proton, neutron, electron: nguyên tố, số khối, điện tích, khối lượng các hạt, kích thước hạt nhân so với nguyên tử). | pending |
