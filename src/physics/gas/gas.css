@@ -5,22 +5,6 @@
   display: grid;
   gap: var(--space-3);
 }
-.gas-panel__list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-1);
-}
-.gas-panel__list [aria-checked='true'] {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-.gas-panel__field {
-  display: grid;
-  gap: var(--space-1);
-}
-.gas-panel__field > span {
-  color: var(--text-muted);
-}
 .gas-panel__head {
   margin: 0;
 }

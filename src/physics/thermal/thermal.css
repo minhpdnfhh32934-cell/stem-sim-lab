@@ -22,13 +22,6 @@
   width: 100%;
   min-height: var(--target);
 }
-.thermal-panel__field {
-  display: grid;
-  gap: var(--space-1);
-}
-.thermal-panel__field > span {
-  color: var(--text-muted);
-}
 .thermal-panel__value {
   display: flex;
   gap: var(--space-2);
