@@ -626,3 +626,21 @@
 .phase-legend__swatch--dashed {
   background: repeating-linear-gradient(90deg, var(--text-muted) 0 5px, transparent 5px 8px);
 }
+
+/*
+ * A scene with a 3D view (#302): the 3D / 2D switch sits under the HUD on the right, in 2D (here)
+ * and in 3D (the 3D view's own corner, moved down the same way and clear of the tool column).
+ */
+.stage__view-switch {
+  position: absolute;
+  top: calc(var(--space-3) + 48px);
+  right: var(--space-3);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.stage .phys3d .bio3d__hud {
+  top: calc(var(--space-3) + 48px);
+  left: calc(var(--space-4) + 56px);
+}

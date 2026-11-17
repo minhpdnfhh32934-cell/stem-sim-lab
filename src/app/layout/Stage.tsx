@@ -21,7 +21,7 @@ import { useSettingsStore } from '@/app/settings/settingsStore';
 import { changedParams, togglePin, useCompareStore } from '@/app/sim/compare';
 import { BenchContext } from '@/app/bench/shellMode';
 import { sim as runtime } from '@/app/sim/runtime';
-import { StageCanvas } from '@/app/sim/StageCanvas';
+import { SceneStage } from '@/app/sim/SceneStage';
 import { Stopwatch } from '@/app/sim/Stopwatch';
 import { ValidationFixes } from '@/app/sim/ValidationFixes';
 import { useSimStore } from '@/app/sim/simStore';
@@ -34,6 +34,8 @@ import { EmptyState } from '@/ui/EmptyState';
 import { Skeleton } from '@/ui/Skeleton';
 import { IconButton } from '@/ui/IconButton';
 import { StageAnnouncer } from './StageAnnouncer';
+import type { Bio3DLesson } from '@/biology/view3d/prefs';
+import { useShow3d } from '@/biology/view3d/support';
 
 /** `basic`: shown in Basic mode too (drag, measure, vectors, camera — PROMPT_PHAN_2 A4.2). */
 const MODES: { id: StageTool; icon: LucideIcon; basic: boolean }[] = [
@@ -99,6 +101,8 @@ export const Stage = memo(function Stage() {
   // The bench keeps only "Chọn | Kéo" and "Vừa khung" here: the measuring tools are switches in
   // its tray and the pin is its D2 (docs/BENCH_DESIGN.md §9.4).
   const bench = useContext(BenchContext);
+  const { show3d } = useShow3d((sim.scene?.id ?? '') as Bio3DLesson);
+  const in3d = sim.scene?.view3d !== undefined && show3d;
   const SubjectIcon = SUBJECT_ICON[subject];
   const disabled = !hasSimulation;
 
@@ -131,72 +135,75 @@ export const Stage = memo(function Stage() {
   return (
     <section className="stage" aria-label={t('stage.regionLabel')}>
       {!sim.scene && <div className="stage__grid" aria-hidden="true" />}
-      {sim.scene && <StageCanvas scene={sim.scene} />}
+      {sim.scene && <SceneStage scene={sim.scene} />}
 
-      <div className="stage__toolbar" role="toolbar" aria-label={t('stage.toolbarLabel')}>
-        {MODES.filter((m) =>
-          bench ? m.id === 'select' || m.id === 'drag' : shown(m.basic, activeTool === m.id),
-        ).map((m) => {
-          const label = t(`stage.tools.${m.id}`);
-          const off = disabled && m.id !== 'select';
-          return (
-            <IconButton
-              key={m.id}
-              icon={m.icon}
-              label={off ? `${label} — ${t('stage.toolUnavailable')}` : label}
-              tooltipSide="right"
-              active={activeTool === m.id}
-              disabled={off}
-              onClick={() => {
-                setActiveTool(m.id);
-              }}
-            />
-          );
-        })}
-        <span className="stage__toolbar-sep" aria-hidden="true" />
-        {TOGGLES.filter((tg) => !bench && shown(tg.basic, sim[tg.id])).map((tg) => {
-          const label = t(`stage.tools.${tg.id}`);
-          return (
-            <IconButton
-              key={tg.id}
-              icon={tg.icon}
-              label={disabled ? `${label} — ${t('stage.toolUnavailable')}` : label}
-              tooltipSide="right"
-              active={!disabled && sim[tg.id]}
-              disabled={disabled}
-              onClick={() => {
-                useSimStore.setState((s) => ({ [tg.id]: !s[tg.id] }));
-              }}
-            />
-          );
-        })}
-        <span className="stage__toolbar-sep" aria-hidden="true" />
-        <IconButton
-          icon={Scan}
-          label={
-            disabled
-              ? `${t('stage.tools.fitView')} — ${t('stage.toolUnavailable')}`
-              : t('stage.tools.fitView')
-          }
-          tooltipSide="right"
-          disabled={disabled}
-          onClick={() => {
-            useSimStore.setState((s) => ({ fitRequest: s.fitRequest + 1 }));
-          }}
-        />
-        {sim.scene?.trail && !bench && (
+      {/* The canvas tools; a scene shown in 3D has its own controls (#302). */}
+      {!in3d && (
+        <div className="stage__toolbar" role="toolbar" aria-label={t('stage.toolbarLabel')}>
+          {MODES.filter((m) =>
+            bench ? m.id === 'select' || m.id === 'drag' : shown(m.basic, activeTool === m.id),
+          ).map((m) => {
+            const label = t(`stage.tools.${m.id}`);
+            const off = disabled && m.id !== 'select';
+            return (
+              <IconButton
+                key={m.id}
+                icon={m.icon}
+                label={off ? `${label} — ${t('stage.toolUnavailable')}` : label}
+                tooltipSide="right"
+                active={activeTool === m.id}
+                disabled={off}
+                onClick={() => {
+                  setActiveTool(m.id);
+                }}
+              />
+            );
+          })}
+          <span className="stage__toolbar-sep" aria-hidden="true" />
+          {TOGGLES.filter((tg) => !bench && shown(tg.basic, sim[tg.id])).map((tg) => {
+            const label = t(`stage.tools.${tg.id}`);
+            return (
+              <IconButton
+                key={tg.id}
+                icon={tg.icon}
+                label={disabled ? `${label} — ${t('stage.toolUnavailable')}` : label}
+                tooltipSide="right"
+                active={!disabled && sim[tg.id]}
+                disabled={disabled}
+                onClick={() => {
+                  useSimStore.setState((s) => ({ [tg.id]: !s[tg.id] }));
+                }}
+              />
+            );
+          })}
+          <span className="stage__toolbar-sep" aria-hidden="true" />
           <IconButton
-            icon={ghost ? PinOff : Pin}
-            label={t(ghost ? 'stage.tools.unpinCompare' : 'stage.tools.pinCompare')}
+            icon={Scan}
+            label={
+              disabled
+                ? `${t('stage.tools.fitView')} — ${t('stage.toolUnavailable')}`
+                : t('stage.tools.fitView')
+            }
             tooltipSide="right"
-            active={ghost !== null}
             disabled={disabled}
             onClick={() => {
-              togglePin(runtime.history);
+              useSimStore.setState((s) => ({ fitRequest: s.fitRequest + 1 }));
             }}
           />
-        )}
-      </div>
+          {sim.scene?.trail && !bench && (
+            <IconButton
+              icon={ghost ? PinOff : Pin}
+              label={t(ghost ? 'stage.tools.unpinCompare' : 'stage.tools.pinCompare')}
+              tooltipSide="right"
+              active={ghost !== null}
+              disabled={disabled}
+              onClick={() => {
+                togglePin(runtime.history);
+              }}
+            />
+          )}
+        </div>
+      )}
 
       {sim.scene && <StageAnnouncer title={Lz(sim.scene.title)} />}
       {/* No aria-live here: the time changes every frame (StageAnnouncer speaks state changes). */}
