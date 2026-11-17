@@ -43,4 +43,7 @@ export const GUIDED_TOPICS = [
   'monosaccharides',
   'disaccharides',
   'polysaccharides',
+  'proteinEnzyme',
+  'polymerBasics',
+  'polymerMaterials',
 ] as const;
