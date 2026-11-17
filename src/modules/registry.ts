@@ -63,6 +63,8 @@ const MODULES: Record<string, () => Promise<ModuleView>> = {
   emWave: () => import('@/physics/emwave/modules').then((m) => m.emWave),
   heatAndPhase: () => import('@/physics/thermal/modules').then((m) => m.heatAndPhase),
   idealGas: () => import('@/physics/gas/modules').then((m) => m.idealGas),
+  magneticForce: () => import('@/physics/magnetic/modules').then((m) => m.magneticForce),
+  induction: () => import('@/physics/induction/modules').then((m) => m.induction),
   // Descriptive textbook lessons (#255): each runs its guided Science Studio lesson.
   ...Object.fromEntries(
     GUIDED_TOPICS.map((id) => [

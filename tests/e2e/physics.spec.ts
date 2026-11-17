@@ -43,11 +43,22 @@ const TOPICS: readonly (readonly [string, string])[] = [
   ['Nội năng, nhiệt độ và nhiệt lượng', 'Nội năng, nhiệt độ và nhiệt lượng'],
   ['Mô hình động học phân tử chất khí', 'Mô hình động học phân tử chất khí'],
   ['Các định luật của khí lí tưởng', 'Các định luật của khí lí tưởng'],
+  ['Từ trường và đường sức từ', 'Từ trường và đường sức từ'],
+  ['Lực từ và cảm ứng từ', 'Lực từ và cảm ứng từ'],
+  ['Cảm ứng điện từ và máy phát điện xoay chiều', 'Cảm ứng điện từ và máy phát điện xoay chiều'],
+  ['Ứng dụng hiện tượng cảm ứng điện từ', 'Ứng dụng hiện tượng cảm ứng điện từ'],
+  ['Điện từ trường và mô hình sóng điện từ', 'Điện từ trường và mô hình sóng điện từ'],
   ['Định luật II Kepler', 'Định luật II Kepler'],
 ];
 
 /** Descriptive lessons run as guided lessons (#255): a lesson frame, no simulation. */
-const GUIDED = new Set(['Cấu trúc của chất và sự chuyển thể', 'Mô hình động học phân tử chất khí']);
+const GUIDED = new Set([
+  'Cấu trúc của chất và sự chuyển thể',
+  'Mô hình động học phân tử chất khí',
+  'Từ trường và đường sức từ',
+  'Ứng dụng hiện tượng cảm ứng điện từ',
+  'Điện từ trường và mô hình sóng điện từ',
+]);
 
 async function openPhysicsLibrary(page: Page) {
   await openLab(page);

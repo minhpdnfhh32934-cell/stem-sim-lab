@@ -110,6 +110,7 @@ const en: Messages = {
     dcCircuit: 'Current and circuits',
     thermalPhysics: 'Thermal physics',
     idealGasChapter: 'Ideal gas',
+    magnetismChapter: 'Magnetic field',
     gravitation: 'Gravitation (extension)',
   },
   topics: {
@@ -226,6 +227,11 @@ const en: Messages = {
     heatAndPhase: 'Internal energy, temperature and heat',
     gasKinetic: 'Kinetic model of gases',
     idealGas: 'Ideal gas laws',
+    magneticField: 'Magnetic field and field lines',
+    magneticForce: 'Magnetic force and magnetic field',
+    induction: 'Electromagnetic induction and the AC generator',
+    inductionApplications: 'Uses of electromagnetic induction',
+    electromagneticField: 'The electromagnetic field and wave model',
     fourierSeries: 'Harmonics and Fourier series',
   },
   stage: {
