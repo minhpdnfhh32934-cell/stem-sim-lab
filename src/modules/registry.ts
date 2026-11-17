@@ -47,6 +47,13 @@ const MODULES: Record<string, () => Promise<ModuleView>> = {
   diffusionOsmosis: () => import('@/biology/modules').then((m) => m.diffusionOsmosis),
   cellStructure: () => import('@/biology/modules').then((m) => m.cellStructure),
   cellToDna: () => import('@/biology/modules').then((m) => m.cellToDna),
+  lacOperon: () => import('@/biology/sh12Modules').then((m) => m.lacOperon),
+  sexLinkage: () => import('@/biology/sh12Modules').then((m) => m.sexLinkage),
+  geneLinkage: () => import('@/biology/sh12Modules').then((m) => m.geneLinkage),
+  chromosomeMutation: () => import('@/biology/sh12Modules').then((m) => m.chromosomeMutation),
+  evolutionEvidence: () => import('@/biology/sh12Modules').then((m) => m.evolutionEvidence),
+  ecologicalFactors: () => import('@/biology/sh12Modules').then((m) => m.ecologicalFactors),
+  ecosystemEnergy: () => import('@/biology/sh12Modules').then((m) => m.ecosystemEnergy),
   // SH10 KNTT Bài 4, 5, 21, 24 (#255): their own chunk.
   cellElements: () => import('@/biology/sh10Modules').then((m) => m.cellElements),
   biomolecules: () => import('@/biology/sh10Modules').then((m) => m.biomolecules),
@@ -75,6 +82,8 @@ const MODULES: Record<string, () => Promise<ModuleView>> = {
   groupIA: () => import('@/chemistry/groups/modules').then((m) => m.groupIA),
   groupIIA: () => import('@/chemistry/groups/modules').then((m) => m.groupIIA),
   transitionMetals: () => import('@/chemistry/groups/modules').then((m) => m.transitionMetals),
+  complexStructure: () => import('@/chemistry/complexes/modules').then((m) => m.complexStructure),
+  complexReactions: () => import('@/chemistry/complexes/modules').then((m) => m.complexReactions),
   radioactivity: () => import('@/physics/nuclear/modules').then((m) => m.radioactivity),
   // Descriptive textbook lessons (#255): each runs its guided Science Studio lesson.
   ...Object.fromEntries(
