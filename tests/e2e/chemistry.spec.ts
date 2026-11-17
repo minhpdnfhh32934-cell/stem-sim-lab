@@ -49,6 +49,8 @@ const TOPICS = [
   'Nguyên tố nhóm IA',
   'Nguyên tố nhóm IIA',
   'Đại cương về kim loại chuyển tiếp dãy thứ nhất',
+  'Sơ lược về phức chất',
+  'Một số tính chất và ứng dụng của phức chất',
   'Quy tắc octet',
   'Liên kết ion',
   'Liên kết cộng hóa trị',
