@@ -1,3 +1,4 @@
+import { lazy } from 'react';
 import type { Locale } from '@/app/i18n/types';
 import type { Source } from '@/core/data/dataset';
 import { DIM } from '@/core/units';
@@ -214,6 +215,7 @@ function card(): ScienceCardData {
 }
 
 export const keplerOrbit: PhysicsScene = {
+  view3d: lazy(() => import('./Kepler3DView')),
   id: 'keplerOrbit',
   engineId: 'phys.kepler',
   endless: true,

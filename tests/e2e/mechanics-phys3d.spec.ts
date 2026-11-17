@@ -132,3 +132,31 @@ test('Chuyển động tròn đều in 3D: the body stays on the circle, v ⊥ r
   await page.screenshot({ path: testInfo.outputPath('circular-3d.png') });
   expect(errors).toEqual([]);
 });
+
+test('Định luật II Kepler in 3D: the orbit, equal slices, the swept one follows the planet', async ({
+  page,
+}, testInfo) => {
+  test.setTimeout(120_000);
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(String(e)));
+  await openTopic(page, 'Vật lý', 'Định luật II Kepler');
+  await page.locator('.stage__view-switch').getByRole('radio', { name: '3D' }).click();
+  const view = page.locator('.bio3d[data-lesson="keplerOrbit"]');
+  await expect(view.locator('canvas')).toBeVisible({ timeout: 30_000 });
+  const slice = () =>
+    page.evaluate(() => {
+      const h = (
+        window as unknown as {
+          __simlab3d?: Record<string, { state(): { slice: number } | null } | undefined>;
+        }
+      ).__simlab3d?.keplerOrbit;
+      return h?.state()?.slice ?? -1;
+    });
+  expect(await slice()).toBe(0);
+  await page.getByRole('button', { name: /^Chạy/ }).first().click();
+  // T = 12 s, N = 6 by default: a new slice every 2 s.
+  await expect.poll(slice, { timeout: 20_000 }).toBeGreaterThan(0);
+  await expect(view.getByText('Mặt Trời', { exact: true })).toBeVisible();
+  await page.screenshot({ path: testInfo.outputPath('kepler-3d.png') });
+  expect(errors).toEqual([]);
+});
