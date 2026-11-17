@@ -2627,6 +2627,33 @@
    "review_status": "pending"
   },
   {
+   "topic": "gasKinetic",
+   "subject": "physics",
+   "grade": 12,
+   "book": "VL12",
+   "chapter": "Chương II. Khí lí tưởng",
+   "lessons": [
+    8
+   ],
+   "reason": "Tên Bài 8: mô hình động học phân tử chất khí, chuyển động Brown, khí lí tưởng (bài học có hướng dẫn: dự đoán và các hoạt động ghép, phân loại).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "idealGas",
+   "subject": "physics",
+   "grade": 12,
+   "book": "VL12",
+   "chapter": "Chương II. Khí lí tưởng",
+   "lessons": [
+    9,
+    10,
+    11,
+    12
+   ],
+   "reason": "Tên Bài 9: định luật Boyle (pV = hằng số, Bảng 9.1); Bài 10: định luật Charles (V/T = hằng số, Bảng 10.1); Bài 11: phương trình trạng thái, pV = nRT; Bài 12: áp suất khí theo mô hình động học phân tử, Ēđ = 3/2 kT.",
+   "review_status": "pending"
+  },
+  {
    "topic": "heatAndPhase",
    "subject": "physics",
    "grade": 12,

@@ -33,14 +33,14 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | --- | --- | --- | --- |
 | Vật lí 10 | 34 | 26 | 26 |
 | Vật lí 11 | 26 | 20 | 20 |
-| Vật lí 12 | 25 | 21 | 6 |
+| Vật lí 12 | 25 | 21 | 11 |
 | Hoá học 10 | 23 | 16 | 16 |
 | Hoá học 11 | 25 | 19 | 19 |
 | Hoá học 12 | 30 | 22 | 1 |
 | Sinh học 10 | 26 | 17 | 17 |
 | Sinh học 11 | 29 | 20 | 20 |
 | Sinh học 12 | 35 | 28 | 7 |
-| **Cộng** | **253** | **189** | **132** |
+| **Cộng** | **253** | **189** | **137** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -123,11 +123,11 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Vật lí 12 | Chương I. Vật lí nhiệt | 5 | Nhiệt nóng chảy riêng | 24 | Lí thuyết | Nội năng, nhiệt độ và nhiệt lượng | Tên Bài 2: nội năng, định luật I (ΔU = A + Q); Bài 3: nhiệt độ, thang nhiệt độ; Bài 4: nhiệt dung riêng (Q = mcΔT); Bài 5: nhiệt nóng chảy riêng (Q = λm); Bài 6: nhiệt hóa hơi riêng (Q = Lm), số liệu Bảng 4.1, 5.1, 6.1. | pending |
 | Vật lí 12 | Chương I. Vật lí nhiệt | 6 | Nhiệt hoá hơi riêng | 27 | Lí thuyết | Nội năng, nhiệt độ và nhiệt lượng | Tên Bài 2: nội năng, định luật I (ΔU = A + Q); Bài 3: nhiệt độ, thang nhiệt độ; Bài 4: nhiệt dung riêng (Q = mcΔT); Bài 5: nhiệt nóng chảy riêng (Q = λm); Bài 6: nhiệt hóa hơi riêng (Q = Lm), số liệu Bảng 4.1, 5.1, 6.1. | pending |
 | Vật lí 12 | Chương I. Vật lí nhiệt | 7 | Bài tập về vật lí nhiệt | 30 | Bài tập | chưa có |  | pending |
-| Vật lí 12 | Chương II. Khí lí tưởng | 8 | Mô hình động học phân tử chất khí | 34 | Lí thuyết | chưa có |  | pending |
-| Vật lí 12 | Chương II. Khí lí tưởng | 9 | Định luật Boyle | 37 | Lí thuyết | chưa có |  | pending |
-| Vật lí 12 | Chương II. Khí lí tưởng | 10 | Định luật Charles | 41 | Lí thuyết | chưa có |  | pending |
-| Vật lí 12 | Chương II. Khí lí tưởng | 11 | Phương trình trạng thái của khí lí tưởng | 45 | Lí thuyết | chưa có |  | pending |
-| Vật lí 12 | Chương II. Khí lí tưởng | 12 | Áp suất khí theo mô hình động học phân tử. Quan hệ giữa động năng phân tử và nhiệt độ | 48 | Lí thuyết | chưa có |  | pending |
+| Vật lí 12 | Chương II. Khí lí tưởng | 8 | Mô hình động học phân tử chất khí | 34 | Lí thuyết | Mô hình động học phân tử chất khí | Tên Bài 8: mô hình động học phân tử chất khí, chuyển động Brown, khí lí tưởng (bài học có hướng dẫn: dự đoán và các hoạt động ghép, phân loại). | pending |
+| Vật lí 12 | Chương II. Khí lí tưởng | 9 | Định luật Boyle | 37 | Lí thuyết | Các định luật của khí lí tưởng | Tên Bài 9: định luật Boyle (pV = hằng số, Bảng 9.1); Bài 10: định luật Charles (V/T = hằng số, Bảng 10.1); Bài 11: phương trình trạng thái, pV = nRT; Bài 12: áp suất khí theo mô hình động học phân tử, Ēđ = 3/2 kT. | pending |
+| Vật lí 12 | Chương II. Khí lí tưởng | 10 | Định luật Charles | 41 | Lí thuyết | Các định luật của khí lí tưởng | Tên Bài 9: định luật Boyle (pV = hằng số, Bảng 9.1); Bài 10: định luật Charles (V/T = hằng số, Bảng 10.1); Bài 11: phương trình trạng thái, pV = nRT; Bài 12: áp suất khí theo mô hình động học phân tử, Ēđ = 3/2 kT. | pending |
+| Vật lí 12 | Chương II. Khí lí tưởng | 11 | Phương trình trạng thái của khí lí tưởng | 45 | Lí thuyết | Các định luật của khí lí tưởng | Tên Bài 9: định luật Boyle (pV = hằng số, Bảng 9.1); Bài 10: định luật Charles (V/T = hằng số, Bảng 10.1); Bài 11: phương trình trạng thái, pV = nRT; Bài 12: áp suất khí theo mô hình động học phân tử, Ēđ = 3/2 kT. | pending |
+| Vật lí 12 | Chương II. Khí lí tưởng | 12 | Áp suất khí theo mô hình động học phân tử. Quan hệ giữa động năng phân tử và nhiệt độ | 48 | Lí thuyết | Các định luật của khí lí tưởng | Tên Bài 9: định luật Boyle (pV = hằng số, Bảng 9.1); Bài 10: định luật Charles (V/T = hằng số, Bảng 10.1); Bài 11: phương trình trạng thái, pV = nRT; Bài 12: áp suất khí theo mô hình động học phân tử, Ēđ = 3/2 kT. | pending |
 | Vật lí 12 | Chương II. Khí lí tưởng | 13 | Bài tập về khí lí tưởng | 52 | Bài tập | chưa có |  | pending |
 | Vật lí 12 | Chương III. Từ trường | 14 | Từ trường | 56 | Lí thuyết | chưa có |  | pending |
 | Vật lí 12 | Chương III. Từ trường | 15 | Lực từ tác dụng lên dây dẫn mang dòng điện. Cảm ứng từ | 61 | Lí thuyết | chưa có |  | pending |
