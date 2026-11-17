@@ -11,12 +11,11 @@ Dự án bắt đầu ngày 28/09/2026: Phase 0–7 (khung app, lõi tính toán
 Tài liệu này được tạo tự động từ release-notes/versions.json (npm run release-notes). Mọi mốc thời gian lấy từ git, GitHub (PR, Actions, Releases) và tài liệu trong repo; ô ghi 'Chưa xác minh được' nghĩa là chưa có bằng chứng, không có nghĩa là việc đó không xảy ra. Giờ được đổi sang giờ Việt Nam (UTC+7); giá trị gốc nằm trong versions.json.
 
 - Số phiên bản ghi nhận: 19 (0.1.0 → 0.10.0).
-- Đã phát hành trên GitHub: 0.2.0 (05/10/2026), 0.3.0 (06/10/2026), 0.4.1 (12/10/2026), 0.5.0 (13/10/2026), 0.5.2 (13/10/2026), 0.6.0 (19/10/2026), 0.7.0 (20/10/2026), 0.7.1 (22/10/2026), 0.8.1 (13/11/2026), 0.8.2 (14/11/2026), 0.9.0 (16/11/2026), 0.9.1 (16/11/2026).
+- Đã phát hành trên GitHub: 0.2.0 (05/10/2026), 0.3.0 (06/10/2026), 0.4.1 (12/10/2026), 0.5.0 (13/10/2026), 0.5.2 (13/10/2026), 0.6.0 (19/10/2026), 0.7.0 (20/10/2026), 0.7.1 (22/10/2026), 0.8.1 (13/11/2026), 0.8.2 (14/11/2026), 0.9.0 (16/11/2026), 0.9.1 (16/11/2026), 0.10.0 (17/11/2026).
 - Đã gộp, chưa phát hành: 0.5.1, 0.8.0.
-- Đang xét duyệt: 0.10.0.
 - Bản phát triển, không phát hành: 0.1.0.
 - Chưa xác minh: 0.4.0, 0.4.2, 0.4.3.
-- Phiên bản mới nhất trong dữ liệu: 0.10.0 (Đang xét duyệt).
+- Phiên bản mới nhất trong dữ liệu: 0.10.0 (Đã phát hành).
 
 ## II. Dòng thời gian phát triển từ bản gốc
 
@@ -42,7 +41,7 @@ Cũ nhất ở trên. Cột "Ngày phát hành" chỉ ghi ngày khi có GitHub R
 | 0.8.2 | Đã phát hành | 14/11/2026 (đã xác minh) | [#250](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/250), [#251](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/251), [#252](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/252), [#253](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/253), [#254](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/254) | [v0.8.2](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.8.2) |
 | 0.9.0 | Đã phát hành | 16/11/2026 (đã xác minh) | [#256](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/256), [#257](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/257), [#260](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/260), [#261](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/261), [#262](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/262), [#264](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/264), [#265](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/265), [#266](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/266), [#267](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/267), [#268](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/268), [#269](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/269), [#270](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/270), [#271](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/271), [#272](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/272), [#273](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/273) | [v0.9.0](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.9.0) |
 | 0.9.1 | Đã phát hành | 16/11/2026 (đã xác minh) | [#275](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/275) | [v0.9.1](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.9.1) |
-| 0.10.0 | Đang xét duyệt | Chưa phát hành | [#277](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/277), [#278](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/278), [#279](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/279), [#283](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/283), [#284](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/284), [#285](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/285), [#286](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/286), [#287](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/287), [#288](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/288), [#289](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/289), [#290](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/290) | — |
+| 0.10.0 | Đã phát hành | 17/11/2026 (đã xác minh) | [#277](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/277), [#278](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/278), [#279](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/279), [#283](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/283), [#284](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/284), [#285](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/285), [#286](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/286), [#287](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/287), [#288](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/288), [#289](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/289), [#290](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/290), [#291](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/291) | [v0.10.0](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.10.0) |
 
 ### Các mốc phát triển
 
@@ -83,23 +82,23 @@ Cũ nhất ở trên. Cột "Ngày phát hành" chỉ ghi ngày khi có GitHub R
 
 ## III. Chi tiết từng phiên bản
 
-### 0.10.0 (Đang xét duyệt)
+### 0.10.0 (Đã phát hành)
 
 Bản 0.10.0 hoàn thành chương trình lớp 11 theo sách Kết nối tri thức: mọi bài lí thuyết của Vật lí 11, Hóa học 11 và Sinh học 11 đều có bài học trong SimLab, số liệu lấy từ sách giáo khoa và có ghi trang.
 
-- Trạng thái: Đang xét duyệt.
+- Trạng thái: Đã phát hành.
 - Kênh phân phối: GitHub Releases: bộ cài Windows và cập nhật trong app.
-- Ghi chú trạng thái: Gói lớp 11 (#255, kế hoạch đăng ở #255 ngày 16/11/2026): mọi bài lí thuyết của Vật lí 11 (20/20), Hóa học 11 (19/19) và Sinh học 11 (20/20) có chủ đề, qua 12 đợt 2a–2l, mỗi đợt một PR vào main theo thứ tự (2a #277, 2b #278, 2c #279, 2d #283, 2e #284, 2f #285, 2g #286, 2h #287, 2i #288, 2j #289, 2k #290 đã gộp vào main ngày 17/11/2026, mỗi PR CI 8/8 xanh; đợt 2l là PR chuẩn bị phát hành này). Chỉ phần web lên 0.10.0 (không có thay đổi Rust kể từ v0.8.2, lõi vẫn 0.8.2), nên ứng dụng cài từ GitHub nhận qua cập nhật trong app. notesReady đặt true khi mở PR chuẩn bị phát hành; phát hành do người dùng chạy lượt Release sau khi PR cuối đã gộp.
+- Ghi chú trạng thái: Phát hành 17/11/2026 từ main @ d21a55f9 (lượt Release 43987526826, người dùng chạy). Gói lớp 11 (#255): mọi bài lý thuyết của Vật lí 11 (20/20), Hóa học 11 (19/19) và Sinh học 11 (20/20) có chủ đề, qua 12 đợt 2a–2l (PR #277, #278, #279, #283–#291, mỗi PR CI 8/8 xanh). Chỉ phần web lên 0.10.0; phần lõi vẫn 0.8.2 (không có thay đổi Rust), nên web-update.json ghi minNative 0.8.2 và ứng dụng 0.8.2 cài từ GitHub nhận qua cập nhật trong app; bộ cài trong bản phát hành vẫn mang số 0.8.2. Không bắt buộc cập nhật (minRequired để trống). Bản Store nhận ở lần nộp có lõi mới.
 - Ghi chú công khai: đã duyệt để công bố (hiện trong hộp "Có gì mới").
 
 | Mốc | Thời điểm (giờ VN) | Giá trị gốc |
 | --- | --- | --- |
 | Bắt đầu phát triển | 16/11/2026 17:43 | `2026-11-16T10:43:58Z` |
 | Commit đầu tiên | 16/11/2026 22:56 | `2026-11-16T22:56:47+07:00` |
-| Commit cuối cùng | Chưa xác minh được | — |
-| Gộp vào nhánh (merge) | Chưa xác minh được | — |
-| Dựng bộ cài (GitHub Actions) | Chưa xác minh được | — |
-| Phát hành (GitHub Release) | Chưa xác minh được | — |
+| Commit cuối cùng | 17/11/2026 06:27 | `2026-11-17T06:27:18+07:00` |
+| Gộp vào nhánh (merge) | 17/11/2026 06:52 | `2026-11-16T23:52:32Z` |
+| Dựng bộ cài (GitHub Actions) | 17/11/2026 07:43 | `2026-11-17T00:43:24Z` |
+| Phát hành (GitHub Release) | 17/11/2026 07:43 | `2026-11-17T00:43:39Z` |
 | Tạo tag | Chưa xác minh được | — |
 
 **Tính năng mới**
@@ -129,6 +128,11 @@ Bản 0.10.0 hoàn thành chương trình lớp 11 theo sách Kết nối tri th
 - Phạm vi: data/curriculum\_kntt.json (scripts/data/gen\_curriculum\_kntt.py) — mọi bài lí thuyết của VL11, HH11, SH11 đều được xếp chủ đề (đếm 17/11/2026 trên nhánh feat/255-sh11-reproduction)
 - Nhật ký từng đợt: docs/work-log/2026-11-16-255-vl11-waves.md và các tệp 2026-11-17-255-\*.md (vl11-electric, hh11-aqueous, hh11-nitrogen-sulfur, hh11-organic-basics, hh11-hydrocarbons, hh11-derivatives, sh11-metabolism, sh11-animals, sh11-response, sh11-growth, sh11-reproduction)
 - Dữ liệu và lời văn mới chờ giáo viên duyệt: docs/DATA\_REVIEW.md VL11-\*, HH11-AB-\*, HH11-NS-\*, HH11-ORG-\*, HH11-GL-1, HH11-HC-\*, HH11-DER-\*, SH11-GL-1 … SH11-GL-20
+- lastCommit: 858e8686 2026-11-17T06:27:18+07:00 'docs(release): 0.10.0 notes list the merged grade-11 PRs #277–#290 (#255)' (commit cuối của PR #291 trước khi gộp)
+- PR #291 gộp d21a55f9 2026-11-16T23:52:32Z (gh pr view 291)
+- built: lượt Release 43987526826 (workflow\_dispatch, main, d21a55f9), job 'Build Windows installers' xong 2026-11-17T00:43:24Z
+- released: GitHub Release v0.10.0 'SimLab 0.10.0', published\_at 2026-11-17T00:43:39Z, target d21a55f9; tệp: SimLab\_0.8.2\_x64-setup.exe, SimLab\_0.8.2\_x64\_en-US.msi, web-bundle.zip, web-update.json, SHA256SUMS.txt
+- web-update.json: webVersion 0.10.0, minNative 0.8.2, minRequired trống, edition main (tải từ bản phát hành)
 
 ### 0.9.1 (Đã phát hành)
 
@@ -1755,20 +1759,20 @@ Mô phỏng 3D Sinh học xuất hiện lần đầu ở phiên bản 0.6.0 (Đ�
 - PR #275: vitest 5509 đạt, typecheck/lint/format đạt, E2E 64/65 trong thư mục tạm (bài RDKit chỉ hỏng ở thư mục tạm), CI 8/8 xanh trước khi gộp
 - Lượt Release 43849341900: job 'Tests before packaging' đạt (2026-11-16T10:36:27Z); 5/5 job đạt
 
-**0.10.0** (Đang xét duyệt)
+**0.10.0** (Đã phát hành)
 
 - Mỗi PR: CI 8/8 xanh trước khi gộp (gh pr checks)
 - Nhánh cuối feat/255-sh11-reproduction: vitest 5611 đạt (3 bỏ qua có sẵn), typecheck và lint đạt; E2E sh11-guided 20/20 trong thư mục tạm (test "touch screens" và bài RDKit chỉ hỏng ở thư mục tạm)
+- Lượt Release 43987526826: job 'Tests before packaging' đạt (2026-11-17T00:36:38Z); 5/5 job đạt
 
 ## VII. Những vấn đề chưa hoàn thành
 
-### Vấn đề đã biết của bản mới nhất (0.10.0, Đang xét duyệt)
+### Vấn đề đã biết của bản mới nhất (0.10.0, Đã phát hành)
 
 - Nội dung lớp 11 đang chờ giáo viên duyệt; ba chỗ sách in chưa khớp (một nhiệt độ sôi, một phần trăm phân li, một phương trình) được ghi rõ trong bài.
 
 ### Phiên bản chưa phát hành hoặc chưa xác minh
 
-- **0.10.0** (Đang xét duyệt): Gói lớp 11 (#255, kế hoạch đăng ở #255 ngày 16/11/2026): mọi bài lí thuyết của Vật lí 11 (20/20), Hóa học 11 (19/19) và Sinh học 11 (20/20) có chủ đề, qua 12 đợt 2a–2l, mỗi đợt một PR vào main theo thứ tự (2a #277, 2b #278, 2c #279, 2d #283, 2e #284, 2f #285, 2g #286, 2h #287, 2i #288, 2j #289, 2k #290 đã gộp vào main ngày 17/11/2026, mỗi PR CI 8/8 xanh; đợt 2l là PR chuẩn bị phát hành này). Chỉ phần web lên 0.10.0 (không có thay đổi Rust kể từ v0.8.2, lõi vẫn 0.8.2), nên ứng dụng cài từ GitHub nhận qua cập nhật trong app. notesReady đặt true khi mở PR chuẩn bị phát hành; phát hành do người dùng chạy lượt Release sau khi PR cuối đã gộp.
 - **0.8.0** (Đã gộp, chưa phát hành): PR phiên bản (#92) gộp vào main ngày 28/10/2026; không phát hành riêng. Toàn bộ nội dung gộp vào 0.8.1 (issue #194, kế hoạch người dùng đã duyệt). Bộ cài 0.8.0 chỉ dùng cho máy demo 07/11/2026. notesReady giữ false để hộp "Có gì mới" không hiện hai lần cùng một nội dung.
 - **0.5.1** (Đã gộp, chưa phát hành): Không có tag v0.5.1 và không có GitHub Release riêng; bộ cài lõi 0.5.1 được phát hành lần đầu kèm Release v0.5.2. Gói Microsoft Store 0.5.1.0 đã gửi duyệt ngày 13/10/2026 và được chọn giữ lại; chưa có tài liệu nào cho thấy app đã lên Store.
 - **0.4.3** (Chưa xác minh): Nhãn nội bộ, chưa bao giờ là số phiên bản trong package.json (commit cbb176a nâng thẳng 0.4.1 → 0.5.0). Không có tag, Release hay ZIP. Nội dung, trừ bảng giảng LessonBoard đã bị thay, đến với người dùng trong 0.5.0.
@@ -1792,7 +1796,7 @@ Kho mã: [https://github.com/minhpdnfhh32934-cell/stem-sim-lab](https://github.c
 
 | Phiên bản | Tag | Commit của tag | GitHub Release | PR | Commit (đầu → cuối) | Nhánh |
 | --- | --- | --- | --- | --- | --- | --- |
-| 0.10.0 | — | — | — | [#277](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/277), [#278](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/278), [#279](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/279), [#283](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/283), [#284](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/284), [#285](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/285), [#286](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/286), [#287](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/287), [#288](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/288), [#289](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/289), [#290](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/290) | `bf73b7ac` | `feat/255-vl11-waves`, `feat/255-vl11-electric`, `feat/255-hh11-acid-base`, `feat/255-hh11-nitrogen-sulfur`, `feat/255-hh11-organic-basics`, `feat/255-hh11-hydrocarbons`, `feat/255-hh11-derivatives`, `feat/255-sh11-metabolism`, `feat/255-sh11-animals`, `feat/255-sh11-response`, `feat/255-sh11-growth`, `feat/255-sh11-reproduction` |
+| 0.10.0 | `v0.10.0` | `d21a55f922452f656f660d375794bd63104c6b77` | [Release v0.10.0](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.10.0) | [#277](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/277), [#278](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/278), [#279](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/279), [#283](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/283), [#284](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/284), [#285](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/285), [#286](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/286), [#287](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/287), [#288](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/288), [#289](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/289), [#290](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/290), [#291](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/291) | `bf73b7ac` → `858e8686` | `feat/255-vl11-waves`, `feat/255-vl11-electric`, `feat/255-hh11-acid-base`, `feat/255-hh11-nitrogen-sulfur`, `feat/255-hh11-organic-basics`, `feat/255-hh11-hydrocarbons`, `feat/255-hh11-derivatives`, `feat/255-sh11-metabolism`, `feat/255-sh11-animals`, `feat/255-sh11-response`, `feat/255-sh11-growth`, `feat/255-sh11-reproduction` |
 | 0.9.1 | `v0.9.1` | `59303d2162574701d85e32fcc4e60967a1a859b9` | [Release v0.9.1](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.9.1) | [#275](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/275) | `19a5f370` → `0a8be19f` | `fix/255-hoa-polyatomic` |
 | 0.9.0 | `v0.9.0` | `cc285f00a13ae733a666ca75fc88c6a992342547` | [Release v0.9.0](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.9.0) | [#256](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/256), [#257](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/257), [#260](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/260), [#261](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/261), [#262](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/262), [#264](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/264), [#265](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/265), [#266](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/266), [#267](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/267), [#268](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/268), [#269](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/269), [#270](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/270), [#271](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/271), [#272](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/272), [#273](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/273) | `82297dc0` → `6e2011a1` | `feat/old-shell`, `feat/255-hh10-atoms`, `feat/255-sh10-models`, `feat/255-hh10-bonds`, `fix/255-vl10-sgk-audit`, `feat/255-hh10-reactions`, `feat/255-sh10-guided`, `fix/biology-spec-cell-wait`, `fix/255-sgk-follow`, `docs/255-grade10-progress` |
 | 0.8.2 | `v0.8.2` | `e89c7e06df943e411ddfb03cb1a036166bf724e4` | [Release v0.8.2](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.8.2) | [#250](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/250), [#251](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/251), [#252](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/252), [#253](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/253), [#254](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/254) | `dbe1c31` → `a691c96` | `main`, `fix/science-card-projectile`, `fix/audit-sweep` |

@@ -182,16 +182,16 @@
   "versions": [
     {
       "version": "0.10.0",
-      "status": "in-review",
-      "statusNote": "Gói lớp 11 (#255, kế hoạch đăng ở #255 ngày 16/11/2026): mọi bài lí thuyết của Vật lí 11 (20/20), Hóa học 11 (19/19) và Sinh học 11 (20/20) có chủ đề, qua 12 đợt 2a–2l, mỗi đợt một PR vào main theo thứ tự (2a #277, 2b #278, 2c #279, 2d #283, 2e #284, 2f #285, 2g #286, 2h #287, 2i #288, 2j #289, 2k #290 đã gộp vào main ngày 17/11/2026, mỗi PR CI 8/8 xanh; đợt 2l là PR chuẩn bị phát hành này). Chỉ phần web lên 0.10.0 (không có thay đổi Rust kể từ v0.8.2, lõi vẫn 0.8.2), nên ứng dụng cài từ GitHub nhận qua cập nhật trong app. notesReady đặt true khi mở PR chuẩn bị phát hành; phát hành do người dùng chạy lượt Release sau khi PR cuối đã gộp.",
+      "status": "released",
+      "statusNote": "Phát hành 17/11/2026 từ main @ d21a55f9 (lượt Release 43987526826, người dùng chạy). Gói lớp 11 (#255): mọi bài lý thuyết của Vật lí 11 (20/20), Hóa học 11 (19/19) và Sinh học 11 (20/20) có chủ đề, qua 12 đợt 2a–2l (PR #277, #278, #279, #283–#291, mỗi PR CI 8/8 xanh). Chỉ phần web lên 0.10.0; phần lõi vẫn 0.8.2 (không có thay đổi Rust), nên web-update.json ghi minNative 0.8.2 và ứng dụng 0.8.2 cài từ GitHub nhận qua cập nhật trong app; bộ cài trong bản phát hành vẫn mang số 0.8.2. Không bắt buộc cập nhật (minRequired để trống). Bản Store nhận ở lần nộp có lõi mới.",
       "channel": "github",
       "dates": {
         "devStart": "2026-11-16T10:43:58Z",
         "firstCommit": "2026-11-16T22:56:47+07:00",
-        "lastCommit": null,
-        "merged": null,
-        "built": null,
-        "released": null,
+        "lastCommit": "2026-11-17T06:27:18+07:00",
+        "merged": "2026-11-16T23:52:32Z",
+        "built": "2026-11-17T00:43:24Z",
+        "released": "2026-11-17T00:43:39Z",
         "tagged": null
       },
       "evidence": [
@@ -199,18 +199,24 @@
         "firstCommit: bf73b7ac 2026-11-16T22:56:47+07:00 'feat(physics): cite the Vật lí 11 KNTT lesson and pages on every VL11 card (#255)'",
         "Phạm vi: data/curriculum_kntt.json (scripts/data/gen_curriculum_kntt.py) — mọi bài lí thuyết của VL11, HH11, SH11 đều được xếp chủ đề (đếm 17/11/2026 trên nhánh feat/255-sh11-reproduction)",
         "Nhật ký từng đợt: docs/work-log/2026-11-16-255-vl11-waves.md và các tệp 2026-11-17-255-*.md (vl11-electric, hh11-aqueous, hh11-nitrogen-sulfur, hh11-organic-basics, hh11-hydrocarbons, hh11-derivatives, sh11-metabolism, sh11-animals, sh11-response, sh11-growth, sh11-reproduction)",
-        "Dữ liệu và lời văn mới chờ giáo viên duyệt: docs/DATA_REVIEW.md VL11-*, HH11-AB-*, HH11-NS-*, HH11-ORG-*, HH11-GL-1, HH11-HC-*, HH11-DER-*, SH11-GL-1 … SH11-GL-20"
+        "Dữ liệu và lời văn mới chờ giáo viên duyệt: docs/DATA_REVIEW.md VL11-*, HH11-AB-*, HH11-NS-*, HH11-ORG-*, HH11-GL-1, HH11-HC-*, HH11-DER-*, SH11-GL-1 … SH11-GL-20",
+        "lastCommit: 858e8686 2026-11-17T06:27:18+07:00 'docs(release): 0.10.0 notes list the merged grade-11 PRs #277–#290 (#255)' (commit cuối của PR #291 trước khi gộp)",
+        "PR #291 gộp d21a55f9 2026-11-16T23:52:32Z (gh pr view 291)",
+        "built: lượt Release 43987526826 (workflow_dispatch, main, d21a55f9), job 'Build Windows installers' xong 2026-11-17T00:43:24Z",
+        "released: GitHub Release v0.10.0 'SimLab 0.10.0', published_at 2026-11-17T00:43:39Z, target d21a55f9; tệp: SimLab_0.8.2_x64-setup.exe, SimLab_0.8.2_x64_en-US.msi, web-bundle.zip, web-update.json, SHA256SUMS.txt",
+        "web-update.json: webVersion 0.10.0, minNative 0.8.2, minRequired trống, edition main (tải từ bản phát hành)"
       ],
       "tests": [
         "Mỗi PR: CI 8/8 xanh trước khi gộp (gh pr checks)",
-        "Nhánh cuối feat/255-sh11-reproduction: vitest 5611 đạt (3 bỏ qua có sẵn), typecheck và lint đạt; E2E sh11-guided 20/20 trong thư mục tạm (test \"touch screens\" và bài RDKit chỉ hỏng ở thư mục tạm)"
+        "Nhánh cuối feat/255-sh11-reproduction: vitest 5611 đạt (3 bỏ qua có sẵn), typecheck và lint đạt; E2E sh11-guided 20/20 trong thư mục tạm (test \"touch screens\" và bài RDKit chỉ hỏng ở thư mục tạm)",
+        "Lượt Release 43987526826: job 'Tests before packaging' đạt (2026-11-17T00:36:38Z); 5/5 job đạt"
       ],
       "refs": {
-        "tag": null,
-        "tagSha": null,
-        "releaseUrl": null,
-        "prs": [277, 278, 279, 283, 284, 285, 286, 287, 288, 289, 290],
-        "commits": ["bf73b7ac"],
+        "tag": "v0.10.0",
+        "tagSha": "d21a55f922452f656f660d375794bd63104c6b77",
+        "releaseUrl": "https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.10.0",
+        "prs": [277, 278, 279, 283, 284, 285, 286, 287, 288, 289, 290, 291],
+        "commits": ["bf73b7ac", "858e8686"],
         "branches": [
           "feat/255-vl11-waves",
           "feat/255-vl11-electric",
