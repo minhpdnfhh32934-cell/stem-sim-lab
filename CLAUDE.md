@@ -857,6 +857,11 @@ Progress log: `docs/PROGRESS.md`.
     `heatAndPhase` heat tab; 6e: `nucleus` structure tab, `radioactivity` law and random tabs): the Stage shows the 3D view in place of its canvas, reading the
     module's store; tabs that are charts or tables stay 2D. The chemistry particle lessons stay 2D
     (their model is a 2D hard-disk gas).
+  - Biology, Sinh học 12 (6h, opt-in): `lacOperon` (`operon/operon3d`), `sexLinkage`
+    (`sexlinked/sexlinked3d`), `geneLinkage` testcross tab (`linkage/linkage3d`),
+    `chromosomeMutation` structure tab (`chromosome/chromosome3d`); each a pure `layout.ts` tested
+    against the lesson's model, `scene.ts`, a lazy view chosen in the lesson's Stage; E2E
+    `tests/e2e/sh12-bio3d.spec.ts`. Wording: DATA_REVIEW SH12-3D-*.
   - Chemistry (6f: `orbitals` — a |ψ|² point cloud of the lesson's exact orbital, `atom/orbital3d.ts`;
     `atomComposition` — exactly Z protons, N neutrons and the electrons, `nuclide/atom3d.ts`): the
     Stage wrapper picks the lazy 3D view or the 2D picture (`useShow3d`, `Bio3DToolbar` in the 2D
