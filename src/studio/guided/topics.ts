@@ -46,4 +46,5 @@ export const GUIDED_TOPICS = [
   'proteinEnzyme',
   'polymerBasics',
   'polymerMaterials',
+  'electrolysis',
 ] as const;

@@ -2884,6 +2884,30 @@
    "review_status": "pending"
   },
   {
+   "topic": "electrodePotential",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 5. Pin điện và điện phân",
+   "lessons": [
+    15
+   ],
+   "reason": "Tên Bài 15: thế điện cực và nguồn điện hóa học: Bảng 15.1, quy tắc α, pin Galvani, E°pin = E°cathode − E°anode.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "electrolysis",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 5. Pin điện và điện phân",
+   "lessons": [
+    16
+   ],
+   "reason": "Tên Bài 16: điện phân (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
    "topic": "heatAndPhase",
    "subject": "physics",
    "grade": 12,

@@ -40,6 +40,8 @@ const TOPICS = [
   'Protein và enzyme',
   'Đại cương về polymer',
   'Vật liệu polymer',
+  'Thế điện cực và nguồn điện hóa học',
+  'Điện phân',
   'Quy tắc octet',
   'Liên kết ion',
   'Liên kết cộng hóa trị',

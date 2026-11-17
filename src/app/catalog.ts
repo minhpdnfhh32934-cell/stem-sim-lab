@@ -99,6 +99,7 @@ export const CATALOG: Record<Subject, ChapterEntry[]> = {
     chapter('carbohydrateGroup', ['monosaccharides', 'disaccharides', 'polysaccharides']),
     chapter('nitrogenOrganicGroup', ['amine', 'aminoAcidPeptide', 'proteinEnzyme']),
     chapter('polymerGroup', ['polymerBasics', 'polymerMaterials']),
+    chapter('cellsElectrolysisGroup', ['electrodePotential', 'electrolysis']),
   ],
   biology: [
     chapter('livingWorld', ['levelsOfLife']),

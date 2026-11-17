@@ -530,6 +530,8 @@ PLACEMENTS = [
     ("proteinEnzyme", "HH12", [10], "Tên Bài 10: protein và enzyme (bài học có hướng dẫn)."),
     ("polymerBasics", "HH12", [12], "Tên Bài 12: đại cương về polymer (bài học có hướng dẫn)."),
     ("polymerMaterials", "HH12", [13], "Tên Bài 13: vật liệu polymer (bài học có hướng dẫn)."),
+    ("electrodePotential", "HH12", [15], "Tên Bài 15: thế điện cực và nguồn điện hóa học: Bảng 15.1, quy tắc α, pin Galvani, E°pin = E°cathode − E°anode."),
+    ("electrolysis", "HH12", [16], "Tên Bài 16: điện phân (bài học có hướng dẫn)."),
     ("heatAndPhase", "VL12", [2, 3, 4, 5, 6], "Tên Bài 2: nội năng, định luật I (ΔU = A + Q); Bài 3: nhiệt độ, thang nhiệt độ; Bài 4: nhiệt dung riêng (Q = mcΔT); Bài 5: nhiệt nóng chảy riêng (Q = λm); Bài 6: nhiệt hóa hơi riêng (Q = Lm), số liệu Bảng 4.1, 5.1, 6.1."),
     ("emWave", "VL11", [11], "Tên Bài 11: sóng điện từ (vectơ E, B vuông góc với phương truyền; λ = c/f; thang sóng điện từ theo Bảng 11.1)."),
     ("interference", "VL11", [12], "Tên Bài 12: giao thoa sóng (cảnh có hai nguồn cùng pha trên mặt nước; phần phách là mở rộng)."),

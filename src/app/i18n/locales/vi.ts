@@ -113,6 +113,7 @@ const vi = {
     carbohydrateGroup: 'Carbohydrate',
     nitrogenOrganicGroup: 'Hợp chất chứa nitrogen',
     polymerGroup: 'Polymer',
+    cellsElectrolysisGroup: 'Pin điện và điện phân',
     bonds: 'Liên kết hóa học',
     dcCircuit: 'Dòng điện, mạch điện',
     thermalPhysics: 'Vật lí nhiệt',
@@ -253,6 +254,8 @@ const vi = {
     proteinEnzyme: 'Protein và enzyme',
     polymerBasics: 'Đại cương về polymer',
     polymerMaterials: 'Vật liệu polymer',
+    electrodePotential: 'Thế điện cực và nguồn điện hóa học',
+    electrolysis: 'Điện phân',
     fourierSeries: 'Họa âm và chuỗi Fourier',
   },
   stage: {

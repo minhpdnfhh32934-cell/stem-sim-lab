@@ -69,6 +69,8 @@ const MODULES: Record<string, () => Promise<ModuleView>> = {
   esterLipid: () => import('@/chemistry/ester/modules').then((m) => m.esterLipid),
   amine: () => import('@/chemistry/amine/modules').then((m) => m.amine),
   aminoAcidPeptide: () => import('@/chemistry/amine/modules').then((m) => m.aminoAcidPeptide),
+  electrodePotential: () =>
+    import('@/chemistry/electrochem/modules').then((m) => m.electrodePotential),
   radioactivity: () => import('@/physics/nuclear/modules').then((m) => m.radioactivity),
   // Descriptive textbook lessons (#255): each runs its guided Science Studio lesson.
   ...Object.fromEntries(
