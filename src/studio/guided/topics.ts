@@ -38,4 +38,5 @@ export const GUIDED_TOPICS = [
   'magneticField',
   'inductionApplications',
   'electromagneticField',
+  'nuclearIndustry',
 ] as const;
