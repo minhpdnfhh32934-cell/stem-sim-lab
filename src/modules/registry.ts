@@ -52,6 +52,8 @@ const MODULES: Record<string, () => Promise<ModuleView>> = {
   geneLinkage: () => import('@/biology/sh12Modules').then((m) => m.geneLinkage),
   chromosomeMutation: () => import('@/biology/sh12Modules').then((m) => m.chromosomeMutation),
   evolutionEvidence: () => import('@/biology/sh12Modules').then((m) => m.evolutionEvidence),
+  ecologicalFactors: () => import('@/biology/sh12Modules').then((m) => m.ecologicalFactors),
+  ecosystemEnergy: () => import('@/biology/sh12Modules').then((m) => m.ecosystemEnergy),
   // SH10 KNTT Bài 4, 5, 21, 24 (#255): their own chunk.
   cellElements: () => import('@/biology/sh10Modules').then((m) => m.cellElements),
   biomolecules: () => import('@/biology/sh10Modules').then((m) => m.biomolecules),

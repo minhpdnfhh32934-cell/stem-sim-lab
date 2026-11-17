@@ -57,4 +57,10 @@ export const GUIDED_TOPICS = [
   'genotypeEnvironment',
   'darwinSelection',
   'modernSynthesis',
+  'community',
+  'ecosystem',
+  'succession',
+  'biosphere',
+  'conservation',
+  'sustainability',
 ] as const;

@@ -2,6 +2,27 @@
 
 Mọi thay đổi đáng chú ý của SimLab (tên cũ: STEM Sim Lab), bản mới nhất ở trên. Định dạng theo [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), số phiên bản dạng `x.y.z`. Tệp này được tạo từ `release-notes/versions.json` bằng `npm run release-notes`. Đừng sửa tay. Lịch sử đầy đủ kèm bằng chứng: [VERSION\_HISTORY.md](VERSION_HISTORY.md).
 
+## [Unreleased] - 0.11.0 (Đang xét duyệt)
+
+_Gói lớp 12 (#255): mọi bài lí thuyết của Vật lí 12 (21/21), Hóa học 12 (22/22) và Sinh học 12 (28/28) có chủ đề, qua 14 đợt: 3a–3d Vật lí 12 (#293–#296), 4a–4f Hóa học 12 (#297–#301, #303), 5a–5d Sinh học 12 (#304–#306 và PR này); mỗi đợt một PR vào main theo thứ tự, CI 8/8 xanh trước khi gộp; đợt 5d là PR chuẩn bị phát hành này. Chỉ phần web lên 0.11.0 (không có thay đổi Rust kể từ v0.8.2, lõi vẫn 0.8.2), nên ứng dụng cài từ GitHub nhận qua cập nhật trong app. notesReady đặt true khi mở PR chuẩn bị phát hành; phát hành do người dùng chạy lượt Release sau khi PR cuối đã gộp._
+
+Bản 0.11.0 hoàn thành chương trình lớp 12 theo sách Kết nối tri thức: mọi bài lí thuyết của Vật lí 12, Hóa học 12 và Sinh học 12 đều có bài học trong SimLab, số liệu lấy từ sách giáo khoa và có ghi trang.
+
+### Added
+
+- Vật lí 12: nội năng, nhiệt độ, nhiệt dung riêng, nhiệt nóng chảy và nhiệt hóa hơi riêng; khí lí tưởng và các định luật chất khí; lực từ, cảm ứng từ, cảm ứng điện từ và máy phát điện xoay chiều; cấu trúc hạt nhân, năng lượng liên kết và hiện tượng phóng xạ.
+- Hóa học 12: ester và chất béo, amine, amino acid và peptide, thế điện cực và pin Galvani, tính chất của kim loại, nguyên tố nhóm IA và IIA, kim loại chuyển tiếp, phức chất (có mô hình 3D khi sách nêu dạng hình học).
+- Sinh học 12: operon lac, di truyền liên kết với giới tính, liên kết và hoán vị gene, đột biến nhiễm sắc thể, bằng chứng tiến hóa và các đại địa chất, giới hạn sinh thái, tháp sinh thái và hiệu suất sinh thái.
+- Thêm các bài học có hướng dẫn cho những bài chủ yếu mô tả: dự đoán trước, rồi làm các hoạt động xếp thứ tự, phân loại, ghép.
+
+### Improved
+
+- Thư viện xếp các bài lớp 12 theo đúng chương và bài của sách; mỗi thẻ khoa học ghi tên bài và trang sách.
+
+### Known Issues
+
+- Nội dung lớp 12 đang chờ giáo viên duyệt; những chỗ sách in chưa khớp nhau được ghi rõ trong bài.
+
 ## [0.10.0] - 2026-11-17
 
 _Phát hành 17/11/2026 từ main @ d21a55f9 (lượt Release 43987526826, người dùng chạy). Gói lớp 11 (#255): mọi bài lý thuyết của Vật lí 11 (20/20), Hóa học 11 (19/19) và Sinh học 11 (20/20) có chủ đề, qua 12 đợt 2a–2l (PR #277, #278, #279, #283–#291, mỗi PR CI 8/8 xanh). Chỉ phần web lên 0.10.0; phần lõi vẫn 0.8.2 (không có thay đổi Rust), nên web-update.json ghi minNative 0.8.2 và ứng dụng 0.8.2 cài từ GitHub nhận qua cập nhật trong app; bộ cài trong bản phát hành vẫn mang số 0.8.2. Không bắt buộc cập nhật (minRequired để trống). Bản Store nhận ở lần nộp có lõi mới._
@@ -747,6 +768,7 @@ Bản đầu tiên của STEM Sim Lab (tên cũ của SimLab): mô phỏng Vật
 
 - Bản này không có bộ cài phát hành công khai; chỉ có bản dựng thử trên GitHub Actions.
 
+[Unreleased]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/293
 [0.10.0]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.10.0
 [0.9.1]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.9.1
 [0.9.0]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.9.0

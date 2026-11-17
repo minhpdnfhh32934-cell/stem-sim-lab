@@ -53,6 +53,14 @@ const TOPICS = [
   'Bằng chứng tiến hóa và lịch sử sự sống',
   'Quan niệm của Darwin về chọn lọc tự nhiên và hình thành loài',
   'Học thuyết tiến hóa tổng hợp hiện đại',
+  'Môi trường và các nhân tố sinh thái',
+  'Quần xã sinh vật',
+  'Hệ sinh thái',
+  'Trao đổi vật chất và chuyển hóa năng lượng trong hệ sinh thái',
+  'Diễn thế sinh thái',
+  'Sinh quyển, khu sinh học và chu trình sinh – địa – hóa',
+  'Sinh thái học phục hồi và bảo tồn đa dạng sinh vật',
+  'Phát triển bền vững',
 ];
 
 async function openBiology(page: Page) {

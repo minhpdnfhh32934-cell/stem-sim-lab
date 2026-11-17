@@ -3161,6 +3161,102 @@
    "review_status": "pending"
   },
   {
+   "topic": "ecologicalFactors",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 6. Môi trường và sinh thái học quần thể",
+   "lessons": [
+    23
+   ],
+   "reason": "Tên Bài 23: môi trường và các nhân tố sinh thái: quy luật giới hạn sinh thái với ví dụ nhiệt độ của sách.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "community",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 7. Sinh thái học quần xã",
+   "lessons": [
+    26
+   ],
+   "reason": "Tên Bài 26: quần xã sinh vật (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "ecosystem",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 7. Sinh thái học quần xã",
+   "lessons": [
+    28
+   ],
+   "reason": "Tên Bài 28: hệ sinh thái (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "ecosystemEnergy",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 7. Sinh thái học quần xã",
+   "lessons": [
+    29
+   ],
+   "reason": "Tên Bài 29: trao đổi vật chất và chuyển hoá năng lượng trong hệ sinh thái: tháp sinh thái Hình 29.6, hiệu suất sinh thái.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "succession",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 7. Sinh thái học quần xã",
+   "lessons": [
+    30
+   ],
+   "reason": "Tên Bài 30: diễn thế sinh thái (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "biosphere",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 7. Sinh thái học quần xã",
+   "lessons": [
+    31
+   ],
+   "reason": "Tên Bài 31: sinh quyển, khu sinh học và chu trình sinh – địa – hoá (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "conservation",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 8. Sinh thái học phục hồi, bảo tồn và phát triển bền vững",
+   "lessons": [
+    33
+   ],
+   "reason": "Tên Bài 33: sinh thái học phục hồi và bảo tồn đa dạng sinh vật (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "sustainability",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 8. Sinh thái học phục hồi, bảo tồn và phát triển bền vững",
+   "lessons": [
+    34
+   ],
+   "reason": "Tên Bài 34: phát triển bền vững (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
    "topic": "heatAndPhase",
    "subject": "physics",
    "grade": 12,
