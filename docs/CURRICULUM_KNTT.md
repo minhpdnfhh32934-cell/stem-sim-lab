@@ -39,8 +39,8 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Hoá học 12 | 30 | 22 | 22 |
 | Sinh học 10 | 26 | 17 | 17 |
 | Sinh học 11 | 29 | 20 | 20 |
-| Sinh học 12 | 35 | 28 | 10 |
-| **Cộng** | **253** | **189** | **171** |
+| Sinh học 12 | 35 | 28 | 13 |
+| **Cộng** | **253** | **189** | **174** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -284,9 +284,9 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 7 | Cấu trúc và chức năng của nhiễm sắc thể | 36 | Lí thuyết | Từ tế bào đến DNA | Tên Bài 7: cấu trúc và chức năng của nhiễm sắc thể (cấp NST kép, sợi nhiễm sắc, nucleosome, DNA). | pending |
 | Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 8 | Học thuyết di truyền Mendel | 40 | Lí thuyết | Di truyền Mendel | Tên Bài 8–9: học thuyết di truyền Mendel và mở rộng học thuyết Mendel (cảnh chỉ mở rộng tới trội không hoàn toàn). | pending |
 | Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 9 | Mở rộng học thuyết Mendel | 46 | Lí thuyết | Di truyền Mendel | Tên Bài 8–9: học thuyết di truyền Mendel và mở rộng học thuyết Mendel (cảnh chỉ mở rộng tới trội không hoàn toàn). | pending |
-| Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 10 | Di truyền giới tính và di truyền liên kết với giới tính | 50 | Lí thuyết | chưa có |  | pending |
-| Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 11 | Liên kết gene và hoán vị gene | 54 | Lí thuyết | chưa có |  | pending |
-| Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 12 | Đột biến nhiễm sắc thể | 60 | Lí thuyết | chưa có |  | pending |
+| Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 10 | Di truyền giới tính và di truyền liên kết với giới tính | 50 | Lí thuyết | Di truyền giới tính và liên kết với giới tính | Tên Bài 10: di truyền giới tính và di truyền liên kết với giới tính: XX – XY, phép lai thuận nghịch của Morgan (Hình 10.2). | pending |
+| Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 11 | Liên kết gene và hoán vị gene | 54 | Lí thuyết | Liên kết gene và hoán vị gene | Tên Bài 11: liên kết gene và hoán vị gene: lai phân tích của Morgan, tần số hoán vị gene, câu 2 tr. 59. | pending |
+| Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 12 | Đột biến nhiễm sắc thể | 60 | Lí thuyết | Đột biến nhiễm sắc thể | Tên Bài 12: đột biến nhiễm sắc thể: cấu trúc (Hình 12.1), lệch bội, đa bội, hội chứng Down theo tuổi mẹ. | pending |
 | Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 13 | Di truyền học người và di truyền y học | 68 | Lí thuyết | chưa có |  | pending |
 | Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 14 | Thực hành: Quan sát một số dạng đột biến nhiễm sắc thể | 75 | Thực hành | chưa có |  | pending |
 | Sinh học 12 | Chương 3. Mở rộng học thuyết di truyền nhiễm sắc thể | 15 | Di truyền gene ngoài nhân | 78 | Lí thuyết | chưa có |  | pending |
