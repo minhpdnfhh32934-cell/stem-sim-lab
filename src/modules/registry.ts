@@ -62,6 +62,7 @@ const MODULES: Record<string, () => Promise<ModuleView>> = {
   fourierSeries: () => import('@/physics/fourier/modules').then((m) => m.fourierSeries),
   emWave: () => import('@/physics/emwave/modules').then((m) => m.emWave),
   heatAndPhase: () => import('@/physics/thermal/modules').then((m) => m.heatAndPhase),
+  idealGas: () => import('@/physics/gas/modules').then((m) => m.idealGas),
   // Descriptive textbook lessons (#255): each runs its guided Science Studio lesson.
   ...Object.fromEntries(
     GUIDED_TOPICS.map((id) => [

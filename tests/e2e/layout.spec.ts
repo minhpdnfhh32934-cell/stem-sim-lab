@@ -20,6 +20,8 @@ const OWN_VIEW = [
   'Họa âm và chuỗi Fourier',
   'Cấu trúc của chất và sự chuyển thể',
   'Nội năng, nhiệt độ và nhiệt lượng',
+  'Mô hình động học phân tử chất khí',
+  'Các định luật của khí lí tưởng',
 ];
 
 interface Rect {

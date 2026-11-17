@@ -62,6 +62,7 @@ export const CATALOG: Record<Subject, ChapterEntry[]> = {
     chapter('electricField', ['electricField', 'electricPotential', 'capacitor']),
     chapter('dcCircuit', ['electricCurrent', 'dcCircuit']),
     chapter('thermalPhysics', ['matterStructure', 'heatAndPhase']),
+    chapter('idealGasChapter', ['gasKinetic', 'idealGas']),
     chapter('gravitation', ['keplerOrbit']),
   ],
   chemistry: [

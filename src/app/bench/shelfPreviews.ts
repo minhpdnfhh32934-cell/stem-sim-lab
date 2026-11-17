@@ -11,6 +11,7 @@ export const SHELF_PREVIEWS: ReadonlySet<string> = new Set([
   'fourierSeries',
   'emWave',
   'heatAndPhase',
+  'idealGas',
   'aqueousEquilibrium',
   'nitrogenSulfur',
   'organicBasics',
@@ -89,6 +90,7 @@ export const SHELF_PREVIEWS: ReadonlySet<string> = new Set([
   'animalReproduction',
   'bodyIntegration',
   'matterStructure',
+  'gasKinetic',
 ]);
 
 /** The picture of `topic` in `theme`, or null when it has none. */

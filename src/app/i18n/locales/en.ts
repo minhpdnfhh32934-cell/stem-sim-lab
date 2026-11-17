@@ -109,6 +109,7 @@ const en: Messages = {
     bonds: 'Chemical bonds',
     dcCircuit: 'Current and circuits',
     thermalPhysics: 'Thermal physics',
+    idealGasChapter: 'Ideal gas',
     gravitation: 'Gravitation (extension)',
   },
   topics: {
@@ -223,6 +224,8 @@ const en: Messages = {
     keplerOrbit: 'Kepler’s second law',
     matterStructure: 'Structure of matter and changes of state',
     heatAndPhase: 'Internal energy, temperature and heat',
+    gasKinetic: 'Kinetic model of gases',
+    idealGas: 'Ideal gas laws',
     fourierSeries: 'Harmonics and Fourier series',
   },
   stage: {
