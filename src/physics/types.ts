@@ -2,6 +2,7 @@ import type { LocalizedTex, LocalizedText } from '@/core/data/dataset';
 import type { Dimension } from '@/core/units';
 import type { Locale } from '@/app/i18n/types';
 import type { ScienceCardData } from '@/science-card/types';
+import type { ComponentType } from 'react';
 import type { Camera } from './render/camera';
 
 /** All scene parameters are numbers in SI (choices/toggles are encoded as numbers). */
@@ -213,4 +214,11 @@ export interface PhysicsScene {
    * Applied only when the learner presses one, never automatically.
    */
   fixes?: (p: Params) => { label: LocalizedText; params: Params }[];
+  /**
+   * A 3D view of the same scene (#302): a `lazy()` component made once in the scene's file, so it
+   * loads only when the learner picks 3D. It reads the same parameters (`useSimStore`) and engine
+   * state (`sim.renderState`) as the canvas. The scene's id must be listed in the 3D kit's
+   * lessons (`OPT_IN_3D`, `src/biology/view3d/prefs.ts`).
+   */
+  view3d?: ComponentType;
 }

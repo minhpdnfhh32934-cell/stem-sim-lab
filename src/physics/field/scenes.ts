@@ -1,3 +1,4 @@
+import { lazy } from 'react';
 import { formatNumber } from '@/app/i18n';
 import type { Locale } from '@/app/i18n/types';
 import { C } from '@/core/constants';
@@ -387,6 +388,7 @@ const stated = (s: ParamSource | undefined) => s === 'problem' || s === 'user';
 export const electricField: PhysicsScene = {
   id: 'electricField',
   engineId: 'phys.field',
+  view3d: lazy(() => import('./Field3DView')),
   title: L('Điện trường của điện tích điểm', 'Electric field of point charges'),
   // `when` keeps only the ones the chosen mode and number of charges use. q₁ sits at the origin
   // and q₂ on the x-axis (any two points can be placed so). One charge: M on the x-axis (x_M only).

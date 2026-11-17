@@ -82,6 +82,9 @@ export const energy = (q: Plates, y: number) => q.q * potential(q, y);
 export const work = (q: Plates, from: Pt, to: Pt) =>
   q.q * (potential(q, from.y) - potential(q, to.y));
 
+/** Right end of the plates as drawn: past M, N and P by 0,35·d (2D and 3D pictures). */
+export const rightEdge = (q: Plates) => Math.max(q.M.x, q.N.x, q.P.x) + 0.35 * q.d;
+
 /** The points the charge goes through. */
 export const pathPoints = (q: Plates): Pt[] =>
   q.path === PATH.broken ? [q.M, q.P, q.N] : [q.M, q.N];

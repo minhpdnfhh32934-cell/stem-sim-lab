@@ -24,10 +24,22 @@ export type Bio3DLesson =
   | 'virusStructure'
   | 'magneticForce'
   | 'induction'
-  | 'emWave';
+  | 'emWave'
+  | 'electricField'
+  | 'electricPotential'
+  | 'electricCurrent'
+  | 'capacitor';
 
 /** Lessons that open in 2D until the learner picks 3D (physics: the 2D picture has the chart). */
-export const OPT_IN_3D: readonly Bio3DLesson[] = ['magneticForce', 'induction', 'emWave'];
+export const OPT_IN_3D: readonly Bio3DLesson[] = [
+  'magneticForce',
+  'induction',
+  'emWave',
+  'electricField',
+  'electricPotential',
+  'electricCurrent',
+  'capacitor',
+];
 
 export const BIO3D_LESSONS: readonly Bio3DLesson[] = [
   'hardyWeinberg',

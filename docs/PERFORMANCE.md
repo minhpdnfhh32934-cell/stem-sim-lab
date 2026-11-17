@@ -182,6 +182,14 @@ Sinh học. Đo bằng SwiftShader 1366×768 (`info()` của móc kiểm thử, 
 tam giác. Lực từ và cảm ứng chỉ vẽ khi có thay đổi (2 khung sau khi mở); sóng điện từ chạy minh họa
 và đứng yên khi người dùng bật giảm chuyển động. Mức Thấp hiện hình 2D cho cả ba bài.
 
+**Vật lí 3D, đợt 6b (2026-11-17, #302).** Điện trường, điện thế, tụ điện, dòng điện (bài dạng
+`PhysicsScene`, hình 3D thay canvas). SwiftShader 1366×768, sau 4 s, chưa bấm Chạy: mức Trung bình
+8 / 23 / 8 / 9 lệnh vẽ, 2 754 / 1 534 / 74 / 15 058 tam giác; mức Cao 8 / 23 / 8 / 9 lệnh vẽ,
+4 994 / 3 150 / 74 / 35 978 tam giác. Đường sức gộp trong hai lệnh vẽ (nét liền, nét đứt), mũi tên
+đường sức và hạt dùng instancing; tụ điện chưa tích điện nên chưa có chấm (hai lệnh vẽ instanced
+khi có). Khi chạy, cảnh chỉ di chuyển vật (không dựng lại, không cấp phát mỗi khung hình). Mức Thấp
+hiện hình 2D.
+
 **Watchdog bộ nhớ** (`src/perf/memory.ts`): 10 giây đọc heap JS một lần (WebView2/Chromium). Khi vượt
 80 % ngân sách 300 MB (hoặc 80 % giới hạn heap), app giải phóng bộ nhớ đệm đã đăng ký (ví dụ: bản
 ghi đồ thị vật lý giữ lại một nửa số mẫu — chỉ giảm độ phân giải đồ thị, không ảnh hưởng mô phỏng)

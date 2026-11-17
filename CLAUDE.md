@@ -848,13 +848,21 @@ Progress log: `docs/PROGRESS.md`.
   "không theo tỉ lệ" chip, then the next level; reduced motion steps at once. 3D/2D choice:
   `stemsim.bio3d` lesson `cellToDna`. Budgets in `scene.test.ts`. E2E `tests/e2e/cellzoom-bio3d.spec.ts`
   (3D project). Texts: DATA_REVIEW `DNAZ-*`.
-- **Physics 3D (#302, round 6a):** physics lessons reuse the biology 3D kit (`Bio3DView`,
-  `SceneKit`, `Bio3DSwitch`; lesson ids `magneticForce`, `induction`, `emWave` in
-  `view3d/prefs.ts`). They are `OPT_IN_3D`: they open in 2D (the picture with the chart) and
-  remember a switch to 3D (`stemsim.bio3d` `on`). Shared pieces `src/physics/view3d/arrow.ts`
-  (arrows, uniform field, lines); each lesson has a pure `xxx3d.ts` (tested against its model),
-  `scene3d.ts` and a lazy `Xxx3DView.tsx`. E2E `tests/e2e/em-phys3d.spec.ts` (`phys3d` in
-  `HEAVY_3D`). Wording: DATA_REVIEW PHY3D-*.
+- **Physics 3D (#302):** physics lessons reuse the biology 3D kit (`Bio3DView`, `SceneKit`,
+  `Bio3DSwitch`); their ids are in `view3d/prefs.ts` `OPT_IN_3D`: they open in 2D (the picture
+  with the chart) and remember a switch to 3D (`stemsim.bio3d` `on`). Shared pieces
+  `src/physics/view3d/arrow.ts` (arrows, uniform field, lines); each lesson has a pure `xxx3d.ts`
+  (tested against its model), `scene3d.ts` and a lazy `Xxx3DView.tsx`.
+  - Modules (6a: `magneticForce`, `induction`, `emWave`): the Stage shows the 3D view in place of
+    its canvas, reading the module's store.
+  - `PhysicsScene`s (6b: `electricField`, `electricPotential`, `capacitor`, `electricCurrent`):
+    `view3d` is a `lazy()` component made once in the scene's file. `src/app/sim/SceneStage.tsx`
+    shows it instead of `StageCanvas`, keeps the engine running (`sim.tick` every frame) and puts
+    the 3D / 2D switch under the HUD; the canvas tool column is hidden in 3D. The view reads
+    `useSimStore` params and `sim.renderState` (moving parts through `setTime` / `tick`, never
+    rebuilt; nothing allocated per frame).
+  - E2E `tests/e2e/em-phys3d.spec.ts`, `electric-phys3d.spec.ts` (`phys3d` in `HEAVY_3D`).
+    Wording: DATA_REVIEW PHY3D-*.
 - Projects (Phase 6): `src/app/project/` — `snapshot.ts` (.stemsim schema; inputs only), `undo.ts`,
   `history.ts` (Rust SQLite `src-tauri/src/history.rs`), `actions.ts` (save/open/PNG/CSV via Rust
   dialogs in `files.rs`), `FileMenu`, `SourcesDialog` (lazy), `Tour` (first run, `stemsim.tourDone`).
