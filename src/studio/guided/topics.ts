@@ -50,4 +50,6 @@ export const GUIDED_TOPICS = [
   'metalExtraction',
   'alloys',
   'corrosion',
+  'dnaReplication',
+  'geneTechnology',
 ] as const;

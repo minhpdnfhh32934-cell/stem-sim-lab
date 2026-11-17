@@ -1,0 +1,104 @@
+/* The lac operon (SH12 Bài 3, #255 round 5a). */
+.operon {
+  padding-top: 72px;
+  display: grid;
+  align-content: start;
+  gap: var(--space-3);
+}
+.operon__env,
+.operon__verdict {
+  margin: 0;
+  font-size: var(--text-content);
+  font-weight: 600;
+}
+.operon__verdict--on {
+  color: var(--chart-1);
+}
+.operon__verdict--off {
+  color: var(--chart-4);
+}
+.operon__reason,
+.operon__free {
+  margin: 0;
+  font-size: var(--text-content);
+}
+.operon__free {
+  color: var(--text-muted);
+}
+.operon__dna {
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+  padding: var(--space-6) 0 var(--space-6);
+  overflow-x: auto;
+}
+.operon__gene {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-width: 72px;
+  min-height: var(--target);
+  padding: 0 var(--space-3);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--accent-soft);
+  font-family: var(--font-mono, monospace);
+  font-size: var(--text-content);
+}
+.operon__gene--reg {
+  border-style: dashed;
+}
+.operon__gene--z {
+  min-width: 96px;
+}
+.operon__gene--on {
+  border-color: var(--chart-1);
+  font-weight: 600;
+}
+.operon__gene--broken {
+  border-color: var(--chart-4);
+  text-decoration: line-through;
+}
+.operon__gap {
+  flex: 0 0 var(--space-6);
+  align-self: center;
+  border-top: 2px dashed var(--border-strong);
+}
+.operon__repressor,
+.operon__pol {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: var(--text-xs);
+  white-space: nowrap;
+}
+.operon__repressor {
+  top: -28px;
+  background: var(--chart-4);
+  color: var(--bg-panel);
+}
+.operon__pol {
+  bottom: -28px;
+  background: var(--chart-2);
+  color: var(--bg-panel);
+}
+.operon__pol--moving {
+  left: 120%;
+}
+.operon__enzymes {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding-left: var(--space-4);
+  font-size: var(--text-content);
+}
+.operon-panel__field {
+  display: grid;
+  gap: var(--space-1);
+}
+.operon-panel__label {
+  font-weight: 600;
+}

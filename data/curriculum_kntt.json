@@ -3016,6 +3016,42 @@
    "review_status": "pending"
   },
   {
+   "topic": "dnaReplication",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 1. Di truyền phân tử",
+   "lessons": [
+    1
+   ],
+   "reason": "Tên Bài 1: DNA và cơ chế tái bản DNA (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "lacOperon",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 1. Di truyền phân tử",
+   "lessons": [
+    3
+   ],
+   "reason": "Tên Bài 3: điều hoà biểu hiện gene: operon lac, thí nghiệm của Monod và Jacob, câu 2 tr. 21.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "geneTechnology",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 1. Di truyền phân tử",
+   "lessons": [
+    5
+   ],
+   "reason": "Tên Bài 5: công nghệ gene (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
    "topic": "heatAndPhase",
    "subject": "physics",
    "grade": 12,

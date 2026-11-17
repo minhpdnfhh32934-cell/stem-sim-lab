@@ -40,6 +40,10 @@ const TOPICS = [
   'Đa dạng và phương pháp nghiên cứu vi sinh vật',
   'Vai trò và ứng dụng của vi sinh vật',
   'Bệnh do virus và ứng dụng virus',
+  // SH12 (#255 round 5a): the lac operon module and two guided lessons.
+  'DNA và cơ chế tái bản DNA',
+  'Điều hòa biểu hiện gene: operon lac',
+  'Công nghệ gene',
 ];
 
 async function openBiology(page: Page) {

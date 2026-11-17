@@ -268,6 +268,9 @@ const vi = {
     transitionMetals: 'Đại cương về kim loại chuyển tiếp dãy thứ nhất',
     complexStructure: 'Sơ lược về phức chất',
     complexReactions: 'Một số tính chất và ứng dụng của phức chất',
+    dnaReplication: 'DNA và cơ chế tái bản DNA',
+    lacOperon: 'Điều hòa biểu hiện gene: operon lac',
+    geneTechnology: 'Công nghệ gene',
     fourierSeries: 'Họa âm và chuỗi Fourier',
   },
   stage: {

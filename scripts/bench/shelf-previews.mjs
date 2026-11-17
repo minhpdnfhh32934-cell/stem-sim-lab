@@ -45,6 +45,7 @@ const TOPICS = [
   'transitionMetals',
   'complexStructure',
   'complexReactions',
+  'lacOperon',
   'aqueousEquilibrium',
   'nitrogenSulfur',
   'organicBasics',
@@ -139,6 +140,8 @@ const TOPICS = [
   'metalExtraction',
   'alloys',
   'corrosion',
+  'dnaReplication',
+  'geneTechnology',
 ];
 const THEMES = ['light', 'dark'];
 /** 480 px wide: twice a card's 242 px preview, sharp on a 2× screen, about 10–20 KB each. */
