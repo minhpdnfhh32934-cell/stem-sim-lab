@@ -1,3 +1,4 @@
+import { lazy } from 'react';
 import type { Locale } from '@/app/i18n/types';
 import type { LocalizedText } from '@/core/data/dataset';
 import { DIM, fromSI } from '@/core/units';
@@ -354,6 +355,7 @@ const capParam = (i: number): ParamDef => ({
 export const capacitor: PhysicsScene = {
   id: 'capacitor',
   engineId: 'phys.capacitor',
+  view3d: lazy(() => import('./Capacitor3DView')),
   title: L('Tụ điện', 'Capacitors'),
   required: ['C1', 'U'],
   params: [
