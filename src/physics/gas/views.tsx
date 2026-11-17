@@ -1,9 +1,11 @@
-import { useMemo } from 'react';
+import { lazy, Suspense, useMemo } from 'react';
 import { formatNumber, type Locale } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import type { LocalizedText } from '@/core/data/dataset';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { usePublishCard } from '@/modules/usePublishCard';
+import { Bio3DToolbar } from '@/biology/view3d/switch';
+import { useShow3d } from '@/biology/view3d/support';
 import { useCanvas } from '@/ui/canvas/useCanvas';
 import { sci } from '@/ui/sciNumber';
 import { axes, dot, twoFrames } from '../common/chart2d';
@@ -79,6 +81,8 @@ const EXAMPLE_NAME: Record<Loadable, LocalizedText> = {
   pump: L('Ví dụ tr. 45', 'Example p. 45'),
 };
 const QTY_NAME: Record<Quantity, string> = { p: 'p₂', V: 'V₂', T: 'T₂' };
+
+const Gas3DView = lazy(() => import('./Gas3DView').then((m) => ({ default: m.Gas3DView })));
 
 function useFmt() {
   const locale = useSettingsStore((s) => s.locale);
@@ -439,18 +443,33 @@ export function GasStage() {
   const process = useGasStore((s) => s.process);
   const card = useMemo(() => gasCard(), []);
   usePublishCard(card);
+  const { show3d } = useShow3d('idealGas');
+  const chips = (
+    <>
+      <span className="chem-chip">
+        <strong className="stage__hud-title">{Lz(TITLE)}</strong>
+      </span>
+      <span className="chem-chip">{Lz(TAB_NAME[tab])}</span>
+      {tab === 'process' && <span className="chem-chip">{Lz(PROCESS_LAW[process])}</span>}
+    </>
+  );
+  // The two states in space (3D on request); the data tables and the molecules stay 2D.
+  if (tab === 'process' && show3d)
+    return (
+      <Suspense fallback={<div className="chem-view gas" />}>
+        <Gas3DView top={chips} />
+      </Suspense>
+    );
   return (
     <div className="chem-view gas">
-      <div className="chem-overlay">
-        <span className="chem-chip">
-          <strong className="stage__hud-title">{Lz(TITLE)}</strong>
-        </span>
-        <span className="chem-chip">{Lz(TAB_NAME[tab])}</span>
-        {tab === 'process' && <span className="chem-chip">{Lz(PROCESS_LAW[process])}</span>}
-      </div>
       {tab === 'process' && <ProcessView />}
       {tab === 'data' && <DataView />}
       {tab === 'molecules' && <MoleculesView />}
+      {/* After the canvas, so the 3D / 2D switch is above it and can be clicked. */}
+      <div className="chem-overlay">
+        {chips}
+        {tab === 'process' && <Bio3DToolbar lesson="idealGas" />}
+      </div>
     </div>
   );
 }

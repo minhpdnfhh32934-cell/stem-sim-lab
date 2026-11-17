@@ -1,8 +1,9 @@
+import { jitter } from '../common/jitter';
 import { describe, expect, it } from 'vitest';
 import { expectAllFreed, testKit } from '@/biology/view3d/testing';
 import { CurrentEngine, WR } from './engine';
 import { ELECTRONS, electronX, electronYZ, wireLength } from './current3d';
-import { WIRE_DEFAULTS, driftSpeed, jitter, wireInput } from './model';
+import { WIRE_DEFAULTS, driftSpeed, wireInput } from './model';
 import { electricCurrent } from './scenes';
 import { buildCurrentScene } from './scene3d';
 

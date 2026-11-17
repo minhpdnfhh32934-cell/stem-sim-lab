@@ -197,6 +197,12 @@ sóng dừng lần đầu 51 914 tam giác, 84 khung, vì vùng mờ dùng 965 �
 mỗi bó và 12 mặt quanh trục: 22 794 tam giác, 172 khung (Cao 52 106 tam giác, 67 → 118 khung). Mặt
 nước, phần tử và dây cập nhật trong cùng bộ đệm mỗi khung, không cấp phát. Mức Thấp hiện hình 2D.
 
+**Vật lí 3D, đợt 6d (2026-11-17, #302).** Khí lí tưởng (hai xi lanh, 2 × 90 hạt chuyển động) và
+nhiệt lượng (216 hạt); SwiftShader 1366×768, khung vẽ trong 6 s: khí lí tưởng Trung bình 13 lệnh
+vẽ, 14 722 tam giác, 298 khung (Cao 35 042 tam giác, 205 khung); nhiệt lượng 3 lệnh vẽ, 17 294 tam
+giác, 228 khung (Cao 41 486 tam giác, 167 khung). Hạt cập nhật trong cùng bộ đệm mỗi khung, không
+cấp phát; đứng yên khi người dùng bật giảm chuyển động. Mức Thấp hiện hình 2D.
+
 **Watchdog bộ nhớ** (`src/perf/memory.ts`): 10 giây đọc heap JS một lần (WebView2/Chromium). Khi vượt
 80 % ngân sách 300 MB (hoặc 80 % giới hạn heap), app giải phóng bộ nhớ đệm đã đăng ký (ví dụ: bản
 ghi đồ thị vật lý giữ lại một nửa số mẫu — chỉ giảm độ phân giải đồ thị, không ảnh hưởng mô phỏng)
