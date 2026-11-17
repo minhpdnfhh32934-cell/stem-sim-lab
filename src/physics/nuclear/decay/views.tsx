@@ -7,7 +7,7 @@ import { usePublishCard } from '@/modules/usePublishCard';
 import { useCanvas } from '@/ui/canvas/useCanvas';
 import { sci } from '@/ui/sciNumber';
 import { axes, twoFrames } from '../../common/chart2d';
-import { ActionRow, ChoiceGroup, LabeledNumber } from '../../common/ModuleControls';
+import { ActionRow, ChoiceGroup, LabeledNumber } from '@/ui/ModuleControls';
 import { COUNTS_23_1, DOSE, EXPOSURE, ISOTOPES, isotope } from '../data';
 import {
   activity,

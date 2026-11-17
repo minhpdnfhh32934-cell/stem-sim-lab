@@ -7,7 +7,7 @@ import { usePublishCard } from '@/modules/usePublishCard';
 import { useCanvas } from '@/ui/canvas/useCanvas';
 import { sci } from '@/ui/sciNumber';
 import { niceStep } from '../common/chart2d';
-import { LabeledNumber } from '../common/ModuleControls';
+import { LabeledNumber } from '@/ui/ModuleControls';
 import { L, TITLE, thermalCard } from './card';
 import {
   PRESETS,

@@ -34,6 +34,10 @@ import { vl12b14Field } from './vl12b14Field';
 import { vl12b18Applications } from './vl12b18Applications';
 import { vl12b19EmField } from './vl12b19EmField';
 import { vl12b24Industry } from './vl12b24Industry';
+import { hh12b02Soap } from './hh12b02Soap';
+import { hh12b04Glucose } from './hh12b04Glucose';
+import { hh12b05Disaccharides } from './hh12b05Disaccharides';
+import { hh12b06Polysaccharides } from './hh12b06Polysaccharides';
 
 /**
  * The descriptive textbook lessons (user decision 14/11/2026, #255). Kept out of
@@ -76,6 +80,10 @@ export const GUIDED_LESSONS: readonly unknown[] = [
   vl12b18Applications,
   vl12b19EmField,
   vl12b24Industry,
+  hh12b02Soap,
+  hh12b04Glucose,
+  hh12b05Disaccharides,
+  hh12b06Polysaccharides,
 ];
 
 let cache: StudioScenario[] | null = null;

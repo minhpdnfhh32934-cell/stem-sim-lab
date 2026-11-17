@@ -7,7 +7,7 @@ import { usePublishCard } from '@/modules/usePublishCard';
 import { useCanvas } from '@/ui/canvas/useCanvas';
 import { sci } from '@/ui/sciNumber';
 import { axes, dot, twoFrames } from '../common/chart2d';
-import { ActionRow, ChoiceGroup, LabeledNumber } from '../common/ModuleControls';
+import { ActionRow, ChoiceGroup, LabeledNumber } from '@/ui/ModuleControls';
 import { L, TITLE, magneticCard } from './card';
 import { COIL, TABLE_15_1, force, forceDirection, measure, type Out } from './model';
 import {

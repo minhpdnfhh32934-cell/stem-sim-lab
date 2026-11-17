@@ -36,11 +36,11 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Vật lí 12 | 25 | 21 | 21 |
 | Hoá học 10 | 23 | 16 | 16 |
 | Hoá học 11 | 25 | 19 | 19 |
-| Hoá học 12 | 30 | 22 | 1 |
+| Hoá học 12 | 30 | 22 | 6 |
 | Sinh học 10 | 26 | 17 | 17 |
 | Sinh học 11 | 29 | 20 | 20 |
 | Sinh học 12 | 35 | 28 | 7 |
-| **Cộng** | **253** | **189** | **147** |
+| **Cộng** | **253** | **189** | **152** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -190,12 +190,12 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Hoá học 11 | Chương 6. Hợp chất carbonyl – carboxylic acid | 23 | Hợp chất carbonyl | 136 | Lí thuyết | Hợp chất carbonyl, carboxylic acid | Tên Bài 23: hợp chất carbonyl; tên Bài 24: carboxylic acid (Bảng 23.1, 24.2, 24.3; so sánh nhiệt độ sôi alkane, aldehyde, alcohol, acid; độ phân li tính từ Ka; phản ứng trong sách). | pending |
 | Hoá học 11 | Chương 6. Hợp chất carbonyl – carboxylic acid | 24 | Carboxylic acid | 145 | Lí thuyết | Hợp chất carbonyl, carboxylic acid | Tên Bài 23: hợp chất carbonyl; tên Bài 24: carboxylic acid (Bảng 23.1, 24.2, 24.3; so sánh nhiệt độ sôi alkane, aldehyde, alcohol, acid; độ phân li tính từ Ka; phản ứng trong sách). | pending |
 | Hoá học 11 | Chương 6. Hợp chất carbonyl – carboxylic acid | 25 | Ôn tập chương 6 | 153 | Ôn tập | chưa có |  | pending |
-| Hoá học 12 | Chương 1. Ester – Lipid | 1 | Ester – Lipid | 6 | Lí thuyết | chưa có |  | pending |
-| Hoá học 12 | Chương 1. Ester – Lipid | 2 | Xà phòng và chất giặt rửa | 14 | Lí thuyết | chưa có |  | pending |
+| Hoá học 12 | Chương 1. Ester – Lipid | 1 | Ester – Lipid | 6 | Lí thuyết | Ester và chất béo | Tên Bài 1: ester – lipid: tên gọi, đồng phân, thủy phân, ester hóa, chất béo (Hình 1.2), xà phòng hóa, hydrogen hóa. | pending |
+| Hoá học 12 | Chương 1. Ester – Lipid | 2 | Xà phòng và chất giặt rửa | 14 | Lí thuyết | Xà phòng và chất giặt rửa | Tên Bài 2: xà phòng và chất giặt rửa (bài học có hướng dẫn). | pending |
 | Hoá học 12 | Chương 1. Ester – Lipid | 3 | Ôn tập chương 1 | 18 | Ôn tập | chưa có |  | pending |
-| Hoá học 12 | Chương 2. Carbohydrate | 4 | Giới thiệu về carbohydrate. Glucose và fructose | 20 | Lí thuyết | chưa có |  | pending |
-| Hoá học 12 | Chương 2. Carbohydrate | 5 | Saccharose và maltose | 25 | Lí thuyết | chưa có |  | pending |
-| Hoá học 12 | Chương 2. Carbohydrate | 6 | Tinh bột và cellulose | 28 | Lí thuyết | chưa có |  | pending |
+| Hoá học 12 | Chương 2. Carbohydrate | 4 | Giới thiệu về carbohydrate. Glucose và fructose | 20 | Lí thuyết | Carbohydrate. Glucose và fructose | Tên Bài 4: carbohydrate, glucose và fructose (bài học có hướng dẫn). | pending |
+| Hoá học 12 | Chương 2. Carbohydrate | 5 | Saccharose và maltose | 25 | Lí thuyết | Saccharose và maltose | Tên Bài 5: saccharose và maltose (bài học có hướng dẫn). | pending |
+| Hoá học 12 | Chương 2. Carbohydrate | 6 | Tinh bột và cellulose | 28 | Lí thuyết | Tinh bột và cellulose | Tên Bài 6: tinh bột và cellulose (bài học có hướng dẫn). | pending |
 | Hoá học 12 | Chương 2. Carbohydrate | 7 | Ôn tập chương 2 | 33 | Ôn tập | chưa có |  | pending |
 | Hoá học 12 | Chương 3. Hợp chất chứa nitrogen | 8 | Amine | 35 | Lí thuyết | chưa có |  | pending |
 | Hoá học 12 | Chương 3. Hợp chất chứa nitrogen | 9 | Amino acid và peptide | 41 | Lí thuyết | chưa có |  | pending |
