@@ -47,4 +47,7 @@ export const GUIDED_TOPICS = [
   'polymerBasics',
   'polymerMaterials',
   'electrolysis',
+  'metalExtraction',
+  'alloys',
+  'corrosion',
 ] as const;
