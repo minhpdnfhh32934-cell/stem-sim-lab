@@ -268,6 +268,9 @@ const en: Messages = {
     dnaReplication: 'DNA and its replication',
     lacOperon: 'Gene regulation: the lac operon',
     geneTechnology: 'Gene technology',
+    sexLinkage: 'Sex determination and sex linkage',
+    geneLinkage: 'Linkage and crossing over',
+    chromosomeMutation: 'Chromosome mutations',
     fourierSeries: 'Harmonics and Fourier series',
   },
   stage: {

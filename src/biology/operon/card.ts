@@ -6,6 +6,7 @@ export const SGK_SH12_BAI3: Source = {
   id: 'sgk-sh12-kntt-bai3',
   citation:
     'SGK Sinh học 12, bộ Kết nối tri thức với cuộc sống (NXB Giáo dục Việt Nam), Bài 3 “Điều hoà biểu hiện gene”, tr. 18–22 (đọc trên taphuan.nxbgd.vn ngày 17/11/2026)',
+  url: 'https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-sinh-hoc-12.4701665546',
 };
 
 export const OPERON_TITLE = L(
