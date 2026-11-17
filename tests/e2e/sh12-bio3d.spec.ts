@@ -79,3 +79,23 @@ test('Di truyền giới tính in 3D: Morgan’s cross, four cells, sons get the
   await page.screenshot({ path: testInfo.outputPath('sexlinked-3d.png') });
   expect(errors).toEqual([]);
 });
+
+test('Liên kết gene in 3D: the bivalent crosses over; the columns are 41,5 : 41,5 : 8,5 : 8,5 %', async ({
+  page,
+}, testInfo) => {
+  test.setTimeout(120_000);
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(String(e)));
+  await openTopic(page, 'Sinh học', 'Liên kết gene và hoán vị gene');
+  await page.getByRole('radio', { name: '3D' }).first().click();
+  const view = page.locator('.bio3d[data-lesson="geneLinkage"]');
+  await expect(view.locator('canvas')).toBeVisible({ timeout: 30_000 });
+  type S = { crossover: boolean; heights: number[] };
+  await expect.poll(async () => (await state<S>(page, 'geneLinkage'))?.crossover).toBe(true);
+  // Opens on the F1 female, 34 % of cells crossing over (Hình 11.2–11.3).
+  const h = (await state<S>(page, 'geneLinkage'))?.heights ?? [];
+  expect(h.map((x) => Math.round(x * 100) / 1000)).toEqual([0.415, 0.415, 0.085, 0.085]);
+  await expect(view.getByText('41,5 %').first()).toBeVisible();
+  await page.screenshot({ path: testInfo.outputPath('linkage-3d.png') });
+  expect(errors).toEqual([]);
+});
