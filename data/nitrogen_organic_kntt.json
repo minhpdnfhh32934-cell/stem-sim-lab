@@ -1,0 +1,141 @@
+{
+  "dataset": "nitrogen_organic_kntt",
+  "version": 1,
+  "accessed": "2026-11-17",
+  "review_status": "pending",
+  "source": {
+    "id": "sgk-hh12-c3",
+    "citation": "SGK Hóa học 12 Kết nối tri thức, NXB Giáo dục Việt Nam: Chương 3 “Hợp chất chứa nitrogen”, Bài 8 (Bảng 8.1, tr. 35–40), Bài 9 (Bảng 9.1, tr. 41–45)",
+    "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-12.4701708102"
+  },
+  "items": [
+    {
+      "id": "Gly",
+      "structure": "H2N-CH2-COOH",
+      "substitutive": "aminoethanoic acid",
+      "semi": "aminoacetic acid",
+      "common": "glycine",
+      "formula": "C2H5NO2",
+      "smiles": "NCC(=O)O",
+      "review_status": "pending"
+    },
+    {
+      "id": "Ala",
+      "structure": "H2N-CH(CH3)-COOH",
+      "substitutive": "2-aminopropanoic acid",
+      "semi": "α-aminopropionic acid",
+      "common": "alanine",
+      "formula": "C3H7NO2",
+      "smiles": "NC(C)C(=O)O",
+      "review_status": "pending"
+    },
+    {
+      "id": "Lys",
+      "structure": "H2N-[CH2]4-CH(NH2)-COOH",
+      "substitutive": "2,6-diaminohexanoic acid",
+      "semi": "α,ε-diaminocaproic acid",
+      "common": "lysine",
+      "formula": "C6H14N2O2",
+      "smiles": "NCCCCC(N)C(=O)O",
+      "review_status": "pending"
+    },
+    {
+      "id": "Glu",
+      "structure": "HOOC-[CH2]2-CH(NH2)-COOH",
+      "substitutive": "2-aminopentane-1,5-dioic acid",
+      "semi": "α-aminoglutaric acid",
+      "common": "glutamic acid",
+      "formula": "C5H9NO4",
+      "smiles": "OC(=O)CCC(N)C(=O)O",
+      "review_status": "pending"
+    },
+    {
+      "id": "Val",
+      "structure": "(CH3)2CH-CH(NH2)-COOH",
+      "substitutive": "2-amino-3-methylbutanoic acid",
+      "semi": "α-aminoisovaleric acid",
+      "common": "valine",
+      "formula": "C5H11NO2",
+      "smiles": "CC(C)C(N)C(=O)O",
+      "review_status": "pending"
+    }
+  ],
+  "amines": [
+    {
+      "formula": "CH3NH2",
+      "name": "methylamine",
+      "mp_C": -93.4,
+      "bp_C": -6.4
+    },
+    {
+      "formula": "CH3CH2NH2",
+      "name": "ethylamine",
+      "mp_C": -81.0,
+      "bp_C": 16.6
+    },
+    {
+      "formula": "CH3NHCH3",
+      "name": "dimethylamine",
+      "mp_C": -93.0,
+      "bp_C": 7.3
+    },
+    {
+      "formula": "CH3CH2CH2NH2",
+      "name": "propylamine",
+      "mp_C": -84.8,
+      "bp_C": 47.2
+    },
+    {
+      "formula": "CH3CH(NH2)CH3",
+      "name": "isopropylamine",
+      "mp_C": -95.1,
+      "bp_C": 31.8
+    },
+    {
+      "formula": "(CH3)3N",
+      "name": "trimethylamine",
+      "mp_C": -117.1,
+      "bp_C": 2.8
+    },
+    {
+      "formula": "C6H5NH2",
+      "name": "aniline",
+      "mp_C": -6.0,
+      "bp_C": 184.1
+    }
+  ],
+  "glycine_neutral_pH": 6,
+  "peptides": [
+    {
+      "id": "val-gly-ala",
+      "lesson": 9,
+      "page": 44,
+      "sequence": [
+        "Val",
+        "Gly",
+        "Ala"
+      ]
+    },
+    {
+      "id": "gly-ala-val",
+      "lesson": 9,
+      "page": 44,
+      "sequence": [
+        "Gly",
+        "Ala",
+        "Val"
+      ]
+    },
+    {
+      "id": "gly-tyr-val-ala",
+      "lesson": 9,
+      "page": 44,
+      "sequence": [
+        "Gly",
+        "Tyr",
+        "Val",
+        "Ala"
+      ]
+    }
+  ]
+}

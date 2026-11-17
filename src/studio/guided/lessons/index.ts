@@ -38,6 +38,9 @@ import { hh12b02Soap } from './hh12b02Soap';
 import { hh12b04Glucose } from './hh12b04Glucose';
 import { hh12b05Disaccharides } from './hh12b05Disaccharides';
 import { hh12b06Polysaccharides } from './hh12b06Polysaccharides';
+import { hh12b10Protein } from './hh12b10Protein';
+import { hh12b12Polymer } from './hh12b12Polymer';
+import { hh12b13Materials } from './hh12b13Materials';
 
 /**
  * The descriptive textbook lessons (user decision 14/11/2026, #255). Kept out of
@@ -84,6 +87,9 @@ export const GUIDED_LESSONS: readonly unknown[] = [
   hh12b04Glucose,
   hh12b05Disaccharides,
   hh12b06Polysaccharides,
+  hh12b10Protein,
+  hh12b12Polymer,
+  hh12b13Materials,
 ];
 
 let cache: StudioScenario[] | null = null;

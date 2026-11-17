@@ -2824,6 +2824,66 @@
    "review_status": "pending"
   },
   {
+   "topic": "amine",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 3. Hợp chất chứa nitrogen",
+   "lessons": [
+    8
+   ],
+   "reason": "Tên Bài 8: amine: bậc amine, tên gốc – chức và tên thay thế, đồng phân, Bảng 8.1, tính base, phản ứng với nitrous acid, nước bromine.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "aminoAcidPeptide",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 3. Hợp chất chứa nitrogen",
+   "lessons": [
+    9
+   ],
+   "reason": "Tên Bài 9: amino acid và peptide: Bảng 9.1, dạng ion lưỡng cực, điện di, liên kết peptide, phản ứng màu biuret.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "proteinEnzyme",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 3. Hợp chất chứa nitrogen",
+   "lessons": [
+    10
+   ],
+   "reason": "Tên Bài 10: protein và enzyme (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "polymerBasics",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 4. Polymer",
+   "lessons": [
+    12
+   ],
+   "reason": "Tên Bài 12: đại cương về polymer (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "polymerMaterials",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 4. Polymer",
+   "lessons": [
+    13
+   ],
+   "reason": "Tên Bài 13: vật liệu polymer (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
    "topic": "heatAndPhase",
    "subject": "physics",
    "grade": 12,

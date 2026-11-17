@@ -36,6 +36,8 @@ const TOPICS = [
   'nucleus',
   'radioactivity',
   'esterLipid',
+  'amine',
+  'aminoAcidPeptide',
   'aqueousEquilibrium',
   'nitrogenSulfur',
   'organicBasics',
@@ -123,6 +125,9 @@ const TOPICS = [
   'monosaccharides',
   'disaccharides',
   'polysaccharides',
+  'proteinEnzyme',
+  'polymerBasics',
+  'polymerMaterials',
 ];
 const THEMES = ['light', 'dark'];
 /** 480 px wide: twice a card's 242 px preview, sharp on a 2× screen, about 10–20 KB each. */
