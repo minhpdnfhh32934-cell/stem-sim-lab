@@ -52,6 +52,12 @@ import { sh12b15Extranuclear } from './sh12b15Extranuclear';
 import { sh12b16GenotypeEnvironment } from './sh12b16GenotypeEnvironment';
 import { sh12b20Darwin } from './sh12b20Darwin';
 import { sh12b21ModernSynthesis } from './sh12b21ModernSynthesis';
+import { sh12b26Community } from './sh12b26Community';
+import { sh12b28Ecosystem } from './sh12b28Ecosystem';
+import { sh12b30Succession } from './sh12b30Succession';
+import { sh12b31Biosphere } from './sh12b31Biosphere';
+import { sh12b33Conservation } from './sh12b33Conservation';
+import { sh12b34Sustainability } from './sh12b34Sustainability';
 
 /**
  * The descriptive textbook lessons (user decision 14/11/2026, #255). Kept out of
@@ -112,6 +118,12 @@ export const GUIDED_LESSONS: readonly unknown[] = [
   sh12b16GenotypeEnvironment,
   sh12b20Darwin,
   sh12b21ModernSynthesis,
+  sh12b26Community,
+  sh12b28Ecosystem,
+  sh12b30Succession,
+  sh12b31Biosphere,
+  sh12b33Conservation,
+  sh12b34Sustainability,
 ];
 
 let cache: StudioScenario[] | null = null;
