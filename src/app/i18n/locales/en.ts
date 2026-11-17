@@ -111,6 +111,7 @@ const en: Messages = {
     nitrogenOrganicGroup: 'Nitrogen compounds',
     polymerGroup: 'Polymers',
     cellsElectrolysisGroup: 'Cells and electrolysis',
+    metalsGroup: 'Metals',
     bonds: 'Chemical bonds',
     dcCircuit: 'Current and circuits',
     thermalPhysics: 'Thermal physics',
@@ -253,6 +254,10 @@ const en: Messages = {
     polymerMaterials: 'Polymer materials',
     electrodePotential: 'Electrode potentials and cells',
     electrolysis: 'Electrolysis',
+    metalProperties: 'Properties of metals',
+    metalExtraction: 'Metals in nature and their extraction',
+    alloys: 'Alloys',
+    corrosion: 'Corrosion of metals',
     fourierSeries: 'Harmonics and Fourier series',
   },
   stage: {

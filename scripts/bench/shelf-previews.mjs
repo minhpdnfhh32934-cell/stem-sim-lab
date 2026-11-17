@@ -39,6 +39,7 @@ const TOPICS = [
   'amine',
   'aminoAcidPeptide',
   'electrodePotential',
+  'metalProperties',
   'aqueousEquilibrium',
   'nitrogenSulfur',
   'organicBasics',
@@ -130,6 +131,9 @@ const TOPICS = [
   'polymerBasics',
   'polymerMaterials',
   'electrolysis',
+  'metalExtraction',
+  'alloys',
+  'corrosion',
 ];
 const THEMES = ['light', 'dark'];
 /** 480 px wide: twice a card's 242 px preview, sharp on a 2× screen, about 10–20 KB each. */

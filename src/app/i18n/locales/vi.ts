@@ -114,6 +114,7 @@ const vi = {
     nitrogenOrganicGroup: 'Hợp chất chứa nitrogen',
     polymerGroup: 'Polymer',
     cellsElectrolysisGroup: 'Pin điện và điện phân',
+    metalsGroup: 'Đại cương về kim loại',
     bonds: 'Liên kết hóa học',
     dcCircuit: 'Dòng điện, mạch điện',
     thermalPhysics: 'Vật lí nhiệt',
@@ -256,6 +257,10 @@ const vi = {
     polymerMaterials: 'Vật liệu polymer',
     electrodePotential: 'Thế điện cực và nguồn điện hóa học',
     electrolysis: 'Điện phân',
+    metalProperties: 'Tính chất vật lí và tính chất hóa học của kim loại',
+    metalExtraction: 'Kim loại trong tự nhiên và phương pháp tách kim loại',
+    alloys: 'Hợp kim',
+    corrosion: 'Sự ăn mòn kim loại',
     fourierSeries: 'Họa âm và chuỗi Fourier',
   },
   stage: {

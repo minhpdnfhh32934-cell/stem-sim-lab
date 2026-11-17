@@ -29,6 +29,20 @@ const ExtraSchema = z.object({
   book_cells: z.array(
     z.object({ anode: z.string(), cathode: z.string(), E_V: z.number(), page: z.number() }),
   ),
+  metal_facts: z.array(
+    z.object({
+      id: z.string(),
+      metal: z.string(),
+      name: z.object({ vi: z.string(), en: z.string() }),
+      value: z.number().nullable(),
+      unit: z.string(),
+      page: z.number(),
+    }),
+  ),
+  light_metal_max_density: z.number(),
+  conductors: z.array(z.string()),
+  water_threshold_V: z.number(),
+  acid_threshold_V: z.number(),
 });
 
 const dataset = loadDataset('electrochem_kntt', CoupleSchema, raw);
@@ -37,7 +51,11 @@ export type Couple = z.infer<typeof CoupleSchema>;
 export type Term = readonly [number, string];
 export const COUPLES: readonly Couple[] = dataset.items;
 export const ELECTROCHEM_SOURCE: Source = dataset.source;
-export const BOOK_CELLS = ExtraSchema.parse(raw).book_cells;
+const extra = ExtraSchema.parse(raw);
+export const BOOK_CELLS = extra.book_cells;
+export const METAL_FACTS = extra.metal_facts;
+export const LIGHT_METAL_MAX_DENSITY = extra.light_metal_max_density;
+export const CONDUCTORS = extra.conductors;
 
 export function couple(id: string): Couple {
   const c = COUPLES.find((x) => x.id === id);
@@ -143,3 +161,37 @@ export function cell(x: Couple, y: Couple): Cell | null {
 export const anodeText = (c: Couple): string => `${sideText(c.red)} → ${sideText(c.ox)} + ${c.n}e`;
 export const cathodeText = (c: Couple): string =>
   `${sideText(c.ox)} + ${c.n}e → ${sideText(c.red)}`;
+
+/* ───────── Bài 19: a metal with water, a dilute acid or a salt solution ───────── */
+
+export const REAGENTS = ['water', 'acid', 'salt'] as const;
+export type Reagent = (typeof REAGENTS)[number];
+
+/**
+ * Metals the reactions part offers: the metal couples of Bảng 15.1 but Cr, whose only row is
+ * Cr³⁺/Cr while the book does not say which ion chromium gives with an acid.
+ */
+export const TEST_METALS: readonly Couple[] = COUPLES.filter((c) => c.metal && c.id !== 'Cr');
+
+/** Salt solutions: ions of the cell electrodes, metals that do not react with water. */
+export const SALT_METALS: readonly Couple[] = ELECTRODES.filter((c) => c.id !== 'Cr');
+
+export interface MetalTest {
+  metal: Couple;
+  /** The couple the metal is compared with: 2H₂O/H₂, 2H⁺/H₂ or the salt's Mⁿ⁺/M. */
+  against: Couple;
+  reacts: boolean;
+  reaction: Reaction | null;
+}
+
+/**
+ * tr. 92: a metal with E° < −0,414 V (the 2H₂O/H₂ value) can push hydrogen out of water; tr. 93:
+ * with E° < 0 it can react with dilute HCl or H₂SO₄ giving H₂, and a more active metal pushes a
+ * less active one out of its salt solution. Null when the salt is the metal's own.
+ */
+export function metalWith(metal: Couple, reagent: Reagent, salt: Couple): MetalTest | null {
+  const against = reagent === 'water' ? couple('H2O') : reagent === 'acid' ? couple('H') : salt;
+  if (against.id === metal.id) return null;
+  const reacts = metal.E_V < against.E_V;
+  return { metal, against, reacts, reaction: reacts ? reaction(metal, against) : null };
+}

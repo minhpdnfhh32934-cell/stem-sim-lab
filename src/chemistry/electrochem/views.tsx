@@ -1,12 +1,14 @@
 import { useMemo } from 'react';
-import { formatNumber, type Locale } from '@/app/i18n';
+import type { Locale } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import type { LocalizedText } from '@/core/data/dataset';
 import { usePublishCard } from '@/modules/usePublishCard';
 import { useCanvas } from '@/ui/canvas/useCanvas';
 import { ActionRow, ChoiceGroup } from '@/ui/ModuleControls';
+import { AlphaCanvas } from './AlphaCanvas';
 import { EC_TITLE, L, electrochemCard } from './card';
+import { emfText, volts } from './format';
 import {
   BOOK_CELLS,
   COUPLES,
@@ -32,17 +34,6 @@ const TAB_NAME: Record<EcTab, LocalizedText> = {
   cell: L('Pin Galvani', 'Galvanic cell'),
 };
 
-/** E° as Bảng 15.1 prints it: sign shown, the book's decimals ("+0,340", "−2,92"). */
-const volts = (locale: Locale, c: Couple): string =>
-  formatNumber(locale, c.E_V, {
-    minimumFractionDigits: c.decimals,
-    maximumFractionDigits: c.decimals,
-    signDisplay: 'exceptZero',
-  });
-
-const emfText = (locale: Locale, v: number): string =>
-  formatNumber(locale, v, { minimumFractionDigits: 3, maximumFractionDigits: 3 });
-
 /** The book's questions on two couples (tr. 72). */
 const BOOK_PAIRS = [
   { id: 'r2', a: 'Cu', b: 'Ag', name: L('Phản ứng (2), tr. 72', 'Reaction (2), p. 72') },
@@ -64,92 +55,13 @@ function SeriesView() {
   const ca = couple(a);
   const cb = couple(b);
   const r = reaction(ca, cb);
-  const ref = useCanvas(
-    ({ ctx, width, css }) => {
-      // The series as a number line (the book's "dãy điện hóa", E° growing to the right).
-      const lo = -3.2;
-      const hi = 1.7;
-      const x0 = 50;
-      const x1 = width - 50;
-      const X = (e: number) => x0 + ((e - lo) / (hi - lo)) * (x1 - x0);
-      const yAxis = 64;
-      ctx.strokeStyle = css('--text-muted');
-      ctx.fillStyle = css('--text-muted');
-      ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      ctx.moveTo(x0, yAxis);
-      ctx.lineTo(x1, yAxis);
-      ctx.stroke();
-      ctx.font = '12px system-ui, sans-serif';
-      ctx.textAlign = 'center';
-      for (const v of [-3, -2, -1, 0, 1]) {
-        ctx.fillText(formatNumber(locale, v, { signDisplay: 'exceptZero' }), X(v), yAxis + 34);
-      }
-      ctx.fillText('E° (V)', x1 - 10, yAxis + 34);
-      for (const c of PAIRABLE) {
-        ctx.beginPath();
-        ctx.moveTo(X(c.E_V), yAxis - 5);
-        ctx.lineTo(X(c.E_V), yAxis + 5);
-        ctx.stroke();
-      }
-      const pair = [ca, cb].sort((p, q) => p.E_V - q.E_V);
-      pair.forEach((c, i) => {
-        ctx.fillStyle = css(i === 0 ? '--chart-2' : '--chart-4');
-        ctx.beginPath();
-        ctx.arc(X(c.E_V), yAxis, 6, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.font = '14px system-ui, sans-serif';
-        ctx.textAlign = 'center';
-        const tx = Math.min(Math.max(X(c.E_V), x0 + 60), x1 - 60);
-        // Both names above the line, on two rows so close values never overlap.
-        ctx.fillText(`${coupleLabel(c)} ${volts(locale, c)} V`, tx, yAxis - (i === 0 ? 38 : 14));
-      });
-      if (!r) return;
-      // The α: the strong oxidant (top right) takes electrons from the strong reductant (bottom
-      // left), giving the weak oxidant (top left) and the weak reductant (bottom right).
-      const cx = width / 2;
-      const left = cx - 130;
-      const right = cx + 130;
-      const top = 138;
-      const bottom = 250;
-      ctx.font = '20px system-ui, sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillStyle = css('--text');
-      ctx.fillText(termText(r.reductant.label[0]), left, top);
-      ctx.fillText(termText(r.reductant.label[1]), left, bottom + 14);
-      ctx.fillText(termText(r.oxidant.label[0]), right, top);
-      ctx.fillText(termText(r.oxidant.label[1]), right, bottom + 14);
-      ctx.font = '12px system-ui, sans-serif';
-      ctx.fillStyle = css('--text-muted');
-      ctx.fillText(`E° = ${volts(locale, r.reductant)} V`, left, bottom + 40);
-      ctx.fillText(`E° = ${volts(locale, r.oxidant)} V`, right, bottom + 40);
-      ctx.strokeStyle = css('--accent');
-      ctx.lineWidth = 2.5;
-      ctx.beginPath();
-      ctx.moveTo(right - 20, top + 10);
-      ctx.lineTo(left + 20, bottom - 14);
-      ctx.quadraticCurveTo(left - 70, (top + bottom) / 2, left - 6, top + 14);
-      ctx.lineTo(right - 22, bottom - 16);
-      ctx.stroke();
-      const ang = Math.atan2(bottom - 16 - (top + 14), right - 22 - (left - 6));
-      ctx.fillStyle = css('--accent');
-      ctx.beginPath();
-      ctx.moveTo(right - 22, bottom - 16);
-      ctx.lineTo(right - 22 - 12 * Math.cos(ang - 0.4), bottom - 16 - 12 * Math.sin(ang - 0.4));
-      ctx.lineTo(right - 22 - 12 * Math.cos(ang + 0.4), bottom - 16 - 12 * Math.sin(ang + 0.4));
-      ctx.closePath();
-      ctx.fill();
-    },
-    false,
-    [a, b, locale],
-  );
   return (
     <div className="ec-view">
-      <canvas
-        ref={ref}
-        className="ec-canvas"
-        role="img"
-        aria-label={Lz(
+      <AlphaCanvas
+        first={ca}
+        second={cb}
+        r={r}
+        label={Lz(
           L(
             `Dãy điện hóa: ${coupleLabel(ca)} ${volts(locale, ca)} V, ${coupleLabel(cb)} ${volts(locale, cb)} V`,
             `Electrochemical series: ${coupleLabel(ca)} ${volts(locale, ca)} V, ${coupleLabel(cb)} ${volts(locale, cb)} V`,
