@@ -1,0 +1,149 @@
+{
+  "dataset": "esters_kntt",
+  "version": 1,
+  "accessed": "2026-11-17",
+  "review_status": "pending",
+  "source": {
+    "id": "sgk-hh12-c1",
+    "citation": "SGK Hóa học 12 Kết nối tri thức, NXB Giáo dục Việt Nam: Chương 1 “Ester – Lipid”, Bài 1 (tr. 6–13, Hình 1.2), Bài 2 (tr. 14–17)",
+    "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-12.4701708102"
+  },
+  "items": [
+    {
+      "id": "palmitic",
+      "name": "palmitic acid",
+      "chain": "C15H31",
+      "carbons": 16,
+      "double_bonds": 0,
+      "review_status": "pending"
+    },
+    {
+      "id": "stearic",
+      "name": "stearic acid",
+      "chain": "C17H35",
+      "carbons": 18,
+      "double_bonds": 0,
+      "review_status": "pending"
+    },
+    {
+      "id": "oleic",
+      "name": "oleic acid",
+      "chain": "C17H33",
+      "carbons": 18,
+      "double_bonds": 1,
+      "review_status": "pending"
+    },
+    {
+      "id": "linoleic",
+      "name": "linoleic acid",
+      "chain": "C17H31",
+      "carbons": 18,
+      "double_bonds": 2,
+      "review_status": "pending"
+    }
+  ],
+  "fat_composition": [
+    {
+      "id": "sunflower",
+      "name": {
+        "vi": "Dầu hướng dương",
+        "en": "Sunflower oil"
+      },
+      "saturated": 11,
+      "one_double": 20,
+      "several_double": 69
+    },
+    {
+      "id": "olive",
+      "name": {
+        "vi": "Dầu oliu",
+        "en": "Olive oil"
+      },
+      "saturated": 14,
+      "one_double": 77,
+      "several_double": 9
+    },
+    {
+      "id": "soybean",
+      "name": {
+        "vi": "Dầu đậu nành",
+        "en": "Soybean oil"
+      },
+      "saturated": 15,
+      "one_double": 24,
+      "several_double": 61
+    },
+    {
+      "id": "peanut",
+      "name": {
+        "vi": "Dầu lạc",
+        "en": "Peanut oil"
+      },
+      "saturated": 18,
+      "one_double": 48,
+      "several_double": 34
+    },
+    {
+      "id": "lard",
+      "name": {
+        "vi": "Mỡ lợn",
+        "en": "Lard"
+      },
+      "saturated": 41,
+      "one_double": 47,
+      "several_double": 12
+    },
+    {
+      "id": "tallow",
+      "name": {
+        "vi": "Mỡ bò",
+        "en": "Beef tallow"
+      },
+      "saturated": 52,
+      "one_double": 44,
+      "several_double": 4
+    },
+    {
+      "id": "butter",
+      "name": {
+        "vi": "Chất béo từ bơ động vật",
+        "en": "Butterfat"
+      },
+      "saturated": 66,
+      "one_double": 30,
+      "several_double": 4
+    }
+  ],
+  "boiling": [
+    {
+      "formula": "CH3CH2CH2OH",
+      "kind": "alcohol",
+      "M": 60,
+      "bp_C": 97
+    },
+    {
+      "formula": "CH3COOH",
+      "kind": "carboxylicAcid",
+      "M": 60,
+      "bp_C": 118
+    },
+    {
+      "formula": "HCOOCH3",
+      "kind": "ester",
+      "M": 60,
+      "bp_C": 32
+    }
+  ],
+  "examples": [
+    {
+      "id": "isoamyl-acetate",
+      "lesson": 1,
+      "page": 9,
+      "acid": "acetic",
+      "acid_g": 16.2,
+      "alcohol": "isoamyl",
+      "alcohol_g": 15.2,
+      "ester_g": 14.16
+    }
+  ]
+}
