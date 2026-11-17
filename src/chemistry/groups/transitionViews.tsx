@@ -6,7 +6,7 @@ import type { LocalizedText } from '@/core/data/dataset';
 import { usePublishCard } from '@/modules/usePublishCard';
 import { ChoiceGroup, LabeledNumber } from '@/ui/ModuleControls';
 import { formatFormula } from '../formula';
-import { BarList, type Bar } from './BarList';
+import { BarList, type Bar } from '@/ui/charts/BarList';
 import { TM_TITLE, tmCard } from './card';
 import {
   BE_MELTING_POINT,
