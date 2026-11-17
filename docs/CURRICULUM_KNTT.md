@@ -36,11 +36,11 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Vật lí 12 | 25 | 21 | 21 |
 | Hoá học 10 | 23 | 16 | 16 |
 | Hoá học 11 | 25 | 19 | 19 |
-| Hoá học 12 | 30 | 22 | 20 |
+| Hoá học 12 | 30 | 22 | 22 |
 | Sinh học 10 | 26 | 17 | 17 |
 | Sinh học 11 | 29 | 20 | 20 |
-| Sinh học 12 | 35 | 28 | 7 |
-| **Cộng** | **253** | **189** | **166** |
+| Sinh học 12 | 35 | 28 | 28 |
+| **Cộng** | **253** | **189** | **189** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -217,8 +217,8 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Hoá học 12 | Chương 7. Nguyên tố nhóm IA và nhóm IIA | 25 | Nguyên tố nhóm IIA | 116 | Lí thuyết | Nguyên tố nhóm IIA | Tên Bài 25: nguyên tố nhóm IIA: Bảng 25.1–25.4, độ tan của hydroxide và muối, độ bền nhiệt của muối carbonate, nitrate. | pending |
 | Hoá học 12 | Chương 7. Nguyên tố nhóm IA và nhóm IIA | 26 | Ôn tập chương 7 | 126 | Ôn tập | chưa có |  | pending |
 | Hoá học 12 | Chương 8. Sơ lược về dãy kim loại chuyển tiếp thứ nhất và phức chất | 27 | Đại cương về kim loại chuyển tiếp dãy thứ nhất | 128 | Lí thuyết | Đại cương về kim loại chuyển tiếp dãy thứ nhất | Tên Bài 27: đại cương về kim loại chuyển tiếp dãy thứ nhất: Bảng 27.1, 27.2, 27.4, cấu hình electron của ion, chuẩn độ FeSO₄ bằng KMnO₄. | pending |
-| Hoá học 12 | Chương 8. Sơ lược về dãy kim loại chuyển tiếp thứ nhất và phức chất | 28 | Sơ lược về phức chất | 134 | Lí thuyết | chưa có |  | pending |
-| Hoá học 12 | Chương 8. Sơ lược về dãy kim loại chuyển tiếp thứ nhất và phức chất | 29 | Một số tính chất và ứng dụng của phức chất | 138 | Lí thuyết | chưa có |  | pending |
+| Hoá học 12 | Chương 8. Sơ lược về dãy kim loại chuyển tiếp thứ nhất và phức chất | 28 | Sơ lược về phức chất | 134 | Lí thuyết | Sơ lược về phức chất | Tên Bài 28: sơ lược về phức chất: nguyên tử trung tâm, phối tử, điện tích, Bảng 28.1 (mô hình 3D khi sách nêu dạng hình học). | pending |
+| Hoá học 12 | Chương 8. Sơ lược về dãy kim loại chuyển tiếp thứ nhất và phức chất | 29 | Một số tính chất và ứng dụng của phức chất | 138 | Lí thuyết | Một số tính chất và ứng dụng của phức chất | Tên Bài 29: một số tính chất và ứng dụng của phức chất: dấu hiệu tạo phức, màu sắc, phản ứng thế phối tử. | pending |
 | Hoá học 12 | Chương 8. Sơ lược về dãy kim loại chuyển tiếp thứ nhất và phức chất | 30 | Ôn tập chương 8 | 142 | Ôn tập | chưa có |  | pending |
 | Sinh học 10 | Phần mở đầu | 1 | Giới thiệu khái quát môn Sinh học | 5 | Mở đầu môn học | chưa có |  | pending |
 | Sinh học 10 | Phần mở đầu | 2 | Phương pháp nghiên cứu và học tập môn Sinh học | 12 | Mở đầu môn học | chưa có |  | pending |
@@ -275,40 +275,40 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Sinh học 11 | Chương 4. Sinh sản ở sinh vật | 27 | Sinh sản ở động vật | 170 | Lí thuyết | Sinh sản ở động vật | Tên Bài 27: sinh sản ở động vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
 | Sinh học 11 | Chương 5. Mối quan hệ giữa các quá trình sinh lí trong cơ thể sinh vật và một số ngành nghề liên quan đến sinh học cơ thể | 28 | Mối quan hệ giữa các quá trình sinh lí trong cơ thể sinh vật | 183 | Lí thuyết | Mối quan hệ giữa các quá trình sinh lí | Tên Bài 28: mối quan hệ giữa các quá trình sinh lí trong cơ thể sinh vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
 | Sinh học 11 | Chương 5. Mối quan hệ giữa các quá trình sinh lí trong cơ thể sinh vật và một số ngành nghề liên quan đến sinh học cơ thể | 29 | Một số ngành nghề liên quan đến sinh học cơ thể | 185 | Ngành nghề | chưa có |  | pending |
-| Sinh học 12 | Chương 1. Di truyền phân tử | 1 | DNA và cơ chế tái bản DNA | 5 | Lí thuyết | chưa có |  | pending |
+| Sinh học 12 | Chương 1. Di truyền phân tử | 1 | DNA và cơ chế tái bản DNA | 5 | Lí thuyết | DNA và cơ chế tái bản DNA | Tên Bài 1: DNA và cơ chế tái bản DNA (bài học có hướng dẫn). | pending |
 | Sinh học 12 | Chương 1. Di truyền phân tử | 2 | Gene, hệ gene và quá trình truyền đạt thông tin di truyền | 9 | Lí thuyết | ADN → mARN → Protein | Tên Bài 2: quá trình truyền đạt thông tin di truyền (Bài 1 về DNA và tái bản: giáo viên quyết định). | pending |
-| Sinh học 12 | Chương 1. Di truyền phân tử | 3 | Điều hoà biểu hiện gene | 18 | Lí thuyết | chưa có |  | pending |
+| Sinh học 12 | Chương 1. Di truyền phân tử | 3 | Điều hoà biểu hiện gene | 18 | Lí thuyết | Điều hòa biểu hiện gene: operon lac | Tên Bài 3: điều hoà biểu hiện gene: operon lac, thí nghiệm của Monod và Jacob, câu 2 tr. 21. | pending |
 | Sinh học 12 | Chương 1. Di truyền phân tử | 4 | Đột biến gene | 23 | Lí thuyết | Đột biến điểm | Tên Bài 4: đột biến gene. | pending |
-| Sinh học 12 | Chương 1. Di truyền phân tử | 5 | Công nghệ gene | 27 | Lí thuyết | chưa có |  | pending |
+| Sinh học 12 | Chương 1. Di truyền phân tử | 5 | Công nghệ gene | 27 | Lí thuyết | Công nghệ gene | Tên Bài 5: công nghệ gene (bài học có hướng dẫn). | pending |
 | Sinh học 12 | Chương 1. Di truyền phân tử | 6 | Thực hành: Tách chiết DNA | 32 | Thực hành | chưa có |  | pending |
 | Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 7 | Cấu trúc và chức năng của nhiễm sắc thể | 36 | Lí thuyết | Từ tế bào đến DNA | Tên Bài 7: cấu trúc và chức năng của nhiễm sắc thể (cấp NST kép, sợi nhiễm sắc, nucleosome, DNA). | pending |
 | Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 8 | Học thuyết di truyền Mendel | 40 | Lí thuyết | Di truyền Mendel | Tên Bài 8–9: học thuyết di truyền Mendel và mở rộng học thuyết Mendel (cảnh chỉ mở rộng tới trội không hoàn toàn). | pending |
 | Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 9 | Mở rộng học thuyết Mendel | 46 | Lí thuyết | Di truyền Mendel | Tên Bài 8–9: học thuyết di truyền Mendel và mở rộng học thuyết Mendel (cảnh chỉ mở rộng tới trội không hoàn toàn). | pending |
-| Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 10 | Di truyền giới tính và di truyền liên kết với giới tính | 50 | Lí thuyết | chưa có |  | pending |
-| Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 11 | Liên kết gene và hoán vị gene | 54 | Lí thuyết | chưa có |  | pending |
-| Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 12 | Đột biến nhiễm sắc thể | 60 | Lí thuyết | chưa có |  | pending |
-| Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 13 | Di truyền học người và di truyền y học | 68 | Lí thuyết | chưa có |  | pending |
+| Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 10 | Di truyền giới tính và di truyền liên kết với giới tính | 50 | Lí thuyết | Di truyền giới tính và liên kết với giới tính | Tên Bài 10: di truyền giới tính và di truyền liên kết với giới tính: XX – XY, phép lai thuận nghịch của Morgan (Hình 10.2). | pending |
+| Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 11 | Liên kết gene và hoán vị gene | 54 | Lí thuyết | Liên kết gene và hoán vị gene | Tên Bài 11: liên kết gene và hoán vị gene: lai phân tích của Morgan, tần số hoán vị gene, câu 2 tr. 59. | pending |
+| Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 12 | Đột biến nhiễm sắc thể | 60 | Lí thuyết | Đột biến nhiễm sắc thể | Tên Bài 12: đột biến nhiễm sắc thể: cấu trúc (Hình 12.1), lệch bội, đa bội, hội chứng Down theo tuổi mẹ. | pending |
+| Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 13 | Di truyền học người và di truyền y học | 68 | Lí thuyết | Di truyền học người và di truyền y học | Tên Bài 13: di truyền học người và di truyền y học (bài học có hướng dẫn). | pending |
 | Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 14 | Thực hành: Quan sát một số dạng đột biến nhiễm sắc thể | 75 | Thực hành | chưa có |  | pending |
-| Sinh học 12 | Chương 3. Mở rộng học thuyết di truyền nhiễm sắc thể | 15 | Di truyền gene ngoài nhân | 78 | Lí thuyết | chưa có |  | pending |
-| Sinh học 12 | Chương 3. Mở rộng học thuyết di truyền nhiễm sắc thể | 16 | Tương tác giữa kiểu gene với môi trường và thành tựu chọn giống | 83 | Lí thuyết | chưa có |  | pending |
+| Sinh học 12 | Chương 3. Mở rộng học thuyết di truyền nhiễm sắc thể | 15 | Di truyền gene ngoài nhân | 78 | Lí thuyết | Di truyền gene ngoài nhân | Tên Bài 15: di truyền gene ngoài nhân (bài học có hướng dẫn). | pending |
+| Sinh học 12 | Chương 3. Mở rộng học thuyết di truyền nhiễm sắc thể | 16 | Tương tác giữa kiểu gene với môi trường và thành tựu chọn giống | 83 | Lí thuyết | Tương tác giữa kiểu gene với môi trường và thành tựu chọn giống | Tên Bài 16: tương tác giữa kiểu gene với môi trường và thành tựu chọn giống (bài học có hướng dẫn). | pending |
 | Sinh học 12 | Chương 3. Mở rộng học thuyết di truyền nhiễm sắc thể | 17 | Thực hành: Thí nghiệm về thường biến ở cây trồng | 88 | Thực hành | chưa có |  | pending |
 | Sinh học 12 | Chương 4. Di truyền quần thể | 18 | Di truyền học quần thể | 91 | Lí thuyết | Định luật Hardy–Weinberg | Tên Bài 18: di truyền học quần thể. | pending |
-| Sinh học 12 | Chương 5. Bằng chứng và các học thuyết tiến hoá | 19 | Các bằng chứng tiến hoá | 97 | Lí thuyết | chưa có |  | pending |
-| Sinh học 12 | Chương 5. Bằng chứng và các học thuyết tiến hoá | 20 | Quan niệm của Darwin về chọn lọc tự nhiên và hình thành loài | 101 | Lí thuyết | chưa có |  | pending |
-| Sinh học 12 | Chương 5. Bằng chứng và các học thuyết tiến hoá | 21 | Học thuyết tiến hoá tổng hợp hiện đại | 106 | Lí thuyết | chưa có |  | pending |
-| Sinh học 12 | Chương 5. Bằng chứng và các học thuyết tiến hoá | 22 | Tiến hoá lớn và quá trình phát sinh chủng loại | 113 | Lí thuyết | chưa có |  | pending |
-| Sinh học 12 | Chương 6. Môi trường và sinh thái học quần thể | 23 | Môi trường và các nhân tố sinh thái | 122 | Lí thuyết | chưa có |  | pending |
+| Sinh học 12 | Chương 5. Bằng chứng và các học thuyết tiến hoá | 19 | Các bằng chứng tiến hoá | 97 | Lí thuyết | Bằng chứng tiến hóa và lịch sử sự sống | Tên Bài 19: các bằng chứng tiến hoá (Bảng 19.1, cytochrome C); Bài 22: tiến hoá lớn và quá trình phát sinh chủng loại (Bảng 22.1, các đại địa chất). | pending |
+| Sinh học 12 | Chương 5. Bằng chứng và các học thuyết tiến hoá | 20 | Quan niệm của Darwin về chọn lọc tự nhiên và hình thành loài | 101 | Lí thuyết | Quan niệm của Darwin về chọn lọc tự nhiên và hình thành loài | Tên Bài 20: quan niệm của Darwin về chọn lọc tự nhiên và hình thành loài (bài học có hướng dẫn). | pending |
+| Sinh học 12 | Chương 5. Bằng chứng và các học thuyết tiến hoá | 21 | Học thuyết tiến hoá tổng hợp hiện đại | 106 | Lí thuyết | Học thuyết tiến hóa tổng hợp hiện đại | Tên Bài 21: học thuyết tiến hoá tổng hợp hiện đại (bài học có hướng dẫn). | pending |
+| Sinh học 12 | Chương 5. Bằng chứng và các học thuyết tiến hoá | 22 | Tiến hoá lớn và quá trình phát sinh chủng loại | 113 | Lí thuyết | Bằng chứng tiến hóa và lịch sử sự sống | Tên Bài 19: các bằng chứng tiến hoá (Bảng 19.1, cytochrome C); Bài 22: tiến hoá lớn và quá trình phát sinh chủng loại (Bảng 22.1, các đại địa chất). | pending |
+| Sinh học 12 | Chương 6. Môi trường và sinh thái học quần thể | 23 | Môi trường và các nhân tố sinh thái | 122 | Lí thuyết | Môi trường và các nhân tố sinh thái | Tên Bài 23: môi trường và các nhân tố sinh thái: quy luật giới hạn sinh thái với ví dụ nhiệt độ của sách. | pending |
 | Sinh học 12 | Chương 6. Môi trường và sinh thái học quần thể | 24 | Sinh thái học quần thể | 128 | Lí thuyết | Tăng trưởng logistic | Tên Bài 24: sinh thái học quần thể. | pending |
 | Sinh học 12 | Chương 6. Môi trường và sinh thái học quần thể | 25 | Thực hành: Xác định một số đặc trưng của quần thể | 138 | Thực hành | chưa có |  | pending |
-| Sinh học 12 | Chương 7. Sinh thái học quần xã | 26 | Quần xã sinh vật | 141 | Lí thuyết | chưa có |  | pending |
+| Sinh học 12 | Chương 7. Sinh thái học quần xã | 26 | Quần xã sinh vật | 141 | Lí thuyết | Quần xã sinh vật | Tên Bài 26: quần xã sinh vật (bài học có hướng dẫn). | pending |
 | Sinh học 12 | Chương 7. Sinh thái học quần xã | 27 | Thực hành: Tìm hiểu cấu trúc dinh dưỡng của quần xã trong tự nhiên | 150 | Thực hành | chưa có |  | pending |
-| Sinh học 12 | Chương 7. Sinh thái học quần xã | 28 | Hệ sinh thái | 152 | Lí thuyết | chưa có |  | pending |
-| Sinh học 12 | Chương 7. Sinh thái học quần xã | 29 | Trao đổi vật chất và chuyển hoá năng lượng trong hệ sinh thái | 155 | Lí thuyết | chưa có |  | pending |
-| Sinh học 12 | Chương 7. Sinh thái học quần xã | 30 | Diễn thế sinh thái | 161 | Lí thuyết | chưa có |  | pending |
-| Sinh học 12 | Chương 7. Sinh thái học quần xã | 31 | Sinh quyển, khu sinh học và chu trình sinh - địa - hoá | 165 | Lí thuyết | chưa có |  | pending |
+| Sinh học 12 | Chương 7. Sinh thái học quần xã | 28 | Hệ sinh thái | 152 | Lí thuyết | Hệ sinh thái | Tên Bài 28: hệ sinh thái (bài học có hướng dẫn). | pending |
+| Sinh học 12 | Chương 7. Sinh thái học quần xã | 29 | Trao đổi vật chất và chuyển hoá năng lượng trong hệ sinh thái | 155 | Lí thuyết | Trao đổi vật chất và chuyển hóa năng lượng trong hệ sinh thái | Tên Bài 29: trao đổi vật chất và chuyển hoá năng lượng trong hệ sinh thái: tháp sinh thái Hình 29.6, hiệu suất sinh thái. | pending |
+| Sinh học 12 | Chương 7. Sinh thái học quần xã | 30 | Diễn thế sinh thái | 161 | Lí thuyết | Diễn thế sinh thái | Tên Bài 30: diễn thế sinh thái (bài học có hướng dẫn). | pending |
+| Sinh học 12 | Chương 7. Sinh thái học quần xã | 31 | Sinh quyển, khu sinh học và chu trình sinh - địa - hoá | 165 | Lí thuyết | Sinh quyển, khu sinh học và chu trình sinh – địa – hóa | Tên Bài 31: sinh quyển, khu sinh học và chu trình sinh – địa – hoá (bài học có hướng dẫn). | pending |
 | Sinh học 12 | Chương 7. Sinh thái học quần xã | 32 | Thực hành: Thiết kế một hệ sinh thái nhân tạo | 172 | Thực hành | chưa có |  | pending |
-| Sinh học 12 | Chương 8. Sinh thái học phục hồi, bảo tồn và phát triển bền vững | 33 | Sinh thái học phục hồi và bảo tồn đa dạng sinh vật | 175 | Lí thuyết | chưa có |  | pending |
-| Sinh học 12 | Chương 8. Sinh thái học phục hồi, bảo tồn và phát triển bền vững | 34 | Phát triển bền vững | 180 | Lí thuyết | chưa có |  | pending |
+| Sinh học 12 | Chương 8. Sinh thái học phục hồi, bảo tồn và phát triển bền vững | 33 | Sinh thái học phục hồi và bảo tồn đa dạng sinh vật | 175 | Lí thuyết | Sinh thái học phục hồi và bảo tồn đa dạng sinh vật | Tên Bài 33: sinh thái học phục hồi và bảo tồn đa dạng sinh vật (bài học có hướng dẫn). | pending |
+| Sinh học 12 | Chương 8. Sinh thái học phục hồi, bảo tồn và phát triển bền vững | 34 | Phát triển bền vững | 180 | Lí thuyết | Phát triển bền vững | Tên Bài 34: phát triển bền vững (bài học có hướng dẫn). | pending |
 | Sinh học 12 | Chương 8. Sinh thái học phục hồi, bảo tồn và phát triển bền vững | 35 | Dự án: Tìm hiểu thực trạng bảo tồn hệ sinh thái tại địa phương và đề xuất giải pháp bảo tồn | 188 | Dự án | chưa có |  | pending |
 
 ## Chủ đề chưa xếp lớp

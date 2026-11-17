@@ -1,0 +1,543 @@
+{
+  "dataset": "complexes_kntt",
+  "version": 1,
+  "accessed": "2026-11-17",
+  "review_status": "pending",
+  "source": {
+    "id": "sgk-hh12-b28-29",
+    "citation": "SGK Hóa học 12 Kết nối tri thức, NXB Giáo dục Việt Nam: Bài 28 “Sơ lược về phức chất” (Bảng 28.1, tr. 134–137), Bài 29 “Một số tính chất và ứng dụng của phức chất” (bảng màu sắc, phản ứng thế phối tử, tr. 138–141)",
+    "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-12.4701708102"
+  },
+  "ligands": {
+    "NH3": {
+      "charge": 0,
+      "donor": "N"
+    },
+    "H2O": {
+      "charge": 0,
+      "donor": "O"
+    },
+    "OH": {
+      "charge": -1,
+      "donor": "O"
+    },
+    "CO": {
+      "charge": 0,
+      "donor": "C"
+    },
+    "F": {
+      "charge": -1,
+      "donor": "F"
+    },
+    "Cl": {
+      "charge": -1,
+      "donor": "Cl"
+    },
+    "CN": {
+      "charge": -1,
+      "donor": "C"
+    }
+  },
+  "items": [
+    {
+      "id": "co_nh3_6_3",
+      "metal": "Co",
+      "metal_charge": 3,
+      "ligands": [
+        {
+          "ligand": "NH3",
+          "count": 6
+        }
+      ],
+      "charge": 3,
+      "geometry": null,
+      "colour": null,
+      "page": 134,
+      "geometry_from": null,
+      "review_status": "pending"
+    },
+    {
+      "id": "zn_oh_4",
+      "metal": "Zn",
+      "metal_charge": 2,
+      "ligands": [
+        {
+          "ligand": "OH",
+          "count": 4
+        }
+      ],
+      "charge": -2,
+      "geometry": null,
+      "colour": null,
+      "page": 134,
+      "geometry_from": null,
+      "review_status": "pending"
+    },
+    {
+      "id": "fe_co_5",
+      "metal": "Fe",
+      "metal_charge": 0,
+      "ligands": [
+        {
+          "ligand": "CO",
+          "count": 5
+        }
+      ],
+      "charge": 0,
+      "geometry": null,
+      "colour": null,
+      "page": 134,
+      "geometry_from": null,
+      "review_status": "pending"
+    },
+    {
+      "id": "cu_h2o_6",
+      "metal": "Cu",
+      "metal_charge": 2,
+      "ligands": [
+        {
+          "ligand": "H2O",
+          "count": 6
+        }
+      ],
+      "charge": 2,
+      "geometry": "octahedral",
+      "colour": {
+        "vi": "xanh",
+        "en": "blue"
+      },
+      "page": 134,
+      "geometry_from": "aqua",
+      "review_status": "pending"
+    },
+    {
+      "id": "co_f_6",
+      "metal": "Co",
+      "metal_charge": 3,
+      "ligands": [
+        {
+          "ligand": "F",
+          "count": 6
+        }
+      ],
+      "charge": -3,
+      "geometry": null,
+      "colour": null,
+      "page": 134,
+      "geometry_from": null,
+      "review_status": "pending"
+    },
+    {
+      "id": "ni_co_4",
+      "metal": "Ni",
+      "metal_charge": 0,
+      "ligands": [
+        {
+          "ligand": "CO",
+          "count": 4
+        }
+      ],
+      "charge": 0,
+      "geometry": null,
+      "colour": null,
+      "page": 134,
+      "geometry_from": null,
+      "review_status": "pending"
+    },
+    {
+      "id": "cisplatin",
+      "metal": "Pt",
+      "metal_charge": 2,
+      "ligands": [
+        {
+          "ligand": "Cl",
+          "count": 2
+        },
+        {
+          "ligand": "NH3",
+          "count": 2
+        }
+      ],
+      "charge": 0,
+      "geometry": "square_planar",
+      "colour": null,
+      "page": 140,
+      "geometry_from": "cisplatin",
+      "review_status": "pending"
+    },
+    {
+      "id": "ag_nh3_2",
+      "metal": "Ag",
+      "metal_charge": 1,
+      "ligands": [
+        {
+          "ligand": "NH3",
+          "count": 2
+        }
+      ],
+      "charge": 1,
+      "geometry": null,
+      "colour": null,
+      "page": 135,
+      "geometry_from": null,
+      "review_status": "pending"
+    },
+    {
+      "id": "fe_h2o_6_2",
+      "metal": "Fe",
+      "metal_charge": 2,
+      "ligands": [
+        {
+          "ligand": "H2O",
+          "count": 6
+        }
+      ],
+      "charge": 2,
+      "geometry": "octahedral",
+      "colour": {
+        "vi": "lục nhạt",
+        "en": "pale green"
+      },
+      "page": 136,
+      "geometry_from": "aqua",
+      "review_status": "pending"
+    },
+    {
+      "id": "co_h2o_6_3",
+      "metal": "Co",
+      "metal_charge": 3,
+      "ligands": [
+        {
+          "ligand": "H2O",
+          "count": 6
+        }
+      ],
+      "charge": 3,
+      "geometry": "octahedral",
+      "colour": null,
+      "page": 136,
+      "geometry_from": "aqua",
+      "review_status": "pending"
+    },
+    {
+      "id": "ni_h2o_6",
+      "metal": "Ni",
+      "metal_charge": 2,
+      "ligands": [
+        {
+          "ligand": "H2O",
+          "count": 6
+        }
+      ],
+      "charge": 2,
+      "geometry": "octahedral",
+      "colour": null,
+      "page": 136,
+      "geometry_from": "q3",
+      "review_status": "pending"
+    },
+    {
+      "id": "zn_h2o_6",
+      "metal": "Zn",
+      "metal_charge": 2,
+      "ligands": [
+        {
+          "ligand": "H2O",
+          "count": 6
+        }
+      ],
+      "charge": 2,
+      "geometry": "octahedral",
+      "colour": null,
+      "page": 136,
+      "geometry_from": "q3",
+      "review_status": "pending"
+    },
+    {
+      "id": "al_oh_3_h2o_3",
+      "metal": "Al",
+      "metal_charge": 3,
+      "ligands": [
+        {
+          "ligand": "OH",
+          "count": 3
+        },
+        {
+          "ligand": "H2O",
+          "count": 3
+        }
+      ],
+      "charge": 0,
+      "geometry": null,
+      "colour": null,
+      "page": 138,
+      "geometry_from": null,
+      "review_status": "pending"
+    },
+    {
+      "id": "cucl4",
+      "metal": "Cu",
+      "metal_charge": 2,
+      "ligands": [
+        {
+          "ligand": "Cl",
+          "count": 4
+        }
+      ],
+      "charge": -2,
+      "geometry": null,
+      "colour": {
+        "vi": "vàng",
+        "en": "yellow"
+      },
+      "page": 138,
+      "geometry_from": null,
+      "review_status": "pending"
+    },
+    {
+      "id": "cu_oh_2_h2o_4",
+      "metal": "Cu",
+      "metal_charge": 2,
+      "ligands": [
+        {
+          "ligand": "OH",
+          "count": 2
+        },
+        {
+          "ligand": "H2O",
+          "count": 4
+        }
+      ],
+      "charge": 0,
+      "geometry": null,
+      "colour": {
+        "vi": "xanh nhạt (kết tủa)",
+        "en": "pale blue (a precipitate)"
+      },
+      "page": 138,
+      "geometry_from": null,
+      "review_status": "pending"
+    },
+    {
+      "id": "cu_nh3_4_h2o_2",
+      "metal": "Cu",
+      "metal_charge": 2,
+      "ligands": [
+        {
+          "ligand": "NH3",
+          "count": 4
+        },
+        {
+          "ligand": "H2O",
+          "count": 2
+        }
+      ],
+      "charge": 2,
+      "geometry": null,
+      "colour": {
+        "vi": "xanh lam",
+        "en": "deep blue"
+      },
+      "page": 138,
+      "geometry_from": null,
+      "review_status": "pending"
+    },
+    {
+      "id": "cr_h2o_6",
+      "metal": "Cr",
+      "metal_charge": 3,
+      "ligands": [
+        {
+          "ligand": "H2O",
+          "count": 6
+        }
+      ],
+      "charge": 3,
+      "geometry": "octahedral",
+      "colour": {
+        "vi": "xanh tím",
+        "en": "violet-blue"
+      },
+      "page": 139,
+      "geometry_from": "aqua",
+      "review_status": "pending"
+    },
+    {
+      "id": "cr_oh_6",
+      "metal": "Cr",
+      "metal_charge": 3,
+      "ligands": [
+        {
+          "ligand": "OH",
+          "count": 6
+        }
+      ],
+      "charge": -3,
+      "geometry": null,
+      "colour": {
+        "vi": "xanh rêu",
+        "en": "moss green"
+      },
+      "page": 139,
+      "geometry_from": null,
+      "review_status": "pending"
+    },
+    {
+      "id": "fe_h2o_6_3",
+      "metal": "Fe",
+      "metal_charge": 3,
+      "ligands": [
+        {
+          "ligand": "H2O",
+          "count": 6
+        }
+      ],
+      "charge": 3,
+      "geometry": "octahedral",
+      "colour": {
+        "vi": "vàng nhạt",
+        "en": "pale yellow"
+      },
+      "page": 139,
+      "geometry_from": "aqua",
+      "review_status": "pending"
+    },
+    {
+      "id": "co_h2o_6_2",
+      "metal": "Co",
+      "metal_charge": 2,
+      "ligands": [
+        {
+          "ligand": "H2O",
+          "count": 6
+        }
+      ],
+      "charge": 2,
+      "geometry": "octahedral",
+      "colour": {
+        "vi": "hồng đỏ",
+        "en": "pinkish red"
+      },
+      "page": 139,
+      "geometry_from": "q3b",
+      "review_status": "pending"
+    },
+    {
+      "id": "co_nh3_6_2",
+      "metal": "Co",
+      "metal_charge": 2,
+      "ligands": [
+        {
+          "ligand": "NH3",
+          "count": 6
+        }
+      ],
+      "charge": 2,
+      "geometry": "octahedral",
+      "colour": {
+        "vi": "vàng nâu",
+        "en": "yellowish brown"
+      },
+      "page": 139,
+      "geometry_from": "q3b",
+      "review_status": "pending"
+    },
+    {
+      "id": "ptcl4",
+      "metal": "Pt",
+      "metal_charge": 2,
+      "ligands": [
+        {
+          "ligand": "Cl",
+          "count": 4
+        }
+      ],
+      "charge": -2,
+      "geometry": null,
+      "colour": null,
+      "page": 140,
+      "geometry_from": null,
+      "review_status": "pending"
+    },
+    {
+      "id": "ptcl3_nh3",
+      "metal": "Pt",
+      "metal_charge": 2,
+      "ligands": [
+        {
+          "ligand": "Cl",
+          "count": 3
+        },
+        {
+          "ligand": "NH3",
+          "count": 1
+        }
+      ],
+      "charge": -1,
+      "geometry": null,
+      "colour": null,
+      "page": 140,
+      "geometry_from": null,
+      "review_status": "pending"
+    },
+    {
+      "id": "fe_cn_6",
+      "metal": "Fe",
+      "metal_charge": 2,
+      "ligands": [
+        {
+          "ligand": "CN",
+          "count": 6
+        }
+      ],
+      "charge": -4,
+      "geometry": null,
+      "colour": null,
+      "page": 140,
+      "geometry_from": null,
+      "review_status": "pending"
+    }
+  ],
+  "substitutions": [
+    {
+      "id": "pt",
+      "before": "ptcl4",
+      "entering": "NH3",
+      "entering_count": 1,
+      "after": "ptcl3_nh3",
+      "leaving": "Cl",
+      "leaving_count": 1,
+      "page": 140
+    },
+    {
+      "id": "fe",
+      "before": "fe_h2o_6_2",
+      "entering": "CN",
+      "entering_count": 6,
+      "after": "fe_cn_6",
+      "leaving": "H2O",
+      "leaving_count": 6,
+      "page": 140
+    },
+    {
+      "id": "cu",
+      "before": "cu_h2o_6",
+      "entering": "Cl",
+      "entering_count": 4,
+      "after": "cucl4",
+      "leaving": "H2O",
+      "leaving_count": 6,
+      "page": 140
+    },
+    {
+      "id": "co",
+      "before": "co_h2o_6_2",
+      "entering": "NH3",
+      "entering_count": 6,
+      "after": "co_nh3_6_2",
+      "leaving": "H2O",
+      "leaving_count": 6,
+      "page": 140
+    }
+  ]
+}

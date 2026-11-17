@@ -1,0 +1,25 @@
+/* Ecological factors and pyramids (SH12 Bài 23, 29; #255 round 5d). */
+.eco-curve {
+  width: 100%;
+  height: 260px;
+}
+.eco-pyramid {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.eco-pyramid__row {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+}
+.eco-pyramid__bar {
+  display: block;
+  height: 26px;
+  border-radius: var(--radius-sm);
+}
+.eco-pyramid__label {
+  font-size: var(--text-content);
+}
