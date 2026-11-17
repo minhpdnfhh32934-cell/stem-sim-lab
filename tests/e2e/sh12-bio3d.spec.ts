@@ -99,3 +99,23 @@ test('Liên kết gene in 3D: the bivalent crosses over; the columns are 41,5 : 
   await page.screenshot({ path: testInfo.outputPath('linkage-3d.png') });
   expect(errors).toEqual([]);
 });
+
+test('Đột biến NST in 3D: the gene orders of Hình 12.1 with their links', async ({
+  page,
+}, testInfo) => {
+  test.setTimeout(120_000);
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(String(e)));
+  await openTopic(page, 'Sinh học', 'Đột biến nhiễm sắc thể');
+  await page.getByRole('radio', { name: '3D' }).first().click();
+  const view = page.locator('.bio3d[data-lesson="chromosomeMutation"]');
+  await expect(view.locator('canvas')).toBeVisible({ timeout: 30_000 });
+  type S = { before: string[]; after: string[]; links: number };
+  // Opens on a deletion: abcdefg → abcg, four genes keep a link.
+  await expect
+    .poll(async () => (await state<S>(page, 'chromosomeMutation'))?.after)
+    .toEqual(['abcg']);
+  expect((await state<S>(page, 'chromosomeMutation'))?.links).toBe(4);
+  await page.screenshot({ path: testInfo.outputPath('chromosome-3d.png') });
+  expect(errors).toEqual([]);
+});

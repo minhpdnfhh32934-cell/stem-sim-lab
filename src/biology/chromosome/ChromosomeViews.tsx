@@ -1,7 +1,10 @@
+import { lazy, Suspense } from 'react';
 import { formatNumber } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import type { LocalizedText } from '@/core/data/dataset';
+import { Bio3DToolbar } from '@/biology/view3d/switch';
+import { useShow3d } from '@/biology/view3d/support';
 import { BarList, type Bar } from '@/ui/charts/BarList';
 import { LabeledNumber } from '@/ui/ModuleControls';
 import { L, usePublishCard } from '../common';
@@ -22,6 +25,10 @@ import {
 import { CHROMOSOME_TABS, restoreChromosome, useChromosome, type ChromosomeTab } from './store';
 import '../bio.css';
 import '../heredity.css';
+
+const Chromosome3DView = lazy(() =>
+  import('./chromosome3d/Chromosome3DView').then((m) => ({ default: m.Chromosome3DView })),
+);
 
 const TAB_NAME: Record<ChromosomeTab, LocalizedText> = {
   structure: L('Đột biến cấu trúc', 'Structural'),
@@ -188,14 +195,37 @@ function DownView() {
 export function ChromosomeStage() {
   const Lz = useLocalized();
   const tab = useChromosome((s) => s.tab);
+  const structure = useChromosome((s) => s.structure);
   usePublishCard(CHROMOSOME_CARD);
+  const { show3d } = useShow3d('chromosomeMutation');
+  const chips = (
+    <>
+      <span className="chem-chip">
+        <strong className="stage__hud-title">{Lz(CHROMOSOME_TITLE)}</strong>
+      </span>
+      <span className="chem-chip">{Lz(TAB_NAME[tab])}</span>
+    </>
+  );
+  // Only the structural mutations have a 3D picture; the counts and Down tabs stay 2D.
+  if (show3d && tab === 'structure')
+    return (
+      <Suspense fallback={<div className="bio-view" />}>
+        <Chromosome3DView
+          label={Lz(STRUCTURE_NAME[structure])}
+          top={
+            <>
+              {chips}
+              <span className="chem-chip">{`${Lz(STRUCTURE_NAME[structure])} (${Lz(L('Hình 12.1', 'Figure 12.1'))})`}</span>
+            </>
+          }
+        />
+      </Suspense>
+    );
   return (
     <div className="bio-view">
       <div className="chem-overlay">
-        <span className="chem-chip">
-          <strong className="stage__hud-title">{Lz(CHROMOSOME_TITLE)}</strong>
-        </span>
-        <span className="chem-chip">{Lz(TAB_NAME[tab])}</span>
+        {chips}
+        {tab === 'structure' && <Bio3DToolbar lesson="chromosomeMutation" />}
       </div>
       {tab === 'structure' ? <StructureView /> : tab === 'number' ? <NumberView /> : <DownView />}
     </div>
