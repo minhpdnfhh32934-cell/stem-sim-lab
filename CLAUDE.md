@@ -573,7 +573,9 @@ Progress log: `docs/PROGRESS.md`.
   benchmarks** (it crashed the lead's laptop, bugcheck 0x119); `gpuSafety.ts` stops Gemma after one
   GPU fault. Numbers the AI explains come from app tools when one applies (`tools.ts`, shown in a
   "Kết quả do SimLab tính" card). AI-written links are never clickable; `navigation.rs` keeps the
-  window on the app. Workflows pin actions by SHA (`tests/workflows.test.ts`); releases only publish
+  window on the app. Workflows pin actions by SHA (`tests/workflows.test.ts`); npm audit fails on
+  high/critical except reviewed ids in `.github/npm-audit-allow.json` (`scripts/ci/npm-audit.mjs`,
+  user decision 2026-11-18: picomatch GHSA-fc5q-39xc-vjpf, dev tools only, no fix yet); releases only publish
   commits on `main`, signing in the `release` environment.
 - UI polish kit (0.5.2): `.segmented`/`.tabs__list` get a sliding indicator
   automatically (`src/ui/slidingIndicator.ts`); `IconButton altIcon/showAlt` morphs two icons;
