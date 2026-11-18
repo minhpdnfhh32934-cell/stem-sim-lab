@@ -487,6 +487,8 @@ describe('faces and drawings', () => {
     setBoard(layout);
     const view = render(<Whiteboard lesson={null} />);
     const wrapper = view.container.querySelector<HTMLElement>('.board__table-scale');
-    expect(wrapper?.style.transform).toBe(`scale(${String(e.scale)})`);
+    // CSS keeps 6 significant digits of the factor (jsdom 31 as browsers do).
+    const factor = /^scale\(([^)]+)\)$/.exec(wrapper?.style.transform ?? '')?.[1];
+    expect(Number(factor)).toBeCloseTo(e.scale, 5);
   });
 });
