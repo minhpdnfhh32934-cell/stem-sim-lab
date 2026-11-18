@@ -28,12 +28,12 @@ const IDLE_FRAME_MS = 50;
 const VOICE_EASE_S = 0.06;
 const silent = () => 0;
 
-/** The orb's colours from the theme tokens (`--teacher-*`; else the accent). */
+/** The orb's colours: the app's stage accent (a run-time reader, CLAUDE.md "Stage"), points and lines. */
 function themeColors(theme: 'light' | 'dark'): OrbColors {
   const css = getComputedStyle(document.documentElement);
   const read = (name: string, or: string) => css.getPropertyValue(name).trim() || or;
-  const accent = read('--teacher-accent', read('--accent', '#0a6b66'));
-  return { accent, line: read('--teacher-line', accent), glow: theme === 'dark' };
+  const accent = read('--stage-accent', read('--accent', '#2f62d8'));
+  return { accent, line: accent, glow: theme === 'dark' };
 }
 
 interface Drawn {

@@ -121,8 +121,11 @@ release history and old work-logs keep the old name). The user accepted:
   `boardAsk.ts`; a picture (`selectionImage.ts`) only when no text was circled, and only to a
   picture-reading model on this computer (`src/teacher/chat/pictureReader.ts`), never online.
   The AI never places anything; board fonts (OFL, Vietnamese) are bundled via `@fontsource`.
-- **AI Teacher station (#234, 0.8.1; `docs/AI_TUTOR.md` "AI Teacher's station"):** the tutor page
-  has its own stage (`--teacher-*` tokens), numbered tabs and an orb instead of the face.
+- **AI Teacher's page (#234, 0.8.1; `docs/AI_TUTOR.md` "AI Teacher's page"):** an orb instead of
+  the face, in the app's look (user request 18/11/2026, replacing #234's "station": no stage,
+  glass, numbered tabs or `--teacher-bg/-accent/-glass…` tokens of its own; `tokens.test.ts` fails
+  on a colour or station token in `teacher.css` / `teacherViews.css`). Do not add a page palette
+  back: `--bg-stage` like the home screen, the app's tabs, the lab's chat panel and cards.
   `src/teacher/orb/` (`points` / `neighbors` / `states` / `orbScene` / `OrbView`; `ORB_BUDGET`
   Medium 300 points / 700 pairs, High 600 / 1500; Low tier, no WebGL 2 or a lost context → the SVG
   rings and the face; reduced motion → drawn once). `useOrbState(typing)`: `ChatPanel` reports a
@@ -130,11 +133,11 @@ release history and old work-logs keep the old name). The user accepted:
   setState: it wiped the box). `src/teacher/voice/voiceLevel.ts`: voices the app plays pass an
   `AnalyserNode` (RMS), the Windows voice gives a pulse per word (an illustration); nothing is
   recorded. `src/teacher/screen/glide.ts` moves the orb between layouts with one FLIP transform.
-  The tabs are the layout radios (`teacherStore.layout`), numbered by position; Advanced adds
-  `memory` / `usage` (`MemoryView`, `UsageView`: the Rust `ai_usage` counter and `dailyCap`, no
-  estimate). The connection chip shows only while an AI can answer; answers sit on glass cards
-  (opaque on Low), never a `backdrop-filter`. E2E `tests/e2e/teacher.spec.ts` (the page) and
-  `post198-teacher.spec.ts` (the station's and the age rule's checks, #263).
+  The tabs are the layout radios (`teacherStore.layout`) drawn as `.tabs__tab` (icon + name);
+  Advanced adds `memory` / `usage` (`MemoryView`, `UsageView`: the Rust `ai_usage` counter and
+  `dailyCap`, no estimate). Who answers is said by the top bar's AI pill only; the orb is drawn in
+  `--stage-accent`. E2E `tests/e2e/teacher.spec.ts` (the page) and
+  `post198-teacher.spec.ts` (the page's and the age rule's checks, #263).
 - **GPU choice (0.4.2):** WebView2 ignores the page's `powerPreference` (hybrid laptops get the
   integrated card). `src-tauri/src/gpu.rs` saves the card as PCI ids in `gpu.json` (4–8 hex
   digits: ACPI ids such as Windows-on-ARM `QCOM` are 8; LUIDs change per
