@@ -73,10 +73,8 @@
     transform: translate3d(-3vmax, 7vmax, 0) scale(0.94);
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .launch__blob {
-    animation: none;
-  }
+:root[data-motion='reduce'] .launch__blob {
+  animation: none;
 }
 .launch__inner {
   position: relative;

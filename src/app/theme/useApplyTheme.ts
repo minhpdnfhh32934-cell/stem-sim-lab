@@ -3,10 +3,14 @@ import { useLayoutStore } from '@/app/layout/layoutStore';
 import { useSettingsStore, type ResolvedTheme } from '@/app/settings/settingsStore';
 
 const DARK_QUERY = '(prefers-color-scheme: dark)';
+const REDUCE_QUERY = '(prefers-reduced-motion: reduce)';
 
-function subscribeSystemTheme(onChange: () => void): () => void {
+const subscribeSystemTheme = (onChange: () => void) => subscribeQuery(DARK_QUERY, onChange);
+const subscribeSystemMotion = (onChange: () => void) => subscribeQuery(REDUCE_QUERY, onChange);
+
+function subscribeQuery(query: string, onChange: () => void): () => void {
   if (typeof window.matchMedia !== 'function') return () => undefined;
-  const mql = window.matchMedia(DARK_QUERY);
+  const mql = window.matchMedia(query);
   mql.addEventListener('change', onChange);
   return () => {
     mql.removeEventListener('change', onChange);
@@ -29,16 +33,30 @@ export function useResolvedTheme(): ResolvedTheme {
   return preference === 'system' ? system : preference;
 }
 
+/** Motion actually used, after resolving "system" (Windows' animation effects). */
+export function useResolvedMotion(): 'reduce' | 'full' {
+  const preference = useSettingsStore((s) => s.motion);
+  const systemReduces = useSyncExternalStore(
+    subscribeSystemMotion,
+    () => typeof window.matchMedia === 'function' && window.matchMedia(REDUCE_QUERY).matches,
+    () => false,
+  );
+  if (preference !== 'system') return preference;
+  return systemReduces ? 'reduce' : 'full';
+}
+
 /** Presentation mode enlarges everything on top of the user's font scale. */
 const PRESENTATION_BOOST = 1.25;
 
 /**
- * Reflects theme, language and font scale onto <html> so CSS tokens can react. A layout
+ * Reflects theme, motion (`data-motion`: the one source CSS and `prefersReducedMotion()` read),
+ * language and font scale onto <html> so CSS tokens can react. A layout
  * effect: it runs before every passive effect of the same commit, so views that read theme
  * tokens in their own effects (canvas, three.js palettes) already see the new theme's values.
  */
 export function useApplyTheme(): ResolvedTheme {
   const theme = useResolvedTheme();
+  const motion = useResolvedMotion();
   const locale = useSettingsStore((s) => s.locale);
   const fontScale = useSettingsStore((s) => s.fontScale);
   const presentation = useLayoutStore((s) => s.presentation);
@@ -46,12 +64,13 @@ export function useApplyTheme(): ResolvedTheme {
   useLayoutEffect(() => {
     const root = document.documentElement;
     root.dataset.theme = theme;
+    root.dataset.motion = motion;
     root.lang = locale;
     root.style.setProperty(
       '--font-scale',
       String(fontScale * (presentation ? PRESENTATION_BOOST : 1)),
     );
-  }, [theme, locale, fontScale, presentation]);
+  }, [theme, motion, locale, fontScale, presentation]);
 
   return theme;
 }

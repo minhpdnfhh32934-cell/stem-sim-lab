@@ -316,10 +316,8 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .teacher-ring__wave {
-    animation: none;
-  }
+:root[data-motion='reduce'] .teacher-ring__wave {
+  animation: none;
 }
 
 @media (max-width: 820px) {
