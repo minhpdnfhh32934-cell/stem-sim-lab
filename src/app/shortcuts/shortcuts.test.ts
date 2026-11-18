@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  focusUnlessTyping,
   formatChord,
   isActivationTarget,
   isEditableTarget,
@@ -79,6 +80,23 @@ describe('isEditableTarget()', () => {
     expect(isEditableTarget(range)).toBe(false);
     expect(isEditableTarget(document.createElement('button'))).toBe(false);
     expect(isEditableTarget(null)).toBe(false);
+  });
+});
+
+describe('focusUnlessTyping()', () => {
+  it('never takes the keys from a field the learner is typing in (a lesson may load after)', () => {
+    const box = document.createElement('textarea');
+    const stage = document.createElement('canvas');
+    stage.tabIndex = 0;
+    document.body.append(box, stage);
+    box.focus();
+    focusUnlessTyping(stage);
+    expect(document.activeElement).toBe(box);
+    box.blur();
+    focusUnlessTyping(stage);
+    expect(document.activeElement).toBe(stage);
+    box.remove();
+    stage.remove();
   });
 });
 
