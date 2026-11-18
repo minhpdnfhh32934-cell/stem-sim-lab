@@ -49,9 +49,7 @@ test('Sổ ghi: a row per run, with the same answers as Lời giải', async ({ 
   await expect(panel.getByText(/Chưa có lần chạy nào/)).toBeVisible();
 });
 
-test('the five bottom tabs fit in one row at 140 % text, Advanced mode (#195)', async ({
-  page,
-}) => {
+test('the six bottom tabs fit in one row at 140 % text, Advanced mode (#195)', async ({ page }) => {
   await page.addInitScript(() => {
     const saved = JSON.parse(localStorage.getItem('stemsim.settings') ?? '{}') as {
       state?: Record<string, unknown>;
@@ -67,7 +65,7 @@ test('the five bottom tabs fit in one row at 140 % text, Advanced mode (#195)', 
   });
   await openTopic(page, 'Vật lý', 'Ném xiên');
   const list = page.getByRole('region', { name: 'Bảng đồ thị và lời giải' }).getByRole('tablist');
-  await expect(list.getByRole('tab')).toHaveCount(5);
+  await expect(list.getByRole('tab')).toHaveCount(6);
   const fits = await list.evaluate((el) => el.scrollWidth <= el.clientWidth + 1);
   expect(fits).toBe(true);
   for (const tab of await list.getByRole('tab').all()) await expect(tab).toBeInViewport();

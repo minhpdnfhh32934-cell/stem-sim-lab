@@ -689,3 +689,51 @@
   align-items: center;
   color: var(--conf-approx);
 }
+
+/* "Quét tham số" (#195 step 5): the form, then the chart and its table. */
+.sweep {
+  padding: var(--space-2) var(--space-3) var(--space-3);
+}
+.sweep__form {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+  gap: var(--space-2) var(--space-3);
+  align-items: end;
+  margin-bottom: var(--space-3);
+}
+.sweep__form label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: var(--text-sm);
+}
+.sweep__form label > span {
+  color: var(--text-muted);
+}
+.sweep__actions {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+/* The chart sizes itself from its box (legend included), so the box holds all of it. */
+.sweep__result .chart {
+  height: 15rem;
+}
+.sweep__skipped {
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+  margin: var(--space-2) 0;
+  font-size: var(--text-xs);
+  color: var(--conf-approx);
+}
+.sweep__table {
+  margin-top: var(--space-2);
+  font-size: var(--text-sm);
+}
+.sweep__table summary {
+  cursor: pointer;
+  min-height: var(--target);
+  display: flex;
+  align-items: center;
+}
