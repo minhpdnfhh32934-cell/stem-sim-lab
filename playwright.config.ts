@@ -39,6 +39,9 @@ export default defineConfig({
   testDir: 'tests/e2e',
   timeout: 60_000,
   fullyParallel: false,
+  // Locally all workers share one Vite dev server: Playwright's default (half the cores) gave 8 on
+  // a 16-core laptop and 9 false failures (18/11/2026); a quarter (4) passed all 265. CI unchanged.
+  ...(process.env.CI ? {} : { workers: '25%' }),
   retries: 0,
   reporter: 'list',
   use: {
