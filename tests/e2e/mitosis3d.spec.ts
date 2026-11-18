@@ -468,8 +468,8 @@ test('mitosis 3D: "Làm mờ phần còn lại" sits in the Inspector in Advance
   const sw = page.getByRole('switch', { name: 'Làm mờ phần còn lại' });
   await expect(sw).toHaveCount(0);
   await page.evaluate(async () => {
-    const { useSettingsStore } = (await import(
-      /* @vite-ignore */ '/src/app/settings/settingsStore.ts'
+    const { useSettingsStore } = (await (async (m: string) => import(/* @vite-ignore */ m))(
+      '/src/app/settings/settingsStore.ts',
     )) as { useSettingsStore: { getState(): { setUiMode(m: 'advanced'): void } } };
     useSettingsStore.getState().setUiMode('advanced');
   });
@@ -479,7 +479,9 @@ test('mitosis 3D: "Làm mờ phần còn lại" sits in the Inspector in Advance
   expect(box?.height ?? 0).toBeGreaterThanOrEqual(40);
   await sw.uncheck();
   const on = await page.evaluate(async () => {
-    const { useDimRest } = (await import(/* @vite-ignore */ '/src/biology/view3d/dimRest.ts')) as {
+    const { useDimRest } = (await (async (m: string) => import(/* @vite-ignore */ m))(
+      '/src/biology/view3d/dimRest.ts',
+    )) as {
       useDimRest: { getState(): { on: boolean } };
     };
     return useDimRest.getState().on;
