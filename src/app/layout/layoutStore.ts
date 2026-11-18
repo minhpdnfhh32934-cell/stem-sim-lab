@@ -2,10 +2,17 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 export type LeftTab = 'library' | 'history';
-export type BottomTab = 'graphs' | 'solution' | 'challenge' | 'data';
+export type BottomTab = 'graphs' | 'solution' | 'challenge' | 'log' | 'sweep' | 'data';
 
 const LEFT_TABS: readonly LeftTab[] = ['library', 'history'];
-const BOTTOM_TABS: readonly BottomTab[] = ['graphs', 'solution', 'challenge', 'data'];
+const BOTTOM_TABS: readonly BottomTab[] = [
+  'graphs',
+  'solution',
+  'challenge',
+  'log',
+  'sweep',
+  'data',
+];
 
 /** Size limits in CSS pixels. Keep the defaults usable on a 1366×768 screen. */
 export const LAYOUT_LIMITS = {
