@@ -361,10 +361,29 @@ const vi = {
     solution: 'Lời giải',
     data: 'Số liệu',
     challenge: 'Thử thách',
+    log: 'Sổ ghi',
     graphsEmpty: 'Đồ thị x–t, v–t, a–t, năng lượng, nồng độ… sẽ hiện ở đây khi mô phỏng chạy.',
     solutionEmpty:
       'Lời giải từng bước sẽ hiện ở đây. Mọi con số đều do chương trình tính, AI chỉ diễn giải bằng lời.',
     dataEmpty: 'Bảng số liệu (có thể xuất CSV) sẽ hiện ở đây.',
+  },
+  runLog: {
+    noScene: 'Mở một bài Vật lí để ghi lại các lần chạy.',
+    empty:
+      'Chưa có lần chạy nào. Bấm Chạy: mỗi lần bài dừng (hết giờ, chạm đất hoặc bấm Tạm dừng), sổ ghi một dòng để bạn so các lần chạy.',
+    note: 'Đáp số do SimLab tính bằng lời giải của bài. Sổ giữ {max} lần chạy gần nhất của bài này, chỉ trong lần mở app này: đóng app là mất, không gửi đi đâu.',
+    clear: 'Xóa sổ',
+    run: 'Lần',
+    time: 'Lúc',
+    changed: 'Thông số đã đổi',
+    answers: 'Đáp số',
+    defaults: 'Mặc định',
+    intervened: 'Đã can thiệp',
+    intervenedHint:
+      'Lần chạy này có kéo bằng chuột: kết quả là mô phỏng số, không có đáp số chính xác.',
+    noAnswers: 'Không tính được với các thông số này',
+    on: 'Bật',
+    off: 'Tắt',
   },
   timeline: {
     time: 'Thời gian mô phỏng',
