@@ -30,7 +30,7 @@ import { goHome, openLab, openStudio, openTopic } from '@/app/topics';
 import { checkForUpdate, updatesSupported } from '@/app/update/updater';
 import { SETTINGS_SECTIONS, SUBJECTS, useWorkspaceStore } from '@/app/workspaceStore';
 import { teacherLocked, useSafetyStore } from '@/safety/safetyStore';
-import { openTeacher, useTeacherStore } from '@/teacher/teacherStore';
+import { openTeacher, openTeacherOn } from '@/teacher/teacherStore';
 import { cx } from '@/ui/cx';
 import { rankCommands, useCommandPalette, type Command } from './commands';
 import './command.css';
@@ -85,10 +85,7 @@ export function CommandPalette() {
         label: t('command.teacherTalk'),
         keywords: 'chat hoi bai',
         icon: GraduationCap,
-        run: () => {
-          openTeacher();
-          useTeacherStore.getState().setLayout('talk');
-        },
+        run: openTeacher,
       },
       {
         id: 'go.board',
@@ -97,9 +94,7 @@ export function CommandPalette() {
         keywords: 'whiteboard bang trang giang',
         icon: Presentation,
         run: () => {
-          // After openTeacher(), which always opens the talk layout.
-          openTeacher();
-          useTeacherStore.getState().setLayout('board');
+          openTeacherOn('board');
         },
       },
     ];

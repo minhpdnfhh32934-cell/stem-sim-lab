@@ -1,0 +1,443 @@
+/* Decorative effects after the SimLab 3D game's (fx.ts, docs/EFFECTS.md). Colours are tokens.
+   `data-fx` (useApplyTheme): off in tests, automated browsers and on the Low tier.
+   `data-motion='reduce'`: no movement, at most a short fade. */
+
+:root {
+  --fx-ease: cubic-bezier(0.65, 0, 0.35, 1);
+  --fx-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ── Screen change (screenChange): the new screen opens as a circle from the press ── */
+::view-transition-old(root),
+::view-transition-new(root) {
+  mix-blend-mode: normal;
+}
+::view-transition-old(root) {
+  animation: fx-recede 560ms var(--fx-ease) both;
+}
+::view-transition-new(root) {
+  animation: fx-iris 560ms var(--fx-ease) both;
+}
+:root[data-motion='reduce']::view-transition-old(root) {
+  animation: none;
+}
+:root[data-motion='reduce']::view-transition-new(root) {
+  animation: fx-fade-in 160ms linear both;
+}
+@keyframes fx-recede {
+  to {
+    transform: scale(0.97);
+    filter: brightness(0.9);
+  }
+}
+@keyframes fx-iris {
+  from {
+    clip-path: circle(0 at var(--fx-x, 50%) var(--fx-y, 50%));
+  }
+  to {
+    clip-path: circle(var(--fx-r, 150vmax) at var(--fx-x, 50%) var(--fx-y, 50%));
+  }
+}
+@keyframes fx-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* The logo's orbit flying out with the circle (ScreenPortal), inside its edge. */
+.fx-portal {
+  position: fixed;
+  top: var(--fx-y, 50%);
+  left: var(--fx-x, 50%);
+  z-index: 1100;
+  width: calc(var(--fx-r, 100vmax) * 1.6);
+  aspect-ratio: 1;
+  pointer-events: none;
+  animation: fx-portal 620ms var(--fx-ease) forwards;
+}
+.fx-portal svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 0.5;
+  filter: drop-shadow(0 0 1.2px var(--accent));
+}
+.fx-portal circle {
+  fill: var(--accent);
+  stroke: none;
+}
+@keyframes fx-portal {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.05) rotate(-50deg);
+  }
+  70% {
+    opacity: 0.85;
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  }
+}
+
+/* ── Opening (Intro.tsx) ── */
+.fx-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: var(--space-4);
+  background:
+    radial-gradient(
+      ellipse at 50% 0%,
+      color-mix(in srgb, var(--accent-soft) 65%, transparent),
+      transparent 58%
+    ),
+    var(--bg-stage);
+  user-select: none;
+}
+.fx-intro.is-leaving {
+  pointer-events: none;
+  animation: fx-fade-out 450ms var(--ease-out) forwards;
+}
+:root[data-motion='reduce'] .fx-intro.is-leaving {
+  animation-duration: 250ms;
+}
+.fx-intro__mark {
+  position: relative;
+  width: 132px;
+  height: 132px;
+}
+.fx-intro__mark svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.fx-intro__bg {
+  fill: var(--accent);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.fx-intro__orbit {
+  fill: none;
+  stroke: var(--text-on-accent);
+  stroke-width: 1.8;
+  transform: rotate(-28deg);
+  transform-box: view-box;
+  transform-origin: 16px 16px;
+}
+.fx-intro__arc {
+  fill: none;
+  stroke: var(--text-on-accent);
+  stroke-width: 1.3;
+  stroke-opacity: 0.7;
+  stroke-linecap: round;
+  stroke-dasharray: 2 2.2;
+}
+.fx-intro__dot {
+  fill: var(--text-on-accent);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+/* The ball thrown along the arc: the logo's path at 132 / 32 px per unit. */
+.fx-intro__ball {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--text-on-accent);
+  offset-path: path('M26.81 96.94 Q57.75 22.69 105.19 82.5');
+  offset-rotate: 0deg;
+  offset-distance: 100%;
+  opacity: 0;
+}
+.fx-intro__word {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  padding: 0 0.12em;
+  color: var(--text);
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+}
+.fx-intro__word > span {
+  display: inline-block;
+}
+.fx-intro__word::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 30%,
+    color-mix(in srgb, var(--accent) 45%, transparent) 50%,
+    transparent 70%
+  );
+  content: '';
+  transform: translateX(-110%);
+}
+
+:root:not([data-motion='reduce']) .fx-intro__bg {
+  animation: fx-pop 520ms var(--fx-spring) both;
+}
+:root:not([data-motion='reduce']) .fx-intro__orbit {
+  animation: fx-orbit-in 900ms 200ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+:root:not([data-motion='reduce']) .fx-intro__arc {
+  animation: fx-fade-in 700ms 550ms linear both;
+}
+:root:not([data-motion='reduce']) .fx-intro__ball {
+  animation: fx-throw 760ms 550ms cubic-bezier(0.3, 0.1, 0.7, 1) both;
+}
+:root:not([data-motion='reduce']) .fx-intro__dot {
+  animation: fx-pop 420ms 1250ms var(--fx-spring) both;
+}
+:root:not([data-motion='reduce']) .fx-intro__word > span {
+  animation: fx-rise 520ms calc(1150ms + var(--i, 0) * 70ms) var(--ease-out) both;
+}
+:root:not([data-motion='reduce']) .fx-intro__word::after {
+  animation: fx-sweep 700ms 1800ms ease-in-out both;
+}
+:root:not([data-motion='reduce']) .fx-intro.is-leaving > * {
+  animation: fx-zoom-out 450ms var(--ease-out) forwards;
+}
+@keyframes fx-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}
+@keyframes fx-orbit-in {
+  from {
+    opacity: 0;
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    transform: rotate(-388deg) scale(0.35);
+  }
+  to {
+    opacity: 1;
+    stroke-dasharray: 100;
+    stroke-dashoffset: 0;
+    transform: rotate(-28deg) scale(1);
+  }
+}
+@keyframes fx-throw {
+  from {
+    offset-distance: 0%;
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  to {
+    offset-distance: 100%;
+    opacity: 0;
+  }
+}
+@keyframes fx-rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.6em);
+  }
+}
+@keyframes fx-sweep {
+  to {
+    transform: translateX(110%);
+  }
+}
+@keyframes fx-zoom-out {
+  to {
+    transform: scale(1.12);
+  }
+}
+@keyframes fx-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+/* ── Launch page: drifting subject shapes (LandingScreen) ── */
+.launch__drift {
+  position: absolute;
+  inset: 0;
+  display: none;
+  overflow: hidden;
+  pointer-events: none;
+}
+:root[data-fx='on'] .launch__drift {
+  display: block;
+}
+.launch__float {
+  position: absolute;
+  opacity: 0.16;
+}
+:root[data-theme='dark'] .launch__float {
+  opacity: 0.22;
+}
+.launch__float--physics {
+  color: var(--subject-physics);
+}
+.launch__float--chemistry {
+  color: var(--subject-chemistry);
+}
+.launch__float--biology {
+  color: var(--subject-biology);
+}
+.launch__float:nth-child(1) {
+  top: 11%;
+  left: 8%;
+}
+.launch__float:nth-child(2) {
+  top: 16%;
+  right: 9%;
+}
+.launch__float:nth-child(3) {
+  bottom: 13%;
+  left: 12%;
+}
+.launch__float:nth-child(4) {
+  right: 13%;
+  bottom: 10%;
+}
+.launch__float:nth-child(5) {
+  top: 50%;
+  left: 3%;
+}
+.launch__float:nth-child(6) {
+  top: 54%;
+  right: 4%;
+}
+.launch__float:nth-child(7) {
+  top: 4%;
+  left: 44%;
+}
+/* A pendulum on a thread (decorative, not a model of one). */
+.launch__pendulum {
+  position: absolute;
+  top: 0;
+  left: 25%;
+  width: 2px;
+  height: 92px;
+  background: currentcolor;
+  color: var(--subject-physics);
+  opacity: 0.18;
+  transform-origin: top center;
+}
+.launch__pendulum::after {
+  position: absolute;
+  bottom: -9px;
+  left: -8px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: currentcolor;
+  content: '';
+}
+:root[data-fx='on']:not([data-motion='reduce']) .launch__float {
+  animation: fx-float 18s ease-in-out infinite alternate;
+}
+:root[data-fx='on']:not([data-motion='reduce']) .launch__float:nth-child(2n) {
+  animation-duration: 23s;
+  animation-direction: alternate-reverse;
+}
+:root[data-fx='on']:not([data-motion='reduce']) .launch__float:nth-child(3n) {
+  animation-duration: 27s;
+  animation-delay: -9s;
+}
+:root[data-fx='on']:not([data-motion='reduce']) .launch__pendulum {
+  animation: fx-swing 2.8s ease-in-out infinite alternate;
+}
+@keyframes fx-float {
+  from {
+    transform: translate3d(0, 0, 0) rotate(-8deg);
+  }
+  50% {
+    transform: translate3d(2.4vmin, -2.8vmin, 0) rotate(4deg);
+  }
+  to {
+    transform: translate3d(-1.6vmin, 1.8vmin, 0) rotate(10deg);
+  }
+}
+@keyframes fx-swing {
+  from {
+    transform: rotate(-16deg);
+  }
+  to {
+    transform: rotate(16deg);
+  }
+}
+@media (max-width: 720px) {
+  :root[data-fx='on'] .launch__drift {
+    display: none;
+  }
+}
+
+/* ── Reveals: launch page, lab home, Settings groups, toasts (backwards: hover still lifts) ── */
+:root[data-fx='on']:not([data-motion='reduce'])
+  :is(
+    .launch__eyebrow,
+    .launch__title,
+    .launch__subtitle,
+    .launch-card,
+    .launch__privacy,
+    .home__inner > *,
+    .settings-panel .settings-group
+  ) {
+  animation: fx-rise 560ms var(--fx-delay, 0ms) var(--ease-out) backwards;
+}
+.launch__title,
+.home__inner > :nth-child(2),
+.settings-panel .settings-group:nth-child(2) {
+  --fx-delay: 70ms;
+}
+.launch__subtitle,
+.home__inner > :nth-child(3),
+.settings-panel .settings-group:nth-child(3) {
+  --fx-delay: 140ms;
+}
+.launch-card:first-child,
+.home__inner > :nth-child(4),
+.settings-panel .settings-group:nth-child(4) {
+  --fx-delay: 220ms;
+}
+.launch-card:nth-child(2),
+.home__inner > :nth-child(5),
+.settings-panel .settings-group:nth-child(n + 5) {
+  --fx-delay: 300ms;
+}
+.launch__privacy,
+.home__inner > :nth-child(n + 6) {
+  --fx-delay: 380ms;
+}
+/* The launch page waits for the opening to fade. */
+:root[data-intro]
+  :is(.launch__eyebrow, .launch__title, .launch__subtitle, .launch-card, .launch__privacy) {
+  animation-play-state: paused;
+}
+:root[data-fx='on']:not([data-motion='reduce']) .toast {
+  animation: fx-toast-in 340ms var(--fx-spring) backwards;
+}
+@keyframes fx-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.96);
+  }
+}
+
+/* ── A press: the icon dips, then springs back ── */
+:root[data-fx='on']:not([data-motion='reduce']) :is(.btn, .icon-btn, .tabs__tab) > svg {
+  transition: transform 300ms var(--fx-spring);
+}
+:root[data-fx='on']:not([data-motion='reduce'])
+  :is(.btn, .icon-btn, .tabs__tab):active:not(:disabled)
+  > svg {
+  transform: scale(0.82);
+  transition-duration: 70ms;
+}

@@ -1,4 +1,17 @@
-import { ArrowRight, GraduationCap, PencilRuler, ShieldCheck, Sparkles } from 'lucide-react';
+import {
+  Apple,
+  ArrowRight,
+  Atom,
+  Dna,
+  FlaskConical,
+  GraduationCap,
+  Magnet,
+  Microscope,
+  Orbit,
+  PencilRuler,
+  ShieldCheck,
+  Sparkles,
+} from 'lucide-react';
 import { openLab } from '@/app/topics';
 import { useT } from '@/app/i18n';
 import { teacherLocked, useSafetyStore } from '@/safety/safetyStore';
@@ -20,6 +33,17 @@ export function LandingScreen() {
         <span className="launch__blob launch__blob--2" />
         <span className="launch__blob launch__blob--3" />
         <span className="launch__blob launch__blob--4" />
+      </div>
+      {/* Subject shapes drifting slowly behind the page (src/app/fx/fx.css), like the game's menu. */}
+      <div className="launch__drift" aria-hidden="true">
+        <FlaskConical className="launch__float launch__float--chemistry" size={54} />
+        <Dna className="launch__float launch__float--biology" size={60} />
+        <Apple className="launch__float launch__float--physics" size={46} />
+        <Atom className="launch__float launch__float--chemistry" size={58} />
+        <Magnet className="launch__float launch__float--physics" size={40} />
+        <Microscope className="launch__float launch__float--biology" size={44} />
+        <Orbit className="launch__float launch__float--physics" size={36} />
+        <span className="launch__pendulum" />
       </div>
       <div className="launch__inner">
         <div className="launch__eyebrow">

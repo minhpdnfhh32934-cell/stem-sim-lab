@@ -9,6 +9,7 @@ import { useProfileStore } from './learner/profileStore';
 import { useProgressStore } from '@/learn/progressStore';
 import { closeTeacher, useTeacherStore } from '@/teacher/teacherStore';
 import { useNavigationStore } from './navigationStore';
+import { screenChange } from './fx/fx';
 
 /** Subject that contains a topic id (for switching the subject when opening). */
 export function subjectOf(topicId: string): Subject | undefined {
@@ -26,41 +27,52 @@ export function subjectOf(topicId: string): Subject | undefined {
  * e.g. a Science Studio condition.
  */
 export async function openTopic(topicId: string, opts?: OpenOptions): Promise<void> {
-  closeTeacher();
-  useNavigationStore.getState().setScreen('lab');
-  const subject = subjectOf(topicId);
-  if (subject) useWorkspaceStore.setState({ subject });
   const isModule = hasModule(topicId);
-  if (!isModule && !hasScene(topicId)) return;
-  // Remembered right away: going home while the engine is still loading must not lose
-  // "Tiếp tục bài đang học".
-  useProfileStore.getState().setLastTopic(topicId);
-  if (isModule) {
-    sim.shutdown();
-    await openModule(topicId);
-  } else {
-    closeModule();
-    await sim.open(topicId, opts);
-  }
+  const known = isModule || hasScene(topicId);
+  let loading: Promise<void> = Promise.resolve();
+  // The screen change shows the topic already loading (the start of `open` runs inside it).
+  await screenChange(() => {
+    closeTeacher();
+    useNavigationStore.getState().setScreen('lab');
+    const subject = subjectOf(topicId);
+    if (subject) useWorkspaceStore.setState({ subject });
+    if (!known) return;
+    // Remembered right away: going home while the engine is still loading must not lose
+    // "Tiếp tục bài đang học".
+    useProfileStore.getState().setLastTopic(topicId);
+    if (isModule) {
+      sim.shutdown();
+      loading = openModule(topicId);
+    } else {
+      closeModule();
+      loading = sim.open(topicId, opts);
+    }
+  });
+  if (!known) return;
+  await loading;
   useProgressStore.getState().markVisited(topicId);
 }
 
 /** Closes the open topic and shows the home screen ("Hôm nay học gì?"). */
 export function goHome(): void {
-  closeTeacher();
-  sim.shutdown();
-  closeModule();
-  useNavigationStore.getState().setScreen('home');
+  void screenChange(() => {
+    closeTeacher();
+    sim.shutdown();
+    closeModule();
+    useNavigationStore.getState().setScreen('home');
+  });
 }
 
 /** Opens the existing topic browser and simulation workspace from the new landing page. */
 export function openLab(): void {
-  closeTeacher();
-  // Nothing open in the lab: no Science Card may linger from another screen's model.
-  if (!useSimStore.getState().scene && !useModuleStore.getState().active) {
-    useWorkspaceStore.setState({ scienceCard: null });
-  }
-  useNavigationStore.getState().setScreen('lab');
+  void screenChange(() => {
+    closeTeacher();
+    // Nothing open in the lab: no Science Card may linger from another screen's model.
+    if (!useSimStore.getState().scene && !useModuleStore.getState().active) {
+      useWorkspaceStore.setState({ scienceCard: null });
+    }
+    useNavigationStore.getState().setScreen('lab');
+  });
 }
 
 /**
@@ -68,10 +80,12 @@ export function openLab(): void {
  * stays beside it. `screen === 'studio'` keeps its meaning for every older caller.
  */
 export function openStudio(): void {
-  closeTeacher();
-  sim.shutdown();
-  closeModule();
-  useNavigationStore.getState().setScreen('studio');
+  void screenChange(() => {
+    closeTeacher();
+    sim.shutdown();
+    closeModule();
+    useNavigationStore.getState().setScreen('studio');
+  });
 }
 
 export function useIsStudio(): boolean {
