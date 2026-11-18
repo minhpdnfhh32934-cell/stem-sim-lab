@@ -5,7 +5,7 @@ import { formatNumber, useT } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { fromSI, unitLabel } from '@/core/units';
-import type { Answer, ParamDef } from '@/physics/types';
+import type { Answer, ParamDef, PhysicsScene } from '@/physics/types';
 import { XYChart } from '@/ui/charts/XYChart';
 import { EmptyState } from '@/ui/EmptyState';
 import { NumberField } from '@/ui/NumberField';
@@ -28,19 +28,32 @@ interface Done {
 /** "Quét tham số" tab (#195 step 5, Advanced): one answer of the lesson against one parameter. */
 export function SweepPanel() {
   const t = useT();
+  const scene = useSimStore((s) => s.scene);
+  if (!scene) {
+    return (
+      <EmptyState icon={Spline} compact>
+        {t('sweep.noScene')}
+      </EmptyState>
+    );
+  }
+  // Each lesson has its own sweep: a new lesson starts from a fresh form.
+  return <SweepBody key={scene.id} scene={scene} />;
+}
+
+function SweepBody({ scene }: { scene: PhysicsScene }) {
+  const t = useT();
   const L = useLocalized();
   const locale = useSettingsStore((s) => s.locale);
-  const { scene, params, sources, validation } = useSimStore(
+  const { params, sources, validation } = useSimStore(
     useShallow((s) => ({
-      scene: s.scene,
       params: s.params,
       sources: s.sources,
       validation: s.validation,
     })),
   );
-  const defs = useMemo(() => (scene ? sweepable(scene, params) : []), [scene, params]);
+  const defs = useMemo(() => sweepable(scene, params), [scene, params]);
   const answers = useMemo(() => {
-    if (!scene || validation.length > 0) return [];
+    if (validation.length > 0) return [];
     try {
       return scene.solve(params, locale).answers;
     } catch {
@@ -56,20 +69,12 @@ export function SweepPanel() {
   const [done, setDone] = useState<Done | null>(null);
   const abort = useRef<AbortController | null>(null);
 
-  // A new lesson starts a new sweep; leaving the tab or the lesson stops one that is running.
+  // Leaving the tab or the lesson stops a sweep that is running.
   useEffect(() => {
-    setDone(null);
-    setRange(null);
-    return () => abort.current?.abort();
-  }, [scene]);
+    const running = abort;
+    return () => running.current?.abort();
+  }, []);
 
-  if (!scene) {
-    return (
-      <EmptyState icon={Spline} compact>
-        {t('sweep.noScene')}
-      </EmptyState>
-    );
-  }
   const def = defs.find((d) => d.key === key) ?? defs[0];
   const answer = answers.find((a) => a.id === answerId) ?? answers[0];
   if (!def || !answer) {
