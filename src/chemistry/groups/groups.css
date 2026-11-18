@@ -1,0 +1,96 @@
+/* Groups IA and IIA, first-row transition metals (HH12 Bài 24, 25, 27; #255 round 4e). */
+@import '../chem.css';
+
+.groups-view {
+  position: absolute;
+  inset: 72px var(--space-4) var(--space-4);
+  overflow: auto;
+  display: grid;
+  align-content: start;
+  gap: var(--space-3);
+}
+.groups-view__head {
+  margin: 0;
+  font-size: var(--text-content);
+}
+.groups-note {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--text-content);
+}
+.groups-table,
+.groups-grid {
+  border-collapse: collapse;
+}
+.groups-table caption,
+.groups-grid caption {
+  text-align: left;
+  font-weight: 600;
+  padding-bottom: var(--space-1);
+}
+.groups-table th,
+.groups-table td,
+.groups-grid th,
+.groups-grid td {
+  padding: 4px var(--space-3);
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.groups-cell {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  min-height: var(--target);
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+.groups-cell--on {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.groups-cell__class {
+  font-weight: 600;
+}
+.groups-cell--K .groups-cell__class {
+  color: var(--chart-4);
+}
+.groups-cell--T .groups-cell__class {
+  color: var(--chart-1);
+}
+.groups-ion {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin: 0;
+  font-size: var(--text-lg, var(--text-content));
+}
+.groups-ion__result,
+.groups-steps__result {
+  font-weight: 600;
+}
+.groups-eq {
+  margin: 0;
+  font-size: var(--text-content);
+}
+.groups-steps {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-1) var(--space-3);
+  margin: 0;
+  font-size: var(--text-content);
+}
+.groups-steps dd {
+  margin: 0;
+}
+.groups-panel__list {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding-left: var(--space-4);
+}

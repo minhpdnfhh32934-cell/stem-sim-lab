@@ -1,6 +1,11 @@
 """Generate data/titration.json: water's ion product at 25 °C and acid–base indicator ranges.
 
-Kw: IAPWS R11-24 (2024), Revised Release on the Ionization Constant of H2O, Eqs. (2)–(4) with the
+Kw used by the app: the textbook's value (user rule 15/11/2026, "bám sát chương trình của sách"):
+SGK Hóa học 11 Kết nối tri thức, Bài 2, tr. 20 ("Em có biết"): Kw = 10^-14 at 25 °C, i.e. pKw = 14.
+It is read in NXBGD's reader https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-11.4701111834
+(16/11/2026). The IAPWS value below is kept as the second source and quoted on the Science Card.
+
+Second source for Kw: IAPWS R11-24 (2024), Revised Release on the Ionization Constant of H2O, Eqs. (2)–(4) with the
 Table 1 parameters. The code is checked against every Table 2 test value, and the 25 °C result
 against the Table 3 value (13.99 at 0.1 MPa). Water density at 25 °C and 0.1 MPa from the IAPWS-95
 formulation (Wagner & Pruss 2002), as Table 3 uses. IAPWS Kw is on the molality scale (mol/kg);
@@ -22,6 +27,12 @@ import math
 import pathlib
 
 OUT = pathlib.Path(__file__).resolve().parents[2] / "data" / "titration.json"
+SGK_HH11_B2 = {
+    "id": "sgk-hh11-b2-kw",
+    "citation": "SGK Hóa học 11 Kết nối tri thức, NXB Giáo dục Việt Nam: Bài 2 tr. 20, Em có biết — tích số ion của nước Kw = 10⁻¹⁴ ở 25 °C",
+    "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-11.4701111834",
+}
+SGK_PKW = 14.0
 ACCESSED = "2026-11-02"
 
 IAPWS = {
@@ -105,7 +116,9 @@ def main() -> None:
         "p_MPa": 0.1,
         "density_g_cm3": RHO_25C,
         "pKw_molal": round(value, 4),
-        "pKw": molar,
+        "pKw": SGK_PKW,
+        "book_source": SGK_HH11_B2,
+        "pKw_iapws": molar,
         "uncertainty_pK": UNCERTAINTY_PK,
         "source": IAPWS,
         "density_source": IAPWS95,
@@ -135,7 +148,7 @@ def main() -> None:
         "items": items,
     }
     OUT.write_text(json.dumps(out, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
-    print(f"wrote pKw(25 C) = {molar} mol/L scale ({value:.6f} mol/kg); {len(items)} indicators")
+    print(f"wrote pKw(25 C) = {SGK_PKW} (SGK); IAPWS {molar} mol/L scale ({value:.6f} mol/kg); {len(items)} indicators")
 
 
 if __name__ == "__main__":

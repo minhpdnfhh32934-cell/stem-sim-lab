@@ -35,7 +35,11 @@ export type Indicator = z.infer<typeof IndicatorSchema>;
 
 const WaterSchema = z.object({
   T_K: z.number(),
+  /** The textbook's pKw (SGK Hóa học 11 Bài 2 tr. 20: Kw = 10⁻¹⁴ at 25 °C), used by the app. */
   pKw: z.number().positive(),
+  book_source: SourceSchema,
+  /** IAPWS R11-24 on the mol/L scale, the second source quoted on the card. */
+  pKw_iapws: z.number().positive(),
   uncertainty_pK: z.number().positive(),
   source: SourceSchema,
   density_source: SourceSchema,
@@ -46,11 +50,14 @@ const dataset = loadDataset('titration', IndicatorSchema, raw);
 const water = WaterSchema.parse((raw as { water: unknown }).water);
 
 export const INDICATORS: readonly Indicator[] = dataset.items;
-/** pKw on the mol/L scale (the generator converts the IAPWS mol/kg value). */
+/** pKw = 14 as the textbook gives it (user rule 15/11/2026: the book first). */
 export const PKW = water.pKw;
+/** IAPWS pKw on the mol/L scale (the generator converts the mol/kg value): the second source. */
+export const PKW_IAPWS = water.pKw_iapws;
 export const KW = 10 ** -water.pKw;
 export const PKW_UNCERTAINTY = water.uncertainty_pK;
 export const TITRATION_SOURCES: Source[] = [
+  water.book_source,
   water.source,
   water.density_source,
   ...new Map(

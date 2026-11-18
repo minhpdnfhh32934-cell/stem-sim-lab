@@ -1,6 +1,8 @@
-import { formatNumber } from '@/app/i18n';
 import type { Locale } from '@/app/i18n/types';
 import type { LocalizedText } from '@/core/data/dataset';
+import { sci } from '@/ui/sciNumber';
+
+export { sci };
 
 const L = (vi: string, en: string): LocalizedText => ({ vi, en });
 
@@ -101,39 +103,6 @@ export const periodOf = (lambda: number) => lambda / C_SGK;
 
 /** A band's frequency range (Hz): the activity of tr. 47 asks for it. */
 export const frequencyRange = (b: Band) => ({ min: frequencyOf(b.max), max: frequencyOf(b.min) });
-
-const SUP: Record<string, string> = {
-  '-': '⁻',
-  '0': '⁰',
-  '1': '¹',
-  '2': '²',
-  '3': '³',
-  '4': '⁴',
-  '5': '⁵',
-  '6': '⁶',
-  '7': '⁷',
-  '8': '⁸',
-  '9': '⁹',
-};
-
-/**
- * A number as the textbook writes large and small ones: "5·10¹⁴", "3,8·10⁻⁷", "1·10⁵" (Vietnamese
- * decimal comma), "10⁻¹²" for a power of ten; plain between 0,01 and 10 000.
- */
-export function sci(locale: Locale, v: number, sig = 3): string {
-  if (!Number.isFinite(v)) return '—';
-  if (v === 0) return '0';
-  const exp = Math.floor(Math.log10(Math.abs(v)) + 1e-12);
-  if (exp >= -2 && exp <= 4) return formatNumber(locale, Number(v.toPrecision(sig)));
-  let mant = Number((v / 10 ** exp).toPrecision(sig));
-  let e = exp;
-  if (Math.abs(mant) >= 10) {
-    mant /= 10;
-    e += 1;
-  }
-  const power = `10${String(e).replace(/[-\d]/g, (c) => SUP[c] ?? c)}`;
-  return mant === 1 ? power : `${formatNumber(locale, mant)}·${power}`;
-}
 
 /** A length in the unit the textbook would use: "100 km", "3 cm", "760 nm", "1·10⁻⁵ nm". */
 export function lengthText(locale: Locale, m: number): string {

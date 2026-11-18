@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "product": "SimLab",
   "repository": "https://github.com/minhpdnfhh32934-cell/stem-sim-lab",
-  "evidenceCheckedAt": "2026-11-14",
+  "evidenceCheckedAt": "2026-11-18",
   "overview": [
     "SimLab (tên cũ: STEM Sim Lab) là ứng dụng desktop mô phỏng Vật lý, Hóa học và Sinh học cho người học, chạy ngay trên máy (Tauri 2 + React). Mọi con số do chương trình tính bằng mô hình ghi trong Thẻ Khoa học; AI chỉ đọc đề và giải thích bằng lời.",
     "Dự án bắt đầu ngày 28/09/2026: Phase 0–7 (khung app, lõi tính toán, Vật lý, AI đọc đề, Hóa học, Sinh học, dự án và bộ cài Windows) xong trong hai ngày đầu. Tiếp theo là giai đoạn 3b (học bằng khám phá, an toàn khi dùng AI, hai bộ cài), bản fork 'Thầy AI' (09–12/10/2026) mà nay là AI Teacher, rồi đổi tên thành SimLab ở 0.5.0 và đợt rà soát toàn diện G0–G5 cho 0.6.0. Bản 0.7.0 và 0.7.1 đưa cả 11 bài Sinh học lên hình 3D. Bản 0.8.0 (không phát hành riêng) và 0.8.1 (chưa phát hành) bám sách Kết nối tri thức, thêm nhiều bài mới và thay toàn bộ giao diện bằng Bàn thí nghiệm.",
@@ -180,6 +180,257 @@
     "Tổng số unit/E2E/Rust test của 0.1.0 và 0.3.0 không có trong tài liệu."
   ],
   "versions": [
+    {
+      "version": "0.11.0",
+      "status": "released",
+      "statusNote": "Phát hành 18/11/2026 từ main @ e3a839dc (lượt Release 44203229726, người dùng chạy). Gói lớp 12 (#255): mọi bài lí thuyết của Vật lí 12 (21/21), Hóa học 12 (22/22) và Sinh học 12 (28/28) có chủ đề, qua 14 đợt (#293–#307); và hình 3D cho mọi bài làm được 3D (#302, chín đợt 6a–6i, PR #309–#316), cùng sửa bước npm audit (#317). Mỗi PR CI 8/8 xanh trước khi gộp. Chỉ phần web lên 0.11.0; lõi vẫn 0.8.2 (không có thay đổi Rust), nên web-update.json ghi minNative 0.8.2 và ứng dụng 0.8.2 cài từ GitHub nhận qua cập nhật trong app; bộ cài trong bản phát hành vẫn mang số 0.8.2. Bắt buộc cập nhật: minRequired 0.11.0 (người dùng chọn khi chạy lượt Release). Hộp “Có gì mới” đóng gói trong bản này được viết trước khi ghi chú nhắc tới hình 3D (thêm 18/11 sau khi phát hành).",
+      "channel": "github",
+      "dates": {
+        "devStart": "2026-11-17T00:43:39Z",
+        "firstCommit": "2026-11-17T09:30:49+07:00",
+        "lastCommit": "2026-11-18T05:41:22+07:00",
+        "merged": "2026-11-17T23:21:24Z",
+        "built": "2026-11-18T00:08:22Z",
+        "released": "2026-11-18T00:08:48Z",
+        "tagged": null
+      },
+      "evidence": [
+        "devStart: GitHub Release v0.10.0 published_at 2026-11-17T00:43:39Z (các thay đổi sau đó thuộc 0.11.0)",
+        "firstCommit: 765aaf3c 2026-11-17T09:30:49+07:00 'feat(data): VL12 thermal tables from the textbook, sgkVl12 sources (#255)'",
+        "Phạm vi: data/curriculum_kntt.json (scripts/data/gen_curriculum_kntt.py) — mọi bài lí thuyết của VL12, HH12, SH12 đều được xếp chủ đề (đếm 17/11/2026 trên nhánh feat/255-sh12-ecology)",
+        "Nhật ký từng đợt: docs/work-log/2026-11-17-255-vl12-*.md, 2026-11-17-255-hh12-*.md, 2026-11-17-255-sh12-*.md",
+        "Dữ liệu và lời văn mới chờ giáo viên duyệt: docs/DATA_REVIEW.md VL12-*, HH12-*, SH12-*",
+        "Hình 3D (#302): docs/work-log/2026-11-17-302-3d-*.md, 2026-11-18-302-3d-sh12.md; câu chữ chờ duyệt docs/DATA_REVIEW.md PHY3D-1 … PHY3D-28, SH12-3D-1 … SH12-3D-5, HH11-3D-1",
+        "npm audit (#317): .github/npm-audit-allow.json bỏ qua đúng GHSA-fc5q-39xc-vjpf (picomatch, chưa có bản vá, chỉ trong công cụ phát triển), quyết định của người dùng 18/11/2026",
+        "lastCommit: d6699b35 2026-11-18T05:41:22+07:00 'Merge main into feat/302-3d-sh12 (#302)' (commit cuối của PR #316 trước khi gộp)",
+        "PR #316 gộp e3a839dc 2026-11-17T23:21:24Z (gh pr view 316)",
+        "built: lượt Release 44203229726 (workflow_dispatch, main, e3a839dc), job 'Build Windows installers' xong 2026-11-18T00:08:22Z",
+        "released: GitHub Release v0.11.0 'SimLab 0.11.0', published_at 2026-11-18T00:08:48Z, target e3a839dc; tệp: SimLab_0.8.2_x64-setup.exe, SimLab_0.8.2_x64_en-US.msi, web-bundle.zip, web-update.json, SHA256SUMS.txt",
+        "web-update.json: webVersion 0.11.0, minNative 0.8.2, minRequired 0.11.0, edition main (đọc từ bản phát hành)"
+      ],
+      "tests": [
+        "Mỗi PR: CI 8/8 xanh trước khi gộp (gh pr checks)",
+        "Nhánh cuối feat/255-sh12-ecology: vitest 5747 đạt và spelling.test sau khi sửa (3 bỏ qua có sẵn); typecheck và lint đạt; E2E chromium và chromium-3d đạt trong thư mục tạm (test \"touch screens\" chỉ hỏng ở thư mục tạm)",
+        "Mỗi PR 3D #309–#316 và #317: CI 8/8 xanh trước khi gộp (gh pr checks)",
+        "Lượt Release 44203229726: job 'Tests before packaging' đạt (2026-11-18T00:02:47Z); 5/5 job đạt"
+      ],
+      "refs": {
+        "tag": "v0.11.0",
+        "tagSha": "e3a839dc51026960e4ae7497641b9febdb6ed66d",
+        "releaseUrl": "https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.11.0",
+        "prs": [
+          293, 294, 295, 296, 297, 298, 299, 300, 301, 303, 304, 305, 306, 307, 309, 310, 311, 312,
+          313, 314, 315, 316, 317
+        ],
+        "commits": ["765aaf3c", "d6699b35", "e3a839dc"],
+        "branches": [
+          "feat/255-vl12-thermal",
+          "feat/255-vl12-ideal-gas",
+          "feat/255-vl12-magnetism",
+          "feat/255-vl12-nuclear",
+          "feat/255-hh12-ester-carbohydrate",
+          "feat/255-hh12-nitrogen-polymer",
+          "feat/255-hh12-electrochemistry",
+          "feat/255-hh12-metals",
+          "feat/255-hh12-groups",
+          "feat/255-hh12-complexes",
+          "feat/255-sh12-molecular",
+          "feat/255-sh12-heredity",
+          "feat/255-sh12-evolution",
+          "feat/255-sh12-ecology",
+          "feat/302-3d-electromagnetism",
+          "feat/302-3d-electrostatics",
+          "feat/302-3d-waves",
+          "feat/302-3d-gases",
+          "feat/302-3d-nuclear",
+          "feat/302-3d-orbitals",
+          "feat/302-3d-mechanics",
+          "feat/302-3d-sh12",
+          "fix/npm-audit-allowlist"
+        ]
+      },
+      "publicNotes": {
+        "summary": {
+          "vi": "Bản 0.11.0 hoàn thành chương trình lớp 12 theo sách Kết nối tri thức: mọi bài lí thuyết của Vật lí 12, Hóa học 12 và Sinh học 12 đều có bài học trong SimLab, số liệu lấy từ sách giáo khoa và có ghi trang.",
+          "en": "Version 0.11.0 completes Grade 12 of the Kết nối tri thức textbooks: every theory lesson of Physics 12, Chemistry 12 and Biology 12 now has a lesson in SimLab, with values taken from the textbook and page references."
+        },
+        "added": [
+          {
+            "vi": "Vật lí 12: nội năng, nhiệt độ, nhiệt dung riêng, nhiệt nóng chảy và nhiệt hóa hơi riêng; khí lí tưởng và các định luật chất khí; lực từ, cảm ứng từ, cảm ứng điện từ và máy phát điện xoay chiều; cấu trúc hạt nhân, năng lượng liên kết và hiện tượng phóng xạ.",
+            "en": "Physics 12: internal energy, temperature, specific heat, latent heats; the ideal gas and the gas laws; magnetic force, magnetic field, electromagnetic induction and the AC generator; nuclear structure, binding energy and radioactivity.",
+            "area": "ui"
+          },
+          {
+            "vi": "Hóa học 12: ester và chất béo, amine, amino acid và peptide, thế điện cực và pin Galvani, tính chất của kim loại, nguyên tố nhóm IA và IIA, kim loại chuyển tiếp, phức chất (có mô hình 3D khi sách nêu dạng hình học).",
+            "en": "Chemistry 12: esters and fats, amines, amino acids and peptides, electrode potentials and Galvanic cells, properties of metals, groups IA and IIA, transition metals, complexes (with a 3D model where the book gives the shape).",
+            "area": "ui"
+          },
+          {
+            "vi": "Sinh học 12: operon lac, di truyền liên kết với giới tính, liên kết và hoán vị gene, đột biến nhiễm sắc thể, bằng chứng tiến hóa và các đại địa chất, giới hạn sinh thái, tháp sinh thái và hiệu suất sinh thái.",
+            "en": "Biology 12: the lac operon, sex linkage, linkage and crossing over, chromosome mutations, evidence of evolution and geological time, tolerance limits, ecological pyramids and efficiency.",
+            "area": "ui"
+          },
+          {
+            "vi": "Thêm các bài học có hướng dẫn cho những bài chủ yếu mô tả: dự đoán trước, rồi làm các hoạt động xếp thứ tự, phân loại, ghép.",
+            "en": "Guided lessons for the mainly descriptive lessons: predict first, then order, sort and match.",
+            "area": "ui"
+          },
+          {
+            "vi": "Hình 3D cho nhiều bài (bấm nút 3D trên hình): Vật lí — điện trường, điện thế, tụ điện, dòng điện, lực từ, cảm ứng điện từ, sóng điện từ, sóng cơ, giao thoa, sóng dừng, khí lí tưởng, nội năng và nhiệt lượng, hạt nhân, phóng xạ, các bài ném, chuyển động tròn đều, định luật II Kepler, con lắc đơn, con lắc lò xo; Hóa học — orbital, thành phần nguyên tử, hydrocarbon; Sinh học 12 — operon lac, di truyền liên kết với giới tính, liên kết gene, đột biến cấu trúc nhiễm sắc thể. Mọi số trong hình do SimLab tính, như hình 2D.",
+            "en": "3D views for many lessons (press 3D on the picture): Physics — electric field, potential, capacitors, current, magnetic force, electromagnetic induction, electromagnetic waves, mechanical waves, interference, standing waves, the ideal gas, internal energy and heat, the nucleus, radioactivity, the throw lessons, uniform circular motion, Kepler’s second law, the simple pendulum, the spring–mass oscillator; Chemistry — orbitals, atom composition, hydrocarbons; Biology 12 — the lac operon, sex-linked inheritance, gene linkage, structural chromosome mutations. Every number in a picture is computed by SimLab, as in 2D.",
+            "area": "bio3d"
+          }
+        ],
+        "improved": [
+          {
+            "vi": "Thư viện xếp các bài lớp 12 theo đúng chương và bài của sách; mỗi thẻ khoa học ghi tên bài và trang sách.",
+            "en": "The library places the Grade 12 lessons under the textbook’s chapters and lessons; each science card names the lesson and pages.",
+            "area": "ui"
+          }
+        ],
+        "fixed": [],
+        "security": [],
+        "performance": [],
+        "changed": [],
+        "deprecated": [],
+        "knownIssues": [
+          {
+            "vi": "Nội dung lớp 12 đang chờ giáo viên duyệt; những chỗ sách in chưa khớp nhau được ghi rõ trong bài.",
+            "en": "The Grade 12 content is waiting for a teacher’s review; places where the printed book disagrees with itself are pointed out in the lessons."
+          }
+        ]
+      },
+      "notesReady": true,
+      "learnerHighlights": [
+        {
+          "area": "ui",
+          "vi": "Đủ mọi bài lí thuyết lớp 12: Vật lí, Hóa học, Sinh học.",
+          "en": "Every Grade 12 theory lesson: Physics, Chemistry, Biology."
+        },
+        {
+          "area": "ui",
+          "vi": "Tính bằng số liệu của sách: pin điện, phóng xạ, tháp sinh thái, hoán vị gene.",
+          "en": "Worked with the book’s data: cells, radioactivity, pyramids, crossing over."
+        },
+        {
+          "area": "bio3d",
+          "vi": "Xem 3D nhiều bài Vật lí, Hóa học, Sinh học: bấm nút 3D trên hình.",
+          "en": "See many Physics, Chemistry and Biology lessons in 3D: press 3D on the picture."
+        }
+      ]
+    },
+    {
+      "version": "0.10.0",
+      "status": "released",
+      "statusNote": "Phát hành 17/11/2026 từ main @ d21a55f9 (lượt Release 43987526826, người dùng chạy). Gói lớp 11 (#255): mọi bài lý thuyết của Vật lí 11 (20/20), Hóa học 11 (19/19) và Sinh học 11 (20/20) có chủ đề, qua 12 đợt 2a–2l (PR #277, #278, #279, #283–#291, mỗi PR CI 8/8 xanh). Chỉ phần web lên 0.10.0; phần lõi vẫn 0.8.2 (không có thay đổi Rust), nên web-update.json ghi minNative 0.8.2 và ứng dụng 0.8.2 cài từ GitHub nhận qua cập nhật trong app; bộ cài trong bản phát hành vẫn mang số 0.8.2. Không bắt buộc cập nhật (minRequired để trống). Bản Store nhận ở lần nộp có lõi mới.",
+      "channel": "github",
+      "dates": {
+        "devStart": "2026-11-16T10:43:58Z",
+        "firstCommit": "2026-11-16T22:56:47+07:00",
+        "lastCommit": "2026-11-17T06:27:18+07:00",
+        "merged": "2026-11-16T23:52:32Z",
+        "built": "2026-11-17T00:43:24Z",
+        "released": "2026-11-17T00:43:39Z",
+        "tagged": null
+      },
+      "evidence": [
+        "devStart: GitHub Release v0.9.1 published_at 2026-11-16T10:43:58Z (các thay đổi sau đó thuộc 0.10.0)",
+        "firstCommit: bf73b7ac 2026-11-16T22:56:47+07:00 'feat(physics): cite the Vật lí 11 KNTT lesson and pages on every VL11 card (#255)'",
+        "Phạm vi: data/curriculum_kntt.json (scripts/data/gen_curriculum_kntt.py) — mọi bài lí thuyết của VL11, HH11, SH11 đều được xếp chủ đề (đếm 17/11/2026 trên nhánh feat/255-sh11-reproduction)",
+        "Nhật ký từng đợt: docs/work-log/2026-11-16-255-vl11-waves.md và các tệp 2026-11-17-255-*.md (vl11-electric, hh11-aqueous, hh11-nitrogen-sulfur, hh11-organic-basics, hh11-hydrocarbons, hh11-derivatives, sh11-metabolism, sh11-animals, sh11-response, sh11-growth, sh11-reproduction)",
+        "Dữ liệu và lời văn mới chờ giáo viên duyệt: docs/DATA_REVIEW.md VL11-*, HH11-AB-*, HH11-NS-*, HH11-ORG-*, HH11-GL-1, HH11-HC-*, HH11-DER-*, SH11-GL-1 … SH11-GL-20",
+        "lastCommit: 858e8686 2026-11-17T06:27:18+07:00 'docs(release): 0.10.0 notes list the merged grade-11 PRs #277–#290 (#255)' (commit cuối của PR #291 trước khi gộp)",
+        "PR #291 gộp d21a55f9 2026-11-16T23:52:32Z (gh pr view 291)",
+        "built: lượt Release 43987526826 (workflow_dispatch, main, d21a55f9), job 'Build Windows installers' xong 2026-11-17T00:43:24Z",
+        "released: GitHub Release v0.10.0 'SimLab 0.10.0', published_at 2026-11-17T00:43:39Z, target d21a55f9; tệp: SimLab_0.8.2_x64-setup.exe, SimLab_0.8.2_x64_en-US.msi, web-bundle.zip, web-update.json, SHA256SUMS.txt",
+        "web-update.json: webVersion 0.10.0, minNative 0.8.2, minRequired trống, edition main (tải từ bản phát hành)"
+      ],
+      "tests": [
+        "Mỗi PR: CI 8/8 xanh trước khi gộp (gh pr checks)",
+        "Nhánh cuối feat/255-sh11-reproduction: vitest 5611 đạt (3 bỏ qua có sẵn), typecheck và lint đạt; E2E sh11-guided 20/20 trong thư mục tạm (test \"touch screens\" và bài RDKit chỉ hỏng ở thư mục tạm)",
+        "Lượt Release 43987526826: job 'Tests before packaging' đạt (2026-11-17T00:36:38Z); 5/5 job đạt"
+      ],
+      "refs": {
+        "tag": "v0.10.0",
+        "tagSha": "d21a55f922452f656f660d375794bd63104c6b77",
+        "releaseUrl": "https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.10.0",
+        "prs": [277, 278, 279, 283, 284, 285, 286, 287, 288, 289, 290, 291],
+        "commits": ["bf73b7ac", "858e8686"],
+        "branches": [
+          "feat/255-vl11-waves",
+          "feat/255-vl11-electric",
+          "feat/255-hh11-acid-base",
+          "feat/255-hh11-nitrogen-sulfur",
+          "feat/255-hh11-organic-basics",
+          "feat/255-hh11-hydrocarbons",
+          "feat/255-hh11-derivatives",
+          "feat/255-sh11-metabolism",
+          "feat/255-sh11-animals",
+          "feat/255-sh11-response",
+          "feat/255-sh11-growth",
+          "feat/255-sh11-reproduction"
+        ]
+      },
+      "publicNotes": {
+        "summary": {
+          "vi": "Bản 0.10.0 hoàn thành chương trình lớp 11 theo sách Kết nối tri thức: mọi bài lí thuyết của Vật lí 11, Hóa học 11 và Sinh học 11 đều có bài học trong SimLab, số liệu lấy từ sách giáo khoa và có ghi trang.",
+          "en": "Version 0.10.0 completes Grade 11 of the Kết nối tri thức textbooks: every theory lesson of Physics 11, Chemistry 11 and Biology 11 now has a lesson in SimLab, with values taken from the textbook and page references."
+        },
+        "added": [
+          {
+            "vi": "Vật lí 11: sóng ngang và sóng dọc, sóng điện từ và thang sóng điện từ, điện thế và công của lực điện, tụ điện ghép nối tiếp và song song, cường độ dòng điện và tốc độ trôi của electron.",
+            "en": "Physics 11: transverse and longitudinal waves, electromagnetic waves and the spectrum, electric potential and the work of the electric force, capacitors in series and in parallel, current and electron drift speed.",
+            "area": "ui"
+          },
+          {
+            "vi": "Hóa học 11: pH và chất chỉ thị, nitrogen và sulfur trên trục số oxi hóa, nhóm chức và lập công thức phân tử, đồng phân, hydrocarbon, dẫn xuất halogen, alcohol, phenol, hợp chất carbonyl và carboxylic acid; thêm bài học có hướng dẫn về tách biệt và tinh chế.",
+            "en": "Chemistry 11: pH and indicators, nitrogen and sulfur on oxidation-number axes, functional groups and molecular formulas, isomers, hydrocarbons, halogen derivatives, alcohols, phenol, carbonyl compounds and carboxylic acids; plus a guided lesson on separating and purifying.",
+            "area": "ui"
+          },
+          {
+            "vi": "Sinh học 11: hai mươi bài học có hướng dẫn, từ trao đổi chất, cảm ứng, sinh trưởng và phát triển đến sinh sản, mỗi bài có câu dự đoán và các hoạt động xếp thứ tự, phân loại, ghép.",
+            "en": "Biology 11: twenty guided lessons, from metabolism, responses and growth and development to reproduction, each with a prediction and ordering, sorting and matching activities.",
+            "area": "ui"
+          }
+        ],
+        "improved": [
+          {
+            "vi": "Thư viện xếp các bài lớp 11 theo đúng chương và bài của sách; mỗi thẻ khoa học ghi tên bài và trang sách.",
+            "en": "The library places the Grade 11 lessons under the textbook’s chapters and lessons; each science card names the lesson and pages.",
+            "area": "ui"
+          },
+          {
+            "vi": "Bài chuẩn độ acid – base dùng hằng số Kw của sách giáo khoa.",
+            "en": "The acid–base titration lesson uses the textbook’s value of Kw.",
+            "area": "ui"
+          }
+        ],
+        "fixed": [],
+        "security": [],
+        "performance": [],
+        "changed": [],
+        "deprecated": [],
+        "knownIssues": [
+          {
+            "vi": "Nội dung lớp 11 đang chờ giáo viên duyệt; ba chỗ sách in chưa khớp (một nhiệt độ sôi, một phần trăm phân li, một phương trình) được ghi rõ trong bài.",
+            "en": "The Grade 11 content is waiting for a teacher’s review; three places where the printed book disagrees with itself or with arithmetic (a boiling point, a percentage dissociated, an equation) are pointed out in the lessons."
+          }
+        ]
+      },
+      "notesReady": true,
+      "learnerHighlights": [
+        {
+          "area": "ui",
+          "vi": "Đủ mọi bài lí thuyết lớp 11: Vật lí, Hóa học, Sinh học.",
+          "en": "Every Grade 11 theory lesson: Physics, Chemistry, Biology."
+        },
+        {
+          "area": "ui",
+          "vi": "Hai mươi bài Sinh học 11 có hướng dẫn: dự đoán trước, rồi làm hoạt động.",
+          "en": "Twenty guided Biology 11 lessons: predict first, then do the activities."
+        }
+      ]
+    },
     {
       "version": "0.9.1",
       "status": "released",

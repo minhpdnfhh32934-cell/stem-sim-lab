@@ -3,6 +3,7 @@ import {
   INDICATORS,
   KW,
   PKW,
+  PKW_IAPWS,
   curve,
   equivalenceVolume,
   indicatorAt,
@@ -79,9 +80,10 @@ describe('strong acid – strong base titration', () => {
 });
 
 describe('water and indicator data', () => {
-  it('uses the generated pKw at 25 °C (IAPWS), pending review', () => {
-    expect(PKW).toBeGreaterThan(13.9);
-    expect(PKW).toBeLessThan(14.1);
+  it('uses the textbook’s Kw = 10⁻¹⁴ at 25 °C (pKw = 14); IAPWS is the second source', () => {
+    expect(PKW).toBe(14);
+    expect(PKW_IAPWS).toBeGreaterThan(13.9);
+    expect(PKW_IAPWS).toBeLessThan(14.1);
     expect(KW).toBeCloseTo(10 ** -PKW, 25);
   });
 

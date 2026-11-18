@@ -1,0 +1,75 @@
+/* Basics of organic chemistry (HH11 Bài 10, 12, 13; #255 round 2e). */
+@import '../chem.css';
+
+.organic-stage__body {
+  position: absolute;
+  inset: 64px var(--space-4) var(--space-3);
+  overflow: auto;
+}
+.organic-steps {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding-left: var(--space-4);
+  font-size: var(--text-content);
+}
+.organic-steps__answer {
+  font-size: 1.25em;
+}
+.organic-steps__error {
+  color: var(--danger, var(--text));
+}
+.organic-isomers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+.organic-panel {
+  display: grid;
+  gap: var(--space-3);
+}
+.organic-panel label {
+  display: grid;
+  grid-template-columns: 3em 1fr auto;
+  align-items: center;
+  gap: var(--space-2);
+}
+.organic-panel label:last-child {
+  grid-template-columns: 1fr;
+}
+.organic-panel__list,
+.organic-panel__presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+.organic-panel__list [aria-checked='true'],
+.organic-panel [aria-pressed='true'] {
+  background: var(--accent-soft);
+}
+.organic-panel__facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-1) var(--space-3);
+  margin: 0;
+}
+.organic-panel__facts dt {
+  color: var(--text-muted);
+}
+.organic-panel__facts dd {
+  margin: 0;
+}
+.organic-table {
+  border-collapse: collapse;
+}
+.organic-table caption {
+  text-align: left;
+  font-weight: 600;
+  padding-bottom: var(--space-1);
+}
+.organic-table th,
+.organic-table td {
+  padding: 4px var(--space-3);
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}

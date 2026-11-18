@@ -17,6 +17,7 @@ import { resolve } from 'node:path';
 import process from 'node:process';
 import { afterAll, describe, expect, it } from 'vitest';
 import { signedMessageV2 } from '../scripts/release/manifest-message.mjs';
+import { check, type AllowEntry } from '../scripts/ci/npm-audit.mjs';
 
 /**
  * Supply-chain and release-integrity rules for the GitHub workflows (audit SEC-01 / SEC-05,
@@ -495,6 +496,68 @@ describe('release.yml: mandatory-update floor', () => {
 });
 
 describe('dependency checks', () => {
+  it('fail npm audit on high or critical advisories except the reviewed ones', () => {
+    const audit = job(read('security.yml'), 'npm-audit');
+    expect(runScripts(audit)).toEqual(['node scripts/ci/npm-audit.mjs']);
+    const allow = JSON.parse(
+      readFileSync(resolve(root, '.github/npm-audit-allow.json'), 'utf8'),
+    ) as AllowEntry[];
+    // Only reviewed dev-tool advisories with no fixed version (user decision 2026-11-18).
+    expect(allow.map((a) => a.id)).toEqual(['GHSA-fc5q-39xc-vjpf']);
+    for (const a of allow) {
+      expect(a.reason.length, a.id).toBeGreaterThan(40);
+      expect(a.reviewed, a.id).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    }
+    const report = {
+      vulnerabilities: {
+        picomatch: {
+          severity: 'high',
+          via: [
+            {
+              name: 'picomatch',
+              severity: 'high',
+              title: 'ReDoS',
+              url: 'https://github.com/advisories/GHSA-fc5q-39xc-vjpf',
+            },
+          ],
+        },
+        vite: { severity: 'high', via: ['picomatch'] },
+        minimatch: {
+          severity: 'moderate',
+          via: [
+            {
+              name: 'minimatch',
+              severity: 'moderate',
+              title: 'DoS',
+              url: 'https://github.com/advisories/GHSA-g3hv-75wg-m249',
+            },
+          ],
+        },
+      },
+    };
+    // The allowed one passes; a package that only depends on it adds nothing; moderate passes.
+    expect(check(report, allow).blocking).toEqual([]);
+    expect(check(report, allow).allowed.map((a) => a.id)).toEqual(['GHSA-fc5q-39xc-vjpf']);
+    // Any other high advisory still fails, and an allowed id npm stops reporting is flagged.
+    const other = {
+      vulnerabilities: {
+        x: {
+          severity: 'critical',
+          via: [
+            {
+              name: 'x',
+              severity: 'critical',
+              title: 'RCE',
+              url: 'https://github.com/advisories/GHSA-aaaa-bbbb-cccc',
+            },
+          ],
+        },
+      },
+    };
+    expect(check(other, allow).blocking.map((a) => a.id)).toEqual(['GHSA-aaaa-bbbb-cccc']);
+    expect(check(other, allow).stale).toEqual(['GHSA-fc5q-39xc-vjpf']);
+  });
+
   it('fail cargo audit on any unsound or yanked crate except the reviewed Linux-only notices', () => {
     const audit = job(read('security.yml'), 'cargo-audit');
     const commands = runScripts(audit).filter((s) => s.startsWith('cargo audit'));

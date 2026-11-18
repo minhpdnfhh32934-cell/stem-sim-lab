@@ -1,0 +1,17 @@
+/* Shared inspector controls of the physics modules (ModuleControls.tsx). */
+.module-field {
+  display: grid;
+  gap: var(--space-1);
+}
+.module-field > span {
+  color: var(--text-muted);
+}
+.module-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+.module-choices [aria-checked='true'] {
+  border-color: var(--accent);
+  color: var(--accent);
+}

@@ -1,7 +1,8 @@
 name: Security checks
 
 # Known-vulnerable dependencies and leaked secrets (audit SEC-02/SEC-08, 2026-10-13).
-# - npm audit: production and development dependencies, fails on high or critical.
+# - npm audit: production and development dependencies, fails on high or critical, except the
+#   reviewed advisories of .github/npm-audit-allow.json (scripts/ci/npm-audit.mjs; 2026-11-18).
 # - cargo audit: RustSec advisories for src-tauri/Cargo.lock. Vulnerabilities and unsound or
 #   yanked crates fail; "unmaintained" notices are printed as warnings. Two reviewed Linux-only
 #   GTK3 advisories are ignored in src-tauri/.cargo/audit.toml (2026-10-14).
@@ -34,7 +35,7 @@ jobs:
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
-      - run: npm audit --audit-level=high
+      - run: node scripts/ci/npm-audit.mjs
 
   cargo-audit:
     name: cargo audit

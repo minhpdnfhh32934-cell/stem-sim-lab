@@ -2615,6 +2615,664 @@
    "review_status": "pending"
   },
   {
+   "topic": "matterStructure",
+   "subject": "physics",
+   "grade": 12,
+   "book": "VL12",
+   "chapter": "Chương I. Vật lí nhiệt",
+   "lessons": [
+    1
+   ],
+   "reason": "Tên Bài 1: cấu trúc của chất, sự chuyển thể (bài học có hướng dẫn: dự đoán và các hoạt động phân loại, ghép; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "gasKinetic",
+   "subject": "physics",
+   "grade": 12,
+   "book": "VL12",
+   "chapter": "Chương II. Khí lí tưởng",
+   "lessons": [
+    8
+   ],
+   "reason": "Tên Bài 8: mô hình động học phân tử chất khí, chuyển động Brown, khí lí tưởng (bài học có hướng dẫn: dự đoán và các hoạt động ghép, phân loại).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "idealGas",
+   "subject": "physics",
+   "grade": 12,
+   "book": "VL12",
+   "chapter": "Chương II. Khí lí tưởng",
+   "lessons": [
+    9,
+    10,
+    11,
+    12
+   ],
+   "reason": "Tên Bài 9: định luật Boyle (pV = hằng số, Bảng 9.1); Bài 10: định luật Charles (V/T = hằng số, Bảng 10.1); Bài 11: phương trình trạng thái, pV = nRT; Bài 12: áp suất khí theo mô hình động học phân tử, Ēđ = 3/2 kT.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "magneticField",
+   "subject": "physics",
+   "grade": 12,
+   "book": "VL12",
+   "chapter": "Chương III. Từ trường",
+   "lessons": [
+    14
+   ],
+   "reason": "Tên Bài 14: từ trường, đường sức từ, quy tắc nắm bàn tay phải (bài học có hướng dẫn: dự đoán và các hoạt động ghép, phân loại).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "magneticForce",
+   "subject": "physics",
+   "grade": 12,
+   "book": "VL12",
+   "chapter": "Chương III. Từ trường",
+   "lessons": [
+    15
+   ],
+   "reason": "Tên Bài 15: lực từ tác dụng lên dây dẫn mang dòng điện, F = BIL sinα, cảm ứng từ, số liệu Bảng 15.1.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "induction",
+   "subject": "physics",
+   "grade": 12,
+   "book": "VL12",
+   "chapter": "Chương III. Từ trường",
+   "lessons": [
+    16,
+    17
+   ],
+   "reason": "Tên Bài 16: từ thông Φ = BS cosα, định luật Faraday và Lenz; Bài 17: máy phát điện xoay chiều, E₀ = NBSω, giá trị hiệu dụng.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "inductionApplications",
+   "subject": "physics",
+   "grade": 12,
+   "book": "VL12",
+   "chapter": "Chương III. Từ trường",
+   "lessons": [
+    18
+   ],
+   "reason": "Tên Bài 18: ứng dụng hiện tượng cảm ứng điện từ: máy biến áp, sạc không dây, đàn ghi ta điện, dòng điện Foucault (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "electromagneticField",
+   "subject": "physics",
+   "grade": 12,
+   "book": "VL12",
+   "chapter": "Chương III. Từ trường",
+   "lessons": [
+    19
+   ],
+   "reason": "Tên Bài 19: điện từ trường, mô hình sóng điện từ (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "emWave",
+   "subject": "physics",
+   "grade": 12,
+   "book": "VL12",
+   "chapter": "Chương III. Từ trường",
+   "lessons": [
+    19
+   ],
+   "reason": "Tên Bài 19 nêu sóng điện từ: λ = cT = c/f, sóng ngang với E, B vuông góc phương truyền (cùng chủ đề đã xếp VL11 Bài 11).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "nucleus",
+   "subject": "physics",
+   "grade": 12,
+   "book": "VL12",
+   "chapter": "Chương IV. Vật lí hạt nhân",
+   "lessons": [
+    21,
+    22
+   ],
+   "reason": "Tên Bài 21: cấu trúc hạt nhân, bán kính R = 1,2·10⁻¹⁵·A^(1/3) m, Bảng 21.1; Bài 22: phản ứng hạt nhân, độ hụt khối, năng lượng liên kết, phân hạch, tổng hợp.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "radioactivity",
+   "subject": "physics",
+   "grade": 12,
+   "book": "VL12",
+   "chapter": "Chương IV. Vật lí hạt nhân",
+   "lessons": [
+    23
+   ],
+   "reason": "Tên Bài 23: hiện tượng phóng xạ, định luật phóng xạ, độ phóng xạ, Bảng 23.1, 23.2, an toàn phóng xạ.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "nuclearIndustry",
+   "subject": "physics",
+   "grade": 12,
+   "book": "VL12",
+   "chapter": "Chương IV. Vật lí hạt nhân",
+   "lessons": [
+    24
+   ],
+   "reason": "Tên Bài 24: công nghiệp hạt nhân: nhà máy điện hạt nhân, y học hạt nhân, ứng dụng phóng xạ (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "esterLipid",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 1. Ester – Lipid",
+   "lessons": [
+    1
+   ],
+   "reason": "Tên Bài 1: ester – lipid: tên gọi, đồng phân, thủy phân, ester hóa, chất béo (Hình 1.2), xà phòng hóa, hydrogen hóa.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "soapDetergent",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 1. Ester – Lipid",
+   "lessons": [
+    2
+   ],
+   "reason": "Tên Bài 2: xà phòng và chất giặt rửa (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "monosaccharides",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 2. Carbohydrate",
+   "lessons": [
+    4
+   ],
+   "reason": "Tên Bài 4: carbohydrate, glucose và fructose (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "disaccharides",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 2. Carbohydrate",
+   "lessons": [
+    5
+   ],
+   "reason": "Tên Bài 5: saccharose và maltose (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "polysaccharides",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 2. Carbohydrate",
+   "lessons": [
+    6
+   ],
+   "reason": "Tên Bài 6: tinh bột và cellulose (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "amine",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 3. Hợp chất chứa nitrogen",
+   "lessons": [
+    8
+   ],
+   "reason": "Tên Bài 8: amine: bậc amine, tên gốc – chức và tên thay thế, đồng phân, Bảng 8.1, tính base, phản ứng với nitrous acid, nước bromine.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "aminoAcidPeptide",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 3. Hợp chất chứa nitrogen",
+   "lessons": [
+    9
+   ],
+   "reason": "Tên Bài 9: amino acid và peptide: Bảng 9.1, dạng ion lưỡng cực, điện di, liên kết peptide, phản ứng màu biuret.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "proteinEnzyme",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 3. Hợp chất chứa nitrogen",
+   "lessons": [
+    10
+   ],
+   "reason": "Tên Bài 10: protein và enzyme (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "polymerBasics",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 4. Polymer",
+   "lessons": [
+    12
+   ],
+   "reason": "Tên Bài 12: đại cương về polymer (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "polymerMaterials",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 4. Polymer",
+   "lessons": [
+    13
+   ],
+   "reason": "Tên Bài 13: vật liệu polymer (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "electrodePotential",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 5. Pin điện và điện phân",
+   "lessons": [
+    15
+   ],
+   "reason": "Tên Bài 15: thế điện cực và nguồn điện hóa học: Bảng 15.1, quy tắc α, pin Galvani, E°pin = E°cathode − E°anode.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "electrolysis",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 5. Pin điện và điện phân",
+   "lessons": [
+    16
+   ],
+   "reason": "Tên Bài 16: điện phân (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "metalProperties",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 6. Đại cương về kim loại",
+   "lessons": [
+    19
+   ],
+   "reason": "Tên Bài 19: tính chất vật lí và tính chất hóa học của kim loại: kim loại với nước (E° < −0,414 V), dung dịch acid loãng (E° < 0), dung dịch muối theo Bảng 15.1; các số liệu vật lí sách nêu.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "metalExtraction",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 6. Đại cương về kim loại",
+   "lessons": [
+    20
+   ],
+   "reason": "Tên Bài 20: kim loại trong tự nhiên và phương pháp tách kim loại (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "alloys",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 6. Đại cương về kim loại",
+   "lessons": [
+    21
+   ],
+   "reason": "Tên Bài 21: hợp kim (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "corrosion",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 6. Đại cương về kim loại",
+   "lessons": [
+    22
+   ],
+   "reason": "Tên Bài 22: sự ăn mòn kim loại (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "groupIA",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 7. Nguyên tố nhóm IA và nhóm IIA",
+   "lessons": [
+    24
+   ],
+   "reason": "Tên Bài 24: nguyên tố nhóm IA: Bảng 24.1–24.3, xu hướng bán kính, nhiệt độ nóng chảy, nhiệt độ sôi, khối lượng riêng, độ cứng, phản ứng với nước, màu ngọn lửa.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "groupIIA",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 7. Nguyên tố nhóm IA và nhóm IIA",
+   "lessons": [
+    25
+   ],
+   "reason": "Tên Bài 25: nguyên tố nhóm IIA: Bảng 25.1–25.4, độ tan của hydroxide và muối, độ bền nhiệt của muối carbonate, nitrate.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "transitionMetals",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 8. Sơ lược về dãy kim loại chuyển tiếp thứ nhất và phức chất",
+   "lessons": [
+    27
+   ],
+   "reason": "Tên Bài 27: đại cương về kim loại chuyển tiếp dãy thứ nhất: Bảng 27.1, 27.2, 27.4, cấu hình electron của ion, chuẩn độ FeSO₄ bằng KMnO₄.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "complexStructure",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 8. Sơ lược về dãy kim loại chuyển tiếp thứ nhất và phức chất",
+   "lessons": [
+    28
+   ],
+   "reason": "Tên Bài 28: sơ lược về phức chất: nguyên tử trung tâm, phối tử, điện tích, Bảng 28.1 (mô hình 3D khi sách nêu dạng hình học).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "complexReactions",
+   "subject": "chemistry",
+   "grade": 12,
+   "book": "HH12",
+   "chapter": "Chương 8. Sơ lược về dãy kim loại chuyển tiếp thứ nhất và phức chất",
+   "lessons": [
+    29
+   ],
+   "reason": "Tên Bài 29: một số tính chất và ứng dụng của phức chất: dấu hiệu tạo phức, màu sắc, phản ứng thế phối tử.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "dnaReplication",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 1. Di truyền phân tử",
+   "lessons": [
+    1
+   ],
+   "reason": "Tên Bài 1: DNA và cơ chế tái bản DNA (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "lacOperon",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 1. Di truyền phân tử",
+   "lessons": [
+    3
+   ],
+   "reason": "Tên Bài 3: điều hoà biểu hiện gene: operon lac, thí nghiệm của Monod và Jacob, câu 2 tr. 21.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "geneTechnology",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 1. Di truyền phân tử",
+   "lessons": [
+    5
+   ],
+   "reason": "Tên Bài 5: công nghệ gene (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "sexLinkage",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 2. Di truyền nhiễm sắc thể",
+   "lessons": [
+    10
+   ],
+   "reason": "Tên Bài 10: di truyền giới tính và di truyền liên kết với giới tính: XX – XY, phép lai thuận nghịch của Morgan (Hình 10.2).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "geneLinkage",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 2. Di truyền nhiễm sắc thể",
+   "lessons": [
+    11
+   ],
+   "reason": "Tên Bài 11: liên kết gene và hoán vị gene: lai phân tích của Morgan, tần số hoán vị gene, câu 2 tr. 59.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "chromosomeMutation",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 2. Di truyền nhiễm sắc thể",
+   "lessons": [
+    12
+   ],
+   "reason": "Tên Bài 12: đột biến nhiễm sắc thể: cấu trúc (Hình 12.1), lệch bội, đa bội, hội chứng Down theo tuổi mẹ.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "humanGenetics",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 2. Di truyền nhiễm sắc thể",
+   "lessons": [
+    13
+   ],
+   "reason": "Tên Bài 13: di truyền học người và di truyền y học (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "extranuclearInheritance",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 3. Mở rộng học thuyết di truyền nhiễm sắc thể",
+   "lessons": [
+    15
+   ],
+   "reason": "Tên Bài 15: di truyền gene ngoài nhân (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "genotypeEnvironment",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 3. Mở rộng học thuyết di truyền nhiễm sắc thể",
+   "lessons": [
+    16
+   ],
+   "reason": "Tên Bài 16: tương tác giữa kiểu gene với môi trường và thành tựu chọn giống (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "evolutionEvidence",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 5. Bằng chứng và các học thuyết tiến hoá",
+   "lessons": [
+    19,
+    22
+   ],
+   "reason": "Tên Bài 19: các bằng chứng tiến hoá (Bảng 19.1, cytochrome C); Bài 22: tiến hoá lớn và quá trình phát sinh chủng loại (Bảng 22.1, các đại địa chất).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "darwinSelection",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 5. Bằng chứng và các học thuyết tiến hoá",
+   "lessons": [
+    20
+   ],
+   "reason": "Tên Bài 20: quan niệm của Darwin về chọn lọc tự nhiên và hình thành loài (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "modernSynthesis",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 5. Bằng chứng và các học thuyết tiến hoá",
+   "lessons": [
+    21
+   ],
+   "reason": "Tên Bài 21: học thuyết tiến hoá tổng hợp hiện đại (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "ecologicalFactors",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 6. Môi trường và sinh thái học quần thể",
+   "lessons": [
+    23
+   ],
+   "reason": "Tên Bài 23: môi trường và các nhân tố sinh thái: quy luật giới hạn sinh thái với ví dụ nhiệt độ của sách.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "community",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 7. Sinh thái học quần xã",
+   "lessons": [
+    26
+   ],
+   "reason": "Tên Bài 26: quần xã sinh vật (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "ecosystem",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 7. Sinh thái học quần xã",
+   "lessons": [
+    28
+   ],
+   "reason": "Tên Bài 28: hệ sinh thái (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "ecosystemEnergy",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 7. Sinh thái học quần xã",
+   "lessons": [
+    29
+   ],
+   "reason": "Tên Bài 29: trao đổi vật chất và chuyển hoá năng lượng trong hệ sinh thái: tháp sinh thái Hình 29.6, hiệu suất sinh thái.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "succession",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 7. Sinh thái học quần xã",
+   "lessons": [
+    30
+   ],
+   "reason": "Tên Bài 30: diễn thế sinh thái (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "biosphere",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 7. Sinh thái học quần xã",
+   "lessons": [
+    31
+   ],
+   "reason": "Tên Bài 31: sinh quyển, khu sinh học và chu trình sinh – địa – hoá (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "conservation",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 8. Sinh thái học phục hồi, bảo tồn và phát triển bền vững",
+   "lessons": [
+    33
+   ],
+   "reason": "Tên Bài 33: sinh thái học phục hồi và bảo tồn đa dạng sinh vật (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "sustainability",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 8. Sinh thái học phục hồi, bảo tồn và phát triển bền vững",
+   "lessons": [
+    34
+   ],
+   "reason": "Tên Bài 34: phát triển bền vững (bài học có hướng dẫn).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "heatAndPhase",
+   "subject": "physics",
+   "grade": 12,
+   "book": "VL12",
+   "chapter": "Chương I. Vật lí nhiệt",
+   "lessons": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "reason": "Tên Bài 2: nội năng, định luật I (ΔU = A + Q); Bài 3: nhiệt độ, thang nhiệt độ; Bài 4: nhiệt dung riêng (Q = mcΔT); Bài 5: nhiệt nóng chảy riêng (Q = λm); Bài 6: nhiệt hóa hơi riêng (Q = Lm), số liệu Bảng 4.1, 5.1, 6.1.",
+   "review_status": "pending"
+  },
+  {
    "topic": "emWave",
    "subject": "physics",
    "grade": 11,
@@ -2676,6 +3334,101 @@
     18
    ],
    "reason": "Tên Bài 16–18: lực tương tác giữa các điện tích, khái niệm điện trường, điện trường đều.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "halideAlcoholPhenol",
+   "subject": "chemistry",
+   "grade": 11,
+   "book": "HH11",
+   "chapter": "Chương 5. Dẫn xuất halogen – alcohol – phenol",
+   "lessons": [
+    19,
+    20,
+    21
+   ],
+   "reason": "Tên Chương 5 và các Bài 19 (dẫn xuất halogen), 20 (alcohol), 21 (phenol): bảng nhiệt độ sôi, độ tan, so sánh với hydrocarbon, ether; năng lượng liên kết C–X; phản ứng tách theo quy tắc Zaitsev; phản ứng trong sách.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "carbonylAcid",
+   "subject": "chemistry",
+   "grade": 11,
+   "book": "HH11",
+   "chapter": "Chương 6. Hợp chất carbonyl – carboxylic acid",
+   "lessons": [
+    23,
+    24
+   ],
+   "reason": "Tên Bài 23: hợp chất carbonyl; tên Bài 24: carboxylic acid (Bảng 23.1, 24.2, 24.3; so sánh nhiệt độ sôi alkane, aldehyde, alcohol, acid; độ phân li tính từ Ka; phản ứng trong sách).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "hydrocarbons",
+   "subject": "chemistry",
+   "grade": 11,
+   "book": "HH11",
+   "chapter": "Chương 4. Hydrocarbon",
+   "lessons": [
+    15,
+    16,
+    17
+   ],
+   "reason": "Tên Bài 15: alkane; tên Bài 16: hydrocarbon không no (alkene, alkyne); tên Bài 17: arene (công thức chung, bảng tính chất vật lí, phương trình đốt cháy, phản ứng trong sách).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "organicBasics",
+   "subject": "chemistry",
+   "grade": 11,
+   "book": "HH11",
+   "chapter": "Chương 3. Đại cương về hoá học hữu cơ",
+   "lessons": [
+    10,
+    12,
+    13
+   ],
+   "reason": "Tên Bài 10: hợp chất hữu cơ và hóa học hữu cơ (nhóm chức, phổ hồng ngoại); tên Bài 12: công thức phân tử hợp chất hữu cơ; tên Bài 13: cấu tạo hóa học hợp chất hữu cơ (công thức cấu tạo, đồng phân).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "organicSeparation",
+   "subject": "chemistry",
+   "grade": 11,
+   "book": "HH11",
+   "chapter": "Chương 3. Đại cương về hoá học hữu cơ",
+   "lessons": [
+    11
+   ],
+   "reason": "Tên Bài 11: phương pháp tách biệt và tinh chế hợp chất hữu cơ (bài học có hướng dẫn: dự đoán, ghép đôi, xếp thứ tự; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "nitrogenSulfur",
+   "subject": "chemistry",
+   "grade": 11,
+   "book": "HH11",
+   "chapter": "Chương 2. Nitrogen – sulfur",
+   "lessons": [
+    4,
+    5,
+    6,
+    7,
+    8
+   ],
+   "reason": "Tên Bài 4–8 nêu các chất mà bài có thẻ chất và đặt lên trục số oxi hóa: nitrogen (Bài 4), ammonia và muối ammonium (Bài 5), hợp chất của nitrogen với oxygen (Bài 6), sulfur và sulfur dioxide (Bài 7), sulfuric acid và muối sulfate (Bài 8).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "aqueousEquilibrium",
+   "subject": "chemistry",
+   "grade": 11,
+   "book": "HH11",
+   "chapter": "Chương 1. Cân bằng hoá học",
+   "lessons": [
+    2
+   ],
+   "reason": "Tên Bài 2: cân bằng trong dung dịch nước (pH, tích số ion của nước, chất chỉ thị theo Bảng 2.1).",
    "review_status": "pending"
   },
   {
@@ -2833,6 +3586,246 @@
     12
    ],
    "reason": "Tên Bài 12: truyền tin tế bào (bài học có hướng dẫn: dự đoán, xếp thứ tự, ghép đôi; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "organismMetabolism",
+   "subject": "biology",
+   "grade": 11,
+   "book": "SH11",
+   "chapter": "Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật",
+   "lessons": [
+    1
+   ],
+   "reason": "Tên Bài 1: khái quát về trao đổi chất và chuyển hóa năng lượng (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "plantWaterMinerals",
+   "subject": "biology",
+   "grade": 11,
+   "book": "SH11",
+   "chapter": "Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật",
+   "lessons": [
+    2
+   ],
+   "reason": "Tên Bài 2: trao đổi nước và khoáng ở thực vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "plantPhotosynthesis",
+   "subject": "biology",
+   "grade": 11,
+   "book": "SH11",
+   "chapter": "Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật",
+   "lessons": [
+    4
+   ],
+   "reason": "Tên Bài 4: quang hợp ở thực vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "plantRespiration",
+   "subject": "biology",
+   "grade": 11,
+   "book": "SH11",
+   "chapter": "Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật",
+   "lessons": [
+    6
+   ],
+   "reason": "Tên Bài 6: hô hấp ở thực vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "animalNutrition",
+   "subject": "biology",
+   "grade": 11,
+   "book": "SH11",
+   "chapter": "Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật",
+   "lessons": [
+    8
+   ],
+   "reason": "Tên Bài 8: dinh dưỡng và tiêu hóa ở động vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "animalRespiration",
+   "subject": "biology",
+   "grade": 11,
+   "book": "SH11",
+   "chapter": "Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật",
+   "lessons": [
+    9
+   ],
+   "reason": "Tên Bài 9: hô hấp ở động vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "animalCirculation",
+   "subject": "biology",
+   "grade": 11,
+   "book": "SH11",
+   "chapter": "Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật",
+   "lessons": [
+    10
+   ],
+   "reason": "Tên Bài 10: tuần hoàn ở động vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "immunity",
+   "subject": "biology",
+   "grade": 11,
+   "book": "SH11",
+   "chapter": "Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật",
+   "lessons": [
+    12
+   ],
+   "reason": "Tên Bài 12: miễn dịch ở người và động vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "excretionHomeostasis",
+   "subject": "biology",
+   "grade": 11,
+   "book": "SH11",
+   "chapter": "Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật",
+   "lessons": [
+    13
+   ],
+   "reason": "Tên Bài 13: bài tiết và cân bằng nội môi (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "responseOverview",
+   "subject": "biology",
+   "grade": 11,
+   "book": "SH11",
+   "chapter": "Chương 2. Cảm ứng ở sinh vật",
+   "lessons": [
+    14
+   ],
+   "reason": "Tên Bài 14: khái quát về cảm ứng ở sinh vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "plantResponse",
+   "subject": "biology",
+   "grade": 11,
+   "book": "SH11",
+   "chapter": "Chương 2. Cảm ứng ở sinh vật",
+   "lessons": [
+    15
+   ],
+   "reason": "Tên Bài 15: cảm ứng ở thực vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "animalResponse",
+   "subject": "biology",
+   "grade": 11,
+   "book": "SH11",
+   "chapter": "Chương 2. Cảm ứng ở sinh vật",
+   "lessons": [
+    17
+   ],
+   "reason": "Tên Bài 17: cảm ứng ở động vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "animalBehaviour",
+   "subject": "biology",
+   "grade": 11,
+   "book": "SH11",
+   "chapter": "Chương 2. Cảm ứng ở sinh vật",
+   "lessons": [
+    18
+   ],
+   "reason": "Tên Bài 18: tập tính ở động vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "growthOverview",
+   "subject": "biology",
+   "grade": 11,
+   "book": "SH11",
+   "chapter": "Chương 3. Sinh trưởng và phát triển ở sinh vật",
+   "lessons": [
+    19
+   ],
+   "reason": "Tên Bài 19: khái quát về sinh trưởng và phát triển ở sinh vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "plantGrowth",
+   "subject": "biology",
+   "grade": 11,
+   "book": "SH11",
+   "chapter": "Chương 3. Sinh trưởng và phát triển ở sinh vật",
+   "lessons": [
+    20
+   ],
+   "reason": "Tên Bài 20: sinh trưởng và phát triển ở thực vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "animalGrowth",
+   "subject": "biology",
+   "grade": 11,
+   "book": "SH11",
+   "chapter": "Chương 3. Sinh trưởng và phát triển ở sinh vật",
+   "lessons": [
+    22
+   ],
+   "reason": "Tên Bài 22: sinh trưởng và phát triển ở động vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "reproductionOverview",
+   "subject": "biology",
+   "grade": 11,
+   "book": "SH11",
+   "chapter": "Chương 4. Sinh sản ở sinh vật",
+   "lessons": [
+    24
+   ],
+   "reason": "Tên Bài 24: khái quát về sinh sản ở sinh vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "plantReproduction",
+   "subject": "biology",
+   "grade": 11,
+   "book": "SH11",
+   "chapter": "Chương 4. Sinh sản ở sinh vật",
+   "lessons": [
+    25
+   ],
+   "reason": "Tên Bài 25: sinh sản ở thực vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "animalReproduction",
+   "subject": "biology",
+   "grade": 11,
+   "book": "SH11",
+   "chapter": "Chương 4. Sinh sản ở sinh vật",
+   "lessons": [
+    27
+   ],
+   "reason": "Tên Bài 27: sinh sản ở động vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "bodyIntegration",
+   "subject": "biology",
+   "grade": 11,
+   "book": "SH11",
+   "chapter": "Chương 5. Mối quan hệ giữa các quá trình sinh lí trong cơ thể sinh vật và một số ngành nghề liên quan đến sinh học cơ thể",
+   "lessons": [
+    28
+   ],
+   "reason": "Tên Bài 28: mối quan hệ giữa các quá trình sinh lí trong cơ thể sinh vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng).",
    "review_status": "pending"
   },
   {

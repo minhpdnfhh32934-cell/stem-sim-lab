@@ -1,0 +1,845 @@
+{
+  "dataset": "nitrogen_sulfur_kntt",
+  "version": 1,
+  "accessed": "2026-11-17",
+  "review_status": "pending",
+  "source": {
+    "id": "sgk-hh11-c2",
+    "citation": "SGK Hóa học 11 Kết nối tri thức, NXB Giáo dục Việt Nam: Chương 2 “Nitrogen – sulfur”, Bài 4 (tr. 29–32), Bài 5 (tr. 33–37), Bài 6 (tr. 38–41), Bài 7 (tr. 42–47), Bài 8 (tr. 48–54)",
+    "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-11.4701111834"
+  },
+  "items": [
+    {
+      "id": "n2",
+      "element": "N",
+      "formula": "N2",
+      "name": {
+        "vi": "Nitrogen",
+        "en": "Nitrogen"
+      },
+      "lesson": 4,
+      "facts": [
+        {
+          "text": {
+            "vi": "Chiếm 75,5% khối lượng (78,1% thể tích) khí quyển Trái Đất.",
+            "en": "75.5% of the mass (78.1% of the volume) of the Earth's atmosphere."
+          },
+          "page": 29
+        },
+        {
+          "text": {
+            "vi": "Hai đồng vị bền: ¹⁴N (99,63%) và ¹⁵N (0,37%).",
+            "en": "Two stable isotopes: ¹⁴N (99.63%) and ¹⁵N (0.37%)."
+          },
+          "page": 29
+        },
+        {
+          "text": {
+            "vi": "Ô số 7, nhóm VA, chu kì 2; độ âm điện 3,04; số oxi hóa từ −3 đến +5.",
+            "en": "Atomic number 7, group VA, period 2; electronegativity 3.04; oxidation numbers −3 to +5."
+          },
+          "page": 30
+        },
+        {
+          "text": {
+            "vi": "Liên kết ba (1 σ, 2 π), năng lượng liên kết 945 kJ/mol, phân tử không phân cực.",
+            "en": "A triple bond (1 σ, 2 π), bond energy 945 kJ/mol; a non-polar molecule."
+          },
+          "page": 30
+        },
+        {
+          "text": {
+            "vi": "Khí không màu, không mùi, không vị; hóa lỏng ở −196 °C; 1 lít nước hòa tan 0,012 lít khí nitrogen.",
+            "en": "A colourless, odourless, tasteless gas; liquefies at −196 °C; 1 L of water dissolves 0.012 L of nitrogen."
+          },
+          "page": 30
+        }
+      ],
+      "review_status": "pending"
+    },
+    {
+      "id": "nh3",
+      "element": "N",
+      "formula": "NH3",
+      "name": {
+        "vi": "Ammonia",
+        "en": "Ammonia"
+      },
+      "lesson": 5,
+      "facts": [
+        {
+          "text": {
+            "vi": "Phân tử dạng chóp tam giác; nguyên tử N còn một cặp electron không liên kết.",
+            "en": "A trigonal pyramid; the N atom keeps one lone pair."
+          },
+          "page": 33
+        },
+        {
+          "text": {
+            "vi": "Liên kết N–H phân cực, năng lượng liên kết 386 kJ/mol.",
+            "en": "Polar N–H bonds, bond energy 386 kJ/mol."
+          },
+          "page": 33
+        },
+        {
+          "text": {
+            "vi": "Khí không màu, nhẹ hơn không khí, mùi khai và xốc; 1 lít nước hòa tan khoảng 700 lít ammonia.",
+            "en": "A colourless gas, lighter than air, with a sharp smell; 1 L of water dissolves about 700 L of ammonia."
+          },
+          "page": 34
+        },
+        {
+          "text": {
+            "vi": "Hóa lỏng ở −33,3 °C, hóa rắn ở −77,7 °C.",
+            "en": "Liquefies at −33.3 °C, solidifies at −77.7 °C."
+          },
+          "page": 34
+        },
+        {
+          "text": {
+            "vi": "Dung dịch có môi trường base yếu: quỳ tím hóa xanh, phenolphthalein hóa hồng.",
+            "en": "Its solution is weakly basic: litmus turns blue, phenolphthalein pink."
+          },
+          "page": 34
+        },
+        {
+          "text": {
+            "vi": "Sản xuất ở 400 °C – 450 °C, áp suất 150 – 200 bar, xúc tác Fe.",
+            "en": "Made at 400–450 °C, 150–200 bar, with an iron catalyst."
+          },
+          "page": 35
+        }
+      ],
+      "review_status": "pending"
+    },
+    {
+      "id": "nh4",
+      "element": "N",
+      "formula": "NH4^+",
+      "name": {
+        "vi": "Ion ammonium",
+        "en": "Ammonium ion"
+      },
+      "lesson": 5,
+      "facts": [
+        {
+          "text": {
+            "vi": "Hầu hết muối ammonium dễ tan và phân li hoàn toàn ra ion.",
+            "en": "Most ammonium salts dissolve easily and dissociate completely."
+          },
+          "page": 36
+        },
+        {
+          "text": {
+            "vi": "Nhận biết: đun với dung dịch kiềm, có khí ammonia mùi khai bay ra.",
+            "en": "Test: warmed with an alkali, it gives off ammonia with its sharp smell."
+          },
+          "page": 36
+        },
+        {
+          "text": {
+            "vi": "Muối ammonium kém bền nhiệt, dễ bị phân hủy khi nung nóng.",
+            "en": "Ammonium salts are unstable to heat and decompose when heated."
+          },
+          "page": 36
+        }
+      ],
+      "review_status": "pending"
+    },
+    {
+      "id": "nox",
+      "element": "N",
+      "formula": "NO2",
+      "name": {
+        "vi": "Các oxide của nitrogen (NOₓ)",
+        "en": "Nitrogen oxides (NOₓ)"
+      },
+      "lesson": 6,
+      "facts": [
+        {
+          "text": {
+            "vi": "N₂O dinitrogen oxide, NO nitrogen monoxide, NO₂ nitrogen dioxide, N₂O₄ dinitrogen tetroxide.",
+            "en": "N₂O dinitrogen oxide, NO nitrogen monoxide, NO₂ nitrogen dioxide, N₂O₄ dinitrogen tetroxide."
+          },
+          "page": 38
+        },
+        {
+          "text": {
+            "vi": "Nước mưa thường có pH khoảng 5,6; mưa có pH nhỏ hơn 5,6 là mưa acid, tác động rõ nhất khi pH dưới 4,5.",
+            "en": "Ordinary rain has a pH of about 5.6; rain below 5.6 is acid rain, most harmful below 4.5."
+          },
+          "page": 39
+        },
+        {
+          "text": {
+            "vi": "Phú dưỡng khi nitrogen trong nước đạt 300 µg/L và phosphorus đạt 20 µg/L.",
+            "en": "Eutrophication sets in when nitrogen in water reaches 300 µg/L and phosphorus 20 µg/L."
+          },
+          "page": 40
+        }
+      ],
+      "review_status": "pending"
+    },
+    {
+      "id": "hno3",
+      "element": "N",
+      "formula": "HNO3",
+      "name": {
+        "vi": "Nitric acid",
+        "en": "Nitric acid"
+      },
+      "lesson": 6,
+      "facts": [
+        {
+          "text": {
+            "vi": "N có số oxi hóa +5, cao nhất của nitrogen: nitric acid có tính oxi hóa mạnh.",
+            "en": "N is at +5, nitrogen's highest: nitric acid is a strong oxidising agent."
+          },
+          "page": 39
+        },
+        {
+          "text": {
+            "vi": "Chất lỏng không màu, khối lượng riêng 1,53 g/mL; nóng chảy ở −42 °C, sôi ở 83 °C; tan vô hạn trong nước.",
+            "en": "A colourless liquid of density 1.53 g/mL; melts at −42 °C, boils at 83 °C; mixes with water in all proportions."
+          },
+          "page": 39
+        }
+      ],
+      "review_status": "pending"
+    },
+    {
+      "id": "s",
+      "element": "S",
+      "formula": "S",
+      "name": {
+        "vi": "Sulfur",
+        "en": "Sulfur"
+      },
+      "lesson": 7,
+      "facts": [
+        {
+          "text": {
+            "vi": "Nguyên tố phổ biến thứ 17 trên vỏ Trái Đất, khoảng 0,03 – 0,1% khối lượng.",
+            "en": "The 17th most common element in the Earth's crust, about 0.03–0.1% of its mass."
+          },
+          "page": 42
+        },
+        {
+          "text": {
+            "vi": "Bốn đồng vị bền: ³²S (94,98%), ³³S (0,76%), ³⁴S (4,22%), ³⁶S (0,02%).",
+            "en": "Four stable isotopes: ³²S (94.98%), ³³S (0.76%), ³⁴S (4.22%), ³⁶S (0.02%)."
+          },
+          "page": 42
+        },
+        {
+          "text": {
+            "vi": "Ô số 16, nhóm VIA, chu kì 3; độ âm điện 2,58; số oxi hóa từ −2 đến +6.",
+            "en": "Atomic number 16, group VIA, period 3; electronegativity 2.58; oxidation numbers −2 to +6."
+          },
+          "page": 43
+        },
+        {
+          "text": {
+            "vi": "Phân tử S₈ dạng vòng; liên kết S–S 226 kJ/mol, dài 205 pm.",
+            "en": "Ring-shaped S₈ molecules; S–S bonds of 226 kJ/mol and 205 pm."
+          },
+          "page": 43
+        },
+        {
+          "text": {
+            "vi": "Không tan trong nước, ít tan trong alcohol, tan nhiều trong carbon disulfide; nóng chảy ở 113 °C, sôi ở 445 °C.",
+            "en": "Insoluble in water, slightly soluble in alcohol, very soluble in carbon disulfide; melts at 113 °C, boils at 445 °C."
+          },
+          "page": 43
+        },
+        {
+          "text": {
+            "vi": "Hai dạng thù hình tà phương và đơn tà, chuyển nhau ở 95,5 °C.",
+            "en": "Two allotropes, rhombic and monoclinic, which change into each other at 95.5 °C."
+          },
+          "page": 44
+        }
+      ],
+      "review_status": "pending"
+    },
+    {
+      "id": "so2",
+      "element": "S",
+      "formula": "SO2",
+      "name": {
+        "vi": "Sulfur dioxide",
+        "en": "Sulfur dioxide"
+      },
+      "lesson": 7,
+      "facts": [
+        {
+          "text": {
+            "vi": "Khí không màu, nặng hơn không khí, mùi hắc; ở 20 °C, 1 lít nước hòa tan được 40 lít sulfur dioxide.",
+            "en": "A colourless gas, heavier than air, with a pungent smell; at 20 °C, 1 L of water dissolves 40 L of sulfur dioxide."
+          },
+          "page": 45
+        },
+        {
+          "text": {
+            "vi": "Khí độc: hít phải lượng vượt ngưỡng gây viêm đường hô hấp.",
+            "en": "Toxic: breathing it above the limit inflames the airways."
+          },
+          "page": 45
+        },
+        {
+          "text": {
+            "vi": "S có số oxi hóa +4: sulfur dioxide vừa có tính oxi hóa vừa có tính khử.",
+            "en": "S is at +4: sulfur dioxide is both an oxidising and a reducing agent."
+          },
+          "page": 46
+        }
+      ],
+      "review_status": "pending"
+    },
+    {
+      "id": "h2so4",
+      "element": "S",
+      "formula": "H2SO4",
+      "name": {
+        "vi": "Sulfuric acid",
+        "en": "Sulfuric acid"
+      },
+      "lesson": 8,
+      "facts": [
+        {
+          "text": {
+            "vi": "Chất lỏng sánh như dầu, không màu, không bay hơi, hút ẩm mạnh.",
+            "en": "An oily, colourless, non-volatile liquid that takes up water strongly."
+          },
+          "page": 49
+        },
+        {
+          "text": {
+            "vi": "Dung dịch 98% có khối lượng riêng 1,84 g/cm³, nặng gần gấp hai lần nước.",
+            "en": "The 98% solution has a density of 1.84 g/cm³, nearly twice that of water."
+          },
+          "page": 49
+        },
+        {
+          "text": {
+            "vi": "Tan vô hạn trong nước và tỏa rất nhiều nhiệt: khi pha loãng phải rót từ từ acid vào nước, không làm ngược lại.",
+            "en": "Mixes with water in all proportions, giving off much heat: to dilute it, pour the acid slowly into water, never the reverse."
+          },
+          "page": 49
+        }
+      ],
+      "review_status": "pending"
+    }
+  ],
+  "axes": {
+    "N": {
+      "min": -3,
+      "max": 5,
+      "species": [
+        "NH3",
+        "NH4Cl",
+        "N2",
+        "N2O",
+        "NO",
+        "HNO2",
+        "KNO2",
+        "NO2",
+        "HNO3",
+        "NaNO3"
+      ],
+      "page": 30
+    },
+    "S": {
+      "min": -2,
+      "max": 6,
+      "species": [
+        "H2S",
+        "Al2S3",
+        "S",
+        "SO2",
+        "SO3",
+        "H2SO4",
+        "BaSO4"
+      ],
+      "page": 43
+    }
+  },
+  "reactions": [
+    {
+      "id": "haber",
+      "element": "N",
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "N2"
+        },
+        {
+          "coef": 3,
+          "formula": "H2"
+        }
+      ],
+      "products": [
+        {
+          "coef": 2,
+          "formula": "NH3"
+        }
+      ],
+      "reversible": true,
+      "conditions": {
+        "vi": "400 °C – 450 °C, 150 – 200 bar, xúc tác Fe",
+        "en": "400–450 °C, 150–200 bar, iron catalyst"
+      },
+      "dH_kJ": -91.8,
+      "page": 35,
+      "review_status": "pending"
+    },
+    {
+      "id": "n2-o2",
+      "element": "N",
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "N2"
+        },
+        {
+          "coef": 1,
+          "formula": "O2"
+        }
+      ],
+      "products": [
+        {
+          "coef": 2,
+          "formula": "NO"
+        }
+      ],
+      "reversible": true,
+      "conditions": {
+        "vi": "trên 3 000 °C hoặc tia lửa điện",
+        "en": "above 3000 °C or an electric spark"
+      },
+      "dH_kJ": 180.6,
+      "page": 31,
+      "review_status": "pending"
+    },
+    {
+      "id": "nh3-burn",
+      "element": "N",
+      "reactants": [
+        {
+          "coef": 4,
+          "formula": "NH3"
+        },
+        {
+          "coef": 3,
+          "formula": "O2"
+        }
+      ],
+      "products": [
+        {
+          "coef": 2,
+          "formula": "N2"
+        },
+        {
+          "coef": 6,
+          "formula": "H2O"
+        }
+      ],
+      "reversible": false,
+      "conditions": {
+        "vi": "đốt trong oxygen",
+        "en": "burnt in oxygen"
+      },
+      "dH_kJ": null,
+      "page": 35,
+      "review_status": "pending"
+    },
+    {
+      "id": "ostwald",
+      "element": "N",
+      "reactants": [
+        {
+          "coef": 4,
+          "formula": "NH3"
+        },
+        {
+          "coef": 5,
+          "formula": "O2"
+        }
+      ],
+      "products": [
+        {
+          "coef": 4,
+          "formula": "NO"
+        },
+        {
+          "coef": 6,
+          "formula": "H2O"
+        }
+      ],
+      "reversible": false,
+      "conditions": {
+        "vi": "800 °C – 900 °C, xúc tác Pt",
+        "en": "800–900 °C, platinum catalyst"
+      },
+      "dH_kJ": null,
+      "page": 35,
+      "review_status": "pending"
+    },
+    {
+      "id": "nh3-hcl",
+      "element": "N",
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "NH3"
+        },
+        {
+          "coef": 1,
+          "formula": "HCl"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "NH4Cl"
+        }
+      ],
+      "reversible": false,
+      "conditions": {
+        "vi": "nhiệt độ thường",
+        "en": "room temperature"
+      },
+      "dH_kJ": null,
+      "page": 34,
+      "review_status": "pending"
+    },
+    {
+      "id": "nh4cl-heat",
+      "element": "N",
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "NH4Cl"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "NH3"
+        },
+        {
+          "coef": 1,
+          "formula": "HCl"
+        }
+      ],
+      "reversible": false,
+      "conditions": {
+        "vi": "nung nóng",
+        "en": "heated"
+      },
+      "dH_kJ": null,
+      "page": 36,
+      "review_status": "pending"
+    },
+    {
+      "id": "nh4no3-heat",
+      "element": "N",
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "NH4NO3"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "N2O"
+        },
+        {
+          "coef": 2,
+          "formula": "H2O"
+        }
+      ],
+      "reversible": false,
+      "conditions": {
+        "vi": "nung nóng",
+        "en": "heated"
+      },
+      "dH_kJ": null,
+      "page": 36,
+      "review_status": "pending"
+    },
+    {
+      "id": "no2-rain",
+      "element": "N",
+      "reactants": [
+        {
+          "coef": 4,
+          "formula": "NO2"
+        },
+        {
+          "coef": 1,
+          "formula": "O2"
+        },
+        {
+          "coef": 2,
+          "formula": "H2O"
+        }
+      ],
+      "products": [
+        {
+          "coef": 4,
+          "formula": "HNO3"
+        }
+      ],
+      "reversible": false,
+      "conditions": {
+        "vi": "trong khí quyển",
+        "en": "in the atmosphere"
+      },
+      "dH_kJ": null,
+      "page": 39,
+      "review_status": "pending"
+    },
+    {
+      "id": "h2-s",
+      "element": "S",
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "H2"
+        },
+        {
+          "coef": 1,
+          "formula": "S"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "H2S"
+        }
+      ],
+      "reversible": false,
+      "conditions": {
+        "vi": "nhiệt độ cao",
+        "en": "high temperature"
+      },
+      "dH_kJ": -20.6,
+      "page": 44,
+      "review_status": "pending"
+    },
+    {
+      "id": "al-s",
+      "element": "S",
+      "reactants": [
+        {
+          "coef": 2,
+          "formula": "Al"
+        },
+        {
+          "coef": 3,
+          "formula": "S"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "Al2S3"
+        }
+      ],
+      "reversible": false,
+      "conditions": {
+        "vi": "đun nóng",
+        "en": "heated"
+      },
+      "dH_kJ": null,
+      "page": 44,
+      "review_status": "pending"
+    },
+    {
+      "id": "s-f2",
+      "element": "S",
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "S"
+        },
+        {
+          "coef": 3,
+          "formula": "F2"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "SF6"
+        }
+      ],
+      "reversible": false,
+      "conditions": {
+        "vi": "nhiệt độ thích hợp",
+        "en": "suitable temperature"
+      },
+      "dH_kJ": -1220.5,
+      "page": 45,
+      "review_status": "pending"
+    },
+    {
+      "id": "s-o2",
+      "element": "S",
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "S"
+        },
+        {
+          "coef": 1,
+          "formula": "O2"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "SO2"
+        }
+      ],
+      "reversible": false,
+      "conditions": {
+        "vi": "đun nóng",
+        "en": "heated"
+      },
+      "dH_kJ": -296.8,
+      "page": 45,
+      "review_status": "pending"
+    },
+    {
+      "id": "so2-h2s",
+      "element": "S",
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "SO2"
+        },
+        {
+          "coef": 2,
+          "formula": "H2S"
+        }
+      ],
+      "products": [
+        {
+          "coef": 3,
+          "formula": "S"
+        },
+        {
+          "coef": 2,
+          "formula": "H2O"
+        }
+      ],
+      "reversible": false,
+      "conditions": {
+        "vi": "nhiệt độ thường",
+        "en": "room temperature"
+      },
+      "dH_kJ": null,
+      "page": 46,
+      "review_status": "pending"
+    },
+    {
+      "id": "so2-no2",
+      "element": "S",
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "SO2"
+        },
+        {
+          "coef": 1,
+          "formula": "NO2"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "SO3"
+        },
+        {
+          "coef": 1,
+          "formula": "NO"
+        }
+      ],
+      "reversible": false,
+      "conditions": {
+        "vi": "xúc tác nitrogen oxide",
+        "en": "nitrogen oxide catalyst"
+      },
+      "dH_kJ": null,
+      "page": 46,
+      "review_status": "pending"
+    },
+    {
+      "id": "so2-rain",
+      "element": "S",
+      "reactants": [
+        {
+          "coef": 2,
+          "formula": "SO2"
+        },
+        {
+          "coef": 1,
+          "formula": "O2"
+        },
+        {
+          "coef": 2,
+          "formula": "H2O"
+        }
+      ],
+      "products": [
+        {
+          "coef": 2,
+          "formula": "H2SO4"
+        }
+      ],
+      "reversible": false,
+      "conditions": {
+        "vi": "xúc tác ion kim loại trong khói bụi",
+        "en": "metal ions in dust as catalyst"
+      },
+      "dH_kJ": null,
+      "page": 39,
+      "review_status": "pending"
+    },
+    {
+      "id": "caf2-h2so4",
+      "element": "S",
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "CaF2"
+        },
+        {
+          "coef": 1,
+          "formula": "H2SO4"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "CaSO4"
+        },
+        {
+          "coef": 2,
+          "formula": "HF"
+        }
+      ],
+      "reversible": false,
+      "conditions": {
+        "vi": "250 °C, sulfuric acid đặc",
+        "en": "250 °C, concentrated sulfuric acid"
+      },
+      "dH_kJ": null,
+      "page": 50,
+      "review_status": "pending"
+    }
+  ]
+}

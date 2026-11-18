@@ -33,14 +33,14 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | --- | --- | --- | --- |
 | Vật lí 10 | 34 | 26 | 26 |
 | Vật lí 11 | 26 | 20 | 20 |
-| Vật lí 12 | 25 | 21 | 0 |
+| Vật lí 12 | 25 | 21 | 21 |
 | Hoá học 10 | 23 | 16 | 16 |
-| Hoá học 11 | 25 | 19 | 1 |
-| Hoá học 12 | 30 | 22 | 1 |
+| Hoá học 11 | 25 | 19 | 19 |
+| Hoá học 12 | 30 | 22 | 22 |
 | Sinh học 10 | 26 | 17 | 17 |
-| Sinh học 11 | 29 | 20 | 0 |
-| Sinh học 12 | 35 | 28 | 7 |
-| **Cộng** | **253** | **189** | **88** |
+| Sinh học 11 | 29 | 20 | 20 |
+| Sinh học 12 | 35 | 28 | 28 |
+| **Cộng** | **253** | **189** | **189** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -116,30 +116,30 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Vật lí 11 | Chương IV. Dòng điện. Mạch điện | 24 | Nguồn điện | 102 | Lí thuyết | Mạch điện một chiều | Tên Bài 23–25: điện trở, định luật Ohm, nguồn điện, năng lượng và công suất điện (cảnh có nguồn E, r và 1–3 điện trở). | pending |
 | Vật lí 11 | Chương IV. Dòng điện. Mạch điện | 25 | Năng lượng và công suất điện | 106 | Lí thuyết | Mạch điện một chiều | Tên Bài 23–25: điện trở, định luật Ohm, nguồn điện, năng lượng và công suất điện (cảnh có nguồn E, r và 1–3 điện trở). | pending |
 | Vật lí 11 | Chương IV. Dòng điện. Mạch điện | 26 | Thực hành: Đo suất điện động và điện trở trong của pin điện hoá | 111 | Thực hành | chưa có |  | pending |
-| Vật lí 12 | Chương I. Vật lí nhiệt | 1 | Cấu trúc của chất. Sự chuyển thể | 6 | Lí thuyết | chưa có |  | pending |
-| Vật lí 12 | Chương I. Vật lí nhiệt | 2 | Nội năng. Định luật I của nhiệt động lực học | 10 | Lí thuyết | chưa có |  | pending |
-| Vật lí 12 | Chương I. Vật lí nhiệt | 3 | Nhiệt độ. Thang nhiệt độ – nhiệt kế | 15 | Lí thuyết | chưa có |  | pending |
-| Vật lí 12 | Chương I. Vật lí nhiệt | 4 | Nhiệt dung riêng | 20 | Lí thuyết | chưa có |  | pending |
-| Vật lí 12 | Chương I. Vật lí nhiệt | 5 | Nhiệt nóng chảy riêng | 24 | Lí thuyết | chưa có |  | pending |
-| Vật lí 12 | Chương I. Vật lí nhiệt | 6 | Nhiệt hoá hơi riêng | 27 | Lí thuyết | chưa có |  | pending |
+| Vật lí 12 | Chương I. Vật lí nhiệt | 1 | Cấu trúc của chất. Sự chuyển thể | 6 | Lí thuyết | Cấu trúc của chất và sự chuyển thể | Tên Bài 1: cấu trúc của chất, sự chuyển thể (bài học có hướng dẫn: dự đoán và các hoạt động phân loại, ghép; không có mô phỏng). | pending |
+| Vật lí 12 | Chương I. Vật lí nhiệt | 2 | Nội năng. Định luật I của nhiệt động lực học | 10 | Lí thuyết | Nội năng, nhiệt độ và nhiệt lượng | Tên Bài 2: nội năng, định luật I (ΔU = A + Q); Bài 3: nhiệt độ, thang nhiệt độ; Bài 4: nhiệt dung riêng (Q = mcΔT); Bài 5: nhiệt nóng chảy riêng (Q = λm); Bài 6: nhiệt hóa hơi riêng (Q = Lm), số liệu Bảng 4.1, 5.1, 6.1. | pending |
+| Vật lí 12 | Chương I. Vật lí nhiệt | 3 | Nhiệt độ. Thang nhiệt độ – nhiệt kế | 15 | Lí thuyết | Nội năng, nhiệt độ và nhiệt lượng | Tên Bài 2: nội năng, định luật I (ΔU = A + Q); Bài 3: nhiệt độ, thang nhiệt độ; Bài 4: nhiệt dung riêng (Q = mcΔT); Bài 5: nhiệt nóng chảy riêng (Q = λm); Bài 6: nhiệt hóa hơi riêng (Q = Lm), số liệu Bảng 4.1, 5.1, 6.1. | pending |
+| Vật lí 12 | Chương I. Vật lí nhiệt | 4 | Nhiệt dung riêng | 20 | Lí thuyết | Nội năng, nhiệt độ và nhiệt lượng | Tên Bài 2: nội năng, định luật I (ΔU = A + Q); Bài 3: nhiệt độ, thang nhiệt độ; Bài 4: nhiệt dung riêng (Q = mcΔT); Bài 5: nhiệt nóng chảy riêng (Q = λm); Bài 6: nhiệt hóa hơi riêng (Q = Lm), số liệu Bảng 4.1, 5.1, 6.1. | pending |
+| Vật lí 12 | Chương I. Vật lí nhiệt | 5 | Nhiệt nóng chảy riêng | 24 | Lí thuyết | Nội năng, nhiệt độ và nhiệt lượng | Tên Bài 2: nội năng, định luật I (ΔU = A + Q); Bài 3: nhiệt độ, thang nhiệt độ; Bài 4: nhiệt dung riêng (Q = mcΔT); Bài 5: nhiệt nóng chảy riêng (Q = λm); Bài 6: nhiệt hóa hơi riêng (Q = Lm), số liệu Bảng 4.1, 5.1, 6.1. | pending |
+| Vật lí 12 | Chương I. Vật lí nhiệt | 6 | Nhiệt hoá hơi riêng | 27 | Lí thuyết | Nội năng, nhiệt độ và nhiệt lượng | Tên Bài 2: nội năng, định luật I (ΔU = A + Q); Bài 3: nhiệt độ, thang nhiệt độ; Bài 4: nhiệt dung riêng (Q = mcΔT); Bài 5: nhiệt nóng chảy riêng (Q = λm); Bài 6: nhiệt hóa hơi riêng (Q = Lm), số liệu Bảng 4.1, 5.1, 6.1. | pending |
 | Vật lí 12 | Chương I. Vật lí nhiệt | 7 | Bài tập về vật lí nhiệt | 30 | Bài tập | chưa có |  | pending |
-| Vật lí 12 | Chương II. Khí lí tưởng | 8 | Mô hình động học phân tử chất khí | 34 | Lí thuyết | chưa có |  | pending |
-| Vật lí 12 | Chương II. Khí lí tưởng | 9 | Định luật Boyle | 37 | Lí thuyết | chưa có |  | pending |
-| Vật lí 12 | Chương II. Khí lí tưởng | 10 | Định luật Charles | 41 | Lí thuyết | chưa có |  | pending |
-| Vật lí 12 | Chương II. Khí lí tưởng | 11 | Phương trình trạng thái của khí lí tưởng | 45 | Lí thuyết | chưa có |  | pending |
-| Vật lí 12 | Chương II. Khí lí tưởng | 12 | Áp suất khí theo mô hình động học phân tử. Quan hệ giữa động năng phân tử và nhiệt độ | 48 | Lí thuyết | chưa có |  | pending |
+| Vật lí 12 | Chương II. Khí lí tưởng | 8 | Mô hình động học phân tử chất khí | 34 | Lí thuyết | Mô hình động học phân tử chất khí | Tên Bài 8: mô hình động học phân tử chất khí, chuyển động Brown, khí lí tưởng (bài học có hướng dẫn: dự đoán và các hoạt động ghép, phân loại). | pending |
+| Vật lí 12 | Chương II. Khí lí tưởng | 9 | Định luật Boyle | 37 | Lí thuyết | Các định luật của khí lí tưởng | Tên Bài 9: định luật Boyle (pV = hằng số, Bảng 9.1); Bài 10: định luật Charles (V/T = hằng số, Bảng 10.1); Bài 11: phương trình trạng thái, pV = nRT; Bài 12: áp suất khí theo mô hình động học phân tử, Ēđ = 3/2 kT. | pending |
+| Vật lí 12 | Chương II. Khí lí tưởng | 10 | Định luật Charles | 41 | Lí thuyết | Các định luật của khí lí tưởng | Tên Bài 9: định luật Boyle (pV = hằng số, Bảng 9.1); Bài 10: định luật Charles (V/T = hằng số, Bảng 10.1); Bài 11: phương trình trạng thái, pV = nRT; Bài 12: áp suất khí theo mô hình động học phân tử, Ēđ = 3/2 kT. | pending |
+| Vật lí 12 | Chương II. Khí lí tưởng | 11 | Phương trình trạng thái của khí lí tưởng | 45 | Lí thuyết | Các định luật của khí lí tưởng | Tên Bài 9: định luật Boyle (pV = hằng số, Bảng 9.1); Bài 10: định luật Charles (V/T = hằng số, Bảng 10.1); Bài 11: phương trình trạng thái, pV = nRT; Bài 12: áp suất khí theo mô hình động học phân tử, Ēđ = 3/2 kT. | pending |
+| Vật lí 12 | Chương II. Khí lí tưởng | 12 | Áp suất khí theo mô hình động học phân tử. Quan hệ giữa động năng phân tử và nhiệt độ | 48 | Lí thuyết | Các định luật của khí lí tưởng | Tên Bài 9: định luật Boyle (pV = hằng số, Bảng 9.1); Bài 10: định luật Charles (V/T = hằng số, Bảng 10.1); Bài 11: phương trình trạng thái, pV = nRT; Bài 12: áp suất khí theo mô hình động học phân tử, Ēđ = 3/2 kT. | pending |
 | Vật lí 12 | Chương II. Khí lí tưởng | 13 | Bài tập về khí lí tưởng | 52 | Bài tập | chưa có |  | pending |
-| Vật lí 12 | Chương III. Từ trường | 14 | Từ trường | 56 | Lí thuyết | chưa có |  | pending |
-| Vật lí 12 | Chương III. Từ trường | 15 | Lực từ tác dụng lên dây dẫn mang dòng điện. Cảm ứng từ | 61 | Lí thuyết | chưa có |  | pending |
-| Vật lí 12 | Chương III. Từ trường | 16 | Từ thông. Hiện tượng cảm ứng điện từ | 66 | Lí thuyết | chưa có |  | pending |
-| Vật lí 12 | Chương III. Từ trường | 17 | Máy phát điện xoay chiều | 72 | Lí thuyết | chưa có |  | pending |
-| Vật lí 12 | Chương III. Từ trường | 18 | Ứng dụng hiện tượng cảm ứng điện từ | 78 | Lí thuyết | chưa có |  | pending |
-| Vật lí 12 | Chương III. Từ trường | 19 | Điện từ trường. Mô hình sóng điện từ | 82 | Lí thuyết | chưa có |  | pending |
+| Vật lí 12 | Chương III. Từ trường | 14 | Từ trường | 56 | Lí thuyết | Từ trường và đường sức từ | Tên Bài 14: từ trường, đường sức từ, quy tắc nắm bàn tay phải (bài học có hướng dẫn: dự đoán và các hoạt động ghép, phân loại). | pending |
+| Vật lí 12 | Chương III. Từ trường | 15 | Lực từ tác dụng lên dây dẫn mang dòng điện. Cảm ứng từ | 61 | Lí thuyết | Lực từ và cảm ứng từ | Tên Bài 15: lực từ tác dụng lên dây dẫn mang dòng điện, F = BIL sinα, cảm ứng từ, số liệu Bảng 15.1. | pending |
+| Vật lí 12 | Chương III. Từ trường | 16 | Từ thông. Hiện tượng cảm ứng điện từ | 66 | Lí thuyết | Cảm ứng điện từ và máy phát điện xoay chiều | Tên Bài 16: từ thông Φ = BS cosα, định luật Faraday và Lenz; Bài 17: máy phát điện xoay chiều, E₀ = NBSω, giá trị hiệu dụng. | pending |
+| Vật lí 12 | Chương III. Từ trường | 17 | Máy phát điện xoay chiều | 72 | Lí thuyết | Cảm ứng điện từ và máy phát điện xoay chiều | Tên Bài 16: từ thông Φ = BS cosα, định luật Faraday và Lenz; Bài 17: máy phát điện xoay chiều, E₀ = NBSω, giá trị hiệu dụng. | pending |
+| Vật lí 12 | Chương III. Từ trường | 18 | Ứng dụng hiện tượng cảm ứng điện từ | 78 | Lí thuyết | Ứng dụng hiện tượng cảm ứng điện từ | Tên Bài 18: ứng dụng hiện tượng cảm ứng điện từ: máy biến áp, sạc không dây, đàn ghi ta điện, dòng điện Foucault (bài học có hướng dẫn). | pending |
+| Vật lí 12 | Chương III. Từ trường | 19 | Điện từ trường. Mô hình sóng điện từ | 82 | Lí thuyết | Điện từ trường và mô hình sóng điện từ, Sóng điện từ | Điện từ trường và mô hình sóng điện từ: Tên Bài 19: điện từ trường, mô hình sóng điện từ (bài học có hướng dẫn). Sóng điện từ: Tên Bài 19 nêu sóng điện từ: λ = cT = c/f, sóng ngang với E, B vuông góc phương truyền (cùng chủ đề đã xếp VL11 Bài 11). | pending |
 | Vật lí 12 | Chương III. Từ trường | 20 | Bài tập về từ trường | 86 | Bài tập | chưa có |  | pending |
-| Vật lí 12 | Chương IV. Vật lí hạt nhân | 21 | Cấu trúc hạt nhân | 91 | Lí thuyết | chưa có |  | pending |
-| Vật lí 12 | Chương IV. Vật lí hạt nhân | 22 | Phản ứng hạt nhân và năng lượng liên kết | 96 | Lí thuyết | chưa có |  | pending |
-| Vật lí 12 | Chương IV. Vật lí hạt nhân | 23 | Hiện tượng phóng xạ | 104 | Lí thuyết | chưa có |  | pending |
-| Vật lí 12 | Chương IV. Vật lí hạt nhân | 24 | Công nghiệp hạt nhân | 114 | Lí thuyết | chưa có |  | pending |
+| Vật lí 12 | Chương IV. Vật lí hạt nhân | 21 | Cấu trúc hạt nhân | 91 | Lí thuyết | Hạt nhân và năng lượng liên kết | Tên Bài 21: cấu trúc hạt nhân, bán kính R = 1,2·10⁻¹⁵·A^(1/3) m, Bảng 21.1; Bài 22: phản ứng hạt nhân, độ hụt khối, năng lượng liên kết, phân hạch, tổng hợp. | pending |
+| Vật lí 12 | Chương IV. Vật lí hạt nhân | 22 | Phản ứng hạt nhân và năng lượng liên kết | 96 | Lí thuyết | Hạt nhân và năng lượng liên kết | Tên Bài 21: cấu trúc hạt nhân, bán kính R = 1,2·10⁻¹⁵·A^(1/3) m, Bảng 21.1; Bài 22: phản ứng hạt nhân, độ hụt khối, năng lượng liên kết, phân hạch, tổng hợp. | pending |
+| Vật lí 12 | Chương IV. Vật lí hạt nhân | 23 | Hiện tượng phóng xạ | 104 | Lí thuyết | Hiện tượng phóng xạ | Tên Bài 23: hiện tượng phóng xạ, định luật phóng xạ, độ phóng xạ, Bảng 23.1, 23.2, an toàn phóng xạ. | pending |
+| Vật lí 12 | Chương IV. Vật lí hạt nhân | 24 | Công nghiệp hạt nhân | 114 | Lí thuyết | Công nghiệp hạt nhân | Tên Bài 24: công nghiệp hạt nhân: nhà máy điện hạt nhân, y học hạt nhân, ứng dụng phóng xạ (bài học có hướng dẫn). | pending |
 | Vật lí 12 | Chương IV. Vật lí hạt nhân | 25 | Bài tập về vật lí hạt nhân | 119 | Bài tập | chưa có |  | pending |
 | Hoá học 10 | Mở đầu |  | Mở đầu | 6 | Mở đầu môn học | chưa có |  | pending |
 | Hoá học 10 | Chương 1. Cấu tạo nguyên tử | 1 | Thành phần của nguyên tử | 13 | Lí thuyết | Thành phần của nguyên tử | Tên Bài 1: thành phần của nguyên tử (cảnh chọn số proton, neutron, electron: nguyên tố, số khối, điện tích, khối lượng các hạt, kích thước hạt nhân so với nguyên tử). | pending |
@@ -166,59 +166,59 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Hoá học 10 | Chương 7. Nguyên tố nhóm halogen | 22 | Hydrogen halide · Muối halide | 112 | Lí thuyết | Hydrogen halide · Muối halide | Tên Bài 22: hydrogen halide, muối halide (cảnh có độ dài, năng lượng liên kết H–X, nhiệt độ sôi, xu hướng tính acid; nhận biết ion halide chỉ có phản ứng tạo AgCl của thư viện). | pending |
 | Hoá học 10 | Chương 7. Nguyên tố nhóm halogen | 23 | Ôn tập chương 7 | 117 | Ôn tập | chưa có |  | pending |
 | Hoá học 11 | Chương 1. Cân bằng hoá học | 1 | Khái niệm về cân bằng hoá học | 6 | Lí thuyết | Cân bằng hóa học & Le Chatelier | Tên Bài 1: khái niệm về cân bằng hoá học. | pending |
-| Hoá học 11 | Chương 1. Cân bằng hoá học | 2 | Cân bằng trong dung dịch nước | 16 | Lí thuyết | chưa có |  | pending |
+| Hoá học 11 | Chương 1. Cân bằng hoá học | 2 | Cân bằng trong dung dịch nước | 16 | Lí thuyết | Cân bằng trong dung dịch nước | Tên Bài 2: cân bằng trong dung dịch nước (pH, tích số ion của nước, chất chỉ thị theo Bảng 2.1). | pending |
 | Hoá học 11 | Chương 1. Cân bằng hoá học | 3 | Ôn tập chương 1 | 27 | Ôn tập | chưa có |  | pending |
-| Hoá học 11 | Chương 2. Nitrogen – sulfur | 4 | Nitrogen | 29 | Lí thuyết | chưa có |  | pending |
-| Hoá học 11 | Chương 2. Nitrogen – sulfur | 5 | Ammonia • Muối ammonium | 33 | Lí thuyết | chưa có |  | pending |
-| Hoá học 11 | Chương 2. Nitrogen – sulfur | 6 | Một số hợp chất của nitrogen với oxygen | 38 | Lí thuyết | chưa có |  | pending |
-| Hoá học 11 | Chương 2. Nitrogen – sulfur | 7 | Sulfur và sulfur dioxide | 42 | Lí thuyết | chưa có |  | pending |
-| Hoá học 11 | Chương 2. Nitrogen – sulfur | 8 | Sulfuric acid và muối sulfate | 48 | Lí thuyết | chưa có |  | pending |
+| Hoá học 11 | Chương 2. Nitrogen – sulfur | 4 | Nitrogen | 29 | Lí thuyết | Nitrogen và sulfur | Tên Bài 4–8 nêu các chất mà bài có thẻ chất và đặt lên trục số oxi hóa: nitrogen (Bài 4), ammonia và muối ammonium (Bài 5), hợp chất của nitrogen với oxygen (Bài 6), sulfur và sulfur dioxide (Bài 7), sulfuric acid và muối sulfate (Bài 8). | pending |
+| Hoá học 11 | Chương 2. Nitrogen – sulfur | 5 | Ammonia • Muối ammonium | 33 | Lí thuyết | Nitrogen và sulfur | Tên Bài 4–8 nêu các chất mà bài có thẻ chất và đặt lên trục số oxi hóa: nitrogen (Bài 4), ammonia và muối ammonium (Bài 5), hợp chất của nitrogen với oxygen (Bài 6), sulfur và sulfur dioxide (Bài 7), sulfuric acid và muối sulfate (Bài 8). | pending |
+| Hoá học 11 | Chương 2. Nitrogen – sulfur | 6 | Một số hợp chất của nitrogen với oxygen | 38 | Lí thuyết | Nitrogen và sulfur | Tên Bài 4–8 nêu các chất mà bài có thẻ chất và đặt lên trục số oxi hóa: nitrogen (Bài 4), ammonia và muối ammonium (Bài 5), hợp chất của nitrogen với oxygen (Bài 6), sulfur và sulfur dioxide (Bài 7), sulfuric acid và muối sulfate (Bài 8). | pending |
+| Hoá học 11 | Chương 2. Nitrogen – sulfur | 7 | Sulfur và sulfur dioxide | 42 | Lí thuyết | Nitrogen và sulfur | Tên Bài 4–8 nêu các chất mà bài có thẻ chất và đặt lên trục số oxi hóa: nitrogen (Bài 4), ammonia và muối ammonium (Bài 5), hợp chất của nitrogen với oxygen (Bài 6), sulfur và sulfur dioxide (Bài 7), sulfuric acid và muối sulfate (Bài 8). | pending |
+| Hoá học 11 | Chương 2. Nitrogen – sulfur | 8 | Sulfuric acid và muối sulfate | 48 | Lí thuyết | Nitrogen và sulfur | Tên Bài 4–8 nêu các chất mà bài có thẻ chất và đặt lên trục số oxi hóa: nitrogen (Bài 4), ammonia và muối ammonium (Bài 5), hợp chất của nitrogen với oxygen (Bài 6), sulfur và sulfur dioxide (Bài 7), sulfuric acid và muối sulfate (Bài 8). | pending |
 | Hoá học 11 | Chương 2. Nitrogen – sulfur | 9 | Ôn tập chương 2 | 55 | Ôn tập | chưa có |  | pending |
-| Hoá học 11 | Chương 3. Đại cương về hoá học hữu cơ | 10 | Hợp chất hữu cơ và hoá học hữu cơ | 57 | Lí thuyết | chưa có |  | pending |
-| Hoá học 11 | Chương 3. Đại cương về hoá học hữu cơ | 11 | Phương pháp tách biệt và tinh chế hợp chất hữu cơ | 63 | Lí thuyết | chưa có |  | pending |
-| Hoá học 11 | Chương 3. Đại cương về hoá học hữu cơ | 12 | Công thức phân tử hợp chất hữu cơ | 70 | Lí thuyết | chưa có |  | pending |
-| Hoá học 11 | Chương 3. Đại cương về hoá học hữu cơ | 13 | Cấu tạo hoá học hợp chất hữu cơ | 74 | Lí thuyết | chưa có |  | pending |
+| Hoá học 11 | Chương 3. Đại cương về hoá học hữu cơ | 10 | Hợp chất hữu cơ và hoá học hữu cơ | 57 | Lí thuyết | Nhóm chức, công thức phân tử, đồng phân | Tên Bài 10: hợp chất hữu cơ và hóa học hữu cơ (nhóm chức, phổ hồng ngoại); tên Bài 12: công thức phân tử hợp chất hữu cơ; tên Bài 13: cấu tạo hóa học hợp chất hữu cơ (công thức cấu tạo, đồng phân). | pending |
+| Hoá học 11 | Chương 3. Đại cương về hoá học hữu cơ | 11 | Phương pháp tách biệt và tinh chế hợp chất hữu cơ | 63 | Lí thuyết | Tách biệt và tinh chế hợp chất hữu cơ | Tên Bài 11: phương pháp tách biệt và tinh chế hợp chất hữu cơ (bài học có hướng dẫn: dự đoán, ghép đôi, xếp thứ tự; không có mô phỏng). | pending |
+| Hoá học 11 | Chương 3. Đại cương về hoá học hữu cơ | 12 | Công thức phân tử hợp chất hữu cơ | 70 | Lí thuyết | Nhóm chức, công thức phân tử, đồng phân | Tên Bài 10: hợp chất hữu cơ và hóa học hữu cơ (nhóm chức, phổ hồng ngoại); tên Bài 12: công thức phân tử hợp chất hữu cơ; tên Bài 13: cấu tạo hóa học hợp chất hữu cơ (công thức cấu tạo, đồng phân). | pending |
+| Hoá học 11 | Chương 3. Đại cương về hoá học hữu cơ | 13 | Cấu tạo hoá học hợp chất hữu cơ | 74 | Lí thuyết | Nhóm chức, công thức phân tử, đồng phân | Tên Bài 10: hợp chất hữu cơ và hóa học hữu cơ (nhóm chức, phổ hồng ngoại); tên Bài 12: công thức phân tử hợp chất hữu cơ; tên Bài 13: cấu tạo hóa học hợp chất hữu cơ (công thức cấu tạo, đồng phân). | pending |
 | Hoá học 11 | Chương 3. Đại cương về hoá học hữu cơ | 14 | Ôn tập chương 3 | 80 | Ôn tập | chưa có |  | pending |
-| Hoá học 11 | Chương 4. Hydrocarbon | 15 | Alkane | 82 | Lí thuyết | chưa có |  | pending |
-| Hoá học 11 | Chương 4. Hydrocarbon | 16 | Hydrocarbon không no | 92 | Lí thuyết | chưa có |  | pending |
-| Hoá học 11 | Chương 4. Hydrocarbon | 17 | Arene (Hydrocarbon thơm) | 102 | Lí thuyết | chưa có |  | pending |
+| Hoá học 11 | Chương 4. Hydrocarbon | 15 | Alkane | 82 | Lí thuyết | Alkane, alkene, alkyne, arene | Tên Bài 15: alkane; tên Bài 16: hydrocarbon không no (alkene, alkyne); tên Bài 17: arene (công thức chung, bảng tính chất vật lí, phương trình đốt cháy, phản ứng trong sách). | pending |
+| Hoá học 11 | Chương 4. Hydrocarbon | 16 | Hydrocarbon không no | 92 | Lí thuyết | Alkane, alkene, alkyne, arene | Tên Bài 15: alkane; tên Bài 16: hydrocarbon không no (alkene, alkyne); tên Bài 17: arene (công thức chung, bảng tính chất vật lí, phương trình đốt cháy, phản ứng trong sách). | pending |
+| Hoá học 11 | Chương 4. Hydrocarbon | 17 | Arene (Hydrocarbon thơm) | 102 | Lí thuyết | Alkane, alkene, alkyne, arene | Tên Bài 15: alkane; tên Bài 16: hydrocarbon không no (alkene, alkyne); tên Bài 17: arene (công thức chung, bảng tính chất vật lí, phương trình đốt cháy, phản ứng trong sách). | pending |
 | Hoá học 11 | Chương 4. Hydrocarbon | 18 | Ôn tập chương 4 | 110 | Ôn tập | chưa có |  | pending |
-| Hoá học 11 | Chương 5. Dẫn xuất halogen – alcohol – phenol | 19 | Dẫn xuất halogen | 112 | Lí thuyết | chưa có |  | pending |
-| Hoá học 11 | Chương 5. Dẫn xuất halogen – alcohol – phenol | 20 | Alcohol | 119 | Lí thuyết | chưa có |  | pending |
-| Hoá học 11 | Chương 5. Dẫn xuất halogen – alcohol – phenol | 21 | Phenol | 129 | Lí thuyết | chưa có |  | pending |
+| Hoá học 11 | Chương 5. Dẫn xuất halogen – alcohol – phenol | 19 | Dẫn xuất halogen | 112 | Lí thuyết | Dẫn xuất halogen, alcohol, phenol | Tên Chương 5 và các Bài 19 (dẫn xuất halogen), 20 (alcohol), 21 (phenol): bảng nhiệt độ sôi, độ tan, so sánh với hydrocarbon, ether; năng lượng liên kết C–X; phản ứng tách theo quy tắc Zaitsev; phản ứng trong sách. | pending |
+| Hoá học 11 | Chương 5. Dẫn xuất halogen – alcohol – phenol | 20 | Alcohol | 119 | Lí thuyết | Dẫn xuất halogen, alcohol, phenol | Tên Chương 5 và các Bài 19 (dẫn xuất halogen), 20 (alcohol), 21 (phenol): bảng nhiệt độ sôi, độ tan, so sánh với hydrocarbon, ether; năng lượng liên kết C–X; phản ứng tách theo quy tắc Zaitsev; phản ứng trong sách. | pending |
+| Hoá học 11 | Chương 5. Dẫn xuất halogen – alcohol – phenol | 21 | Phenol | 129 | Lí thuyết | Dẫn xuất halogen, alcohol, phenol | Tên Chương 5 và các Bài 19 (dẫn xuất halogen), 20 (alcohol), 21 (phenol): bảng nhiệt độ sôi, độ tan, so sánh với hydrocarbon, ether; năng lượng liên kết C–X; phản ứng tách theo quy tắc Zaitsev; phản ứng trong sách. | pending |
 | Hoá học 11 | Chương 5. Dẫn xuất halogen – alcohol – phenol | 22 | Ôn tập chương 5 | 134 | Ôn tập | chưa có |  | pending |
-| Hoá học 11 | Chương 6. Hợp chất carbonyl – carboxylic acid | 23 | Hợp chất carbonyl | 136 | Lí thuyết | chưa có |  | pending |
-| Hoá học 11 | Chương 6. Hợp chất carbonyl – carboxylic acid | 24 | Carboxylic acid | 145 | Lí thuyết | chưa có |  | pending |
+| Hoá học 11 | Chương 6. Hợp chất carbonyl – carboxylic acid | 23 | Hợp chất carbonyl | 136 | Lí thuyết | Hợp chất carbonyl, carboxylic acid | Tên Bài 23: hợp chất carbonyl; tên Bài 24: carboxylic acid (Bảng 23.1, 24.2, 24.3; so sánh nhiệt độ sôi alkane, aldehyde, alcohol, acid; độ phân li tính từ Ka; phản ứng trong sách). | pending |
+| Hoá học 11 | Chương 6. Hợp chất carbonyl – carboxylic acid | 24 | Carboxylic acid | 145 | Lí thuyết | Hợp chất carbonyl, carboxylic acid | Tên Bài 23: hợp chất carbonyl; tên Bài 24: carboxylic acid (Bảng 23.1, 24.2, 24.3; so sánh nhiệt độ sôi alkane, aldehyde, alcohol, acid; độ phân li tính từ Ka; phản ứng trong sách). | pending |
 | Hoá học 11 | Chương 6. Hợp chất carbonyl – carboxylic acid | 25 | Ôn tập chương 6 | 153 | Ôn tập | chưa có |  | pending |
-| Hoá học 12 | Chương 1. Ester – Lipid | 1 | Ester – Lipid | 6 | Lí thuyết | chưa có |  | pending |
-| Hoá học 12 | Chương 1. Ester – Lipid | 2 | Xà phòng và chất giặt rửa | 14 | Lí thuyết | chưa có |  | pending |
+| Hoá học 12 | Chương 1. Ester – Lipid | 1 | Ester – Lipid | 6 | Lí thuyết | Ester và chất béo | Tên Bài 1: ester – lipid: tên gọi, đồng phân, thủy phân, ester hóa, chất béo (Hình 1.2), xà phòng hóa, hydrogen hóa. | pending |
+| Hoá học 12 | Chương 1. Ester – Lipid | 2 | Xà phòng và chất giặt rửa | 14 | Lí thuyết | Xà phòng và chất giặt rửa | Tên Bài 2: xà phòng và chất giặt rửa (bài học có hướng dẫn). | pending |
 | Hoá học 12 | Chương 1. Ester – Lipid | 3 | Ôn tập chương 1 | 18 | Ôn tập | chưa có |  | pending |
-| Hoá học 12 | Chương 2. Carbohydrate | 4 | Giới thiệu về carbohydrate. Glucose và fructose | 20 | Lí thuyết | chưa có |  | pending |
-| Hoá học 12 | Chương 2. Carbohydrate | 5 | Saccharose và maltose | 25 | Lí thuyết | chưa có |  | pending |
-| Hoá học 12 | Chương 2. Carbohydrate | 6 | Tinh bột và cellulose | 28 | Lí thuyết | chưa có |  | pending |
+| Hoá học 12 | Chương 2. Carbohydrate | 4 | Giới thiệu về carbohydrate. Glucose và fructose | 20 | Lí thuyết | Carbohydrate. Glucose và fructose | Tên Bài 4: carbohydrate, glucose và fructose (bài học có hướng dẫn). | pending |
+| Hoá học 12 | Chương 2. Carbohydrate | 5 | Saccharose và maltose | 25 | Lí thuyết | Saccharose và maltose | Tên Bài 5: saccharose và maltose (bài học có hướng dẫn). | pending |
+| Hoá học 12 | Chương 2. Carbohydrate | 6 | Tinh bột và cellulose | 28 | Lí thuyết | Tinh bột và cellulose | Tên Bài 6: tinh bột và cellulose (bài học có hướng dẫn). | pending |
 | Hoá học 12 | Chương 2. Carbohydrate | 7 | Ôn tập chương 2 | 33 | Ôn tập | chưa có |  | pending |
-| Hoá học 12 | Chương 3. Hợp chất chứa nitrogen | 8 | Amine | 35 | Lí thuyết | chưa có |  | pending |
-| Hoá học 12 | Chương 3. Hợp chất chứa nitrogen | 9 | Amino acid và peptide | 41 | Lí thuyết | chưa có |  | pending |
-| Hoá học 12 | Chương 3. Hợp chất chứa nitrogen | 10 | Protein và enzyme | 46 | Lí thuyết | chưa có |  | pending |
+| Hoá học 12 | Chương 3. Hợp chất chứa nitrogen | 8 | Amine | 35 | Lí thuyết | Amine | Tên Bài 8: amine: bậc amine, tên gốc – chức và tên thay thế, đồng phân, Bảng 8.1, tính base, phản ứng với nitrous acid, nước bromine. | pending |
+| Hoá học 12 | Chương 3. Hợp chất chứa nitrogen | 9 | Amino acid và peptide | 41 | Lí thuyết | Amino acid và peptide | Tên Bài 9: amino acid và peptide: Bảng 9.1, dạng ion lưỡng cực, điện di, liên kết peptide, phản ứng màu biuret. | pending |
+| Hoá học 12 | Chương 3. Hợp chất chứa nitrogen | 10 | Protein và enzyme | 46 | Lí thuyết | Protein và enzyme | Tên Bài 10: protein và enzyme (bài học có hướng dẫn). | pending |
 | Hoá học 12 | Chương 3. Hợp chất chứa nitrogen | 11 | Ôn tập chương 3 | 49 | Ôn tập | chưa có |  | pending |
-| Hoá học 12 | Chương 4. Polymer | 12 | Đại cương về polymer | 51 | Lí thuyết | chưa có |  | pending |
-| Hoá học 12 | Chương 4. Polymer | 13 | Vật liệu polymer | 56 | Lí thuyết | chưa có |  | pending |
+| Hoá học 12 | Chương 4. Polymer | 12 | Đại cương về polymer | 51 | Lí thuyết | Đại cương về polymer | Tên Bài 12: đại cương về polymer (bài học có hướng dẫn). | pending |
+| Hoá học 12 | Chương 4. Polymer | 13 | Vật liệu polymer | 56 | Lí thuyết | Vật liệu polymer | Tên Bài 13: vật liệu polymer (bài học có hướng dẫn). | pending |
 | Hoá học 12 | Chương 4. Polymer | 14 | Ôn tập chương 4 | 65 | Ôn tập | chưa có |  | pending |
-| Hoá học 12 | Chương 5. Pin điện và điện phân | 15 | Thế điện cực và nguồn điện hoá học | 67 | Lí thuyết | chưa có |  | pending |
-| Hoá học 12 | Chương 5. Pin điện và điện phân | 16 | Điện phân | 78 | Lí thuyết | chưa có |  | pending |
+| Hoá học 12 | Chương 5. Pin điện và điện phân | 15 | Thế điện cực và nguồn điện hoá học | 67 | Lí thuyết | Thế điện cực và nguồn điện hóa học | Tên Bài 15: thế điện cực và nguồn điện hóa học: Bảng 15.1, quy tắc α, pin Galvani, E°pin = E°cathode − E°anode. | pending |
+| Hoá học 12 | Chương 5. Pin điện và điện phân | 16 | Điện phân | 78 | Lí thuyết | Điện phân | Tên Bài 16: điện phân (bài học có hướng dẫn). | pending |
 | Hoá học 12 | Chương 5. Pin điện và điện phân | 17 | Ôn tập chương 5 | 85 | Ôn tập | chưa có |  | pending |
 | Hoá học 12 | Chương 6. Đại cương về kim loại | 18 | Cấu tạo và liên kết trong tinh thể kim loại | 87 | Lí thuyết | Tinh thể kim loại và NaCl | Tên Bài 18: cấu tạo và liên kết trong tinh thể kim loại (cảnh có thêm tinh thể NaCl; Bài 11 Hoá học 10 tên là liên kết ion, không nêu tinh thể nên không xếp). | pending |
-| Hoá học 12 | Chương 6. Đại cương về kim loại | 19 | Tính chất vật lí và tính chất hoá học của kim loại | 89 | Lí thuyết | chưa có |  | pending |
-| Hoá học 12 | Chương 6. Đại cương về kim loại | 20 | Kim loại trong tự nhiên và phương pháp tách kim loại | 94 | Lí thuyết | chưa có |  | pending |
-| Hoá học 12 | Chương 6. Đại cương về kim loại | 21 | Hợp kim | 99 | Lí thuyết | chưa có |  | pending |
-| Hoá học 12 | Chương 6. Đại cương về kim loại | 22 | Sự ăn mòn kim loại | 102 | Lí thuyết | chưa có |  | pending |
+| Hoá học 12 | Chương 6. Đại cương về kim loại | 19 | Tính chất vật lí và tính chất hoá học của kim loại | 89 | Lí thuyết | Tính chất vật lí và tính chất hóa học của kim loại | Tên Bài 19: tính chất vật lí và tính chất hóa học của kim loại: kim loại với nước (E° < −0,414 V), dung dịch acid loãng (E° < 0), dung dịch muối theo Bảng 15.1; các số liệu vật lí sách nêu. | pending |
+| Hoá học 12 | Chương 6. Đại cương về kim loại | 20 | Kim loại trong tự nhiên và phương pháp tách kim loại | 94 | Lí thuyết | Kim loại trong tự nhiên và phương pháp tách kim loại | Tên Bài 20: kim loại trong tự nhiên và phương pháp tách kim loại (bài học có hướng dẫn). | pending |
+| Hoá học 12 | Chương 6. Đại cương về kim loại | 21 | Hợp kim | 99 | Lí thuyết | Hợp kim | Tên Bài 21: hợp kim (bài học có hướng dẫn). | pending |
+| Hoá học 12 | Chương 6. Đại cương về kim loại | 22 | Sự ăn mòn kim loại | 102 | Lí thuyết | Sự ăn mòn kim loại | Tên Bài 22: sự ăn mòn kim loại (bài học có hướng dẫn). | pending |
 | Hoá học 12 | Chương 6. Đại cương về kim loại | 23 | Ôn tập chương 6 | 106 | Ôn tập | chưa có |  | pending |
-| Hoá học 12 | Chương 7. Nguyên tố nhóm IA và nhóm IIA | 24 | Nguyên tố nhóm IA | 108 | Lí thuyết | chưa có |  | pending |
-| Hoá học 12 | Chương 7. Nguyên tố nhóm IA và nhóm IIA | 25 | Nguyên tố nhóm IIA | 116 | Lí thuyết | chưa có |  | pending |
+| Hoá học 12 | Chương 7. Nguyên tố nhóm IA và nhóm IIA | 24 | Nguyên tố nhóm IA | 108 | Lí thuyết | Nguyên tố nhóm IA | Tên Bài 24: nguyên tố nhóm IA: Bảng 24.1–24.3, xu hướng bán kính, nhiệt độ nóng chảy, nhiệt độ sôi, khối lượng riêng, độ cứng, phản ứng với nước, màu ngọn lửa. | pending |
+| Hoá học 12 | Chương 7. Nguyên tố nhóm IA và nhóm IIA | 25 | Nguyên tố nhóm IIA | 116 | Lí thuyết | Nguyên tố nhóm IIA | Tên Bài 25: nguyên tố nhóm IIA: Bảng 25.1–25.4, độ tan của hydroxide và muối, độ bền nhiệt của muối carbonate, nitrate. | pending |
 | Hoá học 12 | Chương 7. Nguyên tố nhóm IA và nhóm IIA | 26 | Ôn tập chương 7 | 126 | Ôn tập | chưa có |  | pending |
-| Hoá học 12 | Chương 8. Sơ lược về dãy kim loại chuyển tiếp thứ nhất và phức chất | 27 | Đại cương về kim loại chuyển tiếp dãy thứ nhất | 128 | Lí thuyết | chưa có |  | pending |
-| Hoá học 12 | Chương 8. Sơ lược về dãy kim loại chuyển tiếp thứ nhất và phức chất | 28 | Sơ lược về phức chất | 134 | Lí thuyết | chưa có |  | pending |
-| Hoá học 12 | Chương 8. Sơ lược về dãy kim loại chuyển tiếp thứ nhất và phức chất | 29 | Một số tính chất và ứng dụng của phức chất | 138 | Lí thuyết | chưa có |  | pending |
+| Hoá học 12 | Chương 8. Sơ lược về dãy kim loại chuyển tiếp thứ nhất và phức chất | 27 | Đại cương về kim loại chuyển tiếp dãy thứ nhất | 128 | Lí thuyết | Đại cương về kim loại chuyển tiếp dãy thứ nhất | Tên Bài 27: đại cương về kim loại chuyển tiếp dãy thứ nhất: Bảng 27.1, 27.2, 27.4, cấu hình electron của ion, chuẩn độ FeSO₄ bằng KMnO₄. | pending |
+| Hoá học 12 | Chương 8. Sơ lược về dãy kim loại chuyển tiếp thứ nhất và phức chất | 28 | Sơ lược về phức chất | 134 | Lí thuyết | Sơ lược về phức chất | Tên Bài 28: sơ lược về phức chất: nguyên tử trung tâm, phối tử, điện tích, Bảng 28.1 (mô hình 3D khi sách nêu dạng hình học). | pending |
+| Hoá học 12 | Chương 8. Sơ lược về dãy kim loại chuyển tiếp thứ nhất và phức chất | 29 | Một số tính chất và ứng dụng của phức chất | 138 | Lí thuyết | Một số tính chất và ứng dụng của phức chất | Tên Bài 29: một số tính chất và ứng dụng của phức chất: dấu hiệu tạo phức, màu sắc, phản ứng thế phối tử. | pending |
 | Hoá học 12 | Chương 8. Sơ lược về dãy kim loại chuyển tiếp thứ nhất và phức chất | 30 | Ôn tập chương 8 | 142 | Ôn tập | chưa có |  | pending |
 | Sinh học 10 | Phần mở đầu | 1 | Giới thiệu khái quát môn Sinh học | 5 | Mở đầu môn học | chưa có |  | pending |
 | Sinh học 10 | Phần mở đầu | 2 | Phương pháp nghiên cứu và học tập môn Sinh học | 12 | Mở đầu môn học | chưa có |  | pending |
@@ -246,69 +246,69 @@ Gồm **mọi bài** trong mục lục của 9 cuốn (kể cả bài SimLab ch�
 | Sinh học 10 | Chương 7. Virus | 24 | Khái quát về virus | 141 | Lí thuyết | Khái quát về virus | Tên Bài 24: khái quát về virus (cấu tạo: lõi nucleic acid, vỏ capsid, vỏ ngoài; năm giai đoạn nhân lên). | pending |
 | Sinh học 10 | Chương 7. Virus | 25 | Một số bệnh do virus và các thành tựu nghiên cứu ứng dụng virus | 145 | Lí thuyết | Bệnh do virus và ứng dụng virus | Tên Bài 25: một số bệnh do virus và các thành tựu nghiên cứu ứng dụng virus (bài học có hướng dẫn: dự đoán, ghép đôi, phân loại; không có mô phỏng). | pending |
 | Sinh học 10 | Chương 7. Virus | 26 | Thực hành: Điều tra một số bệnh do virus và tuyên truyền phòng chống bệnh | 155 | Thực hành | chưa có |  | pending |
-| Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 1 | Khái quát về trao đổi chất và chuyển hoá năng lượng | 5 | Lí thuyết | chưa có |  | pending |
-| Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 2 | Trao đổi nước và khoáng ở thực vật | 9 | Lí thuyết | chưa có |  | pending |
+| Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 1 | Khái quát về trao đổi chất và chuyển hoá năng lượng | 5 | Lí thuyết | Trao đổi chất ở sinh vật | Tên Bài 1: khái quát về trao đổi chất và chuyển hóa năng lượng (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
+| Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 2 | Trao đổi nước và khoáng ở thực vật | 9 | Lí thuyết | Trao đổi nước và khoáng ở thực vật | Tên Bài 2: trao đổi nước và khoáng ở thực vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
 | Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 3 | Thực hành: Trao đổi nước và khoáng ở thực vật | 22 | Thực hành | chưa có |  | pending |
-| Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 4 | Quang hợp ở thực vật | 26 | Lí thuyết | chưa có |  | pending |
+| Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 4 | Quang hợp ở thực vật | 26 | Lí thuyết | Quang hợp ở thực vật | Tên Bài 4: quang hợp ở thực vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
 | Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 5 | Thực hành: Quang hợp ở thực vật | 35 | Thực hành | chưa có |  | pending |
-| Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 6 | Hô hấp ở thực vật | 38 | Lí thuyết | chưa có |  | pending |
+| Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 6 | Hô hấp ở thực vật | 38 | Lí thuyết | Hô hấp ở thực vật | Tên Bài 6: hô hấp ở thực vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
 | Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 7 | Thực hành: Hô hấp ở thực vật | 44 | Thực hành | chưa có |  | pending |
-| Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 8 | Dinh dưỡng và tiêu hoá ở động vật | 46 | Lí thuyết | chưa có |  | pending |
-| Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 9 | Hô hấp ở động vật | 54 | Lí thuyết | chưa có |  | pending |
-| Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 10 | Tuần hoàn ở động vật | 61 | Lí thuyết | chưa có |  | pending |
+| Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 8 | Dinh dưỡng và tiêu hoá ở động vật | 46 | Lí thuyết | Dinh dưỡng và tiêu hóa ở động vật | Tên Bài 8: dinh dưỡng và tiêu hóa ở động vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
+| Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 9 | Hô hấp ở động vật | 54 | Lí thuyết | Hô hấp ở động vật | Tên Bài 9: hô hấp ở động vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
+| Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 10 | Tuần hoàn ở động vật | 61 | Lí thuyết | Tuần hoàn ở động vật | Tên Bài 10: tuần hoàn ở động vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
 | Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 11 | Thực hành: Một số thí nghiệm về hệ tuần hoàn | 69 | Thực hành | chưa có |  | pending |
-| Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 12 | Miễn dịch ở người và động vật | 72 | Lí thuyết | chưa có |  | pending |
-| Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 13 | Bài tiết và cân bằng nội môi | 80 | Lí thuyết | chưa có |  | pending |
-| Sinh học 11 | Chương 2. Cảm ứng ở sinh vật | 14 | Khái quát về cảm ứng ở sinh vật | 88 | Lí thuyết | chưa có |  | pending |
-| Sinh học 11 | Chương 2. Cảm ứng ở sinh vật | 15 | Cảm ứng ở thực vật | 90 | Lí thuyết | chưa có |  | pending |
+| Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 12 | Miễn dịch ở người và động vật | 72 | Lí thuyết | Miễn dịch ở người và động vật | Tên Bài 12: miễn dịch ở người và động vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
+| Sinh học 11 | Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật | 13 | Bài tiết và cân bằng nội môi | 80 | Lí thuyết | Bài tiết và cân bằng nội môi | Tên Bài 13: bài tiết và cân bằng nội môi (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
+| Sinh học 11 | Chương 2. Cảm ứng ở sinh vật | 14 | Khái quát về cảm ứng ở sinh vật | 88 | Lí thuyết | Khái quát về cảm ứng | Tên Bài 14: khái quát về cảm ứng ở sinh vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
+| Sinh học 11 | Chương 2. Cảm ứng ở sinh vật | 15 | Cảm ứng ở thực vật | 90 | Lí thuyết | Cảm ứng ở thực vật | Tên Bài 15: cảm ứng ở thực vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
 | Sinh học 11 | Chương 2. Cảm ứng ở sinh vật | 16 | Thực hành: Cảm ứng ở thực vật | 97 | Thực hành | chưa có |  | pending |
-| Sinh học 11 | Chương 2. Cảm ứng ở sinh vật | 17 | Cảm ứng ở động vật | 100 | Lí thuyết | chưa có |  | pending |
-| Sinh học 11 | Chương 2. Cảm ứng ở sinh vật | 18 | Tập tính ở động vật | 115 | Lí thuyết | chưa có |  | pending |
-| Sinh học 11 | Chương 3. Sinh trưởng và phát triển ở sinh vật | 19 | Khái quát về sinh trưởng và phát triển ở sinh vật | 125 | Lí thuyết | chưa có |  | pending |
-| Sinh học 11 | Chương 3. Sinh trưởng và phát triển ở sinh vật | 20 | Sinh trưởng và phát triển ở thực vật | 129 | Lí thuyết | chưa có |  | pending |
+| Sinh học 11 | Chương 2. Cảm ứng ở sinh vật | 17 | Cảm ứng ở động vật | 100 | Lí thuyết | Cảm ứng ở động vật | Tên Bài 17: cảm ứng ở động vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
+| Sinh học 11 | Chương 2. Cảm ứng ở sinh vật | 18 | Tập tính ở động vật | 115 | Lí thuyết | Tập tính ở động vật | Tên Bài 18: tập tính ở động vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
+| Sinh học 11 | Chương 3. Sinh trưởng và phát triển ở sinh vật | 19 | Khái quát về sinh trưởng và phát triển ở sinh vật | 125 | Lí thuyết | Khái quát về sinh trưởng và phát triển | Tên Bài 19: khái quát về sinh trưởng và phát triển ở sinh vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
+| Sinh học 11 | Chương 3. Sinh trưởng và phát triển ở sinh vật | 20 | Sinh trưởng và phát triển ở thực vật | 129 | Lí thuyết | Sinh trưởng và phát triển ở thực vật | Tên Bài 20: sinh trưởng và phát triển ở thực vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
 | Sinh học 11 | Chương 3. Sinh trưởng và phát triển ở sinh vật | 21 | Thực hành: Bấm ngọn, tỉa cành; xử lí kích thích tố và tính tuổi cây | 141 | Thực hành | chưa có |  | pending |
-| Sinh học 11 | Chương 3. Sinh trưởng và phát triển ở sinh vật | 22 | Sinh trưởng và phát triển ở động vật | 145 | Lí thuyết | chưa có |  | pending |
+| Sinh học 11 | Chương 3. Sinh trưởng và phát triển ở sinh vật | 22 | Sinh trưởng và phát triển ở động vật | 145 | Lí thuyết | Sinh trưởng và phát triển ở động vật | Tên Bài 22: sinh trưởng và phát triển ở động vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
 | Sinh học 11 | Chương 3. Sinh trưởng và phát triển ở sinh vật | 23 | Thực hành: Quan sát quá trình biến thái ở động vật | 153 | Thực hành | chưa có |  | pending |
-| Sinh học 11 | Chương 4. Sinh sản ở sinh vật | 24 | Khái quát về sinh sản ở sinh vật | 156 | Lí thuyết | chưa có |  | pending |
-| Sinh học 11 | Chương 4. Sinh sản ở sinh vật | 25 | Sinh sản ở thực vật | 159 | Lí thuyết | chưa có |  | pending |
+| Sinh học 11 | Chương 4. Sinh sản ở sinh vật | 24 | Khái quát về sinh sản ở sinh vật | 156 | Lí thuyết | Khái quát về sinh sản | Tên Bài 24: khái quát về sinh sản ở sinh vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
+| Sinh học 11 | Chương 4. Sinh sản ở sinh vật | 25 | Sinh sản ở thực vật | 159 | Lí thuyết | Sinh sản ở thực vật | Tên Bài 25: sinh sản ở thực vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
 | Sinh học 11 | Chương 4. Sinh sản ở sinh vật | 26 | Thực hành: Nhân giống vô tính và thụ phấn cho cây | 167 | Thực hành | chưa có |  | pending |
-| Sinh học 11 | Chương 4. Sinh sản ở sinh vật | 27 | Sinh sản ở động vật | 170 | Lí thuyết | chưa có |  | pending |
-| Sinh học 11 | Chương 5. Mối quan hệ giữa các quá trình sinh lí trong cơ thể sinh vật và một số ngành nghề liên quan đến sinh học cơ thể | 28 | Mối quan hệ giữa các quá trình sinh lí trong cơ thể sinh vật | 183 | Lí thuyết | chưa có |  | pending |
+| Sinh học 11 | Chương 4. Sinh sản ở sinh vật | 27 | Sinh sản ở động vật | 170 | Lí thuyết | Sinh sản ở động vật | Tên Bài 27: sinh sản ở động vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
+| Sinh học 11 | Chương 5. Mối quan hệ giữa các quá trình sinh lí trong cơ thể sinh vật và một số ngành nghề liên quan đến sinh học cơ thể | 28 | Mối quan hệ giữa các quá trình sinh lí trong cơ thể sinh vật | 183 | Lí thuyết | Mối quan hệ giữa các quá trình sinh lí | Tên Bài 28: mối quan hệ giữa các quá trình sinh lí trong cơ thể sinh vật (bài học có hướng dẫn: dự đoán và các hoạt động xếp thứ tự, phân loại, ghép; không có mô phỏng). | pending |
 | Sinh học 11 | Chương 5. Mối quan hệ giữa các quá trình sinh lí trong cơ thể sinh vật và một số ngành nghề liên quan đến sinh học cơ thể | 29 | Một số ngành nghề liên quan đến sinh học cơ thể | 185 | Ngành nghề | chưa có |  | pending |
-| Sinh học 12 | Chương 1. Di truyền phân tử | 1 | DNA và cơ chế tái bản DNA | 5 | Lí thuyết | chưa có |  | pending |
+| Sinh học 12 | Chương 1. Di truyền phân tử | 1 | DNA và cơ chế tái bản DNA | 5 | Lí thuyết | DNA và cơ chế tái bản DNA | Tên Bài 1: DNA và cơ chế tái bản DNA (bài học có hướng dẫn). | pending |
 | Sinh học 12 | Chương 1. Di truyền phân tử | 2 | Gene, hệ gene và quá trình truyền đạt thông tin di truyền | 9 | Lí thuyết | ADN → mARN → Protein | Tên Bài 2: quá trình truyền đạt thông tin di truyền (Bài 1 về DNA và tái bản: giáo viên quyết định). | pending |
-| Sinh học 12 | Chương 1. Di truyền phân tử | 3 | Điều hoà biểu hiện gene | 18 | Lí thuyết | chưa có |  | pending |
+| Sinh học 12 | Chương 1. Di truyền phân tử | 3 | Điều hoà biểu hiện gene | 18 | Lí thuyết | Điều hòa biểu hiện gene: operon lac | Tên Bài 3: điều hoà biểu hiện gene: operon lac, thí nghiệm của Monod và Jacob, câu 2 tr. 21. | pending |
 | Sinh học 12 | Chương 1. Di truyền phân tử | 4 | Đột biến gene | 23 | Lí thuyết | Đột biến điểm | Tên Bài 4: đột biến gene. | pending |
-| Sinh học 12 | Chương 1. Di truyền phân tử | 5 | Công nghệ gene | 27 | Lí thuyết | chưa có |  | pending |
+| Sinh học 12 | Chương 1. Di truyền phân tử | 5 | Công nghệ gene | 27 | Lí thuyết | Công nghệ gene | Tên Bài 5: công nghệ gene (bài học có hướng dẫn). | pending |
 | Sinh học 12 | Chương 1. Di truyền phân tử | 6 | Thực hành: Tách chiết DNA | 32 | Thực hành | chưa có |  | pending |
 | Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 7 | Cấu trúc và chức năng của nhiễm sắc thể | 36 | Lí thuyết | Từ tế bào đến DNA | Tên Bài 7: cấu trúc và chức năng của nhiễm sắc thể (cấp NST kép, sợi nhiễm sắc, nucleosome, DNA). | pending |
 | Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 8 | Học thuyết di truyền Mendel | 40 | Lí thuyết | Di truyền Mendel | Tên Bài 8–9: học thuyết di truyền Mendel và mở rộng học thuyết Mendel (cảnh chỉ mở rộng tới trội không hoàn toàn). | pending |
 | Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 9 | Mở rộng học thuyết Mendel | 46 | Lí thuyết | Di truyền Mendel | Tên Bài 8–9: học thuyết di truyền Mendel và mở rộng học thuyết Mendel (cảnh chỉ mở rộng tới trội không hoàn toàn). | pending |
-| Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 10 | Di truyền giới tính và di truyền liên kết với giới tính | 50 | Lí thuyết | chưa có |  | pending |
-| Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 11 | Liên kết gene và hoán vị gene | 54 | Lí thuyết | chưa có |  | pending |
-| Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 12 | Đột biến nhiễm sắc thể | 60 | Lí thuyết | chưa có |  | pending |
-| Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 13 | Di truyền học người và di truyền y học | 68 | Lí thuyết | chưa có |  | pending |
+| Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 10 | Di truyền giới tính và di truyền liên kết với giới tính | 50 | Lí thuyết | Di truyền giới tính và liên kết với giới tính | Tên Bài 10: di truyền giới tính và di truyền liên kết với giới tính: XX – XY, phép lai thuận nghịch của Morgan (Hình 10.2). | pending |
+| Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 11 | Liên kết gene và hoán vị gene | 54 | Lí thuyết | Liên kết gene và hoán vị gene | Tên Bài 11: liên kết gene và hoán vị gene: lai phân tích của Morgan, tần số hoán vị gene, câu 2 tr. 59. | pending |
+| Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 12 | Đột biến nhiễm sắc thể | 60 | Lí thuyết | Đột biến nhiễm sắc thể | Tên Bài 12: đột biến nhiễm sắc thể: cấu trúc (Hình 12.1), lệch bội, đa bội, hội chứng Down theo tuổi mẹ. | pending |
+| Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 13 | Di truyền học người và di truyền y học | 68 | Lí thuyết | Di truyền học người và di truyền y học | Tên Bài 13: di truyền học người và di truyền y học (bài học có hướng dẫn). | pending |
 | Sinh học 12 | Chương 2. Di truyền nhiễm sắc thể | 14 | Thực hành: Quan sát một số dạng đột biến nhiễm sắc thể | 75 | Thực hành | chưa có |  | pending |
-| Sinh học 12 | Chương 3. Mở rộng học thuyết di truyền nhiễm sắc thể | 15 | Di truyền gene ngoài nhân | 78 | Lí thuyết | chưa có |  | pending |
-| Sinh học 12 | Chương 3. Mở rộng học thuyết di truyền nhiễm sắc thể | 16 | Tương tác giữa kiểu gene với môi trường và thành tựu chọn giống | 83 | Lí thuyết | chưa có |  | pending |
+| Sinh học 12 | Chương 3. Mở rộng học thuyết di truyền nhiễm sắc thể | 15 | Di truyền gene ngoài nhân | 78 | Lí thuyết | Di truyền gene ngoài nhân | Tên Bài 15: di truyền gene ngoài nhân (bài học có hướng dẫn). | pending |
+| Sinh học 12 | Chương 3. Mở rộng học thuyết di truyền nhiễm sắc thể | 16 | Tương tác giữa kiểu gene với môi trường và thành tựu chọn giống | 83 | Lí thuyết | Tương tác giữa kiểu gene với môi trường và thành tựu chọn giống | Tên Bài 16: tương tác giữa kiểu gene với môi trường và thành tựu chọn giống (bài học có hướng dẫn). | pending |
 | Sinh học 12 | Chương 3. Mở rộng học thuyết di truyền nhiễm sắc thể | 17 | Thực hành: Thí nghiệm về thường biến ở cây trồng | 88 | Thực hành | chưa có |  | pending |
 | Sinh học 12 | Chương 4. Di truyền quần thể | 18 | Di truyền học quần thể | 91 | Lí thuyết | Định luật Hardy–Weinberg | Tên Bài 18: di truyền học quần thể. | pending |
-| Sinh học 12 | Chương 5. Bằng chứng và các học thuyết tiến hoá | 19 | Các bằng chứng tiến hoá | 97 | Lí thuyết | chưa có |  | pending |
-| Sinh học 12 | Chương 5. Bằng chứng và các học thuyết tiến hoá | 20 | Quan niệm của Darwin về chọn lọc tự nhiên và hình thành loài | 101 | Lí thuyết | chưa có |  | pending |
-| Sinh học 12 | Chương 5. Bằng chứng và các học thuyết tiến hoá | 21 | Học thuyết tiến hoá tổng hợp hiện đại | 106 | Lí thuyết | chưa có |  | pending |
-| Sinh học 12 | Chương 5. Bằng chứng và các học thuyết tiến hoá | 22 | Tiến hoá lớn và quá trình phát sinh chủng loại | 113 | Lí thuyết | chưa có |  | pending |
-| Sinh học 12 | Chương 6. Môi trường và sinh thái học quần thể | 23 | Môi trường và các nhân tố sinh thái | 122 | Lí thuyết | chưa có |  | pending |
+| Sinh học 12 | Chương 5. Bằng chứng và các học thuyết tiến hoá | 19 | Các bằng chứng tiến hoá | 97 | Lí thuyết | Bằng chứng tiến hóa và lịch sử sự sống | Tên Bài 19: các bằng chứng tiến hoá (Bảng 19.1, cytochrome C); Bài 22: tiến hoá lớn và quá trình phát sinh chủng loại (Bảng 22.1, các đại địa chất). | pending |
+| Sinh học 12 | Chương 5. Bằng chứng và các học thuyết tiến hoá | 20 | Quan niệm của Darwin về chọn lọc tự nhiên và hình thành loài | 101 | Lí thuyết | Quan niệm của Darwin về chọn lọc tự nhiên và hình thành loài | Tên Bài 20: quan niệm của Darwin về chọn lọc tự nhiên và hình thành loài (bài học có hướng dẫn). | pending |
+| Sinh học 12 | Chương 5. Bằng chứng và các học thuyết tiến hoá | 21 | Học thuyết tiến hoá tổng hợp hiện đại | 106 | Lí thuyết | Học thuyết tiến hóa tổng hợp hiện đại | Tên Bài 21: học thuyết tiến hoá tổng hợp hiện đại (bài học có hướng dẫn). | pending |
+| Sinh học 12 | Chương 5. Bằng chứng và các học thuyết tiến hoá | 22 | Tiến hoá lớn và quá trình phát sinh chủng loại | 113 | Lí thuyết | Bằng chứng tiến hóa và lịch sử sự sống | Tên Bài 19: các bằng chứng tiến hoá (Bảng 19.1, cytochrome C); Bài 22: tiến hoá lớn và quá trình phát sinh chủng loại (Bảng 22.1, các đại địa chất). | pending |
+| Sinh học 12 | Chương 6. Môi trường và sinh thái học quần thể | 23 | Môi trường và các nhân tố sinh thái | 122 | Lí thuyết | Môi trường và các nhân tố sinh thái | Tên Bài 23: môi trường và các nhân tố sinh thái: quy luật giới hạn sinh thái với ví dụ nhiệt độ của sách. | pending |
 | Sinh học 12 | Chương 6. Môi trường và sinh thái học quần thể | 24 | Sinh thái học quần thể | 128 | Lí thuyết | Tăng trưởng logistic | Tên Bài 24: sinh thái học quần thể. | pending |
 | Sinh học 12 | Chương 6. Môi trường và sinh thái học quần thể | 25 | Thực hành: Xác định một số đặc trưng của quần thể | 138 | Thực hành | chưa có |  | pending |
-| Sinh học 12 | Chương 7. Sinh thái học quần xã | 26 | Quần xã sinh vật | 141 | Lí thuyết | chưa có |  | pending |
+| Sinh học 12 | Chương 7. Sinh thái học quần xã | 26 | Quần xã sinh vật | 141 | Lí thuyết | Quần xã sinh vật | Tên Bài 26: quần xã sinh vật (bài học có hướng dẫn). | pending |
 | Sinh học 12 | Chương 7. Sinh thái học quần xã | 27 | Thực hành: Tìm hiểu cấu trúc dinh dưỡng của quần xã trong tự nhiên | 150 | Thực hành | chưa có |  | pending |
-| Sinh học 12 | Chương 7. Sinh thái học quần xã | 28 | Hệ sinh thái | 152 | Lí thuyết | chưa có |  | pending |
-| Sinh học 12 | Chương 7. Sinh thái học quần xã | 29 | Trao đổi vật chất và chuyển hoá năng lượng trong hệ sinh thái | 155 | Lí thuyết | chưa có |  | pending |
-| Sinh học 12 | Chương 7. Sinh thái học quần xã | 30 | Diễn thế sinh thái | 161 | Lí thuyết | chưa có |  | pending |
-| Sinh học 12 | Chương 7. Sinh thái học quần xã | 31 | Sinh quyển, khu sinh học và chu trình sinh - địa - hoá | 165 | Lí thuyết | chưa có |  | pending |
+| Sinh học 12 | Chương 7. Sinh thái học quần xã | 28 | Hệ sinh thái | 152 | Lí thuyết | Hệ sinh thái | Tên Bài 28: hệ sinh thái (bài học có hướng dẫn). | pending |
+| Sinh học 12 | Chương 7. Sinh thái học quần xã | 29 | Trao đổi vật chất và chuyển hoá năng lượng trong hệ sinh thái | 155 | Lí thuyết | Trao đổi vật chất và chuyển hóa năng lượng trong hệ sinh thái | Tên Bài 29: trao đổi vật chất và chuyển hoá năng lượng trong hệ sinh thái: tháp sinh thái Hình 29.6, hiệu suất sinh thái. | pending |
+| Sinh học 12 | Chương 7. Sinh thái học quần xã | 30 | Diễn thế sinh thái | 161 | Lí thuyết | Diễn thế sinh thái | Tên Bài 30: diễn thế sinh thái (bài học có hướng dẫn). | pending |
+| Sinh học 12 | Chương 7. Sinh thái học quần xã | 31 | Sinh quyển, khu sinh học và chu trình sinh - địa - hoá | 165 | Lí thuyết | Sinh quyển, khu sinh học và chu trình sinh – địa – hóa | Tên Bài 31: sinh quyển, khu sinh học và chu trình sinh – địa – hoá (bài học có hướng dẫn). | pending |
 | Sinh học 12 | Chương 7. Sinh thái học quần xã | 32 | Thực hành: Thiết kế một hệ sinh thái nhân tạo | 172 | Thực hành | chưa có |  | pending |
-| Sinh học 12 | Chương 8. Sinh thái học phục hồi, bảo tồn và phát triển bền vững | 33 | Sinh thái học phục hồi và bảo tồn đa dạng sinh vật | 175 | Lí thuyết | chưa có |  | pending |
-| Sinh học 12 | Chương 8. Sinh thái học phục hồi, bảo tồn và phát triển bền vững | 34 | Phát triển bền vững | 180 | Lí thuyết | chưa có |  | pending |
+| Sinh học 12 | Chương 8. Sinh thái học phục hồi, bảo tồn và phát triển bền vững | 33 | Sinh thái học phục hồi và bảo tồn đa dạng sinh vật | 175 | Lí thuyết | Sinh thái học phục hồi và bảo tồn đa dạng sinh vật | Tên Bài 33: sinh thái học phục hồi và bảo tồn đa dạng sinh vật (bài học có hướng dẫn). | pending |
+| Sinh học 12 | Chương 8. Sinh thái học phục hồi, bảo tồn và phát triển bền vững | 34 | Phát triển bền vững | 180 | Lí thuyết | Phát triển bền vững | Tên Bài 34: phát triển bền vững (bài học có hướng dẫn). | pending |
 | Sinh học 12 | Chương 8. Sinh thái học phục hồi, bảo tồn và phát triển bền vững | 35 | Dự án: Tìm hiểu thực trạng bảo tồn hệ sinh thái tại địa phương và đề xuất giải pháp bảo tồn | 188 | Dự án | chưa có |  | pending |
 
 ## Chủ đề chưa xếp lớp

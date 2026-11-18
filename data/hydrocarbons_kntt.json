@@ -1,0 +1,1071 @@
+{
+  "dataset": "hydrocarbons_kntt",
+  "version": 1,
+  "accessed": "2026-11-17",
+  "review_status": "pending",
+  "source": {
+    "id": "sgk-hh11-c4",
+    "citation": "SGK Hóa học 11 Kết nối tri thức, NXB Giáo dục Việt Nam: Chương 4 “Hydrocarbon”, Bài 15 (Bảng 15.1, 15.2, tr. 82–91), Bài 16 (Bảng 16.1, 16.2, tr. 92–101), Bài 17 (Bảng 17.1, tr. 102–109); bảng tính chất vật lí sách ghi nguồn PubChem",
+    "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-11.4701111834"
+  },
+  "items": [
+    {
+      "class": "alkane",
+      "name": "methane",
+      "formula": "CH4",
+      "structure": "CH4",
+      "carbons": 1,
+      "mp_C": -182.5,
+      "bp_C": -161.5,
+      "density": null,
+      "straight": true,
+      "in_series": true,
+      "page": 85,
+      "review_status": "pending"
+    },
+    {
+      "class": "alkane",
+      "name": "ethane",
+      "formula": "C2H6",
+      "structure": "CH3CH3",
+      "carbons": 2,
+      "mp_C": -183.3,
+      "bp_C": -88.6,
+      "density": null,
+      "straight": true,
+      "in_series": true,
+      "page": 85,
+      "review_status": "pending"
+    },
+    {
+      "class": "alkane",
+      "name": "propane",
+      "formula": "C3H8",
+      "structure": "CH3CH2CH3",
+      "carbons": 3,
+      "mp_C": -187.7,
+      "bp_C": -42.1,
+      "density": 0.501,
+      "straight": true,
+      "in_series": true,
+      "page": 85,
+      "review_status": "pending"
+    },
+    {
+      "class": "alkane",
+      "name": "butane",
+      "formula": "C4H10",
+      "structure": "CH3[CH2]2CH3",
+      "carbons": 4,
+      "mp_C": -138.3,
+      "bp_C": -0.5,
+      "density": 0.579,
+      "straight": true,
+      "in_series": true,
+      "page": 85,
+      "review_status": "pending"
+    },
+    {
+      "class": "alkane",
+      "name": "pentane",
+      "formula": "C5H12",
+      "structure": "CH3[CH2]3CH3",
+      "carbons": 5,
+      "mp_C": -129.7,
+      "bp_C": 36.1,
+      "density": 0.626,
+      "straight": true,
+      "in_series": true,
+      "page": 85,
+      "review_status": "pending"
+    },
+    {
+      "class": "alkane",
+      "name": "hexane",
+      "formula": "C6H14",
+      "structure": "CH3[CH2]4CH3",
+      "carbons": 6,
+      "mp_C": -95.3,
+      "bp_C": 68.7,
+      "density": 0.659,
+      "straight": true,
+      "in_series": true,
+      "page": 85,
+      "review_status": "pending"
+    },
+    {
+      "class": "alkane",
+      "name": "heptane",
+      "formula": "C7H16",
+      "structure": "CH3[CH2]5CH3",
+      "carbons": 7,
+      "mp_C": -90.6,
+      "bp_C": 98.4,
+      "density": 0.684,
+      "straight": true,
+      "in_series": true,
+      "page": 85,
+      "review_status": "pending"
+    },
+    {
+      "class": "alkane",
+      "name": "octane",
+      "formula": "C8H18",
+      "structure": "CH3[CH2]6CH3",
+      "carbons": 8,
+      "mp_C": -56.8,
+      "bp_C": 125.7,
+      "density": 0.703,
+      "straight": true,
+      "in_series": true,
+      "page": 85,
+      "review_status": "pending"
+    },
+    {
+      "class": "alkane",
+      "name": "nonane",
+      "formula": "C9H20",
+      "structure": "CH3[CH2]7CH3",
+      "carbons": 9,
+      "mp_C": -53.6,
+      "bp_C": 150.8,
+      "density": 0.718,
+      "straight": true,
+      "in_series": true,
+      "page": 85,
+      "review_status": "pending"
+    },
+    {
+      "class": "alkane",
+      "name": "decane",
+      "formula": "C10H22",
+      "structure": "CH3[CH2]8CH3",
+      "carbons": 10,
+      "mp_C": -29.7,
+      "bp_C": 174.0,
+      "density": 0.73,
+      "straight": true,
+      "in_series": true,
+      "page": 85,
+      "review_status": "pending"
+    },
+    {
+      "class": "alkene",
+      "name": "ethene (ethylene)",
+      "formula": "C2H4",
+      "structure": "CH2=CH2",
+      "carbons": 2,
+      "mp_C": -169,
+      "bp_C": -105,
+      "density": null,
+      "straight": true,
+      "in_series": true,
+      "page": 96,
+      "review_status": "pending"
+    },
+    {
+      "class": "alkene",
+      "name": "propene (propylene)",
+      "formula": "C3H6",
+      "structure": "CH2=CH-CH3",
+      "carbons": 3,
+      "mp_C": -185,
+      "bp_C": -47.8,
+      "density": null,
+      "straight": true,
+      "in_series": true,
+      "page": 96,
+      "review_status": "pending"
+    },
+    {
+      "class": "alkene",
+      "name": "but-1-ene",
+      "formula": "C4H8",
+      "structure": "CH2=CH-CH2-CH3",
+      "carbons": 4,
+      "mp_C": -185,
+      "bp_C": -6.3,
+      "density": null,
+      "straight": true,
+      "in_series": true,
+      "page": 96,
+      "review_status": "pending"
+    },
+    {
+      "class": "alkene",
+      "name": "trans-but-2-ene",
+      "formula": "C4H8",
+      "structure": "CH3-CH=CH-CH3",
+      "carbons": 4,
+      "mp_C": -106,
+      "bp_C": 0.9,
+      "density": null,
+      "straight": false,
+      "in_series": true,
+      "page": 96,
+      "review_status": "pending"
+    },
+    {
+      "class": "alkene",
+      "name": "cis-but-2-ene",
+      "formula": "C4H8",
+      "structure": "CH3-CH=CH-CH3",
+      "carbons": 4,
+      "mp_C": -139,
+      "bp_C": 3.7,
+      "density": null,
+      "straight": false,
+      "in_series": true,
+      "page": 96,
+      "review_status": "pending"
+    },
+    {
+      "class": "alkene",
+      "name": "pent-1-ene",
+      "formula": "C5H10",
+      "structure": "CH2=CH-CH2-CH2-CH3",
+      "carbons": 5,
+      "mp_C": -165,
+      "bp_C": 30,
+      "density": 0.641,
+      "straight": true,
+      "in_series": true,
+      "page": 96,
+      "review_status": "pending"
+    },
+    {
+      "class": "alkyne",
+      "name": "ethyne (acetylene)",
+      "formula": "C2H2",
+      "structure": "HC≡CH",
+      "carbons": 2,
+      "mp_C": -81,
+      "bp_C": -83,
+      "density": null,
+      "straight": true,
+      "in_series": true,
+      "page": 96,
+      "review_status": "pending"
+    },
+    {
+      "class": "alkyne",
+      "name": "propyne",
+      "formula": "C3H4",
+      "structure": "HC≡C-CH3",
+      "carbons": 3,
+      "mp_C": -102.7,
+      "bp_C": -23.2,
+      "density": null,
+      "straight": true,
+      "in_series": true,
+      "page": 96,
+      "review_status": "pending"
+    },
+    {
+      "class": "alkyne",
+      "name": "but-1-yne",
+      "formula": "C4H6",
+      "structure": "HC≡C-CH2-CH3",
+      "carbons": 4,
+      "mp_C": -126,
+      "bp_C": 8.1,
+      "density": null,
+      "straight": true,
+      "in_series": true,
+      "page": 96,
+      "review_status": "pending"
+    },
+    {
+      "class": "alkyne",
+      "name": "but-2-yne",
+      "formula": "C4H6",
+      "structure": "CH3-C≡C-CH3",
+      "carbons": 4,
+      "mp_C": -32,
+      "bp_C": 27,
+      "density": 0.691,
+      "straight": false,
+      "in_series": true,
+      "page": 96,
+      "review_status": "pending"
+    },
+    {
+      "class": "alkyne",
+      "name": "pent-1-yne",
+      "formula": "C5H8",
+      "structure": "HC≡C-CH2-CH2-CH3",
+      "carbons": 5,
+      "mp_C": -106,
+      "bp_C": 40.2,
+      "density": 0.69,
+      "straight": true,
+      "in_series": true,
+      "page": 96,
+      "review_status": "pending"
+    },
+    {
+      "class": "alkyne",
+      "name": "pent-2-yne",
+      "formula": "C5H8",
+      "structure": "CH3-C≡C-CH2-CH3",
+      "carbons": 5,
+      "mp_C": -109,
+      "bp_C": 56.1,
+      "density": 0.711,
+      "straight": false,
+      "in_series": true,
+      "page": 96,
+      "review_status": "pending"
+    },
+    {
+      "class": "arene",
+      "name": "benzene",
+      "formula": "C6H6",
+      "structure": "C6H6",
+      "carbons": 6,
+      "mp_C": 5.5,
+      "bp_C": 80.1,
+      "density": 0.878,
+      "straight": true,
+      "in_series": true,
+      "page": 103,
+      "review_status": "pending"
+    },
+    {
+      "class": "arene",
+      "name": "toluene",
+      "formula": "C7H8",
+      "structure": "C6H5CH3",
+      "carbons": 7,
+      "mp_C": -95.0,
+      "bp_C": 110.6,
+      "density": 0.867,
+      "straight": true,
+      "in_series": true,
+      "page": 103,
+      "review_status": "pending"
+    },
+    {
+      "class": "arene",
+      "name": "o-xylene",
+      "formula": "C8H10",
+      "structure": "C6H4(CH3)2",
+      "carbons": 8,
+      "mp_C": -25.2,
+      "bp_C": 144,
+      "density": 0.88,
+      "straight": false,
+      "in_series": true,
+      "page": 103,
+      "review_status": "pending"
+    },
+    {
+      "class": "arene",
+      "name": "m-xylene",
+      "formula": "C8H10",
+      "structure": "C6H4(CH3)2",
+      "carbons": 8,
+      "mp_C": -47.4,
+      "bp_C": 139,
+      "density": 0.864,
+      "straight": false,
+      "in_series": true,
+      "page": 103,
+      "review_status": "pending"
+    },
+    {
+      "class": "arene",
+      "name": "p-xylene",
+      "formula": "C8H10",
+      "structure": "C6H4(CH3)2",
+      "carbons": 8,
+      "mp_C": 13.3,
+      "bp_C": 138,
+      "density": 0.861,
+      "straight": false,
+      "in_series": true,
+      "page": 103,
+      "review_status": "pending"
+    },
+    {
+      "class": "arene",
+      "name": "styrene",
+      "formula": "C8H8",
+      "structure": "C6H5CH=CH2",
+      "carbons": 8,
+      "mp_C": -30.0,
+      "bp_C": 145,
+      "density": 0.909,
+      "straight": false,
+      "in_series": false,
+      "page": 103,
+      "review_status": "pending"
+    },
+    {
+      "class": "arene",
+      "name": "naphthalene",
+      "formula": "C10H8",
+      "structure": "C10H8",
+      "carbons": 10,
+      "mp_C": 80.26,
+      "bp_C": 218,
+      "density": 1.0253,
+      "straight": false,
+      "in_series": false,
+      "page": 103,
+      "review_status": "pending"
+    }
+  ],
+  "classes": [
+    {
+      "id": "alkane",
+      "name": {
+        "vi": "Alkane",
+        "en": "Alkanes"
+      },
+      "a": 2,
+      "b": 2,
+      "n_min": 1,
+      "lesson": 15,
+      "page": 82
+    },
+    {
+      "id": "alkene",
+      "name": {
+        "vi": "Alkene",
+        "en": "Alkenes"
+      },
+      "a": 2,
+      "b": 0,
+      "n_min": 2,
+      "lesson": 16,
+      "page": 92
+    },
+    {
+      "id": "alkyne",
+      "name": {
+        "vi": "Alkyne",
+        "en": "Alkynes"
+      },
+      "a": 2,
+      "b": -2,
+      "n_min": 2,
+      "lesson": 16,
+      "page": 92
+    },
+    {
+      "id": "arene",
+      "name": {
+        "vi": "Dãy đồng đẳng của benzene",
+        "en": "Benzene series"
+      },
+      "a": 2,
+      "b": -6,
+      "n_min": 6,
+      "lesson": 17,
+      "page": 102
+    }
+  ],
+  "shapes": [
+    {
+      "class": "alkane",
+      "text": {
+        "vi": "Methane: bốn liên kết C–H hướng về bốn đỉnh của một tứ diện đều, góc 109,5°.",
+        "en": "Methane: four C–H bonds point to the corners of a regular tetrahedron, at 109.5°."
+      },
+      "page": 84
+    },
+    {
+      "class": "alkene",
+      "text": {
+        "vi": "Ethylene: mọi nguyên tử trên một mặt phẳng; góc HCH 121,3°; C=C 133,9 pm; C–H 108,7 pm; liên kết đôi gồm một σ và một π.",
+        "en": "Ethylene: all atoms in one plane; HCH angle 121.3°; C=C 133.9 pm; C–H 108.7 pm; the double bond is one σ and one π."
+      },
+      "page": 95
+    },
+    {
+      "class": "alkyne",
+      "text": {
+        "vi": "Acetylene: các nguyên tử trên một đường thẳng, góc 180°; C≡C 120,3 pm; C–H 106,0 pm; liên kết ba gồm một σ và hai π.",
+        "en": "Acetylene: the atoms on one straight line, at 180°; C≡C 120.3 pm; C–H 106.0 pm; the triple bond is one σ and two π."
+      },
+      "page": 95
+    },
+    {
+      "class": "arene",
+      "text": {
+        "vi": "Benzene: sáu nguyên tử C tạo lục giác đều, mọi nguyên tử trên một mặt phẳng, góc 120°, liên kết C–C dài 139 pm.",
+        "en": "Benzene: six C atoms in a regular hexagon, all atoms in one plane, 120° angles, C–C bonds of 139 pm."
+      },
+      "page": 103
+    }
+  ],
+  "reactions": [
+    {
+      "class": "alkane",
+      "kind": {
+        "vi": "Thế halogen",
+        "en": "Halogenation"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "CH4"
+        },
+        {
+          "coef": 1,
+          "formula": "Cl2"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "CH3Cl"
+        },
+        {
+          "coef": 1,
+          "formula": "HCl"
+        }
+      ],
+      "conditions": {
+        "vi": "ánh sáng",
+        "en": "light"
+      },
+      "dH_kJ": null,
+      "page": 86
+    },
+    {
+      "class": "alkane",
+      "kind": {
+        "vi": "Cracking",
+        "en": "Cracking"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "C9H20"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "C2H4"
+        },
+        {
+          "coef": 1,
+          "formula": "C7H16"
+        }
+      ],
+      "conditions": {
+        "vi": "cracking",
+        "en": "cracking"
+      },
+      "dH_kJ": null,
+      "page": 87
+    },
+    {
+      "class": "alkane",
+      "kind": {
+        "vi": "Đốt cháy",
+        "en": "Combustion"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "CH4"
+        },
+        {
+          "coef": 2,
+          "formula": "O2"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "CO2"
+        },
+        {
+          "coef": 2,
+          "formula": "H2O"
+        }
+      ],
+      "conditions": {
+        "vi": "đốt cháy",
+        "en": "burnt"
+      },
+      "dH_kJ": -890,
+      "page": 88
+    },
+    {
+      "class": "alkane",
+      "kind": {
+        "vi": "Đốt cháy",
+        "en": "Combustion"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "C3H8"
+        },
+        {
+          "coef": 5,
+          "formula": "O2"
+        }
+      ],
+      "products": [
+        {
+          "coef": 3,
+          "formula": "CO2"
+        },
+        {
+          "coef": 4,
+          "formula": "H2O"
+        }
+      ],
+      "conditions": {
+        "vi": "đốt cháy",
+        "en": "burnt"
+      },
+      "dH_kJ": -2216,
+      "page": 88
+    },
+    {
+      "class": "alkene",
+      "kind": {
+        "vi": "Cộng hydrogen",
+        "en": "Adding hydrogen"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "C2H4"
+        },
+        {
+          "coef": 1,
+          "formula": "H2"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "C2H6"
+        }
+      ],
+      "conditions": {
+        "vi": "Ni, t°, áp suất",
+        "en": "Ni, heat, pressure"
+      },
+      "dH_kJ": null,
+      "page": 96
+    },
+    {
+      "class": "alkene",
+      "kind": {
+        "vi": "Cộng bromine",
+        "en": "Adding bromine"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "C2H4"
+        },
+        {
+          "coef": 1,
+          "formula": "Br2"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "C2H4Br2"
+        }
+      ],
+      "conditions": {
+        "vi": "dung dịch bromine mất màu",
+        "en": "bromine water loses its colour"
+      },
+      "dH_kJ": null,
+      "page": 96
+    },
+    {
+      "class": "alkene",
+      "kind": {
+        "vi": "Cộng HBr",
+        "en": "Adding HBr"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "C2H4"
+        },
+        {
+          "coef": 1,
+          "formula": "HBr"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "C2H5Br"
+        }
+      ],
+      "conditions": {
+        "vi": "—",
+        "en": "—"
+      },
+      "dH_kJ": null,
+      "page": 97
+    },
+    {
+      "class": "alkene",
+      "kind": {
+        "vi": "Cộng nước",
+        "en": "Adding water"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "C2H4"
+        },
+        {
+          "coef": 1,
+          "formula": "H2O"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "C2H6O"
+        }
+      ],
+      "conditions": {
+        "vi": "H₃PO₄, t°",
+        "en": "H₃PO₄, heat"
+      },
+      "dH_kJ": null,
+      "page": 97
+    },
+    {
+      "class": "alkene",
+      "kind": {
+        "vi": "Oxi hóa không hoàn toàn",
+        "en": "Partial oxidation"
+      },
+      "reactants": [
+        {
+          "coef": 3,
+          "formula": "C2H4"
+        },
+        {
+          "coef": 2,
+          "formula": "KMnO4"
+        },
+        {
+          "coef": 4,
+          "formula": "H2O"
+        }
+      ],
+      "products": [
+        {
+          "coef": 3,
+          "formula": "C2H6O2"
+        },
+        {
+          "coef": 2,
+          "formula": "MnO2"
+        },
+        {
+          "coef": 2,
+          "formula": "KOH"
+        }
+      ],
+      "conditions": {
+        "vi": "dung dịch thuốc tím mất màu",
+        "en": "permanganate loses its colour"
+      },
+      "dH_kJ": null,
+      "page": 98
+    },
+    {
+      "class": "alkyne",
+      "kind": {
+        "vi": "Cộng hydrogen",
+        "en": "Adding hydrogen"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "C2H2"
+        },
+        {
+          "coef": 2,
+          "formula": "H2"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "C2H6"
+        }
+      ],
+      "conditions": {
+        "vi": "Ni, t°, áp suất",
+        "en": "Ni, heat, pressure"
+      },
+      "dH_kJ": null,
+      "page": 96
+    },
+    {
+      "class": "alkyne",
+      "kind": {
+        "vi": "Cộng bromine",
+        "en": "Adding bromine"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "C2H2"
+        },
+        {
+          "coef": 2,
+          "formula": "Br2"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "C2H2Br4"
+        }
+      ],
+      "conditions": {
+        "vi": "—",
+        "en": "—"
+      },
+      "dH_kJ": null,
+      "page": 96
+    },
+    {
+      "class": "alkyne",
+      "kind": {
+        "vi": "Cộng nước",
+        "en": "Adding water"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "C2H2"
+        },
+        {
+          "coef": 1,
+          "formula": "H2O"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "C2H4O"
+        }
+      ],
+      "conditions": {
+        "vi": "Hg²⁺, H₂SO₄, t°",
+        "en": "Hg²⁺, H₂SO₄, heat"
+      },
+      "dH_kJ": null,
+      "page": 97
+    },
+    {
+      "class": "alkyne",
+      "kind": {
+        "vi": "Với AgNO₃ trong NH₃",
+        "en": "With AgNO₃ in NH₃"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "C2H2"
+        },
+        {
+          "coef": 2,
+          "formula": "AgNO3"
+        },
+        {
+          "coef": 2,
+          "formula": "NH3"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "C2Ag2"
+        },
+        {
+          "coef": 2,
+          "formula": "NH4NO3"
+        }
+      ],
+      "conditions": {
+        "vi": "kết tủa vàng nhạt",
+        "en": "pale yellow precipitate"
+      },
+      "dH_kJ": null,
+      "page": 98
+    },
+    {
+      "class": "arene",
+      "kind": {
+        "vi": "Thế bromine",
+        "en": "Bromination"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "C6H6"
+        },
+        {
+          "coef": 1,
+          "formula": "Br2"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "C6H5Br"
+        },
+        {
+          "coef": 1,
+          "formula": "HBr"
+        }
+      ],
+      "conditions": {
+        "vi": "FeBr₃, t°",
+        "en": "FeBr₃, heat"
+      },
+      "dH_kJ": null,
+      "page": 104
+    },
+    {
+      "class": "arene",
+      "kind": {
+        "vi": "Nitro hóa",
+        "en": "Nitration"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "C6H6"
+        },
+        {
+          "coef": 1,
+          "formula": "HNO3"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "C6H5NO2"
+        },
+        {
+          "coef": 1,
+          "formula": "H2O"
+        }
+      ],
+      "conditions": {
+        "vi": "H₂SO₄ đặc, t°",
+        "en": "concentrated H₂SO₄, heat"
+      },
+      "dH_kJ": null,
+      "page": 104
+    },
+    {
+      "class": "arene",
+      "kind": {
+        "vi": "Cộng chlorine",
+        "en": "Adding chlorine"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "C6H6"
+        },
+        {
+          "coef": 3,
+          "formula": "Cl2"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "C6H6Cl6"
+        }
+      ],
+      "conditions": {
+        "vi": "UV, t°",
+        "en": "UV, heat"
+      },
+      "dH_kJ": null,
+      "page": 105
+    },
+    {
+      "class": "arene",
+      "kind": {
+        "vi": "Cộng hydrogen",
+        "en": "Adding hydrogen"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "C6H6"
+        },
+        {
+          "coef": 3,
+          "formula": "H2"
+        }
+      ],
+      "products": [
+        {
+          "coef": 1,
+          "formula": "C6H12"
+        }
+      ],
+      "conditions": {
+        "vi": "Ni, t°, áp suất",
+        "en": "Ni, heat, pressure"
+      },
+      "dH_kJ": null,
+      "page": 106
+    },
+    {
+      "class": "arene",
+      "kind": {
+        "vi": "Đốt cháy",
+        "en": "Combustion"
+      },
+      "reactants": [
+        {
+          "coef": 1,
+          "formula": "C7H8"
+        },
+        {
+          "coef": 9,
+          "formula": "O2"
+        }
+      ],
+      "products": [
+        {
+          "coef": 7,
+          "formula": "CO2"
+        },
+        {
+          "coef": 4,
+          "formula": "H2O"
+        }
+      ],
+      "conditions": {
+        "vi": "t°",
+        "en": "heat"
+      },
+      "dH_kJ": null,
+      "page": 106
+    }
+  ]
+}

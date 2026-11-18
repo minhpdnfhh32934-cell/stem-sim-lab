@@ -1,0 +1,319 @@
+{
+  "dataset": "evolution_kntt",
+  "version": 1,
+  "accessed": "2026-11-17",
+  "review_status": "pending",
+  "source": {
+    "id": "sgk-sh12-b19-22",
+    "citation": "SGK Sinh học 12 Kết nối tri thức, NXB Giáo dục Việt Nam: Bài 19 (Bảng 19.1, tr. 99, sách dẫn Hoefnagels 2014), Bài 22 (Bảng 22.1, tr. 116; tr. 115; Hình 22.4, tr. 118–119)",
+    "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-sinh-hoc-12.4701665546"
+  },
+  "items": [
+    {
+      "id": "chimp",
+      "name": {
+        "vi": "Tinh tinh",
+        "en": "Chimpanzee"
+      },
+      "cytochrome_c_diff": 0,
+      "review_status": "pending"
+    },
+    {
+      "id": "rhesus",
+      "name": {
+        "vi": "Khỉ Rhesus",
+        "en": "Rhesus monkey"
+      },
+      "cytochrome_c_diff": 1,
+      "review_status": "pending"
+    },
+    {
+      "id": "rabbit",
+      "name": {
+        "vi": "Thỏ",
+        "en": "Rabbit"
+      },
+      "cytochrome_c_diff": 9,
+      "review_status": "pending"
+    },
+    {
+      "id": "cow",
+      "name": {
+        "vi": "Bò",
+        "en": "Cow"
+      },
+      "cytochrome_c_diff": 10,
+      "review_status": "pending"
+    },
+    {
+      "id": "pigeon",
+      "name": {
+        "vi": "Bồ câu",
+        "en": "Pigeon"
+      },
+      "cytochrome_c_diff": 12,
+      "review_status": "pending"
+    },
+    {
+      "id": "frog",
+      "name": {
+        "vi": "Ếch ương",
+        "en": "Bullfrog"
+      },
+      "cytochrome_c_diff": 18,
+      "review_status": "pending"
+    },
+    {
+      "id": "fly",
+      "name": {
+        "vi": "Ruồi giấm",
+        "en": "Fruit fly"
+      },
+      "cytochrome_c_diff": 25,
+      "review_status": "pending"
+    },
+    {
+      "id": "yeast",
+      "name": {
+        "vi": "Nấm men",
+        "en": "Yeast"
+      },
+      "cytochrome_c_diff": 40,
+      "review_status": "pending"
+    }
+  ],
+  "geologic": [
+    {
+      "eon": "Phanerozoic",
+      "era": "Cenozoic",
+      "id": "quaternary",
+      "name": {
+        "vi": "Quaternary (Đệ tứ)",
+        "en": "Quaternary"
+      },
+      "from_mya": 1.8,
+      "to_mya": null,
+      "event": {
+        "vi": "Loài người xuất hiện; nhiều thực vật và thú lớn tuyệt chủng.",
+        "en": "Humans appear; many plants and large mammals die out."
+      }
+    },
+    {
+      "eon": "Phanerozoic",
+      "era": "Cenozoic",
+      "id": "tertiary",
+      "name": {
+        "vi": "Tertiary (Đệ tam)",
+        "en": "Tertiary"
+      },
+      "from_mya": 65,
+      "to_mya": 1.8,
+      "event": {
+        "vi": "Phát sinh các nhóm linh trưởng, thêm nhiều thú, chim, côn trùng; thực vật có hoa ngự trị.",
+        "en": "Primates arise, more mammals, birds and insects; flowering plants dominate."
+      }
+    },
+    {
+      "eon": "Phanerozoic",
+      "era": "Mesozoic",
+      "id": "cretaceous",
+      "name": {
+        "vi": "Cretaceous (Phấn trắng)",
+        "en": "Cretaceous"
+      },
+      "from_mya": 144,
+      "to_mya": 65,
+      "event": {
+        "vi": "Khủng long đạt đỉnh cao rồi tuyệt diệt cuối kỉ; thực vật có hoa phân hóa mạnh.",
+        "en": "Dinosaurs peak, then die out at the end; flowering plants diversify."
+      }
+    },
+    {
+      "eon": "Phanerozoic",
+      "era": "Mesozoic",
+      "id": "jurassic",
+      "name": {
+        "vi": "Jurassic",
+        "en": "Jurassic"
+      },
+      "from_mya": 206,
+      "to_mya": 144,
+      "event": {
+        "vi": "Khủng long phát sinh nhiều loài và ngự trị; xuất hiện chim cổ đầu tiên; thực vật hạt trần ngự trị, thực vật có hoa xuất hiện.",
+        "en": "Dinosaurs spread and dominate; the first ancient birds; gymnosperms dominate, flowering plants appear."
+      }
+    },
+    {
+      "eon": "Phanerozoic",
+      "era": "Mesozoic",
+      "id": "triassic",
+      "name": {
+        "vi": "Triassic (Tam điệp)",
+        "en": "Triassic"
+      },
+      "from_mya": 248,
+      "to_mya": 206,
+      "event": {
+        "vi": "Xuất hiện khủng long và động vật có vú đầu tiên; thực vật hạt trần và dương xỉ ngự trị.",
+        "en": "Dinosaurs and the first mammals appear; gymnosperms and ferns dominate."
+      }
+    },
+    {
+      "eon": "Phanerozoic",
+      "era": "Paleozoic",
+      "id": "permian",
+      "name": {
+        "vi": "Permian",
+        "en": "Permian"
+      },
+      "from_mya": 290,
+      "to_mya": 248,
+      "event": {
+        "vi": "Tuyệt diệt nhiều loài động vật; bò sát phân hóa; phát sinh ngành Thông, Tuế.",
+        "en": "Many animals die out; reptiles diversify; conifers and cycads arise."
+      }
+    },
+    {
+      "eon": "Phanerozoic",
+      "era": "Paleozoic",
+      "id": "carboniferous",
+      "name": {
+        "vi": "Carboniferous (Than đá)",
+        "en": "Carboniferous"
+      },
+      "from_mya": 354,
+      "to_mya": 290,
+      "event": {
+        "vi": "Xuất hiện nhiều côn trùng; lưỡng cư ngự trị, bò sát đầu tiên; dương xỉ, rêu, thực vật hạt trần phát triển.",
+        "en": "Many insects; amphibians dominate, the first reptiles; ferns, mosses and gymnosperms flourish."
+      }
+    },
+    {
+      "eon": "Phanerozoic",
+      "era": "Paleozoic",
+      "id": "devonian",
+      "name": {
+        "vi": "Devonian",
+        "en": "Devonian"
+      },
+      "from_mya": 417,
+      "to_mya": 354,
+      "event": {
+        "vi": "Tuyệt diệt nhiều động vật biển; xuất hiện lưỡng cư; phát sinh thực vật hạt trần.",
+        "en": "Many sea animals die out; amphibians appear; gymnosperms arise."
+      }
+    },
+    {
+      "eon": "Phanerozoic",
+      "era": "Paleozoic",
+      "id": "silurian",
+      "name": {
+        "vi": "Silurian",
+        "en": "Silurian"
+      },
+      "from_mya": 443,
+      "to_mya": 417,
+      "event": {
+        "vi": "Động vật chân khớp và động vật không xương sống lên cạn; thực vật có mạch xuất hiện.",
+        "en": "Arthropods and other invertebrates move onto land; vascular plants appear."
+      }
+    },
+    {
+      "eon": "Phanerozoic",
+      "era": "Paleozoic",
+      "id": "ordovician",
+      "name": {
+        "vi": "Ordovician",
+        "en": "Ordovician"
+      },
+      "from_mya": 490,
+      "to_mya": 443,
+      "event": {
+        "vi": "Tuyệt diệt nhiều loài; xuất hiện cá không hàm; thực vật lên cạn.",
+        "en": "Many species die out; jawless fish appear; plants move onto land."
+      }
+    },
+    {
+      "eon": "Phanerozoic",
+      "era": "Paleozoic",
+      "id": "cambrian",
+      "name": {
+        "vi": "Cambrian",
+        "en": "Cambrian"
+      },
+      "from_mya": 543,
+      "to_mya": 490,
+      "event": {
+        "vi": "“Bùng nổ” các loài động vật không xương sống; xuất hiện động vật có dây sống.",
+        "en": "An “explosion” of invertebrates; the first chordates."
+      }
+    },
+    {
+      "eon": "Proterozoic",
+      "era": null,
+      "id": "proterozoic",
+      "name": {
+        "vi": "Proterozoic (Nguyên sinh)",
+        "en": "Proterozoic"
+      },
+      "from_mya": 2500,
+      "to_mya": 543,
+      "event": {
+        "vi": "Oxygen tích lũy trong khí quyển nhờ quang hợp; sinh vật nhân thực đơn bào và đa bào cổ nhất xuất hiện.",
+        "en": "Oxygen builds up in the air from photosynthesis; the oldest single- and many-celled eukaryotes appear."
+      }
+    },
+    {
+      "eon": "Archean",
+      "era": null,
+      "id": "archean",
+      "name": {
+        "vi": "Archean (Thái cổ)",
+        "en": "Archean"
+      },
+      "from_mya": 3800,
+      "to_mya": 2500,
+      "event": {
+        "vi": "Xuất hiện các tế bào vi khuẩn và vi khuẩn cổ đầu tiên.",
+        "en": "The first bacteria and archaea appear."
+      }
+    }
+  ],
+  "names": {
+    "Phanerozoic": "Phanerozoic (Hiển sinh)",
+    "Proterozoic": "Proterozoic (Nguyên sinh)",
+    "Archean": "Archean (Thái cổ)",
+    "Cenozoic": "Cenozoic (Tân sinh)",
+    "Mesozoic": "Mesozoic (Trung sinh)",
+    "Paleozoic": "Paleozoic (Cổ sinh)"
+  },
+  "earth_formed_mya": 4600,
+  "prokaryote_fossils_mya": 3500,
+  "eukaryote_fossils_mya": 1800,
+  "hominins": [
+    {
+      "id": "ardipithecus",
+      "name": "Ardipithecus ramidus",
+      "from_mya": 4.4,
+      "to_mya": 4.4
+    },
+    {
+      "id": "australopithecus",
+      "name": "Australopithecus",
+      "from_mya": 4,
+      "to_mya": 2.5
+    },
+    {
+      "id": "homo",
+      "name": "Homo",
+      "from_mya": 2.5,
+      "to_mya": 0.5
+    },
+    {
+      "id": "sapiens",
+      "name": "Homo sapiens",
+      "from_mya": 0.3,
+      "to_mya": null
+    }
+  ]
+}

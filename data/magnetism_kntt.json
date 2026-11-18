@@ -1,0 +1,69 @@
+{
+  "dataset": "magnetism_kntt",
+  "version": 1,
+  "accessed": "2026-11-17",
+  "review_status": "pending",
+  "source": {
+    "id": "sgk-vl12-c3",
+    "citation": "SGK Vật lí 12 Kết nối tri thức, NXB Giáo dục Việt Nam: Chương III “Từ trường”, Bài 15 (Bảng 15.1, tr. 61–65), Bài 16 (tr. 66–71), Bài 17 (tr. 72–77)",
+    "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/shs-vat-li-12.4701697631"
+  },
+  "items": [
+    {
+      "id": "row1",
+      "I": 0.1,
+      "F": 0.02,
+      "B_printed": 0.01,
+      "review_status": "pending"
+    },
+    {
+      "id": "row2",
+      "I": 0.2,
+      "F": 0.05,
+      "B_printed": 0.013,
+      "review_status": "pending"
+    },
+    {
+      "id": "row3",
+      "I": 0.3,
+      "F": 0.07,
+      "B_printed": 0.012,
+      "review_status": "pending"
+    },
+    {
+      "id": "row4",
+      "I": 0.4,
+      "F": 0.09,
+      "B_printed": 0.011,
+      "review_status": "pending"
+    }
+  ],
+  "coil": {
+    "turns": 200,
+    "side_m": 0.1,
+    "length_m": 20,
+    "angle_deg": 90
+  },
+  "electron_charge": 1.6e-19,
+  "three_phase_shift": 2.0943951023931953,
+  "examples": [
+    {
+      "id": "wire-60",
+      "lesson": 15,
+      "page": 63,
+      "L": 1,
+      "I": 3,
+      "B": 0.05,
+      "angle_deg": 60
+    },
+    {
+      "id": "electrons",
+      "lesson": 15,
+      "page": 63,
+      "L": 0.5,
+      "B": 0.005,
+      "angle_deg": 90,
+      "electrons_per_second": 1e+18
+    }
+  ]
+}

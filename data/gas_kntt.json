@@ -1,0 +1,150 @@
+{
+  "dataset": "gas_kntt",
+  "version": 1,
+  "accessed": "2026-11-17",
+  "review_status": "pending",
+  "source": {
+    "id": "sgk-vl12-c2",
+    "citation": "SGK Vật lí 12 Kết nối tri thức, NXB Giáo dục Việt Nam: Chương II “Khí lí tưởng”, Bài 8 (tr. 34–36), Bài 9 (Bảng 9.1, tr. 37–40), Bài 10 (Bảng 10.1, tr. 41–44), Bài 11 (tr. 45–47), Bài 12 (tr. 48–51)",
+    "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/shs-vat-li-12.4701697631"
+  },
+  "items": [
+    {
+      "id": "oxygen",
+      "formula": "O2",
+      "name": {
+        "vi": "Oxygen (O₂)",
+        "en": "Oxygen (O₂)"
+      },
+      "review_status": "pending"
+    },
+    {
+      "id": "nitrogen",
+      "formula": "N2",
+      "name": {
+        "vi": "Nitrogen (N₂)",
+        "en": "Nitrogen (N₂)"
+      },
+      "review_status": "pending"
+    },
+    {
+      "id": "carbonDioxide",
+      "formula": "CO2",
+      "name": {
+        "vi": "Carbon dioxide (CO₂)",
+        "en": "Carbon dioxide (CO₂)"
+      },
+      "review_status": "pending"
+    }
+  ],
+  "constants": {
+    "R": 8.31,
+    "k": 1.38e-23,
+    "N_A": 6.02e+23
+  },
+  "standard": {
+    "p": 101300.0,
+    "V": 0.0224,
+    "T": 273
+  },
+  "kelvin_offset": 273,
+  "boyle_table": [
+    {
+      "V_cm3": 3.0,
+      "p_1e5Pa": 1.0
+    },
+    {
+      "V_cm3": 2.5,
+      "p_1e5Pa": 1.2
+    },
+    {
+      "V_cm3": 2.0,
+      "p_1e5Pa": 1.5
+    },
+    {
+      "V_cm3": 1.5,
+      "p_1e5Pa": 1.9
+    }
+  ],
+  "charles_table": [
+    {
+      "t_C": 24.5,
+      "T_K": 297.5,
+      "V_mL": 30
+    },
+    {
+      "t_C": 0.5,
+      "T_K": 273.5,
+      "V_mL": 27
+    },
+    {
+      "t_C": 41.5,
+      "T_K": 314.5,
+      "V_mL": 33
+    },
+    {
+      "t_C": 59.3,
+      "T_K": 332.3,
+      "V_mL": 35
+    }
+  ],
+  "validity": {
+    "p_max": 100000.0,
+    "T_min": 200
+  },
+  "examples": [
+    {
+      "id": "boyle",
+      "lesson": 9,
+      "page": 39,
+      "p1": 100000.0,
+      "V1": 0.01,
+      "p2": 125000.0
+    },
+    {
+      "id": "ball",
+      "lesson": 9,
+      "page": 40,
+      "p1": 120000.0,
+      "V1": 0.04,
+      "V2": 0.025
+    },
+    {
+      "id": "charles",
+      "lesson": 10,
+      "page": 43,
+      "t1": 32,
+      "t2": 117,
+      "dV": 0.0017
+    },
+    {
+      "id": "pump",
+      "lesson": 11,
+      "page": 45,
+      "p1": 100000.0,
+      "V1": 0.0001,
+      "t1": 27,
+      "V2": 2e-05,
+      "t2": 39
+    },
+    {
+      "id": "balloon",
+      "lesson": 11,
+      "page": 47,
+      "r_high": 1,
+      "p_high": 30000.0,
+      "T_high": 200,
+      "p_ground": 102000.0,
+      "T_ground": 300
+    },
+    {
+      "id": "oxygen-speed",
+      "lesson": 8,
+      "page": 35,
+      "gas": "oxygen",
+      "T": 273,
+      "p": 100000.0,
+      "mean_speed_about": 400
+    }
+  ]
+}

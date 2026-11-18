@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { lazy, Suspense, useMemo } from 'react';
 import { useLocalized } from '@/app/i18n/localized';
 import { useResolvedTheme } from '@/app/theme/useApplyTheme';
 import { useTierConfig } from '@/perf/perfStore';
@@ -8,6 +8,8 @@ import { CSRC, L, usePublishCard } from '../common';
 import { orbitalById, psi, radiusContaining } from './hydrogen';
 import { useOrbitalStore } from './orbitalStore';
 import { Equation } from '@/science-card/Equation';
+import { Bio3DToolbar } from '@/biology/view3d/switch';
+import { useShow3d } from '@/biology/view3d/support';
 import '../chem.css';
 
 const CARD: ScienceCardData = {
@@ -67,9 +69,33 @@ const mix = (a: RGB, b: RGB, t: number): RGB => [
   a[2] + (b[2] - a[2]) * t,
 ];
 
-/** 2D cross-section of a hydrogen orbital: sign of ψ (diverging) or |ψ|² (sequential). */
+const Orbital3DView = lazy(() =>
+  import('./Orbital3DView').then((m) => ({ default: m.Orbital3DView })),
+);
+
+/** The orbital as a 3D probability cloud (on request) or the 2D slice. */
 export function OrbitalStage() {
   usePublishCard(CARD);
+  const Lz = useLocalized();
+  const { show3d } = useShow3d('orbitals');
+  const { n, orbital: orbitalId } = useOrbitalStore();
+  if (!show3d) return <OrbitalSlice />;
+  return (
+    <Suspense fallback={<div className="chem-view chem-view--flush" />}>
+      <Orbital3DView
+        top={
+          <span className="chem-chip">
+            <Equation tex={`\\psi(${String(n)}${orbitalById(orbitalId).label})`} display={false} />
+            {Lz(L(' · đám mây xác suất |ψ|²', ' · probability cloud |ψ|²'))}
+          </span>
+        }
+      />
+    </Suspense>
+  );
+}
+
+/** 2D cross-section of a hydrogen orbital: sign of ψ (diverging) or |ψ|² (sequential). */
+function OrbitalSlice() {
   const Lz = useLocalized();
   const theme = useResolvedTheme();
   const tier = useTierConfig();
@@ -197,6 +223,7 @@ export function OrbitalStage() {
               )
             : Lz(L('Đậm: |ψ|² lớn (thang căn bậc hai)', 'Dark: high |ψ|² (square-root scale)'))}
         </span>
+        <Bio3DToolbar lesson="orbitals" />
       </div>
     </div>
   );

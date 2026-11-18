@@ -1,6 +1,6 @@
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { CATALOG } from '@/app/catalog';
 import { CURRICULUM } from '@/app/curriculum';
 import { LeftSidebar } from '@/app/layout/LeftSidebar';
@@ -13,6 +13,20 @@ import { useAiStore } from '@/ai/aiStore';
 import { loadSafety } from '@/safety/safetyStore';
 import { Onboarding } from './Onboarding';
 import { useProfileStore } from './profileStore';
+
+// Every grade now has topics in every subject: the empty state is faked to keep it tested.
+const emptyGrade = vi.hoisted(() => ({ on: false }));
+vi.mock('@/app/curriculum', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/app/curriculum')>();
+  return {
+    ...actual,
+    gradeView: (...args: Parameters<typeof actual.gradeView>) =>
+      emptyGrade.on ? [] : actual.gradeView(...args),
+  };
+});
+afterEach(() => {
+  emptyGrade.on = false;
+});
 
 describe('library views (Grade → Subject → Topic)', () => {
   it('"Tất cả" is the whole catalog, unplaced topics included, without lessons', () => {
@@ -30,8 +44,13 @@ describe('library views (Grade → Subject → Topic)', () => {
     const ids = chaptersFor(10, 'physics').flatMap((c) => c.topics.map((x) => x.id));
     // Unplaced (no textbook lesson clearly names it): only under "Tất cả".
     expect(ids).not.toContain('inclinedPlane');
-    expect(chaptersFor(11, 'biology')).toEqual([]);
-    expect(availableCount(11, 'biology')).toBe(0);
+    // Grade 12 physics opens with the textbook's Chương I (#255, grade 12).
+    const [g12] = chaptersFor(12, 'physics');
+    expect(g12?.title).toEqual({ text: 'Chương I. Vật lí nhiệt' });
+    expect(g12?.topics.map((x) => [x.id, x.lessons])).toEqual([
+      ['matterStructure', [1]],
+      ['heatAndPhase', [2, 3, 4, 5, 6]],
+    ]);
     expect(availableCount('all', 'biology')).toBe(
       CATALOG.biology.flatMap((c) => c.topics).filter((x) => x.status === 'available').length,
     );
@@ -49,10 +68,10 @@ describe('library views (Grade → Subject → Topic)', () => {
     const s = suggestions('all', ['biology']);
     expect(s[0]?.subject).toBe('biology');
     expect(s.every((x) => x.topic.status === 'available')).toBe(true);
-    // Grade 11 has no biology topic: its suggestions are physics and chemistry ones.
-    const g11 = suggestions(11, ['biology']);
-    expect(g11.map((x) => x.subject)).not.toContain('biology');
-    expect(g11[0]?.topic.id).toBe('springPendulum');
+    // A grade's suggestions follow the book order, the chosen subject first.
+    const g12 = suggestions(12, ['physics']);
+    expect(g12.slice(0, 2).map((x) => x.topic.id)).toEqual(['matterStructure', 'heatAndPhase']);
+    expect(g12.every((x) => x.topic.status === 'available')).toBe(true);
   });
 });
 
@@ -194,15 +213,14 @@ describe('library grade switch', () => {
 
   it('a grade without topics in the subject is no dead end: "Xem tất cả"', async () => {
     const user = userEvent.setup();
-    useProfileStore.setState({ grade: 11 });
-    useWorkspaceStore.setState({ subject: 'biology' });
+    emptyGrade.on = true;
+    useProfileStore.setState({ grade: 12 });
+    useWorkspaceStore.setState({ subject: 'physics' });
     render(<LeftSidebar />);
-    expect(
-      screen.getByText('Chưa có chủ đề Sinh học nào được xếp vào lớp 11.'),
-    ).toBeInTheDocument();
+    expect(screen.getByText('Chưa có chủ đề Vật lý nào được xếp vào lớp 12.')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Xóa tìm kiếm' })).toBeNull();
     await user.click(screen.getByRole('button', { name: 'Xem tất cả' }));
-    expect(screen.getByRole('button', { name: 'Nguyên phân' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Mặt phẳng nghiêng' })).toBeInTheDocument();
   });
 
   it('home suggests the grade’s topics, with the pending label and per-grade counts', () => {

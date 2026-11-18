@@ -1,0 +1,332 @@
+{
+  "dataset": "nuclear_kntt",
+  "version": 1,
+  "accessed": "2026-11-17",
+  "review_status": "pending",
+  "source": {
+    "id": "sgk-vl12-c4",
+    "citation": "SGK Vật lí 12 Kết nối tri thức, NXB Giáo dục Việt Nam: Chương IV “Vật lí hạt nhân”, Bài 21 (Bảng 21.1, tr. 91–95), Bài 22 (tr. 96–103), Bài 23 (Bảng 23.1, 23.2, Hình 23.10, tr. 104–113)",
+    "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/shs-vat-li-12.4701697631"
+  },
+  "items": [
+    {
+      "id": "C14",
+      "name": {
+        "vi": "Carbon",
+        "en": "Carbon"
+      },
+      "symbol": "C",
+      "Z": 6,
+      "A": 14,
+      "half_life": 5700.0,
+      "unit": "year",
+      "review_status": "pending"
+    },
+    {
+      "id": "I131",
+      "name": {
+        "vi": "Iodine",
+        "en": "Iodine"
+      },
+      "symbol": "I",
+      "Z": 53,
+      "A": 131,
+      "half_life": 8.0,
+      "unit": "day",
+      "review_status": "pending"
+    },
+    {
+      "id": "O15",
+      "name": {
+        "vi": "Oxygen",
+        "en": "Oxygen"
+      },
+      "symbol": "O",
+      "Z": 8,
+      "A": 15,
+      "half_life": 120.0,
+      "unit": "second",
+      "review_status": "pending"
+    },
+    {
+      "id": "Po210",
+      "name": {
+        "vi": "Polonium",
+        "en": "Polonium"
+      },
+      "symbol": "Po",
+      "Z": 84,
+      "A": 210,
+      "half_life": 140.0,
+      "unit": "day",
+      "review_status": "pending"
+    },
+    {
+      "id": "Ra226",
+      "name": {
+        "vi": "Radium",
+        "en": "Radium"
+      },
+      "symbol": "Ra",
+      "Z": 88,
+      "A": 226,
+      "half_life": 1600.0,
+      "unit": "year",
+      "review_status": "pending"
+    },
+    {
+      "id": "Rn219",
+      "name": {
+        "vi": "Radon",
+        "en": "Radon"
+      },
+      "symbol": "Rn",
+      "Z": 86,
+      "A": 219,
+      "half_life": 4.0,
+      "unit": "second",
+      "review_status": "pending"
+    },
+    {
+      "id": "U235",
+      "name": {
+        "vi": "Uranium",
+        "en": "Uranium"
+      },
+      "symbol": "U",
+      "Z": 92,
+      "A": 235,
+      "half_life": 700000000.0,
+      "unit": "year",
+      "review_status": "pending"
+    }
+  ],
+  "particles": {
+    "proton_kg": 1.67262e-27,
+    "neutron_kg": 1.67493e-27,
+    "elementary_charge": 1.6e-19,
+    "amu_kg": 1.66054e-27,
+    "proton_amu": 1.00728,
+    "neutron_amu": 1.00866
+  },
+  "radius_r0": 1.2e-15,
+  "table_21_1": [
+    {
+      "symbol": "H",
+      "name": {
+        "vi": "Hydrogen",
+        "en": "Hydrogen"
+      },
+      "Z": 1,
+      "A": 1,
+      "atom_radius": 1.2e-10,
+      "nucleus_radius": 9e-16
+    },
+    {
+      "symbol": "He",
+      "name": {
+        "vi": "Helium",
+        "en": "Helium"
+      },
+      "Z": 2,
+      "A": 4,
+      "atom_radius": 1.4e-10,
+      "nucleus_radius": 1.7e-15
+    },
+    {
+      "symbol": "O",
+      "name": {
+        "vi": "Oxygen",
+        "en": "Oxygen"
+      },
+      "Z": 8,
+      "A": 16,
+      "atom_radius": 1.5e-10,
+      "nucleus_radius": 2.7000000000000005e-15
+    },
+    {
+      "symbol": "Si",
+      "name": {
+        "vi": "Silicon",
+        "en": "Silicon"
+      },
+      "Z": 14,
+      "A": 28,
+      "atom_radius": 2.1000000000000002e-10,
+      "nucleus_radius": 3.1000000000000003e-15
+    },
+    {
+      "symbol": "Fe",
+      "name": {
+        "vi": "Sắt",
+        "en": "Iron"
+      },
+      "Z": 26,
+      "A": 56,
+      "atom_radius": 1.9e-10,
+      "nucleus_radius": 3.7e-15
+    },
+    {
+      "symbol": "Cd",
+      "name": {
+        "vi": "Cadimium",
+        "en": "Cadmium"
+      },
+      "Z": 48,
+      "A": 114,
+      "atom_radius": 1.6000000000000002e-10,
+      "nucleus_radius": 4.6e-15
+    },
+    {
+      "symbol": "Au",
+      "name": {
+        "vi": "Vàng",
+        "en": "Gold"
+      },
+      "Z": 79,
+      "A": 197,
+      "atom_radius": 1.7e-10,
+      "nucleus_radius": 5.400000000000001e-15
+    },
+    {
+      "symbol": "U",
+      "name": {
+        "vi": "Uranium",
+        "en": "Uranium"
+      },
+      "Z": 92,
+      "A": 238,
+      "atom_radius": 1.9e-10,
+      "nucleus_radius": 5.900000000000001e-15
+    }
+  ],
+  "masses": [
+    {
+      "symbol": "He",
+      "Z": 2,
+      "A": 4,
+      "amu": 4.0026,
+      "page": 99
+    },
+    {
+      "symbol": "O",
+      "Z": 8,
+      "A": 16,
+      "amu": 15.99492,
+      "page": 99
+    }
+  ],
+  "fission_mev": 200,
+  "fusion_dd_mev": 4,
+  "critical_kg": {
+    "U235": 47,
+    "Pu239": 10
+  },
+  "counts_23_1": [
+    1,
+    3,
+    2,
+    0,
+    3,
+    1
+  ],
+  "curie_bq": 37000000000.0,
+  "exposure": [
+    {
+      "id": "air",
+      "name": {
+        "vi": "Không khí",
+        "en": "Air"
+      },
+      "percent": 51
+    },
+    {
+      "id": "rock",
+      "name": {
+        "vi": "Đá",
+        "en": "Rock"
+      },
+      "percent": 14
+    },
+    {
+      "id": "medical",
+      "name": {
+        "vi": "Y học hạt nhân",
+        "en": "Nuclear medicine"
+      },
+      "percent": 12
+    },
+    {
+      "id": "food",
+      "name": {
+        "vi": "Thức ăn",
+        "en": "Food"
+      },
+      "percent": 12
+    },
+    {
+      "id": "cosmic",
+      "name": {
+        "vi": "Tia vũ trụ",
+        "en": "Cosmic rays"
+      },
+      "percent": 10
+    },
+    {
+      "id": "other",
+      "name": {
+        "vi": "Nguồn khác",
+        "en": "Other"
+      },
+      "percent": 1
+    }
+  ],
+  "dose": {
+    "background_mSv": 2.4,
+    "public_mSv": 1,
+    "learner_16_18_mSv": 6,
+    "worker_mSv": 20
+  },
+  "examples": [
+    {
+      "id": "rn220",
+      "lesson": 23,
+      "page": 107,
+      "isotope": "Rn220",
+      "half_life_s": 55
+    },
+    {
+      "id": "o15",
+      "lesson": 23,
+      "page": 108,
+      "decayed": 0.75,
+      "time_s": 244
+    },
+    {
+      "id": "f18",
+      "lesson": 23,
+      "page": 109,
+      "half_life_min": 110,
+      "activity_bq": 1000000000.0,
+      "left": [
+        0.1,
+        0.01
+      ],
+      "after_s": 86400
+    },
+    {
+      "id": "c14",
+      "lesson": 23,
+      "page": 109,
+      "half_life_year": 5730
+    },
+    {
+      "id": "u235-1kg",
+      "lesson": 22,
+      "page": 101,
+      "mass_kg": 1,
+      "molar_g": 235,
+      "mev_per_fission": 200
+    }
+  ]
+}

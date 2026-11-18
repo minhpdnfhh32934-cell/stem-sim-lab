@@ -11,10 +11,26 @@ test.use({ viewport: { width: 1366, height: 768 } });
 const MIN_PLOT_HEIGHT = 80;
 /**
  * Physics lessons with a view of their own: the bottom panel shows the module's table, with no
- * graph tab and no Run (waiting for the tab ran into the 5 min timeout). fourier.spec.ts and
- * waves-vl11.spec.ts check those lessons at 1366 × 768 instead.
+ * graph tab and no Run (waiting for the tab ran into the 5 min timeout). fourier.spec.ts,
+ * waves-vl11.spec.ts and thermal-vl12.spec.ts check those lessons at 1366 × 768 instead, and
+ * physics.spec.ts opens the guided textbook lesson.
  */
-const OWN_VIEW = ['Sóng điện từ', 'Họa âm và chuỗi Fourier'];
+const OWN_VIEW = [
+  'Sóng điện từ',
+  'Họa âm và chuỗi Fourier',
+  'Cấu trúc của chất và sự chuyển thể',
+  'Nội năng, nhiệt độ và nhiệt lượng',
+  'Mô hình động học phân tử chất khí',
+  'Các định luật của khí lí tưởng',
+  'Từ trường và đường sức từ',
+  'Lực từ và cảm ứng từ',
+  'Cảm ứng điện từ và máy phát điện xoay chiều',
+  'Ứng dụng hiện tượng cảm ứng điện từ',
+  'Điện từ trường và mô hình sóng điện từ',
+  'Hạt nhân và năng lượng liên kết',
+  'Hiện tượng phóng xạ',
+  'Công nghiệp hạt nhân',
+];
 
 interface Rect {
   top: number;

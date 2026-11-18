@@ -39,8 +39,30 @@ const TOPICS: readonly (readonly [string, string])[] = [
   ['Tụ điện', 'Tụ điện'],
   ['Cường độ dòng điện', 'Cường độ dòng điện'],
   ['Mạch điện một chiều', 'Mạch điện một chiều'],
+  ['Cấu trúc của chất và sự chuyển thể', 'Cấu trúc của chất và sự chuyển thể'],
+  ['Nội năng, nhiệt độ và nhiệt lượng', 'Nội năng, nhiệt độ và nhiệt lượng'],
+  ['Mô hình động học phân tử chất khí', 'Mô hình động học phân tử chất khí'],
+  ['Các định luật của khí lí tưởng', 'Các định luật của khí lí tưởng'],
+  ['Từ trường và đường sức từ', 'Từ trường và đường sức từ'],
+  ['Lực từ và cảm ứng từ', 'Lực từ và cảm ứng từ'],
+  ['Cảm ứng điện từ và máy phát điện xoay chiều', 'Cảm ứng điện từ và máy phát điện xoay chiều'],
+  ['Ứng dụng hiện tượng cảm ứng điện từ', 'Ứng dụng hiện tượng cảm ứng điện từ'],
+  ['Điện từ trường và mô hình sóng điện từ', 'Điện từ trường và mô hình sóng điện từ'],
+  ['Hạt nhân và năng lượng liên kết', 'Hạt nhân và năng lượng liên kết'],
+  ['Hiện tượng phóng xạ', 'Hiện tượng phóng xạ'],
+  ['Công nghiệp hạt nhân', 'Công nghiệp hạt nhân'],
   ['Định luật II Kepler', 'Định luật II Kepler'],
 ];
+
+/** Descriptive lessons run as guided lessons (#255): a lesson frame, no simulation. */
+const GUIDED = new Set([
+  'Cấu trúc của chất và sự chuyển thể',
+  'Mô hình động học phân tử chất khí',
+  'Từ trường và đường sức từ',
+  'Ứng dụng hiện tượng cảm ứng điện từ',
+  'Điện từ trường và mô hình sóng điện từ',
+  'Công nghiệp hạt nhân',
+]);
 
 async function openPhysicsLibrary(page: Page) {
   await openLab(page);
@@ -59,9 +81,16 @@ for (const [name, title] of TOPICS) {
     page.on('pageerror', (e) => errors.push(String(e)));
     const library = await openPhysicsLibrary(page);
     await library.getByRole('button', { name, exact: true }).click();
-    // The dev server compiles a scene's chunk on first use (up to ~20 s on a busy machine).
-    await expect(page.locator('.stage__hud-title')).toHaveText(title, { timeout: 20_000 });
-    await expect(page.getByRole('region', { name: 'Khung mô phỏng' })).toBeVisible();
+    if (GUIDED.has(name)) {
+      await expect(page.getByRole('heading', { level: 2, name: title })).toBeVisible({
+        timeout: 20_000,
+      });
+      await expect(page.getByRole('region', { name: 'Khung bài học' })).toBeVisible();
+    } else {
+      // The dev server compiles a scene's chunk on first use (up to ~20 s on a busy machine).
+      await expect(page.locator('.stage__hud-title')).toHaveText(title, { timeout: 20_000 });
+      await expect(page.getByRole('region', { name: 'Khung mô phỏng' })).toBeVisible();
+    }
     await page.waitForTimeout(300);
     const overflow = await page.evaluate(
       () => document.documentElement.scrollWidth - document.documentElement.clientWidth,

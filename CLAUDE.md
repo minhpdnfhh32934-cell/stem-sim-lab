@@ -573,7 +573,9 @@ Progress log: `docs/PROGRESS.md`.
   benchmarks** (it crashed the lead's laptop, bugcheck 0x119); `gpuSafety.ts` stops Gemma after one
   GPU fault. Numbers the AI explains come from app tools when one applies (`tools.ts`, shown in a
   "Kết quả do SimLab tính" card). AI-written links are never clickable; `navigation.rs` keeps the
-  window on the app. Workflows pin actions by SHA (`tests/workflows.test.ts`); releases only publish
+  window on the app. Workflows pin actions by SHA (`tests/workflows.test.ts`); npm audit fails on
+  high/critical except reviewed ids in `.github/npm-audit-allow.json` (`scripts/ci/npm-audit.mjs`,
+  user decision 2026-11-18: picomatch GHSA-fc5q-39xc-vjpf, dev tools only, no fix yet); releases only publish
   commits on `main`, signing in the `release` environment.
 - UI polish kit (0.5.2): `.segmented`/`.tabs__list` get a sliding indicator
   automatically (`src/ui/slidingIndicator.ts`); `IconButton altIcon/showAlt` morphs two icons;
@@ -848,6 +850,40 @@ Progress log: `docs/PROGRESS.md`.
   "không theo tỉ lệ" chip, then the next level; reduced motion steps at once. 3D/2D choice:
   `stemsim.bio3d` lesson `cellToDna`. Budgets in `scene.test.ts`. E2E `tests/e2e/cellzoom-bio3d.spec.ts`
   (3D project). Texts: DATA_REVIEW `DNAZ-*`.
+- **Physics 3D (#302):** physics lessons reuse the biology 3D kit (`Bio3DView`, `SceneKit`,
+  `Bio3DSwitch`); their ids are in `view3d/prefs.ts` `OPT_IN_3D`: they open in 2D (the picture
+  with the chart) and remember a switch to 3D (`stemsim.bio3d` `on`). Shared pieces
+  `src/physics/view3d/arrow.ts` (arrows, uniform field, lines); each lesson has a pure `xxx3d.ts`
+  (tested against its model), `scene3d.ts` and a lazy `Xxx3DView.tsx`.
+  - Modules (6a: `magneticForce`, `induction`, `emWave`; 6d: `idealGas` process tab,
+    `heatAndPhase` heat tab; 6e: `nucleus` structure tab, `radioactivity` law and random tabs): the Stage shows the 3D view in place of its canvas, reading the
+    module's store; tabs that are charts or tables stay 2D. The chemistry particle lessons stay 2D
+    (their model is a 2D hard-disk gas).
+  - Biology, Sinh học 12 (6h, opt-in): `lacOperon` (`operon/operon3d`), `sexLinkage`
+    (`sexlinked/sexlinked3d`), `geneLinkage` testcross tab (`linkage/linkage3d`),
+    `chromosomeMutation` structure tab (`chromosome/chromosome3d`); each a pure `layout.ts` tested
+    against the lesson's model, `scene.ts`, a lazy view chosen in the lesson's Stage; E2E
+    `tests/e2e/sh12-bio3d.spec.ts`. Wording: DATA_REVIEW SH12-3D-*.
+  - Chemistry (6f: `orbitals` — a |ψ|² point cloud of the lesson's exact orbital, `atom/orbital3d.ts`;
+    `atomComposition` — exactly Z protons, N neutrons and the electrons, `nuclide/atom3d.ts`): the
+    Stage wrapper picks the lazy 3D view or the 2D picture (`useShow3d`, `Bio3DToolbar` in the 2D
+    overlay). The Bohr model stays 2D (a planar model). 6i: `hydrocarbons` shows the chosen
+    straight-chain member in the molecule viewer only when `data/molecules.json` has that compound
+    (`hydrocarbons/molecule3d.ts`: by name, checked by formula), else a note; the other organic
+    lessons and the hydrogen-bond lesson are tables/charts (2D). E2E `organic-bio3d.spec.ts`.
+  - `PhysicsScene`s (6b: `electricField`, `electricPotential`, `capacitor`, `electricCurrent`;
+    6c: `interference`, `travellingWave`, `standingWave`; 6g: `freeFall`, `horizontalProjectile`,
+    `obliqueProjectile` (one `Throw3DView`), `uniformCircularMotion`, `keplerOrbit`,
+    `simplePendulum`, `springPendulum`; moving arrows: `addMovingArrow` in `view3d/arrow.ts`):
+    `view3d` is a `lazy()` component made once in the scene's file. `src/app/sim/SceneStage.tsx`
+    shows it instead of `StageCanvas`, keeps the engine running (`sim.tick` every frame) and puts
+    the 3D / 2D switch under the HUD; the canvas tool column is hidden in 3D. The view reads
+    `useSimStore` params and `sim.renderState` (moving parts through `setTime` / `tick`, never
+    rebuilt; nothing allocated per frame).
+  - E2E `tests/e2e/em-phys3d.spec.ts`, `electric-phys3d.spec.ts`, `waves-phys3d.spec.ts`,
+    `thermo-phys3d.spec.ts`, `nuclear-phys3d.spec.ts`, `orbital-phys3d.spec.ts`,
+    `mechanics-phys3d.spec.ts` (`phys3d` in `HEAVY_3D`); every test sets `stemsim.perf` itself (a
+    slow runner's benchmark picks Low: 2D). Wording: DATA_REVIEW PHY3D-*.
 - Projects (Phase 6): `src/app/project/` — `snapshot.ts` (.stemsim schema; inputs only), `undo.ts`,
   `history.ts` (Rust SQLite `src-tauri/src/history.rs`), `actions.ts` (save/open/PNG/CSV via Rust
   dialogs in `files.rs`), `FileMenu`, `SourcesDialog` (lazy), `Tour` (first run, `stemsim.tourDone`).

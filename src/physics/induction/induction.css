@@ -1,0 +1,44 @@
+/* Electromagnetic induction and the AC generator (VL12 Bài 16–17, #255 round 3c). */
+@import '../../chemistry/chem.css';
+
+.induction-panel {
+  display: grid;
+  gap: var(--space-3);
+}
+.induction-panel__head {
+  margin: 0;
+}
+.induction-panel__facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-1) var(--space-3);
+  margin: 0;
+}
+.induction-panel__facts dt {
+  color: var(--text-muted);
+}
+.induction-panel__facts dd {
+  margin: 0;
+}
+.induction-panel__range {
+  display: grid;
+  gap: var(--space-1);
+}
+.induction-panel__range input[type='range'] {
+  width: 100%;
+  min-height: var(--target);
+}
+.induction-table {
+  border-collapse: collapse;
+}
+.induction-table caption {
+  text-align: left;
+  font-weight: 600;
+  padding-bottom: var(--space-1);
+}
+.induction-table th,
+.induction-table td {
+  padding: 4px var(--space-3);
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}

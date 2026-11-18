@@ -9,7 +9,8 @@ import { matchLibrary, reactionById, REACTIONS } from '../data/reactions';
 import { formatFormula } from '../formula';
 import { REDOX_CARD } from './card';
 import { OxFormula } from './OxFormula';
-import type { OxNote, OxRefusal, OxResult } from './oxidation';
+import type { OxNote } from './oxidation';
+import { refusalText } from './refusal';
 import { analyzeRedox, moleculeAtoms, type Change, type RedoxAnalysis } from './redox';
 import { selectRedoxReaction, useRedoxStore } from './store';
 import '../chem.css';
@@ -19,36 +20,6 @@ const NOT_IN_LIBRARY = L(
   'Phản ứng này chưa có trong cơ sở dữ liệu đã kiểm chứng — không phân tích số oxi hóa.',
   'This reaction is not in the verified database — no oxidation-number analysis.',
 );
-
-const REFUSAL: Record<OxRefusal, (els: string) => LocalizedText> = {
-  twoUnknown: (els) =>
-    L(
-      `còn hai nguyên tố chưa biết (${els}): quy tắc không đủ để xác định`,
-      `two unknown elements (${els}): the rules cannot decide`,
-    ),
-  organic: () =>
-    L(
-      'hợp chất hữu cơ nhiều nguyên tử C: mỗi nguyên tử C có số oxi hóa riêng, quy tắc chỉ cho giá trị trung bình',
-      'organic compound with several C atoms: each C has its own oxidation number, the rules give only the mean',
-    ),
-  mixed: (els) =>
-    L(
-      `${els} được viết ở hai nhóm nguyên tử: các nguyên tử có thể khác nhau, quy tắc chỉ cho giá trị trung bình`,
-      `${els} is written in two groups of atoms: its atoms may differ, the rules give only the mean`,
-    ),
-  fractional: (els) =>
-    L(
-      `số oxi hóa của ${els} tính ra không nguyên: chỉ là giá trị trung bình`,
-      `the oxidation number of ${els} is not a whole number: only a mean`,
-    ),
-  outOfRange: (els) =>
-    L(
-      `${els} sẽ vượt số oxi hóa cao nhất của nhóm: công thức có liên kết đặc biệt`,
-      `${els} would exceed its group’s highest oxidation number: the formula hides an unusual bond`,
-    ),
-  inconsistent: () =>
-    L('các quy tắc mâu thuẫn với công thức này', 'the rules contradict this formula'),
-};
 
 const NOTE: Record<OxNote, LocalizedText> = {
   peroxide: L('O là −1 (peroxide)', 'O is −1 (peroxide)'),
@@ -66,10 +37,6 @@ const ionsNote = (ions: string) =>
     `${ions}: ion nhiều nguyên tử, tổng số oxi hóa bằng điện tích ion (bảng ion)`,
     `${ions}: polyatomic ion, the oxidation numbers add up to its charge (ion table)`,
   );
-
-/** Why a species is refused, in words. */
-const refusalText = (ox: OxResult): LocalizedText | null =>
-  ox.ok ? null : REFUSAL[ox.reason](ox.elements.join(', '));
 
 /** Every library reaction with its verdict, computed once. */
 const VERDICTS = REACTIONS.map((r) => ({ r, kind: analyzeRedox(r).kind }));

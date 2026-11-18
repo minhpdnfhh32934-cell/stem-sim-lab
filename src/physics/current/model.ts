@@ -61,3 +61,6 @@ export function integratedCharge(w: Wire): number {
     ).y[0] ?? Number.NaN
   );
 }
+
+/** The drawn piece of wire is four diameters long, to scale (2D and 3D pictures). */
+export const lengthOf = (d: number) => 4 * d;

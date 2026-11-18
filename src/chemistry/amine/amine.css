@@ -1,0 +1,103 @@
+/* Amines, amino acids and peptides (HH12 Bài 8–9, #255 round 4b). */
+@import '../chem.css';
+
+.amine-view {
+  position: absolute;
+  inset: 72px var(--space-4) var(--space-4);
+  overflow: auto;
+  display: grid;
+  align-content: start;
+  gap: var(--space-4);
+}
+.amine-view__head {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-content);
+}
+.amine-view__note {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--text-content);
+}
+.amine-main {
+  display: grid;
+  justify-items: center;
+}
+.amine-main__picture .smiles-picture__svg {
+  width: 360px;
+  height: 230px;
+}
+.amine-isomers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+.amine-chart {
+  width: 100%;
+  height: 280px;
+}
+.amine-strip {
+  width: 100%;
+  height: 120px;
+}
+.amine-eqs {
+  display: grid;
+  gap: var(--space-1);
+  font-size: var(--text-content);
+}
+.amine-eqs p {
+  margin: 0;
+}
+.amine-fragments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.amine-fragments li {
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-family: var(--font-mono);
+}
+.amine-panel {
+  display: grid;
+  gap: var(--space-3);
+}
+.amine-panel__facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-1) var(--space-3);
+  margin: 0;
+}
+.amine-panel__facts dt {
+  color: var(--text-muted);
+}
+.amine-panel__facts dd {
+  margin: 0;
+}
+.amine-panel__list {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding-left: var(--space-4);
+}
+.amine-panel__migration {
+  margin: 0;
+  font-weight: 600;
+}
+.amine-table {
+  border-collapse: collapse;
+}
+.amine-table caption {
+  text-align: left;
+  font-weight: 600;
+  padding-bottom: var(--space-1);
+}
+.amine-table th,
+.amine-table td {
+  padding: 4px var(--space-3);
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
