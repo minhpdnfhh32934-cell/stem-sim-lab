@@ -212,7 +212,10 @@ function Badge({
 export function LocalRuntimeSettings() {
   const t = useT();
   const locale = useSettingsStore((s) => s.locale);
-  const selected = useLocalAiStore((s) => s.selected);
+  const chosen = useLocalAiStore((s) => s.selected);
+  // "Qwen trong app" is chosen on its own card (Gemma cục bộ): no runtime of this page is.
+  const builtinChosen = chosen?.builtin === true;
+  const selected = builtinChosen ? null : chosen;
   const checks = useLocalAiStore((s) => s.checks);
   const status = useLocalAiStore((s) => s.status);
   // The last detection and its model lists last for the session: reopening Settings shows them
@@ -611,7 +614,12 @@ export function LocalRuntimeSettings() {
 
   return (
     <>
-      {(selected !== null || engine === 'local') && (
+      {builtinChosen && (
+        <p className="muted small" role="status">
+          {t('builtinAi.runtimesNote')}
+        </p>
+      )}
+      {(selected !== null || (engine === 'local' && !builtinChosen)) && (
         <fieldset className="settings-group">
           <legend>
             <PlugZap size={15} aria-hidden="true" />

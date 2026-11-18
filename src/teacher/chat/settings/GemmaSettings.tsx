@@ -19,6 +19,7 @@ import { createEtaTracker, formatEta } from '@/ui/eta';
 import { ProgressBar } from '@/ui/ProgressBar';
 import { formatBytes } from './format';
 import { KnownPageLink } from './KnownPageLink';
+import { QwenSettings } from './QwenSettings';
 import '../chat.css';
 
 const GEMMA_LABELS: Record<string, MessageKey> = {
@@ -214,6 +215,7 @@ export function GemmaSettings() {
 
   return (
     <>
+      <QwenSettings />
       <fieldset className="settings-group">
         <legend>
           <Cpu size={15} aria-hidden="true" />
