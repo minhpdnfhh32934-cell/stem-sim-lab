@@ -1,10 +1,8 @@
-import { ArrowLeft, Info } from 'lucide-react';
+import { ArrowLeft, Brain, Gauge, Info, MessagesSquare, Presentation } from 'lucide-react';
 import { useEffect, useId, useRef, useState, type ComponentProps } from 'react';
 import { useLoaded, type Loaded } from '@/app/layout/useLoaded';
 import { useT, type MessageKey } from '@/app/i18n';
 import { useSettingsStore } from '@/app/settings/settingsStore';
-import { useAiStatusView } from '@/app/ai/aiStatusView';
-import { effectiveTier, usePerfStore } from '@/perf/perfStore';
 import { useChatStore } from '@/teacher/chat/chatStore';
 import { useVoiceStore } from '@/teacher/voice/voiceStore';
 import { voiceLevel } from '@/teacher/voice/voiceLevel';
@@ -30,13 +28,20 @@ const backToTalk = () => {
 };
 
 const LAYOUTS: TeacherLayout[] = ['talk', 'board'];
-/** Advanced mode adds two pages of plain facts (#234 step 5); numbered by position (01–04). */
+/** Advanced mode adds two pages of plain facts (#234 step 5). */
 const ADVANCED_PAGES: TeacherLayout[] = ['memory', 'usage'];
 const TAB_NAMES: Record<TeacherLayout, MessageKey> = {
   talk: 'teacher.layoutTalk',
   board: 'teacher.layoutBoard',
   memory: 'teacherViews.memoryTab',
   usage: 'teacherViews.usageTab',
+};
+/** Each tab shows an icon and its name, like the bottom panel's tabs (the Advanced pages' own icons). */
+const TAB_ICONS: Record<TeacherLayout, typeof Brain> = {
+  talk: MessagesSquare,
+  board: Presentation,
+  memory: Brain,
+  usage: Gauge,
 };
 
 export default function TeacherScreen() {
@@ -48,13 +53,6 @@ export default function TeacherScreen() {
   const pages = advanced ? [...LAYOUTS, ...ADVANCED_PAGES] : LAYOUTS;
   const factsPage = ADVANCED_PAGES.includes(layout);
   const setLayout = useTeacherStore((s) => s.setLayout);
-  // Who answers, in the header pill's words (#233: the old pill said "AI trực tuyến" beside
-  // "Chưa kết nối AI"). Only when an AI can answer: the header and the empty conversation already
-  // say what is missing, and the room never repeats "Chưa kết nối" (#205 B5).
-  const link = useAiStatusView();
-  const answers = link.kind === 'cloud' || link.kind === 'local';
-  // Glass cards are translucent; on the Low tier, or once frames run slow, they are opaque.
-  const solidGlass = usePerfStore((s) => effectiveTier(s) === 'low');
   const messages = useChatStore((s) => s.messages);
   const speaking = useVoiceStore((s) => s.speaking);
   // The face shows what the teacher is doing: speaking, waiting for the AI, or listening.
@@ -98,12 +96,7 @@ export default function TeacherScreen() {
 
   return (
     // One title, the header's "AI Teacher" (#205 B5); the region keeps its own name.
-    <section
-      className="teacher"
-      aria-label={t('teacher.regionLabel')}
-      data-layout={layout}
-      data-glass={solidGlass ? 'solid' : 'glass'}
-    >
+    <section className="teacher" aria-label={t('teacher.regionLabel')} data-layout={layout}>
       <header className="teacher__header">
         <button type="button" className="btn teacher__back" onClick={closeTeacher}>
           <ArrowLeft size={16} strokeWidth={1.75} aria-hidden="true" />
@@ -119,35 +112,31 @@ export default function TeacherScreen() {
         >
           <Info size={16} strokeWidth={1.75} aria-hidden="true" />
         </span>
-        {/* Numbered tabs (#234): the layout switch keeps its radio roles and names. */}
+        {/* The app's tabs (icon, name, sliding underline); the layout switch keeps its radio
+            roles and names. Who answers is said by the top bar's AI pill, not repeated here. */}
         <span id={layoutId} className="sr-only">
           {t('teacher.layoutLabel')}
         </span>
         <div className="tabs__list teacher__tabs" role="radiogroup" aria-labelledby={layoutId}>
-          {pages.map((item, i) => (
-            <button
-              key={item}
-              type="button"
-              role="radio"
-              aria-checked={layout === item}
-              className="tabs__tab teacher__tab"
-              onClick={() => {
-                setLayout(item);
-              }}
-            >
-              <span className="teacher__tab-num" aria-hidden="true">
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              {t(TAB_NAMES[item])}
-            </button>
-          ))}
+          {pages.map((item) => {
+            const Icon = TAB_ICONS[item];
+            return (
+              <button
+                key={item}
+                type="button"
+                role="radio"
+                aria-checked={layout === item}
+                className={`tabs__tab teacher__tab${layout === item ? ' is-selected' : ''}`}
+                onClick={() => {
+                  setLayout(item);
+                }}
+              >
+                <Icon size={16} strokeWidth={1.75} aria-hidden="true" />
+                {t(TAB_NAMES[item])}
+              </button>
+            );
+          })}
         </div>
-        {answers && (
-          <span className="teacher__link" data-status={link.kind}>
-            <span className="teacher__link-dot" aria-hidden="true" />
-            {link.label}
-          </span>
-        )}
       </header>
 
       <div className="teacher__stage">

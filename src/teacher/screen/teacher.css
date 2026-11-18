@@ -1,7 +1,7 @@
-/* AI Teacher's station (#234 step 4): a stage of its own (dark in the dark theme, pale in the
-   light one), numbered tabs, the connection chip, the orb beside the conversation (talk) or small
-   in the corner (board), and AI Teacher's answers on glass cards. Colours come from the --teacher-*
-   tokens, whose text pairs are checked on the stage, the glow and the glass (tokens.test.ts). */
+/* AI Teacher's page in the app's own look (user request 18/11/2026; it replaced #234's station):
+   the home screen's background, the bottom panel's tabs, the chat bubble's panel docked in the
+   room and the app's tokens only (tokens.test.ts checks the page's stylesheets). The orb stays
+   (#234), drawn in the stage accent (OrbView.tsx). */
 .teacher {
   display: flex;
   flex: 1;
@@ -11,27 +11,18 @@
   gap: var(--space-2);
   padding: var(--space-2) var(--space-5) var(--space-3);
   overflow: hidden;
-  background:
-    radial-gradient(circle at 9% 26%, var(--teacher-glow), transparent 52%), var(--teacher-bg);
-  color: var(--teacher-text);
+  background: var(--bg-stage);
+  color: var(--text);
 }
 
-/* What sits on the stage reads the stage's text colours (the board keeps its own). */
-.teacher__header,
-.teacher__presence,
-.teacher__chat-wrap {
-  --text: var(--teacher-text);
-  --text-muted: var(--teacher-text-muted);
-}
-
-/* One row: back · (i) · 01 02 tabs · connection chip. */
+/* One row: back · (i) · tabs, over a line like the bottom panel's tab bar. */
 .teacher__header {
   display: flex;
   flex: none;
   flex-wrap: wrap;
   gap: var(--space-1) var(--space-3);
   align-items: center;
-  border-bottom: 1px solid color-mix(in srgb, var(--teacher-line) 45%, transparent);
+  border-bottom: 1px solid var(--border);
 }
 
 .teacher__about {
@@ -40,75 +31,22 @@
   height: var(--target);
   place-items: center;
   border-radius: var(--radius-full);
-  color: var(--teacher-text-muted);
+  color: var(--text-muted);
   cursor: help;
 }
 .teacher__about:hover {
-  background: color-mix(in srgb, var(--teacher-line) 22%, transparent);
-  color: var(--teacher-text);
+  background: var(--bg-hover);
+  color: var(--text);
 }
 
-/* The layout switch as numbered tabs; slidingIndicator.ts slides the underline. */
+/* The shared tabs (ui.css: colours, underline, slidingIndicator.ts), as tall as a target. */
 .teacher__tabs {
   flex: 0 1 auto;
   flex-wrap: wrap;
-  gap: var(--space-1);
 }
 .teacher__tab {
   min-height: var(--target);
-  gap: var(--space-2);
-  padding: 0 var(--space-3);
-  color: var(--teacher-text-muted);
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
   cursor: pointer;
-}
-.teacher__tab:hover,
-.teacher__tab[aria-checked='true'] {
-  color: var(--teacher-text);
-}
-/* Without the script the open tab keeps its own underline. */
-.teacher__tab[aria-checked='true'] {
-  box-shadow: inset 0 -2px var(--teacher-accent);
-}
-.teacher__tabs.has-indicator > .teacher__tab {
-  box-shadow: none;
-}
-.teacher__tabs.has-indicator::before {
-  background: var(--teacher-accent);
-}
-.teacher__tab-num {
-  color: var(--teacher-accent);
-  font-family: var(--font-mono);
-  font-weight: 500;
-}
-
-/* The AI that answers, in the header pill's words (aiStatusView.ts); shown only while one can. */
-.teacher__link {
-  display: inline-flex;
-  gap: var(--space-2);
-  align-items: center;
-  max-width: 100%;
-  min-height: 28px;
-  margin-left: auto;
-  padding: 0 var(--space-3);
-  border: 1px solid color-mix(in srgb, var(--teacher-line) 60%, transparent);
-  border-radius: var(--radius-full);
-  color: var(--teacher-text);
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-.teacher__link-dot {
-  flex: none;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--teacher-accent);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--teacher-accent) 25%, transparent);
 }
 
 /* Talk: the orb at the left, the conversation in the rest (≥ 70 % of the room, #205 B5). Not
@@ -197,12 +135,9 @@
 /* The orb's state in words (the orb itself is aria-hidden). */
 .teacher__state {
   margin: 0;
-  color: var(--teacher-accent);
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
   font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
 }
 
 .teacher__chat-wrap {
@@ -215,26 +150,13 @@
   display: none;
 }
 
-/* The conversation lies on the stage: no panel of its own. */
+/* The conversation is the chat bubble's panel, docked in the room: its answers are the app's
+   chat cards (chat.css), as in the lab. */
 .teacher__chat-wrap .chat-panel {
   width: 100%;
   height: 100%;
   min-height: 0;
-  border: 0;
-  background: transparent;
-  box-shadow: none;
-}
-
-/* AI Teacher's answers on glass cards: translucent, opaque on the Low tier or once frames run
-   slow (data-glass, TeacherScreen). */
-.teacher .chat-message--assistant .chat-message__body {
-  border: 1px solid color-mix(in srgb, var(--teacher-line) 55%, transparent);
-  background: var(--teacher-glass);
-  color: var(--teacher-text);
-  box-shadow: 0 0 24px color-mix(in srgb, var(--teacher-glow) 60%, transparent);
-}
-.teacher[data-glass='solid'] .chat-message--assistant .chat-message__body {
-  background: var(--teacher-glass-solid);
+  box-shadow: var(--shadow-docked);
 }
 
 .teacher__quick-actions {
@@ -365,9 +287,6 @@
   .teacher__tab {
     flex: 1;
     justify-content: center;
-  }
-  .teacher__link {
-    margin-left: 0;
   }
   .teacher__stage,
   .teacher[data-layout='board'] .teacher__stage {
