@@ -1,8 +1,9 @@
 import { memo } from 'react';
-import { ChartSpline, ListOrdered, Table2, Target } from 'lucide-react';
+import { ChartSpline, ListOrdered, NotebookPen, Table2, Target } from 'lucide-react';
 import { useT } from '@/app/i18n';
 import { DataPanel } from '@/app/sim/DataPanel';
 import { GraphPanel } from '@/app/sim/GraphPanel';
+import { RunLogPanel } from '@/app/sim/RunLogPanel';
 import { SolutionPanel } from '@/app/sim/SolutionPanel';
 import { useLocalized } from '@/app/i18n/localized';
 import { useModuleStore } from '@/modules/moduleStore';
@@ -13,7 +14,7 @@ import { Tabs } from '@/ui/Tabs';
 import { useScrollCue } from '@/ui/useScrollCue';
 import { useLayoutStore, type BottomTab } from './layoutStore';
 
-/** Graphs (uPlot, Phase 1–2), step-by-step solution, and data table. */
+/** Graphs (uPlot, Phase 1–2), step-by-step solution, challenge, run log and data table. */
 export const BottomPanel = memo(function BottomPanel() {
   const t = useT();
   const storedTab = useLayoutStore((s) => s.bottomTab);
@@ -55,6 +56,7 @@ export const BottomPanel = memo(function BottomPanel() {
           { id: 'graphs', label: t('bottom.graphs'), icon: ChartSpline },
           { id: 'solution', label: t('bottom.solution'), icon: ListOrdered },
           { id: 'challenge', label: t('bottom.challenge'), icon: Target },
+          { id: 'log', label: t('bottom.log'), icon: NotebookPen },
           ...(advanced ? [{ id: 'data' as const, label: t('bottom.data'), icon: Table2 }] : []),
         ]}
       />
@@ -67,6 +69,7 @@ export const BottomPanel = memo(function BottomPanel() {
         {tab === 'graphs' && <GraphPanel />}
         {tab === 'solution' && <SolutionPanel />}
         {tab === 'challenge' && <ChallengePanel />}
+        {tab === 'log' && <RunLogPanel />}
         {tab === 'data' && <DataPanel />}
       </div>
     </section>
