@@ -14,7 +14,8 @@ test('Quét tham số: range against initial speed, each point from the lesson',
   // Basic mode has no sweep.
   await expect(tabs.getByRole('tab', { name: 'Quét tham số' })).toHaveCount(0);
   await page.evaluate(async () => {
-    const { useSettingsStore } = (await (async (m: string) => import(/* @vite-ignore */ m))(
+    const { useSettingsStore } = (await (async (m: string) =>
+      import(/* @vite-ignore */ m) as Promise<Record<string, unknown>>)(
       '/src/app/settings/settingsStore.ts',
     )) as { useSettingsStore: { getState(): { setUiMode(m: 'advanced'): void } } };
     useSettingsStore.getState().setUiMode('advanced');
