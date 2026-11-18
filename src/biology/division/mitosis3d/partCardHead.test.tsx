@@ -64,7 +64,10 @@ function setHeight(el: HTMLElement, height: () => number) {
     }) as DOMRect;
 }
 
-/** The card's DOM: slot > card (border, padding) > head + text. */
+/**
+ * The card's DOM: slot > card (border, padding) > head + text, attached to the page (jsdom 31, like
+ * browsers, gives a detached element no computed style).
+ */
 function card(lineHeight = '21px') {
   const slot = document.createElement('div');
   const box = document.createElement('aside');
@@ -78,10 +81,15 @@ function card(lineHeight = '21px') {
   text.textContent = 'Nơi hai crômatit chị em dính nhau.';
   box.append(head, text);
   slot.append(box);
+  document.body.append(slot);
   return { slot, box, head };
 }
 
 describe('part card: measuring', () => {
+  afterEach(() => {
+    document.body.replaceChildren();
+  });
+
   it('reads the row, the head, the borders with the bottom padding, and the line height', () => {
     const { slot, box, head } = card();
     setHeight(slot, () => 200);
