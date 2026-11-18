@@ -1041,11 +1041,30 @@ How each value was found:
 | SHA-256         | `ca8cfe89b00fd447ac3b816d095871bc9b6ca9835fd96e06238a9ff5d1640639` (GitHub's asset digest) |
 
 The bundled runtime is a newer llama.cpp (b12246) with a different backend (Vulkan) than the
-measurement (b12177, CUDA): step 9 measures the app's own path again. TODO (step 1): load the
-pinned GGUF with the pinned zip on the RTX 4080 and record that it reads the file.
+measurement (b12177, CUDA): step 9 measures the app's own path again.
 
-The desktop also has an Intel UHD Graphics 770 (integrated): every run there passes `--device` for
-the RTX 4080, never the integrated card.
+**It reads the file (18/11/2026, desktop).** `llama-server --version` → build 12246, commit
+`78ffbaa18`. `--list-devices` → `Vulkan0: NVIDIA GeForce RTX 4080 (16048 MiB)`,
+`Vulkan1: Intel(R) UHD Graphics 770 (16272 MiB)`. One run with the files the app ships
+(`-m <pinned GGUF> --device Vulkan0 -ngl 99 -c 6000 -np 1 --jinja --no-webui --host 127.0.0.1
+--port <random> --api-key <random>`): `/health` ok 7,1 s after start, the card's memory in use
+6 340 MiB (nvidia-smi, whole card), one Vietnamese answer at 39 tokens/s, a request without the
+key refused (HTTP 401), no `llama-server` left after the stop. The context is rounded to 6 144
+(`n_ctx_slot`). One run only: step 9 measures load time, first-piece time and memory properly.
+
+The integrated card reports 16 GB to Vulkan (shared system memory): the card choice must come from
+`gpu.rs` (`Discrete`, dedicated memory), never from the size Vulkan reports. The desktop runs pass
+`--device` for the RTX 4080, never the integrated card.
+
+### Bundled files (step 1)
+
+`node scripts/llama/fetch-llama-server.mjs` (Windows) downloads the pinned zip, checks its size and
+SHA-256 and keeps the 24 files `llama-server` needs (`KEEP`: the server, `llama*`/`mtmd`/`ggml*`
+libraries, the Vulkan backend, every CPU variant ggml chooses from at start-up, `libomp.dll` and its
+licence) in `src-tauri/binaries/llama-server/` (89 234 324 bytes with the licence below; git-ignored
+except `LICENSE-llama.cpp.txt`, the MIT licence at the pinned commit). `tauri.conf.json`
+`bundle.resources` ships the folder as `llama-server/` beside the app; a build without the fetch
+ships only the licence (the Qwen card then says the runtime is missing).
 
 ## Tested on real hardware (2026-10-12, AMD RDNA 3 GPU, built-in browser)
 
