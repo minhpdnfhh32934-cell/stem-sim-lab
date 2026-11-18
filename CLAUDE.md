@@ -359,6 +359,10 @@ tests/            app-level tests, golden set, e2e
   `tests/tauri-config.test.ts`. Always check formulas in the native build, not only the browser.
 - `public/theme-boot.js` applies the saved theme before React loads (no white flash in dark mode).
   Keep its storage key and shape in sync with `settingsStore.ts` (`stemsim.settings`).
+- **Motion (#195):** Settings → Giao diện → Chuyển động (`settingsStore.motion`: system / reduce /
+  full) is written on `<html>` as `data-motion` (`useApplyTheme`, `theme-boot.js`). CSS writes
+  `:root[data-motion='reduce'] …`, never `@media (prefers-reduced-motion)` (`motion.test.tsx`
+  fails); JS asks `prefersReducedMotion()` (`src/ui/three/availability.ts`), never `matchMedia`.
 - In this repo's cloud sandbox, npm/crates/apt must go **through** the HTTPS proxy:
   `NO_PROXY=localhost,127.0.0.1 npm_config_noproxy=localhost,127.0.0.1`. This does not apply on
   the user's Windows machine.

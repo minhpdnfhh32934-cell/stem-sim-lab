@@ -344,13 +344,11 @@
   color: var(--board-mark);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .board__mark,
-  .board__mark path,
-  .board__draw path,
-  .board__pen {
-    transition: none;
-  }
+:root[data-motion='reduce'] .board__mark,
+:root[data-motion='reduce'] .board__mark path,
+:root[data-motion='reduce'] .board__draw path,
+:root[data-motion='reduce'] .board__pen {
+  transition: none;
 }
 
 /* Minimap of a long face (pattern 104): written blocks + the part on screen. */
