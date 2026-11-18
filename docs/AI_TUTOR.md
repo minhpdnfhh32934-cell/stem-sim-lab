@@ -995,6 +995,58 @@ Tests: `engineChoice.test.ts`, `chatStore.test.ts`, `memory.test.ts`, `chatLocal
 127.0.0.1:11434; every cloud host and Wikipedia counted and refused). Not tested against a real
 runtime.
 
+## Qwen 3.5 9B inside the app (#190, not released)
+
+User decision 10/11/2026 ("đồng ý, đưa Qwen 9B bản gốc vào app ngay"); the five questions of the
+plan were answered "Đồng ý cả 5" on 11/11/2026 (issue #190).
+
+### Pinned files (step 0, recorded 18/11/2026)
+
+The model is the exact file of the 10/11/2026 desktop measurement (RTX 4080; `docs/TEACHING_EVAL.md`
+"Đợt 10/11/2026", row "Qwen 3.5 9B gốc", 33/42,
+`tests/teaching/results/2026-11-10-qwen3.5-9b-base-main.json`).
+
+| Model      | Value                                                                                   |
+| ---------- | --------------------------------------------------------------------------------------- |
+| Repository | `lmstudio-community/Qwen3.5-9B-GGUF` (card: base model `Qwen/Qwen3.5-9B`, `apache-2.0`) |
+| Revision   | `1379f25c6b505a3fc737bd7818cb09389cf807c1`                                              |
+| File       | `Qwen3.5-9B-Q4_K_M.gguf`                                                                |
+| SHA-256    | `cd76ec205963b3b33350093e6904d9de16c4e666fd104e1f632d25c7f15f2a13`                      |
+| Size       | 5 627 044 256 bytes                                                                     |
+
+How each value was found:
+
+- The result files name the model (`qwen3.5-9b`) but not the file. The desktop holds one Qwen 3.5 9B
+  language-model file, `C:\Users\<user>\.lmstudio\models\lmstudio-community\Qwen3.5-9B-GGUF\Qwen3.5-9B-Q4_K_M.gguf`,
+  downloaded by LM Studio 0.4.28+2 from `…/resolve/main/Qwen3.5-9B-Q4_K_M.gguf` on 10/11/2026 at
+  00:09 (Vietnam time, before the measurement). LM Studio's download record lists the SHA-256 and
+  size above; hashing the file again on 18/11/2026 gave the same SHA-256.
+- Revision: the repository's `main` on 18/11/2026. Its last commit is dated 02/03/2026, so it was
+  also `main` at the download, and the HuggingFace API lists the file at this revision with the
+  same size and LFS SHA-256.
+- The folder also holds `mmproj-Qwen3.5-9B-BF16.gguf` (pictures); the plan leaves it out.
+
+| Server when measured | Value                                                                                 |
+| -------------------- | ------------------------------------------------------------------------------------- |
+| Program              | `llama-server.exe` of LM Studio's engine "CUDA 12 llama.cpp (Windows)" 2.71.0         |
+| llama.cpp            | release b12177 (commit `6c01da627`), from that engine's release notes                 |
+| Flags                | `-np 1 -c 6000 --jinja --port 18765` (`scripts/teaching/eval-local.mjs`), no `--lora` |
+| Settings             | temperature 0, the app's compact prompt (`contextPrompt(…, 'compact', …)`)            |
+
+| Bundled runtime | Value                                                                                      |
+| --------------- | ------------------------------------------------------------------------------------------ |
+| llama.cpp tag   | `b12246` (commit `78ffbaa18533c2ed51eab2ef5ae0702330efc3e9`, published 10/11/2026)         |
+| File            | `llama-b12246-bin-win-vulkan-x64.zip` (MIT)                                                |
+| Size            | 37 892 147 bytes                                                                           |
+| SHA-256         | `ca8cfe89b00fd447ac3b816d095871bc9b6ca9835fd96e06238a9ff5d1640639` (GitHub's asset digest) |
+
+The bundled runtime is a newer llama.cpp (b12246) with a different backend (Vulkan) than the
+measurement (b12177, CUDA): step 9 measures the app's own path again. TODO (step 1): load the
+pinned GGUF with the pinned zip on the RTX 4080 and record that it reads the file.
+
+The desktop also has an Intel UHD Graphics 770 (integrated): every run there passes `--device` for
+the RTX 4080, never the integrated card.
+
 ## Tested on real hardware (2026-10-12, AMD RDNA 3 GPU, built-in browser)
 
 - `gemma3-270m` downloaded (≈ 343 MB), stored in OPFS, loaded on WebGPU, answered a chat question
