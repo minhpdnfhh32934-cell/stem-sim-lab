@@ -185,6 +185,15 @@ describe('the Qwen card (Settings → Gemma cục bộ, #190)', () => {
     });
   });
 
+  it('an older desktop app without the commands shows no Qwen card', async () => {
+    client.status.mockRejectedValue(new AiError('unavailable', 'needs-app-update'));
+    const { container } = render(<QwenSettings />);
+    await waitFor(() => {
+      expect(useBuiltinStore.getState().statusError).toBe('needs-app-update');
+    });
+    expect(container).toBeEmptyDOMElement();
+  });
+
   it('deleting the chosen model also unselects it, so nothing is sent', async () => {
     useLocalAiStore.getState().select(BUILTIN_SELECTION);
     useChatStore.getState().setEngine('local');

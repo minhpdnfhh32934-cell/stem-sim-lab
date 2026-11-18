@@ -15,6 +15,7 @@ import { useEffect, type ReactNode } from 'react';
 import { useBuiltinStore } from '@/ai/builtin/builtinStore';
 import type { BuiltinStatus, DownloadFailure, Ineligible } from '@/ai/builtin/types';
 import { useLocalAiStore } from '@/ai/local/localAiStore';
+import { NEEDS_APP_UPDATE } from '@/ai/local/types';
 import { useT, type MessageKey } from '@/app/i18n';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { formatEta } from '@/ui/eta';
@@ -148,6 +149,10 @@ export function QwenSettings() {
     useLocalAiStore.getState().select(null);
     useChatStore.getState().leaveLocal();
   };
+
+  // A newer web part on an older desktop app: it has no llama-server, so no Qwen card at all
+  // (only a new installer brings it).
+  if (statusError === NEEDS_APP_UPDATE) return null;
 
   let body: ReactNode;
   if (!status) {
