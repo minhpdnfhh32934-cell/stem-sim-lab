@@ -118,6 +118,18 @@ export function localFailure(e: unknown, use: LocalUse = 'chat'): LocalFailure {
   return { key: 'chat.errors.localFailed', section: runtimes, retry: true };
 }
 
+/**
+ * The same failure for Qwen inside SimLab (#190): a runtime's sentence would send the learner to
+ * "AI trên máy khác", where nothing helps; the Qwen card does.
+ */
+export function builtinFailure(failure: LocalFailure): LocalFailure {
+  if (failure.key === 'chat.errors.localNoAnswer') {
+    return { key: 'chat.errors.builtinNoAnswer', section: 'local', retry: true };
+  }
+  if (failure.section !== 'runtimes') return failure;
+  return { key: 'chat.errors.builtinFailed', section: 'local', retry: failure.retry };
+}
+
 /** The failure's sentence, naming the runtime. */
 export function localFailureText(locale: Locale, failure: LocalFailure, kind: RuntimeKind): string {
   return translate(locale, failure.key, { name: runtimeName(locale, kind) });

@@ -1991,6 +1991,10 @@ const vi = {
       builtinStartFailed:
         'Mình chưa nạp được Qwen lên card đồ họa. Em hỏi lại nhé; nếu lặp lại, xem thẻ Qwen trong Cài đặt → Gemma cục bộ.',
       builtinBusy: 'Qwen đang tải về hoặc đang trả lời. Em đợi xong rồi thử lại nhé.',
+      builtinNoAnswer:
+        'Qwen chưa viết ra câu trả lời nào. Em hỏi lại nhé; nếu lặp lại, xem thẻ Qwen trong Cài đặt → Gemma cục bộ.',
+      builtinFailed:
+        'Qwen gặp lỗi khi trả lời, và không có gì được gửi lên mạng. Em hỏi lại nhé; nếu lặp lại, xem thẻ Qwen trong Cài đặt → Gemma cục bộ.',
       /**
        * An online provider could not answer: {who} is the provider ("Gemini"), the reviewer
        * ("Bên rà soát (Claude)") or both providers when the fallback may have answered; {page} is

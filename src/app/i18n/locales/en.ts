@@ -2007,6 +2007,10 @@ const en: Messages = {
       builtinStartFailed:
         'I could not load Qwen on the graphics card. Ask again; if it repeats, see the Qwen card in Settings → Local Gemma.',
       builtinBusy: 'Qwen is downloading or answering. Wait for it to finish, then try again.',
+      builtinNoAnswer:
+        'Qwen wrote no answer. Ask again; if it repeats, see the Qwen card in Settings → Local Gemma.',
+      builtinFailed:
+        'Qwen ran into an error while answering, and nothing was sent online. Ask again; if it repeats, see the Qwen card in Settings → Local Gemma.',
       cloud: {
         reviewer: 'The reviewer ({name})',
         withFallback: '{name} (or the {fallback} fallback)',

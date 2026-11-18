@@ -1081,7 +1081,11 @@ ships only the licence (the Qwen card then says the runtime is missing).
   `.partial` file resumed with an HTTP range (a server ignoring it starts again), cancel keeps the
   partial file, a wrong size or SHA-256 deletes it. Stored in `<app data>/models/qwen/`.
 - `server.rs`: `-m <model> --alias qwen3.5-9b --device <VulkanN> -ngl 99 -c 6000 -np 1 --jinja
---no-webui --host 127.0.0.1 --port 0 --api-key-file <file>`. The server binds a free port itself
+--chat-template-kwargs {"enable_thinking":false} --no-webui --host 127.0.0.1 --port 0
+--api-key-file <file>`. Thinking is off for every request, as in the measurement
+  (`eval-local.mjs` sends the same variable): with it on, the in-app check of 19/11/2026 got no
+  answer at all (Qwen 3.5 spent the 2 048-token budget in `reasoning_content`, which SimLab drops,
+  and the local route's `think` switch is Ollama only). The server binds a free port itself
   and logs it (`listening on http://127.0.0.1:<port>`): a port picked in Rust and bound later could
   be taken by another program, which would then get the key. The key (32 bytes from
   `BCryptGenRandom`) is written to a file that is deleted once `/health` answers, so it is never on

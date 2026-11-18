@@ -976,6 +976,24 @@ describe('Qwen inside the app (#190)', () => {
     },
   );
 
+  // In-app check 19/11/2026: the runtime sentences sent the learner to "AI trên máy khác".
+  it.each([
+    [new AiError('badResponse', 'empty answer (stop)'), 'chat.errors.builtinNoAnswer', true],
+    [new AiError('badResponse', 'reasoningOnly'), 'chat.errors.builtinNoAnswer', true],
+    [new AiError('http', 'local-failed: 500: boom'), 'chat.errors.builtinFailed', true],
+    [new AiError('network', 'local-unreachable: refused'), 'chat.errors.builtinFailed', true],
+  ] as const)(
+    '%s from Qwen: a Qwen sentence and the Qwen card, never "AI trên máy khác"',
+    async (err, key, retry) => {
+      local.chat.mockRejectedValue(err);
+      const failed = ask('Vì sao vật rơi tự do có gia tốc không đổi?');
+      await expect(failed).rejects.toThrow(translate('vi', key));
+      await expect(failed).rejects.toMatchObject({ section: 'local', retry });
+      await expect(failed).rejects.not.toThrow(/AI trên máy khác|llama\.cpp/);
+      expect(calls).toHaveLength(0);
+    },
+  );
+
   it('with "Tra thêm Wikipedia" on, Qwen is loaded first: a failed start sends nothing anywhere', async () => {
     useChatStore.setState({ webLookup: true });
     const fetchSpy = vi.spyOn(globalThis, 'fetch').mockRejectedValue(new TypeError('offline'));

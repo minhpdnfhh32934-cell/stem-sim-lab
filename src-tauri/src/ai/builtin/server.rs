@@ -21,6 +21,8 @@ use serde::Serialize;
 pub const ALIAS: &str = "qwen3.5-9b";
 /// The measured context (`n_ctx_slot` rounds it to 6 144).
 pub const CONTEXT: u32 = 6000;
+/// Chat-template variables for every request, as `eval-local.mjs` sends them.
+pub const NO_THINKING: &str = r#"{"enable_thinking":false}"#;
 /// Loading 5,6 GB from a slow disk can take minutes.
 pub const READY_TIMEOUT: Duration = Duration::from_secs(180);
 /// A server unused this long is stopped, to give the card's memory back.
@@ -49,6 +51,9 @@ pub fn args(l: &Launch) -> Vec<OsString> {
     flag("-c", Some(CONTEXT.to_string().into()));
     flag("-np", Some("1".into()));
     flag("--jinja", None);
+    // Qwen 3.5 thinks first by default and spends the whole answer budget in `reasoning_content`
+    // (which SimLab drops); the measurement ran with thinking off (in-app check 19/11/2026).
+    flag("--chat-template-kwargs", Some(NO_THINKING.into()));
     flag("--no-webui", None);
     flag("--host", Some("127.0.0.1".into()));
     flag("--port", Some("0".into()));
@@ -359,6 +364,8 @@ mod tests {
             "-c 6000",
             "-np 1",
             "--jinja",
+            // Thinking off, as measured: with it on, Qwen 3.5 wrote no answer (19/11/2026).
+            r#"--chat-template-kwargs {"enable_thinking":false}"#,
             "--no-webui",
             "--host 127.0.0.1",
             // The server binds a free port itself (never one chosen here first).

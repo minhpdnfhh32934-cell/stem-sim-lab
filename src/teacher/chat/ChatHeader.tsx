@@ -1,4 +1,5 @@
 import { Maximize2, Trash2, Volume2, VolumeX, X } from 'lucide-react';
+import { useLocalAiStore } from '@/ai/local/localAiStore';
 import { useT } from '@/app/i18n';
 import { TeacherFace } from '@/teacher/face/TeacherFace';
 import {
@@ -31,6 +32,8 @@ export function ChatHeader({
 }) {
   const t = useT();
   const setEngine = useChatStore((s) => s.setEngine);
+  // The local engine is Qwen inside SimLab (#190), not a runtime on another program.
+  const builtinChosen = useLocalAiStore((s) => s.selected?.builtin === true);
   const voiceEnabled = useVoiceStore((s) => s.enabled);
   const setVoiceEnabled = useVoiceStore((s) => s.setEnabled);
   const voiceSpeaking = useVoiceStore((s) => s.speaking);
@@ -65,7 +68,9 @@ export function ChatHeader({
           >
             <option value="cloud">{t('chat.cloud')}</option>
             <option value="gemma">{t('chat.gemma')}</option>
-            <option value="local">{t('chat.local')}</option>
+            <option value="local">
+              {builtinChosen ? t('builtinAi.answerLabel') : t('chat.local')}
+            </option>
           </select>
         </label>
         {speechSupported() && (

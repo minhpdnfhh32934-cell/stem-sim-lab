@@ -8,7 +8,12 @@ import { gemmaBlockedByGpuFault, isGpuFailure } from '@/ai/gpuSafety';
 import { getTransport } from '@/ai/transport';
 import { fallbackFor } from '@/ai/fallback';
 import { AiError, toAiError, type ChatMessage, type ChatRequest, type Provider } from '@/ai/types';
-import { localFailure, localFailureText, localModelLabel } from '@/app/ai/localRuntime';
+import {
+  builtinFailure,
+  localFailure,
+  localFailureText,
+  localModelLabel,
+} from '@/app/ai/localRuntime';
 import { getLocalClient } from '@/ai/local/client';
 import type { LocalSelection, ProbeStatus } from '@/ai/local/types';
 import { cloudFailure, cloudFailureText, type CloudErrorKind, type CloudRole } from './cloudErrors';
@@ -252,7 +257,7 @@ function localError(
   if (e instanceof AnswerStopped || signal?.aborted) return new AnswerStopped();
   // The runtime's own words stay in the console for troubleshooting (never a key: there is none).
   console.warn('[teacher-local]', e instanceof Error ? e.message : String(e));
-  const failure = localFailure(e);
+  const failure = selection.builtin ? builtinFailure(localFailure(e)) : localFailure(e);
   return new TeacherError(
     localFailureText(locale, failure, selection.kind),
     failure.section,
