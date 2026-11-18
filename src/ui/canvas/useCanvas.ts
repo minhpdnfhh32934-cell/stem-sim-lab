@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useResolvedTheme } from '@/app/theme/useApplyTheme';
 import { FrameMonitor } from '@/perf/frameMonitor';
 import { reportOverload, useTierConfig } from '@/perf/perfStore';
+import { prefersReducedMotion } from '@/ui/three/availability';
 
 export interface DrawContext {
   ctx: CanvasRenderingContext2D;
@@ -34,7 +35,7 @@ export function useCanvas(draw: (d: DrawContext) => void, animate: boolean, deps
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const reduce = prefersReducedMotion();
     const cs = getComputedStyle(document.documentElement);
     const css = (name: string) => cs.getPropertyValue(name).trim();
     const start = performance.now();

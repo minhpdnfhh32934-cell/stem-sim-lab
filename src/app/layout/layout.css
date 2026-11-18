@@ -584,10 +584,8 @@ body[data-resizing] .splitter {
     transform: translateY(-4px);
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .stage__empty .empty__icon {
-    animation: none;
-  }
+:root[data-motion='reduce'] .stage__empty .empty__icon {
+  animation: none;
 }
 
 /* ───────────── Timeline ───────────── */

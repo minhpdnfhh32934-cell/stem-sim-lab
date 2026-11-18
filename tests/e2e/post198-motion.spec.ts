@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { openTopic } from './nav';
+import { openLab, openTopic } from './nav';
 
 /**
  * #205 C3, carried over from the bench spec written after PR #198: with "reduce motion" on in the
@@ -65,4 +65,58 @@ test('without reduced motion the particle lessons still run on open', async ({ p
   });
   const t0 = await lessonTime(page, 'gas');
   await expect.poll(() => lessonTime(page, 'gas'), { timeout: 10_000 }).toBeGreaterThan(t0);
+});
+
+/** Settings → Giao diện → Chuyển động (#195 step 2): the app's own choice, kept across a reload. */
+async function chooseMotion(page: Page, label: 'Giảm' | 'Đầy đủ') {
+  await openLab(page);
+  await page.getByRole('button', { name: 'Cài đặt', exact: true }).first().click();
+  const settings = page.getByRole('dialog', { name: 'Cài đặt' });
+  await settings.getByRole('tab', { name: /Giao diện/ }).click();
+  await settings
+    .getByRole('radiogroup', { name: 'Chuyển động trong app' })
+    .getByRole('radio', { name: label })
+    .click();
+  await page.keyboard.press('Escape');
+  await expect(settings).toHaveCount(0);
+}
+
+const durFast = (page: Page) =>
+  page.evaluate(() =>
+    getComputedStyle(document.documentElement).getPropertyValue('--dur-fast').trim(),
+  );
+
+test('"Giảm" in the app stops motion although the system asks for none (#195)', async ({
+  page,
+}) => {
+  await chooseMotion(page, 'Giảm');
+  await expect(page.locator('html')).toHaveAttribute('data-motion', 'reduce');
+  expect(await durFast(page)).toBe('0ms');
+  // A fresh start (openTopic reloads): theme-boot and the saved setting keep it.
+  await openTopic(page, 'Hóa học', 'Phân bố Maxwell–Boltzmann');
+  await expect(page.locator('html')).toHaveAttribute('data-motion', 'reduce');
+  const main = page.getByRole('main');
+  await expect(main.getByRole('button', { name: 'Chạy', exact: true })).toBeVisible({
+    timeout: 20_000,
+  });
+  const t0 = await lessonTime(page, 'gas');
+  await page.waitForTimeout(1000);
+  expect(await lessonTime(page, 'gas')).toBe(t0);
+});
+
+test.describe('the system asks for reduced motion', () => {
+  test.use({ reducedMotion: 'reduce' });
+
+  test('"Đầy đủ" in the app keeps full motion (#195)', async ({ page }) => {
+    await chooseMotion(page, 'Đầy đủ');
+    await expect(page.locator('html')).toHaveAttribute('data-motion', 'full');
+    expect(await durFast(page)).not.toBe('0ms');
+    await openTopic(page, 'Hóa học', 'Phân bố Maxwell–Boltzmann');
+    const main = page.getByRole('main');
+    await expect(main.getByRole('button', { name: 'Tạm dừng', exact: true })).toBeVisible({
+      timeout: 20_000,
+    });
+    const t0 = await lessonTime(page, 'gas');
+    await expect.poll(() => lessonTime(page, 'gas'), { timeout: 10_000 }).toBeGreaterThan(t0);
+  });
 });

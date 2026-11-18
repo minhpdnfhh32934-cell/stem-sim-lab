@@ -60,7 +60,7 @@
   --chat-bubble: 52px;
   --chat-bubble-gap: 14px;
 
-  /* Motion — subtle; disabled entirely under prefers-reduced-motion. */
+  /* Motion — subtle; disabled entirely under :root[data-motion='reduce'] (useApplyTheme). */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --dur-fast: 120ms;
   --dur-med: 220ms;
@@ -356,9 +356,7 @@
   --glass-blur: blur(14px) saturate(1.2);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  :root {
-    --dur-fast: 0ms;
-    --dur-med: 0ms;
-  }
+:root[data-motion='reduce'] {
+  --dur-fast: 0ms;
+  --dur-med: 0ms;
 }

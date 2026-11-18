@@ -18,7 +18,7 @@ export interface IconButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonEle
   active?: boolean;
   size?: 'sm' | 'md' | 'lg';
   variant?: 'ghost' | 'solid' | 'accent';
-  /** Micro-animation played on hover/focus (disabled by prefers-reduced-motion). */
+  /** Micro-animation played on hover/focus (off when motion is reduced: data-motion). */
   animation?: IconAnimation;
   tooltipSide?: 'top' | 'bottom' | 'left' | 'right';
 }

@@ -22,6 +22,21 @@ describe('the first frame is the classic window (#263)', () => {
     expect(['light', 'dark']).toContain(document.documentElement.dataset.theme);
   });
 
+  it('theme-boot.js writes the saved motion choice, else full when the system asks nothing (#195)', () => {
+    const root = document.documentElement;
+    try {
+      localStorage.setItem('stemsim.settings', JSON.stringify({ state: { motion: 'reduce' } }));
+      runInThisContext(read('public/theme-boot.js'));
+      expect(root.dataset.motion).toBe('reduce');
+      localStorage.setItem('stemsim.settings', JSON.stringify({ state: { motion: 'system' } }));
+      runInThisContext(read('public/theme-boot.js'));
+      expect(root.dataset.motion).toBe('full');
+    } finally {
+      localStorage.removeItem('stemsim.settings');
+      delete root.dataset.motion;
+    }
+  });
+
   it("index.html paints the app's own background, light and dark", () => {
     const tokens = read('src/app/theme/tokens.css');
     const html = read('index.html');

@@ -93,11 +93,9 @@
     transform: translateX(130vw);
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .screen-scan__band {
-    width: 100%;
-    animation: screen-scan-fade 1s ease forwards;
-  }
+:root[data-motion='reduce'] .screen-scan__band {
+  width: 100%;
+  animation: screen-scan-fade 1s ease forwards;
 }
 @keyframes screen-scan-fade {
   from {
@@ -486,10 +484,8 @@
     visibility: hidden;
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .chat-message__caret {
-    animation: none;
-  }
+:root[data-motion='reduce'] .chat-message__caret {
+  animation: none;
 }
 .chat-message__thinking {
   display: flex;

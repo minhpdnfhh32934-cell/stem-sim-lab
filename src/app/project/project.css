@@ -148,12 +148,10 @@
 .tour__spacer {
   flex: 1;
 }
-@media (prefers-reduced-motion: reduce) {
-  .tour__spot,
-  .tour__card {
-    transition: none;
-    animation: none;
-  }
+:root[data-motion='reduce'] .tour__spot,
+:root[data-motion='reduce'] .tour__card {
+  transition: none;
+  animation: none;
 }
 .btn--ghost {
   border-color: transparent;
