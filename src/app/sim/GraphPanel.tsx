@@ -25,7 +25,7 @@ export function GraphPanel() {
   const scene = useSimStore((s) => s.scene);
   const [graphId, setGraphId] = useState<string | null>(null);
   const params = useSimStore((s) => s.params);
-  // A pinned run's curves are drawn too, dashed (docs/BENCH_DESIGN.md §2, §9.4; kept by #263).
+  // A pinned run's curves are drawn too, dashed.
   const ghost = useCompareStore((s) => (s.ghost && s.ghost.sceneId === scene?.id ? s.ghost : null));
   // A graph whose every curve the parameters hide (the phase circle once there is damping) leaves
   // the picker.

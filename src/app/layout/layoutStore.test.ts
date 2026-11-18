@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { LAYOUT_LIMITS, clampSize, notebookPushes, useLayoutStore } from './layoutStore';
+import { LAYOUT_LIMITS, clampSize, useLayoutStore } from './layoutStore';
 
 describe('clampSize()', () => {
   it('keeps sizes inside the allowed range', () => {
@@ -87,81 +87,31 @@ describe('useLayoutStore', () => {
   });
 });
 
-describe('bench layout fields (0.8.1)', () => {
+describe('a layout saved by the 0.8.1 bench', () => {
   beforeEach(() => {
     useLayoutStore.getState().resetLayout();
   });
 
-  it('a state saved before the bench keeps its sizes and gets the bench defaults', async () => {
-    localStorage.setItem(
-      'stemsim.layout',
-      JSON.stringify({ state: { leftWidth: 300, rightWidth: 333 }, version: 1 }),
-    );
-    await useLayoutStore.persist.rehydrate();
-    const s = useLayoutStore.getState();
-    expect(s.leftWidth).toBe(300);
-    expect(s.rightWidth).toBe(333);
-    expect(s.trayFolded).toBe(false);
-    expect(s.trayWidth).toBe(LAYOUT_LIMITS.tray.default);
-    expect(s.notebookWidth).toBe(LAYOUT_LIMITS.notebook.default);
-    expect(s.notebookTabBySubject).toEqual({});
-  });
-
-  it('clamps the bench sizes, drops NaN and unknown tabs on load', async () => {
+  it('keeps its sizes and tabs; the tray and notebook fields are dropped', async () => {
     localStorage.setItem(
       'stemsim.layout',
       JSON.stringify({
         state: {
-          trayFolded: 'yes',
-          trayWidth: 9999,
-          notebookWidth: 'wide',
-          notebookTabBySubject: { physics: 'graphs', chemistry: 'nope', alchemy: 'graphs' },
+          leftWidth: 300,
+          bottomTab: 'solution',
+          trayFolded: true,
+          trayWidth: 400,
+          notebookTabBySubject: { physics: 'graphs' },
+          challengeSeen: ['freeFall'],
         },
         version: 1,
       }),
     );
     await useLayoutStore.persist.rehydrate();
     const s = useLayoutStore.getState();
-    expect(s.trayFolded).toBe(false);
-    expect(s.trayWidth).toBe(LAYOUT_LIMITS.tray.max);
-    expect(s.notebookWidth).toBe(LAYOUT_LIMITS.notebook.default);
-    expect(s.notebookTabBySubject).toEqual({ physics: 'graphs' });
-    expect(clampSize('notebook', Number.NaN)).toBe(352);
-    expect(clampSize('tray', 100)).toBe(256);
-  });
-
-  it('persists the tray, sizes and tabs, never the open notebook; resetLayout restores them', () => {
-    const st = useLayoutStore.getState();
-    st.setTrayFolded(true);
-    st.setSize('tray', 400);
-    st.setNotebookTab('biology', 'module');
-    st.setNotebookOpen(true);
-    const saved = JSON.parse(localStorage.getItem('stemsim.layout') ?? '{}') as {
-      state: Record<string, unknown>;
-      version: number;
-    };
-    expect(saved.version).toBe(1);
-    expect(saved.state).toMatchObject({
-      trayFolded: true,
-      trayWidth: 400,
-      notebookTabBySubject: { biology: 'module' },
-    });
-    expect(saved.state).not.toHaveProperty('notebookOpen');
-    useLayoutStore.getState().resetLayout();
-    const s = useLayoutStore.getState();
-    expect([s.trayFolded, s.trayWidth, s.notebookTabBySubject]).toEqual([false, 304, {}]);
-  });
-
-  it('the notebook pushes the stage only while the stage keeps 560 px; otherwise it overlays', () => {
-    const d = { trayFolded: false, trayWidth: 304, notebookWidth: 352 };
-    // 1366 − 64 rail − 352 drawer − 304 tray = 646 px of stage.
-    expect(notebookPushes(1366, d)).toBe(true);
-    expect(notebookPushes(1366, { ...d, trayWidth: 420, notebookWidth: 520 })).toBe(false);
-    // Folding the tray to its spine gives the stage back its width.
-    expect(
-      notebookPushes(1366, { ...d, trayFolded: true, trayWidth: 420, notebookWidth: 520 }),
-    ).toBe(true);
-    expect(notebookPushes(1024, d)).toBe(false);
-    expect(notebookPushes(1366, d, 790)).toBe(false);
+    expect(s.leftWidth).toBe(300);
+    expect(s.bottomTab).toBe('solution');
+    for (const key of ['trayFolded', 'trayWidth', 'notebookTabBySubject', 'challengeSeen'])
+      expect(s).not.toHaveProperty(key);
   });
 });

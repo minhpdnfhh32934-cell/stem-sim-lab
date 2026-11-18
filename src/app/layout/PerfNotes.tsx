@@ -6,7 +6,7 @@ import { usePerfStore } from '@/perf/perfStore';
 /**
  * What the overload ladder did, said on the stage (MASTER_PROMPT §2.6: smoothness goes first,
  * never silently): slow motion with its factor, and a lower display quality (the numbers are
- * unchanged). The classic status bar said it; the bench has none (B8, #193). The factor changes
+ * unchanged), shown in presentation mode where the status bar is hidden. The factor changes
  * with every engine report (~10 Hz), so the live line is a separate hidden one without it,
  * always mounted: a screen reader hears each notice as it comes (a live region created with its
  * text may be missed); a notice that goes is not said. The HUD itself is not a live region.

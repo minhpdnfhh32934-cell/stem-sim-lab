@@ -124,9 +124,7 @@ export function HomeScreen() {
           <GraduationCap size={22} strokeWidth={1.5} aria-hidden="true" />
           <div>
             <p className="home__teacher-title">{t('home.teacherTitle')}</p>
-            <p className="home__note">
-              {t(teacherOff ? 'bench.teacherLocked' : 'home.teacherBody')}
-            </p>
+            <p className="home__note">{t(teacherOff ? 'teacher.ageLocked' : 'home.teacherBody')}</p>
           </div>
           <button
             type="button"

@@ -74,7 +74,7 @@ function StudioEntry({ t }: { t: TFunction }) {
   );
 }
 
-/** The way into the SimLab 3D game (0.8.1); the bench shelf had it, the classic library keeps it. */
+/** The way into the SimLab 3D game (0.8.1), at the end of the library. */
 function GameEntry({ t }: { t: TFunction }) {
   const locale = useSettingsStore((s) => s.locale);
   return (

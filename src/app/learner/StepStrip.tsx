@@ -1,6 +1,6 @@
 import { useT } from '@/app/i18n';
 
-/** "Bước i/n" over a strip of n segments, the first i filled (bench first run, §9.2). */
+/** "Bước i/n" over a strip of n segments, the first i filled. */
 export function StepStrip({ i, n }: { i: number; n: number }) {
   const t = useT();
   return (

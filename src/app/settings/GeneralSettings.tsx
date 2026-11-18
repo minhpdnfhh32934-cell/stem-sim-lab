@@ -1,7 +1,4 @@
 import { Gauge, Keyboard, LayoutPanelLeft, Orbit, Palette, Type } from 'lucide-react';
-import { useContext } from 'react';
-import { BenchContext } from '@/app/bench/shellMode';
-import { ThemeSwitch } from '@/app/bench/ThemeSwitch';
 import { LOCALES, formatNumber, useT } from '@/app/i18n';
 import { useLayoutStore } from '@/app/layout/layoutStore';
 import { ModeSwitch } from '@/app/learner/ModeSwitch';
@@ -43,7 +40,6 @@ export function AppearanceSettings() {
   const t = useT();
   const settings = useSettingsStore();
   const resetLayout = useLayoutStore((s) => s.resetLayout);
-  const bench = useContext(BenchContext);
 
   return (
     <>
@@ -55,26 +51,22 @@ export function AppearanceSettings() {
         <ModeSwitch />
         <div className="settings-row">
           <span id="theme-label">{t('settings.theme')}</span>
-          {bench ? (
-            <ThemeSwitch system />
-          ) : (
-            <div className="segmented" role="radiogroup" aria-labelledby="theme-label">
-              {THEMES.map((th) => (
-                <button
-                  key={th.id}
-                  type="button"
-                  role="radio"
-                  aria-checked={settings.theme === th.id}
-                  className="segmented__item"
-                  onClick={() => {
-                    settings.setTheme(th.id);
-                  }}
-                >
-                  {t(th.key)}
-                </button>
-              ))}
-            </div>
-          )}
+          <div className="segmented" role="radiogroup" aria-labelledby="theme-label">
+            {THEMES.map((th) => (
+              <button
+                key={th.id}
+                type="button"
+                role="radio"
+                aria-checked={settings.theme === th.id}
+                className="segmented__item"
+                onClick={() => {
+                  settings.setTheme(th.id);
+                }}
+              >
+                {t(th.key)}
+              </button>
+            ))}
+          </div>
         </div>
       </fieldset>
 

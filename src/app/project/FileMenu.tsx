@@ -4,33 +4,23 @@ import {
   CircleHelp,
   CloudDownload,
   FolderOpen,
-  History,
   ImageDown,
-  Maximize2,
   Menu,
   MonitorCog,
-  Moon,
-  Redo2,
   Save,
   Sparkles,
-  Undo2,
   type LucideIcon,
 } from 'lucide-react';
-import { useContext, useEffect, useRef, useState } from 'react';
-import { MachineInfoDialog } from '@/app/bench/MachineInfo';
-import { BenchContext } from '@/app/bench/shellMode';
-import { toLibrary } from '@/app/bench/toLibrary';
+import { useEffect, useRef, useState } from 'react';
 import { useT } from '@/app/i18n';
-import { useLayoutStore } from '@/app/layout/layoutStore';
 import { useSettingsStore } from '@/app/settings/settingsStore';
-import { useResolvedTheme } from '@/app/theme/useApplyTheme';
 import { openLab } from '@/app/topics';
 import { checkForUpdate, updatesSupported } from '@/app/update/updater';
 import { openWhatsNew, useWhatsNewStore } from '@/app/whatsnew/whatsNewStore';
 import { IconButton } from '@/ui/IconButton';
 import { toast } from '@/ui/toast';
 import { exportPng, openProject, saveProject } from './actions';
-import { redo, undo, useUndoStore } from './undo';
+import { MachineInfoDialog } from './MachineInfo';
 import { openPrivacy } from '@/safety/safetyStore';
 import { startTour, useProjectUi } from './uiStore';
 
@@ -39,31 +29,20 @@ interface Item {
   label: string;
   hint?: string;
   run: () => void;
-  /** Shown only while the header is short of room (bench.css), like the theme item. */
-  className?: string;
-  disabled?: boolean;
 }
 
 /**
  * "Tệp" menu: open / save `.stemsim`, export PNG, sources page, quick tour — and "Có gì mới"
  * (with a dot on the button) while the notes of an update are unseen, e.g. after "Để sau".
- * When the bench header is short of room the light / dark switch moves in here (#205 B2): the
- * item is always rendered and shown by the header's container query (bench.css).
  */
-export function FileMenu({ history = false }: { history?: boolean } = {}) {
+export function FileMenu() {
   const t = useT();
-  const canUndo = useUndoStore((s) => s.canUndo);
-  const canRedo = useUndoStore((s) => s.canRedo);
   const [open, setOpen] = useState(false);
   // "Thông tin máy" (Advanced, #201): render quality, FPS and RAM, the classic status bar's three.
   const [infoOpen, setInfoOpen] = useState(false);
   const advanced = useSettingsStore((s) => s.uiMode === 'advanced');
   const unseen = useWhatsNewStore((s) => s.pending.length > 0);
-  const setTheme = useSettingsStore((s) => s.setTheme);
-  const dark = useResolvedTheme() === 'dark';
   const root = useRef<HTMLDivElement>(null);
-  // The classic top bar has its own light / dark button, always on screen.
-  const bench = useContext(BenchContext);
 
   useEffect(() => {
     if (!open) return;
@@ -75,7 +54,6 @@ export function FileMenu({ history = false }: { history?: boolean } = {}) {
     };
     document.addEventListener('pointerdown', onDown);
     document.addEventListener('keydown', onKey);
-    // The first item on screen (undo / redo and light / dark are hidden while the header has room).
     menuItems(root.current)[0]?.focus();
     return () => {
       document.removeEventListener('pointerdown', onDown);
@@ -84,50 +62,10 @@ export function FileMenu({ history = false }: { history?: boolean } = {}) {
   }, [open]);
 
   const items: Item[] = [
-    // Undo / redo of an open topic, here when the header folds them away (#205 B2b).
-    ...(history
-      ? [
-          {
-            icon: Undo2,
-            label: t('topbar.undo'),
-            run: undo,
-            className: 'file-menu__history',
-            disabled: !canUndo,
-          },
-          {
-            icon: Redo2,
-            label: t('topbar.redo'),
-            run: redo,
-            className: 'file-menu__history',
-            disabled: !canRedo,
-          },
-        ]
-      : []),
     ...(unseen ? [{ icon: Sparkles, label: t('whatsnew.menu'), run: openWhatsNew }] : []),
     { icon: FolderOpen, label: t('project.open'), run: () => void openProject() },
     { icon: Save, label: t('project.save'), run: () => void saveProject() },
     { icon: ImageDown, label: t('project.exportPng'), run: () => void exportPng() },
-    // Classic shell: "Lịch sử" is a tab of the library and the top bar has the presentation button;
-    // inside the bench (BenchContext, not shown since #263) both are here.
-    ...(bench
-      ? [
-          {
-            icon: History,
-            label: t('sidebar.history'),
-            run: () => {
-              toLibrary();
-              useProjectUi.setState({ historyOpen: true, historyFocus: true });
-            },
-          },
-          {
-            icon: Maximize2,
-            label: t('project.presentation'),
-            run: () => {
-              useLayoutStore.getState().setPresentation(true);
-            },
-          },
-        ]
-      : []),
     {
       icon: BookMarked,
       label: t('project.sources'),
@@ -186,16 +124,13 @@ export function FileMenu({ history = false }: { history?: boolean } = {}) {
           aria-label={t('project.file')}
           data-surface="paper"
         >
-          {items.map(({ icon: Icon, label, run, className, disabled }) => (
+          {items.map(({ icon: Icon, label, run }) => (
             <button
               key={label}
               type="button"
               role="menuitem"
-              className={className ? `file-menu__item ${className}` : 'file-menu__item'}
-              // Not `disabled`: the arrow keys still reach it (WAI-ARIA menu).
-              aria-disabled={disabled || undefined}
+              className="file-menu__item"
               onClick={() => {
-                if (disabled) return;
                 setOpen(false);
                 run();
               }}
@@ -212,28 +147,6 @@ export function FileMenu({ history = false }: { history?: boolean } = {}) {
               <span>{label}</span>
             </button>
           ))}
-          {bench && (
-            <button
-              type="button"
-              role="menuitemcheckbox"
-              aria-checked={dark}
-              className="file-menu__item file-menu__theme"
-              onClick={() => {
-                setOpen(false);
-                setTheme(dark ? 'light' : 'dark');
-              }}
-              onKeyDown={(e) => {
-                if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
-                e.preventDefault();
-                const all = menuItems(root.current);
-                const i = all.indexOf(e.currentTarget);
-                all[(i + (e.key === 'ArrowDown' ? 1 : all.length - 1)) % all.length]?.focus();
-              }}
-            >
-              <Moon size={16} strokeWidth={1.75} aria-hidden="true" />
-              <span>{t('bench.darkTheme')}</span>
-            </button>
-          )}
         </div>
       )}
       {infoOpen && (
@@ -249,7 +162,7 @@ export function FileMenu({ history = false }: { history?: boolean } = {}) {
   );
 }
 
-/** The menu's items on screen (the theme item is hidden while the header has room). */
+/** The menu's items on screen. */
 function menuItems(root: HTMLElement | null): HTMLButtonElement[] {
   return [...(root?.querySelectorAll<HTMLButtonElement>('[role^="menuitem"]') ?? [])].filter(
     (b) => getComputedStyle(b).display !== 'none',

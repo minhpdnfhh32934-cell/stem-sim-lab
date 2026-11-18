@@ -13,7 +13,7 @@ import { LAYOUT_LIMITS, useLayoutStore } from './layoutStore';
 import { LeftSidebar } from './LeftSidebar';
 import { Splitter } from './Splitter';
 import { useShellServices } from './useShellServices';
-import { ShellOverlays } from '@/app/bench/ShellOverlays';
+import { ShellOverlays } from './ShellOverlays';
 import { PerfNotes } from './PerfNotes';
 import { Stage } from './Stage';
 import { StatusBar } from './StatusBar';

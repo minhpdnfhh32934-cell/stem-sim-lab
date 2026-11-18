@@ -15,8 +15,6 @@ export interface MoleculeState {
   query: string;
   /** Functional group chosen in "Lọc theo nhóm chức" (Phân tử 3D), or none. */
   group: FunctionalGroup | null;
-  /** The bench's "Tự xoay": the camera turns slowly around the molecule (never saved). */
-  spin: boolean;
 }
 
 export const useMoleculeStore = create<MoleculeState>()(() => ({
@@ -28,7 +26,6 @@ export const useMoleculeStore = create<MoleculeState>()(() => ({
   dipole: false,
   query: '',
   group: null,
-  spin: false,
 }));
 
 /** Topic-specific defaults when a molecule topic opens. */

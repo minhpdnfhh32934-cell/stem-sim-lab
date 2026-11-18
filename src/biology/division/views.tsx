@@ -3,7 +3,6 @@ import { useNo3dNotice, useNo3dReason } from '../view3d/support';
 import { DivisionBottom, DivisionPanel, DivisionStage } from './DivisionViews';
 import { Meiosis3DSwitch } from './meiosis3d/Meiosis3DSwitch';
 import { Meiosis3DBottom, Meiosis3DParts } from './meiosis3d/panels';
-import { DimRestSwitch } from '../view3d/DimRestSwitch';
 import { meiosisIndex2dOf, meiosisTimelineFor, useMeiosis3D } from './meiosis3d/store';
 import { Mitosis3DSwitch } from './mitosis3d/Mitosis3DSwitch';
 import { Mitosis3DBottom, Mitosis3DParts } from './mitosis3d/panels';
@@ -59,7 +58,6 @@ export const MitosisPanel = () => {
     <>
       <DivisionPanel kind="mitosis" />
       {active && <Mitosis3DParts />}
-      {active && <DimRestSwitch />}
     </>
   );
 };
@@ -101,7 +99,6 @@ export const MeiosisPanel = () => {
     <>
       <DivisionPanel kind="meiosis" />
       {active && <Meiosis3DParts />}
-      {active && <DimRestSwitch />}
     </>
   );
 };

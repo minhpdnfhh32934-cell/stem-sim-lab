@@ -66,7 +66,7 @@ describe('Số liệu headers (UI-21)', () => {
   });
 });
 
-describe('a pinned run beside the current one (BENCH_DESIGN §2: dashed, own times)', () => {
+describe('a pinned run beside the current one (dashed, own times)', () => {
   it('joins both runs on the union of their times, null where a run has no sample', () => {
     const a = [
       [0, 1, 2],

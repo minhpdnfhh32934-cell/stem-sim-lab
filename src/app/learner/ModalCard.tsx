@@ -1,7 +1,7 @@
 import { useEffect, useRef, type ReactNode } from 'react';
 import { cx } from '@/ui/cx';
 
-/** The first-run steps' modal dialog (classic onboarding and the bench's first run). */
+/** The first-run steps' modal dialog. */
 export function ModalCard({
   labelledBy,
   onCancel,

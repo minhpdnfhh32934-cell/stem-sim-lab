@@ -6,7 +6,6 @@ import type { StudioScenario } from '../scenario';
 import { engineEvidence, type StudioSession } from '../session';
 import { conditionParams, physicsOf } from './comparison';
 import { Facts, Interact, Observe, Predict } from './PhysicsSteps';
-import { PhysicsLive } from './PhysicsLive';
 
 /** Sources of the scene's Science Card for the recorded condition A. */
 async function modelSources(scenario: StudioScenario, session: StudioSession): Promise<Source[]> {
@@ -25,6 +24,5 @@ export const physicsPlugin: SubjectPlugin = {
   Interact,
   Observe,
   Facts,
-  Live: PhysicsLive,
   modelSources,
 };

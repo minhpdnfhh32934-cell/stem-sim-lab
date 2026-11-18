@@ -4,7 +4,7 @@ import { SUBJECT_ICON } from '@/app/subjectIcons';
 import { SUBJECTS, useWorkspaceStore } from '@/app/workspaceStore';
 import { cx } from '@/ui/cx';
 
-/** The "Môn học" radiogroup: classic top bar; the bench shows it above the library. */
+/** The "Môn học" radiogroup of the top bar. */
 export function SubjectSwitch() {
   const t = useT();
   const { subject, setSubject } = useWorkspaceStore(

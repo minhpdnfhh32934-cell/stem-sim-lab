@@ -5,6 +5,7 @@ const en: Messages = {
   app: {
     tagline: 'Physics · Chemistry · Biology simulations',
     name: 'SimLab',
+    loadFailed: 'I could not open this yet. Please try again.',
   },
   subjects: {
     label: 'Subject',
@@ -319,8 +320,6 @@ const en: Messages = {
     },
     compareLegend: 'Dashed: the pinned run',
     compareBefore: 'When pinned: {values}',
-    compareStale: 'out of date',
-    compareStaleHint: 'The parameters changed after pinning',
     pinnedRun: 'pinned',
     announce: {
       playing: '{title}: running.',
@@ -374,68 +373,6 @@ const en: Messages = {
     reset: 'Reset (R)',
     speed: 'Playback speed',
     scrubber: 'Scrub simulation',
-  },
-  bench: {
-    loadFailed: 'I could not open this yet. Please try again.',
-    breadcrumb: 'You are here',
-    problem: 'Problem',
-    closeProblem: 'Close the problem',
-    search: 'Search',
-    trayTitle: 'Adjust',
-    trayRegion: 'Adjust (inspector)',
-    foldTray: 'Fold the tray',
-    openTray: 'Open the Adjust tray',
-    resizeTray: 'Drag to resize the Adjust tray',
-    resizeNotebook: 'Drag to resize the notebook',
-    closeNotebook: 'Close the notebook',
-    science: 'Science card',
-    ai: 'Ask AI',
-    play: 'Run',
-    pause: 'Pause',
-    reset: 'Reset',
-    openScience: 'Open the Science card',
-    darkTheme: 'Dark theme',
-    followSystem: 'Follow device',
-    decrease: 'Decrease {name}',
-    increase: 'Increase {name}',
-    toolsSection: 'Measuring tools',
-    viewCard: 'See the card',
-    resetExact: 'Reset for the exact result',
-    lessonKind: 'Kind of lesson',
-    lessonFree: 'Free',
-    lessonGuided: 'Guided',
-    haveProblem: 'Have a problem to solve?',
-    chapterOpened: '{done}/{total} opened',
-    topicOpened: 'Opened',
-    topicOpenedSteps: 'Opened · {done}/{total} steps',
-    topicLeft: 'Still to do: {left}',
-    topicComplete: 'Done',
-    guidedCount: '{count} guided lessons',
-    pendingTeacher: 'awaiting teacher review',
-    reopen: 'Open again',
-    launchEyebrow: 'Physics · Chemistry · Biology simulations',
-    stillCaption: 'Drawn by the projectile simulation with its default values',
-    problemField: 'Type or paste a problem…',
-    tourPlayTitle: 'Run the experiment',
-    tourPlayBody:
-      'Run on the bench edge runs the simulation; Space also runs or pauses it. The bar beside it scrubs back.',
-    tourTrayTitle: 'The settings tray',
-    tourTrayBody:
-      'Change the parameters here. The box at the top sums up the model and how far its result can be trusted.',
-    tourNotebookTitle: 'Notebook',
-    tourNotebookBody:
-      'Challenges, Graphs, Solution, Science Card and Ask AI open from the left column.',
-    tourSkip: 'Skip the guide',
-    teacherDoorBody:
-      'Ask questions and follow step-by-step explanations on a board, read aloud if you like.',
-    teacherDoorNote: 'AI Teacher is an AI, so it can be wrong.',
-    teacherLocked: 'AI Teacher needs you to be 18 or older',
-    resume: 'Continue: {topic} ({subject})',
-    firstRun: {
-      connectDesc: 'Gemini, with a step-by-step guide.',
-      gemma: 'Use Gemma on this computer',
-      gemmaDesc: 'Downloads {size}, sends nothing online.',
-    },
   },
   layout: {
     resizeBottom: 'Drag to resize the Graphs panel',
@@ -685,6 +622,8 @@ const en: Messages = {
     allDefault: 'Using default values (not given by a problem). Drag a slider to try.',
     resetHint: 'Changing it restarts the simulation',
     clampedHint: 'The simulation runs {value} (range {min}–{max})',
+    decrease: 'Decrease {name}',
+    increase: 'Increase {name}',
   },
   solution: {
     explainUnsafe:
@@ -862,7 +801,6 @@ const en: Messages = {
     machineInfo: 'Machine info',
     machineInfoMeasured: 'measured {when}',
     machineInfoClose: 'Close',
-    presentation: 'Presentation mode (F5)',
     dismiss: 'Dismiss',
     nothingToSave: 'No topic is open.',
     saved: 'Saved: {name}',
@@ -1191,20 +1129,6 @@ const en: Messages = {
     privacy: 'You choose when to share screen context or use an online AI service.',
   },
   studio: {
-    origin: {
-      engine: 'Computed by SimLab',
-      learner: 'Written by you',
-      ai: 'AI-assisted',
-      predict: 'Prediction',
-      measure: 'Measurements',
-      explain: 'Explanation',
-      conclude: 'Conclusion',
-      aiNotes: 'AI-assisted notes',
-      aiCount: '{n} AI-assisted note(s) (in the report below)',
-      none: 'Not yet',
-    },
-    liveStage: "The lesson's experiment",
-    authoringNav: 'Parts of the lesson',
     title: 'Science Studio',
     subtitle:
       'Guided lessons: predict first, then run the experiment or do the activities, explain and conclude. In an experiment every number is computed by the simulation. In a descriptive textbook lesson the answers come from the lesson itself.',
@@ -2755,8 +2679,6 @@ const en: Messages = {
     },
     breakReminder:
       'You have been studying for about 45 minutes. Rest your eyes for a few minutes: stand up, look into the distance — the simulation will wait for you.',
-    lockPrediction: 'Lock my prediction',
-    lockedHint: 'Locked. Press “Run to check” at the bottom of the bench.',
   },
   teacher: {
     regionLabel: 'Learn with an AI teacher',
@@ -2826,6 +2748,7 @@ const en: Messages = {
       'Could you explain what the “{part}” does at the “{stage}” stage (meiosis model, animal cell)?',
     askMeiosisPartHiddenQuestion:
       'At the “{stage}” stage (meiosis model, animal cell) I can’t clearly see the “{part}”. Is it there at that point, and when does it appear or disappear?',
+    ageLocked: 'AI Teacher needs you to be 18 or older',
   },
   // AI Teacher's Advanced tabs (#234 step 5): plain words, real numbers only.
   teacherViews: {
@@ -2886,7 +2809,6 @@ const en: Messages = {
     stopHint: 'Click anywhere or press a key to stop.',
   },
   game: {
-    shelfTitle: 'Game',
     open: 'SimLab 3D',
     openHint: 'A first-person 3D laboratory',
     title: 'SimLab 3D',

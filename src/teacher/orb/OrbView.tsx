@@ -28,7 +28,7 @@ const IDLE_FRAME_MS = 50;
 const VOICE_EASE_S = 0.06;
 const silent = () => 0;
 
-/** The orb's colours from the theme tokens (the bench sets `--teacher-*`; else the accent). */
+/** The orb's colours from the theme tokens (`--teacher-*`; else the accent). */
 function themeColors(theme: 'light' | 'dark'): OrbColors {
   const css = getComputedStyle(document.documentElement);
   const read = (name: string, or: string) => css.getPropertyValue(name).trim() || or;

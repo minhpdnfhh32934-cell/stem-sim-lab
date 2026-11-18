@@ -1,7 +1,5 @@
 import { Check, KeyRound } from 'lucide-react';
-import { useContext, useState } from 'react';
-import { BenchConnectStep, BenchProfileStep } from '@/app/bench/FirstRun';
-import { BenchContext } from '@/app/bench/shellMode';
+import { useState } from 'react';
 import { useT } from '@/app/i18n';
 import { GRADE_CHOICES } from '@/app/levels';
 import { SUBJECT_ICON } from '@/app/subjectIcons';
@@ -20,10 +18,8 @@ const TOTAL = 5;
 /** First-run onboarding: profile steps, then (after the age gate) "Kết nối AI" in main. */
 export function Onboarding() {
   const phase = useOnboardingPhase();
-  // The bench's first run has three steps (docs/BENCH_DESIGN.md §9.2).
-  const bench = useContext(BenchContext);
-  if (phase === 'profile') return bench ? <BenchProfileStep /> : <ProfileSteps />;
-  if (phase === 'connect') return bench ? <BenchConnectStep /> : <ConnectStep />;
+  if (phase === 'profile') return <ProfileSteps />;
+  if (phase === 'connect') return <ConnectStep />;
   return null;
 }
 

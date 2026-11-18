@@ -6,7 +6,6 @@ import { freeFall } from '@/physics/projectile/scenes';
 import { uniformMotion } from '@/physics/linear/scenes';
 import { hookeSpring, springPendulum } from '@/physics/spring/scenes';
 import type { Params, PhysicsScene } from '@/physics/types';
-import { BenchContext } from '@/app/bench/shellMode';
 import { useCompareStore } from './compare';
 import { GraphPanel } from './GraphPanel';
 import { useSimStore } from './simStore';
@@ -39,14 +38,10 @@ vi.mock('@/ui/charts/uplot', () => ({
     ),
 }));
 
-async function chartFor(scene: PhysicsScene, params: Params, bench = false) {
+async function chartFor(scene: PhysicsScene, params: Params) {
   created.length = 0;
   useSimStore.setState({ scene, params });
-  const view = render(
-    <BenchContext.Provider value={bench}>
-      <GraphPanel />
-    </BenchContext.Provider>,
-  );
+  const view = render(<GraphPanel />);
   await waitFor(() => {
     expect(created.length).toBeGreaterThan(0);
   });
@@ -115,11 +110,10 @@ describe('GraphPanel: a pinned run is drawn dashed beside the current one', () =
       run: { times: [0, 0.1], states: [Float64Array.of(0, 0, 0, 0), Float64Array.of(0, 0, 0, 0)] },
     });
   };
-  // Kept in the classic window by #263 (it was bench-only from #181 until then).
   it('adds each shown curve again, dashed, named "đã ghim", in either shell', async () => {
     pin();
     const first = freeFall.graphs[0]?.series ?? [];
-    const labels = await chartFor(freeFall, { ...freeFall.defaults, g: 9.81 }, true);
+    const labels = await chartFor(freeFall, { ...freeFall.defaults, g: 9.81 });
     expect(labels).toEqual([
       't',
       ...first.map((s) => s.label.vi),

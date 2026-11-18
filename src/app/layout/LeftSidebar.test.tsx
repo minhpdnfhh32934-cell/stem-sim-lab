@@ -70,7 +70,7 @@ describe('library marks: learned, steps left, complete', () => {
   });
 });
 
-describe('SimLab 3D entry (#263: the bench shelf had it, the classic library keeps it)', () => {
+describe('SimLab 3D entry in the library (#263)', () => {
   it('"SimLab 3D" sits under "Science Studio" and opens the game', () => {
     render(<LeftSidebar />);
     const studio = screen.getByRole('button', { name: /^Science Studio/ });

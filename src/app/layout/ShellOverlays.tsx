@@ -35,14 +35,14 @@ export function ShellOverlays({ presentation }: { presentation: boolean }) {
     palette,
     paletteUsed,
     loadPalette,
-    t('bench.loadFailed'),
+    t('app.loadFailed'),
     resetPalette,
   );
   const sourcesLoaded = useLoaded(
     sources,
     sourcesOpen,
     loadSources,
-    t('bench.loadFailed'),
+    t('app.loadFailed'),
     resetSources,
   );
   return (

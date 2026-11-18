@@ -224,8 +224,7 @@
   gap: var(--space-2);
   margin-top: 4px;
 }
-/* The number and its unit share one label (the bench draws it as one box); here they stay two
-   columns of the grid above. */
+/* The number and its unit share one label; they stay two columns of the grid above. */
 .param__num {
   display: contents;
 }
@@ -297,7 +296,7 @@
   gap: var(--space-1);
 }
 /* One row whatever the UI font (Linux fonts, a larger font scale): a second row would take the
-   chart's height, so the row scrolls sideways instead. The bench lays the names out in a grid. */
+   chart's height, so the row scrolls sideways instead. */
 .graph-panel__picker {
   align-self: flex-start;
 }

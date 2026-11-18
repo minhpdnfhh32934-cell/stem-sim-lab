@@ -8,7 +8,7 @@ export interface ReactionState {
   playing: boolean;
   /** Pause briefly on every key frame while playing. */
   stepPause: boolean;
-  /** Playback speed of the mechanism (the bench edge's 0,5× · 1× · 2×). */
+  /** Playback speed of the mechanism (1×). */
   speed: number;
   arrows: boolean;
   labels: boolean;

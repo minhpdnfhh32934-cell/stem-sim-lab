@@ -1,6 +1,4 @@
-import { memo, useContext } from 'react';
-import { BenchContext } from '@/app/bench/shellMode';
-import { ToolSwitches } from '@/app/bench/ToolSwitches';
+import { memo } from 'react';
 import { BadgeInfo, MousePointerClick, SlidersHorizontal } from 'lucide-react';
 import { useT } from '@/app/i18n';
 import { CONFIDENCE_LEVELS } from '@/science-card/types';
@@ -40,8 +38,8 @@ export const Inspector = memo(function Inspector() {
   );
 });
 
-/** The inspector's sections (lessons, object, parameters, Science Card); the bench tray shows them too. */
-export function InspectorBody() {
+/** The inspector's sections: lessons, object, parameters, Science Card. */
+function InspectorBody() {
   const t = useT();
   const card = useWorkspaceStore((s) => s.scienceCard);
   const hasScene = useSimStore((s) => s.scene !== null);
@@ -50,8 +48,6 @@ export function InspectorBody() {
   const ModulePanel = mod?.view.Panel;
   const advanced = useSettingsStore((s) => s.uiMode === 'advanced');
   const topicId = useActiveTopic();
-  // The bench pins the card's summary above this list and shows the whole card in its notebook.
-  const bench = useContext(BenchContext);
 
   return (
     <>
@@ -89,39 +85,32 @@ export function InspectorBody() {
               </EmptyState>
             )}
           </Section>
-          {bench && hasScene && (
-            <Section title={t('bench.toolsSection')}>
-              <ToolSwitches />
-            </Section>
-          )}
         </>
       )}
 
-      {!bench && (
-        <Section
-          title={t('inspector.scienceCard')}
-          trailing={<BadgeInfo size={15} strokeWidth={1.75} className="muted" aria-hidden="true" />}
-        >
-          {card ? (
-            <ScienceCard card={card} collapsible={!advanced} />
-          ) : (
-            <>
-              <p className="science-intro">{t('inspector.scienceCardIntro')}</p>
-              <ul className="confidence-legend">
-                {CONFIDENCE_LEVELS.map((level) => (
-                  <li key={level}>
-                    <ConfidenceBadge level={level} />
-                    <span>{t(`confidence.${level}Desc`)}</span>
-                  </li>
-                ))}
-                <li>
-                  <ReviewBadge status="pending" />
+      <Section
+        title={t('inspector.scienceCard')}
+        trailing={<BadgeInfo size={15} strokeWidth={1.75} className="muted" aria-hidden="true" />}
+      >
+        {card ? (
+          <ScienceCard card={card} collapsible={!advanced} />
+        ) : (
+          <>
+            <p className="science-intro">{t('inspector.scienceCardIntro')}</p>
+            <ul className="confidence-legend">
+              {CONFIDENCE_LEVELS.map((level) => (
+                <li key={level}>
+                  <ConfidenceBadge level={level} />
+                  <span>{t(`confidence.${level}Desc`)}</span>
                 </li>
-              </ul>
-            </>
-          )}
-        </Section>
-      )}
+              ))}
+              <li>
+                <ReviewBadge status="pending" />
+              </li>
+            </ul>
+          </>
+        )}
+      </Section>
     </>
   );
 }
