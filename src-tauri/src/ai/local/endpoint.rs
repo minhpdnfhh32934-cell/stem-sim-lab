@@ -147,8 +147,26 @@ pub fn parse_loopback(input: &str) -> Result<Loopback, AiError> {
 
 /// The only HTTP client used for local runtimes.
 pub fn loopback_client() -> Result<reqwest::Client, AiError> {
+    client_sending(None)
+}
+
+/// The same client, sending `Authorization: Bearer <key>` with every request: only for the
+/// server SimLab starts itself (`ai::builtin`), whose key never leaves Rust.
+pub fn loopback_client_with_bearer(key: &str) -> Result<reqwest::Client, AiError> {
+    client_sending(Some(key))
+}
+
+fn client_sending(bearer: Option<&str>) -> Result<reqwest::Client, AiError> {
     let any_port = |ip: IpAddr| SocketAddr::new(ip, 0);
+    let mut headers = reqwest::header::HeaderMap::new();
+    if let Some(key) = bearer {
+        let mut value = reqwest::header::HeaderValue::from_str(&format!("Bearer {key}"))
+            .map_err(|e| AiError::Network(format!("{}: {e}", super::UNREACHABLE)))?;
+        value.set_sensitive(true);
+        headers.insert(reqwest::header::AUTHORIZATION, value);
+    }
     reqwest::Client::builder()
+        .default_headers(headers)
         .no_proxy()
         .redirect(reqwest::redirect::Policy::none())
         .connect_timeout(Duration::from_secs(2))
