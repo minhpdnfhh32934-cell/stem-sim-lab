@@ -1,3 +1,4 @@
+import { lazy } from 'react';
 import type { Locale } from '@/app/i18n/types';
 import { dopri5 } from '@/core/ode/dopri5';
 import { DIM } from '@/core/units';
@@ -30,9 +31,9 @@ import type {
 import { SP, springInput, staticExtension, type SpringInput } from './engine';
 import { amplitudePhase, gammaOf, omega0, oscillationPeriod, regime } from './model';
 
-const blockSize = (q: SpringInput) => Math.max(0.04, 0.25 * q.l0);
+export const blockSize = (q: SpringInput) => Math.max(0.04, 0.25 * q.l0);
 
-function bounds(q: SpringInput) {
+export function bounds(q: SpringInput) {
   const A = amplitudePhase(q, q.x0, q.v0).A;
   const bs = blockSize(q);
   const len = q.l0 + staticExtension(q);
@@ -623,6 +624,7 @@ export const hookeSpring: PhysicsScene = {
 export const springPendulum: PhysicsScene = {
   ...common,
   id: 'springPendulum',
+  view3d: lazy(() => import('./Spring3DView')),
   required: ['m', 'k'],
   title: L('Con lắc lò xo', 'Spring–mass oscillator'),
   params: [orientation, massParam('m', 5), kParam, x0Param, v0Param, bParam, l0Param, gravityParam],

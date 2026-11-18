@@ -1,7 +1,10 @@
+import { lazy, Suspense } from 'react';
 import { formatNumber } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import type { LocalizedText } from '@/core/data/dataset';
+import { Bio3DToolbar } from '@/biology/view3d/switch';
+import { useShow3d } from '@/biology/view3d/support';
 import { ActionRow } from '@/ui/ModuleControls';
 import { L, usePublishCard } from '../common';
 import { SEXLINKED_CARD, SEXLINKED_TITLE } from '../heredityCards';
@@ -11,21 +14,21 @@ import {
   FATHERS,
   MOTHERS,
   cross,
+  gameteText,
+  genotype,
   motherGametes,
   sonShare,
   type Father,
   type Mother,
 } from './model';
+
+const SexLinked3DView = lazy(() =>
+  import('./sexlinked3d/SexLinked3DView').then((m) => ({ default: m.SexLinked3DView })),
+);
 import { restoreSexLinked, useSexLinked } from './store';
 import '../bio.css';
 import '../heredity.css';
 
-const SUP: Record<string, string> = { A: 'ᴬ', a: 'ᵃ' };
-/** "Aa" → "XᴬXᵃ" (a daughter), "A" → "XᴬY" (a son). */
-const genotype = (alleles: string, male: boolean): string =>
-  `${Array.from(alleles)
-    .map((x) => `X${SUP[x] ?? x}`)
-    .join('')}${male ? 'Y' : ''}`;
 const motherText = (m: Mother) => genotype(m, false);
 const fatherText = (f: Father) => genotype(f, true);
 
@@ -46,12 +49,31 @@ export function SexLinkedStage() {
   const pct = (x: number) => `${formatNumber(locale, 100 * x, { maximumFractionDigits: 1 })} %`;
   const eggs = motherGametes(mother);
   const sperms = [father, 'Y'] as const;
+  const { show3d } = useShow3d('sexLinkage');
+  const title = (
+    <span className="chem-chip">
+      <strong className="stage__hud-title">{Lz(SEXLINKED_TITLE)}</strong>
+    </span>
+  );
+  if (show3d)
+    return (
+      <Suspense fallback={<div className="bio-view" />}>
+        <SexLinked3DView
+          label={`♀ ${genotype(mother, false)} × ♂ ${genotype(father, true)}`}
+          top={
+            <>
+              {title}
+              <span className="chem-chip mono">{`♀ ${genotype(mother, false)} × ♂ ${genotype(father, true)}`}</span>
+            </>
+          }
+        />
+      </Suspense>
+    );
   return (
     <div className="bio-view">
       <div className="chem-overlay">
-        <span className="chem-chip">
-          <strong className="stage__hud-title">{Lz(SEXLINKED_TITLE)}</strong>
-        </span>
+        {title}
+        <Bio3DToolbar lesson="sexLinkage" />
       </div>
       <div className="bio-scroll heredity">
         <p className="heredity__cross">{`♀ ${motherText(mother)} × ♂ ${fatherText(father)}`}</p>
@@ -64,7 +86,7 @@ export function SexLinkedStage() {
               <th scope="col">{Lz(L('Trứng / tinh trùng', 'Egg / sperm'))}</th>
               {sperms.map((s, j) => (
                 <th key={j} scope="col">
-                  {s === 'Y' ? 'Y' : `X${SUP[s] ?? s}`}
+                  {gameteText(s)}
                 </th>
               ))}
             </tr>
@@ -72,7 +94,7 @@ export function SexLinkedStage() {
           <tbody>
             {eggs.map((e, i) => (
               <tr key={i}>
-                <th scope="row">{`X${SUP[e] ?? e}`}</th>
+                <th scope="row">{gameteText(e)}</th>
                 {sperms.map((s, j) => {
                   const male = s === 'Y';
                   const alleles = male ? e : [e, s].sort().join('');

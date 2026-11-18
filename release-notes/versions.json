@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "product": "SimLab",
   "repository": "https://github.com/minhpdnfhh32934-cell/stem-sim-lab",
-  "evidenceCheckedAt": "2026-11-14",
+  "evidenceCheckedAt": "2026-11-18",
   "overview": [
     "SimLab (tên cũ: STEM Sim Lab) là ứng dụng desktop mô phỏng Vật lý, Hóa học và Sinh học cho người học, chạy ngay trên máy (Tauri 2 + React). Mọi con số do chương trình tính bằng mô hình ghi trong Thẻ Khoa học; AI chỉ đọc đề và giải thích bằng lời.",
     "Dự án bắt đầu ngày 28/09/2026: Phase 0–7 (khung app, lõi tính toán, Vật lý, AI đọc đề, Hóa học, Sinh học, dự án và bộ cài Windows) xong trong hai ngày đầu. Tiếp theo là giai đoạn 3b (học bằng khám phá, an toàn khi dùng AI, hai bộ cài), bản fork 'Thầy AI' (09–12/10/2026) mà nay là AI Teacher, rồi đổi tên thành SimLab ở 0.5.0 và đợt rà soát toàn diện G0–G5 cho 0.6.0. Bản 0.7.0 và 0.7.1 đưa cả 11 bài Sinh học lên hình 3D. Bản 0.8.0 (không phát hành riêng) và 0.8.1 (chưa phát hành) bám sách Kết nối tri thức, thêm nhiều bài mới và thay toàn bộ giao diện bằng Bàn thí nghiệm.",
@@ -182,16 +182,16 @@
   "versions": [
     {
       "version": "0.11.0",
-      "status": "in-review",
-      "statusNote": "Gói lớp 12 (#255): mọi bài lí thuyết của Vật lí 12 (21/21), Hóa học 12 (22/22) và Sinh học 12 (28/28) có chủ đề, qua 14 đợt: 3a–3d Vật lí 12 (#293–#296), 4a–4f Hóa học 12 (#297–#301, #303), 5a–5d Sinh học 12 (#304–#306 và PR này); mỗi đợt một PR vào main theo thứ tự, CI 8/8 xanh trước khi gộp; đợt 5d là PR chuẩn bị phát hành này. Chỉ phần web lên 0.11.0 (không có thay đổi Rust kể từ v0.8.2, lõi vẫn 0.8.2), nên ứng dụng cài từ GitHub nhận qua cập nhật trong app. notesReady đặt true khi mở PR chuẩn bị phát hành; phát hành do người dùng chạy lượt Release sau khi PR cuối đã gộp.",
+      "status": "released",
+      "statusNote": "Phát hành 18/11/2026 từ main @ e3a839dc (lượt Release 44203229726, người dùng chạy). Gói lớp 12 (#255): mọi bài lí thuyết của Vật lí 12 (21/21), Hóa học 12 (22/22) và Sinh học 12 (28/28) có chủ đề, qua 14 đợt (#293–#307); và hình 3D cho mọi bài làm được 3D (#302, chín đợt 6a–6i, PR #309–#316), cùng sửa bước npm audit (#317). Mỗi PR CI 8/8 xanh trước khi gộp. Chỉ phần web lên 0.11.0; lõi vẫn 0.8.2 (không có thay đổi Rust), nên web-update.json ghi minNative 0.8.2 và ứng dụng 0.8.2 cài từ GitHub nhận qua cập nhật trong app; bộ cài trong bản phát hành vẫn mang số 0.8.2. Bắt buộc cập nhật: minRequired 0.11.0 (người dùng chọn khi chạy lượt Release). Hộp “Có gì mới” đóng gói trong bản này được viết trước khi ghi chú nhắc tới hình 3D (thêm 18/11 sau khi phát hành).",
       "channel": "github",
       "dates": {
         "devStart": "2026-11-17T00:43:39Z",
         "firstCommit": "2026-11-17T09:30:49+07:00",
-        "lastCommit": null,
-        "merged": null,
-        "built": null,
-        "released": null,
+        "lastCommit": "2026-11-18T05:41:22+07:00",
+        "merged": "2026-11-17T23:21:24Z",
+        "built": "2026-11-18T00:08:22Z",
+        "released": "2026-11-18T00:08:48Z",
         "tagged": null
       },
       "evidence": [
@@ -199,18 +199,30 @@
         "firstCommit: 765aaf3c 2026-11-17T09:30:49+07:00 'feat(data): VL12 thermal tables from the textbook, sgkVl12 sources (#255)'",
         "Phạm vi: data/curriculum_kntt.json (scripts/data/gen_curriculum_kntt.py) — mọi bài lí thuyết của VL12, HH12, SH12 đều được xếp chủ đề (đếm 17/11/2026 trên nhánh feat/255-sh12-ecology)",
         "Nhật ký từng đợt: docs/work-log/2026-11-17-255-vl12-*.md, 2026-11-17-255-hh12-*.md, 2026-11-17-255-sh12-*.md",
-        "Dữ liệu và lời văn mới chờ giáo viên duyệt: docs/DATA_REVIEW.md VL12-*, HH12-*, SH12-*"
+        "Dữ liệu và lời văn mới chờ giáo viên duyệt: docs/DATA_REVIEW.md VL12-*, HH12-*, SH12-*",
+        "Hình 3D (#302): docs/work-log/2026-11-17-302-3d-*.md, 2026-11-18-302-3d-sh12.md; câu chữ chờ duyệt docs/DATA_REVIEW.md PHY3D-1 … PHY3D-28, SH12-3D-1 … SH12-3D-5, HH11-3D-1",
+        "npm audit (#317): .github/npm-audit-allow.json bỏ qua đúng GHSA-fc5q-39xc-vjpf (picomatch, chưa có bản vá, chỉ trong công cụ phát triển), quyết định của người dùng 18/11/2026",
+        "lastCommit: d6699b35 2026-11-18T05:41:22+07:00 'Merge main into feat/302-3d-sh12 (#302)' (commit cuối của PR #316 trước khi gộp)",
+        "PR #316 gộp e3a839dc 2026-11-17T23:21:24Z (gh pr view 316)",
+        "built: lượt Release 44203229726 (workflow_dispatch, main, e3a839dc), job 'Build Windows installers' xong 2026-11-18T00:08:22Z",
+        "released: GitHub Release v0.11.0 'SimLab 0.11.0', published_at 2026-11-18T00:08:48Z, target e3a839dc; tệp: SimLab_0.8.2_x64-setup.exe, SimLab_0.8.2_x64_en-US.msi, web-bundle.zip, web-update.json, SHA256SUMS.txt",
+        "web-update.json: webVersion 0.11.0, minNative 0.8.2, minRequired 0.11.0, edition main (đọc từ bản phát hành)"
       ],
       "tests": [
         "Mỗi PR: CI 8/8 xanh trước khi gộp (gh pr checks)",
-        "Nhánh cuối feat/255-sh12-ecology: vitest 5747 đạt và spelling.test sau khi sửa (3 bỏ qua có sẵn); typecheck và lint đạt; E2E chromium và chromium-3d đạt trong thư mục tạm (test \"touch screens\" chỉ hỏng ở thư mục tạm)"
+        "Nhánh cuối feat/255-sh12-ecology: vitest 5747 đạt và spelling.test sau khi sửa (3 bỏ qua có sẵn); typecheck và lint đạt; E2E chromium và chromium-3d đạt trong thư mục tạm (test \"touch screens\" chỉ hỏng ở thư mục tạm)",
+        "Mỗi PR 3D #309–#316 và #317: CI 8/8 xanh trước khi gộp (gh pr checks)",
+        "Lượt Release 44203229726: job 'Tests before packaging' đạt (2026-11-18T00:02:47Z); 5/5 job đạt"
       ],
       "refs": {
-        "tag": null,
-        "tagSha": null,
-        "releaseUrl": null,
-        "prs": [293, 294, 295, 296, 297, 298, 299, 300, 301, 303, 304, 305, 306],
-        "commits": ["765aaf3c"],
+        "tag": "v0.11.0",
+        "tagSha": "e3a839dc51026960e4ae7497641b9febdb6ed66d",
+        "releaseUrl": "https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.11.0",
+        "prs": [
+          293, 294, 295, 296, 297, 298, 299, 300, 301, 303, 304, 305, 306, 307, 309, 310, 311, 312,
+          313, 314, 315, 316, 317
+        ],
+        "commits": ["765aaf3c", "d6699b35", "e3a839dc"],
         "branches": [
           "feat/255-vl12-thermal",
           "feat/255-vl12-ideal-gas",
@@ -225,7 +237,16 @@
           "feat/255-sh12-molecular",
           "feat/255-sh12-heredity",
           "feat/255-sh12-evolution",
-          "feat/255-sh12-ecology"
+          "feat/255-sh12-ecology",
+          "feat/302-3d-electromagnetism",
+          "feat/302-3d-electrostatics",
+          "feat/302-3d-waves",
+          "feat/302-3d-gases",
+          "feat/302-3d-nuclear",
+          "feat/302-3d-orbitals",
+          "feat/302-3d-mechanics",
+          "feat/302-3d-sh12",
+          "fix/npm-audit-allowlist"
         ]
       },
       "publicNotes": {
@@ -253,6 +274,11 @@
             "vi": "Thêm các bài học có hướng dẫn cho những bài chủ yếu mô tả: dự đoán trước, rồi làm các hoạt động xếp thứ tự, phân loại, ghép.",
             "en": "Guided lessons for the mainly descriptive lessons: predict first, then order, sort and match.",
             "area": "ui"
+          },
+          {
+            "vi": "Hình 3D cho nhiều bài (bấm nút 3D trên hình): Vật lí — điện trường, điện thế, tụ điện, dòng điện, lực từ, cảm ứng điện từ, sóng điện từ, sóng cơ, giao thoa, sóng dừng, khí lí tưởng, nội năng và nhiệt lượng, hạt nhân, phóng xạ, các bài ném, chuyển động tròn đều, định luật II Kepler, con lắc đơn, con lắc lò xo; Hóa học — orbital, thành phần nguyên tử, hydrocarbon; Sinh học 12 — operon lac, di truyền liên kết với giới tính, liên kết gene, đột biến cấu trúc nhiễm sắc thể. Mọi số trong hình do SimLab tính, như hình 2D.",
+            "en": "3D views for many lessons (press 3D on the picture): Physics — electric field, potential, capacitors, current, magnetic force, electromagnetic induction, electromagnetic waves, mechanical waves, interference, standing waves, the ideal gas, internal energy and heat, the nucleus, radioactivity, the throw lessons, uniform circular motion, Kepler’s second law, the simple pendulum, the spring–mass oscillator; Chemistry — orbitals, atom composition, hydrocarbons; Biology 12 — the lac operon, sex-linked inheritance, gene linkage, structural chromosome mutations. Every number in a picture is computed by SimLab, as in 2D.",
+            "area": "bio3d"
           }
         ],
         "improved": [
@@ -285,6 +311,11 @@
           "area": "ui",
           "vi": "Tính bằng số liệu của sách: pin điện, phóng xạ, tháp sinh thái, hoán vị gene.",
           "en": "Worked with the book’s data: cells, radioactivity, pyramids, crossing over."
+        },
+        {
+          "area": "bio3d",
+          "vi": "Xem 3D nhiều bài Vật lí, Hóa học, Sinh học: bấm nút 3D trên hình.",
+          "en": "See many Physics, Chemistry and Biology lessons in 3D: press 3D on the picture."
         }
       ]
     },

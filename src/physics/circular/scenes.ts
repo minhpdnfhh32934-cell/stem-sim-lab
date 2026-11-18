@@ -1,3 +1,4 @@
+import { lazy } from 'react';
 import type { Locale } from '@/app/i18n/types';
 import { DIM } from '@/core/units';
 import type { LocalizedText } from '@/core/data/dataset';
@@ -298,6 +299,7 @@ const givenParam = (
 ): ParamDef => ({ ...def, key, kind: 'number', when: (p) => given(p, key) });
 
 export const uniformCircularMotion: PhysicsScene = {
+  view3d: lazy(() => import('./Circular3DView')),
   id: 'uniformCircularMotion',
   engineId: 'phys.circular',
   endless: true,

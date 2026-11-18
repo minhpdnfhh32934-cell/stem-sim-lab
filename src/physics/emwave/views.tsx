@@ -1,8 +1,10 @@
-import { useMemo } from 'react';
+import { lazy, Suspense, useMemo } from 'react';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { wavelengthColor } from '@/chemistry/atom/spectrumColor';
 import { usePublishCard } from '@/modules/usePublishCard';
+import { Bio3DToolbar } from '@/biology/view3d/switch';
+import { useShow3d } from '@/biology/view3d/support';
 import { useCanvas } from '@/ui/canvas/useCanvas';
 import { NumberField } from '@/ui/NumberField';
 import { emCard, L, TITLE } from './card';
@@ -19,10 +21,10 @@ import {
   type Band,
 } from './model';
 import { F_UNITS, L_UNITS, UNIT_SI, setEm, useEmStore } from './store';
+import { SHOWN_PERIOD } from './emwave3d';
 import './emwave.css';
 
-/** Seconds the drawing takes for one oscillation (slowed down: an illustration). */
-const SHOWN_PERIOD = 2;
+const Em3DView = lazy(() => import('./Em3DView').then((m) => ({ default: m.Em3DView })));
 
 const LOG_MIN = Math.log10(SCALE.min);
 const LOG_SPAN = Math.log10(SCALE.max) - LOG_MIN;
@@ -38,14 +40,70 @@ const ROW: Record<Band['id'], number> = {
   xray: 1,
 };
 
-export function EmStage() {
+/** The wave's band names, or '' outside the textbook's bands. */
+function useBandNames(): string {
+  const Lz = useLocalized();
+  const lambda = useEmStore((s) => s.lambda);
+  return bandsOf(lambda)
+    .map((b) => Lz(b.name))
+    .join(', ');
+}
+
+function useEmLabel(): string {
+  const Lz = useLocalized();
+  const lambda = useEmStore((s) => s.lambda);
+  const names = useBandNames();
+  return Lz(
+    L(
+      `Sóng điện từ λ = ${lengthText('vi', lambda)}: ${names || 'ngoài các dải của SGK'}`,
+      `Electromagnetic wave λ = ${lengthText('en', lambda)}: ${names || 'outside the textbook’s bands'}`,
+    ),
+  );
+}
+
+function EmChips() {
   const Lz = useLocalized();
   const locale = useSettingsStore((s) => s.locale);
   const lambda = useEmStore((s) => s.lambda);
+  const names = useBandNames();
+  return (
+    <>
+      <span className="chem-chip">
+        <strong className="stage__hud-title">{Lz(TITLE)}</strong>
+      </span>
+      <span className="chem-chip mono">λ = {lengthText(locale, lambda)}</span>
+      <span className="chem-chip mono">f = {sci(locale, frequencyOf(lambda))} Hz</span>
+      <span className="chem-chip">
+        {names || Lz(L('Ngoài các dải trong SGK', 'Outside the textbook’s bands'))}
+      </span>
+      <span className="chem-chip chem-chip--approx">
+        {Lz(L('Hình động minh họa, đã làm chậm', 'Illustration, slowed down'))}
+      </span>
+    </>
+  );
+}
+
+/** The wave and the scale in 2D, or the wave in space (3D on request). */
+export function EmStage() {
   const card = useMemo(() => emCard(), []);
   usePublishCard(card);
+  const { show3d } = useShow3d('emWave');
+  const label = useEmLabel();
+  if (show3d)
+    return (
+      <Suspense fallback={<div className="chem-view emwave" />}>
+        <Em3DView top={<EmChips />} label={label} />
+      </Suspense>
+    );
+  return <Em2D label={label} />;
+}
+
+function Em2D({ label }: { label: string }) {
+  const Lz = useLocalized();
+  const locale = useSettingsStore((s) => s.locale);
+  const lambda = useEmStore((s) => s.lambda);
   const bands = bandsOf(lambda);
-  const names = bands.map((b) => Lz(b.name)).join(', ');
+  const names = useBandNames();
 
   const ref = useCanvas(
     ({ ctx, width, height, time, css }) => {
@@ -190,29 +248,10 @@ export function EmStage() {
 
   return (
     <div className="chem-view emwave">
-      <canvas
-        ref={ref}
-        className="chem-canvas"
-        role="img"
-        aria-label={Lz(
-          L(
-            `Sóng điện từ λ = ${lengthText('vi', lambda)}: ${names || 'ngoài các dải của SGK'}`,
-            `Electromagnetic wave λ = ${lengthText('en', lambda)}: ${names || 'outside the textbook’s bands'}`,
-          ),
-        )}
-      />
+      <canvas ref={ref} className="chem-canvas" role="img" aria-label={label} />
       <div className="chem-overlay">
-        <span className="chem-chip">
-          <strong className="stage__hud-title">{Lz(TITLE)}</strong>
-        </span>
-        <span className="chem-chip mono">λ = {lengthText(locale, lambda)}</span>
-        <span className="chem-chip mono">f = {sci(locale, frequencyOf(lambda))} Hz</span>
-        <span className="chem-chip">
-          {names || Lz(L('Ngoài các dải trong SGK', 'Outside the textbook’s bands'))}
-        </span>
-        <span className="chem-chip chem-chip--approx">
-          {Lz(L('Hình động minh họa, đã làm chậm', 'Illustration, slowed down'))}
-        </span>
+        <EmChips />
+        <Bio3DToolbar lesson="emWave" />
       </div>
     </div>
   );

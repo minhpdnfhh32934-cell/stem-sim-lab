@@ -1,9 +1,11 @@
-import { useMemo } from 'react';
+import { lazy, Suspense, useMemo } from 'react';
 import { formatNumber } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import type { LocalizedText } from '@/core/data/dataset';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { usePublishCard } from '@/modules/usePublishCard';
+import { Bio3DToolbar } from '@/biology/view3d/switch';
+import { useShow3d } from '@/biology/view3d/support';
 import { useCanvas } from '@/ui/canvas/useCanvas';
 import { sci } from '@/ui/sciNumber';
 import { axes, dot, twoFrames } from '../../common/chart2d';
@@ -23,6 +25,10 @@ import {
 import { L, TITLE, nucleusCard } from './card';
 import { REACTIONS, TABS, setNucleus, useNucleusStore, type Tab } from './store';
 import '../nuclear.css';
+
+const Nucleus3DView = lazy(() =>
+  import('./Nucleus3DView').then((m) => ({ default: m.Nucleus3DView })),
+);
 
 const TAB_NAME: Record<Tab, LocalizedText> = {
   structure: L('Cấu tạo hạt nhân', 'Structure'),
@@ -256,17 +262,32 @@ export function NucleusStage() {
   const tab = useNucleusStore((s) => s.tab);
   const card = useMemo(() => nucleusCard(), []);
   usePublishCard(card);
+  const { show3d } = useShow3d('nucleus');
+  const chips = (
+    <>
+      <span className="chem-chip">
+        <strong className="stage__hud-title">{Lz(TITLE)}</strong>
+      </span>
+      <span className="chem-chip">{Lz(TAB_NAME[tab])}</span>
+    </>
+  );
+  // The nucleus in space (3D on request); the reactions and the binding energy stay 2D.
+  if (tab === 'structure' && show3d)
+    return (
+      <Suspense fallback={<div className="chem-view nuclear" />}>
+        <Nucleus3DView top={chips} />
+      </Suspense>
+    );
   return (
     <div className="chem-view nuclear">
-      <div className="chem-overlay">
-        <span className="chem-chip">
-          <strong className="stage__hud-title">{Lz(TITLE)}</strong>
-        </span>
-        <span className="chem-chip">{Lz(TAB_NAME[tab])}</span>
-      </div>
       {tab === 'structure' && <StructureView />}
       {tab === 'reactions' && <ReactionsView />}
       {tab === 'binding' && <BindingView />}
+      {/* After the canvas, so the 3D / 2D switch is above it and can be clicked. */}
+      <div className="chem-overlay">
+        {chips}
+        {tab === 'structure' && <Bio3DToolbar lesson="nucleus" />}
+      </div>
     </div>
   );
 }

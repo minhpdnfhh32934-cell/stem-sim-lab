@@ -1,3 +1,5 @@
+import { jitter } from '../common/jitter';
+import { lazy } from 'react';
 import type { Locale } from '@/app/i18n/types';
 import type { LocalizedText } from '@/core/data/dataset';
 import { C } from '@/core/constants';
@@ -27,23 +29,15 @@ import {
   electronsIn,
   integratedCharge,
   isValid,
+  lengthOf,
   wireInput,
 } from './model';
-
-/** The drawn piece of wire is four diameters long, to scale. */
-const lengthOf = (d: number) => 4 * d;
 
 function view(p: Params): WorldBounds {
   const d = wireInput(p).d > 0 ? wireInput(p).d : WIRE_DEFAULTS.d;
   const Lw = lengthOf(d);
   return { xMin: -0.08 * Lw, xMax: 1.08 * Lw, yMin: -1.6 * d, yMax: 1.6 * d };
 }
-
-/** A fixed pseudo-random number in [0, 1) for particle k (the same picture every time). */
-const jitter = (k: number, salt: number) => {
-  const x = Math.sin(k * 12.9898 + salt * 78.233) * 43758.5453;
-  return x - Math.floor(x);
-};
 
 function draw({ ctx, cam, state, p, opts }: DrawContext): void {
   const c = opts.colors;
@@ -309,6 +303,7 @@ const num = (
 export const electricCurrent: PhysicsScene = {
   id: 'electricCurrent',
   engineId: 'phys.electricCurrent',
+  view3d: lazy(() => import('./Current3DView')),
   endless: true,
   title: L('Cường độ dòng điện', 'Electric current'),
   required: ['I'],

@@ -44,3 +44,29 @@
   text-align: left;
   border-bottom: 1px solid var(--border);
 }
+
+.hc-3d {
+  position: relative;
+}
+.hc-3d__missing {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: var(--space-6);
+  margin: 0;
+  text-align: center;
+  font-size: var(--text-content);
+  color: var(--text-muted);
+}
+.hc-3d__caption {
+  position: absolute;
+  left: var(--space-4);
+  right: var(--space-4);
+  bottom: var(--space-3);
+  margin: 0;
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  pointer-events: none;
+}

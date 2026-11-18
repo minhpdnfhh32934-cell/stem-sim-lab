@@ -1,9 +1,11 @@
-import { useMemo } from 'react';
+import { lazy, Suspense, useMemo } from 'react';
 import { formatNumber } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import type { LocalizedText } from '@/core/data/dataset';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { usePublishCard } from '@/modules/usePublishCard';
+import { Bio3DToolbar } from '@/biology/view3d/switch';
+import { useShow3d } from '@/biology/view3d/support';
 import { useCanvas } from '@/ui/canvas/useCanvas';
 import { sci } from '@/ui/sciNumber';
 import { axes, dot, twoFrames } from '../common/chart2d';
@@ -20,6 +22,10 @@ import {
   type Tab,
 } from './store';
 import './magnetic.css';
+
+const Magnetic3DView = lazy(() =>
+  import('./Magnetic3DView').then((m) => ({ default: m.Magnetic3DView })),
+);
 
 const TAB_NAME: Record<Tab, LocalizedText> = {
   force: L('Lực từ', 'Magnetic force'),
@@ -50,9 +56,24 @@ function useFmt() {
   };
 }
 
-function ForceView() {
+/** What the force picture shows (2D and 3D): the force's value and direction. */
+function useForceLabel(): string {
   const Lz = useLocalized();
   const { locale } = useFmt();
+  const { B, I, L: len, alpha, reversed } = useMagneticStore();
+  const F = force(B, I, len, alpha);
+  const dir = forceDirection(alpha, reversed);
+  return Lz(
+    L(
+      `Lực từ F = ${sci(locale, F)} N, ${DIRECTION[dir].vi}`,
+      `Magnetic force F = ${sci(locale, F)} N, ${DIRECTION[dir].en}`,
+    ),
+  );
+}
+
+function ForceView() {
+  const { locale } = useFmt();
+  const label = useForceLabel();
   const { B, I, L: len, alpha, reversed } = useMagneticStore();
   const F = force(B, I, len, alpha);
   const dir = forceDirection(alpha, reversed);
@@ -145,19 +166,7 @@ function ForceView() {
     false,
     [B, I, len, alpha, reversed, locale],
   );
-  return (
-    <canvas
-      ref={ref}
-      className="chem-canvas"
-      role="img"
-      aria-label={Lz(
-        L(
-          `Lực từ F = ${sci(locale, F)} N, ${DIRECTION[dir].vi}`,
-          `Magnetic force F = ${sci(locale, F)} N, ${DIRECTION[dir].en}`,
-        ),
-      )}
-    />
-  );
+  return <canvas ref={ref} className="chem-canvas" role="img" aria-label={label} />;
 }
 
 function MeasureView() {
@@ -202,16 +211,32 @@ export function MagneticStage() {
   const tab = useMagneticStore((s) => s.tab);
   const card = useMemo(() => magneticCard(), []);
   usePublishCard(card);
+  const { show3d } = useShow3d('magneticForce');
+  const label = useForceLabel();
+  const chips = (
+    <>
+      <span className="chem-chip">
+        <strong className="stage__hud-title">{Lz(TITLE)}</strong>
+      </span>
+      <span className="chem-chip">{Lz(TAB_NAME[tab])}</span>
+      {tab === 'force' && <span className="chem-chip">F = BIL sinα</span>}
+    </>
+  );
+  // The force in space (3D on request); the measurement is a chart, always 2D.
+  if (tab === 'force' && show3d)
+    return (
+      <Suspense fallback={<div className="chem-view magnetic" />}>
+        <Magnetic3DView top={chips} label={label} />
+      </Suspense>
+    );
   return (
     <div className="chem-view magnetic">
-      <div className="chem-overlay">
-        <span className="chem-chip">
-          <strong className="stage__hud-title">{Lz(TITLE)}</strong>
-        </span>
-        <span className="chem-chip">{Lz(TAB_NAME[tab])}</span>
-        {tab === 'force' && <span className="chem-chip">F = BIL sinα</span>}
-      </div>
       {tab === 'force' ? <ForceView /> : <MeasureView />}
+      {/* After the canvas, so the 3D / 2D switch is above it and can be clicked. */}
+      <div className="chem-overlay">
+        {chips}
+        {tab === 'force' && <Bio3DToolbar lesson="magneticForce" />}
+      </div>
     </div>
   );
 }

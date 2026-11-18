@@ -176,6 +176,58 @@ không đổi; máy GPU tích hợp không bị nâng mức.
 
 **Luật hạ chất lượng trong bài đo (2026-10-23).** Luật này hạ chất lượng sau 45 khung 3D liên tiếp dài quá 40 ms (1/30 s + 20 %). Máy nhanh (bài mẫu 34–44 ms, khung Nguyên phân 33 ms) vẫn giữ High. Máy CI (bài mẫu 164 ms, khung khoảng 117 ms) thì hạ chất lượng giữa lúc phát là đúng (PR #45, vùng westus2: `degraded: true`, tier medium, trong khi p95 vẫn đạt ngân sách). Vì vậy bài đo chỉ để luật chạy trên máy đủ nhanh cho ngân sách cố định 150 ms (bài mẫu ≤ 88 ms). Trên máy chậm hơn, nó tắt luật trước khi phát: mọi khung được đo đều ở High, và kiểm tra cuối vẫn xác nhận không có gì khác hạ chất lượng.
 
+**Vật lí 3D, đợt 6a (2026-11-17, #302).** Lực từ, cảm ứng điện từ, sóng điện từ dùng bộ 3D của
+Sinh học. Đo bằng SwiftShader 1366×768 (`info()` của móc kiểm thử, sau 4 s): mức Trung bình 25 /
+34 / 8 lệnh vẽ, 708 / 3 938 / 2 114 tam giác; mức Cao 25 / 34 / 8 lệnh vẽ, 1 060 / 8 210 / 3 170
+tam giác. Lực từ và cảm ứng chỉ vẽ khi có thay đổi (2 khung sau khi mở); sóng điện từ chạy minh họa
+và đứng yên khi người dùng bật giảm chuyển động. Mức Thấp hiện hình 2D cho cả ba bài.
+
+**Vật lí 3D, đợt 6b (2026-11-17, #302).** Điện trường, điện thế, tụ điện, dòng điện (bài dạng
+`PhysicsScene`, hình 3D thay canvas). SwiftShader 1366×768, sau 4 s, chưa bấm Chạy: mức Trung bình
+8 / 23 / 8 / 9 lệnh vẽ, 2 754 / 1 534 / 74 / 15 058 tam giác; mức Cao 8 / 23 / 8 / 9 lệnh vẽ,
+4 994 / 3 150 / 74 / 35 978 tam giác. Đường sức gộp trong hai lệnh vẽ (nét liền, nét đứt), mũi tên
+đường sức và hạt dùng instancing; tụ điện chưa tích điện nên chưa có chấm (hai lệnh vẽ instanced
+khi có). Khi chạy, cảnh chỉ di chuyển vật (không dựng lại, không cấp phát mỗi khung hình). Mức Thấp
+hiện hình 2D.
+
+**Vật lí 3D, đợt 6c (2026-11-17, #302).** Giao thoa, sóng cơ, sóng dừng; SwiftShader 1366×768, phát
+6 s (tổng khung trong 6 s): giao thoa Trung bình 5 lệnh vẽ, 5 148 tam giác, 211 khung (Cao 5 644 tam
+giác, 200 khung); sóng cơ (sóng ngang) 6 lệnh vẽ, 31 458 tam giác, 198 khung (Cao 75 410, 126 khung);
+sóng dừng lần đầu 51 914 tam giác, 84 khung, vì vùng mờ dùng 965 điểm biên dạng — giảm còn 24 điểm
+mỗi bó và 12 mặt quanh trục: 22 794 tam giác, 172 khung (Cao 52 106 tam giác, 67 → 118 khung). Mặt
+nước, phần tử và dây cập nhật trong cùng bộ đệm mỗi khung, không cấp phát. Mức Thấp hiện hình 2D.
+
+**Vật lí 3D, đợt 6d (2026-11-17, #302).** Khí lí tưởng (hai xi lanh, 2 × 90 hạt chuyển động) và
+nhiệt lượng (216 hạt); SwiftShader 1366×768, khung vẽ trong 6 s: khí lí tưởng Trung bình 13 lệnh
+vẽ, 14 722 tam giác, 298 khung (Cao 35 042 tam giác, 205 khung); nhiệt lượng 3 lệnh vẽ, 17 294 tam
+giác, 228 khung (Cao 41 486 tam giác, 167 khung). Hạt cập nhật trong cùng bộ đệm mỗi khung, không
+cấp phát; đứng yên khi người dùng bật giảm chuyển động. Mức Thấp hiện hình 2D.
+
+**Vật lí 3D, đợt 6e (2026-11-17, #302).** Hạt nhân (vàng, 197 nucleon, chỉ vẽ khi đổi) Trung bình
+4 lệnh vẽ, 69 698 tam giác (Cao 161 570). Phóng xạ (200 hạt nhân, lần thử ngẫu nhiên chạy lặp lại):
+bản đầu dùng quả cầu đủ chi tiết, 70 402 tam giác, 189 khung trong 6 s (Cao 163 202 tam giác, 84
+khung); đổi sang quả cầu nửa chi tiết cho các chấm nhỏ: 16 002 tam giác, 362 khung (Cao 38 402 tam
+giác, 230 khung). SwiftShader 1366×768. Mức Thấp hiện hình 2D.
+
+**Hóa học 3D, đợt 6f (2026-11-17, #302).** Cả hai hình tĩnh, chỉ vẽ khi đổi. Orbital (đám mây một
+lệnh vẽ dạng điểm): Trung bình 4 000 điểm, 6 lệnh vẽ, 354 tam giác (Cao 8 000 điểm, 818 tam giác).
+Thành phần nguyên tử: C-12 4 lệnh vẽ, 6 338 tam giác (Cao 14 690); lớn nhất Kr-86 (36 proton, 50
+neutron, 36 electron) 42 946 tam giác (Cao 99 554). SwiftShader 1366×768. Mức Thấp hiện hình 2D.
+
+**Vật lí 3D, đợt 6g (2026-11-17, #302).** Năm hình cơ học, SwiftShader 1366×768, khung vẽ trong 6 s
+khi chạy (Trung bình / Cao): Ném xiên 20 lệnh vẽ, 7 134 / 16 814 tam giác, 67 / 70 khung (vật bay
+2,2 s rồi dừng); Chuyển động tròn đều 11 lệnh vẽ, 1 026 / 2 018 tam giác, 265 / 261 khung; Định
+luật II Kepler 17 lệnh vẽ, 994 / 1 922 tam giác, 91 / 90 khung (chậm hơn các hình khác trên
+SwiftShader, chưa rõ nguyên nhân; diện tích mỗi phần nay chỉ tính lại khi thông số đổi); Con lắc
+đơn 14 lệnh vẽ, 910 / 1 934 tam giác, 294 / 290 khung; Con lắc lò xo 10 lệnh vẽ, 166 / 230 tam
+giác, 272 / 275 khung. Mũi tên, dây, lò xo cập nhật trong bộ đệm có sẵn mỗi khung, không cấp phát.
+Mức Thấp hiện hình 2D.
+
+**Sinh học 3D, đợt 6h (2026-11-18, #302).** Bốn hình Sinh học 12, tĩnh (chỉ vẽ khi đổi),
+SwiftShader 1366×768 (Trung bình / Cao): operon lac 11 lệnh vẽ, 9 986 / 26 466 tam giác; di truyền
+liên kết giới tính 36 lệnh vẽ, 9 218 / 14 402 tam giác; liên kết gene 29 lệnh vẽ, 5 422 / 8 014 tam
+giác; đột biến cấu trúc NST 13 lệnh vẽ, 4 578 / 6 866 tam giác. Mức Thấp hiện hình 2D.
+
 **Watchdog bộ nhớ** (`src/perf/memory.ts`): 10 giây đọc heap JS một lần (WebView2/Chromium). Khi vượt
 80 % ngân sách 300 MB (hoặc 80 % giới hạn heap), app giải phóng bộ nhớ đệm đã đăng ký (ví dụ: bản
 ghi đồ thị vật lý giữ lại một nửa số mẫu — chỉ giảm độ phân giải đồ thị, không ảnh hưởng mô phỏng)

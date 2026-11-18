@@ -1,9 +1,11 @@
-import { useMemo } from 'react';
+import { lazy, Suspense, useMemo } from 'react';
 import { formatNumber } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import type { LocalizedText } from '@/core/data/dataset';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { usePublishCard } from '@/modules/usePublishCard';
+import { Bio3DToolbar } from '@/biology/view3d/switch';
+import { useShow3d } from '@/biology/view3d/support';
 import { useCanvas } from '@/ui/canvas/useCanvas';
 import { sci } from '@/ui/sciNumber';
 import { niceStep } from '../common/chart2d';
@@ -77,6 +79,10 @@ function useFmt() {
     n: (v: number, d = 2) => formatNumber(locale, v, { maximumFractionDigits: d }),
   };
 }
+
+const Thermal3DView = lazy(() =>
+  import('./Thermal3DView').then((m) => ({ default: m.Thermal3DView })),
+);
 
 function usePlan() {
   const { preset, m, t0, P, eff, target, t1 } = useThermalStore();
@@ -339,17 +345,32 @@ export function ThermalStage() {
   const tab = useThermalStore((s) => s.tab);
   const card = useMemo(() => thermalCard(), []);
   usePublishCard(card);
+  const { show3d } = useShow3d('heatAndPhase');
+  const chips = (
+    <>
+      <span className="chem-chip">
+        <strong className="stage__hud-title">{Lz(TITLE)}</strong>
+      </span>
+      <span className="chem-chip">{Lz(TAB_NAME[tab])}</span>
+    </>
+  );
+  // The sample's particles in space (3D on request); the scales and the first law stay 2D.
+  if (tab === 'heat' && show3d)
+    return (
+      <Suspense fallback={<div className="chem-view thermal" />}>
+        <Thermal3DView top={chips} />
+      </Suspense>
+    );
   return (
     <div className="chem-view thermal">
-      <div className="chem-overlay">
-        <span className="chem-chip">
-          <strong className="stage__hud-title">{Lz(TITLE)}</strong>
-        </span>
-        <span className="chem-chip">{Lz(TAB_NAME[tab])}</span>
-      </div>
       {tab === 'heat' && <HeatCurve />}
       {tab === 'scale' && <ScaleView />}
       {tab === 'firstLaw' && <FirstLawView />}
+      {/* After the canvas, so the 3D / 2D switch is above it and can be clicked. */}
+      <div className="chem-overlay">
+        {chips}
+        {tab === 'heat' && <Bio3DToolbar lesson="heatAndPhase" />}
+      </div>
     </div>
   );
 }

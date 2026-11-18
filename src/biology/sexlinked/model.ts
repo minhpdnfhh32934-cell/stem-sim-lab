@@ -61,3 +61,13 @@ export const BOOK_CROSSES = [
   { id: 'reciprocal-p', mother: 'aa', father: 'A' },
   { id: 'reciprocal-f1', mother: 'Aa', father: 'a' },
 ] as const satisfies readonly { id: string; mother: Mother; father: Father }[];
+
+const SUP: Record<string, string> = { A: 'ᴬ', a: 'ᵃ' };
+/** "Aa" → "XᴬXᵃ" (a daughter), "A" → "XᴬY" (a son). Shared by the 2D and 3D views. */
+export const genotype = (alleles: string, male: boolean): string =>
+  `${Array.from(alleles)
+    .map((x) => `X${SUP[x] ?? x}`)
+    .join('')}${male ? 'Y' : ''}`;
+
+/** A gamete's chromosome: "A" → "Xᴬ", "Y" → "Y". */
+export const gameteText = (g: string): string => (g === 'Y' ? 'Y' : `X${SUP[g] ?? g}`);

@@ -1,3 +1,4 @@
+import { lazy } from 'react';
 import type { Locale } from '@/app/i18n/types';
 import { dopri5 } from '@/core/ode/dopri5';
 import { DIM } from '@/core/units';
@@ -433,6 +434,7 @@ const common = {
   view,
   draw,
   trail: (s: Float64Array) => [{ x: s[PS.x] ?? 0, y: s[PS.y] ?? 0 }],
+  view3d: lazy(() => import('./Throw3DView')),
 };
 
 export const obliqueProjectile: PhysicsScene = {
