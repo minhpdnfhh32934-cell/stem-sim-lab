@@ -6,7 +6,8 @@ test.use({ viewport: { width: 1366, height: 768 } });
 /** The followed particle's path, read from the app's own gas runtime. */
 const trail = (page: import('@playwright/test').Page) =>
   page.evaluate(async () => {
-    const m = (await (async (p: string) => import(/* @vite-ignore */ p))(
+    const m = (await (async (p: string) =>
+      import(/* @vite-ignore */ p) as Promise<Record<string, unknown>>)(
       '/src/chemistry/particles/gasStore.ts',
     )) as { gasRuntime: { trail: { x: number; y: number; t: number }[] } };
     return m.gasRuntime.trail.length;
