@@ -1,5 +1,7 @@
-//! The bundled `llama-server` (#190): one process at a time, on 127.0.0.1 and a free port, with
-//! a random key only Rust knows. The key reaches the server through a file deleted once it is
+//! The bundled `llama-server` (#190): one process at a time, on 127.0.0.1, with a random key
+//! only Rust knows. The server picks its own free port (`--port 0`, bound at once) and logs it:
+//! a port chosen here and bound later could be taken by another program in between, which would
+//! then receive the key. The key reaches the server through a file deleted once it is
 //! ready (never on the command line, where other programs could read it). The flags are the
 //! measured ones (`-c 6000 -np 1 --jinja`, `docs/AI_TUTOR.md`), never `--lora`, and the server's
 //! web page is off. On Windows the process sits in a job that Windows closes with the app, so
@@ -7,10 +9,9 @@
 
 use std::ffi::OsString;
 use std::io::{BufRead, BufReader};
-use std::net::TcpListener;
 use std::path::{Path, PathBuf};
 use std::process::{Child, Command, Stdio};
-use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicU16, Ordering};
 use std::sync::Arc;
 use std::time::{Duration, Instant};
 
@@ -31,7 +32,6 @@ pub struct Launch<'a> {
     pub model: &'a Path,
     /// `--device`, e.g. `Vulkan0` ([`super::device::choose`]).
     pub device: &'a str,
-    pub port: u16,
     pub key_file: &'a Path,
 }
 
@@ -51,7 +51,7 @@ pub fn args(l: &Launch) -> Vec<OsString> {
     flag("--jinja", None);
     flag("--no-webui", None);
     flag("--host", Some("127.0.0.1".into()));
-    flag("--port", Some(l.port.to_string().into()));
+    flag("--port", Some("0".into()));
     flag("--api-key-file", Some(l.key_file.into()));
     a
 }
@@ -63,11 +63,12 @@ pub fn is_gpu_fault(line: &str) -> bool {
     l.contains("errordevicelost") || l.contains("device lost") || l.contains("device_lost")
 }
 
-/// A free port on 127.0.0.1 (the server binds it right after; a race only makes it fail to
-/// start, and the next start picks another).
-pub fn free_port() -> Option<u16> {
-    let l = TcpListener::bind("127.0.0.1:0").ok()?;
-    l.local_addr().ok().map(|a| a.port())
+/// The port of the server's "listening on http://127.0.0.1:<port>" log line (llama.cpp
+/// `server_on_listening`); any other address is ignored.
+pub fn listening_port(line: &str) -> Option<u16> {
+    let rest = line.split_once("listening on http://127.0.0.1:")?.1;
+    let digits: String = rest.chars().take_while(char::is_ascii_digit).collect();
+    digits.parse().ok().filter(|&p| p > 0)
 }
 
 fn hex(bytes: &[u8]) -> String {
@@ -100,7 +101,6 @@ pub fn random_key() -> Option<String> {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 #[serde(tag = "kind", rename_all = "camelCase")]
 pub enum StartError {
-    NoPort,
     NoKey,
     Disk {
         detail: String,
@@ -225,13 +225,12 @@ pub struct Spawn {
     pub program: PathBuf,
     pub args: Vec<OsString>,
     pub envs: Vec<(String, String)>,
-    pub port: u16,
     pub key: String,
     pub key_file: PathBuf,
 }
 
-/// Starts the server and waits until `/health` answers "ok" with the key, or the process ends,
-/// or `ready` passes. The key file exists only until then.
+/// Starts the server and waits until it logs its port and `/health` answers there (a public
+/// endpoint: the key is not sent), or the process ends, or `ready` passes. The key file exists only until then.
 pub async fn start(
     spec: Spawn,
     ready: Duration,
@@ -271,14 +270,26 @@ async fn spawn_and_wait(
         detail: e.to_string(),
     })?;
     let job = Job::holding(&child);
+    // Without the job the server could outlive SimLab: refuse (Windows; no job elsewhere).
+    if cfg!(windows) && job.is_none() {
+        let _ = child.kill();
+        let _ = child.wait();
+        return Err(StartError::Spawn {
+            detail: "job".into(),
+        });
+    }
     let fault = Arc::new(AtomicBool::new(false));
+    let port = Arc::new(AtomicU16::new(0));
     if let Some(stderr) = child.stderr.take() {
-        let fault = fault.clone();
+        let (fault, port) = (fault.clone(), port.clone());
         // Keeps reading until the process ends, so a full pipe never blocks the server.
         std::thread::spawn(move || {
             for line in BufReader::new(stderr).lines().map_while(Result::ok) {
                 if is_gpu_fault(&line) {
                     fault.store(true, Ordering::SeqCst);
+                }
+                if let Some(p) = listening_port(&line) {
+                    let _ = port.compare_exchange(0, p, Ordering::SeqCst, Ordering::SeqCst);
                 }
             }
         });
@@ -286,13 +297,12 @@ async fn spawn_and_wait(
     let mut server = Server {
         child,
         _job: job,
-        port: spec.port,
+        port: 0,
         key: spec.key.clone(),
         fault,
         last_used: Instant::now(),
     };
     let until = Instant::now() + ready;
-    let health = format!("{}/health", server.base_url());
     loop {
         if let Ok(Some(status)) = server.child.try_wait() {
             // Let the log reader see the last lines.
@@ -302,15 +312,18 @@ async fn spawn_and_wait(
                 gpu_fault: server.gpu_fault(),
             });
         }
-        let asked = http
-            .get(&health)
-            .bearer_auth(&server.key)
-            .timeout(Duration::from_secs(2))
-            .send()
-            .await;
-        if asked.is_ok_and(|r| r.status().is_success()) {
-            server.touch();
-            return Ok(server);
+        server.port = port.load(Ordering::SeqCst);
+        if server.port > 0 {
+            let asked = http
+                .get(format!("{}/health", server.base_url()))
+                .timeout(Duration::from_secs(2))
+                .send()
+                .await;
+            // Still the same process: the answer came from the port it logged.
+            if asked.is_ok_and(|r| r.status().is_success()) && !server.exited() {
+                server.touch();
+                return Ok(server);
+            }
         }
         if Instant::now() >= until {
             return Err(StartError::NotReady);
@@ -333,7 +346,6 @@ mod tests {
         let a: Vec<String> = args(&Launch {
             model,
             device: "Vulkan0",
-            port: 41234,
             key_file,
         })
         .iter()
@@ -349,7 +361,8 @@ mod tests {
             "--jinja",
             "--no-webui",
             "--host 127.0.0.1",
-            "--port 41234",
+            // The server binds a free port itself (never one chosen here first).
+            "--port 0",
             "--api-key-file C:/data/key",
         ] {
             assert!(line.contains(part), "{line} lacks {part}");
@@ -372,16 +385,28 @@ mod tests {
     }
 
     #[test]
-    fn makes_a_fresh_key_and_port_each_time() {
+    fn reads_the_port_from_the_loopback_listening_line_only() {
+        // The desktop's log line (18/11/2026, b12246).
+        assert_eq!(
+            listening_port("0.06.897.112 I srv  server_on_li: listening on http://127.0.0.1:25076"),
+            Some(25076)
+        );
+        assert_eq!(listening_port("listening on http://0.0.0.0:8080"), None);
+        assert_eq!(listening_port("listening on http://127.0.0.1:0"), None);
+        assert_eq!(listening_port("srv  load_model: loading model"), None);
+    }
+
+    #[test]
+    fn makes_a_fresh_key_each_time() {
         let (a, b) = (random_key().unwrap(), random_key().unwrap());
         assert_eq!(a.len(), 64);
         assert_ne!(a, b);
-        assert!(free_port().is_some_and(|p| p > 0));
     }
 
     /// The stand-in for `llama-server`: this test binary started again with `SIMLAB_FAKE_LLAMA`
-    /// set. It reads its key from the key file (as `--api-key-file` does) and answers `/health`
-    /// only with that key. In a normal test run it does nothing.
+    /// set. Like the real server it reads its key from the key file, binds a free port on
+    /// 127.0.0.1 and logs it, answers `/health` without the key and anything else only with
+    /// it. In a normal test run it does nothing.
     #[test]
     fn fake_llama_server() {
         let Ok(mode) = std::env::var(FAKE) else {
@@ -399,9 +424,10 @@ mod tests {
             },
             _ => {}
         }
-        let port: u16 = std::env::var("FAKE_PORT").unwrap().parse().unwrap();
+        let listener = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
+        let port = listener.local_addr().unwrap().port();
+        eprintln!("srv  server_on_li: listening on http://127.0.0.1:{port}");
         let auth = format!("authorization: bearer {key}");
-        let listener = std::net::TcpListener::bind(("127.0.0.1", port)).unwrap();
         for conn in listener.incoming() {
             let Ok(mut s) = conn else { break };
             let mut head = Vec::new();
@@ -410,7 +436,7 @@ mod tests {
                 head.push(byte[0]);
             }
             let head = String::from_utf8_lossy(&head).to_lowercase();
-            let ok = head.starts_with("get /health ") && head.lines().any(|l| l == auth);
+            let ok = head.starts_with("get /health ") || head.lines().any(|l| l == auth);
             let (status, body) = if ok {
                 ("200 OK", r#"{"status":"ok"}"#)
             } else {
@@ -425,7 +451,6 @@ mod tests {
     }
 
     fn fake(mode: &str, dir: &Path) -> Spawn {
-        let port = free_port().unwrap();
         let key_file = dir.join("key");
         Spawn {
             program: std::env::current_exe().unwrap(),
@@ -439,13 +464,11 @@ mod tests {
             .to_vec(),
             envs: vec![
                 (FAKE.into(), mode.into()),
-                ("FAKE_PORT".into(), port.to_string()),
                 (
                     "FAKE_KEY_FILE".into(),
                     key_file.to_string_lossy().into_owned(),
                 ),
             ],
-            port,
             key: random_key().unwrap(),
             key_file,
         }
@@ -467,8 +490,8 @@ mod tests {
         let spec = fake("ok", &dir);
         let key_file = spec.key_file.clone();
         let http = http();
-        let health = |key: Option<&str>, port: u16| {
-            let mut rb = http.get(format!("http://127.0.0.1:{port}/health"));
+        let ask = |key: Option<&str>, port: u16| {
+            let mut rb = http.get(format!("http://127.0.0.1:{port}/v1/models"));
             if let Some(k) = key {
                 rb = rb.bearer_auth(k);
             }
@@ -480,17 +503,15 @@ mod tests {
         let mut server =
             tauri::async_runtime::block_on(start(spec, Duration::from_secs(30), &http)).unwrap();
         let port = server.port;
+        assert!(port > 0);
         assert_eq!(server.base_url(), format!("http://127.0.0.1:{port}"));
         assert!(!key_file.exists(), "the key file outlived the start");
-        assert_eq!(health(Some(server.key()), port).unwrap(), 200);
-        assert_eq!(health(None, port).unwrap(), 401);
+        assert_eq!(ask(Some(server.key()), port).unwrap(), 200);
+        assert_eq!(ask(None, port).unwrap(), 401);
         assert!(!server.exited() && !server.gpu_fault());
         assert!(server.idle_for() < Duration::from_secs(30));
         drop(server);
-        assert!(
-            health(None, port).is_err(),
-            "the server outlived its handle"
-        );
+        assert!(ask(None, port).is_err(), "the server outlived its handle");
         let _ = std::fs::remove_dir_all(&dir);
     }
 
