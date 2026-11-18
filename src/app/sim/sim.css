@@ -643,3 +643,49 @@
   top: calc(var(--space-3) + 48px);
   left: calc(var(--space-4) + 56px);
 }
+
+/* "Sổ ghi" (#195 step 4): the runs of the open physics lesson; spaced like `.solution`. */
+.run-log {
+  padding: var(--space-2) var(--space-3) var(--space-3);
+  user-select: text;
+}
+.run-log__head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-2);
+}
+.run-log__head .solution__note {
+  flex: 1 1 20rem;
+  margin: 0;
+}
+.run-log__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+.run-log__table th {
+  text-align: left;
+  font-weight: 500;
+  color: var(--text-muted);
+  padding: 4px 8px 4px 0;
+  border-bottom: 1px solid var(--border);
+}
+.run-log__table td {
+  padding: 6px 8px 6px 0;
+  vertical-align: top;
+  border-bottom: 1px solid var(--border);
+}
+.run-log__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.run-log__warn {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  color: var(--conf-approx);
+}

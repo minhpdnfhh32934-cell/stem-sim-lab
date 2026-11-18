@@ -16,6 +16,7 @@ import {
 } from '@/science-card/types';
 import { createSimulationHost, type SimulationHost } from '@/workers/host';
 import { History } from './history';
+import { runEntry, useRunLog } from './runLog';
 import { useSimStore } from './simStore';
 
 const UI_HZ = 10;
@@ -401,6 +402,18 @@ class SimRuntime {
 }
 
 export const sim = new SimRuntime();
+
+// "Sổ ghi" (#195): every stop of a run (its end, a pause, a scrub, a reset, leaving the topic)
+// adds a row with the lesson's own answers. The last frame says whether the mouse changed the run:
+// a reset clears the store's flag before it stops the run.
+useWorkspaceStore.subscribe((s, prev) => {
+  if (!prev.playing || s.playing) return;
+  const { scene, params, sources, intervened } = useSimStore.getState();
+  if (!scene) return;
+  const touched = intervened || (sim.latest?.stats.intervened ?? false);
+  const { locale } = useSettingsStore.getState();
+  useRunLog.getState().add(scene.id, runEntry(scene, params, sources, touched, locale, Date.now()));
+});
 
 // Under memory pressure the recorded run keeps every other sample (graph resolution only;
 // the simulation itself is not affected).
