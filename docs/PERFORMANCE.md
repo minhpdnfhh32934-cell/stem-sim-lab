@@ -233,3 +233,19 @@ giác; đột biến cấu trúc NST 13 lệnh vẽ, 4 578 / 6 866 tam giác. M�
 ghi đồ thị vật lý giữ lại một nửa số mẫu — chỉ giảm độ phân giải đồ thị, không ảnh hưởng mô phỏng)
 và hiện cảnh báo một lần. Ở chế độ Nâng cao, thanh trạng thái hiện mức chất lượng, FPS và RAM hiện
 tại; menu Tệp → **Thông tin máy** (#201) cho xem ba số đó, kèm lần đo mức chất lượng.
+
+## Qwen 3.5 9B trong app (#190)
+
+Một lần chạy thử trên máy bàn (RTX 4080, 18/11/2026), bằng đúng các tệp app đóng gói (llama.cpp b12246
+Vulkan) và model đã ghim, `-c 6000 -np 1`, toàn bộ lớp trên card (`--device Vulkan0 -ngl 99`):
+
+| Đo                                   | Kết quả                          |
+| ------------------------------------ | -------------------------------- |
+| Từ lúc chạy tới `/health` trả lời ok | 7,1 s                            |
+| Bộ nhớ card đang dùng (nvidia-smi)   | 6 340 MiB (cả card, sau khi nạp) |
+| Tốc độ sinh chữ của một câu ngắn     | 39 token/s                       |
+
+Đây chỉ là một lần thử để biết bộ chạy đọc được model. Bước 9 của #190 đo lại đúng cách (thời gian
+nạp, thời gian ra chữ đầu, bộ nhớ card, 42 câu của bộ chính) qua đường trong app; chưa làm.
+Cấu hình tối thiểu: card rời có từ 8 GB bộ nhớ riêng (`src-tauri/src/ai/builtin/device.rs`); card
+tích hợp luôn bị chặn. Server tự tắt sau 10 phút không dùng để trả lại bộ nhớ card.

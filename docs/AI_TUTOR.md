@@ -1066,6 +1066,64 @@ except `LICENSE-llama.cpp.txt`, the MIT licence at the pinned commit). `tauri.co
 `bundle.resources` ships the folder as `llama-server/` beside the app; a build without the fetch
 ships only the licence (the Qwen card then says the runtime is missing).
 
+### How it works (steps 2–8)
+
+**Rust (`src-tauri/src/ai/builtin/`).** Every `builtin_ai_*` command checks the 18+ gate first
+(a test reads the source).
+
+- `device.rs`: the card. A `gpu.rs` adapter that is `Discrete` with `dedicated_mb` ≥ 8192,
+  matched by name to a Vulkan device of `llama-server --list-devices`. Refused: integrated, under
+  8 GB, unknown kind (no D3D12 device), not listed by the runtime, or a name shared with an
+  ineligible card. Found once per run.
+- `model.rs`: the pinned GGUF (`MODEL`, same values as the table above, tested against this
+  file). Download from `https://huggingface.co/<repo>/resolve/<revision>/<file>` only; every
+  redirect must stay on HTTPS and the CSP's model hosts. Free space first (size + 1 GiB), a
+  `.partial` file resumed with an HTTP range (a server ignoring it starts again), cancel keeps the
+  partial file, a wrong size or SHA-256 deletes it. Stored in `<app data>/models/qwen/`.
+- `server.rs`: `-m <model> --alias qwen3.5-9b --device <VulkanN> -ngl 99 -c 6000 -np 1 --jinja
+--no-webui --host 127.0.0.1 --port 0 --api-key-file <file>`. The server binds a free port itself
+  and logs it (`listening on http://127.0.0.1:<port>`): a port picked in Rust and bound later could
+  be taken by another program, which would then get the key. The key (32 bytes from
+  `BCryptGenRandom`) is written to a file that is deleted once `/health` answers, so it is never on
+  a command line. No console window; the process sits in a Windows job killed with SimLab; a log
+  line with a lost device marks a card fault. Residual risk: llama.cpp binds with `SO_REUSEADDR`.
+- `mod.rs`: `builtin_ai_status`, `_download` (bytes through a channel), `_cancel`, `_delete`,
+  `_start`, `_stop`, `_enable`, `_chat`. `_chat` takes the local route's `LocalChatRequest` but
+  fills in its own server's address, the alias and a loopback client that sends the key
+  (`endpoint::loopback_client_with_bearer`), then runs `local::chat_cancellable`: never counted,
+  retried or sent to the cloud. A server that dies while answering, or logged a lost card, sets
+  `gpuFault` in `builtin-ai.json` until "Bật lại". A watcher stops a server idle for 10 minutes;
+  the app's exit stops it. One server at a time.
+
+**Page.** `src/ai/builtin/` (`types.ts`, `client.ts`, `builtinStore.ts`, not saved: Rust keeps
+the model and the fault switch). "Qwen trong app" is the fixed local selection `BUILTIN_SELECTION`
+(`builtin: true`, a placeholder address no loopback check accepts): the local client sends it to
+`builtin_ai_chat`, the browser client refuses it, a stored choice is always the fixed one. All the
+local engine's rules hold (`engineChoice.ts`: never `cloud`; Think and Wikipedia only when on, and
+Wikipedia only after `builtin_ai_start` succeeded). The prompt is `compact`, as measured (no
+context check exists for it). Gemma and Qwen free the card for each other (`freeGemmaMemory`
+before a start or a question, `stopBuiltin` before Gemma loads). Pictures are never sent to it
+(no mmproj, no vision check). Rust's `builtin-*` errors become study-partner sentences
+(`localRuntime.ts`) that point at the Qwen card.
+
+**Settings.** `src/teacher/chat/settings/QwenSettings.tsx`, the first card of "Gemma cục bộ":
+size and free space, the card it would use, the terms (`open_known_page`: `qwen-model`,
+`apache-2`, `llama-cpp-licence`), download with progress and time left, cancel, resume, choose,
+free the card, unselect, delete, "Bật lại". Without a desktop app, the runtime, or an eligible card it
+says why and offers nothing to download or run. The runtimes page shows a note instead of an address
+when Qwen in the app is the choice.
+
+**Build.** `release.yml` and the Windows Rust job of `ci.yml` run the fetch script;
+`make-msix.mjs` copies the folder beside the exe and stops without it.
+
+Tests: `device.rs`, `model.rs` (mock HuggingFace), `server.rs` (the test binary as a stand-in
+`llama-server`), `builtin/mod.rs` (gate, registration, no cloud use), `server_tests.rs` (the key
+on every request), `tests/llama-server-fetch.test.ts`, `tests/tauri-config.test.ts`,
+`tests/workflows.test.ts`, `chatLocalOnly.test.ts` ("Qwen inside the app"), `client.test.ts`,
+`engineChoice.test.ts`, `QwenSettings.test.tsx`. Not yet done: the measurement of step 9 on the
+RTX 4080 through the app's path (waiting since 18/11/2026: `llama-server.exe` disappeared from the
+desktop while Norton 360 was running; `docs/LEGAL_COMPLIANCE.md` §2i, point 4).
+
 ## Tested on real hardware (2026-10-12, AMD RDNA 3 GPU, built-in browser)
 
 - `gemma3-270m` downloaded (≈ 343 MB), stored in OPFS, loaded on WebGPU, answered a chat question
