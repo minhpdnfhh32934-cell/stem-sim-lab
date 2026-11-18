@@ -59,6 +59,15 @@ export function useAiStatusView(): AiStatusView {
       section: null,
     };
   }
+  if (engine === 'local' && selected?.builtin) {
+    return {
+      kind: 'local',
+      label: t('builtinAi.answerLabel'),
+      hint: t('builtinAi.pillHint'),
+      Icon: Cpu,
+      section: 'local',
+    };
+  }
   if (engine === 'local' && selected) {
     return {
       kind: 'local',

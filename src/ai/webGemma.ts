@@ -314,6 +314,8 @@ async function loadIntoWorker(
   if (gemmaBlockedByGpuFault()) throw new Error('gpu-blocked');
   await ensureInited(signal);
   if (loadedId === modelId) return;
+  // Qwen in the app leaves the card first: the two never run on it together (#190).
+  await import('./builtin/client').then((m) => m.stopBuiltin()).catch(() => undefined);
   const w = ensureWorker();
   const waiting = waitFor(-3);
   progressListener = (p) => {

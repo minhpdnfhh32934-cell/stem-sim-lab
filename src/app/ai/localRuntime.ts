@@ -50,8 +50,21 @@ function contextFull(use: LocalUse): LocalFailure {
     : { key: 'chat.errors.localContextTask', section: 'runtimes', retry: false };
 }
 
+/** "Qwen trong app" (#190): Rust's `builtin-*` tags; the AI local page (its card) helps. */
+const BUILTIN: Record<string, LocalFailure> = {
+  'builtin-unsupported': { key: 'chat.errors.builtinUnsupported', section: null, retry: false },
+  'builtin-no-runtime': { key: 'chat.errors.builtinNoRuntime', section: 'local', retry: false },
+  'builtin-no-card': { key: 'chat.errors.builtinNoCard', section: 'local', retry: false },
+  'builtin-no-model': { key: 'chat.errors.builtinNoModel', section: 'local', retry: false },
+  'builtin-gpu-fault': { key: 'chat.errors.builtinGpuFault', section: 'local', retry: false },
+  'builtin-start-failed': { key: 'chat.errors.builtinStartFailed', section: 'local', retry: true },
+  'builtin-busy': { key: 'chat.errors.builtinBusy', section: 'local', retry: true },
+};
+
 /** The sentence and Settings page for whatever a local runtime call threw. */
 export function localFailure(e: unknown, use: LocalUse = 'chat'): LocalFailure {
+  const builtin = BUILTIN[toAiError(e).message.split(':')[0]?.trim() ?? ''];
+  if (builtin) return builtin;
   const kind = aiErrorKind(e);
   const runtimes = 'runtimes' as const;
   switch (kind) {

@@ -1,4 +1,5 @@
 /** The engines that answer: an online provider, Gemma in the app, a runtime on this computer. */
+import { getBuiltinClient } from '@/ai/builtin/client';
 import { translate, type Locale, type MessageKey } from '@/app/i18n';
 import { useAiStore } from '@/ai/aiStore';
 import { gemmaChatText, gemmaReady } from '@/ai/gemmaTransport';
@@ -208,6 +209,7 @@ export async function localRuntimeChat(
           kind: selection.kind,
           baseUrl: selection.baseUrl,
           model: selection.model,
+          ...(selection.builtin ? { builtin: true } : {}),
           system,
           messages: picture
             ? messages.map((m, i) => (i === last ? { ...m, images: [picture] } : m))
@@ -227,7 +229,9 @@ export async function localRuntimeChat(
     );
     return {
       content: answer.content,
-      model: localModelLabel(locale, selection.kind, answer.model || selection.model),
+      model: selection.builtin
+        ? translate(locale, 'builtinAi.answerLabel')
+        : localModelLabel(locale, selection.kind, answer.model || selection.model),
       truncated: answer.truncated,
     };
   } catch (e) {
@@ -278,6 +282,15 @@ export async function reachRuntime(
   signal?: AbortSignal,
 ): Promise<void> {
   stopIfAsked(signal);
+  // Qwen in the app: Rust loads it (or says why it cannot) before anything leaves the computer.
+  if (selection.builtin) {
+    try {
+      await untilStopped(getBuiltinClient().start(), signal);
+    } catch (e) {
+      throw localError(e, selection, locale, signal);
+    }
+    return;
+  }
   let status: ProbeStatus;
   try {
     status = (await untilStopped(getLocalClient().probe(selection.baseUrl), signal)).status;

@@ -1976,6 +1976,19 @@ const en: Messages = {
         '{name} reported an error while answering. Ask again; if it repeats, open Settings → AI on this computer to check.',
       localUpdate:
         'The app on this computer must be updated before it can use AI on this computer. Install the new SimLab version.',
+      builtinUnsupported:
+        'Qwen in the app runs only in the SimLab app on Windows, so no question was sent.',
+      builtinNoRuntime:
+        'I cannot find the Qwen runtime in this copy of SimLab (an antivirus may have quarantined it), so no question was sent. See the Qwen card in Settings → Local Gemma.',
+      builtinNoCard:
+        'This computer has no discrete graphics card with 8 GB of its own memory, so Qwen cannot run and no question was sent. See the Qwen card in Settings → Local Gemma.',
+      builtinNoModel:
+        'You have not downloaded Qwen yet, so no question was sent. Download it on the Qwen card in Settings → Local Gemma.',
+      builtinGpuFault:
+        'The graphics card failed while running Qwen, so I turned Qwen off to keep the computer safe. No question was sent online. You can turn it back on with the Qwen card in Settings → Local Gemma.',
+      builtinStartFailed:
+        'I could not load Qwen on the graphics card. Ask again; if it repeats, see the Qwen card in Settings → Local Gemma.',
+      builtinBusy: 'Qwen is downloading or answering. Wait for it to finish, then try again.',
       cloud: {
         reviewer: 'The reviewer ({name})',
         withFallback: '{name} (or the {fallback} fallback)',
@@ -2192,6 +2205,14 @@ const en: Messages = {
       integratedHint:
         'Gemma runs on the integrated card, which can hang on long questions; this computer has a discrete card ({name}): pick it for Gemma.',
     },
+  },
+  /** "Qwen in the app" (#190): the Qwen card on Settings → Local Gemma, and its answers. */
+  builtinAi: {
+    answerLabel: 'Qwen 3.5 9B · in SimLab',
+    pillHint:
+      'Qwen runs inside SimLab on the graphics card of your computer. SimLab does not send the problem online and asks Qwen only when you use AI.',
+    chatOnly: 'Qwen answers inside SimLab on this computer, never online.',
+    chatHere: 'Qwen answers inside SimLab on this computer.',
   },
   localRuntime: {
     intro:

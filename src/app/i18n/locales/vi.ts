@@ -1960,6 +1960,19 @@ const vi = {
         '{name} gặp lỗi khi trả lời. Em hỏi lại nhé; nếu lặp lại, mở Cài đặt → AI trên máy khác để kiểm tra.',
       localUpdate:
         'Ứng dụng trên máy này cần được cập nhật mới dùng được AI trên máy khác. Hãy cài bản SimLab mới.',
+      builtinUnsupported:
+        'Qwen trong app chỉ chạy trong ứng dụng SimLab trên Windows, nên chưa có câu hỏi nào được gửi đi.',
+      builtinNoRuntime:
+        'Mình chưa thấy bộ chạy Qwen trong bản SimLab này (có thể phần mềm diệt virus đã cách ly nó), nên chưa có câu hỏi nào được gửi đi. Xem thẻ Qwen trong Cài đặt → Gemma cục bộ.',
+      builtinNoCard:
+        'Máy này chưa có card đồ họa rời từ 8 GB bộ nhớ riêng, nên Qwen chưa chạy được và chưa có câu hỏi nào được gửi đi. Xem thẻ Qwen trong Cài đặt → Gemma cục bộ.',
+      builtinNoModel:
+        'Em chưa tải Qwen về máy, nên chưa có câu hỏi nào được gửi đi. Tải ở thẻ Qwen trong Cài đặt → Gemma cục bộ.',
+      builtinGpuFault:
+        'Card đồ họa vừa gặp lỗi khi chạy Qwen, nên mình đã tắt Qwen cho máy an toàn. Không có câu hỏi nào được gửi lên mạng. Em có thể bật lại ở thẻ Qwen trong Cài đặt → Gemma cục bộ.',
+      builtinStartFailed:
+        'Mình chưa nạp được Qwen lên card đồ họa. Em hỏi lại nhé; nếu lặp lại, xem thẻ Qwen trong Cài đặt → Gemma cục bộ.',
+      builtinBusy: 'Qwen đang tải về hoặc đang trả lời. Em đợi xong rồi thử lại nhé.',
       /**
        * An online provider could not answer: {who} is the provider ("Gemini"), the reviewer
        * ("Bên rà soát (Claude)") or both providers when the fallback may have answered; {page} is
@@ -2178,6 +2191,14 @@ const vi = {
       integratedHint:
         'Gemma đang chạy trên card tích hợp. Card tích hợp dễ bị treo với câu hỏi dài; máy có card rời ({name}) nên chọn card rời.',
     },
+  },
+  /** "Qwen trong app" (#190): the Qwen card on Settings → Gemma cục bộ, and its answers. */
+  builtinAi: {
+    answerLabel: 'Qwen 3.5 9B · trong SimLab',
+    pillHint:
+      'Qwen chạy ngay trong SimLab trên card đồ họa của máy em. SimLab không gửi đề bài lên mạng, và chỉ hỏi Qwen khi em dùng AI.',
+    chatOnly: 'Qwen trả lời ngay trong SimLab trên máy này, không gửi lên mạng.',
+    chatHere: 'Qwen trả lời ngay trong SimLab trên máy này.',
   },
   localRuntime: {
     intro:
