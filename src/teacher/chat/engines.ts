@@ -1,4 +1,5 @@
 /** The engines that answer: an online provider, Gemma in the app, a runtime on this computer. */
+import { getBuiltinClient } from '@/ai/builtin/client';
 import { translate, type Locale, type MessageKey } from '@/app/i18n';
 import { useAiStore } from '@/ai/aiStore';
 import { gemmaChatText, gemmaReady } from '@/ai/gemmaTransport';
@@ -7,7 +8,12 @@ import { gemmaBlockedByGpuFault, isGpuFailure } from '@/ai/gpuSafety';
 import { getTransport } from '@/ai/transport';
 import { fallbackFor } from '@/ai/fallback';
 import { AiError, toAiError, type ChatMessage, type ChatRequest, type Provider } from '@/ai/types';
-import { localFailure, localFailureText, localModelLabel } from '@/app/ai/localRuntime';
+import {
+  builtinFailure,
+  localFailure,
+  localFailureText,
+  localModelLabel,
+} from '@/app/ai/localRuntime';
 import { getLocalClient } from '@/ai/local/client';
 import type { LocalSelection, ProbeStatus } from '@/ai/local/types';
 import { cloudFailure, cloudFailureText, type CloudErrorKind, type CloudRole } from './cloudErrors';
@@ -208,6 +214,7 @@ export async function localRuntimeChat(
           kind: selection.kind,
           baseUrl: selection.baseUrl,
           model: selection.model,
+          ...(selection.builtin ? { builtin: true } : {}),
           system,
           messages: picture
             ? messages.map((m, i) => (i === last ? { ...m, images: [picture] } : m))
@@ -227,7 +234,9 @@ export async function localRuntimeChat(
     );
     return {
       content: answer.content,
-      model: localModelLabel(locale, selection.kind, answer.model || selection.model),
+      model: selection.builtin
+        ? translate(locale, 'builtinAi.answerLabel')
+        : localModelLabel(locale, selection.kind, answer.model || selection.model),
       truncated: answer.truncated,
     };
   } catch (e) {
@@ -248,7 +257,7 @@ function localError(
   if (e instanceof AnswerStopped || signal?.aborted) return new AnswerStopped();
   // The runtime's own words stay in the console for troubleshooting (never a key: there is none).
   console.warn('[teacher-local]', e instanceof Error ? e.message : String(e));
-  const failure = localFailure(e);
+  const failure = selection.builtin ? builtinFailure(localFailure(e)) : localFailure(e);
   return new TeacherError(
     localFailureText(locale, failure, selection.kind),
     failure.section,
@@ -278,6 +287,15 @@ export async function reachRuntime(
   signal?: AbortSignal,
 ): Promise<void> {
   stopIfAsked(signal);
+  // Qwen in the app: Rust loads it (or says why it cannot) before anything leaves the computer.
+  if (selection.builtin) {
+    try {
+      await untilStopped(getBuiltinClient().start(), signal);
+    } catch (e) {
+      throw localError(e, selection, locale, signal);
+    }
+    return;
+  }
   let status: ProbeStatus;
   try {
     status = (await untilStopped(getLocalClient().probe(selection.baseUrl), signal)).status;

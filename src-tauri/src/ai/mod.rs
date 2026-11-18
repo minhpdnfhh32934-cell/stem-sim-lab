@@ -22,6 +22,7 @@
 //! The LLM is only used to (a) extract a problem into a structured SceneSpec and
 //! (b) explain results already computed by the engine. It never computes numbers.
 
+pub mod builtin;
 pub mod claude;
 pub mod gemini;
 pub mod groq;

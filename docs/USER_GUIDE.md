@@ -190,6 +190,28 @@ Ollama (chạy trên ollama.com) bị từ chối. Ảnh chỉ gửi cho mô hì
 SimLab không chọn được card đồ họa cho chương trình đó (chỉnh trong chính chương trình). Có nút
 **Khôi phục mặc định** và mục **Gặp lỗi? Cách xử lý**.
 
+### Qwen 3.5 9B chạy ngay trong SimLab (máy có card đồ họa rời)
+
+Trên Windows, nếu máy có **card đồ họa rời từ 8 GB bộ nhớ riêng** (NVIDIA, AMD hoặc Intel Arc), AI
+Teacher có thể trả lời bằng Qwen 3.5 9B, một mô hình lớn hơn Gemma, chạy ngay trong SimLab: không
+cần mạng, không cần khóa, không phải cài thêm chương trình nào.
+
+1. Vào Cài đặt → **Gemma cục bộ**, thẻ **Qwen 3.5 9B (mạnh hơn Gemma)**. Thẻ ghi dung lượng tải về
+   (khoảng 5,6 GB), chỗ trống còn lại trên ổ đĩa, card đồ họa của máy và giấy phép (Qwen: Apache-2.0;
+   bộ chạy llama.cpp: MIT).
+2. Bấm **Tải về**. Thanh tiến độ có thời gian còn lại; **Hủy tải** giữ phần đã tải, lần sau bấm **Tải
+   tiếp**. Tải xong, app kiểm lại tệp; tệp sai bị xóa.
+3. Bấm **Dùng cho AI Teacher**. Lần đầu app nạp Qwen lên card đồ họa (vài giây đến vài chục giây).
+   **Giải phóng bộ nhớ card** tắt Qwen ngay; Qwen cũng tự tắt khi đóng SimLab hoặc sau 10 phút không
+   dùng. **Bỏ chọn** trả AI Teacher về lựa chọn cũ; **Xóa Qwen** xóa tệp đã tải.
+
+Máy chỉ có card tích hợp, hoặc card rời dưới 8 GB: thẻ nói rõ lí do và không cho tải hay chạy (card
+tích hợp luôn bị chặn để máy không bị treo). Nếu card gặp lỗi khi chạy Qwen, app tắt Qwen và chỉ bật
+lại khi em bấm **Bật lại Qwen**. Khi Qwen lỗi hoặc chưa sẵn sàng, app nói rõ và **không gửi câu hỏi
+lên mạng**; Think và Tra thêm Wikipedia chỉ chạy khi em bật. Qwen và Gemma không chạy cùng lúc trên
+card. Nếu thẻ báo thiếu bộ chạy, có thể phần mềm diệt virus đã cách ly tệp `llama-server.exe`: kiểm
+tra lịch sử của phần mềm đó, hoặc cài lại SimLab.
+
 ### Giảng trên bảng
 
 Ở trang AI Teacher, chọn tab **02 Bảng giảng** (hàng tab dưới đầu trang; quả cầu thu nhỏ về góc trái).

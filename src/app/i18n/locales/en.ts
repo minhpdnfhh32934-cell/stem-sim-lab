@@ -1843,6 +1843,7 @@ const en: Messages = {
     cloud: 'Online AI',
     gemma: 'Local Gemma',
     local: 'AI on this computer',
+    builtin: 'Qwen in SimLab',
     localMissingNotice:
       'You chose the AI on this computer but no program and model yet, so no question was sent. Choose them in Settings → AI on this computer.',
     localOnlyRuntime:
@@ -1995,6 +1996,23 @@ const en: Messages = {
         '{name} reported an error while answering. Ask again; if it repeats, open Settings → AI on this computer to check.',
       localUpdate:
         'The app on this computer must be updated before it can use AI on this computer. Install the new SimLab version.',
+      builtinUnsupported:
+        'Qwen in the app runs only in the SimLab app on Windows, so no question was sent.',
+      builtinNoRuntime:
+        'I cannot find the Qwen runtime in this copy of SimLab (an antivirus may have quarantined it), so no question was sent. See the Qwen card in Settings → Local Gemma.',
+      builtinNoCard:
+        'This computer has no discrete graphics card with 8 GB of its own memory, so Qwen cannot run and no question was sent. See the Qwen card in Settings → Local Gemma.',
+      builtinNoModel:
+        'You have not downloaded Qwen yet, so no question was sent. Download it on the Qwen card in Settings → Local Gemma.',
+      builtinGpuFault:
+        'The graphics card failed while running Qwen, so I turned Qwen off to keep the computer safe. No question was sent online. You can turn it back on with the Qwen card in Settings → Local Gemma.',
+      builtinStartFailed:
+        'I could not load Qwen on the graphics card. Ask again; if it repeats, see the Qwen card in Settings → Local Gemma.',
+      builtinBusy: 'Qwen is downloading or answering. Wait for it to finish, then try again.',
+      builtinNoAnswer:
+        'Qwen wrote no answer. Ask again; if it repeats, see the Qwen card in Settings → Local Gemma.',
+      builtinFailed:
+        'Qwen ran into an error while answering, and nothing was sent online. Ask again; if it repeats, see the Qwen card in Settings → Local Gemma.',
       cloud: {
         reviewer: 'The reviewer ({name})',
         withFallback: '{name} (or the {fallback} fallback)',
@@ -2210,6 +2228,71 @@ const en: Messages = {
       unknownCard: 'graphics',
       integratedHint:
         'Gemma runs on the integrated card, which can hang on long questions; this computer has a discrete card ({name}): pick it for Gemma.',
+    },
+  },
+  /** "Qwen in the app" (#190): the Qwen card on Settings → Local Gemma, and its answers. */
+  builtinAi: {
+    answerLabel: 'Qwen 3.5 9B · in SimLab',
+    pillHint:
+      'Qwen runs inside SimLab on the graphics card of your computer. SimLab does not send the problem online and asks Qwen only when you use AI.',
+    chatOnly: 'Qwen answers inside SimLab on this computer, never online.',
+    chatHere: 'Qwen answers inside SimLab on this computer.',
+    runtimesNote:
+      'AI Teacher uses Qwen in the app (the Qwen card in Settings → Local Gemma). Choosing a program below replaces Qwen.',
+    title: 'Qwen 3.5 9B (stronger than Gemma)',
+    intro:
+      'A larger model than Gemma that runs inside SimLab on the discrete graphics card of your computer: no network, no key, nothing else to install. Questions are not sent online.',
+    checking: 'Checking this computer…',
+    size: 'Download size: {size}. Free disk space: {free}.',
+    sizeOnly: 'Download size: {size}.',
+    needs:
+      'Needs a discrete graphics card with 8 GB of its own memory; integrated cards are always blocked.',
+    needsHere:
+      'Needs a discrete graphics card with 8 GB of its own memory. This computer uses {name} ({gb} GB).',
+    notDesktop: 'Qwen in the app exists only in the SimLab app on Windows.',
+    noRuntime:
+      'This copy of SimLab is missing the Qwen runtime (llama-server.exe). An antivirus may have quarantined it, or SimLab needs reinstalling.',
+    ineligible: {
+      noDiscrete:
+        'This computer has no discrete graphics card, so Qwen cannot run here. Integrated cards are always blocked so the computer does not freeze.',
+      tooSmall:
+        '{name} has {gb} GB of its own memory and Qwen needs 8 GB, so Qwen cannot run on this computer.',
+      notListed:
+        'The Qwen runtime does not recognise {name}. Try updating the graphics driver, then open SimLab again.',
+      unknownKind:
+        'SimLab cannot tell whether {name} is a discrete or an integrated card, so Qwen does not run on it.',
+    },
+    gpuFault:
+      'The graphics card failed while running Qwen, so Qwen is off. Restart the computer or update the driver before turning it back on.',
+    enable: 'Turn Qwen back on',
+    download: 'Download',
+    resume: 'Resume ({done} / {size})',
+    cancel: 'Cancel download',
+    progress: 'Downloading Qwen',
+    ready: 'Qwen is downloaded on this computer.',
+    use: 'Use for AI Teacher',
+    inUse: 'AI Teacher uses Qwen.',
+    starting: 'Loading Qwen onto the graphics card…',
+    running: 'AI Teacher uses Qwen, running on {name}.',
+    unselect: 'Unselect',
+    stop: 'Free the card memory',
+    remove: 'Delete Qwen',
+    terms:
+      'Qwen 3.5 9B uses the Apache-2.0 licence; the llama.cpp runtime that comes with SimLab uses the MIT licence. The model is downloaded from HuggingFace.',
+    openModel: 'Qwen model page',
+    openApache: 'Apache-2.0 licence',
+    openLlama: 'llama.cpp licence',
+    failed: 'I could not do this ({detail}).',
+    downloadError: {
+      noSpace: 'Not enough disk space: {need} needed, {free} free.',
+      offline: 'The connection dropped while downloading. Press “Resume” to download the rest.',
+      stalled:
+        'The network stopped sending data for too long. Press “Resume” to download the rest.',
+      http: 'HuggingFace answered with error {status}. Try again later.',
+      badFile:
+        'The downloaded file is not the checked file, so I deleted it. Try downloading again.',
+      cancelled: 'Cancelled. What was downloaded is kept for “Resume”.',
+      disk: 'I could not write the file to the disk ({detail}).',
     },
   },
   localRuntime: {

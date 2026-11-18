@@ -294,6 +294,36 @@ Con số "không lỗi đã biết" chỉ đếm các lỗi mà thước biết 
 giờ đồng tình với lỗi sai của người học. Bộ kiểm chứng (`teaching-heldout.json`) không đổi: sửa nó sau
 khi đã xem kết quả là tinh chỉnh theo chính bộ đó.
 
+## Đợt 18/11/2026: Qwen 3.5 9B qua bộ chạy đóng gói trong app (#190, bước 9)
+
+Cùng 42 câu của bộ chính và cách chấm của đợt 10/11, `scripts/teaching/eval-local.mjs` (prompt
+`compact` của app, temperature 0, chỉ biến thể `base`). Máy bàn, RTX 4080, Windows Defender bật.
+Bộ chạy là đúng `llama-server` mà app đóng gói (llama.cpp b12246 Vulkan, tải lại bằng
+`scripts/llama/fetch-llama-server.mjs`, SHA-256 khớp), chạy bằng script với tham số của
+`src-tauri/src/ai/builtin/server.rs` (`--alias qwen3.5-9b --device Vulkan0 -ngl 99 -c 6000 -np 1
+--jinja --no-webui --host 127.0.0.1 --port 0`), không có tệp khóa (script đo không gửi khóa; khóa
+không đổi cách sinh câu). Model: tệp GGUF đã ghim, cùng SHA-256 với đợt 10/11. Kết quả:
+`tests/teaching/results/2026-11-18-qwen3.5-9b-builtin-main.json` (bản main @ caf130c7, sạch).
+
+| 42 câu của bộ chính                     | Câu đúng đủ ý | Tỉ lệ ý chính | Không lỗi đã biết |
+| --------------------------------------- | ------------- | ------------- | ----------------- |
+| Qwen 3.5 9B gốc, 10/11 (CUDA b12177)    | 78,6 % (33)   | 91,8 %        | 97,6 %            |
+| Qwen 3.5 9B, bộ chạy trong app (Vulkan) | 81,0 % (34)   | 91,8 %        | 95,2 %            |
+
+- Lệch 1 câu, trong giới hạn 2 câu của kế hoạch. Khác nhau ở 3 câu: P12 và B14 thành đúng, C14 thành
+  sai và có lỗi đã biết (P13 có lỗi đã biết ở cả hai lần).
+- Không chỉ bộ chạy khác: prompt dựng bằng mã của `main` hôm nay (`chatServiceSha256` khác đợt 10/11),
+  nên không tách được phần lệch do Vulkan/b12246 với phần do prompt.
+- Không lượt nào lỗi, không câu nào bị cắt. Thời gian trả lời trung bình 1 838 ms, trung vị 1 439 ms
+  (không stream).
+- Thời gian ra chữ đầu (gửi lại 5 câu đầu, có stream): 445, 132, 162, 126, 130 ms; câu đầu chậm hơn vì
+  chưa có bộ đệm prompt.
+- Nạp model: `/health` sẵn sàng sau 4,7 s, khi tệp đã nằm trong bộ nhớ đệm của Windows (chưa đo lần
+  nạp nguội từ ổ đĩa). Bộ nhớ card (nvidia-smi, cả card): 1 285 MiB trước khi nạp, 6 464 MiB sau khi
+  nạp, 7 647 MiB sau khi trả lời, 1 288 MiB sau khi dừng server.
+- Chưa đo qua các lệnh của app (`builtin_ai_start`, `builtin_ai_chat`): cổng 18+ của app chưa được trả
+  lời trên máy này, và máy bàn không trả lời thay người dùng. HOLD2 (#141) không chạy.
+
 ## Đo Gemma 4 E2B (09/11/2026)
 
 Cùng 42 câu và 15 câu held-out, cùng thước chấm tự động, prompt v2, cách sinh của app, greedy. Đo

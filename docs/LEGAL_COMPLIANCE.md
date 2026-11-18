@@ -218,6 +218,41 @@ Người dùng cần tự đọc và xác nhận trước khi phát hành model:
    và trách nhiệm với model do mình phát hành cho người học.
 4. Điều khoản của Google Colab khi dùng GPU miễn phí để huấn luyện.
 
+## 2i. Qwen 3.5 9B chạy ngay trong app: đóng gói bộ chạy, cho tải model (ghi 2026-11-18)
+
+Quyết định của người dùng ngày 2026-11-10 ("đưa Qwen 9B bản gốc vào app ngay", #190). Mục này chỉ
+liệt kê, **không phải kết luận pháp lí**.
+
+**Xác nhận của người dùng ngày 2026-11-11** (trả lời "Đồng ý cả 5" cho câu hỏi của kế hoạch #190,
+ghi ở bình luận của issue; câu 4 nguyên văn): "Pháp lý: người dùng tự xác nhận mục LEGAL 2i (Qwen 3.5
+9B ghi Apache-2.0, llama.cpp dùng MIT; được đóng gói, phân phối và cho người học tải về để học tập, kể
+cả bản Store)."
+
+Cách làm trong app:
+
+- **Bộ chạy đóng gói trong bộ cài và gói Store:** `llama-server` của llama.cpp bản b12246 (Vulkan,
+  Windows x64), giấy phép MIT. Bản giấy phép MIT của llama.cpp (`LICENSE-llama.cpp.txt`) đi cùng các
+  tệp chạy trong thư mục `llama-server/` cạnh app. Thư viện `libomp.dll` trong cùng gói thuộc dự án
+  LLVM (Apache-2.0 với ngoại lệ LLVM), tệp `LICENSE-LLVM-OpenMP` đi kèm.
+- **Model không nằm trong bộ cài:** người học bấm "Tải về" thì app tải tệp
+  `Qwen3.5-9B-Q4_K_M.gguf` (bản lượng tử của `lmstudio-community`, model nền `Qwen/Qwen3.5-9B`) trực
+  tiếp từ HuggingFace về máy, đúng một tệp đã ghim (SHA-256). Thẻ Qwen có nút mở trang model, giấy phép
+  Apache-2.0 và giấy phép llama.cpp.
+- Chỉ người đã xác nhận 18+ dùng được (mọi lệnh đều qua cổng an toàn). Câu hỏi không rời máy.
+
+Người dùng cần tự đối chiếu lại trước khi phát hành (máy bàn chỉ tra, không kết luận):
+
+1. Thẻ model của `Qwen/Qwen3.5-9B` và của `lmstudio-community/Qwen3.5-9B-GGUF` vẫn ghi Apache-2.0
+   (API HuggingFace ngày 2026-11-18 trả `license: apache-2.0`, `base_model: Qwen/Qwen3.5-9B` cho repo
+   GGUF). Apache-2.0 yêu cầu giữ bản giấy phép và thông báo (NOTICE, nếu có) khi phân phối lại; app
+   không phân phối lại tệp model, chỉ tải từ HuggingFace theo yêu cầu của người học.
+2. Điều khoản của HuggingFace cho việc app tải tệp thay người học.
+3. Bản Store: Microsoft Store có chấp nhận gói chứa một chương trình phụ (`llama-server.exe`) và việc
+   tải model khoảng 5,6 GB sau khi cài không.
+4. Phần mềm diệt virus có thể chặn `llama-server.exe` (chưa ký số): trên máy bàn ngày 2026-11-18 tệp
+   này đã biến mất sau khi chạy thử khi Norton 360 đang bật. App khi đó báo "thiếu bộ chạy" và không
+   gửi gì đi. Có ký số bộ cài hay không là quyết định của người dùng.
+
 ## 5. Ứng dụng xử lý dữ liệu thế nào (tóm tắt kỹ thuật)
 
 - Không tài khoản, không quảng cáo, không thống kê sử dụng. Mạng chỉ dùng khi: gọi AI (người dùng

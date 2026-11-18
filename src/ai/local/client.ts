@@ -7,6 +7,7 @@
  */
 import { Channel, invoke, isTauri } from '@tauri-apps/api/core';
 import { cancelInRust, isMissingCommand } from '../transport';
+import { freeGemmaMemory } from '../webGemma';
 import { AiError, ShownText, toAiError } from '../types';
 import { parseLoopback } from './endpoint';
 import { FetchLocalClient } from './fetchClient';
@@ -77,11 +78,20 @@ export class TauriLocalClient implements LocalRuntimeClient {
    * drops the request and closes the connection to the runtime. A stopped call always ends as
    * `cancelled`, also when Rust finished the answer before the stop reached it: after "Dừng"
    * nothing more is shown.
+   *
+   * "Qwen trong app" (`builtin`) goes to `builtin_ai_chat` instead: the same request and answer,
+   * but Rust answers with its own server (the address is never used). Gemma leaves the card's
+   * memory first: the two never run on the card together.
    */
   async chat(req: LocalChatRequest, opts: LocalChatOptions = {}): Promise<LocalChatResponse> {
     const { signal } = opts;
     if (signal?.aborted) throw new AiError('cancelled', req.requestId);
-    const request: LocalChatRequest = { ...req, baseUrl: parseLoopback(req.baseUrl).base };
+    const { builtin, ...rest } = req;
+    if (builtin) freeGemmaMemory();
+    const command = builtin ? 'builtin_ai_chat' : 'local_ai_chat';
+    const request: LocalChatRequest = builtin
+      ? rest
+      : { ...rest, baseUrl: parseLoopback(req.baseUrl).base };
     let running = true;
     const onAbort = () => {
       void cancelInRust(req.requestId, () => running);
@@ -94,7 +104,7 @@ export class TauriLocalClient implements LocalRuntimeClient {
     });
     let answer: LocalChatResponse;
     try {
-      answer = await invoke<LocalChatResponse>('local_ai_chat', { request, onEvent });
+      answer = await invoke<LocalChatResponse>(command, { request, onEvent });
     } catch (e) {
       if (signal?.aborted) throw new AiError('cancelled', req.requestId);
       throw commandError(e);

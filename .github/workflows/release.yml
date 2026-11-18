@@ -240,6 +240,10 @@ jobs:
         with:
           workspaces: src-tauri
       - run: npm ci
+      # Qwen in the app (#190): the pinned llama-server (llama.cpp b12246 Vulkan, SHA-256
+      # checked) goes into the installers and the Store package.
+      - name: Fetch llama-server
+        run: node scripts/llama/fetch-llama-server.mjs
       - name: Rust tests
         run: cargo test
         working-directory: src-tauri
