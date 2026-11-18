@@ -426,7 +426,7 @@ const vi = {
       groupAi: 'AI',
       groupPrivacy: 'Quyền riêng tư',
       appearance: 'Giao diện',
-      appearanceHint: 'Chế độ Cơ bản/Nâng cao, màu nền, cỡ chữ, ngôn ngữ và bố cục.',
+      appearanceHint: 'Chế độ Cơ bản/Nâng cao, màu nền, cỡ chữ, ngôn ngữ, chuyển động và bố cục.',
       simulation: 'Mô phỏng & hiệu năng',
       simulationHint: 'Chất lượng hiển thị theo sức máy và gia tốc trọng trường mặc định.',
       aiHint:
@@ -486,6 +486,13 @@ const vi = {
     themeSystem: 'Theo hệ thống',
     themeLight: 'Sáng',
     themeDark: 'Tối',
+    motionCard: 'Chuyển động',
+    motion: 'Chuyển động trong app',
+    motionSystem: 'Theo hệ thống',
+    motionReduce: 'Giảm',
+    motionFull: 'Đầy đủ',
+    motionHint:
+      'Giảm: hình không tự chạy, không có hiệu ứng trượt hay nhấp nháy; bấm Chạy để xem từng bước. Theo hệ thống: làm theo cài đặt hiệu ứng hoạt hình của Windows.',
     fontSize: 'Cỡ chữ',
     language: 'Ngôn ngữ',
     layout: 'Bố cục',
@@ -604,6 +611,7 @@ const vi = {
     fontSmaller: 'Giảm cỡ chữ',
     analyze: 'Phân tích đề (trong ô đề bài)',
     commandPalette: 'Tìm nhanh: chủ đề, cài đặt, thao tác',
+    shortcutSheet: 'Mở danh sách phím tắt này',
   },
   science: {
     cardLabel: 'Thẻ Khoa học',

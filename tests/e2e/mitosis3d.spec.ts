@@ -461,6 +461,40 @@ test('mitosis 3D: every line of the picked part can be read, down to the smalles
   await expect(page.locator('.m3d__info')).toContainText('không thấy rõ ở kì đang xem');
 });
 
+test('mitosis 3D: "Làm mờ phần còn lại" sits in the Inspector in Advanced mode only (#195)', async ({
+  page,
+}) => {
+  await openMitosis(page);
+  const sw = page.getByRole('switch', { name: 'Làm mờ phần còn lại' });
+  await expect(sw).toHaveCount(0);
+  await page.evaluate(async () => {
+    const { useSettingsStore } = (await (async (m: string) =>
+      import(/* @vite-ignore */ m) as Promise<Record<string, unknown>>)(
+      '/src/app/settings/settingsStore.ts',
+    )) as { useSettingsStore: { getState(): { setUiMode(m: 'advanced'): void } } };
+    useSettingsStore.getState().setUiMode('advanced');
+  });
+  await expect(sw).toBeVisible();
+  await expect(sw).toBeChecked();
+  const box = await sw.locator('xpath=..').boundingBox();
+  expect(box?.height ?? 0).toBeGreaterThanOrEqual(40);
+  await sw.uncheck();
+  const on = await page.evaluate(async () => {
+    const { useDimRest } = (await (async (m: string) =>
+      import(/* @vite-ignore */ m) as Promise<Record<string, unknown>>)(
+      '/src/biology/view3d/dimRest.ts',
+    )) as {
+      useDimRest: { getState(): { on: boolean } };
+    };
+    return useDimRest.getState().on;
+  });
+  expect(on).toBe(false);
+  const scroll = await page.evaluate(
+    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+  );
+  expect(scroll).toBeLessThanOrEqual(0);
+});
+
 test('mitosis 3D: "Hỏi thầy về bộ phận này" opens AI Teacher with the question, sends nothing', async ({
   page,
 }) => {

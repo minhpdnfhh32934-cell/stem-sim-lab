@@ -232,10 +232,8 @@
     transform: rotate(360deg);
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .problem-input__submit .spin {
-    animation: none;
-  }
+:root[data-motion='reduce'] .problem-input__submit .spin {
+  animation: none;
 }
 
 /* AI settings */

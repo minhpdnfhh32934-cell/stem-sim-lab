@@ -57,8 +57,14 @@ export function useNo3dNotice(wanted3d: boolean, reason: No3dReason | null): str
   return wanted3d && reason ? Lz(NO3D_NOTICE[reason]) : undefined;
 }
 
-/** The learner asked the system for less motion: nothing starts moving on its own. */
+/**
+ * The learner asked for less motion: nothing starts moving on its own. The app's choice (Settings
+ * → Giao diện → Chuyển động, written on <html> as `data-motion`) wins; without it, the system's.
+ */
 export function prefersReducedMotion(): boolean {
+  const chosen =
+    typeof document === 'undefined' ? undefined : document.documentElement.dataset.motion;
+  if (chosen === 'reduce' || chosen === 'full') return chosen === 'reduce';
   return (
     typeof window !== 'undefined' &&
     typeof window.matchMedia === 'function' &&
