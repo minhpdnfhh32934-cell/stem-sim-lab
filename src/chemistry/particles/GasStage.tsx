@@ -123,6 +123,7 @@ export function GasStage({ mode }: { mode: GasMode }) {
   );
   const card = useMemo(() => cardFor(mode), [mode]);
   usePublishCard(card);
+  const still = prefersReducedMotion();
 
   useEffect(() => {
     // Opens running, or paused with reduced motion (#205 C3).
@@ -223,7 +224,9 @@ export function GasStage({ mode }: { mode: GasMode }) {
     },
     true,
     // `follow`: a paused or still (reduced motion) picture redraws when it is turned on or off.
-    [mode, st.follow],
+    // With reduced motion the canvas does not animate, so a running model redraws on each UI
+    // tick (`version`, ~4×/s) instead of freezing on its first picture.
+    [mode, st.follow, still ? st.version : 0],
   );
 
   const g = gasRuntime.gas;

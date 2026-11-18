@@ -26,8 +26,16 @@
 - E2E `tests/e2e/follow-particle.spec.ts` (chromium, 1366×768): 1 đạt (nút bật, nhãn hiện, đường dài
   dần theo mô hình, nút cao bằng nút Làm lại, tắt thì nhãn mất). Ảnh chụp kiểm bằng mắt.
 
+## Sửa kèm: hình hộp khí đứng yên khi giảm chuyển động (lỗi có sẵn)
+
+- Trước đây: khi bật giảm chuyển động, `useCanvas` chỉ vẽ một lần, nên bấm Chạy thì mô hình chạy
+  nhưng hình đứng yên. Nay `GasStage` vẽ lại mỗi lần mô hình báo nhịp giao diện (`version`, khoảng
+  4 lần/giây) khi giảm chuyển động; ở chế độ đầy đủ vẫn vẽ mỗi khung như cũ. Không có số mới.
+- E2E mới trong `tests/e2e/post198-motion.spec.ts` ("the gas picture follows the model once Chạy is
+  pressed"): hỏng khi chưa sửa (1 failed), đạt sau khi sửa.
+- Chạy lại `post198-motion`, `follow-particle`, `gas-vl12` (chromium): 9 đạt. `tsc` đạt, `eslint`
+  và `prettier` cho các file sửa đạt, vitest `src/chemistry/particles` 33 đạt.
+
 ## Next steps and limits
 
-- Có sẵn từ trước, chưa sửa: khi bật giảm chuyển động, khung hộp khí chỉ vẽ một lần (`useCanvas`
-  không chạy vòng vẽ), nên bấm Chạy thì số liệu vẫn chạy nhưng hình đứng yên.
 - Bước 7 của #195: kiểm axe.
