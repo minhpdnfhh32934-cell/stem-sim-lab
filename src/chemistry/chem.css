@@ -1016,10 +1016,8 @@
   /* Text inside a drawing (SVG units, #205 A1): it scales with the picture. */
   font-size: 10px;
 }
-@media (prefers-reduced-motion: reduce) {
-  .eq-bar__fill {
-    transition: none;
-  }
+:root[data-motion='reduce'] .eq-bar__fill {
+  transition: none;
 }
 
 /* ───── UI audit #70 (i2), group C ───── */
@@ -1140,10 +1138,8 @@
   flex: none;
   width: 6.5rem;
 }
-@media (prefers-reduced-motion: reduce) {
-  .tit-solution {
-    transition: none;
-  }
+:root[data-motion='reduce'] .tit-solution {
+  transition: none;
 }
 
 /* "Lọc theo nhóm chức" (Phân tử 3D, #54 item 11). */

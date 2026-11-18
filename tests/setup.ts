@@ -23,6 +23,9 @@ afterEach(() => {
   cleanup();
   // Node-environment tests (`@vitest-environment node`) have no localStorage.
   if (typeof localStorage !== 'undefined') localStorage.clear();
+  // The app's motion choice (`data-motion`, written by useApplyTheme) does not leak into the next
+  // test: each one starts with the system deciding, as before the app has rendered.
+  if (typeof document !== 'undefined') delete document.documentElement.dataset.motion;
 });
 
 // Unit tests run as an adult who accepted the terms, so the AI code paths can be tested. The
