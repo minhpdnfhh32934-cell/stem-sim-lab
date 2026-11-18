@@ -1,4 +1,4 @@
-import { Gauge, Keyboard, LayoutPanelLeft, Orbit, Palette, Type } from 'lucide-react';
+import { Gauge, Keyboard, LayoutPanelLeft, Orbit, Palette, Type, Wind } from 'lucide-react';
 import { LOCALES, formatNumber, useT } from '@/app/i18n';
 import { useLayoutStore } from '@/app/layout/layoutStore';
 import { ModeSwitch } from '@/app/learner/ModeSwitch';
@@ -7,7 +7,12 @@ import { GRAVITY_PRESETS } from '@/core/constants';
 import { usePerfStore } from '@/perf/perfStore';
 import type { QualityPreference } from '@/perf/tiers';
 import { remeasure } from '@/perf/useStartupBenchmark';
-import { FONT_SCALES, useSettingsStore, type ThemePreference } from './settingsStore';
+import {
+  FONT_SCALES,
+  useSettingsStore,
+  type MotionPreference,
+  type ThemePreference,
+} from './settingsStore';
 
 const QUALITY: QualityPreference[] = ['auto', 'low', 'medium', 'high'];
 
@@ -18,6 +23,15 @@ const THEMES: {
   { id: 'system', key: 'settings.themeSystem' },
   { id: 'light', key: 'settings.themeLight' },
   { id: 'dark', key: 'settings.themeDark' },
+];
+
+const MOTIONS: {
+  id: MotionPreference;
+  key: 'settings.motionSystem' | 'settings.motionReduce' | 'settings.motionFull';
+}[] = [
+  { id: 'system', key: 'settings.motionSystem' },
+  { id: 'reduce', key: 'settings.motionReduce' },
+  { id: 'full', key: 'settings.motionFull' },
 ];
 
 /** Shortcuts listed in Settings (tool keys are shown in tool tooltips instead). */
@@ -33,9 +47,10 @@ const LISTED = [
   'fontLarger',
   'fontSmaller',
   'commandPalette',
+  'shortcutSheet',
 ] as const satisfies readonly ShortcutAction[];
 
-/** "Giao diện": Basic/Advanced, theme, text size, language, layout. */
+/** "Giao diện": Basic/Advanced, theme, text size, language, motion, layout. */
 export function AppearanceSettings() {
   const t = useT();
   const settings = useSettingsStore();
@@ -113,6 +128,33 @@ export function AppearanceSettings() {
             ))}
           </div>
         </div>
+      </fieldset>
+
+      <fieldset className="settings-group">
+        <legend>
+          <Wind size={15} strokeWidth={1.75} aria-hidden="true" />
+          {t('settings.motionCard')}
+        </legend>
+        <div className="settings-row">
+          <span id="motion-label">{t('settings.motion')}</span>
+          <div className="segmented" role="radiogroup" aria-labelledby="motion-label">
+            {MOTIONS.map((m) => (
+              <button
+                key={m.id}
+                type="button"
+                role="radio"
+                aria-checked={settings.motion === m.id}
+                className="segmented__item"
+                onClick={() => {
+                  settings.setMotion(m.id);
+                }}
+              >
+                {t(m.key)}
+              </button>
+            ))}
+          </div>
+        </div>
+        <p className="muted">{t('settings.motionHint')}</p>
       </fieldset>
 
       <fieldset className="settings-group">

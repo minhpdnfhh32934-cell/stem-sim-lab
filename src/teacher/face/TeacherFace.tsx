@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { cx } from '@/ui/cx';
+import { prefersReducedMotion } from '@/ui/three/availability';
 import './face.css';
 
 export type TeacherMood = 'idle' | 'thinking' | 'happy' | 'confused' | 'speaking';
@@ -26,10 +27,7 @@ export function TeacherFace({ mood = 'idle', trackCursor = false, className }: T
 
   useEffect(() => {
     if (!trackCursor) return;
-    const reduceMotion =
-      typeof window.matchMedia === 'function' &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduceMotion) return;
+    if (prefersReducedMotion()) return;
     let raf = 0;
     const onMove = (e: MouseEvent) => {
       const rect = root.current?.getBoundingClientRect();

@@ -52,4 +52,18 @@ describe('global shortcuts', () => {
     expect(undo.undo).toHaveBeenCalledTimes(1);
     expect(play).toHaveBeenCalledTimes(1);
   });
+
+  it.each<AppScreen>(['lab', 'home', 'teacher'])(
+    'Ctrl+/ opens Settings on the shortcut list, on the %s screen too (#195)',
+    (screen) => {
+      useWorkspaceStore.setState({ settingsOpen: false, settingsSection: 'appearance' });
+      useNavigationStore.getState().setScreen(screen);
+      renderHook(() => {
+        useGlobalShortcuts();
+      });
+      expect(press('/', true).defaultPrevented).toBe(true);
+      expect(useWorkspaceStore.getState().settingsOpen).toBe(true);
+      expect(useWorkspaceStore.getState().settingsSection).toBe('shortcuts');
+    },
+  );
 });
