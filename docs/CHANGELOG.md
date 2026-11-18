@@ -2,9 +2,9 @@
 
 Mọi thay đổi đáng chú ý của SimLab (tên cũ: STEM Sim Lab), bản mới nhất ở trên. Định dạng theo [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), số phiên bản dạng `x.y.z`. Tệp này được tạo từ `release-notes/versions.json` bằng `npm run release-notes`. Đừng sửa tay. Lịch sử đầy đủ kèm bằng chứng: [VERSION\_HISTORY.md](VERSION_HISTORY.md).
 
-## [Unreleased] - 0.11.0 (Đang xét duyệt)
+## [0.11.0] - 2026-11-18
 
-_Gói lớp 12 (#255): mọi bài lí thuyết của Vật lí 12 (21/21), Hóa học 12 (22/22) và Sinh học 12 (28/28) có chủ đề, qua 14 đợt: 3a–3d Vật lí 12 (#293–#296), 4a–4f Hóa học 12 (#297–#301, #303), 5a–5d Sinh học 12 (#304–#306 và PR này); mỗi đợt một PR vào main theo thứ tự, CI 8/8 xanh trước khi gộp; đợt 5d là PR chuẩn bị phát hành này. Chỉ phần web lên 0.11.0 (không có thay đổi Rust kể từ v0.8.2, lõi vẫn 0.8.2), nên ứng dụng cài từ GitHub nhận qua cập nhật trong app. notesReady đặt true khi mở PR chuẩn bị phát hành; phát hành do người dùng chạy lượt Release sau khi PR cuối đã gộp._
+_Phát hành 18/11/2026 từ main @ e3a839dc (lượt Release 44203229726, người dùng chạy). Gói lớp 12 (#255): mọi bài lí thuyết của Vật lí 12 (21/21), Hóa học 12 (22/22) và Sinh học 12 (28/28) có chủ đề, qua 14 đợt (#293–#307); và hình 3D cho mọi bài làm được 3D (#302, chín đợt 6a–6i, PR #309–#316), cùng sửa bước npm audit (#317). Mỗi PR CI 8/8 xanh trước khi gộp. Chỉ phần web lên 0.11.0; lõi vẫn 0.8.2 (không có thay đổi Rust), nên web-update.json ghi minNative 0.8.2 và ứng dụng 0.8.2 cài từ GitHub nhận qua cập nhật trong app; bộ cài trong bản phát hành vẫn mang số 0.8.2. Bắt buộc cập nhật: minRequired 0.11.0 (người dùng chọn khi chạy lượt Release). Hộp “Có gì mới” đóng gói trong bản này được viết trước khi ghi chú nhắc tới hình 3D (thêm 18/11 sau khi phát hành)._
 
 Bản 0.11.0 hoàn thành chương trình lớp 12 theo sách Kết nối tri thức: mọi bài lí thuyết của Vật lí 12, Hóa học 12 và Sinh học 12 đều có bài học trong SimLab, số liệu lấy từ sách giáo khoa và có ghi trang.
 
@@ -14,6 +14,7 @@ Bản 0.11.0 hoàn thành chương trình lớp 12 theo sách Kết nối tri th
 - Hóa học 12: ester và chất béo, amine, amino acid và peptide, thế điện cực và pin Galvani, tính chất của kim loại, nguyên tố nhóm IA và IIA, kim loại chuyển tiếp, phức chất (có mô hình 3D khi sách nêu dạng hình học).
 - Sinh học 12: operon lac, di truyền liên kết với giới tính, liên kết và hoán vị gene, đột biến nhiễm sắc thể, bằng chứng tiến hóa và các đại địa chất, giới hạn sinh thái, tháp sinh thái và hiệu suất sinh thái.
 - Thêm các bài học có hướng dẫn cho những bài chủ yếu mô tả: dự đoán trước, rồi làm các hoạt động xếp thứ tự, phân loại, ghép.
+- Hình 3D cho nhiều bài (bấm nút 3D trên hình): Vật lí — điện trường, điện thế, tụ điện, dòng điện, lực từ, cảm ứng điện từ, sóng điện từ, sóng cơ, giao thoa, sóng dừng, khí lí tưởng, nội năng và nhiệt lượng, hạt nhân, phóng xạ, các bài ném, chuyển động tròn đều, định luật II Kepler, con lắc đơn, con lắc lò xo; Hóa học — orbital, thành phần nguyên tử, hydrocarbon; Sinh học 12 — operon lac, di truyền liên kết với giới tính, liên kết gene, đột biến cấu trúc nhiễm sắc thể. Mọi số trong hình do SimLab tính, như hình 2D.
 
 ### Improved
 
@@ -768,7 +769,7 @@ Bản đầu tiên của STEM Sim Lab (tên cũ của SimLab): mô phỏng Vật
 
 - Bản này không có bộ cài phát hành công khai; chỉ có bản dựng thử trên GitHub Actions.
 
-[Unreleased]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/293
+[0.11.0]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.11.0
 [0.10.0]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.10.0
 [0.9.1]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.9.1
 [0.9.0]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.9.0
