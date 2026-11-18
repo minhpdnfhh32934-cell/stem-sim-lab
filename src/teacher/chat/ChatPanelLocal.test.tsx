@@ -109,11 +109,12 @@ describe('AI Teacher chat with the AI on this computer', () => {
     useChatStore.setState({ engine: 'local' });
     render(<ChatPanel teacherPage showScreenContext={false} />);
     const menu = screen.getByRole('combobox', { name: 'Chọn mô hình AI' });
+    // A short name: the full "Qwen 3.5 9B · trong SimLab" wrapped in the 150 px menu (19/11/2026).
     expect(
       within(menu)
         .getAllByRole('option')
         .map((o) => o.textContent),
-    ).toEqual(['AI trực tuyến', 'Gemma cục bộ', 'Qwen 3.5 9B · trong SimLab']);
+    ).toEqual(['AI trực tuyến', 'Gemma cục bộ', 'Qwen trong SimLab']);
   });
 
   it('with a runtime chosen: the local line names it, the answer is labelled with it, nothing online', async () => {

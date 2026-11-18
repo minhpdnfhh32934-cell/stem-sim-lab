@@ -1826,6 +1826,8 @@ const vi = {
     cloud: 'AI trực tuyến',
     gemma: 'Gemma cục bộ',
     local: 'AI trên máy khác',
+    /** The engine menu's short name for Qwen inside SimLab (the AI label keeps the full name). */
+    builtin: 'Qwen trong SimLab',
     localMissingNotice:
       'Em đã chọn AI trên máy khác nhưng chưa chọn chương trình và mô hình, nên chưa có câu hỏi nào được gửi đi. Chọn trong Cài đặt → AI trên máy khác.',
     localOnlyRuntime:

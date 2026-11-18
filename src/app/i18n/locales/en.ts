@@ -1842,6 +1842,7 @@ const en: Messages = {
     cloud: 'Online AI',
     gemma: 'Local Gemma',
     local: 'AI on this computer',
+    builtin: 'Qwen in SimLab',
     localMissingNotice:
       'You chose the AI on this computer but no program and model yet, so no question was sent. Choose them in Settings → AI on this computer.',
     localOnlyRuntime:

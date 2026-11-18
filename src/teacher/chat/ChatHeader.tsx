@@ -68,9 +68,7 @@ export function ChatHeader({
           >
             <option value="cloud">{t('chat.cloud')}</option>
             <option value="gemma">{t('chat.gemma')}</option>
-            <option value="local">
-              {builtinChosen ? t('builtinAi.answerLabel') : t('chat.local')}
-            </option>
+            <option value="local">{builtinChosen ? t('chat.builtin') : t('chat.local')}</option>
           </select>
         </label>
         {speechSupported() && (
