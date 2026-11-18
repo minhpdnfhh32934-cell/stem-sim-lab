@@ -155,8 +155,8 @@
 
   /* Science Card confidence levels (§2.3 of MASTER_PROMPT) */
   --conf-exact: #16804a;
-  --conf-exact-soft: #dcf3e6;
-  --conf-approx: #9a6b00;
+  --conf-exact-soft: #edf9f2;
+  --conf-approx: #8f6300;
   --conf-approx-soft: #fbefcc;
   --conf-qual: #2166b5;
   --conf-qual-soft: #dfeafa;

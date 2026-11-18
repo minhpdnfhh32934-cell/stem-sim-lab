@@ -1115,6 +1115,7 @@ const en: Messages = {
     noAiNote: 'No AI or no internet? You can still learn: open a topic or build a scene.',
     regionLabel: 'Home',
     goHome: 'Back to home',
+    brandLabel: '{name} — Back to home',
     title: 'What shall we learn today?',
     continue: 'Continue where you left off',
     analyze: 'Analyze',

@@ -37,7 +37,8 @@ export const TopBar = memo(function TopBar() {
       <button
         type="button"
         className="topbar__brand"
-        aria-label={t('home.goHome')}
+        // The name starts with the visible "SimLab" (WCAG 2.5.3, axe label-content-name-mismatch).
+        aria-label={t('home.brandLabel', { name: t('app.name') })}
         data-tip={t('home.goHome')}
         data-tip-side="bottom"
         aria-current={home ? 'page' : undefined}
@@ -46,7 +47,9 @@ export const TopBar = memo(function TopBar() {
         <Logo />
         <span className="topbar__brand-text">
           <span className="topbar__name">{t('app.name')}</span>
-          <span className="topbar__tagline">{t('app.tagline')}</span>
+          <span className="topbar__tagline" aria-hidden="true">
+            {t('app.tagline')}
+          </span>
         </span>
         <House className="topbar__home-icon" size={15} strokeWidth={1.75} aria-hidden="true" />
       </button>
