@@ -633,6 +633,9 @@ Khi dùng AI:
   không có WebGL2, app dùng hình 2D và ghi rõ lý do. Từ bản 0.7, mỗi crômatit co xoắn dần ngay tại
   chỗ; ở chất lượng **Cao** có thêm màng nhân kép có lỗ (vỡ thành túi nhỏ ở kì đầu), trung tử 9 bộ
   ba vi ống và các túi tạo tấm tế bào ở thực vật.
+- **Làm mờ phần còn lại** (Nguyên phân 3D và Giảm phân 3D, chế độ Nâng cao, ở bảng bên phải): khi bạn
+  bấm vào một bộ phận, các phần khác mờ đi (mặc định bật). Tắt đi thì phần khác giữ nguyên màu; chỉ
+  hình đổi, số liệu không đổi. Lựa chọn không được lưu khi đóng app.
 - **ADN → mARN → Protein / Đột biến điểm:** dán trình tự ADN (có thể có khoảng trắng, 5′/3′), chọn
   mạch bổ sung hay mạch gốc. Ở Đột biến điểm, chọn dạng đột biến, vị trí và nuclêôtit mới — app so
   sánh protein trước/sau và gọi tên kiểu đột biến.
