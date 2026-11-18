@@ -27,6 +27,12 @@ describe('matchShortcut()', () => {
     expect(matchShortcut(key('Z', { ctrlKey: true, shiftKey: true }), false)).toBe('redo');
   });
 
+  it('Ctrl+/ opens the shortcut list, but not while typing (#195)', () => {
+    expect(matchShortcut(key('/', { ctrlKey: true }), false)).toBe('shortcutSheet');
+    expect(matchShortcut(key('/', { ctrlKey: true }), true)).toBeNull();
+    expect(matchShortcut(key('/'), false)).toBeNull();
+  });
+
   it('treats Cmd (macOS) like Ctrl', () => {
     expect(matchShortcut(key('s', { metaKey: true }), false)).toBe('save');
   });
