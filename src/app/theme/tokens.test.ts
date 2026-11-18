@@ -106,6 +106,23 @@ describe('theme tokens', () => {
   }
 
   for (const [theme, tokens] of Object.entries(THEMES)) {
+    it(`${theme}: each confidence badge's ink reaches 4.5 : 1 on its own tint (#195 axe)`, () => {
+      const low: string[] = [];
+      for (const ink of ['--conf-exact', '--conf-approx', '--conf-qual', '--pending']) {
+        const a = tokens.get(ink);
+        const b = tokens.get(`${ink}-soft`);
+        if (!a || !b) {
+          low.push(`${ink} or its -soft missing`);
+          continue;
+        }
+        const r = contrast(a, b);
+        if (r < 4.5) low.push(`${ink} ${a} on ${b}: ${r.toFixed(2)}`);
+      }
+      expect(low).toEqual([]);
+    });
+  }
+
+  for (const [theme, tokens] of Object.entries(THEMES)) {
     it(`${theme}: the stage accent (selection, cursors, halos) stays ΔE_OK ≥ 0.2 from the text`, () => {
       const accent = tokens.get('--stage-accent');
       const text = tokens.get('--text');
