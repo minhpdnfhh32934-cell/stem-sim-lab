@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useT } from '@/app/i18n';
 import { formatNumber } from '@/app/i18n';
 import { useSettingsStore } from '@/app/settings/settingsStore';
+import { focusUnlessTyping } from '@/app/shortcuts/shortcuts';
 import { useResolvedTheme } from '@/app/theme/useApplyTheme';
 import { useWorkspaceStore } from '@/app/workspaceStore';
 import { FrameMonitor } from '@/perf/frameMonitor';
@@ -46,9 +47,9 @@ export function StageCanvas({ scene }: { scene: PhysicsScene }) {
     colorsRef.current = readThemeColors();
   }, [theme]);
 
-  // Focus the canvas when a scene opens so Space/R work immediately.
+  // Focus the canvas when a scene opens so Space/R work immediately (not while typing a problem).
   useEffect(() => {
-    canvasRef.current?.focus({ preventScroll: true });
+    focusUnlessTyping(canvasRef.current);
   }, [scene]);
 
   // Frame the scene on open / parameter change / "fit view".

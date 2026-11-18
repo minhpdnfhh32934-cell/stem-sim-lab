@@ -55,6 +55,17 @@ test.describe('reduced motion', () => {
       await expect.poll(() => lessonTime(page, which), { timeout: 10_000 }).toBeGreaterThan(t0);
     });
   }
+
+  test('the gas picture follows the model once "Chạy" is pressed', async ({ page }) => {
+    await openTopic(page, 'Hóa học', 'Phân bố Maxwell–Boltzmann');
+    const main = page.getByRole('main');
+    const canvas = main.locator('canvas.chem-canvas').first();
+    await expect(canvas).toBeVisible({ timeout: 20_000 });
+    const picture = () => canvas.evaluate((c: HTMLCanvasElement) => c.toDataURL());
+    const before = await picture();
+    await main.getByRole('button', { name: 'Chạy', exact: true }).click();
+    await expect.poll(picture, { timeout: 10_000 }).not.toBe(before);
+  });
 });
 
 test('without reduced motion the particle lessons still run on open', async ({ page }) => {

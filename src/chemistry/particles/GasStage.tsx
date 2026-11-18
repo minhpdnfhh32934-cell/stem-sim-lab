@@ -1,4 +1,4 @@
-import { Pause, Play, RotateCcw } from 'lucide-react';
+import { Crosshair, Pause, Play, RotateCcw } from 'lucide-react';
 import { useEffect, useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { formatNumber } from '@/app/i18n';
@@ -10,7 +10,15 @@ import { prefersReducedMotion } from '@/ui/three/availability';
 import { IconButton } from '@/ui/IconButton';
 import { CSRC, L, usePublishCard } from '../common';
 import { TYPE_A, TYPE_B, TYPE_C, TYPE_D } from './gas';
-import { gasRuntime, resetGas, sample, useGasStore, type GasMode } from './gasStore';
+import {
+  FOLLOWED,
+  gasRuntime,
+  recordTrail,
+  resetGas,
+  sample,
+  useGasStore,
+  type GasMode,
+} from './gasStore';
 import '../chem.css';
 
 const TYPE_COLOR = ['--chart-1', '--chart-4', '--chart-3', '--chart-2'];
@@ -104,10 +112,18 @@ export function GasStage({ mode }: { mode: GasMode }) {
   const Lz = useLocalized();
   const locale = useSettingsStore((s) => s.locale);
   const st = useGasStore(
-    useShallow((s) => ({ running: s.running, version: s.version, T: s.T, eaKJ: s.eaKJ, n: s.n })),
+    useShallow((s) => ({
+      running: s.running,
+      follow: s.follow,
+      version: s.version,
+      T: s.T,
+      eaKJ: s.eaKJ,
+      n: s.n,
+    })),
   );
   const card = useMemo(() => cardFor(mode), [mode]);
   usePublishCard(card);
+  const still = prefersReducedMotion();
 
   useEffect(() => {
     // Opens running, or paused with reduced motion (#205 C3).
@@ -128,6 +144,7 @@ export function GasStage({ mode }: { mode: GasMode }) {
       const g = gasRuntime.gas;
       if (g && document.visibilityState === 'visible') {
         g.advance(dt * 6);
+        if (useGasStore.getState().follow) recordTrail();
         acc += dt * 6;
         if (acc >= 0.2) {
           acc = 0;
@@ -175,9 +192,41 @@ export function GasStage({ mode }: { mode: GasMode }) {
         ctx.fill();
       }
       ctx.globalAlpha = 1;
+      // "Theo dõi một hạt" (#195): the model's own positions of one particle, newest brightest.
+      // Drawn in the text ink: every particle colour is a data colour (speed, or A/B/C/D).
+      if (useGasStore.getState().follow && FOLLOWED < g.n) {
+        const accent = css('--text');
+        const trail = gasRuntime.trail;
+        ctx.strokeStyle = accent;
+        ctx.lineWidth = 2;
+        ctx.lineCap = 'round';
+        for (let j = 1; j < trail.length; j++) {
+          const a = trail[j - 1];
+          const b = trail[j];
+          if (!a || !b) continue;
+          ctx.globalAlpha = 0.15 + (0.75 * j) / trail.length;
+          ctx.beginPath();
+          ctx.moveTo(x0 + a.x * k, y0 + size - a.y * k);
+          ctx.lineTo(x0 + b.x * k, y0 + size - b.y * k);
+          ctx.stroke();
+        }
+        ctx.globalAlpha = 1;
+        const fx = x0 + (g.x[FOLLOWED] ?? 0) * k;
+        const fy = y0 + size - (g.y[FOLLOWED] ?? 0) * k;
+        ctx.fillStyle = accent;
+        ctx.beginPath();
+        ctx.arc(fx, fy, r * 1.6, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.strokeStyle = css('--bg-stage');
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      }
     },
     true,
-    [mode],
+    // `follow`: a paused or still (reduced motion) picture redraws when it is turned on or off.
+    // With reduced motion the canvas does not animate, so a running model redraws on each UI
+    // tick (`version`, ~4×/s) instead of freezing on its first picture.
+    [mode, st.follow, still ? st.version : 0],
   );
 
   const g = gasRuntime.gas;
@@ -202,6 +251,15 @@ export function GasStage({ mode }: { mode: GasMode }) {
               resetGas();
             }}
           />
+          <IconButton
+            icon={Crosshair}
+            label={Lz(L('Theo dõi một hạt', 'Follow one particle'))}
+            active={st.follow}
+            onClick={() => {
+              gasRuntime.trail = [];
+              useGasStore.setState((s) => ({ follow: !s.follow }));
+            }}
+          />
         </>
 
         {g && (
@@ -220,6 +278,17 @@ export function GasStage({ mode }: { mode: GasMode }) {
             {g.count(TYPE_C)}
             <span className="rx-swatch" style={{ background: 'var(--chart-2)' }} /> D{' '}
             {g.count(TYPE_D)}
+          </span>
+        )}
+        {st.follow && (
+          <span className="chem-chip chem-chip--approx">
+            <span className="rx-swatch" style={{ background: 'var(--text)' }} />{' '}
+            {Lz(
+              L(
+                'Một hạt của mô hình và đường nó vừa đi (đơn vị rút gọn, minh họa)',
+                'One particle of the model and the path it just took (reduced units, illustration)',
+              ),
+            )}
           </span>
         )}
         <span className="chem-chip chem-chip--approx">
