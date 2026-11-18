@@ -33,6 +33,7 @@ const LISTED = [
   'fontLarger',
   'fontSmaller',
   'commandPalette',
+  'shortcutSheet',
 ] as const satisfies readonly ShortcutAction[];
 
 /** "Giao diện": Basic/Advanced, theme, text size, language, layout. */

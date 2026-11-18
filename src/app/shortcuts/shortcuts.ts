@@ -21,7 +21,8 @@ export type ShortcutAction =
   | 'toolProtractor'
   | 'toolStopwatch'
   | 'toolFitView'
-  | 'commandPalette';
+  | 'commandPalette'
+  | 'shortcutSheet';
 
 export interface KeyChord {
   /** `KeyboardEvent.key`, compared case-insensitively. */
@@ -71,6 +72,8 @@ export const SHORTCUTS: readonly ShortcutDef[] = [
   { action: 'toolStopwatch', chords: [{ key: 't' }] },
   { action: 'toolFitView', chords: [{ key: 'f' }] },
   { action: 'commandPalette', chords: [{ key: 'k', ctrl: true }], worksInInputs: true },
+  // Opens Settings → Phím tắt (#195); not while typing, so Ctrl+/ stays the field's own.
+  { action: 'shortcutSheet', chords: [{ key: '/', ctrl: true }] },
 ];
 
 export interface KeyEventLike {

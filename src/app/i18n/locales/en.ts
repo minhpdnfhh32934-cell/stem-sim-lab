@@ -564,6 +564,7 @@ const en: Messages = {
     fontSmaller: 'Decrease font size',
     analyze: 'Analyze problem (in the problem box)',
     commandPalette: 'Quick search: topics, Settings, actions',
+    shortcutSheet: 'Open this list of shortcuts',
   },
   science: {
     cardLabel: 'Science Card',
