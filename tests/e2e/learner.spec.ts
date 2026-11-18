@@ -117,7 +117,7 @@ test('the grade switch fits the narrowest library at the largest font, in Englis
 });
 
 test.describe('Basic / Advanced', () => {
-  test('Basic is the default: key sliders, Đồ thị · Lời giải · Thử thách; Advanced adds the rest', async ({
+  test('Basic is the default: key sliders, Đồ thị · Lời giải · Thử thách · Sổ ghi; Advanced adds the rest', async ({
     page,
   }) => {
     await openLab(page);
@@ -127,7 +127,7 @@ test.describe('Basic / Advanced', () => {
     await expect(mode.getByRole('radio', { name: 'Cơ bản' })).toBeChecked();
 
     const bottom = page.getByRole('tablist', { name: 'Bảng đồ thị và lời giải' });
-    await expect(bottom.getByRole('tab')).toHaveText(['Đồ thị', 'Lời giải', 'Thử thách']);
+    await expect(bottom.getByRole('tab')).toHaveText(['Đồ thị', 'Lời giải', 'Thử thách', 'Sổ ghi']);
     await expect(inspector.getByText('Đối tượng', { exact: true })).toHaveCount(0);
     await expect(page.getByRole('button', { name: /Thước đo góc/ })).toHaveCount(0);
     const sliders = inspector.locator('.params input[type="range"]');
@@ -150,6 +150,7 @@ test.describe('Basic / Advanced', () => {
       'Đồ thị',
       'Lời giải',
       'Thử thách',
+      'Sổ ghi',
       'Số liệu',
     ]);
     await expect(inspector.getByText('Đối tượng', { exact: true })).toBeVisible();
