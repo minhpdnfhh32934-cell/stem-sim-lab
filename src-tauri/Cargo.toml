@@ -41,8 +41,13 @@ windows = { version = "0.62", features = [
   "Win32_Graphics_Direct3D",
   "Win32_Graphics_Direct3D12",
   "Win32_Storage_Packaging_Appx",
-  # Qwen in the app (#190): free disk space before the model download.
+  # Qwen in the app (#190): free disk space before the model download; the server is a child
+  # in a job that dies with the app, and its key comes from the system random generator.
   "Win32_Storage_FileSystem",
+  "Win32_System_JobObjects",
+  "Win32_System_Threading",
+  "Win32_Security",
+  "Win32_Security_Cryptography",
 ] }
 
 [profile.release]
