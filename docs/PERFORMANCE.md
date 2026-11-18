@@ -245,7 +245,9 @@ Vulkan) và model đã ghim, `-c 6000 -np 1`, toàn bộ lớp trên card (`--de
 | Bộ nhớ card đang dùng (nvidia-smi)   | 6 340 MiB (cả card, sau khi nạp) |
 | Tốc độ sinh chữ của một câu ngắn     | 39 token/s                       |
 
-Đây chỉ là một lần thử để biết bộ chạy đọc được model. Bước 9 của #190 đo lại đúng cách (thời gian
-nạp, thời gian ra chữ đầu, bộ nhớ card, 42 câu của bộ chính) qua đường trong app; chưa làm.
+Đây chỉ là một lần thử để biết bộ chạy đọc được model. Bước 9 của #190 (cùng ngày, sau khi gỡ Norton):
+`/health` sẵn sàng sau 4,7 s (tệp model đã trong bộ nhớ đệm của Windows; chưa đo lần nạp nguội), bộ
+nhớ card 1 285 → 6 464 MiB sau khi nạp, 7 647 MiB sau khi trả lời, về 1 288 MiB khi dừng; chữ đầu sau
+126–445 ms; 42 câu: `docs/TEACHING_EVAL.md` "Đợt 18/11/2026".
 Cấu hình tối thiểu: card rời có từ 8 GB bộ nhớ riêng (`src-tauri/src/ai/builtin/device.rs`); card
 tích hợp luôn bị chặn. Server tự tắt sau 10 phút không dùng để trả lại bộ nhớ card.

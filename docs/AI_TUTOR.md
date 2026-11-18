@@ -1120,9 +1120,10 @@ Tests: `device.rs`, `model.rs` (mock HuggingFace), `server.rs` (the test binary 
 `llama-server`), `builtin/mod.rs` (gate, registration, no cloud use), `server_tests.rs` (the key
 on every request), `tests/llama-server-fetch.test.ts`, `tests/tauri-config.test.ts`,
 `tests/workflows.test.ts`, `chatLocalOnly.test.ts` ("Qwen inside the app"), `client.test.ts`,
-`engineChoice.test.ts`, `QwenSettings.test.tsx`. Not yet done: the measurement of step 9 on the
-RTX 4080 through the app's path (waiting since 18/11/2026: `llama-server.exe` disappeared from the
-desktop while Norton 360 was running; `docs/LEGAL_COMPLIANCE.md` §2i, point 4).
+`engineChoice.test.ts`, `QwenSettings.test.tsx`. Step 9 (18/11/2026, after Norton was removed
+and Defender turned on): 34/42 on the main set with the bundled runtime and the flags of
+`server.rs` (33/42 on 10/11), `docs/TEACHING_EVAL.md` "Đợt 18/11/2026". Not yet done: the same run
+through the app's own commands and the Qwen card (the app's 18+ gate is not answered on the desktop).
 
 ## Tested on real hardware (2026-10-12, AMD RDNA 3 GPU, built-in browser)
 
