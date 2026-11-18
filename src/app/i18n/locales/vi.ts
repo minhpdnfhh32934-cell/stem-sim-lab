@@ -574,6 +574,7 @@ const vi = {
     fontSmaller: 'Giảm cỡ chữ',
     analyze: 'Phân tích đề (trong ô đề bài)',
     commandPalette: 'Tìm nhanh: chủ đề, cài đặt, thao tác',
+    shortcutSheet: 'Mở danh sách phím tắt này',
   },
   science: {
     cardLabel: 'Thẻ Khoa học',

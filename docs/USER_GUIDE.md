@@ -849,14 +849,15 @@ Giọng nói ghi lý do. Có thể chọn kiểu giọng (Vui vẻ, Trầm ấm,
 
 ## Phím tắt
 
-| Phím            | Tác dụng                            |
-| --------------- | ----------------------------------- |
-| Space           | Chạy / tạm dừng                     |
-| R               | Đặt lại                             |
-| .               | Bước tiếp theo                      |
-| Ctrl+Z / Ctrl+Y | Hoàn tác / Làm lại                  |
-| Ctrl+S / Ctrl+O | Lưu / mở tệp .stemsim               |
-| F5 / Esc        | Vào / thoát chế độ trình chiếu      |
-| Ctrl+= / Ctrl+- | Tăng / giảm cỡ chữ                  |
-| Ctrl+Enter      | Phân tích đề (khi đang ở ô đề bài)  |
-| Ctrl+K          | Tìm nhanh (chủ đề, trang, thao tác) |
+| Phím            | Tác dụng                                                           |
+| --------------- | ------------------------------------------------------------------ |
+| Space           | Chạy / tạm dừng                                                    |
+| R               | Đặt lại                                                            |
+| .               | Bước tiếp theo                                                     |
+| Ctrl+Z / Ctrl+Y | Hoàn tác / Làm lại                                                 |
+| Ctrl+S / Ctrl+O | Lưu / mở tệp .stemsim                                              |
+| F5 / Esc        | Vào / thoát chế độ trình chiếu                                     |
+| Ctrl+= / Ctrl+- | Tăng / giảm cỡ chữ                                                 |
+| Ctrl+Enter      | Phân tích đề (khi đang ở ô đề bài)                                 |
+| Ctrl+K          | Tìm nhanh (chủ đề, trang, thao tác)                                |
+| Ctrl+/          | Mở danh sách phím tắt (Cài đặt → Phím tắt; không dùng khi đang gõ) |

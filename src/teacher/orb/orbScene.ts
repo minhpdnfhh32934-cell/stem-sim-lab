@@ -9,9 +9,9 @@ import { ORB_BUDGET, orbPoints } from './points';
 import type { OrbParams } from './states';
 
 export interface OrbColors {
-  /** The points (`--teacher-accent`). */
+  /** The points (`--stage-accent`). */
   accent: string;
-  /** The lines (`--teacher-line`). */
+  /** The lines (the same accent, drawn faint). */
   line: string;
   /**
    * Light added to the dark stage (glowing points); false on the light stage, where added light
