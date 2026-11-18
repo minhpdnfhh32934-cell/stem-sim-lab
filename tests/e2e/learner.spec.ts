@@ -151,6 +151,7 @@ test.describe('Basic / Advanced', () => {
       'Lời giải',
       'Thử thách',
       'Sổ ghi',
+      'Quét tham số',
       'Số liệu',
     ]);
     await expect(inspector.getByText('Đối tượng', { exact: true })).toBeVisible();
