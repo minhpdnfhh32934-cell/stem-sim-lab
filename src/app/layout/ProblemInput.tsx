@@ -11,8 +11,7 @@ import { useAiStore } from '@/ai/aiStore';
 import { IconButton } from '@/ui/IconButton';
 
 /**
- * The problem box: the text, "Phân tích đề", the manual scene and the photo button. The classic
- * top bar shows it inline; the bench shell (0.8.1) shows it in its "Đề bài" sheet.
+ * The problem box in the top bar: the text, "Phân tích đề", the manual scene and the photo button.
  */
 export function ProblemInput() {
   const t = useT();

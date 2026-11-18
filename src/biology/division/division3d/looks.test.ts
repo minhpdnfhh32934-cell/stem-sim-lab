@@ -23,23 +23,9 @@ function block(selector: string): Map<string, string> {
 const ROOT = block(':root {');
 const LIGHT = block(":root[data-theme='light']");
 const DARK = block(":root[data-theme='dark']");
-/** The bench shell (0.8.1) overrides some tokens over the classic theme (docs/BENCH_DESIGN.md §4). */
-const BENCH = block(":root[data-shell='bench'] {");
 const THEMES = {
   light: new Map([...ROOT, ...LIGHT]),
   dark: new Map([...ROOT, ...DARK]),
-  'bench light': new Map([
-    ...ROOT,
-    ...LIGHT,
-    ...BENCH,
-    ...block(":root[data-shell='bench']:not([data-theme='dark'])"),
-  ]),
-  'bench dark': new Map([
-    ...ROOT,
-    ...DARK,
-    ...BENCH,
-    ...block(":root[data-shell='bench'][data-theme='dark']"),
-  ]),
 };
 type Theme = keyof typeof THEMES;
 

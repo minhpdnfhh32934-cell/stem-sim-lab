@@ -134,8 +134,7 @@ release history and old work-logs keep the old name). The user accepted:
   `memory` / `usage` (`MemoryView`, `UsageView`: the Rust `ai_usage` counter and `dailyCap`, no
   estimate). The connection chip shows only while an AI can answer; answers sit on glass cards
   (opaque on Low), never a `backdrop-filter`. E2E `tests/e2e/teacher.spec.ts` (the page) and
-  `post198-teacher.spec.ts` (the station's and the age rule's checks, carried over from the bench
-  specs, #263).
+  `post198-teacher.spec.ts` (the station's and the age rule's checks, #263).
 - **GPU choice (0.4.2):** WebView2 ignores the page's `powerPreference` (hybrid laptops get the
   integrated card). `src-tauri/src/gpu.rs` saves the card as PCI ids in `gpu.json` (4–8 hex
   digits: ACPI ids such as Windows-on-ARM `QCOM` are 8; LUIDs change per
@@ -146,9 +145,7 @@ release history and old work-logs keep the old name). The user accepted:
   Measurements and design: `docs/AI_TUTOR.md` → "Choosing the graphics card".
 - **0.4.3 (user decisions 2026-10-12):** the lab panels can no longer be hidden (no top-bar
   buttons, no Ctrl+B/I/J, no in-panel X; only resizing; presentation mode still hides them) — do not
-  add show/hide back. The bench (the only shell from B8 until #263) folded its tray and closed its
-  notebook instead; since #263 the classic window is the shell and this rule applies as written
-  ("Giao diện" below).
+  add show/hide back ("Giao diện" below).
   AI Teacher context is a token budget with an AI-written summary of older turns
   (`src/teacher/chat/memory.ts`, Settings "Trí nhớ hội thoại"); never go back to "last N messages".
   "Giảng trên bảng" is the whiteboard below (one implementation; the earlier compact lesson board
@@ -172,14 +169,18 @@ release-notes` generates `docs/VERSION_HISTORY.md`, `docs/CHANGELOG.md` and
   (`stemsim.whatsnew`). A version has at most 5 `learnerHighlights` (the parser rejects a sixth):
   merge or drop a line to add one. Procedure: `release-notes/README.md`.
 
-## Giao diện: the classic window (the bench is not shown since #263)
+## Giao diện: the classic window (the bench was removed)
 
-**User decision 15/11/2026 (#263):** the classic window (`AppShell`: TopBar, library column, Stage,
-Timeline, bottom panel, Inspector, StatusBar; home "Hôm nay học gì?"; `ChatBubble`) is the only
-shell again. The bench ("Bàn thí nghiệm") is not mounted and `bench.css` is not loaded. Do not add
-bench-style workspace UI back (shelf "Kệ bài", notebook, tray, bench edge, bench header). New
-lesson UI goes into the classic panels: a module's `Stage` / `Panel` / `Bottom`, the Inspector, the
-bottom panel's tabs. The bench source stays in the repo until a cleanup PR the user must confirm.
+**User decisions 15/11/2026 (#263) and 18/11/2026:** the classic window (`AppShell`: TopBar,
+library column, Stage, Timeline, bottom panel, Inspector, StatusBar; home "Hôm nay học gì?";
+`ChatBubble`) is the only shell. The 0.8.1 bench ("Bàn thí nghiệm") was unmounted by #263 and
+removed from the code on 18/11/2026 ("xóa mã Bàn thí nghiệm không dùng"): `src/app/bench/`,
+`bench.css`, the `:root[data-shell='bench']` tokens, its fonts (Be Vietnam Pro, JetBrains Mono),
+`BenchContext`, the bench edge, tray and notebook pieces (`EdgePortal`, `EdgeSteps`, `DriverGrid`,
+a module's `Driver` and `trayStartsFolded`, the physics lessons' `Live` stage, `poeRun`, the
+molecule viewer's "Tự xoay"), `useCutTip` and their tests. Do not add bench-style workspace UI back
+(shelf "Kệ bài", notebook, tray, bench edge, bench header). New lesson UI goes into the classic
+panels: a module's `Stage` / `Panel` / `Bottom`, the Inspector, the bottom panel's tabs.
 
 - **Shell (`src/app/layout/`):** `App` renders `AppShell` in every build (no dev switch, no
   `VITE_*` flag). `TopBar`: logo (back to the launch page), `SubjectSwitch`, `ProblemInput`, AI
@@ -195,29 +196,24 @@ bottom panel's tabs. The bench source stays in the repo until a cleanup PR the u
   Science Studio keeps the library column.
 - **How it came back (#263):** the classic files were restored from `f2e535e9^1` (the last commit
   before #198) with their CSS, their i18n texts and the `--glass-*` tokens. #198 was not reverted
-  as a whole: lessons, fixes and symbols added after it stay. `main.tsx` does not import
-  `bench.css`; `index.html` and `theme-boot.js` set nothing for the bench; nothing mounts
-  `BenchShell`, so `<html data-shell="bench">` is never set, the tokens under
-  `:root[data-shell='bench']` (`tokens.css`) never apply, the bench fonts (`benchFonts.ts`) are
-  never loaded (system fonts) and `BenchContext` (`src/app/bench/shellMode.ts`) is `false`
-  everywhere. Shared parts that read it take their classic branch (`ParamsPanel`, `GraphPanel`,
-  `ChallengePanel`, `Onboarding`, `Tour`, `AgeGate`, `FileMenu`, Settings' theme row, the lesson
-  views' own run controls). A module's `Driver` and `trayStartsFolded` are read by the bench only.
+  as a whole: lessons, fixes and symbols added after it stay.
 - **Kept from the bench era, in the classic window:** the SimLab 3D entry (`LeftSidebar`
-  `GameEntry`); Tệp → "Thông tin máy" in Advanced (`src/app/bench/MachineInfo.tsx`, #201);
-  `ShellOverlays` (`src/app/bench/ShellOverlays.tsx`, mounted by `AppShell`): the Ctrl+K palette
-  and "Nguồn & Giả định" load through `useLoaded` (`src/app/bench/useLoaded.ts`), never
+  `GameEntry`); Tệp → "Thông tin máy" in Advanced (`src/app/project/MachineInfo.tsx`, #201);
+  `ShellOverlays` (`src/app/layout/ShellOverlays.tsx`, mounted by `AppShell`): the Ctrl+K palette
+  and "Nguồn & Giả định" load through `useLoaded` (`src/app/layout/useLoaded.ts`), never
   `React.lazy`: a suspended `lazy()` retries at a low priority that never expires, and a 3D lesson
-  running without end starved it (#228). A failed load toasts "Mình chưa mở được phần này…" and
-  the next open tries again (#229). Pinning a run and the light / dark button were classic
-  already.
+  running without end starved it (#228). A failed load toasts "Mình chưa mở được phần này…"
+  (`app.loadFailed`) and the next open tries again (#229). Pinning a run and the light / dark
+  button were classic already. The bench's i18n keys that classic code still uses moved:
+  `app.loadFailed`, `params.decrease` / `params.increase` (`SliderField`), `teacher.ageLocked`.
 - **Panels:** the 0.4.3 rule applies as written (resize only; presentation mode hides them).
   "Khôi phục bố cục mặc định" is in Settings → Giao diện. `stemsim.layout` stays version 1: the
-  bench fields (`trayFolded`, `trayWidth`, `notebookWidth`, `notebookTabBySubject`,
-  `challengeSeen`) are still saved beside the classic ones; never bump the version (an older copy
-  of the app would drop every saved size).
-- **Overload notices:** slow motion and lower quality show in the `StatusBar`; `PerfNotes` (the
-  bench's on-stage copy) is not mounted. Never let the overload ladder act silently.
+  bench's saved fields (`trayFolded`, `trayWidth`, `notebookWidth`, `notebookTabBySubject`,
+  `challengeSeen`) are ignored on load and dropped at the next save; never bump the version (an
+  older copy of the app would drop every saved size).
+- **Overload notices:** slow motion and lower quality show in the `StatusBar`; in presentation mode,
+  where the status bar is hidden, `PerfNotes` says them over the stage. Never let the overload
+  ladder act silently.
 - **Stage:** run-time readers on stages, charts and 3D read `--stage-accent` (#109), never the
   frame's `--accent`. The stage HUD is not a live region: `StageAnnouncer` speaks state changes
   only (`togglePlay` writes the engine's time with the pause). `workspaceStore.suggestedSpeed` is
@@ -228,30 +224,18 @@ bottom panel's tabs. The bench source stays in the repo until a cleanup PR the u
   focus bubble lets it reach the dialog); a hover bubble stays while the pointer is on it, judged
   by position — the bubble keeps `pointer-events: none`, never block a click (E2E
   `tests/e2e/tooltip.spec.ts`).
-- **E2E:** the specs are in `tests/e2e/` (the Playwright `testDir`; `tests/e2e/bench/` is gone: the
-  classic specs came back, bench tests of features that still exist were carried over to
-  `post198-*.spec.ts`, bench-only ones were deleted). Projects `chromium`, `chromium-3d`
-  (`HEAVY_3D` names, prefixed ones such as `cell-bio3d.spec.ts` included) and `chromium-3d-perf`
-  (`@perf`); one storage state `tests/e2e/storage-state.json`; `nav.ts` (`enterLab`,
-  `openStudioFromLab`, `openTopic`, `openProblem`) enters the lab the way a learner does.
-- **Bench history (0.8.1; user decisions 2026-11-02, plan #54, issues #113 onward; design
-  `docs/BENCH_DESIGN.md`, phases B0–B8 in its §14):** a new interface built from scratch, behind a
-  dev switch from B1 (#115), the only shell from B8 (#193, PR #198, which deleted the classic
-  shell) until #263. What is left is unmounted source: `src/app/bench/` (`BenchShell`,
-  `BenchHeader`, `Notebook`, `Tray`, `DriverGrid`, `Library` = the shelf, `Landing` with the
-  "Tiếp tục: …" link, `FirstRun` with three steps, `ThemeSwitch`, `ToolSwitches`, `speeds.ts` =
-  the Basic speed steps), `bench.css` (uiverse kit B controls, `[data-surface]`; MIT notices in
-  `docs/THIRD_PARTY.md`), the bench tokens (`docs/BENCH_DESIGN.md` §4; AI Teacher's station tokens
-  `--teacher-bg`, `-glow`, `-accent`, `-warn`, `-line`, `-text`, `-text-muted`, `-glass`,
-  `-glass-solid` are declared there and, since #263, in the classic theme blocks too), the fonts Be Vietnam Pro and JetBrains Mono
-  (`benchFonts.ts`, `@fontsource` 5.3.0, OFL-1.1) and `useCutTip` (`src/ui/useCutTip.ts`, used by
-  bench parts only). Their unit tests are still in the suite (`tokens.test.ts`, `recipes.test.ts`
-  and `division3d/looks.test.ts` on bench light / dark too, `benchFonts.test.ts`,
-  `src/app/bench/*.test.*`): never lower a floor while the source is there. The bench rules
-  (panels that fold instead of hiding, D0 144 px, the label "Suy nghĩ kĩ (Think)", which reads
-  "Deepthink" today, and the §13 list: "Sổ ghi" run log, "Ví dụ" presets, parameter sweep, Ctrl+/
-  shortcut sheet, "Hiển thị và trợ năng", "Làm mờ phần còn lại", "Theo dõi một hạt", the "Tiếp
-  tục" link) were decided for the bench; #263 did not carry them over to the classic window.
+- **E2E:** the specs are in `tests/e2e/` (the Playwright `testDir`). Projects `chromium`,
+  `chromium-3d` (`HEAVY_3D` names, prefixed ones such as `cell-bio3d.spec.ts` included) and
+  `chromium-3d-perf` (`@perf`); one storage state `tests/e2e/storage-state.json`; `nav.ts`
+  (`enterLab`, `openStudioFromLab`, `openTopic`) enters the lab the way a learner does. Bench tests
+  of features that still exist were carried over to `post198-*.spec.ts` (#263).
+- **Bench history (0.8.1; user decisions 2026-11-02, plan #54, issues #113 onward):** a new
+  interface built from scratch, behind a dev switch from B1 (#115), the only shell from B8 (#193,
+  PR #198, which deleted the classic shell) until #263, removed from the code on 18/11/2026. Its
+  design record is `docs/BENCH_DESIGN.md` (history only). The rules decided for the bench (panels
+  that fold instead of hiding, D0 144 px, and the §13 list: "Sổ ghi" run log, "Ví dụ" presets,
+  parameter sweep, Ctrl+/ shortcut sheet, "Hiển thị và trợ năng", "Làm mờ phần còn lại", "Theo dõi
+  một hạt", the "Tiếp tục" link) do not apply to the classic window.
 
 ## ⚠️ Supreme rule: scientific integrity (MASTER_PROMPT §2) — never violate
 
@@ -333,7 +317,7 @@ checkout `D:Projectsstem-sim-lab` (kept on `main`), `graphify-out/` (git-ignored
 ## Project map
 
 ```
-src/app/          shell (the classic window, `src/app/layout/`; `src/app/bench/` = the unmounted bench), theme, i18n, settings, shortcuts, stores
+src/app/          shell (the classic window, `src/app/layout/`), theme, i18n, settings, shortcuts, stores
 src/learn/        challenges, predict–observe–explain, progress, break reminder (3b.5)
 src/modules/      ModuleView registry for non-physics topics (and the module-built physics ones)
 src/safety/       age gate, moderation, incident log (the gate itself is in Rust)
@@ -545,8 +529,7 @@ Progress log: `docs/PROGRESS.md`.
 
 - `src/app/learner/`: `HomeScreen` ("Hôm nay học gì?", shown by `AppShell` while `useIsHome()`;
   no stage/timeline/bottom/inspector then, and the top-bar problem box is hidden — the home box is
-  the main action; suggestions by grade, `Badges`; back since #263, the bench's shelf "Kệ bài" had
-  replaced it), `LandingScreen` (the launch page's two cards), `Onboarding` + `onboardingPhase.ts` (not `onboarding.ts`: Windows is case-insensitive, `Onboarding` would resolve to it) (`useOnboardingPhase`: profile → gate → connect
+  the main action; suggestions by grade, `Badges`), `LandingScreen` (the launch page's two cards), `Onboarding` + `onboardingPhase.ts` (not `onboarding.ts`: Windows is case-insensitive, `Onboarding` would resolve to it) (`useOnboardingPhase`: profile → gate → connect
   (only when status is `noKey`) → tour; `AgeGate hold`, the Tour waits for its phase),
   `profileStore` (`stemsim.profile` v2: level, grade, interests, lastTopic; v1 → grade `all`; users with `stemsim.tourDone`
   skip onboarding), `ModeSwitch`.
@@ -647,7 +630,7 @@ Progress log: `docs/PROGRESS.md`.
 - **One age rule for AI Teacher (#246):** `teacherLocked` (`src/safety/safetyStore.ts`: the
   learner answered "under 18") is the one rule for every way into AI Teacher. It is read by Ctrl+K,
   the 3D lessons' "Hỏi thầy" and `openTeacher` / `openTeacherWithQuestion` themselves, so the launch
-  card and the home button are disabled then and say why (`bench.teacherLocked`), and
+  card and the home button are disabled then and say why (`teacher.ageLocked`), and
   `ChatBubble` drops its "open the page" button; the AI itself is refused by `chatService.ts` and
   Rust. A new way in uses
   the same function, never a new condition.
@@ -892,7 +875,7 @@ Progress log: `docs/PROGRESS.md`.
 - Overload: render loops call `reportOverload()` from a `FrameMonitor`; memory watchdog in
   `src/perf/memory.ts` (`registerCacheRelease`). Advanced shows the render quality, FPS and RAM in
   the status bar and, with the quality's measurement, in Tệp → "Thông tin máy"
-  (`src/app/bench/MachineInfo.tsx`, #201): no live region, a dash for a missing number.
+  (`src/app/project/MachineInfo.tsx`, #201): no live region, a dash for a missing number.
 - KaTeX: never put Vietnamese words inside `\text{}` — use the equation `label` instead. A textbook
   symbol's Vietnamese subscript goes inside `\text{}` (`W_{\text{đ}}`, `\alpha_{\text{bđ}}`), never straight in
   math mode (fallback font next to italic letters, KaTeX warning). KaTeX's fonts have "đ" but not "ỏ", "ỉ",

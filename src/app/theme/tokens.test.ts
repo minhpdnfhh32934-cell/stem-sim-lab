@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { deltaEOK, hexOfLinear, linearOf, mixLinear, oklch, type Rgb } from '@/ui/three/color';
@@ -66,15 +66,9 @@ function cvd(hex: string, view: 'normal' | 'deutan' | 'protan'): string {
 const ROOT = themeTokens(':root {');
 const LIGHT = themeTokens(":root[data-theme='light']");
 const DARK = themeTokens(":root[data-theme='dark']");
-/** The bench shell (#113): its shared block, then its light or dark block, over the classic theme. */
-const BENCH = themeTokens(":root[data-shell='bench'] {");
-const BENCH_LIGHT = themeTokens(":root[data-shell='bench']:not([data-theme='dark'])");
-const BENCH_DARK = themeTokens(":root[data-shell='bench'][data-theme='dark']");
 const THEMES = {
   light: theme(ROOT, LIGHT),
   dark: theme(ROOT, DARK),
-  'bench light': theme(ROOT, LIGHT, BENCH, BENCH_LIGHT),
-  'bench dark': theme(ROOT, DARK, BENCH, BENCH_DARK),
 };
 const BACKGROUNDS = ['--bg-app', '--bg-panel', '--bg-panel-2'];
 /** Tokens used for readable text (dimmed codons, hints, counts, warnings). */
@@ -204,165 +198,8 @@ describe('theme tokens', () => {
   });
 });
 
-/**
- * The bench shell's contrast table (design `docs/BENCH_DESIGN.md` §4): text ≥ 4.5 : 1,
- * borders, rings and data colours ≥ 3 : 1. Plots draw only on the stage, the paper or a panel,
- * never on a sunken or active surface, so those are the data colours' backgrounds.
- */
-const PAPER = ['--bg-app', '--bg-panel', '--bg-panel-2', '--bg-active'];
-const FRAME = ['--frame', '--frame-raised', '--frame-pressed'];
-const ON_PAPER = ['--bg-app', '--bg-panel'];
-const BENCH_PAIRS: readonly (readonly [string, readonly string[], number])[] = [
-  ['--text', [...PAPER, '--bg-stage', '--stage-grid'], 4.5],
-  ['--text-muted', [...PAPER, '--bg-stage'], 4.5],
-  ['--text-faint', PAPER, 4.5],
-  ['--border-input', PAPER, 3],
-  ['--frame-line', FRAME, 3],
-  ['--on-frame', FRAME, 4.5],
-  ['--on-frame-muted', FRAME, 4.5],
-  ['--accent', ['--bg-app', '--bg-panel', '--bg-panel-2', '--bg-stage', '--accent-soft'], 4.5],
-  ['--text-on-accent', ['--accent', '--accent-hover'], 4.5],
-  ['--play', FRAME, 3],
-  ['--play-hover', FRAME, 3],
-  ['--on-play', ['--play', '--play-hover'], 4.5],
-  // The main action's 2 px bottom edge reads as depth, not as its boundary (--play is that).
-  ['--play-edge', ['--play'], 2],
-  // Theme switch: the sun / moon on its knob, the knob on its track (the knob's side is the state).
-  // A chat toggle's knob on its track, off and on.
-  ['--switch-knob', ['--border-strong', '--accent'], 3],
-  ['--focus-ring', [...PAPER, '--bg-stage'], 3],
-  ['--focus-frame', FRAME, 3],
-  ['--danger', ON_PAPER, 4.5],
-  ['--on-danger', ['--danger'], 4.5],
-  ['--warning', ['--warning-soft', ...ON_PAPER], 4.5],
-  ['--conf-exact', ['--conf-exact-soft', ...ON_PAPER], 4.5],
-  ['--conf-approx', ['--conf-approx-soft', ...ON_PAPER], 4.5],
-  ['--conf-qual', ['--conf-qual-soft', ...ON_PAPER], 4.5],
-  ['--pending', ['--pending-soft', ...ON_PAPER], 4.5],
-  ['--ink-ai', ['--ink-ai-soft', ...ON_PAPER], 4.5],
-  ['--ink-learner', ['--ink-learner-soft', ...ON_PAPER], 4.5],
-  ['--subject-physics', ON_PAPER, 4.5],
-  ['--subject-chemistry', ON_PAPER, 4.5],
-  ['--subject-biology', ON_PAPER, 4.5],
-  ['--stage-accent', ['--bg-stage'], 3],
-  ['--stage-tool', ['--bg-stage', '--stage-grid'], 3],
-  ...CHARTS.map((c) => [c, ['--bg-stage', ...ON_PAPER], 3] as const),
-];
-
-describe('bench tokens (#113)', () => {
-  for (const name of ['bench light', 'bench dark'] as const) {
-    it(`${name}: every pair of the contrast table reaches its floor`, () => {
-      const tokens = THEMES[name];
-      const failures: string[] = [];
-      for (const [fg, bgs, floor] of BENCH_PAIRS) {
-        for (const bg of bgs) {
-          const a = tokens.get(fg);
-          const b = tokens.get(bg);
-          if (!a || !b) failures.push(`${fg} or ${bg} missing`);
-          else if (contrast(a, b) < floor)
-            failures.push(`${fg} ${a} on ${bg} ${b}: ${contrast(a, b).toFixed(2)} < ${floor}`);
-        }
-      }
-      expect(failures).toEqual([]);
-    });
-  }
-
-  it('both themes set the shadows; reduced motion (the OS or the in-app switch) zeroes every duration', () => {
-    const block = (selector: string) => {
-      const start = CSS.indexOf(selector);
-      return CSS.slice(start, CSS.indexOf('\n}', start));
-    };
-    for (const sel of [
-      ":root[data-shell='bench']:not([data-theme='dark'])",
-      ":root[data-shell='bench'][data-theme='dark']",
-    ])
-      for (const name of ['--shadow-l1', '--shadow-l2']) expect(block(sel)).toContain(`${name}:`);
-    const motion = ['--dur-drawer', '--dur-sheet'];
-    for (const name of motion)
-      expect(block(":root[data-shell='bench'] {")).toMatch(new RegExp(`${name}: [1-9]`));
-    const media = block("@media (prefers-reduced-motion: reduce) {\n  :root[data-shell='bench']");
-    const inApp = block(":root[data-shell='bench'][data-motion='reduce']");
-    for (const name of [...motion, '--press-lift']) {
-      expect(media).toMatch(new RegExp(`${name}: 0`));
-      expect(inApp).toMatch(new RegExp(`${name}: 0`));
-    }
-    for (const name of ['--dur-fast', '--dur-med']) expect(inApp).toMatch(new RegExp(`${name}: 0`));
-  });
-
-  it('dark has its own value for every colour light sets, except the light-only re-steps', () => {
-    const names = (m: Map<string, string>) =>
-      [...m.keys()].filter((n) => !n.startsWith('--chart-') && !n.startsWith('--bio3d-')).sort();
-    expect(names(BENCH_DARK)).toEqual(names(BENCH_LIGHT));
-  });
-
-  it('the classic shell keeps its own values (bench values live only in the bench blocks)', () => {
-    for (const [classic, bench] of [
-      [THEMES.light, THEMES['bench light']],
-      [THEMES.dark, THEMES['bench dark']],
-    ] as const) {
-      expect(classic.get('--accent')).not.toBe(bench.get('--accent'));
-      expect(classic.get('--frame')).toBeUndefined();
-    }
-    expect(THEMES.light.get('--chart-2')).toBe('#e69f00');
-  });
-
-  /**
-   * The closest pair of data colours, for normal vision and the two red–green deficiencies
-   * (Machado, Oliveira & Fernandes 2009, severity 1.0, on linear RGB). Floors: bench light at or
-   * near today's light palette (0.156 / 0.076 / 0.096); bench dark keeps today's dark steps.
-   */
-  const CVD_FLOOR = {
-    'bench light': { normal: 0.15, deutan: 0.08, protan: 0.09 },
-    'bench dark': { normal: 0.085, deutan: 0.036, protan: 0.075 },
-  } as const;
-  for (const [name, floor] of Object.entries(CVD_FLOOR)) {
-    it(`${name}: the closest two chart colours stay apart for normal, deutan and protan vision`, () => {
-      const tokens = THEMES[name as keyof typeof CVD_FLOOR];
-      const charts = CHARTS.map((c) => tokens.get(c) ?? '');
-      const failures: string[] = [];
-      for (const [view, floorOf] of Object.entries(floor)) {
-        const seen = charts.map((c) => cvd(c, view as keyof typeof floor));
-        for (const [i, a] of seen.entries())
-          for (const [j, b] of seen.entries()) {
-            const d = j > i ? deltaEOK(a, b) : Infinity;
-            if (d < floorOf)
-              failures.push(
-                `${view}: chart-${i + 1} vs chart-${j + 1} ${d.toFixed(3)} < ${floorOf}`,
-              );
-          }
-      }
-      expect(failures).toEqual([]);
-    });
-  }
-
-  /**
-   * The 3D point-mutation lesson marks start and stop codons beside the five base colours
-   * (`--chart-1…5`, ROLES baseA…baseU), the changed bases (`--stage-accent`) and muted text, all
-   * with the same shape: in the bench they must differ by colour, also for red–green readers
-   * (≥ 0.15 normal, ≥ 0.08 deutan and protan). The classic shell keeps the confidence inks it
-   * always used (start 0.093 from base A in light today: a known weakness, gone with B8).
-   */
-  const MARK_FLOOR = { normal: 0.15, deutan: 0.08, protan: 0.08 } as const;
-  for (const name of ['bench light', 'bench dark'] as const) {
-    it(`${name}: start and stop codon marks stand apart from the bases and the changed bases`, () => {
-      const tokens = THEMES[name];
-      const near: string[] = [];
-      const marks = ['--dna3d-start', '--dna3d-stop'];
-      for (const mark of marks) {
-        const c = tokens.get(mark) ?? '';
-        expect(contrast(c, tokens.get('--bg-stage') ?? ''), mark).toBeGreaterThanOrEqual(3);
-        const others = [...CHARTS.slice(0, 5), '--stage-accent', '--text-muted'];
-        for (const other of [...others, ...marks.filter((m) => m !== mark)])
-          for (const [view, floor] of Object.entries(MARK_FLOOR)) {
-            const v = view as keyof typeof MARK_FLOOR;
-            const d = deltaEOK(cvd(c, v), cvd(tokens.get(other) ?? '', v));
-            if (d < floor) near.push(`${view}: ${mark} vs ${other}: ${d.toFixed(3)}`);
-          }
-      }
-      expect(near).toEqual([]);
-    });
-  }
-  it('classic: the codon marks are the confidence inks, unchanged', () => {
+describe('3D data colours', () => {
+  it('the codon marks are the confidence inks, unchanged', () => {
     for (const theme of [THEMES.light, THEMES.dark]) {
       expect(theme.get('--dna3d-start')).toBe(theme.get('--conf-exact'));
       expect(theme.get('--dna3d-stop')).toBe(theme.get('--conf-approx'));
@@ -387,24 +224,6 @@ describe('bench tokens (#113)', () => {
           ).toBeGreaterThanOrEqual(0.085);
     });
   }
-
-  it('nothing is blurred under data-shell="bench": every backdrop-filter is a token set to none', () => {
-    const src = resolve(__dirname, '../..');
-    const files = readdirSync(src, { recursive: true, encoding: 'utf8' });
-    const blurs: string[] = [];
-    for (const f of files.filter((n) => /\.(css|tsx?)$/.test(n) && !/\.test\.tsx?$/.test(n))) {
-      const text = readFileSync(resolve(src, f), 'utf8');
-      if (/backdropFilter/.test(text)) blurs.push(`${f}: inline backdropFilter`);
-      // `(backdrop-filter: …)` inside @supports is a condition, not a declaration.
-      for (const m of text.matchAll(/(?<!\()backdrop-filter:\s*([^;{}]+);/g)) {
-        const token = /^var\((--[\w-]+)\)$/.exec(m[1]?.trim() ?? '')?.[1];
-        if (!token) blurs.push(`${f}: backdrop-filter: ${m[1] ?? ''}`);
-        else if (BENCH.get(token) !== 'none')
-          blurs.push(`${f}: ${token} is not none under the bench`);
-      }
-    }
-    expect(blurs).toEqual([]);
-  });
 });
 
 describe("AI Teacher's station tokens (#234)", () => {
@@ -426,7 +245,7 @@ describe("AI Teacher's station tokens (#234)", () => {
       )
       .join('')}`;
 
-  for (const name of ['bench light', 'bench dark'] as const) {
+  for (const name of ['light', 'dark'] as const) {
     const get = (key: string) => {
       const v = THEMES[name].get(key);
       if (!v) throw new Error(`${name}: no ${key}`);

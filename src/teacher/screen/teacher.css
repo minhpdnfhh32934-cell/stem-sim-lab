@@ -226,7 +226,7 @@
 }
 
 /* AI Teacher's answers on glass cards: translucent, opaque on the Low tier or once frames run
-   slow (data-glass, TeacherScreen). Never a backdrop-filter under the bench (tokens.test.ts). */
+   slow (data-glass, TeacherScreen). */
 .teacher .chat-message--assistant .chat-message__body {
   border: 1px solid color-mix(in srgb, var(--teacher-line) 55%, transparent);
   background: var(--teacher-glass);

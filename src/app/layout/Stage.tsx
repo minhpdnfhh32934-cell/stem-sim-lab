@@ -13,13 +13,12 @@ import {
   X,
   type LucideIcon,
 } from 'lucide-react';
-import { memo, useContext } from 'react';
+import { memo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { formatNumber, useT } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { changedParams, togglePin, useCompareStore } from '@/app/sim/compare';
-import { BenchContext } from '@/app/bench/shellMode';
 import { sim as runtime } from '@/app/sim/runtime';
 import { SceneStage } from '@/app/sim/SceneStage';
 import { Stopwatch } from '@/app/sim/Stopwatch';
@@ -98,9 +97,6 @@ export const Stage = memo(function Stage() {
   const ghost = useCompareStore((s) =>
     s.ghost && s.ghost.sceneId === sim.scene?.id ? s.ghost : null,
   );
-  // The bench keeps only "Chọn | Kéo" and "Vừa khung" here: the measuring tools are switches in
-  // its tray and the pin is its D2 (docs/BENCH_DESIGN.md §9.4).
-  const bench = useContext(BenchContext);
   const { show3d } = useShow3d((sim.scene?.id ?? '') as Bio3DLesson);
   const in3d = sim.scene?.view3d !== undefined && show3d;
   const SubjectIcon = SUBJECT_ICON[subject];
@@ -140,9 +136,7 @@ export const Stage = memo(function Stage() {
       {/* The canvas tools; a scene shown in 3D has its own controls (#302). */}
       {!in3d && (
         <div className="stage__toolbar" role="toolbar" aria-label={t('stage.toolbarLabel')}>
-          {MODES.filter((m) =>
-            bench ? m.id === 'select' || m.id === 'drag' : shown(m.basic, activeTool === m.id),
-          ).map((m) => {
+          {MODES.filter((m) => shown(m.basic, activeTool === m.id)).map((m) => {
             const label = t(`stage.tools.${m.id}`);
             const off = disabled && m.id !== 'select';
             return (
@@ -160,7 +154,7 @@ export const Stage = memo(function Stage() {
             );
           })}
           <span className="stage__toolbar-sep" aria-hidden="true" />
-          {TOGGLES.filter((tg) => !bench && shown(tg.basic, sim[tg.id])).map((tg) => {
+          {TOGGLES.filter((tg) => shown(tg.basic, sim[tg.id])).map((tg) => {
             const label = t(`stage.tools.${tg.id}`);
             return (
               <IconButton
@@ -190,7 +184,7 @@ export const Stage = memo(function Stage() {
               useSimStore.setState((s) => ({ fitRequest: s.fitRequest + 1 }));
             }}
           />
-          {sim.scene?.trail && !bench && (
+          {sim.scene?.trail && (
             <IconButton
               icon={ghost ? PinOff : Pin}
               label={t(ghost ? 'stage.tools.unpinCompare' : 'stage.tools.pinCompare')}
@@ -279,7 +273,6 @@ function CompareLegend() {
   const locale = useSettingsStore((s) => s.locale);
   const ghost = useCompareStore((s) => s.ghost);
   const { scene, params } = useSimStore(useShallow((s) => ({ scene: s.scene, params: s.params })));
-  const bench = useContext(BenchContext);
   if (!ghost || !scene) return null;
   const changed = changedParams(
     scene.params.filter((d) => d.kind === 'number'),
@@ -292,19 +285,7 @@ function CompareLegend() {
         <line x1="1" y1="4" x2="25" y2="4" />
       </svg>
       <span>
-        {/* The bench marks a pinned run whose inputs changed since (docs/BENCH_DESIGN.md §2). */}
-        {bench ? (
-          <span>
-            {t('stage.compareLegend')}
-            {changed.length > 0 && (
-              <span className="stage__compare-stale" title={t('stage.compareStaleHint')}>
-                {t('stage.compareStale')}
-              </span>
-            )}
-          </span>
-        ) : (
-          t('stage.compareLegend')
-        )}
+        {t('stage.compareLegend')}
         {changed.length > 0 && (
           <small>
             {t('stage.compareBefore', {

@@ -1,6 +1,5 @@
-import { ChevronsUpDown, Minus, Plus } from 'lucide-react';
-import { useContext, useState } from 'react';
-import { BenchContext } from '@/app/bench/shellMode';
+import { ChevronsUpDown } from 'lucide-react';
+import { useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { basicSplit } from './basicParams';
@@ -13,7 +12,6 @@ import { Equation } from '@/science-card/Equation';
 import { sim } from './runtime';
 import { useSimStore } from './simStore';
 import { fieldText } from '@/ui/fieldText';
-import { IconButton } from '@/ui/IconButton';
 import { NumberField } from '@/ui/NumberField';
 
 /** Parameter sliders + numeric inputs, with the origin of each value (§2.1). */
@@ -76,7 +74,6 @@ function ParamRow({
   const t = useT();
   const L = useLocalized();
   const locale = useSettingsStore((s) => s.locale);
-  const bench = useContext(BenchContext);
   const unit = def.unit ?? '1';
   const shown = def.kind === 'number' ? fromSI(valueSI, unit) : valueSI;
   const id = `param-${def.key}`;
@@ -85,12 +82,6 @@ function ParamRow({
     if (!Number.isFinite(displayValue)) return;
     const clamped = Math.min(def.max ?? Infinity, Math.max(def.min ?? -Infinity, displayValue));
     sim.setParam(def.key, def.kind === 'number' ? toSI(clamped, unit) : clamped);
-  };
-  // The bench's − / + buttons (§9.4): one slider step, or a hundredth of the range without one.
-  const step = def.step ?? ((def.max ?? 1) - (def.min ?? 0)) / 100;
-  const nudge = (sign: 1 | -1) => {
-    const decimals = Math.max(0, -Math.floor(Math.log10(step)) + 1);
-    set(Number((shown + sign * step).toFixed(decimals)));
   };
 
   return (
@@ -124,17 +115,6 @@ function ParamRow({
       </div>
       {def.kind === 'number' && (
         <div className="param__controls">
-          {bench && (
-            <IconButton
-              className="param__step param__step--minus"
-              icon={Minus}
-              label={t('bench.decrease', { name: L(def.label) })}
-              disabled={shown <= (def.min ?? -Infinity)}
-              onClick={() => {
-                nudge(-1);
-              }}
-            />
-          )}
           <input
             type="range"
             aria-label={L(def.label)}
@@ -163,17 +143,6 @@ function ParamRow({
               {unitText}
             </span>
           </label>
-          {bench && (
-            <IconButton
-              className="param__step param__step--plus"
-              icon={Plus}
-              label={t('bench.increase', { name: L(def.label) })}
-              disabled={shown >= (def.max ?? Infinity)}
-              onClick={() => {
-                nudge(1);
-              }}
-            />
-          )}
         </div>
       )}
       {def.kind === 'choice' && (

@@ -53,7 +53,7 @@ export function LandingScreen() {
             </span>
             <span className="launch-card__copy">
               <strong>{t('landing.teacherTitle')}</strong>
-              <span>{t(locked ? 'bench.teacherLocked' : 'landing.teacherBody')}</span>
+              <span>{t(locked ? 'teacher.ageLocked' : 'landing.teacherBody')}</span>
             </span>
             <ArrowRight className="launch-card__arrow" size={20} aria-hidden="true" />
           </button>

@@ -46,7 +46,7 @@ export function ChatBubble() {
               <X size={18} />
             </button>
           </header>
-          <EmptyState icon={Lock} title={t('bench.teacherLocked')} compact>
+          <EmptyState icon={Lock} title={t('teacher.ageLocked')} compact>
             <p>{t('safety.gate.minorNote')}</p>
           </EmptyState>
         </section>

@@ -16,7 +16,7 @@ export interface Ghost {
   tracks: Pt[][];
   params: Params;
   /**
-   * The pinned run's recorded samples (the bench's graphs draw them dashed): the same state
+   * The pinned run's recorded samples (the graphs draw them dashed): the same state
    * objects the history kept (it never changes one after recording), never recomputed.
    */
   run: { times: number[]; states: Float64Array[] };
@@ -84,7 +84,7 @@ useSimStore.subscribe((s, prev) => {
 
 /**
  * Pins the run just recorded for comparison (its trail as dashed ghosts), or clears the pinned
- * one: the classic stage tool bar and the bench's D2. Nothing is pinned without a trail.
+ * one (the stage tool bar). Nothing is pinned without a trail.
  */
 export function togglePin(history: Pick<History, 'times' | 'states' | 'length'>): void {
   const { scene, params } = useSimStore.getState();

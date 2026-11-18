@@ -8,8 +8,7 @@ import {
   Sparkles,
   Target,
 } from 'lucide-react';
-import { useContext, useEffect, useId, useMemo, useRef, useState } from 'react';
-import { BenchContext } from '@/app/bench/shellMode';
+import { useEffect, useId, useMemo, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useT } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
@@ -26,7 +25,6 @@ import { cx } from '@/ui/cx';
 import { challengesFor, evaluate, optimum, startParams, type Challenge } from './challenges';
 import { changedValue, observe, poeFor, type Poe } from './poe';
 import { choiceLabel } from './poeLabels';
-import { usePoeRun } from './poeRun';
 import { useProgressStore } from './progressStore';
 import './learn.css';
 
@@ -115,9 +113,6 @@ function PredictCard({ scene, poe }: { scene: PhysicsScene; poe: Poe }) {
   } | null>(null);
   const [observeError, setObserveError] = useState(false);
   const [note, setNote] = useState('');
-  // Bench: "Chốt dự đoán" locks the choice and leaves the run to the main action (§9.4).
-  const bench = useContext(BenchContext);
-  const [locked, setLocked] = useState(false);
   const groupId = useId();
   const noteId = useId();
   const def = scene.params.find((d) => d.key === poe.param);
@@ -140,30 +135,7 @@ function PredictCard({ scene, poe }: { scene: PhysicsScene; poe: Poe }) {
     if (!useWorkspaceStore.getState().playing) sim.togglePlay();
   };
 
-  const runRef = useRef(run);
-  useEffect(() => {
-    runRef.current = run;
-  });
-  const waiting = useRef<(() => void) | null>(null);
-  const release = () => {
-    if (waiting.current && usePoeRun.getState().run === waiting.current)
-      usePoeRun.setState({ run: null });
-    waiting.current = null;
-  };
-  // Leaving the card (another topic, another tab) drops a prediction that never ran.
-  useEffect(() => release, []);
-  const lock = () => {
-    setLocked(true);
-    waiting.current = () => {
-      waiting.current = null;
-      runRef.current();
-    };
-    usePoeRun.setState({ run: waiting.current });
-  };
-
   const restart = () => {
-    release();
-    setLocked(false);
     setObserved(null);
     setChoice(null);
     setObserveError(false);
@@ -186,7 +158,7 @@ function PredictCard({ scene, poe }: { scene: PhysicsScene; poe: Poe }) {
             type="button"
             role="radio"
             aria-checked={choice === i}
-            disabled={observed !== null || locked}
+            disabled={observed !== null}
             className={cx(
               'learn-choice',
               observed !== null && i === observed.correct && 'is-correct',
@@ -202,27 +174,15 @@ function PredictCard({ scene, poe }: { scene: PhysicsScene; poe: Poe }) {
       </div>
       {observed === null ? (
         <>
-          {bench ? (
-            locked ? (
-              <p className="learn-card__locked" role="status">
-                {t('learn.lockedHint')}
-              </p>
-            ) : (
-              <button type="button" className="btn" disabled={choice === null} onClick={lock}>
-                {t('learn.lockPrediction')}
-              </button>
-            )
-          ) : (
-            <button
-              type="button"
-              className="btn btn--accent"
-              disabled={choice === null}
-              onClick={run}
-            >
-              <Play size={15} strokeWidth={1.75} aria-hidden="true" />
-              {t('learn.observe')}
-            </button>
-          )}
+          <button
+            type="button"
+            className="btn btn--accent"
+            disabled={choice === null}
+            onClick={run}
+          >
+            <Play size={15} strokeWidth={1.75} aria-hidden="true" />
+            {t('learn.observe')}
+          </button>
           {observeError && (
             <p className="learn-result__verdict" role="alert">
               {t('learn.observeFailed')}

@@ -50,7 +50,7 @@ export function SliderField({
         <IconButton
           className="param__step param__step--minus"
           icon={Minus}
-          label={t('bench.decrease', { name: label })}
+          label={t('params.decrease', { name: label })}
           disabled={value <= min}
           onClick={() => {
             nudge(-1);
@@ -88,7 +88,7 @@ export function SliderField({
         <IconButton
           className="param__step param__step--plus"
           icon={Plus}
-          label={t('bench.increase', { name: label })}
+          label={t('params.increase', { name: label })}
           disabled={value >= max}
           onClick={() => {
             nudge(1);

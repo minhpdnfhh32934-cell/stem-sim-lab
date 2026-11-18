@@ -1,9 +1,6 @@
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
-import { BenchLibrary } from '@/app/bench/Library';
-import { BenchContext } from '@/app/bench/shellMode';
 import { useLayoutStore } from '@/app/layout/layoutStore';
-import { useNavigationStore } from '@/app/navigationStore';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { usePerfStore } from '@/perf/perfStore';
 import { FileMenu } from './FileMenu';
@@ -17,13 +14,9 @@ afterEach(() => {
   });
 });
 
-/** The classic window's menu; `bench` gives the bench header's (unmounted since #263). */
-function openMenu(bench = false) {
-  render(
-    <BenchContext.Provider value={bench}>
-      <FileMenu />
-    </BenchContext.Provider>,
-  );
+/** Opens the classic window's Tệp menu. */
+function openMenu() {
+  render(<FileMenu />);
   fireEvent.click(screen.getByRole('button', { name: 'Tệp' }));
 }
 
@@ -34,36 +27,6 @@ describe('Tệp menu in the classic window (#263)', () => {
     expect(screen.queryByRole('menuitem', { name: 'Lịch sử' })).toBeNull();
     expect(screen.queryByRole('menuitem', { name: 'Chế độ trình chiếu (F5)' })).toBeNull();
     expect(screen.queryByRole('menuitemcheckbox')).toBeNull();
-  });
-});
-
-describe('Tệp menu on the bench (docs/BENCH_DESIGN.md: Lịch sử, Chế độ trình chiếu)', () => {
-  it('"Chế độ trình chiếu (F5)" turns presentation on (the bench has no other button for it)', () => {
-    openMenu(true);
-    fireEvent.click(screen.getByRole('menuitem', { name: 'Chế độ trình chiếu (F5)' }));
-    expect(useLayoutStore.getState().presentation).toBe(true);
-  });
-
-  it('"Lịch sử" goes to the shelf and opens its list, in Basic too', () => {
-    act(() => {
-      useSettingsStore.getState().setUiMode('basic');
-      useNavigationStore.getState().setScreen('home');
-    });
-    openMenu(true);
-    fireEvent.click(screen.getByRole('menuitem', { name: 'Lịch sử' }));
-    expect(useNavigationStore.getState().screen).toBe('lab');
-    expect(useProjectUi.getState().historyOpen).toBe(true);
-    render(<BenchLibrary />);
-    const toggle = screen.getByRole('button', { name: 'Lịch sử', expanded: true });
-    // The menu item is gone: the focus follows the list it opened, once.
-    expect(toggle).toHaveFocus();
-    expect(useProjectUi.getState().historyFocus).toBe(false);
-    // Basic keeps "Soạn bài" for Advanced; closing the list hides the section again, and the
-    // focus goes to the search field instead of <body>.
-    expect(screen.queryByRole('button', { name: 'Soạn bài' })).toBeNull();
-    fireEvent.click(toggle);
-    expect(screen.queryByRole('button', { name: 'Lịch sử' })).toBeNull();
-    expect(screen.getByRole('searchbox', { name: 'Tìm chủ đề…' })).toHaveFocus();
   });
 });
 
@@ -122,27 +85,5 @@ describe('"Thông tin máy" in Tệp: quality, FPS and RAM for Advanced (#201)',
     const dialog = screen.getByRole('dialog', { name: 'Thông tin máy' });
     expect(dialog).toHaveTextContent('chưa đo');
     expect(within(dialog).getAllByText('—')).toHaveLength(2);
-  });
-});
-
-describe('light / dark in Tệp (#205 B2: there when the header is short of room)', () => {
-  it('"Giao diện tối" is a checkbox item that switches the theme, and the arrows reach it', () => {
-    act(() => {
-      useSettingsStore.getState().setTheme('light');
-    });
-    openMenu(true);
-    const item = screen.getByRole('menuitemcheckbox', { name: 'Giao diện tối' });
-    expect(item).toHaveAttribute('aria-checked', 'false');
-    // Up from the first item wraps to the last one: the theme item.
-    const first = screen.getAllByRole('menuitem')[0];
-    if (!first) throw new Error('no items');
-    first.focus();
-    fireEvent.keyDown(first, { key: 'ArrowUp' });
-    expect(item).toHaveFocus();
-    fireEvent.click(item);
-    expect(useSettingsStore.getState().theme).toBe('dark');
-    act(() => {
-      useSettingsStore.getState().setTheme('system');
-    });
   });
 });

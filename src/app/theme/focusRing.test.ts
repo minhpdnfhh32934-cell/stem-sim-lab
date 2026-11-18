@@ -7,10 +7,6 @@ import { cssDeclarations } from './cssTesting';
  * (its box, its card, a colour change), listed here with that rule.
  */
 const RING_ELSEWHERE: Record<string, string> = {
-  'src/app/bench/bench.css .param__num .param__number:focus-visible':
-    'src/app/bench/bench.css .param__num:focus-within',
-  'src/app/bench/bench.css .shelf-card__open:focus-visible':
-    'src/app/bench/bench.css .shelf-card:has(.shelf-card__open:focus-visible)',
   'src/app/command/command.css .command-palette__search input':
     'src/app/command/command.css .command-palette__search:focus-within',
   'src/app/layout/layout.css .splitter:focus-visible':

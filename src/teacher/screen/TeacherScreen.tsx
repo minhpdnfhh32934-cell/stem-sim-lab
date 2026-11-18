@@ -1,6 +1,6 @@
 import { ArrowLeft, Info } from 'lucide-react';
 import { useEffect, useId, useRef, useState, type ComponentProps } from 'react';
-import { useLoaded, type Loaded } from '@/app/bench/useLoaded';
+import { useLoaded, type Loaded } from '@/app/layout/useLoaded';
 import { useT, type MessageKey } from '@/app/i18n';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useAiStatusView } from '@/app/ai/aiStatusView';
@@ -68,7 +68,7 @@ export default function TeacherScreen() {
     board,
     layout === 'board',
     loadBoard,
-    t('bench.loadFailed'),
+    t('app.loadFailed'),
     backToTalk,
   );
   // The board teaches the latest answer that is not about part of the board (latestLesson.ts).

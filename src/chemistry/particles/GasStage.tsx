@@ -1,6 +1,5 @@
 import { Pause, Play, RotateCcw } from 'lucide-react';
-import { useContext, useEffect, useMemo } from 'react';
-import { BenchContext } from '@/app/bench/shellMode';
+import { useEffect, useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { formatNumber } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
@@ -103,8 +102,6 @@ function cardFor(mode: GasMode): ScienceCardData {
 /** Particle view shared by the Maxwell–Boltzmann and collision-theory modules. */
 export function GasStage({ mode }: { mode: GasMode }) {
   const Lz = useLocalized();
-  // The bench runs and restarts from its edge (GasDriver).
-  const bench = useContext(BenchContext);
   const locale = useSettingsStore((s) => s.locale);
   const st = useGasStore(
     useShallow((s) => ({ running: s.running, version: s.version, T: s.T, eaKJ: s.eaKJ, n: s.n })),
@@ -189,25 +186,24 @@ export function GasStage({ mode }: { mode: GasMode }) {
     <div className="chem-view chem-view--flush">
       <canvas ref={canvasRef} className="chem-canvas" aria-label={Lz(card.title)} />
       <div className="chem-overlay">
-        {!bench && (
-          <>
-            <IconButton
-              icon={st.running ? Pause : Play}
-              label={st.running ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Chạy', 'Run'))}
-              variant="solid"
-              onClick={() => {
-                useGasStore.setState((s) => ({ running: !s.running }));
-              }}
-            />
-            <IconButton
-              icon={RotateCcw}
-              label={Lz(L('Làm lại từ đầu', 'Restart'))}
-              onClick={() => {
-                resetGas();
-              }}
-            />
-          </>
-        )}
+        <>
+          <IconButton
+            icon={st.running ? Pause : Play}
+            label={st.running ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Chạy', 'Run'))}
+            variant="solid"
+            onClick={() => {
+              useGasStore.setState((s) => ({ running: !s.running }));
+            }}
+          />
+          <IconButton
+            icon={RotateCcw}
+            label={Lz(L('Làm lại từ đầu', 'Restart'))}
+            onClick={() => {
+              resetGas();
+            }}
+          />
+        </>
+
         {g && (
           <span className="chem-chip">
             {Lz(L('Nhiệt độ động học', 'Kinetic temperature'))}: {f(g.temperature() * st.T, 4)} K ·{' '}

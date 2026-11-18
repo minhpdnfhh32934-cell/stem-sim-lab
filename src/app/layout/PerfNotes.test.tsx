@@ -23,7 +23,7 @@ describe('the overload ladder is never silent', () => {
     ]);
   });
 
-  // The bench's notices (B8): no screen mounts them since #263, the component is still there.
+  // Presentation mode hides the status bar; these notices say the same over the stage.
   it('PerfNotes: chips with the factor, and a live line without it', () => {
     const { rerender } = render(<PerfNotes className="stage__notes" />);
     // The live line is there before any notice, so the first one is read out.

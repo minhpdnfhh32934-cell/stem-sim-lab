@@ -1,5 +1,4 @@
-import { useContext, useId, useState } from 'react';
-import { BenchContext } from '@/app/bench/shellMode';
+import { useId, useState } from 'react';
 import { useT } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import type { StudioScenario } from '../scenario';
@@ -25,7 +24,6 @@ interface Props {
 /** Create/edit form: engine choices first, then the teacher's own text. */
 export function ScenarioEditor({ initial, onDone }: Props) {
   const t = useT();
-  const bench = useContext(BenchContext);
   const L = useLocalized();
   const ids = useId();
   const [draft, setDraft] = useState(initial);
@@ -52,13 +50,6 @@ export function ScenarioEditor({ initial, onDone }: Props) {
       }}
     >
       <h2>{t(`studio.authoring.editor.${draft.id ? 'editTitle' : 'newTitle'}`, { subject })}</h2>
-      {bench && (
-        <nav className="author-nav" aria-label={t('studio.authoringNav')}>
-          <a href="#author-engine">{t('studio.authoring.editor.enginePart')}</a>
-          <a href="#author-teacher">{t('studio.authoring.editor.teacherPart')}</a>
-          <a href="#author-save">{t('studio.authoring.editor.save')}</a>
-        </nav>
-      )}
 
       <section id="author-engine" className="author-section">
         <h3>{t('studio.authoring.editor.enginePart')}</h3>

@@ -7,9 +7,9 @@ import { IconButton } from '@/ui/IconButton';
 
 /**
  * Tệp → "Thông tin máy" (Advanced, #201): the render quality with its measurement, the frame
- * rate and the memory the classic status bar showed (B8 removed it; the bench edge's columns are
- * fixed, §8). The numbers change all the time, so nothing here is a live region; a missing one is
- * a dash, never a guess. Esc or "Đóng" closes it; the caller puts the focus back on Tệp.
+ * rate and the memory, also in the status bar. The numbers change all the time, so nothing here
+ * is a live region; a missing one is a dash, never a guess. Esc or "Đóng" closes it; the caller
+ * puts the focus back on Tệp.
  */
 export function MachineInfoDialog({ onClose }: { onClose: () => void }) {
   const t = useT();
