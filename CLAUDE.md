@@ -575,6 +575,13 @@ Progress log: `docs/PROGRESS.md`.
   callbacks, never during render), `Celebrate` for a reached goal (no scores/streaks); floating
   overlays use the `--glass-*` tokens (back with the classic window, #263). Ctrl+K palette: `src/app/command/` (lazy; topics come from
   `CATALOG`, Settings pages from `src/app/settings/sectionMeta.ts`).
+- Effects after the SimLab 3D game (user request 2026-11-19, `docs/EFFECTS.md`, `src/app/fx/`):
+  opening `Intro`, screen change `screenChange` (View Transitions: circle from the press + the
+  logo's orbit, `ScreenPortal`), launch-page drift and reveals (`fx.css`). `data-fx` is `off` in
+  unit tests, automated browsers (unless `?fx=1`, `tests/e2e/fx.spec.ts`) and on the Low tier;
+  reduced motion keeps only fades. With effects on, `screenChange` runs its update one frame later:
+  a navigation function sets everything inside it (e.g. `openTeacherOn('board')`, never
+  `openTeacher()` then a layout). No sound effects, no cursor trail (user choice).
 
 ## Learning (3b.5, `src/learn/`)
 
