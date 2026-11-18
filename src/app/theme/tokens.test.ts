@@ -226,25 +226,15 @@ describe('3D data colours', () => {
   }
 });
 
-describe("AI Teacher's station tokens (#234)", () => {
-  const ALPHA =
-    Number(
-      /--teacher-glass: color-mix\(in srgb, var\(--teacher-glass-solid\) (\d+)%, transparent\)/.exec(
-        CSS,
-      )?.[1],
-    ) / 100;
-  /** The glass panel over a background: sRGB alpha compositing, as the browser draws it. */
-  const over = (fg: string, bg: string) =>
-    `#${[1, 3, 5]
-      .map((i) =>
-        Math.round(
-          ALPHA * parseInt(fg.slice(i, i + 2), 16) + (1 - ALPHA) * parseInt(bg.slice(i, i + 2), 16),
-        )
-          .toString(16)
-          .padStart(2, '0'),
-      )
-      .join('')}`;
+/** AI Teacher's page stylesheets, read as text without their comments (issue numbers). */
+const TEACHER_CSS = ['teacher.css', 'teacherViews.css'].map((f) =>
+  readFileSync(resolve(__dirname, '../../teacher/screen', f), 'utf8').replace(
+    /\/\*[\s\S]*?\*\//g,
+    '',
+  ),
+);
 
+describe("AI Teacher's page in the app's look (18/11/2026; #234's station before)", () => {
   for (const name of ['light', 'dark'] as const) {
     const get = (key: string) => {
       const v = THEMES[name].get(key);
@@ -252,35 +242,29 @@ describe("AI Teacher's station tokens (#234)", () => {
       return v;
     };
 
-    it(`${name}: text, labels, the accent and amber reach 4.5 : 1 on the stage, its glow and the glass`, () => {
-      const stage = [get('--teacher-bg'), get('--teacher-glow')];
-      const grounds = [
-        ...stage,
-        get('--teacher-glass-solid'),
-        ...stage.map((g) => over(get('--teacher-glass-solid'), g)),
-      ];
+    it(`${name}: text, labels, the accent and amber reach 4.5 : 1 on the page, its panel and its cards`, () => {
       const low: string[] = [];
-      for (const ink of [
-        '--teacher-text',
-        '--teacher-text-muted',
-        '--teacher-accent',
-        '--teacher-warn',
-      ])
-        for (const g of grounds) {
-          const c = contrast(get(ink), g);
-          if (c < 4.5) low.push(`${ink} on ${g}: ${c.toFixed(2)}`);
+      for (const ink of ['--text', '--text-muted', '--accent', '--warning'])
+        for (const ground of ['--bg-stage', '--bg-panel', '--bg-panel-2']) {
+          const c = contrast(get(ink), get(ground));
+          if (c < 4.5) low.push(`${ink} on ${ground}: ${c.toFixed(2)}`);
         }
       expect(low).toEqual([]);
     });
 
-    it(`${name}: the orb's lines and the cards' edges reach 3 : 1 on the stage and its glow`, () => {
-      for (const g of [get('--teacher-bg'), get('--teacher-glow')])
-        expect(contrast(get('--teacher-line'), g)).toBeGreaterThanOrEqual(3);
+    it(`${name}: the orb (the stage accent) reaches 3 : 1 on the page`, () => {
+      expect(contrast(get('--stage-accent'), get('--bg-stage'))).toBeGreaterThanOrEqual(3);
     });
   }
 
-  it('the glass is translucent, never below 70 % (the text stays readable over the glow)', () => {
-    expect(ALPHA).toBeGreaterThanOrEqual(0.7);
-    expect(ALPHA).toBeLessThan(1);
+  it("its stylesheets use the app's tokens only: no colour, no station token of their own", () => {
+    const defined = new Set([...CSS.matchAll(/(--[\w-]+):/g)].map((m) => m[1]));
+    for (const sheet of TEACHER_CSS) {
+      const used = [...sheet.matchAll(/var\((--[\w-]+)/g)].map((m) => m[1] ?? '');
+      expect(used.filter((v) => !defined.has(v))).toEqual([]);
+      // The rings' warm/cool pair (fallback picture) is the B4 face's, shared with the home page.
+      expect(used.filter((v) => /^--teacher-(?!warm$|cool$)/.test(v))).toEqual([]);
+      expect(sheet.match(/#[0-9a-f]{3,8}\b|rgba?\(|hsla?\(/gi)).toBeNull();
+    }
   });
 });

@@ -5,8 +5,9 @@ import { fulfillGemini } from './fakeAi';
 /**
  * AI Teacher checks written after PR #198 for the bench (tests/e2e/bench, no longer run), carried
  * over to the classic window at 1366 × 768: the one age rule on every way in, the page's words
- * (#205 B5, user decision 14/11/2026), the station (#234 steps 4–5: numbered tabs, connection
- * chip, the orb's place, glass cards, the Advanced pages 03 Ghi nhớ and 04 Lượt dùng) and the
+ * (#205 B5, user decision 14/11/2026), the page in the app's look (user request 18/11/2026; #234's
+ * station before: the app's tabs, no second connection chip, the orb's place, the app's chat
+ * cards, the Advanced pages Ghi nhớ and Lượt dùng) and the
  * board's quick requests (#205 B9). What each test checks is unchanged; the bench header's parts
  * (its h1 "AI Teacher") are not in the classic window, the top bar's AI pill is.
  */
@@ -145,7 +146,7 @@ for (const fontScale of [1, 1.4] as const) {
   });
 }
 
-// ───────────── The station (#234 steps 4–5) ─────────────
+// ───────────── The page in the app's look (#234 steps 4–5, 18/11/2026) ─────────────
 
 /** The orb's box once its glide (glide.ts) has played. */
 async function settledBox(slot: Locator) {
@@ -167,21 +168,23 @@ async function seriousForAxe(page: Page) {
 
 for (const theme of ['light', 'dark'] as const)
   for (const fontScale of [1, 1.4])
-    test(`station, ${theme}, ${String(fontScale * 100)} %: tabs, chip, talk ↔ board, no horizontal scroll`, async ({
+    test(`page, ${theme}, ${String(fontScale * 100)} %: app tabs, no chip, talk ↔ board, no horizontal scroll`, async ({
       page,
     }) => {
       await settings(page, theme, fontScale);
       const screen = await openTeacher(page);
 
-      // 01 TRÒ CHUYỆN · 02 BẢNG GIẢNG: the layout switch keeps its radios and their names.
+      // Trò chuyện · Bảng giảng: the layout switch keeps its radios and their names.
       const tabs = screen.getByRole('radiogroup', { name: 'Các trang của AI Teacher' });
       const talk = tabs.getByRole('radio', { name: 'Trò chuyện' });
       const board = tabs.getByRole('radio', { name: 'Bảng giảng' });
       await expect(talk).toHaveAttribute('aria-checked', 'true');
       // Basic mode: the two layouts only (03 Ghi nhớ and 04 Lượt dùng are Advanced pages).
       await expect(tabs.getByRole('radio')).toHaveCount(2);
-      await expect(tabs).toContainText('01');
-      await expect(tabs).toContainText('02');
+      // The app's tabs (as in the bottom panel): an icon and the name each, the open one marked.
+      await expect(tabs.getByRole('radio').locator('svg')).toHaveCount(2);
+      await expect(talk).toHaveClass(/\btabs__tab\b.*\bis-selected\b/);
+      await expect(board).not.toHaveClass(/\bis-selected\b/);
       for (const tab of [talk, board])
         expect((await tab.boundingBox())?.height ?? 0).toBeGreaterThanOrEqual(40);
 
@@ -261,7 +264,7 @@ test('the orb glides to the corner, and jumps there under reduced motion', async
 });
 
 for (const tier of ['medium', 'low'] as const)
-  test(`an answer on a glass card (${tier} tier): AI label, report button, state "Đã trả lời"`, async ({
+  test(`an answer on the app's chat card (${tier} tier): AI label, report button, state "Đã trả lời"`, async ({
     page,
   }) => {
     await settings(page, 'dark');
@@ -277,12 +280,9 @@ for (const tier of ['medium', 'low'] as const)
       fulfillGemini(route, answer),
     );
     const screen = await openTeacher(page);
-    await expect(screen).toHaveAttribute('data-glass', tier === 'low' ? 'solid' : 'glass');
-    // Connected: the chip names who answers, in the top bar pill's words.
+    // Connected: the top bar's pill names who answers; the page does not say it a second time.
     await expect(page.locator('.ai-status__label')).toHaveText('Đã kết nối Gemini');
-    await expect(screen.locator('.teacher__link')).toHaveText(
-      (await page.locator('.ai-status__label').textContent()) ?? '',
-    );
+    await expect(screen.locator('.teacher__link')).toHaveCount(0);
 
     const panel = page.getByRole('region', { name: 'Trò chuyện với AI Teacher' });
     await panel.getByRole('textbox', { name: 'Nhập câu hỏi' }).fill('Gia tốc rơi tự do?');
@@ -295,18 +295,24 @@ for (const tier of ['medium', 'low'] as const)
     ).toBeVisible();
     await expect(screen.locator('.teacher__state')).toHaveText('Đã trả lời');
 
-    // Translucent glass, or an opaque card on the Low tier; never a backdrop-filter.
-    const look = await card.evaluate((el) => {
+    // The app's look on every tier: the answer on the chat card of the lab's bubble
+    // (--bg-panel-2), the conversation on the app's panel (--bg-panel); opaque, no backdrop-filter.
+    const look = (el: Element, token: string) => {
+      const probe = document.createElement('i');
+      probe.style.background = `var(${token})`;
+      el.append(probe);
+      const want = getComputedStyle(probe).backgroundColor;
+      probe.remove();
       const s = getComputedStyle(el);
-      const alpha =
-        /\/\s*([\d.]+)\s*\)$/.exec(s.backgroundColor)?.[1] ??
-        /^rgba\([^)]*,\s*([\d.]+)\)$/.exec(s.backgroundColor)?.[1] ??
-        '1';
-      return { alpha: Number(alpha), blur: s.backdropFilter };
-    });
-    expect(look.blur).toBe('none');
-    if (tier === 'low') expect(look.alpha).toBe(1);
-    else expect(look.alpha).toBeLessThan(1);
+      return { bg: s.backgroundColor, want, blur: s.backdropFilter };
+    };
+    const cardLook = await card.evaluate(look, '--bg-panel-2');
+    expect(cardLook.bg).toBe(cardLook.want);
+    expect(cardLook.blur).toBe('none');
+    const panelLook = await panel.evaluate(look, '--bg-panel');
+    expect(panelLook.bg).toBe(panelLook.want);
+    expect(panelLook.blur).toBe('none');
+    expect(cardLook.want).toMatch(/^rgb\(/);
   });
 
 for (const fontScale of [1, 1.4])
@@ -317,9 +323,8 @@ for (const fontScale of [1, 1.4])
     const screen = await openTeacher(page);
     const tabs = screen.getByRole('radiogroup', { name: 'Các trang của AI Teacher' });
     await expect(tabs.getByRole('radio')).toHaveCount(4);
-    // Numbered by position: no gap where 03 Buổi học and 05 Nguồn are not built yet.
-    await expect(tabs).toContainText('03');
-    await expect(tabs).toContainText('04');
+    // The app's tabs: an icon and the name each (Ghi nhớ, Lượt dùng: their pages' own icons).
+    await expect(tabs.getByRole('radio').locator('svg')).toHaveCount(4);
     for (const tab of await tabs.getByRole('radio').all())
       expect((await tab.boundingBox())?.height ?? 0).toBeGreaterThanOrEqual(40);
 

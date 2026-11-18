@@ -819,24 +819,28 @@ header. On the tutor page the orb below replaced it (#234, user answer 12/11/202
 there only as the orb's fallback. The eyes follow the mouse while the chat is open (off with
 `prefers-reduced-motion`).
 
-## AI Teacher's station (#234, 0.8.1)
+## AI Teacher's page (#234, 0.8.1; the app's look since 18/11/2026)
 
-The tutor page (`src/teacher/screen/TeacherScreen.tsx`) is a "station": its own stage
-(`--teacher-bg` + `--teacher-glow`, dark in the dark theme, pale in the light one), one row of
-numbered tabs with the connection chip, the orb, and AI Teacher's answers on glass cards. Plan and
-the user's answers (12/11/2026): issue #234 (the orb replaces the face on this page; SimLab's colours
-with a light version; tabs 01, 02 and the Advanced "Ghi nhớ" and "Lượt dùng"; no name, logo or
-words of the video that inspired it).
+The tutor page (`src/teacher/screen/TeacherScreen.tsx`) has the orb, the layout tabs, the
+conversation and the board. Plan and the user's answers (12/11/2026): issue #234 (the orb replaces
+the face on this page; tabs for the layouts and the Advanced "Ghi nhớ" and "Lượt dùng"; no name,
+logo or words of the video that inspired it).
 
-Since #263 the station tokens (`--teacher-bg`, `-glow`, `-accent`, `-warn`, `-line`, `-text`,
-`-text-muted`, `-glass`, `-glass-solid`) are declared in the classic theme blocks of
-`tokens.css` (the bench blocks keep their copy), so the page has its stage colours in the classic
-window.
+**The app's look (user request 18/11/2026: "đồng đều với giao diện app").** #234 built the page
+as a "station" with colours of its own (`--teacher-bg`, `-glow`, `-accent`, `-warn`, `-line`,
+`-text`, `-text-muted`, `-glass`, `-glass-solid`: a teal stage, numbered mono tabs, a connection
+chip, glass answer cards). Those tokens are gone; the page uses the app's tokens and pieces only:
+the home screen's `--bg-stage`, the bottom panel's tabs (`.tabs__tab`: icon + name, the sliding
+underline), the lab's chat panel docked in the room (`--bg-panel`, `--shadow-docked`) with its
+chat cards (`--bg-panel-2`), and the light / dark theme of Settings. `tokens.test.ts` checks the
+page's colours (4.5 : 1 for text, 3 : 1 for the orb) and that its stylesheets name no colour and no
+token of their own (the fallback rings keep the B4 `--teacher-warm` / `--teacher-cool`).
 
 - **Orb** (`src/teacher/orb/`): `points.ts` (Fibonacci sphere, seeded jitter, a few inner points;
   `ORB_BUDGET` Medium 300 points / 700 pairs, High 600 / 1500), `neighbors.ts` (pairs computed once),
   `states.ts` (six states → radius, spin, glow, band; blends of 400–600 ms; at most 3 pulses a
-  second), `orbScene.ts` + `OrbView.tsx` (Points and LineSegments sharing one buffer, additive;
+  second), `orbScene.ts` + `OrbView.tsx` (Points and LineSegments sharing one buffer, in the app's
+  `--stage-accent`; additive light in the dark theme, ink in the light one;
   nothing allocated per frame; the loop runs outside React; everything disposed on leave). Fallbacks:
   the Low tier, no WebGL 2 or a lost context draw the SVG rings and the face; reduced motion draws
   the orb once and keeps it still.
@@ -852,17 +856,16 @@ window.
   answers about 180 px of height; the conversation keeps ≥ 70 % of the width, #205 B5); board = the
   orb 88 px in the top-left corner. `glide.ts` moves it with one FLIP transform (500 ms; instant
   with reduced motion), so its canvas is resized once.
-- **Tabs** are the layout radios (`teacherStore.layout`), numbered by position. Advanced mode adds
-  `memory` and `usage` (`MemoryView.tsx`, `UsageView.tsx`); Basic shows 01–02 and falls back to the
-  conversation. On those pages the chat is hidden, not removed, so a question being typed stays.
+- **Tabs** are the layout radios (`teacherStore.layout`) drawn as the app's tabs (an icon and the
+  name each). Advanced mode adds `memory` and `usage` (`MemoryView.tsx`, `UsageView.tsx`); Basic
+  shows the two layouts and falls back to the conversation. On those pages the chat is hidden, not removed, so a question being typed stays.
   "Lượt dùng" reads the Rust counter (`ai_usage`, raised by `count_call`) and the learner's
   `dailyCap`; outside the desktop app it says it cannot count. "Ghi nhớ" shows the AI-written
   summary of older turns with its `AiContentBar`.
-- **Connection chip:** `useAiStatusView()` (the header pill's words), shown only while an AI can
-  answer: the room never repeats "Chưa kết nối AI" (#205 B5).
-- **Glass cards:** AI Teacher's answers on `--teacher-glass`; opaque `--teacher-glass-solid` on the
-  Low tier or once the overload ladder lowered it (`data-glass`). The cards have no
-  `backdrop-filter` of their own.
+- **Who answers** is said by the top bar's AI pill only: the station's second chip (#234) was
+  dropped with the station look (18/11/2026); the room never repeats "Chưa kết nối AI" (#205 B5).
+- **Answers** are the app's chat cards (`chat.css`, as in the lab's bubble), opaque on every tier,
+  never a `backdrop-filter`.
 - **Age lock:** `teacherLocked` (`src/safety/safetyStore.ts`: the learner answered "under 18")
   hides the Ctrl+K commands and the "Hỏi thầy" button of the 3D mitosis and meiosis lessons, and
   `openTeacher` refuses. The classic launch card and the home screen's "Mở AI Teacher" are then
@@ -871,8 +874,8 @@ window.
 - **Tests:** `src/teacher/orb/*.test.ts(x)`, `voiceLevel.test.ts`, `glide.test.ts`,
   `MemoryView.test.tsx`, `UsageView.test.tsx`, `teacherGate.test.ts`; E2E
   `tests/e2e/teacher.spec.ts` (the page) and `tests/e2e/post198-teacher.spec.ts` (the age rule,
-  the numbered tabs, the orb's place, glass cards and the Advanced pages, carried over from the
-  bench specs, #263). Measurements: `docs/PERFORMANCE.md`.
+  the app's tabs, the orb's place, the app's chat cards and the Advanced pages, carried over from
+  the bench specs, #263). Measurements: `docs/PERFORMANCE.md`.
 
 ## Problem analysis and photos
 
