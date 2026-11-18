@@ -32,10 +32,8 @@
     transform: none;
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .learn-card--done {
-    animation: none;
-  }
+:root[data-motion='reduce'] .learn-card--done {
+  animation: none;
 }
 .learn-card__head {
   display: flex;

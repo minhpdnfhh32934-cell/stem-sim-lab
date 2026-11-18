@@ -7,6 +7,8 @@ export type ThemePreference = 'system' | 'light' | 'dark';
 export type ResolvedTheme = 'light' | 'dark';
 /** Basic (default): only what a lesson needs. Advanced: full inspector, data table, CSV. */
 export type UiMode = 'basic' | 'advanced';
+/** Motion in the app (#195): follow Windows, always less, or always full. */
+export type MotionPreference = 'system' | 'reduce' | 'full';
 
 /** Font scale steps offered in Settings (1 = 14px base). */
 export const FONT_SCALES = [0.9, 1, 1.1, 1.25, 1.4] as const;
@@ -19,6 +21,7 @@ export interface SettingsState {
   /** g used only when a problem does not state it (always shown as a default). */
   defaultGravity: GravityPreset;
   uiMode: UiMode;
+  motion: MotionPreference;
   setTheme: (theme: ThemePreference) => void;
   toggleTheme: (current: ResolvedTheme) => void;
   setLocale: (locale: Locale) => void;
@@ -26,6 +29,7 @@ export interface SettingsState {
   stepFontScale: (direction: 1 | -1) => void;
   setDefaultGravity: (g: GravityPreset) => void;
   setUiMode: (mode: UiMode) => void;
+  setMotion: (motion: MotionPreference) => void;
 }
 
 export const DEFAULT_SETTINGS = {
@@ -34,9 +38,10 @@ export const DEFAULT_SETTINGS = {
   fontScale: 1,
   defaultGravity: DEFAULT_GRAVITY,
   uiMode: 'basic',
+  motion: 'system',
 } as const satisfies Pick<
   SettingsState,
-  'theme' | 'locale' | 'fontScale' | 'defaultGravity' | 'uiMode'
+  'theme' | 'locale' | 'fontScale' | 'defaultGravity' | 'uiMode' | 'motion'
 >;
 
 /** Returns the next font scale step in `direction`, clamped to the available steps. */
@@ -72,6 +77,9 @@ export const useSettingsStore = create<SettingsState>()(
       setUiMode: (uiMode) => {
         set({ uiMode });
       },
+      setMotion: (motion) => {
+        set({ motion });
+      },
     }),
     {
       name: 'stemsim.settings',
@@ -79,19 +87,21 @@ export const useSettingsStore = create<SettingsState>()(
       storage: createJSONStorage(() => localStorage),
       // v1 had no uiMode: people who used the app before keep the full (advanced) layout they know.
       // v3: the default g follows the textbook, 9,8 m/s² (user decision 16/11/2026); a g still at
-      // the old default 9,81 moves with it, any other choice stays.
+      // the old default 9,81 moves with it, any other choice stays. `motion` (#195) needs no
+      // version: a saved state without it keeps the default, "system".
       migrate: (persisted, version) => {
         let p = (persisted ?? {}) as Partial<SettingsState>;
         if (version < 2) p = { ...p, uiMode: 'advanced' };
         if (version < 3 && p.defaultGravity === 9.81) p = { ...p, defaultGravity: DEFAULT_GRAVITY };
         return p;
       },
-      partialize: ({ theme, locale, fontScale, defaultGravity, uiMode }) => ({
+      partialize: ({ theme, locale, fontScale, defaultGravity, uiMode, motion }) => ({
         theme,
         locale,
         fontScale,
         defaultGravity,
         uiMode,
+        motion,
       }),
     },
   ),

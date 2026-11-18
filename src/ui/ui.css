@@ -206,10 +206,8 @@
     background-position: 0 0;
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .skeleton__block {
-    animation: none;
-  }
+:root[data-motion='reduce'] .skeleton__block {
+  animation: none;
 }
 
 /* Icon morph (IconButton altIcon): the two icons swap with a turn and a fade. */
@@ -731,12 +729,10 @@ input[type='range'] {
 .no-indicator-motion::before {
   transition: none !important;
 }
-@media (prefers-reduced-motion: reduce) {
-  .segmented.has-indicator::before,
-  .subject-switch.has-indicator::before,
-  .tabs__list.has-indicator::before {
-    transition: none;
-  }
+:root[data-motion='reduce'] .segmented.has-indicator::before,
+:root[data-motion='reduce'] .subject-switch.has-indicator::before,
+:root[data-motion='reduce'] .tabs__list.has-indicator::before {
+  transition: none;
 }
 
 .shortcut-list {
@@ -997,14 +993,12 @@ kbd {
     transform: rotate(var(--a)) translateY(-20px) scale(0.4);
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .celebrate__icon {
-    animation: none;
-  }
-  .celebrate__ring,
-  .celebrate__spark {
-    display: none;
-  }
+:root[data-motion='reduce'] .celebrate__icon {
+  animation: none;
+}
+:root[data-motion='reduce'] .celebrate__ring,
+:root[data-motion='reduce'] .celebrate__spark {
+  display: none;
 }
 
 /* ---------- Progress bar (downloads, pattern 083) ---------- */
@@ -1064,18 +1058,18 @@ kbd {
     transform: translateX(310%);
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .progress-bar__fill {
-    transition: none;
-  }
-  .progress-bar:not(.is-indeterminate, .is-done) .progress-bar__fill::after {
-    display: none;
-  }
-  .progress-bar.is-indeterminate .progress-bar__fill {
-    width: 100%;
-    opacity: 0.45;
-    animation: none;
-  }
+:root[data-motion='reduce'] .progress-bar__fill {
+  transition: none;
+}
+:root[data-motion='reduce']
+  .progress-bar:not(.is-indeterminate, :root[data-motion='reduce'] .is-done)
+  .progress-bar__fill::after {
+  display: none;
+}
+:root[data-motion='reduce'] .progress-bar.is-indeterminate .progress-bar__fill {
+  width: 100%;
+  opacity: 0.45;
+  animation: none;
 }
 
 /* Without backdrop blur the glass would let busy content show through: fall back to a solid panel. */

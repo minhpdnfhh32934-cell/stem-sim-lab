@@ -98,8 +98,14 @@ export function rayAt(camera: THREE.Camera, x: number, y: number): THREE.Raycast
   return ray;
 }
 
-/** Makes `prefers-reduced-motion: reduce` match until the returned function is called. */
+/**
+ * Makes `prefers-reduced-motion: reduce` match, and the app's `data-motion` say so, until the
+ * returned function is called.
+ */
 export function withReducedMotion(): () => void {
+  const root = document.documentElement;
+  const motion = root.dataset.motion;
+  root.dataset.motion = 'reduce';
   // jsdom has no matchMedia, and vitest's global is an accessor: putting the descriptor back
   // would keep the stub, so the old value (undefined) goes back through it.
   const before: unknown = Reflect.get(window, 'matchMedia');
@@ -115,5 +121,7 @@ export function withReducedMotion(): () => void {
     }) as unknown as MediaQueryList;
   return () => {
     Reflect.set(window, 'matchMedia', before);
+    if (motion === undefined) delete root.dataset.motion;
+    else root.dataset.motion = motion;
   };
 }
