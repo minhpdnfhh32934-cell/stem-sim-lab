@@ -420,8 +420,11 @@ sóng dừng trên dây, hoạ âm và chuỗi Fourier, điện trường, mạc
   để đọc giá trị tại thời điểm đó), **Lời giải** (công thức và các bước, đáp số đề hỏi được đánh dấu),
   **Sổ ghi** (mỗi lần bài dừng — hết giờ, chạm đất, bấm Tạm dừng — sổ thêm một dòng: lúc dừng, các
   thông số đã đổi và đáp số do lời giải của bài tính; lần chạy có kéo bằng chuột ghi "Đã can thiệp",
-  không có đáp số; giữ 20 lần gần nhất mỗi bài, chỉ trong lần mở app; nút **Xóa sổ**), **Số liệu**
-  (bảng giá trị, nút Xuất CSV).
+  không có đáp số; giữ 20 lần gần nhất mỗi bài, chỉ trong lần mở app; nút **Xóa sổ**), **Quét
+  tham số** (chế độ Nâng cao: chọn một thông số, từ – đến trong khoảng của thanh trượt, 5–50 điểm và
+  một đáp số, bấm **Quét**; mỗi điểm do lời giải của bài tính, các thông số khác giữ nguyên; điểm bài
+  không nhận hoặc không giải được thì bỏ và ghi rõ, không nối qua; có **Bảng số** và nút Xuất CSV;
+  **Hủy** dừng giữa chừng), **Số liệu** (bảng giá trị, nút Xuất CSV).
 - **Chuyển động tròn đều** (chương cùng tên, như SGK): ô đầu tiên chọn đề cho biết **tốc độ v**,
   **tốc độ góc ω**, **chu kì T** hay **tần số f**; nhập bán kính và đại lượng đó, app tính các đại
   lượng còn lại, gia tốc hướng tâm và lực hướng tâm (đề không cho khối lượng thì dùng m = 0,5 kg, có nhãn **mặc định**). Vectơ vận tốc luôn tiếp
