@@ -95,6 +95,9 @@ function runAction(action: ShortcutAction): boolean {
     case 'commandPalette':
       useCommandPalette.getState().setOpen(true);
       return true;
+    case 'shortcutSheet':
+      workspace.openSettingsAt('shortcuts');
+      return true;
     case 'toolFitView':
       if (!workspace.hasSimulation) return false;
       useSimStore.setState((s) => ({ fitRequest: s.fitRequest + 1 }));

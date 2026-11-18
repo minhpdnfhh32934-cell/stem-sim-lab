@@ -413,7 +413,7 @@ sóng dừng trên dây, hoạ âm và chuỗi Fourier, điện trường, mạc
   "Năng lượng đã lệch … so với lúc đầu" và chuyển sang "Định lượng gần đúng"; bấm **Đặt lại để về
   kết quả chính xác** để chạy lại từ đầu.
 - **Giảm chuyển động:** khi máy đặt "giảm chuyển động" (trên Windows: tắt hiệu ứng hoạt ảnh trong
-  phần Trợ năng), mọi bài mở ở trạng thái dừng, kể cả các bài hạt của Hóa học (Maxwell–Boltzmann, thuyết va chạm, cân bằng hóa
+  phần Trợ năng) hoặc bạn chọn **Cài đặt → Giao diện → Chuyển động → Giảm**, mọi bài mở ở trạng thái dừng, kể cả các bài hạt của Hóa học (Maxwell–Boltzmann, thuyết va chạm, cân bằng hóa
   học) vốn tự chạy khi mở; chỉ chạy khi bạn bấm **Chạy** ở chỗ cũ. Đổi thông số lúc đang dừng thì
   bài vẫn dừng.
 - **Bảng dưới:** **Đồ thị** (x–t, v–t, a–t, năng lượng; chú giải ở cột bên phải, rê chuột lên đồ thị
@@ -795,7 +795,8 @@ Cài đặt chia thành các trang nhỏ, chọn ở cột bên trái (màn hìn
 tên lên/xuống để chuyển trang). Mỗi trang gồm vài ô nhỏ.
 
 - **Giao diện:** chế độ Cơ bản / Nâng cao; sáng / tối / theo hệ thống; cỡ chữ 90–140 %; ngôn ngữ;
-  khôi phục bố cục.
+  chuyển động (Theo hệ thống / Giảm / Đầy đủ: "Giảm" tắt mọi hiệu ứng và việc tự chạy trong app dù
+  Windows để thế nào, "Đầy đủ" giữ chúng dù Windows đặt giảm); khôi phục bố cục.
 - **Mô phỏng & hiệu năng:** chất lượng hiển thị (Tự động / Thấp / Trung bình / Cao, nút Đo lại — chỉ
   ảnh hưởng hình ảnh, không ảnh hưởng số liệu); g mặc định (9,80665 / 9,81 / 9,8 / 10 m/s², chỉ dùng
   khi đề không cho g).
@@ -851,14 +852,15 @@ Giọng nói ghi lý do. Có thể chọn kiểu giọng (Vui vẻ, Trầm ấm,
 
 ## Phím tắt
 
-| Phím            | Tác dụng                            |
-| --------------- | ----------------------------------- |
-| Space           | Chạy / tạm dừng                     |
-| R               | Đặt lại                             |
-| .               | Bước tiếp theo                      |
-| Ctrl+Z / Ctrl+Y | Hoàn tác / Làm lại                  |
-| Ctrl+S / Ctrl+O | Lưu / mở tệp .stemsim               |
-| F5 / Esc        | Vào / thoát chế độ trình chiếu      |
-| Ctrl+= / Ctrl+- | Tăng / giảm cỡ chữ                  |
-| Ctrl+Enter      | Phân tích đề (khi đang ở ô đề bài)  |
-| Ctrl+K          | Tìm nhanh (chủ đề, trang, thao tác) |
+| Phím            | Tác dụng                                                           |
+| --------------- | ------------------------------------------------------------------ |
+| Space           | Chạy / tạm dừng                                                    |
+| R               | Đặt lại                                                            |
+| .               | Bước tiếp theo                                                     |
+| Ctrl+Z / Ctrl+Y | Hoàn tác / Làm lại                                                 |
+| Ctrl+S / Ctrl+O | Lưu / mở tệp .stemsim                                              |
+| F5 / Esc        | Vào / thoát chế độ trình chiếu                                     |
+| Ctrl+= / Ctrl+- | Tăng / giảm cỡ chữ                                                 |
+| Ctrl+Enter      | Phân tích đề (khi đang ở ô đề bài)                                 |
+| Ctrl+K          | Tìm nhanh (chủ đề, trang, thao tác)                                |
+| Ctrl+/          | Mở danh sách phím tắt (Cài đặt → Phím tắt; không dùng khi đang gõ) |
