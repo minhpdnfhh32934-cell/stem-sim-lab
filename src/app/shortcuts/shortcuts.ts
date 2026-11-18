@@ -117,6 +117,14 @@ export function isEditableTarget(target: EventTarget | null): boolean {
   return false;
 }
 
+/**
+ * Focuses `el` (a stage, so Space/R work at once) unless the learner is typing in a field: a lesson
+ * can finish loading after they started typing a problem, and must not take the keys away then.
+ */
+export function focusUnlessTyping(el: HTMLElement | null): void {
+  if (!isEditableTarget(document.activeElement)) el?.focus({ preventScroll: true });
+}
+
 const ACTIVATION_ROLES = new Set([
   'button',
   'tab',

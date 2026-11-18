@@ -20,6 +20,8 @@ export interface GasState {
   eaKJ: number;
   reversible: boolean;
   running: boolean;
+  /** "Theo dõi một hạt" (#195): one particle of the model drawn with its recent path. */
+  follow: boolean;
   /** Bumps whenever the simulation is rebuilt or sampled (UI refresh). */
   version: number;
 }
@@ -34,6 +36,7 @@ export const useGasStore = create<GasState>()(() => ({
   reversible: false,
   // With reduced motion the lesson opens paused (#205 C3).
   running: !prefersReducedMotion(),
+  follow: false,
   version: 0,
 }));
 
@@ -54,11 +57,38 @@ export interface GasHistory {
   speeds: number[];
 }
 
+/** The particle "Theo dõi một hạt" follows (its index in the model). */
+export const FOLLOWED = 0;
+/**
+ * Length of the drawn path, in reduced time: 12 τ is about 2 s on screen (the stage plays 6 τ per
+ * second). Kept in model time, so a pause does not shorten it.
+ */
+export const TRAIL_TAU = 12;
+
+/** Where the followed particle was, read from the model at time `t` (reduced units). */
+export interface TrailPoint {
+  x: number;
+  y: number;
+  t: number;
+}
+
 /** The running gas lives outside React state (updated every frame). */
-export const gasRuntime: { gas: Gas2D | null; history: GasHistory } = {
+export const gasRuntime: { gas: Gas2D | null; history: GasHistory; trail: TrailPoint[] } = {
   gas: null,
   history: { t: [], counts: [[], [], [], []], speeds: [] },
+  trail: [],
 };
+
+/** Adds the followed particle's current place to its path and drops what is older than TRAIL_TAU. */
+export function recordTrail(): void {
+  const g = gasRuntime.gas;
+  if (!g || FOLLOWED >= g.n) return;
+  const trail = gasRuntime.trail;
+  trail.push({ x: g.x[FOLLOWED] ?? 0, y: g.y[FOLLOWED] ?? 0, t: g.time });
+  let old = 0;
+  while (old < trail.length && g.time - (trail[old]?.t ?? g.time) > TRAIL_TAU) old++;
+  if (old > 0) trail.splice(0, old);
+}
 
 export function resetGas(): void {
   const s = useGasStore.getState();
@@ -73,6 +103,7 @@ export function resetGas(): void {
     reversible: s.reversible,
   });
   gasRuntime.history = { t: [], counts: [[], [], [], []], speeds: [] };
+  gasRuntime.trail = [];
   sample();
   useGasStore.setState((st) => ({ version: st.version + 1 }));
 }

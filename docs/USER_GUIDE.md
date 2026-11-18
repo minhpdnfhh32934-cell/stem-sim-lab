@@ -647,6 +647,9 @@ Khi dùng AI:
   − Eₐ nghịch) và đúng tỉ lệ với nhau; hình dạng đường cong chỉ là minh họa định tính.
 - **Mức hạt:** Maxwell–Boltzmann (khí 2D), thuyết va chạm, cân bằng hóa học (nhấn các nút thêm
   chất, đổi nhiệt độ, nén để thấy nguyên lí Le Chatelier).
+  Ở hộp khí (Maxwell–Boltzmann, thuyết va chạm), nút **Theo dõi một hạt** (hình tâm ngắm) tô đậm một
+  hạt của mô hình và vẽ đường nó vừa đi (khoảng 2 giây gần nhất); đó là vị trí mô hình tính, đơn vị rút
+  gọn, chỉ để minh họa. Bấm lần nữa để tắt.
 
 ## Sinh học
 

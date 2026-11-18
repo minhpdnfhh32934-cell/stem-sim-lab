@@ -1114,6 +1114,7 @@ const vi = {
     noAiNote: 'Không có AI hay mất mạng vẫn học được: mở chủ đề trong Thư viện hoặc Tự dựng cảnh.',
     regionLabel: 'Trang chủ',
     goHome: 'Về trang chủ',
+    brandLabel: '{name} — Về trang chủ',
     title: 'Hôm nay học gì?',
     continue: 'Tiếp tục bài đang học',
     analyze: 'Phân tích đề',

@@ -48,7 +48,7 @@ describe('App shell (Phase 0)', () => {
       screen.queryByRole('complementary', { name: 'Bảng thuộc tính' }),
     ).not.toBeInTheDocument();
     // The "SimLab" brand goes back to the landing page.
-    await user.click(screen.getByRole('button', { name: 'Về trang chủ' }));
+    await user.click(screen.getByRole('button', { name: /Về trang chủ/ }));
     expect(screen.getByRole('heading', { name: 'Chào mừng đến với SimLab' })).toBeInTheDocument();
   });
 

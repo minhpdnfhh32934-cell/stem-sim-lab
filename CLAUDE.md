@@ -99,7 +99,9 @@ release history and old work-logs keep the old name). The user accepted:
 - E2E: the app opens on the launch page; specs enter the lab with `tests/e2e/nav.ts`. The first open
   of a lazy module waits up to 20 s (the dev server compiles it on first use). Keep Playwright's
   output in `test-results/` (not watched by Vite): traces written inside the watched project
-  contain `.html` files that make the dev server reload every open page mid-test.
+  contain `.html` files that make the dev server reload every open page mid-test. Off CI the
+  workers are a quarter of the cores (`playwright.config.ts`): they all share one dev server, and
+  Playwright's default (half) gave false failures on a 16-core laptop (18/11/2026).
   `tests/e2e/storage-state.json` sets `stemsim.e2e.noOverload`: on the dev server only,
   `reportOverload()` then never lowers the tier, so a slow CI runner (software WebGL) cannot swap
   a 3D view for its 2D picture mid-test. The ladder is unit-tested (`src/perf/perf.test.ts`); the
