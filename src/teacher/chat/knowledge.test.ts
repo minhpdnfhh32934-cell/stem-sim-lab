@@ -153,6 +153,17 @@ describe('excerpt for the small on-device prompt', () => {
 });
 
 describe('a question about the conversation itself (#128, scripted run on E2B)', () => {
+  it('"tăng", "giảm", "gấp", "lần" name no topic: a reply "Tăng 4 lần" brings no other note', () => {
+    // A learner's short reply is looked up with the question it answers (free fall): it once
+    // also brought the wave-interference note through "tăng" and "lần".
+    expect(ids('Giải thích rơi tự do giúp em\nTăng 4 lần')).toEqual(['physics-motion']);
+    expect(ids('Tăng 4 lần')).toEqual([]);
+    expect(ids('Gấp đôi thì giảm mấy lần?')).toEqual([]);
+    // The compounds that name a topic still find it.
+    expect(ids('Giảm phân là gì?')[0]).toBe('bio-cellcycle');
+    expect(ids('Tăng trưởng quần thể là gì?')[0]).toBe('bio-ecology');
+  });
+
   it('"đầu tiên" names no topic: it no longer finds "tiên phong" in the succession note', () => {
     expect(unambiguousNote('Câu đầu tiên em hỏi là gì?', 'vi')).toEqual([]);
   });
