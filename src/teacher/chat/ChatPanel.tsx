@@ -15,6 +15,7 @@ import { ChatComposer, type QuickAction } from './ChatComposer';
 import { ChatHeader } from './ChatHeader';
 import { ChatMessageView } from './ChatMessageView';
 import { ChatNotices } from './ChatNotices';
+import { MessageBody } from './MessageBody';
 import { useChatVoice } from './useChatVoice';
 import { useBoardStore } from '@/teacher/board/boardStore';
 import {
@@ -571,20 +572,23 @@ export function ChatPanel({
           ))
         )}
         {busy && streaming !== null && (
-          // Text being written (on this computer, or streamed by an online provider): plain text
-          // until the answer is complete (then it is laid out with formulas). It is provisional:
-          // never stored, read aloud or taught on the board; if the answer fails, it goes. Screen
-          // readers hear the finished answer only.
+          // Text being written (on this computer, or streamed by an online provider), laid out as
+          // it comes: headings, lists and every formula already closed; one still open stays as
+          // typed until its closing "$". It is provisional: never stored, read aloud or taught on
+          // the board; if the answer fails, it goes. Screen readers hear the finished answer only.
           <div className="chat-message chat-message--assistant chat-message--streaming">
             <span className="chat-message__avatar">
               <Bot size={15} />
             </span>
             <div className="chat-message__body">
               <span className="sr-only">{t('chat.thinking')}</span>
-              <p aria-hidden="true">
-                {streaming}
-                <span className="chat-message__caret" />
-              </p>
+              <div className="chat-message__live" aria-hidden="true">
+                {streaming.trim() ? (
+                  <MessageBody content={streaming} />
+                ) : (
+                  <span className="chat-message__caret" />
+                )}
+              </div>
             </div>
           </div>
         )}

@@ -305,6 +305,44 @@ describe('AI Teacher chat panel with an online provider', () => {
     });
   });
 
+  it('a streamed answer is laid out as it comes: headings, lists, closed formulas', async () => {
+    let finish: (r: ChatResponse) => void = () => undefined;
+    let push: (shown: string) => void = () => undefined;
+    stream = (_req, onText) => {
+      push = onText;
+      return new Promise((resolve) => {
+        finish = resolve;
+      });
+    };
+    setTransportForTests(fake());
+    await askInPanel('Định luật II là gì?');
+    await waitFor(() => {
+      expect(calls).toHaveLength(1);
+    });
+    const text = String.raw`## Định luật II
+1. Viết $F = m a$.
+2. Suy ra $a = \frac{F}`;
+    push(text);
+    const bubble = await waitFor(() => {
+      const node = document.querySelector('.chat-message--streaming');
+      expect(node).not.toBeNull();
+      return node as HTMLElement;
+    });
+    expect(within(bubble).getByRole('heading', { hidden: true })).toHaveTextContent('Định luật II');
+    expect(bubble.querySelector('ol.msg-list')).not.toBeNull();
+    expect(bubble.textContent).not.toContain('##');
+    // The closed formula is drawn; the one still open stays as typed until it closes.
+    await waitFor(() => {
+      expect(bubble.querySelector('.katex')).not.toBeNull();
+    });
+    expect(bubble.textContent).not.toContain('$F = m a$');
+    expect(bubble.textContent).toContain(String.raw`$a = \frac{F}`);
+    finish({ content: text, model: 'gemini-model', durationMs: 1 });
+    await waitFor(() => {
+      expect(document.querySelector('.chat-message--streaming')).toBeNull();
+    });
+  });
+
   it('a streamed answer shows while it is written; an unsafe piece takes it back', async () => {
     let finish: (r: ChatResponse) => void = () => undefined;
     let push: (shown: string) => void = () => undefined;
