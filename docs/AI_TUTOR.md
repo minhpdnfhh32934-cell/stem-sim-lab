@@ -1110,7 +1110,7 @@ before a start or a question, `stopBuiltin` before Gemma loads). Pictures are ne
 (no mmproj, no vision check). Rust's `builtin-*` errors become study-partner sentences
 (`localRuntime.ts`) that point at the Qwen card.
 
-**Settings.** `src/teacher/chat/settings/QwenSettings.tsx`, the first card of "Gemma cục bộ":
+**Settings.** `src/teacher/chat/settings/QwenSettings.tsx`, the first card of "AI trong SimLab" (called "Gemma cục bộ" until 19/11/2026):
 size and free space, the card it would use, the terms (`open_known_page`: `qwen-model`,
 `apache-2`, `llama-cpp-licence`), download with progress and time left, cancel, resume, choose,
 free the card, unselect, delete, "Bật lại". Without a desktop app, the runtime, or an eligible card it

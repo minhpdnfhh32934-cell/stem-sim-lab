@@ -71,7 +71,7 @@ afterEach(() => {
   setBuiltinClientForTests(null);
 });
 
-describe('the Qwen card (Settings → Gemma cục bộ, #190)', () => {
+describe('the Qwen card (Settings → AI trong SimLab, #190)', () => {
   it('names the size, what the computer needs and the terms before the download', async () => {
     show(base);
     expect(

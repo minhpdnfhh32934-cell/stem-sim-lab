@@ -433,9 +433,9 @@ const vi = {
         'Chọn nhà cung cấp AI trực tuyến, nhập khóa API, đặt giới hạn và dự phòng khi hết lượt.',
       teacher: 'AI Teacher',
       teacherHint: 'Deepthink (một AI thứ hai rà soát câu trả lời) và dữ liệu nào được gửi đi.',
-      local: 'Gemma cục bộ',
+      local: 'AI trong SimLab',
       localHint:
-        'Tải, chọn hoặc xóa mô hình Gemma chạy ngay trên máy: trả lời không cần mạng, không cần khóa.',
+        'Tải, chọn hoặc xóa Gemma và Qwen, các mô hình chạy ngay trong SimLab: trả lời không cần mạng, không cần khóa.',
       gpu: 'GPU cho Gemma',
       gpuHint: 'Card đồ họa đang dùng, độ dài câu trả lời và khi nào giải phóng bộ nhớ GPU.',
       knowledge: 'Thư viện kiến thức',
@@ -1984,20 +1984,20 @@ const vi = {
       builtinUnsupported:
         'Qwen trong app chỉ chạy trong ứng dụng SimLab trên Windows, nên chưa có câu hỏi nào được gửi đi.',
       builtinNoRuntime:
-        'Mình chưa thấy bộ chạy Qwen trong bản SimLab này (có thể phần mềm diệt virus đã cách ly nó), nên chưa có câu hỏi nào được gửi đi. Xem thẻ Qwen trong Cài đặt → Gemma cục bộ.',
+        'Mình chưa thấy bộ chạy Qwen trong bản SimLab này (có thể phần mềm diệt virus đã cách ly nó), nên chưa có câu hỏi nào được gửi đi. Xem thẻ Qwen trong Cài đặt → AI trong SimLab.',
       builtinNoCard:
-        'Máy này chưa có card đồ họa rời từ 8 GB bộ nhớ riêng, nên Qwen chưa chạy được và chưa có câu hỏi nào được gửi đi. Xem thẻ Qwen trong Cài đặt → Gemma cục bộ.',
+        'Máy này chưa có card đồ họa rời từ 8 GB bộ nhớ riêng, nên Qwen chưa chạy được và chưa có câu hỏi nào được gửi đi. Xem thẻ Qwen trong Cài đặt → AI trong SimLab.',
       builtinNoModel:
-        'Em chưa tải Qwen về máy, nên chưa có câu hỏi nào được gửi đi. Tải ở thẻ Qwen trong Cài đặt → Gemma cục bộ.',
+        'Em chưa tải Qwen về máy, nên chưa có câu hỏi nào được gửi đi. Tải ở thẻ Qwen trong Cài đặt → AI trong SimLab.',
       builtinGpuFault:
-        'Card đồ họa vừa gặp lỗi khi chạy Qwen, nên mình đã tắt Qwen cho máy an toàn. Không có câu hỏi nào được gửi lên mạng. Em có thể bật lại ở thẻ Qwen trong Cài đặt → Gemma cục bộ.',
+        'Card đồ họa vừa gặp lỗi khi chạy Qwen, nên mình đã tắt Qwen cho máy an toàn. Không có câu hỏi nào được gửi lên mạng. Em có thể bật lại ở thẻ Qwen trong Cài đặt → AI trong SimLab.',
       builtinStartFailed:
-        'Mình chưa nạp được Qwen lên card đồ họa. Em hỏi lại nhé; nếu lặp lại, xem thẻ Qwen trong Cài đặt → Gemma cục bộ.',
+        'Mình chưa nạp được Qwen lên card đồ họa. Em hỏi lại nhé; nếu lặp lại, xem thẻ Qwen trong Cài đặt → AI trong SimLab.',
       builtinBusy: 'Qwen đang tải về hoặc đang trả lời. Em đợi xong rồi thử lại nhé.',
       builtinNoAnswer:
-        'Qwen chưa viết ra câu trả lời nào. Em hỏi lại nhé; nếu lặp lại, xem thẻ Qwen trong Cài đặt → Gemma cục bộ.',
+        'Qwen chưa viết ra câu trả lời nào. Em hỏi lại nhé; nếu lặp lại, xem thẻ Qwen trong Cài đặt → AI trong SimLab.',
       builtinFailed:
-        'Qwen gặp lỗi khi trả lời, và không có gì được gửi lên mạng. Em hỏi lại nhé; nếu lặp lại, xem thẻ Qwen trong Cài đặt → Gemma cục bộ.',
+        'Qwen gặp lỗi khi trả lời, và không có gì được gửi lên mạng. Em hỏi lại nhé; nếu lặp lại, xem thẻ Qwen trong Cài đặt → AI trong SimLab.',
       /**
        * An online provider could not answer: {who} is the provider ("Gemini"), the reviewer
        * ("Bên rà soát (Claude)") or both providers when the fallback may have answered; {page} is
@@ -2217,7 +2217,7 @@ const vi = {
         'Gemma đang chạy trên card tích hợp. Card tích hợp dễ bị treo với câu hỏi dài; máy có card rời ({name}) nên chọn card rời.',
     },
   },
-  /** "Qwen trong app" (#190): the Qwen card on Settings → Gemma cục bộ, and its answers. */
+  /** "Qwen trong app" (#190): the Qwen card on Settings → AI trong SimLab, and its answers. */
   builtinAi: {
     answerLabel: 'Qwen 3.5 9B · trong SimLab',
     pillHint:
@@ -2225,7 +2225,7 @@ const vi = {
     chatOnly: 'Qwen trả lời ngay trong SimLab trên máy này, không gửi lên mạng.',
     chatHere: 'Qwen trả lời ngay trong SimLab trên máy này.',
     runtimesNote:
-      'AI Teacher đang dùng Qwen trong app (thẻ Qwen ở Cài đặt → Gemma cục bộ). Chọn một chương trình dưới đây sẽ thay Qwen.',
+      'AI Teacher đang dùng Qwen trong app (thẻ Qwen ở Cài đặt → AI trong SimLab). Chọn một chương trình dưới đây sẽ thay Qwen.',
     title: 'Qwen 3.5 9B (mạnh hơn Gemma)',
     intro:
       'Mô hình lớn hơn Gemma, chạy ngay trong SimLab trên card đồ họa rời của máy em: không cần mạng, không cần khóa, không phải cài thêm phần mềm. Câu hỏi không gửi lên mạng.',

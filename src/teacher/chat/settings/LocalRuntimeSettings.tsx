@@ -213,7 +213,7 @@ export function LocalRuntimeSettings() {
   const t = useT();
   const locale = useSettingsStore((s) => s.locale);
   const chosen = useLocalAiStore((s) => s.selected);
-  // "Qwen trong app" is chosen on its own card (Gemma cục bộ): no runtime of this page is.
+  // "Qwen trong app" is chosen on its own card (AI trong SimLab): no runtime of this page is.
   const builtinChosen = chosen?.builtin === true;
   const selected = builtinChosen ? null : chosen;
   const checks = useLocalAiStore((s) => s.checks);
