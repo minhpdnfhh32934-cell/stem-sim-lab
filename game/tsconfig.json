@@ -23,13 +23,5 @@
     "noUnusedParameters": true,
     "useUnknownInCatchVariables": true
   },
-  "include": [
-    "src",
-    "e2e",
-    "vite.config.ts",
-    "vite.wallpaper.config.ts",
-    "playwright.config.ts",
-    "playwright.bench.config.ts",
-    "playwright.app.config.ts"
-  ]
+  "include": ["src", "e2e", "vite.config.ts", "playwright.config.ts", "playwright.bench.config.ts"]
 }

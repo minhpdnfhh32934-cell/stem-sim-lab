@@ -191,6 +191,8 @@ export class SettingsPanel implements GameSystem {
     this.quality.setAttribute('aria-describedby', this.qualityHelp.id);
     this.quality.append(this.qualityLegend);
     GRAPHICS_QUALITIES.forEach((quality, i) => {
+      // Inside SimLab (docs/GAME.md): no Ultra; its textures and real people are not shipped.
+      if (quality === 'ultra' && import.meta.env.VITE_SIMLAB_EMBED === '1') return;
       const tile = el('span', 'settings-tile');
       const hint = this.qualityHints[i] ?? el('span');
       // The hint is shown, not part of the choice's name (read as its description instead).

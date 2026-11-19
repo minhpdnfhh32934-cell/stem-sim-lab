@@ -625,7 +625,7 @@ export class Customiser {
     );
     const tab = TABS[this.tab];
     this.panel.replaceChildren(
-      ...(tab?.photo ? [this.photoRow()] : []),
+      ...(tab?.photo && !(import.meta.env.VITE_SIMLAB_EMBED === '1') ? [this.photoRow()] : []),
       ...(tab?.controls ?? []).map((c) => this.control(c)),
     );
   }
@@ -754,6 +754,8 @@ export class Customiser {
     this.renderTabs();
     this.say(t.ui('custom.photo.reading', 'Reading the face…'));
     try {
+      // Embedded in SimLab: no in-app ML model, so the photo reader is not built in.
+      if (import.meta.env.VITE_SIMLAB_EMBED === '1') return;
       const { readPhoto } = await import('./photoFace');
       const found = await readPhoto(source, w, h);
       if (draft !== this.draft) return;
