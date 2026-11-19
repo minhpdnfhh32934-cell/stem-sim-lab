@@ -10,6 +10,7 @@ import {
 } from '../../multiplayer/protocol';
 import type { SaveSlot } from '../../persistence/saveSlots';
 import type { LanRoom, LanRooms } from '../net/LanRooms';
+import { EMBEDDED } from '../net/simlabHost';
 import { el } from './dom';
 import { radarArt } from './playArt';
 import { playedAgo, playedWhen, stageHead } from './PlayPages';
@@ -167,8 +168,17 @@ export class MultiplayerPage {
       {
         eyebrow: () => t.ui('play.title', 'Play'),
         title: () => t.ui('room.title', 'Multiplayer'),
+        // Inside SimLab there is no voice (simlabHost.ts): chat only.
         lead: () =>
-          t.ui('room.lead', 'A room on your network: talk, chat and run the experiments together.'),
+          EMBEDDED
+            ? t.ui(
+                'room.leadText',
+                'A room on your network: chat and run the experiments together.',
+              )
+            : t.ui(
+                'room.lead',
+                'A room on your network: talk, chat and run the experiments together.',
+              ),
       },
       onBack,
     );

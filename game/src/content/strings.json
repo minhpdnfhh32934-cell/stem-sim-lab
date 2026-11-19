@@ -260,6 +260,7 @@
     "solo.completed": "{n} thí nghiệm đã hoàn thành",
     "solo.latest": "Mới nhất",
     "room.lead": "Một phòng trong mạng của bạn: nói chuyện, chat và cùng làm thí nghiệm.",
+    "room.leadText": "Một phòng trong mạng của bạn: chat và cùng làm thí nghiệm.",
     "room.seenAs": "Người khác thấy tên này trên đầu nhân vật của bạn.",
     "room.createHint": "Trên máy này: mọi người trong mạng thấy ngay.",
     "room.lanLive": "Mạng LAN · {n} phòng đang mở",

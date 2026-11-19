@@ -198,6 +198,9 @@ export class ChatView implements GameSystem {
       // "Báo cáo": the line goes, SimLab's incident log keeps the kind and the time (no content).
       const report = el('button', 'chat-report', t.ui('chat.report', 'Report'));
       report.type = 'button';
+      // A press must not take the focus from the line: its blur closes the chat before the click
+      // (machine B's test, 19/11/2026).
+      report.addEventListener('mousedown', (event) => event.preventDefault());
       report.addEventListener('click', () => {
         reportChat();
         root.replaceChildren(t.ui('chat.reported', 'Reported. The message was hidden.'));

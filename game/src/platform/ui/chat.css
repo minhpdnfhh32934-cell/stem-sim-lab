@@ -27,6 +27,14 @@
   pointer-events: auto;
 }
 
+/* Open, the chat has a solid backing: on a short window it may reach the objective in the top
+   corner, whose text must not show through (machine B's test, 19/11/2026). */
+.chat.open {
+  padding: 8px;
+  border-radius: 8px;
+  background: rgb(10 15 21 / 94%);
+}
+
 .chat-line {
   align-self: flex-start;
   max-width: 100%;
