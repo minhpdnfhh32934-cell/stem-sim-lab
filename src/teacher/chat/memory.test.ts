@@ -290,4 +290,33 @@ describe('"Viết tiếp" joins the rest of a cut answer', () => {
     expect(joinContinuation('t = 2', 's')).toBe('t = 2 s');
     expect(joinContinuation('x = 1', ' 4 m')).toBe('x = 1 4 m');
   });
+
+  it("a remark about the continuing itself is dropped: Gemma 1B's openings (sweep 19/11)", () => {
+    expect(
+      joinContinuation(
+        'Vật rơi với gia',
+        'Đúng vậy, tôi đã dừng lại ở chỗ bị dừng. tốc g = 9,81 m/s².',
+      ),
+    ).toBe('Vật rơi với gia tốc g = 9,81 m/s².');
+    expect(
+      joinContinuation('2. Viết công thức.', 'Tuyệt vời! Tiếp tục viết tiếp… 3. Thay số vào.'),
+    ).toBe('2. Viết công thức.\n3. Thay số vào.');
+    expect(joinContinuation('Ta có', 'Sure, continuing where I left off: F = ma.')).toBe(
+      'Ta có F = ma.',
+    );
+  });
+
+  it('a sentence of the lesson is never taken for such a remark', () => {
+    // Its own content (numbers, a formula) or no word about the continuing: it stays.
+    expect(joinContinuation('Bước 2.', 'Tiếp tục, ta thay t = 2 s vào công thức.')).toBe(
+      'Bước 2. Tiếp tục, ta thay t = 2 s vào công thức.',
+    );
+    expect(joinContinuation('Bước 2.', 'Tuyệt vời! Em làm đúng rồi.')).toBe(
+      'Bước 2. Tuyệt vời! Em làm đúng rồi.',
+    );
+    // A rest that is nothing but the remark is kept as it is (nothing to show otherwise).
+    expect(joinContinuation('Xong.', 'Đúng vậy, tôi đã dừng lại ở chỗ bị dừng.')).toBe(
+      'Xong. Đúng vậy, tôi đã dừng lại ở chỗ bị dừng.',
+    );
+  });
 });

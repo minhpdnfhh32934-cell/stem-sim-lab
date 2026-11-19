@@ -306,13 +306,37 @@ export const CONTINUE_PROMPT: Record<Locale, string> = {
   en: 'Your last answer stopped in the middle because it was too long. Continue exactly where it stopped, without repeating what you wrote and without greeting again.',
 };
 
+/** Words about the continuing itself ("chỗ bị dừng", "viết tiếp", "where I left off"). */
+const RESUME_REMARK =
+  /(?:viết tiếp|tiếp tục viết|chỗ bị dừng|bị dừng|dừng lại|phần còn lại|continu\w* (?:where|from)|left off|pick(?:ing)? up where)/iu;
+/** A word of praise or assent before such a remark ("Tuyệt vời!", "Đúng vậy,", "Sure,"). */
+const ASSENT =
+  /^(?:tuyệt vời|đúng vậy|vâng|dạ|được rồi|được|ok(?:ay)?|sure|great|alright)(?=[\s,.!…:]|$)[\s,.!…:]*/iu;
+
+/**
+ * Gemma 1B sometimes opens the rest with a remark on the continuing itself ("Đúng vậy, tôi đã dừng
+ * lại ở chỗ bị dừng.", "Tuyệt vời! Tiếp tục viết tiếp…": machine B's sweep 19/11/2026); that
+ * opening goes. Only positive evidence: its first sentence names the continuing and has no digit
+ * or formula of its own. A praise alone stays, and a rest that is nothing but the remark stays whole.
+ */
+function withoutResumeRemark(rest: string): string {
+  const text = rest.trimStart();
+  const assent = ASSENT.exec(text)?.[0] ?? '';
+  const after = text.slice(assent.length);
+  const sentence = /^[^.!?…:\n]*[.!?…:]+/u.exec(after)?.[0];
+  if (!sentence || !RESUME_REMARK.test(sentence) || /[\d=$\\]/u.test(sentence)) return rest;
+  const remainder = after.slice(sentence.length).trimStart();
+  return remainder ? remainder : rest;
+}
+
 /**
  * Appends the rest of a cut answer. A part that starts a list item, heading or formula goes on
  * a new line (so the board keeps it as its own step); text cut mid-sentence goes on the same line.
  * A cut inside a number is joined without a space: "x = 1" + "4 m" is "x = 14 m", "9," + "81" is
  * "9,81" (numbers never change), unless the rest itself starts with a space ("1," + " 2, 3").
  */
-export function joinContinuation(previous: string, rest: string): string {
+export function joinContinuation(previous: string, cut: string): string {
+  const rest = withoutResumeRemark(cut);
   const next = rest.trimStart();
   if (/^(#{1,4}\s|\d+[.)]\s|[-*]\s|\$\$)/.test(next)) return `${previous.trimEnd()}\n${next}`;
   if (/\s$/.test(previous)) return `${previous}${next}`;
