@@ -29,6 +29,20 @@ export interface GemmaLocalMessage {
   content: string;
 }
 
+/**
+ * A digit of another script as the plain digit it stands for: E2B once wrote "mv^২" (Bengali
+ * two) for "mv^2" (machine B, #342). Unicode encodes every script's decimal digits as one run of
+ * 0–9, so a digit's value is its distance from the start of its run.
+ */
+export function plainDigits(text: string): string {
+  return text.replace(/(?![0-9])\p{Nd}/gu, (digit) => {
+    const code = digit.codePointAt(0) ?? 0;
+    let zero = code;
+    while (/\p{Nd}/u.test(String.fromCodePoint(zero - 1))) zero -= 1;
+    return String((code - zero) % 10);
+  });
+}
+
 /** Asks the in-browser Gemma model. Extra images go to `images` (ArrayBuffers). */
 export async function gemmaChatText(args: {
   model: string;
@@ -46,7 +60,8 @@ export async function gemmaChatText(args: {
   echo?: string;
 }): Promise<{ content: string; model: string; truncated: boolean }> {
   if (webGPUStatus() !== 'webgpu') throw new AiError('unavailable', 'webgpu-missing');
-  return webGemmaChat({
+  const { onPartial } = args;
+  const answer = await webGemmaChat({
     model: args.model,
     system: args.system,
     messages: args.messages,
@@ -54,10 +69,17 @@ export async function gemmaChatText(args: {
     ...(args.temperature !== undefined ? { temperature: args.temperature } : {}),
     ...(args.maxTokens !== undefined ? { maxTokens: args.maxTokens } : {}),
     ...(args.inputBudget !== undefined ? { inputBudget: args.inputBudget } : {}),
-    ...(args.onPartial ? { onPartial: args.onPartial } : {}),
+    ...(onPartial
+      ? {
+          onPartial: (text: string) => {
+            onPartial(plainDigits(text));
+          },
+        }
+      : {}),
     ...(args.signal ? { signal: args.signal } : {}),
     ...(args.echo ? { echo: args.echo } : {}),
   });
+  return { ...answer, content: plainDigits(answer.content) };
 }
 
 export async function gemmaStatus(model?: string): Promise<GemmaStatus> {

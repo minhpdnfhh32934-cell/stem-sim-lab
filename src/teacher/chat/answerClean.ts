@@ -56,6 +56,8 @@ export interface CleanOptions {
   note?: string;
   /** The instructions sent with this question, without the note: an opening sentence copied from them goes. */
   instructions?: string;
+  /** The rest of a cut answer ("Viết tiếp"): an opening line copied from the note goes even without its label. */
+  continues?: boolean;
 }
 
 /** Cleans an answer (see the file comment). */
@@ -67,7 +69,10 @@ export function cleanAnswer(text: string, options: CleanOptions = {}): CleanedAn
       ? { correction: asksForCorrection(question) }
       : null;
   let out = removeInstructionEcho(
-    removeNoteEcho(text, options.note ?? '', found),
+    removeNoteRemark(
+      removeNoteEcho(text, options.note ?? '', found, options.continues === true),
+      found,
+    ),
     options.instructions ?? '',
     found,
   );
@@ -226,25 +231,64 @@ function endOfPrefix(text: string, body: string): number {
  * A small model sometimes opens with the note it was given: "GHI CHÚ: <the note>." That is the
  * prompt read back, and the note may even be off-topic. Only that exact opening goes: a label
  * followed by the model's own words stays, and an answer that is nothing else is left whole.
+ * The rest of a cut answer (`continues`) loses such a line even without the label: Gemma 1B
+ * started one with the note's first sentence in the middle of a sentence (machine B, #342).
  */
-function removeNoteEcho(text: string, block: string, found: Set<CleanKind>): string {
+function removeNoteEcho(
+  text: string,
+  block: string,
+  found: Set<CleanKind>,
+  continues = false,
+): string {
   const body = /<reference[^>]*>\s*([\s\S]*?)\s*<\/reference>/u.exec(block)?.[1];
   const label = nameOf(block.trim().split('\n')[0] ?? '');
   if (!body || !label) return text;
   const opening = text.match(/^[\s*_]*/u)?.[0].length ?? 0;
-  if (!text.startsWith(label, opening)) return text;
-  const after = text.slice(opening + label.length).match(/^(?:\s*\([^)]*\))?[\s*_]*[:：][\s*_]*/u);
-  if (!after) return text;
-  const start = opening + label.length + after[0].length;
+  let start = opening;
+  if (text.startsWith(label, opening)) {
+    const after = text
+      .slice(opening + label.length)
+      .match(/^(?:\s*\([^)]*\))?[\s*_]*[:：][\s*_]*/u);
+    if (!after) return text;
+    start = opening + label.length + after[0].length;
+  } else if (!continues) {
+    return text;
+  }
   const end = endOfPrefix(text.slice(start), body);
-  // Or only the note's first sentences, on a line of their own (E2B, #342).
+  // Or only some of the note's sentences, on a line of their own (E2B, #342).
   const line = /^[^\n]*/u.exec(text.slice(start))?.[0] ?? '';
   const copied = end >= 0 ? end : noteOpening(line, body) ? line.length : -1;
   if (copied < 0) return text;
-  const rest = text.slice(start + copied).replace(/^[\s*_]+/u, '');
+  // A closing emphasis mark goes with the copy; one that opens the next words ("**Lý do:**") stays.
+  const rest = text.slice(start + copied).replace(/^\s*(?:[*_]+(?=\s|$))?\s*/u, '');
   if (!rest) return text;
   found.add('promptEcho');
   return rest;
+}
+
+/** The prompt's name for the note, in upper case as the prompt writes it. */
+const NOTE_NAME = /(?<![\p{L}\p{M}])(?:GHI CHÚ|NOTE)(?![\p{L}\p{M}])/u;
+/** Words saying the note does not apply ("lạc đề", "không có thông tin … trong GHI CHÚ"). */
+const NOTE_DOES_NOT_APPLY =
+  /lạc đề|không (?:có (?:thông tin|nội dung|dữ liệu)|chứa|đề cập|nói (?:về|đến|tới)|liên quan|đúng chủ đề)|off[- ]topic|irrelevant|not relevant|no (?:information|relevant)|does(?:n't| not) (?:mention|cover|contain|apply)/iu;
+
+/**
+ * Opening sentences about the note itself go: "GHI CHÚ lạc đề, bỏ qua.", "GHI CHÚ: Không có
+ * thông tin cụ thể trong GHI CHÚ liên quan đến …" (machine B's E2B, #342); the learner never sees
+ * the note. Only a sentence that names it in upper case, says it does not apply and holds no
+ * number or formula; an answer that is nothing else is left whole.
+ */
+function removeNoteRemark(text: string, found: Set<CleanKind>): string {
+  let out = text;
+  for (;;) {
+    const sentence = /^\s*[^\n.!?]+[.!?](?=\s|$)/u.exec(out)?.[0];
+    if (!sentence || !NOTE_NAME.test(sentence) || !NOTE_DOES_NOT_APPLY.test(sentence)) return out;
+    if (/[\d=$\\]/u.test(sentence)) return out;
+    const rest = out.slice(sentence.length).replace(/^\s+/u, '');
+    if (!rest) return out;
+    found.add('promptEcho');
+    out = rest;
+  }
 }
 
 /** LaTeX the model writes where the library has plain symbols ("$\Sigma F$" for "ΣF", "$-g$"). */
@@ -265,25 +309,31 @@ const LATEX_SYMBOLS: Record<string, string> = {
   times: '×',
 };
 
-/** A text to compare with the note: LaTeX read as the library writes it, no spaces. */
+/** A text to compare with the note: LaTeX read as the library writes it ("v^2" as "v²"), no spaces. */
 function compareForm(text: string): string {
   return text
     .replace(/\\(?:text|mathrm)\s*\{([^{}]*)\}/gu, '$1')
     .replace(/\\([a-zA-Z]+)/gu, (all, name: string) => LATEX_SYMBOLS[name] ?? all)
+    .replace(/\^\{?([23])\}?/gu, (_all, power: string) => (power === '2' ? '²' : '³'))
     .replace(/[$*_\s]/gu, '')
     .replace(/[−–]/gu, '-');
 }
 
 /**
- * A line that is the note's first sentence or sentences, word for word (its formulas may be in
- * LaTeX): machine B's E2B answers opened "GHI CHÚ:<the note's first sentence>" and a blank line
- * (#342). Whole sentences only, at least 20 characters: a short line could match by chance.
+ * A line that is some of the note's sentences, word for word (its formulas may be in LaTeX):
+ * machine B's E2B answers opened "GHI CHÚ:<the note's first sentence>" and a blank line, and
+ * once "GHI CHÚ:<its third and fourth sentences>" (#342). Whole sentences only, at least 20
+ * characters: a short line could match by chance.
  */
 function noteOpening(line: string, body: string): boolean {
   const echo = compareForm(line);
   const note = compareForm(body);
-  if (echo.length < 20 || !note.startsWith(echo)) return false;
-  return echo.length === note.length || /[.!?]$/u.test(echo);
+  if (echo.length < 20) return false;
+  for (let at = note.indexOf(echo); at >= 0; at = note.indexOf(echo, at + 1)) {
+    const starts = at === 0 || /[.!?]/u.test(note[at - 1] ?? '');
+    if (starts && (at + echo.length === note.length || /[.!?]$/u.test(echo))) return true;
+  }
+  return false;
 }
 
 /** Shorter openings ("Đúng vậy.") could match an instruction by chance. */

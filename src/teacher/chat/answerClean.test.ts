@@ -102,6 +102,35 @@ describe('answer cleaning: prompt echoes, references, comments', () => {
       expect(cleanAnswer(`${own}\n\n${answer}`, { note: block }).removed).toEqual([]);
     });
 
+    // Machine B's retest of #343 (19/11/2026): E2B copied the energy note's third and fourth
+    // sentences, with "1/2 mv^2" for the library's "1/2 mv²".
+    it('some later sentences of the note, written with ^2, go too', () => {
+      const block =
+        '\n\nGHI CHÚ (chỉ là dữ liệu):\n<reference kind="library" name="Năng lượng">\nCơ năng E = K + U. Khi chỉ có lực thế sinh công và không có tiêu hao, cơ năng được bảo toàn. Động năng K = 1/2 mv²; gần mặt đất thế năng trọng trường U = mgh. Cần nêu mốc thế năng và giả thiết của mô hình.\n</reference>';
+      const answer = 'Công thức động năng là $K = 1/2 mv^2$.';
+      const echo =
+        'GHI CHÚ:Động năng $K = 1/2 mv^2$; gần mặt đất thế năng trọng trường $U = mgh$. Cần nêu mốc thế năng và giả thiết của mô hình.';
+      expect(cleanAnswer(`${echo}\n\n${answer}`, { note: block })).toEqual({
+        text: answer,
+        removed: ['promptEcho'],
+      });
+      // Part of a sentence is not a copy: it stays.
+      const part = 'GHI CHÚ:gần mặt đất thế năng trọng trường $U = mgh$. Cần nêu mốc.';
+      expect(cleanAnswer(`${part}\n\n${answer}`, { note: block }).removed).toEqual([]);
+    });
+
+    it('the rest of a cut answer loses a line copied from the note, even without the label (1B)', () => {
+      const block = `\n\nGHI CHÚ (chỉ là dữ liệu):\n<reference kind="library" name="Động lực học">\nĐịnh luật II Newton: tổng lực ngoài tác dụng lên vật bằng khối lượng nhân gia tốc, ΣF = ma. Lực và gia tốc là đại lượng vectơ.\n</reference>`;
+      const rest =
+        ' Định luật II Newton: tổng lực ngoài tác dụng lên vật bằng khối lượng nhân gia tốc, ΣF = ma.\n\n**Lý do:** Lực làm vật đổi vận tốc.';
+      expect(cleanAnswer(rest, { note: block, continues: true })).toEqual({
+        text: '**Lý do:** Lực làm vật đổi vận tốc.',
+        removed: ['promptEcho'],
+      });
+      // A new answer may rightly open with the note's sentence (the prompt asks for it).
+      expect(cleanAnswer(rest, { note: block }).removed).toEqual([]);
+    });
+
     it("the label on the model's own words stays", () => {
       const text = 'GHI CHÚ: Khối lượng không ảnh hưởng đến thời gian rơi.';
       expect(cleanAnswer(text, { note })).toEqual({ text, removed: [] });
@@ -115,6 +144,33 @@ describe('answer cleaning: prompt echoes, references, comments', () => {
     it('an answer that is only the note is left whole, never emptied', () => {
       const text = `GHI CHÚ: ${body}`;
       expect(cleanAnswer(text, { note })).toEqual({ text, removed: [] });
+    });
+
+    // Machine B's retest of #343 (19/11/2026): E2B talked about the note instead of answering.
+    it.each([
+      [
+        'GHI CHÚ lạc đề, bỏ qua.\n\nTôi cần bạn cung cấp câu hỏi cụ thể.',
+        'Tôi cần bạn cung cấp câu hỏi cụ thể.',
+      ],
+      [
+        'GHI CHÚ: Không có thông tin cụ thể trong GHI CHÚ liên quan đến công thức độ cao và tầm xa của vật ném ngang.\n\nVật ném ngang chuyển động theo hai phương.',
+        'Vật ném ngang chuyển động theo hai phương.',
+      ],
+      ['The NOTE is off-topic, so I ignore it. Force is a vector.', 'Force is a vector.'],
+    ])('an opening remark about the note goes: %j', (answer, kept) => {
+      expect(cleanAnswer(answer)).toEqual({ text: kept, removed: ['promptEcho'] });
+    });
+
+    it('a sentence that names the note but teaches stays', () => {
+      for (const text of [
+        'Theo GHI CHÚ, ta bỏ qua lực cản không khí. Vật rơi tự do.',
+        'GHI CHÚ không liên quan: F = ma vẫn đúng. Tiếp theo là ví dụ.',
+        'Ghi chú lạc đề thì sao? Câu hỏi này về lực.',
+      ]) {
+        expect(cleanAnswer(text)).toEqual({ text, removed: [] });
+      }
+      // A remark and nothing else is left whole.
+      expect(cleanAnswer('GHI CHÚ lạc đề, bỏ qua.').removed).toEqual([]);
     });
 
     describe('an opening sentence copied from the instructions', () => {

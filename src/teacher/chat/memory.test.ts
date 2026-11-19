@@ -325,6 +325,56 @@ describe('"Viết tiếp" joins the rest of a cut answer', () => {
     );
   });
 
+  // Machine B's retest of #343 (19/11/2026), Gemma 1B "Ngắn": the six openings word for word.
+  it.each([
+    [' Tôi xin tiếp tục:\n\n**3. Định luật III Newton**', '**3. Định luật III Newton**'],
+    [
+      ' Chuyển động ngang tiếp tục:\n\nKhi vật rơi, hệ tọa độ của nó biến đổi.',
+      'Khi vật rơi, hệ tọa độ của nó biến đổi.',
+    ],
+    [
+      ' Để tiếp tục, chúng ta cần mô tả một ví dụ cụ thể hơn về phản ứng oxi hóa–khử. …\n\n**Ví dụ 2:**',
+      '**Ví dụ 2:**',
+    ],
+    [
+      ' Tuyệt vời! Chúng ta cần tiếp tục phần giải thích về định luật II Newton.\n\n**Định luật II Newton (Tiếp tục):**',
+      '**Định luật II Newton (Tiếp tục):**',
+    ],
+    [
+      ' Tuyệt vời! Chúng ta cần tiếp tục phần giải thích về định luật II Newton, đặc biệt là khi liên quan đến việc tính toán chính xác.\n\nLực càng lớn thì gia tốc càng lớn.',
+      'Lực càng lớn thì gia tốc càng lớn.',
+    ],
+  ])("Gemma 1B's lead-in %j goes (retest of #343)", (cut, kept) => {
+    expect(joinContinuation('Ví dụ trước đã xong.', cut)).toBe(`Ví dụ trước đã xong. ${kept}`);
+  });
+
+  it('a rest that only goes on with the physics keeps its first sentence', () => {
+    // "tiếp tục" about the body, not about the writing.
+    expect(
+      joinContinuation('Khi không có lực tác dụng,', 'vật tiếp tục chuyển động thẳng đều.'),
+    ).toBe('Khi không có lực tác dụng, vật tiếp tục chuyển động thẳng đều.');
+    expect(joinContinuation('Bước 2.', 'Ta tiếp tục thay số: F = 2 · 3 = 6 N.')).toBe(
+      'Bước 2. Ta tiếp tục thay số: F = 2 · 3 = 6 N.',
+    );
+  });
+
+  it('E2B writing the last item again, its typos corrected, replaces it (retest of #343)', () => {
+    const before =
+      '1. **Định luật I Newton (Quán tính):**\n    *   **Ví dụ 1:** Một quyển sách nằm yên trên bàn.\n\n';
+    const previous = `${before}2. **Định luật I Newton (Quá tính):**\n    *   **Ví ví dụ 2:** Khi bạn đang ngồi trên xe buýt đang chạy và xe đột ngột phanh gấp, bạn sẽ bị ngả về phía trước.\n    *   **Giải thích:** Cơ thể bạn có xu hướng giữ nguyên trạng thái chuyển động`;
+    const rest =
+      '\n2. **Định luật I Newton (Quán tính):**\n    *   **Ví dụ 2:** Khi bạn đang ngồi trên xe buýt đang chạy và xe đột ngột phanh gấp, bạn sẽ bị ngả về phía trước.\n    *   **Giải thích:** Cơ thể bạn có xu hướng giữ nguyên trạng thái chuyển động ban đầu vì không có lực nào giữ bạn lại.';
+    expect(joinContinuation(previous, rest)).toBe(`${before}${rest.trimStart()}`);
+  });
+
+  it('a next item that only looks like the last one is not a rewrite', () => {
+    const previous =
+      '*   **Ví dụ 2:** Khi bạn đẩy một chiếc xe đẩy hàng, xe chuyển động về phía trước.';
+    const rest =
+      '*   **Ví dụ 3:** Khi bạn đẩy một chiếc xe đẩy hàng nặng hơn, xe chuyển động chậm hơn.';
+    expect(joinContinuation(previous, rest)).toBe(`${previous}\n${rest}`);
+  });
+
   it('a rest that starts again with the end of the cut text does not repeat it (E2B, #342)', () => {
     expect(
       joinContinuation(

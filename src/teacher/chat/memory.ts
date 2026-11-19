@@ -306,9 +306,14 @@ export const CONTINUE_PROMPT: Record<Locale, string> = {
   en: 'Your last answer stopped in the middle because it was too long. Continue exactly where it stopped, without repeating what you wrote and without greeting again.',
 };
 
-/** Words about the continuing itself ("chỗ bị dừng", "viết tiếp", "where I left off"). */
+/**
+ * Words about the continuing itself ("chỗ bị dừng", "viết tiếp", "where I left off"), or a
+ * sentence that only says it goes on: "Tôi xin tiếp tục:", "Chúng ta cần tiếp tục phần giải
+ * thích về…", "Để tiếp tục, …", "Chuyển động ngang tiếp tục:" (Gemma 1B, machine B, #342).
+ * "Ta tiếp tục thay số:" goes on with the solution, not with the writing: it stays.
+ */
 const RESUME_REMARK =
-  /(?:viết tiếp|tiếp tục viết|chỗ bị dừng|bị dừng|dừng lại|phần còn lại|continu\w* (?:where|from)|left off|pick(?:ing)? up where|^[\s(]*(?:(?:chúng ta|mình|ta) )?(?:sẽ |hãy )?(?:tiếp tục|continuing|continued)[\s.…:!)]*$)/iu;
+  /(?:viết tiếp|tiếp tục viết|chỗ bị dừng|bị dừng|dừng lại|phần còn lại|continu\w* (?:where|from)|left off|pick(?:ing)? up where|^[\s(]*(?:(?:chúng ta|mình|ta) )?(?:sẽ |hãy )?(?:tiếp tục|continuing|continued)[\s.…:!)]*$|^(?:chúng ta|chúng tôi|mình|ta|tôi|em) (?:(?:sẽ|hãy|xin|cần|cùng) )*tiếp tục(?:[\s.…:!)]*$| (?:với )?(?:phần|bài|nội dung|câu trả lời|giải thích|trình bày)(?![\p{L}\p{M}]))|^để tiếp tục,|^[\p{L}\p{M} ]{1,40} tiếp tục\s*:$|^(?:let's|let us|i'll|i will|we'll|we will) continue\b)/iu;
 /**
  * A word of praise, assent or apology before such a remark ("Tuyệt vời!", "Đúng vậy,", "Sure,",
  * "Tôi xin lỗi vì sự chậm trễ."): dropped only with the remark after it.
@@ -337,12 +342,6 @@ function withoutResumeRemark(rest: string): string {
   return remainder ? remainder : rest;
 }
 
-/**
- * Appends the rest of a cut answer. A part that starts a list item, heading or formula goes on
- * a new line (so the board keeps it as its own step); text cut mid-sentence goes on the same line.
- * A cut inside a number is joined without a space: "x = 1" + "4 m" is "x = 14 m", "9," + "81" is
- * "9,81" (numbers never change), unless the rest itself starts with a space ("1," + " 2, 3").
- */
 /** At least this much of the cut text, repeated at the start of the rest, is a repeat. */
 const MIN_REPEAT = 12;
 
@@ -360,8 +359,92 @@ function withoutRepeat(previous: string, rest: string): string {
   return rest;
 }
 
+/** A line as compared for a rewrite: no markdown dressing, case or spaces. */
+const lineKey = (line: string) =>
+  line
+    .normalize('NFC')
+    .toLowerCase()
+    .replace(/[\s*_#>`]/gu, '');
+
+/** How alike two keys are, 0–1 (Dice coefficient of their pairs of letters). */
+function likeness(a: string, b: string): number {
+  if (a === b) return 1;
+  if (a.length < 2 || b.length < 2) return 0;
+  const pairs = new Map<string, number>();
+  for (let i = 1; i < a.length; i += 1) {
+    const pair = a.slice(i - 1, i + 1);
+    pairs.set(pair, (pairs.get(pair) ?? 0) + 1);
+  }
+  let shared = 0;
+  for (let i = 1; i < b.length; i += 1) {
+    const pair = b.slice(i - 1, i + 1);
+    const left = pairs.get(pair) ?? 0;
+    if (left > 0) {
+      shared += 1;
+      pairs.set(pair, left - 1);
+    }
+  }
+  return (2 * shared) / (a.length + b.length - 2);
+}
+
+/** Two lines are one line written again: this alike, with the same numbers in the same order. */
+const REWRITE_LIKENESS = 0.85;
+/** At least this much text must be written again ("1. Ý A" alone could match by chance). */
+const MIN_REWRITE = 40;
+/** How far back from the cut a rewrite may start. */
+const REWRITE_LINES = 15;
+
+const sameLine = (a: string, b: string) =>
+  a.replace(/\D/gu, '') === b.replace(/\D/gu, '') && likeness(a, b) >= REWRITE_LIKENESS;
+
+/**
+ * Where the rest starts writing the cut text's last lines again, with its own typos corrected
+ * ("Quá tính" → "Quán tính", "Ví ví dụ" → "Ví dụ": machine B's E2B, #342): the index in
+ * `previous` of the first line written again, or -1. Every line from there to the cut must come
+ * back in order (the cut line as the start of its new line), with the same numbers.
+ */
+function rewriteStart(previous: string, rest: string): number {
+  const lines = previous.trimEnd().split('\n');
+  const next = rest
+    .trimStart()
+    .split('\n')
+    .filter((l) => l.trim())
+    .map(lineKey);
+  let offset = 0;
+  const starts = lines.map((line) => {
+    const at = offset;
+    offset += line.length + 1;
+    return at;
+  });
+  for (let j = Math.max(0, lines.length - REWRITE_LINES); j < lines.length; j += 1) {
+    if (!lines[j]?.trim()) continue;
+    const keys = lines
+      .slice(j)
+      .filter((l) => l.trim())
+      .map(lineKey);
+    if (keys.length > next.length || keys.join('').length < MIN_REWRITE) continue;
+    const last = keys.length - 1;
+    const again = keys.every((key, k) => {
+      const line = next[k] ?? '';
+      return sameLine(key, k === last ? line.slice(0, key.length) : line);
+    });
+    if (again) return starts[j] ?? -1;
+  }
+  return -1;
+}
+
+/**
+ * Appends the rest of a cut answer. A part that starts a list item, heading or formula goes on
+ * a new line (so the board keeps it as its own step); text cut mid-sentence goes on the same line.
+ * A cut inside a number is joined without a space: "x = 1" + "4 m" is "x = 14 m", "9," + "81" is
+ * "9,81" (numbers never change), unless the rest itself starts with a space ("1," + " 2, 3").
+ * A rest that writes the last lines again replaces them (its version is the one that goes on).
+ */
 export function joinContinuation(previous: string, cut: string): string {
-  const rest = withoutRepeat(previous, withoutResumeRemark(cut));
+  const remarkless = withoutResumeRemark(cut);
+  const rewrite = rewriteStart(previous, remarkless);
+  if (rewrite >= 0) return `${previous.slice(0, rewrite)}${remarkless.trimStart()}`;
+  const rest = withoutRepeat(previous, remarkless);
   const next = rest.trimStart();
   if (/^(#{1,4}\s|\d+[.)]\s|[-*]\s|\$\$)/.test(next)) return `${previous.trimEnd()}\n${next}`;
   if (/\s$/.test(previous)) return `${previous}${next}`;
