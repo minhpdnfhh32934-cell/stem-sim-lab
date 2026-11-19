@@ -18,9 +18,27 @@
 .shell[data-inspector] .chat-bubble-root {
   right: var(--chat-bubble-gap);
 }
-/* The open chat stays over the stage, left of the Inspector (the Science Card stays readable). */
+/* The open chat sits left of the Inspector (the Science Card stays readable). */
 .shell[data-inspector] .chat-bubble-root > .chat-panel {
   right: calc(var(--right-w) + var(--splitter) + 16px);
+}
+/* ...in a column of its own: the centre (stage, timeline, graphs) narrows beside it instead of
+   being covered (user request 19/11/2026). A phone-size window keeps it as a sheet (below). */
+@media (min-width: 521px) {
+  /* Meanwhile the library and the Inspector take their narrowest sizes (LAYOUT_LIMITS left.min
+     and right.min, src/app/layout/layoutStore.ts), never hidden: the centre keeps about 450 px at
+     1366×768, as wide as the layout ever lets it get. The learner's own widths are inline on
+     .shell (hence !important) and come back when the chat closes. */
+  .shell:has(.chat-bubble-root > .chat-panel) {
+    --left-w: 200px !important;
+    --right-w: 240px !important;
+  }
+  .shell[data-inspector]:has(.chat-bubble-root > .chat-panel) .shell__center {
+    margin-right: calc(var(--chat-w) + 16px + 12px);
+  }
+  .shell:not([data-inspector]):has(.chat-bubble-root > .chat-panel) .shell__center {
+    margin-right: calc(var(--chat-w) + 20px + 12px);
+  }
 }
 /* The open chat uses the full height between the top bar and the status bar; the round button
    hides meanwhile (the panel has its own close button). */
@@ -110,10 +128,14 @@
     opacity: 0;
   }
 }
+:root {
+  /* The lab chat's width; the centre makes room for exactly this (above). */
+  --chat-w: min(435px, calc(100vw - 28px));
+}
 .chat-panel {
   display: flex;
   flex-direction: column;
-  width: min(435px, calc(100vw - 28px));
+  width: var(--chat-w);
   height: min(680px, calc(100vh - 138px));
   min-height: 360px;
   overflow: hidden;

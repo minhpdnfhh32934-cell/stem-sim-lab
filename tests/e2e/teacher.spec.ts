@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 import { fulfillGemini, fulfillGroq, geminiQuota, groqQuota } from './fakeAi';
-import { openLab } from './nav';
+import { openLab, openTopic } from './nav';
 
 /** "AI Teacher": launch page entry, the full teacher page and the floating chat bubble. */
 
@@ -411,4 +411,47 @@ test('Groq reasoning, closed or cut off, reaches neither the chat nor the board'
   await expect(board).not.toContainText(reasoning);
   // Both answers were streamed.
   expect(asked).toEqual([true, true]);
+});
+
+test('the open chat takes its own column: it never covers the simulation (user request 19/11)', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1366, height: 768 });
+  await openTopic(page, 'Vật lý', 'Rơi tự do');
+  const center = page.locator('.shell__center');
+  const box = async (selector: string) => {
+    const b = await page.locator(selector).first().boundingBox();
+    if (!b) throw new Error(`${selector} has no box`);
+    return b;
+  };
+  const before = await box('.shell__center');
+
+  await page.getByRole('button', { name: 'AI Teacher', exact: true }).click();
+  const panel = page.getByRole('region', { name: 'Trò chuyện với AI Teacher' });
+  await expect(panel).toBeVisible();
+  // The centre (stage, timeline, graphs) ends before the chat; the panels only narrow.
+  await expect
+    .poll(async () => (await box('.shell__center')).x + (await box('.shell__center')).width)
+    .toBeLessThanOrEqual((await box('.chat-bubble-root > .chat-panel')).x);
+  const docked = await box('.shell__center');
+  expect(docked.width).toBeGreaterThanOrEqual(440);
+  expect((await box('.sidebar')).width).toBe(200);
+  expect((await box('.inspector')).width).toBe(240);
+  // Every control of the centre stays inside it: none is under the chat.
+  const outside = await center.evaluate((c) => {
+    const right = c.getBoundingClientRect().right;
+    return [...c.querySelectorAll('button, select, input, [role=tab]')]
+      .filter((e) => {
+        const el = e as HTMLElement;
+        if (!el.offsetParent || el.closest('.graph-panel__picker')) return false;
+        return el.getBoundingClientRect().right > right + 1;
+      })
+      .map((e) => e.getAttribute('aria-label') ?? e.textContent);
+  });
+  expect(outside).toEqual([]);
+  expect(await overflow(page)).toBeLessThanOrEqual(0);
+
+  // Closed: the learner's widths come back.
+  await page.getByRole('button', { name: 'Đóng chat' }).first().click();
+  await expect.poll(async () => (await box('.shell__center')).width).toBe(before.width);
 });
