@@ -237,11 +237,53 @@ function removeNoteEcho(text: string, block: string, found: Set<CleanKind>): str
   if (!after) return text;
   const start = opening + label.length + after[0].length;
   const end = endOfPrefix(text.slice(start), body);
-  if (end < 0) return text;
-  const rest = text.slice(start + end).replace(/^[\s*_]+/u, '');
+  // Or only the note's first sentences, on a line of their own (E2B, #342).
+  const line = /^[^\n]*/u.exec(text.slice(start))?.[0] ?? '';
+  const copied = end >= 0 ? end : noteOpening(line, body) ? line.length : -1;
+  if (copied < 0) return text;
+  const rest = text.slice(start + copied).replace(/^[\s*_]+/u, '');
   if (!rest) return text;
   found.add('promptEcho');
   return rest;
+}
+
+/** LaTeX the model writes where the library has plain symbols ("$\Sigma F$" for "ΣF", "$-g$"). */
+const LATEX_SYMBOLS: Record<string, string> = {
+  Sigma: 'Σ',
+  Delta: 'Δ',
+  Omega: 'Ω',
+  alpha: 'α',
+  beta: 'β',
+  gamma: 'γ',
+  lambda: 'λ',
+  mu: 'μ',
+  omega: 'ω',
+  pi: 'π',
+  rho: 'ρ',
+  theta: 'θ',
+  cdot: '·',
+  times: '×',
+};
+
+/** A text to compare with the note: LaTeX read as the library writes it, no spaces. */
+function compareForm(text: string): string {
+  return text
+    .replace(/\\(?:text|mathrm)\s*\{([^{}]*)\}/gu, '$1')
+    .replace(/\\([a-zA-Z]+)/gu, (all, name: string) => LATEX_SYMBOLS[name] ?? all)
+    .replace(/[$*_\s]/gu, '')
+    .replace(/[−–]/gu, '-');
+}
+
+/**
+ * A line that is the note's first sentence or sentences, word for word (its formulas may be in
+ * LaTeX): machine B's E2B answers opened "GHI CHÚ:<the note's first sentence>" and a blank line
+ * (#342). Whole sentences only, at least 20 characters: a short line could match by chance.
+ */
+function noteOpening(line: string, body: string): boolean {
+  const echo = compareForm(line);
+  const note = compareForm(body);
+  if (echo.length < 20 || !note.startsWith(echo)) return false;
+  return echo.length === note.length || /[.!?]$/u.test(echo);
 }
 
 /** Shorter openings ("Đúng vậy.") could match an instruction by chance. */
