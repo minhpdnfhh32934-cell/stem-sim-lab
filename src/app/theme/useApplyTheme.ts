@@ -1,4 +1,5 @@
 import { useLayoutEffect, useSyncExternalStore } from 'react';
+import { useEffectsOn } from '@/app/fx/fx';
 import { useLayoutStore } from '@/app/layout/layoutStore';
 import { useSettingsStore, type ResolvedTheme } from '@/app/settings/settingsStore';
 
@@ -50,7 +51,7 @@ const PRESENTATION_BOOST = 1.25;
 
 /**
  * Reflects theme, motion (`data-motion`: the one source CSS and `prefersReducedMotion()` read),
- * language and font scale onto <html> so CSS tokens can react. A layout
+ * the decorative effects (`data-fx`, src/app/fx), language and font scale onto <html> so CSS tokens can react. A layout
  * effect: it runs before every passive effect of the same commit, so views that read theme
  * tokens in their own effects (canvas, three.js palettes) already see the new theme's values.
  */
@@ -60,17 +61,19 @@ export function useApplyTheme(): ResolvedTheme {
   const locale = useSettingsStore((s) => s.locale);
   const fontScale = useSettingsStore((s) => s.fontScale);
   const presentation = useLayoutStore((s) => s.presentation);
+  const fx = useEffectsOn();
 
   useLayoutEffect(() => {
     const root = document.documentElement;
     root.dataset.theme = theme;
     root.dataset.motion = motion;
+    root.dataset.fx = fx ? 'on' : 'off';
     root.lang = locale;
     root.style.setProperty(
       '--font-scale',
       String(fontScale * (presentation ? PRESENTATION_BOOST : 1)),
     );
-  }, [theme, motion, locale, fontScale, presentation]);
+  }, [theme, motion, fx, locale, fontScale, presentation]);
 
   return theme;
 }

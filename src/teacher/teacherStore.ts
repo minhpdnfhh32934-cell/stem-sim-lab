@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { screenChange } from '@/app/fx/fx';
 import { useNavigationStore } from '@/app/navigationStore';
 import { teacherLocked, useSafetyStore } from '@/safety/safetyStore';
 import { stopSpeaking } from './voice/speak';
@@ -38,12 +39,27 @@ export const useTeacherStore = create<TeacherState>()((set) => ({
   },
 }));
 
-export function openTeacher(): void {
+/**
+ * Opens AI Teacher on `layout` with `draft` in the box, all in one screen change (it may run a
+ * frame later: src/app/fx/fx.ts `screenChange`, so nothing is set on the teacher after it).
+ */
+function showTeacher(layout: TeacherLayout, draft: string | null): void {
   // Under 18 the door stays locked whichever way it is asked (#245 follow-up: Ctrl+K opened it).
   if (teacherLocked(useSafetyStore.getState())) return;
-  useChatStore.getState().setIncludeScreen(false);
-  useNavigationStore.getState().setScreen('teacher');
-  useTeacherStore.setState({ open: true, layout: 'talk', draft: null });
+  void screenChange(() => {
+    useChatStore.getState().setIncludeScreen(false);
+    useNavigationStore.getState().setScreen('teacher');
+    useTeacherStore.setState({ open: true, layout, draft });
+  });
+}
+
+export function openTeacher(): void {
+  showTeacher('talk', null);
+}
+
+/** Opens AI Teacher on one of its pages (Ctrl+K "Giảng trên bảng"). */
+export function openTeacherOn(layout: TeacherLayout): void {
+  showTeacher(layout, null);
 }
 
 /**
@@ -51,9 +67,7 @@ export function openTeacher(): void {
  * này" in the 3D mitosis view. The learner reads it, may change it and sends it themselves.
  */
 export function openTeacherWithQuestion(question: string): void {
-  if (teacherLocked(useSafetyStore.getState())) return;
-  openTeacher();
-  useTeacherStore.setState({ draft: question });
+  showTeacher('talk', question);
 }
 
 /**
@@ -65,9 +79,11 @@ export function askInBubble(question: string): void {
 }
 
 export function closeTeacher(): void {
-  stopSpeaking();
-  useTeacherStore.setState({ open: false, draft: null });
-  if (useNavigationStore.getState().screen === 'teacher') {
-    useNavigationStore.getState().returnFromTeacher();
-  }
+  void screenChange(() => {
+    stopSpeaking();
+    useTeacherStore.setState({ open: false, draft: null });
+    if (useNavigationStore.getState().screen === 'teacher') {
+      useNavigationStore.getState().returnFromTeacher();
+    }
+  });
 }
