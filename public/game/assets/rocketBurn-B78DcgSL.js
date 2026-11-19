@@ -1,0 +1,1 @@
+var e=9.80665,t={CH4:16.043,O2:31.998,CO2:44.009,H2O:18.015},n=802.3;function r(r,i,a){let o=r/(i*e),s=o/(1+a),c=o-s,l=s*1e3/t.CH4,u=c*1e3/t.O2,d=Math.min(l,u/2);return{methane:s,oxygen:c,carbonDioxide:d*t.CO2/1e3,water:d*2*t.H2O/1e3,unburnt:(l-d)*t.CH4/1e3,stoichiometric:2*t.O2/t.CH4,heat:d*n*1e3}}export{e as n,r,n as t};
