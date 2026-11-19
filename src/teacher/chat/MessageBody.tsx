@@ -2,7 +2,24 @@ import { Fragment, type ReactNode } from 'react';
 import { Equation } from '@/science-card/Equation';
 import { parseMessage } from './messageParse';
 
+/** Bold around a formula ("**$\Sigma F$ (Tổng hợp lực):**"), formulas included whole. */
+const BOLD_WITH_MATH = /(\*\*[^*\n]*\$[^$\n]+?\$[^*\n]*\*\*)/g;
+
 function renderInline(text: string, keyPrefix: string): ReactNode[] {
+  // Bold around a formula first: split by the math below, its ** pair would fall in two pieces
+  // and show as typed (machine B's sweep 19/11/2026, V2).
+  const bold = text.split(BOLD_WITH_MATH);
+  if (bold.length > 1) {
+    return bold.flatMap((part, i) =>
+      i % 2 === 1
+        ? [
+            <strong key={`${keyPrefix}-bm${i}`}>
+              {renderInline(part.slice(2, -2), `${keyPrefix}-bm${i}`)}
+            </strong>,
+          ]
+        : renderInline(part, `${keyPrefix}-bm${i}`),
+    );
+  }
   // Inline math first so its $ and * never become emphasis.
   const out: ReactNode[] = [];
   const mathSplit = text.split(/(\$[^$\n]+?\$)/g);
