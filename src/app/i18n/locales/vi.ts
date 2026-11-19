@@ -1817,6 +1817,8 @@ const vi = {
     title: 'AI Teacher',
     model: 'Gemma · {model}',
     clear: 'Xóa cuộc trò chuyện',
+    cleared: 'Đã xóa cuộc trò chuyện.',
+    undoClear: 'Hoàn tác',
     voice: 'Thầy đọc to câu trả lời',
     voiceHint: 'Bật/tắt giọng nói của thầy',
     close: 'Đóng chat',

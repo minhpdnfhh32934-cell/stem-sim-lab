@@ -905,6 +905,14 @@ kbd {
 .toast--info > svg {
   color: var(--accent);
 }
+.toast__action {
+  flex: none;
+  align-self: center;
+  margin-left: auto;
+}
+.toast__action + .toast__close {
+  margin-left: 0;
+}
 .toast__close {
   flex: none;
   margin-left: auto;

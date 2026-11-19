@@ -35,6 +35,7 @@ import {
 import { useTeacherStore } from '@/teacher/teacherStore';
 import { CONTINUE_PROMPT, answersPicture, asksAboutPicture, joinContinuation } from './memory';
 import { cx } from '@/ui/cx';
+import { toast } from '@/ui/toast';
 import { useT, type MessageKey } from '@/app/i18n';
 import { engineKind, useAnalysisEngine } from '@/app/ai/engineChoice';
 import { openTopic, useActiveTopic } from '@/app/topics';
@@ -429,9 +430,19 @@ export function ChatPanel({
   const clearConversation = () => {
     useChatStore.getState().stopAnswer?.();
     stopSpeaking();
+    const { messages, summary, summarySkip } = useChatStore.getState();
     chat.clearMessages();
     useChatStore.setState({ stopped: false });
     setError(null);
+    if (messages.length === 0) return;
+    // One click must not lose a conversation: "Hoàn tác" brings it back while nothing new was asked.
+    toast(t('chat.cleared'), 'info', 8000, {
+      label: t('chat.undoClear'),
+      run: () => {
+        if (useChatStore.getState().messages.length === 0)
+          useChatStore.setState({ messages, summary, summarySkip });
+      },
+    });
   };
   const hasAnswer = chat.messages.some((m) => m.role === 'assistant');
   // The simulation the last question names (audit EDU-03): found in the catalog, not by the AI.

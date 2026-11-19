@@ -21,6 +21,18 @@ export function Toaster() {
           <div key={x.id} className={`toast toast--${x.kind}`}>
             <Icon size={16} aria-hidden="true" />
             <span>{x.text}</span>
+            {x.action && (
+              <button
+                type="button"
+                className="btn btn--small toast__action"
+                onClick={() => {
+                  dismissToast(x.id);
+                  x.action?.run();
+                }}
+              >
+                {x.action.label}
+              </button>
+            )}
             <button
               type="button"
               className="toast__close"
