@@ -266,8 +266,9 @@ impl Discovery {
     }
 
     /// Keeps a server heard now, at `at` (the sender's address, the port it gave). A sender
-    /// already counted MAX_SERVERS_PER_IP times, or a full list, makes way: the entry heard
-    /// longest ago goes, so a flood never keeps the newest servers out.
+    /// already counted MAX_SERVERS_PER_IP times makes way for its own newest. A full list makes
+    /// way only for a server gone quiet (two beacons missed): servers still heard are never
+    /// pushed out by newcomers.
     pub(crate) fn note(&self, at: SocketAddr, name: String, rooms: Vec<Value>) {
         let time = (self.config.now_ms)();
         let key = at.to_string();
@@ -287,8 +288,12 @@ impl Discovery {
                 }
             }
             if heard.len() >= MAX_SERVERS {
-                if let Some(k) = oldest(&heard, false) {
-                    heard.remove(&k);
+                let quiet = |k: &String| time.saturating_sub(heard[k].time) > 2 * BEACON_MS;
+                match oldest(&heard, false).filter(quiet) {
+                    Some(k) => {
+                        heard.remove(&k);
+                    }
+                    None => return,
                 }
             }
         }
@@ -634,7 +639,7 @@ mod tests {
     }
 
     #[test]
-    fn one_sender_counts_twice_at_most_and_a_full_list_makes_way_for_the_newest() {
+    fn one_sender_counts_twice_at_most_and_a_full_list_keeps_the_servers_still_heard() {
         tauri::async_runtime::block_on(async {
             let now = Arc::new(AtomicU64::new(1_000));
             let clock = now.clone();
@@ -660,12 +665,18 @@ mod tests {
                 );
                 tick();
             }
+            // Full of servers heard just now: a newcomer waits.
+            a.note(at("192.168.2.1:5189"), "New".into(), vec![]);
             let all = a.servers();
             assert_eq!(all.len(), MAX_SERVERS);
-            assert!(all
-                .iter()
-                .any(|s| s.at == format!("192.168.1.{MAX_SERVERS}:5189")));
-            assert!(!all.iter().any(|s| s.at.starts_with("10.0.0.9:")));
+            assert!(!all.iter().any(|s| s.at == "192.168.2.1:5189"));
+            // The oldest have gone quiet (two beacons missed): they make way.
+            now.fetch_add(2 * BEACON_MS - 30, Ordering::SeqCst);
+            a.note(at("192.168.2.1:5189"), "New".into(), vec![]);
+            let all = a.servers();
+            assert_eq!(all.len(), MAX_SERVERS);
+            assert!(all.iter().any(|s| s.at == "192.168.2.1:5189"));
+            assert!(!all.iter().any(|s| s.at == "10.0.0.9:6001"));
             a.stop();
         });
     }

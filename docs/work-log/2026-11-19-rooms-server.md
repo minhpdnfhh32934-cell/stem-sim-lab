@@ -117,3 +117,13 @@ now in #341.
   - `cargo fmt --check`: OK.
   - `cargo clippy --all-targets -- -D warnings`: no warnings.
   - `cargo test`: 293 passed (43 in `rooms`, run 4 times).
+- **Second automated security review, fixed the same day:**
+  - LAN streams may hold at most 48 of the 64 places, so this computer's pages always have
+    room (checked at compile time).
+  - `via` sends its own `Content-Type` (`application/json` or `text/event-stream`), never the
+    other server's, and only when the other server's type is exactly that. It also sends
+    `Content-Security-Policy: sandbox; default-src 'none'`.
+  - A full LAN list drops only a server that missed two beacons. Servers still heard are never
+    pushed out by newcomers.
+- **Linux CI fix:** `broadcast_of` is used only by the Windows code outside tests. Clippy on
+  Ubuntu failed on dead code; the function is now marked for that case.

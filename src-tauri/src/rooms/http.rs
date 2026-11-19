@@ -55,8 +55,12 @@ const PROXY_IDLE: Duration = Duration::from_secs(45);
 const QUEUE: usize = 1024;
 /// Open event streams, at most (8 players in each of a few rooms, and their reloads).
 pub const MAX_STREAMS: usize = 64;
+/// Open event streams from the LAN, at most: the rest is kept for this computer's pages.
+pub const MAX_LAN_STREAMS: usize = 48;
 /// Open event streams from one LAN address, at most.
 pub const MAX_STREAMS_PER_LAN_IP: usize = 16;
+// The LAN never takes the share kept for this computer's pages.
+const _: () = assert!(MAX_LAN_STREAMS + MAX_STREAMS_PER_LAN_IP <= MAX_STREAMS);
 /// Bytes a POST may have: MESSAGE_MAX_CHARS UTF-16 units are at most 3 bytes each in UTF-8.
 const BODY_MAX_BYTES: usize = MESSAGE_MAX_CHARS * 3;
 /// The app's pages: the packaged app (both schemes WebView2 may use) and the dev server.
@@ -143,8 +147,8 @@ impl Shared {
         self.discovery.get()
     }
 
-    /// A new connection: its name, number and queue; 503 past MAX_STREAMS (in all) or
-    /// MAX_STREAMS_PER_LAN_IP (from one LAN address).
+    /// A new connection: its name, number and queue; 503 past MAX_STREAMS (in all),
+    /// MAX_LAN_STREAMS (from the LAN) or MAX_STREAMS_PER_LAN_IP (from one LAN address).
     fn connect(
         &self,
         lan_ip: Option<IpAddr>,
@@ -159,7 +163,9 @@ impl Shared {
                 .filter(|c| c.lan_ip == Some(ip))
                 .count()
         };
-        let crowded = lan_ip.is_some_and(|ip| from_ip(ip) >= MAX_STREAMS_PER_LAN_IP);
+        let from_lan = inner.conns.values().filter(|c| c.lan_ip.is_some()).count();
+        let crowded = lan_ip
+            .is_some_and(|ip| from_lan >= MAX_LAN_STREAMS || from_ip(ip) >= MAX_STREAMS_PER_LAN_IP);
         if inner.conns.len() >= MAX_STREAMS || crowded {
             return Err(StatusCode::SERVICE_UNAVAILABLE);
         }
@@ -689,24 +695,28 @@ async fn via(
         "events" => "text/event-stream",
         _ => "",
     };
-    let kind = answer
+    // The type's essence, exactly ("text/event-stream; charset=utf-8" is one; a list is not).
+    let essence = answer
         .headers()
         .get("content-type")
         .and_then(|v| v.to_str().ok())
-        .unwrap_or_default()
-        .to_string();
+        .and_then(|v| v.split(';').next())
+        .map(|v| v.trim().to_ascii_lowercase())
+        .unwrap_or_default();
     if !(200..300).contains(&status) || expected.is_empty() {
         return StatusCode::from_u16(status)
             .unwrap_or(StatusCode::BAD_GATEWAY)
             .into_response();
     }
-    if !kind.starts_with(expected) {
+    if essence != expected {
         return StatusCode::BAD_GATEWAY.into_response();
     }
+    // Our own headers, never the other server's.
     Response::builder()
         .status(status)
-        .header("content-type", kind)
+        .header("content-type", expected)
         .header("cache-control", "no-cache")
+        .header("content-security-policy", "sandbox; default-src 'none'")
         .body(Body::from_stream(answer.bytes_stream()))
         .unwrap_or_else(|_| StatusCode::BAD_GATEWAY.into_response())
 }
@@ -1339,15 +1349,25 @@ mod tests {
             // A "server" that answers its hello with a web page.
             let fake = TcpListener::bind((Ipv4Addr::LOCALHOST, 0)).await.unwrap();
             let fake_port = fake.local_addr().unwrap().port();
-            let page = Router::new().route(
-                &format!("{ROOM_PATH}/hello"),
-                get(|| async {
-                    (
-                        [(header::CONTENT_TYPE, "text/html")],
-                        "<script>alert(1)</script>",
-                    )
-                }),
-            );
+            let page = Router::new()
+                .route(
+                    &format!("{ROOM_PATH}/hello"),
+                    get(|| async {
+                        (
+                            [(header::CONTENT_TYPE, "text/html")],
+                            "<script>alert(1)</script>",
+                        )
+                    }),
+                )
+                .route(
+                    &format!("{ROOM_PATH}/events"),
+                    get(|| async {
+                        (
+                            [(header::CONTENT_TYPE, "text/event-stream, text/html")],
+                            "<script>alert(1)</script>",
+                        )
+                    }),
+                );
             let fake_task = tauri::async_runtime::spawn(async move {
                 let _ = axum::serve(fake, page).await;
             });
@@ -1362,6 +1382,13 @@ mod tests {
                 .await
                 .unwrap();
             assert_eq!(answer.status(), 502);
+            // A list of types is no event stream either.
+            let events = http()
+                .get(format!("{h}/via/{at}/events"))
+                .send()
+                .await
+                .unwrap();
+            assert_eq!(events.status(), 502);
             fake_task.abort();
             here.stop();
         });
