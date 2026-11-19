@@ -59,13 +59,28 @@ Quy tắc khi làm việc trong `game/`:
 
 Cờ đọc lúc dựng (`import.meta.env.VITE_SIMLAB_EMBED === '1'`). Bản độc lập của game không đổi.
 
-| Bỏ                                                                         | Chỗ trong mã                                       | Lý do                                                                                                                                                                                      |
-| -------------------------------------------------------------------------- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Khuôn mặt từ ảnh** (camera + MediaPipe Face Landmarker / Hair Segmenter) | `game/src/platform/ui/characterPage/Customiser.ts` | CLAUDE.md: không chạy thêm mô hình nào trong app nếu chưa hỏi người dùng; quyền riêng tư camera. Mã đọc ảnh không được đưa vào bản dựng (không có `tasks-vision`), thư mục `models/` bị bỏ |
-| **Chơi nhiều người qua LAN và trò chuyện bằng giọng**                      | `game/src/platform/ui/PlayPages.ts`                | Cần máy chủ phòng của dev server (không có trong app); trò chuyện với người lạ, micro. Trang "Chơi" chỉ còn "Chơi đơn". Mã LAN và giọng nói vẫn nằm trong gói JS nhưng không tới được      |
-| **Chất lượng đồ hoạ Ultra**                                                | `game/src/platform/ui/settings.ts`                 | 107 MB texture PBR (CC0) và 94 MB người thật, vải (`max`) làm bộ cài và bản cập nhật web nặng gấp nhiều lần; ba mức Thấp / Trung bình / Cao vẫn còn                                        |
+| Bỏ                                                                         | Chỗ trong mã                                                          | Lý do                                                                                                                                                                                      |
+| -------------------------------------------------------------------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Khuôn mặt từ ảnh** (camera + MediaPipe Face Landmarker / Hair Segmenter) | `game/src/platform/ui/characterPage/Customiser.ts`                    | CLAUDE.md: không chạy thêm mô hình nào trong app nếu chưa hỏi người dùng; quyền riêng tư camera. Mã đọc ảnh không được đưa vào bản dựng (không có `tasks-vision`), thư mục `models/` bị bỏ |
+| **Trò chuyện bằng giọng**                                                  | `game/src/main.ts`, `ChatView.ts`, `ControlsPanel.ts`, `PlayPages.ts` | Người dùng chọn ngày 19/11/2026 không bật giọng nói (micro, không lọc được). Không tạo `VoiceChat`; chữ hướng dẫn chỉ nói chat. Phòng LAN thì **có** (xem "Chơi chung qua LAN")            |
+| **Chất lượng đồ hoạ Ultra**                                                | `game/src/platform/ui/settings.ts`                                    | 107 MB texture PBR (CC0) và 94 MB người thật, vải (`max`) làm bộ cài và bản cập nhật web nặng gấp nhiều lần; ba mức Thấp / Trung bình / Cao vẫn còn                                        |
 
-Ngoài ra không sửa gì khác trong game.
+Ngoài ra trong game chỉ có phần nối phòng LAN với SimLab (`game/src/platform/net/simlabHost.ts`, mục "Chơi chung qua LAN").
+
+## Chơi chung qua LAN (#339, người dùng quyết ngày 19/11/2026)
+
+- Máy chủ phòng nằm trong SimLab (Rust, `src-tauri/src/rooms/`, cổng cố định 5189), làm theo đúng giao
+  thức phòng LAN của game (`game/src/multiplayer/`). `GameDialog` gọi `rooms_start` khi mở game,
+  `rooms_stop` khi đóng. Máy chủ chỉ nghe 127.0.0.1; khi người học tạo phòng nó mới mở ra mạng riêng
+  và phát tín hiệu UDP 5188 (tên gửi đi là "SimLab", không phải tên máy).
+- Game nhúng gọi `http://127.0.0.1:5189/simlab-rooms` (`game/src/platform/net/simlabHost.ts`). Đây
+  là địa chỉ `http://` duy nhất (ngoài IPC) trong CSP, có test ghim (`tests/tauri-config.test.ts`).
+- Chỉ thấy nhau di chuyển, tên và trò chuyện bằng chữ; không giọng nói. Mọi người trong phòng nhắn
+  được. Mỗi tin qua bộ lọc của SimLab trên cửa sổ cha (`src/app/game/gameBridge.ts`); không có bộ lọc
+  thì không gửi, không hiện. Có nút Báo cáo; nhật ký sự cố chỉ ghi loại và thời gian. Điểm pháp lý:
+  `docs/LEGAL_COMPLIANCE.md` mục 2j.
+- Trong trình duyệt thường (`npm run dev`, E2E) không có máy chủ: thẻ "Chơi nhiều người" ghi "Máy chủ
+  phòng chưa chạy".
 
 ## Cách mở trong SimLab
 
@@ -77,12 +92,12 @@ Ngoài ra không sửa gì khác trong game.
 
 ## CSP và bản cài
 
-Không phải sửa CSP:
+CSP chỉ thêm một địa chỉ cho phòng LAN (`http://127.0.0.1:5189`, mục "Chơi chung qua LAN"); phần còn lại không phải sửa:
 
 - `default-src 'self'` cho phép iframe, glTF và âm thanh cùng nguồn.
 - `script-src 'self' 'wasm-unsafe-eval'` cho phép Rapier.
 
-Game không tải gì từ mạng. Phần tìm phòng LAN chỉ hỏi chính trang (`…/hello`) và tự dừng khi không có máy chủ phòng.
+Game không tải gì từ Internet. Phần phòng LAN chỉ hỏi máy chủ phòng của SimLab trên chính máy này (`http://127.0.0.1:5189/simlab-rooms/hello`) và tự dừng khi không có máy chủ.
 
 ## Giấy phép
 

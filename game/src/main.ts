@@ -31,6 +31,7 @@ import { SettingsPanel } from './platform/ui/settings';
 import { WorkspaceLoader } from './platform/ui/workspace/WorkspaceLoader';
 import { LanRooms } from './platform/net/LanRooms';
 import { VoiceChat } from './platform/net/VoiceChat';
+import { EMBEDDED } from './platform/net/simlabHost';
 import { ChatView } from './platform/ui/ChatView';
 
 /** Longest frame step; after a stall (tab hidden, breakpoint) the game slows instead of jumping. */
@@ -108,7 +109,8 @@ async function start(app: HTMLElement, opening: IntroPhases): Promise<void> {
         dialogue.shown ||
         paper.shown;
       chat = new ChatView(app, g, rooms, panelHasMouse, () => input.lockPointer());
-      const voice = new VoiceChat(app, g, rooms);
+      // Inside SimLab no voice (user decision 19/11/2026, simlabHost.ts): no microphone at all.
+      const voice = EMBEDDED ? null : new VoiceChat(app, g, rooms);
       // A gamepad, on any device (2026-11-12): read each frame, beside the keys and the mouse.
       const gamepad = new GamepadInput(g);
       return [
@@ -137,7 +139,7 @@ async function start(app: HTMLElement, opening: IntroPhases): Promise<void> {
         new ControlSettings(g, settings, device),
         rooms,
         chat,
-        voice,
+        ...(voice ? [voice] : []),
         new MainMenu(app, g, enterWorld, !persistent, settings, rooms, opening),
         new PauseMenu(app, g, settings, () => input.lockPointer(), panelHasMouse),
         // Dev only: in a production build this is false at compile time and the panel is not

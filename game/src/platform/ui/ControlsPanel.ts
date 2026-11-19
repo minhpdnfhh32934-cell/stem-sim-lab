@@ -1,6 +1,7 @@
 import type { GameConfig } from '../../core/config';
 import type { Texts } from '../../core/i18n';
 import type { Game } from '../../game/Game';
+import { EMBEDDED } from '../net/simlabHost';
 import { el, keyLabel } from './dom';
 
 type Bindings = GameConfig['input']['bindings'];
@@ -111,10 +112,16 @@ const GROUPS: readonly { title: (t: Texts) => string; rows: readonly Row[] }[] =
         keys: (b, t) => [first(b.chat, t)],
         does: (t) => t.ui('controls.chat', 'Chat: type a line to the room, Enter sends it'),
       },
-      {
-        keys: (b, t) => [first(b.talk, t)],
-        does: (t) => t.ui('controls.talk', 'Hold to talk: the players near you hear you'),
-      },
+      // Inside SimLab there is no voice (simlabHost.ts): no "hold to talk" row.
+      ...(EMBEDDED
+        ? []
+        : [
+            {
+              keys: (b: Bindings, t: Texts) => [first(b.talk, t)],
+              does: (t: Texts) =>
+                t.ui('controls.talk', 'Hold to talk: the players near you hear you'),
+            },
+          ]),
     ],
   },
   {

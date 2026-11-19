@@ -791,10 +791,23 @@ phòng thí nghiệm 3D, em nhìn qua mắt người chơi:
 - Đi lại bằng W A S D, nhìn quanh bằng chuột. Bảng "Điều khiển" trong menu của trò chơi ghi đủ các phím.
 - Bấm **Về SimLab** ở đầu màn hình để quay lại. Lượt chơi được lưu trên máy này.
 
+**Chơi chung trong cùng mạng (LAN):** bấm **Chơi** → **Chơi nhiều người**. Một máy tạo phòng; các máy
+SimLab khác trong cùng Wi-Fi hay phòng máy thấy phòng đó trong danh sách và bấm vào để chơi cùng. Không
+cần Internet hay tài khoản.
+
+- Em thấy nhân vật và tên của bạn cùng phòng. Bấm **Enter** để nhắn một dòng cho cả phòng.
+- Tin có số điện thoại, địa chỉ, số giấy tờ hay lời không phù hợp sẽ không được gửi; tin như vậy của
+  người khác sẽ bị ẩn. Thấy tin không ổn thì mở khung chat (Enter) và bấm **Báo cáo** cạnh tin đó.
+  SimLab không lưu tin nhắn; nhật ký an toàn chỉ ghi loại sự việc và thời gian.
+- Nên đặt tên người chơi là biệt danh, không cần tên thật.
+- Lần đầu tạo phòng, Windows có thể hỏi có cho SimLab dùng mạng không: chọn **mạng riêng tư** (Private)
+  để các máy trong lớp vào được. Đóng trò chơi thì phòng của máy em cũng đóng.
+- Trong app không có trò chuyện bằng giọng.
+
 Giới hạn hiện tại:
 
 - Nội dung khoa học trong trò chơi đang chờ giáo viên duyệt.
-- Trong app chỉ chơi một người.
+- Chơi chung chỉ trong cùng mạng LAN, chưa chơi qua Internet.
 - Không có mức đồ hoạ Ultra, trò chuyện bằng giọng hay khuôn mặt từ ảnh.
 
 ## Lưu, mở, xuất và lịch sử

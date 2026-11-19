@@ -23,8 +23,8 @@
       }
     ],
     "security": {
-      "csp": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; worker-src 'self' blob:; connect-src 'self' ipc: http://ipc.localhost https://huggingface.co https://cdn-lfs.huggingface.co https://cas-bridge.xethub.huggingface.co https://*.hf.co https://vi.wikipedia.org https://en.wikipedia.org",
-      "devCsp": "default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; worker-src 'self' blob:; connect-src 'self' ipc: http://ipc.localhost ws://localhost:1420 ws://localhost:1421 https://huggingface.co https://cdn-lfs.huggingface.co https://cas-bridge.xethub.huggingface.co https://*.hf.co https://vi.wikipedia.org https://en.wikipedia.org",
+      "csp": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; worker-src 'self' blob:; connect-src 'self' ipc: http://ipc.localhost http://127.0.0.1:5189 https://huggingface.co https://cdn-lfs.huggingface.co https://cas-bridge.xethub.huggingface.co https://*.hf.co https://vi.wikipedia.org https://en.wikipedia.org",
+      "devCsp": "default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; worker-src 'self' blob:; connect-src 'self' ipc: http://ipc.localhost http://127.0.0.1:5189 ws://localhost:1420 ws://localhost:1421 https://huggingface.co https://cdn-lfs.huggingface.co https://cas-bridge.xethub.huggingface.co https://*.hf.co https://vi.wikipedia.org https://en.wikipedia.org",
       "dangerousDisableAssetCspModification": ["style-src"]
     }
   },

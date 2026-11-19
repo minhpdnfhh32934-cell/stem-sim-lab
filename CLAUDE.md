@@ -85,7 +85,9 @@ release history and old work-logs keep the old name). The user accepted:
   (`release.yml`, `ci.yml`, `make-msix.mjs`; the folder is git-ignored except its licence).
   Legal list: `docs/LEGAL_COMPLIANCE.md` §2i.
 - **Production CSP** may list exactly the HuggingFace model hosts and `vi`/`en.wikipedia.org`
-  (`tests/tauri-config.test.ts` pins the list). Nothing else.
+  (`tests/tauri-config.test.ts` pins the list), plus one loopback address, `http://127.0.0.1:5189`:
+  SimLab's own LAN room server for SimLab 3D (user decision 2026-11-19, #339, `docs/GAME.md`).
+  Nothing else.
 - Everything else in this file still applies (scientific integrity, safety gates, i18n, tests).
 - Design and data-flow notes: `docs/AI_TUTOR.md`. Engine choice: `src/app/ai/engineChoice.ts`
   (a pre-selected Gemma without a model never blocks a learner who connected an API; a Gemma the
@@ -368,7 +370,7 @@ tests/            app-level tests, golden set, e2e
 - Lucide is 1.x (`lucide-react`). Check that an icon name exists before using it.
 - `tauri.conf.json` has a separate, looser `devCsp` (Vite's inline React-refresh preamble and the
   HMR websocket). The production `csp` stays strict. Never loosen the production CSP (fork
-  exception above: HuggingFace model hosts + Wikipedia only).
+  exception above: HuggingFace model hosts + Wikipedia, and the game's loopback room server).
 - `dangerousDisableAssetCspModification: ["style-src"]` is required: otherwise Tauri adds hashes
   to `style-src`, browsers then ignore `'unsafe-inline'`, and KaTeX's inline `style="top:…"` is
   blocked (every subscript drops below the line in the packaged app). Test:

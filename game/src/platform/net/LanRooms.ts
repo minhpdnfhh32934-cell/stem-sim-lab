@@ -25,6 +25,7 @@ import { BURNING_KEY } from '../../gameplay/fire/FireSystem';
 import { CIRCUIT_KEY } from '../../gameplay/circuit/CircuitSystem';
 
 import { doingOf } from './doing';
+import { EMBEDDED, SIMLAB_ROOMS_ORIGIN } from './simlabHost';
 
 const SHARED = new Set<string>(SHARED_STATE_KEYS);
 
@@ -55,6 +56,12 @@ const LanAnswerSchema = z.object({
     )
     .max(64),
 });
+
+/**
+ * The room server: the page's own server, or inside SimLab, SimLab's (the page is not served by
+ * it; simlabHost.ts).
+ */
+const ROOMS = EMBEDDED ? `${SIMLAB_ROOMS_ORIGIN}${ROOM_PATH}` : ROOM_PATH;
 
 /** A station no command touched for this long (s), with no run on it, is free again. */
 const IDLE_RELEASE_S = 60;
@@ -379,7 +386,7 @@ export class LanRooms implements GameSystem {
   }
 
   private base(): string {
-    return this.at === null ? ROOM_PATH : `${ROOM_PATH}/via/${encodeURIComponent(this.at)}`;
+    return this.at === null ? ROOMS : `${ROOMS}/via/${encodeURIComponent(this.at)}`;
   }
 
   /** The other computers' rooms, from this page's server (it hears their servers on the LAN). */
@@ -387,7 +394,7 @@ export class LanRooms implements GameSystem {
     if (this.lanAsking) return;
     this.lanAsking = true;
     try {
-      const answer = await fetch(`${ROOM_PATH}/lan`);
+      const answer = await fetch(`${ROOMS}/lan`);
       const parsed = LanAnswerSchema.safeParse(answer.ok ? await answer.json() : null);
       const lan = parsed.success
         ? parsed.data.servers.flatMap((server) =>

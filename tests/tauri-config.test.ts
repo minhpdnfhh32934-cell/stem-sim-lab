@@ -34,7 +34,12 @@ const directives = (csp: string): Record<string, string[]> =>
   );
 
 const MODEL_AND_WIKI = ALLOWED_REMOTES.map((h) => `https://${h}`).sort();
-const LOCAL = ["'self'", 'ipc:', 'http://ipc.localhost'];
+/**
+ * SimLab's own LAN room server for the game (src-tauri/src/rooms, #339): loopback, one fixed port.
+ * The only http:// address besides the IPC one (user decision 19/11/2026).
+ */
+const ROOM_SERVER = 'http://127.0.0.1:5189';
+const LOCAL = ["'self'", 'ipc:', 'http://ipc.localhost', ROOM_SERVER];
 
 describe('tauri.conf.json security', () => {
   const sec = conf.app.security;
@@ -67,6 +72,13 @@ describe('tauri.conf.json security', () => {
     expect(d['font-src']).toEqual(["'self'", 'data:']);
     expect(d['worker-src']).toEqual(["'self'", 'blob:']);
     expect([...(d['connect-src'] ?? [])].sort()).toEqual([...LOCAL, ...MODEL_AND_WIKI].sort());
+  });
+
+  it('the one plain http:// address besides IPC is the loopback room server', () => {
+    for (const csp of [sec.csp, sec.devCsp]) {
+      const http = [...csp.matchAll(/http:\/\/[^\s;]+/g)].map((m) => m[0]).sort();
+      expect(http).toEqual(['http://127.0.0.1:5189', 'http://ipc.localhost']);
+    }
   });
 
   it('the dev CSP adds only the Vite websockets to connect-src', () => {

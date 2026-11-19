@@ -253,6 +253,38 @@ Người dùng cần tự đối chiếu lại trước khi phát hành (máy b�
    này đã biến mất sau khi chạy thử khi Norton 360 đang bật. App khi đó báo "thiếu bộ chạy" và không
    gửi gì đi. Có ký số bộ cài hay không là quyết định của người dùng.
 
+## 2j. Chơi chung SimLab 3D qua mạng LAN và nhắn tin giữa người chơi (ghi 2026-11-19)
+
+Quyết định của người dùng ngày 2026-11-19 (#339): chơi chung **qua mạng LAN trước**; chỉ bật **thấy
+nhau di chuyển và tên** và **trò chuyện bằng chữ**, **không** giọng nói; **mọi người trong phòng** đều
+nhắn được (không chỉ người đã xác nhận 18+). Mục này chỉ liệt kê, **không phải kết luận pháp lí**.
+
+Cách làm trong app:
+
+- Không có máy chủ trên Internet và không có tài khoản. Máy tạo phòng chạy máy chủ phòng ngay trong
+  SimLab; các máy SimLab khác trong cùng mạng riêng (Wi-Fi, phòng máy) vào phòng đó. Máy chủ chỉ mở
+  ra mạng khi người học tạo phòng, chỉ nhận địa chỉ mạng riêng, và tắt khi đóng game.
+- Tin nhắn không được lưu ở đâu cả: chỉ hiện trên màn hình người trong phòng rồi mất khi rời phòng.
+- Mỗi tin gửi đi qua cùng bộ lọc với câu hỏi cho AI (`src/safety/moderation.ts`: số điện thoại, email,
+  số giấy tờ, tên và địa chỉ nhà, nội dung không phù hợp, dấu hiệu khủng hoảng); tin bị chặn không được
+  gửi và người học được báo lý do. Tin của người khác cũng được kiểm trước khi hiện. Mỗi tin có nút
+  **Báo cáo**. Nhật ký sự cố chỉ ghi loại và thời gian, không ghi nội dung.
+- Tên người chơi do người học tự đặt (tối đa 20 kí tự) và hiện cho người cùng phòng.
+- Lần đầu tạo phòng, Windows có thể hỏi cho phép SimLab qua tường lửa; SimLab không tự đổi cài đặt
+  tường lửa.
+
+Người dùng / nhà trường cần tự xác nhận trước khi dùng với học sinh:
+
+1. Cho học sinh dưới 18 tuổi (kể cả dưới 16, là trẻ em theo Luật Trẻ em 2016) nhắn tin với người khác
+   trong phòng có cần đồng ý của cha mẹ, hay cần giáo viên giám sát buổi chơi không (Luật Trẻ em số
+   102/2016/QH13; Nghị định 56/2017/NĐ-CP; Luật Bảo vệ dữ liệu cá nhân số 91/2025/QH15, ở mục 3).
+2. Tên người chơi có thể là tên thật: có nên nhắc học sinh dùng biệt danh không.
+3. Các quy định về cung cấp, sử dụng dịch vụ Internet và thông tin trên mạng (Nghị định số
+   147/2024/NĐ-CP) có áp dụng cho trò chuyện chỉ trong mạng LAN, không có máy chủ của nhà phát hành
+   hay không: cần tra nguyên văn trên vbpl.vn, chưa tra.
+4. Bộ lọc dựa trên danh sách từ và mẫu; nó không bắt được mọi lời không phù hợp. Có cần thêm quy định
+   lớp học (ví dụ chỉ chơi chung trong giờ có giáo viên) không.
+
 ## 5. Ứng dụng xử lý dữ liệu thế nào (tóm tắt kỹ thuật)
 
 - Không tài khoản, không quảng cáo, không thống kê sử dụng. Mạng chỉ dùng khi: gọi AI (người dùng
