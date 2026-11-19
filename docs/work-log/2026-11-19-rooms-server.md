@@ -127,3 +127,36 @@ now in #341.
     pushed out by newcomers.
 - **Linux CI fix:** `broadcast_of` is used only by the Windows code outside tests. Clippy on
   Ubuntu failed on dead code; the function is now marked for that case.
+
+## 2026-11-19 17:26 +0700: step 4, real test on one computer
+
+- **Setup:**
+  - local branch `test/339-local` (not pushed) = this PR + `origin/feat/339-rooms-embed` (#340);
+  - `npm run tauri dev`;
+  - player A was the app (SimLab 3D, driven over CDP on 127.0.0.1);
+  - player B was a script speaking to the room server like the embedded game (`hello`,
+    `events`, `send` with Origin `http://localhost:1420`).
+- **Why B was a script:** a browser page on localhost:1420 would first ask the 18+ question,
+  which is not answered on the user's behalf.
+- **Firewall:** no Windows firewall dialog was touched.
+
+| Check                                                                                                                                    | Result                                                                                                                                                                                                                    |
+| ---------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Opening the game: `rooms_start`, TCP 127.0.0.1:5189 only, UDP 5188 listening                                                             | PASS                                                                                                                                                                                                                      |
+| A creates a room: `rooms_status` `{running: true, lan_open: true, rooms: 1}`, also listening on the private address 192.168.100.167:5189 | PASS                                                                                                                                                                                                                      |
+| B joins (204), CORS answers `http://localhost:1420`; B received 120 of A's poses                                                         | PASS                                                                                                                                                                                                                      |
+| A sees B (character, name tag "Bình", "Bình đã vào phòng.")                                                                              | PASS                                                                                                                                                                                                                      |
+| Chat both ways (B → A shown; A → B received as `name: "An"`)                                                                             | PASS                                                                                                                                                                                                                      |
+| B's line with a phone number is hidden on A ("Một tin nhắn đã được ẩn.")                                                                 | PASS                                                                                                                                                                                                                      |
+| A's line with a phone number is not sent, the reason is shown, the incident log keeps `inputPersonalData` (kind and time only)           | PASS                                                                                                                                                                                                                      |
+| "Báo cáo" with the mouse                                                                                                                 | **FAIL** (game side, #340): the mouse-down closes the chat, so the click never reaches the button. Called directly, it works: the line becomes "Đã báo cáo. Tin nhắn đã được ẩn.", and the incident log gets `userReport` |
+| No voice: no voice control on screen, holding V does nothing, no microphone request                                                      | PASS                                                                                                                                                                                                                      |
+| A leaves the room: `lan_open: false`, 0 rooms, the LAN listener closed                                                                   | PASS                                                                                                                                                                                                                      |
+| Closing the game: `rooms_stop`, nothing listens on 5189 or 5188; reopening starts it again                                               | PASS                                                                                                                                                                                                                      |
+
+Also seen on the game side (#340):
+
+- the open chat overlaps the task panel;
+- the multiplayer page says "nói chuyện" although voice is off;
+- "Về màn hình chính" keeps the room. This is by design: "Rời phòng" leaves it, so the LAN
+  stays open until then.
