@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { fitScale } from './fitScale';
-import { loadKatex, tightDecimalCommas } from './katex';
+import { KATEX_STRICT, loadKatex, tightDecimalCommas } from './katex';
 
 interface EquationProps {
   tex: string;
@@ -27,7 +27,7 @@ export function Equation({ tex, display = true }: EquationProps) {
             output: 'html',
             // Vietnamese letters inside \text{…} (e.g. "số va chạm") have no KaTeX font
             // metrics; the browser draws them with the UI font, which is what we want.
-            strict: (code: string) => (code === 'unknownSymbol' ? 'ignore' : 'warn'),
+            strict: KATEX_STRICT,
           }),
         );
       } catch (e) {

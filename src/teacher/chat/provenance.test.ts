@@ -86,6 +86,12 @@ describe('what counts as a stated value', () => {
   it('a formula coefficient written in LaTeX or as ½ is not a number of the AI (sweep 19/11)', () => {
     expect(unverified('Quãng đường: $s = \\frac{1}{2} g t^2$.')).toEqual([]);
     expect(unverified('Quãng đường: s = ½gt², động năng ¾ lần.')).toEqual([]);
+    // Machine B's Qwen answer (19/11): the chip listed "1".
+    expect(
+      unverified(
+        'Công thức quãng đường là $x = x_0 + \\frac{1}{2}gt^2$ (nếu chọn mốc $x_0 = 0$ thì $x = \\frac{1}{2}gt^2$).',
+      ),
+    ).toEqual([]);
     // A number the AI brings in is still listed beside the coefficient.
     expect(unverified('$s = \\frac{1}{2} g t^2$ với t = 7 s')).toEqual(['7 s']);
   });

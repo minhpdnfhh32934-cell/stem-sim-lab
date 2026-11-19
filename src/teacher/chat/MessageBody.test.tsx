@@ -43,9 +43,13 @@ describe('MessageBody', () => {
     render(<MessageBody content={'- **$\\Sigma F$ (Tổng hợp lực):** tổng các lực.'} />);
     const strong = document.querySelector('strong');
     expect(strong).toHaveTextContent('(Tổng hợp lực):');
-    await waitFor(() => {
-      expect(strong?.querySelector('.katex')).not.toBeNull();
-    });
+    await waitFor(
+      () => {
+        expect(strong?.querySelector('.katex')).not.toBeNull();
+        // KaTeX loads on first use: slow while many test files run at once.
+      },
+      { timeout: 5000 },
+    );
     expect(document.body.textContent).not.toContain('**');
   });
 
@@ -77,5 +81,15 @@ describe('MessageBody', () => {
     expect(screen.getByText('bài viết này')).toBeInTheDocument();
     expect(screen.getByText('(evil.example)')).toBeInTheDocument();
     expect(screen.getByTitle('https://evil.example/login?next=1')).toBeInTheDocument();
+  });
+});
+
+describe('MessageBody: a heading written with its mark twice (E2B, #342)', () => {
+  it('"# # Rơi Tự Do" is the heading "Rơi Tự Do", no "#" left', () => {
+    render(<MessageBody content={'# # Rơi Tự Do: chuyển động theo trọng lực\n\nChào em.'} />);
+    expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent(
+      /^Rơi Tự Do: chuyển động theo trọng lực$/,
+    );
+    expect(document.body.textContent).not.toContain('#');
   });
 });
