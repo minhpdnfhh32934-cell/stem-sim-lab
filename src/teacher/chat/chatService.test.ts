@@ -434,6 +434,25 @@ describe('AI Teacher long conversations', () => {
     expect(sent).toHaveLength(3);
   });
 
+  it('a question stopped with "Dừng" (no answer) never travels as history', async () => {
+    // Machine B's sweep 19/11 (N2): Gemma 1B and E2B answered the stopped question
+    // ("ném ngang") instead of the new one ("ba định luật Newton").
+    setTransportForTests(scripted(() => ({ content: 'Câu trả lời' })));
+    const saved: ChatMessageRecord[] = [
+      { id: 'u1', role: 'user', content: 'Lực là gì?' },
+      { id: 'a1', role: 'assistant', content: 'Lực là đại lượng vectơ.' },
+      { id: 'u2', role: 'user', content: 'Giảng bài ném ngang' },
+    ];
+    await askTeacher('Ba định luật Newton là gì?', 'vi', saved, {
+      includeScreen: false,
+      think: false,
+    });
+    const sent = calls.at(-1)?.messages.map((m) => m.content) ?? [];
+    expect(sent.join(' ')).not.toContain('ném ngang');
+    expect(sent).toHaveLength(3);
+    expect(sent.at(-1)).toContain('Ba định luật Newton');
+  });
+
   it('a failed summary never blocks the answer', async () => {
     let first = true;
     setTransportForTests({
