@@ -25,6 +25,19 @@ describe('MessageBody', () => {
     expect(document.body.textContent).not.toContain('###');
   });
 
+  it('keeps the step numbers of a numbered list, also after a formula between the steps', () => {
+    render(
+      <MessageBody
+        content={'1. Chọn chiều dương.\n2. Viết công thức:\n$$s = v t$$\n3. Thay số.\n- ghi chú'}
+      />,
+    );
+    const lists = document.querySelectorAll('.msg-list');
+    expect([...lists].map((l) => l.tagName)).toEqual(['OL', 'OL', 'UL']);
+    // The step after the formula is still step 3, not a new step 1.
+    expect(lists[1]?.getAttribute('start')).toBe('3');
+    expect(lists[0]?.getAttribute('start')).toBeNull();
+  });
+
   it('frames code instead of showing fences', () => {
     render(<MessageBody content={'Ví dụ:\n```python\nprint(1)\n```'} />);
     expect(document.querySelector('.msg-code__lang')).toHaveTextContent('python');
