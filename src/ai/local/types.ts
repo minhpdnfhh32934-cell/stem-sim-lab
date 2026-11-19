@@ -180,6 +180,8 @@ export interface LocalChatRequest {
   think?: boolean;
   /** Longest answer in seconds (5–600, default 600). */
   timeoutSecs?: number;
+  /** For "Qwen trong app": Rust answers with its own server (`builtin_ai_chat`). Not sent. */
+  builtin?: boolean;
 }
 
 export interface LocalChatResponse {
@@ -234,6 +236,8 @@ export interface LocalSelection {
   model: string;
   /** What the learner sees, e.g. "Ollama · qwen3:8b". */
   label: string;
+  /** "Qwen trong app" (#190): Rust's own server answers; `baseUrl` is never used. */
+  builtin?: true;
 }
 
 // Error tags: the start of an AiError message from a local runtime ("<tag>" or

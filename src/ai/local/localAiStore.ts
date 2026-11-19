@@ -11,6 +11,7 @@
  * is read back, and the cleaned data is written back at once (an address off this computer does
  * not stay in storage until the next change).
  */
+import { BUILTIN_SELECTION } from '../builtin/types';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { aiErrorKind, type AiErrorKind } from '../errorKind';
@@ -156,6 +157,8 @@ function obj(v: unknown): Record<string, unknown> {
 
 function sanitizeSelection(v: unknown): LocalSelection | null {
   const o = obj(v);
+  // "Qwen trong app": always the fixed choice, whatever else was stored with it.
+  if (o.builtin === true) return BUILTIN_SELECTION;
   const base = tryLoopback(o.baseUrl);
   const model = typeof o.model === 'string' ? cleanId(o.model) : null;
   if (!isRuntimeKind(o.kind) || !base || model === null) return null;

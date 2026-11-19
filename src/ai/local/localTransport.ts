@@ -12,7 +12,9 @@
 import type { KeyTest } from '../keyTest';
 import { schemaInSystem } from '../prompts';
 import type { LlmTransport } from '../transport';
-import { AiError, type ChatRequest, type ChatResponse } from '../types';
+import { AiError, toAiError, type ChatRequest, type ChatResponse } from '../types';
+import { getBuiltinClient } from '../builtin/client';
+import { BUILTIN_MODEL } from '../builtin/types';
 import { getLocalClient } from './client';
 import { checkFor, useLocalAiStore } from './localAiStore';
 import {
@@ -66,6 +68,7 @@ export class LocalTransport implements LlmTransport {
       kind: sel.kind,
       baseUrl: sel.baseUrl,
       model: sel.model,
+      ...(sel.builtin ? { builtin: true } : {}),
       system: schema !== undefined && !structured ? schemaInSystem(req.system, schema) : req.system,
       messages: req.messages,
       ...(structured ? { jsonSchema: schema } : {}),
@@ -103,6 +106,7 @@ export class LocalTransport implements LlmTransport {
   async models(): Promise<string[]> {
     const sel = this.selection();
     if (!sel) return [];
+    if (sel.builtin) return [BUILTIN_MODEL];
     const list = await this.client().models(sel.kind, sel.baseUrl);
     return list.models.filter((m) => !m.remote).map((m) => m.id);
   }
@@ -123,6 +127,13 @@ export class LocalTransport implements LlmTransport {
   async testKey(): Promise<KeyTest> {
     const sel = this.selection();
     if (!sel) return { status: 'noKey', detail: '' };
+    // Qwen in the app: loading it on the card is the check (Rust answers every failure).
+    if (sel.builtin) {
+      return getBuiltinClient()
+        .start()
+        .then((): KeyTest => ({ status: 'ok', detail: '' }))
+        .catch((e: unknown): KeyTest => ({ status: 'error', detail: toAiError(e).message }));
+    }
     return keyTestOf(await this.client().test(sel.kind, sel.baseUrl, sel.model));
   }
 }

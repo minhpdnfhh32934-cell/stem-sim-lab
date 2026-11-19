@@ -6,6 +6,8 @@
 //! - `local_ai_*`: language models run by another program on this computer (Ollama, LM Studio,
 //!   llama.cpp, OpenAI-compatible): loopback only, streamed, cancellable, never counted and
 //!   never sent to the cloud
+//! - `builtin_ai_*`: Qwen inside the app (#190): the bundled `llama-server` on a discrete card,
+//!   loopback with a key only Rust knows, the pinned model downloaded from HuggingFace
 //!
 //! - `safety_*`: 18+ confirmation and incident log (PROMPT_PHAN_2 A3)
 //! - `save_file` / `open_text_file`: native Save/Open dialogs (`.stemsim`, PNG, CSV)
@@ -47,6 +49,7 @@ pub fn run() {
         .manage(webupdate::WebUpdateState(web))
         .manage(gpu)
         .manage(ai::AiState::default())
+        .manage(ai::builtin::BuiltinState::default())
         .manage(history::HistoryState::default())
         .manage(safety::SafetyState::default())
         .invoke_handler(tauri::generate_handler![
@@ -71,6 +74,14 @@ pub fn run() {
             ai::local::local_ai_model_info,
             ai::local::local_ai_test,
             ai::local::local_ai_chat,
+            ai::builtin::builtin_ai_status,
+            ai::builtin::builtin_ai_download,
+            ai::builtin::builtin_ai_cancel,
+            ai::builtin::builtin_ai_delete,
+            ai::builtin::builtin_ai_start,
+            ai::builtin::builtin_ai_stop,
+            ai::builtin::builtin_ai_enable,
+            ai::builtin::builtin_ai_chat,
             safety::safety_status,
             safety::safety_answer_adult,
             safety::safety_log_incident,
@@ -93,6 +104,13 @@ pub fn run() {
             webupdate::app_restart,
             webupdate::open_releases_page
         ])
-        .run(context)
-        .expect("error while running SimLab");
+        .build(context)
+        .expect("error while running SimLab")
+        .run(|app, event| {
+            // The Windows job also stops it if SimLab crashes.
+            if let tauri::RunEvent::Exit = event {
+                use tauri::Manager;
+                app.state::<ai::builtin::BuiltinState>().stop_now();
+            }
+        });
 }

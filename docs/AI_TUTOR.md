@@ -995,6 +995,140 @@ Tests: `engineChoice.test.ts`, `chatStore.test.ts`, `memory.test.ts`, `chatLocal
 127.0.0.1:11434; every cloud host and Wikipedia counted and refused). Not tested against a real
 runtime.
 
+## Qwen 3.5 9B inside the app (#190, not released)
+
+User decision 10/11/2026 ("đồng ý, đưa Qwen 9B bản gốc vào app ngay"); the five questions of the
+plan were answered "Đồng ý cả 5" on 11/11/2026 (issue #190).
+
+### Pinned files (step 0, recorded 18/11/2026)
+
+The model is the exact file of the 10/11/2026 desktop measurement (RTX 4080; `docs/TEACHING_EVAL.md`
+"Đợt 10/11/2026", row "Qwen 3.5 9B gốc", 33/42,
+`tests/teaching/results/2026-11-10-qwen3.5-9b-base-main.json`).
+
+| Model      | Value                                                                                   |
+| ---------- | --------------------------------------------------------------------------------------- |
+| Repository | `lmstudio-community/Qwen3.5-9B-GGUF` (card: base model `Qwen/Qwen3.5-9B`, `apache-2.0`) |
+| Revision   | `1379f25c6b505a3fc737bd7818cb09389cf807c1`                                              |
+| File       | `Qwen3.5-9B-Q4_K_M.gguf`                                                                |
+| SHA-256    | `cd76ec205963b3b33350093e6904d9de16c4e666fd104e1f632d25c7f15f2a13`                      |
+| Size       | 5 627 044 256 bytes                                                                     |
+
+How each value was found:
+
+- The result files name the model (`qwen3.5-9b`) but not the file. The desktop holds one Qwen 3.5 9B
+  language-model file, `C:\Users\<user>\.lmstudio\models\lmstudio-community\Qwen3.5-9B-GGUF\Qwen3.5-9B-Q4_K_M.gguf`,
+  downloaded by LM Studio 0.4.28+2 from `…/resolve/main/Qwen3.5-9B-Q4_K_M.gguf` on 10/11/2026 at
+  00:09 (Vietnam time, before the measurement). LM Studio's download record lists the SHA-256 and
+  size above; hashing the file again on 18/11/2026 gave the same SHA-256.
+- Revision: the repository's `main` on 18/11/2026. Its last commit is dated 02/03/2026, so it was
+  also `main` at the download, and the HuggingFace API lists the file at this revision with the
+  same size and LFS SHA-256.
+- The folder also holds `mmproj-Qwen3.5-9B-BF16.gguf` (pictures); the plan leaves it out.
+
+| Server when measured | Value                                                                                 |
+| -------------------- | ------------------------------------------------------------------------------------- |
+| Program              | `llama-server.exe` of LM Studio's engine "CUDA 12 llama.cpp (Windows)" 2.71.0         |
+| llama.cpp            | release b12177 (commit `6c01da627`), from that engine's release notes                 |
+| Flags                | `-np 1 -c 6000 --jinja --port 18765` (`scripts/teaching/eval-local.mjs`), no `--lora` |
+| Settings             | temperature 0, the app's compact prompt (`contextPrompt(…, 'compact', …)`)            |
+
+| Bundled runtime | Value                                                                                      |
+| --------------- | ------------------------------------------------------------------------------------------ |
+| llama.cpp tag   | `b12246` (commit `78ffbaa18533c2ed51eab2ef5ae0702330efc3e9`, published 10/11/2026)         |
+| File            | `llama-b12246-bin-win-vulkan-x64.zip` (MIT)                                                |
+| Size            | 37 892 147 bytes                                                                           |
+| SHA-256         | `ca8cfe89b00fd447ac3b816d095871bc9b6ca9835fd96e06238a9ff5d1640639` (GitHub's asset digest) |
+
+The bundled runtime is a newer llama.cpp (b12246) with a different backend (Vulkan) than the
+measurement (b12177, CUDA): step 9 measures the app's own path again.
+
+**It reads the file (18/11/2026, desktop).** `llama-server --version` → build 12246, commit
+`78ffbaa18`. `--list-devices` → `Vulkan0: NVIDIA GeForce RTX 4080 (16048 MiB)`,
+`Vulkan1: Intel(R) UHD Graphics 770 (16272 MiB)`. One run with the files the app ships
+(`-m <pinned GGUF> --device Vulkan0 -ngl 99 -c 6000 -np 1 --jinja --no-webui --host 127.0.0.1
+--port <random> --api-key <random>`): `/health` ok 7,1 s after start, the card's memory in use
+6 340 MiB (nvidia-smi, whole card), one Vietnamese answer at 39 tokens/s, a request without the
+key refused (HTTP 401), no `llama-server` left after the stop. The context is rounded to 6 144
+(`n_ctx_slot`). One run only: step 9 measures load time, first-piece time and memory properly.
+
+The integrated card reports 16 GB to Vulkan (shared system memory): the card choice must come from
+`gpu.rs` (`Discrete`, dedicated memory), never from the size Vulkan reports. The desktop runs pass
+`--device` for the RTX 4080, never the integrated card.
+
+### Bundled files (step 1)
+
+`node scripts/llama/fetch-llama-server.mjs` (Windows) downloads the pinned zip, checks its size and
+SHA-256 and keeps the 24 files `llama-server` needs (`KEEP`: the server, `llama*`/`mtmd`/`ggml*`
+libraries, the Vulkan backend, every CPU variant ggml chooses from at start-up, `libomp.dll` and its
+licence) in `src-tauri/binaries/llama-server/` (89 234 324 bytes with the licence below; git-ignored
+except `LICENSE-llama.cpp.txt`, the MIT licence at the pinned commit). `tauri.conf.json`
+`bundle.resources` ships the folder as `llama-server/` beside the app; a build without the fetch
+ships only the licence (the Qwen card then says the runtime is missing).
+
+### How it works (steps 2–8)
+
+**Rust (`src-tauri/src/ai/builtin/`).** Every `builtin_ai_*` command checks the 18+ gate first
+(a test reads the source).
+
+- `device.rs`: the card. A `gpu.rs` adapter that is `Discrete` with `dedicated_mb` ≥ 8192,
+  matched by name to a Vulkan device of `llama-server --list-devices`. Refused: integrated, under
+  8 GB, unknown kind (no D3D12 device), not listed by the runtime, or a name shared with an
+  ineligible card. Found once per run.
+- `model.rs`: the pinned GGUF (`MODEL`, same values as the table above, tested against this
+  file). Download from `https://huggingface.co/<repo>/resolve/<revision>/<file>` only; every
+  redirect must stay on HTTPS and the CSP's model hosts. Free space first (size + 1 GiB), a
+  `.partial` file resumed with an HTTP range (a server ignoring it starts again), cancel keeps the
+  partial file, a wrong size or SHA-256 deletes it. Stored in `<app data>/models/qwen/`.
+- `server.rs`: `-m <model> --alias qwen3.5-9b --device <VulkanN> -ngl 99 -c 6000 -np 1 --jinja
+--chat-template-kwargs {"enable_thinking":false} --no-webui --host 127.0.0.1 --port 0
+--api-key-file <file>`. Thinking is off for every request, as in the measurement
+  (`eval-local.mjs` sends the same variable): with it on, the in-app check of 19/11/2026 got no
+  answer at all (Qwen 3.5 spent the 2 048-token budget in `reasoning_content`, which SimLab drops,
+  and the local route's `think` switch is Ollama only). The server binds a free port itself
+  and logs it (`listening on http://127.0.0.1:<port>`): a port picked in Rust and bound later could
+  be taken by another program, which would then get the key. The key (32 bytes from
+  `BCryptGenRandom`) is written to a file that is deleted once `/health` answers, so it is never on
+  a command line. No console window; the process sits in a Windows job killed with SimLab; a log
+  line with a lost device marks a card fault. Residual risk: llama.cpp binds with `SO_REUSEADDR`.
+- `mod.rs`: `builtin_ai_status`, `_download` (bytes through a channel), `_cancel`, `_delete`,
+  `_start`, `_stop`, `_enable`, `_chat`. `_chat` takes the local route's `LocalChatRequest` but
+  fills in its own server's address, the alias and a loopback client that sends the key
+  (`endpoint::loopback_client_with_bearer`), then runs `local::chat_cancellable`: never counted,
+  retried or sent to the cloud. A server that dies while answering, or logged a lost card, sets
+  `gpuFault` in `builtin-ai.json` until "Bật lại". A watcher stops a server idle for 10 minutes;
+  the app's exit stops it. One server at a time.
+
+**Page.** `src/ai/builtin/` (`types.ts`, `client.ts`, `builtinStore.ts`, not saved: Rust keeps
+the model and the fault switch). "Qwen trong app" is the fixed local selection `BUILTIN_SELECTION`
+(`builtin: true`, a placeholder address no loopback check accepts): the local client sends it to
+`builtin_ai_chat`, the browser client refuses it, a stored choice is always the fixed one. All the
+local engine's rules hold (`engineChoice.ts`: never `cloud`; Think and Wikipedia only when on, and
+Wikipedia only after `builtin_ai_start` succeeded). The prompt is `compact`, as measured (no
+context check exists for it). Gemma and Qwen free the card for each other (`freeGemmaMemory`
+before a start or a question, `stopBuiltin` before Gemma loads). Pictures are never sent to it
+(no mmproj, no vision check). Rust's `builtin-*` errors become study-partner sentences
+(`localRuntime.ts`) that point at the Qwen card.
+
+**Settings.** `src/teacher/chat/settings/QwenSettings.tsx`, the first card of "Gemma cục bộ":
+size and free space, the card it would use, the terms (`open_known_page`: `qwen-model`,
+`apache-2`, `llama-cpp-licence`), download with progress and time left, cancel, resume, choose,
+free the card, unselect, delete, "Bật lại". Without a desktop app, the runtime, or an eligible card it
+says why and offers nothing to download or run. The runtimes page shows a note instead of an address
+when Qwen in the app is the choice.
+
+**Build.** `release.yml` and the Windows Rust job of `ci.yml` run the fetch script;
+`make-msix.mjs` copies the folder beside the exe and stops without it.
+
+Tests: `device.rs`, `model.rs` (mock HuggingFace), `server.rs` (the test binary as a stand-in
+`llama-server`), `builtin/mod.rs` (gate, registration, no cloud use), `server_tests.rs` (the key
+on every request), `tests/llama-server-fetch.test.ts`, `tests/tauri-config.test.ts`,
+`tests/workflows.test.ts`, `chatLocalOnly.test.ts` ("Qwen inside the app"), `client.test.ts`,
+`engineChoice.test.ts`, `QwenSettings.test.tsx`. Step 9 (18/11/2026, after Norton was removed
+and Defender turned on): 34/42 on the main set with the bundled runtime and the flags of
+`server.rs` (33/42 on 10/11), `docs/TEACHING_EVAL.md` "Đợt 18/11/2026". Not yet done: the same run
+through the app's own commands and the Qwen card (the app's 18+ gate is not answered on the desktop).
+
 ## Tested on real hardware (2026-10-12, AMD RDNA 3 GPU, built-in browser)
 
 - `gemma3-270m` downloaded (≈ 343 MB), stored in OPFS, loaded on WebGPU, answered a chat question

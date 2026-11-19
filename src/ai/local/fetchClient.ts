@@ -42,6 +42,7 @@ import {
 } from './runtimes';
 import { Lines, MAX_ANSWER_BYTES, MAX_LINE_BYTES, MAX_MODELS, rustTrim, sseLine } from './stream';
 import { allowVision, checkRequest } from './vision';
+import { BUILTIN_UNSUPPORTED } from '../builtin/types';
 import {
   FAILED,
   IS_OLLAMA,
@@ -824,6 +825,8 @@ export class FetchLocalClient implements LocalRuntimeClient {
     const shown = new ShownText(opts.onPartial);
     try {
       refuseInDesktop();
+      // "Qwen trong app" runs only in the desktop app (Rust starts its server).
+      if (req.builtin) throw new AiError('unavailable', BUILTIN_UNSUPPORTED);
       await requireAiAllowed();
       const base = parseLoopback(req.baseUrl);
       if (signal?.aborted) throw aborted();

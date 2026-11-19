@@ -6,6 +6,8 @@ import {
   forgetGpuFault,
   noteGpuFault,
 } from '@/ai/gpuSafety';
+import { setBuiltinClientForTests, type BuiltinClient } from '@/ai/builtin/client';
+import { BUILTIN_MODEL, BUILTIN_SELECTION } from '@/ai/builtin/types';
 import { setLocalClientForTests } from '@/ai/local/client';
 import { useLocalAiStore } from '@/ai/local/localAiStore';
 import {
@@ -870,5 +872,172 @@ describe('Think with Gemma: the draft on this computer, one review online', () =
     const failed = askTeacher('Lực ma sát là gì?', 'vi', [], { includeScreen: false, think: true });
     await expect(failed).rejects.toThrow(/^Bên rà soát \(Claude\) báo đã hết lượt dùng/);
     expect(calls.map((c) => [c.provider, c.noFallback])).toEqual([['claude', true]]);
+  });
+});
+
+describe('Qwen inside the app (#190)', () => {
+  const calls: ChatRequest[] = [];
+  const usage = vi.fn(() => Promise.resolve({ count: 0 }));
+  const local = {
+    detect: vi.fn<LocalRuntimeClient['detect']>(),
+    probe: vi.fn<LocalRuntimeClient['probe']>(),
+    models: vi.fn<LocalRuntimeClient['models']>(),
+    modelInfo: vi.fn<LocalRuntimeClient['modelInfo']>(),
+    test: vi.fn<LocalRuntimeClient['test']>(),
+    chat: vi.fn<LocalRuntimeClient['chat']>(),
+  };
+  const builtin = {
+    status: vi.fn<BuiltinClient['status']>(),
+    download: vi.fn<BuiltinClient['download']>(),
+    cancel: vi.fn<BuiltinClient['cancel']>(),
+    remove: vi.fn<BuiltinClient['remove']>(),
+    start: vi.fn<BuiltinClient['start']>(),
+    stop: vi.fn<BuiltinClient['stop']>(),
+    enable: vi.fn<BuiltinClient['enable']>(),
+  };
+  const answer = (content: string): LocalChatResponse => ({
+    content,
+    model: BUILTIN_MODEL,
+    runtime: 'llamaCpp',
+    durationMs: 5,
+    firstPieceMs: 1,
+    truncated: false,
+    streamed: true,
+  });
+  const ask = (question: string, extra: Partial<Parameters<typeof askTeacher>[3]> = {}) =>
+    askTeacher(question, 'vi', [], { includeScreen: false, think: false, ...extra });
+
+  beforeEach(() => {
+    calls.length = 0;
+    gemmaCalls.length = 0;
+    failure.current = null;
+    picked.current = 'local';
+    usage.mockClear();
+    for (const fn of [...Object.values(local), ...Object.values(builtin)]) fn.mockReset();
+    builtin.start.mockResolvedValue();
+    useChatStore.setState({
+      engine: 'local',
+      engineChosen: true,
+      messages: [],
+      summary: null,
+      summarySkip: null,
+      webLookup: false,
+      memoryLength: 'medium',
+      verifierProvider: 'claude',
+      verifierModel: '',
+    });
+    useLocalAiStore.setState({ selected: BUILTIN_SELECTION, checks: {}, userEndpoints: [] });
+    setLocalClientForTests(local);
+    setBuiltinClientForTests(builtin);
+    const cloud = transport(calls) as unknown as { usage: unknown };
+    cloud.usage = usage;
+    setTransportForTests(cloud as unknown as LlmTransport);
+  });
+  afterEach(() => {
+    picked.current = 'gemma';
+    setLocalClientForTests(null);
+    setBuiltinClientForTests(null);
+    setTransportForTests(null);
+    useLocalAiStore.setState({ selected: null, checks: {} });
+  });
+
+  it('answers through Rust’s own server with the measured compact prompt, never online', async () => {
+    local.chat.mockResolvedValue(answer('Gia tốc cho biết vận tốc thay đổi nhanh hay chậm.'));
+    const question = 'Gia tốc là gì?';
+    const reply = await ask(question);
+    expect(reply.metadata.model).toBe(translate('vi', 'builtinAi.answerLabel'));
+    const [req] = local.chat.mock.calls[0] ?? [];
+    expect(req).toMatchObject({ builtin: true, kind: 'llamaCpp', model: BUILTIN_MODEL });
+    // The page has no address for it: the placeholder is never a loopback address.
+    expect(req?.baseUrl).toBe('builtin:qwen');
+    // The prompt of the 10/11 measurement (`eval-local.mjs`: contextPrompt(…, 'compact')).
+    expect(req?.system).toBe((await contextPrompt(question, 'vi', false, false, 'compact')).system);
+    expect(calls).toHaveLength(0);
+    expect(usage).not.toHaveBeenCalled();
+    expect(gemmaCalls).toHaveLength(0);
+  });
+
+  it.each([
+    ['builtin-gpu-fault', 'chat.errors.builtinGpuFault', false],
+    ['builtin-no-model', 'chat.errors.builtinNoModel', false],
+    ['builtin-no-card: {"reason":"noDiscrete"}', 'chat.errors.builtinNoCard', false],
+    ['builtin-no-runtime', 'chat.errors.builtinNoRuntime', false],
+    ['builtin-start-failed: {"kind":"notReady"}', 'chat.errors.builtinStartFailed', true],
+  ] as const)(
+    '%s: its sentence, the Qwen card, and nothing sent online',
+    async (msg, key, retry) => {
+      local.chat.mockRejectedValue(new AiError('unavailable', msg));
+      const failed = ask('Gia tốc là gì?');
+      await expect(failed).rejects.toThrow(translate('vi', key));
+      await expect(failed).rejects.toMatchObject({ section: 'local', retry });
+      expect(calls).toHaveLength(0);
+      expect(usage).not.toHaveBeenCalled();
+      expect(gemmaCalls).toHaveLength(0);
+    },
+  );
+
+  // In-app check 19/11/2026: the runtime sentences sent the learner to "AI trên máy khác".
+  it.each([
+    [new AiError('badResponse', 'empty answer (stop)'), 'chat.errors.builtinNoAnswer', true],
+    [new AiError('badResponse', 'reasoningOnly'), 'chat.errors.builtinNoAnswer', true],
+    [new AiError('http', 'local-failed: 500: boom'), 'chat.errors.builtinFailed', true],
+    [new AiError('network', 'local-unreachable: refused'), 'chat.errors.builtinFailed', true],
+  ] as const)(
+    '%s from Qwen: a Qwen sentence and the Qwen card, never "AI trên máy khác"',
+    async (err, key, retry) => {
+      local.chat.mockRejectedValue(err);
+      const failed = ask('Vì sao vật rơi tự do có gia tốc không đổi?');
+      await expect(failed).rejects.toThrow(translate('vi', key));
+      await expect(failed).rejects.toMatchObject({ section: 'local', retry });
+      await expect(failed).rejects.not.toThrow(/AI trên máy khác|llama\.cpp/);
+      expect(calls).toHaveLength(0);
+    },
+  );
+
+  it('with "Tra thêm Wikipedia" on, Qwen is loaded first: a failed start sends nothing anywhere', async () => {
+    useChatStore.setState({ webLookup: true });
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockRejectedValue(new TypeError('offline'));
+    builtin.start.mockRejectedValue(new AiError('unavailable', 'builtin-gpu-fault'));
+    const failed = ask('Lực ma sát là gì?');
+    await expect(failed).rejects.toThrow(translate('vi', 'chat.errors.builtinGpuFault'));
+    expect(fetchSpy).not.toHaveBeenCalled();
+    expect(local.chat).not.toHaveBeenCalled();
+    expect(local.probe).not.toHaveBeenCalled();
+    expect(calls).toHaveLength(0);
+    fetchSpy.mockRestore();
+  });
+
+  it('Wikipedia is asked only when turned on, after Qwen is loaded', async () => {
+    const order: string[] = [];
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockImplementation(() => {
+      order.push('wikipedia');
+      return Promise.reject(new TypeError('offline'));
+    });
+    builtin.start.mockImplementation(() => {
+      order.push('start');
+      return Promise.resolve();
+    });
+    local.chat.mockImplementation(() => {
+      order.push('chat');
+      return Promise.resolve(answer('Lực ma sát cản chuyển động.'));
+    });
+    await ask('Lực ma sát là gì?');
+    expect(order).toEqual(['chat']);
+    useChatStore.setState({ webLookup: true });
+    order.length = 0;
+    await ask('Lực ma sát là gì?');
+    expect(order[0]).toBe('start');
+    expect(order.at(-1)).toBe('chat');
+    fetchSpy.mockRestore();
+  });
+
+  it('Think off sends nothing online; Think on sends only the review (no fallback)', async () => {
+    local.chat.mockResolvedValue(answer('Bản nháp: lực ma sát cản chuyển động.'));
+    await ask('Lực ma sát là gì?');
+    expect(calls).toHaveLength(0);
+    const reply = await ask('Lực ma sát là gì?', { think: true, onPartial: () => undefined });
+    expect(calls).toHaveLength(1);
+    expect(calls[0]).toMatchObject({ provider: 'claude', noFallback: true });
+    expect(reply.metadata.model).toBe(translate('vi', 'builtinAi.answerLabel'));
   });
 });

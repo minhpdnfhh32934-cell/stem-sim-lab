@@ -88,3 +88,12 @@ describe('tauri.conf.json security', () => {
     expect(sec.dangerousDisableAssetCspModification).toContain('style-src');
   });
 });
+
+describe('tauri.conf.json bundled files (#190)', () => {
+  it('ships only the fetched llama-server folder, beside the app, and nothing else', () => {
+    // The folder holds what scripts/llama/fetch-llama-server.mjs keeps; Rust starts
+    // <resource dir>/llama-server/llama-server.exe. No sidecar, no other resource.
+    expect(conf.bundle.resources).toEqual({ 'binaries/llama-server/': 'llama-server/' });
+    expect('externalBin' in conf.bundle).toBe(false);
+  });
+});
