@@ -57,20 +57,32 @@ const TAG = /<\/?[a-zA-Z][\w-]*(?:\s[^<>]*)?\/?>/g;
  * The answer as plain text: no tags (TeachScript, HTML), LaTeX commands, markdown marks or
  * superscripts ("x²" → "x^2"); line breaks are kept (they mark list items).
  */
+const VULGAR: Record<string, string> = {
+  '½': '1/2',
+  '⅓': '1/3',
+  '⅔': '2/3',
+  '¼': '1/4',
+  '¾': '3/4',
+};
+
 export function plainAnswer(text: string): string {
-  return text
-    .normalize('NFC')
-    .replace(TAG, ' ')
-    .replace(/\\(?:d|t)?frac\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g, '($1)/($2)')
-    .replace(/\\(?:text|mathrm|mathbf|operatorname)\s*\{([^{}]*)\}/g, ' $1')
-    .replace(/\\(?:cdot|times)/g, '×')
-    .replace(/\\approx/g, '≈')
-    .replace(/\\[a-zA-Z]+|\\[,;:! ]/g, ' ')
-    .replace(/[{}$`]|\*\*|__/g, ' ')
-    .replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻]+/g, (s) => `^${s.replace(/./gu, (c) => SUPERSCRIPTS[c] ?? c)}`)
-    .replace(/[−–—]/g, '-')
-    .replace(/[\u00a0\u202f]/g, ' ')
-    .replace(/[ \t]+/g, ' ');
+  return (
+    text
+      .normalize('NFC')
+      // "½gt²": the fraction characters as the fractions they are (formula coefficients).
+      .replace(/[½⅓⅔¼¾]/gu, (c) => ` ${VULGAR[c] ?? c}`)
+      .replace(TAG, ' ')
+      .replace(/\\(?:d|t)?frac\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g, '($1)/($2)')
+      .replace(/\\(?:text|mathrm|mathbf|operatorname)\s*\{([^{}]*)\}/g, ' $1')
+      .replace(/\\(?:cdot|times)/g, '×')
+      .replace(/\\approx/g, '≈')
+      .replace(/\\[a-zA-Z]+|\\[,;:! ]/g, ' ')
+      .replace(/[{}$`]|\*\*|__/g, ' ')
+      .replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻]+/g, (s) => `^${s.replace(/./gu, (c) => SUPERSCRIPTS[c] ?? c)}`)
+      .replace(/[−–—]/g, '-')
+      .replace(/[\u00a0\u202f]/g, ' ')
+      .replace(/[ \t]+/g, ' ')
+  );
 }
 
 /** Units and measure words a value may carry (longest first). */
@@ -251,8 +263,10 @@ export function answerNumbers(answer: string): Mention[] {
       values: mantissa.map((v) => v * 10 ** exp),
     });
   }
-  // Small fractions are formula coefficients: "1/2 mv²", "3/4".
-  for (const m of text.matchAll(/(?<![\p{L}\p{N}.,])(\d{1,2})\s*\/\s*(\d{1,2})(?![\d.,])/gu)) {
+  // Small fractions are formula coefficients: "1/2 mv²", "3/4", "\frac{1}{2}" (read as "(1)/(2)").
+  for (const m of text.matchAll(
+    /(?<![\p{L}\p{N}.,])\(?(\d{1,2})\)?\s*\/\s*\(?(\d{1,2})\)?(?![\d.,])/gu,
+  )) {
     if (Number(m[1]) <= 10 && Number(m[2]) <= 10) taken.push([m.index, m.index + m[0].length]);
   }
 
