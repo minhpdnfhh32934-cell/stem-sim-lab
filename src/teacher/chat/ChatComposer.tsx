@@ -133,7 +133,8 @@ export function ChatComposer({
             }}
             title={t('chat.thinkTitle')}
           >
-            <Check size={14} /> {t('chat.think')}{' '}
+            {/* The tick says "on": an off switch with a tick read as on. */}
+            {thinkEnabled && <Check size={14} />} {t('chat.think')}{' '}
             {/* A draft written on this computer is reviewed by one API only. */}
             {thinkEnabled && (
               <span>{engine === 'cloud' ? t('chat.twoApis') : t('chat.oneApiReview')}</span>
