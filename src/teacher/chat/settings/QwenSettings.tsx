@@ -128,7 +128,7 @@ function blockedText(t: T, s: BuiltinStatus): string | null {
 }
 
 /**
- * "Qwen 3.5 9B (mạnh hơn Gemma)" on Settings → Gemma cục bộ (#190): download size, what the
+ * "Qwen 3.5 9B (mạnh hơn Gemma)" on Settings → AI trong SimLab (#190): download size, what the
  * computer needs, the terms, download (resume, cancel), choose for AI Teacher, free the card,
  * delete, and "Bật lại" after a card fault. Only a discrete card with 8 GB or more may run it;
  * otherwise the card says why and offers nothing to download or run.

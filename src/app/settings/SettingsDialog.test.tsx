@@ -29,7 +29,7 @@ describe('Settings: one small page per section', () => {
     for (const name of [
       'Giao diện',
       'Kết nối AI',
-      'Gemma cục bộ',
+      'AI trong SimLab',
       'AI trên máy khác (Ollama, LM Studio, llama.cpp)',
       'GPU cho Gemma',
       'Trí nhớ hội thoại',
@@ -68,12 +68,12 @@ describe('Settings: one small page per section', () => {
     expect(screen.getByText('Độ dài câu trả lời của Gemma')).toBeInTheDocument();
   });
 
-  it('"AI trên máy khác" comes right after the Gemma page and asks no runtime when shown', () => {
+  it('"AI trên máy khác" comes right after "AI trong SimLab" (Gemma and Qwen) and asks no runtime when shown', () => {
     renderOpen();
     const names = within(screen.getByRole('tablist'))
       .getAllByRole('tab')
       .map((tab) => tab.textContent);
-    const gemma = names.findIndex((n) => n.includes('Gemma cục bộ'));
+    const gemma = names.findIndex((n) => n.includes('AI trong SimLab'));
     expect(names[gemma + 1]).toContain('AI trên máy khác (Ollama, LM Studio, llama.cpp)');
     const fetchSpy = vi.spyOn(globalThis, 'fetch');
     act(() => {

@@ -430,9 +430,9 @@ const en: Messages = {
       aiHint: 'Choose the online AI provider, enter the API key, set limits and the fallback.',
       teacher: 'AI Teacher',
       teacherHint: 'Deepthink (a second AI reviews the answer) and what data is sent.',
-      local: 'Local Gemma',
+      local: 'AI in SimLab',
       localHint:
-        'Download, choose or delete the Gemma models that run on this computer: no network, no key.',
+        'Download, choose or delete Gemma and Qwen, the models that run right inside SimLab: no network, no key.',
       gpu: 'GPU for Gemma',
       gpuHint: 'The graphics card in use, answer length and when to free the GPU memory.',
       knowledge: 'Knowledge library',
@@ -1999,20 +1999,20 @@ const en: Messages = {
       builtinUnsupported:
         'Qwen in the app runs only in the SimLab app on Windows, so no question was sent.',
       builtinNoRuntime:
-        'I cannot find the Qwen runtime in this copy of SimLab (an antivirus may have quarantined it), so no question was sent. See the Qwen card in Settings → Local Gemma.',
+        'I cannot find the Qwen runtime in this copy of SimLab (an antivirus may have quarantined it), so no question was sent. See the Qwen card in Settings → AI in SimLab.',
       builtinNoCard:
-        'This computer has no discrete graphics card with 8 GB of its own memory, so Qwen cannot run and no question was sent. See the Qwen card in Settings → Local Gemma.',
+        'This computer has no discrete graphics card with 8 GB of its own memory, so Qwen cannot run and no question was sent. See the Qwen card in Settings → AI in SimLab.',
       builtinNoModel:
-        'You have not downloaded Qwen yet, so no question was sent. Download it on the Qwen card in Settings → Local Gemma.',
+        'You have not downloaded Qwen yet, so no question was sent. Download it on the Qwen card in Settings → AI in SimLab.',
       builtinGpuFault:
-        'The graphics card failed while running Qwen, so I turned Qwen off to keep the computer safe. No question was sent online. You can turn it back on with the Qwen card in Settings → Local Gemma.',
+        'The graphics card failed while running Qwen, so I turned Qwen off to keep the computer safe. No question was sent online. You can turn it back on with the Qwen card in Settings → AI in SimLab.',
       builtinStartFailed:
-        'I could not load Qwen on the graphics card. Ask again; if it repeats, see the Qwen card in Settings → Local Gemma.',
+        'I could not load Qwen on the graphics card. Ask again; if it repeats, see the Qwen card in Settings → AI in SimLab.',
       builtinBusy: 'Qwen is downloading or answering. Wait for it to finish, then try again.',
       builtinNoAnswer:
-        'Qwen wrote no answer. Ask again; if it repeats, see the Qwen card in Settings → Local Gemma.',
+        'Qwen wrote no answer. Ask again; if it repeats, see the Qwen card in Settings → AI in SimLab.',
       builtinFailed:
-        'Qwen ran into an error while answering, and nothing was sent online. Ask again; if it repeats, see the Qwen card in Settings → Local Gemma.',
+        'Qwen ran into an error while answering, and nothing was sent online. Ask again; if it repeats, see the Qwen card in Settings → AI in SimLab.',
       cloud: {
         reviewer: 'The reviewer ({name})',
         withFallback: '{name} (or the {fallback} fallback)',
@@ -2230,7 +2230,7 @@ const en: Messages = {
         'Gemma runs on the integrated card, which can hang on long questions; this computer has a discrete card ({name}): pick it for Gemma.',
     },
   },
-  /** "Qwen in the app" (#190): the Qwen card on Settings → Local Gemma, and its answers. */
+  /** "Qwen in the app" (#190): the Qwen card on Settings → AI in SimLab, and its answers. */
   builtinAi: {
     answerLabel: 'Qwen 3.5 9B · in SimLab',
     pillHint:
@@ -2238,7 +2238,7 @@ const en: Messages = {
     chatOnly: 'Qwen answers inside SimLab on this computer, never online.',
     chatHere: 'Qwen answers inside SimLab on this computer.',
     runtimesNote:
-      'AI Teacher uses Qwen in the app (the Qwen card in Settings → Local Gemma). Choosing a program below replaces Qwen.',
+      'AI Teacher uses Qwen in the app (the Qwen card in Settings → AI in SimLab). Choosing a program below replaces Qwen.',
     title: 'Qwen 3.5 9B (stronger than Gemma)',
     intro:
       'A larger model than Gemma that runs inside SimLab on the discrete graphics card of your computer: no network, no key, nothing else to install. Questions are not sent online.',

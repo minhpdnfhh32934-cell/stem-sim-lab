@@ -38,7 +38,7 @@ test('the Qwen card outside the desktop app: says why, nothing to download, fits
   await openLab(page);
   await page.getByRole('button', { name: 'Cài đặt', exact: true }).first().click();
   const settings = page.getByRole('dialog', { name: 'Cài đặt' });
-  await settings.getByRole('tab', { name: 'Gemma cục bộ' }).click();
+  await settings.getByRole('tab', { name: 'AI trong SimLab' }).click();
   const panel = page.locator('#settings-local');
   const card = panel.getByRole('group', { name: 'Qwen 3.5 9B (mạnh hơn Gemma)' });
   await expect(card).toBeVisible();
