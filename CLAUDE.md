@@ -163,7 +163,10 @@ release history and old work-logs keep the old name). The user accepted:
   Measurements and design: `docs/AI_TUTOR.md` → "Choosing the graphics card".
 - **0.4.3 (user decisions 2026-10-12):** the lab panels can no longer be hidden (no top-bar
   buttons, no Ctrl+B/I/J, no in-panel X; only resizing; presentation mode still hides them) — do not
-  add show/hide back ("Giao diện" below).
+  add show/hide back ("Giao diện" below). **User decision 2026-11-19:** the open lab chat (bubble)
+  never covers the simulation: it is a column of its own (`chat.css`, `.shell:has(…)`), the centre
+  narrows and the library/Inspector take their LAYOUT_LIMITS minimum while it is open (E2E
+  `teacher.spec.ts`). Do not put it back over the stage.
   AI Teacher context is a token budget with an AI-written summary of older turns
   (`src/teacher/chat/memory.ts`, Settings "Trí nhớ hội thoại"); never go back to "last N messages".
   "Giảng trên bảng" is the whiteboard below (one implementation; the earlier compact lesson board

@@ -97,7 +97,9 @@ chép qua USB và cài trước.
 ### Trò chuyện với AI Teacher
 
 Trong Virtual Lab, bấm nút tròn có mặt **AI Teacher** ở góc dưới bên phải màn hình để hỏi nhanh
-(khung chat mở ngay cạnh bài, gọi là bong bóng chat); ở trang chủ, bấm thẻ **AI Teacher** để mở cuộc
+(khung chat mở ngay cạnh bài, gọi là bong bóng chat). Khung chat là một cột riêng, không che mô
+phỏng: phần mô phỏng thu hẹp lại, thư viện và bảng thông số tạm về cỡ nhỏ nhất, đóng chat thì tất cả
+trở lại như cũ. Ở trang chủ, bấm thẻ **AI Teacher** để mở cuộc
 trò chuyện toàn màn hình. Bấm chữ **SimLab**
 ở góc trên để về trang chủ. Chọn AI trực tuyến hoặc Gemma cục bộ ở ô chọn trên đầu khung chat; nút
 ⓘ cạnh tiêu đề trang AI Teacher nhắc trang này làm gì và dữ liệu nào có thể được gửi đi. Nếu chưa kết nối API hoặc
