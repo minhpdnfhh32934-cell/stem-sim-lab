@@ -338,6 +338,11 @@ export function ChatPanel({
         // The rest of an answer about part of the board stays a chat answer.
         board: board && message.mode !== 'aside',
         signal: controller.signal,
+        // The rest shows as it is written, like any answer (machine B's sweep 19/11: 15–21 s of
+        // "đang suy nghĩ" before it all came at once).
+        onPartial: (text) => {
+          if (!controller.signal.aborted) setStreaming(text || null);
+        },
       });
       if (cleared()) {
         endAnswer(answer);
@@ -367,6 +372,7 @@ export function ChatPanel({
         setError(failureOf(e, { kind: 'continue', id: message.id }));
       }
     } finally {
+      setStreaming(null);
       setBusy(false);
     }
   };
