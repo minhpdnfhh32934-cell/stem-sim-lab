@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { screenChange } from '@/app/fx/fx';
 import { useNavigationStore } from '@/app/navigationStore';
 import { teacherLocked, useSafetyStore } from '@/safety/safetyStore';
 import { stopSpeaking } from './voice/speak';
@@ -39,18 +38,13 @@ export const useTeacherStore = create<TeacherState>()((set) => ({
   },
 }));
 
-/**
- * Opens AI Teacher on `layout` with `draft` in the box, all in one screen change (it may run a
- * frame later: src/app/fx/fx.ts `screenChange`, so nothing is set on the teacher after it).
- */
+/** Opens AI Teacher on `layout` with `draft` in the box. */
 function showTeacher(layout: TeacherLayout, draft: string | null): void {
   // Under 18 the door stays locked whichever way it is asked (#245 follow-up: Ctrl+K opened it).
   if (teacherLocked(useSafetyStore.getState())) return;
-  void screenChange(() => {
-    useChatStore.getState().setIncludeScreen(false);
-    useNavigationStore.getState().setScreen('teacher');
-    useTeacherStore.setState({ open: true, layout, draft });
-  });
+  useChatStore.getState().setIncludeScreen(false);
+  useNavigationStore.getState().setScreen('teacher');
+  useTeacherStore.setState({ open: true, layout, draft });
 }
 
 export function openTeacher(): void {
@@ -79,11 +73,9 @@ export function askInBubble(question: string): void {
 }
 
 export function closeTeacher(): void {
-  void screenChange(() => {
-    stopSpeaking();
-    useTeacherStore.setState({ open: false, draft: null });
-    if (useNavigationStore.getState().screen === 'teacher') {
-      useNavigationStore.getState().returnFromTeacher();
-    }
-  });
+  stopSpeaking();
+  useTeacherStore.setState({ open: false, draft: null });
+  if (useNavigationStore.getState().screen === 'teacher') {
+    useNavigationStore.getState().returnFromTeacher();
+  }
 }

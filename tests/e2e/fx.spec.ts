@@ -9,7 +9,10 @@ test.use({ viewport: { width: 1366, height: 768 } });
 
 const intro = (page: Page) => page.locator('.fx-intro');
 
-/** Counts the view transitions the page starts. */
+/**
+ * Counts the view transitions the page starts: none since the screen-change circle was removed
+ * (user request 19/11/2026).
+ */
 async function countTransitions(page: Page): Promise<void> {
   await page.evaluate(() => {
     const w = window as unknown as { __fxTransitions: number };
@@ -57,7 +60,7 @@ test('without ?fx=1 an automated browser gets none of them', async ({ page }) =>
   await expect(page.locator('.launch__drift')).toBeHidden();
 });
 
-test('the opening plays, then the launch page; a screen change opens the lab', async ({ page }) => {
+test('the opening plays, then the launch page; the lab opens at once', async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await watchIntro(page);
@@ -72,9 +75,9 @@ test('the opening plays, then the launch page; a screen change opens the lab', a
   await countTransitions(page);
   await page.getByRole('button', { name: /Virtual Lab/ }).click();
   await expect(page.getByRole('heading', { name: 'Hôm nay học gì?' })).toBeVisible();
-  expect(await transitions(page)).toBe(1);
-  // The ring flies out with it, then is gone.
-  await expect(page.locator('.fx-portal')).toHaveCount(0, { timeout: 3_000 });
+  // No circle, no orbit ring: the screen simply changes.
+  expect(await transitions(page)).toBe(0);
+  await expect(page.locator('.fx-portal')).toHaveCount(0);
 
   // Once everything has settled, the page passes axe as without the effects.
   await page.evaluate(() =>
@@ -105,7 +108,7 @@ test('a key skips the opening', async ({ page }) => {
 test.describe('reduced motion', () => {
   test.use({ reducedMotion: 'reduce' });
 
-  test('a short still opening, no drift, a plain cross-fade without the ring', async ({ page }) => {
+  test('a short still opening, no drift, the lab opens at once', async ({ page }) => {
     await watchIntro(page);
     await page.goto('/?fx=1');
     await expect(intro(page)).toHaveCount(0, { timeout: 10_000 });
@@ -119,7 +122,6 @@ test.describe('reduced motion', () => {
     await countTransitions(page);
     await page.getByRole('button', { name: /Virtual Lab/ }).click();
     await expect(page.getByRole('heading', { name: 'Hôm nay học gì?' })).toBeVisible();
-    expect(await transitions(page)).toBe(1);
-    await expect(page.locator('.fx-portal')).toHaveCount(0);
+    expect(await transitions(page)).toBe(0);
   });
 });
