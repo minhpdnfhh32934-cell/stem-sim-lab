@@ -143,18 +143,25 @@ describe('on-device Gemma failures', () => {
   });
 
   it.each([
-    ['gemma-stalled', /không viết thêm chữ nào/],
-    ['model-missing', /Gemma chưa được tải/],
-    ['something odd', /Gemma gặp lỗi khi trả lời/],
+    ['gemma-stalled', /không viết thêm chữ nào/, 'gpu', true],
+    ['model-missing', /Gemma chưa được tải/, 'local', false],
+    ['something odd', /Gemma gặp lỗi khi trả lời/, 'local', true],
     // An out-of-memory error that did not turn Gemma off: asking again is allowed.
-    ['out of memory', /Card đồ họa vừa ngắt Gemma/],
-  ])('%s → a clear message and nothing sent online', async (raw, text) => {
-    failure.current = raw;
-    await expect(
-      askTeacher('Lực ma sát là gì?', 'vi', [], { includeScreen: false, think: false }),
-    ).rejects.toThrow(text);
-    expect(calls).toHaveLength(0);
-  });
+    ['out of memory', /Card đồ họa vừa ngắt Gemma/, 'gpu', true],
+  ] as const)(
+    '%s → a clear message, its Settings page, nothing sent online',
+    async (raw, text, section, retry) => {
+      failure.current = raw;
+      const answer = askTeacher('Lực ma sát là gì?', 'vi', [], {
+        includeScreen: false,
+        think: false,
+      });
+      await expect(answer).rejects.toThrow(text);
+      // The "Cài đặt" (and, when asking again may work, "Hỏi lại") button under the message.
+      await expect(answer).rejects.toMatchObject({ section, retry });
+      expect(calls).toHaveLength(0);
+    },
+  );
 
   // The real engine notes a GPU fault (Gemma off until restart) before it reports these errors,
   // so the learner is told Gemma is paused, not invited to ask again (audit GPU-01).
@@ -173,6 +180,9 @@ describe('on-device Gemma failures', () => {
       });
       await expect(answer).rejects.toThrow(/Gemma tạm dừng tới khi em mở lại app/);
       await expect(answer).rejects.not.toThrow(/em hỏi lại nhé/);
+      // Not "the card hung, pick the discrete card": the learner may already use it (sweep N1).
+      await expect(answer).rejects.not.toThrow(/chọn card rời/);
+      await expect(answer).rejects.toMatchObject({ section: 'gpu', retry: false });
       expect(calls).toHaveLength(0);
     },
   );
