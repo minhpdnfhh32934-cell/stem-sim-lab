@@ -28,6 +28,11 @@ pub const BEACON_MS: u64 = 2_000;
 /// A server unheard this long is forgotten (a few beacons lost in a row).
 pub const FORGET_MS: u64 = 7_000;
 pub const MAX_SERVERS: usize = 32;
+/// Servers kept from one address (SimLab and a standalone game on one computer): one sender
+/// cannot fill the list.
+pub const MAX_SERVERS_PER_IP: usize = 2;
+/// A beacon must name an unprivileged port: `via` never reaches a computer's web pages on 80 or 443.
+const MIN_PORT: f64 = 1024.0;
 /// A datagram longer than this is dropped unread (32 full rooms fit well under it).
 const BEACON_MAX_BYTES: usize = 16_000;
 const NAME_MAX: usize = 32;
@@ -82,6 +87,7 @@ pub fn now_ms() -> u64 {
 }
 
 struct Heard {
+    ip: IpAddr,
     name: String,
     rooms: Vec<Value>,
     time: u64,
@@ -256,19 +262,46 @@ impl Discovery {
         if id == self.id {
             return;
         }
-        let at = format!("{}:{port}", from.ip());
-        self.note(at, name, rooms);
+        self.note(SocketAddr::new(from.ip(), port), name, rooms);
     }
 
-    /// Keeps a server heard now (at most MAX_SERVERS).
-    pub(crate) fn note(&self, at: String, name: String, rooms: Vec<Value>) {
-        let known = self.heard.lock().expect("heard").contains_key(&at);
-        if !known && self.servers().len() >= MAX_SERVERS {
-            return;
-        }
+    /// Keeps a server heard now, at `at` (the sender's address, the port it gave). A sender
+    /// already counted MAX_SERVERS_PER_IP times, or a full list, makes way: the entry heard
+    /// longest ago goes, so a flood never keeps the newest servers out.
+    pub(crate) fn note(&self, at: SocketAddr, name: String, rooms: Vec<Value>) {
         let time = (self.config.now_ms)();
+        let key = at.to_string();
         let mut heard = self.heard.lock().expect("heard");
-        heard.insert(at, Heard { name, rooms, time });
+        heard.retain(|_, s| time.saturating_sub(s.time) <= FORGET_MS);
+        if !heard.contains_key(&key) {
+            let oldest = |heard: &HashMap<String, Heard>, same_ip: bool| {
+                heard
+                    .iter()
+                    .filter(|(_, s)| !same_ip || s.ip == at.ip())
+                    .min_by_key(|(_, s)| s.time)
+                    .map(|(k, _)| k.clone())
+            };
+            if heard.values().filter(|s| s.ip == at.ip()).count() >= MAX_SERVERS_PER_IP {
+                if let Some(k) = oldest(&heard, true) {
+                    heard.remove(&k);
+                }
+            }
+            if heard.len() >= MAX_SERVERS {
+                if let Some(k) = oldest(&heard, false) {
+                    heard.remove(&k);
+                }
+            }
+        }
+        let ip = at.ip();
+        heard.insert(
+            key,
+            Heard {
+                ip,
+                name,
+                rooms,
+                time,
+            },
+        );
     }
 
     fn warn(&self, message: &str) {
@@ -289,7 +322,7 @@ fn beacon(v: &Value) -> Option<(String, u16, String, Vec<Value>)> {
         return None;
     }
     let port = o.get("port")?.as_f64()?;
-    if port.fract() != 0.0 || !(1.0..=65_535.0).contains(&port) {
+    if port.fract() != 0.0 || !(MIN_PORT..=65_535.0).contains(&port) {
         return None;
     }
     let name = o.get("name")?.as_str()?;
@@ -579,6 +612,59 @@ mod tests {
             taken.set_announce(true);
             assert_eq!(taken.servers(), vec![]);
             taken.stop();
+            a.stop();
+        });
+    }
+
+    #[test]
+    fn a_beacon_names_an_unprivileged_port() {
+        tauri::async_runtime::block_on(async {
+            let a = Discovery::start(config(5190, Arc::new(AtomicU64::new(0))), no_rooms()).await;
+            for port in [80, 443, 1023, 1024] {
+                let beacon = json!({ "app": "simlab-rooms", "v": 1, "id": "x", "port": port, "name": "PC", "rooms": [] });
+                send_raw(a.listen_port(), beacon.to_string().as_bytes()).await;
+            }
+            assert!(eventually(|| !a.servers().is_empty()).await);
+            tokio::time::sleep(Duration::from_millis(100)).await;
+            let at: Vec<String> = a.servers().into_iter().map(|s| s.at).collect();
+            assert_eq!(at, vec!["127.0.0.1:1024".to_string()]);
+            a.stop();
+        });
+    }
+
+    #[test]
+    fn one_sender_counts_twice_at_most_and_a_full_list_makes_way_for_the_newest() {
+        tauri::async_runtime::block_on(async {
+            let now = Arc::new(AtomicU64::new(1_000));
+            let clock = now.clone();
+            let mut c = config(5190, Arc::new(AtomicU64::new(0)));
+            c.now_ms = Arc::new(move || clock.load(Ordering::SeqCst));
+            let a = Discovery::start(c, no_rooms()).await;
+            let at = |s: &str| s.parse::<SocketAddr>().expect("addr");
+            let tick = || now.fetch_add(1, Ordering::SeqCst);
+            for port in [6000, 6001, 6002] {
+                a.note(at(&format!("10.0.0.9:{port}")), "PC".into(), vec![]);
+                tick();
+            }
+            let kept: Vec<String> = a.servers().into_iter().map(|s| s.at).collect();
+            assert_eq!(
+                kept,
+                vec!["10.0.0.9:6001".to_string(), "10.0.0.9:6002".into()]
+            );
+            for i in 0..MAX_SERVERS {
+                a.note(
+                    at(&format!("192.168.1.{}:5189", i + 1)),
+                    "PC".into(),
+                    vec![],
+                );
+                tick();
+            }
+            let all = a.servers();
+            assert_eq!(all.len(), MAX_SERVERS);
+            assert!(all
+                .iter()
+                .any(|s| s.at == format!("192.168.1.{MAX_SERVERS}:5189")));
+            assert!(!all.iter().any(|s| s.at.starts_with("10.0.0.9:")));
             a.stop();
         });
     }

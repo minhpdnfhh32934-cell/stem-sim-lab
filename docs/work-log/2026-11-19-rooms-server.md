@@ -95,3 +95,25 @@ The laptop approved these on 19/11/2026.
   report, `lan_open`, port closed on exit. The laptop asked for this after the PR.
 - Not run here: the Linux CI job (only `#[cfg(not(windows))]` code differs: std only), and a real
   second computer (the LAN path is tested with 127.0.0.2 standing in for a LAN address).
+
+## 2026-11-19 (later): review fixes
+
+The laptop's review of #341 and an automated security review asked for these. All of them are
+now in #341.
+
+- **Host header.** Each listener answers only under its own address: loopback accepts
+  `127.0.0.1:<port>` or `localhost:<port>`, and a LAN listener accepts `<its IP>:<port>`.
+  Any other Host gets 403, which stops DNS rebinding.
+- **`nosniff`.** Every answer carries `X-Content-Type-Options: nosniff`.
+- **Stream caps.** At most 64 event streams in all, and 16 per LAN address; past that the
+  server answers 503.
+- **`via` answers.** `via` passes back only what a room server sends: JSON for `hello`, an event
+  stream for `events`, a bare status otherwise. Any other type of content gets 502, so another
+  computer's web page never runs under 127.0.0.1:5189.
+- **Beacons.** A beacon must name a port of 1024 or above. One sender counts for at most 2
+  servers, and a full list drops the server heard longest ago, so a flood cannot keep new
+  servers out.
+- **Checks:**
+  - `cargo fmt --check`: OK.
+  - `cargo clippy --all-targets -- -D warnings`: no warnings.
+  - `cargo test`: 293 passed (43 in `rooms`, run 4 times).

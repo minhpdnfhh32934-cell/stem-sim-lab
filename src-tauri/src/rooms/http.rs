@@ -53,6 +53,10 @@ const KEEP_ALIVE: Duration = Duration::from_secs(20);
 const PROXY_IDLE: Duration = Duration::from_secs(45);
 /// Messages waiting for one connection; a page this far behind is disconnected.
 const QUEUE: usize = 1024;
+/// Open event streams, at most (8 players in each of a few rooms, and their reloads).
+pub const MAX_STREAMS: usize = 64;
+/// Open event streams from one LAN address, at most.
+pub const MAX_STREAMS_PER_LAN_IP: usize = 16;
 /// Bytes a POST may have: MESSAGE_MAX_CHARS UTF-16 units are at most 3 bytes each in UTF-8.
 const BODY_MAX_BYTES: usize = MESSAGE_MAX_CHARS * 3;
 /// The app's pages: the packaged app (both schemes WebView2 may use) and the dev server.
@@ -101,6 +105,8 @@ enum Side {
 struct Conn {
     key: String,
     tx: mpsc::Sender<Arc<str>>,
+    /// The sender's address when it came from the LAN.
+    lan_ip: Option<IpAddr>,
 }
 
 struct Inner {
@@ -137,11 +143,26 @@ impl Shared {
         self.discovery.get()
     }
 
-    /// A new connection: its name, number and queue.
-    fn connect(&self, lan: bool) -> Option<(String, ClientId, mpsc::Receiver<Arc<str>>)> {
-        let key = random_name()?;
+    /// A new connection: its name, number and queue; 503 past MAX_STREAMS (in all) or
+    /// MAX_STREAMS_PER_LAN_IP (from one LAN address).
+    fn connect(
+        &self,
+        lan_ip: Option<IpAddr>,
+    ) -> Result<(String, ClientId, mpsc::Receiver<Arc<str>>), StatusCode> {
+        let key = random_name().ok_or(StatusCode::SERVICE_UNAVAILABLE)?;
         let (tx, rx) = mpsc::channel(QUEUE);
         let mut inner = self.inner.lock().expect("rooms");
+        let from_ip = |ip| {
+            inner
+                .conns
+                .values()
+                .filter(|c| c.lan_ip == Some(ip))
+                .count()
+        };
+        let crowded = lan_ip.is_some_and(|ip| from_ip(ip) >= MAX_STREAMS_PER_LAN_IP);
+        if inner.conns.len() >= MAX_STREAMS || crowded {
+            return Err(StatusCode::SERVICE_UNAVAILABLE);
+        }
         let id = inner.next;
         inner.next += 1;
         inner.keys.insert(key.clone(), id);
@@ -150,10 +171,11 @@ impl Shared {
             Conn {
                 key: key.clone(),
                 tx,
+                lan_ip,
             },
         );
-        inner.hub.connect(id, !lan);
-        Some((key, id, rx))
+        inner.hub.connect(id, lan_ip.is_none());
+        Ok((key, id, rx))
     }
 
     fn disconnect(&self, id: ClientId) {
@@ -269,7 +291,11 @@ impl RoomServer {
         let (stop, stop_rx) = watch::channel(false);
         let loopback = serve(
             listener,
-            router(shared.clone(), Side::Loopback),
+            router(
+                shared.clone(),
+                Side::Loopback,
+                vec![format!("127.0.0.1:{port}"), format!("localhost:{port}")],
+            ),
             stop_rx.clone(),
         );
         let lan = tauri::async_runtime::spawn(follow_rooms(
@@ -364,7 +390,7 @@ async fn follow_rooms(
                         // Detached: it ends when `close` turns true.
                         drop(serve(
                             listener,
-                            router(shared.clone(), Side::Lan),
+                            router(shared.clone(), Side::Lan, vec![format!("{ip}:{port}")]),
                             close_rx.clone(),
                         ));
                         listening += 1;
@@ -405,10 +431,17 @@ fn shut_lan(shared: &Shared, close: &watch::Sender<bool>) {
 struct App {
     shared: Arc<Shared>,
     side: Side,
+    /// The `Host` values this listener answers (its own address): a page that reached it under
+    /// another name (DNS rebinding) is refused.
+    hosts: Arc<Vec<String>>,
 }
 
-fn router(shared: Arc<Shared>, side: Side) -> Router {
-    let app = App { shared, side };
+fn router(shared: Arc<Shared>, side: Side, hosts: Vec<String>) -> Router {
+    let app = App {
+        shared,
+        side,
+        hosts: Arc::new(hosts),
+    };
     Router::new()
         .route(&format!("{ROOM_PATH}/hello"), get(hello))
         .route(&format!("{ROOM_PATH}/events"), get(events))
@@ -423,8 +456,15 @@ fn router(shared: Arc<Shared>, side: Side) -> Router {
         .with_state(app)
 }
 
-/// LAN rules, origins and CORS, before any route.
+/// Host, LAN rules, origins and CORS, before any route.
 async fn guard(State(app): State<App>, req: Request, next: Next) -> Response {
+    let host = req
+        .headers()
+        .get(header::HOST)
+        .and_then(|h| h.to_str().ok());
+    if !host.is_some_and(|h| app.hosts.iter().any(|ok| ok.eq_ignore_ascii_case(h))) {
+        return StatusCode::FORBIDDEN.into_response();
+    }
     if app.side == Side::Lan {
         let peer = req.extensions().get::<ConnectInfo<SocketAddr>>();
         let peer_ok = peer.is_some_and(|c| is_private_or_loopback(c.0.ip()));
@@ -448,6 +488,11 @@ async fn guard(State(app): State<App>, req: Request, next: Next) -> Response {
     } else {
         next.run(req).await
     };
+    // Never read as anything but what it says it is (JSON, an event stream).
+    res.headers_mut().insert(
+        header::X_CONTENT_TYPE_OPTIONS,
+        HeaderValue::from_static("nosniff"),
+    );
     if let Some(o) = origin {
         let h = res.headers_mut();
         h.insert(header::ACCESS_CONTROL_ALLOW_ORIGIN, o);
@@ -516,10 +561,11 @@ struct Stream {
     _leave: Leave,
 }
 
-async fn events(State(app): State<App>) -> Response {
+async fn events(State(app): State<App>, ConnectInfo(peer): ConnectInfo<SocketAddr>) -> Response {
     let lan = app.side == Side::Lan;
-    let Some((key, id, rx)) = app.shared.connect(lan) else {
-        return StatusCode::SERVICE_UNAVAILABLE.into_response();
+    let (key, id, rx) = match app.shared.connect(lan.then_some(peer.ip())) {
+        Ok(c) => c,
+        Err(status) => return status.into_response(),
     };
     let state = Stream {
         rx,
@@ -635,13 +681,33 @@ async fn via(
     let Ok(answer) = request.send().await else {
         return StatusCode::BAD_GATEWAY.into_response();
     };
-    let mut back = Response::builder().status(answer.status().as_u16());
-    for name in ["content-type", "cache-control"] {
-        if let Some(value) = answer.headers().get(name).and_then(|v| v.to_str().ok()) {
-            back = back.header(name, value);
-        }
+    let status = answer.status().as_u16();
+    // Only what a room server sends is passed back, under its own type: JSON for `hello`, an
+    // event stream for `events`, a bare status otherwise (another server's page never runs here).
+    let expected = match what.as_str() {
+        "hello" => "application/json",
+        "events" => "text/event-stream",
+        _ => "",
+    };
+    let kind = answer
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or_default()
+        .to_string();
+    if !(200..300).contains(&status) || expected.is_empty() {
+        return StatusCode::from_u16(status)
+            .unwrap_or(StatusCode::BAD_GATEWAY)
+            .into_response();
     }
-    back.body(Body::from_stream(answer.bytes_stream()))
+    if !kind.starts_with(expected) {
+        return StatusCode::BAD_GATEWAY.into_response();
+    }
+    Response::builder()
+        .status(status)
+        .header("content-type", kind)
+        .header("cache-control", "no-cache")
+        .body(Body::from_stream(answer.bytes_stream()))
         .unwrap_or_else(|_| StatusCode::BAD_GATEWAY.into_response())
 }
 
@@ -1047,7 +1113,8 @@ mod tests {
             let there = RoomServer::start(config()).await.expect("there");
             let here = RoomServer::start(config()).await.expect("here");
             let at = format!("127.0.0.1:{}", there.port());
-            here.discovery().note(at.clone(), "PC-B".into(), vec![]);
+            here.discovery()
+                .note(at.parse().unwrap(), "PC-B".into(), vec![]);
             let h = base("127.0.0.1", here.port());
             let listed: Value = http()
                 .get(format!("{h}/lan"))
@@ -1140,7 +1207,8 @@ mod tests {
                 .await
                 .unwrap();
             assert_eq!(post.status(), 404);
-            here.discovery().note(at.clone(), "B".into(), vec![]);
+            here.discovery()
+                .note(at.parse().unwrap(), "B".into(), vec![]);
             let other = http()
                 .get(format!("{h}/via/{at}/other"))
                 .send()
@@ -1157,7 +1225,7 @@ mod tests {
             assert_eq!(stranger.status(), 403);
             // A heard address outside private networks is never reached.
             here.discovery()
-                .note("8.8.8.8:5189".into(), "X".into(), vec![]);
+                .note("8.8.8.8:5189".parse().unwrap(), "X".into(), vec![]);
             let public = http()
                 .get(format!("{h}/via/8.8.8.8:5189/hello"))
                 .send()
@@ -1166,6 +1234,136 @@ mod tests {
             assert_eq!(public.status(), 404);
             here.stop();
             there.stop();
+        });
+    }
+
+    #[test]
+    fn answers_only_under_its_own_address_no_dns_rebinding() {
+        tauri::async_runtime::block_on(async {
+            let server = RoomServer::start(config()).await.expect("start");
+            let port = server.port();
+            let hello = |ip: &'static str, host: String| {
+                http()
+                    .get(format!("http://{ip}:{port}{ROOM_PATH}/hello"))
+                    .header("host", host)
+                    .send()
+            };
+            for ok in [format!("127.0.0.1:{port}"), format!("localhost:{port}")] {
+                assert_eq!(
+                    hello("127.0.0.1", ok.clone()).await.unwrap().status(),
+                    200,
+                    "{ok}"
+                );
+            }
+            for bad in [
+                format!("evil.example:{port}"),
+                format!("127.0.0.1:{}", port.wrapping_add(1)),
+                "127.0.0.1".to_string(),
+                format!("127.0.0.2:{port}"),
+            ] {
+                assert_eq!(
+                    hello("127.0.0.1", bad.clone()).await.unwrap().status(),
+                    403,
+                    "{bad}"
+                );
+            }
+            let a = Player::join(&base("127.0.0.1", port)).await;
+            a.send(create("R", "A")).await;
+            assert!(eventually(|| server.lan_open()).await);
+            let lan_ok = hello("127.0.0.2", format!("127.0.0.2:{port}"))
+                .await
+                .unwrap();
+            assert_eq!(lan_ok.status(), 200);
+            for bad in [format!("127.0.0.1:{port}"), format!("localhost:{port}")] {
+                assert_eq!(
+                    hello("127.0.0.2", bad.clone()).await.unwrap().status(),
+                    403,
+                    "{bad}"
+                );
+            }
+            let nosniff = hello("127.0.0.1", format!("127.0.0.1:{port}"))
+                .await
+                .unwrap();
+            assert_eq!(nosniff.headers()["x-content-type-options"], "nosniff");
+            a.close();
+            server.stop();
+        });
+    }
+
+    #[test]
+    fn caps_the_streams_in_all_and_per_lan_address() {
+        tauri::async_runtime::block_on(async {
+            let server = RoomServer::start(config()).await.expect("start");
+            let port = server.port();
+            let here = base("127.0.0.1", port);
+            let host = Player::join(&here).await;
+            host.send(create("R", "A")).await;
+            assert!(eventually(|| server.lan_open()).await);
+            let mut lan = Vec::new();
+            for _ in 0..MAX_STREAMS_PER_LAN_IP {
+                lan.push(Player::join(&base("127.0.0.2", port)).await);
+            }
+            let one_more = http()
+                .get(format!("{}/events", base("127.0.0.2", port)))
+                .send()
+                .await
+                .unwrap();
+            assert_eq!(one_more.status(), 503);
+            let mut local = Vec::new();
+            while 1 + lan.len() + local.len() < MAX_STREAMS {
+                local.push(Player::join(&here).await);
+            }
+            let past = http().get(format!("{here}/events")).send().await.unwrap();
+            assert_eq!(past.status(), 503);
+            // A closed stream makes room again.
+            local.pop().unwrap().close();
+            let mut again = None;
+            for _ in 0..50 {
+                if let Some(p) = Player::join_with(&here, None).await {
+                    again = Some(p);
+                    break;
+                }
+                tokio::time::sleep(Duration::from_millis(20)).await;
+            }
+            assert!(again.is_some());
+            for p in lan.into_iter().chain(local).chain(again).chain([host]) {
+                p.close();
+            }
+            server.stop();
+        });
+    }
+
+    #[test]
+    fn passes_back_only_a_room_servers_own_kind_of_answer() {
+        tauri::async_runtime::block_on(async {
+            // A "server" that answers its hello with a web page.
+            let fake = TcpListener::bind((Ipv4Addr::LOCALHOST, 0)).await.unwrap();
+            let fake_port = fake.local_addr().unwrap().port();
+            let page = Router::new().route(
+                &format!("{ROOM_PATH}/hello"),
+                get(|| async {
+                    (
+                        [(header::CONTENT_TYPE, "text/html")],
+                        "<script>alert(1)</script>",
+                    )
+                }),
+            );
+            let fake_task = tauri::async_runtime::spawn(async move {
+                let _ = axum::serve(fake, page).await;
+            });
+            let here = RoomServer::start(config()).await.expect("here");
+            let at = format!("127.0.0.1:{fake_port}");
+            here.discovery()
+                .note(at.parse().unwrap(), "X".into(), vec![]);
+            let h = base("127.0.0.1", here.port());
+            let answer = http()
+                .get(format!("{h}/via/{at}/hello"))
+                .send()
+                .await
+                .unwrap();
+            assert_eq!(answer.status(), 502);
+            fake_task.abort();
+            here.stop();
         });
     }
 
