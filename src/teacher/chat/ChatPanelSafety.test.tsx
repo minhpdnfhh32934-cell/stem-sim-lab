@@ -130,6 +130,8 @@ describe('AI Teacher chat panel: blocked questions and clearing', () => {
     });
     late?.action?.run();
     expect(useChatStore.getState().messages[0]?.content).toBe('Gia tốc là gì?');
+    // The offer ended with the new question: no button that would do nothing.
+    expect(useToastStore.getState().toasts.some((x) => x.id === late?.id)).toBe(false);
   });
 
   it('clearing an empty conversation shows no undo', async () => {

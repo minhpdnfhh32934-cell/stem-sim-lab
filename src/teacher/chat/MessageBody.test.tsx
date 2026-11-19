@@ -38,6 +38,17 @@ describe('MessageBody', () => {
     expect(lists[0]?.getAttribute('start')).toBeNull();
   });
 
+  it('bold around a formula is bold, with the formula drawn inside (no ** left)', async () => {
+    // Gemma E2B writes this often (machine B's sweep 19/11, V2).
+    render(<MessageBody content={'- **$\\Sigma F$ (Tổng hợp lực):** tổng các lực.'} />);
+    const strong = document.querySelector('strong');
+    expect(strong).toHaveTextContent('(Tổng hợp lực):');
+    await waitFor(() => {
+      expect(strong?.querySelector('.katex')).not.toBeNull();
+    });
+    expect(document.body.textContent).not.toContain('**');
+  });
+
   it('frames code instead of showing fences', () => {
     render(<MessageBody content={'Ví dụ:\n```python\nprint(1)\n```'} />);
     expect(document.querySelector('.msg-code__lang')).toHaveTextContent('python');

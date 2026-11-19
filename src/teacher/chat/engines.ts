@@ -1,6 +1,7 @@
 /** The engines that answer: an online provider, Gemma in the app, a runtime on this computer. */
 import { getBuiltinClient } from '@/ai/builtin/client';
 import { translate, type Locale, type MessageKey } from '@/app/i18n';
+import type { SettingsSection } from '@/app/workspaceStore';
 import { useAiStore } from '@/ai/aiStore';
 import { gemmaChatText, gemmaReady } from '@/ai/gemmaTransport';
 import { webGPUStatus } from '@/ai/webGemma';
@@ -154,8 +155,10 @@ export async function localGemma(
   onPartial?: (textSoFar: string) => void,
   extra: { signal?: AbortSignal; echo?: string; images?: ArrayBuffer[] } = {},
 ): Promise<Answer> {
-  if (webGPUStatus() !== 'webgpu') throw new Error(translate(locale, 'chat.errors.webgpu'));
-  if (!(await gemmaReady(model))) throw new Error(translate(locale, 'chat.errors.gemmaMissing'));
+  if (webGPUStatus() !== 'webgpu')
+    throw new TeacherError(translate(locale, 'chat.errors.webgpu'), 'gpu', false);
+  if (!(await gemmaReady(model)))
+    throw new TeacherError(translate(locale, 'chat.errors.gemmaMissing'), 'local', false);
   try {
     // "Dừng" interrupts the generation in the worker (src/ai/webGemmaWorker.ts).
     return await untilStopped(
@@ -176,7 +179,9 @@ export async function localGemma(
     if (e instanceof AnswerStopped || extra.signal?.aborted) throw new AnswerStopped();
     const message = e instanceof Error ? e.message : String(e);
     console.warn('[teacher-gemma]', message);
-    throw new Error(translate(locale, gemmaErrorKey(message)), { cause: e });
+    const key = gemmaErrorKey(message);
+    const { section, retry } = GEMMA_HELP[key];
+    throw new TeacherError(translate(locale, key), section, retry, { cause: e });
   }
 }
 
@@ -330,6 +335,22 @@ export function gemmaErrorKey(
   if (m.includes('model-missing') || m.includes('webgpu')) return 'chat.errors.gemmaMissing';
   return 'chat.errors.gemmaFailed';
 }
+
+/**
+ * The Settings page that helps with each on-device failure and whether asking again may work: the
+ * "Cài đặt" and "Hỏi lại" buttons under the message (machine B's sweep 19/11: none were shown).
+ * After a GPU fault Gemma stays paused (audit GPU-01): no "Hỏi lại" then.
+ */
+const GEMMA_HELP: Record<
+  ReturnType<typeof gemmaErrorKey>,
+  { section: SettingsSection; retry: boolean }
+> = {
+  'chat.errors.gemmaStalled': { section: 'gpu', retry: true },
+  'chat.errors.gemmaGpuBlocked': { section: 'gpu', retry: false },
+  'chat.errors.gemmaGpu': { section: 'gpu', retry: true },
+  'chat.errors.gemmaMissing': { section: 'local', retry: false },
+  'chat.errors.gemmaFailed': { section: 'local', retry: true },
+};
 
 /** PNG bytes as plain base64 (a local runtime's picture). */
 export function toBase64(buffer: ArrayBuffer): string {

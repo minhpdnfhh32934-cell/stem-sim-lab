@@ -1148,7 +1148,7 @@ const en: Messages = {
     blockedHint:
       'If the browser blocked it permanently, click the lock/site-settings icon next to the address bar, set Camera to “Allow”, then press Try again.',
     unsupported: 'This device has no supported camera.',
-    needGemma: 'No Gemma model yet. Download one in Settings → AI Teacher.',
+    needGemma: 'No Gemma model yet. Download one in Settings → AI in SimLab.',
     needVision:
       'Could not read the photo: need online AI (Gemini/Groq with a key) or a ready Gemma model.',
     readFailed: 'Could not read the problem in the photo. Please retake it more clearly.',
@@ -1854,7 +1854,7 @@ const en: Messages = {
     voiceOnline:
       'The Gemini voice is on: the text of each answer is sent to Google to be read aloud.',
     gemmaMissingNotice:
-      'Gemma is not ready: this model is not downloaded. Download it in Settings → AI Teacher, or choose “Online AI”.',
+      'Gemma is not ready: this model is not downloaded. Download it in Settings → AI in SimLab, or choose “Online AI”.',
     settings: 'Settings',
     localOnly: 'Questions are processed locally on this computer.',
     noWebgpuNotice:
@@ -1937,16 +1937,16 @@ const en: Messages = {
         'AI is not enabled for this profile. Complete the safety setup in Settings to continue.',
       noCloudKey: 'No API key is set for the answering model. Add one in Settings.',
       gemmaMissing:
-        'Gemma is not downloaded, or this browser has no WebGPU. Check Settings → AI Teacher.',
+        'Gemma is not downloaded, or this browser has no WebGPU. Check Settings → AI in SimLab.',
       webgpu: 'This browser or device has no WebGPU support, so Gemma cannot run on it.',
       gemmaStalled:
         'Gemma wrote nothing for a long time, so it was stopped and restarted. Please ask again; if it stays slow, pick "Short" answers or a smaller model in Settings.',
       gemmaGpu:
         'The graphics card stopped Gemma (out of memory or a driver reset). You can ask again; if it happens again, close other apps or pick a smaller model.',
       gemmaGpuBlocked:
-        'The graphics card hung while running Gemma. So the computer does not restart, Gemma stays off until you reopen the app. Pick the discrete card in Settings → GPU for Gemma, use a smaller model, or ask through an API.',
+        'The graphics card reported an error while running Gemma (out of graphics memory, or the card hung). To keep the computer safe, Gemma is paused until you reopen the app or turn it back on in Settings → GPU for Gemma. You can choose “Short” answers, a smaller model, or ask through an API.',
       gemmaFailed:
-        'Gemma hit an error while answering. Please ask again; if it repeats, open Settings → AI Teacher.',
+        'Gemma hit an error while answering. Please ask again; if it repeats, open Settings → AI in SimLab.',
       crisis:
         'I’m sorry you are having a hard time. Please tell a trusted adult now. If you are in immediate danger in Vietnam, call 111 or 115. This message was not sent to AI.',
       personal:

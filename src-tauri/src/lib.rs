@@ -16,6 +16,8 @@
 //! - `gpu_*`: graphics card for the in-app AI (WebView2 adapter, applied at start-up)
 //! - `history_*`: simulation history in SQLite (app data folder)
 //! - `web_update_*`: signed in-app updates of the web part (no new executable)
+//! - `rooms_*`: LAN rooms of the SimLab 3D game (#339): its room server on 127.0.0.1:5189, open
+//!   to the private network only while a page of this computer is in a room here
 
 mod ai;
 mod app_info;
@@ -25,6 +27,7 @@ mod gpu;
 mod history;
 mod links;
 mod navigation;
+mod rooms;
 mod safety;
 mod webupdate;
 
@@ -52,6 +55,7 @@ pub fn run() {
         .manage(ai::builtin::BuiltinState::default())
         .manage(history::HistoryState::default())
         .manage(safety::SafetyState::default())
+        .manage(rooms::RoomsState::default())
         .invoke_handler(tauri::generate_handler![
             app_info,
             ai::ai_chat,
@@ -102,7 +106,10 @@ pub fn run() {
             webupdate::web_update_apply,
             webupdate::web_update_reset,
             webupdate::app_restart,
-            webupdate::open_releases_page
+            webupdate::open_releases_page,
+            rooms::rooms_start,
+            rooms::rooms_stop,
+            rooms::rooms_status
         ])
         .build(context)
         .expect("error while running SimLab")
@@ -111,6 +118,7 @@ pub fn run() {
             if let tauri::RunEvent::Exit = event {
                 use tauri::Manager;
                 app.state::<ai::builtin::BuiltinState>().stop_now();
+                app.state::<rooms::RoomsState>().stop_now();
             }
         });
 }

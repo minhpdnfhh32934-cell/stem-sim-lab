@@ -18,10 +18,12 @@ tauri-build = { version = "2", features = [] }
 tauri = { version = "2", features = [] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-tokio = { version = "1.53.1", features = ["sync", "time", "macros"] }
+# "net": the LAN room server of the SimLab 3D game (#339, `src/rooms/`): TCP listeners, UDP beacons.
+tokio = { version = "1.53.1", features = ["sync", "time", "macros", "net"] }
 keyring = { version = "3.6.3", features = ["apple-native", "windows-native", "linux-native"] }
 thiserror = "2.0.21"
-reqwest = { version = "0.13.3", default-features = false, features = ["json", "rustls"] }
+# "stream" (#339): the room server passes another LAN server's event stream back as it comes.
+reqwest = { version = "0.13.3", default-features = false, features = ["json", "rustls", "stream"] }
 tauri-plugin-dialog = "2"
 rusqlite = { version = "0.41.1", features = ["bundled"] }
 base64 = "0.23.1"
@@ -30,6 +32,12 @@ sha2 = "0.11.1"
 zip = { version = "9.0.5", default-features = false, features = ["deflate"] }
 tauri-plugin-opener = "2"
 dirs = "7"
+# LAN rooms of the SimLab 3D game (#339, `src/rooms/http.rs`): an HTTP server with Server-Sent
+# Events, so the protocol is not written by hand. HTTP/1 only, no default extras.
+axum = { version = "0.8.4", default-features = false, features = ["tokio", "http1"] }
+# The streams the room server sends (SSE needs a `Stream`; std and tokio have none). Already in
+# the dependency tree through axum and reqwest.
+futures-util = { version = "0.3.34", default-features = false }
 
 # GPU list for the in-app AI (src/gpu.rs): DXGI adapters + D3D12 UMA check. Microsoft's official
 # bindings, already in the dependency tree through Tauri/WebView2 (same 0.61 version).
@@ -48,6 +56,9 @@ windows = { version = "0.62", features = [
   "Win32_System_Threading",
   "Win32_Security",
   "Win32_Security_Cryptography",
+  # LAN rooms (#339): the computer's private IPv4 networks (GetAdaptersInfo), to listen on them
+  # and send each one's directed broadcast only while a room is hosted here.
+  "Win32_NetworkManagement_IpHelper",
 ] }
 
 [profile.release]
