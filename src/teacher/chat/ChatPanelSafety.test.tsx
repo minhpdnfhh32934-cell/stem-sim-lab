@@ -6,6 +6,7 @@ import { setTransportForTests, type LlmTransport } from '@/ai/transport';
 import type { ChatRequest } from '@/ai/types';
 import { translate } from '@/app/i18n';
 import { useTeacherStore } from '@/teacher/teacherStore';
+import { useToastStore } from '@/ui/toast';
 import { ChatPanel } from './ChatPanel';
 import { useChatStore } from './chatStore';
 
@@ -101,5 +102,42 @@ describe('AI Teacher chat panel: blocked questions and clearing', () => {
     expect(useChatStore.getState().stopped).toBe(false);
     expect(screen.queryByText('Lực là đại lượng vectơ.')).not.toBeInTheDocument();
     expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+  });
+
+  it('"Hoàn tác" brings a cleared conversation back, never over a new one', async () => {
+    useToastStore.setState({ toasts: [] });
+    const user = userEvent.setup();
+    render(<ChatPanel teacherPage showScreenContext={false} />);
+    await user.type(screen.getByRole('textbox', { name: 'Nhập câu hỏi' }), 'Lực là gì?{Enter}');
+    expect(await screen.findByText('Lực là đại lượng vectơ.')).toBeInTheDocument();
+    const before = useChatStore.getState().messages;
+
+    await user.click(screen.getByRole('button', { name: 'Xóa cuộc trò chuyện' }));
+    expect(useChatStore.getState().messages).toEqual([]);
+    const undo = useToastStore.getState().toasts.at(-1);
+    expect(undo?.text).toBe('Đã xóa cuộc trò chuyện.');
+    expect(undo?.action?.label).toBe('Hoàn tác');
+    undo?.action?.run();
+    expect(useChatStore.getState().messages).toEqual(before);
+    expect(await screen.findByText('Lực là đại lượng vectơ.')).toBeInTheDocument();
+
+    // Cleared, then a new question: the old conversation never replaces the new one.
+    await user.click(screen.getByRole('button', { name: 'Xóa cuộc trò chuyện' }));
+    const late = useToastStore.getState().toasts.at(-1);
+    await user.type(screen.getByRole('textbox', { name: 'Nhập câu hỏi' }), 'Gia tốc là gì?{Enter}');
+    await waitFor(() => {
+      expect(useChatStore.getState().messages).toHaveLength(2);
+    });
+    late?.action?.run();
+    expect(useChatStore.getState().messages[0]?.content).toBe('Gia tốc là gì?');
+  });
+
+  it('clearing an empty conversation shows no undo', async () => {
+    useToastStore.setState({ toasts: [] });
+    const user = userEvent.setup();
+    render(<ChatPanel teacherPage showScreenContext={false} />);
+    const clear = screen.queryByRole('button', { name: 'Xóa cuộc trò chuyện' });
+    if (clear) await user.click(clear);
+    expect(useToastStore.getState().toasts).toEqual([]);
   });
 });

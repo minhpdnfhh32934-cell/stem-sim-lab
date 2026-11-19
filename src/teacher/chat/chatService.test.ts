@@ -159,6 +159,10 @@ describe('AI Teacher chat service', () => {
     await expect(
       askTeacher('lực là gì', 'vi', [], { includeScreen: false, think: false }),
     ).rejects.toThrow(/AI trực tuyến đang tắt/);
+    // The error carries the Settings page that turns a provider on ("Cài đặt" button).
+    await expect(
+      askTeacher('lực là gì', 'vi', [], { includeScreen: false, think: false }),
+    ).rejects.toMatchObject({ section: 'ai', retry: false });
   });
 
   it('the screen-context system prompt reaches the provider only when enabled', async () => {
@@ -174,6 +178,9 @@ describe('AI Teacher chat service', () => {
     await expect(
       askTeacher('lực là gì', 'vi', [], { includeScreen: false, think: true }),
     ).rejects.toThrow(/API thứ hai/);
+    await expect(
+      askTeacher('lực là gì', 'vi', [], { includeScreen: false, think: true }),
+    ).rejects.toMatchObject({ section: 'teacher', retry: false });
     expect(calls).toHaveLength(0);
   });
 
@@ -183,6 +190,9 @@ describe('AI Teacher chat service', () => {
     await expect(
       askTeacher('lực là gì', 'vi', [], { includeScreen: false, think: true }),
     ).rejects.toThrow(/nhà cung cấp khác/);
+    await expect(
+      askTeacher('lực là gì', 'vi', [], { includeScreen: false, think: true }),
+    ).rejects.toMatchObject({ section: 'teacher', retry: false });
   });
 
   it('Think: draft from the main provider without fallback, then an independent review', async () => {

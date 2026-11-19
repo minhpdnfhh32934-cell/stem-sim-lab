@@ -1833,6 +1833,8 @@ const en: Messages = {
     title: 'AI Teacher',
     model: 'Gemma · {model}',
     clear: 'Clear conversation',
+    cleared: 'Conversation cleared.',
+    undoClear: 'Undo',
     voice: 'Teacher reads answers aloud',
     voiceHint: 'Turn the teacher’s voice on/off',
     close: 'Close chat',

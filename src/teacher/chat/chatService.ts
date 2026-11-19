@@ -557,19 +557,19 @@ export async function askTeacher(
   const teachScript = board && !compact;
   const baseSystem = teachScript ? [core, BOARD_SYSTEM[locale]].join('\n\n') : core;
 
+  // Each carries the Settings page that fixes it (the "Cài đặt" button under the message).
+  const cloudOff = () => new TeacherError(translate(locale, 'chat.errors.cloudOff'), 'ai', false);
   if (think) {
     const checker = chat.verifierProvider;
-    if (engine === 'cloud' && provider === 'off')
-      throw new Error(translate(locale, 'chat.errors.cloudOff'));
+    if (engine === 'cloud' && provider === 'off') throw cloudOff();
     if (!(await getTransport().hasKey(checker)))
-      throw new Error(translate(locale, 'chat.errors.noVerifierKey'));
+      throw new TeacherError(translate(locale, 'chat.errors.noVerifierKey'), 'teacher', false);
     if (engine === 'cloud' && provider === checker)
-      throw new Error(translate(locale, 'chat.errors.sameProvider'));
+      throw new TeacherError(translate(locale, 'chat.errors.sameProvider'), 'teacher', false);
     // The draft below is sent with `noFallback`, so a quota fallback can never make the
     // reviewer check its own answer (e.g. Gemini → Groq fallback with Groq as reviewer).
   }
-  if (engine === 'cloud' && provider === 'off')
-    throw new Error(translate(locale, 'chat.errors.cloudOff'));
+  if (engine === 'cloud' && provider === 'off') throw cloudOff();
 
   const fullBudget = contextBudget(engine, chat.gemmaModel, chat.memoryLength, localContext);
   // Gemma's answer length is the learner's choice (Settings → GPU cho Gemma); a cut answer can

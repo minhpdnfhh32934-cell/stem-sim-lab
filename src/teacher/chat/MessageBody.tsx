@@ -89,17 +89,23 @@ function renderEmphasis(text: string, keyPrefix: string): ReactNode {
 
 function renderMdLines(lines: string[], keyPrefix: string): ReactNode[] {
   const out: ReactNode[] = [];
-  let list: string[] | null = null;
+  // A numbered list keeps its numbers ("Bước 3" after a formula between the steps is still 3).
+  let list: { start: number | null; items: string[] } | null = null;
   const flushList = () => {
     if (list) {
-      const items = list;
+      const { start, items } = list;
       list = null;
+      const Tag = start === null ? 'ul' : 'ol';
       out.push(
-        <ul key={`${keyPrefix}-ul${out.length}`} className="msg-list">
+        <Tag
+          key={`${keyPrefix}-ul${out.length}`}
+          className="msg-list"
+          {...(start !== null && start !== 1 ? { start } : {})}
+        >
           {items.map((item, i) => (
             <li key={i}>{renderInline(item, `${keyPrefix}-li${out.length}-${i}`)}</li>
           ))}
-        </ul>,
+        </Tag>,
       );
     }
   };
@@ -123,10 +129,13 @@ function renderMdLines(lines: string[], keyPrefix: string): ReactNode[] {
       return;
     }
     const dashItem = /^[-*]\s+(.*)$/.exec(trimmed)?.[1];
-    const numberedItem = /^(\d+)[.)]\s+([\s\S]*)$/.exec(trimmed)?.[2];
-    const itemText = dashItem ?? numberedItem ?? null;
+    const numbered = dashItem === undefined ? /^(\d+)[.)]\s+([\s\S]*)$/.exec(trimmed) : null;
+    const itemText = dashItem ?? numbered?.[2] ?? null;
     if (itemText !== null) {
-      (list ??= []).push(itemText);
+      const start = numbered ? Number(numbered[1]) : null;
+      // A bullet after numbered steps (or the reverse) starts a list of its own.
+      if (list && (list.start === null) !== (start === null)) flushList();
+      (list ??= { start, items: [] }).items.push(itemText);
       return;
     }
     if (trimmed.startsWith('> ')) {

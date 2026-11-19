@@ -15,6 +15,7 @@ import { ChatComposer, type QuickAction } from './ChatComposer';
 import { ChatHeader } from './ChatHeader';
 import { ChatMessageView } from './ChatMessageView';
 import { ChatNotices } from './ChatNotices';
+import { MessageBody } from './MessageBody';
 import { useChatVoice } from './useChatVoice';
 import { useBoardStore } from '@/teacher/board/boardStore';
 import {
@@ -35,6 +36,7 @@ import {
 import { useTeacherStore } from '@/teacher/teacherStore';
 import { CONTINUE_PROMPT, answersPicture, asksAboutPicture, joinContinuation } from './memory';
 import { cx } from '@/ui/cx';
+import { toast } from '@/ui/toast';
 import { useT, type MessageKey } from '@/app/i18n';
 import { engineKind, useAnalysisEngine } from '@/app/ai/engineChoice';
 import { openTopic, useActiveTopic } from '@/app/topics';
@@ -429,9 +431,19 @@ export function ChatPanel({
   const clearConversation = () => {
     useChatStore.getState().stopAnswer?.();
     stopSpeaking();
+    const { messages, summary, summarySkip } = useChatStore.getState();
     chat.clearMessages();
     useChatStore.setState({ stopped: false });
     setError(null);
+    if (messages.length === 0) return;
+    // One click must not lose a conversation: "Hoàn tác" brings it back while nothing new was asked.
+    toast(t('chat.cleared'), 'info', 8000, {
+      label: t('chat.undoClear'),
+      run: () => {
+        if (useChatStore.getState().messages.length === 0)
+          useChatStore.setState({ messages, summary, summarySkip });
+      },
+    });
   };
   const hasAnswer = chat.messages.some((m) => m.role === 'assistant');
   // The simulation the last question names (audit EDU-03): found in the catalog, not by the AI.
@@ -560,20 +572,23 @@ export function ChatPanel({
           ))
         )}
         {busy && streaming !== null && (
-          // Text being written (on this computer, or streamed by an online provider): plain text
-          // until the answer is complete (then it is laid out with formulas). It is provisional:
-          // never stored, read aloud or taught on the board; if the answer fails, it goes. Screen
-          // readers hear the finished answer only.
+          // Text being written (on this computer, or streamed by an online provider), laid out as
+          // it comes: headings, lists and every formula already closed; one still open stays as
+          // typed until its closing "$". It is provisional: never stored, read aloud or taught on
+          // the board; if the answer fails, it goes. Screen readers hear the finished answer only.
           <div className="chat-message chat-message--assistant chat-message--streaming">
             <span className="chat-message__avatar">
               <Bot size={15} />
             </span>
             <div className="chat-message__body">
               <span className="sr-only">{t('chat.thinking')}</span>
-              <p aria-hidden="true">
-                {streaming}
-                <span className="chat-message__caret" />
-              </p>
+              <div className="chat-message__live" aria-hidden="true">
+                {streaming.trim() ? (
+                  <MessageBody content={streaming} />
+                ) : (
+                  <span className="chat-message__caret" />
+                )}
+              </div>
             </div>
           </div>
         )}

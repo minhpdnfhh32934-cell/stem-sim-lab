@@ -103,6 +103,10 @@ trò chuyện toàn màn hình. Bấm chữ **SimLab**
 ⓘ cạnh tiêu đề trang AI Teacher nhắc trang này làm gì và dữ liệu nào có thể được gửi đi. Nếu chưa kết nối API hoặc
 Gemma chưa sẵn sàng, khung chat hiện thông báo và nút **Cài đặt** mở thẳng đúng mục cần chỉnh. Dòng
 nhỏ dưới thanh chọn cho biết câu hỏi tiếp theo sẽ được gửi tới đâu (hoặc chỉ xử lý trên máy).
+Câu trả lời hiện dần trong khi thầy viết, và đề mục, danh sách, chữ đậm, công thức hiện đúng dạng
+ngay lúc đó (một công thức chưa viết xong tạm hiện như đang gõ). Các bước đánh số giữ đúng số thứ tự.
+Nút thùng rác **Xóa cuộc trò chuyện** xóa ngay, rồi hiện thông báo có nút **Hoàn tác** trong vài giây
+để lấy lại cuộc trò chuyện nếu lỡ tay (khi em chưa hỏi câu mới).
 
 - Bật **Lấy thông tin từ màn hình** để gửi chủ đề, thông số, đề bài đã mở, trạng thái mô phỏng và
   Thẻ Khoa học của SimLab cùng câu hỏi. Mặc định tắt; nút tự tắt lại mỗi lần mở bong bóng.

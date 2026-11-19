@@ -153,6 +153,17 @@ describe('AI Teacher chat with the AI on this computer', () => {
     expect(think).not.toHaveTextContent('2 AI');
   });
 
+  it('the Deepthink switch shows a tick only while it is on', async () => {
+    useChatStore.setState({ thinkEnabled: false });
+    render(<ChatPanel teacherPage showScreenContext={false} />);
+    const think = screen.getByRole('button', { name: /Deepthink/ });
+    expect(think).toHaveAttribute('aria-pressed', 'false');
+    expect(think.querySelector('.lucide-check')).toBeNull();
+    await userEvent.click(think);
+    expect(think).toHaveAttribute('aria-pressed', 'true');
+    expect(think.querySelector('.lucide-check')).not.toBeNull();
+  });
+
   it('with the Gemini voice on, the local line never says that nothing goes online', () => {
     useLocalAiStore.setState({ selected: selection });
     useChatStore.setState({ engine: 'local' });

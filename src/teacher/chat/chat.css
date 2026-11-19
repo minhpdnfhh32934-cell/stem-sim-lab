@@ -468,8 +468,14 @@
 .chat-message--user .chat-message__meta {
   color: color-mix(in srgb, var(--text-on-accent) 78%, transparent);
 }
-/* The on-device answer while it is written: a soft blinking caret at the end. */
-.chat-message__caret {
+/* The answer while it is written: a soft blinking caret after its last line (a list: its last item). */
+.chat-message__live > :not(ul, ol):last-child::after,
+.chat-message__live > :is(ul, ol):last-child > li:last-child::after {
+  content: '';
+}
+.chat-message__caret,
+.chat-message__live > :not(ul, ol):last-child::after,
+.chat-message__live > :is(ul, ol):last-child > li:last-child::after {
   display: inline-block;
   width: 0.5em;
   height: 1em;
@@ -484,7 +490,9 @@
     visibility: hidden;
   }
 }
-:root[data-motion='reduce'] .chat-message__caret {
+:root[data-motion='reduce'] .chat-message__caret,
+:root[data-motion='reduce'] .chat-message__live > :not(ul, ol):last-child::after,
+:root[data-motion='reduce'] .chat-message__live > :is(ul, ol):last-child > li:last-child::after {
   animation: none;
 }
 .chat-message__thinking {

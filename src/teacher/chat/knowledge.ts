@@ -661,14 +661,18 @@ function syllables(text: string): Syllable[] {
     .flatMap((w) => (ABBREVIATIONS[fold(w)]?.split(' ') ?? [w]).map(syllable));
 }
 
-/** Function words: never scored alone (pairs may still contain them: "không khí", "có hại"). */
+/**
+ * Function words: never scored alone (pairs may still contain them: "không khí", "có hại"). "lần",
+ * "gấp", "tăng", "giảm" only say how much ("Tăng 4 lần"): alone they brought the interference note
+ * to a free-fall reply; "giảm phân", "tăng trưởng" still match as pairs.
+ */
 const STOP_WORDS = `không một những các cái của là và có được cho trong tính khi thì mà với về để
   này đó kia nào gì sao vì do nên nếu thế như hay hoặc bị đã đang sẽ rồi còn cũng chỉ rất lại ra
   vào lên xuống từ tới đến theo trên dưới ở tại bằng hơn nhất nhiều ít mỗi mọi cả em anh chị thầy
   cô bạn mình tôi ta chúng họ nó ạ ơi nhé nha à ừ vâng dạ hãy giúp xin cảm ơn hỏi trả lời giải
   thích bài câu ví dụ cách làm biết cần phải nói xem thấy đi gồm bao nhiêu lâu xa mấy vậy đúng
   sai chưa khác giống nhau ấy đây sau trước đầu cuối giữa người việc gọi thường luôn hai ba bốn
-  năm sáu bảy tám chín mười
+  năm sáu bảy tám chín mười lần gấp tăng giảm
   the a an of to in on at for and or is are was were be been being what which who whom why how
   when where does do did can could would should will with by from as that this these those it its
   into than then there their about please explain tell me my i you your we our`
