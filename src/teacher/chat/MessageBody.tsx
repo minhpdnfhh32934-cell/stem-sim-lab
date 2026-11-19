@@ -10,7 +10,7 @@ function renderInline(text: string, keyPrefix: string): ReactNode[] {
   // and show as typed (machine B's sweep 19/11/2026, V2).
   const bold = text.split(BOLD_WITH_MATH);
   if (bold.length > 1) {
-    return bold.flatMap((part, i) =>
+    return bold.flatMap((part, i): ReactNode[] =>
       i % 2 === 1
         ? [
             <strong key={`${keyPrefix}-bm${i}`}>
