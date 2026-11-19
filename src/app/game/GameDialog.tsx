@@ -1,6 +1,7 @@
 import { ArrowLeft } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { useT } from '@/app/i18n';
+import { installGameBridge, startRooms, stopRooms } from './gameBridge';
 import { closeGame, useGameStore } from './gameStore';
 import './game.css';
 
@@ -29,6 +30,18 @@ export function GameDialog() {
       dialog.close();
       opener.current?.focus();
     }
+  }, [open]);
+
+  // LAN rooms (#339): SimLab's chat checks for the game's frame and its room server, while the
+  // game is open; closing the game closes every room this computer made.
+  useEffect(() => {
+    if (!open) return;
+    const uninstall = installGameBridge();
+    startRooms();
+    return () => {
+      stopRooms();
+      uninstall();
+    };
   }, [open]);
 
   return (

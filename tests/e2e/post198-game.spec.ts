@@ -6,7 +6,7 @@ declare const process: { env: Record<string, string | undefined> };
 /**
  * SimLab 3D (docs/GAME.md), carried over from the bench spec written after PR #198: the library's
  * "SimLab 3D" button (under "Science Studio") opens the game over the app, in Vietnamese, with
- * single player only (no LAN rooms or voice inside SimLab); "Về SimLab" closes it.
+ * single player and LAN rooms (chat only, no voice: #339); "Về SimLab" closes it.
  * WebGL runs in software (SwiftShader) so the game's menu comes up on a runner without a GPU.
  */
 test.use({
@@ -16,7 +16,7 @@ test.use({
   },
 });
 
-test('SimLab 3D opens over the lab, single player only, and closes back to the lab', async ({
+test('SimLab 3D opens over the lab, rooms without voice, and closes back to the lab', async ({
   page,
 }) => {
   const errors: string[] = [];
@@ -38,10 +38,14 @@ test('SimLab 3D opens over the lab, single player only, and closes back to the l
   });
   await game.getByRole('button', { name: 'Chơi', exact: true }).click();
   await expect(game.getByText('Chơi đơn').first()).toBeVisible();
-  // No LAN rooms or voice chat inside SimLab: the play page offers single player only (the
-  // game still builds its hidden Multiplayer page, never reachable from here).
+  // LAN rooms inside SimLab (#339): the Multiplayer card is back, chat only (no voice). In a
+  // plain browser there is no SimLab room server, and the card says so (never a fake room).
   await expect(game.getByRole('button', { name: /Chơi đơn/ })).toBeVisible();
-  await expect(game.getByRole('button', { name: /Chơi nhiều người/ })).toHaveCount(0);
+  const multi = game.getByRole('button', { name: /Chơi nhiều người/ });
+  await expect(multi).toBeVisible();
+  await expect(multi).toContainText('Chat bằng Enter');
+  await expect(multi).not.toContainText('giữ V để nói');
+  await expect(multi).toContainText('Máy chủ phòng chưa chạy');
   await dialog.getByRole('button', { name: 'Về SimLab' }).click();
   await expect(dialog).toBeHidden();
   await expect(page.locator('iframe[title="Trò chơi SimLab 3D"]')).toHaveCount(0);
